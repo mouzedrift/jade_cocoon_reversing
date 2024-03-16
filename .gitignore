@@ -1,0 +1,16 @@
+Output
+.cache
+.vs
+.vscode
+compile_commands.json
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.ipch
+*.log
+*.db
+*.bin
+*.spv
+**/build*
+CMakeSettings.json

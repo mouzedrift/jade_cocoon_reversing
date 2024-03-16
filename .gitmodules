@@ -1,0 +1,3 @@
+[submodule "libs/psyq_sdk"]
+	path = libs/psyq_sdk
+	url = https://github.com/FoxdieTeam/psyq_sdk.git
