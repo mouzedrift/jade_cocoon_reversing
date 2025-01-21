@@ -14,11 +14,6 @@ void sub_8003FDB0(int* a0)
 
 }
 
-void SetGameBootState_80040470(void)
-{
-
-}
-
 void GameLoop_8004047C(void)
 {
 
