@@ -1,13 +1,14 @@
 #include "globals.h"
 #include "stubs.h"
+#include "LIBGPU.H"
 
-// Match
+// Matched
 int sub_80012178(int arg0)
 {
     return (arg0 * 3) + 20;
 }
 
-// Match
+// Matched
 int sub_80012140(int arg0)
 {
     int result;
@@ -25,7 +26,7 @@ int sub_80012140(int arg0)
     return result;
 }
 
-// Match
+// Matched
 int sub_8003BA58(int arg0)
 {
     int result;
@@ -142,4 +143,28 @@ void GameLoop_8004047C(void)
             break;
         }
     } while ((unknownFlags_8008D678 & 4) == 0);
+}
+
+char* off_80086570 = "\\DATA\\DATA.001;1";
+
+// Matched
+int LoadData001File_8003CD1C(void) {
+    while (DsSearchFile(&Data001File_800954A8, off_80086570) == 0)
+    {
+    }
+
+    return 1;
+}
+
+// Matched
+void InitImage_80010428(void)
+{
+    RECT rect;
+
+    rect.w = 1024;
+    rect.x = 0;
+    rect.y = 0;
+    rect.h = 512;
+    ClearImage(&rect, 0, 0, 0);
+    DrawSync(0);
 }

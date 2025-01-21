@@ -10,7 +10,6 @@ void SetGameBootState_80040470(void);
 void GameLoop_8004047C(void);
 void sub_80010228(void);
 void sub_8004DE00(void);
-void InitImage_80010428(void);
 void CloseEvents_80010328(void);
 int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
 enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);

@@ -34,11 +34,6 @@ void sub_8004DE00(void)
 
 }
 
-void InitImage_80010428(void)
-{
-
-}
-
 void CloseEvents_80010328(void)
 {
 
