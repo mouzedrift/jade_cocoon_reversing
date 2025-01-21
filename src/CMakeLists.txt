@@ -3,7 +3,8 @@ project(jade_cocoon_exe VERSION 1.0 LANGUAGES C)
 set(SRC_FILES
     main.c
     funcs.c
-    data/bss.c
+    globals.h
+    globals.c
 )
 
 add_executable(jade_cocoon_exe ${SRC_FILES})

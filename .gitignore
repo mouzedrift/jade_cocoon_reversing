@@ -14,3 +14,11 @@ compile_commands.json
 *.spv
 **/build*
 CMakeSettings.json
+venv
+
+# splat related
+slus_008.54*
+!slus_008.54.yaml
+asm
+undefined_funcs_auto.txt
+undefined_syms_auto.txt

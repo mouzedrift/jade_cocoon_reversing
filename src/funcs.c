@@ -1,51 +1,13 @@
-
-extern int dword_800918B0;
-extern int dword_8008BD84[93];
-
-static const char* overlays[31] =
-{
-    "BATTLE.BIN",
-    "BTEND.BIN",
-    "BTLEXEC.BIN",
-    "CHAPTER.BIN",
-    "COMBAT.BIN",
-    "COMBBTL.BIN",
-    "COMBCHUI.BIN",
-    "COMBCOM.BIN",
-    "COMBLOAD.BIN",
-    "COMBRSLT.BIN",
-    "COMBSEL.BIN",
-    "COMBSTRT.BIN",
-    "CONFIG.BIN",
-    "ENCOM.BIN",
-    "EQUIP.BIN",
-    "EVENTFNC.BIN",
-    "GAME.BIN",
-    "LOAD.BIN",
-    "MAP.BIN",
-    "MENU.BIN",
-    "NAME.BIN",
-    "PIERCE.BIN",
-    "PLCOM.BIN",
-    "SHOP.BIN",
-    "SHOPCTRL.BIN",
-    "SHOPENTR.BIN",
-    "SOUNDTST.BIN",
-    "TITLE.BIN",
-    "TSTCOMPO.BIN",
-    "TSTMODEL.BIN",
-    "WPNSHOP.BIN"
-};
+#include "globals.h"
 
 
-int dword_8008BD84[93];
-
-
+// Match
 int sub_80012178(int arg0)
 {
     return (arg0 * 3) + 20;
 }
 
+// Match
 int sub_80012140(int arg0)
 {
     int result;
@@ -63,6 +25,7 @@ int sub_80012140(int arg0)
     return result;
 }
 
+// Match
 int sub_8003BA58(int arg0)
 {
     int result;
@@ -94,6 +57,7 @@ int sub_800125B8()
     return result;
 }
 
+// Matched
 int sub_8001C2FC()
 {
     return (dword_800918B0 & 3) == 0;
