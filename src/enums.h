@@ -18,6 +18,7 @@ enum GameStates
     eTstModel_10 = 10u,
     eTstCompo_11 = 11u,
     eToMainMenu_14 = 14u,
+    eUnknown_15 = 15u
 };
 
 enum OverlayIds
