@@ -1,6 +1,17 @@
 #include "LIBGPU.H"
+#include "MALLOC.H"
 #include "globals.h"
 #include "stubs.h"
+
+void* malloc3_8003FC4C(size_t s)
+{
+    return malloc3(s);
+}
+
+void free3_8003FC6C(void* block)
+{
+    free3(block);
+}
 
 // Matched
 int sub_80012178(int arg0)
@@ -1380,4 +1391,25 @@ void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, in
     } while (seekSuccess != 0);
 
     dword_8008B55C |= 0x10;
+}
+
+// Matched
+void* DATA_GetFileBuffer_8003CAA0(int idx)
+{
+    unsigned long* pFileBuffer;
+    Data001File dataFile;
+    int pad[2];
+
+    DATA_GetFile_8003C7CC(&dataFile, idx);
+    pFileBuffer = malloc3_8003FC4C(dataFile.field_4_sectors * 2048);
+    LoadFileIntoBuffer_8003CB7C(&dataFile.field_0_position, pFileBuffer, dataFile.field_4_sectors);
+    return pFileBuffer;
+}
+
+// Matched
+void sub_8001C290(void)
+{
+    unknownFlags_8008D678 &= ~2;
+    unknownFlags_8008D678 |= 0x10;
+    unknownFlags_8008D678 |= 0x80;
 }
