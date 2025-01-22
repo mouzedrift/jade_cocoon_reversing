@@ -12,5 +12,6 @@ extern volatile int unknownFlags_8008D678;
 extern short word_8008B558[2];
 extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
+extern int dword_8008B55C;
 
 #endif

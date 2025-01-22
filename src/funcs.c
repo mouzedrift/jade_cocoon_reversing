@@ -1346,3 +1346,38 @@ int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFi
 
     return 1;
 }
+
+// Matched
+void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors)
+{
+    int var_s0;
+    int seekSuccess;
+
+    seekSuccess = 1;
+    var_s0 = 0;
+    dword_8008B55C &= ~0x10;
+    do
+    {
+        switch (var_s0)
+        {
+            case 0:
+                if (DsControl(0x15, fileLoc, 0) != 0)
+                {
+                    var_s0 = 1;
+                }
+                break;
+            case 1:
+                if (ReadFileIntoBuffer_8003CC54(fileLoc, sectors, pFileBuffer) == 0)
+                {
+                    var_s0 = 0;
+                }
+                else
+                {
+                    seekSuccess = 0;
+                }
+                break;
+        }
+    } while (seekSuccess != 0);
+
+    dword_8008B55C |= 0x10;
+}
