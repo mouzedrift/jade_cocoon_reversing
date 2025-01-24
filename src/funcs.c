@@ -1413,3 +1413,11 @@ void sub_8001C290(void)
     unknownFlags_8008D678 |= 0x10;
     unknownFlags_8008D678 |= 0x80;
 }
+
+// Matched
+void sub_8001B230(void)
+{
+    unknownFlags_8008D678 &= ~0x10;
+    dword_800918BC = 0;
+    unknownFlags_8008D678 |= 0x40;
+}

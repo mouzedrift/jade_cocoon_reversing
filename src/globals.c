@@ -9,3 +9,4 @@ short word_8008B558[2];
 DslFILE Data001File_800954A8;
 int DsReadSyncResult_8008D630;
 int dword_8008B55C;
+int dword_800918BC;
