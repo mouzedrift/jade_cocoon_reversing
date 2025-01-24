@@ -2,11 +2,10 @@ project(jade_cocoon_exe VERSION 1.0 LANGUAGES C)
 
 set(SRC_FILES
     main.c
+    funcs.h
     funcs.c
     globals.h
     globals.c
-    stubs.h
-    stubs.c
     enums.h
 )
 

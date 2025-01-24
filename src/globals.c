@@ -10,5 +10,4 @@ DslFILE Data001File_800954A8;
 int DsReadSyncResult_8008D630;
 int dword_8008B55C;
 int dword_800918BC;
-DRAWENV drawEnv_8008B4E0;
 struct_44 stru_8008B4D8;

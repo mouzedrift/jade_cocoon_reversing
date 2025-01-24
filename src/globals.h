@@ -1,8 +1,10 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#define _SIZE_T
+
+#include "SYS/TYPES.H"
 #include "LIBDS.H"
-#include "LIBGPU.H"
 #include "enums.h"
 
 typedef struct
@@ -23,7 +25,6 @@ extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern dword_800918BC;
-extern DRAWENV drawEnv_8008B4E0;
 extern struct_44 stru_8008B4D8;
 
 #endif

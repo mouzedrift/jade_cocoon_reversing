@@ -1,7 +1,9 @@
+#define _SIZE_T
+
 #include "LIBAPI.H"
 #include "MALLOC.H"
 #include "globals.h"
-#include "stubs.h"
+#include "funcs.h"
 
 extern char __heap_start, __sp;
 
