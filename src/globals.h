@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include "LIBDS.H"
+#include "LIBGPU.H"
 #include "enums.h"
 
 extern int dword_8008BD84[93];
@@ -14,5 +15,8 @@ extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern dword_800918BC;
+extern DRAWENV drawEnv_8008B4E0;
+extern int dword_8008B4D8;
+extern int dword_8008B4DC;
 
 #endif
