@@ -1,6 +1,7 @@
 import idc
 import idautils
 import os
+import ida_bytes
 
 CURRENT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,7 +20,7 @@ for segment in idautils.Segments():
         is_data = idc.is_data(idc.get_full_flags(head))
         name = idc.get_name(head)
         if is_data and name != "" and not name.startswith("loc_") and not name.startswith("def_") and not name.startswith("jpt_"):
-            symbols.append(f"{name}={hex(head)};")
+            symbols.append(f"{name}={hex(head)}; // size:{hex(ida_bytes.get_item_size(head))}")
 
 outpath = f"{CURRENT_DIRECTORY}/../../symbol_addrs.txt"
 with open(outpath, "w") as file:
