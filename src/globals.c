@@ -11,5 +11,4 @@ int DsReadSyncResult_8008D630;
 int dword_8008B55C;
 int dword_800918BC;
 DRAWENV drawEnv_8008B4E0;
-int dword_8008B4D8;
-int dword_8008B4DC;
+struct_44 stru_8008B4D8;

@@ -1421,3 +1421,38 @@ void sub_8001B230(void)
     dword_800918BC = 0;
     unknownFlags_8008D678 |= 0x40;
 }
+
+// Matched
+void sub_80040658(int arg1)
+{
+    sub_8001B230();
+    switch (arg1)
+    {
+        case 0:
+            stru_8008B4D8.field_0 = 5;
+            stru_8008B4D8.field_8_x = 0;
+            stru_8008B4D8.field_A_y = 16;
+            stru_8008B4D8.field_4 = 1;
+            break;
+        case 1:
+            stru_8008B4D8.field_0 = 1;
+            stru_8008B4D8.field_8_x = 0;
+            stru_8008B4D8.field_A_y = 16;
+            stru_8008B4D8.field_4 = 2;
+            break;
+        case 2:
+            stru_8008B4D8.field_0 = 1;
+            stru_8008B4D8.field_8_x = 0;
+            stru_8008B4D8.field_A_y = 16;
+            stru_8008B4D8.field_4 = 1;
+            break;
+        case 3:
+            stru_8008B4D8.field_0 = 7;
+            stru_8008B4D8.field_8_x = 0;
+            stru_8008B4D8.field_A_y = 16;
+            stru_8008B4D8.field_4 = 1;
+            break;
+        case 4:
+            break;
+    }
+}
