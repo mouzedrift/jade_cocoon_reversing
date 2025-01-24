@@ -13,6 +13,24 @@ typedef struct
     int field_8_size;
 } Data001File;
 
+// Stubs
+void InitGame_80010110(void);
+void InitEvents_8001028C(void);
+void sub_8003FDB0(int*);
+void sub_80010228(void);
+void sub_8004DE00(void);
+void CloseEvents_80010328(void);
+int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
+enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
+void sub_80040718(void);
+void LoadPublicTiyAndFtg_800407D0(void);
+void sub_80040A84(void);
+void sub_80040AEC(void);
+void sub_80040B54(void);
+void sub_80040C8C(void);
+void sub_80040CCC(void);
+int sub_80040D5C(void);
+
 extern void* malloc3_8003FC4C(unsigned int s);
 extern void free3_8003FC6C(void* block);
 extern int sub_80012178(int arg0);
@@ -31,22 +49,5 @@ extern void* DATA_GetFileBuffer_8003CAA0(int idx);
 extern void sub_8001C290(void);
 extern void sub_8001B230(void);
 extern void sub_80040658(int arg1);
-
-// Stubs
-void InitGame_80010110(void);
-void InitEvents_8001028C(void);
-void sub_8003FDB0(int*);
-void sub_80010228(void);
-void sub_8004DE00(void);
-void CloseEvents_80010328(void);
-int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
-enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
-void sub_80040718(void);
-void LoadPublicTiyAndFtg_800407D0(void);
-void sub_80040A84(void);
-void sub_80040AEC(void);
-void sub_80040B54(void);
-void sub_80040C8C(void);
-void sub_80040CCC(void);
 
 #endif

@@ -13,6 +13,7 @@ void InitGame_80010110(void)
 void InitEvents_8001028C(void)
 {
 }
+
 void sub_8003FDB0(int* arg0)
 {
 }
@@ -31,10 +32,12 @@ void CloseEvents_80010328(void)
 
 int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 {
+    return 0;
 }
 
 enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId)
 {
+    return 0;
 }
 
 void sub_80040718(void)
@@ -63,6 +66,11 @@ void sub_80040C8C(void)
 
 void sub_80040CCC(void)
 {
+}
+
+int sub_80040D5C(void)
+{
+    return 0;
 }
 
 void* malloc3_8003FC4C(unsigned int s)
@@ -1427,7 +1435,7 @@ void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, in
         switch (var_s0)
         {
             case 0:
-                if (DsControl(0x15, fileLoc, 0) != 0)
+                if (DsControl(0x15, (u_char*)fileLoc, 0) != 0)
                 {
                     var_s0 = 1;
                 }
