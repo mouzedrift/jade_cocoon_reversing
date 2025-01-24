@@ -13,7 +13,7 @@ void InitGame_80010110(void)
 void InitEvents_8001028C(void)
 {
 }
-void sub_8003FDB0(int* a0)
+void sub_8003FDB0(int* arg0)
 {
 }
 
