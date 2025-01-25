@@ -13,3 +13,10 @@ int dword_800918BC;
 struct_44 stru_8008B4D8;
 long cdRomEventDescError_8008B490;
 long vsyncEventDesc_8008B494;
+int dword_8008B574;
+int dword_8008B574;
+volatile int dword_8008B4B4;
+volatile int gnFrame_8008D610;
+volatile int dword_8008D450;
+volatile int dword_8008D404;
+struct_46 dword_8008B570; // might be part of a bigger save game struct

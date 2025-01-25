@@ -70,11 +70,6 @@ int sub_80040D5C(void)
     return 0;
 }
 
-long vsyncEventHandler_800103AC()
-{
-    return 0;
-}
-
 void* malloc3_8003FC4C(unsigned int s)
 {
     return malloc3(s);
@@ -1538,9 +1533,25 @@ void InitEvents_8001028C(void)
     gnFrame_8008D610 = 0;
 }
 
+// Matched
 long cdRomEventErrorHandler_8003BBAC(void)
 {
     unknownFlags_8008D678 |= 0x100u;
     printf("Assertion failed: file \"%s\", line %d\n", "CD.C", 79);
     exit(1);
+}
+
+// Matched
+long vsyncEventHandler_800103AC(void)
+{
+    ++dword_8008B4B4;
+    ++gnFrame_8008D610;
+    --dword_8008D450;
+    if (!(unknownFlags_8008D678 & 8))
+    {
+        dword_8008D404++;
+        dword_8008B570.field_4++;
+    }
+
+    return dword_8008B4B4;
 }

@@ -15,6 +15,12 @@ typedef struct
     short field_A_y;
 } struct_44;
 
+typedef struct
+{
+    int field_0;
+    int field_4;
+} struct_46;
+
 extern int dword_8008BD84[93];
 extern int dword_800918B0;
 extern int dword_80096090[4];
@@ -28,7 +34,11 @@ extern dword_800918BC;
 extern struct_44 stru_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
-extern int dword_8008B4B4;
-extern int gnFrame_8008D610;
+extern int dword_8008B574;
+extern volatile int dword_8008B4B4;
+extern volatile int gnFrame_8008D610;
+extern volatile int dword_8008D450;
+extern volatile int dword_8008D404;
+extern struct_46 dword_8008B570; // might be part of a bigger save game struct
 
 #endif
