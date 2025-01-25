@@ -1555,3 +1555,19 @@ long vsyncEventHandler_800103AC(void)
 
     return dword_8008B4B4;
 }
+
+unsigned int GetCapturedMinionsCount_800125B8(void)
+{
+    unsigned int totalMinions;
+    unsigned int currentBitfield;
+    int i;
+
+    totalMinions = 0;
+    for (i = 0; i < 7; i++)
+    {
+        currentBitfield = allMinionsBitfields_8008BD84[i];
+        totalMinions += GetCapturedMinionsFromBitfield_8003BA58(currentBitfield);
+    };
+
+    return totalMinions;
+}

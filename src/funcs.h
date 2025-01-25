@@ -51,5 +51,6 @@ extern void sub_80040658(int arg1);
 extern void InitEvents_8001028C(void);
 extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
+extern unsigned int GetCapturedMinionsCount_800125B8(void);
 
 #endif
