@@ -16,6 +16,7 @@ compile_commands.json
 !build.py
 CMakeSettings.json
 venv
+.ninja_log
 
 # splat related
 slus_008.54*

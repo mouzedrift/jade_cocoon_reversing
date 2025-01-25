@@ -3,6 +3,7 @@
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
+#include "enums.h"
 
 typedef struct
 {

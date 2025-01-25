@@ -1,0 +1,23 @@
+; base address
+    org    $80010000
+
+; link objs
+    ;main
+    include "build_psyq/main.obj"          ;main.c
+    include "build_psyq/funcs.obj"          ;funcs.c
+    include "build_psyq/globals.obj"          ;globals.c
+
+    ; PSY-Q start
+    inclib "libcd.lib"
+    inclib "libds.lib"
+    inclib "libc2.lib"
+    inclib "libgpu.lib"
+    inclib "libgte.lib"
+    inclib "libspu.lib"
+    inclib "libetc.lib"
+    inclib "libsn.lib"
+    inclib "libcard.lib"
+    inclib "libapi.lib"
+    inclib "libpad.lib"
+
+    regs    pc=__SN_ENTRY_POINT
