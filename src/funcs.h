@@ -29,7 +29,6 @@ void sub_80040B54(void);
 void sub_80040C8C(void);
 void sub_80040CCC(void);
 int sub_80040D5C(void);
-long cdRomEventErrorHandler_8003BBAC(void);
 long vsyncEventHandler_800103AC(void);
 
 extern void* malloc3_8003FC4C(unsigned int s);
@@ -51,5 +50,6 @@ extern void sub_8001C290(void);
 extern void sub_8001B230(void);
 extern void sub_80040658(int arg1);
 extern void InitEvents_8001028C(void);
+extern long cdRomEventErrorHandler_8003BBAC(void);
 
 #endif

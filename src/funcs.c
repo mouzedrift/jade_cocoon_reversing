@@ -70,11 +70,6 @@ int sub_80040D5C(void)
     return 0;
 }
 
-long cdRomEventErrorHandler_8003BBAC(void)
-{
-    return 0;
-}
-
 long vsyncEventHandler_800103AC()
 {
     return 0;
@@ -1541,4 +1536,11 @@ void InitEvents_8001028C(void)
 
     dword_8008B4B4 = 0;
     gnFrame_8008D610 = 0;
+}
+
+long cdRomEventErrorHandler_8003BBAC(void)
+{
+    unknownFlags_8008D678 |= 0x100u;
+    printf("Assertion failed: file \"%s\", line %d\n", "CD.C", 79);
+    exit(1);
 }
