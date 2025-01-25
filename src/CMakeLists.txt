@@ -7,6 +7,7 @@ set(SRC_FILES
     globals.h
     globals.c
     enums.h
+    common.h
 )
 
 add_executable(jade_cocoon_exe ${SRC_FILES})

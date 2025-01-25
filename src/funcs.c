@@ -6,6 +6,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "common.h"
 
 void InitGame_80010110(void)
 {
@@ -105,7 +106,7 @@ int sub_80012140(int arg0)
 }
 
 // Matched
-int sub_8003BA58(int arg0)
+int GetCapturedMinionsFromBitfield_8003BA58(int arg0)
 {
     int result;
     int var_v0;
@@ -119,19 +120,6 @@ int sub_8003BA58(int arg0)
         {
             result += 1;
         }
-    }
-    return result;
-}
-
-int sub_800125B8()
-{
-    int i;
-    int result;
-
-    result = 0;
-    for (i = 0; i < 7; i++)
-    {
-        result += sub_8003BA58(dword_8008BD84[i]);
     }
     return result;
 }
@@ -1556,6 +1544,7 @@ long vsyncEventHandler_800103AC(void)
     return dword_8008B4B4;
 }
 
+// Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
 {
     unsigned int totalMinions;
@@ -1563,7 +1552,7 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     int i;
 
     totalMinions = 0;
-    for (i = 0; i < 7; i++)
+    for (i = 0; i < COUNTOF_S(allMinionsBitfields_8008BD84); i++)
     {
         currentBitfield = allMinionsBitfields_8008BD84[i];
         totalMinions += GetCapturedMinionsFromBitfield_8003BA58(currentBitfield);

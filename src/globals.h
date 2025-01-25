@@ -21,7 +21,6 @@ typedef struct
     int field_4;
 } struct_46;
 
-extern int dword_8008BD84[93];
 extern int dword_800918B0;
 extern int dword_80096090[4];
 extern enum GameStates currentGameState_8008D4B4;
