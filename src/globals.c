@@ -11,3 +11,5 @@ int DsReadSyncResult_8008D630;
 int dword_8008B55C;
 int dword_800918BC;
 struct_44 stru_8008B4D8;
+long cdRomEventDescError_8008B490;
+long vsyncEventDesc_8008B494;

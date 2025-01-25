@@ -26,5 +26,9 @@ extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern dword_800918BC;
 extern struct_44 stru_8008B4D8;
+extern long cdRomEventDescError_8008B490;
+extern long vsyncEventDesc_8008B494;
+extern int dword_8008B4B4;
+extern int gnFrame_8008D610;
 
 #endif

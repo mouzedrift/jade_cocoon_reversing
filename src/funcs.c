@@ -4,13 +4,10 @@
 #include "MALLOC.H"
 #include "LIBGTE.H"
 #include "LIBGPU.H"
+#include "LIBAPI.H"
 #include "globals.h"
 
 void InitGame_80010110(void)
-{
-}
-
-void InitEvents_8001028C(void)
 {
 }
 
@@ -69,6 +66,16 @@ void sub_80040CCC(void)
 }
 
 int sub_80040D5C(void)
+{
+    return 0;
+}
+
+long cdRomEventErrorHandler_8003BBAC(void)
+{
+    return 0;
+}
+
+long vsyncEventHandler_800103AC()
 {
     return 0;
 }
@@ -1518,4 +1525,20 @@ void sub_80040658(int arg1)
         case 4:
             break;
     }
+}
+
+// Matched
+void InitEvents_8001028C(void)
+{
+    cdRomEventDescError_8008B490 = OpenEvent(HwCdRom, EvSpERROR, EvMdINTR, cdRomEventErrorHandler_8003BBAC);
+    EnableEvent(cdRomEventDescError_8008B490);
+
+    vsyncEventDesc_8008B494 = OpenEvent(RCntCNT3, EvSpINT, EvMdINTR, vsyncEventHandler_800103AC);
+    EnableEvent(vsyncEventDesc_8008B494);
+
+    SetRCnt(RCntCNT3, RCntMdSC, RCntMdINTR);
+    StartRCnt(RCntCNT3);
+
+    dword_8008B4B4 = 0;
+    gnFrame_8008D610 = 0;
 }
