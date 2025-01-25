@@ -5,36 +5,30 @@
 #include "globals.h"
 #include "funcs.h"
 
-extern char __heap_start, __sp;
+char heapStart_800CD858;
 
-int main(int argc, char* argv[])
+// Matched
+int main(void)
 {
-    unsigned int heapSize; // $s0
-    unsigned int v4; // $v1
-    unsigned __int8* v5; // $a0
-    int v6; // $a0
+    int* pHeapIter;
+    unsigned int heapSize;
+    unsigned int i;
 
     InitGame_80010110();
     EnterCriticalSection();
-    SetMem(2u);
-    //heapSize = 8 * ((unsigned int)((char*)&loadedBinaryFile_801B9250 - (char*)heapStart_800CD858) >> 3);// 2048 bytes
-    //InitHeap3(heapStart_800CD858, heapSize);
-    heapSize = (&__sp - 0x800) - &__heap_start;
-    InitHeap3((unsigned long*)&(__heap_start), heapSize);
+    SetMem(2);
 
-    /*
-    v4 = 2;
-    if ((heapSize >> 2) - 2 > 2)                // init heap with 0x55555555
+    // calc heap size in multiple of 8
+    heapSize = ((0x801B9250 - (unsigned int)(&heapStart_800CD858 + sizeof(int) * 2)));
+    heapSize = (heapSize / 8) * 8;
+
+    InitHeap3((&heapStart_800CD858 + sizeof(int) * 2), heapSize);
+
+    pHeapIter = &heapStart_800CD858 + sizeof(int) * 2;
+    for (i = 2; i < (heapSize / 4) - 2; i++)
     {
-        v5 = &heapStart_800CD858[8];
-        do
-        {
-            *(_DWORD*)v5 = 0x55555555;
-            ++v4;
-            v5 += 4;
-        } while (v4 < (heapSize >> 2) - 2);
+        pHeapIter[i] = 0x55555555;
     }
-    */
 
     InitEvents_8001028C();
     ExitCriticalSection();
@@ -49,6 +43,5 @@ int main(int argc, char* argv[])
     sub_8004DE00();
     _96_init();
     LoadExec("cdrom:\\SLUS_008.54;1", 0x801FFFF0, 0);
-
-    exit(0);
+    exit();
 }
