@@ -51,5 +51,6 @@ extern void InitEvents_8001028C(void);
 extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
 extern unsigned int GetCapturedMinionsCount_800125B8(void);
+extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut);
 
 #endif

@@ -16,4 +16,6 @@ enum foo
 */
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))
 
+#define MAX_PLAYER_NAME_LENGTH 10
+
 #endif

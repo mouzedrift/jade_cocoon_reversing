@@ -1560,3 +1560,20 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
 
     return totalMinions;
 }
+
+// Matched
+int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut)
+{
+    int i;
+
+    if (*pPlayerOut == 0xFFFF)
+    {
+        for (i = 0; i < MAX_PLAYER_NAME_LENGTH; i++)
+        {
+            pPlayerOut[i] = pPlayerIn[i];
+        }
+        return 1;
+    }
+
+    return 0;
+}
