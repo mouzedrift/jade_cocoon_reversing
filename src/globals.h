@@ -1,8 +1,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#define _SIZE_T
-
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
 #include "enums.h"

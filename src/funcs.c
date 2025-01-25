@@ -1,5 +1,3 @@
-#define _SIZE_T
-
 #include "funcs.h"
 #include "MALLOC.H"
 #include "LIBGTE.H"

@@ -1,5 +1,3 @@
-#define _SIZE_T
-
 #include "LIBAPI.H"
 #include "MALLOC.H"
 #include "globals.h"

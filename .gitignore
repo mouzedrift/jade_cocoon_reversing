@@ -13,6 +13,7 @@ compile_commands.json
 *.bin
 *.spv
 **/build*
+!build.py
 CMakeSettings.json
 venv
 

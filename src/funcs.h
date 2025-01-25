@@ -1,8 +1,6 @@
 #ifndef _FUNCS_H_
 #define _FUNCS_H_
 
-#define _SIZE_T
-
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
 
@@ -14,21 +12,21 @@ typedef struct
 } Data001File;
 
 // Stubs
-void InitGame_80010110(void);
-void sub_8003FDB0(int*);
-void sub_80010228(void);
-void sub_8004DE00(void);
-void CloseEvents_80010328(void);
-int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
-enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
-void sub_80040718(void);
-void LoadPublicTiyAndFtg_800407D0(void);
-void sub_80040A84(void);
-void sub_80040AEC(void);
-void sub_80040B54(void);
-void sub_80040C8C(void);
-void sub_80040CCC(void);
-int sub_80040D5C(void);
+extern void InitGame_80010110(void);
+extern void sub_8003FDB0(int*);
+extern void sub_80010228(void);
+extern void sub_8004DE00(void);
+extern void CloseEvents_80010328(void);
+extern int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
+extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
+extern void sub_80040718(void);
+extern void LoadPublicTiyAndFtg_800407D0(void);
+extern void sub_80040A84(void);
+extern void sub_80040AEC(void);
+extern void sub_80040B54(void);
+extern void sub_80040C8C(void);
+extern void sub_80040CCC(void);
+extern int sub_80040D5C(void);
 
 extern void* malloc3_8003FC4C(unsigned int s);
 extern void free3_8003FC6C(void* block);
