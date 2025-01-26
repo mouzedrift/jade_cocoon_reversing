@@ -1,9 +1,57 @@
+#include "STDLIB.H"
+#include "STDIO.H"
 #include "LIBAPI.H"
 #include "MALLOC.H"
 #include "globals.h"
 #include "funcs.h"
+#include "LIBPAD.H"
+#include "LIBSND.H"
+#include "LIBMCX.H"
+#include "LIBPRESS.H"
+#include "LIBETC.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
 
 char heapStart_800CD858;
+
+unsigned char pad1_800918E8[9];
+unsigned char pad2_800918F1[34];
+
+char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
+
+// No match
+void InitGame_80010110(void)
+{
+    ResetCallback();
+    SetVideoMode(0);
+
+    if (!DsInit())
+    {
+        printf("Assertion failed: file \"%s\", line %d\n", "MAIN.C", 200);
+        exit(1);
+    }
+
+    LoadData001File_8003CD1C();
+    DecDCTReset(0);
+    ResetGraph(0);
+    InitGeom();
+    SsInitHot();
+    McxStartCom();
+    PadInitDirect(pad1_800918E8, pad2_800918F1);
+    PadStartCom();
+    ChangeClearPAD(0);
+    SetGraphDebug(0);
+    DsSetDebug(0);
+    sub_8002FE7C();
+    SsInit();
+    SsSetTableSize(SEQDataAttributeTable_80091D60, 5, 16);
+    SsSetTickMode(1);
+    SsStart2();
+    SsSetSerialAttr(0, 0, 1);
+    SsSetSerialVol(0, 112, 112);
+    SsUtSetReverbType(SS_REV_TYPE_STUDIO_C);
+    SsUtReverbOn();
+}
 
 // Matched
 int main(void)

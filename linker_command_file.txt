@@ -8,16 +8,21 @@
     include "build_psyq/globals.obj"          ;globals.c
 
     ; PSY-Q start
-    inclib "libcd.lib"
-    inclib "libds.lib"
-    inclib "libc2.lib"
-    inclib "libgpu.lib"
-    inclib "libgte.lib"
-    inclib "libspu.lib"
-    inclib "libetc.lib"
-    inclib "libsn.lib"
-    inclib "libcard.lib"
     inclib "libapi.lib"
+    inclib "libgte.lib"
+    inclib "libmcrd.lib"
+    inclib "libcard.lib"
+    inclib "libcd.lib"
+    inclib "libc2.lib"
+    inclib "libds.lib"
+    inclib "libetc.lib"
+    inclib "libgpu.lib"
+    inclib "libmath.lib"
     inclib "libpad.lib"
+    inclib "libpress.lib"
+    inclib "libsnd.lib"
+    inclib "libsn.lib"
+    inclib "libspu.lib"
+    inclib "libmcx.lib"
 
     regs    pc=__SN_ENTRY_POINT

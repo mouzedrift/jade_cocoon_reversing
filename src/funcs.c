@@ -5,8 +5,10 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "common.h"
+#include "STDLIB.H"
+#include "STDIO.H"
 
-void InitGame_80010110(void)
+void sub_8002FE7C(void)
 {
 }
 

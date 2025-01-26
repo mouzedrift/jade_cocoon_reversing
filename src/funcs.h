@@ -13,10 +13,10 @@ typedef struct
 } Data001File;
 
 // Stubs
-extern void InitGame_80010110(void);
+extern void sub_8002FE7C(void);
 extern void sub_8003FDB0(int*);
 extern void sub_80010228(void);
-extern void sub_8004DE00(void);
+extern void sub_8004DE00(void); // probably a lib function
 extern void CloseEvents_80010328(void);
 extern int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
