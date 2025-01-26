@@ -15,12 +15,11 @@
 
 char heapStart_800CD858;
 
-unsigned char pad1_800918E8[9];
-unsigned char pad2_800918F1[34];
+unsigned char pads_800918E8[2][9];
 
 char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
 
-// No match
+// Matched
 void InitGame_80010110(void)
 {
     ResetCallback();
@@ -38,7 +37,7 @@ void InitGame_80010110(void)
     InitGeom();
     MemCardInit(1);
     McxStartCom();
-    PadInitDirect(pad1_800918E8, pad2_800918F1);
+    PadInitDirect(pads_800918E8[0], pads_800918E8[1]);
     PadStartCom();
     ChangeClearPAD(0);
     SetGraphDebug(0);
