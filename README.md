@@ -15,7 +15,7 @@ git clone --recursive https://github.com/mouzedrift/jade_cocoon_reversing.git
 
 Install python dependencies and build:
 ```
-python -r requirements.txt
+pip install -r requirements.txt
 python build.py
 ```
 

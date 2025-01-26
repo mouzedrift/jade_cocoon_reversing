@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2019
+            name: Windows
+
+    steps:
+    - name: Checkout repository recursively
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install prerequisites
+      run: pip install -r requirements.txt
+
+    - name: Build
+      run: python build.py
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts
+        path: build_psyq/*
