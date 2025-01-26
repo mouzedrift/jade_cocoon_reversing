@@ -11,6 +11,7 @@
 #include "LIBETC.H"
 #include "LIBGTE.H"
 #include "LIBGPU.H"
+#include "LIBMCRD.H"
 
 char heapStart_800CD858;
 
@@ -35,7 +36,7 @@ void InitGame_80010110(void)
     DecDCTReset(0);
     ResetGraph(0);
     InitGeom();
-    SsInitHot();
+    MemCardInit(1);
     McxStartCom();
     PadInitDirect(pad1_800918E8, pad2_800918F1);
     PadStartCom();
