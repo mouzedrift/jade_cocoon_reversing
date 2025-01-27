@@ -9,13 +9,13 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = f"{CURRENT_DIR}\\build_psyq"
 
 def generate_ninja():
-    psyq_path = f"{CURRENT_DIR}\\libs\\psyq_sdk\\psyq_4.4"
+    psyq_path = f"{CURRENT_DIR}\\libs\\psyq4.4"
     with open("build.ninja", "w") as ninja_file:
         ninja = ninja_syntax.Writer(ninja_file)
 
         ninja.variable("cpppsx", f"{psyq_path}\\bin\\CPPPSX.EXE")
         ninja.variable("cc1psx", f"{psyq_path}\\bin\\CC1PSX.EXE")
-        ninja.variable("aspsx", f"{CURRENT_DIR}\\libs\\psyq_sdk\\ASPSX\\2.81\\ASPSX.EXE")
+        ninja.variable("aspsx", f"{psyq_path}\\bin\\ASPSX.EXE")
         ninja.variable("psylink", f"{psyq_path}\\bin\\psylink.exe")
         ninja.variable("cpe2exe", f"{psyq_path}\\bin\\cpe2exe.exe")
         includes = f"-I {psyq_path}\\INCLUDE -I {CURRENT_DIR}\\src"
