@@ -8,10 +8,6 @@
 #include "STDLIB.H"
 #include "STDIO.H"
 
-void sub_8002FE7C(void)
-{
-}
-
 void sub_8003FDB0(int* arg0)
 {
 }
@@ -1578,6 +1574,7 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
     return 0;
 }
 
+// Matched
 void InitSound_8002FE54(SoundStruct* arg1)
 {
     arg1->field_0 = -1;
@@ -1588,4 +1585,12 @@ void InitSound_8002FE54(SoundStruct* arg1)
     arg1->field_8 = 0;
     arg1->field_10_ptr = 0;
     arg1->field_18_ptr = 0;
+}
+
+// Matched
+void sub_8002FE7C(void)
+{
+    InitSound_8002FE54(&stru_80091CE0);
+    InitSound_8002FE54(&stru_80091D20);
+    InitSound_8002FE54(&stru_80091D00);
 }

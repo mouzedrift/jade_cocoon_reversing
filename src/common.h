@@ -18,4 +18,16 @@ enum foo
 
 #define MAX_PLAYER_NAME_LENGTH 10
 
+typedef struct
+{
+    int field_0;
+    short field_4_seq_num;
+    short field_6_sound_idx;
+    int field_8;
+    int field_C_sep_access_num;
+    int field_10_ptr;
+    int field_14_sep_access_num;
+    int field_18_ptr;
+} SoundStruct;
+
 #endif

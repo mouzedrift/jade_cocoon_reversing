@@ -21,3 +21,6 @@ volatile int dword_8008D404;
 struct_46 dword_8008B570; // might be part of a bigger save game struct
 unsigned int allMinionsBitfields_8008BD84[7];
 unsigned char playerName_8008BD48[MAX_PLAYER_NAME_LENGTH];
+SoundStruct stru_80091CE0;
+SoundStruct stru_80091D20;
+SoundStruct stru_80091D00;

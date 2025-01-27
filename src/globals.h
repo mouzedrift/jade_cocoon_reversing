@@ -40,5 +40,8 @@ extern volatile int dword_8008D404;
 extern struct_46 dword_8008B570; // might be part of a bigger save game struct
 extern unsigned int allMinionsBitfields_8008BD84[7];
 extern unsigned char playerName_8008BD48[MAX_PLAYER_NAME_LENGTH];
+extern SoundStruct stru_80091CE0;
+extern SoundStruct stru_80091D20;
+extern SoundStruct stru_80091D00;
 
 #endif
