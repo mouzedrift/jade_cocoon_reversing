@@ -12,6 +12,18 @@ typedef struct
     int field_8_size;
 } Data001File;
 
+typedef struct
+{
+    int field_0;
+    short field_4_seq_num;
+    short field_6_sound_idx;
+    int field_8;
+    int field_C_sep_access_num;
+    int field_10_ptr;
+    int field_14_sep_access_num;
+    int field_18_ptr;
+} SoundStruct;
+
 // Stubs
 extern void sub_8002FE7C(void);
 extern void sub_8003FDB0(int*);
@@ -51,5 +63,6 @@ extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
 extern unsigned int GetCapturedMinionsCount_800125B8(void);
 extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut);
+extern void InitSound_8002FE54(SoundStruct* arg1);
 
 #endif
