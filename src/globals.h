@@ -59,4 +59,6 @@ extern unsigned long* pOT_8008D5F4;
 extern unsigned long* pOT_8008B4C8;
 extern unsigned long* pOT_8008D3EC;
 
+extern unsigned int settingsFlags_8008B58C;
+
 #endif

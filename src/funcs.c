@@ -1640,3 +1640,16 @@ void AddPrimsAll_8001B3C8(void)
         }
     }
 }
+
+// Matched
+void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
+{
+    int dataToCopy;
+
+    do
+    {
+        dataToCopy = *pSource++;
+        *pOut++ = dataToCopy;
+        --count;
+    } while (count);
+}

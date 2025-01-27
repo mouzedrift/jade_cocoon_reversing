@@ -55,5 +55,6 @@ extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPl
 extern void sub_8002FE7C(void);
 extern void ClearOTagRAll_8001B260(void);
 extern void AddPrimsAll_8001B3C8(void);
+extern void ReadBytesInto_80040388(int* pOut, int* pSource, int count);
 
 #endif
