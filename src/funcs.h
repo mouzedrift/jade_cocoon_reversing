@@ -13,6 +13,7 @@ typedef struct
 } Data001File;
 
 // Stubs
+extern void sub_8004D924(void);
 extern void sub_8003FDB0(int*);
 extern void sub_80010228(void);
 extern void sub_8004DE00(void); // probably a lib function
@@ -53,5 +54,7 @@ extern unsigned int GetCapturedMinionsCount_800125B8(void);
 extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut);
 extern void InitSound_8002FE54(SoundStruct* arg1);
 extern void sub_8002FE7C(void);
+extern void ClearOTagRAll_8001B260(void);
+extern void AddPrimsAll_8001B3C8(void);
 
 #endif

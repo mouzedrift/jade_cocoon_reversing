@@ -8,6 +8,10 @@
 #include "STDLIB.H"
 #include "STDIO.H"
 
+void sub_8004D924(void)
+{
+}
+
 void sub_8003FDB0(int* arg0)
 {
 }
@@ -1593,4 +1597,59 @@ void sub_8002FE7C(void)
     InitSound_8002FE54(&stru_80091CE0);
     InitSound_8002FE54(&stru_80091D20);
     InitSound_8002FE54(&stru_80091D00);
+}
+
+// Matched
+void ClearOTagRAll_8001B260(void)
+{
+    sub_8004D924();
+    pOT_8008D788 = OT_8008D798[bDoubleBuffer_8008D428];
+    pOT_8008D4AC = OT_80091868[bDoubleBuffer_8008D428];
+    pOT_8008D454 = OT_800917D8[bDoubleBuffer_8008D428];
+    pOT_8008D5F4 = OT_80091888[bDoubleBuffer_8008D428];
+    pOT_8008D690 = OT_8008D7D8[bDoubleBuffer_8008D428];
+    pOT_8008B4C8 = OT_8008F7D8[bDoubleBuffer_8008D428];
+    pOT_8008D78C = OT_800918A8[bDoubleBuffer_8008D428];
+    pOT_8008D3EC = OT_80091858[bDoubleBuffer_8008D428];
+
+    ClearOTagR(pOT_8008D788, 8);
+    ClearOTagR(pOT_8008D4AC, 4);
+    ClearOTagR(pOT_8008D454, 16);
+    ClearOTagR(pOT_8008D5F4, 4);
+    ClearOTagR(pOT_8008D690, 1024);
+    ClearOTagR(pOT_8008B4C8, 1024);
+    ClearOTagR(pOT_8008D78C, 1);
+    ClearOTagR(pOT_8008D3EC, 1);
+}
+
+// Matched
+void AddPrimsAll_8001B3C8(void)
+{
+    char pad[20];
+
+    if ((unknownFlags_8008D678 & 2) != 0)
+    {
+        AddPrims(&pOT_8008D788[7], pOT_8008D78C, pOT_8008D78C);
+        AddPrims(&pOT_8008D788[6], pOT_8008D3EC, pOT_8008D3EC);
+        AddPrims(&pOT_8008D788[3], &pOT_8008D5F4[3], pOT_8008D5F4);
+        AddPrims(&pOT_8008D788[2], &pOT_8008D454[15], pOT_8008D454);
+        AddPrims(&pOT_8008D788[0], &pOT_8008D4AC[3], pOT_8008D4AC);
+    }
+    else
+    {
+        AddPrims(&pOT_8008D788[7], pOT_8008D78C, pOT_8008D78C);
+        AddPrims(&pOT_8008D788[6], pOT_8008D3EC, pOT_8008D3EC);
+        AddPrims(&pOT_8008D788[4], &pOT_8008D690[1023], pOT_8008D690);
+        AddPrims(&pOT_8008D788[3], &pOT_8008D5F4[3], pOT_8008D5F4);
+        AddPrims(&pOT_8008D788[2], &pOT_8008D454[15], pOT_8008D454);
+        AddPrims(&pOT_8008D788[0], &pOT_8008D4AC[3], pOT_8008D4AC);
+        if ((unknownFlags_8008D678 & 0x10000) != 0)
+        {
+            AddPrims(&pOT_8008D788[1], &pOT_8008B4C8[1023], pOT_8008B4C8);
+        }
+        else
+        {
+            AddPrims(&pOT_8008D788[5], &pOT_8008B4C8[1023], pOT_8008B4C8);
+        }
+    }
 }

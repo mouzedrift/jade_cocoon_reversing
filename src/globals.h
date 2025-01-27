@@ -44,4 +44,23 @@ extern SoundStruct stru_80091CE0;
 extern SoundStruct stru_80091D20;
 extern SoundStruct stru_80091D00;
 
+extern unsigned long bDoubleBuffer_8008D428;
+extern unsigned long OT_8008D798[2][8];
+extern unsigned long OT_8008D7D8[2][1024];
+extern unsigned long OT_8008F7D8[2][1024];
+extern unsigned long OT_800917D8[2][16];
+extern unsigned long OT_80091858[2][1];
+extern unsigned long OT_80091868[2][4];
+extern unsigned long OT_80091888[2][4];
+extern unsigned long OT_800918A8[2][1];
+
+extern unsigned long* pOT_8008D788;
+extern unsigned long* pOT_8008D4AC;
+extern unsigned long* pOT_8008D454;
+extern unsigned long* pOT_8008D690;
+extern unsigned long* pOT_8008D78C;
+extern unsigned long* pOT_8008D5F4;
+extern unsigned long* pOT_8008B4C8;
+extern unsigned long* pOT_8008D3EC;
+
 #endif
