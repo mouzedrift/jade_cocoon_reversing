@@ -52,7 +52,6 @@ extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
 extern unsigned int GetCapturedMinionsCount_800125B8(void);
 extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut);
-extern void InitSound_8002FE54(SoundStruct* arg1);
 extern void sub_8002FE7C(void);
 extern void ClearOTagRAll_8001B260(void);
 extern void AddPrimsAll_8001B3C8(void);

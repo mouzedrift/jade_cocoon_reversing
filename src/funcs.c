@@ -4,9 +4,9 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
-#include "common.h"
 #include "STDLIB.H"
 #include "STDIO.H"
+#include "sound.h"
 
 void sub_8004D924(void)
 {
@@ -1576,19 +1576,6 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
     }
 
     return 0;
-}
-
-// Matched
-void InitSound_8002FE54(SoundStruct* arg1)
-{
-    arg1->field_0 = -1;
-    arg1->field_4_seq_num = -1;
-    arg1->field_6_sound_idx = -1;
-    arg1->field_C_sep_access_num = -1;
-    arg1->field_14_sep_access_num = -1;
-    arg1->field_8 = 0;
-    arg1->field_10_ptr = 0;
-    arg1->field_18_ptr = 0;
 }
 
 // Matched

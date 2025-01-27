@@ -28,7 +28,7 @@ extern short word_8008B558[2];
 extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
-extern dword_800918BC;
+extern int dword_800918BC;
 extern struct_44 stru_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
@@ -40,10 +40,6 @@ extern volatile int dword_8008D404;
 extern struct_46 dword_8008B570; // might be part of a bigger save game struct
 extern unsigned int allMinionsBitfields_8008BD84[7];
 extern unsigned char playerName_8008BD48[MAX_PLAYER_NAME_LENGTH];
-extern SoundStruct stru_80091CE0;
-extern SoundStruct stru_80091D20;
-extern SoundStruct stru_80091D00;
-
 extern unsigned long bDoubleBuffer_8008D428;
 extern unsigned long OT_8008D798[2][8];
 extern unsigned long OT_8008D7D8[2][1024];

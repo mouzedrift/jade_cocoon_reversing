@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-c_files = ["main.c", "funcs.c", "globals.c"]
+c_files = ["main.c", "funcs.c", "globals.c", "sound.c"]
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = f"{CURRENT_DIR}\\build_psyq"

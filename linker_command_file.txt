@@ -6,6 +6,7 @@
     include "build_psyq/main.obj"          ;main.c
     include "build_psyq/funcs.obj"          ;funcs.c
     include "build_psyq/globals.obj"          ;globals.c
+    include "build_psyq/sound.obj" ;sound.c
 
     ; PSY-Q start
     inclib "libapi.lib"
