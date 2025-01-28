@@ -113,7 +113,9 @@ def exec_pcsx(iso_path):
         print(f"Could not find game iso in {BUILD_DIR}")
         sys.exit(1)
 
-    pcsx_command = f'{os.path.join(pcsx_path, 'pcsx-redux.exe')} -iso "{game_iso}" -exe "{os.path.join(BUILD_DIR, 'jade_cocoon.exe')}" -run'
+    pcsx_exe = os.path.join(pcsx_path, "pcsx-redux.exe")
+    game_exe = os.path.join(BUILD_DIR, "jade_cocoon.exe")
+    pcsx_command = f"{pcsx_exe} -iso {game_iso} -exe {game_exe} -run"
     print(pcsx_command)
 
     # set cwd to pcsx_path to avoid writing all the files in the repository root
