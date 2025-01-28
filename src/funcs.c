@@ -1672,3 +1672,46 @@ void sub_80040360(int *pOut, int *pDataToWrite, int fileSize)
   }
   while ( fileSize );
 }
+
+// Matched
+void sub_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize)
+{
+  unsigned int *overlayAddr_copy; // $s2
+  unsigned char *pFileBuffer; // $s3
+  unsigned int fileSize_copy; // $s1
+  unsigned int alignedFileSize; // $s0
+
+  overlayAddr_copy = overlayAddr;
+  pFileBuffer = (unsigned char *)fileBuffer;
+  fileSize_copy = fileSize;
+  if ( fileSize )
+  {
+    if ( ((unsigned char)overlayAddr & 3) == 0 )
+    {
+      alignedFileSize = fileSize >> 3;
+      if ( ((unsigned char)fileBuffer & 3) == 0 )
+      {
+        fileSize_copy = fileSize & 7;
+        if ( alignedFileSize )
+        {
+          sub_80040360(overlayAddr, (int *)fileBuffer, alignedFileSize);
+          overlayAddr_copy += 2 * alignedFileSize;
+          pFileBuffer += 8 * alignedFileSize;
+        }
+      }
+    }
+    if ( fileSize_copy )
+      sub_800403C8(overlayAddr_copy, pFileBuffer, fileSize_copy);
+  }
+}
+
+// Matched
+void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
+{
+  do
+  {
+    *a1++ = *fileBuffer++;
+    --fileSize;
+  }
+  while ( fileSize );
+}

@@ -57,5 +57,7 @@ extern void ClearOTagRAll_8001B260(void);
 extern void AddPrimsAll_8001B3C8(void);
 extern void ReadBytesInto_80040388(int* pOut, int* pSource, int count);
 extern void sub_80040360(int *pOut, int *pDataToWrite, int fileSize);
+extern void sub_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize);
+extern void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize);
 
 #endif
