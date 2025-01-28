@@ -13,7 +13,7 @@
 #include "LIBGPU.H"
 #include "LIBMCRD.H"
 
-char heapStart_800CD858;
+char heapStart_800CD858[2*1024];
 
 unsigned char pads_800918E8[2][9];
 

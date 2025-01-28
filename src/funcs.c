@@ -1653,3 +1653,22 @@ void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
         --count;
     } while (count);
 }
+
+// Matched
+void sub_80040360(int *pOut, int *pDataToWrite, int fileSize)
+{
+  int result; // $v0
+  int v4; // $v1
+
+  do
+  {
+    result = *pDataToWrite;
+    v4 = pDataToWrite[1];
+    pDataToWrite += 2;
+    --fileSize;
+    *pOut = result;
+    pOut[1] = v4;
+    pOut += 2;
+  }
+  while ( fileSize );
+}

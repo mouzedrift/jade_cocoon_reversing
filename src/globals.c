@@ -39,3 +39,4 @@ unsigned long* pOT_8008D5F4;
 unsigned long* pOT_8008B4C8;
 unsigned long* pOT_8008D3EC;
 unsigned int settingsFlags_8008B58C;
+int numFilesInsideTiy_8008B4BC;
