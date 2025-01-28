@@ -166,8 +166,10 @@ SoundInfo soundFiles_80082F0C[155] =
   { SOUND_SAIRASU_SND, 255u, 255u, 1u, 0u, 44 }
 };
 
+// Matched
 int GetSoundFileId_80030D4C(int idx)
 {
+  return soundFiles_80082F0C[idx].field_0_file_id;
 }
 
 // Matched

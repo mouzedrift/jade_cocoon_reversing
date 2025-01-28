@@ -34,7 +34,7 @@ typedef struct
 
 typedef struct
 {
-  short field_0;
+  short field_0_file_id;
   unsigned char field_2;
   unsigned char field_3;
   unsigned char field_4_seq_count;
