@@ -5,7 +5,8 @@ Currently I use [decomp.me](https://decomp.me/) for matching game functions. I d
 ## Building
 
 ### Prerequisites 
-- Python
+- Python >= 3.7
+- Wine (For Linux)
 
 Clone the repository with the `--recursive` flag:
 
@@ -14,9 +15,19 @@ git clone --recursive https://github.com/mouzedrift/jade_cocoon_reversing.git
 ```
 
 Install python dependencies and build:
+
+### Windows
 ```
 pip install -r requirements.txt
 python build.py
+```
+
+### Linux
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 build.py
 ```
 
 Objects and binaries will be output to the `build_psyq` directory.

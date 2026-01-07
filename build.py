@@ -4,6 +4,7 @@ import subprocess
 import sys
 import argparse
 import time
+import platform
 
 c_files = ["main.c", "funcs.c", "globals.c", "sound.c"]
 
@@ -37,11 +38,17 @@ def generate_ninja():
         map_path = os.path.join(BUILD_DIR, f"{EXE_NAME}.map")
         exe_path = os.path.join(BUILD_DIR, f"{EXE_NAME}.exe")
 
-        ninja.rule("pre_process", f"$cpppsx -undef -D__GNUC__=2 -v -D__OPTIMIZE__ {includes} -lang-c -Dmips -D__mips__ -D__mips -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D__CHAR_UNSIGNED__ -D_LANGUAGE_C -DLANGUAGE_C $in $out", "Preprocess $in -> $out")
-        ninja.rule("compile", "$cc1psx -quiet -G0 -O2 $in -o $out", "Compile $in -> $out")
-        ninja.rule("assemble", "$aspsx -G0 -q $in -o $out", "Assemble $in -> $out")
-        ninja.rule("link", f"$psylink {pysq_lib} /c /n 4000 /q /gp .sdata /m @linker_command_file.txt,{cpe_path},{sym_path},{map_path}", "Linking $out")
-        ninja.rule("convert_cpe_to_exe", "$cpe2exe -CA $in", "$in -> $out")
+        rules = {
+            "pre_process": (f"$cpppsx -undef -D__GNUC__=2 -v -D__OPTIMIZE__ {includes} -lang-c -Dmips -D__mips__ -D__mips -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D__CHAR_UNSIGNED__ -D_LANGUAGE_C -DLANGUAGE_C $in $out", "Preprocess $in -> $out"),
+            "compile": ("$cc1psx -quiet -G0 -O2 $in -o $out", "Compile $in -> $out"),
+            "assemble": ("$aspsx -G0 -q $in -o $out", "Assemble $in -> $out"),
+            "link": (f"$psylink {pysq_lib} /c /n 4000 /q /gp .sdata /m @linker_command_file.txt,{cpe_path},{sym_path},{map_path}", "Linking $out"),
+            "convert_cpe_to_exe": ("$cpe2exe -CA $in", "$in -> $out")
+        }
+
+        on_linux = platform.system() == "Linux"
+        for name, (cmd, desc) in rules.items():
+            ninja.rule(name, f"wine {cmd}" if on_linux else cmd, desc)
 
         linker_deps = list()
         for c_file in c_files:
