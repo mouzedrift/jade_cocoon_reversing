@@ -97,6 +97,21 @@ typedef struct
 
 typedef struct
 {
+    char data[0x54];
+} struct_54;
+
+// object with a header at +0x4C and tables of struct_54 at +0x50 and +0x68
+typedef struct
+{
+    char pad_0[0x4C];
+    int* field_4C;
+    struct_54* field_50;
+    char pad_54[0x14];
+    struct_54* field_68;
+} struct_obj_E;
+
+typedef struct
+{
     char pad_0[0x2A];
     short field_2A;
 } struct_2C;
@@ -210,6 +225,12 @@ extern struct_obj_Q dword_80095C90[0x14];
 extern short word_80091D0C;
 extern struct_8 dword_800833E4[];
 extern int** dword_8008D3F8;
+extern unsigned char drawEnvRed_8008D448[3];
+extern char copyright_80086948[];
+extern char genkiMovie_80086968[];
+extern char craveEntertainmentMovie_80086988[];
+extern char demoDisclaimer_800869A8[];
+extern char introAnime_800869C8[];
 extern int frameCount_8008D3FC;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];

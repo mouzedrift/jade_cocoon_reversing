@@ -110,3 +110,10 @@ int** dword_8008D3F8;
 
 int dword_8008B540;
 int dword_800918B8;
+
+unsigned char drawEnvRed_8008D448[3];
+char copyright_80086948[0x20];
+char genkiMovie_80086968[0x20];
+char craveEntertainmentMovie_80086988[0x20];
+char demoDisclaimer_800869A8[0x20];
+char introAnime_800869C8[0x20];

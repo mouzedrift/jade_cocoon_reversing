@@ -43,25 +43,10 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
 }
 
-void sub_80040A84(void)
-{
-}
 
-void sub_80040AEC(void)
-{
-}
 
-void sub_80040B54(void)
-{
-}
 
-void sub_80040C8C(void)
-{
-}
 
-void sub_80040CCC(void)
-{
-}
 
 int sub_80040D5C(void)
 {
@@ -141,27 +126,27 @@ void GameLoop_8004047C(void)
                 break;
             case eIntroCopyright_1:
                 sub_80040658(3);
-                sub_80040A84();
+                ShowCopyright_80040A84();
                 currentGameState_8008D4B4 = eCraveEntertainmentMovie_3;
                 break;
             case eGenkiMovie_2:
                 sub_80040658(1);
-                sub_80040AEC();
+                PlayGenkiMovie_80040AEC();
                 currentGameState_8008D4B4 = eIntroAnime_5;
                 break;
             case eCraveEntertainmentMovie_3:
                 sub_80040658(1);
-                sub_80040B54();
+                PlayCraveEntertainmentMovie_80040B54();
                 currentGameState_8008D4B4 = eGenkiMovie_2;
                 break;
             case eUnknown_4:
                 sub_80040658(1);
-                sub_80040C8C();
+                ShowDemoDisclaimer_80040C8C();
                 currentGameState_8008D4B4 = eIntroAnime_5;
                 break;
             case eIntroAnime_5:
                 sub_80040658(1);
-                sub_80040CCC();
+                PlayAnimeMovie_80040CCC();
                 word_8008B558[1] = 1;
                 word_8008B558[0] = 0;
                 currentGameState_8008D4B4 = eMainMenu_6;
@@ -2599,10 +2584,10 @@ void sub_8001DC34(void* p)
 }
 
 // Matched
-char* sub_80024E38(char* p)
+char* sub_80024E38(struct_obj_E* p)
 {
     char* result = 0;
-    int* hdr = *(int**)(p + 0x4C);
+    int* hdr = p->field_4C;
     if (hdr && hdr[0])
     {
         result = (char*)hdr + hdr[0] + 4;
@@ -2611,10 +2596,10 @@ char* sub_80024E38(char* p)
 }
 
 // Matched
-char* sub_80024E64(char* p)
+char* sub_80024E64(struct_obj_E* p)
 {
     char* result = 0;
-    int* hdr = *(int**)(p + 0x4C);
+    int* hdr = p->field_4C;
     if (hdr && hdr[1])
     {
         result = (char*)hdr + hdr[1];
@@ -2787,7 +2772,7 @@ short sub_80033508(Minion* p)
 }
 
 // Matched
-unsigned char sub_80033514(Minion* p)
+short sub_80033514(Minion* p)
 {
     return p->field_44;
 }
@@ -3587,15 +3572,15 @@ void sub_8001C244(void)
 }
 
 // Matched
-void sub_800251A0(void* dst, char* src, int a2, int idx)
+void sub_800251A0(void* dst, struct_obj_E* src, int a2, int idx)
 {
-    sub_800403E8((unsigned int*)dst, (unsigned int*)(*(char**)(src + 0x50) + idx * 0x54), 0x54);
+    sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_50[idx], sizeof(struct_54));
 }
 
 // Matched
-void sub_80025B20(void* dst, char* src, int idx)
+void sub_80025B20(void* dst, struct_obj_E* src, int idx)
 {
-    sub_800403E8((unsigned int*)dst, (unsigned int*)(*(char**)(src + 0x68) + idx * 0x54), 0x54);
+    sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
 }
 
 // Matched
@@ -3700,4 +3685,268 @@ void sub_8001F9AC(void* p)
     sub_8001FD08(p);
     sub_8001FF48(p);
     sub_800200F8(p);
+}
+
+
+void ProcessPad_8001C8E8(int a0)
+{
+}
+
+void sub_80036820(int a0)
+{
+}
+
+void DrawIntroMovie_8001AF64(void* a0)
+{
+}
+
+void sub_80024BB0(int* a0)
+{
+}
+
+// Matched
+void ShowCopyright_80040A84(void)
+{
+    sub_8001C290();
+    drawEnvRed_8008D448[2] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[0] = 0;
+    DrawIntroMovie_8001AF64(copyright_80086948);
+}
+
+// Matched
+void PlayGenkiMovie_80040AEC(void)
+{
+    sub_8001C290();
+    drawEnvRed_8008D448[2] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[0] = 0;
+    DrawIntroMovie_8001AF64(genkiMovie_80086968);
+}
+
+// Matched
+void PlayCraveEntertainmentMovie_80040B54(void)
+{
+    sub_8001C290();
+    drawEnvRed_8008D448[2] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[0] = 0;
+    DrawIntroMovie_8001AF64(craveEntertainmentMovie_80086988);
+}
+
+// Matched
+void ShowDemoDisclaimer_80040C8C(void)
+{
+    sub_8001C290();
+    drawEnvRed_8008D448[2] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[0] = 0;
+    DrawIntroMovie_8001AF64(demoDisclaimer_800869A8);
+}
+
+// Matched
+void PlayAnimeMovie_80040CCC(void)
+{
+    sub_8001C290();
+    drawEnvRed_8008D448[2] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[0] = 0;
+    DrawIntroMovie_8001AF64(introAnime_800869C8);
+}
+
+// Matched
+void nullsub_2(void)
+{
+}
+
+// Matched
+void nullsub_3(void)
+{
+}
+
+// Matched
+void nullsub_4(void)
+{
+}
+
+// Matched
+void nullsub_5(void)
+{
+}
+
+// Matched
+void nullsub_6(void)
+{
+}
+
+// Matched
+void SeVibOn(void)
+{
+}
+
+// Matched
+void SetVib(void)
+{
+}
+
+// Matched
+void SsUtVibrateOn(void)
+{
+}
+
+// Matched
+void SsUtVibrateOff(void)
+{
+}
+
+// Matched
+void sub_8001C810(short* p, short v)
+{
+    *p = v;
+}
+
+// Matched
+int sub_8001CEEC(void)
+{
+    return 1;
+}
+
+// Matched
+int sub_800316DC(void)
+{
+    return 0;
+}
+
+// Matched
+int sub_800316E4(void)
+{
+    return 0;
+}
+
+// Matched
+int sub_80033DEC(void)
+{
+    return 0;
+}
+
+// Matched
+int sub_80034124(void)
+{
+    return 0;
+}
+
+// Matched
+int sub_80031BDC(int a0)
+{
+    return a0;
+}
+
+// Matched
+void* sub_80033A60(void* p)
+{
+    return p;
+}
+
+// Matched
+unsigned char* sub_80033520(Minion* p)
+{
+    return p->field_2C;
+}
+
+// Matched
+char* sub_80033818(Minion* p)
+{
+    return p->field_84;
+}
+
+// Matched
+char* sub_80033820(Minion* p)
+{
+    return p->field_CC;
+}
+
+// Matched
+char* sub_80033828(Minion* p)
+{
+    return p->field_94;
+}
+
+// Matched
+char* sub_80033A68(char* p)
+{
+    return p + 0x48;
+}
+
+// Matched
+void sub_80040148(int* p, int v)
+{
+    p[1] = v;
+}
+
+// Matched
+short sub_8002FA70(void)
+{
+    return sub_80033514((Minion*)sub_80033ABC((char*)&saveData_8008B570));
+}
+
+// Matched
+short ratan2Difference_8003B9E0(int* a, int* b)
+{
+    return ratan2(b[0] - a[0], b[2] - a[2]);
+}
+
+// Matched
+void sub_8002052C(void)
+{
+    int* p = dword_8008B54C[0x24 / 4];
+    if (p[2])
+    {
+        sub_80024BB0(p + 2);
+    }
+}
+
+// Matched
+short sub_8003BA18(int v)
+{
+    short r = v & 0xFFF;
+    if (r >= 0x800)
+    {
+        r |= 0xF000;
+    }
+    return r;
+}
+
+// Matched
+int sub_8003BA38(unsigned int a, unsigned int b)
+{
+    if (a > b)
+    {
+        return -1;
+    }
+    if (a == b)
+    {
+        return 0;
+    }
+    return a < b;
+}
+
+// Matched
+void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
+{
+    Data001File file;
+    int pad[2]; // the original frame has 8 more bytes of locals
+    DATA_GetFile_8003C7CC(&file, idx);
+    LoadFileIntoBuffer_8003CB7C(&file.field_0_position, (unsigned long*)0x801B9250, file.field_4_sectors);
+    return (void*)0x801B9250;
+}
+
+// Matched
+void ProcessPads_8001BF50(void)
+{
+    int i;
+    for (i = 0; i < 2; i++)
+    {
+        ProcessPad_8001C8E8(i);
+        sub_80036820(i);
+    }
 }
