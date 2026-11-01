@@ -1,177 +1,30 @@
-#include "sound.h"
+#include "common.h"
+#include "funcs.h"
+#include "MALLOC.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
+#include "LIBAPI.H"
 #include "globals.h"
-#include "enums.h"
+#include "STDLIB.H"
+#include "STDIO.H"
+#include "LIBPAD.H"
+#include "LIBSND.H"
+#include "LIBMCX.H"
+#include "LIBPRESS.H"
+#include "LIBETC.H"
+#include "LIBMCRD.H"
+#include "sound.h"
+#include "data_decls.h"
 
-SoundStruct stru_80091CE0;
-SoundStruct stru_80091D20;
-SoundStruct stru_80091D00;
-SoundStruct stru_80091D40;
+INCLUDE_DATA(dword_80074438);
+INCLUDE_DATA(dword_8007443C);
+INCLUDE_DATA(dword_80074440);
+INCLUDE_DATA(dword_80074444);
+INCLUDE_DATA(word_80074448);
+INCLUDE_DATA(aAssertionFaile_0);
+INCLUDE_DATA(aSoundC);
 
-SoundInfo soundFiles_80082F0C[155] =
-{
-  { SOUND_PUBLIC_SND, 0u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 1u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 2u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 3u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 4u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 5u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 6u, 0u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 255u, 255u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 255u, 255u, 7u, 0u, -1 },
-  { SOUND_PUBLIC_SND, 255u, 255u, 7u, 0u, -1 },
-  { SOUND_PUBLIC2_SND, 255u, 255u, 16u, 16u, -1 },
-  { SOUND_NAME_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SABAKI_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SAINIGHT_SND, 0u, 0u, 1u, 0u, 44 },
-  { SOUND_SAIRASU_SND, 0u, 0u, 1u, 0u, 44 },
-  { SOUND_SAISTONE_SND, 0u, 0u, 2u, 0u, 44 },
-  { SOUND_SHUUGEKI_SND, 0u, 0u, 1u, 0u, 52 },
-  { SOUND_TAMA_SND, 0u, 0u, 1u, 0u, 64 },
-  { SOUND_YAMU_SND, 0u, 0u, 1u, 0u, 59 },
-  { SOUND_ARUKANA_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_IJIGEN_SND, 0u, 0u, 1u, 0u, 44 },
-  { SOUND_IKENIE_SND, 0u, 0u, 1u, 0u, 44 },
-  { SOUND_KEKKAI_SND, 0u, 0u, 1u, 0u, 63 },
-  { SOUND_KEKKON_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_KIKINA_SND, 0u, 0u, 1u, 0u, 58 },
-  { SOUND_KORISU_SND, 0u, 0u, 1u, 0u, 121 },
-  { SOUND_KUMO_SND, 0u, 0u, 1u, 0u, 115 },
-  { SOUND_MTITLE_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_GOSHIN_SND, 0u, 0u, 2u, 0u, 61 },
-  { SOUND_MAP_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_MIKKAI_SND, 0u, 0u, 3u, 0u, 51 },
-  { SOUND_GA_SND, 0u, 0u, 1u, 0u, 117 },
-  { SOUND_TOMBO_SND, 0u, 0u, 1u, 0u, 113 },
-  { SOUND_NAGI_SND, 0u, 0u, 1u, 0u, 62 },
-  { SOUND_DREAM_SND, 0u, 0u, 1u, 0u, 57 },
-  { SOUND_LUI_SND, 0u, 0u, 1u, 0u, 119 },
-  { SOUND_MBOSS_SND, 0u, 0u, 1u, 0u, 119 },
-  { SOUND_IJIKIKI_SND, 0u, 0u, 1u, 0u, 58 },
-  { SOUND_IJIKORI_SND, 0u, 0u, 1u, 0u, 121 },
-  { SOUND_IJIKUMO_SND, 0u, 0u, 1u, 0u, 115 },
-  { SOUND_IJISHIN_SND, 0u, 0u, 1u, 0u, 61 },
-  { SOUND_IJITAMA_SND, 0u, 0u, 1u, 0u, 64 },
-  { SOUND_IJITOMBO_SND, 0u, 0u, 1u, 0u, 113 },
-  { SOUND_IJIYAMU_SND, 0u, 0u, 1u, 0u, 59 },
-  { SOUND_SE_SAI_SND, 255u, 255u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 0u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 1u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 2u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 3u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 4u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 5u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_MIHA1_SND, 255u, 255u, 1u, 0u, -1 },
-  { SOUND_SE_REBA3_SND, 255u, 255u, 4u, 0u, -1 },
-  { SOUND_SE_REBA3_SND, 0u, 0u, 4u, 0u, -1 },
-  { SOUND_SE_REBA3_SND, 1u, 0u, 4u, 0u, -1 },
-  { SOUND_SE_REBA3_SND, 2u, 0u, 4u, 0u, -1 },
-  { SOUND_SE_REBA3_SND, 3u, 0u, 4u, 0u, -1 },
-  { SOUND_SE_YUME1_SND, 255u, 255u, 0u, 0u, -1 },
-  { SOUND_SE_KIKI_SND, 255u, 255u, 1u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 255u, 255u, 0u, 0u, -1 },
-  { SOUND_SE_MBOSS_SND, 255u, 255u, 1u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 255u, 255u, 5u, 0u, -1 },
-  { SOUND_SE_NAGI_SND, 255u, 255u, 1u, 0u, -1 },
-  { SOUND_SE_MON_SND, 255u, 255u, 0u, 0u, -1 },
-  { SOUND_SE_TAMA_SND, 255u, 255u, 3u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 0u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 1u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 2u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 3u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 4u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 5u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 6u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 7u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 8u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 9u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 10u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 11u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 12u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 13u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 14u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST2_SND, 15u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 0u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 1u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 2u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 3u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 4u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 5u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 6u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 7u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 8u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 9u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 10u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 11u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 12u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 13u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 14u, 0u, 16u, 0u, -1 },
-  { SOUND_PUBTST3_SND, 15u, 0u, 16u, 0u, -1 },
-  { SOUND_SE_MBOSS_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SE_SAI_SND, 6u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_MIHA1_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 0u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 1u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 2u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 3u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 4u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 5u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_YAMU_SND, 6u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 0u, 0u, 5u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 1u, 0u, 5u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 2u, 0u, 5u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 3u, 0u, 5u, 0u, -1 },
-  { SOUND_SE_NAGI_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SE_TAMA_SND, 0u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_TOMBO_SND, 255u, 255u, 3u, 0u, -1 },
-  { SOUND_SE_TOMBO_SND, 0u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_KUMO_SND, 255u, 255u, 3u, 0u, -1 },
-  { SOUND_SE_KUMO_SND, 0u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_GA_SND, 255u, 255u, 3u, 0u, -1 },
-  { SOUND_SE_GA_SND, 0u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 255u, 255u, 7u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 0u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_KORI_SND, 255u, 255u, 0u, 0u, -1 },
-  { SOUND_NAGIZ_SND, 0u, 0u, 1u, 0u, 123 },
-  { SOUND_SE_NAGIZ_SND, 255u, 255u, 0u, 0u, -1 },
-  { SOUND_SAISTONE_SND, 1u, 0u, 2u, 0u, 44 },
-  { SOUND_GOSHIN_SND, 1u, 0u, 2u, 0u, 61 },
-  { SOUND_MIKKAI_SND, 1u, 0u, 3u, 0u, 51 },
-  { SOUND_SE_MRB_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SYOU_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SE_TAMA_SND, 1u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_TOMBO_SND, 1u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_KUMO_SND, 1u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_GA_SND, 1u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 1u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 2u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_SHIN_SND, 4u, 0u, 5u, 0u, -1 },
-  { SOUND_SE_TAMA_SND, 2u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_TOMBO_SND, 2u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_KUMO_SND, 2u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_GA_SND, 2u, 0u, 3u, 0u, -1 },
-  { SOUND_SE_MON_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_HORAGAI_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_ZAKKA_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_MATSURI_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_MIKKAI_SND, 2u, 0u, 3u, 0u, 51 },
-  { SOUND_BRACKMRC_SND, 0u, 0u, 1u, 0u, 44 },
-  { SOUND_LBOSS_SND, 0u, 0u, 1u, 0u, 119 },
-  { SOUND_SE_BTL_SND, 3u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 4u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 5u, 0u, 7u, 0u, -1 },
-  { SOUND_SE_BTL_SND, 6u, 0u, 7u, 0u, -1 },
-  { SOUND_SYOU_SND, 255u, 255u, 1u, 0u, 123 },
-  { SOUND_SE_KIKI_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_TAISEN_SND, 0u, 0u, 1u, 0u, -1 },
-  { SOUND_SAIRASU_SND, 255u, 255u, 1u, 0u, 44 }
-};
-
-// Matched
-int GetSoundFileId_80030D4C(int idx)
-{
-  return soundFiles_80082F0C[idx].field_0_file_id;
-}
-
+INCLUDE_ASM(sub_8002FD0C);
 // Matched
 void InitSound_8002FE54(SoundStruct* arg1)
 {
@@ -184,26 +37,34 @@ void InitSound_8002FE54(SoundStruct* arg1)
     arg1->field_10_sep_data_ptr = 0;
     arg1->field_18_vab_header_ptr = 0;
 }
-
 // Matched
-void PlaySfx_80031494(int a1)
+void sub_8002FE7C(void)
 {
-    if (a1 < 63)
-    {
-        SsVoKeyOn((stru_80091D20.field_0_vab_id << 8) + a1,
-                  0x3C00u,
-                  (settingsFlags_8008B58C >> 14) & 0x7F,
-                  (settingsFlags_8008B58C >> 14) & 0x7F);
-    }
-    else
-    {
-        SsVoKeyOn((stru_80091D40.field_0_vab_id << 8) + a1,
-                  0x3C00u,
-                  (settingsFlags_8008B58C >> 14) & 0x7F,
-                  (settingsFlags_8008B58C >> 14) & 0x7F);
-    }
+    InitSound_8002FE54(&stru_80091CE0);
+    InitSound_8002FE54(&stru_80091D20);
+    InitSound_8002FE54(&stru_80091D00);
 }
-
+INCLUDE_ASM(sub_8002FEB8);
+INCLUDE_ASM(sub_8002FF64);
+INCLUDE_ASM(sub_8003006C);
+INCLUDE_ASM(sub_800300E0);
+INCLUDE_ASM(sub_800303E8);
+INCLUDE_ASM(sub_800304D0);
+INCLUDE_ASM(sub_80030664);
+// Matched
+int sub_800306B0(void)
+{
+    return dword_8008D4A4[0x24 / 4][1] == 2;
+}
+// Matched
+void sub_800306D8(void)
+{
+    sub_80030EEC(&stru_80091CE0);
+}
+INCLUDE_ASM(sub_800306FC);
+INCLUDE_ASM(sub_800307B4);
+INCLUDE_ASM(ApplyAudioOutputFormat_80030988);
+INCLUDE_ASM(sub_800309D8);
 // Matched
 void sub_80030A84(short soundId, SoundStruct* sound)
 {
@@ -224,13 +85,13 @@ void sub_80030A84(short soundId, SoundStruct* sound)
     sound->field_0_vab_id = SsVabOpenHead(sound->field_18_vab_header_ptr, -1);
     if (sound->field_0_vab_id == -1)
     {
-        printf("Assertion failed: file \"%s\", line %d\n", "SOUND.C", 631);
+        printf(aAssertionFaile_0, aSoundC, 631);
         exit(1);
     }
 
     if (SsVabTransBody((unsigned char*)(pSndFileBuffer + pSndFileHeader->field_8), sound->field_0_vab_id) == -1)
     {
-        printf("Assertion failed: file \"%s\", line %d\n", "SOUND.C", 639);
+        printf(aAssertionFaile_0, aSoundC, 639);
         exit(1);
     }
     SsVabTransCompleted(1);
@@ -246,7 +107,7 @@ void sub_80030A84(short soundId, SoundStruct* sound)
             SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
         if (sound->field_C_sep_access_num == -1)
         {
-            printf("Assertion failed: file \"%s\", line %d\n", "SOUND.C", 652);
+            printf(aAssertionFaile_0, aSoundC, 652);
             exit(1);
         }
         SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
@@ -266,7 +127,7 @@ void sub_80030A84(short soundId, SoundStruct* sound)
             SsSepOpen(sound->field_10_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count);
         if (sound->field_14_sep_access_num == -1)
         {
-            printf("Assertion failed: file \"%s\", line %d\n", "SOUND.C", 667);
+            printf(aAssertionFaile_0, aSoundC, 667);
             exit(1);
         }
         SsSepSetVol(sound->field_14_sep_access_num, 1, 0, 0);

@@ -1,0 +1,91 @@
+#include "common.h"
+#include "funcs.h"
+#include "MALLOC.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
+#include "LIBAPI.H"
+#include "globals.h"
+#include "STDLIB.H"
+#include "STDIO.H"
+#include "LIBPAD.H"
+#include "LIBSND.H"
+#include "LIBMCX.H"
+#include "LIBPRESS.H"
+#include "LIBETC.H"
+#include "LIBMCRD.H"
+#include "sound.h"
+#include "data_decls.h"
+
+INCLUDE_DATA(aDWorkPsusEvent);
+
+INCLUDE_ASM(sub_8004226C);
+INCLUDE_ASM(sub_80042460);
+INCLUDE_ASM(sub_800424C0);
+INCLUDE_ASM(sub_8004251C);
+INCLUDE_ASM(sub_80042750);
+INCLUDE_ASM(sub_80042870);
+INCLUDE_ASM(sub_800429A8);
+#if 0
+void sub_800429F8(int a0, int a1)
+{
+}
+#endif
+INCLUDE_ASM(sub_800429F8);
+#if 0
+void sub_80042B38(int a0, int a1)
+{
+}
+#endif
+INCLUDE_ASM(sub_80042B38);
+INCLUDE_ASM(sub_80043054);
+// Matched
+void sub_800430B0(void)
+{
+    SsSetSerialVol(0, 0, 0);
+    DsControlB(9, 0, 0);
+}
+INCLUDE_ASM(sub_800430E8);
+// Matched
+void sub_800431C4(struct_obj_D* p, int* q)
+{
+    char buf[8];
+    if (sub_80053B9C(q[1], buf) == 2)
+    {
+        p->field_8 = sub_80043204;
+    }
+}
+#if 0
+void sub_80043204(void)
+{
+}
+#endif
+INCLUDE_ASM(sub_80043204);
+INCLUDE_ASM(sub_80043264);
+INCLUDE_ASM(sub_800432EC);
+INCLUDE_ASM(sub_800433FC);
+INCLUDE_ASM(sub_800434C4);
+// Matched
+void sub_80043564(short a0, short a1, short a2)
+{
+    dword_80096118 = 0;
+    stru_80096110.field_2 = a0;
+    stru_80096110.field_4 = a1;
+    stru_80096110.field_6 = a2;
+}
+// Matched
+int sub_80043584(void)
+{
+    return ((short*)dword_8008B560[0x24 / 4])[4] == 0;
+}
+// Matched
+unsigned int sub_800435A4(void)
+{
+    return dword_80096118 >> 31;
+}
+INCLUDE_ASM(sub_800435B4);
+INCLUDE_ASM(sub_800437E8);
+INCLUDE_ASM(sub_80043840);
+INCLUDE_ASM(sub_80043898);
+INCLUDE_ASM(sub_800438F8);
+INCLUDE_ASM(sub_80043958);
+INCLUDE_ASM(sub_80043A5C);

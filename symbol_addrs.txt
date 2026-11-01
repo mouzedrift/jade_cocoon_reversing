@@ -3450,3 +3450,6 @@ dword_800A0598=0x800a0598; // size:0x4
 dword_800A05A0=0x800a05a0; // size:0x4
 heapStart_800CD858=0x800cd858; // size:0x800
 loadedFileBuffer_801B9250=0x801b9250; // size:0x4
+sub_800B3274=0x800b3274; // overlay function called from the game code
+sub_8001C314=0x8001c314; // function behind sub_8001C2FC (was hidden in its span)
+sub_800403A8=0x800403a8; // function behind ReadBytesInto_80040388

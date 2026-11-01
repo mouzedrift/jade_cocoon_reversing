@@ -1,0 +1,49 @@
+#include "common.h"
+#include "funcs.h"
+#include "MALLOC.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
+#include "LIBAPI.H"
+#include "globals.h"
+#include "STDLIB.H"
+#include "STDIO.H"
+#include "LIBPAD.H"
+#include "LIBSND.H"
+#include "LIBMCX.H"
+#include "LIBPRESS.H"
+#include "LIBETC.H"
+#include "LIBMCRD.H"
+#include "sound.h"
+#include "data_decls.h"
+
+
+// Matched
+struct_12* sub_800318C8(int idx)
+{
+    return &stru_80083594[idx];
+}
+INCLUDE_ASM(sub_800318E4);
+// Matched
+void SeVibOn(void)
+{
+}
+// Matched
+void SetVib(void)
+{
+}
+// Matched
+void SsUtVibrateOn(void)
+{
+}
+// Matched
+void SsUtVibrateOff(void)
+{
+}
+// Matched
+int sub_80031954(void* pv, int idx)
+{
+    unsigned char* q = (unsigned char*)pv + idx * 4;
+    return *q & 1;
+}
+INCLUDE_ASM(sub_80031968);
+INCLUDE_ASM(sub_80031A04);

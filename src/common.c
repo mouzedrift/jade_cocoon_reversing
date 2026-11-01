@@ -1,0 +1,48 @@
+#include "common.h"
+#include "funcs.h"
+#include "MALLOC.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
+#include "LIBAPI.H"
+#include "globals.h"
+#include "STDLIB.H"
+#include "STDIO.H"
+#include "LIBPAD.H"
+#include "LIBSND.H"
+#include "LIBMCX.H"
+#include "LIBPRESS.H"
+#include "LIBETC.H"
+#include "LIBMCRD.H"
+#include "sound.h"
+#include "data_decls.h"
+
+INCLUDE_DATA(dword_80071F58);
+INCLUDE_DATA(dword_80071F5C);
+INCLUDE_DATA(dword_80071F60);
+INCLUDE_DATA(aAssertionFaile_2);
+INCLUDE_DATA(aCommonC);
+INCLUDE_DATA(byte_800793C4);
+INCLUDE_DATA(dword_800793C8);
+
+#if 0
+// Not matched: a1 is masked into $v0 instead of being reused
+void sub_80012794(struct_obj_B* p, int a1)
+{
+    if (p->flags_0 & 0x3F8)
+    {
+        p->flags_0 |= a1 & ~0x3F8;
+    }
+    else
+    {
+        p->field_4 = 0;
+        p->field_8 = 0;
+        p->flags_0 |= 0x400;
+    }
+}
+#endif
+INCLUDE_ASM(sub_80012794);
+INCLUDE_ASM(sub_800127D0);
+INCLUDE_ASM(sub_80012828);
+INCLUDE_ASM(sub_800129B0);
+INCLUDE_ASM(sub_80012BB0);
+INCLUDE_ASM(sub_80013228);

@@ -11,7 +11,6 @@ and assembly generated from the original.
   * a C function that does not reproduce the original bytes in the linked image is replaced by
     assembly and the image is rebuilt, so the result is always at the right addresses.
 
-usage: full_build.py SLUS_008.54 [--pin-data]   game code of the executable -> build_psyq/full.exe
        full_build.py --overlay NAME ISO.bin SLUS_008.54   overlay -> build_psyq/overlay_name.bin  (see overlays.py)
 """
 import os
@@ -279,12 +278,7 @@ def main():
     if len(sys.argv) >= 2 and sys.argv[1] == "--overlay":
         import overlays
         return overlays.main(sys.argv[2:])
-    exe = open(sys.argv[1], "rb").read()[0x800:]
-    t = Target("full", exe, 0x80010000, 0x8004D924, "symbol_addrs.txt",
-               ["main.c", "funcs.c", "sound.c", "globals.c"])
-    r = build(t, pin_data="--pin-data" in sys.argv)
-    report(r, "game code")
-    return 0
+    sys.exit("the executable is built from the TU sources now: run scripts/split.py once, then build.py (docs/full_build.md)")
 
 
 if __name__ == "__main__":

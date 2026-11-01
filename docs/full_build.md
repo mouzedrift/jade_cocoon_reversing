@@ -1,51 +1,51 @@
-# Full build (C + generated assembly)
+# Building the whole executable
 
-`python build.py` only compiles the decompiled C, so function addresses differ from the
-original and a function can only be checked on its own (`scripts/check_match.py`).
-
-`scripts/full_build.py` builds a whole image instead - the game code of the executable
-(0x80010000 - 0x8004D924) or an overlay:
-
-* functions marked `// Matched` are compiled from C,
-* every other function is generated from the original image by `scripts/gen_asm.py` and pulled in
-  as inline `asm()` (the "INCLUDE_ASM" idea - it goes through `CC1PSX` and `ASPSX` like any C
-  function, no new tools needed),
-* everything is emitted in address order, so each function lands at its real address,
-* a C function that does not reproduce the original bytes in the linked image is replaced by
-  its assembly and the image is rebuilt, so "Matched" is always checked against the real layout.
+The executable is built from one C file per translation unit (`config/tus.txt`, `src/<tu>.c`).
+Functions that are not decompiled yet are pulled in with `INCLUDE_ASM(name)`, data that is not
+decompiled yet with `INCLUDE_DATA(name)`; both include assembly generated from your own copy of the
+executable, so nothing derived from the game is committed (`asm/` is git-ignored).
 
 ```
-python scripts/full_build.py SLUS_008.54                               # build_psyq/full.exe
-python scripts/overlays.py NAME "Jade Cocoon (USA).bin" SLUS_008.54    # build_psyq/NAME.BIN
+python scripts/split.py SLUS_008.54      # once (and when symbol_addrs.txt / config/ change): writes asm/
+python build.py                          # builds build_psyq/jade_cocoon.exe
+python scripts/exe_diff.py SLUS_008.54   # word-by-word comparison with the original
+python scripts/sym_diff.py               # symbols that are not at their original address (layout drift)
+python scripts/check_match.py SLUS_008.54 --all   # every "// Matched" function against the original
 ```
 
-## What the numbers mean
+## Result
 
-Global data is **not** pinned to its original address (`--pin-data` does that, but then data layout
-mistakes are hidden, so it is off by default). Symbols that are not defined anywhere (library code,
-other images, overlay data that is not in C yet) have to be given their original address by the
-link script, since the libraries are not relinked here.
+Everything the linker places is identical to the original: 126464 of 126464 words (code, `.rdata`,
+`.data`, `.bss`), all 2682 symbols at their original address, 305 functions compiled from C.
+What is not reproduced: the executable header's size field and the 250 KB of trailing bss/garbage
+after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file hash differs.
 
-Executable, when this was written: 62543 of 63049 words identical; the other 506 words are all
-`lui`/load/store immediates in C functions that point at a global - i.e. the only thing missing for an
-identical game-code area is the layout of `.rdata`/`.data`/`.bss`. 0 words differ for any other reason.
+## How it hangs together
 
-NAME.BIN: 1471 of 1471 words identical (18 of its 24 functions are still assembly).
+* `asm/f/<symbol>.s` code, `asm/d/<symbol>.s` data symbol (each owns the bytes up to the next symbol),
+  `asm/lib/*` the PSY-Q library part as raw blobs (library code is not decompiled; it is only there so
+  the data of the game lands at its real address). The libs are not linked from the `.lib` files.
+* TU bounds: `config/tus.txt`. Anchors (`__FILE__` strings) name main/common/effect/sound/cd/event; the
+  others are inferred from `.rdata` references and named by address - rename them when you know better.
+  Splitting a real TU into pieces does not change the output, only organisation.
+* Data of a TU = chunks listed in the TU file in address order (owner = smallest TU that references
+  anything at or after the symbol). It can be wrong for `.data`/`.bss` globals; moving an `INCLUDE_DATA`
+  line to another TU file keeps the output identical as long as the per-section order is kept.
+* Symbols named after an address (`dword_8007CB78`) that are not in `symbol_addrs.txt` are picked up from
+  the C sources and become aliases / split points.
 
-## Notes
+## Rules when decompiling
 
-* All 935 symbols of the game-code area reproduce the original bytes when assembled from the
-  generated assembly alone, so the syntax emitted by `gen_asm.py` is trustworthy. Files given to
-  `ASPSX` directly need CRLF line endings (text that goes through `CC1PSX` does not).
-* The symbol list is incomplete (e.g. `sub_8001C2FC` covers a function without a symbol), such
-  functions simply stay assembly until the symbol is added.
-* Generated assembly is not committed (it comes from the game); the scripts produce it on the fly.
-  `overlays/<name>.sym` only holds addresses.
-* Overlay function boundaries are guessed (`overlays.py --discover`): call targets, code after
-  `jr $ra`, pointer tables - never splitting a function that a branch or `j` crosses.
+* Never define data in C that is also in `asm/d`: remove its `INCLUDE_DATA` line, or keep the C object
+  smaller than the symbol and list the rest in `config/c_data.txt` (becomes `<name>_tail`).
+  A function must not emit its own `.rdata` (string literals, switch tables) next to the asm copy:
+  reference the existing symbol (`printf(aAssertionFaile_0, aSoundC, 631)`), or for switch tables
+  truncate the asm chunk (`config/c_rodata.txt`) so the compiler's table replaces it.
+* A symbol span larger than the compiled function means a hidden function follows: add it to
+  `symbol_addrs.txt` (`sub_8001C314`, `sub_800403A8` were found like this).
+* `sym_diff.py` shows the first symbol that drifts: the one before it has the wrong size.
 
-## Next steps
+## Overlays
 
-* Lay out the data sections like the original (per TU, see `translation_units.md`).
-* More overlays: add the overlay to `LOAD_ADDRESSES` in `overlays.py` if needed and run it.
-* Teach `permute.py` about overlays.
+`scripts/overlays.py NAME <iso>.bin SLUS_008.54` still works for overlays (see `src/overlays/name.c`,
+`overlays/name.sym`); it uses `scripts/full_build.py`, which keeps its own self-verifying builder.

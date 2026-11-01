@@ -4,9 +4,22 @@ import subprocess
 import sys
 import argparse
 import time
+import re
 import platform
 
-c_files = ["main.c", "funcs.c", "globals.c", "sound.c"]
+def read_tus():
+    """translation units of the game code in link order (config/tus.txt), one src/<name>.c each"""
+    tus = []
+    for line in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "tus.txt")):
+        line = line.split("#")[0].strip()
+        if line:
+            tus.append(line.split()[0])
+    return tus
+
+
+c_files = [tu + ".c" for tu in read_tus()]
+# the PSY-Q library part of the executable, as raw blobs (see scripts/split.py)
+lib_files = ["text", "lib_pad", "lib_rdata", "lib_data", "lib_sbss", "lib_bss"]
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(CURRENT_DIR, "build_psyq")
@@ -38,11 +51,12 @@ def generate_ninja():
         map_path = os.path.join(BUILD_DIR, f"{EXE_NAME}.map")
         exe_path = os.path.join(BUILD_DIR, f"{EXE_NAME}.exe")
 
+        link_path = os.path.join(BUILD_DIR, "link.txt")
         rules = {
             "pre_process": (f"$cpppsx -undef -D__GNUC__=2 -v -D__OPTIMIZE__ {includes} -lang-c -Dmips -D__mips__ -D__mips -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D__CHAR_UNSIGNED__ -D_LANGUAGE_C -DLANGUAGE_C $in $out", "Preprocess $in -> $out"),
             "compile": ("$cc1psx -quiet -G0 -O2 $in -o $out", "Compile $in -> $out"),
             "assemble": ("$aspsx -G0 -q $in -o $out", "Assemble $in -> $out"),
-            "link": (f"$psylink {pysq_lib} /c /n 4000 /q /gp .sdata /m @linker_command_file.txt,{cpe_path},{sym_path},{map_path}", "Linking $out"),
+            "link": (f"$psylink {pysq_lib} /c /n 4000 /q /m @{link_path},{cpe_path},{sym_path},{map_path}", "Linking $out"),
             "convert_cpe_to_exe": ("$cpe2exe -CA $in", "$in -> $out")
         }
 
@@ -51,18 +65,44 @@ def generate_ninja():
             ninja.rule(name, f"wine {cmd}" if on_linux else cmd, desc)
 
         linker_deps = list()
+        objs = []
         headers = [os.path.join(project_src, f) for f in sorted(os.listdir(project_src)) if f.endswith(".h")]
         for c_file in c_files:
             file_name = c_file.split(".")[0]
             out_path = os.path.join(BUILD_DIR, file_name)
 
             # headers are not tracked by the preprocessor, so rebuild everything when any of them change
-            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers)
+            # INCLUDE_ASM / INCLUDE_DATA pull in generated assembly, rebuild when it changes
+            text = open(os.path.join(project_src, c_file)).read()
+            inc = [os.path.join(CURRENT_DIR, "asm", "f" if k == "ASM" else "d", n + ".s")
+                   for k, n in re.findall(r"INCLUDE_(ASM|DATA)\((\w+)\)", text)]
+            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers + inc)
             ninja.build(f"{out_path}.o", "compile", f"{out_path}.preproc")
             ninja.build(f"{out_path}.obj", "assemble", f"{out_path}.o")
             linker_deps.append(f"{out_path}.obj")
 
-        ninja.build(cpe_path, "link", implicit=linker_deps)
+        for lib in lib_files:
+            out_path = os.path.join(BUILD_DIR, "lib_" + lib if not lib.startswith("lib_") else lib)
+            ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", lib + ".s"))
+            linker_deps.append(f"{out_path}.obj")
+
+        with open(link_path, "w") as f:
+            f.write("\torg\t$80010000\n")
+            for g, kw in (("text", ""), ("rdata", ""), ("data", ""), ("bss", "\tbss")):
+                f.write("%s\tgroup%s\n" % (g, kw))
+            for sec, g in ((".text", "text"), (".rdata", "rdata"), (".data", "data"), (".sdata", "data"),
+                           (".sbss", "bss"), (".bss", "bss")):
+                f.write("\tsection\t%s,%s\n" % (sec, g))
+            for o in linker_deps:
+                f.write('\tinclude "%s"\n' % o)
+            # symbols outside of the image (overlays, buffers behind the executable)
+            for line in open(os.path.join(CURRENT_DIR, "symbol_addrs.txt")):
+                m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
+                if m and int(m.group(2), 16) >= 0x800A05A0:
+                    f.write("%s\tequ\t$%s\n" % (m.group(1), m.group(2)))
+            f.write("\tregs\tpc=start\n")
+
+        ninja.build(cpe_path, "link", implicit=linker_deps + [link_path])
         ninja.build(exe_path, "convert_cpe_to_exe", cpe_path)
 
 def build():
