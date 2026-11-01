@@ -684,6 +684,26 @@ struct_24* sub_8001D0FC(unsigned int idx)
     }
     return &stru_8007D6B0[idx];
 }
+#if 0
+// Not matched
+int sub_8001D128(int a0, int a1)
+{
+    int r = 0;
+    if (a1 == 1)
+    {
+        r = sub_8001CFDC(a0);
+    }
+    else if (a1 == 0)
+    {
+        r = sub_8001CF20(a0);
+    }
+    else if (a1 == 2)
+    {
+        r = sub_8001D0A4(a0);
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_8001D128);
 #if 0
 short* sub_8001D190(void)
@@ -1471,6 +1491,18 @@ void sub_80025ED0(int* p)
     p[14] = 0;
 }
 INCLUDE_ASM(sub_80025F14);
+#if 0
+// Not matched
+void sub_80026014(char* a0)
+{
+    int* p = *(int**)(a0 + 0x14);
+    int* q = *(int**)(a0 + 0x1C);
+    int n = q[0];
+    p[0x48 / 4] = n;
+    p[0x4C / 4] = sub_8003FC8C(n, ((int*)p[0])[1]);
+    sub_800403E8((unsigned int*)p[0x4C / 4], (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
+}
+#endif
 INCLUDE_ASM(sub_80026014);
 INCLUDE_ASM(sub_8002607C);
 INCLUDE_ASM(sub_800260FC);
@@ -1555,7 +1587,19 @@ int sub_80026724(int* p)
 {
     return p[0];
 }
-INCLUDE_ASM(sub_80026730);
+// Matched
+void sub_80026730(struct_28** a0, int a1, int a2)
+{
+    struct_28* p = (struct_28*)sub_8003FC8C(a1 * 28, a2);
+    int i;
+    *a0 = p;
+    for (i = 0; i < a1; i++)
+    {
+        p[i].field_10 = 0;
+        p[i].field_14 = 0;
+        p[i].field_18 = 0;
+    }
+}
 INCLUDE_ASM(sub_8002679C);
 INCLUDE_ASM(sub_80026870);
 INCLUDE_ASM(sub_800268E8);
@@ -1571,7 +1615,19 @@ int sub_80026D6C(int* p)
 {
     return p[0];
 }
-INCLUDE_ASM(sub_80026D78);
+// Matched
+void sub_80026D78(struct_12** a0, int a1, int a2)
+{
+    struct_12* p = (struct_12*)sub_8003FC8C(a1 * 12, a2);
+    int i;
+    for (i = 0; i < a1; i++)
+    {
+        p[i].field_0 = 0;
+        p[i].field_4 = 0;
+        p[i].field_8 = 0;
+    }
+    *a0 = p;
+}
 INCLUDE_ASM(sub_80026DE8);
 INCLUDE_ASM(sub_80026E74);
 INCLUDE_ASM(sub_80026EF8);
@@ -1651,7 +1707,23 @@ void sub_8002741C(void)
 INCLUDE_ASM(sub_8002741C);
 INCLUDE_ASM(sub_80027478);
 INCLUDE_ASM(sub_80027540);
-INCLUDE_ASM(sub_800275E8);
+// Matched
+void sub_800275E8(char** a0, int a1, int a2)
+{
+    char* p;
+    char* q;
+    int i;
+    if (a1 != 0)
+    {
+        p = (char*)sub_8003FDC0(a2, a1);
+        *a0 = p;
+        q = p;
+        for (i = 0; i < a1; i++)
+        {
+            q[i] = 1;
+        }
+    }
+}
 INCLUDE_ASM(sub_80027650);
 INCLUDE_ASM(sub_80027708);
 INCLUDE_ASM(sub_80027778);

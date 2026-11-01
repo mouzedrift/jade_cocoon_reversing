@@ -432,4 +432,7 @@ extern void sub_8001A9E4(void);
 
 extern void sub_800209AC(struct_cb* p, int* q);
 
+extern int sub_800A248C(void);
+extern int sub_800A2B20(int a0);
+
 #endif

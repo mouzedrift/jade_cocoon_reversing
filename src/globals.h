@@ -406,4 +406,12 @@ typedef struct
     short field_2;
 } struct_4s;
 
+typedef struct
+{
+    char pad_0[0x10];
+    int field_10;
+    int field_14;
+    int field_18;
+} struct_28;
+
 #endif
