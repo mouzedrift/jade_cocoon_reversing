@@ -19,6 +19,9 @@
 extern int dword_80086568;
 extern void sub_8003BF18(struct_node_C* n);
 
+extern void sub_80070E30(int a, int* b);
+extern int sub_8006F0E0(int a, int* b, int* c);
+
 INCLUDE_DATA(aDataData0011);
 INCLUDE_DATA(aAssertionFaile_1);
 INCLUDE_DATA(aCdC);
@@ -61,6 +64,21 @@ int sub_8003B56C(int x, int y)
     }
     return d;
 }
+#if 0
+// Not matched: s1/s2 register assignment swapped
+int sub_8003B5D4(int* v, short* out)
+{
+    int len = sub_8003B918(((int (*)(int*))sub_8003B8DC)(v));
+    short a;
+    short b;
+    b = ratan2(v[0], v[2]);
+    out[1] = b;
+    a = ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    out[0] = -a;
+    out[2] = 0;
+    return len;
+}
+#endif
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
 int sub_8003B664(int x)
@@ -75,7 +93,33 @@ int sub_8003B664(int x)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003B684);
+// Matched
+void sub_8003B684(int* v)
+{
+    int m = 0x20;
+    int t = Lzc(v[0]);
+    if (t < m)
+    {
+        m = t;
+    }
+    t = Lzc(v[1]);
+    if (t < m)
+    {
+        m = t;
+    }
+    t = Lzc(v[2]);
+    if (t < m)
+    {
+        m = t;
+    }
+    if (m < 0x12)
+    {
+        int sh = 0x12 - m;
+        v[0] >>= sh;
+        v[1] >>= sh;
+        v[2] >>= sh;
+    }
+}
 INCLUDE_ASM(sub_8003B740);
 // Matched
 int sub_8003B80C(int* a, int* b)
@@ -120,7 +164,16 @@ unsigned int sub_8003B918(unsigned int n)
 }
 #endif
 INCLUDE_ASM(sub_8003B918);
-INCLUDE_ASM(sub_8003B95C);
+// Matched
+Vec3i* sub_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
+{
+    Vec3i t;
+    t.x = (a->x + b->x) / 2;
+    t.y = (a->y + b->y) / 2;
+    t.z = (a->z + b->z) / 2;
+    *out = t;
+    return out;
+}
 // Matched
 short ratan2Difference_8003B9E0(int* a, int* b)
 {
@@ -167,9 +220,41 @@ int GetCapturedMinionsFromBitfield_8003BA58(int arg0)
     }
     return result;
 }
-INCLUDE_ASM(sub_8003BA90);
-INCLUDE_ASM(sub_8003BADC);
-INCLUDE_ASM(sub_8003BB1C);
+// Matched
+void sub_8003BA90(void)
+{
+    float f = 0;
+    while (f < 621.0f)
+    {
+        f += 1.0f;
+    }
+}
+// Matched
+int sub_8003BADC(int a0)
+{
+    int out[2];
+    sub_80070E30(a0, &dword_8008D4D8);
+    while (!sub_8006F0E0(0, &out[0], &out[1]))
+    {
+    }
+    return out[1];
+}
+// Matched
+void sub_8003BB1C(void)
+{
+    int i;
+    int r;
+    for (i = 0; i < 2; i++)
+    {
+        r = sub_8003BADC(i << 4);
+        if (r == 0 || r == 3)
+        {
+            unknownFlags_8008D678 |= 0x1000;
+            return;
+        }
+        unknownFlags_8008D678 &= ~0x1000;
+    }
+}
 // Matched
 long cdRomEventErrorHandler_8003BBAC(void)
 {
@@ -216,13 +301,24 @@ INCLUDE_ASM(sub_8003BC84);
 void nullsub_6(void)
 {
 }
-#if 0
+// Matched
 int sub_8003BE30(int arg0)
 {
+    struct_node_C* n = sub_8003BED4(arg0);
+    if (n)
+    {
+        if (n->field_C & 0x100)
+        {
+            if (n->field_C & 0x1000)
+            {
+                return 3;
+            }
+            return 2;
+        }
+        return 1;
+    }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_8003BE30);
 // Matched
 int sub_8003BE88(int key)
 {
@@ -247,6 +343,32 @@ struct_node_C* sub_8003BED4(int key)
     }
     return 0;
 }
+#if 0
+// Not matched: load of list[0] scheduled before the field_10 store
+void sub_8003BF18(struct_node_C* n)
+{
+    // n->next (offset 0) is the previous node, n->field_4 the next one
+    int* list = &dword_80086540;
+    if (n->next == 0)
+    {
+        list[2] = n->field_4;
+    }
+    else
+    {
+        n->next->field_4 = n->field_4;
+    }
+    if (n->field_4 == 0)
+    {
+        list[3] = (int)n->next;
+    }
+    else
+    {
+        ((struct_node_C*)n->field_4)->next = n->next;
+    }
+    n->field_10 = 0x10000;
+    list[0]--;
+}
+#endif
 INCLUDE_ASM(sub_8003BF18);
 // Matched
 int sub_8003BF88(void)
@@ -270,7 +392,33 @@ int sub_8003BFC0(void)
 {
     return dword_8008656C;
 }
-INCLUDE_ASM(sub_8003BFD0);
+// Matched
+int sub_8003BFD0(int key, int flag)
+{
+    struct_node_C* n = sub_8003BED4(key);
+    if (n)
+    {
+        unsigned int f = n->field_C;
+        if (f & 0x1000)
+        {
+            void (*cb)(int, int) = (void (*)(int, int))n->field_24;
+            n->field_C = f | 0x2000;
+            if (cb)
+            {
+                cb(n->field_20, n->field_1C);
+                n->field_24 = 0;
+                return 0;
+            }
+            return 2;
+        }
+        if (flag)
+        {
+            n->field_C = f | 0x2000;
+            return 1;
+        }
+    }
+    return 2;
+}
 // Matched
 int sub_8003C060(int key)
 {

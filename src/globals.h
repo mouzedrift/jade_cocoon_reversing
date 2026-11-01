@@ -248,7 +248,10 @@ typedef struct struct_node_C
     int field_4;
     int key;
     unsigned int field_C;
-    char pad_10[0x14];
+    int field_10;
+    char pad_14[8];
+    int field_1C;
+    int field_20;
     int field_24;
 } struct_node_C;
 
@@ -349,5 +352,14 @@ typedef struct EventNode
     int count;
     EventEntry entry;
 } EventNode;
+
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} Vec3i;
+
+extern int dword_8008D4D8;
 
 #endif
