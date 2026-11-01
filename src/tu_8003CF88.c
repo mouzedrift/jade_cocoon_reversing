@@ -17,9 +17,20 @@
 #include "data_decls.h"
 
 
+extern short* dword_8008D434;
+extern char* dword_8008D440;
+
 #if 0
-void sub_8003CF88(short a0, short a1, int a2)
+// Not matched: instruction scheduling differs (prologue/lw order)
+void sub_8003CF88(short x, short y, int idx)
 {
+    ((char*)dword_8008D434)[0x4B4] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
+    *(short*)((char*)dword_8008D434 + 0x4B8) = x;
+    *(short*)((char*)dword_8008D434 + 0x4BA) = y;
+    ((char*)dword_8008D434)[0x4B5] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
+    ((char*)dword_8008D434)[0x4B6] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
+    sub_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x4B0, 5);
+    sub_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x1E0, 2);
 }
 #endif
 INCLUDE_ASM(sub_8003CF88);

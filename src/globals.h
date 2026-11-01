@@ -112,7 +112,9 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x14];
+    char pad_0[0x10];
+    short field_10;
+    char pad_12[2];
     unsigned short* field_14;
     char pad_18[0x12];
     short field_2A;
