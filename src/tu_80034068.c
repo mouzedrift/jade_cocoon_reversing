@@ -88,5 +88,16 @@ int sub_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-INCLUDE_ASM(sub_80034BB8);
+extern void sub_80034C18(int* a);
+extern void sub_800353A0(int* a);
+// Matched
+void sub_80034BB8(int* a0, int* a1)
+{
+    sub_80034C18(a1);
+    sub_800353A0(a1);
+    if (a1[2] == 7)
+    {
+        a0[0] = (a0[0] & ~1) | 0x8000;
+    }
+}
 INCLUDE_ASM(sub_80034C18);
