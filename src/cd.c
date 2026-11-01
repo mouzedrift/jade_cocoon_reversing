@@ -45,7 +45,22 @@ short ratan2_8003B548(long y, long x)
 {
     return ratan2(y, x);
 }
-INCLUDE_ASM(sub_8003B56C);
+// Matched
+int sub_8003B56C(int x, int y)
+{
+    int r = ratan2(y, x);
+    int d;
+    if (r < 0)
+    {
+        r += 0x1000;
+    }
+    d = r * 360 / 4096;
+    if ((unsigned int)d >= 360)
+    {
+        d = 0;
+    }
+    return d;
+}
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
 int sub_8003B664(int x)

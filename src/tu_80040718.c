@@ -43,7 +43,19 @@ void sub_80040898(void)
     sub_8003DA70();
 }
 INCLUDE_ASM(sub_800408F4);
-INCLUDE_ASM(sub_80040A10);
+extern int dword_8008D47C;
+extern int dword_8008B4EC;
+extern void sub_800408F4(void);
+// Matched
+void sub_80040A10(int* a0)
+{
+    void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
+    dword_8008D47C = 0;
+    dword_8008B4EC = 0;
+    sub_80028E74(&dword_8008D47C, 0, &dword_8008B4EC, (int)pFile, 1);
+    free3_8003FC6C(pFile);
+    a0[2] = (int)sub_800408F4;
+}
 // Matched
 void ShowCopyright_80040A84(void)
 {

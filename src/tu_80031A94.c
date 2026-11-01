@@ -26,7 +26,19 @@ int sub_80031BDC(int a0)
 }
 INCLUDE_ASM(sub_80031BE4);
 INCLUDE_ASM(sub_80031FF4);
-INCLUDE_ASM(sub_80032470);
+typedef struct
+{
+    int a;
+    int b;
+} struct_pair;
+extern struct_20* dword_8008D434;
+extern struct_pair* dword_8008D440;
+// Matched
+void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
+{
+    *pOut20 = dword_8008D434[idx];
+    *pOut8 = dword_8008D440[idx];
+}
 INCLUDE_ASM(sub_800324D8);
 INCLUDE_ASM(sub_800327A8);
 INCLUDE_ASM(sub_80032D34);

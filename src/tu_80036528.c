@@ -63,7 +63,28 @@ void sub_80037770(void)
     p[1] &= ~0x2000;
     sub_80039698(p);
 }
-INCLUDE_ASM(sub_800377B4);
+extern int dword_80083D00[];
+extern int dword_80084330[];
+extern void sub_8003970C(int a, int* b);
+extern void sub_8003983C(int a, int* b);
+// Matched
+void sub_800377B4(int a0, short a1)
+{
+    if (a0 == 0)
+    {
+        if (a1 == 5 || a1 == 0x1A)
+        {
+            sub_8003970C(a1, dword_80083D00);
+        }
+    }
+    else if (a0 == 1)
+    {
+        if (a1 == 2)
+        {
+            sub_8003983C(2, dword_80084330);
+        }
+    }
+}
 INCLUDE_ASM(sub_80037828);
 // Matched
 void sub_800378CC(void)
