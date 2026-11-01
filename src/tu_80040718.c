@@ -34,7 +34,14 @@ void LoadPublicTiyAndFtg_800407D0(void)
 }
 #endif
 INCLUDE_ASM(LoadPublicTiyAndFtg_800407D0);
-INCLUDE_ASM(sub_80040898);
+// Matched
+void sub_80040898(void)
+{
+    void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
+    numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68((int*)pFile);
+    sub_80028E74(0, 0, 0, (int)pFile, 1);
+    sub_8003DA70();
+}
 INCLUDE_ASM(sub_800408F4);
 INCLUDE_ASM(sub_80040A10);
 // Matched

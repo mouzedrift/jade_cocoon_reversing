@@ -103,7 +103,16 @@ void sub_800390F4(void* arg0, int arg1)
 }
 #endif
 INCLUDE_ASM(sub_800390F4);
-INCLUDE_ASM(sub_800395D0);
+// Matched
+int sub_800395D0(int* pIdx, int value, int* table)
+{
+    if (value >= table[*pIdx + 1])
+    {
+        *pIdx = *pIdx + 1;
+    }
+    return table[*pIdx + 1] != -1;
+}
+
 INCLUDE_ASM(sub_80039620);
 #if 0
 void sub_80039698(int* a0)

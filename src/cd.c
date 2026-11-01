@@ -269,7 +269,18 @@ int sub_8003C060(int key)
     return 2;
 }
 INCLUDE_ASM(sub_8003C0A4);
-INCLUDE_ASM(sub_8003C128);
+extern void sub_8003C184(void);
+// Matched
+void sub_8003C128(int* a0, int* a1)
+{
+    sub_8003BBE4();
+    dword_8008656C = 0x801B9250;
+    a1[0] = 0;
+    a1[7] = 0;
+    a1[8] = 0;
+    a1[10] = 0;
+    a0[2] = (int)sub_8003C184;
+}
 INCLUDE_ASM(sub_8003C184);
 // Matched
 void sub_8003C684(void)

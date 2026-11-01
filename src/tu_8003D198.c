@@ -16,6 +16,9 @@
 #include "sound.h"
 #include "data_decls.h"
 
+extern unsigned short word_8009194C[];
+extern void PlaySfx_80031494(int a1);
+
 INCLUDE_DATA(word_80074994);
 INCLUDE_DATA(dword_80074998);
 

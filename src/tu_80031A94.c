@@ -111,7 +111,19 @@ int sub_80033548(int* p, int mask)
     return (*p & mask) != 0;
 }
 INCLUDE_ASM(sub_8003355C);
-INCLUDE_ASM(sub_800335D0);
+extern void sub_80033754(void* a, void* b);
+// Matched
+void sub_800335D0(void* pSrc, Minion* m)
+{
+    int r;
+    sub_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
+    r = sub_80033624(m->field_2C, (int)m);
+    if (r)
+    {
+        m->field_44 = r;
+    }
+    sub_80033754((char*)m + 0x20, m);
+}
 #if 0
 void sub_80033624(void* arg0, int arg1)
 {

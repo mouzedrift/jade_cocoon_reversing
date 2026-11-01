@@ -47,5 +47,21 @@ INCLUDE_ASM(sub_8002F078);
 INCLUDE_ASM(sub_8002F120);
 INCLUDE_ASM(sub_8002F1C8);
 INCLUDE_ASM(sub_8002F23C);
-INCLUDE_ASM(sub_8002F424);
+// Matched
+short sub_8002F424(unsigned char* p)
+{
+    short mask = 0;
+    short i;
+    if (p)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            if (p[i])
+            {
+                mask |= 1 << i;
+            }
+        }
+    }
+    return mask;
+}
 INCLUDE_ASM(sub_8002F480);

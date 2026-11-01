@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+extern short* dword_8008D434;
+
 INCLUDE_DATA(aDWorkPsusEvent);
 
 INCLUDE_ASM(sub_8004226C);
@@ -24,7 +26,16 @@ INCLUDE_ASM(sub_800424C0);
 INCLUDE_ASM(sub_8004251C);
 INCLUDE_ASM(sub_80042750);
 INCLUDE_ASM(sub_80042870);
-INCLUDE_ASM(sub_800429A8);
+// Matched
+int sub_800429A8(short* p)
+{
+    short* g = dword_8008D434;
+    if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
+    {
+        return 1;
+    }
+    return 0;
+}
 #if 0
 void sub_800429F8(int a0, int a1)
 {
