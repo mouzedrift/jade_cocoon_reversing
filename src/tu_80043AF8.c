@@ -21,7 +21,22 @@ INCLUDE_DATA(dword_800986A0);
 INCLUDE_DATA(dword_800987D8);
 INCLUDE_DATA(dword_8009AAD8);
 
-INCLUDE_ASM(sub_80043AF8);
+// Matched
+EventEntry* sub_80043AF8(EventNode* n)
+{
+    int i;
+    int count = n->count;
+    for (i = 0; i < count; i++)
+    {
+        EventEntry* e = &n->entry;
+        if (!(e->flags & 1))
+        {
+            return e;
+        }
+        n = n->next;
+    }
+    return 0;
+}
 // Matched
 void sub_80043B40(int* p)
 {

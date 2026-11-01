@@ -123,7 +123,85 @@ int sub_80043840(int* a0)
     }
     return 1;
 }
-INCLUDE_ASM(sub_80043898);
-INCLUDE_ASM(sub_800438F8);
-INCLUDE_ASM(sub_80043958);
-INCLUDE_ASM(sub_80043A5C);
+// Matched
+void sub_80043898(EventNode* n)
+{
+    do
+    {
+        if ((n->entry.flags & 0x8001) == 1)
+        {
+            n->entry.cb_8(&n->entry, n->entry.buffer);
+        }
+        n = n->next;
+    } while (n);
+}
+// Matched
+void sub_800438F8(EventNode* n)
+{
+    do
+    {
+        if ((n->entry.flags & 0x8004) == 4)
+        {
+            n->entry.cb_C(&n->entry, n->entry.buffer);
+        }
+        n = n->next;
+    } while (n);
+}
+// Matched
+void sub_80043958(EventNode* n)
+{
+    if (dword_8008B540 == 0)
+    {
+        do
+        {
+            if ((n->entry.flags & 0x8001) == 1)
+            {
+                n->entry.cb_8(&n->entry, n->entry.buffer);
+            }
+            n = n->next;
+        } while (n && dword_8008B540 == 0);
+    }
+}
+#if 0
+// Not matched: gcc hoists out+0xc into a3
+void sub_800439E0(unsigned int** arr, unsigned int* out)
+{
+    unsigned int* p;
+    unsigned int i;
+    out += 4;
+    while (*arr)
+    {
+        p = *arr;
+        for (i = 0; i < p[0]; i++)
+        {
+            out[2] = p[4];
+            out[3] = p[5];
+            out[0] = p[1];
+        }
+        arr++;
+        out += 10;
+    }
+}
+#endif
+INCLUDE_ASM(sub_800439E0);
+// Matched
+int sub_80043A5C(EventNode* head)
+{
+    EventNode* n = head;
+    do
+    {
+        EventEntry* e = &n->entry;
+        if (e->buffer)
+        {
+            if (e->field_4 == 0)
+            {
+                free3_dbg(e->buffer, aDWorkPsusEvent, 0x45);
+            }
+            e->buffer = 0;
+            e->size = 0;
+        }
+        n = n->next;
+    } while (n);
+    free3_dbg(head, aDWorkPsusEvent, 0x143);
+    return 0;
+}

@@ -328,4 +328,26 @@ extern unsigned long* pOT_8008D3EC;
 extern unsigned int settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
+// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
+struct EventEntry;
+typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
+typedef struct EventEntry
+{
+    unsigned int flags;
+    int field_4; // nonzero: buffer is not owned
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+    int size;
+    void* buffer;
+} EventEntry;
+
+typedef struct EventNode
+{
+    int field_0;
+    struct EventNode* next;
+    int field_8;
+    int count;
+    EventEntry entry;
+} EventNode;
+
 #endif
