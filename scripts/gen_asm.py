@@ -30,9 +30,15 @@ REGNUM["s8"] = 30
 DATA_PREFIXES = ("dword_", "word_", "byte_", "stru_", "off_", "jpt_", "flt_", "dbl_")
 
 
-def load_symbols(repo):
+def configure(base, code_end):
+    """retarget the generator, e.g. at an overlay that is loaded somewhere else"""
+    global BASE, CODE_END
+    BASE, CODE_END = base, code_end
+
+
+def load_symbols(repo, path="symbol_addrs.txt"):
     syms = []
-    for line in open(os.path.join(repo, "symbol_addrs.txt")):
+    for line in open(os.path.join(repo, path)):
         m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
         if m:
             syms.append((int(m.group(2), 16), m.group(1)))
@@ -56,8 +62,16 @@ def reg(m):
     return "$%d" % REGNUM[m.group(1)]
 
 
+# instructions of the R3000 (MIPS I); anything else is data that merely looks like code
+R3000 = set("""add addi addiu addu and andi beq bgez bgezal bgtz blez bltz bltzal bne break div divu j jal jalr jr
+lb lbu lh lhu lui lw lwl lwr mfhi mflo mthi mtlo mult multu nor or ori sb sh sll sllv slt slti sltiu sltu sra srav
+srl srlv sub subu sw swl swr xor xori syscall nop move beqz bnez b bal negu neg not li sltu""".split())
+
+
 def format_insn(i, names, labels):
     mn, op = i.mnemonic, i.op_str
+    if mn not in R3000:
+        return None
     if mn in ("break", "syscall"):
         return None
     if mn.startswith(("cop", "mfc", "mtc", "cfc", "ctc", "lwc", "swc", "rfe", "tlb")) or mn == "invalid":
