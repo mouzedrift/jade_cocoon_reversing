@@ -2816,7 +2816,7 @@ int sub_8003BFC0(void)
 // Matched
 int sub_8003C9EC(void)
 {
-    return dword_80086550;
+    return dword_80086550[0];
 }
 
 // Matched
@@ -3949,4 +3949,413 @@ void ProcessPads_8001BF50(void)
         ProcessPad_8001C8E8(i);
         sub_80036820(i);
     }
+}
+
+
+void sub_80043204(void)
+{
+}
+
+int sub_80053B9C(int a0, void* a1)
+{
+    return 0;
+}
+
+short* sub_8001D190(void)
+{
+    return 0;
+}
+
+void sub_80026A8C(void* a0, int a1, int a2)
+{
+}
+
+void sub_80030D00(int a0)
+{
+}
+
+void sub_80039698(int* a0)
+{
+}
+
+unsigned short* sub_8003F684(int a0, int a1)
+{
+    return 0;
+}
+
+void sub_800298AC(int a0, int a1, void* a2)
+{
+}
+
+struct_20* sub_800B3274(int a0)
+{
+    return 0;
+}
+
+void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
+{
+}
+
+void sub_80028E74(int* a0, int a1, int* a2, int a3, int a4)
+{
+}
+
+void sub_8006AF08(short a0)
+{
+}
+
+// Matched
+void sub_800431C4(struct_obj_D* p, int* q)
+{
+    char buf[8];
+    if (sub_80053B9C(q[1], buf) == 2)
+    {
+        p->field_8 = sub_80043204;
+    }
+}
+
+// Matched
+int sub_8001D2D4(void)
+{
+    short* p = sub_8001D190();
+    int idx;
+    if (p == 0)
+    {
+        idx = 0x24;
+    }
+    else
+    {
+        idx = *p;
+    }
+    return dword_8007D938[idx];
+}
+
+// Matched
+void sub_80020CD8(int a0, int* p)
+{
+    int v = p[0];
+    if (v != p[1])
+    {
+        p[1] = v;
+        p[2] = LoadOverlay_80020BF8(2, v);
+    }
+}
+
+// Matched
+void sub_80025ED0(int* p)
+{
+    p[2] = -1;
+    p[0] = 0;
+    p[1] = 0;
+    p[3] = 2;
+    p[4] = 0;
+    p[5] = 0;
+    p[6] = 0;
+    p[7] = 0;
+    p[8] = 0;
+    p[9] = 0;
+    p[10] = 0;
+    p[11] = 0;
+    p[13] = 0;
+    p[14] = 0;
+}
+
+// Matched
+void sub_800263CC(int* p)
+{
+    int** q = (int**)p[5];
+    sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, p[0xB], q[0][1]);
+}
+
+// Matched
+int sub_800272D0(void)
+{
+    int* a = dword_800B1DC4[0x24 / 4];
+    int* b = dword_800B1DB8[0x24 / 4];
+    if (*a != 0)
+    {
+        return 1;
+    }
+    if (*b == 0)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+// Matched
+void sub_80027314(void)
+{
+    dword_80082670 = 1;
+    word_8008B862 = -1;
+}
+
+// Matched
+int sub_80027330(short a0)
+{
+    if (dword_80082678 == 0)
+    {
+        word_80091C40 = a0;
+        return 1;
+    }
+    return 0;
+}
+
+// Matched
+void sub_80029868(int a0, int a1, int a2)
+{
+    char buf[0x28];
+    sub_80029708(buf, (void*)a1);
+    sub_800298AC(a0, a2, buf);
+}
+
+// Matched
+void sub_800315F4(void)
+{
+    int* s0 = ((int**)dword_8008D4A4)[0x24 / 4];
+    sub_80030D00(s0[1]);
+    sub_80030D00(s0[2]);
+}
+
+// Matched
+void sub_80037770(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] = (p[1] & ~4) & ~0x2000;
+    sub_80039698(p);
+}
+
+// Matched
+unsigned int sub_8003B918(unsigned int n)
+{
+    unsigned int x;
+    unsigned int y;
+    if (n == 0)
+    {
+        return 0;
+    }
+    x = n;
+    if (n < 2)
+    {
+        x = 1;
+    }
+    do
+    {
+        y = x;
+        x = (n / y + y) >> 1;
+    } while ((int)x < (int)y);
+    return y;
+}
+
+// Matched
+struct_node_C* sub_8003BED4(int key)
+{
+    struct_node_C* p;
+    for (p = dword_8008654C; p; p = p->next)
+    {
+        if (key == p->key)
+        {
+            return p;
+        }
+    }
+    return 0;
+}
+
+// Matched
+int sub_8003C060(int key)
+{
+    struct_node_C* n = sub_8003BED4(key);
+    if (!n)
+    {
+        return 2;
+    }
+    n->field_C |= 0x2000;
+    n->field_24 = 0;
+    return 0;
+}
+
+// Matched
+void sub_8003C684(void)
+{
+    if (dword_80086540)
+    {
+        printf("Assertion failed: file \"%s\", line %d\n", "CD.C", 878);
+        exit(1);
+    }
+}
+
+// Matched
+int sub_8003C900(void)
+{
+    if (sub_80053B9C(dword_80086550[4], 0) == 2)
+    {
+        dword_80086550[0] = 1;
+        return 1;
+    }
+    return 0;
+}
+
+// Matched
+int sub_8003E484(int a0)
+{
+    unsigned short v = *sub_8003F684(2, a0);
+    if (v < 0xC3)
+    {
+        if (v >= 0x91)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Matched
+void sub_8003F9E8(int idx, int v)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    sub_80033048(p->field_14, v);
+}
+
+// Matched
+void AllocMdecVLCBuffer_80041848(void)
+{
+    if (!mdecVLCBuffer_80086F94)
+    {
+        mdecVLCBuffer_80086F94 = malloc3_8003FC4C(0x11000);
+        DecDCTvlcBuild(mdecVLCBuffer_80086F94);
+    }
+}
+
+// Matched
+int sub_80011B24(int a0)
+{
+    int* p = dword_8008D464[0x24 / 4];
+    if (a0 == 0x29)
+    {
+        p[1] = 1000;
+        p[0] = 0;
+        return 1000;
+    }
+    if (a0 == 0x2A)
+    {
+        p[1] = 1000;
+        p[0] = 1;
+        return 1;
+    }
+    return 1000;
+}
+
+// Matched
+void sub_80016BF4(int* p, int* q)
+{
+    if (--q[1] < 0)
+    {
+        *p = (*p & ~1) | 0x8000;
+        PlaySfx_80031494(0x24);
+    }
+}
+
+// Matched
+struct_20* sub_80019C28(unsigned int idx)
+{
+    if (idx >= 0xC9)
+    {
+        return sub_800B3274(idx - 0x39);
+    }
+    return &dword_8007A9F8[idx];
+}
+
+// Matched
+void sub_800201A4(void)
+{
+    int i;
+    for (i = 0; i < 7; i++)
+    {
+        sub_800204AC(&dword_800919A0[i]);
+    }
+}
+
+// Matched
+void sub_8002A2A0(struct_obj_B* p, short a1, short a2)
+{
+    sub_8002A2E8(p, a1);
+    sub_8002A2FC(p, a2);
+}
+
+// Matched
+void sub_8002AF10(int a0, int a1, int a2)
+{
+    RECT r;
+    r.x = 10;
+    r.y = 0x99;
+    r.w = 0x12C;
+    r.h = 0x3C;
+    sub_8002AFA0(a0, a1, a2, &r, 4);
+}
+
+// Matched
+void sub_8002AF58(int a0, int a1, int a2)
+{
+    RECT r;
+    r.x = 10;
+    r.y = 0xC3;
+    r.w = 0x12C;
+    r.h = 0x12;
+    sub_8002AFA0(a0, a1, a2, &r, 1);
+}
+
+// Matched
+void sub_8002BFCC(int a0, int a1)
+{
+    sub_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
+    dword_8008B4E8 = 1;
+}
+
+// Matched
+int sub_8002D738(int a0, int a1, int a2)
+{
+    if (a2 == 0 || a2 == 2)
+    {
+        return 1;
+    }
+    if (a2 == 3 && a0 + 1 != a1)
+    {
+        return 1;
+    }
+    if (a2 == 1 && a0 + 1 == a1)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+// Matched
+void sub_80030EA4(short* p)
+{
+    sub_8006AF08(p[0]);
+    if (*(int*)(p + 0xC))
+    {
+        free3_8003FC6C(*(void**)(p + 0xC));
+        *(int*)(p + 0xC) = 0;
+    }
+}
+
+// Matched
+int sub_80034B40(int* p, unsigned int mask)
+{
+    int n = 0;
+    int i = 0;
+    if (*p)
+    {
+        do
+        {
+            if (mask & (1 << i))
+            {
+                n++;
+            }
+            p++;
+            i++;
+        } while (*p);
+    }
+    return n;
 }

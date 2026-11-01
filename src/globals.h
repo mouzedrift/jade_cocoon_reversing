@@ -112,7 +112,9 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x2A];
+    char pad_0[0x14];
+    unsigned short* field_14;
+    char pad_18[0x12];
     short field_2A;
 } struct_2C;
 
@@ -195,7 +197,7 @@ extern int dword_80091CFC;
 extern int dword_80083BD0;
 extern int dword_80086540;
 extern int dword_8008656C;
-extern int dword_80086550;
+extern int dword_80086550[5];
 extern int dword_80079320[];
 extern struct_8 dword_8007A4B4[];
 extern int** dword_8008D4C0;
@@ -231,6 +233,38 @@ extern char genkiMovie_80086968[];
 extern char craveEntertainmentMovie_80086988[];
 extern char demoDisclaimer_800869A8[];
 extern char introAnime_800869C8[];
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+} struct_20;
+
+typedef struct struct_node_C
+{
+    struct struct_node_C* next;
+    int field_4;
+    int key;
+    unsigned int field_C;
+    char pad_10[0x14];
+    int field_24;
+} struct_node_C;
+
+extern int** dword_800B1DC4;
+extern int** dword_800B1DB8;
+extern short dword_8007D938[];
+extern int dword_80082670;
+extern short word_8008B862;
+extern int dword_80082678;
+extern short word_80091C40;
+extern struct_node_C* dword_8008654C;
+extern struct_20 dword_8007A9F8[];
+extern struct_obj_C dword_800919A0[7];
+extern int loadedOverlayMaybe_8008D620;
+extern int dword_8008D3F4;
+extern int dword_8008B4E8;
 extern int frameCount_8008D3FC;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];

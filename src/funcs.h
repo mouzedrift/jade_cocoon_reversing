@@ -3,6 +3,8 @@
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
 #include "enums.h"
 #include "globals.h"
 
@@ -361,5 +363,47 @@ extern short sub_8003BA18(int v);
 extern int sub_8003BA38(unsigned int a, unsigned int b);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void ProcessPads_8001BF50(void);
+extern void sub_80043204(void);
+extern int sub_80053B9C(int a0, void* a1);
+extern short* sub_8001D190(void);
+extern void sub_80026A8C(void* a0, int a1, int a2);
+extern void sub_80030D00(int a0);
+extern void sub_80039698(int* a0);
+extern unsigned short* sub_8003F684(int a0, int a1);
+extern void sub_800298AC(int a0, int a1, void* a2);
+extern struct_20* sub_800B3274(int a0);
+extern void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
+extern void sub_80028E74(int* a0, int a1, int* a2, int a3, int a4);
+extern void sub_8006AF08(short a0);
+extern void sub_800431C4(struct_obj_D* p, int* q);
+extern int sub_8001D2D4(void);
+extern void sub_80020CD8(int a0, int* p);
+extern void sub_80025ED0(int* p);
+extern void sub_800263CC(int* p);
+extern int sub_800272D0(void);
+extern void sub_80027314(void);
+extern int sub_80027330(short a0);
+extern void sub_80029868(int a0, int a1, int a2);
+extern void sub_800315F4(void);
+extern void sub_80037770(void);
+extern unsigned int sub_8003B918(unsigned int n);
+extern struct_node_C* sub_8003BED4(int key);
+extern int sub_8003C060(int key);
+extern void sub_8003C684(void);
+extern int sub_8003C900(void);
+extern int sub_8003E484(int a0);
+extern void sub_8003F9E8(int idx, int v);
+extern void AllocMdecVLCBuffer_80041848(void);
+extern int sub_80011B24(int a0);
+extern void sub_80016BF4(int* p, int* q);
+extern struct_20* sub_80019C28(unsigned int idx);
+extern void sub_800201A4(void);
+extern void sub_8002A2A0(struct_obj_B* p, short a1, short a2);
+extern void sub_8002AF10(int a0, int a1, int a2);
+extern void sub_8002AF58(int a0, int a1, int a2);
+extern void sub_8002BFCC(int a0, int a1);
+extern int sub_8002D738(int a0, int a1, int a2);
+extern void sub_80030EA4(short* p);
+extern int sub_80034B40(int* p, unsigned int mask);
 
 #endif
