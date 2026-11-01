@@ -178,7 +178,8 @@ def init_src(name, syms):
     blocks = fb.split_blocks(old)
     funcs = {b[1]: b for b in blocks if b[0] == "func"}
     head = [b[2] for b in blocks if b[0] != "func"]
-    out = ["\n".join(head)]
+    out = ["\n".join(head)] if head else [
+        "// %s.BIN\n#include \"common.h\"\n#include \"funcs.h\"\n#include \"globals.h\"" % name]
     for a, n in syms:
         b = funcs.get(n)
         if b and b[3]:
@@ -228,7 +229,7 @@ def main(argv):
         for sec, g in ((".text", "text"), (".rdata", "rdata"), (".data", "data"), (".sdata", "data"),
                        (".sbss", "bss"), (".bss", "bss")):
             f.write("\tsection\t%s,%s\n" % (sec, g))
-        f.write('\tinclude "%s"\n' % obj)
+        f.write('\tinclude "%s"\n' % os.path.basename(obj))
         for a, n in main_syms:
             if not (base <= a < base + len(data)):
                 f.write("%s\tequ\t$%08x\n" % (n, a))
@@ -238,9 +239,15 @@ def main(argv):
             if n not in known:
                 f.write("%s\tequ\t$%s\n" % (n, addr))
     cpe = os.path.join(b, tag + ".cpe")
-    fb.run([os.path.join(fb.BIN, "psylink.exe"), "/l", os.path.join(fb.PSYQ, "LIB"), "/c", "/n", "4000", "/q", "/m",
-            "@%s,%s,%s,%s" % (link, cpe, os.path.join(b, tag + ".sym"), os.path.join(b, tag + ".map"))])
-    fb.run([os.path.join(fb.BIN, "cpe2exe.exe"), "-CA", cpe])
+    # the SN tools crash on long paths: run them from the build folder with relative names
+    cwd = os.getcwd()
+    os.chdir(b)
+    try:
+        fb.run([os.path.relpath(os.path.join(fb.BIN, "psylink.exe")), "/l", os.path.relpath(os.path.join(fb.PSYQ, "LIB")),
+                "/c", "/n", "4000", "/q", "/m", "@%s,%s,%s,%s" % (tag + "_link.txt", tag + ".cpe", tag + ".sym", tag + ".map")])
+        fb.run([os.path.relpath(os.path.join(fb.BIN, "cpe2exe.exe")), "-CA", tag + ".cpe"])
+    finally:
+        os.chdir(cwd)
     built = open(os.path.join(b, tag + ".exe"), "rb").read()[0x800:]
     built = built[:len(data)]
     diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
