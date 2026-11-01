@@ -177,7 +177,7 @@ extern void sub_80036658(int arg0);
 extern void sub_8001DB98(void* arg0);
 extern void sub_80029708(void* arg0, void* arg1);
 extern void sub_800296A0(void* arg0);
-extern void sub_80040298(void* arg0, void* arg1, int arg2);
+extern short* sub_80040298(void* arg0, void* arg1, int arg2);
 extern void sub_800338DC(void* arg0, void* arg1, void* arg2);
 extern void sub_800390F4(void* arg0, int arg1);
 extern unsigned short sub_8001C818(unsigned short* p);
@@ -227,7 +227,7 @@ extern int* sub_8001CD58(int idx);
 extern int sub_8003D288(int arg0, int arg1);
 extern int sub_8003D3C0(int arg0, int arg1);
 extern void PlayMovie_80040EB4(int arg0);
-extern void sub_80033624(void* arg0, int arg1);
+extern int sub_80033624(void* arg0, int arg1);
 extern int sub_80014390(int arg0);
 extern void sub_80010AD8(int arg0);
 extern int* sub_8001091C(void);
@@ -405,5 +405,7 @@ extern void sub_8002BFCC(int a0, int a1);
 extern int sub_8002D738(int a0, int a1, int a2);
 extern void sub_80030EA4(short* p);
 extern int sub_80034B40(int* p, unsigned int mask);
+
+extern void sub_8003DA70(void);
 
 #endif

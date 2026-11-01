@@ -26,11 +26,32 @@ int sub_80031BDC(int a0)
 }
 INCLUDE_ASM(sub_80031BE4);
 INCLUDE_ASM(sub_80031FF4);
-INCLUDE_ASM(sub_80032470);
+typedef struct
+{
+    int a;
+    int b;
+} struct_pair;
+extern struct_20* dword_8008D434;
+extern struct_pair* dword_8008D440;
+// Matched
+void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
+{
+    *pOut20 = dword_8008D434[idx];
+    *pOut8 = dword_8008D440[idx];
+}
 INCLUDE_ASM(sub_800324D8);
 INCLUDE_ASM(sub_800327A8);
 INCLUDE_ASM(sub_80032D34);
-INCLUDE_ASM(sub_80032DFC);
+// Matched
+void sub_80032DFC(short* p, int a1)
+{
+    int d = p[8] - p[4];
+    short* q = sub_80040298((void*)a1, p, 10);
+    q[4] = p[4] + d;
+    q[8] = p[4];
+    q[12] = p[4] + d;
+    q[16] = p[4];
+}
 INCLUDE_ASM(sub_80032E78);
 INCLUDE_ASM(sub_80032EF4);
 INCLUDE_ASM(sub_80032F88);
@@ -111,7 +132,19 @@ int sub_80033548(int* p, int mask)
     return (*p & mask) != 0;
 }
 INCLUDE_ASM(sub_8003355C);
-INCLUDE_ASM(sub_800335D0);
+extern void sub_80033754(void* a, void* b);
+// Matched
+void sub_800335D0(void* pSrc, Minion* m)
+{
+    int r;
+    sub_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
+    r = sub_80033624(m->field_2C, (int)m);
+    if (r)
+    {
+        m->field_44 = r;
+    }
+    sub_80033754((char*)m + 0x20, m);
+}
 #if 0
 void sub_80033624(void* arg0, int arg1)
 {
@@ -150,7 +183,20 @@ short sub_80033858(Minion* p)
 {
     return p->id;
 }
-INCLUDE_ASM(sub_80033864);
+// Matched
+void sub_80033864(Minion* m, unsigned char* out)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        out[i] = *((unsigned char*)m + i + 0xC2);
+        if (out[i] < 8)
+        {
+            out[i] = 0;
+        }
+        out[i] >>= 1;
+    }
+}
 // Matched
 unsigned char sub_800338B0(char* p)
 {

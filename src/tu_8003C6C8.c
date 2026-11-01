@@ -20,7 +20,18 @@ INCLUDE_DATA(dword_8007490C);
 INCLUDE_DATA(dword_8007493C);
 
 INCLUDE_ASM(sub_8003C6C8);
-INCLUDE_ASM(sub_8003C76C);
+// Matched
+void sub_8003C76C(int* a0, int* a1)
+{
+    if (a1[1])
+    {
+        dword_8008B540 = 1;
+    }
+    if (sub_8003BE30(a1[0]) == 0)
+    {
+        a0[0] = (a0[0] & ~1) | 0x8000;
+    }
+}
 // Matched
 void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx)
 {
@@ -50,7 +61,20 @@ int DATA_GetFileSize_8003C87C(int idx)
 {
     return Data001Files_80075AA0[idx].field_8_size;
 }
-INCLUDE_ASM(sub_8003C8A0);
+extern int sub_8005384C(int a, int b, int c, int d, int e);
+// Matched
+int sub_8003C8A0(int a0)
+{
+    if (dword_80086550[0] != 0)
+    {
+        dword_80086550[0] = 0;
+        dword_80086550[2] = a0;
+        dword_80086550[4] = sub_8005384C(0xA0, a0, 0x15, 0, -1);
+        return 1;
+    }
+    return 0;
+}
+
 // Matched
 int sub_8003C900(void)
 {
@@ -93,7 +117,13 @@ void* DATA_GetFileBuffer_8003CAA0(int idx)
     LoadFileIntoBuffer_8003CB7C(&dataFile.field_0_position, pFileBuffer, dataFile.field_4_sectors);
     return pFileBuffer;
 }
-INCLUDE_ASM(sub_8003CAEC);
+// Matched
+void sub_8003CAEC(int idx, unsigned int* pDest)
+{
+    void* pBuffer = DATA_GetFileBuffer_8003CAA0(idx);
+    sub_800403E8(pDest, pBuffer, DATA_GetFileSize_8003C87C(idx));
+    free3_8003FC6C(pBuffer);
+}
 // Matched
 void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
 {

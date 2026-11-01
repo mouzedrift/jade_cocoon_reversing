@@ -30,12 +30,17 @@ INCLUDE_DATA(dword_800745E8);
 INCLUDE_DATA(dword_80074600);
 INCLUDE_DATA(dword_80074610);
 
-#if 0
+// Matched
 void sub_80030D00(int a0)
 {
+    short* p = (short*)a0;
+    if (p && p[3] >= 0)
+    {
+        sub_80030EEC(p);
+        sub_80030EA4(p);
+        p[3] = -1;
+    }
 }
-#endif
-INCLUDE_ASM(sub_80030D00);
 // Matched
 int GetSoundFileId_80030D4C(int idx)
 {

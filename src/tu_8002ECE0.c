@@ -45,7 +45,43 @@ INCLUDE_ASM(sub_8002EF5C);
 INCLUDE_ASM(sub_8002EFC4);
 INCLUDE_ASM(sub_8002F078);
 INCLUDE_ASM(sub_8002F120);
-INCLUDE_ASM(sub_8002F1C8);
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_F1C8;
+extern void sub_8002F23C(int a0, int a1, int a2, int a3, int a4, int a5);
+extern void sub_8002A384(struct_F1C8* p);
+// Matched
+void sub_8002F1C8(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+{
+    struct_F1C8 s;
+    sub_8002F23C(a0, a1, a3, a4, a5, a6);
+    s.field_8 = a2;
+    s.field_0 = a4;
+    s.field_4 = a3;
+    s.field_A = a5;
+    sub_8002A384(&s);
+}
+
 INCLUDE_ASM(sub_8002F23C);
-INCLUDE_ASM(sub_8002F424);
+// Matched
+short sub_8002F424(unsigned char* p)
+{
+    short mask = 0;
+    short i;
+    if (p)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            if (p[i])
+            {
+                mask |= 1 << i;
+            }
+        }
+    }
+    return mask;
+}
 INCLUDE_ASM(sub_8002F480);

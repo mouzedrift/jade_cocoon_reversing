@@ -16,11 +16,61 @@
 #include "sound.h"
 #include "data_decls.h"
 
+extern unsigned short word_8009194C[];
+extern unsigned short word_800918CC[];
+extern void PlaySfx_80031494(int a1);
+
 INCLUDE_DATA(word_80074994);
 INCLUDE_DATA(dword_80074998);
 
-INCLUDE_ASM(sub_8003D198);
-INCLUDE_ASM(sub_8003D210);
+// Matched
+int sub_8003D198(int limit, int pos, int step, int idx)
+{
+    if (word_800918CC[idx] & 2)
+    {
+        pos += step;
+    }
+    else if (word_800918CC[idx] & 8)
+    {
+        if (!(word_800918D0[idx] & 2))
+        {
+            pos -= step;
+        }
+    }
+    if (pos >= limit)
+    {
+        pos = limit - 1;
+    }
+    if (pos < 0)
+    {
+        pos = 0;
+    }
+    return pos;
+}
+// Matched
+int sub_8003D210(int limit, int pos, int step, int idx)
+{
+    if (word_800918CC[idx] & 0x2000)
+    {
+        pos += step;
+    }
+    else if (word_800918CC[idx] & 0x8000)
+    {
+        if (!(word_800918D0[idx] & 0x2000))
+        {
+            pos -= step;
+        }
+    }
+    if (pos >= limit)
+    {
+        pos = limit - 1;
+    }
+    if (pos < 0)
+    {
+        pos = 0;
+    }
+    return pos;
+}
 #if 0
 int sub_8003D288(int arg0, int arg1)
 {

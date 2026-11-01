@@ -46,7 +46,9 @@ void sub_8002FE7C(void)
 }
 INCLUDE_ASM(sub_8002FEB8);
 INCLUDE_ASM(sub_8002FF64);
+extern void sub_80030D68(SoundStruct* p);
 INCLUDE_ASM(sub_8003006C);
+
 INCLUDE_ASM(sub_800300E0);
 INCLUDE_ASM(sub_800303E8);
 INCLUDE_ASM(sub_800304D0);
@@ -63,7 +65,19 @@ void sub_800306D8(void)
 }
 INCLUDE_ASM(sub_800306FC);
 INCLUDE_ASM(sub_800307B4);
-INCLUDE_ASM(ApplyAudioOutputFormat_80030988);
+// Matched
+void ApplyAudioOutputFormat_80030988(void)
+{
+    if (!((settingsFlags_8008B58C >> 6) & 1))
+    {
+        SsSetStereo();
+    }
+    else
+    {
+        SsSetMono();
+    }
+    SsSetMVol(0x7F, 0x7F);
+}
 INCLUDE_ASM(sub_800309D8);
 // Matched
 void sub_80030A84(short soundId, SoundStruct* sound)

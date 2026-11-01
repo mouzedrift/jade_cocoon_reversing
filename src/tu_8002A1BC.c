@@ -43,6 +43,13 @@ void sub_8002A2FC(struct_obj_B* p, short a1)
     p->flags_0 |= 4;
     p->field_A = a1;
 }
+typedef struct
+{
+    unsigned short x;
+    unsigned short y;
+    int field_4;
+} struct_entry8;
+extern void sub_8003E91C(int mode, int a, void* b, int c);
 INCLUDE_ASM(sub_8002A310);
 INCLUDE_ASM(sub_8002A384);
 INCLUDE_ASM(sub_8002A42C);

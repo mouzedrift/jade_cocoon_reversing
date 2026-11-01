@@ -16,12 +16,33 @@
 #include "sound.h"
 #include "data_decls.h"
 
+extern void sub_8003F610(int* buf);
+extern void sub_8003E91C(int mode, int* buf, int a, int b);
+
 INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
 
+#if 0
+// Not matched: registers of a0/a2 swapped ($16/$17)
+void sub_8003EF74(int a0, int a1, int a2)
+{
+    int buf[6];
+    sub_8003F610(buf);
+    sub_8003E91C(2, buf, a0, a2);
+}
+#endif
 INCLUDE_ASM(sub_8003EF74);
 INCLUDE_ASM(sub_8003EFBC);
 INCLUDE_ASM(sub_8003F264);
+#if 0
+// Not matched: registers of a0/a2 swapped ($16/$17)
+void sub_8003F544(int a0, int a1, int a2)
+{
+    int buf[6];
+    sub_8003F610(buf);
+    sub_8003E91C(1, buf, a0, a2);
+}
+#endif
 INCLUDE_ASM(sub_8003F544);
 INCLUDE_ASM(sub_8003F58C);
 INCLUDE_ASM(sub_8003F610);
@@ -67,20 +88,16 @@ void sub_8003F9E8(int idx, int v)
 INCLUDE_ASM(sub_8003FA2C);
 INCLUDE_ASM(sub_8003FB60);
 INCLUDE_ASM(sub_8003FBD4);
-#if 0
+// Matched
 void* malloc3_8003FC4C(unsigned int s)
 {
     return malloc3(s);
 }
-#endif
-INCLUDE_ASM(malloc3_8003FC4C);
-#if 0
+// Matched
 void free3_8003FC6C(void* block)
 {
     free3(block);
 }
-#endif
-INCLUDE_ASM(free3_8003FC6C);
 #if 0
 int sub_8003FC8C(int a0, int a1)
 {
@@ -170,7 +187,15 @@ void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
         --count;
     } while (count);
 }
-INCLUDE_ASM(sub_800403A8);
+// Matched
+void sub_800403A8(unsigned short* pOut, unsigned short* pSource, int count)
+{
+    do
+    {
+        *pOut++ = *pSource++;
+        --count;
+    } while (count);
+}
 // Matched
 void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
 {

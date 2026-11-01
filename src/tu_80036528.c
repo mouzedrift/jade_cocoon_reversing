@@ -55,21 +55,36 @@ void nullsub_5(void)
 }
 INCLUDE_ASM(sub_800376A8);
 INCLUDE_ASM(sub_80037720);
-#if 0
-// Not matched (close)
+// Matched
 void sub_80037770(void)
 {
-    short tmp60;
-    char* tmp87;
     int* p = dword_8008D4A0[0x24 / 4];
-    tmp87 = *(1 + p);
-    tmp60 = (int)tmp87;
-    1[p] = (tmp60 & ~4) & ~0x2000;
+    p[1] &= ~4;
+    p[1] &= ~0x2000;
     sub_80039698(p);
 }
-#endif
-INCLUDE_ASM(sub_80037770);
-INCLUDE_ASM(sub_800377B4);
+extern int dword_80083D00[];
+extern int dword_80084330[];
+extern void sub_8003970C(int a, int* b);
+extern void sub_8003983C(int a, int* b);
+// Matched
+void sub_800377B4(int a0, short a1)
+{
+    if (a0 == 0)
+    {
+        if (a1 == 5 || a1 == 0x1A)
+        {
+            sub_8003970C(a1, dword_80083D00);
+        }
+    }
+    else if (a0 == 1)
+    {
+        if (a1 == 2)
+        {
+            sub_8003983C(2, dword_80084330);
+        }
+    }
+}
 INCLUDE_ASM(sub_80037828);
 // Matched
 void sub_800378CC(void)
@@ -109,7 +124,16 @@ void sub_800390F4(void* arg0, int arg1)
 }
 #endif
 INCLUDE_ASM(sub_800390F4);
-INCLUDE_ASM(sub_800395D0);
+// Matched
+int sub_800395D0(int* pIdx, int value, int* table)
+{
+    if (value >= table[*pIdx + 1])
+    {
+        *pIdx = *pIdx + 1;
+    }
+    return table[*pIdx + 1] != -1;
+}
+
 INCLUDE_ASM(sub_80039620);
 #if 0
 void sub_80039698(int* a0)
