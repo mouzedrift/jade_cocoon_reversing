@@ -72,7 +72,16 @@ void sub_8002AD80(int flags)
         sub_8002C5D0(0);
     }
 }
-INCLUDE_ASM(sub_8002ADB4);
+extern void sub_8002A710(void* a, int b);
+extern void sub_80042460(void* a, int b, void* c, int d);
+// Matched
+void sub_8002ADB4(char* a0, int a1, int a2, int a3)
+{
+    sub_8002A710(a0, a2);
+    sub_8003F900(2, 0);
+    sub_8003F900(1, 0);
+    sub_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
+}
 INCLUDE_ASM(sub_8002AE38);
 // Matched
 void sub_8002AF10(int a0, int a1, int a2)
@@ -120,4 +129,15 @@ void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
     sub_8002AE38(a0, &p, a2, a3, a4);
 }
 INCLUDE_ASM(sub_8002B004);
-INCLUDE_ASM(sub_8002B1B0);
+typedef struct
+{
+    short s[8];
+} Block16;
+extern Block16 dword_800741C4;
+extern void sub_8002B2A4(short a, int b, int c, Block16* d, int e);
+// Matched
+void sub_8002B1B0(short a, int b, int c)
+{
+    Block16 local = dword_800741C4;
+    sub_8002B2A4(a, b, c, &local, 0);
+}

@@ -21,4 +21,15 @@ INCLUDE_DATA(dword_800741CC);
 INCLUDE_DATA(dword_800741D0);
 INCLUDE_DATA(dword_800741D4);
 
-INCLUDE_ASM(sub_8002B228);
+typedef struct
+{
+    short s[8];
+} Block16;
+extern Block16 dword_800741D4;
+extern void sub_8002B2A4(short a, int b, int c, Block16* d, int e);
+// Matched
+void sub_8002B228(short a, int b, int c)
+{
+    Block16 local = dword_800741D4;
+    sub_8002B2A4(a, b, c, &local, 1);
+}
