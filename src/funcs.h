@@ -411,7 +411,7 @@ extern void sub_8001A41C(int** p);
 extern unsigned int sub_800AD990(int a0);
 extern void sub_800204D0(void);
 extern void sub_800205F0(void);
-extern void sub_80043B40(int a0);
+extern void sub_80043B40(int* p);
 
 extern int sub_8003FDC0(int a0, int a1);
 extern void sub_80012614(int a0, int a1, int a2, int a3);
