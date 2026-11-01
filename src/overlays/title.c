@@ -162,7 +162,7 @@ void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
 }
 
 
-extern void sub_800A1AFC(TitleTask* t, int a1);
+extern void sub_800A1AFC();
 // Matched
 void sub_800A0BCC(TitleTask* t, TitleCtxA* c)
 {
@@ -601,7 +601,7 @@ extern char dword_800A069C[];
 extern int dword_800A2818;
 extern void sub_800BB64C(void);
 extern void sub_8003E91C(int mode, void* buf, void* rect, int c);
-extern void sub_800A1310(TitleTaskM* t);
+extern void sub_800A1310();
 extern void sub_800A1B74(TitleTaskM* t);
 
 // Matched
@@ -684,7 +684,7 @@ void sub_800A1780(TitleTaskM* t, int x)
     sub_8002A5A4(&cfg);
 }
 
-extern void sub_800A1AFC(TitleTaskM* t, int a);
+extern void sub_800A1AFC();
 
 // Matched
 void sub_800A1AC0(TitleTaskM* t, int* cnt)
@@ -840,7 +840,7 @@ typedef struct
     short field_24;
 } TitleObjM;
 extern int sub_800C45D8(void);
-extern void sub_800A1F98(int a, int b, TitleObjM* u);
+extern void sub_800A1F98();
 extern void sub_800A1E9C();
 
 // Matched
@@ -873,7 +873,7 @@ void sub_800A1F00(TitleTaskM* t)
     sub_800A1AFC(t, 0xC);
 }
 
-extern void sub_800A1AFC(void* a, int b);
+extern void sub_800A1AFC();
 extern void sub_800A2358(void);
 extern void sub_800A22FC(void);
 extern void sub_800A2450(void);
