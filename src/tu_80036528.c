@@ -230,13 +230,32 @@ int sub_800395D0(int* pIdx, int value, int* table)
     return table[*pIdx + 1] != -1;
 }
 
-INCLUDE_ASM(sub_80039620);
-#if 0
+typedef struct
+{
+    int words[0x41];
+} Block104;
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair;
+extern Block104 dword_8008D4F0;
+extern ShortPair dword_8008D474;
+// Matched
+void sub_80039620(char* o)
+{
+    *(Block104*)(o + 0x48) = dword_8008D4F0;
+    *(int*)(o + 0x184) = dword_8008B4F8;
+    *(ShortPair*)(o + 0x14C) = dword_8008D474;
+}
+// Matched
 void sub_80039698(int* a0)
 {
+    char* o = (char*)a0;
+    dword_8008D4F0 = *(Block104*)(o + 0x48);
+    dword_8008B4F8 = *(int*)(o + 0x184);
+    dword_8008D474 = *(ShortPair*)(o + 0x14C);
 }
-#endif
-INCLUDE_ASM(sub_80039698);
 INCLUDE_ASM(sub_8003970C);
 typedef struct
 {
