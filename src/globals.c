@@ -40,7 +40,7 @@ unsigned long* pOT_8008B4C8;
 unsigned long* pOT_8008D3EC;
 unsigned int settingsFlags_8008B58C;
 int numFilesInsideTiy_8008B4BC;
-unsigned int dword_80096118;
+struct_10 stru_80096110;
 int dword_80091C88;
 int dword_80091C44;
 int* dword_80091C00;
@@ -77,3 +77,27 @@ unsigned char byte_8007CEAC[0x2B];
 int off_8007CF30[0x26];
 int off_8007C348[0x1E * 2];
 unsigned short dword_80079348[0x15];
+
+int dword_80091CFC;
+int dword_80083BD0;
+int dword_80086540;
+int dword_8008656C;
+int dword_80086550;
+int dword_80079320[16];
+struct_8 dword_8007A4B4[16];
+int** dword_8008D4C0;
+struct_12 stru_80083594[8];
+struct_4 byte_80095460[8];
+int** dword_8008B560;
+int off_8007CB20[16];
+int dword_8007CB4C[16];
+
+int bStopDrawingMovie_8008D45C;
+int dword_80086564;
+int dword_80098688;
+int off_800824CC[16];
+struct_12_b dword_8007C438[0x1E];
+int dword_80091C20;
+unsigned short word_8007CED8[16];
+
+unsigned int dword_80096118;

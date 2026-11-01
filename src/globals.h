@@ -17,7 +17,16 @@ typedef struct
 typedef struct
 {
     short id; // 4 = empty slot
-    char pad_2[0x7A];
+    short pad_2[3];
+    short field_8;
+    short field_A;
+    short field_C;
+    short field_E;
+    char pad_10[0x1C];
+    unsigned char field_2C[0x16];
+    short field_42;
+    unsigned char field_44;
+    char pad_45[0x37];
     unsigned char field_7C[8];
     char field_84[0x10];
     char field_94[0x38];
@@ -48,6 +57,43 @@ typedef struct
     int field_4;
     void (*field_8)(void);
 } struct_obj_D;
+
+typedef struct
+{
+    int field_0;
+    unsigned char field_4;
+    char pad_5[7];
+} struct_12_b;
+
+typedef struct
+{
+    int field_0;
+    short field_4;
+    signed char field_6;
+    unsigned char field_7;
+} struct_8;
+
+typedef struct
+{
+    char pad_0[2];
+    unsigned char field_2;
+    unsigned char field_3;
+} struct_4;
+
+typedef struct
+{
+    short field_0;
+    short field_2;
+    short field_4;
+    short field_6;
+} struct_10;
+
+typedef struct
+{
+    char pad_0[2];
+    short field_2;
+    char pad_4[0xC];
+} struct_16_b;
 
 typedef struct
 {
@@ -121,6 +167,27 @@ extern unsigned short word_8007D64C[0xf];
 extern struct_24 stru_8007D6B0[0x11];
 extern int dword_8007D66C[0x11];
 extern unsigned short word_8007D914[0x11];
+extern unsigned int dword_80096118;
+extern int dword_80091CFC;
+extern int dword_80083BD0;
+extern int dword_80086540;
+extern int dword_8008656C;
+extern int dword_80086550;
+extern int dword_80079320[];
+extern struct_8 dword_8007A4B4[];
+extern int** dword_8008D4C0;
+extern struct_12 stru_80083594[];
+extern struct_4 byte_80095460[];
+extern int** dword_8008B560;
+extern int off_8007CB20[];
+extern int dword_8007CB4C[];
+extern int bStopDrawingMovie_8008D45C;
+extern int dword_80086564;
+extern int dword_80098688;
+extern int off_800824CC[];
+extern struct_12_b dword_8007C438[];
+extern int dword_80091C20;
+extern unsigned short word_8007CED8[];
 extern int frameCount_8008D3FC;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];
@@ -134,7 +201,7 @@ extern int off_8007CF30[0x26];
 extern int off_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int dword_800918B0;
-extern unsigned int dword_80096118;
+extern struct_10 stru_80096110;
 extern int dword_80091C88;
 extern int dword_80091C44;
 extern int* dword_80091C00;

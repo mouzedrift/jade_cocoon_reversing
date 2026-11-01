@@ -12,9 +12,6 @@ void sub_8004D924(void)
 {
 }
 
-void sub_8003FDB0(int* arg0)
-{
-}
 
 void sub_80010228(void)
 {
@@ -1847,9 +1844,6 @@ void sub_8001EA48(void* arg0)
 {
 }
 
-void sub_800229B0(void)
-{
-}
 
 void sub_8003FEC8(void* arg0)
 {
@@ -1900,9 +1894,9 @@ void sub_80020EE0(int* p)
 }
 
 // Matched
-void sub_80021804(void)
+void sub_80021804(int* p)
 {
-    sub_800229B0();
+    sub_800229B0(p);
 }
 
 // Matched
@@ -2145,13 +2139,7 @@ void sub_800204AC(struct_obj_C* p)
 }
 
 
-void PlayAnimeMovie_80040D0C(void)
-{
-}
 
-void sub_80010A10(int arg0)
-{
-}
 
 void sub_8001098C(int arg0)
 {
@@ -2186,9 +2174,6 @@ void sub_8003FD18(int arg0)
 {
 }
 
-void sub_80036658(int arg0)
-{
-}
 
 void sub_8001DB98(void* arg0)
 {
@@ -2675,4 +2660,536 @@ int sub_80034B14(int* p)
 void sub_800378CC(void)
 {
     sub_800390F4(dword_8008D4A0[0x24 / 4], 1);
+}
+
+
+int sub_8003D288(int arg0, int arg1)
+{
+    return 0;
+}
+
+int sub_8003D3C0(int arg0, int arg1)
+{
+    return 0;
+}
+
+void PlayMovie_80040EB4(int arg0)
+{
+}
+
+void sub_80033624(void* arg0, int arg1)
+{
+}
+
+int sub_80014390(int arg0)
+{
+    return 0;
+}
+
+void sub_80010AD8(int arg0)
+{
+}
+
+int* sub_8001091C(void)
+{
+    return 0;
+}
+
+// Matched
+unsigned short sub_8001C818(unsigned short* p)
+{
+    return *p;
+}
+
+// Matched
+int sub_8001D8A8(short* p)
+{
+    return p[8] == 0;
+}
+
+// Matched
+int sub_80021738(int* p)
+{
+    return p[1];
+}
+
+// Matched
+int sub_80021DE4(int* p)
+{
+    return p[2];
+}
+
+// Matched
+int sub_80026724(int* p)
+{
+    return p[0];
+}
+
+// Matched
+int sub_80026D6C(int* p)
+{
+    return p[0];
+}
+
+// Matched
+int GetTiyFileCount_80028E68(int* p)
+{
+    return p[0];
+}
+
+// Matched
+void sub_800315D8(int a0)
+{
+    dword_80091CFC = a0;
+}
+
+// Matched
+int sub_800315E4(void)
+{
+    return dword_80091CFC;
+}
+
+// Matched
+short sub_800334CC(Minion* p)
+{
+    return p->field_A;
+}
+
+// Matched
+short sub_800334D8(Minion* p)
+{
+    return p->field_8;
+}
+
+// Matched
+short sub_800334E4(Minion* p)
+{
+    return p->field_E;
+}
+
+// Matched
+short sub_800334F0(Minion* p)
+{
+    return p->field_C;
+}
+
+// Matched
+int sub_800334FC(int* p)
+{
+    return p[1];
+}
+
+// Matched
+short sub_80033508(Minion* p)
+{
+    return p->field_42;
+}
+
+// Matched
+unsigned char sub_80033514(Minion* p)
+{
+    return p->field_44;
+}
+
+// Matched
+short sub_80033858(Minion* p)
+{
+    return p->id;
+}
+
+// Matched
+int sub_80033AB0(Item* p)
+{
+    return p->id;
+}
+
+// Matched
+void sub_80039FA4(int a0)
+{
+    dword_80083BD0 = a0;
+}
+
+// Matched
+int sub_80039FB0(void)
+{
+    return dword_80083BD0;
+}
+
+// Matched
+int sub_8003BC34(void)
+{
+    return dword_80086540;
+}
+
+// Matched
+int sub_8003BFC0(void)
+{
+    return dword_8008656C;
+}
+
+// Matched
+int sub_8003C9EC(void)
+{
+    return dword_80086550;
+}
+
+// Matched
+void sub_8003FDB0(int* p)
+{
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = 0;
+}
+
+// Matched
+int sub_80013358(int idx)
+{
+    return dword_80079320[idx];
+}
+
+// Matched
+signed char sub_80019BF0(int idx)
+{
+    return dword_8007A4B4[idx].field_6;
+}
+
+// Matched
+unsigned char sub_80019C0C(int idx)
+{
+    return dword_8007A4B4[idx].field_7;
+}
+
+// Matched
+void sub_80020D68(void)
+{
+    *dword_8008D4C0[0x24 / 4] = 0x1D;
+}
+
+// Matched
+struct_12* sub_800318C8(int idx)
+{
+    return &stru_80083594[idx];
+}
+
+// Matched
+int sub_80033A90(Minion* p, unsigned int idx)
+{
+    return sub_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
+}
+
+// Matched
+void sub_80036658(int idx)
+{
+    byte_80095460[(unsigned char)idx].field_2 = 0;
+    byte_80095460[(unsigned char)idx].field_3 = 0;
+}
+
+// Matched
+short sub_800378F8(void)
+{
+    return ((short*)dword_8008D4A0[0x24 / 4])[4];
+}
+
+// Matched
+short sub_80037A4C(void)
+{
+    return ((short*)dword_8008D4A0[0x24 / 4])[0x12];
+}
+
+// Matched
+int sub_8003B664(int x)
+{
+    if (x > 0)
+    {
+        return 1;
+    }
+    if (x < 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+// Matched
+int sub_8003B8BC(int x, int y)
+{
+    return x * x + y * y;
+}
+
+// Matched
+int sub_8003D380(int a0)
+{
+    return sub_8003D288(a0, 0);
+}
+
+// Matched
+int sub_8003D3A0(int a0)
+{
+    return sub_8003D288(a0, 1);
+}
+
+// Matched
+int sub_8003D41C(int a0)
+{
+    return sub_8003D3C0(a0, 0);
+}
+
+// Matched
+int sub_8003D43C(int a0)
+{
+    return sub_8003D3C0(a0, 1);
+}
+
+// Matched
+int sub_8003D480(void)
+{
+    return sub_8003D45C(0);
+}
+
+// Matched
+int sub_8003D4A0(void)
+{
+    return sub_8003D45C(1);
+}
+
+// Matched
+void sub_80043564(short a0, short a1, short a2)
+{
+    dword_80096118 = 0;
+    stru_80096110.field_2 = a0;
+    stru_80096110.field_4 = a1;
+    stru_80096110.field_6 = a2;
+}
+
+// Matched
+int sub_80043584(void)
+{
+    return ((short*)dword_8008B560[0x24 / 4])[4] == 0;
+}
+
+// Matched
+int sub_8001CD3C(int idx)
+{
+    return off_8007CB20[idx];
+}
+
+// Matched
+int* sub_8001CD58(int idx)
+{
+    return &dword_8007CB4C[idx];
+}
+
+
+
+// Matched
+void PlayGenkiMovie_80040AC4(void)
+{
+    PlayMovie_80040EB4(0);
+    bStopDrawingMovie_8008D45C = 1;
+}
+
+// Matched
+void PlayCraveMovie_80040B2C(void)
+{
+    PlayMovie_80040EB4(0x19);
+    bStopDrawingMovie_8008D45C = 1;
+}
+
+// Matched
+void PlayAnimeMovie_80040D0C(void)
+{
+    PlayMovie_80040EB4(1);
+    bStopDrawingMovie_8008D45C = 1;
+}
+
+// Matched
+int sub_8001CD34(void)
+{
+    return 0;
+}
+
+// Matched
+int sub_8001CD6C(void)
+{
+    return 0x36;
+}
+
+// Matched
+int sub_8001CE4C(void)
+{
+    return 0;
+}
+
+// Matched
+unsigned short sub_8001CE54(int idx)
+{
+    return word_8007CED8[idx];
+}
+
+// Matched
+int sub_800251E4(int idx)
+{
+    return off_800824CC[idx];
+}
+
+// Matched
+short ratan2_8003B548(long y, long x)
+{
+    return ratan2(y, x);
+}
+
+// Matched
+int DATA_GetFileSize_8003C87C(int idx)
+{
+    return Data001Files_80075AA0[idx].field_8_size;
+}
+
+// Matched
+int sub_80040274(int a0, int* a1)
+{
+    return a1[-4] == 0x8FFFFFFF;
+}
+
+// Matched
+void sub_8004028C(void)
+{
+    dword_80098688 = 0;
+}
+
+// Matched
+void sub_8001D68C(struct_obj_A* p, int on)
+{
+    if (on)
+    {
+        p->flags_4 |= 0x40000;
+    }
+    else
+    {
+        p->flags_4 &= ~0x40000;
+    }
+}
+
+// Matched
+void sub_8001D6BC(struct_obj_A* p, int on)
+{
+    if (on)
+    {
+        p->flags_4 |= 0x1000000;
+    }
+    else
+    {
+        p->flags_4 &= ~0x1000000;
+    }
+}
+
+// Matched
+void sub_8001D6EC(struct_obj_A* p, int on)
+{
+    if (on)
+    {
+        p->flags_4 |= 4;
+    }
+    else
+    {
+        p->flags_4 &= ~4;
+    }
+}
+
+// Matched
+void sub_8001D730(struct_obj_A* p, int on)
+{
+    if (on)
+    {
+        p->flags_4 &= ~0x2000;
+    }
+    else
+    {
+        p->flags_4 |= 0x2000;
+    }
+}
+
+// Matched
+void sub_800229B0(int* p)
+{
+    int a = p[1];
+    if (a)
+    {
+        sub_8003FD18(a);
+    }
+}
+
+// Matched
+int sub_80026600(struct_16_b* p)
+{
+    int n = 0;
+    if (p->field_2 != -1)
+    {
+        do
+        {
+            p++;
+            n++;
+        } while (p->field_2 != -1);
+    }
+    return n;
+}
+
+// Matched
+void sub_8002728C(void)
+{
+    dword_80091C44 = -1;
+    sub_8003FEC8(&dword_80091C20);
+}
+
+// Matched
+void sub_800367F0(int a0, unsigned char* a1)
+{
+    byte_80095460[*a1].field_2 = 0;
+    byte_80095460[*a1].field_3 = 0;
+}
+
+// Matched
+int sub_8003BF88(void)
+{
+    if (dword_80086540 == 0 && dword_80086564 == 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+// Matched
+void FreeMdecBuffer_800418CC(void)
+{
+    free3_8003FC6C(mdecVLCBuffer_80086F94);
+    mdecVLCBuffer_80086F94 = 0;
+}
+
+
+// Matched
+void sub_80010A10(int arg0)
+{
+    int* p = sub_8001091C();
+    sub_80010AD8(((int**)p)[0x14 / 4][1]);
+}
+
+// Matched
+void sub_80013E80(void* p, int arg)
+{
+    sub_80033624(p, sub_80014390(arg & 0xFF));
+}
+
+// Not matched: the original calls sub_800107A0 with only one argument
+void sub_80013EB4(void* p, int a1, int a2)
+{
+    sub_80033624(p, (int)sub_800107A0(a2, 0));
+}
+
+// Matched
+unsigned char sub_8001AC58(int idx)
+{
+    if (idx < 0x1E)
+    {
+        return dword_8007C438[idx].field_4;
+    }
+    return 0;
 }
