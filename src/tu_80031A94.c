@@ -266,8 +266,36 @@ Item* sub_80033AE4(SaveData* s, int idx)
     return &s->items[idx];
 }
 INCLUDE_ASM(sub_80033AFC);
+typedef struct
+{
+    short field_0;
+    short field_2;
+    short pad_4[3];
+    short field_A;
+    Minion* field_C_minion;
+} struct_minion_ref;
+extern int sub_8001AEC0(void* p, int v);
+extern int sub_80031A04(void* p, int idx);
 INCLUDE_ASM(sub_80033C08);
-INCLUDE_ASM(sub_80033C98);
+// Matched
+int sub_80033C98(struct_minion_ref* p)
+{
+    int a;
+    short idx = p->field_0;
+    a = sub_80031A04(p->field_C_minion->field_DE, idx);
+    if (!sub_80031954(p->field_C_minion->field_DE, idx))
+    {
+        return 7;
+    }
+    if (*(short*)&p->field_C_minion->field_84[0xC] < a)
+    {
+        if (p->field_A == 0)
+        {
+            return 5;
+        }
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80033D20);
 // Matched
 int sub_80033DEC(void)
