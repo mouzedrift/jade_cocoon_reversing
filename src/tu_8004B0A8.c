@@ -63,7 +63,33 @@ INCLUDE_ASM(sub_8004C21C);
 INCLUDE_ASM(sub_8004C4F0);
 INCLUDE_ASM(sub_8004C7BC);
 INCLUDE_ASM(sub_8004D0E8);
-INCLUDE_ASM(sub_8004D1EC);
+extern void sub_80044D0C(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7);
+
+// Matched
+void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+{
+    sub_80044D0C(a0, a1, a2, a3, a4, a5, a6, 0);
+}
+typedef struct
+{
+    char pad_0[0x14];
+    unsigned short* field_14;
+} struct_tbl14;
+
+// Matched
+void sub_8004D224(unsigned short* out, struct_tbl14* s, int idx)
+{
+    if (idx == 0)
+    {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        return;
+    }
+    out[0] = s->field_14[idx * 3];
+    out[1] = s->field_14[idx * 3 + 1];
+    out[2] = s->field_14[idx * 3 + 2];
+}
 INCLUDE_ASM(sub_8004D288);
 INCLUDE_ASM(sub_8004D3D8);
 INCLUDE_ASM(sub_8004D5CC);
