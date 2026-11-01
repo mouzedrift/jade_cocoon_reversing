@@ -59,7 +59,8 @@ INCLUDE_ASM(sub_80037720);
 void sub_80037770(void)
 {
     int* p = dword_8008D4A0[0x24 / 4];
-    p[1] = (p[1] & ~4) & ~0x2000;
+    p[1] &= ~4;
+    p[1] &= ~0x2000;
     sub_80039698(p);
 }
 INCLUDE_ASM(sub_800377B4);

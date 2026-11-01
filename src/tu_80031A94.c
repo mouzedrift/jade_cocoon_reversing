@@ -150,7 +150,20 @@ short sub_80033858(Minion* p)
 {
     return p->id;
 }
-INCLUDE_ASM(sub_80033864);
+// Matched
+void sub_80033864(Minion* m, unsigned char* out)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        out[i] = *((unsigned char*)m + i + 0xC2);
+        if (out[i] < 8)
+        {
+            out[i] = 0;
+        }
+        out[i] >>= 1;
+    }
+}
 // Matched
 unsigned char sub_800338B0(char* p)
 {

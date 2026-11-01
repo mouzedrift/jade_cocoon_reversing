@@ -46,5 +46,16 @@ int sub_8002D738(int a0, int a1, int a2)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8002D780);
+// Matched
+int sub_8002D780(void)
+{
+    int n = sub_80010548(3);
+    int i;
+    int mask = 0;
+    for (i = 0; i < n; i++)
+    {
+        mask |= 1 << (i + 1);
+    }
+    return mask;
+}
 INCLUDE_ASM(sub_8002D7D0);

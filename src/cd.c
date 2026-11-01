@@ -16,6 +16,9 @@
 #include "sound.h"
 #include "data_decls.h"
 
+extern int dword_80086568;
+extern void sub_8003BF18(struct_node_C* n);
+
 INCLUDE_DATA(aDataData0011);
 INCLUDE_DATA(aAssertionFaile_1);
 INCLUDE_DATA(aCdC);
@@ -59,7 +62,14 @@ int sub_8003B664(int x)
 }
 INCLUDE_ASM(sub_8003B684);
 INCLUDE_ASM(sub_8003B740);
-INCLUDE_ASM(sub_8003B80C);
+// Matched
+int sub_8003B80C(int* a, int* b)
+{
+    int dx = a[0] - b[0];
+    int dy = a[1] - b[1];
+    int dz = a[2] - b[2];
+    return dx * dx + dy * dy + dz * dz;
+}
 INCLUDE_ASM(sub_8003B860);
 // Matched
 int sub_8003B8BC(int x, int y)
@@ -71,19 +81,20 @@ int sub_8003B8DC(int* p, int a1)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
-// Matched
+// Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
+#if 0
 unsigned int sub_8003B918(unsigned int n)
 {
-    unsigned int x;
-    unsigned int y;
+    int x;
+    int y;
     if (n == 0)
     {
         return 0;
     }
-    x = n;
-    if (n < 2)
+    x = 1;
+    if (n >= 2)
     {
-        x = 1;
+        x = n;
     }
     do
     {
@@ -92,6 +103,8 @@ unsigned int sub_8003B918(unsigned int n)
     } while (x < y);
     return y;
 }
+#endif
+INCLUDE_ASM(sub_8003B918);
 INCLUDE_ASM(sub_8003B95C);
 // Matched
 short ratan2Difference_8003B9E0(int* a, int* b)
@@ -149,7 +162,22 @@ long cdRomEventErrorHandler_8003BBAC(void)
     printf(aAssertionFaile_1, aCdC, 79);
     exit(1);
 }
-INCLUDE_ASM(sub_8003BBE4);
+// Matched
+void sub_8003BBE4(void)
+{
+    int v = 0x10000;
+    int i;
+    dword_80086540 = 0;
+    ((int*)&dword_80086540)[1] = 0;
+    ((int*)&dword_80086540)[2] = 0;
+    ((int*)&dword_80086540)[3] = 0;
+    for (i = 0x13; i >= 0; i--)
+    {
+        dword_80095C90[i].field_10 = v;
+    }
+    dword_80086564 = 0;
+    dword_80086568 = 0;
+}
 // Matched
 int sub_8003BC34(void)
 {
@@ -180,7 +208,17 @@ int sub_8003BE30(int arg0)
 }
 #endif
 INCLUDE_ASM(sub_8003BE30);
-INCLUDE_ASM(sub_8003BE88);
+// Matched
+int sub_8003BE88(int key)
+{
+    struct_node_C* n = sub_8003BED4(key);
+    if (n && !(n->field_C & 0x100))
+    {
+        sub_8003BF18(n);
+        return 1;
+    }
+    return 0;
+}
 // Matched
 struct_node_C* sub_8003BED4(int key)
 {
@@ -204,11 +242,14 @@ int sub_8003BF88(void)
     }
     return 0;
 }
-// Matched
+// Not matched: no jr after the store, execution falls through into sub_8003BFC0
+#if 0
 void sub_8003BFB8(int arg0)
 {
     dword_80086564 = arg0;
 }
+#endif
+INCLUDE_ASM(sub_8003BFB8);
 // Matched
 int sub_8003BFC0(void)
 {
@@ -219,13 +260,13 @@ INCLUDE_ASM(sub_8003BFD0);
 int sub_8003C060(int key)
 {
     struct_node_C* n = sub_8003BED4(key);
-    if (!n)
+    if (n)
     {
-        return 2;
+        n->field_24 = 0;
+        n->field_C |= 0x2000;
+        return 0;
     }
-    n->field_24 = 0;
-    n->field_C |= 0x2000;
-    return 0;
+    return 2;
 }
 INCLUDE_ASM(sub_8003C0A4);
 INCLUDE_ASM(sub_8003C128);

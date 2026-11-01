@@ -22,22 +22,28 @@ extern void sub_8003E91C(int mode, int* buf, int a, int b);
 INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
 
-// Matched
+#if 0
+// Not matched: registers of a0/a2 swapped ($16/$17)
 void sub_8003EF74(int a0, int a1, int a2)
 {
     int buf[6];
     sub_8003F610(buf);
     sub_8003E91C(2, buf, a0, a2);
 }
+#endif
+INCLUDE_ASM(sub_8003EF74);
 INCLUDE_ASM(sub_8003EFBC);
 INCLUDE_ASM(sub_8003F264);
-// Matched
+#if 0
+// Not matched: registers of a0/a2 swapped ($16/$17)
 void sub_8003F544(int a0, int a1, int a2)
 {
     int buf[6];
     sub_8003F610(buf);
     sub_8003E91C(1, buf, a0, a2);
 }
+#endif
+INCLUDE_ASM(sub_8003F544);
 INCLUDE_ASM(sub_8003F58C);
 INCLUDE_ASM(sub_8003F610);
 #if 0

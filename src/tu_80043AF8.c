@@ -22,7 +22,20 @@ INCLUDE_DATA(dword_800987D8);
 INCLUDE_DATA(dword_8009AAD8);
 
 INCLUDE_ASM(sub_80043AF8);
-INCLUDE_ASM(sub_80043B40);
+// Matched
+void sub_80043B40(int* p)
+{
+    int n = p[3];
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        if (p[4] & 1)
+        {
+            p[4] = (p[4] & ~1) | 0x8000;
+        }
+        p = (int*)p[1];
+    }
+}
 INCLUDE_ASM(sub_80043B8C);
 INCLUDE_ASM(sub_80043DE0);
 INCLUDE_ASM(sub_80044010);

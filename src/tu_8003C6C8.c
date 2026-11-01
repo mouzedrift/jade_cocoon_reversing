@@ -93,7 +93,13 @@ void* DATA_GetFileBuffer_8003CAA0(int idx)
     LoadFileIntoBuffer_8003CB7C(&dataFile.field_0_position, pFileBuffer, dataFile.field_4_sectors);
     return pFileBuffer;
 }
-INCLUDE_ASM(sub_8003CAEC);
+// Matched
+void sub_8003CAEC(int idx, unsigned int* pDest)
+{
+    void* pBuffer = DATA_GetFileBuffer_8003CAA0(idx);
+    sub_800403E8(pDest, pBuffer, DATA_GetFileSize_8003C87C(idx));
+    free3_8003FC6C(pBuffer);
+}
 // Matched
 void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
 {
