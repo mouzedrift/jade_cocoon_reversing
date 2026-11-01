@@ -9,6 +9,7 @@
 #include "STDIO.H"
 #include "LIBPAD.H"
 #include "LIBSND.H"
+#include "LIBSPU.H"
 #include "LIBMCX.H"
 #include "LIBPRESS.H"
 #include "LIBETC.H"
@@ -17,8 +18,30 @@
 #include "data_decls.h"
 
 
-INCLUDE_ASM(sub_8002A1BC);
-INCLUDE_ASM(sub_8002A218);
+extern struct_obj_B dword_80091CC8; // really a SpuReverbAttr
+extern void sub_8002A218(void);
+// Matched
+void sub_8002A1BC(int* p)
+{
+    dword_80091CC8.flags_0 = 0;
+    sub_8002A280(&dword_80091CC8, 0);
+    sub_8002A2A0(&dword_80091CC8, 0x42, 0x42);
+    p[2] = (int)sub_8002A218;
+}
+// Matched
+void sub_8002A218(void)
+{
+    if (dword_80091CC8.flags_0 != 0)
+    {
+        SpuSetReverbModeParam((SpuReverbAttr*)&dword_80091CC8);
+        if (dword_80091CC8.flags_0 & 1)
+        {
+            sub_8002A2A0(&dword_80091CC8, 0x42, 0x42);
+            SpuSetReverbDepth((SpuReverbAttr*)&dword_80091CC8);
+        }
+        dword_80091CC8.flags_0 = 0;
+    }
+}
 // Matched
 void sub_8002A280(struct_obj_B* p, short a1)
 {

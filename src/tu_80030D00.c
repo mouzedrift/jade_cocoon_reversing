@@ -66,13 +66,50 @@ INCLUDE_ASM(sub_80030EEC);
 INCLUDE_ASM(sub_8003105C);
 INCLUDE_ASM(sub_80031160);
 INCLUDE_ASM(sub_80031260);
-INCLUDE_ASM(sub_80031334);
+// Matched
+void sub_80031334(int idx)
+{
+    SoundStruct* s = &stru_80091D00;
+    int a;
+    short b;
+    if (dword_800833E4[idx].field_0 == 1)
+    {
+        a = s->field_14_sep_access_num;
+    }
+    else
+    {
+        a = s->field_C_sep_access_num;
+    }
+    b = dword_800833E4[idx].field_4;
+    SsSepStop(a, b);
+    SsSepSetVol(a, b, 0, 0);
+}
 // Matched
 void sub_800313C8(int idx)
 {
     SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
 }
-INCLUDE_ASM(sub_80031408);
+// Matched
+void sub_80031408(SoundStruct* s, int idx)
+{
+    SoundInfo* t = soundFiles_80082F0C;
+    SoundInfo* si = &t[idx];
+    int v = ((short*)si)[1];
+    int a;
+    int b;
+    if (v >= 0x10)
+    {
+        a = s->field_14_sep_access_num;
+        b = v - 0x10;
+    }
+    else
+    {
+        a = s->field_C_sep_access_num;
+        b = v;
+    }
+    SsSepStop(a, b);
+    SsSepSetVol(a, b, 0, 0);
+}
 // Matched
 void PlaySfx_80031494(int a1)
 {
@@ -91,8 +128,34 @@ void PlaySfx_80031494(int a1)
                   (settingsFlags_8008B58C >> 14) & 0x7F);
     }
 }
-INCLUDE_ASM(sub_800314F4);
-INCLUDE_ASM(sub_80031574);
+// Matched
+short sub_800314F4(int a)
+{
+    SoundStruct* s;
+    if (a < 0x3f)
+    {
+        s = &stru_80091D20;
+    }
+    else
+    {
+        s = &stru_80091D40;
+    }
+    return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.field_1C_settings >> 14) & 0x7F, (saveData_8008B570.field_1C_settings >> 14) & 0x7F);
+}
+// Matched
+void sub_80031574(short a, short b)
+{
+    SoundStruct* s;
+    if (b < 0x3f)
+    {
+        s = &stru_80091D20;
+    }
+    else
+    {
+        s = &stru_80091D40;
+    }
+    SsUtKeyOff(a, *(short*)s, b, 0, 0x3c);
+}
 // Matched
 void sub_800315D8(int a0)
 {
@@ -110,6 +173,33 @@ void sub_800315F4(void)
     sub_80030D00(s0[1]);
     sub_80030D00(s0[2]);
 }
+#if 0
+// Not matched (loop pointer gets strength-reduced with folded offsets)
+void sub_80031638(void)
+{
+    char* q;
+    int i;
+    q = (char*)dword_8008D4A4[0x24 / 4];
+    if (stru_80091D20.field_4_seq_num >= 0)
+    {
+        i = 0;
+        do
+        {
+            i++;
+            if (*(short*)(q + 0x18) == 0)
+            {
+                *(short*)(q + 0x18) = 1;
+                SsSepSetDecrescendo(stru_80091D20.field_C_sep_access_num, stru_80091D20.field_4_seq_num, 0x7F, 0x40);
+                *(short*)(q + 0x1C) = stru_80091D20.field_C_sep_access_num;
+                *(short*)(q + 0x1A) = 0x20;
+                *(short*)(q + 0x1E) = stru_80091D20.field_4_seq_num;
+                break;
+            }
+            q += 8;
+        } while (i < 5);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80031638);
 // Matched
 int sub_800316DC(void)

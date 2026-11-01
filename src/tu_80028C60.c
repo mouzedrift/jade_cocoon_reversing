@@ -45,12 +45,18 @@ void sub_80029674(void* p)
     sub_80029708(buf, p);
     sub_800296A0(buf);
 }
-#if 0
+// Matched
 void sub_800296A0(void* arg0)
 {
+    int* p = (int*)arg0;
+    if (p[0] == 1 && p[2] != 0)
+    {
+        LoadImage((RECT*)&p[3], (u_long*)p[5]);
+        DrawSync(0);
+    }
+    LoadImage((RECT*)&p[7], (u_long*)p[9]);
+    DrawSync(0);
 }
-#endif
-INCLUDE_ASM(sub_800296A0);
 #if 0
 void sub_80029708(void* arg0, void* arg1)
 {
@@ -84,8 +90,23 @@ void InitPolyFT4_80029A10(void* a0, void* a1)
 }
 #endif
 INCLUDE_ASM(InitPolyFT4_80029A10);
-INCLUDE_ASM(sub_80029C68);
-INCLUDE_ASM(sub_80029CB4);
+// Matched
+void sub_80029C68(unsigned short* d, unsigned short* s)
+{
+    d[3] = *s & 0x8000;
+    d[0] = *s & 0x1f;
+    d[1] = (*s >> 5) & 0x1f;
+    d[2] = (*s >> 10) & 0x1f;
+}
+// Matched
+void sub_80029CB4(unsigned short* d, unsigned short* s)
+{
+    *d = 0;
+    *d = s[3];
+    *d |= s[0];
+    *d |= s[1] << 5;
+    *d |= s[2] << 10;
+}
 INCLUDE_ASM(sub_80029D00);
 INCLUDE_ASM(sub_80029EA8);
 INCLUDE_ASM(sub_8002A040);

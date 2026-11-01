@@ -41,10 +41,62 @@ INCLUDE_DATA(dword_80074428);
 
 INCLUDE_ASM(sub_8002ECE0);
 INCLUDE_ASM(sub_8002EE28);
-INCLUDE_ASM(sub_8002EF5C);
-INCLUDE_ASM(sub_8002EFC4);
-INCLUDE_ASM(sub_8002F078);
-INCLUDE_ASM(sub_8002F120);
+extern void sub_8002C06C(void* p, int a1, short a2);
+// Matched
+void sub_8002EF5C(unsigned short* pos, short count, short a2)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0];
+    loc[1] = pos[1];
+    do
+    {
+        sub_8002C06C(loc, 0xd9, a2);
+        count--;
+        loc[0] += 7;
+    } while (count > 0);
+}
+extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void sub_8002EE28(short* a, void* b, int c, int d);
+extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
+// Matched
+void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5)
+{
+    unsigned short pos[2];
+    int local[4];
+    unsigned short* a3 = (unsigned short*)a3_;
+    local[0] = 1;
+    local[1] = a1;
+    local[2] = ((short*)a0)[0];
+    local[3] = ((short*)a0)[1];
+    pos[0] = a3[0];
+    pos[1] = a3[1];
+    sub_8002BA54(local, a2, pos, a4);
+    pos[0] = a3[0] + 8;
+    pos[1] = a3[1] + 7;
+    sub_8002EE28(a0, pos, (short)a4, a5);
+}
+// Matched
+void sub_8002F078(char* a0, unsigned short* pos, int a2, short a3)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0] + 7;
+    loc[1] = pos[1] + 4;
+    sub_8002C06C(loc, 0x76, a3);
+    loc[0] = pos[0] + 0x20;
+    loc[1] = pos[1] + 3;
+    sub_8002EFC4(a0 + 8, a2, 0, loc, a3, 1);
+}
+// Matched
+void sub_8002F120(char* a0, unsigned short* pos, int a2, short a3)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0] + 7;
+    loc[1] = pos[1] + 4;
+    sub_8002C06C(loc, 0x71, a3);
+    loc[0] = pos[0] + 0x20;
+    loc[1] = pos[1] + 3;
+    sub_8002EFC4(a0 + 0xC, a2, 0, loc, a3, 1);
+}
 typedef struct
 {
     int field_0;

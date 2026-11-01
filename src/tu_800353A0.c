@@ -22,7 +22,35 @@ INCLUDE_DATA(dword_80074864);
 
 INCLUDE_ASM(sub_800353A0);
 INCLUDE_ASM(sub_800355EC);
-INCLUDE_ASM(sub_8003580C);
+typedef struct
+{
+    int field_0;
+    unsigned short x;
+    unsigned short y;
+    unsigned short w;
+    unsigned short h;
+} struct_rect_1B8;
+typedef struct
+{
+    int field_0;
+    unsigned int field_4_flags;
+    char pad_8[0x1B0];
+    struct_rect_1B8 field_1B8;
+} struct_1BC_owner;
+extern int sub_8003DB74(struct_rect_1B8* p, int a);
+// Matched
+int sub_8003580C(struct_1BC_owner* o, unsigned short* r)
+{
+    o->field_1B8.x = r[0] + 6;
+    o->field_1B8.y = r[1] + 4;
+    o->field_1B8.w = r[2] - 6;
+    o->field_1B8.h = r[3] - 7;
+    if ((short)o->field_1B8.h > 0 && (short)o->field_1B8.w > 0)
+    {
+        return sub_8003DB74(&o->field_1B8, ((o->field_4_flags >> 18) ^ 1) & 1);
+    }
+    return 1;
+}
 // Matched
 void sub_80035898(struct_obj_A* p, int a1)
 {

@@ -52,9 +52,50 @@ void sub_80032DFC(short* p, int a1)
     q[12] = p[4] + d;
     q[16] = p[4];
 }
-INCLUDE_ASM(sub_80032E78);
-INCLUDE_ASM(sub_80032EF4);
-INCLUDE_ASM(sub_80032F88);
+// Matched
+void sub_80032E78(unsigned short* p, int a1)
+{
+    int d = ((short*)p)[13] - ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    q[5] = p[5] + d;
+    q[9] = p[5] + d;
+    q[13] = p[5];
+    q[17] = p[5];
+}
+// Matched
+void sub_80032EF4(unsigned short* p, int a1)
+{
+    int a = ((short*)p)[4];
+    int b = ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short t;
+    q[4] = p[12];
+    q[5] = p[13];
+    q[12] = p[16];
+    q[13] = p[17];
+    q[16] = p[8];
+    t = p[9];
+    q[8] = a;
+    q[9] = b;
+    q[17] = t;
+}
+// Matched
+void sub_80032F88(unsigned short* p, int a1)
+{
+    int a = ((short*)p)[4];
+    int b = ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short t;
+    q[4] = p[8];
+    q[5] = p[9];
+    q[8] = p[16];
+    q[9] = p[17];
+    q[16] = p[12];
+    t = p[13];
+    q[12] = a;
+    q[13] = b;
+    q[17] = t;
+}
 // Matched
 void sub_8003301C(void* a, void* b)
 {
@@ -70,11 +111,68 @@ void sub_80033064(unsigned short* p, int v)
 {
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
+#if 0
+// Not matched (5 words: scheduling of the table index/base loads)
+void sub_80033080(unsigned short* a, int i, int j)
+{
+    struct_20* s = &dword_8008D434[i];
+    unsigned short* e = (unsigned short*)s;
+    e[4] = a[0];
+    e[5] = a[1];
+    sub_80040298(pOT_8008D454 + j, e, 5);
+    sub_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
+}
+#endif
 INCLUDE_ASM(sub_80033080);
 INCLUDE_ASM(sub_80033114);
-INCLUDE_ASM(sub_800331C4);
-INCLUDE_ASM(sub_8003326C);
-INCLUDE_ASM(sub_80033308);
+// Matched
+void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
+{
+    if (col)
+    {
+        o[7] &= 0xFE;
+        o[4] = col[0];
+        o[5] = col[1];
+        o[6] = col[2];
+    }
+    else
+    {
+        o[7] |= 1;
+    }
+    *(unsigned short*)(o + 8) = a[0];
+    *(unsigned short*)(o + 0xA) = a[1];
+    sub_80040298(c, o, 5);
+    sub_80040298(c, b, 2);
+}
+extern DRAWENV drawEnv_8008D698[2];
+// Matched
+void sub_8003326C(unsigned short* a, void* b)
+{
+    DR_TWIN twin;
+    RECT rect;
+    DRAWENV* e = drawEnv_8008D698;
+    unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
+    rect.x = a[0] + c[0];
+    rect.y = a[1] + c[1];
+    rect.w = a[2];
+    rect.h = a[3];
+    SetTexWindow(&twin, &rect);
+    sub_80040298(b, &twin, 3);
+}
+// Matched
+void sub_80033308(void* p)
+{
+    DR_TWIN twin;
+    RECT rect;
+    DRAWENV* e = drawEnv_8008D698;
+    unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
+    rect.x = c[0];
+    rect.y = c[1];
+    rect.w = c[2];
+    rect.h = c[3];
+    SetTexWindow(&twin, &rect);
+    sub_80040298(p, &twin, 3);
+}
 INCLUDE_ASM(sub_80033394);
 // Matched
 unsigned char sub_800334BC(unsigned char* arr, int idx)
@@ -257,8 +355,36 @@ Item* sub_80033AE4(SaveData* s, int idx)
     return &s->items[idx];
 }
 INCLUDE_ASM(sub_80033AFC);
+typedef struct
+{
+    short field_0;
+    short field_2;
+    short pad_4[3];
+    short field_A;
+    Minion* field_C_minion;
+} struct_minion_ref;
+extern int sub_8001AEC0(void* p, int v);
+extern int sub_80031A04(void* p, int idx);
 INCLUDE_ASM(sub_80033C08);
-INCLUDE_ASM(sub_80033C98);
+// Matched
+int sub_80033C98(struct_minion_ref* p)
+{
+    int a;
+    short idx = p->field_0;
+    a = sub_80031A04(p->field_C_minion->field_DE, idx);
+    if (!sub_80031954(p->field_C_minion->field_DE, idx))
+    {
+        return 7;
+    }
+    if (*(short*)&p->field_C_minion->field_84[0xC] < a)
+    {
+        if (p->field_A == 0)
+        {
+            return 5;
+        }
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80033D20);
 // Matched
 int sub_80033DEC(void)

@@ -48,13 +48,71 @@ INCLUDE_ASM(sub_800369E0);
 INCLUDE_ASM(sub_80036AB4);
 INCLUDE_ASM(sub_80036BB0);
 INCLUDE_ASM(sub_800374E0);
-INCLUDE_ASM(sub_800375F8);
+extern void sub_80038230(int* p);
+extern void sub_80037918(int* p);
+extern void sub_8003891C(int* p, void* q);
+extern void sub_800368F8(void);
+extern char levantPos_8008BD18[];
+extern int dword_8008B4F8;
+// Matched
+void sub_800375F8(int* o, int* p)
+{
+    int* q = p;
+    if (p[3] > 0)
+    {
+        sub_80038230(p);
+        if (p[3] > 0)
+        {
+            p[3] -= 0x1000;
+        }
+        if (p[3] < 0)
+        {
+            p[3] = 0;
+        }
+    }
+    else
+    {
+        sub_80039698(q);
+        sub_80037918(q);
+        sub_8003891C(q, levantPos_8008BD18);
+        ((short*)q)[4] = 0;
+        o[2] = (int)sub_800368F8;
+    }
+}
 // Matched
 void nullsub_5(void)
 {
 }
-INCLUDE_ASM(sub_800376A8);
-INCLUDE_ASM(sub_80037720);
+extern void sub_80039E14(void);
+extern int geomScreenDistance_8008B548;
+extern short word_8008D51E;
+// Matched
+void sub_800376A8(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    short* sp;
+    sub_80039E14();
+    dword_8008B4F8 = 0x1000;
+    geomScreenDistance_8008B548 = (word_8008D51E << 12) / 0x1000;
+    sp = (short*)p;
+    p[1] = 0;
+    sp[4] = 0;
+    sp[0x24 / 2] = 0;
+    sp[0x26 / 2] = 0x1000;
+    p[0] = (int)levantPos_8008BD18;
+}
+// Matched
+void sub_80037720(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] |= 0x2000;
+}
+// Matched
+void sub_80037748(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] |= 4;
+}
 // Matched
 void sub_80037770(void)
 {
@@ -85,7 +143,29 @@ void sub_800377B4(int a0, short a1)
         }
     }
 }
-INCLUDE_ASM(sub_80037828);
+// Table in the overlay area (outside the linked image), 8 bytes per entry
+extern int dword_800B1084[];
+__asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
+// Matched
+void sub_80037828(int a, short b, int c)
+{
+    void* p = dword_8008D4A0[0x24 / 4];
+    if (c)
+    {
+        sub_800390F4(p, 2);
+    }
+    else if (a == 0)
+    {
+        if (dword_800B1084[b * 2] != 0x10 && b != 0x11 && b != 0x12)
+        {
+            sub_800390F4(p, 1);
+        }
+    }
+    else if (a != 1 || (unsigned short)(b - 0x11) >= 2)
+    {
+        sub_800390F4(p, 1);
+    }
+}
 // Matched
 void sub_800378CC(void)
 {
@@ -102,7 +182,23 @@ short sub_80037A4C(void)
 {
     return ((short*)dword_8008D4A0[0x24 / 4])[0x12];
 }
-INCLUDE_ASM(sub_80037A6C);
+// Matched
+void sub_80037A6C(int a, int b)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    if (b >= 2)
+    {
+        p[0x34 / 4] = a;
+        ((short*)p)[0x12 / 2] = b;
+        ((short*)p)[0xA / 2] = *(unsigned short*)&dword_8008B4F8;
+        p[1] |= 0x20;
+    }
+    else
+    {
+        dword_8008B4F8 = a;
+        sub_80037918(p);
+    }
+}
 // Matched
 void sub_80037AC8(int a0)
 {
@@ -134,14 +230,55 @@ int sub_800395D0(int* pIdx, int value, int* table)
     return table[*pIdx + 1] != -1;
 }
 
-INCLUDE_ASM(sub_80039620);
-#if 0
+typedef struct
+{
+    int words[0x41];
+} Block104;
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair;
+extern Block104 dword_8008D4F0;
+extern ShortPair dword_8008D474;
+// Matched
+void sub_80039620(char* o)
+{
+    *(Block104*)(o + 0x48) = dword_8008D4F0;
+    *(int*)(o + 0x184) = dword_8008B4F8;
+    *(ShortPair*)(o + 0x14C) = dword_8008D474;
+}
+// Matched
 void sub_80039698(int* a0)
 {
+    char* o = (char*)a0;
+    dword_8008D4F0 = *(Block104*)(o + 0x48);
+    dword_8008B4F8 = *(int*)(o + 0x184);
+    dword_8008D474 = *(ShortPair*)(o + 0x14C);
 }
-#endif
-INCLUDE_ASM(sub_80039698);
 INCLUDE_ASM(sub_8003970C);
-INCLUDE_ASM(sub_8003983C);
+typedef struct
+{
+    int a;
+    int b;
+} struct_pair8;
+// Matched
+void sub_8003983C(int idx_, int* a5)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    struct_pair8* t = (struct_pair8*)dword_800B1084;
+    int* q;
+    p[0x1C / 4] = t[(short)idx_].b;
+    q = p + 0x1C8 / 4;
+    p[0x218 / 4] = (int)a5;
+    p[0x1C8 / 4] = 0;
+    p[1] |= 8;
+    q[1] = 0x28;
+    q[2] = 0x50;
+    q[3] = 0x78;
+    q[4] = -1;
+    p[0x1BC / 4] = (int)levantPos_8008BD18;
+    p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
+}
 INCLUDE_ASM(sub_800398B4);
 INCLUDE_ASM(sub_80039E14);

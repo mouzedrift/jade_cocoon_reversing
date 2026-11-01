@@ -52,7 +52,16 @@ INCLUDE_ASM(sub_8003006C);
 INCLUDE_ASM(sub_800300E0);
 INCLUDE_ASM(sub_800303E8);
 INCLUDE_ASM(sub_800304D0);
-INCLUDE_ASM(sub_80030664);
+// Matched
+void sub_80030664(void)
+{
+    sub_80030EEC(&stru_80091D00);
+}
+// Matched
+int sub_80030688(void)
+{
+    return dword_8008D4A4[0x24 / 4][1] == 2;
+}
 // Matched
 int sub_800306B0(void)
 {
