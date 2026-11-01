@@ -92,7 +92,21 @@ void PlaySfx_80031494(int a1)
     }
 }
 INCLUDE_ASM(sub_800314F4);
-INCLUDE_ASM(sub_80031574);
+extern int sub_80067630(short a, short b, short c, short d, short e);
+// Matched
+void sub_80031574(short a, short b)
+{
+    SoundStruct* s;
+    if (b < 0x3f)
+    {
+        s = &stru_80091D20;
+    }
+    else
+    {
+        s = &stru_80091D40;
+    }
+    sub_80067630(a, *(short*)s, b, 0, 0x3c);
+}
 // Matched
 void sub_800315D8(int a0)
 {
