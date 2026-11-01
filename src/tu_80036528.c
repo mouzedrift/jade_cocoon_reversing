@@ -48,7 +48,36 @@ INCLUDE_ASM(sub_800369E0);
 INCLUDE_ASM(sub_80036AB4);
 INCLUDE_ASM(sub_80036BB0);
 INCLUDE_ASM(sub_800374E0);
-INCLUDE_ASM(sub_800375F8);
+extern void sub_80038230(int* p);
+extern void sub_80037918(int* p);
+extern void sub_8003891C(int* p, void* q);
+extern void sub_800368F8(void);
+extern char levantPos_8008BD18[];
+// Matched
+void sub_800375F8(int* o, int* p)
+{
+    int* q = p;
+    if (p[3] > 0)
+    {
+        sub_80038230(p);
+        if (p[3] > 0)
+        {
+            p[3] -= 0x1000;
+        }
+        if (p[3] < 0)
+        {
+            p[3] = 0;
+        }
+    }
+    else
+    {
+        sub_80039698(q);
+        sub_80037918(q);
+        sub_8003891C(q, levantPos_8008BD18);
+        ((short*)q)[4] = 0;
+        o[2] = (int)sub_800368F8;
+    }
+}
 // Matched
 void nullsub_5(void)
 {
@@ -85,7 +114,29 @@ void sub_800377B4(int a0, short a1)
         }
     }
 }
-INCLUDE_ASM(sub_80037828);
+// Table in the overlay area (outside the linked image), 8 bytes per entry
+extern int dword_800B1084[];
+__asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
+// Matched
+void sub_80037828(int a, short b, int c)
+{
+    void* p = dword_8008D4A0[0x24 / 4];
+    if (c)
+    {
+        sub_800390F4(p, 2);
+    }
+    else if (a == 0)
+    {
+        if (dword_800B1084[b * 2] != 0x10 && b != 0x11 && b != 0x12)
+        {
+            sub_800390F4(p, 1);
+        }
+    }
+    else if (a != 1 || (unsigned short)(b - 0x11) >= 2)
+    {
+        sub_800390F4(p, 1);
+    }
+}
 // Matched
 void sub_800378CC(void)
 {
@@ -102,7 +153,6 @@ short sub_80037A4C(void)
 {
     return ((short*)dword_8008D4A0[0x24 / 4])[0x12];
 }
-extern void sub_80037918(int* p);
 extern int dword_8008B4F8;
 // Matched
 void sub_80037A6C(int a, int b)
