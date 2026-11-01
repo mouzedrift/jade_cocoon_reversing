@@ -41,6 +41,13 @@ int sub_800184DC(int a0, int a1)
 }
 INCLUDE_ASM(sub_8001852C);
 INCLUDE_ASM(sub_80018908);
-INCLUDE_ASM(sub_800189F8);
+// Matched
+int sub_800189F8(void)
+{
+    SaveData* sd = &saveData_8008B570;
+    struct_24* p = sub_8001CF84(*((unsigned char*)sd + 0x7E4));
+    sub_800BFAF8(*((unsigned char*)sd + 0x7E4));
+    return dword_80079708[((short*)p)[1]];
+}
 INCLUDE_ASM(sub_80018A4C);
 INCLUDE_ASM(sub_80018C00);

@@ -140,9 +140,34 @@ int sub_80014390(int arg0)
 }
 #endif
 INCLUDE_ASM(sub_80014390);
+#if 0
+// Not matched
+int sub_80014444(unsigned int a0)
+{
+    int r = 0;
+    if ((a0 & 0xFF) >= 8)
+    {
+        r = sub_800A11D8((a0 - 8) & 0xFF);
+    }
+    else if ((a0 & 0xFF) != 0)
+    {
+        r = (int)sub_80010598(3, (a0 - 1) & 0xFF);
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_80014444);
 INCLUDE_ASM(sub_8001449C);
-INCLUDE_ASM(sub_8001450C);
+// Matched
+void sub_8001450C(int* a0, struct_16* a1, int a2, int a3)
+{
+    unsigned int i;
+    sub_80014574(a1, a2, a3);
+    for (i = 0; i < a1->field_4; i++)
+    {
+        a0[i] = 0;
+    }
+}
 // Matched
 void sub_80014574(struct_16* p, int a1, int a2)
 {
@@ -165,4 +190,15 @@ int sub_800148D4(void)
 {
     return ((int*)dword_8008D3F8[9])[0x2C / 4] == 0;
 }
-INCLUDE_ASM(sub_800148F4);
+// Matched
+void sub_800148F4(int a0)
+{
+    int* p = dword_8008D3F8[9];
+    p[0x28 / 4] |= 4;
+    p[0x38 / 4] = a0;
+    if (p[0x2C / 4] != 0)
+    {
+        printf(aAssertionFaile_3, aEffectC, 0x124);
+        exit(1);
+    }
+}

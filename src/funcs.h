@@ -416,11 +416,20 @@ extern int sub_8003FDC0(int a0, int a1);
 extern void sub_80012614(int a0, int a1, int a2, int a3);
 extern void sub_8001852C(int a0, int a1);
 extern unsigned int sub_8001C874(void);
-extern void sub_800BFAF8(void);
+extern void sub_800BFAF8(int a0);
 extern struct_8_id* sub_8001C314(struct_8_list* p, int id);
 extern void sub_8001497C(void);
 extern int sub_800148D4(void);
 extern int* sub_80019C70(int idx);
 extern int sub_80019C84(void);
+
+extern int sub_800A11D8(int a0);
+
+extern int sub_8001F03C(int a0, int a1, int a2, int a3);
+extern int* sub_800B3260(int a0);
+extern void sub_8001A9A4(void);
+extern void sub_8001A9E4(void);
+
+extern void sub_800209AC(struct_cb* p, int* q);
 
 #endif

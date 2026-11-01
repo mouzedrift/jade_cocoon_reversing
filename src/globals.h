@@ -334,9 +334,28 @@ extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
 {
-    char pad_0[0x38];
+    int field_0;
+    int field_4;
+    char pad_8[0x2C];
+    int field_34;
     unsigned short id_38;
-    char pad_3A[0x36];
+    unsigned short field_3A;
+    unsigned short field_3C;
+    unsigned short field_3E;
+    unsigned short field_40;
+    unsigned char field_42;
+    unsigned char field_43;
+    int field_44;
+    int field_48;
+    int field_4C;
+    int field_50;
+    int field_54;
+    int field_58;
+    int field_5C;
+    int field_60;
+    int field_64;
+    int field_68;
+    int field_6C;
 } struct_112;
 typedef struct
 {
@@ -362,5 +381,29 @@ typedef struct
     int count;
     struct_8_id* items;
 } struct_8_list;
+
+extern int dword_8007A6AC[];
+extern int dword_8008D40C;
+typedef struct
+{
+    char pad_0[0x14];
+    int count;
+    struct_12* items;
+} struct_list_14;
+typedef struct struct_cb
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*fn_8)(struct struct_cb*, int*);
+    int field_C;
+    int field_10;
+    int* field_14;
+} struct_cb;
+
+typedef struct
+{
+    short field_0;
+    short field_2;
+} struct_4s;
 
 #endif
