@@ -42,7 +42,16 @@ void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
 INCLUDE_ASM(sub_800324D8);
 INCLUDE_ASM(sub_800327A8);
 INCLUDE_ASM(sub_80032D34);
-INCLUDE_ASM(sub_80032DFC);
+// Matched
+void sub_80032DFC(short* p, int a1)
+{
+    int d = p[8] - p[4];
+    short* q = sub_80040298((void*)a1, p, 10);
+    q[4] = p[4] + d;
+    q[8] = p[4];
+    q[12] = p[4] + d;
+    q[16] = p[4];
+}
 INCLUDE_ASM(sub_80032E78);
 INCLUDE_ASM(sub_80032EF4);
 INCLUDE_ASM(sub_80032F88);

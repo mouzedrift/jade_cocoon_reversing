@@ -24,12 +24,15 @@ int GetTiyFileCount_80028E68(int* p)
 {
     return p[0];
 }
-#if 0
+extern void sub_800295D8(int* a0, int a1, int* a2, int a3, int a4);
+extern void sub_80028EEC(int* a0, int a1, int* a2, int a3, int a4);
+// Matched
 void sub_80028E74(int* a0, int a1, int* a2, int a3, int a4)
 {
+    int v = *(int*)a3;
+    sub_800295D8(a0, a1, a2, v, a4);
+    sub_80028EEC(a0, a1, a2, a3, v);
 }
-#endif
-INCLUDE_ASM(sub_80028E74);
 INCLUDE_ASM(sub_80028EEC);
 INCLUDE_ASM(sub_80028FDC);
 INCLUDE_ASM(sub_800290FC);

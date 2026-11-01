@@ -177,7 +177,7 @@ extern void sub_80036658(int arg0);
 extern void sub_8001DB98(void* arg0);
 extern void sub_80029708(void* arg0, void* arg1);
 extern void sub_800296A0(void* arg0);
-extern void sub_80040298(void* arg0, void* arg1, int arg2);
+extern short* sub_80040298(void* arg0, void* arg1, int arg2);
 extern void sub_800338DC(void* arg0, void* arg1, void* arg2);
 extern void sub_800390F4(void* arg0, int arg1);
 extern unsigned short sub_8001C818(unsigned short* p);
