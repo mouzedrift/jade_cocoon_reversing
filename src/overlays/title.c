@@ -221,36 +221,38 @@ void sub_800A223C(void)
 }
 
 #if 0
-// Not matched: saveData base register is derived from the playerYan base in the original (addiu a0,v0,-0x24) but late
+// Not matched: gcc computes the base registers before the first store (original: store, then addiu of the base, saveData base = base - 0x24)
 void sub_800A22FC(void)
 {
+    char* b;
+    char* s;
     playerYan_8008B594 = 0x64;
+    b = (char*)&playerYan_8008B594;
+    s = SBASE;
+    b[5] = 3;
+    b[6] = 0xE;
+    b[4] = 0;
+    b[7] = 1;
+    s[0x7E4] = 1;
+    s[0x7E5] = 0;
+    s[0x7E6] = 0xFF;
+    if (*(unsigned int*)(b + 0x284) < 10)
     {
-        char* b = (char*)&playerYan_8008B594;
-        char* s = SBASE;
-        b[5] = 3;
-        b[6] = 0xE;
-        b[4] = 0;
-        b[7] = 1;
-        s[0x7E4] = 1;
-        s[0x7E5] = 0;
-        s[0x7E6] = 0xFF;
-        if (*(unsigned int*)(b + 0x284) < 10)
-        {
-            *(int*)(s + 0x2A8) = 10;
-        }
+        *(int*)(s + 0x2A8) = 10;
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(title, sub_800A22FC);
 
-#if 0
-// Not matched: last two loops are not strength reduced to a pointer
 void sub_800A2358(void)
 {
-    char* b = SA(0x8008B594);
+    char* b;
+    char* p;
     int i;
-    *(int*)b = 0;
+    int j;
+    int k;
+    playerYan_8008B594 = 0;
+    b = (char*)&playerYan_8008B594;
     for (i = 0; i < 0x40; i++)
     {
         b[4 + i * 2] = 0xFF;
@@ -273,17 +275,15 @@ void sub_800A2358(void)
     *(int*)(b + 0x284) = 0;
     *(int*)(b + 0x288) = 0;
     *(int*)(b + 0x28C) = 0;
-    for (i = 0x12; i >= 0; i--)
+    for (j = 0x12, p = b + 0x12; j >= 0; j--, p--)
     {
-        b[0x290 + i] = 0;
+        p[0x290] = 0;
     }
-    for (i = 0x13; i >= 0; i--)
+    for (k = 0x13, p = b + 0x13; k >= 0; k--, p--)
     {
-        b[0x2A3 + i] = 0;
+        p[0x2A3] = 0;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, sub_800A2358);
 
 // Matched
 void sub_800A2424(void)
