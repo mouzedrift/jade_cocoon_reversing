@@ -66,12 +66,51 @@ INCLUDE_ASM(sub_80030EEC);
 INCLUDE_ASM(sub_8003105C);
 INCLUDE_ASM(sub_80031160);
 INCLUDE_ASM(sub_80031260);
-INCLUDE_ASM(sub_80031334);
+// Matched
+void sub_80031334(int idx)
+{
+    SoundStruct* s = &stru_80091D00;
+    int a;
+    short b;
+    if (dword_800833E4[idx].field_0 == 1)
+    {
+        a = s->field_14_sep_access_num;
+    }
+    else
+    {
+        a = s->field_C_sep_access_num;
+    }
+    b = dword_800833E4[idx].field_4;
+    SsSepStop(a, b);
+    SsSepSetVol(a, b, 0, 0);
+}
 // Matched
 void sub_800313C8(int idx)
 {
     SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
 }
+#if 0
+// Not matched (3 words: lui/addiu/sll scheduling)
+void sub_80031408(SoundStruct* s, int idx)
+{
+    SoundInfo* si = soundFiles_80082F0C + idx;
+    int v = ((short*)si)[1];
+    int a;
+    int b;
+    if (v >= 0x10)
+    {
+        a = s->field_14_sep_access_num;
+        b = v - 0x10;
+    }
+    else
+    {
+        a = s->field_C_sep_access_num;
+        b = v;
+    }
+    SsSepStop(a, b);
+    SsSepSetVol(a, b, 0, 0);
+}
+#endif
 INCLUDE_ASM(sub_80031408);
 // Matched
 void PlaySfx_80031494(int a1)

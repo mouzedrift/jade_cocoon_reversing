@@ -102,7 +102,25 @@ short sub_80037A4C(void)
 {
     return ((short*)dword_8008D4A0[0x24 / 4])[0x12];
 }
-INCLUDE_ASM(sub_80037A6C);
+extern void sub_80037918(int* p);
+extern int dword_8008B4F8;
+// Matched
+void sub_80037A6C(int a, int b)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    if (b >= 2)
+    {
+        p[0x34 / 4] = a;
+        ((short*)p)[0x12 / 2] = b;
+        ((short*)p)[0xA / 2] = *(unsigned short*)&dword_8008B4F8;
+        p[1] |= 0x20;
+    }
+    else
+    {
+        dword_8008B4F8 = a;
+        sub_80037918(p);
+    }
+}
 // Matched
 void sub_80037AC8(int a0)
 {

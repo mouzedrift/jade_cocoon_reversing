@@ -52,7 +52,16 @@ void sub_80032DFC(short* p, int a1)
     q[12] = p[4] + d;
     q[16] = p[4];
 }
-INCLUDE_ASM(sub_80032E78);
+// Matched
+void sub_80032E78(unsigned short* p, int a1)
+{
+    int d = ((short*)p)[13] - ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    q[5] = p[5] + d;
+    q[9] = p[5] + d;
+    q[13] = p[5];
+    q[17] = p[5];
+}
 INCLUDE_ASM(sub_80032EF4);
 INCLUDE_ASM(sub_80032F88);
 // Matched
