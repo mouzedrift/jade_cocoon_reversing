@@ -123,33 +123,38 @@ void sub_800A1F78(void* a)
     sub_800A1AFC(a, 11);
 }
 
-#if 0
+typedef struct { char c[4]; } Blk4_;
+extern Blk4_ dword_800A08B0;
+
 void sub_800A1F98(char* p, char* q)
 {
     char tmp[4];
-    Blk8_ loc;
-    int i;
+    Blk4_ loc;
+    short i;
+    short y;
     Sprite20_* e;
+    Sprite20_* e5;
 
     memset(tmp, 0, 4);
-    loc = *(Blk8_*)0x800A08B0;
-    ((Sprite20_*)p)[5].y_A = 0x4A;
-    ((Sprite20_*)p)[5].x_8 = 0x55;
+    y = 0x4A;
+    e5 = &((Sprite20_*)p)[5];
+    loc = dword_800A08B0;
+    e5->y_A = y;
+    e5->x_8 = 0x55;
     sub_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
-    SetSemiTrans(p + 0x64, 1);
-    sub_80040298((void*)pOT_8008D3EC, p + 0x64, 5);
+    SetSemiTrans(e5, 1);
+    sub_80040298((void*)pOT_8008D3EC, e5, 5);
     sub_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
+    y = 0;
     for (i = 7; i < 9; i++)
     {
-        e = &((Sprite20_*)p)[i];
+        e = (Sprite20_*)((int)i * 20 + (int)p);
         e->x_8 = (i - 7) * 5 << 5;
-        e->y_A = 0;
+        e->y_A = y;
         sub_80040298((void*)pOT_8008D3EC, e, 5);
         sub_80040298((void*)pOT_8008D3EC, q + i * 8, 2);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, sub_800A1F98);
 
 // Matched
 void sub_800A20F4(void)
