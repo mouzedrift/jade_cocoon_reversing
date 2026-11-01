@@ -124,12 +124,44 @@ INCLUDE_DATA(dword_80073008);
 INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
 
+#if 0
+// Not matched
+int sub_80018E5C(char* a0, unsigned int a1)
+{
+    struct_4s* t = (struct_4s*)(a0 + 0x108);
+    int v = 0;
+    if (a1 >= 10)
+    {
+        if (a1 == 10)
+        {
+            v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
+        }
+    }
+    else
+    {
+        v = t[a1].field_0;
+    }
+    return v;
+}
+#endif
 INCLUDE_ASM(sub_80018E5C);
 INCLUDE_ASM(sub_80018EBC);
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
 INCLUDE_ASM(sub_800199A0);
-INCLUDE_ASM(sub_80019A20);
+// Matched
+void sub_80019A20(char* a0)
+{
+    unsigned int idx = *(unsigned int*)(a0 + 0x5C);
+    if (idx < 0xC9)
+    {
+        *(int*)(a0 + 0x80) = dword_8007A6AC[idx];
+    }
+    else
+    {
+        *(int*)(a0 + 0x80) = *sub_800B3260(idx - 0x39);
+    }
+}
 #if 0
 void sub_80019A80(int arg0)
 {

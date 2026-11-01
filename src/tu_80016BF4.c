@@ -31,6 +31,19 @@ INCLUDE_ASM(sub_80016C3C);
 INCLUDE_ASM(sub_80016E20);
 INCLUDE_ASM(sub_80016FC8);
 INCLUDE_ASM(sub_80017158);
-INCLUDE_ASM(sub_80017208);
+// Matched
+void sub_80017208(int* a0, int* a1)
+{
+    if (a1[0] < 0x20)
+    {
+        sub_800C4090((int)(a1 + 0x44 / 4), (int)(a1 + 0xA8 / 4), 0x5DC, (0x20 - a1[0]) << 7);
+        a1[0] = a1[0] + 1;
+    }
+    else
+    {
+        sub_800C410C();
+        a0[0] = (a0[0] & ~1) | 0x8000;
+    }
+}
 INCLUDE_ASM(sub_80017290);
 INCLUDE_ASM(sub_800173A8);

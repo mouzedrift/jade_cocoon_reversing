@@ -19,4 +19,7 @@ extern char aMainC[];
 extern char aSoundC[];
 extern char name[];
 
+extern char aAssertionFaile_3[];
+extern char aEffectC[];
+
 #endif

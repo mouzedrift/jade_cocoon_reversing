@@ -255,7 +255,17 @@ void sub_80010A10(int arg0)
     int* p = sub_8001091C();
     sub_80010AD8(((int**)p)[0x14 / 4][1]);
 }
-INCLUDE_ASM(sub_80010A44);
+// Matched
+int sub_80010A44(void)
+{
+    int* p = (int*)((int*)sub_8001091C())[5];
+    int* q = (int*)p[1];
+    if (q[0x38 / 4] == 5)
+    {
+        return ((int*)q[0])[2];
+    }
+    return 0;
+}
 // Matched
 void sub_80010A90(int arg0, int* arg1)
 {

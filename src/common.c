@@ -41,7 +41,15 @@ void sub_80012794(struct_obj_B* p, int a1)
 }
 #endif
 INCLUDE_ASM(sub_80012794);
-INCLUDE_ASM(sub_800127D0);
+// Matched
+void sub_800127D0(int a0, int a1, int a2, int a3)
+{
+    int v = sub_80014390(a0 & 0xFF);
+    if (v != 0)
+    {
+        sub_80012614(v, a1, a2, a3);
+    }
+}
 INCLUDE_ASM(sub_80012828);
 INCLUDE_ASM(sub_800129B0);
 INCLUDE_ASM(sub_80012BB0);

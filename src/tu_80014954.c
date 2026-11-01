@@ -471,7 +471,17 @@ INCLUDE_DATA(dword_80083D00);
 INCLUDE_DATA(dword_80084330);
 INCLUDE_DATA(asc_80084350);
 
-INCLUDE_ASM(sub_80014954);
+// Matched
+int sub_80014954(void)
+{
+    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 2;
+}
+// Matched
+void sub_8001497C(void)
+{
+    int* p = dword_8008D3F8[9];
+    p[0x28 / 4] |= 1;
+}
 INCLUDE_ASM(sub_800149A4);
 INCLUDE_ASM(sub_80014C28);
 INCLUDE_ASM(sub_80014CCC);
