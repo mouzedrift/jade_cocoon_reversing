@@ -61,6 +61,8 @@ class Checker:
         size = (nxt[0] - start) // 4 if nxt else 0
         orig = self.orig[self.syms[name] - BASE:][:size * 4]
         built = self.built[start - BASE:][:size * 4]
+        if len(orig) < size * 4 or len(built) < size * 4:
+            return None
         lui = set()
         bad = 0
         for i in range(size):

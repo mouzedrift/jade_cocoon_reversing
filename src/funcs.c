@@ -4014,23 +4014,23 @@ void sub_800431C4(struct_obj_D* p, int* q)
     }
 }
 
-// Matched
+// Not matched (close)
 int sub_8001D2D4(void)
 {
     short* p = sub_8001D190();
-    int idx;
-    if (p == 0)
+    short idx;
+    if (0 != p)
     {
-        idx = 0x24;
+        idx = *p;
     }
     else
     {
-        idx = *p;
+        idx = 0x24;
     }
     return dword_8007D938[idx];
 }
 
-// Matched
+// Not matched (close)
 void sub_80020CD8(int a0, int* p)
 {
     int v = p[0];
@@ -4063,11 +4063,13 @@ void sub_80025ED0(int* p)
 // Matched
 void sub_800263CC(int* p)
 {
+    int* tmp27;
     int** q = (int**)p[5];
-    sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, p[0xB], q[0][1]);
+    tmp27 = *(q + 0);
+    sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, *(p + 0xB), tmp27[1]);
 }
 
-// Matched
+// Not matched (close)
 int sub_800272D0(void)
 {
     int* a = dword_800B1DC4[0x24 / 4];
@@ -4117,19 +4119,23 @@ void sub_800315F4(void)
     sub_80030D00(s0[2]);
 }
 
-// Matched
+// Not matched (close)
 void sub_80037770(void)
 {
+    short tmp60;
+    char* tmp87;
     int* p = dword_8008D4A0[0x24 / 4];
-    p[1] = (p[1] & ~4) & ~0x2000;
+    tmp87 = *(1 + p);
+    tmp60 = (int)tmp87;
+    1[p] = (tmp60 & ~4) & ~0x2000;
     sub_80039698(p);
 }
 
-// Matched
+// Not matched (close)
 unsigned int sub_8003B918(unsigned int n)
 {
-    unsigned int x;
-    unsigned int y;
+    int y;
+    int x;
     if (n == 0)
     {
         return 0;
@@ -4137,13 +4143,13 @@ unsigned int sub_8003B918(unsigned int n)
     x = n;
     if (n < 2)
     {
-        x = 1;
+        x = (int)1;
     }
     do
     {
-        y = x;
         x = (n / y + y) >> 1;
-    } while ((int)x < (int)y);
+        y = (int)x;
+    } while (x < y);
     return y;
 }
 
@@ -4161,17 +4167,21 @@ struct_node_C* sub_8003BED4(int key)
     return 0;
 }
 
-// Matched
+// Not matched (close)
 int sub_8003C060(int key)
 {
+    int tmp84;
+    unsigned int tmp55;
     struct_node_C* n = sub_8003BED4(key);
-    if (!n)
+    if (!(n))
     {
         return 2;
     }
-    n->field_C |= 0x2000;
-    n->field_24 = 0;
     return 0;
+    tmp84 = n->field_C;
+    tmp55 = tmp84;
+    (*n).field_24 = (int)0;
+    tmp55 = tmp55 | 0x2000;
 }
 
 // Matched
@@ -4198,7 +4208,7 @@ int sub_8003C900(void)
 // Matched
 int sub_8003E484(int a0)
 {
-    unsigned short v = *sub_8003F684(2, a0);
+    int v = *sub_8003F684(2, a0);
     if (v < 0xC3)
     {
         if (v >= 0x91)
@@ -4226,21 +4236,21 @@ void AllocMdecVLCBuffer_80041848(void)
     }
 }
 
-// Matched
+// Not matched (close)
 int sub_80011B24(int a0)
 {
     int* p = dword_8008D464[0x24 / 4];
     if (a0 == 0x29)
     {
-        p[1] = 1000;
-        p[0] = 0;
         return 1000;
+        *(p + 1) = (int)1000;
+        p[0] = (int)0;
     }
-    if (a0 == 0x2A)
+    if (0x2A == a0)
     {
-        p[1] = 1000;
-        p[0] = 1;
+        *(p + 1) = (int)1000;
         return 1;
+        *(0 + p) = 1;
     }
     return 1000;
 }
@@ -4258,11 +4268,11 @@ void sub_80016BF4(int* p, int* q)
 // Matched
 struct_20* sub_80019C28(unsigned int idx)
 {
-    if (idx >= 0xC9)
+    if (0xC9 > idx)
     {
-        return sub_800B3274(idx - 0x39);
+        return &dword_8007A9F8[idx];
     }
-    return &dword_8007A9F8[idx];
+    return sub_800B3274(idx - 0x39);
 }
 
 // Matched
