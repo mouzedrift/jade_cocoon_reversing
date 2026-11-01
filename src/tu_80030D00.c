@@ -91,8 +91,20 @@ void PlaySfx_80031494(int a1)
                   (settingsFlags_8008B58C >> 14) & 0x7F);
     }
 }
-INCLUDE_ASM(sub_800314F4);
-extern int sub_80067630(short a, short b, short c, short d, short e);
+// Matched
+short sub_800314F4(int a)
+{
+    SoundStruct* s;
+    if (a < 0x3f)
+    {
+        s = &stru_80091D20;
+    }
+    else
+    {
+        s = &stru_80091D40;
+    }
+    return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.field_1C_settings >> 14) & 0x7F, (saveData_8008B570.field_1C_settings >> 14) & 0x7F);
+}
 // Matched
 void sub_80031574(short a, short b)
 {
@@ -105,7 +117,7 @@ void sub_80031574(short a, short b)
     {
         s = &stru_80091D40;
     }
-    sub_80067630(a, *(short*)s, b, 0, 0x3c);
+    SsUtKeyOff(a, *(short*)s, b, 0, 0x3c);
 }
 // Matched
 void sub_800315D8(int a0)

@@ -46,7 +46,9 @@ typedef struct
 {
     int field_0;
     int field_4;
-    char pad_8[0x980];
+    char pad_8[0x14];
+    unsigned int field_1C_settings; // == settingsFlags_8008B58C
+    char pad_20[0x968];
     Minion minions[15];
     Item items[12];
 } SaveData;

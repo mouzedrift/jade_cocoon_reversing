@@ -38,17 +38,17 @@ INCLUDE_ASM(sub_80028FDC);
 INCLUDE_ASM(sub_800290FC);
 INCLUDE_ASM(sub_800292D0);
 INCLUDE_ASM(sub_800295D8);
-extern void sub_800296A0(int* p);
 // Matched
 void sub_80029674(void* p)
 {
     char buf[0x28];
     sub_80029708(buf, p);
-    sub_800296A0((int*)buf);
+    sub_800296A0(buf);
 }
 // Matched
-void sub_800296A0(int* p)
+void sub_800296A0(void* arg0)
 {
+    int* p = (int*)arg0;
     if (p[0] == 1 && p[2] != 0)
     {
         LoadImage((RECT*)&p[3], (u_long*)p[5]);

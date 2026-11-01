@@ -60,33 +60,52 @@ INCLUDE_ASM(sub_8002C06C);
 INCLUDE_ASM(sub_8002C100);
 INCLUDE_ASM(sub_8002C290);
 INCLUDE_ASM(sub_8002C414);
-#if 0
+typedef struct
+{
+    int field_0;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    char pad_7[13];
+} OverlayColorEntry;
+extern unsigned char dword_800826F8[][4];
+// Matched
 void sub_8002C5D0(int a0)
 {
+    short i = 0x84;
+    do
+    {
+        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].r = dword_800826F8[a0][0];
+        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].g = dword_800826F8[a0][1];
+        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].b = dword_800826F8[a0][2];
+        i++;
+    } while (i < 0x8e);
 }
-#endif
-INCLUDE_ASM(sub_8002C5D0);
 // Matched
 unsigned int sub_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
 }
-// Matched
+#if 0
+// Not matched (b ends up in a0 instead of v0)
 int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
 {
     char* p = base + idx * 4;
-    if (p[0xde] & 1)
+    int b;
+    if (!(p[0xde] & 1))
     {
-        unsigned char b = p[0xdf];
-        if (b)
-        {
-            sub_8002AF10(a2 + b * 16, a1, a4);
-            return 1;
-        }
         return 0;
     }
-    return 0;
+    b = (unsigned char)p[0xdf];
+    if (!b)
+    {
+        return 0;
+    }
+    sub_8002AF10(a2 + b * 16, a1, a4);
+    return 1;
 }
+#endif
+INCLUDE_ASM(sub_8002C670);
 INCLUDE_ASM(sub_8002C6DC);
 INCLUDE_ASM(sub_8002C728);
 INCLUDE_ASM(sub_8002CAC8);
