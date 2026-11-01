@@ -435,4 +435,15 @@ extern void sub_800209AC(struct_cb* p, int* q);
 extern int sub_800A248C(void);
 extern int sub_800A2B20(int a0);
 
+extern int sub_8002032C(int a0, int a1, int a2);
+extern void sub_800268E8(int a0, int a1, int a2, int a3, int a4);
+
+extern void sub_800A5BCC(int a0);
+
+extern void sub_800C4090(int a0, int a1, int a2, int a3);
+extern void sub_800C410C(void);
+
+extern struct_cb* sub_80043AF8(int a0);
+extern void sub_8001E574(int* p, int a1);
+
 #endif

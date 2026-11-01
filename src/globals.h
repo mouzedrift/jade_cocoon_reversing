@@ -414,4 +414,16 @@ typedef struct
     int field_18;
 } struct_28;
 
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    int field_8;
+    int field_C;
+    char pad_10[0x120];
+    int field_130;
+} struct_obj_F;
+
+extern unsigned short dword_8008B578[];
+
 #endif

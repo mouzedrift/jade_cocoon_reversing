@@ -3463,3 +3463,4 @@ sub_8001A9E4=0x8001a9e4; // function behind sub_8001A9A4 (was hidden in its span
 dword_800B1DB8=0x800b1db8; // overlay data referenced from the game code
 dword_800B1DC4=0x800b1dc4; // overlay data referenced from the game code
 sub_800A2B20=0x800a2b20; // overlay function called from the game code
+sub_800A5BCC=0x800a5bcc; // overlay function called from the game code
