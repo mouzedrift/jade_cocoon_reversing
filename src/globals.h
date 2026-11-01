@@ -112,7 +112,9 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x14];
+    char pad_0[0x10];
+    short field_10;
+    char pad_12[2];
     unsigned short* field_14;
     char pad_18[0x12];
     short field_2A;
@@ -248,7 +250,10 @@ typedef struct struct_node_C
     int field_4;
     int key;
     unsigned int field_C;
-    char pad_10[0x14];
+    int field_10;
+    char pad_14[8];
+    int field_1C;
+    int field_20;
     int field_24;
 } struct_node_C;
 
@@ -425,5 +430,35 @@ typedef struct
 } struct_obj_F;
 
 extern unsigned short dword_8008B578[];
+// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
+struct EventEntry;
+typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
+typedef struct EventEntry
+{
+    unsigned int flags;
+    int field_4; // nonzero: buffer is not owned
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+    int size;
+    void* buffer;
+} EventEntry;
+
+typedef struct EventNode
+{
+    int field_0;
+    struct EventNode* next;
+    int field_8;
+    int count;
+    EventEntry entry;
+} EventNode;
+
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} Vec3i;
+
+extern int dword_8008D4D8;
 
 #endif

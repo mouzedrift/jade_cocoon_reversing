@@ -17,6 +17,7 @@
 #include "data_decls.h"
 
 extern unsigned short word_8009194C[];
+extern unsigned short dword_800918D4[];
 extern unsigned short word_800918CC[];
 extern void PlaySfx_80031494(int a1);
 
@@ -72,9 +73,36 @@ int sub_8003D210(int limit, int pos, int step, int idx)
     return pos;
 }
 #if 0
-int sub_8003D288(int arg0, int arg1)
+// Not matched: return value register: orig keeps result in a2 across PlaySfx call (re-set after call)
+int sub_8003D288(int flag, int idx)
 {
-    return 0;
+    int r = 0;
+    unsigned int x;
+    if ((word_8009194C[idx] & 0x40) && !(word_800918D0[idx] & 4) && !(((unsigned short*)dword_800918D4)[idx] & 4))
+    {
+        goto done;
+    }
+    x = word_8009194C[idx];
+    if (!(x & 4))
+    {
+        goto end;
+    }
+    if ((word_800918D0[idx] & 0x40) || (((unsigned short*)dword_800918D4)[idx] & 0x40))
+    {
+        if (!(x & 0x40))
+        {
+            goto end;
+        }
+    }
+done:
+    r = 1;
+    if (flag)
+    {
+        PlaySfx_80031494(0x7E);
+        r = 1;
+    }
+end:
+    return r;
 }
 #endif
 INCLUDE_ASM(sub_8003D288);
@@ -123,7 +151,38 @@ int sub_8003D4A0(void)
 }
 INCLUDE_ASM(sub_8003D4C0);
 INCLUDE_ASM(sub_8003D630);
-INCLUDE_ASM(sub_8003D794);
+typedef struct
+{
+    short field_0;
+    short field_2;
+    unsigned short field_4;
+    unsigned short field_6;
+    short field_8;
+    short field_A;
+} struct_menu;
+
+extern int sub_8003D830(struct_menu* p);
+
+// Matched
+int sub_8003D794(struct_menu* p)
+{
+    unsigned short a = p->field_8;
+    unsigned short b = p->field_A;
+    int r = sub_8003D830(p);
+    if (r == 0)
+    {
+        int t = p->field_4 - 1;
+        if (t < p->field_8)
+        {
+            p->field_8 = t;
+        }
+    }
+    if ((short)a != p->field_8 || (short)b != p->field_A)
+    {
+        PlaySfx_80031494(0x7F);
+    }
+    return r;
+}
 INCLUDE_ASM(sub_8003D830);
 INCLUDE_ASM(sub_8003DA70);
 INCLUDE_ASM(sub_8003DB74);

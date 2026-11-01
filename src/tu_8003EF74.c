@@ -19,6 +19,37 @@
 extern void sub_8003F610(int* buf);
 extern void sub_8003E91C(int mode, int* buf, int a, int b);
 
+typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
+typedef struct List { int count; ListNode* head; ListNode* tail; } List;
+
+struct Heap;
+typedef struct HeapBlock
+{
+    int magic;
+    unsigned int size;
+    struct HeapBlock* prev;
+    struct HeapBlock* next;
+} HeapBlock;
+
+typedef struct Heap
+{
+    int magic;
+    int inited;
+    unsigned int size;
+    int count;
+    int field_10;
+    unsigned int used;
+    void* buffer;
+    HeapBlock* head;
+    HeapBlock* tail;
+} Heap;
+
+extern HeapBlock* sub_80040150(Heap* h, unsigned int size);
+extern void* sub_8003FFD0(Heap* h, unsigned int size);
+extern void sub_800400B4(Heap* h, void* p);
+extern void* sub_8003FDC0(List* l, int size);
+extern void sub_8003FE38(void* arg0, int arg1);
+
 INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
 
@@ -98,19 +129,58 @@ void free3_8003FC6C(void* block)
 {
     free3(block);
 }
-#if 0
-int sub_8003FC8C(int a0, int a1)
+// Matched
+int sub_8003FC8C(int size, Heap* h)
 {
-    return 0;
+    switch ((int)h)
+    {
+    case 0:
+        return (int)sub_8003FDC0((List*)dword_80096090, size);
+    case 1:
+        return (int)malloc3_8003FC4C(size);
+    default:
+        if (h->magic == (int)0x8FFFFFFF)
+        {
+            if (h->inited != 0)
+            {
+                return (int)sub_8003FFD0(h, size);
+            }
+            return (int)malloc3_8003FC4C(size);
+        }
+        break;
+    }
+    return (int)sub_8003FDC0((List*)h, size);
 }
-#endif
-INCLUDE_ASM(sub_8003FC8C);
-#if 0
-void sub_8003FD18(int arg0)
+// Matched
+void sub_8003FD18(int ptr, Heap* h)
 {
+    switch ((int)h)
+    {
+    case 0:
+        sub_8003FE38(dword_80096090, ptr);
+        break;
+    case 1:
+        free3_8003FC6C((void*)ptr);
+        break;
+    default:
+        if (h->magic == (int)0x8FFFFFFF)
+        {
+            if (sub_80040274((int)h, (int*)ptr))
+            {
+                sub_800400B4(h, (void*)ptr);
+            }
+            else
+            {
+                free3_8003FC6C((void*)ptr);
+            }
+        }
+        else
+        {
+            sub_8003FE38(h, ptr);
+        }
+        break;
+    }
 }
-#endif
-INCLUDE_ASM(sub_8003FD18);
 // Matched
 void sub_8003FDB0(int* p)
 {
@@ -118,23 +188,163 @@ void sub_8003FDB0(int* p)
     p[1] = 0;
     p[2] = 0;
 }
-INCLUDE_ASM(sub_8003FDC0);
+// Matched
+void* sub_8003FDC0(List* l, int size)
+{
+    ListNode* n = (ListNode*)malloc3_8003FC4C(size + 8);
+    n->prev = 0;
+    n->next = 0;
+    if (l->count == 0)
+    {
+        l->head = n;
+    }
+    else
+    {
+        n->prev = l->tail;
+        l->tail->next = n;
+    }
+    l->tail = n;
+    l->count++;
+    return n + 1;
+}
 #if 0
+// Not matched: arg1 register reused for prev (3 words)
 void sub_8003FE38(void* arg0, int arg1)
 {
+    List* l = (List*)arg0;
+    ListNode* n = (ListNode*)((char*)arg1 - 8);
+    if (l->count)
+    {
+        if (n->prev == 0)
+        {
+            l->head = n->next;
+        }
+        else
+        {
+            n->prev->next = n->next;
+        }
+        if (n->next == 0)
+        {
+            l->tail = n->prev;
+        }
+        else
+        {
+            n->next->prev = n->prev;
+        }
+        l->count--;
+        free3_8003FC6C(n);
+    }
 }
 #endif
 INCLUDE_ASM(sub_8003FE38);
-#if 0
+// Matched
 void sub_8003FEC8(void* arg0)
 {
+    List* l = (List*)arg0;
+    ListNode* n = l->tail;
+    while (n)
+    {
+        ListNode* cur = n;
+        n = n->prev;
+        free3_8003FC6C(cur);
+    }
+    sub_8003FDB0((int*)l);
+}
+// Matched
+void sub_8003FF1C(Heap* h, unsigned int size)
+{
+    void* buf = malloc3_8003FC4C(size);
+    h->magic = 0x8FFFFFFF;
+    h->inited = 1;
+    h->buffer = buf;
+    h->size = size;
+    h->used = 0;
+    h->count = 0;
+    h->head = 0;
+    h->tail = 0;
+}
+// Matched
+void sub_8003FF7C(Heap* h)
+{
+    free3_8003FC6C(h->buffer);
+    h->magic = 0x8FFFFFFF;
+    h->inited = 0;
+    h->buffer = 0;
+    h->size = 0;
+    h->count = 0;
+    h->used = 0;
+    h->head = 0;
+    h->tail = 0;
+}
+#if 0
+// Not matched: align expr (size+4)-rem folded differently
+void* sub_8003FFD0(Heap* h, unsigned int size)
+{
+    HeapBlock* b = 0;
+    int rem = size & 3;
+    unsigned int aligned;
+    if (rem)
+    {
+        aligned = 4 + size;
+        aligned -= rem;
+    }
+    else
+    {
+        aligned = size;
+    }
+    size = aligned;
+    if (h->size - h->used >= size)
+    {
+        b = sub_80040150(h, size + 16);
+    }
+    b->magic = 0x8FFFFFFF;
+    b->size = size + 16;
+    b->next = 0;
+    b->prev = 0;
+    if (h->count == 0)
+    {
+        h->head = b;
+    }
+    else
+    {
+        b->prev = h->tail;
+        h->tail->next = b;
+    }
+    h->tail = b;
+    h->used += b->size;
+    h->count++;
+    return b + 1;
 }
 #endif
-INCLUDE_ASM(sub_8003FEC8);
-INCLUDE_ASM(sub_8003FF1C);
-INCLUDE_ASM(sub_8003FF7C);
 INCLUDE_ASM(sub_8003FFD0);
-INCLUDE_ASM(sub_800400B4);
+// Matched
+void sub_800400B4(Heap* h, void* p)
+{
+    HeapBlock* b;
+    if (h->count)
+    {
+        b = (HeapBlock*)p - 1;
+        if (b->prev == 0)
+        {
+            h->head = b->next;
+        }
+        else
+        {
+            b->prev->next = b->next;
+        }
+        if (b->next == 0)
+        {
+            h->tail = b->prev;
+        }
+        else
+        {
+            b->next->prev = b->prev;
+        }
+        b->magic = 0x08070F01;
+        h->used -= b->size;
+        h->count--;
+    }
+}
 // Matched
 void sub_80040148(int* p, int v)
 {

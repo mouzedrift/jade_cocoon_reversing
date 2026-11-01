@@ -23,9 +23,25 @@ extern char aDWorkPsusEvent[];
 #define malloc3_dbg ((void* (*)(int, const char*, int))malloc3_8003FC4C)
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
+extern short uiColor_8008B590;
+extern void sub_8004226C(int a, RECT* r, int c, int d);
+extern void sub_80041ED0(int a, RECT* r, int c, int d);
+
 INCLUDE_ASM(sub_8004226C);
-INCLUDE_ASM(sub_80042460);
-INCLUDE_ASM(sub_800424C0);
+// Matched
+void sub_80042460(int a0, unsigned char* p, int a2, int a3)
+{
+    RECT r;
+    sub_8004226C(p[2], &r, a3, *(short*)p);
+    sub_80041ED0(a0, &r, a2, p[3]);
+}
+// Matched
+void sub_800424C0(int a0, short a1, int a2, int a3)
+{
+    RECT r;
+    sub_8004226C(a1, &r, a3, uiColor_8008B590);
+    sub_80041ED0(a0, &r, a2, 1);
+}
 INCLUDE_ASM(sub_8004251C);
 INCLUDE_ASM(sub_80042750);
 INCLUDE_ASM(sub_80042870);
@@ -51,7 +67,21 @@ void sub_80042B38(int a0, int a1)
 }
 #endif
 INCLUDE_ASM(sub_80042B38);
-INCLUDE_ASM(sub_80043054);
+extern int sub_8003C0A4(int a);
+extern int sub_800434C4(int a);
+extern int dword_80096108;
+extern void sub_800430E8(void);
+extern void sub_800432EC(void);
+
+// Matched
+void sub_80043054(struct_obj_D* p, int* q)
+{
+    SsSetSerialAttr(0, 0, 1);
+    dword_80096118 = -1;
+    q[0] = 0;
+    ((short*)q)[4] = 0;
+    p->field_8 = sub_800430E8;
+}
 // Matched
 void sub_800430B0(void)
 {
@@ -68,13 +98,34 @@ void sub_800431C4(struct_obj_D* p, int* q)
         p->field_8 = sub_80043204;
     }
 }
-#if 0
-void sub_80043204(void)
+// Matched
+void sub_80043204(struct_obj_D* p, int* q)
 {
+    if (sub_800434C4(dword_80096108))
+    {
+        q[1] = DsControlF(0x11, 0);
+        ((short*)q)[4] = 2;
+        p->field_8 = sub_800432EC;
+    }
 }
-#endif
-INCLUDE_ASM(sub_80043204);
-INCLUDE_ASM(sub_80043264);
+// Matched
+void sub_80043264(struct_obj_D* p, short* q)
+{
+    short v = q[5] - 14;
+    q[5] = v;
+    if (v < 0)
+    {
+        q[4] = 0;
+        p->field_8 = sub_800430E8;
+        SsSetSerialVol(0, 0, 0);
+        DsControlB(9, 0, 0);
+        sub_8003C0A4(0);
+    }
+    else
+    {
+        SsSetSerialVol(0, v, v);
+    }
+}
 INCLUDE_ASM(sub_800432EC);
 INCLUDE_ASM(sub_800433FC);
 INCLUDE_ASM(sub_800434C4);
@@ -123,7 +174,85 @@ int sub_80043840(int* a0)
     }
     return 1;
 }
-INCLUDE_ASM(sub_80043898);
-INCLUDE_ASM(sub_800438F8);
-INCLUDE_ASM(sub_80043958);
-INCLUDE_ASM(sub_80043A5C);
+// Matched
+void sub_80043898(EventNode* n)
+{
+    do
+    {
+        if ((n->entry.flags & 0x8001) == 1)
+        {
+            n->entry.cb_8(&n->entry, n->entry.buffer);
+        }
+        n = n->next;
+    } while (n);
+}
+// Matched
+void sub_800438F8(EventNode* n)
+{
+    do
+    {
+        if ((n->entry.flags & 0x8004) == 4)
+        {
+            n->entry.cb_C(&n->entry, n->entry.buffer);
+        }
+        n = n->next;
+    } while (n);
+}
+// Matched
+void sub_80043958(EventNode* n)
+{
+    if (dword_8008B540 == 0)
+    {
+        do
+        {
+            if ((n->entry.flags & 0x8001) == 1)
+            {
+                n->entry.cb_8(&n->entry, n->entry.buffer);
+            }
+            n = n->next;
+        } while (n && dword_8008B540 == 0);
+    }
+}
+#if 0
+// Not matched: gcc hoists out+0xc into a3
+void sub_800439E0(unsigned int** arr, unsigned int* out)
+{
+    unsigned int* p;
+    unsigned int i;
+    out += 4;
+    while (*arr)
+    {
+        p = *arr;
+        for (i = 0; i < p[0]; i++)
+        {
+            out[2] = p[4];
+            out[3] = p[5];
+            out[0] = p[1];
+        }
+        arr++;
+        out += 10;
+    }
+}
+#endif
+INCLUDE_ASM(sub_800439E0);
+// Matched
+int sub_80043A5C(EventNode* head)
+{
+    EventNode* n = head;
+    do
+    {
+        EventEntry* e = &n->entry;
+        if (e->buffer)
+        {
+            if (e->field_4 == 0)
+            {
+                free3_dbg(e->buffer, aDWorkPsusEvent, 0x45);
+            }
+            e->buffer = 0;
+            e->size = 0;
+        }
+        n = n->next;
+    } while (n);
+    free3_dbg(head, aDWorkPsusEvent, 0x143);
+    return 0;
+}

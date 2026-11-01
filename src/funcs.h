@@ -172,7 +172,8 @@ extern void sub_80022AE8(void* arg0, void* arg1, int arg2);
 extern void sub_80030EEC(void* arg0);
 extern void* sub_8003BFB8(int arg0);
 extern void sub_8003FE38(void* arg0, int arg1);
-extern void sub_8003FD18(int arg0);
+struct Heap;
+extern void sub_8003FD18(); // callers pass only the pointer (second arg is whatever is in a1)
 extern void sub_80036658(int arg0);
 extern void sub_8001DB98(void* arg0);
 extern void sub_80029708(void* arg0, void* arg1);
@@ -258,12 +259,13 @@ extern void sub_80013E80(void* p, int arg);
 extern void sub_80013EB4(void* p, int a1, int a2);
 extern unsigned char sub_8001AC58(int idx);
 extern int sub_80024D70(int a0, int a1);
-extern int sub_8003FC8C(int a0, int a1);
+struct Heap;
+extern int sub_8003FC8C(int a0, struct Heap* a1);
 extern void InitPolyFT4_80029A10(void* a0, void* a1);
 extern void sub_8002C5D0(int a0);
 extern void sub_800429F8(int a0, int a1);
 extern void sub_80042B38(int a0, int a1);
-extern void sub_8003CA30(void);
+extern void sub_8003CA30(unsigned char mode);
 extern void sub_8001E34C(void* a0);
 extern char* sub_80024FA8(void* a0);
 extern void sub_80027CF8(void* a0, int* a1);
@@ -363,7 +365,7 @@ extern short sub_8003BA18(int v);
 extern int sub_8003BA38(unsigned int a, unsigned int b);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void ProcessPads_8001BF50(void);
-extern void sub_80043204(void);
+extern void sub_80043204(struct_obj_D* p, int* q);
 extern int sub_80053B9C(int a0, void* a1);
 extern short* sub_8001D190(void);
 extern void sub_80026A8C(void* a0, int a1, int a2);
@@ -413,7 +415,7 @@ extern void sub_800204D0(void);
 extern void sub_800205F0(void);
 extern void sub_80043B40(int* p);
 
-extern int sub_8003FDC0(int a0, int a1);
+extern void* sub_8003FDC0();
 extern void sub_80012614(int a0, int a1, int a2, int a3);
 extern void sub_8001852C(int a0, int a1);
 extern unsigned int sub_8001C874(void);
@@ -444,7 +446,7 @@ extern void sub_800A5BCC(int a0);
 extern void sub_800C4090(int a0, int a1, int a2, int a3);
 extern void sub_800C410C(void);
 
-extern struct_cb* sub_80043AF8(int a0);
+extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001E574(int* p, int a1);
 
 #endif
