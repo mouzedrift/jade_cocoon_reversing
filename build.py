@@ -51,11 +51,13 @@ def generate_ninja():
             ninja.rule(name, f"wine {cmd}" if on_linux else cmd, desc)
 
         linker_deps = list()
+        headers = [os.path.join(project_src, f) for f in sorted(os.listdir(project_src)) if f.endswith(".h")]
         for c_file in c_files:
             file_name = c_file.split(".")[0]
             out_path = os.path.join(BUILD_DIR, file_name)
 
-            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file))
+            # headers are not tracked by the preprocessor, so rebuild everything when any of them change
+            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers)
             ninja.build(f"{out_path}.o", "compile", f"{out_path}.preproc")
             ninja.build(f"{out_path}.obj", "assemble", f"{out_path}.o")
             linker_deps.append(f"{out_path}.obj")
