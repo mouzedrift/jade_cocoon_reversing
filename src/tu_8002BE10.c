@@ -20,14 +20,42 @@ INCLUDE_DATA(dword_800741EC);
 
 INCLUDE_ASM(sub_8002BE10);
 INCLUDE_ASM(sub_8002BEC8);
-INCLUDE_ASM(sub_8002BF74);
+extern void sub_8003BC84(int* a);
+// Matched
+void sub_8002BF74(void)
+{
+    int s[8];
+    dword_8008B4E8 = 0;
+    s[0] = 0x29;
+    s[1] = 0x3B;
+    s[2] = 0;
+    s[3] = 0;
+    s[4] = 0;
+    s[5] = 0;
+    s[6] = 0;
+    s[7] = (int)sub_8002BFCC;
+    sub_8003BC84(s);
+}
 // Matched
 void sub_8002BFCC(int a0, int a1)
 {
     sub_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
     dword_8008B4E8 = 1;
 }
-INCLUDE_ASM(FreeActiveOverlay_8002C014);
+// Matched
+void FreeActiveOverlay_8002C014(void)
+{
+    if (loadedOverlayMaybe_8008D620)
+    {
+        free3_8003FC6C((void*)loadedOverlayMaybe_8008D620);
+        loadedOverlayMaybe_8008D620 = 0;
+    }
+    if (dword_8008D3F4)
+    {
+        free3_8003FC6C((void*)dword_8008D3F4);
+        dword_8008D3F4 = 0;
+    }
+}
 INCLUDE_ASM(sub_8002C06C);
 INCLUDE_ASM(sub_8002C100);
 INCLUDE_ASM(sub_8002C290);

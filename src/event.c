@@ -19,6 +19,9 @@
 extern short* dword_8008D434;
 
 INCLUDE_DATA(aDWorkPsusEvent);
+extern char aDWorkPsusEvent[];
+#define malloc3_dbg ((void* (*)(int, const char*, int))malloc3_8003FC4C)
+#define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
 INCLUDE_ASM(sub_8004226C);
 INCLUDE_ASM(sub_80042460);
@@ -94,8 +97,32 @@ unsigned int sub_800435A4(void)
     return dword_80096118 >> 31;
 }
 INCLUDE_ASM(sub_800435B4);
-INCLUDE_ASM(sub_800437E8);
-INCLUDE_ASM(sub_80043840);
+// Matched
+void* sub_800437E8(int* a0, int size)
+{
+    void* p = malloc3_dbg(size, aDWorkPsusEvent, 0x2C);
+    if (p == 0)
+    {
+        return 0;
+    }
+    a0[5] = (int)p;
+    a0[4] = size;
+    return p;
+}
+// Matched
+int sub_80043840(int* a0)
+{
+    if (a0[5])
+    {
+        if (a0[1] == 0)
+        {
+            free3_dbg((void*)a0[5], aDWorkPsusEvent, 0x45);
+        }
+        a0[5] = 0;
+        a0[4] = 0;
+    }
+    return 1;
+}
 INCLUDE_ASM(sub_80043898);
 INCLUDE_ASM(sub_800438F8);
 INCLUDE_ASM(sub_80043958);
