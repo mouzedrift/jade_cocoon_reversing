@@ -227,7 +227,7 @@ extern int sub_8001CD3C(int idx);
 extern int* sub_8001CD58(int idx);
 extern int sub_8003D288(int arg0, int arg1);
 extern int sub_8003D3C0(int arg0, int arg1);
-extern void PlayMovie_80040EB4(int arg0);
+extern int PlayMovie_80040EB4(int arg0);
 extern int sub_80033624(void* arg0, int arg1);
 extern int sub_80014390(int arg0);
 extern void sub_80010AD8(int arg0);
