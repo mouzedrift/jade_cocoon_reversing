@@ -71,12 +71,11 @@ int sub_8003B8DC(int* p, int a1)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
-#if 0
-// Not matched (close)
+// Matched
 unsigned int sub_8003B918(unsigned int n)
 {
-    int y;
-    int x;
+    unsigned int x;
+    unsigned int y;
     if (n == 0)
     {
         return 0;
@@ -84,17 +83,15 @@ unsigned int sub_8003B918(unsigned int n)
     x = n;
     if (n < 2)
     {
-        x = (int)1;
+        x = 1;
     }
     do
     {
+        y = x;
         x = (n / y + y) >> 1;
-        y = (int)x;
     } while (x < y);
     return y;
 }
-#endif
-INCLUDE_ASM(sub_8003B918);
 INCLUDE_ASM(sub_8003B95C);
 // Matched
 short ratan2Difference_8003B9E0(int* a, int* b)
@@ -207,38 +204,29 @@ int sub_8003BF88(void)
     }
     return 0;
 }
-#if 0
-void* sub_8003BFB8(int arg0)
+// Matched
+void sub_8003BFB8(int arg0)
 {
-    return 0;
+    dword_80086564 = arg0;
 }
-#endif
-INCLUDE_ASM(sub_8003BFB8);
 // Matched
 int sub_8003BFC0(void)
 {
     return dword_8008656C;
 }
 INCLUDE_ASM(sub_8003BFD0);
-#if 0
-// Not matched (close)
+// Matched
 int sub_8003C060(int key)
 {
-    int tmp84;
-    unsigned int tmp55;
     struct_node_C* n = sub_8003BED4(key);
-    if (!(n))
+    if (!n)
     {
         return 2;
     }
+    n->field_24 = 0;
+    n->field_C |= 0x2000;
     return 0;
-    tmp84 = n->field_C;
-    tmp55 = tmp84;
-    (*n).field_24 = (int)0;
-    tmp55 = tmp55 | 0x2000;
 }
-#endif
-INCLUDE_ASM(sub_8003C060);
 INCLUDE_ASM(sub_8003C0A4);
 INCLUDE_ASM(sub_8003C128);
 INCLUDE_ASM(sub_8003C184);

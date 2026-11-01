@@ -55,20 +55,13 @@ void nullsub_5(void)
 }
 INCLUDE_ASM(sub_800376A8);
 INCLUDE_ASM(sub_80037720);
-#if 0
-// Not matched (close)
+// Matched
 void sub_80037770(void)
 {
-    short tmp60;
-    char* tmp87;
     int* p = dword_8008D4A0[0x24 / 4];
-    tmp87 = *(1 + p);
-    tmp60 = (int)tmp87;
-    1[p] = (tmp60 & ~4) & ~0x2000;
+    p[1] = (p[1] & ~4) & ~0x2000;
     sub_80039698(p);
 }
-#endif
-INCLUDE_ASM(sub_80037770);
 INCLUDE_ASM(sub_800377B4);
 INCLUDE_ASM(sub_80037828);
 // Matched

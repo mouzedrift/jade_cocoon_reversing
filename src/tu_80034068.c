@@ -71,6 +71,22 @@ int sub_80034B40(int* p, unsigned int mask)
     }
     return n;
 }
-INCLUDE_ASM(sub_80034B88);
+// Matched
+int sub_80034B88(int n, unsigned int mask)
+{
+    int i = 0;
+    if (n >= 0)
+    {
+        do
+        {
+            if (mask & (1 << i))
+            {
+                n--;
+            }
+            i++;
+        } while (n >= 0);
+    }
+    return i - 1;
+}
 INCLUDE_ASM(sub_80034BB8);
 INCLUDE_ASM(sub_80034C18);
