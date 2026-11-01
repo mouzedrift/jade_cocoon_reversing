@@ -81,7 +81,25 @@ void sub_80033064(unsigned short* p, int v)
 }
 INCLUDE_ASM(sub_80033080);
 INCLUDE_ASM(sub_80033114);
-INCLUDE_ASM(sub_800331C4);
+// Matched
+void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
+{
+    if (col)
+    {
+        o[7] &= 0xFE;
+        o[4] = col[0];
+        o[5] = col[1];
+        o[6] = col[2];
+    }
+    else
+    {
+        o[7] |= 1;
+    }
+    *(unsigned short*)(o + 8) = a[0];
+    *(unsigned short*)(o + 0xA) = a[1];
+    sub_80040298(c, o, 5);
+    sub_80040298(c, b, 2);
+}
 extern DRAWENV drawEnv_8008D698[2];
 // Matched
 void sub_8003326C(unsigned short* a, void* b)
