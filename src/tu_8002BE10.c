@@ -71,7 +71,22 @@ unsigned int sub_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
 }
-INCLUDE_ASM(sub_8002C670);
+// Matched
+int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
+{
+    char* p = base + idx * 4;
+    if (p[0xde] & 1)
+    {
+        unsigned char b = p[0xdf];
+        if (b)
+        {
+            sub_8002AF10(a2 + b * 16, a1, a4);
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_8002C6DC);
 INCLUDE_ASM(sub_8002C728);
 INCLUDE_ASM(sub_8002CAC8);

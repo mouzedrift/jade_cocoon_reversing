@@ -99,6 +99,25 @@ void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
 {
 }
 #endif
-INCLUDE_ASM(sub_8002AFA0);
+typedef struct
+{
+    unsigned short x;
+    unsigned short y;
+} Pos16;
+extern void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4);
+// Matched
+void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
+{
+    Pos16 p;
+    Pos16* src = (Pos16*)a1;
+    if (src)
+    {
+        ((Pos16*)a3)->x = src->x;
+        ((Pos16*)a3)->y = src->y;
+    }
+    p.x = ((Pos16*)a3)->x + 4;
+    p.y = ((Pos16*)a3)->y + 5;
+    sub_8002AE38(a0, &p, a2, a3, a4);
+}
 INCLUDE_ASM(sub_8002B004);
 INCLUDE_ASM(sub_8002B1B0);

@@ -22,7 +22,19 @@ struct_12* sub_800318C8(int idx)
 {
     return &stru_80083594[idx];
 }
-INCLUDE_ASM(sub_800318E4);
+// Matched
+int sub_800318E4(unsigned int idx, int nth)
+{
+    Minion* m = sub_80010598(3, nth - 1);
+    if (m && sub_80031954(m->field_DE, idx))
+    {
+        if (idx < 0xff)
+        {
+            return 0;
+        }
+    }
+    return 0;
+}
 // Matched
 void SeVibOn(void)
 {

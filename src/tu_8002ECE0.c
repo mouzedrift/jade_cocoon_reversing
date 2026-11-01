@@ -41,7 +41,20 @@ INCLUDE_DATA(dword_80074428);
 
 INCLUDE_ASM(sub_8002ECE0);
 INCLUDE_ASM(sub_8002EE28);
-INCLUDE_ASM(sub_8002EF5C);
+extern void sub_8002C06C(void* p, int a1, short a2);
+// Matched
+void sub_8002EF5C(unsigned short* pos, short count, short a2)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0];
+    loc[1] = pos[1];
+    do
+    {
+        sub_8002C06C(loc, 0xd9, a2);
+        count--;
+        loc[0] += 7;
+    } while (count > 0);
+}
 INCLUDE_ASM(sub_8002EFC4);
 INCLUDE_ASM(sub_8002F078);
 INCLUDE_ASM(sub_8002F120);
