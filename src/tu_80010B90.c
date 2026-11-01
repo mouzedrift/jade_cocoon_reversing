@@ -1214,6 +1214,22 @@ void nullsub_2(void)
 }
 INCLUDE_ASM(sub_80011C0C);
 INCLUDE_ASM(sub_80011CD0);
+#if 0
+// Not matched
+int sub_80011D28(int a0)
+{
+    struct_10* p = (struct_10*)word_80079374;
+    while (p->field_0 != 0)
+    {
+        if (a0 < p->field_0)
+        {
+            return p->field_2;
+        }
+        p++;
+    }
+    return 9;
+}
+#endif
 INCLUDE_ASM(sub_80011D28);
 // Matched
 void sub_80011D78(void* arg0)

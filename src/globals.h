@@ -328,4 +328,39 @@ extern unsigned long* pOT_8008D3EC;
 extern unsigned int settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
+extern int** dword_8008D628;
+extern int dword_8008D43C;
+extern struct_12 dword_8007D274[0x17];
+extern unsigned short word_80079374[];
+typedef struct
+{
+    char pad_0[0x38];
+    unsigned short id_38;
+    char pad_3A[0x36];
+} struct_112;
+typedef struct
+{
+    int count;
+    int field_4;
+    struct_112* items;
+} struct_112_list;
+
+extern int dword_8007BD30[];
+extern unsigned short dword_8007CAD8[0xe];
+extern int dword_80091BD0[4];
+extern int dword_8008D4DC;
+extern int dword_80079708[];
+typedef struct
+{
+    short id;
+    short field_2;
+    int field_4;
+} struct_8_id;
+typedef struct
+{
+    char pad_0[0xC];
+    int count;
+    struct_8_id* items;
+} struct_8_list;
+
 #endif

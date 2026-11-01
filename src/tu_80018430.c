@@ -31,7 +31,14 @@ void sub_800184A0(int arg, int bit)
         (base + arg)[0x44] |= 1 << bit;
     }
 }
-INCLUDE_ASM(sub_800184DC);
+// Matched
+int sub_800184DC(int a0, int a1)
+{
+    int* p = dword_8008D3F8[9];
+    sub_8001852C(a0, *((unsigned char*)p + a1 + 0x44));
+    p[0x28 / 4] |= 1;
+    return 1;
+}
 INCLUDE_ASM(sub_8001852C);
 INCLUDE_ASM(sub_80018908);
 INCLUDE_ASM(sub_800189F8);

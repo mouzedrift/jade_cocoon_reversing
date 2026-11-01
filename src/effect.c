@@ -29,6 +29,13 @@ INCLUDE_DATA(dword_800795E8);
 INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
+#if 0
+// Not matched
+int sub_80013DB0(void)
+{
+    return rand() % 6 ? 1 : 2;
+}
+#endif
 INCLUDE_ASM(sub_80013DB0);
 // Matched
 int sub_80013E00(unsigned int idx, int add)
@@ -40,7 +47,11 @@ int sub_80013E00(unsigned int idx, int add)
     }
     return result;
 }
-INCLUDE_ASM(sub_80013E30);
+// Matched
+int sub_80013E30(void)
+{
+    return rand() % 100;
+}
 // Matched
 void sub_80013E80(void* p, int arg)
 {
@@ -72,7 +83,42 @@ int sub_80014164(int x)
 }
 INCLUDE_ASM(sub_8001419C);
 INCLUDE_ASM(sub_80014200);
+#if 0
+// Not matched
+int sub_800142B8(unsigned char* p)
+{
+    int v = p[8] * 200 / (p[8] + p[6]);
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
+    {
+        v = 1;
+    }
+    return v;
+}
+#endif
 INCLUDE_ASM(sub_800142B8);
+#if 0
+// Not matched
+int sub_80014308(unsigned char* p)
+{
+    int v = p[6] * 200 / (p[6] + p[8]);
+    if (v <= 0)
+    {
+        v = 1;
+    }
+    else if (v >= 0xC9)
+    {
+        v = 0xC8;
+    }
+    return v;
+}
+#endif
 INCLUDE_ASM(sub_80014308);
 // Matched
 int sub_80014358(unsigned int mask)
@@ -108,5 +154,15 @@ void sub_80014574(struct_16* p, int a1, int a2)
 INCLUDE_ASM(sub_80014588);
 INCLUDE_ASM(sub_80014638);
 INCLUDE_ASM(sub_800147FC);
-INCLUDE_ASM(sub_800148A0);
+// Matched
+void sub_800148A0(void)
+{
+    sub_80020EE0(dword_80091BD0);
+    unknownFlags_8008D678 &= ~0x800;
+}
+// Matched
+int sub_800148D4(void)
+{
+    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 0;
+}
 INCLUDE_ASM(sub_800148F4);

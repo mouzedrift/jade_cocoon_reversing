@@ -3453,3 +3453,7 @@ loadedFileBuffer_801B9250=0x801b9250; // size:0x4
 sub_800B3274=0x800b3274; // overlay function called from the game code
 sub_8001C314=0x8001c314; // function behind sub_8001C2FC (was hidden in its span)
 sub_800403A8=0x800403a8; // function behind ReadBytesInto_80040388
+sub_800AD990=0x800ad990; // overlay function called from the game code
+sub_8001497C=0x8001497c; // function behind sub_80014954 (was hidden in its span)
+sub_800148D4=0x800148d4; // function behind sub_800148A0 (was hidden in its span)
+sub_80019C84=0x80019c84; // function behind sub_80019C70 (was hidden in its span)
