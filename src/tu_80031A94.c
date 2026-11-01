@@ -62,8 +62,40 @@ void sub_80032E78(unsigned short* p, int a1)
     q[13] = p[5];
     q[17] = p[5];
 }
-INCLUDE_ASM(sub_80032EF4);
-INCLUDE_ASM(sub_80032F88);
+// Matched
+void sub_80032EF4(unsigned short* p, int a1)
+{
+    int a = ((short*)p)[4];
+    int b = ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short t;
+    q[4] = p[12];
+    q[5] = p[13];
+    q[12] = p[16];
+    q[13] = p[17];
+    q[16] = p[8];
+    t = p[9];
+    q[8] = a;
+    q[9] = b;
+    q[17] = t;
+}
+// Matched
+void sub_80032F88(unsigned short* p, int a1)
+{
+    int a = ((short*)p)[4];
+    int b = ((short*)p)[5];
+    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short t;
+    q[4] = p[8];
+    q[5] = p[9];
+    q[8] = p[16];
+    q[9] = p[17];
+    q[16] = p[12];
+    t = p[13];
+    q[12] = a;
+    q[13] = b;
+    q[17] = t;
+}
 // Matched
 void sub_8003301C(void* a, void* b)
 {
@@ -79,6 +111,18 @@ void sub_80033064(unsigned short* p, int v)
 {
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
+#if 0
+// Not matched (5 words: scheduling of the table index/base loads)
+void sub_80033080(unsigned short* a, int i, int j)
+{
+    struct_20* s = &dword_8008D434[i];
+    unsigned short* e = (unsigned short*)s;
+    e[4] = a[0];
+    e[5] = a[1];
+    sub_80040298(pOT_8008D454 + j, e, 5);
+    sub_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
+}
+#endif
 INCLUDE_ASM(sub_80033080);
 INCLUDE_ASM(sub_80033114);
 // Matched

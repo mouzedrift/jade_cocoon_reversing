@@ -106,6 +106,19 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
 }
 #endif
 INCLUDE_ASM(sub_8002C670);
-INCLUDE_ASM(sub_8002C6DC);
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair2;
+extern void sub_8002B3DC(ShortPair2 p, int b, int c, int d);
+// Matched
+void sub_8002C6DC(int a0, short a1, short a2)
+{
+    ShortPair2 p;
+    p.a = 2;
+    p.b = a1;
+    sub_8002B3DC(p, frameCount_8008D3FC, a0, a2);
+}
 INCLUDE_ASM(sub_8002C728);
 INCLUDE_ASM(sub_8002CAC8);
