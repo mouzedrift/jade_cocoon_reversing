@@ -155,8 +155,44 @@ def write_symbols(name, base, size, first, last, starts):
     return path
 
 
+def split(name, data, base, syms):
+    """asm/overlays/<name>/<symbol>.s for every symbol of the overlay (git-ignored, derived from the disc)"""
+    import gen_asm
+    from capstone import Cs, CS_ARCH_MIPS, CS_MODE_MIPS32, CS_MODE_LITTLE_ENDIAN
+    gen_asm.configure(base, base + len(data))
+    md = Cs(CS_ARCH_MIPS, CS_MODE_MIPS32 + CS_MODE_LITTLE_ENDIAN)
+    names = {a: n for a, n in syms}
+    out = os.path.join(REPO, "asm", "overlays", name.lower())
+    os.makedirs(out, exist_ok=True)
+    for (a, n), (b, _) in zip(syms, syms[1:] + [(base + len(data), "")]):
+        text = (gen_asm.emit_data(data, n, a, b - a) if n.startswith(gen_asm.DATA_PREFIXES)
+                else gen_asm.emit_function(md, data, n, a, b - a, names))
+        open(os.path.join(out, n + ".s"), "w", newline="").write(text.replace("\n", "\r\n"))
+
+
+def init_src(name, syms):
+    """first version of src/overlays/<name>.c: functions already written in C stay, the others become INCLUDE_ASM"""
+    import full_build as fb
+    path = os.path.join(REPO, "src", "overlays", name.lower() + ".c")
+    old = open(path).read() if os.path.exists(path) else ""
+    blocks = fb.split_blocks(old)
+    funcs = {b[1]: b for b in blocks if b[0] == "func"}
+    head = [b[2] for b in blocks if b[0] != "func"]
+    out = ["\n".join(head)]
+    for a, n in syms:
+        b = funcs.get(n)
+        if b and b[3]:
+            out.append(b[2])
+        else:
+            if b:
+                out.append("#if 0\n" + b[2] + "\n#endif")
+            out.append("INCLUDE_OVERLAY_ASM(%s, %s);" % (name.lower(), n))
+    open(path, "w").write("\n\n".join(out) + "\n")
+
+
 def main(argv):
-    import full_build
+    import gen_asm
+    import full_build as fb
     name = argv[0].upper()
     iso_path, exe_path = argv[1], argv[2]
     exe = open(exe_path, "rb").read()[0x800:]
@@ -164,20 +200,54 @@ def main(argv):
     base = LOAD_ADDRESSES[name]
     data = data + b"\0" * (-len(data) % 4)
     print("%s.BIN: %d bytes, loaded at 0x%08X" % (name, len(data), base))
-    symfile = os.path.join("overlays", name.lower() + ".sym")
-    if "--discover" in argv or not os.path.exists(os.path.join(REPO, symfile)):
+    symfile = os.path.join(REPO, "overlays", name.lower() + ".sym")
+    if "--discover" in argv or not os.path.exists(symfile):
         first, last, starts = discover(data, base)
         write_symbols(name, base, len(data), first, last, starts)
         print("found %d functions, wrote %s" % (len(starts), symfile))
-    import gen_asm
+    syms = gen_asm.load_symbols(REPO, os.path.join("overlays", name.lower() + ".sym"))
+    split(name, data, base, syms)
+    if "--init-src" in argv:
+        init_src(name, syms)
+    src = os.path.join(REPO, "src", "overlays", name.lower() + ".c")
+    b = fb.BUILD
+    tag = "overlay_" + name.lower()
+    pre, cc, obj = (os.path.join(b, tag + e) for e in (".preproc", ".o", ".obj"))
+    inc = ["-I", os.path.join(fb.PSYQ, "INCLUDE"), "-I", os.path.join(REPO, "src")]
+    fb.run([os.path.join(fb.BIN, "CPPPSX.EXE"), "-undef", "-D__GNUC__=2", "-v", "-D__OPTIMIZE__"] + inc + [
+        "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
+        "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
+    fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
+    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", cc, "-o", obj])
+    link = os.path.join(b, tag + "_link.txt")
     main_syms = gen_asm.load_symbols(REPO)
-    src = os.path.join("overlays", name.lower() + ".c")
-    t = full_build.Target("overlay_" + name.lower(), data, base, base + len(data), symfile, [src],
-                          extra_syms=main_syms)
-    r = full_build.build(t, pin_data="--pin-data" in argv)
-    full_build.report(r, name + ".BIN")
-    open(os.path.join(full_build.BUILD, name + ".BIN"), "wb").write(r["built"])
-    return 0 if r["diff"] - r["addr_only"] == 0 else 1
+    with open(link, "w") as f:
+        f.write("\torg\t$%08x\n" % base)
+        for g, kw in (("text", ""), ("rdata", ""), ("data", ""), ("bss", "\tbss")):
+            f.write("%s\tgroup%s\n" % (g, kw))
+        for sec, g in ((".text", "text"), (".rdata", "rdata"), (".data", "data"), (".sdata", "data"),
+                       (".sbss", "bss"), (".bss", "bss")):
+            f.write("\tsection\t%s,%s\n" % (sec, g))
+        f.write('\tinclude "%s"\n' % obj)
+        for a, n in main_syms:
+            if not (base <= a < base + len(data)):
+                f.write("%s\tequ\t$%08x\n" % (n, a))
+        # buffers behind the overlay that are only named in the C source (name_XXXXXXXX)
+        known = {n for _, n in main_syms} | {n for _, n in syms}
+        for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", open(src).read()))):
+            if n not in known:
+                f.write("%s\tequ\t$%s\n" % (n, addr))
+    cpe = os.path.join(b, tag + ".cpe")
+    fb.run([os.path.join(fb.BIN, "psylink.exe"), "/l", os.path.join(fb.PSYQ, "LIB"), "/c", "/n", "4000", "/q", "/m",
+            "@%s,%s,%s,%s" % (link, cpe, os.path.join(b, tag + ".sym"), os.path.join(b, tag + ".map"))])
+    fb.run([os.path.join(fb.BIN, "cpe2exe.exe"), "-CA", cpe])
+    built = open(os.path.join(b, tag + ".exe"), "rb").read()[0x800:]
+    built = built[:len(data)]
+    diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
+    print("%s.BIN: %d of %d words identical" % (name, len(data) // 4 - diff, len(data) // 4))
+    open(os.path.join(b, name + ".BIN"), "wb").write(built)
+    open(os.path.join(b, name + ".orig"), "wb").write(data)
+    return 1 if diff else 0
 
 
 if __name__ == "__main__":

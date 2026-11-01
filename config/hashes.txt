@@ -1,0 +1,3 @@
+# SHA-1 of the original images (see scripts/verify.py)
+exe-image ee9b1ab06c771f9fd4ae209c3939ef86d4eea5ee
+overlay-NAME ba6812cf003bb507d521b0503e7958f4b3f022d8

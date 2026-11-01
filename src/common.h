@@ -20,6 +20,7 @@ enum foo
 
 /* pull in the assembly generated from the original executable (scripts/split.py), run from the repository root */
 #define INCLUDE_ASM(name) __asm__(".include \"asm/f/" #name ".s\"")
+#define INCLUDE_OVERLAY_ASM(dir, name) __asm__(".include \"asm/overlays/" #dir "/" #name ".s\"")
 #define INCLUDE_DATA(name) __asm__(".include \"asm/d/" #name ".s\"")
 
 #endif

@@ -47,5 +47,13 @@ after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file
 
 ## Overlays
 
-`scripts/overlays.py NAME <iso>.bin SLUS_008.54` still works for overlays (see `src/overlays/name.c`,
-`overlays/name.sym`); it uses `scripts/full_build.py`, which keeps its own self-verifying builder.
+`python scripts/overlays.py NAME <iso>.bin SLUS_008.54 [--discover] [--init-src]` extracts the overlay
+from the disc, finds its functions (`overlays/<name>.sym`), writes `asm/overlays/<name>/*.s` and builds
+`src/overlays/<name>.c` (`INCLUDE_OVERLAY_ASM(name, sym)` for functions not decompiled yet) into
+`build_psyq/NAME.BIN`. `scripts/ovl_diff.py NAME` lists the functions that differ.
+
+## Hash check
+
+`python scripts/verify.py SLUS_008.54 <iso>.bin` builds the executable and every overlay and compares the
+SHA-1 of each built image with the original (and with `config/hashes.txt`; `--update` rewrites that file).
+Currently OK: exe image (the linked part, without the trailing bss) and NAME.BIN.
