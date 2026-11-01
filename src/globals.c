@@ -101,3 +101,12 @@ int dword_80091C20;
 unsigned short word_8007CED8[16];
 
 unsigned int dword_80096118;
+
+unsigned char byte_8007CFC8[0x26];
+struct_obj_Q dword_80095C90[0x14];
+short word_80091D0C;
+struct_8 dword_800833E4[16];
+int** dword_8008D3F8;
+
+int dword_8008B540;
+int dword_800918B8;

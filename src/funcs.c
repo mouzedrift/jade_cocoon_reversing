@@ -2162,8 +2162,9 @@ void sub_80030EEC(void* arg0)
 {
 }
 
-void sub_8003BFB8(int arg0)
+void* sub_8003BFB8(int arg0)
 {
+    return 0;
 }
 
 void sub_8003FE38(void* arg0, int arg1)
@@ -3192,4 +3193,511 @@ unsigned char sub_8001AC58(int idx)
         return dword_8007C438[idx].field_4;
     }
     return 0;
+}
+
+
+int sub_80024D70(int a0, int a1)
+{
+    return 0;
+}
+
+int sub_8003FC8C(int a0, int a1)
+{
+    return 0;
+}
+
+void InitPolyFT4_80029A10(void* a0, void* a1)
+{
+}
+
+void sub_8002C5D0(int a0)
+{
+}
+
+void sub_800429F8(int a0, int a1)
+{
+}
+
+void sub_80042B38(int a0, int a1)
+{
+}
+
+void sub_8003CA30(void)
+{
+}
+
+void sub_8001E34C(void* a0)
+{
+}
+
+char* sub_80024FA8(void* a0)
+{
+    return 0;
+}
+
+void sub_80027CF8(void* a0, int* a1)
+{
+}
+
+void sub_800283C0(void* a0, int* a1)
+{
+}
+
+void sub_8003CF88(short a0, short a1, int a2)
+{
+}
+
+void sub_8001F354(void* a0)
+{
+}
+
+void sub_8001F918(void* a0)
+{
+}
+
+void sub_8001F9F0(void* a0)
+{
+}
+
+void sub_8001FB00(void* a0)
+{
+}
+
+void sub_8001FD08(void* a0)
+{
+}
+
+void sub_8001FF48(void* a0)
+{
+}
+
+void sub_800200F8(void* a0)
+{
+}
+
+// Matched
+int sub_8001D344(int idx)
+{
+    if (idx < 0x26)
+    {
+        return byte_8007CFC8[idx];
+    }
+    return 0x24;
+}
+
+// Matched
+int sub_8001D36C(int v)
+{
+    return (unsigned int)(v - 0x19) < 0xD;
+}
+
+// Matched
+void sub_8001D658(int** pp, int on)
+{
+    int* p = *pp;
+    if (on)
+    {
+        *p &= 0xFFFF7FFF;
+    }
+    else
+    {
+        *p |= 0x8000;
+    }
+}
+
+// Matched
+void sub_8001D9B0(struct_obj_A* p)
+{
+    if (!(p->field_D4 & 2))
+    {
+        p->field_90 = p->field_1A;
+        p->field_1C = 0;
+        p->flags_4 |= 0x4000;
+    }
+}
+
+// Matched
+void sub_80020734(int arg)
+{
+    sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
+}
+
+// Matched
+void sub_80021DF0(int* p, int a1, int a2)
+{
+    p[0] = a1;
+    p[1] = sub_8003FC8C(a1 * 16, a2);
+}
+
+// Matched
+void sub_80021744(int* p, int idx, int a2)
+{
+    *p = sub_8003FC8C(idx * 0x54, a2);
+}
+
+// Matched
+void sub_800299DC(void* p, void* q)
+{
+    char buf[0x28];
+    sub_80029708(buf, q);
+    InitPolyFT4_80029A10(p, buf);
+}
+
+// Matched
+void sub_8002AD80(int flags)
+{
+    if (flags & 2)
+    {
+        sub_8002C5D0(3);
+    }
+    else
+    {
+        sub_8002C5D0(0);
+    }
+}
+
+// Matched
+void sub_80035898(struct_obj_A* p, int a1)
+{
+    if (!(p->flags_4 & 0x40000))
+    {
+        sub_800429F8(a1, 2);
+    }
+}
+
+// Matched
+void sub_800358CC(struct_obj_A* p, int a1)
+{
+    if (!(p->flags_4 & 0x40000))
+    {
+        sub_80042B38(a1, 2);
+    }
+}
+
+// Matched
+void sub_8003C9FC(unsigned char mode)
+{
+    if (mode == 2)
+    {
+        DsStartReadySystem(sub_8003CA30, -1);
+    }
+}
+
+// Matched
+void sub_80011B8C(void)
+{
+    dword_8008B540 = 1;
+    unknownFlags_8008D678 |= 0x8000000;
+    sub_8001C260();
+}
+
+// Matched
+void sub_80011BCC(void)
+{
+    int f;
+    sub_80011B8C();
+    f = unknownFlags_8008D678;
+    bStopDrawingMovie_8008D45C = 1;
+    unknownFlags_8008D678 = f | 4;
+}
+
+// Matched
+int sub_80014164(int x)
+{
+    return (x * x * x) / 400;
+}
+
+// Matched
+int sub_80014358(unsigned int mask)
+{
+    unsigned int i;
+    for (i = 0; i < 32; i++)
+    {
+        if (mask & (1 << i))
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
+// Matched
+void sub_8001E254(struct_obj_A* p)
+{
+    p->flags_4 = (p->flags_4 & 0xFFFDFFFF) | 0x600000;
+    sub_8001E34C(p);
+}
+
+// Matched
+char* sub_80024E90(void* p)
+{
+    char* r = sub_80024FA8(p);
+    if (r)
+    {
+        r += *(int*)r;
+    }
+    return r;
+}
+
+// Matched
+char* sub_80024EC8(void* p)
+{
+    char* r = sub_80024FA8(p);
+    if (r)
+    {
+        r += *(int*)(r + 4);
+    }
+    return r;
+}
+
+// Matched
+char* sub_80024F00(void* p)
+{
+    char* r = sub_80024FA8(p);
+    if (r)
+    {
+        r += *(int*)(r + 8);
+    }
+    return r;
+}
+
+// Matched
+char* sub_80024F38(void* p)
+{
+    char* r = sub_80024FA8(p);
+    if (r)
+    {
+        r += *(int*)(r + 0xC);
+    }
+    return r;
+}
+
+// Matched
+char* sub_80024F70(void* p)
+{
+    char* r = sub_80024FA8(p);
+    if (r)
+    {
+        r += *(int*)(r + 0x10);
+    }
+    return r;
+}
+
+// Matched
+void sub_80027CC0(struct_obj_D* p, int* q)
+{
+    q[0] = 0;
+    q[1] = 0;
+    sub_80027CF8(p, q);
+    p->field_8 = (void (*)(void))sub_80027CF8;
+}
+
+// Matched
+void sub_80028388(struct_obj_D* p, int* q)
+{
+    q[0] = 0;
+    q[1] = 0;
+    sub_800283C0(p, q);
+    p->field_8 = (void (*)(void))sub_800283C0;
+}
+
+// Matched
+void sub_80033048(unsigned short* p, int v)
+{
+    p[2] = (p[2] & 0xFF9F) | ((v & 3) << 5);
+}
+
+// Matched
+void sub_80033064(unsigned short* p, int v)
+{
+    p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
+}
+
+// Matched
+char* sub_80033ABC(char* p)
+{
+    return p + 0x7C8;
+}
+
+// Matched
+char* sub_80033AC4(char* p)
+{
+    return p + 0x7BC;
+}
+
+// Matched
+Minion* sub_80033ACC(SaveData* s, int idx)
+{
+    return &s->minions[idx];
+}
+
+// Matched
+Item* sub_80033AE4(SaveData* s, int idx)
+{
+    return &s->items[idx];
+}
+
+// Matched
+void sub_800430B0(void)
+{
+    SsSetSerialVol(0, 0, 0);
+    DsControlB(9, 0, 0);
+}
+
+// Not matched: a1 is masked into $v0 instead of being reused
+void sub_80012794(struct_obj_B* p, int a1)
+{
+    if (p->flags_0 & 0x3F8)
+    {
+        p->flags_0 |= a1 & ~0x3F8;
+    }
+    else
+    {
+        p->field_4 = 0;
+        p->field_8 = 0;
+        p->flags_0 |= 0x400;
+    }
+}
+
+// Matched
+void sub_800184A0(int arg, int bit)
+{
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    if (bit == 0)
+    {
+        (base + arg)[0x44] = 0;
+    }
+    else
+    {
+        (base + arg)[0x44] |= 1 << bit;
+    }
+}
+
+// Matched
+void sub_8001C224(void)
+{
+    unknownFlags_8008D678 |= 8;
+    dword_800918B8 = 0;
+}
+
+// Matched
+void sub_8001C244(void)
+{
+    unknownFlags_8008D678 &= ~2;
+}
+
+// Matched
+void sub_800251A0(void* dst, char* src, int a2, int idx)
+{
+    sub_800403E8((unsigned int*)dst, (unsigned int*)(*(char**)(src + 0x50) + idx * 0x54), 0x54);
+}
+
+// Matched
+void sub_80025B20(void* dst, char* src, int idx)
+{
+    sub_800403E8((unsigned int*)dst, (unsigned int*)(*(char**)(src + 0x68) + idx * 0x54), 0x54);
+}
+
+// Matched
+void sub_8002AD08(int flags)
+{
+    if (flags & 2)
+    {
+        sub_8003F900(1, 1);
+    }
+    else
+    {
+        sub_8003F900(1, 0);
+    }
+}
+
+// Matched
+void sub_8002AD44(int flags)
+{
+    if (flags & 2)
+    {
+        sub_8003F900(2, 1);
+    }
+    else
+    {
+        sub_8003F900(2, 0);
+    }
+}
+
+// Matched
+int sub_8003B8DC(int* p, int a1)
+{
+    return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+}
+
+// Matched
+void sub_8001DB58(struct_obj_A* p, int a1, int a2)
+{
+    if (a2)
+    {
+        p->field_8C = a1;
+        p->flags_4 |= 0x20000000;
+    }
+    else
+    {
+        p->field_8C = 0x1000;
+        p->flags_4 &= ~0x20000000;
+    }
+}
+
+// Matched
+int sub_8003BC44(void)
+{
+    int i;
+    for (i = 0; i < 0x14; i++)
+    {
+        if (dword_80095C90[i].field_10 == 0x10000)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Matched
+void sub_8003E268(unsigned short* p)
+{
+    short x = p[0] + 0xC3;
+    short y = p[1] + 0x23;
+    sub_8003CF88(x, y, 0);
+}
+
+// Matched
+void sub_8004188C(void)
+{
+    if (!mdecVLCBuffer_80086F94)
+    {
+        mdecVLCBuffer_80086F94 = sub_8003BFB8(1);
+        DecDCTvlcBuild(mdecVLCBuffer_80086F94);
+    }
+}
+
+// Matched
+void sub_800313C8(int idx)
+{
+    SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
+}
+
+// Matched
+void sub_8001D41C(int a0, void* a1)
+{
+    sub_8001EA28(a1);
+    sub_8001F354(a1);
+    sub_8001F918(a1);
+    sub_8001F9AC(a1);
+}
+
+// Matched
+void sub_8001F9AC(void* p)
+{
+    sub_8001F9F0(p);
+    sub_8001FB00(p);
+    sub_8001FD08(p);
+    sub_8001FF48(p);
+    sub_800200F8(p);
 }

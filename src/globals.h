@@ -127,14 +127,22 @@ typedef struct
     int field_14;
 } struct_24;
 
-// object with a flags word at +4 and two halfwords at +0x20
+// object with a flags word at +4
 typedef struct
 {
     int field_0;
     unsigned int flags_4;
-    char pad_8[0x18];
+    char pad_8[0x12];
+    short field_1A;
+    short field_1C;
+    short pad_1E;
     short field_20;
     short field_22;
+    char pad_24[0x68];
+    int field_8C;
+    int field_90;
+    char pad_94[0x40];
+    unsigned int field_D4;
 } struct_obj_A;
 
 // object with a flags word at +0
@@ -182,12 +190,26 @@ extern int** dword_8008B560;
 extern int off_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
+extern int dword_8008B540;
+extern int dword_800918B8;
 extern int dword_80086564;
 extern int dword_80098688;
 extern int off_800824CC[];
 extern struct_12_b dword_8007C438[];
 extern int dword_80091C20;
 extern unsigned short word_8007CED8[];
+typedef struct
+{
+    char pad_0[0x10];
+    int field_10;
+    char pad_14[0x14];
+} struct_obj_Q;
+
+extern unsigned char byte_8007CFC8[0x26];
+extern struct_obj_Q dword_80095C90[0x14];
+extern short word_80091D0C;
+extern struct_8 dword_800833E4[];
+extern int** dword_8008D3F8;
 extern int frameCount_8008D3FC;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];
