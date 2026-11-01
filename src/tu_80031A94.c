@@ -82,8 +82,35 @@ void sub_80033064(unsigned short* p, int v)
 INCLUDE_ASM(sub_80033080);
 INCLUDE_ASM(sub_80033114);
 INCLUDE_ASM(sub_800331C4);
-INCLUDE_ASM(sub_8003326C);
-INCLUDE_ASM(sub_80033308);
+extern DRAWENV drawEnv_8008D698[2];
+// Matched
+void sub_8003326C(unsigned short* a, void* b)
+{
+    DR_TWIN twin;
+    RECT rect;
+    DRAWENV* e = drawEnv_8008D698;
+    unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
+    rect.x = a[0] + c[0];
+    rect.y = a[1] + c[1];
+    rect.w = a[2];
+    rect.h = a[3];
+    SetTexWindow(&twin, &rect);
+    sub_80040298(b, &twin, 3);
+}
+// Matched
+void sub_80033308(void* p)
+{
+    DR_TWIN twin;
+    RECT rect;
+    DRAWENV* e = drawEnv_8008D698;
+    unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
+    rect.x = c[0];
+    rect.y = c[1];
+    rect.w = c[2];
+    rect.h = c[3];
+    SetTexWindow(&twin, &rect);
+    sub_80040298(p, &twin, 3);
+}
 INCLUDE_ASM(sub_80033394);
 // Matched
 unsigned char sub_800334BC(unsigned char* arr, int idx)
