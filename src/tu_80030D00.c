@@ -173,6 +173,33 @@ void sub_800315F4(void)
     sub_80030D00(s0[1]);
     sub_80030D00(s0[2]);
 }
+#if 0
+// Not matched (loop pointer gets strength-reduced with folded offsets)
+void sub_80031638(void)
+{
+    char* q;
+    int i;
+    q = (char*)dword_8008D4A4[0x24 / 4];
+    if (stru_80091D20.field_4_seq_num >= 0)
+    {
+        i = 0;
+        do
+        {
+            i++;
+            if (*(short*)(q + 0x18) == 0)
+            {
+                *(short*)(q + 0x18) = 1;
+                SsSepSetDecrescendo(stru_80091D20.field_C_sep_access_num, stru_80091D20.field_4_seq_num, 0x7F, 0x40);
+                *(short*)(q + 0x1C) = stru_80091D20.field_C_sep_access_num;
+                *(short*)(q + 0x1A) = 0x20;
+                *(short*)(q + 0x1E) = stru_80091D20.field_4_seq_num;
+                break;
+            }
+            q += 8;
+        } while (i < 5);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80031638);
 // Matched
 int sub_800316DC(void)
