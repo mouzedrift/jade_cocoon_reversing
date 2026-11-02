@@ -203,6 +203,41 @@ void sub_8003E268(unsigned short* p)
     sub_8003CF88(x, y, 0);
 }
 INCLUDE_ASM(sub_8003E2A8);
+typedef struct
+{
+    short w;
+    short h;
+} Size2;
+extern int sub_8003E4C8(int str);
+
+#if 0
+Size2 sub_8003E3B4(int* list)
+{
+    Size2 r;
+    int* p;
+    r.w = 0;
+    r.h = 0;
+    p = list;
+    if (*p)
+    {
+        do
+        {
+            if (!sub_8003E484(*p))
+            {
+                int w = sub_8003E4C8(*p);
+                if (r.w < (short)w)
+                {
+                    r.w = w;
+                }
+                r.h++;
+            }
+            p++;
+        } while (*p);
+    }
+    r.h = r.h * 12;
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_8003E3B4);
 // Matched
 int sub_8003E484(int a0)
