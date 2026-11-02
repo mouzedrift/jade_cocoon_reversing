@@ -72,8 +72,7 @@ int sub_8003D210(int limit, int pos, int step, int idx)
     }
     return pos;
 }
-#if 0
-// Not matched: return value register: orig keeps result in a2 across PlaySfx call (re-set after call)
+// Matched
 int sub_8003D288(int flag, int idx)
 {
     int r = 0;
@@ -95,17 +94,14 @@ int sub_8003D288(int flag, int idx)
         }
     }
 done:
-    r = 1;
     if (flag)
     {
         PlaySfx_80031494(0x7E);
-        r = 1;
     }
+    r = 1;
 end:
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8003D288);
 // Matched
 int sub_8003D380(int a0)
 {

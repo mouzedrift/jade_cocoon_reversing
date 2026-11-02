@@ -104,7 +104,21 @@ void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
 }
 INCLUDE_ASM(sub_800324D8);
 INCLUDE_ASM(sub_800327A8);
-INCLUDE_ASM(sub_80032D34);
+// Matched
+void sub_80032D34(unsigned short* a, void* b)
+{
+    int dx = (short)a[8] - (short)a[4];
+    int dy = (short)a[0xD] - (short)a[5];
+    short* r = sub_80040298(b, a, 10);
+    r[4] = a[4] + dx;
+    r[5] = a[5] + dy;
+    r[8] = a[4];
+    r[9] = a[5] + dy;
+    r[0xC] = a[4] + dx;
+    r[0xD] = a[5];
+    r[0x10] = a[4];
+    r[0x11] = a[5];
+}
 // Matched
 void sub_80032DFC(short* p, int a1)
 {
