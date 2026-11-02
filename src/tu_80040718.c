@@ -79,8 +79,6 @@ void sub_80040898(void)
 extern int dword_8008D47C;
 extern int dword_8008B4EC;
 
-extern int dword_8008D47C;
-extern int dword_8008B4EC;
 
 // Matched
 void sub_800408F4(void)
@@ -115,8 +113,6 @@ void sub_800408F4(void)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-extern int dword_8008D47C;
-extern int dword_8008B4EC;
 extern void sub_800408F4(void);
 // Matched
 void sub_80040A10(int* a0)
