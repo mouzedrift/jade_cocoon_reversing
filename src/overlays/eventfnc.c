@@ -1497,7 +1497,50 @@ void sub_800BC7A0(void)
 {
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC7A8);
+typedef struct EvGfxEventfnc
+{
+    int f0_0;
+    int f4_4;
+    char pad_8[0x24];
+    int f2C_2C;
+} EvGfxEventfnc;
+typedef struct EvGfxArgEventfnc
+{
+    EvGfxEventfnc* g_0;
+    short s_4[6];
+    int f10_10;
+} EvGfxArgEventfnc;
+extern int dword_800AEB7C;
+extern EvGfxEventfnc dword_800AEB80;
+extern void sub_800A5854(void);
+extern void sub_800A5804(int a);
+extern void sub_80020F5C(EvGfxArgEventfnc* p, int a);
+void sub_800BC7A8(int a)
+{
+    EvGfxArgEventfnc t;
+    if (dword_800AEB7C != 2)
+    {
+        sub_800A5854();
+    }
+    if (dword_800AEB80.f4_4)
+    {
+        sub_8003FEC8(&dword_800AEB80.f4_4);
+    }
+    t.g_0 = &dword_800AEB80;
+    t.s_4[5] = 0;
+    t.s_4[4] = 0;
+    t.s_4[3] = 0;
+    t.s_4[2] = 0;
+    t.s_4[1] = 0;
+    t.s_4[0] = 0;
+    t.f10_10 = 0;
+    sub_8003FDB0(&dword_800AEB80.f4_4);
+    sub_80020F5C(&t, a);
+    if (dword_800AEB80.f2C_2C)
+    {
+        sub_800A5804(0);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC854);
 
