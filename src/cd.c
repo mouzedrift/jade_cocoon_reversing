@@ -65,19 +65,20 @@ int sub_8003B56C(int x, int y)
     return d;
 }
 #if 0
-// Not matched: s1/s2 register assignment swapped
+// Not matched (8 words): s1/s2 register assignment swapped
 int sub_8003B5D4(int* v, short* out)
 {
     int len = sub_8003B918(((int (*)(int*))sub_8003B8DC)(v));
-    short a;
     short b;
+    int a;
     b = ratan2(v[0], v[2]);
     out[1] = b;
-    a = ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    a = (short)ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
     out[0] = -a;
     out[2] = 0;
     return len;
 }
+
 #endif
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
@@ -357,7 +358,7 @@ struct_node_C* sub_8003BED4(int key)
     return 0;
 }
 #if 0
-// Not matched: load of list[0] scheduled before the field_10 store
+// Not matched (6 words): load of list[0] scheduled before the field_10 store
 void sub_8003BF18(struct_node_C* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
@@ -381,6 +382,7 @@ void sub_8003BF18(struct_node_C* n)
     n->field_10 = 0x10000;
     list[0]--;
 }
+
 #endif
 INCLUDE_ASM(sub_8003BF18);
 // Matched
