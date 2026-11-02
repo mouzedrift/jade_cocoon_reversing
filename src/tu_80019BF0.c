@@ -1417,6 +1417,7 @@ void sub_8001DA2C(struct_obj_A* p)
 }
 INCLUDE_ASM(sub_8001DA4C);
 INCLUDE_ASM(sub_8001DAAC);
+INCLUDE_ASM(sub_8001DB00);
 // Matched
 void sub_8001DB58(struct_obj_A* p, int a1, int a2)
 {
@@ -1703,6 +1704,7 @@ int sub_8002032C(int a0, int a1, int a2)
     return r;
 }
 INCLUDE_ASM(sub_800203B0);
+INCLUDE_ASM(sub_80020410);
 // Matched
 void sub_800204AC(struct_obj_C* p)
 {
