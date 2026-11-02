@@ -1406,7 +1406,33 @@ void sub_800229B0(int* p)
         sub_8003FD18(a);
     }
 }
-INCLUDE_ASM(sub_800229E0);
+// Matched
+void sub_800229E0(int* a0, int* a1, int h)
+{
+    int i;
+    if (a0[1] != 0)
+    {
+        for (i = 0; i < *(short*)a0; i++)
+        {
+            if (((int*)a0[1])[i * 2 + 1] != 0)
+            {
+                sub_8003FD18(((int*)a0[1])[i * 2 + 1], h);
+            }
+        }
+        sub_8003FD18(a0[1], h);
+    }
+    if (a1[1] != 0)
+    {
+        for (i = 0; i < *(short*)a1; i++)
+        {
+            if (((struct_12*)a1[1])[i].field_8 != 0)
+            {
+                sub_8003FD18(((struct_12*)a1[1])[i].field_8, h);
+            }
+        }
+        sub_8003FD18(a1[1], h);
+    }
+}
 // Matched
 void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
 {
@@ -1819,7 +1845,43 @@ int sub_800256B8(struct_112_list* a0, int id)
 }
 #endif
 INCLUDE_ASM(sub_800256B8);
-INCLUDE_ASM(sub_80025780);
+// Matched
+int sub_80025780(struct_112* p, int idx, int flag)
+{
+    int b[16];
+    int c[8];
+    unsigned short* e;
+    char* t;
+    int u;
+    int v;
+    sub_80025884(p);
+    e = (unsigned short*)off_800824CC[p->id_38];
+    t = (char*)e + (e[9] * 6 + 0x14);
+    u = ((unsigned short*)t)[idx * 2 + 1];
+    v = ((unsigned short*)t)[idx * 2 + 2];
+    sub_80025ED0(b);
+    b[0] = 0x20;
+    b[5] = (int)p;
+    b[1] = (int)e;
+    c[0] = 0x68;
+    if (flag != 0)
+    {
+        c[0] = 0x6C;
+    }
+    else
+    {
+        c[0] = 0x69;
+    }
+    c[1] = e[0];
+    c[2] = u;
+    c[3] = v;
+    c[4] = 0;
+    c[5] = (int)b;
+    c[6] = 0x3C;
+    c[7] = (int)sub_80025D7C;
+    sub_80025D00((struct_25D00*)p, c);
+    return 1;
+}
 // Matched
 void sub_80025884(struct_112* p)
 {
@@ -1937,7 +1999,42 @@ void sub_80025ED0(int* p)
     p[13] = 0;
     p[14] = 0;
 }
-INCLUDE_ASM(sub_80025F14);
+// Matched
+void sub_80025F14(int* a0)
+{
+    if (a0[0] & 1)
+    {
+        sub_80026014((char*)a0);
+    }
+    if (a0[0] & 2)
+    {
+        sub_8002607C(a0);
+    }
+    if (a0[0] & 4)
+    {
+        sub_800260FC(a0);
+    }
+    if (a0[0] & 8)
+    {
+        sub_800261C8(a0);
+    }
+    if (a0[0] & 0x10)
+    {
+        sub_800263CC(a0);
+    }
+    if (a0[0] & 0x20)
+    {
+        sub_80026410(a0);
+    }
+    if (a0[0] & 0x40)
+    {
+        sub_8002651C(a0);
+    }
+    if (a0[0] & 0x80)
+    {
+        sub_8002659C((char*)a0);
+    }
+}
 // Matched
 void sub_80026014(char* a0)
 {
