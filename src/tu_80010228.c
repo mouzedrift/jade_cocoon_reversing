@@ -9,6 +9,7 @@
 #include "STDIO.H"
 #include "LIBPAD.H"
 #include "LIBSND.H"
+#include "LIBSPU.H"
 #include "LIBMCX.H"
 #include "LIBPRESS.H"
 #include "LIBETC.H"
@@ -17,12 +18,19 @@
 #include "data_decls.h"
 
 
-#if 0
+// Matched
 void sub_80010228(void)
 {
+    SsEnd();
+    SpuSetTransferStartAddr(0x1010);
+    SpuWrite0(0x7EFF0);
+    SsQuit();
+    ResetGraph(3);
+    StopCallback();
+    sub_8006EC08();
+    PadStopCom();
+    sub_8004EDB8();
 }
-#endif
-INCLUDE_ASM(sub_80010228);
 // Matched
 void InitEvents_8001028C(void)
 {
@@ -38,12 +46,18 @@ void InitEvents_8001028C(void)
     dword_8008B4B4 = 0;
     gnFrame_8008D610 = 0;
 }
-#if 0
+// Matched
 void CloseEvents_80010328(void)
 {
+    DisableEvent(cdRomEventDescError_8008B490);
+    DisableEvent(vsyncEventDesc_8008B494);
+    CloseEvent(cdRomEventDescError_8008B490);
+    CloseEvent(vsyncEventDesc_8008B494);
+    StopRCnt(RCntCNT0);
+    StopRCnt(RCntCNT1);
+    StopRCnt(RCntCNT2);
+    StopRCnt(RCntCNT3);
 }
-#endif
-INCLUDE_ASM(CloseEvents_80010328);
 // Matched
 long vsyncEventHandler_800103AC(void)
 {
@@ -235,29 +249,49 @@ char* sub_80010824(int id, int nth)
     return 0;
 }
 INCLUDE_ASM(sub_80010850);
-#if 0
-int* sub_8001091C(void)
+// Matched
+int* sub_8001091C(int id)
 {
+    EventNode* n = dword_8008D618;
+    EventEntry* e;
+    int i;
+    int count = n->count;
+    for (i = 0; i < count; i++)
+    {
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1 && *(int*)e->buffer == id)
+        {
+            return (int*)e;
+        }
+        n = n->next;
+    }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001091C);
-#if 0
-void sub_8001098C(int arg0)
+// Matched
+int sub_8001098C(int id)
 {
+    EventEntry* e = (EventEntry*)sub_8001091C(id);
+    int* b = e->buffer;
+    int* q = (int*)b[1];
+    if (q[0x38 / 4] == 5)
+    {
+        sub_80024BB0(q);
+        free3_8003FC6C((void*)b[1]);
+        e->flags = (((e->flags & ~1) | 0x8000) & ~4) | 0x8000;
+        return 1;
+    }
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001098C);
 // Matched
 void sub_80010A10(int arg0)
 {
-    int* p = sub_8001091C();
+    int* p = sub_8001091C(arg0);
     sub_80010AD8(((int**)p)[0x14 / 4][1]);
 }
 // Matched
-int sub_80010A44(void)
+int sub_80010A44(int id)
 {
-    int* p = (int*)((int*)sub_8001091C())[5];
+    int* p = (int*)((int*)sub_8001091C(id))[5];
     int* q = (int*)p[1];
     if (q[0x38 / 4] == 5)
     {

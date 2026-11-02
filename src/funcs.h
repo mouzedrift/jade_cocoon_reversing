@@ -165,7 +165,7 @@ extern void sub_8003301C(void* a, void* b);
 extern unsigned char sub_800338B0(char* p);
 extern int sub_80034B14(int* p);
 extern void sub_800378CC(void);
-extern void sub_8001098C(int arg0);
+extern int sub_8001098C(int arg0);
 extern int sub_80019A80(int arg0);
 extern int sub_8003BE30(int arg0);
 extern void sub_80022AE8(void* arg0, void* arg1, int arg2);
@@ -231,7 +231,7 @@ extern int PlayMovie_80040EB4(int arg0);
 extern int sub_80033624(void* arg0, int arg1);
 extern int sub_80014390(int arg0);
 extern void sub_80010AD8(int arg0);
-extern int* sub_8001091C(void);
+extern int* sub_8001091C();
 extern void PlayGenkiMovie_80040AC4(void);
 extern void PlayCraveMovie_80040B2C(void);
 extern void PlayAnimeMovie_80040D0C(void);
@@ -449,6 +449,8 @@ extern void sub_800C410C(void);
 
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001E574(int* p, int a1);
+extern void sub_8006EC08(void);
+extern void sub_8004EDB8(void);
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

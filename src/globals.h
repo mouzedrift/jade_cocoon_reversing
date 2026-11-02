@@ -464,6 +464,7 @@ typedef struct EventNode
     int count;
     EventEntry entry;
 } EventNode;
+extern EventNode* dword_8008D618;
 
 typedef struct
 {
