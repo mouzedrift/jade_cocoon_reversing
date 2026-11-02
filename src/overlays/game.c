@@ -387,7 +387,9 @@ void sub_800A8108()
 typedef struct G2Inner
 {
     unsigned int f0;
-    char pad_4[0xA0];
+    char pad_4[0x98];
+    int f9C;
+    int fA0;
     int fA4;
     int fA8;
     int fAC;
@@ -477,9 +479,27 @@ extern void sub_800A88E0();
 extern void sub_800AB010();
 extern int sub_800AC518();
 extern void sub_800AC6A8();
-extern int sub_800AC834();
 extern int sub_800AC4A8();
 extern int sub_800ADBA0();
+typedef struct G2Rec
+{
+    unsigned char f0;
+    char pad_1[2];
+    unsigned char f3;
+    short s4;
+    short s6;
+    short s8;
+    unsigned short sA;
+    short sC;
+    char pad_E[0x32];
+} G2Rec;
+#define G2REC(a, b) ((G2Rec*)sub_80024E38(dword_8007DC60[2]))
+extern int sub_800AC794(int, int);
+extern void sub_800A913C();
+extern void sub_800ABAD4();
+extern void sub_800AB444();
+extern void sub_8001450C(int*, void*, int, int);
+extern char dword_800795C0;
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
 extern int dword_8008B540;
@@ -490,7 +510,6 @@ extern char dword_800B1DD0;
 extern int dword_800B11DC[];
 extern int sub_80025440(int, int, int);
 extern void sub_80025780(int, int, int);
-extern unsigned sub_800AC944(int, int);
 extern int sub_800AC474(int);
 extern int sub_800AC3E4();
 extern int sub_800AC38C();
@@ -532,7 +551,14 @@ void sub_800A8138()
 {
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8140);
+void sub_800A8140()
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    sub_8001450C((int*)((char*)p + 0x5C), (char*)p + 0x4C, (int)&dword_800795C0, 4);
+    p->f0 = 0;
+    p->f9C = 0;
+    p->fC6 = 0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A818C);
 
@@ -556,7 +582,13 @@ void sub_800A895C()
     dword_8008B4CC->f24->f0 |= 0x41;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8984);
+void sub_800A8984(int a)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->f0 &= ~1;
+    p->f0 &= ~0x10;
+    sub_800AB444(a, p);
+}
 
 void sub_800A89C8()
 {
@@ -646,7 +678,13 @@ void sub_800A8E0C()
     p->f0 |= 0x20;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8E38);
+void sub_800A8E38()
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->f0 &= ~0x20;
+    sub_800A913C();
+    sub_800ABAD4();
+}
 
 int sub_800A8E7C()
 {
@@ -784,7 +822,16 @@ unsigned short sub_800AB170(int a)
     return sub_800AC944(a, sub_800AC474(a));
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AB1A4);
+void sub_800AB1A4(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f0 |= 0x20;
+    if (a == 1)
+    {
+        p->f0 |= 0x800;
+        p->f0 &= ~0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800AB1EC);
 
@@ -933,7 +980,14 @@ void sub_800ABB98(int a)
 
 INCLUDE_OVERLAY_ASM(game, sub_800ABBD8);
 
-INCLUDE_OVERLAY_ASM(game, sub_800ABC34);
+void sub_800ABC34(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+        p->f0 &= ~0x40000;
+    else
+        p->f0 |= 0x40000;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800ABC78);
 
@@ -1047,19 +1101,47 @@ unsigned char* sub_800AC7B4(int a)
     return (unsigned char*)sub_80024E38(dword_8007DC60[2]) + ((a << 10) + 0x380);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC7F0);
+short sub_800AC7F0(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s4;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC834);
+short sub_800AC834(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s6;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC878);
+short sub_800AC878(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s8;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC8BC);
+unsigned short sub_800AC8BC(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].sA;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC900);
+unsigned char sub_800AC900(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].f3;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC944);
+short sub_800AC944(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].sC;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC988);
+unsigned char sub_800AC988(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].f0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800AC9CC);
 
