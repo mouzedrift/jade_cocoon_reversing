@@ -573,9 +573,19 @@ void sub_8004028C(void)
 {
     dword_80098688 = 0;
 }
+extern unsigned long* dword_800960A8[];
 #if 0
-void sub_80040298(void* arg0, void* arg1, int arg2)
+short* sub_80040298(void* arg0, void* arg1, int arg2)
 {
+    unsigned long* ot = (unsigned long*)arg0;
+    unsigned long* cur = dword_800960A8[bDoubleBuffer_8008D428];
+    unsigned long** p;
+    ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
+    p = &dword_800960A8[bDoubleBuffer_8008D428];
+    **p = (**p & 0xFF000000) | (*ot & 0xFFFFFF);
+    *ot = (*ot & 0xFF000000) | ((unsigned long)*p & 0xFFFFFF);
+    *p += arg2;
+    return (short*)cur;
 }
 #endif
 INCLUDE_ASM(sub_80040298);

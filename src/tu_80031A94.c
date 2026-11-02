@@ -178,20 +178,25 @@ void sub_80033064(unsigned short* p, int v)
 {
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
-#if 0
-// Not matched (5 words: scheduling of the table index/base loads)
+// Matched
 void sub_80033080(unsigned short* a, int i, int j)
 {
-    struct_20* s = &dword_8008D434[i];
-    unsigned short* e = (unsigned short*)s;
-    e[4] = a[0];
-    e[5] = a[1];
-    sub_80040298(pOT_8008D454 + j, e, 5);
+    ((unsigned short*)&dword_8008D434[i])[4] = a[0];
+    ((unsigned short*)&dword_8008D434[i])[5] = a[1];
+    sub_80040298(pOT_8008D454 + j, &dword_8008D434[i], 5);
     sub_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
 }
-#endif
-INCLUDE_ASM(sub_80033080);
-INCLUDE_ASM(sub_80033114);
+// Matched
+void sub_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
+{
+    ((unsigned char*)&dword_8008D434[idx])[4] = col[0];
+    ((unsigned char*)&dword_8008D434[idx])[5] = col[1];
+    ((unsigned char*)&dword_8008D434[idx])[6] = col[2];
+    ((unsigned short*)&dword_8008D434[idx])[4] = a[0];
+    ((unsigned short*)&dword_8008D434[idx])[5] = a[1];
+    sub_80040298(c, &dword_8008D434[idx], 5);
+    sub_80040298(c, &dword_8008D440[idx], 2);
+}
 // Matched
 void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
 {
@@ -297,7 +302,7 @@ int sub_80033548(int* p, int mask)
     return (*p & mask) != 0;
 }
 INCLUDE_ASM(sub_8003355C);
-extern void sub_80033754(void* a, void* b);
+extern void sub_80033754(unsigned char* a, unsigned char* b);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
 {
@@ -316,7 +321,30 @@ void sub_80033624(void* arg0, int arg1)
 }
 #endif
 INCLUDE_ASM(sub_80033624);
-INCLUDE_ASM(sub_80033754);
+// Matched
+void sub_80033754(unsigned char* dst, unsigned char* src)
+{
+    unsigned char* tbl[2];
+    int i;
+    int j;
+    sub_800403E8((unsigned int*)dst, (unsigned int*)(src + 0x20), 12);
+    src += 0x1C;
+    tbl[0] = (unsigned char*)sub_8001CDA0(src[1]);
+    tbl[1] = (unsigned char*)sub_8001CD74(src[2]);
+    for (j = 0; j < 2; j++)
+    {
+        if (tbl[j])
+        {
+            for (i = 0; i < 12; i++)
+            {
+                if ((signed char)tbl[j][i] < (signed char)dst[i])
+                {
+                    dst[i] = tbl[j][i];
+                }
+            }
+        }
+    }
+}
 // Matched
 char* sub_80033818(Minion* p)
 {
