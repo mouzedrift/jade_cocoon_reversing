@@ -56,18 +56,28 @@ void FreeActiveOverlay_8002C014(void)
         dword_8008D3F4 = 0;
     }
 }
-INCLUDE_ASM(sub_8002C06C);
-INCLUDE_ASM(sub_8002C100);
-INCLUDE_ASM(sub_8002C290);
-INCLUDE_ASM(sub_8002C414);
 typedef struct
 {
     int field_0;
     unsigned char r;
     unsigned char g;
     unsigned char b;
-    char pad_7[13];
+    char pad_7;
+    unsigned short x;
+    unsigned short y;
+    char pad_C[8];
 } OverlayColorEntry;
+// Matched
+void sub_8002C06C(unsigned short* pos, int idx, int ot)
+{
+    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].x = pos[0];
+    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].y = pos[1];
+    sub_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
+    sub_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
+}
+INCLUDE_ASM(sub_8002C100);
+INCLUDE_ASM(sub_8002C290);
+INCLUDE_ASM(sub_8002C414);
 extern unsigned char dword_800826F8[][4];
 // Matched
 void sub_8002C5D0(int a0)

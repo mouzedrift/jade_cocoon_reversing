@@ -19,7 +19,37 @@
 INCLUDE_DATA(jpt_8007470C);
 
 
-INCLUDE_ASM(sub_80031A94);
+extern unsigned char* sub_80031B30(unsigned char a);
+// Matched
+int sub_80031A94(int* p)
+{
+    int r;
+    unsigned char* q;
+    r = 2;
+    if (p[2] & 0xF)
+    {
+        r = 4;
+    }
+    q = sub_80031B30(sub_80014358(p[2]));
+    q += p[1] * 4;
+    if (q[1] == 12)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+int sub_80031B0C(unsigned char* p, int idx)
+{
+    int r;
+    p += idx * 4;
+    r = 4;
+    if (p[1] == 12)
+    {
+        r = 5;
+    }
+    return r;
+}
 INCLUDE_ASM(sub_80031B30);
 // Matched
 int sub_80031BDC(int a0)
@@ -392,6 +422,29 @@ typedef struct
 } struct_minion_ref;
 extern int sub_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
+#if 0
+// Not matched (1 word: sub_8001AC58 is declared unsigned char in funcs.h, original caller does not mask the result)
+int sub_80033C08(struct_minion_ref* p)
+{
+    int a;
+    int r;
+    char* q = p->field_C_minion->field_84;
+    r = sub_8001AEC0(p->field_C_minion->field_F4, p->field_0 + p->field_2);
+    a = sub_8001AC58(r);
+    if (r >= 30)
+    {
+        return 6;
+    }
+    if (*(short*)&q[0xC] < a)
+    {
+        if (p->field_A == 0)
+        {
+            return 5;
+        }
+    }
+    return 0;
+}
+#endif
 INCLUDE_ASM(sub_80033C08);
 // Matched
 int sub_80033C98(struct_minion_ref* p)
