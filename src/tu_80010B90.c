@@ -1515,4 +1515,81 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
 
     return totalMinions;
 }
+#if 0
+// Not matched: the clamped value lives in $a2 instead of $v1 (the jump table is emitted by C: see config/c_rodata.txt)
+void sub_80012614(int a0, int sel, int delta, int mask)
+{
+    char* p = (char*)a0;
+    unsigned short* sp = 0;
+    unsigned char* bp = 0;
+    int max = 0;
+    int r;
+    int v;
+    switch (sel)
+    {
+    case 0:
+        max = *(short*)(p + 0xA);
+        sp = (unsigned short*)(p + 8);
+        break;
+    case 1:
+        sp = (unsigned short*)(p + 0xA);
+        max = 999;
+        break;
+    case 2:
+        max = *(short*)(p + 0xE);
+        sp = (unsigned short*)(p + 0xC);
+        break;
+    case 3:
+        sp = (unsigned short*)(p + 0xE);
+        max = 999;
+        break;
+    case 4:
+    case 5:
+        bp = (unsigned char*)(p + 0x2C);
+        max = 99;
+        break;
+    case 6:
+    case 7:
+        bp = (unsigned char*)(p + 0x30);
+        max = 99;
+        break;
+    case 8:
+    case 9:
+        bp = (unsigned char*)(p + 0x2D);
+        max = 99;
+        break;
+    case 10:
+    case 11:
+        bp = (unsigned char*)(p + 0x2E);
+        max = 99;
+        break;
+    case 12:
+    case 13:
+        bp = (unsigned char*)(p + 0x2F);
+        max = 99;
+        break;
+    case 16:
+        sub_80012794((struct_obj_B*)p, mask);
+        break;
+    case 17:
+        *(int*)p &= ~mask;
+        break;
+    case 19:
+        p[0x44] += delta;
+        break;
+    }
+    if (sp)
+    {
+        v = *sp + delta;
+        r = (v < 0) ? 0 : ((max < v) ? max : v);
+        *sp = r;
+    }
+    else if (bp)
+    {
+        v = *bp + delta;
+        r = (v < 0) ? 0 : ((max < v) ? max : v);
+        *bp = r;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80012614);
