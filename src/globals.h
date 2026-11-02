@@ -66,7 +66,7 @@ typedef struct
     unsigned char field_4;
     unsigned char field_5;
     unsigned char field_6;
-    char pad_7;
+    unsigned char field_7;
     short field_8;
     short pad_A;
 } struct_12_b;
@@ -118,11 +118,25 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x10];
+    char pad_0[4];
+    unsigned char field_4;
+    unsigned char field_5;
+    unsigned char field_6;
+    char pad_7[5];
+    unsigned char field_C;
+    unsigned char field_D;
+    unsigned short field_E;
     short field_10;
-    char pad_12[2];
+    short field_12;
     unsigned short* field_14;
-    char pad_18[0x12];
+    short field_18;
+    short field_1A;
+    short field_1C;
+    unsigned short field_1E;
+    short field_20;
+    short field_22;
+    unsigned char* field_24;
+    short field_28;
     short field_2A;
 } struct_2C;
 

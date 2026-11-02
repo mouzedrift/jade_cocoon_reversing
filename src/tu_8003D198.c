@@ -72,8 +72,7 @@ int sub_8003D210(int limit, int pos, int step, int idx)
     }
     return pos;
 }
-#if 0
-// Not matched: return value register: orig keeps result in a2 across PlaySfx call (re-set after call)
+// Matched
 int sub_8003D288(int flag, int idx)
 {
     int r = 0;
@@ -95,17 +94,14 @@ int sub_8003D288(int flag, int idx)
         }
     }
 done:
-    r = 1;
     if (flag)
     {
         PlaySfx_80031494(0x7E);
-        r = 1;
     }
+    r = 1;
 end:
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8003D288);
 // Matched
 int sub_8003D380(int a0)
 {
@@ -116,13 +112,21 @@ int sub_8003D3A0(int a0)
 {
     return sub_8003D288(a0, 1);
 }
-#if 0
+// Matched
 int sub_8003D3C0(int arg0, int arg1)
 {
-    return 0;
+    int r = 0;
+    unsigned short x = word_8009194C[arg1];
+    if ((x & 0x10) || (x & 1))
+    {
+        if (arg0)
+        {
+            PlaySfx_80031494(0x7D);
+        }
+        r = 1;
+    }
+    return r;
 }
-#endif
-INCLUDE_ASM(sub_8003D3C0);
 // Matched
 int sub_8003D41C(int a0)
 {
@@ -195,11 +199,46 @@ void sub_8003E268(unsigned short* p)
     sub_8003CF88(x, y, 0);
 }
 INCLUDE_ASM(sub_8003E2A8);
+typedef struct
+{
+    short w;
+    short h;
+} Size2;
+extern int sub_8003E4C8(int str);
+
+#if 0
+Size2 sub_8003E3B4(int* list)
+{
+    Size2 r;
+    int* p;
+    r.w = 0;
+    r.h = 0;
+    p = list;
+    if (*p)
+    {
+        do
+        {
+            if (!sub_8003E484(*p))
+            {
+                int w = sub_8003E4C8(*p);
+                if (r.w < (short)w)
+                {
+                    r.w = w;
+                }
+                r.h++;
+            }
+            p++;
+        } while (*p);
+    }
+    r.h = r.h * 12;
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_8003E3B4);
 // Matched
 int sub_8003E484(int a0)
 {
-    int v = *sub_8003F684(2, a0);
+    int v = *sub_8003F684(2, (unsigned short*)a0);
     if (v < 0xC3)
     {
         if (v >= 0x91)

@@ -268,7 +268,7 @@ int sub_8001AC2C(int idx)
     return off_8007C348[idx * 2];
 }
 // Matched
-unsigned char sub_8001AC58(int idx)
+int sub_8001AC58(int idx)
 {
     if (idx < 0x1E)
     {
@@ -1530,7 +1530,7 @@ INCLUDE_ASM(sub_8001E7F0);
 void sub_8001EA00(char* p)
 {
     int v = *(int*)(p + 0x134);
-    sub_8003FE38(dword_80091990, v);
+    sub_8003FE38(dword_80091990, (void*)v);
 }
 // Matched
 void sub_8001EA28(void* arg0)
