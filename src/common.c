@@ -52,4 +52,37 @@ void sub_800127D0(int a0, int a1, int a2, int a3)
 INCLUDE_ASM(sub_80012828);
 INCLUDE_ASM(sub_800129B0);
 INCLUDE_ASM(sub_80012BB0);
-INCLUDE_ASM(sub_80013228);
+extern struct_u8x12 dword_80071F58;
+extern int sub_80031B30(int a0);
+extern unsigned char* sub_800129B0(void* a0, int a1, int a2);
+extern struct_12* sub_8001AD64(unsigned int idx);
+extern struct_12* sub_8001D260(void);
+// Matched
+int sub_80013228(int a0, int a1, int* p)
+{
+    struct_u8x12 local = dword_80071F58;
+    unsigned char* q = local.c;
+    int b1 = sub_80014358(p[2]);
+    int b2 = sub_80014358(p[3]);
+    switch (p[0])
+    {
+    case 0:
+        if (p[2] == 1)
+        {
+            q = (unsigned char*)sub_8001D260();
+        }
+        break;
+    case 6:
+        q = sub_800129B0(&local, sub_80031B30(b1 & 0xFF) + p[1] * 4, b2);
+        break;
+    case 1:
+        q = (unsigned char*)sub_8001AD64(p[1]);
+        break;
+    case 4:
+        q = (unsigned char*)sub_8001CDF4(p[1]);
+        break;
+    case 26:
+        break;
+    }
+    return q[8] == 8;
+}

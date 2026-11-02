@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(dword_800720E4);
+
 
 // Matched
 int sub_80013358(int idx)

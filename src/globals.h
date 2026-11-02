@@ -307,6 +307,10 @@ typedef struct
 {
     unsigned char c[4];
 } struct_u8x4;
+typedef struct
+{
+    unsigned char c[12];
+} struct_u8x12;
 // 0x14 bytes copied without alignment
 typedef struct
 {
