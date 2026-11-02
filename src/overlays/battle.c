@@ -17,6 +17,8 @@ typedef struct BatTask
 } BatTask;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);
+extern unsigned char dword_800C9E54;
+extern int dword_800C9E3C;
 extern int sub_800BE364();
 extern void sub_800BE3C0();
 extern int sub_800BEA94();
@@ -2985,8 +2987,38 @@ unsigned char sub_800C78D0()
     return dword_800C9648[dword_800C9E49 + (short)sub_8003DA54(dword_800C92D8) * 2];
 }
 
+extern int dword_800C9E78;
+extern unsigned char dword_800C9E72[];
+#if 0
+int sub_800C791C()
+{
+    unsigned char b = dword_800C9E68;
+    int r = 0;
+    if (b & 1)
+    {
+        if (b & 4)
+        {
+            r = dword_800C9E4C;
+        }
+        if (b & 2)
+        {
+            r |= 1;
+            r |= dword_800C9E78;
+        }
+    }
+    else if (b & 4)
+    {
+        short i = sub_8003DA54(dword_800C9314);
+        r = dword_800C9E72[i];
+    }
+    else
+    {
+        r = 1 << *(int*)&dword_800C9E54;
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C791C);
-
 extern char dword_800C9308[];
 void sub_800C79B8()
 {
@@ -3069,7 +3101,18 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C7D54);INCLUDE_OVERLAY_ASM(battle, sub_800C7D
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C83B0);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C8694);
+extern unsigned char dword_800C9E72[];
+void sub_800C8694(unsigned char a)
+{
+    if (a == 4 && (dword_800C9E68 & 5) == 4)
+    {
+        dword_800C9E3C = dword_800C9E72[(short)sub_8003DA54(dword_800C9314)];
+    }
+    else
+    {
+        dword_800C9E3C = dword_800C9E4C;
+    }
+}
 
 extern int dword_800C9E38;
 extern int dword_800C9E3C;
@@ -3097,9 +3140,61 @@ void sub_800C88AC(int a)
     sub_8002AF10((int)s, 0, 0xF);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C88E4);
+extern unsigned short word_8009194C;
+extern unsigned char dword_800C9E51;
+extern unsigned char dword_800C9E48;
+extern unsigned char dword_800C9E50;
+extern int dword_800C9E7C;
+void sub_800C88E4()
+{
+    if (word_8009194C)
+    {
+        dword_800C9E51 = 0;
+    }
+    if (dword_800C9E51 == 0)
+    {
+        dword_800C9E48 = 0;
+    }
+    else
+    {
+        dword_800C9E51--;
+    }
+    if (dword_800C9E7C)
+    {
+        if (dword_800C9E50 == 0)
+        {
+            sub_800C8828(dword_800C9E7C);
+        }
+        else
+        {
+            sub_800C88AC(dword_800C9E7C);
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C8970);
+extern int dword_800C9E58[];
+extern unsigned int dword_800C9E64;
+void sub_800C8970()
+{
+    int v;
+    dword_800C9C88[0] = dword_800C9E58[0];
+    dword_800C9C88[1] = dword_800C9E58[1];
+    dword_800C9C88[2] = dword_800C9E58[2];
+    v = dword_800C9E58[0];
+    if (v == 7 || v == 0x12)
+    {
+        dword_800C9C88[3] = dword_800C9E4C;
+    }
+    else if (v == 8)
+    {
+        dword_800C9C88[3] = 0;
+    }
+    else
+    {
+        dword_800C9C88[3] = dword_800C9E58[3];
+    }
+    dword_800C9C98 = sub_80014358(dword_800C9E64);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C8A08);
 
