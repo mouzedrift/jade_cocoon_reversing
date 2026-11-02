@@ -206,27 +206,25 @@ INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
 INCLUDE_ASM(sub_8001A38C);
 INCLUDE_ASM(sub_8001A41C);
-#if 0
-// Not matched
+// Matched
 void sub_8001A9A4(void)
 {
     unsigned short* p;
+    unsigned short v;
     dword_8008D40C = 0x1000;
     p = (unsigned short*)dword_8008D628[9];
+    v = p[0];
     unknownFlags_8008D678 &= ~0x400;
     p[1] = 0;
-    p[0] &= 0xFFF0;
+    p[0] = v & 0xFFF0;
 }
-#endif
-INCLUDE_ASM(sub_8001A9A4);
 // Matched
 void sub_8001A9E4(void)
 {
     unknownFlags_8008D678 |= 0x400;
     dword_8008D40C = 0;
 }
-#if 0
-// Not matched
+// Matched
 void sub_8001AA04(short a0)
 {
     unsigned short* p = (unsigned short*)dword_8008D628[9];
@@ -235,12 +233,37 @@ void sub_8001AA04(short a0)
     q = dword_8008D4A0 + 4;
     p[1] = 0;
     p[0] |= 1;
-    sub_8001A41C(q);
+    sub_8001A41C(q, p);
 }
-#endif
-INCLUDE_ASM(sub_8001AA04);
-INCLUDE_ASM(sub_8001AA50);
-INCLUDE_ASM(sub_8001AAA8);
+// Matched
+void sub_8001AA50(short a0)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    int** q;
+    unknownFlags_8008D678 |= 0x400;
+    p[3] = a0;
+    q = dword_8008D4A0 + 4;
+    p[1] = 0;
+    p[0] |= 2;
+    sub_8001A41C(q, p);
+}
+// Matched
+void sub_8001AAA8(short a0)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    int** q;
+    p[3] = a0;
+    q = dword_8008D4A0 + 4;
+    p[1] = 0;
+    p[0] |= 4;
+    sub_8001A41C(q, p);
+}
+// Matched
+void sub_8001AAF4(void)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    p[0] &= ~4;
+}
 INCLUDE_ASM(sub_8001AB1C);
 // Matched
 int sub_8001AC2C(int idx)
@@ -365,18 +388,15 @@ void AddPrimsAll_8001B3C8(void)
 }
 INCLUDE_ASM(sub_8001B540);
 INCLUDE_ASM(Draw_8001B5EC);
-#if 0
-// Not matched: same logic, the compiler addresses dword_8008B4B4 differently
+// Matched
 int sub_8001B6E8(void)
 {
     int snapshot = dword_8008B4B4;
-    while (dword_8008B4B4 <= snapshot)
+    do
     {
-    }
+    } while (dword_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
-#endif
-INCLUDE_ASM(sub_8001B6E8);
 INCLUDE_ASM(sub_8001B714);
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 INCLUDE_ASM(InitSprt_8001B9A0);

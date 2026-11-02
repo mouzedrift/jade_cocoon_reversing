@@ -409,7 +409,7 @@ extern void sub_80030EA4(short* p);
 extern int sub_80034B40(int* p, unsigned int mask);
 
 extern void sub_8003DA70(void);
-extern void sub_8001A41C(int** p);
+extern void sub_8001A41C(int** p, unsigned short* q);
 extern unsigned int sub_800AD990(int a0);
 extern void sub_800204D0(void);
 extern void sub_800205F0(void);
