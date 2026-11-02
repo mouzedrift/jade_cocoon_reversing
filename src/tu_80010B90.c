@@ -1164,66 +1164,78 @@ INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
 #if 0
-// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
-int sub_80010B90(int* p)
+typedef struct
+{
+    int field_0;
+    int pad_4;
+    int items[3];
+    int field_14[7];
+    int field_30;
+    int field_34;
+    int field_38;
+    int field_3C;
+} struct_B90;
+extern void sub_80024ADC(void* p, int a, int b);
+extern void sub_80025200(int a, int b, int c, int d, int e);
+// Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
+int sub_80010B90(struct_B90* p)
 {
     int i;
-    sub_80024ADC(p, p[0x34 / 4], 1);
+    sub_80024ADC(p, p->field_34, 1);
     for (i = 0; i < 3; i++)
     {
-        if (i == p[0x30 / 4])
+        if (i == p->field_30)
         {
-            sub_80025200(p[0], p[2 + i], -1, 1, 0);
+            sub_80025200(p->field_0, p->items[i], -1, 1, 0);
         }
         else
         {
-            sub_80025200(p[0], p[2 + i], -1, 0, 0);
+            sub_80025200(p->field_0, p->items[i], -1, 0, 0);
         }
     }
-    p[0x38 / 4] = 4;
-    p[0x3C / 4] = 2;
+    p->field_38 = 4;
+    p->field_3C = 2;
     return 1;
 }
 #endif
 INCLUDE_ASM(sub_80010B90);
+typedef struct
+{
+    char pad_0[0x38];
+    unsigned short field_38;
+    char pad_3A[0x36];
+} struct_C30_item;
+typedef struct
+{
+    int count;
+    int pad_4;
+    struct_C30_item* items;
+} struct_C30_list;
+typedef struct
+{
+    struct_C30_list* list;
+    char pad_4[0x34];
+    int field_38;
+    int field_3C;
+} struct_C30;
+extern int sub_80024DC4(void* p);
 // Matched
-int sub_80010C30(struct_state_obj* p)
+int sub_80010C30(struct_C30* p)
 {
     int i;
-    for (i = 0; i < p->field_0[0]; i++)
+    for (i = 0; i < p->list->count; i++)
     {
-        struct_elem_70* e = (struct_elem_70*)p->field_0[2];
-        if (e[i].id_38 != 0xFFFF)
+        if (p->list->items[i].field_38 != 0xFFFF)
         {
-            if (!sub_80024DC4((int*)&e[i]))
+            if (!sub_80024DC4(&p->list->items[i]))
             {
                 return 0;
             }
         }
     }
-    p->state_38 = p->next_3C;
+    p->field_38 = p->field_3C;
     return 1;
 }
-#if 0
-// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
-int sub_80010CDC(struct_state_obj* p)
-{
-    if (p->field_2C >= 0)
-    {
-        *(unsigned short*)(p->field_0[2] + 0x38) = p->field_2C;
-    }
-    else
-    {
-        *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_24];
-    }
-    sub_800255F0((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38), p->field_28);
-    *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_30];
-    sub_800256B8((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38));
-    p->state_38 = 4;
-    p->next_3C = 5;
-    return 1;
-}
-#endif
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
@@ -1290,80 +1302,70 @@ void sub_80011BCC(void)
 void nullsub_2(void)
 {
 }
-// Matched
-void sub_80011C0C(struct_pair_obj* p, struct_pair_obj* q)
+typedef struct
 {
-    p->field_8 = p->field_A = q->field_A;
-    p->field_C = p->field_E = q->field_E;
+    int field_0;
+    int pad_4;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short field_C;
+    unsigned short field_E;
+} struct_C0C;
+// Matched
+void sub_80011C0C(struct_C0C* a, struct_C0C* b)
+{
+    a->field_8 = a->field_A = b->field_A;
+    a->field_C = a->field_E = b->field_E;
 }
 // Matched
-void sub_80011C30(struct_pair_obj* p)
+void sub_80011C30(struct_C0C* p)
 {
-    p->flags_0 &= 0x400;
+    p->field_0 &= 0x400;
 }
-// Matched
-void sub_80011C44(struct_pair_obj* p)
+void sub_80011C44(struct_C0C* p)
 {
-    short v;
-    if (!(p->flags_0 &= 0x400))
+    int v = p->field_0 & 0x400;
+    p->field_0 = v;
+    if (v == 0)
     {
-        if (p->field_8 + p->field_A / 4 <= p->field_A)
-        {
-            v = p->field_8 + p->field_A / 4;
-        }
-        else
-        {
-            v = p->field_A;
-        }
-        p->field_8 = v;
-        if (p->field_C + p->field_E / 4 <= p->field_E)
-        {
-            v = p->field_C + p->field_E / 4;
-        }
-        else
-        {
-            v = p->field_E;
-        }
-        p->field_C = v;
+        p->field_8 = ((short)p->field_8 + (short)p->field_A / 4 > (short)p->field_A) ? p->field_A : p->field_8 + (short)p->field_A / 4;
+        p->field_C = ((short)p->field_C + (short)p->field_E / 4 > (short)p->field_E) ? p->field_E : p->field_C + (short)p->field_E / 4;
     }
 }
 // Matched
-void sub_80011CD0(struct_pair_obj* p)
+void sub_80011CD0(struct_C0C* p)
 {
-    p->flags_0 = 0;
+    p->field_0 = 0;
     sub_80011C0C(p, p);
 }
 // Matched
-void sub_80011CF4(struct_pair_obj* p)
+void sub_80011CF4(struct_C0C* p)
 {
-    short v;
-    p->field_4 = 0;
-    p->flags_0 = 0;
-    if (p->field_8 + 1 <= p->field_A)
-    {
-        v = p->field_8 + 1;
-    }
-    else
-    {
-        v = p->field_A;
-    }
-    p->field_8 = v;
+    p->pad_4 = 0;
+    p->field_0 = 0;
+    p->field_8 = ((short)p->field_8 + 1 > (short)p->field_A) ? p->field_A : p->field_8 + 1;
 }
+typedef struct
+{
+    unsigned short limit;
+    unsigned short value;
+} struct_D28;
 #if 0
-// Not matched: register allocation only (p in $a1 instead of $v1)
+// Not matched (8 words): register allocation of the table pointer
 int sub_80011D28(int a0)
 {
-    unsigned short* p = word_80079374;
-    while (p[0] != 0)
+    struct_D28* p = (struct_D28*)word_80079374;
+    while (p->limit != 0)
     {
-        if (a0 >= p[0])
+        if (!(a0 < p->limit))
         {
-            return p[1];
+            return p->value;
         }
-        p += 2;
+        p++;
     }
     return 9;
 }
+
 #endif
 INCLUDE_ASM(sub_80011D28);
 // Matched
@@ -1400,39 +1402,38 @@ int sub_80012178(int arg0)
     return (arg0 * 3) + 20;
 }
 // Matched
-void sub_80012188(void* arg0)
+void sub_80012188(void* p)
 {
-    sub_80011D98(arg0, 0);
+    sub_80011D98(p, 0);
 }
-// Matched
-int sub_800121A8(int x)
+int sub_800121A8(int a)
 {
-    int r;
-    if (x < 20)
+    int v;
+    if (a < 20)
     {
-        r = x / 4;
+        v = a / 4;
     }
-    else if (x < 31)
+    else if (a < 31)
     {
-        r = 5;
+        v = 5;
     }
-    else if (x < 35)
+    else if (a < 35)
     {
-        r = 6;
-    }
-    else if (x >= 40)
-    {
-        r = 8;
+        v = 6;
     }
     else
     {
-        r = 7;
+        v = 7;
+        if (a >= 40)
+        {
+            v = 8;
+        }
     }
-    if (r > 8)
+    if (v > 8)
     {
-        r = 8;
+        v = 8;
     }
-    return r;
+    return v;
 }
 // Matched
 int sub_80012204(int a, int b, int c, int d)
@@ -1476,28 +1477,6 @@ double sub_80012358(int n, int x)
     }
     return r;
 }
-#if 0
-// Not matched: the original loads 67108864.0 into $s0/$s1 before the first subtraction (here it is an immediate)
-int sub_8001247C(double x)
-{
-    double t = 67108864.0;
-    double s = 1.0;
-    int i = 0;
-    x -= t;
-    do
-    {
-        t = s * 67108864.0;
-        if (t > x)
-        {
-            break;
-        }
-        x -= t;
-        s += s;
-        i++;
-    } while (i < 99);
-    return (double)(i << 26) + x / s;
-}
-#endif
 INCLUDE_ASM(sub_8001247C);
 // Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
@@ -1515,81 +1494,4 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
 
     return totalMinions;
 }
-#if 0
-// Not matched: the clamped value lives in $a2 instead of $v1 (the jump table is emitted by C: see config/c_rodata.txt)
-void sub_80012614(int a0, int sel, int delta, int mask)
-{
-    char* p = (char*)a0;
-    unsigned short* sp = 0;
-    unsigned char* bp = 0;
-    int max = 0;
-    int r;
-    int v;
-    switch (sel)
-    {
-    case 0:
-        max = *(short*)(p + 0xA);
-        sp = (unsigned short*)(p + 8);
-        break;
-    case 1:
-        sp = (unsigned short*)(p + 0xA);
-        max = 999;
-        break;
-    case 2:
-        max = *(short*)(p + 0xE);
-        sp = (unsigned short*)(p + 0xC);
-        break;
-    case 3:
-        sp = (unsigned short*)(p + 0xE);
-        max = 999;
-        break;
-    case 4:
-    case 5:
-        bp = (unsigned char*)(p + 0x2C);
-        max = 99;
-        break;
-    case 6:
-    case 7:
-        bp = (unsigned char*)(p + 0x30);
-        max = 99;
-        break;
-    case 8:
-    case 9:
-        bp = (unsigned char*)(p + 0x2D);
-        max = 99;
-        break;
-    case 10:
-    case 11:
-        bp = (unsigned char*)(p + 0x2E);
-        max = 99;
-        break;
-    case 12:
-    case 13:
-        bp = (unsigned char*)(p + 0x2F);
-        max = 99;
-        break;
-    case 16:
-        sub_80012794((struct_obj_B*)p, mask);
-        break;
-    case 17:
-        *(int*)p &= ~mask;
-        break;
-    case 19:
-        p[0x44] += delta;
-        break;
-    }
-    if (sp)
-    {
-        v = *sp + delta;
-        r = (v < 0) ? 0 : ((max < v) ? max : v);
-        *sp = r;
-    }
-    else if (bp)
-    {
-        v = *bp + delta;
-        r = (v < 0) ? 0 : ((max < v) ? max : v);
-        *bp = r;
-    }
-}
-#endif
 INCLUDE_ASM(sub_80012614);

@@ -18,26 +18,28 @@
 
 
 // Matched
-void sub_80018430(short a0)
+void sub_80018430(short v)
 {
-    ((short*)dword_8008D3F8[9])[0x40 / 2] = a0;
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    *(short*)(base + 0x40) = v;
 }
 // Matched
-void sub_80018448(short a0)
+void sub_80018448(short v)
 {
-    ((short*)dword_8008D3F8[9])[0x42 / 2] = a0;
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    *(short*)(base + 0x42) = v;
 }
 // Matched
-void sub_80018460(int a0)
+void sub_80018460(int on)
 {
-    int* p = dword_8008D3F8[9];
-    if (a0 != 0)
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    if (on)
     {
-        p[0x28 / 4] |= 8;
+        *(unsigned int*)(base + 0x28) |= 8;
     }
     else
     {
-        p[0x28 / 4] &= ~8;
+        *(unsigned int*)(base + 0x28) &= ~8;
     }
 }
 // Matched
@@ -62,43 +64,6 @@ int sub_800184DC(int a0, int a1)
     return 1;
 }
 INCLUDE_ASM(sub_8001852C);
-#if 0
-// Not matched: registers of i and the row pointer are swapped
-int sub_80018908(int id, short (*tbl)[6])
-{
-    int i;
-    int r = -1;
-    if (tbl != 0 && tbl[0][0] != -1)
-    {
-        for (i = 0; tbl[i][0] != -1; i++)
-        {
-            if (id == tbl[i][0])
-            {
-                if (tbl[i][2] == -1 && tbl[i][3] == -1 && tbl[i][4] == -1 && tbl[i][5] == -1)
-                {
-                    int link = tbl[i][1];
-                    short* p = tbl[0];
-                    for (i = 0; *p != -1; i++)
-                    {
-                        if (link == *p)
-                        {
-                            r = i;
-                            break;
-                        }
-                        p += 6;
-                    }
-                }
-                else
-                {
-                    r = i;
-                }
-                break;
-            }
-        }
-    }
-    return r;
-}
-#endif
 INCLUDE_ASM(sub_80018908);
 // Matched
 int sub_800189F8(void)

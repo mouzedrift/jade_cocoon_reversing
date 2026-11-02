@@ -30,19 +30,20 @@ INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
 #if 0
-// Not matched: branch sense (beq vs bne) and registers differ
+// Not matched (7 words): result register and branch polarity
 int sub_80013DB0(void)
 {
-    int r;
-    if (rand() % 6 != 0)
+    int r = rand();
+    int v;
+    if (r % 6)
     {
-        r = 1;
+        v = 1;
     }
     else
     {
-        r = 2;
+        v = 2;
     }
-    return r;
+    return v;
 }
 #endif
 INCLUDE_ASM(sub_80013DB0);
@@ -67,9 +68,9 @@ void sub_80013E80(void* p, int arg)
     sub_80033624(p, sub_80014390(arg & 0xFF));
 }
 // Matched
-void sub_80013EB4(void* p, int nth, int id)
+void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)sub_800107A0(id, nth));
+    sub_80033624(p, (int)sub_800107A0(a2));
 }
 INCLUDE_ASM(sub_80013EE8);
 // Matched
@@ -180,36 +181,9 @@ int sub_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-// Not matched: only the callee-saved register assignment of a0 and r is swapped
-int sub_80014390(int a0)
+int sub_80014390(int arg0)
 {
-    unsigned char c = a0;
-    int idx;
-    int r = 0;
-    if (c >= 8)
-    {
-        idx = a0 - 8;
-        r = sub_800A10C0(idx);
-    }
-    else if (c >= 4)
-    {
-        int m = sub_800A248C() & (1 << c);
-        if (m)
-        {
-            idx = a0 - 4;
-            r = sub_800A2B60(idx);
-        }
-    }
-    else if (c != 0)
-    {
-        idx = a0 - 1;
-        r = (int)sub_800107A0(3, (unsigned char)idx);
-    }
-    else
-    {
-        r = (int)&byte_8008BD38;
-    }
-    return r;
+    return 0;
 }
 #endif
 INCLUDE_ASM(sub_80014390);
@@ -231,21 +205,23 @@ int sub_80014444(int a0)
     return r;
 }
 #if 0
-// Not matched: only the callee-saved register assignment of a0 and r is swapped
+// Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
 int sub_8001449C(int a0)
 {
-    unsigned int v = a0 - 4;
     int r = 0;
-    if ((v & 0xFF) < 3)
+    int v = a0 - 4;
+    if ((unsigned char)v < 3)
     {
-        int m = sub_800A248C() & (1 << a0);
-        if (m != 0)
+        int flags = sub_800A248C();
+        int m = 1 << a0;
+        if (flags & m)
         {
-            r = sub_800A2B20(v);
+            r = sub_800A2B20((unsigned char)v);
         }
     }
     return r;
 }
+
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched

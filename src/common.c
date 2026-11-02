@@ -27,12 +27,11 @@ INCLUDE_DATA(dword_800793C8);
 // Matched
 void sub_80012794(struct_obj_B* p, int a1)
 {
-    unsigned int f = p->flags_0;
-    if (f & 0x3F8)
+    if (p->flags_0 & 0x3F8)
     {
         a1 &= ~0x3F8;
     }
-    p->flags_0 = f | a1;
+    p->flags_0 |= a1;
 }
 // Matched
 void sub_800127B8(struct_obj_B* p)

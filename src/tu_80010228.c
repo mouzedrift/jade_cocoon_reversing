@@ -9,7 +9,6 @@
 #include "STDIO.H"
 #include "LIBPAD.H"
 #include "LIBSND.H"
-#include "LIBSPU.H"
 #include "LIBMCX.H"
 #include "LIBPRESS.H"
 #include "LIBETC.H"
@@ -18,6 +17,10 @@
 #include "data_decls.h"
 
 
+extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
+extern unsigned long SpuWrite0(unsigned long size);
+extern void sub_8006EC08(void);
+extern void sub_8004EDB8(void);
 // Matched
 void sub_80010228(void)
 {
@@ -84,7 +87,10 @@ void InitImage_80010428(void)
     ClearImage(&rect, 0, 0, 0);
     DrawSync(0);
 }
-INCLUDE_ASM(__main);
+// Matched
+void __main(void)
+{
+}
 INCLUDE_ASM(start);
 INCLUDE_ASM(dword_80010528);
 INCLUDE_ASM(dword_8001052C);
@@ -131,6 +137,22 @@ Minion* sub_80010598(int id, int nth)
     }
     return result;
 }
+#if 0
+// Not matched: only the order of the two constant loads (4 / 0xE) differs
+void sub_80010600(void)
+{
+    int i;
+
+    for (i = 14; i >= 0; i--)
+    {
+        saveData_8008B570.minions[i].id = 4;
+    }
+    for (i = 11; i >= 0; i--)
+    {
+        saveData_8008B570.items[i].id = 0xD3;
+    }
+}
+#endif
 // Matched
 void sub_80010600(void)
 {
@@ -248,36 +270,66 @@ char* sub_80010824(int id, int nth)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80010850);
+extern EventNode* dword_8008D618;
 // Matched
-int* sub_8001091C(int id)
+int sub_80010850(void* a0)
+{
+    EventEntry* e = sub_80043AF8(dword_8008D618);
+    int* buf;
+    int* m;
+    if (e != 0)
+    {
+        e->cb_8 = (EventEntryFn)sub_80010A90;
+        buf = (int*)e->buffer;
+        e->cb_C = (EventEntryFn)sub_80010AB4;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        e->flags = (e->flags | 4) & 0xFFFF7FFF;
+        buf[0] = e->field_4;
+        m = malloc3_8003FC4C(0x40);
+        buf[1] = (int)m;
+        sub_800403E8((unsigned int*)(m + 1), (unsigned int*)a0, 0x34);
+        m[0] = 0;
+        m[0x38 / 4] = 1;
+        m[0x3C / 4] = 1;
+        sub_80010AD8((int)m);
+        return buf[0];
+    }
+    return -1;
+}
+// Matched
+int* sub_8001091C(key)
+int key;
 {
     EventNode* n = dword_8008D618;
+    int count = n->count;
     EventEntry* e;
     int i;
-    int count = n->count;
     for (i = 0; i < count; i++)
     {
         e = &n->entry;
-        if ((e->flags & 0x8001) == 1 && *(int*)e->buffer == id)
+        if ((e->flags & 0x8001) == 1)
         {
-            return (int*)e;
+            if (*(int*)e->buffer == key)
+            {
+                return (int*)e;
+            }
         }
         n = n->next;
     }
     return 0;
 }
 // Matched
-int sub_8001098C(int id)
+int sub_8001098C(int arg0)
 {
-    EventEntry* e = (EventEntry*)sub_8001091C(id);
-    int* b = e->buffer;
-    int* q = (int*)b[1];
+    EventEntry* e = (EventEntry*)sub_8001091C();
+    int* buf = (int*)e->buffer;
+    int* q = (int*)buf[1];
     if (q[0x38 / 4] == 5)
     {
-        sub_80024BB0(q);
-        free3_8003FC6C((void*)b[1]);
-        e->flags = (((e->flags & ~1) | 0x8000) & ~4) | 0x8000;
+        sub_80024BB0((int*)buf[1]);
+        free3_8003FC6C((void*)buf[1]);
+        e->flags = (e->flags & ~1) | 0x8000;
+        e->flags = (e->flags & ~4) | 0x8000;
         return 1;
     }
     return 0;
@@ -285,13 +337,13 @@ int sub_8001098C(int id)
 // Matched
 void sub_80010A10(int arg0)
 {
-    int* p = sub_8001091C(arg0);
+    int* p = sub_8001091C();
     sub_80010AD8(((int**)p)[0x14 / 4][1]);
 }
 // Matched
-int sub_80010A44(int id)
+int sub_80010A44(void)
 {
-    int* p = (int*)((int*)sub_8001091C(id))[5];
+    int* p = (int*)((int*)sub_8001091C())[5];
     int* q = (int*)p[1];
     if (q[0x38 / 4] == 5)
     {

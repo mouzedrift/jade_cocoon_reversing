@@ -190,10 +190,14 @@ void sub_80018EBC(int a0, unsigned int* a1)
 }
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
+typedef struct
+{
+    char b[20];
+} bytes20;
 // Matched
 void sub_800199A0(char* p)
 {
-    *(struct_20_u8*)(p + 0x6C) = *(struct_20_u8*)sub_80019C28(*(unsigned int*)(p + 0x5C));
+    *(bytes20*)(p + 0x6C) = *(bytes20*)sub_80019C28(*(unsigned int*)(p + 0x5C));
 }
 // Matched
 void sub_80019A20(char* a0)
@@ -208,13 +212,14 @@ void sub_80019A20(char* a0)
         *(int*)(a0 + 0x80) = *sub_800B3260(idx - 0x39);
     }
 }
+extern unsigned char dword_8007C2E4[];
 // Matched
-int sub_80019A80(int arg0)
+int sub_80019A80(int a0)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
-        if (arg0 < dword_8007C2E4[i])
+        if (a0 < dword_8007C2E4[i])
         {
             break;
         }

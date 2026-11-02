@@ -33,9 +33,9 @@ def main():
             if only and name not in only:
                 continue
             res = []
-            for cc in ("4.4", "4.3"):
+            for cc in ("4.4", "4.3", "4.6", "4.6n"):
                 open(path, "w").write(orig[:m.start()] + m.group(1) + orig[m.end():])
-                open("config/cc43.txt", "w").write((f[:-2] if cc == "4.3" else "") + "\n")
+                open("config/cc43.txt", "w").write((f[:-2] + " " + cc if cc != "4.4" else "") + "\n")
                 if run([sys.executable, "build.py"]).returncode:
                     res.append(cc + ":build-fail")
                     continue
