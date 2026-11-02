@@ -28,6 +28,8 @@ extern char dword_80082680[];
 extern void sub_8002ADB4(void*, void*, int, int);
 extern void sub_8002B004(void*, int, int);
 extern void sub_800A41E4();
+extern void sub_8002C290(void*, int, int);
+extern void sub_8002C06C(void*, int, int);
 extern void sub_800A16FC();
 extern void sub_8001C19C(int, int);
 extern void sub_800A4240(int);
@@ -69,6 +71,41 @@ void sub_800A41E4(CombRsltTask* t, int a)
 
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A4240);
 
+// Near miss: scheduling of the repeated x/y stores
+#if 0
+void sub_800A444C(unsigned short* p, int a, int b, int c)
+{
+    short v[2];
+    unsigned int x;
+    unsigned int y;
+    x = p[0];
+    v[0] = x + 0x1C;
+    y = p[1];
+    v[0] = x + 0x12;
+    v[1] = y + 4;
+    v[1] = y + 7;
+    sub_8002C290(v, b, a);
+    x = p[0];
+    v[0] = x + 0x1C;
+    y = p[1];
+    v[0] = x + 0x14;
+    v[1] = y + 5;
+    sub_8002C06C(v, 0xAE, a);
+    x = p[0];
+    v[0] = x + 0x43;
+    y = p[1];
+    v[0] = x + 0x39;
+    v[1] = y + 4;
+    v[1] = y + 7;
+    sub_8002C290(v, c, a);
+    x = p[0];
+    v[0] = x + 0x43;
+    y = p[1];
+    v[0] = x + 0x3B;
+    v[1] = y + 5;
+    sub_8002C06C(v, 0x4D, a);
+}
+#endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A444C);
 
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A4554);
