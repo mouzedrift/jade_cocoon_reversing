@@ -41,7 +41,47 @@ extern void sub_8001AEC0(int, int);
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CB7AC);
+extern int dword_8008D614;
+extern int dword_800CD840;
+extern int dword_800CD848;
+extern unsigned char byte_800A38D8;
+extern unsigned char byte_800A38DC;
+extern unsigned char byte_800CD83A;
+extern unsigned char byte_800CD838;
+extern unsigned char byte_800CD845;
+extern unsigned char byte_800CD850;
+extern void sub_800CD16C();
+extern void sub_800CB88C();
+extern void sub_800CB924();
+
+EventEntry* sub_800CB7AC(int a, int b)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D614);
+    if (e)
+    {
+        e->cb_8 = (EventEntryFn)sub_800CD16C;
+        dword_800CD840 = a;
+        byte_800CD839 = b;
+        e->flags = (e->flags | 1) & ~0x8000;
+        if (!b)
+        {
+            dword_800CD848 = 0;
+        }
+        else
+        {
+            dword_800CD848 = byte_800A38D8;
+        }
+        byte_800A38DC = 0;
+        byte_800CD83A = 0;
+        byte_800CD850 = 0;
+        byte_800CD838 = 0;
+        byte_800CD844 = 4;
+        byte_800CD845 = 0;
+        sub_800CB88C();
+        sub_800CB924();
+    }
+    return e;
+}
 
 void sub_800CB88C()
 {
