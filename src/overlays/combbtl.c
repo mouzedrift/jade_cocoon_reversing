@@ -10,6 +10,13 @@ typedef struct CombBtlTask
     void (*next_8)();
 } CombBtlTask;
 
+typedef struct CombBtlNode
+{
+    unsigned int flags;
+} CombBtlNode;
+
+extern CombBtlNode* dword_800A82DC;
+
 typedef struct CombBtl4
 {
     int a;
@@ -110,7 +117,7 @@ extern void sub_800A616C();
 extern void sub_800A5000();
 extern void sub_80039FA4(int);
 extern void sub_800A0A28();
-extern void sub_800300E0(int, int);
+extern int sub_800300E0(int, int);
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -182,9 +189,117 @@ void sub_800A4CFC()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A4D48);
+extern int sub_800303E8();
+extern int sub_80030688();
+extern int sub_800BC8E8();
+extern void sub_800BC878();
+extern void sub_80037720();
+extern void sub_80037748();
+extern void sub_8001C19C();
+extern void sub_8002BF74();
+extern int dword_8008B4E8;
+extern int subInt_800378F8();
+extern void sub_800A7290();
+extern void sub_800A7420();
+extern void sub_800A4EC8();
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A4EC8);
+void sub_800A4D48(CombBtlTask* t, int a)
+{
+    switch (dword_800A84B8)
+    {
+    case 0:
+        if (!sub_800303E8())
+        {
+            break;
+        }
+        dword_800A84B8 = 1;
+    case 1:
+        if (!sub_80030688())
+        {
+            break;
+        }
+        sub_800315F4();
+        dword_800A84B8 = 2;
+    case 2:
+        if (!sub_800300E0(0x99, 1))
+        {
+            break;
+        }
+        dword_800A84B8 = 3;
+    case 3:
+        sub_800BC878();
+        dword_800A84B8 = 4;
+    case 4:
+        if (!sub_800BC8E8())
+        {
+            break;
+        }
+        dword_800A84B8 = 5;
+    case 5:
+        sub_800A7290();
+        sub_800A7420();
+        sub_80037720();
+        sub_80037748();
+        dword_800A84B8 = 9;
+        break;
+    case 6:
+        sub_8001C19C(3, 0x20);
+        dword_800A84B8 = 7;
+    case 7:
+        sub_8002BF74();
+        dword_800A84B8 = 8;
+    case 8:
+        if (!dword_8008B4E8)
+        {
+            break;
+        }
+        dword_800A84B8 = 9;
+    case 9:
+        if (subInt_800378F8() != 4)
+        {
+            t->next_8 = sub_800A4EC8;
+            t->next_8(t, a);
+        }
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A54);
+
+extern void sub_800A5638();
+
+void sub_800A4EC8(CombBtlTask* t, int a)
+{
+    int ok[2];
+    unsigned int i;
+    unsigned int j;
+    for (i = 0; i < 2; i++)
+    {
+        ok[i] = 1;
+        for (j = 0; j < 3; j++)
+        {
+            if (sub_800A1934(&dword_800A3AA0[i][j]) == 0 && sub_800A1958(&dword_800A3AA0[i][j]) == 0)
+            {
+                ok[i] = 0;
+                break;
+            }
+        }
+        if (ok[i] == 1)
+        {
+            dword_800A85F8 = i;
+            break;
+        }
+    }
+    if (dword_800A85F8 >= 0)
+    {
+        t->next_8 = sub_800A5000;
+    }
+    else
+    {
+        dword_800A84B8 = 10;
+        t->next_8 = sub_800A5638;
+    }
+    t->next_8(t, a);
+}
 
 void sub_800A5000(CombBtlTask* t)
 {
@@ -213,9 +328,78 @@ void sub_800A5080(CombBtlTask* t)
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A50E4);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A51EC);
+extern void sub_800A8078(short, short, short);
+extern int sub_800A8098();
+extern void sub_800A5290();
+extern void sub_800A54CC();
+extern char dword_800A82EC[];
+extern char dword_800A8300[];
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5290);
+void sub_800A51EC(CombBtlTask* t)
+{
+    if (--dword_800A84D4 <= 0)
+    {
+        if (dword_800A85F8 == 1)
+        {
+            sub_800A8078(7, 0x3BC, 0x1B);
+            dword_800A82DC = sub_800A8098(0, dword_800A82EC, 1);
+        }
+        else
+        {
+            sub_800A8078(9, 0x3BF, 0x1F);
+            dword_800A82DC = sub_800A8098(0, dword_800A8300, 0);
+        }
+        t->next_8 = sub_800A5290;
+    }
+}
+
+typedef struct CombBtlA28
+{
+    int w[7];
+} CombBtlA28;
+
+typedef struct CombBtlBox
+{
+    short col_0;
+    char c_2;
+    char c_3;
+} CombBtlBox;
+
+extern CombBtlA28 dword_800A4A54;
+extern CombBtlA28 dword_800A4A70;
+typedef struct CombBtlUi
+{
+    char pad_0[0x20];
+    unsigned short col_20;
+} CombBtlUi;
+
+extern CombBtlUi ui_8008B570;
+extern void sub_8002ADB4(void*, void*, int, int);
+
+void sub_800A5290(CombBtlTask* t)
+{
+    CombBtlBox box;
+    CombBtlA28 a = dword_800A4A54;
+    int pair[2];
+    CombBtlA28 b;
+    pair[0] = 0x33;
+    pair[1] = 0xDF;
+    a.w[1] = pair[dword_800A85F8 ^ 1];
+    box.c_2 = 1;
+    box.c_3 = 1;
+    box.col_0 = ui_8008B570.col_20;
+    sub_8002ADB4(&a, &box, 0xF, sub_8002C64C());
+    b = dword_800A4A70;
+    box.c_2 = 1;
+    box.c_3 = 1;
+    box.col_0 = ui_8008B570.col_20;
+    sub_8002ADB4(&b, &box, 0xF, sub_8002C64C());
+    if (dword_800A82DC == 0 || (dword_800A82DC->flags & 0x8001) != 1)
+    {
+        dword_800A82DC = 0;
+        t->next_8 = sub_800A54CC;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
@@ -232,11 +416,55 @@ void sub_800A54CC(CombBtlTask* t)
     t->next_8 = sub_800A5544;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5544);
+extern int sub_8001AB94();
+extern void sub_800A73E4();
+extern void sub_800A7478();
+extern void sub_800A7560();
+extern void sub_800A0A6C();
+extern void sub_80066E38();
+extern void sub_800A16FC();
+
+void sub_800A5544(CombBtlTask* t)
+{
+    int i;
+    if (sub_8001AB94() == 1)
+    {
+        sub_800A73E4();
+        sub_800A7478();
+        for (i = 0; i < 2; i++)
+        {
+            if (dword_800A4078[i] >= 0)
+            {
+                if (sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]) == 0)
+                {
+                    sub_800A7560(i);
+                }
+            }
+        }
+        sub_800A0A6C();
+        sub_80030664();
+        sub_80066E38(0);
+        sub_800300E0(0x8E, 1);
+        sub_80039FC0();
+        t->next_8 = sub_800A16FC;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5638);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A58E8);
+void sub_800A58E8(int i)
+{
+    CombBtlUnit* u;
+    do
+    {
+        dword_800A4078[i]++;
+        if (dword_800A4078[i] >= 3)
+        {
+            dword_800A4078[i] = 0;
+        }
+        u = &dword_800A3AA0[i][dword_800A4078[i]];
+    } while (sub_800A1934(u) || sub_800A1958(u));
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A599C);
 
@@ -388,8 +616,6 @@ int sub_800A7164(int i)
     return cnt;
 }
 
-// Near miss: register assignment of the two element pointers
-#if 0
 CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
 {
     CombBtlPair r;
@@ -398,23 +624,22 @@ CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
     int i;
     for (i = 0; i < n; i++)
     {
-        p[i].hi = p[i].hi - p[i].lo;
-        p[i].lo = -p[i].lo;
-        if (p[i].lo < lo)
+        p->hi = p->hi - p->lo;
+        p->lo = -p->lo;
+        if (p->lo < lo)
         {
-            lo = p[i].lo;
+            lo = p->lo;
         }
-        if (hi < p[i].hi)
+        if (hi < p->hi)
         {
-            hi = p[i].hi;
+            hi = p->hi;
         }
+        p++;
     }
     r.lo = lo;
     r.hi = hi;
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A71E4);
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
@@ -532,8 +757,70 @@ void sub_800A8078(short a, short b, short c)
     word_800A82E0[3] = c;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A8098);
+extern int** dword_8008D458;
+extern int dword_800A8478;
+extern unsigned int dword_800A3A88;
+extern int sub_800A5408();
+extern void sub_800A816C();
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A816C);
+int sub_800A8098(int a, int b, int c)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D458);
+    if (e)
+    {
+        e->cb_8 = (EventEntryFn)sub_800A816C;
+        e->flags = (e->flags | 1) & ~0x8000;
+        sub_80043564(word_800A82E0[1], word_800A82E0[2], word_800A82E0[3]);
+        dword_800A8478 = sub_800A5408(a, b, c);
+        dword_800A3A88 &= ~4;
+        dword_800A3A88 &= ~8;
+        dword_800A3A88 &= ~0x10;
+    }
+    return (int)e;
+}
+
+extern int sub_800349B4();
+extern int sub_80043524();
+extern void sub_80034A84();
+
+void sub_800A816C(EventEntry* e)
+{
+    int buf[4];
+    int v;
+    if (!(dword_800A3A88 & 4))
+    {
+        if (sub_800349B4(dword_800A8478, buf) && buf[3])
+        {
+            dword_800A3A88 |= 4;
+        }
+    }
+    v = sub_800435A4();
+    if (v == 1 && sub_80043584() == v)
+    {
+        dword_800A3A88 |= 8;
+    }
+    if (!(dword_800A3A88 & 8))
+    {
+        v = (settingsFlags_8008B58C >> 3) & 1;
+        if (v == 1 && (dword_800A3A88 & 4))
+        {
+            if (!(dword_800A3A88 & 0x10))
+            {
+                if (sub_80043524() == v)
+                {
+                    dword_800A3A88 |= 0x10;
+                }
+            }
+        }
+    }
+    if ((dword_800A3A88 & 0xC) == 0xC)
+    {
+        dword_800A3A88 &= ~4;
+        dword_800A3A88 &= ~8;
+        dword_800A3A88 &= ~0x10;
+        sub_80034A84(dword_800A8478);
+        e->flags = (e->flags & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A82D0);

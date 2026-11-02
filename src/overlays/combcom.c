@@ -41,7 +41,47 @@ extern void sub_8001AEC0(int, int);
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CB7AC);
+extern int dword_8008D614;
+extern int dword_800CD840;
+extern int dword_800CD848;
+extern unsigned char byte_800A38D8;
+extern unsigned char byte_800A38DC;
+extern unsigned char byte_800CD83A;
+extern unsigned char byte_800CD838;
+extern unsigned char byte_800CD845;
+extern unsigned char byte_800CD850;
+extern void sub_800CD16C();
+extern void sub_800CB88C();
+extern void sub_800CB924();
+
+EventEntry* sub_800CB7AC(int a, int b)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D614);
+    if (e)
+    {
+        e->cb_8 = (EventEntryFn)sub_800CD16C;
+        dword_800CD840 = a;
+        byte_800CD839 = b;
+        e->flags = (e->flags | 1) & ~0x8000;
+        if (!b)
+        {
+            dword_800CD848 = 0;
+        }
+        else
+        {
+            dword_800CD848 = byte_800A38D8;
+        }
+        byte_800A38DC = 0;
+        byte_800CD83A = 0;
+        byte_800CD850 = 0;
+        byte_800CD838 = 0;
+        byte_800CD844 = 4;
+        byte_800CD845 = 0;
+        sub_800CB88C();
+        sub_800CB924();
+    }
+    return e;
+}
 
 void sub_800CB88C()
 {
@@ -66,53 +106,113 @@ void sub_800CB924()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CB974);
+extern short dword_800CD2BC[];
+extern short dword_800CD2B0[];
+extern short* dword_800CD2D4[];
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBA20);
-
-// Near miss: the two table lookups are not merged in the original
-#if 0
-void sub_800CBAD4(int a)
+short* sub_800CB974(int a)
 {
-    unsigned char v;
-    if ((a & 0xFF) == 3)
+    a &= 0xFF;
+    if (a == 3)
     {
-        if (byte_800CD844 & 5)
+        if ((byte_800CD844 & 1) == 0)
         {
-            v = dword_800A4078[byte_800CD839 * 4];
+            if ((byte_800CD844 & 4) == 0)
+            {
+                if ((short)sub_8003DA54(word_800CD28C) == 4)
+                {
+                    dword_800CD2BC[2] = sub_800A1AAC(byte_800CD839) - 1;
+                    return dword_800CD2BC;
+                }
+            }
         }
-        else
-        {
-            v = byte_800CD83C;
-        }
+        return dword_800CD2B0;
+    }
+    return dword_800CD2D4[a];
+}
+
+extern unsigned int dword_800CD41C[];
+extern short word_800CD294;
+extern short word_800CD434[];
+extern char* dword_800CD404[];
+
+void sub_800CBA20(int a)
+{
+    int i;
+    int off;
+    a &= 0xFF;
+    if (a == 0)
+    {
+        dword_800CD41C[0] = 2;
     }
     else
     {
-        v = dword_800A4078[byte_800CD839 * 4];
+        dword_800CD41C[0] = 4;
     }
-    byte_800A85BD = v;
+    dword_800CD41C[1] = sub_8002C64C();
+    if (dword_800CD41C[2] < 8)
+    {
+        dword_800CD41C[2]++;
+    }
+    off = byte_800CD839;
+    dword_800CD41C[3] = word_800CD294;
+    for (i = 0; i < 5; i++)
+    {
+        *(short*)(dword_800CD404[i] + 0x10) = word_800CD434[i] + off * 192;
+    }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBAD4);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBB4C);
+void sub_800CBAD4(int a)
+{
+    if ((a & 0xFF) != 3)
+    {
+        byte_800A85BD = dword_800A4078[byte_800CD839 * 4];
+    }
+    else if (byte_800CD844 & 5)
+    {
+        byte_800A85BD = dword_800A4078[byte_800CD839 * 4];
+    }
+    else
+    {
+        byte_800A85BD = byte_800CD83C;
+    }
+}
 
-// Near miss: prologue store of ra is scheduled later than in the original
-#if 0
+extern int sub_8003E4C8(int);
+
+void sub_800CBB4C(int p)
+{
+    RECT a;
+    short b[2];
+    int d;
+    int w;
+    a.w = w = sub_8003E4C8(p) + 4;
+    a.h = 0x12;
+    if (byte_800CD839 == 1)
+    {
+        a.x = 0xDD - w;
+    }
+    else
+    {
+        a.x = 0x5F;
+    }
+    a.y = 0xC1;
+    b[1] = 0xC3;
+    b[0] = a.x + 2;
+    d = p;
+    sub_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
+}
+
 void sub_800CBBE0(int p)
 {
-    short v[2];
+    short v[2] = {0xA, 0x14};
     CombComDlg d;
-    v[0] = 0xA;
-    v[1] = 0x14;
     d.f0 = p;
     d.f4 = 0;
     d.f8 = 0;
     d.fC = 0;
     sub_8002AF10((int)&d, (int)v, 0xF);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBBE0);
 
 void sub_800CBC28()
 {
