@@ -8,7 +8,7 @@ typedef struct WpnObj_wpnshop
     short f_0;
     short f_2;
     int f_4;
-    void (*f_8)();
+    int f_8;
     int f_C;
     short f_10;
     short f_12;
@@ -67,8 +67,8 @@ extern void sub_8002A5A4(WpnDlg_wpnshop* p);
 extern char name_800826B0[];
 extern char name_80082680[];
 extern unsigned short name_800BF1EC[];
-extern void sub_800BCF80(unsigned short* p);
-extern void sub_800BB950(unsigned short* p);
+extern void sub_800BCF80();
+extern void sub_800BB950();
 extern void sub_800BC0AC();
 extern WpnDlg_wpnshop name_800BADF0;
 extern int dword_8008B4E8;
@@ -93,13 +93,33 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+#define f_26 f_20[3]
+extern int sub_8003D480(void);
+extern char name_800BEBC4[];
+extern char name_800BEBC8[];
+extern char name_800BEBCC[];
+extern char name_800BEFEC[];
+extern char name_800BEE7C[];
+extern char name_800BF0DC[];
+extern void sub_800BC194();
+extern void sub_800BC2E4();
+extern void sub_800BBED0();
+extern void sub_800BC374();
+extern void sub_800BCC4C();
+extern void sub_800BCCE8();
+extern void sub_800BD174();
+extern void sub_800BCC18();
+extern void sub_800BC268();
+extern void sub_800BCED4();
+extern void sub_800BCFCC();
+extern void sub_800BB8CC();
 typedef struct WpnRow_wpnshop
 {
     unsigned short* p;
     char pad_4[16];
 } WpnRow_wpnshop;
 extern WpnRow_wpnshop name_800BE580[];
-extern void (*name_800BE7CC[])();
+extern int name_800BE7CC[];
 extern int** dword_8008D3E0;
 extern void sub_800A7B00(int a);
 extern void sub_800BB130();
@@ -366,7 +386,182 @@ void sub_800BB8CC(WpnObj_wpnshop* o)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB950);
+// Matched
+void sub_800BB950(WpnObj_wpnshop* o)
+{
+    WpnPos_wpnshop pos;
+    char* p;
+    int r;
+    int s;
+    short i;
+    p = 0;
+    if (o->f_8 & 1)
+    {
+        sub_800BC194(o);
+    }
+    if (o->f_8 & 2)
+    {
+        sub_800BC2E4(o);
+    }
+    if (o->f_8 & 4)
+    {
+        sub_800BBED0(o, name_800BEBC4);
+    }
+    if (o->f_8 & 8)
+    {
+        sub_800BBED0(o, name_800BEBC8);
+    }
+    if (o->f_8 & 0x10)
+    {
+        sub_800BC374(o, 4);
+    }
+    if (o->f_8 & 0x20)
+    {
+        sub_800BC374(o, 5);
+    }
+    if (o->f_8 & 0x80)
+    {
+        sub_800BCC4C(o);
+    }
+    if (o->f_8 & 0x400)
+    {
+        sub_800BCCE8(o);
+        sub_800BC374(o, 0xA);
+    }
+    if (o->f_8 & 0x800)
+    {
+        sub_800BC374(o, 0xB);
+    }
+    if (o->f_8 & 0x40)
+    {
+        sub_800BC194(o);
+    }
+    if (o->f_8 & 0x2000)
+    {
+        sub_800BD174(o);
+    }
+    if (o->f_8 & 0x4000)
+    {
+        sub_800BD174(o);
+    }
+    if (o->f_8 & 0x20000)
+    {
+        sub_800BCC18(o);
+    }
+    if (o->f_8 & 0x40000)
+    {
+        sub_800BCC18(o);
+    }
+    if (o->f_8 & 0x200)
+    {
+        sub_800BC268(o);
+    }
+    if (o->f_8 & 0x800000)
+    {
+        sub_800BCED4(o);
+    }
+    if (o->f_8 & 0x2000000)
+    {
+        sub_800BCFCC(o);
+    }
+    if ((unsigned short)(o->f_0 - 2) < 4)
+    {
+        p = (char*)1;
+    }
+    if (p)
+    {
+        p = 0;
+        if (sub_8003D480())
+        {
+            pos.x = 0xA;
+            pos.y = 0x12;
+            s = (unsigned short)o->f_32 + (unsigned short)o->f_30;
+            r = 0xFF;
+            switch (o->f_34)
+            {
+            case 4:
+                if ((short)s < o->f_26)
+                {
+                    r = sub_800BDDB0((short)s, o->f_1E);
+                }
+                if (r != 0xFF)
+                {
+                    p = name_800BEBCC + r * 16;
+                }
+                break;
+            case 5:
+                r = sub_800AD288((short)s, 0);
+                if (r != 0xFF)
+                {
+                    p = name_800BEBCC + r * 16;
+                }
+                break;
+            case 10:
+                if ((short)s < o->f_20[o->f_10])
+                {
+                    r = sub_800BDD2C((short)s, o->f_10, o->f_1E);
+                }
+                if (r != 0xFF)
+                {
+                    switch (o->f_10)
+                    {
+                    case 0:
+                        p = name_800BEE7C + r * 16;
+                        break;
+                    case 1:
+                        p = name_800BEFEC + r * 16;
+                        break;
+                    case 2:
+                        p = name_800BF0DC + r * 16;
+                        break;
+                    }
+                }
+                break;
+            case 11:
+                r = sub_800AD288((short)s, o->f_10 + 1);
+                if (r != 0xFF)
+                {
+                    switch (o->f_10)
+                    {
+                    case 0:
+                        p = name_800BEE7C + r * 16;
+                        break;
+                    case 1:
+                        p = name_800BEFEC + r * 16;
+                        break;
+                    case 2:
+                        p = name_800BF0DC + r * 16;
+                        break;
+                    }
+                }
+                break;
+            default:
+                p = 0;
+                break;
+            }
+        }
+    }
+    if (p)
+    {
+        sub_8002AF10((int)p, (int)&pos, 0xE);
+    }
+    else
+    {
+        sub_800BB8CC(o);
+    }
+    for (i = 0; i < 0x1D; i++)
+    {
+        int bit = 1 << i;
+        if ((o->f_8 & bit) && i != 0x18)
+        {
+            int c = o->f_C;
+            if (o->f_48 == 8)
+            {
+                o->f_C = c | bit;
+            }
+        }
+    }
+}
 
 // Matched
 void sub_800BBDD0(WpnObj_wpnshop* o)
