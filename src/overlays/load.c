@@ -69,6 +69,13 @@ extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
 extern void sub_8004FE08(int a);
+extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
+extern char byte_800B682C[];
+extern char byte_800B6B9C[];
+extern void sub_8003F264(void* p, int a, int b);
+extern char byte_800B69FC[];
+extern int dword_800BDD64;
+extern void sub_8002A5A4(void* p);
 typedef struct
 {
     short x_LOAD;
@@ -109,6 +116,8 @@ typedef struct
 } Row8_LOAD;
 extern Row8_LOAD dword_800BD998[];
 extern Bytes8_LOAD dword_800B6B8C;
+extern Bytes8_LOAD dword_800B6A24;
+extern Bytes8_LOAD dword_800B6BA0;
 extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short word_8008B590;
 extern char* dword_8008D454;
@@ -120,7 +129,9 @@ typedef struct
     int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
-    char pad2C_LOAD[0x28];
+    char pad2C_LOAD[4];
+    short s30_LOAD;
+    char pad32_LOAD[0x22];
     unsigned f54_LOAD;
 } LoadTask_LOAD;
 extern int sub_8003D288(int a, int b);
@@ -130,6 +141,23 @@ extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 extern char byte_800B73A0[];
 extern char byte_800B7544[];
+typedef struct
+{
+    short a_LOAD;
+    short b_LOAD;
+} Pair_LOAD;
+typedef struct
+{
+    unsigned char pad0_LOAD[6];
+    unsigned char f6_LOAD;
+    unsigned char f7_LOAD;
+    unsigned char f8_LOAD;
+    unsigned char pad9_LOAD[2];
+    unsigned char fB_LOAD;
+    unsigned char fC_LOAD;
+    unsigned char fD_LOAD;
+    unsigned char padE_LOAD[2];
+} Row16_LOAD;
 typedef struct
 {
     unsigned char pad0_LOAD[0xC];
@@ -145,6 +173,9 @@ typedef struct
     unsigned char f4C_LOAD;
 } Opts_LOAD;
 extern Opts_LOAD dword_800BDF4C;
+extern Row16_LOAD stru_800BDF4C[];
+extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
+extern void sub_800B8BD4(void* t);
 extern void sub_80031494(int a);
 extern void sub_800BADF4(void);
 extern int sub_800BAE4C(int n);
@@ -244,9 +275,46 @@ INCLUDE_OVERLAY_ASM(load, sub_800B82FC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B847C);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B85AC);
+void sub_800B85AC(void)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    p0.x_LOAD = 0x13;
+    p0.y_LOAD = 0x49;
+    sub_8003E91C(2, byte_800B682C, &p0, 5);
+    p1.x_LOAD = 0x13;
+    p1.y_LOAD = 0x57;
+    sub_8003E91C(2, byte_800B69FC, &p1, 5);
+    a = dword_800B6A24;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    sub_8002A5A4(&dword_800BDD64);
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B867C);
+void sub_800B867C(LoadTask_LOAD* t)
+{
+    Pair_LOAD q;
+    short r0[4];
+    short r1[6];
+    sub_800B8BD4(t);
+    r1[0] = stru_800BDF4C[t->s30_LOAD].f6_LOAD;
+    r1[1] = stru_800BDF4C[t->s30_LOAD].f7_LOAD;
+    r1[2] = stru_800BDF4C[t->s30_LOAD].f8_LOAD;
+    r1[3] = stru_800BDF4C[t->s30_LOAD].fB_LOAD;
+    r1[4] = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+    r1[5] = stru_800BDF4C[t->s30_LOAD].fD_LOAD;
+    q.a_LOAD = 2;
+    q.b_LOAD = 1;
+    r0[0] = 0x9A;
+    r0[1] = 0x2C;
+    r0[2] = 0x9A;
+    r0[3] = 0xB7;
+    sub_8002B8DC(q, r1, r0, 1);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B877C);
 
@@ -285,7 +353,28 @@ void sub_800B8A20(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B8AE4);
+void sub_800B8AE4(void)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Pos_LOAD p2;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    p0.x_LOAD = 0x1C;
+    p0.y_LOAD = 0x24;
+    sub_8003F264(&p0, dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD + 1, 5);
+    p1.x_LOAD = 0x1C;
+    p1.y_LOAD = 0x24;
+    sub_8003E91C(1, byte_800B6B9C, &p1, 5);
+    p2.x_LOAD = 0x32;
+    p2.y_LOAD = 0x24;
+    sub_8003F264(&p2, 0xF, 5);
+    a = dword_800B6BA0;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
 
