@@ -643,6 +643,7 @@ typedef struct G2L2
     int f4;
     int rest[0x48];
 } G2L2;
+extern int dword_8001D060(int);
 extern int sub_800A79C8(int);
 extern int* sub_800A7940(int);
 extern void sub_8003B740();
@@ -1636,7 +1637,7 @@ void sub_800AC3A4(short v)
     word_8008BDA4 = v;
 }
 
-void sub_800AC3B0(short a)
+void sub_800AC3B0(int a)
 {
     word_8008BDA6 = a;
     sub_800AC380(1);
@@ -2206,6 +2207,61 @@ unsigned int sub_800AD990(int a)
     return r;
 }
 
+#if 0
+int sub_800AD9EC(int a, int b)
+{
+    unsigned char old = sub_800AD990(b);
+    G2Sv4* s;
+    switch ((unsigned)b)
+    {
+    case 0:
+        if (old == 0xFF)
+        {
+            if (a == 0xFF)
+                return 1;
+        }
+        else if (a == 0xFF)
+        {
+            return 0;
+        }
+        s = (G2Sv4*)&saveData_8008B570;
+        s->b7E4 = a;
+        sub_800AD1E0(a, 1, 1);
+        if (old < 0x17)
+            sub_800AD184(old, 1, 1);
+        sub_800AC3A4(*(short*)((char*)sub_8001CF84(a) + 2));
+        sub_8001D034(s->b7E5);
+        sub_800AC3B0(dword_8001D060(s->b7E5));
+        return 1;
+    case 1:
+        if (old == 0xFF)
+        {
+            if (a == 0xFF)
+                return 1;
+        }
+        else if (a == 0xFF)
+        {
+            return 0;
+        }
+        s = (G2Sv4*)&saveData_8008B570;
+        s->b7E5 = a;
+        sub_800AD1E0(a, 1, 2);
+        if (old < 0xF)
+            sub_800AD184(old, 1, 2);
+        sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
+        sub_8001D034(a);
+        sub_800AC3B0(dword_8001D060(a));
+        return 1;
+    case 2:
+        byte_8008BD56 = a;
+        sub_800AD1E0(a, 1, 3);
+        if (old != 0xFF)
+            sub_800AD184(old, 1, 3);
+        return 1;
+    }
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD9EC);
 
 #if 0
