@@ -125,7 +125,7 @@ INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
 
 #if 0
-// Not matched
+// Not matched (14 words): basic block order
 int sub_80018E5C(char* a0, unsigned int a1)
 {
     struct_4s* t = (struct_4s*)(a0 + 0x108);
@@ -143,6 +143,7 @@ int sub_80018E5C(char* a0, unsigned int a1)
     }
     return v;
 }
+
 #endif
 INCLUDE_ASM(sub_80018E5C);
 INCLUDE_ASM(sub_80018EBC);
@@ -170,12 +171,25 @@ void sub_80019A20(char* a0)
         *(int*)(a0 + 0x80) = *sub_800B3260(idx - 0x39);
     }
 }
-#if 0
-void sub_80019A80(int arg0)
+extern unsigned char dword_8007C2E4[];
+// Matched
+int sub_80019A80(int a0)
 {
+    int i;
+    for (i = 0; i < 5; i++)
+    {
+        if (a0 < dword_8007C2E4[i])
+        {
+            break;
+        }
+    }
+    i--;
+    if (i == 5)
+    {
+        return 4;
+    }
+    return i;
 }
-#endif
-INCLUDE_ASM(sub_80019A80);
 // Matched
 int sub_80019AD0(char* p)
 {

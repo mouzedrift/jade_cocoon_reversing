@@ -30,10 +30,20 @@ INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
 #if 0
-// Not matched
+// Not matched (7 words): result register and branch polarity
 int sub_80013DB0(void)
 {
-    return rand() % 6 ? 1 : 2;
+    int r = rand();
+    int v;
+    if (r % 6)
+    {
+        v = 1;
+    }
+    else
+    {
+        v = 2;
+    }
+    return v;
 }
 #endif
 INCLUDE_ASM(sub_80013DB0);
@@ -57,14 +67,11 @@ void sub_80013E80(void* p, int arg)
 {
     sub_80033624(p, sub_80014390(arg & 0xFF));
 }
-#if 0
-// Not matched: the original calls sub_800107A0 with only one argument
+// Matched
 void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)sub_800107A0(a2, 0));
+    sub_80033624(p, (int)sub_800107A0(a2));
 }
-#endif
-INCLUDE_ASM(sub_80013EB4);
 INCLUDE_ASM(sub_80013EE8);
 // Matched
 int sub_80014114(int x)
@@ -141,8 +148,8 @@ int sub_80014390(int arg0)
 #endif
 INCLUDE_ASM(sub_80014390);
 #if 0
-// Not matched
-int sub_80014444(unsigned int a0)
+// Not matched (13 words): the masked copy of a0 lands in $a0 instead of $a1
+int sub_80014444(int a0)
 {
     int r = 0;
     if ((a0 & 0xFF) >= 8)
@@ -155,6 +162,7 @@ int sub_80014444(unsigned int a0)
     }
     return r;
 }
+
 #endif
 INCLUDE_ASM(sub_80014444);
 #if 0

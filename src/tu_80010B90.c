@@ -1238,21 +1238,20 @@ INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
 #if 0
-// Not matched (close)
+// Not matched (11 words): branch layout
 int sub_80011B24(int a0)
 {
     int* p = dword_8008D464[0x24 / 4];
     if (a0 == 0x29)
     {
-        return 1000;
-        *(p + 1) = (int)1000;
-        p[0] = (int)0;
+        p[1] = 1000;
+        p[0] = 0;
     }
-    if (0x2A == a0)
+    else if (a0 == 0x2A)
     {
-        *(p + 1) = (int)1000;
+        p[1] = 1000;
+        p[0] = 1;
         return 1;
-        *(0 + p) = 1;
     }
     return 1000;
 }
@@ -1283,23 +1282,70 @@ void sub_80011BCC(void)
 void nullsub_2(void)
 {
 }
-INCLUDE_ASM(sub_80011C0C);
-INCLUDE_ASM(sub_80011CD0);
+typedef struct
+{
+    int field_0;
+    int pad_4;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short field_C;
+    unsigned short field_E;
+} struct_C0C;
+// Matched
+void sub_80011C0C(struct_C0C* a, struct_C0C* b)
+{
+    a->field_8 = a->field_A = b->field_A;
+    a->field_C = a->field_E = b->field_E;
+}
+// Matched
+void sub_80011C30(struct_C0C* p)
+{
+    p->field_0 &= 0x400;
+}
+void sub_80011C44(struct_C0C* p)
+{
+    int v = p->field_0 & 0x400;
+    p->field_0 = v;
+    if (v == 0)
+    {
+        p->field_8 = ((short)p->field_8 + (short)p->field_A / 4 > (short)p->field_A) ? p->field_A : p->field_8 + (short)p->field_A / 4;
+        p->field_C = ((short)p->field_C + (short)p->field_E / 4 > (short)p->field_E) ? p->field_E : p->field_C + (short)p->field_E / 4;
+    }
+}
+// Matched
+void sub_80011CD0(struct_C0C* p)
+{
+    p->field_0 = 0;
+    sub_80011C0C(p, p);
+}
+// Matched
+void sub_80011CF4(struct_C0C* p)
+{
+    p->pad_4 = 0;
+    p->field_0 = 0;
+    p->field_8 = ((short)p->field_8 + 1 > (short)p->field_A) ? p->field_A : p->field_8 + 1;
+}
+typedef struct
+{
+    unsigned short limit;
+    unsigned short value;
+} struct_D28;
 #if 0
-// Not matched
+// Not matched (8 words): register allocation of the table pointer
 int sub_80011D28(int a0)
 {
-    struct_10* p = (struct_10*)word_80079374;
-    while (p->field_0 != 0)
+    struct_D28* p = (struct_D28*)word_80079374;
+    while (p->limit != 0)
     {
-        if (a0 < p->field_0)
+        if (!(a0 < p->limit))
         {
-            return p->field_2;
+            return p->value;
         }
         p++;
     }
     return 9;
 }
+
 #endif
 INCLUDE_ASM(sub_80011D28);
 // Matched
