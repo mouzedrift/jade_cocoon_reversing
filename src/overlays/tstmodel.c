@@ -1,0 +1,42 @@
+// TSTMODEL.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A09C0);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0A8C);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0BC0);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0C00);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0EC8);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0F20);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A104C);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1428);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1614);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A17B8);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A18F4);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A19E4);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1A24);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1B24);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1B48);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1CAC);
+
+INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1D70);
+
+INCLUDE_OVERLAY_ASM(tstmodel, dword_800A1E84);

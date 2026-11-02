@@ -1,0 +1,36 @@
+// SHOPCTRL.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(shopctrl, dword_800B66C0);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B66C4);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6720);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B67C0);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B681C);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6840);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6898);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6900);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6964);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6A6C);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6AE0);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6C6C);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6CA0);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6CB8);
+
+INCLUDE_OVERLAY_ASM(shopctrl, sub_800B6CC8);
+
+INCLUDE_OVERLAY_ASM(shopctrl, dword_800B6CD8);

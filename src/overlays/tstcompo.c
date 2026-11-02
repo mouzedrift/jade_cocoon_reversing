@@ -1,0 +1,46 @@
+// TSTCOMPO.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0800);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0918);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A097C);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1320);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A13B8);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1468);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A15F4);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1804);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A194C);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A19A4);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1AD0);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1AFC);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1BE0);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1C14);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1E68);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A200C);
+
+INCLUDE_OVERLAY_ASM(tstcompo, sub_800A2030);
+
+INCLUDE_OVERLAY_ASM(tstcompo, dword_800A20EC);

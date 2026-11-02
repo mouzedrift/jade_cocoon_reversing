@@ -1,0 +1,50 @@
+// COMBCOM.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CB7AC);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CB88C);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CB924);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CB974);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBA20);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBAD4);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBB4C);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBBE0);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBC28);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBC58);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBCA0);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CC674);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CC9FC);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CCA94);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CCD84);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CCDD0);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CCFCC);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CD0C8);
+
+INCLUDE_OVERLAY_ASM(combcom, sub_800CD16C);
+
+INCLUDE_OVERLAY_ASM(combcom, dword_800CD28C);

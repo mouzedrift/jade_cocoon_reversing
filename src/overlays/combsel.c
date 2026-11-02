@@ -1,0 +1,30 @@
+// COMBSEL.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(combsel, dword_800A4088);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A4360);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A4C74);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A4D64);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A4E4C);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A4E94);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A5080);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A5188);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A53B0);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A54A0);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A5538);
+
+INCLUDE_OVERLAY_ASM(combsel, sub_800A5560);
+
+INCLUDE_OVERLAY_ASM(combsel, dword_800A55C4);
