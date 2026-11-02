@@ -485,7 +485,8 @@ extern int sub_800ADBA0(short*);
 typedef struct G2Rec
 {
     unsigned char f0;
-    char pad_1[2];
+    unsigned char f1;
+    char pad_2;
     unsigned char f3;
     short s4;
     short s6;
@@ -538,7 +539,8 @@ extern unsigned char* sub_800AD4D8();
 extern int sub_800AD8E4();
 typedef struct G2Sv4
 {
-    char pad_0[0x7E5];
+    char pad_0[0x7E4];
+    unsigned char b7E4;
     unsigned char b7E5;
     char pad_7E6[0x4A];
     int f830;
@@ -560,6 +562,10 @@ extern void sub_800AA25C();
 extern void sub_800AA51C();
 extern void sub_800AACF8();
 extern void sub_800AC02C();
+extern int sub_800AD670(int, int);
+extern int sub_80025924(int, int);
+extern void sub_8003FF1C(void*, unsigned);
+extern int sub_800ACB64();
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
 extern int dword_8008B540;
@@ -1294,7 +1300,14 @@ int sub_800AC4A8(int a)
     return p[sub_800AC794(a, dword_800B11DC[sub_800AC3E4()])].f0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC518);
+int sub_800AC518(int a)
+{
+    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60[2]);
+    int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
+    if (p[r].f1)
+        return 1;
+    return sub_80025924(dword_8007DC60[2], (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
+}
 
 int sub_800AC5D0(int a, int b)
 {
@@ -1403,7 +1416,25 @@ int* sub_800ACA38(int a)
     return &((G2Rec*)sub_80024E38(dword_8007DC60[2]))[r].f34;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800ACAA4);
+void sub_800ACAA4(int* a, int* b)
+{
+    G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    b[0] = 0;
+    b[1] = 0;
+    b[2] = -1;
+    b[3] = -1;
+    b[4] = -1;
+    b[5] = -1;
+    b[6] = -1;
+    b[7] = -1;
+    b[8] = -1;
+    b[9] = 0;
+    sub_800AC380(s->b7E5 != 0xFF);
+    sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
+    sub_8003FF1C(&dword_800B1DD0, 0x2BF20);
+    sub_800ACB64(a, b);
+    a[2] = (int)sub_800ACB64;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
@@ -1500,9 +1531,9 @@ int sub_800AD16C(int a, int b)
     return b;
 }
 
-int sub_800AD184(int a, int b)
+int sub_800AD184(int a, int b, int c)
 {
-    unsigned char* r = sub_800AD4D8(a, b);
+    unsigned char* r = sub_800AD4D8(a, b, c);
     if (r && a != 0xFF)
     {
         r[0] = a;
@@ -1600,7 +1631,24 @@ int sub_800AD398()
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD3F0);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD4D8);
+unsigned char* sub_800AD4D8(int a, int b, int c)
+{
+    unsigned char* r = sub_800AD58C(a, c);
+    if (r)
+    {
+        if (sub_800AD670(r[1], b))
+        {
+            if ((unsigned)(c - 1) < 3 && a == sub_800AD990(c - 1))
+            {
+                if (!(r[1] + b < 0x14))
+                    return 0;
+            }
+            return r;
+        }
+        return 0;
+    }
+    return sub_800AD58C(0xFF, c);
+}
 
 #if 0
 unsigned char* sub_800AD58C(int a, int b)
