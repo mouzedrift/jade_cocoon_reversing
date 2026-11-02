@@ -417,7 +417,22 @@ INCLUDE_ASM(InitSprt_8001B9A0);
 INCLUDE_ASM(sub_8001BB28);
 INCLUDE_ASM(sub_8001BC00);
 INCLUDE_ASM(sub_8001BCE4);
-INCLUDE_ASM(sub_8001BEC8);
+// Matched
+void sub_8001BEC8(void)
+{
+    RECT r;
+    u_long* p = decodedImageData_8008B4A0;
+    r.w = 16;
+    r.h = 64;
+    r.y = 256;
+    for (r.x = 576; r.x < 640; r.x += 16)
+    {
+        DecDCTout(p, 0x200);
+        DecDCToutSync(0);
+        LoadImage(&r, p);
+        p += 0x200;
+    }
+}
 // Matched
 void ProcessPads_8001BF50(void)
 {
@@ -1399,7 +1414,31 @@ void sub_800201A4(void)
         sub_800204AC(&dword_800919A0[i]);
     }
 }
-INCLUDE_ASM(sub_800201EC);
+// Matched
+int sub_800201EC(int id)
+{
+    struct_obj_C* e = dword_800919A0;
+    int i;
+    for (i = 0; i < 7; i++, e++)
+    {
+        if (id == e->field_0)
+        {
+            e->field_4++;
+            return i;
+        }
+    }
+    e = dword_800919A0;
+    for (i = 0; i < 7; i++, e++)
+    {
+        if (e->field_0 == 0)
+        {
+            e->field_0 = id;
+            e->field_4 = 1;
+            return i;
+        }
+    }
+    return -1;
+}
 INCLUDE_ASM(sub_80020278);
 // Matched
 int sub_8002032C(int a0, int a1, int a2)
@@ -1491,11 +1530,83 @@ void sub_80020814(void)
         e++;
     }
 }
-INCLUDE_ASM(sub_80020898);
-INCLUDE_ASM(sub_80020924);
+// Matched
+void sub_80020898(void)
+{
+    int* p = dword_8008B54C[9];
+    struct_20* e = (struct_20*)(p + 3);
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_4 >= 0 && e->field_10 >= 0)
+        {
+            sub_80025780(sub_80024D70(p[2], e->field_4), e->field_10, 1);
+        }
+        e++;
+    }
+}
+// Matched
+int sub_80020924(void)
+{
+    int* p = dword_8008B54C[9];
+    struct_20* e = (struct_20*)(p + 3);
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_4 >= 0)
+        {
+            if (sub_80024DC4(sub_80024D70(p[2], e->field_4)) == 0)
+            {
+                return 0;
+            }
+        }
+        e++;
+    }
+    return 1;
+}
+#if 0
+// Not matched: s0/s1 swapped; case 0 loads q[0] before the store and adds a register 1
+void sub_800209AC(struct_cb* p, int* q)
+{
+    int s = q[0];
+    switch (s)
+    {
+    case 0:
+        sub_80020A38(q);
+        dword_8008B540 = 1;
+        q[0] += 1;
+        break;
+    case 1:
+        if (sub_80020B70(q))
+        {
+            sub_800205F0();
+        }
+        dword_8008B540 = s;
+        break;
+    }
+}
+#endif
 INCLUDE_ASM(sub_800209AC);
 INCLUDE_ASM(sub_80020A38);
-INCLUDE_ASM(sub_80020B70);
+// Matched
+int sub_80020B70(int* p)
+{
+    struct_20* e = (struct_20*)(p + 3);
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_0 != 0)
+        {
+            if (sub_80024DC4(sub_80024D70(p[2], e->field_4)) == 0)
+            {
+                return 0;
+            }
+        }
+        e++;
+    }
+    p[1] = 1;
+    return 1;
+}
 #if 0
 int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 {

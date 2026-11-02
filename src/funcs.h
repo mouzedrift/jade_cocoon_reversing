@@ -450,6 +450,11 @@ extern void sub_800C410C(void);
 
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001C0B4(EventEntry* e, void* buf);
+extern int sub_80024DC4(int a0);
+extern void sub_80025780(int a0, int a1, int a2);
+extern void sub_80025884(int a0);
+extern void sub_80020A38(int* p);
+extern int sub_80020B70(int* p);
 extern void sub_8001E574(int* p, int a1);
 
 #endif
