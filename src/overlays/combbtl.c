@@ -671,6 +671,48 @@ int sub_800A8098(int a, int b, int c)
     return (int)e;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A816C);
+extern int sub_800349B4();
+extern int sub_80043524();
+extern void sub_80034A84();
+
+void sub_800A816C(EventEntry* e)
+{
+    int buf[4];
+    int v;
+    if (!(dword_800A3A88 & 4))
+    {
+        if (sub_800349B4(dword_800A8478, buf) && buf[3])
+        {
+            dword_800A3A88 |= 4;
+        }
+    }
+    v = sub_800435A4();
+    if (v == 1 && sub_80043584() == v)
+    {
+        dword_800A3A88 |= 8;
+    }
+    if (!(dword_800A3A88 & 8))
+    {
+        v = (settingsFlags_8008B58C >> 3) & 1;
+        if (v == 1 && (dword_800A3A88 & 4))
+        {
+            if (!(dword_800A3A88 & 0x10))
+            {
+                if (sub_80043524() == v)
+                {
+                    dword_800A3A88 |= 0x10;
+                }
+            }
+        }
+    }
+    if ((dword_800A3A88 & 0xC) == 0xC)
+    {
+        dword_800A3A88 &= ~4;
+        dword_800A3A88 &= ~8;
+        dword_800A3A88 &= ~0x10;
+        sub_80034A84(dword_800A8478);
+        e->flags = (e->flags & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A82D0);
