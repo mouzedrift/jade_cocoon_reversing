@@ -10,6 +10,13 @@ typedef struct CombBtlTask
     void (*next_8)();
 } CombBtlTask;
 
+typedef struct CombBtlNode
+{
+    unsigned int flags;
+} CombBtlNode;
+
+extern CombBtlNode* dword_800A82DC;
+
 typedef struct CombBtl4
 {
     int a;
@@ -216,9 +223,9 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A50E4);
 extern void sub_800A8078(short, short, short);
 extern int sub_800A8098();
 extern void sub_800A5290();
+extern void sub_800A54CC();
 extern char dword_800A82EC[];
 extern char dword_800A8300[];
-extern int dword_800A82DC;
 
 void sub_800A51EC(CombBtlTask* t)
 {
@@ -238,7 +245,53 @@ void sub_800A51EC(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5290);
+typedef struct CombBtlA28
+{
+    int w[7];
+} CombBtlA28;
+
+typedef struct CombBtlBox
+{
+    short col_0;
+    char c_2;
+    char c_3;
+} CombBtlBox;
+
+extern CombBtlA28 dword_800A4A54;
+extern CombBtlA28 dword_800A4A70;
+typedef struct CombBtlUi
+{
+    char pad_0[0x20];
+    unsigned short col_20;
+} CombBtlUi;
+
+extern CombBtlUi ui_8008B570;
+extern void sub_8002ADB4(void*, void*, int, int);
+
+void sub_800A5290(CombBtlTask* t)
+{
+    CombBtlBox box;
+    CombBtlA28 a = dword_800A4A54;
+    int pair[2];
+    CombBtlA28 b;
+    pair[0] = 0x33;
+    pair[1] = 0xDF;
+    a.w[1] = pair[dword_800A85F8 ^ 1];
+    box.c_2 = 1;
+    box.c_3 = 1;
+    box.col_0 = ui_8008B570.col_20;
+    sub_8002ADB4(&a, &box, 0xF, sub_8002C64C());
+    b = dword_800A4A70;
+    box.c_2 = 1;
+    box.c_3 = 1;
+    box.col_0 = ui_8008B570.col_20;
+    sub_8002ADB4(&b, &box, 0xF, sub_8002C64C());
+    if (dword_800A82DC == 0 || (dword_800A82DC->flags & 0x8001) != 1)
+    {
+        dword_800A82DC = 0;
+        t->next_8 = sub_800A54CC;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
