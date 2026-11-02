@@ -56,6 +56,17 @@ void FreeActiveOverlay_8002C014(void)
         dword_8008D3F4 = 0;
     }
 }
+#if 0
+// Not matched (5 words: register allocation of the address temporary)
+void sub_8002C06C(unsigned short* p, int a1, int a2)
+{
+    int* q = (int*)loadedOverlayMaybe_8008D620 + a1 * 5;
+    ((unsigned short*)q)[4] = p[0];
+    ((unsigned short*)q)[5] = p[1];
+    sub_80040298(pOT_8008D454 + a2, q, 5);
+    sub_80040298(pOT_8008D454 + a2, (char*)dword_8008D3F4 + a1 * 8, 2);
+}
+#endif
 INCLUDE_ASM(sub_8002C06C);
 INCLUDE_ASM(sub_8002C100);
 INCLUDE_ASM(sub_8002C290);

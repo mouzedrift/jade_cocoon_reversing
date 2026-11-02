@@ -37,7 +37,22 @@ INCLUDE_ASM(sub_80028EEC);
 INCLUDE_ASM(sub_80028FDC);
 INCLUDE_ASM(sub_800290FC);
 INCLUDE_ASM(sub_800292D0);
-INCLUDE_ASM(sub_800295D8);
+// Matched
+void sub_800295D8(int* a, int b, int* c, int n, int heap)
+{
+    if (a)
+    {
+        *a = sub_8003FC8C(n * 20, (struct Heap*)heap);
+    }
+    if (b)
+    {
+        *(int*)b = sub_8003FC8C(n * 40, (struct Heap*)heap);
+    }
+    if (c)
+    {
+        *c = sub_8003FC8C(n * 8, (struct Heap*)heap);
+    }
+}
 // Matched
 void sub_80029674(void* p)
 {

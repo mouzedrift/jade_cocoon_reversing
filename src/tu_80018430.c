@@ -17,7 +17,31 @@
 #include "data_decls.h"
 
 
-INCLUDE_ASM(sub_80018430);
+// Matched
+void sub_80018430(short v)
+{
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    *(short*)(base + 0x40) = v;
+}
+// Matched
+void sub_80018448(short v)
+{
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    *(short*)(base + 0x42) = v;
+}
+// Matched
+void sub_80018460(int on)
+{
+    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    if (on)
+    {
+        *(unsigned int*)(base + 0x28) |= 8;
+    }
+    else
+    {
+        *(unsigned int*)(base + 0x28) &= ~8;
+    }
+}
 // Matched
 void sub_800184A0(int arg, int bit)
 {

@@ -129,7 +129,20 @@ int sub_8003B80C(int* a, int* b)
     int dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
-INCLUDE_ASM(sub_8003B860);
+// Matched
+int sub_8003B860(int* a, int* b)
+{
+    int dx = a[0] - b[0];
+    int dz = a[2] - b[2];
+    return dx * dx + dz * dz;
+}
+// Matched
+int sub_8003B898(int x0, int y0, int x1, int y1)
+{
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    return dx * dx + dy * dy;
+}
 // Matched
 int sub_8003B8BC(int x, int y)
 {

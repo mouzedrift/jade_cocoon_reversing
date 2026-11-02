@@ -148,7 +148,15 @@ INCLUDE_ASM(sub_80018E5C);
 INCLUDE_ASM(sub_80018EBC);
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
-INCLUDE_ASM(sub_800199A0);
+typedef struct
+{
+    char b[20];
+} bytes20;
+// Matched
+void sub_800199A0(char* p)
+{
+    *(bytes20*)(p + 0x6C) = *(bytes20*)sub_80019C28(*(unsigned int*)(p + 0x5C));
+}
 // Matched
 void sub_80019A20(char* a0)
 {

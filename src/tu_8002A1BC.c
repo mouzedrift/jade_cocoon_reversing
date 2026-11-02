@@ -73,8 +73,60 @@ typedef struct
     int field_4;
 } struct_entry8;
 extern void sub_8003E91C(int mode, int a, void* b, int c);
+#if 0
+// Not matched: loop pointer is strength-reduced differently
+void sub_8002A310(struct_entry8* e, int a1)
+{
+    if (e)
+    {
+        while (e->field_4)
+        {
+            unsigned short loc[2];
+            loc[0] = e->x;
+            loc[1] = e->y;
+            sub_8003E91C(2, e->field_4, loc, a1);
+            e++;
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_8002A310);
-INCLUDE_ASM(sub_8002A384);
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_F1C8;
+extern short uiColor_8008B590;
+typedef struct
+{
+    short color;
+    unsigned char field_2;
+    unsigned char field_3;
+} struct_A384_buf;
+extern void sub_80042460(int a, struct_A384_buf* b, void* c, int d);
+// Matched
+void sub_8002A384(struct_F1C8* p)
+{
+    struct_A384_buf buf;
+    unsigned char c = p->field_8;
+    short col = uiColor_8008B590;
+    buf.field_3 = 1;
+    buf.field_2 = c;
+    buf.color = col;
+    sub_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
+}
+extern int dword_800827BC[];
+// Matched
+short sub_8002A3E0(int a)
+{
+    if (a < 30)
+    {
+        return (short)dword_800827BC[dword_8007C438[a].field_8];
+    }
+    return 36;
+}
 INCLUDE_ASM(sub_8002A42C);
 INCLUDE_ASM(sub_8002A4E4);
 INCLUDE_ASM(sub_8002A5A4);

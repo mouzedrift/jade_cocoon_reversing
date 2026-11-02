@@ -1264,7 +1264,40 @@ int sub_80012178(int arg0)
 {
     return (arg0 * 3) + 20;
 }
-INCLUDE_ASM(sub_80012188);
+// Matched
+void sub_80012188(void* p)
+{
+    sub_80011D98(p, 0);
+}
+int sub_800121A8(int a)
+{
+    int v;
+    if (a < 20)
+    {
+        v = a / 4;
+    }
+    else if (a < 31)
+    {
+        v = 5;
+    }
+    else if (a < 35)
+    {
+        v = 6;
+    }
+    else
+    {
+        v = 7;
+        if (a >= 40)
+        {
+            v = 8;
+        }
+    }
+    if (v > 8)
+    {
+        v = 8;
+    }
+    return v;
+}
 INCLUDE_ASM(sub_80012204);
 INCLUDE_ASM(sub_800122A0);
 INCLUDE_ASM(sub_80012358);
