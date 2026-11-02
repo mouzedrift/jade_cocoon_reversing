@@ -263,38 +263,29 @@ void sub_8004D3D8(SVECTOR* r, MATRIX* m)
     m->m[2][2] = (cy * cx) >> 12;
     m->m[2][1] = ((cz * sx) >> 12) - ((b * cx) >> 12);
 }
-#if 0
-// Not matched: vy loaded once (lhu + sll/sra) instead of lhu and lh; regalloc follows
+// Matched
 void sub_8004D5CC(SVECTOR* r, MATRIX* m)
 {
-    int cz;
-    int sy;
-    int sz;
-    int cy;
-    int cx;
-    int sx;
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
     int a;
     int b;
-    cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    sy = SIN_TABLE[r->vy & 0xFFF];
-    a = (cz * sy) >> 12;
-    sz = SIN_TABLE[r->vz & 0xFFF];
-    b = (sz * sy) >> 12;
-    cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    sx = SIN_TABLE[r->vx & 0xFFF];
     m->m[2][0] = -sy;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
     m->m[0][0] = (cz * cy) >> 12;
     m->m[1][0] = (sz * cy) >> 12;
-    m->m[0][1] = ((a * sx) >> 12) - ((sz * cx) >> 12);
+    m->m[0][1] = -((sz * cx) >> 12) + ((a * sx) >> 12);
     m->m[1][1] = ((cz * cx) >> 12) + ((b * sx) >> 12);
     m->m[2][1] = (cy * sx) >> 12;
     m->m[0][2] = ((sz * sx) >> 12) + ((a * cx) >> 12);
     m->m[2][2] = (cy * cx) >> 12;
-    m->m[1][2] = ((b * cx) >> 12) - ((cz * sx) >> 12);
+    m->m[1][2] = -((cz * sx) >> 12) + ((b * cx) >> 12);
 }
-#endif
-INCLUDE_ASM(sub_8004D5CC);
 // Matched
 void sub_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
