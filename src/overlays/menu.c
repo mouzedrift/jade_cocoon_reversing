@@ -127,6 +127,9 @@ extern void sub_800C0084();
 
 extern char name_8008BD38[];
 
+extern int sub_800BF540();
+extern void sub_800BE048();
+
 typedef struct MenuBox
 {
     short x_0;
@@ -610,7 +613,83 @@ int sub_800BDD94(int a)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BDD94);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BDE10);
+extern int sub_800BF540();
+extern void sub_800BE048();
+void sub_800BDE10(MenuCtx* c)
+{
+    int r = 0;
+    if (c->f18)
+    {
+        r = sub_800BF540();
+        if ((short)r == 0)
+        {
+            c->f4 = c->sel_2;
+            sub_800BE048(c);
+        }
+        else if ((short)r != 0xF)
+        {
+            int snd = 0x7E;
+            if ((short)r != 0xE)
+                snd = 0x7C;
+            PlaySfx_80031494(snd);
+            c->f6 = r;
+            c->f24 = 1;
+        }
+    }
+    else if (c->f1C)
+    {
+        if (c->sel_2 == 0)
+        {
+            c->flags_0 |= 8;
+        }
+        else
+        {
+            sub_800BE25C(c);
+            sub_800BF8B4(c);
+            sub_800BE38C(c);
+        }
+    }
+    if (!(c->flags_0 & 8) && (short)r != 0xF && (short)r != 9 && (short)r != 0xE)
+    {
+        if (c->f1C)
+        {
+            c->f10 = 0;
+            if ((unsigned)((unsigned short)c->sel_2 - 6) >= 2)
+                c->f10 = name_800C1998[c->sel_2];
+            c->f14 = c->f10;
+        }
+        else
+        {
+            short i;
+            int v;
+            int mask;
+            c->f10 = 0;
+            v = name_800C1998[c->sel_2];
+            mask = c->f14;
+            c->f14 = 0;
+            c->f10 = v;
+            for (i = 0; i < 0x11; i++)
+            {
+                int bit = 1 << i;
+                if ((bit & mask) && (name_800C1998[c->sel_2] & bit))
+                    c->f14 |= bit;
+            }
+            sub_800BF8B4(c);
+            if (c->sel_2 == 6)
+            {
+                c->arr_2A[0] = 2;
+                c->f60 = 2;
+            }
+            else if (c->sel_2 == 7)
+            {
+                c->arr_2A[2] = 2;
+                c->f60 = 2;
+            }
+        }
+    }
+    c->f1C = 0;
+    c->f18 = 0;
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE048);
 
