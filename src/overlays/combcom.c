@@ -66,7 +66,30 @@ void sub_800CB924()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CB974);
+extern short dword_800CD2BC[];
+extern short dword_800CD2B0[];
+extern short* dword_800CD2D4[];
+
+short* sub_800CB974(int a)
+{
+    a &= 0xFF;
+    if (a == 3)
+    {
+        if ((byte_800CD844 & 1) == 0)
+        {
+            if ((byte_800CD844 & 4) == 0)
+            {
+                if ((short)sub_8003DA54(word_800CD28C) == 4)
+                {
+                    dword_800CD2BC[2] = sub_800A1AAC(byte_800CD839) - 1;
+                    return dword_800CD2BC;
+                }
+            }
+        }
+        return dword_800CD2B0;
+    }
+    return dword_800CD2D4[a];
+}
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBA20);
 
