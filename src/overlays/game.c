@@ -1702,7 +1702,39 @@ void sub_800A5FAC(void)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6060);
+typedef struct GameRun_1
+{
+    unsigned int f0;
+    int f4;
+    int** f8;
+    int fC;
+} GameRun_1;
+extern int (*name_800BCDBC[])(GameRun_1*);
+extern void sub_800BC2B4(GameRun_1* q);
+void sub_800A6060(GameTask_1* t, GameRun_1* q)
+{
+    while (1)
+    {
+        if (dword_800B0EC0 != 1)
+            break;
+        if (name_800BCDBC[*(int*)q->f8](q) == 0)
+            break;
+    }
+    if (q->f0 & 0x40)
+        sub_800BC2B4(q);
+    if (q->f0 & 0x10)
+    {
+        q->f0 &= ~0x10;
+        q->f8 = (int**)q->fC;
+    }
+    if (q->f0 & 1)
+    {
+        t->f0 &= ~1;
+        t->f0 |= 0x8000;
+        t->f0 &= ~4;
+        t->f0 |= 0x8000;
+    }
+}
 
 // Matched
 void sub_800A6168(GameTask_1* t, GameQ_1* q)
