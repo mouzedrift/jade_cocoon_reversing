@@ -366,6 +366,20 @@ typedef struct GameO_1
 } GameO_1;
 extern int sub_800A48F4(int a);
 extern void sub_800A46FC(GameP4470_1* p);
+typedef struct GameLst_1
+{
+    int** p0;
+    int f4;
+} GameLst_1;
+extern GameLst_1 dword_800B09FC[];
+extern GameLst_1* dword_800B0D74[];
+extern void sub_800A6CCC();
+extern void sub_80030988(void);
+extern void sub_800A6C00();
+extern void sub_800A6A48();
+extern void sub_800A6B00();
+extern void sub_800A73A8(void);
+extern void sub_800A7450(GameNode_1* n);
 
 INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
 
@@ -1775,10 +1789,74 @@ void sub_800A68CC(GameTask_1* t, int* q)
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800A68CC);
 
+#if 0
+// Not matched
+void sub_800A6968(GameTask_1* t, GameQ_1* q)
+{
+    if (dword_800B09FC[0].p0 != 0)
+    {
+        GameLst_1* l = dword_800B09FC;
+        do
+        {
+            sub_800A7450((GameNode_1*)*l->p0);
+            if (dword_8008B540)
+            {
+                goto end;
+            }
+            l++;
+        } while (l->p0 != 0);
+    }
+    if (dword_8008B540)
+    {
+        goto end;
+    }
+    sub_80030988();
+    sub_800A73A8();
+    sub_800A6C00(t, q);
+    sub_800A6A48(t, q);
+    t->next_8 = sub_800A6B00;
+end:
+    dword_8008B540 = 0;
+    dword_800B0698 = 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A6968);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6A48);
 
+#if 0
+// Not matched
+void sub_800A6B00(GameTask_1* t, GameQ_1* q)
+{
+    GameLst_1* l0 = dword_800B0D74[*(int*)q];
+    if (l0->p0 != 0)
+    {
+        GameLst_1* l = l0;
+        do
+        {
+            sub_800A7450((GameNode_1*)*l->p0);
+            if (dword_8008B540)
+            {
+                goto end;
+            }
+            l++;
+        } while (l->p0 != 0);
+    }
+    if (unknownFlags_8008D678 & 0x8000000)
+    {
+        t->next_8 = sub_800A6CCC;
+        goto end;
+    }
+    if (dword_800B0698 != 0)
+    {
+        sub_800A6C00(t, q);
+        sub_800A6A48(t, q);
+    }
+end:
+    dword_8008B540 = 0;
+    dword_800B0698 = 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A6B00);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6C00);
