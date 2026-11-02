@@ -26,6 +26,7 @@ INCLUDE_ASM(sub_8002B2A4);
 INCLUDE_ASM(sub_8002B3DC);
 INCLUDE_ASM(sub_8002B8DC);
 INCLUDE_ASM(sub_8002BA54);
+// Not matched: original has no zero-divisor check (plain divu), cc1psx/aspsx emit one
 // Matched
 unsigned int sub_8002BC60(unsigned int a, unsigned int b, unsigned int c)
 {

@@ -57,3 +57,18 @@ from the disc, finds its functions (`overlays/<name>.sym`), writes `asm/overlays
 `python scripts/verify.py SLUS_008.54 <iso>.bin` builds the executable and every overlay and compares the
 SHA-1 of each built image with the original (and with `config/hashes.txt`; `--update` rewrites that file).
 Currently OK: exe image (the linked part, without the trailing bss) and NAME.BIN.
+
+### Switch statements in overlays
+
+The data in front of an overlay's code (strings, jump tables) is linked as `.rdata`, behind a one word header
+that goes to `.sdata` (so the compiler's `.align 3` for a table counts from the end of the header, as in the
+original). A switch compiled by cc1psx emits its jump table into `.rdata`, so the original table has to be
+cut out of the data blob and the compiler's copy has to land in the same place:
+
+    python scripts/carve.py NAME sub_XXXXXXXX     # after an overlays.py run
+
+adds `jpt_<table>` and `dword_<rest>` symbols to `overlays/<name>.sym` and puts their `INCLUDE_OVERLAY_ASM`
+lines behind the function (build stays identical). Write the function in C and delete the `jpt_` line: the
+table comes from the compiler, `dword_<rest>` (kept behind the function) holds the data that followed it.
+Case labels may sit inside nested blocks (`case 0:` inside the `if` that cases 1, 2 and 4 share) - the table
+entries show which instruction each case enters.

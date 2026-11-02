@@ -30,7 +30,27 @@ void sub_80016BF4(int* p, int* q)
 INCLUDE_ASM(sub_80016C3C);
 INCLUDE_ASM(sub_80016E20);
 INCLUDE_ASM(sub_80016FC8);
-INCLUDE_ASM(sub_80017158);
+extern EventNode* dword_8008B4A8;
+extern void sub_80017208(int* a0, int* a1);
+// Matched
+void sub_80017158(int* a0, unsigned char* a1)
+{
+    EventEntry* e = sub_80043AF8(dword_8008B4A8);
+    int* q;
+    if (e)
+    {
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        q = (int*)e->buffer;
+        q[0x44 / 4] = a0[0];
+        q[0x48 / 4] = a0[1];
+        q[0x4C / 4] = a0[2];
+        q[0] = 0;
+        ((unsigned char*)q)[0xA8] = a1[0];
+        ((unsigned char*)q)[0xA9] = a1[1];
+        ((unsigned char*)q)[0xAA] = a1[2];
+        e->cb_8 = (EventEntryFn)sub_80017208;
+    }
+}
 // Matched
 void sub_80017208(int* a0, int* a1)
 {

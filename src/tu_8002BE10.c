@@ -18,24 +18,24 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-void sub_8002C06C(unsigned short* pos, int idx, int ot);
+extern void sub_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
 void sub_8002BE10(void)
 {
+    unsigned short pos[2];
     short i;
     short j;
-    unsigned short loc[2];
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 3; j++)
         {
-            loc[0] = j * 128;
+            pos[0] = (j << 16) >> 9;
             if (i & 1)
             {
-                loc[0] -= 0x40;
+                pos[0] -= 0x40;
             }
-            loc[1] = i * 60;
-            sub_8002C06C(loc, 0x95, 0xF);
+            pos[1] = i * 60;
+            sub_8002C06C(pos, 0x95, 0xF);
         }
     }
 }
@@ -46,9 +46,9 @@ typedef struct
     short field_8;
     short field_A;
 } struct_BEC8;
-extern void sub_8004196C(int a0, int a1, int a2, int a3, int a4);
-extern void sub_8003326C(int a, unsigned long* b);
-extern void sub_80033308(unsigned long* p);
+extern void sub_8004196C(int a, int b, int c, int d, int e);
+extern void sub_8003326C(int a, void* b);
+extern void sub_80033308(void* a);
 extern void sub_8002A384(struct_BEC8* p);
 // Matched
 void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
@@ -65,8 +65,8 @@ void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
         s.field_8 = 0;
     }
     s.field_0 = a0;
-    s.field_A = a3;
     s.field_4 = a5;
+    s.field_A = a3;
     sub_8002A384(&s);
     sub_80033308(&pOT_8008D454[a3]);
 }
@@ -146,8 +146,7 @@ unsigned int sub_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
 }
-#if 0
-// Not matched (b ends up in a0 instead of v0)
+// Matched
 int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
 {
     char* p = base + idx * 4;
@@ -156,16 +155,13 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
     {
         return 0;
     }
-    b = (unsigned char)p[0xdf];
-    if (!b)
+    if (p[0xdf] == 0)
     {
         return 0;
     }
-    sub_8002AF10(a2 + b * 16, a1, a4);
+    sub_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_8002C670);
 typedef struct
 {
     short a;

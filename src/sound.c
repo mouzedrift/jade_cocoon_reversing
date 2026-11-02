@@ -44,46 +44,71 @@ void sub_8002FE7C(void)
     InitSound_8002FE54(&stru_80091D20);
     InitSound_8002FE54(&stru_80091D00);
 }
-INCLUDE_ASM(sub_8002FEB8);
-#if 0
-// Not matched (case 2 loop: the +0x18 offset is folded into the loop pointer)
-void sub_8002FF64(int a0, char* p)
+// Matched
+void sub_8002FEB8(void)
 {
+    char* p = (char*)dword_8008D4A4[0x24 / 4];
+    char* q;
     int i;
-    switch (*(unsigned short*)(p + 2))
+    *(SoundStruct**)(p + 4) = &stru_80091CE0;
+    *(SoundStruct**)(p + 8) = &stru_80091D20;
+    *(SoundStruct**)(p + 0xC) = &stru_80091D00;
+    *(short*)(p + 2) = 2;
+    q = p + 0x20;
+    for (i = 4; i >= 0; i--)
     {
-    case 0:
-        if (!sub_8003BE30(*(int*)(p + 0x10)) && !sub_8003BE30(*(int*)(p + 0x14)))
-        {
-            (*(unsigned short*)(p + 2))++;
-        }
-        else
-        {
-            dword_8008B540 = 1;
-        }
-        break;
-    case 1:
-        *(unsigned short*)(p + 2) = 2;
-        break;
-    case 2:
-        for (i = 0; i < 5; i++)
-        {
-            if (((short*)p)[12])
-            {
-                if (--((short*)p)[13] <= 0)
-                {
-                    SsSepStop(((short*)p)[14], ((short*)p)[15]);
-                    ((short*)p)[12] = 0;
-                }
-            }
-            p += 8;
-        }
-        break;
+        *(short*)(q + 0x18) = 0;
+        q -= 8;
     }
 }
-#endif
+extern void sub_8002FF64(void);
+typedef struct
+{
+    short field_0;
+    short field_2;
+    SoundStruct* field_4;
+    SoundStruct* field_8;
+    SoundStruct* field_C;
+    char pad_10[8];
+    struct
+    {
+        short a;
+        short b;
+        int c;
+    } e[5];
+} struct_FF10;
+// Matched
+void sub_8002FF10(char* a, struct_FF10* p)
+{
+    int i;
+    p->field_4 = &stru_80091CE0;
+    p->field_8 = &stru_80091D20;
+    p->field_C = &stru_80091D00;
+    p->field_2 = 2;
+    for (i = 4; i >= 0; i--)
+    {
+        p->e[i].a = 0;
+    }
+    *(void (**)(void))(a + 8) = sub_8002FF64;
+}
 INCLUDE_ASM(sub_8002FF64);
 extern void sub_80030D68(SoundStruct* p);
+#if 0
+// Not matched: register allocation of the sequence number
+void sub_8003006C(int a0, int* a1)
+{
+    SoundStruct* s = &stru_80091CE0;
+    short seq = s->field_4_seq_num;
+    if (seq >= 0)
+    {
+        SsSepStop(s->field_C_sep_access_num, seq);
+        s->field_4_seq_num = -1;
+    }
+    sub_80030D00(a1[1]);
+    sub_80030D68(&stru_80091D40);
+    sub_80030D00(a1[2]);
+}
+#endif
 INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(sub_800300E0);
@@ -173,8 +198,8 @@ void sub_800309D8(SoundStruct* s)
     int i;
     for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
     {
-        SsSepSetVol(s->field_C_sep_access_num, i, (saveData_8008B570.field_1C_settings >> 7) & 0x7F,
-                    (saveData_8008B570.field_1C_settings >> 7) & 0x7F);
+        int vol = (saveData_8008B570.field_1C_settings >> 7) & 0x7F;
+        SsSepSetVol(s->field_C_sep_access_num, i, vol, vol);
     }
 }
 // Matched

@@ -28,11 +28,16 @@ BUILD_DIR = os.path.join(CURRENT_DIR, "build_psyq")
 EXE_NAME = "jade_cocoon"
 
 def read_cc43():
-    """TUs built with the psyq 4.3 compiler (GCC 2.7.2) instead of 4.4 (config/cc43.txt)"""
+    """TUs built with another compiler than psyq 4.4: "tu [4.3|4.6|4.6n]" (4.6n: with -mno-check-zero-division)"""
     path = os.path.join(CURRENT_DIR, "config", "cc43.txt")
     if not os.path.exists(path):
-        return set()
-    return {l.split("#")[0].strip() for l in open(path) if l.split("#")[0].strip()}
+        return {}
+    out = {}
+    for l in open(path):
+        f = l.split("#")[0].split()
+        if f:
+            out[f[0]] = f[1] if len(f) > 1 else "4.3"
+    return out
 
 
 cc43 = read_cc43()
@@ -48,7 +53,8 @@ def generate_ninja():
         ninja.variable("cpppsx", os.path.join(bin_dir, "CPPPSX.EXE"))
         ninja.variable("cc1psx", os.path.join(bin_dir, "CC1PSX.EXE"))
         ninja.variable("cc1psx43", os.environ.get("CC1PSX43", os.path.join(CURRENT_DIR, "..", "psyq_sdk", "psyq_4.3", "bin", "cc1psx.exe")))
-        ninja.variable("aspsx", os.path.join(bin_dir, "ASPSX.EXE"))
+        ninja.variable("cc1psx46", os.environ.get("CC1PSX46", os.path.join(CURRENT_DIR, "..", "psyq_sdk", "psyq_4.6", "bin", "CC1PSX.EXE")))
+        ninja.variable("aspsx", os.environ.get("ASPSX_EXE", os.path.join(bin_dir, "ASPSX.EXE")))
         ninja.variable("psylink", os.path.join(bin_dir, "psylink.exe"))
         ninja.variable("cpe2exe", os.path.join(bin_dir, "cpe2exe.exe"))
 
@@ -68,7 +74,9 @@ def generate_ninja():
         rules = {
             "pre_process": (f"$cpppsx -undef -D__GNUC__=2 -v -D__OPTIMIZE__ {includes} -lang-c -Dmips -D__mips__ -D__mips -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D__CHAR_UNSIGNED__ -D_LANGUAGE_C -DLANGUAGE_C $in $out", "Preprocess $in -> $out"),
             "compile": ("$cc1psx -quiet -G0 -O2 $in -o $out", "Compile $in -> $out"),
-            "compile43": ("$cc1psx43 -quiet -G0 -O2 $in -o $out", "Compile (psyq 4.3) $in -> $out"),
+            "compile4.3": ("$cc1psx43 -quiet -G0 -O2 $in -o $out", "Compile (psyq 4.3) $in -> $out"),
+            "compile4.6": ("$cc1psx46 -quiet -G0 -O2 $in -o $out", "Compile (psyq 4.6) $in -> $out"),
+            "compile4.6n": ("$cc1psx46 -quiet -G0 -O2 -mno-check-zero-division $in -o $out", "Compile (psyq 4.6, no zero check) $in -> $out"),
             "assemble": ("$aspsx -G0 -q -0 $in -o $out", "Assemble $in -> $out"),
             "link": (f"$psylink {pysq_lib} /c /n 4000 /q /m @{link_path},{cpe_path},{sym_path},{map_path}", "Linking $out"),
             "convert_cpe_to_exe": ("$cpe2exe -CA $in", "$in -> $out")
@@ -91,7 +99,7 @@ def generate_ninja():
             inc = [os.path.join(CURRENT_DIR, "asm", "f" if k == "ASM" else "d", n + ".s")
                    for k, n in re.findall(r"INCLUDE_(ASM|DATA)\((\w+)\)", text)]
             ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers + inc)
-            ninja.build(f"{out_path}.o", "compile43" if file_name in cc43 else "compile", f"{out_path}.preproc")
+            ninja.build(f"{out_path}.o", "compile" + cc43[file_name] if file_name in cc43 else "compile", f"{out_path}.preproc")
             ninja.build(f"{out_path}.obj", "assemble", f"{out_path}.o")
             linker_deps.append(f"{out_path}.obj")
 

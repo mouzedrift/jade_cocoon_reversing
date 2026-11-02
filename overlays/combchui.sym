@@ -1,0 +1,4 @@
+dword_800A4088=0x800a4088; // overlay header / data
+sub_800A4394=0x800a4394;
+sub_800A450C=0x800a450c;
+dword_800A45B0=0x800a45b0; // data behind the code

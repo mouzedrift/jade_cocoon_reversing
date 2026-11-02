@@ -18,10 +18,11 @@
 
 INCLUDE_DATA(dword_800743D0);
 
+
 extern unsigned char dword_80082EBC[];
 extern unsigned char a1ftf[];
 extern void sub_8002C06C(void* p, int a1, int a2);
-void sub_8002E0D8(short* pos, short ot);
+void sub_8002E0D8(unsigned short* p, short a1);
 // Matched
 void sub_8002DA3C(unsigned short* pos, int ot)
 {
@@ -42,49 +43,52 @@ void sub_8002DA3C(unsigned short* pos, int ot)
     sub_8002C06C(loc, 0x72, ot);
     loc[0] = pos[0] + 0x4E;
     loc[1] = pos[1];
-    sub_8002E0D8((short*)loc, ot);
+    sub_8002E0D8(loc, ot);
 }
 INCLUDE_ASM(sub_8002DB48);
-extern void sub_80031FF4(int a0, unsigned long* ot, unsigned short* pos, int a3);
-extern void sub_8002C290(unsigned short* pos, int val, int ot);
+extern void sub_80031FF4(int a, void* b, void* c, int d);
+extern void sub_8002C290(void* p, int a1, int a2);
 // Matched
-void sub_8002E004(unsigned short* pos, int val, int ot)
+void sub_8002E004(unsigned short* p, int a1, int a2)
 {
-    unsigned short loc[2];
-    unsigned short x = pos[0];
-    loc[0] = x + 3;
-    loc[1] = pos[1] + 3;
-    if (val > 0)
+    unsigned short pos[2];
+    unsigned short x = p[0];
+    pos[0] = x + 3;
+    pos[1] = p[1] + 3;
+    if (a1 > 0)
     {
-        if (val >= 100)
+        if (a1 >= 100)
         {
-            loc[0] = x - 5;
+            pos[0] = x - 5;
         }
-        sub_80031FF4(0x58, &pOT_8008D454[ot], loc, 0x400);
+        sub_80031FF4(0x58, &pOT_8008D454[a2], pos, 0x400);
     }
-    else if (val < 0)
+    else if (a1 < 0)
     {
-        val = -val;
-        if (val >= 100)
+        a1 = -a1;
+        if (a1 >= 100)
         {
-            loc[0] = x - 5;
+            pos[0] = x - 5;
         }
-        sub_80031FF4(0x58, &pOT_8008D454[ot], loc, 0xC00);
+        sub_80031FF4(0x58, &pOT_8008D454[a2], pos, 0xC00);
     }
-    loc[0] = pos[0] + 0x14;
-    loc[1] = pos[1];
-    sub_8002C290(loc, val, ot);
+    pos[0] = p[0] + 0x14;
+    pos[1] = p[1];
+    sub_8002C290(pos, a1, a2);
 }
+extern unsigned char dword_80082EBC[];
+extern unsigned char a1ftf[];
+extern void sub_8002C06C(void* p, int a1, int a2);
 // Matched
-void sub_8002E0D8(short* pos, short ot)
+void sub_8002E0D8(unsigned short* p, short a1)
 {
-    short loc[2];
+    unsigned short pos[2];
     short i;
-    loc[0] = pos[0];
+    pos[0] = p[0];
     for (i = 0; i < 5; i++)
     {
-        loc[1] = pos[1] + a1ftf[i];
-        sub_8002C06C(loc, dword_80082EBC[i], ot);
+        pos[1] = p[1] + a1ftf[i];
+        sub_8002C06C(pos, dword_80082EBC[i], a1);
     }
 }
 extern void sub_8002C100(unsigned short* pos, int v, short ot);
@@ -110,23 +114,23 @@ void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short
     }
 }
 // Matched
-void sub_8002E288(void* src, int v, int which, void* dst)
+void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
 {
-    char* m = 0;
-    sub_800403E8((unsigned int*)m, (unsigned int*)src, 0x48);
-    switch (which)
+    char* p = 0;
+    sub_800403E8(0, a0, 0x48);
+    switch (a2)
     {
     case 0:
-        m[0x1C] = v;
+        p[0x1C] = a1;
         break;
     case 1:
-        m[0x1D] = v;
+        p[0x1D] = a1;
         break;
     case 2:
-        m[0x1E] = v;
+        p[0x1E] = a1;
         break;
     }
-    sub_80033624(dst, (int)m);
+    sub_80033624(a3, p);
 }
 INCLUDE_ASM(sub_8002E334);
 INCLUDE_ASM(sub_8002E730);

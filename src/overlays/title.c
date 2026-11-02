@@ -898,7 +898,7 @@ extern int playerYan_8008B594;
 extern int dword_8008B554;
 #define SBASE ((char*)&saveData_8008B570)
 #define SA(a) ((char*)&saveData_8008B570 + ((a) - 0x8008B570))
-#define SDECL char* s = SBASE; __asm__("" : "+r"(s))
+#define SDECL char* s = SBASE
 #define SB(o) (*(char*)(s + (o)))
 #define SH(o) (*(short*)(s + (o)))
 #define SW(o) (*(int*)(s + (o)))

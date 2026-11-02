@@ -64,9 +64,11 @@ typedef struct
 {
     int field_0;
     unsigned char field_4;
-    char pad_5[2];
+    unsigned char field_5;
+    unsigned char field_6;
     unsigned char field_7;
-    int field_8;
+    short field_8;
+    short pad_A;
 } struct_12_b;
 
 typedef struct
@@ -116,11 +118,25 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x10];
+    char pad_0[4];
+    unsigned char field_4;
+    unsigned char field_5;
+    unsigned char field_6;
+    char pad_7[5];
+    unsigned char field_C;
+    unsigned char field_D;
+    unsigned short field_E;
     short field_10;
-    char pad_12[2];
+    short field_12;
     unsigned short* field_14;
-    char pad_18[0x12];
+    short field_18;
+    short field_1A;
+    short field_1C;
+    unsigned short field_1E;
+    short field_20;
+    short field_22;
+    unsigned char* field_24;
+    short field_28;
     short field_2A;
 } struct_2C;
 
@@ -187,6 +203,7 @@ typedef struct
 extern struct_12 stru_8007D848[17];
 extern struct_12 stru_8007D598[15];
 extern unsigned char byte_8007CC24[0x2b];
+extern unsigned short aKkkiqqqqqssssZ[];
 extern struct_12 stru_8007CCA8[0x2b];
 extern int dword_8007CB78[0x2b];
 extern struct_24 stru_8007D04C[0x17];
@@ -219,6 +236,7 @@ extern int dword_80086564;
 extern int dword_80098688;
 extern int off_800824CC[];
 extern struct_12_b dword_8007C438[];
+extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
 extern unsigned short word_8007CED8[];
 typedef struct
@@ -280,6 +298,9 @@ extern int loadedOverlayMaybe_8008D620;
 extern int dword_8008D3F4;
 extern int dword_8008B4E8;
 extern int frameCount_8008D3FC;
+extern int geomScreenDistance_8008B548;
+extern int dword_8008B4F8;
+extern int dword_800918C4;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
@@ -301,6 +322,10 @@ extern unsigned char byte_8007D588[16];
 extern int** dword_8008D4A0;
 extern int** dword_8008D464;
 extern int** dword_8008B54C;
+extern int dword_8008B550;
+extern int dword_800960A0[2];
+extern int dword_800960A8[2];
+extern unsigned long* decodedImageData_8008B4A0;
 extern int dword_80096090[4];
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;
@@ -309,6 +334,7 @@ extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern int dword_800918BC;
+extern int ODEIsEvenAddressDrawn_800918C0;
 extern struct_44 stru_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
@@ -344,13 +370,15 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
 extern int dword_8008D43C;
+extern int dword_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
 {
     int field_0;
     int field_4;
-    char pad_8[0x2C];
+    char pad_8[0x28];
+    int field_30;
     int field_34;
     unsigned short id_38;
     unsigned short field_3A;
@@ -376,10 +404,12 @@ typedef struct
     int count;
     int field_4;
     struct_112* items;
+    void* field_C;
 } struct_112_list;
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
+extern unsigned short dword_8007CAF4[0xa];
 extern int dword_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];
@@ -419,6 +449,7 @@ typedef struct
     short field_0;
     short field_2;
 } struct_4s;
+extern struct_4s dword_8008D600[3];
 
 typedef struct
 {
@@ -469,5 +500,15 @@ typedef struct
 } Vec3i;
 
 extern int dword_8008D4D8;
+
+extern int dword_8008B500[];
+
+extern int dword_80091CA0;
+
+extern int dword_80091C30[];
+
+extern int dword_80091C60[];
+
+extern short word_8008B860;
 
 #endif

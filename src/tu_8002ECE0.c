@@ -87,6 +87,7 @@ void sub_8002EE28(short* a, unsigned short* pos, short c, int d)
         sub_8002EF5C(loc, 3, c);
     }
 }
+extern void sub_8002C06C(void* p, int a1, short a2);
 // Matched
 void sub_8002EF5C(unsigned short* pos, short count, short a2)
 {

@@ -20,6 +20,7 @@ INCLUDE_DATA(dword_8007442C);
 INCLUDE_DATA(dword_80074430);
 INCLUDE_DATA(dword_80074434);
 
+
 typedef struct
 {
     int field_0;
