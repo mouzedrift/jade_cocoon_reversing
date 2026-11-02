@@ -1060,6 +1060,14 @@ void sub_800A2EE4(void)
 {
 }
 
+typedef struct GameS3A8C_1
+{
+    char pad_0[8];
+    struct_obj_A* f8;
+    int fC;
+    char pad_10[0x14];
+    int f24;
+} GameS3A8C_1;
 typedef struct GameA2EEC_1
 {
     char pad_0[8];
@@ -1098,7 +1106,33 @@ INCLUDE_OVERLAY_ASM(game, sub_800A34D8);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A366C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A3804);
+void sub_800A3804(int unused, GameS3A8C_1* p)
+{
+    int c;
+    if (sub_800A4278(p) == 0)
+    {
+        c = p->fC;
+        switch (c)
+        {
+        case -1:
+            sub_800A433C(p, 1, 1, 0, c, 1, 2);
+            break;
+        case 1:
+            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+                sub_800A433C(p, 0xa, 4, 0x28, -1, 1, 2);
+            break;
+        case 0xa:
+            if (--p->f24 < 0)
+                sub_800A433C(p, 0xf, 2, 0, -1, 1, 2);
+            break;
+        case 0xf:
+            sub_800A45F8(p);
+            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
+                p->fC = -1;
+            break;
+        }
+    }
+}
 
 void sub_800A3954(int unused, GameA2EEC_1* p)
 {
@@ -1124,14 +1158,6 @@ void sub_800A3954(int unused, GameA2EEC_1* p)
     }
 }
 
-typedef struct GameS3A8C_1
-{
-    char pad_0[8];
-    struct_obj_A* f8;
-    int fC;
-    char pad_10[0x14];
-    int f24;
-} GameS3A8C_1;
 extern void sub_800A43FC();
 void sub_800A3A8C(int unused, GameS3A8C_1* p)
 {
