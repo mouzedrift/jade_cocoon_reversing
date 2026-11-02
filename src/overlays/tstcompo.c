@@ -333,6 +333,38 @@ int sub_800A200C()
     return 6;
 }
 
+#if 0 // near miss: loop pointer strength reduction differs
+typedef struct TstCompoEnt
+{
+    unsigned short a;
+    unsigned short b;
+    int p;
+} TstCompoEnt;
+extern unsigned short uiColor_8008B590;
+extern void sub_8003E91C(int a, int b, void* c, int d);
+extern void sub_80042460(int a, void* b, void* c, int d);
+void sub_800A2030(int p, TstCompoEnt* e, int idx)
+{
+    unsigned short t[2];
+    if (e)
+    {
+        while (e->p)
+        {
+            t[0] = e->a;
+            t[1] = e->b;
+            sub_8003E91C(1, e->p, t, idx);
+            e++;
+        }
+    }
+    if (p)
+    {
+        ((unsigned char*)t)[2] = 1;
+        ((unsigned char*)t)[3] = 1;
+        t[0] = uiColor_8008B590;
+        sub_80042460(p, t, pOT_8008D454 + idx, 0);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A2030);
 
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A20EC);
