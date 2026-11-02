@@ -465,13 +465,10 @@ void sub_800A895C()
 
 INCLUDE_OVERLAY_ASM(game, sub_800A8984);
 
-#if 0
 void sub_800A89C8()
 {
     dword_8008B4CC->f24->f0 &= ~0x40;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A89C8);
 
 void sub_800A89F0()
 {
@@ -629,24 +626,18 @@ void sub_800AB114(G2Obj* p)
     p->f0 = (p->f0 | 4) & ~2;
 }
 
-#if 0
 void sub_800AB134(G2Obj* p)
 {
     p->f30 = 0;
     p->f0 = (p->f0 | 2) & ~4;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AB134);
 
-#if 0
 void sub_800AB150(G2Obj* p)
 {
     p->f30 = 0;
     p->f0 &= ~4;
     p->f0 &= ~2;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AB150);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AB170);
 
@@ -849,25 +840,19 @@ INCLUDE_OVERLAY_ASM(game, sub_800AD058);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD0A4);
 
-#if 0
 int sub_800AD0D4(unsigned a)
 {
     return (playerYan_8008B594[0x290 + (a >> 3)] >> (a & 7)) & 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD0D4);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD0F8);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD124);
 
-#if 0
 int sub_800AD154(int a)
 {
     return playerYan_8008B594[a + 0x2A3];
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD154);
 
 #if 0
 void sub_800AD16C(int a, int b)
