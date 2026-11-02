@@ -114,11 +114,21 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[0x10];
+    char pad_0[4];
+    unsigned char field_4;
+    unsigned char field_5;
+    unsigned char field_6;
+    char pad_7[7];
+    unsigned short field_E;
     short field_10;
     char pad_12[2];
     unsigned short* field_14;
-    char pad_18[0x12];
+    char pad_18[6];
+    unsigned short field_1E;
+    short field_20;
+    short field_22;
+    unsigned char* field_24;
+    char pad_28[2];
     short field_2A;
 } struct_2C;
 

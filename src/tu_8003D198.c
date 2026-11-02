@@ -116,13 +116,20 @@ int sub_8003D3A0(int a0)
 {
     return sub_8003D288(a0, 1);
 }
-#if 0
 int sub_8003D3C0(int arg0, int arg1)
 {
-    return 0;
+    int r = 0;
+    unsigned short x = word_8009194C[arg1];
+    if ((x & 0x10) || (x & 1))
+    {
+        if (arg0)
+        {
+            PlaySfx_80031494(0x7D);
+        }
+        r = 1;
+    }
+    return r;
 }
-#endif
-INCLUDE_ASM(sub_8003D3C0);
 // Matched
 int sub_8003D41C(int a0)
 {
@@ -199,7 +206,7 @@ INCLUDE_ASM(sub_8003E3B4);
 // Matched
 int sub_8003E484(int a0)
 {
-    int v = *sub_8003F684(2, a0);
+    int v = *sub_8003F684(2, (unsigned short*)a0);
     if (v < 0xC3)
     {
         if (v >= 0x91)

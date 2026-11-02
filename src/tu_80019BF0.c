@@ -1050,7 +1050,7 @@ INCLUDE_ASM(sub_8001E7F0);
 void sub_8001EA00(char* p)
 {
     int v = *(int*)(p + 0x134);
-    sub_8003FE38(dword_80091990, v);
+    sub_8003FE38(dword_80091990, (void*)v);
 }
 // Matched
 void sub_8001EA28(void* arg0)

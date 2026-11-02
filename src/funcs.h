@@ -171,7 +171,7 @@ extern int sub_8003BE30(int arg0);
 extern void sub_80022AE8(void* arg0, void* arg1, int arg2);
 extern void sub_80030EEC(void* arg0);
 extern void* sub_8003BFB8(int arg0);
-extern void sub_8003FE38(void* arg0, int arg1);
+extern void sub_8003FE38(void* arg0, void* arg1);
 struct Heap;
 extern void sub_8003FD18(); // callers pass only the pointer (second arg is whatever is in a1)
 extern void sub_80036658(int arg0);
@@ -371,7 +371,7 @@ extern short* sub_8001D190(void);
 extern void sub_80026A8C(void* a0, int a1, int a2);
 extern void sub_80030D00(int a0);
 extern void sub_80039698(int* a0);
-extern unsigned short* sub_8003F684(int a0, int a1);
+extern unsigned short* sub_8003F684(int a0, unsigned short* a1);
 extern void sub_800298AC(int a0, int a1, void* a2);
 extern struct_20* sub_800B3274(int a0);
 extern void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
