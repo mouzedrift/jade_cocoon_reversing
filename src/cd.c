@@ -446,7 +446,29 @@ int sub_8003C060(int key)
     }
     return 2;
 }
-INCLUDE_ASM(sub_8003C0A4);
+extern int** dword_8008B544;
+// Matched
+int sub_8003C0A4(int a0)
+{
+    int* p = dword_8008B544[0x24 / 4];
+    if (dword_80086568 != a0)
+    {
+        if (a0 == 1)
+        {
+            int* q = (int*)p[0];
+            if (q == 0 || (p[0x1C / 4] == 8 && (q[0xC / 4] & 0x1000)))
+            {
+                dword_80086568 = a0;
+            }
+        }
+        else
+        {
+            dword_80086568 = 0;
+        }
+        return dword_80086568 == a0;
+    }
+    return 0;
+}
 extern void sub_8003C184(void);
 // Matched
 void sub_8003C128(int* a0, int* a1)
