@@ -3200,6 +3200,48 @@ void sub_80027708(int* a0, int a1)
         sub_80021824(a0, dword_8008B500[15], dword_8008B500[14], a1, 0);
     }
 }
+typedef struct
+{
+    int field_0;
+    int count;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short* items;
+} struct_27778;
+#if 0
+// Not matched: inner copy loop: original copies the entry pointer to a temp register (a2)
+void sub_80027778(int* a0, int h)
+{
+    struct_27778* arr;
+    struct_27778* e;
+    unsigned int i;
+    int j;
+    int* src;
+    unsigned short* q;
+    int n;
+    dword_8008D648[1] = a0[0];
+    dword_8008D648[2] = a0[1];
+    n = a0[2];
+    dword_8008D648[0] = n;
+    arr = (struct_27778*)sub_8003FDC0(h, n * 16);
+    for (i = 0; i < dword_8008D648[0]; i++)
+    {
+        src = (int*)((char*)a0 + a0[i + 3]);
+        e = &arr[i];
+        e->field_0 = *src++;
+        e->count = *src++;
+        q = (unsigned short*)src;
+        e->field_8 = *q++;
+        e->field_A = *q++;
+        e->items = (unsigned short*)sub_8003FDC0(h, e->count * 2);
+        for (j = 0; j < e->count; j++)
+        {
+            e->items[j] = *q++;
+        }
+    }
+    dword_8008D648[3] = (int)arr;
+}
+#endif
 INCLUDE_ASM(sub_80027778);
 INCLUDE_ASM(sub_800278BC);
 INCLUDE_ASM(sub_80027A88);
