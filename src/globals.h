@@ -231,7 +231,12 @@ typedef struct
 extern unsigned char byte_8007CFC8[0x26];
 extern struct_obj_Q dword_80095C90[0x14];
 extern short word_80091D0C;
-extern struct_8 dword_800833E4[];
+typedef struct
+{
+    int field_0;
+    int field_4;
+} struct_833E4;
+extern struct_833E4 dword_800833E4[];
 extern int** dword_8008D3F8;
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];

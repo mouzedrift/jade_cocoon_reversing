@@ -64,7 +64,32 @@ void sub_80030EEC(void* arg0)
 #endif
 INCLUDE_ASM(sub_80030EEC);
 INCLUDE_ASM(sub_8003105C);
-INCLUDE_ASM(sub_80031160);
+// Matched
+void sub_80031160(unsigned int idx, short loops)
+{
+    SoundStruct* s = &stru_80091D00;
+    int a;
+    int b;
+    if (dword_800833E4[idx].field_0 == 1)
+    {
+        a = s->field_14_sep_access_num;
+    }
+    else
+    {
+        a = s->field_C_sep_access_num;
+    }
+    b = dword_800833E4[idx].field_4;
+    if (idx < 2)
+    {
+        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 7) & 0x7F, (settingsFlags_8008B58C >> 7) & 0x7F);
+    }
+    else
+    {
+        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 14) & 0x7F, (settingsFlags_8008B58C >> 14) & 0x7F);
+    }
+    SsSepPlay(a, b, 1, loops);
+    SsSepSetCrescendo(a, b, 1, 1);
+}
 typedef struct
 {
     short field_0_file_id;

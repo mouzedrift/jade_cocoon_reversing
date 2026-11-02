@@ -65,7 +65,28 @@ void sub_8002E0D8(short* pos, short ot)
         sub_8002C06C(loc, dword_80082EBC[i], ot);
     }
 }
-INCLUDE_ASM(sub_8002E188);
+extern void sub_8002C100(unsigned short* pos, int v, short ot);
+// Matched
+void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short ot)
+{
+    unsigned short loc[2];
+    short i;
+    for (i = 0; i < 5; i++)
+    {
+        if (a[i] < b[i])
+        {
+            sub_8002C5D0(1);
+        }
+        else if (b[i] < a[i])
+        {
+            sub_8002C5D0(2);
+        }
+        loc[0] = pos[0] + 0x16;
+        loc[1] = pos[1] + i * 14 + 2;
+        sub_8002C100(loc, b[i], ot);
+        sub_8002C5D0(0);
+    }
+}
 // Matched
 void sub_8002E288(void* src, int v, int which, void* dst)
 {
