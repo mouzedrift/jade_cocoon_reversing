@@ -467,3 +467,5 @@ extern void sub_80023F34(int* a0, int a1, int a2, int a3);
 extern void sub_80024730(int* a0, int a1, int a2, int a3);
 extern void sub_80024C48(void* p);
 extern void sub_8001C19C(int a0, int a1);
+extern int sub_8003BFD0(int key, int flag);
+extern void sub_80028DC0(void);

@@ -1735,7 +1735,68 @@ int sub_800255D8(struct_112* p, int i)
 {
     return ((unsigned char*)p->field_44)[i] != 0;
 }
+extern int sub_8003BC84(int* p);
+typedef struct
+{
+    int field_0;
+    int count;
+    int items[10];
+} struct_25D00;
+int sub_80025D00(struct_25D00* p, int* q);
+void sub_80025D7C();
+#if 0
+// Not matched: a2 and a0[2] swap callee-saved registers (s2/s3)
+int sub_800255F0(int* a0, int idx, int a2)
+{
+    int b[16];
+    int c[8];
+    int x = a0[2];
+    int y = a0[3];
+    unsigned short* e = (unsigned short*)off_800824CC[idx];
+    sub_80025ED0(b);
+    b[0] = 2;
+    b[2] = a2;
+    c[0] = 0x69;
+    b[5] = x;
+    b[6] = y;
+    b[1] = (int)e;
+    c[1] = e[0];
+    c[2] = e[3];
+    c[3] = e[4];
+    c[5] = (int)b;
+    c[6] = 0x3C;
+    c[4] = 0;
+    c[7] = (int)sub_80025D7C;
+    sub_80025D00((struct_25D00*)x, c);
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_800255F0);
+#if 0
+// Not matched: item pointer and table entry swap callee-saved registers (s0/s1)
+int sub_800256B8(struct_112_list* a0, int id)
+{
+    int b[16];
+    int c[8];
+    struct_112* it = &a0->items[sub_80026630(a0, id)];
+    unsigned short* e = (unsigned short*)off_800824CC[it->id_38];
+    sub_80025ED0(b);
+    b[0] = 8;
+    b[3] = 3;
+    c[0] = 0x69;
+    b[5] = (int)it;
+    b[1] = (int)e;
+    c[1] = e[0];
+    c[2] = e[7];
+    c[3] = e[8];
+    c[5] = (int)b;
+    c[6] = 0x3C;
+    c[4] = 0;
+    c[7] = (int)sub_80025D7C;
+    sub_80025D00((struct_25D00*)it, c);
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_800256B8);
 INCLUDE_ASM(sub_80025780);
 // Matched
@@ -1806,13 +1867,6 @@ void sub_80025B20(void* dst, struct_obj_E* src, int idx)
 }
 INCLUDE_ASM(sub_80025B5C);
 INCLUDE_ASM(sub_80025C38);
-extern int sub_8003BC84(int* p);
-typedef struct
-{
-    int field_0;
-    int count;
-    int items[10];
-} struct_25D00;
 // Matched
 int sub_80025D00(struct_25D00* p, int* q)
 {
@@ -2128,7 +2182,28 @@ int sub_80027330(short a0)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80027358);
+// Matched
+int sub_80027358(int a0)
+{
+    int* p;
+    if (dword_80082678 == 1 && word_80091C40 == a0)
+    {
+        p = dword_800B1DB8[9];
+        if (sub_8003BE30(p[1]) != 3)
+        {
+            return 0;
+        }
+        sub_8002728C();
+        sub_8003BFD0(p[1], 0);
+        sub_80028DC0();
+        saveData_8008B570.field_2E4[3].field_0 = a0;
+        saveData_8008B570.field_2E4[3].field_2 = a0;
+        dword_80082678 = 0;
+        return 1;
+    }
+    saveData_8008B570.field_2E4[3].field_0 = a0;
+    return 0;
+}
 // Matched
 void sub_8002741C(void)
 {
