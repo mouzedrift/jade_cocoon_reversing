@@ -75,6 +75,14 @@ typedef struct MenuCol
     unsigned char c_3;
 } MenuCol;
 
+typedef struct MenuQ
+{
+    int w[4];
+} MenuQ;
+extern char name_800C18F4[];
+extern void sub_8002AF10();
+extern void sub_8002F1C8();
+
 typedef struct MenuBox
 {
     short x_0;
@@ -853,9 +861,47 @@ void sub_800C0578(MenuObj* o)
     sub_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C05E0);
+extern int sub_800AD7F8();
+extern MenuQ name_800C1E98[];
+extern char name_8008BD38[];
+void sub_800C05E0(MenuCtx* c)
+{
+    int found = 0;
+    int sum = (unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1];
+    int is = c->sel_2 == 0xE;
+    if (sub_8003D480() && is && c->f24 == 0)
+    {
+        int r = (short)sub_800AD7F8((short)sum);
+        if (r < 0x26)
+        {
+            sub_8002AF10(&name_800C1E98[r], found, 0xE);
+            found = 1;
+        }
+    }
+    if (!found && c->f24 == 0 && c->sel_2 != 0x10)
+        sub_8002F1C8(name_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
+}
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C06E8);
+extern int name_8001AEC0();
+extern MenuQ name_800C20F8[];
+void sub_800C06E8(MenuCtx* c)
+{
+    int found = 0;
+    int sum = (unsigned short)c->arr_2A[7] + (unsigned short)c->arr_46[2];
+    char* m = (char*)sub_80010598(3, c->arr_2A[1]);
+    int is = c->sel_2 == 4;
+    if (sub_8003D480() && is && c->f24 == 0)
+    {
+        int r = name_8001AEC0(m + 0xF4, (short)sum);
+        if (r < 0x1E)
+        {
+            sub_8002AF10(&name_800C20F8[r], found, 0xE);
+            found = 1;
+        }
+    }
+    if (!found && c->f24 == 0)
+        sub_8002F1C8(m + 0x84, 0, 0, 0, name_800C18F4, 0xE, 0);
+}
 
 extern char name_800C2660[];
 // near miss: c and s swap their saved registers
