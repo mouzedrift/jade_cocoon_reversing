@@ -273,7 +273,7 @@ extern void sub_800A1474();
 extern char dword_80091CE0[];
 extern int sub_8001DECC(void* a, int b, int c);
 extern short* sub_800B322C();
-extern short* sub_800A53CC();
+extern unsigned short* sub_800A53CC();
 extern int sub_800AD154(int a);
 extern void sub_800AD16C(int a, int b);
 typedef struct GameRect_1
@@ -790,8 +790,7 @@ int sub_800A28FC(int a)
     return dword_800B19E0;
 }
 
-#if 0
-// Not matched
+// Matched
 void sub_800A2924(int a)
 {
     sub_800A2CA8(a, 0);
@@ -806,8 +805,6 @@ void sub_800A2924(int a)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A2924);
 
 // Matched
 void sub_800A29CC(int a, int* out)
@@ -1216,8 +1213,7 @@ int sub_800A5354(void)
     return v;
 }
 
-#if 0
-// Not matched
+// Matched
 unsigned short* sub_800A53CC(void)
 {
     char* b = (char*)&saveData_8008B570;
@@ -1258,8 +1254,6 @@ unsigned short* sub_800A53CC(void)
     }
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A53CC);
 
 // Matched
 void sub_800A5474(void)
