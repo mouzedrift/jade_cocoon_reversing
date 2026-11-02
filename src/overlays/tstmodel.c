@@ -165,6 +165,8 @@ typedef struct TstModelB
     unsigned short s6;
     short s8;
     short sA;
+    short sC;
+    unsigned short sE;
 } TstModelB;
 extern short name_800A37F4[];
 extern short name_800A37FC[];
@@ -183,6 +185,43 @@ void sub_800A1CAC(TstModelB* p, int k)
     }
 }
 
+extern int sub_800A1B48();
+#if 0 // near miss: the original shares the shifted copy of sE between both tests
+extern int name_8003D198();
+extern void name_80031494();
+int sub_800A1D70(TstModelB* p)
+{
+    int old = (short)p->s6;
+    int k = sub_800A1B48(p);
+    unsigned short t = p->sE;
+    short ts = t;
+    if (k == 3)
+    {
+        if (ts >= p->s8)
+        {
+            p->sE = t - p->s8;
+            name_80031494(0x7F);
+            return 8;
+        }
+    }
+    else if (k == 4)
+    {
+        if (ts < p->sC - p->s8 * p->sA)
+        {
+            p->sE = t + p->s8;
+            name_80031494(0x7F);
+            return 7;
+        }
+    }
+    sub_800A1CAC(p, k);
+    p->sE = name_8003D198(p->sC - p->s8 * p->sA + 1, (short)p->sE, p->s8 * p->sA, 0);
+    if (old != (short)p->s6)
+    {
+        name_80031494(0x7F);
+    }
+    return 9;
+}
+#endif
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1D70);
 
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A1E84);
