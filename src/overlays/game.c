@@ -126,7 +126,7 @@ extern short* dword_800AE254[];
 typedef struct GameCtx_1
 {
     int f0;
-    int pad_4;
+    int f4;
     int f8;
     int fc[12];
     int f3c;
@@ -321,6 +321,7 @@ extern void sub_800A5B54(int* p);
 extern void sub_800A6060();
 extern void sub_800A6168();
 extern int dword_800AEBDC;
+extern void sub_800A0A04();
 
 INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
 
@@ -342,7 +343,13 @@ void sub_800A09B0(void)
     *(unsigned short*)(*(int*)(dword_800B1DBC + 0x24)) &= 0xFFFE;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A09D8);
+// Matched
+void sub_800A09D8(GameTask_1* t, short* q)
+{
+    *q = 0;
+    t->next_8 = sub_800A0A04;
+    sub_800A0A04(t, q);
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A0A04);
 
@@ -618,9 +625,17 @@ char* sub_800A1E3C(void)
     return dword_800B19CC;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E48);
+// Matched
+int sub_800A1E48(void)
+{
+    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x38;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E68);
+// Matched
+int sub_800A1E68(void)
+{
+    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x5c;
+}
 
 // Matched
 void sub_800A1E88(void)
@@ -1683,7 +1698,13 @@ void sub_800A6CCC(GameTask_1* t, GameQ_1* q)
     t->f0 = (t->f0 & ~1) | 0x8000;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6D30);
+// Matched
+void sub_800A6D30(int a)
+{
+    int* w = (int*)dword_8008D46C[9];
+    dword_800B0698 = 1;
+    w[2] = a;
+}
 
 #if 0
 // Not matched
@@ -2000,7 +2021,11 @@ int sub_800A7A9C(int a)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7AD8);
+// Matched
+void sub_800A7AD8(int a)
+{
+    sub_8001D9B0((struct_obj_A*)sub_800A7A60(a));
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A7B00);
 
