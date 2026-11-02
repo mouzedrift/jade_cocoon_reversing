@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-PAT = re.compile(r"#if 0\n(.*?)#endif\nINCLUDE_ASM\((\w+)\);\n", re.S)
+PAT = re.compile(r"#if 0\n((?:(?!#if 0\n|#endif).)*?)#endif\nINCLUDE_ASM\((\w+)\);\n", re.S)
 
 
 def run(cmd):
