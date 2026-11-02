@@ -192,29 +192,27 @@ int sub_8003B8DC(int* p, int a1)
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
-#if 0
+// Matched
 unsigned int sub_8003B918(unsigned int n)
 {
     int x;
     int y;
-    if (n == 0)
+    if (n != 0)
     {
-        return 0;
+        x = 1;
+        if (n >= 2)
+        {
+            x = n;
+        }
+        do
+        {
+            y = x;
+            x = (n / y + y) >> 1;
+        } while (x < y);
+        return y;
     }
-    x = 1;
-    if (n >= 2)
-    {
-        x = n;
-    }
-    do
-    {
-        y = x;
-        x = (n / y + y) >> 1;
-    } while (x < y);
-    return y;
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8003B918);
 // Matched
 Vec3i* sub_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
 {

@@ -149,8 +149,102 @@ int sub_8003D4A0(void)
 {
     return sub_8003D45C(1);
 }
-INCLUDE_ASM(sub_8003D4C0);
-INCLUDE_ASM(sub_8003D630);
+// Matched
+int sub_8003D4C0(short* m, int idx)
+{
+    int r = 1;
+    if (m[4] < 0)
+    {
+        m[4] = 0;
+    }
+    if (word_800918CC[idx] & 0x2000)
+    {
+        if (m[4] % m[0] == m[0] - 1)
+        {
+            r |= 2;
+        }
+        else
+        {
+            m[4]++;
+        }
+    }
+    if (word_800918CC[idx] & 0x8000)
+    {
+        if (m[4] % m[0] == 0)
+        {
+            r |= 4;
+        }
+        else
+        {
+            m[4]--;
+        }
+    }
+    if (word_800918CC[idx] & 0x1000)
+    {
+        if (m[4] < m[0])
+        {
+            r |= 8;
+        }
+        else
+        {
+            m[4] -= m[0];
+        }
+    }
+    if (word_800918CC[idx] & 0x4000)
+    {
+        if (m[4] > m[0] * (m[1] - 1) - 1)
+        {
+            r |= 0x10;
+        }
+        else
+        {
+            m[4] += m[0];
+        }
+    }
+    return r;
+}
+// Matched
+int sub_8003D630(short* m)
+{
+    int idx = 0;
+    if (m[3] < 0)
+    {
+        m[3] = 0;
+    }
+    if (word_800918CC[idx] & 0x2000)
+    {
+        if (m[3] % m[4] == m[4] - 1)
+        {
+            return 1;
+        }
+        m[3]++;
+    }
+    if (word_800918CC[idx] & 0x8000)
+    {
+        if (m[3] % m[4] == 0)
+        {
+            return 2;
+        }
+        m[3]--;
+    }
+    if (word_800918CC[idx] & 0x1000)
+    {
+        if (m[3] < m[4])
+        {
+            return 3;
+        }
+        m[3] -= m[4];
+    }
+    if (word_800918CC[idx] & 0x4000)
+    {
+        if (m[3] > m[4] * (m[5] - 1) - 1)
+        {
+            return 4;
+        }
+        m[3] = m[3] + m[4];
+    }
+    return 0;
+}
 typedef struct
 {
     short field_0;
