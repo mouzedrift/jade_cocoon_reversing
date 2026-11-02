@@ -217,6 +217,14 @@ typedef struct
 extern struct_8008D4F0 dword_8008D4F0;
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
+extern int off_8007DC70;
+typedef struct
+{
+    int fileIdx;
+    unsigned int** ppDest;
+} OverlayEntry;
+extern OverlayEntry overlays_8007D9E8[];
+extern int sub_8003BC84(int* p);
 extern unsigned short dword_800918C8[];
 extern unsigned short word_800918CC[];
 extern unsigned short dword_800918D4[];
@@ -2516,7 +2524,38 @@ void sub_800209AC(struct_cb* p, int* q)
 }
 #endif
 INCLUDE_ASM(sub_800209AC);
-INCLUDE_ASM(sub_80020A38);
+// Matched
+void sub_80020A38(int* p)
+{
+    struct_20* e;
+    int i;
+    if (p[2] == 0)
+    {
+        sub_80024ADC(&p[2], off_8007DC70, 1);
+    }
+    e = (struct_20*)(p + 3);
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_4 >= 0 && e->field_0 == 0)
+        {
+            sub_80025200(p[2], e->field_4, e->field_8, e->field_C, 1);
+        }
+        e++;
+    }
+    e = (struct_20*)(p + 3);
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_4 >= 0 && e->field_0 == 0)
+        {
+            if (e->field_10 >= 0)
+            {
+                sub_80025780(sub_80024D70(p[2], e->field_4), e->field_10, 1);
+            }
+            e->field_0 = 1;
+        }
+        e++;
+    }
+}
 // Matched
 int sub_80020B70(int* p)
 {
@@ -2536,13 +2575,39 @@ int sub_80020B70(int* p)
     p[1] = 1;
     return 1;
 }
-#if 0
-int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
+// Matched
+int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
 {
-    return 0;
+    int req[8];
+    switch (mode)
+    {
+    case 0:
+        req[0] = 0x22;
+        break;
+    case 2:
+        sub_8003CAEC(overlays_8007D9E8[overlayIdx].fileIdx, *overlays_8007D9E8[overlayIdx].ppDest);
+        return -1;
+    case 1:
+    case 3:
+        req[0] = 0x2A;
+        break;
+    }
+    req[1] = overlays_8007D9E8[overlayIdx].fileIdx;
+    req[2] = 0;
+    req[3] = 0;
+    req[4] = (int)*overlays_8007D9E8[overlayIdx].ppDest;
+    req[5] = 0;
+    req[6] = 0;
+    req[7] = 0;
+    return sub_8003BC84(req);
 }
-#endif
-INCLUDE_ASM(LoadOverlay_80020BF8);
+// Matched
+void sub_80020CB8(struct_cb* p, int* q)
+{
+    q[1] = -1;
+    q[0] = 0x1D;
+    p->fn_8 = (void (*)(struct struct_cb*, int*))sub_80020CD8;
+}
 // Matched
 void sub_80020CD8(int a0, int* p)
 {

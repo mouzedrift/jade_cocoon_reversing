@@ -20,7 +20,7 @@ extern void sub_8004D924(void);
 extern void sub_80010228(void);
 extern void sub_8004DE00(void); // probably a lib function
 extern void CloseEvents_80010328(void);
-extern int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
+extern int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
 extern void sub_80040718(void);
 extern void LoadPublicTiyAndFtg_800407D0(void);
@@ -452,6 +452,9 @@ extern void sub_800C410C(void);
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001C0B4(EventEntry* e, void* buf);
 extern int sub_80024DC4(int a0);
+extern void sub_8003CAEC(int idx, unsigned int* pDest);
+extern void sub_80024ADC(int* p, int a1, int a2);
+extern void sub_80025200(int a0, int a1, int a2, int a3, int a4);
 extern void sub_8002556C(int a0, int a1);
 extern int sub_8001DFC8(char* o, VECTOR* target, int a2, int a3);
 extern int sub_8001DDFC(char* o, VECTOR* target, int step);
