@@ -20,6 +20,25 @@ typedef struct MapRow
     int f14;
 } MapRow;
 
+typedef struct MapPos
+{
+    short a;
+    short b;
+} MapPos;
+
+typedef struct MapQuery
+{
+    short a;
+    short b;
+    short c;
+} MapQuery;
+
+extern unsigned char* dword_800B9348[];
+extern unsigned char dword_800B9360[];
+extern short word_800B8C98[];
+extern int sub_800AD0D4(int);
+extern int sub_800ADC1C(MapQuery*);
+extern int sub_800B8290(MapPos*);
 extern int dword_800B9430;
 extern int dword_800B9314;
 extern int dword_800B9318;
@@ -140,7 +159,30 @@ void sub_800B6F60(MapTask* t)
     unknownFlags_8008D678 &= 0xFBFFFFFF;
 }
 
-INCLUDE_OVERLAY_ASM(map, sub_800B6FAC);
+// Matched
+void sub_800B6FAC(MapTask* t)
+{
+    if (dword_800B9314)
+    {
+        free3_8003FC6C((void*)dword_800B9314);
+        dword_800B9314 = 0;
+    }
+    if (dword_800B9318)
+    {
+        free3_8003FC6C((void*)dword_800B9318);
+        dword_800B9318 = 0;
+    }
+    if (dword_800B931C)
+    {
+        free3_8003FC6C((void*)dword_800B931C);
+        dword_800B931C = 0;
+    }
+    if (dword_800B9320)
+    {
+        free3_8003FC6C((void*)dword_800B9320);
+        dword_800B9320 = 0;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(map, sub_800B7044);
 
@@ -166,15 +208,72 @@ void sub_800B7A38(MapTask* t)
 
 INCLUDE_OVERLAY_ASM(map, sub_800B7A90);
 
-INCLUDE_OVERLAY_ASM(map, sub_800B7E54);
+// Matched
+int sub_800B7E54(short a)
+{
+    int i;
+    int cnt = 0;
+    MapPos pos;
+    pos.a = a;
+    for (i = 0; i < word_800B8C98[a]; i++)
+    {
+        pos.b = i;
+        if (sub_800B8290(&pos))
+        {
+            cnt++;
+        }
+    }
+    return cnt;
+}
 
 INCLUDE_OVERLAY_ASM(map, sub_800B7EE0);
 
-INCLUDE_OVERLAY_ASM(map, sub_800B8128);
+// Matched
+void sub_800B8128(short a, short b, MapPos* out)
+{
+    int cnt = 0;
+    int i;
+    out->a = b;
+    for (i = 0; i < word_800B8C98[b]; i++)
+    {
+        out->b = i;
+        if (sub_800B8290(out))
+        {
+            if (cnt++ == a)
+            {
+                break;
+            }
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(map, sub_800B81D0);
 
-INCLUDE_OVERLAY_ASM(map, sub_800B8290);
+// Matched
+int sub_800B8290(MapPos* p)
+{
+    int idx = p->a;
+    unsigned char c = dword_800B9348[idx][p->b];
+    MapQuery q;
+    int r;
+    if (c == 0xFF)
+    {
+        return sub_800AD0D4(1) != 0;
+    }
+    if (c == 0xFE)
+    {
+        return 1;
+    }
+    if (c >= 0xF0)
+    {
+        c += 0x11;
+    }
+    q.a = dword_800B9360[idx];
+    q.b = c;
+    q.c = 0;
+    r = sub_800ADC1C(&q);
+    return r != -1;
+}
 
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
