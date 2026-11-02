@@ -5,13 +5,11 @@
 
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 
-#if 0 // near miss: register allocation of table base/loaded value
 typedef struct TstModelTbl { int a; int b; int c; } TstModelTbl;
 extern TstModelTbl name_800A33B0[];
 extern void sub_800A0A8C();
 void sub_800A09C0(int* task, int* c)
 {
-    TstModelTbl* tbl = name_800A33B0;
     int i;
     c[0] = 0;
     c[1] = 0;
@@ -22,13 +20,13 @@ void sub_800A09C0(int* task, int* c)
     c[8] = 0;
     ((short*)c)[0x172 / 2] = 0;
     c[7] = 0;
-    if (tbl[0].a >= 0)
+    if (name_800A33B0[0].a >= 0)
     {
         do
         {
             i = c[7] + 1;
             c[7] = i;
-        } while (tbl[i].a >= 0);
+        } while (name_800A33B0[i].a >= 0);
     }
     c[0x1B8 / 4] = 0;
     c[0x1A8 / 4] = 0;
@@ -41,8 +39,6 @@ void sub_800A09C0(int* task, int* c)
     drawEnvRed_8008D448[2] = 0x80;
     task[2] = (int)sub_800A0A8C;
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A09C0);
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0A8C);
 
