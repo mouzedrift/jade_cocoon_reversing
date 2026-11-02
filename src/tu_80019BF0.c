@@ -1893,8 +1893,26 @@ void sub_8001DB58(struct_obj_A* p, int a1, int a2)
     }
 }
 #if 0
-void sub_8001DB98(void* arg0)
+// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
+void sub_8001DB98(char* o, unsigned char* s)
 {
+    short old = *(short*)(o + 0xC2);
+    *(short*)(o + 0xC2) = -1;
+    *(short*)(o + 0xC4) = 0;
+    *(short*)(o + 0xC6) = 1;
+    *(short*)(o + 0xC8) = 0;
+    *(short*)(o + 0xCA) = 0;
+    *(short*)(o + 0xCC) = -1;
+    *(short*)(o + 0xCE) = -1;
+    *(unsigned char**)(o + 0xD0) = s;
+    *(int*)(o + 4) &= ~0x8000;
+    *(int*)(o + 4) |= 0x4000;
+    *(short*)(o + 0xC0) = old;
+    while (s[0] != 0)
+    {
+        *(short*)(o + 0xC6) += s[1];
+        s += s[1] * 4;
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001DB98);
@@ -2199,7 +2217,26 @@ void sub_8001EFC4(struct_obj_F* p)
     p->flags_4 &= 0xFF17FFFF;
 }
 INCLUDE_ASM(sub_8001F03C);
-INCLUDE_ASM(sub_8001F268);
+// Matched
+short sub_8001F268(char* o, short* out, int a2, int idx)
+{
+    short* e = (short*)(*(char**)(o + 0x148) + idx * 60 + 8);
+    int i;
+    for (i = 0; i < 10; i++)
+    {
+        if (e[i * 2] < 0 && e[i * 2 + 1] < 0)
+        {
+            out[i * 2] = -1;
+            out[i * 2 + 1] = -1;
+        }
+        else
+        {
+            out[i * 2] = sub_8001F03C((int)o, a2, idx, e[i * 2]);
+            out[i * 2 + 1] = sub_8001F03C((int)o, a2, idx, e[i * 2 + 1]);
+        }
+    }
+    return out[0];
+}
 #if 0
 void sub_8001F354(void* a0)
 {
@@ -2301,8 +2338,25 @@ void sub_8001FF48(void* a0)
 #endif
 INCLUDE_ASM(sub_8001FF48);
 #if 0
-void sub_800200F8(void* a0)
+// Not matched: original reuses the -1 of the first compare for the loop (move a3,v0), ours loads it again
+void sub_800200F8(char* o)
 {
+    int i;
+    MATRIX* src;
+    if (*(int*)(o + 4) & 0x10000000)
+    {
+        if (**(short**)(o + 0x134) != -1)
+        {
+            i = 0;
+            src = dword_80098188;
+            do
+            {
+                (*(MATRIX**)(o + 0x1C8))[i] = *src;
+                i++;
+                src++;
+            } while ((*(short**)(o + 0x134))[i * 4] != -1);
+        }
+    }
 }
 #endif
 INCLUDE_ASM(sub_800200F8);
