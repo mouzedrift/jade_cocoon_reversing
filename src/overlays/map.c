@@ -45,9 +45,14 @@ extern short word_800B8C98[];
 extern int sub_800AD0D4(int);
 extern int sub_800ADC1C(MapQuery*);
 extern int sub_800B8290(MapPos*);
+#define MAPV ((MapSaveView*)&saveData_8008B570)
 typedef struct MapSaveView
 {
-    char pad_0[0x2E4];
+    char pad_0[0x2DC];
+    short f2DC;
+    short f2DE;
+    short f2E0;
+    short pad_2E2;
     short f2E4;
     short pad_2E6;
     short f2E8;
@@ -69,6 +74,16 @@ typedef struct MapRec12
 } MapRec12;
 
 extern MapRec12 dword_800AEBFC[];
+extern unsigned short word_800918CC;
+extern char dword_800B6BE0[];
+extern void sub_8003E91C(int, void*, void*, int);
+extern void sub_8003EF74(void*, int, int);
+extern int dword_800B9438;
+extern unsigned char dword_800B9368[];
+extern int dword_800B8CA4;
+extern int sub_800AD154(int);
+extern void sub_800300E0(int, int);
+extern void sub_800B6E5C();
 extern int dword_800B9430;
 extern int dword_800B9314;
 extern int dword_800B9318;
@@ -81,7 +96,7 @@ extern int dword_800B9400[];
 extern MapRow dword_800B9220[];
 extern unsigned short word_800AEBF8[2];
 extern unsigned short dword_800B8C94[2];
-extern void sub_800B8448(void*);
+extern void sub_800B8448();
 extern short word_800B932C;
 extern void sub_8001C19C(int, int);
 extern void sub_8001CD04(int);
@@ -121,7 +136,29 @@ void sub_800B6C7C(MapTask* t)
     t->next_8 = sub_800B6CB4;
 }
 
-INCLUDE_OVERLAY_ASM(map, sub_800B6CB4);
+// Matched
+void sub_800B6CB4(MapTask* t)
+{
+    int a;
+    dword_800B8CA4 = sub_800B7E54((short)word_800AEBF8[0]);
+    sub_800B7EE0();
+    if (sub_800AD154(0xC) == 1)
+    {
+        a = 0xF;
+    }
+    else if (sub_800AD154(0xC) == 2)
+    {
+        a = 0x91;
+    }
+    else
+    {
+        a = dword_800B9220[(short)word_800AEBF8[0]].f10;
+    }
+    sub_800300E0(a, 1);
+    dword_800B9434 = 0;
+    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f0);
+    t->next_8 = sub_800B6E5C;
+}
 
 // Matched
 void sub_800B6D90(int* p, int a1)
@@ -378,6 +415,61 @@ void sub_800B8338(MapPos* p)
 #endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
+#if 0
+// Not matched: the original hoists the load of the flag above the store of 12 and jumps into the shared tail
+void sub_800B8448(MapPos* out)
+{
+    unsigned short t = MAPV->f2E4;
+    MapQuery q;
+    unsigned char* tbl;
+    unsigned char cnt;
+    if ((unsigned short)(t - 4) < 2)
+    {
+        if (MAPV->f2E8 == 0)
+        {
+            out->b = 12;
+            out->a = MAPV->f2E0 == 1;
+            return;
+        }
+        q.a = t;
+        q.c = 0;
+        q.b = 1;
+        do
+        {
+            if (sub_800ADC1C(&q) == -1)
+            {
+                break;
+            }
+            q.b++;
+        } while (q.b < 5);
+        if (q.b == 5)
+        {
+            q.b--;
+        }
+        out->a = q.b + 1;
+    }
+    else if ((unsigned short)(t - 1) >= 3)
+    {
+        out->b = 0;
+        out->a = MAPV->f2E0 == 1;
+        return;
+    }
+    else
+    {
+        out->a = MAPV->f2E0 == 1;
+    }
+    tbl = dword_800B9348[out->a];
+    cnt = dword_800B9368[out->a];
+    for (out->b = 0; out->b < cnt; out->b++)
+    {
+        if (MAPV->f2E8 == tbl[out->b])
+        {
+            return;
+        }
+    }
+    out->b = 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8448);
 
 // Matched
@@ -405,6 +497,45 @@ void sub_800B8B2C(MapTask* t)
     f();
 }
 
+#if 0
+// Not matched: the original loads the constant 0x78 twice (no CSE between a.y and b.x)
+void sub_800B8B5C()
+{
+    int* sel = &dword_800B9438;
+    unsigned short pad = word_800918CC;
+    RECT a;
+    RECT b;
+    RECT c;
+    int r;
+    if (pad & 0x1000)
+    {
+        dword_800B9438--;
+    }
+    else if (pad & 0x4000)
+    {
+        dword_800B9438++;
+    }
+    *sel = *sel < 0 ? 0 : *sel < 7 ? *sel : 6;
+    r = sub_8003D380(1);
+    if (r == 1)
+    {
+        MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
+        sv->f2DE = -5;
+        sv->f2DC = *sel;
+        sub_800A6D30(0);
+        dword_8008B540 = r;
+    }
+    sub_8003D41C(1);
+    a.x = 0x6E;
+    a.y = 0x78;
+    b.x = 0x78;
+    b.y = 0x82;
+    sub_8003E91C(2, dword_800B6BE0, &b, 0);
+    c.x = a.x + 0x50;
+    c.y = a.y + 0xA;
+    sub_8003EF74(&c, *sel + 1, 0);
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8B5C);
 
 INCLUDE_OVERLAY_ASM(map, dword_800B8C94);
