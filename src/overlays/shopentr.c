@@ -60,9 +60,9 @@ extern char str_800B6EB0[];
 extern EventNode* dword_8008D4A8;
 extern void sub_8002BE10(void);
 extern void sub_8002BA54(void* a0, int a1, void* a2, int a3);
-extern void sub_8003E91C(int a0, char* a1, void* a2, int a3);
-extern void sub_8003EF74(void* a0, int a1, int a2);
-extern void sub_8003F264(void* a0, int a1, int a2);
+extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
+extern void sub_8003EF74(void* a0, int a1, short a2);
+extern void sub_8003F264(void* a0, int a1, short a2);
 extern void sub_8003D794(CtxShopentr* c, int a1);
 extern int sub_8003D380(int a0);
 extern int sub_8003D41C(int a0);
@@ -79,6 +79,10 @@ extern void sub_800B7858(CtxShopentr* c);
 extern void sub_800B7A90(RectShopentr* p, short a1, short a2);
 extern void sub_800B7B64(RectShopentr* p, short a1, short a2);
 extern void sub_800B7C08(RectShopentr* p);
+extern char str_800B6EBC[];
+extern char str_800B6EC8[];
+extern char str_800B6ED0[];
+extern char str_800B6EDC[];
 extern char str_800B6F04[];
 extern char str_800B6F08[];
 
@@ -280,7 +284,50 @@ void sub_800B75DC(CtxShopentr* c)
     sub_8003E91C(2, str_800B6EB0, u, 14);
 }
 
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7684);
+// Matched
+void sub_800B7684(CtxShopentr* c)
+{
+    RectShopentr a;
+    unsigned short p[2];
+    unsigned short q[2];
+    unsigned short l28[2];
+    unsigned short l30[2];
+    unsigned short l38[2];
+    unsigned short l40[2];
+    short i;
+    int col = 14;
+    a.x = 0x50;
+    a.w = 0xa0;
+    a.h = 0x12;
+    for (i = 0; i < 5; i++)
+    {
+        a.y = i * 19 + 0x50;
+        q[1] = a.y;
+        q[0] = a.x;
+        sub_8003EF74(q, c->field_A + i + 1, col);
+        p[0] = 0x82;
+        p[1] = a.y;
+        sub_800B7B64((RectShopentr*)p, 0x14, 0x19);
+        p[0] = 0xc8;
+        p[1] = a.y + 4;
+        sub_800B7C08((RectShopentr*)p);
+    }
+    l28[0] = 0x82;
+    l28[1] = 0x20;
+    sub_8003E91C(2, str_800B6EBC, l28, col);
+    l30[0] = 0x50;
+    l30[1] = 0x3c;
+    sub_8003E91C(2, str_800B6EC8, l30, col);
+    l38[0] = 0x82;
+    l38[1] = 0x3c;
+    sub_8003E91C(2, str_800B6ED0, l38, col);
+    l40[0] = 0xd2;
+    l40[1] = 0x3c;
+    sub_8003E91C(2, str_800B6EDC, l40, col);
+    p[0] = 0x20;
+    p[1] = 0x50;
+    sub_800B7A90((RectShopentr*)p, c->field_8 + c->field_A + 1, 0xf);
+}
 
 INCLUDE_OVERLAY_ASM(shopentr, sub_800B7858);
 
