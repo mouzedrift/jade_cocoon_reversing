@@ -2046,7 +2046,52 @@ int sub_800A6D50(int a)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6DAC);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A70F8);
+typedef struct GameD_1
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    void (*f1C)(int);
+} GameD_1;
+extern int sub_8003BE30();
+extern void sub_8001C224();
+extern void sub_8001C290();
+extern void sub_8001C260();
+extern void sub_800A6DAC();
+void sub_800A70F8(GameTask_1* t, GameD_1* q)
+{
+    int c = 0;
+    GameD_1* r = q;
+    if (q->f8)
+        c = (unsigned)sub_8003BE30(q->f4) > 0;
+    if (c == 0)
+    {
+        if (q->f1C)
+            q->f1C(q->f18);
+        sub_800A6D30(q->f0);
+        t->next_8 = sub_800A6DAC;
+        if (q->fC)
+            sub_8001C224();
+        else
+            sub_8001C290();
+        dword_8008B540 = r->f10;
+    }
+    else
+    {
+        if (q->f14 == 0)
+        {
+            sub_8001C260();
+            q->f14 = 1;
+            sub_800A6D30(0xb);
+            t->next_8 = sub_800A70F8;
+        }
+        dword_8008B540 = 1;
+    }
+}
 
 // Matched
 void sub_800A7204(GameSub_1* p)
