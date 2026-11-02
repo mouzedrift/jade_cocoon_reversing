@@ -20,7 +20,36 @@ INCLUDE_DATA(dword_800743D0);
 
 INCLUDE_ASM(sub_8002DA3C);
 INCLUDE_ASM(sub_8002DB48);
-INCLUDE_ASM(sub_8002E004);
+extern void sub_80031FF4(int a0, unsigned long* ot, unsigned short* pos, int a3);
+extern void sub_8002C290(unsigned short* pos, int val, int ot);
+// Matched
+void sub_8002E004(unsigned short* pos, int val, int ot)
+{
+    unsigned short loc[2];
+    unsigned short x = pos[0];
+    loc[0] = x + 3;
+    loc[1] = pos[1] + 3;
+    if (val > 0)
+    {
+        if (val >= 100)
+        {
+            loc[0] = x - 5;
+        }
+        sub_80031FF4(0x58, &pOT_8008D454[ot], loc, 0x400);
+    }
+    else if (val < 0)
+    {
+        val = -val;
+        if (val >= 100)
+        {
+            loc[0] = x - 5;
+        }
+        sub_80031FF4(0x58, &pOT_8008D454[ot], loc, 0xC00);
+    }
+    loc[0] = pos[0] + 0x14;
+    loc[1] = pos[1];
+    sub_8002C290(loc, val, ot);
+}
 extern unsigned char dword_80082EBC[];
 extern unsigned char a1ftf[];
 extern void sub_8002C06C(void* p, int a1, short a2);

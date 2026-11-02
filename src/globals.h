@@ -64,7 +64,8 @@ typedef struct
 {
     int field_0;
     unsigned char field_4;
-    char pad_5[3];
+    char pad_5[2];
+    unsigned char field_7;
     int field_8;
 } struct_12_b;
 

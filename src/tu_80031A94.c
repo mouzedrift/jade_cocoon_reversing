@@ -96,7 +96,24 @@ void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
 }
 INCLUDE_ASM(sub_800324D8);
 INCLUDE_ASM(sub_800327A8);
-INCLUDE_ASM(sub_80032D34);
+// Matched
+void sub_80032D34(short* src, void* ot)
+{
+    short* d;
+    int w;
+    int h;
+    w = src[8] - src[4];
+    h = src[13] - src[5];
+    d = sub_80040298(ot, src, 10);
+    d[4] = src[4] + w;
+    d[5] = src[5] + h;
+    d[8] = src[4];
+    d[9] = src[5] + h;
+    d[12] = src[4] + w;
+    d[13] = src[5];
+    d[16] = src[4];
+    d[17] = src[5];
+}
 // Matched
 void sub_80032DFC(short* p, int a1)
 {
@@ -374,7 +391,7 @@ int sub_8003356C(unsigned char* p, unsigned int idx)
     }
     return r;
 }
-extern void sub_80033754(void* a, void* b);
+extern void sub_80033754(signed char* out, unsigned char* m);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
 {
@@ -385,7 +402,7 @@ void sub_800335D0(void* pSrc, Minion* m)
     {
         m->field_44 = r;
     }
-    sub_80033754((char*)m + 0x20, m);
+    sub_80033754((signed char*)m + 0x20, (unsigned char*)m);
 }
 #if 0
 void sub_80033624(void* arg0, int arg1)
@@ -393,6 +410,32 @@ void sub_80033624(void* arg0, int arg1)
 }
 #endif
 INCLUDE_ASM(sub_80033624);
+#if 0
+// Not matched (2 words: a0/v1 swapped for the two lb loads in the inner loop)
+void sub_80033754(signed char* out, unsigned char* m)
+{
+    signed char* tbl[2];
+    int i;
+    int j;
+    sub_800403E8((unsigned int*)out, (unsigned int*)(m + 0x20), 12);
+    m += 0x1C;
+    tbl[0] = (signed char*)sub_8001CDA0(m[1]);
+    tbl[1] = (signed char*)sub_8001CD74(m[2]);
+    for (j = 0; j < 2; j++)
+    {
+        if (tbl[j])
+        {
+            for (i = 0; i < 12; i++)
+            {
+                if (*(out + i) < *(tbl[j] + i))
+                {
+                    *(out + i) = *(tbl[j] + i);
+                }
+            }
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80033754);
 // Matched
 char* sub_80033818(Minion* p)
@@ -612,7 +655,32 @@ int sub_80033C98(struct_minion_ref* p)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80033D20);
+// Matched
+int sub_80033D20(struct_minion_ref* p)
+{
+    Minion* m = p->field_C_minion;
+    char* q = m->field_84;
+    int r = sub_8001AEC0(m->field_F4, p->field_0 + p->field_2);
+    if (dword_8007C438[r].field_0 & 0x40)
+    {
+        switch (dword_8007C438[r].field_7)
+        {
+        case 0:
+            if (*(short*)&q[8] == *(short*)&q[0xA])
+            {
+                return 3;
+            }
+            break;
+        case 1:
+            if (r != 0x10 && !(*(int*)m->field_84 & 0x7FB))
+            {
+                return 3;
+            }
+            break;
+        }
+    }
+    return 0;
+}
 // Matched
 int sub_80033DEC(void)
 {
