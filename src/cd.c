@@ -345,7 +345,69 @@ int sub_8003BC44(void)
     }
     return -1;
 }
-INCLUDE_ASM(sub_8003BC84);
+extern unsigned char dword_800954C0[][0x64];
+typedef struct
+{
+    int count;
+    int nextkey;
+    struct_node_C* first;
+    struct_node_C* last;
+} struct_head_8003BC84;
+// Matched
+int sub_8003BC84(int* req)
+{
+    struct_head_8003BC84* head = (struct_head_8003BC84*)&dword_80086540;
+    int i = sub_8003BC44();
+    struct_node_C* n = (struct_node_C*)&dword_80095C90[i];
+    struct_node_C* t;
+    struct_node_C* nx;
+    n->next = 0;
+    n->field_4 = 0;
+    n->key = head->nextkey;
+    n->field_C = req[0];
+    n->field_10 = req[1];
+    ((int*)n)[0x14 / 4] = req[2];
+    ((int*)n)[0x18 / 4] = req[3];
+    n->field_1C = req[4];
+    n->field_24 = req[7];
+    if (req[6] == 0 || req[5] == 0)
+    {
+        n->field_20 = 0;
+    }
+    else
+    {
+        n->field_20 = (int)dword_800954C0[i];
+        sub_800403E8((unsigned int*)n->field_20, (unsigned int*)req[5], req[6]);
+    }
+    if (head->count == 0)
+    {
+        head->first = n;
+    }
+    else
+    {
+        t = head->last;
+        if (t->field_C & 0x10)
+        {
+            do
+            {
+                t = t->next;
+                nx = t->next;
+            } while (nx->field_C & 0x10);
+            n->next = nx;
+            n->field_4 = (int)t;
+            t->next = n;
+        }
+        else
+        {
+            n->next = t;
+            (head->last)->field_4 = (int)n;
+        }
+    }
+    head->last = n;
+    head->count++;
+    head->nextkey++;
+    return n->key;
+}
 // Matched
 void nullsub_6(void)
 {
