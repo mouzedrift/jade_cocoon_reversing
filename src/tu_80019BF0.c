@@ -1546,6 +1546,27 @@ void sub_80024AB8(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
+#if 0
+// Not matched: list pointer reloaded from *a0 instead of reusing a0's register (s1)
+void sub_80024ADC(struct_112_list** a0, struct_16_b* a1, int h)
+{
+    struct_112_list* p;
+    int n;
+    int i;
+    *a0 = (struct_112_list*)sub_8003FC8C(0x10, h);
+    n = sub_80026600(a1);
+    (p = *a0)->count = n;
+    p->field_4 = h;
+    p->items = (struct_112*)sub_8003FC8C(n * sizeof(struct_112), h);
+    ((int*)p)[3] = (int)a1;
+    for (i = 0; i < p->count; i++)
+    {
+        p->items[i].field_0 = (int)p;
+        p->items[i].field_30 = i;
+        sub_800266CC(&p->items[i]);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80024ADC);
 // Matched
 void sub_80024BB0(int* a0)
@@ -1865,7 +1886,24 @@ void sub_80025B20(void* dst, struct_obj_E* src, int idx)
 {
     sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
 }
-INCLUDE_ASM(sub_80025B5C);
+// Matched
+void sub_80025B5C(struct_obj_E* p, int idx, int sel)
+{
+    struct_54 tmp;
+    if (idx == sel)
+    {
+        sub_8002512C((unsigned int*)&tmp, (char*)p, idx);
+    }
+    else if (sel < p->field_3C)
+    {
+        sub_800251A0(&tmp, p, idx, sel);
+    }
+    else
+    {
+        sub_80025B20(&tmp, p, sel - p->field_3C);
+    }
+    p->field_50[idx] = tmp;
+}
 INCLUDE_ASM(sub_80025C38);
 // Matched
 int sub_80025D00(struct_25D00* p, int* q)
@@ -2062,6 +2100,36 @@ void sub_80026730(struct_28** a0, int a1, int a2)
         p[i].field_18 = 0;
     }
 }
+#if 0
+// Not matched: loop pointer biased by +0x18 and different register assignment
+void sub_8002679C(struct_28** a0, int n, int h)
+{
+    struct_28* base = *a0;
+    struct_28* p;
+    int i;
+    if (base != 0)
+    {
+        p = base;
+        for (i = 0; i < n; i++, p++)
+        {
+            if (p->field_10 != 0)
+            {
+                sub_8003FD18(p->field_10, h);
+            }
+            if (p->field_14 != 0)
+            {
+                sub_8003FD18(p->field_14, h);
+            }
+            if (p->field_18 != 0)
+            {
+                sub_8003FD18(p->field_18, h);
+            }
+        }
+        sub_8003FD18(base, h);
+    }
+    *a0 = 0;
+}
+#endif
 INCLUDE_ASM(sub_8002679C);
 // Matched
 void sub_80026870(int* a0, int a1, int a2)
@@ -2070,6 +2138,22 @@ void sub_80026870(int* a0, int a1, int a2)
     sub_80026730((struct_28**)a0, r, a2);
     sub_800268E8(a0[0], a1, r, a2, -1);
 }
+#if 0
+// Not matched: mask test becomes srav/andi, register assignment differs
+void sub_800268E8(int a0, int a1, int n, int h, int mask)
+{
+    struct_28* p = (struct_28*)a0;
+    int* q = (int*)a1;
+    int i;
+    for (i = 0; i < n; i++, p++)
+    {
+        if ((mask & (1 << i)) && p->field_14 == 0 && p->field_18 == 0)
+        {
+            sub_80026A8C(p, a1 + q[i + 1], h);
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_800268E8);
 // Matched
 void sub_800269C4(int a0, int n, int sel, int h)

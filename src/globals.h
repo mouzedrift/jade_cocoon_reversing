@@ -105,13 +105,15 @@ typedef struct
 
 typedef struct
 {
-    char data[0x54];
+    int data[0x15];
 } struct_54;
 
 // object with a header at +0x4C and tables of struct_54 at +0x50 and +0x68
 typedef struct
 {
-    char pad_0[0x4C];
+    char pad_0[0x3C];
+    unsigned short field_3C;
+    char pad_3E[0xE];
     int* field_4C;
     struct_54* field_50;
     char pad_54[0x14];
@@ -353,7 +355,8 @@ typedef struct
 {
     int field_0;
     int field_4;
-    char pad_8[0x2C];
+    char pad_8[0x28];
+    int field_30;
     int field_34;
     unsigned short id_38;
     unsigned short field_3A;
@@ -381,6 +384,7 @@ typedef struct
     struct_112* items;
 } struct_112_list;
 int sub_80026630(struct_112_list* p, unsigned int id);
+void sub_800266CC(struct_112* p);
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
