@@ -154,6 +154,41 @@ typedef struct ShopBigShop
     char pad_5C8[0x800 - 0x5C8];
 } ShopBigShop;
 extern ShopBigShop name_80084540[];
+typedef struct ShopSetupShop
+{
+    int w0;
+    int w4;
+    int w8;
+    int wC;
+    int w10;
+    short s14;
+    short s16;
+    short s18;
+    short pad_1A;
+    int w1C;
+    int w20;
+    int w24;
+    int w28;
+    int w2C;
+    int w30;
+    int w34;
+    int w38;
+    int w3C;
+    int w40;
+    int w44;
+    int w48;
+} ShopSetupShop;
+extern int fn_80010A44(int a);
+extern int fn_80024E90(int a, int b);
+extern int fn_80024EC8(int a, int b);
+extern int fn_80024E38(int a);
+extern int fn_80024E64(int a);
+extern void* fn_8001D45C(void* p);
+extern int fn_80024F00(int a, int b);
+extern int fn_80024F38(int a, int b);
+extern void fn_80019B14(int a, int b, int c);
+extern void fn_8001D68C(void* p, int on);
+extern char name_80079140[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -536,7 +571,55 @@ int sub_800BAB30()
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BAB38);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BACD0);
+int sub_800BACD0(unsigned char* d)
+{
+    int r = -1;
+    int n6 = 0;
+    int n5 = n6;
+    int n4 = n6;
+    int n3 = n6;
+    int n2 = n6;
+    int n1 = n6;
+    int i = n6;
+    unsigned char v;
+    for (; i < 0x30; i++)
+    {
+        v = (d + i)[0x4C];
+        if (v == 0x1E || v == 0xB1 || v == 0xB2 || v == 0xB3 || v == 0xB4)
+        {
+            n1++;
+        }
+        else if (v == 0xE || v == 0x71 || v == 0x72 || v == 0x73 || v == 0x74)
+        {
+            n2++;
+        }
+        else if (v == 0xF || v == 0x75 || v == 0x76 || v == 0x77 || v == 0x78)
+        {
+            n3++;
+        }
+        else if (v == 3 || v == 0x45 || v == 0x46 || v == 0x47 || v == 0x48)
+        {
+            n4++;
+        }
+        else if (v == 7 || v == 0x55 || v == 0x56 || v == 0x57 || v == 0x58)
+        {
+            n5++;
+        }
+        else if (v == 9 || v == 0x5D || v == 0x5E || v == 0x5F || v == 0x60)
+        {
+            n6++;
+        }
+    }
+    if (n1 >= 3 && n2 >= 3 && n3 >= 3)
+    {
+        r = 0x22;
+    }
+    else if (n4 >= 3 && n5 >= 3 && n3 >= 3 && n6 >= 3)
+    {
+        r = 0x23;
+    }
+    return r;
+}
 
 int sub_800BAE80(ShopUnitShop* p)
 {
@@ -1374,6 +1457,42 @@ void sub_800BF548()
     sub_8001098C(v);
 }
 
+#if 0 // near miss: store scheduling / temp registers (17 words)
+void sub_800BF574(int* a, unsigned short* b)
+{
+    ShopSetupShop q;
+    ShopCtxShop* c = &name_800C09E0;
+    int r = fn_80010A44(c->field_0);
+    int v;
+    int x;
+    q.w0 = -1;
+    q.w4 = 2;
+    q.w8 = a[0];
+    q.wC = a[1];
+    q.w10 = a[2];
+    q.s14 = b[0];
+    q.s16 = b[1];
+    v = *(int*)((char*)c + 0x24);
+    q.s18 = b[2];
+    q.w28 = 0x1000;
+    q.w30 = 1;
+    q.w1C = 0;
+    q.w20 = 4;
+    q.w24 = -1;
+    q.w2C = 4;
+    q.w48 = r;
+    q.w34 = (int)name_80079140;
+    q.w38 = fn_80024E90(r, v);
+    q.w3C = fn_80024EC8(r, v);
+    q.w40 = fn_80024E38(r);
+    q.w44 = fn_80024E64(r);
+    c->field_3C = fn_8001D45C(&q);
+    x = fn_80024F00(r, v);
+    r = fn_80024F38(r, v);
+    fn_80019B14(*(int*)((char*)c->field_3C + 0x134), x, r);
+    fn_8001D68C(c->field_3C, 0);
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BF574);
 
 void sub_800BF6C4()
