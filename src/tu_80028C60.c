@@ -72,12 +72,32 @@ void sub_800296A0(void* arg0)
     LoadImage((RECT*)&p[7], (u_long*)p[9]);
     DrawSync(0);
 }
-#if 0
-void sub_80029708(void* arg0, void* arg1)
+// Matched
+int sub_80029708(void* arg0, void* arg1)
 {
+    int* out = (int*)arg0;
+    int* in = (int*)arg1;
+    int* q;
+    out[1] = in[1] & 7;
+    q = in + 2;
+    if (in[1] & 8)
+    {
+        out[0] = 1;
+        out[2] = in[2] - 12;
+        *(RECT*)&out[3] = *(RECT*)&in[3];
+        out[5] = (int)&in[5];
+        q = (int*)((char*)q + in[2]);
+    }
+    else
+    {
+        out[0] = 0;
+        out[2] = 0;
+    }
+    out[6] = q[0] - 12;
+    *(RECT*)&out[7] = *(RECT*)&q[1];
+    out[9] = (int)&q[3];
+    return 1;
 }
-#endif
-INCLUDE_ASM(sub_80029708);
 // Matched
 void sub_800297C0(int* a, short* b)
 {

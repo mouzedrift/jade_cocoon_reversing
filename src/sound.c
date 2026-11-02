@@ -72,7 +72,25 @@ void sub_800306D8(void)
 {
     sub_80030EEC(&stru_80091CE0);
 }
-INCLUDE_ASM(sub_800306FC);
+extern void sub_80031408(SoundStruct* s, int idx);
+// Matched
+void sub_800306FC(int idx)
+{
+    SoundStruct** p = (SoundStruct**)dword_8008D4A4[0x24 / 4];
+    if (idx < 10)
+    {
+        sub_80031408(&stru_80091D40, idx);
+        return;
+    }
+    if (GetSoundFileId_80030D4C(p[1]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    {
+        sub_80031408(p[1], idx);
+    }
+    if (GetSoundFileId_80030D4C(p[2]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    {
+        sub_80031408(p[2], idx);
+    }
+}
 INCLUDE_ASM(sub_800307B4);
 // Matched
 void ApplyAudioOutputFormat_80030988(void)

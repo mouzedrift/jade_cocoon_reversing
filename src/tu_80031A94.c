@@ -50,6 +50,29 @@ int sub_80031B0C(unsigned char* p, int idx)
     }
     return r;
 }
+#if 0
+// Not matched (bit test becomes srav/andi instead of sllv/and; temporaries land in a0 instead of a1)
+unsigned char* sub_80031B30(unsigned char a)
+{
+    unsigned char* r = 0;
+    if (a >= 8)
+    {
+        r = (unsigned char*)sub_800A11A0((unsigned char)(a - 8));
+    }
+    else if (a >= 4)
+    {
+        if ((1 << a) & sub_800A248C())
+        {
+            r = (unsigned char*)sub_800A2BA0((unsigned char)(a - 4));
+        }
+    }
+    else if (a != 0)
+    {
+        r = (unsigned char*)sub_800107F8(3, (unsigned char)(a - 1));
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_80031B30);
 // Matched
 int sub_80031BDC(int a0)
