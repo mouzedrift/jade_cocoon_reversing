@@ -50,6 +50,34 @@ extern int dword_8008D4F0[];
 extern int dword_8008B4F8;
 extern char dword_800A398C[];
 extern int sub_800A1934(short* p);
+extern void sub_800376A8(void);
+extern void sub_80037748(void);
+extern void sub_800368F8(void);
+extern void nullsub_5(void);
+extern void sub_800A12B8(void);
+extern void CombatReq_8001E34C(void* p, void* q);
+
+typedef struct CombatReqCombat
+{
+    int field_0;
+    int field_4;
+    void* field_8;
+    short field_C;
+    short field_E;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
+    short field_20;
+    short field_22;
+    short field_24;
+    short field_26;
+    short field_28;
+    short field_2A;
+    int field_2C;
+    int field_30;
+    char pad_34[0x2C];
+} CombatReqCombat;
 extern void sub_800A05E0(int a, void* b, char* c);
 
 
@@ -128,7 +156,35 @@ void sub_800A0D1C(int i)
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0D64);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0E1C);
+// Matched
+void sub_800A0E1C(int i, int* src)
+{
+    CombatSlotCombat* s = &dword_800A3A08[i];
+    CombatReqCombat r;
+    r.field_0 = 0;
+    r.field_4 = 0;
+    r.field_8 = 0;
+    r.field_C = 0;
+    r.field_E = -1;
+    r.field_10 = -1;
+    r.field_18 = 0;
+    r.field_1C = 1;
+    r.field_20 = 0;
+    r.field_22 = 0;
+    r.field_24 = -1;
+    r.field_26 = -1;
+    r.field_28 = -1;
+    r.field_2A = -1;
+    r.field_2C = 0;
+    r.field_30 = 0;
+    *(int*)(s->field_3C + 0x70) = src[0];
+    *(int*)(s->field_3C + 0x74) = src[1];
+    *(int*)(s->field_3C + 0x78) = src[2];
+    r.field_8 = s->field_3C + 0x70;
+    r.field_C = 0x100;
+    r.field_26 = 2;
+    CombatReq_8001E34C(s->field_3C, &r);
+}
 
 // Matched
 void sub_800A0EE8(int i)
@@ -198,7 +254,17 @@ int sub_800A10F8(int i)
     return *(int*)(s->field_3C + 0x1C4);
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A111C);
+// Matched
+void sub_800A111C(int i, int* out)
+{
+    CombatSlotCombat* s = &dword_800A3A08[i];
+    out[0] = *(int*)(s->field_3C + 0x14C);
+    out[1] = (int)(s->field_3C + 0x38);
+    out[2] = *(int*)(s->field_3C + 0x1C4);
+    out[3] = *(int*)(s->field_3C + 0x1C8);
+    out[0xB] = *(int*)(s->field_3C + 0x144);
+    out[0xC] = (int)(s->field_3C + 0x2C);
+}
 
 // Matched
 int sub_800A11A0(int i)
@@ -221,7 +287,21 @@ int sub_800A11D8(int i)
     return (int)s->field_4;
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A11F4);
+// Matched
+void sub_800A11F4(void)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D4A0);
+    if (e)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        sub_800376A8();
+        sub_80037748();
+        e->cb_8 = (EventEntryFn)sub_800368F8;
+        e->cb_C = (EventEntryFn)nullsub_5;
+        e->flags = (e->flags | 4) & ~0x8000;
+        sub_800A12B8();
+    }
+}
 
 // Matched
 void sub_800A127C(void)
