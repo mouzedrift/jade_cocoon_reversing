@@ -649,6 +649,39 @@ int sub_800B9B4C(EvCtxEventfnc* c)
     return 1;
 }
 
+extern int sub_800AD73C(int a);
+#if 0
+// Not matched: the original places a shared 'return 0' block in front of the body and tests the condition differently
+int sub_800B9B98(EvCtxEventfnc* c)
+{
+    unsigned int f;
+    if (c->pc_8->a_4 == 0)
+    {
+        if (dword_800AEBD8 < 0 || dword_800AEBD8 == c->f10_10)
+        {
+            f = c->flags_0 | 8;
+            c->flags_0 = f;
+            c->fC8_C8 = c->pc_8->b_8;
+            if (!(f & 4))
+            {
+                return 0;
+            }
+            c->flags_0 = f & ~0xC;
+            c->fC8_C8 = -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        c->fEC_EC = sub_800AD73C(c->pc_8->b_8) == 0;
+    }
+    c->pc_8++;
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9B98);
 
 extern int sub_800AD68C(int a);
@@ -842,7 +875,34 @@ int sub_800BA2E8(EvCtxEventfnc* c)
     return sub_800BB990(c, &m, 1, 1);
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA338);
+int sub_800BA338(EvCtxEventfnc* c)
+{
+    EvInsEventfnc* ins = c->pc_8;
+    EvMsgEventfnc m;
+    switch (c->fB8_B8)
+    {
+    case 0:
+        m.m0_0 = ins->b_8;
+        m.m4_4 = 4;
+        m.mC_C = c->f24_24[c->pc_8->a_4];
+        if (sub_800BB990(c, &m, 1, 0))
+        {
+            c->fB8_B8++;
+        }
+    case 1:
+        if ((c->f18_18 & c->pc_8->b_8) == 0)
+        {
+            c->fB8_B8 = 0;
+            c->pc_8++;
+            return 1;
+        }
+        c->pc_8 = ins;
+        return 0;
+    default:
+        c->pc_8 = ins;
+        return 0;
+    }
+}
 
 int sub_800BA40C(EvCtxEventfnc* c)
 {
