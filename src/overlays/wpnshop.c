@@ -12,8 +12,11 @@ typedef struct WpnObj_wpnshop
     int f_C;
     short f_10;
     short f_12;
-    void* f_14;
-    char pad_18[0x10];
+    int f_14;
+    char pad_18[4];
+    short f_1C;
+    unsigned short f_1E;
+    char pad_20[8];
     char f_28[8];
     short f_30;
     short f_32;
@@ -25,7 +28,8 @@ typedef struct WpnObj_wpnshop
     int f_40;
     int f_44;
     short f_48;
-    char pad_4A[4];
+    char pad_4A[2];
+    short f_4C;
     short f_4E;
 } WpnObj_wpnshop;
 
@@ -84,8 +88,39 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+extern void sub_800BBFD4();
+extern short sub_800BE00C(WpnObj_wpnshop* o, short i);
+extern int sub_800BDDB0();
+extern int sub_800BDD2C();
+extern int sub_800AD2C8(int a, int b);
+extern int sub_800AD254(int a, int b);
+extern int sub_800AD288(int a, int b);
+extern int sub_800AD73C(int a);
+extern void sub_8002C06C(void* p, int a, short b);
+extern void sub_8002C414(void* p, int a, short b);
+extern unsigned short name_800BE868[];
+extern unsigned short name_800BE86C[];
+typedef struct WpnBox_wpnshop
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    unsigned short col_8;
+    char c_A;
+    char c_B;
+} WpnBox_wpnshop;
+typedef struct WpnSave_wpnshop
+{
+    char pad_0[0x2DC];
+    short f2DC;
+    char pad_2DE[6];
+    short f2E4;
+    char pad_2E6[2];
+    short f2E8;
+} WpnSave_wpnshop;
+#define WPNSAVE ((WpnSave_wpnshop*)&saveData_8008B570)
 extern void FreeActiveOverlay_8002C014(void);
-extern void sub_800AD9EC(void* a, int b);
+extern void sub_800AD9EC(int a, int b);
 extern void sub_800BBDD0();
 extern void sub_800BB664();
 extern void sub_800BB30C();
@@ -113,7 +148,28 @@ INCLUDE_OVERLAY_ASM(wpnshop, dword_800B66C0);
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BAE2C);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB088);
+// Matched
+int sub_800BB088(WpnObj_wpnshop* o)
+{
+    int r = 1;
+    if (sub_800AD73C(4))
+    {
+        r = 2;
+    }
+    if (sub_800AD73C(6))
+    {
+        r = 4;
+    }
+    if (o->f_4C == 3)
+    {
+        r = 8;
+    }
+    if (WPNSAVE->f2DC == 0 && WPNSAVE->f2E4 == 0 && WPNSAVE->f2E8 == 4 && o->f_4C == 3)
+    {
+        r = 0x10;
+    }
+    return r;
+}
 
 // Matched
 void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
@@ -256,6 +312,30 @@ void sub_800BBE54(WpnObj_wpnshop* o)
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBED0);
 
+#if 0
+// register allocation: original keeps &box in s0, 0x4d in s1, 0x77 in s2
+void sub_800BBFD4(int a)
+{
+    WpnRect_wpnshop r;
+    WpnBox_wpnshop b;
+    r.w = 0x45;
+    r.h = 0x10;
+    b.c_B = 1;
+    b.x_0 = 0x7B;
+    b.col_8 = uiColor_8008B590;
+    r.x = 0x77;
+    r.y = 0x4D;
+    b.c_A = 0;
+    b.y_2 = 0x50;
+    sub_8002C06C(&b, 0x93, 0xE);
+    b.x_0 = 0xB8;
+    b.y_2 = 0x52;
+    sub_8002C414(&b, a, 0xE);
+    b.x_0 = 0x77;
+    b.y_2 = 0x4D;
+    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+}
+#endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBFD4);
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC0AC);
@@ -293,7 +373,20 @@ void sub_800BC268(WpnObj_wpnshop* o)
     sub_8002A5A4(&cfg);
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC2E4);
+// Matched
+void sub_800BC2E4(WpnObj_wpnshop* o)
+{
+    int r = 0;
+    if (o->f_12 == 1)
+    {
+        r = sub_800AD2C8(sub_800BE00C(o, 5), 0);
+    }
+    else if (o->f_12 == 0)
+    {
+        r = sub_800AD254(sub_800BDDB0(sub_800BE00C(o, 4), o->f_1E), 0);
+    }
+    sub_800BBFD4(r);
+}
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC374);
 
@@ -305,7 +398,20 @@ void sub_800BCC18(WpnObj_wpnshop* o)
     sub_800BC0AC(o, o->f_12 == 1 ? 0x12 : 0x11);
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCC4C);
+// Matched
+void sub_800BCC4C(WpnObj_wpnshop* o)
+{
+    int r = 0;
+    if (o->f_12 == 1)
+    {
+        r = sub_800AD2C8(sub_800BE00C(o, 0xB), o->f_10 + 1);
+    }
+    else if (o->f_12 == 0)
+    {
+        r = sub_800AD254(sub_800BDD2C(sub_800BE00C(o, 0xA), o->f_10, o->f_1E), o->f_10 + 1);
+    }
+    sub_800BBFD4(r);
+}
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCCE8);
 
@@ -332,11 +438,77 @@ void sub_800BD174(WpnObj_wpnshop* o)
     sub_800BC0AC(o, o->f_12 == 1 ? 0xE : 0xD);
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD1A8);
+// Matched
+void sub_800BD1A8(WpnObj_wpnshop* o)
+{
+    if (o->f_40)
+    {
+        if (o->f_30 != 2)
+        {
+            if (o->f_1C == 0)
+            {
+                o->f_2 = name_800BE868[o->f_30];
+            }
+            else if (o->f_1C == 1)
+            {
+                o->f_2 = name_800BE86C[o->f_30];
+            }
+            PlaySfx_80031494(0x7E);
+            o->f_12 = o->f_30;
+        }
+        else
+        {
+            o->f_4 |= 2;
+            PlaySfx_80031494(0x7D);
+        }
+    }
+    else if (o->f_44)
+    {
+        if (o->f_30 != 2)
+        {
+            o->f_30 = 2;
+            PlaySfx_80031494(0x7F);
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD278);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD378);
+// Matched
+void sub_800BD378(WpnObj_wpnshop* o)
+{
+    int s = o->f_30 + o->f_32;
+    int r;
+    sub_800AD288(s, 0);
+    r = sub_800AD2C8(s, 0);
+    if (o->f_40)
+    {
+        if (r)
+        {
+            o->f_14 = sub_800AD288(s, 0);
+            if (o->f_12 == 0)
+            {
+                o->f_2 = 0xA;
+            }
+            else if (o->f_12 == 1)
+            {
+                o->f_2 = 0xB;
+            }
+            PlaySfx_80031494(0x7E);
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+        }
+    }
+    else if (o->f_44)
+    {
+        o->f_2 = 0;
+        o->f_36 = 0;
+        o->f_38 = 0;
+        PlaySfx_80031494(0x7D);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD444);
 
@@ -407,7 +579,36 @@ void sub_800BD928(WpnObj_wpnshop* o)
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD9A8);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDAB4);
+// Matched
+void sub_800BDAB4(WpnObj_wpnshop* o)
+{
+    int s = o->f_30 + o->f_32;
+    if (o->f_40)
+    {
+        if (sub_800AD2C8(s, o->f_10 + 1))
+        {
+            PlaySfx_80031494(0x7E);
+            o->f_14 = sub_800AD288(s, o->f_10 + 1);
+            if (o->f_12 == 0)
+            {
+                o->f_2 = 8;
+            }
+            else if (o->f_12 == 1)
+            {
+                o->f_2 = 9;
+            }
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+        }
+    }
+    else if (o->f_44)
+    {
+        PlaySfx_80031494(0x7D);
+        o->f_2 = 7;
+    }
+}
 
 // Matched
 int sub_800BDB80(int a, int b)
@@ -525,7 +726,7 @@ INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDE38);
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDF68);
 
 // Matched
-int sub_800BE00C(WpnObj_wpnshop* o, short i)
+short sub_800BE00C(WpnObj_wpnshop* o, short i)
 {
     if (i == o->f_34)
     {
@@ -535,7 +736,7 @@ int sub_800BE00C(WpnObj_wpnshop* o, short i)
 }
 
 // Matched
-int sub_800BE058(WpnObj_wpnshop* o, short i)
+short sub_800BE058(WpnObj_wpnshop* o, short i)
 {
     if (i == o->f_34)
     {
