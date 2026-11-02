@@ -1092,7 +1092,24 @@ EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int idx, int mode)
     return &c->vec3C_3C[idx];
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBC80);
+typedef struct EvRotEventfnc
+{
+    short pad_0;
+    short ang_2;
+} EvRotEventfnc;
+extern short name_80084540[];
+EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
+{
+    if (mode == 1)
+    {
+        EvVecEventfnc* v = sub_800BBBA0(idx);
+        EvRotEventfnc* r = (EvRotEventfnc*)sub_800BBBD0(idx);
+        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->ang_2 & 0xFFF] * 100 / 4096;
+        c->vec78_78[idx].y_4 = r->ang_2;
+        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->ang_2 + 0x400) & 0xFFF] * 100 / 4096;
+    }
+    return &c->vec78_78[idx];
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBDA0);
 
