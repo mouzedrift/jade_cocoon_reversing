@@ -37,7 +37,10 @@ typedef struct
     int fC_LOAD;
     int f10_LOAD;
     int f14_LOAD;
-    int pad18_LOAD[11];
+    int f18_LOAD;
+    int f1C_LOAD;
+    int f20_LOAD;
+    int pad24_LOAD[8];
     int f44_LOAD;
     int f48_LOAD;
     int f4C_LOAD;
@@ -119,6 +122,24 @@ extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 extern char byte_800B73A0[];
 extern char byte_800B7544[];
+typedef struct
+{
+    unsigned char pad0_LOAD[0x1C];
+    unsigned char f1C_LOAD;
+    unsigned char pad1D_LOAD[0xF];
+    unsigned char f2C_LOAD;
+} Opts_LOAD;
+extern Opts_LOAD dword_800BDF4C;
+typedef struct
+{
+    char c_LOAD[6];
+} Bytes6_LOAD;
+extern Bytes6_LOAD dword_800B7624;
+extern char byte_800B74C4[];
+extern char byte_800B74E8[];
+extern char byte_800B7514[];
+extern void sub_800BBF88(void);
+extern void sub_800BC17C(void);
 extern int printf(const char* fmt, ...);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
@@ -251,7 +272,29 @@ INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B9360);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9470);
+void sub_800B9470(LoadTask_LOAD* t)
+{
+    int r = sub_800BAE68(dword_800BDF4C.f1C_LOAD);
+    if (r < -1 || (r > 0 && r != 4))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D288(1, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.f2C_LOAD == 0)
+        {
+            t->f28_LOAD = 4;
+        }
+        if (dword_800BDF4C.f2C_LOAD == 1)
+        {
+            t->f24_LOAD = 1;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B952C);
 
@@ -497,10 +540,82 @@ void sub_800BBE8C(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BBE8C);
 
+#if 0
+// Not matched: the original addresses the state through a register holding &state.f14 (negative offsets); psyq 4.4 uses &state
+int sub_800BBED0(int a, int b, int c)
+{
+    char* msg;
+    if (dword_800BE1F4.f14_LOAD < 0)
+    {
+        msg = byte_800B74C4;
+    }
+    else if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        msg = byte_800B73A0;
+    }
+    else if (c & 0x7F)
+    {
+        msg = byte_800B74E8;
+    }
+    else if (b & 0x7F)
+    {
+        msg = byte_800B7514;
+    }
+    else
+    {
+        dword_800BE1F4.f0_LOAD = 5;
+        dword_800BE1F4.f4_LOAD = 0;
+        dword_800BE1F4.f8_LOAD = 0;
+        dword_800BE1F4.f18_LOAD = b;
+        dword_800BE1F4.f20_LOAD = a;
+        dword_800BE1F4.f1C_LOAD = c;
+        sub_800BD18C(sub_800BBF88, b);
+        return 1;
+    }
+    printf(msg);
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BBED0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBF88);
 
+#if 0
+// Not matched: same as sub_800BBED0
+int sub_800BC0C4(int a, int b, int c)
+{
+    char* msg;
+    if (dword_800BE1F4.f14_LOAD < 0)
+    {
+        msg = byte_800B74C4;
+    }
+    else if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        msg = byte_800B73A0;
+    }
+    else if (c & 0x7F)
+    {
+        msg = byte_800B74E8;
+    }
+    else if (b & 0x7F)
+    {
+        msg = byte_800B7514;
+    }
+    else
+    {
+        dword_800BE1F4.f0_LOAD = 6;
+        dword_800BE1F4.f4_LOAD = 0;
+        dword_800BE1F4.f8_LOAD = 0;
+        dword_800BE1F4.f18_LOAD = b;
+        dword_800BE1F4.f20_LOAD = a;
+        dword_800BE1F4.f1C_LOAD = c;
+        sub_800BD18C(sub_800BC17C, b);
+        return 1;
+    }
+    printf(msg);
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BC0C4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC17C);
@@ -615,6 +730,15 @@ void sub_800BD06C(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD06C);
 
+#if 0
+// Not matched: the original moves both arguments to $a2/$a3 before the 6 byte block copy
+void sub_800BD118(int n, Bytes6_LOAD* out)
+{
+    *out = dword_800B7624;
+    out->c_LOAD[2] = (n / 16) + 0x30;
+    out->c_LOAD[3] = (n % 16) + 0x30;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD118);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD174);
