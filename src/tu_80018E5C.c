@@ -124,27 +124,31 @@ INCLUDE_DATA(dword_80073008);
 INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
 
-#if 0
-// Not matched
+// Matched
 int sub_80018E5C(char* a0, unsigned int a1)
 {
     struct_4s* t = (struct_4s*)(a0 + 0x108);
     int v = 0;
-    if (a1 >= 10)
+    switch (a1)
     {
-        if (a1 == 10)
-        {
-            v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
-        }
-    }
-    else
-    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
         v = t[a1].field_0;
+        break;
+    case 10:
+        v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
+        break;
     }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_80018E5C);
 INCLUDE_ASM(sub_80018EBC);
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);

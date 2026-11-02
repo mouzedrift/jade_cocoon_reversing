@@ -205,14 +205,15 @@ int sub_80014444(int a0)
 #endif
 INCLUDE_ASM(sub_80014444);
 #if 0
-// Not matched
+// Not matched: (unsigned char)(a0 - 4) is CSE'd into one register; the original masks twice and keeps a0 - 4
 int sub_8001449C(int a0)
 {
     int r = 0;
     int v = a0 - 4;
     if ((unsigned char)v < 3)
     {
-        if ((1 << a0) & sub_800A248C())
+        int m = sub_800A248C() & (1 << a0);
+        if (m != 0)
         {
             r = sub_800A2B20((unsigned char)v);
         }
