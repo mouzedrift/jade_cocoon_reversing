@@ -1418,7 +1418,28 @@ void sub_800A3FC0(int unused, GameS3A8C_1* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A4124);
+void sub_800A4124(int unused, GameS3A8C_1* p)
+{
+    GameS3A8C_1* q = p;
+    if (sub_800A4278(p) == 0)
+    {
+        switch (p->fC)
+        {
+        case -1:
+            sub_800A433C(p, 2, 1, 0, p->fC, 1, 2);
+        case 2:
+            sub_8001D6EC(q->f8, 1);
+            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0x61A7F)
+                sub_800A433C(q, 0xf, 2, 0, -1, 1, 2);
+            break;
+        case 0xf:
+            sub_800A45F8(q);
+            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
+                sub_800A433C(q, 2, 1, 0, -1, 1, 2);
+            break;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A4278);
 
