@@ -53,6 +53,16 @@ extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
+typedef struct
+{
+    char pad0_LOAD[0x24];
+    int f24_LOAD;
+    int f28_LOAD;
+    char pad2C_LOAD[0x28];
+    unsigned f54_LOAD;
+} LoadTask_LOAD;
+extern int sub_8003D288(int a, int b);
+extern int sub_8003D3C0(int a, int b);
 extern void sub_800BD18C(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
@@ -121,7 +131,29 @@ INCLUDE_OVERLAY_ASM(load, sub_800B8AE4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9220);
+void sub_800B9220(LoadTask_LOAD* t)
+{
+    if (sub_8003D288(1, (t->f54_LOAD >> 6) & 1))
+    {
+        switch (byte_800BDF58)
+        {
+        case 0:
+        case 1:
+            t->f24_LOAD = 1;
+            break;
+        case 2:
+            t->f28_LOAD = 5;
+            break;
+        case 3:
+            t->f24_LOAD = 5;
+            break;
+        }
+    }
+    else if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f28_LOAD = 5;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
