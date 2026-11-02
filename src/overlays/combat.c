@@ -11,6 +11,7 @@ typedef struct CombatSlotCombat
     char* field_3C;
 } CombatSlotCombat;
 
+typedef struct CombatBlkC_combat { char pad[0xF8]; } CombatBlkC_combat;
 typedef struct CombatBlkA_combat { char pad[744]; } CombatBlkA_combat;
 typedef struct CombatBlkB_combat { char pad[3720]; } CombatBlkB_combat;
 extern CombatSlotCombat dword_800A3A08[];
@@ -21,7 +22,7 @@ extern void sub_80018EBC(void* p, int v);
 extern void sub_8001E1DC(void* p);
 extern void sub_800376A0(void* a, void* b);
 extern int sub_800A10C0(int i);
-extern void sub_800A1A3C(void* p, int n);
+extern int sub_800A1A3C(CombatBlkC_combat* p, int n);
 
 typedef struct CombatTaskCombat
 {
@@ -43,6 +44,13 @@ extern void sub_800A0B70(int i);
 extern void sub_800A14F0();
 extern void sub_800A1554();
 extern void sub_800A15B4();
+extern char* dword_8007DC78;
+extern int sub_80010850(void* p);
+extern int dword_8008D4F0[];
+extern int dword_8008B4F8;
+extern char dword_800A398C[];
+extern int sub_800A1934(short* p);
+extern void sub_800A05E0(int a, void* b, char* c);
 
 
 INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
@@ -79,7 +87,15 @@ void sub_800A0A6C(void)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0ACC);
+// Matched
+void sub_800A0ACC(int i, int x)
+{
+    CombatSlotCombat* s = &dword_800A3A08[i];
+    sub_800A05E0(x, s->pad_8, dword_8007DC78 + (i << 6));
+    s->field_4 = (char*)x;
+    s->field_0 = sub_80010850(s->pad_8);
+    s->field_3C = 0;
+}
 
 // Matched
 void sub_800A0B3C(int i)
@@ -215,9 +231,44 @@ void sub_800A127C(void)
     sub_80043B40((int*)dword_8008D4A0);
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A12B8);
+// Matched
+void sub_800A12B8(void)
+{
+    char* p = (char*)dword_8008D4F0;
+    char* q;
+    *(short*)(p + 0x2E) = 0;
+    *(int*)(p + 0x20) = 0;
+    *(int*)(p + 0x24) = 0;
+    *(int*)(p + 0x28) = 0;
+    *(int*)(p + 0x14) = 0;
+    *(int*)(p + 0x18) = 0;
+    *(int*)(p + 0x1C) = 0;
+    *(short*)(p + 0x34) = 0;
+    *(short*)(p + 0x36) = 0;
+    *(short*)(p + 0x38) = 0;
+    *(short*)(p + 0x3C) = 0;
+    *(short*)(p + 0x3E) = 0;
+    *(short*)(p + 0x40) = 0;
+    dword_8008B4F8 = 0x1000;
+    q = (char*)&saveData_8008B570;
+    *(int*)(q + 0x7A8) = 0;
+    *(int*)(q + 0x7AC) = 0;
+    *(int*)(q + 0x7B0) = 0;
+    *(short*)(q + 0x7B4) = 0;
+    *(short*)(q + 0x7B6) = 0;
+    *(short*)(q + 0x7B8) = 0;
+}
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A1324);
+// Matched
+int sub_800A1324(void)
+{
+    unknownFlags_8008D678 |= 0x2000000;
+    unknownFlags_8008D678 |= 0x4000000;
+    DrawIntroMovie_8001AF64(dword_800A398C);
+    unknownFlags_8008D678 &= ~0x2000000;
+    unknownFlags_8008D678 &= ~0x4000000;
+    return 6;
+}
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A13A0);
 
@@ -288,18 +339,31 @@ void sub_800A197C(short* p)
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A1988);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A1A3C);
+// Matched
+int sub_800A1A3C(CombatBlkC_combat* p, int n)
+{
+    int i;
+    int count = 0;
+    for (i = 0; i < n; i++)
+    {
+        if (!sub_800A1934((short*)&p[i]))
+        {
+            count++;
+        }
+    }
+    return count;
+}
 
 // Matched
 void sub_800A1AAC(int i)
 {
-    sub_800A1A3C(&dword_800A3AA0[i], 3);
+    sub_800A1A3C((CombatBlkC_combat*)&dword_800A3AA0[i], 3);
 }
 
 // Matched
 void sub_800A1AEC(int i)
 {
-    sub_800A1A3C(&dword_800A1BC8[i], 0xF);
+    sub_800A1A3C((CombatBlkC_combat*)&dword_800A1BC8[i], 0xF);
 }
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A1B2C);
