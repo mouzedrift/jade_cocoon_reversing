@@ -156,7 +156,17 @@ void sub_80033080(unsigned short* a, int i, int j)
 }
 #endif
 INCLUDE_ASM(sub_80033080);
-INCLUDE_ASM(sub_80033114);
+// Matched
+void sub_80033114(unsigned short* pos, int idx, void* ot, unsigned char* rgb)
+{
+    ((unsigned char*)&dword_8008D434[idx])[4] = rgb[0];
+    ((unsigned char*)&dword_8008D434[idx])[5] = rgb[1];
+    ((unsigned char*)&dword_8008D434[idx])[6] = rgb[2];
+    ((unsigned short*)&dword_8008D434[idx])[4] = pos[0];
+    ((unsigned short*)&dword_8008D434[idx])[5] = pos[1];
+    sub_80040298(ot, &dword_8008D434[idx], 5);
+    sub_80040298(ot, &dword_8008D440[idx], 2);
+}
 // Matched
 void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
 {
