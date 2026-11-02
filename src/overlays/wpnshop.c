@@ -84,7 +84,10 @@ extern void sub_8002A310(void* p, int a);
 extern void sub_800429F8(int a0, int a1);
 extern void sub_80042B38(int a0, int a1);
 extern unsigned short name_800BE870[];
-extern char name_800BE134[];
+extern int name_800BE134[];
+extern int* name_800BE3D8[];
+extern int* name_800BE434[];
+extern int* name_800BE37C[];
 extern char name_800BE7C4[];
 extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
@@ -605,6 +608,28 @@ void sub_800BCC4C(WpnObj_wpnshop* o)
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCCE8);
 
+#if 0
+// register allocation: original copies the ctx pointer to a1 (move a1,a0) and keeps the table in a0
+void sub_800BCED4(WpnObj_wpnshop* o)
+{
+    int** tbl;
+    switch (o->f_4C)
+    {
+    case 2:
+        tbl = name_800BE3D8;
+        break;
+    case 3:
+        tbl = name_800BE434;
+        break;
+    default:
+        tbl = name_800BE37C;
+        break;
+    }
+    name_800BE134[1] = tbl[o->f_3A][0];
+    name_800BE134[3] = tbl[o->f_3A][1];
+    name_800BE134[5] = tbl[o->f_3A][2];
+}
+#endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCED4);
 
 // Matched
@@ -848,7 +873,70 @@ int sub_800BD71C(int a, int b)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD760);
+// Matched
+void sub_800BD760(WpnObj_wpnshop* o)
+{
+    int prev = o->f_18;
+    int v = 0;
+    switch (o->f_0)
+    {
+    case 8:
+        v = sub_800BDE38((short)o->f_14, o->f_10);
+        break;
+    case 9:
+        v = sub_800AD2C8(o->f_36 + o->f_38, o->f_10 + 1);
+        break;
+    case 10:
+        v = sub_800BDF68((short)o->f_14);
+        break;
+    case 11:
+        v = sub_800AD2C8(o->f_36 + o->f_38, 0);
+        break;
+    }
+    o->f_18 = sub_800BE084(o->f_18, v);
+    if (o->f_18 != prev)
+    {
+        PlaySfx_80031494(0x7F);
+    }
+    if (o->f_40)
+    {
+        PlaySfx_80031494(0x7E);
+        switch (o->f_0)
+        {
+        case 8:
+            o->f_2 = 0xC;
+            break;
+        case 9:
+            o->f_2 = 0xD;
+            break;
+        case 10:
+            o->f_2 = 0xE;
+            break;
+        case 11:
+            o->f_2 = 0xF;
+            break;
+        }
+    }
+    else if (o->f_44)
+    {
+        PlaySfx_80031494(0x7D);
+        switch (o->f_0)
+        {
+        case 8:
+            o->f_2 = 4;
+            break;
+        case 9:
+            o->f_2 = 5;
+            break;
+        case 10:
+            o->f_2 = 2;
+            break;
+        case 11:
+            o->f_2 = 3;
+            break;
+        }
+    }
+}
 
 // Matched
 void sub_800BD928(WpnObj_wpnshop* o)
