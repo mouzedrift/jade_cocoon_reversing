@@ -204,6 +204,22 @@ typedef struct ShopSaveShop
     ShopAuxShop aux[12];
 } ShopSaveShop;
 extern ShopSaveShop name_8008B570;
+extern int fn_800272D0();
+extern void fn_800A7BF0(int a);
+extern void fn_800A5F9C(int a);
+extern void fn_800B6C6C(void* p, int a);
+extern void fn_800B6CC8();
+extern void fn_80027478(int a, int b);
+extern void fn_800A6D30(int a);
+extern int name_8008B540;
+extern void fn_8002C014();
+extern void fn_8001ABEC(int a);
+extern int fn_800AD288(int a, int b);
+extern void fn_800AD1E0(int a, int b, int c);
+extern void fn_800AD3F0(int a);
+extern void sub_800B9B44(short* p);
+extern void sub_800BE128();
+extern void sub_800BE07C();
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -1305,6 +1321,33 @@ void sub_800BD854(ShopUnit3Shop* u)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
 
+#if 0 // near miss: t/u register swap (10 words)
+void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
+{
+    extern void sub_800BE128();
+    extern void sub_800BE07C();
+    if (fn_800272D0() == 0)
+    {
+        fn_800A7BF0(-1);
+        if (u->field_0 == 3)
+        {
+            fn_800A5F9C(1);
+            t->next_8 = sub_800BE128;
+            fn_800B6C6C((char*)u->field_4C + 0x94, 1);
+        }
+        else if (u->field_0 == 6)
+        {
+            fn_800A5F9C(2);
+            t->next_8 = sub_800BE07C;
+            fn_800B6CC8();
+        }
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        fn_80027478(0x40, 0);
+        fn_800A6D30(1);
+        name_8008B540 = 1;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BDD74);
 
 extern void sub_800BDEA8();
@@ -1320,7 +1363,67 @@ void sub_800BDE44(ShopTaskShop* t, int a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BDEA8);
+void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
+{
+    ShopTaskShop* tk;
+    char* sv;
+    int* p;
+    sub_8002BE10();
+    sub_800BC380(u);
+    if (sub_8001AB94())
+    {
+        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        if (*(short*)((char*)u + 0x94) == 1)
+        {
+            tk->next_8 = sub_800BE128;
+        }
+        else if (*(short*)((char*)u + 0x94) == 2)
+        {
+            tk->next_8 = sub_800BE07C;
+        }
+        tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
+        fn_8002C014();
+        if (*(short*)((char*)u + 0x94) == 1)
+        {
+            sv = (char*)&saveData_8008B570;
+            if (!((*(unsigned int*)(sv + 0x1C) >> 5) & 1))
+            {
+                sub_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+                sub_800B9B44((short*)u->field_50);
+                if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
+                {
+                    p = (int*)(sv + 0x814);
+                    p[1] |= 8;
+                }
+                else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
+                {
+                    p = (int*)(sv + 0x814);
+                    p[1] |= 4;
+                }
+                if (u->field_24 & 0x200)
+                {
+                    fn_800AD1E0(fn_800AD288(u->field_6E + u->field_76, 4), 1, 4);
+                    fn_800AD3F0(4);
+                    u->field_24 &= ~0x200;
+                }
+                *(int*)((char*)u + 0x84) = 0;
+                *(int*)((char*)u + 0x88) = 0;
+                *(int*)((char*)u + 0x8C) = 0;
+                u->field_24 |= 1;
+            }
+            fn_800B6C6C((char*)u->field_4C + 0x94, 1);
+            sub_8001C19C(0, 0x20);
+        }
+        else if (*(short*)((char*)u + 0x94) == 2)
+        {
+            fn_800B6CC8();
+            sub_8001C19C(0, 0x20);
+        }
+        u->field_24 &= ~0x800;
+        fn_8001ABEC(0);
+        *(short*)((char*)u + 0x94) = 0;
+    }
+}
 
 extern void sub_800BE210();
 void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
