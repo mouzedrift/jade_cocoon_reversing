@@ -308,7 +308,39 @@ void sub_800A54CC(CombBtlTask* t)
     t->next_8 = sub_800A5544;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5544);
+extern int sub_8001AB94();
+extern void sub_800A73E4();
+extern void sub_800A7478();
+extern void sub_800A7560();
+extern void sub_800A0A6C();
+extern void sub_80066E38();
+extern void sub_800A16FC();
+
+void sub_800A5544(CombBtlTask* t)
+{
+    int i;
+    if (sub_8001AB94() == 1)
+    {
+        sub_800A73E4();
+        sub_800A7478();
+        for (i = 0; i < 2; i++)
+        {
+            if (dword_800A4078[i] >= 0)
+            {
+                if (sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]) == 0)
+                {
+                    sub_800A7560(i);
+                }
+            }
+        }
+        sub_800A0A6C();
+        sub_80030664();
+        sub_80066E38(0);
+        sub_800300E0(0x8E, 1);
+        sub_80039FC0();
+        t->next_8 = sub_800A16FC;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5638);
 
