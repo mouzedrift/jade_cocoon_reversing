@@ -58,7 +58,8 @@ typedef struct ShopUnit3Shop
     short field_0;
     short field_2;
     short field_4;
-    char pad_6[0x16];
+    short field_6;
+    char pad_8[0x14];
     int field_1C;
     int field_20;
     int field_24;
@@ -94,7 +95,8 @@ typedef struct ShopUnit3Shop
     short field_7E;
     char pad_80[4];
     int field_84;
-    char pad_88[0xE];
+    int field_88;
+    char pad_8C[0xA];
     short field_96;
 } ShopUnit3Shop;
 
@@ -1441,8 +1443,69 @@ void sub_800BCEDC(ShopUnit3Shop* u)
     sub_8002A5A4(&q);
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BCF74);
-INCLUDE_OVERLAY_ASM(shop, jpt_800B9624);
+int sub_800BCF74(ShopUnit3Shop* u)
+{
+    int s;
+    if (u->field_0 == 0)
+    {
+        s = u->field_30;
+        if (s == 0)
+        {
+            if (u->field_4 + u->field_6 < 2)
+            {
+                return 1;
+            }
+        }
+        else if (s >= 0 && s < 4)
+        {
+            if (u->field_4 + u->field_6 == 0)
+            {
+                return 2;
+            }
+        }
+        return 0;
+    }
+    switch (u->field_0)
+    {
+    case 5:
+        if (!u->field_84 && !u->field_88)
+        {
+            return 2;
+        }
+        return 0;
+    case 1:
+    case 8:
+        if (*(short*)u->field_4C == 4)
+        {
+            return 2;
+        }
+        return 0;
+    case 2:
+        if (*(short*)u->field_50 == 4)
+        {
+            return 2;
+        }
+        if (u->field_50 == u->field_4C)
+        {
+            return 3;
+        }
+        return 0;
+    case 4:
+        if (u->field_4 + u->field_6 < 2)
+        {
+            return 1;
+        }
+        return 0;
+    case 14:
+        if (sub_800AD288(u->field_6E + u->field_76, 4) == 0xFF)
+        {
+            return 4;
+        }
+        u->field_24 |= 0x200;
+        return 0;
+    }
+    return 0;
+}
 INCLUDE_OVERLAY_ASM(shop, dword_800B965C);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD0D4);
