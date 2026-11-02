@@ -33,6 +33,24 @@ INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1320);
 
+#if 0 // near miss: store scheduling
+extern int name_80010A10(int);
+extern int name_80010A44(int);
+extern int name_800A2784;
+extern void sub_800A1AFC(int* a);
+void sub_800A1354(int* a)
+{
+    if (name_80010A10(0))
+    {
+        a[1] = name_80010A44(0);
+        sub_800A1AFC(a);
+        a[0x188 / 4] = -1;
+        a[0x198 / 4] = 0;
+        a[0x19C / 4] = name_800A2784;
+        a[0] = 3;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A13B8);
