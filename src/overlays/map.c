@@ -10,6 +10,12 @@ typedef struct MapTask
     void (*next_8)();
 } MapTask;
 
+typedef struct MapElem
+{
+    char pad_0[0x18];
+    int f18;
+} MapElem;
+
 typedef struct MapRow
 {
     int f0;
@@ -17,7 +23,7 @@ typedef struct MapRow
     int f8;
     int fc;
     int f10;
-    int f14;
+    MapElem* f14;
 } MapRow;
 
 typedef struct MapPos
@@ -39,6 +45,30 @@ extern short word_800B8C98[];
 extern int sub_800AD0D4(int);
 extern int sub_800ADC1C(MapQuery*);
 extern int sub_800B8290(MapPos*);
+typedef struct MapSaveView
+{
+    char pad_0[0x2E4];
+    short f2E4;
+    short pad_2E6;
+    short f2E8;
+    short pad_2EA;
+    short f2EC;
+    short f2EE;
+} MapSaveView;
+
+extern int sub_8003DA54(void*);
+extern void sub_800A8DEC();
+extern void sub_800A6D30(int);
+extern void sub_800AD16C(int, int);
+extern int dword_80091C94;
+typedef struct MapRec12
+{
+    int a;
+    int b;
+    int c;
+} MapRec12;
+
+extern MapRec12 dword_800AEBFC[];
 extern int dword_800B9430;
 extern int dword_800B9314;
 extern int dword_800B9318;
@@ -65,6 +95,7 @@ extern void sub_800B6FAC(MapTask*);
 extern void sub_800B7044();
 extern void sub_800B7980();
 extern void sub_800B7A90();
+extern void sub_800B7A38();
 extern void sub_800B860C();
 extern void sub_800B8B5C();
 
@@ -193,6 +224,20 @@ void sub_800B7948(MapTask* t)
     t->next_8 = sub_800B7980;
 }
 
+#if 0
+// Not matched: register allocation of the table base (v0/v1 swapped)
+void sub_800B7980(MapTask* t)
+{
+    MapPos q;
+    MapElem* e;
+    short* w = (short*)word_800AEBF8;
+    int r = sub_8003DA54(&dword_800AEBFC[w[0]]);
+    sub_800B8128((short)r, w[0], &q);
+    dword_800B9434 = 0;
+    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f14[q.b].f18);
+    t->next_8 = sub_800B7A38;
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B7980);
 
 // Matched
@@ -247,6 +292,29 @@ void sub_800B8128(short a, short b, MapPos* out)
     }
 }
 
+#if 0
+// Not matched: s0/s1 swapped for i and cnt
+short sub_800B81D0(MapPos* p)
+{
+    int i;
+    int cnt = 0;
+    MapPos q;
+    q.a = p->a;
+    for (i = 0; i < word_800B8C98[p->a]; i++)
+    {
+        q.b = i;
+        if (sub_800B8290(&q))
+        {
+            cnt++;
+            if (q.b == p->b)
+            {
+                break;
+            }
+        }
+    }
+    return cnt;
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B81D0);
 
 // Matched
@@ -275,6 +343,39 @@ int sub_800B8290(MapPos* p)
     return r != -1;
 }
 
+#if 0
+// Not matched: block layout (the original tests 0xFE/0xFF first and has p in a2)
+void sub_800B8338(MapPos* p)
+{
+    unsigned char c = dword_800B9348[p->a][p->b];
+    MapSaveView* v;
+    if (c >= 0xF0)
+    {
+        if (c != 0xFE && c != 0xFF)
+        {
+            sub_800AD16C(4, c - 0xEF);
+        }
+        v = (MapSaveView*)&saveData_8008B570;
+        v->f2E4 = 4;
+        v->f2E8 = 0;
+        v->f2EC = 0;
+        v->f2EE = -1;
+    }
+    else
+    {
+        v = (MapSaveView*)&saveData_8008B570;
+        v->f2E4 = dword_800B9360[p->a];
+        v->f2E8 = dword_800B9348[p->a][p->b];
+        v->f2EC = 0;
+        v->f2EE = -1;
+    }
+    sub_800A8DEC();
+    sub_8001C19C(0, 0x20);
+    sub_800A6D30(1);
+    dword_80091C94 = 1;
+    dword_8008B540 = 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
 INCLUDE_OVERLAY_ASM(map, sub_800B8448);
