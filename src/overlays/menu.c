@@ -648,6 +648,57 @@ void sub_800BEC8C(int unused, int a, short b)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
+typedef struct MenuLoc
+{
+    short a;
+    short b;
+    short c;
+    short d;
+    int e;
+    short f;
+    short pad_1E;
+    int g;
+} MenuLoc;
+extern void sub_8002F8E4();
+// near miss: saved register assignment differs
+#if 0
+void sub_800BEFAC(MenuCtx* a, short b)
+{
+    MenuLoc loc;
+    int v = sub_800C0990(a, 4);
+    int j = 0;
+    if (a->f8 - 1 > 0)
+    {
+        do
+        {
+            MenuRc* r18 = name_80014390((j + 1) & 0xFF);
+            int r16;
+            int r17;
+            if ((*(int*)a & 0xFFFF0002) == 2)
+            {
+                r17 = a->f60;
+                r16 = frameCount_8008D3FC;
+            }
+            else
+            {
+                r17 = -1;
+                r16 = 0;
+            }
+            sub_80033308(&pOT_8008D454[b]);
+            loc.a = v;
+            loc.b = (unsigned short)a->f8 - 1;
+            loc.c = r17;
+            loc.d = b;
+            loc.e = r16;
+            loc.f = j;
+            loc.g = 1;
+            sub_8002F8E4(r18, &loc);
+            sub_80033308(&pOT_8008D454[b]);
+            j++;
+        } while ((short)j < a->f8 - 1);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BEFAC);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF0F4);
