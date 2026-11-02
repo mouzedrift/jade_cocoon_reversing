@@ -3,6 +3,18 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern EventNode* dword_8008D624;
+extern char dword_800C9D82;
+extern char dword_800C9D83;
+extern char dword_800C9D56;
+extern int dword_800C9C58;
+extern int sub_800A5354();
+extern int sub_800BAAD8();
+extern void sub_800A1F80();
+extern void sub_800A8D0C();
+extern void sub_800A096C();
+extern void sub_800BAC4C();
+
 extern char dword_800C912C[];
 extern int sub_800A2C28();
 extern int sub_800BEB50();
@@ -381,7 +393,36 @@ void sub_800BA97C()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BA9E4);
+EventEntry* sub_800BA9E4()
+{
+    EventEntry* e = sub_80043AF8(dword_8008D624);
+    char buf[0x10];
+    int r;
+    if (e)
+    {
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        e->cb_8 = (EventEntryFn)sub_800BAC4C;
+        r = sub_800A5354();
+        dword_800C9D82 = r;
+        dword_800C9D84 = r;
+        dword_800C9D83 = r;
+        sub_800BF648(dword_800C9C68, sub_800BAAD8());
+        dword_800B1228 = 0;
+        sub_800BC838(0x80000);
+        dword_800C9D56 = 0;
+        dword_800C9C7C = 0;
+        dword_800C9C99 = 0;
+        dword_800C9C82 = 0;
+        dword_800B122C = 0;
+        sub_800A1F80();
+        sub_800BC378(sub_800A248C(), buf);
+        sub_800A8D0C(buf);
+        sub_800BABC4();
+        dword_800C9C58 = 0;
+        sub_800A096C();
+    }
+    return e;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BAAD8);
 
