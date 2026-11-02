@@ -63,7 +63,40 @@ void sub_80030EEC(void* arg0)
 }
 #endif
 INCLUDE_ASM(sub_80030EEC);
-INCLUDE_ASM(sub_8003105C);
+typedef struct
+{
+    short field_0_file_id;
+    short field_2_seq;
+    int field_4;
+} SoundSeqInfo;
+// Matched
+void sub_8003105C(SoundStruct* s, int idx, short loops)
+{
+    int v = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
+    int a;
+    int b;
+    if (v >= 0x10)
+    {
+        a = s->field_14_sep_access_num;
+        b = v - 0x10;
+    }
+    else
+    {
+        b = v;
+        a = s->field_C_sep_access_num;
+    }
+    if (idx == 0)
+    {
+        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 7) & 0x7F, (settingsFlags_8008B58C >> 7) & 0x7F);
+    }
+    else
+    {
+        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 14) & 0x7F, (settingsFlags_8008B58C >> 14) & 0x7F);
+    }
+    SsSepPlay(a, b, 1, loops);
+    SsSepSetCrescendo(a, b, 1, 1);
+    s->field_4_seq_num = b;
+}
 // Matched
 void sub_80031160(unsigned int idx, short loops)
 {
@@ -90,12 +123,6 @@ void sub_80031160(unsigned int idx, short loops)
     SsSepPlay(a, b, 1, loops);
     SsSepSetCrescendo(a, b, 1, 1);
 }
-typedef struct
-{
-    short field_0_file_id;
-    short field_2_seq;
-    int field_4;
-} SoundSeqInfo;
 // Matched
 void sub_80031260(SoundStruct* s, int idx, short loops)
 {
