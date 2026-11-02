@@ -988,7 +988,64 @@ int sub_800C0C3C(void* a)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C0CA4);
+typedef struct MenuTmp
+{
+    int w[14];
+} MenuTmp;
+
+typedef struct MenuRc
+{
+    char pad_0[8];
+    short x8;
+    short xA;
+    short xC;
+    short xE;
+} MenuRc;
+
+typedef struct MenuQuad
+{
+    short a;
+    short b;
+    unsigned short c;
+    short d;
+} MenuQuad;
+
+extern int name_800AD288();
+extern MenuRc* name_80014390();
+extern int sub_80033DF4();
+extern void sub_80013C28();
+void sub_800C0CA4(MenuCtx* c, int* out)
+{
+    MenuTmp tmp;
+    MenuQuad q;
+    int r17;
+    MenuRc* r16;
+    unsigned short u = c->arr_2A[5];
+    r17 = name_800AD288(c->arr_2A[3] + c->arr_46[0], 0);
+    r16 = name_80014390(u & 0xFF);
+    q.a = r17;
+    q.b = 0;
+    q.c = u;
+    q.d = 1;
+    out[0] = 0;
+    out[1] = 0;
+    tmp.w[2] = 1;
+    sub_800C00D4(&tmp, r17, (short)u);
+    tmp.w[0] = 4;
+    if (sub_80033DF4(&q) == 0 && sub_800C0DD4(r17))
+    {
+        int v;
+        sub_80013C28(name_8008BD38, r16, &tmp, &tmp.w[4]);
+        out[0] = -tmp.w[11];
+        out[1] = -tmp.w[12];
+        v = r16->xA - r16->x8;
+        if (v < out[0])
+            out[0] = v;
+        v = r16->xE - r16->xC;
+        if (v < out[1])
+            out[1] = v;
+    }
+}
 
 // near miss: compiler folds the range tests differently
 #if 0
