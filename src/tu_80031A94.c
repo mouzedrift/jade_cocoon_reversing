@@ -205,7 +205,61 @@ void sub_80033308(void* p)
     SetTexWindow(&twin, &rect);
     sub_80040298(p, &twin, 3);
 }
-INCLUDE_ASM(sub_80033394);
+// Matched
+void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
+{
+    int ph;
+    int den;
+    int r, g, b;
+    if (period <= 0)
+    {
+        period = 40;
+    }
+    if (half <= 0)
+    {
+        half = 20;
+    }
+    ph = t % period;
+    if (ph < half)
+    {
+        den = half;
+    }
+    else
+    {
+        ph = period - ph;
+        den = period - half;
+    }
+    r = c0[0] + (c1[0] - c0[0]) * ph / den;
+    g = c0[1] + (c1[1] - c0[1]) * ph / den;
+    b = c0[2] + (c1[2] - c0[2]) * ph / den;
+    if (r > 255)
+    {
+        r = 255;
+    }
+    if (g > 255)
+    {
+        g = 255;
+    }
+    if (b > 255)
+    {
+        b = 255;
+    }
+    if (r < 0)
+    {
+        r = 0;
+    }
+    if (g < 0)
+    {
+        g = 0;
+    }
+    if (b < 0)
+    {
+        b = 0;
+    }
+    out[0] = r;
+    out[1] = g;
+    out[2] = b;
+}
 // Matched
 unsigned char sub_800334BC(unsigned char* arr, int idx)
 {
