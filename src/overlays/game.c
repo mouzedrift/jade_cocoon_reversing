@@ -464,8 +464,6 @@ void sub_800A14E0(GameTask_1* t, GameQ_1* q)
     dword_8008B540 = 1;
 }
 
-#if 0
-// Not matched
 void sub_800A1578(GameTask_1* t, int** q)
 {
     if ((*q[2] & 0x8001) != 1)
@@ -477,13 +475,11 @@ void sub_800A1578(GameTask_1* t, int** q)
         if (sd->f2f2 == sd->f2f0)
         {
             sub_80027314();
-            sub_80020D68();
         }
+        sub_80020D68();
         t->next_8 = sub_800A15FC;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A1578);
 
 // Matched
 void sub_800A15FC(GameTask_1* t, GameQ_1* q)
@@ -1004,16 +1000,14 @@ int sub_800A2C68(int a)
     }
 }
 
-#if 0
-// Not matched
 int sub_800A2CA8(int a, int b)
 {
     int ok = 0;
-    if (a >= 0 && a < gCtx_800B1260.f40 && gCtx_800B1260.f4c[a] != 0)
+    if (a < 0 || a >= gCtx_800B1260.f40 || gCtx_800B1260.f4c[a] != 0)
     {
         ok = 1;
     }
-    if (!ok)
+    if (ok)
     {
         if (!b)
         {
@@ -1023,8 +1017,6 @@ int sub_800A2CA8(int a, int b)
     }
     return ok;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A2CA8);
 
 // Matched
 void sub_800A2D28(GameFlagObj_1* p)
@@ -1878,31 +1870,24 @@ void sub_800A6D30(int a)
     w[2] = a;
 }
 
-#if 0
-// Not matched
 int sub_800A6D50(int a)
 {
     int* p = (int*)dword_8008D46C[9];
     int r = 0;
-    if (a == 1)
+    switch ((unsigned)a)
     {
-        r = p[1];
-        return r;
-    }
-    if (a == 0)
-    {
+    case 0:
         r = p[0];
-        return r;
-    }
-    if (a == 2)
-    {
+        break;
+    case 1:
+        r = p[1];
+        break;
+    case 2:
         r = p[2];
-        return r;
+        break;
     }
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A6D50);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6DAC);
 
@@ -3323,7 +3308,6 @@ void sub_800ABC78(int a)
     }
 }
 
-#if 0
 void sub_800ABCF4(G2Act* p)
 {
     if (p->s20 == 0x19)
@@ -3355,12 +3339,10 @@ void sub_800ABCF4(G2Act* p)
     }
     else if (p->s20 == 0x1D)
     {
-        p->f2C = sub_8001CDCC(p->f34);
+        p->f2C = ((int (*)(int))sub_8001CDCC)(p->f34);
         sub_800148F4(p->f2C);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800ABCF4);
 
 void sub_800ABDF0(G2Act* a)
 {
@@ -3528,15 +3510,11 @@ int sub_800AC5D0(int a, int b)
     return sub_80025440(dword_8007DC60[2], a, b) != 0;
 }
 
-#if 0
 int sub_800AC604(int a, int b)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    short r = sub_800AC988(a, t);
-    return sub_80025440(dword_8007DC60[2], r, b) != 0;
+    return sub_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AC604);
 
 void sub_800AC678(int a)
 {
@@ -3952,21 +3930,16 @@ void sub_800AD6E4(int n)
         f->w[n / 32] &= ~(1 << (n % 32));
 }
 
-#if 0
 int sub_800AD73C(int n)
 {
     G2Flags* f = (G2Flags*)playerYan_8008B594;
-    int r = 0;
     if (n < 0x40)
     {
-        r = 1;
-        if (!(f->w[n / 32] & (1 << (n % 32))))
-            r = 0;
+        if (f->w[n / 32] & (1 << (n % 32)))
+            return 1;
     }
-    return r;
+    return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD73C);
 
 int sub_800AD79C()
 {
