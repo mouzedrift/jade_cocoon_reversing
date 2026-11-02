@@ -1802,6 +1802,23 @@ char* sub_80024FA8(void* a0, int n)
 }
 #endif
 INCLUDE_ASM(sub_80024FA8);
+#if 0
+// Not matched: induction variables for ids[] and the 0x58 offset created in swapped order
+void sub_80024FFC(struct_112* p, int* ids)
+{
+    int n;
+    for (n = 0; ids[n] >= 0; n++)
+    {
+    }
+    p->field_40 = n;
+    p->field_64 = sub_8003FC8C(n * sizeof(struct_58), ((int*)p->field_0)[1]);
+    for (n--; n >= 0; n--)
+    {
+        ((struct_58*)p->field_64)[n].id = ids[n];
+        ((struct_58*)p->field_64)[n].d = ((struct_54*)p->field_50)[ids[n]];
+    }
+}
+#endif
 INCLUDE_ASM(sub_80024FFC);
 // Matched
 void sub_8002512C(unsigned int* a0, char* a1, int a2)
@@ -1832,6 +1849,51 @@ int sub_800251E4(int idx)
     return off_800824CC[idx];
 }
 INCLUDE_ASM(sub_80025200);
+#if 0
+// Not matched: table-entry address arithmetic: operand order and scheduling differ
+int sub_80025440(struct_112* p, int idx, int flag)
+{
+    int b[16];
+    int c[8];
+    unsigned short* e;
+    unsigned short* t;
+    int u;
+    int v;
+    unsigned char* f = (unsigned char*)p->field_44 + idx;
+    if (*f == 0)
+    {
+        e = (unsigned short*)off_800824CC[p->id_38];
+        t = e + (e[9] + (idx * 2 + 10));
+        u = t[0];
+        v = t[1];
+        *f = 1;
+        sub_80025ED0(b);
+        b[0] = 0x10;
+        b[5] = (int)p;
+        b[1] = (int)e;
+        b[4] = idx;
+        c[0] = 0x68;
+        if (flag != 0)
+        {
+            c[0] = 0x6C;
+        }
+        else
+        {
+            c[0] = 0x69;
+        }
+        c[1] = e[0];
+        c[2] = u;
+        c[3] = v;
+        c[4] = 0;
+        c[5] = (int)b;
+        c[6] = 0x3C;
+        c[7] = (int)sub_80025D7C;
+        sub_80025D00((struct_25D00*)p, c);
+        return 1;
+    }
+    return sub_80024DC4((int*)p) == 0;
+}
+#endif
 INCLUDE_ASM(sub_80025440);
 // Matched
 void sub_8002556C(struct_112* p, int i)
@@ -1848,14 +1910,6 @@ int sub_800255D8(struct_112* p, int i)
     return ((unsigned char*)p->field_44)[i] != 0;
 }
 extern int sub_8003BC84(int* p);
-typedef struct
-{
-    int field_0;
-    int count;
-    int items[10];
-} struct_25D00;
-int sub_80025D00(struct_25D00* p, int* q);
-void sub_80025D7C();
 #if 0
 // Not matched: a2 and a0[2] swap callee-saved registers (s2/s3)
 int sub_800255F0(int* a0, int idx, int a2)
@@ -2031,7 +2085,26 @@ void sub_80025B5C(struct_obj_E* p, int idx, int sel)
     }
     p->field_50[idx] = tmp;
 }
-INCLUDE_ASM(sub_80025C38);
+// Matched
+void sub_80025C38(struct_112* p, int flag)
+{
+    int i;
+    int id;
+    short* e;
+    for (i = 0; i < p->field_40; i++)
+    {
+        id = *(int*)(p->field_64 + i * 0x58);
+        sub_80025B5C((struct_obj_E*)p, id, id);
+    }
+    if (flag != 0)
+    {
+        for (i = 0; i < p->field_43; i++)
+        {
+            e = (short*)(i * 4 + p->field_6C);
+            sub_80025B5C((struct_obj_E*)p, e[0], e[1]);
+        }
+    }
+}
 // Matched
 int sub_80025D00(struct_25D00* p, int* q)
 {

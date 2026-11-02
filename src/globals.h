@@ -108,6 +108,12 @@ typedef struct
     int data[0x15];
 } struct_54;
 
+typedef struct
+{
+    int id;
+    struct_54 d;
+} struct_58;
+
 // object with a header at +0x4C and tables of struct_54 at +0x50 and +0x68
 typedef struct
 {
@@ -386,6 +392,15 @@ typedef struct
 int sub_80026630(struct_112_list* p, unsigned int id);
 void sub_800266CC(struct_112* p);
 void sub_80024C48(struct_112* p);
+void sub_80025C38(struct_112* p, int flag);
+typedef struct
+{
+    int field_0;
+    int count;
+    int items[10];
+} struct_25D00;
+int sub_80025D00(struct_25D00* p, int* q);
+void sub_80025D7C();
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];

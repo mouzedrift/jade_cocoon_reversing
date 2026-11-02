@@ -473,5 +473,5 @@ extern void sub_800261C8(int* a0);
 extern void sub_800263CC(int* p);
 extern void sub_80026410(int* a0);
 extern void sub_8002651C(int* a0);
-extern void sub_80025C38(void* p, int a1);
+extern int sub_80024DC4(int* p);
 extern void sub_8002679C(struct_28** a0, int n, int h);
