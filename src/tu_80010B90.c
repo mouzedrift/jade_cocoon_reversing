@@ -1236,6 +1236,26 @@ int sub_80010C30(struct_C30* p)
     p->field_38 = p->field_3C;
     return 1;
 }
+#if 0
+// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
+int sub_80010CDC(struct_state_obj* p)
+{
+    if (p->field_2C >= 0)
+    {
+        *(unsigned short*)(p->field_0[2] + 0x38) = p->field_2C;
+    }
+    else
+    {
+        *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_24];
+    }
+    sub_800255F0((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38), p->field_28);
+    *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_30];
+    sub_800256B8((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38));
+    p->state_38 = 4;
+    p->next_3C = 5;
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
@@ -1477,6 +1497,28 @@ double sub_80012358(int n, int x)
     }
     return r;
 }
+#if 0
+// Not matched: the original loads 67108864.0 into $s0/$s1 before the first subtraction (here it is an immediate)
+int sub_8001247C(double x)
+{
+    double t = 67108864.0;
+    double s = 1.0;
+    int i = 0;
+    x -= t;
+    do
+    {
+        t = s * 67108864.0;
+        if (t > x)
+        {
+            break;
+        }
+        x -= t;
+        s += s;
+        i++;
+    } while (i < 99);
+    return (double)(i << 26) + x / s;
+}
+#endif
 INCLUDE_ASM(sub_8001247C);
 // Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
@@ -1494,4 +1536,81 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
 
     return totalMinions;
 }
+#if 0
+// Not matched: the clamped value lives in $a2 instead of $v1 (the jump table is emitted by C: see config/c_rodata.txt)
+void sub_80012614(int a0, int sel, int delta, int mask)
+{
+    char* p = (char*)a0;
+    unsigned short* sp = 0;
+    unsigned char* bp = 0;
+    int max = 0;
+    int r;
+    int v;
+    switch (sel)
+    {
+    case 0:
+        max = *(short*)(p + 0xA);
+        sp = (unsigned short*)(p + 8);
+        break;
+    case 1:
+        sp = (unsigned short*)(p + 0xA);
+        max = 999;
+        break;
+    case 2:
+        max = *(short*)(p + 0xE);
+        sp = (unsigned short*)(p + 0xC);
+        break;
+    case 3:
+        sp = (unsigned short*)(p + 0xE);
+        max = 999;
+        break;
+    case 4:
+    case 5:
+        bp = (unsigned char*)(p + 0x2C);
+        max = 99;
+        break;
+    case 6:
+    case 7:
+        bp = (unsigned char*)(p + 0x30);
+        max = 99;
+        break;
+    case 8:
+    case 9:
+        bp = (unsigned char*)(p + 0x2D);
+        max = 99;
+        break;
+    case 10:
+    case 11:
+        bp = (unsigned char*)(p + 0x2E);
+        max = 99;
+        break;
+    case 12:
+    case 13:
+        bp = (unsigned char*)(p + 0x2F);
+        max = 99;
+        break;
+    case 16:
+        sub_80012794((struct_obj_B*)p, mask);
+        break;
+    case 17:
+        *(int*)p &= ~mask;
+        break;
+    case 19:
+        p[0x44] += delta;
+        break;
+    }
+    if (sp)
+    {
+        v = *sp + delta;
+        r = (v < 0) ? 0 : ((max < v) ? max : v);
+        *sp = r;
+    }
+    else if (bp)
+    {
+        v = *bp + delta;
+        r = (v < 0) ? 0 : ((max < v) ? max : v);
+        *bp = r;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80012614);
