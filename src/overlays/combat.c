@@ -55,6 +55,14 @@ extern void sub_80037748(void);
 extern void sub_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
+extern unsigned char* Cbt_80019C70(int idx);
+extern int Cbt_800338DC(void* a, void* b, void* c);
+typedef struct CombatLocalCombat
+{
+    unsigned char b[4];
+    int pad_4;
+    int w[3];
+} CombatLocalCombat;
 extern void Cbt_8002FAA0(int a, void* b, char* c, int d);
 extern void Cbt_8002C290(void* a, int b, int c);
 extern void Cbt_8002B1B0(int a, void* b, int c);
@@ -194,10 +202,114 @@ typedef struct CombatReqCombat
     int field_30;
     char pad_34[0x2C];
 } CombatReqCombat;
-extern void sub_800A05E0(int a, void* b, char* c);
+extern void sub_800A05E0(unsigned char* a, int* o, int c);
+extern int sub_800A0898(unsigned char* a);
 
 
 INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
+
+#if 0
+// Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
+void sub_800A05E0(unsigned char* a, int* o, int c)
+{
+    CombatLocalCombat l;
+    unsigned int h = *(unsigned short*)Cbt_80019C70(a[2]);
+    int t;
+    o[0] = Cbt_800338DC(a + 0x4C, l.b, l.w);
+    o[1] = *(unsigned short*)Cbt_80019C70(l.b[0]);
+    o[2] = *(unsigned short*)Cbt_80019C70(l.b[1]);
+    o[3] = *(unsigned short*)Cbt_80019C70(l.b[2]);
+    o[4] = l.w[0];
+    o[5] = l.w[1];
+    o[6] = l.w[2];
+    if (o[1] == o[2])
+    {
+        if (o[2] == o[3])
+        {
+            o[4] += o[5];
+            o[5] = 0;
+            o[6] = 0;
+            o[0] = 1;
+        }
+        else
+        {
+            t = o[6];
+            o[0] = 2;
+            o[4] = o[4] + o[5];
+            o[6] = 0;
+            o[2] = o[3];
+            o[5] = t;
+        }
+    }
+    else if (o[1] == o[3])
+    {
+        o[4] = o[4] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    else if (o[2] == o[3])
+    {
+        o[5] = o[5] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    o[11] = 0;
+    if (o[1] != h)
+    {
+        if (o[2] == h)
+        {
+            t = o[5];
+            o[2] = o[1];
+            o[1] = h;
+            o[5] = o[4];
+            o[4] = t;
+        }
+        else if (o[3] == h)
+        {
+            t = o[6];
+            o[3] = o[1];
+            o[1] = h;
+            o[6] = o[4];
+            o[4] = t;
+        }
+        else if (o[0] < 2)
+        {
+            t = o[4];
+            o[2] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 2;
+            o[5] = t;
+        }
+        else
+        {
+            t = o[4];
+            o[3] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 3;
+            o[6] = t;
+        }
+    }
+    o[7] = Cbt_80019A80(a[0xC8]);
+    o[8] = o[0] - 1;
+    o[10] = *(unsigned short*)Cbt_80019C70(a[3]);
+    o[12] = c;
+    o[9] = sub_800A0898(a + 0xC2);
+    if (o[9] == -1000)
+    {
+        o[9] = Cbt_80019C70(a[3])[2] << 1;
+    }
+    else
+    {
+        o[9] = o[9] - (Cbt_80019C70(a[3])[3] << 1);
+        if (o[9] < 0)
+        {
+            o[9] = o[9] + 0x168;
+        }
+    }
+}
+#endif
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A05E0);
 
@@ -289,7 +401,7 @@ void sub_800A0A6C(void)
 void sub_800A0ACC(int i, int x)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_800A05E0(x, s->pad_8, dword_8007DC78 + (i << 6));
+    sub_800A05E0((unsigned char*)x, (int*)s->pad_8, (int)(dword_8007DC78 + (i << 6)));
     s->field_4 = (char*)x;
     s->field_0 = sub_80010850(s->pad_8);
     s->field_3C = 0;
