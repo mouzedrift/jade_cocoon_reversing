@@ -23,6 +23,36 @@ extern void sub_8004EE54(void);
 extern int sub_8004EDD8(void);
 extern void sub_800BC9DC(int a, int* b, int* c);
 extern void sub_800B7674(int a, int b);
+typedef struct
+{
+    int f0_LOAD;
+    int f4_LOAD;
+    int f8_LOAD;
+    int fC_LOAD;
+    int f10_LOAD;
+    int f14_LOAD;
+    int pad18_LOAD[12];
+    int f44_LOAD;
+    int f48_LOAD;
+    int f4C_LOAD;
+    int f50_LOAD;
+    int f54_LOAD;
+} LoadState_LOAD;
+extern LoadState_LOAD dword_800BE1F4;
+extern int dword_8008B4E8;
+extern int dword_8008B570[];
+extern unsigned char byte_800BDF58;
+extern int dword_800BE208;
+extern char dword_800BDECC[];
+extern void sub_8003CD5C(int* t);
+extern void sub_8002BE10(void);
+extern void sub_800BACBC(void* p);
+extern void sub_800B794C(int* t);
+extern void sub_800BA9AC(int* t);
+extern void sub_800BA9F0(int* t);
+extern void sub_8004F5E8(int a);
+extern void sub_80056FEC(int a, int b);
+extern void sub_800BD558(void);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
 
@@ -33,7 +63,13 @@ void sub_800B7650(void)
 
 INCLUDE_OVERLAY_ASM(load, sub_800B7674);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B7894);
+void sub_800B7894(int* t)
+{
+    if (dword_8008B4E8)
+    {
+        t[2] = (int)sub_800B794C;
+    }
+}
 
 void sub_800B78B8(int v)
 {
@@ -102,21 +138,43 @@ INCLUDE_OVERLAY_ASM(load, sub_800BA234);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BA968);
+void sub_800BA968(int* t)
+{
+    sub_8003CD5C(t);
+    sub_800BACBC(dword_800BDECC);
+    sub_8002BE10();
+    t[2] = (int)sub_800BA9AC;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BA9AC);
+void sub_800BA9AC(int* t)
+{
+    sub_8003CD5C(t);
+    sub_800BACBC(dword_800BDECC);
+    sub_8002BE10();
+    t[2] = (int)sub_800BA9F0;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BA9F0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BAAE0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAC14);
+int sub_800BAC14(int n)
+{
+    return n / 216000 % 60;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAC68);
+int sub_800BAC68(int n)
+{
+    return n / 3600 % 60;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BACBC);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BADE0);
+void sub_800BADE0(unsigned char* p)
+{
+    p[12] = p[9];
+    p[13] = p[10];
+}
 
 void sub_800BADF4(void)
 {
@@ -162,6 +220,18 @@ INCLUDE_OVERLAY_ASM(load, sub_800BB4A8);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB5DC);
 
+#if 0
+// Not matched: the original keeps the address of the state field in a register (la); psyq 4.4 folds it into the offsets
+void sub_800BB64C(void)
+{
+    LoadState_LOAD* st = &dword_800BE1F4;
+    while (st->f0_LOAD)
+    {
+    }
+    sub_80056FEC(7, 0);
+    sub_800BD558();
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB64C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB68C);
@@ -174,6 +244,18 @@ INCLUDE_OVERLAY_ASM(load, sub_800BBA5C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBD04);
 
+#if 0
+// Not matched: same: la of the global kept in $s0
+void sub_800BBE8C(void)
+{
+    int* p = &dword_800BE208;
+    if (*p >= 0)
+    {
+        sub_8004F5E8(*p);
+        *p = -1;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BBE8C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBED0);
@@ -207,6 +289,37 @@ INCLUDE_OVERLAY_ASM(load, sub_800BCEA8);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BCF64);
 
+#if 0
+// Not matched: branch order differs
+int sub_800BD018(int a)
+{
+    int r = 0;
+    if (a == 1)
+    {
+        r = 2;
+    }
+    else if (a < 2)
+    {
+        if (a != 0)
+        {
+            r = a | 0x8000;
+        }
+    }
+    else if (a == 2)
+    {
+        r = 1;
+    }
+    else if (a == 4)
+    {
+        r = 3;
+    }
+    else
+    {
+        r = a | 0x8000;
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD018);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD06C);
