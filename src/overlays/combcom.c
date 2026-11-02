@@ -91,7 +91,36 @@ short* sub_800CB974(int a)
     return dword_800CD2D4[a];
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBA20);
+extern unsigned int dword_800CD41C[];
+extern short word_800CD294;
+extern short word_800CD434[];
+extern char* dword_800CD404[];
+
+void sub_800CBA20(int a)
+{
+    int i;
+    int off;
+    a &= 0xFF;
+    if (a == 0)
+    {
+        dword_800CD41C[0] = 2;
+    }
+    else
+    {
+        dword_800CD41C[0] = 4;
+    }
+    dword_800CD41C[1] = sub_8002C64C();
+    if (dword_800CD41C[2] < 8)
+    {
+        dword_800CD41C[2]++;
+    }
+    off = byte_800CD839;
+    dword_800CD41C[3] = word_800CD294;
+    for (i = 0; i < 5; i++)
+    {
+        *(short*)(dword_800CD404[i] + 0x10) = word_800CD434[i] + off * 192;
+    }
+}
 
 void sub_800CBAD4(int a)
 {
