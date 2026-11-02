@@ -19,6 +19,10 @@ typedef struct BatTask
 extern void sub_800C6AFC(BatTask* t, int a, int b);
 extern unsigned char dword_800C9E54;
 extern int dword_800C9E3C;
+extern unsigned char dword_800C9E51;
+extern unsigned char dword_800C9E48;
+extern unsigned char dword_800C9E50;
+extern int dword_800C9E7C;
 extern int sub_800BE364();
 extern void sub_800BE3C0();
 extern int sub_800BEA94();
@@ -2118,7 +2122,22 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C3D34);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C3DF8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4090);
+extern int dword_8008D680[3];
+extern short dword_8008D418[3];
+extern int dword_8008D3F0;
+void sub_800C4090(int a0, int a1, int c, int a3)
+{
+    int* a = (int*)a0;
+    unsigned char* b = (unsigned char*)a1;
+    unsigned int d = a3;
+    dword_8008D680[0] = a[0];
+    dword_8008D680[1] = a[1];
+    dword_8008D680[2] = a[2];
+    dword_8008D3F0 = c;
+    dword_8008D418[0] = b[0] * d >> 7;
+    dword_8008D418[1] = b[1] * d >> 7;
+    dword_8008D418[2] = b[2] * d >> 7;
+}
 
 extern int dword_8008D3F0;
 void sub_800C410C()
@@ -3126,10 +3145,58 @@ void sub_800C8710()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C8768);
+extern unsigned char dword_800C9E40;
+void sub_800C8768()
+{
+    if (sub_8003D380(0))
+    {
+        if (sub_800C7530())
+        {
+            sub_80031494(0x7E);
+            sub_800C7A6C();
+        }
+        else
+        {
+            sub_80031494(0x7C);
+            if (dword_800C9E7C)
+            {
+                dword_800C9E51 = 0x96;
+                dword_800C9E48 = 1;
+            }
+        }
+    }
+    else if (sub_8003D41C(0))
+    {
+        if (dword_800C9E50)
+        {
+            unsigned char c;
+            sub_80031494(0x7D);
+            c = dword_800C9E40;
+            dword_800C9E40 = 0;
+            dword_800C9E50 = c;
+        }
+    }
+}
 
+#if 0
+void sub_800C8828(int a)
+{
+    short rect[4];
+    short p[8];
+    int s[1];
+    rect[0] = 0x19;
+    rect[1] = 0x8A;
+    rect[2] = sub_8003E4C8() + 4;
+    rect[3] = 0x12;
+    s[0] = a;
+    p[0] = rect[0];
+    p[1] = rect[1];
+    p[4] = rect[0] + 2;
+    p[5] = rect[1] + 4;
+    sub_8002AE38(s, &p[4], 0xF, rect, 1);
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
-
 void sub_800C88AC(int a)
 {
     int s[4];
