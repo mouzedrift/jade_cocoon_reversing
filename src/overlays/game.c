@@ -1100,7 +1100,39 @@ INCLUDE_OVERLAY_ASM(game, sub_800A2FB8);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A31DC);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A333C);
+extern int sub_800AB39C();
+void sub_800A333C(int unused, GameS3A8C_1* p)
+{
+    GameS3A8C_1* q = p;
+    int x;
+    int c;
+    if (sub_800A4278(p) == 0)
+    {
+        c = p->fC;
+        switch (c)
+        {
+        case -1:
+            sub_800A433C(p, 0xd, 0x17, 0, -2, 0, 2);
+        case 0xd:
+            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            {
+                x = sub_800AB39C() & 0xFFFFFFF;
+                if (x == 1)
+                    sub_800A433C(q, 0xf, 2, 0, -1, x, 2);
+            }
+            break;
+        case 0xf:
+            sub_800A45F8(p);
+            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
+                sub_800A433C(p, 1, 1, 0x32, -1, 1, 2);
+            break;
+        case 1:
+            if (--q->f24 < 0)
+                sub_800A433C(q, 0xd, 0x17, 0, -1, c, 2);
+            break;
+        }
+    }
+}
 
 void sub_800A34D8(int unused, GameS3A8C_1* p)
 {
