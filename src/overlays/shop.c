@@ -1091,11 +1091,16 @@ void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
     t->next_8 = sub_800BE210;
 }
 
-#if 0 // near miss: s0 == 9 ? 8 : 4 gets compiled as default+override
 void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
 {
-    int v = (u->field_0 == 9) ? 8 : 4;
-    u->field_0 = v;
+    if (u->field_0 == 9)
+    {
+        u->field_0 = 8;
+    }
+    else
+    {
+        u->field_0 = 4;
+    }
     u->field_2 = 0;
     sub_800BD7A8(u);
     sub_800BBB54(u, 0);
@@ -1108,8 +1113,8 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
         u->field_24 &= ~8;
     }
     sub_800BD854(u);
-    u->field_32 = u->a72[0];
     u->field_30 = u->a5E[1];
+    u->field_32 = u->a72[0];
     if (u->field_0 == 4)
     {
         u->field_30 = 0;
@@ -1120,8 +1125,6 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     sub_800A7B00(-1);
     t->next_8 = sub_800BB444;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BE128);
 
 extern void sub_800BE264();
 void sub_800BE210(ShopTaskShop* t, int a)
