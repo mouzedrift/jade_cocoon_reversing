@@ -93,6 +93,22 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+typedef struct WpnPair_wpnshop
+{
+    short a;
+    short b;
+} WpnPair_wpnshop;
+typedef struct WpnSmall_wpnshop
+{
+    short a;
+    char b;
+    char c;
+} WpnSmall_wpnshop;
+extern char byte_8008BD38[];
+extern void sub_8002F7D0(void* p, int a1);
+extern void sub_8002E288(int a0, int a1, int a2, void* p);
+extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void sub_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
 #define f_26 f_20[3]
 extern int sub_8003D480(void);
 extern char name_800BEBC4[];
@@ -169,7 +185,9 @@ typedef struct WpnBox_wpnshop
 } WpnBox_wpnshop;
 typedef struct WpnSave_wpnshop
 {
-    char pad_0[0x2DC];
+    char pad_0[0x20];
+    unsigned short f20;
+    char pad_22[0x2BA];
     short f2DC;
     char pad_2DE[6];
     short f2E4;
@@ -801,7 +819,67 @@ void sub_800BCC4C(WpnObj_wpnshop* o)
     sub_800BBFD4(r);
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCCE8);
+// Matched
+void sub_800BCCE8(WpnObj_wpnshop* o)
+{
+    char buf10[0x18];
+    char buf28[0x18];
+    WpnRect_wpnshop r40;
+    WpnRect_wpnshop r48;
+    WpnSmall_wpnshop s50;
+    union
+    {
+        WpnPair_wpnshop p;
+        WpnSmall_wpnshop s;
+    } u;
+    WpnRect_wpnshop r60;
+    int r;
+    sub_80033624(buf10, (int)byte_8008BD38);
+    r = sub_800BDD2C(sub_800BE00C(o, 0xA), o->f_10, o->f_1E);
+    if (r != 0xFF)
+    {
+        if (o->f_0 != 0x11)
+        {
+            if (o->f_2 != 0x11)
+            {
+                sub_8002E288((int)byte_8008BD38, r, o->f_10, buf28);
+                r40.x = 0x119;
+                r40.y = 0x73;
+                sub_8002E188(buf10, buf28, &r40, 0xE);
+            }
+        }
+    }
+    r40.x = 0xC2;
+    r40.y = 0x70;
+    sub_8002F7D0(&r40, 0xE);
+    r48.x = 0xC2;
+    r48.y = 0x70;
+    r48.w = 0x4B;
+    r48.h = 0x4D;
+    s50.b = 0;
+    s50.c = 1;
+    s50.a = WPNSAVE->f20;
+    sub_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
+    if (o->f_0 != 0x11)
+    {
+        u.p.a = 2;
+        u.p.b = 0;
+        r48.x = 0x112;
+        r48.y = 0x95;
+        sub_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
+        if (o->f_0 != 0x11)
+        {
+            r60.x = 0x119;
+            r60.y = 0x70;
+            r60.w = 0x1D;
+            r60.h = 0x4D;
+            u.s.b = 0;
+            u.s.c = 1;
+            u.s.a = WPNSAVE->f20;
+            sub_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
+        }
+    }
+}
 
 #if 0
 // register allocation: original copies the ctx pointer to a1 (move a1,a0) and keeps the table in a0
