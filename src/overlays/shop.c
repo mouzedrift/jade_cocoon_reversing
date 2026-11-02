@@ -50,7 +50,8 @@ typedef struct ShopUnit3Shop
 {
     short field_0;
     short field_2;
-    char pad_4[0x18];
+    short field_4;
+    char pad_6[0x16];
     int field_1C;
     int field_20;
     int field_24;
@@ -137,6 +138,7 @@ extern int sub_8001AD30(int i);
 extern int sub_8001AE54(unsigned int* b);
 extern char name_800B6D04[];
 extern char name_800B6D2C[];
+extern unsigned short name_800BF888[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -725,7 +727,73 @@ void sub_800BB828(ShopUnit3Shop* u)
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB828);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BB8C4);
+void sub_800BB8C4(ShopUnit3Shop* u)
+{
+    short s = u->field_0;
+    short t;
+    if (s == 0)
+    {
+        if (u->field_30 != 4)
+        {
+            u->field_30 = 4;
+        }
+        else
+        {
+            if (u->field_4 >= 13)
+            {
+                u->field_0 = 12;
+            }
+            else
+            {
+                u->field_0 = 11;
+            }
+        }
+    }
+    else if (s == 3)
+    {
+        u->field_0 = 2;
+        u->field_2 = 1;
+        u->field_24 &= ~0x200;
+        u->field_30 = u->a5E[2];
+        u->field_32 = u->a72[1];
+    }
+    else if (s == 4)
+    {
+        u->field_0 = 0;
+        u->field_32 = 0;
+        u->field_30 = 0;
+    }
+    else if (s == 12)
+    {
+        u->field_0 = 0;
+    }
+    else if (s == 11)
+    {
+        u->field_24 |= 4;
+    }
+    else if (s == 13)
+    {
+        sub_800BD720(u);
+        u->field_0 = 3;
+        u->field_2 = 2;
+    }
+    else if (s == 14)
+    {
+        u->field_0 = 13;
+        u->field_2 = 2;
+    }
+    else
+    {
+        if (s == 2 || s == 10)
+        {
+            u->field_7E = u->a7A[0];
+        }
+        t = u->field_2;
+        u->field_0 = t;
+        u->field_2 = name_800BF888[t];
+        sub_800BB828(u);
+    }
+}
 
 extern unsigned short word_8009194C;
 void sub_800BBA3C(char* u)
