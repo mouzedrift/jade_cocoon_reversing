@@ -1178,7 +1178,41 @@ int sub_800BAD88(EvCtxEventfnc* c)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BADF8);
+typedef struct EvRectEventfnc
+{
+    short x_0;
+    short y_2;
+    short w_4;
+    short h_6;
+} EvRectEventfnc;
+extern EvRectEventfnc dword_8008D420;
+int sub_800BADF8(EvCtxEventfnc* c)
+{
+    if (c->pc_8->c_C)
+    {
+        dword_8008D420 = *(EvRectEventfnc*)c->pc_8->c_C;
+    }
+    else
+    {
+        switch (c->pc_8->b_8)
+        {
+        case 0:
+            dword_8008D420.x_0 = 0;
+            dword_8008D420.y_2 = 0;
+            dword_8008D420.w_4 = 0x140;
+            dword_8008D420.h_6 = 0xF0;
+            break;
+        case 1:
+            dword_8008D420.x_0 = 0;
+            dword_8008D420.y_2 = 0x20;
+            dword_8008D420.w_4 = 0x140;
+            dword_8008D420.h_6 = 0xA0;
+            break;
+        }
+    }
+    c->pc_8++;
+    return 1;
+}
 
 extern void sub_80037A6C(int a, int b);
 int sub_800BAEBC(EvCtxEventfnc* c)
