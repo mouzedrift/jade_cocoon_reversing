@@ -1161,27 +1161,97 @@ INCLUDE_DATA(dword_80096628);
 INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
+#if 0
+typedef struct
+{
+    int field_0;
+    int pad_4;
+    int items[3];
+    int field_14[7];
+    int field_30;
+    int field_34;
+    int field_38;
+    int field_3C;
+} struct_B90;
+extern void sub_80024ADC(void* p, int a, int b);
+extern void sub_80025200(int a, int b, int c, int d, int e);
+// Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
+int sub_80010B90(struct_B90* p)
+{
+    int i;
+    sub_80024ADC(p, p->field_34, 1);
+    for (i = 0; i < 3; i++)
+    {
+        if (i == p->field_30)
+        {
+            sub_80025200(p->field_0, p->items[i], -1, 1, 0);
+        }
+        else
+        {
+            sub_80025200(p->field_0, p->items[i], -1, 0, 0);
+        }
+    }
+    p->field_38 = 4;
+    p->field_3C = 2;
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_80010B90);
-INCLUDE_ASM(sub_80010C30);
+typedef struct
+{
+    char pad_0[0x38];
+    unsigned short field_38;
+    char pad_3A[0x36];
+} struct_C30_item;
+typedef struct
+{
+    int count;
+    int pad_4;
+    struct_C30_item* items;
+} struct_C30_list;
+typedef struct
+{
+    struct_C30_list* list;
+    char pad_4[0x34];
+    int field_38;
+    int field_3C;
+} struct_C30;
+extern int sub_80024DC4(void* p);
+// Matched
+int sub_80010C30(struct_C30* p)
+{
+    int i;
+    for (i = 0; i < p->list->count; i++)
+    {
+        if (p->list->items[i].field_38 != 0xFFFF)
+        {
+            if (!sub_80024DC4(&p->list->items[i]))
+            {
+                return 0;
+            }
+        }
+    }
+    p->field_38 = p->field_3C;
+    return 1;
+}
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
 #if 0
-// Not matched (close)
+// Not matched (11 words): branch layout
 int sub_80011B24(int a0)
 {
     int* p = dword_8008D464[0x24 / 4];
     if (a0 == 0x29)
     {
-        return 1000;
-        *(p + 1) = (int)1000;
-        p[0] = (int)0;
+        p[1] = 1000;
+        p[0] = 0;
     }
-    if (0x2A == a0)
+    else if (a0 == 0x2A)
     {
-        *(p + 1) = (int)1000;
+        p[1] = 1000;
+        p[0] = 1;
         return 1;
-        *(0 + p) = 1;
     }
     return 1000;
 }
@@ -1212,23 +1282,70 @@ void sub_80011BCC(void)
 void nullsub_2(void)
 {
 }
-INCLUDE_ASM(sub_80011C0C);
-INCLUDE_ASM(sub_80011CD0);
+typedef struct
+{
+    int field_0;
+    int pad_4;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short field_C;
+    unsigned short field_E;
+} struct_C0C;
+// Matched
+void sub_80011C0C(struct_C0C* a, struct_C0C* b)
+{
+    a->field_8 = a->field_A = b->field_A;
+    a->field_C = a->field_E = b->field_E;
+}
+// Matched
+void sub_80011C30(struct_C0C* p)
+{
+    p->field_0 &= 0x400;
+}
+void sub_80011C44(struct_C0C* p)
+{
+    int v = p->field_0 & 0x400;
+    p->field_0 = v;
+    if (v == 0)
+    {
+        p->field_8 = ((short)p->field_8 + (short)p->field_A / 4 > (short)p->field_A) ? p->field_A : p->field_8 + (short)p->field_A / 4;
+        p->field_C = ((short)p->field_C + (short)p->field_E / 4 > (short)p->field_E) ? p->field_E : p->field_C + (short)p->field_E / 4;
+    }
+}
+// Matched
+void sub_80011CD0(struct_C0C* p)
+{
+    p->field_0 = 0;
+    sub_80011C0C(p, p);
+}
+// Matched
+void sub_80011CF4(struct_C0C* p)
+{
+    p->pad_4 = 0;
+    p->field_0 = 0;
+    p->field_8 = ((short)p->field_8 + 1 > (short)p->field_A) ? p->field_A : p->field_8 + 1;
+}
+typedef struct
+{
+    unsigned short limit;
+    unsigned short value;
+} struct_D28;
 #if 0
-// Not matched
+// Not matched (8 words): register allocation of the table pointer
 int sub_80011D28(int a0)
 {
-    struct_10* p = (struct_10*)word_80079374;
-    while (p->field_0 != 0)
+    struct_D28* p = (struct_D28*)word_80079374;
+    while (p->limit != 0)
     {
-        if (a0 < p->field_0)
+        if (!(a0 < p->limit))
         {
-            return p->field_2;
+            return p->value;
         }
         p++;
     }
     return 9;
 }
+
 #endif
 INCLUDE_ASM(sub_80011D28);
 // Matched
@@ -1264,7 +1381,40 @@ int sub_80012178(int arg0)
 {
     return (arg0 * 3) + 20;
 }
-INCLUDE_ASM(sub_80012188);
+// Matched
+void sub_80012188(void* p)
+{
+    sub_80011D98(p, 0);
+}
+int sub_800121A8(int a)
+{
+    int v;
+    if (a < 20)
+    {
+        v = a / 4;
+    }
+    else if (a < 31)
+    {
+        v = 5;
+    }
+    else if (a < 35)
+    {
+        v = 6;
+    }
+    else
+    {
+        v = 7;
+        if (a >= 40)
+        {
+            v = 8;
+        }
+    }
+    if (v > 8)
+    {
+        v = 8;
+    }
+    return v;
+}
 INCLUDE_ASM(sub_80012204);
 INCLUDE_ASM(sub_800122A0);
 INCLUDE_ASM(sub_80012358);
