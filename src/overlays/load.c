@@ -52,7 +52,30 @@ extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
-extern void sub_800BD558(void);
+extern #if 0
+// Not matched: register allocation of the lui/lw pairs differs ($a0 in the original)
+void sub_800BD558(void);
+typedef struct
+{
+    short x_LOAD;
+    short y_LOAD;
+} Pos_LOAD;
+extern unsigned char byte_800BDF68;
+extern int dword_800BE2A4;
+extern int dword_800BE2A8;
+extern int dword_800BE2AC;
+extern int dword_800BE2B0;
+extern int dword_800BE2B4;
+extern int dword_800BE2B8;
+extern int dword_800BE2BC;
+extern int dword_800BE2C0;
+extern int sub_8004DE68(void);
+extern void sub_8004DE38();
+extern void sub_8004DE78(void);
+extern void sub_800BD60C(void);
+extern int sub_800BD7EC(void);
+extern void sub_8004FA18(void);
+extern void sub_8004FA08(int a, int b, void* c);
 typedef struct
 {
     char c_LOAD[8];
@@ -72,6 +95,7 @@ typedef struct
 } Row8_LOAD;
 extern Row8_LOAD dword_800BD998[];
 extern Bytes8_LOAD dword_800B6B8C;
+extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short word_8008B590;
 extern char* dword_8008D454;
 extern void sub_8002C06C(void* a, int b, int c);
@@ -90,6 +114,7 @@ extern void sub_800BD18C(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 extern char byte_800B73A0[];
+extern char byte_800B7544[];
 extern int printf(const char* fmt, ...);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
@@ -98,6 +123,8 @@ void sub_800B7650(void)
 {
     sub_800B7674(4, 0);
 }
+#endif
+INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B7674);
 
@@ -158,6 +185,27 @@ void sub_800B8984(void)
     sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
+#if 0
+// Not matched: only the order of the prologue stores ($ra/$s0 vs argument set-up) differs
+void sub_800B8A20(void)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    p0.x_LOAD = 0xBF;
+    p0.y_LOAD = 0x15;
+    sub_8002C06C(&p0, 0x27, 1);
+    p1.x_LOAD = 0x124;
+    p1.y_LOAD = 0x15;
+    sub_8002C06C(&p1, (byte_800BDF68 == 1) << 1, 1);
+    a = dword_800B6B94;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8AE4);
@@ -419,6 +467,34 @@ INCLUDE_OVERLAY_ASM(load, sub_800BCCF4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BCEA8);
 
+#if 0
+// Not matched: the original keeps the address of the state struct in a register (la) and fills the buffer with a decrementing pointer
+int sub_800BCF64(int a)
+{
+    char buf[128];
+    int i;
+    if (dword_800BE1F4.f0_LOAD)
+    {
+        printf(byte_800B7544);
+        return -1;
+    }
+    for (i = 127; i >= 0; i--)
+    {
+        buf[i] = -1;
+    }
+    for (i = 0; i < 15; i++)
+    {
+        sub_800BD60C();
+        sub_8004FA18();
+        sub_8004FA08(a, i, buf);
+        if (sub_800BD7EC())
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BCF64);
 
 #if 0
@@ -515,7 +591,22 @@ int sub_800BD538(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD538);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD558);
+void sub_800BD558(void)
+{
+    int r = sub_8004DE68();
+    sub_8004DE38(dword_800BE2A4);
+    sub_8004DE38(dword_800BE2A8);
+    sub_8004DE38(dword_800BE2AC);
+    sub_8004DE38(dword_800BE2B0);
+    sub_8004DE38(dword_800BE2B4);
+    sub_8004DE38(dword_800BE2B8);
+    sub_8004DE38(dword_800BE2BC);
+    sub_8004DE38(dword_800BE2C0);
+    if (r == 1)
+    {
+        sub_8004DE78();
+    }
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD60C);
 
