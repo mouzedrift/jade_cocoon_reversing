@@ -1,0 +1,38 @@
+// SHOPENTR.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(shopentr, dword_800B6D00);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B6F1C);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B6F24);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7000);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7144);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B72D4);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B73A8);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7440);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7520);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7594);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B75DC);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7684);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7858);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7A90);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7B64);
+
+INCLUDE_OVERLAY_ASM(shopentr, sub_800B7C08);
+
+INCLUDE_OVERLAY_ASM(shopentr, dword_800B7CC0);

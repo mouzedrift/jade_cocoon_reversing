@@ -1,0 +1,32 @@
+// EQUIP.BIN
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+
+INCLUDE_OVERLAY_ASM(equip, dword_800C29D0);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C47A8);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C48B4);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C497C);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C4A94);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C4D50);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C4DF4);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C5064);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C50F0);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C51B0);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C5314);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C5440);
+
+INCLUDE_OVERLAY_ASM(equip, sub_800C5510);
+
+INCLUDE_OVERLAY_ASM(equip, dword_800C5834);
