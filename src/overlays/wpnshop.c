@@ -8,7 +8,7 @@ typedef struct WpnObj_wpnshop
     short f_0;
     short f_2;
     int f_4;
-    char pad_8[4];
+    void (*f_8)();
     int f_C;
     short f_10;
     short f_12;
@@ -17,20 +17,22 @@ typedef struct WpnObj_wpnshop
     short f_1C;
     unsigned short f_1E;
     short f_20[4];
-    char f_28[8];
+    short f_28[4];
     short f_30;
     short f_32;
     short f_34;
     short f_36;
     short f_38;
     short f_3A;
-    char pad_3C[4];
+    short f_3C;
+    short f_3E;
     int f_40;
     int f_44;
     short f_48;
     char pad_4A[2];
     short f_4C;
     short f_4E;
+    short f_50;
 } WpnObj_wpnshop;
 
 typedef struct WpnRect_wpnshop
@@ -88,6 +90,18 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+typedef struct WpnRow_wpnshop
+{
+    unsigned short* p;
+    char pad_4[16];
+} WpnRow_wpnshop;
+extern WpnRow_wpnshop name_800BE580[];
+extern void (*name_800BE7CC[])();
+extern int** dword_8008D3E0;
+extern void sub_800A7B00(int a);
+extern void sub_800BB130();
+extern short sub_800BDDF8();
+extern int sub_800BB088();
 typedef struct WpnA384_wpnshop
 {
     void* rect;
@@ -167,6 +181,68 @@ extern char name_800BEBB4[];
 
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800B66C0);
 
+#if 0
+// register allocation only: original has b in s1, t in s2, a in s3
+void sub_800BAE2C(int a, int b)
+{
+    WpnObj_wpnshop* o;
+    EventEntry* t = sub_80043AF8((EventNode*)dword_8008D3E0);
+    if (t)
+    {
+        t->flags = (t->flags | 1) & ~0x8000;
+        o = (WpnObj_wpnshop*)t->buffer;
+        o->f_4C = b;
+        if (a == 0)
+        {
+            o->f_0 = 1;
+            o->f_34 = 6;
+            o->f_3A = 0;
+        }
+        else if (a == 1)
+        {
+            o->f_0 = 0;
+            o->f_34 = 0;
+            o->f_3A = 9;
+        }
+        sub_8003F900(2, 0);
+        sub_8003F900(1, 0);
+        o->f_2 = -1;
+        o->f_4 = 4;
+        o->f_8 = 0;
+        o->f_C = 0;
+        o->f_10 = 0;
+        o->f_14 = 0;
+        o->f_12 = 0;
+        o->f_18 = 1;
+        o->f_1C = a;
+        o->f_8 = name_800BE7CC[o->f_0];
+        o->f_1E = sub_800BB088(o);
+        o->f_20[0] = sub_800BDDF8(name_800BF244, 0x17, o->f_1E);
+        o->f_20[1] = sub_800BDDF8(name_800BF274, 0xF, o->f_1E);
+        o->f_20[2] = sub_800BDDF8(name_800BF294, 0x11, o->f_1E);
+        o->f_20[3] = sub_800BDDF8(name_800BF1EC, 0x2B, o->f_1E);
+        o->f_36 = 0;
+        o->f_38 = 0;
+        o->f_3C = 0;
+        o->f_3E = 0;
+        o->f_28[0] = name_800BE580[o->f_34].p[0];
+        o->f_28[1] = name_800BE580[o->f_34].p[1];
+        o->f_28[2] = name_800BE580[o->f_34].p[2];
+        o->f_28[3] = name_800BE580[o->f_34].p[3];
+        o->f_30 = 0;
+        o->f_32 = 0;
+        o->f_40 = 0;
+        o->f_44 = 0;
+        o->f_48 = 0;
+        o->f_4E = 0;
+        o->f_50 = 0;
+        sub_8001C19C(0, 0x20);
+        sub_800A7B00(-1);
+        sub_8002BF74();
+        t->cb_8 = (EventEntryFn)sub_800BB130;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BAE2C);
 
 // Matched
