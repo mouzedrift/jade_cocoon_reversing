@@ -112,7 +112,59 @@ void sub_800B6F1C(void)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7000);
+// Matched
+void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
+{
+    int r;
+    sub_8002BE10();
+    sub_800B7440(c);
+    r = 0;
+    if (!(c->flags_C & 1))
+    {
+        sub_8003D794(c, r);
+    }
+    if (sub_8003D380(0))
+    {
+        if (!(c->flags_C & 1))
+        {
+            PlaySfx_80031494(0x7e);
+            sub_800B7144(c);
+        }
+        else
+        {
+            r = 1;
+        }
+    }
+    else if (sub_8003D41C(0))
+    {
+        if (!(c->flags_C & 1))
+        {
+            sub_800B72D4(c);
+        }
+        else
+        {
+            r = 1;
+        }
+    }
+    if (r)
+    {
+        PlaySfx_80031494(0x7c);
+    }
+    if (c->flags_C & 1)
+    {
+        if (sub_800B73A8(c))
+        {
+            PlaySfx_80031494(0x7e);
+            sub_800B7144(c);
+        }
+    }
+    if (c->state_14 == 15)
+    {
+        dword_800B7EAC = 0;
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        sub_800B6CA0();
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shopentr, sub_800B7144);
 
