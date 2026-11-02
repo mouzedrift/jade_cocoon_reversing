@@ -50,7 +50,32 @@ extern void sub_80030D68(SoundStruct* p);
 INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(sub_800300E0);
-INCLUDE_ASM(sub_800303E8);
+extern int sub_8003BC84(int* a);
+extern void sub_800304D0(void);
+// Matched
+int sub_800303E8(void)
+{
+    unsigned short* p = dword_8008D4A4[0x24 / 4];
+    int s[8];
+    if (p[1] != 2)
+    {
+        return 0;
+    }
+    stru_80091D00 = stru_80091D40;
+    stru_80091D00.field_8_sep_data_ptr = 0;
+    stru_80091D00.field_6_sound_idx = 10;
+    p[1] = 0;
+    s[0] = 0x2C;
+    s[1] = 0x301;
+    s[5] = (int)(p + 6);
+    s[6] = 4;
+    s[2] = 0;
+    s[3] = 0;
+    s[4] = 0;
+    s[7] = (int)sub_800304D0;
+    *(int*)(p + 8) = sub_8003BC84(s);
+    return 1;
+}
 INCLUDE_ASM(sub_800304D0);
 // Matched
 void sub_80030664(void)
