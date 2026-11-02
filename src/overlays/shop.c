@@ -1443,6 +1443,7 @@ void sub_800BCEDC(ShopUnit3Shop* u)
     sub_8002A5A4(&q);
 }
 
+#if 0 // near miss: orig shares the field_30 == 0 block with case 4 and cross-jumps the return-2 tails
 int sub_800BCF74(ShopUnit3Shop* u)
 {
     int s;
@@ -1506,6 +1507,9 @@ int sub_800BCF74(ShopUnit3Shop* u)
     }
     return 0;
 }
+#endif
+INCLUDE_OVERLAY_ASM(shop, sub_800BCF74);
+INCLUDE_OVERLAY_ASM(shop, jpt_800B9624);
 INCLUDE_OVERLAY_ASM(shop, dword_800B965C);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD0D4);
