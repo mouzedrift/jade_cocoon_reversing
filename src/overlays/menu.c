@@ -83,6 +83,17 @@ extern char name_800C18F4[];
 extern void sub_8002AF10();
 extern void sub_8002F1C8();
 
+typedef struct MenuRc
+{
+    char pad_0[8];
+    short x8;
+    short xA;
+    short xC;
+    short xE;
+} MenuRc;
+extern int name_800AD288();
+extern MenuRc* name_80014390();
+
 typedef struct MenuBox
 {
     short x_0;
@@ -844,7 +855,40 @@ void sub_800C01D0(MenuObj* o)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C01F4);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C0428);
+extern MenuQ name_800C1BE8[];
+void sub_800C0428(MenuCtx* c)
+{
+    int found = 0;
+    int sum = (unsigned short)c->arr_2A[3] + (unsigned short)c->arr_46[0];
+    int is = c->sel_2 == 1;
+    if (sub_8003D480() && is && c->f24 == 0)
+    {
+        int r = name_800AD288((short)sum, found);
+        if (r < 0x2B)
+        {
+            sub_8002AF10(&name_800C1BE8[r], found, 0xE);
+            found = 1;
+        }
+    }
+    if (!found && c->f24 == 0)
+    {
+        int tmp[2];
+        unsigned short u = 0;
+        int a = 0;
+        MenuRc* r;
+        if (c->sel_2 == 2)
+        {
+            u = c->arr_2A[5];
+            sub_800C0CA4(c, tmp);
+            a = tmp[0];
+        }
+        r = name_80014390(u & 0xFF);
+        if (u == 0)
+            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 2);
+        else
+            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 0);
+    }
+}
 
 extern int sub_800C0990();
 extern void sub_8002F7D0();
@@ -993,14 +1037,6 @@ typedef struct MenuTmp
     int w[14];
 } MenuTmp;
 
-typedef struct MenuRc
-{
-    char pad_0[8];
-    short x8;
-    short xA;
-    short xC;
-    short xE;
-} MenuRc;
 
 typedef struct MenuQuad
 {
@@ -1010,8 +1046,6 @@ typedef struct MenuQuad
     short d;
 } MenuQuad;
 
-extern int name_800AD288();
-extern MenuRc* name_80014390();
 extern int sub_80033DF4();
 extern void sub_80013C28();
 void sub_800C0CA4(MenuCtx* c, int* out)
