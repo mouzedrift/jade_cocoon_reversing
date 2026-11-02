@@ -81,6 +81,7 @@ extern void sub_8002C06C();
 extern unsigned short uiColor_8008B590;
 extern void sub_800BFF84();
 extern void sub_80027478();
+extern char* name_8008D498;
 extern int sub_800C0990();
 typedef struct MenuDlg
 {
@@ -512,11 +513,75 @@ int sub_800BFB10(MenuCtx* c)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BFB10);
 
+// near miss: register allocation of the flags copy
+#if 0
+int sub_800BFBE0(MenuCtx* c)
+{
+    int n = *(unsigned short*)&c->f8 - 1;
+    unsigned short fl = c->flags_0;
+    if (fl & 2)
+    {
+        c->f58 = 1;
+        c->f5A = 1;
+        c->f5C = 1;
+        c->f5E = 0x20;
+        c->f60 = 0;
+        c->flags_0 = (fl & ~2) | 1;
+        return 1;
+    }
+    if (fl & 4)
+    {
+        if ((short)n != 0)
+        {
+            c->f58 = n;
+            c->f5C = n;
+            c->f5A = 1;
+            c->f5E = 0x31;
+            c->f60 = c->arr_2A[1];
+            c->flags_0 |= 2;
+        }
+        else
+        {
+            c->f58 = 1;
+            c->f5A = 1;
+            c->f5C = 1;
+            c->f5E = 0x20;
+            c->flags_0 |= 1;
+        }
+        c->flags_0 &= ~4;
+        return 1;
+    }
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BFBE0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFCA8);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BFE18);
+extern void sub_80020BF8();
+extern void name_800C2EB4();
+extern void name_800C47A8();
+extern void sub_800BFF38();
+extern void sub_800BFEC0();
+void sub_800BFE18(MenuCtx* c)
+{
+    MenuTask* t = (MenuTask*)(name_8008D498 + 0x10);
+    switch (c->sel_2)
+    {
+    case 8:
+        t->next_8 = sub_800BFF38;
+        sub_80020BF8(2, 0xF);
+        c->flags_0 |= 0x20;
+        name_800C2EB4();
+        break;
+    case 10:
+        t->next_8 = sub_800BFEC0;
+        sub_80020BF8(2, 0x12);
+        c->flags_0 |= 0x20;
+        name_800C47A8(0);
+        break;
+    }
+}
 
 extern void sub_80033308();
 extern void sub_800C07F0();
@@ -586,7 +651,6 @@ void sub_800BFFFC(MenuTask* t)
 extern void sub_80027478();
 extern void sub_80027314();
 extern void sub_800BFFFC();
-extern char* name_8008D498;
 void sub_800C0084(void)
 {
     MenuTask* t = (MenuTask*)(name_8008D498 + 0x10);
@@ -604,7 +668,22 @@ void sub_800C00D4(MenuObj* o, int a, int s)
     o->fC |= 1 << s;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C00F8);
+extern void sub_800127D0();
+void sub_800C00F8(MenuObj* a, int* b)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        int bit = 1 << i;
+        if (a->fC & bit)
+        {
+            sub_800127D0(i, 0, -b[7], 0);
+            sub_800127D0(i, 2, -b[8], 0);
+            sub_800127D0(i, 0x11, 0, b[1]);
+            sub_800127D0(i, 0x10, 0, b[2]);
+        }
+    }
+}
 
 extern int name_800C1BBC[];
 void sub_800C01AC(MenuObj* o)
