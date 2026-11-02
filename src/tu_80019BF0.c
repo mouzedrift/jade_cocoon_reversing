@@ -202,6 +202,46 @@ int sub_80019C84(void)
     }
     return v;
 }
+// the block at 0x8008D4F0 (tu_80036528.c copies its first 0x68 bytes as Block104)
+typedef struct
+{
+    VECTOR pos;
+    int field_10;
+    int active;
+} struct_8008D4F0_point;
+typedef struct
+{
+    char pad_0[0x44];
+    struct_8008D4F0_point points[8];
+} struct_8008D4F0;
+extern struct_8008D4F0 dword_8008D4F0;
+#if 0
+// Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
+int sub_80019CC4(VECTOR* pos)
+{
+    unsigned int i;
+    unsigned int best;
+    int found;
+    best = -1;
+    found = 0;
+    if (!(unknownFlags_8008D678 & 0x8000))
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (dword_8008D4F0.points[i].active == 0)
+            {
+                break;
+            }
+            if (sub_8003B860(&dword_8008D4F0.points[i].pos, pos) < best)
+            {
+                best = sub_8003B860(&dword_8008D4F0.points[i].pos, pos);
+                found = i;
+            }
+        }
+    }
+    return found;
+}
+#endif
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
 INCLUDE_ASM(sub_8001A38C);
@@ -284,7 +324,45 @@ unsigned char sub_8001AC58(int idx)
     return 0;
 }
 INCLUDE_ASM(sub_8001AC8C);
-INCLUDE_ASM(sub_8001AD64);
+// Matched
+struct_12* sub_8001AD64(unsigned int idx)
+{
+    if (idx < 0x1E)
+    {
+        return &dword_8007C5A0[idx];
+    }
+    return 0;
+}
+// Matched
+void sub_8001AD90(unsigned int* bits)
+{
+    int i;
+    for (i = 0; i < 1; i++)
+    {
+        bits[i] = 0;
+    }
+}
+// Matched
+void sub_8001ADAC(unsigned int* bits, unsigned int idx)
+{
+    unsigned int* p = bits + (idx >> 5);
+    *p |= 1 << (idx & 0x1F);
+}
+// Matched
+void sub_8001ADD4(unsigned int* dst, unsigned int* src)
+{
+    int i;
+    for (i = 0; i < 1; i++)
+    {
+        dst[i] |= src[i];
+    }
+}
+// Matched
+void sub_8001AE00(unsigned int* bits, unsigned int idx)
+{
+    unsigned int* p = bits + (idx >> 5);
+    *p &= ~(1 << (idx & 0x1F));
+}
 // Matched
 int sub_8001AE2C(unsigned int* bits, unsigned int idx)
 {
@@ -625,7 +703,46 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
 }
 INCLUDE_ASM(sub_8001C364);
 INCLUDE_ASM(sub_8001C440);
-INCLUDE_ASM(sub_8001C6C8);
+// Matched
+void sub_8001C6C8(void)
+{
+    unsigned short* dst = dword_8008B578;
+    int i = 0;
+    unsigned short* src = dword_8007CAF4;
+    for (; i < 10; i++)
+    {
+        sub_8001C810(dst++, *src++);
+    }
+}
+// Matched
+int sub_8001C72C(int pad, unsigned short mask)
+{
+    return (pad & mask) != 0;
+}
+// Matched
+int sub_8001C73C(int pad, unsigned short mask)
+{
+    if (mask == 0)
+    {
+        return 0;
+    }
+    return (pad & mask) == mask;
+}
+// Matched
+int sub_8001C75C(unsigned short v)
+{
+    unsigned short* p = dword_8008B578;
+    int i;
+    for (i = 0; i < 10; i++)
+    {
+        if (*p == v)
+        {
+            return i;
+        }
+        p++;
+    }
+    return -1;
+}
 #if 0
 // Not matched: s1/s2 register assignment for p/q swapped
 void sub_8001C79C(int a0, int a1)
@@ -1274,7 +1391,35 @@ void sub_8001DA4C(char* p, int div, int from, int to)
         *(int*)(p + 4) |= 3;
     }
 }
-INCLUDE_ASM(sub_8001DAAC);
+// Matched
+void sub_8001DAAC(char* o, int a1)
+{
+    if (a1 != 0)
+    {
+        *(int*)(o + 4) |= 0x800;
+        sub_800292D0(o + 0x150, o + 0x158, a1);
+    }
+    else
+    {
+        *(int*)(o + 4) &= ~0x800;
+    }
+}
+// Matched
+void sub_8001DB00(char* o, int* v, int a2)
+{
+    if (v != 0)
+    {
+        *(int*)(o + 0x70) = v[0];
+        *(int*)(o + 0x74) = v[1];
+        *(int*)(o + 0x78) = v[2];
+        *(int*)(o + 0x7C) = a2;
+        *(int*)(o + 4) |= 0x4000000;
+    }
+    else
+    {
+        *(int*)(o + 4) &= ~0x4000000;
+    }
+}
 // Matched
 void sub_8001DB58(struct_obj_A* p, int a1, int a2)
 {
@@ -1320,7 +1465,30 @@ void sub_8001DC34(void* p, unsigned char* s)
     sub_8001EA48(p);
 }
 INCLUDE_ASM(sub_8001DC60);
-INCLUDE_ASM(sub_8001DD44);
+// Matched
+int sub_8001DD44(char* o, int mode, int a, int b)
+{
+    int m;
+    int r;
+    m = a;
+    if (a >= b)
+    {
+        m = b;
+    }
+    if (mode == 1)
+    {
+        *(int*)(o + 0x19C) = m;
+    }
+    else
+    {
+        *(int*)(o + 0x19C) = -m;
+    }
+    sub_8001D71C((struct_obj_A*)o);
+    sub_80014588(o + 0x1A4, o + 0x194, frameCount_8008D3FC);
+    *(short*)(o + 0x5E) += *(short*)(o + 0x1A0);
+    r = a - b;
+    return r < 0 ? 0 : (a < r ? a : r);
+}
 INCLUDE_ASM(sub_8001DDFC);
 INCLUDE_ASM(sub_8001DECC);
 INCLUDE_ASM(sub_8001DFC8);
@@ -1359,7 +1527,30 @@ void sub_8001E254(struct_obj_A* p)
     p->flags_4 = (p->flags_4 & 0xFFFDFFFF) | 0x600000;
     sub_8001E34C(p);
 }
-INCLUDE_ASM(sub_8001E28C);
+// Matched
+void sub_8001E28C(char* o)
+{
+    int s[0x4A];
+    if (*(int*)(o + 0x130) >= 0)
+    {
+        s[0] = *(int*)(o + 0x130);
+        s[1] = (int)(o + 0x108);
+        s[2] = *(int*)(o + 0x14C);
+        s[3] = (int)(o + 0x38);
+        s[4] = *(int*)(o + 0x1C4);
+        s[5] = *(int*)(o + 0x1C8);
+        s[13] = *(int*)(o + 0x144);
+        s[14] = (int)(o + 0x2C);
+        sub_800182B8(s, *(int*)(o + 0xEC));
+        sub_800184DC((int)s, sub_80014358(*(int*)(o + 0xE8)));
+        *(int*)(o + 0x130) = -1;
+    }
+    *(int*)(o + 4) |= 0x20000;
+    if (*(int*)(o + 0x100) != 0)
+    {
+        sub_8001EFC4((struct_obj_F*)o);
+    }
+}
 #if 0
 void sub_8001E34C(void* a0)
 {
@@ -1491,8 +1682,25 @@ void sub_8001FF48(void* a0)
 #endif
 INCLUDE_ASM(sub_8001FF48);
 #if 0
-void sub_800200F8(void* a0)
+// Not matched: original reuses the -1 of the first compare for the loop (move a3,v0), ours loads it again
+void sub_800200F8(char* o)
 {
+    int i;
+    MATRIX* src;
+    if (*(int*)(o + 4) & 0x10000000)
+    {
+        if (**(short**)(o + 0x134) != -1)
+        {
+            i = 0;
+            src = dword_80098188;
+            do
+            {
+                (*(MATRIX**)(o + 0x1C8))[i] = *src;
+                i++;
+                src++;
+            } while ((*(short**)(o + 0x134))[i * 4] != -1);
+        }
+    }
 }
 #endif
 INCLUDE_ASM(sub_800200F8);
@@ -1530,7 +1738,23 @@ int sub_800201EC(int id)
     }
     return -1;
 }
-INCLUDE_ASM(sub_80020278);
+// Matched
+void sub_80020278(int a0, int a1)
+{
+    int i;
+    struct_obj_C* e = &dword_800919A0[a0];
+    for (i = 0; i < 0x23; i++)
+    {
+        if ((e->field_8[i] >> a1) & 1)
+        {
+            sub_800203B0(a0, a1, i);
+        }
+    }
+    if (--e->field_4 == 0)
+    {
+        sub_800204AC(e);
+    }
+}
 // Matched
 int sub_8002032C(int a0, int a1, int a2)
 {
@@ -1605,7 +1829,26 @@ void sub_80020734(int arg)
 {
     sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
 }
-INCLUDE_ASM(sub_80020768);
+// Matched
+void sub_80020768(int a0)
+{
+    int* p = dword_8008B54C[9];
+    struct_20* e = (struct_20*)(p + 3);
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (e->field_4 >= 0 && e->field_10 >= 0)
+        {
+            if (a0 == sub_80024D70(p[2], e->field_4))
+            {
+                sub_80024C48(a0);
+                e->field_4 = -1;
+                return;
+            }
+        }
+        e++;
+    }
+}
 // Matched
 void sub_80020814(void)
 {
