@@ -30,6 +30,25 @@ extern void sub_800A0D1C(int);
 extern void sub_800A0B70(int);
 extern void sub_8001C02C(void*);
 extern void sub_800376A0(int*, int);
+typedef struct CombBtlUnit
+{
+    char pad_0[0xF8];
+} CombBtlUnit;
+
+typedef struct CombBtlHist
+{
+    int a;
+    char pad_4[0x10];
+} CombBtlHist;
+
+extern CombBtlUnit dword_800A3AA0[2][3];
+extern CombBtlHist dword_800A84D8[];
+extern int dword_8008D778;
+extern void sub_8001A38C();
+extern void sub_8001A41C();
+extern int sub_800A1958(void*);
+extern int sub_800A10DC(int);
+extern void sub_800A7EFC();
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -174,7 +193,16 @@ void sub_800A5EF8(CombBtlTask* t)
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5F60);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A601C);
+void sub_800A601C()
+{
+    int i;
+    for (i = 10; i > 0; i--)
+    {
+        sub_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
+    }
+    dword_800A84D8[0].a = dword_800A85B8;
+    sub_800403E8((unsigned int*)((char*)dword_800A84D8 + 4), (unsigned int*)&dword_800A8600, 0x10);
+}
 
 void sub_800A60A4()
 {
@@ -210,7 +238,19 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A616C);
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A68E0);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7164);
+int sub_800A7164(int i)
+{
+    int cnt = 0;
+    int j;
+    for (j = 0; j < 3; j++)
+    {
+        if (sub_800A1958(&dword_800A3AA0[i][j]) == 0)
+        {
+            cnt++;
+        }
+    }
+    return cnt;
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A71E4);
 
@@ -222,7 +262,16 @@ void sub_800A73E4()
     sub_80043B40((int*)dword_8008D4A0);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7420);
+void sub_800A7420()
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D628);
+    if (e)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        sub_8001A38C();
+        e->cb_8 = (EventEntryFn)sub_8001A41C;
+    }
+}
 
 void sub_800A7478()
 {
@@ -264,7 +313,22 @@ void sub_800A7BE4()
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7C0C);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7E34);
+void sub_800A7E34(int a, int b, int c)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D778);
+    int* p;
+    if (e)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        p = (int*)e->buffer;
+        p[0] = b;
+        p[2] = 0;
+        p[1] = c;
+        p[6] = a;
+        p[4] = sub_800A10DC(a);
+        e->cb_8 = (EventEntryFn)sub_800A7EFC;
+    }
+}
 
 void sub_800A7ECC()
 {
