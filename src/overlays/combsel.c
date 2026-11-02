@@ -24,7 +24,17 @@ typedef struct CombSelItem
 extern short* dword_800A566C[3];
 extern short* dword_800A57E4[6];
 extern short* dword_800A5930[5];
-extern volatile unsigned char byte_800A38D9;
+extern unsigned char byte_800A38D9;
+extern void sub_800A4E4C();
+typedef struct CombSelState
+{
+    char pad_0[8];
+    short field_8;
+} CombSelState;
+
+extern CombSelState dword_800A1BBC;
+extern short word_800A5968;
+extern short word_800A5974;
 extern CombSelUnit dword_800A3AA0[2][3];
 extern int dword_800A3A94;
 extern unsigned char byte_800A38DB;
@@ -34,6 +44,7 @@ extern int sub_800A1934(void*);
 extern void sub_800A4D64(CombSelUnit*);
 extern void sub_800A197C(void*);
 extern void sub_800A5538();
+extern int sub_800A5560(CombSelUnit*, int);
 extern int sub_8003DA54(void*);
 extern void sub_80031494(int);
 
@@ -49,19 +60,19 @@ void sub_800A4C74()
     {
         v[0] = 0xA;
         v[1] = 0xA6;
-        dword_800A566C[i][8] = v[byte_800A38D9];
+        dword_800A566C[i][8] = v[*(volatile unsigned char*)&byte_800A38D9];
     }
     for (i = 0; i < 6; i++)
     {
         v[0] = 0x9B;
         v[1] = 0x15;
-        dword_800A57E4[i][8] = v[byte_800A38D9];
+        dword_800A57E4[i][8] = v[*(volatile unsigned char*)&byte_800A38D9];
     }
     for (i = 0; i < 5; i++)
     {
         v[0] = 0xA;
         v[1] = 0xCA;
-        dword_800A5930[i][8] = v[byte_800A38D9];
+        dword_800A5930[i][8] = v[*(volatile unsigned char*)&byte_800A38D9];
     }
 }
 
@@ -101,6 +112,36 @@ void sub_800A4E4C()
 
 INCLUDE_OVERLAY_ASM(combsel, sub_800A4E94);
 
+// Near miss: store order of the case 0 assignments
+#if 0
+void sub_800A5080(CombSelTask* t, int a)
+{
+    if (sub_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
+    {
+        sub_80031494(0x7C);
+    }
+    else
+    {
+        byte_800A38DB = 0;
+        dword_800A1BBC.field_8 = 3;
+        sub_80031494(0x7E);
+        switch (byte_800A38D9)
+        {
+        case 0:
+            dword_800A1BBC.field_8 = 0;
+            word_800A5968 = 0;
+            byte_800A38D9 = 1;
+            word_800A5974 = 0;
+            break;
+        case 1:
+            sub_800A4E4C();
+            t->next_8 = sub_800A16FC;
+            t->next_8(t, a);
+            break;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combsel, sub_800A5080);
 
 INCLUDE_OVERLAY_ASM(combsel, sub_800A5188);
