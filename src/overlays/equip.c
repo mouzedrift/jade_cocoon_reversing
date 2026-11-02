@@ -191,7 +191,58 @@ void sub_800C4D50(EquipCtx_equip* c)
 }
 
 
-INCLUDE_OVERLAY_ASM(equip, sub_800C4DF4);
+void sub_800C4DF4(EquipCtx_equip* c)
+{
+    if (c->field_28)
+    {
+        if (c->mode_1C == 1)
+        {
+            c->s_40 = sub_800AD288(c->s_3C + c->s_3E, c->sel_18 + 1);
+        }
+        c->a_0[c->idx_1A] = c->s_3C;
+        c->b_C[c->idx_1A] = c->s_3E;
+        c->s_3C = c->a_0[c->idx_1A + 1];
+        c->s_3E = c->b_C[c->idx_1A + 1];
+        c->idx_1A++;
+        c->mode_1C = tab_800C59B0[c->idx_1A];
+        if (c->mode_1C == 1)
+        {
+            c->s_3C = c->a_0[c->sel_18 + 1];
+            c->s_3E = c->b_C[c->sel_18 + 1];
+        }
+        if (c->mode_1C != 1)
+        {
+            c->s_42 = 0;
+        }
+    }
+    else if (c->field_2C)
+    {
+        c->idx_1A--;
+        if (c->idx_1A == -1)
+        {
+            unknownFlags_8008D678 &= 0x7FFFFFFF;
+            return;
+        }
+        c->mask_1E &= 0xfffc;
+        c->mode_1C = tab_800C59B0[c->idx_1A];
+        c->s_3C = c->a_0[c->idx_1A];
+        c->s_3E = c->b_C[c->idx_1A];
+        if (c->mode_1C == 1)
+        {
+            c->s_3C = c->a_0[c->sel_18 + 1];
+            c->s_3E = c->b_C[c->sel_18 + 1];
+        }
+    }
+    c->mask_1E |= 3;
+    if (c->field_2C)
+    {
+        c->field_20 = (short)c->mask_1E;
+    }
+    sub_800C497C(c);
+    c->field_2C = 0;
+    c->field_28 = 0;
+}
+
 
 void sub_800C5064(EquipCtx_equip* c)
 {
@@ -271,9 +322,107 @@ void sub_800C51B0(EquipCtx_equip* c)
 }
 
 
-INCLUDE_OVERLAY_ASM(equip, sub_800C5314);
+typedef struct
+{
+    short x;
+    short y;
+    short w;
+    short h;
+} Rect8_equip;
 
-INCLUDE_OVERLAY_ASM(equip, sub_800C5440);
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair_equip;
+
+typedef struct
+{
+    short a;
+    char b;
+    char c;
+} Small_equip;
+
+extern short uiColor_8008B590;
+extern char name_800C59A0[];
+extern int sub_80014390(int a0);
+extern void sub_8002F7D0(void* p, int a1);
+extern void sub_8002E288(int a0, int a1, int a2, void* p);
+extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
+extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+
+void sub_800C5314(EquipCtx_equip* c)
+{
+    char buf10[0x18];
+    char buf28[0x18];
+    Rect8_equip r40;
+    int h;
+    int mode;
+    h = sub_80014390(0);
+    sub_80033624(buf10, h);
+    r40.x = 0xc2;
+    r40.y = 0x31;
+    sub_8002F7D0(&r40, 0xe);
+    mode = c->mode_1C;
+    if (mode == 1 && c->s_40 != 0xff)
+    {
+        union
+        {
+            ShortPair_equip p;
+            Small_equip s;
+        } u;
+        Rect8_equip r50;
+        sub_8002E288(h, c->s_40, c->sel_18, buf28);
+        r40.x = 0x119;
+        r40.y = 0x34;
+        sub_8002E188(buf10, buf28, &r40, 0xe);
+        u.p.a = 2;
+        u.p.b = 0;
+        r50.x = 0x112;
+        r50.y = 0x57;
+        sub_8002B3DC(u.p, frameCount_8008D3FC, &r50, 0xe);
+        u.s.a = uiColor_8008B590;
+        u.s.b = 0;
+        u.s.c = mode;
+        sub_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+    }
+}
+
+
+extern char tab_800C59E0[][16];
+extern char tab_800C5B50[][16];
+extern char tab_800C5C40[][16];
+void sub_800C5440(short a0, short a1, int a2)
+{
+    int e = 0;
+    switch (a1)
+    {
+    case 0:
+        if (a0 < 0x17)
+        {
+            e = (int)tab_800C59E0 + a0 * 16;
+        }
+        break;
+    case 1:
+        if (a0 < 0xf)
+        {
+            e = (int)tab_800C5B50 + a0 * 16;
+        }
+        break;
+    case 2:
+        if (a0 < 0x11)
+        {
+            e = (int)tab_800C5C40 + a0 * 16;
+        }
+        break;
+    }
+    if (e)
+    {
+        sub_8002AF10(e, a2, 0xe);
+    }
+}
+
 
 INCLUDE_OVERLAY_ASM(equip, sub_800C5510);
 
