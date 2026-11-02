@@ -55,7 +55,10 @@ typedef struct ShopUnit3Shop
     int field_1C;
     int field_20;
     int field_24;
-    char pad_28[8];
+    short field_28;
+    short field_2A;
+    short field_2C;
+    short field_2E;
     short field_30;
     short field_32;
     char pad_34[8];
@@ -70,7 +73,9 @@ typedef struct ShopUnit3Shop
     void* field_4C;
     void* field_50;
     void* field_54;
-    char pad_58[6];
+    unsigned short field_58;
+    unsigned short field_5A;
+    unsigned short field_5C;
     short a5E[7];
     short field_6C;
     short field_6E;
@@ -139,6 +144,8 @@ extern int sub_8001AE54(unsigned int* b);
 extern char name_800B6D04[];
 extern char name_800B6D2C[];
 extern unsigned short name_800BF888[];
+extern unsigned short name_800BF7E8[][4];
+extern int sub_800AD308(int a);
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -979,7 +986,67 @@ void sub_800BD7A8(ShopUnit3Shop* u)
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BD7A8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BD854);
+void sub_800BD854(ShopUnit3Shop* u)
+{
+    unsigned short* e = name_800BF7E8[u->field_0];
+    int r;
+    u->field_28 = e[0];
+    u->field_2A = e[1];
+    u->field_2C = e[2];
+    u->field_2E = e[3];
+    if (u->field_1C & 8)
+    {
+        if (u->field_0 == 4)
+        {
+            u->field_30 = 0;
+        }
+        else
+        {
+            u->field_30 = 1;
+        }
+    }
+    if (u->field_0 == 3)
+    {
+        u->field_3C = 2;
+    }
+    if (u->field_24 & 8)
+    {
+        if (u->field_7E == 0)
+        {
+            u->field_24 |= 0x10;
+            u->field_28 = 1;
+            u->field_2E = 0x20;
+            u->field_2A = 3;
+            u->field_2C = 3;
+            if (u->field_0 == 2 || u->field_0 == 10)
+            {
+                u->field_30 = u->field_58;
+            }
+        }
+        else
+        {
+            u->field_24 &= ~0x10;
+            u->field_28 = 1;
+            u->field_2A = 4;
+            u->field_2C = 0x18;
+            u->field_2E = 0x50;
+            if (u->field_0 == 2 || u->field_0 == 10)
+            {
+                u->field_30 = u->field_5A;
+                u->field_32 = u->field_5C;
+            }
+        }
+    }
+    if (u->field_0 == 14)
+    {
+        r = sub_800AD308(4);
+        if (r < 3)
+        {
+            r = 3;
+        }
+        u->field_2C = r + 1;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
 
