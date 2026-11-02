@@ -52,8 +52,40 @@ typedef struct EvCtxEventfnc
     EvEntEventfnc* ent_120;
 } EvCtxEventfnc;
 
-extern int sub_800BBC00(EvCtxEventfnc* c, int a, int b);
-extern int sub_800BBC80(EvCtxEventfnc* c, int a, int b);
+typedef struct EvVecEventfnc
+{
+    int x_0;
+    int y_4;
+    int z_8;
+} EvVecEventfnc;
+
+typedef struct EvMsgEventfnc
+{
+    int m0_0;
+    int m4_4;
+    int m8_8;
+    int mC_C;
+    int m10_10;
+    int m14_14;
+    int m18_18;
+    int m1C_1C;
+    int m20_20;
+    int m24_24;
+} EvMsgEventfnc;
+
+typedef struct EvObjEventfnc
+{
+    char pad_0[0x1A];
+    short f1A_1A;
+    char pad_1C[0x90 - 0x1C];
+    int f90_90;
+} EvObjEventfnc;
+
+extern EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int a, int b);
+extern EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int a, int b);
+extern EvVecEventfnc* sub_800BBBA0(int a);
+extern int sub_800BB840(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
+extern int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
 extern void sub_800BBDA0(int a, int b);
 extern int sub_800BBDD8(int a);
 
@@ -242,19 +274,81 @@ int sub_800B9218(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9260);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B93A8);
+int sub_800B93A8(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    EvVecEventfnc* v = (EvVecEventfnc*)c->pc_8->c_C;
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = c->pc_8->op_0 != 0x14;
+    m.m18_18 = v->x_0;
+    m.m1C_1C = v->y_4;
+    m.m20_20 = v->z_8;
+    m.m14_14 = c->pc_8->b_8;
+    return sub_800BB840(c, &m, 1, 1);
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B942C);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B95BC);
+int sub_800B95BC(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    EvInsEventfnc* i = c->pc_8;
+    EvVecEventfnc* v = (EvVecEventfnc*)i->c_C;
+    int a = i->a_4;
+    m.m0_0 = a;
+    m.m4_4 = 2;
+    m.m18_18 = v->x_0;
+    m.m1C_1C = v->y_4;
+    m.m20_20 = v->z_8;
+    m.m14_14 = c->pc_8->b_8;
+    return sub_800BB840(c, &m, 1, 1);
+}
 
+#if 0
+int sub_800B962C(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    EvVecEventfnc* v;
+    int a = c->pc_8->a_4;
+    int b = c->pc_8->b_8;
+    v = (a == b) ? sub_800BBC80(c, b, 0) : sub_800BBBA0(b);
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = 2;
+    m.m18_18 = v->x_0;
+    m.m1C_1C = v->y_4;
+    m.m20_20 = v->z_8;
+    m.m14_14 = c->pc_8->c_C;
+    return sub_800BB840(c, &m, 1, 1);
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B962C);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B96D8);
+int sub_800B96D8(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = 6;
+    m.mC_C = c->pc_8->b_8;
+    return sub_800BB990(c, &m, 0, 1);
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9720);
+int sub_800B9720(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = 7;
+    m.mC_C = c->pc_8->b_8;
+    return sub_800BB990(c, &m, 0, 1);
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9768);
+int sub_800B9768(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = 8;
+    m.mC_C = c->pc_8->b_8;
+    return sub_800BB990(c, &m, 0, 1);
+}
 
 int sub_800B97B0(EvCtxEventfnc* c)
 {
@@ -484,27 +578,119 @@ int sub_800B9FD8(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA020);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA1DC);
+int sub_800BA1DC(EvCtxEventfnc* c)
+{
+    int* p = c->f110_110;
+    if (p != 0)
+    {
+        EvInsEventfnc* i = c->pc_8;
+        unsigned int a = i->a_4;
+        unsigned int b = i->b_8;
+        if (b >= a)
+        {
+            p[3] = i->c_C;
+        }
+        else
+        {
+            i->b_8 = b + 1;
+        }
+    }
+    c->pc_8++;
+    return 1;
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA238);
+extern int sub_80034ADC(int a, int b);
+int sub_800BA238(EvCtxEventfnc* c)
+{
+    if (sub_80034ADC(c->f11C_11C, c->pc_8->b_8))
+    {
+        c->pc_8++;
+        return 1;
+    }
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA28C);
+int sub_800BA28C(EvCtxEventfnc* c)
+{
+    EvInsEventfnc* i = c->pc_8;
+    if (i->a_4 == 1)
+    {
+        c->f114_114 |= i->b_8;
+    }
+    else
+    {
+        c->f114_114 &= ~i->b_8;
+    }
+    c->pc_8++;
+    return 1;
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA2E8);
+int sub_800BA2E8(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = 1 << c->pc_8->a_4;
+    m.m4_4 = 3;
+    m.mC_C = c->pc_8->b_8;
+    return sub_800BB990(c, &m, 1, 1);
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA338);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA40C);
+int sub_800BA40C(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = 1 << c->pc_8->a_4;
+    m.m4_4 = 5;
+    m.m24_24 = c->pc_8->c_C;
+    return sub_800BB990(c, &m, 1, 1);
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA45C);
+extern EvObjEventfnc* sub_800A7A60(int a);
+int sub_800BA45C(EvCtxEventfnc* c)
+{
+    int ok = 0;
+    int a = c->pc_8->a_4;
+    if (a != 0)
+    {
+        EvObjEventfnc* o = sub_800A7A60(a - 1);
+        if (o->f90_90 == o->f1A_1A)
+        {
+            sub_8001D6EC((struct_obj_A*)o, c->pc_8->b_8);
+            ok = 1;
+        }
+    }
+    if (ok)
+    {
+        c->pc_8++;
+        return 1;
+    }
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA4F0);
+int sub_800BA4F0(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    m.m0_0 = 1 << c->pc_8->a_4;
+    m.m4_4 = 9;
+    m.mC_C = c->pc_8->b_8;
+    m.m14_14 = c->pc_8->c_C;
+    return sub_800BB990(c, &m, 1, 1);
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA554);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA5CC);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA678);
+int sub_800BA678(EvCtxEventfnc* c)
+{
+    c->fF0_F0 = c->pc_8->c_C;
+    if (c->fF0_F0 == 0)
+    {
+        c->fF0_F0 = sub_800BBDF4(c);
+    }
+    c->pc_8++;
+    return 1;
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA6D0);
 
