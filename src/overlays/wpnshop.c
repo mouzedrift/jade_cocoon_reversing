@@ -1134,8 +1134,51 @@ void sub_800BCF80(unsigned short* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCFCC);
-INCLUDE_OVERLAY_ASM(wpnshop, jpt_800BAE0C);
+void sub_800BCFCC(WpnObj_wpnshop* o)
+{
+    int v = 0;
+    WpnRect_wpnshop r;
+    WpnBox_wpnshop b;
+    if (o->f_14 != 0xFF)
+    {
+        switch (o->f_34)
+        {
+        case 17:
+        case 19:
+            v = GETINT_8001CE54(o->f_14);
+            break;
+        case 16:
+        case 18:
+            v = GETINT_8001CE54(o->f_14) * 3 / 4;
+            break;
+        case 13:
+        case 15:
+            v = sub_8001D1F8(o->f_14, o->f_10);
+            break;
+        case 12:
+        case 14:
+            v = sub_8001D1F8(o->f_14, o->f_10) * 3 / 4;
+            break;
+        }
+        r.x = 0xBD;
+        r.y = 0x5E;
+        r.w = 0x79;
+        r.h = 0x10;
+        b.c_B = 1;
+        b.x_0 = 0xC1;
+        b.col_8 = uiColor_8008B590;
+        b.c_A = 0;
+        b.y_2 = 0x60;
+        sub_8002C06C(&b, 0xCE, 0xE);
+        b.x_0 = 0x11D;
+        b.y_2 = 0x64;
+        sub_8002C414(&b, v * o->f_18, 0xE);
+        b.x_0 = 0x11E;
+        b.y_2 = 0x62;
+        sub_8002C06C(&b, 0xEA, 0xE);
+        sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    }
+}
 
 // Matched
 void sub_800BD174(WpnObj_wpnshop* o)
