@@ -29,6 +29,8 @@ extern int dword_800A3A88;
 extern short word_800A4C90;
 extern short word_800A4C92;
 extern short word_800A4C94;
+extern short word_800A4C96;
+extern unsigned int dword_8008D3FC;
 extern unsigned short word_8008D3FC;
 extern unsigned short uiColor_8008B590;
 extern CombStrtUnit dword_800A3AA0[2][3];
@@ -99,7 +101,38 @@ void sub_800A4524(CombStrtTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combstrt, sub_800A45B8);
+void sub_800A45B8()
+{
+    short st = word_800A4C92;
+    switch (st)
+    {
+    case 0:
+        sub_800A46FC();
+        if (word_800A4C90 < word_800A4C94++)
+        {
+            word_800A4C92 = 1;
+            word_800A4C94 = 0;
+            word_800A4C96 = 0;
+            word_800A4C90 = ((dword_8008D3FC & 0x70) >> 4) + 5;
+        }
+        break;
+    case 1:
+        if (word_800A4C96 < word_800A4C94++)
+        {
+            word_800A4C92 = 2;
+        }
+        break;
+    case 2:
+        sub_800A46FC();
+        word_800A4C92 = 1;
+        word_800A4C94 = 0;
+        if (word_800A4C90 < word_800A4C96++)
+        {
+            byte_800A4C14 = 2;
+        }
+        break;
+    }
+}
 
 void sub_800A46FC()
 {
