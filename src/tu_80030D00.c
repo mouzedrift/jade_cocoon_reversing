@@ -46,7 +46,28 @@ int GetSoundFileId_80030D4C(int idx)
 {
   return soundFiles_80082F0C[idx].field_0_file_id;
 }
-INCLUDE_ASM(sub_80030D68);
+// Matched
+void sub_80030D68(SoundStruct* s)
+{
+    int i;
+    s->field_4_seq_num = -1;
+    if (s->field_8_sep_data_ptr)
+    {
+        for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
+        {
+            SsSepStop(s->field_C_sep_access_num, i);
+            SsSepSetVol(s->field_C_sep_access_num, i, 0, 0);
+        }
+    }
+    if (s->field_10_sep_data_ptr)
+    {
+        for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_5_seq_count; i++)
+        {
+            SsSepStop(s->field_14_sep_access_num, i);
+            SsSepSetVol(s->field_14_sep_access_num, i, 0, 0);
+        }
+    }
+}
 // Matched
 void sub_80030EA4(short* p)
 {

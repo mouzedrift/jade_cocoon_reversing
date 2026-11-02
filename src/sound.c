@@ -24,7 +24,57 @@ INCLUDE_DATA(word_80074448);
 INCLUDE_DATA(aAssertionFaile_0);
 INCLUDE_DATA(aSoundC);
 
-INCLUDE_ASM(sub_8002FD0C);
+typedef struct
+{
+    void* field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_FD0C;
+extern void sub_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
+extern void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3);
+extern void sub_8002A384(struct_FD0C* p);
+// Matched
+void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
+{
+    char buf[8];
+    RECT r;
+    unsigned short loc[2];
+    struct_FD0C s1;
+    struct_FD0C s2;
+    int v;
+    if (flag)
+    {
+        v = frameCount_8008D3FC;
+    }
+    else
+    {
+        v = 0;
+    }
+    r.x = 10;
+    r.y = 0x2C;
+    r.w = 0x44;
+    r.h = 0x44;
+    sub_8004196C(buf, &r, a1, 8, 0);
+    loc[0] = 12;
+    loc[1] = 0x2E;
+    sub_8002A42C(loc, 0, a4, a0);
+    s1.field_8 = a2;
+    s1.field_0 = buf;
+    s1.field_4 = v;
+    s1.field_A = a0;
+    sub_8002A384(&s1);
+    r.x = 0x4E;
+    r.y = 0x2C;
+    r.w = 0x8D;
+    r.h = 0x44;
+    sub_8004196C(buf, &r, a1, 8, 0);
+    s2.field_8 = a2;
+    s2.field_0 = buf;
+    s2.field_4 = v;
+    s2.field_A = a0;
+    sub_8002A384(&s2);
+}
 // Matched
 void InitSound_8002FE54(SoundStruct* arg1)
 {
