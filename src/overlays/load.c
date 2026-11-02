@@ -52,9 +52,7 @@ extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
-extern #if 0
-// Not matched: register allocation of the lui/lw pairs differs ($a0 in the original)
-void sub_800BD558(void);
+extern void sub_800BD558(void);
 typedef struct
 {
     short x_LOAD;
@@ -70,7 +68,7 @@ extern int dword_800BE2B8;
 extern int dword_800BE2BC;
 extern int dword_800BE2C0;
 extern int sub_8004DE68(void);
-extern void sub_8004DE38();
+extern void sub_8004DE38(int a);
 extern void sub_8004DE78(void);
 extern void sub_800BD60C(void);
 extern int sub_800BD7EC(void);
@@ -123,8 +121,6 @@ void sub_800B7650(void)
 {
     sub_800B7674(4, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B7674);
 
@@ -186,7 +182,7 @@ void sub_800B8984(void)
 }
 
 #if 0
-// Not matched: only the order of the prologue stores ($ra/$s0 vs argument set-up) differs
+// Not matched: only the order of the prologue stores differs ($ra/$s0 vs argument set-up)
 void sub_800B8A20(void)
 {
     Pos_LOAD p0;
@@ -591,6 +587,8 @@ int sub_800BD538(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD538);
 
+#if 0
+// Not matched: register allocation of the lui/lw pairs differs ($a0 in the original)
 void sub_800BD558(void)
 {
     int r = sub_8004DE68();
@@ -607,6 +605,8 @@ void sub_800BD558(void)
         sub_8004DE78();
     }
 }
+#endif
+INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD60C);
 
