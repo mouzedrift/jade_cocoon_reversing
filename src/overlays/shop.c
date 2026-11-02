@@ -46,6 +46,63 @@ extern void PlaySfx_80031494(int a);
 extern void sub_800BF474();
 extern void sub_800BF4B8();
 extern int name_8008D670;
+typedef struct ShopUnit3Shop
+{
+    short field_0;
+    char pad_2[0x22];
+    int field_24;
+    char pad_28[8];
+    short field_30;
+    short field_32;
+    char pad_34[8];
+    short field_3C;
+    char pad_3E[0xE];
+    void* field_4C;
+    void* field_50;
+    void* field_54;
+    char pad_58[6];
+    short a5E[7];
+    short field_6C;
+    short field_6E;
+    short pad_70;
+    short a72[2];
+    short field_76;
+    short pad_78;
+    short a7A[2];
+    short field_7E;
+    char pad_80[0x16];
+    short field_96;
+} ShopUnit3Shop;
+
+typedef struct ShopTask3Shop
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+    char pad_C[8];
+    ShopUnit3Shop* field_14;
+} ShopTask3Shop;
+
+typedef struct ShopSixShop
+{
+    int w0;
+    int w1;
+    int w2;
+    int w3;
+    int w4;
+    int w5;
+} ShopSixShop;
+
+extern short name_800BFD1C[];
+extern unsigned short name_800BFD3C[];
+extern unsigned short name_800BFD5C[];
+extern char name_800C08E8[];
+extern ShopSixShop name_800B9608;
+extern char name_800C07D4[];
+extern void sub_800B9FC8(void* a, void* b, void* c, int d);
+extern int sub_800AD288(int a, int b);
+extern void sub_8002A5A4(void* p);
+extern void sub_800BB148();
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -301,7 +358,24 @@ void sub_800BAEDC(unsigned int* a, unsigned int* b)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BAF54);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BB058);
+extern void sub_800BB0F8();
+void sub_800BB058(int a)
+{
+    EventEntry* t = sub_80043AF8((EventNode*)name_8008D670);
+    ShopUnit3Shop* u;
+    if (t)
+    {
+        u = t->buffer;
+        t->flags = (t->flags | 1) & ~0x8000;
+        sub_8003F900(2, 0);
+        sub_8003F900(1, 0);
+        sub_8002BE10();
+        u->field_96 = a;
+        sub_800BB148(u);
+        sub_800BC380(u);
+        t->cb_8 = sub_800BB0F8;
+    }
+}
 
 extern void sub_800BB444();
 void sub_800BB0F8(ShopTaskShop* t, int a)
@@ -337,8 +411,54 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BB3E8);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB444);
 
+#if 0 // near miss: load order of table entries
+void sub_800BB798(ShopUnit3Shop* u)
+{
+    unsigned short b;
+    int a;
+    unsigned short c;
+    a = name_800BFD1C[u->field_0];
+    b = name_800BFD3C[u->field_0];
+    c = name_800BFD5C[u->field_0];
+    if (a >= 0)
+    {
+        u->a5E[a] = u->field_30;
+    }
+    if ((short)b >= 0)
+    {
+        u->a72[(short)b] = u->field_32;
+    }
+    if ((short)c >= 0)
+    {
+        u->a7A[(short)c] = u->field_7E;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB798);
 
+#if 0 // near miss: load order of table entries
+void sub_800BB828(ShopUnit3Shop* u)
+{
+    unsigned short b;
+    int a;
+    unsigned short c;
+    a = name_800BFD1C[u->field_0];
+    b = name_800BFD3C[u->field_0];
+    c = name_800BFD5C[u->field_0];
+    if (a >= 0)
+    {
+        u->field_30 = u->a5E[a];
+    }
+    if ((short)b >= 0)
+    {
+        u->field_32 = u->a72[(short)b];
+    }
+    if ((short)c >= 0)
+    {
+        u->field_7E = u->a7A[(short)c];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB828);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB8C4);
@@ -366,13 +486,39 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BC1A8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BC2DC);
+void sub_800BC2DC(ShopUnit3Shop* u)
+{
+    if (sub_8003D380(0) || sub_8003D41C(0))
+    {
+        int fl = u->field_24;
+        if ((fl & 0x400) && u->field_0 == 3 && (fl & 2))
+        {
+            PlaySfx_80031494(0x7D);
+            u->field_24 &= ~0x400;
+        }
+        else
+        {
+            PlaySfx_80031494(0x7E);
+            sub_800BBB54(u, 0);
+            u->field_24 &= ~2;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BC380);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BCCD8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BCEDC);
+void sub_800BCEDC(ShopUnit3Shop* u)
+{
+    ShopSixShop q = name_800B9608;
+    q.w1 = sub_8002C64C();
+    q.w4 = (int)name_800C07D4;
+    q.w0 = (q.w0 & ~7) | 2;
+    q.w3 = u->field_30;
+    q.w2 = 8;
+    sub_8002A5A4(&q);
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BCF74);
 
@@ -391,7 +537,22 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BD678);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD6C4);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BD720);
+void sub_800BD720(ShopUnit3Shop* u)
+{
+    int d;
+    if (u->field_4C && u->field_50)
+    {
+        if (u->field_24 & 0x200)
+        {
+            d = sub_800AD288(u->field_6E + u->field_76, 4);
+        }
+        else
+        {
+            d = 10;
+        }
+        sub_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD7A8);
 
@@ -475,7 +636,31 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BEB60);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BEBC8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BECC8);
+void sub_800BECC8(ShopUnit3Shop* u)
+{
+    if (u->field_0 == 3)
+    {
+        switch (u->field_3C)
+        {
+        case 1:
+            u->field_54 = u->field_50;
+            return;
+        case 0:
+            goto def;
+        case 2:
+            u->field_54 = name_800C08E8;
+            return;
+        }
+        return;
+    }
+    if (u->field_0 == 2 || u->field_0 == 10)
+    {
+        u->field_54 = u->field_50;
+        return;
+    }
+def:
+    u->field_54 = u->field_4C;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BED48);
 
