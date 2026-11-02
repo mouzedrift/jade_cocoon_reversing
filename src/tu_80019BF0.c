@@ -215,6 +215,7 @@ typedef struct
     struct_8008D4F0_point points[8];
 } struct_8008D4F0;
 extern struct_8008D4F0 dword_8008D4F0;
+extern VECTOR levantPos_8008BD18;
 #if 0
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
 int sub_80019CC4(VECTOR* pos)
@@ -323,7 +324,44 @@ unsigned char sub_8001AC58(int idx)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8001AC8C);
+// Matched
+unsigned char sub_8001AC8C(int idx)
+{
+    if (idx < 0x1E)
+    {
+        return dword_8007C438[idx].field_6;
+    }
+    return 0x1A;
+}
+// Matched
+unsigned char sub_8001ACC0(int idx)
+{
+    return dword_8007C438[idx].field_5;
+}
+// Matched
+int sub_8001ACE4(int idx)
+{
+    unsigned int v = dword_8007C438[idx].field_0;
+    int r = (v >> 5) & 2;
+    if (v & 0x80)
+    {
+        r |= 4;
+    }
+    if (v & 4)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+short sub_8001AD30(int idx)
+{
+    if (idx < 0x1E)
+    {
+        return dword_8007C438[idx].field_8;
+    }
+    return 0xB;
+}
 // Matched
 struct_12* sub_8001AD64(unsigned int idx)
 {
@@ -1464,7 +1502,33 @@ void sub_8001DC34(void* p, unsigned char* s)
     sub_8001DB98(p, s);
     sub_8001EA48(p);
 }
-INCLUDE_ASM(sub_8001DC60);
+// Matched
+int sub_8001DC60(char* o, VECTOR* target, int step, int a3)
+{
+    unsigned int dist;
+    int d;
+    int y0 = *(int*)(o + 0x40);
+    int y1 = *(int*)(o + 0x4C);
+    dist = 0xFFF;
+    if (y0 > y1)
+    {
+        d = y0 - y1;
+    }
+    else
+    {
+        d = y1 - y0;
+    }
+    if (sub_8003B740((VECTOR*)(o + 0x38), target, &dist) != 0 && dist < d * d)
+    {
+        return 1;
+    }
+    if (dist < (d + 50) * (d + 50) && sub_8001DFC8(o, target, a3, 1) != 0)
+    {
+        return 1;
+    }
+    sub_8001DDFC(o, target, step);
+    return 0;
+}
 // Matched
 int sub_8001DD44(char* o, int mode, int a, int b)
 {
@@ -1489,9 +1553,132 @@ int sub_8001DD44(char* o, int mode, int a, int b)
     r = a - b;
     return r < 0 ? 0 : (a < r ? a : r);
 }
-INCLUDE_ASM(sub_8001DDFC);
+// Matched
+int sub_8001DDFC(char* o, VECTOR* target, int step)
+{
+    VECTOR d;
+    int a;
+    d.vx = target->vx - *(int*)(o + 0x38);
+    d.vz = target->vz - *(int*)(o + 0x40);
+    a = (ratan2_8003B548(d.vx, d.vz) - *(short*)(o + 0x5E)) & 0xFFF;
+    *(int*)(o + 0x19C) = 0;
+    if (a < step || a >= 0x1000 - step)
+    {
+        *(short*)(o + 0x5E) += a;
+        return 1;
+    }
+    if (a < 0x800)
+    {
+        *(int*)(o + 0x19C) = step;
+    }
+    else
+    {
+        *(int*)(o + 0x19C) = -step;
+    }
+    sub_80014588(o + 0x1A4, o + 0x194, frameCount_8008D3FC);
+    *(short*)(o + 0x5E) += *(short*)(o + 0x1A0);
+    return 0;
+}
+#if 0
+// Not matched: register allocation: o/range^2/count land in s2/s4/s3 instead of s3/s2/s4
+int sub_8001DECC(char* o, int range, int checkLevant)
+{
+    EventNode* n;
+    EventEntry* e;
+    int count;
+    int i;
+    unsigned int r2 = range * range;
+    int found = 0;
+    if (checkLevant)
+    {
+        found = sub_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, r2);
+    }
+    if (found == 0)
+    {
+        n = (EventNode*)dword_8008D43C;
+        count = n->count;
+        for (i = 0; i < count; i++)
+        {
+            e = &n->entry;
+            if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)e->buffer)
+            {
+                found = sub_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), r2);
+                if (found)
+                {
+                    break;
+                }
+            }
+            n = n->next;
+        }
+    }
+    return found;
+}
+#endif
 INCLUDE_ASM(sub_8001DECC);
-INCLUDE_ASM(sub_8001DFC8);
+// Matched
+int sub_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
+{
+    EventNode* n;
+    EventEntry* e;
+    char* b;
+    int count;
+    int i;
+    unsigned int dist;
+    if (checkLevant)
+    {
+        dist = 0xFFF;
+        if (sub_8003B740((VECTOR*)(o + 0x38), &levantPos_8008BD18, &dist) != 0 && dist < range * range)
+        {
+            return 1;
+        }
+    }
+    n = (EventNode*)dword_8008D43C;
+    count = n->count;
+    for (i = 0; i < count; i++)
+    {
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)(b = e->buffer))
+        {
+            dist = 0xFFF;
+            if (sub_8003B740((VECTOR*)(o + 0x38), (VECTOR*)(b + 0x38), &dist) != 0 && dist < range * range)
+            {
+                return 1;
+            }
+        }
+        n = n->next;
+    }
+    return 0;
+}
+#if 0
+// Not matched: the final range test becomes a set-on-less-than here, the original branches to return 1 / 0
+int sub_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
+{
+    VECTOR d;
+    unsigned int dist;
+    int a;
+    dist = 0xFFF;
+    if (sub_8003B740(from, to, &dist) != 1)
+    {
+        return 0;
+    }
+    if (dist >= range)
+    {
+        return 0;
+    }
+    d.vx = to->vx - from->vx;
+    d.vz = to->vz - from->vz;
+    a = (ratan2_8003B548(d.vx, d.vz) - angle) & 0xFFF;
+    if (a < 0x400)
+    {
+        return 2;
+    }
+    if (a > 0xC00 && a < 0x1000)
+    {
+        return 1;
+    }
+    return 0;
+}
+#endif
 INCLUDE_ASM(sub_8001E0F4);
 // Matched
 int sub_8001E1C8(struct_obj_A* p)
