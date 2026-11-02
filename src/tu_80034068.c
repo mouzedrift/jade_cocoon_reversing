@@ -72,7 +72,46 @@ int sub_8003412C(char* p)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80034140);
+extern unsigned char** off_80083800[];
+extern unsigned char* off_800837D8;
+// Matched
+int sub_80034140(void)
+{
+    unsigned char*** t = off_80083800;
+    char* sd = (char*)&saveData_8008B570;
+    unsigned char** tbl = t[*(short*)(sd + 0x2E4)];
+    unsigned char* list;
+    short target;
+    short i;
+    if (tbl)
+    {
+        list = tbl[*(short*)(sd + 0x2E8)];
+        if (list)
+        {
+            i = 0;
+            if (list == off_800837D8)
+            {
+                target = *(short*)(sd + 0x2F0);
+            }
+            else
+            {
+                target = *(short*)(sd + 0x2EC);
+            }
+            while (list[i] != 0xFF)
+            {
+                if (list[i] == 200 || target == list[i])
+                {
+                    goto found;
+                }
+                i++;
+            }
+        }
+        return 0;
+    found:
+        return 1;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_8003422C);
 INCLUDE_ASM(sub_80034900);
 // Matched

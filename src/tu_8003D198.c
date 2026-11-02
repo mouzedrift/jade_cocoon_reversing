@@ -282,7 +282,48 @@ int sub_8003D794(struct_menu* p)
     return r;
 }
 INCLUDE_ASM(sub_8003D830);
-INCLUDE_ASM(sub_8003DA70);
+typedef struct
+{
+    unsigned short field_0;
+    unsigned short field_2;
+    unsigned short field_4;
+    unsigned short field_6;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short field_C;
+    unsigned short pad_E;
+    unsigned char* field_10;
+    unsigned short field_14;
+    unsigned short pad_16;
+} FontDef;
+extern FontDef dword_80086574[];
+extern char* dword_8008D434;
+extern char* dword_8008D440;
+// Matched
+void sub_8003DA70(void)
+{
+    int i;
+    FontDef* e;
+    struct_2C* f;
+    for (i = 0; i < 3; i++)
+    {
+        e = &dword_80086574[i];
+        f = &dword_80095FB0[i];
+        sub_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
+        f->field_10 = e->field_6;
+        f->field_12 = e->field_8;
+        f->field_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
+        f->field_18 = f->field_C;
+        f->field_1A = f->field_D;
+        f->field_1E = e->field_4;
+        f->field_20 = e->field_A;
+        f->field_22 = e->field_C;
+        f->field_24 = e->field_10;
+        f->field_1C = e->field_2;
+        f->field_28 = e->field_14;
+        f->field_2A = 0;
+    }
+}
 extern void sub_80033308(unsigned long* ot);
 extern void sub_8003326C(void* p, unsigned long* ot);
 extern void sub_8003DCA4(int a, unsigned int* w);

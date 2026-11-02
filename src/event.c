@@ -101,7 +101,7 @@ extern int sub_8003C0A4(int a);
 extern int sub_800434C4(int a);
 extern int dword_80096108;
 extern int dword_8009610C;
-extern void sub_800430E8(void);
+extern void sub_800430E8();
 extern void sub_800432EC();
 
 // Matched
@@ -119,7 +119,29 @@ void sub_800430B0(void)
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
-INCLUDE_ASM(sub_800430E8);
+extern int sub_80053EB0(void);
+extern void sub_800431C4();
+void sub_800433FC(int* o);
+// Matched
+void sub_800430E8(struct_obj_D* p, int* q0)
+{
+    int* q = q0;
+    int r;
+    int s;
+    if (q[0] & 1)
+    {
+        q[0] &= ~1;
+        dword_80096118 = -1;
+    }
+    if ((int)dword_80096118 >= 0 && (r = sub_80053EB0()) == 1 && (s = sub_8003C0A4(r)) == r)
+    {
+        sub_800433FC(q);
+        dword_80096118 = -1;
+        ((short*)q)[4] = s;
+        q[0] &= ~1;
+        p->field_8 = sub_800431C4;
+    }
+}
 // Matched
 void sub_800431C4(struct_obj_D* p, int* q)
 {
