@@ -265,6 +265,7 @@ extern void sub_800BBCC8();
 extern void sub_800BC144();
 extern void sub_800BC850(unsigned int);
 extern int sub_800BC28C();
+extern int sub_800BC1A8();
 extern void sub_800BE058();
 extern void sub_800BFC10();
 extern void sub_800BFC40();
@@ -670,6 +671,56 @@ void sub_800BBA24(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
+#if 0 // near miss: u and the hoisted constant 1 swap saved registers (s2/s3)
+void sub_800BBA70(BatTask_a* t, BatObj_a* u)
+{
+    unsigned int mask;
+    int i;
+    BatSlot_a* s;
+    if (sub_800BC1A8(dword_800C9C88[3]) == 1)
+    {
+        mask = dword_800C9C88[3];
+        sub_800BC838(0x1000);
+        sub_800BB74C();
+        sub_800BB7D4();
+        s = (BatSlot_a*)dword_800C9CC8;
+        for (i = 0; i < 7; i++)
+        {
+            if (mask & (1 << i))
+            {
+                int f = *(int*)sub_80014390(i & 0xFF);
+                if (f & 0x200)
+                {
+                    s[i].a = 0x13;
+                }
+                else if (f & 0x10000)
+                {
+                    s[i].a = 0xE;
+                }
+                else if (f & 2)
+                {
+                    s[i].a = 0x10;
+                }
+                else if (f & 0x8000)
+                {
+                    s[i].a = 0x12;
+                }
+                s[i].b = 0;
+                s[i].c = 1 << i;
+                s[i].d = 0;
+            }
+        }
+        dword_800C9C7C = 7;
+        u->fc = sub_800BC28C();
+        u->next_8 = (void (*)())u->f4;
+        t->next_8 = sub_800BC144;
+    }
+    else
+    {
+        t->next_8 = (void (*)())u->f4;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BBA70);
 
 void sub_800BBBA8(BatTask_a* t, BatObj_a* u)
