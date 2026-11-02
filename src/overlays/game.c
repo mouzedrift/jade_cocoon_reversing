@@ -413,7 +413,23 @@ INCLUDE_OVERLAY_ASM(game, sub_800A0A04);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A0A5C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1314);
+extern void sub_800A13B8();
+extern int sub_800A19E4();
+extern void sub_80036528();
+void sub_800A1314(GameTask_1* t)
+{
+    if (sub_800A19E4() == 1)
+        dword_800B1228 |= 0x4000;
+    if (dword_800B1228 & 0x4000)
+    {
+        sub_80036528(0, 10);
+        sub_8001C19C(0, 0x20);
+        sub_8001C19C(1, 0x20);
+        sub_800A6D30(2);
+        t->next_8 = sub_800A13B8;
+        unknownFlags_8008D678 |= 0x4000000;
+    }
+}
 
 // Matched
 void sub_800A13B8(GameTask_1* t, void** q)
