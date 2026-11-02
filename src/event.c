@@ -43,8 +43,38 @@ void sub_800424C0(int a0, short a1, int a2, int a3)
     sub_80041ED0(a0, &r, a2, 1);
 }
 INCLUDE_ASM(sub_8004251C);
-INCLUDE_ASM(sub_80042750);
-INCLUDE_ASM(sub_80042870);
+extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+// Matched
+void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
+{
+    LINE_F4 l;
+    DVECTOR a;
+    DVECTOR b;
+    setLineF4(&l);
+    setRGB0(&l, rgb[0], rgb[1], rgb[2]);
+    setXY4(&l, r->x, r->y, r->x + r->w, r->y, r->x + r->w, r->y + r->h, r->x, r->y + r->h);
+    sub_80040298(ot, &l, 7);
+    a.vx = l.x0;
+    a.vy = l.y0;
+    b.vx = l.x3;
+    b.vy = l.y3;
+    sub_80042870(&a, &b, rgb, ot);
+}
+// Matched
+void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
+{
+    LINE_F2 l;
+    DR_TPAGE dt;
+    setLineF2(&l);
+    setRGB0(&l, rgb[0], rgb[1], rgb[2]);
+    setXY2(&l, a->vx, a->vy, b->vx, b->vy);
+    sub_80040298(ot, &l, 4);
+    SetDrawTPage(&dt, 0, 1, GetTPage(0, 0, 0, 0));
+    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
+    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+    addPrim(ot, dword_800960A8[bDoubleBuffer_8008D428]);
+    dword_800960A8[bDoubleBuffer_8008D428] += 8;
+}
 // Matched
 int sub_800429A8(short* p)
 {
@@ -70,8 +100,9 @@ INCLUDE_ASM(sub_80042B38);
 extern int sub_8003C0A4(int a);
 extern int sub_800434C4(int a);
 extern int dword_80096108;
-extern void sub_800430E8(void);
-extern void sub_800432EC(void);
+extern int dword_8009610C;
+extern void sub_800430E8();
+extern void sub_800432EC();
 
 // Matched
 void sub_80043054(struct_obj_D* p, int* q)
@@ -88,7 +119,29 @@ void sub_800430B0(void)
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
-INCLUDE_ASM(sub_800430E8);
+extern int sub_80053EB0(void);
+extern void sub_800431C4();
+void sub_800433FC(int* o);
+// Matched
+void sub_800430E8(struct_obj_D* p, int* q0)
+{
+    int* q = q0;
+    int r;
+    int s;
+    if (q[0] & 1)
+    {
+        q[0] &= ~1;
+        dword_80096118 = -1;
+    }
+    if ((int)dword_80096118 >= 0 && (r = sub_80053EB0()) == 1 && (s = sub_8003C0A4(r)) == r)
+    {
+        sub_800433FC(q);
+        dword_80096118 = -1;
+        ((short*)q)[4] = s;
+        q[0] &= ~1;
+        p->field_8 = sub_800431C4;
+    }
+}
 // Matched
 void sub_800431C4(struct_obj_D* p, int* q)
 {
@@ -126,8 +179,53 @@ void sub_80043264(struct_obj_D* p, short* q)
         SsSetSerialVol(0, v, v);
     }
 }
-INCLUDE_ASM(sub_800432EC);
-INCLUDE_ASM(sub_800433FC);
+// Matched
+void sub_800432EC(struct_obj_D* p, int* q)
+{
+    u_char result[8];
+    DslLOC loc;
+    if (sub_80053B9C(q[1], result) == 2 && q[1])
+    {
+        loc.minute = result[5];
+        loc.second = result[6];
+        loc.sector = result[7];
+        if (DsPosToInt(&loc) > dword_8009610C || (int)dword_80096118 >= 0)
+        {
+            ((short*)q)[5] = 0x70;
+            p->field_8 = sub_80043264;
+            return;
+        }
+        SsSetSerialVol(0, 0x70, 0x70);
+        q[1] = DsControlF(0x11, 0);
+    }
+    if (dword_8008D450 < -1000 || (q[0] & 1))
+    {
+        ((short*)q)[5] = 0x70;
+        q[0] &= ~1;
+        p->field_8 = sub_80043264;
+    }
+}
+extern int sub_80053608(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
+// Matched
+void sub_800433FC(int* o)
+{
+    Data001File f;
+    u_char result[8];
+    u_char param[4];
+    int r;
+    DATA_GetFile_8003C7CC(&f, 0x439);
+    param[0] = 1;
+    param[1] = stru_80096110.field_2;
+    do
+    {
+        r = sub_80053608(0xD, param, 0, -1);
+        o[1] = r;
+    } while (r == 0);
+    dword_80096108 = DsPosToInt(&f.field_0_position);
+    dword_80096108 += stru_80096110.field_4 * 32;
+    dword_8009610C = dword_80096108 + stru_80096110.field_6 * 32;
+    dword_8008D450 = stru_80096110.field_6 * 1920 / 150;
+}
 extern int sub_8005384C(unsigned char a, void* b, unsigned char c, int d, int e);
 // Matched
 int sub_800434C4(int a)

@@ -19,7 +19,18 @@
 
 typedef struct
 {
-    int words[0x41];
+    int x;
+    int y;
+    int z;
+} struct_v3;
+typedef struct
+{
+    int pad_0[5];
+    struct_v3 field_14;
+    struct_v3 field_20;
+    short field_2C;
+    short field_2E;
+    int pad_30[0x35];
 } Block104;
 typedef struct
 {
@@ -28,6 +39,22 @@ typedef struct
 } ShortPair;
 extern Block104 dword_8008D4F0;
 extern ShortPair dword_8008D474;
+typedef struct
+{
+    unsigned short field_0;
+    unsigned char field_2;
+    unsigned char field_3;
+} PadVibEntry;
+extern PadVibEntry* off_80083B30[];
+typedef struct
+{
+    unsigned char idx;
+    unsigned char b;
+    unsigned char k;
+    unsigned char pad;
+    short field_4;
+} struct_buf_80036528;
+extern EventNode* dword_8008D4B8;
 INCLUDE_ASM(sub_80036528);
 // Matched
 void sub_80036658(int idx)
@@ -41,7 +68,27 @@ void sub_80036678(void)
     sub_80036658(0);
     sub_80036658(1);
 }
-INCLUDE_ASM(sub_800366A0);
+extern void sub_800367F0(int a0, unsigned char* a1);
+// Matched
+void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
+{
+    if (--o->field_4 <= 0)
+    {
+        o->k++;
+        o->field_4 = off_80083B30[o->b][o->k].field_0;
+        byte_80095460[o->idx].field_2 = off_80083B30[o->b][o->k].field_2;
+        byte_80095460[o->idx].field_3 = off_80083B30[o->b][o->k].field_3;
+        if (o->field_4 < 0)
+        {
+            e->cb_8 = (EventEntryFn)sub_800367F0;
+        }
+    }
+    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[o->idx][1] >> 4) != 7)
+    {
+        byte_80095460[o->idx].field_2 = 0;
+        byte_80095460[o->idx].field_3 = 0;
+    }
+}
 // Matched
 void sub_800367F0(int a0, unsigned char* a1)
 {
@@ -72,12 +119,12 @@ void sub_80036820(int port)
         }
     }
 }
-extern void sub_80037918(int* p);
+extern void sub_80037918();
 extern char levantPos_8008BD18[];
 extern void sub_80039620(char* o);
-extern void sub_80038CA8(char* p);
+extern void sub_80038CA8();
 extern void sub_80037F44(int* p);
-extern void sub_800374E0(void);
+extern void sub_800374E0();
 extern int sub_800B8184(int a, int b);
 extern void sub_800369E0(struct_obj_D* p, int* q);
 
@@ -188,7 +235,41 @@ run:
     }
 }
 INCLUDE_ASM(sub_80036BB0);
-INCLUDE_ASM(sub_800374E0);
+extern int sub_8003B860(int* a, int* b);
+void sub_80038D64(char* o, int* a);
+extern void sub_80038230(int* p);
+extern char levantPos_8008BD18[];
+extern void sub_800375F8(int* o, int* p);
+// Matched
+void sub_800374E0(struct_obj_D* p, int* q)
+{
+    char* o = (char*)q;
+    if (q[1] & 0x100)
+    {
+        *(short*)(o + 0x152) += 0x10;
+        sub_80038230(q);
+        if (q[3] > 0)
+        {
+            q[3] -= 0x1000;
+        }
+        if (q[3] < 0)
+        {
+            q[3] = 0;
+        }
+    }
+    else
+    {
+        q[3] = 0x1000;
+        *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+        *(struct_v3*)(o + 0x198) = *(struct_v3*)(o + 0x68);
+        *(struct_v3*)(o + 0x1A4) = *(struct_v3*)(o + 0x5C);
+        *(struct_v3*)(o + 0x18C) = *(struct_v3*)(o + 0x5C);
+        q[0x17C / 4] = dword_8008D4F0.field_2E;
+        q[0x180 / 4] = dword_8008D4F0.field_2E;
+        sub_80038D64(o, (int*)levantPos_8008BD18);
+        p->field_8 = (void (*)(void))sub_800375F8;
+    }
+}
 extern int dword_8008B4F8;
 // Matched
 void sub_800375F8(int* o, int* p)
@@ -312,7 +393,55 @@ short sub_800378F8(void)
 {
     return ((short*)dword_8008D4A0[0x24 / 4])[4];
 }
-INCLUDE_ASM(sub_80037918);
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    char pad_8[0x1C];
+    short field_24;
+    short field_26;
+    int field_28[3];
+} struct_obj_37918;
+extern void sub_80038A5C(struct_obj_37918* p, int a, int* b, int c);
+// Matched
+void sub_80037918(struct_obj_37918* p)
+{
+    if (p->flags_4 & 0x10)
+    {
+        sub_80038A5C(p, p->field_0, p->field_28, p->field_24);
+        p->field_24 += 0x1000 / p->field_26;
+        if (p->field_24 > 0x1000)
+        {
+            p->field_24 = 0x1000;
+        }
+    }
+    else
+    {
+        sub_80038A5C(p, p->field_0, p->field_28, p->field_24);
+        p->field_24 -= 0x1000 / p->field_26;
+        if (p->field_24 < 0)
+        {
+            p->field_24 = 0;
+        }
+    }
+}
+// Matched
+void sub_800379DC(int* v, short n)
+{
+    struct_obj_37918* p = (struct_obj_37918*)dword_8008D4A0[0x24 / 4];
+    p->field_28[0] = v[0];
+    p->field_28[1] = v[1];
+    p->field_28[2] = v[2];
+    p->flags_4 |= 0x10;
+    p->field_26 = n;
+}
+// Matched
+void sub_80037A20(int a0, short n)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    ((short*)p)[0x26 / 2] = n;
+    p[1] &= ~0x10;
+}
 // Matched
 short sub_80037A4C(void)
 {
@@ -340,14 +469,132 @@ void sub_80037AC8(int a0)
 {
     *(int*)dword_8008D4A0[0x24 / 4] = a0;
 }
-INCLUDE_ASM(sub_80037AE0);
+extern unsigned short dword_80083CE8[][4];
+extern int* sub_800A1E3C(void);
+extern int* sub_800C0FAC(void);
+extern unsigned char byte_800C9C7C;
+extern void sub_80038E2C(int* p, int a, int b);
+extern void sub_80036AB4();
+// Matched
+void sub_80037AE0(unsigned short mask)
+{
+    int sel = 0;
+    int cnt = 0;
+    int i;
+    int* p = dword_8008D4A0[0x24 / 4];
+    int* r;
+    int v;
+    for (i = 0; i < 3; i++)
+    {
+        if ((mask >> (i + 4)) & 1)
+        {
+            sel = i;
+            cnt++;
+        }
+    }
+    if (cnt != 1)
+    {
+        sel = 3;
+    }
+    if (((unsigned short*)p)[4] == 4 || ((unsigned short*)p)[4] == 5)
+    {
+        r = sub_800A1E3C();
+        if (byte_800C9C7C == 0)
+        {
+            v = 0;
+        }
+        else
+        {
+            v = sub_800C0FAC()[0x7C / 4] + 0xF5;
+        }
+        sub_80038E2C(p, dword_80083CE8[r[0] - 1][sel], v);
+        ((unsigned short*)p)[4] = 4;
+        dword_8008D4A0[0x18 / 4] = (int*)sub_80036AB4;
+    }
+}
+// Matched
+void sub_80037BFC(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    ((short*)p)[0x10 / 2] = 0;
+    p[1] |= 0xC0;
+}
+// Matched
+void sub_80037C24(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] |= 0x100;
+}
+// Matched
+void sub_80037C4C(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] &= ~0x100;
+}
 INCLUDE_ASM(sub_80037C74);
 INCLUDE_ASM(sub_80037F44);
 INCLUDE_ASM(sub_80038230);
 INCLUDE_ASM(sub_8003856C);
-INCLUDE_ASM(sub_8003891C);
+extern void sub_8003856C(int* p);
+extern void sub_800398B4(int* p, void* q);
+extern int dword_8008D4BC;
+#define D600_VEC ((VECTOR*)dword_8008D600)
+typedef struct
+{
+    DVECTOR xy;
+    int z;
+} ScreenPosZ;
+extern ScreenPosZ word_8008D668;
+// Matched
+void sub_8003891C(int* p, void* q)
+{
+    int* v = (int*)q;
+    SVECTOR sv;
+    long pr;
+    long flag;
+    int a;
+    unsigned int b;
+    sub_80039E14();
+    sub_8003856C(p);
+    a = word_8008D51E * dword_8008B4F8;
+    b = word_8008D51E * dword_8008D4BC;
+    sv.vx = v[0];
+    sv.vy = v[1];
+    sv.vz = v[2];
+    sv.vy -= 0x15E;
+    sv.vx -= D600_VEC->vx;
+    sv.vy -= D600_VEC->vy;
+    sv.vz -= D600_VEC->vz;
+    geomScreenDistance_8008B548 = b >> 12;
+    SetGeomScreen(a / 4096);
+    word_8008D668.z = RotTransPers(&sv, (long*)&word_8008D668.xy, &pr, &flag);
+    if (flag < 0)
+    {
+        word_8008D668.xy.vx = 0xA0;
+        word_8008D668.xy.vy = 0x78;
+    }
+    SetGeomScreen(geomScreenDistance_8008B548);
+    if (!(p[1] & 0x800))
+    {
+        sub_800398B4(p, &word_8008D668);
+    }
+}
 INCLUDE_ASM(sub_80038A5C);
-INCLUDE_ASM(sub_80038CA8);
+// Matched
+void sub_80038CA8(int* p)
+{
+    char* o = (char*)p;
+    char* sd = (char*)&saveData_8008B570;
+    p[3] = 0x1000;
+    p[1] &= ~8;
+    *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)(o + 0x198) = *(struct_v3*)(sd + 0x7A8);
+    *(struct_v3*)(o + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)(o + 0x18C) = dword_8008D4F0.field_14;
+    p[0x17C / 4] = dword_8008D4F0.field_2E;
+    p[0x180 / 4] = dword_8008D4F0.field_2E;
+    sub_80038D64(o, (int*)(sd + 0x7A8));
+}
 extern int stru_8008D504[];
 extern int sub_8003B860(int* a, int* b);
 
@@ -401,12 +648,54 @@ void sub_80039698(int* a0)
     dword_8008B4F8 = *(int*)(o + 0x184);
     dword_8008D474 = *(ShortPair*)(o + 0x14C);
 }
-INCLUDE_ASM(sub_8003970C);
 typedef struct
 {
     int a;
     int b;
 } struct_pair8;
+extern int sub_800AB4D8(int a);
+// Matched
+void sub_8003970C(int idx_, int* a5)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    struct_pair8* t = (struct_pair8*)dword_800B1084;
+    int* q;
+    int r;
+    p[0x1C / 4] = t[(short)idx_].b;
+    p[0x218 / 4] = (int)a5;
+    p[1] |= 8;
+    r = (short)sub_800AB4D8(0xE);
+    if (((settingsFlags_8008B58C & 0x200000) >> 21) == 1)
+    {
+        q = p + 0x1C8 / 4;
+        p[0x1C8 / 4] = 0;
+        q[1] = r + 0x32;
+        q[2] = r + 0x46;
+        q[3] = r + 0x5A;
+        q[4] = r + 0x6E;
+        q[5] = r + 0x97;
+        q[6] = r + 0xC8;
+        q[7] = r + 0x10E;
+        q[8] = r + 0x169;
+        q[9] = r + 0x258;
+        q[10] = -1;
+    }
+    else
+    {
+        q = p + 0x1C8 / 4;
+        p[0x1C8 / 4] = 0;
+        q[1] = r + 0x32;
+        q[2] = r + 0x46;
+        q[3] = r + 0x5A;
+        q[4] = r + 0x6E;
+        q[5] = r + 0x97;
+        q[6] = r + 0xC8;
+        q[7] = r + 0x10E;
+        q[8] = -1;
+    }
+    p[0x1BC / 4] = (int)levantPos_8008BD18;
+    p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
+}
 // Matched
 void sub_8003983C(int idx_, int* a5)
 {
@@ -426,4 +715,57 @@ void sub_8003983C(int idx_, int* a5)
     p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
 }
 INCLUDE_ASM(sub_800398B4);
-INCLUDE_ASM(sub_80039E14);
+extern SVECTOR word_8008D4C8;
+extern void sub_8004D0E8(void);
+// Matched
+void sub_80039E14(void)
+{
+    VECTOR d;
+    int a;
+    D600_VEC->vx = dword_8008D4F0.field_14.x;
+    D600_VEC->vy = dword_8008D4F0.field_14.y;
+    D600_VEC->vz = dword_8008D4F0.field_14.z;
+    d.vx = dword_8008D4F0.field_20.x - dword_8008D4F0.field_14.x;
+    d.vy = dword_8008D4F0.field_20.y - dword_8008D4F0.field_14.y;
+    d.vz = dword_8008D4F0.field_20.z - dword_8008D4F0.field_14.z;
+    a = ratan2_8003B548(d.vx, d.vz);
+    word_8008D4C8.vy = -a;
+    word_8008D4C8.vx = ratan2_8003B548(d.vy, sub_8003B918(sub_8003B8BC(d.vx, d.vz)));
+    word_8008D4C8.vz = dword_8008D4F0.field_2C;
+    sub_8004D0E8();
+}
+#if 0
+// Not matched: target is a symbol at 0x8008D540 (inside stru_8008D534, data split lives in main.c); also needs its jump table via config/c_rodata.txt (dword_80074864 0x20)
+void sub_80039ED8(int mode)
+{
+    switch ((short)(mode + 1))
+    {
+    case 0:
+        stru_8008D534.v[0] = 0x800;
+        stru_8008D534.v[1] = 0x800;
+        stru_8008D534.v[2] = 0x800;
+        break;
+    case 1:
+        stru_8008D534.v[0] = 0x1000;
+        stru_8008D534.v[1] = 0;
+        stru_8008D534.v[2] = 0x6B0;
+        break;
+    case 4:
+        stru_8008D534.v[0] = 0x150;
+        stru_8008D534.v[1] = 0;
+        stru_8008D534.v[2] = 0x1000;
+        break;
+    case 3:
+        stru_8008D534.v[0] = 0;
+        stru_8008D534.v[1] = 0x1000;
+        stru_8008D534.v[2] = 0x940;
+        break;
+    case 2:
+        stru_8008D534.v[0] = 0xEB0;
+        stru_8008D534.v[1] = 0x1000;
+        stru_8008D534.v[2] = 0;
+        break;
+    }
+}
+#endif
+INCLUDE_ASM(sub_80039ED8);

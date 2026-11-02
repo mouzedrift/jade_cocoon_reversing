@@ -67,7 +67,41 @@ void sub_800358CC(struct_obj_A* p, int a1, int a2)
         sub_80042B38(a1, 2);
     }
 }
-INCLUDE_ASM(sub_80035900);
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    char pad_8[0x5C];
+    unsigned short x;
+    unsigned short y;
+    int field_68;
+    char pad_6C[0x18];
+    int field_84;
+    POLY_FT4 prim;
+} struct_obj_35900;
+// Matched
+void sub_80035900(struct_obj_35900* o)
+{
+    if (!(o->flags_4 & 0x40000) && o->field_84 == 1)
+    {
+        if (o->field_68)
+        {
+            o->prim.x1 = o->x;
+            o->prim.y0 = o->y;
+            o->prim.x0 = o->x + 0x3F;
+            o->prim.y1 = o->y;
+            o->prim.x3 = o->x;
+            o->prim.y2 = o->y + 0x3F;
+            o->prim.x2 = o->x + 0x3F;
+            o->prim.y3 = o->y + 0x3F;
+        }
+        else
+        {
+            setXY4(&o->prim, o->x, o->y, o->x + 0x3F, o->y, o->x, o->y + 0x3F, o->x + 0x3F, o->y + 0x3F);
+        }
+        sub_80040298(pOT_8008D454 + 1, &o->prim, 10);
+    }
+}
 extern void sub_8003E91C(int mode, void* str, void* pos, int z);
 extern int sub_8003E4C8(void* str);
 
@@ -92,5 +126,53 @@ void sub_800359F8(struct_obj_A* p)
         }
     }
 }
-INCLUDE_ASM(sub_80035AC8);
+extern EventNode* dword_8008D640;
+extern void sub_800300E0(int a, int b);
+extern void sub_80035BD8(EventEntry* e, void* buf);
+// Matched
+EventEntry* sub_80035AC8(int* init)
+{
+    EventEntry* e = sub_80043AF8(dword_8008D640);
+    int* o;
+    if (e)
+    {
+        o = (int*)e->buffer;
+        o[0] = (int)e;
+        o[1] = 0;
+        o[0x14 / 4] = 0;
+        ((short*)o)[0x18 / 2] = 0;
+        ((short*)o)[0x1A / 2] = 0;
+        ((short*)o)[0x1C / 2] = 0;
+        ((short*)o)[0x1E / 2] = 0;
+        o[0x20 / 4] = 0;
+        o[0x24 / 4] = 0;
+        o[0x34 / 4] = 0;
+        ((short*)o)[0x38 / 2] = 0;
+        ((short*)o)[0x3A / 2] = 0;
+        ((short*)o)[0x3C / 2] = 0;
+        ((short*)o)[0x3E / 2] = 0;
+        o[0x48 / 4] = 0;
+        ((short*)o)[0x4C / 2] = 0;
+        ((short*)o)[0x4E / 2] = 0;
+        ((short*)o)[0x50 / 2] = 0;
+        ((short*)o)[0x52 / 2] = 0;
+        o[0x54 / 4] = 0;
+        o[0x78 / 4] = 0;
+        o[0x7C / 4] = 0;
+        ((short*)o)[0xB0 / 2] = 0;
+        ((short*)o)[0xB2 / 2] = 0;
+        o[0x1B4 / 4] = 0;
+        sub_800403E8((unsigned int*)(o + 0x214 / 4), (unsigned int*)init, 0x50);
+        o[0x20 / 4] = 0;
+        o[0x24 / 4] = 1;
+        if ((unsigned int)o[0x25C / 4] < 4)
+        {
+            sub_800300E0(1, 1);
+        }
+        e->cb_8 = sub_80035BD8;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        return e;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80035BD8);

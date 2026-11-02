@@ -45,4 +45,36 @@ void sub_8003D034(unsigned short* pPos, int a1)
     SetSemiTrans((char*)dword_8008D434 + 0x64, 1);
     sub_80033080(r, 5, a1);
 }
-INCLUDE_ASM(sub_8003D090);
+// Matched
+void sub_8003D090(short x, short y, int a2, int a3, int idx)
+{
+    int r = 0;
+    int t;
+    switch ((unsigned int)frameCount_8008D3FC % 12)
+    {
+    case 0:
+    case 1:
+    case 10:
+    case 11:
+        r = 0;
+        break;
+    case 2:
+    case 3:
+    case 8:
+    case 9:
+        r = 1;
+        break;
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+        r = 2;
+        break;
+    }
+    t = r + 0x10;
+    *(short*)((char*)dword_8008D434 + 0x6C) = x - t;
+    *(short*)((char*)dword_8008D434 + 0x6E) = y - 10;
+    SetSemiTrans((char*)dword_8008D434 + 0x64, 1);
+    sub_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x64, 5);
+    sub_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x28, 2);
+}

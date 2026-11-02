@@ -60,8 +60,55 @@ INCLUDE_ASM(sub_80045534);
 INCLUDE_ASM(sub_800459E4);
 INCLUDE_ASM(sub_80045E48);
 INCLUDE_ASM(sub_80046248);
-INCLUDE_ASM(sub_8004668C);
-INCLUDE_ASM(sub_80046874);
+/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
+extern short asc_80084350[];
+#define SIN_TABLE (asc_80084350 + 0xF8)
+// Matched
+void sub_8004668C(SVECTOR* r, MATRIX* m)
+{
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int a;
+    int b;
+    m->m[2][1] = sx;
+    b = (cz * sx) >> 12;
+    a = (sz * sx) >> 12;
+    m->m[0][0] = ((cz * cy) >> 12) - ((a * sy) >> 12);
+    m->m[1][0] = ((sz * cy) >> 12) + ((b * sy) >> 12);
+    m->m[2][0] = -(cx * sy) >> 12;
+    m->m[0][1] = -(sz * cx) >> 12;
+    m->m[1][1] = (cz * cx) >> 12;
+    m->m[0][2] = ((cz * sy) >> 12) + ((a * cy) >> 12);
+    m->m[2][2] = (cx * cy) >> 12;
+    m->m[1][2] = ((sz * sy) >> 12) - ((b * cy) >> 12);
+}
+// Matched
+void sub_80046874(SVECTOR* r, MATRIX* m)
+{
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int a;
+    int b;
+    m->m[1][2] = -sx;
+    b = (cy * sx) >> 12;
+    a = (sy * sx) >> 12;
+    m->m[0][0] = ((cy * cz) >> 12) + ((a * sz) >> 12);
+    m->m[1][0] = (cx * sz) >> 12;
+    m->m[2][0] = -((sy * cz) >> 12) + ((b * sz) >> 12);
+    m->m[0][1] = -((cy * sz) >> 12) + ((a * cz) >> 12);
+    m->m[1][1] = (cx * cz) >> 12;
+    m->m[0][2] = (sy * cx) >> 12;
+    m->m[2][2] = (cy * cx) >> 12;
+    m->m[2][1] = ((sy * sz) >> 12) + ((b * cz) >> 12);
+}
 INCLUDE_ASM(sub_80046A58);
 INCLUDE_ASM(sub_80047E28);
 INCLUDE_ASM(sub_8004A4FC);

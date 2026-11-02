@@ -153,8 +153,102 @@ int sub_8003D4A0(void)
 {
     return sub_8003D45C(1);
 }
-INCLUDE_ASM(sub_8003D4C0);
-INCLUDE_ASM(sub_8003D630);
+// Matched
+int sub_8003D4C0(short* m, int idx)
+{
+    int r = 1;
+    if (m[4] < 0)
+    {
+        m[4] = 0;
+    }
+    if (word_800918CC[idx] & 0x2000)
+    {
+        if (m[4] % m[0] == m[0] - 1)
+        {
+            r |= 2;
+        }
+        else
+        {
+            m[4]++;
+        }
+    }
+    if (word_800918CC[idx] & 0x8000)
+    {
+        if (m[4] % m[0] == 0)
+        {
+            r |= 4;
+        }
+        else
+        {
+            m[4]--;
+        }
+    }
+    if (word_800918CC[idx] & 0x1000)
+    {
+        if (m[4] < m[0])
+        {
+            r |= 8;
+        }
+        else
+        {
+            m[4] -= m[0];
+        }
+    }
+    if (word_800918CC[idx] & 0x4000)
+    {
+        if (m[4] > m[0] * (m[1] - 1) - 1)
+        {
+            r |= 0x10;
+        }
+        else
+        {
+            m[4] += m[0];
+        }
+    }
+    return r;
+}
+// Matched
+int sub_8003D630(short* m)
+{
+    int idx = 0;
+    if (m[3] < 0)
+    {
+        m[3] = 0;
+    }
+    if (word_800918CC[idx] & 0x2000)
+    {
+        if (m[3] % m[4] == m[4] - 1)
+        {
+            return 1;
+        }
+        m[3]++;
+    }
+    if (word_800918CC[idx] & 0x8000)
+    {
+        if (m[3] % m[4] == 0)
+        {
+            return 2;
+        }
+        m[3]--;
+    }
+    if (word_800918CC[idx] & 0x1000)
+    {
+        if (m[3] < m[4])
+        {
+            return 3;
+        }
+        m[3] -= m[4];
+    }
+    if (word_800918CC[idx] & 0x4000)
+    {
+        if (m[3] > m[4] * (m[5] - 1) - 1)
+        {
+            return 4;
+        }
+        m[3] = m[3] + m[4];
+    }
+    return 0;
+}
 typedef struct
 {
     short field_0;
@@ -188,8 +282,84 @@ int sub_8003D794(struct_menu* p)
     return r;
 }
 INCLUDE_ASM(sub_8003D830);
-INCLUDE_ASM(sub_8003DA70);
-INCLUDE_ASM(sub_8003DB74);
+typedef struct
+{
+    unsigned short field_0;
+    unsigned short field_2;
+    unsigned short field_4;
+    unsigned short field_6;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short field_C;
+    unsigned short pad_E;
+    unsigned char* field_10;
+    unsigned short field_14;
+    unsigned short pad_16;
+} FontDef;
+extern FontDef dword_80086574[];
+extern char* dword_8008D434;
+extern char* dword_8008D440;
+// Matched
+void sub_8003DA70(void)
+{
+    int i;
+    FontDef* e;
+    struct_2C* f;
+    for (i = 0; i < 3; i++)
+    {
+        e = &dword_80086574[i];
+        f = &dword_80095FB0[i];
+        sub_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
+        f->field_10 = e->field_6;
+        f->field_12 = e->field_8;
+        f->field_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
+        f->field_18 = f->field_C;
+        f->field_1A = f->field_D;
+        f->field_1E = e->field_4;
+        f->field_20 = e->field_A;
+        f->field_22 = e->field_C;
+        f->field_24 = e->field_10;
+        f->field_1C = e->field_2;
+        f->field_28 = e->field_14;
+        f->field_2A = 0;
+    }
+}
+extern void sub_80033308(unsigned long* ot);
+extern void sub_8003326C(void* p, unsigned long* ot);
+extern void sub_8003DCA4(int a, unsigned int* w);
+// Matched
+int sub_8003DB74(unsigned int* w, int a)
+{
+    if (w[9] >= 3 - (settingsFlags_8008B58C & 7))
+    {
+        w[9] = 0;
+        w[7]++;
+    }
+    if (w[5] == 0)
+    {
+        w[7] = 0x0FFFFFFF;
+    }
+    w[8] = w[7];
+    sub_80033308(pOT_8008D454);
+    sub_8003DCA4(a, w);
+    sub_8003326C(w + 1, pOT_8008D454);
+    switch (w[10])
+    {
+    case 1:
+        if (w[6] == 1 && ((word_800918D0[0] & 0x60F) || (word_8009194C[0] & 0xF0)))
+        {
+            w[7] = 0x0FFFFFFF;
+        }
+        else
+        {
+            w[9]++;
+        }
+        break;
+    case 10:
+        return 1;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_8003DCA4);
 // Matched
 void sub_8003E268(unsigned short* p)
@@ -198,7 +368,35 @@ void sub_8003E268(unsigned short* p)
     short y = p[1] + 0x23;
     sub_8003CF88(x, y, 0);
 }
-INCLUDE_ASM(sub_8003E2A8);
+typedef struct
+{
+    short w;
+    short h;
+} struct_size_8003E3B4;
+extern int sub_8003E4C8(int str);
+// Matched
+struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
+{
+    struct_size_8003E3B4 sz;
+    short w;
+    int i;
+    sz.w = 0;
+    sz.h = 0;
+    for (i = 0; list[i]; i++)
+    {
+        if (mask & (1 << i))
+        {
+            w = sub_8003E4C8(list[sz.h]);
+            if (sz.w < w)
+            {
+                sz.w = w;
+            }
+            sz.h++;
+        }
+    }
+    sz.h *= 12;
+    return sz;
+}
 typedef struct
 {
     short w;
@@ -206,35 +404,29 @@ typedef struct
 } Size2;
 extern int sub_8003E4C8(int str);
 
-#if 0
-Size2 sub_8003E3B4(int* list)
+// Matched
+struct_size_8003E3B4 sub_8003E3B4(int* list)
 {
-    Size2 r;
-    int* p;
-    r.w = 0;
-    r.h = 0;
-    p = list;
-    if (*p)
+    struct_size_8003E3B4 sz;
+    short w;
+    int i;
+    sz.w = 0;
+    sz.h = 0;
+    for (i = 0; list[i]; i++)
     {
-        do
+        if (!sub_8003E484(list[i]))
         {
-            if (!sub_8003E484(*p))
+            w = sub_8003E4C8(list[i]);
+            if (sz.w < w)
             {
-                int w = sub_8003E4C8(*p);
-                if (r.w < (short)w)
-                {
-                    r.w = w;
-                }
-                r.h++;
+                sz.w = w;
             }
-            p++;
-        } while (*p);
+            sz.h++;
+        }
     }
-    r.h = r.h * 12;
-    return r;
+    sz.h *= 12;
+    return sz;
 }
-#endif
-INCLUDE_ASM(sub_8003E3B4);
 // Matched
 int sub_8003E484(int a0)
 {

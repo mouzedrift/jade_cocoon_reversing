@@ -562,7 +562,68 @@ void sub_80040148(int* p, int v)
 {
     p[1] = v;
 }
-INCLUDE_ASM(sub_80040150);
+// Matched
+HeapBlock* sub_80040150(Heap* h, unsigned int size)
+{
+    char* best = 0;
+    char* pos = (char*)h->buffer;
+    unsigned int bestsz;
+    unsigned int total = h->size;
+    HeapBlock* blk = h->head;
+    char* end;
+    HeapBlock* b;
+    unsigned int i;
+    int j;
+    unsigned int gap;
+    end = pos + total;
+    bestsz = total;
+    if (h->count == 0)
+    {
+        if (end >= pos + size)
+        {
+            best = pos;
+        }
+    }
+    else
+    {
+        for (i = 0; i <= h->count; i++)
+        {
+            if (end >= pos + size)
+            {
+                j = 0;
+                for (b = h->head; b; b = b->next, j++)
+                {
+                    if (pos < (char*)b + b->size && (char*)b < pos + size)
+                    {
+                        break;
+                    }
+                }
+                if (j == h->count)
+                {
+                    gap = h->size;
+                    for (b = h->head; b; b = b->next)
+                    {
+                        if (pos < (char*)b && (unsigned int)((char*)b - pos) < gap)
+                        {
+                            gap = (char*)b - pos;
+                        }
+                    }
+                    if (best == 0 || gap < bestsz)
+                    {
+                        best = pos;
+                        bestsz = gap;
+                    }
+                }
+            }
+            pos += blk->size;
+            if (blk->next)
+            {
+                blk = blk->next;
+            }
+        }
+    }
+    return (HeapBlock*)best;
+}
 // Matched
 int sub_80040274(int a0, int* a1)
 {
