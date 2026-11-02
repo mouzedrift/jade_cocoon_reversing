@@ -227,6 +227,7 @@ extern int off_800824CC[];
 extern struct_12_b dword_8007C438[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
+extern int dword_80091C60[];
 extern unsigned short word_8007CED8[];
 typedef struct
 {

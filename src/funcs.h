@@ -456,7 +456,7 @@ extern void sub_80021824(int* a0, int a1, int a2, int a3, int a4);
 extern void sub_80027118(void);
 extern void sub_800269C4(int a0, int a1, int a2, int a3);
 extern void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
-extern void sub_80026EF8(void* a0, void* a1, int a2);
+extern void sub_80026EF8(struct_12* p, unsigned short* s, int a2);
 extern void sub_80023514(int* a0, int a1, int a2, int a3);
 extern void sub_800236AC(int* a0, int a1, int a2, int a3);
 extern void sub_80023934(int* a0, int a1, int a2, int a3);

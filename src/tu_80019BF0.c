@@ -1369,7 +1369,34 @@ INCLUDE_ASM(sub_80021EDC);
 INCLUDE_ASM(sub_800221DC);
 INCLUDE_ASM(sub_80022458);
 INCLUDE_ASM(sub_80022634);
-INCLUDE_ASM(sub_800228F8);
+// Matched
+int sub_800228F8(int* a0, int* a1, char* a2, int h)
+{
+    int n;
+    int m;
+    *(unsigned short*)a0 = *(unsigned short*)(a2 + 0x20);
+    n = *(int*)(a2 + 0x20);
+    if (n != 0)
+    {
+        a0[1] = sub_8003FC8C(n * 8, h);
+    }
+    else
+    {
+        a0[1] = 0;
+    }
+    *(unsigned short*)a1 = *(unsigned short*)(a2 + 0x24);
+    m = *(int*)(a2 + 0x24);
+    n += m;
+    if (m != 0)
+    {
+        a1[1] = sub_8003FC8C(m * 12, h);
+    }
+    else
+    {
+        a1[1] = 0;
+    }
+    return n;
+}
 // Matched
 void sub_800229B0(int* p)
 {
@@ -2018,11 +2045,31 @@ void sub_80026E74(struct_12* a0, int* a1, int a2)
     int i;
     for (i = 0; i < sub_80026D6C(a1); i++)
     {
-        sub_80026EF8(a0, (char*)a1 + a1[i + 1], a2);
+        sub_80026EF8(a0, (unsigned short*)((char*)a1 + a1[i + 1]), a2);
         a0++;
     }
 }
-INCLUDE_ASM(sub_80026EF8);
+// Matched
+void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
+{
+    unsigned short* d;
+    int i;
+    p->field_0 = *(int*)s;
+    s += 2;
+    p->field_4 = *(int*)s;
+    s += 2;
+    d = (unsigned short*)sub_8003FC8C(p->field_0 * 8, a2);
+    p->field_8 = (int)d;
+    for (i = 0; i < p->field_0; i++)
+    {
+        d[0] = s[0];
+        d[1] = s[1];
+        d[2] = s[2];
+        d[3] = s[3];
+        d += 4;
+        s += 4;
+    }
+}
 INCLUDE_ASM(sub_80026FAC);
 INCLUDE_ASM(sub_80027118);
 // Matched
@@ -2140,7 +2187,34 @@ void sub_800275E8(char** a0, int a1, int a2)
         }
     }
 }
-INCLUDE_ASM(sub_80027650);
+// Matched
+int* sub_80027650(int* a0, int a1, int h)
+{
+    int* src;
+    int* d;
+    int n;
+    int i;
+    int* g = dword_80091C60;
+    a0 += 1;
+    n = *a0++;
+    src = a0;
+    g[0] = n;
+    if (n != 0)
+    {
+        d = (int*)sub_8003FDC0(h, n * 16);
+        g[1] = (int)d;
+        for (i = 0; i < g[0]; i++)
+        {
+            d[0] = src[0];
+            d[1] = src[1];
+            d[2] = src[2];
+            d[3] = src[3];
+            d += 4;
+            src += 4;
+        }
+    }
+    return src;
+}
 // Matched
 void sub_80027708(int* a0, int a1)
 {
