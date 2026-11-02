@@ -24,6 +24,27 @@ typedef struct MenuObj
     short f60;
 } MenuObj;
 
+typedef struct MenuSaveView
+{
+    char pad_0[0x814];
+    unsigned int flags_814[1];
+} MenuSaveView;
+
+typedef struct MenuBox
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    short col_8;
+    char c_A;
+    char c_B;
+} MenuBox;
+extern void sub_8002C06C();
+extern unsigned short uiColor_8008B590;
+extern void sub_800BFF84();
+extern void sub_80027478();
+extern void sub_80042460();
+
 extern void sub_800BE4A0();
 extern void sub_800BD5E4();
 extern void sub_800BD6C8();
@@ -98,9 +119,44 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BC2A8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BC56C);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BC8A8);
+void sub_800BC8A8(void)
+{
+    short rect[4];
+    MenuBox b;
+    rect[0] = 0x6C;
+    rect[1] = 0x1A;
+    rect[2] = 0x6C;
+    rect[3] = 0x12;
+    b.x_0 = 0x6F;
+    b.y_2 = 0x1C;
+    sub_8002C06C(&b, 0xE4, 0xE);
+    b.c_A = 1;
+    b.c_B = 1;
+    b.col_8 = uiColor_8008B590;
+    sub_80042460(rect, &b.col_8, (char*)pOT_8008D454 + 0x38, frameCount_8008D3FC);
+}
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BC934);
+extern int sub_8002FA0C();
+void sub_800BC934(int a, int b)
+{
+    short rect[4];
+    MenuBox bx;
+    short r = sub_8002FA0C((short)b, (short)(a - 1));
+    if (r != 0)
+    {
+        rect[0] = r + 8;
+        rect[1] = 0xBF;
+        rect[2] = 0x54;
+        rect[3] = 0x12;
+        bx.x_0 = r + 0xE;
+        bx.y_2 = 0xC1;
+        sub_8002C06C(&bx, 0x5D, 0xE);
+        bx.c_A = 1;
+        bx.c_B = 1;
+        bx.col_8 = uiColor_8008B590;
+        sub_80042460(rect, &bx.col_8, (char*)pOT_8008D454 + 0x38, frameCount_8008D3FC);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BC9E8);
 
@@ -120,7 +176,22 @@ void sub_800BCF74(short a)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCFDC);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BD1B0);
+extern int sub_8003D380();
+extern int sub_8003D41C();
+extern void sub_80034A84();
+extern int* name_8008D640;
+void sub_800BD1B0(MenuTask* t)
+{
+    int* p = name_8008D640;
+    int f;
+    sub_8002BE10();
+    f = p[4] & 0x8001;
+    p += 4;
+    if (f != 1)
+        t->next_8 = sub_800BBF48;
+    if (sub_8003D380(1) || sub_8003D41C(1))
+        sub_80034A84(p);
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD230);
 
@@ -146,6 +217,21 @@ void sub_800BD5E4(MenuTask* t, int a)
     t->next_8 = sub_800BD6C8;
 }
 
+// near miss: original has an extra register copy of i / 32
+#if 0
+void sub_800BD634(void)
+{
+    int i;
+    for (i = 0; i < 0xD3; i++)
+    {
+        if (sub_800BDD94(i) && (unsigned)(i - 0x25) >= 4)
+        {
+            int q = i / 32;
+            ((MenuSaveView*)&saveData_8008B570)->flags_814[q] |= 1 << (i - q * 32);
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BD634);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD6C8);
@@ -163,11 +249,6 @@ int sub_800BDB74(int a)
 
 // near miss: a kept in a different register
 #if 0
-typedef struct MenuSaveView
-{
-    char pad_0[0x814];
-    unsigned int flags_814[1];
-} MenuSaveView;
 int sub_800BDBB8(int a)
 {
     int q = a / 32;
@@ -178,6 +259,21 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BDBB8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BDBFC);
 
+// near miss: 1 word (delay slot of the last return)
+#if 0
+int sub_800BDD94(int a)
+{
+    if ((unsigned)(a - 0x29) < 0x10 || (unsigned)(a - 0xC9) < 0xA)
+        return 0;
+    if ((unsigned)(a - 0x20) < 4 || (unsigned)(a - 0xC1) < 8)
+        return (unsigned)(a - 0x22) < 2;
+    if ((unsigned)(a - 0x24) < 5)
+        return 1;
+    if ((unsigned)(a - 0x20) < 2 || (unsigned)(a - 0x39) < 0x88)
+        return 1;
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BDD94);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BDE10);
@@ -201,16 +297,30 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BE4A0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BEAE0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BEBFC);
+extern void sub_8002DB48();
+void sub_800BEBFC(int* o, int a)
+{
+    Minion* m = 0;
+    char* m2 = 0;
+    short s[2];
+    short x = *(unsigned short*)((char*)o + 0x2C) + *(unsigned short*)((char*)o + 0x4C);
+    if (x < o[2] - 1)
+    {
+        m = sub_80010598(3, x);
+        m2 = (char*)m + 0x84;
+    }
+    s[0] = 0x33;
+    s[1] = 0x3E;
+    if (m)
+        sub_8002DB48(m2, 0xE, a, s, m, 0);
+}
 
-extern unsigned short uiColor_8008B590;
 typedef struct MenuCol
 {
     unsigned short col;
     unsigned char c_2;
     unsigned char c_3;
 } MenuCol;
-extern void sub_80042460();
 void sub_800BEC8C(int unused, int a, short b)
 {
     MenuCol t;
@@ -249,6 +359,26 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BFCA8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFE18);
 
+extern void sub_80033308();
+extern void sub_800C07F0();
+extern int name_8008D678;
+// near miss: scheduling of the global load vs. prologue
+#if 0
+void sub_800BFEC0(MenuTask* t, int a)
+{
+    if (name_8008D678 < 0)
+    {
+        sub_80033308((char*)pOT_8008D454 + 0x38);
+        sub_800C07F0(a);
+        sub_80033308((char*)pOT_8008D454 + 0x38);
+    }
+    else
+    {
+        sub_800BFF84(a);
+        t->next_8 = sub_800BD6C8;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BFEC0);
 
 extern int name_800C45D8();
@@ -264,7 +394,22 @@ void sub_800BFF38(MenuTask* t, int a)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFF84);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BFFFC);
+extern int name_800C29BC;
+extern void sub_800A7714();
+extern void sub_800BD40C();
+void sub_800BFFFC(MenuTask* t)
+{
+    if (sub_800272D0() == 0)
+    {
+        if (name_800C29BC)
+            sub_800A7714(0);
+        sub_80027478(0x40, 0);
+        sub_800A6D30(1);
+        t->next_8 = sub_800BD40C;
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+    }
+    dword_8008B540 = 1;
+}
 
 extern void sub_80027478();
 extern void sub_80027314();
