@@ -411,15 +411,75 @@ unsigned char sub_800338B0(char* p)
 {
     unsigned char a[8];
     unsigned char b[16];
-    sub_800338DC(p + 0x4C, a, b);
+    sub_800338DC((unsigned char*)p + 0x4C, a, (int*)b);
     return a[0];
 }
-#if 0
-void sub_800338DC(void* arg0, void* arg1, void* arg2)
+// Matched
+int sub_800338DC(unsigned char* src, unsigned char* ids, int* counts)
 {
+    unsigned char hist[0xD3];
+    int i;
+    int j;
+    int k;
+    int res;
+    int sum;
+    k = 0;
+    res = k;
+    for (i = 0; i < 0xD3; i++)
+    {
+        hist[i] = 0;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        ids[i] = 0xD3;
+        counts[i] = 0;
+    }
+    for (i = 0; i < 0x30; i++)
+    {
+        hist[src[i]]++;
+    }
+    for (i = 0xFF; i >= 0; i--)
+    {
+        for (j = 0; j < 0xD3; j++)
+        {
+            if (hist[j] >= i)
+            {
+                if (i != 0)
+                {
+                    ids[k] = j;
+                }
+                else
+                {
+                    ids[k] = ids[0];
+                    if (res == 0)
+                    {
+                        res = k;
+                    }
+                }
+                counts[k] = i;
+                k++;
+                hist[j] = 0;
+            }
+            if (k >= 3)
+            {
+                if (res == 0)
+                {
+                    res = 3;
+                }
+                goto done;
+            }
+        }
+    }
+done:
+    sum = counts[0] + counts[1] + counts[2];
+    counts[0] <<= 12;
+    counts[1] <<= 12;
+    counts[2] <<= 12;
+    counts[0] /= sum;
+    counts[1] /= sum;
+    counts[2] /= sum;
+    return res;
 }
-#endif
-INCLUDE_ASM(sub_800338DC);
 // Matched
 void* sub_80033A60(void* p)
 {
