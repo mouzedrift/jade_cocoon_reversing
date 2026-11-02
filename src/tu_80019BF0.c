@@ -1365,7 +1365,89 @@ void sub_80021E4C(char* a0, int* a1, unsigned int n)
         src += 8;
     }
 }
-INCLUDE_ASM(sub_80021EDC);
+// r2 is unused (the original frame has room for it)
+// Matched
+void sub_80021EDC(unsigned char* p, unsigned char* d)
+{
+    RECT r;
+    RECT r2;
+    r.x = p[4];
+    r.y = p[5];
+    r.w = p[0xE];
+    r.h = p[0xF];
+    if (p[8] < r.x)
+    {
+        r.x = p[8];
+    }
+    if (r.x > p[0xC])
+    {
+        r.x = p[0xC];
+    }
+    if (r.x > p[0xE])
+    {
+        r.x = p[0xE];
+    }
+    if (p[9] < r.y)
+    {
+        r.y = p[9];
+    }
+    if (r.y > p[0xD])
+    {
+        r.y = p[0xD];
+    }
+    if (r.y > p[0xF])
+    {
+        r.y = p[0xF];
+    }
+    if (r.w < p[0xC])
+    {
+        r.w = p[0xC];
+    }
+    if (r.w < p[8])
+    {
+        r.w = p[8];
+    }
+    if (r.w < p[4])
+    {
+        r.w = p[4];
+    }
+    if (r.h < p[0xD])
+    {
+        r.h = p[0xD];
+    }
+    if (r.h < p[9])
+    {
+        r.h = p[9];
+    }
+    if (r.h < p[5])
+    {
+        r.h = p[5];
+    }
+    d[3] = 9;
+    d[7] = 0x2C;
+    d[4] = p[0];
+    d[5] = p[1];
+    d[6] = p[2];
+    d[0xC] = r.x;
+    d[0xD] = r.y;
+    d[0x14] = r.w;
+    d[0x15] = r.y;
+    d[0x1C] = r.x;
+    d[0x1D] = r.h;
+    d[0x24] = r.w;
+    d[0x25] = r.h;
+    *(short*)(d + 8) = 0;
+    *(short*)(d + 0xA) = 0;
+    *(short*)(d + 0x10) = r.w - r.x;
+    *(short*)(d + 0x12) = 0;
+    *(short*)(d + 0x18) = 0;
+    *(short*)(d + 0x1A) = r.h - r.y;
+    *(short*)(d + 0x20) = r.w - r.x;
+    *(short*)(d + 0x22) = r.h - r.y;
+    d[7] = p[3];
+    *(unsigned short*)(d + 0x16) = *(unsigned short*)(p + 0xA);
+    *(unsigned short*)(d + 0xE) = *(unsigned short*)(p + 6);
+}
 // Matched
 void sub_800221DC(unsigned char* p, unsigned char* d, DR_TPAGE* tp)
 {
