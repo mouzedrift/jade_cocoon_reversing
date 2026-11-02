@@ -87,8 +87,51 @@ int sub_80014164(int x)
 {
     return (x * x * x) / 400;
 }
-INCLUDE_ASM(sub_8001419C);
-INCLUDE_ASM(sub_80014200);
+// Matched
+void sub_8001419C(unsigned char* p, short* out)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int x = p[10] * 47 / (p[10] + a);
+    int y = p[8] * 47 / (p[8] + p[6]);
+    out[0] = x;
+    out[1] = y;
+}
+// Matched
+int sub_80014200(unsigned char* p)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int v = p[10] * 200 / (p[10] + a);
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
+    {
+        v = 1;
+    }
+    return v;
+}
+// Matched
+int sub_8001425C(unsigned char* p)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int v = a * 200 / (a + p[10]);
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
+    {
+        v = 1;
+    }
+    return v;
+}
 // Matched
 int sub_800142B8(unsigned char* p)
 {
@@ -106,23 +149,23 @@ int sub_800142B8(unsigned char* p)
     }
     return v;
 }
-#if 0
-// Not matched
+// Matched
 int sub_80014308(unsigned char* p)
 {
     int v = p[6] * 200 / (p[6] + p[8]);
-    if (v <= 0)
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
     {
         v = 1;
     }
-    else if (v >= 0xC9)
-    {
-        v = 0xC8;
-    }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_80014308);
 // Matched
 int sub_80014358(unsigned int mask)
 {

@@ -3480,3 +3480,4 @@ sub_80011CF4=0x80011cf4; // function behind sub_80011CD0 (was hidden in its span
 sub_800121A8=0x800121a8; // function behind sub_80012188 (was hidden in its span)
 sub_80018448=0x80018448; // function behind sub_80018430 (was hidden in its span)
 sub_80018460=0x80018460; // function behind sub_80018430 (was hidden in its span)
+sub_8001425C=0x8001425c; // function behind sub_80014200 (was hidden in its span)
