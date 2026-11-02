@@ -3,23 +3,58 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern int dword_800BE184;
+extern int dword_800BE14C;
+extern int dword_800BE150;
+extern int dword_800BE174;
+extern int dword_800BE188[];
+extern int dword_800BE2C4;
+extern int dword_800BE2C8;
+extern int dword_800BE2CC;
+extern int dword_800BE2D0;
+extern int dword_800BE2D4;
+extern int dword_800BE2D8;
+extern int dword_800BE2DC;
+extern int dword_800BE2E0;
+extern int** dword_8008D480;
+extern int sub_8004EE8C(void);
+extern void sub_8004EDE8(void);
+extern void sub_8004EE54(void);
+extern int sub_8004EDD8(void);
+extern void sub_800BC9DC(int a, int* b, int* c);
+extern void sub_800B7674(int a, int b);
+
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B7650);
+void sub_800B7650(void)
+{
+    sub_800B7674(4, 0);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B7674);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B7894);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B78B8);
+void sub_800B78B8(int v)
+{
+    dword_8008D480[9][22] = v;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B78D0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B7914);
+int sub_800B7914(void)
+{
+    return dword_8008D480[9][2];
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B7934);
+void sub_800B7934(void)
+{
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B793C);
+int sub_800B793C(void)
+{
+    return dword_800BE184;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B794C);
 
@@ -83,15 +118,33 @@ INCLUDE_OVERLAY_ASM(load, sub_800BACBC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BADE0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BADF4);
+void sub_800BADF4(void)
+{
+    int a = 0;
+    int b = 0;
+    sub_800BC9DC(0, &b, &a);
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE24);
+int sub_800BAE24(void)
+{
+    return 1;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE2C);
+int sub_800BAE2C(void)
+{
+    return dword_800BE14C;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE3C);
+int sub_800BAE3C(void)
+{
+    return dword_800BE150;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE4C);
+int sub_800BAE4C(int i)
+{
+    int* p = dword_800BE188;
+    return p[i];
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BAE68);
 
@@ -141,6 +194,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800BC628);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC768);
 
+// Not matched: the original keeps &var in a register (lui/addiu) for the load and the store
 INCLUDE_OVERLAY_ASM(load, sub_800BC9C8);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC9DC);
@@ -161,34 +215,59 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD118);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD174);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD17C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD18C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD208);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD274);
+unsigned sub_800BD274(void)
+{
+    return (unsigned)dword_800BE174 >> 31;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD284);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD2A0);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD2B4);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD2C8);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD2DC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD2F0);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD304);
 
+// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD318);
 
+#if 0
+// Not matched: epilogue order differs (addiu sp before jr, nop in delay slot)
+int sub_800BD32C(void)
+{
+    sub_8004EDE8();
+    sub_8004EE54();
+    return sub_8004EDD8();
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD32C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD35C);
 
+#if 0
+// Not matched: epilogue order differs
+int sub_800BD538(void)
+{
+    return sub_8004EE8C();
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD538);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD558);
@@ -199,8 +278,22 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD714);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD7EC);
 
+#if 0
+// Not matched: load scheduling differs
+int sub_800BD8C4(void)
+{
+    return dword_800BE2C4 + dword_800BE2C8 * 2 + dword_800BE2CC * 4 + dword_800BE2D0 * 8;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD8C4);
 
+#if 0
+// Not matched: load scheduling differs
+int sub_800BD900(void)
+{
+    return dword_800BE2D4 + dword_800BE2D8 * 2 + dword_800BE2DC * 4 + dword_800BE2E0 * 8;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD900);
 
 INCLUDE_OVERLAY_ASM(load, dword_800BD93C);
