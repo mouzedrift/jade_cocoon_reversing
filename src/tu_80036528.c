@@ -110,7 +110,45 @@ void sub_80036820(int a0)
 }
 #endif
 INCLUDE_ASM(sub_80036820);
-INCLUDE_ASM(sub_800368F8);
+extern void sub_80039620(char* o);
+extern void sub_80038CA8(int* p);
+extern void sub_800374E0();
+extern void sub_80037F44(int* p);
+extern int sub_800B8184(int a, int b);
+extern void sub_80037918();
+extern void sub_800369E0();
+extern char levantPos_8008BD18[];
+// Matched
+void sub_800368F8(struct_obj_D* p, int* q)
+{
+    if (q[1] & 0x100)
+    {
+        sub_80039620((char*)q);
+        q[0x38 / 4] = ((int*)levantPos_8008BD18)[0];
+        q[0x3C / 4] = ((int*)levantPos_8008BD18)[1];
+        q[0x40 / 4] = ((int*)levantPos_8008BD18)[2];
+        sub_80038CA8(q);
+        ((short*)q)[4] = 6;
+        p->field_8 = sub_800374E0;
+    }
+    else if (!(q[1] & 0x2000))
+    {
+        char* sd = (char*)&saveData_8008B570;
+        int r = sub_800B8184(q[0], *(short*)(sd + 0x2F0));
+        if (r >= 0)
+        {
+            *(short*)(sd + 0x2F0) = r;
+        }
+    }
+    else
+    {
+        sub_80037F44(q);
+        ((short*)q)[4] = 2;
+        p->field_8 = sub_800369E0;
+        ((void (*)(struct_obj_D*, int*))p->field_8)(p, q);
+    }
+    sub_80037918(q);
+}
 extern void sub_80037C74(int* p);
 extern void sub_8001AA04(short a0);
 extern void sub_800BC90C(int* p);
@@ -142,6 +180,44 @@ void sub_800369E0(struct_obj_D* p, int* q)
         break;
     }
 }
+extern void sub_80036BB0();
+extern void sub_80038230(int* p);
+#if 0
+// Not matched: orig keeps q and a copy in two saved regs (s0/s1)
+void sub_80036AB4(struct_obj_D* p, int* q)
+{
+    int* o = q;
+    if (q[1] & 4)
+    {
+        sub_80038230(q);
+        if (q[3] > 0)
+        {
+            q[3] -= 0x100;
+        }
+        if (q[3] < 0)
+        {
+            q[3] = 0;
+        }
+        if (q[1] & 4)
+        {
+            sub_800BC90C(o);
+            if (o[1] & 8)
+            {
+                ((short*)o)[4] = 5;
+                o[0x1C4 / 4] = 0;
+                p->field_8 = sub_80036BB0;
+                o[3] = 0;
+            }
+            return;
+        }
+    }
+    sub_80037918(o);
+    sub_8003891C(o, levantPos_8008BD18);
+    ((short*)o)[4] = 0;
+    o[1] &= ~0x1000;
+    p->field_8 = sub_800368F8;
+}
+#endif
 INCLUDE_ASM(sub_80036AB4);
 INCLUDE_ASM(sub_80036BB0);
 typedef struct
@@ -198,7 +274,7 @@ void sub_800374E0(struct_obj_D* p, int* q)
 extern void sub_80038230(int* p);
 extern void sub_80037918();
 extern void sub_8003891C(int* p, void* q);
-extern void sub_800368F8(void);
+extern void sub_800368F8();
 extern char levantPos_8008BD18[];
 extern int dword_8008B4F8;
 // Matched

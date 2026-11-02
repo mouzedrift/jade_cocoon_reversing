@@ -67,7 +67,41 @@ void sub_800358CC(struct_obj_A* p, int a1, int a2)
         sub_80042B38(a1, 2);
     }
 }
-INCLUDE_ASM(sub_80035900);
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    char pad_8[0x5C];
+    unsigned short x;
+    unsigned short y;
+    int field_68;
+    char pad_6C[0x18];
+    int field_84;
+    POLY_FT4 prim;
+} struct_obj_35900;
+// Matched
+void sub_80035900(struct_obj_35900* o)
+{
+    if (!(o->flags_4 & 0x40000) && o->field_84 == 1)
+    {
+        if (o->field_68)
+        {
+            o->prim.x1 = o->x;
+            o->prim.y0 = o->y;
+            o->prim.x0 = o->x + 0x3F;
+            o->prim.y1 = o->y;
+            o->prim.x3 = o->x;
+            o->prim.y2 = o->y + 0x3F;
+            o->prim.x2 = o->x + 0x3F;
+            o->prim.y3 = o->y + 0x3F;
+        }
+        else
+        {
+            setXY4(&o->prim, o->x, o->y, o->x + 0x3F, o->y, o->x, o->y + 0x3F, o->x + 0x3F, o->y + 0x3F);
+        }
+        sub_80040298(pOT_8008D454 + 1, &o->prim, 10);
+    }
+}
 extern void sub_8003E91C(int mode, void* str, void* pos, int c);
 extern int sub_8003E4C8(void* str);
 // Matched
