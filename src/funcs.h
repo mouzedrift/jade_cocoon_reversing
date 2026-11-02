@@ -437,7 +437,9 @@ extern void sub_8001A9E4(void);
 extern void sub_800209AC(struct_cb* p, int* q);
 
 extern int sub_800A248C(void);
-extern int sub_800A2B20(int a0);
+extern int sub_800A10C0(unsigned char a0);
+extern int sub_800A2B60(unsigned char a0);
+extern int sub_800A2B20(unsigned char a0);
 
 extern int sub_8002032C(int a0, int a1, int a2);
 extern void sub_800268E8(int a0, int a1, int a2, int a3, int a4);

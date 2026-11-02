@@ -180,42 +180,68 @@ int sub_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-int sub_80014390(int arg0)
-{
-    return 0;
-}
-#endif
-INCLUDE_ASM(sub_80014390);
-#if 0
-// Not matched: register allocation (masked arg kept in $a1 vs raw arg)
-int sub_80014444(int a0)
+// Not matched: only the callee-saved register assignment of a0 and r is swapped
+int sub_80014390(int a0)
 {
     unsigned char c = a0;
+    int idx;
     int r = 0;
     if (c >= 8)
     {
-        r = sub_800A11D8((unsigned char)(a0 - 8));
+        idx = a0 - 8;
+        r = sub_800A10C0(idx);
+    }
+    else if (c >= 4)
+    {
+        int m = sub_800A248C() & (1 << c);
+        if (m)
+        {
+            idx = a0 - 4;
+            r = sub_800A2B60(idx);
+        }
     }
     else if (c != 0)
     {
-        r = (int)sub_80010598(3, (unsigned char)(a0 - 1));
+        idx = a0 - 1;
+        r = (int)sub_800107A0(3, (unsigned char)idx);
+    }
+    else
+    {
+        r = (int)&byte_8008BD38;
     }
     return r;
 }
 #endif
-INCLUDE_ASM(sub_80014444);
+INCLUDE_ASM(sub_80014390);
+// Matched
+int sub_80014444(int a0)
+{
+    unsigned int v = a0 & 0xFF;
+    int r = 0;
+    if (v >= 8)
+    {
+        v = a0 - 8;
+        r = sub_800A11D8(v & 0xFF);
+    }
+    else if (v != 0)
+    {
+        v = a0 - 1;
+        r = (int)sub_80010598(3, v & 0xFF);
+    }
+    return r;
+}
 #if 0
-// Not matched: (unsigned char)(a0 - 4) is CSE'd into one register; the original masks twice and keeps a0 - 4
+// Not matched: only the callee-saved register assignment of a0 and r is swapped
 int sub_8001449C(int a0)
 {
+    unsigned int v = a0 - 4;
     int r = 0;
-    int v = a0 - 4;
-    if ((unsigned char)v < 3)
+    if ((v & 0xFF) < 3)
     {
         int m = sub_800A248C() & (1 << a0);
         if (m != 0)
         {
-            r = sub_800A2B20((unsigned char)v);
+            r = sub_800A2B20(v);
         }
     }
     return r;

@@ -505,6 +505,7 @@ typedef struct
 
 extern int dword_8008D4D8;
 extern short word_8008D780;
+extern unsigned char byte_8008BD38;
 extern unsigned long* dword_8008D42C;
 
 #endif
