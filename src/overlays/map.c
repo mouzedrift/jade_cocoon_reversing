@@ -485,8 +485,7 @@ void sub_800B8338(MapPos* p)
 #endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
-#if 0
-// Not matched: the original hoists the load of the flag above the store of 12 and jumps into the shared tail
+// Matched
 void sub_800B8448(MapPos* out)
 {
     unsigned short t = MAPV->f2E4;
@@ -497,8 +496,9 @@ void sub_800B8448(MapPos* out)
     {
         if (MAPV->f2E8 == 0)
         {
+            int f = MAPV->f2E0;
             out->b = 12;
-            out->a = MAPV->f2E0 == 1;
+            out->a = f == 1;
             return;
         }
         q.a = t;
@@ -520,8 +520,9 @@ void sub_800B8448(MapPos* out)
     }
     else if ((unsigned short)(t - 1) >= 3)
     {
+        int f = MAPV->f2E0;
         out->b = 0;
-        out->a = MAPV->f2E0 == 1;
+        out->a = f == 1;
         return;
     }
     else
@@ -539,8 +540,6 @@ void sub_800B8448(MapPos* out)
     }
     out->b = 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8448);
 
 // Matched
 void sub_800B85CC(MapTask* t)
