@@ -49,6 +49,24 @@ extern void sub_8001A41C();
 extern int sub_800A1958(void*);
 extern int sub_800A10DC(int);
 extern void sub_800A7EFC();
+typedef struct CombBtlObj
+{
+    int a;
+    int b;
+    short x;
+    short y;
+    short w;
+    short h;
+} CombBtlObj;
+
+typedef struct CombBtlPair
+{
+    short lo;
+    short hi;
+} CombBtlPair;
+
+extern short word_800A82D4[][2];
+extern void sub_800A7694();
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -252,6 +270,32 @@ int sub_800A7164(int i)
     return cnt;
 }
 
+// Near miss: register assignment of the two element pointers
+#if 0
+CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
+{
+    CombBtlPair r;
+    short hi = 0;
+    short lo = hi;
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        p[i].hi = p[i].hi - p[i].lo;
+        p[i].lo = -p[i].lo;
+        if (p[i].lo < lo)
+        {
+            lo = p[i].lo;
+        }
+        if (hi < p[i].hi)
+        {
+            hi = p[i].hi;
+        }
+    }
+    r.lo = lo;
+    r.hi = hi;
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A71E4);
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
@@ -302,7 +346,23 @@ int sub_800A758C()
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A75F8);
+void sub_800A75F8(int a)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008B564);
+    CombBtlObj* p;
+    if (e)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        p = (CombBtlObj*)e->buffer;
+        p->a = a;
+        p->b = 0;
+        p->x = word_800A82D4[a][0];
+        p->y = word_800A82D4[a][1];
+        p->w = 0x64;
+        p->h = 0x29;
+        e->cb_8 = (EventEntryFn)sub_800A7694;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7694);
 
