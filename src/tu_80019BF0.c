@@ -1506,7 +1506,43 @@ int sub_80023624(unsigned char* a0, int a1, int* a2, int a3)
     sub_800236AC(a2 + 2, a1, a0[3], a3);
     return 0x3C;
 }
-INCLUDE_ASM(sub_800236AC);
+// Matched
+void sub_800236AC(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x3C;
+    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
+    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
+    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x4);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x5);
+    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0x6);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x8);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x9);
+    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xA);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned short*)(s + 0x26);
+    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x34);
+    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned short*)(s + 0x36);
+    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x38);
+    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
+    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x2C);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x2E);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x30);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+}
 // Matched
 int sub_800238AC(unsigned char* a0, int a1, int* a2, int a3)
 {
@@ -1517,7 +1553,39 @@ int sub_800238AC(unsigned char* a0, int a1, int* a2, int a3)
     sub_80023934(a2 + 4, a1, a0[3], a3);
     return 0x24;
 }
-INCLUDE_ASM(sub_80023934);
+// Matched
+void sub_80023934(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x30;
+    *(unsigned short*)(o + a0[1] + 0xA) = *(unsigned short*)(s);
+    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x12);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x13);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned char*)(o + a0[1] + 0x4) + (*(unsigned char*)(o + a0[1] + 0x5) << 8);
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x1A);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x1B);
+    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned char*)(o + a0[1] + 0x8) + (*(unsigned char*)(o + a0[1] + 0x9) << 8);
+    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x22);
+    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x23);
+    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
+    *(unsigned char*)(o + a0[1]) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x1) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x2) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0xC);
+    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x4);
+    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x6);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x8);
+}
 // Matched
 void sub_80023B24(unsigned short* p, int arg1)
 {
@@ -1533,7 +1601,51 @@ int sub_80023B48(unsigned char* a0, int a1, int* a2, int a3)
     sub_80023BD0(a2 + 6, a1, a0[3], a3);
     return 0x40;
 }
-INCLUDE_ASM(sub_80023BD0);
+// Matched
+void sub_80023BD0(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x48;
+    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s);
+    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x1E);
+    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x1F);
+    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
+    *(unsigned char*)(o + a0[1] + 0x10) = *(unsigned char*)(s + 0x2E);
+    *(unsigned char*)(o + a0[1] + 0x11) = *(unsigned char*)(s + 0x2F);
+    *(unsigned short*)(o + a0[1] + 0x3E) = *(unsigned char*)(o + a0[1] + 0x10) + (*(unsigned char*)(o + a0[1] + 0x11) << 8);
+    *(unsigned char*)(o + a0[1] + 0x14) = *(unsigned char*)(s + 0x3E);
+    *(unsigned char*)(o + a0[1] + 0x15) = *(unsigned char*)(s + 0x3F);
+    *(unsigned short*)(o + a0[1] + 0x46) = *(unsigned char*)(o + a0[1] + 0x14) + (*(unsigned char*)(o + a0[1] + 0x15) << 8);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1]) = *(unsigned char*)(s + 0x4);
+    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x5);
+    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x6);
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x8);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x9);
+    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0xA);
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0xC);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0xD);
+    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x1A);
+    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x3A) = *(unsigned short*)(s + 0x2A);
+    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x2C);
+    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x38);
+    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned short*)(s + 0x3A);
+    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x3C);
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0x12);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x22);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x30);
+    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x32);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x34);
+}
 // Matched
 void sub_80023E80(unsigned short* p, int arg1)
 {
@@ -1549,7 +1661,31 @@ int sub_80023EA4(unsigned char* a0, int a1, int* a2, int a3)
     sub_80023F34(a2 + 8, a1, a0[3], a3);
     return 0x2C;
 }
-INCLUDE_ASM(sub_80023F34);
+// Matched
+void sub_80023F34(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x2C;
+    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
+    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
+    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
+    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x26);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x4) = *(unsigned short*)(s + 0x4);
+    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x6);
+    *(unsigned short*)(o + a0[1] + 0x8) = *(unsigned short*)(s + 0x8);
+}
 // Matched
 int sub_8002407C(unsigned char* a0, int a1, int* a2, int a3)
 {
@@ -1560,7 +1696,52 @@ int sub_8002407C(unsigned char* a0, int a1, int* a2, int a3)
     sub_80024104(a2 + 10, a1, a0[3], a3);
     return 0x50;
 }
-INCLUDE_ASM(sub_80024104);
+// Matched
+void sub_80024104(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x50;
+    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
+    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
+    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x4);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x5);
+    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0x6);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x8);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x9);
+    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xA);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0xC);
+    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0xD);
+    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0xE);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x1A);
+    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x3A) = *(unsigned short*)(s + 0x2A);
+    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x2C);
+    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x38);
+    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned short*)(s + 0x3A);
+    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x3C);
+    *(unsigned short*)(o + a0[1] + 0x48) = *(unsigned short*)(s + 0x48);
+    *(unsigned short*)(o + a0[1] + 0x4A) = *(unsigned short*)(s + 0x4A);
+    *(unsigned short*)(o + a0[1] + 0x4C) = *(unsigned short*)(s + 0x4C);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x12);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0x22);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x30);
+    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x32);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x34);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x40);
+    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x42);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x44);
+}
 // Matched
 int sub_80024394(unsigned char* a0, int a1, int* a2, int a3)
 {
@@ -1571,7 +1752,45 @@ int sub_80024394(unsigned char* a0, int a1, int* a2, int a3)
     sub_8002441C(a2 + 12, a1, a0[3], a3);
     return 0x2C;
 }
-INCLUDE_ASM(sub_8002441C);
+// Matched
+void sub_8002441C(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x38;
+    *(unsigned short*)(o + a0[1] + 0xA) = *(unsigned short*)(s);
+    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x12);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x13);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned char*)(o + a0[1] + 0x4) + (*(unsigned char*)(o + a0[1] + 0x5) << 8);
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x1A);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x1B);
+    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned char*)(o + a0[1] + 0x8) + (*(unsigned char*)(o + a0[1] + 0x9) << 8);
+    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x22);
+    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x23);
+    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
+    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0x2A);
+    *(unsigned char*)(o + a0[1] + 0xF) = *(unsigned char*)(s + 0x2B);
+    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned char*)(o + a0[1] + 0xE) + (*(unsigned char*)(o + a0[1] + 0xF) << 8);
+    *(unsigned char*)(o + a0[1]) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x1) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x2) = 0x80;
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0xC);
+    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x26);
+    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x4);
+    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x6);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x8);
+}
 // Matched
 void sub_8002467C(unsigned short* p, int arg1)
 {
@@ -1587,7 +1806,63 @@ int sub_800246A0(unsigned char* a0, int a1, int* a2, int a3)
     sub_80024730(a2 + 14, a1, a0[3], a3);
     return 0x54;
 }
-INCLUDE_ASM(sub_80024730);
+// Matched
+void sub_80024730(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x5C;
+    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s);
+    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x2);
+    *(unsigned char*)(o + a0[1] + 0x10) = *(unsigned char*)(s + 0x22);
+    *(unsigned char*)(o + a0[1] + 0x11) = *(unsigned char*)(s + 0x23);
+    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned char*)(o + a0[1] + 0x10) + (*(unsigned char*)(o + a0[1] + 0x11) << 8);
+    *(unsigned char*)(o + a0[1] + 0x14) = *(unsigned char*)(s + 0x32);
+    *(unsigned char*)(o + a0[1] + 0x15) = *(unsigned char*)(s + 0x33);
+    *(unsigned short*)(o + a0[1] + 0x4A) = *(unsigned char*)(o + a0[1] + 0x14) + (*(unsigned char*)(o + a0[1] + 0x15) << 8);
+    *(unsigned char*)(o + a0[1] + 0x18) = *(unsigned char*)(s + 0x42);
+    *(unsigned char*)(o + a0[1] + 0x19) = *(unsigned char*)(s + 0x43);
+    *(unsigned short*)(o + a0[1] + 0x52) = *(unsigned char*)(o + a0[1] + 0x18) + (*(unsigned char*)(o + a0[1] + 0x19) << 8);
+    *(unsigned char*)(o + a0[1] + 0x1A) = *(unsigned char*)(s + 0x52);
+    *(unsigned char*)(o + a0[1] + 0x1B) = *(unsigned char*)(s + 0x53);
+    *(unsigned short*)(o + a0[1] + 0x5A) = *(unsigned char*)(o + a0[1] + 0x1A) + (*(unsigned char*)(o + a0[1] + 0x1B) << 8);
+    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    *(unsigned char*)(o + a0[1]) = *(unsigned char*)(s + 0x4);
+    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x5);
+    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x6);
+    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x8);
+    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x9);
+    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0xA);
+    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0xC);
+    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0xD);
+    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xE);
+    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x10);
+    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x11);
+    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0x12);
+    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x3E) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x2C);
+    *(unsigned short*)(o + a0[1] + 0x46) = *(unsigned short*)(s + 0x2E);
+    *(unsigned short*)(o + a0[1] + 0x48) = *(unsigned short*)(s + 0x30);
+    *(unsigned short*)(o + a0[1] + 0x4C) = *(unsigned short*)(s + 0x3C);
+    *(unsigned short*)(o + a0[1] + 0x4E) = *(unsigned short*)(s + 0x3E);
+    *(unsigned short*)(o + a0[1] + 0x50) = *(unsigned short*)(s + 0x40);
+    *(unsigned short*)(o + a0[1] + 0x54) = *(unsigned short*)(s + 0x4C);
+    *(unsigned short*)(o + a0[1] + 0x56) = *(unsigned short*)(s + 0x4E);
+    *(unsigned short*)(o + a0[1] + 0x58) = *(unsigned short*)(s + 0x50);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
+    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x26);
+    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x28);
+    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x34);
+    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned short*)(s + 0x36);
+    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x38);
+    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x44);
+    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned short*)(s + 0x46);
+    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x48);
+}
 // Matched
 void sub_80024AB8(unsigned short* p, int arg1)
 {
