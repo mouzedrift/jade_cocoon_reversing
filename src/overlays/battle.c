@@ -3,6 +3,16 @@
 #include "funcs.h"
 #include "globals.h"
 
+typedef struct BatMin_a
+{
+    unsigned int f0;
+    int f4;
+    short h8;
+} BatMin_a;
+
+extern int sub_800BC6CC();
+extern void sub_800313C8(int);
+
 extern EventNode* dword_8008D624;
 extern char dword_800C9D82;
 extern char dword_800C9D83;
@@ -56,6 +66,7 @@ extern void sub_8002C014();
 extern void sub_800AC708();
 extern void sub_800A9364();
 extern int sub_800A8DAC();
+extern int sub_800A1B2C();
 extern void sub_80011CF4();
 extern void sub_8006281C();
 extern void sub_800BA848();
@@ -311,7 +322,33 @@ void sub_800BA52C(BatTask_a* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BA564);
+void sub_800BA564(BatTask_a* t, BatObj_a* u)
+{
+    int r = sub_800A8DAC();
+    if (r == 1)
+    {
+        if (sub_800A1B2C() == r)
+        {
+            if (--u->f4 < 0)
+            {
+                if (sub_800BC820(0x20000) == 0)
+                {
+                    sub_800313C8(0);
+                }
+                else
+                {
+                    short* p = dword_80091CE0;
+                    if (p[2] >= 0)
+                    {
+                        sub_8006281C(p[6], p[2], 0x7F, 0x78);
+                        p[2] = -1;
+                    }
+                }
+                t->next_8 = sub_800BA624;
+            }
+        }
+    }
+}
 
 void sub_800BA624(BatTask_a* t, BatObj_a* u)
 {
@@ -749,7 +786,34 @@ int sub_800BC174()
     return dword_800C8B54[(unsigned char)dword_800C8B38[dword_800C9C88[0]]];
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BC1A8);
+int sub_800BC1A8(unsigned int mask)
+{
+    int i;
+    int m;
+    BatMin_a* mn;
+    int c;
+    for (i = 0; i < 7; i++)
+    {
+        m = 1 << i;
+        if (mask & m)
+        {
+            mn = (BatMin_a*)sub_80014390(i & 0xFF);
+            c = (unsigned char)dword_800C9CBC[i];
+            if (c != 0 && c != 5 && c != 6 && mn->h8 > 0)
+            {
+                if (dword_800C9CA0[i] & 0x18202)
+                {
+                    return 1;
+                }
+                if (mn->f0 & 0x8000)
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 int sub_800BC28C()
 {
@@ -780,7 +844,39 @@ void sub_800BC324(BatTask_a* t, int a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BC378);
+extern BatV12_a* sub_800BC5EC();
+
+int sub_800BC378(unsigned int mask, BatV12_a* out)
+{
+    BatV12_a arr[7];
+    BatV12_a tmp;
+    unsigned int i;
+    int n;
+    int m;
+    n = i = 0;
+    for (; i < 7; i++)
+    {
+        m = 1 << i;
+        if (mask & m)
+        {
+            BatV12_a* p = (BatV12_a*)sub_800BC6CC(i);
+            if (p)
+            {
+                arr[n].x = p->x;
+                arr[n].y = p->y;
+                arr[n].z = p->z;
+                n++;
+            }
+        }
+    }
+    if (n != 0)
+    {
+        sub_800BC5EC(&tmp, arr, n);
+        *out = tmp;
+        return 1;
+    }
+    return 0;
+}
 
 void sub_800BC468(int a, int b)
 {
