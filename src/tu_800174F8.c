@@ -22,7 +22,30 @@ INCLUDE_ASM(sub_800174F8);
 INCLUDE_ASM(sub_8001761C);
 INCLUDE_ASM(sub_80017784);
 INCLUDE_ASM(sub_800178C0);
-INCLUDE_ASM(sub_80017A6C);
+void sub_80017B10(unsigned int* a0, int* a1);
+// Matched
+void sub_80017A6C(int a0, int a1)
+{
+    EventEntry* e = sub_80043AF8(dword_8008B4A8);
+    if (e)
+    {
+        int* b = e->buffer;
+        b[0x8C / 4] = (int)dword_80091C00;
+        b[0] = 0;
+        if (a1 > 0)
+        {
+            b[1] = a1;
+        }
+        else
+        {
+            b[1] = sub_800181E8();
+        }
+        e->cb_8 = (EventEntryFn)sub_80017B10;
+        e->flags = (e->flags | 1) & ~0x8000;
+        sub_8004188C();
+        DecDCTReset(0);
+    }
+}
 // Matched
 void sub_80017B10(unsigned int* a0, int* a1)
 {

@@ -493,6 +493,8 @@ typedef struct EventNode
     EventEntry entry;
 } EventNode;
 extern EventNode* dword_8008D618;
+extern EventNode* dword_8008B4A8;
+extern EventNode* dword_8008D60C;
 
 typedef struct
 {

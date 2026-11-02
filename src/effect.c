@@ -262,7 +262,42 @@ void sub_80014618(struct_obj_D* p, int* q)
     p->field_8 = (void (*)(void))sub_80014638;
 }
 INCLUDE_ASM(sub_80014638);
-INCLUDE_ASM(sub_800147FC);
+// Matched
+int sub_800147FC(void)
+{
+    int i;
+    int c;
+    EventNode* head;
+    EventNode* n;
+    int count;
+    EventNode* head2;
+    EventNode* n2;
+    int j;
+    i = 0;
+    head = dword_8008B4A8;
+    c = i;
+    count = head->count;
+    for (n = head; i < count; i++)
+    {
+        if ((n->entry.flags & 0x8001) == 1)
+        {
+            c++;
+        }
+        n = n->next;
+    }
+    head2 = dword_8008D60C;
+    j = 0;
+    count = head2->count;
+    for (n2 = head2; j < count; j++)
+    {
+        if ((n2->entry.flags & 0x8001) == 1)
+        {
+            c++;
+        }
+        n2 = n2->next;
+    }
+    return c;
+}
 // Matched
 void sub_800148A0(void)
 {
