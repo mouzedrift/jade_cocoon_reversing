@@ -694,7 +694,8 @@ void sub_8001C0B4(struct_cb* p, int* q)
     sub_80040298(pOT_8008D5F4, &dr, 2);
 }
 // Matched
-void sub_8001C19C(unsigned int a0)
+void sub_8001C19C(a0)
+unsigned int a0;
 {
     switch (a0)
     {
