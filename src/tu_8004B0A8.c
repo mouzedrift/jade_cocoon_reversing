@@ -237,7 +237,63 @@ void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
     out[1] = s->field_18[i * 3 + 1];
     out[2] = s->field_18[i * 3 + 2];
 }
-INCLUDE_ASM(sub_8004D3D8);
+/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
+extern short asc_80084350[];
+#define SIN_TBL_80084540 (asc_80084350 + 0xF8)
+// Matched
+void sub_8004D3D8(SVECTOR* r, MATRIX* m)
+{
+    int cy = SIN_TBL_80084540[(r->vy + 0x400) & 0xFFF];
+    int cz = SIN_TBL_80084540[(r->vz + 0x400) & 0xFFF];
+    int sy = SIN_TBL_80084540[r->vy & 0xFFF];
+    int cx = SIN_TBL_80084540[(r->vx + 0x400) & 0xFFF];
+    int sz = SIN_TBL_80084540[r->vz & 0xFFF];
+    int sx = SIN_TBL_80084540[r->vx & 0xFFF];
+    int a;
+    int b;
+    m->m[0][2] = sy;
+    m->m[0][0] = (cz * cy) >> 12;
+    a = (cz * -sy) >> 12;
+    m->m[1][0] = ((sz * cx) >> 12) - ((a * sx) >> 12);
+    m->m[2][0] = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    m->m[0][1] = -(sz * cy) >> 12;
+    b = (sz * -sy) >> 12;
+    m->m[1][1] = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m->m[1][2] = -(cy * sx) >> 12;
+    m->m[2][2] = (cy * cx) >> 12;
+    m->m[2][1] = ((cz * sx) >> 12) - ((b * cx) >> 12);
+}
+#if 0
+// Not matched: vy loaded once (lhu + sll/sra) instead of lhu and lh; regalloc follows
+void sub_8004D5CC(SVECTOR* r, MATRIX* m)
+{
+    int cz;
+    int sy;
+    int sz;
+    int cy;
+    int cx;
+    int sx;
+    int a;
+    int b;
+    cz = SIN_TBL_80084540[(r->vz + 0x400) & 0xFFF];
+    sy = SIN_TBL_80084540[r->vy & 0xFFF];
+    a = (cz * sy) >> 12;
+    sz = SIN_TBL_80084540[r->vz & 0xFFF];
+    b = (sz * sy) >> 12;
+    cy = SIN_TBL_80084540[(r->vy + 0x400) & 0xFFF];
+    cx = SIN_TBL_80084540[(r->vx + 0x400) & 0xFFF];
+    sx = SIN_TBL_80084540[r->vx & 0xFFF];
+    m->m[2][0] = -sy;
+    m->m[0][0] = (cz * cy) >> 12;
+    m->m[1][0] = (sz * cy) >> 12;
+    m->m[0][1] = ((a * sx) >> 12) - ((sz * cx) >> 12);
+    m->m[1][1] = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m->m[2][1] = (cy * sx) >> 12;
+    m->m[0][2] = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    m->m[2][2] = (cy * cx) >> 12;
+    m->m[1][2] = ((b * cx) >> 12) - ((cz * sx) >> 12);
+}
+#endif
 INCLUDE_ASM(sub_8004D5CC);
 // Matched
 void sub_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)

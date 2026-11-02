@@ -111,7 +111,37 @@ void sub_80036820(int a0)
 #endif
 INCLUDE_ASM(sub_80036820);
 INCLUDE_ASM(sub_800368F8);
-INCLUDE_ASM(sub_800369E0);
+extern void sub_80037C74(int* p);
+extern void sub_8001AA04(short a0);
+extern void sub_800BC90C(int* p);
+extern void sub_8003891C(int* p, void* q);
+extern char levantPos_8008BD18[];
+extern void sub_80036AB4();
+// Matched
+void sub_800369E0(struct_obj_D* p, int* q)
+{
+    switch (((short*)q)[4])
+    {
+    case 2:
+        if (q[1] & 4)
+        {
+            ((short*)q)[4]++;
+            sub_80037C74(q);
+            sub_8001AA04(8);
+        }
+        break;
+    case 3:
+        if (++q[5] > 0x3C)
+        {
+            sub_800390F4(q, 1);
+            ((short*)q)[4] = 4;
+            p->field_8 = sub_80036AB4;
+        }
+        sub_8003891C(q, levantPos_8008BD18);
+        sub_800BC90C(q);
+        break;
+    }
+}
 INCLUDE_ASM(sub_80036AB4);
 INCLUDE_ASM(sub_80036BB0);
 typedef struct
