@@ -1520,7 +1520,97 @@ void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
 }
 INCLUDE_ASM(sub_80022B84);
 INCLUDE_ASM(sub_80022CC4);
+typedef struct
+{
+    unsigned char b0;
+    unsigned char b1;
+    unsigned char b2;
+    unsigned char b3;
+    unsigned short f4;
+    unsigned short f6;
+    unsigned short f8;
+    unsigned short fA;
+    unsigned short fC;
+    unsigned short fE;
+    unsigned short f10;
+    unsigned short f12;
+} struct_20_b;
+typedef struct
+{
+    int count;
+    struct_20_b* items;
+} struct_8_20b;
+typedef struct
+{
+    int count;
+    unsigned short f4;
+    unsigned short f6;
+    struct_20_b* items;
+} struct_12_20b;
+#if 0
+// Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
+int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
+{
+    int r = 4;
+    int i;
+    unsigned char* q;
+    ((struct_8_20b*)a[1])[k].count = *(int*)p;
+    ((struct_8_20b*)a[1])[k].items = (struct_20_b*)sub_8003FC8C(*(int*)p * 20, h);
+    q = p + r;
+    for (i = 0; i < *(int*)p; i++)
+    {
+        ((struct_8_20b*)a[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
+        ((struct_8_20b*)a[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
+        ((struct_8_20b*)a[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_8_20b*)a[1])[k].items[i].fA = 0;
+        ((struct_8_20b*)a[1])[k].items[i].fC = *(unsigned short*)(q + 8);
+        ((struct_8_20b*)a[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
+        ((struct_8_20b*)a[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_8_20b*)a[1])[k].items[i].f12 = 0;
+        ((struct_8_20b*)a[1])[k].items[i].b0 = q[0x10];
+        ((struct_8_20b*)a[1])[k].items[i].b1 = q[0x11];
+        ((struct_8_20b*)a[1])[k].items[i].b2 = q[0x12];
+        ((struct_8_20b*)a[1])[k].items[i].b3 = 0;
+        r += 20;
+        q += 20;
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_8002300C);
+#if 0
+// Not matched: same issues as sub_8002300C plus register assignment
+int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h)
+{
+    int r = 8;
+    int i;
+    unsigned char* q;
+    ((struct_12_20b*)b[1])[k].count = *(int*)p;
+    ((struct_12_20b*)b[1])[k].items = (struct_20_b*)sub_8003FC8C(*(int*)p * 20, h);
+    ((struct_12_20b*)b[1])[k].f4 = *(unsigned short*)(p + 4);
+    ((struct_12_20b*)b[1])[k].f6 = *(unsigned short*)(p + 6);
+    q = p + r;
+    for (i = 0; i < *(int*)p; i++)
+    {
+        ((struct_12_20b*)b[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
+        ((struct_12_20b*)b[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
+        ((struct_12_20b*)b[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_12_20b*)b[1])[k].items[i].fA = 0;
+        ((struct_12_20b*)b[1])[k].items[i].fC = *(unsigned short*)(q + 8);
+        ((struct_12_20b*)b[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
+        ((struct_12_20b*)b[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_12_20b*)b[1])[k].items[i].f12 = 0;
+        ((struct_12_20b*)b[1])[k].items[i].b0 = q[0x10];
+        ((struct_12_20b*)b[1])[k].items[i].b1 = q[0x11];
+        ((struct_12_20b*)b[1])[k].items[i].b2 = q[0x12];
+        ((struct_12_20b*)b[1])[k].items[i].b3 = hdr[3];
+        ((struct_12_20b*)b[1])[k].items[i].f12 = q[0xE] + (q[0xF] << 8);
+        r += 20;
+        q += 20;
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_8002320C);
 // Matched
 void sub_80023460(char* p, int arg1)
