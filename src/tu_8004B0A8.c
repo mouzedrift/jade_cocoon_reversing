@@ -196,7 +196,47 @@ void sub_8004D224(unsigned short* out, struct_tbl14* s, int idx)
     out[1] = s->field_14[idx * 3 + 1];
     out[2] = s->field_14[idx * 3 + 2];
 }
-INCLUDE_ASM(sub_8004D288);
+typedef struct
+{
+    int pad_0;
+    int n;
+    char pad_8[0x10];
+    short* field_18;
+} struct_tbl18;
+// Matched
+void sub_8004D288(int* out, struct_tbl18* s, int k)
+{
+    int i = k * (s->n + 2);
+    out[0] = s->field_18[i * 3];
+    out[1] = s->field_18[i * 3 + 1];
+    out[2] = s->field_18[i * 3 + 2];
+}
+// Matched
+void sub_8004D2EC(short* out, struct_tbl18* s, int k)
+{
+    int i = k * (s->n + 2) + 1;
+    out[0] = s->field_18[i * 3];
+    out[1] = s->field_18[i * 3 + 1];
+    out[2] = s->field_18[i * 3 + 2];
+}
+// Matched
+void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
+{
+    int i;
+    int t;
+    if (j == 0)
+    {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        return;
+    }
+    t = j + 2;
+    i = k * (s->n + 2) + t;
+    out[0] = s->field_18[i * 3];
+    out[1] = s->field_18[i * 3 + 1];
+    out[2] = s->field_18[i * 3 + 2];
+}
 INCLUDE_ASM(sub_8004D3D8);
 INCLUDE_ASM(sub_8004D5CC);
 INCLUDE_ASM(sub_8004D7A8);

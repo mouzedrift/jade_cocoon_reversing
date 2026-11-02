@@ -279,7 +279,42 @@ int sub_8003D794(struct_menu* p)
 }
 INCLUDE_ASM(sub_8003D830);
 INCLUDE_ASM(sub_8003DA70);
-INCLUDE_ASM(sub_8003DB74);
+extern void sub_80033308(unsigned long* ot);
+extern void sub_8003326C(void* p, unsigned long* ot);
+extern void sub_8003DCA4(int a, unsigned int* w);
+// Matched
+int sub_8003DB74(unsigned int* w, int a)
+{
+    if (w[9] >= 3 - (settingsFlags_8008B58C & 7))
+    {
+        w[9] = 0;
+        w[7]++;
+    }
+    if (w[5] == 0)
+    {
+        w[7] = 0x0FFFFFFF;
+    }
+    w[8] = w[7];
+    sub_80033308(pOT_8008D454);
+    sub_8003DCA4(a, w);
+    sub_8003326C(w + 1, pOT_8008D454);
+    switch (w[10])
+    {
+    case 1:
+        if (w[6] == 1 && ((word_800918D0[0] & 0x60F) || (word_8009194C[0] & 0xF0)))
+        {
+            w[7] = 0x0FFFFFFF;
+        }
+        else
+        {
+            w[9]++;
+        }
+        break;
+    case 10:
+        return 1;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_8003DCA4);
 // Matched
 void sub_8003E268(unsigned short* p)

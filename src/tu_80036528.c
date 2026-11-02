@@ -17,6 +17,53 @@
 #include "data_decls.h"
 
 
+typedef struct
+{
+    unsigned short field_0;
+    unsigned char field_2;
+    unsigned char field_3;
+} struct_80083B30;
+extern struct_80083B30* off_80083B30[];
+typedef struct
+{
+    unsigned char idx;
+    unsigned char b;
+    unsigned char k;
+    unsigned char pad;
+    short field_4;
+} struct_buf_80036528;
+extern EventNode* dword_8008D4B8;
+void sub_80036658(int idx);
+extern void sub_800366A0();
+#if 0
+// Not matched: idx/b register swap (a3/a1) and o[] reloads after stores
+void sub_80036528(int idx, int b)
+{
+    EventNode* n;
+    EventEntry* e;
+    struct_buf_80036528* o;
+    int i;
+    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[(unsigned char)idx][1] >> 4) != 7)
+    {
+        sub_80036658((unsigned char)idx);
+        return;
+    }
+    n = dword_8008D4B8;
+    for (i = 0; i < (unsigned char)idx; i++)
+    {
+        n = n->next;
+    }
+    e = &n->entry;
+    o = (struct_buf_80036528*)e->buffer;
+    e->cb_8 = sub_800366A0;
+    o->b = b;
+    o->idx = idx;
+    o->k = 0;
+    o->field_4 = off_80083B30[(unsigned char)b]->field_0;
+    byte_80095460[o->idx].field_2 = off_80083B30[o->b][o->k].field_2;
+    byte_80095460[o->idx].field_3 = off_80083B30[o->b][o->k].field_3;
+}
+#endif
 INCLUDE_ASM(sub_80036528);
 // Matched
 void sub_80036658(int idx)
@@ -30,7 +77,27 @@ void sub_80036678(void)
     sub_80036658(0);
     sub_80036658(1);
 }
-INCLUDE_ASM(sub_800366A0);
+extern void sub_800367F0(int a0, unsigned char* a1);
+// Matched
+void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
+{
+    if (--o->field_4 <= 0)
+    {
+        o->k++;
+        o->field_4 = off_80083B30[o->b][o->k].field_0;
+        byte_80095460[o->idx].field_2 = off_80083B30[o->b][o->k].field_2;
+        byte_80095460[o->idx].field_3 = off_80083B30[o->b][o->k].field_3;
+        if (o->field_4 < 0)
+        {
+            e->cb_8 = (EventEntryFn)sub_800367F0;
+        }
+    }
+    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[o->idx][1] >> 4) != 7)
+    {
+        byte_80095460[o->idx].field_2 = 0;
+        byte_80095460[o->idx].field_3 = 0;
+    }
+}
 // Matched
 void sub_800367F0(int a0, unsigned char* a1)
 {
@@ -307,7 +374,50 @@ INCLUDE_ASM(sub_80037C74);
 INCLUDE_ASM(sub_80037F44);
 INCLUDE_ASM(sub_80038230);
 INCLUDE_ASM(sub_8003856C);
-INCLUDE_ASM(sub_8003891C);
+extern void sub_8003856C(int* p);
+extern void sub_800398B4(int* p, void* q);
+extern int dword_8008D4BC;
+extern VECTOR dword_8008D600;
+typedef struct
+{
+    DVECTOR xy;
+    int z;
+} struct_8008D668;
+extern struct_8008D668 word_8008D668;
+// Matched
+void sub_8003891C(int* p, void* q)
+{
+    int* v = (int*)q;
+    SVECTOR sv;
+    long pr;
+    long flag;
+    int a;
+    unsigned int b;
+    sub_80039E14();
+    sub_8003856C(p);
+    a = word_8008D51E * dword_8008B4F8;
+    b = word_8008D51E * dword_8008D4BC;
+    sv.vx = v[0];
+    sv.vy = v[1];
+    sv.vz = v[2];
+    sv.vy -= 0x15E;
+    sv.vx -= dword_8008D600.vx;
+    sv.vy -= dword_8008D600.vy;
+    sv.vz -= dword_8008D600.vz;
+    geomScreenDistance_8008B548 = b >> 12;
+    SetGeomScreen(a / 4096);
+    word_8008D668.z = RotTransPers(&sv, (long*)&word_8008D668.xy, &pr, &flag);
+    if (flag < 0)
+    {
+        word_8008D668.xy.vx = 0xA0;
+        word_8008D668.xy.vy = 0x78;
+    }
+    SetGeomScreen(geomScreenDistance_8008B548);
+    if (!(p[1] & 0x800))
+    {
+        sub_800398B4(p, &word_8008D668);
+    }
+}
 INCLUDE_ASM(sub_80038A5C);
 // Matched
 void sub_80038CA8(int* p)

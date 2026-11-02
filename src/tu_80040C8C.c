@@ -31,7 +31,9 @@ typedef struct
 {
     char pad_0[4];
     int is24bpp;
-    char pad_8[8];
+    char pad_8[2];
+    short field_A;
+    char pad_C[4];
     short field_10;
     short field_12;
     char pad_14[2];
@@ -41,8 +43,7 @@ typedef struct
 
 typedef struct
 {
-    void* buf0;
-    void* buf1;
+    void* vlcbuf[2];
     int field_8;
     void* imgbuf[2];
     int field_14;
@@ -146,8 +147,8 @@ void sub_80041240(MovieCtx* c, MovieInfo* i)
     int y;
     int x2;
     int y2;
-    c->buf0 = (void*)0x801B9250;
-    c->buf1 = (void*)0x801CA250;
+    c->vlcbuf[0] = (void*)0x801B9250;
+    c->vlcbuf[1] = (void*)0x801CA250;
     c->field_8 = 0;
     c->imgbuf[0] = (void*)0x801F0250;
     c->imgbuf[1] = (void*)0x801F2F50;
@@ -249,7 +250,34 @@ void sub_80041424(void)
 }
 #endif
 INCLUDE_ASM(sub_80041424);
-INCLUDE_ASM(sub_800415D8);
+extern short movieWidth_80086F98;
+extern short movieHeight_80086F9A;
+// Matched
+int sub_800415D8(MovieCtx* c, MovieInfo* m)
+{
+    u_long* addr;
+    u_long* hdr;
+    while (StGetNext(&addr, &hdr) == 1)
+    {
+    }
+    if (hdr[2] >= m->field_A)
+    {
+        bMovieFinished_800960FC = 1;
+    }
+    if (movieWidth_80086F98 != ((u_short*)hdr)[8] || movieHeight_80086F9A != ((u_short*)hdr)[9])
+    {
+        sub_80040E28(m);
+        movieWidth_80086F98 = ((u_short*)hdr)[8];
+        movieHeight_80086F9A = ((u_short*)hdr)[9];
+    }
+    c->rect[0].w = c->rect[1].w = MOVIE_W(m, movieWidth_80086F98);
+    c->rect[0].h = c->rect[1].h = movieHeight_80086F9A;
+    c->slice.h = movieHeight_80086F9A;
+    c->field_8 = c->field_8 == 0;
+    DecDCTvlc2(addr, c->vlcbuf[c->field_8], mdecVLCBuffer_80086F94);
+    StFreeRing(addr);
+    return 1;
+}
 // Matched
 void sub_80041724(MovieCtx* c)
 {
