@@ -97,6 +97,7 @@ extern MenuRc* name_80014390();
 extern int sub_80034140();
 extern unsigned short name_8009194C;
 extern void sub_800BE294();
+extern short name_800C1B74[];
 extern void sub_800BDE10();
 extern void sub_800BF794();
 extern void sub_800BFCA8();
@@ -781,13 +782,58 @@ void sub_800BE25C(short* p)
         p[1] = v;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BE294);
+void sub_800BE294(MenuCtx* c)
+{
+    short v = name_800C1B74[c->sel_2];
+    if (v != -1)
+    {
+        c->arr_2A[v] = (unsigned short)c->f60;
+    }
+    switch (c->sel_2)
+    {
+    case 0:
+        if (c->flags_0 & 1)
+        {
+            c->arr_46[3] = (unsigned short)c->f62;
+            c->arr_2A[6] = 0;
+        }
+        else if (c->flags_0 & 2)
+        {
+            c->arr_2A[1] = (unsigned short)c->f60;
+            c->arr_2A[6] = (unsigned short)c->f60 + 1;
+            c->arr_46[3] = (unsigned short)c->f62;
+        }
+        else
+        {
+            c->arr_2A[0] = (unsigned short)c->f60;
+        }
+        break;
+    case 1:
+        c->arr_2A[5] = 0;
+        c->arr_46[0] = (unsigned short)c->f62;
+        break;
+    case 14:
+        c->arr_46[1] = (unsigned short)c->f62;
+        break;
+    case 3:
+        c->arr_2A[6] = (unsigned short)c->f60 + 1;
+        break;
+    case 4:
+        c->arr_46[2] = (unsigned short)c->f62;
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(menu, dword_800BBA04);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE38C);
+INCLUDE_OVERLAY_ASM(menu, jpt_800BBA08);
+INCLUDE_OVERLAY_ASM(menu, dword_800BBA44);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE4A0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BEAE0);
+INCLUDE_OVERLAY_ASM(menu, jpt_800BBAC8);
+INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
 
 extern void sub_8002DB48();
 void sub_800BEBFC(int* o, int a)
