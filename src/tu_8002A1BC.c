@@ -117,13 +117,19 @@ void sub_8002A384(struct_F1C8* p)
     buf.color = col;
     sub_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
 }
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+} struct_12_c;
 extern int dword_800827BC[];
 // Matched
 short sub_8002A3E0(int a)
 {
     if (a < 30)
     {
-        return (short)dword_800827BC[dword_8007C438[a].field_8];
+        return (short)dword_800827BC[((struct_12_c*)dword_8007C438)[a].field_8];
     }
     return 36;
 }

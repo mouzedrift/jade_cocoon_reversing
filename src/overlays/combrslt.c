@@ -69,7 +69,57 @@ void sub_800A41E4(CombRsltTask* t, int a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combrslt, sub_800A4240);
+extern unsigned char byte_800A3A98[];
+extern unsigned char byte_800A3A90[];
+extern int* dword_800A4830[];
+extern int* dword_800A4870[];
+extern unsigned short* dword_800A48B0[];
+typedef struct CombRsltEnt
+{
+    char pad_0[0xA];
+    short idx_A;
+} CombRsltEnt;
+extern CombRsltEnt dword_800A47E8[];
+extern void sub_800A444C();
+extern void sub_800A4554();
+
+void sub_800A4240(int i)
+{
+    CombRsltBox box;
+    short pos[2];
+    int j;
+    int u;
+    int t = byte_800A3A98[i];
+    switch (t)
+    {
+    case 0:
+        dword_800A4870[i][1] = 0xE6;
+        box.c_2 = 1;
+        break;
+    case 1:
+        dword_800A4870[i][1] = 0x68;
+        box.c_2 = 2;
+        break;
+    case 2:
+        dword_800A4870[i][1] = 0x41;
+        box.c_2 = 2;
+        break;
+    }
+    box.col_0 = uiColor_8008B590;
+    box.c_3 = 1;
+    sub_8002ADB4(dword_800A4830[i], &box, 0xF, sub_8002C64C());
+    sub_8002ADB4(dword_800A4870[i], &box, 0xF, sub_8002C64C());
+    pos[0] = dword_800A48B0[i][8];
+    pos[1] = dword_800A48B0[i][9];
+    sub_800A444C(pos, 0xF, byte_800A3A90[i ^ 1], byte_800A3A90[i]);
+    sub_8002ADB4(dword_800A48B0[i], &box, 0xF, sub_8002C64C());
+    j = 0;
+    u = byte_800A3A98[i];
+    if (u < 3 && u != 0)
+        box.c_2 = 0;
+    for (j = 0; j < 3; j++)
+        sub_800A4554(i, j + dword_800A47E8[0].idx_A, &box);
+}
 
 // Near miss: scheduling of the repeated x/y stores
 #if 0
@@ -108,6 +158,87 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
 #endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A444C);
 
+typedef struct CombRsltSub
+{
+    unsigned short flags_0;
+    short s_2;
+    int ptr_4;
+    int pad_8[2];
+    short x_10;
+    short y_12;
+    int pad_14[2];
+} CombRsltSub;
+
+typedef struct CombRsltPos
+{
+    unsigned short x;
+    unsigned short y;
+} CombRsltPos;
+
+extern CombRsltSub dword_800A40A8;
+extern CombRsltSub dword_800A40C4;
+extern int* dword_800A48B8[];
+extern CombRsltPos dword_800A48C4[];
+extern char byte_800A3AA0[];
+
+extern int sub_800A1958();
+extern int sub_800A1934();
+extern void sub_800A1844();
+extern void sub_8002F078();
+extern void sub_80042460();
+
+// Near miss: register allocation of the q / j*4 address computation
+#if 0
+void sub_800A4554(int i, int j, void* arg)
+{
+    CombRsltSub a = dword_800A40A8;
+    CombRsltSub b;
+    CombRsltPos r1;
+    CombRsltPos r2;
+    CombRsltPos r3[2];
+    CombRsltPos* q;
+    char* e;
+    int on;
+    if (sub_800A1958(byte_800A3AA0 + i * 744 + j * 248))
+    {
+        a.flags_0 |= 2;
+        on = 1;
+    }
+    else
+    {
+        on = 0;
+        a.flags_0 &= ~2;
+    }
+    e = byte_800A3AA0 + i * 744 + j * 248;
+    if (sub_800A1934(e) != 1)
+    {
+        a.ptr_4 = (int)dword_800A48B8[j];
+        q = dword_800A48C4 + j + i * 3;
+        a.x_10 = q->x;
+        a.y_12 = q->y;
+        sub_8002ADB4(&a, arg, 0xF, sub_8002C64C());
+        b = dword_800A40C4;
+        b.x_10 = q->x + 0x32;
+        b.y_12 = q->y;
+        if (!on)
+        {
+            r1.x = q->x + 0x2F;
+            r1.y = q->y;
+            sub_8002F078(e + 0x84, &r1, 0, 0xF);
+            b.s_2 = 0;
+        }
+        sub_8002ADB4(&b, arg, 0xF, sub_8002C64C());
+        r2.x = q->x;
+        r2.y = q->y + 0x14;
+        sub_800A1844(e, &r2, a.flags_0);
+        r3[0].x = q->x;
+        r3[0].y = q->y + 0x14;
+        r3[1].x = 0x90;
+        r3[1].y = 0x13;
+        sub_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, sub_8002C64C());
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A4554);
 
 INCLUDE_OVERLAY_ASM(combrslt, dword_800A47E8);

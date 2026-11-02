@@ -204,21 +204,37 @@ int sub_80019C84(void)
 }
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
-INCLUDE_ASM(sub_8001A38C);
+// Matched
+extern short dword_80087114[];
+extern short dword_80087134[];
+extern char dword_8008D4F0[];
+void sub_8001A38C(void)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    unsigned short* g;
+    p[0] = 0;
+    p[1] = 0;
+    g = (unsigned short*)dword_8008D4F0;
+    dword_80087114[6] = -g[0x34 / 2];
+    dword_80087114[7] = -g[0x36 / 2];
+    dword_80087114[8] = -g[0x38 / 2];
+    dword_80087134[2] = (short)g[0x3C / 2] / 4;
+    dword_80087134[5] = (short)g[0x3E / 2] / 4;
+    dword_80087134[8] = (short)g[0x40 / 2] / 4;
+}
 INCLUDE_ASM(sub_8001A41C);
-#if 0
-// Not matched
+// Matched
 void sub_8001A9A4(void)
 {
     unsigned short* p;
+    unsigned short v;
     dword_8008D40C = 0x1000;
     p = (unsigned short*)dword_8008D628[9];
+    v = p[0];
     unknownFlags_8008D678 &= ~0x400;
     p[1] = 0;
-    p[0] &= 0xFFF0;
+    p[0] = v & 0xFFF0;
 }
-#endif
-INCLUDE_ASM(sub_8001A9A4);
 // Matched
 void sub_8001A9E4(void)
 {
@@ -260,8 +276,83 @@ unsigned char sub_8001AC58(int idx)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8001AC8C);
-INCLUDE_ASM(sub_8001AD64);
+// Matched
+int sub_8001AC8C(int idx)
+{
+    if (idx < 0x1E)
+    {
+        return dword_8007C438[idx].field_6;
+    }
+    return 0x1A;
+}
+// Matched
+int sub_8001ACC0(int idx)
+{
+    return dword_8007C438[idx].field_5;
+}
+// Matched
+int sub_8001ACE4(int idx)
+{
+    unsigned int v = dword_8007C438[idx].field_0;
+    int r = (v >> 5) & 2;
+    if (v & 0x80)
+    {
+        r |= 4;
+    }
+    if (v & 4)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+int sub_8001AD30(int idx)
+{
+    if (idx < 0x1E)
+    {
+        return dword_8007C438[idx].field_8;
+    }
+    return 0xB;
+}
+// Matched
+struct_12* sub_8001AD64(unsigned int idx)
+{
+    if (idx < 0x1E)
+    {
+        return &dword_8007C5A0[idx];
+    }
+    return 0;
+}
+// Matched
+void sub_8001AD90(unsigned int* bits)
+{
+    int i;
+    for (i = 0; i < 1; i++)
+    {
+        bits[i] = 0;
+    }
+}
+// Matched
+void sub_8001ADAC(unsigned int* bits, unsigned int idx)
+{
+    unsigned int* p = bits + (idx >> 5);
+    *p |= 1 << (idx & 0x1F);
+}
+// Matched
+void sub_8001ADD4(unsigned int* dst, unsigned int* src)
+{
+    int i;
+    for (i = 0; i < 1; i++)
+    {
+        *dst++ |= *src++;
+    }
+}
+// Matched
+void sub_8001AE00(unsigned int* bits, unsigned int idx)
+{
+    unsigned int* p = bits + (idx >> 5);
+    *p &= ~(1 << (idx & 0x1F));
+}
 // Matched
 int sub_8001AE2C(unsigned int* bits, unsigned int idx)
 {
@@ -286,7 +377,24 @@ int sub_8001AE54(unsigned int* a0)
 void nullsub_3(void)
 {
 }
-INCLUDE_ASM(sub_8001AEC0);
+// Matched
+int sub_8001AEC0(unsigned int* bits, int n)
+{
+    int cnt = 0;
+    int i;
+    for (i = 0; i < 0x1E; i++)
+    {
+        if (sub_8001AE2C(bits, i))
+        {
+            if (cnt == n)
+            {
+                return i;
+            }
+            cnt++;
+        }
+    }
+    return 0x1E;
+}
 // Matched
 unsigned char sub_8001AF3C(int idx)
 {
@@ -302,7 +410,21 @@ void DrawIntroMovie_8001AF64(void* a0)
 }
 #endif
 INCLUDE_ASM(DrawIntroMovie_8001AF64);
-INCLUDE_ASM(InitMovie_8001B1B0);
+// Matched
+void InitMovie_8001B1B0(void)
+{
+    bStopDrawingMovie_8008D45C = 0;
+    frameCount_8008D3FC = 0;
+    geomScreenDistance_8008B548 = 0xA0;
+    dword_8008B4F8 = 0x1000;
+    drawEnvRed_8008D448[0] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[2] = 0;
+    bDoubleBuffer_8008D428 = 0;
+    dword_800918C4 = 0;
+    unknownFlags_8008D678 &= ~0x200;
+    sub_8001B230();
+}
 // Matched
 void sub_8001B230(void)
 {
@@ -363,27 +485,152 @@ void AddPrimsAll_8001B3C8(void)
         }
     }
 }
-INCLUDE_ASM(sub_8001B540);
+// Matched
+void sub_8001B540(void)
+{
+    if (unknownFlags_8008D678 & 8)
+    {
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+    }
+    else if (unknownFlags_8008D678 & 0x82)
+    {
+        int f = dword_800918B0;
+        if (f & 2)
+        {
+            sub_8001BC00();
+        }
+        else if (f & 1)
+        {
+            sub_8001BB28();
+        }
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+        unknownFlags_8008D678 &= ~0x80;
+    }
+}
 INCLUDE_ASM(Draw_8001B5EC);
-#if 0
-// Not matched: same logic, the compiler addresses dword_8008B4B4 differently
-int sub_8001B6E8(void)
+// Matched
+int sub_8001B6E8()
 {
     int snapshot = dword_8008B4B4;
-    while (dword_8008B4B4 <= snapshot)
+    do
     {
-    }
+    } while (dword_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
-#endif
-INCLUDE_ASM(sub_8001B6E8);
-INCLUDE_ASM(sub_8001B714);
+// Matched
+void sub_8001B714(void)
+{
+    if ((unsigned int)dword_800918BC < 2)
+    {
+        if (dword_800918BC == 0)
+        {
+            InitEnvironments_8001B7B4();
+            sub_8001B6E8(0);
+            ODEIsEvenAddressDrawn_800918C0 = GetODE() == 0;
+        }
+        dword_800918BC = dword_800918BC + 1;
+        unknownFlags_8008D678 &= ~0x10;
+    }
+    else
+    {
+        unknownFlags_8008D678 &= ~0x40;
+        unknownFlags_8008D678 |= 0x10;
+    }
+}
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 INCLUDE_ASM(InitSprt_8001B9A0);
-INCLUDE_ASM(sub_8001BB28);
-INCLUDE_ASM(sub_8001BC00);
+// Matched
+void sub_8001BB28(void)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    SetPolyF4(&poly);
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.r0 = 8;
+    poly.g0 = 8;
+    poly.b0 = 8;
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 1);
+    sub_80040298(pOT_8008D78C, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000240;
+    sub_80040298(pOT_8008D78C, &dr, 2);
+    dword_800918B4++;
+    if ((unsigned int)dword_800918B4 > 0x20)
+    {
+        dword_800918B0 &= ~1;
+    }
+}
+// Matched
+void sub_8001BC00(void)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    SetPolyF4(&poly);
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.r0 = 8;
+    poly.g0 = 8;
+    poly.b0 = 8;
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 1);
+    sub_80040298(pOT_8008D78C, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000220;
+    sub_80040298(pOT_8008D78C, &dr, 2);
+    dword_800918B4++;
+    if ((unsigned int)dword_800918B4 > 0x20)
+    {
+        dword_800918B0 &= ~2;
+    }
+}
+// Matched
+void sub_8001BCD8(int a0)
+{
+    dword_800918C4 = a0;
+}
 INCLUDE_ASM(sub_8001BCE4);
-INCLUDE_ASM(sub_8001BEC8);
+// Matched
+void sub_8001BEC8(void)
+{
+    RECT rect;
+    unsigned long* p = decodedImageData_8008B4A0;
+    rect.w = 0x10;
+    rect.h = 0x40;
+    rect.y = 0x100;
+    rect.x = 0x240;
+    do
+    {
+        DecDCTout(p, 0x200);
+        DecDCToutSync(0);
+        LoadImage(&rect, (unsigned long*)p);
+        rect.x += 0x10;
+        p += 0x200;
+    } while (rect.x < 0x280);
+}
 // Matched
 void ProcessPads_8001BF50(void)
 {
@@ -395,9 +642,79 @@ void ProcessPads_8001BF50(void)
     }
 }
 INCLUDE_ASM(sub_8001BF90);
-INCLUDE_ASM(sub_8001C02C);
-INCLUDE_ASM(sub_8001C0B4);
-INCLUDE_ASM(sub_8001C19C);
+// Matched
+void sub_8001C02C(unsigned char* a0)
+{
+    struct_cb* r = sub_80043AF8(dword_8008D61C);
+    if (r != 0)
+    {
+        unsigned char* p = (unsigned char*)r->field_14;
+        r->flags_0 = (r->flags_0 | 1) & ~0x8000;
+        *(int*)p = 0;
+        p[4] = a0[0];
+        p[5] = a0[1];
+        p[6] = a0[2];
+        r->fn_8 = (void (*)(struct_cb*, int*))sub_8001C0B4;
+    }
+}
+// Matched
+void sub_8001C0B4(struct_cb* p, int* q)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    unsigned char* c = (unsigned char*)q;
+    q[0]++;
+    if (q[0] >= 4)
+    {
+        p->flags_0 = (p->flags_0 & ~1) | 0x8000;
+        return;
+    }
+    SetPolyF4(&poly);
+    poly.r0 = c[4];
+    poly.g0 = c[5];
+    poly.b0 = c[6];
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 0);
+    sub_80040298(pOT_8008D5F4, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000220;
+    sub_80040298(pOT_8008D5F4, &dr, 2);
+}
+// Matched
+void sub_8001C19C(a0)
+unsigned int a0;
+{
+    switch (a0)
+    {
+    case 0:
+        sub_8001C260();
+        break;
+    case 1:
+        sub_8001C260();
+        sub_8001C2CC();
+        break;
+    case 2:
+        sub_8001C260();
+        sub_8001C2E4();
+        break;
+    case 3:
+        sub_8001C290();
+        break;
+    }
+}
 // Matched
 void sub_8001C224(void)
 {
@@ -455,24 +772,85 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-INCLUDE_ASM(sub_8001C364);
+// Matched
+extern char dword_8007C750[];
+void sub_8001C364(char* a0, int idx, int a2)
+{
+    int* e = (int*)(*(int*)(a0 + 0x54) + idx * 28);
+    int i;
+    for (i = 0; i < e[3]; i++)
+    {
+        short* q = (short*)(i * 8 + e[4]);
+        if (a2 == q[0] && q[1] == 0)
+        {
+            unsigned int n = (unsigned short)q[2];
+            if (n < 0x6E)
+            {
+                char* t = (char*)(((short)n << 3) + (int)dword_8007C750);
+                if (*(int*)t == 0)
+                {
+                    PlaySfx_80031494(*(short*)(t + 4));
+                }
+            }
+        }
+    }
+}
 INCLUDE_ASM(sub_8001C440);
-INCLUDE_ASM(sub_8001C6C8);
-#if 0
-// Not matched
+// Matched
+void sub_8001C6C8(void)
+{
+    unsigned short* p = dword_8008B578;
+    int i = 0;
+    unsigned short* q = dword_8007CAF4;
+    for (; i < 10; i++)
+    {
+        sub_8001C810((short*)p++, *q++);
+    }
+}
+// Matched
+int sub_8001C72C(unsigned int a0, unsigned int a1)
+{
+    return (a0 & (unsigned short)a1) != 0;
+}
+// Matched
+int sub_8001C73C(unsigned int a0, unsigned int a1)
+{
+    a1 = (unsigned short)a1;
+    if (a1 == 0)
+    {
+        return 0;
+    }
+    return (a0 & a1) == a1;
+}
+// Matched
+int sub_8001C75C(unsigned int a0)
+{
+    unsigned short* p = dword_8008B578;
+    int i = 0;
+    unsigned int v = (unsigned short)a0;
+    for (; i < 10; i++)
+    {
+        if (*p == v)
+        {
+            return i;
+        }
+        p++;
+    }
+    return -1;
+}
+// Matched
 void sub_8001C79C(int a0, int a1)
 {
-    unsigned short* p = &dword_8008B578[a0];
+    unsigned short* base = dword_8008B578;
+    unsigned short* p = &base[a0];
     unsigned short r1 = sub_8001C818(p);
-    unsigned short* q = &dword_8008B578[a1];
+    unsigned short* q = &base[a1];
     unsigned short r2 = sub_8001C818(q);
     sub_8001C810((short*)p, r2);
     sub_8001C810((short*)q, r1);
 }
-#endif
-INCLUDE_ASM(sub_8001C79C);
 // Matched
-void sub_8001C810(short* p, short v)
+void sub_8001C810(short* p, unsigned short v)
 {
     *p = v;
 }
@@ -495,7 +873,38 @@ int sub_8001C824(void)
     }
     return i;
 }
-INCLUDE_ASM(sub_8001C874);
+// Matched
+unsigned int sub_8001C874(int a0)
+{
+    unsigned short* p = dword_8008B578;
+    int i;
+    for (i = 0; i < a0; i++)
+    {
+        p++;
+    }
+    return *p;
+}
+// Matched
+unsigned int sub_8001C8A0(short mask)
+{
+    unsigned int r = 1;
+    int i = 0;
+    unsigned short* p;
+    int m = mask;
+    p = dword_8007CAD8;
+    do
+    {
+        unsigned int t = *p;
+        i++;
+        if (m & t)
+        {
+            r = t;
+            break;
+        }
+        p++;
+    } while (i < 10);
+    return r;
+}
 #if 0
 void ProcessPad_8001C8E8(int a0)
 {
@@ -579,7 +988,31 @@ unsigned short sub_8001CE54(int idx)
 {
     return word_8007CED8[idx];
 }
-INCLUDE_ASM(sub_8001CE70);
+// Matched
+unsigned short sub_8001CE70(int idx)
+{
+    return aKkkiqqqqqssssZ[idx];
+}
+// Matched
+int sub_8001CE8C(int idx)
+{
+    unsigned short v = aKkkiqqqqqssssZ[idx];
+    int r = (v >> 5) & 2;
+    if (v & 0x80)
+    {
+        r |= 4;
+    }
+    if (v & 4)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+unsigned char sub_8001CED0(int idx)
+{
+    return *(unsigned char*)&aKkkiqqqqqssssZ[idx];
+}
 // Matched
 int sub_8001CEEC(void)
 {
@@ -640,7 +1073,7 @@ int sub_8001CFDC(unsigned int idx)
     return dword_8007D3E4[idx];
 }
 // Matched
-unsigned short sub_8001D008(unsigned int idx)
+int sub_8001D008(unsigned int idx)
 {
     if (idx >= 0xF)
     {
@@ -681,7 +1114,7 @@ int sub_8001D0A4(unsigned int idx)
     return dword_8007D66C[idx];
 }
 // Matched
-unsigned short sub_8001D0D0(unsigned int idx)
+int sub_8001D0D0(unsigned int idx)
 {
     if (idx >= 0x11)
     {
@@ -698,35 +1131,62 @@ struct_24* sub_8001D0FC(unsigned int idx)
     }
     return &stru_8007D6B0[idx];
 }
-#if 0
-// Not matched
-int sub_8001D128(int a0, int a1)
+// Matched
+int sub_8001D128(int a0, unsigned int a1)
 {
     int r = 0;
-    if (a1 == 1)
+    switch (a1)
     {
-        r = sub_8001CFDC(a0);
-    }
-    else if (a1 == 0)
-    {
+    case 0:
         r = sub_8001CF20(a0);
-    }
-    else if (a1 == 2)
-    {
+        break;
+    case 1:
+        r = sub_8001CFDC(a0);
+        break;
+    case 2:
         r = sub_8001D0A4(a0);
+        break;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8001D128);
-#if 0
-short* sub_8001D190(void)
+// Matched
+short* sub_8001D190(a0, a1)
+unsigned int a0;
+unsigned int a1;
 {
-    return 0;
+    short* r = 0;
+    switch (a1)
+    {
+    case 0:
+        r = (short*)sub_8001CF84(a0);
+        break;
+    case 1:
+        r = (short*)sub_8001D034(a0);
+        break;
+    case 2:
+        r = (short*)sub_8001D0FC(a0);
+        break;
+    }
+    return r;
 }
-#endif
-INCLUDE_ASM(sub_8001D190);
-INCLUDE_ASM(sub_8001D1F8);
+// Matched
+int sub_8001D1F8(int a0, unsigned int a1)
+{
+    int r = 0;
+    switch (a1)
+    {
+    case 0:
+        r = sub_8001CF4C(a0);
+        break;
+    case 1:
+        r = sub_8001D008(a0);
+        break;
+    case 2:
+        r = sub_8001D0D0(a0);
+        break;
+    }
+    return r;
+}
 // Matched
 struct_12* sub_8001D260(void)
 {
@@ -746,24 +1206,16 @@ int sub_8001D2AC(int idx)
     }
     return 0xFF;
 }
-#if 0
-// Not matched (close)
+// Matched
 int sub_8001D2D4(void)
 {
     short* p = sub_8001D190();
-    short idx;
-    if (0 != p)
+    if (p != 0)
     {
-        idx = *p;
+        return dword_8007D938[*p];
     }
-    else
-    {
-        idx = 0x24;
-    }
-    return dword_8007D938[idx];
+    return 0x24;
 }
-#endif
-INCLUDE_ASM(sub_8001D2D4);
 // Matched
 int sub_8001D318(unsigned int idx)
 {
@@ -817,28 +1269,22 @@ void sub_8001D41C(int a0, void* a1)
     sub_8001F918(a1);
     sub_8001F9AC(a1);
 }
-#if 0
-// Not matched
+// Matched
 int* sub_8001D45C(int a0)
 {
     struct_cb* r = sub_80043AF8(dword_8008D43C);
     int* p;
-    if (r == 0)
-    {
-        p = 0;
-    }
-    else
+    if (r != 0)
     {
         p = r->field_14;
         r->fn_8 = (void (*)(struct_cb*, int*))sub_8001D41C;
         r->flags_0 = (r->flags_0 | 1) & ~0x8000;
         p[0] = (int)r;
         sub_8001E574(p, a0);
+        return p;
     }
-    return p;
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001D45C);
 INCLUDE_ASM(sub_8001D4DC);
 // Matched
 void sub_8001D600(char* a0)
@@ -997,7 +1443,41 @@ void sub_8001DC34(void* p)
     sub_8001DB98(p);
     sub_8001EA48(p);
 }
-INCLUDE_ASM(sub_8001DC60);
+// Matched
+int sub_8001DC60(char* p, int a1, int a2, int a3)
+{
+    unsigned int dist;
+    int x = *(int*)(p + 0x40);
+    int y = *(int*)(p + 0x4C);
+    int d;
+    int t;
+    dist = 0xFFF;
+    if (y < x)
+    {
+        d = x - y;
+    }
+    else
+    {
+        d = y - x;
+    }
+    if (sub_8003B740(p + 0x38, a1, &dist))
+    {
+        if (dist < d * d)
+        {
+            return 1;
+        }
+    }
+    t = d + 0x32;
+    if (dist < t * t)
+    {
+        if (sub_8001DFC8(p, a1, a3, 1))
+        {
+            return 1;
+        }
+    }
+    sub_8001DDFC(p, a1, a2);
+    return 0;
+}
 INCLUDE_ASM(sub_8001DD44);
 INCLUDE_ASM(sub_8001DDFC);
 INCLUDE_ASM(sub_8001DECC);
@@ -1063,8 +1543,7 @@ void sub_8001EA48(void* arg0)
 }
 #endif
 INCLUDE_ASM(sub_8001EA48);
-#if 0
-// Not matched
+// Matched
 void sub_8001EFC4(struct_obj_F* p)
 {
     unsigned int f = p->flags_4;
@@ -1072,7 +1551,14 @@ void sub_8001EFC4(struct_obj_F* p)
     if (f & 0x800000)
     {
         n = p->field_C;
-        if (n < 0 || n >= 3)
+        if (n < 0)
+        {
+            if (f & 0x200000)
+            {
+                sub_800A5BCC(n - 2);
+            }
+        }
+        else if (n >= 3)
         {
             if (f & 0x200000)
             {
@@ -1082,8 +1568,6 @@ void sub_8001EFC4(struct_obj_F* p)
     }
     p->flags_4 &= 0xFF17FFFF;
 }
-#endif
-INCLUDE_ASM(sub_8001EFC4);
 INCLUDE_ASM(sub_8001F03C);
 INCLUDE_ASM(sub_8001F268);
 #if 0
@@ -1092,12 +1576,28 @@ void sub_8001F354(void* a0)
 }
 #endif
 INCLUDE_ASM(sub_8001F354);
-#if 0
+// Matched
 void sub_8001F918(void* a0)
 {
+    char* p = a0;
+    switch (*(short*)(p + 0x10))
+    {
+    case 0:
+        break;
+    case 1:
+        sub_8002032C(*(short*)(p + 0x16), ((int*)*(int*)p)[1], *(short*)(p + 0x12));
+        *(unsigned short*)(p + 0x14) = *(unsigned short*)(p + 0x12);
+        *(short*)(p + 0x12) = -1;
+        *(short*)(p + 0x10) = 2;
+        break;
+    case 2:
+        if (sub_80024DC4((int*)*(int*)(p + 0x15C)))
+        {
+            *(short*)(p + 0x10) = 0;
+        }
+        break;
+    }
 }
-#endif
-INCLUDE_ASM(sub_8001F918);
 // Matched
 void sub_8001F9AC(void* p)
 {
@@ -1119,7 +1619,22 @@ void sub_8001FB00(void* a0)
 }
 #endif
 INCLUDE_ASM(sub_8001FB00);
-INCLUDE_ASM(sub_8001FC90);
+// Matched
+int sub_8001FC90(char* a0)
+{
+    SVECTOR v;
+    long sxy;
+    long p;
+    long flag;
+    v.vx = *(unsigned short*)(a0 + 0x38);
+    v.vy = *(unsigned short*)(a0 + 0x3C);
+    v.vz = *(unsigned short*)(a0 + 0x40);
+    v.vx -= dword_8008D600[0].field_0;
+    v.vy -= dword_8008D600[1].field_0;
+    v.vz -= dword_8008D600[2].field_0;
+    RotTransPers(&v, &sxy, &p, &flag);
+    return flag >= 0;
+}
 #if 0
 void sub_8001FD08(void* a0)
 {
@@ -1147,9 +1662,46 @@ void sub_800201A4(void)
         sub_800204AC(&dword_800919A0[i]);
     }
 }
-INCLUDE_ASM(sub_800201EC);
+// Matched
+int sub_800201EC(int a0)
+{
+    int i;
+    struct_obj_C* p = dword_800919A0;
+    for (i = 0; i < 7; i++, p++)
+    {
+        if (a0 == p->field_0)
+        {
+            p->field_4++;
+            return i;
+        }
+    }
+    p = dword_800919A0;
+    for (i = 0; i < 7; i++, p++)
+    {
+        if (p->field_0 == 0)
+        {
+            p->field_0 = a0;
+            p->field_4 = 1;
+            return i;
+        }
+    }
+    return -1;
+}
 INCLUDE_ASM(sub_80020278);
-INCLUDE_ASM(sub_8002032C);
+// Matched
+int sub_8002032C(int a0, int a1, int a2)
+{
+    struct_obj_C* e = &dword_800919A0[a0];
+    unsigned short* s = (unsigned short*)((char*)e + a2 * 2);
+    int r = 0;
+    if (s[4] == 0)
+    {
+        sub_80025440(e->field_0, a2, r);
+        r = 1;
+    }
+    s[4] |= 1 << a1;
+    return r;
+}
 INCLUDE_ASM(sub_800203B0);
 // Matched
 void sub_800204AC(struct_obj_C* p)
@@ -1162,27 +1714,25 @@ void sub_800204AC(struct_obj_C* p)
     p->field_0 = 0;
     p->field_4 = 0;
 }
-#if 0
-// Not matched
+// Matched
 void sub_800204D0(void)
 {
-    int* p = dword_8008B54C[9];
-    struct_20* e = (struct_20*)(p + 3);
+    int* p = (int*)dword_8008B54C[9];
+    int* q = p + 3;
     int i;
     p[0] = 0;
     p[1] = 1;
     p[2] = 0;
     for (i = 0; i < 4; i++)
     {
-        e[i].field_0 = 0;
-        e[i].field_4 = -1;
-        e[i].field_8 = 0;
-        e[i].field_C = 0;
-        e[i].field_10 = -1;
+        q[0] = 0;
+        q[1] = -1;
+        q[2] = 0;
+        q[3] = 0;
+        q[4] = -1;
+        q += 5;
     }
 }
-#endif
-INCLUDE_ASM(sub_800204D0);
 // Matched
 void sub_8002052C(void)
 {
@@ -1212,13 +1762,96 @@ void sub_80020734(int arg)
 {
     sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
 }
-INCLUDE_ASM(sub_80020768);
-INCLUDE_ASM(sub_80020814);
-INCLUDE_ASM(sub_80020898);
-INCLUDE_ASM(sub_80020924);
+// Matched
+void sub_80020768(int a0)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 4;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[0] >= 0 && p[3] >= 0)
+        {
+            if (a0 == sub_80024D70(base[2], p[0]))
+            {
+                sub_80024C48(a0);
+                p[0] = -1;
+                return;
+            }
+        }
+        p += 5;
+    }
+}
+// Matched
+void sub_80020814(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 7;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[-3] >= 0 && p[0] >= 0)
+        {
+            sub_80025884(sub_80024D70(base[2], p[-3]));
+        }
+        p += 5;
+    }
+}
+// Matched
+void sub_80020898(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 7;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[-3] >= 0 && p[0] >= 0)
+        {
+            sub_80025780(sub_80024D70(base[2], p[-3]), p[0], 1);
+        }
+        p += 5;
+    }
+}
+// Matched
+int sub_80020924(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 3;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[1] >= 0)
+        {
+            if (sub_80024DC4(sub_80024D70(base[2], p[1])) == 0)
+            {
+                return 0;
+            }
+        }
+        p += 5;
+    }
+    return 1;
+}
 INCLUDE_ASM(sub_800209AC);
 INCLUDE_ASM(sub_80020A38);
-INCLUDE_ASM(sub_80020B70);
+// Matched
+int sub_80020B70(int* a0)
+{
+    int* p = a0 + 3;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[0] != 0)
+        {
+            if (sub_80024DC4(sub_80024D70(a0[2], p[1])) == 0)
+            {
+                return 0;
+            }
+        }
+        p += 5;
+    }
+    a0[1] = 1;
+    return 1;
+}
 #if 0
 int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 {
@@ -1226,19 +1859,15 @@ int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 }
 #endif
 INCLUDE_ASM(LoadOverlay_80020BF8);
-#if 0
-// Not matched (close)
+// Matched
 void sub_80020CD8(int a0, int* p)
 {
-    int v = p[0];
-    if (v != p[1])
+    if (p[0] != p[1])
     {
-        p[1] = v;
-        p[2] = LoadOverlay_80020BF8(2, v);
+        p[1] = p[0];
+        p[2] = LoadOverlay_80020BF8(2, p[0]);
     }
 }
-#endif
-INCLUDE_ASM(sub_80020CD8);
 #if 0
 // Not matched
 int sub_80020D1C(int a0, int a1)
@@ -1320,13 +1949,36 @@ void sub_80021744(int* p, int idx, int a2)
 {
     *p = sub_8003FC8C(idx * 0x54, a2);
 }
-INCLUDE_ASM(sub_80021784);
 // Matched
-void sub_80021804(int* p)
+void sub_80021784(int** a0, unsigned int n, int heap)
 {
-    sub_800229B0(p);
+    char* p = (char*)*a0;
+    unsigned int i;
+    for (i = 0; i < n; i++)
+    {
+        sub_800229B0((int*)p, heap);
+        p += 0x54;
+    }
+    sub_8003FD18(*a0, heap);
+    *a0 = 0;
 }
-INCLUDE_ASM(sub_80021824);
+// Matched
+void sub_80021804(int* p, int heap)
+{
+    sub_800229B0(p, heap);
+}
+// Matched
+void sub_80021824(int* a0, char* a1, int a2, int a3, int a4)
+{
+    unsigned int n = sub_80021738(a0);
+    int r = (int)(a0 + 4);
+    unsigned int i;
+    for (i = 0; i < n; i++)
+    {
+        r = sub_80022458(a1, r, a3, a4);
+        a1 += 0x54;
+    }
+}
 INCLUDE_ASM(sub_800218A8);
 // Matched
 int sub_80021DE4(int* p)
@@ -1346,25 +1998,100 @@ void sub_80021E24(volatile int* p)
     p[0] = 0;
     sub_8003FD18(p[1]);
 }
-INCLUDE_ASM(sub_80021E4C);
+// Matched
+void sub_80021E4C(int* a0, int* a1, unsigned int n)
+{
+    unsigned short* src = (unsigned short*)((char*)a0 + a0[3]);
+    unsigned int i;
+    for (i = 0; i < n; i++)
+    {
+        unsigned short* dst = (unsigned short*)((char*)a1[1] + i * 16);
+        dst[0] = src[0];
+        dst[1] = src[1];
+        dst[2] = src[2];
+        dst[3] = src[3];
+        dst[4] = src[4];
+        dst[5] = src[5];
+        dst[6] = src[6];
+        dst[7] = src[7];
+        src += 8;
+    }
+}
 INCLUDE_ASM(sub_80021EDC);
 INCLUDE_ASM(sub_800221DC);
 INCLUDE_ASM(sub_80022458);
 INCLUDE_ASM(sub_80022634);
-INCLUDE_ASM(sub_800228F8);
+typedef struct
+{
+    unsigned short count;
+    int ptr;
+} struct_cnt_ptr;
 // Matched
-void sub_800229B0(int* p)
+int sub_800228F8(struct_cnt_ptr* a0, struct_cnt_ptr* a1, int* a2, int heap)
+{
+    int n;
+    int m;
+    a0->count = a2[8];
+    n = a2[8];
+    if (n)
+    {
+        a0->ptr = sub_8003FC8C(n << 3, (struct Heap*)heap);
+    }
+    else
+    {
+        a0->ptr = 0;
+    }
+    a1->count = a2[9];
+    m = a2[9];
+    n += m;
+    if (m)
+    {
+        a1->ptr = sub_8003FC8C(m * 12, (struct Heap*)heap);
+    }
+    else
+    {
+        a1->ptr = 0;
+    }
+    return n;
+}
+// Matched
+void sub_800229B0(int* p, int heap)
 {
     int a = p[1];
     if (a)
     {
-        sub_8003FD18(a);
+        sub_8003FD18(a, heap);
     }
 }
 INCLUDE_ASM(sub_800229E0);
 #if 0
+// Not matched
 void sub_80022AE8(void* arg0, void* arg1, int arg2)
 {
+    unsigned short* a0 = arg0;
+    unsigned short* a1 = arg1;
+    short* a2 = (short*)arg2;
+    int x = a2[0] / 64;
+    int y = a2[1] / 256;
+    int tp = y * 16 + x;
+    int u = (*a1 & 0x3F) << 4;
+    int v = (*a1 >> 6) & 0x1FF;
+    int dx;
+    int dy;
+    if (((*a0 >> 7) & 3) == 0)
+    {
+        dx = a2[2];
+        dy = a2[3];
+    }
+    else
+    {
+        dx = a2[4];
+        dy = a2[5];
+    }
+    u += dx;
+    v += dy;
+    *a0 += tp;
+    *a1 = v * 64 + (u >> 4);
 }
 #endif
 INCLUDE_ASM(sub_80022AE8);
@@ -1377,57 +2104,157 @@ void sub_80023460(char* p, int arg1)
 {
     sub_80022AE8(p + 4, p + 6, arg1);
 }
-INCLUDE_ASM(sub_8002348C);
+// Matched
+int sub_8002348C(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[1] + a3 * 0x24, 1);
+    }
+    sub_80023514(a2, a1, a0[3], a3);
+    return 0x24;
+}
 INCLUDE_ASM(sub_80023514);
-INCLUDE_ASM(sub_80023624);
+// Matched
+int sub_80023624(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[3] + a3 * 0x3C, 1);
+    }
+    sub_800236AC(a2 + 2, a1, a0[3], a3);
+    return 0x3C;
+}
 INCLUDE_ASM(sub_800236AC);
-INCLUDE_ASM(sub_800238AC);
+// Matched
+int sub_800238AC(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[5] + a3 * 0x30, 1);
+    }
+    sub_80023934(a2 + 4, a1, a0[3], a3);
+    return 0x24;
+}
 INCLUDE_ASM(sub_80023934);
 // Matched
 void sub_80023B24(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80023B48);
+// Matched
+int sub_80023B48(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[7] + a3 * 0x48, 1);
+    }
+    sub_80023BD0(a2 + 6, a1, a0[3], a3);
+    return 0x40;
+}
 INCLUDE_ASM(sub_80023BD0);
 // Matched
 void sub_80023E80(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80023EA4);
+// Matched
+int sub_80023EA4(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[9] + a3 * 0x2C, 1);
+    }
+    sub_80023F34(a2 + 8, a1, a0[3], a3);
+    return 0x2C;
+}
 INCLUDE_ASM(sub_80023F34);
-INCLUDE_ASM(sub_8002407C);
+// Matched
+int sub_8002407C(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[11] + a3 * 0x50, 1);
+    }
+    sub_80024104(a2 + 10, a1, a0[3], a3);
+    return 0x50;
+}
 INCLUDE_ASM(sub_80024104);
-INCLUDE_ASM(sub_80024394);
+// Matched
+int sub_80024394(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[13] + a3 * 0x38, 1);
+    }
+    sub_8002441C(a2 + 12, a1, a0[3], a3);
+    return 0x2C;
+}
 INCLUDE_ASM(sub_8002441C);
 // Matched
 void sub_8002467C(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_800246A0);
+// Matched
+int sub_800246A0(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[15] + a3 * 0x5C, 1);
+    }
+    sub_80024730(a2 + 14, a1, a0[3], a3);
+    return 0x54;
+}
 INCLUDE_ASM(sub_80024730);
 // Matched
 void sub_80024AB8(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80024ADC);
-#if 0
-void sub_80024BB0(int* a0)
+// Matched
+void sub_80024ADC(struct_112_list** a0, void* a1, int heap)
 {
+    struct_112_list* l;
+    int i;
+    l = *a0 = (struct_112_list*)sub_8003FC8C(0x10, (struct Heap*)heap);
+    l->count = sub_80026600(a1);
+    l->field_4 = heap;
+    l->items = (struct_112*)sub_8003FC8C(l->count * 0x70, (struct Heap*)heap);
+    l->field_C = a1;
+    for (i = 0; i < l->count; i++)
+    {
+        l->items[i].field_0 = (int)l;
+        l->items[i].field_30 = i;
+        sub_800266CC(&l->items[i]);
+    }
 }
-#endif
-INCLUDE_ASM(sub_80024BB0);
-INCLUDE_ASM(sub_80024C48);
-#if 0
-int sub_80024D70(int a0, int a1)
+// Matched
+void sub_80024BB0(struct_112_list** a0)
 {
+    struct_112_list* l = *a0;
+    int i;
+    for (i = 0; i < l->count; i++)
+    {
+        sub_80024C48(&l->items[i]);
+    }
+    sub_8003FD18(l->items, l->field_4);
+    sub_8003FD18(l, l->field_4);
+    *a0 = 0;
+}
+INCLUDE_ASM(sub_80024C48);
+// Matched
+struct_112* sub_80024D70(struct_112_list* p, unsigned int id)
+{
+    int i = sub_80026630(p, id);
+    if (i >= 0)
+    {
+        struct_112* r = &p->items[i];
+        r->field_3A++;
+        return r;
+    }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_80024D70);
 #if 0
 // Not matched
 int sub_80024DC4(int* p)
@@ -1473,9 +2300,9 @@ char* sub_80024E64(struct_obj_E* p)
     return result;
 }
 // Matched
-char* sub_80024E90(void* p)
+char* sub_80024E90(void* p, int n)
 {
-    char* r = sub_80024FA8(p);
+    char* r = sub_80024FA8(p, n);
     if (r)
     {
         r += *(int*)r;
@@ -1483,9 +2310,9 @@ char* sub_80024E90(void* p)
     return r;
 }
 // Matched
-char* sub_80024EC8(void* p)
+char* sub_80024EC8(void* p, int n)
 {
-    char* r = sub_80024FA8(p);
+    char* r = sub_80024FA8(p, n);
     if (r)
     {
         r += *(int*)(r + 4);
@@ -1493,9 +2320,9 @@ char* sub_80024EC8(void* p)
     return r;
 }
 // Matched
-char* sub_80024F00(void* p)
+char* sub_80024F00(void* p, int n)
 {
-    char* r = sub_80024FA8(p);
+    char* r = sub_80024FA8(p, n);
     if (r)
     {
         r += *(int*)(r + 8);
@@ -1503,9 +2330,9 @@ char* sub_80024F00(void* p)
     return r;
 }
 // Matched
-char* sub_80024F38(void* p)
+char* sub_80024F38(void* p, int n)
 {
-    char* r = sub_80024FA8(p);
+    char* r = sub_80024FA8(p, n);
     if (r)
     {
         r += *(int*)(r + 0xC);
@@ -1513,9 +2340,9 @@ char* sub_80024F38(void* p)
     return r;
 }
 // Matched
-char* sub_80024F70(void* p)
+char* sub_80024F70(void* p, int n)
 {
-    char* r = sub_80024FA8(p);
+    char* r = sub_80024FA8(p, n);
     if (r)
     {
         r += *(int*)(r + 0x10);
@@ -1523,9 +2350,25 @@ char* sub_80024F70(void* p)
     return r;
 }
 #if 0
-char* sub_80024FA8(void* a0)
+// Not matched
+char* sub_80024FA8(void* a0, int n)
 {
-    return 0;
+    char* r = 0;
+    int i = 0;
+    char* hdr = *(char**)((char*)a0 + 0x4C);
+    if (hdr)
+    {
+        int off = *(int*)(hdr + 8);
+        if (off)
+        {
+            r = hdr + off + 8;
+            for (; i < n; i++)
+            {
+                r += *(int*)(r + 0x14);
+            }
+        }
+    }
+    return r;
 }
 #endif
 INCLUDE_ASM(sub_80024FA8);
@@ -1560,11 +2403,44 @@ int sub_800251E4(int idx)
 }
 INCLUDE_ASM(sub_80025200);
 INCLUDE_ASM(sub_80025440);
-INCLUDE_ASM(sub_8002556C);
+// Matched
+void sub_8002556C(struct_112* p, int idx)
+{
+    if (((char*)p->field_44)[idx])
+    {
+        sub_800269C4(p->field_54, p->field_3E, idx, ((int*)p->field_0)[1]);
+        ((char*)p->field_44)[idx] = 0;
+    }
+}
+// Matched
+int sub_800255D8(struct_112* p, int idx)
+{
+    return ((char*)p->field_44)[idx] != 0;
+}
 INCLUDE_ASM(sub_800255F0);
 INCLUDE_ASM(sub_800256B8);
 INCLUDE_ASM(sub_80025780);
-INCLUDE_ASM(sub_80025884);
+// Matched
+void sub_80025884(struct_112* p)
+{
+    int* list = (int*)p->field_58;
+    if (list)
+    {
+        int heap = ((int*)p->field_0)[1];
+        int n = list[0];
+        int i;
+        for (i = 0; i < n; i++)
+        {
+            int id = ((int*)p->field_58)[i + 1];
+            if (id >= 0)
+            {
+                sub_8002556C(p, id);
+            }
+        }
+        sub_8003FD18(p->field_58, heap);
+        p->field_58 = 0;
+    }
+}
 // Matched
 int sub_80025924(int* p, int id)
 {
@@ -1585,15 +2461,66 @@ int sub_80025924(int* p, int id)
     return 0;
 }
 INCLUDE_ASM(sub_80025974);
-INCLUDE_ASM(sub_80025AB0);
+// Matched
+void sub_80025AB0(struct_112* p)
+{
+    struct Heap* h = (struct Heap*)((int*)p->field_0)[1];
+    if (p->field_68)
+    {
+        sub_80021784(&p->field_68, p->field_42, h);
+        p->field_42 = 0;
+        p->field_68 = 0;
+    }
+    if (p->field_6C)
+    {
+        sub_8003FD18(p->field_6C, h);
+        p->field_43 = 0;
+        p->field_6C = 0;
+    }
+}
 // Matched
 void sub_80025B20(void* dst, struct_obj_E* src, int idx)
 {
     sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
 }
 INCLUDE_ASM(sub_80025B5C);
-INCLUDE_ASM(sub_80025C38);
-INCLUDE_ASM(sub_80025D00);
+// Matched
+void sub_80025C38(struct_112* p, int flag)
+{
+    int i;
+    for (i = 0; i < p->field_40; i++)
+    {
+        int* e = (int*)(i * 0x58 + p->field_64);
+        sub_80025B5C(p, e[0], e[0]);
+    }
+    if (flag)
+    {
+        for (i = 0; i < p->field_43; i++)
+        {
+            short* s = (short*)(i * 4 + p->field_6C);
+            sub_80025B5C(p, s[0], s[1]);
+        }
+    }
+}
+typedef struct
+{
+    int field_0;
+    int count;
+    int items[10];
+} struct_list10;
+// Matched
+int sub_80025D00(struct_list10* a0, int* a1)
+{
+    if (a0->count < 10)
+    {
+        a1[2] <<= 11;
+        a1[3] <<= 11;
+        a0->items[a0->count] = sub_8003BC84(a1);
+        a0->count += 1;
+        return 1;
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80025D7C);
 // Matched
 void sub_80025ED0(int* p)
@@ -1614,20 +2541,39 @@ void sub_80025ED0(int* p)
     p[14] = 0;
 }
 INCLUDE_ASM(sub_80025F14);
+typedef struct
+{
+    char pad_0[0x14];
+    struct_112* owner_14;
+    int* data_18;
+    int* data_1C;
+    char pad_20[0x14];
+    int* list_34;
+    unsigned char* data_38;
+} struct_loader;
 #if 0
 // Not matched
-void sub_80026014(char* a0)
+void sub_80026014(struct_loader* a0)
 {
-    int* p = *(int**)(a0 + 0x14);
-    int* q = *(int**)(a0 + 0x1C);
-    int n = q[0];
-    p[0x48 / 4] = n;
-    p[0x4C / 4] = sub_8003FC8C(n, ((int*)p[0])[1]);
-    sub_800403E8((unsigned int*)p[0x4C / 4], (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
+    struct_112* p = a0->owner_14;
+    unsigned int n = a0->data_1C[0];
+    char* tmp29 = p->field_0;
+    p->field_48 = n;
+    p->field_4C = sub_8003FC8C(n, (struct Heap*)((int*)tmp29)[1]);
+    sub_800403E8((unsigned int*)p->field_4C, (unsigned int*)(1 + a0->data_1C), n);
 }
 #endif
 INCLUDE_ASM(sub_80026014);
-INCLUDE_ASM(sub_8002607C);
+// Matched
+void sub_8002607C(int* a0)
+{
+    if (a0[2] != -1)
+    {
+        int* p = (int*)a0[5];
+        sub_80028FDC(0, 0, 0, a0[8], GetTiyFileCount_80028E68((int*)a0[8]), a0[6] + 4, a0[2]);
+        p[0x34 / 4] = a0[2];
+    }
+}
 INCLUDE_ASM(sub_800260FC);
 INCLUDE_ASM(sub_800261C8);
 // Matched
@@ -1639,20 +2585,33 @@ void sub_800263CC(int* p)
     sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, *(p + 0xB), tmp27[1]);
 }
 INCLUDE_ASM(sub_80026410);
+#if 0
+// Not matched
+void sub_8002651C(struct_loader* a0)
+{
+    struct_112* p = a0->owner_14;
+    int* list = a0->list_34;
+    int heap = ((int*)p->field_0)[1];
+    int* q = a0->data_18 + 1;
+    p->field_42 = sub_80021738(list);
+    sub_80021744(&p->field_68, p->field_42, heap);
+    sub_80021824(a0->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
+}
+#endif
 INCLUDE_ASM(sub_8002651C);
 #if 0
 // Not matched
 void sub_8002659C(char* a0)
 {
-    unsigned char* p = *(unsigned char**)(a0 + 0x14);
     unsigned char* q = *(unsigned char**)(a0 + 0x38);
+    struct_112* p = *(struct_112**)(a0 + 0x14);
     unsigned char n = q[0];
     int r;
     q += 4;
-    p[0x43] = n;
-    r = sub_8003FC8C(n << 2, ((int*)*(int*)p)[1]);
-    *(int*)(p + 0x6C) = r;
-    sub_800403E8((unsigned int*)r, (unsigned int*)q, p[0x43] << 2);
+    p->field_43 = n;
+    r = sub_8003FC8C(n << 2, (struct Heap*)((int*)p->field_0)[1]);
+    p->field_6C = r;
+    sub_800403E8((unsigned int*)r, (unsigned int*)q, p->field_43 << 2);
 }
 #endif
 INCLUDE_ASM(sub_8002659C);
@@ -1738,6 +2697,40 @@ void sub_80026730(struct_28** a0, int a1, int a2)
         p[i].field_18 = 0;
     }
 }
+#if 0
+// Not matched
+void sub_8002679C(struct_28** a0, int n, int heap)
+{
+    struct_28* arr;
+    struct_28* e;
+    int i;
+    arr = *a0;
+    if (arr)
+    {
+        i = 0;
+        e = arr;
+        while (i < n)
+        {
+            if (e->field_10)
+            {
+                sub_8003FD18(e->field_10, heap);
+            }
+            if (e->field_14)
+            {
+                sub_8003FD18(e->field_14, heap);
+            }
+            if (e->field_18)
+            {
+                sub_8003FD18(e->field_18, heap);
+            }
+            i++;
+            e++;
+        }
+        sub_8003FD18(arr, heap);
+        *a0 = 0;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8002679C);
 // Matched
 void sub_80026870(int* a0, int a1, int a2)
@@ -1747,6 +2740,30 @@ void sub_80026870(int* a0, int a1, int a2)
     sub_800268E8(a0[0], a1, r, a2, -1);
 }
 INCLUDE_ASM(sub_800268E8);
+#if 0
+// Not matched
+void sub_800269C4(char* a0, int n, int idx, int heap)
+{
+    int i;
+    int* e = (int*)(a0 + 0x18);
+    for (i = 0; i < n; i++)
+    {
+        if (idx == i && e[-1] != 0 && e[0] != 0)
+        {
+            if (e[-2] != 0)
+            {
+                sub_8003FD18(e[-2], heap);
+            }
+            sub_8003FD18(e[-1], heap);
+            sub_8003FD18(e[0], heap);
+            e[-2] = 0;
+            e[-1] = 0;
+            e[0] = 0;
+        }
+        e += 7;
+    }
+}
+#endif
 INCLUDE_ASM(sub_800269C4);
 #if 0
 void sub_80026A8C(void* a0, int a1, int a2)
@@ -1774,6 +2791,36 @@ void sub_80026D78(struct_12** a0, int a1, int a2)
 }
 INCLUDE_ASM(sub_80026DE8);
 INCLUDE_ASM(sub_80026E74);
+// Matched
+typedef struct
+{
+    unsigned short a;
+    unsigned short b;
+    unsigned short c;
+    unsigned short d;
+} struct_4h;
+#if 0
+// Not matched
+void sub_80026EF8(int* a0, int* a1, int heap)
+{
+    int i;
+    struct_4h* dst;
+    struct_4h* src;
+    a0[0] = *a1++;
+    a0[1] = *a1++;
+    a0[2] = (int)(dst = (struct_4h*)sub_8003FC8C(a0[0] << 3, (struct Heap*)heap));
+    src = (struct_4h*)a1;
+    for (i = 0; i < a0[0]; i++)
+    {
+        dst->a = src->a;
+        dst->b = src->b;
+        dst->c = src->c;
+        dst->d = src->d;
+        src++;
+        dst++;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80026EF8);
 INCLUDE_ASM(sub_80026FAC);
 INCLUDE_ASM(sub_80027118);
@@ -1833,24 +2880,108 @@ int sub_80027330(short a0)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80027358);
-#if 0
-// Not matched
+// Matched
+// Matched
+int sub_80027358(int id)
+{
+    int* p;
+    short* s;
+    if (dword_80082678 == 1)
+    {
+        if (word_80091C40 != id)
+        {
+            word_8008B860 = id;
+            return 0;
+        }
+        p = dword_800B1DB8[9];
+        if (sub_8003BE30(p[1]) != 3)
+        {
+            return 0;
+        }
+        sub_8002728C();
+        sub_8003BFD0(p[1], 0);
+        sub_80028DC0();
+        s = (short*)&saveData_8008B570;
+        s[0x2F0 / 2] = id;
+        s[0x2F2 / 2] = id;
+        dword_80082678 = 0;
+        return 1;
+    }
+    word_8008B860 = id;
+    return 0;
+}
+// Matched
 void sub_8002741C(void)
 {
     int* p;
     if (dword_80082678 == 1)
     {
         p = dword_800B1DB8[9];
-        dword_80082678 = 0;
         sub_8003C060(p[1]);
+        dword_80082678 = 0;
         p[0] = 0;
     }
 }
-#endif
-INCLUDE_ASM(sub_8002741C);
-INCLUDE_ASM(sub_80027478);
-INCLUDE_ASM(sub_80027540);
+// Matched
+void sub_80027478(int mask, int set)
+{
+    int f;
+    int code;
+    if (set)
+    {
+        dword_80091C30[2] |= mask;
+    }
+    else
+    {
+        dword_80091C30[2] &= ~mask;
+    }
+    f = dword_80091C30[2];
+    if (f && !(f & 1))
+    {
+        code = 0;
+        if (!(f & 0x40))
+        {
+            if (dword_80091C30[0] & f)
+            {
+                code = 1;
+            }
+            else if (dword_80091C30[1] & f)
+            {
+                code = 2;
+            }
+        }
+        dword_80091C30[2] |= 1;
+        sub_8001C19C(code, 0x20);
+    }
+}
+// Matched
+int sub_80027540(void)
+{
+    int* g = dword_80091C30;
+    if (g[2] & 0x40)
+    {
+        return 1;
+    }
+    if (g[2] & 1)
+    {
+        if (g[2] == 1 && sub_8001C2FC())
+        {
+            g[3] = 2;
+            g[2] &= ~1;
+            return 1;
+        }
+        return 0;
+    }
+    if (g[3] > 0)
+    {
+        g[3]--;
+        if (g[3] <= 0)
+        {
+            sub_8001C19C(3, 0);
+        }
+    }
+    return 1;
+}
 // Matched
 void sub_800275E8(char** a0, int a1, int a2)
 {
@@ -1868,8 +2999,48 @@ void sub_800275E8(char** a0, int a1, int a2)
         }
     }
 }
+#if 0
+// Not matched
+int* sub_80027650(int* a0, int a1, int heap)
+{
+    int* g = dword_80091C60;
+    int* src;
+    int* dst;
+    int i;
+    int n;
+    a0++;
+    src = a0 + 1;
+    n = *a0;
+    g[0] = n;
+    if (n)
+    {
+        dst = (int*)sub_8003FDC0(heap, n << 4);
+        g[1] = (int)dst;
+        for (i = 0; i < g[0]; i++)
+        {
+            dst[0] = src[0];
+            dst[1] = src[1];
+            dst[2] = src[2];
+            dst[3] = src[3];
+            src += 4;
+            dst += 4;
+        }
+    }
+    return src;
+}
+#endif
 INCLUDE_ASM(sub_80027650);
-INCLUDE_ASM(sub_80027708);
+// Matched
+void sub_80027708(int* a0, int a1)
+{
+    int r = sub_80021738(a0);
+    dword_8008B500[0x38 / 4] = r;
+    if (r != 0)
+    {
+        sub_80021744(&dword_8008B500[0x3C / 4], r, a1);
+        sub_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
+    }
+}
 INCLUDE_ASM(sub_80027778);
 INCLUDE_ASM(sub_800278BC);
 INCLUDE_ASM(sub_80027A88);
@@ -1887,7 +3058,21 @@ void sub_80027CF8(void* a0, int* a1)
 }
 #endif
 INCLUDE_ASM(sub_80027CF8);
-INCLUDE_ASM(sub_8002830C);
+// Matched
+// Matched
+void sub_8002830C(struct_obj_D* p)
+{
+    short* s = (short*)&saveData_8008B570;
+    s[0x2E6 / 2] = -1;
+    s[0x2EA / 2] = -1;
+    s[0x2EE / 2] = -1;
+    s[0x2F2 / 2] = -1;
+    unknownFlags_8008D678 &= ~0x20000;
+    dword_80091CA0 = 1;
+    sub_80027118();
+    sub_8002728C();
+    p->field_8 = (void (*)(void))sub_80027CC0;
+}
 // Matched
 void sub_80028388(struct_obj_D* p, int* q)
 {
