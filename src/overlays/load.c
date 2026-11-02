@@ -56,12 +56,19 @@ extern char dword_800BDECC[];
 extern void sub_8003CD5C(int* t);
 extern void sub_8002BE10(void);
 extern void sub_800BACBC(void* p);
-extern void sub_800B794C(int* t);
+extern void sub_800B794C(int* t, int* s);
+extern void sub_800B79F8();
+extern void sub_800B9A8C();
+extern void sub_800B98C4();
+extern void sub_800BA234();
+extern void sub_800BA968();
+extern void sub_800BAAE0();
 extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
+extern void sub_8004FE08(int a);
 typedef struct
 {
     short x_LOAD;
@@ -203,7 +210,31 @@ int sub_800B793C(void)
     return dword_800BE184;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B794C);
+void sub_800B794C(int* t, int* s)
+{
+    switch (s[10])
+    {
+    case 0:
+        sub_800B79F8(s);
+        break;
+    case 2:
+        sub_800B9A8C(s);
+        t[2] = (int)sub_800B98C4;
+        s[11] = 0;
+        break;
+    case 3:
+        t[2] = (int)sub_800BA234;
+        break;
+    case 4:
+        t[2] = (int)sub_800BA968;
+        break;
+    case 5:
+    case 6:
+        t[2] = (int)sub_800BAAE0;
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(load, dword_800B68E0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B79F8);
 
@@ -1012,6 +1043,22 @@ void sub_800BD558(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 
+#if 0
+// Not matched: hand-written assembly style (stores via the assembler macro with $at, results re-read from the stored variables); not producible from C
+void sub_800BD60C(void)
+{
+    sub_8004FE08(dword_800BE2A4);
+    sub_8004FE08(dword_800BE2A8);
+    sub_8004FE08(dword_800BE2AC);
+    sub_8004FE08(dword_800BE2B0);
+    sub_8004FE08(dword_800BE2B4);
+    sub_8004FE08(dword_800BE2B8);
+    sub_8004FE08(dword_800BE2BC);
+    sub_8004FE08(dword_800BE2C0);
+    dword_800BE2C4 = dword_800BE2C8 = dword_800BE2CC = dword_800BE2D0 = 0;
+    dword_800BE2D4 = dword_800BE2D8 = dword_800BE2DC = dword_800BE2E0 = 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD60C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD714);
