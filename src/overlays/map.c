@@ -282,7 +282,6 @@ void sub_800B7948(MapTask* t)
     t->next_8 = sub_800B7980;
 }
 
-#if 0
 // Not matched: register allocation of the table base (v0/v1 swapped)
 void sub_800B7980(MapTask* t)
 {
@@ -292,11 +291,10 @@ void sub_800B7980(MapTask* t)
     int r = sub_8003DA54(&dword_800AEBFC[w[0]]);
     sub_800B8128((short)r, w[0], &q);
     dword_800B9434 = 0;
-    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f14[q.b].f18);
+    e = dword_800B9220[(short)word_800AEBF8[0]].f14 + q.b;
+    sub_800B6D90(dword_800B9400, e->f18);
     t->next_8 = sub_800B7A38;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B7980);
 
 // Matched
 void sub_800B7A38(MapTask* t)
@@ -487,8 +485,7 @@ void sub_800B8338(MapPos* p)
 #endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
-#if 0
-// Not matched: the original hoists the load of the flag above the store of 12 and jumps into the shared tail
+// Matched
 void sub_800B8448(MapPos* out)
 {
     unsigned short t = MAPV->f2E4;
@@ -499,8 +496,9 @@ void sub_800B8448(MapPos* out)
     {
         if (MAPV->f2E8 == 0)
         {
+            int f = MAPV->f2E0;
             out->b = 12;
-            out->a = MAPV->f2E0 == 1;
+            out->a = f == 1;
             return;
         }
         q.a = t;
@@ -522,8 +520,9 @@ void sub_800B8448(MapPos* out)
     }
     else if ((unsigned short)(t - 1) >= 3)
     {
+        int f = MAPV->f2E0;
         out->b = 0;
-        out->a = MAPV->f2E0 == 1;
+        out->a = f == 1;
         return;
     }
     else
@@ -541,8 +540,6 @@ void sub_800B8448(MapPos* out)
     }
     out->b = 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8448);
 
 // Matched
 void sub_800B85CC(MapTask* t)

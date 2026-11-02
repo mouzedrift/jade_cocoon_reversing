@@ -103,30 +103,37 @@ INCLUDE_OVERLAY_ASM(tstcompo, sub_800A097C);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1320);
+extern void name_80010850();
+void sub_800A1320(int* a)
+{
+    name_80010850(name_800A2768);
+    a[0] = 2;
+}
 
-#if 0 // near miss: store scheduling
 extern int name_80010A10(int);
 extern int name_80010A44(int);
 extern int name_800A2784;
 extern void sub_800A1AFC(int* a);
+#if 0 // near miss: store scheduling
 void sub_800A1354(int* a)
 {
+    int v;
     if (name_80010A10(0))
     {
         a[1] = name_80010A44(0);
         sub_800A1AFC(a);
         a[0x188 / 4] = -1;
         a[0x198 / 4] = 0;
-        a[0x19C / 4] = name_800A2784;
+        v = name_800A2784;
         a[0] = 3;
+        a[0x19C / 4] = v;
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
-#if 0 // near miss: register allocation (n/base swapped)
 extern int name_80024DC4(int);
+#if 0
 void sub_800A13B8(int* a)
 {
     if (name_80024DC4(a[1]))
