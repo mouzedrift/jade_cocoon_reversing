@@ -744,4 +744,44 @@ void sub_80039E14(void)
     word_8008D4C8.vz = dword_8008D4F0.field_2C;
     sub_8004D0E8();
 }
+typedef struct
+{
+    int pad_0[3];
+    short v[3];
+} struct_D534;
+extern struct_D534 stru_8008D534;
+#if 0
+// Not matched: target is a symbol at 0x8008D540 (inside stru_8008D534, data split lives in main.c); also needs its jump table via config/c_rodata.txt (dword_80074864 0x20)
+void sub_80039ED8(int mode)
+{
+    switch ((short)(mode + 1))
+    {
+    case 0:
+        stru_8008D534.v[0] = 0x800;
+        stru_8008D534.v[1] = 0x800;
+        stru_8008D534.v[2] = 0x800;
+        break;
+    case 1:
+        stru_8008D534.v[0] = 0x1000;
+        stru_8008D534.v[1] = 0;
+        stru_8008D534.v[2] = 0x6B0;
+        break;
+    case 4:
+        stru_8008D534.v[0] = 0x150;
+        stru_8008D534.v[1] = 0;
+        stru_8008D534.v[2] = 0x1000;
+        break;
+    case 3:
+        stru_8008D534.v[0] = 0;
+        stru_8008D534.v[1] = 0x1000;
+        stru_8008D534.v[2] = 0x940;
+        break;
+    case 2:
+        stru_8008D534.v[0] = 0xEB0;
+        stru_8008D534.v[1] = 0x1000;
+        stru_8008D534.v[2] = 0;
+        break;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80039ED8);
