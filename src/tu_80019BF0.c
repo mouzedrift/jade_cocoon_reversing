@@ -1008,7 +1008,43 @@ void sub_8001D730(struct_obj_A* p, int on)
         p->flags_4 |= 0x2000;
     }
 }
-INCLUDE_ASM(sub_8001D760);
+// Matched
+void sub_8001D760(char* o, int idx, int mode, int a3)
+{
+    int base;
+    *(short*)(o + 0xC2) = idx;
+    *(int*)(o + 0xA0) = *(int*)(o + 0x9C);
+    *(int*)(o + 0x9C) = *(signed char*)(idx * 60 + *(int*)(o + 0x148));
+    *(short*)(o + 0x18) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 4);
+    *(short*)(o + 0x1A) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 6);
+    *(int*)(o + 0x94) = *(int*)(o + 0x90);
+    if (mode == -1)
+    {
+        *(int*)(o + 0x90) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 2);
+    }
+    else if (mode == -2)
+    {
+        *(int*)(o + 0x90) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 4);
+    }
+    else if (mode == -3)
+    {
+        int r = rand();
+        char* e = (char*)(idx * 60 + *(int*)(o + 0x148));
+        base = *(short*)(e + 2);
+        *(int*)(o + 0x90) = base + r % (*(short*)(e + 4) - base);
+    }
+    else
+    {
+        *(int*)(o + 0x90) = mode % *(short*)(o + 0x1A);
+    }
+    *(short*)(o + 0x1C) = 0;
+    *(int*)(o + 0xAC) = 0;
+    *(int*)(o + 4) |= 8;
+    if (a3)
+    {
+        *(int*)(o + 4) |= 0x10;
+    }
+}
 // Matched
 int sub_8001D8A8(short* p)
 {
@@ -1027,6 +1063,25 @@ void sub_8001D8B4(char* a0, int a1)
         }
     }
 }
+#if 0
+// Not matched: key and loop counter registers (a2/a3) swapped
+void sub_8001D92C(char* obj, int idx)
+{
+    signed char* e = *(signed char**)(obj + 0x148);
+    int n = ((int*)e)[-1];
+    int key = e[idx * 0x3C];
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        if (key == e[0] && ((unsigned char*)e)[1] == 1)
+        {
+            return;
+        }
+        e += 0x3C;
+    }
+    sub_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1]);
+}
+#endif
 INCLUDE_ASM(sub_8001D92C);
 // Matched
 void sub_8001D9B0(struct_obj_A* p)
@@ -1063,7 +1118,28 @@ void sub_8001DA2C(struct_obj_A* p)
     p->field_22 = 0;
     p->flags_4 &= 0xBFFFF81F;
 }
-INCLUDE_ASM(sub_8001DA4C);
+// Matched
+void sub_8001DA4C(char* p, int div, int from, int to)
+{
+    if (from < 0)
+    {
+        from = *(short*)(p + 0x26);
+    }
+    if (to < from)
+    {
+        *(short*)(p + 0x28) = (from - to) / div;
+        *(short*)(p + 0x26) = from;
+        *(short*)(p + 0x2A) = to;
+        *(int*)(p + 4) |= 1;
+    }
+    else
+    {
+        *(short*)(p + 0x28) = (to - from) / div;
+        *(short*)(p + 0x26) = from;
+        *(short*)(p + 0x2A) = to;
+        *(int*)(p + 4) |= 3;
+    }
+}
 INCLUDE_ASM(sub_8001DAAC);
 // Matched
 void sub_8001DB58(struct_obj_A* p, int a1, int a2)
