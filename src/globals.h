@@ -463,4 +463,7 @@ typedef struct
 
 extern int dword_8008D4D8;
 
+// camera position (vx, vy, vz at 0x8008D600..0x8008D608)
+extern int dword_8008D600[3];
+
 #endif
