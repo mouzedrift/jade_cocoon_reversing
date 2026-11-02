@@ -113,7 +113,67 @@ void sub_800A4E4C()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combsel, sub_800A4E94);
+extern short word_800A5980;
+
+void sub_800A4E94(CombSelTask* t, int a)
+{
+    if (sub_8003D288(0, dword_800A3A94))
+    {
+        switch (word_800A1BC4)
+        {
+        case 0:
+            sub_80031494(0x7E);
+            t->next_8 = sub_800A16FC;
+            t->next_8(t, a);
+            break;
+        case 1:
+            if (sub_800A5560(dword_800A1BC8[byte_800A38D9], 6) == 1)
+            {
+                sub_80031494(0x7C);
+            }
+            else
+            {
+                sub_80031494(0x7E);
+                byte_800A38DB = 2;
+            }
+            break;
+        case 2:
+            if (sub_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
+            {
+                sub_80031494(0x7C);
+            }
+            else
+            {
+                sub_80031494(0x7E);
+                byte_800A38DB = 1;
+            }
+            break;
+        case 3:
+            sub_800A5080(t, a);
+            break;
+        case 4:
+            sub_80031494(0x7E);
+            byte_800A38DB = 3;
+            word_800A5980 = 1;
+            break;
+        }
+    }
+    else if (sub_8003D3C0(1, dword_800A3A94))
+    {
+        switch (byte_800A38D9)
+        {
+        case 0:
+            word_800A1BC4 = 4;
+            break;
+        case 1:
+            word_800A1BC4 = 1;
+            word_800A5968 = 0;
+            byte_800A38D9 = 0;
+            word_800A5974 = 0;
+            break;
+        }
+    }
+}
 
 // Near miss: store order of the case 0 assignments
 #if 0
