@@ -147,6 +147,13 @@ extern unsigned short name_800BF888[];
 extern unsigned short name_800BF7E8[][4];
 extern int sub_800AD308(int a);
 extern void sub_800BF750();
+typedef struct ShopBigShop
+{
+    char pad_0[0x5C6];
+    short field_5C6;
+    char pad_5C8[0x800 - 0x5C8];
+} ShopBigShop;
+extern ShopBigShop name_80084540[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -1315,6 +1322,21 @@ done:
     return r;
 }
 
+#if 0 // near miss: temp register numbering of the eight products
+int sub_800BF3B4(unsigned char* p)
+{
+    ShopBigShop* g = name_80084540;
+    int t1 = g[0].field_5C6 * p[0];
+    int t2 = g[3].field_5C6 * p[0];
+    int t3 = g[3].field_5C6 * p[3];
+    int t4 = g[2].field_5C6 * p[3];
+    int t5 = g[2].field_5C6 * p[2];
+    int t6 = g[1].field_5C6 * p[2];
+    int t7 = g[1].field_5C6 * p[1];
+    int t8 = g[0].field_5C6 * p[1];
+    return sub_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BF3B4);
 
 void sub_800BF474()
