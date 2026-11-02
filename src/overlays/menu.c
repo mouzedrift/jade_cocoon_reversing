@@ -94,6 +94,23 @@ typedef struct MenuRc
 extern int name_800AD288();
 extern MenuRc* name_80014390();
 
+extern int sub_80034140();
+extern unsigned short name_8009194C;
+extern void sub_800BE294();
+extern void sub_800BDE10();
+extern void sub_800BF794();
+extern void sub_800BFCA8();
+extern void sub_800BFE18();
+extern void sub_800C0084();
+extern void sub_800C01AC();
+extern void sub_800C01D0();
+extern void sub_800BD80C();
+
+extern int sub_800AD7F8();
+extern MenuQ name_800C1E98[];
+extern int sub_8003D380();
+extern int sub_8003D41C();
+
 typedef struct MenuBox
 {
     short x_0;
@@ -343,8 +360,6 @@ void sub_800BCF74(short a)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCFDC);
 
-extern int sub_8003D380();
-extern int sub_8003D41C();
 extern void sub_80034A84();
 extern int* name_8008D640;
 void sub_800BD1B0(MenuTask* t)
@@ -510,7 +525,34 @@ void sub_800BD634(void)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BD634);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BD6C8);
+void sub_800BD6C8(MenuTask* t, MenuCtx* c)
+{
+    sub_8002BE10();
+    sub_800BFE18(c);
+    if (c->sel_2 == 6)
+        sub_800C01AC(c);
+    if (c->sel_2 == 7)
+        sub_800C01D0(c);
+    sub_800BE4A0(c);
+    if (c->f24 == 0)
+    {
+        sub_800BE294(c);
+        if (c->f18 || c->f1C)
+            sub_800BDE10(c);
+        if (c->flags_0 & 8)
+            sub_800C0084();
+        else
+            sub_800BFCA8(c);
+    }
+    else
+    {
+        sub_800BF794(c);
+    }
+    if (c->f28 < 8)
+        c->f28++;
+    if ((name_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
+        t->next_8 = sub_800BD80C;
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD80C);
 
@@ -617,7 +659,38 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BF3E0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF540);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BF794);
+extern int name_800C18FC[];
+extern char name_800B6838[];
+void sub_800BF794(MenuCtx* c)
+{
+    int tmp[4];
+    if (c->f56 < 0x96)
+        c->f56++;
+    if (c->f6 != 0xE)
+    {
+        tmp[0] = name_800C18FC[c->f6];
+        tmp[1] = (int)name_800B6838;
+        tmp[2] = (int)name_800B6838;
+        tmp[3] = (int)name_800B6838;
+        sub_8002AF10(tmp, 0, 0xE);
+        if (name_8009194C == 0)
+        {
+            if (c->f56 < 0x96)
+                return;
+        }
+    }
+    else
+    {
+        int r = (short)name_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
+        sub_8002AF10(&name_800C1E98[r], 0, 0xE);
+        if (!sub_8003D380(0) && !sub_8003D41C(0))
+            return;
+        PlaySfx_80031494(0x7D);
+    }
+    c->f6 = 0;
+    c->f24 = 0;
+    c->f56 = 0;
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF8B4);
 
@@ -905,8 +978,6 @@ void sub_800C0578(MenuObj* o)
     sub_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
 }
 
-extern int sub_800AD7F8();
-extern MenuQ name_800C1E98[];
 extern char name_8008BD38[];
 void sub_800C05E0(MenuCtx* c)
 {
@@ -1006,7 +1077,6 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C09B0);
 
 
 extern int sub_800A5E80();
-extern int sub_80034140();
 extern int sub_800C1000();
 // near miss: compiler turns the tail into a boolean (sltu)
 #if 0
