@@ -95,9 +95,19 @@ extern int name_800AD288();
 extern MenuRc* name_80014390();
 
 extern int sub_80034140();
+extern void sub_8002B004(void* p, int a, int b);
+extern char name_80082680[];
+extern char name_800826B0[];
+extern char name_800C28F0[];
+extern char name_800C28D8[];
+extern char name_800C2910[];
+extern char name_800C2930[];
+extern char name_800C2958[];
+extern char name_800C2968[];
 extern unsigned short name_8009194C;
 extern void sub_800BE294();
 extern short name_800C1B74[];
+extern short name_800C1B98[];
 extern void sub_800BDE10();
 extern void sub_800BF794();
 extern void sub_800BFCA8();
@@ -825,14 +835,110 @@ void sub_800BE294(MenuCtx* c)
 }
 INCLUDE_OVERLAY_ASM(menu, dword_800BBA04);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BE38C);
-INCLUDE_OVERLAY_ASM(menu, jpt_800BBA08);
+void sub_800BE38C(MenuCtx* c)
+{
+    short v = name_800C1B98[c->sel_2];
+    if (v != -1)
+    {
+        c->f60 = (unsigned short)c->arr_2A[v];
+        c->f62 = 0;
+    }
+    switch (c->sel_2)
+    {
+    case 0:
+        if (c->flags_0 & 1)
+        {
+            c->f60 = 0;
+        }
+        else if (c->flags_0 & 2)
+        {
+            c->f60 = (unsigned short)c->arr_2A[1];
+        }
+        else
+        {
+            c->f60 = (unsigned short)c->arr_2A[0];
+        }
+        c->f62 = (unsigned short)c->arr_46[3];
+        break;
+    case 1:
+        c->arr_2A[5] = 0;
+        c->f62 = (unsigned short)c->arr_46[0];
+        break;
+    case 14:
+        c->f62 = (unsigned short)c->arr_46[1];
+        break;
+    case 4:
+        c->f62 = (unsigned short)c->arr_46[2];
+        break;
+    case 6:
+        if (c->flags_0 & 1)
+        {
+            c->f60 = (unsigned short)c->arr_2A[0];
+        }
+        else if (c->flags_0 & 2)
+        {
+            c->f60 = (unsigned short)c->arr_2A[2];
+        }
+        c->f62 = 0;
+        break;
+    }
+}
 INCLUDE_OVERLAY_ASM(menu, dword_800BBA44);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE4A0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BEAE0);
-INCLUDE_OVERLAY_ASM(menu, jpt_800BBAC8);
+void sub_800BEAE0(MenuCtx* c)
+{
+    char* s;
+    switch (c->sel_2)
+    {
+    case 0:
+        if ((c->flags_0 & 1) || (c->flags_0 & 2))
+        {
+            if (sub_80034140())
+                s = name_800C28F0;
+            else
+                s = name_800C28D8;
+        }
+        else
+        {
+            if (sub_80034140())
+                s = name_800C2910;
+            else
+                s = name_80082680;
+        }
+        break;
+    case 6:
+        if (c->f60 == 2)
+            s = name_800C2958;
+        else
+            s = name_80082680;
+        break;
+    case 7:
+        if (c->f60 == 2 || c->f60 == 3)
+            s = name_800C2958;
+        else
+            s = name_80082680;
+        break;
+    case 1:
+        s = name_800C2930;
+        break;
+    case 4:
+    case 11:
+        s = name_800C2968;
+        break;
+    case 14:
+        s = name_800826B0;
+        break;
+    case 13:
+        s = name_800C2958;
+        break;
+    default:
+        s = name_80082680;
+        break;
+    }
+    sub_8002B004(s, 0, 0xE);
+}
 INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
 
 extern void sub_8002DB48();
