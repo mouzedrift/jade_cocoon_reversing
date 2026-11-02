@@ -24,6 +24,7 @@ extern char aEffectC[];
 extern unsigned char dword_8007C2E4[];
 extern short word_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
 extern int stru_8008D534[4];
+extern struct_u8x4 dword_80072270;
 extern struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
 
 #endif

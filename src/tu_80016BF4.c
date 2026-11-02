@@ -93,4 +93,29 @@ void sub_80017290(char* a0, int a1)
         e->cb_8 = (EventEntryFn)sub_800173A8;
     }
 }
+#if 0
+// Not matched: only the scheduling of the a0/a1 copies into $s0/$s1 differs
+void sub_800173A8(int* a0, int* a1)
+{
+    int* t = (int*)a1[0x88 / 4];
+    struct_u8x4 col;
+    int v[3];
+    if (a1[0] < a1[1])
+    {
+        col = dword_80072270;
+        a1[0x34 / 4] = a1[0x34 / 4] * 7 / 8;
+        a1[0x30 / 4] += a1[0x34 / 4];
+        v[0] = v[1] = v[2] = a1[0x30 / 4] / 4096;
+        ((short*)a1)[0x82 / 2] += ((short*)a1)[0x86 / 2];
+        sub_8004D1EC(t[1], (int)pOT_8008D690, (int)(a1 + 0x44 / 4), (int)(a1 + 0x80 / 4), (int)stru_8008D534, 0x30, (int)v);
+        sub_800C4090((int)(a1 + 0x44 / 4), (int)&col, 0x5DC, ((a1[1] - a1[0]) << 12) / a1[1]);
+        a1[0]++;
+    }
+    else
+    {
+        sub_800C410C();
+        *a0 = (*a0 & ~1) | 0x8000;
+    }
+}
+#endif
 INCLUDE_ASM(sub_800173A8);

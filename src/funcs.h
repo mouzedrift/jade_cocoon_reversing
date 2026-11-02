@@ -86,7 +86,7 @@ extern void sub_8001DA2C(struct_obj_A* p);
 extern void sub_8001EA28(void* arg0);
 extern int sub_800205D0(void);
 extern void sub_80020EE0(int* p);
-extern void sub_80021804(int* p);
+extern void sub_80021804(); // (int* p); one caller passes a second argument
 extern void sub_8002A280(struct_obj_B* p, short a1);
 extern void sub_8002ACE8(int flags, unsigned char* out);
 extern unsigned char sub_80033528(unsigned char* p, int idx);
@@ -467,6 +467,7 @@ extern int sub_80020F00(struct_list_14* p, int a, int b);
 extern void sub_800218A8(int a0, void* a1, int a2);
 extern void sub_80039FE4(int a0, int a1, int a2);
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
+extern void sub_8003A6C4(int a0, int a1, int a2, int a3);
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif
