@@ -18,7 +18,32 @@
 
 INCLUDE_DATA(dword_800743D0);
 
-INCLUDE_ASM(sub_8002DA3C);
+extern unsigned char dword_80082EBC[];
+extern unsigned char a1ftf[];
+extern void sub_8002C06C(void* p, int a1, int a2);
+void sub_8002E0D8(short* pos, short ot);
+// Matched
+void sub_8002DA3C(unsigned short* pos, int ot)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 4;
+    sub_8002C06C(loc, 0x11, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x11;
+    sub_8002C06C(loc, 0x5C, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x1E;
+    sub_8002C06C(loc, 0x3C, ot);
+    loc[0] = pos[0] + 1;
+    loc[1] = pos[1] + 0x37;
+    sub_8002C06C(loc, 0x54, ot);
+    loc[1] = pos[1] + 0x56;
+    sub_8002C06C(loc, 0x72, ot);
+    loc[0] = pos[0] + 0x4E;
+    loc[1] = pos[1];
+    sub_8002E0D8((short*)loc, ot);
+}
 INCLUDE_ASM(sub_8002DB48);
 extern void sub_80031FF4(int a0, unsigned long* ot, unsigned short* pos, int a3);
 extern void sub_8002C290(unsigned short* pos, int val, int ot);
@@ -50,9 +75,6 @@ void sub_8002E004(unsigned short* pos, int val, int ot)
     loc[1] = pos[1];
     sub_8002C290(loc, val, ot);
 }
-extern unsigned char dword_80082EBC[];
-extern unsigned char a1ftf[];
-extern void sub_8002C06C(void* p, int a1, short a2);
 // Matched
 void sub_8002E0D8(short* pos, short ot)
 {

@@ -427,6 +427,8 @@ extern int* sub_80019C70(int idx);
 extern int sub_80019C84(void);
 
 extern int sub_800A11D8(int a0);
+extern int sub_800AD288(int a0, int a1);
+extern int sub_800AD2C8(int a0, int a1);
 extern void sub_800A61CC(int a0, void* a1, void* a2);
 extern int sub_800A11A0(int a0);
 extern int sub_800A2BA0(int a0);

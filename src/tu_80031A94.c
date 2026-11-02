@@ -601,7 +601,6 @@ Item* sub_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }
-INCLUDE_ASM(sub_80033AFC);
 typedef struct
 {
     short field_0;
@@ -610,6 +609,44 @@ typedef struct
     short field_A;
     Minion* field_C_minion;
 } struct_minion_ref;
+extern int sub_80034140(void);
+extern int sub_8001CE70(int a);
+// Matched
+int sub_80033AFC(struct_minion_ref* p)
+{
+    int a = sub_800AD288(p->field_0 + p->field_2, 0);
+    if (sub_800AD2C8(p->field_0 + p->field_2, 0) <= 0)
+    {
+        return 1;
+    }
+    if (a == 0x29 && p->field_A == 1)
+    {
+        if (sub_80034140())
+        {
+            return 0;
+        }
+        return 3;
+    }
+    if (!(sub_8001CE70(a) & 1) && !(sub_8001CE70(a) & 2))
+    {
+        return 2;
+    }
+    if (p->field_A == 0)
+    {
+        if (!(sub_8001CE70(a) & 2))
+        {
+            return 4;
+        }
+    }
+    else if (p->field_A == 1)
+    {
+        if (!(sub_8001CE70(a) & 1))
+        {
+            return 3;
+        }
+    }
+    return 0;
+}
 extern int sub_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
 #if 0
