@@ -1161,8 +1161,79 @@ INCLUDE_DATA(dword_80096628);
 INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
+#if 0
+typedef struct
+{
+    int field_0;
+    int pad_4;
+    int items[3];
+    int field_14[7];
+    int field_30;
+    int field_34;
+    int field_38;
+    int field_3C;
+} struct_B90;
+extern void sub_80024ADC(void* p, int a, int b);
+extern void sub_80025200(int a, int b, int c, int d, int e);
+// Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
+int sub_80010B90(struct_B90* p)
+{
+    int i;
+    sub_80024ADC(p, p->field_34, 1);
+    for (i = 0; i < 3; i++)
+    {
+        if (i == p->field_30)
+        {
+            sub_80025200(p->field_0, p->items[i], -1, 1, 0);
+        }
+        else
+        {
+            sub_80025200(p->field_0, p->items[i], -1, 0, 0);
+        }
+    }
+    p->field_38 = 4;
+    p->field_3C = 2;
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_80010B90);
-INCLUDE_ASM(sub_80010C30);
+typedef struct
+{
+    char pad_0[0x38];
+    unsigned short field_38;
+    char pad_3A[0x36];
+} struct_C30_item;
+typedef struct
+{
+    int count;
+    int pad_4;
+    struct_C30_item* items;
+} struct_C30_list;
+typedef struct
+{
+    struct_C30_list* list;
+    char pad_4[0x34];
+    int field_38;
+    int field_3C;
+} struct_C30;
+extern int sub_80024DC4(void* p);
+// Matched
+int sub_80010C30(struct_C30* p)
+{
+    int i;
+    for (i = 0; i < p->list->count; i++)
+    {
+        if (p->list->items[i].field_38 != 0xFFFF)
+        {
+            if (!sub_80024DC4(&p->list->items[i]))
+            {
+                return 0;
+            }
+        }
+    }
+    p->field_38 = p->field_3C;
+    return 1;
+}
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
