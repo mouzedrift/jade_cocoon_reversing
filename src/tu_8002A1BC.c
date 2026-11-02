@@ -74,7 +74,41 @@ typedef struct
 } struct_entry8;
 extern void sub_8003E91C(int mode, int a, void* b, int c);
 INCLUDE_ASM(sub_8002A310);
-INCLUDE_ASM(sub_8002A384);
+typedef struct
+{
+    int field_0;
+    int field_4;
+    unsigned char field_8;
+    char pad_9;
+    short field_A;
+} struct_text_A384;
+typedef struct
+{
+    short color;
+    unsigned char b;
+    unsigned char c;
+} struct_text_param;
+extern short uiColor_8008B590;
+extern void sub_80042460(int a0, struct_text_param* p, unsigned long* a2, int a3);
+// Matched
+void sub_8002A384(struct_text_A384* p)
+{
+    struct_text_param t;
+    t.b = p->field_8;
+    t.c = 1;
+    t.color = uiColor_8008B590;
+    sub_80042460(p->field_0, &t, &pOT_8008D454[p->field_A], p->field_4);
+}
+extern short dword_800827BC[][2];
+// Matched
+short sub_8002A3E0(int idx)
+{
+    if (idx < 30)
+    {
+        return dword_800827BC[dword_8007C438[idx].field_8][0];
+    }
+    return 0x24;
+}
 INCLUDE_ASM(sub_8002A42C);
 INCLUDE_ASM(sub_8002A4E4);
 INCLUDE_ASM(sub_8002A5A4);

@@ -78,7 +78,26 @@ void sub_80029708(void* arg0, void* arg1)
 }
 #endif
 INCLUDE_ASM(sub_80029708);
-INCLUDE_ASM(sub_800297C0);
+// Matched
+void sub_800297C0(int* a, short* b)
+{
+    if (a[0])
+    {
+        switch (a[1])
+        {
+        case 0:
+            ((RECT*)&a[3])->x += b[2];
+            ((RECT*)&a[3])->y += b[3];
+            break;
+        case 1:
+            ((RECT*)&a[3])->x += b[4];
+            ((RECT*)&a[3])->y += b[5];
+            break;
+        }
+    }
+    ((RECT*)&a[7])->x += b[0];
+    ((RECT*)&a[7])->y += b[1];
+}
 // Matched
 void sub_80029868(int a0, int a1, int a2)
 {
