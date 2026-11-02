@@ -46,6 +46,7 @@ extern int sub_800AD0D4(int);
 extern int sub_800ADC1C(MapQuery*);
 extern int sub_800B8290(MapPos*);
 #define MAPV ((MapSaveView*)&saveData_8008B570)
+#define SEL dword_800AEBFC[(short)word_800AEBF8[0]]
 typedef struct MapSaveView
 {
     char pad_0[0x2DC];
@@ -66,14 +67,17 @@ extern void sub_800A8DEC();
 extern void sub_800A6D30(int);
 extern void sub_800AD16C(int, int);
 extern int dword_80091C94;
-typedef struct MapRec12
+typedef struct MapSel
 {
-    int a;
-    int b;
-    int c;
-} MapRec12;
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+    short s8;
+    short sA;
+} MapSel;
 
-extern MapRec12 dword_800AEBFC[];
+extern MapSel dword_800AEBFC[];
 extern unsigned short word_800918CC;
 extern char dword_800B6BE0[];
 extern void sub_8003E91C(int, void*, void*, int);
@@ -84,6 +88,7 @@ extern int dword_800B8CA4;
 extern int sub_800AD154(int);
 extern void sub_800300E0(int, int);
 extern void sub_800B6E5C();
+extern int sub_800B81D0(MapPos*);
 extern int dword_800B9430;
 extern int dword_800B9314;
 extern int dword_800B9318;
@@ -308,7 +313,58 @@ int sub_800B7E54(short a)
     return cnt;
 }
 
-INCLUDE_OVERLAY_ASM(map, sub_800B7EE0);
+// Matched
+void sub_800B7EE0()
+{
+    MapPos q;
+    int r;
+    int n;
+    int k;
+    if (dword_800B8CA4 < 4)
+    {
+        SEL.s2 = dword_800B8CA4;
+        SEL.s6 = 0;
+    }
+    else
+    {
+        SEL.s2 = 3;
+        SEL.s6 = 0x40;
+    }
+    SEL.s4 = dword_800B8CA4;
+    if ((short)word_800AEBF8[0] != (short)dword_800B8C94[0] || (short)word_800AEBF8[1] != (short)dword_800B8C94[1])
+    {
+        SEL.s8 = 0;
+        SEL.sA = 0;
+    }
+    else
+    {
+        r = sub_8003DA54(&SEL);
+        sub_800B8128((short)r, (short)word_800AEBF8[0], &q);
+        if (!sub_800B8290(&q))
+        {
+            SEL.s8 = 0;
+            SEL.sA = 0;
+        }
+        else
+        {
+            n = sub_800B81D0((MapPos*)word_800AEBF8);
+            if (dword_800B8CA4 < 4)
+            {
+                SEL.s8 = n;
+                SEL.sA = 0;
+            }
+            else
+            {
+                k = (unsigned short)dword_800B8CA4 - 3;
+                if ((short)k < SEL.sA)
+                {
+                    SEL.s8 = n - k;
+                    SEL.sA = k;
+                }
+            }
+        }
+    }
+}
 
 // Matched
 void sub_800B8128(short a, short b, MapPos* out)
