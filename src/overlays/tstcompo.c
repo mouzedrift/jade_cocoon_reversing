@@ -207,7 +207,76 @@ void sub_800A194C(TstCompoC* c)
 #endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A194C);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A19A4);
+extern unsigned short word_8009194C;
+typedef struct TstCompoE
+{
+    int f0;
+    int f4;
+    char pad_8[0x146];
+    short s14E;
+    char pad_150[0x30];
+    int f180;
+    int f184;
+    int f188;
+    int f18C;
+    int f190;
+    int f194;
+} TstCompoE;
+extern unsigned short word_800918CC;
+extern void name_8002556C(int a, int b);
+extern void name_80025440(int a, int b, int c);
+void sub_800A19A4(TstCompoE* c)
+{
+    unsigned short pad = word_800918CC;
+    if (pad & 0x1000)
+    {
+        int v = c->f18C + 1;
+        int t = c->f188 - 1;
+        c->f18C = v;
+        if (t < v)
+        {
+            c->f18C = t;
+        }
+    }
+    else if (pad & 0x4000)
+    {
+        int v = c->f18C - 1;
+        c->f18C = v;
+        if (v <= 0)
+        {
+            c->f18C = 1;
+        }
+    }
+    pad = word_8009194C;
+    if (pad & 0x20)
+    {
+        if (c->f190)
+        {
+            name_8002556C(c->f4, c->f184);
+            c->f190 = 0;
+        }
+        if (*(unsigned char*)(*(int*)(c->f4 + 0x44) + c->f18C) == 0)
+        {
+            c->f190 = 1;
+        }
+        else
+        {
+            c->f190 = 0;
+        }
+        if (c->f190)
+        {
+            name_80025440(c->f4, c->f18C, 0);
+        }
+        c->f194 = 0;
+        c->f180 = 0;
+        c->f0 = 3;
+    }
+    else if (pad & 0x40)
+    {
+        c->s14E = 0;
+        c->f0 = 4;
+    }
+}
 
 // Matched
 void sub_800A1AD0(int* a)
