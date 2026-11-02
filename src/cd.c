@@ -123,6 +123,41 @@ void sub_8003B684(int* v)
         v[2] >>= sh;
     }
 }
+#if 0
+// Not matched: squares land in different regs (a0/v0/a3 rotated)
+int sub_8003B740(int* a, int* b, unsigned int* r)
+{
+    unsigned int d = -1;
+    unsigned int lim = *r;
+    int res;
+    unsigned int dx;
+    unsigned int dy;
+    unsigned int dz;
+    int tx;
+    int ty;
+    int tz;
+    tx = a[0] - b[0];
+    dx = (tx < 0) ? -tx : tx;
+    res = 0;
+    if (dx <= lim)
+    {
+        ty = a[1] - b[1];
+        dy = (ty < 0) ? -ty : ty;
+        if (dy <= lim)
+        {
+            tz = a[2] - b[2];
+            dz = (tz < 0) ? -tz : tz;
+            if (dz <= lim)
+            {
+                d = dx * dx + dy * dy + dz * dz;
+                res = d <= lim * lim;
+            }
+        }
+    }
+    *r = d;
+    return res;
+}
+#endif
 INCLUDE_ASM(sub_8003B740);
 // Matched
 int sub_8003B80C(int* a, int* b)

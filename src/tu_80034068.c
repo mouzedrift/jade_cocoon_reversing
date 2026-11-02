@@ -23,6 +23,38 @@ INCLUDE_DATA(dword_800747D0);
 INCLUDE_DATA(dword_800747E8);
 INCLUDE_DATA(dword_80074800);
 
+#if 0
+// Not matched: register allocation of r/e/idx (a0/a2/a1)
+int sub_80034068(short* a)
+{
+    int* r = (int*)sub_80014390(((unsigned char*)a)[2]);
+    if (dword_8007C438[a[0]].field_0 & 0x40)
+    {
+        switch (dword_8007C438[a[0]].field_7)
+        {
+        case 0:
+            if (((short*)r)[4] != ((short*)r)[5])
+            {
+                return 0;
+            }
+            return 3;
+        case 1:
+            if (a[0] == 0x10)
+            {
+                return 0;
+            }
+            if ((r[0] & 0x7FB) == 0)
+            {
+                return 3;
+            }
+            break;
+        default:
+            return 0;
+        }
+    }
+    return 0;
+}
+#endif
 INCLUDE_ASM(sub_80034068);
 // Matched
 int sub_80034124(void)

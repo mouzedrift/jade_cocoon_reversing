@@ -211,8 +211,58 @@ INCLUDE_ASM(sub_80038230);
 INCLUDE_ASM(sub_8003856C);
 INCLUDE_ASM(sub_8003891C);
 INCLUDE_ASM(sub_80038A5C);
-INCLUDE_ASM(sub_80038CA8);
-INCLUDE_ASM(sub_80038D64);
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} struct_v3;
+typedef struct
+{
+    int pad_0[5];
+    struct_v3 field_14;
+    struct_v3 field_20;
+    short field_2C;
+    short field_2E;
+    int pad_30[0x35];
+} Block104;
+extern Block104 dword_8008D4F0;
+extern int sub_8003B860(int* a, int* b);
+void sub_80038D64(char* o, int* a);
+// Matched
+void sub_80038CA8(int* p)
+{
+    char* o = (char*)p;
+    char* sd = (char*)&saveData_8008B570;
+    p[3] = 0x1000;
+    p[1] &= ~8;
+    *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)(o + 0x198) = *(struct_v3*)(sd + 0x7A8);
+    *(struct_v3*)(o + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)(o + 0x18C) = dword_8008D4F0.field_14;
+    p[0x17C / 4] = dword_8008D4F0.field_2E;
+    p[0x180 / 4] = dword_8008D4F0.field_2E;
+    sub_80038D64(o, (int*)(sd + 0x7A8));
+}
+// Matched
+void sub_80038D64(char* o, int* a)
+{
+    int* g = (int*)((char*)&dword_8008D4F0 + 0x14);
+    int d;
+    *(short*)(o + 0x150) = ratan2Difference_8003B9E0(a, g) & 0xFFF;
+    *(int*)(o + 0x154) = sub_8003B918(sub_8003B860(a, g));
+    *(short*)(o + 0x152) = ratan2Difference_8003B9E0(a, (int*)(o + 0x18C)) & 0xFFF;
+    *(int*)(o + 0x158) = sub_8003B918(sub_8003B860(a, (int*)(o + 0x18C)));
+    d = *(short*)(o + 0x152) - *(short*)(o + 0x150);
+    if (d > 0x800)
+    {
+        *(short*)(o + 0x152) -= 0x1000;
+    }
+    else if (d < -0x800)
+    {
+        *(short*)(o + 0x152) += 0x1000;
+    }
+}
 INCLUDE_ASM(sub_80038E2C);
 #if 0
 void sub_800390F4(void* arg0, int arg1)
@@ -232,14 +282,9 @@ int sub_800395D0(int* pIdx, int value, int* table)
 
 typedef struct
 {
-    int words[0x41];
-} Block104;
-typedef struct
-{
     short a;
     short b;
 } ShortPair;
-extern Block104 dword_8008D4F0;
 extern ShortPair dword_8008D474;
 // Matched
 void sub_80039620(char* o)

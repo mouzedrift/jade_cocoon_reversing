@@ -127,7 +127,28 @@ void sub_80043264(struct_obj_D* p, short* q)
     }
 }
 INCLUDE_ASM(sub_800432EC);
-INCLUDE_ASM(sub_800433FC);
+extern int dword_8009610C;
+extern int sub_80053608(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
+// Matched
+void sub_800433FC(int* o)
+{
+    Data001File f;
+    u_char result[8];
+    u_char param[4];
+    int r;
+    DATA_GetFile_8003C7CC(&f, 0x439);
+    param[0] = 1;
+    param[1] = stru_80096110.field_2;
+    do
+    {
+        r = sub_80053608(0xD, param, 0, -1);
+        o[1] = r;
+    } while (r == 0);
+    dword_80096108 = DsPosToInt(&f.field_0_position);
+    dword_80096108 += stru_80096110.field_4 * 32;
+    dword_8009610C = dword_80096108 + stru_80096110.field_6 * 32;
+    dword_8008D450 = stru_80096110.field_6 * 1920 / 150;
+}
 extern int sub_8005384C(u_char mode, DslLOC* pos, u_char com, DslCB func, int count); /* DsPacket */
 // Matched
 int sub_800434C4(int pos)
