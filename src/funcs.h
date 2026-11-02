@@ -449,5 +449,6 @@ extern void sub_800C410C(void);
 
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001E574(int* p, int a1);
+extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

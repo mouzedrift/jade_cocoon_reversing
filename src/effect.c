@@ -239,7 +239,18 @@ void sub_80014574(struct_16* p, int a1, int a2)
     p->field_8 = 0;
     p->field_C = 0;
 }
-INCLUDE_ASM(sub_80014588);
+// Matched
+void sub_80014588(int* a0, struct_16* a1, unsigned int a2)
+{
+    unsigned int i;
+    a0[a2 % a1->field_4] = a1->field_8;
+    a1->field_C = 0;
+    for (i = 0; i < a1->field_4; i++)
+    {
+        a1->field_C += a0[(a2 - i) % a1->field_4] * ((int*)a1->field_0)[i];
+    }
+    a1->field_C >>= 12;
+}
 void sub_80014638(struct_obj_D* p, int* q);
 // Matched
 void sub_80014618(struct_obj_D* p, int* q)
