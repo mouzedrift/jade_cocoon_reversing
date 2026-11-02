@@ -74,5 +74,33 @@ int sub_800181E8(void)
 {
     return *dword_80091C00;
 }
-INCLUDE_ASM(sub_80018200);
+// Matched
+struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, short n)
+{
+    struct_4s* dst = (struct_4s*)dword_8008D3F8[9];
+    int i;
+    int j;
+    short d;
+    for (i = 0; i < 10; i++)
+    {
+        dst[i].field_0 = src[i].field_0;
+        dst[i].field_2 = src[i].field_2;
+    }
+    d = hi - lo;
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < 10; j++)
+        {
+            if (dst[j].field_0 >= hi)
+            {
+                dst[j].field_0 += d;
+            }
+            if (dst[j].field_2 >= hi)
+            {
+                dst[j].field_2 += d;
+            }
+        }
+    }
+    return dst;
+}
 INCLUDE_ASM(sub_800182B8);
