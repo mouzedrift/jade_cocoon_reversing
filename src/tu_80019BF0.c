@@ -1924,6 +1924,24 @@ void sub_8002607C(int* a0)
         p->field_34 = a0[2];
     }
 }
+#if 0
+// Not matched: load of a0[9] and a0[6] scheduled in swapped order
+void sub_800260FC(int* a0)
+{
+    int q = a0[6];
+    struct_112* p = (struct_112*)a0[5];
+    int h = ((int*)p->field_0)[1];
+    q += 4;
+    p->field_3C = sub_80021738((int*)a0[9]);
+    sub_80021744(&p->field_50, p->field_3C, h);
+    sub_80021824((int*)a0[9], p->field_50, p->field_3C, h, q);
+    if (sub_80021DE4((int*)a0[9]) != 0)
+    {
+        sub_80021DF0(&p->field_5C, sub_80021DE4((int*)a0[9]), h);
+        sub_80021E4C((char*)a0[9], &p->field_5C, sub_80021DE4((int*)a0[9]));
+    }
+}
+#endif
 INCLUDE_ASM(sub_800260FC);
 INCLUDE_ASM(sub_800261C8);
 // Matched
@@ -2053,7 +2071,27 @@ void sub_80026870(int* a0, int a1, int a2)
     sub_800268E8(a0[0], a1, r, a2, -1);
 }
 INCLUDE_ASM(sub_800268E8);
-INCLUDE_ASM(sub_800269C4);
+// Matched
+void sub_800269C4(int a0, int n, int sel, int h)
+{
+    struct_28* p = (struct_28*)a0;
+    int i;
+    for (i = 0; i < n; i++, p++)
+    {
+        if (sel == i && p->field_14 != 0 && p->field_18 != 0)
+        {
+            if (p->field_10 != 0)
+            {
+                sub_8003FD18(p->field_10, h);
+            }
+            sub_8003FD18(p->field_14, h);
+            sub_8003FD18(p->field_18, h);
+            p->field_10 = 0;
+            p->field_14 = 0;
+            p->field_18 = 0;
+        }
+    }
+}
 #if 0
 void sub_80026A8C(void* a0, int a1, int a2)
 {
@@ -2216,7 +2254,38 @@ void sub_8002741C(void)
         p[0] = 0;
     }
 }
-INCLUDE_ASM(sub_80027478);
+// Matched
+void sub_80027478(int mask, int on)
+{
+    unsigned int f;
+    int r;
+    if (on != 0)
+    {
+        dword_80091C30[2] |= mask;
+    }
+    else
+    {
+        dword_80091C30[2] &= ~mask;
+    }
+    f = dword_80091C30[2];
+    if (f != 0 && !(f & 1))
+    {
+        r = 0;
+        if (!(f & 0x40))
+        {
+            if (dword_80091C30[0] & f)
+            {
+                r = 1;
+            }
+            else if (dword_80091C30[1] & f)
+            {
+                r = 2;
+            }
+        }
+        dword_80091C30[2] |= 1;
+        sub_8001C19C(r, 0x20);
+    }
+}
 // Matched
 int sub_80027540(void)
 {
