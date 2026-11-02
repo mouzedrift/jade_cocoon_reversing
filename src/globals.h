@@ -391,6 +391,7 @@ typedef struct
 } struct_112_list;
 int sub_80026630(struct_112_list* p, unsigned int id);
 void sub_800266CC(struct_112* p);
+int sub_8002667C(struct_112_list* p);
 void sub_80024C48(struct_112* p);
 void sub_80025C38(struct_112* p, int flag);
 typedef struct

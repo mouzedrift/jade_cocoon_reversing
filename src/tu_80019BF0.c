@@ -2276,7 +2276,100 @@ int sub_800251E4(int idx)
 {
     return off_800824CC[idx];
 }
-INCLUDE_ASM(sub_80025200);
+// Matched
+int sub_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
+{
+    int b[16];
+    int c[8];
+    int two = 1;
+    int i;
+    unsigned short* e;
+    struct_112* it;
+    int x;
+    int u;
+    int v;
+    i = sub_80026630(a0, id);
+    if (i >= 0)
+    {
+        return sub_80024DC4((int*)&a0->items[i]) == 0;
+    }
+    i = sub_8002667C(a0);
+    if (i >= 0)
+    {
+        e = (unsigned short*)off_800824CC[id];
+        it = &a0->items[i];
+        x = ((int*)a0)[3] + i * 16;
+        sub_80025ED0(b);
+        if (sel != -1)
+        {
+            b[0] |= 3;
+        }
+        b[0] |= 0xC;
+        v = 0;
+        b[5] = (int)it;
+        b[6] = x;
+        b[1] = (int)e;
+        b[2] = sel;
+        b[3] = a3;
+        if (sel != -1)
+        {
+            two = 0;
+            v += e[2];
+            v += e[4];
+            u = e[1];
+        }
+        else
+        {
+            u = e[5];
+        }
+        v += e[6];
+        v += e[8];
+        c[1] = e[0];
+        c[0] = 0x68;
+        if (flag == 1)
+        {
+            c[0] = 0x6C;
+        }
+        else
+        {
+            c[0] = 0x69;
+        }
+        c[2] = u;
+        c[3] = v;
+        c[4] = 0;
+        c[5] = (int)b;
+        c[6] = 0x3C;
+        c[7] = (int)sub_80025D7C;
+        sub_80025D00((struct_25D00*)it, c);
+        if (two != 0)
+        {
+            sub_80025ED0(b);
+            b[0] = 1;
+            b[5] = (int)it;
+            b[1] = (int)e;
+            c[1] = e[0];
+            c[0] = 0x68;
+            if (flag == 1)
+            {
+                c[0] = 0x6C;
+            }
+            else
+            {
+                c[0] = 0x69;
+            }
+            c[2] = e[1];
+            c[3] = e[2];
+            c[5] = (int)b;
+            c[6] = 0x3C;
+            c[4] = 0;
+            c[7] = (int)sub_80025D7C;
+            sub_80025D00((struct_25D00*)it, c);
+        }
+        it->id_38 = id;
+        return 1;
+    }
+    return 2;
+}
 #if 0
 // Not matched: table-entry address arithmetic: operand order and scheduling differ
 int sub_80025440(struct_112* p, int idx, int flag)
