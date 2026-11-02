@@ -369,7 +369,68 @@ void sub_80037AC8(int a0)
 {
     *(int*)dword_8008D4A0[0x24 / 4] = a0;
 }
-INCLUDE_ASM(sub_80037AE0);
+extern unsigned short dword_80083CE8[][4];
+extern int* sub_800A1E3C(void);
+extern int* sub_800C0FAC(void);
+extern unsigned char byte_800C9C7C;
+extern void sub_80038E2C(int* p, int a, int b);
+extern void sub_80036AB4();
+// Matched
+void sub_80037AE0(unsigned short mask)
+{
+    int sel = 0;
+    int cnt = 0;
+    int i;
+    int* p = dword_8008D4A0[0x24 / 4];
+    int* r;
+    int v;
+    for (i = 0; i < 3; i++)
+    {
+        if ((mask >> (i + 4)) & 1)
+        {
+            sel = i;
+            cnt++;
+        }
+    }
+    if (cnt != 1)
+    {
+        sel = 3;
+    }
+    if (((unsigned short*)p)[4] == 4 || ((unsigned short*)p)[4] == 5)
+    {
+        r = sub_800A1E3C();
+        if (byte_800C9C7C == 0)
+        {
+            v = 0;
+        }
+        else
+        {
+            v = sub_800C0FAC()[0x7C / 4] + 0xF5;
+        }
+        sub_80038E2C(p, dword_80083CE8[r[0] - 1][sel], v);
+        ((unsigned short*)p)[4] = 4;
+        dword_8008D4A0[0x18 / 4] = (int*)sub_80036AB4;
+    }
+}
+// Matched
+void sub_80037BFC(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    ((short*)p)[0x10 / 2] = 0;
+    p[1] |= 0xC0;
+}
+// Matched
+void sub_80037C24(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] |= 0x100;
+}
+// Matched
+void sub_80037C4C(void)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    p[1] &= ~0x100;
+}
 INCLUDE_ASM(sub_80037C74);
 INCLUDE_ASM(sub_80037F44);
 INCLUDE_ASM(sub_80038230);
