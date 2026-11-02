@@ -93,6 +93,10 @@ extern int sub_800BB840(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
 extern int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
 extern void sub_800BBDA0(int a, int b);
 extern int sub_800BBDD8(int a);
+extern char dword_80091C10[];
+extern void sub_800B8940(int* p);
+extern void sub_800206A0(int a, int b, int c, int d);
+extern void sub_8002056C(void);
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
 
@@ -108,13 +112,46 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B7E40);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8028);
+typedef struct EvQuadEventfnc
+{
+    short x_0;
+    short y_2;
+    short z_4;
+    short pad_6;
+} EvQuadEventfnc;
+int sub_800B8028(int* out, EvQuadEventfnc* v)
+{
+    int i;
+    int j;
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+        {
+            if (i != j && v[i].x_0 == v[j].x_0 && v[i].y_2 == v[j].y_2 && v[i].z_4 == v[j].z_4)
+            {
+                out[0] = v[i].x_0;
+                out[1] = v[i].y_2;
+                out[2] = v[i].z_4;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B80C8);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8184);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8220);
+extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
+extern void sub_800B7E40(int* p, int a, int b, int c, int* d);
+void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
+{
+    sub_800B79E0(a2, p, a1, a3, a4);
+    sub_800B7E40(p, a2, *a3, *a4, a5);
+    p[0] += a5[2] >> 10;
+    p[2] -= a5[0] >> 10;
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B82C8);
 
@@ -124,7 +161,31 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800B844C);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8568);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B88A4);
+extern int* dword_8008D674;
+extern void sub_800A170C();
+extern void sub_800A1794();
+extern void sub_800B844C();
+void sub_800B88A4(int a)
+{
+    int* p;
+    int* q;
+    if (a)
+    {
+        sub_800B8940((int*)a);
+        dword_8008B540 = 1;
+    }
+    p = dword_8008D674;
+    p[4] = (p[4] | 1) & 0xFFFF7FFF;
+    p += 4;
+    q = (int*)p[5];
+    q[2] = 0;
+    q[3] = 0;
+    q[4] = 0;
+    q[5] = 0;
+    p[2] = (int)sub_800B844C;
+    sub_800A170C();
+    sub_800A1794();
+}
 
 void sub_800B8928()
 {
@@ -134,7 +195,17 @@ void sub_800B8928()
     }
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8940);
+void sub_800B8940(int* p)
+{
+    int i = 0;
+    int* q = p;
+    for (; i < 3; i++)
+    {
+        unsigned short* e = (unsigned short*)sub_80019C70(*q++);
+        sub_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
+    }
+    sub_8002056C();
+}
 
 int sub_800B89A8(EvCtxEventfnc* c)
 {
@@ -1177,11 +1248,24 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC7A8);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC854);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC98C);
+extern int dword_800AEBC0[2];
+void sub_800BC98C(int a)
+{
+    if (dword_800AEBC0[0])
+    {
+        sub_8003FE38(dword_80091C10, dword_800AEBC0[0]);
+        dword_800AEBC0[0] = 0;
+    }
+    if (dword_800AEBC0[1])
+    {
+        sub_8003FE38(dword_80091C10, dword_800AEBC0[1]);
+        dword_800AEBC0[1] = 0;
+    }
+    sub_80028E74(&dword_800AEBC0[0], 0, &dword_800AEBC0[1], a, (int)dword_80091C10);
+}
 
 #if 0
 extern int dword_800AEBC8;
-extern char dword_80091C10[];
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
     unsigned int* r = (unsigned int*)sub_8003FDC0(dword_80091C10);
