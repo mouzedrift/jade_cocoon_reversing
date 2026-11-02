@@ -101,6 +101,15 @@ extern char dword_800C5298[];
 extern char dword_800C52BC[];
 extern char dword_800C52E0[];
 extern void sub_800309D8(void* p);
+extern char dword_800C58A8[];
+extern char dword_800C5920[];
+typedef struct CfgTailConfig
+{
+    short col_0;
+    char c_2;
+    char c_3;
+} CfgTailConfig;
+extern int frameCount_8008D3FC;
 extern void sub_8002BE10();
 extern void sub_8002B004(void*, int, int);
 extern void sub_8003D794(void*, int);
@@ -110,6 +119,11 @@ extern void sub_800C383C(CfgCtxConfig*);
 extern void sub_800C450C(CfgCtxConfig*);
 extern void sub_800C3540(CfgCtxConfig*);
 extern void sub_800C378C(CfgCtxConfig*);
+extern void sub_800C38CC(CfgCtxConfig*);
+extern void sub_800C39C4(CfgCtxConfig*);
+extern void sub_800C3CA4(CfgCtxConfig*);
+extern void sub_800C4180(CfgCtxConfig*);
+extern void sub_800C4390(CfgCtxConfig*);
 
 INCLUDE_OVERLAY_ASM(config, dword_800C29D0);
 
@@ -223,8 +237,63 @@ INCLUDE_OVERLAY_ASM(config, sub_800C31DC);
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3540);
 
+#if 0
+// Not matched: the switch needs a jump table, and the compiler would emit its own copy in .rdata instead of
+// using the one inside the dword_800C29D0 blob (the rest of the function compiles to the original code)
+void sub_800C378C(CfgCtxConfig* c)
+{
+    c->f3c = dword_800C4CD4[c->cur_4];
+    switch (c->cur_4)
+    {
+    case 0:
+        break;
+    case 3:
+        if (c->prev_2 == 0)
+        {
+            c->f44 = uiColor_8008B590;
+            c->f46 = 0;
+        }
+        break;
+    case 1:
+    case 2:
+    case 4:
+        if (c->prev_2 == 0)
+        {
+            c->f44 = 0;
+            c->f46 = 0;
+        }
+        break;
+    }
+    c->prev_2 = c->cur_4;
+    c->cur_4 = -1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(config, sub_800C378C);
 
+#if 0
+// Not matched: needs a jump table (see sub_800C378C)
+void sub_800C383C(CfgCtxConfig* c)
+{
+    switch (c->prev_2)
+    {
+    case 0:
+        sub_800C38CC(c);
+        break;
+    case 1:
+        sub_800C39C4(c);
+        break;
+    case 2:
+        sub_800C3CA4(c);
+        break;
+    case 3:
+        sub_800C4180(c);
+        break;
+    case 4:
+        sub_800C4390(c);
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(config, sub_800C383C);
 
 // Matched
@@ -329,9 +398,110 @@ void sub_800C39C4(CfgCtxConfig* c)
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3CA4);
 
+#if 0
+// Not matched: the original does not keep i*38 in a register across the loop body (uses fewer saved registers)
+void sub_800C4180(CfgCtxConfig* c)
+{
+    short rect[4];
+    CfgBoxConfig box1;
+    short rect2[4];
+    short rect3[4];
+    CfgTailConfig tail;
+    CfgBoxConfig box3;
+    short i;
+    rect[0] = 0x72;
+    rect[1] = 0x12;
+    rect[2] = 0x5C;
+    rect[3] = 0x12;
+    box1.c_B = 1;
+    box1.x_0 = 0x8C;
+    box1.col_8 = uiColor_8008B590;
+    box1.c_A = 0;
+    box1.y_2 = 0x14;
+    sub_8002C06C(&box1, 0x2A, 0xE);
+    box1.x_0 = 0x8C;
+    box1.y_2 = 0x15;
+    sub_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
+    for (i = 0; i < 4; i++)
+    {
+        unsigned int n = 0;
+        rect2[0] = 0x52;
+        rect2[1] = i * 38 + 0x2A;
+        rect2[2] = 0x12;
+        rect2[3] = 0x24;
+        tail.c_2 = 1;
+        if (c->ff == i)
+        {
+            n = (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
+        }
+        tail.col_0 = i;
+        tail.c_3 = 1;
+        sub_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
+        rect3[0] = 0x66;
+        rect3[1] = i * 38 + 0x2A;
+        rect3[2] = 0x76;
+        rect3[3] = 0x24;
+        box3.col_8 = i;
+        box3.c_A = 0;
+        box3.c_B = 1;
+        box3.x_0 = 0x74;
+        box3.y_2 = i * 38 + 0x2C;
+        sub_8002C06C(&box3, 0xCA, 0xE);
+        box3.x_0 = rect3[0] + 0xE;
+        box3.y_2 = rect3[1] + 6;
+        sub_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(config, sub_800C4180);
 
-INCLUDE_OVERLAY_ASM(config, sub_800C4390);
+// Matched
+void sub_800C4390(CfgCtxConfig* c)
+{
+    short rect[4];
+    CfgDlgConfig a;
+    CfgDlgConfig b;
+    CfgBoxConfig box;
+    a = dword_800C2CE8;
+    b = dword_800C2CE8;
+    a.f4 = sub_8002C64C();
+    a.fC = 0;
+    a.f10 = (int)dword_800C58A8;
+    b.f4 = sub_8002C64C();
+    b.fC = c->f12;
+    b.f10 = (int)dword_800C5920;
+    if (c->f38)
+    {
+        a.f0 = 4;
+    }
+    else
+    {
+        a.f0 = 2;
+    }
+    sub_8002A5A4(&a);
+    if (c->f38)
+    {
+        b.f0 = 2;
+    }
+    else
+    {
+        b.f0 = 4;
+    }
+    sub_8002A5A4(&b);
+    rect[0] = 0x72;
+    rect[1] = 0x12;
+    rect[2] = 0x5C;
+    rect[3] = 0x12;
+    box.c_B = 1;
+    box.x_0 = 0x85;
+    box.col_8 = uiColor_8008B590;
+    box.c_A = 0;
+    box.y_2 = 0x15;
+    sub_8002C06C(&box, 0xAB, 0xE);
+    box.x_0 = 0x8C;
+    box.y_2 = 0x15;
+    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+}
 
 // Matched
 void sub_800C450C(CfgCtxConfig* c)
