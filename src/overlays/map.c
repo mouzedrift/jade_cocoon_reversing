@@ -282,7 +282,6 @@ void sub_800B7948(MapTask* t)
     t->next_8 = sub_800B7980;
 }
 
-#if 0
 // Not matched: register allocation of the table base (v0/v1 swapped)
 void sub_800B7980(MapTask* t)
 {
@@ -292,11 +291,10 @@ void sub_800B7980(MapTask* t)
     int r = sub_8003DA54(&dword_800AEBFC[w[0]]);
     sub_800B8128((short)r, w[0], &q);
     dword_800B9434 = 0;
-    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f14[q.b].f18);
+    e = dword_800B9220[(short)word_800AEBF8[0]].f14 + q.b;
+    sub_800B6D90(dword_800B9400, e->f18);
     t->next_8 = sub_800B7A38;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B7980);
 
 // Matched
 void sub_800B7A38(MapTask* t)
