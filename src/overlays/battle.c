@@ -2204,13 +2204,66 @@ int sub_800C4C74(BatTask* t)
     return sub_800C6A68(t);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4CBC);
+int sub_800C4CBC(BatTask* t)
+{
+    int r;
+    int m = sub_8004E298() % 100;
+    if (m < 30)
+    {
+        r = sub_800C6BD0(t, 0);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4D38);
+int sub_800C4D38(BatTask* t)
+{
+    int r;
+    Minion* s = (Minion*)t->f10;
+    short x = sub_800334D8(s);
+    short y = sub_800334CC(s);
+    if (x < y / 4)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4DB8);
+int sub_800C4DB8(BatTask* t)
+{
+    int r;
+    int m = sub_8004E298() % 100;
+    if (m < 50)
+    {
+        r = sub_800C6BD0(t, 9);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4E34);
+int sub_800C4E34(BatTask* t)
+{
+    int r;
+    if (sub_8004E298() % 10 < 7)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4EA8);
 
@@ -2303,13 +2356,52 @@ int sub_800C5220(BatTask* t)
     }
     return sub_800C6A68(t);
 }
-INCLUDE_OVERLAY_ASM(battle, sub_800C5290);
+int sub_800C5290(BatTask* t)
+{
+    int r;
+    if (sub_8004E298() % 10 < 6)
+    {
+        r = sub_800C6BD0(t, 2);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C5304);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C53B0);
+int sub_800C53B0(BatTask* t)
+{
+    int r;
+    if (sub_8004E298() % 10 < 6)
+    {
+        r = sub_800C6BD0(t, 5);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5424);
+int sub_800C5424(BatTask* t)
+{
+    int r;
+    Minion* s = (Minion*)t->f10;
+    short x = sub_800334D8(s);
+    short y = sub_800334CC(s);
+    if (x <= y / 2)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 int sub_800C54A4(BatTask* t)
 {
@@ -2329,9 +2421,47 @@ int sub_800C54A4(BatTask* t)
     }
     return sub_800C6A68(t);
 }
-INCLUDE_OVERLAY_ASM(battle, sub_800C5510);
+int sub_800C5510(BatTask* t)
+{
+    int r;
+    if (sub_800C6BD0(t, 8) == 0)
+    {
+        return sub_800C6C58(t);
+    }
+    r = sub_8004E298() & 1;
+    if (r)
+    {
+        return r;
+    }
+    if (sub_800334F0((Minion*)t->f14) != 0)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    r = sub_800C6A68(t);
+    if (r)
+    {
+        return r;
+    }
+    return sub_800C6C58(t);
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5594);
+int sub_800C5594(BatTask* t)
+{
+    int r;
+    if (sub_8004E298() % 10 < 7)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 int sub_800C5608(BatTask* t)
 {
@@ -2514,7 +2644,19 @@ int sub_800C6A68(BatTask* t)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6A8C);
+extern int sub_800C6D6C();
+int sub_800C6A8C(BatTask* t)
+{
+    int r = sub_800C6D6C(t->f4, t->f10);
+    if (r != 5)
+    {
+        t->f8[0] = 6;
+        t->f8[1] = r;
+        t->f8[3] = t->f18;
+        return 1;
+    }
+    return 0;
+}
 
 void sub_800C6AFC(BatTask* t, int a, int b)
 {
@@ -2534,7 +2676,18 @@ void sub_800C6B24(BatTask* t, int a, int b)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6B50);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6BD0);
+extern int sub_800C6CFC();
+int sub_800C6BD0(BatTask* t, int a)
+{
+    if (sub_800C6CFC(a, t->f0, t->f10) != 0)
+    {
+        t->f8[0] = 1;
+        t->f8[1] = a;
+        t->f8[3] = t->f18;
+        return 1;
+    }
+    return 0;
+}
 
 int sub_800C6C44(BatTask* t)
 {
@@ -2551,7 +2704,17 @@ int sub_800C6C58(BatTask* t)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6C7C);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6CFC);
+int sub_800C6CFC(unsigned int a, unsigned int* b, short* c)
+{
+    if (sub_8001AE2C(b, a) != 0)
+    {
+        if (dword_8007C438[a].field_4 <= c[6])
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6D6C);
 
