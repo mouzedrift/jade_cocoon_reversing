@@ -163,6 +163,7 @@ extern void sub_800C5314(EquipCtx_equip* c);
 
 INCLUDE_OVERLAY_ASM(equip, dword_800C29D0);
 
+// Matched
 void sub_800C47A8(void)
 {
     EquipTask_equip* t = &equipTask_8008D4C4->t;
@@ -199,6 +200,7 @@ void sub_800C47A8(void)
 }
 
 
+// Matched
 void sub_800C48B4(EquipTask_equip* t, EquipCtx_equip* c)
 {
     sub_8002BE10();
@@ -223,6 +225,7 @@ void sub_800C48B4(EquipTask_equip* t, EquipCtx_equip* c)
 }
 
 
+// Matched
 void sub_800C497C(EquipCtx_equip* c)
 {
     short i;
@@ -348,6 +351,7 @@ void sub_800C4A94(EquipCtx_equip* c)
 INCLUDE_OVERLAY_ASM(equip, sub_800C4A94);
 
 
+// Matched
 void sub_800C4D50(EquipCtx_equip* c)
 {
     int v;
@@ -374,6 +378,7 @@ void sub_800C4D50(EquipCtx_equip* c)
 }
 
 
+// Matched
 void sub_800C4DF4(EquipCtx_equip* c)
 {
     if (c->field_28)
@@ -427,6 +432,7 @@ void sub_800C4DF4(EquipCtx_equip* c)
 }
 
 
+// Matched
 void sub_800C5064(EquipCtx_equip* c)
 {
     EquipTask_equip* t;
@@ -447,6 +453,7 @@ void sub_800C5064(EquipCtx_equip* c)
 
 
 extern char name_800C5D50[];
+// Matched
 void sub_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
 {
     char* p = name_800C5D50;
@@ -468,6 +475,7 @@ void sub_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
 }
 
 
+// Matched
 void sub_800C51B0(EquipCtx_equip* c)
 {
     short v;
@@ -506,6 +514,7 @@ void sub_800C51B0(EquipCtx_equip* c)
 
 
 
+// Matched
 void sub_800C5314(EquipCtx_equip* c)
 {
     char buf10[0x18];
