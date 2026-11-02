@@ -46,6 +46,22 @@ extern int sub_800AD0D4(int);
 extern int sub_800ADC1C(MapQuery*);
 extern int sub_800B8290(MapPos*);
 #define MAPV ((MapSaveView*)&saveData_8008B570)
+typedef struct MapEntry
+{
+    short id;
+    char pad_2[14];
+} MapEntry;
+
+extern MapEntry** dword_800B0608[];
+extern int dword_800B0624[];
+extern char dword_800B6B98[];
+extern char dword_800B6BAC[];
+extern char dword_800B6BCC[];
+extern char* dword_800B9370[];
+extern char** dword_800B93E0[];
+extern unsigned char dword_800B93F8[];
+extern int dword_80091C54;
+extern void sub_8003D034(void*, int);
 #define SEL dword_800AEBFC[(short)word_800AEBF8[0]]
 typedef struct MapSaveView
 {
@@ -53,11 +69,11 @@ typedef struct MapSaveView
     short f2DC;
     short f2DE;
     short f2E0;
-    short pad_2E2;
+    short f2E2;
     short f2E4;
-    short pad_2E6;
+    short f2E6;
     short f2E8;
-    short pad_2EA;
+    short f2EA;
     short f2EC;
     short f2EE;
 } MapSaveView;
@@ -542,7 +558,151 @@ void sub_800B85CC(MapTask* t)
     f();
 }
 
+#if 0
+// Not matched: scheduling of the loads in the last case (about 20 words differ)
+void sub_800B860C()
+{
+    int* m = dword_800B9420;
+    int a = m[1];
+    int b = m[2];
+    MapEntry* list = dword_800B0608[a][b];
+    RECT r1;
+    RECT r2;
+    RECT r3;
+    int y;
+    int i;
+    int n;
+    int d;
+    char* str;
+    int v;
+    int c;
+    switch (m[0])
+    {
+    case 0:
+        if (word_800918CC & 0x1000)
+        {
+            m[1] = a - 1;
+        }
+        else if (word_800918CC & 0x4000)
+        {
+            m[1] = a + 1;
+        }
+        m[1] = m[1] < 0 ? 0 : m[1] < 6 ? m[1] : 5;
+        if (sub_8003D380(1) == 1)
+        {
+            m[0]++;
+        }
+        r1.x = 0x1E;
+        r1.y = 0x14;
+        sub_8003E91C(2, dword_800B6B98, &r1, 0);
+        for (i = 0; i < 6; i++)
+        {
+            str = dword_800B9370[i];
+            d = i == m[1] ? (frameCount_8008D3FC & 0xF) : 0;
+            r2.x = 0x1E + d;
+            r2.y = 0x32 + i * 14;
+            sub_8003E91C(2, str, &r2, 0);
+        }
+        if (frameCount_8008D3FC & 3)
+        {
+            r2.x = 0x1E;
+            r2.y = m[1] * 14 + 0x32;
+            sub_8003D034(&r2, 0);
+        }
+        break;
+    case 1:
+        if (word_800918CC & 0x1000)
+        {
+            m[2] = b - 1;
+        }
+        else if (word_800918CC & 0x4000)
+        {
+            m[2] = b + 1;
+        }
+        m[2] = m[2] < 0 ? 0 : (dword_800B0624[m[1]] - 1 < m[2] ? dword_800B0624[m[1]] - 1 : m[2]);
+        if (sub_8003D380(1) == 1)
+        {
+            m[0]++;
+        }
+        else if (sub_8003D41C(1) == 1)
+        {
+            m[2] = 0;
+            m[0]--;
+        }
+        r2.x = 0x1E;
+        r2.y = 0x14;
+        sub_8003E91C(2, dword_800B6BAC, &r2, 0);
+        for (i = 0; i < dword_800B0624[m[1]]; i++)
+        {
+            str = dword_800B93E0[m[1]][i];
+            d = i == m[2] ? (frameCount_8008D3FC & 0xF) : 0;
+            r3.x = 0x1E + d;
+            r3.y = 0x32 + i * 14;
+            sub_8003E91C(2, str, &r3, 0);
+        }
+        if (frameCount_8008D3FC & 3)
+        {
+            r3.x = 0x1E;
+            r3.y = m[2] * 14 + 0x32;
+            sub_8003D034(&r3, 0);
+        }
+        break;
+    case 2:
+        if (word_800918CC & 0x1000)
+        {
+            m[3]--;
+        }
+        else if (word_800918CC & 0x4000)
+        {
+            m[3]++;
+        }
+        n = 0;
+        if (list->id != -1)
+        {
+            MapEntry* p = list;
+            do
+            {
+                p++;
+                n++;
+            } while (p->id != -1);
+        }
+        m[3] = m[3] < 0 ? 0 : (n - 1 < m[3] ? n - 1 : m[3]);
+        if (sub_8003D380(1) == 1)
+        {
+            MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
+            short fl = dword_800B93F8[m[1]];
+            sv->f2EC = m[3];
+            sv->f2E4 = m[1];
+            sv->f2E2 = -1;
+            sv->f2E6 = -1;
+            sv->f2EA = -1;
+            sv->f2EE = -1;
+            dword_80091C94 = 1;
+            sv->f2E8 = m[2];
+            dword_80091C54 = 0;
+            sv->f2E0 = fl;
+            sub_800A8DEC();
+            sub_800A6D30(1);
+            sub_8001C19C(0, 0x20);
+            dword_8008B540 = 1;
+        }
+        else
+        {
+            if (sub_8003D41C(1) == 1)
+            {
+                m[3] = 0;
+                m[0]--;
+            }
+            r3.x = 0x1E;
+            r3.y = 0x14;
+            sub_8003E91C(2, dword_800B6BCC, &r3, 0);
+        }
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B860C);
+
 
 // Matched
 void sub_800B8B2C(MapTask* t)
