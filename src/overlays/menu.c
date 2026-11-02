@@ -115,6 +115,18 @@ extern int sub_800BFB10();
 extern int sub_800BFBE0();
 extern void PlaySfx_80031494();
 
+typedef struct MenuTmp
+{
+    int w[14];
+} MenuTmp;
+extern void sub_80013C28();
+extern void sub_800C00F8();
+extern void sub_800C00D4();
+extern void sub_800AD1E0();
+extern void sub_800C0084();
+
+extern char name_8008BD38[];
+
 typedef struct MenuBox
 {
     short x_0;
@@ -710,6 +722,45 @@ void sub_800BF3AC(MenuObj* o)
     sub_800AD1E0(o, 1, 0);
 }
 
+extern void sub_800A911C();
+// near miss: original tests s == 0 via sltiu + bnez (one word more)
+#if 0
+void sub_800BF3E0(MenuCtx* c)
+{
+    MenuTmp tmp;
+    int r17;
+    MenuRc* p;
+    int s;
+    switch (c->sel_2)
+    {
+    case 2:
+        r17 = name_800AD288((short)((unsigned short)c->arr_2A[3] + (unsigned short)c->arr_46[0]), 0);
+        tmp.w[2] = 1;
+        sub_800C00D4(&tmp, r17, c->arr_2A[5]);
+        tmp.w[0] = 4;
+        p = name_80014390(*(unsigned char*)&c->arr_2A[5]);
+        if (p)
+            sub_80013C28(name_8008BD38, p, &tmp, &tmp.w[4]);
+        sub_800C00F8(&tmp, &tmp.w[4]);
+        sub_800AD1E0(r17, 1, 0);
+        break;
+    case 0xE:
+        s = (short)sub_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
+        c->flags_0 |= 8;
+        sub_800C0084();
+        if (s == 0)
+            name_800C29BC = 1;
+        else
+            sub_800A911C(s);
+        break;
+    case 0x10:
+        c->flags_0 |= 8;
+        sub_800C0084();
+        name_800C29BC = 1;
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BF3E0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF540);
@@ -1085,7 +1136,6 @@ void sub_800C0578(MenuObj* o)
     sub_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
 }
 
-extern char name_8008BD38[];
 void sub_800C05E0(MenuCtx* c)
 {
     int found = 0;
@@ -1209,10 +1259,6 @@ int sub_800C0C3C(void* a)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
-typedef struct MenuTmp
-{
-    int w[14];
-} MenuTmp;
 
 
 typedef struct MenuQuad
@@ -1224,7 +1270,6 @@ typedef struct MenuQuad
 } MenuQuad;
 
 extern int sub_80033DF4();
-extern void sub_80013C28();
 void sub_800C0CA4(MenuCtx* c, int* out)
 {
     MenuTmp tmp;
