@@ -13,7 +13,7 @@ typedef struct WpnObj_wpnshop
     short f_10;
     short f_12;
     int f_14;
-    char pad_18[4];
+    int f_18;
     short f_1C;
     unsigned short f_1E;
     char pad_20[8];
@@ -88,6 +88,14 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+extern int sub_800AD02C(void);
+extern int sub_800BDF68();
+extern int sub_800BDE38();
+typedef struct WpnPos_wpnshop
+{
+    unsigned short x;
+    unsigned short y;
+} WpnPos_wpnshop;
 extern void sub_800BBFD4();
 extern short sub_800BE00C(WpnObj_wpnshop* o, short i);
 extern int sub_800BDDB0();
@@ -310,7 +318,29 @@ void sub_800BBE54(WpnObj_wpnshop* o)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBED0);
+// Matched
+void sub_800BBED0(void* unused, WpnPos_wpnshop* p)
+{
+    WpnRect_wpnshop r;
+    WpnBox_wpnshop b;
+    r.x = p->x;
+    r.y = p->y;
+    r.w = 0x79;
+    r.h = 0x10;
+    b.col_8 = uiColor_8008B590;
+    b.c_A = 0;
+    b.c_B = 1;
+    b.x_0 = p->x + 4;
+    b.y_2 = p->y + 3;
+    sub_8002C06C(&b, 0x7A, 0xE);
+    b.x_0 = p->x + 0x60;
+    b.y_2 = p->y + 6;
+    sub_8002C414(&b, sub_800AD02C(), 0xE);
+    b.x_0 = p->x + 0x61;
+    b.y_2 = p->y + 4;
+    sub_8002C06C(&b, 0xEA, 0xE);
+    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+}
 
 #if 0
 // register allocation: original keeps &box in s0, 0x4d in s1, 0x77 in s2
@@ -338,6 +368,30 @@ void sub_800BBFD4(int a)
 #endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBFD4);
 
+#if 0
+// constants 0x77/0x5e get hoisted into regs; original reloads
+void sub_800BC0AC(WpnObj_wpnshop* o, int k)
+{
+    WpnRect_wpnshop r;
+    WpnBox_wpnshop b;
+    r.x = 0x77;
+    r.y = 0x5E;
+    r.w = 0x45;
+    r.h = 0x10;
+    b.c_A = o->f_34 == k ? 1 : 2;
+    b.c_B = 1;
+    b.x_0 = 0x7B;
+    b.col_8 = uiColor_8008B590;
+    b.y_2 = 0x61;
+    sub_8002C06C(&b, 0x53, 0xE);
+    b.x_0 = 0xB8;
+    b.y_2 = 0x63;
+    sub_8002C414(&b, o->f_18, 0xE);
+    b.x_0 = 0x77;
+    b.y_2 = 0x5E;
+    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
+}
+#endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC0AC);
 
 // Matched
@@ -472,7 +526,48 @@ void sub_800BD1A8(WpnObj_wpnshop* o)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD278);
+// Matched
+void sub_800BD278(WpnObj_wpnshop* o)
+{
+    int s = o->f_30 + o->f_32;
+    int r;
+    if (o->f_40)
+    {
+        r = sub_800BDF68((short)sub_800BDDB0(s, o->f_1E));
+        if (r > 0)
+        {
+            if (o->f_12 == 0)
+            {
+                o->f_2 = 0xA;
+            }
+            else if (o->f_12 == 1)
+            {
+                o->f_2 = 0xB;
+            }
+            PlaySfx_80031494(0x7E);
+        }
+        else if (r < 0)
+        {
+            PlaySfx_80031494(0x7C);
+            o->f_4E = 2;
+            o->f_4 |= 1;
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+            o->f_4E = 1;
+            o->f_4 |= 1;
+        }
+        o->f_14 = sub_800BDDB0(s, o->f_1E);
+    }
+    else if (o->f_44)
+    {
+        o->f_2 = 0;
+        o->f_36 = 0;
+        o->f_38 = 0;
+        PlaySfx_80031494(0x7D);
+    }
+}
 
 // Matched
 void sub_800BD378(WpnObj_wpnshop* o)
@@ -577,7 +672,46 @@ void sub_800BD928(WpnObj_wpnshop* o)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD9A8);
+// Matched
+void sub_800BD9A8(WpnObj_wpnshop* o)
+{
+    int s = o->f_32 + o->f_30;
+    int r;
+    if (o->f_40)
+    {
+        r = sub_800BDE38((short)sub_800BDD2C(s, o->f_10, o->f_1E), o->f_10);
+        if (r > 0)
+        {
+            PlaySfx_80031494(0x7E);
+            if (o->f_12 == 0)
+            {
+                o->f_2 = 8;
+            }
+            else if (o->f_12 == 1)
+            {
+                o->f_2 = 9;
+            }
+        }
+        else if (r < 0)
+        {
+            PlaySfx_80031494(0x7C);
+            o->f_4E = 2;
+            o->f_4 |= 1;
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+            o->f_4E = 1;
+            o->f_4 |= 1;
+        }
+        o->f_14 = sub_800BDD2C(s, o->f_10, o->f_1E);
+    }
+    else if (o->f_44)
+    {
+        PlaySfx_80031494(0x7D);
+        o->f_2 = 6;
+    }
+}
 
 // Matched
 void sub_800BDAB4(WpnObj_wpnshop* o)
