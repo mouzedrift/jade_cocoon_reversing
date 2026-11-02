@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "sound.h"
 
 typedef struct { char b[8]; } Bytes8Config;
 
@@ -71,6 +72,35 @@ extern char dword_800C2DA4[];
 extern char dword_800C2DF4[];
 extern char dword_800C2E5C[];
 extern void sub_800C4BDC(int n);
+typedef struct CfgDlgConfig
+{
+    int f0, f4, f8, fC, f10, f14;
+} CfgDlgConfig;
+
+typedef struct CfgBoxConfig
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    short col_8;
+    char c_A;
+    char c_B;
+} CfgBoxConfig;
+
+extern CfgDlgConfig dword_800C2CD0;
+extern CfgDlgConfig dword_800C2CE8;
+extern char dword_800C4DDC[];
+extern char dword_800C4E98[];
+extern char* dword_8008D454;
+extern unsigned short uiColor_8008B590;
+extern void sub_8002A5A4(CfgDlgConfig* p);
+extern void sub_8002C06C(void* p, int a, short b);
+extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern unsigned int sub_8002C64C(void);
+extern char dword_800C5298[];
+extern char dword_800C52BC[];
+extern char dword_800C52E0[];
+extern void sub_800309D8(void* p);
 extern void sub_8002BE10();
 extern void sub_8002B004(void*, int, int);
 extern void sub_8003D794(void*, int);
@@ -197,9 +227,105 @@ INCLUDE_OVERLAY_ASM(config, sub_800C378C);
 
 INCLUDE_OVERLAY_ASM(config, sub_800C383C);
 
-INCLUDE_OVERLAY_ASM(config, sub_800C38CC);
+// Matched
+void sub_800C38CC(CfgCtxConfig* c)
+{
+    short rect[4];
+    CfgDlgConfig cfg;
+    CfgBoxConfig b;
+    cfg = dword_800C2CD0;
+    cfg.f4 = sub_8002C64C();
+    cfg.fC = c->f44;
+    cfg.f10 = (int)dword_800C4DDC;
+    sub_8002A5A4(&cfg);
+    rect[0] = 0x7D;
+    rect[1] = 0x12;
+    rect[2] = 0x46;
+    rect[3] = 0x12;
+    b.c_B = 1;
+    b.x_0 = 0x84;
+    b.col_8 = uiColor_8008B590;
+    b.c_A = 0;
+    b.y_2 = 0x15;
+    sub_8002C06C(&b, 0x4F, 0xE);
+    sub_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
+}
 
-INCLUDE_OVERLAY_ASM(config, sub_800C39C4);
+// Matched
+void sub_800C39C4(CfgCtxConfig* c)
+{
+    short rect[4];
+    CfgDlgConfig a;
+    CfgDlgConfig b;
+    CfgDlgConfig d;
+    CfgDlgConfig e;
+    CfgBoxConfig box;
+    a = dword_800C2CD0;
+    b = dword_800C2CE8;
+    d = dword_800C2CE8;
+    e = dword_800C2CE8;
+    a.f4 = sub_8002C64C();
+    a.fC = c->f44;
+    a.f10 = (int)dword_800C4E98;
+    b.f4 = sub_8002C64C();
+    b.fC = dword_8008B570.f_1C / 16;
+    b.f10 = (int)dword_800C5298;
+    d.f4 = sub_8002C64C();
+    d.fC = dword_8008B570.g_1C / 16;
+    d.f10 = (int)dword_800C52BC;
+    e.f4 = sub_8002C64C();
+    e.fC = c->fc;
+    e.f10 = (int)dword_800C52E0;
+    sub_800309D8(&stru_80091CE0);
+    if (c->f38)
+    {
+        a.f0 = 4;
+    }
+    else
+    {
+        a.f0 = 2;
+    }
+    sub_8002A5A4(&a);
+    if (c->f38)
+    {
+        b.f0 = 4;
+        d.f0 = 4;
+        e.f0 = 4;
+        switch (c->f44)
+        {
+        case 0:
+            b.f0 = 2;
+            break;
+        case 1:
+            d.f0 = 2;
+            break;
+        case 2:
+            e.f0 = 2;
+            break;
+        }
+    }
+    else
+    {
+        b.f0 = 4;
+        d.f0 = 4;
+        e.f0 = 4;
+    }
+    sub_8002A5A4(&b);
+    sub_8002A5A4(&d);
+    sub_8002A5A4(&e);
+    rect[0] = 0x72;
+    rect[1] = 0x12;
+    rect[2] = 0x5C;
+    rect[3] = 0x12;
+    box.c_B = 1;
+    box.x_0 = 0x93;
+    box.y_2 = 0x15;
+    box.col_8 = uiColor_8008B590;
+    box.c_A = 0;
+    box.x_0 = 0x8B;
+    sub_8002C06C(&box, 0xDD, 0xE);
+    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+}
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3CA4);
 
