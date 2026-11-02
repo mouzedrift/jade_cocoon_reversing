@@ -1929,14 +1929,12 @@ void sub_800A7280(GameSub_1* p)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A72C8);
 
-#if 0
-// Not matched
 void sub_800A73A8(void)
 {
     GameRect_1* r = &stru_8008D420;
     dword_8008D40C = 0x1000;
-    r->x = 0;
     dword_8008D404 = 0;
+    r->x = 0;
     r->w = 0x140;
     r->y = 0;
     r->h = 0xf0;
@@ -1950,8 +1948,6 @@ void sub_800A73A8(void)
     sub_800A94CC();
     dword_80091C94 = dword_800B1DC8[0];
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A73A8);
 
 // Matched
 void sub_800A7450(GameNode_1* n)
@@ -2863,7 +2859,47 @@ void sub_800A9414(void* pv, int b, int c)
     sub_800AA140(p);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A94CC);
+typedef struct G2Init_1
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    char pad_14[4];
+    short s18;
+    short s1a;
+    short s1c;
+    short s1e;
+    char pad_20[6];
+    short s26;
+    char pad_28[8];
+    int f30;
+    char pad_34[8];
+    int f3C;
+} G2Init_1;
+extern void sub_800B80C8(void* p);
+void sub_800A94CC(void)
+{
+    G2Init_1* p = (G2Init_1*)dword_8008B4A4->f24;
+    p->s1c = 3;
+    p->s1e = 3;
+    p->fC = 0;
+    p->f8 = 0;
+    p->f10 = 0;
+    p->s26 = 0;
+    p->f0 = 0;
+    p->f30 = 0;
+    p->s1a = 0;
+    p->s18 = 0x1000;
+    p->f4 = 0;
+    sub_800AB8DC();
+    sub_800A9414(p, 0, 3);
+    sub_800AB150((G2Obj*)p);
+    sub_800B80C8(p);
+    p->f3C = dword_8008BD38;
+    sub_800ABECC(dword_8008BD38);
+}
 
 void sub_800A955C()
 {
@@ -3144,7 +3180,24 @@ void sub_800AB3D4()
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AB444);
+void sub_800AB444(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (p->f0 & 0x100)
+    {
+        if (a == 1)
+            p->f0 |= 0x1000;
+        else
+            p->f0 &= ~0x1000;
+        p->f0 &= ~0x100;
+        dword_8008BD18.x = p->v60.a;
+        dword_8008BD18.y = p->v60.b;
+        dword_8008BD18.z = p->v60.c;
+        p->v48.a = p->v60.a;
+        p->v48.b = p->v60.b;
+        p->v48.c = p->v60.c;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800AB4D8);
 
