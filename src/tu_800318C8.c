@@ -83,4 +83,46 @@ int sub_800319E8(int idx)
 {
     return off_80083580[idx];
 }
-INCLUDE_ASM(sub_80031A04);
+// Matched
+int sub_80031A04(unsigned char* p, int idx)
+{
+    int r;
+    p += idx * 4;
+    r = 0;
+    if (p[0] != 0)
+    {
+        switch (p[1])
+        {
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+            r += 10;
+            break;
+        case 14:
+        case 15:
+            r += 5;
+            break;
+        case 13:
+            r += 35;
+            break;
+        case 12:
+            r += 15;
+            break;
+        }
+        switch (p[2])
+        {
+        case 2:
+        case 3:
+        case 4:
+            r += 10;
+            break;
+        }
+    }
+    return r;
+}

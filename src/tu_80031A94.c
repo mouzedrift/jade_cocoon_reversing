@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(jpt_8007470C);
+
 
 INCLUDE_ASM(sub_80031A94);
 INCLUDE_ASM(sub_80031B30);
