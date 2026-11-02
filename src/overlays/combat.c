@@ -774,9 +774,127 @@ void sub_800A1554(CombatTaskCombat* t, int x)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A15B4);
+extern void sub_800A4394();
+extern void sub_800A4360();
+extern void sub_800A40FC();
+extern void sub_800A4170();
+extern void sub_800A4B8C();
+extern void sub_800A40E0();
+extern int sub_800A1AEC(int i);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A16FC);
+void sub_800A15B4(CombatTaskCombat* t, int x)
+{
+    unsigned int v;
+    switch (dword_800A3A8C)
+    {
+    case 0:
+        t->next_8 = sub_800A4394;
+        break;
+    case 1:
+        v = dword_800A4070;
+        switch (v)
+        {
+        case 0:
+        case 3:
+            byte_800A38DB = 0;
+            byte_800A38D9 = 0;
+            word_800A1BC4 = 0;
+            break;
+        case 2:
+            if (sub_800A1AEC(byte_800A38D9))
+            {
+                byte_800A38DB = v;
+                word_800A1BC4 = 1;
+            }
+            else
+            {
+                byte_800A38DB = 0;
+            }
+            break;
+        }
+        t->next_8 = sub_800A4360;
+        break;
+    case 2:
+        t->next_8 = sub_800A40FC;
+        break;
+    case 3:
+        t->next_8 = sub_800A4170;
+        break;
+    case 4:
+        t->next_8 = sub_800A4B8C;
+        break;
+    case 5:
+        t->next_8 = sub_800A40E0;
+        break;
+    case 6:
+        break;
+    }
+    t->next_8(t, x);
+}
+INCLUDE_OVERLAY_ASM(combat, dword_800A05C0);
+
+extern int dword_800A3A88;
+extern unsigned char byte_800A38DC;
+
+void sub_800A16FC(CombatTaskCombat* t)
+{
+    int v = dword_800A3A8C;
+    short s;
+    dword_800A4070 = v;
+    switch (v)
+    {
+    case 0:
+        dword_800A3A8C = 1;
+        break;
+    case 1:
+        s = word_800A1BC4;
+        switch (s)
+        {
+        case 0:
+            dword_800A3A8C = 2;
+            break;
+        case 3:
+            dword_800A3A8C = s;
+            break;
+        case 4:
+            bStopDrawingMovie_8008D45C = 1;
+            return;
+        }
+        break;
+    case 2:
+        dword_800A3A8C = 1;
+        break;
+    case 3:
+        if (dword_800A3A88 & 1)
+        {
+            dword_800A3A8C = 4;
+        }
+        else
+        {
+            dword_800A3A8C = 1;
+        }
+        break;
+    case 4:
+        switch (byte_800A38DC)
+        {
+        case 0:
+        case 1:
+            dword_800A3A8C = 5;
+            break;
+        case 2:
+            dword_800A3A8C = 3;
+            break;
+        }
+        break;
+    case 5:
+        dword_800A3A8C = 3;
+        break;
+    case 6:
+        break;
+    }
+    t->next_8 = sub_800A14F0;
+    t->next_8(t);
+}
 
 // Matched
 void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
@@ -868,9 +986,9 @@ void sub_800A1AAC(int i)
 }
 
 // Matched
-void sub_800A1AEC(int i)
+int sub_800A1AEC(int i)
 {
-    sub_800A1A3C((CombatBlkC_combat*)&dword_800A1BC8[i], 0xF);
+    return sub_800A1A3C((CombatBlkC_combat*)&dword_800A1BC8[i], 0xF);
 }
 
 // Matched
