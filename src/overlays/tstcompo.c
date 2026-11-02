@@ -53,6 +53,42 @@ void sub_800A1354(int* a)
 #endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
+#if 0 // near miss: register allocation (n/base swapped)
+extern int name_80024DC4(int);
+void sub_800A13B8(int* a)
+{
+    if (name_80024DC4(a[1]))
+    {
+        if (a[0x188 / 4] <= 0)
+        {
+            int i = 0;
+            char* b = (char*)a[1];
+            int n;
+            int m = n = *(unsigned short*)(b + 0x3E);
+            a[0x188 / 4] = n;
+            if (m != 0)
+            {
+                char* base = *(char**)(b + 0x44);
+                do
+                {
+                    int c = base[i];
+                    i++;
+                    if (c != 0)
+                    {
+                        a[0x184 / 4] = i;
+                        break;
+                    }
+                } while (i < m);
+            }
+        }
+        else
+        {
+            a[0x184 / 4] = a[0x18C / 4];
+        }
+        a[0] = 4;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A13B8);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1468);
