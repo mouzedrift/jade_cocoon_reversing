@@ -665,7 +665,65 @@ void sub_800BD378(WpnObj_wpnshop* o)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BD444);
+// Matched
+void sub_800BD444(WpnObj_wpnshop* o)
+{
+    if (o->f_40 && o->f_30 == 0)
+    {
+        if (o->f_12 == 0)
+        {
+            if (o->f_1C == 0)
+            {
+                sub_800BDC40(o->f_14, o->f_10, o->f_18);
+            }
+            else if (o->f_1C == 1)
+            {
+                sub_800BDB80(o->f_14, o->f_18);
+            }
+        }
+        else if (o->f_12 == 1)
+        {
+            if (o->f_1C == 0)
+            {
+                sub_800BDCB4(o->f_14, o->f_10, o->f_18);
+            }
+            else if (o->f_1C == 1)
+            {
+                sub_800BDBDC(o->f_14, o->f_18);
+            }
+        }
+        PlaySfx_80031494(0x7E);
+    }
+    else if ((o->f_40 && o->f_30 == 1) || o->f_44)
+    {
+        PlaySfx_80031494(0x7D);
+    }
+    if (o->f_40 || o->f_44)
+    {
+        if (o->f_1C == 0)
+        {
+            if (o->f_40)
+            {
+                if (o->f_12 == 0 && o->f_30 == 0 && sub_800BD71C(o->f_14, o->f_10) == 0)
+                {
+                    o->f_2 = 0x10;
+                }
+                else
+                {
+                    o->f_2 = name_800BE870[o->f_12];
+                }
+            }
+            else if (o->f_44)
+            {
+                o->f_2 = name_800BE870[o->f_12];
+            }
+        }
+        else if (o->f_1C == 1)
+        {
+            o->f_2 = name_800BE86C[o->f_12];
+        }
+    }
+}
 
 // Matched
 void sub_800BD61C(WpnObj_wpnshop* o)
