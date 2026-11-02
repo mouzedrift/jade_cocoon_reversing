@@ -463,4 +463,12 @@ typedef struct
 
 extern int dword_8008D4D8;
 
+extern int dword_8008B500[];
+
+extern int dword_80091CA0;
+
+extern int dword_80091C30[];
+
+extern int dword_80091C60[];
+
 #endif
