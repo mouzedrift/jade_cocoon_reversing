@@ -231,7 +231,32 @@ int sub_80033548(int* p, int mask)
 {
     return (*p & mask) != 0;
 }
-INCLUDE_ASM(sub_8003355C);
+// Matched
+unsigned char sub_8003355C(unsigned char* p, int idx)
+{
+    return (p + idx)[0x20];
+}
+// Matched
+int sub_8003356C(unsigned char* p, unsigned int idx)
+{
+    int r = 0xFF;
+    switch (idx)
+    {
+    case 0:
+        r = p[0x1C];
+        break;
+    case 1:
+        r = p[0x1D];
+        break;
+    case 2:
+        r = p[0x1E];
+        break;
+    case 3:
+        r = p[0x1F];
+        break;
+    }
+    return r;
+}
 extern void sub_80033754(void* a, void* b);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
