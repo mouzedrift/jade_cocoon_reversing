@@ -37,14 +37,15 @@ typedef struct EvCtxEventfnc
     int f10_10;
     int f14_14;
     int f18_18;
-    char pad_1C[0x24 - 0x1C];
+    int f1C_1C;
+    char pad_20[4];
     int f24_24[6];
     EvVecEventfnc vec3C_3C[5];
     EvVecEventfnc vec78_78[5];
     int padB4_B4;
     int fB8_B8;
     int fBC_BC;
-    char pad_C0[4];
+    int fC0_C0;
     unsigned int fC4_C4;
     int fC8_C8;
     int fCC_CC[8];
@@ -1379,6 +1380,59 @@ int sub_800BB7D8(EvCtxEventfnc* c)
     return 1;
 }
 
+extern int sub_800BBAB0(int i);
+extern int sub_800BBAE4(int i);
+extern int sub_800BBB18(int* p);
+extern int sub_800BBB5C(int* p);
+#if 0
+// Not matched: the original keeps fC0 in $s0 for the whole loop (default case spins on the stale value); register allocation differs
+int sub_800BB840(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
+{
+    while (1)
+    {
+        switch (c->fC0_C0)
+        {
+        case 0:
+            m->m8_8 = a;
+            if (c->f18_18 & (1 << m->m0_0))
+            {
+                return 0;
+            }
+            if (!sub_800BBAB0(m->m0_0))
+            {
+                return 0;
+            }
+            sub_800BBB18((int*)m);
+            if (a)
+            {
+                c->f18_18 |= 1 << m->m0_0;
+            }
+            c->fC0_C0 = 1;
+            break;
+        case 1:
+            if (!sub_800BBAE4(m->m0_0))
+            {
+                return 0;
+            }
+            sub_800BBB5C((int*)m);
+            if (b)
+            {
+                c->pc_8++;
+            }
+            if (m->m4_4 == 3)
+            {
+                c->f1C_1C |= c->fC0_C0 << m->m0_0;
+            }
+            else if (m->m4_4 == 4)
+            {
+                c->f1C_1C &= ~(c->fC0_C0 << m->m0_0);
+            }
+            c->fC0_C0 = 0;
+            return 1;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB840);
 
 int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
