@@ -31,7 +31,8 @@ extern unsigned char byte_800A38DB;
 extern char dword_800A5978[];
 extern void sub_800A16FC();
 extern int sub_800A1934(void*);
-extern void sub_800A4D64(void*);
+extern void sub_800A4D64(CombSelUnit*);
+extern void sub_800A197C(void*);
 extern void sub_800A5538();
 extern int sub_8003DA54(void*);
 extern void sub_80031494(int);
@@ -64,7 +65,30 @@ void sub_800A4C74()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combsel, sub_800A4D64);
+void sub_800A4D64(CombSelUnit* base)
+{
+    int i;
+    int j;
+    for (i = 0; i < 2; i++)
+    {
+        if (sub_800A1934(&base[i]) == 1)
+        {
+            for (j = i + 1; j < 3; j++)
+            {
+                if (sub_800A1934(&base[j]) == 0)
+                {
+                    sub_800403E8((unsigned int*)&base[i], (unsigned int*)&base[j], 0xF8);
+                    sub_800A197C(&base[j]);
+                    break;
+                }
+            }
+            if (j >= 3)
+            {
+                return;
+            }
+        }
+    }
+}
 
 void sub_800A4E4C()
 {
