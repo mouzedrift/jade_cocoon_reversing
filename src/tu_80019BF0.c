@@ -2319,7 +2319,48 @@ int sub_80025924(int* p, int id)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80025974);
+// Matched
+int sub_80025974(struct_112* p, int idx, int flag)
+{
+    int b[16];
+    int c[8];
+    unsigned short* e;
+    char* t;
+    int u;
+    int v;
+    int* g;
+    sub_80025AB0(p);
+    e = (unsigned short*)off_800824CC[p->id_38];
+    t = (char*)e + (e[9] * 6 + 0x14);
+    t += *(unsigned short*)t * 4 + 2;
+    g = (int*)p->field_0;
+    u = ((unsigned short*)t)[idx * 2 + 1];
+    v = ((unsigned short*)t)[idx * 2 + 2];
+    sub_80025ED0(b);
+    b[0] = 0x40;
+    b[5] = (int)p;
+    b[6] = g[3] + p->field_30 * 16;
+    b[2] = p->field_34;
+    b[1] = (int)e;
+    c[0] = 0x68;
+    if (flag != 0)
+    {
+        c[0] = 0x6C;
+    }
+    else
+    {
+        c[0] = 0x69;
+    }
+    c[1] = e[0];
+    c[2] = u;
+    c[3] = v;
+    c[4] = 0;
+    c[5] = (int)b;
+    c[6] = 0x3C;
+    c[7] = (int)sub_80025D7C;
+    sub_80025D00((struct_25D00*)p, c);
+    return 1;
+}
 // Matched
 void sub_80025AB0(struct_112* p)
 {
