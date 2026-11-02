@@ -170,7 +170,7 @@ def split(name, data, base, syms):
         # data in front of the code is .rdata (jump tables and strings come out of the compiler in the same
         # place), data behind it .data
         sec = ".rdata" if a < first_code else ".data"
-        text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code)) if n.startswith(gen_asm.DATA_PREFIXES)
+        text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code and name.upper() != "GAME")) if n.startswith(gen_asm.DATA_PREFIXES)
                 else gen_asm.emit_function(md, data, n, a, b - a, names))
         open(os.path.join(out, n + ".s"), "w", newline="").write(text.replace("\n", "\r\n"))
 

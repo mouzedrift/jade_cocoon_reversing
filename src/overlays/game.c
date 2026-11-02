@@ -3813,21 +3813,20 @@ int sub_800AD308(int a)
     return 0;
 }
 
-#if 0
-int sub_800AD374(unsigned a)
+int sub_800AD374(int a)
 {
     int r;
-    if (a < 4)
-        goto L;
+    unsigned u = a;
     r = 0;
-    if (a != 4)
-        return r;
-L:
-    r = 0x40;
+    if (u < 4)
+        goto L;
+    if (u == 4)
+    {
+    L:
+        r = 0x40;
+    }
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD374);
 
 int sub_800AD398()
 {
@@ -3906,7 +3905,24 @@ unsigned char* sub_800AD58C(int a, int b)
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD58C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD604);
+unsigned char* sub_800AD604(int n)
+{
+    switch ((unsigned)n)
+    {
+    case 0:
+        return (unsigned char*)&saveData_8008B570 + 0x28;
+    case 1:
+        return (unsigned char*)&saveData_8008B570 + 0xA8;
+    case 2:
+        return (unsigned char*)&saveData_8008B570 + 0x128;
+    case 3:
+        return (unsigned char*)&saveData_8008B570 + 0x1A8;
+    case 4:
+        return (unsigned char*)&saveData_8008B570 + 0x228;
+    }
+    return 0;
+}
+INCLUDE_OVERLAY_ASM(game, dword_800A094C);
 
 int sub_800AD670(int a, int b)
 {
