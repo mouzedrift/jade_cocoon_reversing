@@ -245,7 +245,52 @@ void sub_800BD1B0(MenuTask* t)
         sub_80034A84(p);
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BD230);
+typedef struct MenuCtxB
+{
+    char pad_0[0x4C];
+    int a_4C[3];
+} MenuCtxB;
+
+typedef struct MenuSlot
+{
+    char pad_0[3];
+    unsigned char f3;
+    char pad_4[4];
+} MenuSlot;
+
+typedef struct MenuEnt
+{
+    char pad_0[4];
+    short s4;
+    char pad_6[4];
+    unsigned short a;
+} MenuEnt;
+
+extern MenuSlot name_800C29A0[];
+extern MenuEnt name_800B1238[];
+int sub_800BD230(MenuCtx* c)
+{
+    short i;
+    int found = 0;
+    for (i = 0; i < 3; i++)
+    {
+        name_800C29A0[i].f3 = 0xFF;
+        ((MenuCtxB*)c)->a_4C[i] = 0;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        MenuEnt* e = &name_800B1238[i];
+        if (e->s4 != -1 && e->a != 7)
+        {
+            if (sub_800BD358(&name_800C29A0[i], e->s4))
+            {
+                ((MenuCtxB*)c)->a_4C[i] = 1;
+                found = 1;
+            }
+        }
+    }
+    return found;
+}
 
 extern int sub_8004E298();
 extern MenuRow name_800C1080[];
