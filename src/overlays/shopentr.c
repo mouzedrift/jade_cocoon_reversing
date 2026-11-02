@@ -185,38 +185,71 @@ void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
     }
 }
 
-#if 0
-// Not built: the jump table (switch on state - 2) lives in the overlay data blob, a compiled
-// switch would emit a second table in .rdata
 void sub_800B7144(CtxShopentr* c)
 {
-    EntryShopentr* e = &entries_800B7D08[c->state_14];
-    if (e->next_0 == -1)
+    if (entries_800B7D08[c->state_14].next_0 == -1)
     {
         switch (c->state_14)
         {
         case 2:
-            if (word_800918D0[0] & 0x40) c->state_14 = 5;
-            else if (word_800918D0[0] & 4) c->state_14 = 6;
-            else c->state_14 = 3;
+            if (word_800918D0[0] & 0x40)
+            {
+                c->state_14 = 5;
+            }
+            else if (word_800918D0[0] & 4)
+            {
+                c->state_14 = 6;
+            }
+            else
+            {
+                c->state_14 = 3;
+            }
             break;
         case 4:
-            c->state_14 = (c->field_8 & 1) ? 0xb : 0xa;
+            if (c->field_8 & 1)
+            {
+                c->state_14 = 0xb;
+            }
+            else
+            {
+                c->state_14 = 0xa;
+            }
             break;
         case 7:
-            c->state_14 = c->field_8 ? 1 : 8;
+            if (c->field_8)
+            {
+                c->state_14 = 1;
+            }
+            else
+            {
+                c->state_14 = 8;
+            }
             break;
         case 10:
-            c->state_14 = c->field_8 ? 3 : 9;
+            if (c->field_8)
+            {
+                c->state_14 = 3;
+            }
+            else
+            {
+                c->state_14 = 9;
+            }
             break;
         case 11:
-            c->state_14 = c->field_8 ? 3 : 0xd;
+            if (!c->field_8)
+            {
+                c->state_14 = 0xd;
+            }
+            else
+            {
+                c->state_14 = 3;
+            }
             break;
         }
     }
     else
     {
-        c->state_14 = e->next_0;
+        c->state_14 = entries_800B7D08[c->state_14].next_0;
     }
     c->mask_10 = 0;
     c->mask_10 = masks_800B7E34[c->state_14];
@@ -226,8 +259,7 @@ void sub_800B7144(CtxShopentr* c)
         c->flags_C |= 1;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7144);
+INCLUDE_OVERLAY_ASM(shopentr, dword_800B6E74);
 
 // Matched
 void sub_800B72D4(CtxShopentr* c)
