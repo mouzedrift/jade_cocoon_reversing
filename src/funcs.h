@@ -452,6 +452,7 @@ extern void sub_800C410C(void);
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001C0B4(EventEntry* e, void* buf);
 extern int sub_80024DC4(int a0);
+extern void sub_8002556C(int a0, int a1);
 extern int sub_8001DFC8(char* o, VECTOR* target, int a2, int a3);
 extern int sub_8001DDFC(char* o, VECTOR* target, int step);
 extern int sub_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range);
