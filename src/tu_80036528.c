@@ -381,12 +381,54 @@ void sub_80039698(int* a0)
     dword_8008B4F8 = *(int*)(o + 0x184);
     dword_8008D474 = *(ShortPair*)(o + 0x14C);
 }
-INCLUDE_ASM(sub_8003970C);
 typedef struct
 {
     int a;
     int b;
 } struct_pair8;
+extern int sub_800AB4D8(int a);
+// Matched
+void sub_8003970C(int idx_, int* a5)
+{
+    int* p = dword_8008D4A0[0x24 / 4];
+    struct_pair8* t = (struct_pair8*)dword_800B1084;
+    int* q;
+    int r;
+    p[0x1C / 4] = t[(short)idx_].b;
+    p[0x218 / 4] = (int)a5;
+    p[1] |= 8;
+    r = (short)sub_800AB4D8(0xE);
+    if (((settingsFlags_8008B58C & 0x200000) >> 21) == 1)
+    {
+        q = p + 0x1C8 / 4;
+        p[0x1C8 / 4] = 0;
+        q[1] = r + 0x32;
+        q[2] = r + 0x46;
+        q[3] = r + 0x5A;
+        q[4] = r + 0x6E;
+        q[5] = r + 0x97;
+        q[6] = r + 0xC8;
+        q[7] = r + 0x10E;
+        q[8] = r + 0x169;
+        q[9] = r + 0x258;
+        q[10] = -1;
+    }
+    else
+    {
+        q = p + 0x1C8 / 4;
+        p[0x1C8 / 4] = 0;
+        q[1] = r + 0x32;
+        q[2] = r + 0x46;
+        q[3] = r + 0x5A;
+        q[4] = r + 0x6E;
+        q[5] = r + 0x97;
+        q[6] = r + 0xC8;
+        q[7] = r + 0x10E;
+        q[8] = -1;
+    }
+    p[0x1BC / 4] = (int)levantPos_8008BD18;
+    p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
+}
 // Matched
 void sub_8003983C(int idx_, int* a5)
 {

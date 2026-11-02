@@ -43,8 +43,39 @@ void sub_800424C0(int a0, short a1, int a2, int a3)
     sub_80041ED0(a0, &r, a2, 1);
 }
 INCLUDE_ASM(sub_8004251C);
-INCLUDE_ASM(sub_80042750);
-INCLUDE_ASM(sub_80042870);
+extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+// Matched
+void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
+{
+    LINE_F4 l;
+    DVECTOR a;
+    DVECTOR b;
+    setLineF4(&l);
+    setRGB0(&l, rgb[0], rgb[1], rgb[2]);
+    setXY4(&l, r->x, r->y, r->x + r->w, r->y, r->x + r->w, r->y + r->h, r->x, r->y + r->h);
+    sub_80040298(ot, &l, 7);
+    a.vx = l.x0;
+    a.vy = l.y0;
+    b.vx = l.x3;
+    b.vy = l.y3;
+    sub_80042870(&a, &b, rgb, ot);
+}
+extern char* dword_800960A8[];
+// Matched
+void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
+{
+    LINE_F2 l;
+    DR_TPAGE dt;
+    setLineF2(&l);
+    setRGB0(&l, rgb[0], rgb[1], rgb[2]);
+    setXY2(&l, a->vx, a->vy, b->vx, b->vy);
+    sub_80040298(ot, &l, 4);
+    SetDrawTPage(&dt, 0, 1, GetTPage(0, 0, 0, 0));
+    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
+    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+    addPrim(ot, dword_800960A8[bDoubleBuffer_8008D428]);
+    dword_800960A8[bDoubleBuffer_8008D428] += 8;
+}
 // Matched
 int sub_800429A8(short* p)
 {
