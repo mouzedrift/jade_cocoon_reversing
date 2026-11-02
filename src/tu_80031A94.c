@@ -57,11 +57,7 @@ int sub_80031B0C(Ent4* base, int idx)
 extern Ent4* sub_800A11A0(int a0);
 extern Ent4* sub_800A2BA0(int a0);
 
-extern Ent4* sub_800A11A0(int a0);
-extern Ent4* sub_800A2BA0(int a0);
 
-extern Ent4* sub_800A11A0(int a0);
-extern Ent4* sub_800A2BA0(int a0);
 
 #if 0
 Ent4* sub_80031B30(int a0)
@@ -460,7 +456,27 @@ typedef struct
 } struct_minion_ref;
 extern int sub_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
-INCLUDE_ASM(sub_80033C08);
+// Matched
+int sub_80033C08(short* p)
+{
+    char* q = *(char**)(p + 6);
+    short* r = (short*)(q + 0x84);
+    int idx = sub_8001AEC0(q + 0xF4, p[0] + p[1]);
+    int v = sub_8001AC58(idx);
+    if (idx >= 0x1E)
+    {
+        return 6;
+    }
+    if (r[6] >= v)
+    {
+        return 0;
+    }
+    if (p[5] == 0)
+    {
+        return 5;
+    }
+    return 0;
+}
 // Matched
 int sub_80033C98(struct_minion_ref* p)
 {
@@ -480,6 +496,37 @@ int sub_80033C98(struct_minion_ref* p)
     }
     return 0;
 }
+#if 0
+int sub_80033D20(short* p)
+{
+    char* q = *(char**)(p + 6);
+    short* r = (short*)(q + 0x84);
+    int idx = sub_8001AEC0(q + 0xF4, p[0] + p[1]);
+    if (dword_8007C438[idx].field_0 & 0x40)
+    {
+        switch (dword_8007C438[idx].field_7)
+        {
+        case 0:
+            if (r[4] != r[5])
+            {
+                return 0;
+            }
+            return 3;
+        case 1:
+            if (idx == 0x10)
+            {
+                return 0;
+            }
+            if (!(*(int*)(q + 0x84) & 0x7FB))
+            {
+                return 3;
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+#endif
 INCLUDE_ASM(sub_80033D20);
 // Matched
 int sub_80033DEC(void)

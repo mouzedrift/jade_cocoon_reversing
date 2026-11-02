@@ -257,7 +257,7 @@ extern void FreeMdecBuffer_800418CC(void);
 extern void sub_80010A10(int arg0);
 extern void sub_80013E80(void* p, int arg);
 extern void sub_80013EB4(void* p, int a1, int a2);
-extern unsigned char sub_8001AC58(int idx);
+extern int sub_8001AC58(int idx);
 extern int sub_80024D70(int a0, int a1);
 struct Heap;
 extern int sub_8003FC8C(int a0, struct Heap* a1);

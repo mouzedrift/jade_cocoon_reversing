@@ -252,7 +252,7 @@ int sub_8001AC2C(int idx)
     return off_8007C348[idx * 2];
 }
 // Matched
-unsigned char sub_8001AC58(int idx)
+int sub_8001AC58(int idx)
 {
     if (idx < 0x1E)
     {
