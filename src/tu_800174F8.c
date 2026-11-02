@@ -243,45 +243,33 @@ int sub_800181E8(void)
     return *dword_80091C00;
 }
 // Matched
-#if 0
-// Not matched: 10 words, register numbering of the loop counters
-typedef struct
+// Matched
+struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, short n)
 {
-    short x;
-    short y;
-} struct_pair16;
-short* sub_80018200(short* src, int a1, int a2, short a3)
-{
-    struct_pair16* dst = (struct_pair16*)dword_8008D3F8[0x24 / 4];
-    struct_pair16* p = dst;
-    struct_pair16* s = (struct_pair16*)src;
+    struct_4s* dst = (struct_4s*)dword_8008D3F8[9];
     int i;
     int j;
-    int d;
+    short d;
     for (i = 0; i < 10; i++)
     {
-        p->x = s->x;
-        p->y = s->y;
-        s++;
-        p++;
+        dst[i].field_0 = src[i].field_0;
+        dst[i].field_2 = src[i].field_2;
     }
-    d = a2 - a1;
-    for (j = 0; j < a3; j++)
+    d = hi - lo;
+    for (i = 0; i < n; i++)
     {
-        for (i = 0; i < 10; i++)
+        for (j = 0; j < 10; j++)
         {
-            if (dst[i].x >= (unsigned short)a2)
+            if (dst[j].field_0 >= hi)
             {
-                dst[i].x += d;
+                dst[j].field_0 += d;
             }
-            if (dst[i].y >= (unsigned short)a2)
+            if (dst[j].field_2 >= hi)
             {
-                dst[i].y += d;
+                dst[j].field_2 += d;
             }
         }
     }
-    return (short*)dst;
+    return dst;
 }
-#endif
-INCLUDE_ASM(sub_80018200);
 INCLUDE_ASM(sub_800182B8);
