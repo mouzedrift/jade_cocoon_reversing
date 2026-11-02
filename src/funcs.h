@@ -184,6 +184,7 @@ extern void sub_800390F4(void* arg0, int arg1);
 extern unsigned short sub_8001C818(unsigned short* p);
 extern int sub_8001D8A8(short* p);
 extern int sub_80021738(int* p);
+extern int sub_80022458(char* p, int a1, int a2, int a3);
 extern int sub_80021DE4(int* p);
 extern int sub_80026724(int* p);
 extern int sub_80026D6C(int* p);
@@ -248,7 +249,7 @@ extern void sub_8001D68C(struct_obj_A* p, int on);
 extern void sub_8001D6BC(struct_obj_A* p, int on);
 extern void sub_8001D6EC(struct_obj_A* p, int on);
 extern void sub_8001D730(struct_obj_A* p, int on);
-extern void sub_800229B0(int* p);
+extern void sub_800229B0(); // (int* p); sub_80021784 also passes the heap in a1, which it forwards to sub_8003FD18
 extern int sub_80026600(struct_16_b* p);
 extern void sub_8002728C(void);
 extern void sub_800367F0(int a0, unsigned char* a1);

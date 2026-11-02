@@ -179,7 +179,7 @@ typedef struct
 {
     int field_0;
     int field_4;
-    short field_8[0x23];
+    unsigned short field_8[0x23];
 } struct_obj_C;
 
 extern struct_12 stru_8007D848[17];
