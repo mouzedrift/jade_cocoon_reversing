@@ -451,6 +451,9 @@ extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001E574(int* p, int a1);
 extern void sub_8006EC08(void);
 extern void sub_8004EDB8(void);
+extern int sub_80012204(int a, int b, int c, int d);
+extern double sub_80012358(int n, int x);
+extern int sub_8001247C(double x);
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

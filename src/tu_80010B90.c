@@ -1373,9 +1373,70 @@ int sub_800121A8(int x)
     }
     return r;
 }
-INCLUDE_ASM(sub_80012204);
-INCLUDE_ASM(sub_800122A0);
-INCLUDE_ASM(sub_80012358);
+// Matched
+int sub_80012204(int a, int b, int c, int d)
+{
+    double s = 0.0;
+    s += sub_80012358(a, b);
+    s += sub_80012358(c, d);
+    return sub_8001247C(s) - ((a << 26) + b);
+}
+// Matched
+void sub_800122A0(int a0, int a1, int* a2)
+{
+    char* p = (char*)sub_80014390(a0 & 0xFF);
+    int v = *a2;
+    if (v != 0)
+    {
+        int lo = *(int*)(p + 4) + (v & 0x3FFFFFF);
+        int hi = *(unsigned char*)(p + 0x44) + ((unsigned int)v >> 26);
+        int q = lo / 0x4000000;
+        *a2 += sub_80012204(hi + q, lo - (q << 26), a1, 0);
+    }
+    else
+    {
+        *a2 = sub_80012204(*(unsigned char*)(p + 0x44), *(int*)(p + 4), a1, 0);
+    }
+}
+// Matched
+double sub_80012358(int n, int x)
+{
+    double r = 67108864.0;
+    double s = 1.0;
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        r += s * 67108864.0;
+        s += s;
+    }
+    if (s != 1.0)
+    {
+        r += (double)x * s;
+    }
+    return r;
+}
+#if 0
+// Not matched: the original loads 67108864.0 into $s0/$s1 before the first subtraction (here it is an immediate)
+int sub_8001247C(double x)
+{
+    double t = 67108864.0;
+    double s = 1.0;
+    int i = 0;
+    x -= t;
+    do
+    {
+        t = s * 67108864.0;
+        if (t > x)
+        {
+            break;
+        }
+        x -= t;
+        s += s;
+        i++;
+    } while (i < 99);
+    return (double)(i << 26) + x / s;
+}
+#endif
 INCLUDE_ASM(sub_8001247C);
 // Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)

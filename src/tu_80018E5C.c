@@ -152,7 +152,11 @@ int sub_80018E5C(char* a0, unsigned int a1)
 INCLUDE_ASM(sub_80018EBC);
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
-INCLUDE_ASM(sub_800199A0);
+// Matched
+void sub_800199A0(char* p)
+{
+    *(struct_20_u8*)(p + 0x6C) = *(struct_20_u8*)sub_80019C28(*(unsigned int*)(p + 0x5C));
+}
 // Matched
 void sub_80019A20(char* a0)
 {

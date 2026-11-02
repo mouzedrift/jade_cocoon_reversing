@@ -256,6 +256,11 @@ typedef struct
     int field_C;
     int field_10;
 } struct_20;
+// 0x14 bytes copied without alignment
+typedef struct
+{
+    unsigned char data[0x14];
+} struct_20_u8;
 
 typedef struct struct_node_C
 {
