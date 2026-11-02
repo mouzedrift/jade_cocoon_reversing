@@ -343,7 +343,8 @@ typedef struct
 {
     int field_0;
     int field_4;
-    char pad_8[0x2C];
+    char pad_8[0x28];
+    int field_30;
     int field_34;
     unsigned short id_38;
     unsigned short field_3A;
@@ -369,6 +370,7 @@ typedef struct
     int count;
     int field_4;
     struct_112* items;
+    void* field_C;
 } struct_112_list;
 
 extern int dword_8007BD30[];
@@ -470,5 +472,7 @@ extern int dword_80091CA0;
 extern int dword_80091C30[];
 
 extern int dword_80091C60[];
+
+extern short word_8008B860;
 
 #endif

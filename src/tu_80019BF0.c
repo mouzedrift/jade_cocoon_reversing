@@ -1583,7 +1583,23 @@ void sub_80024AB8(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80024ADC);
+// Matched
+void sub_80024ADC(struct_112_list** a0, void* a1, int heap)
+{
+    struct_112_list* l;
+    int i;
+    l = *a0 = (struct_112_list*)sub_8003FC8C(0x10, (struct Heap*)heap);
+    l->count = sub_80026600(a1);
+    l->field_4 = heap;
+    l->items = (struct_112*)sub_8003FC8C(l->count * 0x70, (struct Heap*)heap);
+    l->field_C = a1;
+    for (i = 0; i < l->count; i++)
+    {
+        l->items[i].field_0 = (int)l;
+        l->items[i].field_30 = i;
+        sub_800266CC(&l->items[i]);
+    }
+}
 // Matched
 void sub_80024BB0(struct_112_list** a0)
 {
@@ -1839,7 +1855,24 @@ void sub_80025B20(void* dst, struct_obj_E* src, int idx)
     sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
 }
 INCLUDE_ASM(sub_80025B5C);
-INCLUDE_ASM(sub_80025C38);
+// Matched
+void sub_80025C38(struct_112* p, int flag)
+{
+    int i;
+    for (i = 0; i < p->field_40; i++)
+    {
+        int* e = (int*)(i * 0x58 + p->field_64);
+        sub_80025B5C(p, e[0], e[0]);
+    }
+    if (flag)
+    {
+        for (i = 0; i < p->field_43; i++)
+        {
+            short* s = (short*)(i * 4 + p->field_6C);
+            sub_80025B5C(p, s[0], s[1]);
+        }
+    }
+}
 typedef struct
 {
     int field_0;
@@ -2035,6 +2068,40 @@ void sub_80026730(struct_28** a0, int a1, int a2)
         p[i].field_18 = 0;
     }
 }
+#if 0
+// Not matched
+void sub_8002679C(struct_28** a0, int n, int heap)
+{
+    struct_28* arr;
+    struct_28* e;
+    int i;
+    arr = *a0;
+    if (arr)
+    {
+        i = 0;
+        e = arr;
+        while (i < n)
+        {
+            if (e->field_10)
+            {
+                sub_8003FD18(e->field_10, heap);
+            }
+            if (e->field_14)
+            {
+                sub_8003FD18(e->field_14, heap);
+            }
+            if (e->field_18)
+            {
+                sub_8003FD18(e->field_18, heap);
+            }
+            i++;
+            e++;
+        }
+        sub_8003FD18(arr, heap);
+        *a0 = 0;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8002679C);
 // Matched
 void sub_80026870(int* a0, int a1, int a2)
@@ -2184,7 +2251,36 @@ int sub_80027330(short a0)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80027358);
+// Matched
+// Matched
+int sub_80027358(int id)
+{
+    int* p;
+    short* s;
+    if (dword_80082678 == 1)
+    {
+        if (word_80091C40 != id)
+        {
+            word_8008B860 = id;
+            return 0;
+        }
+        p = dword_800B1DB8[9];
+        if (sub_8003BE30(p[1]) != 3)
+        {
+            return 0;
+        }
+        sub_8002728C();
+        sub_8003BFD0(p[1], 0);
+        sub_80028DC0();
+        s = (short*)&saveData_8008B570;
+        s[0x2F0 / 2] = id;
+        s[0x2F2 / 2] = id;
+        dword_80082678 = 0;
+        return 1;
+    }
+    word_8008B860 = id;
+    return 0;
+}
 // Matched
 void sub_8002741C(void)
 {
@@ -2197,7 +2293,38 @@ void sub_8002741C(void)
         p[0] = 0;
     }
 }
-INCLUDE_ASM(sub_80027478);
+// Matched
+void sub_80027478(int mask, int set)
+{
+    int f;
+    int code;
+    if (set)
+    {
+        dword_80091C30[2] |= mask;
+    }
+    else
+    {
+        dword_80091C30[2] &= ~mask;
+    }
+    f = dword_80091C30[2];
+    if (f && !(f & 1))
+    {
+        code = 0;
+        if (!(f & 0x40))
+        {
+            if (dword_80091C30[0] & f)
+            {
+                code = 1;
+            }
+            else if (dword_80091C30[1] & f)
+            {
+                code = 2;
+            }
+        }
+        dword_80091C30[2] |= 1;
+        sub_8001C19C(code, 0x20);
+    }
+}
 // Matched
 int sub_80027540(void)
 {
