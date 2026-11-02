@@ -2126,7 +2126,24 @@ void sub_800C410C()
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4118);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4328);
+void sub_800C4328(BatTask* t)
+{
+    Minion* s = (Minion*)t->f14;
+    short x = sub_800334D8(s);
+    short y = sub_800334CC(s);
+    if (x < (short)(y / 10))
+    {
+        sub_800C6AFC(t, 6, 0);
+    }
+    else if (sub_8004E298() & 1)
+    {
+        sub_800C6AFC(t, 6, 1);
+    }
+    else
+    {
+        sub_800C6AFC(t, 0, 0);
+    }
+}
 
 void sub_800C43D8(BatTask* t)
 {
@@ -2213,7 +2230,30 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C473C);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4A40);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4B34);
+int sub_800C4B34(BatTask* t)
+{
+    int r;
+    Minion* s = (Minion*)t->f10;
+    short x = sub_800334D8(s);
+    short y = sub_800334CC(s);
+    if (x < (short)(y / 3))
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+        if (sub_8004E298() & 1)
+        {
+            r = sub_800C6C44(t);
+            if (r)
+            {
+                return r;
+            }
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 int sub_800C4BE4(BatTask* t)
 {
@@ -2421,7 +2461,27 @@ int sub_800C5290(BatTask* t)
     return sub_800C6A68(t);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5304);
+int sub_800C5304(BatTask* t)
+{
+    int r;
+    if (sub_800C6EC8(t, 1) == 0 && sub_8004E298() % 10 < 7)
+    {
+        r = sub_800C6BD0(t, 0x11);
+        if (r)
+        {
+            return r;
+        }
+    }
+    if (sub_8004E298() & 1)
+    {
+        r = sub_800C6A8C(t);
+        if (r)
+        {
+            return r;
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 int sub_800C53B0(BatTask* t)
 {
@@ -2809,7 +2869,28 @@ int sub_800C6D6C(unsigned char* a, short* b)
     return i;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6DF8);
+int sub_800C6DF8(BatTask* t, int a)
+{
+    Minion* out[3];
+    int i;
+    sub_800C6C7C(out);
+    for (i = 0; i < 3; i++)
+    {
+        if (out[i])
+        {
+            short x = sub_800334D8(out[i]);
+            short y = sub_800334CC(out[i]);
+            if (x <= y / 4)
+            {
+                if (sub_800C6B50(t, a, i))
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 int sub_800C6EC8(BatTask* t, int m)
 {
