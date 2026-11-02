@@ -213,7 +213,30 @@ void sub_800A5080(CombBtlTask* t)
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A50E4);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A51EC);
+extern void sub_800A8078(short, short, short);
+extern int sub_800A8098();
+extern void sub_800A5290();
+extern char dword_800A82EC[];
+extern char dword_800A8300[];
+extern int dword_800A82DC;
+
+void sub_800A51EC(CombBtlTask* t)
+{
+    if (--dword_800A84D4 <= 0)
+    {
+        if (dword_800A85F8 == 1)
+        {
+            sub_800A8078(7, 0x3BC, 0x1B);
+            dword_800A82DC = sub_800A8098(0, dword_800A82EC, 1);
+        }
+        else
+        {
+            sub_800A8078(9, 0x3BF, 0x1F);
+            dword_800A82DC = sub_800A8098(0, dword_800A8300, 0);
+        }
+        t->next_8 = sub_800A5290;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5290);
 
