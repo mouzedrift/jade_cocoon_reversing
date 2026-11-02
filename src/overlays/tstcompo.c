@@ -5,7 +5,79 @@
 
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0800);
+typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
+typedef struct TstCompoD
+{
+    int f0;
+    char pad_4[0x17C];
+    int f180;
+    int f184;
+    char pad_188[8];
+    int f190;
+    int f194;
+    int f198;
+    char pad_19C[0x3C];
+    TstCompoBlk8 f1D8;
+    short f1E0;
+    short f1E2;
+    int f1E4;
+    int f1E8;
+    int f1EC;
+    int f1F0;
+    int f1F4;
+    int f1F8;
+    int f1FC;
+    int f200;
+    int f204;
+    int f208;
+    int f20C;
+    int f210;
+    int f214;
+    int f218;
+    int f21C;
+    int f220;
+    int f224;
+    int f228;
+    int f22C;
+} TstCompoD;
+extern void sub_800A097C();
+extern TstCompoBlk8* name_800A250C[];
+void sub_800A0800(int* task, TstCompoD* c)
+{
+    c->f184 = 3;
+    c->f0 = 0;
+    c->f194 = 0;
+    c->f190 = 0;
+    c->f180 = 0;
+    c->f198 = 0;
+    drawEnvRed_8008D448[0] = 0x40;
+    drawEnvRed_8008D448[1] = 0x40;
+    drawEnvRed_8008D448[2] = 0x80;
+    sub_800A1BE0(c);
+    sub_800A0918();
+    c->f1E8 = 0;
+    c->f1E4 = -1;
+    c->f1EC = -1;
+    c->f1E0 = 0;
+    c->f1E2 = 0;
+    c->f1D8 = *name_800A250C[c->f1E8 * 5];
+    c->f1F4 = 0;
+    c->f1F0 = 0;
+    c->f210 = 0;
+    c->f214 = 0;
+    c->f218 = 0;
+    c->f21C = 0;
+    c->f220 = 0;
+    c->f224 = 0;
+    c->f228 = 0;
+    c->f22C = 0;
+    c->f208 = 0;
+    c->f20C = 0;
+    c->f1FC = 0;
+    c->f200 = 0;
+    c->f204 = 0;
+    task[2] = (int)sub_800A097C;
+}
 
 extern int name_800A2768[];
 extern int dword_8007DC74;
