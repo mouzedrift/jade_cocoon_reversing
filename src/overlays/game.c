@@ -1622,17 +1622,15 @@ int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
 
 #if 0
 // Not matched
-int sub_800A66A4(int* p, int x, unsigned short* q)
+int sub_800A66A4(int* p, int* x, unsigned short* q)
 {
-    if (p[0] >= 0)
+    int v = p[0];
+    if (v >= 0 && sub_800A6504(v))
     {
-        if (sub_800A6504(p[0]))
+        int d = GameFn_8003B9E0(x, p + 1);
+        if ((unsigned int)(sub_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
         {
-            int d = GameFn_8003B9E0((int*)x, p + 1);
-            if ((unsigned int)(sub_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
-            {
-                return 1;
-            }
+            return 1;
         }
     }
     return 0;
