@@ -2726,7 +2726,85 @@ void sub_800260FC(int* a0)
 }
 #endif
 INCLUDE_ASM(sub_800260FC);
-INCLUDE_ASM(sub_800261C8);
+// Matched
+void sub_800261C8(int* a0)
+{
+    struct_112* p = (struct_112*)a0[5];
+    int h = ((int*)p->field_0)[1];
+    int i;
+    int j;
+    int mode;
+    p->field_3E = *(unsigned short*)(a0[1] + 0x12);
+    if (p->field_54 == 0)
+    {
+        sub_80026730((struct_28**)&p->field_54, p->field_3E, h);
+    }
+    if (p->field_44 != 0)
+    {
+        sub_8003FD18(p->field_44, h);
+    }
+    p->field_44 = sub_8003FC8C(p->field_3E, h);
+    for (i = 0; i < p->field_3E; i++)
+    {
+        mode = a0[3];
+        if (mode == 0)
+        {
+            if (i == 0)
+            {
+                ((unsigned char*)p->field_44)[0] = 1;
+            }
+            else
+            {
+                ((unsigned char*)p->field_44)[i] = 0;
+            }
+        }
+        else if (mode == 1)
+        {
+            if (i == 0)
+            {
+                ((unsigned char*)p->field_44)[0] = 1;
+            }
+            else if (i == 1)
+            {
+                ((unsigned char*)p->field_44)[1] = 1;
+            }
+            else
+            {
+                ((unsigned char*)p->field_44)[i] = 0;
+            }
+        }
+        else if (mode == 3)
+        {
+            if (i == 0)
+            {
+                ((unsigned char*)p->field_44)[0] = 0;
+            }
+            else if (i == 1)
+            {
+                ((unsigned char*)p->field_44)[1] = 0;
+            }
+            else
+            {
+                ((unsigned char*)p->field_44)[i] = *(unsigned char*)(a0[1] + 0x14 + i * 2);
+            }
+        }
+        else
+        {
+            ((unsigned char*)p->field_44)[i] = *(unsigned char*)(a0[1] + 0x14 + i * 2);
+        }
+    }
+    for (i = 0, j = 0; i < p->field_3E; i++)
+    {
+        if (((unsigned short*)(a0[1] + 0x14))[i] != 0)
+        {
+            if (((unsigned char*)p->field_44)[i] != 0)
+            {
+                sub_80026A8C((char*)p->field_54 + i * 28, a0[10] + ((int*)a0[10])[j + 1], h);
+            }
+            j++;
+        }
+    }
+}
 // Matched
 void sub_800263CC(int* p)
 {
