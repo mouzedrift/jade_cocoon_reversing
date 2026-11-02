@@ -206,21 +206,17 @@ void sub_800A5538(CombSelTask* t)
     t->next_8(t);
 }
 
-// Near miss: the compiler copies p to a callee-saved register before the loop test
-#if 0
 int sub_800A5560(CombSelUnit* p, int n)
 {
     int i;
-    for (i = 0; i < n; i++, p++)
+    for (i = 0; i < n; i++)
     {
-        if (sub_800A1934(p) == 0)
+        if (sub_800A1934(p + i) == 0)
         {
             return 0;
         }
     }
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(combsel, sub_800A5560);
 
 INCLUDE_OVERLAY_ASM(combsel, dword_800A55C4);
