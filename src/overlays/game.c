@@ -3339,7 +3339,25 @@ void sub_800AB444(int a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AB4D8);
+short sub_800AB4D8(int a)
+{
+    int s = (unsigned short)sub_800AC834(a, sub_800AC474(a));
+    int e = (unsigned short)sub_800AC878(a, sub_800AC474(a));
+    int t;
+    switch ((unsigned)a)
+    {
+    case 25:
+    case 26:
+    case 28:
+        return sub_800AC8BC(a, sub_800AC474(a)) + (e - s) * 2;
+    case 7:
+    case 8:
+        t = sub_800AC8BC(14, sub_800AC474(14));
+        return t + sub_800AC8BC(a, sub_800AC474(a)) + (e - s) * 30;
+    }
+    return sub_800AC8BC(a, sub_800AC474(a));
+}
+INCLUDE_OVERLAY_ASM(game, dword_800A0870);
 
 short sub_800AB5F8(int a)
 {
