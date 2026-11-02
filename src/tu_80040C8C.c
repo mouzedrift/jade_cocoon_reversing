@@ -44,15 +44,11 @@ typedef struct
     void* buf0;
     void* buf1;
     int field_8;
-    void* buf2;
-    void* buf3;
+    void* imgbuf[2];
     int field_14;
     MovieRect rect[2];
     int field_28;
-    short cur_x;
-    short cur_y;
-    short field_30;
-    unsigned short field_32;
+    MovieRect slice;
     int field_34;
     int field_38;
 } MovieCtx;
@@ -153,8 +149,8 @@ void sub_80041240(MovieCtx* c, MovieInfo* i)
     c->buf0 = (void*)0x801B9250;
     c->buf1 = (void*)0x801CA250;
     c->field_8 = 0;
-    c->buf2 = (void*)0x801F0250;
-    c->buf3 = (void*)0x801F2F50;
+    c->imgbuf[0] = (void*)0x801F0250;
+    c->imgbuf[1] = (void*)0x801F2F50;
     c->field_14 = 0;
     x = MOVIE_W(i, i->field_10);
     y = i->field_12;
@@ -169,16 +165,16 @@ void sub_80041240(MovieCtx* c, MovieInfo* i)
     c->field_38 = i->is24bpp;
     if (c->field_28 == 0)
     {
-        c->cur_x = x;
-        c->cur_y = y;
+        c->slice.x = x;
+        c->slice.y = y;
     }
     else
     {
-        c->cur_x = x2;
-        c->cur_y = y2;
+        c->slice.x = x2;
+        c->slice.y = y2;
     }
-    c->field_30 = i->is24bpp ? 0x18 : 0x10;
-    c->field_32 = i->field_16;
+    c->slice.w = i->is24bpp ? 0x18 : 0x10;
+    c->slice.h = i->field_16;
 }
 // Matched
 void sub_80041358(int a0, int ring, int* stream)
@@ -205,6 +201,53 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
     }
     return 0;
 }
+extern MovieCtx dword_800960C0;
+extern int dword_800960F8;
+extern int dword_80096100;
+/* libcd's StCdIntrFlag lives in the PSY-Q .bss blob (0x8009AE6C), which has no symbols of its own */
+extern char lib_bss[];
+#define StCdIntrFlag (*(int*)(lib_bss + (0x8009AE6C - 0x8009AE60)))
+extern void StCdInterrupt(void);
+#if 0
+// Not matched: slice-size product / rectid toggle scheduling differs (~60 lines)
+void sub_80041424(void)
+{
+    MovieRect r;
+    MovieRect r2;
+    int id;
+    int rem;
+    if (dword_800960F8 && StCdIntrFlag)
+    {
+        StCdInterrupt();
+        StCdIntrFlag = 0;
+    }
+    r = dword_800960C0.slice;
+    id = dword_800960C0.field_14;
+    dword_800960C0.field_14 = dword_800960C0.field_14 ? 0 : 1;
+    if (dword_80096100 == 1 && (rem = dword_800960C0.rect[dword_800960C0.field_28].w % dword_800960C0.slice.w) != 0)
+    {
+        dword_80096100 = 0;
+        dword_800960C0.slice.x += rem;
+    }
+    else
+    {
+        dword_800960C0.slice.x += dword_800960C0.slice.w;
+    }
+    if (dword_800960C0.slice.x < dword_800960C0.rect[dword_800960C0.field_28].x + dword_800960C0.rect[dword_800960C0.field_28].w)
+    {
+        DecDCTout(dword_800960C0.imgbuf[dword_800960C0.field_14], (dword_800960C0.slice.w * 16 * ((dword_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+    }
+    else
+    {
+        dword_800960C0.field_34 = 1;
+        dword_800960C0.field_28 = dword_800960C0.field_28 ? 0 : 1;
+        dword_800960C0.slice.x = dword_800960C0.rect[dword_800960C0.field_28].x;
+        dword_80096100 = 1;
+        dword_800960C0.slice.y = dword_800960C0.rect[dword_800960C0.field_28].y;
+    }
+    LoadImage((RECT*)&r, dword_800960C0.imgbuf[id]);
+}
+#endif
 INCLUDE_ASM(sub_80041424);
 INCLUDE_ASM(sub_800415D8);
 // Matched
@@ -217,8 +260,8 @@ void sub_80041724(MovieCtx* c)
         {
             c->field_34 = 1;
             c->field_28 = (c->field_28 == 0);
-            c->cur_x = c->rect[c->field_28].x;
-            c->cur_y = c->rect[c->field_28].y;
+            c->slice.x = c->rect[c->field_28].x;
+            c->slice.y = c->rect[c->field_28].y;
         }
     }
     c->field_34 = 0;
