@@ -1,4 +1,15 @@
 dword_800B6D00=0x800b6d00; // overlay header / data
+jpt_800B95A4=0x800b95a4; // jump table of sub_800BB38C
+dword_800B95CC=0x800b95cc; // data behind the jump table
+dword_800B9608=0x800b9608; // data behind the jump table
+jpt_800B9624=0x800b9624; // jump table of sub_800BCF74
+dword_800B965C=0x800b965c; // data behind the jump table
+jpt_800B969C=0x800b969c; // jump table of sub_800BD678
+dword_800B96C4=0x800b96c4; // data behind the jump table
+dword_800B96F0=0x800b96f0; // data behind the jump table
+jpt_800B9734=0x800b9734; // jump table of sub_800BEB60
+dword_800B9770=0x800b9770; // data behind the jump table
+jpt_800B9774=0x800b9774; // jump table of sub_800BEBC8
 sub_800B97B0=0x800b97b0;
 sub_800B9888=0x800b9888;
 sub_800B9920=0x800b9920;
