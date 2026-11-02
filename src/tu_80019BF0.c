@@ -485,7 +485,28 @@ void AddPrimsAll_8001B3C8(void)
         }
     }
 }
-INCLUDE_ASM(sub_8001B540);
+// Matched
+void sub_8001B540(void)
+{
+    if (unknownFlags_8008D678 & 8)
+    {
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+    }
+    else if (unknownFlags_8008D678 & 0x82)
+    {
+        int f = dword_800918B0;
+        if (f & 2)
+        {
+            sub_8001BC00();
+        }
+        else if (f & 1)
+        {
+            sub_8001BB28();
+        }
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+        unknownFlags_8008D678 &= ~0x80;
+    }
+}
 INCLUDE_ASM(Draw_8001B5EC);
 // Matched
 int sub_8001B6E8()
@@ -1421,7 +1442,41 @@ void sub_8001DC34(void* p)
     sub_8001DB98(p);
     sub_8001EA48(p);
 }
-INCLUDE_ASM(sub_8001DC60);
+// Matched
+int sub_8001DC60(char* p, int a1, int a2, int a3)
+{
+    unsigned int dist;
+    int x = *(int*)(p + 0x40);
+    int y = *(int*)(p + 0x4C);
+    int d;
+    int t;
+    dist = 0xFFF;
+    if (y < x)
+    {
+        d = x - y;
+    }
+    else
+    {
+        d = y - x;
+    }
+    if (sub_8003B740(p + 0x38, a1, &dist))
+    {
+        if (dist < d * d)
+        {
+            return 1;
+        }
+    }
+    t = d + 0x32;
+    if (dist < t * t)
+    {
+        if (sub_8001DFC8(p, a1, a3, 1))
+        {
+            return 1;
+        }
+    }
+    sub_8001DDFC(p, a1, a2);
+    return 0;
+}
 INCLUDE_ASM(sub_8001DD44);
 INCLUDE_ASM(sub_8001DDFC);
 INCLUDE_ASM(sub_8001DECC);
@@ -1520,12 +1575,28 @@ void sub_8001F354(void* a0)
 }
 #endif
 INCLUDE_ASM(sub_8001F354);
-#if 0
+// Matched
 void sub_8001F918(void* a0)
 {
+    char* p = a0;
+    switch (*(short*)(p + 0x10))
+    {
+    case 0:
+        break;
+    case 1:
+        sub_8002032C(*(short*)(p + 0x16), ((int*)*(int*)p)[1], *(short*)(p + 0x12));
+        *(unsigned short*)(p + 0x14) = *(unsigned short*)(p + 0x12);
+        *(short*)(p + 0x12) = -1;
+        *(short*)(p + 0x10) = 2;
+        break;
+    case 2:
+        if (sub_80024DC4((int*)*(int*)(p + 0x15C)))
+        {
+            *(short*)(p + 0x10) = 0;
+        }
+        break;
+    }
 }
-#endif
-INCLUDE_ASM(sub_8001F918);
 // Matched
 void sub_8001F9AC(void* p)
 {
