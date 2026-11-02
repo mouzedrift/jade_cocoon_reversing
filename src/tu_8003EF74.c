@@ -16,7 +16,12 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern void sub_8003F610(int* buf);
+typedef struct { unsigned short* tbl; int f4; int f8; } struct_8008685C;
+extern struct_8008685C dword_8008685C[];
+void sub_8003F58C(unsigned char* out, int n);
+int sub_8003FB60(unsigned short* s);
+unsigned char* sub_8003F748(int idx, unsigned char* s);
+void sub_8003F610(unsigned short* out, int n);
 extern void sub_8003E91C(int mode, int* buf, int a, int b);
 
 typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
@@ -75,8 +80,44 @@ void sub_8003F544(int a0, int a1, int a2)
 }
 #endif
 INCLUDE_ASM(sub_8003F544);
-INCLUDE_ASM(sub_8003F58C);
-INCLUDE_ASM(sub_8003F610);
+// Matched
+void sub_8003F58C(unsigned char* out, int n)
+{
+    int neg = 1;
+    if (n >= 0)
+    {
+        n = -n;
+        neg = 0;
+    }
+    do
+    {
+        *out++ = 0x82;
+        *out++ = -(n % 10) + 0x4F;
+        n /= 10;
+    } while (n);
+    if (neg)
+    {
+        *out++ = 0x81;
+        *out++ = 0x7C;
+    }
+    out[0] = 0;
+    out[1] = 0;
+}
+// Matched
+void sub_8003F610(unsigned short* out, int n)
+{
+    unsigned short buf[12];
+    unsigned short* start = out;
+    int len;
+    sub_8003F58C((unsigned char*)buf, n);
+    len = sub_8003FB60(buf);
+    do
+    {
+        *out++ = buf[--len];
+    } while (len);
+    *out = 0;
+    sub_8003F684(2, (int)start);
+}
 #if 0
 unsigned short* sub_8003F684(int a0, int a1)
 {
@@ -84,7 +125,52 @@ unsigned short* sub_8003F684(int a0, int a1)
 }
 #endif
 INCLUDE_ASM(sub_8003F684);
-INCLUDE_ASM(sub_8003F748);
+// Matched
+unsigned char* sub_8003F748(int idx, unsigned char* s)
+{
+    unsigned short* tbl = dword_8008685C[idx].tbl;
+    unsigned short* p = (unsigned short*)s;
+    if (s && *s)
+    {
+        do
+        {
+            if (*p < 0x2081)
+            {
+                *p = tbl[*p - 1];
+            }
+            p++;
+        } while (*(unsigned char*)p);
+    }
+    return s;
+}
+#if 0
+// Not matched: a0 (i) / a1 (p) moves before the loop swapped
+void sub_8003F7C8(void* src, unsigned char* out)
+{
+    unsigned short buf[12];
+    unsigned short* p;
+    int done = 0;
+    int i;
+    unsigned char c;
+    sub_800403E8((unsigned int*)buf, (unsigned int*)src, 0x16);
+    p = sub_8003F684(1, (int)sub_8003F748(2, (unsigned char*)buf));
+    for (i = 0; i < 10; i++)
+    {
+        c = 0;
+        if (!done)
+        {
+            c = *(unsigned char*)p;
+            if (c == 0)
+            {
+                done = 1;
+            }
+        }
+        p++;
+        out[i] = c;
+    }
+    out[10] = 0;
+}
+#endif
 INCLUDE_ASM(sub_8003F7C8);
 // Matched
 int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut)
@@ -102,6 +188,24 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
 
     return 0;
 }
+#if 0
+// Not matched: second byte swap masks into a new reg (andi $v1 vs $v0, 2 instrs)
+void sub_8003F89C(unsigned short* p)
+{
+    int i;
+    unsigned short v;
+    for (i = 0; i < 10; i++)
+    {
+        v = (*p >> 8) + ((*p & 0xFF) << 8);
+        if ((unsigned short)(v - 0x8281) < 26)
+        {
+            v += 0xFFDF;
+            *p = (v >> 8) + ((v & 0xFF) << 8);
+        }
+        p++;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8003F89C);
 // Matched
 void sub_8003F900(int idx, short val)
@@ -109,16 +213,116 @@ void sub_8003F900(int idx, short val)
     struct_2C* p = &dword_80095FB0[idx];
     p->field_2A = val;
 }
-INCLUDE_ASM(sub_8003F928);
+// Matched
+void sub_8003F928(int idx, int v)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    p->field_E = GetClut(p->field_20, p->field_22 + v);
+}
+// Matched
+void sub_8003F978(int idx, int c)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    p->field_4 = c;
+    p->field_5 = c;
+    p->field_6 = c;
+}
+// Matched
+void sub_8003F9A8(int idx, unsigned char* rgb)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    p->field_4 = rgb[0];
+    p->field_5 = rgb[1];
+    p->field_6 = rgb[2];
+}
 // Matched
 void sub_8003F9E8(int idx, int v)
 {
     struct_2C* p = &dword_80095FB0[idx];
     sub_80033048(p->field_14, v);
 }
-INCLUDE_ASM(sub_8003FA2C);
-INCLUDE_ASM(sub_8003FB60);
-INCLUDE_ASM(sub_8003FBD4);
+// Matched
+void sub_8003FA2C(int idx, int abe)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    SetSemiTrans(p->field_14, abe);
+}
+// Matched
+int sub_8003FA70(int idx, unsigned char* s)
+{
+    struct_2C* p = &dword_80095FB0[idx];
+    int w = 0;
+    int i = 0;
+    int c;
+    while ((c = s[i]) != 0)
+    {
+        c = c - 0x20 + p->field_1E;
+        if (p->field_24)
+        {
+            w += p->field_24[c];
+        }
+        else
+        {
+            w += p->field_10;
+        }
+        i++;
+    }
+    return w;
+}
+// Matched
+int sub_8003FAF0(unsigned char* s)
+{
+    int n = 0;
+    while (s[n])
+    {
+        n++;
+    }
+    return n;
+}
+// Matched
+int sub_8003FB24(unsigned char* s)
+{
+    int n = 0;
+    while (s[n])
+    {
+        n += 2;
+    }
+    return n / 2;
+}
+// Matched
+int sub_8003FB60(unsigned short* s)
+{
+    int n = 0;
+    while (*s)
+    {
+        s++;
+        n++;
+    }
+    return n;
+}
+// Matched
+void sub_8003FB8C(unsigned char* dst, unsigned char* src)
+{
+    int i = 0;
+    while (src[i])
+    {
+        dst[i] = src[i];
+        i++;
+    }
+    dst[i] = src[i];
+}
+// Matched
+void sub_8003FBD4(int idx)
+{
+    int n;
+    int i;
+    sub_8003F748(idx, playerName_8008BD48);
+    n = sub_80010548(3);
+    for (i = 0; i < n; i++)
+    {
+        sub_8003F748(idx, (unsigned char*)sub_800106F8(3, i));
+    }
+}
 // Matched
 void* malloc3_8003FC4C(unsigned int s)
 {

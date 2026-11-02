@@ -128,7 +128,30 @@ void sub_80043264(struct_obj_D* p, short* q)
 }
 INCLUDE_ASM(sub_800432EC);
 INCLUDE_ASM(sub_800433FC);
-INCLUDE_ASM(sub_800434C4);
+extern int sub_8005384C(u_char mode, DslLOC* pos, u_char com, DslCB func, int count); /* DsPacket */
+// Matched
+int sub_800434C4(int pos)
+{
+    DslLOC loc;
+    int mode = 0xC9;
+    int com = 0x1B;
+    int r;
+    DsIntToPos(pos, &loc);
+    while ((r = sub_8005384C(mode, &loc, com, 0, -1)) == 0)
+    {
+    }
+    return r;
+}
+// Matched
+int sub_80043524(void)
+{
+    if ((int)dword_80096118 >= 0)
+    {
+        return 0;
+    }
+    dword_8008B560[0x24 / 4][0] |= 1;
+    return 1;
+}
 // Matched
 void sub_80043564(short a0, short a1, short a2)
 {

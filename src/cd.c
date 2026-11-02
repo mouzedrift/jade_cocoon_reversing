@@ -17,6 +17,9 @@
 #include "data_decls.h"
 
 extern int dword_80086568;
+typedef struct { struct_node_C* node; int pad[6]; int field_1C; } struct_8008B544_24;
+typedef struct { int pad[9]; struct_8008B544_24* field_24; } struct_8008B544;
+extern struct_8008B544* dword_8008B544;
 extern void sub_8003BF18(struct_node_C* n);
 
 extern void sub_80070E30(int a, int* b);
@@ -129,7 +132,20 @@ int sub_8003B80C(int* a, int* b)
     int dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
-INCLUDE_ASM(sub_8003B860);
+// Matched
+int sub_8003B860(int* a, int* b)
+{
+    int dx = a[0] - b[0];
+    int dz = a[2] - b[2];
+    return dx * dx + dz * dz;
+}
+// Matched
+int sub_8003B898(int x1, int y1, int x2, int y2)
+{
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    return dx * dx + dy * dy;
+}
 // Matched
 int sub_8003B8BC(int x, int y)
 {
@@ -431,7 +447,29 @@ int sub_8003C060(int key)
     }
     return 2;
 }
-INCLUDE_ASM(sub_8003C0A4);
+// Matched
+int sub_8003C0A4(int a0)
+{
+    struct_8008B544_24* p = dword_8008B544->field_24;
+    struct_node_C* n;
+    if (dword_80086568 != a0)
+    {
+        if (a0 == 1)
+        {
+            n = p->node;
+            if (n == 0 || (p->field_1C == 8 && (n->field_C & 0x1000)))
+            {
+                dword_80086568 = a0;
+            }
+        }
+        else
+        {
+            dword_80086568 = 0;
+        }
+        return dword_80086568 == a0;
+    }
+    return 0;
+}
 extern void sub_8003C184(void);
 // Matched
 void sub_8003C128(int* a0, int* a1)
