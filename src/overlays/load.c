@@ -109,7 +109,8 @@ extern void sub_8002C06C(void* a, int b, int c);
 extern void sub_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
-    char pad0_LOAD[0x24];
+    char pad0_LOAD[0x20];
+    int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
     char pad2C_LOAD[0x28];
@@ -124,12 +125,25 @@ extern char byte_800B73A0[];
 extern char byte_800B7544[];
 typedef struct
 {
-    unsigned char pad0_LOAD[0x1C];
+    unsigned char pad0_LOAD[0xC];
+    unsigned char fC_LOAD;
+    unsigned char padD_LOAD[0xF];
     unsigned char f1C_LOAD;
     unsigned char pad1D_LOAD[0xF];
     unsigned char f2C_LOAD;
+    unsigned char pad2D_LOAD[0xF];
+    unsigned char f3C_LOAD;
+    unsigned char f3D_LOAD;
+    unsigned char pad3E_LOAD[0xE];
+    unsigned char f4C_LOAD;
 } Opts_LOAD;
 extern Opts_LOAD dword_800BDF4C;
+extern void sub_80031494(int a);
+extern void sub_800BADF4(void);
+extern int sub_800BAE4C(int n);
+extern int sub_800BAE2C(void);
+extern int sub_800BAE3C(void);
+extern void sub_800BAFB0(int a);
 typedef struct
 {
     char c_LOAD[6];
@@ -268,9 +282,78 @@ void sub_800B9220(LoadTask_LOAD* t)
     }
 }
 
+#if 0
+// Not matched: only a dead byte load (lbu $v1) of the options struct in the prologue is missing
+void sub_800B92C0(LoadTask_LOAD* t)
+{
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        sub_80031494(0x7E);
+        sub_800BADF4();
+        t->f24_LOAD = 0x12;
+    }
+    else if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        if (t->f54_LOAD & 0x24)
+        {
+            t->f28_LOAD = 5;
+        }
+        else
+        {
+            t->f24_LOAD = 0;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9360);
+void sub_800B9360(LoadTask_LOAD* t)
+{
+    switch (sub_800BAE68(dword_800BDF4C.f1C_LOAD))
+    {
+    case 0:
+    case 3:
+        sub_800BAFB0(dword_800BDF4C.f1C_LOAD);
+        sub_80031494(0x7E);
+        if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            if (sub_800BAE2C() || sub_800BAE3C())
+            {
+                t->f20_LOAD = 0;
+                t->f24_LOAD = 3;
+            }
+            else
+            {
+                t->f24_LOAD = 7;
+            }
+        }
+        else if (sub_800BAE3C())
+        {
+            t->f20_LOAD = 0;
+            t->f24_LOAD = 3;
+        }
+        else
+        {
+            t->f24_LOAD = 8;
+        }
+        break;
+    case 4:
+        if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            t->f24_LOAD = 2;
+        }
+        else
+        {
+            t->f24_LOAD = 0xB;
+        }
+        break;
+    case -1:
+        break;
+    default:
+        t->f24_LOAD = 6;
+        break;
+    }
+}
 
 void sub_800B9470(LoadTask_LOAD* t)
 {
@@ -296,9 +379,86 @@ void sub_800B9470(LoadTask_LOAD* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B952C);
+void sub_800B952C(LoadTask_LOAD* t)
+{
+    int n = dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD;
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.fC_LOAD == 1)
+        {
+            if (n < t->f20_LOAD - 1)
+            {
+                if (sub_800BAE4C(n))
+                {
+                    t->f24_LOAD = 4;
+                    sub_80031494(0x7E);
+                }
+                else
+                {
+                    sub_80031494(0x7C);
+                }
+            }
+            else
+            {
+                sub_80031494(0x7C);
+            }
+        }
+        else if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            if (n < t->f20_LOAD - 1)
+            {
+                if (!sub_800BAE4C(n) && sub_800BAE2C() <= 0)
+                {
+                    t->f24_LOAD = 9;
+                    sub_80031494(0x7C);
+                }
+                else
+                {
+                    t->f24_LOAD = 4;
+                    sub_80031494(0x7E);
+                }
+            }
+            else
+            {
+                sub_80031494(0x7C);
+            }
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9654);
+void sub_800B9654(LoadTask_LOAD* t)
+{
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 3;
+    }
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.f4C_LOAD == 0)
+        {
+            sub_80031494(0x7E);
+            if (dword_800BDF4C.fC_LOAD == 1)
+            {
+                sub_800BADF4();
+                t->f28_LOAD = 3;
+            }
+            else if (dword_800BDF4C.fC_LOAD == 0)
+            {
+                sub_800BADF4();
+                t->f28_LOAD = 2;
+            }
+        }
+        else
+        {
+            sub_80031494(0x7D);
+            t->f24_LOAD = 3;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B9724);
 
