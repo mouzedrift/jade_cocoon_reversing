@@ -1123,7 +1123,42 @@ void sub_800A459C(GameP4470_1* p)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A45F8);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A46FC);
+void sub_800A46FC(GameP4470_1* p)
+{
+    int r;
+    if (p->f2c)
+    {
+        p->f2c = sub_8001DD44(p->f8, p->f28, p->f2c, 0x20);
+    }
+    else
+    {
+        r = sub_8001DECC(p->f8, 0x190, 0);
+        p->f28 = r;
+        if (r == 3)
+        {
+            p->f28 = 2;
+            p->f2c = 0x745;
+        }
+        else if ((unsigned)(r - 1) < 2)
+        {
+            p->f2c = 0x1e1;
+        }
+        else
+        {
+            r = *(int*)((char*)p->f8 + 0x80);
+            p->f28 = r;
+            if (r == 3)
+            {
+                p->f28 = 2;
+                p->f2c = 0x745;
+            }
+            else if ((unsigned)(r - 1) < 2)
+            {
+                p->f2c = 0x100;
+            }
+        }
+    }
+}
 
 #if 0
 // Not matched
@@ -3538,16 +3573,20 @@ int sub_800AC3E4()
     return word_8008BDA4;
 }
 
-#if 0
 int sub_800AC3F4()
 {
     G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    int r;
     if (s->f830)
-        return sub_8001D060(s->b7E5) + dword_800B11B8[s->s834];
-    return dword_800B116C[s->s834];
+    {
+        r = ((int (*)(int))sub_8001D060)(s->b7E5) + dword_800B11B8[s->s834];
+    }
+    else
+    {
+        r = dword_800B116C[s->s834];
+    }
+    return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AC3F4);
 
 int sub_800AC464()
 {
