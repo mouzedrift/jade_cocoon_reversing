@@ -1188,27 +1188,22 @@ void sub_80011AF8(struct_obj_D* p, int* q)
         r[0] = -1;
     }
 }
-#if 0
-// Not matched (close)
-int sub_80011B24(int a0)
+// Matched
+void sub_80011B24(int a0)
 {
     int* p = dword_8008D464[0x24 / 4];
-    if (a0 == 0x29)
+    switch (a0)
     {
-        return 1000;
-        *(p + 1) = (int)1000;
-        p[0] = (int)0;
+    case 0x29:
+        p[1] = 1000;
+        p[0] = 0;
+        break;
+    case 0x2A:
+        p[1] = 1000;
+        p[0] = 1;
+        break;
     }
-    if (0x2A == a0)
-    {
-        *(p + 1) = (int)1000;
-        return 1;
-        *(0 + p) = 1;
-    }
-    return 1000;
 }
-#endif
-INCLUDE_ASM(sub_80011B24);
 // Matched
 int sub_80011B6C(void)
 {
@@ -1294,17 +1289,17 @@ void sub_80011CF4(struct_pair_obj* p)
     p->field_8 = v;
 }
 #if 0
-// Not matched
+// Not matched: register allocation only (p in $a1 instead of $v1)
 int sub_80011D28(int a0)
 {
-    struct_10* p = (struct_10*)word_80079374;
-    while (p->field_0 != 0)
+    unsigned short* p = word_80079374;
+    while (p[0] != 0)
     {
-        if (a0 < p->field_0)
+        if (a0 >= p[0])
         {
-            return p->field_2;
+            return p[1];
         }
-        p++;
+        p += 2;
     }
     return 9;
 }

@@ -117,23 +117,22 @@ Minion* sub_80010598(int id, int nth)
     }
     return result;
 }
-#if 0
-// Not matched: only the order of the two constant loads (4 / 0xE) differs
+// Matched
 void sub_80010600(void)
 {
     int i;
+    int v = 4;
 
     for (i = 14; i >= 0; i--)
     {
-        saveData_8008B570.minions[i].id = 4;
+        saveData_8008B570.minions[i].id = v;
     }
+    v = 0xD3;
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].id = 0xD3;
+        saveData_8008B570.items[i].id = v;
     }
 }
-#endif
-INCLUDE_ASM(sub_80010600);
 // Matched
 int sub_80010650(Item* pItem)
 {

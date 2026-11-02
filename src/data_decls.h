@@ -21,5 +21,6 @@ extern char name[];
 
 extern char aAssertionFaile_3[];
 extern char aEffectC[];
+extern unsigned char dword_8007C2E4[];
 
 #endif

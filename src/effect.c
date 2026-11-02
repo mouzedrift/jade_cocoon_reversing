@@ -89,8 +89,7 @@ int sub_80014164(int x)
 }
 INCLUDE_ASM(sub_8001419C);
 INCLUDE_ASM(sub_80014200);
-#if 0
-// Not matched
+// Matched
 int sub_800142B8(unsigned char* p)
 {
     int v = p[8] * 200 / (p[8] + p[6]);
@@ -107,8 +106,6 @@ int sub_800142B8(unsigned char* p)
     }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_800142B8);
 #if 0
 // Not matched
 int sub_80014308(unsigned char* p)
@@ -147,17 +144,18 @@ int sub_80014390(int arg0)
 #endif
 INCLUDE_ASM(sub_80014390);
 #if 0
-// Not matched
-int sub_80014444(unsigned int a0)
+// Not matched: register allocation (masked arg kept in $a1 vs raw arg)
+int sub_80014444(int a0)
 {
+    unsigned char c = a0;
     int r = 0;
-    if ((a0 & 0xFF) >= 8)
+    if (c >= 8)
     {
-        r = sub_800A11D8((a0 - 8) & 0xFF);
+        r = sub_800A11D8((unsigned char)(a0 - 8));
     }
-    else if ((a0 & 0xFF) != 0)
+    else if (c != 0)
     {
-        r = (int)sub_80010598(3, (a0 - 1) & 0xFF);
+        r = (int)sub_80010598(3, (unsigned char)(a0 - 1));
     }
     return r;
 }
