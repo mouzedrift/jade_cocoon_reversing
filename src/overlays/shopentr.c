@@ -76,6 +76,11 @@ extern void sub_800B7594(CtxShopentr* c);
 extern void sub_800B75DC(CtxShopentr* c);
 extern void sub_800B7684(CtxShopentr* c);
 extern void sub_800B7858(CtxShopentr* c);
+extern void sub_800B7A90(RectShopentr* p, short a1, short a2);
+extern void sub_800B7B64(RectShopentr* p, short a1, short a2);
+extern void sub_800B7C08(RectShopentr* p);
+extern char str_800B6F04[];
+extern char str_800B6F08[];
 
 INCLUDE_OVERLAY_ASM(shopentr, dword_800B6D00);
 
@@ -227,10 +232,64 @@ INCLUDE_OVERLAY_ASM(shopentr, sub_800B7684);
 
 INCLUDE_OVERLAY_ASM(shopentr, sub_800B7858);
 
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7A90);
+// Matched
+void sub_800B7A90(RectShopentr* p, short a1, short a2)
+{
+    RectShopentr r;
+    unsigned short l18[2];
+    unsigned short l20[2];
+    unsigned short l28[2];
+    l18[0] = p->x + 0x12;
+    l18[1] = p->y + 2;
+    sub_8003F264(l18, a1, 14);
+    l20[0] = p->x + 0x12;
+    l20[1] = p->y + 2;
+    sub_8003E91C(1, str_800B6F04, l20, 14);
+    l28[0] = p->x + 0x2a;
+    l28[1] = p->y + 2;
+    sub_8003F264(l28, a2, 14);
+    r.x = p->x;
+    r.y = p->y;
+    r.w = 0x2c;
+    r.h = 0xc;
+}
 
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7B64);
+// Matched
+void sub_800B7B64(RectShopentr* p, short a1, short a2)
+{
+    unsigned short l10[2];
+    unsigned short l18[2];
+    unsigned short l20[2];
+    l10[0] = p->x;
+    l10[1] = p->y;
+    sub_8003EF74(l10, a1, 14);
+    l18[0] = p->x + 0x18;
+    l18[1] = 0x3c;
+    sub_8003E91C(2, str_800B6F04, l18, 14);
+    l20[0] = p->x + 0x24;
+    l20[1] = p->y;
+    sub_8003EF74(l20, a2, 14);
+}
 
-INCLUDE_OVERLAY_ASM(shopentr, sub_800B7C08);
+// Matched
+void sub_800B7C08(RectShopentr* p)
+{
+    unsigned short l10[2];
+    unsigned short l18[2];
+    unsigned short l20[2];
+    unsigned short l28[2];
+    l10[0] = p->x + 0x10;
+    l10[1] = p->y;
+    sub_8003F264(l10, 0, 14);
+    l18[0] = p->x + 0x10;
+    l18[1] = p->y;
+    sub_8003E91C(1, str_800B6F08, l18, 14);
+    l20[0] = p->x + 0x20;
+    l20[1] = p->y;
+    sub_8003F264(l20, 0, 14);
+    l28[0] = p->x + 0x28;
+    l28[1] = p->y;
+    sub_8003F264(l28, 0, 14);
+}
 
 INCLUDE_OVERLAY_ASM(shopentr, dword_800B7CC0);
