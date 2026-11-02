@@ -1684,8 +1684,6 @@ int sub_800A66A4(int* p, int* x, unsigned short* q)
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800A66A4);
 
-#if 0
-// Not matched
 int sub_800A6738(unsigned int a)
 {
     dword_800AEBE8 = 0x8000;
@@ -1696,15 +1694,14 @@ int sub_800A6738(unsigned int a)
         t = sub_800A55B0(1);
         if (a < t->count)
         {
-            GameTabEnt_1* e = t->e;
-            return e[a].v;
+            int off = a * 8;
+            off += 4;
+            return *(int*)((char*)t + off);
         }
         return 0;
     }
     return a;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A6738);
 
 // Matched
 int sub_800A67B4(unsigned int* p)
@@ -1851,7 +1848,26 @@ end:
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800A6B00);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6C00);
+void sub_800A6C00(GameTask_1* t, int* q)
+{
+    GameLst_1* l0 = dword_800B0D74[q[0]];
+    GameLst_1* l;
+    int one = 1;
+    if (l0->p0 != 0)
+    {
+        l = l0;
+        do
+        {
+            if (l->f4 & (one << q[2]))
+                sub_800A74F0((GameNode_1*)*l->p0);
+            l++;
+        } while (l->p0 != 0);
+    }
+    if (q[0] == 11)
+        q[0] = q[1];
+    q[1] = q[0];
+    q[0] = q[2];
+}
 
 // Matched
 void sub_800A6CCC(GameTask_1* t, GameQ_1* q)
