@@ -81,6 +81,13 @@ extern void sub_8002C06C();
 extern unsigned short uiColor_8008B590;
 extern void sub_800BFF84();
 extern void sub_80027478();
+extern int sub_800C0990();
+typedef struct MenuDlg
+{
+    int f0, f4, f8, fC, f10, f14;
+} MenuDlg;
+extern MenuDlg name_800BBB7C;
+extern void sub_8002A5A4();
 extern int name_800C1998[];
 extern void sub_800BE25C();
 extern void sub_800BF8B4();
@@ -636,11 +643,55 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C05E0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C06E8);
 
+extern char name_800C2660[];
+// near miss: c and s swap their saved registers
+#if 0
+void sub_800C07F0(MenuCtx* c)
+{
+    int s;
+    MenuDlg d;
+    d = name_800BBB7C;
+    s = sub_800C0990(c, 1);
+    d.f4 = sub_8002C64C();
+    d.f8 = (short)s;
+    d.f10 = (int)name_800C2660;
+    d.f0 &= ~7;
+    if (c->sel_2 == 6)
+        d.f0 |= 2;
+    else
+        d.f0 |= 4;
+    d.f8 = (short)s;
+    d.fC = c->arr_2A[0];
+    sub_8002A5A4(&d);
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C07F0);
 
+extern char name_800C2758[];
+// near miss: c and s swap their saved registers
+#if 0
+void sub_800C08C0(MenuCtx* c)
+{
+    int s;
+    MenuDlg d;
+    d = name_800BBB7C;
+    s = sub_800C0990(c, 0x80);
+    d.f4 = sub_8002C64C();
+    d.f8 = (short)s;
+    d.f10 = (int)name_800C2758;
+    d.f0 &= ~7;
+    if (c->sel_2 == 7)
+        d.f0 |= 2;
+    else
+        d.f0 |= 4;
+    d.f8 = (short)s;
+    d.fC = c->arr_2A[2];
+    sub_8002A5A4(&d);
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C08C0);
 
-int sub_800C0990(MenuObj* o, int m)
+int sub_800C0990(MenuCtx* o, int m)
 {
     if (m & o->f14)
         return 8;
@@ -649,6 +700,32 @@ int sub_800C0990(MenuObj* o, int m)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C09B0);
 
+
+extern int sub_800A5E80();
+extern int sub_80034140();
+extern int sub_800C1000();
+// near miss: compiler turns the tail into a boolean (sltu)
+#if 0
+int sub_800C0C3C(void* a)
+{
+    int r;
+    if (a)
+    {
+        if (sub_8001D36C((int)a))
+            return 1;
+        r = sub_800A5E80(a);
+    }
+    else
+    {
+        r = sub_80034140();
+    }
+    if (r == 0)
+        return 0;
+    if (sub_800C1000())
+        return 1;
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C0CA4);
