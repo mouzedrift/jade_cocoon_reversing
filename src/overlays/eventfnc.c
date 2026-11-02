@@ -1275,7 +1275,21 @@ void sub_800BCA18(unsigned int* a, unsigned int* b)
 #endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCA18);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCA68);
+extern int dword_800AEBCC[2];
+extern void sub_80026DE8(int* a, int b, void* c);
+extern void sub_80026D78(int* a, int b, void* c);
+extern void sub_80026E74(int a, int b, void* c);
+void sub_800BCA68(int a)
+{
+    if (dword_800AEBCC[1] != 0)
+    {
+        sub_80026DE8(&dword_800AEBCC[1], dword_800AEBCC[0], dword_80091C10);
+        dword_800AEBCC[0] = 0;
+    }
+    dword_800AEBCC[0] = sub_80026D6C((int*)a);
+    sub_80026D78(&dword_800AEBCC[1], dword_800AEBCC[0], dword_80091C10);
+    sub_80026E74(dword_800AEBCC[1], a, dword_80091C10);
+}
 
 typedef struct TaskEventfnc
 {
