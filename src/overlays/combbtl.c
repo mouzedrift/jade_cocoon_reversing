@@ -67,6 +67,19 @@ typedef struct CombBtlPair
 
 extern short word_800A82D4[][2];
 extern void sub_800A7694();
+typedef struct CombBtlA24
+{
+    int w[6];
+} CombBtlA24;
+
+typedef struct CombBtlB16
+{
+    char c[16];
+} CombBtlB16;
+
+extern CombBtlA24 dword_800A4AD4;
+extern CombBtlB16 dword_800A4AEC;
+extern void sub_800A0BA8(int, void*, void*);
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -322,7 +335,12 @@ void sub_800A7478()
     sub_80043B40((int*)dword_8008D628);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A74A0);
+void sub_800A74A0(int i)
+{
+    CombBtlA24 a = dword_800A4AD4;
+    CombBtlB16 b = dword_800A4AEC;
+    sub_800A0BA8(i, (char*)&a + i * 12, (char*)&b + i * 8);
+}
 
 void sub_800A7560(int a)
 {
