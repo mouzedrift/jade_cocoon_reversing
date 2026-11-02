@@ -673,8 +673,7 @@ void sub_800BBFD4(int a)
 #endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBFD4);
 
-#if 0
-// constants 0x77/0x5e get hoisted into regs; original reloads
+// Matched
 void sub_800BC0AC(WpnObj_wpnshop* o, int k)
 {
     WpnRect_wpnshop r;
@@ -683,7 +682,14 @@ void sub_800BC0AC(WpnObj_wpnshop* o, int k)
     r.y = 0x5E;
     r.w = 0x45;
     r.h = 0x10;
-    b.c_A = o->f_34 == k ? 1 : 2;
+    if (o->f_34 == k)
+    {
+        b.c_A = 1;
+    }
+    else
+    {
+        b.c_A = 2;
+    }
     b.c_B = 1;
     b.x_0 = 0x7B;
     b.col_8 = uiColor_8008B590;
@@ -696,8 +702,7 @@ void sub_800BC0AC(WpnObj_wpnshop* o, int k)
     b.y_2 = 0x5E;
     sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC0AC);
+
 
 // Matched
 void sub_800BC194(WpnObj_wpnshop* o)
