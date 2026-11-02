@@ -259,7 +259,19 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A5544);
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5638);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A58E8);
+void sub_800A58E8(int i)
+{
+    CombBtlUnit* u;
+    do
+    {
+        dword_800A4078[i]++;
+        if (dword_800A4078[i] >= 3)
+        {
+            dword_800A4078[i] = 0;
+        }
+        u = &dword_800A3AA0[i][dword_800A4078[i]];
+    } while (sub_800A1934(u) || sub_800A1958(u));
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A599C);
 
