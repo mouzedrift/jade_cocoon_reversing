@@ -151,7 +151,7 @@ int sub_80043524(void)
     {
         return 0;
     }
-    p = dword_8008D4A0[0x24 / 4];
+    p = dword_8008B560[0x24 / 4];
     *p |= 1;
     return 1;
 }
