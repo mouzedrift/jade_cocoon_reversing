@@ -77,7 +77,7 @@ def generate_ninja():
             "compile4.3": ("$cc1psx43 -quiet -G0 -O2 $in -o $out", "Compile (psyq 4.3) $in -> $out"),
             "compile4.6": ("$cc1psx46 -quiet -G0 -O2 $in -o $out", "Compile (psyq 4.6) $in -> $out"),
             "compile4.6n": ("$cc1psx46 -quiet -G0 -O2 -mno-check-zero-division $in -o $out", "Compile (psyq 4.6, no zero check) $in -> $out"),
-            "assemble": ("$aspsx -G0 -q $in -o $out", "Assemble $in -> $out"),
+            "assemble": ("$aspsx -G0 -q -0 $in -o $out", "Assemble $in -> $out"),
             "link": (f"$psylink {pysq_lib} /c /n 4000 /q /m @{link_path},{cpe_path},{sym_path},{map_path}", "Linking $out"),
             "convert_cpe_to_exe": ("$cpe2exe -CA $in", "$in -> $out")
         }
