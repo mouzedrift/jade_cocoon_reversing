@@ -36,6 +36,16 @@ extern int name_8007DC74;
 extern int sub_80010850(void* p);
 extern int sub_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
+extern void sub_800BBB54();
+extern void sub_800BF704();
+extern int ret_800BF520();
+extern int sub_8001AB94();
+extern void sub_8001AAF4();
+extern void sub_8001AB1C(int a);
+extern void PlaySfx_80031494(int a);
+extern void sub_800BF474();
+extern void sub_800BF4B8();
+extern int name_8008D670;
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -198,6 +208,30 @@ unsigned char sub_800BA46C(unsigned char a, unsigned char b)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
+#if 0 // near miss: pointer induction var
+void sub_800BA650(unsigned char* d)
+{
+    int i;
+    int v;
+    unsigned char* p;
+    for (i = 0, p = d; i < 6; i++, p = d + i)
+    {
+        v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
+        if (v < 0)
+        {
+            v = 0;
+        }
+        else if (v > 100)
+        {
+            v = 100;
+        }
+        p[0xB0] = v;
+    }
+    for (i = 5; i >= 0; i--)
+    {
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA650);
 
 void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
@@ -255,7 +289,15 @@ int sub_800BAE80(ShopUnitShop* p)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BAEDC);
+void sub_800BAEDC(unsigned int* a, unsigned int* b)
+{
+    unsigned int t1[0x3E];
+    unsigned int t2[0x3E];
+    sub_800403E8(t1, a, 0xF8);
+    sub_800403E8(t2, b, 0xF8);
+    sub_800403E8(a, t2, 0xF8);
+    sub_800403E8(b, t1, 0xF8);
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BAF54);
 
@@ -301,7 +343,20 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BB828);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB8C4);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BBA3C);
+extern unsigned short word_8009194C;
+void sub_800BBA3C(char* u)
+{
+    if (*(short*)(u + 0x98) < 0x96)
+    {
+        *(short*)(u + 0x98) += 1;
+    }
+    if (word_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
+    {
+        sub_800BBB54(u, 0);
+        *(int*)(u + 0x18) = 0;
+        *(short*)(u + 0x98) = 0;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BBAAC);
 
@@ -346,7 +401,18 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BDD74);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BDE44);
+extern void sub_800BDEA8();
+void sub_800BDE44(ShopTaskShop* t, int a)
+{
+    sub_8002BE10();
+    sub_800BC380(a);
+    if (sub_8001AB94())
+    {
+        sub_8001AAF4();
+        sub_8001AB1C(0x20);
+        t->next_8 = sub_800BDEA8;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BDEA8);
 
@@ -354,15 +420,52 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BE07C);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BE128);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE210);
+extern void sub_800BE264();
+void sub_800BE210(ShopTaskShop* t, int a)
+{
+    if (dword_8008B4E8)
+    {
+        sub_8002BE10();
+        sub_800BC380(a);
+        t->next_8 = sub_800BE264;
+    }
+}
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE264);
+extern void sub_800BB444();
+void sub_800BE264(ShopTaskShop* t, int a)
+{
+    sub_8002BE10();
+    sub_800BC380(a);
+    sub_8001C19C(3, 0x20);
+    t->next_8 = sub_800BB444;
+}
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE2B4);
+extern void sub_800BE4D0();
+void sub_800BE2B4(int a)
+{
+    char* g = (char*)name_8008D670 + 0x10;
+    PlaySfx_80031494(0x7E);
+    sub_800BF474();
+    unknownFlags_8008D678 |= 0x10000;
+    unknownFlags_8008D678 |= 0x4000000;
+    sub_800BF4B8(a);
+    *(void (**)())(g + 8) = sub_800BE4D0;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BE334);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE4D0);
+extern void sub_800BE334();
+void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
+{
+    sub_8002BE10();
+    sub_800BC380(a);
+    if (ret_800BF520() == 1)
+    {
+        sub_800BBB54(a, 2);
+        sub_800BF704(*(short*)((char*)a + 0x96));
+        t->next_8 = sub_800BE334;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BE53C);
 
