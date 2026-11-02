@@ -142,5 +142,67 @@ void sub_80029CB4(unsigned short* d, unsigned short* s)
     *d |= s[2] << 10;
 }
 INCLUDE_ASM(sub_80029D00);
-INCLUDE_ASM(sub_80029EA8);
+// Matched
+int sub_80029EA8(short* in, short* out)
+{
+    int idx;
+    int min;
+    int dr, dg, db;
+    idx = 0;
+    out[2] = in[2];
+    if (out[2] < in[0])
+    {
+        out[2] = in[0];
+        idx = 1;
+    }
+    if (in[1] > out[2])
+    {
+        out[2] = in[1];
+        idx = 2;
+    }
+    min = in[2];
+    if (in[0] < min)
+    {
+        min = in[0];
+    }
+    if (in[1] < min)
+    {
+        min = in[1];
+    }
+    if (out[2] == 0)
+    {
+        out[1] = 0;
+    }
+    else
+    {
+        out[1] = ((out[2] - min) * 31) / out[2];
+    }
+    if (out[1] == 0)
+    {
+        out[0] = -1;
+        return 0;
+    }
+    db = out[2] - in[2];
+    dr = out[2] - in[0];
+    min = out[2] - min;
+    dg = out[2] - in[1];
+    switch (idx)
+    {
+    case 0:
+        out[0] = ((dg - dr) * 32) / min + 0x80;
+        break;
+    case 1:
+        out[0] = ((db - dg) * 32) / min;
+        break;
+    case 2:
+        out[0] = ((dr - db) * 32) / min + 0x40;
+        break;
+    }
+    if (out[0] < 0)
+    {
+        out[0] += 0xC0;
+    }
+    out[3] = in[3];
+    return 1;
+}
 INCLUDE_ASM(sub_8002A040);
