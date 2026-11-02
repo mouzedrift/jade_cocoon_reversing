@@ -117,7 +117,7 @@ extern void sub_800A616C();
 extern void sub_800A5000();
 extern void sub_80039FA4(int);
 extern void sub_800A0A28();
-extern void sub_800300E0(int, int);
+extern int sub_800300E0(int, int);
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -189,7 +189,81 @@ void sub_800A4CFC()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A4D48);
+extern int sub_800303E8();
+extern int sub_80030688();
+extern int sub_800BC8E8();
+extern void sub_800BC878();
+extern void sub_80037720();
+extern void sub_80037748();
+extern void sub_8001C19C();
+extern void sub_8002BF74();
+extern int dword_8008B4E8;
+extern int subInt_800378F8();
+extern void sub_800A7290();
+extern void sub_800A7420();
+extern void sub_800A4EC8();
+
+void sub_800A4D48(CombBtlTask* t, int a)
+{
+    switch (dword_800A84B8)
+    {
+    case 0:
+        if (!sub_800303E8())
+        {
+            break;
+        }
+        dword_800A84B8 = 1;
+    case 1:
+        if (!sub_80030688())
+        {
+            break;
+        }
+        sub_800315F4();
+        dword_800A84B8 = 2;
+    case 2:
+        if (!sub_800300E0(0x99, 1))
+        {
+            break;
+        }
+        dword_800A84B8 = 3;
+    case 3:
+        sub_800BC878();
+        dword_800A84B8 = 4;
+    case 4:
+        if (!sub_800BC8E8())
+        {
+            break;
+        }
+        dword_800A84B8 = 5;
+    case 5:
+        sub_800A7290();
+        sub_800A7420();
+        sub_80037720();
+        sub_80037748();
+        dword_800A84B8 = 9;
+        break;
+    case 6:
+        sub_8001C19C(3, 0x20);
+        dword_800A84B8 = 7;
+    case 7:
+        sub_8002BF74();
+        dword_800A84B8 = 8;
+    case 8:
+        if (!dword_8008B4E8)
+        {
+            break;
+        }
+        dword_800A84B8 = 9;
+    case 9:
+        if (subInt_800378F8() != 4)
+        {
+            t->next_8 = sub_800A4EC8;
+            t->next_8(t, a);
+        }
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A54);
 
 extern void sub_800A5638();
 
