@@ -200,6 +200,23 @@ extern void sub_800AD9EC(int a, int b);
 extern void sub_800BBDD0();
 extern void sub_800BB664();
 extern void sub_800BB30C();
+extern int sub_8003D380(int a);
+extern int sub_8003D41C(int a);
+extern unsigned short name_8009194C;
+extern void sub_800BD1A8();
+extern void sub_800BD278();
+extern void sub_800BD378();
+extern void sub_800BD9A8();
+extern void sub_800BDAB4();
+extern void sub_800BD928();
+extern void sub_800BD760();
+extern void sub_800BD444();
+extern void sub_800BD61C();
+extern void sub_800BD6A4();
+
+extern unsigned short name_800BE818[];
+extern unsigned short name_800BE840[];
+extern int sub_800AD308(int a);
 extern void sub_800BB298();
 extern void sub_80027478(int a, int b);
 extern void sub_800A7BF0(int a);
@@ -370,9 +387,203 @@ void sub_800BB298(WpnTask_wpnshop* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB30C);
+void sub_800BB30C(WpnObj_wpnshop* o)
+{
+    int r;
+    int a;
+    short i;
+    int old;
+    int m;
+    if (o->f_2 != -1)
+    {
+        o->f_8 = 0;
+        o->f_34 = name_800BE818[o->f_2];
+        o->f_28[0] = name_800BE580[o->f_34].p[0];
+        o->f_28[1] = name_800BE580[o->f_34].p[1];
+        o->f_28[2] = name_800BE580[o->f_34].p[2];
+        o->f_28[3] = name_800BE580[o->f_34].p[3];
+        switch (o->f_2)
+        {
+        case 3:
+            r = sub_800AD308(0);
+            if (r < 3)
+                r = 3;
+            o->f_28[2] = r + 1;
+            break;
+        case 5:
+            r = sub_800AD308(o->f_10 + 1);
+            if (r < 3)
+                r = 3;
+            o->f_28[2] = r + 1;
+            break;
+        }
+        o->f_3A = name_800BE840[o->f_2];
+        switch (o->f_2)
+        {
+        case 0:
+        case 1:
+            o->f_30 = (unsigned short)o->f_12;
+            o->f_32 = 0;
+            o->f_10 = 0;
+            break;
+        case 2:
+        case 3:
+            o->f_30 = (unsigned short)o->f_36;
+            o->f_32 = (unsigned short)o->f_38;
+            if (o->f_12 == 0)
+                o->f_28[2] = o->f_26;
+            break;
+        case 4:
+        case 5:
+            o->f_30 = (unsigned short)o->f_36;
+            o->f_32 = (unsigned short)o->f_38;
+            if (o->f_12 == 0)
+                o->f_28[2] = o->f_20[o->f_10];
+            break;
+        case 6:
+        case 7:
+            o->f_30 = (unsigned short)o->f_10;
+            o->f_32 = 0;
+            o->f_36 = 0;
+            o->f_38 = 0;
+            break;
+        case 8:
+        case 9:
+            o->f_30 = (unsigned short)o->f_30;
+            o->f_36 = o->f_30;
+            o->f_38 = o->f_32;
+            o->f_18 = 1;
+            if (o->f_12 == 1)
+                o->f_8 |= 0x800;
+            else if (o->f_12 == 0)
+                o->f_8 |= 0x400;
+            break;
+        case 10:
+        case 11:
+            o->f_36 = o->f_30;
+            o->f_38 = o->f_32;
+            o->f_18 = 1;
+            if (o->f_12 == 1)
+                o->f_8 |= 0x20;
+            else if (o->f_12 == 0)
+                o->f_8 |= 0x10;
+            break;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+            o->f_30 = 1;
+            o->f_32 = 0;
+            break;
+        case 17:
+        case 18:
+            o->f_30 = 0;
+            o->f_32 = 0;
+            break;
+        }
+        o->f_48 = 0;
+        old = o->f_C;
+        o->f_8 |= name_800BE7CC[o->f_2];
+        o->f_C = 0;
+        for (i = 0; i < 29; i++)
+        {
+            m = 1 << i;
+            if ((old & m) && (o->f_8 & m))
+                o->f_C |= m;
+        }
+        o->f_0 = o->f_2;
+        o->f_2 = -1;
+    }
+}
+INCLUDE_OVERLAY_ASM(wpnshop, dword_800BADA0);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB664);
+void sub_800BB664(WpnObj_wpnshop* o)
+{
+    if (o->f_48 == 8 && !(o->f_4 & 1))
+    {
+        if (sub_8003D380(0))
+        {
+            o->f_40 = 1;
+        }
+        else if (sub_8003D41C(0))
+        {
+            o->f_44 = 1;
+        }
+    }
+    if (o->f_4 & 1)
+    {
+        sub_800BBE54(o);
+        if (o->f_50 < 150)
+        {
+            o->f_50++;
+        }
+        if (name_8009194C || o->f_50 >= 150)
+        {
+            o->f_3A = name_800BE840[o->f_0];
+            o->f_4 &= ~1;
+            o->f_4E = 0;
+            o->f_3E = 0;
+            o->f_50 = 0;
+        }
+    }
+    else
+    {
+        switch (o->f_0)
+        {
+        case 0:
+        case 1:
+            sub_800BD1A8(o);
+            break;
+        case 2:
+            sub_800BD278(o);
+            break;
+        case 3:
+            sub_800BD378(o);
+            break;
+        case 4:
+            sub_800BD9A8(o);
+            break;
+        case 5:
+            sub_800BDAB4(o);
+            break;
+        case 6:
+        case 7:
+            sub_800BD928(o);
+            break;
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            sub_800BD760(o);
+            break;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            sub_800BD444(o);
+            break;
+        case 16:
+            sub_800BD61C(o);
+            break;
+        case 17:
+        case 18:
+            sub_800BD6A4(o);
+            break;
+        }
+        if (o->f_40)
+        {
+            o->f_40 = 0;
+        }
+        if (o->f_44)
+        {
+            o->f_44 = 0;
+        }
+    }
+    sub_800BB950(o);
+    sub_800BCF80(o);
+}
+INCLUDE_OVERLAY_ASM(wpnshop, dword_800BADF0);
 
 // Matched
 void sub_800BB868(WpnObj_wpnshop* o, WpnRect_wpnshop* r, int a2, int a3, short idx)
@@ -923,7 +1134,51 @@ void sub_800BCF80(unsigned short* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCFCC);
+void sub_800BCFCC(WpnObj_wpnshop* o)
+{
+    int v = 0;
+    WpnRect_wpnshop r;
+    WpnBox_wpnshop b;
+    if (o->f_14 != 0xFF)
+    {
+        switch (o->f_34)
+        {
+        case 17:
+        case 19:
+            v = GETINT_8001CE54(o->f_14);
+            break;
+        case 16:
+        case 18:
+            v = GETINT_8001CE54(o->f_14) * 3 / 4;
+            break;
+        case 13:
+        case 15:
+            v = sub_8001D1F8(o->f_14, o->f_10);
+            break;
+        case 12:
+        case 14:
+            v = sub_8001D1F8(o->f_14, o->f_10) * 3 / 4;
+            break;
+        }
+        r.x = 0xBD;
+        r.y = 0x5E;
+        r.w = 0x79;
+        r.h = 0x10;
+        b.c_B = 1;
+        b.x_0 = 0xC1;
+        b.col_8 = uiColor_8008B590;
+        b.c_A = 0;
+        b.y_2 = 0x60;
+        sub_8002C06C(&b, 0xCE, 0xE);
+        b.x_0 = 0x11D;
+        b.y_2 = 0x64;
+        sub_8002C414(&b, v * o->f_18, 0xE);
+        b.x_0 = 0x11E;
+        b.y_2 = 0x62;
+        sub_8002C06C(&b, 0xEA, 0xE);
+        sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    }
+}
 
 // Matched
 void sub_800BD174(WpnObj_wpnshop* o)
