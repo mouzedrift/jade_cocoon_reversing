@@ -454,6 +454,11 @@ extern void sub_8004EDB8(void);
 extern int sub_80012204(int a, int b, int c, int d);
 extern double sub_80012358(int n, int x);
 extern int sub_8001247C(double x);
+extern void sub_80024ADC(void* a0, int a1, int a2);
+extern void sub_80025200(int a0, int a1, int a2, int a3, int a4);
+extern int sub_80024DC4(int* p);
+extern void sub_800255F0(int a0, int a1, int a2);
+extern void sub_800256B8(int a0, int a1);
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

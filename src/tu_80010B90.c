@@ -1161,8 +1161,67 @@ INCLUDE_DATA(dword_80096628);
 INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
+#if 0
+// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
+int sub_80010B90(int* p)
+{
+    int i;
+    sub_80024ADC(p, p[0x34 / 4], 1);
+    for (i = 0; i < 3; i++)
+    {
+        if (i == p[0x30 / 4])
+        {
+            sub_80025200(p[0], p[2 + i], -1, 1, 0);
+        }
+        else
+        {
+            sub_80025200(p[0], p[2 + i], -1, 0, 0);
+        }
+    }
+    p[0x38 / 4] = 4;
+    p[0x3C / 4] = 2;
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_80010B90);
-INCLUDE_ASM(sub_80010C30);
+// Matched
+int sub_80010C30(struct_state_obj* p)
+{
+    int i;
+    for (i = 0; i < p->field_0[0]; i++)
+    {
+        struct_elem_70* e = (struct_elem_70*)p->field_0[2];
+        if (e[i].id_38 != 0xFFFF)
+        {
+            if (!sub_80024DC4((int*)&e[i]))
+            {
+                return 0;
+            }
+        }
+    }
+    p->state_38 = p->next_3C;
+    return 1;
+}
+#if 0
+// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
+int sub_80010CDC(struct_state_obj* p)
+{
+    if (p->field_2C >= 0)
+    {
+        *(unsigned short*)(p->field_0[2] + 0x38) = p->field_2C;
+    }
+    else
+    {
+        *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_24];
+    }
+    sub_800255F0((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38), p->field_28);
+    *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_30];
+    sub_800256B8((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38));
+    p->state_38 = 4;
+    p->next_3C = 5;
+    return 1;
+}
+#endif
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);

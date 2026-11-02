@@ -186,6 +186,29 @@ typedef struct
     short field_E;
 } struct_pair_obj;
 
+// 0x70-byte element with an id at +0x38 (0xFFFF = unused)
+typedef struct
+{
+    char pad_0[0x38];
+    unsigned short id_38;
+    char pad_3A[0x36];
+} struct_elem_70;
+
+// 0x40-byte state object driven by sub_80010AD8 (state_38 indexes its jump table)
+typedef struct
+{
+    int* field_0;
+    int field_4;
+    int arr_8[7];
+    int field_24;
+    int field_28;
+    int field_2C;
+    int field_30;
+    int field_34;
+    int state_38;
+    int next_3C;
+} struct_state_obj;
+
 typedef struct
 {
     int field_0;
