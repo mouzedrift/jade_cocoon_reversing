@@ -146,6 +146,7 @@ extern char name_800B6D2C[];
 extern unsigned short name_800BF888[];
 extern unsigned short name_800BF7E8[][4];
 extern int sub_800AD308(int a);
+extern void sub_800BF750();
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -1154,7 +1155,63 @@ void sub_800BE2B4(int a)
     *(void (**)())(g + 8) = sub_800BE4D0;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE334);
+extern void sub_800BB444();
+void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
+{
+    char* c;
+    int v;
+    sub_8002BE10();
+    sub_800BC380(u);
+    c = (char*)sub_800BF780();
+    if (word_800918D0[0] & 0x8000)
+    {
+        *(unsigned short*)(c + 0x5E) += 0x88;
+    }
+    else if (word_800918D0[0] & 0x2000)
+    {
+        *(unsigned short*)(c + 0x5E) -= 0x88;
+    }
+    if (word_800918D0[0] & 8)
+    {
+        v = *(int*)(c + 0x138) + 0x40;
+        if (v < 0x1000)
+        {
+            *(int*)(c + 0x138) = v;
+            *(int*)(c + 0x13C) += 0x40;
+            *(int*)(c + 0x140) += 0x40;
+        }
+    }
+    else if (word_800918D0[0] & 2)
+    {
+        v = *(int*)(c + 0x138) - 0x40;
+        if (v > 0x400)
+        {
+            *(int*)(c + 0x138) = v;
+            *(int*)(c + 0x13C) -= 0x40;
+            *(int*)(c + 0x140) -= 0x40;
+        }
+    }
+    if (sub_8003D41C(1))
+    {
+        sub_800BF750();
+        unknownFlags_8008D678 &= ~0x10000;
+        unknownFlags_8008D678 &= ~0x4000000;
+        if (u->field_0 == 3)
+        {
+            sub_800BBB54(u, 3);
+        }
+        else
+        {
+            sub_800BBB54(u, 0);
+        }
+        if (u->field_0 == 5)
+        {
+            *(int*)((char*)u + 0x10) = 0;
+        }
+        u->field_24 &= ~0x20;
+        t->next_8 = sub_800BB444;
+    }
+}
 
 extern void sub_800BE334();
 void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
