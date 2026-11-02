@@ -304,7 +304,6 @@ int sub_800B95BC(EvCtxEventfnc* c)
     return sub_800BB840(c, &m, 1, 1);
 }
 
-#if 0
 int sub_800B962C(EvCtxEventfnc* c)
 {
     EvMsgEventfnc m;
@@ -320,8 +319,6 @@ int sub_800B962C(EvCtxEventfnc* c)
     m.m14_14 = c->pc_8->c_C;
     return sub_800BB840(c, &m, 1, 1);
 }
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B962C);
 
 int sub_800B96D8(EvCtxEventfnc* c)
 {
