@@ -22,18 +22,52 @@ INCLUDE_DATA(dword_80074A88);
 INCLUDE_DATA(dword_80074AA8);
 INCLUDE_DATA(dword_80074B10);
 
+extern int geomScreenDistance_8008B548;
 #if 0
 void sub_80040718(void)
 {
+    int i;
+    unknownFlags_8008D678 = 0;
+    geomScreenDistance_8008B548 = 0;
+    saveData_8008B570.field_1C_settings &= 0xFFFFC07F;
+    saveData_8008B570.field_1C_settings |= 0x2800;
+    saveData_8008B570.field_1C_settings &= 0xFFE03FFF;
+    saveData_8008B570.field_1C_settings |= 0x100000;
+    saveData_8008B570.field_1C_settings |= 0x200038;
+    saveData_8008B570.field_1C_settings &= 0xFFFFFFF8;
+    saveData_8008B570.field_1C_settings |= 0x400002;
+    saveData_8008B570.field_1C_settings |= 0x800000;
+    saveData_8008B570.field_1C_settings |= 0x1000000;
+    saveData_8008B570.field_1C_settings &= 0xFFFFFFBF;
+    i = 14;
+    while (i >= 0)
+    {
+        saveData_8008B570.minions[i].id = 4;
+        i--;
+    }
+    sub_8001C6C8();
+    word_8008B558[1] = 0;
 }
 #endif
 INCLUDE_ASM(sub_80040718);
-#if 0
+extern int dword_8008D430;
+extern int dword_8008D434;
+extern int dword_8008D440;
+extern int dword_8008D4D0;
+extern void sub_80021824(int* p, int a, int b, int c, int d);
+
+// Matched
 void LoadPublicTiyAndFtg_800407D0(void)
 {
+    int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
+    numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
+    sub_80028E74(&dword_8008D434, (int)&dword_8008D430, &dword_8008D440, (int)pFile, 1);
+    pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
+    sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
+    sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
+    sub_80030A84(0, &stru_80091D40);
+    sub_8003DA70();
 }
-#endif
-INCLUDE_ASM(LoadPublicTiyAndFtg_800407D0);
 // Matched
 void sub_80040898(void)
 {
