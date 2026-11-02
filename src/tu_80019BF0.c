@@ -1380,12 +1380,28 @@ void sub_800229B0(int* p)
     }
 }
 INCLUDE_ASM(sub_800229E0);
-#if 0
-void sub_80022AE8(void* arg0, void* arg1, int arg2)
+// Matched
+void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
 {
+    int u = a2[0] / 64;
+    int v = a2[1] / 256;
+    int tp = v * 16 + u;
+    unsigned short t = *a1;
+    u = (t & 0x3F) * 16;
+    v = (t >> 6) & 0x1FF;
+    if (((*a0 >> 7) & 3) == 0)
+    {
+        u += a2[2];
+        v += a2[3];
+    }
+    else
+    {
+        u += a2[4];
+        v += a2[5];
+    }
+    *a0 += tp;
+    *a1 = v * 64 + (u >> 4);
 }
-#endif
-INCLUDE_ASM(sub_80022AE8);
 INCLUDE_ASM(sub_80022B84);
 INCLUDE_ASM(sub_80022CC4);
 INCLUDE_ASM(sub_8002300C);
@@ -1504,12 +1520,19 @@ void sub_80024AB8(unsigned short* p, int arg1)
     sub_80022AE8(p, p + 1, arg1);
 }
 INCLUDE_ASM(sub_80024ADC);
-#if 0
+// Matched
 void sub_80024BB0(int* a0)
 {
+    struct_112_list* p = *(struct_112_list**)a0;
+    int i;
+    for (i = 0; i < p->count; i++)
+    {
+        sub_80024C48(&p->items[i]);
+    }
+    sub_8003FD18(p->items, p->field_4);
+    sub_8003FD18(p, p->field_4);
+    *a0 = 0;
 }
-#endif
-INCLUDE_ASM(sub_80024BB0);
 INCLUDE_ASM(sub_80024C48);
 // Matched
 int sub_80024D70(int a0, int a1)
@@ -1688,7 +1711,30 @@ int sub_800255D8(struct_112* p, int i)
 INCLUDE_ASM(sub_800255F0);
 INCLUDE_ASM(sub_800256B8);
 INCLUDE_ASM(sub_80025780);
-INCLUDE_ASM(sub_80025884);
+// Matched
+void sub_80025884(struct_112* p)
+{
+    int* list = (int*)p->field_58;
+    int h;
+    int n;
+    int i;
+    int v;
+    if (list != 0)
+    {
+        h = ((int*)p->field_0)[1];
+        n = list[0];
+        for (i = 0; i < n; i++)
+        {
+            v = ((int*)p->field_58)[i + 1];
+            if (v >= 0)
+            {
+                sub_8002556C(p, v);
+            }
+        }
+        sub_8003FD18(p->field_58, h);
+        p->field_58 = 0;
+    }
+}
 // Matched
 int sub_80025924(int* p, int id)
 {
@@ -2049,7 +2095,34 @@ void sub_8002741C(void)
     }
 }
 INCLUDE_ASM(sub_80027478);
-INCLUDE_ASM(sub_80027540);
+// Matched
+int sub_80027540(void)
+{
+    int* g = dword_80091C30;
+    unsigned int f = g[2];
+    if (f & 0x40)
+    {
+        return 1;
+    }
+    if (f & 1)
+    {
+        if (f == 1 && sub_8001C2FC() != 0)
+        {
+            g[3] = 2;
+            g[2] &= ~1;
+            return 1;
+        }
+        return 0;
+    }
+    if (g[3] > 0)
+    {
+        if (--g[3] <= 0)
+        {
+            sub_8001C19C(3, 0);
+        }
+    }
+    return 1;
+}
 // Matched
 void sub_800275E8(char** a0, int a1, int a2)
 {
