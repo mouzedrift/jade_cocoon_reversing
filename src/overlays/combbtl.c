@@ -191,7 +191,41 @@ void sub_800A4CFC()
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A4D48);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A4EC8);
+extern void sub_800A5638();
+
+void sub_800A4EC8(CombBtlTask* t, int a)
+{
+    int ok[2];
+    unsigned int i;
+    unsigned int j;
+    for (i = 0; i < 2; i++)
+    {
+        ok[i] = 1;
+        for (j = 0; j < 3; j++)
+        {
+            if (sub_800A1934(&dword_800A3AA0[i][j]) == 0 && sub_800A1958(&dword_800A3AA0[i][j]) == 0)
+            {
+                ok[i] = 0;
+                break;
+            }
+        }
+        if (ok[i] == 1)
+        {
+            dword_800A85F8 = i;
+            break;
+        }
+    }
+    if (dword_800A85F8 >= 0)
+    {
+        t->next_8 = sub_800A5000;
+    }
+    else
+    {
+        dword_800A84B8 = 10;
+        t->next_8 = sub_800A5638;
+    }
+    t->next_8(t, a);
+}
 
 void sub_800A5000(CombBtlTask* t)
 {
