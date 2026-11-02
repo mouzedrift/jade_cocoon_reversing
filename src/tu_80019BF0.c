@@ -660,7 +660,7 @@ int sub_8001CFDC(unsigned int idx)
     return dword_8007D3E4[idx];
 }
 // Matched
-unsigned short sub_8001D008(unsigned int idx)
+int sub_8001D008(unsigned int idx)
 {
     if (idx >= 0xF)
     {
@@ -701,7 +701,7 @@ int sub_8001D0A4(unsigned int idx)
     return dword_8007D66C[idx];
 }
 // Matched
-unsigned short sub_8001D0D0(unsigned int idx)
+int sub_8001D0D0(unsigned int idx)
 {
     if (idx >= 0x11)
     {
@@ -718,35 +718,60 @@ struct_24* sub_8001D0FC(unsigned int idx)
     }
     return &stru_8007D6B0[idx];
 }
-#if 0
-// Not matched
-int sub_8001D128(int a0, int a1)
+// Matched
+int sub_8001D128(int a0, unsigned int a1)
 {
     int r = 0;
-    if (a1 == 1)
+    switch (a1)
     {
-        r = sub_8001CFDC(a0);
-    }
-    else if (a1 == 0)
-    {
+    case 0:
         r = sub_8001CF20(a0);
-    }
-    else if (a1 == 2)
-    {
+        break;
+    case 1:
+        r = sub_8001CFDC(a0);
+        break;
+    case 2:
         r = sub_8001D0A4(a0);
+        break;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8001D128);
-#if 0
-short* sub_8001D190(void)
+// Matched
+short* sub_8001D190(int a0, unsigned int a1)
 {
-    return 0;
+    struct_24* r = 0;
+    switch (a1)
+    {
+    case 0:
+        r = sub_8001CF84(a0);
+        break;
+    case 1:
+        r = sub_8001D034(a0);
+        break;
+    case 2:
+        r = sub_8001D0FC(a0);
+        break;
+    }
+    return (short*)r;
 }
-#endif
-INCLUDE_ASM(sub_8001D190);
-INCLUDE_ASM(sub_8001D1F8);
+// Matched
+int sub_8001D1F8(int a0, unsigned int a1)
+{
+    int r = 0;
+    switch (a1)
+    {
+    case 0:
+        r = sub_8001CF4C(a0);
+        break;
+    case 1:
+        r = sub_8001D008(a0);
+        break;
+    case 2:
+        r = sub_8001D0D0(a0);
+        break;
+    }
+    return r;
+}
 // Matched
 struct_12* sub_8001D260(void)
 {
@@ -766,24 +791,16 @@ int sub_8001D2AC(int idx)
     }
     return 0xFF;
 }
-#if 0
-// Not matched (close)
-int sub_8001D2D4(void)
+// Matched
+int sub_8001D2D4(int a0, unsigned int a1)
 {
-    short* p = sub_8001D190();
-    short idx;
-    if (0 != p)
+    short* p = sub_8001D190(a0, a1);
+    if (p != 0)
     {
-        idx = *p;
+        return dword_8007D938[*p];
     }
-    else
-    {
-        idx = 0x24;
-    }
-    return dword_8007D938[idx];
+    return 0x24;
 }
-#endif
-INCLUDE_ASM(sub_8001D2D4);
 // Matched
 int sub_8001D318(unsigned int idx)
 {
@@ -1246,21 +1263,17 @@ int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 }
 #endif
 INCLUDE_ASM(LoadOverlay_80020BF8);
-#if 0
-// Not matched (close)
+// Matched
 void sub_80020CD8(int a0, int* p)
 {
-    int v = p[0];
-    if (v != p[1])
+    if (p[0] != p[1])
     {
-        p[1] = v;
-        p[2] = LoadOverlay_80020BF8(2, v);
+        p[1] = p[0];
+        p[2] = LoadOverlay_80020BF8(2, p[0]);
     }
 }
-#endif
-INCLUDE_ASM(sub_80020CD8);
 #if 0
-// Not matched
+// Not matched: a1 copied to v1 first and p allocated to a1 in the original
 int sub_80020D1C(int a0, int a1)
 {
     int v = a1;
