@@ -64,7 +64,11 @@ typedef struct
 {
     int field_0;
     unsigned char field_4;
-    char pad_5[7];
+    unsigned char field_5;
+    unsigned char field_6;
+    char pad_7;
+    short field_8;
+    short pad_A;
 } struct_12_b;
 
 typedef struct
@@ -218,6 +222,7 @@ extern int dword_80086564;
 extern int dword_80098688;
 extern int off_800824CC[];
 extern struct_12_b dword_8007C438[];
+extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
 extern unsigned short word_8007CED8[];
 typedef struct
@@ -295,6 +300,10 @@ extern unsigned char byte_8007D588[16];
 extern int** dword_8008D4A0;
 extern int** dword_8008D464;
 extern int** dword_8008B54C;
+extern int dword_8008B550;
+extern int dword_800960A0[2];
+extern int dword_800960A8[2];
+extern unsigned long* decodedImageData_8008B4A0;
 extern int dword_80096090[4];
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;
@@ -303,6 +312,7 @@ extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern int dword_800918BC;
+extern int ODEIsEvenAddressDrawn_800918C0;
 extern struct_44 stru_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
@@ -338,6 +348,7 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
 extern int dword_8008D43C;
+extern int dword_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
