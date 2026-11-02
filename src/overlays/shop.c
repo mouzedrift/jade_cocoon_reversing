@@ -220,6 +220,64 @@ extern void fn_800AD3F0(int a);
 extern void sub_800B9B44(short* p);
 extern void sub_800BE128();
 extern void sub_800BE07C();
+typedef struct ShopUnit4Shop
+{
+    short s0;
+    short s2;
+    short s4;
+    short pad_6;
+    short s8;
+    short pad_A;
+    short sC;
+    short pad_E;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+    int f20;
+    int f24;
+    short s28;
+    short s2A;
+    short s2C;
+    short s2E;
+    short s30;
+    short s32;
+    short s34;
+    short s36;
+    short s38;
+    short s3A;
+    short s3C;
+    short s3E;
+    short s40;
+    short s42;
+    short s44;
+    short s46;
+    short s48;
+    short s4A;
+    int f4C;
+    int f50;
+    int f54;
+    short s58;
+    short s5A;
+    short s5C;
+    short a5E[10];
+    short a72[4];
+    short a7A[2];
+    short s7E;
+    short s80;
+    short pad_82;
+    int f84;
+    int f88;
+    int f8C;
+    int f90;
+    short s94;
+    short s96;
+    short s98;
+} ShopUnit4Shop;
+extern void fn_80011CD0(void* p);
+extern int fn_800AD888();
+extern void fn_800AD8F4(int a);
+extern char name_8008BD38[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -930,6 +988,85 @@ void sub_800BB0F8(ShopTaskShop* t, int a)
     t->next_8 = sub_800BB444;
 }
 
+#if 0 // near miss: constant 3 / store scheduling (17 words)
+void sub_800BB148(ShopUnit4Shop* u)
+{
+    short i;
+    void* r;
+    u->s0 = 0;
+    u->s2 = -2;
+    for (i = 0; i < 10; i++)
+    {
+        u->a5E[i] = 0;
+    }
+    for (i = 0; i < 4; i++)
+    {
+        u->a72[i] = 0;
+    }
+    for (i = 0; i < 2; i++)
+    {
+        u->a7A[i] = 0;
+    }
+    u->s36 = 1;
+    u->s3A = 1;
+    u->s40 = 1;
+    u->s42 = 1;
+    u->s44 = 1;
+    u->s46 = 0x40;
+    u->s34 = 3;
+    u->s38 = 3;
+    u->f84 = 0;
+    u->f88 = 0;
+    u->f8C = 0;
+    u->f90 = 0;
+    u->s80 = 0;
+    u->s94 = 0;
+    u->s32 = 0;
+    u->s30 = 0;
+    u->s3E = 0;
+    u->s3C = 0;
+    u->s4A = 0;
+    u->s48 = 0;
+    u->f4C = 0;
+    u->f50 = 0;
+    u->f54 = 0;
+    u->s5C = 0;
+    u->s5A = 0;
+    u->s58 = 0;
+    u->f18 = 0;
+    u->s8 = 0;
+    u->f14 = 0;
+    u->f10 = 0;
+    u->sC = 0;
+    u->s98 = 0;
+    u->s7E = 0;
+    u->f24 = 1;
+    u->f1C = 0;
+    u->f20 = 0;
+    u->f1C = name_800BF8B4[u->s0];
+    sub_800BBB54(u, 0);
+    sub_800BD854(u);
+    fn_80011CD0(name_8008BD38);
+    for (i = 0; i < 12; i++)
+    {
+        r = sub_80033AE4(&saveData_8008B570, i);
+        if (r)
+        {
+            fn_80011CD0(r);
+        }
+    }
+    for (i = 0; i < 3; i++)
+    {
+        r = sub_80010598(3, i);
+        if (r)
+        {
+            fn_80011CD0((char*)r + 0x84);
+        }
+    }
+    sub_800B9920();
+    fn_800AD8F4(fn_800AD888());
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB148);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB38C);
