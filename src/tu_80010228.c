@@ -17,12 +17,23 @@
 #include "data_decls.h"
 
 
-#if 0
+extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
+extern unsigned long SpuWrite0(unsigned long size);
+extern void sub_8006EC08(void);
+extern void sub_8004EDB8(void);
+// Matched
 void sub_80010228(void)
 {
+    SsEnd();
+    SpuSetTransferStartAddr(0x1010);
+    SpuWrite0(0x7EFF0);
+    SsQuit();
+    ResetGraph(3);
+    StopCallback();
+    sub_8006EC08();
+    PadStopCom();
+    sub_8004EDB8();
 }
-#endif
-INCLUDE_ASM(sub_80010228);
 // Matched
 void InitEvents_8001028C(void)
 {
@@ -38,12 +49,18 @@ void InitEvents_8001028C(void)
     dword_8008B4B4 = 0;
     gnFrame_8008D610 = 0;
 }
-#if 0
+// Matched
 void CloseEvents_80010328(void)
 {
+    DisableEvent(cdRomEventDescError_8008B490);
+    DisableEvent(vsyncEventDesc_8008B494);
+    CloseEvent(cdRomEventDescError_8008B490);
+    CloseEvent(vsyncEventDesc_8008B494);
+    StopRCnt(RCntCNT0);
+    StopRCnt(RCntCNT1);
+    StopRCnt(RCntCNT2);
+    StopRCnt(RCntCNT3);
 }
-#endif
-INCLUDE_ASM(CloseEvents_80010328);
 // Matched
 long vsyncEventHandler_800103AC(void)
 {
@@ -70,7 +87,10 @@ void InitImage_80010428(void)
     ClearImage(&rect, 0, 0, 0);
     DrawSync(0);
 }
-INCLUDE_ASM(__main);
+// Matched
+void __main(void)
+{
+}
 INCLUDE_ASM(start);
 INCLUDE_ASM(dword_80010528);
 INCLUDE_ASM(dword_8001052C);
@@ -132,6 +152,22 @@ void sub_80010600(void)
         saveData_8008B570.items[i].id = 0xD3;
     }
 }
+#endif
+#if 0
+// Not matched: 4 words, li order of the constants
+void sub_80010600(void)
+{
+    int i;
+    for (i = 14; i >= 0; i--)
+    {
+        saveData_8008B570.minions[i].id = 4;
+    }
+    for (i = 11; i >= 0; i--)
+    {
+        saveData_8008B570.items[i].id = 0xD3;
+    }
+}
+
 #endif
 INCLUDE_ASM(sub_80010600);
 // Matched
@@ -235,20 +271,70 @@ char* sub_80010824(int id, int nth)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80010850);
-#if 0
-int* sub_8001091C(void)
+extern EventNode* dword_8008D618;
+// Matched
+int sub_80010850(void* a0)
 {
+    EventEntry* e = sub_80043AF8(dword_8008D618);
+    int* buf;
+    int* m;
+    if (e != 0)
+    {
+        e->cb_8 = (EventEntryFn)sub_80010A90;
+        buf = (int*)e->buffer;
+        e->cb_C = (EventEntryFn)sub_80010AB4;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        e->flags = (e->flags | 4) & 0xFFFF7FFF;
+        buf[0] = e->field_4;
+        m = malloc3_8003FC4C(0x40);
+        buf[1] = (int)m;
+        sub_800403E8((unsigned int*)(m + 1), (unsigned int*)a0, 0x34);
+        m[0] = 0;
+        m[0x38 / 4] = 1;
+        m[0x3C / 4] = 1;
+        sub_80010AD8((int)m);
+        return buf[0];
+    }
+    return -1;
+}
+// Matched
+int* sub_8001091C(key)
+int key;
+{
+    EventNode* n = dword_8008D618;
+    int count = n->count;
+    EventEntry* e;
+    int i;
+    for (i = 0; i < count; i++)
+    {
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1)
+        {
+            if (*(int*)e->buffer == key)
+            {
+                return (int*)e;
+            }
+        }
+        n = n->next;
+    }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001091C);
-#if 0
-void sub_8001098C(int arg0)
+// Matched
+int sub_8001098C(int arg0)
 {
+    EventEntry* e = (EventEntry*)sub_8001091C();
+    int* buf = (int*)e->buffer;
+    int* q = (int*)buf[1];
+    if (q[0x38 / 4] == 5)
+    {
+        sub_80024BB0((int*)buf[1]);
+        free3_8003FC6C((void*)buf[1]);
+        e->flags = (e->flags & ~1) | 0x8000;
+        e->flags = (e->flags & ~4) | 0x8000;
+        return 1;
+    }
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001098C);
 // Matched
 void sub_80010A10(int arg0)
 {
