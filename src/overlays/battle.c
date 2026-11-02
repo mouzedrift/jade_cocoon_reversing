@@ -469,7 +469,31 @@ EventEntry* sub_800BA9E4()
     return e;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BAAD8);
+extern short sinTable_80084540[];
+extern int sub_800A1E48(void);
+extern int sub_800A1E68(void);
+
+int sub_800BAAD8()
+{
+    int* sd = (int*)&saveData_8008B570;
+    int px = sd[0x7A8 / 4];
+    int pz = sd[0x7B0 / 4];
+    short ang = *(unsigned short*)((char*)sd + 0x7B6);
+    int x = *(int*)sub_800A1E48();
+    int z = ((int*)sub_800A1E48())[2];
+    short* rot = (short*)sub_800A1E68();
+    int a;
+    if (sinTable_80084540[(ang - rot[1] + 0x400) & 0xFFF] >= 0)
+    {
+        a = ratan2_8003B548(x - px, z - pz);
+        if (sinTable_80084540[(a - ang + 0x400) & 0xFFF] >= 0)
+        {
+            return 1;
+        }
+        return 2;
+    }
+    return 0;
+}
 
 #if 0
 void sub_800BABC4()
