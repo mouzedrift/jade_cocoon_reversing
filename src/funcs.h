@@ -267,7 +267,7 @@ extern void sub_800429F8(int a0, int a1);
 extern void sub_80042B38(int a0, int a1);
 extern void sub_8003CA30(unsigned char mode);
 extern void sub_8001E34C(void* a0);
-extern char* sub_80024FA8(void* a0);
+extern char* sub_80024FA8(void* a0, int n);
 extern void sub_80027CF8(void* a0, int* a1);
 extern void sub_800283C0(void* a0, int* a1);
 extern void sub_8003CF88(short a0, short a1, int a2);
@@ -296,11 +296,11 @@ extern void sub_80011BCC(void);
 extern int sub_80014164(int x);
 extern int sub_80014358(unsigned int mask);
 extern void sub_8001E254(struct_obj_A* p);
-extern char* sub_80024E90(void* p);
-extern char* sub_80024EC8(void* p);
-extern char* sub_80024F00(void* p);
-extern char* sub_80024F38(void* p);
-extern char* sub_80024F70(void* p);
+extern char* sub_80024E90(void* p, int n);
+extern char* sub_80024EC8(void* p, int n);
+extern char* sub_80024F00(void* p, int n);
+extern char* sub_80024F38(void* p, int n);
+extern char* sub_80024F70(void* p, int n);
 extern void sub_80027CC0(struct_obj_D* p, int* q);
 extern void sub_80028388(struct_obj_D* p, int* q);
 extern void sub_80033048(unsigned short* p, int v);
@@ -450,3 +450,7 @@ extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8001E574(int* p, int a1);
 
 #endif
+
+extern void sub_80021784(int* p, int n, int h);
+extern void sub_80021824(int* a0, int a1, int a2, int a3, int a4);
+extern void sub_80027118(void);

@@ -48,7 +48,13 @@ typedef struct
     int field_4;
     char pad_8[0x14];
     unsigned int field_1C_settings; // == settingsFlags_8008B58C
-    char pad_20[0x968];
+    char pad_20[0x2C4];
+    struct
+    {
+        short field_0;
+        short field_2;
+    } field_2E4[4];
+    char pad_2F4[0x694];
     Minion minions[15];
     Item items[12];
 } SaveData;
@@ -212,6 +218,8 @@ extern int off_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
 extern int dword_8008B540;
+extern int dword_8008B500[];
+extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int dword_80086564;
 extern int dword_80098688;
@@ -370,6 +378,7 @@ typedef struct
     int field_4;
     struct_112* items;
 } struct_112_list;
+int sub_80026630(struct_112_list* p, unsigned int id);
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
