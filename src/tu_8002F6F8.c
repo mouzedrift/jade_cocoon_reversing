@@ -58,7 +58,28 @@ void sub_8002F6F8(int a0, int* st)
     s.field_A = 0xF;
     sub_8002A384(&s);
 }
-INCLUDE_ASM(sub_8002F7D0);
+extern unsigned char byte_8008BD38[];
+extern unsigned char dword_80082F04[];
+extern unsigned char dword_80082EBC[];
+extern void sub_8002C06C(void* p, int a1, int a2);
+extern void sub_8002C100(unsigned short* pos, int v, int ot);
+// Matched
+void sub_8002F7D0(unsigned short* pos, short ot)
+{
+    unsigned short loc[2];
+    unsigned char vals[0x18];
+    short i;
+    sub_80033624(vals, (int)byte_8008BD38);
+    for (i = 0; i < 5; i++)
+    {
+        loc[0] = pos[0] + 6;
+        loc[1] = pos[1] + dword_80082F04[i] + 1;
+        sub_8002C06C(loc, dword_80082EBC[i], ot);
+        loc[0] = pos[0] + 0x45;
+        loc[1] = pos[1] + dword_80082F04[i] + 2;
+        sub_8002C100(loc, vals[i], ot);
+    }
+}
 INCLUDE_ASM(sub_8002F8E4);
 // Matched
 short sub_8002FA70(void)

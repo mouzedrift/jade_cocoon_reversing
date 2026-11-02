@@ -52,7 +52,35 @@ void sub_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-INCLUDE_ASM(sub_80028FDC);
+extern void sub_80029D00(void* buf, void* a);
+void sub_800297C0(int* a, short* b);
+// Matched
+void sub_80028FDC(int* a0, int a1, int* a2, int a3, int a4, short* a5, void* a6)
+{
+    char buf[0x28];
+    unsigned int i;
+    for (i = 0; i < a4; i++)
+    {
+        sub_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
+        if (a6)
+        {
+            sub_80029D00(buf, a6);
+        }
+        if (a5)
+        {
+            sub_800297C0((int*)buf, a5);
+        }
+        sub_800296A0(buf);
+        if (a0 && a2)
+        {
+            sub_800298AC(*a0 + i * 20, *a2 + i * 8, buf);
+        }
+        if (a1)
+        {
+            InitPolyFT4_80029A10((void*)(*(int*)a1 + i * 40), buf);
+        }
+    }
+}
 INCLUDE_ASM(sub_800290FC);
 INCLUDE_ASM(sub_800292D0);
 // Matched
