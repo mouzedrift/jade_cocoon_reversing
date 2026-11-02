@@ -558,4 +558,23 @@ void sub_8003983C(int idx_, int* a5)
     p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
 }
 INCLUDE_ASM(sub_800398B4);
-INCLUDE_ASM(sub_80039E14);
+extern SVECTOR word_8008D4C8;
+extern void sub_8004D0E8(void);
+// Matched
+void sub_80039E14(void)
+{
+    VECTOR d;
+    int a;
+    dword_8008D600.vx = dword_8008D4F0.field_14.x;
+    dword_8008D600.vy = dword_8008D4F0.field_14.y;
+    dword_8008D600.vz = dword_8008D4F0.field_14.z;
+    d.vx = dword_8008D4F0.field_20.x - dword_8008D4F0.field_14.x;
+    d.vy = dword_8008D4F0.field_20.y - dword_8008D4F0.field_14.y;
+    d.vz = dword_8008D4F0.field_20.z - dword_8008D4F0.field_14.z;
+    a = ratan2_8003B548(d.vx, d.vz);
+    word_8008D4C8.vy = -a;
+    word_8008D4C8.vx = ratan2_8003B548(d.vy, sub_8003B918(sub_8003B8BC(d.vx, d.vz)));
+    word_8008D4C8.vz = dword_8008D4F0.field_2C;
+    sub_8004D0E8();
+}
+INCLUDE_ASM(sub_80039ED8);

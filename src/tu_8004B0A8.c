@@ -239,4 +239,33 @@ void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
 }
 INCLUDE_ASM(sub_8004D3D8);
 INCLUDE_ASM(sub_8004D5CC);
-INCLUDE_ASM(sub_8004D7A8);
+// Matched
+void sub_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
+{
+    out->vx = a->vx + (b->vx - a->vx) * t / 4096;
+    out->vy = a->vy + (b->vy - a->vy) * t / 4096;
+    out->vz = a->vz + (b->vz - a->vz) * t / 4096;
+}
+// Matched
+void sub_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
+{
+    int d;
+    d = (b->vx - a->vx) & 0xFFF;
+    if (d >= 0x800)
+    {
+        d -= 0x1000;
+    }
+    out->vx = (a->vx + d * t / 4096) & 0xFFF;
+    d = (b->vy - a->vy) & 0xFFF;
+    if (d >= 0x800)
+    {
+        d -= 0x1000;
+    }
+    out->vy = (a->vy + d * t / 4096) & 0xFFF;
+    d = (b->vz - a->vz) & 0xFFF;
+    if (d >= 0x800)
+    {
+        d -= 0x1000;
+    }
+    out->vz = (a->vz + d * t / 4096) & 0xFFF;
+}
