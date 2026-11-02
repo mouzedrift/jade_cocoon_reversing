@@ -59,7 +59,13 @@ typedef struct ShopUnit3Shop
     short field_32;
     char pad_34[8];
     short field_3C;
-    char pad_3E[0xE];
+    short pad_3E;
+    short field_40;
+    short field_42;
+    short field_44;
+    short field_46;
+    short field_48;
+    short field_4A;
     void* field_4C;
     void* field_50;
     void* field_54;
@@ -126,6 +132,11 @@ extern int sub_800B9888(short i);
 extern ShopItemShop* sub_800B9C5C(int i);
 extern int sub_800B9C10(int i);
 extern ShopItemShop name_8008EF18[];
+extern void sub_8001AE00(unsigned int* b, int i);
+extern int sub_8001AD30(int i);
+extern int sub_8001AE54(unsigned int* b);
+extern char name_800B6D04[];
+extern char name_800B6D2C[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -332,6 +343,43 @@ int sub_800B9DA8()
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800B9DA8);
 
+#if 0 // near miss: lbu/addiu order in first loop
+int sub_800B9E94(char* src, char* dst, short c)
+{
+    int i;
+    int k;
+    unsigned int j;
+    unsigned int r;
+    *(short*)dst = c;
+    for (i = 0, k = 4; i < 6; k += 12)
+    {
+        sub_80019AF4((unsigned int*)(dst + k), (unsigned int*)(src + 0x10));
+        (dst + i)[0x7C] = src[0x42];
+        i++;
+    }
+    r = sub_80014358(*(short*)(src + 0x42));
+    for (j = 0; j < 4; j++)
+    {
+        (dst + j)[0xC2] = 0;
+    }
+    if (r >= 4)
+    {
+        printf(name_800B6D04, name_800B6D2C, 0x1AB);
+        exit(1);
+    }
+    (dst + r)[0xC2] = 0x20;
+    for (i = 0; i < 0x30; i++)
+    {
+        (dst + i)[0x4C] = src[0x5C];
+    }
+    dst[2] = src[0x5C];
+    dst[3] = src[0x5C];
+    sub_800403E8((unsigned int*)(dst + 0x84), (unsigned int*)src, 0x48);
+    sub_800403E8((unsigned int*)(dst + 0xDE), (unsigned int*)(src + 0x6C), 0x14);
+    sub_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800B9E94);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800B9FC8);
@@ -424,6 +472,44 @@ void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
 
+#if 0 // near miss: orig keeps (1 << x) & mask as sllv/and, we get sra/andi
+void sub_800BAA0C(char* a, char* b)
+{
+    unsigned int old = *(unsigned int*)(a + 0xF4);
+    unsigned int* p = (unsigned int*)(a + 0xF4);
+    int i;
+    int mask;
+    if (sub_800BAB30(b))
+    {
+        old |= *(unsigned int*)(b + 0xF4);
+    }
+    mask = *(short*)(a + 0xC6);
+    *(unsigned int*)(a + 0xF4) = old;
+    for (i = 0; i < 30; i++)
+    {
+        if (sub_8001AE2C(p, i) && !((1 << sub_8001AD30(i)) & mask))
+        {
+            sub_8001AE00(p, i);
+        }
+    }
+    if (a[0xC2] != 0x20)
+    {
+        sub_8001AE00(p, 0x15);
+    }
+    if (a[0xC4] != 0x20)
+    {
+        sub_8001AE00(p, 0x17);
+    }
+    if (a[0xC3] != 0x20)
+    {
+        sub_8001AE00(p, 0x18);
+    }
+    if (a[0xC5] != 0x20)
+    {
+        sub_8001AE00(p, 0x16);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BAA0C);
 
 int sub_800BAB30()
@@ -679,6 +765,60 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BBB54);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
+#if 0 // near miss: orig does not fold the two flag masks (and/and with separate constants)
+void sub_800BC1A8(ShopUnit3Shop* u)
+{
+    int fl;
+    int r;
+    if (*(short*)u->field_54 != 4)
+    {
+        fl = u->field_24;
+        u->field_40 = 1;
+        u->field_42 = 1;
+        u->field_44 = 1;
+        u->field_46 = 0;
+        u->field_4A = 0;
+        u->field_48 = 0;
+        if ((fl & 0x1C0) == 0)
+        {
+            u->field_24 = fl | 0x40;
+            u->field_44 = 5;
+            u->field_42 = 5;
+        }
+        else if (fl & 0x40)
+        {
+            fl &= ~0x40;
+            fl &= ~0x100;
+            u->field_24 = fl | 0x80;
+            r = sub_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
+            if (r < 4)
+            {
+                r = 4;
+            }
+            u->field_40 = 1;
+            u->field_42 = 4;
+            u->field_44 = r;
+            u->field_46 = 0x40;
+        }
+        else if (fl & 0x80)
+        {
+            fl &= ~0x40;
+            fl &= ~0x80;
+            u->field_24 = fl | 0x100;
+        }
+        else if (fl & 0x100)
+        {
+            int fl2 = fl & ~0x100;
+            u->field_24 = fl2;
+            if (u->field_0 == 3 && (fl & 2))
+            {
+                u->field_24 = fl2 & ~0x401;
+            }
+        }
+        PlaySfx_80031494(0x7F);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BC1A8);
 
 void sub_800BC2DC(ShopUnit3Shop* u)
