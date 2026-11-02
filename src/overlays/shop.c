@@ -576,7 +576,7 @@ void sub_800BAEDC(unsigned int* a, unsigned int* b)
     sub_800403E8(b, t1, 0xF8);
 }
 
-#if 0 // near miss: orig tail-merges the *a = 3 store of the b==3 and b==4 cases (jump into the other copy)
+#if 0 // near miss: orig jumps from the b==3 case into the b==4 copy of the *a = 3 store (cross-jump)
 int sub_800BAF54(short* a, short* b, short c, short d)
 {
     if (*a == 3)
@@ -596,11 +596,10 @@ int sub_800BAF54(short* a, short* b, short c, short d)
         if (*b == 3)
         {
             *b = 2;
-            goto set3;
+            *a = 3;
         }
         else if (*b == 4 && d == 3)
         {
-        set3:
             *a = 3;
         }
     }
