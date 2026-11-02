@@ -2434,7 +2434,48 @@ int sub_80025D00(struct_25D00* p, int* q)
     }
     return 0;
 }
-INCLUDE_ASM(sub_80025D7C);
+// Matched
+void sub_80025D7C(int* a0, int b)
+{
+    if (a0[0] & 1)
+    {
+        a0[7] = b;
+        b += *(unsigned short*)(a0[1] + 4) << 11;
+    }
+    if (a0[0] & 2)
+    {
+        a0[8] = b;
+        b += *(unsigned short*)(a0[1] + 8) << 11;
+    }
+    if (a0[0] & 4)
+    {
+        a0[9] = b;
+        b += *(unsigned short*)(a0[1] + 0xC) << 11;
+    }
+    if (a0[0] & 8)
+    {
+        a0[10] = b;
+        b += *(unsigned short*)(a0[1] + 0x10) << 11;
+    }
+    if (a0[0] & 0x10)
+    {
+        a0[11] = b;
+    }
+    if (a0[0] & 0x20)
+    {
+        a0[12] = b;
+    }
+    if (a0[0] & 0x40)
+    {
+        a0[0] |= 0x80;
+        a0[14] = b + ((int*)b)[1];
+        a0[0] |= 0x40;
+        a0[13] = b + ((int*)b)[2];
+        a0[0] |= 2;
+        a0[8] = b + ((int*)b)[3];
+    }
+    sub_80025F14(a0);
+}
 // Matched
 void sub_80025ED0(int* p)
 {

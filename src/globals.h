@@ -400,7 +400,7 @@ typedef struct
     int items[10];
 } struct_25D00;
 int sub_80025D00(struct_25D00* p, int* q);
-void sub_80025D7C();
+void sub_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
