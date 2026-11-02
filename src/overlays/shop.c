@@ -92,7 +92,9 @@ typedef struct ShopUnit3Shop
     short pad_78;
     short a7A[2];
     short field_7E;
-    char pad_80[0x16];
+    char pad_80[4];
+    int field_84;
+    char pad_88[0xE];
     short field_96;
 } ShopUnit3Shop;
 
@@ -105,6 +107,19 @@ typedef struct ShopTask3Shop
     ShopUnit3Shop* field_14;
 } ShopTask3Shop;
 
+extern char name_80082680[];
+extern void sub_8002B004(void* p, int a, int b);
+extern char name_800BFFE0[];
+extern char name_800C0048[];
+extern char name_800BFF70[];
+extern char name_800BFFB8[];
+extern char name_800BFF28[];
+extern char name_800BFF48[];
+extern char name_800BFF90[];
+extern char name_800C0018[];
+extern char name_800C0000[];
+extern char name_800C0070[];
+extern char name_800C0038[];
 typedef struct ShopSixShop
 {
     int w0;
@@ -1094,7 +1109,6 @@ int sub_800BB38C(ShopUnitShop* p)
     }
     return 0;
 }
-INCLUDE_OVERLAY_ASM(shop, dword_800B95CC);
 
 #if 0 // near miss: reg alloc of field_84 load
 int sub_800BB3E8(ShopUnitShop* p)
@@ -1350,7 +1364,70 @@ void sub_800BC2DC(ShopUnit3Shop* u)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BC380);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BCCD8);
+void sub_800BCCD8(ShopUnit3Shop* u)
+{
+    switch (u->field_0)
+    {
+    case 1:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else
+            sub_8002B004(name_800C0048, 0, 0xE);
+        break;
+    case 2:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else
+            sub_8002B004(name_800BFF70, 0, 0xE);
+        break;
+    case 3:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else if (u->field_24 & 2)
+            sub_8002B004(name_800BFFB8, 0, 0xE);
+        else
+            sub_8002B004(name_80082680, 0, 0xE);
+        break;
+    case 5:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else if (!u->field_84)
+            sub_8002B004(name_800BFF48, 0, 0xE);
+        else
+            sub_8002B004(name_800BFF28, 0, 0xE);
+        break;
+    case 8:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else
+            sub_8002B004(name_800BFF90, 0, 0xE);
+        break;
+    case 15:
+        if (u->field_24 & 0xC0)
+            sub_8002B004(name_800C0018, 0, 0xE);
+        else
+            sub_8002B004(name_800C0000, 0, 0xE);
+        break;
+    case 7:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else
+            sub_8002B004(name_800C0048, 0, 0xE);
+        break;
+    case 10:
+        if (u->field_24 & 0x20)
+            sub_8002B004(name_800BFFE0, 0, 0xE);
+        else
+            sub_8002B004(name_800C0070, 0, 0xE);
+        break;
+    default:
+        if (u->field_24 & 2)
+            sub_8002B004(name_800C0038, 0, 0xE);
+        else
+            sub_8002B004(name_80082680, 0, 0xE);
+        break;
+    }
+}
 INCLUDE_OVERLAY_ASM(shop, dword_800B9608);
 
 void sub_800BCEDC(ShopUnit3Shop* u)
