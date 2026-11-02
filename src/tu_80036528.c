@@ -47,7 +47,57 @@ INCLUDE_ASM(sub_800368F8);
 INCLUDE_ASM(sub_800369E0);
 INCLUDE_ASM(sub_80036AB4);
 INCLUDE_ASM(sub_80036BB0);
-INCLUDE_ASM(sub_800374E0);
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} struct_v3;
+typedef struct
+{
+    int pad_0[5];
+    struct_v3 field_14;
+    struct_v3 field_20;
+    short field_2C;
+    short field_2E;
+    int pad_30[0x35];
+} Block104;
+extern Block104 dword_8008D4F0;
+extern int sub_8003B860(int* a, int* b);
+void sub_80038D64(char* o, int* a);
+extern void sub_80038230(int* p);
+extern char levantPos_8008BD18[];
+extern void sub_800375F8(int* o, int* p);
+// Matched
+void sub_800374E0(struct_obj_D* p, int* q)
+{
+    char* o = (char*)q;
+    if (q[1] & 0x100)
+    {
+        *(short*)(o + 0x152) += 0x10;
+        sub_80038230(q);
+        if (q[3] > 0)
+        {
+            q[3] -= 0x1000;
+        }
+        if (q[3] < 0)
+        {
+            q[3] = 0;
+        }
+    }
+    else
+    {
+        q[3] = 0x1000;
+        *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+        *(struct_v3*)(o + 0x198) = *(struct_v3*)(o + 0x68);
+        *(struct_v3*)(o + 0x1A4) = *(struct_v3*)(o + 0x5C);
+        *(struct_v3*)(o + 0x18C) = *(struct_v3*)(o + 0x5C);
+        q[0x17C / 4] = dword_8008D4F0.field_2E;
+        q[0x180 / 4] = dword_8008D4F0.field_2E;
+        sub_80038D64(o, (int*)levantPos_8008BD18);
+        p->field_8 = (void (*)(void))sub_800375F8;
+    }
+}
 extern void sub_80038230(int* p);
 extern void sub_80037918();
 extern void sub_8003891C(int* p, void* q);
@@ -259,24 +309,6 @@ INCLUDE_ASM(sub_80038230);
 INCLUDE_ASM(sub_8003856C);
 INCLUDE_ASM(sub_8003891C);
 INCLUDE_ASM(sub_80038A5C);
-typedef struct
-{
-    int x;
-    int y;
-    int z;
-} struct_v3;
-typedef struct
-{
-    int pad_0[5];
-    struct_v3 field_14;
-    struct_v3 field_20;
-    short field_2C;
-    short field_2E;
-    int pad_30[0x35];
-} Block104;
-extern Block104 dword_8008D4F0;
-extern int sub_8003B860(int* a, int* b);
-void sub_80038D64(char* o, int* a);
 // Matched
 void sub_80038CA8(int* p)
 {

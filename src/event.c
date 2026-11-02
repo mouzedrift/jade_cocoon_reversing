@@ -70,8 +70,9 @@ INCLUDE_ASM(sub_80042B38);
 extern int sub_8003C0A4(int a);
 extern int sub_800434C4(int a);
 extern int dword_80096108;
+extern int dword_8009610C;
 extern void sub_800430E8(void);
-extern void sub_800432EC(void);
+extern void sub_800432EC();
 
 // Matched
 void sub_80043054(struct_obj_D* p, int* q)
@@ -126,8 +127,32 @@ void sub_80043264(struct_obj_D* p, short* q)
         SsSetSerialVol(0, v, v);
     }
 }
-INCLUDE_ASM(sub_800432EC);
-extern int dword_8009610C;
+// Matched
+void sub_800432EC(struct_obj_D* p, int* q)
+{
+    u_char result[8];
+    DslLOC loc;
+    if (sub_80053B9C(q[1], result) == 2 && q[1])
+    {
+        loc.minute = result[5];
+        loc.second = result[6];
+        loc.sector = result[7];
+        if (DsPosToInt(&loc) > dword_8009610C || (int)dword_80096118 >= 0)
+        {
+            ((short*)q)[5] = 0x70;
+            p->field_8 = sub_80043264;
+            return;
+        }
+        SsSetSerialVol(0, 0x70, 0x70);
+        q[1] = DsControlF(0x11, 0);
+    }
+    if (dword_8008D450 < -1000 || (q[0] & 1))
+    {
+        ((short*)q)[5] = 0x70;
+        q[0] &= ~1;
+        p->field_8 = sub_80043264;
+    }
+}
 extern int sub_80053608(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
 // Matched
 void sub_800433FC(int* o)

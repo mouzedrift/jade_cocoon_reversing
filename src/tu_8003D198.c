@@ -288,13 +288,35 @@ void sub_8003E268(unsigned short* p)
     short y = p[1] + 0x23;
     sub_8003CF88(x, y, 0);
 }
-INCLUDE_ASM(sub_8003E2A8);
 typedef struct
 {
     short w;
     short h;
 } struct_size_8003E3B4;
 extern int sub_8003E4C8(int str);
+// Matched
+struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
+{
+    struct_size_8003E3B4 sz;
+    short w;
+    int i;
+    sz.w = 0;
+    sz.h = 0;
+    for (i = 0; list[i]; i++)
+    {
+        if (mask & (1 << i))
+        {
+            w = sub_8003E4C8(list[sz.h]);
+            if (sz.w < w)
+            {
+                sz.w = w;
+            }
+            sz.h++;
+        }
+    }
+    sz.h *= 12;
+    return sz;
+}
 // Matched
 struct_size_8003E3B4 sub_8003E3B4(int* list)
 {
