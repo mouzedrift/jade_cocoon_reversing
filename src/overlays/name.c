@@ -206,8 +206,57 @@ void sub_800B8018(void)
 {
 }
 
-INCLUDE_OVERLAY_ASM(name, sub_800B8020);
+typedef struct
+{
+    int flags;
+    unsigned short s4;
+    unsigned short s6;
+    short s8;
+    short sA;
+} NameCursor;
+extern short name_800B83C8[];
+extern short name_800B83D0[];
+void sub_800B8020(NameCursor* p, int k)
+{
+    if (p->flags & name_800B83C8[k - 1])
+    {
+        if ((p->flags & 1) && (unsigned)(k - 1) < 2)
+        {
+            p->s6 += name_800B83D0[k - 1] * (p->s8 - 1);
+        }
+        else if ((p->flags & 2) && (unsigned)(k - 3) < 2)
+        {
+            p->s6 += name_800B83D0[k - 1] * p->s8 * (p->sA - 1);
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(name, sub_800B80E4);
+typedef struct
+{
+    int mask;
+    int result;
+} NameCursorTbl;
+extern NameCursorTbl name_800B83D8[];
+extern int sub_8003D630();
+extern void sub_80031494(int);
+int sub_800B80E4(NameCursor* p)
+{
+    int old = (short)p->s6;
+    int k = sub_8003D630();
+    if (k)
+    {
+        sub_800B8020(p, k);
+        if (p->flags & name_800B83D8[k - 1].mask)
+        {
+            sub_80031494(0x7F);
+            return name_800B83D8[k - 1].result;
+        }
+    }
+    if (old != (short)p->s6)
+    {
+        sub_80031494(0x7F);
+    }
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(name, dword_800B8190);

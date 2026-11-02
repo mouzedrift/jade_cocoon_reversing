@@ -131,9 +131,9 @@ void sub_800B6B18()
     short f0;
     sub_800ADCEC(&v, e->field_4);
     dword_80091C54 = 0;
-    dword_80091C94 = 1;
     s->next_2DE = s->cur_2DC + 1;
     f0 = e->field_0;
+    dword_80091C94 = 1;
     s->field_2F0 = 0;
     s->x_2E4 = v.x;
     s->y_2E8 = v.y;

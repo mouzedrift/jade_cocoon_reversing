@@ -130,7 +130,30 @@ int sub_800A1B24()
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1B48);
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1CAC);
+typedef struct TstModelB
+{
+    int flags;
+    unsigned short s4;
+    unsigned short s6;
+    short s8;
+    short sA;
+} TstModelB;
+extern short name_800A37F4[];
+extern short name_800A37FC[];
+void sub_800A1CAC(TstModelB* p, int k)
+{
+    if (p->flags & name_800A37F4[k - 1])
+    {
+        if ((p->flags & 1) && (unsigned)(k - 1) < 2)
+        {
+            p->s6 += name_800A37FC[k - 1] * (p->s8 - 1);
+        }
+        else if ((p->flags & 2) && (unsigned)(k - 3) < 2)
+        {
+            p->s6 += name_800A37FC[k - 1] * p->s8 * (p->sA - 1);
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1D70);
 

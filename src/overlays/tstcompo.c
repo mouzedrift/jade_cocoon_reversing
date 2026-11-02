@@ -132,8 +132,8 @@ void sub_800A1354(int* a)
 #endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
-#if 0 // near miss: register allocation (n/base swapped)
 extern int name_80024DC4(int);
+#if 0
 void sub_800A13B8(int* a)
 {
     if (name_80024DC4(a[1]))
