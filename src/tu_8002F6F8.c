@@ -20,7 +20,44 @@ INCLUDE_DATA(dword_8007442C);
 INCLUDE_DATA(dword_80074430);
 INCLUDE_DATA(dword_80074434);
 
-INCLUDE_ASM(sub_8002F6F8);
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_F6F8;
+extern void sub_8002A384(struct_F6F8* p);
+// Matched
+void sub_8002F6F8(int a0, int* st)
+{
+    unsigned char col[4];
+    struct_F6F8 s;
+    short v = 20;
+    if (st[2])
+    {
+        (*(short*)st[0])++;
+        if (*(short*)st[0] == 40)
+        {
+            *(short*)st[0] = 0;
+        }
+        v = *(short*)st[0];
+        if (v > 20)
+        {
+            v = 40 - v;
+        }
+    }
+    col[0] = col[1] = col[2] = v * 8;
+    if (!st[1])
+    {
+        col[0] = col[1] = col[2] = 0xA0;
+    }
+    s.field_8 = 1;
+    s.field_0 = a0;
+    s.field_4 = v;
+    s.field_A = 0xF;
+    sub_8002A384(&s);
+}
 INCLUDE_ASM(sub_8002F7D0);
 INCLUDE_ASM(sub_8002F8E4);
 // Matched
