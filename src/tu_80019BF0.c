@@ -1371,7 +1371,14 @@ typedef void (*fn_80022458_a)(unsigned char* p, int a3);
 typedef int (*fn_80022458_b)(unsigned char* hdr, unsigned char* p, int a0, int k, int h);
 extern fn_80022458_a dword_8007DB08[];
 extern fn_80022458_b off_8007DAE0[];
-int sub_80022634(int a0, unsigned char* hdr, int h);
+typedef struct
+{
+    short n;
+    short pad;
+    int p;
+} struct_22634;
+void sub_80022B84(int* c, int* x, int* y);
+int sub_80022634(struct_22634* out, int* c, int h);
 int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h);
 int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
 void sub_80022CC4(int a0, int* a, int* b, int h);
@@ -1394,7 +1401,7 @@ unsigned char* sub_80022458(int a0, unsigned char* a1, int h, int a3)
     }
     hdr = a1;
     a1 += 0x28;
-    n = sub_80022634(a0, hdr, h);
+    n = sub_80022634((struct_22634*)a0, (int*)hdr, h);
     sub_800228F8(A, B, (char*)hdr, h);
     for (i = 0; i < n; i++)
     {
@@ -1431,7 +1438,69 @@ unsigned char* sub_80022458(int a0, unsigned char* a1, int h, int a3)
     sub_800229E0(A, B, h);
     return a1;
 }
-INCLUDE_ASM(sub_80022634);
+// Matched
+int sub_80022634(struct_22634* out, int* c, int h)
+{
+    int x;
+    int y;
+    int size;
+    int total;
+    char* p;
+    p = 0;
+    sub_80022B84(c, &x, &y);
+    size = c[0] * 0x24 + c[1] * 0x3C;
+    total = c[0] + c[1];
+    size += c[2] * 0x30;
+    total += c[2];
+    size += c[3] * 0x48;
+    total += c[3];
+    size += c[4] * 0x2C;
+    total += c[4];
+    size += c[5] * 0x50;
+    total += c[5];
+    size += c[6] * 0x38;
+    total += c[6];
+    size += c[7] * 0x5C;
+    total += c[7];
+    size += x * 0x14;
+    total += c[8];
+    size += y * 0x14;
+    total += c[9];
+    if (size != 0)
+    {
+        p = (char*)sub_8003FC8C(size, h);
+    }
+    out[0].n = c[0];
+    out[0].p = (int)p;
+    p += c[0] * 0x24;
+    out[1].n = c[1];
+    out[1].p = (int)p;
+    p += c[1] * 0x3C;
+    out[2].n = c[2];
+    out[2].p = (int)p;
+    p += c[2] * 0x30;
+    out[3].n = c[3];
+    out[3].p = (int)p;
+    p += c[3] * 0x48;
+    out[4].n = c[4];
+    out[4].p = (int)p;
+    p += c[4] * 0x2C;
+    out[5].n = c[5];
+    out[5].p = (int)p;
+    p += c[5] * 0x50;
+    out[6].n = c[6];
+    out[6].p = (int)p;
+    p += c[6] * 0x38;
+    out[7].n = c[7];
+    out[7].p = (int)p;
+    p += c[7] * 0x5C;
+    ((int*)out)[0x40 / 4] = x;
+    ((int*)out)[0x44 / 4] = (int)p;
+    p += x * 0x14;
+    ((int*)out)[0x48 / 4] = y;
+    ((int*)out)[0x50 / 4] = (int)p;
+    return total;
+}
 // Matched
 int sub_800228F8(int* a0, int* a1, char* a2, int h)
 {
