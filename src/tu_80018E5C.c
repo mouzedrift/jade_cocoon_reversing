@@ -201,4 +201,47 @@ void sub_80019AF4(unsigned int* arg0, unsigned int* arg1)
 {
     sub_800403E8(arg0, arg1, 12);
 }
+#if 0
+typedef struct
+{
+    unsigned int v[3];
+} struct_u3;
+extern unsigned int dword_8007303C[];
+// Not matched (5 words): the +6 field offset is folded into the pointer
+void sub_80019B14(unsigned char* base, unsigned short* a1, unsigned short* a2)
+{
+    struct_u3 local;
+    int j;
+    int k;
+    short* q;
+    unsigned int m1;
+    unsigned int m2;
+    local = *(struct_u3*)dword_8007303C;
+    for (j = 0; j < 3; j++)
+    {
+        m1 = m2 = 0;
+        if (a1[j] < 2)
+        {
+            m1 = local.v[j];
+        }
+        if (a2[j] == 0)
+        {
+            m2 = local.v[j];
+        }
+        q = (short*)base;
+        for (k = 0; k < 25; k++)
+        {
+            if (m1 & (1 << k))
+            {
+                q[3] &= ~2;
+            }
+            if (m2 & (1 << k))
+            {
+                q[3] |= 0x10;
+            }
+            q += 4;
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80019B14);

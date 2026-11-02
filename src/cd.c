@@ -121,6 +121,51 @@ void sub_8003B684(int* v)
         v[2] >>= sh;
     }
 }
+#if 0
+// Not matched (33 words): register assignment of the abs() temporaries
+int sub_8003B740(int* a, int* b, unsigned int* c)
+{
+    int sum = -1;
+    int ok = 0;
+    unsigned int r = *c;
+    int t;
+    int dx;
+    int dy;
+    int dz;
+    t = a[0] - b[0];
+    dx = t;
+    if (t < 0)
+    {
+        dx = -dx;
+    }
+    if (r >= (unsigned int)dx)
+    {
+        t = a[1] - b[1];
+        dy = t;
+        if (t < 0)
+        {
+            dy = -dy;
+        }
+        if (r >= (unsigned int)dy)
+        {
+            t = a[2] - b[2];
+            dz = t;
+            if (t < 0)
+            {
+                dz = -dz;
+            }
+            if (r >= (unsigned int)dz)
+            {
+                sum = dx * dx + dy * dy + dz * dz;
+                ok = !(r * r < (unsigned int)sum);
+            }
+        }
+    }
+    *c = sum;
+    return ok;
+}
+
+#endif
 INCLUDE_ASM(sub_8003B740);
 // Matched
 int sub_8003B80C(int* a, int* b)

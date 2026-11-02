@@ -149,7 +149,16 @@ void ApplyAudioOutputFormat_80030988(void)
     }
     SsSetMVol(0x7F, 0x7F);
 }
-INCLUDE_ASM(sub_800309D8);
+// Matched
+void sub_800309D8(SoundStruct* s)
+{
+    int i;
+    for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
+    {
+        int vol = (saveData_8008B570.field_1C_settings >> 7) & 0x7F;
+        SsSepSetVol(s->field_C_sep_access_num, i, vol, vol);
+    }
+}
 // Matched
 void sub_80030A84(short soundId, SoundStruct* sound)
 {
