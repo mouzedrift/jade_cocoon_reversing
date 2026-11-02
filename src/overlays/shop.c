@@ -190,6 +190,20 @@ extern void fn_80019B14(int a, int b, int c);
 extern void fn_8001D68C(void* p, int on);
 extern char name_80079140[];
 extern signed char name_8007BA74[];
+extern int sub_800B9E94(char* src, char* dst, short c);
+typedef struct ShopAuxShop
+{
+    char pad_0[0x5C];
+    int field_5C;
+    char pad_60[0x28];
+} ShopAuxShop;
+typedef struct ShopSaveShop
+{
+    char pad_0[0x988];
+    ShopItemShop items[15];
+    ShopAuxShop aux[12];
+} ShopSaveShop;
+extern ShopSaveShop name_8008B570;
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -237,7 +251,53 @@ int sub_800B9888(short i)
     return -1;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800B9920);
+int sub_800B9920()
+{
+    int total = 27;
+    ShopItemShop* items = malloc3_8003FC4C(0x1A28);
+    short n = 0;
+    int k;
+    for (k = 0; k < 15; k++)
+    {
+        if (name_8008B570.items[k].state_0 == 3)
+        {
+            sub_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            n++;
+        }
+    }
+    if (n < 3)
+    {
+        for (k = n; k < 3; k++)
+        {
+            items[k].state_0 = 4;
+        }
+    }
+    n = 3;
+    for (k = 0; k < 15; k++)
+    {
+        if (name_8008B570.items[k].state_0 == 2)
+        {
+            sub_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            n++;
+        }
+    }
+    for (k = 0; k < 12; k++)
+    {
+        if (name_8008B570.aux[k].field_5C != 0xD3)
+        {
+            sub_800B9E94((char*)&name_8008B570.aux[k], (char*)&items[n], 2);
+            n++;
+        }
+    }
+    for (k = n; k < total; k++)
+    {
+        items[k].state_0 = 4;
+    }
+    sub_80010600();
+    name_800B6CF0 = items;
+    name_800B6CE4 = total;
+    return total;
+}
 
 void sub_800B9B20(int i)
 {
