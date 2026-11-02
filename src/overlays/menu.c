@@ -3,15 +3,37 @@
 #include "funcs.h"
 #include "globals.h"
 
+typedef struct MenuTask
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+} MenuTask;
+
 INCLUDE_OVERLAY_ASM(menu, dword_800B66C0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BBB9C);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BBE50);
+extern int dword_8008B4E8;
+extern void sub_8002BE10();
+extern void sub_800BBE90();
+void sub_800BBE50(MenuTask* t)
+{
+    if (dword_8008B4E8)
+    {
+        sub_8002BE10();
+        t->next_8 = sub_800BBE90;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BBE90);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BBF10);
+extern int sub_800121A8();
+int sub_800BBF10(unsigned char a, unsigned char b)
+{
+    int x = sub_800121A8(a);
+    return x < sub_800121A8(b);
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BBF48);
 
@@ -45,7 +67,15 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BD40C);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD590);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BD5E4);
+extern void sub_800BE4A0();
+extern void sub_800BD6C8();
+void sub_800BD5E4(MenuTask* t, int a)
+{
+    sub_8002BE10();
+    sub_800BE4A0(a);
+    sub_8001C19C(3, 0x20);
+    t->next_8 = sub_800BD6C8;
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD634);
 
@@ -53,8 +83,28 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BD6C8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BD80C);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BDB74);
+extern int sub_800B32D4();
+extern int name_8007A170[];
+int sub_800BDB74(int a)
+{
+    if (a < 0xC9)
+        return name_8007A170[a];
+    return sub_800B32D4(a - 0xC9);
+}
 
+// near miss: a kept in a different register
+#if 0
+typedef struct MenuSaveView
+{
+    char pad_0[0x814];
+    unsigned int flags_814[1];
+} MenuSaveView;
+int sub_800BDBB8(int a)
+{
+    int q = a / 32;
+    return (((MenuSaveView*)&saveData_8008B570)->flags_814[q] & (1 << (a - q * 32))) != 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BDBB8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BDBFC);
@@ -65,7 +115,14 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BDE10);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE048);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BE25C);
+extern short name_800C1974[];
+void sub_800BE25C(short* p)
+{
+    short* tbl = name_800C1974;
+    short v = tbl[p[1]];
+    if (v != -1)
+        p[1] = v;
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BE294);
 
