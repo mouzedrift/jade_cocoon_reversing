@@ -300,6 +300,27 @@ extern GameNode_1* dword_8008D400;
 extern GameRect_1 stru_8008D420;
 extern int dword_80091C94;
 extern void sub_800A72C8(int* p);
+typedef struct GameMapEnt_1
+{
+    int pad_0;
+    short f4;
+    char pad_6[10];
+} GameMapEnt_1;
+typedef struct GameSave2_1
+{
+    char pad_0[0x2e4];
+    short f2e4;
+    short pad_2e6;
+    short f2e8;
+    short pad_2ea;
+    short f2ec;
+} GameSave2_1;
+extern GameMapEnt_1** dword_800B0608[];
+extern void sub_800A4940(int a, int b);
+extern void sub_800A5B54(int* p);
+extern void sub_800A6060();
+extern void sub_800A6168();
+extern int dword_800AEBDC;
 
 INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
 
@@ -769,6 +790,23 @@ int sub_800A28FC(int a)
     return dword_800B19E0;
 }
 
+#if 0
+// Not matched
+void sub_800A2924(int a)
+{
+    sub_800A2CA8(a, 0);
+    gCtx_800B1260.f4c[a] = 1;
+    if (--gCtx_800B1260.f44 == 0)
+    {
+        int x = *(int*)((char*)&gCtx_800B1260 + 0x48);
+        if (x >= 0)
+        {
+            GameSave2_1* sd = (GameSave2_1*)&saveData_8008B570;
+            sub_800A4940(x, dword_800B0608[sd->f2e4][sd->f2e8][sd->f2ec].f4);
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A2924);
 
 // Matched
@@ -1178,6 +1216,49 @@ int sub_800A5354(void)
     return v;
 }
 
+#if 0
+// Not matched
+unsigned short* sub_800A53CC(void)
+{
+    char* b = (char*)&saveData_8008B570;
+    unsigned short* r = 0;
+    if (((GameSave2_1*)b)->f2e4 == 4)
+    {
+        if (((GameSave2_1*)b)->f2e8 == 1)
+        {
+            r = (unsigned short*)(b + 0x838);
+        }
+        else if (((GameSave2_1*)b)->f2e8 == 2)
+        {
+            r = (unsigned short*)(b + 0x850);
+        }
+        else if (((GameSave2_1*)b)->f2e8 == 3)
+        {
+            r = (unsigned short*)(b + 0x874);
+        }
+        else if (((GameSave2_1*)b)->f2e8 == 4)
+        {
+            r = (unsigned short*)(b + 0x8cc);
+        }
+    }
+    else if (((GameSave2_1*)b)->f2e4 == 5)
+    {
+        if (((GameSave2_1*)b)->f2e8 == 1)
+        {
+            r = (unsigned short*)(b + 0x8f8);
+        }
+        else if (((GameSave2_1*)b)->f2e8 == 2)
+        {
+            r = (unsigned short*)(b + 0x90c);
+        }
+        else if (((GameSave2_1*)b)->f2e8 == 3)
+        {
+            r = (unsigned short*)(b + 0x92c);
+        }
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A53CC);
 
 // Matched
@@ -1231,7 +1312,32 @@ int sub_800A5854(void)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A58B4);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A59D0);
+// Matched
+int* sub_800A59D0(int v)
+{
+    GameObj5_1* p = (GameObj5_1*)sub_80043AF8((EventNode*)dword_8008D410);
+    if (p)
+    {
+        int* q = p->obj_14;
+        int i;
+        p->flags_0 = ((((p->flags_0 | 1) & ~0x8000) | 4) & ~0x8000);
+        q[1] = v;
+        q[2] = v;
+        q[3] = v;
+        q[4] = dword_800AEBDC;
+        q[0x114 / 4] = 0;
+        for (i = 7; i >= 0; i--)
+        {
+            q[51 + i] = 0;
+        }
+        sub_800A5B54(q);
+        p->fn_8 = sub_800A6060;
+        p->fn_c = sub_800A6168;
+        dword_800AEBDC++;
+        return (int*)p;
+    }
+    return 0;
+}
 
 // Matched
 GameR5_1* sub_800A5AA0(int a, int b)
