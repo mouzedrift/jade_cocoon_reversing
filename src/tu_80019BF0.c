@@ -305,7 +305,52 @@ void sub_8001AAF4(void)
     unsigned short* p = (unsigned short*)dword_8008D628[9];
     p[0] &= ~4;
 }
-INCLUDE_ASM(sub_8001AB1C);
+// Matched
+void sub_8001AB1C(short a0)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    int** q;
+    p[3] = a0;
+    q = dword_8008D4A0 + 4;
+    p[1] = 0;
+    p[0] |= 8;
+    sub_8001A41C(q, p);
+}
+// Matched
+void sub_8001AB68(void)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    p[1] = 8;
+    p[0] |= 0x10;
+}
+// Matched
+int sub_8001AB94(void)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    unsigned short v = p[0];
+    if (v & 0x1B)
+    {
+        return 0;
+    }
+    if (v & 4)
+    {
+        return ((short*)p)[1] == p[3];
+    }
+    return 1;
+}
+// Matched
+void sub_8001ABEC(int on)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    if (on)
+    {
+        p[0] |= 0x20;
+    }
+    else
+    {
+        p[0] &= ~0x20;
+    }
+}
 // Matched
 int sub_8001AC2C(int idx)
 {
