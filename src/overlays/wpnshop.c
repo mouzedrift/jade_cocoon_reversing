@@ -200,6 +200,20 @@ extern void sub_800AD9EC(int a, int b);
 extern void sub_800BBDD0();
 extern void sub_800BB664();
 extern void sub_800BB30C();
+extern int sub_8003D380(int a);
+extern int sub_8003D41C(int a);
+extern unsigned short name_8009194C;
+extern void sub_800BD1A8();
+extern void sub_800BD278();
+extern void sub_800BD378();
+extern void sub_800BD9A8();
+extern void sub_800BDAB4();
+extern void sub_800BD928();
+extern void sub_800BD760();
+extern void sub_800BD444();
+extern void sub_800BD61C();
+extern void sub_800BD6A4();
+
 extern unsigned short name_800BE818[];
 extern unsigned short name_800BE840[];
 extern int sub_800AD308(int a);
@@ -484,8 +498,91 @@ void sub_800BB30C(WpnObj_wpnshop* o)
 }
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800BADA0);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB664);
-INCLUDE_OVERLAY_ASM(wpnshop, jpt_800BADA4);
+void sub_800BB664(WpnObj_wpnshop* o)
+{
+    if (o->f_48 == 8 && !(o->f_4 & 1))
+    {
+        if (sub_8003D380(0))
+        {
+            o->f_40 = 1;
+        }
+        else if (sub_8003D41C(0))
+        {
+            o->f_44 = 1;
+        }
+    }
+    if (o->f_4 & 1)
+    {
+        sub_800BBE54(o);
+        if (o->f_50 < 150)
+        {
+            o->f_50++;
+        }
+        if (name_8009194C || o->f_50 >= 150)
+        {
+            o->f_3A = name_800BE840[o->f_0];
+            o->f_4 &= ~1;
+            o->f_4E = 0;
+            o->f_3E = 0;
+            o->f_50 = 0;
+        }
+    }
+    else
+    {
+        switch (o->f_0)
+        {
+        case 0:
+        case 1:
+            sub_800BD1A8(o);
+            break;
+        case 2:
+            sub_800BD278(o);
+            break;
+        case 3:
+            sub_800BD378(o);
+            break;
+        case 4:
+            sub_800BD9A8(o);
+            break;
+        case 5:
+            sub_800BDAB4(o);
+            break;
+        case 6:
+        case 7:
+            sub_800BD928(o);
+            break;
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            sub_800BD760(o);
+            break;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            sub_800BD444(o);
+            break;
+        case 16:
+            sub_800BD61C(o);
+            break;
+        case 17:
+        case 18:
+            sub_800BD6A4(o);
+            break;
+        }
+        if (o->f_40)
+        {
+            o->f_40 = 0;
+        }
+        if (o->f_44)
+        {
+            o->f_44 = 0;
+        }
+    }
+    sub_800BB950(o);
+    sub_800BCF80(o);
+}
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800BADF0);
 
 // Matched
