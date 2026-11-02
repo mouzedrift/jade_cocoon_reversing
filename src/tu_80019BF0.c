@@ -325,7 +325,21 @@ void DrawIntroMovie_8001AF64(void* a0)
 }
 #endif
 INCLUDE_ASM(DrawIntroMovie_8001AF64);
-INCLUDE_ASM(InitMovie_8001B1B0);
+// Matched
+void InitMovie_8001B1B0(void)
+{
+    bStopDrawingMovie_8008D45C = 0;
+    frameCount_8008D3FC = 0;
+    geomScreenDistance_8008B548 = 0xA0;
+    dword_8008B4F8 = 0x1000;
+    drawEnvRed_8008D448[0] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[2] = 0;
+    bDoubleBuffer_8008D428 = 0;
+    dword_800918C4 = 0;
+    unknownFlags_8008D678 &= ~0x200;
+    sub_8001B230();
+}
 // Matched
 void sub_8001B230(void)
 {
@@ -624,7 +638,31 @@ unsigned short sub_8001CE54(int idx)
 {
     return word_8007CED8[idx];
 }
-INCLUDE_ASM(sub_8001CE70);
+// Matched
+unsigned short sub_8001CE70(int idx)
+{
+    return aKkkiqqqqqssssZ[idx];
+}
+// Matched
+int sub_8001CE8C(int idx)
+{
+    unsigned short v = aKkkiqqqqqssssZ[idx];
+    int r = (v >> 5) & 2;
+    if (v & 0x80)
+    {
+        r |= 4;
+    }
+    if (v & 4)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+unsigned char sub_8001CED0(int idx)
+{
+    return *(unsigned char*)&aKkkiqqqqqssssZ[idx];
+}
 // Matched
 int sub_8001CEEC(void)
 {
@@ -879,28 +917,22 @@ void sub_8001D41C(int a0, void* a1)
     sub_8001F918(a1);
     sub_8001F9AC(a1);
 }
-#if 0
-// Not matched
+// Matched
 int* sub_8001D45C(int a0)
 {
     struct_cb* r = sub_80043AF8(dword_8008D43C);
     int* p;
-    if (r == 0)
-    {
-        p = 0;
-    }
-    else
+    if (r != 0)
     {
         p = r->field_14;
         r->fn_8 = (void (*)(struct_cb*, int*))sub_8001D41C;
         r->flags_0 = (r->flags_0 | 1) & ~0x8000;
         p[0] = (int)r;
         sub_8001E574(p, a0);
+        return p;
     }
-    return p;
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001D45C);
 INCLUDE_ASM(sub_8001D4DC);
 // Matched
 void sub_8001D600(char* a0)

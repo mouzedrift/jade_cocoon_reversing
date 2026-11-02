@@ -465,5 +465,9 @@ extern int dword_8008D4D8;
 
 // camera position (vx, vy, vz at 0x8008D600..0x8008D608)
 extern int dword_8008D600[3];
+extern unsigned short aKkkiqqqqqssssZ[];
+extern int dword_8008B4F8;
+extern int geomScreenDistance_8008B548;
+extern int dword_800918C4;
 
 #endif
