@@ -69,6 +69,9 @@ extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
 extern void sub_8004FE08(int a);
+extern void sub_800BD17C(void);
+extern void sub_800BD35C(void);
+extern void sub_800BD06C(void);
 extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
 extern char byte_800B682C[];
 extern char byte_800B6B9C[];
@@ -746,6 +749,25 @@ INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB4A8);
 
+#if 0
+// Not matched: the original reloads the zero it stored to f54 (for f50) and uses a smaller frame; not reproduced
+void sub_800BB5DC(void)
+{
+    LoadState_LOAD* st = &dword_800BE1F4;
+    st->fC_LOAD = 0;
+    sub_800BD17C();
+    st->f44_LOAD = 0;
+    st->f0_LOAD = 0;
+    st->f4_LOAD = 0;
+    st->f8_LOAD = 0;
+    st->f50_LOAD = st->f54_LOAD = 0;
+    st->f14_LOAD = -1;
+    st->f4C_LOAD = 1;
+    st->f48_LOAD = 1;
+    sub_800BD35C();
+    sub_80056FEC(7, (int)sub_800BD06C);
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB5DC);
 
 #if 0
