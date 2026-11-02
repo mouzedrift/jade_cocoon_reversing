@@ -275,7 +275,7 @@ extern void sub_800283C0(void* a0, int* a1);
 extern void sub_8003CF88(short a0, short a1, int a2);
 extern void sub_8001F354(void* a0);
 extern void sub_8001F918(char* o);
-extern void sub_8001F9F0(void* a0);
+extern void sub_8001F9F0(char* o);
 extern void sub_8001FB00(void* a0);
 extern void sub_8001FD08(void* a0);
 extern void sub_8001FF48(void* a0);

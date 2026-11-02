@@ -216,6 +216,12 @@ typedef struct
 } struct_8008D4F0;
 extern struct_8008D4F0 dword_8008D4F0;
 extern VECTOR levantPos_8008BD18;
+extern short dword_8008D474[2];
+extern unsigned short dword_800918C8[];
+extern unsigned short word_800918CC[];
+extern unsigned short dword_800918D4[];
+extern unsigned short word_8009194C[];
+extern unsigned short dword_80091950[][16];
 #if 0
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
 int sub_80019CC4(VECTOR* pos)
@@ -582,7 +588,31 @@ void sub_8001B540(void)
         unknownFlags_8008D678 &= ~0x80;
     }
 }
-INCLUDE_ASM(Draw_8001B5EC);
+// Matched
+void Draw_8001B5EC(void)
+{
+    int r;
+    if (!(unknownFlags_8008D678 & 0x20))
+    {
+        DrawSync(0);
+    }
+    SetGeomOffset(stru_8008B4D8.field_C_w / 2 + dword_8008D474[0], stru_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomScreen(geomScreenDistance_8008B548);
+    do
+    {
+    } while (dword_8008B4B4 < stru_8008B4D8.field_4);
+    if (unknownFlags_8008D678 & 0x20)
+    {
+        ResetGraph(1);
+        do
+        {
+            r = GetODE();
+        } while (ODEIsEvenAddressDrawn_800918C0 == r);
+        ODEIsEvenAddressDrawn_800918C0 = r;
+    }
+    dword_8008B4B4 = 0;
+    dword_8008B4B4 = 0;
+}
 // Matched
 int sub_8001B6E8(int unused)
 {
@@ -952,7 +982,37 @@ void ProcessPad_8001C8E8(int a0)
 }
 #endif
 INCLUDE_ASM(ProcessPad_8001C8E8);
-INCLUDE_ASM(sub_8001CAF0);
+// Matched
+void sub_8001CAF0(int port, unsigned short delay, unsigned short rate)
+{
+    int i;
+    unsigned short changed;
+    unsigned short held;
+    unsigned short bit;
+    int tick;
+    changed = word_800918D0[port] ^ dword_800918C8[port];
+    word_8009194C[port] = changed & word_800918D0[port];
+    dword_800918D4[port] = changed & ~word_800918D0[port];
+    word_800918CC[port] = word_8009194C[port];
+    held = word_800918D0[port] & dword_800918C8[port];
+    tick = frameCount_8008D3FC & (rate - 1);
+    for (i = 0; i < 16; i++)
+    {
+        bit = held & 1;
+        held >>= 1;
+        if (bit)
+        {
+            if (++dword_80091950[port][i] >= delay && tick == 0)
+            {
+                word_800918CC[port] |= bit << i;
+            }
+        }
+        else
+        {
+            dword_80091950[port][i] = 0;
+        }
+    }
+}
 INCLUDE_ASM(sub_8001CC04);
 // Matched
 int sub_8001CD34(void)
@@ -1930,12 +1990,35 @@ void sub_8001F9AC(void* p)
     sub_8001FF48(p);
     sub_800200F8(p);
 }
-#if 0
-void sub_8001F9F0(void* a0)
+// Matched
+void sub_8001F9F0(char* o)
 {
+    unsigned int f = *(unsigned int*)(o + 4);
+    if (f & 1)
+    {
+        if (f & 2)
+        {
+            *(short*)(o + 0x26) += *(short*)(o + 0x28);
+            if (*(short*)(o + 0x2A) < *(short*)(o + 0x26))
+            {
+                *(short*)(o + 0x26) = *(short*)(o + 0x2A);
+                *(unsigned int*)(o + 4) &= ~3;
+            }
+        }
+        else
+        {
+            *(short*)(o + 0x26) -= *(short*)(o + 0x28);
+            if (*(short*)(o + 0x26) < *(short*)(o + 0x2A))
+            {
+                *(short*)(o + 0x26) = *(short*)(o + 0x2A);
+                *(unsigned int*)(o + 4) &= ~1;
+            }
+        }
+    }
+    *(int*)(o + 0x2C) = *(int*)(o + 0x138) * *(short*)(o + 0x26) / 4096;
+    *(int*)(o + 0x30) = *(int*)(o + 0x13C) * *(short*)(o + 0x26) / 4096;
+    *(int*)(o + 0x34) = *(int*)(o + 0x140) * *(short*)(o + 0x26) / 4096;
 }
-#endif
-INCLUDE_ASM(sub_8001F9F0);
 #if 0
 void sub_8001FB00(void* a0)
 {
