@@ -138,7 +138,30 @@ void sub_800CBAD4(int a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBB4C);
+extern int sub_8003E4C8(int);
+
+void sub_800CBB4C(int p)
+{
+    RECT a;
+    short b[2];
+    int d;
+    int w;
+    a.w = w = sub_8003E4C8(p) + 4;
+    a.h = 0x12;
+    if (byte_800CD839 == 1)
+    {
+        a.x = 0xDD - w;
+    }
+    else
+    {
+        a.x = 0x5F;
+    }
+    a.y = 0xC1;
+    b[1] = 0xC3;
+    b[0] = a.x + 2;
+    d = p;
+    sub_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
+}
 
 void sub_800CBBE0(int p)
 {
