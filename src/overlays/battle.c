@@ -3,6 +3,11 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern int dword_800C9DD0[];
+extern int sub_800BE364();
+extern void sub_800BE3C0();
+extern int sub_800BEA94();
+
 typedef struct BatMin_a
 {
     unsigned int f0;
@@ -1098,6 +1103,33 @@ void sub_800BDBB0(BatTask_a* t)
     }
 }
 
+#if 0
+void sub_800BDC3C(BatTask_a* t)
+{
+    int k;
+    if ((short)sub_800BE364() < dword_800C9D94 && sub_800BEA94() == 1)
+    {
+        k = dword_800C9D90;
+        dword_800C9D90 = k - 1;
+        if (k != 0)
+        {
+            do
+            {
+                sub_800A2924(dword_800C9DD0[dword_800C9D90]);
+                k = dword_800C9D90;
+                dword_800C9D90 = k - 1;
+            } while (k != 0);
+        }
+        t->f0 = (t->f0 & ~1) | 0x8000;
+        dword_800B1228 &= ~0x1000;
+    }
+    else
+    {
+        sub_800BE3C0();
+        dword_800C9D94++;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BDC3C);
 
 #if 0
