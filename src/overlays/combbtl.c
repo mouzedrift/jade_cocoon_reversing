@@ -564,7 +564,27 @@ void sub_800A8078(short a, short b, short c)
     word_800A82E0[3] = c;
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A8098);
+extern int** dword_8008D458;
+extern int dword_800A8478;
+extern unsigned int dword_800A3A88;
+extern int sub_800A5408();
+extern void sub_800A816C();
+
+int sub_800A8098(int a, int b, int c)
+{
+    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D458);
+    if (e)
+    {
+        e->cb_8 = (EventEntryFn)sub_800A816C;
+        e->flags = (e->flags | 1) & ~0x8000;
+        sub_80043564(word_800A82E0[1], word_800A82E0[2], word_800A82E0[3]);
+        dword_800A8478 = sub_800A5408(a, b, c);
+        dword_800A3A88 &= ~4;
+        dword_800A3A88 &= ~8;
+        dword_800A3A88 &= ~0x10;
+    }
+    return (int)e;
+}
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A816C);
 
