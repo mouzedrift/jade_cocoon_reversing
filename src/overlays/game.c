@@ -344,6 +344,28 @@ extern void sub_800A6060();
 extern void sub_800A6168();
 extern int dword_800AEBDC;
 extern void sub_800A0A04();
+typedef struct GameVec4_1
+{
+    int x, y, z, w;
+} GameVec4_1;
+typedef struct GameSave4_1
+{
+    char pad_0[0x7a8];
+    int f7a8;
+    int pad_7ac;
+    int f7b0;
+} GameSave4_1;
+typedef struct GameO_1
+{
+    char pad_0[0x38];
+    int f38;
+    int pad_3c;
+    int f40;
+    char pad_44[0x1a];
+    short f5e;
+} GameO_1;
+extern int sub_800A48F4(int a);
+extern void sub_800A46FC(GameP4470_1* p);
 
 INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
 
@@ -1062,7 +1084,25 @@ int sub_800A4470(GameP4470_1* p)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A44C0);
+// Matched
+void sub_800A44C0(GameP4470_1* p)
+{
+    GameVec4_1 v;
+    GameVec4_1 w;
+    int ang;
+    int idx;
+    sub_800A46FC(p);
+    v.x = ((GameSave4_1*)&saveData_8008B570)->f7a8 - ((GameO_1*)p->f8)->f38;
+    v.z = ((GameSave4_1*)&saveData_8008B570)->f7b0 - ((GameO_1*)p->f8)->f40;
+    ang = ratan2_8003B548(v.x, v.z);
+    idx = (ang - ((GameO_1*)p->f8)->f5e) & 0xfff;
+    w.x = ((GameO_1*)p->f8)->f38 + (((GameO_1*)p->f8)->f38 - ((GameSave4_1*)&saveData_8008B570)->f7a8);
+    w.z = ((GameO_1*)p->f8)->f40 + (((GameO_1*)p->f8)->f40 - ((GameSave4_1*)&saveData_8008B570)->f7b0);
+    if (sub_8001DDFC(p->f8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
+    {
+        sub_8001D71C(p->f8);
+    }
+}
 
 // Matched
 void sub_800A459C(GameP4470_1* p)
