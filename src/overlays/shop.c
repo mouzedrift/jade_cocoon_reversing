@@ -189,6 +189,7 @@ extern int fn_80024F38(int a, int b);
 extern void fn_80019B14(int a, int b, int c);
 extern void fn_8001D68C(void* p, int on);
 extern char name_80079140[];
+extern signed char name_8007BA74[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -487,6 +488,61 @@ unsigned char sub_800BA46C(unsigned char a, unsigned char b)
     return out;
 }
 
+#if 0 // near miss: first loop i/x register assignment (20 words)
+void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
+{
+    int tmp[4];
+    int j;
+    int i;
+    int v;
+    int y;
+    int x;
+    for (i = 0; i < 12; i++)
+    {
+        x = (a + i)[0xA4];
+        y = (b + i)[0xA4];
+        if (x < y)
+        {
+            x = x * 2;
+        }
+        else
+        {
+            y = y * 2;
+        }
+        v = (x + y) / 3;
+        if (v < -128)
+        {
+            v = -128;
+        }
+        else if (v >= 128)
+        {
+            v = 127;
+        }
+        (d + i)[0xA4] = v;
+    }
+    memset(tmp, 0, 16);
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+        {
+            tmp[j] += (unsigned char)d[0xC2 + i] * name_8007BA74[i * 4 + j];
+        }
+    }
+    for (i = 0; i < 4; i++)
+    {
+        d[0xA4 + i] = tmp[i] / 32;
+    }
+    for (i = 11; i >= 0; i--)
+    {
+    }
+    for (i = 11; i >= 0; i--)
+    {
+    }
+    for (i = 11; i >= 0; i--)
+    {
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
 #if 0 // near miss: pointer induction var
@@ -569,6 +625,55 @@ int sub_800BAB30()
     return 1;
 }
 
+#if 0 // near miss: compiler strength-reduces the first loop to pointer increments (96 of 102 words differ)
+void sub_800BAB38(char* a, char* b)
+{
+    unsigned char tmp[0x30];
+    unsigned int e[18];
+    unsigned char g[6];
+    int i;
+    int j;
+    for (i = 0; i < 0x30; i++)
+    {
+        if (i < 0x20)
+        {
+            if (i * 2 < 0x30)
+            {
+                tmp[i] = a[i * 2 + 0x4C];
+            }
+            else
+            {
+                tmp[i] = a[i * 6 - 0x8F + 0x4C];
+            }
+        }
+        else
+        {
+            tmp[i] = b[i * 3 - 0x60 + 0x4C];
+        }
+    }
+    sub_800403E8((unsigned int*)(a + 0x4C), (unsigned int*)tmp, 0x30);
+    sub_80019AF4(e, (unsigned int*)(a + 0x94));
+    sub_80019AF4(e + 3, (unsigned int*)(b + 0x94));
+    sub_80019AF4(e + 6, (unsigned int*)(a + 4));
+    sub_80019AF4(e + 9, (unsigned int*)(a + 0x10));
+    sub_80019AF4(e + 12, (unsigned int*)(b + 4));
+    sub_80019AF4(e + 15, (unsigned int*)(b + 0x10));
+    for (j = 0; j < 6; j++)
+    {
+        sub_80019AF4((unsigned int*)(a + 4 + j * 12), e + j * 3);
+    }
+    g[0] = a[0xC6];
+    g[1] = b[0xC6];
+    g[2] = a[0x7C];
+    g[3] = a[0x7D];
+    g[4] = b[0x7C];
+    g[5] = b[0x7D];
+    for (j = 0; j < 6; j++)
+    {
+        (a + j)[0x7C] = g[j];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BAB38);
 
 int sub_800BACD0(unsigned char* d)
