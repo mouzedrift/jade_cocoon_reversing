@@ -16,7 +16,7 @@ typedef struct WpnObj_wpnshop
     int f_18;
     short f_1C;
     unsigned short f_1E;
-    char pad_20[8];
+    short f_20[4];
     char f_28[8];
     short f_30;
     short f_32;
@@ -88,6 +88,19 @@ extern unsigned short name_800BF244[];
 extern unsigned short name_800BF274[];
 extern unsigned short name_800BF294[];
 extern void sub_800BC210();
+typedef struct WpnA384_wpnshop
+{
+    void* rect;
+    int frame;
+    short a;
+    short b;
+} WpnA384_wpnshop;
+typedef struct WpnBox2_wpnshop
+{
+    short x;
+    short y;
+} WpnBox2_wpnshop;
+extern void sub_8002A384(void* p);
 extern int sub_800AD02C(void);
 extern int sub_800BDF68();
 extern int sub_800BDE38();
@@ -444,7 +457,54 @@ void sub_800BC2E4(WpnObj_wpnshop* o)
 
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC374);
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BCABC);
+// Matched
+void sub_800BCABC(WpnObj_wpnshop* o, short k)
+{
+    WpnRect_wpnshop rect;
+    WpnA384_wpnshop d;
+    WpnBox2_wpnshop box;
+    int cur = sub_800AD990(o->f_10);
+    int s;
+    int r = 0xFF;
+    if (k == o->f_34)
+    {
+        s = o->f_30 + o->f_32;
+    }
+    else
+    {
+        s = o->f_36 + o->f_38;
+    }
+    if (k == 0xA)
+    {
+        if (s < o->f_20[o->f_10])
+        {
+            r = sub_800BDD2C(s, o->f_10, o->f_1E);
+        }
+        else
+        {
+            r = 0xFF;
+        }
+    }
+    else if (k == 0xB)
+    {
+        r = sub_800AD288(s, o->f_10 + 1);
+    }
+    if (r != 0xFF && r == cur)
+    {
+        rect.x = 0x50;
+        rect.y = 0x4D;
+        rect.w = 0x26;
+        rect.h = 0x10;
+        d.a = 1;
+        d.rect = &rect;
+        d.frame = frameCount_8008D3FC;
+        d.b = 0xE;
+        box.x = 0x54;
+        box.y = 0x50;
+        sub_8002C06C(&box, 0xB6, 0xE);
+        sub_8002A384(&d);
+    }
+}
 
 // Matched
 void sub_800BCC18(WpnObj_wpnshop* o)
