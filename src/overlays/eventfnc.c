@@ -94,6 +94,7 @@ extern int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
 extern void sub_800BBDA0(int a, int b);
 extern int sub_800BBDD8(int a);
 extern char dword_80091C10[];
+extern int dword_800AEBD8;
 extern void sub_800B8940(int* p);
 extern void sub_800206A0(int a, int b, int c, int d);
 extern void sub_8002056C(void);
@@ -236,6 +237,41 @@ int sub_800B89F4(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8A34);
 
+#if 0
+extern int dword_800B0EC0;
+extern int dword_800B1260;
+extern int sub_800A6D50(int a);
+extern void sub_800A1904(void);
+int sub_800B8BE8(EvCtxEventfnc* c)
+{
+    int r;
+    if (dword_800B0EC0 != 1)
+    {
+        return 0;
+    }
+    if (dword_800B1260 != 0)
+    {
+        return 0;
+    }
+    if (dword_800AEBD8 >= 0)
+    {
+        if (c->f10_10 != dword_800AEBD8)
+        {
+            return 0;
+        }
+    }
+    r = sub_800A6D50(0);
+    if (r != sub_800A6D50(2))
+    {
+        return 0;
+    }
+    c->flags_0 |= 0x20;
+    sub_800A1904();
+    dword_800AEBD8 = c->f10_10;
+    c->pc_8++;
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8BE8);
 
 int sub_800B8CB0(EvCtxEventfnc* c)
@@ -867,7 +903,6 @@ int sub_800BA6D0(EvCtxEventfnc* c)
     return 1;
 }
 
-extern int dword_800AEBD8;
 int sub_800BA714(EvCtxEventfnc* c)
 {
     if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->f10_10)
