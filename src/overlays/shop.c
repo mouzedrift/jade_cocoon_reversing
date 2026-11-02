@@ -49,7 +49,10 @@ extern int name_8008D670;
 typedef struct ShopUnit3Shop
 {
     short field_0;
-    char pad_2[0x22];
+    short field_2;
+    char pad_4[0x18];
+    int field_1C;
+    int field_20;
     int field_24;
     char pad_28[8];
     short field_30;
@@ -103,6 +106,20 @@ extern void sub_800B9FC8(void* a, void* b, void* c, int d);
 extern int sub_800AD288(int a, int b);
 extern void sub_8002A5A4(void* p);
 extern void sub_800BB148();
+typedef struct ShopEntShop
+{
+    int w0;
+    int w4;
+} ShopEntShop;
+extern int* name_800BFCF4[];
+extern int* name_800BFD08[];
+extern ShopEntShop name_800BF7C8[];
+extern short name_800BF8B4[];
+extern void sub_800A7B00(int a);
+extern void sub_8002BF74();
+extern int sub_800BD678();
+extern void sub_800BD854();
+extern void sub_800BD7A8();
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -119,7 +136,17 @@ INCLUDE_OVERLAY_ASM(shop, dword_800B6D00);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800B97B0);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800B9888);
+int sub_800B9888(short i)
+{
+    for (; i < name_800B6CE4; i++)
+    {
+        if (sub_800B9C10(i) == 2)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800B9920);
 
@@ -244,7 +271,23 @@ void sub_800BA368(unsigned char* d, unsigned char* s)
     *(unsigned short*)(d + 0x92) = *(unsigned short*)(s + 0x92);
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BA3C8);
+void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b)
+{
+    int i;
+    for (i = 5; i >= 0; i--)
+    {
+    }
+    for (i = 5; i >= 0; i--)
+    {
+    }
+    for (i = 0; i < 6; i++)
+    {
+        (d + i)[6] = sub_800BA46C((a + i)[6], (b + i)[6]);
+    }
+    for (i = 5; i >= 0; i--)
+    {
+    }
+}
 
 unsigned char sub_800BA46C(unsigned char a, unsigned char b)
 {
@@ -478,7 +521,24 @@ void sub_800BBA3C(char* u)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BBAAC);
+void sub_800BBAAC(ShopUnit3Shop* u)
+{
+    short i;
+    if (u->field_0 == 0)
+    {
+        for (i = 0; i < 3; i++)
+        {
+            if (u->field_96 == 4)
+            {
+                name_800BF7C8[i].w4 = name_800BFCF4[u->field_30][i];
+            }
+            else
+            {
+                name_800BF7C8[i].w4 = name_800BFD08[u->field_30][i];
+            }
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BBB54);
 
@@ -554,6 +614,26 @@ void sub_800BD720(ShopUnit3Shop* u)
     }
 }
 
+#if 0 // near miss: tab/v register swap
+void sub_800BD7A8(ShopUnit3Shop* u)
+{
+    short i;
+    unsigned short v = u->field_20;
+    u->field_1C = 0;
+    u->field_20 = 0;
+    u->field_1C = name_800BF8B4[u->field_0];
+    for (i = 0; i < 7; i++)
+    {
+        if ((v >> i) & 1)
+        {
+            if ((name_800BF8B4[u->field_0] >> i) & 1)
+            {
+                u->field_20 |= 1 << i;
+            }
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BD7A8);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD854);
@@ -577,7 +657,28 @@ void sub_800BDE44(ShopTaskShop* t, int a)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BDEA8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE07C);
+extern void sub_800BE210();
+void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
+{
+    u->field_0 = 5;
+    u->field_2 = 0;
+    sub_800BD7A8(u);
+    sub_800BBB54(u, 0);
+    if (sub_800BD678(u))
+    {
+        u->field_24 |= 8;
+    }
+    else
+    {
+        u->field_24 &= ~8;
+    }
+    sub_800BD854(u);
+    u->field_30 = u->a5E[1];
+    u->field_32 = u->a72[0];
+    sub_800A7B00(-1);
+    sub_8002BF74();
+    t->next_8 = sub_800BE210;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BE128);
 
