@@ -212,7 +212,27 @@ INCLUDE_ASM(sub_8003856C);
 INCLUDE_ASM(sub_8003891C);
 INCLUDE_ASM(sub_80038A5C);
 INCLUDE_ASM(sub_80038CA8);
-INCLUDE_ASM(sub_80038D64);
+extern int stru_8008D504[];
+extern int sub_8003B860(int* a, int* b);
+
+// Matched
+void sub_80038D64(char* p, int* a1)
+{
+    int d;
+    *(short*)(p + 0x150) = ratan2Difference_8003B9E0(a1, stru_8008D504) & 0xFFF;
+    *(int*)(p + 0x154) = sub_8003B918(sub_8003B860(a1, stru_8008D504));
+    *(short*)(p + 0x152) = ratan2Difference_8003B9E0(a1, (int*)(p + 0x18C)) & 0xFFF;
+    *(int*)(p + 0x158) = sub_8003B918(sub_8003B860(a1, (int*)(p + 0x18C)));
+    d = *(short*)(p + 0x152) - *(short*)(p + 0x150);
+    if (d > 0x800)
+    {
+        *(short*)(p + 0x152) = *(unsigned short*)(p + 0x152) - 0x1000;
+    }
+    else if (d < -0x800)
+    {
+        *(short*)(p + 0x152) = *(unsigned short*)(p + 0x152) + 0x1000;
+    }
+}
 INCLUDE_ASM(sub_80038E2C);
 #if 0
 void sub_800390F4(void* arg0, int arg1)
