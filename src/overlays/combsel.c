@@ -35,10 +35,13 @@ typedef struct CombSelState
 extern CombSelState dword_800A1BBC;
 extern short word_800A5968;
 extern short word_800A5974;
+extern CombSelUnit dword_800A1BC8[][15];
+extern short word_800A1BC4;
 extern CombSelUnit dword_800A3AA0[2][3];
 extern int dword_800A3A94;
 extern unsigned char byte_800A38DB;
 extern char dword_800A5978[];
+extern char dword_800A596C[];
 extern void sub_800A16FC();
 extern int sub_800A1934(void*);
 extern void sub_800A4D64(CombSelUnit*);
@@ -146,7 +149,35 @@ INCLUDE_OVERLAY_ASM(combsel, sub_800A5080);
 
 INCLUDE_OVERLAY_ASM(combsel, sub_800A5188);
 
-INCLUDE_OVERLAY_ASM(combsel, sub_800A53B0);
+void sub_800A53B0()
+{
+    short s;
+    if (sub_8003D288(0, dword_800A3A94))
+    {
+        s = word_800A1BC4;
+        if (s == 1)
+        {
+            short r = sub_8003DA54(dword_800A596C);
+            if (sub_800A1934(&dword_800A1BC8[byte_800A38D9][r]) == 1)
+            {
+                sub_80031494(0x7C);
+            }
+            else
+            {
+                byte_800A38DB = 1;
+                sub_80031494(0x7E);
+            }
+        }
+    }
+    else if (sub_8003D3C0(1, dword_800A3A94))
+    {
+        byte_800A38DB = 0;
+        if (sub_800A1AAC(byte_800A38D9))
+        {
+            word_800A1BC4 = 3;
+        }
+    }
+}
 
 void sub_800A54A0(CombSelTask* t)
 {
