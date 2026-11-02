@@ -500,28 +500,17 @@ void sub_8003FF7C(Heap* h)
     h->tail = 0;
 }
 #if 0
-// Not matched: align expr (size+4)-rem folded differently
 void* sub_8003FFD0(Heap* h, unsigned int size)
 {
     HeapBlock* b = 0;
-    int rem = size & 3;
-    unsigned int aligned;
-    if (rem)
+    unsigned int s;
+    if (size & 3) s = size + 4 - (size & 3); else s = size;
+    if (!(h->size - h->used < s))
     {
-        aligned = 4 + size;
-        aligned -= rem;
-    }
-    else
-    {
-        aligned = size;
-    }
-    size = aligned;
-    if (h->size - h->used >= size)
-    {
-        b = sub_80040150(h, size + 16);
+        b = sub_80040150(h, s + 0x10);
     }
     b->magic = 0x8FFFFFFF;
-    b->size = size + 16;
+    b->size = s + 0x10;
     b->next = 0;
     b->prev = 0;
     if (h->count == 0)

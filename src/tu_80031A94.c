@@ -17,7 +17,74 @@
 #include "data_decls.h"
 
 
-INCLUDE_ASM(sub_80031A94);
+typedef struct Ent4
+{
+    unsigned char a;
+    unsigned char type;
+    unsigned char b;
+    unsigned char c;
+} Ent4;
+extern Ent4* sub_80031B30(int a0);
+
+// Matched
+int sub_80031A94(int* p)
+{
+    int r = 2;
+    Ent4* base;
+    if (p[2] & 0xF)
+    {
+        r = 4;
+    }
+    base = sub_80031B30(sub_80014358(p[2]) & 0xFF);
+    base += p[1];
+    if (base->type == 0xC)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+int sub_80031B0C(Ent4* base, int idx)
+{
+    int r = 4;
+    base += idx;
+    if (base->type == 0xC)
+    {
+        r = 5;
+    }
+    return r;
+}
+extern Ent4* sub_800A11A0(int a0);
+extern Ent4* sub_800A2BA0(int a0);
+
+extern Ent4* sub_800A11A0(int a0);
+extern Ent4* sub_800A2BA0(int a0);
+
+extern Ent4* sub_800A11A0(int a0);
+extern Ent4* sub_800A2BA0(int a0);
+
+#if 0
+Ent4* sub_80031B30(int a0)
+{
+    Ent4* r = 0;
+    unsigned int v = a0 & 0xFF;
+    if (v >= 8)
+    {
+        r = sub_800A11A0((a0 - 8) & 0xFF);
+    }
+    else if (v >= 4)
+    {
+        int flags = sub_800A248C();
+        int bit = 1 << v;
+        if (flags & bit) { r = sub_800A2BA0((a0 - 4) & 0xFF); }
+    }
+    else if (v != 0)
+    {
+        r = (Ent4*)sub_800107F8(3, (a0 - 1) & 0xFF);
+    }
+    return r;
+}
+#endif
 INCLUDE_ASM(sub_80031B30);
 // Matched
 int sub_80031BDC(int a0)

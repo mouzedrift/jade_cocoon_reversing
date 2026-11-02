@@ -116,6 +116,7 @@ int sub_8003D3A0(int a0)
 {
     return sub_8003D288(a0, 1);
 }
+// Matched
 int sub_8003D3C0(int arg0, int arg1)
 {
     int r = 0;
