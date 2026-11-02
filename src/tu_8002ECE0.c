@@ -40,8 +40,53 @@ INCLUDE_DATA(dword_80074424);
 INCLUDE_DATA(dword_80074428);
 
 INCLUDE_ASM(sub_8002ECE0);
-INCLUDE_ASM(sub_8002EE28);
 extern void sub_8002C06C(void* p, int a1, short a2);
+extern void sub_8002C290(unsigned short* pos, int val, short ot);
+void sub_8002EF5C(unsigned short* pos, short count, short a2);
+// Matched
+void sub_8002EE28(short* a, unsigned short* pos, short c, int d)
+{
+    unsigned short loc[2];
+    if (d)
+    {
+        loc[0] = pos[0] + 0x15;
+        loc[1] = pos[1];
+        sub_8002C290(loc, a[0], c);
+    }
+    else
+    {
+        unsigned short x = pos[0];
+        unsigned short y;
+        loc[0] = x - 5;
+        y = pos[1];
+        loc[0] = x;
+        loc[1] = y;
+        sub_8002EF5C(loc, 3, c);
+    }
+    loc[0] = pos[0] + 0x15;
+    loc[1] = pos[1];
+    sub_8002C06C(loc, 0xDA, c);
+    if (d)
+    {
+        unsigned short x = pos[0];
+        unsigned short y;
+        loc[0] = x + 0x2B;
+        y = pos[1];
+        loc[0] = x + 0x30;
+        loc[1] = y;
+        sub_8002C290(loc, a[1], c);
+    }
+    else
+    {
+        unsigned short x = pos[0];
+        unsigned short y;
+        loc[0] = x + 0x1E;
+        y = pos[1];
+        loc[0] = x + 0x1B;
+        loc[1] = y;
+        sub_8002EF5C(loc, 3, c);
+    }
+}
 // Matched
 void sub_8002EF5C(unsigned short* pos, short count, short a2)
 {
@@ -56,7 +101,7 @@ void sub_8002EF5C(unsigned short* pos, short count, short a2)
     } while (count > 0);
 }
 extern void sub_8002BA54(void* a, int b, void* c, int d);
-extern void sub_8002EE28(short* a, void* b, int c, int d);
+extern void sub_8002EE28(short* a, unsigned short* pos, short c, int d);
 extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 // Matched
 void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5)
