@@ -1105,7 +1105,37 @@ int sub_800BAB5C(EvCtxEventfnc* c)
 #endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BAB5C);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BABB0);
+typedef struct EvWaitEventfnc
+{
+    int f0_0;
+    int f4_4;
+    int f8_8;
+} EvWaitEventfnc;
+extern EvWaitEventfnc dword_800B06B0;
+extern int sub_800A5F9C(int a);
+int sub_800BABB0(EvCtxEventfnc* c)
+{
+    switch (c->fB8_B8)
+    {
+    case 0:
+        dword_800B06B0.f0_0 = 1;
+        dword_800B06B0.f4_4 = ((unsigned short*)&c->pc_8->b_8)[1];
+        dword_800B06B0.f8_8 = ((unsigned short*)&c->pc_8->b_8)[0];
+        c->fB8_B8 = 1;
+        return 0;
+    case 1:
+        if (dword_800B06B0.f0_0 == 0)
+        {
+            c->fEC_EC = sub_800A5F9C(0);
+            c->fB8_B8 = 0;
+            c->pc_8++;
+            return 1;
+        }
+        return 0;
+    default:
+        return 0;
+    }
+}
 
 extern void sub_800379DC(EvVecEventfnc* v, int b);
 int sub_800BAC60(EvCtxEventfnc* c)
