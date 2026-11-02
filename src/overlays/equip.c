@@ -28,7 +28,7 @@ typedef struct EquipCtx_equip
     short sel_18;
     short idx_1A;
     short mode_1C;
-    unsigned short mask_1E;
+    short mask_1E;
     int field_20;
     int pad_24;
     int field_28;
@@ -65,6 +65,101 @@ extern void sub_800C497C(EquipCtx_equip* c);
 extern void sub_800C48B4(EquipTask_equip* t, EquipCtx_equip* c);
 extern void sub_800C50F0(EquipTask_equip* t, EquipCtx_equip* c);
 extern void sub_800C5064(EquipCtx_equip* c);
+typedef struct
+{
+    short x;
+    short y;
+    short w;
+    short h;
+} Rect8_equip;
+
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair_equip;
+
+typedef struct
+{
+    short a;
+    char b;
+    char c;
+} Small_equip;
+
+extern short uiColor_8008B590;
+extern char name_800C59A0[];
+extern int sub_80014390(int a0);
+extern void sub_8002F7D0(void* p, int a1);
+extern void sub_8002E288(int a0, int a1, int a2, void* p);
+extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
+extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void sub_800C5440(short a0, short a1, int a2);
+typedef struct Widget_equip
+{
+    unsigned short flags_0;
+    int field_4;
+    void* field_8;
+    void* field_C;
+    short field_10;
+    short field_12;
+    char pad_14[8];
+    unsigned short flags_1C;
+    short pad_1E;
+    int field_20;
+    char pad_24[8];
+    short field_2C;
+    short field_2E;
+    char pad_30[8];
+    unsigned short flags_38;
+    char pad_3A[2];
+    int field_3C;
+    char pad_40[8];
+    short field_48;
+    short field_4A;
+} Widget_equip;
+
+typedef struct
+{
+    int a;
+    int b;
+    int c;
+    int d;
+    void* e;
+    int f;
+} Params5510_equip;
+
+extern Widget_equip* tab_800C598C[];
+extern char name_800C4784[];
+extern char name_800C5834[];
+extern char name_800C5838[];
+extern char name_8008D434[];
+extern char name_8008D440[];
+extern int fn_8001D2D4(int a0, int a1);
+extern int sub_8001D128(int a0, int a1);
+extern int sub_800AD2C8(int a0, int a1);
+extern void sub_8002A5A4(void* p);
+extern void sub_8002C6DC(int a0, short a1, short a2);
+
+typedef struct
+{
+    short a;
+    short b;
+    short c;
+    short d;
+    short e;
+    int f;
+} Quad16_equip;
+extern void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel);
+
+extern char name_800826B0[];
+extern char name_800C599C[];
+extern char name_800C59A8[];
+extern void sub_8002B004(void* a0, int a1, int a2);
+extern void sub_80033308(void* p);
+extern void sub_800C0E04(void* a0, void* a1, int a2);
+extern void sub_800C5314(EquipCtx_equip* c);
+
 
 INCLUDE_OVERLAY_ASM(equip, dword_800C29D0);
 
@@ -163,7 +258,95 @@ void sub_800C497C(EquipCtx_equip* c)
 }
 
 
+#if 0
+// Not matched: register allocation of the hoisted constants differs ($19/$20 swapped)
+void sub_800C4A94(EquipCtx_equip* c)
+{
+    short i;
+    int ofs = 0x38;
+    int k;
+    Rect8_equip r;
+    union
+    {
+        Quad16_equip q;
+        Small_equip s;
+    } u;
+    Quad16_equip q28;
+    if (unknownFlags_8008D678 < 0)
+    {
+        sub_8002B004(name_800826B0, 0, 0xe);
+    }
+    for (i = 0; i < 4; i++)
+    {
+        if ((c->mask_1E >> i) & 1)
+        {
+            sub_80033308((char*)pOT_8008D454 + ofs);
+            switch (i)
+            {
+            case 0:
+                if (c->flags_44 & 4)
+                {
+                    sub_800C5440(sub_800AD990(c->sel_18), c->sel_18, 0);
+                }
+                else if (!(c->flags_44 & 8))
+                {
+                    r.x = 0x53;
+                    r.y = 0x89;
+                    u.q.a = c->a_0[c->sel_18 + 1];
+                    u.q.b = c->b_C[c->sel_18 + 1];
+                    k = 2;
+                    if (c->mode_1C != 1)
+                    {
+                        k = 1;
+                    }
+                    u.q.c = k;
+                    u.q.d = 0xe;
+                    u.q.e = 0;
+                    u.q.f = 0;
+                    sub_800C5510(&u.q, &r, c->sel_18);
+                }
+                sub_80033308((char*)pOT_8008D454 + ofs);
+                break;
+            case 1:
+                if (!(c->flags_44 & 2))
+                {
+                    r.x = 0xa;
+                    r.y = 0x3d;
+                    q28.a = c->sel_18;
+                    q28.b = 0;
+                    k = 4;
+                    if (c->mode_1C == 0)
+                    {
+                        k = 2;
+                    }
+                    q28.c = k;
+                    q28.d = 0xe;
+                    q28.e = 0;
+                    q28.f = 0;
+                    sub_800C0E04(&q28, &r, 8);
+                    sub_800C5314(c);
+                    u.s.a = uiColor_8008B590;
+                    u.s.b = 0;
+                    u.s.c = 1;
+                    sub_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+                }
+                else
+                {
+                    sub_800C5440(sub_800AD288(c->a_0[c->sel_18 + 1] + c->b_C[c->sel_18 + 1], c->sel_18 + 1), c->sel_18, (int)name_800C599C);
+                }
+                sub_80033308((char*)pOT_8008D454 + ofs);
+                break;
+            }
+            if (c->s_42 == 8)
+            {
+                c->field_20 |= 1 << i;
+            }
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(equip, sub_800C4A94);
+
 
 void sub_800C4D50(EquipCtx_equip* c)
 {
@@ -322,35 +505,6 @@ void sub_800C51B0(EquipCtx_equip* c)
 }
 
 
-typedef struct
-{
-    short x;
-    short y;
-    short w;
-    short h;
-} Rect8_equip;
-
-typedef struct
-{
-    short a;
-    short b;
-} ShortPair_equip;
-
-typedef struct
-{
-    short a;
-    char b;
-    char c;
-} Small_equip;
-
-extern short uiColor_8008B590;
-extern char name_800C59A0[];
-extern int sub_80014390(int a0);
-extern void sub_8002F7D0(void* p, int a1);
-extern void sub_8002E288(int a0, int a1, int a2, void* p);
-extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
 void sub_800C5314(EquipCtx_equip* c)
 {
@@ -393,6 +547,8 @@ void sub_800C5314(EquipCtx_equip* c)
 extern char tab_800C59E0[][16];
 extern char tab_800C5B50[][16];
 extern char tab_800C5C40[][16];
+#if 0
+// Not matched: original does not merge the three table address computations
 void sub_800C5440(short a0, short a1, int a2)
 {
     int e = 0;
@@ -422,8 +578,82 @@ void sub_800C5440(short a0, short a1, int a2)
         sub_8002AF10(e, a2, 0xe);
     }
 }
+#endif
+INCLUDE_OVERLAY_ASM(equip, sub_800C5440);
 
 
+#if 0
+// Not matched: the constant 8 in the stack struct is built as addiu/sll/sra in the original
+void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
+{
+    short i;
+    int v;
+    int a;
+    int flag;
+    Params5510_equip prm;
+    for (i = 0; i < 3; i++)
+    {
+        v = sub_800AD288(i + q->b, sel + 1);
+        if (v != 0xff)
+        {
+            a = fn_8001D2D4(v, sel);
+            v = sub_8001D128(v, sel);
+            flag = sub_800AD2C8(i + q->b, sel + 1);
+        }
+        else
+        {
+            a = -1;
+            v = (int)name_800C4784;
+            flag = 0;
+        }
+        tab_800C598C[i]->field_4 = a;
+        tab_800C598C[i]->field_20 = v;
+        tab_800C598C[i]->field_3C = flag;
+        tab_800C598C[i]->field_8 = name_8008D434;
+        tab_800C598C[i]->field_C = name_8008D440;
+        tab_800C598C[i]->field_10 = r->x;
+        tab_800C598C[i]->field_12 = r->y + i * 22;
+        tab_800C598C[i]->field_2C = r->x + 0x15;
+        tab_800C598C[i]->field_2E = r->y + i * 22;
+        tab_800C598C[i]->field_48 = r->x + 0x85;
+        tab_800C598C[i]->field_4A = r->y + i * 22;
+        if (flag == 0)
+        {
+            tab_800C598C[i]->flags_0 |= 0x40;
+            tab_800C598C[i]->flags_1C |= 0x40;
+            tab_800C598C[i]->flags_38 |= 0x40;
+        }
+        else
+        {
+            tab_800C598C[i]->flags_0 &= ~0x40;
+            tab_800C598C[i]->flags_1C &= ~0x40;
+            tab_800C598C[i]->flags_38 &= ~0x40;
+        }
+    }
+    prm.a = q->c;
+    prm.b = frameCount_8008D3FC;
+    prm.c = (short)8;
+    prm.d = q->a;
+    prm.e = tab_800C598C;
+    prm.f = q->d;
+    sub_8002A5A4(&prm);
+    sub_8003F900(2, 0);
+    v = sub_800AD308(sel + 1) + 1;
+    if (v < 3)
+    {
+        v = 3;
+    }
+    if (q->b != 0)
+    {
+        sub_8002C6DC((int)name_800C5834, 3, q->d);
+    }
+    if (q->b < v - 3 && v >= 4)
+    {
+        sub_8002C6DC((int)name_800C5838, 1, q->d);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(equip, sub_800C5510);
+
 
 INCLUDE_OVERLAY_ASM(equip, dword_800C5834);
