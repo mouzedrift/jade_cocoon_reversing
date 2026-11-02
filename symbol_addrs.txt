@@ -3481,3 +3481,4 @@ dword_800B1DB8=0x800b1db8; // overlay data referenced from the game code
 dword_800B1DC4=0x800b1dc4; // overlay data referenced from the game code
 sub_800A2B20=0x800a2b20; // overlay function called from the game code
 sub_800A5BCC=0x800a5bcc; // overlay function called from the game code
+sub_800A61CC=0x800a61cc;

@@ -127,7 +127,40 @@ short sub_8002A3E0(int a)
     }
     return 36;
 }
-INCLUDE_ASM(sub_8002A42C);
+extern void sub_800A61CC(int a, void* b, void* c);
+extern void sub_8003326C(int a, void* b);
+// Matched
+void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
+{
+    unsigned short buf1[10];
+    char buf2[8];
+    sub_800A61CC(a1, buf1, buf2);
+    buf1[4] = pos[0];
+    buf1[5] = pos[1];
+    sub_80040298(pOT_8008D454 + a3, buf1, 5);
+    sub_80040298(pOT_8008D454 + a3, buf2, 2);
+    if (a2)
+    {
+        sub_8003326C(a2, &pOT_8008D454[a3]);
+    }
+}
+#if 0
+extern char aFb[];
+// Not matched (33 words): the original reads the pair at 0x800827EC through its own address, not through aFb
+void sub_8002A4E4(short a0)
+{
+    unsigned short buf1[10];
+    char buf2[8];
+    sub_80042B38((int)aFb, a0);
+    sub_800A61CC(1, buf1, buf2);
+    buf1[4] = ((unsigned short*)aFb)[4];
+    buf1[5] = ((unsigned short*)aFb)[5];
+    sub_80040298(pOT_8008D454 + a0, buf1, 5);
+    sub_80040298(pOT_8008D454 + a0, buf2, 2);
+    sub_800429F8((int)aFb, a0);
+}
+
+#endif
 INCLUDE_ASM(sub_8002A4E4);
 INCLUDE_ASM(sub_8002A5A4);
 INCLUDE_ASM(sub_8002A710);
