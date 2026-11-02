@@ -1367,7 +1367,70 @@ void sub_80021E4C(char* a0, int* a1, unsigned int n)
 }
 INCLUDE_ASM(sub_80021EDC);
 INCLUDE_ASM(sub_800221DC);
-INCLUDE_ASM(sub_80022458);
+typedef void (*fn_80022458_a)(unsigned char* p, int a3);
+typedef int (*fn_80022458_b)(unsigned char* hdr, unsigned char* p, int a0, int k, int h);
+extern fn_80022458_a dword_8007DB08[];
+extern fn_80022458_b off_8007DAE0[];
+int sub_80022634(int a0, unsigned char* hdr, int h);
+int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h);
+int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
+void sub_80022CC4(int a0, int* a, int* b, int h);
+// Matched
+unsigned char* sub_80022458(int a0, unsigned char* a1, int h, int a3)
+{
+    int cnt[10];
+    int A[2];
+    int B[2];
+    unsigned int i;
+    unsigned int n;
+    unsigned char* hdr;
+    unsigned char* p;
+    unsigned int type;
+    unsigned int j;
+    int k;
+    for (j = 0; j < 10; j++)
+    {
+        cnt[j] = 0;
+    }
+    hdr = a1;
+    a1 += 0x28;
+    n = sub_80022634(a0, hdr, h);
+    sub_800228F8(A, B, (char*)hdr, h);
+    for (i = 0; i < n; i++)
+    {
+        p = a1;
+        a1 += 4;
+        type = *p;
+        k = cnt[type];
+        cnt[type] = k + 1;
+        if (a3 != 0 && dword_8007DB08[type] != 0)
+        {
+            dword_8007DB08[type](a1, a3);
+        }
+        switch (type)
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+            a1 += off_8007DAE0[type](p, a1, a0, k, h);
+            break;
+        case 8:
+            a1 += sub_8002300C(p, a1, A, k, h);
+            break;
+        case 9:
+            a1 += sub_8002320C(p, a1, B, k, h);
+            break;
+        }
+    }
+    sub_80022CC4(a0, A, B, h);
+    sub_800229E0(A, B, h);
+    return a1;
+}
 INCLUDE_ASM(sub_80022634);
 // Matched
 int sub_800228F8(int* a0, int* a1, char* a2, int h)
