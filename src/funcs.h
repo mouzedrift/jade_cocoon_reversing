@@ -468,6 +468,7 @@ extern void sub_800218A8(int a0, void* a1, int a2);
 extern void sub_80039FE4(int a0, int a1, int a2);
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern void sub_8003A6C4(int a0, int a1, int a2, int a3);
+extern void sub_8001DAAC(int a0, int* a1);
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

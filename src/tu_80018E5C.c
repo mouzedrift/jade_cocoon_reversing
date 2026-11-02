@@ -149,7 +149,45 @@ int sub_80018E5C(char* a0, unsigned int a1)
     }
     return v;
 }
-INCLUDE_ASM(sub_80018EBC);
+// Matched
+void sub_80018EBC(int a0, unsigned int* a1)
+{
+    unsigned int f = *a1;
+    int* r = 0;
+    if (f & 0x200)
+    {
+        r = (f & 1) ? dword_8007A14C : dword_8007A0EC;
+    }
+    else if (f & 0x100)
+    {
+        r = (f & 1) ? dword_8007A140 : dword_8007A0E0;
+    }
+    else if (f & 0x80)
+    {
+        r = (f & 1) ? dword_8007A134 : dword_8007A0D4;
+    }
+    else if (f & 0x40)
+    {
+        r = (f & 1) ? dword_8007A128 : dword_8007A0C8;
+    }
+    else if (f & 0x20)
+    {
+        r = (f & 1) ? dword_8007A11C : dword_8007A0BC;
+    }
+    else if (f & 0x10)
+    {
+        r = (f & 1) ? dword_8007A110 : dword_8007A0B0;
+    }
+    else if (f & 0x8)
+    {
+        r = (f & 1) ? sub_8007A104 : dword_8007A0A4;
+    }
+    else if (f & 1)
+    {
+        r = dword_8007A0F8;
+    }
+    sub_8001DAAC(a0, r);
+}
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
 // Matched
