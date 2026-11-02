@@ -1287,8 +1287,7 @@ void sub_8001EA48(void* arg0)
 }
 #endif
 INCLUDE_ASM(sub_8001EA48);
-#if 0
-// Not matched
+// Matched
 void sub_8001EFC4(struct_obj_F* p)
 {
     unsigned int f = p->flags_4;
@@ -1296,7 +1295,14 @@ void sub_8001EFC4(struct_obj_F* p)
     if (f & 0x800000)
     {
         n = p->field_C;
-        if (n < 0 || n >= 3)
+        if (n < 0)
+        {
+            if (f & 0x200000)
+            {
+                sub_800A5BCC(n - 2);
+            }
+        }
+        else if (n >= 3)
         {
             if (f & 0x200000)
             {
@@ -1306,8 +1312,6 @@ void sub_8001EFC4(struct_obj_F* p)
     }
     p->flags_4 &= 0xFF17FFFF;
 }
-#endif
-INCLUDE_ASM(sub_8001EFC4);
 INCLUDE_ASM(sub_8001F03C);
 INCLUDE_ASM(sub_8001F268);
 #if 0
@@ -1343,7 +1347,22 @@ void sub_8001FB00(void* a0)
 }
 #endif
 INCLUDE_ASM(sub_8001FB00);
-INCLUDE_ASM(sub_8001FC90);
+// Matched
+int sub_8001FC90(char* a0)
+{
+    SVECTOR v;
+    long sxy;
+    long p;
+    long flag;
+    v.vx = *(unsigned short*)(a0 + 0x38);
+    v.vy = *(unsigned short*)(a0 + 0x3C);
+    v.vz = *(unsigned short*)(a0 + 0x40);
+    v.vx -= dword_8008D600[0].field_0;
+    v.vy -= dword_8008D600[1].field_0;
+    v.vz -= dword_8008D600[2].field_0;
+    RotTransPers(&v, &sxy, &p, &flag);
+    return flag >= 0;
+}
 #if 0
 void sub_8001FD08(void* a0)
 {
@@ -1423,27 +1442,25 @@ void sub_800204AC(struct_obj_C* p)
     p->field_0 = 0;
     p->field_4 = 0;
 }
-#if 0
-// Not matched
+// Matched
 void sub_800204D0(void)
 {
-    int* p = dword_8008B54C[9];
-    struct_20* e = (struct_20*)(p + 3);
+    int* p = (int*)dword_8008B54C[9];
+    int* q = p + 3;
     int i;
     p[0] = 0;
     p[1] = 1;
     p[2] = 0;
     for (i = 0; i < 4; i++)
     {
-        e[i].field_0 = 0;
-        e[i].field_4 = -1;
-        e[i].field_8 = 0;
-        e[i].field_C = 0;
-        e[i].field_10 = -1;
+        q[0] = 0;
+        q[1] = -1;
+        q[2] = 0;
+        q[3] = 0;
+        q[4] = -1;
+        q += 5;
     }
 }
-#endif
-INCLUDE_ASM(sub_800204D0);
 // Matched
 void sub_8002052C(void)
 {
@@ -1570,19 +1587,15 @@ int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx)
 }
 #endif
 INCLUDE_ASM(LoadOverlay_80020BF8);
-#if 0
-// Not matched (close)
+// Matched
 void sub_80020CD8(int a0, int* p)
 {
-    int v = p[0];
-    if (v != p[1])
+    if (p[0] != p[1])
     {
-        p[1] = v;
-        p[2] = LoadOverlay_80020BF8(2, v);
+        p[1] = p[0];
+        p[2] = LoadOverlay_80020BF8(2, p[0]);
     }
 }
-#endif
-INCLUDE_ASM(sub_80020CD8);
 #if 0
 // Not matched
 int sub_80020D1C(int a0, int a1)

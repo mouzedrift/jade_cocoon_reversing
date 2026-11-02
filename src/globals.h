@@ -424,6 +424,7 @@ typedef struct
     short field_0;
     short field_2;
 } struct_4s;
+extern struct_4s dword_8008D600[3];
 
 typedef struct
 {
