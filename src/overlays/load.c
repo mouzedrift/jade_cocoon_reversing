@@ -7,6 +7,10 @@ extern int dword_800BE184;
 extern int dword_800BE14C;
 extern int dword_800BE150;
 extern int dword_800BE174;
+extern int dword_800BE1E4[];
+extern int (*dword_800BE294[])();
+extern int dword_800BE254[];
+extern char byte_800B7630[];
 extern int dword_800BE188[];
 extern int dword_800BE2C4;
 extern int dword_800BE2C8;
@@ -21,7 +25,9 @@ extern int sub_8004EE8C(void);
 extern void sub_8004EDE8(void);
 extern void sub_8004EE54(void);
 extern int sub_8004EDD8(void);
-extern void sub_800BC9DC(int a, int* b, int* c);
+extern int sub_800BC9DC(int a, int* b, int* c);
+extern void sub_800BB9F4();
+extern void sub_800BB68C();
 extern void sub_800B7674(int a, int b);
 typedef struct
 {
@@ -31,7 +37,10 @@ typedef struct
     int fC_LOAD;
     int f10_LOAD;
     int f14_LOAD;
-    int pad18_LOAD[12];
+    int f18_LOAD;
+    int f1C_LOAD;
+    int f20_LOAD;
+    int pad24_LOAD[8];
     int f44_LOAD;
     int f48_LOAD;
     int f4C_LOAD;
@@ -47,12 +56,29 @@ extern char dword_800BDECC[];
 extern void sub_8003CD5C(int* t);
 extern void sub_8002BE10(void);
 extern void sub_800BACBC(void* p);
-extern void sub_800B794C(int* t);
+extern void sub_800B794C(int* t, int* s);
+extern void sub_800B79F8();
+extern void sub_800B9A8C();
+extern void sub_800B98C4();
+extern void sub_800BA234();
+extern void sub_800BA968();
+extern void sub_800BAAE0();
 extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
+extern void sub_8004FE08(int a);
+extern void sub_800BD17C(void);
+extern void sub_800BD35C(void);
+extern void sub_800BD06C(void);
+extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
+extern char byte_800B682C[];
+extern char byte_800B6B9C[];
+extern void sub_8003F264(void* p, int a, int b);
+extern char byte_800B69FC[];
+extern int dword_800BDD64;
+extern void sub_8002A5A4(void* p);
 typedef struct
 {
     short x_LOAD;
@@ -93,6 +119,8 @@ typedef struct
 } Row8_LOAD;
 extern Row8_LOAD dword_800BD998[];
 extern Bytes8_LOAD dword_800B6B8C;
+extern Bytes8_LOAD dword_800B6A24;
+extern Bytes8_LOAD dword_800B6BA0;
 extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short word_8008B590;
 extern char* dword_8008D454;
@@ -100,10 +128,13 @@ extern void sub_8002C06C(void* a, int b, int c);
 extern void sub_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
-    char pad0_LOAD[0x24];
+    char pad0_LOAD[0x20];
+    int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
-    char pad2C_LOAD[0x28];
+    char pad2C_LOAD[4];
+    short s30_LOAD;
+    char pad32_LOAD[0x22];
     unsigned f54_LOAD;
 } LoadTask_LOAD;
 extern int sub_8003D288(int a, int b);
@@ -113,6 +144,57 @@ extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 extern char byte_800B73A0[];
 extern char byte_800B7544[];
+typedef struct
+{
+    short a_LOAD;
+    short b_LOAD;
+} Pair_LOAD;
+typedef struct
+{
+    unsigned char pad0_LOAD[6];
+    unsigned char f6_LOAD;
+    unsigned char f7_LOAD;
+    unsigned char f8_LOAD;
+    unsigned char pad9_LOAD[2];
+    unsigned char fB_LOAD;
+    unsigned char fC_LOAD;
+    unsigned char fD_LOAD;
+    unsigned char padE_LOAD[2];
+} Row16_LOAD;
+typedef struct
+{
+    unsigned char pad0_LOAD[0xC];
+    unsigned char fC_LOAD;
+    unsigned char padD_LOAD[0xF];
+    unsigned char f1C_LOAD;
+    unsigned char pad1D_LOAD[0xF];
+    unsigned char f2C_LOAD;
+    unsigned char pad2D_LOAD[0xF];
+    unsigned char f3C_LOAD;
+    unsigned char f3D_LOAD;
+    unsigned char pad3E_LOAD[0xE];
+    unsigned char f4C_LOAD;
+} Opts_LOAD;
+extern Opts_LOAD dword_800BDF4C;
+extern Row16_LOAD stru_800BDF4C[];
+extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
+extern void sub_800B8BD4(void* t);
+extern void sub_80031494(int a);
+extern void sub_800BADF4(void);
+extern int sub_800BAE4C(int n);
+extern int sub_800BAE2C(void);
+extern int sub_800BAE3C(void);
+extern void sub_800BAFB0(int a);
+typedef struct
+{
+    char c_LOAD[6];
+} Bytes6_LOAD;
+extern Bytes6_LOAD dword_800B7624;
+extern char byte_800B74C4[];
+extern char byte_800B74E8[];
+extern char byte_800B7514[];
+extern void sub_800BBF88(void);
+extern void sub_800BC17C(void);
 extern int printf(const char* fmt, ...);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
@@ -137,7 +219,16 @@ void sub_800B78B8(int v)
     dword_8008D480[9][22] = v;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B78D0);
+void sub_800B78D0(void)
+{
+    int* t;
+    dword_8008B570[516] = -1;
+    dword_8008B570[0] |= 0x180;
+    t = dword_8008D480[9];
+    *(short*)((char*)t + 0x30) = 1;
+    byte_800BDF58 = 0;
+    t[21] = 0x20;
+}
 
 int sub_800B7914(void)
 {
@@ -153,7 +244,31 @@ int sub_800B793C(void)
     return dword_800BE184;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B794C);
+void sub_800B794C(int* t, int* s)
+{
+    switch (s[10])
+    {
+    case 0:
+        sub_800B79F8(s);
+        break;
+    case 2:
+        sub_800B9A8C(s);
+        t[2] = (int)sub_800B98C4;
+        s[11] = 0;
+        break;
+    case 3:
+        t[2] = (int)sub_800BA234;
+        break;
+    case 4:
+        t[2] = (int)sub_800BA968;
+        break;
+    case 5:
+    case 6:
+        t[2] = (int)sub_800BAAE0;
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(load, dword_800B68E0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B79F8);
 
@@ -163,9 +278,46 @@ INCLUDE_OVERLAY_ASM(load, sub_800B82FC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B847C);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B85AC);
+void sub_800B85AC(void)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    p0.x_LOAD = 0x13;
+    p0.y_LOAD = 0x49;
+    sub_8003E91C(2, byte_800B682C, &p0, 5);
+    p1.x_LOAD = 0x13;
+    p1.y_LOAD = 0x57;
+    sub_8003E91C(2, byte_800B69FC, &p1, 5);
+    a = dword_800B6A24;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    sub_8002A5A4(&dword_800BDD64);
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B867C);
+void sub_800B867C(LoadTask_LOAD* t)
+{
+    Pair_LOAD q;
+    short r0[4];
+    short r1[6];
+    sub_800B8BD4(t);
+    r1[0] = stru_800BDF4C[t->s30_LOAD].f6_LOAD;
+    r1[1] = stru_800BDF4C[t->s30_LOAD].f7_LOAD;
+    r1[2] = stru_800BDF4C[t->s30_LOAD].f8_LOAD;
+    r1[3] = stru_800BDF4C[t->s30_LOAD].fB_LOAD;
+    r1[4] = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+    r1[5] = stru_800BDF4C[t->s30_LOAD].fD_LOAD;
+    q.a_LOAD = 2;
+    q.b_LOAD = 1;
+    r0[0] = 0x9A;
+    r0[1] = 0x2C;
+    r0[2] = 0x9A;
+    r0[3] = 0xB7;
+    sub_8002B8DC(q, r1, r0, 1);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B877C);
 
@@ -204,7 +356,28 @@ void sub_800B8A20(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B8AE4);
+void sub_800B8AE4(void)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Pos_LOAD p2;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    p0.x_LOAD = 0x1C;
+    p0.y_LOAD = 0x24;
+    sub_8003F264(&p0, dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD + 1, 5);
+    p1.x_LOAD = 0x1C;
+    p1.y_LOAD = 0x24;
+    sub_8003E91C(1, byte_800B6B9C, &p1, 5);
+    p2.x_LOAD = 0x32;
+    p2.y_LOAD = 0x24;
+    sub_8003F264(&p2, 0xF, 5);
+    a = dword_800B6BA0;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
 
@@ -232,15 +405,183 @@ void sub_800B9220(LoadTask_LOAD* t)
     }
 }
 
+#if 0
+// Not matched: only a dead byte load (lbu $v1) of the options struct in the prologue is missing
+void sub_800B92C0(LoadTask_LOAD* t)
+{
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        sub_80031494(0x7E);
+        sub_800BADF4();
+        t->f24_LOAD = 0x12;
+    }
+    else if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        if (t->f54_LOAD & 0x24)
+        {
+            t->f28_LOAD = 5;
+        }
+        else
+        {
+            t->f24_LOAD = 0;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9360);
+void sub_800B9360(LoadTask_LOAD* t)
+{
+    switch (sub_800BAE68(dword_800BDF4C.f1C_LOAD))
+    {
+    case 0:
+    case 3:
+        sub_800BAFB0(dword_800BDF4C.f1C_LOAD);
+        sub_80031494(0x7E);
+        if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            if (sub_800BAE2C() || sub_800BAE3C())
+            {
+                t->f20_LOAD = 0;
+                t->f24_LOAD = 3;
+            }
+            else
+            {
+                t->f24_LOAD = 7;
+            }
+        }
+        else if (sub_800BAE3C())
+        {
+            t->f20_LOAD = 0;
+            t->f24_LOAD = 3;
+        }
+        else
+        {
+            t->f24_LOAD = 8;
+        }
+        break;
+    case 4:
+        if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            t->f24_LOAD = 2;
+        }
+        else
+        {
+            t->f24_LOAD = 0xB;
+        }
+        break;
+    case -1:
+        break;
+    default:
+        t->f24_LOAD = 6;
+        break;
+    }
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9470);
+void sub_800B9470(LoadTask_LOAD* t)
+{
+    int r = sub_800BAE68(dword_800BDF4C.f1C_LOAD);
+    if (r < -1 || (r > 0 && r != 4))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D288(1, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.f2C_LOAD == 0)
+        {
+            t->f28_LOAD = 4;
+        }
+        if (dword_800BDF4C.f2C_LOAD == 1)
+        {
+            t->f24_LOAD = 1;
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B952C);
+void sub_800B952C(LoadTask_LOAD* t)
+{
+    int n = dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD;
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 1;
+    }
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.fC_LOAD == 1)
+        {
+            if (n < t->f20_LOAD - 1)
+            {
+                if (sub_800BAE4C(n))
+                {
+                    t->f24_LOAD = 4;
+                    sub_80031494(0x7E);
+                }
+                else
+                {
+                    sub_80031494(0x7C);
+                }
+            }
+            else
+            {
+                sub_80031494(0x7C);
+            }
+        }
+        else if (dword_800BDF4C.fC_LOAD == 0)
+        {
+            if (n < t->f20_LOAD - 1)
+            {
+                if (!sub_800BAE4C(n) && sub_800BAE2C() <= 0)
+                {
+                    t->f24_LOAD = 9;
+                    sub_80031494(0x7C);
+                }
+                else
+                {
+                    t->f24_LOAD = 4;
+                    sub_80031494(0x7E);
+                }
+            }
+            else
+            {
+                sub_80031494(0x7C);
+            }
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9654);
+void sub_800B9654(LoadTask_LOAD* t)
+{
+    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    {
+        t->f24_LOAD = 3;
+    }
+    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    {
+        if (dword_800BDF4C.f4C_LOAD == 0)
+        {
+            sub_80031494(0x7E);
+            if (dword_800BDF4C.fC_LOAD == 1)
+            {
+                sub_800BADF4();
+                t->f28_LOAD = 3;
+            }
+            else if (dword_800BDF4C.fC_LOAD == 0)
+            {
+                sub_800BADF4();
+                t->f28_LOAD = 2;
+            }
+        }
+        else
+        {
+            sub_80031494(0x7D);
+            t->f24_LOAD = 3;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B9724);
 
@@ -318,9 +659,57 @@ int sub_800BAE4C(int i)
     return p[i];
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE68);
+int sub_800BAE68(int a)
+{
+    int x[2];
+    int ret = -1;
+    int r;
+    int off = a << 4;
+    x[0] = 0;
+    x[1] = 0;
+    r = sub_800BC9DC(1, &x[0], &x[1]);
+    switch (r)
+    {
+    case 0:
+        break;
+    case -1:
+        sub_800BB9F4(off);
+        break;
+    case 1:
+        if (x[0] == 2)
+        {
+            ret = x[1];
+        }
+        break;
+    }
+    return ret;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAF0C);
+int sub_800BAF0C(int a)
+{
+    int x[2];
+    int ret = -1;
+    int r;
+    int off = a << 4;
+    x[0] = 0;
+    x[1] = 0;
+    r = sub_800BC9DC(1, &x[0], &x[1]);
+    switch (r)
+    {
+    case 0:
+        break;
+    case -1:
+        sub_800BB68C(off);
+        break;
+    case 1:
+        if (x[0] == 1)
+        {
+            ret = x[1];
+        }
+        break;
+    }
+    return ret;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BAFB0);
 
@@ -360,6 +749,25 @@ INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB4A8);
 
+#if 0
+// Not matched: the original reloads the zero it stored to f54 (for f50) and uses a smaller frame; not reproduced
+void sub_800BB5DC(void)
+{
+    LoadState_LOAD* st = &dword_800BE1F4;
+    st->fC_LOAD = 0;
+    sub_800BD17C();
+    st->f44_LOAD = 0;
+    st->f0_LOAD = 0;
+    st->f4_LOAD = 0;
+    st->f8_LOAD = 0;
+    st->f50_LOAD = st->f54_LOAD = 0;
+    st->f14_LOAD = -1;
+    st->f4C_LOAD = 1;
+    st->f48_LOAD = 1;
+    sub_800BD35C();
+    sub_80056FEC(7, (int)sub_800BD06C);
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB5DC);
 
 #if 0
@@ -434,10 +842,82 @@ void sub_800BBE8C(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BBE8C);
 
+#if 0
+// Not matched: the original addresses the state through a register holding &state.f14 (negative offsets); psyq 4.4 uses &state
+int sub_800BBED0(int a, int b, int c)
+{
+    char* msg;
+    if (dword_800BE1F4.f14_LOAD < 0)
+    {
+        msg = byte_800B74C4;
+    }
+    else if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        msg = byte_800B73A0;
+    }
+    else if (c & 0x7F)
+    {
+        msg = byte_800B74E8;
+    }
+    else if (b & 0x7F)
+    {
+        msg = byte_800B7514;
+    }
+    else
+    {
+        dword_800BE1F4.f0_LOAD = 5;
+        dword_800BE1F4.f4_LOAD = 0;
+        dword_800BE1F4.f8_LOAD = 0;
+        dword_800BE1F4.f18_LOAD = b;
+        dword_800BE1F4.f20_LOAD = a;
+        dword_800BE1F4.f1C_LOAD = c;
+        sub_800BD18C(sub_800BBF88, b);
+        return 1;
+    }
+    printf(msg);
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BBED0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBF88);
 
+#if 0
+// Not matched: same as sub_800BBED0
+int sub_800BC0C4(int a, int b, int c)
+{
+    char* msg;
+    if (dword_800BE1F4.f14_LOAD < 0)
+    {
+        msg = byte_800B74C4;
+    }
+    else if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        msg = byte_800B73A0;
+    }
+    else if (c & 0x7F)
+    {
+        msg = byte_800B74E8;
+    }
+    else if (b & 0x7F)
+    {
+        msg = byte_800B7514;
+    }
+    else
+    {
+        dword_800BE1F4.f0_LOAD = 6;
+        dword_800BE1F4.f4_LOAD = 0;
+        dword_800BE1F4.f8_LOAD = 0;
+        dword_800BE1F4.f18_LOAD = b;
+        dword_800BE1F4.f20_LOAD = a;
+        dword_800BE1F4.f1C_LOAD = c;
+        sub_800BD18C(sub_800BC17C, b);
+        return 1;
+    }
+    printf(msg);
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BC0C4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC17C);
@@ -526,8 +1006,41 @@ int sub_800BD018(int a)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD018);
 
+#if 0
+// Not matched: the copied pair and the counters are reloaded separately
+void sub_800BD06C(void)
+{
+    if (!sub_800BD274())
+    {
+        sub_800BD208();
+        if (sub_800BD274())
+        {
+            dword_800BE1F4.f8_LOAD = 1;
+            dword_800BE1E4[0] = dword_800BE1F4.f0_LOAD;
+            dword_800BE1E4[1] = dword_800BE1F4.f4_LOAD;
+            dword_800BE1F4.f0_LOAD = 0;
+            dword_800BE1F4.f4_LOAD = 0;
+            if (dword_800BE1F4.f44_LOAD)
+            {
+                ((void (*)(int, int))dword_800BE1F4.f44_LOAD)(dword_800BE1E4[0], dword_800BE1E4[1]);
+            }
+        }
+    }
+    dword_800BE1F4.f50_LOAD++;
+    dword_800BE1F4.f54_LOAD++;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD06C);
 
+#if 0
+// Not matched: the original moves both arguments to $a2/$a3 before the 6 byte block copy
+void sub_800BD118(int n, Bytes6_LOAD* out)
+{
+    *out = dword_800B7624;
+    out->c_LOAD[2] = (n / 16) + 0x30;
+    out->c_LOAD[3] = (n % 16) + 0x30;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD118);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD174);
@@ -535,8 +1048,41 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD174);
 // Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD17C);
 
+#if 0
+// Not matched: address computation of the clearing loop differs
+void sub_800BD18C(void* fn, int a)
+{
+    int n = dword_800BE174 + 1;
+    int i;
+    if (n >= 4)
+    {
+        printf(byte_800B7630);
+        return;
+    }
+    dword_800BE174 = n;
+    dword_800BE294[n] = (int (*)())fn;
+    for (i = 3; i >= 0; i--)
+    {
+        dword_800BE254[n * 4 + i] = 0;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD18C);
 
+#if 0
+// Not matched: the symbol address is reloaded (lui) instead of kept in a saved register
+void sub_800BD208(void)
+{
+    int i = dword_800BE174;
+    if (i >= 0)
+    {
+        if (dword_800BE294[i](dword_800BE254 + i * 16))
+        {
+            dword_800BE174 = dword_800BE174 - 1;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD208);
 
 unsigned sub_800BD274(void)
@@ -608,6 +1154,22 @@ void sub_800BD558(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 
+#if 0
+// Not matched: hand-written assembly style (stores via the assembler macro with $at, results re-read from the stored variables); not producible from C
+void sub_800BD60C(void)
+{
+    sub_8004FE08(dword_800BE2A4);
+    sub_8004FE08(dword_800BE2A8);
+    sub_8004FE08(dword_800BE2AC);
+    sub_8004FE08(dword_800BE2B0);
+    sub_8004FE08(dword_800BE2B4);
+    sub_8004FE08(dword_800BE2B8);
+    sub_8004FE08(dword_800BE2BC);
+    sub_8004FE08(dword_800BE2C0);
+    dword_800BE2C4 = dword_800BE2C8 = dword_800BE2CC = dword_800BE2D0 = 0;
+    dword_800BE2D4 = dword_800BE2D8 = dword_800BE2DC = dword_800BE2E0 = 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD60C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD714);
