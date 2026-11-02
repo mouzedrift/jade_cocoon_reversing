@@ -237,16 +237,11 @@ INCLUDE_OVERLAY_ASM(config, sub_800C31DC);
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3540);
 
-#if 0
-// Not matched: the switch needs a jump table, and the compiler would emit its own copy in .rdata instead of
-// using the one inside the dword_800C29D0 blob (the rest of the function compiles to the original code)
 void sub_800C378C(CfgCtxConfig* c)
 {
     c->f3c = dword_800C4CD4[c->cur_4];
     switch (c->cur_4)
     {
-    case 0:
-        break;
     case 3:
         if (c->prev_2 == 0)
         {
@@ -260,6 +255,7 @@ void sub_800C378C(CfgCtxConfig* c)
         if (c->prev_2 == 0)
         {
             c->f44 = 0;
+    case 0:
             c->f46 = 0;
         }
         break;
@@ -267,8 +263,7 @@ void sub_800C378C(CfgCtxConfig* c)
     c->prev_2 = c->cur_4;
     c->cur_4 = -1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(config, sub_800C378C);
+INCLUDE_OVERLAY_ASM(config, dword_800C2CB8);
 
 #if 0
 // Not matched: needs a jump table (see sub_800C378C)

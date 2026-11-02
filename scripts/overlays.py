@@ -164,8 +164,13 @@ def split(name, data, base, syms):
     names = {a: n for a, n in syms}
     out = os.path.join(REPO, "asm", "overlays", name.lower())
     os.makedirs(out, exist_ok=True)
+    code = [a for a, n in syms if not n.startswith(gen_asm.DATA_PREFIXES)]
+    first_code, last_code = min(code), max(code)
     for (a, n), (b, _) in zip(syms, syms[1:] + [(base + len(data), "")]):
-        text = (gen_asm.emit_data(data, n, a, b - a) if n.startswith(gen_asm.DATA_PREFIXES)
+        # data in front of the code is .rdata (jump tables and strings come out of the compiler in the same
+        # place), data behind it .data
+        sec = ".rdata" if a < first_code else ".data"
+        text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code)) if n.startswith(gen_asm.DATA_PREFIXES)
                 else gen_asm.emit_function(md, data, n, a, b - a, names))
         open(os.path.join(out, n + ".s"), "w", newline="").write(text.replace("\n", "\r\n"))
 
@@ -224,9 +229,9 @@ def main(argv):
     main_syms = gen_asm.load_symbols(REPO)
     with open(link, "w") as f:
         f.write("\torg\t$%08x\n" % base)
-        for g, kw in (("text", ""), ("rdata", ""), ("data", ""), ("bss", "\tbss")):
+        for g, kw in (("head", ""), ("rdata", ""), ("text", ""), ("data", ""), ("bss", "\tbss")):
             f.write("%s\tgroup%s\n" % (g, kw))
-        for sec, g in ((".text", "text"), (".rdata", "rdata"), (".data", "data"), (".sdata", "data"),
+        for sec, g in ((".sdata", "head"), (".rdata", "rdata"), (".text", "text"), (".data", "data"),
                        (".sbss", "bss"), (".bss", "bss")):
             f.write("\tsection\t%s,%s\n" % (sec, g))
         f.write('\tinclude "%s"\n' % os.path.basename(obj))

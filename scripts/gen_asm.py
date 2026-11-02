@@ -130,9 +130,13 @@ def emit_function(md, exe, name, addr, size, names):
     return "\n".join(out) + "\n"
 
 
-def emit_data(exe, name, addr, size):
-    out = ["\t.data" if False else "\t.text", "\t.globl\t%s" % name, "%s:" % name]
+def emit_data(exe, name, addr, size, section=".text", header=False):
+    """header: the first word goes to .sdata, which the overlay link puts in front of everything else, so
+    that the alignment of the compiler's .rdata (jump tables) starts behind it"""
+    out = ["\t" + (".sdata" if header else section), "\t.globl\t%s" % name, "%s:" % name]
     for off in range(0, size - size % 4, 4):
+        if header and off == 4:
+            out.append("\t" + section)
         out.append("\t.word\t0x%08x" % struct.unpack("<I", exe[addr - BASE + off:addr - BASE + off + 4])[0])
     for off in range(size - size % 4, size):
         out.append("\t.byte\t0x%02x" % exe[addr - BASE + off])

@@ -1,4 +1,6 @@
 dword_800C29D0=0x800c29d0; // overlay header / data
+jpt_800C2CA4=0x800c2ca4; // jump table of sub_800C378C
+dword_800C2CB8=0x800c2cb8; // data behind the jump table
 sub_800C2EB4=0x800c2eb4;
 sub_800C2F70=0x800c2f70;
 sub_800C3060=0x800c3060;
