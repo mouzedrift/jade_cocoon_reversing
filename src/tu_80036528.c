@@ -22,8 +22,8 @@ typedef struct
     unsigned short field_0;
     unsigned char field_2;
     unsigned char field_3;
-} struct_80083B30;
-extern struct_80083B30* off_80083B30[];
+} PadVibEntry;
+extern PadVibEntry* off_80083B30[];
 typedef struct
 {
     unsigned char idx;
@@ -549,8 +549,8 @@ typedef struct
 {
     DVECTOR xy;
     int z;
-} struct_8008D668;
-extern struct_8008D668 word_8008D668;
+} ScreenPosZ;
+extern ScreenPosZ word_8008D668;
 // Matched
 void sub_8003891C(int* p, void* q)
 {

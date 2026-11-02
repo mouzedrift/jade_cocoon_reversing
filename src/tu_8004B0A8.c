@@ -239,16 +239,16 @@ void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
 }
 /* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
 extern short asc_80084350[];
-#define SIN_TBL_80084540 (asc_80084350 + 0xF8)
+#define SIN_TABLE (asc_80084350 + 0xF8)
 // Matched
 void sub_8004D3D8(SVECTOR* r, MATRIX* m)
 {
-    int cy = SIN_TBL_80084540[(r->vy + 0x400) & 0xFFF];
-    int cz = SIN_TBL_80084540[(r->vz + 0x400) & 0xFFF];
-    int sy = SIN_TBL_80084540[r->vy & 0xFFF];
-    int cx = SIN_TBL_80084540[(r->vx + 0x400) & 0xFFF];
-    int sz = SIN_TBL_80084540[r->vz & 0xFFF];
-    int sx = SIN_TBL_80084540[r->vx & 0xFFF];
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
     int a;
     int b;
     m->m[0][2] = sy;
@@ -275,14 +275,14 @@ void sub_8004D5CC(SVECTOR* r, MATRIX* m)
     int sx;
     int a;
     int b;
-    cz = SIN_TBL_80084540[(r->vz + 0x400) & 0xFFF];
-    sy = SIN_TBL_80084540[r->vy & 0xFFF];
+    cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    sy = SIN_TABLE[r->vy & 0xFFF];
     a = (cz * sy) >> 12;
-    sz = SIN_TBL_80084540[r->vz & 0xFFF];
+    sz = SIN_TABLE[r->vz & 0xFFF];
     b = (sz * sy) >> 12;
-    cy = SIN_TBL_80084540[(r->vy + 0x400) & 0xFFF];
-    cx = SIN_TBL_80084540[(r->vx + 0x400) & 0xFFF];
-    sx = SIN_TBL_80084540[r->vx & 0xFFF];
+    cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    sx = SIN_TABLE[r->vx & 0xFFF];
     m->m[2][0] = -sy;
     m->m[0][0] = (cz * cy) >> 12;
     m->m[1][0] = (sz * cy) >> 12;

@@ -17,9 +17,9 @@
 #include "data_decls.h"
 
 extern int dword_80086568;
-typedef struct { struct_node_C* node; int pad[6]; int field_1C; } struct_8008B544_24;
-typedef struct { int pad[9]; struct_8008B544_24* field_24; } struct_8008B544;
-extern struct_8008B544* dword_8008B544;
+typedef struct { struct_node_C* node; int pad[6]; int field_1C; } CdCtxSub;
+typedef struct { int pad[9]; CdCtxSub* field_24; } CdCtx;
+extern CdCtx* dword_8008B544;
 extern void sub_8003BF18(struct_node_C* n);
 
 extern void sub_80070E30(int a, int* b);
@@ -545,7 +545,7 @@ int sub_8003C060(int key)
 // Matched
 int sub_8003C0A4(int a0)
 {
-    struct_8008B544_24* p = dword_8008B544->field_24;
+    CdCtxSub* p = dword_8008B544->field_24;
     struct_node_C* n;
     if (dword_80086568 != a0)
     {

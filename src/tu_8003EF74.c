@@ -16,8 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
-typedef struct { unsigned short* tbl; int f4; int f8; } struct_8008685C;
-extern struct_8008685C dword_8008685C[];
+typedef struct { unsigned short* tbl; int f4; int f8; } FontTblEntry;
+extern FontTblEntry dword_8008685C[];
 void sub_8003F58C(unsigned char* out, int n);
 int sub_8003FB60(unsigned short* s);
 unsigned char* sub_8003F748(int idx, unsigned char* s);
