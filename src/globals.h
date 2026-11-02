@@ -175,6 +175,17 @@ typedef struct
     short field_A;
 } struct_obj_B;
 
+// flags word at +0 and two (current, target) short pairs
+typedef struct
+{
+    unsigned int flags_0;
+    int field_4;
+    short field_8;
+    short field_A;
+    short field_C;
+    short field_E;
+} struct_pair_obj;
+
 typedef struct
 {
     int field_0;

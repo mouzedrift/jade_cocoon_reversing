@@ -1166,6 +1166,8 @@ INCLUDE_ASM(sub_80010C30);
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
+INCLUDE_ASM(sub_80011ADC);
+INCLUDE_ASM(sub_80011AF8);
 #if 0
 // Not matched (close)
 int sub_80011B24(int a0)
@@ -1212,8 +1214,65 @@ void sub_80011BCC(void)
 void nullsub_2(void)
 {
 }
-INCLUDE_ASM(sub_80011C0C);
-INCLUDE_ASM(sub_80011CD0);
+// Matched
+void sub_80011C0C(struct_pair_obj* p, struct_pair_obj* q)
+{
+    p->field_8 = p->field_A = q->field_A;
+    p->field_C = p->field_E = q->field_E;
+}
+// Matched
+void sub_80011C30(struct_pair_obj* p)
+{
+    p->flags_0 &= 0x400;
+}
+// Matched
+void sub_80011C44(struct_pair_obj* p)
+{
+    short v;
+    if (!(p->flags_0 &= 0x400))
+    {
+        if (p->field_8 + p->field_A / 4 <= p->field_A)
+        {
+            v = p->field_8 + p->field_A / 4;
+        }
+        else
+        {
+            v = p->field_A;
+        }
+        p->field_8 = v;
+        if (p->field_C + p->field_E / 4 <= p->field_E)
+        {
+            v = p->field_C + p->field_E / 4;
+        }
+        else
+        {
+            v = p->field_E;
+        }
+        p->field_C = v;
+    }
+}
+// Matched
+void sub_80011CD0(struct_pair_obj* p)
+{
+    p->flags_0 = 0;
+    sub_80011C0C(p, p);
+}
+// Matched
+void sub_80011CF4(struct_pair_obj* p)
+{
+    short v;
+    p->field_4 = 0;
+    p->flags_0 = 0;
+    if (p->field_8 + 1 <= p->field_A)
+    {
+        v = p->field_8 + 1;
+    }
+    else
+    {
+        v = p->field_A;
+    }
+    p->field_8 = v;
+}
 #if 0
 // Not matched
 int sub_80011D28(int a0)
@@ -1265,6 +1324,7 @@ int sub_80012178(int arg0)
     return (arg0 * 3) + 20;
 }
 INCLUDE_ASM(sub_80012188);
+INCLUDE_ASM(sub_800121A8);
 INCLUDE_ASM(sub_80012204);
 INCLUDE_ASM(sub_800122A0);
 INCLUDE_ASM(sub_80012358);

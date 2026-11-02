@@ -18,6 +18,8 @@
 
 
 INCLUDE_ASM(sub_80018430);
+INCLUDE_ASM(sub_80018448);
+INCLUDE_ASM(sub_80018460);
 // Matched
 void sub_800184A0(int arg, int bit)
 {

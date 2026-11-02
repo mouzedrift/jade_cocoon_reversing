@@ -30,10 +30,19 @@ INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
 #if 0
-// Not matched
+// Not matched: branch sense (beq vs bne) and registers differ
 int sub_80013DB0(void)
 {
-    return rand() % 6 ? 1 : 2;
+    int r;
+    if (rand() % 6 != 0)
+    {
+        r = 1;
+    }
+    else
+    {
+        r = 2;
+    }
+    return r;
 }
 #endif
 INCLUDE_ASM(sub_80013DB0);
@@ -57,14 +66,11 @@ void sub_80013E80(void* p, int arg)
 {
     sub_80033624(p, sub_80014390(arg & 0xFF));
 }
-#if 0
-// Not matched: the original calls sub_800107A0 with only one argument
-void sub_80013EB4(void* p, int a1, int a2)
+// Matched
+void sub_80013EB4(void* p, int nth, int id)
 {
-    sub_80033624(p, (int)sub_800107A0(a2, 0));
+    sub_80033624(p, (int)sub_800107A0(id, nth));
 }
-#endif
-INCLUDE_ASM(sub_80013EB4);
 INCLUDE_ASM(sub_80013EE8);
 // Matched
 int sub_80014114(int x)
@@ -193,6 +199,7 @@ void sub_80014574(struct_16* p, int a1, int a2)
     p->field_C = 0;
 }
 INCLUDE_ASM(sub_80014588);
+INCLUDE_ASM(sub_80014618);
 INCLUDE_ASM(sub_80014638);
 INCLUDE_ASM(sub_800147FC);
 // Matched

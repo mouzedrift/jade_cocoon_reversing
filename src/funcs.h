@@ -311,6 +311,7 @@ extern Minion* sub_80033ACC(SaveData* s, int idx);
 extern Item* sub_80033AE4(SaveData* s, int idx);
 extern void sub_800430B0(void);
 extern void sub_80012794(struct_obj_B* p, int a1);
+extern void sub_800127B8(struct_obj_B* p);
 extern void sub_800184A0(int arg, int bit);
 extern void sub_8001C224(void);
 extern void sub_8001C244(void);

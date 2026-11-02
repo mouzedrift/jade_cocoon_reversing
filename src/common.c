@@ -24,23 +24,23 @@ INCLUDE_DATA(aCommonC);
 INCLUDE_DATA(byte_800793C4);
 INCLUDE_DATA(dword_800793C8);
 
-#if 0
-// Not matched: a1 is masked into $v0 instead of being reused
+// Matched
 void sub_80012794(struct_obj_B* p, int a1)
 {
-    if (p->flags_0 & 0x3F8)
+    unsigned int f = p->flags_0;
+    if (f & 0x3F8)
     {
-        p->flags_0 |= a1 & ~0x3F8;
+        a1 &= ~0x3F8;
     }
-    else
-    {
-        p->field_4 = 0;
-        p->field_8 = 0;
-        p->flags_0 |= 0x400;
-    }
+    p->flags_0 = f | a1;
 }
-#endif
-INCLUDE_ASM(sub_80012794);
+// Matched
+void sub_800127B8(struct_obj_B* p)
+{
+    p->field_4 = 0;
+    p->field_8 = 0;
+    p->flags_0 |= 0x400;
+}
 // Matched
 void sub_800127D0(int a0, int a1, int a2, int a3)
 {
