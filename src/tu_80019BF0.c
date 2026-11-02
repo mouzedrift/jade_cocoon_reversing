@@ -1346,7 +1346,25 @@ void sub_80021E24(volatile int* p)
     p[0] = 0;
     sub_8003FD18(p[1]);
 }
-INCLUDE_ASM(sub_80021E4C);
+// Matched
+void sub_80021E4C(char* a0, int* a1, unsigned int n)
+{
+    unsigned short* src = (unsigned short*)(a0 + *(int*)(a0 + 0xC));
+    unsigned int i;
+    for (i = 0; i < n; i++)
+    {
+        unsigned short* d = (unsigned short*)(a1[1] + i * 16);
+        d[0] = src[0];
+        d[1] = src[1];
+        d[2] = src[2];
+        d[3] = src[3];
+        d[4] = src[4];
+        d[5] = src[5];
+        d[6] = src[6];
+        d[7] = src[7];
+        src += 8;
+    }
+}
 INCLUDE_ASM(sub_80021EDC);
 INCLUDE_ASM(sub_800221DC);
 INCLUDE_ASM(sub_80022458);
@@ -1377,36 +1395,108 @@ void sub_80023460(char* p, int arg1)
 {
     sub_80022AE8(p + 4, p + 6, arg1);
 }
-INCLUDE_ASM(sub_8002348C);
+// Matched
+int sub_8002348C(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[1] + a3 * 0x24, 1);
+    }
+    sub_80023514(a2, a1, a0[3], a3);
+    return 0x24;
+}
 INCLUDE_ASM(sub_80023514);
-INCLUDE_ASM(sub_80023624);
+// Matched
+int sub_80023624(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[3] + a3 * 0x3C, 1);
+    }
+    sub_800236AC(a2 + 2, a1, a0[3], a3);
+    return 0x3C;
+}
 INCLUDE_ASM(sub_800236AC);
-INCLUDE_ASM(sub_800238AC);
+// Matched
+int sub_800238AC(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[5] + a3 * 0x30, 1);
+    }
+    sub_80023934(a2 + 4, a1, a0[3], a3);
+    return 0x24;
+}
 INCLUDE_ASM(sub_80023934);
 // Matched
 void sub_80023B24(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80023B48);
+// Matched
+int sub_80023B48(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[7] + a3 * 0x48, 1);
+    }
+    sub_80023BD0(a2 + 6, a1, a0[3], a3);
+    return 0x40;
+}
 INCLUDE_ASM(sub_80023BD0);
 // Matched
 void sub_80023E80(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_80023EA4);
+// Matched
+int sub_80023EA4(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[9] + a3 * 0x2C, 1);
+    }
+    sub_80023F34(a2 + 8, a1, a0[3], a3);
+    return 0x2C;
+}
 INCLUDE_ASM(sub_80023F34);
-INCLUDE_ASM(sub_8002407C);
+// Matched
+int sub_8002407C(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[11] + a3 * 0x50, 1);
+    }
+    sub_80024104(a2 + 10, a1, a0[3], a3);
+    return 0x50;
+}
 INCLUDE_ASM(sub_80024104);
-INCLUDE_ASM(sub_80024394);
+// Matched
+int sub_80024394(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[13] + a3 * 0x38, 1);
+    }
+    sub_8002441C(a2 + 12, a1, a0[3], a3);
+    return 0x2C;
+}
 INCLUDE_ASM(sub_8002441C);
 // Matched
 void sub_8002467C(unsigned short* p, int arg1)
 {
     sub_80022AE8(p, p + 1, arg1);
 }
-INCLUDE_ASM(sub_800246A0);
+// Matched
+int sub_800246A0(unsigned char* a0, int a1, int* a2, int a3)
+{
+    if (a0[3] & 2)
+    {
+        SetSemiTrans((char*)a2[15] + a3 * 0x5C, 1);
+    }
+    sub_80024730(a2 + 14, a1, a0[3], a3);
+    return 0x54;
+}
 INCLUDE_ASM(sub_80024730);
 // Matched
 void sub_80024AB8(unsigned short* p, int arg1)
@@ -1581,7 +1671,20 @@ int sub_800251E4(int idx)
 }
 INCLUDE_ASM(sub_80025200);
 INCLUDE_ASM(sub_80025440);
-INCLUDE_ASM(sub_8002556C);
+// Matched
+void sub_8002556C(struct_112* p, int i)
+{
+    if (((unsigned char*)p->field_44)[i] != 0)
+    {
+        sub_800269C4(p->field_54, p->field_3E, i, ((int*)p->field_0)[1]);
+        ((unsigned char*)p->field_44)[i] = 0;
+    }
+}
+// Matched
+int sub_800255D8(struct_112* p, int i)
+{
+    return ((unsigned char*)p->field_44)[i] != 0;
+}
 INCLUDE_ASM(sub_800255F0);
 INCLUDE_ASM(sub_800256B8);
 INCLUDE_ASM(sub_80025780);
@@ -1683,7 +1786,17 @@ void sub_80026014(char* a0)
     p->field_4C = r;
     sub_800403E8((unsigned int*)r, (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
 }
-INCLUDE_ASM(sub_8002607C);
+// Matched
+void sub_8002607C(int* a0)
+{
+    struct_112* p;
+    if (a0[2] != -1)
+    {
+        p = (struct_112*)a0[5];
+        sub_80028FDC(0, 0, 0, a0[8], GetTiyFileCount_80028E68((int*)a0[8]), a0[6] + 4, a0[2]);
+        p->field_34 = a0[2];
+    }
+}
 INCLUDE_ASM(sub_800260FC);
 INCLUDE_ASM(sub_800261C8);
 // Matched
@@ -1695,6 +1808,19 @@ void sub_800263CC(int* p)
     sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, *(p + 0xB), tmp27[1]);
 }
 INCLUDE_ASM(sub_80026410);
+#if 0
+// Not matched: a0 and q get swapped callee-saved registers (s1/s2)
+void sub_8002651C(int* a0)
+{
+    int q = a0[6];
+    struct_112* p = (struct_112*)a0[5];
+    int h = ((int*)p->field_0)[1];
+    q += 4;
+    p->field_42 = sub_80021738((int*)a0[13]);
+    sub_80021744(&p->field_68, p->field_42, h);
+    sub_80021824((int*)a0[13], p->field_68, p->field_42, h, q);
+}
+#endif
 INCLUDE_ASM(sub_8002651C);
 // Matched
 void sub_8002659C(char* a0)
@@ -1825,8 +1951,31 @@ void sub_80026D78(struct_12** a0, int a1, int a2)
     }
     *a0 = p;
 }
-INCLUDE_ASM(sub_80026DE8);
-INCLUDE_ASM(sub_80026E74);
+// Matched
+void sub_80026DE8(struct_12** a0, int n, int h)
+{
+    struct_12* p = *a0;
+    int i;
+    for (i = 0; i < n; i++, p++)
+    {
+        if (p->field_8 != 0)
+        {
+            sub_8003FD18(p->field_8, h);
+        }
+    }
+    sub_8003FD18(*a0, h);
+    *a0 = 0;
+}
+// Matched
+void sub_80026E74(struct_12* a0, int* a1, int a2)
+{
+    int i;
+    for (i = 0; i < sub_80026D6C(a1); i++)
+    {
+        sub_80026EF8(a0, (char*)a1 + a1[i + 1], a2);
+        a0++;
+    }
+}
 INCLUDE_ASM(sub_80026EF8);
 INCLUDE_ASM(sub_80026FAC);
 INCLUDE_ASM(sub_80027118);
