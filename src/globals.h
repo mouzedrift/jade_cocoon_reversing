@@ -185,6 +185,7 @@ typedef struct
 extern struct_12 stru_8007D848[17];
 extern struct_12 stru_8007D598[15];
 extern unsigned char byte_8007CC24[0x2b];
+extern unsigned short aKkkiqqqqqssssZ[];
 extern struct_12 stru_8007CCA8[0x2b];
 extern int dword_8007CB78[0x2b];
 extern struct_24 stru_8007D04C[0x17];

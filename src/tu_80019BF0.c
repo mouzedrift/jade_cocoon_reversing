@@ -206,19 +206,18 @@ INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
 INCLUDE_ASM(sub_8001A38C);
 INCLUDE_ASM(sub_8001A41C);
-#if 0
-// Not matched
+// Matched
 void sub_8001A9A4(void)
 {
     unsigned short* p;
+    unsigned short v;
     dword_8008D40C = 0x1000;
     p = (unsigned short*)dword_8008D628[9];
+    v = p[0];
     unknownFlags_8008D678 &= ~0x400;
     p[1] = 0;
-    p[0] &= 0xFFF0;
+    p[0] = v & 0xFFF0;
 }
-#endif
-INCLUDE_ASM(sub_8001A9A4);
 // Matched
 void sub_8001A9E4(void)
 {
@@ -286,7 +285,24 @@ int sub_8001AE54(unsigned int* a0)
 void nullsub_3(void)
 {
 }
-INCLUDE_ASM(sub_8001AEC0);
+// Matched
+int sub_8001AEC0(unsigned int* bits, int n)
+{
+    int cnt = 0;
+    int i;
+    for (i = 0; i < 0x1E; i++)
+    {
+        if (sub_8001AE2C(bits, i))
+        {
+            if (cnt == n)
+            {
+                return i;
+            }
+            cnt++;
+        }
+    }
+    return 0x1E;
+}
 // Matched
 unsigned char sub_8001AF3C(int idx)
 {
@@ -365,18 +381,15 @@ void AddPrimsAll_8001B3C8(void)
 }
 INCLUDE_ASM(sub_8001B540);
 INCLUDE_ASM(Draw_8001B5EC);
-#if 0
-// Not matched: same logic, the compiler addresses dword_8008B4B4 differently
+// Matched
 int sub_8001B6E8(void)
 {
     int snapshot = dword_8008B4B4;
-    while (dword_8008B4B4 <= snapshot)
+    do
     {
-    }
+    } while (dword_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
-#endif
-INCLUDE_ASM(sub_8001B6E8);
 INCLUDE_ASM(sub_8001B714);
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 INCLUDE_ASM(InitSprt_8001B9A0);
@@ -458,21 +471,19 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
 INCLUDE_ASM(sub_8001C364);
 INCLUDE_ASM(sub_8001C440);
 INCLUDE_ASM(sub_8001C6C8);
-#if 0
-// Not matched
+// Matched
 void sub_8001C79C(int a0, int a1)
 {
-    unsigned short* p = &dword_8008B578[a0];
+    unsigned short* base = dword_8008B578;
+    unsigned short* p = &base[a0];
     unsigned short r1 = sub_8001C818(p);
-    unsigned short* q = &dword_8008B578[a1];
+    unsigned short* q = &base[a1];
     unsigned short r2 = sub_8001C818(q);
     sub_8001C810((short*)p, r2);
     sub_8001C810((short*)q, r1);
 }
-#endif
-INCLUDE_ASM(sub_8001C79C);
 // Matched
-void sub_8001C810(short* p, short v)
+void sub_8001C810(short* p, unsigned short v)
 {
     *p = v;
 }
@@ -495,7 +506,38 @@ int sub_8001C824(void)
     }
     return i;
 }
-INCLUDE_ASM(sub_8001C874);
+// Matched
+unsigned int sub_8001C874(int a0)
+{
+    unsigned short* p = dword_8008B578;
+    int i;
+    for (i = 0; i < a0; i++)
+    {
+        p++;
+    }
+    return *p;
+}
+// Matched
+unsigned int sub_8001C8A0(short mask)
+{
+    unsigned int r = 1;
+    int i = 0;
+    unsigned short* p;
+    int m = mask;
+    p = dword_8007CAD8;
+    do
+    {
+        unsigned int t = *p;
+        i++;
+        if (m & t)
+        {
+            r = t;
+            break;
+        }
+        p++;
+    } while (i < 10);
+    return r;
+}
 #if 0
 void ProcessPad_8001C8E8(int a0)
 {
@@ -579,7 +621,31 @@ unsigned short sub_8001CE54(int idx)
 {
     return word_8007CED8[idx];
 }
-INCLUDE_ASM(sub_8001CE70);
+// Matched
+unsigned short sub_8001CE70(int idx)
+{
+    return aKkkiqqqqqssssZ[idx];
+}
+// Matched
+int sub_8001CE8C(int idx)
+{
+    unsigned short v = aKkkiqqqqqssssZ[idx];
+    int r = (v >> 5) & 2;
+    if (v & 0x80)
+    {
+        r |= 4;
+    }
+    if (v & 4)
+    {
+        r |= 1;
+    }
+    return r;
+}
+// Matched
+unsigned char sub_8001CED0(int idx)
+{
+    return *(unsigned char*)&aKkkiqqqqqssssZ[idx];
+}
 // Matched
 int sub_8001CEEC(void)
 {
@@ -698,34 +764,44 @@ struct_24* sub_8001D0FC(unsigned int idx)
     }
     return &stru_8007D6B0[idx];
 }
-#if 0
-// Not matched
-int sub_8001D128(int a0, int a1)
+// Matched
+int sub_8001D128(int a0, unsigned int a1)
 {
     int r = 0;
-    if (a1 == 1)
+    switch (a1)
     {
-        r = sub_8001CFDC(a0);
-    }
-    else if (a1 == 0)
-    {
+    case 0:
         r = sub_8001CF20(a0);
-    }
-    else if (a1 == 2)
-    {
+        break;
+    case 1:
+        r = sub_8001CFDC(a0);
+        break;
+    case 2:
         r = sub_8001D0A4(a0);
+        break;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8001D128);
-#if 0
-short* sub_8001D190(void)
+// Matched
+short* sub_8001D190(a0, a1)
+unsigned int a0;
+unsigned int a1;
 {
-    return 0;
+    short* r = 0;
+    switch (a1)
+    {
+    case 0:
+        r = (short*)sub_8001CF84(a0);
+        break;
+    case 1:
+        r = (short*)sub_8001D034(a0);
+        break;
+    case 2:
+        r = (short*)sub_8001D0FC(a0);
+        break;
+    }
+    return r;
 }
-#endif
-INCLUDE_ASM(sub_8001D190);
 INCLUDE_ASM(sub_8001D1F8);
 // Matched
 struct_12* sub_8001D260(void)
@@ -746,24 +822,16 @@ int sub_8001D2AC(int idx)
     }
     return 0xFF;
 }
-#if 0
-// Not matched (close)
+// Matched
 int sub_8001D2D4(void)
 {
     short* p = sub_8001D190();
-    short idx;
-    if (0 != p)
+    if (p != 0)
     {
-        idx = *p;
+        return dword_8007D938[*p];
     }
-    else
-    {
-        idx = 0x24;
-    }
-    return dword_8007D938[idx];
+    return 0x24;
 }
-#endif
-INCLUDE_ASM(sub_8001D2D4);
 // Matched
 int sub_8001D318(unsigned int idx)
 {
@@ -817,28 +885,22 @@ void sub_8001D41C(int a0, void* a1)
     sub_8001F918(a1);
     sub_8001F9AC(a1);
 }
-#if 0
-// Not matched
+// Matched
 int* sub_8001D45C(int a0)
 {
     struct_cb* r = sub_80043AF8(dword_8008D43C);
     int* p;
-    if (r == 0)
-    {
-        p = 0;
-    }
-    else
+    if (r != 0)
     {
         p = r->field_14;
         r->fn_8 = (void (*)(struct_cb*, int*))sub_8001D41C;
         r->flags_0 = (r->flags_0 | 1) & ~0x8000;
         p[0] = (int)r;
         sub_8001E574(p, a0);
+        return p;
     }
-    return p;
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8001D45C);
 INCLUDE_ASM(sub_8001D4DC);
 // Matched
 void sub_8001D600(char* a0)
@@ -1147,9 +1209,46 @@ void sub_800201A4(void)
         sub_800204AC(&dword_800919A0[i]);
     }
 }
-INCLUDE_ASM(sub_800201EC);
+// Matched
+int sub_800201EC(int a0)
+{
+    int i;
+    struct_obj_C* p = dword_800919A0;
+    for (i = 0; i < 7; i++, p++)
+    {
+        if (a0 == p->field_0)
+        {
+            p->field_4++;
+            return i;
+        }
+    }
+    p = dword_800919A0;
+    for (i = 0; i < 7; i++, p++)
+    {
+        if (p->field_0 == 0)
+        {
+            p->field_0 = a0;
+            p->field_4 = 1;
+            return i;
+        }
+    }
+    return -1;
+}
 INCLUDE_ASM(sub_80020278);
-INCLUDE_ASM(sub_8002032C);
+// Matched
+int sub_8002032C(int a0, int a1, int a2)
+{
+    struct_obj_C* e = &dword_800919A0[a0];
+    unsigned short* s = (unsigned short*)((char*)e + a2 * 2);
+    int r = 0;
+    if (s[4] == 0)
+    {
+        sub_80025440(e->field_0, a2, r);
+        r = 1;
+    }
+    s[4] |= 1 << a1;
+    return r;
+}
 INCLUDE_ASM(sub_800203B0);
 // Matched
 void sub_800204AC(struct_obj_C* p)
@@ -1213,9 +1312,55 @@ void sub_80020734(int arg)
     sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
 }
 INCLUDE_ASM(sub_80020768);
-INCLUDE_ASM(sub_80020814);
-INCLUDE_ASM(sub_80020898);
-INCLUDE_ASM(sub_80020924);
+// Matched
+void sub_80020814(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 7;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[-3] >= 0 && p[0] >= 0)
+        {
+            sub_80025884(sub_80024D70(base[2], p[-3]));
+        }
+        p += 5;
+    }
+}
+// Matched
+void sub_80020898(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 7;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[-3] >= 0 && p[0] >= 0)
+        {
+            sub_80025780(sub_80024D70(base[2], p[-3]), p[0], 1);
+        }
+        p += 5;
+    }
+}
+// Matched
+int sub_80020924(void)
+{
+    int* base = (int*)dword_8008B54C[9];
+    int* p = base + 3;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (p[1] >= 0)
+        {
+            if (sub_80024DC4(sub_80024D70(base[2], p[1])) == 0)
+            {
+                return 0;
+            }
+        }
+        p += 5;
+    }
+    return 1;
+}
 INCLUDE_ASM(sub_800209AC);
 INCLUDE_ASM(sub_80020A38);
 INCLUDE_ASM(sub_80020B70);
