@@ -1366,7 +1366,76 @@ void sub_80021E4C(char* a0, int* a1, unsigned int n)
     }
 }
 INCLUDE_ASM(sub_80021EDC);
-INCLUDE_ASM(sub_800221DC);
+// Matched
+void sub_800221DC(unsigned char* p, unsigned char* d, DR_TPAGE* tp)
+{
+    RECT r;
+    r.x = p[4];
+    r.y = p[5];
+    r.w = p[0xE];
+    r.h = p[0xF];
+    if (p[8] < r.x)
+    {
+        r.x = p[8];
+    }
+    if (r.x > p[0xC])
+    {
+        r.x = p[0xC];
+    }
+    if (r.x > p[0xE])
+    {
+        r.x = p[0xE];
+    }
+    if (p[9] < r.y)
+    {
+        r.y = p[9];
+    }
+    if (r.y > p[0xD])
+    {
+        r.y = p[0xD];
+    }
+    if (r.y > p[0xF])
+    {
+        r.y = p[0xF];
+    }
+    if (r.w < p[0xC])
+    {
+        r.w = p[0xC];
+    }
+    if (r.w < p[8])
+    {
+        r.w = p[8];
+    }
+    if (r.w < p[4])
+    {
+        r.w = p[4];
+    }
+    if (r.h < p[0xD])
+    {
+        r.h = p[0xD];
+    }
+    if (r.h < p[9])
+    {
+        r.h = p[9];
+    }
+    if (r.h < p[5])
+    {
+        r.h = p[5];
+    }
+    d[3] = 4;
+    d[7] = 0x64;
+    d[4] = p[0];
+    d[5] = p[1];
+    d[6] = p[2];
+    d[0xC] = r.x;
+    d[0xD] = r.y;
+    *(short*)(d + 8) = 0;
+    *(short*)(d + 0xA) = 0;
+    *(short*)(d + 0x10) = r.w - r.x;
+    *(short*)(d + 0x12) = r.h - r.y;
+    *(unsigned short*)(d + 0xE) = *(unsigned short*)(p + 6);
+    SetDrawTPage(tp, 0, 1, *(unsigned short*)(p + 0xA));
+}
 typedef void (*fn_80022458_a)(unsigned char* p, int a3);
 typedef int (*fn_80022458_b)(unsigned char* hdr, unsigned char* p, int a0, int k, int h);
 extern fn_80022458_a dword_8007DB08[];
