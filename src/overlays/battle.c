@@ -1465,7 +1465,25 @@ int sub_800BF980(int x)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BF980);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BF9B4);
+int sub_800BF9B4(int x)
+{
+    int r = 0;
+    switch (x)
+    {
+    case 0x29:
+    case 0x2C:
+    case 0x2E:
+    case 0x30:
+    case 0x31:
+    case 0x32:
+    case 0x33:
+    case 0x37:
+        r = 1;
+        break;
+    }
+    return r;
+}
+INCLUDE_OVERLAY_ASM(battle, dword_800B67F0);
 
 #if 0
 void sub_800BF9F0(int a)
@@ -1531,7 +1549,43 @@ int sub_800BFA4C(unsigned int a, unsigned int b)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BFA4C);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BFAF8);
+void sub_800BFAF8(int x)
+{
+    int a;
+    switch (x)
+    {
+    case 9:
+        a = 1;
+        break;
+    case 7:
+        a = 8;
+        break;
+    case 11:
+        a = 4;
+        break;
+    case 14:
+        a = 0;
+        break;
+    case 18:
+        a = 2;
+        break;
+    case 2:
+        a = 3;
+        break;
+    case 13:
+        a = 5;
+        break;
+    case 21:
+        a = 7;
+        break;
+    case 22:
+    default:
+        return;
+    }
+    sub_80018430(a);
+}
+
+INCLUDE_OVERLAY_ASM(battle, dword_800B6848);
 
 void sub_800BFB80()
 {
