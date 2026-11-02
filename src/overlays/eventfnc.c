@@ -1583,8 +1583,84 @@ int sub_800BC58C(int* p)
     return m;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC5C8);
+extern unsigned short word_8008D600[];
+extern void sub_8005BBC8();
+int sub_800BC5C8(int a, int b)
+{
+    unsigned short v[3];
+    short r1[4];
+    short r2[4];
+    short tmp[4];
+    unsigned short* p = (unsigned short*)sub_800BBBA0(a);
+    unsigned short* q;
+    v[0] = p[0];
+    v[1] = p[2];
+    v[2] = p[4];
+    v[0] -= word_8008D600[0];
+    v[1] -= word_8008D600[2];
+    v[2] -= word_8008D600[4];
+    sub_8005BBC8(v, r1, tmp, tmp);
+    q = (unsigned short*)sub_800BBBA0(b);
+    v[0] = q[0];
+    v[1] = q[2];
+    v[2] = q[4];
+    v[0] -= word_8008D600[0];
+    v[1] -= word_8008D600[2];
+    v[2] -= word_8008D600[4];
+    sub_8005BBC8(v, r2, tmp, tmp);
+    return r1[0] < r2[0];
+}
 
+typedef struct EvSrcEventfnc
+{
+    short a_0;
+    short b_2;
+    int c_4;
+} EvSrcEventfnc;
+typedef struct EvSlotEventfnc
+{
+    int f0_0;
+    int f4_4;
+    int f8_8;
+    int fC_C;
+    int f10_10;
+} EvSlotEventfnc;
+extern void sub_8004E268(void* p, int v, int n);
+#if 0
+// Not matched: loop induction variables are allocated differently (the original strength-reduces only the slot offset)
+void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
+{
+    int local[8];
+    int i;
+    int off = 0xC;
+    EvSlotEventfnc* p;
+    sub_8004E268(local, 0, 0x20);
+    local[0] = 2;
+    local[5] = 3;
+    for (i = 0; i < 3; i++, off += 0x14)
+    {
+        p = (EvSlotEventfnc*)(base + off);
+        if (i < n)
+        {
+            p->f0_0 = src->a_0;
+            p->f4_4 = src->b_2;
+            p->f8_8 = src->c_4;
+        }
+        else
+        {
+            p->f0_0 = -1;
+            p->f4_4 = 0;
+            p->f8_8 = 0;
+        }
+        if (p->f0_0 >= 0)
+        {
+            p->fC_C = local[p->f0_0];
+            p->f10_10 = p->f4_4;
+        }
+        src++;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC6C4);
 
 void sub_800BC7A0(void)
