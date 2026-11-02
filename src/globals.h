@@ -48,7 +48,13 @@ typedef struct
     int field_4;
     char pad_8[0x14];
     unsigned int field_1C_settings; // == settingsFlags_8008B58C
-    char pad_20[0x968];
+    char pad_20[0x2C4];
+    struct
+    {
+        short field_0;
+        short field_2;
+    } field_2E4[4];
+    char pad_2F4[0x694];
     Minion minions[15];
     Item items[12];
 } SaveData;
@@ -103,13 +109,21 @@ typedef struct
 
 typedef struct
 {
-    char data[0x54];
+    int data[0x15];
 } struct_54;
+
+typedef struct
+{
+    int id;
+    struct_54 d;
+} struct_58;
 
 // object with a header at +0x4C and tables of struct_54 at +0x50 and +0x68
 typedef struct
 {
-    char pad_0[0x4C];
+    char pad_0[0x3C];
+    unsigned short field_3C;
+    char pad_3E[0xE];
     int* field_4C;
     struct_54* field_50;
     char pad_54[0x14];
@@ -231,6 +245,8 @@ extern int off_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
 extern int dword_8008B540;
+extern int dword_8008B500[];
+extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int dword_80086564;
 extern int dword_80098688;
@@ -238,6 +254,8 @@ extern int off_800824CC[];
 extern struct_12_b dword_8007C438[];
 extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
+extern int dword_80091C30[];
+extern int dword_80091C60[];
 extern unsigned short word_8007CED8[];
 typedef struct
 {
@@ -401,6 +419,19 @@ typedef struct
     struct_112* items;
     void* field_C;
 } struct_112_list;
+int sub_80026630(struct_112_list* p, unsigned int id);
+void sub_800266CC(struct_112* p);
+int sub_8002667C(struct_112_list* p);
+void sub_80024C48(struct_112* p);
+void sub_80025C38(struct_112* p, int flag);
+typedef struct
+{
+    int field_0;
+    int count;
+    int items[10];
+} struct_list10;
+int sub_80025D00(struct_list10* p, int* q);
+void sub_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
