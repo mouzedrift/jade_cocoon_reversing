@@ -64,5 +64,33 @@ void sub_80017208(int* a0, int* a1)
         a0[0] = (a0[0] & ~1) | 0x8000;
     }
 }
-INCLUDE_ASM(sub_80017290);
+void sub_80017A6C(int a0, int a1);
+void sub_800173A8(int* a0, int* a1);
+// Matched
+void sub_80017290(char* a0, int a1)
+{
+    EventEntry* e;
+    sub_80017A6C((int)a0, 0);
+    e = sub_80043AF8(dword_8008B4A8);
+    if (e)
+    {
+        int* b = e->buffer;
+        int idx;
+        b[0x44 / 4] = (*(int**)(a0 + 0x1C))[0];
+        b[0x48 / 4] = (*(int**)(a0 + 0x1C))[1];
+        b[0x4C / 4] = (*(int**)(a0 + 0x1C))[2];
+        b[0] = 0;
+        b[1] = sub_800181E8();
+        b[0x30 / 4] = 0;
+        b[0x34 / 4] = 0x23F000;
+        ((short*)b)[0x84 / 2] = 0;
+        ((short*)b)[0x82 / 2] = 0;
+        ((short*)b)[0x80 / 2] = 0;
+        ((short*)b)[0x86 / 2] = 0;
+        idx = sub_80020F00((struct_list_14*)dword_80091BD0, 1, a1);
+        e->flags = (e->flags | 1) & ~0x8000;
+        b[0x88 / 4] = dword_80091BD0[0x28 / 4] + idx * 28;
+        e->cb_8 = (EventEntryFn)sub_800173A8;
+    }
+}
 INCLUDE_ASM(sub_800173A8);
