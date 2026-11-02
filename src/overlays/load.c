@@ -55,6 +55,29 @@ extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
 typedef struct
 {
+    char c_LOAD[8];
+} Bytes8_LOAD;
+typedef struct
+{
+    short s_LOAD;
+    char c0_LOAD;
+    char c1_LOAD;
+} Tail4_LOAD;
+typedef struct
+{
+    short f0_LOAD;
+    short f2_LOAD;
+    short f4_LOAD;
+    short f6_LOAD;
+} Row8_LOAD;
+extern Row8_LOAD dword_800BD998[];
+extern Bytes8_LOAD dword_800B6B8C;
+extern unsigned short word_8008B590;
+extern char* dword_8008D454;
+extern void sub_8002C06C(void* a, int b, int c);
+extern void sub_80042460(void* a, void* b, void* c, int d);
+typedef struct
+{
     char pad0_LOAD[0x24];
     int f24_LOAD;
     int f28_LOAD;
@@ -123,7 +146,17 @@ INCLUDE_OVERLAY_ASM(load, sub_800B867C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B877C);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B8984);
+void sub_800B8984(void)
+{
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    sub_8002C06C(&dword_800BD998[byte_800BDF58], dword_800BD998[byte_800BDF58].f4_LOAD, dword_800BD998[byte_800BDF58].f6_LOAD);
+    a = dword_800B6B8C;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = word_8008B590;
+    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
 
