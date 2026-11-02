@@ -2960,28 +2960,23 @@ struct_112* sub_80024D70(struct_112_list* p, unsigned int id)
     }
     return 0;
 }
-#if 0
-// Not matched
-int sub_80024DC4(int* p)
+// Matched
+int sub_80024DC4(void* a0)
 {
+    int* p = (int*)a0;
     int i;
-    int r = 1;
-    for (i = 0; i < p[1]; i++)
+    i = 0;
+    while (i < p[1])
     {
         if (sub_8003BE30(p[2 + i]) != 0)
         {
-            r = 0;
-            break;
+            return 0;
         }
+        i++;
     }
-    if (r)
-    {
-        p[1] = 0;
-    }
-    return r;
+    p[1] = 0;
+    return 1;
 }
-#endif
-INCLUDE_ASM(sub_80024DC4);
 // Matched
 char* sub_80024E38(struct_obj_E* p)
 {
