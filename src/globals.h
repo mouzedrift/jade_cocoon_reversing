@@ -304,6 +304,7 @@ extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern int dword_800918BC;
+extern int ODEIsEvenAddressDrawn_800918C0;
 extern struct_44 stru_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;

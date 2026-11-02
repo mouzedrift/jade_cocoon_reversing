@@ -400,10 +400,30 @@ void AddPrimsAll_8001B3C8(void)
         }
     }
 }
-INCLUDE_ASM(sub_8001B540);
+// Matched
+void sub_8001B540(void)
+{
+    if (unknownFlags_8008D678 & 8)
+    {
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+    }
+    else if (unknownFlags_8008D678 & 0x82)
+    {
+        if (dword_800918B0 & 2)
+        {
+            sub_8001BC00();
+        }
+        else if (dword_800918B0 & 1)
+        {
+            sub_8001BB28();
+        }
+        InitSprt_8001B9A0(bDoubleBuffer_8008D428);
+        unknownFlags_8008D678 &= ~0x80;
+    }
+}
 INCLUDE_ASM(Draw_8001B5EC);
 // Matched
-int sub_8001B6E8(void)
+int sub_8001B6E8(int unused)
 {
     int snapshot = dword_8008B4B4;
     do
@@ -411,7 +431,26 @@ int sub_8001B6E8(void)
     } while (dword_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
-INCLUDE_ASM(sub_8001B714);
+// Matched
+void sub_8001B714(void)
+{
+    if ((unsigned int)dword_800918BC < 2)
+    {
+        if (dword_800918BC == 0)
+        {
+            InitEnvironments_8001B7B4();
+            sub_8001B6E8(0);
+            ODEIsEvenAddressDrawn_800918C0 = GetODE() == 0;
+        }
+        dword_800918BC++;
+        unknownFlags_8008D678 &= ~0x10;
+    }
+    else
+    {
+        unknownFlags_8008D678 &= ~0x40;
+        unknownFlags_8008D678 |= 0x10;
+    }
+}
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 INCLUDE_ASM(InitSprt_8001B9A0);
 INCLUDE_ASM(sub_8001BB28);
@@ -1251,15 +1290,33 @@ void sub_8001DB58(struct_obj_A* p, int a1, int a2)
     }
 }
 #if 0
-void sub_8001DB98(void* arg0)
+// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
+void sub_8001DB98(char* o, unsigned char* s)
 {
+    short old = *(short*)(o + 0xC2);
+    *(short*)(o + 0xC2) = -1;
+    *(short*)(o + 0xC4) = 0;
+    *(short*)(o + 0xC6) = 1;
+    *(short*)(o + 0xC8) = 0;
+    *(short*)(o + 0xCA) = 0;
+    *(short*)(o + 0xCC) = -1;
+    *(short*)(o + 0xCE) = -1;
+    *(unsigned char**)(o + 0xD0) = s;
+    *(int*)(o + 4) &= ~0x8000;
+    *(int*)(o + 4) |= 0x4000;
+    *(short*)(o + 0xC0) = old;
+    while (s[0] != 0)
+    {
+        *(short*)(o + 0xC6) += s[1];
+        s += s[1] * 4;
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001DB98);
 // Matched
-void sub_8001DC34(void* p)
+void sub_8001DC34(void* p, unsigned char* s)
 {
-    sub_8001DB98(p);
+    sub_8001DB98(p, s);
     sub_8001EA48(p);
 }
 INCLUDE_ASM(sub_8001DC60);
