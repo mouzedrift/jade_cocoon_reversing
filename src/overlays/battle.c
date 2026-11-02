@@ -4,6 +4,17 @@
 #include "globals.h"
 
 extern int dword_800C9DD0[];
+
+typedef struct BatTask
+{
+    int f0;
+    int f4;
+    int* f8;
+    int fC;
+    int f10;
+    unsigned char* f14;
+    int f18;
+} BatTask;
 extern int sub_800BE364();
 extern void sub_800BE3C0();
 extern int sub_800BEA94();
@@ -1990,9 +2001,25 @@ void sub_800C0FC4(int* p)
     p[12] = (int)(q + 0x2C);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C100C);
+int sub_800C100C(int a)
+{
+    int h = (int)sub_80010598(3, a);
+    if (h)
+    {
+        return h + 0xDE;
+    }
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C103C);
+int sub_800C103C(int a)
+{
+    int h = (int)sub_80010598(3, a);
+    if (h)
+    {
+        return h + 0xF4;
+    }
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C106C);
 
@@ -2048,7 +2075,11 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C3DF8);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4090);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C410C);
+extern int dword_8008D3F0;
+void sub_800C410C()
+{
+    dword_8008D3F0 = 0;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4118);
 
@@ -2058,7 +2089,11 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C43D8);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4424);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4470);
+extern void sub_800C6AFC();
+void sub_800C4470(int a)
+{
+    sub_800C6AFC(a, 1, 0x14);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4494);
 
@@ -2068,9 +2103,16 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C4548);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C45A8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C46FC);
+extern void sub_800C473C();
+void sub_800C46FC()
+{
+    sub_800C473C();
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C471C);
+void sub_800C471C()
+{
+    sub_800C473C();
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C473C);
 
@@ -2092,13 +2134,30 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C4E34);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4EA8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4FA8);
+extern int sub_800C6BD0();
+int sub_800C4FA8(BatTask* t)
+{
+    int r = sub_800C6BD0(t, 4);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C4FE0);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C5034);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C507C);
+int sub_800C507C(BatTask* t)
+{
+    int r = sub_800C6A8C(t);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C50B0);
 
@@ -2130,15 +2189,50 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C5700);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C576C);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C57D8);
+int sub_800C57D8(BatTask* t)
+{
+    int r = sub_800C6A8C(t);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C580C);
+int sub_800C580C(BatTask* t)
+{
+    int r = sub_800C6A8C(t);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5840);
+int sub_800C5840(BatTask* t)
+{
+    int r = sub_800C6A8C(t);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5874);
+int sub_800C5874(BatTask* t)
+{
+    int r = sub_800C6BD0(t, 0x14);
+    if (r == 0)
+    {
+        r = sub_800C6A68(t);
+    }
+    return r;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C58AC);
+void sub_800C58AC(BatTask* t)
+{
+    *t->f8 = 0x12;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C58BC);
 
@@ -2164,23 +2258,54 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C6824);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6928);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6A40);
+void sub_800C6A40(BatTask* t)
+{
+    *t->f8 = 6;
+    t->f8[1] = 0;
+    t->f8[3] = t->f18;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6A68);
+int sub_800C6A68(BatTask* t)
+{
+    *t->f8 = 0;
+    t->f8[3] = t->f18;
+    return 1;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6A8C);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6AFC);
+void sub_800C6AFC(BatTask* t, int a, int b)
+{
+    t->f8[0] = a;
+    t->f8[1] = b;
+    t->f8[3] = t->f18;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6B24);
+void sub_800C6B24(BatTask* t, int a, int b)
+{
+    int* p;
+    t->f8[0] = a;
+    t->f8[1] = b;
+    p = t->f8;
+    p[3] = p[2];
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6B50);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6BD0);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6C44);
+int sub_800C6C44(BatTask* t)
+{
+    *t->f8 = 0x12;
+    return 1;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6C58);
+int sub_800C6C58(BatTask* t)
+{
+    *t->f8 = 7;
+    t->f8[3] = t->f18;
+    return 1;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6C7C);
 
@@ -2190,15 +2315,27 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C6D6C);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6DF8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6EC8);
+int sub_800C6EC8(BatTask* t, int m)
+{
+    return (*(int*)t->f14 & m) != 0;
+}
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6EE4);
+int sub_800C6EE4(BatTask* t)
+{
+    return t->f14[0x2d] > t->f14[0x2f];
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6EFC);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C7088);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C71A0);
+extern int dword_800C9628[];
+extern unsigned char dword_800C9E49;
+extern int dword_800C9640;
+void sub_800C71A0()
+{
+    dword_800C9640 = dword_800C9628[dword_800C9E49];
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C71C8);
 
@@ -2218,7 +2355,12 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C791C);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C79B8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C79EC);
+extern int sub_8003DA54(void*);
+extern char dword_800C92E4[];
+void sub_800C79EC()
+{
+    sub_80031BDC((short)sub_8003DA54(dword_800C92E4));
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C7A1C);
 
@@ -2240,7 +2382,15 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C8768);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C88AC);
+void sub_800C88AC(int a)
+{
+    int s[4];
+    s[0] = a;
+    s[1] = 0;
+    s[2] = 0;
+    s[3] = 0;
+    sub_8002AF10((int)s, 0, 0xF);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C88E4);
 
