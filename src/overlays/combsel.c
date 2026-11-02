@@ -207,7 +207,50 @@ void sub_800A5080(CombSelTask* t, int a)
 #endif
 INCLUDE_OVERLAY_ASM(combsel, sub_800A5080);
 
-INCLUDE_OVERLAY_ASM(combsel, sub_800A5188);
+extern char dword_800A5960[];
+
+void sub_800A5188()
+{
+    if (sub_8003D288(0, dword_800A3A94))
+    {
+        switch (word_800A1BC4)
+        {
+        case 1:
+        {
+            CombSelUnit* a = &dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)];
+            CombSelUnit* b = &dword_800A1BC8[byte_800A38D9][(short)sub_8003DA54(dword_800A596C)];
+            sub_800403E8((unsigned int*)a, (unsigned int*)b, 0xF8);
+            byte_800A38DB = 2;
+            sub_80031494(0x7E);
+            break;
+        }
+        case 2:
+            if (sub_800A1934(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]) == 1)
+            {
+                sub_80031494(0x7C);
+            }
+            else
+            {
+                sub_80031494(0x7E);
+                sub_800A197C(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]);
+                byte_800A38DB = 0;
+            }
+            break;
+        }
+    }
+    else if (sub_8003D3C0(1, dword_800A3A94))
+    {
+        switch (word_800A1BC4)
+        {
+        case 1:
+            byte_800A38DB = 2;
+            break;
+        case 2:
+            byte_800A38DB = 0;
+            break;
+        }
+    }
+}
 
 void sub_800A53B0()
 {
