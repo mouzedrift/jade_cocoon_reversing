@@ -279,6 +279,9 @@ extern int loadedOverlayMaybe_8008D620;
 extern int dword_8008D3F4;
 extern int dword_8008B4E8;
 extern int frameCount_8008D3FC;
+extern int geomScreenDistance_8008B548;
+extern int dword_8008B4F8;
+extern int dword_800918C4;
 extern unsigned short** dword_8008D4A4;
 extern unsigned short word_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
@@ -385,6 +388,7 @@ typedef struct
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
+extern unsigned short dword_8007CAF4[0xa];
 extern int dword_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];

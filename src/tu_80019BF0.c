@@ -204,7 +204,24 @@ int sub_80019C84(void)
 }
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
-INCLUDE_ASM(sub_8001A38C);
+// Matched
+extern short dword_80087114[];
+extern short dword_80087134[];
+extern char dword_8008D4F0[];
+void sub_8001A38C(void)
+{
+    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    unsigned short* g;
+    p[0] = 0;
+    p[1] = 0;
+    g = (unsigned short*)dword_8008D4F0;
+    dword_80087114[6] = -g[0x34 / 2];
+    dword_80087114[7] = -g[0x36 / 2];
+    dword_80087114[8] = -g[0x38 / 2];
+    dword_80087134[2] = (short)g[0x3C / 2] / 4;
+    dword_80087134[5] = (short)g[0x3E / 2] / 4;
+    dword_80087134[8] = (short)g[0x40 / 2] / 4;
+}
 INCLUDE_ASM(sub_8001A41C);
 // Matched
 void sub_8001A9A4(void)
@@ -393,7 +410,21 @@ void DrawIntroMovie_8001AF64(void* a0)
 }
 #endif
 INCLUDE_ASM(DrawIntroMovie_8001AF64);
-INCLUDE_ASM(InitMovie_8001B1B0);
+// Matched
+void InitMovie_8001B1B0(void)
+{
+    bStopDrawingMovie_8008D45C = 0;
+    frameCount_8008D3FC = 0;
+    geomScreenDistance_8008B548 = 0xA0;
+    dword_8008B4F8 = 0x1000;
+    drawEnvRed_8008D448[0] = 0;
+    drawEnvRed_8008D448[1] = 0;
+    drawEnvRed_8008D448[2] = 0;
+    bDoubleBuffer_8008D428 = 0;
+    dword_800918C4 = 0;
+    unknownFlags_8008D678 &= ~0x200;
+    sub_8001B230();
+}
 // Matched
 void sub_8001B230(void)
 {
@@ -487,8 +518,79 @@ void sub_8001B714(void)
 }
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 INCLUDE_ASM(InitSprt_8001B9A0);
-INCLUDE_ASM(sub_8001BB28);
-INCLUDE_ASM(sub_8001BC00);
+// Matched
+void sub_8001BB28(void)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    SetPolyF4(&poly);
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.r0 = 8;
+    poly.g0 = 8;
+    poly.b0 = 8;
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 1);
+    sub_80040298(pOT_8008D78C, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000240;
+    sub_80040298(pOT_8008D78C, &dr, 2);
+    dword_800918B4++;
+    if ((unsigned int)dword_800918B4 > 0x20)
+    {
+        dword_800918B0 &= ~1;
+    }
+}
+// Matched
+void sub_8001BC00(void)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    SetPolyF4(&poly);
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.r0 = 8;
+    poly.g0 = 8;
+    poly.b0 = 8;
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 1);
+    sub_80040298(pOT_8008D78C, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000220;
+    sub_80040298(pOT_8008D78C, &dr, 2);
+    dword_800918B4++;
+    if ((unsigned int)dword_800918B4 > 0x20)
+    {
+        dword_800918B0 &= ~2;
+    }
+}
+// Matched
+void sub_8001BCD8(int a0)
+{
+    dword_800918C4 = a0;
+}
 INCLUDE_ASM(sub_8001BCE4);
 // Matched
 void sub_8001BEC8(void)
@@ -534,7 +636,42 @@ void sub_8001C02C(unsigned char* a0)
         r->fn_8 = (void (*)(struct_cb*, int*))sub_8001C0B4;
     }
 }
-INCLUDE_ASM(sub_8001C0B4);
+// Matched
+void sub_8001C0B4(struct_cb* p, int* q)
+{
+    POLY_F4 poly;
+    DR_TPAGE dr;
+    unsigned short* s;
+    unsigned short w;
+    unsigned short h;
+    unsigned char* c = (unsigned char*)q;
+    q[0]++;
+    if (q[0] >= 4)
+    {
+        p->flags_0 = (p->flags_0 & ~1) | 0x8000;
+        return;
+    }
+    SetPolyF4(&poly);
+    poly.r0 = c[4];
+    poly.g0 = c[5];
+    poly.b0 = c[6];
+    s = (unsigned short*)&stru_8008B4D8;
+    w = s[6];
+    h = s[7];
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = h;
+    poly.x3 = w;
+    poly.y3 = h;
+    SetSemiTrans(&poly, 0);
+    sub_80040298(pOT_8008D5F4, &poly, 6);
+    setlen(&dr, 1);
+    dr.code[0] = 0xE1000220;
+    sub_80040298(pOT_8008D5F4, &dr, 2);
+}
 // Matched
 void sub_8001C19C(unsigned int a0)
 {
@@ -613,9 +750,72 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-INCLUDE_ASM(sub_8001C364);
+// Matched
+extern char dword_8007C750[];
+void sub_8001C364(char* a0, int idx, int a2)
+{
+    int* e = (int*)(*(int*)(a0 + 0x54) + idx * 28);
+    int i;
+    for (i = 0; i < e[3]; i++)
+    {
+        short* q = (short*)(i * 8 + e[4]);
+        if (a2 == q[0] && q[1] == 0)
+        {
+            unsigned int n = (unsigned short)q[2];
+            if (n < 0x6E)
+            {
+                char* t = (char*)(((short)n << 3) + (int)dword_8007C750);
+                if (*(int*)t == 0)
+                {
+                    PlaySfx_80031494(*(short*)(t + 4));
+                }
+            }
+        }
+    }
+}
 INCLUDE_ASM(sub_8001C440);
-INCLUDE_ASM(sub_8001C6C8);
+// Matched
+void sub_8001C6C8(void)
+{
+    unsigned short* p = dword_8008B578;
+    int i = 0;
+    unsigned short* q = dword_8007CAF4;
+    for (; i < 10; i++)
+    {
+        sub_8001C810((short*)p++, *q++);
+    }
+}
+// Matched
+int sub_8001C72C(unsigned int a0, unsigned int a1)
+{
+    return (a0 & (unsigned short)a1) != 0;
+}
+// Matched
+int sub_8001C73C(unsigned int a0, unsigned int a1)
+{
+    a1 = (unsigned short)a1;
+    if (a1 == 0)
+    {
+        return 0;
+    }
+    return (a0 & a1) == a1;
+}
+// Matched
+int sub_8001C75C(unsigned int a0)
+{
+    unsigned short* p = dword_8008B578;
+    int i = 0;
+    unsigned int v = (unsigned short)a0;
+    for (; i < 10; i++)
+    {
+        if (*p == v)
+        {
+            return i;
+        }
+        p++;
+    }
+    return -1;
+}
 // Matched
 void sub_8001C79C(int a0, int a1)
 {
