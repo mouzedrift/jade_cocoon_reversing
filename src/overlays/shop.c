@@ -23,6 +23,19 @@ typedef struct ShopTaskShop
     void (*next_8)();
 } ShopTaskShop;
 
+typedef struct ShopUnitShop
+{
+    char pad_0[0x84];
+    int field_84;
+    int field_88;
+    char pad_8C[0x3C];
+    unsigned char field_C8;
+} ShopUnitShop;
+
+extern int name_8007DC74;
+extern int sub_80010850(void* p);
+extern int sub_80012204(int a, int b, int c, int d);
+extern void sub_800BF02C();
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -153,17 +166,46 @@ void sub_800BA340(unsigned int* a)
     sub_800403E8(a, name_800C07F0, 0xF8);
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BA368);
+void sub_800BA368(unsigned char* d, unsigned char* s)
+{
+    int i;
+    for (i = 0; i < 6; i++)
+    {
+        (d + i)[0xB0] = (s + i)[0xB0] - (s + i)[0xB6] / 20;
+    }
+    *(unsigned short*)(d + 0x8E) = *(unsigned short*)(s + 0x8E);
+    *(unsigned short*)(d + 0x92) = *(unsigned short*)(s + 0x92);
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA3C8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BA46C);
+unsigned char sub_800BA46C(unsigned char a, unsigned char b)
+{
+    int s = (a + b) >> 1;
+    int c = b - 200;
+    int r = s + (a + c) / 7;
+    int out = 0;
+    if (r >= 0)
+    {
+        out = r;
+        if (out > 200)
+        {
+            out = 200;
+        }
+    }
+    return out;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA650);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BA6D0);
+void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
+{
+    d->field_C8 = s->field_C8;
+    d->field_88 = s->field_88;
+    d->field_88 += sub_80012204(s->field_C8, s->field_88, t->field_C8, t->field_88);
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
 
@@ -178,7 +220,40 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BAB38);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BACD0);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BAE80);
+int sub_800BAE80(ShopUnitShop* p)
+{
+    unsigned int v = p->field_C8;
+    int r;
+    if (v < 4)
+    {
+        r = 0x21;
+    }
+    else if (v < 7)
+    {
+        r = 0x22;
+    }
+    else if (v < 12)
+    {
+        r = 0x23;
+    }
+    else if (v < 18)
+    {
+        r = 0x24;
+    }
+    else if (v < 25)
+    {
+        r = 0x25;
+    }
+    else if (v < 31)
+    {
+        r = 0x26;
+    }
+    else
+    {
+        r = 0x27;
+    }
+    return r;
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BAEDC);
 
@@ -199,6 +274,23 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BB148);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB38C);
 
+#if 0 // near miss: reg alloc of field_84 load
+int sub_800BB3E8(ShopUnitShop* p)
+{
+    switch (*(short*)p)
+    {
+    case 5:
+        if (p->field_84)
+        {
+            return 0;
+        }
+    case 1:
+    case 7:
+        return 1;
+    }
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB3E8);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB444);
@@ -304,7 +396,14 @@ void sub_800BF484()
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BF4B8);
+void sub_800BF4B8(int a)
+{
+    ShopCtxShop* c = &name_800C09E0;
+    sub_800BF02C(a, c->pad_4 + 4, name_8007DC74);
+    *(int*)c->pad_4 = a;
+    c->field_0 = sub_80010850(c->pad_4 + 4);
+    c->field_3C = 0;
+}
 
 void sub_800BF520()
 {
