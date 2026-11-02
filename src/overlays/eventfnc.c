@@ -43,7 +43,8 @@ typedef struct EvCtxEventfnc
     EvVecEventfnc vec78_78[5];
     int padB4_B4;
     int fB8_B8;
-    char pad_BC[8];
+    int fBC_BC;
+    char pad_C0[4];
     unsigned int fC4_C4;
     int fC8_C8;
     int fCC_CC[8];
@@ -1380,7 +1381,43 @@ int sub_800BB7D8(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB840);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB990);
+int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
+{
+    int i;
+    int bit;
+    switch (c->fBC_BC)
+    {
+    case 0:
+        c->f24_24[5] = m->m0_0;
+        c->fBC_BC++;
+    case 1:
+        for (i = 0; i < 5; i++)
+        {
+            bit = 1 << i;
+            if (c->f24_24[5] & bit)
+            {
+                m->m0_0 = i;
+                if (!sub_800BB840(c, m, a, 0))
+                {
+                    break;
+                }
+                c->f24_24[5] &= ~bit;
+            }
+        }
+        if (c->f24_24[5] == 0)
+        {
+            if (b)
+            {
+                c->pc_8++;
+            }
+            c->fBC_BC = 0;
+            return 1;
+        }
+        return 0;
+    default:
+        return 0;
+    }
+}
 
 extern int sub_800A8E7C();
 extern int sub_800A7CB8(int a);
