@@ -111,6 +111,10 @@ extern MenuQ name_800C1E98[];
 extern int sub_8003D380();
 extern int sub_8003D41C();
 
+extern int sub_800BFB10();
+extern int sub_800BFBE0();
+extern void PlaySfx_80031494();
+
 typedef struct MenuBox
 {
     short x_0;
@@ -783,7 +787,59 @@ int sub_800BFBE0(MenuCtx* c)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BFBE0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BFCA8);
+extern int name_8003D794();
+extern void sub_800AD3F0();
+extern int sub_800AD308();
+void sub_800BFCA8(MenuCtx* c)
+{
+    if (c->sel_2 != 0)
+    {
+        name_8003D794(&c->f58, 0);
+    }
+    else
+    {
+        int r16 = 0;
+        int x = name_8003D794(&c->f58, r16);
+        if (x == 4)
+            r16 = sub_800BFB10(c);
+        else if (x == 3)
+            r16 = sub_800BFBE0(c);
+        if (r16)
+            PlaySfx_80031494(0x7F);
+    }
+    if (c->f28 >= 8)
+    {
+        if (sub_8003D380(0))
+        {
+            if (c->sel_2 == 0x10 && c->f60 == 1)
+            {
+                int v = c->f60;
+                PlaySfx_80031494(0x7D);
+                c->f1C = v;
+            }
+            else
+            {
+                c->f18 = 1;
+            }
+        }
+        else if (sub_8003D41C(1))
+        {
+            c->f1C = 1;
+        }
+        else if ((name_8009194C & 0x80) && c->sel_2 == 1)
+        {
+            int r;
+            sub_800AD3F0(0);
+            PlaySfx_80031494(0x7E);
+            c->f62 = 0;
+            c->f60 = 0;
+            r = sub_800AD308(0);
+            if (r < 3)
+                r = 3;
+            c->f5C = r + 1;
+        }
+    }
+}
 
 extern void sub_80020BF8();
 extern void name_800C2EB4();
