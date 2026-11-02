@@ -443,7 +443,24 @@ void ProcessPads_8001BF50(void)
         sub_80036820(i);
     }
 }
-INCLUDE_ASM(sub_8001BF90);
+// Matched
+void sub_8001BF90(void)
+{
+    if (unknownFlags_8008D678 & 0x200)
+    {
+        dword_800960A8[0] = dword_8008B550 + 0x801B9250;
+        dword_800960A0[0] = dword_8008B550 + 0x801B9250;
+        dword_800960A8[1] = 0x801FC000 - ((0x42DB0 - dword_8008B550) >> 1);
+        dword_800960A0[1] = 0x801FC000 - ((0x42DB0 - dword_8008B550) >> 1);
+    }
+    else
+    {
+        dword_800960A8[0] = 0x801D4000;
+        dword_800960A0[0] = 0x801D4000;
+        dword_800960A8[1] = 0x801E8000;
+        dword_800960A0[1] = 0x801E8000;
+    }
+}
 // Matched
 void sub_8001C02C(unsigned char* rgb)
 {
@@ -1344,12 +1361,29 @@ void sub_8001F354(void* a0)
 }
 #endif
 INCLUDE_ASM(sub_8001F354);
-#if 0
-void sub_8001F918(void* a0)
+// Matched
+void sub_8001F918(char* o)
 {
+    short v;
+    switch (*(short*)(o + 0x10))
+    {
+    case 0:
+        break;
+    case 1:
+        sub_8002032C(*(short*)(o + 0x16), (*(int**)o)[1], *(short*)(o + 0x12));
+        v = *(short*)(o + 0x12);
+        *(short*)(o + 0x12) = -1;
+        *(short*)(o + 0x10) = 2;
+        *(short*)(o + 0x14) = v;
+        break;
+    case 2:
+        if (sub_80024DC4(*(int*)(o + 0x15C)))
+        {
+            *(short*)(o + 0x10) = 0;
+        }
+        break;
+    }
 }
-#endif
-INCLUDE_ASM(sub_8001F918);
 // Matched
 void sub_8001F9AC(void* p)
 {

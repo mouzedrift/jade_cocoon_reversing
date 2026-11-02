@@ -468,6 +468,9 @@ extern int dword_8008D4D8;
 // camera position (vx, vy, vz at 0x8008D600..0x8008D608)
 extern int dword_8008D600[3];
 extern unsigned short aKkkiqqqqqssssZ[];
+extern unsigned int dword_8008B550;
+extern unsigned int dword_800960A0[2];
+extern unsigned int dword_800960A8[2];
 extern unsigned long* decodedImageData_8008B4A0;
 extern struct EventNode* dword_8008D61C;
 extern int dword_8008B4F8;
