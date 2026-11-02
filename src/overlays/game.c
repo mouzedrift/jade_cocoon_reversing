@@ -367,22 +367,6 @@ INCLUDE_OVERLAY_ASM(game, sub_800A7AD8);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A7B00);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7BF0);
-
-INCLUDE_OVERLAY_ASM(game, sub_800A7CB8);
-
-INCLUDE_OVERLAY_ASM(game, sub_800A7CFC);
-
-INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
-
-INCLUDE_OVERLAY_ASM(game, sub_800A80C4);
-
-void sub_800A8108()
-{
-    sub_800A6D30(sub_800A6D50(1));
-    dword_8008B540 = 1;
-}
-
 /* ---- GAME second half (G2) ---- */
 typedef struct G2Inner
 {
@@ -475,12 +459,12 @@ typedef struct G2Act
     char pad_24[0x1C];
     int f40;
 } G2Act;
-extern void sub_800A88E0();
+extern int sub_800A88E0();
 extern void sub_800AB010();
 extern int sub_800AC518();
 extern void sub_800AC6A8();
 extern int sub_800AC4A8();
-extern int sub_800ADBA0();
+extern int sub_800ADBA0(short*);
 typedef struct G2Rec
 {
     unsigned char f0;
@@ -500,6 +484,38 @@ extern void sub_800ABAD4();
 extern void sub_800AB444();
 extern void sub_8001450C(int*, void*, int, int);
 extern char dword_800795C0;
+typedef struct G2Stat
+{
+    char pad_0[0x7D0];
+    unsigned short cur;
+    unsigned short max;
+    unsigned short cur2;
+    unsigned short max2;
+} G2Stat;
+typedef struct G2P
+{
+    short s0;
+    short s2;
+    unsigned short u4;
+    unsigned short u6;
+} G2P;
+typedef struct G2E
+{
+    char pad_0[0x2F8];
+    short a;
+    short b;
+    short c;
+} G2E;
+typedef struct G2Save2
+{
+    char pad_0[0x2F4];
+    int n;
+} G2Save2;
+extern unsigned char equippedWeaponId_8008BD54;
+extern unsigned char equippedArmor_8008BD55;
+extern unsigned char byte_8008BD56;
+extern unsigned char* sub_800AD4D8();
+extern int sub_800AD8E4();
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
 extern int dword_8008B540;
@@ -547,6 +563,22 @@ extern void sub_800AB910();
 extern void sub_800ABBD8();
 
 
+INCLUDE_OVERLAY_ASM(game, sub_800A7BF0);
+
+INCLUDE_OVERLAY_ASM(game, sub_800A7CB8);
+
+INCLUDE_OVERLAY_ASM(game, sub_800A7CFC);
+
+INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
+
+INCLUDE_OVERLAY_ASM(game, sub_800A80C4);
+
+void sub_800A8108()
+{
+    sub_800A6D30(sub_800A6D50(1));
+    dword_8008B540 = 1;
+}
+
 void sub_800A8138()
 {
 }
@@ -567,7 +599,19 @@ void sub_800A88A0(int a, int b)
     sub_800A88E0(a, b, sub_800A8930());
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A88E0);
+int sub_800A88E0(G2P* p, int a, int b)
+{
+    int x = b ^ a;
+    if (x & 1)
+        p->s0 = 0x130 - p->u4;
+    else
+        p->s0 = 0x10;
+    if (x & 2)
+        p->s2 = 0xE0 - p->u6;
+    else
+        p->s2 = 0x10;
+    return x;
+}
 
 int sub_800A8930()
 {
@@ -627,9 +671,31 @@ char* sub_800A8C40()
     return &levantPos_8008BD18;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8C4C);
+void sub_800A8C4C(int a)
+{
+    G2Stat* s = (G2Stat*)&saveData_8008B570;
+    s->cur -= a;
+    if ((short)s->cur < 0)
+    {
+        s->cur = 0;
+        return;
+    }
+    if ((short)s->max < (short)s->cur)
+        s->cur = s->max;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8CA0);
+void sub_800A8CA0(int a)
+{
+    G2Stat* s = (G2Stat*)&saveData_8008B570;
+    s->cur2 -= a;
+    if ((short)s->cur2 < 0)
+    {
+        s->cur2 = 0;
+        return;
+    }
+    if ((short)s->max2 < (short)s->cur2)
+        s->cur2 = s->max2;
+}
 
 void sub_800A8CF4()
 {
@@ -978,7 +1044,19 @@ void sub_800ABB98(int a)
         p->f0 &= ~0x100000;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800ABBD8);
+void sub_800ABBD8(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+    {
+        p->f0 &= ~0x20000;
+        sub_800AB150((G2Obj*)p);
+    }
+    else
+    {
+        p->f0 |= 0x20000;
+    }
+}
 
 void sub_800ABC34(int a)
 {
@@ -1217,7 +1295,17 @@ int sub_800AD16C(int a, int b)
     return b;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD184);
+int sub_800AD184(int a, int b)
+{
+    unsigned char* r = sub_800AD4D8(a, b);
+    if (r && a != 0xFF)
+    {
+        r[0] = a;
+        r[1] += b;
+        return 1;
+    }
+    return 0;
+}
 
 int sub_800AD1E0(int a, int b, int c)
 {
@@ -1390,7 +1478,20 @@ int sub_800AD79C()
     return c;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD7F8);
+int sub_800AD7F8(int a)
+{
+    short i;
+    int c = 0;
+    for (i = 0; i < 0x26; i++)
+    {
+        if (sub_800AD73C(i))
+        {
+            if (a == (short)c++)
+                return i;
+        }
+    }
+    return 0x26;
+}
 
 int sub_800AD888()
 {
@@ -1410,19 +1511,74 @@ int sub_800AD8E4()
     return dword_8008B818;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD8F4);
+int sub_800AD8F4(int a)
+{
+    int ret = 1;
+    int v = sub_800AD8E4() + a;
+    if (v >= 13)
+    {
+        v = 12;
+        ret = 0;
+    }
+    dword_8008B818 = v;
+    return ret;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD944);
+int sub_800AD944(int a)
+{
+    int ret = 1;
+    int v = sub_800AD8E4() - a;
+    if (v < 0)
+    {
+        v = 0;
+        ret = v;
+    }
+    dword_8008B818 = v;
+    return ret;
+}
 
+#if 0
+unsigned int sub_800AD990(int a)
+{
+    unsigned int r = 0;
+    switch (a)
+    {
+    case 0:
+        r = equippedWeaponId_8008BD54;
+        break;
+    case 1:
+        r = equippedArmor_8008BD55;
+        break;
+    case 2:
+        r = byte_8008BD56;
+        break;
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD990);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD9EC);
 
+#if 0
+int sub_800ADBA0(short* p)
+{
+    int n = ((G2Save2*)&saveData_8008B570)->n;
+    char* q = (char*)&saveData_8008B570;
+    int i;
+    for (i = 0; i < n; i++, q += 8)
+    {
+        if (((G2E*)q)->a == p[0] && ((G2E*)q)->b == p[1] && ((G2E*)q)->c == p[2])
+            return i;
+    }
+    return -1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800ADBA0);
 
-int sub_800ADC1C()
+int sub_800ADC1C(short* p)
 {
-    int r = sub_800ADBA0();
+    int r = sub_800ADBA0(p);
     if (r != -1)
         r = ((G2Sv*)((char*)&saveData_8008B570 + r * 8))->s;
     return r;
