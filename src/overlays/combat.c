@@ -23,6 +23,27 @@ extern void sub_800376A0(void* a, void* b);
 extern int sub_800A10C0(int i);
 extern void sub_800A1A3C(void* p, int n);
 
+typedef struct CombatTaskCombat
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+} CombatTaskCombat;
+
+extern int dword_800A3A8C;
+extern int dword_800A4070;
+extern int dword_800A4080;
+extern int dword_800A39F0[];
+extern void sub_8001D378(void);
+extern void sub_8001D600(void* p);
+extern void sub_8001E28C(void* p);
+extern void sub_8001C19C(int a, int b);
+extern void sub_800A0D1C(int i);
+extern void sub_800A0B70(int i);
+extern void sub_800A14F0();
+extern void sub_800A1554();
+extern void sub_800A15B4();
+
 
 INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 
@@ -32,9 +53,31 @@ INCLUDE_OVERLAY_ASM(combat, sub_800A0898);
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0968);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0A28);
+// Matched
+void sub_800A0A28(void)
+{
+    int i;
+    int m = -1;
+    for (i = 1; i >= 0; i--)
+    {
+        dword_800A3A08[i].field_0 = m;
+    }
+    sub_8001D378();
+}
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0A6C);
+// Matched
+void sub_800A0A6C(void)
+{
+    int i;
+    for (i = 0; i < 2; i++)
+    {
+        if (dword_800A3A08[i].field_0 >= 0)
+        {
+            sub_800A0D1C(i);
+            sub_800A0B70(i);
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0ACC);
 
@@ -56,7 +99,16 @@ void sub_800A0B70(int i)
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0BA8);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0D1C);
+// Matched
+void sub_800A0D1C(int i)
+{
+    CombatSlotCombat* s = &dword_800A3A08[i];
+    if (s->field_3C)
+    {
+        sub_8001D600(s->field_3C);
+        s->field_3C = 0;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0D64);
 
@@ -78,7 +130,15 @@ void sub_800A0F1C(int i)
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0F50);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0FF0);
+// Matched
+void sub_800A0FF0(int i, int* p)
+{
+    CombatSlotCombat* s = &dword_800A3A08[i];
+    if (*p != 0x14)
+    {
+        sub_8001E28C(s->field_3C);
+    }
+}
 
 // Matched
 void sub_800A1034(int i)
@@ -167,11 +227,36 @@ void sub_800A148C(void)
     FreeActiveOverlay_8002C014();
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A14AC);
+// Matched
+void sub_800A14AC(CombatTaskCombat* t)
+{
+    if (dword_8008B4E8)
+    {
+        dword_800A3A8C = 0;
+        dword_800A4070 = 0;
+        t->next_8 = sub_800A14F0;
+        t->next_8(t);
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A14F0);
+// Matched
+void sub_800A14F0(CombatTaskCombat* t)
+{
+    sub_8001C19C(0, 0x20);
+    dword_800A4080 = LoadOverlay_80020BF8(1, dword_800A39F0[dword_800A3A8C]);
+    t->next_8 = sub_800A1554;
+}
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A1554);
+// Matched
+void sub_800A1554(CombatTaskCombat* t, int x)
+{
+    if (sub_8003BE30(dword_800A4080) == 0)
+    {
+        sub_8001C19C(3, 0x20);
+        t->next_8 = sub_800A15B4;
+        t->next_8(t, x);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A15B4);
 
