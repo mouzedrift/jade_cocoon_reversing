@@ -18,8 +18,58 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-INCLUDE_ASM(sub_8002BE10);
-INCLUDE_ASM(sub_8002BEC8);
+extern void sub_8002C06C(void* p, int a1, int a2);
+// Matched
+void sub_8002BE10(void)
+{
+    unsigned short pos[2];
+    short i;
+    short j;
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            pos[0] = (j << 16) >> 9;
+            if (i & 1)
+            {
+                pos[0] -= 0x40;
+            }
+            pos[1] = i * 60;
+            sub_8002C06C(pos, 0x95, 0xF);
+        }
+    }
+}
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_BEC8;
+extern void sub_8004196C(int a, int b, int c, int d, int e);
+extern void sub_8003326C(int a, void* b);
+extern void sub_80033308(void* a);
+extern void sub_8002A384(struct_BEC8* p);
+// Matched
+void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
+{
+    struct_BEC8 s;
+    sub_8004196C(a0, a1, a2, 8, 0);
+    sub_8003326C(a0, &pOT_8008D454[a3]);
+    if (a4)
+    {
+        s.field_8 = 1;
+    }
+    else
+    {
+        s.field_8 = 0;
+    }
+    s.field_0 = a0;
+    s.field_4 = a5;
+    s.field_A = a3;
+    sub_8002A384(&s);
+    sub_80033308(&pOT_8008D454[a3]);
+}
 extern void sub_8003BC84(int* a);
 // Matched
 void sub_8002BF74(void)
@@ -56,6 +106,17 @@ void FreeActiveOverlay_8002C014(void)
         dword_8008D3F4 = 0;
     }
 }
+#if 0
+// Not matched (5 words: register allocation of the address temporary)
+void sub_8002C06C(unsigned short* p, int a1, int a2)
+{
+    int* q = (int*)loadedOverlayMaybe_8008D620 + a1 * 5;
+    ((unsigned short*)q)[4] = p[0];
+    ((unsigned short*)q)[5] = p[1];
+    sub_80040298(pOT_8008D454 + a2, q, 5);
+    sub_80040298(pOT_8008D454 + a2, (char*)dword_8008D3F4 + a1 * 8, 2);
+}
+#endif
 INCLUDE_ASM(sub_8002C06C);
 INCLUDE_ASM(sub_8002C100);
 INCLUDE_ASM(sub_8002C290);
@@ -86,8 +147,7 @@ unsigned int sub_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
 }
-#if 0
-// Not matched (b ends up in a0 instead of v0)
+// Matched
 int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
 {
     char* p = base + idx * 4;
@@ -96,16 +156,13 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
     {
         return 0;
     }
-    b = (unsigned char)p[0xdf];
-    if (!b)
+    if (p[0xdf] == 0)
     {
         return 0;
     }
-    sub_8002AF10(a2 + b * 16, a1, a4);
+    sub_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_8002C670);
 typedef struct
 {
     short a;

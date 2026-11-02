@@ -65,6 +65,28 @@ void sub_80030EEC(void* arg0)
 INCLUDE_ASM(sub_80030EEC);
 INCLUDE_ASM(sub_8003105C);
 INCLUDE_ASM(sub_80031160);
+#if 0
+void sub_80031260(SoundStruct* s, int idx, int vol)
+{
+    SoundInfo* si = &soundFiles_80082F0C[idx];
+    int a;
+    if (((short*)si)[1] >= 0)
+    {
+        if (s == &stru_80091CE0)
+        {
+            a = settingsFlags_8008B58C >> 7;
+        }
+        else
+        {
+            a = (settingsFlags_8008B58C >> 14) & 0x7F;
+        }
+        SsSepSetVol(s->field_C_sep_access_num, ((short*)si)[1], a, a);
+        SsSepPlay(s->field_C_sep_access_num, ((short*)si)[1], 1, vol);
+        SsSepSetCrescendo(s->field_C_sep_access_num, ((short*)si)[1], 1, 1);
+        s->field_4_seq_num = ((short*)si)[1];
+    }
+}
+#endif
 INCLUDE_ASM(sub_80031260);
 // Matched
 void sub_80031334(int idx)

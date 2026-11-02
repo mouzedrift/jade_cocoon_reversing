@@ -128,7 +128,33 @@ void sub_80043264(struct_obj_D* p, short* q)
 }
 INCLUDE_ASM(sub_800432EC);
 INCLUDE_ASM(sub_800433FC);
-INCLUDE_ASM(sub_800434C4);
+extern int sub_8005384C(unsigned char a, void* b, unsigned char c, int d, int e);
+// Matched
+int sub_800434C4(int a)
+{
+    unsigned char loc[4];
+    int r;
+    int c = 0xC9;
+    int d = 0x1B;
+    DsIntToPos(a, loc);
+    do
+    {
+        r = sub_8005384C(c, loc, d, 0, -1);
+    } while (r == 0);
+    return r;
+}
+// Matched
+int sub_80043524(void)
+{
+    int* p;
+    if ((int)dword_80096118 >= 0)
+    {
+        return 0;
+    }
+    p = dword_8008B560[0x24 / 4];
+    *p |= 1;
+    return 1;
+}
 // Matched
 void sub_80043564(short a0, short a1, short a2)
 {

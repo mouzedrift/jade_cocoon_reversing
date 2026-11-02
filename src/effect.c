@@ -30,10 +30,20 @@ INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
 #if 0
-// Not matched
+// Not matched (7 words): result register and branch polarity
 int sub_80013DB0(void)
 {
-    return rand() % 6 ? 1 : 2;
+    int r = rand();
+    int v;
+    if (r % 6)
+    {
+        v = 1;
+    }
+    else
+    {
+        v = 2;
+    }
+    return v;
 }
 #endif
 INCLUDE_ASM(sub_80013DB0);
@@ -57,14 +67,11 @@ void sub_80013E80(void* p, int arg)
 {
     sub_80033624(p, sub_80014390(arg & 0xFF));
 }
-#if 0
-// Not matched: the original calls sub_800107A0 with only one argument
+// Matched
 void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)sub_800107A0(a2, 0));
+    sub_80033624(p, (int)sub_800107A0(a2));
 }
-#endif
-INCLUDE_ASM(sub_80013EB4);
 INCLUDE_ASM(sub_80013EE8);
 // Matched
 int sub_80014114(int x)
@@ -141,8 +148,8 @@ int sub_80014390(int arg0)
 #endif
 INCLUDE_ASM(sub_80014390);
 #if 0
-// Not matched
-int sub_80014444(unsigned int a0)
+// Not matched (13 words): the masked copy of a0 lands in $a0 instead of $a1
+int sub_80014444(int a0)
 {
     int r = 0;
     if ((a0 & 0xFF) >= 8)
@@ -155,23 +162,27 @@ int sub_80014444(unsigned int a0)
     }
     return r;
 }
+
 #endif
 INCLUDE_ASM(sub_80014444);
 #if 0
-// Not matched
+// Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
 int sub_8001449C(int a0)
 {
     int r = 0;
     int v = a0 - 4;
     if ((unsigned char)v < 3)
     {
-        if ((1 << a0) & sub_800A248C())
+        int flags = sub_800A248C();
+        int m = 1 << a0;
+        if (flags & m)
         {
             r = sub_800A2B20((unsigned char)v);
         }
     }
     return r;
 }
+
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched
@@ -194,6 +205,38 @@ void sub_80014574(struct_16* p, int a1, int a2)
 }
 INCLUDE_ASM(sub_80014588);
 INCLUDE_ASM(sub_80014638);
+#if 0
+extern EventNode* dword_8008B4A8;
+extern EventNode* dword_8008D60C;
+// Not matched: 16 words, loop counter/accumulator register assignment
+int sub_800147FC(void)
+{
+    int i = 0;
+    int n = i;
+    EventNode* p = dword_8008B4A8;
+    int count = p->count;
+    for (i = 0; i < count; i++)
+    {
+        if ((p->entry.flags & 0x8001) == 1)
+        {
+            n++;
+        }
+        p = p->next;
+    }
+    p = dword_8008D60C;
+    count = p->count;
+    for (i = 0; i < count; i++)
+    {
+        if ((p->entry.flags & 0x8001) == 1)
+        {
+            n++;
+        }
+        p = p->next;
+    }
+    return n;
+}
+
+#endif
 INCLUDE_ASM(sub_800147FC);
 // Matched
 void sub_800148A0(void)

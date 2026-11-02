@@ -65,19 +65,20 @@ int sub_8003B56C(int x, int y)
     return d;
 }
 #if 0
-// Not matched: s1/s2 register assignment swapped
+// Not matched (8 words): s1/s2 register assignment swapped
 int sub_8003B5D4(int* v, short* out)
 {
     int len = sub_8003B918(((int (*)(int*))sub_8003B8DC)(v));
-    short a;
     short b;
+    int a;
     b = ratan2(v[0], v[2]);
     out[1] = b;
-    a = ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    a = (short)ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
     out[0] = -a;
     out[2] = 0;
     return len;
 }
+
 #endif
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
@@ -120,6 +121,51 @@ void sub_8003B684(int* v)
         v[2] >>= sh;
     }
 }
+#if 0
+// Not matched (33 words): register assignment of the abs() temporaries
+int sub_8003B740(int* a, int* b, unsigned int* c)
+{
+    int sum = -1;
+    int ok = 0;
+    unsigned int r = *c;
+    int t;
+    int dx;
+    int dy;
+    int dz;
+    t = a[0] - b[0];
+    dx = t;
+    if (t < 0)
+    {
+        dx = -dx;
+    }
+    if (r >= (unsigned int)dx)
+    {
+        t = a[1] - b[1];
+        dy = t;
+        if (t < 0)
+        {
+            dy = -dy;
+        }
+        if (r >= (unsigned int)dy)
+        {
+            t = a[2] - b[2];
+            dz = t;
+            if (t < 0)
+            {
+                dz = -dz;
+            }
+            if (r >= (unsigned int)dz)
+            {
+                sum = dx * dx + dy * dy + dz * dz;
+                ok = !(r * r < (unsigned int)sum);
+            }
+        }
+    }
+    *c = sum;
+    return ok;
+}
+
+#endif
 INCLUDE_ASM(sub_8003B740);
 // Matched
 int sub_8003B80C(int* a, int* b)
@@ -129,7 +175,20 @@ int sub_8003B80C(int* a, int* b)
     int dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
-INCLUDE_ASM(sub_8003B860);
+// Matched
+int sub_8003B860(int* a, int* b)
+{
+    int dx = a[0] - b[0];
+    int dz = a[2] - b[2];
+    return dx * dx + dz * dz;
+}
+// Matched
+int sub_8003B898(int x0, int y0, int x1, int y1)
+{
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    return dx * dx + dy * dy;
+}
 // Matched
 int sub_8003B8BC(int x, int y)
 {
@@ -344,7 +403,7 @@ struct_node_C* sub_8003BED4(int key)
     return 0;
 }
 #if 0
-// Not matched: load of list[0] scheduled before the field_10 store
+// Not matched (6 words): load of list[0] scheduled before the field_10 store
 void sub_8003BF18(struct_node_C* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
@@ -368,6 +427,7 @@ void sub_8003BF18(struct_node_C* n)
     n->field_10 = 0x10000;
     list[0]--;
 }
+
 #endif
 INCLUDE_ASM(sub_8003BF18);
 // Matched
@@ -431,7 +491,29 @@ int sub_8003C060(int key)
     }
     return 2;
 }
-INCLUDE_ASM(sub_8003C0A4);
+extern int** dword_8008B544;
+// Matched
+int sub_8003C0A4(int a0)
+{
+    int* p = dword_8008B544[0x24 / 4];
+    if (dword_80086568 != a0)
+    {
+        if (a0 == 1)
+        {
+            int* q = (int*)p[0];
+            if (q == 0 || (p[0x1C / 4] == 8 && (q[0xC / 4] & 0x1000)))
+            {
+                dword_80086568 = a0;
+            }
+        }
+        else
+        {
+            dword_80086568 = 0;
+        }
+        return dword_80086568 == a0;
+    }
+    return 0;
+}
 extern void sub_8003C184(void);
 // Matched
 void sub_8003C128(int* a0, int* a1)
