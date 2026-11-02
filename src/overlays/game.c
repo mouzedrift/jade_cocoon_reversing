@@ -2,14 +2,59 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+extern void sub_800A170C(void);
+extern void sub_800A2CA8(int, int);
+extern int sub_800A7A60(void);
+extern char dword_800B19CC[];
+extern int dword_800B1D98;
+extern int dword_800AEBF0;
+extern int dword_800B0EC0;
+extern int dword_800B0EC4[];
+extern int dword_800AEBF4;
+extern int dword_800AEBD8;
+extern int dword_800B19E0;
+extern int dword_800B1DBC;
+extern int dword_800B0698;
+extern int dword_800AEBE0;
+extern char dword_800B1CB8[];
+extern char* dword_8008B518;
+extern char* dword_8008B534;
+extern int* dword_8008D46C;
+extern int* dword_800B1264;
+extern void sub_800A170C(void);
+extern void sub_800A2CA8(int, int);
+extern int sub_800A7A60(void);
+extern char dword_800B19CC[];
+extern int dword_800B1D98;
+extern int dword_800AEBF0;
+extern int dword_800B0EC0;
+extern int dword_800B0EC4[];
+extern int dword_800AEBF4;
+extern int dword_800AEBD8;
+extern int dword_800B19E0;
+extern int dword_800B1DBC;
+extern int dword_800B0698;
+extern int dword_800AEBE0;
 
 INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A096C);
+// Matched
+void sub_800A096C(void)
+{
+    unknownFlags_8008D678 |= 0x8000;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A0988);
+// Matched
+void sub_800A0988(void)
+{
+    *(unsigned short*)(*(int*)(dword_800B1DBC + 0x24)) |= 1;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A09B0);
+// Matched
+void sub_800A09B0(void)
+{
+    *(unsigned short*)(*(int*)(dword_800B1DBC + 0x24)) &= 0xFFFE;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A09D8);
 
@@ -61,17 +106,32 @@ INCLUDE_OVERLAY_ASM(game, sub_800A1B78);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A1BD0);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E1C);
+// Matched
+void sub_800A1E1C(void)
+{
+    sub_800A170C();
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E3C);
+// Matched
+char* sub_800A1E3C(void)
+{
+    return dword_800B19CC;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A1E48);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A1E68);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E88);
+// Matched
+void sub_800A1E88(void)
+{
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1E90);
+// Matched
+int sub_800A1E90(void)
+{
+    return 1;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A1E98);
 
@@ -87,9 +147,19 @@ INCLUDE_OVERLAY_ASM(game, sub_800A2550);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2594);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A25D8);
+// Matched
+int sub_800A25D8(int a)
+{
+    sub_800A2CA8(a, 0);
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A25F8);
+// Matched
+int sub_800A25F8(int a)
+{
+    sub_800A2CA8(a, 0);
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2618);
 
@@ -103,15 +173,30 @@ INCLUDE_OVERLAY_ASM(game, sub_800A284C);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2898);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A28DC);
+// Matched
+int sub_800A28DC(int a)
+{
+    sub_800A2CA8(a, 0);
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A28FC);
+// Matched
+int sub_800A28FC(int a)
+{
+    sub_800A2CA8(a, 0);
+    return dword_800B19E0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2924);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A29CC);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2A50);
+// Matched
+int sub_800A2A50(int a)
+{
+    sub_800A2CA8(a, 0);
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2A70);
 
@@ -133,15 +218,26 @@ INCLUDE_OVERLAY_ASM(game, sub_800A2C68);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2CA8);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2D28);
+// Matched
+void sub_800A2D28(unsigned int** p)
+{
+    **p = (**p & ~1) | 0x8000;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2D48);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2D90);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2EC8);
+// Matched
+void sub_800A2EC8(unsigned int** p)
+{
+    **p |= 0x8000;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2EE4);
+// Matched
+void sub_800A2EE4(void)
+{
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2EEC);
 
@@ -233,7 +329,11 @@ INCLUDE_OVERLAY_ASM(game, sub_800A59D0);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5AA0);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5AD0);
+// Matched
+int sub_800A5AD0(int* p)
+{
+    return *(int*)(p[5] + 0x10);
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5AE4);
 
@@ -245,15 +345,37 @@ INCLUDE_OVERLAY_ASM(game, sub_800A5C40);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5DDC);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5E68);
+// Matched
+int sub_800A5E68(void)
+{
+    return dword_800AEBD8 >= 0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5E80);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5F6C);
+// Matched
+char* sub_800A5F6C(void)
+{
+    if (dword_800AEBE0)
+    {
+        return dword_800B1CB8;
+    }
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5F90);
+// Matched
+void sub_800A5F90(int a)
+{
+    dword_800B1D98 = a;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5F9C);
+// Matched
+int sub_800A5F9C(int a)
+{
+    int old = dword_800AEBF4;
+    dword_800AEBF4 = a;
+    return old;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5FAC);
 
@@ -269,9 +391,17 @@ INCLUDE_OVERLAY_ASM(game, sub_800A6434);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6504);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6534);
+// Matched
+void sub_800A6534(int a, char b)
+{
+    dword_8008B518[a] = b;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A654C);
+// Matched
+void sub_800A654C(int a, char b)
+{
+    dword_8008B534[a] = b;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6564);
 
@@ -285,7 +415,11 @@ INCLUDE_OVERLAY_ASM(game, sub_800A6738);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A67B4);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6830);
+// Matched
+void sub_800A6830(int a)
+{
+    dword_800AEBF0 = a;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A683C);
 
@@ -331,16 +465,37 @@ INCLUDE_OVERLAY_ASM(game, sub_800A7690);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A76D8);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7714);
+// Matched
+void sub_800A7714(int a)
+{
+    dword_800B0EC0 = a;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A7720);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7784);
+// Matched
+void sub_800A7784(void)
+{
+    dword_800B0EC4[0] = 0;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7790);
+// Matched
+int sub_800A7790(void)
+{
+    return dword_800B0EC4[0];
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A77A0);
 
+#if 0
+// Not matched
+int sub_800A77F4(int a)
+{
+    int* p = dword_800B0EC4 + a;
+    p++;
+    return *p;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A77F4);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A7810);
