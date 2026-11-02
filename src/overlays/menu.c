@@ -68,6 +68,13 @@ typedef struct MenuRow
     unsigned char a_7;
 } MenuRow;
 
+typedef struct MenuCol
+{
+    unsigned short col;
+    unsigned char c_2;
+    unsigned char c_3;
+} MenuCol;
+
 typedef struct MenuBox
 {
     short x_0;
@@ -210,11 +217,100 @@ void sub_800BC934(int a, int b)
     }
 }
 
+typedef struct MenuPad
+{
+    int f0;
+    char pad_4[0x40];
+    short s44;
+    char pad_46[0x16];
+    int arr_5C[1];
+} MenuPad;
+
+typedef struct MenuPadB
+{
+    char pad_0[0x1F0];
+    unsigned char b_1F0;
+} MenuPadB;
+
+// near miss: the original keeps 1 in a register (sllv) and hoists the saveData base out of the loop
+#if 0
+void sub_800BC9E8(MenuPad* p)
+{
+    short i;
+    short s;
+    if (p->s44 > 0)
+    {
+        for (i = 0; i < p->s44; i++)
+        {
+            int n = p->s44;
+            if (i == n - 1)
+            {
+                if (p->f0 & (1 << n))
+                {
+                    if (sub_8003D380(1) || sub_8003D41C(1))
+                        p->f0 |= 0x40;
+                    return;
+                }
+            }
+            else if (p->f0 & (1 << (i + 1)))
+            {
+                continue;
+            }
+            s = i;
+            if (p->arr_5C[s] > 0)
+            {
+                if (sub_8003D380(1) || sub_8003D41C(1))
+                {
+                    int f = p->f0;
+                    if (f & 0x20)
+                    {
+                        p->f0 = (f | (1 << (s + 1))) & ~0x20;
+                    }
+                    else if (s != 0)
+                    {
+                        p->f0 = f | 0x20;
+                    }
+                    else if (sub_800BBF10(((MenuPadB*)p)->b_1F0, ((unsigned char*)&saveData_8008B570)[0x80C]))
+                    {
+                        p->f0 |= 0x20;
+                    }
+                    else
+                    {
+                        p->f0 |= 2;
+                    }
+                }
+            }
+            else
+            {
+                p->f0 |= 1 << (s + 1);
+            }
+            return;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BC9E8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCB98);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BCEA0);
+extern char name_800C1060[];
+void sub_800BCEA0(char* a, int b, void* c, short d)
+{
+    short s[2];
+    MenuCol col;
+    if (c)
+    {
+        int i = d;
+        Minion* m = sub_80010598(3, i - 1);
+        s[0] = 0x33;
+        s[1] = 0x3E;
+        sub_8002DB48(c, b, 0, s, m, a + 0x1AC + i * 72);
+    }
+    col.col = uiColor_8008B590;
+    col.c_2 = 0;
+    col.c_3 = 1;
+    sub_80042460(name_800C1060, &col, &pOT_8008D454[b], 0);
+}
 
 extern void sub_8001AEB8();
 extern int name_800338B0();
@@ -476,12 +572,6 @@ void sub_800BEBFC(int* o, int a)
         sub_8002DB48(m2, 0xE, a, s, m, 0);
 }
 
-typedef struct MenuCol
-{
-    unsigned short col;
-    unsigned char c_2;
-    unsigned char c_3;
-} MenuCol;
 void sub_800BEC8C(int unused, int a, short b)
 {
     MenuCol t;
