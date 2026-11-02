@@ -469,6 +469,19 @@ extern int sub_800AC474(int);
 extern int sub_800AC3E4();
 extern int sub_800AC38C();
 extern unsigned char* sub_800AD58C();
+extern unsigned char* sub_800AD604(int);
+extern int sub_800AD374(int);
+extern int sub_800AD308(int);
+extern int sub_800AD288(int, int);
+extern int sub_800AD2C8(int, int);
+extern int sub_800AD67C(int, int);
+extern unsigned char* sub_800AC7B4(int);
+extern int sub_800AD73C(int);
+typedef struct G2Flags
+{
+    char pad_0[0x288];
+    unsigned int w[2];
+} G2Flags;
 extern int sub_800AD8BC();
 typedef struct G2Save
 {
@@ -982,7 +995,16 @@ void sub_800ACF0C()
 
 INCLUDE_OVERLAY_ASM(game, sub_800ACF3C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800ACFB8);
+void sub_800ACFB8()
+{
+    unsigned char* p = sub_800AC7B4(dword_800B11DC[sub_800AC3E4()]);
+    int i;
+    for (i = 0; i < 16; i++, p += 0x40)
+    {
+        if (p[1])
+            sub_800AC5D0(p[0], 1);
+    }
+}
 
 int sub_800AD02C()
 {
@@ -1033,7 +1055,21 @@ int sub_800AD16C(int a, int b)
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD184);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD1E0);
+int sub_800AD1E0(int a, int b, int c)
+{
+    unsigned char* r = sub_800AD58C(a, c);
+    if (r)
+    {
+        if (sub_800AD67C(r[1], b))
+        {
+            r[1] -= b;
+            if (r[1] == 0)
+                r[0] = 0xFF;
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int sub_800AD254()
 {
@@ -1047,7 +1083,21 @@ INCLUDE_OVERLAY_ASM(game, sub_800AD288);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD2C8);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD308);
+int sub_800AD308(int a)
+{
+    unsigned char* p = sub_800AD604(a);
+    int n = sub_800AD374(a);
+    int i;
+    if (p)
+    {
+        for (i = n - 1; i > 0; i--)
+        {
+            if (p[i * 2] != 0xFF)
+                return i;
+        }
+    }
+    return 0;
+}
 
 #if 0
 int sub_800AD374(unsigned a)
@@ -1065,12 +1115,45 @@ L:
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD374);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD398);
+int sub_800AD398()
+{
+    int x;
+    if (sub_800AD308(4) > 0)
+        return 1;
+    if (sub_800AD288(0, 4) != 0xFF)
+    {
+        x = sub_800AD2C8(0, 4);
+        if (x)
+            return 1;
+    }
+    return 0;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD3F0);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD4D8);
 
+#if 0
+unsigned char* sub_800AD58C(int a, int b)
+{
+    int n = sub_800AD374(b);
+    unsigned char* p = sub_800AD604(b);
+    unsigned char* q = 0;
+    int i;
+    if (p && n > 0)
+    {
+        i = 0;
+        do
+        {
+            if (a == p[0])
+                return p;
+            i++;
+            p += 2;
+        } while (i < n);
+    }
+    return q;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD58C);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD604);
@@ -1085,13 +1168,51 @@ int sub_800AD67C(int a, int b)
     return (a - b) >= 0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD68C);
+int sub_800AD68C(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    if (n < 0x40)
+    {
+        f->w[n / 32] |= 1 << (n % 32);
+        return 1;
+    }
+    return 0;
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD6E4);
+void sub_800AD6E4(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    if (n < 0x40)
+        f->w[n / 32] &= ~(1 << (n % 32));
+}
 
+#if 0
+int sub_800AD73C(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    int r = 0;
+    if (n < 0x40)
+    {
+        r = 1;
+        if (!(f->w[n / 32] & (1 << (n % 32))))
+            r = 0;
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD73C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AD79C);
+int sub_800AD79C()
+{
+    short i;
+    int c = 0;
+    for (i = 0; i < 0x26; i++)
+    {
+        if (sub_800AD73C(i))
+            c++;
+    }
+    return c;
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800AD7F8);
 
