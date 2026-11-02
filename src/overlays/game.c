@@ -88,6 +88,28 @@ extern char* dword_8008B518;
 extern char* dword_8008B534;
 extern int* dword_8008D46C;
 extern int* dword_800B1264;
+typedef struct GameSave3_1
+{
+    char pad_0[0x2e4];
+    short f2e4;
+    short pad_2e6;
+    short f2e8;
+    short pad_2ea;
+    short f2ec;
+    short pad_2ee;
+    short f2f0;
+} GameSave3_1;
+typedef struct GameS3_1
+{
+    unsigned short a, b, c;
+} GameS3_1;
+extern void sub_8003B740(int* a, int* b, unsigned int* out);
+extern int dword_800AEBE4;
+extern void sub_800ADCEC(GameS3_1* out, int a);
+extern void sub_800AD0F8(int a);
+extern int dword_80091C54;
+extern int dword_80091C9C;
+extern int dword_80091C8C;
 typedef struct GameVec3_1
 {
     int x, y, z;
@@ -1505,7 +1527,27 @@ int sub_800A5F9C(int a)
     return old;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5FAC);
+// Matched
+void sub_800A5FAC(void)
+{
+    if (dword_800AEBE4)
+    {
+        GameSave3_1* sd = (GameSave3_1*)&saveData_8008B570;
+        GameS3_1 v;
+        sub_800AD16C(4, sd->f2e8 + 4);
+        sub_800ADCEC(&v, sub_800A683C(-1));
+        sub_800AD0F8(0);
+        dword_80091C94 = 1;
+        dword_80091C54 = 0;
+        sd->f2f0 = 0;
+        dword_80091C9C = 1;
+        dword_80091C8C = 0;
+        sd->f2e4 = v.a;
+        sd->f2e8 = v.b;
+        sd->f2ec = v.c;
+        unknownFlags_8008D678 &= ~0x20000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6060);
 
@@ -1562,7 +1604,21 @@ int sub_800A65BC(int a, int b)
     return (unsigned int)(sub_8003BA18((short)(a - b)) + 0x198) < 0x331;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A65F0);
+// Matched
+int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
+{
+    unsigned int u = 0xfff;
+    sub_8003B740(b, a, &u);
+    if (u < (unsigned int)(r * r))
+    {
+        int d = GameFn_8003B9E0(b, a);
+        if ((unsigned int)(sub_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 #if 0
 // Not matched
