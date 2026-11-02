@@ -83,7 +83,22 @@ extern char str_800B6EBC[];
 extern char str_800B6EC8[];
 extern char str_800B6ED0[];
 extern char str_800B6EDC[];
+extern char str_800B6EE4[];
+extern char str_800B6EEC[];
+extern char str_800B6EF4[];
+extern char str_800B6EFC[];
 extern char str_800B6F04[];
+typedef struct
+{
+    short kind_0;
+    char pad_2[0x92];
+    char data_94[0x32];
+    unsigned short field_C6;
+    unsigned char field_C8;
+} EntShopentr;
+extern EntShopentr* sub_800B9C5C(int a0);
+extern void sub_8002FAA0(int a0, void* a1, void* a2, short a3);
+extern void sub_8002B1B0(short a0, void* a1, short a2);
 extern char str_800B6F08[];
 
 INCLUDE_OVERLAY_ASM(shopentr, dword_800B6D00);
@@ -170,6 +185,48 @@ void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
     }
 }
 
+#if 0
+// Not built: the jump table (switch on state - 2) lives in the overlay data blob, a compiled
+// switch would emit a second table in .rdata
+void sub_800B7144(CtxShopentr* c)
+{
+    EntryShopentr* e = &entries_800B7D08[c->state_14];
+    if (e->next_0 == -1)
+    {
+        switch (c->state_14)
+        {
+        case 2:
+            if (word_800918D0[0] & 0x40) c->state_14 = 5;
+            else if (word_800918D0[0] & 4) c->state_14 = 6;
+            else c->state_14 = 3;
+            break;
+        case 4:
+            c->state_14 = (c->field_8 & 1) ? 0xb : 0xa;
+            break;
+        case 7:
+            c->state_14 = c->field_8 ? 1 : 8;
+            break;
+        case 10:
+            c->state_14 = c->field_8 ? 3 : 9;
+            break;
+        case 11:
+            c->state_14 = c->field_8 ? 3 : 0xd;
+            break;
+        }
+    }
+    else
+    {
+        c->state_14 = e->next_0;
+    }
+    c->mask_10 = 0;
+    c->mask_10 = masks_800B7E34[c->state_14];
+    sub_800B7520(c);
+    if (c->state_14 < 15 && entries_800B7D08[c->state_14].field_10)
+    {
+        c->flags_C |= 1;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shopentr, sub_800B7144);
 
 // Matched
@@ -329,6 +386,78 @@ void sub_800B7684(CtxShopentr* c)
     sub_800B7A90((RectShopentr*)p, c->field_8 + c->field_A + 1, 0xf);
 }
 
+#if 0
+// Not matched: i/s18 register allocation and delay slot filling differ (19 words)
+void sub_800B7858(CtxShopentr* c)
+{
+    RectShopentr a;
+    unsigned short p[2];
+    unsigned short q[2];
+    unsigned short l28[2];
+    unsigned short l30[2];
+    unsigned short l38[2];
+    unsigned short l40[2];
+    EntShopentr* e;
+    char* d;
+    int s16;
+    unsigned short s18;
+    short i;
+    short col = 14;
+    a.x = 0x50;
+    a.w = 0xa0;
+    a.h = 0x12;
+    for (i = 0; i < 5; i++)
+    {
+        e = sub_800B9C5C(i + c->field_A);
+        if (e && e->kind_0 != 4)
+        {
+            d = e->data_94;
+            s16 = e->field_C8;
+            s18 = e->field_C6;
+        }
+        else
+        {
+            d = 0;
+            s16 = 0;
+            s18 = 0;
+        }
+        a.y = i * 19 + 0x50;
+        p[1] = a.y + 4;
+        p[0] = a.x + 3;
+        if (d)
+        {
+            sub_8002FAA0(0, p, d, col);
+        }
+        p[0] = 0xa2;
+        p[1] = a.y + 4;
+        if (s16)
+        {
+            q[0] = 0xa2;
+            q[1] = p[1];
+            sub_8003F264(q, s16, col);
+        }
+        p[0] = 0xb2;
+        p[1] = a.y + 2;
+        if ((short)s18)
+            sub_8002B1B0(s18, p, col);
+    }
+    l28[0] = 0x8c;
+    l28[1] = 0x20;
+    sub_8003E91C(2, str_800B6EE4, l28, col);
+    l30[0] = 0x50;
+    l30[1] = 0x3c;
+    sub_8003E91C(2, str_800B6EEC, l30, col);
+    l38[0] = 0x8c;
+    l38[1] = 0x3c;
+    sub_8003E91C(2, str_800B6EF4, l38, col);
+    l40[0] = 0xd2;
+    l40[1] = 0x3c;
+    sub_8003E91C(2, str_800B6EFC, l40, col);
+    p[0] = 0x20;
+    p[1] = 0x50;
+    sub_800B7A90((RectShopentr*)p, c->field_8 + c->field_A + 1, 0x19);
+}
+#endif
 INCLUDE_OVERLAY_ASM(shopentr, sub_800B7858);
 
 // Matched
