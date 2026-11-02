@@ -53,6 +53,11 @@ extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void sub_80056FEC(int a, int b);
 extern void sub_800BD558(void);
+extern void sub_800BD18C(void* fn, int a);
+extern void sub_800BB6F4(void);
+extern void sub_800BBA5C(void);
+extern char byte_800B73A0[];
+extern int printf(const char* fmt, ...);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
 
@@ -212,7 +217,35 @@ INCLUDE_OVERLAY_ASM(load, sub_800BAFB0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB0E4);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BB23C);
+int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
+{
+    int i;
+    int j;
+    int diff;
+    int res = 0;
+    for (i = 0; i < n; i++, b += 0x28)
+    {
+        diff = 0;
+        for (j = 0; j < 0x15; j++)
+        {
+            if (a[j] == 0)
+            {
+                break;
+            }
+            if (a[j] != b[j])
+            {
+                diff++;
+                break;
+            }
+        }
+        if (diff == 0)
+        {
+            res = 1;
+            break;
+        }
+    }
+    return res;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
@@ -234,10 +267,44 @@ void sub_800BB64C(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB64C);
 
+#if 0
+// Not matched: the original keeps the address of the state struct in a register (la); the compiler folds it
+int sub_800BB68C(int a)
+{
+    if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        printf(byte_800B73A0);
+        return 0;
+    }
+    dword_800BE1F4.f0_LOAD = 1;
+    dword_800BE1F4.f4_LOAD = 0;
+    dword_800BE1F4.f8_LOAD = 0;
+    dword_800BE1F4.f10_LOAD = a;
+    sub_800BD18C(sub_800BB6F4, a);
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB68C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB6F4);
 
+#if 0
+// Not matched: same as sub_800BB68C
+int sub_800BB9F4(int a)
+{
+    if (dword_800BE1F4.f0_LOAD > 0)
+    {
+        printf(byte_800B73A0);
+        return 0;
+    }
+    dword_800BE1F4.f0_LOAD = 2;
+    dword_800BE1F4.f4_LOAD = 0;
+    dword_800BE1F4.f8_LOAD = 0;
+    dword_800BE1F4.f10_LOAD = a;
+    sub_800BD18C(sub_800BBA5C, a);
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB9F4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBA5C);
