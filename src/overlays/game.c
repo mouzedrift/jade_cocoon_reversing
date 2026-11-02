@@ -1044,7 +1044,33 @@ void sub_800A2EE4(void)
 {
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2EEC);
+typedef struct GameA2EEC_1
+{
+    char pad_0[8];
+    struct_obj_A* f8;
+    int fC;
+} GameA2EEC_1;
+extern int sub_800A4278();
+extern void sub_800A433C();
+extern unsigned int sub_8003B860(void* a, void* b);
+void sub_800A2EEC(int unused, GameA2EEC_1* p)
+{
+    if (sub_800A4278(p) == 0)
+    {
+        switch (p->fC)
+        {
+        case -1:
+            sub_800A433C(p, 5, 2, 0, -1, 1, 2);
+            sub_8001DB58(p->f8, 0x3000, 1);
+            break;
+        case 5:
+            sub_800A459C((GameP4470_1*)p);
+            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
+                p->fC = -1;
+            break;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(game, sub_800A2FB8);
 
@@ -2036,7 +2062,24 @@ void sub_800A74F0(GameNode_1* n)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7574);
+extern void sub_8001AF64(void* p);
+extern void sub_80066E38(int a);
+extern char name_800B0EA4[];
+extern char name_80096090[];
+int sub_800A7574(void)
+{
+    sub_8001AF64(name_800B0EA4);
+    sub_8003FEC8(name_80096090);
+    sub_80066E38(0);
+    if (unknownFlags_8008D678 & 0x40000000)
+    {
+        unknownFlags_8008D678 &= 0xBFFFFFFF;
+        return 8;
+    }
+    if (unknownFlags_8008D678 & 0x10000000)
+        return 7;
+    return 0xd;
+}
 
 // Matched
 void sub_800A75F8(GameTask_1* t, void** q)
