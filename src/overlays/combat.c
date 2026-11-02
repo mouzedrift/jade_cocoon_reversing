@@ -55,6 +55,18 @@ extern void sub_80037748(void);
 extern void sub_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
+extern void Cbt_8002FAA0(int a, void* b, char* c, int d);
+extern void Cbt_8002C290(void* a, int b, int c);
+extern void Cbt_8002B1B0(int a, void* b, int c);
+extern void* memset(void* p, int c, unsigned int n);
+extern void Cbt_80018A4C(void* a, char* b, int* c, int d, int e);
+typedef struct CombatColorCombat
+{
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char cd;
+} CombatColorCombat;
 extern void sub_8003BC84(void* p);
 extern void sub_80025D7C();
 extern char* off_8007DC70;
@@ -414,6 +426,22 @@ void sub_800A0F1C(int i)
     sub_8001E1DC(s->field_3C);
 }
 
+#if 0
+// Not matched: register allocation differs (out/p swapped in s2/s1)
+CombatColorCombat sub_800A0F50(int i, int* p, int x)
+{
+    CombatColorCombat c;
+    CombatSlotCombat* s;
+    memset(&c, 0, 4);
+    s = &dword_800A3A08[i];
+    if (*p != 0x14)
+    {
+        Cbt_80018A4C(&c, s->field_3C, p, 0, x);
+    }
+    return c;
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(combat, sub_800A0F50);
 
 // Matched
@@ -638,7 +666,33 @@ INCLUDE_OVERLAY_ASM(combat, sub_800A15B4);
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A16FC);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A1844);
+// Matched
+void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
+{
+    char* q;
+    unsigned short v[2];
+    if (sub_800A1934((short*)a) != 1)
+    {
+        if (flags & 2)
+        {
+            sub_8003F900(1, 1);
+        }
+        else
+        {
+            sub_8003F900(1, 0);
+        }
+        q = a + 0x84;
+        v[0] = pt[0] + 5;
+        v[1] = pt[1] + 6;
+        Cbt_8002FAA0(0, v, a + 0x94, 0);
+        v[0] = pt[0] + 0x50;
+        v[1] = pt[1] + 6;
+        Cbt_8002C290(v, *(unsigned char*)(q + 0x44), 0);
+        v[0] = pt[0] + 0x54;
+        v[1] = pt[1] + 3;
+        Cbt_8002B1B0(*(short*)(q + 0x42), v, 0);
+    }
+}
 
 // Matched
 int sub_800A1934(short* p)
