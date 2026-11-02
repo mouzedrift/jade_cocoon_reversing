@@ -70,49 +70,34 @@ INCLUDE_OVERLAY_ASM(combcom, sub_800CB974);
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBA20);
 
-// Near miss: the two table lookups are not merged in the original
-#if 0
 void sub_800CBAD4(int a)
 {
-    unsigned char v;
-    if ((a & 0xFF) == 3)
+    if ((a & 0xFF) != 3)
     {
-        if (byte_800CD844 & 5)
-        {
-            v = dword_800A4078[byte_800CD839 * 4];
-        }
-        else
-        {
-            v = byte_800CD83C;
-        }
+        byte_800A85BD = dword_800A4078[byte_800CD839 * 4];
+    }
+    else if (byte_800CD844 & 5)
+    {
+        byte_800A85BD = dword_800A4078[byte_800CD839 * 4];
     }
     else
     {
-        v = dword_800A4078[byte_800CD839 * 4];
+        byte_800A85BD = byte_800CD83C;
     }
-    byte_800A85BD = v;
 }
-#endif
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBAD4);
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBB4C);
 
-// Near miss: prologue store of ra is scheduled later than in the original
-#if 0
 void sub_800CBBE0(int p)
 {
-    short v[2];
+    short v[2] = {0xA, 0x14};
     CombComDlg d;
-    v[0] = 0xA;
-    v[1] = 0x14;
     d.f0 = p;
     d.f4 = 0;
     d.f8 = 0;
     d.fC = 0;
     sub_8002AF10((int)&d, (int)v, 0xF);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBBE0);
 
 void sub_800CBC28()
 {
