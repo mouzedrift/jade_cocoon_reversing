@@ -7,6 +7,10 @@ extern int dword_800BE184;
 extern int dword_800BE14C;
 extern int dword_800BE150;
 extern int dword_800BE174;
+extern int dword_800BE1E4[];
+extern int (*dword_800BE294[])();
+extern int dword_800BE254[];
+extern char byte_800B7630[];
 extern int dword_800BE188[];
 extern int dword_800BE2C4;
 extern int dword_800BE2C8;
@@ -21,7 +25,9 @@ extern int sub_8004EE8C(void);
 extern void sub_8004EDE8(void);
 extern void sub_8004EE54(void);
 extern int sub_8004EDD8(void);
-extern void sub_800BC9DC(int a, int* b, int* c);
+extern int sub_800BC9DC(int a, int* b, int* c);
+extern void sub_800BB9F4();
+extern void sub_800BB68C();
 extern void sub_800B7674(int a, int b);
 typedef struct
 {
@@ -31,7 +37,7 @@ typedef struct
     int fC_LOAD;
     int f10_LOAD;
     int f14_LOAD;
-    int pad18_LOAD[12];
+    int pad18_LOAD[11];
     int f44_LOAD;
     int f48_LOAD;
     int f4C_LOAD;
@@ -137,7 +143,16 @@ void sub_800B78B8(int v)
     dword_8008D480[9][22] = v;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B78D0);
+void sub_800B78D0(void)
+{
+    int* t;
+    dword_8008B570[516] = -1;
+    dword_8008B570[0] |= 0x180;
+    t = dword_8008D480[9];
+    *(short*)((char*)t + 0x30) = 1;
+    byte_800BDF58 = 0;
+    t[21] = 0x20;
+}
 
 int sub_800B7914(void)
 {
@@ -318,9 +333,57 @@ int sub_800BAE4C(int i)
     return p[i];
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAE68);
+int sub_800BAE68(int a)
+{
+    int x[2];
+    int ret = -1;
+    int r;
+    int off = a << 4;
+    x[0] = 0;
+    x[1] = 0;
+    r = sub_800BC9DC(1, &x[0], &x[1]);
+    switch (r)
+    {
+    case 0:
+        break;
+    case -1:
+        sub_800BB9F4(off);
+        break;
+    case 1:
+        if (x[0] == 2)
+        {
+            ret = x[1];
+        }
+        break;
+    }
+    return ret;
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAF0C);
+int sub_800BAF0C(int a)
+{
+    int x[2];
+    int ret = -1;
+    int r;
+    int off = a << 4;
+    x[0] = 0;
+    x[1] = 0;
+    r = sub_800BC9DC(1, &x[0], &x[1]);
+    switch (r)
+    {
+    case 0:
+        break;
+    case -1:
+        sub_800BB68C(off);
+        break;
+    case 1:
+        if (x[0] == 1)
+        {
+            ret = x[1];
+        }
+        break;
+    }
+    return ret;
+}
 
 INCLUDE_OVERLAY_ASM(load, sub_800BAFB0);
 
@@ -526,6 +589,30 @@ int sub_800BD018(int a)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD018);
 
+#if 0
+// Not matched: the copied pair and the counters are reloaded separately
+void sub_800BD06C(void)
+{
+    if (!sub_800BD274())
+    {
+        sub_800BD208();
+        if (sub_800BD274())
+        {
+            dword_800BE1F4.f8_LOAD = 1;
+            dword_800BE1E4[0] = dword_800BE1F4.f0_LOAD;
+            dword_800BE1E4[1] = dword_800BE1F4.f4_LOAD;
+            dword_800BE1F4.f0_LOAD = 0;
+            dword_800BE1F4.f4_LOAD = 0;
+            if (dword_800BE1F4.f44_LOAD)
+            {
+                ((void (*)(int, int))dword_800BE1F4.f44_LOAD)(dword_800BE1E4[0], dword_800BE1E4[1]);
+            }
+        }
+    }
+    dword_800BE1F4.f50_LOAD++;
+    dword_800BE1F4.f54_LOAD++;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD06C);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD118);
@@ -535,8 +622,41 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD174);
 // Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
 INCLUDE_OVERLAY_ASM(load, sub_800BD17C);
 
+#if 0
+// Not matched: address computation of the clearing loop differs
+void sub_800BD18C(void* fn, int a)
+{
+    int n = dword_800BE174 + 1;
+    int i;
+    if (n >= 4)
+    {
+        printf(byte_800B7630);
+        return;
+    }
+    dword_800BE174 = n;
+    dword_800BE294[n] = (int (*)())fn;
+    for (i = 3; i >= 0; i--)
+    {
+        dword_800BE254[n * 4 + i] = 0;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD18C);
 
+#if 0
+// Not matched: the symbol address is reloaded (lui) instead of kept in a saved register
+void sub_800BD208(void)
+{
+    int i = dword_800BE174;
+    if (i >= 0)
+    {
+        if (dword_800BE294[i](dword_800BE254 + i * 16))
+        {
+            dword_800BE174 = dword_800BE174 - 1;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD208);
 
 unsigned sub_800BD274(void)
