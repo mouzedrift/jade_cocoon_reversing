@@ -225,6 +225,8 @@ typedef struct
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
 extern int sub_8003BC84(int* p);
+extern int sub_8003C6C8(int* req);
+void sub_80020F5C();
 extern unsigned short dword_800918C8[];
 extern unsigned short word_800918CC[];
 extern unsigned short dword_800918D4[];
@@ -653,7 +655,49 @@ void sub_8001B714(void)
     }
 }
 INCLUDE_ASM(InitEnvironments_8001B7B4);
-INCLUDE_ASM(InitSprt_8001B9A0);
+// Matched
+void InitSprt_8001B9A0(int buffer)
+{
+    SPRT sprt;
+    DR_TPAGE tpage;
+    int x;
+    int y;
+    int top;
+    int tp;
+    if (unknownFlags_8008D678 & 0x20)
+    {
+        return;
+    }
+    SetSprt(&sprt);
+    sprt.r0 = 0x80;
+    sprt.g0 = 0x80;
+    sprt.b0 = 0x80;
+    sprt.w = 0x40;
+    sprt.h = 0x40;
+    SetShadeTex(&sprt, 1);
+    if (buffer)
+    {
+        top = stru_8008B4D8.field_A_y;
+    }
+    else
+    {
+        top = 0x100;
+    }
+    for (y = 0; y < stru_8008B4D8.field_E_h; y += 0x40)
+    {
+        for (x = 0; x < stru_8008B4D8.field_C_w; x += 0x40)
+        {
+            sprt.x0 = x;
+            sprt.y0 = y;
+            sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
+            sprt.v0 = y + top;
+            sub_80040298(pOT_8008D78C, &sprt, 5);
+            tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
+            setDrawTPage(&tpage, 0, 0, tp);
+            sub_80040298(pOT_8008D78C, &tpage, 2);
+        }
+    }
+}
 // Matched
 void sub_8001BB28(void)
 {
@@ -2654,7 +2698,45 @@ int sub_80020D84(void)
     }
     return r;
 }
-INCLUDE_ASM(sub_80020DDC);
+// Matched
+void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
+{
+    int req[8];
+    struct
+    {
+        int* out;
+        short a[2];
+        short b[2];
+        short c[2];
+        int d;
+    } arg;
+    arg.out = out;
+    arg.a[0] = a2[0];
+    arg.a[1] = a2[1];
+    arg.b[0] = a3[0];
+    arg.b[1] = a3[1];
+    arg.c[0] = a3[0];
+    arg.c[1] = a3[1];
+    arg.d = a4;
+    sub_8003FDB0(out + 1);
+    req[0] = 0x28;
+    if (a5)
+    {
+        req[0] |= 4;
+    }
+    else
+    {
+        req[0] |= 1;
+    }
+    req[1] = a0;
+    req[2] = 0;
+    req[3] = 0;
+    req[4] = 0;
+    req[5] = (int)&arg;
+    req[6] = 0x14;
+    req[7] = (int)sub_80020F5C;
+    *out = sub_8003C6C8(req);
+}
 // Matched
 int sub_80020EBC(int* p)
 {
@@ -2680,6 +2762,39 @@ int sub_80020F00(struct_list_14* p, int a, int b)
 }
 INCLUDE_ASM(sub_80020F5C);
 INCLUDE_ASM(sub_80021298);
+#if 0
+// Not matched: only the load order of images[0]/images[1] in the size products differs
+void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
+{
+    int* models = (int*)((char*)hdr + hdr[1]);
+    int* images = (int*)((char*)hdr + hdr[2]);
+    if (sub_80021738(models))
+    {
+        out[0] = sub_80021738(models);
+        sub_80021744(&out[1], out[0], heap);
+        sub_80021824(models, (char*)out[1], out[0], heap, a2);
+    }
+    if (sub_80021DE4(models))
+    {
+        sub_80021DF0(&out[2], sub_80021DE4(models), heap);
+        sub_80021E4C(models, &out[2], sub_80021DE4(models));
+    }
+    else
+    {
+        out[2] = 0;
+    }
+    out[4] = 0;
+    out[5] = 0;
+    out[6] = 0;
+    if (images[0] && images[1])
+    {
+        out[4] = images[0];
+        out[5] = images[1];
+        out[6] = (int)sub_8003FDC0(heap, images[1] * 40 * images[0]);
+        sub_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[1] * 40 * images[0]);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80021464);
 // Matched
 int sub_800215E8(int* hdr, int* out, int heap)
