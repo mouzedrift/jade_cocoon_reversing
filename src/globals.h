@@ -12,6 +12,8 @@ typedef struct
     int field_4;
     short field_8_x;
     short field_A_y;
+    short field_C_w; // word_8008B4E4
+    short field_E_h; // word_8008B4E6
 } struct_44;
 
 typedef struct
@@ -466,6 +468,7 @@ extern int dword_8008D4D8;
 // camera position (vx, vy, vz at 0x8008D600..0x8008D608)
 extern int dword_8008D600[3];
 extern unsigned short aKkkiqqqqqssssZ[];
+extern struct EventNode* dword_8008D61C;
 extern int dword_8008B4F8;
 extern int geomScreenDistance_8008B548;
 extern int dword_800918C4;

@@ -449,6 +449,7 @@ extern void sub_800C4090(int a0, int a1, int a2, int a3);
 extern void sub_800C410C(void);
 
 extern EventEntry* sub_80043AF8(EventNode* n);
+extern void sub_8001C0B4(EventEntry* e, void* buf);
 extern void sub_8001E574(int* p, int a1);
 
 #endif

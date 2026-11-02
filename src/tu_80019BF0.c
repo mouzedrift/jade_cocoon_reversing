@@ -429,9 +429,72 @@ void ProcessPads_8001BF50(void)
     }
 }
 INCLUDE_ASM(sub_8001BF90);
-INCLUDE_ASM(sub_8001C02C);
-INCLUDE_ASM(sub_8001C0B4);
-INCLUDE_ASM(sub_8001C19C);
+// Matched
+void sub_8001C02C(unsigned char* rgb)
+{
+    EventEntry* e = sub_80043AF8(dword_8008D61C);
+    unsigned char* b;
+    if (e != 0)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        b = e->buffer;
+        *(int*)b = 0;
+        b[4] = rgb[0];
+        b[5] = rgb[1];
+        b[6] = rgb[2];
+        e->cb_8 = (EventEntryFn)sub_8001C0B4;
+    }
+}
+// Matched
+void sub_8001C0B4(EventEntry* e, void* buf)
+{
+    unsigned char* b = buf;
+    POLY_F4 poly;
+    DR_TPAGE mode;
+    if (++*(int*)b >= 4)
+    {
+        e->flags = (e->flags & ~1) | 0x8000;
+        return;
+    }
+    SetPolyF4(&poly);
+    poly.r0 = b[4];
+    poly.g0 = b[5];
+    poly.b0 = b[6];
+    poly.x0 = 0;
+    poly.y0 = 0;
+    poly.x1 = stru_8008B4D8.field_C_w;
+    poly.y1 = 0;
+    poly.x2 = 0;
+    poly.y2 = stru_8008B4D8.field_E_h;
+    poly.x3 = stru_8008B4D8.field_C_w;
+    poly.y3 = stru_8008B4D8.field_E_h;
+    SetSemiTrans(&poly, 0);
+    sub_80040298(pOT_8008D5F4, &poly, 6);
+    setlen(&mode, 1);
+    mode.code[0] = 0xE1000220;
+    sub_80040298(pOT_8008D5F4, &mode, 2);
+}
+// Matched
+void sub_8001C19C(unsigned int mode)
+{
+    switch (mode)
+    {
+    case 0:
+        sub_8001C260();
+        break;
+    case 1:
+        sub_8001C260();
+        sub_8001C2CC();
+        break;
+    case 2:
+        sub_8001C260();
+        sub_8001C2E4();
+        break;
+    case 3:
+        sub_8001C290();
+        break;
+    }
+}
 // Matched
 void sub_8001C224(void)
 {
