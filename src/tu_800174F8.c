@@ -18,7 +18,36 @@
 
 INCLUDE_DATA(off_80072278);
 
-INCLUDE_ASM(sub_800174F8);
+void sub_8001761C(int* a0, int* a1);
+// Matched
+void sub_800174F8(char* a0, int a1)
+{
+    EventEntry* e = sub_80043AF8(dword_8008B4A8);
+    if (e)
+    {
+        int* b = e->buffer;
+        int* p;
+        int idx;
+        b[0x44 / 4] = (*(int**)(a0 + 0x1C))[0];
+        b[0x48 / 4] = (*(int**)(a0 + 0x1C))[1];
+        b[0x4C / 4] = (*(int**)(a0 + 0x1C))[2];
+        b[0] = 0;
+        b[0x30 / 4] = 0;
+        b[0x34 / 4] = 0x23F000;
+        ((short*)b)[0x84 / 2] = 0;
+        ((short*)b)[0x82 / 2] = 0;
+        ((short*)b)[0x80 / 2] = 0;
+        ((short*)b)[0x86 / 2] = 0;
+        idx = sub_80020F00((struct_list_14*)dword_80091BD0, 1, a1);
+        e->flags = (e->flags | 1) & ~0x8000;
+        p = (int*)(dword_80091BD0[0x28 / 4] + idx * 28);
+        b[0x88 / 4] = (int)p;
+        b[0x94 / 4] = (int)malloc3_8003FC4C(0x54);
+        sub_800218A8(p[1], (void*)b[0x94 / 4], 1);
+        sub_80039FE4(p[1], p[1] + 0x54, b[0x94 / 4]);
+        e->cb_8 = (EventEntryFn)sub_8001761C;
+    }
+}
 INCLUDE_ASM(sub_8001761C);
 INCLUDE_ASM(sub_80017784);
 INCLUDE_ASM(sub_800178C0);
@@ -89,6 +118,31 @@ void sub_80017BF0(char* a0, int a1)
         e->cb_8 = (EventEntryFn)sub_80017CE4;
     }
 }
+#if 0
+// Not matched: callee-saved registers of a1 and i are swapped
+void sub_80017CE4(int* a0, int* a1)
+{
+    int* t = (int*)a1[0x88 / 4];
+    int i;
+    int v[3];
+    int y;
+    if (a1[0] < 0x80)
+    {
+        for (i = 0; i < 16; i++)
+        {
+            v[0] = v[2] = 0x1000 + i * 0x80;
+            y = word_80084540[(a1[0] * 16) & 0xFF0] * (word_80084540[((i - a1[0]) * 256) & 0xF00] + 0x1000) / 4096;
+            v[1] = y;
+            sub_8004D1EC(t[1], (int)pOT_8008D690, (int)(a1 + 0x44 / 4), (int)(a1 + 0x80 / 4), (int)stru_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, (int)v);
+        }
+        a1[0]++;
+    }
+    else
+    {
+        *a0 = (*a0 & ~1) | 0x8000;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80017CE4);
 INCLUDE_ASM(sub_80017E30);
 INCLUDE_ASM(sub_80017FF8);
