@@ -109,7 +109,38 @@ short sub_8002A3E0(int idx)
     }
     return 0x24;
 }
-INCLUDE_ASM(sub_8002A42C);
+extern void sub_8003326C(int a, unsigned long* b);
+// Matched
+void sub_8002A42C(unsigned short* pos, short a1, int a2, short ot)
+{
+    unsigned short prim[12];
+    int mode[2];
+    sub_800A61CC(a1, prim, mode);
+    prim[4] = pos[0];
+    prim[5] = pos[1];
+    sub_80040298(&pOT_8008D454[ot], prim, 5);
+    sub_80040298(&pOT_8008D454[ot], mode, 2);
+    if (a2)
+    {
+        sub_8003326C(a2, &pOT_8008D454[ot]);
+    }
+}
+extern char aFb[];
+#if 0
+// Not matched (original addresses aFb + 8 as a separate data symbol, whose INCLUDE_DATA lives in tu_80014954.c)
+void sub_8002A4E4(short ot)
+{
+    unsigned short prim[12];
+    int mode[2];
+    sub_80042B38((int)aFb, ot);
+    sub_800A61CC(1, prim, mode);
+    prim[4] = ((unsigned short*)(aFb + 8))[0];
+    prim[5] = ((unsigned short*)(aFb + 8))[1];
+    sub_80040298(&pOT_8008D454[ot], prim, 5);
+    sub_80040298(&pOT_8008D454[ot], mode, 2);
+    sub_800429F8((int)aFb, ot);
+}
+#endif
 INCLUDE_ASM(sub_8002A4E4);
 INCLUDE_ASM(sub_8002A5A4);
 INCLUDE_ASM(sub_8002A710);

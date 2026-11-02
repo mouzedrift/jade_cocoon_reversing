@@ -18,7 +18,27 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-INCLUDE_ASM(sub_8002BE10);
+void sub_8002C06C(unsigned short* pos, int idx, int ot);
+// Matched
+void sub_8002BE10(void)
+{
+    short i;
+    short j;
+    unsigned short loc[2];
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            loc[0] = j * 128;
+            if (i & 1)
+            {
+                loc[0] -= 0x40;
+            }
+            loc[1] = i * 60;
+            sub_8002C06C(loc, 0x95, 0xF);
+        }
+    }
+}
 typedef struct
 {
     int field_0;
