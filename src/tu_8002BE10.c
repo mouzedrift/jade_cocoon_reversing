@@ -147,8 +147,7 @@ unsigned int sub_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
 }
-#if 0
-// Not matched (b ends up in a0 instead of v0)
+// Matched
 int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
 {
     char* p = base + idx * 4;
@@ -157,16 +156,13 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
     {
         return 0;
     }
-    b = (unsigned char)p[0xdf];
-    if (!b)
+    if (p[0xdf] == 0)
     {
         return 0;
     }
-    sub_8002AF10(a2 + b * 16, a1, a4);
+    sub_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_8002C670);
 typedef struct
 {
     short a;

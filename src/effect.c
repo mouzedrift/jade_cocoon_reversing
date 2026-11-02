@@ -166,20 +166,23 @@ int sub_80014444(int a0)
 #endif
 INCLUDE_ASM(sub_80014444);
 #if 0
-// Not matched
+// Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
 int sub_8001449C(int a0)
 {
     int r = 0;
     int v = a0 - 4;
     if ((unsigned char)v < 3)
     {
-        if ((1 << a0) & sub_800A248C())
+        int flags = sub_800A248C();
+        int m = 1 << a0;
+        if (flags & m)
         {
             r = sub_800A2B20((unsigned char)v);
         }
     }
     return r;
 }
+
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched
