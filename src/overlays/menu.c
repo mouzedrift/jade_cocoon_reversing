@@ -691,6 +691,85 @@ void sub_800BDE10(MenuCtx* c)
     c->f18 = 0;
 }
 
+extern short name_800C1950[];
+extern unsigned short name_800C193C[];
+extern unsigned short name_800C1948[];
+extern int name_8001CE70();
+// near miss: gcc cross-jumps the 'moved = 1' tails differently from the original
+#if 0
+void sub_800BE048(MenuCtx* c)
+{
+    int moved = 0;
+    short* tbl = name_800C1950;
+    short t = tbl[c->sel_2];
+    if (t >= 0)
+    {
+        if (t == 2)
+        {
+            int s = c->arr_2A[3] + c->arr_46[0];
+            int r = name_800AD288(s, moved);
+            if (name_8001CE70(r) & 0x20)
+            {
+                sub_800BF3AC(r, s);
+                PlaySfx_80031494(0x44);
+                goto end;
+            }
+        }
+        PlaySfx_80031494(0x7E);
+        moved = 1;
+        c->sel_2 = (unsigned short)tbl[c->sel_2];
+    }
+    else if (t == -1)
+    {
+        PlaySfx_80031494(0x7E);
+        switch (c->sel_2)
+        {
+        case 0:
+            moved = 1;
+            if (c->flags_0 & 1)
+                c->sel_2 = 6;
+            else if (c->flags_0 & 2)
+                c->sel_2 = 7;
+            else
+                c->sel_2 = 8;
+            break;
+        case 6:
+            moved = 1;
+            c->sel_2 = name_800C193C[c->f60];
+            break;
+        case 7:
+            moved = 1;
+            c->sel_2 = name_800C1948[c->f60];
+            break;
+        default:
+            moved = 1;
+            break;
+        }
+    }
+    else if (t == -3)
+    {
+        short r = name_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
+        if (c->sel_2 == 0xE && r == 0)
+        {
+            PlaySfx_80031494(0x7E);
+            c->sel_2 = 0x10;
+            c->f60 = 1;
+        }
+        else
+        {
+            PlaySfx_80031494(0x44);
+            sub_800BF3E0(c);
+        }
+    }
+end:
+    if (moved)
+    {
+        c->f62 = 0;
+        c->f60 = 0;
+        c->f28 = 0;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BE048);
 
 extern short name_800C1974[];
