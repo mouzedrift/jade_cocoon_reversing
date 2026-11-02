@@ -423,8 +423,6 @@ int sub_800A7164(int i)
     return cnt;
 }
 
-// Near miss: register assignment of the two element pointers
-#if 0
 CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
 {
     CombBtlPair r;
@@ -433,23 +431,22 @@ CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
     int i;
     for (i = 0; i < n; i++)
     {
-        p[i].hi = p[i].hi - p[i].lo;
-        p[i].lo = -p[i].lo;
-        if (p[i].lo < lo)
+        p->hi = p->hi - p->lo;
+        p->lo = -p->lo;
+        if (p->lo < lo)
         {
-            lo = p[i].lo;
+            lo = p->lo;
         }
-        if (hi < p[i].hi)
+        if (hi < p->hi)
         {
-            hi = p[i].hi;
+            hi = p->hi;
         }
+        p++;
     }
     r.lo = lo;
     r.hi = hi;
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A71E4);
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
