@@ -44,6 +44,31 @@ void sub_800BBE50(MenuTask* t)
     }
 }
 
+extern int sub_800BD230();
+extern void sub_800BCFDC();
+extern void sub_800BC2A8();
+extern void sub_800BD1B0();
+extern void sub_800BBF48();
+// near miss: original keeps a second copy of the argument in another saved register
+#if 0
+void sub_800BBE90(MenuTask* t, void* a)
+{
+    void* q;
+    sub_8002BE10();
+    sub_8001C19C(3, 0x20);
+    q = a;
+    if (sub_800BD230(a))
+    {
+        sub_800BCFDC(a);
+        t->next_8 = sub_800BD1B0;
+    }
+    else
+    {
+        sub_800BC2A8(q);
+        t->next_8 = sub_800BBF48;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BBE90);
 
 extern int sub_800121A8();
@@ -55,7 +80,19 @@ int sub_800BBF10(unsigned char a, unsigned char b)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BBF48);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BC24C);
+extern int sub_800272D0();
+extern void sub_80020D68();
+extern void sub_800A6D30();
+void sub_800BC24C(MenuTask* t)
+{
+    if (sub_800272D0() == 0)
+    {
+        sub_80020D68();
+        sub_800A6D30(1);
+        dword_8008B540 = 1;
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BC2A8);
 
@@ -71,7 +108,15 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BCB98);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCEA0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BCF74);
+extern void sub_8001AEB8();
+extern int name_800338B0();
+void sub_800BCF74(short a)
+{
+    int x = a - 1;
+    int r17 = (int)sub_80010824(3, x);
+    char* r16 = (char*)sub_80010598(3, x);
+    sub_8001AEB8(name_800338B0(r16), r16 + 0x84, r17);
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCFDC);
 
@@ -158,7 +203,22 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BEAE0);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BEBFC);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BEC8C);
+extern unsigned short uiColor_8008B590;
+typedef struct MenuCol
+{
+    unsigned short col;
+    unsigned char c_2;
+    unsigned char c_3;
+} MenuCol;
+extern void sub_80042460();
+void sub_800BEC8C(int unused, int a, short b)
+{
+    MenuCol t;
+    t.col = uiColor_8008B590;
+    t.c_2 = 1;
+    t.c_3 = 1;
+    sub_80042460(a, &t, &pOT_8008D454[b], frameCount_8008D3FC);
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
@@ -191,13 +251,33 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BFE18);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFEC0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BFF38);
+extern int name_800C45D8();
+extern void sub_800BFF84();
+void sub_800BFF38(MenuTask* t, int a)
+{
+    if (name_800C45D8() == 0)
+    {
+        sub_800BFF84(a);
+        t->next_8 = sub_800BD6C8;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFF84);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BFFFC);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C0084);
+extern void sub_80027478();
+extern void sub_80027314();
+extern void sub_800BFFFC();
+extern char* name_8008D498;
+void sub_800C0084(void)
+{
+    MenuTask* t = (MenuTask*)(name_8008D498 + 0x10);
+    sub_80027478(0x40, 1);
+    FreeActiveOverlay_8002C014();
+    sub_80027314();
+    t->next_8 = sub_800BFFFC;
+}
 
 void sub_800C00D4(MenuObj* o, int a, int s)
 {
@@ -227,7 +307,20 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C01F4);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C0428);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C0578);
+extern int sub_800C0990();
+extern void sub_8002F7D0();
+extern void sub_8002BEC8();
+extern char name_800C18C4[];
+void sub_800C0578(MenuObj* o)
+{
+    int buf[2];
+    short r[2];
+    short s = sub_800C0990(o, 1);
+    r[0] = 0xC2;
+    r[1] = 0x31;
+    sub_8002F7D0(r, 0xE);
+    sub_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C05E0);
 
