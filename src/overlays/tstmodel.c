@@ -118,7 +118,35 @@ void sub_800A19E4(int* a)
     a[0] = 0;
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1A24);
+extern int name_8008D600[];
+extern short name_8008D4C8[];
+extern unsigned char name_8008D460[];
+extern short name_8008D474[];
+extern int name_8008B548;
+extern int name_8003B548();
+extern void name_8004D0E8();
+void sub_800A1A24(int* c)
+{
+    int v[3];
+    int yaw;
+    name_8008D600[0] = c[0x178 / 4];
+    name_8008D600[1] = c[0x17C / 4];
+    name_8008D600[2] = c[0x180 / 4];
+    v[0] = c[0x184 / 4] - c[0x178 / 4];
+    v[1] = c[0x188 / 4] - c[0x17C / 4];
+    v[2] = c[0x18C / 4] - c[0x180 / 4];
+    yaw = ratan2_8003B548(v[0], v[2]);
+    name_8008D4C8[1] = -yaw;
+    name_8008D4C8[0] = name_8003B548(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    name_8008D4C8[2] = 0;
+    name_8008D460[0] = 0x40;
+    name_8008D460[1] = 0x40;
+    name_8008D460[2] = 0x40;
+    name_8008D474[0] = 0;
+    name_8008D474[1] = 0;
+    name_8008B548 = 0xA0;
+    name_8004D0E8();
+}
 
 // Matched
 extern char name_800A1EDC[];
