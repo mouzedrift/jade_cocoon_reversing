@@ -171,12 +171,33 @@ void sub_80029868(int a0, int a1, int a2)
     sub_80029708(buf, (void*)a1);
     sub_800298AC(a0, a2, buf);
 }
-#if 0
+typedef struct
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    u_long* caddr;
+    int pix_len;
+    RECT prect;
+    u_long* paddr;
+} TimInfo;
+// Matched
 void sub_800298AC(int a0, int a1, void* a2)
 {
+    SPRT* s = (SPRT*)a0;
+    TimInfo* t = (TimInfo*)a2;
+    SetSprt(s);
+    s->r0 = 0x80;
+    s->g0 = 0x80;
+    s->b0 = 0x80;
+    SetDrawTPage((DR_TPAGE*)a1, 0, 1, GetTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256));
+    s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
+    s->v0 = t->prect.y % 256;
+    s->w = (t->prect.w * 4) >> t->mode;
+    s->h = t->prect.h;
+    s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
 }
-#endif
-INCLUDE_ASM(sub_800298AC);
 // Matched
 void sub_800299DC(void* p, void* q)
 {

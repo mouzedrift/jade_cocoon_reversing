@@ -405,8 +405,55 @@ void sub_800335D0(void* pSrc, Minion* m)
     sub_80033754((signed char*)m + 0x20, (unsigned char*)m);
 }
 #if 0
-void sub_80033624(void* arg0, int arg1)
+// Not matched (the out+i store pointer gets strength-reduced; clamp copy and register use differ)
+int sub_80033624(void* arg0, int arg1)
 {
+    unsigned char* out = (unsigned char*)arg0;
+    unsigned char* m = (unsigned char*)arg1;
+    unsigned char* base = m + 0x2C;
+    signed char* tbl[4];
+    int i;
+    int j;
+    int v;
+    int mx;
+    m += 0x1C;
+    tbl[0] = (signed char*)sub_8001CEF4(m[0]);
+    tbl[1] = (signed char*)sub_8001CFB0(m[1]);
+    tbl[2] = (signed char*)sub_8001D078(m[2]);
+    tbl[3] = 0;
+    for (i = 0; i < 6; i++)
+    {
+        v = base[i];
+        for (j = 0; j < 4; j++)
+        {
+            if (tbl[j])
+            {
+                v += tbl[j][i];
+            }
+        }
+        if (v >= 0)
+        {
+            mx = v;
+            if (mx >= 100)
+            {
+                mx = 99;
+            }
+            out[i] = mx;
+        }
+        else
+        {
+            out[i] = 0;
+        }
+    }
+    mx = 0;
+    for (j = 0; j < 4; j++)
+    {
+        if (tbl[j] && mx < *(int*)(tbl[j] + 0x10))
+        {
+            mx = *(int*)(tbl[j] + 0x10);
+        }
+    }
+    return mx;
 }
 #endif
 INCLUDE_ASM(sub_80033624);
