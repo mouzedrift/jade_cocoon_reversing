@@ -125,6 +125,7 @@ extern void sub_800BAEDC();
 extern int sub_800B9888(short i);
 extern ShopItemShop* sub_800B9C5C(int i);
 extern int sub_800B9C10(int i);
+extern ShopItemShop name_8008EF18[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -289,6 +290,46 @@ int sub_800B9D6C(int i)
     return 0;
 }
 
+#if 0 // near miss: i/p register swap
+int sub_800B9DA8()
+{
+    int cnt = name_800B6CE4;
+    ShopItemShop* items = name_800B6CF0;
+    int n = 0;
+    int i = 0;
+    ShopItemShop* p;
+    ShopItemShop* dst;
+    for (; i < cnt; i++)
+    {
+        if (items[i].state_0 != 4)
+        {
+            n++;
+        }
+    }
+    if (n < 16)
+    {
+        i = 0;
+        if (i < cnt)
+        {
+            dst = name_8008EF18;
+            p = items;
+            do
+            {
+                if (p->state_0 != 4)
+                {
+                    sub_800403E8((unsigned int*)dst, (unsigned int*)p, 0xF8);
+                    dst++;
+                }
+                i++;
+                p++;
+            } while (i < cnt);
+        }
+        free3_8003FC6C(items);
+        return 1;
+    }
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800B9DA8);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800B9E94);
@@ -439,6 +480,60 @@ void sub_800BAEDC(unsigned int* a, unsigned int* b)
     sub_800403E8(b, t1, 0xF8);
 }
 
+#if 0 // near miss: orig tail-merges the *a = 3 store of the b==3 and b==4 cases (jump into the other copy)
+int sub_800BAF54(short* a, short* b, short c, short d)
+{
+    if (*a == 3)
+    {
+        if (*b == 2)
+        {
+            *a = 2;
+            *b = 3;
+        }
+        else if (*b == 4 && d == 2)
+        {
+            *a = 2;
+        }
+    }
+    else if (*a == 2)
+    {
+        if (*b == 3)
+        {
+            *b = 2;
+            goto set3;
+        }
+        else if (*b == 4 && d == 3)
+        {
+        set3:
+            *a = 3;
+        }
+    }
+    else if (*a == 4)
+    {
+        if (c == 3)
+        {
+            if (*b == 2 && d == 2)
+            {
+                *b = 3;
+            }
+        }
+        else if (c == 2)
+        {
+            if (*b == 3 && d == 3)
+            {
+                *b = 2;
+            }
+        }
+    }
+    else
+    {
+        goto end;
+    }
+    sub_800BAEDC(a, b);
+end:
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BAF54);
 
 extern void sub_800BB0F8();
