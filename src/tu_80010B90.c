@@ -1166,8 +1166,28 @@ INCLUDE_ASM(sub_80010C30);
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
 INCLUDE_ASM(sub_80011904);
-INCLUDE_ASM(sub_80011ADC);
-INCLUDE_ASM(sub_80011AF8);
+void sub_80011AF8(struct_obj_D* p, int* q);
+// Matched
+void sub_80011ADC(struct_obj_D* p, int* q)
+{
+    q[0] = -1;
+    q[1] = -1;
+    p->field_8 = (void (*)(void))sub_80011AF8;
+}
+// Matched
+void sub_80011AF8(struct_obj_D* p, int* q)
+{
+    int* r = q;
+    if (q[1] > 0)
+    {
+        q[1]--;
+    }
+    else
+    {
+        r[1] = 0;
+        r[0] = -1;
+    }
+}
 #if 0
 // Not matched (close)
 int sub_80011B24(int a0)
@@ -1323,8 +1343,41 @@ int sub_80012178(int arg0)
 {
     return (arg0 * 3) + 20;
 }
-INCLUDE_ASM(sub_80012188);
-INCLUDE_ASM(sub_800121A8);
+// Matched
+void sub_80012188(void* arg0)
+{
+    sub_80011D98(arg0, 0);
+}
+// Matched
+int sub_800121A8(int x)
+{
+    int r;
+    if (x < 20)
+    {
+        r = x / 4;
+    }
+    else if (x < 31)
+    {
+        r = 5;
+    }
+    else if (x < 35)
+    {
+        r = 6;
+    }
+    else if (x >= 40)
+    {
+        r = 8;
+    }
+    else
+    {
+        r = 7;
+    }
+    if (r > 8)
+    {
+        r = 8;
+    }
+    return r;
+}
 INCLUDE_ASM(sub_80012204);
 INCLUDE_ASM(sub_800122A0);
 INCLUDE_ASM(sub_80012358);

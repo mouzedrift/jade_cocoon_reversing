@@ -199,7 +199,15 @@ void sub_80014574(struct_16* p, int a1, int a2)
     p->field_C = 0;
 }
 INCLUDE_ASM(sub_80014588);
-INCLUDE_ASM(sub_80014618);
+void sub_80014638(struct_obj_D* p, int* q);
+// Matched
+void sub_80014618(struct_obj_D* p, int* q)
+{
+    q[0x28 / 4] = 2;
+    q[0x3C / 4] = 0;
+    q[0x2C / 4] = 0;
+    p->field_8 = (void (*)(void))sub_80014638;
+}
 INCLUDE_ASM(sub_80014638);
 INCLUDE_ASM(sub_800147FC);
 // Matched

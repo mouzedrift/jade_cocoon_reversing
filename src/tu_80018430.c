@@ -17,9 +17,29 @@
 #include "data_decls.h"
 
 
-INCLUDE_ASM(sub_80018430);
-INCLUDE_ASM(sub_80018448);
-INCLUDE_ASM(sub_80018460);
+// Matched
+void sub_80018430(short a0)
+{
+    ((short*)dword_8008D3F8[9])[0x40 / 2] = a0;
+}
+// Matched
+void sub_80018448(short a0)
+{
+    ((short*)dword_8008D3F8[9])[0x42 / 2] = a0;
+}
+// Matched
+void sub_80018460(int a0)
+{
+    int* p = dword_8008D3F8[9];
+    if (a0 != 0)
+    {
+        p[0x28 / 4] |= 8;
+    }
+    else
+    {
+        p[0x28 / 4] &= ~8;
+    }
+}
 // Matched
 void sub_800184A0(int arg, int bit)
 {
