@@ -1624,7 +1624,37 @@ int sub_800A5E68(void)
     return dword_800AEBD8 >= 0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A5E80);
+int sub_800A5E80(int a)
+{
+    GameNode_1* n = dword_8008D400;
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            if (q[0x78 / 4] != 0 && (q[0x84 / 4] & 0xBFFFFFFF) == a)
+                return 1;
+        }
+        n = n->next_4;
+    }
+    n = dword_8008D410;
+    cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            if (q[0xc8 / 4] == a)
+                return 1;
+        }
+        n = n->next_4;
+    }
+    return 0;
+}
 
 // Matched
 char* sub_800A5F6C(void)
