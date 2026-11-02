@@ -140,6 +140,8 @@ def emit_data(exe, name, addr, size, section=".text", header=False):
         out.append("\t.word\t0x%08x" % struct.unpack("<I", exe[addr - BASE + off:addr - BASE + off + 4])[0])
     for off in range(size - size % 4, size):
         out.append("\t.byte\t0x%02x" % exe[addr - BASE + off])
+    if section != ".text":
+        out.append("\t.text")  # gcc does not know that the include switched sections
     return "\n".join(out) + "\n"
 
 

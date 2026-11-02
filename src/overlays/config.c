@@ -234,8 +234,12 @@ void sub_800C3060(CfgCtxConfig* c)
 }
 
 INCLUDE_OVERLAY_ASM(config, sub_800C31DC);
+INCLUDE_OVERLAY_ASM(config, jpt_800C2C6C);
+INCLUDE_OVERLAY_ASM(config, dword_800C2C88);
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3540);
+INCLUDE_OVERLAY_ASM(config, jpt_800C2C8C);
+INCLUDE_OVERLAY_ASM(config, dword_800C2CA0);
 
 void sub_800C378C(CfgCtxConfig* c)
 {
@@ -265,8 +269,6 @@ void sub_800C378C(CfgCtxConfig* c)
 }
 INCLUDE_OVERLAY_ASM(config, dword_800C2CB8);
 
-#if 0
-// Not matched: needs a jump table (see sub_800C378C)
 void sub_800C383C(CfgCtxConfig* c)
 {
     switch (c->prev_2)
@@ -288,8 +290,7 @@ void sub_800C383C(CfgCtxConfig* c)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(config, sub_800C383C);
+INCLUDE_OVERLAY_ASM(config, dword_800C2CD0);
 
 // Matched
 void sub_800C38CC(CfgCtxConfig* c)
@@ -392,6 +393,8 @@ void sub_800C39C4(CfgCtxConfig* c)
 }
 
 INCLUDE_OVERLAY_ASM(config, sub_800C3CA4);
+INCLUDE_OVERLAY_ASM(config, jpt_800C2D04);
+INCLUDE_OVERLAY_ASM(config, dword_800C2D20);
 
 #if 0
 // Not matched: the original does not keep i*38 in a register across the loop body (uses fewer saved registers)
@@ -540,6 +543,8 @@ int sub_800C45D8(void)
 }
 
 INCLUDE_OVERLAY_ASM(config, sub_800C45E8);
+INCLUDE_OVERLAY_ASM(config, jpt_800C2D24);
+INCLUDE_OVERLAY_ASM(config, dword_800C2D40);
 
 // Matched
 void sub_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
