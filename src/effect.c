@@ -194,6 +194,38 @@ void sub_80014574(struct_16* p, int a1, int a2)
 }
 INCLUDE_ASM(sub_80014588);
 INCLUDE_ASM(sub_80014638);
+#if 0
+extern EventNode* dword_8008B4A8;
+extern EventNode* dword_8008D60C;
+// Not matched: 16 words, loop counter/accumulator register assignment
+int sub_800147FC(void)
+{
+    int i = 0;
+    int n = i;
+    EventNode* p = dword_8008B4A8;
+    int count = p->count;
+    for (i = 0; i < count; i++)
+    {
+        if ((p->entry.flags & 0x8001) == 1)
+        {
+            n++;
+        }
+        p = p->next;
+    }
+    p = dword_8008D60C;
+    count = p->count;
+    for (i = 0; i < count; i++)
+    {
+        if ((p->entry.flags & 0x8001) == 1)
+        {
+            n++;
+        }
+        p = p->next;
+    }
+    return n;
+}
+
+#endif
 INCLUDE_ASM(sub_800147FC);
 // Matched
 void sub_800148A0(void)
