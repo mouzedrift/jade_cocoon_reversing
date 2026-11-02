@@ -230,7 +230,7 @@ extern int sub_8003D3C0(int arg0, int arg1);
 extern int PlayMovie_80040EB4(int arg0);
 extern int sub_80033624(void* arg0, int arg1);
 extern int sub_80014390(int arg0);
-extern void sub_80010AD8(int arg0);
+extern int sub_80010AD8(int arg0);
 extern int* sub_8001091C();
 extern void PlayGenkiMovie_80040AC4(void);
 extern void PlayCraveMovie_80040B2C(void);
@@ -469,6 +469,10 @@ extern void sub_80039FE4(int a0, int a1, int a2);
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern void sub_8003A6C4(int a0, int a1, int a2, int a3);
 extern void sub_8001DAAC(int a0, int* a1);
+extern int sub_80010B90();
+extern int sub_80010C30(struct_state_obj* p);
+extern int sub_80010CDC();
+extern int sub_80010DB0();
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
 #endif

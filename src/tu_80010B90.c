@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(dword_80071B78);
+
 Data001File Data001Files_80075AA0[1108] = {{{0u, 2u, 35u, 0u}, 367, 751616},
                                            {{0u, 7u, 22u, 0u}, 1, 1},
                                            {{0u, 7u, 23u, 0u}, 1, 1},

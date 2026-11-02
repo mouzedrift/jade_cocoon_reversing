@@ -309,9 +309,35 @@ void sub_80010AB4(int arg0, int* arg1)
 {
     sub_8001098C(*arg1);
 }
-#if 0
-void sub_80010AD8(int arg0)
+// Matched
+int sub_80010AD8(int arg0)
 {
+    struct_state_obj* p = (struct_state_obj*)arg0;
+    int cont = 1;
+    int r = 0;
+    do
+    {
+        switch (p->state_38)
+        {
+        case 0:
+            break;
+        case 1:
+            cont = sub_80010B90(p);
+            break;
+        case 2:
+            cont = sub_80010DB0(p);
+            break;
+        case 3:
+            cont = sub_80010CDC(p);
+            break;
+        case 4:
+            cont = sub_80010C30(p);
+            break;
+        case 5:
+            cont = 0;
+            r = 1;
+            break;
+        }
+    } while (cont);
+    return r;
 }
-#endif
-INCLUDE_ASM(sub_80010AD8);
