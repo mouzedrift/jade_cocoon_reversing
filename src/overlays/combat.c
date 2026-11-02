@@ -55,6 +55,44 @@ extern void sub_80037748(void);
 extern void sub_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
+extern int sub_8003B56C(int a, int b);
+extern void sub_80029A10(void* a, void* b);
+extern int sub_800A0968(unsigned char* a);
+typedef struct CombatShortPair_combat
+{
+    unsigned short a;
+    unsigned short b;
+} CombatShortPair_combat;
+typedef struct CombatReq2Combat
+{
+    int field_0;
+    int field_4;
+    char pad_8[4];
+    unsigned short field_C;
+    unsigned short field_E;
+    unsigned short field_10;
+    unsigned short field_12;
+    char pad_14[8];
+    unsigned short field_1C;
+    unsigned short field_1E;
+    unsigned short field_20;
+    unsigned short field_22;
+    char pad_24[4];
+} CombatReq2Combat;
+extern CombatShortPair_combat dword_8007DCAC[];
+extern CombatShortPair_combat dword_8007DCBC[];
+extern short dword_80084540[];
+extern short dword_800A1BBC[];
+extern unsigned char byte_800A38D9;
+extern unsigned char byte_800A38DA;
+extern unsigned char byte_800A38DB;
+extern short word_800A1BC4;
+extern char data_8008EEF8[];
+extern void sub_800300E0(int a, int b);
+extern void sub_8002BF74(void);
+extern void sub_800A197C(short* p);
+extern void sub_800A0D64(int a, int b);
+extern void sub_800A14AC();
 extern void CombatReq_8001E34C(void* p, void* q);
 
 typedef struct CombatReqCombat
@@ -85,7 +123,61 @@ INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A05E0);
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A0898);
+// Matched
+int sub_800A0898(unsigned char* a)
+{
+    int n = 0;
+    int r;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (a[i])
+        {
+            n++;
+        }
+    }
+    if (n == 1)
+    {
+        r = -1000;
+    }
+    else if (n == 2)
+    {
+        if (a[3] && a[1])
+        {
+            r = a[1] < a[3] ? 0xF5 : 0x41;
+        }
+        else if (a[0] && a[2])
+        {
+            r = a[2] < a[0] ? 0x14F : 0x9B;
+        }
+        else
+        {
+            r = sub_800A0968(a);
+        }
+    }
+    else
+    {
+        r = sub_800A0968(a);
+    }
+    return r;
+}
+
+#if 0
+// Not matched: register allocation of the products differs (6 words)
+int sub_800A0968(unsigned char* a)
+{
+    short* t = dword_80084540;
+    int p0 = t[0x5C6 / 2] * a[0];
+    int p1 = t[0x1DC6 / 2] * a[0];
+    int p2 = t[0x1DC6 / 2] * a[3];
+    int p3 = t[0x15C6 / 2] * a[3];
+    int p4 = t[0x15C6 / 2] * a[2];
+    int p5 = t[0xDC6 / 2] * a[2];
+    int p6 = t[0xDC6 / 2] * a[1];
+    int p7 = t[0x5C6 / 2] * a[1];
+    return sub_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
+}
+#endif
 
 INCLUDE_OVERLAY_ASM(combat, sub_800A0968);
 
@@ -350,6 +442,37 @@ int sub_800A1324(void)
     return 6;
 }
 
+#if 0
+// Not matched: the original keeps the full address of the table in a register across the loops
+void sub_800A13A0(CombatTaskCombat* t)
+{
+    int i;
+    int j;
+    int off = 0;
+    dword_800A1BBC[0] = 1;
+    dword_800A1BBC[1] = 5;
+    dword_800A1BBC[2] = 5;
+    dword_800A1BBC[3] = 2;
+    dword_800A1BBC[4] = 0;
+    dword_800A1BBC[5] = 0;
+    for (i = 0; i < 2; i++)
+    {
+        char* q = (char*)dword_800A3AA0;
+        for (j = 0; j < 3; j++)
+        {
+            sub_800A197C((short*)((char*)off + (int)q));
+            q += 0xF8;
+        }
+        off += 0x2E8;
+    }
+    sub_800300E0(0x8E, 1);
+    sub_8002BF74();
+    sub_800A0D64(2, 0x42);
+    sub_800A0D64(3, 0x41);
+    t->next_8 = sub_800A14AC;
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(combat, sub_800A13A0);
 
 // Matched
@@ -417,6 +540,22 @@ void sub_800A197C(short* p)
     *p = 4;
 }
 
+#if 0
+// Not matched: address arithmetic of the destination is reassociated by the compiler
+void sub_800A1988(void)
+{
+    int i;
+    char* src = data_8008EEF8;
+    byte_800A38DA = 0;
+    for (i = 0; i < 15; i++)
+    {
+        sub_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&((CombatBlkA_combat*)dword_800A1BC8)[byte_800A38DA]), (unsigned int*)src, 0xF8);
+        src += 0xF8;
+        byte_800A38DA++;
+    }
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(combat, sub_800A1988);
 
 // Matched
@@ -446,6 +585,21 @@ void sub_800A1AEC(int i)
     sub_800A1A3C((CombatBlkC_combat*)&dword_800A1BC8[i], 0xF);
 }
 
-INCLUDE_OVERLAY_ASM(combat, sub_800A1B2C);
+// Matched
+void sub_800A1B2C(int i, void* p)
+{
+    CombatReq2Combat r;
+    r.field_0 = 1;
+    r.field_4 = 1;
+    r.field_1C = dword_8007DCAC[i].a;
+    r.field_1E = dword_8007DCAC[i].b;
+    r.field_20 = 0x20;
+    r.field_22 = 0x40;
+    r.field_C = dword_8007DCBC[i].a;
+    r.field_E = dword_8007DCBC[i].b;
+    r.field_10 = 0x100;
+    r.field_12 = 1;
+    sub_80029A10(p, &r);
+}
 
 INCLUDE_OVERLAY_ASM(combat, dword_800A1BBC);
