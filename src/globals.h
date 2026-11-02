@@ -279,6 +279,10 @@ typedef struct
     int field_C;
     int field_10;
 } struct_20;
+typedef struct
+{
+    int m[3];
+} struct_int3;
 // 0x14 bytes copied without alignment
 typedef struct
 {

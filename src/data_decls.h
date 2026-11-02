@@ -22,5 +22,6 @@ extern char name[];
 extern char aAssertionFaile_3[];
 extern char aEffectC[];
 extern unsigned char dword_8007C2E4[];
+extern struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
 
 #endif

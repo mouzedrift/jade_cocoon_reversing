@@ -199,4 +199,36 @@ void sub_80019AF4(unsigned int* arg0, unsigned int* arg1)
 {
     sub_800403E8(arg0, arg1, 12);
 }
-INCLUDE_ASM(sub_80019B14);
+// Matched
+void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2)
+{
+    struct_int3 masks;
+    int k;
+    int i;
+    masks = dword_8007303C;
+    for (k = 0; k < 3; k++)
+    {
+        int set = 0;
+        int clr = 0;
+        if (a1[k] < 2)
+        {
+            clr = masks.m[k];
+        }
+        if (a2[k] == 0)
+        {
+            set = masks.m[k];
+        }
+        for (i = 0; i < 25; i++)
+        {
+            int bit = 1 << i;
+            if (clr & bit)
+            {
+                p[i * 4 + 3] &= ~2;
+            }
+            if (set & bit)
+            {
+                p[i * 4 + 3] |= 0x10;
+            }
+        }
+    }
+}
