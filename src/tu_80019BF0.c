@@ -1341,7 +1341,7 @@ void sub_80021DF0(int* p, int a1, int a2)
 }
 // Matched
 // p is volatile to keep the store before the load
-void sub_80021E24(volatile int* p)
+void sub_80021E24(volatile int* p, int h)
 {
     p[0] = 0;
     sub_8003FD18(p[1]);
@@ -1474,7 +1474,28 @@ int sub_8002348C(unsigned char* a0, int a1, int* a2, int a3)
     sub_80023514(a2, a1, a0[3], a3);
     return 0x24;
 }
-INCLUDE_ASM(sub_80023514);
+// Matched
+void sub_80023514(int* a0, int a1, int a2, int a3)
+{
+    unsigned char* s = (unsigned char*)a1;
+    int o = a3 * 0x24;
+    ((unsigned char*)(o + a0[1]))[0] = s[0];
+    ((unsigned char*)(o + a0[1]))[1] = s[1];
+    ((unsigned char*)(o + a0[1]))[2] = s[2];
+    ((unsigned char*)(o + a0[1]))[3] = a2;
+    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
+    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
+    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
+    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
+    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x16);
+    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x18);
+    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x1C);
+    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x1E);
+    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
+    *(unsigned short*)(o + a0[1] + 4) = *(unsigned short*)(s + 4);
+    *(unsigned short*)(o + a0[1] + 6) = *(unsigned short*)(s + 6);
+    *(unsigned short*)(o + a0[1] + 8) = *(unsigned short*)(s + 8);
+}
 // Matched
 int sub_80023624(unsigned char* a0, int a1, int* a2, int a3)
 {
@@ -1607,7 +1628,51 @@ void sub_80024BB0(int* a0)
     sub_8003FD18(p, p->field_4);
     *a0 = 0;
 }
-INCLUDE_ASM(sub_80024C48);
+// Matched
+void sub_80024C48(struct_112* p)
+{
+    int h;
+    sub_80025AB0(p);
+    sub_80025C38(p, 1);
+    h = ((int*)p->field_0)[1];
+    if (p->field_44 != 0)
+    {
+        sub_8003FD18(p->field_44, h);
+    }
+    if (p->field_4C != 0)
+    {
+        sub_8003FD18(p->field_4C, h);
+    }
+    if (p->field_50 != 0)
+    {
+        sub_80021784(&p->field_50, p->field_3C, h);
+    }
+    if (p->field_54 != 0)
+    {
+        sub_8002679C((struct_28**)&p->field_54, p->field_3E, h);
+    }
+    if (p->field_58 != 0)
+    {
+        sub_8003FD18(p->field_58, h);
+    }
+    if (p->field_60 != 0)
+    {
+        sub_80021E24(&p->field_5C, h);
+    }
+    if (p->field_64 != 0)
+    {
+        sub_8003FD18(p->field_64, h);
+    }
+    if (p->field_68 != 0)
+    {
+        sub_80021784(&p->field_68, p->field_42, h);
+    }
+    if (p->field_6C != 0)
+    {
+        sub_8003FD18(p->field_6C, h);
+    }
+    sub_800266CC(p);
+}
 // Matched
 int sub_80024D70(int a0, int a1)
 {
@@ -2087,7 +2152,35 @@ void sub_800263CC(int* p)
     tmp27 = *(q + 0);
     sub_80026A8C((char*)q[0x54 / 4] + p[4] * 28, *(p + 0xB), tmp27[1]);
 }
-INCLUDE_ASM(sub_80026410);
+// Matched
+void sub_80026410(int* a0)
+{
+    int* q = (int*)a0[12];
+    struct_112* p = (struct_112*)a0[5];
+    int n = q[0];
+    int h = ((int*)p->field_0)[1];
+    int* list = (int*)sub_8003FC8C((n + 1) * 4, h);
+    int i;
+    int id;
+    int src;
+    p->field_58 = (int)list;
+    list[0] = n;
+    for (i = 0; i < n; i++)
+    {
+        id = q[i * 2 + 1];
+        src = (int)q + q[i * 2 + 2];
+        if (((unsigned char*)p->field_44)[id] == 0)
+        {
+            ((int*)p->field_58)[i + 1] = id;
+            ((unsigned char*)p->field_44)[id] = 1;
+            sub_80026A8C((char*)p->field_54 + id * 28, src, h);
+        }
+        else
+        {
+            ((int*)p->field_58)[i + 1] = -1;
+        }
+    }
+}
 #if 0
 // Not matched: a0 and q get swapped callee-saved registers (s1/s2)
 void sub_8002651C(int* a0)

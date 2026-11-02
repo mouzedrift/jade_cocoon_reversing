@@ -385,6 +385,7 @@ typedef struct
 } struct_112_list;
 int sub_80026630(struct_112_list* p, unsigned int id);
 void sub_800266CC(struct_112* p);
+void sub_80024C48(struct_112* p);
 
 extern int dword_8007BD30[];
 extern unsigned short dword_8007CAD8[0xe];
