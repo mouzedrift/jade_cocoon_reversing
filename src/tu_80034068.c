@@ -24,31 +24,33 @@ INCLUDE_DATA(dword_800747E8);
 INCLUDE_DATA(dword_80074800);
 
 #if 0
-// Not matched: register allocation of r/e/idx (a0/a2/a1)
-int sub_80034068(short* a)
+int sub_80034068(short* p)
 {
-    int* r = (int*)sub_80014390(((unsigned char*)a)[2]);
-    if (dword_8007C438[a[0]].field_0 & 0x40)
+    int* q;
+    int idx;
+    struct_12_b* e;
+    q = (int*)sub_80014390(((unsigned char*)p)[2]);
+    idx = p[0];
+    e = &dword_8007C438[idx];
+    if (e->field_0 & 0x40)
     {
-        switch (dword_8007C438[a[0]].field_7)
+        switch (e->field_7)
         {
         case 0:
-            if (((short*)r)[4] != ((short*)r)[5])
+            if (((short*)q)[4] != ((short*)q)[5])
             {
                 return 0;
             }
             return 3;
         case 1:
-            if (a[0] == 0x10)
+            if (idx == 0x10)
             {
                 return 0;
             }
-            if ((r[0] & 0x7FB) == 0)
+            if (!(q[0] & 0x7FB))
             {
                 return 3;
             }
-            break;
-        default:
             return 0;
         }
     }

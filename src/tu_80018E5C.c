@@ -125,7 +125,7 @@ INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
 
 #if 0
-// Not matched
+// Not matched (14 words): basic block order
 int sub_80018E5C(char* a0, unsigned int a1)
 {
     struct_4s* t = (struct_4s*)(a0 + 0x108);
@@ -143,12 +143,21 @@ int sub_80018E5C(char* a0, unsigned int a1)
     }
     return v;
 }
+
 #endif
 INCLUDE_ASM(sub_80018E5C);
 INCLUDE_ASM(sub_80018EBC);
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
-INCLUDE_ASM(sub_800199A0);
+typedef struct
+{
+    char b[20];
+} bytes20;
+// Matched
+void sub_800199A0(char* p)
+{
+    *(bytes20*)(p + 0x6C) = *(bytes20*)sub_80019C28(*(unsigned int*)(p + 0x5C));
+}
 // Matched
 void sub_80019A20(char* a0)
 {
@@ -162,12 +171,25 @@ void sub_80019A20(char* a0)
         *(int*)(a0 + 0x80) = *sub_800B3260(idx - 0x39);
     }
 }
-#if 0
-void sub_80019A80(int arg0)
+extern unsigned char dword_8007C2E4[];
+// Matched
+int sub_80019A80(int a0)
 {
+    int i;
+    for (i = 0; i < 5; i++)
+    {
+        if (a0 < dword_8007C2E4[i])
+        {
+            break;
+        }
+    }
+    i--;
+    if (i == 5)
+    {
+        return 4;
+    }
+    return i;
 }
-#endif
-INCLUDE_ASM(sub_80019A80);
 // Matched
 int sub_80019AD0(char* p)
 {
@@ -179,4 +201,47 @@ void sub_80019AF4(unsigned int* arg0, unsigned int* arg1)
 {
     sub_800403E8(arg0, arg1, 12);
 }
+#if 0
+typedef struct
+{
+    unsigned int v[3];
+} struct_u3;
+extern unsigned int dword_8007303C[];
+// Not matched (5 words): the +6 field offset is folded into the pointer
+void sub_80019B14(unsigned char* base, unsigned short* a1, unsigned short* a2)
+{
+    struct_u3 local;
+    int j;
+    int k;
+    short* q;
+    unsigned int m1;
+    unsigned int m2;
+    local = *(struct_u3*)dword_8007303C;
+    for (j = 0; j < 3; j++)
+    {
+        m1 = m2 = 0;
+        if (a1[j] < 2)
+        {
+            m1 = local.v[j];
+        }
+        if (a2[j] == 0)
+        {
+            m2 = local.v[j];
+        }
+        q = (short*)base;
+        for (k = 0; k < 25; k++)
+        {
+            if (m1 & (1 << k))
+            {
+                q[3] &= ~2;
+            }
+            if (m2 & (1 << k))
+            {
+                q[3] |= 0x10;
+            }
+            q += 4;
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80019B14);

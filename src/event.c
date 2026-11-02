@@ -60,7 +60,6 @@ void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
     b.vy = l.y3;
     sub_80042870(&a, &b, rgb, ot);
 }
-extern char* dword_800960A8[];
 // Matched
 void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 {
@@ -205,28 +204,31 @@ void sub_800433FC(int* o)
     dword_8009610C = dword_80096108 + stru_80096110.field_6 * 32;
     dword_8008D450 = stru_80096110.field_6 * 1920 / 150;
 }
-extern int sub_8005384C(u_char mode, DslLOC* pos, u_char com, DslCB func, int count); /* DsPacket */
+extern int sub_8005384C(unsigned char a, void* b, unsigned char c, int d, int e);
 // Matched
-int sub_800434C4(int pos)
+int sub_800434C4(int a)
 {
-    DslLOC loc;
-    int mode = 0xC9;
-    int com = 0x1B;
+    unsigned char loc[4];
     int r;
-    DsIntToPos(pos, &loc);
-    while ((r = sub_8005384C(mode, &loc, com, 0, -1)) == 0)
+    int c = 0xC9;
+    int d = 0x1B;
+    DsIntToPos(a, loc);
+    do
     {
-    }
+        r = sub_8005384C(c, loc, d, 0, -1);
+    } while (r == 0);
     return r;
 }
 // Matched
 int sub_80043524(void)
 {
+    int* p;
     if ((int)dword_80096118 >= 0)
     {
         return 0;
     }
-    dword_8008B560[0x24 / 4][0] |= 1;
+    p = dword_8008B560[0x24 / 4];
+    *p |= 1;
     return 1;
 }
 // Matched

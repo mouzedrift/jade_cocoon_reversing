@@ -17,9 +17,6 @@
 #include "data_decls.h"
 
 extern int dword_80086568;
-typedef struct { struct_node_C* node; int pad[6]; int field_1C; } CdCtxSub;
-typedef struct { int pad[9]; CdCtxSub* field_24; } CdCtx;
-extern CdCtx* dword_8008B544;
 extern void sub_8003BF18(struct_node_C* n);
 
 extern void sub_80070E30(int a, int* b);
@@ -68,19 +65,20 @@ int sub_8003B56C(int x, int y)
     return d;
 }
 #if 0
-// Not matched: s1/s2 register assignment swapped
+// Not matched (8 words): s1/s2 register assignment swapped
 int sub_8003B5D4(int* v, short* out)
 {
     int len = sub_8003B918(((int (*)(int*))sub_8003B8DC)(v));
-    short a;
     short b;
+    int a;
     b = ratan2(v[0], v[2]);
     out[1] = b;
-    a = ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    a = (short)ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
     out[0] = -a;
     out[2] = 0;
     return len;
 }
+
 #endif
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
@@ -124,39 +122,49 @@ void sub_8003B684(int* v)
     }
 }
 #if 0
-// Not matched: squares land in different regs (a0/v0/a3 rotated)
-int sub_8003B740(int* a, int* b, unsigned int* r)
+// Not matched (33 words): register assignment of the abs() temporaries
+int sub_8003B740(int* a, int* b, unsigned int* c)
 {
-    unsigned int d = -1;
-    unsigned int lim = *r;
-    int res;
-    unsigned int dx;
-    unsigned int dy;
-    unsigned int dz;
-    int tx;
-    int ty;
-    int tz;
-    tx = a[0] - b[0];
-    dx = (tx < 0) ? -tx : tx;
-    res = 0;
-    if (dx <= lim)
+    int sum = -1;
+    int ok = 0;
+    unsigned int r = *c;
+    int t;
+    int dx;
+    int dy;
+    int dz;
+    t = a[0] - b[0];
+    dx = t;
+    if (t < 0)
     {
-        ty = a[1] - b[1];
-        dy = (ty < 0) ? -ty : ty;
-        if (dy <= lim)
+        dx = -dx;
+    }
+    if (r >= (unsigned int)dx)
+    {
+        t = a[1] - b[1];
+        dy = t;
+        if (t < 0)
         {
-            tz = a[2] - b[2];
-            dz = (tz < 0) ? -tz : tz;
-            if (dz <= lim)
+            dy = -dy;
+        }
+        if (r >= (unsigned int)dy)
+        {
+            t = a[2] - b[2];
+            dz = t;
+            if (t < 0)
             {
-                d = dx * dx + dy * dy + dz * dz;
-                res = d <= lim * lim;
+                dz = -dz;
+            }
+            if (r >= (unsigned int)dz)
+            {
+                sum = dx * dx + dy * dy + dz * dz;
+                ok = !(r * r < (unsigned int)sum);
             }
         }
     }
-    *r = d;
-    return res;
+    *c = sum;
+    return ok;
 }
+
 #endif
 INCLUDE_ASM(sub_8003B740);
 // Matched
@@ -175,10 +183,10 @@ int sub_8003B860(int* a, int* b)
     return dx * dx + dz * dz;
 }
 // Matched
-int sub_8003B898(int x1, int y1, int x2, int y2)
+int sub_8003B898(int x0, int y0, int x1, int y1)
 {
-    int dx = x2 - x1;
-    int dy = y2 - y1;
+    int dx = x1 - x0;
+    int dy = y1 - y0;
     return dx * dx + dy * dy;
 }
 // Matched
@@ -191,6 +199,7 @@ int sub_8003B8DC(int* p, int a1)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
+// Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Matched
 unsigned int sub_8003B918(unsigned int n)
@@ -455,7 +464,7 @@ struct_node_C* sub_8003BED4(int key)
     return 0;
 }
 #if 0
-// Not matched: load of list[0] scheduled before the field_10 store
+// Not matched (6 words): load of list[0] scheduled before the field_10 store
 void sub_8003BF18(struct_node_C* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
@@ -479,6 +488,7 @@ void sub_8003BF18(struct_node_C* n)
     n->field_10 = 0x10000;
     list[0]--;
 }
+
 #endif
 INCLUDE_ASM(sub_8003BF18);
 // Matched
@@ -542,17 +552,17 @@ int sub_8003C060(int key)
     }
     return 2;
 }
+extern int** dword_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
-    CdCtxSub* p = dword_8008B544->field_24;
-    struct_node_C* n;
+    int* p = dword_8008B544[0x24 / 4];
     if (dword_80086568 != a0)
     {
         if (a0 == 1)
         {
-            n = p->node;
-            if (n == 0 || (p->field_1C == 8 && (n->field_C & 0x1000)))
+            int* q = (int*)p[0];
+            if (q == 0 || (p[0x1C / 4] == 8 && (q[0xC / 4] & 0x1000)))
             {
                 dword_80086568 = a0;
             }

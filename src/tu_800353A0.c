@@ -102,24 +102,28 @@ void sub_80035900(struct_obj_35900* o)
         sub_80040298(pOT_8008D454 + 1, &o->prim, 10);
     }
 }
-extern void sub_8003E91C(int mode, void* str, void* pos, int c);
+extern void sub_8003E91C(int mode, void* str, void* pos, int z);
 extern int sub_8003E4C8(void* str);
+
 // Matched
-void sub_800359F8(char* o)
+void sub_800359F8(struct_obj_A* p)
 {
-    RECT pos;
-    RECT r;
-    if (!(((struct_obj_A*)o)->flags_4 & 0x40000) && *(void**)(o + 0x74))
+    short pos[2];
+    short r[4];
+    if (!(p->flags_4 & 0x40000))
     {
-        pos.x = *(unsigned short*)(o + 0x6E) + 7;
-        pos.y = *(unsigned short*)(o + 0x70) + 4;
-        sub_8003E91C(2, *(void**)(o + 0x74), &pos, 0);
-        r.x = *(unsigned short*)(o + 0x6E);
-        r.y = *(unsigned short*)(o + 0x70);
-        r.w = sub_8003E4C8(*(void**)(o + 0x74)) + 0x11;
-        r.h = 0x12;
-        sub_80035898((struct_obj_A*)o, (int)&r, 2);
-        sub_800358CC((struct_obj_A*)o, (int)&r, 0);
+        if (*(int*)((char*)p + 0x74) != 0)
+        {
+            pos[0] = *(unsigned short*)((char*)p + 0x6E) + 7;
+            pos[1] = *(unsigned short*)((char*)p + 0x70) + 4;
+            sub_8003E91C(2, *(void**)((char*)p + 0x74), pos, 0);
+            r[0] = *(unsigned short*)((char*)p + 0x6E);
+            r[1] = *(unsigned short*)((char*)p + 0x70);
+            r[2] = sub_8003E4C8(*(void**)((char*)p + 0x74)) + 0x11;
+            r[3] = 0x12;
+            sub_80035898(p, (int)r, 2);
+            sub_800358CC(p, (int)r, 0);
+        }
     }
 }
 extern EventNode* dword_8008D640;
