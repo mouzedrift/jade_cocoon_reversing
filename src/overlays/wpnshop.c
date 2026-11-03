@@ -57,7 +57,7 @@ extern char* dword_8008D454;
 extern int frameCount_8008D3FC;
 extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 /* funcs.h declares unsigned short; the callers here use the full register */
-#define GETINT_8001CE54(x) (((int (*)(int))sub_8001CE54)(x))
+#define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
 extern void sub_8002B004(void* p, int a, int b);
 extern void sub_8002BE10();
 extern void sub_8002A4E4(int a);
@@ -1049,7 +1049,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
     } u;
     WpnRect_wpnshop r60;
     int r;
-    sub_80033624(buf10, (int)levantStatus_8008BD38);
+    CalcEquippedStats_80033624(buf10, (int)levantStatus_8008BD38);
     r = sub_800BDD2C(sub_800BE00C(o, 0xA), o->f_10, o->f_1E);
     if (r != 0xFF)
     {
@@ -1152,11 +1152,11 @@ void sub_800BCFCC(WpnObj_wpnshop* o)
             break;
         case 13:
         case 15:
-            v = sub_8001D1F8(o->f_14, o->f_10);
+            v = GetEquipmentPrice_8001D1F8(o->f_14, o->f_10);
             break;
         case 12:
         case 14:
-            v = sub_8001D1F8(o->f_14, o->f_10) * 3 / 4;
+            v = GetEquipmentPrice_8001D1F8(o->f_14, o->f_10) * 3 / 4;
             break;
         }
         r.x = 0xBD;
@@ -1582,7 +1582,7 @@ int sub_800BDC40(int a, int b, int c)
 {
     if (sub_800AD184(a, c, b + 1) == 1)
     {
-        return sub_800AD0A4(sub_8001D1F8(a, b) * c) != 1;
+        return sub_800AD0A4(GetEquipmentPrice_8001D1F8(a, b) * c) != 1;
     }
     return 2;
 }
@@ -1592,7 +1592,7 @@ void sub_800BDCB4(int a, int b, int c)
 {
     int x;
     sub_800AD1E0(a, c, b + 1);
-    x = sub_8001D1F8(a, b);
+    x = GetEquipmentPrice_8001D1F8(a, b);
     sub_800AD058((x * 3 / 4) * c);
 }
 

@@ -171,7 +171,7 @@ int sub_80013228(int a0, int a1, int* p)
         q = (unsigned char*)sub_8001AD64(p[1]);
         break;
     case 4:
-        q = (unsigned char*)sub_8001CDF4(p[1]);
+        q = (unsigned char*)GetItemData_8001CDF4(p[1]);
         break;
     case 26:
         break;

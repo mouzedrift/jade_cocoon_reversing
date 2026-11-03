@@ -65,12 +65,12 @@ int sub_80013E30(void)
 // Matched
 void sub_80013E80(void* p, int arg)
 {
-    sub_80033624(p, sub_80014390(arg & 0xFF));
+    CalcEquippedStats_80033624(p, sub_80014390(arg & 0xFF));
 }
 // Matched
 void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)GetMinionStatus_800107A0(a2));
+    CalcEquippedStats_80033624(p, (int)GetMinionStatus_800107A0(a2));
 }
 int sub_80014200(unsigned char* p);
 // Matched

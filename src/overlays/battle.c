@@ -1587,7 +1587,7 @@ int sub_800BF784(int a)
     {
         return 0;
     }
-    sub_80033624(buf, p);
+    CalcEquippedStats_80033624(buf, p);
     return buf[4] + 10;
 }
 

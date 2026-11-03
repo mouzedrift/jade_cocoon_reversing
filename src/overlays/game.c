@@ -4328,7 +4328,7 @@ void sub_800ACAA4(int* a, int* b)
     b[8] = -1;
     b[9] = 0;
     sub_800AC380(s->b7E5 != 0xFF);
-    sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
+    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
     PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
@@ -4758,8 +4758,8 @@ int sub_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 1);
         if (old < 0x17)
             sub_800AD184(old, 1, 1);
-        sub_800AC3A4(*(short*)((char*)sub_8001CF84(a) + 2));
-        sub_8001D034(s->b7E5);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
+        GetArmorData_8001D034(s->b7E5);
         sub_800AC3B0(dword_8001D060(s->b7E5));
         return 1;
     case 1:
@@ -4777,8 +4777,8 @@ int sub_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 2);
         if (old < 0xF)
             sub_800AD184(old, 1, 2);
-        sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
-        sub_8001D034(a);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+        GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
         return 1;
     case 2:

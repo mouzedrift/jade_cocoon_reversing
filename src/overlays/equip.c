@@ -136,7 +136,7 @@ extern char name_800C5838[];
 extern char name_8008D434[];
 extern char name_8008D440[];
 extern int fn_8001D2D4(int a0, int a1);
-extern int sub_8001D128(int a0, int a1);
+extern int GetEquipmentName_8001D128(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
 extern void sub_8002A5A4(void* p);
 extern void sub_8002C6DC(int a0, short a1, short a2);
@@ -523,7 +523,7 @@ void sub_800C5314(EquipCtx_equip* c)
     int h;
     int mode;
     h = sub_80014390(0);
-    sub_80033624(buf10, h);
+    CalcEquippedStats_80033624(buf10, h);
     r40.x = 0xc2;
     r40.y = 0x31;
     sub_8002F7D0(&r40, 0xe);
@@ -606,7 +606,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
         if (v != 0xff)
         {
             a = fn_8001D2D4(v, sel);
-            v = sub_8001D128(v, sel);
+            v = GetEquipmentName_8001D128(v, sel);
             flag = sub_800AD2C8(i + q->b, sel + 1);
         }
         else

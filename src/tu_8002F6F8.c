@@ -70,7 +70,7 @@ void sub_8002F7D0(unsigned short* pos, short ot)
     unsigned short loc[2];
     unsigned char vals[0x18];
     short i;
-    sub_80033624(vals, (int)levantStatus_8008BD38);
+    CalcEquippedStats_80033624(vals, (int)levantStatus_8008BD38);
     for (i = 0; i < 5; i++)
     {
         loc[0] = pos[0] + 6;

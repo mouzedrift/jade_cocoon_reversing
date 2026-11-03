@@ -1369,9 +1369,9 @@ int sub_8001CD34(void)
     return 0;
 }
 // Matched
-int sub_8001CD3C(int idx)
+int GetPersonName_8001CD3C(int idx)
 {
-    return off_8007CB20[idx];
+    return personNames_8007CB20[idx];
 }
 // Matched
 int* sub_8001CD58(int idx)
@@ -1379,27 +1379,27 @@ int* sub_8001CD58(int idx)
     return &dword_8007CB4C[idx];
 }
 // Matched
-int sub_8001CD6C(void)
+int GetPersonIcon_8001CD6C(void)
 {
     return 0x36;
 }
 // Matched
-struct_12* sub_8001CD74(unsigned int idx)
+struct_12* GetAccessoryModifiers_8001CD74(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &stru_8007D848[idx];
+    return &accessoryModifiers_8007D848[idx];
 }
 // Matched
-struct_12* sub_8001CDA0(unsigned int idx)
+struct_12* GetArmorModifiers_8001CDA0(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &stru_8007D598[idx];
+    return &armorModifiers_8007D598[idx];
 }
 // Matched
 unsigned char sub_8001CDCC(unsigned int idx)
@@ -1411,22 +1411,22 @@ unsigned char sub_8001CDCC(unsigned int idx)
     return 0x22;
 }
 // Matched
-struct_12* sub_8001CDF4(unsigned int idx)
+struct_12* GetItemData_8001CDF4(unsigned int idx)
 {
     if (idx < 0x2B)
     {
-        return &stru_8007CCA8[idx];
+        return &itemData_8007CCA8[idx];
     }
     return 0;
 }
 // Matched
-int sub_8001CE20(unsigned int idx)
+int GetItemName_8001CE20(unsigned int idx)
 {
     if (idx >= 0x2B)
     {
         return 0;
     }
-    return dword_8007CB78[idx];
+    return itemNames_8007CB78[idx];
 }
 // Matched
 int sub_8001CE4C(void)
@@ -1434,19 +1434,19 @@ int sub_8001CE4C(void)
     return 0;
 }
 // Matched
-unsigned short sub_8001CE54(int idx)
+unsigned short GetItemPrice_8001CE54(int idx)
 {
-    return word_8007CED8[idx];
+    return itemPrices_8007CED8[idx];
 }
 // Matched
-unsigned short sub_8001CE70(int idx)
+unsigned short GetItemFlags_8001CE70(int idx)
 {
-    return aKkkiqqqqqssssZ[idx];
+    return itemFlags_8007CC50[idx];
 }
 // Matched
 int sub_8001CE8C(int idx)
 {
-    unsigned short v = aKkkiqqqqqssssZ[idx];
+    unsigned short v = itemFlags_8007CC50[idx];
     int r = (v >> 5) & 2;
     if (v & 0x80)
     {
@@ -1461,7 +1461,7 @@ int sub_8001CE8C(int idx)
 // Matched
 unsigned char sub_8001CED0(int idx)
 {
-    return *(unsigned char*)&aKkkiqqqqqssssZ[idx];
+    return *(unsigned char*)&itemFlags_8007CC50[idx];
 }
 // Matched
 int sub_8001CEEC(void)
@@ -1469,76 +1469,76 @@ int sub_8001CEEC(void)
     return 1;
 }
 // Matched
-int* sub_8001CEF4(unsigned int idx)
+int* GetWeaponStatBonus_8001CEF4(unsigned int idx)
 {
     if (idx >= 0x17)
     {
         return 0;
     }
-    return &stru_8007D04C[idx].field_4;
+    return &weaponData_8007D04C[idx].field_4;
 }
 // Matched
-int sub_8001CF20(unsigned int idx)
+int GetWeaponName_8001CF20(unsigned int idx)
 {
     if (idx >= 0x17)
     {
         return 0;
     }
-    return dword_8007CFF0[idx];
+    return weaponNames_8007CFF0[idx];
 }
 // Matched
-int sub_8001CF4C(unsigned int idx)
+int GetWeaponPrice_8001CF4C(unsigned int idx)
 {
     if (idx >= 0x17)
     {
         return 0;
     }
-    return dword_8007D388[idx] * 10;
+    return weaponPrices_8007D388[idx] * 10;
 }
 // Matched
-struct_24* sub_8001CF84(unsigned int idx)
+struct_24* GetWeaponData_8001CF84(unsigned int idx)
 {
     if (idx >= 0x17)
     {
         return 0;
     }
-    return &stru_8007D04C[idx];
+    return &weaponData_8007D04C[idx];
 }
 // Matched
-int* sub_8001CFB0(unsigned int idx)
+int* GetArmorStatBonus_8001CFB0(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &stru_8007D420[idx].field_4;
+    return &armorData_8007D420[idx].field_4;
 }
 // Matched
-int sub_8001CFDC(unsigned int idx)
+int GetArmorName_8001CFDC(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return dword_8007D3E4[idx];
+    return armorNames_8007D3E4[idx];
 }
 // Matched
-int sub_8001D008(unsigned int idx)
+int GetArmorPrice_8001D008(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return word_8007D64C[idx];
+    return armorPrices_8007D64C[idx];
 }
 // Matched
-struct_24* sub_8001D034(unsigned int idx)
+struct_24* GetArmorData_8001D034(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &stru_8007D420[idx];
+    return &armorData_8007D420[idx];
 }
 // Matched
 unsigned char sub_8001D060(int idx)
@@ -1546,61 +1546,61 @@ unsigned char sub_8001D060(int idx)
     return byte_8007D588[idx];
 }
 // Matched
-int* sub_8001D078(unsigned int idx)
+int* GetAccessoryStatBonus_8001D078(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &stru_8007D6B0[idx].field_4;
+    return &accessoryData_8007D6B0[idx].field_4;
 }
 // Matched
-int sub_8001D0A4(unsigned int idx)
+int GetAccessoryName_8001D0A4(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return dword_8007D66C[idx];
+    return accessoryNames_8007D66C[idx];
 }
 // Matched
-int sub_8001D0D0(unsigned int idx)
+int GetAccessoryPrice_8001D0D0(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return word_8007D914[idx];
+    return accessoryPrices_8007D914[idx];
 }
 // Matched
-struct_24* sub_8001D0FC(unsigned int idx)
+struct_24* GetAccessoryData_8001D0FC(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &stru_8007D6B0[idx];
+    return &accessoryData_8007D6B0[idx];
 }
 // Matched
-int sub_8001D128(int a0, unsigned int a1)
+int GetEquipmentName_8001D128(int a0, unsigned int a1)
 {
     int r = 0;
     switch (a1)
     {
     case 0:
-        r = sub_8001CF20(a0);
+        r = GetWeaponName_8001CF20(a0);
         break;
     case 1:
-        r = sub_8001CFDC(a0);
+        r = GetArmorName_8001CFDC(a0);
         break;
     case 2:
-        r = sub_8001D0A4(a0);
+        r = GetAccessoryName_8001D0A4(a0);
         break;
     }
     return r;
 }
 // Matched
-short* sub_8001D190(a0, a1)
+short* GetEquipmentData_8001D190(a0, a1)
 unsigned int a0;
 unsigned int a1;
 {
@@ -1608,31 +1608,31 @@ unsigned int a1;
     switch (a1)
     {
     case 0:
-        r = (short*)sub_8001CF84(a0);
+        r = (short*)GetWeaponData_8001CF84(a0);
         break;
     case 1:
-        r = (short*)sub_8001D034(a0);
+        r = (short*)GetArmorData_8001D034(a0);
         break;
     case 2:
-        r = (short*)sub_8001D0FC(a0);
+        r = (short*)GetAccessoryData_8001D0FC(a0);
         break;
     }
     return r;
 }
 // Matched
-int sub_8001D1F8(int a0, unsigned int a1)
+int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
 {
     int r = 0;
     switch (a1)
     {
     case 0:
-        r = sub_8001CF4C(a0);
+        r = GetWeaponPrice_8001CF4C(a0);
         break;
     case 1:
-        r = sub_8001D008(a0);
+        r = GetArmorPrice_8001D008(a0);
         break;
     case 2:
-        r = sub_8001D0D0(a0);
+        r = GetAccessoryPrice_8001D0D0(a0);
         break;
     }
     return r;
@@ -1648,39 +1648,39 @@ struct_12* sub_8001D260(void)
     return 0;
 }
 // Matched
-int sub_8001D2AC(int idx)
+int GetItemIcon_8001D2AC(int idx)
 {
     if (idx < 0x2B)
     {
-        return byte_8007CEAC[idx];
+        return itemIcons_8007CEAC[idx];
     }
     return 0xFF;
 }
 // Matched
-int sub_8001D2D4(void)
+int GetEquipmentIcon_8001D2D4(void)
 {
-    short* p = sub_8001D190();
+    short* p = GetEquipmentData_8001D190();
     if (p != 0)
     {
-        return dword_8007D938[*p];
+        return equipmentIcons_8007D938[*p];
     }
     return 0x24;
 }
 // Matched
-int sub_8001D318(unsigned int idx)
+int GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
     {
         return 0;
     }
-    return off_8007CF30[idx];
+    return keyItemNames_8007CF30[idx];
 }
 // Matched
-int sub_8001D344(int idx)
+int GetKeyItemIcon_8001D344(int idx)
 {
     if (idx < 0x26)
     {
-        return byte_8007CFC8[idx];
+        return keyItemIcons_8007CFC8[idx];
     }
     return 0x24;
 }

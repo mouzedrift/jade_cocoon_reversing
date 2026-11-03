@@ -1,0 +1,78 @@
+# Identifier renames, applied by scripts/apply_renames.py as whole-word replacements across src/, include/,
+# symbol_addrs.txt, config/*.txt and overlays/*.sym. One `OldName NewName` per line.
+# Several old spellings of one address (off_/dword_/stru_ aliases) may map to the same new name.
+# Re-run the script after merging other branches: it is idempotent.
+
+# --- item / equipment / key item tables (names are Shift-JIS fullwidth strings) ---
+off_8007CB78 itemNames_8007CB78
+dword_8007CB78 itemNames_8007CB78
+sub_8001CE20 GetItemName_8001CE20
+dword_8007CED8 itemPrices_8007CED8
+word_8007CED8 itemPrices_8007CED8
+sub_8001CE54 GetItemPrice_8001CE54
+aKkkiqqqqqssssZ itemFlags_8007CC50
+sub_8001CE70 GetItemFlags_8001CE70
+dword_8007CCA8 itemData_8007CCA8
+stru_8007CCA8 itemData_8007CCA8
+sub_8001CDF4 GetItemData_8001CDF4
+byte_8007CEAC itemIcons_8007CEAC
+a44448223333555 itemIcons_8007CEAC
+sub_8001D2AC GetItemIcon_8001D2AC
+off_8007CF30 keyItemNames_8007CF30
+sub_8001D318 GetKeyItemName_8001D318
+dword_8007CFC8 keyItemIcons_8007CFC8
+byte_8007CFC8 keyItemIcons_8007CFC8
+sub_8001D344 GetKeyItemIcon_8001D344
+off_8007CB20 personNames_8007CB20
+sub_8001CD3C GetPersonName_8001CD3C
+off_8007CB08 nameGetters_8007CB08
+
+off_8007CFF0 weaponNames_8007CFF0
+dword_8007CFF0 weaponNames_8007CFF0
+sub_8001CF20 GetWeaponName_8001CF20
+dword_8007D388 weaponPrices_8007D388
+sub_8001CF4C GetWeaponPrice_8001CF4C
+dword_8007D04C weaponData_8007D04C
+stru_8007D04C weaponData_8007D04C
+sub_8001CF84 GetWeaponData_8001CF84
+sub_8001CEF4 GetWeaponStatBonus_8001CEF4
+
+off_8007D3E4 armorNames_8007D3E4
+dword_8007D3E4 armorNames_8007D3E4
+sub_8001CFDC GetArmorName_8001CFDC
+dword_8007D64C armorPrices_8007D64C
+word_8007D64C armorPrices_8007D64C
+sub_8001D008 GetArmorPrice_8001D008
+dword_8007D420 armorData_8007D420
+stru_8007D420 armorData_8007D420
+sub_8001D034 GetArmorData_8001D034
+sub_8001CFB0 GetArmorStatBonus_8001CFB0
+dword_8007D598 armorModifiers_8007D598
+stru_8007D598 armorModifiers_8007D598
+sub_8001CDA0 GetArmorModifiers_8001CDA0
+
+off_8007D66C accessoryNames_8007D66C
+dword_8007D66C accessoryNames_8007D66C
+sub_8001D0A4 GetAccessoryName_8001D0A4
+dword_8007D914 accessoryPrices_8007D914
+word_8007D914 accessoryPrices_8007D914
+sub_8001D0D0 GetAccessoryPrice_8001D0D0
+dword_8007D6B0 accessoryData_8007D6B0
+stru_8007D6B0 accessoryData_8007D6B0
+sub_8001D0FC GetAccessoryData_8001D0FC
+sub_8001D078 GetAccessoryStatBonus_8001D078
+dword_8007D848 accessoryModifiers_8007D848
+stru_8007D848 accessoryModifiers_8007D848
+sub_8001CD74 GetAccessoryModifiers_8001CD74
+
+# equipment by category (0 weapon, 1 armor, 2 accessory)
+sub_8001D128 GetEquipmentName_8001D128
+sub_8001D190 GetEquipmentData_8001D190
+sub_8001D1F8 GetEquipmentPrice_8001D1F8
+dword_8007D938 equipmentIcons_8007D938
+sub_8001D2D4 GetEquipmentIcon_8001D2D4
+sub_80033624 CalcEquippedStats_80033624
+sub_80033754 ApplyEquipmentModifiers_80033754
+
+off_8007A170 minionSpeciesNames_8007A170
+sub_8001CD6C GetPersonIcon_8001CD6C

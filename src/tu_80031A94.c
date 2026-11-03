@@ -408,21 +408,21 @@ int sub_8003356C(unsigned char* p, unsigned int idx)
     }
     return r;
 }
-extern void sub_80033754(unsigned char* a, unsigned char* b);
+extern void ApplyEquipmentModifiers_80033754(unsigned char* a, unsigned char* b);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
 {
     int r;
     MemCopy_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
-    r = sub_80033624(m->field_2C, (int)m);
+    r = CalcEquippedStats_80033624(m->field_2C, (int)m);
     if (r)
     {
         m->field_44 = r;
     }
-    sub_80033754((char*)m + 0x20, m);
+    ApplyEquipmentModifiers_80033754((char*)m + 0x20, m);
 }
 // Matched
-int sub_80033624(void* arg0, int arg1)
+int CalcEquippedStats_80033624(void* arg0, int arg1)
 {
     unsigned char* stats = (unsigned char*)arg1 + 0x2C;
     unsigned char* ids = (unsigned char*)arg1 + 0x1C;
@@ -431,9 +431,9 @@ int sub_80033624(void* arg0, int arg1)
     int j;
     int v;
     int max;
-    tbl[0] = sub_8001CEF4(ids[0]);
-    tbl[1] = sub_8001CFB0(ids[1]);
-    tbl[2] = sub_8001D078(ids[2]);
+    tbl[0] = GetWeaponStatBonus_8001CEF4(ids[0]);
+    tbl[1] = GetArmorStatBonus_8001CFB0(ids[1]);
+    tbl[2] = GetAccessoryStatBonus_8001D078(ids[2]);
     tbl[3] = 0;
     for (i = 0; i < 6; i++)
     {
@@ -461,15 +461,15 @@ int sub_80033624(void* arg0, int arg1)
     return max;
 }
 // Matched
-void sub_80033754(unsigned char* dst, unsigned char* src)
+void ApplyEquipmentModifiers_80033754(unsigned char* dst, unsigned char* src)
 {
     unsigned char* tbl[2];
     int i;
     int j;
     MemCopy_800403E8((unsigned int*)dst, (unsigned int*)(src + 0x20), 12);
     src += 0x1C;
-    tbl[0] = (unsigned char*)sub_8001CDA0(src[1]);
-    tbl[1] = (unsigned char*)sub_8001CD74(src[2]);
+    tbl[0] = (unsigned char*)GetArmorModifiers_8001CDA0(src[1]);
+    tbl[1] = (unsigned char*)GetAccessoryModifiers_8001CD74(src[2]);
     for (j = 0; j < 2; j++)
     {
         if (tbl[j])
@@ -657,7 +657,7 @@ typedef struct
     Minion* field_C_minion;
 } struct_minion_ref;
 extern int sub_80034140(void);
-extern int sub_8001CE70(int a);
+extern int GetItemFlags_8001CE70(int a);
 // Matched
 int sub_80033AFC(struct_minion_ref* p)
 {
@@ -674,20 +674,20 @@ int sub_80033AFC(struct_minion_ref* p)
         }
         return 3;
     }
-    if (!(sub_8001CE70(a) & 1) && !(sub_8001CE70(a) & 2))
+    if (!(GetItemFlags_8001CE70(a) & 1) && !(GetItemFlags_8001CE70(a) & 2))
     {
         return 2;
     }
     if (p->field_A == 0)
     {
-        if (!(sub_8001CE70(a) & 2))
+        if (!(GetItemFlags_8001CE70(a) & 2))
         {
             return 4;
         }
     }
     else if (p->field_A == 1)
     {
-        if (!(sub_8001CE70(a) & 1))
+        if (!(GetItemFlags_8001CE70(a) & 1))
         {
             return 3;
         }
@@ -789,19 +789,19 @@ int sub_80033DF4(ItemUse_DF4* p)
 {
     Target_DF4* t;
     int full = 0;
-    if (sub_8001CE70(p->item) & 0x80)
+    if (GetItemFlags_8001CE70(p->item) & 0x80)
     {
         return 0;
     }
-    if (sub_8001CE70(p->item) & 4)
+    if (GetItemFlags_8001CE70(p->item) & 4)
     {
         return 0;
     }
-    if (!(sub_8001CE70(p->item) & 8) && p->target == 0)
+    if (!(GetItemFlags_8001CE70(p->item) & 8) && p->target == 0)
     {
         return 2;
     }
-    if (!(sub_8001CE70(p->item) & 0x10) && (p->target == 1 || p->target == 2 || p->target == 3))
+    if (!(GetItemFlags_8001CE70(p->item) & 0x10) && (p->target == 1 || p->target == 2 || p->target == 3))
     {
         return 1;
     }

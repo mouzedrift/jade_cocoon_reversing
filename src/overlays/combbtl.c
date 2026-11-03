@@ -476,7 +476,7 @@ int sub_800A5B70(int a)
     r = sub_80014390((a + 8) & 0xFF);
     if (r)
     {
-        sub_80033624(buf, r);
+        CalcEquippedStats_80033624(buf, r);
         v = buf[4] + 0xA;
     }
     else

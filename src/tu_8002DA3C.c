@@ -130,7 +130,7 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
         p[0x1E] = a1;
         break;
     }
-    sub_80033624(a3, p);
+    CalcEquippedStats_80033624(a3, p);
 }
 INCLUDE_ASM(sub_8002E334);
 extern unsigned char dword_80082EA4[];
