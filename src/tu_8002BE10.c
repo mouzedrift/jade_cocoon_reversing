@@ -125,9 +125,111 @@ void sub_8002C06C(unsigned short* pos, int idx, int ot)
     AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
     AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
 }
-INCLUDE_ASM(sub_8002C100);
-INCLUDE_ASM(sub_8002C290);
-INCLUDE_ASM(sub_8002C414);
+// Matched
+void sub_8002C100(unsigned short* p, int n, int ot)
+{
+    short digits[7];
+    unsigned short pos[2];
+    short i;
+    short j;
+    for (i = 0; i < 7; i++)
+    {
+        digits[i] = -1;
+    }
+    if (n > 9999999)
+    {
+        n = 9999999;
+    }
+    i = 0;
+    do
+    {
+        digits[i] = n % 10 + 0x84;
+        n /= 10;
+        i++;
+    } while (n);
+    pos[1] = p[1];
+    for (j = 0; j < i; j++)
+    {
+        if (digits[j] != -1)
+        {
+            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
+            sub_8002C06C(pos, digits[j], ot);
+        }
+    }
+}
+// Matched
+void sub_8002C290(unsigned short* p, int n, int ot)
+{
+    short digits[3];
+    unsigned short pos[2];
+    short i;
+    short j;
+    for (i = 0; i < 3; i++)
+    {
+        digits[i] = -1;
+    }
+    if (n > 999)
+    {
+        n = 999;
+    }
+    i = 0;
+    do
+    {
+        digits[i] = n % 10 + 0xCF;
+        n /= 10;
+        i++;
+    } while (n);
+    pos[1] = p[1];
+    for (j = 0; j < i; j++)
+    {
+        if (digits[j] != -1)
+        {
+            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
+            sub_8002C06C(pos, digits[j], ot);
+        }
+    }
+}
+// Matched
+void sub_8002C414(unsigned short* p, int n, int ot)
+{
+    short digits[9];
+    unsigned short pos[2];
+    short i;
+    short j;
+    for (i = 0; i < 9; i++)
+    {
+        digits[i] = -1;
+    }
+    if (n > 999999999)
+    {
+        n = 999999999;
+    }
+    i = 0;
+    do
+    {
+        digits[i] = n % 10 + 0xCF;
+        n /= 10;
+        i++;
+    } while (n);
+    pos[1] = p[1];
+    for (j = 0; j < i; j++)
+    {
+        if (digits[j] != -1)
+        {
+            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
+            sub_8002C06C(pos, digits[j], ot);
+        }
+    }
+}
+// Matched
+int sub_8002C5A4(int n)
+{
+    do
+    {
+        n /= 10;
+    } while (n);
+    return 0;
+}
 extern unsigned char dword_800826F8[][4];
 // Matched
 void sub_8002C5D0(int a0)

@@ -17,6 +17,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(dword_8007415C);
+
 
 extern struct_obj_B dword_80091CC8; // really a SpuReverbAttr
 extern void sub_8002A218(void);
@@ -168,5 +170,43 @@ void sub_8002A4E4(short a0)
 
 #endif
 INCLUDE_ASM(sub_8002A4E4);
-INCLUDE_ASM(sub_8002A5A4);
+typedef struct
+{
+    unsigned short flags;
+    char pad_2[0xE];
+    char field_10[0xC];
+} struct_A5A4_item;
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+    int field_C;
+    struct_A5A4_item** field_10;
+    int field_14;
+} struct_A5A4;
+extern void sub_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void AddClipTexWindowPrim_80033308(void* a);
+extern void sub_8002A710(void* a, int b);
+extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
+// Matched
+void sub_8002A5A4(struct_A5A4* p)
+{
+    RECT r;
+    int i;
+    int j;
+    for (i = 0; p->field_10[i]; i++)
+    {
+        for (j = 0; !(p->field_10[i][j].flags & 1); j++)
+        {
+            sub_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
+            AddClipTexWindowPrim_80033308(pOT_8008D454 + p->field_14);
+            sub_8002A710(&p->field_10[i][j], p->field_14);
+            AddTexWindowPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
+            sub_8002AAF0(p, i, j, &r);
+        }
+    }
+    sub_8003F900(2, 0);
+    sub_8003F900(1, 0);
+}
 INCLUDE_ASM(sub_8002A710);
