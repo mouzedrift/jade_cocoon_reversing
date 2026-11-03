@@ -64,7 +64,7 @@ INCLUDE_ASM(sub_80046248);
 extern short asc_80084350[];
 #define SIN_TABLE (asc_80084350 + 0xF8)
 // Matched
-void sub_8004668C(SVECTOR* r, MATRIX* m)
+void RotMatrixZXY_8004668C(SVECTOR* r, MATRIX* m)
 {
     int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
     int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
@@ -87,7 +87,7 @@ void sub_8004668C(SVECTOR* r, MATRIX* m)
     m->m[1][2] = ((sz * sy) >> 12) - ((b * cy) >> 12);
 }
 // Matched
-void sub_80046874(SVECTOR* r, MATRIX* m)
+void RotMatrixYXZ_80046874(SVECTOR* r, MATRIX* m)
 {
     int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
     int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];

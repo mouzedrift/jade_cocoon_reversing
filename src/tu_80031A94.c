@@ -230,7 +230,7 @@ void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigne
 }
 extern DRAWENV drawEnv_8008D698[2];
 // Matched
-void sub_8003326C(unsigned short* a, void* b)
+void AddTexWindowPrim_8003326C(unsigned short* a, void* b)
 {
     DR_TWIN twin;
     RECT rect;
@@ -244,7 +244,7 @@ void sub_8003326C(unsigned short* a, void* b)
     AddPrimCopy_80040298(b, &twin, 3);
 }
 // Matched
-void sub_80033308(void* p)
+void AddClipTexWindowPrim_80033308(void* p)
 {
     DR_TWIN twin;
     RECT rect;

@@ -1006,7 +1006,7 @@ void sub_800BEFAC(MenuCtx* a, short b)
                 r17 = -1;
                 r16 = 0;
             }
-            sub_80033308(&pOT_8008D454[b]);
+            AddClipTexWindowPrim_80033308(&pOT_8008D454[b]);
             loc.a = v;
             loc.b = (unsigned short)a->f8 - 1;
             loc.c = r17;
@@ -1015,7 +1015,7 @@ void sub_800BEFAC(MenuCtx* a, short b)
             loc.f = j;
             loc.g = 1;
             sub_8002F8E4(r18, &loc);
-            sub_80033308(&pOT_8008D454[b]);
+            AddClipTexWindowPrim_80033308(&pOT_8008D454[b]);
             j++;
         } while ((short)j < a->f8 - 1);
     }
@@ -1278,7 +1278,7 @@ void sub_800BFE18(MenuCtx* c)
     }
 }
 
-extern void sub_80033308();
+extern void AddClipTexWindowPrim_80033308();
 extern void sub_800C07F0();
 extern int name_8008D678;
 // near miss: scheduling of the global load vs. prologue
@@ -1287,9 +1287,9 @@ void sub_800BFEC0(MenuTask* t, int a)
 {
     if (name_8008D678 < 0)
     {
-        sub_80033308((char*)pOT_8008D454 + 0x38);
+        AddClipTexWindowPrim_80033308((char*)pOT_8008D454 + 0x38);
         sub_800C07F0(a);
-        sub_80033308((char*)pOT_8008D454 + 0x38);
+        AddClipTexWindowPrim_80033308((char*)pOT_8008D454 + 0x38);
     }
     else
     {

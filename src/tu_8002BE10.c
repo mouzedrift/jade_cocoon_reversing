@@ -47,15 +47,15 @@ typedef struct
     short field_A;
 } struct_BEC8;
 extern void sub_8004196C(int a, int b, int c, int d, int e);
-extern void sub_8003326C(int a, void* b);
-extern void sub_80033308(void* a);
+extern void AddTexWindowPrim_8003326C(int a, void* b);
+extern void AddClipTexWindowPrim_80033308(void* a);
 extern void sub_8002A384(struct_BEC8* p);
 // Matched
 void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
 {
     struct_BEC8 s;
     sub_8004196C(a0, a1, a2, 8, 0);
-    sub_8003326C(a0, &pOT_8008D454[a3]);
+    AddTexWindowPrim_8003326C(a0, &pOT_8008D454[a3]);
     if (a4)
     {
         s.field_8 = 1;
@@ -68,7 +68,7 @@ void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
     s.field_4 = a5;
     s.field_A = a3;
     sub_8002A384(&s);
-    sub_80033308(&pOT_8008D454[a3]);
+    AddClipTexWindowPrim_80033308(&pOT_8008D454[a3]);
 }
 extern void QueueFileRequest_8003BC84(int* a);
 // Matched
