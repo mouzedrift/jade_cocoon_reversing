@@ -865,17 +865,7 @@ extern int dword_80091C94;
 extern char byte_800A08B4[];
 typedef struct { char c[8]; } Blk8_;
 extern Blk8_ dword_800B06A8;
-// Levant's 0x48-byte status block (saveData_8008B570 + 0x7C8; SaveData only has its first 0x10 bytes)
-typedef struct
-{
-    int status_0; // EntityStatus
-    char pad_4[0x18];
-    unsigned char f1C;
-    unsigned char f1D;
-    unsigned char f1E;
-    char pad_1F[0x29];
-} Blk72_;
-extern Blk72_ dword_800A2730;
+extern UnitStatus dword_800A2730; // Levant's initial status block
 
 extern int playerYan_8008B594;
 extern int dword_8008B554;
@@ -902,7 +892,7 @@ typedef struct TitleSave
     Blk12_ levantPos_7A8;
     Blk8_ levantRot_7B4;
     char pad_7BC[0xC];
-    Blk72_ levantStatus_7C8;
+    UnitStatus levantStatus_7C8;
     int f810;
     int minionBits_814[7];
     char pad_830[8];
@@ -973,9 +963,10 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 void sub_800A20F4(void)
 {
     SDECL;
-    s->levantStatus_7C8.f1C = 0;
-    s->levantStatus_7C8.f1D = 0xFF;
-    s->levantStatus_7C8.f1E = 0xFF;
+    s->levantStatus_7C8.field_1C[0] = 0;
+    s->levantStatus_7C8.field_1C[1] = 0xFF;
+    s->levantStatus_7C8.field_1C[2] = 0xFF;
+
 }
 
 // Matched
