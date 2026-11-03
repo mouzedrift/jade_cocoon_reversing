@@ -3804,7 +3804,49 @@ void sub_800C3D34(EventEntry* t, BatFade_a* u)
     sub_8004D1EC(m[1], (int)pOT_8008D690, (int)u->f44, (int)u->f80, (int)stru_8008D534, ((0x1000 - u->f30) << 16) | 0xB0, 0);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C3DF8);
+typedef struct BatOrb_a
+{
+    int frame_0;
+    char pad4[0xA];
+    short fx_E;
+    char pad10[0x28];
+    int vel_38[3];
+    int pos_44[3];
+} BatOrb_a;
+extern char* dword_8008B4A4;
+extern int DistanceSquared3D_8003B80C(int* a, int* b);
+void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
+{
+    int v[3];
+    int* q;
+    BatOrb_a* w;
+    w = u;
+    sub_800C1A5C(u->pos_44, (short*)&dword_800795D4, effectFile_80091BD0[0x20 / 4] + u->fx_E * 52, 0x1000);
+    q = *(int**)(dword_8008B4A4 + 0x24);
+    v[0] = q[0x5E4 / 4];
+    v[1] = q[0x5E8 / 4];
+    v[2] = q[0x5EC / 4];
+    v[0] += ((int*)levantPos_8008BD18)[0];
+    v[1] += ((int*)levantPos_8008BD18)[1];
+    v[2] += ((int*)levantPos_8008BD18)[2];
+    if (DistanceSquared3D_8003B80C(v, u->pos_44) >= 0x57E5)
+    {
+        u->vel_38[0] += ((v[0] - u->pos_44[0]) << 10) / 70;
+        u->vel_38[1] += ((v[1] - u->pos_44[1]) << 10) / 70;
+        u->vel_38[2] += ((v[2] - u->pos_44[2]) << 10) / 70;
+        u->vel_38[0] = u->vel_38[0] * 31 / 32;
+        u->vel_38[1] = u->vel_38[1] * 31 / 32;
+        u->vel_38[2] = u->vel_38[2] * 31 / 32;
+        u->pos_44[0] += u->vel_38[0] / 1024;
+        u->pos_44[1] += u->vel_38[1] / 1024;
+        u->pos_44[2] += u->vel_38[2] / 1024;
+    }
+    else
+    {
+        ((void (*)())sub_800C1C5C)(v, &dword_800795D4, effectFile_80091BD0[0x20 / 4] + w->fx_E * 52, 0x1000);
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 extern int dword_8008D680[3];
 extern short dword_8008D418[3];
