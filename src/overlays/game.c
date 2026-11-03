@@ -154,7 +154,7 @@ typedef struct GameCtx_1
     int f3c;
     int f40;
     int f44;
-    int pad_48;
+    int f48;
     int f4c[12];
     int f7c[12];
     char pad_ac[0x76c - 0xac];
@@ -165,6 +165,9 @@ typedef struct GameCtx_1
     int f77c;
     int f780;
     int f784;
+    int f788;
+    char pad_78c[0xa48 - 0x78c];
+    int fa48;
 } GameCtx_1;
 extern GameCtx_1 gCtx_800B1260;
 typedef struct GameP4470_1
@@ -730,6 +733,93 @@ void sub_800A1B78(void)
     }
 }
 
+#if 0
+// Not matched: loop: $s4/$s5 swapped (cur slot copy vs &gCtx); tail: 'n' loaded straight into $a0 (no copy), &gCtx in $a2, dword_800B1CA8 store sinks to the epilogue. The control flow and the rest match
+extern int dword_800B1CA8;
+extern int sub_8001D4DC(int o, int a, int b, int c);
+extern int name_8007A024[];
+void sub_800A1BD0(void)
+{
+    char* e = sub_800A5F6C();
+    int found;
+    int o;
+    GameSlot_1* slot;
+    GameSlot_1* s;
+    GameSlot_1* cur;
+    int* t;
+    GameFlagObj_1* obj;
+    int done;
+    int i;
+    int n;
+    int* q;
+    int* p;
+    GameCtx_1* g;
+    if (e)
+    {
+        o = *(int*)(e + 0xa4);
+        *(int*)(e + 0xa4) = sub_8001D4DC(o, 0, 0, 0);
+        slot = sub_800A17F4((unsigned int*)e, 0);
+        slot->f4 = (GameFlagObj_1*)CreateEnemyAiEvent_800A2D90(*(int*)(e + 0xa4), (char*)slot + 0x24, 0);
+        sub_8001D730((struct_obj_A*)o, 0);
+        sub_8001D68C((struct_obj_A*)o, 0);
+        dword_800B1264 = (int*)slot;
+    }
+    found = 0;
+    for (i = 0; i < 3; i++)
+    {
+        if (dword_800B19F0[i].f0)
+        {
+            s = &dword_800B19F0[i];
+            cur = s;
+            done = 0;
+            t = *(int**)((char*)s + 0xd0);
+            obj = s->f4;
+            t = t ? t : name_8007A024;
+            if (!found && gCtx_800B1260.f4 == (int)s)
+            {
+                sub_800A2EC8(obj);
+                sub_8001DC34((void*)obj->f8, (void*)t[0]);
+                found = 1;
+                done = found;
+                gCtx_800B1260.f4 = (int)s;
+            }
+            if (!done)
+            {
+                sub_800A2EC8(obj);
+                sub_8001DC34((void*)obj->f8, (void*)t[1]);
+                gCtx_800B1260.fc[gCtx_800B1260.f8] = (int)cur;
+                gCtx_800B1260.f8++;
+            }
+        }
+    }
+    g = &gCtx_800B1260;
+    p = (int*)g->f4;
+    for (i = 0; i < 3; i++)
+    {
+        if ((unsigned)p[0xb8 / 4 + i * 2] >= 0xd3)
+        {
+            break;
+        }
+    }
+    n = p[0xc / 4];
+    if (n >= i)
+    {
+        n = i;
+    }
+    g->f76c = n;
+    g->f770 = i;
+    q = (int*)g->f4;
+    g->f774 = q[2] == 0;
+    g->f77c = 0;
+    g->f778 = q[2] == 1;
+    g->f780 = q[4];
+    g->f784 = q[5];
+    g->f788 = q[6];
+    dword_800B1CA8 = 0;
+    gCtx_800B1260.f0 = 1;
+    g->f48 = q[7];
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A1BD0);
 
 // Matched
