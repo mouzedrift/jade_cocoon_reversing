@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "sound.h"
 
 typedef struct ChapterVec
 {
@@ -32,7 +33,9 @@ typedef struct ChapterEntry
     short field_0;
     short pad_2;
     int field_4;
-    char pad_8[0xC];
+    int music_8;
+    int fadeBgm_C;
+    int movie_10;
     int field_14;
     int field_18;
 } ChapterEntry;
@@ -52,7 +55,71 @@ extern void sub_800B6A94(short*);
 
 INCLUDE_OVERLAY_ASM(chapter, dword_800B66C0);
 
-INCLUDE_OVERLAY_ASM(chapter, sub_800B66F4);
+#define CHAPTER_SAVE ((ChapterSave*)&saveData_8008B570)
+
+extern int PlayMusic_800300E0(int idx, int a1);
+
+typedef struct ChapterTask
+{
+    int flags_0;
+    int f4_4;
+    void (*next_8)();
+} ChapterTask;
+
+extern void sub_800B68A8();
+extern void sub_800B6900();
+extern void sub_800B6B18();
+extern void sub_800A7690();
+extern void SsSepSetDecrescendo(short, short, short, long);
+void sub_800B66F4(ChapterTask* t, int* st)
+{
+    switch (st[0])
+    {
+    case 0:
+        PlayMusic_800300E0(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].music_8, 1);
+        sub_800315D8(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].music_8);
+        st[0]++;
+        break;
+    case 1:
+        if (!IsSoundTaskReady_800306B0())
+        {
+            break;
+        }
+        st[0]++;
+        break;
+    case 2:
+    case 3:
+        st[0]++;
+        break;
+    case 4:
+        PlayMovie_80040EB4(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].movie_10);
+        if (dword_800B6FE0[CHAPTER_SAVE->cur_2DC].fadeBgm_C)
+        {
+            if (bgmSound_80091CE0.field_4_seq_num >= 0)
+            {
+                SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
+                bgmSound_80091CE0.field_4_seq_num = -1;
+            }
+            st[1] = 0x3C;
+        }
+        else
+        {
+            st[1] = 0;
+        }
+        st[0]++;
+        break;
+    case 5:
+        if (--st[1] < 0)
+        {
+            sub_800B68A8();
+            sub_800B6900();
+            sub_800B6B18();
+            t->next_8 = sub_800A7690;
+        }
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(chapter, dword_800B66DC);
 
 void sub_800B68A8()
 {
@@ -64,8 +131,6 @@ void sub_800B68A8()
         a = dword_800B70A4[++i];
     }
 }
-
-#define CHAPTER_SAVE ((ChapterSave*)&saveData_8008B570)
 
 void sub_800B6900()
 {
