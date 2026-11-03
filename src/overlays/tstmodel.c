@@ -148,8 +148,8 @@ void sub_800A1A24(int* c)
     name_8004D0E8();
 }
 
-// Matched
 extern char name_800A1EDC[];
+// Matched
 int sub_800A1B24()
 {
     DrawIntroMovie_8001AF64(name_800A1EDC);

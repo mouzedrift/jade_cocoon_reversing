@@ -332,8 +332,8 @@ INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1C14);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1E68);
 
-// Matched
 extern char name_800A2560[];
+// Matched
 int sub_800A200C()
 {
     DrawIntroMovie_8001AF64(name_800A2560);

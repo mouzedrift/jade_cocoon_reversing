@@ -6,8 +6,8 @@
 
 INCLUDE_OVERLAY_ASM(soundtst, dword_800A05A0);
 
-// Matched
 extern char name_800AA340[];
+// Matched
 int sub_800A51AC()
 {
     EndFade_8001C290();

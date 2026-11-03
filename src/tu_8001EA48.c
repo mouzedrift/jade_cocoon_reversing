@@ -1712,8 +1712,8 @@ void sub_80021DF0(int* p, int a1, int a2)
     p[0] = a1;
     p[1] = HeapAlloc_8003FC8C(a1 * 16, a2);
 }
-// Matched
 // p is volatile to keep the store before the load
+// Matched
 void sub_80021E24(volatile int* p, int h)
 {
     p[0] = 0;
@@ -3988,7 +3988,6 @@ void sub_80026E74(struct_12* a0, int* a1, int a2)
         a0++;
     }
 }
-// Matched
 typedef struct
 {
     unsigned short a;
