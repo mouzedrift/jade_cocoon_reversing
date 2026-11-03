@@ -445,7 +445,7 @@ ShopItemShop* sub_800B9C5C(int i)
     return &name_800B6CF0[i];
 }
 
-int sub_800B9C78(int v)
+int CountItemsInState_800B9C78(int v)
 {
     int i;
     int n;
@@ -468,7 +468,7 @@ int sub_800B9CCC(short* p)
 
 int sub_800B9CDC(int i)
 {
-    if (sub_800B9C78(3) < 3)
+    if (CountItemsInState_800B9C78(3) < 3)
     {
         if (sub_800B9C10(i) == 2)
         {
@@ -839,7 +839,182 @@ void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
     d->field_88 += sub_80012204(s->field_C8, s->field_88, t->field_C8, t->field_88);
 }
 
+#if 0
+// Not matched (25 words): only the registers of &t.e[i] (a3 in the original) and m (t0) are swapped.
+// (When writing this in C, delete the jpt_800B6D4C line behind the function.)
+typedef struct ShopSlotShop
+{
+    unsigned char c[4];
+} ShopSlotShop;
+typedef struct ShopSlots5Shop
+{
+    ShopSlotShop e[5];
+} ShopSlots5Shop;
+void sub_800BA72C(unsigned char* a, unsigned char* b)
+{
+    ShopSlots5Shop t;
+    ShopSlotShop* ae;
+    ShopSlotShop* be;
+    int i;
+    int mask;
+    int r;
+    int m;
+    int v;
+    t = *(ShopSlots5Shop*)(a + 0xDE);
+    ae = (ShopSlotShop*)(a + 0xDE);
+    be = (ShopSlotShop*)(b + 0xDE);
+    for (i = 0; i < 5; i++)
+    {
+        t.e[i].c[0] |= (ae[i].c[0] | be[i].c[0]) & 1;
+    }
+    mask = *(short*)(a + 0xC6);
+    for (i = 0; i < 5; i++)
+    {
+        switch (t.e[i].c[1])
+        {
+        case 2:
+            if (!(mask & 4))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 3:
+            if (!(mask & 8))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 4:
+            if (!(mask & 1))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 5:
+            if (!(mask & 2))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        }
+        if (t.e[i].c[0] & 1)
+        {
+            m = *(short*)(a + 0xC6);
+            r = -1;
+            switch (ae[i].c[1])
+            {
+            case 0:
+            case 1:
+                r = ae[i].c[1];
+                break;
+            case 2:
+                if (m & 4)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 3:
+                if (m & 8)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 4:
+                if (m & 1)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 5:
+                if (m & 2)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            default:
+                r = ae[i].c[1];
+                break;
+            }
+            if (r >= 0)
+            {
+                t.e[i].c[1] = r;
+            }
+            r = -1;
+            switch (be[i].c[1])
+            {
+            case 0:
+            case 1:
+                break;
+            case 2:
+                if (m & 4)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 3:
+                if (m & 8)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 4:
+                if (m & 1)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 5:
+                if (m & 2)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            default:
+                if (t.e[i].c[1] == 0)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            }
+            if (r >= 0)
+            {
+                t.e[i].c[1] = r;
+            }
+            if (t.e[i].c[1] == 1)
+            {
+                t.e[i].c[1] = 0;
+            }
+        }
+        else
+        {
+            t.e[i].c[1] = 0;
+        }
+        if (t.e[i].c[0] & 1)
+        {
+            v = be[i].c[2];
+            if (v == 1)
+            {
+                t.e[i].c[2] = 1;
+                t.e[i].c[3] = 0;
+            }
+            else if (v != 0 && v < 5)
+            {
+                t.e[i].c[2] = v;
+                t.e[i].c[3] = 1;
+            }
+        }
+        else
+        {
+            t.e[i].c[2] = 0;
+            t.e[i].c[3] = 0;
+        }
+    }
+    MemCopy_800403E8((unsigned int*)(a + 0xDE), (unsigned int*)&t, 0x14);
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
+INCLUDE_OVERLAY_ASM(shop, jpt_800B6D4C);
+INCLUDE_OVERLAY_ASM(shop, dword_800B6D7C);
 
 void sub_800BAA0C(char* a, char* b)
 {
@@ -1246,8 +1421,8 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
     DrawMenuBackground_8002BE10();
     if (u->f24 & 1)
     {
-        u->s4 = sub_800B9C78(2);
-        u->s6 = sub_800B9C78(3);
+        u->s4 = CountItemsInState_800B9C78(2);
+        u->s6 = CountItemsInState_800B9C78(3);
         u->f24 &= ~1;
     }
     if (u->s0 != 15 && !(u->f24 & 0x400))

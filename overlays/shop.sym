@@ -1,4 +1,6 @@
 dword_800B6D00=0x800b6d00; // overlay header / data
+jpt_800B6D4C=0x800b6d4c; // jump table of sub_800BA72C
+dword_800B6D7C=0x800b6d7c; // data behind the jump table
 jpt_800B95A4=0x800b95a4; // jump table of sub_800BB38C
 dword_800B95CC=0x800b95cc; // data behind the jump table
 dword_800B9608=0x800b9608; // data behind the jump table
@@ -22,7 +24,7 @@ sub_800B9C10=0x800b9c10;
 sub_800B9C34=0x800b9c34;
 sub_800B9C54=0x800b9c54;
 sub_800B9C5C=0x800b9c5c;
-sub_800B9C78=0x800b9c78;
+CountItemsInState_800B9C78=0x800b9c78;
 sub_800B9CCC=0x800b9ccc;
 sub_800B9CDC=0x800b9cdc;
 sub_800B9D48=0x800b9d48;
