@@ -5,3 +5,4 @@ dword_80074610 0xAC     # head; the jump table of sub_80031870 (tu_80031870) fol
 dword_800746D0 0x4     # zero word after the jump table of sub_80031870; the jump table of sub_80031A04 (tu_800318C8) follows
 aMainC 0x8               # "MAIN.C"; the jump table of sub_80010AD8 follows (dword_80071B78 starts after it)
 aCommonC 0xEC            # "COMMON.C" and the jump tables of sub_80012BB0; the jump tables of sub_80013228 and sub_80013C28 follow
+dword_800740B4 0x90     # head; the jump table of sub_8002A040 (tu_80028C60) follows, dword_8007415C starts after it

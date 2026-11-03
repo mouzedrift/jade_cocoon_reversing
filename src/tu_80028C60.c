@@ -17,9 +17,53 @@
 #include "data_decls.h"
 
 
+extern char dword_8008D4F0[];
+extern int dword_80091C68[];
+extern int dword_8008266C;
+extern int dword_80091C5C;
+extern int dword_80091C8C;
+extern void (*dword_80091CB4)(int);
+extern void sub_80027778(char* p, int* q);
+extern void sub_800278BC(char* p, int* q);
+extern int dword_80082668;
+#if 0
+// Not matched: original copies a1 to $v0 before p = a1 + 0x108 (p/n regs swapped here)
+void sub_80028C60(int a0, int a1)
+{
+    int n;
+    char* p;
+    MemCopy_800403E8((unsigned int*)dword_8008D4F0, (unsigned int*)a1, 0x104);
+    p = (char*)a1 + 0x108;
+    n = *(int*)(a1 + 0x104);
+    LoadTiy_80028E74(0, 0, 0, (int)p, (int)&dword_80091C20);
+    p += n;
+    n = *(int*)p;
+    p += 4;
+    if (dword_80082670 == 0)
+    {
+        sub_80027778(p, &dword_80091C20);
+    }
+    p += n;
+    n = *(int*)p;
+    p += 4;
+    if (dword_80082670 == 0)
+    {
+        sub_800278BC(p, &dword_80091C20);
+    }
+    p += n;
+    if (dword_80082670 == 1)
+    {
+        LoadTiy_80028E74(0, 0, 0, (int)(p + 4), (int)dword_80091C68);
+    }
+    sub_800272BC(dword_8008B500[0], word_8008B860);
+    if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
+    {
+        dword_80091CB4(1);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80028C60);
 extern short dword_8008D474[2];
-extern int dword_80082668;
 extern char levantPos_8008BD18[];
 extern void sub_80037918(int* p);
 // Matched
@@ -245,12 +289,26 @@ void InitPolyFT4FromTimData_800299DC(void* p, void* q)
     ParseTim_80029708(buf, q);
     InitPolyFT4_80029A10(p, buf);
 }
-#if 0
+// Matched
 void InitPolyFT4_80029A10(void* a0, void* a1)
 {
+    POLY_FT4* s = (POLY_FT4*)a0;
+    TimInfo* t = (TimInfo*)a1;
+    SetPolyFT4(s);
+    s->r0 = 0x80;
+    s->g0 = 0x80;
+    s->b0 = 0x80;
+    s->tpage = getTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256);
+    s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
+    s->v0 = t->prect.y % 256;
+    s->u1 = (((short)(t->prect.x % 64) * 4) >> t->mode) + (((t->prect.w * 4) >> t->mode) - 1);
+    s->v1 = t->prect.y % 256;
+    s->u2 = ((short)(t->prect.x % 64) * 4) >> t->mode;
+    s->v2 = t->prect.y % 256 + (t->prect.h - 1);
+    s->u3 = (((short)(t->prect.x % 64) * 4) >> t->mode) + (((t->prect.w * 4) >> t->mode) - 1);
+    s->v3 = t->prect.y % 256 + (t->prect.h - 1);
+    s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
 }
-#endif
-INCLUDE_ASM(InitPolyFT4_80029A10);
 // Matched
 void UnpackColor555_80029C68(unsigned short* d, unsigned short* s)
 {
@@ -332,4 +390,52 @@ int sub_80029EA8(short* in, short* out)
     out[3] = in[3];
     return 1;
 }
-INCLUDE_ASM(sub_8002A040);
+// Matched
+int sub_8002A040(short* in, short* out)
+{
+    int sector;
+    short f;
+    int v;
+    int p, q, t;
+    sector = in[0] / 32;
+    f = in[0] % 32;
+    v = in[2];
+    p = (v * (0x3E0 - in[1] * 32) + 0x1F0) / 0x3E0;
+    q = (v * (0x3E0 - in[1] * f) + 0x1F0) / 0x3E0;
+    t = (v * (0x3E0 - in[1] * (32 - f)) + 0x1F0) / 0x3E0;
+    switch (sector)
+    {
+    case 0:
+        out[0] = v;
+        out[1] = t;
+        out[2] = p;
+        break;
+    case 1:
+        out[0] = q;
+        out[1] = v;
+        out[2] = p;
+        break;
+    case 2:
+        out[0] = p;
+        out[1] = v;
+        out[2] = t;
+        break;
+    case 3:
+        out[0] = p;
+        out[1] = q;
+        out[2] = v;
+        break;
+    case 4:
+        out[0] = t;
+        out[1] = p;
+        out[2] = v;
+        break;
+    case 5:
+        out[0] = v;
+        out[1] = p;
+        out[2] = q;
+        break;
+    }
+    out[3] = in[3];
+    return 1;
+}
