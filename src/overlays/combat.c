@@ -5,6 +5,7 @@
 
 #include "actor.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
 typedef struct CombatModelParams
@@ -93,8 +94,6 @@ extern void sub_80037748(void);
 extern void InitCameraTask_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
-extern MinionModelDesc* Cbt_80019C70(int idx);
-extern int Cbt_800338DC(void* a, void* b, void* c);
 typedef struct CombatLocalCombat
 {
     unsigned char b[4];
@@ -116,58 +115,7 @@ typedef struct CombatColorCombat
 } CombatColorCombat;
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void OnModelFileLoaded_80025D7C();
-typedef struct CombatObjCombat
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    char pad_30[0x10];
-} CombatObjCombat;
-extern int Cbt_80010A44(int a);
-extern int Cbt_80019A80(int a);
-extern int Cbt_80024E90(int a, int b);
-extern int Cbt_80024EC8(int a, int b);
-extern int Cbt_80024E38(int a);
-extern int Cbt_80024E64(int a);
-extern int Cbt_8001D45C(void* p);
-extern int Cbt_80024F00(int a, int b);
-extern int Cbt_80024F38(int a, int b);
-extern void Cbt_80019B14(int a, int b, int c);
-extern void Cbt_8001D68C(Actor* p, int on);
-extern int dword_80079140[];
-typedef struct CombatSpawnCombat
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    short field_14;
-    short field_16;
-    short field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
-    int* field_34;
-    int field_38;
-    int field_3C;
-    int field_40;
-    int field_44;
-    int field_48;
-    int field_4C;
-} CombatSpawnCombat;
+extern short dword_80079140[]; // default bone table
 extern int ratan2Degrees_8003B56C(int a, int b);
 extern void InitPolyFT4_80029A10(void* a, void* b);
 extern int sub_800A0968(unsigned char* a);
@@ -240,12 +188,12 @@ INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
 {
     CombatLocalCombat l;
-    unsigned int h = Cbt_80019C70(a->species_2)->modelId_0;
+    unsigned int h = sub_80019C70(a->species_2)->modelId_0;
     int t;
-    o->count_0 = Cbt_800338DC(a->species_4C, l.b, l.w);
-    o->parts_4[0] = Cbt_80019C70(l.b[0])->modelId_0;
-    o->parts_4[1] = Cbt_80019C70(l.b[1])->modelId_0;
-    o->parts_4[2] = Cbt_80019C70(l.b[2])->modelId_0;
+    o->count_0 = sub_800338DC(a->species_4C, l.b, l.w);
+    o->parts_4[0] = sub_80019C70(l.b[0])->modelId_0;
+    o->parts_4[1] = sub_80019C70(l.b[1])->modelId_0;
+    o->parts_4[2] = sub_80019C70(l.b[2])->modelId_0;
     o->weights_10[0] = l.w[0];
     o->weights_10[1] = l.w[1];
     o->weights_10[2] = l.w[2];
@@ -320,16 +268,16 @@ void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
     }
     o->modelId_1C = Cbt_80019A80(a->status_84.level_44);
     o->f20 = o->count_0 - 1;
-    o->f28 = Cbt_80019C70(a->field_3)->modelId_0;
+    o->f28 = sub_80019C70(a->field_3)->modelId_0;
     o->f30 = c;
     o->angle_24 = sub_800A0898(a->status_84.element_3E);
     if (o->angle_24 == -1000)
     {
-        o->angle_24 = Cbt_80019C70(a->field_3)->field_2 << 1;
+        o->angle_24 = sub_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o->angle_24 = o->angle_24 - (Cbt_80019C70(a->field_3)->field_3 << 1);
+        o->angle_24 = o->angle_24 - (sub_80019C70(a->field_3)->field_3 << 1);
         if (o->angle_24 < 0)
         {
             o->angle_24 = o->angle_24 + 0x168;
@@ -454,37 +402,37 @@ void sub_800A0B70(int i)
 void sub_800A0BA8(int i, int* src, short* sh)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    CombatSpawnCombat r;
-    int h = Cbt_80010A44(s->task_0);
-    int v = Cbt_80019A80(s->minion_4->status_84.level_44);
-    int x;
-    int y;
-    r.field_0 = -1;
-    r.field_4 = 2;
-    r.field_8 = src[0];
-    r.field_C = src[1];
-    r.field_10 = src[2];
-    r.field_14 = sh[0];
-    r.field_16 = sh[1];
-    r.field_18 = sh[2];
-    r.field_1C = i;
-    r.field_20 = 4;
-    r.field_24 = -1;
-    r.field_28 = 0x1000;
-    r.field_2C = 4;
-    r.field_30 = 0;
-    r.field_48 = h;
-    r.field_34 = dword_80079140;
-    r.field_38 = Cbt_80024E90(h, v);
-    r.field_3C = Cbt_80024EC8(h, v);
-    r.field_40 = Cbt_80024E38(h);
-    r.field_44 = Cbt_80024E64(h);
-    r.field_4C = 1;
-    s->actor_3C = (Actor*)Cbt_8001D45C(&r);
-    x = Cbt_80024F00(h, v);
-    y = Cbt_80024F38(h, v);
-    Cbt_80019B14((int)s->actor_3C->bones_134, x, y);
-    Cbt_8001D68C(s->actor_3C, 0);
+    ActorDesc r;
+    Model* h = sub_80010A44(s->task_0);
+    int v = sub_80019A80(s->minion_4->status_84.level_44);
+    unsigned short* x;
+    unsigned short* y;
+    r.modelId_0 = -1;
+    r.kind_4 = 2;
+    r.pos_8[0] = src[0];
+    r.pos_8[1] = src[1];
+    r.pos_8[2] = src[2];
+    r.rot_14[0] = sh[0];
+    r.rot_14[1] = sh[1];
+    r.rot_14[2] = sh[2];
+    r.clutRow_1C = i;
+    r.animIdx_20 = 4;
+    r.frame_24 = -1;
+    r.frameSpeed_28 = 0x1000;
+    r.blendDiv_2C = 4;
+    r.visible_30 = 0;
+    r.model_48 = h;
+    r.bones_34 = dword_80079140;
+    r.baseScale_38 = sub_80024E90(h, v);
+    r.boneScale_3C = sub_80024EC8(h, v);
+    r.anims_40 = sub_80024E38(h);
+    r.effectTbl_44 = sub_80024E64(h);
+    r.hasMatrices_4C = 1;
+    s->actor_3C = CreateActor_8001D45C(&r);
+    x = sub_80024F00(h, v);
+    y = sub_80024F38(h, v);
+    sub_80019B14(s->actor_3C->bones_134, x, y);
+    sub_8001D68C(s->actor_3C, 0);
 }
 
 // Matched
@@ -501,19 +449,19 @@ void sub_800A0D1C(int i)
 // Matched
 void sub_800A0D64(int i, int id)
 {
-    unsigned short* q = (unsigned short*)GetModelDesc_800251E4(id);
-    CombatObjCombat o;
+    ModelDesc* q = GetModelDesc_800251E4(id);
+    ModelLoadParams o;
     FileRequestDesc m;
-    InitModelLoadParams_80025ED0((int*)&o);
-    o.field_0 = 2;
-    o.field_14 = 0;
-    o.field_4 = (int)q;
-    o.field_8 = 0;
-    o.field_18 = (int)&off_8007DC70[i];
+    InitModelLoadParams_80025ED0(&o);
+    o.flags_0 = 2;
+    o.model_14 = 0;
+    o.desc_4 = q;
+    o.sel_8 = 0;
+    o.vram_18 = &off_8007DC70[i];
     m.flags_0 = 0x69;
-    m.fileId_4 = q[0];
-    m.offset_8 = q[3] << 11;
-    m.size_C = q[4] << 11;
+    m.fileId_4 = q->fileId_0;
+    m.offset_8 = q->tex_6.offset << 11;
+    m.size_C = q->tex_6.size << 11;
     m.dest_10 = 0;
     m.params_14 = &o;
     m.paramsSize_18 = 0x3C;
