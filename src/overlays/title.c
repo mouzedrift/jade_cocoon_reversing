@@ -112,9 +112,9 @@ void sub_800A0A70(TitleTask* t)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
-            EncodeName_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
+            EncodeName_8003F7C8(&dword_800A2718, saveData_8008B570.playerName_7D8);
         }
-        StartNameEntry_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
+        StartNameEntry_800B6E4C(saveData_8008B570.playerName_7D8, 0);
         t->next_8 = sub_800A0AE8;
     }
 }
@@ -865,17 +865,58 @@ extern int dword_80091C94;
 extern char byte_800A08B4[];
 typedef struct { char c[8]; } Blk8_;
 extern Blk8_ dword_800B06A8;
-typedef struct { int a[18]; } Blk72_;
+// Levant's 0x48-byte status block (saveData_8008B570 + 0x7C8; SaveData only has its first 0x10 bytes)
+typedef struct
+{
+    int status_0; // EntityStatus
+    char pad_4[0x18];
+    unsigned char f1C;
+    unsigned char f1D;
+    unsigned char f1E;
+    char pad_1F[0x29];
+} Blk72_;
 extern Blk72_ dword_800A2730;
 
 extern int playerYan_8008B594;
 extern int dword_8008B554;
-#define SBASE ((char*)&saveData_8008B570)
-#define SA(a) ((char*)&saveData_8008B570 + ((a) - 0x8008B570))
-#define SDECL char* s = SBASE
-#define SB(o) (*(char*)(s + (o)))
-#define SH(o) (*(short*)(s + (o)))
-#define SW(o) (*(int*)(s + (o)))
+// saveData_8008B570 with the fields SaveData (globals.h) does not have yet
+typedef struct TitleSave
+{
+    int field_0;
+    int playTime_4;
+    char pad_8[0x2D4];
+    short chapter_2DC;
+    short f2DE;
+    short f2E0;
+    short f2E2;
+    short f2E4; // mapId_2E4[0].field_0
+    short f2E6;
+    short f2E8;
+    short f2EA;
+    short f2EC;
+    short f2EE;
+    short f2F0;
+    short f2F2;
+    int f2F4;
+    char pad_2F8[0x4B0];
+    Blk12_ levantPos_7A8;
+    Blk8_ levantRot_7B4;
+    char pad_7BC[0xC];
+    Blk72_ levantStatus_7C8;
+    int f810;
+    int minionBits_814[7];
+    char pad_830[8];
+    unsigned short f838[12];
+    unsigned short f850[18];
+    unsigned short f874[44];
+    unsigned short f8CC[22];
+    unsigned short f8F8[10];
+    unsigned short f90C[16];
+    unsigned short f92C[42];
+    int pad_980;
+    int f984;
+} TitleSave;
+#define SDECL TitleSave* s = (TitleSave*)&saveData_8008B570
 
 // Matched
 void sub_800A1F38(void* a)
@@ -932,29 +973,29 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 void sub_800A20F4(void)
 {
     SDECL;
-    s[0x7E4] = 0;
-    s[0x7E5] = 0xFF;
-    s[0x7E6] = 0xFF;
+    s->levantStatus_7C8.f1C = 0;
+    s->levantStatus_7C8.f1D = 0xFF;
+    s->levantStatus_7C8.f1E = 0xFF;
 }
 
 // Matched
 void sub_800A2110(void)
 {
-    *(int*)((char*)&saveData_8008B570 + 0x2F4) = 0;
+    ((TitleSave*)&saveData_8008B570)->f2F4 = 0;
 }
 
 void sub_800A211C(void)
 {
     SDECL;
-    SW(0x984) = 5;
+    s->f984 = 5;
     saveData_8008B570.field_0 = 0;
-    SH(0x2DE) = -1;
-    SW(4) = 0;
-    SH(0x2DC) = 0;
-    *(Blk12_*)(s + 0x7A8) = dword_800B069C;
-    *(Blk8_*)(s + 0x7B4) = dword_800B06A8;
-    *(Blk72_*)(s + 0x7C8) = dword_800A2730;
-    *(int*)SA(0x8008BD80) = -2;
+    s->f2DE = -1;
+    s->playTime_4 = 0;
+    s->chapter_2DC = 0;
+    s->levantPos_7A8 = dword_800B069C;
+    s->levantRot_7B4 = dword_800B06A8;
+    s->levantStatus_7C8 = dword_800A2730;
+    ((TitleSave*)&saveData_8008B570)->f810 = -2;
     sub_800A2358();
     sub_800A20F4();
     sub_800A2110();
@@ -967,7 +1008,7 @@ void sub_800A2214(void)
     SDECL;
     for (i = 6; i >= 0; i--)
     {
-        ((int*)(s + 0x814))[i] = 0;
+        s->minionBits_814[i] = 0;
     }
 }
 
@@ -975,17 +1016,17 @@ void sub_800A223C(void)
 {
     {
         SDECL;
-        *(Blk72_*)(s + 0x7C8) = dword_800A2730;
+        s->levantStatus_7C8 = dword_800A2730;
     }
     {
         int i;
         SDECL;
         for (i = 6; i >= 0; i--)
         {
-            ((int*)(s + 0x814))[i] = 0;
+            s->minionBits_814[i] = 0;
         }
     }
-    EncodeName_8003F7C8(byte_800A08B4, SA(0x8008BD48));
+    EncodeName_8003F7C8(byte_800A08B4, saveData_8008B570.playerName_7D8);
     sub_800A2358();
     sub_800A22FC();
     sub_800A2450();
@@ -1000,7 +1041,7 @@ void sub_800A22FC(void)
     char* s;
     playerYan_8008B594 = 0x64;
     b = (char*)&playerYan_8008B594;
-    s = SBASE;
+    s = (char*)&saveData_8008B570;
     b[5] = 3;
     b[6] = 0xE;
     b[4] = 0;
@@ -1065,11 +1106,11 @@ void sub_800A2424(void)
 void sub_800A242C(void)
 {
     SDECL;
-    SH(0x2E2) = -1;
-    SH(0x2E6) = -1;
-    SH(0x2EA) = -1;
-    SH(0x2EE) = -1;
-    SH(0x2F2) = -1;
+    s->f2E2 = -1;
+    s->f2E6 = -1;
+    s->f2EA = -1;
+    s->f2EE = -1;
+    s->f2F2 = -1;
 }
 
 void sub_800A2450(void)
@@ -1097,40 +1138,40 @@ void sub_800A24E0(void)
     }
 }
 
-#define FILL(off, n) { int i; unsigned short v = 0x8000; SDECL; for (i = (n) - 1; i >= 0; i--) ((unsigned short*)(s + (off)))[i] = v; }
+#define FILL(arr, n) { int i; unsigned short v = 0x8000; SDECL; for (i = (n) - 1; i >= 0; i--) s->arr[i] = v; }
 
 void sub_800A2540(void)
 {
     dword_8008B554 = 1;
-    FILL(0x838, 12)
-    FILL(0x850, 18)
-    FILL(0x874, 44)
-    FILL(0x8CC, 22)
-    FILL(0x8F8, 10)
-    FILL(0x90C, 16)
-    FILL(0x92C, 42)
+    FILL(f838, 12)
+    FILL(f850, 18)
+    FILL(f874, 44)
+    FILL(f8CC, 22)
+    FILL(f8F8, 10)
+    FILL(f90C, 16)
+    FILL(f92C, 42)
 }
 
 void sub_800A2650(void)
 {
     SDECL;
-    SH(0x2DE) = -1;
-    SH(0x2E0) = 1;
-    SH(0x2E2) = -1;
-    SH(0x2E6) = -1;
-    SH(0x2EA) = -1;
-    SH(0x2EE) = -1;
-    SH(0x2F2) = -1;
-    SH(0x2E8) = 4;
+    s->f2DE = -1;
+    s->f2E0 = 1;
+    s->f2E2 = -1;
+    s->f2E6 = -1;
+    s->f2EA = -1;
+    s->f2EE = -1;
+    s->f2F2 = -1;
+    s->f2E8 = 4;
     dword_80091C94 = 1;
-    SW(4) = 0;
-    SH(0x2DC) = 0;
-    SW(0x810) = 0;
-    SH(0x2E4) = 0;
-    SH(0x2EC) = 0;
-    SH(0x2F0) = 0;
-    *(Blk12_*)(s + 0x7A8) = dword_800B069C;
-    *(Blk8_*)(s + 0x7B4) = dword_800B06A8;
+    s->playTime_4 = 0;
+    s->chapter_2DC = 0;
+    s->f810 = 0;
+    s->f2E4 = 0;
+    s->f2EC = 0;
+    s->f2F0 = 0;
+    s->levantPos_7A8 = dword_800B069C;
+    s->levantRot_7B4 = dword_800B06A8;
     sub_800A2110();
     sub_800A2540();
 }
