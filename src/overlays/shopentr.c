@@ -419,7 +419,9 @@ void sub_800B7684(CtxShopentr* c)
 }
 
 #if 0
-// Not matched: i/s18 register allocation and delay slot filling differ (19 words)
+// Not matched: i/s18 register allocation and delay slot filling differ (19 words).
+// Copying s18 into a short k (k = s18; if (k) sub_8002B1B0(k, p, col);) fixes the registers and the
+// sign extension, but then the beqz delay slot is filled from the taken path (one extra word).
 void sub_800B7858(CtxShopentr* c)
 {
     RectShopentr a;

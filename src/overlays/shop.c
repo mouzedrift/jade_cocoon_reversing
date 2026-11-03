@@ -616,7 +616,6 @@ unsigned char sub_800BA46C(unsigned char a, unsigned char b)
     return out;
 }
 
-#if 0 // near miss: first loop i/x register assignment (20 words)
 void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
 {
     int tmp[4];
@@ -625,10 +624,13 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     int v;
     int y;
     int x;
-    for (i = 0; i < 12; i++)
+    int t;
+    int r;
+    int k;
+    for (k = 0; k < 12; k++)
     {
-        x = (a + i)[0xA4];
-        y = (b + i)[0xA4];
+        x = (a + k)[0xA4];
+        y = (b + k)[0xA4];
         if (x < y)
         {
             x = x * 2;
@@ -638,27 +640,32 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
             y = y * 2;
         }
         v = (x + y) / 3;
-        if (v < -128)
+        if (v >= -128)
         {
-            v = -128;
+            t = v;
+            if (t > 127)
+            {
+                t = 127;
+            }
+            r = t;
         }
-        else if (v >= 128)
+        else
         {
-            v = 127;
+            r = -128;
         }
-        (d + i)[0xA4] = v;
+        (d + k)[0xA4] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 4; j++)
         {
-            tmp[j] += (unsigned char)d[0xC2 + i] * name_8007BA74[i * 4 + j];
+            tmp[j] += (unsigned char)(d + i)[0xC2] * name_8007BA74[j + i * 4];
         }
     }
     for (i = 0; i < 4; i++)
     {
-        d[0xA4 + i] = tmp[i] / 32;
+        (d + i)[0xA4] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -670,8 +677,6 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     {
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
 void sub_800BA650(unsigned char* d)
 {
@@ -1869,7 +1874,94 @@ void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE53C);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern ShopSixShop name_800B971C;
+extern char name_800BFE24[];
+void sub_800BE53C(ShopUnit4Shop* u)
+{
+    short r[4];
+    short out[4];
+    unsigned short p[2];
+    ShopSixShop q;
+    short sel;
+    short h;
+    int clut;
+    short i;
+    char* s;
+    ShopItemShop* e;
+    clut = 0;
+    if (sub_800BD678(u))
+    {
+        sel = u->s30;
+    }
+    else
+    {
+        sel = -1;
+    }
+    h = 8;
+    if (!(u->f20 & 2))
+    {
+        h = u->sC;
+    }
+    r[2] = 0x40;
+    r[3] = 0xE;
+    for (i = 0; i < 3; i++)
+    {
+        if (sub_800B9C10(i) == 3)
+        {
+            e = sub_800B9C5C(i);
+            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+        }
+        else
+        {
+            s = 0;
+        }
+        r[0] = 0xD;
+        r[1] = i * 15 + 0x5D;
+        if (((unsigned int)u->f84 & (1 << i)) && ((unsigned int)u->f88 & (1 << i)))
+        {
+            SetFontClutOffset_8003F900(1, 3);
+            clut = 1;
+        }
+        InterpolateWindowRect_8004196C(out, r, (short)h, 8, 0);
+        p[0] = r[0] + r[2] / 2;
+        p[1] = r[1] + 3;
+        if (s)
+        {
+            sub_8002FAA0(2, p, s, 0xE);
+        }
+        if (clut)
+        {
+            SetFontClutOffset_8003F900(1, 0);
+            clut = 0;
+        }
+        SetFontClutOffset_8003F900(1, 0);
+    }
+    q = name_800B971C;
+    q.w1 = GetTime30Hz_8002C64C();
+    q.w2 = (short)h;
+    q.w4 = (int)name_800BFE24;
+    if (u->f24 & 0x10)
+    {
+        q.w3 = (short)sel;
+    }
+    else
+    {
+        q.w3 = -1;
+    }
+    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    {
+        q.w0 |= 4;
+    }
+    else
+    {
+        q.w0 |= 2;
+    }
+    q.w2 = 8;
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(1, 0);
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BE7F0);
 
@@ -1968,6 +2060,116 @@ def:
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BED48);
 
+#if 0
+// Not matched (17 words): the original cross-jumps the all-equal case into the o[1] == o[3] tail
+// (o[4] += o[6]) and reloads o[6] in the o[2] != o[3] case; here the two tails get different registers.
+typedef struct ShopLocalShop
+{
+    unsigned char b[4];
+    int pad_4;
+    int w[3];
+} ShopLocalShop;
+extern int sub_800BF2E4(unsigned char* p);
+void sub_800BF02C(unsigned char* a, int* o, int c)
+{
+    ShopLocalShop l;
+    unsigned int h = *(unsigned short*)sub_80019C70(a[2]);
+    int t;
+    o[0] = sub_800338DC(a + 0x4C, l.b, l.w);
+    o[1] = *(unsigned short*)sub_80019C70(l.b[0]);
+    o[2] = *(unsigned short*)sub_80019C70(l.b[1]);
+    o[3] = *(unsigned short*)sub_80019C70(l.b[2]);
+    o[4] = l.w[0];
+    o[5] = l.w[1];
+    o[6] = l.w[2];
+    if (o[1] == o[2])
+    {
+        if (o[2] == o[3])
+        {
+            o[4] = o[4] + o[5] + o[6];
+            o[5] = 0;
+            o[6] = 0;
+            o[0] = 1;
+        }
+        else
+        {
+            t = o[6];
+            o[0] = 2;
+            o[4] = o[4] + o[5];
+            o[6] = 0;
+            o[2] = o[3];
+            o[5] = t;
+        }
+    }
+    else if (o[1] == o[3])
+    {
+        o[4] = o[4] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    else if (o[2] == o[3])
+    {
+        o[5] = o[5] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    o[11] = 0;
+    if (o[1] != h)
+    {
+        if (o[2] == h)
+        {
+            t = o[5];
+            o[2] = o[1];
+            o[1] = h;
+            o[5] = o[4];
+            o[4] = t;
+        }
+        else if (o[3] == h)
+        {
+            t = o[6];
+            o[3] = o[1];
+            o[1] = h;
+            o[6] = o[4];
+            o[4] = t;
+        }
+        else if (o[0] < 2)
+        {
+            t = o[4];
+            o[2] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 2;
+            o[5] = t;
+        }
+        else
+        {
+            t = o[4];
+            o[3] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 3;
+            o[6] = t;
+        }
+    }
+    o[7] = sub_80019A80(a[0xC8]);
+    o[8] = o[0] - 1;
+    o[10] = *(unsigned short*)sub_80019C70(a[3]);
+    o[12] = c;
+    o[9] = sub_800BF2E4(a + 0xC2);
+    if (o[9] == -1000)
+    {
+        o[9] = ((unsigned char*)sub_80019C70(a[3]))[2] << 1;
+    }
+    else
+    {
+        o[9] = o[9] - (((unsigned char*)sub_80019C70(a[3]))[3] << 1);
+        if (o[9] < 0)
+        {
+            o[9] = o[9] + 0x168;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BF02C);
 
 int sub_800BF2E4(unsigned char* p)

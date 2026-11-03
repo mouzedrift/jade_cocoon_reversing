@@ -240,8 +240,9 @@ extern char name_800BEBB4[];
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800B66C0);
 
 #if 0
-// register allocation only: original has b in s1, t in s2, a in s3
-void sub_800BAE2C(int a, int b)
+// Not matched: with b as short the registers match; left is the scheduling of the o->f_18 = 1 store
+// and the name_800BE7CC[o->f_0] load among the field clears (17 words)
+void sub_800BAE2C(int a, short b)
 {
     WpnObj_wpnshop* o;
     EventEntry* t = AllocEventEntry_80043AF8((EventNode*)dword_8008D3E0);
