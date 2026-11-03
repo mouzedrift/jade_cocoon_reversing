@@ -40,7 +40,53 @@ void sub_800A09C0(int* task, int* c)
     task[2] = (int)sub_800A0A8C;
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0A8C);
+extern void sub_800A0C00();
+extern void sub_800A0EC8();
+extern void sub_800A0F20();
+extern void sub_800A104C();
+extern void sub_800A1428();
+extern void sub_800A17B8();
+extern void sub_800A1614();
+extern void sub_800A18F4();
+extern void sub_800A19E4();
+void sub_800A0A8C(int* task, int* c)
+{
+    switch (c[0])
+    {
+    case 0:
+        sub_800A0C00(c);
+        break;
+    case 1:
+        sub_800A0EC8(c);
+        break;
+    case 2:
+        sub_800A0F20(c);
+        break;
+    case 3:
+        sub_800A104C(c);
+        sub_800A1428(c);
+        sub_800A18F4(c);
+        break;
+    case 4:
+        sub_800A1428(c);
+        sub_800A17B8(c);
+        break;
+    case 5:
+        sub_800A1428(c);
+        sub_800A1614(c);
+        break;
+    case 6:
+        sub_800A19E4(c);
+        break;
+    }
+    if ((unsigned)(c[0] - 1) >= 2 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
+        (padHeld_800918D0[0] & 0x90A) == 0x90A)
+    {
+        sub_800A19E4(c);
+        bStopDrawingMovie_8008D45C = 1;
+    }
+}
+INCLUDE_OVERLAY_ASM(tstmodel, dword_800A09B8);
 
 typedef struct TstModelA
 {
@@ -96,7 +142,51 @@ void sub_800A0EC8(int* a)
     a[0] = 2;
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0F20);
+extern void sub_80024FFC(struct_112* p, void* a);
+extern void sub_80025974(struct_112* p, int a, int b);
+extern int LoadModelAnim_80025440(struct_112* p, int a, int b);
+extern char name_800A37E8[];
+void sub_800A0F20(int* a)
+{
+    struct_112* m = AcquireModel_80024D70((struct_112_list*)a[5], a[9]);
+    if (AreFileRequestsDone_80024DC4(m))
+    {
+        if (a[9] == 0x28 && a[0x1A8 / 4] == -1)
+        {
+            a[0x1A8 / 4] = 0;
+            sub_80024FFC(m, name_800A37E8);
+            sub_80025974(m, 5, 0);
+            return;
+        }
+        if (a[0x1AC / 4] <= 0)
+        {
+            int i = 0;
+            int found = 0;
+            a[0x1AC / 4] = m->field_3E;
+            for (; i < a[0x1AC / 4]; i++)
+            {
+                if (((unsigned char*)m->field_44)[i] != 0)
+                {
+                    a[0x1A8 / 4] = i;
+                    found = 1;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                a[0x1B0 / 4] = 0;
+                LoadModelAnim_80025440(m, 0, 0);
+                return;
+            }
+        }
+        else
+        {
+            a[0x1A8 / 4] = a[0x1B0 / 4];
+        }
+        sub_80025C38(m, 1);
+        a[0] = 3;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A104C);
 
