@@ -658,8 +658,9 @@ extern void Draw_8001B5EC(void);
 extern void LoadDecodedImage_8001BEC8(void);
 extern void InitPrimBuffers_8001BF90(void);
 #if 0
-// Not matched: the flags address (lui s0) is scheduled after the drawEnv pointers instead of before, and PutDrawEnv's
-// address is added as e0 + i*0x5C instead of i*0x5C + e0
+// Not matched (4 lines): only the flags address (lui s0) is scheduled after the drawEnv pointers instead of before.
+// The int-arithmetic PutDrawEnv argument fixed the add order. Tried: e0/e1 set inside the loop or before
+// CreateEventList, e1 = &drawEnv_8008D698[1], globals instead of e0/e1 (merges both into one base); permuter 1500 iters
 void DrawIntroMovie_8001AF64(void* a0)
 {
     void* list;

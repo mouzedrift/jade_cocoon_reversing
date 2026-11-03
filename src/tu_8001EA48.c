@@ -3109,7 +3109,10 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
     return 2;
 }
 #if 0
-// Not matched: the table-entry sum lands in the wrong one of v0/v1, and &b is set up one slot early
+// Not matched (5 lines): the pointer-add form below fixes the &b scheduling and the v0/v1 choice, but gcc then folds
+// k*2 into idx*4 + 0x14 instead of keeping (e[9] + k) * 2. The int form ((k + e[9]) * 2 + (int)e) keeps the sum but
+// misplaces &b and the sum register (8 lines). Tried: operand orders, temporaries for e[9]/k, k/idx types, e[k + 1]
+// double reads, statement order, shifts instead of *2; permuter 1500 iters
 int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
 {
     int b[16];
@@ -3124,7 +3127,9 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
     {
         k = idx * 2 + 10;
         e = (unsigned short*)modelDescs_800824CC[p->id_38];
-        t = (unsigned short*)((k + e[9]) * 2 + (int)e);
+        t = e;
+        t += e[9];
+        t += k;
         u = t[0];
         v = t[1];
         *f = 1;

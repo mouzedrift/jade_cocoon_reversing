@@ -27,7 +27,9 @@ extern void sub_80027778(char* p, int* q);
 extern void sub_800278BC(char* p, int* q);
 extern int dword_80082668;
 #if 0
-// Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0
+// Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0. Tried: int* param,
+// separate cursor variable (swaps s0/s1), header struct with data[] member, int casts, copy before the MemCopy call,
+// reading n before/after the advance, inline helper (n goes to the stack); permuter 1500 iters
 void sub_80028C60(int a0, char* a1)
 {
     int n;
