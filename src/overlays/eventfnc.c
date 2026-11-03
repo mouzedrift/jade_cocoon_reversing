@@ -2390,6 +2390,271 @@ int sub_800BBE18(EvCtxEventfnc* c)
     return -1;
 }
 
+typedef struct EvPairEventfnc2
+{
+    int a_0;
+    int b_4;
+} EvPairEventfnc2;
+typedef struct EvMsgCfgEventfnc
+{
+    int posMode_0;
+    unsigned short* pos_4;
+    int str_8;
+    int fC;
+    int f10;
+    int f14;
+    int mask_18;
+    int* list_1C;
+    EvPairEventfnc2 pair_20;
+    int f28;
+    int f2C;
+    int f30;
+    int f34;
+    int f38;
+    int f3C;
+    int f40;
+    int voice_44;
+} EvMsgCfgEventfnc;
+typedef struct EvItemCfgEventfnc
+{
+    int posMode_0;
+    unsigned short* pos_4;
+    int f8;
+    char pad_C[0x3C];
+    int f48;
+    int f4C;
+} EvItemCfgEventfnc;
+typedef struct EvMsgOptEventfnc
+{
+    EvPairEventfnc2 pair_A8;
+    EvSrcEventfnc src_B0;
+    int* list_B8;
+    int fBC;
+    int fC0;
+    int fC4;
+    int fC8;
+    int fCC;
+} EvMsgOptEventfnc;
+extern int sub_800A6738(int a);
+extern int sub_800A78A8(int a);
+extern int sub_800A78F4(int a);
+extern int OpenMessageWindow_8003422C(EvMsgCfgEventfnc* cfg);
+extern int OpenItemMessageWindow_80035AC8(EvItemCfgEventfnc* cfg);
+int* sub_800BC560(int* p);
+int sub_800BC58C(int* p);
+int sub_800BC5C8(int a, int b);
+void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n);
+
+#if 0
+// Not matched (register allocation): list/bc/c0/c4/c8/cc are spilled scalars as in the original, but here list keeps
+// $fp and mask is spilled, so mask/ret/pos/skip sit one callee-saved register off (orig s5/s6/s7/fp) and list's stack
+// slot moves; control flow, the double store of c8 and the call sequence match
+int sub_800BBE3C(EvCtxEventfnc* c)
+{
+    EvMsgCfgEventfnc m;
+    EvItemCfgEventfnc it;
+    EvPairEventfnc2 pair;
+    EvSrcEventfnc src;
+    int* list;
+    int bc;
+    int c0;
+    int c4;
+    int c8;
+    int cc;
+    int mode;
+    EvInsEventfnc* pc;
+    int posMode;
+    int str;
+    int mask;
+    int ret;
+    unsigned short* pos;
+    int skip;
+    EvVoiceEventfnc* v;
+    int x;
+    int fl;
+    ret = 0;
+    str = ret;
+    mask = ret;
+    list = 0;
+    bc = 1;
+    c0 = 0;
+    c4 = 0;
+    cc = 1;
+    skip = (settingsFlags_8008B58C & 7) != 3;
+    c8 = settingsFlags_8008B58C & 0x18;
+    pc = c->pc_8;
+    c8 = c8 == 0x18;
+    pos = (unsigned short*)ret;
+    if (pc->op_0 == 0x3E)
+    {
+        mode = 2;
+    }
+    else if (pc->op_0 == 0x3C || pc->op_0 == 0x3D)
+    {
+        mode = 1;
+    }
+    else if (pc->op_0 == 0x3B)
+    {
+        if (pc->c_C == -1)
+        {
+            str = sub_800BBDF4(c);
+        }
+        else
+        {
+            str = sub_800A6738(pc->c_C);
+        }
+        mode = 3;
+    }
+    else if (pc->op_0 == 0x39 || pc->op_0 == 0x3A)
+    {
+        mask = 0;
+        mode = 0;
+        str = sub_800A6738(pc->c_C);
+        list = sub_800BC560((int*)str);
+        mask = sub_800BC58C(list) & ~c->f114_114;
+    }
+    else
+    {
+        mode = mask;
+        list = 0;
+        str = sub_800A6738(pc->c_C);
+    }
+    if (*(short*)&c->f100_100 != -1 && *(short*)&c->f102_102 != -1)
+    {
+        posMode = 0;
+        pos = &c->f100_100;
+    }
+    else
+    {
+        posMode = c->f104_104;
+        if (posMode < 0)
+        {
+            posMode = !(pc->op_0 == 0x39 || pc->op_0 == 0x3A) << 1;
+        }
+    }
+    if (pc->op_0 >= 0x37 && pc->op_0 < 0x3B)
+    {
+        pair.a_0 = 1;
+        pair.b_4 = pc->a_4;
+        bc = sub_800BC5C8(pc->a_4, pc->b_8);
+    }
+    else if (pc->op_0 == 0x3B)
+    {
+        bc = 1;
+        pair.a_0 = 0;
+        pair.b_4 = -1;
+    }
+    fl = c->f108_108;
+    if (fl & 1)
+    {
+        skip = 0;
+    }
+    if (fl & 2)
+    {
+        c4 = 1;
+    }
+    if (fl & 4)
+    {
+        c8 = 1;
+    }
+    if (fl & 8)
+    {
+        c0 = 1;
+    }
+    if (fl & 0x10)
+    {
+        cc = 0;
+    }
+    if (mode == 0)
+    {
+        m.posMode_0 = posMode;
+        m.pos_4 = pos;
+        m.str_8 = str;
+        m.f10 = skip;
+        m.mask_18 = mask;
+        m.f14 = cc;
+        m.list_1C = list;
+        m.pair_20 = pair;
+        m.f28 = bc;
+        m.f30 = c0;
+        m.f34 = c4;
+        m.f38 = c8;
+        m.f3C = 0;
+        m.f40 = 0;
+        m.fC = sub_800A78A8(pc->a_4 - 1);
+        m.f2C = sub_800A78F4(pc->a_4 - 1);
+        v = dword_800AEBF0;
+        m.voice_44 = 0;
+        if (v != 0)
+        {
+            for (; v->xa_2.a_0 >= 0; v++)
+            {
+                if (dword_800AEBE8 == v->id_0)
+                {
+                    m.voice_44 = 1;
+                    break;
+                }
+            }
+        }
+        ret = OpenMessageWindow_8003422C(&m);
+    }
+    else if (mode == 1)
+    {
+        it.posMode_0 = posMode;
+        it.pos_4 = pos;
+        it.f8 = 0;
+        it.f48 = pc->b_8;
+        it.f4C = 0;
+        x = pc->c_C;
+        if (x == 0)
+        {
+            x = sub_800BBDF4(c);
+        }
+        sub_800BC6C4((char*)&it, (EvSrcEventfnc*)x, pc->a_4);
+        ret = OpenItemMessageWindow_80035AC8(&it);
+    }
+    else if (mode == 2)
+    {
+        it.posMode_0 = posMode;
+        it.pos_4 = pos;
+        it.f8 = 0;
+        it.f48 = pc->b_8;
+        it.f4C = 0;
+        x = pc->a_4;
+        if (x == -1)
+        {
+            x = sub_800BBE18(c);
+        }
+        src.a_0 = pc->c_C;
+        src.b_2 = x;
+        src.c_4 = 1;
+        sub_800BC6C4((char*)&it, &src, 1);
+        ret = OpenItemMessageWindow_80035AC8(&it);
+    }
+    else if (mode == 3)
+    {
+        it.posMode_0 = posMode;
+        it.pos_4 = pos;
+        it.f8 = 0;
+        it.f48 = 0xB;
+        it.f4C = str;
+        sub_800BC6C4((char*)&it, 0, 0);
+        ret = OpenItemMessageWindow_80035AC8(&it);
+    }
+    if (ret == 0)
+    {
+        return 0;
+    }
+    c->f118_118 = 1;
+    c->f100_100 = -1;
+    c->f102_102 = -1;
+    c->f11C_11C = ret;
+    c->f104_104 = -1;
+    c->f108_108 = 0;
+    return 1;
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBE3C);
 
 int sub_800BC2B4(EvCtxEventfnc* c)
