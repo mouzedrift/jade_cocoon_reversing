@@ -89,7 +89,36 @@ int sub_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, s
     }
     return 0;
 }
-INCLUDE_ASM(sub_80043DE0);
+// Matched
+int sub_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
+{
+    BillboardScratch* s = BILLBOARD_SCRATCH;
+    s->rel_4.vx = pos->vx - dword_8008D600.vx;
+    s->rel_4.vy = pos->vy - dword_8008D600.vy;
+    s->rel_4.vz = pos->vz - dword_8008D600.vz;
+    gte_ldv0(&s->rel_4);
+    gte_rtps();
+    gte_stsxy(s);
+    gte_stszotz(&s->otz_C);
+    if (s->otz_C - 101 < 0xF9BU)
+    {
+        s->w_10 = (size[0] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        if (s->w_10 > 0x800)
+        {
+            s->w_10 = 0x800;
+        }
+        if (s->h_14 > 0x800)
+        {
+            s->h_14 = 0x800;
+        }
+        p->r0 = (rgb[0] * dword_8008D40C) >> 12;
+        p->g0 = (rgb[1] * dword_8008D40C) >> 12;
+        p->b0 = (rgb[2] * dword_8008D40C) >> 12;
+        return sub_80031BE4(p, pOT_8008B4C8 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, 0, 0x20);
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80044010);
 INCLUDE_ASM(sub_80044D0C);
 INCLUDE_ASM(sub_800451BC);
