@@ -222,7 +222,7 @@ extern int sub_800A8DAC();
 
 extern int sub_800A1B2C();
 
-extern void ReviveOneHp_80011CF4();
+
 
 extern void SsSepSetDecrescendo();
 
@@ -350,9 +350,9 @@ extern void sub_8001E28C();
 
 extern void sub_800A2924();
 
-extern void ClearStatus_80011C30();
 
-extern void RecoverQuarterHpMp_80011C44();
+
+
 
 extern void memset();
 
@@ -590,7 +590,7 @@ extern int sub_800C0AEC();
 
 extern void sub_800BB794();
 
-extern int sub_800C0F78(int);
+extern UnitStatus* sub_800C0F78(int);
 
 extern void StartScreenFlash_8001C02C(void*);
 
@@ -598,7 +598,7 @@ extern void sub_8001DB00(Actor*, int, int);
 
 extern void sub_80018E5C(Actor*, int);
 
-extern void sub_80018EBC(Actor*, int);
+extern void sub_80018EBC(Actor*, UnitStatus*);
 
 extern int sub_8001E1DC(void*);
 

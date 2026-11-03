@@ -689,10 +689,11 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A599C);
 
 int sub_800A5B70(int a)
 {
-    int r;
+    UnitStatus* r;
     int v;
     unsigned char buf[0x18];
     r = sub_80014390((a + 8) & 0xFF);
+
     if (r)
     {
         CalcEquippedStats_80033624(buf, r);
@@ -744,17 +745,12 @@ extern int dword_800A8490;
 extern void sub_800A5BB4();
 extern void sub_800A60F0();
 extern void sub_800A5EB8();
-extern void name_800BF7C4(void* u, short* a, short* b);
+extern void name_800BF7C4(UnitStatus* u, short* a, short* b);
 extern int name_800BFA4C(int a, int b);
-typedef struct CombBtlActor
-{
-    int flags_0;
-    int f4;
-    short hp_8;
-} CombBtlActor;
+
 void sub_800A5C64(CombBtlTask* t)
 {
-    CombBtlActor* u;
+    UnitStatus* u;
     int flags0;
     int fl;
     int r;
@@ -762,8 +758,8 @@ void sub_800A5C64(CombBtlTask* t)
     word_800A8488 = 0;
     byte_800A84A8 &= 0xFC;
     sub_800A60F0();
-    u = (CombBtlActor*)sub_80014390((unsigned char)(dword_800A85B8 + 8));
-    flags0 = u->flags_0;
+    u = sub_80014390((unsigned char)(dword_800A85B8 + 8));
+    flags0 = u->status_0;
     name_800BF7C4(u, &word_800A84BC, &word_800A84C4);
     if (word_800A84BC != 0)
     {
@@ -783,7 +779,7 @@ void sub_800A5C64(CombBtlTask* t)
         byte_800A85FC[dword_800A85B8] = 2;
         dword_800A85C8.kind_0 = 2;
     }
-    fl = u->flags_0;
+    fl = u->status_0;
     r = name_800BFA4C(fl, flags0);
     dword_800A85A8.kind_0 = r;
     dword_800A85A8.targets_C = 0;
@@ -1201,11 +1197,11 @@ void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     p->amount_4 += d;
     if (p->kind_0 == 1)
     {
-        CombBtlActor* r = (CombBtlActor*)sub_80014390((unsigned char)(p->side_18 + 8));
+        UnitStatus* r = sub_80014390((unsigned char)(p->side_18 + 8));
         sub_800127D0(p->side_18 + 8, 0, d, 0);
         if (r->hp_8 <= 0)
         {
-            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)(p->side_18 + 8)));
+            sub_800127B8(sub_80014390((unsigned char)(p->side_18 + 8)));
         }
     }
     else if (p->kind_0 == 2)

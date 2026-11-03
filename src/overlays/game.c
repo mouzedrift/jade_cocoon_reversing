@@ -625,7 +625,7 @@ void sub_800A284C(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        int v = sub_800A2B60(a);
+        UnitStatus* v = sub_800A2B60(a);
         sub_80018EBC(gCtx_800B1260.actors_7c[a], v);
     }
 }
@@ -737,17 +737,17 @@ void sub_800A2AE8(void)
 }
 
 // Matched
-int sub_800A2B20(int a)
+UnitStats* sub_800A2B20(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&gCtx_800B1260.ents_ac[a];
+    return &gCtx_800B1260.ents_ac[a];
 }
 
 // Matched
-int sub_800A2B60(int a)
+UnitStatus* sub_800A2B60(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&gCtx_800B1260.ents_ac[a];
+    return &gCtx_800B1260.ents_ac[a].st_0;
 }
 
 // Matched

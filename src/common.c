@@ -88,24 +88,24 @@ typedef struct
     unsigned char c7;
     int f8;
 } Stats12;
-extern int sub_80014444(int a0);
-extern int sub_8001449C(int a0);
+
 // Matched
 unsigned char* sub_800129B0(Stats12* out, unsigned char* in, int a2)
 {
     int id = 0xD3;
     int kind = in[1];
-    int m;
+    Minion* mn;
+    UnitStats* u;
     MemCopy_800403E8((unsigned int*)out, (unsigned int*)sub_800318C8(kind), 12);
-    m = sub_80014444(a2 & 0xFF);
-    if (m)
+    mn = sub_80014444(a2 & 0xFF);
+    if (mn)
     {
-        id = ((unsigned char*)m)[2];
+        id = mn->species_2;
     }
-    m = sub_8001449C(a2 & 0xFF);
-    if (m)
+    u = sub_8001449C(a2 & 0xFF);
+    if (u)
     {
-        id = ((UnitStats*)m)->species_5C;
+        id = u->species_5C;
     }
     if (id != 0xD3)
     {
@@ -187,7 +187,8 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     int b2;
     int t;
     int id;
-    int m;
+    Minion* mn;
+    UnitStats* u;
     int c;
     short sa;
     short sb;
@@ -257,15 +258,15 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         }
     }
     id = 0xD3;
-    m = sub_80014444(b1 & 0xFF);
-    if (m)
+    mn = sub_80014444(b1 & 0xFF);
+    if (mn)
     {
-        id = ((unsigned char*)m)[2];
+        id = mn->species_2;
     }
-    m = sub_8001449C(b1 & 0xFF);
-    if (m)
+    u = sub_8001449C(b1 & 0xFF);
+    if (u)
     {
-        id = ((UnitStats*)m)->species_5C;
+        id = u->species_5C;
     }
     if (id != 0xD3)
     {

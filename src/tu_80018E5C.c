@@ -153,9 +153,9 @@ int sub_80018E5C(Actor* a0, unsigned int a1)
     return v;
 }
 // Matched
-void sub_80018EBC(int a0, unsigned int* a1)
+void sub_80018EBC(int a0, UnitStatus* a1)
 {
-    unsigned int f = *a1;
+    unsigned int f = a1->status_0;
     int* r = 0;
     if (f & 0x200)
     {

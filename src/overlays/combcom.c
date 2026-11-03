@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "minion_menu.h"
 
 typedef struct CombComTask
 {
@@ -313,14 +314,7 @@ INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
 
 #if 0
 // Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
-typedef struct CombComBox
-{
-    char pad_0[8];
-    short x0;
-    short x1;
-    short y0;
-    short y1;
-} CombComBox;
+
 extern int sub_80012BB0(void* a, void* b, void* c, int* d);
 extern int sub_80013228(void* a, void* b, void* c, int* d);
 extern int sub_80034068(short* p);
@@ -329,19 +323,19 @@ void sub_800CC40C()
     short arg[4];
     int out[10];
     unsigned int i;
-    void* src;
-    CombComBox* t;
+    UnitStatus* src;
+    UnitStatus* t;
     if (byte_800CD83A == 3)
     {
         word_800A82D0 = 0;
         word_800A82D2 = 0;
-        src = (void*)sub_80014390((unsigned char)(byte_800CD839 + 8));
+        src = sub_80014390((unsigned char)(byte_800CD839 + 8));
         for (i = 0; i < 2; i++)
         {
             int bit = 1 << (i + 8);
             if (dword_800CD840->targets_C & bit)
             {
-                t = (CombComBox*)sub_80014390((unsigned char)(i + 8));
+                t = sub_80014390((unsigned char)(i + 8));
                 sub_80012BB0(src, t, dword_800CD840, out);
                 if (!sub_80013228(src, t, dword_800CD840, out))
                 {
@@ -354,13 +348,14 @@ void sub_800CC40C()
                     word_800A82D2 -= out[6];
                     word_800A82D0 -= out[7];
                     word_800A82D2 -= out[8];
-                    if (t->x1 - t->x0 < word_800A82D0)
+                    if (t->maxHp_A - t->hp_8 < word_800A82D0)
                     {
-                        word_800A82D0 = t->x1 - t->x0;
+                        word_800A82D0 = t->maxHp_A - t->hp_8;
                     }
-                    if (t->y1 - t->y0 < word_800A82D2)
+                    if (t->maxMp_E - t->mp_C < word_800A82D2)
                     {
-                        word_800A82D2 = t->y1 - t->y0;
+                        word_800A82D2 = t->maxMp_E - t->mp_C;
+
                     }
                     }
                 }
@@ -388,9 +383,9 @@ INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
 extern CombComItem name_800CB690;
 extern CombComItem name_800CB6C8;
 extern CombComItem name_800CB700;
-extern char dword_800A3AA0[][3][0xF8];
-extern int sub_800A1934(void*);
-extern int sub_800A1958(void*);
+extern Minion dword_800A3AA0[][3];
+extern int sub_800A1934(Minion* p);
+extern int sub_800A1958(Minion* p);
 extern int sub_80034068(short* p);
 int sub_800CC674(short* arg, int mode, int sel, int f)
 {
@@ -403,7 +398,7 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
     int i;
     int k;
     short x;
-    void* u;
+    Minion* u;
     CombComItem* p0;
     CombComItem* it;
     CombComItem** pk;
@@ -432,9 +427,9 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
     if (mode == 1)
     {
         {
-            char* s = (char*)sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            UnitStatus* s = sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
             list[0] = p0;
-            p0->text_4 = s + 0x10;
+            p0->text_4 = s->name_10;
         }
         q[1] = arg[1] + 8;
         if (sub_80034068(q) == 0)
@@ -452,12 +447,12 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
         pi = pk;
         for (k = i = 0; i < 3; i++)
         {
-            u = dword_800A3AA0[arg[1]][i];
+            u = &dword_800A3AA0[arg[1]][i];
             if (i != ((int*)dword_800A4078)[byte_800CD839] && sub_800A1934(u) == 0)
             {
                 it = items[k];
                 *pk = it;
-                it->text_4 = (char*)u + 0x94;
+                it->text_4 = u->status_84.name_10;
                 if (sub_800A1958(u))
                 {
                     (*pk)->flags |= 2;
@@ -512,34 +507,26 @@ typedef struct CombComMsg
     int f0;
     int* text;
 } CombComMsg;
-typedef struct CombComCheck
-{
-    short x;
-    short y;
-    short pad_4[3];
-    short sA;
-    int c;
-} CombComCheck;
+
 extern short* dword_800CD854;
 extern CombComMsg name_800CD46C[];
 extern int dword_800CD454;
 extern int dword_800CD458;
 extern int dword_800CD460;
-extern int sub_800A11D8(int);
-extern char dword_800A3AA0[][3][0xF8];
-extern int sub_800A1958(void*);
-extern int sub_80033C98(CombComCheck* p);
-extern int CheckMagicCastable_80033C08(CombComCheck* p);
+extern Minion dword_800A3AA0[][3];
+extern int sub_800A1958(Minion* p);
+extern int sub_80033C98(struct_minion_ref* p);
+extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 int sub_800CCA94()
 {
-    CombComCheck a;
+    struct_minion_ref a;
     short b[4];
     int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
     int* p;
-    a.x = dword_800CD854[4];
+    a.field_0 = dword_800CD854[4];
     dword_800CD84C = 0;
-    a.y = dword_800CD854[5];
-    a.sA = 0;
+    a.field_2 = dword_800CD854[5];
+    a.field_A = 0;
     b[3] = 0;
     b[0] = dword_800CD840->arg_4;
     b[1] = byte_800CD839 + 8;
@@ -555,7 +542,7 @@ int sub_800CCA94()
         dword_800CD84C = *p;
         return 0;
     case 1:
-        a.c = sub_800A11D8(byte_800CD839);
+        a.field_C_minion = sub_800A11D8(byte_800CD839);
         switch (sub_80033C98(&a))
         {
         case 0:
@@ -573,7 +560,7 @@ int sub_800CCA94()
         }
         break;
     case 2:
-        a.c = sub_800A11D8(byte_800CD839);
+        a.field_C_minion = sub_800A11D8(byte_800CD839);
         switch (CheckMagicCastable_80033C08(&a))
         {
         case 0:
@@ -623,7 +610,7 @@ int sub_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 4)
         {
-            if (sub_800A1958(dword_800A3AA0[byte_800CD839][dword_800CD83C]))
+            if (sub_800A1958(&dword_800A3AA0[byte_800CD839][dword_800CD83C]))
             {
                 dword_800CD84C = dword_800CD454;
                 return 0;

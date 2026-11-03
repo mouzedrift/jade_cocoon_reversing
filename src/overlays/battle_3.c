@@ -1431,9 +1431,9 @@ void sub_800C0F54(int a)
     GetMinionName_800106F8(3, a);
 }
 
-int sub_800C0F78(int a)
+UnitStatus* sub_800C0F78(int a)
 {
-    GetMinionStatus_800107A0(3, a);
+    GetMinionStatus_800107A0(3, a); // sic: no return, the result is left in $v0
 }
 
 int* sub_800C0F9C()

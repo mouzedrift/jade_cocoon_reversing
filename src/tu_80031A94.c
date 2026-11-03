@@ -1030,21 +1030,10 @@ typedef struct
     short pad_2;
     short target;
 } ItemUse_DF4;
-typedef struct
-{
-    int status;
-    int pad_4;
-    short hp;
-    short maxHp;
-    short mp;
-    short maxMp;
-    char pad_10[0x1C];
-    unsigned char stats[6];
-} Target_DF4;
 // Matched
 int sub_80033DF4(ItemUse_DF4* p)
 {
-    Target_DF4* t;
+    UnitStatus* t;
     int full = 0;
     if (GetItemFlags_8001CE70(p->item) & 0x80)
     {
@@ -1062,8 +1051,8 @@ int sub_80033DF4(ItemUse_DF4* p)
     {
         return 1;
     }
-    t = (Target_DF4*)sub_80014390(p->target & 0xFF);
-    if (p->item != 13 && (t->status & 0x400))
+    t = sub_80014390(p->target & 0xFF);
+    if (p->item != 13 && (t->status_0 & 0x400))
     {
         return 4;
     }
@@ -1072,43 +1061,43 @@ int sub_80033DF4(ItemUse_DF4* p)
     case 0:
     case 1:
     case 2:
-        if (t->hp == t->maxHp)
+        if (t->hp_8 == t->maxHp_A)
         {
             full = 1;
         }
         break;
     case 3:
-        if (t->maxHp == 999)
+        if (t->maxHp_A == 999)
         {
             full = 1;
         }
         break;
     case 4:
-        if (t->stats[0] >= 99)
+        if (t->stats_2C[0] >= 99)
         {
             full = 1;
         }
         break;
     case 5:
-        if (t->stats[4] >= 99)
+        if (t->stats_2C[4] >= 99)
         {
             full = 1;
         }
         break;
     case 6:
-        if (t->stats[1] >= 99)
+        if (t->stats_2C[1] >= 99)
         {
             full = 1;
         }
         break;
     case 7:
-        if (t->stats[2] >= 99)
+        if (t->stats_2C[2] >= 99)
         {
             full = 1;
         }
         break;
     case 8:
-        if (t->stats[3] >= 99)
+        if (t->stats_2C[3] >= 99)
         {
             full = 1;
         }
@@ -1117,25 +1106,25 @@ int sub_80033DF4(ItemUse_DF4* p)
     case 10:
     case 11:
     case 12:
-        if (t->hp == t->maxHp && t->mp == t->maxMp)
+        if (t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
         {
             full = 1;
         }
         break;
     case 13:
-        if (!(t->status & 0x7FB) && t->hp == t->maxHp && t->mp == t->maxMp)
+        if (!(t->status_0 & 0x7FB) && t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
         {
             full = 1;
         }
         break;
     case 14:
-        if (!(t->status & 1))
+        if (!(t->status_0 & 1))
         {
             full = 1;
         }
         break;
     case 15:
-        if (!(t->status & 0x3F8))
+        if (!(t->status_0 & 0x3F8))
         {
             full = 1;
         }

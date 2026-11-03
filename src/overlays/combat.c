@@ -65,10 +65,10 @@ extern CombatSlotCombat dword_800A3A08[];
 extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
 extern void sub_80018E5C(void* p);
-extern void sub_80018EBC(void* p, int v);
+extern void sub_80018EBC(void* p, UnitStatus* v);
 extern void sub_8001E1DC(void* p);
 extern void sub_800376A0(void* a, void* b);
-extern int sub_800A10C0(int i);
+
 extern int sub_800A1A3C(Minion* p, int n);
 
 typedef struct CombatTaskCombat
@@ -625,10 +625,10 @@ int sub_800A10A4(int i)
 }
 
 // Matched
-int sub_800A10C0(int i)
+UnitStatus* sub_800A10C0(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)&s->minion_4->status_84;
+    return &s->minion_4->status_84;
 }
 
 // Matched
@@ -672,11 +672,12 @@ int sub_800A11BC(int i)
 }
 
 // Matched
-int sub_800A11D8(int i)
+Minion* sub_800A11D8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->minion_4;
+    return s->minion_4;
 }
+
 
 // Matched
 void sub_800A11F4(void)

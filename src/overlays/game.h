@@ -282,7 +282,7 @@ typedef struct GameSub_1
 
 extern int sub_8001E1DC(struct_obj_A* p);
 
-extern void sub_80018EBC(Actor* a, int b);
+extern void sub_80018EBC(Actor* a, UnitStatus* b);
 
 extern void sub_80018E5C(Actor* a, int b);
 

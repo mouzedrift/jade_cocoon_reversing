@@ -214,10 +214,9 @@ int LowestSetBit_80014358(unsigned int mask)
 }
 #if 0
 // Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C / sub_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
-extern int sub_800A10C0(int a0);
-int sub_80014390(int a0)
+UnitStatus* sub_80014390(int a0)
 {
-    int r = 0;
+    UnitStatus* r = 0;
     unsigned int v = a0 & 0xFF;
     unsigned int w;
     if (v >= 8)
@@ -238,21 +237,21 @@ int sub_80014390(int a0)
     else if (v != 0)
     {
         w = a0 - 1;
-        r = (int)GetMinionStatus_800107A0(3, w & 0xFF);
+        r = GetMinionStatus_800107A0(3, w & 0xFF);
     }
     else
     {
-        r = (int)&saveData_8008B570.levantStatus_7C8;
+        r = &levantStatus_8008BD38; // == saveData_8008B570.levantStatus_7C8
     }
     return r;
 }
 #endif
 INCLUDE_ASM(sub_80014390);
 // Matched
-int sub_80014444(int a0)
+Minion* sub_80014444(int a0)
 {
     unsigned int v = a0 & 0xFF;
-    int r = 0;
+    Minion* r = 0;
     if (v >= 8)
     {
         v = a0 - 8;
@@ -261,15 +260,15 @@ int sub_80014444(int a0)
     else if (v != 0)
     {
         v = a0 - 1;
-        r = (int)GetMinion_80010598(3, v & 0xFF);
+        r = GetMinion_80010598(3, v & 0xFF);
     }
     return r;
 }
 #if 0
 // Not matched (2 words): with an int a0 the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1, 11 words); u_char a0 (here) gets them right but masks a0 on entry (andi instead of move, a0 - 4 taken from the masked copy). a0 = 1 << a0 / a0 = flags & m also fix the registers but write $s0; tried K&R int/u_char, a0 copies, range test a0 >= 4 && a0 < 7, early returns, if/else r = 0; permuter 1500: best is this
-int sub_8001449C(unsigned char a0)
+UnitStats* sub_8001449C(unsigned char a0)
 {
-    int r = 0;
+    UnitStats* r = 0;
     int v = a0 - 4;
     if ((unsigned char)v < 3)
     {

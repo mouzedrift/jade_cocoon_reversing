@@ -157,7 +157,7 @@ extern int CountItems_800106B8(void);
 extern unsigned char* GetMinionName_800106F8(int id, int nth);
 extern unsigned char* sub_80010724(int id, int nth, int idx);
 extern unsigned char sub_80010768(int id, int nth, int idx);
-extern UnitStatus* GetMinionStatus_800107A0();
+extern UnitStatus* GetMinionStatus_800107A0(); // (int id, int nth); unprototyped: sub_80013EB4 calls it with one argument
 extern unsigned char* sub_800107CC(int id, int nth);
 extern UnitSkills* sub_800107F8(int id, int nth);
 extern unsigned int* sub_80010824(int id, int nth);
@@ -461,7 +461,7 @@ extern int IsEffectTaskIdle_800148D4(void);
 
 extern int sub_80019C84(void);
 
-extern int sub_800A11D8(int a0);
+extern Minion* sub_800A11D8(int a0);
 extern int sub_800AD288(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
 extern void sub_800A61CC(int a0, void* a1, void* a2);
@@ -477,7 +477,7 @@ extern void FadeToBlackStep_8001BB28(void);
 extern void FadeToWhiteStep_8001BC00(void);
 
 extern int sub_800A248C(void);
-extern int sub_800A2B20(int a0);
+extern UnitStats* sub_800A2B20(int a0);
 
 extern int RequestModelAnim_8002032C(int a0, int a1, int a2);
 extern void sub_800268E8(struct ModelAnim* a0, int a1, int a2, int a3, int a4);
@@ -502,7 +502,10 @@ extern int AreRequestedModelsLoaded_80020B70(struct ModelLoader* p);
 extern void sub_8001E574();
 
 extern void sub_800127B8(UnitStatus* p);
-extern int sub_800A2B60(int a0);
+extern UnitStatus* sub_800A2B60(int a0);
+extern UnitStatus* sub_800A10C0(int a0);
+extern Minion* sub_80014444(int a0);
+extern UnitStats* sub_8001449C(int a0);
 extern int sub_80012204(int a, int b, int c, int d);
 extern double sub_80012358(int n, int x);
 extern int sub_8001247C(double x);
