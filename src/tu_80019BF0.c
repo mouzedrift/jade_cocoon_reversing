@@ -16,7 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_80073040);
 INCLUDE_DATA(dword_80073044);
 INCLUDE_DATA(dword_80073048);
 INCLUDE_DATA(dword_8007304C);
@@ -41,77 +40,6 @@ INCLUDE_DATA(overlayAddr4_80073204);
 INCLUDE_DATA(overlayAddr5_80073208);
 INCLUDE_DATA(overlayAddr6_8007320C);
 INCLUDE_DATA(dword_80073210);
-INCLUDE_DATA(dword_80073234);
-INCLUDE_DATA(dword_80073238);
-INCLUDE_DATA(dword_8007324C);
-INCLUDE_DATA(dword_8007327C);
-INCLUDE_DATA(dword_800732A8);
-INCLUDE_DATA(dword_800732D8);
-INCLUDE_DATA(dword_800732F4);
-INCLUDE_DATA(dword_80073310);
-INCLUDE_DATA(dword_80073330);
-INCLUDE_DATA(dword_80073350);
-INCLUDE_DATA(dword_80073388);
-INCLUDE_DATA(dword_800733B8);
-INCLUDE_DATA(dword_800733D0);
-INCLUDE_DATA(dword_800733F0);
-INCLUDE_DATA(dword_80073410);
-INCLUDE_DATA(dword_800734DC);
-INCLUDE_DATA(dword_8007355C);
-INCLUDE_DATA(dword_800735EC);
-INCLUDE_DATA(dword_80073628);
-INCLUDE_DATA(dword_80073648);
-INCLUDE_DATA(dword_8007366C);
-INCLUDE_DATA(dword_800736D0);
-INCLUDE_DATA(dword_800736EC);
-INCLUDE_DATA(dword_80073724);
-INCLUDE_DATA(dword_80073740);
-INCLUDE_DATA(dword_80073760);
-INCLUDE_DATA(dword_8007377C);
-INCLUDE_DATA(dword_800737A0);
-INCLUDE_DATA(dword_800737B4);
-INCLUDE_DATA(dword_800737C8);
-INCLUDE_DATA(dword_80073910);
-INCLUDE_DATA(dword_8007393C);
-INCLUDE_DATA(dword_800739F4);
-INCLUDE_DATA(dword_80073A14);
-INCLUDE_DATA(dword_80073A28);
-INCLUDE_DATA(dword_80073A48);
-INCLUDE_DATA(dword_80073A84);
-INCLUDE_DATA(dword_80073AAC);
-INCLUDE_DATA(dword_80073ACC);
-INCLUDE_DATA(dword_80073B00);
-INCLUDE_DATA(dword_80073B20);
-INCLUDE_DATA(dword_80073B44);
-INCLUDE_DATA(dword_80073B68);
-INCLUDE_DATA(dword_80073B78);
-INCLUDE_DATA(dword_80073BB0);
-INCLUDE_DATA(dword_80073BC4);
-INCLUDE_DATA(dword_80073BDC);
-INCLUDE_DATA(dword_80073C14);
-INCLUDE_DATA(dword_80073C58);
-INCLUDE_DATA(dword_80073C80);
-INCLUDE_DATA(dword_80073CB0);
-INCLUDE_DATA(dword_80073CCC);
-INCLUDE_DATA(dword_80073CE0);
-INCLUDE_DATA(dword_80073CF8);
-INCLUDE_DATA(dword_80073D18);
-INCLUDE_DATA(dword_80073D34);
-INCLUDE_DATA(dword_80073D54);
-INCLUDE_DATA(dword_80073DD0);
-INCLUDE_DATA(dword_80073E18);
-INCLUDE_DATA(dword_80073ED8);
-INCLUDE_DATA(dword_80073F24);
-INCLUDE_DATA(dword_80073F40);
-INCLUDE_DATA(dword_80073F5C);
-INCLUDE_DATA(dword_80073FA4);
-INCLUDE_DATA(dword_80073FC0);
-INCLUDE_DATA(dword_80073FF8);
-INCLUDE_DATA(dword_8007400C);
-INCLUDE_DATA(dword_8007403C);
-INCLUDE_DATA(dword_8007408C);
-INCLUDE_DATA(dword_800740B0);
-INCLUDE_DATA(dword_800740B4);
 INCLUDE_DATA(fileRequestQueue_80086540);
 INCLUDE_DATA(dword_80086544);
 INCLUDE_DATA(dword_80086548);
@@ -690,6 +618,50 @@ void sub_8001B714(void)
         unknownFlags_8008D678 |= 0x10;
     }
 }
+extern short dword_8007C728[][2];
+extern DRAWENV drawEnv_8008D698[2];
+extern DISPENV dispEnv_8008D750[2];
+extern DRAWENV* InitDrawEnv_8005A9C8(DRAWENV* env, int x, int y, int w, int h);
+extern DISPENV* InitDispEnv_8005AA88(DISPENV* env, int x, int y, int w, int h);
+#if 0
+// Not matched: only the scheduling of the display base address at the top differs (one extra load-delay nop)
+void InitEnvironments_8001B7B4(void)
+{
+    int interlace;
+    int off;
+    display_8008B4D8.field_C_w = dword_8007C728[display_8008B4D8.field_0][0];
+    display_8008B4D8.field_E_h = dword_8007C728[display_8008B4D8.field_0][1];
+    off = 240;
+    if (display_8008B4D8.field_E_h == 480)
+    {
+        off = 0;
+        interlace = 1;
+        unknownFlags_8008D678 |= 0x20;
+    }
+    else
+    {
+        interlace = 0;
+        unknownFlags_8008D678 &= ~0x20;
+    }
+    InitDrawEnv_8005A9C8(&drawEnv_8008D698[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDispEnv_8005AA88(&dispEnv_8008D750[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDrawEnv_8005A9C8(&drawEnv_8008D698[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDispEnv_8005AA88(&dispEnv_8008D750[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    drawEnv_8008D698[1].isbg = 1;
+    drawEnv_8008D698[0].isbg = 1;
+    drawEnv_8008D698[1].dtd = 1;
+    drawEnv_8008D698[0].dtd = 1;
+    dispEnv_8008D750[1].isinter = interlace;
+    dispEnv_8008D750[0].isinter = interlace;
+    dispEnv_8008D750[1].isrgb24 = 0;
+    dispEnv_8008D750[0].isrgb24 = 0;
+    dword_8008D474[0] = display_8008B4D8.field_8_x;
+    dword_8008D474[1] = display_8008B4D8.field_A_y;
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomScreen(geomScreenDistance_8008B548);
+    SetFarColor(0, 0, 0);
+}
+#endif
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 // Matched
 void InitSprt_8001B9A0(int buffer)
@@ -1165,12 +1137,138 @@ unsigned int sub_8001C8A0(short mask)
     } while (i < 10);
     return r;
 }
-#if 0
-void ProcessPad_8001C8E8(int a0)
+// Matched
+void ProcessPad_8001C8E8(int port)
 {
+    int i;
+    unsigned short delay;
+    unsigned short rate;
+    pads_800918E8[port][8] = 0;
+    if (pads_800918E8[port][0] != 0xFF)
+    {
+        padPrevHeld_800918C8[port] = padHeld_800918D0[port];
+        padHeld_800918D0[port] = ~((pads_800918E8[port][2] << 8) | pads_800918E8[port][3]);
+        if (display_8008B4D8.vsyncsPerFrame_4 >= 2)
+        {
+            delay = 0x14;
+            rate = 1;
+        }
+        else
+        {
+            delay = 0x28;
+            rate = 2;
+        }
+        switch (pads_800918E8[port][1] >> 4)
+        {
+        case 1:
+        case 2:
+        case 3:
+        case 5:
+        case 6:
+        case 8:
+            break;
+        case 7:
+            UpdatePadAnalog_8001CC04(port);
+            if (pads_800918E8[port][8] == 1)
+            {
+                delay *= 2;
+                rate = 0x10;
+            }
+            else if (pads_800918E8[port][8] == 2)
+            {
+                delay = delay * 1.5;
+                rate = 8;
+            }
+        case 4:
+            UpdatePadRepeat_8001CAF0(port, delay, rate);
+            break;
+        }
+    }
+    else
+    {
+        padHeld_800918D0[port] = 0;
+        padPrevHeld_800918C8[port] = 0;
+        padPressed_8009194C[port] = 0;
+        padReleased_800918D4[port] = 0;
+        padRepeat_800918CC[port] = 0;
+        for (i = 0; i < 16; i++)
+        {
+            padHoldFrames_80091950[port][i] = 0;
+        }
+    }
 }
-#endif
-INCLUDE_ASM(ProcessPad_8001C8E8);
+// .rdata that follows the jump table of ProcessPad_8001C8E8 (the compiler's table is emitted between)
+INCLUDE_DATA(dword_80073234);
+INCLUDE_DATA(dword_80073238);
+INCLUDE_DATA(dword_8007324C);
+INCLUDE_DATA(dword_8007327C);
+INCLUDE_DATA(dword_800732A8);
+INCLUDE_DATA(dword_800732D8);
+INCLUDE_DATA(dword_800732F4);
+INCLUDE_DATA(dword_80073310);
+INCLUDE_DATA(dword_80073330);
+INCLUDE_DATA(dword_80073350);
+INCLUDE_DATA(dword_80073388);
+INCLUDE_DATA(dword_800733B8);
+INCLUDE_DATA(dword_800733D0);
+INCLUDE_DATA(dword_800733F0);
+INCLUDE_DATA(dword_80073410);
+INCLUDE_DATA(dword_800734DC);
+INCLUDE_DATA(dword_8007355C);
+INCLUDE_DATA(dword_800735EC);
+INCLUDE_DATA(dword_80073628);
+INCLUDE_DATA(dword_80073648);
+INCLUDE_DATA(dword_8007366C);
+INCLUDE_DATA(dword_800736D0);
+INCLUDE_DATA(dword_800736EC);
+INCLUDE_DATA(dword_80073724);
+INCLUDE_DATA(dword_80073740);
+INCLUDE_DATA(dword_80073760);
+INCLUDE_DATA(dword_8007377C);
+INCLUDE_DATA(dword_800737A0);
+INCLUDE_DATA(dword_800737B4);
+INCLUDE_DATA(dword_800737C8);
+INCLUDE_DATA(dword_80073910);
+INCLUDE_DATA(dword_8007393C);
+INCLUDE_DATA(dword_800739F4);
+INCLUDE_DATA(dword_80073A14);
+INCLUDE_DATA(dword_80073A28);
+INCLUDE_DATA(dword_80073A48);
+INCLUDE_DATA(dword_80073A84);
+INCLUDE_DATA(dword_80073AAC);
+INCLUDE_DATA(dword_80073ACC);
+INCLUDE_DATA(dword_80073B00);
+INCLUDE_DATA(dword_80073B20);
+INCLUDE_DATA(dword_80073B44);
+INCLUDE_DATA(dword_80073B68);
+INCLUDE_DATA(dword_80073B78);
+INCLUDE_DATA(dword_80073BB0);
+INCLUDE_DATA(dword_80073BC4);
+INCLUDE_DATA(dword_80073BDC);
+INCLUDE_DATA(dword_80073C14);
+INCLUDE_DATA(dword_80073C58);
+INCLUDE_DATA(dword_80073C80);
+INCLUDE_DATA(dword_80073CB0);
+INCLUDE_DATA(dword_80073CCC);
+INCLUDE_DATA(dword_80073CE0);
+INCLUDE_DATA(dword_80073CF8);
+INCLUDE_DATA(dword_80073D18);
+INCLUDE_DATA(dword_80073D34);
+INCLUDE_DATA(dword_80073D54);
+INCLUDE_DATA(dword_80073DD0);
+INCLUDE_DATA(dword_80073E18);
+INCLUDE_DATA(dword_80073ED8);
+INCLUDE_DATA(dword_80073F24);
+INCLUDE_DATA(dword_80073F40);
+INCLUDE_DATA(dword_80073F5C);
+INCLUDE_DATA(dword_80073FA4);
+INCLUDE_DATA(dword_80073FC0);
+INCLUDE_DATA(dword_80073FF8);
+INCLUDE_DATA(dword_8007400C);
+INCLUDE_DATA(dword_8007403C);
+INCLUDE_DATA(dword_8007408C);
+INCLUDE_DATA(dword_800740B0);
+INCLUDE_DATA(dword_800740B4);
 // Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
