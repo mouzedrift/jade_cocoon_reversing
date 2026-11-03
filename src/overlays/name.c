@@ -20,6 +20,25 @@ typedef struct
     int field_40;
     short length_44; // length of name_10 in bytes
 } NameEntry;
+typedef struct
+{
+    int flags;
+    unsigned short s4;
+    unsigned short s6;
+    short s8;
+    short sA;
+} NameCursor;
+typedef struct
+{
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+    short s8;
+    short pad_A[5];
+} NameGrid;
+extern NameGrid name_800B8200[];
+extern int sub_800B80E4(NameCursor* p);
 extern int dword_800B83F8;
 extern char defaultName_800B83B8[0x14];
 extern unsigned short padPressed_8009194C;
@@ -126,7 +145,58 @@ INCLUDE_OVERLAY_ASM(name, sub_800B7414);
 
 INCLUDE_OVERLAY_ASM(name, sub_800B75EC);
 
-INCLUDE_OVERLAY_ASM(name, sub_800B78EC);
+void sub_800B78EC(NameEntry* p)
+{
+    NameCursor cur;
+    if (p->field_8 == 0)
+    {
+        p->pad_E = p->field_C;
+    }
+    cur.flags = name_800B8200[p->field_8].s2;
+    cur.s4 = 0;
+    cur.s8 = name_800B8200[p->field_8].s6;
+    cur.sA = name_800B8200[p->field_8].s8;
+    cur.s6 = p->field_C;
+    p->field_4 = sub_800B80E4(&cur);
+    p->field_C = cur.s6;
+    if (p->field_8 == 0)
+    {
+        if (p->field_4 == 1)
+        {
+            p->field_8 = 1;
+            p->field_C = p->pad_A;
+        }
+    }
+    else if (p->field_8 == 1)
+    {
+        if (p->field_4 == 1)
+        {
+            p->field_C = 0;
+            p->field_8 = 2;
+        }
+        else if (p->field_4 == 2)
+        {
+            if ((short)p->pad_E % 12 != 0)
+            {
+                p->field_C = p->pad_E;
+            }
+            else
+            {
+                p->field_C = p->pad_E + 11;
+            }
+            p->field_8 = 0;
+        }
+    }
+    else if (p->field_8 == 2)
+    {
+        if (p->field_4 == 2)
+        {
+            p->field_8 = 1;
+            p->field_C = p->pad_A;
+        }
+    }
+    p->field_4 = 0;
+}
 
 // Matched
 void sub_800B7A88(NameEntry* p)
@@ -316,14 +386,6 @@ void sub_800B8018(void)
 {
 }
 
-typedef struct
-{
-    int flags;
-    unsigned short s4;
-    unsigned short s6;
-    short s8;
-    short sA;
-} NameCursor;
 extern short name_800B83C8[];
 extern short name_800B83D0[];
 void sub_800B8020(NameCursor* p, int k)
