@@ -709,6 +709,7 @@ sub_80035900=0x80035900;
 sub_800359F8=0x800359f8;
 OpenItemMessageWindow_80035AC8=0x80035ac8;
 UpdateItemMessageWindow_80035BD8=0x80035bd8;
+InitPadVibration_800364E4=0x800364e4;
 StartPadVibration_80036528=0x80036528;
 StopPadVibration_80036658=0x80036658;
 StopAllPadVibration_80036678=0x80036678;
