@@ -54,6 +54,10 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned char byte_800CD83B;
 extern int dword_800CD84C;
 extern void sub_800CD16C();
+extern int dword_800CD83C;
+extern unsigned char byte_800A85BC;
+extern short word_800A82D0;
+extern short word_800A82D2;
 extern void sub_800CB88C();
 extern void sub_800CB924();
 
@@ -282,12 +286,80 @@ void sub_800CBCA0()
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
 
+#if 0
+// Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
+typedef struct CombComBox
+{
+    char pad_0[8];
+    short x0;
+    short x1;
+    short y0;
+    short y1;
+} CombComBox;
+extern int sub_80012BB0(void* a, void* b, void* c, int* d);
+extern int sub_80013228(void* a, void* b, void* c, int* d);
+extern int sub_80034068(short* p);
+void sub_800CC40C()
+{
+    short arg[4];
+    int out[10];
+    unsigned int i;
+    void* src;
+    CombComBox* t;
+    if (byte_800CD83A == 3)
+    {
+        word_800A82D0 = 0;
+        word_800A82D2 = 0;
+        src = (void*)sub_80014390((unsigned char)(byte_800CD839 + 8));
+        for (i = 0; i < 2; i++)
+        {
+            int bit = 1 << (i + 8);
+            if (dword_800CD840->fC & bit)
+            {
+                t = (CombComBox*)sub_80014390((unsigned char)(i + 8));
+                sub_80012BB0(src, t, dword_800CD840, out);
+                if (!sub_80013228(src, t, dword_800CD840, out))
+                {
+                    bit = 1 << i;
+                    if (dword_800CD840->f8 & bit)
+                    {
+                    word_800A82D0 -= out[3];
+                    word_800A82D2 -= out[4];
+                    word_800A82D0 -= out[5];
+                    word_800A82D2 -= out[6];
+                    word_800A82D0 -= out[7];
+                    word_800A82D2 -= out[8];
+                    if (t->x1 - t->x0 < word_800A82D0)
+                    {
+                        word_800A82D0 = t->x1 - t->x0;
+                    }
+                    if (t->y1 - t->y0 < word_800A82D2)
+                    {
+                        word_800A82D2 = t->y1 - t->y0;
+                    }
+                    }
+                }
+            }
+        }
+        arg[0] = dword_800CD840->f4;
+        arg[1] = byte_800CD839 + 8;
+        arg[2] = dword_800CD83C;
+        arg[3] = 0;
+        if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 6)
+        {
+            ((int (*)(short*))sub_80034124)(arg);
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && sub_80034068(arg))
+        {
+            word_800A82D0 = 0;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC674);
 
-extern int dword_800CD83C;
-extern unsigned char byte_800A85BC;
 void sub_800CC9FC()
 {
     byte_800A85BC = dword_800CD83C;
@@ -444,8 +516,6 @@ void sub_800CD0C8()
 extern short* dword_800CD854;
 extern void (*dword_800CD818[])(EventEntry*, void*);
 extern unsigned char byte_800A84A8;
-extern short word_800A82D0;
-extern short word_800A82D2;
 extern int UpdateMenuCursor_8003D794(void* p, int a1);
 extern void sub_800CBEA4();
 void sub_800CD16C(EventEntry* e, void* buf)
