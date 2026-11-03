@@ -18,3 +18,4 @@ dword_8007411C 0x28     # the jump table of HsvToRgb555_8002A040 (tu_80028C60) f
 aDWorkPsusEvent 0x18       # "D:\WORK\PSUS\EVENT.C"; the jump table of sub_8004AD44 (tu_80043AF8) follows
 dword_8007415C 0x48     # SJIS strings; the jump table of DrawMenuWindowContents_8002A710 (tu_8002A1BC) follows
 dword_80074864 0x20     # head and the jump table of an asm function of tu_800353A0; the jump table of sub_80039ED8 (tu_80036528) follows
+aEffectC 0x10     # "EFFECT.C" and padding; the jump tables of sub_80015478 (tu_80014954) follow
