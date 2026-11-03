@@ -164,7 +164,7 @@ extern void sub_800BFE18();
 extern void sub_800C0084();
 extern void sub_800C01AC();
 extern void sub_800C01D0();
-extern void sub_800BD80C();
+extern void MinionListScreen_800BD80C();
 
 extern int sub_800AD7F8();
 extern MenuQ name_800C1E98[];
@@ -253,7 +253,7 @@ typedef struct MenuMain
 extern void sub_800BBE50();
 extern void LoadUiTiy_8002BF74();
 extern void sub_800122A0();
-EventEntry* sub_800BBB9C(EventNode* n)
+EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
 {
     EventEntry* t = AllocEventEntry_80043AF8(n);
     MenuMain* c;
@@ -1058,7 +1058,7 @@ void sub_800BD5E4(MenuTask* t, int a)
     t->next_8 = sub_800BD6C8;
 }
 
-void sub_800BD634(void)
+void SetAllMinionsCaptured_800BD634(void)
 {
     int i;
     for (i = 0; i < 0xD3; i++)
@@ -1099,7 +1099,7 @@ void sub_800BD6C8(MenuTask* t, MenuCtx* c)
     if (c->f28 < 8)
         c->f28++;
     if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
-        t->next_8 = sub_800BD80C;
+        t->next_8 = MinionListScreen_800BD80C;
 }
 
 typedef struct MenuBox7
@@ -1118,11 +1118,11 @@ extern int name_800C2980;
 extern char name_800C2958[];
 extern unsigned short padRepeat_800918CC;
 extern void sub_8002ADB4();
-extern void sub_800BDBFC(char* a, int page);
+extern void DrawMinionListPage_800BDBFC(char* a, int page);
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
 extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
-void sub_800BD80C(MenuTask* t, char* a)
+void MinionListScreen_800BD80C(MenuTask* t, char* a)
 {
     MenuCol col;
     MenuBox7 box;
@@ -1186,7 +1186,7 @@ void sub_800BD80C(MenuTask* t, char* a)
     pos[0] += 0x1C;
     DrawSmallNumber3_8002C290(pos, 0xAB, 0xE);
     DrawUiWindow_8002A384(&w);
-    sub_800BDBFC(aa, name_800C2980);
+    DrawMinionListPage_800BDBFC(aa, name_800C2980);
     }
     r2.x = 0xE;
     r2.y = 0x29;
@@ -1212,14 +1212,14 @@ void sub_800BD80C(MenuTask* t, char* a)
 
 extern int sub_800B32D4();
 extern int name_8007A170[];
-int sub_800BDB74(int a)
+int GetMinionSpeciesName_800BDB74(int a)
 {
     if (a < 0xC9)
         return name_8007A170[a];
     return sub_800B32D4(a - 0xC9);
 }
 
-int sub_800BDBB8(int a)
+int IsMinionCaptured_800BDBB8(int a)
 {
     int q = a / 32;
     int r = a - q * 32;
@@ -1229,7 +1229,7 @@ int sub_800BDBB8(int a)
 extern char name_800BB9C0[];
 extern void DrawText_8003E91C();
 extern void sub_8003F89C();
-void sub_800BDBFC(char* a, int page)
+void DrawMinionListPage_800BDBFC(char* a, int page)
 {
     short pos[2];
     int cnt = 0;
@@ -1248,9 +1248,9 @@ void sub_800BDBFC(char* a, int page)
             pos[1] = ((cnt - lo) / 4) * 10 + 0x2B;
             DrawText_8003E91C(1, name_800BB9C0, pos, 0xE);
         }
-        if (sub_800BDBB8(i) && cnt < hi && cnt >= lo)
+        if (IsMinionCaptured_800BDBB8(i) && cnt < hi && cnt >= lo)
         {
-            MemCopy_800403E8((unsigned int*)buf, (unsigned int*)sub_800BDB74(i), 0x16);
+            MemCopy_800403E8((unsigned int*)buf, (unsigned int*)GetMinionSpeciesName_800BDB74(i), 0x16);
             pos[0] += 8;
             if (buf)
             {
@@ -1744,7 +1744,7 @@ extern int GetRankName_8002FCD8();
 extern int sub_800AD02C();
 extern void DrawLargeNumber_8002C100();
 extern void AddClipDrawAreaPrim_80033308();
-extern void sub_800C0E04(short* a, short* pos, short c);
+extern void DrawEquipmentWindow_800C0E04(short* a, short* pos, short c);
 extern char name_800C2994[];
 extern char name_800C298C[];
 extern char name_800C1BE0[];
@@ -1789,7 +1789,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
     w.w[4] = 0;
     w.w[5] = 1;
     w.z = 0;
-    sub_800C0E04(w.w, pp, s);
+    DrawEquipmentWindow_800C0E04(w.w, pp, s);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     pos[0] = 0xF;
     pos[1] = 0x77;
@@ -2392,7 +2392,7 @@ typedef struct MenuItemGrid
     char pad_10[0x2C];
     short scroll_3C;
 } MenuItemGrid;
-void sub_800C01F4(MenuItemGrid* c)
+void DrawItemGrid_800C01F4(MenuItemGrid* c)
 {
     MenuCell r;
     MenuPair pr;
@@ -2604,7 +2604,7 @@ extern int GetKeyItemIcon_8001D344();
 extern void sub_8002C6DC();
 extern char name_800C276C[];
 extern char name_800C2770[];
-void sub_800C09B0(short* a)
+void DrawKeyItemsWindow_800C09B0(short* a)
 {
     MenuDlg d;
     short i;
@@ -2768,7 +2768,7 @@ typedef struct MenuEquipLine
 extern MenuEquipLine* name_800C18B0[];
 extern int name_800C1754[];
 extern int GetEquipmentName_8001D128();
-void sub_800C0E04(short* a, short* pos, short c)
+void DrawEquipmentWindow_800C0E04(short* a, short* pos, short c)
 {
     MenuDlg d;
     short i;
