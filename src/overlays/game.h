@@ -10,6 +10,7 @@
 
 #include "tu_8001EA48.h"
 #include "tu_80036528.h"
+#include "tu_80019BF0.h"
 
 extern void sub_800A6D30(int a);
 
@@ -46,12 +47,39 @@ typedef struct GameV3_1
     int a, b, c;
 } GameV3_1;
 
+// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
+typedef struct GameEnemyMember
+{
+    int species_0; // sub_80019C70 / InitMinionData_8001900C
+    int f4;
+} GameEnemyMember;
+
+typedef struct GameEnemy
+{
+    int kind_0; // 0: actors already exist, 1: hide them when reused
+    int maxCount_4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int useMinion_18; // 1: the first member is minion_1C
+    UnitStats minion_1C;
+    Actor* actors_A4[3];
+    GameEnemyMember members_B0[3];
+    int fC8[3];
+    int fD4[3];
+} GameEnemy;
+
 typedef struct GameSlot_1
 {
     int f0;
     GameAi* f4;
-    char data_8[0xe0];
+    GameEnemy data_8;
 } GameSlot_1;
+
+extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
+extern short dword_80079140[]; // default bone table
+extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
 
 
 
@@ -589,6 +617,7 @@ typedef struct GameO_1
 extern int sub_800A48F4(int a);
 
 extern void sub_800A46FC(GameAi* p);
+extern void sub_800A45F8(GameAi* p);
 
 typedef struct GameLst_1
 {

@@ -208,7 +208,7 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b)
     GameSlot_1* r = sub_800A17BC();
     r->f0 = 1;
     r->f4 = b;
-    MemCopy_800403E8((unsigned int*)r->data_8, src, 0xe0);
+    MemCopy_800403E8((unsigned int*)&r->data_8, src, 0xe0);
     return r;
 }
 
@@ -491,7 +491,118 @@ void sub_800A1F0C(void)
     sub_800A7BF0(-1);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1F80);
+// Matched
+void sub_800A1F80(void)
+{
+    ActorDesc s;
+    int v[3];
+    GameCtx_1* g;
+    GameSlot_1* h;
+    int n;
+    short* offs;
+    int i;
+    int k;
+    Model* m;
+    Actor* a;
+    MinionModelDesc* d;
+    int* p0;
+    int* p1;
+    int f;
+    g = &gCtx_800B1260;
+    n = g->f770;
+    h = (GameSlot_1*)g->f4;
+    if (g->f76c < n)
+    {
+        offs = dword_800ADE9C[g->f76c - 1];
+    }
+    else
+    {
+        offs = dword_800ADE9C[n - 1];
+    }
+    i = 0;
+    do
+    {
+        k = 0;
+        if (i == 0 && h->data_8.useMinion_18 == 1)
+        {
+            MemCopy_800403E8((unsigned int*)&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], (unsigned int*)&h->data_8.minion_1C, sizeof(UnitStats));
+        }
+        else
+        {
+            k = InitMinionData_8001900C(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], &h->data_8.members_B0[i].species_0);
+        }
+        if (h->data_8.kind_0 == 0 || h->data_8.actors_A4[i] != 0)
+        {
+            a = sub_8001D4DC(h->data_8.actors_A4[i], 1, i, 1);
+            if (h->data_8.kind_0 == 1)
+            {
+                sub_8001D730(a, 1);
+            }
+        }
+        else
+        {
+            d = sub_80019C70(h->data_8.members_B0[i].species_0);
+            m = AcquireLoaderModel_80020734(d->modelId_0);
+            s.modelId_0 = d->modelId_0;
+            s.kind_4 = 1;
+            s.pos_8[0] = 0;
+            s.pos_8[1] = 0;
+            s.pos_8[2] = 0;
+            s.rot_14[0] = 0;
+            s.rot_14[1] = 0;
+            s.rot_14[2] = 0;
+            s.clutRow_1C = i;
+            s.animIdx_20 = 4;
+            s.frame_24 = -3;
+            s.frameSpeed_28 = 0x1000;
+            s.blendDiv_2C = 4;
+            s.visible_30 = 1;
+            s.bones_34 = dword_80079140;
+            if (k >= 4)
+            {
+                s.baseScale_38 = (int*)sub_80024E90(m, k);
+            }
+            else
+            {
+                p0 = (int*)sub_80024E90(m, k);
+                p1 = (int*)sub_80024E90(m, k + 1);
+                f = sub_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
+                f = ((p1[0] - p0[0]) * f) / 4096;
+                v[0] = p0[0] + f;
+                v[1] = p0[1] + f;
+                v[2] = p0[2] + f;
+                s.baseScale_38 = v;
+            }
+            s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
+            s.anims_40 = (ActorAnim*)sub_80024E38(m);
+            s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+            s.hasMatrices_4C = 1;
+            a = CreateActor_8001D45C(&s);
+            sub_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
+        }
+        a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c]) & 0xfff] * 1000 / 4096;
+        a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
+        a->pos_38[2] = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c] + 0x400) & 0xfff] * 1000 / 4096;
+        a->rot_5C[0] = 0;
+        a->prevPos_44[0] = a->pos_38[0];
+        a->prevPos_44[1] = a->pos_38[1];
+        a->prevPos_44[2] = a->pos_38[2];
+        a->basePos_50[0] = a->pos_38[0];
+        a->basePos_50[1] = a->pos_38[1];
+        a->basePos_50[2] = a->pos_38[2];
+        a->rot_5C[1] = ratan2_8003B548(saveData_8008B570.levant_7A8.pos.x - a->pos_38[0], saveData_8008B570.levant_7A8.pos.z - a->pos_38[2]);
+        a->rot_5C[2] = 0;
+        sub_8001D68C(a, 0);
+        gCtx_800B1260.actors_7c[gCtx_800B1260.f40] = a;
+        gCtx_800B1260.f4c[gCtx_800B1260.f40] = i >= gCtx_800B1260.f76c;
+        gCtx_800B1260.f70c[gCtx_800B1260.f40] = h->data_8.fC8[i];
+        gCtx_800B1260.f73c[gCtx_800B1260.f40] = h->data_8.fD4[i];
+        i++;
+        gCtx_800B1260.f40++;
+        gCtx_800B1260.f44++;
+    } while (i < n);
+    sub_800A1850((GameHolder_1*)h);
+}
 
 // Matched
 int sub_800A248C(void)
@@ -1291,7 +1402,6 @@ int sub_800A4278(GameAi* p)
     return 1;
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(game, sub_800A4278);
 
 void SetActorState_800A433C(GameAi* p, int state, int anim, int timer, int mode, int flag, int div)
