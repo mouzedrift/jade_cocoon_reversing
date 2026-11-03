@@ -546,17 +546,17 @@ void sub_8003DCA4(int draw, TextWindow* w)
                 case -1:
                     break;
                 case 0x81:
-                    sub_8003F900(2, 3);
+                    SetFontClutOffset_8003F900(2, 3);
                     break;
                 case 0x7F:
-                    sub_8003F900(2, 0);
+                    SetFontClutOffset_8003F900(2, 0);
                     break;
                 case 0x80:
                 case 0x82:
                 case 0x83:
                 case 0x84:
                 case 0x85:
-                    sub_8003F900(2, c - 0x7F);
+                    SetFontClutOffset_8003F900(2, c - 0x7F);
                     break;
                 case 0x86:
                 case 0x87:
@@ -608,7 +608,7 @@ void sub_8003DCA4(int draw, TextWindow* w)
 done:
     if (draw)
     {
-        sub_8003F900(2, 0);
+        SetFontClutOffset_8003F900(2, 0);
         ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f->tpage_14)[0];
         ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f->tpage_14)[1];
         addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);

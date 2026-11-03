@@ -37,7 +37,7 @@ int sub_80039FB0(void)
 // Matched
 void sub_80039FC0(void)
 {
-    sub_80020EE0(dword_80095468);
+    FreeEffectFile_80020EE0(dword_80095468);
 }
 typedef struct
 {
@@ -161,7 +161,7 @@ int ratan2Degrees_8003B56C(int x, int y)
     return d;
 }
 #if 0
-// Not matched (8 words): s1/s2 register assignment swapped
+// Not matched: s1/s2 register assignment of out/len swapped (8 words)
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
@@ -174,7 +174,6 @@ int VectorToAngles_8003B5D4(int* v, short* out)
     out[2] = 0;
     return len;
 }
-
 #endif
 INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched
@@ -218,49 +217,32 @@ void sub_8003B684(int* v)
     }
 }
 #if 0
-// Not matched (33 words): register assignment of the abs() temporaries
+// Not matched: the four mflo temporaries get v0/a3/v1/a0 instead of a0/v0/v1/a3 (5 words)
 int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
-    int sum = -1;
-    int ok = 0;
+    unsigned int sum = -1;
     unsigned int r = *c;
-    int t;
-    int dx;
-    int dy;
-    int dz;
-    t = a[0] - b[0];
-    dx = t;
-    if (t < 0)
+    short ok = 0;
+    unsigned int dx;
+    unsigned int dy;
+    unsigned int dz;
+    dx = abs(a[0] - b[0]);
+    if (dx <= r)
     {
-        dx = -dx;
-    }
-    if (r >= (unsigned int)dx)
-    {
-        t = a[1] - b[1];
-        dy = t;
-        if (t < 0)
+        dy = abs(a[1] - b[1]);
+        if (dy <= r)
         {
-            dy = -dy;
-        }
-        if (r >= (unsigned int)dy)
-        {
-            t = a[2] - b[2];
-            dz = t;
-            if (t < 0)
-            {
-                dz = -dz;
-            }
-            if (r >= (unsigned int)dz)
+            dz = abs(a[2] - b[2]);
+            if (dz <= r)
             {
                 sum = dx * dx + dy * dy + dz * dz;
-                ok = !(r * r < (unsigned int)sum);
+                ok = !(r * r < sum);
             }
         }
     }
     *c = sum;
     return ok;
 }
-
 #endif
 INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
@@ -384,23 +366,23 @@ void DelayLoop_8003BA90(void)
     }
 }
 // Matched
-int sub_8003BADC(int a0)
+int GetMemCardInfoSync_8003BADC(int a0)
 {
     int out[2];
-    McxAllInfo(a0, (unsigned char*)&dword_8008D4D8);
+    McxAllInfo(a0, (unsigned char*)&memCardInfo_8008D4D8);
     while (!McxSync(0, (long*)&out[0], (long*)&out[1]))
     {
     }
     return out[1];
 }
 // Matched
-void sub_8003BB1C(void)
+void CheckMemCards_8003BB1C(void)
 {
     int i;
     int r;
     for (i = 0; i < 2; i++)
     {
-        r = sub_8003BADC(i << 4);
+        r = GetMemCardInfoSync_8003BADC(i << 4);
         if (r == 0 || r == 3)
         {
             unknownFlags_8008D678 |= 0x1000;
@@ -599,7 +581,7 @@ void* SetFileBufferInUse_8003BFB8(int arg0)
     return (void*)fileBuffer_8008656C;
 }
 // Matched
-int sub_8003BFD0(int key, int flag)
+int ConsumeFileRequest_8003BFD0(int key, int flag)
 {
     FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)

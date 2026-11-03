@@ -26,10 +26,10 @@ typedef struct
     short s[8];
 } Block16;
 extern Block16 dword_800741D4;
-extern void sub_8002B2A4(short a, int b, int c, Block16* d, int e);
+extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched
 void sub_8002B228(short a, int b, int c)
 {
     Block16 local = dword_800741D4;
-    sub_8002B2A4(a, b, c, &local, 1);
+    DrawElementIcons_8002B2A4(a, b, c, &local, 1);
 }

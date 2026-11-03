@@ -261,8 +261,8 @@ void sub_800BAE2C(int a, int b)
             o->f_34 = 0;
             o->f_3A = 9;
         }
-        sub_8003F900(2, 0);
-        sub_8003F900(1, 0);
+        SetFontClutOffset_8003F900(2, 0);
+        SetFontClutOffset_8003F900(1, 0);
         o->f_2 = -1;
         o->f_4 = 4;
         o->f_8 = 0;

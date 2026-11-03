@@ -39,8 +39,8 @@ void sub_80016C3C(int* a0, void* buf)
     int pos[3];
     int v[3];
     int* vp;
-    idx = sub_80020F00(dword_80091BD0, 1, 6);
-    t = (int*)(dword_80091BD0[0x28 / 4] + idx * 28);
+    idx = sub_80020F00(effectFile_80091BD0, 1, 6);
+    t = (int*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
     if (--a1[1] > 0)
     {
         if (a1[0xA0 / 4])
@@ -87,8 +87,8 @@ void sub_80016E20(int* a0, void* buf)
         for (i = 0; i < 5; i++)
         {
             v[1] = r + (i << 12) / 5;
-            idx = sub_80020F00(dword_80091BD0, 0, 0x176);
-            sub_800C1A5C(a1 + 0x44 / 4, v, dword_80091BD0[0x20 / 4] + idx * 52, 0x1000);
+            idx = sub_80020F00(effectFile_80091BD0, 0, 0x176);
+            sub_800C1A5C(a1 + 0x44 / 4, v, effectFile_80091BD0[0x20 / 4] + idx * 52, 0x1000);
             sub_800C32DC((int)(a1 + 0x44 / 4), 0xB2, 0, v[1]);
         }
     }
@@ -119,16 +119,16 @@ void sub_80016FC8(int* a0, int* a1)
         sub_800C1190(0x50, 0x1D);
         for (i = 0; i < 4; i++)
         {
-            idx = sub_80020F00(dword_80091BD0, 0, 0x16);
-            sub_800C1A5C(a1 + 0x44 / 4, v, dword_80091BD0[0x20 / 4] + idx * 52, 0x1000);
+            idx = sub_80020F00(effectFile_80091BD0, 0, 0x16);
+            sub_800C1A5C(a1 + 0x44 / 4, v, effectFile_80091BD0[0x20 / 4] + idx * 52, 0x1000);
             v[1] += 0x400;
             sub_800C32DC(a1[0x1C / 4], 0xF, 0, v[1]);
         }
     }
     if (a1[1] == 0x30)
     {
-        idx = sub_80020F00(dword_80091BD0, 0, 0x15);
-        sub_800C1A5C(a1 + 0x44 / 4, v, dword_80091BD0[0x20 / 4] + idx * 52, 0x1000);
+        idx = sub_80020F00(effectFile_80091BD0, 0, 0x15);
+        sub_800C1A5C(a1 + 0x44 / 4, v, effectFile_80091BD0[0x20 / 4] + idx * 52, 0x1000);
     }
     if (a1[1] == 0x33)
     {
@@ -195,9 +195,9 @@ void sub_80017290(char* a0, int a1)
         ((short*)b)[0x82 / 2] = 0;
         ((short*)b)[0x80 / 2] = 0;
         ((short*)b)[0x86 / 2] = 0;
-        idx = sub_80020F00((struct_list_14*)dword_80091BD0, 1, a1);
+        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        b[0x88 / 4] = dword_80091BD0[0x28 / 4] + idx * 28;
+        b[0x88 / 4] = effectFile_80091BD0[0x28 / 4] + idx * 28;
         e->cb_8 = (EventEntryFn)sub_800173A8;
     }
 }

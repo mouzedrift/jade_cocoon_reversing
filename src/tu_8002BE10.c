@@ -384,7 +384,7 @@ void sub_8002C728(short* a0)
     s.field_10 = off_800829E8;
     s.field_14 = a0[3];
     DrawMenuWindows_8002A5A4(&s);
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
     n = sub_800AD308(0) + 1;
     if (n < 4)
     {
@@ -476,7 +476,7 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
     s.field_10 = off_80082B54;
     s.field_14 = a0[3];
     DrawMenuWindows_8002A5A4(&s);
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
     n = CountMagicBits_8001AE54(*(char**)(a0 + 6) + 0xF4);
     if (n < 4)
     {

@@ -23,10 +23,11 @@ INCLUDE_DATA(dword_80074AA8);
 INCLUDE_DATA(dword_80074B10);
 
 extern int geomScreenDistance_8008B548;
-#if 0
+// Matched
 void InitGameDefaults_80040718(void)
 {
     int i;
+    int j;
     unknownFlags_8008D678 = 0;
     geomScreenDistance_8008B548 = 0;
     saveData_8008B570.field_1C_settings &= 0xFFFFC07F;
@@ -39,22 +40,20 @@ void InitGameDefaults_80040718(void)
     saveData_8008B570.field_1C_settings |= 0x800000;
     saveData_8008B570.field_1C_settings |= 0x1000000;
     saveData_8008B570.field_1C_settings &= 0xFFFFFFBF;
-    i = 14;
-    while (i >= 0)
+    j = 14;
+    for (i = 0; i < 15; i++)
     {
-        saveData_8008B570.minions[i].id = 4;
-        i--;
+        saveData_8008B570.minions[j].id = 4;
+        j--;
     }
     ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
-#endif
-INCLUDE_ASM(InitGameDefaults_80040718);
 extern int publicTiyPolyFT4s_8008D430;
 extern int publicTiySprts_8008D434;
 extern int publicTiyTPages_8008D440;
-extern int dword_8008D4D0;
-extern void sub_80021824(int* p, int a, int b, int c, int d);
+extern int publicFtg_8008D4D0;
+extern void LoadFtgObjects_80021824(int* p, int a, int b, int c, int d);
 
 // Matched
 void LoadPublicTiyAndFtg_800407D0(void)
@@ -63,8 +62,8 @@ void LoadPublicTiyAndFtg_800407D0(void)
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
     LoadTiy_80028E74(&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
-    sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
-    sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
+    AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
+    LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);
     LoadSound_80030A84(0, &systemSound_80091D40);
     InitFonts_8003DA70();
 }

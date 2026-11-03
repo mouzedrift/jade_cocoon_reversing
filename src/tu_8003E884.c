@@ -151,17 +151,17 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
             switch (c)
             {
             case 0x81:
-                sub_8003F900(2, 3);
+                SetFontClutOffset_8003F900(2, 3);
                 break;
             case 0x7f:
-                sub_8003F900(2, 0);
+                SetFontClutOffset_8003F900(2, 0);
                 break;
             case 0x80:
             case 0x82:
             case 0x83:
             case 0x84:
             case 0x85:
-                sub_8003F900(2, c - 0x7f);
+                SetFontClutOffset_8003F900(2, c - 0x7f);
                 break;
             }
         }

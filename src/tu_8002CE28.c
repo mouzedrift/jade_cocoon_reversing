@@ -138,7 +138,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
     s.field_10 = off_80082D98;
     s.field_14 = a0[3];
     DrawMenuWindows_8002A5A4(&s);
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
 }
 extern unsigned char dword_800827F0[];
 extern unsigned char* off_8008280C[];

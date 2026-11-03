@@ -125,13 +125,13 @@ typedef struct
     int field_4;
     int field_8;
 } struct_12_c;
-extern int dword_800827BC[];
+extern int elementIcons_800827BC[];
 // Matched
-short sub_8002A3E0(int a)
+short GetMagicElementIcon_8002A3E0(int a)
 {
     if (a < 30)
     {
-        return (short)dword_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
+        return (short)elementIcons_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
     }
     return 36;
 }
@@ -206,8 +206,8 @@ void DrawMenuWindows_8002A5A4(struct_A5A4* p)
             sub_8002AAF0(p, i, j, &r);
         }
     }
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
 }
 typedef struct
 {
@@ -238,7 +238,7 @@ typedef struct
     unsigned short x;
     unsigned short y;
 } Pt;
-extern void sub_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
+extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
 extern void AddSprtWithTPage_800331C4(unsigned short* a, char* o, char* b, unsigned long* c, unsigned char* col);
 extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern int MeasureTextWidth_8003E4C8(int text);
@@ -273,28 +273,28 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
     case 1:
         if ((unsigned int)p->text < 0xFFFFFFFF)
         {
-            sub_8002ACE8(p->flags, col);
-            sub_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
+            GetMenuItemColor_8002ACE8(p->flags, col);
+            AlignMenuItem_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
             mode = p->text;
             AddSprtWithTPage_800331C4(loc, (char*)&((Elem20*)*p->f8)[mode], (char*)&((Elem8*)*p->fC)[mode], pOT_8008D454 + ot, col);
         }
         break;
     case 2:
-        sub_8002AD08(p->flags);
-        sub_8002AC88(p->flags, r, MeasureTextWidthFont1_8003E6B0(p->text), loc);
+        SetMenuItemFont1Clut_8002AD08(p->flags);
+        AlignMenuItem_8002AC88(p->flags, r, MeasureTextWidthFont1_8003E6B0(p->text), loc);
         mode = 1;
         loc[1] += 2;
         DrawText_8003E91C(mode, p->text, loc, ot);
         break;
     case 3:
-        sub_8002AD44(p->flags);
-        sub_8002AC88(p->flags, r, MeasureTextWidth_8003E4C8(p->text), loc);
+        SetMenuItemFont2Clut_8002AD44(p->flags);
+        AlignMenuItem_8002AC88(p->flags, r, MeasureTextWidth_8003E4C8(p->text), loc);
         mode = 2;
         loc[1] += 2;
         DrawText_8003E91C(mode, p->text, loc, ot);
         break;
     case 4:
-        sub_8002AD08(p->flags);
+        SetMenuItemFont1Clut_8002AD08(p->flags);
         loc[0] = r[0];
         loc[1] = r[1];
         if (p->flags & 4)
@@ -312,7 +312,7 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         }
         break;
     case 5:
-        sub_8002AD44(p->flags);
+        SetMenuItemFont2Clut_8002AD44(p->flags);
         loc[0] = r[0];
         loc[1] = r[1];
         if (p->flags & 4)
@@ -330,19 +330,19 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         }
         break;
     case 6:
-        sub_8002AD08(p->flags);
+        SetMenuItemFont1Clut_8002AD08(p->flags);
         loc[0] = r[0] + r[2];
         loc[1] = r[1];
         sub_8003F264(loc, p->text, ot);
         break;
     case 7:
-        sub_8002AD44(p->flags);
+        SetMenuItemFont2Clut_8002AD44(p->flags);
         loc[0] = r[0] + r[2];
         loc[1] = r[1];
         sub_8003EFBC(loc, p->text, ot);
         break;
     case 8:
-        sub_8002AD80(p->flags);
+        SetMenuItemDigitColor_8002AD80(p->flags);
         loc[0] = r[0] + r[2] - 3;
         loc[1] = r[1] + 2;
         DrawLargeNumber_8002C100(loc, p->text, ot);
