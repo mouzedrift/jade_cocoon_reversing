@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "gte.h"
 
 INCLUDE_DATA(dword_8008713C);
 INCLUDE_DATA(dword_80087140);
@@ -135,7 +136,25 @@ INCLUDE_ASM(sub_8004BFA8);
 INCLUDE_ASM(sub_8004C21C);
 INCLUDE_ASM(sub_8004C4F0);
 INCLUDE_ASM(sub_8004C7BC);
-INCLUDE_ASM(sub_8004D0E8);
+extern unsigned char byte_8008D460[3]; // back colour
+extern MATRIX dword_80087114;            // light matrix
+extern MATRIX dword_80087134;            // light colour matrix
+extern SVECTOR word_8008D4C8;
+// Matched
+void sub_8004D0E8(void)
+{
+    MATRIX* m;
+    gte_SetBackColor(byte_8008D460[0], byte_8008D460[1], byte_8008D460[2]);
+    gte_SetColorMatrix(&dword_80087134);
+    gte_SetLightMatrix(&dword_80087114);
+    RotMatrixZXY_8004668C(&word_8008D4C8, (MATRIX*)getScratchAddr(0));
+    m = (MATRIX*)getScratchAddr(0);
+    m->t[2] = 0;
+    m->t[1] = 0;
+    m->t[0] = 0;
+    gte_SetRotMatrix(m);
+    gte_SetTransMatrix(m);
+}
 extern void sub_80044D0C(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale, int a7);
 
 // Matched
