@@ -305,7 +305,7 @@ int CheckEnemyContact_800A19E4(void)
             d = 0xfff;
             if (IsWithinDistance_8003B740(o->actor_8->pos_38, (int*)&levantPos_8008BD18, &d) == 1)
             {
-                r = o->actor_8->f138[2] * 400 / 4096;
+                r = o->actor_8->baseScale_138[2] * 400 / 4096;
                 if (d < r * r)
                 {
                     dword_800B1264 = (int*)s;
@@ -675,10 +675,10 @@ void sub_800A29CC(int a, GameActorInfo* out)
         Actor* e = gCtx_800B1260.actors_7c[a];
         out->f0 = e->f14C;
         out->pos_4 = e->pos_38;
-        out->f8 = e->f1C4;
-        out->fC = e->f1C8;
-        out->f2C = e->f144;
-        out->f30 = &e->f2C;
+        out->f8 = e->bonePos_1C4;
+        out->fC = (char*)e->boneMatrices_1C8;
+        out->f2C = (char*)e->boneScale_144;
+        out->f30 = e->scale_2C;
     }
 }
 
@@ -781,7 +781,7 @@ int sub_800A2C28(int a)
 int sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->f1C4;
+    return (int)gCtx_800B1260.actors_7c[a]->bonePos_1C4;
 }
 
 int sub_800A2CA8(int a, int b)
@@ -1376,7 +1376,7 @@ void sub_800A45F8(GameAi* p)
         {
             goto turn;
         }
-        r = p->actor_8->f80;
+        r = p->actor_8->ground_80;
         p->f28 = r;
         if (r != 3)
         {
@@ -1422,7 +1422,7 @@ void sub_800A46FC(GameAi* p)
         }
         else
         {
-            r = p->actor_8->f80;
+            r = p->actor_8->ground_80;
             p->f28 = r;
             if (r == 3)
             {
@@ -1454,7 +1454,7 @@ int sub_800A4804(GameAi* p)
     int r = FindActorInFront_8001DECC(p->actor_8, 0x190, 0);
     if (r == 0)
     {
-        r = p->actor_8->f80;
+        r = p->actor_8->ground_80;
     }
     if (r != 0)
     {

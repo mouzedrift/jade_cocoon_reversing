@@ -491,7 +491,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
     s->actor_3C = (Actor*)Cbt_8001D45C(&r);
     x = Cbt_80024F00(h, v);
     y = Cbt_80024F38(h, v);
-    Cbt_80019B14(s->actor_3C->f134, x, y);
+    Cbt_80019B14((int)s->actor_3C->bones_134, x, y);
     Cbt_8001D68C(s->actor_3C, 0);
 }
 
@@ -550,10 +550,10 @@ void sub_800A0E1C(int i, int* src)
     r.field_2A = -1;
     r.field_2C = 0;
     r.field_30 = 0;
-    s->actor_3C->target_70[0] = src[0];
-    s->actor_3C->target_70[1] = src[1];
-    s->actor_3C->target_70[2] = src[2];
-    r.field_8 = s->actor_3C->target_70;
+    s->actor_3C->target_70.vx = src[0];
+    s->actor_3C->target_70.vy = src[1];
+    s->actor_3C->target_70.vz = src[2];
+    r.field_8 = (int*)&s->actor_3C->target_70;
     r.field_C = 0x100;
     r.field_26 = 2;
     CombatReq_8001E34C(s->actor_3C, &r);
@@ -640,7 +640,7 @@ int sub_800A10DC(int i)
 int sub_800A10F8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->actor_3C->f1C4;
+    return (int)s->actor_3C->bonePos_1C4;
 }
 
 // Matched
@@ -649,10 +649,10 @@ void sub_800A111C(int i, CombatActorInfo* out)
     CombatSlotCombat* s = &dword_800A3A08[i];
     out->f0 = s->actor_3C->f14C;
     out->pos_4 = s->actor_3C->pos_38;
-    out->f8 = s->actor_3C->f1C4;
-    out->fC = s->actor_3C->f1C8;
-    out->f2C = s->actor_3C->f144;
-    out->f30 = &s->actor_3C->f2C;
+    out->f8 = s->actor_3C->bonePos_1C4;
+    out->fC = (char*)s->actor_3C->boneMatrices_1C8;
+    out->f2C = (char*)s->actor_3C->boneScale_144;
+    out->f30 = s->actor_3C->scale_2C;
 }
 
 // Matched

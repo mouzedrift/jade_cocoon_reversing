@@ -2593,22 +2593,22 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     if (padHeld_800918D0[0] & 8)
     {
-        v = c->f138[0] + 0x40;
+        v = c->baseScale_138[0] + 0x40;
         if (v < 0x1000)
         {
-            c->f138[0] = v;
-            c->f138[1] += 0x40;
-            c->f138[2] += 0x40;
+            c->baseScale_138[0] = v;
+            c->baseScale_138[1] += 0x40;
+            c->baseScale_138[2] += 0x40;
         }
     }
     else if (padHeld_800918D0[0] & 2)
     {
-        v = c->f138[0] - 0x40;
+        v = c->baseScale_138[0] - 0x40;
         if (v > 0x400)
         {
-            c->f138[0] = v;
-            c->f138[1] -= 0x40;
-            c->f138[2] -= 0x40;
+            c->baseScale_138[0] = v;
+            c->baseScale_138[1] -= 0x40;
+            c->baseScale_138[2] -= 0x40;
         }
     }
     if (IsCancelPressedP1_8003D41C(1))

@@ -512,7 +512,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         s.f4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
-        sub_80019B14(actor->f134, x, sub_80024F38(model, k));
+        sub_80019B14((int)actor->bones_134, x, sub_80024F38(model, k));
         e.f0 = 2;
         e.f4 = 3;
         e.f8 = 1;

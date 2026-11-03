@@ -1215,7 +1215,7 @@ GameActorDesc* sub_800A7A1C(int a)
 {
     if (a < sub_800A7790())
     {
-        return (GameActorDesc*)sub_800A77F4(a)->cb_14.actor_4->desc_15C;
+        return (GameActorDesc*)sub_800A77F4(a)->cb_14.actor_4->model_15C;
     }
     return 0;
 }
