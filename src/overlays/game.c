@@ -3844,7 +3844,7 @@ extern void sub_800AC02C();
 extern int sub_800AD670(int, int);
 extern int IsAnimInModelAnimSet_80025924(int, int);
 extern void PoolInit_8003FF1C(void*, unsigned);
-extern int sub_800ACB64();
+extern void sub_800ACB64();
 extern void PlaySfx_80031494(int);
 extern void PlaySeqSlot_80031160(int, int);
 typedef struct G2Sv5
@@ -5939,6 +5939,138 @@ void sub_800ACAA4(int* a, int* b)
     a[2] = (int)sub_800ACB64;
 }
 
+#if 0
+// Not matched: control flow follows the original, but loop.c also hoists the 0x800B0000 high half of &dword_800B1DD0 into an eighth saved register, so the frame and everything after shift
+typedef struct G2SvB
+{
+    char pad_0[0x830];
+    int f830;
+    short h834;
+    short h836;
+} G2SvB;
+typedef struct G2Ld_1
+{
+    int state;
+    int flags;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+} G2Ld_1;
+extern int dword_8007DC6C;
+extern int name_800B1164[];
+extern char dword_800B11CC;
+extern void InitModelList_80024ADC(void* p, int a, int b);
+extern void LoadModel_80025200(int list, int id, int a, int b, int c);
+extern void sub_80025974(void* m, int a, int b);
+extern void sub_80024FFC(void* m, void* p);
+extern void sub_80025C38();
+extern void sub_800ACF3C();
+extern void sub_800ACFB8();
+void sub_800ACB64(int* a, G2Ld_1* q)
+{
+    int more = 1;
+    G2SvB* sd = (G2SvB*)&saveData_8008B570;
+    struct_112* m;
+    do
+    {
+        switch (q->state)
+        {
+        case 0:
+            if (q->f8 != sd->f830)
+            {
+                q->f10 = -1;
+                q->flags |= 0xd;
+                sub_800AC3A4(sd->h834);
+            }
+            if (q->f10 != sd->h834 || q->f18 != sd->h836)
+            {
+                q->flags |= 0x16;
+                sub_800ACF3C(q);
+            }
+            if (q->flags == 0)
+            {
+                more = 0;
+            }
+            else
+            {
+                sub_80040148((int*)&dword_800B1DD0, 1);
+                q->state = 1;
+            }
+            break;
+        case 1:
+            if (q->flags & 1)
+            {
+                if (dword_8007DC60)
+                {
+                    FreeModelList_80024BB0((struct_112_list**)&dword_8007DC60);
+                }
+                InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
+                LoadModel_80025200((int)dword_8007DC60, name_800B1164[sd->f830], 0, 2, 1);
+                q->fC = q->f8;
+                q->flags &= ~1;
+                q->f8 = sd->f830;
+            }
+            else if (q->flags & 2)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80025974(m, sub_800AC3F4(), 1);
+                q->f14 = sub_800AC3E4();
+                q->f10 = sd->h834;
+                q->f1C = sub_800AC464();
+                q->f18 = sd->h836;
+                q->flags &= ~2;
+            }
+            else if (q->flags & 4)
+            {
+                sub_800ACFB8(q);
+                q->flags &= ~4;
+            }
+            BeginFade_8001C260();
+            eventDispatchHalt_8008B540 = 1;
+            ClearOTagRAll_8001B260();
+            q->state = 2;
+            break;
+        case 2:
+            if (AreFileRequestsDone_80024DC4((void*)dword_8007DC60[2]) == 1)
+            {
+                q->state = 3;
+            }
+            else
+            {
+                more = 0;
+                eventDispatchHalt_8008B540 = 1;
+            }
+            break;
+        case 3:
+            if ((q->flags & 9) == 8)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80024FFC(m, &dword_800B11CC);
+                q->flags &= ~8;
+            }
+            if ((q->flags & 0x12) == 0x10)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                q->flags &= ~0x10;
+            }
+            if (q->flags == 0)
+            {
+                more = 0;
+                sub_800AB8DC();
+                ClearOTagRAll_8001B260();
+                EndFade_8001C290();
+            }
+            sub_80040148((int*)&dword_800B1DD0, 0);
+            q->state = 0;
+            break;
+        }
+    } while (more);
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
 void sub_800ACF0C()
