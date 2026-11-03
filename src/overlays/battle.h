@@ -40,8 +40,6 @@ extern int dword_800C9E4C;
 
 extern int dword_800C9E78;
 
-extern int dword_800C9E58[];
-
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
 extern char stru_8008D534[];
@@ -76,17 +74,28 @@ extern int dword_800C8B34;
 
 extern int dword_800C9DD0[];
 
+// a battle command (dword_800C9C88 is the current one, dword_800C9CC8 holds each unit's reaction)
+typedef struct BatCmd_a
+{
+    int kind_0; // 0x14: none
+    int arg_4;
+    int mask_8; // acting unit bits
+    int targets_C; // target unit bits
+} BatCmd_a;
+
 typedef struct BatTask
 {
     int f0;
     int f4;
-    int* f8;
+    BatCmd_a* f8;
     int fC;
     int f10;
     unsigned char* f14;
     int f18;
     int f1C;
 } BatTask;
+
+extern BatCmd_a dword_800C9E58;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);
 
@@ -458,13 +467,6 @@ typedef struct BatTask_a
     int* fc;
 } BatTask_a;
 
-typedef struct BatSlot_a
-{
-    int a;
-    int b;
-    int c;
-    int d;
-} BatSlot_a;
 
 extern short levantPos_8008BD18[];
 
@@ -499,7 +501,7 @@ extern char dword_800C9DFC;
 
 extern char dword_800C9DFD;
 
-extern int dword_800C9C88[4];
+extern BatCmd_a dword_800C9C88;
 
 extern unsigned char dword_800C9C7C;
 
@@ -509,7 +511,7 @@ extern int dword_800C8B54[];
 
 extern char dword_800C8B38[];
 
-extern int dword_800C9CC8[];
+extern BatCmd_a dword_800C9CC8[7];
 
 extern int sub_8001AB94(void*);
 
@@ -633,7 +635,7 @@ extern void sub_800A2684();
 
 extern void sub_800A8C0C(int b);
 
-extern void sub_800A2760(int* p, int b);
+extern void sub_800A2760(BatCmd_a* p, int b);
 
 extern void sub_800377B4(int a, int b, int c);
 
@@ -689,13 +691,6 @@ typedef struct BatUnit_a
     unsigned char f44;
 } BatUnit_a;
 
-typedef struct BatCmd_a
-{
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-} BatCmd_a;
 
 typedef struct BatResult_a
 {
@@ -715,7 +710,7 @@ typedef struct BatResult_a
 
 extern void sub_80012BB0(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r);
 
-extern void sub_800B4390(BatUnit_a* a, BatUnit_a* b, int* c, BatResult_a* r, int* e);
+extern void sub_800B4390(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r, int* e);
 
 extern void sub_800BF9F0(int a);
 

@@ -401,11 +401,11 @@ void sub_800BDA28(BatTask_a* t)
             }
             if (f)
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88[0], 1);
+                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
             }
             else
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88[0], 0);
+                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
             }
         }
     }
@@ -429,7 +429,7 @@ void sub_800BDBB0(BatTask_a* t)
 {
     if (sub_800BDE04() == 1)
     {
-        if (dword_800C9C88[0] == 2 && dword_800C9C7C == 0)
+        if (dword_800C9C88.kind_0 == 2 && dword_800C9C7C == 0)
         {
             sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18, levantPos_8008BD18[7]);
         }
@@ -536,13 +536,13 @@ void sub_800BDEBC()
     int ny;
     if (!(*(int*)&saveData_8008B570 & 0x20))
     {
-        x = dword_800C9C88[2];
+        x = dword_800C9C88.mask_8;
         if (x & 0xF)
         {
             x &= ~0xE;
             x |= 1;
         }
-        y = dword_800C9C88[3];
+        y = dword_800C9C88.targets_C;
         if (y & 0xF)
         {
             y &= ~0xE;
@@ -553,16 +553,16 @@ void sub_800BDEBC()
         y = ny;
         if (y)
         {
-            if (dword_800C9C88[2])
+            if (dword_800C9C88.mask_8)
             {
-                sub_800BC468(y, dword_800C9C88[2]);
+                sub_800BC468(y, dword_800C9C88.mask_8);
             }
         }
         if (x)
         {
-            if (dword_800C9C88[3])
+            if (dword_800C9C88.targets_C)
             {
-                sub_800BC468(x, dword_800C9C88[3]);
+                sub_800BC468(x, dword_800C9C88.targets_C);
             }
         }
     }
@@ -570,7 +570,7 @@ void sub_800BDEBC()
 
 void sub_800BDF74()
 {
-    sub_800BE058(dword_800C9D98, dword_800C9C88, 0, dword_800C9C7C);
+    sub_800BE058(dword_800C9D98, &dword_800C9C88, 0, dword_800C9C7C);
 }
 
 void sub_800BDFAC()
@@ -586,13 +586,13 @@ void sub_800BDFAC()
         }
         else
         {
-            sub_800BE058(&t, &((BatSlot_a*)dword_800C9CC8)[i], 1, i);
+            sub_800BE058(&t, &dword_800C9CC8[i], 1, i);
         }
         dword_800C9DA0[i] = t;
     }
 }
 
-BatPair_a* sub_800BE058(BatPair_a* out, int* p, int c, int a)
+BatPair_a* sub_800BE058(BatPair_a* out, BatCmd_a* p, int c, int a)
 {
     BatPair_a r;
     if ((*(int*)&saveData_8008B570 & 0x20) || sub_800BC570(a) == 0)
@@ -619,7 +619,7 @@ BatPair_a* sub_800BE058(BatPair_a* out, int* p, int c, int a)
     return out;
 }
 
-void sub_800BE14C(int* p, int b, int k)
+void sub_800BE14C(BatCmd_a* p, int b, int k)
 {
     int r;
     if (*(int*)&saveData_8008B570 & 0x20)
@@ -641,7 +641,7 @@ void sub_800BE14C(int* p, int b, int k)
         break;
     case 2:
         sub_800A2760(p, b);
-        if (p[0] == 0x13 || p[0] == 0xB || p[0] == 7 || (p[0] == 5 && sub_80013358(p[1]) == 1) || (p[0] == 0x1A && sub_80013358(p[1]) == 1))
+        if (p->kind_0 == 0x13 || p->kind_0 == 0xB || p->kind_0 == 7 || (p->kind_0 == 5 && sub_80013358(p->arg_4) == 1) || (p->kind_0 == 0x1A && sub_80013358(p->arg_4) == 1))
         {
             dword_800C9DD0[dword_800C9D90] = k - 4;
             dword_800C9D90++;
@@ -650,7 +650,7 @@ void sub_800BE14C(int* p, int b, int k)
     }
     if (!(*(int*)&saveData_8008B570 & 2) && b == 0)
     {
-        sub_800377B4(r, (short)p[0], k - 4);
+        sub_800377B4(r, (short)p->kind_0, k - 4);
     }
 }
 
@@ -687,7 +687,7 @@ void sub_800BE3C0()
     int v;
     if (dword_800C9DBC == dword_800C9D94 && dword_800C9C7C < 7)
     {
-        sub_800BE14C(dword_800C9C88, 0, dword_800C9C7C);
+        sub_800BE14C(&dword_800C9C88, 0, dword_800C9C7C);
         sub_800BF3DC(dword_800C9C7C, 0, dword_800C9C7E, sub_800BC6CC(dword_800C9C7C), 0);
         if (dword_800C9C7E > 0)
         {
@@ -695,26 +695,26 @@ void sub_800BE3C0()
             PlaySfx_80031494(0x72);
         }
         sub_800BF3DC(dword_800C9C7C, 1, dword_800C9C80, sub_800BC6CC(dword_800C9C7C), 0);
-        v = dword_800C9C88[0];
+        v = dword_800C9C88.kind_0;
         if (v == 5 || v == 0x1A)
         {
             sub_800AD944(1);
         }
         else if (v == 4)
         {
-            sub_800AD1E0(dword_800C9C88[1], 1, 0);
+            sub_800AD1E0(dword_800C9C88.arg_4, 1, 0);
         }
         else if (v == 0x13)
         {
             sub_800127B8((struct_obj_B*)sub_80014390(dword_800C9C7C));
         }
-        if (dword_800C9C88[0] == 7 && dword_800C9C7C != 0)
+        if (dword_800C9C88.kind_0 == 7 && dword_800C9C7C != 0)
         {
             PlaySeqSlot_80031160(0x1C, 1);
         }
         if (sub_800BC7DC(dword_800C9C7C) == 0 || sub_800BC7DC(dword_800C9C7C) == 1)
         {
-            v = dword_800C9C88[0];
+            v = dword_800C9C88.kind_0;
             if (v == 5)
             {
                 if (((BatSettingsBits*)&settingsFlags_8008B58C)->b21 == 1)
@@ -764,12 +764,12 @@ void sub_800BE3C0()
         {
             if (dword_800C9C7C != i)
             {
-                BatSlot_a* s = &((BatSlot_a*)dword_800C9CC8)[i];
-                if ((s->a == 5 && sub_80013358(s->b) == 1) || (s->a == 0x1A && sub_80013358(s->b) == 1))
+                BatCmd_a* s = &dword_800C9CC8[i];
+                if ((s->kind_0 == 5 && sub_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && sub_80013358(s->arg_4) == 1))
                 {
                     sub_800A2898(i - 4);
                 }
-                sub_800BE14C(&dword_800C9CC8[i * 4], 1, i);
+                sub_800BE14C(&dword_800C9CC8[i], 1, i);
             }
             if (dword_800C9DC0[i] == dword_800C9D94)
             {

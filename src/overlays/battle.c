@@ -554,10 +554,10 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
         {
             sub_800BC850(8);
             dword_800C9C7C = 0;
-            dword_800C9C88[0] = 3;
-            dword_800C9C88[1] = 0;
-            dword_800C9C88[2] = 1;
-            dword_800C9C88[3] = 0;
+            dword_800C9C88.kind_0 = 3;
+            dword_800C9C88.arg_4 = 0;
+            dword_800C9C88.mask_8 = 1;
+            dword_800C9C88.targets_C = 0;
             sub_800BC838(0x8000);
             t->next_8 = sub_800BBE00;
             u->next_8 = (void (*)())(u->f4 = (int)sub_800BAE74);
@@ -568,10 +568,10 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
             sub_800BC850(2);
             dword_800C9C98 = 4;
             dword_800C9C7C = 4;
-            dword_800C9C88[0] = 3;
-            dword_800C9C88[1] = 0;
-            dword_800C9C88[2] = 0x10;
-            dword_800C9C88[3] = 0;
+            dword_800C9C88.kind_0 = 3;
+            dword_800C9C88.arg_4 = 0;
+            dword_800C9C88.mask_8 = 0x10;
+            dword_800C9C88.targets_C = 0;
             sub_800BC838(0x10000);
             t->next_8 = sub_800BC05C;
             v->next_8 = (void (*)())(v->f4 = (int)sub_800BAE74);
@@ -620,10 +620,10 @@ void sub_800BB1B0(BatTask_a* t, BatObj_a* u)
         if (dword_800C9C82 != 0)
         {
             dword_800C9C7C = dword_800C9C82;
-            dword_800C9C88[0] = 3;
-            dword_800C9C88[1] = 0;
-            dword_800C9C88[3] = 0;
-            dword_800C9C88[2] = 1 << dword_800C9C7C;
+            dword_800C9C88.kind_0 = 3;
+            dword_800C9C88.arg_4 = 0;
+            dword_800C9C88.targets_C = 0;
+            dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
             t->next_8 = (void (*)())sub_800BC174();
             u->f4 = (int)sub_800BB1B0;
             u->next_8 = sub_800BB1B0;
@@ -702,9 +702,9 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     }
     f = m->f0;
     r = sub_800BFA4C(f, flags);
-    dword_800C9C88[0] = r;
-    dword_800C9C88[1] = 0;
-    dword_800C9C88[3] = 0;
+    dword_800C9C88.kind_0 = r;
+    dword_800C9C88.arg_4 = 0;
+    dword_800C9C88.targets_C = 0;
     if (r == 0x13)
     {
         switch ((unsigned int)kind)
@@ -742,7 +742,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     }
     if (m->h8 - dword_800C9C7E <= 0)
     {
-        dword_800C9C88[0] = 0xB;
+        dword_800C9C88.kind_0 = 0xB;
         dword_800C9C7E = m->h8;
         switch ((unsigned int)kind)
         {
@@ -782,7 +782,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
         t->next_8 = sub_800BAE74;
         return;
     }
-    if (dword_800C9C88[0] == 0x14)
+    if (dword_800C9C88.kind_0 == 0x14)
     {
         t->next_8 = sub_800BB860;
         return;
@@ -808,10 +808,10 @@ INCLUDE_OVERLAY_ASM(battle, sub_800BB380);
 
 void sub_800BB74C()
 {
-    dword_800C9C88[0] = 0x14;
-    dword_800C9C88[1] = 0;
-    dword_800C9C88[3] = 0;
-    dword_800C9C88[2] = 1 << dword_800C9C7C;
+    dword_800C9C88.kind_0 = 0x14;
+    dword_800C9C88.arg_4 = 0;
+    dword_800C9C88.targets_C = 0;
+    dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
     sub_800BB794();
 }
 
@@ -820,10 +820,10 @@ void sub_800BB794()
     int i;
     for (i = 0; i < 7; i++)
     {
-        ((BatSlot_a*)dword_800C9CC8)[i].a = 0x14;
-        ((BatSlot_a*)dword_800C9CC8)[i].b = 0;
-        ((BatSlot_a*)dword_800C9CC8)[i].c = 1 << i;
-        ((BatSlot_a*)dword_800C9CC8)[i].d = 0;
+        dword_800C9CC8[i].kind_0 = 0x14;
+        dword_800C9CC8[i].arg_4 = 0;
+        dword_800C9CC8[i].mask_8 = 1 << i;
+        dword_800C9CC8[i].targets_C = 0;
     }
 }
 
@@ -856,11 +856,11 @@ void sub_800BB894(BatTask_a* t, BatObj_a* u)
     {
         if (dword_800ADE78 == 1)
         {
-            sub_800B42A8(dword_800C9C88, &dword_800ADE78);
+            sub_800B42A8(&dword_800C9C88, &dword_800ADE78);
         }
         else
         {
-            sub_800A2618(dword_800C9C88, dword_800C9C7C - 4);
+            sub_800A2618(&dword_800C9C88, dword_800C9C7C - 4);
         }
         t->next_8 = (void (*)())sub_800BC174();
         u->next_8 = (void (*)())(u->f4 = (int)sub_800BAE74);
@@ -879,7 +879,7 @@ void sub_800BB940(BatTask_a* t, BatObj_a* u)
         sub_800BC850(0x2000);
         if (dword_800ADE78 == 1)
         {
-            if (((&dword_800ADE78)[4] = sub_800B4318(dword_800C9C88, &dword_800ADE78)) >= 0)
+            if (((&dword_800ADE78)[4] = sub_800B4318(&dword_800C9C88, &dword_800ADE78)) >= 0)
             {
                 sub_800BC838(0x2000);
                 t->next_8 = sub_800BAE74;
@@ -888,9 +888,9 @@ void sub_800BB940(BatTask_a* t, BatObj_a* u)
         }
         t->next_8 = (void (*)())sub_800BC174();
         u->f4 = (int)sub_800BAE74;
-        if (dword_800C9C88[0] == 2)
+        if (dword_800C9C88.kind_0 == 2)
         {
-            dword_800B122C |= dword_800C9C88[3];
+            dword_800B122C |= dword_800C9C88.targets_C;
         }
     }
 }
@@ -907,14 +907,14 @@ void sub_800BBA70(BatTask_a* t, BatObj_a* u)
 {
     unsigned int mask;
     int i;
-    BatSlot_a* s;
-    if (sub_800BC1A8(dword_800C9C88[3]) == 1)
+    BatCmd_a* s;
+    if (sub_800BC1A8(dword_800C9C88.targets_C) == 1)
     {
-        mask = dword_800C9C88[3];
+        mask = dword_800C9C88.targets_C;
         sub_800BC838(0x1000);
         sub_800BB74C();
         sub_800BB7D4();
-        s = (BatSlot_a*)dword_800C9CC8;
+        s = dword_800C9CC8;
         for (i = 0; i < 7; i++)
         {
             if (mask & (1 << i))
@@ -922,23 +922,23 @@ void sub_800BBA70(BatTask_a* t, BatObj_a* u)
                 int f = *(int*)sub_80014390(i & 0xFF);
                 if (f & 0x200)
                 {
-                    s[i].a = 0x13;
+                    s[i].kind_0 = 0x13;
                 }
                 else if (f & 0x10000)
                 {
-                    s[i].a = 0xE;
+                    s[i].kind_0 = 0xE;
                 }
                 else if (f & 2)
                 {
-                    s[i].a = 0x10;
+                    s[i].kind_0 = 0x10;
                 }
                 else if (f & 0x8000)
                 {
-                    s[i].a = 0x12;
+                    s[i].kind_0 = 0x12;
                 }
-                s[i].b = 0;
-                s[i].c = 1 << i;
-                s[i].d = 0;
+                s[i].arg_4 = 0;
+                s[i].mask_8 = 1 << i;
+                s[i].targets_C = 0;
             }
         }
         dword_800C9C7C = 7;
@@ -962,11 +962,11 @@ void sub_800BBBA8(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
-#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88[3] (original keeps source order); tried early return, pointer local, swapped branches
+#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C (original keeps source order); tried early return, pointer local, swapped branches
 void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88[0] = 3;
-    dword_800C9C88[3] = 0;
+    dword_800C9C88.kind_0 = 3;
+    dword_800C9C88.targets_C = 0;
     if (dword_800C9C98)
     {
         PlaySeqSlot_80031160(0x11, 1);
@@ -998,12 +998,12 @@ void sub_800BBCC8(BatTask_a* t, BatObj_a* u)
     BatObj_a* v = u;
     if (sub_800C0BF0(t) == 1)
     {
-        dword_800C9C88[0] = 2;
-        dword_800C9C88[3] = 0;
+        dword_800C9C88.kind_0 = 2;
+        dword_800C9C88.targets_C = 0;
         dword_800C9C99 = dword_800C9C98;
         dword_800C9C7C = dword_800C9C98;
         dword_800C9C82 = dword_800C9C98;
-        dword_800C9C88[2] = 1 << dword_800C9C98;
+        dword_800C9C88.mask_8 = 1 << dword_800C9C98;
         u->fc = sub_800BC28C();
         if (dword_800ADE78 == 1)
         {
@@ -1034,7 +1034,7 @@ void sub_800BBE00(BatTask_a* t, BatObj_a* u)
     dword_800C9C7C = 0;
     dword_800C9C99 = 0;
     dword_800C9C82 = 0;
-    dword_800C9C88[2] = 1 << dword_800C9C98;
+    dword_800C9C88.mask_8 = 1 << dword_800C9C98;
     u->fc = sub_800BC28C();
     u->next_8 = sub_800BBE7C;
     t->next_8 = sub_800BC144;
@@ -1062,18 +1062,18 @@ void sub_800BBEFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = sub_800BC28C(t);
     u->next_8 = sub_800BBF64;
-    dword_800C9C88[3] = 0;
-    dword_800C9C98 = dword_800C9C88[1] + 4;
+    dword_800C9C88.targets_C = 0;
+    dword_800C9C98 = dword_800C9C88.arg_4 + 4;
     t->next_8 = sub_800BC144;
 }
 
 #if 0 // Not matched: instruction scheduling only (s0/s1 save order, C68 address placement); tried assignment-expression, pointer local, byte temp
 void sub_800BBF64(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88[0] = 0x15;
+    dword_800C9C88.kind_0 = 0x15;
     dword_800C9C7C = dword_800C9C98;
-    dword_800C9C88[2] = 1 << dword_800C9C7C;
-    sub_800A2AE8(dword_800C9C88);
+    dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
+    sub_800A2AE8(&dword_800C9C88);
     u->fc = sub_800BC28C();
     u->next_8 = (void (*)())u->f4;
     t->next_8 = sub_800BC144;
@@ -1087,17 +1087,17 @@ void sub_800BBFFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = sub_800BC28C(t);
     u->next_8 = sub_800BC05C;
-    dword_800C9C98 = dword_800C9C88[1] + 4;
+    dword_800C9C98 = dword_800C9C88.arg_4 + 4;
     t->next_8 = sub_800BC144;
 }
 
 #if 0
 void sub_800BC05C(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88[0] = 0x16;
+    dword_800C9C88.kind_0 = 0x16;
     dword_800C9C7C = dword_800C9C98;
-    dword_800C9C88[2] = 1 << dword_800C9C98;
-    sub_800A2AE8(dword_800C9C88);
+    dword_800C9C88.mask_8 = 1 << dword_800C9C98;
+    sub_800A2AE8(&dword_800C9C88);
     sub_800BC838(0x10000);
     u->fc = sub_800BC28C();
     u->next_8 = (void (*)())u->f4;
@@ -1125,7 +1125,7 @@ void sub_800BC144(BatTask_a* t, BatTask_a* u)
 
 int sub_800BC174()
 {
-    return dword_800C8B54[(unsigned char)dword_800C8B38[dword_800C9C88[0]]];
+    return dword_800C8B54[(unsigned char)dword_800C8B38[dword_800C9C88.kind_0]];
 }
 
 int sub_800BC1A8(unsigned int mask)

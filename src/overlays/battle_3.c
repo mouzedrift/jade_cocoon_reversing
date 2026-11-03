@@ -74,7 +74,7 @@ void sub_800BE834(int idx, int b)
     case 6:
         break;
     case 7:
-        StartPadVibration_80036528(0, dword_800C9134[((BatSlot_a*)dword_800C9CC8)[idx].b]);
+        StartPadVibration_80036528(0, dword_800C9134[dword_800C9CC8[idx].arg_4]);
         break;
     }
 }
@@ -101,7 +101,7 @@ int sub_800BEA94()
         }
         else
         {
-            if (dword_800C912C[(unsigned char)dword_800C8B38[dword_800C9C88[0]]] == 0)
+            if (dword_800C912C[(unsigned char)dword_800C8B38[dword_800C9C88.kind_0]] == 0)
             {
                 return sub_800BEB50();
             }
@@ -148,8 +148,8 @@ void ApplyBattleCommand_800BEBB8()
     sub_800BC7DC(dword_800C9C7C);
     flag = 1;
     actor = (BatUnit_a*)sub_80014390(dword_800C9C7C);
-    cmd = *(BatCmd_a*)dword_800C9C88;
-    if (dword_800C9C88[0] == 0x12)
+    cmd = dword_800C9C88;
+    if (dword_800C9C88.kind_0 == 0x12)
     {
         actor = (BatUnit_a*)sub_80014390(dword_800C9C7C);
         actor->flags_0 |= 0x8000;
@@ -158,20 +158,20 @@ void ApplyBattleCommand_800BEBB8()
     {
         r = sub_800BC7DC(i);
         bit = 1 << i;
-        ((BatSlot_a*)dword_800C9CC8)[i].a = 0x14;
-        ((BatSlot_a*)dword_800C9CC8)[i].b = 0;
-        ((BatSlot_a*)dword_800C9CC8)[i].c = bit;
-        ((BatSlot_a*)dword_800C9CC8)[i].d = 0;
-        if (dword_800C9C88[3] & bit)
+        dword_800C9CC8[i].kind_0 = 0x14;
+        dword_800C9CC8[i].arg_4 = 0;
+        dword_800C9CC8[i].mask_8 = bit;
+        dword_800C9CC8[i].targets_C = 0;
+        if (dword_800C9C88.targets_C & bit)
         {
             m = (BatUnit_a*)sub_80014390(i & 0xFF);
             res.f24 = (signed char)dword_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
-            cmd.fC = bit;
+            cmd.targets_C = bit;
             sub_80012BB0(actor, m, &cmd, &res);
             if (dword_800ADE78 == 1)
             {
-                sub_800B4390(actor, m, dword_800C9C88, &res, &dword_800ADE78);
+                sub_800B4390(actor, m, &dword_800C9C88, &res, &dword_800ADE78);
             }
             dword_800C9D84 = res.f24;
             dword_800C9D38[i] = res.f1C;
@@ -234,7 +234,7 @@ void ApplyBattleCommand_800BEBB8()
                 switch (res.kind_0)
                 {
                 case 0:
-                    ((BatSlot_a*)dword_800C9CC8)[i].b = res.arg_2;
+                    dword_800C9CC8[i].arg_4 = res.arg_2;
                     if (res.arg_2 != 0)
                     {
                         flag = 0;
@@ -245,36 +245,36 @@ void ApplyBattleCommand_800BEBB8()
                 case 3:
                     if (dword_800C9D38[i] > 0 || dword_800C9D48[i] > 0)
                     {
-                        ((BatSlot_a*)dword_800C9CC8)[i].a = 9;
+                        dword_800C9CC8[i].kind_0 = 9;
                         dword_800C9D78 = 0x72;
                     }
                     break;
                 case 4:
-                    ((BatSlot_a*)dword_800C9CC8)[i].a = 10;
+                    dword_800C9CC8[i].kind_0 = 10;
                     dword_800C9D78 = 0x71;
                     break;
                 case 5:
                     a = m->flags_0 & 0x8000;
-                    ((BatSlot_a*)dword_800C9CC8)[i].a = a ? 0x14 : 0xC;
+                    dword_800C9CC8[i].kind_0 = a ? 0x14 : 0xC;
                     dword_800C9D78 = 0x70;
                     break;
                 case 7:
-                    ((BatSlot_a*)dword_800C9CC8)[i].a = 5;
-                    ((BatSlot_a*)dword_800C9CC8)[i].b = res.arg_2;
-                    dword_800C9C88[1] = res.arg_2;
+                    dword_800C9CC8[i].kind_0 = 5;
+                    dword_800C9CC8[i].arg_4 = res.arg_2;
+                    dword_800C9C88.arg_4 = res.arg_2;
                     if (sub_80013358(res.arg_2) == 1)
                     {
                         sub_800BF9F0(sub_800A2BE4(i - 4));
                         if (GetCapturedMinionsFromBitfield_8003BA58(sub_800A248C()) == 1)
                         {
-                            dword_800C9C88[0] = 0x1A;
+                            dword_800C9C88.kind_0 = 0x1A;
                         }
                         sub_800BC838(0x40);
                         if (r == 2)
                         {
                             
                             dword_800B1238[i - 4].c = dword_800C9C7C;
-                            dword_800B1238[i - 4].e = dword_800C9C88[0];
+                            dword_800B1238[i - 4].e = dword_800C9C88.kind_0;
                             dword_800B1238[i - 4].a = m->f4;
                             dword_800B1238[i - 4].d = m->f44;
                         }
@@ -284,7 +284,7 @@ void ApplyBattleCommand_800BEBB8()
                 if (m->hp_8 <= dword_800C9D38[i] || (dword_800C9CA0[i] & 0x600))
                 {
                     dword_800C9D38[i] = m->hp_8;
-                    ((BatSlot_a*)dword_800C9CC8)[i].a = 0xB;
+                    dword_800C9CC8[i].kind_0 = 0xB;
                     if (r == 2)
                     {
                         sub_800BC838(0x40);
@@ -303,7 +303,7 @@ void ApplyBattleCommand_800BEBB8()
                         
                         dword_800B1238[i - 4].b = sub_800A2BE4(i - 4);
                         dword_800B1238[i - 4].c = dword_800C9C7C;
-                        dword_800B1238[i - 4].e = dword_800C9C88[0];
+                        dword_800B1238[i - 4].e = dword_800C9C88.kind_0;
                         dword_800B1238[i - 4].a = m->f4;
                         dword_800B1238[i - 4].d = m->f44;
                         if (sub_800BC820(0x100000) == 1)
@@ -329,15 +329,15 @@ void ApplyBattleCommand_800BEBB8()
             }
             if (i == dword_800C9C7C)
             {
-                ((BatSlot_a*)dword_800C9CC8)[i].a = 0x14;
+                dword_800C9CC8[i].kind_0 = 0x14;
             }
         }
     }
-    if (dword_800C9C88[0] == 7)
+    if (dword_800C9C88.kind_0 == 7)
     {
         if (flag == 1)
         {
-            dword_800C9C88[1] = 0;
+            dword_800C9C88.arg_4 = 0;
             if (sub_800BC7DC(dword_800C9C7C) == 0)
             {
                 sub_800BC838(0x80);
@@ -345,10 +345,10 @@ void ApplyBattleCommand_800BEBB8()
         }
         else
         {
-            dword_800C9C88[1] = 1;
+            dword_800C9C88.arg_4 = 1;
             if (sub_800BC7DC(dword_800C9C7C) == 2)
             {
-                dword_800C9C88[0] = 0x14;
+                dword_800C9C88.kind_0 = 0x14;
             }
         }
     }
@@ -357,8 +357,8 @@ void ApplyBattleCommand_800BEBB8()
 void sub_800BF2E8()
 {
     int v;
-    if ((sub_800BC7DC(dword_800C9C7C) == 0 && ((v = dword_800C9C88[0]) == 5 || v == 0x1A || v == 2 || v == 3 || v == 7))
-        || (sub_800BC7DC(dword_800C9C7C) == 1 && ((v = dword_800C9C88[0]) - 2 < 2U || v == 8)))
+    if ((sub_800BC7DC(dword_800C9C7C) == 0 && ((v = dword_800C9C88.kind_0) == 5 || v == 0x1A || v == 2 || v == 3 || v == 7))
+        || (sub_800BC7DC(dword_800C9C7C) == 1 && ((v = dword_800C9C88.kind_0) - 2 < 2U || v == 8)))
     {
         sub_800BC838(0x8000);
         sub_800BC838(0x10000);
@@ -1399,12 +1399,12 @@ void sub_800C0DB0(int a)
 }
 
 #if 0 // Not matched: struct-return copy: 'move v0,s1' is scheduled before the lwl/lwr copy (original: after); tried explicit out-pointer form
-BatCol_a* sub_800C0DDC(BatCol_a* out, int* p, int c)
+BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
 {
     BatCol_a buf;
     int mask;
     memset(&buf, 0, 4);
-    if (p[0] != 0x14 && (p[2] & (mask = 1 << (dword_800C918C + 1))))
+    if (p->kind_0 != 0x14 && (p->mask_8 & (mask = 1 << (dword_800C918C + 1))))
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
@@ -1415,15 +1415,15 @@ BatCol_a* sub_800C0DDC(BatCol_a* out, int* p, int c)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C0DDC);
 
-int sub_800C0E84(int* p)
+int sub_800C0E84(BatCmd_a* p)
 {
     int mask;
-    if (p[0] == 0x14)
+    if (p->kind_0 == 0x14)
     {
         return 0;
     }
     mask = 1 << (dword_800C918C + 1);
-    if (p[2] & mask)
+    if (p->mask_8 & mask)
     {
         sub_8001E28C(dword_800C9190.obj);
     }
@@ -2396,7 +2396,7 @@ void sub_800C5A7C(BatTask* t);
 void sub_800C58AC(BatTask* t);
 
 // Matched
-void sub_800C4118(int* a, char* b, int c, unsigned int d)
+void sub_800C4118(BatCmd_a* a, char* b, int c, unsigned int d)
 {
     BatTask t;
     unsigned int k;
@@ -2419,7 +2419,7 @@ void sub_800C4118(int* a, char* b, int c, unsigned int d)
         t.f18 = 1;
         t.f14 = (unsigned char*)levantStatus_8008BD38;
     }
-    t.f8[2] = 1 << (c + 4);
+    t.f8->mask_8 = 1 << (c + 4);
     switch (d)
     {
     case 0:
@@ -3248,7 +3248,7 @@ int sub_800C5874(BatTask* t)
 
 void sub_800C58AC(BatTask* t)
 {
-    *t->f8 = 0x12;
+    t->f8->kind_0 = 0x12;
 }
 
 void sub_800C58BC(BatTask* t)
@@ -3257,25 +3257,25 @@ void sub_800C58BC(BatTask* t)
     switch (k)
     {
     case 0:
-        t->f8[0] = 6;
-        t->f8[1] = 2;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 2;
+        t->f8->targets_C = t->f18;
         break;
     case 2:
-        t->f8[0] = 6;
-        t->f8[1] = 3;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 3;
+        t->f8->targets_C = t->f18;
         break;
     case 4:
-        t->f8[0] = 6;
-        t->f8[1] = 1;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 1;
+        t->f8->targets_C = t->f18;
         break;
     case 1:
     case 3:
     case 5:
-        t->f8[0] = 0;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 0;
+        t->f8->targets_C = t->f18;
         break;
     }
     dword_800C8B30++;
@@ -3289,19 +3289,19 @@ void sub_800C59A0(BatTask* t)
     switch (k)
     {
     case 0:
-        t->f8[0] = 6;
-        t->f8[1] = 3;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 3;
+        t->f8->targets_C = t->f18;
         break;
     case 1:
-        t->f8[0] = 6;
-        t->f8[1] = 2;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 2;
+        t->f8->targets_C = t->f18;
         break;
     case 2:
-        t->f8[0] = 6;
-        t->f8[1] = 1;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 1;
+        t->f8->targets_C = t->f18;
         break;
     }
     dword_800C8B30++;
@@ -3313,16 +3313,16 @@ void sub_800C5A7C(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
         }
     }
     else if (t->fC == 1)
@@ -3331,18 +3331,18 @@ void sub_800C5A7C(BatTask* t)
         switch (k)
         {
         case 0:
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
             break;
         case 1:
-            t->f8[0] = 6;
-            t->f8[1] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 0;
+            t->f8->targets_C = t->f18;
             break;
         case 2:
-            t->f8[0] = 1;
-            t->f8[1] = 2;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 1;
+            t->f8->arg_4 = 2;
+            t->f8->targets_C = t->f18;
             break;
         }
         dword_800C8B30++;
@@ -3355,16 +3355,16 @@ void sub_800C5BC0(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
         }
     }
     else if (t->fC == 1)
@@ -3373,18 +3373,18 @@ void sub_800C5BC0(BatTask* t)
         switch (k)
         {
         case 0:
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
             break;
         case 1:
-            t->f8[0] = 6;
-            t->f8[1] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 0;
+            t->f8->targets_C = t->f18;
             break;
         case 2:
-            t->f8[0] = 1;
-            t->f8[1] = 2;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 1;
+            t->f8->arg_4 = 2;
+            t->f8->targets_C = t->f18;
             break;
         }
         dword_800C8B30++;
@@ -3397,16 +3397,16 @@ void sub_800C5D04(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
         }
     }
     else
@@ -3414,9 +3414,9 @@ void sub_800C5D04(BatTask* t)
         unsigned char* p = &dword_800C8B30;
         if (p[1])
         {
-            t->f8[0] = 6;
-            t->f8[1] = 2;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 2;
+            t->f8->targets_C = t->f18;
             p[1] = 0;
         }
         else
@@ -3424,20 +3424,20 @@ void sub_800C5D04(BatTask* t)
             switch (rand() % 3)
             {
             case 0:
-                t->f8[0] = 1;
-                t->f8[1] = 0x1B;
-                t->f8[3] = t->f18;
+                t->f8->kind_0 = 1;
+                t->f8->arg_4 = 0x1B;
+                t->f8->targets_C = t->f18;
                 sub_80018430(2);
                 break;
             case 1:
-                t->f8[0] = 6;
-                t->f8[1] = 1;
-                t->f8[3] = t->f18;
+                t->f8->kind_0 = 6;
+                t->f8->arg_4 = 1;
+                t->f8->targets_C = t->f18;
                 break;
             default:
-                t->f8[0] = 6;
-                t->f8[1] = 0;
-                t->f8[3] = t->f8[2];
+                t->f8->kind_0 = 6;
+                t->f8->arg_4 = 0;
+                t->f8->targets_C = t->f8->mask_8;
                 (&dword_800C8B30)[1] = 1;
                 break;
             }
@@ -3452,16 +3452,16 @@ void sub_800C5EB8(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
         }
     }
     else
@@ -3471,21 +3471,21 @@ void sub_800C5EB8(BatTask* t)
         case 0:
             if (sub_800334F0((Minion*)t->f14))
             {
-                t->f8[0] = 6;
-                t->f8[1] = 1;
-                t->f8[3] = t->f18;
+                t->f8->kind_0 = 6;
+                t->f8->arg_4 = 1;
+                t->f8->targets_C = t->f18;
                 break;
             }
         case 1:
-            t->f8[0] = 1;
-            t->f8[1] = 0x19;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 1;
+            t->f8->arg_4 = 0x19;
+            t->f8->targets_C = t->f18;
             sub_80018430(0);
             break;
         case 2:
-            t->f8[0] = 6;
-            t->f8[1] = 3;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 3;
+            t->f8->targets_C = t->f18;
             break;
         }
     }
@@ -3499,23 +3499,23 @@ void sub_800C6038(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
-            t->f8[0] = 0;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 0;
+            t->f8->targets_C = t->f18;
         }
     }
     else if (dword_800C8B30 != 0 && sub_800C6EC8(t, 2))
     {
-        t->f8[0] = 6;
-        t->f8[1] = 0;
-        t->f8[3] = t->f8[2];
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = 0;
+        t->f8->targets_C = t->f8->mask_8;
         dword_800C8B30 = 0;
     }
     else
@@ -3524,20 +3524,20 @@ void sub_800C6038(BatTask* t)
         switch (rand() % 3)
         {
         case 0:
-            t->f8[0] = 1;
-            t->f8[1] = 0x1C;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 1;
+            t->f8->arg_4 = 0x1C;
+            t->f8->targets_C = t->f18;
             sub_80018430(1);
             break;
         case 1:
-            t->f8[0] = 6;
-            t->f8[1] = 1;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = t->f18;
             break;
         case 2:
-            t->f8[0] = 6;
-            t->f8[1] = 3;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 3;
+            t->f8->targets_C = t->f18;
             break;
         }
     }
@@ -3553,19 +3553,19 @@ void sub_800C61FC(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
         }
         else
         {
             *(short*)(t->f10 + 0x42) = 0;
             sub_800C66B4((unsigned char*)t->f10, 0xC);
-            t->f8[0] = 6;
-            t->f8[1] = 1;
-            t->f8[3] = t->f18;
+            t->f8->kind_0 = 6;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = t->f18;
         }
     }
     else if ((sub_800BC868() == 0 && !(*(unsigned short*)(t->f10 + 0x42) & 1)) || (dword_800C8B30 >= 3 && sub_800BC868() == 0))
@@ -3686,11 +3686,11 @@ void sub_800C66F4(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
             return;
         }
     }
@@ -3718,8 +3718,8 @@ void sub_800C66F4(BatTask* t)
     {
         return;
     }
-    t->f8[0] = 0;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 0;
+    t->f8->targets_C = t->f18;
 }
 
 void sub_800C6824(BatTask* t)
@@ -3728,11 +3728,11 @@ void sub_800C6824(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
             return;
         }
     }
@@ -3756,8 +3756,8 @@ void sub_800C6824(BatTask* t)
     {
         return;
     }
-    t->f8[0] = 0;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 0;
+    t->f8->targets_C = t->f18;
 }
 
 void sub_800C6928(BatTask* t)
@@ -3766,11 +3766,11 @@ void sub_800C6928(BatTask* t)
     {
         if (dword_800C8B34 == 0)
         {
-            t->f8[2] = 0x10;
-            t->f8[0] = 0x15;
+            t->f8->mask_8 = 0x10;
+            t->f8->kind_0 = 0x15;
             dword_800C8B34 = 1;
-            t->f8[1] = 1;
-            t->f8[3] = 2;
+            t->f8->arg_4 = 1;
+            t->f8->targets_C = 2;
             return;
         }
     }
@@ -3797,21 +3797,21 @@ void sub_800C6928(BatTask* t)
     {
         return;
     }
-    t->f8[0] = 0;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 0;
+    t->f8->targets_C = t->f18;
 }
 
 void sub_800C6A40(BatTask* t)
 {
-    *t->f8 = 6;
-    t->f8[1] = 0;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 6;
+    t->f8->arg_4 = 0;
+    t->f8->targets_C = t->f18;
 }
 
 int sub_800C6A68(BatTask* t)
 {
-    *t->f8 = 0;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 0;
+    t->f8->targets_C = t->f18;
     return 1;
 }
 
@@ -3820,9 +3820,9 @@ int sub_800C6A8C(BatTask* t)
     int r = sub_800C6D6C(t->f4, t->f10);
     if (r != 5)
     {
-        t->f8[0] = 6;
-        t->f8[1] = r;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 6;
+        t->f8->arg_4 = r;
+        t->f8->targets_C = t->f18;
         return 1;
     }
     return 0;
@@ -3830,16 +3830,16 @@ int sub_800C6A8C(BatTask* t)
 
 void sub_800C6AFC(BatTask* t, int a, int b)
 {
-    t->f8[0] = a;
-    t->f8[1] = b;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = a;
+    t->f8->arg_4 = b;
+    t->f8->targets_C = t->f18;
 }
 
 void sub_800C6B24(BatTask* t, int a, int b)
 {
     int* p;
-    t->f8[0] = a;
-    t->f8[1] = b;
+    t->f8->kind_0 = a;
+    t->f8->arg_4 = b;
     p = t->f8;
     p[3] = p[2];
 }
@@ -3848,9 +3848,9 @@ int sub_800C6B50(BatTask* t, int a, int b)
 {
     if (sub_800C6CFC(a, t->f0, t->f10) != 0)
     {
-        t->f8[0] = 1;
-        t->f8[1] = a;
-        t->f8[3] = 1 << (b + 4);
+        t->f8->kind_0 = 1;
+        t->f8->arg_4 = a;
+        t->f8->targets_C = 1 << (b + 4);
         return 1;
     }
     return 0;
@@ -3860,9 +3860,9 @@ int sub_800C6BD0(BatTask* t, int a)
 {
     if (sub_800C6CFC(a, t->f0, t->f10) != 0)
     {
-        t->f8[0] = 1;
-        t->f8[1] = a;
-        t->f8[3] = t->f18;
+        t->f8->kind_0 = 1;
+        t->f8->arg_4 = a;
+        t->f8->targets_C = t->f18;
         return 1;
     }
     return 0;
@@ -3870,14 +3870,14 @@ int sub_800C6BD0(BatTask* t, int a)
 
 int sub_800C6C44(BatTask* t)
 {
-    *t->f8 = 0x12;
+    t->f8->kind_0 = 0x12;
     return 1;
 }
 
 int sub_800C6C58(BatTask* t)
 {
-    *t->f8 = 7;
-    t->f8[3] = t->f18;
+    t->f8->kind_0 = 7;
+    t->f8->targets_C = t->f18;
     return 1;
 }
 
@@ -3979,10 +3979,10 @@ int StartBattleMenu_800C6EFC()
         {
             dword_800C9E49 = 1;
         }
-        dword_800C9E58[0] = 0;
-        dword_800C9E58[1] = 0;
-        dword_800C9E58[3] = 0;
-        dword_800C9E58[2] = 1 << dword_800C9C7C;
+        dword_800C9E58.kind_0 = 0;
+        dword_800C9E58.arg_4 = 0;
+        dword_800C9E58.targets_C = 0;
+        dword_800C9E58.mask_8 = 1 << dword_800C9C7C;
         dword_800C9E78 = sub_800C0A9C();
         dword_800C9E4B = GetCapturedMinionsFromBitfield_8003BA58(dword_800C9E78);
         dword_800C9E4C = sub_800A248C();
@@ -4392,7 +4392,7 @@ void sub_800C7A6C()
     case 0:
         dword_800C9E68 = dword_800C9660[sub_800C78D0()];
         dword_800C9E50 = dword_800C9654[sub_800C78D0()];
-        dword_800C9E58[0] = dword_800C96A4[sub_800C78D0()];
+        dword_800C9E58.kind_0 = dword_800C96A4[sub_800C78D0()];
         break;
     case 1:
         dword_800C9E68 = sub_8001CE8C(((int (*)())sub_800C79B8)());
@@ -4642,7 +4642,7 @@ void sub_800C83B0()
     int bit;
     BatUnit_a* self;
     BatUnit_a* m;
-    a = *(BatCmd_a*)dword_800C9E58;
+    a = dword_800C9E58;
     if (dword_800C9E50 == 4)
     {
         dword_800C9180 = 0;
@@ -4651,14 +4651,14 @@ void sub_800C83B0()
         for (i = 0; i < 4; i++)
         {
             bit = 1 << i;
-            if ((((BatCmd_a*)dword_800C9E58)->fC & bit) && i == dword_800C9C99)
+            if ((dword_800C9E58.targets_C & bit) && i == dword_800C9C99)
             {
                 m = (BatUnit_a*)sub_80014390(i & 0xFF);
                 d.f24 = (signed char)dword_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
-                a.fC = bit;
+                a.targets_C = bit;
                 sub_80012BB0(self, m, &a, &d);
-                if (sub_80013228(self, m, &a, &d) == 0 && (((BatCmd_a*)dword_800C9E58)->f8 & bit))
+                if (sub_80013228(self, m, &a, &d) == 0 && (dword_800C9E58.mask_8 & bit))
                 {
                     dword_800C9180 -= d.fC;
                     dword_800C9182 -= d.f10;
@@ -4823,21 +4823,21 @@ void sub_800C88E4()
 void sub_800C8970()
 {
     int v;
-    dword_800C9C88[0] = dword_800C9E58[0];
-    dword_800C9C88[1] = dword_800C9E58[1];
-    dword_800C9C88[2] = dword_800C9E58[2];
-    v = dword_800C9E58[0];
+    dword_800C9C88.kind_0 = dword_800C9E58.kind_0;
+    dword_800C9C88.arg_4 = dword_800C9E58.arg_4;
+    dword_800C9C88.mask_8 = dword_800C9E58.mask_8;
+    v = dword_800C9E58.kind_0;
     if (v == 7 || v == 0x12)
     {
-        dword_800C9C88[3] = dword_800C9E4C;
+        dword_800C9C88.targets_C = dword_800C9E4C;
     }
     else if (v == 8)
     {
-        dword_800C9C88[3] = 0;
+        dword_800C9C88.targets_C = 0;
     }
     else
     {
-        dword_800C9C88[3] = dword_800C9E58[3];
+        dword_800C9C88.targets_C = dword_800C9E58.targets_C;
     }
     dword_800C9C98 = LowestSetBit_80014358(dword_800C9E64);
 }
