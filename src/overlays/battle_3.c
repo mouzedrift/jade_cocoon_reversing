@@ -546,36 +546,36 @@ typedef struct BatChance_a
 extern BatChance_a dword_800C9138[];
 extern int GetEquipmentId_8003356C(unsigned char* p, unsigned int idx);
 extern unsigned int Rand100_80013E30();
-void sub_800BF7C4(unsigned char* p, short* a, short* b)
+void sub_800BF7C4(BatUnit_a* p, short* a, short* b)
 {
-    unsigned int f = *(unsigned int*)p;
+    unsigned int f = p->flags_0;
     unsigned int f0 = f;
     int i;
     BatChance_a* e;
     *a = 0;
     *b = 0;
     f = sub_800BFA34(f);
-    if ((GetEquipmentId_8003356C(p, 2) & 0xFF) == 0x10)
+    if ((GetEquipmentId_8003356C((unsigned char*)p, 2) & 0xFF) == 0x10)
     {
         f |= 0x4000;
     }
     if (f0 & 1)
     {
-        *a = *(short*)(p + 0xA) / 10;
+        *a = p->hpLoss_A / 10;
         f &= ~2;
     }
     else if (f & 0x4000)
     {
-        *a = -(short)(*(short*)(p + 0xA) / 20);
+        *a = -(short)(p->hpLoss_A / 20);
     }
     if (f0 & 0x8000)
     {
-        *b = -((p[0x44] >> 2) + 3);
+        *b = -((p->f44 >> 2) + 3);
         f &= ~0x8000;
     }
     if (f & 0x200)
     {
-        *a = *(short*)(p + 8);
+        *a = p->hp_8;
     }
     i = 0;
 loop:
@@ -592,7 +592,7 @@ loop:
     {
         goto loop;
     }
-    *(unsigned int*)p = f;
+    p->flags_0 = f;
 }
 #endif
 
@@ -1076,102 +1076,102 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C04A4);
 
-void sub_800C064C(unsigned char* m, int* o, int c)
+void sub_800C064C(unsigned char* m, BatModelReq_a* o, int c)
 {
     unsigned char ids[8];
     int counts[3];
     int self;
     int t;
     self = *(unsigned short*)sub_80019C70(m[2]);
-    o[0] = sub_800338DC(m + 0x4C, ids, counts);
-    o[1] = *(unsigned short*)sub_80019C70(ids[0]);
-    o[2] = *(unsigned short*)sub_80019C70(ids[1]);
-    o[3] = *(unsigned short*)sub_80019C70(ids[2]);
-    o[4] = counts[0];
-    o[5] = counts[1];
-    o[6] = counts[2];
-    if (o[1] == o[2])
+    o->count_0 = sub_800338DC(m + 0x4C, ids, counts);
+    o->ids_4[0] = *(unsigned short*)sub_80019C70(ids[0]);
+    o->ids_4[1] = *(unsigned short*)sub_80019C70(ids[1]);
+    o->ids_4[2] = *(unsigned short*)sub_80019C70(ids[2]);
+    o->nums_10[0] = counts[0];
+    o->nums_10[1] = counts[1];
+    o->nums_10[2] = counts[2];
+    if (o->ids_4[0] == o->ids_4[1])
     {
-        if (o[2] == o[3])
+        if (o->ids_4[1] == o->ids_4[2])
         {
-            o[4] += o[5];
-            o[4] += o[6];
-            o[5] = 0;
-            o[6] = 0;
-            o[0] = 1;
+            o->nums_10[0] += o->nums_10[1];
+            o->nums_10[0] += o->nums_10[2];
+            o->nums_10[1] = 0;
+            o->nums_10[2] = 0;
+            o->count_0 = 1;
         }
         else
         {
-            o[4] += o[5];
-            o[2] = o[3];
-            o[5] = o[6];
-            o[0] = 2;
-            o[6] = 0;
+            o->nums_10[0] += o->nums_10[1];
+            o->ids_4[1] = o->ids_4[2];
+            o->nums_10[1] = o->nums_10[2];
+            o->count_0 = 2;
+            o->nums_10[2] = 0;
         }
     }
-    else if (o[1] == o[3])
+    else if (o->ids_4[0] == o->ids_4[2])
     {
-        o[4] += o[6];
-        o[6] = 0;
-        o[0] = 2;
+        o->nums_10[0] += o->nums_10[2];
+        o->nums_10[2] = 0;
+        o->count_0 = 2;
     }
-    else if (o[2] == o[3])
+    else if (o->ids_4[1] == o->ids_4[2])
     {
-        o[5] += o[6];
-        o[6] = 0;
-        o[0] = 2;
+        o->nums_10[1] += o->nums_10[2];
+        o->nums_10[2] = 0;
+        o->count_0 = 2;
     }
-    o[11] = 0;
-    if (o[1] != self)
+    o->f2C = 0;
+    if (o->ids_4[0] != self)
     {
-        if (o[2] == self)
+        if (o->ids_4[1] == self)
         {
-            o[2] = o[1];
-            o[1] = self;
-            t = o[5];
-            o[5] = o[4];
-            o[4] = t;
+            o->ids_4[1] = o->ids_4[0];
+            o->ids_4[0] = self;
+            t = o->nums_10[1];
+            o->nums_10[1] = o->nums_10[0];
+            o->nums_10[0] = t;
         }
-        else if (o[3] == self)
+        else if (o->ids_4[2] == self)
         {
-            o[3] = o[1];
-            o[1] = self;
-            t = o[6];
-            o[6] = o[4];
-            o[4] = t;
+            o->ids_4[2] = o->ids_4[0];
+            o->ids_4[0] = self;
+            t = o->nums_10[2];
+            o->nums_10[2] = o->nums_10[0];
+            o->nums_10[0] = t;
         }
-        else if (o[0] < 2)
+        else if (o->count_0 < 2)
         {
-            o[2] = o[1];
-            o[1] = self;
-            o[5] = o[4];
-            o[4] = 0;
-            o[0] = 2;
+            o->ids_4[1] = o->ids_4[0];
+            o->ids_4[0] = self;
+            o->nums_10[1] = o->nums_10[0];
+            o->nums_10[0] = 0;
+            o->count_0 = 2;
         }
         else
         {
-            o[3] = o[1];
-            o[1] = self;
-            o[6] = o[4];
-            o[4] = 0;
-            o[0] = 3;
+            o->ids_4[2] = o->ids_4[0];
+            o->ids_4[0] = self;
+            o->nums_10[2] = o->nums_10[0];
+            o->nums_10[0] = 0;
+            o->count_0 = 3;
         }
     }
-    o[7] = sub_80019A80(m[0xC8]);
-    o[8] = o[0] - 1;
-    o[10] = *(unsigned short*)sub_80019C70(m[3]);
-    o[12] = c;
-    o[9] = sub_800C0904(m + 0xC2);
-    if (o[9] == -1000)
+    o->f1C = sub_80019A80(m[0xC8]);
+    o->f20 = o->count_0 - 1;
+    o->f28 = *(unsigned short*)sub_80019C70(m[3]);
+    o->f30 = c;
+    o->angle_24 = sub_800C0904(m + 0xC2);
+    if (o->angle_24 == -1000)
     {
-        o[9] = ((unsigned char*)sub_80019C70(m[3]))[2] * 2;
+        o->angle_24 = ((unsigned char*)sub_80019C70(m[3]))[2] * 2;
     }
     else
     {
-        o[9] -= ((unsigned char*)sub_80019C70(m[3]))[3] * 2;
-        if (o[9] < 0)
+        o->angle_24 -= ((unsigned char*)sub_80019C70(m[3]))[3] * 2;
+        if (o->angle_24 < 0)
         {
-            o[9] += 360;
+            o->angle_24 += 360;
         }
     }
 }
@@ -1264,7 +1264,7 @@ int sub_800C0A9C()
 
 int sub_800C0AEC(int a, int* b, int c)
 {
-    char buf[0x38];
+    BatModelReq_a buf;
     int h;
     if (sub_800C0D50() != -1)
     {
@@ -1276,8 +1276,8 @@ int sub_800C0AEC(int a, int* b, int c)
         return 0;
     }
     dword_800C9188 = h;
-    sub_800C064C(h, buf, dword_8007DC74);
-    StartModelTask_80010850(buf);
+    sub_800C064C(h, &buf, dword_8007DC74);
+    StartModelTask_80010850(&buf);
     dword_800C9190.f4 = b[0];
     dword_800C9190.f8 = b[1];
     dword_800C9190.fc = b[2];
@@ -1446,15 +1446,15 @@ int sub_800C0FAC()
     return (int)dword_800C9190.obj->f1C4;
 }
 
-void sub_800C0FC4(int* p)
+void sub_800C0FC4(BatModelInfo_a* p)
 {
     Actor* q = dword_800C9190.obj;
-    p[0] = q->f14C;
-    p[1] = (int)q->pos_38;
-    p[2] = (int)q->f1C4;
-    p[3] = (int)q->f1C8;
-    p[11] = (int)q->f144;
-    p[12] = (int)&q->f2C;
+    p->f0 = q->f14C;
+    p->pos_4 = q->pos_38;
+    p->f8 = q->f1C4;
+    p->fC = q->f1C8;
+    p->f2C = q->f144;
+    p->f30 = &q->f2C;
 }
 
 int sub_800C100C(int a)

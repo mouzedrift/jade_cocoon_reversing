@@ -119,12 +119,6 @@ extern void sub_800BE3C0();
 
 extern int sub_800BEA94();
 
-typedef struct BatMin_a
-{
-    unsigned int f0;
-    int f4;
-    short h8;
-} BatMin_a;
 
 extern int sub_800BC6CC();
 
@@ -232,6 +226,33 @@ extern void SsSepSetDecrescendo();
 extern void sub_800BA848();
 
 extern void sub_800BA4F4();
+
+// sub_800C064C: what StartModelTask_80010850 builds a minion's model from
+typedef struct BatModelReq_a
+{
+    int count_0; // distinct parts
+    int ids_4[3];
+    int nums_10[3];
+    int f1C;
+    int f20;
+    int angle_24;
+    int f28;
+    int f2C;
+    int f30;
+    int f34;
+} BatModelReq_a;
+
+// sub_800C0FC4: filled from the battle model actor
+typedef struct BatModelInfo_a
+{
+    int f0;
+    int* pos_4;
+    char* f8;
+    char* fC;
+    int f10[7];
+    char* f2C;
+    int* f30;
+} BatModelInfo_a;
 
 extern void sub_800C064C();
 

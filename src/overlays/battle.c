@@ -674,17 +674,17 @@ void sub_800BB314(BatTask_a* t)
 #if 0 // Not matched: only u and flags swap saved registers (s5/s6); reducing flags refs flips them; tried decl order, types, split ifs, tail variable
 void sub_800BB380(BatTask_a* t, BatObj_a* u)
 {
-    BatMin_a* m;
+    BatUnit_a* m;
     int flags;
     int kind;
     int r;
     unsigned int f;
     sub_800BB74C();
     sub_800BB7D4();
-    m = (BatMin_a*)sub_80014390(dword_800C9C7C);
-    flags = m->f0;
+    m = (BatUnit_a*)sub_80014390(dword_800C9C7C);
+    flags = m->flags_0;
     kind = sub_800BC7DC(dword_800C9C7C);
-    sub_800BF7C4((unsigned char*)m, &dword_800C9C7E, &dword_800C9C80);
+    sub_800BF7C4(m, &dword_800C9C7E, &dword_800C9C80);
     if (dword_800C9C7E != 0)
     {
         if (dword_800C9C80 != 0)
@@ -700,7 +700,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     {
         dword_800C9CBC[dword_800C9C7C] = 2;
     }
-    f = m->f0;
+    f = m->flags_0;
     r = sub_800BFA4C(f, flags);
     dword_800C9C88.kind_0 = r;
     dword_800C9C88.arg_4 = 0;
@@ -740,10 +740,10 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
         u->f4 = (int)(u->next_8 = sub_800BAE74);
         return;
     }
-    if (m->h8 - dword_800C9C7E <= 0)
+    if (m->hp_8 - dword_800C9C7E <= 0)
     {
         dword_800C9C88.kind_0 = 0xB;
-        dword_800C9C7E = m->h8;
+        dword_800C9C7E = m->hp_8;
         switch ((unsigned int)kind)
         {
         case 0:
@@ -1132,22 +1132,22 @@ int sub_800BC1A8(unsigned int mask)
 {
     int i;
     int m;
-    BatMin_a* mn;
+    BatUnit_a* mn;
     int c;
     for (i = 0; i < 7; i++)
     {
         m = 1 << i;
         if (mask & m)
         {
-            mn = (BatMin_a*)sub_80014390(i & 0xFF);
+            mn = (BatUnit_a*)sub_80014390(i & 0xFF);
             c = (unsigned char)dword_800C9CBC[i];
-            if (c != 0 && c != 5 && c != 6 && mn->h8 > 0)
+            if (c != 0 && c != 5 && c != 6 && mn->hp_8 > 0)
             {
                 if (dword_800C9CA0[i] & 0x18202)
                 {
                     return 1;
                 }
-                if (mn->f0 & 0x8000)
+                if (mn->flags_0 & 0x8000)
                 {
                     return 1;
                 }
