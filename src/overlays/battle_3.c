@@ -1544,7 +1544,56 @@ void sub_800C1190(int a, int b)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1220);
+typedef struct BatDrop_a
+{
+    int f0;
+    int f4;
+    short size_8;
+    short padA;
+    int padC;
+    int pos_10[3];
+    char pad1C[0xC];
+    int vel_28[3];
+    short rot_34[4];
+    int pad3C;
+    int* anim_40;
+} BatDrop_a;
+
+// Matched
+void sub_800C1220(EventEntry* t, BatDrop_a* u)
+{
+    int v[3];
+    short s[4];
+    short w[4];
+    int* d;
+    char* e;
+    u->vel_28[0] = u->vel_28[0] * 15 / 16;
+    u->vel_28[1] = u->vel_28[1] * 15 / 16 + u->size_8 / 8;
+    u->vel_28[2] = u->vel_28[2] * 15 / 16;
+    u->pos_10[0] += u->vel_28[0];
+    u->pos_10[1] += u->vel_28[1];
+    u->pos_10[2] += u->vel_28[2];
+    d = u->anim_40;
+    e = ((char**)d[2])[0];
+    v[0] = u->pos_10[0];
+    v[1] = u->pos_10[1];
+    v[2] = u->pos_10[2];
+    v[0] /= 1024;
+    v[1] /= 1024;
+    v[2] /= 1024;
+    if (((int*)levantPos_8008BD18)[1] < v[1] || u->size_8 < 0x800)
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+    u->size_8 -= 0x40;
+    s[0] = *(short*)(e + 0xC) * u->size_8 / 4096;
+    s[1] = *(short*)(e + 0xE) * u->size_8 / 4096;
+    w[0] = 0x14;
+    w[1] = 0;
+    w[2] = 0;
+    u->rot_34[1] += 0x80;
+    sub_80044010(&d[3], v, u->rot_34, e, e + 4, e + 8, s, w, e + 0x18, 0, 0x30, pOT_8008D690);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
 
