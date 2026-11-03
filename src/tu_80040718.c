@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 INCLUDE_DATA(dword_80074A24);
 INCLUDE_DATA(dword_80074A34);
@@ -49,9 +50,6 @@ void InitGameDefaults_80040718(void)
     ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
-extern int publicTiyPolyFT4s_8008D430;
-extern int publicTiySprts_8008D434;
-extern int publicTiyTPages_8008D440;
 extern int publicFtg_8008D4D0;
 extern void LoadFtgObjects_80021824(int* p, int a, int b, int c, int d);
 
@@ -60,7 +58,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74(&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74((int*)&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, (int*)&publicTiyTPages_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
     LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);

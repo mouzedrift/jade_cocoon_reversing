@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 INCLUDE_DATA(dword_8007490C);
 INCLUDE_DATA(dword_8007493C);
@@ -274,8 +275,6 @@ void DrawLoadingIcon_8003CD5C(void)
     pos[1] = 0xBA;
     DrawPublicTiySprt_80033080(pos, n, 0);
 }
-extern SPRT* publicTiySprts_8008D434;
-extern char* publicTiyTPages_8008D440;
 // Matched
 void sub_8003CE18(short x, short y)
 {
@@ -291,7 +290,7 @@ void sub_8003CE18(short x, short y)
         s->y0 = y;
         SetSemiTrans(s, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
-        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x238, 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
         break;
     case 1:
     case 3:
@@ -302,7 +301,7 @@ void sub_8003CE18(short x, short y)
         s->y0 = y;
         SetSemiTrans(s, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
-        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x238, 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
         break;
     case 2:
     case 4:
@@ -312,7 +311,7 @@ void sub_8003CE18(short x, short y)
         s->y0 = y;
         SetSemiTrans(s, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[72], 5);
-        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x240, 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[72], 2);
         break;
     }
 }

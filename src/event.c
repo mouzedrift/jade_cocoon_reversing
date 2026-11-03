@@ -15,8 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
-extern short* publicTiySprts_8008D434;
 
 INCLUDE_DATA(aDWorkPsusEvent);
 extern char aDWorkPsusEvent[];
@@ -157,8 +157,8 @@ void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 // Matched
 int sub_800429A8(short* p)
 {
-    short* g = publicTiySprts_8008D434;
-    if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
+    SPRT* g = publicTiySprts_8008D434;
+    if (p[2] >= *(short*)&g[79].w + *(short*)&g[82].w && p[3] >= *(short*)&g[79].h + *(short*)&g[82].h)
     {
         return 1;
     }
@@ -169,12 +169,12 @@ extern unsigned char* off_80087028[];
 void sub_800429F8(int a0, int a1)
 {
     short* p = (short*)a0;
-    short* g = publicTiySprts_8008D434;
+    SPRT* g = publicTiySprts_8008D434;
     unsigned char rgb[4][4];
     RECT r;
     short i;
 
-    if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
+    if (p[2] >= *(short*)&g[79].w + *(short*)&g[82].w && p[3] >= *(short*)&g[79].h + *(short*)&g[82].h)
     {
         r.x = p[0] + 3;
         r.y = p[1] + 2;
@@ -189,9 +189,7 @@ void sub_800429F8(int a0, int a1)
         DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
     }
 }
-extern POLY_FT4* publicTiyPolyFT4s_8008D430;
-extern DR_TPAGE* publicTiyTPages_8008D440;
-#define EVT_SPRT ((SPRT*)publicTiySprts_8008D434)
+#define EVT_SPRT publicTiySprts_8008D434
 #if 0
 // Not matched: register allocation (g/the sprite base gets $t7 instead of $s2, shifting the temporaries of the rect setup)
 void sub_80042B38(int a0, int a1)
