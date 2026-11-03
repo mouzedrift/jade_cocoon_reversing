@@ -1709,7 +1709,68 @@ int sub_800C0DD4(int a)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C0E04);
+typedef struct MenuEquipLine
+{
+    char pad_0[4];
+    int f4;
+    void* f8;
+    void* fC;
+    short x_10;
+    short y_12;
+    char pad_14[0xC];
+    int icon_20;
+    char pad_24[8];
+    short x_2C;
+    short y_2E;
+    char pad_30[0xC];
+    void* name_3C;
+    char pad_40[8];
+    short x_48;
+    short y_4A;
+} MenuEquipLine;
+extern MenuEquipLine* name_800C18B0[];
+extern int name_800C1754[];
+extern int GetEquipmentName_8001D128();
+void sub_800C0E04(short* a, short* pos, short c)
+{
+    MenuDlg d;
+    short i;
+    for (i = 0; i < 3; i++)
+    {
+        int icon;
+        void* nm;
+        int id = sub_800AD990(i);
+        if (id != 0xFF)
+        {
+            icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, i);
+            nm = (void*)GetEquipmentName_8001D128(id, i);
+        }
+        else
+        {
+            icon = -1;
+            nm = name_800B6838;
+        }
+        name_800C18B0[i]->f4 = name_800C1754[i];
+        name_800C18B0[i]->icon_20 = icon;
+        name_800C18B0[i]->name_3C = nm;
+        name_800C18B0[i]->f8 = &uiTiySprts_8008D620;
+        name_800C18B0[i]->fC = &uiTiyTPages_8008D3F4;
+        name_800C18B0[i]->x_10 = pos[0];
+        name_800C18B0[i]->y_12 = pos[1] + i * 22;
+        name_800C18B0[i]->x_2C = pos[0] + 0x32;
+        name_800C18B0[i]->y_2E = pos[1] + i * 22;
+        name_800C18B0[i]->x_48 = pos[0] + 0x47;
+        name_800C18B0[i]->y_4A = pos[1] + i * 22;
+    }
+    d.f0 = a[2];
+    d.f4 = frameCount_8008D3FC;
+    d.f8 = c;
+    d.fC = a[0];
+    d.f10 = (int)name_800C18B0;
+    d.f14 = a[3];
+    DrawMenuWindows_8002A5A4(&d);
+    SetFontClutOffset_8003F900(2, 0);
+}
 
 extern int name_800C29B8;
 extern int name_800B0EC0;
