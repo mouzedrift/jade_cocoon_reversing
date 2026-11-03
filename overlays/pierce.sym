@@ -1,2 +1,4 @@
-dword_800B66C0=0x800b66c0; // overlay header / data
-sub_800B66D8=0x800b66d8;
+dword_800C6F40=0x800c6f40; // overlay header / data
+jpt_800C6F44=0x800c6f44; // jump table of sub_800C6F58
+sub_800C6F58=0x800c6f58;
+sub_800C7124=0x800c7124;
