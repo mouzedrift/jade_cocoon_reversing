@@ -371,4 +371,17 @@ typedef struct ModelLoadParams
     int pad_3C;
 } ModelLoadParams;
 
+// model header section (struct_112 field_4C, copied by sub_80026014)
+typedef struct
+{
+    int offset_0;  // sub_80024E38: data at offset_0 + 4
+    int offset_4;  // sub_80024E64
+    int records_8; // chain of ModelHeaderRecord at records_8 + 8 (sub_80024FA8)
+} ModelHeaderData;
+typedef struct
+{
+    int offsets_0[5]; // from the record start (sub_80024E90..sub_80024F70)
+    int size_14;      // to the next record
+} ModelHeaderRecord;
+
 #endif

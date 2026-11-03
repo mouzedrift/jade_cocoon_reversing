@@ -17,18 +17,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-// the block at 0x8008D4F0 (tu_80036528.c copies its first 0x68 bytes as Block104)
-typedef struct
-{
-    VECTOR pos;
-    int field_10;
-    int active;
-} struct_8008D4F0_point;
-typedef struct
-{
-    char pad_0[0x44];
-    struct_8008D4F0_point points[8];
-} struct_8008D4F0;
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
@@ -2672,7 +2660,7 @@ void FreeModel_80024C48(struct_112* p)
     }
     if (p->field_54 != 0)
     {
-        FreeModelAnims_8002679C((struct_28**)&p->field_54, p->field_3E, h);
+        FreeModelAnims_8002679C((ModelAnim**)&p->field_54, p->field_3E, h);
     }
     if (p->field_58 != 0)
     {
@@ -2753,7 +2741,7 @@ char* sub_80024E90(void* p, int n)
     char* r = sub_80024FA8(p, n);
     if (r)
     {
-        r += *(int*)r;
+        r += ((ModelHeaderRecord*)r)->offsets_0[0];
     }
     return r;
 }
@@ -2763,7 +2751,7 @@ char* sub_80024EC8(void* p, int n)
     char* r = sub_80024FA8(p, n);
     if (r)
     {
-        r += *(int*)(r + 4);
+        r += ((ModelHeaderRecord*)r)->offsets_0[1];
     }
     return r;
 }
@@ -2773,7 +2761,7 @@ char* sub_80024F00(void* p, int n)
     char* r = sub_80024FA8(p, n);
     if (r)
     {
-        r += *(int*)(r + 8);
+        r += ((ModelHeaderRecord*)r)->offsets_0[2];
     }
     return r;
 }
@@ -2783,7 +2771,7 @@ char* sub_80024F38(void* p, int n)
     char* r = sub_80024FA8(p, n);
     if (r)
     {
-        r += *(int*)(r + 0xC);
+        r += ((ModelHeaderRecord*)r)->offsets_0[3];
     }
     return r;
 }
@@ -2793,26 +2781,26 @@ char* sub_80024F70(void* p, int n)
     char* r = sub_80024FA8(p, n);
     if (r)
     {
-        r += *(int*)(r + 0x10);
+        r += ((ModelHeaderRecord*)r)->offsets_0[4];
     }
     return r;
 }
 // Matched
 char* sub_80024FA8(void* a0, int n)
 {
-    char* hdr = *(char**)((char*)a0 + 0x4C);
+    char* hdr = (char*)((struct_112*)a0)->field_4C;
     char* r = 0;
     int i;
     if (hdr)
     {
-        int off = *(int*)(hdr + 8);
+        int off = ((ModelHeaderData*)hdr)->records_8;
         if (off)
         {
             hdr += off;
             hdr += 8;
             for (i = 0; i < n; i++)
             {
-                hdr += *(int*)(hdr + 0x14);
+                hdr += ((ModelHeaderRecord*)hdr)->size_14;
             }
             r = hdr;
         }
@@ -2840,15 +2828,15 @@ void sub_80024FFC(struct_112* p, int* ids)
     }
 }
 // Matched
-void sub_8002512C(unsigned int* a0, char* a1, int a2)
+void sub_8002512C(unsigned int* a0, struct_112* a1, int a2)
 {
     int i;
-    for (i = 0; i < *(unsigned short*)(a1 + 0x40); i++)
+    for (i = 0; i < a1->field_40; i++)
     {
-        int* e = (int*)(i * 0x58 + *(int*)(a1 + 0x64));
-        if (a2 == e[0])
+        struct_58* e = (struct_58*)(i * 0x58 + a1->field_64);
+        if (a2 == e->id)
         {
-            MemCopy_800403E8(a0, (unsigned int*)(e + 1), 0x54);
+            MemCopy_800403E8(a0, (unsigned int*)&e->d, 0x54);
             break;
         }
     }
@@ -3019,7 +3007,7 @@ void FreeModelAnim_8002556C(struct_112* p, int idx)
 {
     if (((char*)p->field_44)[idx])
     {
-        FreeModelAnimData_800269C4(p->field_54, p->field_3E, idx, ((int*)p->field_0)[1]);
+        FreeModelAnimData_800269C4((ModelAnim*)p->field_54, p->field_3E, idx, ((int*)p->field_0)[1]);
         ((char*)p->field_44)[idx] = 0;
     }
 }
@@ -3225,7 +3213,7 @@ void sub_80025B5C(struct_obj_E* p, int idx, int sel)
     struct_54 tmp;
     if (idx == sel)
     {
-        sub_8002512C((unsigned int*)&tmp, (char*)p, idx);
+        sub_8002512C((unsigned int*)&tmp, (struct_112*)p, idx);
     }
     else if (sel < p->field_3C)
     {
@@ -3418,7 +3406,7 @@ void LoadModelAnims_800261C8(ModelLoadParams* a0)
     p->field_3E = a0->desc_4->animCount_12;
     if (p->field_54 == 0)
     {
-        AllocModelAnims_80026730((struct_28**)&p->field_54, p->field_3E, h);
+        AllocModelAnims_80026730((ModelAnim**)&p->field_54, p->field_3E, h);
     }
     if (p->field_44 != 0)
     {
@@ -3620,39 +3608,39 @@ int sub_80026724(int* p)
     return p[0];
 }
 // Matched
-void AllocModelAnims_80026730(struct_28** a0, int a1, int a2)
+void AllocModelAnims_80026730(ModelAnim** a0, int a1, int a2)
 {
-    struct_28* p = (struct_28*)HeapAlloc_8003FC8C(a1 * 28, a2);
+    ModelAnim* p = (ModelAnim*)HeapAlloc_8003FC8C(a1 * 28, a2);
     int i;
     *a0 = p;
     for (i = 0; i < a1; i++)
     {
-        p[i].field_10 = 0;
-        p[i].field_14 = 0;
-        p[i].field_18 = 0;
+        p[i].cues_10 = 0;
+        p[i].basePose_14 = 0;
+        p[i].frames_18 = 0;
     }
 }
 // Matched
-void FreeModelAnims_8002679C(struct_28** a0, int n, int heap)
+void FreeModelAnims_8002679C(ModelAnim** a0, int n, int heap)
 {
-    struct_28* arr;
+    ModelAnim* arr;
     int i;
     if (*a0)
     {
         arr = *a0;
         for (i = 0; i < n; i++)
         {
-            if (arr[i].field_10)
+            if (arr[i].cues_10)
             {
-                HeapFree_8003FD18(arr[i].field_10, heap);
+                HeapFree_8003FD18(arr[i].cues_10, heap);
             }
-            if (arr[i].field_14)
+            if (arr[i].basePose_14)
             {
-                HeapFree_8003FD18(arr[i].field_14, heap);
+                HeapFree_8003FD18(arr[i].basePose_14, heap);
             }
-            if (arr[i].field_18)
+            if (arr[i].frames_18)
             {
-                HeapFree_8003FD18(arr[i].field_18, heap);
+                HeapFree_8003FD18(arr[i].frames_18, heap);
             }
         }
         HeapFree_8003FD18(arr, heap);
@@ -3660,49 +3648,49 @@ void FreeModelAnims_8002679C(struct_28** a0, int n, int heap)
     }
 }
 // Matched
-void sub_80026870(int* a0, int a1, int a2)
+void sub_80026870(ModelAnim** a0, int a1, int a2)
 {
     int r = sub_80026724((int*)a1);
-    AllocModelAnims_80026730((struct_28**)a0, r, a2);
+    AllocModelAnims_80026730(a0, r, a2);
     sub_800268E8(a0[0], a1, r, a2, -1);
 }
 // Matched
-void sub_800268E8(int a0, int a1, int n, int h, int mask)
+void sub_800268E8(ModelAnim* a0, int a1, int n, int h, int mask)
 {
     int* q = (int*)a1;
     int i;
-    for (i = 0; i < n; i++, a0 += sizeof(struct_28))
+    for (i = 0; i < n; i++, a0++)
     {
         int bit = 1 << i;
-        if ((mask & bit) && ((struct_28*)a0)->field_14 == 0 && ((struct_28*)a0)->field_18 == 0)
+        if ((mask & bit) && a0->basePose_14 == 0 && a0->frames_18 == 0)
         {
-            LoadModelAnimData_80026A8C((struct_28*)a0, a1 + q[i + 1], h);
+            LoadModelAnimData_80026A8C(a0, a1 + q[i + 1], h);
         }
     }
 }
 // Matched
-void FreeModelAnimData_800269C4(int a0, int n, int sel, int h)
+void FreeModelAnimData_800269C4(ModelAnim* a0, int n, int sel, int h)
 {
-    struct_28* p = (struct_28*)a0;
+    ModelAnim* p = a0;
     int i;
     for (i = 0; i < n; i++, p++)
     {
-        if (sel == i && p->field_14 != 0 && p->field_18 != 0)
+        if (sel == i && p->basePose_14 != 0 && p->frames_18 != 0)
         {
-            if (p->field_10 != 0)
+            if (p->cues_10 != 0)
             {
-                HeapFree_8003FD18(p->field_10, h);
+                HeapFree_8003FD18(p->cues_10, h);
             }
-            HeapFree_8003FD18(p->field_14, h);
-            HeapFree_8003FD18(p->field_18, h);
-            p->field_10 = 0;
-            p->field_14 = 0;
-            p->field_18 = 0;
+            HeapFree_8003FD18(p->basePose_14, h);
+            HeapFree_8003FD18(p->frames_18, h);
+            p->cues_10 = 0;
+            p->basePose_14 = 0;
+            p->frames_18 = 0;
         }
     }
 }
 // Matched
-void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
+void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
 {
     int f1 = 0;
     int f2 = f1;
@@ -3714,21 +3702,21 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     unsigned int j;
     int r;
     int k;
-    ((int*)a0)[0] = ((int*)a1)[0];
-    n = ((int*)a0)[0];
-    ((int*)a0)[1] = ((int*)a1)[1];
-    m = ((int*)a0)[1];
+    a0->frameCount_0 = ((ModelAnimFile*)a1)->frameCount_0;
+    n = a0->frameCount_0;
+    a0->boneCount_4 = ((ModelAnimFile*)a1)->boneCount_4;
+    m = a0->boneCount_4;
     if ((int)n < 0)
     {
         n &= 0x7FFFFFFF;
         s = (unsigned short*)(((int*)a1) + 3);
-        ((int*)a0)[0] = n;
-        ((int*)a0)[2] = ((int*)a1)[2];
+        a0->frameCount_0 = n;
+        a0->divisor_8 = ((ModelAnimFile*)a1)->divisor_8;
         f1 = 1;
     }
     else
     {
-        ((int*)a0)[2] = 0x20;
+        a0->divisor_8 = 0x20;
         s = (unsigned short*)(((int*)a1) + 2);
     }
     if ((int)m < 0)
@@ -3738,18 +3726,18 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     }
     else
     {
-        ((int*)a0)[3] = 0;
+        a0->cueCount_C = 0;
     }
-    ((int*)a0)[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
-    ((int*)a0)[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
-    d = (unsigned short*)((int*)a0)[5];
+    a0->basePose_14 = (unsigned short*)HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    a0->frames_18 = (unsigned short*)HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    d = a0->basePose_14;
     for (i = 0; i < m; i++)
     {
         *d++ = *s++;
         *d++ = *s++;
         *d++ = *s++;
     }
-    d = (unsigned short*)((int*)a0)[6];
+    d = a0->frames_18;
     for (j = 0; j < n; j++)
     {
         *d++ = *s++;
@@ -3779,16 +3767,16 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
             r += 2;
             s = (unsigned short*)((char*)((int*)a1) + r);
         }
-        ((int*)a0)[3] = *(int*)s;
+        a0->cueCount_C = *(int*)s;
         s += 2;
-        ((int*)a0)[4] = HeapAlloc_8003FC8C(((int*)a0)[3] * 8, (struct Pool*)a2);
+        a0->cues_10 = (ModelAnimCue*)HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
         k = 0;
-        while (k < ((int*)a0)[3])
+        while (k < a0->cueCount_C)
         {
-            ((unsigned short*)((int*)a0)[4])[k * 4 + 0] = s[0];
-            ((unsigned short*)((int*)a0)[4])[k * 4 + 1] = s[1];
-            ((unsigned short*)((int*)a0)[4])[k * 4 + 2] = s[2];
-            ((unsigned short*)((int*)a0)[4])[k * 4 + 3] = s[3];
+            a0->cues_10[k].frame_0 = s[0];
+            a0->cues_10[k].kind_2 = s[1];
+            a0->cues_10[k].arg_4 = s[2];
+            a0->cues_10[k].arg_6 = s[3];
             k++;
             s += 4;
         }

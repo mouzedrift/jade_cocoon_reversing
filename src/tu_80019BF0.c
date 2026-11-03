@@ -131,18 +131,9 @@ int sub_80019C84(void)
     }
     return v;
 }
-// the block at 0x8008D4F0 (tu_80036528.c copies its first 0x68 bytes as Block104)
-typedef struct
-{
-    VECTOR pos;
-    int field_10;
-    int active;
-} struct_8008D4F0_point;
-typedef struct
-{
-    char pad_0[0x44];
-    struct_8008D4F0_point points[8];
-} struct_8008D4F0;
+extern CameraState cameraState_8008D4F0;
+extern MATRIX dword_80087114; // light matrix
+extern MATRIX dword_80087134; // light colour matrix
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
@@ -165,16 +156,6 @@ extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
 #if 0
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
-typedef struct
-{
-    char pad[0x44];
-    struct
-    {
-        int pos[5];
-        int active;
-    } points[8];
-} CamState_80019CC4;
-extern char cameraState_8008D4F0[];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 int sub_80019CC4(int* pos)
 {
@@ -187,13 +168,13 @@ int sub_80019CC4(int* pos)
     {
         for (i = 0; i < 8; i++)
         {
-            if (((CamState_80019CC4*)cameraState_8008D4F0)->points[i].active == 0)
+            if (cameraState_8008D4F0.points_44[i].active == 0)
             {
                 break;
             }
-            if (DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos) < best)
+            if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
             {
-                best = DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos);
+                best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
                 found = i;
             }
         }
@@ -203,23 +184,20 @@ int sub_80019CC4(int* pos)
 #endif
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
-extern short dword_80087114[];
-extern short dword_80087134[];
-extern char cameraState_8008D4F0[];
 // Matched
 void sub_8001A38C(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    unsigned short* g;
+    unsigned short* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    CameraState* g;
     p[0] = 0;
     p[1] = 0;
-    g = (unsigned short*)cameraState_8008D4F0;
-    dword_80087114[6] = -g[0x34 / 2];
-    dword_80087114[7] = -g[0x36 / 2];
-    dword_80087114[8] = -g[0x38 / 2];
-    dword_80087134[2] = (short)g[0x3C / 2] / 4;
-    dword_80087134[5] = (short)g[0x3E / 2] / 4;
-    dword_80087134[8] = (short)g[0x40 / 2] / 4;
+    g = &cameraState_8008D4F0;
+    dword_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
+    dword_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
+    dword_80087114.m[2][2] = -(unsigned short)g->lightDir_34.vz;
+    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
 extern unsigned char byte_8008D460[3];
 typedef struct
@@ -229,11 +207,6 @@ typedef struct
     short pad_4;
     unsigned short duration;
 } Fade_8001A41C;
-typedef struct
-{
-    char pad_0[0x30];
-    unsigned char rgb[3];
-} CamColor_8001A41C;
 // Matched
 void sub_8001A41C(int** p, unsigned short* q)
 {
@@ -243,7 +216,7 @@ void sub_8001A41C(int** p, unsigned short* q)
     DR_TPAGE tp;
     int v;
     SVECTOR* sv;
-    unsigned char* c;
+    CameraState* c;
     unsigned char b;
     if (f->flags & 0x20)
     {
@@ -352,47 +325,47 @@ void sub_8001A41C(int** p, unsigned short* q)
             f->count = f->duration;
         }
     }
-    sv = (SVECTOR*)(cameraState_8008D4F0 + 0x34);
+    sv = &cameraState_8008D4F0.lightDir_34;
     VectorNormalSS(sv, sv);
-    c = (unsigned char*)cameraState_8008D4F0;
-    dword_80087114[0] = *(short*)(c + 0x34);
-    dword_80087114[1] = *(short*)(c + 0x36);
-    dword_80087114[2] = *(short*)(c + 0x38);
+    c = &cameraState_8008D4F0;
+    dword_80087114.m[0][0] = c->lightDir_34.vx;
+    dword_80087114.m[0][1] = c->lightDir_34.vy;
+    dword_80087114.m[0][2] = c->lightDir_34.vz;
     if (unknownFlags_8008D678 & 0x400)
     {
-        dword_80087134[0] = *(short*)(c + 0x3C) * dword_8008D40C >> 12;
-        dword_80087134[3] = *(short*)(c + 0x3E) * dword_8008D40C >> 12;
-        dword_80087134[6] = *(short*)(c + 0x40) * dword_8008D40C >> 12;
+        dword_80087134.m[0][0] = c->lightColor_3C[0] * dword_8008D40C >> 12;
+        dword_80087134.m[1][0] = c->lightColor_3C[1] * dword_8008D40C >> 12;
+        dword_80087134.m[2][0] = c->lightColor_3C[2] * dword_8008D40C >> 12;
     }
     else
     {
-        dword_80087134[0] = *(short*)(c + 0x3C);
-        dword_80087134[3] = *(short*)(c + 0x3E);
-        dword_80087134[6] = *(short*)(c + 0x40);
+        dword_80087134.m[0][0] = c->lightColor_3C[0];
+        dword_80087134.m[1][0] = c->lightColor_3C[1];
+        dword_80087134.m[2][0] = c->lightColor_3C[2];
     }
-    dword_80087114[3] = 0;
-    dword_80087114[4] = 0;
-    dword_80087114[5] = 0;
-    dword_80087114[6] = -dword_80087114[0];
-    dword_80087114[7] = -dword_80087114[1];
-    dword_80087114[8] = -dword_80087114[2];
-    dword_80087134[1] = 0;
-    dword_80087134[4] = 0;
-    dword_80087134[7] = 0;
-    dword_80087134[2] = dword_80087134[0] / 4;
-    dword_80087134[5] = dword_80087134[3] / 4;
-    dword_80087134[8] = dword_80087134[6] / 4;
+    dword_80087114.m[1][0] = 0;
+    dword_80087114.m[1][1] = 0;
+    dword_80087114.m[1][2] = 0;
+    dword_80087114.m[2][0] = -dword_80087114.m[0][0];
+    dword_80087114.m[2][1] = -dword_80087114.m[0][1];
+    dword_80087114.m[2][2] = -dword_80087114.m[0][2];
+    dword_80087134.m[0][1] = 0;
+    dword_80087134.m[1][1] = 0;
+    dword_80087134.m[2][1] = 0;
+    dword_80087134.m[0][2] = dword_80087134.m[0][0] / 4;
+    dword_80087134.m[1][2] = dword_80087134.m[1][0] / 4;
+    dword_80087134.m[2][2] = dword_80087134.m[2][0] / 4;
     if (unknownFlags_8008D678 & 0x400)
     {
-        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0] * dword_8008D40C >> 12;
-        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1] * dword_8008D40C >> 12;
-        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2] * dword_8008D40C >> 12;
+        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0] * dword_8008D40C >> 12;
+        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1] * dword_8008D40C >> 12;
+        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2] * dword_8008D40C >> 12;
     }
     else
     {
-        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0];
-        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1];
-        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2];
+        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0];
+        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1];
+        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2];
     }
 }
 // Matched

@@ -23,17 +23,26 @@ typedef struct
     short arg_6;
 } ModelAnimCue;
 
-// model animation header (the struct_112 field_54 table, 0x1C bytes each)
+// loaded model animation (the struct_112 field_54 table, 0x1C bytes each; LoadModelAnimData_80026A8C;
+// the shared headers call it struct_28)
+typedef struct ModelAnim
+{
+    unsigned int frameCount_0;
+    unsigned int boneCount_4;
+    int divisor_8;           // 0x20 unless the file gives one
+    int cueCount_C;
+    ModelAnimCue* cues_10;
+    unsigned short* basePose_14; // 3 per bone
+    unsigned short* frames_18;   // per frame: 6, then 3 per bone
+} ModelAnim;
+
+// animation file header (frameCount_0 bit 31: a divisor follows; boneCount_4 bit 31: cues follow the frames)
 typedef struct
 {
     unsigned int frameCount_0;
-    int field_4;
+    unsigned int boneCount_4;
     int divisor_8;
-    int cueCount_C;
-    ModelAnimCue* cues_10;
-    int field_14;
-    int field_18;
-} ModelAnim;
+} ModelAnimFile;
 
 // scripted movement (Actor.path_160): one (x, y, z, rot y) step per frame
 typedef struct

@@ -22,6 +22,7 @@ struct FtgSrcSprites9;
 struct FtgObject;
 struct ModelLoader;
 struct ModelLoadParams;
+struct ModelAnim;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -389,7 +390,7 @@ extern void ProcessPads_8001BF50(void);
 extern void XaStartReadTask_80043204(struct_obj_D* p, int* q);
 extern short* GetEquipmentData_8001D190();
 extern int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1);
-extern void LoadModelAnimData_80026A8C(void* a0, int a1, int a2);
+extern void LoadModelAnimData_80026A8C(struct ModelAnim* a0, int a1, int a2);
 extern void FreeSound_80030D00(int a0);
 extern void RestoreCameraState_80039698(int* a0);
 extern unsigned short* EncodeText_8003F684(int a0, unsigned short* a1);
@@ -464,7 +465,7 @@ extern int sub_800A248C(void);
 extern int sub_800A2B20(int a0);
 
 extern int RequestModelAnim_8002032C(int a0, int a1, int a2);
-extern void sub_800268E8(int a0, int a1, int a2, int a3, int a4);
+extern void sub_800268E8(struct ModelAnim* a0, int a1, int a2, int a3, int a4);
 
 extern void sub_800A5BCC(int a0);
 
@@ -509,7 +510,7 @@ extern int sub_80013DB0(void);
 #endif
 
 extern void sub_80027118(void);
-extern void FreeModelAnimData_800269C4(int a0, int a1, int a2, int a3);
+extern void FreeModelAnimData_800269C4(struct ModelAnim* a0, int a1, int a2, int a3);
 extern void LoadTiyTimsRelocated_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern void sub_80026EF8(struct_12* p, unsigned short* s, int a2);
 extern void sub_80023514(struct FtgPolyF3List* a0, struct FtgPolyF3* s, int a2, int a3);
@@ -528,4 +529,4 @@ extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);
 extern void LoadModelAnimSetSection_80026410(struct ModelLoadParams* a0);
 extern void sub_8002651C(struct ModelLoadParams* a0);
 extern int AreFileRequestsDone_80024DC4(void* p);
-extern void FreeModelAnims_8002679C(struct_28** a0, int n, int h);
+extern void FreeModelAnims_8002679C(struct ModelAnim** a0, int n, int h);

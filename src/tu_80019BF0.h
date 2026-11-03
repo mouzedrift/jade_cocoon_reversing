@@ -27,4 +27,21 @@ typedef struct
     short pad;
 } SoundCue_8007C750;
 
+// the block at 0x8008D4F0 (tu_80036528.c copies its first 0x68 bytes as Block104)
+typedef struct
+{
+    char pad_0[0x30];
+    unsigned char ambient_30[3];
+    unsigned char pad_33;
+    SVECTOR lightDir_34;
+    short lightColor_3C[3];
+    short pad_42;
+    struct
+    {
+        VECTOR pos;
+        int field_10;
+        int active;
+    } points_44[8];
+} CameraState;
+
 #endif
