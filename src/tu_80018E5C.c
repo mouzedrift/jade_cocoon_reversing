@@ -189,6 +189,183 @@ void sub_80018EBC(int a0, unsigned int* a1)
     }
     sub_8001DAAC(a0, r);
 }
+extern void* off_8007A170[];
+extern unsigned char dword_8007BA84[];
+extern unsigned char dword_8007BA74[];
+extern int dword_8007A67C[];
+extern int dword_8007A68C[];
+extern int dword_8007A69C[];
+extern MinionBaseStats* sub_800B32A4(int a0);
+extern unsigned char* sub_800B32F0(int a0);
+extern void sub_8003F7C8(void* a0, unsigned char* a1);
+extern void sub_8001980C(unsigned char* p, MinionBaseStats* s);
+extern void sub_800199A0(char* p);
+extern void sub_80019A20(char* a0);
+#if 0
+// Not matched: register allocation only - the two 4-byte resistance loops swap counter/pointer registers ($v0/$v1) and the constant 8 is not hoisted; two m+index adds have operands swapped (permuter: nothing)
+void sub_8001900C(char* m, int* a1)
+{
+    MinionBaseStats st;
+    void** name;
+    int r;
+    unsigned int id;
+    unsigned int id2;
+    int e;
+    int i;
+    int j;
+    int k;
+    int n;
+    int v;
+
+    n = a1[0];
+    *(int*)(m + 0x5C) = n;
+    name = &off_8007A170[n];
+    r = dword_8008D4DC;
+    sub_8003F7C8(*name, (unsigned char*)(m + 0x10));
+    sub_8003F7C8(*name, (unsigned char*)(m + 0x60));
+    id = *(unsigned int*)(m + 0x5C);
+    if (id < 0x39)
+    {
+        st = minionBaseStats_8007A4B4[id];
+        if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+        {
+            st.attack += (r % 5) * 10 - 20;
+            st.magicAttack += (r / 10 % 5) * 10 - 20;
+            st.defense += (r / 100 % 5) * 10 - 20;
+            st.magicDefense += (r / 1000 % 5) * 10 - 20;
+            st.speed += (r / 10000 % 5) * 10 - 20;
+            st.critical += (r / 100000 % 5) * 10 - 20;
+        }
+    }
+    else if (id < 0xC9)
+    {
+        id = (id - 0x39) / 4;
+        st = minionBaseStats_8007A4B4[id];
+        e = (*(unsigned int*)(m + 0x5C) - 0x39) & 3;
+        if (st.element != e)
+        {
+            st.element = e;
+            switch (e)
+            {
+            case 0:
+                st.attack += 10;
+                st.magicAttack += 10;
+                st.defense -= 10;
+                st.magicDefense -= 10;
+                break;
+            case 1:
+                st.defense -= 10;
+                st.magicDefense -= 10;
+                st.speed += 10;
+                st.critical += 10;
+                break;
+            case 2:
+                st.defense += 10;
+                st.magicDefense += 10;
+                st.speed -= 10;
+                st.critical -= 10;
+                break;
+            case 3:
+                st.attack -= 10;
+                st.magicAttack += 10;
+                st.defense -= 10;
+                st.magicDefense += 10;
+                break;
+            }
+        }
+    }
+    else
+    {
+        st = *sub_800B32A4(id - 0xC9);
+    }
+    sub_8001980C((unsigned char*)(m + 0x2C), &st);
+    *(int*)m = 0;
+    if (st.element != -1)
+    {
+        *(short*)(m + 0x42) = 1 << st.element;
+        for (j = 0; j < 4; j++)
+        {
+            (m + 0x3E)[j] = 0;
+        }
+        (m + st.element)[0x3E] = 0x20;
+    }
+    else
+    {
+        *(short*)(m + 0x42) = 0;
+        for (j = 0; j < 4; j++)
+        {
+            (m + 0x3E)[j] = 8;
+        }
+    }
+    *(int*)(m + 4) = 0x4000000;
+    m[0x44] = 0;
+    m[0x1C] = 0xFF;
+    m[0x1D] = 0xFF;
+    m[0x1E] = 0xFF;
+    m[0x1F] = 0xFF;
+    m[0x45] = 0;
+    id2 = *(unsigned int*)(m + 0x5C);
+    if (id2 < 0x39)
+    {
+        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+    }
+    else if (id2 < 0xC9)
+    {
+        id2 = (id2 - 0x39) / 4;
+        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+    }
+    else
+    {
+        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)sub_800B32F0(id2 - 0xC9), 12);
+    }
+    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    {
+        v = r;
+        for (i = 4; i < 9; i++)
+        {
+            (m + i)[0x20] = (v % 9) * 4 + 8;
+            v /= 10;
+        }
+    }
+    if (st.element != -1)
+    {
+        id2 = *(unsigned int*)(m + 0x5C);
+        if (!(id2 - 0x2B < 0xE) && !(id2 - 0xC9 < 0xA))
+        {
+            MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA74 + st.element * 4), 4);
+        }
+    }
+    *(int*)(m + 4) += a1[1];
+    sub_80012188(m);
+    FillHpMp_80011C0C((EntityStatus*)m, (EntityStatus*)m);
+    sub_800199A0(m);
+    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    {
+        m[0x6F + (r % 4) * 4] = 1;
+        m[0x6E + (r % 4) * 4] = r % 3 + 2;
+        k = r % 3 + 1;
+        m[0x6D + k * 4] = r % 10 + 6;
+        m[0x7D] = 12;
+    }
+    sub_80019A20(m);
+    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    {
+        if (r / 11 % 3)
+        {
+            *(int*)(m + 0x80) |= dword_8007A67C[st.element];
+        }
+        if (r / 70 & 1)
+        {
+            *(int*)(m + 0x80) |= dword_8007A68C[st.element];
+        }
+        if (r / 500 & 1)
+        {
+            *(int*)(m + 0x80) |= dword_8007A69C[st.element];
+        }
+    }
+    sub_80019A80(m[0x44]);
+}
+#endif
 INCLUDE_ASM(sub_8001900C);
 #if 0
 // Not matched: the clamp to 0..100 stores from each branch and keeps 100 in a register (original: one store of $v0 after $v1 copies); permuter found nothing
