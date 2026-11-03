@@ -1,7 +1,7 @@
 #ifndef _SOUND_H
 #define _SOUND_H
 
-typedef struct
+typedef struct SoundStruct
 {
     int field_0_vab_id;
     short field_4_seq_num;

@@ -23,7 +23,7 @@ typedef struct
 } EffectTaskState;
 
 /* buffer of an effect object (an EventEntry of effectObjects_8008B4A8) */
-typedef struct
+typedef struct EffectObj
 {
     int field_0; // frame counter
     int field_4;

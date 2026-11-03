@@ -161,7 +161,7 @@ void UpdateSoundTask_8002FF64(int a0, SoundTask* p)
 extern void StopSoundSeqs_80030D68(SoundStruct* p);
 #if 0
 // Not matched: register allocation of the sequence number
-void FreeSoundTask_8003006C(int a0, int* a1)
+void FreeSoundTask_8003006C(EventEntry* a0, SoundTask* a1)
 {
     SoundStruct* s = &bgmSound_80091CE0;
     short seq = s->field_4_seq_num;
@@ -170,9 +170,9 @@ void FreeSoundTask_8003006C(int a0, int* a1)
         SsSepStop(s->field_C_sep_access_num, seq);
         s->field_4_seq_num = -1;
     }
-    FreeSound_80030D00(a1[1]);
+    FreeSound_80030D00(a1->bgm_4);
     StopSoundSeqs_80030D68(&systemSound_80091D40);
-    FreeSound_80030D00(a1[2]);
+    FreeSound_80030D00(a1->sfx_8);
 }
 #endif
 INCLUDE_ASM(FreeSoundTask_8003006C);
@@ -231,11 +231,11 @@ int PlayMusic_800300E0(int idx, int a1)
     }
     if (t->bgm_4->field_6_sound_idx >= 0)
     {
-        FreeSound_80030D00((int)t->bgm_4);
+        FreeSound_80030D00(t->bgm_4);
     }
     if (t->sfx_8->field_6_sound_idx >= 0)
     {
-        FreeSound_80030D00((int)t->sfx_8);
+        FreeSound_80030D00(t->sfx_8);
     }
     t->bgm_4->field_6_sound_idx = idx;
     t->state_2 = 0;

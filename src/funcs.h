@@ -26,6 +26,8 @@ struct ModelAnim;
 struct OverlayLoader;
 struct Fade_8001A41C;
 struct XaTask;
+struct SoundStruct;
+struct EffectObj;
 struct ActorEffectReq;
 struct CameraCtrl;
 struct MsgWindow;
@@ -37,6 +39,7 @@ struct TimInfo;
 #include "LIBDS.H"
 #include "LIBGTE.H"
 #include "LIBGPU.H"
+#include "LIBSPU.H"
 #include "enums.h"
 #include "globals.h"
 
@@ -100,8 +103,8 @@ extern void sub_8001D71C(struct Actor* p);
 extern int sub_8001E1C8(struct Actor* p);
 extern int sub_8001E1DC(struct Actor* p);
 extern void sub_800272BC(int a0, int a1);
-extern void SetReverbDepthLeft_8002A2E8(struct_obj_B* p, short a1);
-extern void SetReverbDepthRight_8002A2FC(struct_obj_B* p, short a1);
+extern void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short a1);
+extern void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short a1);
 extern int sub_80031954(void* p, int idx);
 extern int sub_80033548(int* p, int mask);
 extern int sub_8003412C(char* p);
@@ -119,7 +122,7 @@ extern void sub_8001EA28(void* arg0);
 extern int IsModelLoaderDone_800205D0(void);
 extern void FreeEffectFile_80020EE0(struct EffectFile* p);
 extern void sub_80021804(struct FtgObject* p, int heap);
-extern void SetReverbMode_8002A280(struct_obj_B* p, short a1);
+extern void SetReverbMode_8002A280(SpuReverbAttr* p, short a1);
 extern void GetMenuItemColor_8002ACE8(int flags, unsigned char* out);
 extern unsigned char sub_80033528(unsigned char* p, int idx);
 extern int sub_80033A70(unsigned char* p, int idx);
@@ -403,7 +406,7 @@ extern void XaStartReadTask_80043204(EventEntry* p, struct XaTask* q);
 extern short* GetEquipmentData_8001D190();
 extern int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1);
 extern void LoadModelAnimData_80026A8C(struct ModelAnim* a0, int a1, int a2);
-extern void FreeSound_80030D00(int a0);
+extern void FreeSound_80030D00(struct SoundStruct* p);
 extern void RestoreCameraState_80039698(struct CameraCtrl* p);
 extern unsigned short* EncodeText_8003F684(int a0, unsigned short* a1);
 extern void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, struct TimInfo* t);
@@ -430,15 +433,15 @@ extern int sub_8003E484(int a0);
 extern void SetFontAbr_8003F9E8(int idx, int v);
 extern void AllocMdecVLCBuffer_80041848(void);
 extern void sub_80011B24(int a0);
-extern void sub_80016BF4(int* p, int* q);
+extern void sub_80016BF4(EventEntry* p, struct EffectObj* q);
 extern struct_20* sub_80019C28(unsigned int idx);
 extern void ClearModelAnimRefs_800201A4(void);
-extern void SetReverbDepth_8002A2A0(struct_obj_B* p, short a1, short a2);
+extern void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short a1, short a2);
 extern void DrawLargeTextBox_8002AF10(int a0, int a1, int a2);
 extern void DrawSmallTextBox_8002AF58(int a0, int a1, int a2);
 extern void OnUiTiyLoaded_8002BFCC(void* params, int* data);
 extern int sub_8002D738(int a0, int a1, int a2);
-extern void FreeSoundVab_80030EA4(short* p);
+extern void FreeSoundVab_80030EA4(struct SoundStruct* p);
 extern int CountMaskedUntilZero_80034B40(int* p, unsigned int mask);
 
 extern void InitFonts_8003DA70(void);

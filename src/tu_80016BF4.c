@@ -21,11 +21,11 @@
 INCLUDE_DATA(dword_80072270);
 
 // Matched
-void sub_80016BF4(int* p, int* q)
+void sub_80016BF4(EventEntry* p, EffectObj* q)
 {
-    if (--((EffectObj*)q)->field_4 < 0)
+    if (--q->field_4 < 0)
     {
-        *p = (*p & ~1) | 0x8000;
+        p->flags = (p->flags & ~1) | 0x8000;
         PlaySfx_80031494(0x24);
     }
 }

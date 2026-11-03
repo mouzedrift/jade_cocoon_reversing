@@ -26,8 +26,8 @@ extern void UpdateReverb_8002A218(void);
 void InitReverbTask_8002A1BC(int* p)
 {
     reverbAttr_80091CC8.mask = 0;
-    SetReverbMode_8002A280((struct_obj_B*)&reverbAttr_80091CC8, 0);
-    SetReverbDepth_8002A2A0((struct_obj_B*)&reverbAttr_80091CC8, 0x42, 0x42);
+    SetReverbMode_8002A280(&reverbAttr_80091CC8, 0);
+    SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
     p[2] = (int)UpdateReverb_8002A218;
 }
 // Matched
@@ -38,35 +38,35 @@ void UpdateReverb_8002A218(void)
         SpuSetReverbModeParam(&reverbAttr_80091CC8);
         if (reverbAttr_80091CC8.mask & 1)
         {
-            SetReverbDepth_8002A2A0((struct_obj_B*)&reverbAttr_80091CC8, 0x42, 0x42);
+            SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
             SpuSetReverbDepth(&reverbAttr_80091CC8);
         }
         reverbAttr_80091CC8.mask = 0;
     }
 }
 // Matched
-void SetReverbMode_8002A280(struct_obj_B* p, short a1)
+void SetReverbMode_8002A280(SpuReverbAttr* p, short a1)
 {
-    p->flags_0 |= 1;
-    p->field_4 = (short)(a1 | 0x100);
+    p->mask |= 1;
+    p->mode = (short)(a1 | 0x100);
 }
 // Matched
-void SetReverbDepth_8002A2A0(struct_obj_B* p, short a1, short a2)
+void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short a1, short a2)
 {
     SetReverbDepthLeft_8002A2E8(p, a1);
     SetReverbDepthRight_8002A2FC(p, a2);
 }
 // Matched
-void SetReverbDepthLeft_8002A2E8(struct_obj_B* p, short a1)
+void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short a1)
 {
-    p->flags_0 |= 2;
-    p->field_8 = a1;
+    p->mask |= 2;
+    p->depth.left = a1;
 }
 // Matched
-void SetReverbDepthRight_8002A2FC(struct_obj_B* p, short a1)
+void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short a1)
 {
-    p->flags_0 |= 4;
-    p->field_A = a1;
+    p->mask |= 4;
+    p->depth.right = a1;
 }
 typedef struct
 {

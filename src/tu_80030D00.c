@@ -32,14 +32,13 @@ INCLUDE_DATA(dword_80074600);
 INCLUDE_DATA(dword_80074610);
 
 // Matched
-void FreeSound_80030D00(int a0)
+void FreeSound_80030D00(SoundStruct* p)
 {
-    short* p = (short*)a0;
-    if (p && p[3] >= 0)
+    if (p && p->field_6_sound_idx >= 0)
     {
         FreeSoundSeqs_80030EEC(p);
         FreeSoundVab_80030EA4(p);
-        p[3] = -1;
+        p->field_6_sound_idx = -1;
     }
 }
 // Matched
@@ -70,13 +69,13 @@ void StopSoundSeqs_80030D68(SoundStruct* s)
     }
 }
 // Matched
-void FreeSoundVab_80030EA4(short* p)
+void FreeSoundVab_80030EA4(SoundStruct* p)
 {
-    SsVabClose(p[0]);
-    if (((SoundStruct*)p)->field_18_vab_header_ptr)
+    SsVabClose(p->field_0_vab_id);
+    if (p->field_18_vab_header_ptr)
     {
-        free3_8003FC6C(((SoundStruct*)p)->field_18_vab_header_ptr);
-        ((SoundStruct*)p)->field_18_vab_header_ptr = 0;
+        free3_8003FC6C(p->field_18_vab_header_ptr);
+        p->field_18_vab_header_ptr = 0;
     }
 }
 // Matched
@@ -286,8 +285,8 @@ int sub_800315E4(void)
 void FreeBgmAndSfx_800315F4(void)
 {
     SoundTask* s0 = soundTask_8008D4A4->entry.buffer;
-    FreeSound_80030D00((int)s0->bgm_4);
-    FreeSound_80030D00((int)s0->sfx_8);
+    FreeSound_80030D00(s0->bgm_4);
+    FreeSound_80030D00(s0->sfx_8);
 }
 // Matched
 void FadeOutSfxSeq_80031638(void)
