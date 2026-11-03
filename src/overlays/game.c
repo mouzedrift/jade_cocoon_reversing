@@ -1071,7 +1071,7 @@ typedef struct GameA2EEC_1
     int fC;
 } GameA2EEC_1;
 extern int sub_800A4278();
-extern void sub_800A433C();
+extern void SetActorState_800A433C();
 extern unsigned int DistanceSquaredXZ_8003B860(void* a, void* b);
 void sub_800A2EEC(int unused, GameA2EEC_1* p)
 {
@@ -1080,7 +1080,7 @@ void sub_800A2EEC(int unused, GameA2EEC_1* p)
         switch (p->fC)
         {
         case -1:
-            sub_800A433C(p, 5, 2, 0, -1, 1, 2);
+            SetActorState_800A433C(p, 5, 2, 0, -1, 1, 2);
             sub_8001DB58(p->f8, 0x3000, 1);
             break;
         case 5:
@@ -1104,14 +1104,14 @@ void sub_800A31DC(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 1, 1, 0, c, 1, 2);
+            SetActorState_800A433C(p, 1, 1, 0, c, 1, 2);
             sub_8001DB58(p->f8, 0x1000, 0);
             break;
         case 1:
             TurnActorTowards_8001DDFC(p->f8, &dword_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
-                sub_800A433C(p, 5, 2, 0, -1, c, 2);
+                SetActorState_800A433C(p, 5, 2, 0, -1, c, 2);
                 sub_8001DB58(p->f8, 0x3000, 1);
             }
             break;
@@ -1136,23 +1136,23 @@ void sub_800A333C(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 0xd, 0x17, 0, -2, 0, 2);
+            SetActorState_800A433C(p, 0xd, 0x17, 0, -2, 0, 2);
         case 0xd:
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 x = sub_800AB39C() & 0xFFFFFFF;
                 if (x == 1)
-                    sub_800A433C(q, 0xf, 2, 0, -1, x, 2);
+                    SetActorState_800A433C(q, 0xf, 2, 0, -1, x, 2);
             }
             break;
         case 0xf:
             sub_800A45F8(p);
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
-                sub_800A433C(p, 1, 1, 0x32, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, 0x32, -1, 1, 2);
             break;
         case 1:
             if (--q->f24 < 0)
-                sub_800A433C(q, 0xd, 0x17, 0, -1, c, 2);
+                SetActorState_800A433C(q, 0xd, 0x17, 0, -1, c, 2);
             break;
         }
     }
@@ -1168,16 +1168,16 @@ void sub_800A34D8(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 8, 2, (rand() % 16) * 10 + 0x64, c, 1, 2);
+            SetActorState_800A433C(p, 8, 2, (rand() % 16) * 10 + 0x64, c, 1, 2);
             break;
         case 8:
             sub_800A46FC((GameP4470_1*)p);
             if (--p->f24 < 0)
-                sub_800A433C(p, 1, 1, (rand() % 16) * 10 + 0x64, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, (rand() % 16) * 10 + 0x64, -1, 1, 2);
             break;
         case 1:
             if (--p->f24 < 0)
-                sub_800A433C(p, 0xe, 2, 0, -1, c, 2);
+                SetActorState_800A433C(p, 0xe, 2, 0, -1, c, 2);
             break;
         case 0xe:
             if (sub_800A4470((GameP4470_1*)p) == 0)
@@ -1197,16 +1197,16 @@ void sub_800A366C(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 8, 2, (rand() % 16) * 10 + 0x64, c, 1, 2);
+            SetActorState_800A433C(p, 8, 2, (rand() % 16) * 10 + 0x64, c, 1, 2);
             break;
         case 8:
             sub_800A46FC((GameP4470_1*)p);
             if (--p->f24 < 0)
-                sub_800A433C(p, 1, 1, (rand() % 16) * 10 + 0x64, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, (rand() % 16) * 10 + 0x64, -1, 1, 2);
             break;
         case 1:
             if (--p->f24 < 0)
-                sub_800A433C(p, 0xe, 2, 0, -1, c, c);
+                SetActorState_800A433C(p, 0xe, 2, 0, -1, c, c);
             break;
         case 0xe:
             if (sub_800A4470((GameP4470_1*)p) == 0)
@@ -1225,15 +1225,15 @@ void sub_800A3804(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 1, 1, 0, c, 1, 2);
+            SetActorState_800A433C(p, 1, 1, 0, c, 1, 2);
             break;
         case 1:
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
-                sub_800A433C(p, 0xa, 4, 0x28, -1, 1, 2);
+                SetActorState_800A433C(p, 0xa, 4, 0x28, -1, 1, 2);
             break;
         case 0xa:
             if (--p->f24 < 0)
-                sub_800A433C(p, 0xf, 2, 0, -1, 1, 2);
+                SetActorState_800A433C(p, 0xf, 2, 0, -1, 1, 2);
             break;
         case 0xf:
             sub_800A45F8(p);
@@ -1252,12 +1252,12 @@ void sub_800A3954(int unused, GameA2EEC_1* p)
         switch (p->fC)
         {
         case -1:
-            sub_800A433C(p, 0xf, 2, 0, p->fC, 1, 2);
+            SetActorState_800A433C(p, 0xf, 2, 0, p->fC, 1, 2);
             break;
         case 0xf:
             sub_800A45F8(p);
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
-                sub_800A433C(p, 0xa, 4, 0x46, -1, 1, 2);
+                SetActorState_800A433C(p, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
             TurnActorTowards_8001DDFC(q->f8, &dword_8008BD18, 0x155);
@@ -1279,17 +1279,17 @@ void sub_800A3A8C(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 8, 2, 0, c, 1, 2);
+            SetActorState_800A433C(p, 8, 2, 0, c, 1, 2);
             break;
         case 8:
             sub_800A46FC((GameP4470_1*)p);
             if (sub_800A4804((GameP4804_1*)p))
-                sub_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
             break;
         case 1:
             if (--p->f24 < 0)
             {
-                sub_800A433C(p, 0xe, 1, 0, -1, c, 2);
+                SetActorState_800A433C(p, 0xe, 1, 0, -1, c, 2);
                 sub_800A43FC(p);
             }
             break;
@@ -1311,11 +1311,11 @@ void sub_800A3BEC(int unused, GameA2EEC_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, c, 1, 2);
+            SetActorState_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, c, 1, 2);
             break;
         case 1:
             if (sub_800A4884(&dword_8008BD18, (short*)(&dword_8008BD18 + 1), (GameVec3_1*)((char*)p->f8 + 0x38)))
-                sub_800A433C(p, 0xf, 2, 0, -1, c, 2);
+                SetActorState_800A433C(p, 0xf, 2, 0, -1, c, 2);
             break;
         case 0xf:
             sub_800A45F8(p);
@@ -1335,17 +1335,17 @@ void sub_800A3D24(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 8, 2, 0x14, c, 1, 2);
+            SetActorState_800A433C(p, 8, 2, 0x14, c, 1, 2);
             break;
         case 8:
             sub_800A46FC((GameP4470_1*)p);
             if (--p->f24 < 0)
-                sub_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
             break;
         case 1:
             if (--p->f24 < 0)
             {
-                sub_800A433C(p, 0xe, 2, 0, -1, c, 2);
+                SetActorState_800A433C(p, 0xe, 2, 0, -1, c, 2);
                 sub_800A43FC(p);
             }
             break;
@@ -1366,11 +1366,11 @@ void sub_800A3E88(int unused, GameA2EEC_1* p)
         switch (p->fC)
         {
         case -1:
-            sub_800A433C(p, 0x10, 0x12, 0, p->fC, 1, 2);
+            SetActorState_800A433C(p, 0x10, 0x12, 0, p->fC, 1, 2);
         case 0x10:
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
-                sub_800A433C(q, 5, 2, 0, -1, 1, 2);
+                SetActorState_800A433C(q, 5, 2, 0, -1, 1, 2);
                 sub_8001DB58(q->f8, 0x2000, 1);
             }
             break;
@@ -1392,17 +1392,17 @@ void sub_800A3FC0(int unused, GameS3A8C_1* p)
         switch (c)
         {
         case -1:
-            sub_800A433C(p, 8, 2, 0x21, c, 1, 2);
+            SetActorState_800A433C(p, 8, 2, 0x21, c, 1, 2);
             break;
         case 8:
             sub_800A46FC((GameP4470_1*)p);
             if (--p->f24 < 0)
-                sub_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
+                SetActorState_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, -1, 1, 2);
             break;
         case 1:
             if (--p->f24 < 0)
             {
-                sub_800A433C(p, 0xe, 2, 0, -1, c, 2);
+                SetActorState_800A433C(p, 0xe, 2, 0, -1, c, 2);
                 sub_800A43FC(p);
             }
             break;
@@ -1422,24 +1422,70 @@ void sub_800A4124(int unused, GameS3A8C_1* p)
         switch (p->fC)
         {
         case -1:
-            sub_800A433C(p, 2, 1, 0, p->fC, 1, 2);
+            SetActorState_800A433C(p, 2, 1, 0, p->fC, 1, 2);
         case 2:
             sub_8001D6EC(q->f8, 1);
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0x61A7F)
-                sub_800A433C(q, 0xf, 2, 0, -1, 1, 2);
+                SetActorState_800A433C(q, 0xf, 2, 0, -1, 1, 2);
             break;
         case 0xf:
             sub_800A45F8(q);
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
-                sub_800A433C(q, 2, 1, 0, -1, 1, 2);
+                SetActorState_800A433C(q, 2, 1, 0, -1, 1, 2);
             break;
         }
     }
 }
 
+#if 0
+// Not matched: first SetActorState_800A433C call: 'move $a0,$s0' / 'move $a1,$v0' swapped (which one fills the beq delay slot)
+int sub_800A4278(GameS3A8C_1* p)
+{
+    int r;
+    int s;
+    if (sub_80011B6C() == 0)
+    {
+        s = 0xd;
+        if (p->fC != s)
+        {
+            SetActorState_800A433C(p, s, 0x17, 0, -1, 1, 2);
+        }
+        return 1;
+    }
+    r = sub_80011B6C();
+    if (r != 1)
+        return 0;
+    if (p->fC != 8)
+        SetActorState_800A433C(p, 8, 2, 0, -1, r, 2);
+    sub_800A45F8(p);
+    return 1;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A4278);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A433C);
+typedef struct GameAi_1
+{
+    char pad_0[8];
+    int** obj_8;
+    int state_c;
+    char pad_10[0x10];
+    int anim_20;
+    int timer_24;
+    int f28;
+    int f2c;
+} GameAi_1;
+void SetActorState_800A433C(GameAi_1* p, int state, int anim, int timer, int mode, int flag, int div)
+{
+    p->state_c = state;
+    p->timer_24 = timer;
+    p->anim_20 = anim;
+    sub_8001D760(p->obj_8, anim, mode, flag);
+    if (state == 0xe)
+    {
+        p->f2c = 0x1000 / (rand() % 16) / div;
+        p->f28 = (rand() & 1) ? 1 : 2;
+    }
+}
 
 void sub_800A43FC(GameP4470_1* p)
 {
@@ -1782,6 +1828,32 @@ void sub_800A54A0(void)
     }
 }
 
+#if 0
+// Not matched: needs carve.py; the original table (0x800A061C) is 4 mod 8 from the
+// start of GAME's .rdata (as are those of sub_800A5628/sub_800A56BC: a separate TU),
+// so the compiler's .align 3 table lands 4 bytes late.
+GameTable_1* sub_800A55B0(int a)
+{
+    GameTable_1* r = 0;
+    switch (a)
+    {
+    case 0:
+        r = (GameTable_1*)name_800AEB80;
+        break;
+    case 1:
+        return (GameTable_1*)name_800AEBBC;
+    case 2:
+        r = (GameTable_1*)name_800AEBC0;
+        break;
+    case 3:
+        return (GameTable_1*)name_800AEBC8;
+    case 4:
+        r = (GameTable_1*)name_800AEBCC;
+        break;
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A55B0);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A5628);
@@ -2195,14 +2267,13 @@ int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
 }
 
 #if 0
-// Not matched
+// Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
 int sub_800A66A4(int* p, int* x, unsigned short* q)
 {
-    int v = p[0];
-    if (v >= 0 && sub_800A6504(v))
+    if (p[0] >= 0 && sub_800A6504(p[0]))
     {
         int d = GameFn_8003B9E0(x, p + 1);
-        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        if ((unsigned int)((short)WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -2278,50 +2349,40 @@ int sub_800A683C(int x)
     return v;
 }
 
-#if 0
-// Not matched
 void sub_800A68CC(GameTask_1* t, int* q)
 {
     int i;
-    int v;
-    int v2;
-    int* p;
-    sub_800A72C8(dword_800B1DC8);
-    v = dword_800B1DC8[1];
-    q[0] = v;
-    v2 = v;
-    q[1] = v;
-    q[2] = v2;
-    p = q + 11;
+    int* d = dword_800B1DC8;
+    sub_800A72C8(d);
+    q[0] = d[1];
+    q[1] = q[0];
+    q[2] = q[0];
     for (i = 11; i >= 0; i--)
     {
-        p[3] = 0;
-        p--;
+        q[i + 3] = 0;
     }
     q[0xf] = CreateEventList_800435B4(dword_800B0DA4);
     eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
     t->next_8 = sub_800A6968;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A68CC);
 
-#if 0
-// Not matched
 void sub_800A6968(GameTask_1* t, GameQ_1* q)
 {
-    if (dword_800B09FC[0].p0 != 0)
+    GameLst_1* l0 = dword_800B09FC;
+    int i;
+    if (l0->p0 != 0)
     {
-        GameLst_1* l = dword_800B09FC;
+        i = 0;
         do
         {
-            sub_800A7450((GameNode_1*)*l->p0);
+            sub_800A7450((GameNode_1*)*l0[i].p0);
             if (eventDispatchHalt_8008B540)
             {
-                goto end;
+                break;
             }
-            l++;
-        } while (l->p0 != 0);
+            i++;
+        } while (l0[i].p0 != 0);
     }
     if (eventDispatchHalt_8008B540)
     {
@@ -2336,28 +2397,53 @@ end:
     eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A6968);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6A48);
+typedef struct GameStage_1
+{
+    int idx_0;
+    int f4;
+    int f8;
+    int done_c[12];
+} GameStage_1;
+void sub_800A6A48(GameTask_1* t, GameStage_1* q)
+{
+    GameLst_1* l0;
+    GameLst_1* l;
+    if (q->done_c[q->idx_0] == 0)
+    {
+        l0 = dword_800B0D74[q->idx_0];
+        if (l0->p0 != 0)
+        {
+            l = l0;
+            do
+            {
+                if (l->f4 & 0x1000)
+                {
+                    sub_800A7450((GameNode_1*)*l->p0);
+                }
+                l++;
+            } while (l->p0 != 0);
+        }
+        q->done_c[q->idx_0] = 1;
+    }
+}
 
-#if 0
-// Not matched
 void sub_800A6B00(GameTask_1* t, GameQ_1* q)
 {
     GameLst_1* l0 = dword_800B0D74[*(int*)q];
+    int i;
     if (l0->p0 != 0)
     {
-        GameLst_1* l = l0;
+        i = 0;
         do
         {
-            sub_800A7450((GameNode_1*)*l->p0);
+            sub_800A7450((GameNode_1*)*l0[i].p0);
             if (eventDispatchHalt_8008B540)
             {
-                goto end;
+                break;
             }
-            l++;
-        } while (l->p0 != 0);
+            i++;
+        } while (l0[i].p0 != 0);
     }
     if (unknownFlags_8008D678 & 0x8000000)
     {
@@ -2373,8 +2459,6 @@ end:
     eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A6B00);
 
 void sub_800A6C00(GameTask_1* t, int* q)
 {
@@ -3526,7 +3610,12 @@ void sub_800A99DC(G2Q* p)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AA140);
+extern void sub_8004D288(void* out, void* s, int k);
+void sub_800AA140(G2Act* p)
+{
+    char* t = (char*)*(int*)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
+}
 
 int sub_800AA1C0(int* p)
 {
@@ -4554,28 +4643,21 @@ unsigned char* sub_800AD4D8(int a, int b, int c)
     return sub_800AD58C(0xFF, c);
 }
 
-#if 0
 unsigned char* sub_800AD58C(int a, int b)
 {
     int n = sub_800AD374(b);
     unsigned char* p = sub_800AD604(b);
-    unsigned char* q = 0;
     int i;
-    if (p && n > 0)
+    if (p != 0)
     {
-        i = 0;
-        do
+        for (i = 0; i < n; i++)
         {
-            if (a == p[0])
-                return p;
-            i++;
-            p += 2;
-        } while (i < n);
+            if (a == p[i * 2])
+                return &p[i * 2];
+        }
     }
-    return q;
+    return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD58C);
 
 unsigned char* sub_800AD604(int n)
 {
@@ -4781,21 +4863,18 @@ int sub_800AD9EC(int a, int b)
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800AD9EC);
 
-#if 0
 int sub_800ADBA0(short* p)
 {
-    int n = ((G2Save2*)&saveData_8008B570)->n;
-    char* q = (char*)&saveData_8008B570;
+    char* base = (char*)&saveData_8008B570;
     int i;
-    for (i = 0; i < n; i++, q += 8)
+    for (i = 0; i < ((G2Save2*)base)->n; i++)
     {
-        if (((G2E*)q)->a == p[0] && ((G2E*)q)->b == p[1] && ((G2E*)q)->c == p[2])
+        G2E* q = (G2E*)(base + i * 8);
+        if (q->a == p[0] && q->b == p[1] && q->c == p[2])
             return i;
     }
     return -1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800ADBA0);
 
 int sub_800ADC1C(short* p)
 {
