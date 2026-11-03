@@ -1271,7 +1271,6 @@ int sub_800BF540(MenuCtx* c)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BF540);
 INCLUDE_OVERLAY_ASM(menu, jpt_800BBB08);
-INCLUDE_OVERLAY_ASM(menu, dword_800BBB40);
 
 extern int name_800C18FC[];
 extern char name_800B6838[];
@@ -1306,7 +1305,114 @@ void sub_800BF794(MenuCtx* c)
     c->f56 = 0;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BF8B4);
+typedef struct MenuLayout
+{
+    unsigned short a;
+    unsigned short b;
+    unsigned short c;
+    unsigned short d;
+    char pad_8[8];
+} MenuLayout;
+extern MenuLayout name_800C19DC[];
+extern int sub_800AD308();
+extern int sub_800AD79C();
+extern int CountMagicBits_8001AE54();
+void sub_800BF8B4(MenuCtx* c)
+{
+    MenuLayout* e = &name_800C19DC[c->sel_2];
+    int v;
+    c->f58 = e->a;
+    c->f5A = e->b;
+    c->f5C = e->c;
+    c->f5E = e->d;
+    switch (c->sel_2)
+    {
+    case 0:
+        if (c->flags_0 & 1)
+        {
+            c->f58 = 1;
+            c->f5A = 1;
+            c->f5C = 1;
+            c->f60 = 0;
+            c->f5E = 0x20;
+        }
+        else if (c->flags_0 & 2)
+        {
+            c->f5A = 1;
+            c->f5E = 0x31;
+            c->f60 = c->arr_2A[1];
+            c->f58 = c->f8 - 1;
+            c->f5C = c->f8 - 1;
+        }
+        else
+        {
+            c->f58 = 1;
+            c->f5A = 1;
+            c->f5C = 1;
+            c->f5E = 0x10;
+        }
+        break;
+    case 3:
+        c->f5A = c->f5C = c->f8 - 1;
+        if (c->f8 - 1 > 0)
+            break;
+    case 5:
+    case 9:
+        c->f5C = 1;
+        c->f5A = 1;
+        break;
+    case 1:
+        c->f60 = c->arr_2A[3];
+        c->f62 = c->arr_46[0];
+        v = sub_800AD308(0);
+        if (v < 3)
+            v = 3;
+        c->f5C = v + 1;
+        break;
+    case 14:
+        c->f60 = c->arr_2A[4];
+        c->f62 = c->arr_46[1];
+        v = sub_800AD79C();
+        if (v < 4)
+            v = 4;
+        c->f5C = v;
+        break;
+    case 4:
+        c->f60 = c->arr_2A[7];
+        c->f62 = c->arr_46[2];
+        v = CountMagicBits_8001AE54(sub_80010824(3, c->arr_2A[1]));
+        if (v < 4)
+            v = 4;
+        c->f5C = v;
+        break;
+    case 13:
+    {
+        int n = c->fC;
+        if (n >= 10)
+        {
+            short rows;
+            int q = n / 3;
+            rows = q;
+            if (n % 3 != 0)
+                rows = q + 1;
+            c->f5C = rows - 2;
+            c->f5A = rows - 2;
+        }
+        c->f60 = c->arr_2A[9];
+        break;
+    }
+    case 11:
+        c->f60 = c->arr_2A[10];
+        break;
+    case 2:
+        c->f58 = 1;
+        c->f5E = 2;
+        c->f5A = c->f8;
+        c->f5C = c->f8;
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(menu, dword_800BBB7C);
 
 int sub_800BFB10(MenuCtx* c)
 {
