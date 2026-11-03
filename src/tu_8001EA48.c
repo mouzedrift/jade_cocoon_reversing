@@ -29,7 +29,7 @@ typedef struct
 extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
-void OnEffectFileLoaded_80020F5C();
+void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];
@@ -1216,26 +1216,19 @@ int sub_80020D84(void)
     return r;
 }
 // Matched
-void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
+void LoadEffectFile_80020DDC(int a0, EffectFile* out, short* a2, short* a3, int a4, int a5)
 {
     FileRequestDesc req;
-    struct
-    {
-        int* out;
-        short a[2];
-        short b[2];
-        short c[2];
-        int d;
-    } arg;
-    arg.out = out;
-    arg.a[0] = a2[0];
-    arg.a[1] = a2[1];
-    arg.b[0] = a3[0];
-    arg.b[1] = a3[1];
-    arg.c[0] = a3[0];
-    arg.c[1] = a3[1];
-    arg.d = a4;
-    ListInit_8003FDB0(out + 1);
+    EffectLoadArg arg;
+    arg.out_0 = out;
+    arg.reloc_4[0] = a2[0];
+    arg.reloc_4[1] = a2[1];
+    arg.reloc_4[2] = a3[0];
+    arg.reloc_4[3] = a3[1];
+    arg.reloc_4[4] = a3[0];
+    arg.reloc_4[5] = a3[1];
+    arg.sel_10 = a4;
+    ListInit_8003FDB0(out->list_4);
     req.flags_0 = 0x28;
     if (a5)
     {
@@ -1252,7 +1245,7 @@ void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int
     req.params_14 = &arg;
     req.paramsSize_18 = 0x14;
     req.callback_1C = OnEffectFileLoaded_80020F5C;
-    *out = StartFileRequestTask_8003C6C8(&req);
+    out->request_0 = StartFileRequestTask_8003C6C8(&req);
 }
 // Matched
 int IsEffectFileLoaded_80020EBC(int* p)
@@ -1277,21 +1270,16 @@ int sub_80020F00(struct_list_14* p, int a, int b)
     }
     return -1;
 }
-void sub_80021298(int* src, int* out, int a2, int a3, int heap);
-void sub_80021464(int* hdr, int* out, int a2, int a3, int heap);
-int LoadMdecImages_800215E8(int* hdr, int* out, int heap);
-void sub_800216E8(int* a0, int a1, int a2);
-typedef struct
-{
-    int a;
-    int b;
-    int c;
-} struct_3i;
+void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap);
+void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap);
+int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap);
+void sub_800216E8(EffectMdecBuffers* a0, int a1, int a2);
+void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n);
 // Matched
-void OnEffectFileLoaded_80020F5C(int* arg_in, int* hdr)
+void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {
-    int* arg = arg_in;
-    int* out = (int*)arg[0];
+    EffectLoadArg* arg = arg_in;
+    EffectFile* out = arg->out_0;
     int* p1 = (int*)((char*)hdr + hdr[1]);
     int* p2 = (int*)((char*)hdr + hdr[2]);
     int* p3 = (int*)((char*)hdr + hdr[3]);
@@ -1303,107 +1291,90 @@ void OnEffectFileLoaded_80020F5C(int* arg_in, int* hdr)
     int r;
     int n;
     int* src;
-    out[5] = 0;
-    out[7] = 0;
-    out[9] = 0;
-    out[11] = 0;
-    out[4] = (int)ListAlloc_8003FDC0(out + 1, p1[0]);
-    MemCopy_800403E8((unsigned int*)out[4], (unsigned int*)(p1 + 1), p1[0]);
+    out->pointCount_14 = 0;
+    out->spriteCount_1C = 0;
+    out->modelCount_24 = 0;
+    out->imageSetCount_2C = 0;
+    out->data_10 = ListAlloc_8003FDC0(out->list_4, p1[0]);
+    MemCopy_800403E8((unsigned int*)out->data_10, (unsigned int*)(p1 + 1), p1[0]);
     n = p2[0];
     if (n)
     {
-        out[5] = n;
-        out[6] = (int)ListAlloc_8003FDC0(out + 1, n * 12);
+        out->pointCount_14 = n;
+        out->points_18 = ListAlloc_8003FDC0(out->list_4, n * 12);
         src = p2 + 1;
-        for (i = 0; i < out[5]; i++)
+        for (i = 0; i < out->pointCount_14; i++)
         {
-            ((struct_3i*)out[6])[i].a = src[0];
-            ((struct_3i*)out[6])[i].b = src[1];
-            ((struct_3i*)out[6])[i].c = src[2];
+            out->points_18[i].a = src[0];
+            out->points_18[i].b = src[1];
+            out->points_18[i].c = src[2];
             src += 3;
         }
     }
     n = p3[0];
     if (n)
     {
-        out[7] = n;
-        out[8] = (int)ListAlloc_8003FDC0(out + 1, n * 0x34);
-        for (i = 0; i < out[7]; i++)
+        out->spriteCount_1C = n;
+        out->sprites_20 = ListAlloc_8003FDC0(out->list_4, n * 0x34);
+        for (i = 0; i < out->spriteCount_1C; i++)
         {
-            int* d = (int*)(out[8] + i * 0x34);
-            sub_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)(arg + 1), arg[4], (int)(out + 1));
+            EffectSprite* d = &out->sprites_20[i];
+            sub_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
     n = p4[0];
     if (n)
     {
-        out[9] = n;
-        out[10] = (int)ListAlloc_8003FDC0(out + 1, n * 0x1C);
-        for (i = 0; i < out[9]; i++)
+        out->modelCount_24 = n;
+        out->models_28 = ListAlloc_8003FDC0(out->list_4, n * 0x1C);
+        for (i = 0; i < out->modelCount_24; i++)
         {
-            int* d = (int*)(out[10] + i * 0x1C);
-            sub_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)(arg + 1), arg[4], (int)(out + 1));
+            EffectModel* d = &out->models_28[i];
+            sub_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
     n = p5[0];
     if (n)
     {
-        out[11] = n;
-        out[12] = (int)ListAlloc_8003FDC0(out + 1, n * 8);
+        out->imageSetCount_2C = n;
+        out->imageSets_30 = ListAlloc_8003FDC0(out->list_4, n * 8);
         i = 0;
         max = i;
-        for (; i < out[11]; i++)
+        for (; i < out->imageSetCount_2C; i++)
         {
-            r = LoadMdecImages_800215E8((int*)((char*)p5 + p5[i + 1]), (int*)(out[12] + i * 8), (int)(out + 1));
+            r = LoadMdecImages_800215E8((int*)((char*)p5 + p5[i + 1]), &out->imageSets_30[i], (int)out->list_4);
             if (max < r)
             {
                 max = r;
             }
         }
-        sub_800216E8(out + 13, max, (int)(out + 1));
+        sub_800216E8(&out->mdec_34, max, (int)out->list_4);
     }
     if (GetTiyFileCount_80028E68(p6))
     {
-        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)(arg + 1), arg[4]);
+        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)arg->reloc_4, arg->sel_10);
     }
 }
-typedef struct
-{
-    unsigned char b[4];
-} struct_b4;
-typedef struct
-{
-    unsigned char b[8];
-} struct_b8;
-typedef struct
-{
-    struct_b4 f0;
-    struct_b4 f4;
-    struct_b4 f8;
-    struct_b4 fC;
-    struct_b8 f10;
-    struct_b4 f18;
-} struct_1c;
 // Matched
-void sub_80021298(int* src, int* out, int a2, int a3, int heap)
+void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
 {
-    int buf[10];
+    POLY_FT4 buf;
     int i;
     int j;
     int n;
     struct_1c* d;
     struct_1c* s;
-    out[0] = *src++;
-    out[1] = (int)ListAlloc_8003FDC0(heap, out[0]);
-    out[2] = (int)ListAlloc_8003FDC0(heap, out[0] * 4);
-    for (i = 0; i < out[0]; i++)
+    out->count_0 = *src++;
+    out->frameCounts_4 = ListAlloc_8003FDC0(heap, out->count_0);
+    out->frames_8 = ListAlloc_8003FDC0(heap, out->count_0 * 4);
+    for (i = 0; i < out->count_0; i++)
     {
         n = *src++;
         s = (struct_1c*)src;
         d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
-        ((unsigned char*)out[1])[i] = n;
-        ((struct_1c**)out[2])[i] = d;
-        for (j = 0; j < ((unsigned char*)out[1])[i]; j++)
+        out->frameCounts_4[i] = n;
+        out->frames_8[i] = d;
+        for (j = 0; j < out->frameCounts_4[i]; j++)
         {
             d->f0 = s->f0;
             d->f4 = s->f4;
@@ -1416,42 +1387,42 @@ void sub_80021298(int* src, int* out, int a2, int a3, int heap)
         }
         src = (int*)s;
     }
-    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)src, 0x28);
-    InitPolyFT4_80029A10(out + 3, buf);
+    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)src, 0x28);
+    InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 // Matched
-void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
+void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
     int* images = (int*)((char*)hdr + hdr[2]);
     if (GetFtgObjectCount_80021738(models))
     {
-        out[0] = GetFtgObjectCount_80021738(models);
-        AllocFtgObjects_80021744(&out[1], out[0], heap);
-        LoadFtgObjects_80021824(models, (char*)out[1], out[0], heap, a2);
+        out->ftgCount_0 = GetFtgObjectCount_80021738(models);
+        AllocFtgObjects_80021744((int*)&out->ftg_4, out->ftgCount_0, heap);
+        LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, heap, a2);
     }
     if (sub_80021DE4(models))
     {
-        sub_80021DF0(&out[2], sub_80021DE4(models), heap);
-        sub_80021E4C(models, &out[2], sub_80021DE4(models));
+        sub_80021DF0((int*)&out->mats_8, sub_80021DE4(models), heap);
+        sub_80021E4C(models, &out->mats_8, sub_80021DE4(models));
     }
     else
     {
-        out[2] = 0;
+        out->mats_8.count_0 = 0;
     }
-    out[4] = 0;
-    out[5] = 0;
-    out[6] = 0;
+    out->imageW_10 = 0;
+    out->imageH_14 = 0;
+    out->images_18 = 0;
     if (images[0] && images[1])
     {
-        out[4] = images[0];
-        out[5] = images[1];
-        out[6] = (int)ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
-        MemCopy_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[0] * 40 * images[1]);
+        out->imageW_10 = images[0];
+        out->imageH_14 = images[1];
+        out->images_18 = ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
+        MemCopy_800403E8((unsigned int*)out->images_18, (unsigned int*)(images + 2), images[0] * 40 * images[1]);
     }
 }
 // Matched
-int LoadMdecImages_800215E8(int* hdr, int* out, int heap)
+int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
 {
     int i;
     int max;
@@ -1459,16 +1430,16 @@ int LoadMdecImages_800215E8(int* hdr, int* out, int heap)
     unsigned long* src;
     int n;
     int count = hdr[0];
-    out[0] = count;
-    out[1] = (int)ListAlloc_8003FDC0(heap, count * 4);
+    out->count_0 = count;
+    out->images_4 = ListAlloc_8003FDC0(heap, count * 4);
     i = 0;
     max = i;
-    for (; i < out[0]; i++)
+    for (; i < out->count_0; i++)
     {
         size = hdr[i * 2 + 2];
         src = (unsigned long*)((char*)hdr + hdr[i * 2 + 1]);
-        ((int*)out[1])[i] = (int)ListAlloc_8003FDC0(heap, size);
-        MemCopy_800403E8((unsigned int*)((int*)out[1])[i], (unsigned int*)src, size);
+        out->images_4[i] = ListAlloc_8003FDC0(heap, size);
+        MemCopy_800403E8((unsigned int*)out->images_4[i], (unsigned int*)src, size);
         n = DecDCTBufSize(src);
         if (max < n)
         {
@@ -1478,10 +1449,10 @@ int LoadMdecImages_800215E8(int* hdr, int* out, int heap)
     return max;
 }
 // Matched
-void sub_800216E8(int* a0, int a1, int a2)
+void sub_800216E8(EffectMdecBuffers* a0, int a1, int a2)
 {
-    a0[0] = ListAlloc_8003FDC0(a2, (a1 + 1) * 4);
-    a0[1] = ListAlloc_8003FDC0(a2, 0x2000);
+    a0->dct_0 = ListAlloc_8003FDC0(a2, (a1 + 1) * 4);
+    a0->work_4 = ListAlloc_8003FDC0(a2, 0x2000);
 }
 // Matched
 int GetFtgObjectCount_80021738(int* p)
@@ -1637,13 +1608,13 @@ void sub_80021E24(volatile int* p, int h)
     HeapFree_8003FD18(p[1]);
 }
 // Matched
-void sub_80021E4C(int* a0, int* a1, unsigned int n)
+void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n)
 {
     unsigned short* src = (unsigned short*)((char*)a0 + a0[3]);
     unsigned int i;
     for (i = 0; i < n; i++)
     {
-        unsigned short* dst = (unsigned short*)((char*)a1[1] + i * 16);
+        unsigned short* dst = a1->items_4[i];
         dst[0] = src[0];
         dst[1] = src[1];
         dst[2] = src[2];

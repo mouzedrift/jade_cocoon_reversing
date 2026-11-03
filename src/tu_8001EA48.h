@@ -384,4 +384,94 @@ typedef struct
     int size_14;      // to the next record
 } ModelHeaderRecord;
 
+// ---------------------------------------------------------------------------------------------
+// effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
+
+// FTG material list (sub_80021DF0 / sub_80021E4C; also struct_112 field_5C)
+typedef struct
+{
+    int count_0;
+    unsigned short (*items_4)[8];
+} FtgMatList;
+
+typedef struct
+{
+    int a;
+    int b;
+    int c;
+} EffectPoint;
+
+// one 28-byte sprite animation frame record (copied as byte groups)
+typedef struct
+{
+    unsigned char b[4];
+} struct_b4;
+typedef struct
+{
+    unsigned char b[8];
+} struct_b8;
+typedef struct
+{
+    struct_b4 f0;
+    struct_b4 f4;
+    struct_b4 f8;
+    struct_b4 fC;
+    struct_b8 f10;
+    struct_b4 f18;
+} struct_1c;
+
+typedef struct
+{
+    int count_0;
+    unsigned char* frameCounts_4;
+    struct_1c** frames_8;
+    POLY_FT4 poly_C; // built by InitPolyFT4_80029A10 from the file
+} EffectSprite;
+
+typedef struct
+{
+    int ftgCount_0;
+    FtgObject* ftg_4;
+    FtgMatList mats_8;
+    int imageW_10;
+    int imageH_14;
+    void* images_18; // imageW_10 * imageH_14 records of 40 bytes
+} EffectModel;
+
+typedef struct
+{
+    int count_0;
+    void** images_4; // MDEC bitstreams
+} MdecImageSet;
+
+typedef struct
+{
+    void* dct_0;  // DecDCTBufSize of the largest image
+    void* work_4; // 0x2000 bytes
+} EffectMdecBuffers;
+
+typedef struct EffectFile
+{
+    int request_0;
+    int list_4[3]; // ListInit_8003FDB0 heap the file's data lives in
+    void* data_10;
+    int pointCount_14;
+    EffectPoint* points_18;
+    int spriteCount_1C;
+    EffectSprite* sprites_20;
+    int modelCount_24;
+    EffectModel* models_28;
+    int imageSetCount_2C;
+    MdecImageSet* imageSets_30;
+    EffectMdecBuffers mdec_34;
+} EffectFile;
+
+// OnEffectFileLoaded_80020F5C parameters
+typedef struct
+{
+    EffectFile* out_0;
+    short reloc_4[6]; // RelocateTPageClut_80022AE8 table
+    int sel_10;
+} EffectLoadArg;
+
 #endif
