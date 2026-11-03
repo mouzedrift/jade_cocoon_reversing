@@ -15,6 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "unit.h"
+#include "tu_80010B90.h"
 
 INCLUDE_DATA(dword_80071B78);
 
@@ -1521,23 +1523,23 @@ void sub_80011AF8(struct_obj_D* p, int* q)
 // Matched
 void sub_80011B24(int a0)
 {
-    int* p = dword_8008D464[0x24 / 4];
+    Task8008D464Buf* p = TASK_8008D464_BUF;
     switch (a0)
     {
     case 0x29:
-        p[1] = 1000;
-        p[0] = 0;
+        p->timer_4 = 1000;
+        p->mode_0 = 0;
         break;
     case 0x2A:
-        p[1] = 1000;
-        p[0] = 1;
+        p->timer_4 = 1000;
+        p->mode_0 = 1;
         break;
     }
 }
 // Matched
 int sub_80011B6C(void)
 {
-    return *dword_8008D464[0x24 / 4];
+    return TASK_8008D464_BUF->mode_0;
 }
 // Matched
 void sub_80011B8C(void)
@@ -1818,18 +1820,18 @@ int sub_80012204(int a, int b, int c, int d)
 // Matched
 void sub_800122A0(int a0, int a1, int* a2)
 {
-    char* p = (char*)sub_80014390(a0 & 0xFF);
+    UnitStats* p = (UnitStats*)sub_80014390(a0 & 0xFF);
     int v = *a2;
     if (v != 0)
     {
-        int lo = *(int*)(p + 4) + (v & 0x3FFFFFF);
-        int hi = *(unsigned char*)(p + 0x44) + ((unsigned int)v >> 26);
+        int lo = p->exp_4 + (v & 0x3FFFFFF);
+        int hi = p->level_44 + ((unsigned int)v >> 26);
         int q = lo / 0x4000000;
         *a2 += sub_80012204(hi + q, lo - (q << 26), a1, 0);
     }
     else
     {
-        *a2 = sub_80012204(*(unsigned char*)(p + 0x44), *(int*)(p + 4), a1, 0);
+        *a2 = sub_80012204(p->level_44, p->exp_4, a1, 0);
     }
 }
 // Matched
@@ -1893,61 +1895,61 @@ void sub_80012614(int a0, int sel, int delta, int mask)
 {
     int v;
     int r;
-    char* p = (char*)a0;
+    UnitStats* p = (UnitStats*)a0;
     unsigned short* sp = 0;
     unsigned char* bp = 0;
     int max = 0;
     switch (sel)
     {
     case 0:
-        max = *(short*)(p + 0xA);
-        sp = (unsigned short*)(p + 8);
+        max = *(short*)&p->maxHp_A;
+        sp = &p->hp_8;
         break;
     case 1:
-        sp = (unsigned short*)(p + 0xA);
+        sp = &p->maxHp_A;
         max = 999;
         break;
     case 2:
-        max = *(short*)(p + 0xE);
-        sp = (unsigned short*)(p + 0xC);
+        max = *(short*)&p->maxMp_E;
+        sp = &p->mp_C;
         break;
     case 3:
-        sp = (unsigned short*)(p + 0xE);
+        sp = &p->maxMp_E;
         max = 999;
         break;
     case 4:
     case 5:
-        bp = (unsigned char*)(p + 0x2C);
+        bp = &p->stats_2C[0];
         max = 99;
         break;
     case 6:
     case 7:
-        bp = (unsigned char*)(p + 0x30);
+        bp = &p->stats_2C[4];
         max = 99;
         break;
     case 8:
     case 9:
-        bp = (unsigned char*)(p + 0x2D);
+        bp = &p->stats_2C[1];
         max = 99;
         break;
     case 10:
     case 11:
-        bp = (unsigned char*)(p + 0x2E);
+        bp = &p->stats_2C[2];
         max = 99;
         break;
     case 12:
     case 13:
-        bp = (unsigned char*)(p + 0x2F);
+        bp = &p->stats_2C[3];
         max = 99;
         break;
     case 16:
         sub_80012794((struct_obj_B*)p, mask);
         break;
     case 17:
-        *(int*)p &= ~mask;
+        p->status_0 &= ~mask;
         break;
     case 19:
-        p[0x44] += delta;
+        *(char*)&p->level_44 += delta;
         break;
     }
     if (sp)

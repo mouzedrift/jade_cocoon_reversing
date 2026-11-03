@@ -15,6 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "actor.h"
+#include "unit.h"
 
 INCLUDE_DATA(dword_80072310);
 INCLUDE_DATA(dword_80072324);
@@ -126,9 +128,9 @@ INCLUDE_DATA(dword_8007303C);
 INCLUDE_DATA(dword_80073040); // kept here so tu_80019BF0's .rdata starts at 4 mod 8 (its switch tables use .align 3)
 
 // Matched
-int sub_80018E5C(char* a0, unsigned int a1)
+int sub_80018E5C(Actor* a0, unsigned int a1)
 {
-    struct_4s* t = (struct_4s*)(a0 + 0x108);
+    struct_4s* t = (struct_4s*)&a0->f108;
     int v = 0;
     switch (a1)
     {
@@ -145,7 +147,7 @@ int sub_80018E5C(char* a0, unsigned int a1)
         v = t[a1].field_0;
         break;
     case 10:
-        v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
+        v = sub_8001F03C((int)a0, a0->fD0, -1, 0x10);
         break;
     }
     return v;
@@ -199,10 +201,10 @@ extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
 extern void EncodeName_8003F7C8(void* a0, unsigned char* a1);
 extern void sub_8001980C(unsigned char* p, MinionBaseStats* s);
-extern void sub_800199A0(char* p);
-extern void sub_80019A20(char* a0);
+extern void sub_800199A0(UnitStats* p);
+extern void sub_80019A20(UnitStats* a0);
 // Matched
-void InitMinionData_8001900C(char* m, int* a1)
+void InitMinionData_8001900C(UnitStats* m, int* a1)
 {
     MinionBaseStats st;
     void** name;
@@ -218,16 +220,16 @@ void InitMinionData_8001900C(char* m, int* a1)
     int v;
 
     n = a1[0];
-    *(int*)(m + 0x5C) = n;
+    m->species_5C = n;
     name = &minionSpeciesNames_8007A170[n];
     r = dword_8008D4DC;
-    EncodeName_8003F7C8(*name, (unsigned char*)(m + 0x10));
-    EncodeName_8003F7C8(*name, (unsigned char*)(m + 0x60));
-    id = *(unsigned int*)(m + 0x5C);
+    EncodeName_8003F7C8(*name, m->name_10);
+    EncodeName_8003F7C8(*name, m->name_60);
+    id = m->species_5C;
     if (id < 0x39)
     {
         st = minionBaseStats_8007A4B4[id];
-        if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+        if (m->species_5C - 0x25 < 4)
         {
             st.attack += (r % 5) * 10 - 20;
             st.magicAttack += (r / 10 % 5) * 10 - 20;
@@ -241,7 +243,7 @@ void InitMinionData_8001900C(char* m, int* a1)
     {
         id = (id - 0x39) / 4;
         st = minionBaseStats_8007A4B4[id];
-        e = (*(unsigned int*)(m + 0x5C) - 0x39) & 3;
+        e = (m->species_5C - 0x39) & 3;
         if (st.element != e)
         {
             st.element = e;
@@ -278,92 +280,92 @@ void InitMinionData_8001900C(char* m, int* a1)
     {
         st = *sub_800B32A4(id - 0xC9);
     }
-    sub_8001980C((unsigned char*)(m + 0x2C), &st);
-    *(int*)m = 0;
+    sub_8001980C(m->stats_2C, &st);
+    m->status_0 = 0;
     if (st.element != -1)
     {
-        *(short*)(m + 0x42) = 1 << st.element;
+        m->elementMask_42 = 1 << st.element;
         for (j = 0; j < 4; j++)
         {
-            (m + 0x3E)[j] = 0;
+            m->element_3E[j] = 0;
         }
-        (m + st.element)[0x3E] = 0x20;
+        m->element_3E[st.element] = 0x20;
     }
     else
     {
-        *(short*)(m + 0x42) = 0;
+        m->elementMask_42 = 0;
         for (l = 0; l < 4; l++)
         {
-            (m + 0x3E)[l] = 8;
+            m->element_3E[l] = 8;
         }
     }
-    *(int*)(m + 4) = 0x4000000;
-    m[0x44] = 0;
-    m[0x1C] = 0xFF;
-    m[0x1D] = 0xFF;
-    m[0x1E] = 0xFF;
-    m[0x1F] = 0xFF;
-    m[0x45] = 0;
-    id2 = *(unsigned int*)(m + 0x5C);
+    m->exp_4 = 0x4000000;
+    m->level_44 = 0;
+    m->field_1C[0] = 0xFF;
+    m->field_1C[1] = 0xFF;
+    m->field_1C[2] = 0xFF;
+    m->field_1C[3] = 0xFF;
+    m->field_45 = 0;
+    id2 = m->species_5C;
     if (id2 < 0x39)
     {
-        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+        MemCopy_800403E8((unsigned int*)m->field_20, (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
     }
     else if (id2 < 0xC9)
     {
         id2 = (id2 - 0x39) / 4;
-        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+        MemCopy_800403E8((unsigned int*)m->field_20, (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
     }
     else
     {
-        MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)sub_800B32F0(id2 - 0xC9), 12);
+        MemCopy_800403E8((unsigned int*)m->field_20, (unsigned int*)sub_800B32F0(id2 - 0xC9), 12);
     }
-    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    if (m->species_5C - 0x25 < 4)
     {
         v = r;
         for (i = 4; i < 9; i++)
         {
-            (m + i)[0x20] = (v % 9) * 4 + 8;
+            m->field_20[i] = (v % 9) * 4 + 8;
             v /= 10;
         }
     }
     if (st.element != -1)
     {
-        id2 = *(unsigned int*)(m + 0x5C);
+        id2 = m->species_5C;
         if (!(id2 - 0x2B < 0xE) && !(id2 - 0xC9 < 0xA))
         {
-            MemCopy_800403E8((unsigned int*)(m + 0x20), (unsigned int*)(dword_8007BA74 + st.element * 4), 4);
+            MemCopy_800403E8((unsigned int*)m->field_20, (unsigned int*)(dword_8007BA74 + st.element * 4), 4);
         }
     }
-    *(int*)(m + 4) += a1[1];
+    m->exp_4 += a1[1];
     sub_80012188(m);
     FillHpMp_80011C0C((EntityStatus*)m, (EntityStatus*)m);
     sub_800199A0(m);
-    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    if (m->species_5C - 0x25 < 4)
     {
-        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[r % 4][3] = 1;
-        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[r % 4][2] = r % 3 + 2;
+        m->skills_6C.e[r % 4][3] = 1;
+        m->skills_6C.e[r % 4][2] = r % 3 + 2;
         k = r % 3 + 1;
-        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[k][1] = r % 10 + 6;
-        m[0x7D] = 12;
+        m->skills_6C.e[k][1] = r % 10 + 6;
+        m->skills_6C.field_10[1] = 12;
     }
     sub_80019A20(m);
-    if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
+    if (m->species_5C - 0x25 < 4)
     {
         if (r / 11 % 3)
         {
-            *(int*)(m + 0x80) |= dword_8007A67C[st.element];
+            m->field_80 |= dword_8007A67C[st.element];
         }
         if (r / 70 & 1)
         {
-            *(int*)(m + 0x80) |= dword_8007A68C[st.element];
+            m->field_80 |= dword_8007A68C[st.element];
         }
         if (r / 500 & 1)
         {
-            *(int*)(m + 0x80) |= dword_8007A69C[st.element];
+            m->field_80 |= dword_8007A69C[st.element];
         }
     }
-    sub_80019A80(m[0x44]);
+    sub_80019A80(*(char*)&m->level_44);
 }
 // Matched
 void sub_8001980C(unsigned char* p, MinionBaseStats* s)
@@ -402,26 +404,22 @@ void sub_8001980C(unsigned char* p, MinionBaseStats* s)
         (p + j)[12] = rand() % 100;
     }
 }
-typedef struct
-{
-    char b[20];
-} bytes20;
 // Matched
-void sub_800199A0(char* p)
+void sub_800199A0(UnitStats* p)
 {
-    *(bytes20*)(p + 0x6C) = *(bytes20*)sub_80019C28(*(unsigned int*)(p + 0x5C));
+    p->skills_6C = *(UnitSkills*)sub_80019C28(p->species_5C);
 }
 // Matched
-void sub_80019A20(char* a0)
+void sub_80019A20(UnitStats* a0)
 {
-    unsigned int idx = *(unsigned int*)(a0 + 0x5C);
+    unsigned int idx = a0->species_5C;
     if (idx < 0xC9)
     {
-        *(int*)(a0 + 0x80) = dword_8007A6AC[idx];
+        a0->field_80 = dword_8007A6AC[idx];
     }
     else
     {
-        *(int*)(a0 + 0x80) = *sub_800B3260(idx - 0x39);
+        a0->field_80 = *sub_800B3260(idx - 0x39);
     }
 }
 extern unsigned char dword_8007C2E4[];
@@ -446,7 +444,7 @@ int sub_80019A80(int a0)
 // Matched
 int sub_80019AD0(char* p)
 {
-    sub_80019A80(*(unsigned char*)(p + 0x44));
+    sub_80019A80(((UnitStats*)p)->level_44);
     return 4;
 }
 // Matched
