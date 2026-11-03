@@ -699,25 +699,20 @@ int sub_800A2A70(int a)
     }
 }
 
-#if 0
-// Not matched: early returns give the right registers but a second `jr $ra` for
-// the last return; a result variable (if/else, nested, goto, ternary) lands in $v1.
+// Matched
 int sub_800A2AB4(void)
 {
     GameCtx_1* c = &gCtx_800B1260;
-    if (c->f774 == 0)
+    if (c->f774 != 0)
     {
-        return 0;
+        if (c->f3c == 0)
+        {
+            return 1;
+        }
+        return 2;
     }
-    if (c->f3c == 0)
-    {
-        return 1;
-    }
-    return 2;
+    return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, sub_800A2AB4);
 
 // Matched
 void sub_800A2AE8(void)
