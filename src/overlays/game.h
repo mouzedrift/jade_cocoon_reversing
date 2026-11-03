@@ -596,6 +596,14 @@ typedef struct GameSave2_1
     short f2e8;
     short pad_2ea;
     short f2ec;
+    char pad_2ee[0x54A];
+    unsigned short f838[12]; // the tables sub_800A53CC picks by f2e4/f2e8 (title.c fills them with 0x8000)
+    unsigned short f850[18];
+    unsigned short f874[44];
+    unsigned short f8cc[22];
+    unsigned short f8f8[10];
+    unsigned short f90c[16];
+    unsigned short f92c[42];
 } GameSave2_1;
 
 extern GameMapEnt_1** dword_800B0608[];

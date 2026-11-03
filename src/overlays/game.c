@@ -1860,40 +1860,40 @@ int sub_800A5354(void)
 // Matched
 unsigned short* sub_800A53CC(void)
 {
-    char* b = (char*)&saveData_8008B570;
+    GameSave2_1* b = (GameSave2_1*)&saveData_8008B570;
     unsigned short* r = 0;
-    if (((GameSave2_1*)b)->f2e4 == 4)
+    if (b->f2e4 == 4)
     {
-        if (((GameSave2_1*)b)->f2e8 == 1)
+        if (b->f2e8 == 1)
         {
-            r = (unsigned short*)(b + 0x838);
+            r = b->f838;
         }
-        else if (((GameSave2_1*)b)->f2e8 == 2)
+        else if (b->f2e8 == 2)
         {
-            r = (unsigned short*)(b + 0x850);
+            r = b->f850;
         }
-        else if (((GameSave2_1*)b)->f2e8 == 3)
+        else if (b->f2e8 == 3)
         {
-            r = (unsigned short*)(b + 0x874);
+            r = b->f874;
         }
-        else if (((GameSave2_1*)b)->f2e8 == 4)
+        else if (b->f2e8 == 4)
         {
-            r = (unsigned short*)(b + 0x8cc);
+            r = b->f8cc;
         }
     }
-    else if (((GameSave2_1*)b)->f2e4 == 5)
+    else if (b->f2e4 == 5)
     {
-        if (((GameSave2_1*)b)->f2e8 == 1)
+        if (b->f2e8 == 1)
         {
-            r = (unsigned short*)(b + 0x8f8);
+            r = b->f8f8;
         }
-        else if (((GameSave2_1*)b)->f2e8 == 2)
+        else if (b->f2e8 == 2)
         {
-            r = (unsigned short*)(b + 0x90c);
+            r = b->f90c;
         }
-        else if (((GameSave2_1*)b)->f2e8 == 3)
+        else if (b->f2e8 == 3)
         {
-            r = (unsigned short*)(b + 0x92c);
+            r = b->f92c;
         }
     }
     return r;
