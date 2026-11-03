@@ -271,7 +271,84 @@ int sub_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B73C0);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B76B8);
+int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* p)
+{
+    VECTOR e;
+    VECTOR r;
+    int i;
+    int minx;
+    int maxx;
+    int minz;
+    int maxz;
+    for (i = 0; i < m->nTris_0; i++)
+    {
+        if (m->tris_4[i].v_0[0].x_0 > m->tris_4[i].v_0[1].x_0)
+        {
+            maxx = m->tris_4[i].v_0[0].x_0;
+            minx = m->tris_4[i].v_0[1].x_0;
+        }
+        else
+        {
+            minx = m->tris_4[i].v_0[0].x_0;
+            maxx = m->tris_4[i].v_0[1].x_0;
+        }
+        if (maxx < m->tris_4[i].v_0[2].x_0)
+        {
+            maxx = m->tris_4[i].v_0[2].x_0;
+        }
+        else if (m->tris_4[i].v_0[2].x_0 < minx)
+        {
+            minx = m->tris_4[i].v_0[2].x_0;
+        }
+        if (m->tris_4[i].v_0[0].z_4 > m->tris_4[i].v_0[1].z_4)
+        {
+            maxz = m->tris_4[i].v_0[0].z_4;
+            minz = m->tris_4[i].v_0[1].z_4;
+        }
+        else
+        {
+            minz = m->tris_4[i].v_0[0].z_4;
+            maxz = m->tris_4[i].v_0[1].z_4;
+        }
+        if (maxz < m->tris_4[i].v_0[2].z_4)
+        {
+            maxz = m->tris_4[i].v_0[2].z_4;
+        }
+        else if (m->tris_4[i].v_0[2].z_4 < minz)
+        {
+            minz = m->tris_4[i].v_0[2].z_4;
+        }
+        if (p->x_0 < minx || maxx < p->x_0 || p->z_8 < minz || maxz < p->z_8)
+        {
+            continue;
+        }
+        e.vx = m->tris_4[i].v_0[1].x_0 - m->tris_4[i].v_0[0].x_0;
+        e.vz = m->tris_4[i].v_0[1].z_4 - m->tris_4[i].v_0[0].z_4;
+        r.vx = p->x_0 - m->tris_4[i].v_0[0].x_0;
+        r.vz = p->z_8 - m->tris_4[i].v_0[0].z_4;
+        if (e.vx * r.vz - e.vz * r.vx > 0)
+        {
+            continue;
+        }
+        e.vx = m->tris_4[i].v_0[2].x_0 - m->tris_4[i].v_0[1].x_0;
+        e.vz = m->tris_4[i].v_0[2].z_4 - m->tris_4[i].v_0[1].z_4;
+        r.vx = p->x_0 - m->tris_4[i].v_0[1].x_0;
+        r.vz = p->z_8 - m->tris_4[i].v_0[1].z_4;
+        if (e.vx * r.vz - e.vz * r.vx > 0)
+        {
+            continue;
+        }
+        e.vx = m->tris_4[i].v_0[0].x_0 - m->tris_4[i].v_0[2].x_0;
+        e.vz = m->tris_4[i].v_0[0].z_4 - m->tris_4[i].v_0[2].z_4;
+        r.vx = p->x_0 - m->tris_4[i].v_0[2].x_0;
+        r.vz = p->z_8 - m->tris_4[i].v_0[2].z_4;
+        if (e.vx * r.vz - e.vz * r.vx <= 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
 
