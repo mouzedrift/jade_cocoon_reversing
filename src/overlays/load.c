@@ -11,7 +11,7 @@ extern int dword_800BE1E4[];
 extern int (*dword_800BE294[])();
 extern int dword_800BE254[];
 extern char byte_800B7630[];
-extern int dword_800BE188[];
+extern char* dword_800BE188[];
 extern int dword_800BE2C4;
 extern int dword_800BE2C8;
 extern int dword_800BE2CC;
@@ -52,10 +52,10 @@ extern int uiTiyLoaded_8008B4E8;
 extern int dword_8008B570[];
 extern unsigned char byte_800BDF58;
 extern int dword_800BE208;
-extern char dword_800BDECC[];
-extern void DrawLoadingIcon_8003CD5C(int* t);
+extern char* dword_800BDECC[];
+extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
-extern void sub_800BACBC(void* p);
+extern void sub_800BACBC(char** lines);
 extern void sub_800B794C(int* t, int* s);
 extern void sub_800B79F8();
 extern void sub_800B9A8C();
@@ -64,8 +64,52 @@ extern void sub_800BA234();
 extern void sub_800BA968();
 extern void sub_800BAAE0();
 extern void sub_800BA9AC(int* t);
-extern void sub_800BA9F0(int* t);
+extern void sub_800BA9F0();
 extern void sub_8004F5E8(int a);
+typedef struct
+{
+    unsigned short flags_LOAD;
+    short pad2_LOAD;
+    int f4_LOAD;
+    int f8_LOAD;
+    int fC_LOAD;
+    short x_LOAD;
+    short y_LOAD;
+    char pad14_LOAD[8];
+} MenuItem_LOAD;
+typedef struct
+{
+    MenuItem_LOAD item_LOAD[2];
+} MenuItems2_LOAD;
+typedef struct
+{
+    int f0_LOAD;
+    int f4_LOAD;
+    int f8_LOAD;
+    int fC_LOAD;
+    MenuItem_LOAD** items_LOAD;
+    int f14_LOAD;
+} MenuWin_LOAD;
+extern MenuItems2_LOAD dword_800B731C;
+extern MenuItems2_LOAD dword_800B7368;
+typedef struct DirEntry_LOAD
+{
+    char name_LOAD[20];
+    long attr_LOAD;
+    long size_LOAD;
+    struct DirEntry_LOAD* next_LOAD;
+    long head_LOAD;
+    char system_LOAD[4];
+} DirEntry_LOAD;
+extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
+extern char byte_800B72FC[];
+extern char* dword_800BE028[2][15];
+extern void FreeActiveOverlay_8002C014(void);
+extern int sub_800A6D50(int a);
+extern void sub_800A6D30(int a);
+extern int dword_80091C54;
+extern int MemCardFormat(long chan);
+extern void sub_800BAFB0(int a);
 extern void VSyncCallbacks(int a, int b);
 extern void _card_stop(void);
 extern void TestEvent(int a);
@@ -120,6 +164,10 @@ typedef struct
 extern Row8_LOAD dword_800BD998[];
 extern Bytes8_LOAD dword_800B6B8C;
 extern Bytes8_LOAD dword_800B6A24;
+extern Bytes8_LOAD dword_800B69F4;
+extern int dword_800BDB64;
+extern int dword_800BDBBC;
+extern int* dword_800BDBD4[];
 extern Bytes8_LOAD dword_800B6BA0;
 extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short uiColor_8008B590;
@@ -128,7 +176,9 @@ extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
-    char pad0_LOAD[0x20];
+    void* f0_LOAD;
+    void* f4_LOAD;
+    char pad8_LOAD[0x18];
     int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
@@ -136,7 +186,22 @@ typedef struct
     short s30_LOAD;
     char pad32_LOAD[0x22];
     unsigned f54_LOAD;
+    int f58_LOAD;
+    int f5C_LOAD;
 } LoadTask_LOAD;
+typedef struct
+{
+    short w_LOAD;
+    short h_LOAD;
+} Size_LOAD;
+typedef struct
+{
+    short x_LOAD;
+    short y_LOAD;
+    short w_LOAD;
+    short h_LOAD;
+} Rect_LOAD;
+extern Size_LOAD MeasureTextLines_8003E3B4(int* list);
 extern int IsConfirmPressed_8003D288(int a, int b);
 extern int IsCancelPressed_8003D3C0(int a, int b);
 extern void UserFuncOpen(void* fn, int a);
@@ -181,10 +246,9 @@ extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 extern void sub_800B8BD4(void* t);
 extern void PlaySfx_80031494(int a);
 extern void sub_800BADF4(void);
-extern int sub_800BAE4C(int n);
+extern char* sub_800BAE4C(int n);
 extern int sub_800BAE2C(void);
 extern int sub_800BAE3C(void);
-extern void sub_800BAFB0(int a);
 typedef struct
 {
     char c_LOAD[6];
@@ -276,7 +340,35 @@ INCLUDE_OVERLAY_ASM(load, sub_800B80F8);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B82FC);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B847C);
+void sub_800B847C(void)
+{
+    int i;
+    Row8_LOAD* p;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    for (i = 0; i < 2; i++)
+    {
+        if (i == stru_800BDF4C[1].fC_LOAD)
+        {
+            *dword_800BDBD4[i] = 4;
+        }
+        else
+        {
+            *dword_800BDBD4[i] = 1;
+        }
+    }
+    DrawMenuWindows_8002A5A4(&dword_800BDB64);
+    DrawMenuWindows_8002A5A4(&dword_800BDBBC);
+    for (p = &dword_800BD998[2]; p->f4_LOAD >= 0; p++)
+    {
+        DrawUiTiySprt_8002C06C(p, p->f4_LOAD, p->f6_LOAD);
+    }
+    a = dword_800B69F4;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = uiColor_8008B590;
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
 
 void sub_800B85AC(void)
 {
@@ -595,7 +687,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
 void sub_800BA968(int* t)
 {
-    DrawLoadingIcon_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C();
     sub_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9AC;
@@ -603,15 +695,84 @@ void sub_800BA968(int* t)
 
 void sub_800BA9AC(int* t)
 {
-    DrawLoadingIcon_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C();
     sub_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9F0;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800BA9F0);
+void sub_800BA9F0(int* t, LoadTask_LOAD* s)
+{
+    switch (MemCardFormat(stru_800BDF4C[1].fC_LOAD << 4))
+    {
+    case 0:
+        t[2] = (int)sub_800B794C;
+        s->f28_LOAD = 0;
+        s->f24_LOAD = 3;
+        s->f20_LOAD = 0;
+        sub_800BAFB0(stru_800BDF4C[1].fC_LOAD);
+        s->f5C_LOAD = 0;
+        break;
+    case 1:
+        t[2] = (int)sub_800B794C;
+        s->f28_LOAD = 0;
+        s->f24_LOAD = 1;
+        break;
+    case 2:
+        t[2] = (int)sub_800B794C;
+        s->f28_LOAD = 0;
+        s->f24_LOAD = 0xD;
+        break;
+    case -1:
+        break;
+    }
+    sub_800BADF4();
+    DrawLoadingIcon_8003CD5C();
+    sub_800BACBC(dword_800BDECC);
+    DrawMenuBackground_8002BE10();
+}
 
-INCLUDE_OVERLAY_ASM(load, sub_800BAAE0);
+void sub_800BAAE0(int* t, LoadTask_LOAD* s)
+{
+    free3_8003FC6C(s->f0_LOAD);
+    free3_8003FC6C(s->f4_LOAD);
+    dword_800BE184 = 0;
+    t[0] = (t[0] & ~1) | 0x8000;
+    MemCardStop();
+    t[2] = (int)sub_800B7650;
+    if (!(s->f54_LOAD & 8))
+    {
+        FreeActiveOverlay_8002C014();
+        if (s->f54_LOAD & 0x20)
+        {
+            sub_80027314();
+            sub_800A6D30(sub_800A6D50(1));
+        }
+        else if (!(s->f54_LOAD & 4))
+        {
+            sub_80027314();
+            sub_800A6D30(sub_800A6D50(1));
+        }
+        if (s->f54_LOAD & 1)
+        {
+            short* m = (short*)&saveData_8008B570;
+            m[0x2E2 / 2] = -1;
+            m[0x2E6 / 2] = -1;
+            m[0x2EA / 2] = -1;
+            m[0x2EE / 2] = -1;
+            m[0x2F2 / 2] = -1;
+            dword_80091C54 = 0;
+            if (!(s->f54_LOAD & 4))
+            {
+                unknownFlags_8008D678 |= 0x18000000;
+            }
+        }
+        if (s->f54_LOAD & 0x10)
+        {
+            sub_80011BCC();
+        }
+    }
+}
 
 int sub_800BAC14(int n)
 {
@@ -623,7 +784,38 @@ int sub_800BAC68(int n)
     return n / 3600 % 60;
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800BACBC);
+void sub_800BACBC(char** lines)
+{
+    Size_LOAD sz;
+    Rect_LOAD r;
+    int i;
+    sz = MeasureTextLines_8003E3B4((int*)lines);
+    r.x_LOAD = (0x13A - sz.w_LOAD) / 2;
+    r.y_LOAD = (0xEA - sz.h_LOAD) / 2;
+    r.w_LOAD = sz.w_LOAD + 6;
+    r.h_LOAD = sz.h_LOAD + 3;
+    if (sz.h_LOAD >= 0x10)
+    {
+        r.h_LOAD = sz.h_LOAD + 6;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        if (lines[i])
+        {
+            Pos_LOAD p;
+            p.x_LOAD = r.x_LOAD + 3;
+            p.y_LOAD = r.y_LOAD + 5 + i * 13;
+            DrawText_8003E91C(2, lines[i], &p, 5);
+        }
+    }
+    {
+        Tail4_LOAD b;
+        b.c1_LOAD = 1;
+        b.c0_LOAD = 0;
+        b.s_LOAD = uiColor_8008B590;
+        DrawWindow_80042460(&r, &b, dword_8008D454 + 0x38, 0);
+    }
+}
 
 void sub_800BADE0(unsigned char* p)
 {
@@ -653,9 +845,9 @@ int sub_800BAE3C(void)
     return dword_800BE150;
 }
 
-int sub_800BAE4C(int i)
+char* sub_800BAE4C(int i)
 {
-    int* p = dword_800BE188;
+    char** p = dword_800BE188;
     return p[i];
 }
 
@@ -711,8 +903,93 @@ int sub_800BAF0C(int a)
     return ret;
 }
 
+#if 0
+// Not matched: the original tests the first loop's entry as found < files (slt/beqz on the register copy of 0); this folds it to blez files and swaps which of i/found is copied before the call
+void sub_800BAFB0(int slot)
+{
+    DirEntry_LOAD dir[15];
+    long files;
+    int blocks;
+    int found;
+    int i;
+    i = found = blocks = 0;
+    files = 0;
+    MemCardGetDirentry(slot << 4, byte_800B72FC, dir, &files, 0, 15);
+    for (; i < files; i++)
+    {
+        int q = dir[i].size_LOAD / 0x2000;
+        if (dir[i].size_LOAD & 0x1FFF)
+        {
+            blocks += q + 1;
+        }
+        else
+        {
+            blocks += q;
+        }
+    }
+    for (i = 0; i < 15; i++)
+    {
+        if (sub_800BB23C(files, dword_800BE028[0][i], dir))
+        {
+            found++;
+            dword_800BE188[i] = dword_800BE028[0][i];
+        }
+        else
+        {
+            dword_800BE188[i] = 0;
+        }
+    }
+    dword_800BE14C = 15 - blocks;
+    dword_800BE150 = found;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BAFB0);
 
+#if 0
+// Not matched: same as sub_800BAFB0 (first loop entry test found < files is folded to blez files here)
+void sub_800BB0E4(int slot)
+{
+    DirEntry_LOAD dir[15];
+    long files;
+    int blocks;
+    int found;
+    int i;
+    i = found = blocks = 0;
+    files = 0;
+    MemCardGetDirentry(slot << 4, byte_800B72FC, dir, &files, 0, 15);
+    for (; i < files; i++)
+    {
+        int q = dir[i].size_LOAD / 0x2000;
+        if (dir[i].size_LOAD & 0x1FFF)
+        {
+            blocks += q + 1;
+        }
+        else
+        {
+            blocks += q;
+        }
+    }
+    for (i = 0; i < 15; i++)
+    {
+        if (sub_800BB23C(files, dword_800BE028[0][i], dir))
+        {
+            found++;
+            dword_800BE188[i] = dword_800BE028[0][i];
+        }
+        else if (sub_800BB23C(files, dword_800BE028[1][i], dir))
+        {
+            found++;
+            dword_800BE188[i] = dword_800BE028[1][i];
+        }
+        else
+        {
+            dword_800BE188[i] = 0;
+        }
+    }
+    dword_800BE14C = 15 - blocks;
+    dword_800BE150 = found;
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB0E4);
 
 int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
@@ -747,7 +1024,30 @@ int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BB4A8);
+void sub_800BB4A8(short sel)
+{
+    MenuItems2_LOAD a = dword_800B731C;
+    MenuItems2_LOAD b = dword_800B7368;
+    MenuItem_LOAD* list[3];
+    MenuWin_LOAD w;
+    int i;
+    list[0] = a.item_LOAD;
+    list[1] = b.item_LOAD;
+    list[2] = 0;
+    w.f0_LOAD = 2;
+    w.f4_LOAD = 0;
+    w.f8_LOAD = 8;
+    w.fC_LOAD = 0;
+    w.items_LOAD = list;
+    w.f14_LOAD = 0;
+    for (i = 0; i < 2; i++)
+    {
+        list[i]->flags_LOAD |= 2;
+    }
+    w.f4_LOAD = frameCount_8008D3FC;
+    w.fC_LOAD = sel;
+    DrawMenuWindows_8002A5A4(&w);
+}
 
 // 0x800BB5DC..0x800BD93C is PSY-Q 4.4 library code (LIBMCRD.LIB modules LIBMCRD, USERFUNC and BIOS,
 // identical code): not decompiled. It could be linked from the library like the exe's lib code.
