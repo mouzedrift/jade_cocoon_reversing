@@ -202,10 +202,10 @@ int sub_80019CC4(int* pos)
 #endif
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
-// Matched
 extern short dword_80087114[];
 extern short dword_80087134[];
 extern char cameraState_8008D4F0[];
+// Matched
 void sub_8001A38C(void)
 {
     unsigned short* p = (unsigned short*)dword_8008D628[9];
@@ -1097,8 +1097,8 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-// Matched
 extern char dword_8007C750[];
+// Matched
 void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2)
 {
     int* e = (int*)(*(int*)(a0 + 0x54) + idx * 28);
@@ -1120,7 +1120,93 @@ void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2)
         }
     }
 }
-INCLUDE_ASM(sub_8001C440);
+extern short dword_8007CAC0[];
+extern short dword_8007CACC[];
+extern int PlayMusic_800300E0(int idx, int a1);
+extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
+extern void sub_80025B5C(void* p, int idx, int sel);
+typedef struct
+{
+    int kind; // 0: sfx, 1: music, 2: sequence, 3: fade out the system sequence
+    short arg;
+    short pad;
+} SoundCue_8007C750;
+// Matched
+void sub_8001C440(char* a0, int idx, int key)
+{
+    int* e = (int*)(idx * 28 + *(int*)(a0 + 0x54));
+    short* q = (short*)e[4];
+    int n = e[3];
+    int i;
+    short arg;
+    for (i = 0; i < n; i++, q += 4)
+    {
+        if (key != q[0])
+        {
+            continue;
+        }
+        switch (q[1])
+        {
+        case 0:
+            if ((unsigned short)q[2] < 0x6E)
+            {
+                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 0)
+                {
+                    PlaySfx_80031494(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg);
+                }
+                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 1)
+                {
+                    PlayMusic_800300E0(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg, 1);
+                }
+                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 2)
+                {
+                    arg = ((SoundCue_8007C750*)dword_8007C750)[q[2]].arg;
+                    if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 3)
+                    {
+                        arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
+                        if (arg > 4)
+                        {
+                            arg = 4;
+                        }
+                        arg = dword_8007CACC[arg];
+                    }
+                    else if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 2)
+                    {
+                        arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
+                        if (arg > 4)
+                        {
+                            arg = 4;
+                        }
+                        arg = dword_8007CAC0[arg];
+                    }
+                    PlaySeqSlot_80031160(arg, 1);
+                }
+                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 3)
+                {
+                    if (systemSound_80091D40.field_4_seq_num >= 0)
+                    {
+                        SsSepSetDecrescendo(systemSound_80091D40.field_C_sep_access_num, systemSound_80091D40.field_4_seq_num, 0x7F, 0x78);
+                        systemSound_80091D40.field_4_seq_num = -1;
+                    }
+                }
+            }
+            break;
+        case 1:
+            sub_80025B5C(a0, q[2], q[3]);
+            break;
+        }
+    }
+}
+// Matched
+void sub_8001C69C(void)
+{
+    int i;
+    for (i = 0; i < 2; i++)
+    {
+        padAnalogMax_800918E0[i][1] = 0;
+        padAnalogMax_800918E0[i][0] = 0;
+    }
+}
 // Matched
 void ResetButtonConfig_8001C6C8(void)
 {
@@ -1360,8 +1446,6 @@ INCLUDE_DATA(dword_80073FF8);
 INCLUDE_DATA(dword_8007400C);
 INCLUDE_DATA(dword_8007403C);
 INCLUDE_DATA(dword_8007408C);
-INCLUDE_DATA(dword_800740B0);
-INCLUDE_DATA(dword_800740B4);
 // Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
@@ -2576,7 +2660,74 @@ void sub_8001E574(char* o, int* d)
 }
 #endif
 INCLUDE_ASM(sub_8001E574);
-INCLUDE_ASM(sub_8001E7F0);
+// Matched
+void sub_8001E7F0(char* o, int* d)
+{
+    short* p;
+    int n;
+    int size;
+    int i;
+    char* mem;
+    short* src;
+    int sz0;
+    int sz1;
+    p = (short*)d[0x34 / 4];
+    n = 0;
+    while (p[n * 4] != -1)
+    {
+        n++;
+    }
+    sz0 = (n + 1) << 3;
+    sz1 = n << 3;
+    size = sz0;
+    size += sz1;
+    size += n * 12;
+    if (d[0x4C / 4])
+    {
+        size += n * 32;
+    }
+    mem = ListAlloc_8003FDC0(dword_80091990, size);
+    *(char**)(o + 0x134) = mem;
+    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d[0x34 / 4], sz0);
+    *(int*)(o + 0x138) = ((int*)d[0x38 / 4])[0];
+    *(int*)(o + 0x13C) = ((int*)d[0x38 / 4])[1];
+    *(int*)(o + 0x140) = ((int*)d[0x38 / 4])[2];
+    mem += sz0;
+    {
+        short def[4] = {0x1000, 0x1000, 0x1000, 0};
+        *(char**)(o + 0x144) = mem;
+        mem += sz1;
+        *(int*)(o + 4) |= 0x8000000;
+        for (i = 0; i < n; i++)
+        {
+            if (d[0x3C / 4])
+            {
+                src = (short*)(d[0x3C / 4] + i * 8);
+            }
+            else
+            {
+                src = def;
+            }
+            ((short*)(*(char**)(o + 0x144) + i * 8))[0] = src[0];
+            ((short*)(*(char**)(o + 0x144) + i * 8))[1] = src[1];
+            ((short*)(*(char**)(o + 0x144) + i * 8))[2] = src[2];
+            ((short*)(*(char**)(o + 0x144) + i * 8))[3] = src[3];
+        }
+    }
+    *(int*)(o + 0x148) = d[0x40 / 4];
+    *(int*)(o + 0x14C) = d[0x44 / 4];
+    *(char**)(o + 0x1C4) = mem;
+    mem += n * 12;
+    if (d[0x4C / 4])
+    {
+        *(char**)(o + 0x1C8) = mem;
+        *(int*)(o + 4) |= 0x10000000;
+    }
+    else
+    {
+        *(char**)(o + 0x1C8) = 0;
+    }
+}
 // Matched
 void sub_8001EA00(char* p)
 {
