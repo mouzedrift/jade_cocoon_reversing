@@ -40,7 +40,7 @@ typedef struct ShopUnitShop
 } ShopUnitShop;
 
 extern int name_8007DC74;
-extern int sub_80010850(void* p);
+extern int StartModelTask_80010850(void* p);
 extern int sub_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
 extern void sub_800BBB54();
@@ -2110,20 +2110,20 @@ void sub_800BF4B8(int a)
     ShopCtxShop* c = &name_800C09E0;
     sub_800BF02C(a, c->pad_4 + 4, name_8007DC74);
     *(int*)c->pad_4 = a;
-    c->field_0 = sub_80010850(c->pad_4 + 4);
+    c->field_0 = StartModelTask_80010850(c->pad_4 + 4);
     c->field_3C = 0;
 }
 
 void sub_800BF520()
 {
-    sub_80010A10(name_800C09E0.field_0);
+    RunModelTask_80010A10(name_800C09E0.field_0);
 }
 
 void sub_800BF548()
 {
     int v = name_800C09E0.field_0;
     name_800C09E0.field_0 = -1;
-    sub_8001098C(v);
+    FreeModelTask_8001098C(v);
 }
 
 #if 0 // near miss: store scheduling / temp registers (17 words)

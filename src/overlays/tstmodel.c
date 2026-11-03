@@ -87,11 +87,11 @@ INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0C00);
 
 extern int off_8007DC70;
 extern int InitModelList_80024ADC(int* a, int b, int c);
-extern void sub_80025200(int a, int b, int c, int d, int e);
+extern void LoadModel_80025200(int a, int b, int c, int d, int e);
 void sub_800A0EC8(int* a)
 {
     InitModelList_80024ADC(&a[5], off_8007DC70, 1);
-    sub_80025200(a[5], a[9], a[8], 2, 0);
+    LoadModel_80025200(a[5], a[9], a[8], 2, 0);
     a[8] = 0;
     a[0] = 2;
 }

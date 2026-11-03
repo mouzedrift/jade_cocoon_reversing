@@ -294,3 +294,36 @@ sub_8003E2A8 MeasureTextLinesMasked_8003E2A8
 dword_80096038 textNumberArgs_80096038
 sub_8003F7C8 EncodeName_8003F7C8
 sub_8001900C InitMinionData_8001900C
+
+# --- model tasks (dword_8008D618 list; state machine load -> wait -> draw -> done) ---
+dword_8008D618 modelTasks_8008D618
+sub_80010850 StartModelTask_80010850
+sub_8001091C FindModelTask_8001091C
+sub_8001098C FreeModelTask_8001098C
+sub_80010A10 RunModelTask_80010A10
+sub_80010A90 ModelTaskUpdateCb_80010A90
+sub_80010AB4 ModelTaskFreeCb_80010AB4
+sub_80010AD8 StepModelTask_80010AD8
+sub_80010B90 ModelTaskLoad_80010B90
+sub_80010C30 ModelTaskWaitLoad_80010C30
+sub_80010DB0 ModelTaskDraw_80010DB0
+struct_state_obj ModelTaskState
+sub_80025200 LoadModel_80025200
+
+# --- model animations (model+0x54: 28-byte entries, +0x44 loaded flags) and their reference counts ---
+sub_80025440 LoadModelAnim_80025440
+sub_8002556C FreeModelAnim_8002556C
+sub_800255D8 IsModelAnimLoaded_800255D8
+dword_800919A0 modelAnimRefs_800919A0
+sub_800201A4 ClearModelAnimRefs_800201A4
+sub_800204AC ClearModelAnimRef_800204AC
+sub_800201EC AddModelAnimRef_800201EC
+sub_80020278 ReleaseModelAnimRef_80020278
+sub_8002032C RequestModelAnim_8002032C
+sub_800203B0 ReleaseModelAnim_800203B0
+
+# --- VRAM image recolouring (StoreImage -> per-pixel 555 colour change -> LoadImage) ---
+sub_800290FC ShiftVramImageHsv_800290FC
+sub_800292D0 TintVramImage_800292D0
+sub_80029EA8 Rgb555ToHsv_80029EA8
+sub_8002A040 HsvToRgb555_8002A040

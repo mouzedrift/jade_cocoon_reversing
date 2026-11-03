@@ -1694,7 +1694,7 @@ void sub_8001D378(void)
 {
     sub_800204D0();
     sub_800205F0();
-    sub_800201A4();
+    ClearModelAnimRefs_800201A4();
     ListInit_8003FDB0(dword_80091990);
     StopAllEventEntries_80043B40(dword_8008D43C);
 }
@@ -1709,7 +1709,7 @@ void sub_8001D3C4(int a0)
     }
     ListFreeAll_8003FEC8(dword_80091990);
     StopAllEventEntries_80043B40(dword_8008D43C);
-    sub_800201A4();
+    ClearModelAnimRefs_800201A4();
 }
 // Matched
 void sub_8001D41C(int a0, void* a1)
@@ -1789,7 +1789,7 @@ int* sub_8001D4DC(char* o, int a1, int a2, int a3)
 void sub_8001D600(char* a0)
 {
     int* q = *(int**)a0;
-    sub_80020278(*(short*)(a0 + 0x16), q[1]);
+    ReleaseModelAnimRef_80020278(*(short*)(a0 + 0x16), q[1]);
     sub_8001EA00(a0);
     q[0] = (q[0] & ~1) | 0x8000;
 }
@@ -1907,7 +1907,7 @@ void sub_8001D8B4(char* a0, int a1)
     unsigned char* q = (unsigned char*)(a1 * 60 + *(int*)(a0 + 0x148));
     if (q[1] == 0)
     {
-        if (sub_8002032C(*(short*)(a0 + 0x16), ((int*)*(int*)a0)[1], *(signed char*)q))
+        if (RequestModelAnim_8002032C(*(short*)(a0 + 0x16), ((int*)*(int*)a0)[1], *(signed char*)q))
         {
             *(short*)(a0 + 0x14) = a1;
             *(short*)(a0 + 0x10) = 2;
@@ -1930,7 +1930,7 @@ void sub_8001D92C(char* obj, int idx)
         }
         e += 0x3C;
     }
-    sub_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1]);
+    ReleaseModelAnim_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1]);
 }
 #endif
 INCLUDE_ASM(sub_8001D92C);
@@ -1997,7 +1997,7 @@ void sub_8001DAAC(char* o, int a1)
     if (a1 != 0)
     {
         *(int*)(o + 4) |= 0x800;
-        sub_800292D0(o + 0x150, o + 0x158, a1);
+        TintVramImage_800292D0(o + 0x150, o + 0x158, a1);
     }
     else
     {
@@ -2407,7 +2407,7 @@ void sub_8001E574(char* o, int* d)
     {
         m = (struct_112*)d[0x48 / 4];
     }
-    v = sub_800201EC((int)m);
+    v = AddModelAnimRef_800201EC((int)m);
     f = 0x40000;
     *(int*)(o + 4) = 0x40000;
     if (d[0x30 / 4] != 1)
@@ -2655,7 +2655,7 @@ void sub_8001F918(void* a0)
     case 0:
         break;
     case 1:
-        sub_8002032C(*(short*)(p + 0x16), ((int*)*(int*)p)[1], *(short*)(p + 0x12));
+        RequestModelAnim_8002032C(*(short*)(p + 0x16), ((int*)*(int*)p)[1], *(short*)(p + 0x12));
         *(unsigned short*)(p + 0x14) = *(unsigned short*)(p + 0x12);
         *(short*)(p + 0x12) = -1;
         *(short*)(p + 0x10) = 2;
@@ -2940,19 +2940,19 @@ void sub_800200F8(char* o)
 #endif
 INCLUDE_ASM(sub_800200F8);
 // Matched
-void sub_800201A4(void)
+void ClearModelAnimRefs_800201A4(void)
 {
     int i;
     for (i = 0; i < 7; i++)
     {
-        sub_800204AC(&dword_800919A0[i]);
+        ClearModelAnimRef_800204AC(&modelAnimRefs_800919A0[i]);
     }
 }
 // Matched
-int sub_800201EC(int a0)
+int AddModelAnimRef_800201EC(int a0)
 {
     int i;
-    struct_obj_C* p = dword_800919A0;
+    struct_obj_C* p = modelAnimRefs_800919A0;
     for (i = 0; i < 7; i++, p++)
     {
         if (a0 == p->field_0)
@@ -2961,7 +2961,7 @@ int sub_800201EC(int a0)
             return i;
         }
     }
-    p = dword_800919A0;
+    p = modelAnimRefs_800919A0;
     for (i = 0; i < 7; i++, p++)
     {
         if (p->field_0 == 0)
@@ -2974,49 +2974,49 @@ int sub_800201EC(int a0)
     return -1;
 }
 // Matched
-void sub_80020278(int a0, int a1)
+void ReleaseModelAnimRef_80020278(int a0, int a1)
 {
     int i;
-    struct_obj_C* e = &dword_800919A0[a0];
+    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
     for (i = 0; i < 0x23; i++)
     {
         if ((e->field_8[i] >> a1) & 1)
         {
-            sub_800203B0(a0, a1, i);
+            ReleaseModelAnim_800203B0(a0, a1, i);
         }
     }
     if (--e->field_4 == 0)
     {
-        sub_800204AC(e);
+        ClearModelAnimRef_800204AC(e);
     }
 }
 // Matched
-int sub_8002032C(int a0, int a1, int a2)
+int RequestModelAnim_8002032C(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &dword_800919A0[a0];
+    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
     unsigned short* s = (unsigned short*)((char*)e + a2 * 2);
     int r = 0;
     if (s[4] == 0)
     {
-        sub_80025440(e->field_0, a2, r);
+        LoadModelAnim_80025440(e->field_0, a2, r);
         r = 1;
     }
     s[4] |= 1 << a1;
     return r;
 }
 // Matched
-void sub_800203B0(int a0, int a1, int a2)
+void ReleaseModelAnim_800203B0(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &dword_800919A0[a0];
+    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
     if ((e->field_8[a2] &= ~(1 << a1)) == 0)
     {
-        sub_8002556C(e->field_0, a2);
+        FreeModelAnim_8002556C(e->field_0, a2);
     }
 }
 // Matched
 int sub_80020410(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &dword_800919A0[a0];
+    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
     int* list;
     int i;
     if (((e->field_8[a2] >> a1) & 1) == 0)
@@ -3037,7 +3037,7 @@ int sub_80020410(int a0, int a1, int a2)
     return 1;
 }
 // Matched
-void sub_800204AC(struct_obj_C* p)
+void ClearModelAnimRef_800204AC(struct_obj_C* p)
 {
     int i;
     for (i = 0x22; i >= 0; i--)
@@ -3275,7 +3275,7 @@ void sub_80020A38(int* p)
     {
         if (e->field_4 >= 0 && e->field_0 == 0)
         {
-            sub_80025200(p[2], e->field_4, e->field_8, e->field_C, 1);
+            LoadModel_80025200(p[2], e->field_4, e->field_8, e->field_C, 1);
         }
         e++;
     }
@@ -4840,7 +4840,7 @@ int GetModelDesc_800251E4(int idx)
     return modelDescs_800824CC[idx];
 }
 // Matched
-int sub_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
+int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 {
     int b[16];
     int c[8];
@@ -4935,7 +4935,7 @@ int sub_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 }
 #if 0
 // Not matched: the table-entry sum lands in the wrong one of v0/v1, and &b is set up one slot early
-int sub_80025440(struct_112* p, int idx, int flag)
+int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
 {
     int b[16];
     int c[8];
@@ -4980,9 +4980,9 @@ int sub_80025440(struct_112* p, int idx, int flag)
     return AreFileRequestsDone_80024DC4((int*)p) == 0;
 }
 #endif
-INCLUDE_ASM(sub_80025440);
+INCLUDE_ASM(LoadModelAnim_80025440);
 // Matched
-void sub_8002556C(struct_112* p, int idx)
+void FreeModelAnim_8002556C(struct_112* p, int idx)
 {
     if (((char*)p->field_44)[idx])
     {
@@ -4991,7 +4991,7 @@ void sub_8002556C(struct_112* p, int idx)
     }
 }
 // Matched
-int sub_800255D8(struct_112* p, int idx)
+int IsModelAnimLoaded_800255D8(struct_112* p, int idx)
 {
     return ((char*)p->field_44)[idx] != 0;
 }
@@ -5100,7 +5100,7 @@ void sub_80025884(struct_112* p)
             int id = ((int*)p->field_58)[i + 1];
             if (id >= 0)
             {
-                sub_8002556C(p, id);
+                FreeModelAnim_8002556C(p, id);
             }
         }
         HeapFree_8003FD18(p->field_58, heap);

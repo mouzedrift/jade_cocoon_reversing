@@ -288,7 +288,7 @@ void sub_800A19A4(TstCompoE* c)
 // Matched
 void sub_800A1AD0(int* a)
 {
-    sub_8001098C(0);
+    FreeModelTask_8001098C(0);
     *a = 0;
 }
 

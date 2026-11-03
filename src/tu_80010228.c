@@ -270,18 +270,18 @@ char* sub_80010824(int id, int nth)
     }
     return 0;
 }
-extern EventNode* dword_8008D618;
+extern EventNode* modelTasks_8008D618;
 // Matched
-int sub_80010850(void* a0)
+int StartModelTask_80010850(void* a0)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D618);
+    EventEntry* e = AllocEventEntry_80043AF8(modelTasks_8008D618);
     int* buf;
     int* m;
     if (e != 0)
     {
-        e->cb_8 = (EventEntryFn)sub_80010A90;
+        e->cb_8 = (EventEntryFn)ModelTaskUpdateCb_80010A90;
         buf = (int*)e->buffer;
-        e->cb_C = (EventEntryFn)sub_80010AB4;
+        e->cb_C = (EventEntryFn)ModelTaskFreeCb_80010AB4;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->flags = (e->flags | 4) & 0xFFFF7FFF;
         buf[0] = e->field_4;
@@ -291,16 +291,16 @@ int sub_80010850(void* a0)
         m[0] = 0;
         m[0x38 / 4] = 1;
         m[0x3C / 4] = 1;
-        sub_80010AD8((int)m);
+        StepModelTask_80010AD8((int)m);
         return buf[0];
     }
     return -1;
 }
 // Matched
-int* sub_8001091C(key)
+int* FindModelTask_8001091C(key)
 int key;
 {
-    EventNode* n = dword_8008D618;
+    EventNode* n = modelTasks_8008D618;
     int count = n->count;
     EventEntry* e;
     int i;
@@ -319,9 +319,9 @@ int key;
     return 0;
 }
 // Matched
-int sub_8001098C(int arg0)
+int FreeModelTask_8001098C(int arg0)
 {
-    EventEntry* e = (EventEntry*)sub_8001091C();
+    EventEntry* e = (EventEntry*)FindModelTask_8001091C();
     int* buf = (int*)e->buffer;
     int* q = (int*)buf[1];
     if (q[0x38 / 4] == 5)
@@ -335,15 +335,15 @@ int sub_8001098C(int arg0)
     return 0;
 }
 // Matched
-void sub_80010A10(int arg0)
+void RunModelTask_80010A10(int arg0)
 {
-    int* p = sub_8001091C();
-    sub_80010AD8(((int**)p)[0x14 / 4][1]);
+    int* p = FindModelTask_8001091C();
+    StepModelTask_80010AD8(((int**)p)[0x14 / 4][1]);
 }
 // Matched
 int sub_80010A44(void)
 {
-    int* p = (int*)((int*)sub_8001091C())[5];
+    int* p = (int*)((int*)FindModelTask_8001091C())[5];
     int* q = (int*)p[1];
     if (q[0x38 / 4] == 5)
     {
@@ -352,19 +352,19 @@ int sub_80010A44(void)
     return 0;
 }
 // Matched
-void sub_80010A90(int arg0, int* arg1)
+void ModelTaskUpdateCb_80010A90(int arg0, int* arg1)
 {
-    sub_80010A10(*arg1);
+    RunModelTask_80010A10(*arg1);
 }
 // Matched
-void sub_80010AB4(int arg0, int* arg1)
+void ModelTaskFreeCb_80010AB4(int arg0, int* arg1)
 {
-    sub_8001098C(*arg1);
+    FreeModelTask_8001098C(*arg1);
 }
 // Matched
-int sub_80010AD8(int arg0)
+int StepModelTask_80010AD8(int arg0)
 {
-    struct_state_obj* p = (struct_state_obj*)arg0;
+    ModelTaskState* p = (ModelTaskState*)arg0;
     int cont = 1;
     int r = 0;
     do
@@ -374,16 +374,16 @@ int sub_80010AD8(int arg0)
         case 0:
             break;
         case 1:
-            cont = sub_80010B90(p);
+            cont = ModelTaskLoad_80010B90(p);
             break;
         case 2:
-            cont = sub_80010DB0(p);
+            cont = ModelTaskDraw_80010DB0(p);
             break;
         case 3:
             cont = sub_80010CDC(p);
             break;
         case 4:
-            cont = sub_80010C30(p);
+            cont = ModelTaskWaitLoad_80010C30(p);
             break;
         case 5:
             cont = 0;

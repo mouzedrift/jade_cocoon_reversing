@@ -258,7 +258,7 @@ typedef struct
     char pad_3A[0x36];
 } struct_elem_70;
 
-// 0x40-byte state object driven by sub_80010AD8 (state_38 indexes its jump table)
+// 0x40-byte state object driven by StepModelTask_80010AD8 (state_38 indexes its jump table)
 typedef struct
 {
     int* field_0;
@@ -271,7 +271,7 @@ typedef struct
     int field_34;
     int state_38;
     int next_3C;
-} struct_state_obj;
+} ModelTaskState;
 
 typedef struct
 {
@@ -388,7 +388,7 @@ extern int dword_80082678;
 extern short word_80091C40;
 extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
-extern struct_obj_C dword_800919A0[7];
+extern struct_obj_C modelAnimRefs_800919A0[7];
 extern int uiTiySprts_8008D620;
 extern int uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;
@@ -599,7 +599,7 @@ typedef struct EventNode
     int count;
     EventEntry entry;
 } EventNode;
-extern EventNode* dword_8008D618;
+extern EventNode* modelTasks_8008D618;
 extern EventNode* dword_8008B4A8;
 extern EventNode* dword_8008D60C;
 

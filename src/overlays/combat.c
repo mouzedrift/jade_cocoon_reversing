@@ -45,7 +45,7 @@ extern void sub_800A14F0();
 extern void sub_800A1554();
 extern void sub_800A15B4();
 extern char* dword_8007DC78;
-extern int sub_80010850(void* p);
+extern int StartModelTask_80010850(void* p);
 extern int cameraState_8008D4F0[];
 extern int dword_8008B4F8;
 extern char dword_800A398C[];
@@ -403,7 +403,7 @@ void sub_800A0ACC(int i, int x)
     CombatSlotCombat* s = &dword_800A3A08[i];
     sub_800A05E0((unsigned char*)x, (int*)s->pad_8, (int)(dword_8007DC78 + (i << 6)));
     s->field_4 = (char*)x;
-    s->field_0 = sub_80010850(s->pad_8);
+    s->field_0 = StartModelTask_80010850(s->pad_8);
     s->field_3C = 0;
 }
 
@@ -411,7 +411,7 @@ void sub_800A0ACC(int i, int x)
 void sub_800A0B3C(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80010A10(s->field_0);
+    RunModelTask_80010A10(s->field_0);
 }
 
 // Matched
@@ -420,7 +420,7 @@ void sub_800A0B70(int i)
     CombatSlotCombat* s = &dword_800A3A08[i];
     int v = s->field_0;
     s->field_0 = -1;
-    sub_8001098C(v);
+    FreeModelTask_8001098C(v);
 }
 
 // Matched

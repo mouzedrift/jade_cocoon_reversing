@@ -96,7 +96,7 @@ extern void SsSepSetDecrescendo();
 extern void sub_800BA848();
 extern void sub_800BA4F4();
 extern void sub_800C064C();
-extern void sub_80010850();
+extern void StartModelTask_80010850();
 extern int sub_800BF784();
 extern void sub_800BC468();
 
@@ -1890,7 +1890,7 @@ int sub_800C0AEC(int a, int* b, int c)
     }
     dword_800C9188 = h;
     sub_800C064C(h, buf, dword_8007DC74);
-    sub_80010850(buf);
+    StartModelTask_80010850(buf);
     dword_800C9190.f4 = b[0];
     dword_800C9190.f8 = b[1];
     dword_800C9190.fc = b[2];
@@ -1903,7 +1903,7 @@ int sub_800C0BA0()
 {
     if (sub_800C0D50() >= 0)
     {
-        sub_8001098C(0);
+        FreeModelTask_8001098C(0);
         sub_8001D600(dword_800C9190.obj);
         dword_800C918C = -1;
         return 1;

@@ -3066,7 +3066,7 @@ extern G2V12 dword_8007A164;
 extern char dword_8007DC80;
 extern char dword_8007DC88;
 extern unsigned int dword_8008BD38;
-extern void sub_800292D0();
+extern void TintVramImage_800292D0();
 typedef struct G2L2
 {
     int f0;
@@ -3082,11 +3082,11 @@ extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
 extern int eventDispatchHalt_8008B540;
 extern void sub_800A9414(void*, int, int);
-extern void sub_8002556C(int, int);
+extern void FreeModelAnim_8002556C(int, int);
 extern void PoolDestroy_8003FF7C(void*);
 extern char dword_800B1DD0;
 extern int dword_800B11DC[];
-extern int sub_80025440(int, int, int);
+extern int LoadModelAnim_80025440(int, int, int);
 extern void sub_80025780(int, int, int);
 extern int sub_800AC474(int);
 extern int sub_800AC3E4();
@@ -4121,7 +4121,7 @@ void sub_800ABECC()
     {
         r = &dword_8007A0F8;
     }
-    sub_800292D0(&dword_8007DC80, &dword_8007DC88, r);
+    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
 }
 
 INCLUDE_OVERLAY_ASM(game, sub_800AC02C);
@@ -4213,24 +4213,24 @@ int sub_800AC518(int a)
 
 int sub_800AC5D0(int a, int b)
 {
-    return sub_80025440(dword_8007DC60[2], a, b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60[2], a, b) != 0;
 }
 
 int sub_800AC604(int a, int b)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    return sub_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
 }
 
 void sub_800AC678(int a)
 {
-    sub_8002556C(dword_8007DC60[2], a);
+    FreeModelAnim_8002556C(dword_8007DC60[2], a);
 }
 
 void sub_800AC6A8(int a)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    sub_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
+    FreeModelAnim_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
 }
 
 void sub_800AC708(int a, int b)
