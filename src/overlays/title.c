@@ -22,8 +22,8 @@ typedef struct TitleCtxA
     int field_64;
     int field_68;
     int field_6C;
-    void* field_70;
-    void* field_74;
+    SPRT* sprts_70;      // from LoadTiy_80028E74
+    DR_TPAGE* tpages_74; // one per sprite
 } TitleCtxA;
 
 extern int dword_800A280C;
@@ -33,7 +33,6 @@ extern void sub_800A093C();
 void sub_800A08C8(TitleTask* t, TitleCtxA* c)
 {
     RECT r;
-    unsigned short* s = (unsigned short*)&display_8008B4D8;
     dword_800A280C = 0x36;
     dword_800A2810 = 0x18;
     c->field_64 = 0x1E;
@@ -43,8 +42,8 @@ void sub_800A08C8(TitleTask* t, TitleCtxA* c)
     c->field_6C = 0;
     r.x = 0x20;
     r.y = 0x20;
-    r.w = s[6] - 0x20;
-    r.h = s[7] - 0x20;
+    r.w = display_8008B4D8.field_C_w - 0x20;
+    r.h = display_8008B4D8.field_E_h - 0x20;
     t->next_8 = sub_800A093C;
 }
 
@@ -56,10 +55,10 @@ void sub_800A093C(TitleTask* t, TitleCtxA* c)
     void* buf;
     if (GetFileRequestCount_8003BC34() == 0)
     {
-        c->field_70 = 0;
-        c->field_74 = 0;
+        c->sprts_70 = 0;
+        c->tpages_74 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x39);
-        LoadTiy_80028E74((int*)&c->field_70, 0, (int*)&c->field_74, (int)buf, 1);
+        LoadTiy_80028E74((int*)&c->sprts_70, 0, (int*)&c->tpages_74, (int)buf, 1);
         free3_8003FC6C(buf);
         t->next_8 = sub_800A09C0;
     }
@@ -153,7 +152,7 @@ void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
             c->field_64 = dword_800A280C - dword_800A2810;
         }
     }
-    sub_800A0D18(c->field_70, c->field_74, 0, c);
+    sub_800A0D18(c->sprts_70, c->tpages_74, 0, c);
     if (IsNameEntryActive_800B6FC8() == 0)
     {
         FreeActiveOverlay_8002C014();
@@ -194,15 +193,15 @@ void sub_800A0C28(TitleTask* t, TitleCtxA* c)
     }
     if (r)
     {
-        if (c->field_70)
+        if (c->sprts_70)
         {
-            free3_8003FC6C(c->field_70);
-            c->field_70 = 0;
+            free3_8003FC6C(c->sprts_70);
+            c->sprts_70 = 0;
         }
-        if (c->field_74)
+        if (c->tpages_74)
         {
-            free3_8003FC6C(c->field_74);
-            c->field_74 = 0;
+            free3_8003FC6C(c->tpages_74);
+            c->tpages_74 = 0;
         }
         c->field_68 = 0x3C;
         t->next_8 = sub_800A0BCC;
@@ -217,15 +216,6 @@ void sub_800A0C28(TitleTask* t, TitleCtxA* c)
 #endif
 INCLUDE_OVERLAY_ASM(title, sub_800A0C28);
 
-typedef struct TitleEnt
-{
-    int field_0;
-    int field_4;
-    short field_8;
-    short field_A;
-    int pad_C[2];
-} TitleEnt;
-
 typedef struct TitleStr4
 {
     char c[4];
@@ -236,7 +226,7 @@ extern unsigned long* pOT_8008D3EC;
 extern int dword_800A05A0;
 #if 0
 // Not matched: register allocation / scheduling differs
-void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
+void sub_800A0D18(SPRT* p, DR_TPAGE* q, int mode, TitleCtxA* c)
 {
     int y = 0;
     short i = 0;
@@ -257,10 +247,10 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         end = i + 2;
         for (; i < end; i++)
         {
-                p[i].field_8 = ((i % 2) * 5) << 5;
-            p[i].field_A = y;
+            p[i].x0 = ((i % 2) * 5) << 5;
+            p[i].y0 = y;
             AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, &q[i], 2);
         }
     }
     else
@@ -269,12 +259,12 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         y = 0x17;
         i = (short)i;
         s4 = *(TitleStr4*)((char*)&dword_800A05A0 + 4);
-        p[i].field_8 = 0x6F;
-        p[i].field_A = y;
-        PulseColor_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
+        p[i].x0 = 0x6F;
+        p[i].y0 = y;
+        PulseColor_80033394(&p[i].r0, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
         SetSemiTrans(&p[i], 1);
         AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
-        AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
+        AddPrimCopy_80040298(pOT_8008D3EC, &q[i], 2);
     }
 }
 #endif
@@ -304,9 +294,9 @@ typedef struct TitleCtxB
     int field_0;
     int field_4;
     int field_8;
-    char* field_C;
+    SPRT* sprts_C;       // from LoadTiy_80028E74
     int field_10;
-    char* field_14;
+    DR_TPAGE* tpages_14; // one per sprite
     char pad_18[4];
     short field_1C[4];
     short field_24;
@@ -339,10 +329,10 @@ void sub_800A0F6C(TitleTask* t, TitleCtxB* c)
         c->field_24 = (unsigned short)word_8008B558[1];
         dword_800A2814 = 0;
         c->field_26 = 0;
-        c->field_C = 0;
-        c->field_14 = 0;
+        c->sprts_C = 0;
+        c->tpages_14 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x36);
-        LoadTiy_80028E74((int*)&c->field_C, 0, (int*)&c->field_14, (int)buf, 1);
+        LoadTiy_80028E74((int*)&c->sprts_C, 0, (int*)&c->tpages_14, (int)buf, 1);
         free3_8003FC6C(buf);
         (t->next_8 = sub_800A1070)(t, c);
     }
@@ -378,15 +368,15 @@ void sub_800A10D0(TitleTask* t, TitleCtxB* c)
         word_8008B558[1] = 4;
         unknownFlags_8008D678 &= ~0x20000000;
     }
-    if (c->field_C)
+    if (c->sprts_C)
     {
-        free3_8003FC6C(c->field_C);
-        c->field_C = 0;
+        free3_8003FC6C(c->sprts_C);
+        c->sprts_C = 0;
     }
-    if (d->field_14)
+    if (d->tpages_14)
     {
-        free3_8003FC6C(d->field_14);
-        d->field_14 = 0;
+        free3_8003FC6C(d->tpages_14);
+        d->tpages_14 = 0;
     }
 }
 
@@ -415,13 +405,6 @@ extern void sub_8004E2C8(int a0);
         SetFadeMode_8001C19C(1, 0x20); \
         (t)->next_8 = sub_800A1AC0; \
     }
-typedef struct TitleSprtXY
-{
-    char pad_0[0x30];
-    short x_30;
-    short y_32;
-} TitleSprtXY;
-
 void sub_800A1174(TitleTask* t, TitleCtxB* c)
 {
     TitleSmall s;
@@ -434,12 +417,12 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     s.b = 1;
     s.c = 1;
     s.a = 4;
-    ((TitleSprtXY*)c->field_C)->x_30 = 0x54;
-    ((TitleSprtXY*)c->field_C)->y_32 = 0xA7;
-    AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
-    AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
-    DrawWindow_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
-    sub_800A1F98(c->field_C, c->field_14, c);
+    c->sprts_C[2].x0 = 0x54;
+    c->sprts_C[2].y0 = 0xA7;
+    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->sprts_C[2], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], 2);
+    DrawWindow_80042460(&r, &s, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
+    sub_800A1F98(c->sprts_C, c->tpages_14, c);
     if (padPressed_8009194C & 0x800)
     {
         PlaySfx_80031494(0x7E);
@@ -461,7 +444,7 @@ extern void (*off_800A27E8[])();
 // Matched
 void sub_800A1310(TitleTask* t, TitleCtxB* c)
 {
-    sub_800A1F98(c->field_C, c->field_14, c);
+    sub_800A1F98(c->sprts_C, c->tpages_14, c);
     UpdateMenuCursor_8003D794(c->field_1C, 0);
     if (padRepeat_800918CC & 0x5000)
     {
@@ -580,22 +563,26 @@ void sub_800A158C(TitleTask* t)
 }
 
 
-typedef struct TitleTaskM
-{
-    unsigned int flags_0;
-    int pad_4;
-    void (*fn_8)();
-    int field_C;
-    int field_10;
-    int field_14;
-} TitleTaskM;
+typedef TitleTask TitleTaskM;
 typedef struct
 {
     short x, y, w, h;
 } TitleRectM;
+// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in tu_8002CE28.c)
+typedef struct TitleMenuItem
+{
+    unsigned short flags_0;
+    short pad_2;
+    int f4;
+    void* f8;
+    void* fC;
+    short x_10;
+    short y_12;
+    char pad_14[8];
+} TitleMenuItem;
 typedef struct
 {
-    int w[14];
+    TitleMenuItem items[2];
 } TitleBlk38M;
 extern char dword_800A05A8[];
 extern char dword_800A0658[];
@@ -619,7 +606,7 @@ void sub_800A166C(TitleTaskM* t)
     DrawText_8003E91C(2, dword_800A069C, &r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
-        t->fn_8 = sub_800A1310;
+        t->next_8 = sub_800A1310;
         sub_800A1B74(t);
     }
 }
@@ -628,21 +615,24 @@ void sub_800A166C(TitleTaskM* t)
 void sub_800A1728(TitleTaskM* t)
 {
     sub_800BB64C();
-    t->fn_8 = sub_800A1310;
+    t->next_8 = sub_800A1310;
     sub_800A1B74(t);
 }
 
-extern void sub_800A1780(TitleTaskM* t, int x);
+extern void sub_800A1780(TitleCtxB* c, int x);
 
 // Matched
-void sub_800A1760(void* p, int x, int y)
+void sub_800A1760(TitleCtxB* p, int x, int y)
 {
-    sub_800A1780((TitleTaskM*)p, x);
+    sub_800A1780(p, x);
 }
 
+// struct_A5A4 in tu_8002CE28.c
 typedef struct
 {
-    int f0, f4, f8, fC, f10, f14;
+    int f0, f4, f8, fC;
+    TitleBlk38M** windows_10;
+    int f14;
 } TitleCfgM;
 extern TitleBlk38M dword_800A06D8, dword_800A0710, dword_800A0748, dword_800A0780;
 extern TitleBlk38M dword_800A07B8, dword_800A07F0, dword_800A0828, dword_800A0860;
@@ -650,10 +640,10 @@ extern TitleCfgM dword_800A0898;
 extern void DrawMenuWindows_8002A5A4(TitleCfgM* cfg);
 
 // Matched
-void sub_800A1780(TitleTaskM* t, int x)
+void sub_800A1780(TitleCtxB* t, int x)
 {
     TitleBlk38M b0, b1, b2, b3, b4, b5, b6, b7;
-    void* ptrs[5];
+    TitleBlk38M* ptrs[5];
     TitleCfgM cfg;
     b0 = dword_800A06D8;
     b1 = dword_800A0710;
@@ -665,21 +655,21 @@ void sub_800A1780(TitleTaskM* t, int x)
     b7 = dword_800A0860;
     memset(ptrs, 0, sizeof(ptrs));
     cfg = dword_800A0898;
-    b0.w[2] = (int)&t->field_C;
-    b0.w[3] = (int)&t->field_14;
-    b1.w[2] = (int)&t->field_C;
-    b1.w[3] = (int)&t->field_14;
-    b2.w[2] = (int)&t->field_C;
-    b2.w[3] = (int)&t->field_14;
-    b3.w[2] = (int)&t->field_C;
-    b3.w[3] = (int)&t->field_14;
+    b0.items[0].f8 = &t->sprts_C;
+    b0.items[0].fC = &t->tpages_14;
+    b1.items[0].f8 = &t->sprts_C;
+    b1.items[0].fC = &t->tpages_14;
+    b2.items[0].f8 = &t->sprts_C;
+    b2.items[0].fC = &t->tpages_14;
+    b3.items[0].f8 = &t->sprts_C;
+    b3.items[0].fC = &t->tpages_14;
     ptrs[0] = &b0;
     ptrs[1] = &b1;
     ptrs[2] = &b2;
     ptrs[3] = &b3;
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = x;
-    cfg.f10 = (int)ptrs;
+    cfg.windows_10 = ptrs;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
@@ -751,7 +741,7 @@ void sub_800A1C18(TitleTaskM* t)
     SetDisplayMode_80040658(1);
     dword_8008BD80 = -2;
     sub_800B7674(1, 0);
-    t->fn_8 = sub_800A1CC0;
+    t->next_8 = sub_800A1CC0;
 }
 
 extern void sub_800A2650(void);
@@ -789,7 +779,7 @@ void sub_800A1CC0(TitleTaskM* t)
         }
         else
         {
-            t->fn_8 = sub_800A1310;
+            t->next_8 = sub_800A1310;
             SetDisplayMode_80040658(1);
         }
     }
@@ -810,7 +800,7 @@ void sub_800A1D8C(TitleTaskM* t)
     LoadOverlay_80020BF8(2, 0xF);
     SetFadeMode_8001C19C(0, 0x20);
     LoadUiTiy_8002BF74();
-    t->fn_8 = sub_800A1DD8;
+    t->next_8 = sub_800A1DD8;
 }
 
 extern void sub_800C2EB4(void);
@@ -823,44 +813,34 @@ void sub_800A1DD8(TitleTaskM* t)
     {
         SetFadeMode_8001C19C(3, 0x20);
         sub_800C2EB4();
-        t->fn_8 = sub_800A1E24;
+        t->next_8 = sub_800A1E24;
     }
 }
 
-typedef struct
-{
-    int field_0;
-    int pad_4[2];
-    int field_C;
-    int pad_10;
-    int field_14;
-    char pad_18[0xC];
-    short field_24;
-} TitleObjM;
 extern int sub_800C45D8(void);
 extern void sub_800A1E9C();
 
 // Matched
-void sub_800A1E24(TitleTaskM* t, TitleObjM* u)
+void sub_800A1E24(TitleTaskM* t, TitleCtxB* u)
 {
     if (!sub_800C45D8())
     {
         u->field_0 = 0;
         FreeActiveOverlay_8002C014();
-        sub_800A1F98(u->field_C, u->field_14, u);
+        sub_800A1F98(u->sprts_C, u->tpages_14, u);
         sub_800A1760(u, u->field_24, u->field_0);
         SetFadeMode_8001C19C(0, 0x20);
-        t->fn_8 = sub_800A1E9C;
+        t->next_8 = sub_800A1E9C;
     }
 }
 
 // Matched
-void sub_800A1E9C(TitleTaskM* t, TitleObjM* u)
+void sub_800A1E9C(TitleTaskM* t, TitleCtxB* u)
 {
     SetFadeMode_8001C19C(3, 0x20);
-    sub_800A1F98(u->field_C, u->field_14, u);
+    sub_800A1F98(u->sprts_C, u->tpages_14, u);
     sub_800A1760(u, u->field_24, u->field_0);
-    t->fn_8 = sub_800A1310;
+    t->next_8 = sub_800A1310;
 }
 
 // Matched
@@ -887,7 +867,6 @@ typedef struct { char c[8]; } Blk8_;
 extern Blk8_ dword_800B06A8;
 typedef struct { int a[18]; } Blk72_;
 extern Blk72_ dword_800A2730;
-typedef struct { char pad_0[8]; short x_8; short y_A; char pad_C[8]; } Sprite20_;
 
 extern int playerYan_8008B594;
 extern int dword_8008B554;
@@ -919,33 +898,33 @@ void sub_800A1F78(void* a)
 typedef struct { char c[4]; } Blk4_;
 extern Blk4_ dword_800A08B0;
 
-void sub_800A1F98(char* p, char* q)
+void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 {
     char tmp[4];
     Blk4_ loc;
     short i;
     short y;
-    Sprite20_* e;
-    Sprite20_* e5;
+    SPRT* e;
+    SPRT* e5;
 
     memset(tmp, 0, 4);
     y = 0x4A;
-    e5 = &((Sprite20_*)p)[5];
+    e5 = &p[5];
     loc = dword_800A08B0;
-    e5->y_A = y;
-    e5->x_8 = 0x55;
-    PulseColor_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
+    e5->y0 = y;
+    e5->x0 = 0x55;
+    PulseColor_80033394(&p[5].r0, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(e5, 1);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, e5, 5);
-    AddPrimCopy_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, &q[5], 2);
     y = 0;
     for (i = 7; i < 9; i++)
     {
-        e = (Sprite20_*)((int)i * 20 + (int)p);
-        e->x_8 = (i - 7) * 5 << 5;
-        e->y_A = y;
+        e = (SPRT*)((int)i * sizeof(SPRT) + (int)p); // &p[i] does not match
+        e->x0 = (i - 7) * 5 << 5;
+        e->y0 = y;
         AddPrimCopy_80040298((void*)pOT_8008D3EC, e, 5);
-        AddPrimCopy_80040298((void*)pOT_8008D3EC, q + i * 8, 2);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, &q[i], 2);
     }
 }
 
