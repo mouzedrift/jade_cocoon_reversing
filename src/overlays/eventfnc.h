@@ -139,7 +139,8 @@ typedef struct EvSaveEventfnc
     short f2EC_2EC;
     short f2EE_2EE;
     short f2F0_2F0;
-    char pad_2F2[0x7A8 - 0x2F2];
+    short f2F2_2F2;
+    char pad_2F4[0x7A8 - 0x2F4];
     int f7A8_7A8;
     int f7AC_7AC;
     int f7B0_7B0;

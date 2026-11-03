@@ -1807,10 +1807,10 @@ int sub_800BAF08(EvCtxEventfnc* c)
 
 int sub_800BAF68(EvCtxEventfnc* c)
 {
-    char* s = (char*)&saveData_8008B570;
+    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
     unsigned short v = *(unsigned short*)&c->pc_8->b_8;
-    *(unsigned short*)(s + 0x2F0) = v;
-    if ((short)v == *(short*)(s + 0x2F2))
+    s->f2F0_2F0 = v;
+    if ((short)v == s->f2F2_2F2)
     {
         c->pc_8++;
         return 1;
