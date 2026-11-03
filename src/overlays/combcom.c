@@ -56,7 +56,7 @@ extern void sub_800CB924();
 
 EventEntry* sub_800CB7AC(int a, int b)
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D614);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D614);
     if (e)
     {
         e->cb_8 = (EventEntryFn)sub_800CD16C;

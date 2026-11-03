@@ -716,7 +716,7 @@ void sub_800A1B74(TitleTaskM* t)
 {
     EventEntry* e;
     t->flags_0 &= ~1;
-    e = sub_80043AF8(dword_8008D638);
+    e = AllocEventEntry_80043AF8(dword_8008D638);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;

@@ -15,7 +15,7 @@ The `assert()` macro embeds `__FILE__`, and those strings sit in `.rdata` in TU 
 | `EFFECT.C` | 0x80072128 | `sub_800148F4` | |
 | `SOUND.C` | 0x80074474 | `LoadSoundSeqFromBuffer_800304D0`, `LoadSoundFromBuffer_800307B4`, `LoadSound_80030A84` | already `sound.c` |
 | `CD.C` | 0x800748D4 | `cdRomEventErrorHandler_8003BBAC`, `AssertFileRequestQueueEmpty_8003C684` | |
-| `D:/WORK/PSUS/EVENT.C` | 0x80074BA4 | `sub_800435B4` .. `sub_80043A5C` | full path, built outside the usual setup |
+| `D:/WORK/PSUS/EVENT.C` | 0x80074BA4 | `CreateEventList_800435B4` .. `FreeEventList_80043A5C` | full path, built outside the usual setup |
 
 Rodata references rise monotonically with function address across the whole game area
 (see `scripts/tu_hints.py`), which confirms the TUs are laid out in address order and gives the

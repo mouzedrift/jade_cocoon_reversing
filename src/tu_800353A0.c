@@ -132,7 +132,7 @@ extern void sub_80035BD8(EventEntry* e, void* buf);
 // Matched
 EventEntry* sub_80035AC8(int* init)
 {
-    EventEntry* e = sub_80043AF8(dword_8008D640);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D640);
     int* o;
     if (e)
     {

@@ -289,7 +289,7 @@ void sub_800A54A0(CombSelTask* t)
         sub_80031494(0x7E);
         if ((short)sub_8003DA54(dword_800A5978) == 0)
         {
-            sub_80043564(1, 0x678, 0x1F);
+            XaRequestPlay_80043564(1, 0x678, 0x1F);
             t->next_8 = sub_800A5538;
         }
         else

@@ -460,7 +460,7 @@ void sub_800BA97C()
 
 EventEntry* sub_800BA9E4()
 {
-    EventEntry* e = sub_80043AF8(dword_8008D624);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D624);
     char buf[0x10];
     int r;
     if (e)
@@ -919,7 +919,7 @@ int sub_800BC1A8(unsigned int mask)
 
 int sub_800BC28C()
 {
-    EventEntry* e = sub_80043AF8(dword_8008B4C0);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4C0);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
@@ -1483,7 +1483,7 @@ void sub_800BF3AC()
 #if 0
 void sub_800BF3DC(int a, int b, int c, int d, int e)
 {
-    EventEntry* p = sub_80043AF8(dword_8008D778);
+    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D778);
     if (p)
     {
         int* q = p->buffer;
@@ -1745,10 +1745,10 @@ void sub_800BFB80()
 
 void sub_800BFBB8()
 {
-    sub_80043B40(dword_8008B568);
-    sub_80043B40(dword_8008B564);
-    sub_80043B40((int*)dword_8008D4B0);
-    sub_80043B40((int*)dword_8008D63C);
+    StopAllEventEntries_80043B40(dword_8008B568);
+    StopAllEventEntries_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40((int*)dword_8008D4B0);
+    StopAllEventEntries_80043B40((int*)dword_8008D63C);
 }
 
 void sub_800BFC10()
@@ -1770,7 +1770,7 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 #if 0
 void sub_800C01D8()
 {
-    EventEntry* e = sub_80043AF8(dword_8008D4B0);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D4B0);
     if (e)
     {
         short* q;
@@ -1791,7 +1791,7 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C0254);
 
 void sub_800C0440()
 {
-    EventEntry* e = sub_80043AF8(dword_8008D63C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D63C);
     if (e)
     {
         dword_800C9D74 = 0;
@@ -2041,7 +2041,7 @@ void sub_800C106C(unsigned int* a, int* b)
 extern EventNode* dword_8008D60C;
 void sub_800C10B8(int a, int b)
 {
-    EventEntry* e = sub_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
     if (a > 0 && e)
     {
         int* q;
@@ -2065,7 +2065,7 @@ void sub_800C1140(unsigned int* a, short* b)
 
 void sub_800C1190(int a, int b)
 {
-    EventEntry* e = sub_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
     if (a > 0 && e)
     {
         int* q;

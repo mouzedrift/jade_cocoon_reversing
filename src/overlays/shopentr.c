@@ -108,7 +108,7 @@ void sub_800B6F1C(void)
 {
     TaskShopentr* t;
     CtxShopentr* c;
-    t = (TaskShopentr*)sub_80043AF8(dword_8008D4A8);
+    t = (TaskShopentr*)AllocEventEntry_80043AF8(dword_8008D4A8);
     if (t)
     {
         t->flags_0 = (t->flags_0 | 1) & 0xFFFF7FFF;

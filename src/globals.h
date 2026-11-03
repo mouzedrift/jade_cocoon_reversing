@@ -94,13 +94,14 @@ typedef struct
     unsigned char motor_2[2];
 } PadVibration;
 
+// XA audio request (event.c): played from DATA.001 file 0x439
 typedef struct
 {
     short field_0;
-    short field_2;
-    short field_4;
-    short field_6;
-} struct_10;
+    short channel_2;     // CdlSetfilter channel
+    short startSector_4; // in units of 32 sectors from the file start
+    short length_6;      // in units of 32 sectors
+} XaRequest;
 
 typedef struct
 {
@@ -265,7 +266,7 @@ extern unsigned short word_8007D64C[0xf];
 extern struct_24 stru_8007D6B0[0x11];
 extern int dword_8007D66C[0x11];
 extern unsigned short word_8007D914[0x11];
-extern unsigned int dword_80096118;
+extern unsigned int xaRequestPending_80096118;
 extern int dword_80091CFC;
 extern int dword_80083BD0;
 extern int fileRequestQueue_80086540;
@@ -378,7 +379,7 @@ extern int off_8007CF30[0x26];
 extern int off_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int fadeFlags_800918B0;
-extern struct_10 stru_80096110;
+extern XaRequest xaRequest_80096110;
 extern int dword_80091C88;
 extern int dword_80091C44;
 extern int* dword_80091C00;
@@ -406,7 +407,7 @@ extern long vsyncEventDesc_8008B494;
 extern int dword_8008B574;
 extern volatile int vsyncCounter_8008B4B4;
 extern volatile int gnFrame_8008D610;
-extern volatile int dword_8008D450;
+extern volatile int xaTimer_8008D450;
 extern volatile int dword_8008D404;
 extern SaveData saveData_8008B570;
 extern unsigned int allMinionsBitfields_8008BD84[7];

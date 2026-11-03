@@ -987,7 +987,7 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BAF54);
 extern void sub_800BB0F8();
 void sub_800BB058(int a)
 {
-    EventEntry* t = sub_80043AF8((EventNode*)name_8008D670);
+    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)name_8008D670);
     ShopUnit3Shop* u;
     if (t)
     {

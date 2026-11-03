@@ -244,7 +244,7 @@ INCLUDE_OVERLAY_ASM(wpnshop, dword_800B66C0);
 void sub_800BAE2C(int a, int b)
 {
     WpnObj_wpnshop* o;
-    EventEntry* t = sub_80043AF8((EventNode*)dword_8008D3E0);
+    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)dword_8008D3E0);
     if (t)
     {
         t->flags = (t->flags | 1) & ~0x8000;

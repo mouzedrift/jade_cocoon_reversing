@@ -66,7 +66,7 @@ long vsyncEventHandler_800103AC(void)
 {
     ++vsyncCounter_8008B4B4;
     ++gnFrame_8008D610;
-    --dword_8008D450;
+    --xaTimer_8008D450;
     if (!(unknownFlags_8008D678 & 8))
     {
         dword_8008D404++;
@@ -274,7 +274,7 @@ extern EventNode* dword_8008D618;
 // Matched
 int sub_80010850(void* a0)
 {
-    EventEntry* e = sub_80043AF8(dword_8008D618);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D618);
     int* buf;
     int* m;
     if (e != 0)

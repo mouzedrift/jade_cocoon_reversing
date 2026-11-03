@@ -35,7 +35,7 @@ extern void sub_80017208(int* a0, int* a1);
 // Matched
 void sub_80017158(int* a0, unsigned char* a1)
 {
-    EventEntry* e = sub_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
     int* q;
     if (e)
     {
@@ -73,7 +73,7 @@ void sub_80017290(char* a0, int a1)
 {
     EventEntry* e;
     sub_80017A6C((int)a0, 0);
-    e = sub_80043AF8(dword_8008B4A8);
+    e = AllocEventEntry_80043AF8(dword_8008B4A8);
     if (e)
     {
         int* b = e->buffer;

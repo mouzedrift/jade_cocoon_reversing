@@ -646,12 +646,12 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 void sub_800A73E4()
 {
     sub_800376A0((int*)dword_8008D4A0 + 4, dword_8008D4A0[9]);
-    sub_80043B40((int*)dword_8008D4A0);
+    StopAllEventEntries_80043B40((int*)dword_8008D4A0);
 }
 
 void sub_800A7420()
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D628);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D628);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
@@ -662,7 +662,7 @@ void sub_800A7420()
 
 void sub_800A7478()
 {
-    sub_80043B40((int*)dword_8008D628);
+    StopAllEventEntries_80043B40((int*)dword_8008D628);
 }
 
 void sub_800A74A0(int i)
@@ -696,7 +696,7 @@ int sub_800A758C()
 
 void sub_800A75F8(int a)
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008B564);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008B564);
     CombBtlObj* p;
     if (e)
     {
@@ -716,14 +716,14 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7694);
 
 void sub_800A7BE4()
 {
-    sub_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40(dword_8008B564);
 }
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7C0C);
 
 void sub_800A7E34(int a, int b, int c)
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D778);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D778);
     int* p;
     if (e)
     {
@@ -765,12 +765,12 @@ extern void sub_800A816C();
 
 int sub_800A8098(int a, int b, int c)
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D458);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D458);
     if (e)
     {
         e->cb_8 = (EventEntryFn)sub_800A816C;
         e->flags = (e->flags | 1) & ~0x8000;
-        sub_80043564(word_800A82E0[1], word_800A82E0[2], word_800A82E0[3]);
+        XaRequestPlay_80043564(word_800A82E0[1], word_800A82E0[2], word_800A82E0[3]);
         dword_800A8478 = sub_800A5408(a, b, c);
         dword_800A3A88 &= ~4;
         dword_800A3A88 &= ~8;
@@ -780,7 +780,7 @@ int sub_800A8098(int a, int b, int c)
 }
 
 extern int sub_800349B4();
-extern int sub_80043524();
+extern int XaRequestStop_80043524();
 extern void sub_80034A84();
 
 void sub_800A816C(EventEntry* e)
@@ -794,8 +794,8 @@ void sub_800A816C(EventEntry* e)
             dword_800A3A88 |= 4;
         }
     }
-    v = sub_800435A4();
-    if (v == 1 && sub_80043584() == v)
+    v = XaNoRequestPending_800435A4();
+    if (v == 1 && XaIsIdle_80043584() == v)
     {
         dword_800A3A88 |= 8;
     }
@@ -806,7 +806,7 @@ void sub_800A816C(EventEntry* e)
         {
             if (!(dword_800A3A88 & 0x10))
             {
-                if (sub_80043524() == v)
+                if (XaRequestStop_80043524() == v)
                 {
                     dword_800A3A88 |= 0x10;
                 }

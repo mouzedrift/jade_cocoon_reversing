@@ -905,7 +905,7 @@ void sub_8001BF90(void)
 // Matched
 void StartScreenFlash_8001C02C(unsigned char* a0)
 {
-    struct_cb* r = sub_80043AF8(dword_8008D61C);
+    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D61C);
     if (r != 0)
     {
         unsigned char* p = (unsigned char*)r->field_14;
@@ -1603,7 +1603,7 @@ void sub_8001D378(void)
     sub_800205F0();
     sub_800201A4();
     ListInit_8003FDB0(dword_80091990);
-    sub_80043B40(dword_8008D43C);
+    StopAllEventEntries_80043B40(dword_8008D43C);
 }
 // Matched
 void sub_8001D3C4(int a0)
@@ -1615,7 +1615,7 @@ void sub_8001D3C4(int a0)
         sub_800204D0();
     }
     ListFreeAll_8003FEC8(dword_80091990);
-    sub_80043B40(dword_8008D43C);
+    StopAllEventEntries_80043B40(dword_8008D43C);
     sub_800201A4();
 }
 // Matched
@@ -1629,7 +1629,7 @@ void sub_8001D41C(int a0, void* a1)
 // Matched
 int* sub_8001D45C(int a0)
 {
-    struct_cb* r = sub_80043AF8(dword_8008D43C);
+    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D43C);
     int* p;
     if (r != 0)
     {
@@ -5320,14 +5320,14 @@ void sub_80027118(void)
     dword_8008266C = 0;
     if (dword_80091C8C == 0)
     {
-        sub_80043B40(dword_800B1DA8);
-        sub_80043B40(dword_8008D400);
+        StopAllEventEntries_80043B40(dword_800B1DA8);
+        StopAllEventEntries_80043B40(dword_8008D400);
     }
     sub_800AC73C();
-    sub_80043B40(dword_8008D640);
-    sub_80043B40(dword_8008D49C);
-    sub_80043B40(dword_8008D674);
-    sub_80043B40(dword_8008D488);
+    StopAllEventEntries_80043B40(dword_8008D640);
+    StopAllEventEntries_80043B40(dword_8008D49C);
+    StopAllEventEntries_80043B40(dword_8008D674);
+    StopAllEventEntries_80043B40(dword_8008D488);
     sub_800A54A0();
     sub_800A58B4();
     sub_8001D3C4(dword_80091CA0);

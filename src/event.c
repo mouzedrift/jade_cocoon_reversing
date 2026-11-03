@@ -98,32 +98,32 @@ void sub_80042B38(int a0, int a1)
 #endif
 INCLUDE_ASM(sub_80042B38);
 extern int sub_8003C0A4(int a);
-extern int sub_800434C4(int a);
-extern int dword_80096108;
-extern int dword_8009610C;
-extern void sub_800430E8();
-extern void sub_800432EC();
+extern int XaStartRead_800434C4(int a);
+extern int xaStartPos_80096108;
+extern int xaEndPos_8009610C;
+extern void XaIdleTask_800430E8();
+extern void XaMonitorTask_800432EC();
 
 // Matched
-void sub_80043054(struct_obj_D* p, int* q)
+void XaInitTask_80043054(struct_obj_D* p, int* q)
 {
     SsSetSerialAttr(0, 0, 1);
-    dword_80096118 = -1;
+    xaRequestPending_80096118 = -1;
     q[0] = 0;
     ((short*)q)[4] = 0;
-    p->field_8 = sub_800430E8;
+    p->field_8 = XaIdleTask_800430E8;
 }
 // Matched
-void sub_800430B0(void)
+void XaStop_800430B0(void)
 {
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
 extern int sub_80053EB0(void);
-extern void sub_800431C4();
-void sub_800433FC(int* o);
+extern void XaWaitFilterTask_800431C4();
+void XaSetup_800433FC(int* o);
 // Matched
-void sub_800430E8(struct_obj_D* p, int* q0)
+void XaIdleTask_800430E8(struct_obj_D* p, int* q0)
 {
     int* q = q0;
     int r;
@@ -131,45 +131,45 @@ void sub_800430E8(struct_obj_D* p, int* q0)
     if (q[0] & 1)
     {
         q[0] &= ~1;
-        dword_80096118 = -1;
+        xaRequestPending_80096118 = -1;
     }
-    if ((int)dword_80096118 >= 0 && (r = sub_80053EB0()) == 1 && (s = sub_8003C0A4(r)) == r)
+    if ((int)xaRequestPending_80096118 >= 0 && (r = sub_80053EB0()) == 1 && (s = sub_8003C0A4(r)) == r)
     {
-        sub_800433FC(q);
-        dword_80096118 = -1;
+        XaSetup_800433FC(q);
+        xaRequestPending_80096118 = -1;
         ((short*)q)[4] = s;
         q[0] &= ~1;
-        p->field_8 = sub_800431C4;
+        p->field_8 = XaWaitFilterTask_800431C4;
     }
 }
 // Matched
-void sub_800431C4(struct_obj_D* p, int* q)
+void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q)
 {
     char buf[8];
     if (sub_80053B9C(q[1], buf) == 2)
     {
-        p->field_8 = sub_80043204;
+        p->field_8 = XaStartReadTask_80043204;
     }
 }
 // Matched
-void sub_80043204(struct_obj_D* p, int* q)
+void XaStartReadTask_80043204(struct_obj_D* p, int* q)
 {
-    if (sub_800434C4(dword_80096108))
+    if (XaStartRead_800434C4(xaStartPos_80096108))
     {
         q[1] = DsControlF(0x11, 0);
         ((short*)q)[4] = 2;
-        p->field_8 = sub_800432EC;
+        p->field_8 = XaMonitorTask_800432EC;
     }
 }
 // Matched
-void sub_80043264(struct_obj_D* p, short* q)
+void XaFadeOutTask_80043264(struct_obj_D* p, short* q)
 {
     short v = q[5] - 14;
     q[5] = v;
     if (v < 0)
     {
         q[4] = 0;
-        p->field_8 = sub_800430E8;
+        p->field_8 = XaIdleTask_800430E8;
         SsSetSerialVol(0, 0, 0);
         DsControlB(9, 0, 0);
         sub_8003C0A4(0);
@@ -180,7 +180,7 @@ void sub_80043264(struct_obj_D* p, short* q)
     }
 }
 // Matched
-void sub_800432EC(struct_obj_D* p, int* q)
+void XaMonitorTask_800432EC(struct_obj_D* p, int* q)
 {
     u_char result[8];
     DslLOC loc;
@@ -189,25 +189,25 @@ void sub_800432EC(struct_obj_D* p, int* q)
         loc.minute = result[5];
         loc.second = result[6];
         loc.sector = result[7];
-        if (DsPosToInt(&loc) > dword_8009610C || (int)dword_80096118 >= 0)
+        if (DsPosToInt(&loc) > xaEndPos_8009610C || (int)xaRequestPending_80096118 >= 0)
         {
             ((short*)q)[5] = 0x70;
-            p->field_8 = sub_80043264;
+            p->field_8 = XaFadeOutTask_80043264;
             return;
         }
         SsSetSerialVol(0, 0x70, 0x70);
         q[1] = DsControlF(0x11, 0);
     }
-    if (dword_8008D450 < -1000 || (q[0] & 1))
+    if (xaTimer_8008D450 < -1000 || (q[0] & 1))
     {
         ((short*)q)[5] = 0x70;
         q[0] &= ~1;
-        p->field_8 = sub_80043264;
+        p->field_8 = XaFadeOutTask_80043264;
     }
 }
 extern int sub_80053608(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
 // Matched
-void sub_800433FC(int* o)
+void XaSetup_800433FC(int* o)
 {
     Data001File f;
     u_char result[8];
@@ -215,20 +215,20 @@ void sub_800433FC(int* o)
     int r;
     DATA_GetFile_8003C7CC(&f, 0x439);
     param[0] = 1;
-    param[1] = stru_80096110.field_2;
+    param[1] = xaRequest_80096110.channel_2;
     do
     {
         r = sub_80053608(0xD, param, 0, -1);
         o[1] = r;
     } while (r == 0);
-    dword_80096108 = DsPosToInt(&f.field_0_position);
-    dword_80096108 += stru_80096110.field_4 * 32;
-    dword_8009610C = dword_80096108 + stru_80096110.field_6 * 32;
-    dword_8008D450 = stru_80096110.field_6 * 1920 / 150;
+    xaStartPos_80096108 = DsPosToInt(&f.field_0_position);
+    xaStartPos_80096108 += xaRequest_80096110.startSector_4 * 32;
+    xaEndPos_8009610C = xaStartPos_80096108 + xaRequest_80096110.length_6 * 32;
+    xaTimer_8008D450 = xaRequest_80096110.length_6 * 1920 / 150;
 }
 extern int sub_8005384C(unsigned char a, void* b, unsigned char c, int d, int e);
 // Matched
-int sub_800434C4(int a)
+int XaStartRead_800434C4(int a)
 {
     unsigned char loc[4];
     int r;
@@ -242,10 +242,10 @@ int sub_800434C4(int a)
     return r;
 }
 // Matched
-int sub_80043524(void)
+int XaRequestStop_80043524(void)
 {
     int* p;
-    if ((int)dword_80096118 >= 0)
+    if ((int)xaRequestPending_80096118 >= 0)
     {
         return 0;
     }
@@ -254,26 +254,26 @@ int sub_80043524(void)
     return 1;
 }
 // Matched
-void sub_80043564(short a0, short a1, short a2)
+void XaRequestPlay_80043564(short a0, short a1, short a2)
 {
-    dword_80096118 = 0;
-    stru_80096110.field_2 = a0;
-    stru_80096110.field_4 = a1;
-    stru_80096110.field_6 = a2;
+    xaRequestPending_80096118 = 0;
+    xaRequest_80096110.channel_2 = a0;
+    xaRequest_80096110.startSector_4 = a1;
+    xaRequest_80096110.length_6 = a2;
 }
 // Matched
-int sub_80043584(void)
+int XaIsIdle_80043584(void)
 {
     return ((short*)dword_8008B560[0x24 / 4])[4] == 0;
 }
 // Matched
-unsigned int sub_800435A4(void)
+unsigned int XaNoRequestPending_800435A4(void)
 {
-    return dword_80096118 >> 31;
+    return xaRequestPending_80096118 >> 31;
 }
-INCLUDE_ASM(sub_800435B4);
+INCLUDE_ASM(CreateEventList_800435B4);
 // Matched
-void* sub_800437E8(int* a0, int size)
+void* EventEntryAllocBuffer_800437E8(int* a0, int size)
 {
     void* p = malloc3_dbg(size, aDWorkPsusEvent, 0x2C);
     if (p == 0)
@@ -285,7 +285,7 @@ void* sub_800437E8(int* a0, int size)
     return p;
 }
 // Matched
-int sub_80043840(int* a0)
+int EventEntryFreeBuffer_80043840(int* a0)
 {
     if (a0[5])
     {
@@ -299,7 +299,7 @@ int sub_80043840(int* a0)
     return 1;
 }
 // Matched
-void sub_80043898(EventNode* n)
+void RunEventList_80043898(EventNode* n)
 {
     do
     {
@@ -323,7 +323,7 @@ void sub_800438F8(EventNode* n)
     } while (n);
 }
 // Matched
-void sub_80043958(EventNode* n)
+void RunEventListUntilAbort_80043958(EventNode* n)
 {
     if (dword_8008B540 == 0)
     {
@@ -360,7 +360,7 @@ void sub_800439E0(unsigned int** arr, unsigned int* out)
 #endif
 INCLUDE_ASM(sub_800439E0);
 // Matched
-int sub_80043A5C(EventNode* head)
+int FreeEventList_80043A5C(EventNode* head)
 {
     EventNode* n = head;
     do

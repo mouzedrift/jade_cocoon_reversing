@@ -21,13 +21,13 @@ INCLUDE_DATA(dword_8007493C);
 
 extern EventNode* dword_8008D488;
 extern int QueueFileRequest_8003BC84(int* p);
-extern EventEntry* sub_80043AF8(EventNode* n);
+extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void sub_8003C76C(int* a0, int* a1);
 
 // Matched
 int sub_8003C6C8(int* a0)
 {
-    EventEntry* e = sub_80043AF8(dword_8008D488);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D488);
     int* buf;
     if (e)
     {

@@ -194,7 +194,7 @@ extern void sub_800A7654();
 extern void sub_800A1314();
 extern void sub_8001C19C(int a, int b);
 extern void sub_800438F8(int a);
-extern void sub_80043A5C(int a);
+extern void FreeEventList_80043A5C(int a);
 extern void sub_800A6534(int a, int b);
 extern void sub_800A654C(int a, int b);
 extern GameVec3_1 dword_8008BD18;
@@ -308,7 +308,7 @@ extern void sub_800B66DC();
 extern int sub_800BBB94(void);
 extern int dword_800B1DC8[];
 extern void sub_800A6968();
-extern int sub_800435B4(char* p);
+extern int CreateEventList_800435B4(char* p);
 extern char dword_800B0DA4[];
 extern void sub_8001E28C(int a);
 extern void sub_80026FAC(void);
@@ -1848,7 +1848,7 @@ void sub_800A58B4(void)
     dword_800AEBD8 = -1;
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
-    sub_80043B40((int*)dword_8008D410);
+    StopAllEventEntries_80043B40((int*)dword_8008D410);
     sub_80037AC8((int)&dword_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
@@ -1869,7 +1869,7 @@ void sub_800A58B4(void)
 // Matched
 int* sub_800A59D0(int v)
 {
-    GameObj5_1* p = (GameObj5_1*)sub_80043AF8((EventNode*)dword_8008D410);
+    GameObj5_1* p = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D410);
     if (p)
     {
         int* q = p->obj_14;
@@ -2309,7 +2309,7 @@ void sub_800A68CC(GameTask_1* t, int* q)
         p[3] = 0;
         p--;
     }
-    q[0xf] = sub_800435B4(dword_800B0DA4);
+    q[0xf] = CreateEventList_800435B4(dword_800B0DA4);
     dword_8008B540 = 0;
     dword_800B0698 = 0;
     t->next_8 = sub_800A6968;
@@ -2412,7 +2412,7 @@ void sub_800A6C00(GameTask_1* t, int* q)
 void sub_800A6CCC(GameTask_1* t, GameQ_1* q)
 {
     sub_800438F8(q->f3c);
-    sub_80043A5C(q->f3c);
+    FreeEventList_80043A5C(q->f3c);
     bStopDrawingMovie_8008D45C = 1;
     t->f0 = (t->f0 & ~1) | 0x8000;
 }

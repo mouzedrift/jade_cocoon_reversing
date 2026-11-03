@@ -51,7 +51,7 @@ INCLUDE_OVERLAY_ASM(shopctrl, dword_800B66C0);
 
 void sub_800B66C4(int a)
 {
-    EventEntry* e = sub_80043AF8((EventNode*)dword_8008D438);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D438);
     if (e)
     {
         word_800B6CEA = a;
@@ -185,7 +185,7 @@ void sub_800B6AE0(ShopCtrlTask* t)
         }
         else
         {
-            e = sub_80043AF8((EventNode*)dword_8008D670);
+            e = AllocEventEntry_80043AF8((EventNode*)dword_8008D670);
             if (dword_8008B58C.f5 == 1)
             {
                 sub_800B6720();
@@ -201,7 +201,7 @@ void sub_800B6AE0(ShopCtrlTask* t)
         sub_8001C19C(3, 0x20);
         break;
     case 2:
-        e = sub_80043AF8((EventNode*)dword_8008D670);
+        e = AllocEventEntry_80043AF8((EventNode*)dword_8008D670);
         if (dword_8008B58C.f5 == 1)
         {
             sub_800B6720();
