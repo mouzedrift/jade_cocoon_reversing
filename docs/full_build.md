@@ -99,3 +99,17 @@ lines behind the function (build stays identical). Write the function in C and d
 table comes from the compiler, `dword_<rest>` (kept behind the function) holds the data that followed it.
 Case labels may sit inside nested blocks (`case 0:` inside the `if` that cases 1, 2 and 4 share) - the table
 entries show which instruction each case enters.
+
+### Overlays built from several source files
+
+Like the executable, an overlay was linked from several objects, and each object's `.rdata` starts where the
+previous one ended, so the compiler's `.align 3` for a jump table counts from that object's start. A table that
+sits 4 bytes off from where a single source file puts it marks a file boundary. The overlay is then
+`src/overlays/<name>.c`, `<name>_2.c`, `<name>_3.c`, ... (linked in that order, declarations shared in
+`<name>.h`):
+
+    python scripts/ovl_split_tu.py NAME TEXT:RDATA [TEXT:RDATA ...]
+
+starts a new file at the function at TEXT, with its `.rdata` from RDATA (GAME: `800A55B0:800A061C
+800A5804:800A0660`, EVENTFNC: `800BCB3C:800B6D98`). The text boundaries are only known to be at or before
+the first function that uses the file's `.rdata`.

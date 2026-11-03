@@ -257,16 +257,24 @@ def main(argv):
     split(name, data, base, syms, lib_ranges, gamebss)
     if "--init-src" in argv:
         init_src(name, syms)
-    src = os.path.join(REPO, "src", "overlays", name.lower() + ".c")
+    # an overlay built from several source files (as the original was, which matters for the .rdata alignment
+    # of each file) has src/overlays/<name>.c, <name>_2.c, <name>_3.c, ..., linked in that order
+    srcs = [os.path.join(REPO, "src", "overlays", name.lower() + ".c")]
+    while os.path.exists(os.path.join(REPO, "src", "overlays", "%s_%d.c" % (name.lower(), len(srcs) + 1))):
+        srcs.append(os.path.join(REPO, "src", "overlays", "%s_%d.c" % (name.lower(), len(srcs) + 1)))
+    src_text = "".join(open(p).read() for p in srcs)
     b = fb.BUILD
     tag = "overlay_" + name.lower()
-    pre, cc, obj = (os.path.join(b, tag + e) for e in (".preproc", ".o", ".obj"))
     inc = ["-I", os.path.join(fb.PSYQ, "INCLUDE"), "-I", os.path.join(REPO, "src")]
-    fb.run([os.path.join(fb.BIN, "CPPPSX.EXE"), "-undef", "-D__GNUC__=2", "-v", "-D__OPTIMIZE__"] + inc + [
-        "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
-        "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
-    fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
-    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", "-0", cc, "-o", obj])
+    objs = []
+    for i, src in enumerate(srcs):
+        pre, cc, obj = (os.path.join(b, tag + ("_%d" % (i + 1) if i else "") + e) for e in (".preproc", ".o", ".obj"))
+        fb.run([os.path.join(fb.BIN, "CPPPSX.EXE"), "-undef", "-D__GNUC__=2", "-v", "-D__OPTIMIZE__"] + inc + [
+            "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
+            "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
+        fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
+        fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", "-0", cc, "-o", obj])
+        objs.append(obj)
     link = os.path.join(b, tag + "_link.txt")
     main_syms = gen_asm.load_symbols(REPO)
     with open(link, "w") as f:
@@ -276,7 +284,8 @@ def main(argv):
         for sec, g in ((".sdata", "head"), (".rdata", "rdata"), (".text", "text"), (".data", "data"),
                        (".sbss", "bss"), (".bss", "bss")):
             f.write("\tsection\t%s,%s\n" % (sec, g))
-        f.write('\tinclude "%s"\n' % os.path.basename(obj))
+        for obj in objs:
+            f.write('\tinclude "%s"\n' % os.path.basename(obj))
         for path in libs:
             f.write('\tinclude "%s"\n' % os.path.relpath(path, b))
         for a, n in main_syms:
@@ -285,13 +294,13 @@ def main(argv):
         # buffers behind the overlay that are only named in the C source (name_XXXXXXXX)
         # (main-exe symbols inside the overlay range are not written above, so they count as unknown here)
         known = {n for a, n in main_syms if not (base <= a < base + len(data))} | {n for _, n in syms}
-        for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", open(src).read()))):
+        for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", src_text))):
             if n not in known:
                 f.write("%s\tequ\t$%s\n" % (n, addr))
         # library code of the executable is named by its linked objects (SetDrawMove, MulMatrix0, and for the
         # linked library modules open, lseek, _card_load, ...): take those from the executable's link map
         # (build.py first)
-        known |= set(re.findall(r"\b(\w+_[0-9A-F]{8})\b", open(src).read()))
+        known |= set(re.findall(r"\b(\w+_[0-9A-F]{8})\b", src_text))
         for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(b, "jade_cocoon.map")).read(), re.M):
             if m.group(2) not in known:
                 known.add(m.group(2))

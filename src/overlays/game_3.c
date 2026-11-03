@@ -1,0 +1,3831 @@
+// GAME.BIN, source file 3 of 3 from 0x800A5804 (.rdata from 0x800A0660)
+#include "game.h"
+
+INCLUDE_OVERLAY_ASM(game, dword_800A0660);
+
+// Matched
+void sub_800A5804(int a)
+{
+    if (a == 0)
+    {
+        AllocMdecVLCBuffer_80041848();
+    }
+    else if (a == 1)
+    {
+        AllocMdecVLCBufferInFileBuffer_8004188C();
+    }
+    dword_800AEB7C = a;
+}
+
+// Matched
+int sub_800A5854(void)
+{
+    int old = dword_800AEB7C;
+    if (old == 0)
+    {
+        FreeMdecBuffer_800418CC();
+    }
+    else if (old == 1)
+    {
+        ReleaseMdecVLCFileBuffer_800418FC();
+    }
+    dword_800AEB7C = 2;
+    return old;
+}
+
+void sub_800A58B4(void)
+{
+    GameNode_1* n = dword_8008D410;
+    int i;
+    int cnt = n->count_c;
+    GameRect_1* r;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+            sub_800A6168(o, o->obj_14);
+        n = n->next_4;
+    }
+    dword_800AEBD8 = -1;
+    dword_800AEBDC = 0;
+    name_800AEBD4 = 0;
+    StopAllEventEntries_80043B40((int*)dword_8008D410);
+    SetCameraTarget_80037AC8((int)&dword_8008BD18);
+    if (!(name_80091C38 & 0x40))
+    {
+        r = &stru_8008D420;
+        r->x = 0;
+        r->w = 0x140;
+        r->y = 0;
+        r->h = 0xf0;
+    }
+    sub_8001A9A4();
+    dword_800AEBF0 = 0;
+    dword_800AEBE8 = 0x8000;
+    name_800AEBEC = 0;
+    dword_800AEBE0 = 0;
+    dword_800AEBF4 = 0;
+}
+
+// Matched
+int* sub_800A59D0(int v)
+{
+    GameObj5_1* p = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D410);
+    if (p)
+    {
+        int* q = p->obj_14;
+        int i;
+        p->flags_0 = ((((p->flags_0 | 1) & ~0x8000) | 4) & ~0x8000);
+        q[1] = v;
+        q[2] = v;
+        q[3] = v;
+        q[4] = dword_800AEBDC;
+        q[0x114 / 4] = 0;
+        for (i = 7; i >= 0; i--)
+        {
+            q[51 + i] = 0;
+        }
+        sub_800A5B54(q);
+        p->fn_8 = sub_800A6060;
+        p->fn_c = sub_800A6168;
+        dword_800AEBDC++;
+        return (int*)p;
+    }
+    return 0;
+}
+
+// Matched
+GameR5_1* sub_800A5AA0(int a, int b)
+{
+    GameR5_1* r = (GameR5_1*)sub_800A59D0(a);
+    GameR6_1* t = r->f14;
+    t->f120 = b;
+    return r;
+}
+
+// Matched
+int sub_800A5AD0(int* p)
+{
+    return *(int*)(p[5] + 0x10);
+}
+
+// Matched
+int sub_800A5AE4(int a)
+{
+    GameNode_1* n = dword_8008D410;
+    GameObj5_1* o;
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            if (a == o->obj_14[4])
+            {
+                return (int)o;
+            }
+        }
+        n = n->next_4;
+    }
+    return 0;
+}
+
+// Matched
+void sub_800A5B54(int* p)
+{
+    int i;
+    p[5] = 0;
+    p[6] = 0;
+    p[7] = 0;
+    p[8] = 0;
+    p[0] = 0;
+    p[0xb4 / 4] = 0;
+    p[0xb8 / 4] = 0;
+    p[0xbc / 4] = 0;
+    p[0xc0 / 4] = 0;
+    p[0xc4 / 4] = 0;
+    p[0xc8 / 4] = -1;
+    p[0xec / 4] = 0;
+    p[0x110 / 4] = 0;
+    p[0x118 / 4] = 0;
+    ((short*)p)[0x100 / 2] = -1;
+    ((short*)p)[0x102 / 2] = -1;
+    p[0x104 / 4] = -1;
+    p[0x108 / 4] = 0;
+    p[0x11c / 4] = 0;
+    p[0x120 / 4] = 0;
+    p[0xf0 / 4] = 0;
+    for (i = 4; i >= 0; i--)
+    {
+        p[9 + i] = 0;
+    }
+}
+
+// Matched
+void sub_800A5BCC(int a)
+{
+    GameNode_1* n = dword_8008D410;
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            int m = 1 << a;
+            q[6] &= ~m;
+            q[8] &= ~m;
+        }
+        n = n->next_4;
+    }
+}
+
+int sub_800A5C40(int a)
+{
+    int r = sub_800A5E68();
+    GameNode_1* n = dword_8008D410;
+    int cnt = n->count_c;
+    int i;
+    int* o;
+    int* q;
+    int v;
+    int k;
+    GameObj5_1* e;
+    for (i = 0; i < cnt; i++)
+    {
+        e = &n->sub_10;
+        if ((e->flags_0 & 0x8001) == 1)
+        {
+            o = e->obj_14;
+            if (r == 0 && (o[0] & 8) && o[0xc8 / 4] == a)
+            {
+                o[0] |= 4;
+                r = 1;
+                break;
+            }
+        }
+        n = n->next_4;
+    }
+    n = dword_8008D400;
+    cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        e = &n->sub_10;
+        if ((e->flags_0 & 0x8001) == 1)
+        {
+            q = e->obj_14;
+            if (r)
+            {
+                q[0x78 / 4] = 0;
+            }
+            else if (q[0x78 / 4])
+            {
+                k = 1;
+                v = q[0x84 / 4];
+                if (v != -1 && (v & 0x40000000))
+                {
+                    k = (unsigned)((v & ~0x40000000) ^ a) < k;
+                }
+                if (k)
+                {
+                    q[0x7c / 4] = 0;
+                    if (q[0x88 / 4])
+                    {
+                        sub_800A59D0(q[0x88 / 4]);
+                        dword_800AEBD8 = dword_800AEBDC - 1;
+                        r = 1;
+                    }
+                }
+            }
+        }
+        n = n->next_4;
+    }
+    return r;
+}
+
+// Matched
+int* sub_800A5DDC(int a, int b, int* c)
+{
+    GameNode_1* n = dword_8008D400;
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            if (c != q)
+            {
+                if (b == 0)
+                {
+                    if (a == q[1])
+                    {
+                        return q;
+                    }
+                }
+                else
+                {
+                    if (a == q[4])
+                    {
+                        return q;
+                    }
+                }
+            }
+        }
+        n = n->next_4;
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A5E68(void)
+{
+    return dword_800AEBD8 >= 0;
+}
+
+int sub_800A5E80(int a)
+{
+    GameNode_1* n = dword_8008D400;
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            if (q[0x78 / 4] != 0 && (q[0x84 / 4] & 0xBFFFFFFF) == a)
+                return 1;
+        }
+        n = n->next_4;
+    }
+    n = dword_8008D410;
+    cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        GameObj5_1* o = &n->sub_10;
+        if ((o->flags_0 & 0x8001) == 1)
+        {
+            int* q = o->obj_14;
+            if (q[0xc8 / 4] == a)
+                return 1;
+        }
+        n = n->next_4;
+    }
+    return 0;
+}
+
+// Matched
+char* sub_800A5F6C(void)
+{
+    if (dword_800AEBE0)
+    {
+        return dword_800B1CB8;
+    }
+    return 0;
+}
+
+// Matched
+void sub_800A5F90(int a)
+{
+    dword_800B1D98 = a;
+}
+
+// Matched
+int sub_800A5F9C(int a)
+{
+    int old = dword_800AEBF4;
+    dword_800AEBF4 = a;
+    return old;
+}
+
+// Matched
+void sub_800A5FAC(void)
+{
+    if (dword_800AEBE4)
+    {
+        GameSave3_1* sd = (GameSave3_1*)&saveData_8008B570;
+        GameS3_1 v;
+        sub_800AD16C(4, sd->f2e8 + 4);
+        sub_800ADCEC(&v, sub_800A683C(-1));
+        sub_800AD0F8(0);
+        dword_80091C94 = 1;
+        dword_80091C54 = 0;
+        sd->f2f0 = 0;
+        dword_80091C9C = 1;
+        dword_80091C8C = 0;
+        sd->f2e4 = v.a;
+        sd->f2e8 = v.b;
+        sd->f2ec = v.c;
+        unknownFlags_8008D678 &= ~0x20000;
+    }
+}
+
+void sub_800A6060(GameTask_1* t, GameRun_1* q)
+{
+    while (1)
+    {
+        if (dword_800B0EC0 != 1)
+            break;
+        if (name_800BCDBC[*(int*)q->f8](q) == 0)
+            break;
+    }
+    if (q->f0 & 0x40)
+        sub_800BC2B4(q);
+    if (q->f0 & 0x10)
+    {
+        q->f0 &= ~0x10;
+        q->f8 = (int**)q->fC;
+    }
+    if (q->f0 & 1)
+    {
+        t->f0 &= ~1;
+        t->f0 |= 0x8000;
+        t->f0 &= ~4;
+        t->f0 |= 0x8000;
+    }
+}
+
+// Matched
+void sub_800A6168(GameTask_1* t, GameQ_1* q)
+{
+    if (dword_800AEBD8 == *(int*)((char*)q + 0x10))
+    {
+        sub_800B8A34(q);
+    }
+    t->f0 = (((t->f0 & ~1) | 0x8000) & ~4) | 0x8000;
+}
+
+void sub_800A61CC(int a, void* b, void* c)
+{
+    GameTim_1 t;
+    int i;
+    if (a == 0)
+    {
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCA4.x;
+        t.prect.y = name_8007DCA4.y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCA8.x;
+        t.crect.y = name_8007DCA8.y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    else
+    {
+        i = sub_800A7A1C(a - 1);
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
+        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
+        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    InitSprtFromTim_800298AC((int)b, (int)c, &t);
+}
+
+void sub_800A6308(int a, void* poly)
+{
+    GameTim_1 t;
+    int i;
+    if (a == 0)
+    {
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCA4.x;
+        t.prect.y = name_8007DCA4.y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCA8.x;
+        t.crect.y = name_8007DCA8.y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    else
+    {
+        i = sub_800A7A1C(a - 1);
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
+        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
+        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    InitPolyFT4_80029A10(poly, &t);
+}
+
+void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
+{
+    int icon;
+    switch (kind)
+    {
+    case 0:
+        break;
+    case 1:
+        sub_800A61CC(id, b, c);
+        break;
+    case 2:
+        icon = GetItemIcon_8001D2AC(id);
+        goto draw;
+    case 3:
+        icon = GetKeyItemIcon_8001D344(id);
+        goto draw;
+    case 4:
+    case 5:
+    case 6:
+        icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, kind - 4);
+    draw:
+        GetPublicTiySprt_80032470(icon, b, c);
+        break;
+    case 7:
+        printf(aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
+        exit(1);
+        break;
+    }
+}
+
+INCLUDE_OVERLAY_ASM(game, dword_800A06B8);
+
+// Matched
+int sub_800A6504(int a)
+{
+    return sub_800B76B8(dword_8008B520 + (a << 3)) >= 0;
+}
+
+// Matched
+void sub_800A6534(int a, int b)
+{
+    dword_8008B518[a] = b;
+}
+
+// Matched
+void sub_800A654C(int a, int b)
+{
+    dword_8008B534[a] = b;
+}
+
+// Matched
+void sub_800A6564(GameJ_1* p, int b)
+{
+    if (p->h0 >= 0)
+    {
+        sub_800A6534(p->h0, b);
+    }
+    if (p->h2 >= 0)
+    {
+        sub_800A654C(p->h2, b);
+    }
+}
+
+// Matched
+int sub_800A65BC(int a, int b)
+{
+    return (unsigned int)(WrapAngle_8003BA18((short)(a - b)) + 0x198) < 0x331;
+}
+
+// Matched
+int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
+{
+    unsigned int u = 0xfff;
+    IsWithinDistance_8003B740(b, a, &u);
+    if (u < (unsigned int)(r * r))
+    {
+        int d = GameFn_8003B9E0(b, a);
+        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+#if 0
+// Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
+int sub_800A66A4(int* p, int* x, unsigned short* q)
+{
+    if (p[0] >= 0 && sub_800A6504(p[0]))
+    {
+        int d = GameFn_8003B9E0(x, p + 1);
+        if ((unsigned int)((short)WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800A66A4);
+
+int sub_800A6738(unsigned int a)
+{
+    dword_800AEBE8 = 0x8000;
+    if (a <= 0xfffe)
+    {
+        GameTable_1* t;
+        dword_800AEBE8 = a;
+        t = sub_800A55B0(1);
+        if (a < t->count)
+        {
+            int off = a * 8;
+            off += 4;
+            return *(int*)((char*)t + off);
+        }
+        return 0;
+    }
+    return a;
+}
+
+// Matched
+int sub_800A67B4(unsigned int* p)
+{
+    int i;
+    for (i = 0; i < 5; i++)
+    {
+        if (p[6] & (1 << i))
+        {
+            if (i == 0)
+            {
+                sub_800A8EA4();
+            }
+            else
+            {
+                sub_800A7AD8(i - 1);
+            }
+        }
+    }
+    return 0;
+}
+
+// Matched
+void sub_800A6830(int a)
+{
+    dword_800AEBF0 = a;
+}
+
+// Matched
+int sub_800A683C(int x)
+{
+    int v = sub_800AD154(5) << 8;
+    v += sub_800AD154(6);
+    if (v == 0)
+    {
+        v = 0x66;
+        sub_800AD16C(5, 0);
+        sub_800AD16C(6, v);
+    }
+    if (x >= 0)
+    {
+        int hi = x >> 8;
+        sub_800AD16C(5, hi);
+        sub_800AD16C(6, x - (hi << 8));
+    }
+    return v;
+}
+
+void sub_800A68CC(GameTask_1* t, int* q)
+{
+    int i;
+    int* d = dword_800B1DC8;
+    sub_800A72C8((GameMode2_1*)d);
+    q[0] = d[1];
+    q[1] = q[0];
+    q[2] = q[0];
+    for (i = 11; i >= 0; i--)
+    {
+        q[i + 3] = 0;
+    }
+    q[0xf] = CreateEventList_800435B4(dword_800B0DA4);
+    eventDispatchHalt_8008B540 = 0;
+    dword_800B0698 = 0;
+    t->next_8 = sub_800A6968;
+}
+
+void sub_800A6968(GameTask_1* t, GameQ_1* q)
+{
+    GameLst_1* l0 = dword_800B09FC;
+    int i;
+    if (l0->p0 != 0)
+    {
+        i = 0;
+        do
+        {
+            sub_800A7450((GameNode_1*)*l0[i].p0);
+            if (eventDispatchHalt_8008B540)
+            {
+                break;
+            }
+            i++;
+        } while (l0[i].p0 != 0);
+    }
+    if (eventDispatchHalt_8008B540)
+    {
+        goto end;
+    }
+    ApplyAudioOutputFormat_80030988();
+    sub_800A73A8();
+    sub_800A6C00(t, q);
+    sub_800A6A48(t, q);
+    t->next_8 = sub_800A6B00;
+end:
+    eventDispatchHalt_8008B540 = 0;
+    dword_800B0698 = 0;
+}
+
+void sub_800A6A48(GameTask_1* t, GameStage_1* q)
+{
+    GameLst_1* l0;
+    GameLst_1* l;
+    if (q->done_c[q->idx_0] == 0)
+    {
+        l0 = dword_800B0D74[q->idx_0];
+        if (l0->p0 != 0)
+        {
+            l = l0;
+            do
+            {
+                if (l->f4 & 0x1000)
+                {
+                    sub_800A7450((GameNode_1*)*l->p0);
+                }
+                l++;
+            } while (l->p0 != 0);
+        }
+        q->done_c[q->idx_0] = 1;
+    }
+}
+
+void sub_800A6B00(GameTask_1* t, GameQ_1* q)
+{
+    GameLst_1* l0 = dword_800B0D74[*(int*)q];
+    int i;
+    if (l0->p0 != 0)
+    {
+        i = 0;
+        do
+        {
+            sub_800A7450((GameNode_1*)*l0[i].p0);
+            if (eventDispatchHalt_8008B540)
+            {
+                break;
+            }
+            i++;
+        } while (l0[i].p0 != 0);
+    }
+    if (unknownFlags_8008D678 & 0x8000000)
+    {
+        t->next_8 = sub_800A6CCC;
+        goto end;
+    }
+    if (dword_800B0698 != 0)
+    {
+        sub_800A6C00(t, q);
+        sub_800A6A48(t, q);
+    }
+end:
+    eventDispatchHalt_8008B540 = 0;
+    dword_800B0698 = 0;
+}
+
+void sub_800A6C00(GameTask_1* t, int* q)
+{
+    GameLst_1* l0 = dword_800B0D74[q[0]];
+    GameLst_1* l;
+    int one = 1;
+    if (l0->p0 != 0)
+    {
+        l = l0;
+        do
+        {
+            if (l->f4 & (one << q[2]))
+                sub_800A74F0((GameNode_1*)*l->p0);
+            l++;
+        } while (l->p0 != 0);
+    }
+    if (q[0] == 11)
+        q[0] = q[1];
+    q[1] = q[0];
+    q[0] = q[2];
+}
+
+// Matched
+void sub_800A6CCC(GameTask_1* t, GameQ_1* q)
+{
+    RunEventListFreeCallbacks_800438F8(q->f3c);
+    FreeEventList_80043A5C(q->f3c);
+    bStopDrawingMovie_8008D45C = 1;
+    t->f0 = (t->f0 & ~1) | 0x8000;
+}
+
+// Matched
+void sub_800A6D30(int a)
+{
+    int* w = (int*)dword_8008D46C[9];
+    dword_800B0698 = 1;
+    w[2] = a;
+}
+
+int sub_800A6D50(int a)
+{
+    int* p = (int*)dword_8008D46C[9];
+    int r = 0;
+    switch ((unsigned)a)
+    {
+    case 0:
+        r = p[0];
+        break;
+    case 1:
+        r = p[1];
+        break;
+    case 2:
+        r = p[2];
+        break;
+    }
+    return r;
+}
+
+void sub_800A6DAC(GameTask_1* t, GameD_1* q)
+{
+    GameD_1* p;
+    int ov;
+    GameObj5_1* e;
+    q->f0 = -1;
+    unknownFlags_8008D678 &= ~8;
+    p = q;
+    q->f8 = 0;
+    q->fC = 0;
+    q->f10 = 0;
+    q->f14 = 0;
+    q->f1C = 0;
+    if (dword_80091C9C == 1)
+        return;
+    if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
+        return;
+    if (saveData_8008B570.mapId_2E4[1].field_2 != saveData_8008B570.mapId_2E4[1].field_0)
+        return;
+    if (saveData_8008B570.mapId_2E4[2].field_2 != saveData_8008B570.mapId_2E4[2].field_0)
+        return;
+    if (word_80091C40[1] != word_80091C40[0])
+        return;
+    if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+        return;
+    if (word_80091CB8[6] != word_80091CB8[7])
+        return;
+    if (sub_800272D0())
+        return;
+    if (sub_800A5E68() == 0 && dword_800B0EC0 == 1 && gCtx_800B1260.f0 == 0 &&
+        !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
+    {
+        q->f8 = dword_800B0EC0;
+        q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D498);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        q->f0 = 4;
+    }
+    else if (sub_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && dword_800B0EC0 != 1)
+    {
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_800B1DAC);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        p->f0 = 1;
+    }
+    else if (dword_800B06B0[0])
+    {
+        if (dword_800B06B0[1] == 0)
+        {
+            ov = 0xe;
+        }
+        else if (dword_800B06B0[1] == 1)
+        {
+            ov = 0xe;
+        }
+        else if (dword_800B06B0[1] == 2)
+        {
+            ov = 0xc;
+        }
+        else
+        {
+            ov = 0xd;
+        }
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
+        p->f0 = 5;
+        p->f18 = (int)dword_800B06B0;
+        p->f1C = (void (*)(int))sub_800A7204;
+    }
+    else if (sub_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && dword_800B06BC)
+    {
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D480);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        p->f0 = 6;
+        p->f18 = (int)&dword_800B06BC;
+        p->f1C = (void (*)(int))sub_800A7280;
+    }
+    if (p->f0 >= 0)
+    {
+        sub_800A70F8(t, q);
+    }
+}
+
+void sub_800A70F8(GameTask_1* t, GameD_1* q)
+{
+    int c = 0;
+    GameD_1* r = q;
+    if (q->f8)
+        c = (unsigned)GetFileRequestStatus_8003BE30(q->f4) > 0;
+    if (c == 0)
+    {
+        if (q->f1C)
+            q->f1C(q->f18);
+        sub_800A6D30(q->f0);
+        t->next_8 = sub_800A6DAC;
+        if (q->fC)
+            sub_8001C224();
+        else
+            EndFade_8001C290();
+        eventDispatchHalt_8008B540 = r->f10;
+    }
+    else
+    {
+        if (q->f14 == 0)
+        {
+            BeginFade_8001C260();
+            q->f14 = 1;
+            sub_800A6D30(0xb);
+            t->next_8 = sub_800A70F8;
+        }
+        eventDispatchHalt_8008B540 = 1;
+    }
+}
+
+// Matched
+void sub_800A7204(GameSub_1* p)
+{
+    if (p->f4 == 0)
+    {
+        sub_800BAE2C(0, *(short*)&p->f8);
+        p->f0 = 0;
+    }
+    else if (p->f4 == 1)
+    {
+        sub_800BAE2C(1, *(short*)&p->f8);
+        p->f0 = 0;
+    }
+    else
+    {
+        if (p->f4 == 2)
+        {
+            sub_800B66C4(*(short*)&p->f8);
+        }
+        p->f0 = 0;
+    }
+}
+
+// Matched
+void sub_800A7280(GameSub_1* p)
+{
+    sub_800B78B8(p->f8);
+    if (p->fc)
+    {
+        sub_800B78D0();
+    }
+    p->f0 = 0;
+}
+
+GameMode2_1* sub_800A72C8(GameMode2_1* out)
+{
+    GameMode2_1 r;
+    GameS3_1 v;
+    if (unknownFlags_8008D678 & 0x40000000)
+    {
+        r.a = 0;
+        r.b = 1;
+        sub_800ADCEC(&v, 0x159);
+        saveData_8008B570.mapId_2E4[0].field_2 = -1;
+        saveData_8008B570.mapId_2E4[1].field_2 = -1;
+        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        dword_80091C94 = 1;
+        saveData_8008B570.mapId_2E4[0].field_0 = v.a;
+        saveData_8008B570.mapId_2E4[1].field_0 = v.b;
+        saveData_8008B570.mapId_2E4[2].field_0 = v.c;
+    }
+    else if ((unsigned short)word_8008B558[1] == 1)
+    {
+        r.a = 0;
+        r.b = 1;
+    }
+    else if ((unsigned short)word_8008B558[1] == 4)
+    {
+        r.a = 1;
+        r.b = 1;
+    }
+    else
+    {
+        r.a = 1;
+        r.b = 0;
+    }
+    *out = r;
+    return out;
+}
+
+void sub_800A73A8(void)
+{
+    GameRect_1* r = &stru_8008D420;
+    dword_8008D40C = 0x1000;
+    dword_8008D404 = 0;
+    r->x = 0;
+    r->w = 0x140;
+    r->y = 0;
+    r->h = 0xf0;
+    unknownFlags_8008D678 &= ~0x8000000;
+    sub_80026FAC();
+    GameFn_800A094C();
+    ResetSoundTask_8002FEB8();
+    sub_8001A38C();
+    ResetCameraToLevant_800376A8();
+    sub_800A8140();
+    sub_800A94CC();
+    dword_80091C94 = dword_800B1DC8[0];
+}
+
+// Matched
+void sub_800A7450(GameNode_1* n)
+{
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        if (eventDispatchHalt_8008B540)
+        {
+            break;
+        }
+        if ((n->sub_10.flags_0 & 0x8001) == 1)
+        {
+            GameObj5_1* o = &n->sub_10;
+            o->fn_8(o, o->obj_14);
+        }
+        n = n->next_4;
+    }
+}
+
+// Matched
+void sub_800A74F0(GameNode_1* n)
+{
+    int i;
+    int cnt = n->count_c;
+    for (i = 0; i < cnt; i++)
+    {
+        if ((n->sub_10.flags_0 & 0x8004) == 4)
+        {
+            GameObj5_1* o = &n->sub_10;
+            o->fn_c(o, o->obj_14);
+        }
+        n = n->next_4;
+    }
+}
+
+int sub_800A7574(void)
+{
+    DrawIntroMovie_8001AF64(name_800B0EA4);
+    ListFreeAll_8003FEC8(name_80096090);
+    SsUtAllKeyOff(0);
+    if (unknownFlags_8008D678 & 0x40000000)
+    {
+        unknownFlags_8008D678 &= 0xBFFFFFFF;
+        return 8;
+    }
+    if (unknownFlags_8008D678 & 0x10000000)
+        return 7;
+    return 0xd;
+}
+
+// Matched
+void sub_800A75F8(GameTask_1* t, void** q)
+{
+    *q = LoadOverlayIfChanged_80020D1C(1, 0xa);
+    t->next_8 = sub_800A7654;
+    unknownFlags_8008D678 |= 0x4000000;
+}
+
+// Matched
+void sub_800A7654(GameTask_1* t, int* q)
+{
+    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    {
+        t->next_8 = sub_800B6BFC;
+    }
+}
+
+// Matched
+void sub_800A7690(GameTask_1* t, void** q)
+{
+    *q = LoadOverlayIfChanged_80020D1C(1, 0x14);
+    t->next_8 = sub_800A76D8;
+}
+
+// Matched
+void sub_800A76D8(GameTask_1* t, int* q)
+{
+    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    {
+        t->next_8 = sub_800B66DC;
+    }
+}
+
+// Matched
+void sub_800A7714(int a)
+{
+    dword_800B0EC0 = a;
+}
+
+// Matched
+void sub_800A7720(GameTask_1* t)
+{
+    int n = dword_800B0EC0;
+    if (n != 1)
+    {
+        void (*f)() = dword_800B0EB8[n].fn;
+        t->next_8 = f;
+        f(t);
+    }
+    else
+    {
+        t->f0 = (t->f0 & ~1) | 0x8000;
+    }
+}
+
+// Matched
+void sub_800A7784(void)
+{
+    dword_800B0EC4.count = 0;
+}
+
+// Matched
+int sub_800A7790(void)
+{
+    return dword_800B0EC4.count;
+}
+
+int sub_800A77A0(int a)
+{
+    GameList_1* l = &dword_800B0EC4;
+    int i = l->count;
+    l->a[i] = a;
+    l->b[l->count] = 0;
+    l->c[l->count] = 0;
+    l->count++;
+    return i;
+}
+
+// Matched
+int sub_800A77F4(int a)
+{
+    return dword_800B0EC4.a[a];
+}
+
+// Matched
+int sub_800A7810(int a)
+{
+    if (a < sub_800A7790())
+    {
+        GameCb_1* p = (GameCb_1*)(sub_800A77F4(a) + 0x14);
+        return p->cb_c(p);
+    }
+    return 0;
+}
+
+// Matched
+void sub_800A785C(int a)
+{
+    if (a < sub_800A7790())
+    {
+        GameCb_1* p = (GameCb_1*)(sub_800A77F4(a) + 0x14);
+        p->cb_10(p);
+    }
+}
+
+// Matched
+int sub_800A78A8(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return ***(int***)(sub_800A77F4(a) + 0x10);
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A78F4(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(short*)(**(int**)(sub_800A77F4(a) + 0x10) + 0x2a);
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A7940(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(int*)(sub_800A77F4(a) + 0x18) + 0x38;
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A7984(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(int*)(sub_800A77F4(a) + 0x18) + 0x5c;
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A79C8(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return ((*(unsigned int*)(*(int*)(sub_800A77F4(a) + 0x18) + 4) >> 13) ^ 1) & 1;
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A7A1C(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(int*)(*(int*)(sub_800A77F4(a) + 0x18) + 0x15c);
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A7A60(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(int*)(sub_800A77F4(a) + 0x18);
+    }
+    return 0;
+}
+
+// Matched
+int sub_800A7A9C(int a)
+{
+    if (a < sub_800A7790())
+    {
+        return *(int*)(sub_800A77F4(a) + 0x1c);
+    }
+    return 0;
+}
+
+// Matched
+void sub_800A7AD8(int a)
+{
+    sub_8001D9B0((struct_obj_A*)sub_800A7A60(a));
+}
+
+void sub_800A7B00(int a)
+{
+    int i;
+    int end;
+    struct_obj_A* o;
+    if (a < 0)
+    {
+        i = 0;
+        end = sub_800A7790();
+    }
+    else
+    {
+        i = a;
+        end = a + 1;
+    }
+    for (; i < end; i++)
+    {
+        o = *(struct_obj_A**)(sub_800A77F4(i) + 0x18);
+        if (dword_800B0EC4.b[i] == 0)
+        {
+            if (!(*(unsigned int*)((char*)o + 4) & 0x2000))
+            {
+                sub_8001D6EC(o, 1);
+                sub_8001D730(o, 0);
+                dword_800B0EC4.c[i] = 1;
+            }
+            if (!(**(unsigned int**)o & 0x8000))
+            {
+                SetActorActive_8001D658(o, 0);
+                dword_800B0EC4.b[i] = 1;
+            }
+        }
+    }
+}
+
+void sub_800A7BF0(int a)
+{
+    int i, end;
+    G2L* q;
+    struct_obj_A* o;
+    if (a < 0)
+    {
+        i = 0;
+        end = sub_800A7790();
+    }
+    else
+    {
+        i = a;
+        end = a + 1;
+    }
+    for (; i < end; i++)
+    {
+        q = (G2L*)&name_800B0EC4[i];
+        o = name_800A77F4(i)->f18;
+        if (q->a)
+        {
+            if (q->b)
+            {
+                sub_8001D6EC(o, 0);
+                sub_8001D730(o, 1);
+                q->b = 0;
+            }
+            SetActorActive_8001D658((int**)o, 1);
+            q->a = 0;
+        }
+    }
+}
+
+int sub_800A7CB8(int a)
+{
+    if (a < sub_800A7790())
+        return sub_8001E1C8(name_800A77F4(a)->f18);
+    return 0;
+}
+
+int sub_800A7CFC(int a)
+{
+    if (a < sub_800A7790())
+        return sub_8001E1DC(name_800A77F4(a)->f18);
+    return 0;
+}
+
+#if 0
+// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
+typedef struct GameCmdA_1
+{
+    int f0;
+    int kind_4;
+    int f8;
+    int fC;
+    int f10;
+    unsigned int f14;
+    int f18;
+    int f1C;
+    int f20;
+    int f24;
+} GameCmdA_1;
+typedef struct GameAnimReq_1
+{
+    int flags;
+    int f4;
+    int f8;
+    short hC;
+    short hE;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+    short h20;
+    short h22;
+    short h24;
+    short h26;
+    short h28;
+    short h2A;
+    int f2C;
+    int f30;
+    char pad_34[0x2c];
+} GameAnimReq_1;
+void sub_800A7D40(int a, GameCmdA_1* c)
+{
+    GameAnimReq_1 s;
+    short** hdr;
+    char* ent;
+    struct_obj_A* obj;
+    int k;
+    int t;
+    int u;
+    int w;
+    if (a < sub_800A7790())
+    {
+        hdr = *(short***)(sub_800A77F4(a) + 0x10);
+        ent = (char*)sub_800A77F4(a) + 0x14;
+        obj = *(struct_obj_A**)(ent + 4);
+        s.flags = 0;
+        s.f4 = 0;
+        s.f8 = 0;
+        s.hC = 0;
+        s.hE = -1;
+        s.f10 = -1;
+        s.f18 = 0;
+        s.h20 = 0;
+        s.h22 = 0;
+        s.f1C = 1;
+        s.h24 = -1;
+        s.h26 = -1;
+        s.h28 = -1;
+        s.h2A = -1;
+        s.f2C = 0;
+        s.f30 = 0;
+        s.f1C = c->f8;
+        k = 0;
+        switch (c->kind_4)
+        {
+        case 0:
+            if (c->f14 != -1)
+                s.h24 = c->f14;
+            else
+                s.h24 = (*hdr)[0x20 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 1:
+            if (c->f14 != -1)
+                s.h24 = c->f14;
+            else
+                s.h24 = (*hdr)[0x22 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 2:
+            if (c->f14 != -1)
+                s.h26 = c->f14;
+            else
+                s.h26 = (*hdr)[0x24 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 3:
+        case 4:
+            s.f4 = (*(int**)(ent + 8))[c->fC];
+            k = 1;
+            break;
+        case 5:
+            s.f4 = c->f24;
+            k = 1;
+            break;
+        case 6:
+            sub_8001D730(obj, c->fC);
+            k = 0;
+            break;
+        case 7:
+            sub_8001D68C(obj, c->fC);
+            k = 0;
+            break;
+        case 8:
+            sub_8001D6BC(obj, c->fC);
+            k = 0;
+            break;
+        case 9:
+        case 10:
+            s.h28 = c->fC;
+            s.h2A = (c->kind_4 == 10) ? c->f10 : -1;
+            s.hC = (c->f14 & 1) ? -1 : -2;
+            s.f2C = (c->f14 >> 3) & 1;
+            k = 1;
+            s.flags = (c->f14 >> 2) & 1;
+            if (c->f14 & 0x10)
+            {
+                s.flags = s.flags | 2;
+            }
+            break;
+        case 11:
+            s.h28 = c->fC;
+            if (c->f10 >= 0)
+                s.h2A = c->f10;
+            else
+                s.h2A = *(short*)((char*)obj + 0xc2);
+            s.hC = (c->f14 & 1) ? -1 : -2;
+            s.f2C = (c->f14 >> 3) & 1;
+            s.flags = (c->f14 >> 2) & 1;
+            t = s.flags;
+            if (c->f14 & 0x10)
+                t |= 2;
+            s.flags = t;
+            u = t;
+            if (c->f14 & 0x20)
+                u |= 4;
+            s.flags = u;
+            s.f30 = c->f24;
+            k = 1;
+            break;
+        case 13:
+            break;
+        }
+        if (k)
+        {
+            sub_8001E254(obj, &s);
+        }
+        else if (c->f8)
+        {
+            sub_800A5BCC(a + 3);
+        }
+    }
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
+
+INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
+
+void sub_800A80C4(int a)
+{
+    if (a < sub_800A7790())
+        name_8001E28C(name_800A77F4(a)->f18);
+}
+
+void sub_800A8108()
+{
+    sub_800A6D30(sub_800A6D50(1));
+    eventDispatchHalt_8008B540 = 1;
+}
+
+void sub_800A8138()
+{
+}
+
+void sub_800A8140()
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    FirFilterInit_8001450C((int*)((char*)p + 0x5C), (char*)p + 0x4C, (int)&dword_800795C0, 4);
+    p->f0 = 0;
+    p->f9C = 0;
+    p->fC6 = 0;
+}
+
+INCLUDE_OVERLAY_ASM(game, sub_800A818C);
+
+void sub_800A88A0(int a, int b)
+{
+    sub_800A88E0(a, b, sub_800A8930());
+}
+
+int sub_800A88E0(G2P* p, int a, int b)
+{
+    int x = b ^ a;
+    if (x & 1)
+        p->s0 = 0x130 - p->u4;
+    else
+        p->s0 = 0x10;
+    if (x & 2)
+        p->s2 = 0xE0 - p->u6;
+    else
+        p->s2 = 0x10;
+    return x;
+}
+
+int sub_800A8930()
+{
+    int r = word_8008D668[0] > 0xA0;
+    if (word_8008D668[1] >= 0x79)
+        r += 2;
+    return r;
+}
+
+void sub_800A895C()
+{
+    dword_8008B4CC->f24->f0 |= 0x41;
+}
+
+void sub_800A8984(int a)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->f0 &= ~1;
+    p->f0 &= ~0x10;
+    sub_800AB444(a, p);
+}
+
+void sub_800A89C8()
+{
+    dword_8008B4CC->f24->f0 &= ~0x40;
+}
+
+void sub_800A89F0()
+{
+    sub_800AB304();
+}
+
+void sub_800A8A10()
+{
+    sub_800AB354();
+}
+
+G2Pair_1 sub_800A8A30(int* c, int mode)
+{
+    G2Pair_1 r;
+    unsigned int u;
+    G2InnerC* p = (G2InnerC*)dword_8008B4CC->f24;
+    if (name_800B1084[c[0]].a == 0x10)
+    {
+        p->fC6 = 5;
+        r.a = 0;
+        r.b = 0;
+        return r;
+    }
+    p->fC6 = name_800B1084[c[0]].a;
+    p->fCC = name_800B1084[c[0]].b;
+    if (p->fCC == 8 && (int)((settingsFlags_8008B58C >> 21) & 1) == 1)
+    {
+        p->fCC = 7;
+    }
+    sub_800AC340(c[0] == 0x1a);
+    u = (p->f0 | 2) & ~4;
+    p->f38 = c[1];
+    p->f34 = c[3];
+    p->f0 = u;
+    switch (mode)
+    {
+    case 0:
+        p->f0 = u | 8;
+        break;
+    case 1:
+        p->f0 = u & ~8;
+        break;
+    }
+    if (c[0] == 0x12)
+    {
+        sub_800AB264();
+    }
+    else
+    {
+        sub_800AB28C();
+    }
+    if (c[0] == 0x10)
+    {
+        sub_800AB2B4();
+    }
+    else
+    {
+        sub_800AB2DC();
+    }
+    r.a = sub_800AB750(p->fCC);
+    r.b = sub_800AB4D8(p->fCC);
+    return r;
+}
+
+int sub_800A8BE4()
+{
+    return dword_8008B4CC->f24->fC6 == 4;
+}
+
+void sub_800A8C0C()
+{
+    dword_8008B4CC->f24->f0 |= 4;
+}
+
+char* sub_800A8C34()
+{
+    return &levantStatus_8008BD38;
+}
+
+char* sub_800A8C40()
+{
+    return (char*)&levantPos_8008BD18;
+}
+
+void sub_800A8C4C(int a)
+{
+    G2Stat* s = (G2Stat*)&saveData_8008B570;
+    s->cur -= a;
+    if ((short)s->cur < 0)
+    {
+        s->cur = 0;
+        return;
+    }
+    if ((short)s->max < (short)s->cur)
+        s->cur = s->max;
+}
+
+void sub_800A8CA0(int a)
+{
+    G2Stat* s = (G2Stat*)&saveData_8008B570;
+    s->cur2 -= a;
+    if ((short)s->cur2 < 0)
+    {
+        s->cur2 = 0;
+        return;
+    }
+    if ((short)s->max2 < (short)s->cur2)
+        s->cur2 = s->max2;
+}
+
+void sub_800A8CF4()
+{
+    dword_8008B4CC->f24->fC6 = 0;
+}
+
+void sub_800A8D0C(int* a)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->fC6 = 7;
+    p->fA4 = a[0];
+    p->fA8 = a[1];
+    p->fAC = a[2];
+}
+
+void sub_800A8D48(int* a)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->fC6 = 8;
+    p->fA4 = a[0];
+    p->fA8 = a[1];
+    p->fAC = a[2];
+}
+
+int sub_800A8D84()
+{
+    return dword_8008B4CC->f24->fC6 == 1;
+}
+
+void sub_800A8DAC()
+{
+    sub_800AB85C();
+}
+
+void sub_800A8DCC()
+{
+    sub_800AB884();
+}
+
+void sub_800A8DEC()
+{
+    sub_800AB8AC();
+}
+
+void sub_800A8E0C()
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->fC6 = 9;
+    p->f0 |= 0x20;
+}
+
+void sub_800A8E38()
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->f0 &= ~0x20;
+    sub_800A913C();
+    sub_800ABAD4();
+}
+
+int sub_800A8E7C()
+{
+    return dword_8008B4CC->f24->fC6 == 9;
+}
+
+void sub_800A8EA4()
+{
+    sub_800AC318();
+}
+
+void sub_800A8EC4(G2Cmd_1* c)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    int b;
+    switch (c->kind_4)
+    {
+    case 0:
+    case 1:
+    case 2:
+        p->fA4 = c->f18;
+        p->fA8 = c->f1C;
+        p->fAC = c->f20;
+        break;
+    case 9:
+    case 10:
+        if (c->f14 & 1)
+        {
+            sub_800ABB98(0);
+        }
+        else
+        {
+            sub_800ABB98(1);
+        }
+        b = -1;
+        if (c->kind_4 == 10)
+        {
+            b = c->f10;
+        }
+        if (c->f14 & 4)
+        {
+            sub_800AB9A8(c->fC, b, 0);
+        }
+        else
+        {
+            sub_800AB9A8(c->fC, b, 1);
+        }
+        goto set;
+    case 11:
+        sub_800ABC78(1);
+        sub_800ABAA4(c->f24);
+        sub_800ABB98(1);
+        sub_800AB9A8(c->fC, -1, 1);
+    set:
+        p->fC6 = 9;
+        p->fB0 = c->kind_4;
+        break;
+    case 13:
+        break;
+    }
+}
+
+int sub_800A8FE0()
+{
+    return dword_8008B4CC->f24->fC6 == 9;
+}
+
+void sub_800A9008(G2Cmd_1* c)
+{
+    G2Inner* p = dword_8008B4CC->f24;
+    p->f0 &= ~0x80;
+    switch (c->kind_4)
+    {
+    case 0:
+        p->fC6 = 10;
+        break;
+    case 1:
+        p->fC6 = 11;
+        break;
+    case 2:
+        p->fC6 = 12;
+        break;
+    case 4:
+        p->fC6 = 14;
+        sub_800AB910();
+        break;
+    case 6:
+        sub_800ABBD8(c->fC);
+        break;
+    case 7:
+        sub_800ABC34(c->fC);
+        break;
+    case 8:
+        sub_800ABC78(c->fC);
+        break;
+    case 9:
+    case 10:
+    case 11:
+        if (c->f14 & 8)
+        {
+            p->fC6 = 9;
+            sub_800A5BCC(0);
+        }
+        else
+        {
+            p->fC6 = 13;
+        }
+        sub_800AB1A4(1);
+        break;
+    case 13:
+        break;
+    }
+}
+
+INCLUDE_OVERLAY_ASM(game, dword_800A07A8);
+
+void sub_800A911C(int a)
+{
+    sub_800A5C40(a);
+}
+
+void sub_800A913C()
+{
+    dword_8008B4CC->f24->f0 |= 0x80;
+}
+
+int sub_800A9164(int* out)
+{
+    int best = 0x7FFFFFFF;
+    int n = sub_800A7790();
+    int i;
+    int* v;
+    short y;
+    for (i = 0; i < n; i++)
+    {
+        if (sub_800A79C8(i))
+        {
+            v = name_800A7940(i);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
+            if (best <= 0x9C3F)
+            {
+                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                *out = y;
+                if ((unsigned)(y + 0x3FF) < 0x7FF)
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int sub_800A926C()
+{
+    int best = 0x7FFFFFFF;
+    int n = sub_800A7790();
+    int i;
+    int* v;
+    short y;
+    for (i = 0; i < n; i++)
+    {
+        if (sub_800A79C8(i))
+        {
+            v = name_800A7940(i);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
+            if (best <= 0x9C3F)
+            {
+                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                if (!((unsigned)(y + 0x400) < 0x801))
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+void sub_800A9364()
+{
+    sub_800AB910();
+}
+
+void sub_800A9384()
+{
+    sub_800ABBD8();
+}
+
+void sub_800A93A4(int* a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    a[0] = (int)sub_80024E64(p->f40);
+    a[1] = (int)&levantPos_8008BD18;
+    a[2] = (int)p + 0x590;
+    a[3] = (int)p + 0x90;
+    a[11] = (int)&dword_800B0FB0;
+    a[12] = 0;
+}
+
+void sub_800A9414(void* pv, int b, int c)
+{
+    G2Act* p = (G2Act*)pv;
+    sub_80025C38(p->f40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+    FirFilterInit_8001450C((int*)((char*)p + 0x780), (char*)p + 0x770, (int)&dword_800795C0, 4);
+    sub_800AB010(p, b, c, 0);
+    p->fC = 0;
+    if (sub_800AAFD8(p->s1e) != 1)
+        p->f0 &= ~0x10;
+    sub_800ABAD4();
+    sub_800AA140(p);
+}
+
+void sub_800A94CC(void)
+{
+    G2Init_1* p = (G2Init_1*)dword_8008B4A4->f24;
+    p->s1c = 3;
+    p->s1e = 3;
+    p->fC = 0;
+    p->f8 = 0;
+    p->f10 = 0;
+    p->s26 = 0;
+    p->f0 = 0;
+    p->f30 = 0;
+    p->s1a = 0;
+    p->s18 = 0x1000;
+    p->f4 = 0;
+    sub_800AB8DC();
+    sub_800A9414(p, 0, 3);
+    sub_800AB150((G2Obj*)p);
+    sub_800B80C8(p);
+    p->f3C = dword_8008BD38;
+    sub_800ABECC(dword_8008BD38);
+}
+
+void sub_800A955C()
+{
+}
+
+void sub_800A9564(int a, G2ActB* p)
+{
+    int i;
+    p->f778 = 0;
+    p->v48[0] = dword_8008BD18.x;
+    p->v48[1] = dword_8008BD18.y;
+    p->v48[2] = dword_8008BD18.z;
+    if (p->s26 >= 0x1000)
+    {
+        p->f0 &= ~0x10;
+    }
+    else
+    {
+        p->s26 += 0x400;
+    }
+    p->u1a += p->u18;
+    if (p->u1a >= 0x1000)
+    {
+        p->u1a -= 0x1000;
+        p->f10++;
+    }
+    if (p->f0 & 0x800)
+    {
+        if (p->f10 == (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)))
+        {
+            p->f0 |= 0x8000;
+            p->f10 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+            sub_800AA140(p);
+        }
+    }
+    sub_800AAF58(p);
+    sub_800A9A9C(p);
+    sub_800A99DC(p);
+    DrawLevantModel_800A9708(p);
+    sub_800AA220(p);
+    for (i = 0; i < 40; i++)
+    {
+        p->mats_90[i] = dword_80098188[i];
+    }
+}
+
+void DrawLevantModel_800A9708(G2ActD* p)
+{
+    G2Skel_1 sk;
+    int v;
+    char* anim;
+    int flags;
+    int st;
+    char* sd;
+    v = sub_80019CC4((char*)&saveData_8008B570 + 0x7a8);
+    sd = (char*)&saveData_8008B570;
+    if (p->f3c != *(int*)(sd + 0x7c8))
+    {
+        p->f3c = *(int*)(sd + 0x7c8);
+        sub_800ABECC(*(int*)(sd + 0x7c8));
+    }
+    anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    if (*(int*)(sd + 0x7c8) & 0x3fd)
+    {
+        flags = (word_8007DC8A - word_8007DC82) << 8;
+    }
+    else
+    {
+        flags = 0;
+    }
+    if (p->f0 & 6)
+    {
+        int t = flags | 0xb0;
+        flags = t | (p->f30 << 16);
+    }
+    if (p->f0 & 2)
+    {
+        p->f30 += 0x80;
+        if (p->f30 >= 0x1000)
+        {
+            p->f30 = 0x1000;
+        }
+    }
+    else if (p->f0 & 4)
+    {
+        p->f30 -= 0x80;
+        if (p->f30 < 0)
+        {
+            p->f30 = 0;
+            sub_800AB150(p);
+        }
+    }
+    if (p->f30 == 0x1000)
+    {
+        return;
+    }
+    if (p->f0 & 0x20000)
+    {
+        return;
+    }
+    sk.f0 = *(int*)(p->f40 + 0x50);
+    sk.f4 = &levantPos_8008BD18;
+    sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
+    sk.bones = &dword_800B0EF8;
+    sk.base = &dword_800B0FB0;
+    sk.f24 = 0;
+    sk.pose = anim;
+    sk.frame = p->f10 % *(unsigned int*)anim;
+    sk.flags = flags;
+    sk.pos = (char*)p + 0x590;
+    sk.ot = pOT_8008D690;
+    if (sub_800AC518(p->s1e) == 0)
+    {
+        p->f0 &= ~0x10;
+    }
+    if (!(p->f0 & 0x10))
+    {
+        sub_80046A58(&sk, stru_8008D534 + v * 24, 0);
+    }
+    else
+    {
+        anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1e) * 28;
+        sub_80047E28(&sk, &dword_800B0FB0, anim, p->f14 % *(unsigned int*)anim, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
+    }
+    sub_800459E4(&dword_800B0EF8, p->f40 + 0x5c, pOT_8008D690, sk.flags);
+}
+
+void sub_800A99DC(G2Q* p)
+{
+    if (p->f4 & 0x10000000)
+        p->f778 = -0x40;
+    if (p->f4 & 0x20000000)
+        p->f778 = 0x40;
+    if (p->f4 & 0x40000000)
+        p->f778 /= 2;
+    p->f4 &= ~0x30000000;
+    FirFilterStep_80014588((char*)p + 0x780, (char*)p + 0x770, frameCount_8008D3FC);
+    ((G2Sv5*)&saveData_8008B570)->u7B6 += p->u77C;
+}
+
+INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
+
+void sub_800AA140(G2Act* p)
+{
+    char* t = (char*)*(int*)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
+}
+
+int sub_800AA1C0(int* p)
+{
+    return p[1] & 0xFFFFFFF;
+}
+
+int sub_800AA1D4(unsigned char* p)
+{
+    return p[1] & 1;
+}
+
+void sub_800AA1E0(G2Act* a)
+{
+    a->s20 = a->u22;
+    sub_800AB010(a, 0x17, 3, 0);
+    a->fC = 3;
+}
+
+void sub_800AA220(G2Act* a)
+{
+    sub_8001C440(a->f40, sub_800AC4A8(a->s1c), a->f10);
+}
+
+void sub_800AA25C(G2Act* p)
+{
+    if (sub_800AA1D4(p) == 1)
+    {
+        sub_800AB010(p, 7, 3, 0);
+        p->fC = 1;
+        return;
+    }
+    if (p->f0 & 0x4000)
+    {
+        return;
+    }
+    if (p->f0 & 0x10)
+    {
+        return;
+    }
+    if (sub_800AA1C0((int*)p) == 1)
+    {
+        sub_800AB010(p, 5, 2, 0);
+        return;
+    }
+    if (sub_800AA1C0((int*)p) == 2)
+    {
+        sub_800AB010(p, 4, 1, 0);
+        return;
+    }
+    if (sub_800AA1C0((int*)p) == 4)
+    {
+        sub_800AB010(p, 2, 0, 0);
+        p->f0 &= ~0x200000;
+        return;
+    }
+    if (*(int*)((char*)p + 4) & 0x30000000)
+    {
+        sub_800AB010(p, 2, 0, 0);
+        p->f0 |= 0x200000;
+        return;
+    }
+    if (sub_800AA1C0((int*)p) == 3)
+    {
+        sub_800AA1E0(p);
+        return;
+    }
+    if (++p->s28 > 0x5a)
+    {
+        sub_800AB010(p, 1, 4, 0);
+        p->s28 = 0x5a;
+    }
+    else
+    {
+        sub_800AB010(p, 0, 3, 0);
+    }
+}
+
+void sub_800AA3F0(G2Act* a)
+{
+    sub_800AB010(a, 0, 3, 0);
+    a->fC = 0;
+    a->f0 |= 0x2000;
+}
+
+#if 0
+// Not matched: the original reloads p->f2C after the v19 select (lw 0x2c before 'sw 0x18'); here the compare's value is reused, so everything after is 2 words short
+void sub_800AA430(G2Act* p)
+{
+    G2L2 L;
+    int v19;
+    short* r17;
+    int r16;
+    if (p->f2C != 0x46)
+    {
+        v19 = 4;
+        if (!((unsigned short)(p->s1c - 7) < 2))
+            v19 = p->s2A;
+        L.f0 = p->f2C;
+        r17 = sub_800AC9CC(p->s20);
+        r16 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+        L.f4 = sub_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
+        sub_800A93A4(L.rest);
+        sub_800182B8(&L, p->f38);
+        sub_800184DC((int)&L, 0);
+    }
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800AA430);
+
+INCLUDE_OVERLAY_ASM(game, sub_800AA51C);
+
+void sub_800AACF8(G2Act* p)
+{
+    switch (p->f8)
+    {
+    case 0x17:
+        if (p->f0 & 0x20)
+        {
+            if (p->f0 & 0x100000)
+            {
+                sub_800AB010(p, 0x18, p->s20, (unsigned short)sub_800AC834(p->s20, sub_800AC474(p->s20)));
+            }
+            else
+            {
+                sub_800AB010(p, 0x18, p->s20, 0);
+            }
+            p->f0 &= ~0x8000;
+            if (p->s24 >= 0)
+            {
+                p->f0 &= ~0x800;
+            }
+        }
+        break;
+    case 0x18:
+        if (p->f0 & 0x800000)
+        {
+            if (p->f0 & 0x800)
+            {
+                p->f0 &= ~0x800000;
+                p->f10 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+                p->f0 &= ~0x8000;
+            }
+            else
+            {
+                p->f0 &= ~0x800000;
+                p->f10 = (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c));
+            }
+        }
+        if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)))
+        {
+            if (p->s24 < 0)
+            {
+                sub_800AB010(p, 0, 3, 0);
+                p->fC = 0;
+            }
+            else
+            {
+                if (p->f0 & 0x100000)
+                {
+                    sub_800AB010(p, -1, p->s24, (unsigned short)sub_800AC834(p->s24, sub_800AC474(p->s24)));
+                }
+                else
+                {
+                    sub_800AB010(p, -1, p->s24, 0);
+                }
+                p->s24 = -1;
+                p->s20 = p->u22;
+                p->f0 |= 0x800;
+            }
+        }
+        if (p->s20 != (short)p->u22)
+        {
+            if (sub_800AC604((short)p->u22, 0) == 0)
+            {
+                p->f8 = 0x17;
+                p->s20 = p->u22;
+            }
+            else
+            {
+                printf(dword_800A07E0, dword_800A0808, 0x44e);
+                exit(1);
+            }
+        }
+        break;
+    }
+}
+
+void sub_800AAF58(G2Act* a)
+{
+    switch ((unsigned)a->fC)
+    {
+    case 0:
+        sub_800AA25C(a);
+        break;
+    case 1:
+        sub_800AA51C(a);
+        break;
+    case 2:
+        sub_800AACF8(a);
+        break;
+    case 3:
+        sub_800AC02C(a);
+        break;
+    default:
+        break;
+    }
+}
+
+int sub_800AAFD8(int a)
+{
+    if (sub_800AC518(a))
+        return 1;
+    sub_800AC6A8(a);
+    return 0;
+}
+
+void sub_800AB010(G2Act* p, int a, int b, int c)
+{
+    if (c == 0)
+        c = (short)sub_800AC7F0(b, sub_800AC474(b));
+    if (p->f8 == a && p->s1c == b)
+        return;
+    p->s28 = 0;
+    if (b < 0)
+    {
+        p->f8 = a;
+    }
+    else if (a < 0)
+    {
+        unsigned short t = p->s1c;
+        int t3 = p->f10;
+        p->s1c = b;
+        p->f10 = c;
+        p->s26 = 0;
+        p->s1e = t;
+        p->f14 = t3;
+    }
+    else
+    {
+        unsigned short t = p->s1c;
+        int t3 = p->f10;
+        p->f8 = a;
+        p->s1c = b;
+        p->f10 = c;
+        p->s26 = 0;
+        p->s1e = t;
+        p->f14 = t3;
+    }
+    if (p->s1e != p->s1c)
+    {
+        p->f0 |= 8;
+        if (sub_800AAFD8(p->s1e) == 1)
+            p->f0 |= 0x10;
+    }
+}
+
+void sub_800AB114(G2Obj* p)
+{
+    p->f30 = 0x1000;
+    p->f0 = (p->f0 | 4) & ~2;
+}
+
+void sub_800AB134(G2Obj* p)
+{
+    p->f30 = 0;
+    p->f0 = (p->f0 | 2) & ~4;
+}
+
+void sub_800AB150(G2Obj* p)
+{
+    p->f30 = 0;
+    p->f0 &= ~4;
+    p->f0 &= ~2;
+}
+
+unsigned short sub_800AB170(int a)
+{
+    return sub_800AC944(a, sub_800AC474(a));
+}
+
+void sub_800AB1A4(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f0 |= 0x20;
+    if (a == 1)
+    {
+        p->f0 |= 0x800;
+        p->f0 &= ~0x8000;
+    }
+}
+
+int sub_800AB1EC(int a, int b, int c, int d)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (!(p->f0 & 1))
+    {
+        if (b == 1)
+            p->f0 |= 0x200;
+        else
+            p->f0 &= ~0x200;
+        p->s20 = a;
+        p->f38 = c;
+        p->f34 = d;
+        p->f0 &= ~0x2000;
+        p->f0 |= 1;
+        p->f0 &= ~0x20;
+        return 1;
+    }
+    return 0;
+}
+
+void sub_800AB264()
+{
+    dword_8008B4A4->f24->f0 |= 0x400;
+}
+
+void sub_800AB28C()
+{
+    dword_8008B4A4->f24->f0 &= ~0x400;
+}
+
+void sub_800AB2B4()
+{
+    dword_8008B4A4->f24->f0 |= 0x10000;
+}
+
+void sub_800AB2DC()
+{
+    dword_8008B4A4->f24->f0 &= ~0x10000;
+}
+
+int sub_800AB304()
+{
+    return (dword_8008B4A4->f24->f0 & 1) ^ 1;
+}
+
+int sub_800AB32C()
+{
+    return dword_8008B4A4->f24->f8 == 0xD;
+}
+
+int sub_800AB354()
+{
+    unsigned t = dword_8008B4A4->f24->f0 & 0x400;
+    return t != 0;
+}
+
+int sub_800AB37C(int v)
+{
+    dword_8008B4A4->f24->f4 = v;
+    return 1;
+}
+
+int sub_800AB39C()
+{
+    return dword_8008B4A4->f24->f4;
+}
+
+void sub_800AB3BC()
+{
+    dword_8008B4A4->f24->f28 = 0;
+}
+
+void sub_800AB3D4()
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (!(p->f0 & 0x100))
+    {
+        p->f0 |= 0x4100;
+        p->v60.a = levantPos_8008BD18.a;
+        p->v60.b = levantPos_8008BD18.b;
+        p->v60.c = levantPos_8008BD18.c;
+        p->v54.a = p->v48.a;
+        p->v54.b = p->v48.b;
+        p->v54.c = p->v48.c;
+    }
+}
+
+void sub_800AB444(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (p->f0 & 0x100)
+    {
+        if (a == 1)
+            p->f0 |= 0x1000;
+        else
+            p->f0 &= ~0x1000;
+        p->f0 &= ~0x100;
+        dword_8008BD18.x = p->v60.a;
+        dword_8008BD18.y = p->v60.b;
+        dword_8008BD18.z = p->v60.c;
+        p->v48.a = p->v60.a;
+        p->v48.b = p->v60.b;
+        p->v48.c = p->v60.c;
+    }
+}
+
+short sub_800AB4D8(int a)
+{
+    int s = (unsigned short)sub_800AC834(a, sub_800AC474(a));
+    int e = (unsigned short)sub_800AC878(a, sub_800AC474(a));
+    int t;
+    switch ((unsigned)a)
+    {
+    case 25:
+    case 26:
+    case 28:
+        return sub_800AC8BC(a, sub_800AC474(a)) + (e - s) * 2;
+    case 7:
+    case 8:
+        t = sub_800AC8BC(14, sub_800AC474(14));
+        return t + sub_800AC8BC(a, sub_800AC474(a)) + (e - s) * 30;
+    }
+    return sub_800AC8BC(a, sub_800AC474(a));
+}
+
+short sub_800AB5F8(int a)
+{
+    return sub_800AC834(a, sub_800AC474(a));
+}
+
+short sub_800AB630(int a)
+{
+    int s = (unsigned short)sub_800AC834(a, sub_800AC474(a));
+    int e = (unsigned short)sub_800AC878(a, sub_800AC474(a));
+    int t;
+    switch ((unsigned)a)
+    {
+    case 25:
+    case 26:
+    case 28:
+        return sub_800AC878(a, sub_800AC474(a)) + (e - s) * 2;
+    case 7:
+    case 8:
+        t = sub_800AC8BC(14, sub_800AC474(14));
+        return t + sub_800AC878(a, sub_800AC474(a)) + (e - s) * 30;
+    }
+    return sub_800AC878(a, sub_800AC474(a));
+}
+
+short sub_800AB750(int a)
+{
+    int s = (unsigned short)sub_800AC834(a, sub_800AC474(a));
+    int e = (unsigned short)sub_800AC878(a, sub_800AC474(a));
+    short t;
+    switch ((unsigned)a)
+    {
+    case 25:
+    case 26:
+    case 28:
+        return sub_800AB170(a) + (e - s) * 2;
+    case 7:
+        t = sub_800AC8BC(14, sub_800AC474(14));
+        t = t + sub_800AB170(a) + 0x4c;
+        return t;
+    case 8:
+        t = sub_800AC8BC(14, sub_800AC474(14));
+        t = t + sub_800AB170(a);
+        return t;
+    }
+    return sub_800AB170(a);
+}
+
+int sub_800AB85C()
+{
+    unsigned t = dword_8008B4A4->f24->f0 & 0x2000;
+    return t != 0;
+}
+
+void sub_800AB884()
+{
+    dword_8008B4A4->f24->f0 &= ~0x4000;
+}
+
+void sub_800AB8AC()
+{
+    sub_800A9414(dword_8008B4A4->f24, 0, 3);
+}
+
+void sub_800AB8DC()
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f40 = sub_800AC38C();
+}
+
+void sub_800AB910()
+{
+    dword_8008B4A4->f24->f0 &= ~0x800;
+}
+
+int sub_800AB938()
+{
+    return ((unsigned char*)dword_8008B4A4->f24)[1] >> 7;
+}
+
+int sub_800AB958()
+{
+    return (unsigned)dword_8008B4A4->f24->f8 < 2;
+}
+
+void sub_800AB978(short a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f24 = -1;
+    p->f22 = a;
+    p->f0 &= ~0x20;
+}
+
+void sub_800AB9A8(int a, int b, int c)
+{
+    G2Act* p = (G2Act*)dword_8008B4A4->f24;
+    if (sub_800AC604(a, 0) == 0 && (b < 0 || sub_800AC604(b, 0) == 0))
+    {
+        sub_800AB010(p, 0x17, a, 0);
+        p->fC = 2;
+        if (c)
+            p->f0 |= 0x10;
+        else
+            p->f0 &= ~0x10;
+    }
+    else
+    {
+        printf(dword_800A07E0, dword_800A0808, 0x6B9);
+        exit(1);
+    }
+    p->u22 = a;
+    p->s20 = a;
+    p->s24 = b;
+    p->f0 &= ~0x20;
+    p->f0 &= ~1;
+}
+
+void sub_800ABAA4(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f78 = a;
+    p->f7c = 0;
+    p->f0 |= 0x400000;
+}
+
+void sub_800ABAD4()
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    p->f0 &= ~0x400000;
+    sub_800ABC78(0);
+    p->f0 = (p->f0 & ~0x800) | 8;
+    sub_800AB010(p, 0, 3, 0);
+    p->fC = 0;
+}
+
+int sub_800ABB44()
+{
+    return ((dword_8008B4A4->f24->f0 >> 22) ^ 1) & 1;
+}
+
+int sub_800ABB70()
+{
+    return dword_8008B4A4->f24->f8 == 0x17;
+}
+
+void sub_800ABB98(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a == 1)
+        p->f0 |= 0x100000;
+    else
+        p->f0 &= ~0x100000;
+}
+
+void sub_800ABBD8(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+    {
+        p->f0 &= ~0x20000;
+        sub_800AB150((G2Obj*)p);
+    }
+    else
+    {
+        p->f0 |= 0x20000;
+    }
+}
+
+void sub_800ABC34(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+        p->f0 &= ~0x40000;
+    else
+        p->f0 |= 0x40000;
+}
+
+void sub_800ABC78(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+    {
+        p->f0 |= 0x80000;
+        p->v60.a = levantPos_8008BD18.a;
+        p->v60.b = levantPos_8008BD18.b;
+        p->v60.c = levantPos_8008BD18.c;
+        p->v54.a = p->v48.a;
+        p->v54.b = p->v48.b;
+        p->v54.c = p->v48.c;
+    }
+    else
+    {
+        p->f0 &= ~0x80000;
+    }
+}
+
+void sub_800ABCF4(G2Act* p)
+{
+    if (p->s20 == 0x19)
+    {
+        p->f2C = sub_8001AC8C(p->f34);
+        RequestEffect_800148F4(p->f2C);
+    }
+    else if ((unsigned short)(p->s20 - 7) < 2)
+    {
+        p->f2C = 0x25;
+        RequestEffect_800148F4(0x25);
+        sub_80013358(p->f34);
+        word_8008D782 = sub_80013358(p->f34);
+    }
+    else if (p->s20 == 0x1A)
+    {
+        p->f2C = 0x39;
+        RequestEffect_800148F4(p->f2C);
+    }
+    else if (p->s20 == 0x1C)
+    {
+        p->f2C = 0x3A;
+        RequestEffect_800148F4(p->f2C);
+    }
+    else if (p->s20 == 0x10)
+    {
+        p->f2C = sub_800189F8();
+        RequestEffect_800148F4(p->f2C);
+    }
+    else if (p->s20 == 0x1D)
+    {
+        p->f2C = ((int (*)(int))sub_8001CDCC)(p->f34);
+        RequestEffect_800148F4(p->f2C);
+    }
+}
+
+void sub_800ABDF0(G2Act* a)
+{
+    if (a->s1c == 0x1A)
+    {
+        if (a->f10 == (unsigned short)sub_800AC834(a->s1c, sub_800AC474(0x1A)))
+            sub_800AB134((G2Obj*)a);
+    }
+    if (a->s1c == 0x1D)
+    {
+        if (a->f10 == (unsigned short)sub_800AB170(0x1D))
+            PlaySfx_80031494(0x44);
+        if (a->f10 == (unsigned short)sub_800AB170(a->s1c) - 10)
+            PlaySeqSlot_80031160(0x1D, 1);
+    }
+    if (a->s1c == 0x1C && a->f10 == 2)
+        sub_800AB114((G2Obj*)a);
+}
+
+void sub_800ABECC()
+{
+    G2V12* r = &dword_8007A164;
+    unsigned int f = dword_8008BD38;
+    if (f & 0x200)
+    {
+        if (f & 1)
+            r = &dword_8007A14C;
+        else
+            r = &dword_8007A0EC;
+    }
+    else if (f & 0x100)
+    {
+        if (f & 1)
+            r = &dword_8007A140;
+        else
+            r = &dword_8007A0E0;
+    }
+    else if (f & 0x80)
+    {
+        if (f & 1)
+            r = &dword_8007A134;
+        else
+            r = &dword_8007A0D4;
+    }
+    else if (f & 0x40)
+    {
+        if (f & 1)
+            r = &dword_8007A128;
+        else
+            r = &dword_8007A0C8;
+    }
+    else if (f & 0x20)
+    {
+        if (f & 1)
+            r = &dword_8007A11C;
+        else
+            r = &dword_8007A0BC;
+    }
+    else if (f & 0x10)
+    {
+        if (f & 1)
+            r = &dword_8007A110;
+        else
+            r = &dword_8007A0B0;
+    }
+    else if (f & 8)
+    {
+        if (f & 1)
+            r = &dword_8007A104;
+        else
+            r = &dword_8007A0A4;
+    }
+    else if (f & 1)
+    {
+        r = &dword_8007A0F8;
+    }
+    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
+}
+
+void sub_800AC02C(G2Act* p)
+{
+    switch (p->f8)
+    {
+    case 0x15:
+        if (p->s26 >= 0x1000)
+        {
+            p->f0 &= ~0x10;
+            sub_800AC604(p->s20, 0);
+            p->f8 = 0x16;
+        }
+        break;
+    case 0x16:
+        if (sub_800AC768() == 1)
+        {
+            p->f8 = 0x17;
+        }
+        break;
+    case 0x17:
+        if (p->f0 & 0x20)
+        {
+            if (p->f0 & 0x100000)
+            {
+                sub_800AB010(p, 0x18, p->s20, (unsigned short)sub_800AC834(p->s20, sub_800AC474(p->s20)));
+            }
+            else
+            {
+                sub_800AB010(p, 0x18, p->s20, 0);
+            }
+            p->f0 &= ~0x8000;
+            if (p->s24 >= 0)
+            {
+                p->f0 &= ~0x800;
+            }
+        }
+        break;
+    case 0x18:
+        if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)))
+        {
+            if (p->s24 < 0)
+            {
+                sub_800AB010(p, 0, 3, 0);
+                p->fC = 0;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+            }
+            else
+            {
+                if (p->f0 & 0x100000)
+                {
+                    sub_800AB010(p, -1, p->s24, 0);
+                }
+                else
+                {
+                    sub_800AB010(p, -1, p->s24, (unsigned short)sub_800AC834(p->s24, sub_800AC474(p->s24)));
+                }
+                p->s20 = p->u22;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+                p->f0 |= 0x800;
+            }
+        }
+        if (p->s20 != (short)p->u22)
+        {
+            if (sub_800AC604((short)p->u22, 0) == 0)
+            {
+                p->s20 = p->u22;
+                p->f8 = 0x17;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+            }
+            else
+            {
+                sub_800AB010(p, 0x19, 3, 0);
+                p->f0 |= 0x10;
+            }
+        }
+        break;
+    case 0x19:
+        if (p->s26 >= 0x1000)
+        {
+            p->f0 &= ~0x10;
+            sub_800AAFD8(p->s20);
+            p->s20 = p->u22;
+            sub_800AC604(p->s20, 0);
+            p->f8 = 0x16;
+        }
+        break;
+    case 0x1a:
+        break;
+    }
+}
+
+void sub_800AC318()
+{
+    dword_8008B4A4->f24->f0 |= 0x800000;
+}
+
+void sub_800AC340(int a)
+{
+    G2Inner2* p = dword_8008B4A4->f24;
+    if (a)
+        p->f0 |= 0x1000000;
+    else
+        p->f0 &= ~0x1000000;
+}
+
+void sub_800AC380(int v)
+{
+    dword_8008BDA0 = v;
+}
+
+int sub_800AC38C()
+{
+    return dword_8007DC60[2];
+}
+
+void sub_800AC3A4(short v)
+{
+    word_8008BDA4 = v;
+}
+
+void sub_800AC3B0(int a)
+{
+    word_8008BDA6 = a;
+    sub_800AC380(1);
+}
+
+char* sub_800AC3D8()
+{
+    return &dword_800B1DF8;
+}
+
+int sub_800AC3E4()
+{
+    return word_8008BDA4;
+}
+
+int sub_800AC3F4()
+{
+    G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    int r;
+    if (s->f830)
+    {
+        r = ((int (*)(int))sub_8001D060)(s->b7E5) + dword_800B11B8[s->s834];
+    }
+    else
+    {
+        r = dword_800B116C[s->s834];
+    }
+    return r;
+}
+
+int sub_800AC464()
+{
+    return word_8008BDA6;
+}
+
+int sub_800AC474(int a)
+{
+    return dword_800B11DC[sub_800AC3E4()];
+}
+
+int sub_800AC4A8(int a)
+{
+    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60[2]);
+    return p[sub_800AC794(a, dword_800B11DC[sub_800AC3E4()])].f0;
+}
+
+int sub_800AC518(int a)
+{
+    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60[2]);
+    int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
+    if (p[r].f1)
+        return 1;
+    return IsAnimInModelAnimSet_80025924(dword_8007DC60[2], (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
+}
+
+int sub_800AC5D0(int a, int b)
+{
+    return LoadModelAnim_80025440(dword_8007DC60[2], a, b) != 0;
+}
+
+int sub_800AC604(int a, int b)
+{
+    int t = dword_800B11DC[sub_800AC3E4()];
+    return LoadModelAnim_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
+}
+
+void sub_800AC678(int a)
+{
+    FreeModelAnim_8002556C(dword_8007DC60[2], a);
+}
+
+void sub_800AC6A8(int a)
+{
+    int t = dword_800B11DC[sub_800AC3E4()];
+    FreeModelAnim_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
+}
+
+void sub_800AC708(int a, int b)
+{
+    LoadModelAnimSet_80025780(dword_8007DC60[2], a, b);
+}
+
+void sub_800AC73C()
+{
+    FreeModelAnimSet_80025884(dword_8007DC60[2]);
+}
+
+int sub_800AC768()
+{
+    return AreFileRequestsDone_80024DC4(dword_8007DC60[2]);
+}
+
+int sub_800AC794(int a, int b)
+{
+    if ((unsigned)(a - 0xE) >= 0x60)
+        return a;
+    return a + b * 16;
+}
+
+unsigned char* sub_800AC7B4(int a)
+{
+    return (unsigned char*)sub_80024E38(dword_8007DC60[2]) + ((a << 10) + 0x380);
+}
+
+short sub_800AC7F0(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s4;
+}
+
+short sub_800AC834(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s6;
+}
+
+short sub_800AC878(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].s8;
+}
+
+unsigned short sub_800AC8BC(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].sA;
+}
+
+unsigned char sub_800AC900(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].f3;
+}
+
+short sub_800AC944(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].sC;
+}
+
+unsigned char sub_800AC988(int a, int b)
+{
+    int r = sub_800AC794(a, b);
+    return G2REC(a, b)[r].f0;
+}
+
+short* sub_800AC9CC(int a)
+{
+    int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
+    return &((G2Rec*)sub_80024E38(dword_8007DC60[2]))[r].sC;
+}
+
+int* sub_800ACA38(int a)
+{
+    int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
+    return &((G2Rec*)sub_80024E38(dword_8007DC60[2]))[r].f34;
+}
+
+void sub_800ACAA4(int* a, int* b)
+{
+    G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    b[0] = 0;
+    b[1] = 0;
+    b[2] = -1;
+    b[3] = -1;
+    b[4] = -1;
+    b[5] = -1;
+    b[6] = -1;
+    b[7] = -1;
+    b[8] = -1;
+    b[9] = 0;
+    sub_800AC380(s->b7E5 != 0xFF);
+    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+    PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
+    sub_800ACB64(a, b);
+    a[2] = (int)sub_800ACB64;
+}
+
+#if 0
+// Not matched: control flow follows the original, but loop.c also hoists the 0x800B0000 high half of &dword_800B1DD0 into an eighth saved register, so the frame and everything after shift
+typedef struct G2SvB
+{
+    char pad_0[0x830];
+    int f830;
+    short h834;
+    short h836;
+} G2SvB;
+typedef struct G2Ld_1
+{
+    int state;
+    int flags;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+} G2Ld_1;
+extern int dword_8007DC6C;
+extern int name_800B1164[];
+extern char dword_800B11CC;
+extern void InitModelList_80024ADC(void* p, int a, int b);
+extern void LoadModel_80025200(int list, int id, int a, int b, int c);
+extern void sub_80025974(void* m, int a, int b);
+extern void sub_80024FFC(void* m, void* p);
+extern void sub_80025C38();
+extern void sub_800ACF3C();
+extern void sub_800ACFB8();
+void sub_800ACB64(int* a, G2Ld_1* q)
+{
+    int more = 1;
+    G2SvB* sd = (G2SvB*)&saveData_8008B570;
+    struct_112* m;
+    do
+    {
+        switch (q->state)
+        {
+        case 0:
+            if (q->f8 != sd->f830)
+            {
+                q->f10 = -1;
+                q->flags |= 0xd;
+                sub_800AC3A4(sd->h834);
+            }
+            if (q->f10 != sd->h834 || q->f18 != sd->h836)
+            {
+                q->flags |= 0x16;
+                sub_800ACF3C(q);
+            }
+            if (q->flags == 0)
+            {
+                more = 0;
+            }
+            else
+            {
+                sub_80040148((int*)&dword_800B1DD0, 1);
+                q->state = 1;
+            }
+            break;
+        case 1:
+            if (q->flags & 1)
+            {
+                if (dword_8007DC60)
+                {
+                    FreeModelList_80024BB0((struct_112_list**)&dword_8007DC60);
+                }
+                InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
+                LoadModel_80025200((int)dword_8007DC60, name_800B1164[sd->f830], 0, 2, 1);
+                q->fC = q->f8;
+                q->flags &= ~1;
+                q->f8 = sd->f830;
+            }
+            else if (q->flags & 2)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80025974(m, sub_800AC3F4(), 1);
+                q->f14 = sub_800AC3E4();
+                q->f10 = sd->h834;
+                q->f1C = sub_800AC464();
+                q->f18 = sd->h836;
+                q->flags &= ~2;
+            }
+            else if (q->flags & 4)
+            {
+                sub_800ACFB8(q);
+                q->flags &= ~4;
+            }
+            BeginFade_8001C260();
+            eventDispatchHalt_8008B540 = 1;
+            ClearOTagRAll_8001B260();
+            q->state = 2;
+            break;
+        case 2:
+            if (AreFileRequestsDone_80024DC4((void*)dword_8007DC60[2]) == 1)
+            {
+                q->state = 3;
+            }
+            else
+            {
+                more = 0;
+                eventDispatchHalt_8008B540 = 1;
+            }
+            break;
+        case 3:
+            if ((q->flags & 9) == 8)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80024FFC(m, &dword_800B11CC);
+                q->flags &= ~8;
+            }
+            if ((q->flags & 0x12) == 0x10)
+            {
+                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                q->flags &= ~0x10;
+            }
+            if (q->flags == 0)
+            {
+                more = 0;
+                sub_800AB8DC();
+                ClearOTagRAll_8001B260();
+                EndFade_8001C290();
+            }
+            sub_80040148((int*)&dword_800B1DD0, 0);
+            q->state = 0;
+            break;
+        }
+    } while (more);
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
+
+void sub_800ACF0C()
+{
+    FreeModelList_80024BB0((int*)&dword_8007DC60);
+    PoolDestroy_8003FF7C(&dword_800B1DD0);
+}
+
+void sub_800ACF3C(G2Act* p)
+{
+    unsigned char* q;
+    int i;
+    if (p->f14 >= 0)
+    {
+        q = sub_800AC7B4(dword_800B11DC[p->f14]);
+        for (i = 0; i < 16; i++, q += 0x40)
+        {
+            if (q[1])
+                sub_800AC678(q[0]);
+        }
+    }
+}
+
+void sub_800ACFB8()
+{
+    unsigned char* p = sub_800AC7B4(dword_800B11DC[sub_800AC3E4()]);
+    int i;
+    for (i = 0; i < 16; i++, p += 0x40)
+    {
+        if (p[1])
+            sub_800AC5D0(p[0], 1);
+    }
+}
+
+int sub_800AD02C()
+{
+    int v = *(int*)playerYan_8008B594;
+    if (v > 9999999)
+        v = 9999999;
+    return v;
+}
+
+int sub_800AD058(int a)
+{
+    G2Save* s = (G2Save*)&saveData_8008B570;
+    int v;
+    if (s->f24 <= 9999998)
+    {
+        v = s->f24 + a;
+        if (v <= 9999998)
+            s->f24 = v;
+        else
+            s->f24 = 9999999;
+        return 1;
+    }
+    return 0;
+}
+
+int sub_800AD0A4(int a)
+{
+    G2Save* s = (G2Save*)&saveData_8008B570;
+    if (s->f24 >= a)
+    {
+        s->f24 -= a;
+        return 1;
+    }
+    return 0;
+}
+
+int sub_800AD0D4(unsigned a)
+{
+    return (playerYan_8008B594[0x290 + (a >> 3)] >> (a & 7)) & 1;
+}
+
+void sub_800AD0F8(unsigned a)
+{
+    ((G2Bits*)playerYan_8008B594)->b[a >> 3] |= 1 << (a & 7);
+}
+
+void sub_800AD124(unsigned a)
+{
+    ((G2Bits*)playerYan_8008B594)->b[a >> 3] &= ~(1 << (a & 7));
+}
+
+int sub_800AD154(int a)
+{
+    return playerYan_8008B594[a + 0x2A3];
+}
+
+int sub_800AD16C(int a, int b)
+{
+    ((G2Bits3*)playerYan_8008B594)->c[a] = b;
+    return b;
+}
+
+int sub_800AD184(int a, int b, int c)
+{
+    unsigned char* r = sub_800AD4D8(a, b, c);
+    if (r && a != 0xFF)
+    {
+        r[0] = a;
+        r[1] += b;
+        return 1;
+    }
+    return 0;
+}
+
+int sub_800AD1E0(int a, int b, int c)
+{
+    unsigned char* r = sub_800AD58C(a, c);
+    if (r)
+    {
+        if (sub_800AD67C(r[1], b))
+        {
+            r[1] -= b;
+            if (r[1] == 0)
+                r[0] = 0xFF;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int sub_800AD254()
+{
+    unsigned char* r = sub_800AD58C();
+    if (r)
+        return r[1];
+    return 0;
+}
+
+int sub_800AD288(int a, int b)
+{
+    unsigned char* p = sub_800AD604(b);
+    if (p)
+        return p[a * 2];
+    return 0xFF;
+}
+
+int sub_800AD2C8(int a, int b)
+{
+    unsigned char* p = sub_800AD604(b);
+    if (p)
+        return p[a * 2 + 1];
+    return 0;
+}
+
+int sub_800AD308(int a)
+{
+    unsigned char* p = sub_800AD604(a);
+    int n = sub_800AD374(a);
+    int i;
+    if (p)
+    {
+        for (i = n - 1; i > 0; i--)
+        {
+            if (p[i * 2] != 0xFF)
+                return i;
+        }
+    }
+    return 0;
+}
+
+int sub_800AD374(int a)
+{
+    int r;
+    unsigned u = a;
+    r = 0;
+    if (u < 4)
+        goto L;
+    if (u == 4)
+    {
+    L:
+        r = 0x40;
+    }
+    return r;
+}
+
+int sub_800AD398()
+{
+    int x;
+    if (sub_800AD308(4) > 0)
+        return 1;
+    if (sub_800AD288(0, 4) != 0xFF)
+    {
+        x = sub_800AD2C8(0, 4);
+        if (x)
+            return 1;
+    }
+    return 0;
+}
+
+void sub_800AD3F0(int a)
+{
+    unsigned char tmp[2];
+    int n = sub_800AD374(a);
+    unsigned char* tbl = sub_800AD604(a);
+    short cnt = 0;
+    short i;
+    unsigned char* r;
+    for (i = 0; i < n; i++)
+    {
+        r = sub_800AD58C(i, a);
+        if (r)
+        {
+            MemCopy_800403E8((unsigned*)tmp, (unsigned*)(tbl + cnt * 2), 2);
+            MemCopy_800403E8((unsigned*)(tbl + cnt * 2), (unsigned*)r, 2);
+            MemCopy_800403E8((unsigned*)r, (unsigned*)tmp, 2);
+            cnt++;
+        }
+    }
+}
+
+unsigned char* sub_800AD4D8(int a, int b, int c)
+{
+    unsigned char* r = sub_800AD58C(a, c);
+    if (r)
+    {
+        if (sub_800AD670(r[1], b))
+        {
+            if ((unsigned)(c - 1) < 3 && a == sub_800AD990(c - 1))
+            {
+                if (!(r[1] + b < 0x14))
+                    return 0;
+            }
+            return r;
+        }
+        return 0;
+    }
+    return sub_800AD58C(0xFF, c);
+}
+
+unsigned char* sub_800AD58C(int a, int b)
+{
+    int n = sub_800AD374(b);
+    unsigned char* p = sub_800AD604(b);
+    int i;
+    if (p != 0)
+    {
+        for (i = 0; i < n; i++)
+        {
+            if (a == p[i * 2])
+                return &p[i * 2];
+        }
+    }
+    return 0;
+}
+
+unsigned char* sub_800AD604(int n)
+{
+    switch ((unsigned)n)
+    {
+    case 0:
+        return (unsigned char*)&saveData_8008B570 + 0x28;
+    case 1:
+        return (unsigned char*)&saveData_8008B570 + 0xA8;
+    case 2:
+        return (unsigned char*)&saveData_8008B570 + 0x128;
+    case 3:
+        return (unsigned char*)&saveData_8008B570 + 0x1A8;
+    case 4:
+        return (unsigned char*)&saveData_8008B570 + 0x228;
+    }
+    return 0;
+}
+
+INCLUDE_OVERLAY_ASM(game, dword_800A094C);
+
+int sub_800AD670(int a, int b)
+{
+    return a + b < 0x15;
+}
+
+int sub_800AD67C(int a, int b)
+{
+    return (a - b) >= 0;
+}
+
+int sub_800AD68C(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    if (n < 0x40)
+    {
+        f->w[n / 32] |= 1 << (n % 32);
+        return 1;
+    }
+    return 0;
+}
+
+void sub_800AD6E4(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    if (n < 0x40)
+        f->w[n / 32] &= ~(1 << (n % 32));
+}
+
+int sub_800AD73C(int n)
+{
+    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    if (n < 0x40)
+    {
+        if (f->w[n / 32] & (1 << (n % 32)))
+            return 1;
+    }
+    return 0;
+}
+
+int sub_800AD79C()
+{
+    short i;
+    int c = 0;
+    for (i = 0; i < 0x26; i++)
+    {
+        if (sub_800AD73C(i))
+            c++;
+    }
+    return c;
+}
+
+int sub_800AD7F8(int a)
+{
+    short i;
+    int c = 0;
+    for (i = 0; i < 0x26; i++)
+    {
+        if (sub_800AD73C(i))
+        {
+            if (a == (short)c++)
+                return i;
+        }
+    }
+    return 0x26;
+}
+
+int sub_800AD888()
+{
+    int v = 12 - sub_800AD8BC();
+    if (v < 0)
+        v = 0;
+    return v;
+}
+
+int sub_800AD8BC()
+{
+    return levantEmptyCocoons_8008B818 + CountMinions_80010548(0);
+}
+
+int sub_800AD8E4()
+{
+    return levantEmptyCocoons_8008B818;
+}
+
+int sub_800AD8F4(int a)
+{
+    int ret = 1;
+    int v = sub_800AD8E4() + a;
+    if (v >= 13)
+    {
+        v = 12;
+        ret = 0;
+    }
+    levantEmptyCocoons_8008B818 = v;
+    return ret;
+}
+
+int sub_800AD944(int a)
+{
+    int ret = 1;
+    int v = sub_800AD8E4() - a;
+    if (v < 0)
+    {
+        v = 0;
+        ret = v;
+    }
+    levantEmptyCocoons_8008B818 = v;
+    return ret;
+}
+
+unsigned int sub_800AD990(int a)
+{
+    unsigned int r = 0;
+    switch ((unsigned)a)
+    {
+    case 0:
+        r = equippedWeaponId_8008BD54;
+        break;
+    case 1:
+        r = equippedArmor_8008BD55;
+        break;
+    case 2:
+        r = byte_8008BD56;
+        break;
+    }
+    return r;
+}
+
+int SetEquipment_800AD9EC(int a, int b)
+{
+    unsigned char old = sub_800AD990(b);
+    G2Sv4* s;
+    switch ((unsigned)b)
+    {
+    case 0:
+        if (old == 0xFF)
+        {
+            if (a == 0xFF)
+                return 1;
+        }
+        else if (a == 0xFF)
+        {
+            goto fail;
+        }
+        s = (G2Sv4*)&saveData_8008B570;
+        s->b7E4 = a;
+        sub_800AD1E0(a, 1, 1);
+        if (old < 0x17)
+            sub_800AD184(old, 1, 1);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
+        GetArmorData_8001D034(s->b7E5);
+        sub_800AC3B0(dword_8001D060(s->b7E5));
+        break;
+    case 1:
+        if (old == 0xFF)
+        {
+            if (a == 0xFF)
+                return 1;
+        }
+        else if (a == 0xFF)
+        {
+            goto fail;
+        }
+        s = (G2Sv4*)&saveData_8008B570;
+        s->b7E5 = a;
+        sub_800AD1E0(a, 1, 2);
+        if (old < 0xF)
+            sub_800AD184(old, 1, 2);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+        GetArmorData_8001D034(a);
+        sub_800AC3B0(dword_8001D060(a));
+        break;
+    fail:
+        return 0;
+    case 2:
+        byte_8008BD56 = a;
+        sub_800AD1E0(a, 1, 3);
+        if (old != 0xFF)
+            sub_800AD184(old, 1, 3);
+        break;
+    }
+    return 1;
+}
+
+int sub_800ADBA0(short* p)
+{
+    char* base = (char*)&saveData_8008B570;
+    int i;
+    for (i = 0; i < ((G2Save2*)base)->n; i++)
+    {
+        G2E* q = (G2E*)(base + i * 8);
+        if (q->a == p[0] && q->b == p[1] && q->c == p[2])
+            return i;
+    }
+    return -1;
+}
+
+int sub_800ADC1C(short* p)
+{
+    int r = sub_800ADBA0(p);
+    if (r != -1)
+        r = ((G2Sv*)((char*)&saveData_8008B570 + r * 8))->s;
+    return r;
+}
+
+void sub_800ADC5C(unsigned short* p, int b)
+{
+    int i;
+    if (b != -2)
+    {
+        i = sub_800ADBA0((short*)p);
+        if (i == -1)
+            i = ((G2Save2*)&saveData_8008B570)->n++;
+#define G2EN ((G2E*)((char*)&saveData_8008B570 + i * 8))
+        G2EN->a = p[0];
+        G2EN->b = p[1];
+        G2EN->c = p[2];
+        G2EN->d = b;
+    }
+}
+
+void sub_800ADCEC(short* out, int key)
+{
+    int i, j, k;
+    G2Ent16** row;
+    G2Ent16* e;
+    for (i = 0; name_800B0608[i]; i++)
+    {
+        row = name_800B0608[i];
+        for (j = 0; row[j]; j++)
+        {
+            e = row[j];
+            for (k = 0; e[k].id != -1; k++)
+            {
+                if (key == e[k].s6)
+                {
+                    out[0] = i;
+                    out[1] = j;
+                    out[2] = k;
+                    out[3] = e[k].u4;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+#if 0
+// Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
+void sub_800ADDAC(void)
+{
+    GameS3_1 v;
+    int r;
+    int i;
+    int key;
+    G2Ent16* e;
+    v.a = saveData_8008B570.mapId_2E4[0].field_0;
+    v.b = saveData_8008B570.mapId_2E4[1].field_0;
+    v.c = saveData_8008B570.mapId_2E4[2].field_0;
+    r = sub_800ADC1C(&v);
+    e = name_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+    key = saveData_8008B570.mapId_2E4[2].field_0;
+    i = 0;
+    if (e->id >= 0)
+    {
+        do
+        {
+            if (key == (short)e[i].u4 && (r == -1 || r == e[i].s6))
+            {
+                saveData_8008B570.mapId_2E4[2].field_0 = i;
+                return;
+            }
+            i++;
+        } while (e[i].id >= 0);
+    }
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800ADDAC);
+
+INCLUDE_OVERLAY_ASM(game, dword_800ADE78);

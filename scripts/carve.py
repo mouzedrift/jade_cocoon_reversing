@@ -47,7 +47,11 @@ def main(name, func):
         sys.exit("no jump table for %s found" % func)
     have = {a for a, _ in syms}
     add = []
-    c = os.path.join(REPO, "src", "overlays", name.lower() + ".c")
+    # the source file (of an overlay built from several: <name>.c, <name>_2.c, ...) that has FUNC
+    import glob
+    inc = "INCLUDE_OVERLAY_ASM(%s, %s);" % (name.lower(), func)
+    cands = sorted(glob.glob(os.path.join(REPO, "src", "overlays", name.lower() + "*.c")))
+    c = next((p for p in cands if inc in open(p).read()), os.path.join(REPO, "src", "overlays", name.lower() + ".c"))
     src = open(c).read()
     ins = []
     for s, e in out:
@@ -61,7 +65,6 @@ def main(name, func):
     new = sorted(lines + add, key=lambda l: int(re.match(r"\w+=0x([0-9a-f]+)", l).group(1), 16))
     open(sym, "w").write("\n".join(new) + "\n")
     # behind FUNC in the source (its INCLUDE line or the end of its C definition's INCLUDE line)
-    inc = "INCLUDE_OVERLAY_ASM(%s, %s);" % (name.lower(), func)
     if inc in src and ins:
         src = src.replace(inc, inc + "".join("\nINCLUDE_OVERLAY_ASM(%s, %s);" % (name.lower(), n) for n in ins))
         open(c, "w").write(src)

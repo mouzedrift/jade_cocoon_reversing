@@ -1,6 +1,7 @@
 dword_800B6D00=0x800b6d00; // overlay header / data
 jpt_800B6D34=0x800b6d34; // jump table of sub_800BA020
 dword_800B6D4C=0x800b6d4c; // data behind the jump table
+dword_800B6D98=0x800b6d98; // .rdata of the next source file
 sub_800B6DD4=0x800b6dd4;
 CollideWithMap_800B716C=0x800b716c;
 MarkSharedEdges_800B73C0=0x800b73c0;
