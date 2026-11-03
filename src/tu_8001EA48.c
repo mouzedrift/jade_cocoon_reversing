@@ -2938,30 +2938,28 @@ char* sub_80024F70(void* p, int n)
     }
     return r;
 }
-#if 0
-// Not matched: the original keeps the 0 result in v0 and copies it into the loop counter; ours keeps the result in a2
+// Matched
 char* sub_80024FA8(void* a0, int n)
 {
     char* hdr = *(char**)((char*)a0 + 0x4C);
     char* r = 0;
-    int i = 0;
+    int i;
     if (hdr)
     {
         int off = *(int*)(hdr + 8);
         if (off)
         {
-            hdr = hdr + off + 8;
-            for (; i < n; i++)
+            hdr += off;
+            hdr += 8;
+            for (i = 0; i < n; i++)
             {
                 hdr += *(int*)(hdr + 0x14);
             }
-            return hdr;
+            r = hdr;
         }
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_80024FA8);
 // Matched
 void sub_80024FFC(struct_112* p, int* ids)
 {

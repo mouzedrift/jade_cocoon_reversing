@@ -710,7 +710,7 @@ void DrawIntroMovie_8001AF64(void* a0)
             SetDispMask(0);
         }
         PutDispEnv(&dispEnv_8008D750[bDoubleBuffer_8008D428]);
-        PutDrawEnv(&e0[bDoubleBuffer_8008D428]);
+        PutDrawEnv((DRAWENV*)(bDoubleBuffer_8008D428 * sizeof(DRAWENV) + (int)e0));
         if (unknownFlags_8008D678 & 8)
         {
             DrawOTag(pOT_8008D78C);
@@ -889,15 +889,13 @@ extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
 extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
 extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
-#if 0
-// Not matched: only the scheduling of the display base address at the top differs (one extra load-delay nop)
+// Matched
 void InitEnvironments_8001B7B4(void)
 {
     int interlace;
     int off;
     display_8008B4D8.field_C_w = dword_8007C728[display_8008B4D8.field_0][0];
     display_8008B4D8.field_E_h = dword_8007C728[display_8008B4D8.field_0][1];
-    off = 240;
     if (display_8008B4D8.field_E_h == 480)
     {
         off = 0;
@@ -906,6 +904,7 @@ void InitEnvironments_8001B7B4(void)
     }
     else
     {
+        off = 240;
         interlace = 0;
         unknownFlags_8008D678 &= ~0x20;
     }
@@ -927,8 +926,6 @@ void InitEnvironments_8001B7B4(void)
     SetGeomScreen(geomScreenDistance_8008B548);
     SetFarColor(0, 0, 0);
 }
-#endif
-INCLUDE_ASM(InitEnvironments_8001B7B4);
 // Matched
 void InitSprt_8001B9A0(int buffer)
 {
