@@ -76,7 +76,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B6DD4);
 
-int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
+int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
 {
     EvQuadEventfnc v[4];
     int n[4];
@@ -135,7 +135,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
     {
         return 0;
     }
-    d = ((unsigned short)rot->ang_2 - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
+    d = ((unsigned short)rot->vy - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
     if (d > 0xC00 || (d > 0x400 && d < 0x800))
     {
         return 1;
@@ -904,7 +904,7 @@ int sub_800B9260(EvCtxEventfnc* c)
 {
     int* q = (int*)c->pc_8->c_C;
     EvVecEventfnc* pos = sub_800BBBA0(c->pc_8->a_4);
-    EvRotEventfnc* rot = (EvRotEventfnc*)sub_800BBBD0(c->pc_8->a_4);
+    SVECTOR* rot = sub_800BBBD0(c->pc_8->a_4);
     int ang;
     if (q)
     {
@@ -918,7 +918,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->x_0 = q[0];
     pos->y_4 = q[1];
     pos->z_8 = q[2];
-    rot->ang_2 = ang;
+    rot->vy = ang;
     sub_80037918(cameraTask_8008D4A0->entry.buffer);
     SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     c->pc_8++;
@@ -1790,7 +1790,7 @@ int sub_800BAF68(EvCtxEventfnc* c)
 int sub_800BAFAC(EvCtxEventfnc* c)
 {
     EvVecEventfnc* lev;
-    EvRotEventfnc* rot;
+    SVECTOR* rot;
     EvVecEventfnc* p;
     int i;
     int hit;
@@ -1807,7 +1807,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
     }
     c->flags_0 &= ~0xC;
     lev = sub_800BBBA0(0);
-    rot = (EvRotEventfnc*)sub_800BBBD0(0);
+    rot = sub_800BBBD0(0);
     for (i = 1; i < sub_800A7790() + 1; i++)
     {
         int bit = 1 << i;
@@ -1830,7 +1830,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
             }
             if (hit)
             {
-                if ((unsigned int)(WrapAngle_8003BA18((short)(rot->ang_2 - ratan2Difference_8003B9E0((int*)lev, (int*)p))) + 0x198) < 0x331)
+                if ((unsigned int)(WrapAngle_8003BA18((short)(rot->vy - ratan2Difference_8003B9E0((int*)lev, (int*)p))) + 0x198) < 0x331)
                 {
                     c->flags_0 |= 8;
                     break;
@@ -2306,12 +2306,12 @@ EvVecEventfnc* sub_800BBBA0(int i)
     return r;
 }
 
-EvVecEventfnc* sub_800BBBD0(int i)
+SVECTOR* sub_800BBBD0(int i)
 {
-    EvVecEventfnc* r;
+    SVECTOR* r;
     if (i == 0)
     {
-        r = (EvVecEventfnc*)&levantRot_8008BD24;
+        r = &levantRot_8008BD24;
     }
     else
     {
@@ -2337,10 +2337,10 @@ EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
     if (mode == 1)
     {
         EvVecEventfnc* v = sub_800BBBA0(idx);
-        EvRotEventfnc* r = (EvRotEventfnc*)sub_800BBBD0(idx);
-        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->ang_2 & 0xFFF] * 100 / 4096;
-        c->vec78_78[idx].y_4 = r->ang_2;
-        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->ang_2 + 0x400) & 0xFFF] * 100 / 4096;
+        SVECTOR* r = sub_800BBBD0(idx);
+        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->vy & 0xFFF] * 100 / 4096;
+        c->vec78_78[idx].y_4 = r->vy;
+        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
     }
     return &c->vec78_78[idx];
 }

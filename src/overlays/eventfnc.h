@@ -37,11 +37,6 @@ typedef struct EvEntEventfnc
 } EvEntEventfnc;
 
 
-typedef struct EvRotEventfnc
-{
-    short pad_0;
-    short ang_2;
-} EvRotEventfnc;
 
 typedef struct EvCtxEventfnc
 {
@@ -264,7 +259,7 @@ extern void (*dword_800B1D98)(int);
 
 extern int sub_800A59D0(int a);
 
-extern EvVecEventfnc* sub_800BBBD0(int i);
+extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
 
 extern short dword_8008D474[2];
 
@@ -394,7 +389,7 @@ extern int sub_800A7CFC(int a);
 extern EvVecEventfnc* sub_800A7940(int a);
 
 
-extern EvVecEventfnc* sub_800A7984(int a);
+extern SVECTOR* sub_800A7984(int a);
 
 extern int dword_800AEBD4;
 

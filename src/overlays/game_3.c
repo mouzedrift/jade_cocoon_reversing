@@ -1181,21 +1181,21 @@ int sub_800A78F4(int a)
 }
 
 // Matched
-int sub_800A7940(int a)
+int* sub_800A7940(int a)
 {
     if (a < sub_800A7790())
     {
-        return (int)sub_800A77F4(a)->cb_14.actor_4->pos_38;
+        return sub_800A77F4(a)->cb_14.actor_4->pos_38;
     }
     return 0;
 }
 
 // Matched
-int sub_800A7984(int a)
+short* sub_800A7984(int a)
 {
     if (a < sub_800A7790())
     {
-        return (int)sub_800A77F4(a)->cb_14.actor_4->rot_5C;
+        return sub_800A77F4(a)->cb_14.actor_4->rot_5C;
     }
     return 0;
 }
