@@ -13,6 +13,12 @@ extern UnitSkills* sub_80019C28(unsigned int idx);
 extern char* minionSpeciesNames_8007A170[];
 extern char* sub_800B32D4(int a0);
 
+extern ActionData* sub_8001AD64(unsigned int idx); // magic
+extern ActionData* GetItemData_8001CDF4(unsigned int idx);
+extern ActionData* sub_8001D260(void); // Levant's weapon attack
+extern unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx);
+extern unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx);
+
 // per-species model description (dword_8007BD30, sub_80019C70)
 typedef struct
 {

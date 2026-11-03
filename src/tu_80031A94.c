@@ -734,8 +734,8 @@ void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src)
     unsigned char* ids;
     MemCopy_800403E8(dst, src->field_20, 12);
     ids = src->field_1C;
-    tbl[0] = (unsigned char*)GetArmorModifiers_8001CDA0(ids[1]);
-    tbl[1] = (unsigned char*)GetAccessoryModifiers_8001CD74(ids[2]);
+    tbl[0] = GetArmorModifiers_8001CDA0(ids[1]);
+    tbl[1] = GetAccessoryModifiers_8001CD74(ids[2]);
     for (j = 0; j < 2; j++)
     {
         if (tbl[j])

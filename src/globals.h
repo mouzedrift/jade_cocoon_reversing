@@ -297,11 +297,12 @@ typedef struct
 } struct_elem_70;
 
 
-extern struct_12 accessoryModifiers_8007D848[17];
-extern struct_12 armorModifiers_8007D598[15];
+// per-element/status minimums applied by ApplyEquipmentModifiers_80033754
+extern unsigned char accessoryModifiers_8007D848[17][12];
+extern unsigned char armorModifiers_8007D598[15][12];
 extern unsigned char byte_8007CC24[0x2b];
 extern unsigned short itemFlags_8007CC50[];
-extern struct_12 itemData_8007CCA8[0x2b];
+extern ActionData itemData_8007CCA8[0x2b];
 extern int itemNames_8007CB78[0x2b];
 extern EquipmentData weaponData_8007D04C[0x17];
 extern int weaponNames_8007CFF0[0x17];
@@ -319,7 +320,7 @@ extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern struct_12 stru_80083594[];
+extern ActionData stru_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
 extern int dword_8007CB4C[];
@@ -330,7 +331,7 @@ extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
-extern struct_12 dword_8007C5A0[];
+extern ActionData dword_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
@@ -356,10 +357,6 @@ typedef struct
 {
     unsigned char c[4];
 } struct_u8x4;
-typedef struct
-{
-    unsigned char c[12];
-} struct_u8x12;
 // 0x14 bytes copied without alignment
 typedef struct
 {
@@ -476,7 +473,7 @@ extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
-extern struct_12 dword_8007D274[0x17];
+extern ActionData dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);

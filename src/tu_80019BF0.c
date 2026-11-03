@@ -521,7 +521,7 @@ int GetMagicElement_8001AD30(int idx)
     return 0xB;
 }
 // Matched
-struct_12* sub_8001AD64(unsigned int idx)
+ActionData* sub_8001AD64(unsigned int idx)
 {
     if (idx < 0x1E)
     {
@@ -1691,22 +1691,22 @@ int GetPersonIcon_8001CD6C(void)
     return 0x36;
 }
 // Matched
-struct_12* GetAccessoryModifiers_8001CD74(unsigned int idx)
+unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &accessoryModifiers_8007D848[idx];
+    return accessoryModifiers_8007D848[idx];
 }
 // Matched
-struct_12* GetArmorModifiers_8001CDA0(unsigned int idx)
+unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &armorModifiers_8007D598[idx];
+    return armorModifiers_8007D598[idx];
 }
 // Matched
 unsigned char sub_8001CDCC(unsigned int idx)
@@ -1718,7 +1718,7 @@ unsigned char sub_8001CDCC(unsigned int idx)
     return 0x22;
 }
 // Matched
-struct_12* GetItemData_8001CDF4(unsigned int idx)
+ActionData* GetItemData_8001CDF4(unsigned int idx)
 {
     if (idx < 0x2B)
     {
@@ -1945,7 +1945,7 @@ int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
     return r;
 }
 // Matched
-struct_12* sub_8001D260(void)
+ActionData* sub_8001D260(void)
 {
     unsigned int i = sub_800AD990(0);
     if (i < 0x17)

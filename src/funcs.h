@@ -141,10 +141,7 @@ extern int sub_80033A70(UnitStats* p, int idx);
 extern void sub_8001EA48(void* arg0);
 
 extern void ListFreeAll_8003FEC8(void* arg0);
-extern struct_12* GetAccessoryModifiers_8001CD74(unsigned int idx);
-extern struct_12* GetArmorModifiers_8001CDA0(unsigned int idx);
 extern unsigned char sub_8001CDCC(unsigned int idx);
-extern struct_12* GetItemData_8001CDF4(unsigned int idx);
 extern int GetItemName_8001CE20(unsigned int idx);
 extern int* GetWeaponStatBonus_8001CEF4(unsigned int idx);
 extern int GetWeaponName_8001CF20(unsigned int idx);
@@ -256,7 +253,6 @@ extern int sub_80013358(int idx);
 extern signed char GetMinionElement_80019BF0(int idx);
 extern unsigned char GetMinionEnhancementBody_80019C0C(int idx);
 extern void ResetOverlayLoaderTask_80020D68(void);
-extern struct_12* sub_800318C8(int idx);
 extern int HasMagic_80033A90(UnitStats* p, unsigned int idx);
 extern int GetCameraMode_800378F8(void);
 extern short sub_80037A4C(void);

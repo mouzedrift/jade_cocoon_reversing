@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "unit.h"
+#include "tu_80019BF0.h"
+#include "tu_800318C8.h"
 
 INCLUDE_DATA(dword_80071F58);
 INCLUDE_DATA(dword_80071F5C);
@@ -77,20 +79,9 @@ void sub_80012828(int* p, UnitStatus* f)
         p[5] = 0;
     }
 }
-typedef struct
-{
-    unsigned char c0;
-    unsigned char c1;
-    short s2;
-    unsigned char c4;
-    unsigned char c5;
-    unsigned char c6;
-    unsigned char c7;
-    int f8;
-} Stats12;
 
 // Matched
-unsigned char* sub_800129B0(Stats12* out, unsigned char* in, int a2)
+ActionData* sub_800129B0(ActionData* out, unsigned char* in, int a2)
 {
     int id = 0xD3;
     int kind = in[1];
@@ -144,7 +135,7 @@ unsigned char* sub_800129B0(Stats12* out, unsigned char* in, int a2)
         out->c7 = ((signed char)out->c7 + 50 < 126) ? out->c7 + 50 : 125;
         break;
     }
-    return (unsigned char*)out;
+    return out;
 }
 typedef struct
 {
@@ -165,14 +156,12 @@ extern char aAssertionFaile_2[];
 extern char aCommonC[];
 extern unsigned char byte_800793C4[];
 extern unsigned char dword_800793C8[][4];
-extern struct_u8x12 dword_80071F58;
+extern ActionData dword_80071F58; // an empty action
 extern int sub_80031B30(int a0);
 extern int sub_80031A04(int a0, int a1);
-extern struct_12* sub_8001AD64(unsigned int idx);
-extern struct_12* sub_8001D260(void);
 extern void sub_800335D0(UnitStatus* src, UnitStatus* out);
-extern void sub_80013EE8(int* out, UnitStatus* f, Stats12* s, int a3);
-extern void sub_80013374(Stats12* s, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, ActionResult* out);
+extern void sub_80013EE8(int* out, UnitStatus* f, ActionData* s, int a3);
+extern void sub_80013374(ActionData* s, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, ActionResult* out);
 extern int Rand100_80013E30(void);
 // Matched
 void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
@@ -181,8 +170,8 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     int r2[12];
     UnitStatus f1;
     UnitStatus f2;
-    struct_u8x12 local = dword_80071F58;
-    Stats12* q;
+    ActionData local = dword_80071F58;
+    ActionData* q;
     int b1;
     int b2;
     int t;
@@ -211,7 +200,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     out->field_1C = 0;
     out->field_20 = 0;
     sub_800184A0(b2, 0);
-    q = (Stats12*)&local;
+    q = &local;
     switch (p[0])
     {
     case 0:
@@ -222,7 +211,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         break;
     case 6:
         t = sub_80031B30(b1 & 0xFF);
-        q = (Stats12*)sub_800129B0((Stats12*)&local, (unsigned char*)(t + p[1] * 4), b2);
+        q = sub_800129B0(&local, (unsigned char*)(t + p[1] * 4), b2);
         out->field_10 = sub_80031A04(t, p[1]);
         break;
     case 1:
@@ -241,7 +230,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     sub_80013EE8(r2, &f2, q, p[3]);
     sub_80012828(r1, &f1);
     sub_80012828(r2, &f2);
-    if (out->field_24 == ((unsigned char*)q)[8] && q->s2 != 0)
+    if (out->field_24 == q->c8 && q->s2 != 0)
     {
         q->s2 = (0xFFFF < q->s2 + 60) ? -1 : (unsigned short)q->s2 + 60;
     }
@@ -366,8 +355,8 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
 // Matched
 int sub_80013228(int a0, int a1, int* p)
 {
-    struct_u8x12 local = dword_80071F58;
-    unsigned char* q = local.c;
+    ActionData local = dword_80071F58;
+    ActionData* q = &local;
     int b1 = LowestSetBit_80014358(p[2]);
     int b2 = LowestSetBit_80014358(p[3]);
     switch (p[0])
@@ -375,22 +364,22 @@ int sub_80013228(int a0, int a1, int* p)
     case 0:
         if (p[2] == 1)
         {
-            q = (unsigned char*)sub_8001D260();
+            q = sub_8001D260();
         }
         break;
     case 6:
-        q = sub_800129B0((Stats12*)&local, (unsigned char*)(sub_80031B30(b1 & 0xFF) + p[1] * 4), b2);
+        q = sub_800129B0(&local, (unsigned char*)(sub_80031B30(b1 & 0xFF) + p[1] * 4), b2);
         break;
     case 1:
-        q = (unsigned char*)sub_8001AD64(p[1]);
+        q = sub_8001AD64(p[1]);
         break;
     case 4:
-        q = (unsigned char*)GetItemData_8001CDF4(p[1]);
+        q = GetItemData_8001CDF4(p[1]);
         break;
     case 26:
         break;
     }
-    return q[8] == 8;
+    return q->c8 == 8;
 }
 
 // zero word at the end of this TU's .rdata, in front of the jump table of sub_80013C28 (tu_80013358)
