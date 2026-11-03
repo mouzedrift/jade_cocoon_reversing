@@ -89,14 +89,15 @@ typedef struct
     void (*field_8)(void);
 } struct_obj_D;
 
+// one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;
-    unsigned char field_4;
+    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
+    unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char field_6;
     unsigned char field_7;
-    short field_8;
+    short field_8;         // enum Element (GetMagicElement_8001AD30)
     short pad_A;
 } MagicData;
 
@@ -212,6 +213,16 @@ typedef struct
     int field_14;
 } struct_24;
 
+// weapon / armor / accessory table entry (weaponData_8007D04C, armorData_8007D420, accessoryData_8007D6B0)
+typedef struct
+{
+    short icon_0;               // index into equipmentIcons_8007D938
+    short field_2;
+    signed char statBonus_4[6]; // added to the six base stats by CalcEquippedStats_80033624
+    char pad_A[0xA];
+    int field_14;               // CalcEquippedStats_80033624 returns the largest one of the equipped items
+} EquipmentData;
+
 // object with a flags word at +4
 typedef struct
 {
@@ -286,13 +297,13 @@ extern unsigned char byte_8007CC24[0x2b];
 extern unsigned short itemFlags_8007CC50[];
 extern struct_12 itemData_8007CCA8[0x2b];
 extern int itemNames_8007CB78[0x2b];
-extern struct_24 weaponData_8007D04C[0x17];
+extern EquipmentData weaponData_8007D04C[0x17];
 extern int weaponNames_8007CFF0[0x17];
 extern int weaponPrices_8007D388[0x17];
-extern struct_24 armorData_8007D420[0xf];
+extern EquipmentData armorData_8007D420[0xf];
 extern int armorNames_8007D3E4[0xf];
 extern unsigned short armorPrices_8007D64C[0xf];
-extern struct_24 accessoryData_8007D6B0[0x11];
+extern EquipmentData accessoryData_8007D6B0[0x11];
 extern int accessoryNames_8007D66C[0x11];
 extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;

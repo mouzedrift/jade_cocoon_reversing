@@ -107,9 +107,9 @@ INCLUDE_ASM(sub_80018908);
 int sub_800189F8(void)
 {
     SaveData* sd = &saveData_8008B570;
-    struct_24* p = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
+    EquipmentData* p = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
     sub_800BFAF8(*((unsigned char*)sd + 0x7E4));
-    return dword_80079708[((short*)p)[1]];
+    return dword_80079708[p->field_2];
 }
 typedef struct
 {

@@ -1475,7 +1475,7 @@ int* GetWeaponStatBonus_8001CEF4(unsigned int idx)
     {
         return 0;
     }
-    return &weaponData_8007D04C[idx].field_4;
+    return (int*)weaponData_8007D04C[idx].statBonus_4;
 }
 // Matched
 int GetWeaponName_8001CF20(unsigned int idx)
@@ -1496,7 +1496,7 @@ int GetWeaponPrice_8001CF4C(unsigned int idx)
     return weaponPrices_8007D388[idx] * 10;
 }
 // Matched
-struct_24* GetWeaponData_8001CF84(unsigned int idx)
+EquipmentData* GetWeaponData_8001CF84(unsigned int idx)
 {
     if (idx >= 0x17)
     {
@@ -1511,7 +1511,7 @@ int* GetArmorStatBonus_8001CFB0(unsigned int idx)
     {
         return 0;
     }
-    return &armorData_8007D420[idx].field_4;
+    return (int*)armorData_8007D420[idx].statBonus_4;
 }
 // Matched
 int GetArmorName_8001CFDC(unsigned int idx)
@@ -1532,7 +1532,7 @@ int GetArmorPrice_8001D008(unsigned int idx)
     return armorPrices_8007D64C[idx];
 }
 // Matched
-struct_24* GetArmorData_8001D034(unsigned int idx)
+EquipmentData* GetArmorData_8001D034(unsigned int idx)
 {
     if (idx >= 0xF)
     {
@@ -1552,7 +1552,7 @@ int* GetAccessoryStatBonus_8001D078(unsigned int idx)
     {
         return 0;
     }
-    return &accessoryData_8007D6B0[idx].field_4;
+    return (int*)accessoryData_8007D6B0[idx].statBonus_4;
 }
 // Matched
 int GetAccessoryName_8001D0A4(unsigned int idx)
@@ -1573,7 +1573,7 @@ int GetAccessoryPrice_8001D0D0(unsigned int idx)
     return accessoryPrices_8007D914[idx];
 }
 // Matched
-struct_24* GetAccessoryData_8001D0FC(unsigned int idx)
+EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
 {
     if (idx >= 0x11)
     {
