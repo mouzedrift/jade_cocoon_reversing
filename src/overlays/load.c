@@ -3,56 +3,22 @@
 #include "funcs.h"
 #include "globals.h"
 
-extern int dword_800BE184;
-extern int dword_800BE14C;
-extern int dword_800BE150;
+extern int loadMenuActive_800BE184;
+extern int cardFreeBlocks_800BE14C;
+extern int cardSaveCount_800BE150;
 extern int dword_800BE174;
-extern int dword_800BE1E4[];
 extern int (*dword_800BE294[])();
-extern int dword_800BE254[];
-extern char byte_800B7630[];
-extern char* dword_800BE188[];
-extern int dword_800BE2C4;
-extern int dword_800BE2C8;
-extern int dword_800BE2CC;
-extern int dword_800BE2D0;
-extern int dword_800BE2D4;
-extern int dword_800BE2D8;
-extern int dword_800BE2DC;
-extern int dword_800BE2E0;
+extern char* cardSaveNames_800BE188[];
 extern int** dword_8008D480;
-extern int StopCARD(void);
-extern void InitCARD(void);
-extern void StartCARD(void);
-extern int _bu_init(void);
 extern int MemCardSync(int a, int* b, int* c);
 extern void MemCardAccept();
 extern void MemCardExist();
 extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
-extern void sub_800B7674(int a, int b);
-typedef struct
-{
-    int f0_LOAD;
-    int f4_LOAD;
-    int f8_LOAD;
-    int fC_LOAD;
-    int f10_LOAD;
-    int f14_LOAD;
-    int f18_LOAD;
-    int f1C_LOAD;
-    int f20_LOAD;
-    int pad24_LOAD[8];
-    int f44_LOAD;
-    int f48_LOAD;
-    int f4C_LOAD;
-    int f50_LOAD;
-    int f54_LOAD;
-} LoadState_LOAD;
-extern LoadState_LOAD dword_800BE1F4;
+extern void LoadMenuInit_800B7674(int mode, int b);
+extern void sub_800B7894();
 extern int uiTiyLoaded_8008B4E8;
 extern int dword_8008B570[];
 extern unsigned char byte_800BDF58;
-extern int dword_800BE208;
 extern char* dword_800BDECC[];
 extern char* dword_800BDEDC[];
 extern char* dword_800BDEEC[];
@@ -61,17 +27,18 @@ extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long b
 extern int sub_800BA3EC();
 extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
-extern void sub_800BACBC(char** lines);
-extern void sub_800B794C(int* t, int* s);
+extern void DrawMessageBox_800BACBC(char** lines);
+extern void LoadMenuTask_800B794C(int* t, int* s);
 extern void sub_800B79F8();
 extern void sub_800B9A8C();
-extern void sub_800B98C4();
-extern void sub_800BA234();
+extern void WriteSaveTask_800B98C4();
+extern void LoadSaveTask_800BA234();
 extern void sub_800BA968();
-extern void sub_800BAAE0();
+extern void LoadMenuExit_800BAAE0();
 extern void sub_800BA9AC(int* t);
-extern void sub_800BA9F0();
-extern void sub_8004F5E8(int a);
+extern void FormatCardTask_800BA9F0();
+extern void LoadUiTiy_8002BF74(void);
+extern int dword_8008BD80;
 extern char byte_800B6A2C[];
 extern char byte_800B6A54[];
 extern char byte_800B6A58[];
@@ -80,7 +47,7 @@ extern char byte_800B6ADC[];
 extern char byte_800B6B0C[];
 extern char* dword_800BDA08[];
 extern int UpdateMenuCursor_8003D794(short* cursor, int b);
-extern void sub_800BADE0(unsigned char* p);
+extern void ResetMenuRow_800BADE0(unsigned char* p);
 typedef struct
 {
     char c_LOAD[5];
@@ -160,16 +127,14 @@ typedef struct DirEntry_LOAD
 } DirEntry_LOAD;
 extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
 extern char byte_800B72FC[];
-extern char* dword_800BE028[2][15];
+extern char* saveFileNames_800BE028[2][15];
 extern void FreeActiveOverlay_8002C014(void);
 extern int sub_800A6D50(int a);
 extern void sub_800A6D30(int a);
 extern int dword_80091C54;
 extern int MemCardFormat(long chan);
-extern void sub_800BAFB0(int a);
-extern void VSyncCallbacks(int a, int b);
+extern void ScanCardSaves_800BAFB0(int a);
 extern void _card_stop(void);
-extern void TestEvent(int a);
 extern void UserFuncInit(void);
 extern void _card_start(void);
 extern void sub_800BD06C(void);
@@ -186,21 +151,8 @@ typedef struct
     short y_LOAD;
 } Pos_LOAD;
 extern unsigned char byte_800BDF68;
-extern int dword_800BE2A4;
-extern int dword_800BE2A8;
-extern int dword_800BE2AC;
-extern int dword_800BE2B0;
-extern int dword_800BE2B4;
-extern int dword_800BE2B8;
-extern int dword_800BE2BC;
-extern int dword_800BE2C0;
-extern int EnterCriticalSection(void);
-extern void CloseEvent(int a);
-extern void ExitCriticalSection(void);
 extern void _clr_card_event(void);
 extern int _get_card_event_x(void);
-extern void _new_card(void);
-extern void _card_write(int a, int b, void* c);
 typedef struct
 {
     char c_LOAD[8];
@@ -234,19 +186,27 @@ extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
-    char* f0_LOAD;
-    char* f4_LOAD;
+    char* summaries_LOAD; // 15 x 0x80 bytes: the summary block (file offset 0x280) of each save
+    char* fileBuf_LOAD;   // one save file (0x2180 bytes)
     int f8_LOAD;
-    char padC_LOAD[0x14];
+    char padC_LOAD[8];
+    int f14_LOAD;
+    char pad18_LOAD[8];
     int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
-    char pad2C_LOAD[4];
+    int f2C_LOAD;
     short s30_LOAD;
-    char pad32_LOAD[0x22];
+    short s32_LOAD;
+    char pad34_LOAD[8];
+    int f3C_LOAD;
+    int f40_LOAD;
+    char pad44_LOAD[0x10];
     unsigned f54_LOAD;
     int f58_LOAD;
     int f5C_LOAD;
+    int f60_LOAD;
+    void* rows_LOAD[6];
 } LoadTask_LOAD;
 typedef struct
 {
@@ -266,8 +226,6 @@ extern int IsCancelPressed_8003D3C0(int a, int b);
 extern void UserFuncOpen(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
-extern char byte_800B73A0[];
-extern char byte_800B7544[];
 typedef struct
 {
     short a_LOAD;
@@ -304,36 +262,106 @@ extern Row16_LOAD stru_800BDF4C[];
 extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 extern void sub_800B8BD4(void* t);
 extern void PlaySfx_80031494(int a);
-extern void sub_800BADF4(void);
-extern char* sub_800BAE4C(int n);
-extern int sub_800BAE2C(void);
-extern int sub_800BAE3C(void);
+extern void WaitCardSync_800BADF4(void);
+extern char* GetCardSaveName_800BAE4C(int n);
+extern int GetCardFreeBlocks_800BAE2C(void);
+extern int GetCardSaveCount_800BAE3C(void);
 typedef struct
 {
     char c_LOAD[6];
 } Bytes6_LOAD;
-extern Bytes6_LOAD dword_800B7624;
-extern char byte_800B74C4[];
-extern char byte_800B74E8[];
-extern char byte_800B7514[];
 extern void sub_800BBF88(void);
 extern void sub_800BC17C(void);
-extern int printf(const char* fmt, ...);
 
 INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
 
 void sub_800B7650(void)
 {
-    sub_800B7674(4, 0);
+    LoadMenuInit_800B7674(4, 0);
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B7674);
+#if 0
+// Not matched: mode and t swap $s3/$s4, and the case 0/1 stores are scheduled differently
+void LoadMenuInit_800B7674(int mode, int b)
+{
+    int i;
+    int* t;
+    LoadTask_LOAD* s;
+    MemCardStart();
+    t = (int*)dword_8008D480 + 4;
+    s = (LoadTask_LOAD*)t[5];
+    t[0] = (t[0] | 1) & ~0x8000;
+    for (i = 0; i < 6; i++)
+    {
+        ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[i]);
+    }
+    s->f8_LOAD = 0;
+    s->f24_LOAD = -1;
+    s->f28_LOAD = 0;
+    switch (mode)
+    {
+    case 0:
+        s->s30_LOAD = 1;
+        byte_800BDF58 = 0;
+        s->f54_LOAD = 4;
+        break;
+    case 1:
+        s->s30_LOAD = 1;
+        byte_800BDF58 = 1;
+        s->f54_LOAD = 4;
+        break;
+    case 2:
+        s->s30_LOAD = 1;
+        byte_800BDF58 = 1;
+        s->f54_LOAD = 0xC;
+        t[2] = (int)LoadMenuTask_800B794C;
+        goto done;
+    case 3:
+        s->s30_LOAD = 1;
+        byte_800BDF58 = 1;
+        s->f54_LOAD = 0x4C;
+        t[2] = (int)LoadMenuTask_800B794C;
+        goto done;
+    default:
+        s->s30_LOAD = 0;
+        byte_800BDF58 = 0;
+        s->f54_LOAD = 0;
+        break;
+    }
+    LoadUiTiy_8002BF74();
+    t[2] = (int)sub_800B7894;
+done:
+    if (dword_8008BD80 == -1 && !(s->f54_LOAD & 8))
+    {
+        s->s30_LOAD = 1;
+        byte_800BDF58 = 0;
+        s->f54_LOAD = 0x20;
+    }
+    s->f5C_LOAD = 0;
+    s->f20_LOAD = 0;
+    s->f14_LOAD = 0;
+    s->s32_LOAD = 0;
+    s->f2C_LOAD = 0;
+    s->f3C_LOAD = 0;
+    s->f40_LOAD = 0;
+    s->rows_LOAD[0] = &stru_800BDF4C[0];
+    s->rows_LOAD[1] = &stru_800BDF4C[1];
+    s->rows_LOAD[2] = &stru_800BDF4C[2];
+    s->rows_LOAD[3] = &stru_800BDF4C[3];
+    s->rows_LOAD[4] = &stru_800BDF4C[4];
+    s->rows_LOAD[5] = &stru_800BDF4C[5];
+    s->summaries_LOAD = malloc3_8003FC4C(0x780);
+    s->fileBuf_LOAD = malloc3_8003FC4C(0x2180);
+    loadMenuActive_800BE184 = 1;
+}
+#endif
+INCLUDE_OVERLAY_ASM(load, LoadMenuInit_800B7674);
 
 void sub_800B7894(int* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        t[2] = (int)sub_800B794C;
+        t[2] = (int)LoadMenuTask_800B794C;
     }
 }
 
@@ -362,12 +390,12 @@ void sub_800B7934(void)
 {
 }
 
-int sub_800B793C(void)
+int IsLoadMenuActive_800B793C(void)
 {
-    return dword_800BE184;
+    return loadMenuActive_800BE184;
 }
 
-void sub_800B794C(int* t, int* s)
+void LoadMenuTask_800B794C(int* t, int* s)
 {
     switch (s[10])
     {
@@ -376,18 +404,18 @@ void sub_800B794C(int* t, int* s)
         break;
     case 2:
         sub_800B9A8C(s);
-        t[2] = (int)sub_800B98C4;
+        t[2] = (int)WriteSaveTask_800B98C4;
         s[11] = 0;
         break;
     case 3:
-        t[2] = (int)sub_800BA234;
+        t[2] = (int)LoadSaveTask_800BA234;
         break;
     case 4:
         t[2] = (int)sub_800BA968;
         break;
     case 5:
     case 6:
-        t[2] = (int)sub_800BAAE0;
+        t[2] = (int)LoadMenuExit_800BAAE0;
         break;
     }
 }
@@ -406,22 +434,22 @@ void sub_800B80F8(LoadTask_LOAD* t)
         case 0:
             break;
         case 1:
-            sub_800BADE0((unsigned char*)&stru_800BDF4C[3]);
+            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[3]);
             break;
         case 2:
-            sub_800BADE0((unsigned char*)&stru_800BDF4C[2]);
+            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[2]);
             break;
         case 3:
             break;
         case 4:
-            sub_800BADE0((unsigned char*)&stru_800BDF4C[4]);
+            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[4]);
             if (stru_800BDF4C[0].fC_LOAD == 0)
             {
                 stru_800BDF4C[4].fC_LOAD = 1;
             }
             break;
         case 5:
-            sub_800BADE0((unsigned char*)&stru_800BDF4C[5]);
+            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[5]);
             break;
         }
         t->s30_LOAD = t->f24_LOAD;
@@ -732,7 +760,7 @@ void sub_800B92C0(LoadTask_LOAD* t)
     if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
         PlaySfx_80031494(0x7E);
-        sub_800BADF4();
+        WaitCardSync_800BADF4();
         t->f24_LOAD = 0x12;
     }
     else if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
@@ -752,15 +780,15 @@ INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
 void sub_800B9360(LoadTask_LOAD* t)
 {
-    switch (sub_800BAE68(dword_800BDF4C.f1C_LOAD))
+    switch (PollCardAccept_800BAE68(dword_800BDF4C.f1C_LOAD))
     {
     case 0:
     case 3:
-        sub_800BAFB0(dword_800BDF4C.f1C_LOAD);
+        ScanCardSaves_800BAFB0(dword_800BDF4C.f1C_LOAD);
         PlaySfx_80031494(0x7E);
         if (dword_800BDF4C.fC_LOAD == 0)
         {
-            if (sub_800BAE2C() || sub_800BAE3C())
+            if (GetCardFreeBlocks_800BAE2C() || GetCardSaveCount_800BAE3C())
             {
                 t->f20_LOAD = 0;
                 t->f24_LOAD = 3;
@@ -770,7 +798,7 @@ void sub_800B9360(LoadTask_LOAD* t)
                 t->f24_LOAD = 7;
             }
         }
-        else if (sub_800BAE3C())
+        else if (GetCardSaveCount_800BAE3C())
         {
             t->f20_LOAD = 0;
             t->f24_LOAD = 3;
@@ -800,7 +828,7 @@ void sub_800B9360(LoadTask_LOAD* t)
 
 void sub_800B9470(LoadTask_LOAD* t)
 {
-    int r = sub_800BAE68(dword_800BDF4C.f1C_LOAD);
+    int r = PollCardAccept_800BAE68(dword_800BDF4C.f1C_LOAD);
     if (r < -1 || (r > 0 && r != 4))
     {
         t->f24_LOAD = 1;
@@ -835,7 +863,7 @@ void sub_800B952C(LoadTask_LOAD* t)
         {
             if (n < t->f20_LOAD - 1)
             {
-                if (sub_800BAE4C(n))
+                if (GetCardSaveName_800BAE4C(n))
                 {
                     t->f24_LOAD = 4;
                     PlaySfx_80031494(0x7E);
@@ -854,7 +882,7 @@ void sub_800B952C(LoadTask_LOAD* t)
         {
             if (n < t->f20_LOAD - 1)
             {
-                if (!sub_800BAE4C(n) && sub_800BAE2C() <= 0)
+                if (!GetCardSaveName_800BAE4C(n) && GetCardFreeBlocks_800BAE2C() <= 0)
                 {
                     t->f24_LOAD = 9;
                     PlaySfx_80031494(0x7C);
@@ -886,12 +914,12 @@ void sub_800B9654(LoadTask_LOAD* t)
             PlaySfx_80031494(0x7E);
             if (dword_800BDF4C.fC_LOAD == 1)
             {
-                sub_800BADF4();
+                WaitCardSync_800BADF4();
                 t->f28_LOAD = 3;
             }
             else if (dword_800BDF4C.fC_LOAD == 0)
             {
-                sub_800BADF4();
+                WaitCardSync_800BADF4();
                 t->f28_LOAD = 2;
             }
         }
@@ -903,7 +931,7 @@ void sub_800B9654(LoadTask_LOAD* t)
     }
 }
 
-int sub_800B9724(LoadTask_LOAD* t)
+int ReadSaveSummaries_800B9724(LoadTask_LOAD* t)
 {
     int ret = 1;
     int cmd = 0;
@@ -917,10 +945,10 @@ int sub_800B9724(LoadTask_LOAD* t)
     case -1:
         if (t->f20_LOAD < 15)
         {
-            name = sub_800BAE4C(t->f20_LOAD);
+            name = GetCardSaveName_800BAE4C(t->f20_LOAD);
             if (name)
             {
-                MemCardReadFile(chan, name, t->f0_LOAD + t->f20_LOAD * 128, 0x280, 0x80);
+                MemCardReadFile(chan, name, t->summaries_LOAD + t->f20_LOAD * 128, 0x280, 0x80);
             }
             else if (t->f20_LOAD == 14)
             {
@@ -966,8 +994,8 @@ int sub_800B9724(LoadTask_LOAD* t)
 }
 
 #if 0
-// Not matched: same prologue scheduling as sub_800BA234 ($a0 = 1 before the $s1 save / second-argument copy)
-void sub_800B98C4(int* t, LoadTask_LOAD* s)
+// Not matched: same prologue scheduling as LoadSaveTask_800BA234 ($a0 = 1 before the $s1 save / second-argument copy)
+void WriteSaveTask_800B98C4(int* t, LoadTask_LOAD* s)
 {
     int cmd = 0;
     int res = 0;
@@ -979,13 +1007,13 @@ void sub_800B98C4(int* t, LoadTask_LOAD* s)
     case 0:
         break;
     case -1:
-        name = sub_800BAE4C(n);
+        name = GetCardSaveName_800BAE4C(n);
         if (!name)
         {
-            MemCardCreateFile(chan, dword_800BE028[0][n], 1);
-            name = dword_800BE028[0][n];
+            MemCardCreateFile(chan, saveFileNames_800BE028[0][n], 1);
+            name = saveFileNames_800BE028[0][n];
         }
-        MemCardWriteFile(chan, name, s->f4_LOAD, 0, 0x2180);
+        MemCardWriteFile(chan, name, s->fileBuf_LOAD, 0, 0x2180);
         break;
     case 1:
         if (cmd == 4)
@@ -993,18 +1021,18 @@ void sub_800B98C4(int* t, LoadTask_LOAD* s)
             switch (res)
             {
             case 0:
-                t[2] = (int)sub_800B794C;
+                t[2] = (int)LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 3;
                 PlaySfx_80031494(0x7E);
-                MemCopy_800403E8((unsigned int*)(s->f0_LOAD + n * 128), (unsigned int*)(s->f4_LOAD + 0x280), 0x80);
-                sub_800BAFB0(stru_800BDF4C[1].fC_LOAD);
+                MemCopy_800403E8((unsigned int*)(s->summaries_LOAD + n * 128), (unsigned int*)(s->fileBuf_LOAD + 0x280), 0x80);
+                ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
                 break;
             case 1:
             case 2:
             case 3:
             case 5:
-                t[2] = (int)sub_800B794C;
+                t[2] = (int)LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 0xE;
                 break;
@@ -1013,17 +1041,17 @@ void sub_800B98C4(int* t, LoadTask_LOAD* s)
         break;
     }
     DrawLoadingIcon_8003CD5C();
-    sub_800BACBC(dword_800BDEEC);
+    DrawMessageBox_800BACBC(dword_800BDEEC);
     DrawMenuBackground_8002BE10();
 }
 #endif
-INCLUDE_OVERLAY_ASM(load, sub_800B98C4);
+INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B9A8C);
 
 #if 0
 // Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
-void sub_800BA234(int* t, LoadTask_LOAD* s)
+void LoadSaveTask_800BA234(int* t, LoadTask_LOAD* s)
 {
     int cmd = 0;
     int res = 0;
@@ -1035,14 +1063,14 @@ void sub_800BA234(int* t, LoadTask_LOAD* s)
     case 0:
         break;
     case -1:
-        name = sub_800BAE4C(n);
+        name = GetCardSaveName_800BAE4C(n);
         if (name)
         {
-            MemCardReadFile(chan, name, s->f4_LOAD, 0, 0x2180);
+            MemCardReadFile(chan, name, s->fileBuf_LOAD, 0, 0x2180);
         }
         else
         {
-            t[2] = (int)sub_800B794C;
+            t[2] = (int)LoadMenuTask_800B794C;
             s->f28_LOAD = 0;
             s->f24_LOAD = 0xF;
         }
@@ -1056,13 +1084,13 @@ void sub_800BA234(int* t, LoadTask_LOAD* s)
                 if (sub_800BA3EC(s))
                 {
                     s->f8_LOAD = 1;
-                    t[2] = (int)sub_800B794C;
+                    t[2] = (int)LoadMenuTask_800B794C;
                     s->f28_LOAD = 6;
                     s->f54_LOAD |= 1;
                 }
                 else
                 {
-                    t[2] = (int)sub_800B794C;
+                    t[2] = (int)LoadMenuTask_800B794C;
                     s->f28_LOAD = 0;
                     s->f24_LOAD = 0xA;
                 }
@@ -1072,7 +1100,7 @@ void sub_800BA234(int* t, LoadTask_LOAD* s)
             case 2:
             case 3:
             case 5:
-                t[2] = (int)sub_800B794C;
+                t[2] = (int)LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 0xF;
                 break;
@@ -1081,18 +1109,18 @@ void sub_800BA234(int* t, LoadTask_LOAD* s)
         break;
     }
     DrawLoadingIcon_8003CD5C();
-    sub_800BACBC(dword_800BDEDC);
+    DrawMessageBox_800BACBC(dword_800BDEDC);
     DrawMenuBackground_8002BE10();
 }
 #endif
-INCLUDE_OVERLAY_ASM(load, sub_800BA234);
+INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
 void sub_800BA968(int* t)
 {
     DrawLoadingIcon_8003CD5C();
-    sub_800BACBC(dword_800BDECC);
+    DrawMessageBox_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9AC;
 }
@@ -1100,47 +1128,47 @@ void sub_800BA968(int* t)
 void sub_800BA9AC(int* t)
 {
     DrawLoadingIcon_8003CD5C();
-    sub_800BACBC(dword_800BDECC);
+    DrawMessageBox_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
-    t[2] = (int)sub_800BA9F0;
+    t[2] = (int)FormatCardTask_800BA9F0;
 }
 
-void sub_800BA9F0(int* t, LoadTask_LOAD* s)
+void FormatCardTask_800BA9F0(int* t, LoadTask_LOAD* s)
 {
     switch (MemCardFormat(stru_800BDF4C[1].fC_LOAD << 4))
     {
     case 0:
-        t[2] = (int)sub_800B794C;
+        t[2] = (int)LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 3;
         s->f20_LOAD = 0;
-        sub_800BAFB0(stru_800BDF4C[1].fC_LOAD);
+        ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
         s->f5C_LOAD = 0;
         break;
     case 1:
-        t[2] = (int)sub_800B794C;
+        t[2] = (int)LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 1;
         break;
     case 2:
-        t[2] = (int)sub_800B794C;
+        t[2] = (int)LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 0xD;
         break;
     case -1:
         break;
     }
-    sub_800BADF4();
+    WaitCardSync_800BADF4();
     DrawLoadingIcon_8003CD5C();
-    sub_800BACBC(dword_800BDECC);
+    DrawMessageBox_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
 }
 
-void sub_800BAAE0(int* t, LoadTask_LOAD* s)
+void LoadMenuExit_800BAAE0(int* t, LoadTask_LOAD* s)
 {
-    free3_8003FC6C(s->f0_LOAD);
-    free3_8003FC6C(s->f4_LOAD);
-    dword_800BE184 = 0;
+    free3_8003FC6C(s->summaries_LOAD);
+    free3_8003FC6C(s->fileBuf_LOAD);
+    loadMenuActive_800BE184 = 0;
     t[0] = (t[0] & ~1) | 0x8000;
     MemCardStop();
     t[2] = (int)sub_800B7650;
@@ -1178,17 +1206,17 @@ void sub_800BAAE0(int* t, LoadTask_LOAD* s)
     }
 }
 
-int sub_800BAC14(int n)
+int PlayTimeHours_800BAC14(int n)
 {
     return n / 216000 % 60;
 }
 
-int sub_800BAC68(int n)
+int PlayTimeMinutes_800BAC68(int n)
 {
     return n / 3600 % 60;
 }
 
-void sub_800BACBC(char** lines)
+void DrawMessageBox_800BACBC(char** lines)
 {
     Size_LOAD sz;
     Rect_LOAD r;
@@ -1221,13 +1249,13 @@ void sub_800BACBC(char** lines)
     }
 }
 
-void sub_800BADE0(unsigned char* p)
+void ResetMenuRow_800BADE0(unsigned char* p)
 {
     p[12] = p[9];
     p[13] = p[10];
 }
 
-void sub_800BADF4(void)
+void WaitCardSync_800BADF4(void)
 {
     int a = 0;
     int b = 0;
@@ -1239,23 +1267,23 @@ int sub_800BAE24(void)
     return 1;
 }
 
-int sub_800BAE2C(void)
+int GetCardFreeBlocks_800BAE2C(void)
 {
-    return dword_800BE14C;
+    return cardFreeBlocks_800BE14C;
 }
 
-int sub_800BAE3C(void)
+int GetCardSaveCount_800BAE3C(void)
 {
-    return dword_800BE150;
+    return cardSaveCount_800BE150;
 }
 
-char* sub_800BAE4C(int i)
+char* GetCardSaveName_800BAE4C(int i)
 {
-    char** p = dword_800BE188;
+    char** p = cardSaveNames_800BE188;
     return p[i];
 }
 
-int sub_800BAE68(int a)
+int PollCardAccept_800BAE68(int a)
 {
     int x[2];
     int ret = -1;
@@ -1281,7 +1309,7 @@ int sub_800BAE68(int a)
     return ret;
 }
 
-int sub_800BAF0C(int a)
+int PollCardExist_800BAF0C(int a)
 {
     int x[2];
     int ret = -1;
@@ -1309,7 +1337,7 @@ int sub_800BAF0C(int a)
 
 #if 0
 // Not matched: the original tests the first loop's entry as found < files (slt/beqz on the register copy of 0); this folds it to blez files and swaps which of i/found is copied before the call
-void sub_800BAFB0(int slot)
+void ScanCardSaves_800BAFB0(int slot)
 {
     DirEntry_LOAD dir[15];
     long files;
@@ -1333,25 +1361,25 @@ void sub_800BAFB0(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (sub_800BB23C(files, dword_800BE028[0][i], dir))
+        if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[0][i], dir))
         {
             found++;
-            dword_800BE188[i] = dword_800BE028[0][i];
+            cardSaveNames_800BE188[i] = saveFileNames_800BE028[0][i];
         }
         else
         {
-            dword_800BE188[i] = 0;
+            cardSaveNames_800BE188[i] = 0;
         }
     }
-    dword_800BE14C = 15 - blocks;
-    dword_800BE150 = found;
+    cardFreeBlocks_800BE14C = 15 - blocks;
+    cardSaveCount_800BE150 = found;
 }
 #endif
-INCLUDE_OVERLAY_ASM(load, sub_800BAFB0);
+INCLUDE_OVERLAY_ASM(load, ScanCardSaves_800BAFB0);
 
 #if 0
-// Not matched: same as sub_800BAFB0 (first loop entry test found < files is folded to blez files here)
-void sub_800BB0E4(int slot)
+// Not matched: same as ScanCardSaves_800BAFB0 (first loop entry test found < files is folded to blez files here)
+void ScanCardSavesComb_800BB0E4(int slot)
 {
     DirEntry_LOAD dir[15];
     long files;
@@ -1375,28 +1403,28 @@ void sub_800BB0E4(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (sub_800BB23C(files, dword_800BE028[0][i], dir))
+        if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[0][i], dir))
         {
             found++;
-            dword_800BE188[i] = dword_800BE028[0][i];
+            cardSaveNames_800BE188[i] = saveFileNames_800BE028[0][i];
         }
-        else if (sub_800BB23C(files, dword_800BE028[1][i], dir))
+        else if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[1][i], dir))
         {
             found++;
-            dword_800BE188[i] = dword_800BE028[1][i];
+            cardSaveNames_800BE188[i] = saveFileNames_800BE028[1][i];
         }
         else
         {
-            dword_800BE188[i] = 0;
+            cardSaveNames_800BE188[i] = 0;
         }
     }
-    dword_800BE14C = 15 - blocks;
-    dword_800BE150 = found;
+    cardFreeBlocks_800BE14C = 15 - blocks;
+    cardSaveCount_800BE150 = found;
 }
 #endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB0E4);
+INCLUDE_OVERLAY_ASM(load, ScanCardSavesComb_800BB0E4);
 
-int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
+int FindDirEntry_800BB23C(int n, unsigned char* a, unsigned char* b)
 {
     int i;
     int j;
@@ -1428,7 +1456,7 @@ int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
 
 #if 0
 // Not matched: register allocation (h/i/table pointer in $s0/$s1/$s2 in the original) and the clearing loops are not strength-reduced to a decrementing pointer here
-void sub_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
+void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
 {
     int i;
     int j;
@@ -1481,7 +1509,7 @@ void sub_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
     MemCopy_800403E8((unsigned int*)h->f200_LOAD, (unsigned int*)dword_800BE0B8, 0x80);
 }
 #endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
+INCLUDE_OVERLAY_ASM(load, BuildCardHeader_800BB2AC);
 
 void sub_800BB4A8(short sel)
 {
