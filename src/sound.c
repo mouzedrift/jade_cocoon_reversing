@@ -90,8 +90,8 @@ void InitSound_8002FE54(SoundStruct* arg1)
 // Matched
 void InitSounds_8002FE7C(void)
 {
-    InitSound_8002FE54(&stru_80091CE0);
-    InitSound_8002FE54(&stru_80091D20);
+    InitSound_8002FE54(&bgmSound_80091CE0);
+    InitSound_8002FE54(&sfxSound_80091D20);
     InitSound_8002FE54(&stru_80091D00);
 }
 // Matched
@@ -100,8 +100,8 @@ void sub_8002FEB8(void)
     char* p = (char*)soundTask_8008D4A4[0x24 / 4];
     char* q;
     int i;
-    *(SoundStruct**)(p + 4) = &stru_80091CE0;
-    *(SoundStruct**)(p + 8) = &stru_80091D20;
+    *(SoundStruct**)(p + 4) = &bgmSound_80091CE0;
+    *(SoundStruct**)(p + 8) = &sfxSound_80091D20;
     *(SoundStruct**)(p + 0xC) = &stru_80091D00;
     *(short*)(p + 2) = 2;
     q = p + 0x20;
@@ -131,8 +131,8 @@ typedef struct
 void sub_8002FF10(char* a, struct_FF10* p)
 {
     int i;
-    p->field_4 = &stru_80091CE0;
-    p->field_8 = &stru_80091D20;
+    p->field_4 = &bgmSound_80091CE0;
+    p->field_8 = &sfxSound_80091D20;
     p->field_C = &stru_80091D00;
     p->field_2 = 2;
     for (i = 4; i >= 0; i--)
@@ -184,7 +184,7 @@ extern void StopSoundSeqs_80030D68(SoundStruct* p);
 // Not matched: register allocation of the sequence number
 void sub_8003006C(int a0, int* a1)
 {
-    SoundStruct* s = &stru_80091CE0;
+    SoundStruct* s = &bgmSound_80091CE0;
     short seq = s->field_4_seq_num;
     if (seq >= 0)
     {
@@ -192,7 +192,7 @@ void sub_8003006C(int a0, int* a1)
         s->field_4_seq_num = -1;
     }
     FreeSound_80030D00(a1[1]);
-    StopSoundSeqs_80030D68(&stru_80091D40);
+    StopSoundSeqs_80030D68(&systemSound_80091D40);
     FreeSound_80030D00(a1[2]);
 }
 #endif
@@ -210,7 +210,7 @@ int sub_800303E8(void)
     {
         return 0;
     }
-    stru_80091D00 = stru_80091D40;
+    stru_80091D00 = systemSound_80091D40;
     stru_80091D00.field_8_sep_data_ptr = 0;
     stru_80091D00.field_6_sound_idx = 10;
     p[1] = 0;
@@ -244,7 +244,7 @@ int sub_800306B0(void)
 // Matched
 void sub_800306D8(void)
 {
-    FreeSoundSeqs_80030EEC(&stru_80091CE0);
+    FreeSoundSeqs_80030EEC(&bgmSound_80091CE0);
 }
 extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
@@ -253,7 +253,7 @@ void sub_800306FC(int idx)
     SoundStruct** p = (SoundStruct**)soundTask_8008D4A4[0x24 / 4];
     if (idx < 10)
     {
-        StopSoundSeq_80031408(&stru_80091D40, idx);
+        StopSoundSeq_80031408(&systemSound_80091D40, idx);
         return;
     }
     if (GetSoundFileId_80030D4C(p[1]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))

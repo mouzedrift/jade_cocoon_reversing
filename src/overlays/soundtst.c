@@ -25,8 +25,8 @@ void sub_800A51D8(int* a, short* b)
     b[2] = 0;
     b[5] = 0;
     a[2] = (int)sub_800A5238;
-    FreeSound_80030D00((int)&stru_80091D40);
-    LoadSound_80030A84(0x1B, &stru_80091CE0);
+    FreeSound_80030D00((int)&systemSound_80091D40);
+    LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
 
 INCLUDE_OVERLAY_ASM(soundtst, sub_800A5238);

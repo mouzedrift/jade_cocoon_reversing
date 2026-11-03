@@ -150,7 +150,7 @@ void sub_80031260(SoundStruct* s, int idx, short loops)
     int seq = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
     if (seq >= 0)
     {
-        if (s == &stru_80091CE0)
+        if (s == &bgmSound_80091CE0)
         {
             SsSepSetVol(s->field_C_sep_access_num, seq, (settingsFlags_8008B58C >> 7) & 0x7F,
                         (settingsFlags_8008B58C >> 7) & 0x7F);
@@ -214,14 +214,14 @@ void PlaySfx_80031494(int a1)
 {
     if (a1 < 63)
     {
-        SsVoKeyOn((stru_80091D20.field_0_vab_id << 8) + a1,
+        SsVoKeyOn((sfxSound_80091D20.field_0_vab_id << 8) + a1,
                   0x3C00u,
                   (settingsFlags_8008B58C >> 14) & 0x7F,
                   (settingsFlags_8008B58C >> 14) & 0x7F);
     }
     else
     {
-        SsVoKeyOn((stru_80091D40.field_0_vab_id << 8) + a1,
+        SsVoKeyOn((systemSound_80091D40.field_0_vab_id << 8) + a1,
                   0x3C00u,
                   (settingsFlags_8008B58C >> 14) & 0x7F,
                   (settingsFlags_8008B58C >> 14) & 0x7F);
@@ -233,11 +233,11 @@ short SfxKeyOn_800314F4(int a)
     SoundStruct* s;
     if (a < 0x3f)
     {
-        s = &stru_80091D20;
+        s = &sfxSound_80091D20;
     }
     else
     {
-        s = &stru_80091D40;
+        s = &systemSound_80091D40;
     }
     return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.field_1C_settings >> 14) & 0x7F, (saveData_8008B570.field_1C_settings >> 14) & 0x7F);
 }
@@ -247,11 +247,11 @@ void SfxKeyOff_80031574(short a, short b)
     SoundStruct* s;
     if (b < 0x3f)
     {
-        s = &stru_80091D20;
+        s = &sfxSound_80091D20;
     }
     else
     {
-        s = &stru_80091D40;
+        s = &systemSound_80091D40;
     }
     SsUtKeyOff(a, *(short*)s, b, 0, 0x3c);
 }
@@ -279,7 +279,7 @@ void sub_80031638(void)
     char* q;
     int i;
     q = (char*)soundTask_8008D4A4[0x24 / 4];
-    if (stru_80091D20.field_4_seq_num >= 0)
+    if (sfxSound_80091D20.field_4_seq_num >= 0)
     {
         i = 0;
         do
@@ -288,10 +288,10 @@ void sub_80031638(void)
             if (*(short*)(q + 0x18) == 0)
             {
                 *(short*)(q + 0x18) = 1;
-                SsSepSetDecrescendo(stru_80091D20.field_C_sep_access_num, stru_80091D20.field_4_seq_num, 0x7F, 0x40);
-                *(short*)(q + 0x1C) = stru_80091D20.field_C_sep_access_num;
+                SsSepSetDecrescendo(sfxSound_80091D20.field_C_sep_access_num, sfxSound_80091D20.field_4_seq_num, 0x7F, 0x40);
+                *(short*)(q + 0x1C) = sfxSound_80091D20.field_C_sep_access_num;
                 *(short*)(q + 0x1A) = 0x20;
-                *(short*)(q + 0x1E) = stru_80091D20.field_4_seq_num;
+                *(short*)(q + 0x1E) = sfxSound_80091D20.field_4_seq_num;
                 break;
             }
             q += 8;

@@ -553,7 +553,7 @@ void sub_800C39C4(CfgCtxConfig* c)
     e.f4 = GetTime30Hz_8002C64C();
     e.fC = c->fc;
     e.f10 = (int)dword_800C52E0;
-    ApplyBgmVolume_800309D8(&stru_80091CE0);
+    ApplyBgmVolume_800309D8(&bgmSound_80091CE0);
     if (c->f38)
     {
         a.f0 = 4;

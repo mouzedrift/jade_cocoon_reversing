@@ -168,7 +168,7 @@ void sub_800A0BCC(TitleTask* t, TitleCtxA* c)
 {
     if (--c->field_68 <= 0)
     {
-        FreeSound_80030D00((int)&stru_80091CE0);
+        FreeSound_80030D00((int)&bgmSound_80091CE0);
         sub_800A1AFC(t, 0xC);
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
@@ -206,7 +206,7 @@ void sub_800A0C28(TitleTask* t, TitleCtxA* c)
         }
         c->field_68 = 0x3C;
         t->next_8 = sub_800A0BCC;
-        ss = &stru_80091CE0;
+        ss = &bgmSound_80091CE0;
         if (ss->field_4_seq_num >= 0)
         {
             SsSepSetDecrescendo(*(short*)&ss->field_C_sep_access_num, ss->field_4_seq_num, 0x7F, 0x78);
@@ -291,10 +291,10 @@ int sub_800A0EF0(void)
     drawEnvRed_8008D448[0] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
-    LoadSound_80030A84(0x1B, &stru_80091CE0);
-    sub_80031260(&stru_80091CE0, 0x1B, 1);
+    LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
+    sub_80031260(&bgmSound_80091CE0, 0x1B, 1);
     DrawIntroMovie_8001AF64(&dword_800A27C0);
-    FreeSound_80030D00((int)&stru_80091CE0);
+    FreeSound_80030D00((int)&bgmSound_80091CE0);
     return dword_800A2818;
 }
 
@@ -407,10 +407,10 @@ extern void sub_8004E2C8(int a0);
     if (++dword_800A2814 >= 0x1771) \
     { \
         (c)->field_0 = 0; \
-        if (stru_80091CE0.field_4_seq_num >= 0) \
+        if (bgmSound_80091CE0.field_4_seq_num >= 0) \
         { \
-            SsSepSetDecrescendo(*(short*)&stru_80091CE0.field_C_sep_access_num, stru_80091CE0.field_4_seq_num, 0x7F, 0x78); \
-            stru_80091CE0.field_4_seq_num = -1; \
+            SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78); \
+            bgmSound_80091CE0.field_4_seq_num = -1; \
         } \
         sub_8001C19C(0, 0x20); \
         sub_8001C19C(1, 0x20); \
@@ -698,7 +698,7 @@ void sub_800A1AC0(TitleTaskM* t, int* cnt)
 // Matched
 void sub_800A1AFC(TitleTaskM* t, int a)
 {
-    SoundStruct* s = &stru_80091CE0;
+    SoundStruct* s = &bgmSound_80091CE0;
     dword_800A2818 = a;
     if (s->field_4_seq_num >= 0)
     {
