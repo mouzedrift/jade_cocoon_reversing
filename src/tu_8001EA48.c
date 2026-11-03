@@ -3343,25 +3343,22 @@ void LoadModelTextures_8002607C(ModelLoadParams* a0)
         p->texSel_34 = a0->sel_8;
     }
 }
-#if 0
-// Not matched: the a0[9] list argument is loaded before the a0[6] load in the original, ours after; insensitive to statement order, types and temporaries
+// Matched
 void LoadModelFtg_800260FC(ModelLoadParams* a0)
 {
-    int q = (int)a0->vram_18;
     Model* p = a0->model_14;
+    int* list = a0->ftg_24;
+    ModelVramSlot* v = a0->vram_18;
     int h = p->list_0->heap_4;
-    q += 4;
-    p->ftgCount_3C = GetFtgObjectCount_80021738(a0->ftg_24);
+    p->ftgCount_3C = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->ftg_50, p->ftgCount_3C, h);
-    LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, q);
+    LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, (int)v->reloc_4);
     if (sub_80021DE4(a0->ftg_24) != 0)
     {
         sub_80021DF0(&p->mats_5C, sub_80021DE4(a0->ftg_24), h);
         sub_80021E4C(a0->ftg_24, &p->mats_5C, sub_80021DE4(a0->ftg_24));
     }
 }
-#endif
-INCLUDE_ASM(LoadModelFtg_800260FC);
 // Matched
 void LoadModelAnims_800261C8(ModelLoadParams* a0)
 {
@@ -3478,20 +3475,17 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
         }
     }
 }
-#if 0
-// Not matched: the original loads the list argument (+0x34) right after the owner pointer, ours schedules it first (same as LoadModelFtg_800260FC)
+// Matched
 void sub_8002651C(ModelLoadParams* a)
 {
     Model* p = a->model_14;
     int* list = a->ftg2_34;
+    ModelVramSlot* v = a->vram_18;
     int heap = p->list_0->heap_4;
-    short* q = a->vram_18->reloc_4;
     p->ftg2Count_42 = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->ftg2_68, p->ftg2Count_42, heap);
-    LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)q);
+    LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)v->reloc_4);
 }
-#endif
-INCLUDE_ASM(sub_8002651C);
 // Matched
 void sub_8002659C(ModelLoadParams* a0)
 {
