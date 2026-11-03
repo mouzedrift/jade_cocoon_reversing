@@ -155,9 +155,9 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-#if 0
-// Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
+// index of the camera point nearest to pos (XZ plane)
+// Matched
 int sub_80019CC4(int* pos)
 {
     unsigned int i;
@@ -165,25 +165,24 @@ int sub_80019CC4(int* pos)
     int found;
     best = -1;
     found = 0;
-    if (!(unknownFlags_8008D678 & 0x8000))
+    if (unknownFlags_8008D678 & 0x8000)
     {
-        for (i = 0; i < 8; i++)
+        return found;
+    }
+    for (i = 0; i < 8; i++)
+    {
+        if (cameraState_8008D4F0.points_44[i].active == 0)
         {
-            if (cameraState_8008D4F0.points_44[i].active == 0)
-            {
-                break;
-            }
-            if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
-            {
-                best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
-                found = i;
-            }
+            break;
+        }
+        if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
+        {
+            best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
+            found = i;
         }
     }
     return found;
 }
-#endif
-INCLUDE_ASM(sub_80019CC4);
 extern int dword_8008D3F0;      // range of the global point light (0: none)
 extern int dword_8008D680[3];   // position of the global point light
 extern SVECTOR word_8008D418;   // colour of the global point light
