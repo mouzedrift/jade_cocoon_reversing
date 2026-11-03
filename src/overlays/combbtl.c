@@ -326,7 +326,45 @@ void sub_800A5080(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A50E4);
+extern unsigned char byte_800A3A90[];
+extern void sub_800A54CC();
+extern void sub_800A51EC();
+void sub_800A50E4(CombBtlTask* t)
+{
+    int r = IsEffectTaskIdle_800148D4();
+    if (r == 1)
+    {
+        if (dword_800A85F8 < 0)
+        {
+            if (byte_800A38DC == r)
+            {
+                dword_800A85F8 = dword_800A85B8;
+                byte_800A3A90[dword_800A85B8]++;
+                if (byte_800A3A90[dword_800A85B8] >= 100)
+                {
+                    byte_800A3A90[dword_800A85B8] = 99;
+                }
+            }
+            else
+            {
+                t->next_8 = sub_800A54CC;
+                return;
+            }
+        }
+        else
+        {
+            byte_800A38DC = 0;
+            byte_800A3A98[dword_800A85F8] = r;
+            byte_800A3A90[dword_800A85F8]++;
+            if (byte_800A3A90[dword_800A85F8] >= 100)
+            {
+                byte_800A3A90[dword_800A85F8] = 99;
+            }
+        }
+        t->next_8 = sub_800A51EC;
+        dword_800A84D4 = 0x1E;
+    }
+}
 
 extern void sub_800A8078(short, short, short);
 extern int sub_800A8098();
@@ -401,6 +439,36 @@ void sub_800A5290(CombBtlTask* t)
     }
 }
 
+#if 0
+// Not matched: the index scaling becomes sllv by the register holding 2 (CSE with kinds[0]); the original shifts by a constant
+extern EventEntry* OpenMessageWindow_8003422C(int* cfg);
+extern int dword_800A4A8C[];
+extern int dword_800A4A94[];
+int sub_800A5408(int which, int text, int c)
+{
+    int cfg[18];
+    int kinds[2] = {2, 3};
+    int* tbl[2] = {dword_800A4A8C, dword_800A4A94};
+    cfg[0] = 2;
+    cfg[1] = 0;
+    cfg[2] = text;
+    cfg[3] = (int)tbl[which];
+    cfg[4] = (settingsFlags_8008B58C & 7) != 3;
+    cfg[5] = 0;
+    cfg[6] = 0;
+    cfg[7] = 0;
+    cfg[8] = 7;
+    cfg[9] = kinds[which];
+    cfg[10] = c;
+    cfg[11] = 1;
+    cfg[12] = 0;
+    cfg[13] = 0;
+    cfg[14] = (settingsFlags_8008B58C >> 3) & 1;
+    cfg[15] = 1;
+    cfg[16] = 0;
+    return (int)OpenMessageWindow_8003422C(cfg);
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
 void sub_800A54CC(CombBtlTask* t)
@@ -642,6 +710,66 @@ CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
     return r;
 }
 
+#if 0
+// Not matched: scheduling/regalloc around the 0x1000 store and the cb_C address (15 words); the flags store only stays ahead of the camera stores with e as int*
+extern void ResetCameraToLevant_800376A8(void);
+extern void InitCameraTask_800368F8(void);
+extern int cameraState_8008D4F0[];
+extern int dword_8008B4F8;
+extern short dword_8007C2EC[];
+extern short dword_8007C30C[];
+extern short dword_80087114[];
+extern short dword_80087134[];
+void sub_800A7290()
+{
+    int* e = (int*)AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
+    char* p;
+    char* q;
+    if (e)
+    {
+        e[0] = (e[0] | 1) & ~0x8000;
+        ResetCameraToLevant_800376A8();
+        sub_80037748();
+        e[2] = (int)InitCameraTask_800368F8;
+        dword_8008B4F8 = 0x1000;
+        e[3] = (int)nullsub_5;
+        e[0] = (e[0] | 4) & ~0x8000;
+        p = (char*)cameraState_8008D4F0;
+        *(short*)(p + 0x2E) = 0;
+        *(int*)(p + 0x20) = 0;
+        *(int*)(p + 0x24) = 0;
+        *(int*)(p + 0x28) = 0;
+        *(int*)(p + 0x14) = 0;
+        *(int*)(p + 0x18) = 0;
+        *(int*)(p + 0x1C) = 0;
+        *(short*)(p + 0x34) = 0;
+        *(short*)(p + 0x36) = 0;
+        *(short*)(p + 0x38) = 0;
+        *(short*)(p + 0x3C) = 0;
+        *(short*)(p + 0x3E) = 0;
+        *(short*)(p + 0x40) = 0;
+        q = (char*)&saveData_8008B570;
+        *(int*)(q + 0x7A8) = 0;
+        *(int*)(q + 0x7AC) = 0;
+        *(int*)(q + 0x7B0) = 0;
+        *(short*)(q + 0x7B4) = 0;
+        *(short*)(q + 0x7B6) = 0;
+        *(short*)(q + 0x7B8) = 0;
+        *(short*)(p + 0x34) = dword_8007C2EC[0];
+        *(short*)(p + 0x36) = dword_8007C2EC[1];
+        *(short*)(p + 0x38) = dword_8007C2EC[2];
+        *(short*)(p + 0x3C) = dword_8007C30C[0];
+        *(short*)(p + 0x3E) = dword_8007C30C[3];
+        *(short*)(p + 0x40) = dword_8007C30C[6];
+        dword_80087114[0] = dword_8007C2EC[0];
+        dword_80087114[1] = dword_8007C2EC[1];
+        dword_80087114[2] = dword_8007C2EC[2];
+        dword_80087134[0] = dword_8007C30C[0];
+        dword_80087134[3] = dword_8007C30C[3];
+        dword_80087134[6] = dword_8007C30C[6];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
 void sub_800A73E4()
