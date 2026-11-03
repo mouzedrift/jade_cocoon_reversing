@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "gte.h"
+#include "tu_8004B0A8.h"
 
 INCLUDE_DATA(dword_8008713C);
 INCLUDE_DATA(dword_80087140);
@@ -128,8 +129,113 @@ void sub_8004B0A8(VECTOR* v, MATRIX* m)
     m->m[1][2] = n2.vy;
     m->m[2][2] = n2.vz;
 }
-INCLUDE_ASM(sub_8004B320);
-INCLUDE_ASM(sub_8004B590);
+// Matched
+void sub_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_F3* t = (POLY_F3*)FTG_PRIM_SCRATCH;
+    FtgPolyF3* e = obj->f3_0.items;
+    int i;
+    setPolyF3(t);
+    for (i = 0; i < obj->f3_0.count; i++, e++)
+    {
+        FtgVert* n = &e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        gte_stsxy3_f3(t);
+        gte_nclip();
+        gte_stopz(&ctx->opz_10);
+        if (ctx->opz_10 > 0)
+        {
+            gte_avsz3();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r0);
+                }
+                else
+                {
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                }
+                *(POLY_F3*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_F3);
+                ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+                ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(DR_TPAGE);
+            }
+        }
+    }
+}
+// Matched
+void sub_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_F4* t = (POLY_F4*)FTG_PRIM_SCRATCH;
+    FtgPolyF4* e = obj->f4_20.items;
+    int i;
+    setPolyF4(t);
+    for (i = 0; i < obj->f4_20.count; i++, e++)
+    {
+        FtgVert* n = &e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        gte_nclip();
+        gte_stopz(&ctx->opz_10);
+        gte_stsxy3_f4(t);
+        gte_ldv0(&e->v[3]);
+        gte_rtps();
+        gte_nclip();
+        gte_stopz(&ctx->opz2_14);
+        if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
+        {
+            gte_avsz4();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                gte_stsxy(&t->x3);
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r0);
+                }
+                else
+                {
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                }
+                *(POLY_F4*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_F4);
+                ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+                ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(DR_TPAGE);
+            }
+        }
+    }
+}
 INCLUDE_ASM(sub_8004B844);
 INCLUDE_ASM(sub_8004BB9C);
 INCLUDE_ASM(sub_8004BFA8);
