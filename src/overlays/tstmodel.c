@@ -186,7 +186,6 @@ void sub_800A1CAC(TstModelB* p, int k)
 }
 
 extern int sub_800A1B48();
-#if 0 // near miss: the original shares the shifted copy of sE between both tests
 extern int name_8003D198();
 extern void PlaySfx_80031494();
 int sub_800A1D70(TstModelB* p)
@@ -194,10 +193,10 @@ int sub_800A1D70(TstModelB* p)
     int old = (short)p->s6;
     int k = sub_800A1B48(p);
     unsigned short t = p->sE;
-    short ts = t;
+    int ts = t << 16;
     if (k == 3)
     {
-        if (ts >= p->s8)
+        if ((ts >> 16) >= p->s8)
         {
             p->sE = t - p->s8;
             PlaySfx_80031494(0x7F);
@@ -206,7 +205,7 @@ int sub_800A1D70(TstModelB* p)
     }
     else if (k == 4)
     {
-        if (ts < p->sC - p->s8 * p->sA)
+        if ((ts >> 16) < p->sC - p->s8 * p->sA)
         {
             p->sE = t + p->s8;
             PlaySfx_80031494(0x7F);
@@ -221,7 +220,5 @@ int sub_800A1D70(TstModelB* p)
     }
     return 9;
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1D70);
 
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A1E84);

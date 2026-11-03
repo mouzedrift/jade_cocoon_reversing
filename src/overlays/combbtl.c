@@ -99,8 +99,8 @@ typedef struct CombBtlD
 extern CombBtlD dword_800A85C8;
 extern int dword_800A85B8;
 extern int dword_800A8620;
-extern int xarr_800A85B8[1];
-extern int xarr_800A8620[1];
+extern int xarr_800A85B8[];
+extern int xarr_800A8620[];
 extern CombBtl4 dword_800A8610;
 extern int dword_800A84C0;
 extern int dword_800A84A0;
@@ -488,6 +488,7 @@ int sub_800A5B70(int a)
 
 // Near miss: the original loads the two shift counts only after all the stores
 #if 0
+// Not matched: the original loads the two shift counts after all the stores (alias/scheduling), tried array/struct/pointer forms
 void sub_800A5BB4()
 {
     dword_800A8600.a = 0x14;
