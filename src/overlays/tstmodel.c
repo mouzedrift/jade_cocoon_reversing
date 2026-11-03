@@ -3,6 +3,9 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern unsigned short padRepeat_800918CC[];
+extern unsigned short padPressed_8009194C[];
+
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 
 typedef struct TstModelTbl { int a; int b; int c; } TstModelTbl;
@@ -194,10 +197,55 @@ INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1428);
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1614);
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A17B8);
+extern void name_8002556C(struct_112* m, int a);
+void sub_800A17B8(int* c)
+{
+    unsigned short pad;
+    struct_112* m;
+    if (padRepeat_800918CC[0] & 0x4000)
+    {
+        c[0x1B0 / 4]++;
+    }
+    else if (padRepeat_800918CC[0] & 0x1000)
+    {
+        if (--c[0x1B0 / 4] < 0)
+        {
+            c[0x1B0 / 4] = c[0x1AC / 4] - 1;
+        }
+    }
+    c[0x1B0 / 4] = (unsigned)c[0x1B0 / 4] % c[0x1AC / 4];
+    pad = padPressed_8009194C[0];
+    if (pad & 0x20)
+    {
+        m = AcquireModel_80024D70((struct_112_list*)c[5], c[9]);
+        if (c[0x1B4 / 4])
+        {
+            name_8002556C(m, c[0x1A8 / 4]);
+            c[0x1B4 / 4] = 0;
+        }
+        if (((unsigned char*)m->field_44)[c[0x1B0 / 4]] == 0)
+        {
+            c[0x1B4 / 4] = 1;
+        }
+        else
+        {
+            c[0x1B4 / 4] = 0;
+        }
+        if (c[0x1B4 / 4])
+        {
+            LoadModelAnim_80025440(m, c[0x1B0 / 4], 0);
+        }
+        c[0x1B8 / 4] = 0;
+        c[0x1A4 / 4] = 0;
+        c[0] = 2;
+    }
+    else if (pad & 0x40)
+    {
+        ((short*)c)[0x172 / 2] = 0;
+        c[0] = 3;
+    }
+}
 
-extern unsigned short padRepeat_800918CC;
-extern unsigned short padPressed_8009194C;
 typedef struct TstModelC
 {
     char pad_0[0x172];
@@ -214,11 +262,11 @@ void sub_800A18F4(TstModelC* c)
 {
     if (c->i1B8)
     {
-        if (padRepeat_800918CC & 0x80)
+        if (padRepeat_800918CC[0] & 0x80)
         {
             c->i1A4++;
         }
-        else if (padRepeat_800918CC & 0x10)
+        else if (padRepeat_800918CC[0] & 0x10)
         {
             if (--c->i1A4 < 0)
             {
@@ -231,12 +279,12 @@ void sub_800A18F4(TstModelC* c)
     {
         c->i1A4++;
     }
-    if (padPressed_8009194C & 0x40)
+    if (padPressed_8009194C[0] & 0x40)
     {
         c->s172 = 0;
         c->i1B8 = !c->i1B8;
     }
-    if (padPressed_8009194C & 0x100)
+    if (padPressed_8009194C[0] & 0x100)
     {
         c->i1BC = (c->i1BC + 1) & 3;
     }
@@ -290,7 +338,47 @@ int sub_800A1B24()
     return 6;
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1B48);
+int sub_800A1B48(short* m)
+{
+    int idx = 0;
+    if (m[3] < 0)
+    {
+        m[3] = 0;
+    }
+    if (padRepeat_800918CC[idx] & 0x2000)
+    {
+        if (m[3] % m[4] == m[4] - 1)
+        {
+            return 1;
+        }
+        m[3]++;
+    }
+    if (padRepeat_800918CC[idx] & 0x8000)
+    {
+        if (m[3] % m[4] == 0)
+        {
+            return 2;
+        }
+        m[3]--;
+    }
+    if (padRepeat_800918CC[idx] & 0x1000)
+    {
+        if (m[3] < m[4])
+        {
+            return 3;
+        }
+        m[3] -= m[4];
+    }
+    if (padRepeat_800918CC[idx] & 0x4000)
+    {
+        if (m[3] > m[4] * (m[5] - 1) - 1)
+        {
+            return 4;
+        }
+        m[3] = m[3] + m[4];
+    }
+    return 0;
+}
 
 typedef struct TstModelB
 {
