@@ -1269,24 +1269,24 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-extern char dword_8007C750[];
+extern SoundCue_8007C750 dword_8007C750[];
 // Matched
-void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2)
+void PlayAnimFrameSfx_8001C364(struct_112* a0, int idx, int a2)
 {
-    int* e = (int*)(*(int*)(a0 + 0x54) + idx * 28);
+    ModelAnim* e = &((ModelAnim*)a0->field_54)[idx];
     int i;
-    for (i = 0; i < e[3]; i++)
+    for (i = 0; i < e->cueCount_C; i++)
     {
-        short* q = (short*)(i * 8 + e[4]);
-        if (a2 == q[0] && q[1] == 0)
+        ModelAnimCue* q = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (int)e->cues_10); // integer sum: the original adds the base second
+        if (a2 == q->frame_0 && q->kind_2 == 0)
         {
-            unsigned int n = (unsigned short)q[2];
+            unsigned int n = (unsigned short)q->arg_4;
             if (n < 0x6E)
             {
-                char* t = (char*)(((short)n << 3) + (int)dword_8007C750);
-                if (*(int*)t == 0)
+                SoundCue_8007C750* t = &dword_8007C750[(short)n];
+                if (t->kind == 0)
                 {
-                    PlaySfx_80031494(*(short*)(t + 4));
+                    PlaySfx_80031494(t->arg);
                 }
             }
         }
@@ -1296,44 +1296,38 @@ extern short dword_8007CAC0[];
 extern short dword_8007CACC[];
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
-extern void sub_80025B5C(void* p, int idx, int sel);
-typedef struct
-{
-    int kind; // 0: sfx, 1: music, 2: sequence, 3: fade out the system sequence
-    short arg;
-    short pad;
-} SoundCue_8007C750;
+extern void sub_80025B5C(struct_112* p, int idx, int sel);
 // Matched
-void sub_8001C440(char* a0, int idx, int key)
+void sub_8001C440(struct_112* a0, int idx, int key)
 {
-    int* e = (int*)(idx * 28 + *(int*)(a0 + 0x54));
-    short* q = (short*)e[4];
-    int n = e[3];
+    ModelAnim* e = (ModelAnim*)(idx * 28 + a0->field_54);
+    ModelAnimCue* q = e->cues_10;
+    int n = e->cueCount_C;
     int i;
     short arg;
-    for (i = 0; i < n; i++, q += 4)
+    for (i = 0; i < n; i++, q++)
     {
-        if (key != q[0])
+        if (key != q->frame_0)
         {
             continue;
         }
-        switch (q[1])
+        switch (q->kind_2)
         {
         case 0:
-            if ((unsigned short)q[2] < 0x6E)
+            if ((unsigned short)q->arg_4 < 0x6E)
             {
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 0)
+                if (dword_8007C750[q->arg_4].kind == 0)
                 {
-                    PlaySfx_80031494(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg);
+                    PlaySfx_80031494(dword_8007C750[q->arg_4].arg);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 1)
+                if (dword_8007C750[q->arg_4].kind == 1)
                 {
-                    PlayMusic_800300E0(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg, 1);
+                    PlayMusic_800300E0(dword_8007C750[q->arg_4].arg, 1);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 2)
+                if (dword_8007C750[q->arg_4].kind == 2)
                 {
-                    arg = ((SoundCue_8007C750*)dword_8007C750)[q[2]].arg;
-                    if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 3)
+                    arg = dword_8007C750[q->arg_4].arg;
+                    if (dword_8007C750[q->arg_4].arg == 3)
                     {
                         arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
                         if (arg > 4)
@@ -1342,7 +1336,7 @@ void sub_8001C440(char* a0, int idx, int key)
                         }
                         arg = dword_8007CACC[arg];
                     }
-                    else if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 2)
+                    else if (dword_8007C750[q->arg_4].arg == 2)
                     {
                         arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
                         if (arg > 4)
@@ -1353,7 +1347,7 @@ void sub_8001C440(char* a0, int idx, int key)
                     }
                     PlaySeqSlot_80031160(arg, 1);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 3)
+                if (dword_8007C750[q->arg_4].kind == 3)
                 {
                     if (systemSound_80091D40.field_4_seq_num >= 0)
                     {
@@ -1364,7 +1358,7 @@ void sub_8001C440(char* a0, int idx, int key)
             }
             break;
         case 1:
-            sub_80025B5C(a0, q[2], q[3]);
+            sub_80025B5C(a0, q->arg_4, q->arg_6);
             break;
         }
     }
@@ -2362,30 +2356,29 @@ void sub_8001DB58(struct_obj_A* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask (o is a macro for ((char*)arg0) to keep the funcs.h prototype)
-#define o ((char*)arg0)
+// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
 void sub_8001DB98(void* arg0, void* arg1)
 {
+    Actor* o = arg0;
     unsigned char* s = arg1;
-    short old = *(short*)(o + 0xC2);
-    *(short*)(o + 0xC2) = -1;
-    *(short*)(o + 0xC4) = 0;
-    *(short*)(o + 0xC6) = 1;
-    *(short*)(o + 0xC8) = 0;
-    *(short*)(o + 0xCA) = 0;
-    *(short*)(o + 0xCC) = -1;
-    *(short*)(o + 0xCE) = -1;
-    *(unsigned char**)(o + 0xD0) = s;
-    *(int*)(o + 4) &= ~0x8000;
-    *(int*)(o + 4) |= 0x4000;
-    *(short*)(o + 0xC0) = old;
+    short old = o->animIdx_C2;
+    o->animIdx_C2 = -1;
+    o->scriptPos_C4 = 0;
+    o->scriptLen_C6 = 1;
+    o->wait_C8 = 0;
+    o->waitLen_CA = 0;
+    o->fCC = -1;
+    o->fCE = -1;
+    o->script_D0 = (ActorScriptCmd*)s;
+    o->flags_4 &= ~0x8000;
+    o->flags_4 |= 0x4000;
+    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
-        *(short*)(o + 0xC6) += s[1];
+        o->scriptLen_C6 += s[1];
         s += s[1] * 4;
     }
 }
-#undef o
 #endif
 INCLUDE_ASM(sub_8001DB98);
 // Matched
@@ -2721,92 +2714,92 @@ extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
 // Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
-void sub_8001E574(char* o, int* d)
+void sub_8001E574(Actor* o, ActorDesc* d)
 {
     struct_112* m;
     int v;
     int f;
-    if (d[0] >= 0)
+    if (d->modelId_0 >= 0)
     {
-        m = AcquireLoaderModel_80020734(d[0]);
+        m = AcquireLoaderModel_80020734(d->modelId_0);
     }
     else
     {
-        m = (struct_112*)d[0x48 / 4];
+        m = d->model_48;
     }
     v = AddModelAnimRef_800201EC((int)m);
-    *(int*)(o + 4) = 0x40000;
-    f = *(int*)(o + 4);
-    if (d[0x30 / 4] != 1)
+    o->flags_4 = 0x40000;
+    f = o->flags_4;
+    if (d->visible_30 != 1)
     {
         f |= 0x2000;
-        *(int*)(o + 4) = f;
+        o->flags_4 = f;
     }
-    if (d[1] == 2)
+    if (d->kind_4 == 2)
     {
         f |= 0x1000;
-        *(int*)(o + 4) = f;
+        o->flags_4 = f;
     }
-    *(int*)(o + 8) = 0;
-    *(int*)(o + 0xC) = d[1];
-    *(short*)(o + 0x10) = 0;
-    *(short*)(o + 0x12) = -1;
-    *(short*)(o + 0x14) = -1;
-    *(short*)(o + 0x16) = v;
-    *(short*)(o + 0x18) = 0;
-    *(short*)(o + 0x1A) = 0;
-    *(short*)(o + 0x1C) = 0;
-    *(short*)(o + 0x1E) = *(short*)((char*)d + 0x28);
-    *(short*)(o + 0x26) = 0x1000;
-    *(short*)(o + 0x20) = 0;
-    *(short*)(o + 0x22) = 0;
-    *(short*)(o + 0x28) = 0;
-    *(short*)(o + 0x2A) = 0x1000;
-    *(short*)(o + 0x24) = *(short*)((char*)d + 0x2C);
-    *(int*)(o + 0x44) = *(int*)(o + 0x50) = *(int*)(o + 0x38) = d[2];
-    *(int*)(o + 0x48) = *(int*)(o + 0x54) = *(int*)(o + 0x3C) = d[3];
-    *(int*)(o + 0x4C) = *(int*)(o + 0x58) = *(int*)(o + 0x40) = d[4];
-    *(short*)(o + 0x5C) = *(short*)((char*)d + 0x14);
-    *(short*)(o + 0x5E) = *(short*)((char*)d + 0x16);
-    *(short*)(o + 0x60) = *(short*)((char*)d + 0x18);
-    *(int*)(o + 0x64) = 0;
-    *(int*)(o + 0x68) = 0;
-    *(int*)(o + 0x6C) = 0;
-    *(int*)(o + 0x80) = 0;
-    *(int*)(o + 0x84) = 0;
-    *(int*)(o + 0x88) = 0;
-    *(int*)(o + 0x8C) = 0x1000;
-    *(int*)(o + 0x90) = 0;
-    *(int*)(o + 0x94) = 0;
-    *(int*)(o + 0x98) = 0;
-    f = d[8];
-    *(int*)(o + 0xA8) = -1;
-    *(int*)(o + 0xAC) = 0;
-    *(int*)(o + 0xB0) = 0;
-    *(int*)(o + 0xB4) = 0;
-    *(int*)(o + 0xB8) = 0;
-    *(short*)(o + 0xC4) = 0;
-    *(short*)(o + 0xC6) = 0;
-    *(short*)(o + 0xC8) = 0;
-    *(short*)(o + 0xCA) = 0;
-    *(short*)(o + 0xCC) = -1;
-    *(short*)(o + 0xCE) = -1;
-    *(int*)(o + 0x9C) = f;
-    *(int*)(o + 0xA0) = f;
-    *(int*)(o + 0xA4) = *(int*)(o + 0xA0);
-    *(short*)(o + 0xC2) = *(short*)(o + 0xC0) = *(short*)(o + 0x9C);
-    *(int*)(o + 0x130) = -1;
-    *(struct_112**)(o + 0x15C) = m;
-    *(short*)(o + 0x150) = word_8007DC8C[0];
-    *(short*)(o + 0x152) = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
-    *(short*)(o + 0x154) = word_8007DC8C[2];
-    *(short*)(o + 0x156) = word_8007DC8C[3];
-    *(short*)(o + 0x158) = word_8007DC94[0];
-    *(short*)(o + 0x15A) = word_8007DC94[1] + *(short*)((char*)d + 0x1C);
-    *(int*)(o + 0x160) = 0;
+    o->drawMode_8 = 0;
+    o->kind_C = d->kind_4;
+    o->animLoadState_10 = 0;
+    o->animRequest_12 = -1;
+    o->animLoading_14 = -1;
+    o->modelRef_16 = v;
+    o->loopFrame_18 = 0;
+    o->endFrame_1A = 0;
+    o->frameFrac_1C = 0;
+    o->frameSpeed_1E = *(short*)&d->frameSpeed_28;
+    o->scale_26 = 0x1000;
+    o->fade_20 = 0;
+    o->fadeDiv_22 = 0;
+    o->scaleStep_28 = 0;
+    o->scaleTarget_2A = 0x1000;
+    o->blendDiv_24 = *(short*)&d->blendDiv_2C;
+    o->prevPos_44[0] = o->basePos_50[0] = o->pos_38[0] = d->pos_8[0];
+    o->prevPos_44[1] = o->basePos_50[1] = o->pos_38[1] = d->pos_8[1];
+    o->prevPos_44[2] = o->basePos_50[2] = o->pos_38[2] = d->pos_8[2];
+    o->rot_5C[0] = d->rot_14[0];
+    o->rot_5C[1] = d->rot_14[1];
+    o->rot_5C[2] = d->rot_14[2];
+    o->animDelta_64[0] = 0;
+    o->animDelta_64[1] = 0;
+    o->animDelta_64[2] = 0;
+    o->ground_80 = 0;
+    o->prevGround_84 = 0;
+    o->f88 = 0;
+    o->speedScale_8C = 0x1000;
+    o->frame_90 = 0;
+    o->prevFrame_94 = 0;
+    o->pathStep_98 = 0;
+    f = d->animIdx_20;
+    o->startMode_A8 = -1;
+    o->blend_AC = 0;
+    o->waitCount_B0 = 0;
+    o->fB4 = 0;
+    o->fB8 = 0;
+    o->scriptPos_C4 = 0;
+    o->scriptLen_C6 = 0;
+    o->wait_C8 = 0;
+    o->waitLen_CA = 0;
+    o->fCC = -1;
+    o->fCE = -1;
+    o->anim_9C = f;
+    o->prevAnim_A0 = f;
+    o->nextAnim_A4 = o->prevAnim_A0;
+    o->animIdx_C2 = o->prevAnimIdx_C0 = *(short*)&o->anim_9C;
+    o->effect_130 = -1;
+    o->model_15C = m;
+    o->image_150.x = word_8007DC8C[0];
+    o->image_150.y = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    o->image_150.w = word_8007DC8C[2];
+    o->image_150.h = word_8007DC8C[3];
+    o->clut_158[0] = word_8007DC94[0];
+    o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
+    o->path_160 = 0;
     sub_8001E7F0(o, d);
-    FirFilterInit_8001450C((int*)(o + 0x1A4), (struct_16*)(o + 0x194), (int)dword_800795A0, 8);
-    sub_8001D760(o, d[8], d[9], 0);
+    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, (int)dword_800795A0, 8);
+    sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
 INCLUDE_ASM(sub_8001E574);

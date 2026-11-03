@@ -5,7 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
-#include "actor.h"
+#include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -1507,14 +1507,14 @@ void AllocFtgObjects_80021744(int* p, int idx, int a2)
     *p = HeapAlloc_8003FC8C(idx * 0x54, a2);
 }
 // Matched
-void FreeFtgObjects_80021784(int** a0, unsigned int n, int heap)
+void FreeFtgObjects_80021784(FtgObject** a0, unsigned int n, int heap)
 {
-    char* p = (char*)*a0;
+    FtgObject* p = *a0;
     unsigned int i;
     for (i = 0; i < n; i++)
     {
-        FreeFtgObject_800229B0((int*)p, heap);
-        p += 0x54;
+        FreeFtgObject_800229B0(p, heap);
+        p++;
     }
     HeapFree_8003FD18(*a0, heap);
     *a0 = 0;
@@ -1522,10 +1522,10 @@ void FreeFtgObjects_80021784(int** a0, unsigned int n, int heap)
 // Matched
 void sub_80021804(int* p, int heap)
 {
-    FreeFtgObject_800229B0(p, heap);
+    FreeFtgObject_800229B0((FtgObject*)p, heap);
 }
 // Matched
-void LoadFtgObjects_80021824(int* a0, char* a1, int a2, int a3, int a4)
+void LoadFtgObjects_80021824(int* a0, FtgObject* a1, int a2, int a3, int a4)
 {
     unsigned int n = GetFtgObjectCount_80021738(a0);
     int r = (int)(a0 + 4);
@@ -1533,42 +1533,24 @@ void LoadFtgObjects_80021824(int* a0, char* a1, int a2, int a3, int a4)
     for (i = 0; i < n; i++)
     {
         r = LoadFtgObject_80022458(a1, r, a3, a4);
-        a1 += 0x54;
+        a1++;
     }
 }
-typedef struct
-{
-    short n;
-    short pad;
-    char* p;
-} ModelList;
-typedef struct
-{
-    ModelList l[8];
-    int n8;
-    char* p8;
-    int n9;
-    unsigned short f4C;
-    unsigned short f4E;
-    char* p9;
-} Model54;
-#define S ((Model54*)a0)
-#define D ((Model54*)a1)
 // Matched
-void sub_800218A8(int a0, void* a1, int a2)
+void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
 {
     char* buf;
     int size;
     int i;
-    size = S->l[0].n * 0x24 + S->l[1].n * 0x3C;
-    size += S->l[2].n * 0x30;
-    size += S->l[3].n * 0x48;
-    size += S->l[4].n * 0x2C;
-    size += S->l[5].n * 0x50;
-    size += S->l[6].n * 0x38;
-    size += S->l[7].n * 0x5C;
-    size += S->n8 * 0x14;
-    size += S->n9 * 0x14;
+    size = s->f3_0.count * 0x24 + s->g3_8.count * 0x3C;
+    size += s->ft3_10.count * 0x30;
+    size += s->gt3_18.count * 0x48;
+    size += s->f4_20.count * 0x2C;
+    size += s->g4_28.count * 0x50;
+    size += s->ft4_30.count * 0x38;
+    size += s->gt4_38.count * 0x5C;
+    size += s->spriteCount_40 * 0x14;
+    size += s->texSpriteCount_48 * 0x14;
     if (size)
     {
         buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
@@ -1577,80 +1559,78 @@ void sub_800218A8(int a0, void* a1, int a2)
     {
         buf = 0;
     }
-    D->l[0].n = S->l[0].n;
-    D->l[0].p = buf;
-    buf += S->l[0].n * 0x24;
-    D->l[1].n = S->l[1].n;
-    D->l[1].p = buf;
-    buf += S->l[1].n * 0x3C;
-    D->l[2].n = S->l[2].n;
-    D->l[2].p = buf;
-    buf += S->l[2].n * 0x30;
-    D->l[3].n = S->l[3].n;
-    D->l[3].p = buf;
-    buf += S->l[3].n * 0x48;
-    D->l[4].n = S->l[4].n;
-    D->l[4].p = buf;
-    buf += S->l[4].n * 0x2C;
-    D->l[5].n = S->l[5].n;
-    D->l[5].p = buf;
-    buf += S->l[5].n * 0x50;
-    D->l[6].n = S->l[6].n;
-    D->l[6].p = buf;
-    buf += S->l[6].n * 0x38;
-    D->l[7].n = S->l[7].n;
-    D->l[7].p = buf;
-    buf += S->l[7].n * 0x5C;
-    D->n8 = S->n8;
-    D->p8 = buf;
-    buf += S->n8 * 0x14;
-    D->n9 = S->n9;
-    D->p9 = buf;
-    for (i = 0; i < D->l[0].n; i++)
+    d->f3_0.count = s->f3_0.count;
+    d->f3_0.items = (FtgPolyF3*)buf;
+    buf += s->f3_0.count * 0x24;
+    d->g3_8.count = s->g3_8.count;
+    d->g3_8.items = (FtgPolyG3*)buf;
+    buf += s->g3_8.count * 0x3C;
+    d->ft3_10.count = s->ft3_10.count;
+    d->ft3_10.items = (FtgPolyFT3*)buf;
+    buf += s->ft3_10.count * 0x30;
+    d->gt3_18.count = s->gt3_18.count;
+    d->gt3_18.items = (FtgPolyGT3*)buf;
+    buf += s->gt3_18.count * 0x48;
+    d->f4_20.count = s->f4_20.count;
+    d->f4_20.items = (FtgPolyF4*)buf;
+    buf += s->f4_20.count * 0x2C;
+    d->g4_28.count = s->g4_28.count;
+    d->g4_28.items = (FtgPolyG4*)buf;
+    buf += s->g4_28.count * 0x50;
+    d->ft4_30.count = s->ft4_30.count;
+    d->ft4_30.items = (FtgPolyFT4*)buf;
+    buf += s->ft4_30.count * 0x38;
+    d->gt4_38.count = s->gt4_38.count;
+    d->gt4_38.items = (FtgPolyGT4*)buf;
+    buf += s->gt4_38.count * 0x5C;
+    d->spriteCount_40 = s->spriteCount_40;
+    d->sprites_44 = (FtgSprite*)buf;
+    buf += s->spriteCount_40 * 0x14;
+    d->texSpriteCount_48 = s->texSpriteCount_48;
+    d->texSprites_50 = (FtgSprite*)buf;
+    for (i = 0; i < d->f3_0.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[0].p + i * 0x24), (unsigned int*)(S->l[0].p + i * 0x24), 0x24);
+        MemCopy_800403E8((unsigned int*)&d->f3_0.items[i], (unsigned int*)&s->f3_0.items[i], 0x24);
     }
-    for (i = 0; i < D->l[1].n; i++)
+    for (i = 0; i < d->g3_8.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[1].p + i * 0x3C), (unsigned int*)(S->l[1].p + i * 0x3C), 0x3C);
+        MemCopy_800403E8((unsigned int*)&d->g3_8.items[i], (unsigned int*)&s->g3_8.items[i], 0x3C);
     }
-    for (i = 0; i < D->l[2].n; i++)
+    for (i = 0; i < d->ft3_10.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[2].p + i * 0x30), (unsigned int*)(S->l[2].p + i * 0x30), 0x30);
+        MemCopy_800403E8((unsigned int*)&d->ft3_10.items[i], (unsigned int*)&s->ft3_10.items[i], 0x30);
     }
-    for (i = 0; i < D->l[3].n; i++)
+    for (i = 0; i < d->gt3_18.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[3].p + i * 0x48), (unsigned int*)(S->l[3].p + i * 0x48), 0x48);
+        MemCopy_800403E8((unsigned int*)&d->gt3_18.items[i], (unsigned int*)&s->gt3_18.items[i], 0x48);
     }
-    for (i = 0; i < D->l[4].n; i++)
+    for (i = 0; i < d->f4_20.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[4].p + i * 0x2C), (unsigned int*)(S->l[4].p + i * 0x2C), 0x2C);
+        MemCopy_800403E8((unsigned int*)&d->f4_20.items[i], (unsigned int*)&s->f4_20.items[i], 0x2C);
     }
-    for (i = 0; i < D->l[5].n; i++)
+    for (i = 0; i < d->g4_28.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[5].p + i * 0x50), (unsigned int*)(S->l[5].p + i * 0x50), 0x50);
+        MemCopy_800403E8((unsigned int*)&d->g4_28.items[i], (unsigned int*)&s->g4_28.items[i], 0x50);
     }
-    for (i = 0; i < D->l[6].n; i++)
+    for (i = 0; i < d->ft4_30.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[6].p + i * 0x38), (unsigned int*)(S->l[6].p + i * 0x38), 0x38);
+        MemCopy_800403E8((unsigned int*)&d->ft4_30.items[i], (unsigned int*)&s->ft4_30.items[i], 0x38);
     }
-    for (i = 0; i < D->l[7].n; i++)
+    for (i = 0; i < d->gt4_38.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->l[7].p + i * 0x5C), (unsigned int*)(S->l[7].p + i * 0x5C), 0x5C);
+        MemCopy_800403E8((unsigned int*)&d->gt4_38.items[i], (unsigned int*)&s->gt4_38.items[i], 0x5C);
     }
-    for (i = 0; i < D->n8; i++)
+    for (i = 0; i < d->spriteCount_40; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->p8 + i * 0x14), (unsigned int*)(S->p8 + i * 0x14), 0x14);
+        MemCopy_800403E8((unsigned int*)&d->sprites_44[i], (unsigned int*)&s->sprites_44[i], 0x14);
     }
-    for (i = 0; i < D->n9; i++)
+    for (i = 0; i < d->texSpriteCount_48; i++)
     {
-        MemCopy_800403E8((unsigned int*)(D->p9 + i * 0x14), (unsigned int*)(S->p9 + i * 0x14), 0x14);
+        MemCopy_800403E8((unsigned int*)&d->texSprites_50[i], (unsigned int*)&s->texSprites_50[i], 0x14);
     }
-    D->f4C = S->f4C;
-    D->f4E = S->f4E;
+    d->tpage_4C = s->tpage_4C;
+    d->clut_4E = s->clut_4E;
 }
-#undef S
-#undef D
 // Matched
 int sub_80021DE4(int* p)
 {
@@ -1841,32 +1821,25 @@ void sub_800221DC(unsigned char* p, unsigned char* d, DR_TPAGE* tp)
     *(unsigned short*)(d + 0xE) = *(unsigned short*)(p + 6);
     SetDrawTPage(tp, 0, 1, *(unsigned short*)(p + 0xA));
 }
-typedef void (*fn_80022458_a)(unsigned char* p, int a3);
-typedef int (*fn_80022458_b)(unsigned char* hdr, unsigned char* p, int a0, int k, int h);
+typedef void (*fn_80022458_a)(unsigned char* body, int a3);
+typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
 extern fn_80022458_a ftgPrimRelocators_8007DB08[];
 extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
-typedef struct
-{
-    short n;
-    short pad;
-    int p;
-} struct_22634;
-void sub_80022B84(int* c, int* x, int* y);
-int sub_80022634(struct_22634* out, int* c, int h);
-int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h);
-int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
-typedef struct struct_22CC4 struct_22CC4;
-void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h);
+void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
+int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
+int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
+int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p, FtgSpriteGroups9* b, int k, int h);
+void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h);
 // Matched
-int LoadFtgObject_80022458(int a0, unsigned char* a1, int h, int a3)
+int LoadFtgObject_80022458(FtgObject* a0, unsigned char* a1, int h, int a3)
 {
     int cnt[10];
-    int A[2];
-    int B[2];
+    FtgSpriteGroups8 A;
+    FtgSpriteGroups9 B;
     unsigned int i;
     unsigned int n;
     unsigned char* hdr;
-    unsigned char* p;
+    FtgPrimHeader* p;
     unsigned int type;
     unsigned int j;
     int k;
@@ -1876,13 +1849,13 @@ int LoadFtgObject_80022458(int a0, unsigned char* a1, int h, int a3)
     }
     hdr = a1;
     a1 += 0x28;
-    n = sub_80022634((struct_22634*)a0, (int*)hdr, h);
-    sub_800228F8(A, B, (char*)hdr, h);
+    n = sub_80022634(a0, (FtgSrcObjectHeader*)hdr, h);
+    sub_800228F8(&A, &B, (FtgSrcObjectHeader*)hdr, h);
     for (i = 0; i < n; i++)
     {
-        p = a1;
+        p = (FtgPrimHeader*)a1;
         a1 += 4;
-        type = *p;
+        type = p->type_0;
         k = cnt[type];
         cnt[type] = k + 1;
         if (a3 != 0 && ftgPrimRelocators_8007DB08[type] != 0)
@@ -1902,27 +1875,28 @@ int LoadFtgObject_80022458(int a0, unsigned char* a1, int h, int a3)
             a1 += ftgPrimLoaders_8007DAE0[type](p, a1, a0, k, h);
             break;
         case 8:
-            a1 += sub_8002300C(p, a1, A, k, h);
+            a1 += sub_8002300C(p, (FtgSrcSprites8*)a1, &A, k, h);
             break;
         case 9:
-            a1 += sub_8002320C(p, a1, B, k, h);
+            a1 += sub_8002320C(p, (FtgSrcSprites9*)a1, &B, k, h);
             break;
         }
     }
-    sub_80022CC4((struct_22CC4*)a0, (struct_22634*)A, (struct_22634*)B, h);
-    sub_800229E0(A, B, h);
+    sub_80022CC4(a0, &A, &B, h);
+    sub_800229E0(&A, &B, h);
     return (int)a1;
 }
 // Matched
-int sub_80022634(struct_22634* out, int* c, int h)
+int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
 {
     int x;
     int y;
     int size;
     int total;
     char* p;
+    int* c = hdr->counts_0;
     p = 0;
-    sub_80022B84(c, &x, &y);
+    sub_80022B84(hdr, &x, &y);
     size = c[0] * 0x24 + c[1] * 0x3C;
     total = c[0] + c[1];
     size += c[2] * 0x30;
@@ -1945,104 +1919,99 @@ int sub_80022634(struct_22634* out, int* c, int h)
     {
         p = (char*)HeapAlloc_8003FC8C(size, h);
     }
-    out[0].n = c[0];
-    out[0].p = (int)p;
+    out->f3_0.count = c[0];
+    out->f3_0.items = (FtgPolyF3*)p;
     p += c[0] * 0x24;
-    out[1].n = c[1];
-    out[1].p = (int)p;
+    out->g3_8.count = c[1];
+    out->g3_8.items = (FtgPolyG3*)p;
     p += c[1] * 0x3C;
-    out[2].n = c[2];
-    out[2].p = (int)p;
+    out->ft3_10.count = c[2];
+    out->ft3_10.items = (FtgPolyFT3*)p;
     p += c[2] * 0x30;
-    out[3].n = c[3];
-    out[3].p = (int)p;
+    out->gt3_18.count = c[3];
+    out->gt3_18.items = (FtgPolyGT3*)p;
     p += c[3] * 0x48;
-    out[4].n = c[4];
-    out[4].p = (int)p;
+    out->f4_20.count = c[4];
+    out->f4_20.items = (FtgPolyF4*)p;
     p += c[4] * 0x2C;
-    out[5].n = c[5];
-    out[5].p = (int)p;
+    out->g4_28.count = c[5];
+    out->g4_28.items = (FtgPolyG4*)p;
     p += c[5] * 0x50;
-    out[6].n = c[6];
-    out[6].p = (int)p;
+    out->ft4_30.count = c[6];
+    out->ft4_30.items = (FtgPolyFT4*)p;
     p += c[6] * 0x38;
-    out[7].n = c[7];
-    out[7].p = (int)p;
+    out->gt4_38.count = c[7];
+    out->gt4_38.items = (FtgPolyGT4*)p;
     p += c[7] * 0x5C;
-    ((int*)out)[0x40 / 4] = x;
-    ((int*)out)[0x44 / 4] = (int)p;
+    out->spriteCount_40 = x;
+    out->sprites_44 = (FtgSprite*)p;
     p += x * 0x14;
-    ((int*)out)[0x48 / 4] = y;
-    ((int*)out)[0x50 / 4] = (int)p;
+    out->texSpriteCount_48 = y;
+    out->texSprites_50 = (FtgSprite*)p;
     return total;
 }
-typedef struct
-{
-    unsigned short count;
-    int ptr;
-} struct_cnt_ptr;
 // Matched
-int sub_800228F8(struct_cnt_ptr* a0, struct_cnt_ptr* a1, int* a2, int heap)
+int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader* a2, int heap)
 {
     int n;
     int m;
-    a0->count = a2[8];
-    n = a2[8];
+    a0->count = a2->counts_0[8];
+    n = a2->counts_0[8];
     if (n)
     {
-        a0->ptr = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
+        a0->groups = (FtgSpriteGroup8*)HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
     }
     else
     {
-        a0->ptr = 0;
+        a0->groups = 0;
     }
-    a1->count = a2[9];
-    m = a2[9];
+    a1->count = a2->counts_0[9];
+    m = a2->counts_0[9];
     n += m;
     if (m)
     {
-        a1->ptr = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
+        a1->groups = (FtgSpriteGroup9*)HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
     }
     else
     {
-        a1->ptr = 0;
+        a1->groups = 0;
     }
     return n;
 }
 // Matched
-void FreeFtgObject_800229B0(int* p, int heap)
+void FreeFtgObject_800229B0(FtgObject* p, int heap)
 {
-    int a = p[1];
+    FtgPolyF3* a = p->f3_0.items;
     if (a)
     {
         HeapFree_8003FD18(a, heap);
     }
 }
 // Matched
-void sub_800229E0(int* a0, int* a1, int h)
+void sub_800229E0(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, int h)
 {
     int i;
-    if (a0[1] != 0)
+    if (a0->groups != 0)
     {
-        for (i = 0; i < *(short*)a0; i++)
+        for (i = 0; i < a0->count; i++)
         {
-            if (((int*)a0[1])[i * 2 + 1] != 0)
+            if (a0->groups[i].items != 0)
             {
-                HeapFree_8003FD18(((int*)a0[1])[i * 2 + 1], h);
+                HeapFree_8003FD18(a0->groups[i].items, h);
             }
         }
-        HeapFree_8003FD18(a0[1], h);
+        HeapFree_8003FD18(a0->groups, h);
     }
-    if (a1[1] != 0)
+    if (a1->groups != 0)
     {
-        for (i = 0; i < *(short*)a1; i++)
+        for (i = 0; i < a1->count; i++)
         {
-            if (((struct_12*)a1[1])[i].field_8 != 0)
+            if (a1->groups[i].items != 0)
             {
-                HeapFree_8003FD18(((struct_12*)a1[1])[i].field_8, h);
+                HeapFree_8003FD18(a1->groups[i].items, h);
             }
         }
-        HeapFree_8003FD18(a1[1], h);
+        HeapFree_8003FD18(a1->groups, h);
     }
 }
 // Matched
@@ -2067,36 +2036,9 @@ void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a
     *a0 += tp;
     *a1 = v * 64 + (u >> 4);
 }
-typedef struct
-{
-    unsigned char b0;
-    unsigned char b1;
-    unsigned char b2;
-    unsigned char b3;
-    unsigned short f4;
-    unsigned short f6;
-    unsigned short f8;
-    unsigned short fA;
-    unsigned short fC;
-    unsigned short fE;
-    unsigned short f10;
-    unsigned short f12;
-} struct_20_b;
-typedef struct
-{
-    int count;
-    struct_20_b* items;
-} struct_8_20b;
-typedef struct
-{
-    int count;
-    unsigned short f4;
-    unsigned short f6;
-    struct_20_b* items;
-} struct_12_20b;
 #if 0
 // Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
-void sub_80022B84(int* c, int* x, int* y)
+void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 {
     int n;
     int i;
@@ -2157,566 +2099,528 @@ void sub_80022B84(int* c, int* x, int* y)
 }
 #endif
 INCLUDE_ASM(sub_80022B84);
-struct struct_22CC4
-{
-    char pad_0[0x40];
-    int n1;
-    struct_20_b* d1;
-    int n2;
-    unsigned short f4C;
-    unsigned short f4E;
-    struct_20_b* d2;
-};
 #if 0
 // Not matched: first loop swaps the j/k registers and fills the first beqz delay slot; second loop has the j++/n++ increments in the other order
-void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
+void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
 {
     int j;
     int n;
     int k;
-    struct_8_20b* e;
-    struct_12_20b* f;
-    if (a->n)
+    FtgSpriteGroup8* e;
+    FtgSpriteGroup9* f;
+    if (a->count)
     {
         j = 0;
-        e = (struct_8_20b*)a->p;
+        e = a->groups;
         k = 0;
-        for (n = 0; n < a0->n1; n++)
+        for (n = 0; n < a0->spriteCount_40; n++)
         {
-            if (j >= ((struct_8_20b*)a->p)[k].count)
+            if (j >= a->groups[k].count)
             {
                 k++;
                 j = 0;
-                e = &((struct_8_20b*)a->p)[k];
+                e = &a->groups[k];
             }
-            a0->d1[n].f4 = e->items[j].f4;
-            a0->d1[n].f6 = e->items[j].f6;
-            a0->d1[n].f8 = e->items[j].f8;
-            a0->d1[n].fA = 0;
-            a0->d1[n].fC = e->items[j].fC;
-            a0->d1[n].fE = e->items[j].fE;
-            a0->d1[n].f10 = e->items[j].f10;
-            a0->d1[n].f12 = 0;
-            a0->d1[n].b0 = e->items[j].b0;
-            a0->d1[n].b1 = e->items[j].b1;
-            a0->d1[n].b2 = e->items[j].b2;
-            a0->d1[n].b3 = 0;
+            a0->sprites_44[n].p0.x = e->items[j].p0.x;
+            a0->sprites_44[n].p0.y = e->items[j].p0.y;
+            a0->sprites_44[n].p0.z = e->items[j].p0.z;
+            a0->sprites_44[n].p0.uv = 0;
+            a0->sprites_44[n].p1.x = e->items[j].p1.x;
+            a0->sprites_44[n].p1.y = e->items[j].p1.y;
+            a0->sprites_44[n].p1.z = e->items[j].p1.z;
+            a0->sprites_44[n].p1.uv = 0;
+            a0->sprites_44[n].c.r = e->items[j].c.r;
+            a0->sprites_44[n].c.g = e->items[j].c.g;
+            a0->sprites_44[n].c.b = e->items[j].c.b;
+            a0->sprites_44[n].c.code = 0;
             j++;
         }
     }
-    if (b->n)
+    if (b->count)
     {
         j = 0;
-        a0->f4C = ((struct_12_20b*)b->p)->f4;
-        a0->f4E = ((struct_12_20b*)b->p)->f6;
-        f = (struct_12_20b*)b->p;
+        a0->tpage_4C = b->groups->tpage;
+        a0->clut_4E = b->groups->clut;
+        f = b->groups;
         k = 0;
-        for (n = 0; n < a0->n2; n++, j++)
+        for (n = 0; n < a0->texSpriteCount_48; n++, j++)
         {
-            if (j >= ((struct_12_20b*)b->p)[k].count)
+            if (j >= b->groups[k].count)
             {
                 k++;
                 j = 0;
-                f = &((struct_12_20b*)b->p)[k];
+                f = &b->groups[k];
             }
-            a0->d2[n].f4 = f->items[j].f4;
-            a0->d2[n].f6 = f->items[j].f6;
-            a0->d2[n].f8 = f->items[j].f8;
-            a0->d2[n].fA = 0;
-            a0->d2[n].fC = f->items[j].fC;
-            a0->d2[n].fE = f->items[j].fE;
-            a0->d2[n].f10 = f->items[j].f10;
-            a0->d2[n].f12 = 0;
-            a0->d2[n].b0 = f->items[j].b0;
-            a0->d2[n].b1 = f->items[j].b1;
-            a0->d2[n].b2 = f->items[j].b2;
-            a0->d2[n].b3 = f->items[j].b3;
-            a0->d2[n].f12 = f->items[j].f12;
+            a0->texSprites_50[n].p0.x = f->items[j].p0.x;
+            a0->texSprites_50[n].p0.y = f->items[j].p0.y;
+            a0->texSprites_50[n].p0.z = f->items[j].p0.z;
+            a0->texSprites_50[n].p0.uv = 0;
+            a0->texSprites_50[n].p1.x = f->items[j].p1.x;
+            a0->texSprites_50[n].p1.y = f->items[j].p1.y;
+            a0->texSprites_50[n].p1.z = f->items[j].p1.z;
+            a0->texSprites_50[n].p1.uv = 0;
+            a0->texSprites_50[n].c.r = f->items[j].c.r;
+            a0->texSprites_50[n].c.g = f->items[j].c.g;
+            a0->texSprites_50[n].c.b = f->items[j].c.b;
+            a0->texSprites_50[n].c.code = f->items[j].c.code;
+            a0->texSprites_50[n].p1.uv = f->items[j].p1.uv;
         }
     }
 }
 #endif
 INCLUDE_ASM(sub_80022CC4);
-// 20-byte source records read by sub_8002300C / sub_8002320C
-typedef struct
-{
-    unsigned short h[8];
-    unsigned char b[4];
-} SrcRec300C;
-typedef struct
-{
-    unsigned short h[7];
-    unsigned char e[2];
-    unsigned char b[4];
-} SrcRec320C;
 // Matched
-int sub_8002300C(unsigned char* hdr, unsigned char* p_in, int* a, int k, int h)
+int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, int k, int h)
 {
-    unsigned char* p = p_in;
+    FtgSrcSprites8* p = p_in;
     int r = 4;
     int i;
-    SrcRec300C* q;
-    ((struct_8_20b*)a[1])[k].count = *(int*)p;
-    ((struct_8_20b*)a[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
-    q = (SrcRec300C*)(p + r);
-    for (i = 0; i < *(int*)p; i++)
+    FtgSrcSprite8* q;
+    a->groups[k].count = p->count_0;
+    a->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    q = (FtgSrcSprite8*)((unsigned char*)p + r); // r: bytes read so far
+    for (i = 0; i < p->count_0; i++)
     {
-        ((struct_8_20b*)a[1])[k].items[i].f4 = q[i].h[0];
-        ((struct_8_20b*)a[1])[k].items[i].f6 = q[i].h[1];
-        ((struct_8_20b*)a[1])[k].items[i].f8 = q[i].h[2];
-        ((struct_8_20b*)a[1])[k].items[i].fA = 0;
-        ((struct_8_20b*)a[1])[k].items[i].fC = q[i].h[4];
-        ((struct_8_20b*)a[1])[k].items[i].fE = q[i].h[5];
-        ((struct_8_20b*)a[1])[k].items[i].f10 = q[i].h[6];
-        ((struct_8_20b*)a[1])[k].items[i].f12 = 0;
-        ((struct_8_20b*)a[1])[k].items[i].b0 = q[i].b[0];
-        ((struct_8_20b*)a[1])[k].items[i].b1 = q[i].b[1];
-        ((struct_8_20b*)a[1])[k].items[i].b2 = q[i].b[2];
-        ((struct_8_20b*)a[1])[k].items[i].b3 = 0;
+        a->groups[k].items[i].p0.x = q[i].p0.x;
+        a->groups[k].items[i].p0.y = q[i].p0.y;
+        a->groups[k].items[i].p0.z = q[i].p0.z;
+        a->groups[k].items[i].p0.uv = 0;
+        a->groups[k].items[i].p1.x = q[i].p1.x;
+        a->groups[k].items[i].p1.y = q[i].p1.y;
+        a->groups[k].items[i].p1.z = q[i].p1.z;
+        a->groups[k].items[i].p1.uv = 0;
+        a->groups[k].items[i].c.r = q[i].c.r;
+        a->groups[k].items[i].c.g = q[i].c.g;
+        a->groups[k].items[i].c.b = q[i].c.b;
+        a->groups[k].items[i].c.code = 0;
         r += 20;
     }
     return r;
 }
 // Matched
-int sub_8002320C(unsigned char* hdr, unsigned char* p_in, int* b, int k, int h)
+int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, int k, int h)
 {
-    unsigned char* p = p_in;
+    FtgSrcSprites9* p = p_in;
     int r;
     int i;
-    SrcRec320C* q;
-    ((struct_12_20b*)b[1])[k].count = *(int*)p;
-    ((struct_12_20b*)b[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
+    FtgSrcSprite9* q;
+    b->groups[k].count = p->count_0;
+    b->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
     r = 8;
-    ((struct_12_20b*)b[1])[k].f4 = *(unsigned short*)(p + 4);
-    ((struct_12_20b*)b[1])[k].f6 = *(unsigned short*)(p + 6);
-    q = (SrcRec320C*)(p + r);
-    for (i = 0; i < *(int*)p; i++)
+    b->groups[k].tpage = p->tpage_4;
+    b->groups[k].clut = p->clut_6;
+    q = (FtgSrcSprite9*)((unsigned char*)p + r); // r: bytes read so far
+    for (i = 0; i < p->count_0; i++)
     {
-        ((struct_12_20b*)b[1])[k].items[i].f4 = q[i].h[0];
-        ((struct_12_20b*)b[1])[k].items[i].f6 = q[i].h[1];
-        ((struct_12_20b*)b[1])[k].items[i].f8 = q[i].h[2];
-        ((struct_12_20b*)b[1])[k].items[i].fA = 0;
-        ((struct_12_20b*)b[1])[k].items[i].fC = q[i].h[4];
-        ((struct_12_20b*)b[1])[k].items[i].fE = q[i].h[5];
-        ((struct_12_20b*)b[1])[k].items[i].f10 = q[i].h[6];
-        ((struct_12_20b*)b[1])[k].items[i].f12 = 0;
-        ((struct_12_20b*)b[1])[k].items[i].b0 = q[i].b[0];
-        ((struct_12_20b*)b[1])[k].items[i].b1 = q[i].b[1];
-        ((struct_12_20b*)b[1])[k].items[i].b2 = q[i].b[2];
-        ((struct_12_20b*)b[1])[k].items[i].b3 = hdr[3];
-        ((struct_12_20b*)b[1])[k].items[i].f12 = q[i].e[0] + (q[i].e[1] << 8);
+        b->groups[k].items[i].p0.x = q[i].p0.x;
+        b->groups[k].items[i].p0.y = q[i].p0.y;
+        b->groups[k].items[i].p0.z = q[i].p0.z;
+        b->groups[k].items[i].p0.uv = 0;
+        b->groups[k].items[i].p1.x = q[i].p1.x;
+        b->groups[k].items[i].p1.y = q[i].p1.y;
+        b->groups[k].items[i].p1.z = q[i].p1.z;
+        b->groups[k].items[i].p1.uv = 0;
+        b->groups[k].items[i].c.r = q[i].c.r;
+        b->groups[k].items[i].c.g = q[i].c.g;
+        b->groups[k].items[i].c.b = q[i].c.b;
+        b->groups[k].items[i].c.code = hdr->flags_3;
+        b->groups[k].items[i].p1.uv = q[i].p1.u + (q[i].p1.v << 8);
         r += 20;
     }
     return r;
 }
 // Matched
-void sub_80023460(char* p, int arg1)
+void sub_80023460(FtgSrcSprites9* p, int arg1)
 {
-    RelocateTPageClut_80022AE8(p + 4, p + 6, arg1);
+    RelocateTPageClut_80022AE8(&p->tpage_4, &p->clut_6, arg1);
 }
 // Matched
-int sub_8002348C(unsigned char* a0, int a1, int* a2, int a3)
+int sub_8002348C(FtgPrimHeader* a0, FtgPolyF3* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[1] + a3 * 0x24, 1);
+        SetSemiTrans(&a2->f3_0.items[a3], 1);
     }
-    sub_80023514(a2, a1, a0[3], a3);
+    sub_80023514(&a2->f3_0, a1, a0->flags_3, a3);
     return 0x24;
 }
 // Matched
-void sub_80023514(int* a0, int a1, int a2, int a3)
+void sub_80023514(FtgPolyF3List* a0, FtgPolyF3* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x24;
-    ((unsigned char*)(o + a0[1]))[0] = s[0];
-    ((unsigned char*)(o + a0[1]))[1] = s[1];
-    ((unsigned char*)(o + a0[1]))[2] = s[2];
-    ((unsigned char*)(o + a0[1]))[3] = a2;
-    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
-    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 4) = *(unsigned short*)(s + 4);
-    *(unsigned short*)(o + a0[1] + 6) = *(unsigned short*)(s + 6);
-    *(unsigned short*)(o + a0[1] + 8) = *(unsigned short*)(s + 8);
+    a0->items[a3].c.r = s->c.r;
+    a0->items[a3].c.g = s->c.g;
+    a0->items[a3].c.b = s->c.b;
+    a0->items[a3].c.code = a2;
+    a0->items[a3].v[0].x = s->v[0].x;
+    a0->items[a3].v[0].y = s->v[0].y;
+    a0->items[a3].v[0].z = s->v[0].z;
+    a0->items[a3].v[1].x = s->v[1].x;
+    a0->items[a3].v[1].y = s->v[1].y;
+    a0->items[a3].v[1].z = s->v[1].z;
+    a0->items[a3].v[2].x = s->v[2].x;
+    a0->items[a3].v[2].y = s->v[2].y;
+    a0->items[a3].v[2].z = s->v[2].z;
+    a0->items[a3].n.x = s->n.x;
+    a0->items[a3].n.y = s->n.y;
+    a0->items[a3].n.z = s->n.z;
 }
 // Matched
-int sub_80023624(unsigned char* a0, int a1, int* a2, int a3)
+int sub_80023624(FtgPrimHeader* a0, FtgSrcPolyG3* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[3] + a3 * 0x3C, 1);
+        SetSemiTrans(&a2->g3_8.items[a3], 1);
     }
-    sub_800236AC(a2 + 2, a1, a0[3], a3);
+    sub_800236AC(&a2->g3_8, a1, a0->flags_3, a3);
     return 0x3C;
 }
 // Matched
-void sub_800236AC(int* a0, int a1, int a2, int a3)
+void sub_800236AC(FtgPolyG3List* a0, FtgSrcPolyG3* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x3C;
-    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
-    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
-    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x4);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x5);
-    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0x6);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x8);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x9);
-    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xA);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned short*)(s + 0x26);
-    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x34);
-    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned short*)(s + 0x36);
-    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x38);
-    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
-    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x2C);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x2E);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x30);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
+    a0->items[a3].c[0].r = s->c[0].r;
+    a0->items[a3].c[0].g = s->c[0].g;
+    a0->items[a3].c[0].b = s->c[0].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[1].r = s->c[1].r;
+    a0->items[a3].c[1].g = s->c[1].g;
+    a0->items[a3].c[1].b = s->c[1].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[2].r = s->c[2].r;
+    a0->items[a3].c[2].g = s->c[2].g;
+    a0->items[a3].c[2].b = s->c[2].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].v[0].x = s->p[0].v.x;
+    a0->items[a3].v[0].y = s->p[0].v.y;
+    a0->items[a3].v[0].z = s->p[0].v.z;
+    a0->items[a3].v[1].x = s->p[1].v.x;
+    a0->items[a3].v[1].y = s->p[1].v.y;
+    a0->items[a3].v[1].z = s->p[1].v.z;
+    a0->items[a3].v[2].x = s->p[2].v.x;
+    a0->items[a3].v[2].y = s->p[2].v.y;
+    a0->items[a3].v[2].z = s->p[2].v.z;
+    a0->items[a3].n[0].x = s->p[0].n.x;
+    a0->items[a3].n[0].y = s->p[0].n.y;
+    a0->items[a3].n[0].z = s->p[0].n.z;
+    a0->items[a3].n[1].x = s->p[1].n.x;
+    a0->items[a3].n[1].y = s->p[1].n.y;
+    a0->items[a3].n[1].z = s->p[1].n.z;
+    a0->items[a3].n[2].x = s->p[2].n.x;
+    a0->items[a3].n[2].y = s->p[2].n.y;
+    a0->items[a3].n[2].z = s->p[2].n.z;
+    a0->items[a3].c[0].code = a2;
 }
 // Matched
-int sub_800238AC(unsigned char* a0, int a1, int* a2, int a3)
+int sub_800238AC(FtgPrimHeader* a0, FtgSrcPolyFT3* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[5] + a3 * 0x30, 1);
+        SetSemiTrans(&a2->ft3_10.items[a3], 1);
     }
-    sub_80023934(a2 + 4, a1, a0[3], a3);
+    sub_80023934(&a2->ft3_10, a1, a0->flags_3, a3);
     return 0x24;
 }
 // Matched
-void sub_80023934(int* a0, int a1, int a2, int a3)
+void sub_80023934(FtgPolyFT3List* a0, FtgSrcPolyFT3* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x30;
-    *(unsigned short*)(o + a0[1] + 0xA) = *(unsigned short*)(s);
-    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x12);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x13);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned char*)(o + a0[1] + 0x4) + (*(unsigned char*)(o + a0[1] + 0x5) << 8);
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x1A);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x1B);
-    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned char*)(o + a0[1] + 0x8) + (*(unsigned char*)(o + a0[1] + 0x9) << 8);
-    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x22);
-    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x23);
-    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
-    *(unsigned char*)(o + a0[1]) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x1) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x2) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0xC);
-    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x4);
-    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x6);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x8);
+    a0->items[a3].tpage = s->tex.tpage;
+    a0->items[a3].clut = s->tex.clut;
+    a0->items[a3].u0 = s->v[0].u;
+    a0->items[a3].v0 = s->v[0].v;
+    a0->items[a3].v[0].uv = a0->items[a3].u0 + (a0->items[a3].v0 << 8);
+    a0->items[a3].u1 = s->v[1].u;
+    a0->items[a3].v1 = s->v[1].v;
+    a0->items[a3].v[1].uv = a0->items[a3].u1 + (a0->items[a3].v1 << 8);
+    a0->items[a3].u2 = s->v[2].u;
+    a0->items[a3].v2 = s->v[2].v;
+    a0->items[a3].v[2].uv = a0->items[a3].u2 + (a0->items[a3].v2 << 8);
+    a0->items[a3].c.r = 0x80;
+    a0->items[a3].c.g = 0x80;
+    a0->items[a3].c.b = 0x80;
+    a0->items[a3].c.code = a2;
+    a0->items[a3].v[0].x = s->v[0].x;
+    a0->items[a3].v[0].y = s->v[0].y;
+    a0->items[a3].v[0].z = s->v[0].z;
+    a0->items[a3].v[1].x = s->v[1].x;
+    a0->items[a3].v[1].y = s->v[1].y;
+    a0->items[a3].v[1].z = s->v[1].z;
+    a0->items[a3].v[2].x = s->v[2].x;
+    a0->items[a3].v[2].y = s->v[2].y;
+    a0->items[a3].v[2].z = s->v[2].z;
+    a0->items[a3].n.x = s->n.x;
+    a0->items[a3].n.y = s->n.y;
+    a0->items[a3].n.z = s->n.z;
 }
 // Matched
-void sub_80023B24(unsigned short* p, int arg1)
+void sub_80023B24(FtgSrcPolyFT3* p, int arg1)
 {
-    RelocateTPageClut_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_80023B48(unsigned char* a0, int a1, int* a2, int a3)
+int sub_80023B48(FtgPrimHeader* a0, FtgSrcPolyGT3* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[7] + a3 * 0x48, 1);
+        SetSemiTrans(&a2->gt3_18.items[a3], 1);
     }
-    sub_80023BD0(a2 + 6, a1, a0[3], a3);
+    sub_80023BD0(&a2->gt3_18, a1, a0->flags_3, a3);
     return 0x40;
 }
 // Matched
-void sub_80023BD0(int* a0, int a1, int a2, int a3)
+void sub_80023BD0(FtgPolyGT3List* a0, FtgSrcPolyGT3* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x48;
-    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s);
-    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x1E);
-    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x1F);
-    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
-    *(unsigned char*)(o + a0[1] + 0x10) = *(unsigned char*)(s + 0x2E);
-    *(unsigned char*)(o + a0[1] + 0x11) = *(unsigned char*)(s + 0x2F);
-    *(unsigned short*)(o + a0[1] + 0x3E) = *(unsigned char*)(o + a0[1] + 0x10) + (*(unsigned char*)(o + a0[1] + 0x11) << 8);
-    *(unsigned char*)(o + a0[1] + 0x14) = *(unsigned char*)(s + 0x3E);
-    *(unsigned char*)(o + a0[1] + 0x15) = *(unsigned char*)(s + 0x3F);
-    *(unsigned short*)(o + a0[1] + 0x46) = *(unsigned char*)(o + a0[1] + 0x14) + (*(unsigned char*)(o + a0[1] + 0x15) << 8);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1]) = *(unsigned char*)(s + 0x4);
-    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x5);
-    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x6);
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x8);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x9);
-    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0xA);
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0xC);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0xD);
-    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x1A);
-    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x3A) = *(unsigned short*)(s + 0x2A);
-    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x2C);
-    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x38);
-    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned short*)(s + 0x3A);
-    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x3C);
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0x12);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x22);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x30);
-    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x32);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x34);
+    a0->items[a3].tpage = s->tex.tpage;
+    a0->items[a3].clut = s->tex.clut;
+    a0->items[a3].u0 = s->p[0].v.u;
+    a0->items[a3].v0 = s->p[0].v.v;
+    a0->items[a3].v[0].uv = a0->items[a3].u0 + (a0->items[a3].v0 << 8);
+    a0->items[a3].u1 = s->p[1].v.u;
+    a0->items[a3].v1 = s->p[1].v.v;
+    a0->items[a3].v[1].uv = a0->items[a3].u1 + (a0->items[a3].v1 << 8);
+    a0->items[a3].u2 = s->p[2].v.u;
+    a0->items[a3].v2 = s->p[2].v.v;
+    a0->items[a3].v[2].uv = a0->items[a3].u2 + (a0->items[a3].v2 << 8);
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[0].r = s->c[0].r;
+    a0->items[a3].c[0].g = s->c[0].g;
+    a0->items[a3].c[0].b = s->c[0].b;
+    a0->items[a3].c[1].r = s->c[1].r;
+    a0->items[a3].c[1].g = s->c[1].g;
+    a0->items[a3].c[1].b = s->c[1].b;
+    a0->items[a3].c[2].r = s->c[2].r;
+    a0->items[a3].c[2].g = s->c[2].g;
+    a0->items[a3].c[2].b = s->c[2].b;
+    a0->items[a3].v[0].x = s->p[0].v.x;
+    a0->items[a3].v[0].y = s->p[0].v.y;
+    a0->items[a3].v[0].z = s->p[0].v.z;
+    a0->items[a3].v[1].x = s->p[1].v.x;
+    a0->items[a3].v[1].y = s->p[1].v.y;
+    a0->items[a3].v[1].z = s->p[1].v.z;
+    a0->items[a3].v[2].x = s->p[2].v.x;
+    a0->items[a3].v[2].y = s->p[2].v.y;
+    a0->items[a3].v[2].z = s->p[2].v.z;
+    a0->items[a3].n[0].x = s->p[0].n.x;
+    a0->items[a3].n[0].y = s->p[0].n.y;
+    a0->items[a3].n[0].z = s->p[0].n.z;
+    a0->items[a3].n[1].x = s->p[1].n.x;
+    a0->items[a3].n[1].y = s->p[1].n.y;
+    a0->items[a3].n[1].z = s->p[1].n.z;
+    a0->items[a3].n[2].x = s->p[2].n.x;
+    a0->items[a3].n[2].y = s->p[2].n.y;
+    a0->items[a3].n[2].z = s->p[2].n.z;
 }
 // Matched
-void sub_80023E80(unsigned short* p, int arg1)
+void sub_80023E80(FtgSrcPolyGT3* p, int arg1)
 {
-    RelocateTPageClut_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_80023EA4(unsigned char* a0, int a1, int* a2, int a3)
+int sub_80023EA4(FtgPrimHeader* a0, FtgPolyF4* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[9] + a3 * 0x2C, 1);
+        SetSemiTrans(&a2->f4_20.items[a3], 1);
     }
-    sub_80023F34(a2 + 8, a1, a0[3], a3);
+    sub_80023F34(&a2->f4_20, a1, a0->flags_3, a3);
     return 0x2C;
 }
 // Matched
-void sub_80023F34(int* a0, int a1, int a2, int a3)
+void sub_80023F34(FtgPolyF4List* a0, FtgPolyF4* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x2C;
-    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
-    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
-    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned short*)(o + a0[1] + 0xC) = *(unsigned short*)(s + 0xC);
-    *(unsigned short*)(o + a0[1] + 0xE) = *(unsigned short*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x26);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x4) = *(unsigned short*)(s + 0x4);
-    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x6);
-    *(unsigned short*)(o + a0[1] + 0x8) = *(unsigned short*)(s + 0x8);
+    a0->items[a3].c.r = s->c.r;
+    a0->items[a3].c.g = s->c.g;
+    a0->items[a3].c.b = s->c.b;
+    a0->items[a3].c.code = a2;
+    a0->items[a3].v[0].x = s->v[0].x;
+    a0->items[a3].v[0].y = s->v[0].y;
+    a0->items[a3].v[0].z = s->v[0].z;
+    a0->items[a3].v[1].x = s->v[1].x;
+    a0->items[a3].v[1].y = s->v[1].y;
+    a0->items[a3].v[1].z = s->v[1].z;
+    a0->items[a3].v[2].x = s->v[2].x;
+    a0->items[a3].v[2].y = s->v[2].y;
+    a0->items[a3].v[2].z = s->v[2].z;
+    a0->items[a3].v[3].x = s->v[3].x;
+    a0->items[a3].v[3].y = s->v[3].y;
+    a0->items[a3].v[3].z = s->v[3].z;
+    a0->items[a3].n.x = s->n.x;
+    a0->items[a3].n.y = s->n.y;
+    a0->items[a3].n.z = s->n.z;
 }
 // Matched
-int sub_8002407C(unsigned char* a0, int a1, int* a2, int a3)
+int sub_8002407C(FtgPrimHeader* a0, FtgSrcPolyG4* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[11] + a3 * 0x50, 1);
+        SetSemiTrans(&a2->g4_28.items[a3], 1);
     }
-    sub_80024104(a2 + 10, a1, a0[3], a3);
+    sub_80024104(&a2->g4_28, a1, a0->flags_3, a3);
     return 0x50;
 }
 // Matched
-void sub_80024104(int* a0, int a1, int a2, int a3)
+void sub_80024104(FtgPolyG4List* a0, FtgSrcPolyG4* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x50;
-    *(unsigned char*)(o + a0[1]) = *(unsigned char*)s;
-    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x1);
-    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x4);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x5);
-    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0x6);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x8);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x9);
-    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xA);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0xC);
-    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0xD);
-    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0xE);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x1A);
-    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x3A) = *(unsigned short*)(s + 0x2A);
-    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x2C);
-    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x38);
-    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned short*)(s + 0x3A);
-    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x3C);
-    *(unsigned short*)(o + a0[1] + 0x48) = *(unsigned short*)(s + 0x48);
-    *(unsigned short*)(o + a0[1] + 0x4A) = *(unsigned short*)(s + 0x4A);
-    *(unsigned short*)(o + a0[1] + 0x4C) = *(unsigned short*)(s + 0x4C);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x12);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0x22);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x30);
-    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x32);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x34);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x40);
-    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x42);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x44);
+    a0->items[a3].c[0].r = s->c[0].r;
+    a0->items[a3].c[0].g = s->c[0].g;
+    a0->items[a3].c[0].b = s->c[0].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[1].r = s->c[1].r;
+    a0->items[a3].c[1].g = s->c[1].g;
+    a0->items[a3].c[1].b = s->c[1].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[2].r = s->c[2].r;
+    a0->items[a3].c[2].g = s->c[2].g;
+    a0->items[a3].c[2].b = s->c[2].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[3].r = s->c[3].r;
+    a0->items[a3].c[3].g = s->c[3].g;
+    a0->items[a3].c[3].b = s->c[3].b;
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].v[0].x = s->p[0].v.x;
+    a0->items[a3].v[0].y = s->p[0].v.y;
+    a0->items[a3].v[0].z = s->p[0].v.z;
+    a0->items[a3].v[1].x = s->p[1].v.x;
+    a0->items[a3].v[1].y = s->p[1].v.y;
+    a0->items[a3].v[1].z = s->p[1].v.z;
+    a0->items[a3].v[2].x = s->p[2].v.x;
+    a0->items[a3].v[2].y = s->p[2].v.y;
+    a0->items[a3].v[2].z = s->p[2].v.z;
+    a0->items[a3].v[3].x = s->p[3].v.x;
+    a0->items[a3].v[3].y = s->p[3].v.y;
+    a0->items[a3].v[3].z = s->p[3].v.z;
+    a0->items[a3].n[0].x = s->p[0].n.x;
+    a0->items[a3].n[0].y = s->p[0].n.y;
+    a0->items[a3].n[0].z = s->p[0].n.z;
+    a0->items[a3].n[1].x = s->p[1].n.x;
+    a0->items[a3].n[1].y = s->p[1].n.y;
+    a0->items[a3].n[1].z = s->p[1].n.z;
+    a0->items[a3].n[2].x = s->p[2].n.x;
+    a0->items[a3].n[2].y = s->p[2].n.y;
+    a0->items[a3].n[2].z = s->p[2].n.z;
+    a0->items[a3].n[3].x = s->p[3].n.x;
+    a0->items[a3].n[3].y = s->p[3].n.y;
+    a0->items[a3].n[3].z = s->p[3].n.z;
 }
 // Matched
-int sub_80024394(unsigned char* a0, int a1, int* a2, int a3)
+int sub_80024394(FtgPrimHeader* a0, FtgSrcPolyFT4* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[13] + a3 * 0x38, 1);
+        SetSemiTrans(&a2->ft4_30.items[a3], 1);
     }
-    sub_8002441C(a2 + 12, a1, a0[3], a3);
+    sub_8002441C(&a2->ft4_30, a1, a0->flags_3, a3);
     return 0x2C;
 }
 // Matched
-void sub_8002441C(int* a0, int a1, int a2, int a3)
+void sub_8002441C(FtgPolyFT4List* a0, FtgSrcPolyFT4* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x38;
-    *(unsigned short*)(o + a0[1] + 0xA) = *(unsigned short*)(s);
-    *(unsigned short*)(o + a0[1] + 0x6) = *(unsigned short*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x12);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x13);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned char*)(o + a0[1] + 0x4) + (*(unsigned char*)(o + a0[1] + 0x5) << 8);
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0x1A);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0x1B);
-    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned char*)(o + a0[1] + 0x8) + (*(unsigned char*)(o + a0[1] + 0x9) << 8);
-    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x22);
-    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x23);
-    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned char*)(o + a0[1] + 0xC) + (*(unsigned char*)(o + a0[1] + 0xD) << 8);
-    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0x2A);
-    *(unsigned char*)(o + a0[1] + 0xF) = *(unsigned char*)(s + 0x2B);
-    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned char*)(o + a0[1] + 0xE) + (*(unsigned char*)(o + a0[1] + 0xF) << 8);
-    *(unsigned char*)(o + a0[1]) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x1) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x2) = 0x80;
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned short*)(o + a0[1] + 0x18) = *(unsigned short*)(s + 0xC);
-    *(unsigned short*)(o + a0[1] + 0x1A) = *(unsigned short*)(s + 0xE);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x10);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x22) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x2A) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x32) = *(unsigned short*)(s + 0x26);
-    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x10) = *(unsigned short*)(s + 0x4);
-    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x6);
-    *(unsigned short*)(o + a0[1] + 0x14) = *(unsigned short*)(s + 0x8);
+    a0->items[a3].tpage = s->tex.tpage;
+    a0->items[a3].clut = s->tex.clut;
+    a0->items[a3].u0 = s->v[0].u;
+    a0->items[a3].v0 = s->v[0].v;
+    a0->items[a3].v[0].uv = a0->items[a3].u0 + (a0->items[a3].v0 << 8);
+    a0->items[a3].u1 = s->v[1].u;
+    a0->items[a3].v1 = s->v[1].v;
+    a0->items[a3].v[1].uv = a0->items[a3].u1 + (a0->items[a3].v1 << 8);
+    a0->items[a3].u2 = s->v[2].u;
+    a0->items[a3].v2 = s->v[2].v;
+    a0->items[a3].v[2].uv = a0->items[a3].u2 + (a0->items[a3].v2 << 8);
+    a0->items[a3].u3 = s->v[3].u;
+    a0->items[a3].v3 = s->v[3].v;
+    a0->items[a3].v[3].uv = a0->items[a3].u3 + (a0->items[a3].v3 << 8);
+    a0->items[a3].c.r = 0x80;
+    a0->items[a3].c.g = 0x80;
+    a0->items[a3].c.b = 0x80;
+    a0->items[a3].c.code = a2;
+    a0->items[a3].v[0].x = s->v[0].x;
+    a0->items[a3].v[0].y = s->v[0].y;
+    a0->items[a3].v[0].z = s->v[0].z;
+    a0->items[a3].v[1].x = s->v[1].x;
+    a0->items[a3].v[1].y = s->v[1].y;
+    a0->items[a3].v[1].z = s->v[1].z;
+    a0->items[a3].v[2].x = s->v[2].x;
+    a0->items[a3].v[2].y = s->v[2].y;
+    a0->items[a3].v[2].z = s->v[2].z;
+    a0->items[a3].v[3].x = s->v[3].x;
+    a0->items[a3].v[3].y = s->v[3].y;
+    a0->items[a3].v[3].z = s->v[3].z;
+    a0->items[a3].n.x = s->n.x;
+    a0->items[a3].n.y = s->n.y;
+    a0->items[a3].n.z = s->n.z;
 }
 // Matched
-void sub_8002467C(unsigned short* p, int arg1)
+void sub_8002467C(FtgSrcPolyFT4* p, int arg1)
 {
-    RelocateTPageClut_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_800246A0(unsigned char* a0, int a1, int* a2, int a3)
+int sub_800246A0(FtgPrimHeader* a0, FtgSrcPolyGT4* a1, FtgObject* a2, int a3)
 {
-    if (a0[3] & 2)
+    if (a0->flags_3 & 2)
     {
-        SetSemiTrans((char*)a2[15] + a3 * 0x5C, 1);
+        SetSemiTrans(&a2->gt4_38.items[a3], 1);
     }
-    sub_80024730(a2 + 14, a1, a0[3], a3);
+    sub_80024730(&a2->gt4_38, a1, a0->flags_3, a3);
     return 0x54;
 }
 // Matched
-void sub_80024730(int* a0, int a1, int a2, int a3)
+void sub_80024730(FtgPolyGT4List* a0, FtgSrcPolyGT4* s, int a2, int a3)
 {
-    unsigned char* s = (unsigned char*)a1;
-    int o = a3 * 0x5C;
-    *(unsigned short*)(o + a0[1] + 0x16) = *(unsigned short*)(s);
-    *(unsigned short*)(o + a0[1] + 0x12) = *(unsigned short*)(s + 0x2);
-    *(unsigned char*)(o + a0[1] + 0x10) = *(unsigned char*)(s + 0x22);
-    *(unsigned char*)(o + a0[1] + 0x11) = *(unsigned char*)(s + 0x23);
-    *(unsigned short*)(o + a0[1] + 0x42) = *(unsigned char*)(o + a0[1] + 0x10) + (*(unsigned char*)(o + a0[1] + 0x11) << 8);
-    *(unsigned char*)(o + a0[1] + 0x14) = *(unsigned char*)(s + 0x32);
-    *(unsigned char*)(o + a0[1] + 0x15) = *(unsigned char*)(s + 0x33);
-    *(unsigned short*)(o + a0[1] + 0x4A) = *(unsigned char*)(o + a0[1] + 0x14) + (*(unsigned char*)(o + a0[1] + 0x15) << 8);
-    *(unsigned char*)(o + a0[1] + 0x18) = *(unsigned char*)(s + 0x42);
-    *(unsigned char*)(o + a0[1] + 0x19) = *(unsigned char*)(s + 0x43);
-    *(unsigned short*)(o + a0[1] + 0x52) = *(unsigned char*)(o + a0[1] + 0x18) + (*(unsigned char*)(o + a0[1] + 0x19) << 8);
-    *(unsigned char*)(o + a0[1] + 0x1A) = *(unsigned char*)(s + 0x52);
-    *(unsigned char*)(o + a0[1] + 0x1B) = *(unsigned char*)(s + 0x53);
-    *(unsigned short*)(o + a0[1] + 0x5A) = *(unsigned char*)(o + a0[1] + 0x1A) + (*(unsigned char*)(o + a0[1] + 0x1B) << 8);
-    *(unsigned char*)(o + a0[1] + 0x3) = a2;
-    *(unsigned char*)(o + a0[1]) = *(unsigned char*)(s + 0x4);
-    *(unsigned char*)(o + a0[1] + 0x1) = *(unsigned char*)(s + 0x5);
-    *(unsigned char*)(o + a0[1] + 0x2) = *(unsigned char*)(s + 0x6);
-    *(unsigned char*)(o + a0[1] + 0x4) = *(unsigned char*)(s + 0x8);
-    *(unsigned char*)(o + a0[1] + 0x5) = *(unsigned char*)(s + 0x9);
-    *(unsigned char*)(o + a0[1] + 0x6) = *(unsigned char*)(s + 0xA);
-    *(unsigned char*)(o + a0[1] + 0x8) = *(unsigned char*)(s + 0xC);
-    *(unsigned char*)(o + a0[1] + 0x9) = *(unsigned char*)(s + 0xD);
-    *(unsigned char*)(o + a0[1] + 0xA) = *(unsigned char*)(s + 0xE);
-    *(unsigned char*)(o + a0[1] + 0xC) = *(unsigned char*)(s + 0x10);
-    *(unsigned char*)(o + a0[1] + 0xD) = *(unsigned char*)(s + 0x11);
-    *(unsigned char*)(o + a0[1] + 0xE) = *(unsigned char*)(s + 0x12);
-    *(unsigned short*)(o + a0[1] + 0x3C) = *(unsigned short*)(s + 0x1C);
-    *(unsigned short*)(o + a0[1] + 0x3E) = *(unsigned short*)(s + 0x1E);
-    *(unsigned short*)(o + a0[1] + 0x40) = *(unsigned short*)(s + 0x20);
-    *(unsigned short*)(o + a0[1] + 0x44) = *(unsigned short*)(s + 0x2C);
-    *(unsigned short*)(o + a0[1] + 0x46) = *(unsigned short*)(s + 0x2E);
-    *(unsigned short*)(o + a0[1] + 0x48) = *(unsigned short*)(s + 0x30);
-    *(unsigned short*)(o + a0[1] + 0x4C) = *(unsigned short*)(s + 0x3C);
-    *(unsigned short*)(o + a0[1] + 0x4E) = *(unsigned short*)(s + 0x3E);
-    *(unsigned short*)(o + a0[1] + 0x50) = *(unsigned short*)(s + 0x40);
-    *(unsigned short*)(o + a0[1] + 0x54) = *(unsigned short*)(s + 0x4C);
-    *(unsigned short*)(o + a0[1] + 0x56) = *(unsigned short*)(s + 0x4E);
-    *(unsigned short*)(o + a0[1] + 0x58) = *(unsigned short*)(s + 0x50);
-    *(unsigned short*)(o + a0[1] + 0x1C) = *(unsigned short*)(s + 0x14);
-    *(unsigned short*)(o + a0[1] + 0x1E) = *(unsigned short*)(s + 0x16);
-    *(unsigned short*)(o + a0[1] + 0x20) = *(unsigned short*)(s + 0x18);
-    *(unsigned short*)(o + a0[1] + 0x24) = *(unsigned short*)(s + 0x24);
-    *(unsigned short*)(o + a0[1] + 0x26) = *(unsigned short*)(s + 0x26);
-    *(unsigned short*)(o + a0[1] + 0x28) = *(unsigned short*)(s + 0x28);
-    *(unsigned short*)(o + a0[1] + 0x2C) = *(unsigned short*)(s + 0x34);
-    *(unsigned short*)(o + a0[1] + 0x2E) = *(unsigned short*)(s + 0x36);
-    *(unsigned short*)(o + a0[1] + 0x30) = *(unsigned short*)(s + 0x38);
-    *(unsigned short*)(o + a0[1] + 0x34) = *(unsigned short*)(s + 0x44);
-    *(unsigned short*)(o + a0[1] + 0x36) = *(unsigned short*)(s + 0x46);
-    *(unsigned short*)(o + a0[1] + 0x38) = *(unsigned short*)(s + 0x48);
+    a0->items[a3].tpage = s->tex.tpage;
+    a0->items[a3].clut = s->tex.clut;
+    a0->items[a3].u0 = s->p[0].v.u;
+    a0->items[a3].v0 = s->p[0].v.v;
+    a0->items[a3].v[0].uv = a0->items[a3].u0 + (a0->items[a3].v0 << 8);
+    a0->items[a3].u1 = s->p[1].v.u;
+    a0->items[a3].v1 = s->p[1].v.v;
+    a0->items[a3].v[1].uv = a0->items[a3].u1 + (a0->items[a3].v1 << 8);
+    a0->items[a3].u2 = s->p[2].v.u;
+    a0->items[a3].v2 = s->p[2].v.v;
+    a0->items[a3].v[2].uv = a0->items[a3].u2 + (a0->items[a3].v2 << 8);
+    a0->items[a3].u3 = s->p[3].v.u;
+    a0->items[a3].v3 = s->p[3].v.v;
+    a0->items[a3].v[3].uv = a0->items[a3].u3 + (a0->items[a3].v3 << 8);
+    a0->items[a3].c[0].code = a2;
+    a0->items[a3].c[0].r = s->c[0].r;
+    a0->items[a3].c[0].g = s->c[0].g;
+    a0->items[a3].c[0].b = s->c[0].b;
+    a0->items[a3].c[1].r = s->c[1].r;
+    a0->items[a3].c[1].g = s->c[1].g;
+    a0->items[a3].c[1].b = s->c[1].b;
+    a0->items[a3].c[2].r = s->c[2].r;
+    a0->items[a3].c[2].g = s->c[2].g;
+    a0->items[a3].c[2].b = s->c[2].b;
+    a0->items[a3].c[3].r = s->c[3].r;
+    a0->items[a3].c[3].g = s->c[3].g;
+    a0->items[a3].c[3].b = s->c[3].b;
+    a0->items[a3].v[0].x = s->p[0].v.x;
+    a0->items[a3].v[0].y = s->p[0].v.y;
+    a0->items[a3].v[0].z = s->p[0].v.z;
+    a0->items[a3].v[1].x = s->p[1].v.x;
+    a0->items[a3].v[1].y = s->p[1].v.y;
+    a0->items[a3].v[1].z = s->p[1].v.z;
+    a0->items[a3].v[2].x = s->p[2].v.x;
+    a0->items[a3].v[2].y = s->p[2].v.y;
+    a0->items[a3].v[2].z = s->p[2].v.z;
+    a0->items[a3].v[3].x = s->p[3].v.x;
+    a0->items[a3].v[3].y = s->p[3].v.y;
+    a0->items[a3].v[3].z = s->p[3].v.z;
+    a0->items[a3].n[0].x = s->p[0].n.x;
+    a0->items[a3].n[0].y = s->p[0].n.y;
+    a0->items[a3].n[0].z = s->p[0].n.z;
+    a0->items[a3].n[1].x = s->p[1].n.x;
+    a0->items[a3].n[1].y = s->p[1].n.y;
+    a0->items[a3].n[1].z = s->p[1].n.z;
+    a0->items[a3].n[2].x = s->p[2].n.x;
+    a0->items[a3].n[2].y = s->p[2].n.y;
+    a0->items[a3].n[2].z = s->p[2].n.z;
+    a0->items[a3].n[3].x = s->p[3].n.x;
+    a0->items[a3].n[3].y = s->p[3].n.y;
+    a0->items[a3].n[3].z = s->p[3].n.z;
 }
 // Matched
-void sub_80024AB8(unsigned short* p, int arg1)
+void sub_80024AB8(FtgSrcPolyGT4* p, int arg1)
 {
-    RelocateTPageClut_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
 void InitModelList_80024ADC(struct_112_list** a0, void* a1, int heap)

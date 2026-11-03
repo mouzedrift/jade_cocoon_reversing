@@ -19,4 +19,12 @@ typedef struct
     char pad_3C[0xEC];        // count at 0x40, then 0x38-byte entries
 } ActorEffectReq;
 
+// sound cue table dword_8007C750 (ModelAnimCue.arg_4 indexes it)
+typedef struct
+{
+    int kind; // 0: sfx, 1: music, 2: sequence, 3: fade out the system sequence
+    short arg;
+    short pad;
+} SoundCue_8007C750;
+
 #endif
