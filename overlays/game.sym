@@ -1,4 +1,6 @@
 dword_800A05A0=0x800a05a0; // overlay header / data
+jpt_800A05D8=0x800a05d8; // jump table of sub_800A2FB8
+dword_800A061C=0x800a061c; // data behind the jump table
 jpt_800A0698=0x800a0698; // jump table of GetIconSprtByKind_800A6434
 dword_800A06B8=0x800a06b8; // data behind the jump table
 jpt_800A0738=0x800a0738; // jump table of sub_800A8EC4
