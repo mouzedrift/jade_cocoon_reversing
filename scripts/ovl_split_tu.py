@@ -52,11 +52,13 @@ def main(argv):
     code = [a for n, a in addr.items() if not DATA.match(n)]
     first_code = min(code)
     # a symbol at each part's .rdata start
+    created = set()
     for _, r in cuts:
         if r not in addr.values():
             n = "dword_%08X" % r
             symtext = symtext.rstrip("\n") + "\n%s=0x%08x; // .rdata of the next source file\n" % (n, r)
             addr[n] = r
+            created.add(n)
     lines = sorted(symtext.rstrip("\n").split("\n"), key=lambda l: int(re.search(r"=0x([0-9a-f]+);", l).group(1), 16)
                    if re.search(r"=0x([0-9a-f]+);", l) else -1)
     open(symfile, "w").write("\n".join(lines) + "\n")
@@ -71,7 +73,7 @@ def main(argv):
     src = os.path.join(REPO, "src", "overlays", name + ".c")
     pieces = chunks(open(src).read())
     header, parts, pending = [], [[] for _ in range(len(cuts) + 1)], []
-    new_includes = {n for n, a in addr.items() if a in {r for _, r in cuts}}
+    new_includes = created  # (an existing symbol there is included already, or replaced by compiler output)
     seen_includes = set()
     for c in pieces:
         cl = code_lines(c)
