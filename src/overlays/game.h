@@ -398,7 +398,7 @@ extern void FreeMdecBuffer_800418CC(void);
 
 extern void ReleaseMdecVLCFileBuffer_800418FC(void);
 
-extern void sub_800B8A34(GameQ_1* q);
+extern void sub_800B8A34(GameEvCtx* q);
 
 extern void sub_800C4118(void* a, void* b, int c, int d);
 
@@ -717,17 +717,9 @@ extern int name_800AEBEC;
 
 extern unsigned int name_80091C38;
 
-typedef struct GameRun_1
-{
-    unsigned int f0;
-    int f4;
-    int** f8;
-    int fC;
-} GameRun_1;
+extern int (*name_800BCDBC[])(GameEvCtx*);
 
-extern int (*name_800BCDBC[])(GameRun_1*);
-
-extern void sub_800BC2B4(GameRun_1* q);
+extern void sub_800BC2B4(GameEvCtx* q);
 
 typedef struct GameTim_1
 {

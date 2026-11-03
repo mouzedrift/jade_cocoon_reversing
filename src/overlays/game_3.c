@@ -364,23 +364,23 @@ void sub_800A5FAC(void)
     }
 }
 
-void sub_800A6060(GameTask_1* t, GameRun_1* q)
+void sub_800A6060(GameTask_1* t, GameEvCtx* q)
 {
     while (1)
     {
         if (dword_800B0EC0 != 1)
             break;
-        if (name_800BCDBC[*(int*)q->f8](q) == 0)
+        if (name_800BCDBC[*(int*)q->pc_8](q) == 0)
             break;
     }
-    if (q->f0 & 0x40)
+    if (q->flags_0 & 0x40)
         sub_800BC2B4(q);
-    if (q->f0 & 0x10)
+    if (q->flags_0 & 0x10)
     {
-        q->f0 &= ~0x10;
-        q->f8 = (int**)q->fC;
+        q->flags_0 &= ~0x10;
+        q->pc_8 = q->ret_C;
     }
-    if (q->f0 & 1)
+    if (q->flags_0 & 1)
     {
         t->f0 &= ~1;
         t->f0 |= 0x8000;
@@ -390,9 +390,9 @@ void sub_800A6060(GameTask_1* t, GameRun_1* q)
 }
 
 // Matched
-void sub_800A6168(GameTask_1* t, GameQ_1* q)
+void sub_800A6168(GameTask_1* t, GameEvCtx* q)
 {
-    if (dword_800AEBD8 == *(int*)((char*)q + 0x10))
+    if (dword_800AEBD8 == q->id_10)
     {
         sub_800B8A34(q);
     }
