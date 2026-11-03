@@ -445,33 +445,20 @@ ShopItemShop* sub_800B9C5C(int i)
     return &name_800B6CF0[i];
 }
 
-#if 0 // near miss: i/n register swap
 int sub_800B9C78(int v)
 {
-    int n;
     int i;
-    int cnt;
-    ShopItemShop* p;
+    int n;
     n = 0;
-    i = n;
-    if (name_800B6CE4 > 0)
+    for (i = 0; i < name_800B6CE4; i++)
     {
-        cnt = name_800B6CE4;
-        p = name_800B6CF0;
-        do
+        if (v == name_800B6CF0[i].state_0)
         {
-            if (v == p->state_0)
-            {
-                n++;
-            }
-            i++;
-            p++;
-        } while (i < cnt);
+            n++;
+        }
     }
     return n;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9C78);
 
 int sub_800B9CCC(short* p)
 {
@@ -512,16 +499,13 @@ int sub_800B9D6C(int i)
     return 0;
 }
 
-#if 0 // near miss: i/p register swap
 int sub_800B9DA8()
 {
     int cnt = name_800B6CE4;
     ShopItemShop* items = name_800B6CF0;
     int n = 0;
-    int i = 0;
-    ShopItemShop* p;
-    ShopItemShop* dst;
-    for (; i < cnt; i++)
+    int i;
+    for (i = 0; i < cnt; i++)
     {
         if (items[i].state_0 != 4)
         {
@@ -530,43 +514,31 @@ int sub_800B9DA8()
     }
     if (n < 16)
     {
-        i = 0;
-        if (i < cnt)
+        n = 0;
+        for (i = 0; i < cnt; i++)
         {
-            dst = name_8008EF18;
-            p = items;
-            do
+            if (items[i].state_0 != 4)
             {
-                if (p->state_0 != 4)
-                {
-                    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)p, 0xF8);
-                    dst++;
-                }
-                i++;
-                p++;
-            } while (i < cnt);
+                MemCopy_800403E8((unsigned int*)&name_8008B570.items[n], (unsigned int*)&items[i], 0xF8);
+                n++;
+            }
         }
         free3_8003FC6C(items);
         return 1;
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9DA8);
 
-#if 0 // near miss: lbu/addiu order in first loop
 int sub_800B9E94(char* src, char* dst, short c)
 {
     int i;
-    int k;
     unsigned int j;
     unsigned int r;
     *(short*)dst = c;
-    for (i = 0, k = 4; i < 6; k += 12)
+    for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)(dst + k), (unsigned int*)(src + 0x10));
+        sub_80019AF4((unsigned int*)(dst + 4 + i * 12), (unsigned int*)(src + 0x10));
         (dst + i)[0x7C] = src[0x42];
-        i++;
     }
     r = LowestSetBit_80014358(*(short*)(src + 0x42));
     for (j = 0; j < 4; j++)
@@ -590,8 +562,6 @@ int sub_800B9E94(char* src, char* dst, short c)
     MemCopy_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9E94);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800B9FC8);
 
@@ -703,31 +673,23 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
-#if 0 // near miss: pointer induction var
 void sub_800BA650(unsigned char* d)
 {
     int i;
     int v;
+    int r;
+    int t;
     unsigned char* p;
-    for (i = 0, p = d; i < 6; i++, p = d + i)
+    for (i = 0; i < 6; i++)
     {
+        p = d + i;
         v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
-        if (v < 0)
-        {
-            v = 0;
-        }
-        else if (v > 100)
-        {
-            v = 100;
-        }
-        p[0xB0] = v;
+        if (v >= 0) { t = v; if (t > 100) t = 100; r = t; } else r = 0; p[0xB0] = r;
     }
     for (i = 5; i >= 0; i--)
     {
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BA650);
 
 void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
 {
@@ -738,13 +700,12 @@ void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
 
-#if 0 // near miss: orig keeps (1 << x) & mask as sllv/and, we get sra/andi
 void sub_800BAA0C(char* a, char* b)
 {
     unsigned int old = *(unsigned int*)(a + 0xF4);
     unsigned int* p = (unsigned int*)(a + 0xF4);
     int i;
-    int mask;
+    unsigned int mask;
     if (sub_800BAB30(b))
     {
         old |= *(unsigned int*)(b + 0xF4);
@@ -753,7 +714,7 @@ void sub_800BAA0C(char* a, char* b)
     *(unsigned int*)(a + 0xF4) = old;
     for (i = 0; i < 30; i++)
     {
-        if (TestMagicBit_8001AE2C(p, i) && !((1 << GetMagicElement_8001AD30(i)) & mask))
+        if (TestMagicBit_8001AE2C(p, i) && (mask & (1 << GetMagicElement_8001AD30(i))) == 0)
         {
             ClearMagicBit_8001AE00(p, i);
         }
@@ -775,8 +736,6 @@ void sub_800BAA0C(char* a, char* b)
         ClearMagicBit_8001AE00(p, 0x16);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BAA0C);
 
 int sub_800BAB30()
 {
@@ -1112,32 +1071,27 @@ int sub_800BB38C(ShopUnitShop* p)
     return 0;
 }
 
-#if 0 // near miss: reg alloc of field_84 load
 int sub_800BB3E8(ShopUnitShop* p)
 {
     switch (*(short*)p)
     {
     case 5:
-        if (p->field_84)
+        if (p->field_84 == 0)
         {
-            return 0;
-        }
     case 1:
     case 7:
-        return 1;
+            return 1;
+        }
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB3E8);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BB444);
 
-#if 0 // near miss: load order of table entries
 void sub_800BB798(ShopUnit3Shop* u)
 {
+    short a;
     unsigned short b;
-    int a;
     unsigned short c;
     a = name_800BFD1C[u->field_0];
     b = name_800BFD3C[u->field_0];
@@ -1155,14 +1109,11 @@ void sub_800BB798(ShopUnit3Shop* u)
         u->a7A[(short)c] = u->field_7E;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB798);
 
-#if 0 // near miss: load order of table entries
 void sub_800BB828(ShopUnit3Shop* u)
 {
     unsigned short b;
-    int a;
+    short a;
     unsigned short c;
     a = name_800BFD1C[u->field_0];
     b = name_800BFD3C[u->field_0];
@@ -1180,8 +1131,6 @@ void sub_800BB828(ShopUnit3Shop* u)
         u->field_7E = u->a7A[(short)c];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB828);
 
 void sub_800BB8C4(ShopUnit3Shop* u)
 {
@@ -1289,11 +1238,11 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BBB54);
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
-#if 0 // near miss: orig does not fold the two flag masks (and/and with separate constants)
 void sub_800BC1A8(ShopUnit3Shop* u)
 {
     int fl;
     int r;
+    int t;
     if (*(short*)u->field_54 != 4)
     {
         fl = u->field_24;
@@ -1311,9 +1260,9 @@ void sub_800BC1A8(ShopUnit3Shop* u)
         }
         else if (fl & 0x40)
         {
-            fl &= ~0x40;
-            fl &= ~0x100;
-            u->field_24 = fl | 0x80;
+            t = fl & ~0x40;
+            t &= ~0x100;
+            u->field_24 = t | 0x80;
             r = CountMagicBits_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
             if (r < 4)
             {
@@ -1326,9 +1275,9 @@ void sub_800BC1A8(ShopUnit3Shop* u)
         }
         else if (fl & 0x80)
         {
-            fl &= ~0x40;
-            fl &= ~0x80;
-            u->field_24 = fl | 0x100;
+            int t2 = fl & ~0x40;
+            t2 &= ~0x80;
+            u->field_24 = t2 | 0x100;
         }
         else if (fl & 0x100)
         {
@@ -1336,14 +1285,12 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             u->field_24 = fl2;
             if (u->field_0 == 3 && (fl & 2))
             {
-                u->field_24 = fl2 & ~0x401;
+                u->field_24 = fl2 & ~0x400;
             }
         }
         PlaySfx_80031494(0x7F);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BC1A8);
 
 void sub_800BC2DC(ShopUnit3Shop* u)
 {
@@ -1573,14 +1520,16 @@ void sub_800BD720(ShopUnit3Shop* u)
     }
 }
 
-#if 0 // near miss: tab/v register swap
 void sub_800BD7A8(ShopUnit3Shop* u)
 {
     short i;
-    unsigned short v = u->field_20;
+    unsigned short v;
+    int s;
+    v = u->field_20;
     u->field_1C = 0;
+    s = name_800BF8B4[u->field_0];
     u->field_20 = 0;
-    u->field_1C = name_800BF8B4[u->field_0];
+    u->field_1C = s;
     for (i = 0; i < 7; i++)
     {
         if ((v >> i) & 1)
@@ -1592,8 +1541,6 @@ void sub_800BD7A8(ShopUnit3Shop* u)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BD7A8);
 
 void sub_800BD854(ShopUnit3Shop* u)
 {
@@ -1659,9 +1606,9 @@ void sub_800BD854(ShopUnit3Shop* u)
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
 
-#if 0 // near miss: t/u register swap (10 words)
-void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
+void sub_800BDD74(ShopTaskShop* t, void* arg)
 {
+    ShopUnit3Shop* u = (ShopUnit3Shop*)arg;
     extern void sub_800BE128();
     extern void sub_800BE07C();
     if (fn_800272D0() == 0)
@@ -1685,8 +1632,6 @@ void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
         eventDispatchHalt_8008B540 = 1;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BDD74);
 
 extern void sub_800BDEA8();
 void sub_800BDE44(ShopTaskShop* t, int a)
@@ -2074,22 +2019,19 @@ done:
     return r;
 }
 
-#if 0 // near miss: temp register numbering of the eight products
 int sub_800BF3B4(unsigned char* p)
 {
-    ShopBigShop* g = name_80084540;
-    int t1 = g[0].field_5C6 * p[0];
-    int t2 = g[3].field_5C6 * p[0];
-    int t3 = g[3].field_5C6 * p[3];
-    int t4 = g[2].field_5C6 * p[3];
-    int t5 = g[2].field_5C6 * p[2];
-    int t6 = g[1].field_5C6 * p[2];
-    int t7 = g[1].field_5C6 * p[1];
-    int t8 = g[0].field_5C6 * p[1];
+    int t2, t1, t4, t3, t5, t6, t7, t8;
+    t1 = name_80084540[0].field_5C6 * p[0];
+    t2 = name_80084540[3].field_5C6 * p[0];
+    t3 = name_80084540[3].field_5C6 * p[3];
+    t4 = name_80084540[2].field_5C6 * p[3];
+    t5 = name_80084540[2].field_5C6 * p[2];
+    t6 = name_80084540[1].field_5C6 * p[2];
+    t7 = name_80084540[1].field_5C6 * p[1];
+    t8 = name_80084540[0].field_5C6 * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BF3B4);
 
 void sub_800BF474()
 {
