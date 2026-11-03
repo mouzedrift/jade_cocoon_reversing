@@ -482,4 +482,40 @@ typedef struct OverlayLoader
     int request_8; // LoadOverlay_80020BF8 file request
 } OverlayLoader;
 
+// map data block dword_8008D648 (sub_80027778 / sub_800278BC); fields named by offset
+typedef struct
+{
+    int field_0;
+    int count;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short* items;
+} struct_27778;
+typedef struct
+{
+    unsigned char a;
+    unsigned char b;
+    unsigned short c;
+} struct_4b;
+typedef struct
+{
+    unsigned int count;
+    struct_4b* items;
+} struct_8_4b;
+typedef struct
+{
+    short a;
+    short b;
+} struct_2s;
+typedef struct
+{
+    int count_0;
+    int field_4;
+    int field_8;
+    struct_27778* items_C;
+    int listCount_10;
+    struct_8_4b* lists_14;
+    struct_2s* pairs_18;
+} struct_8008D648;
+
 #endif

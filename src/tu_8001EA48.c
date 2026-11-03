@@ -3824,7 +3824,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
         s += 4;
     }
 }
-extern int dword_8008D648[];
+extern struct_8008D648 dword_8008D648;
 extern int* dword_80082674;
 extern int dword_80091C98;
 extern int dword_80091C94;
@@ -3862,15 +3862,15 @@ void sub_80026FAC(void)
     dword_8008B500[10] = 0;
     dword_8008B500[14] = 0;
     dword_8008B500[15] = 0;
-    dword_8008D648[0] = 0;
-    dword_8008D648[1] = 0;
-    dword_8008D648[2] = 0;
-    dword_8008D648[3] = 0;
-    dword_8008D648[1] = 0;
-    dword_8008D648[2] = 0;
-    dword_8008D648[4] = 0;
-    dword_8008D648[5] = 0;
-    dword_8008D648[6] = 0;
+    dword_8008D648.count_0 = 0;
+    dword_8008D648.field_4 = 0;
+    dword_8008D648.field_8 = 0;
+    dword_8008D648.items_C = 0;
+    dword_8008D648.field_4 = 0;
+    dword_8008D648.field_8 = 0;
+    dword_8008D648.listCount_10 = 0;
+    dword_8008D648.lists_14 = 0;
+    dword_8008D648.pairs_18 = 0;
     dword_80091C88 = -1;
     dword_80091C44 = -1;
     dword_80082674 = 0;
@@ -4171,14 +4171,6 @@ void sub_80027708(int* a0, int a1)
         LoadFtgObjects_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
     }
 }
-typedef struct
-{
-    int field_0;
-    int count;
-    unsigned short field_8;
-    unsigned short field_A;
-    unsigned short* items;
-} struct_27778;
 // Matched
 void sub_80027778(int* a0, int h)
 {
@@ -4188,12 +4180,12 @@ void sub_80027778(int* a0, int h)
     int* src;
     unsigned short* q;
     int n;
-    dword_8008D648[1] = a0[0];
-    dword_8008D648[2] = a0[1];
+    dword_8008D648.field_4 = a0[0];
+    dword_8008D648.field_8 = a0[1];
     n = a0[2];
-    dword_8008D648[0] = n;
+    dword_8008D648.count_0 = n;
     arr = (struct_27778*)ListAlloc_8003FDC0(h, n * 16);
-    for (i = 0; i < dword_8008D648[0]; i++)
+    for (i = 0; i < dword_8008D648.count_0; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
         arr[i].field_0 = *src++;
@@ -4207,24 +4199,8 @@ void sub_80027778(int* a0, int h)
             arr[i].items[j] = *q++;
         }
     }
-    dword_8008D648[3] = (int)arr;
+    dword_8008D648.items_C = arr;
 }
-typedef struct
-{
-    unsigned char a;
-    unsigned char b;
-    unsigned short c;
-} struct_4b;
-typedef struct
-{
-    unsigned int count;
-    struct_4b* items;
-} struct_8_4b;
-typedef struct
-{
-    short a;
-    short b;
-} struct_2s;
 // Matched
 void sub_800278BC(int* a, int h)
 {
@@ -4236,25 +4212,25 @@ void sub_800278BC(int* a, int h)
     struct_4b* r;
     struct_2s* e;
     n = a0[0];
-    dword_8008D648[4] = n;
-    dword_8008D648[5] = (int)ListAlloc_8003FDC0(h, n * 8);
-    for (i = 0; i < dword_8008D648[4]; i++)
+    dword_8008D648.listCount_10 = n;
+    dword_8008D648.lists_14 = ListAlloc_8003FDC0(h, n * 8);
+    for (i = 0; i < dword_8008D648.listCount_10; i++)
     {
         q = (int*)((char*)a0 + a0[i + 1]);
-        ((struct_8_4b*)dword_8008D648[5])[i].count = *q;
-        ((struct_8_4b*)dword_8008D648[5])[i].items = (struct_4b*)ListAlloc_8003FDC0(h, ((struct_8_4b*)dword_8008D648[5])[i].count * 4);
+        dword_8008D648.lists_14[i].count = *q;
+        dword_8008D648.lists_14[i].items = (struct_4b*)ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
-        for (j = 0; j < ((struct_8_4b*)dword_8008D648[5])[i].count; j++)
+        for (j = 0; j < dword_8008D648.lists_14[i].count; j++)
         {
-            ((struct_8_4b*)dword_8008D648[5])[i].items[j].a = r[j].a;
-            ((struct_8_4b*)dword_8008D648[5])[i].items[j].b = r[j].b;
-            ((struct_8_4b*)dword_8008D648[5])[i].items[j].c = r[j].c;
+            dword_8008D648.lists_14[i].items[j].a = r[j].a;
+            dword_8008D648.lists_14[i].items[j].b = r[j].b;
+            dword_8008D648.lists_14[i].items[j].c = r[j].c;
         }
     }
-    dword_8008D648[6] = (int)ListAlloc_8003FDC0(h, dword_8008D648[4] * 4);
-    for (i = 0; i < dword_8008D648[4]; i++)
+    dword_8008D648.pairs_18 = ListAlloc_8003FDC0(h, dword_8008D648.listCount_10 * 4);
+    for (i = 0; i < dword_8008D648.listCount_10; i++)
     {
-        e = (struct_2s*)(i * 4 + dword_8008D648[6]);
+        e = (struct_2s*)(i * 4 + (int)dword_8008D648.pairs_18); // integer sum, as the original
         e->b = 0;
         e->a = 0;
     }
