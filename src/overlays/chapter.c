@@ -118,28 +118,22 @@ void sub_800B6A94(short* p)
     }
 }
 
-// Near miss (register allocation / scheduling)
-#if 0
 void sub_800B6B18()
 {
     ChapterSave* s = (ChapterSave*)&saveData_8008B570;
     ChapterEntry* e = &dword_800B6FE0[s->cur_2DC];
     ChapterVec v;
-    short f0;
     sub_800ADCEC(&v, e->field_4);
     dword_80091C54 = 0;
     s->next_2DE = s->cur_2DC + 1;
-    f0 = e->field_0;
+    s->field_2E0 = e->field_0;
     dword_80091C94 = 1;
-    s->field_2F0 = 0;
     s->x_2E4 = v.x;
     s->y_2E8 = v.y;
     s->z_2EC = v.z;
-    s->field_2E0 = f0;
+    s->field_2F0 = 0;
     sub_800A6D30(1);
     eventDispatchHalt_8008B540 = 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(chapter, sub_800B6B18);
 
 INCLUDE_OVERLAY_ASM(chapter, dword_800B6BC4);
