@@ -168,14 +168,14 @@ INCLUDE_DATA(dword_80087134);
 INCLUDE_DATA(dword_80087138);
 
 // Matched
-signed char sub_80019BF0(int idx)
+signed char GetMinionElement_80019BF0(int idx)
 {
-    return dword_8007A4B4[idx].field_6;
+    return minionBaseStats_8007A4B4[idx].element;
 }
 // Matched
-unsigned char sub_80019C0C(int idx)
+unsigned char GetMinionEnhancementBody_80019C0C(int idx)
 {
-    return dword_8007A4B4[idx].field_7;
+    return minionBaseStats_8007A4B4[idx].enhancementBody;
 }
 // Matched
 struct_20* sub_80019C28(unsigned int idx)

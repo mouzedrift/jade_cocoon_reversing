@@ -104,7 +104,7 @@ typedef struct WpnSmall_wpnshop
     char b;
     char c;
 } WpnSmall_wpnshop;
-extern char byte_8008BD38[];
+extern char levantStatus_8008BD38[];
 extern void sub_8002F7D0(void* p, int a1);
 extern void sub_8002E288(int a0, int a1, int a2, void* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
@@ -1050,7 +1050,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
     } u;
     WpnRect_wpnshop r60;
     int r;
-    sub_80033624(buf10, (int)byte_8008BD38);
+    sub_80033624(buf10, (int)levantStatus_8008BD38);
     r = sub_800BDD2C(sub_800BE00C(o, 0xA), o->f_10, o->f_1E);
     if (r != 0xFF)
     {
@@ -1058,7 +1058,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
         {
             if (o->f_2 != 0x11)
             {
-                sub_8002E288((int)byte_8008BD38, r, o->f_10, buf28);
+                sub_8002E288((int)levantStatus_8008BD38, r, o->f_10, buf28);
                 r40.x = 0x119;
                 r40.y = 0x73;
                 sub_8002E188(buf10, buf28, &r40, 0xE);

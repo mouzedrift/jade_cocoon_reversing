@@ -16,6 +16,18 @@ typedef struct
     short field_E_h; // word_8008B4E6
 } DisplayConfig;
 
+// HP/MP block shared by Levant (0x8008BD38) and each Minion (status_84);
+// Heal_80011CD0 refills it (Meos4's randomizer calls 0x80011CD0 "healFn")
+typedef struct
+{
+    int status_0; // status effect bits (0x400 survives ClearStatus_80011C30)
+    int pad_4;
+    unsigned short hp_8;
+    unsigned short maxHp_A;
+    unsigned short mp_C;
+    unsigned short maxMp_E;
+} EntityStatus;
+
 typedef struct
 {
     short id; // 4 = empty slot
@@ -30,7 +42,7 @@ typedef struct
     unsigned char field_44;
     char pad_45[0x37];
     unsigned char field_7C[8];
-    char field_84[0x10];
+    char status_84[0x10]; // EntityStatus
     char field_94[0x38];
     char field_CC[0x12];
     char field_DE[0x16];
@@ -79,13 +91,18 @@ typedef struct
     short pad_A;
 } struct_12_b;
 
+// base stats per minion species (Meos4's randomizer: "minionStats", StatsStruct)
 typedef struct
 {
-    int field_0;
-    short field_4;
-    signed char field_6;
-    unsigned char field_7;
-} struct_8;
+    unsigned char attack;
+    unsigned char magicAttack;
+    unsigned char defense;
+    unsigned char magicDefense;
+    unsigned char speed;
+    unsigned char critical;
+    signed char element; // enum Element
+    unsigned char enhancementBody; // bit 0: special, bit 1: magic
+} MinionBaseStats;
 
 // per-port vibration state; motor_2 is the actuator data sent with PadSetAct
 typedef struct
@@ -273,7 +290,7 @@ extern int fileRequestQueue_80086540;
 extern int fileBuffer_8008656C;
 extern int cdReadState_80086550[5];
 extern int dword_80079320[];
-extern struct_8 dword_8007A4B4[];
+extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern int** dword_8008D4C0;
 extern struct_12 stru_80083594[];
 extern PadVibration padVibration_80095460[];

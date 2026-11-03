@@ -721,18 +721,18 @@ int sub_800B9D08(EvCtxEventfnc* c)
 }
 
 extern char* sub_800A8C34();
-extern void sub_80011CD0();
-extern void sub_80011C0C();
+extern void Heal_80011CD0();
+extern void FillHpMp_80011C0C();
 int sub_800B9D50(EvCtxEventfnc* c)
 {
     int i;
     char* p;
-    sub_80011CD0(sub_800A8C34());
-    for (i = 0; i < sub_80010548(3); i++)
+    Heal_80011CD0(sub_800A8C34());
+    for (i = 0; i < CountMinions_80010548(3); i++)
     {
-        p = sub_800107A0(3, i);
-        sub_80011CD0(p);
-        sub_80011C0C(p, p);
+        p = GetMinionStatus_800107A0(3, i);
+        Heal_80011CD0(p);
+        FillHpMp_80011C0C(p, p);
     }
     c->pc_8 += 1;
     return 1;

@@ -95,7 +95,7 @@ INCLUDE_ASM(start);
 INCLUDE_ASM(dword_80010528);
 INCLUDE_ASM(dword_8001052C);
 // Matched
-int sub_80010548(int id)
+int CountMinions_80010548(int id)
 {
     int count;
     int i;
@@ -115,7 +115,7 @@ int sub_80010548(int id)
     return count;
 }
 // Matched
-Minion* sub_80010598(int id, int nth)
+Minion* GetMinion_80010598(int id, int nth)
 {
     Minion* result;
     int matches;
@@ -139,7 +139,7 @@ Minion* sub_80010598(int id, int nth)
 }
 #if 0
 // Not matched: only the order of the two constant loads (4 / 0xE) differs
-void sub_80010600(void)
+void ClearMinionsAndItems_80010600(void)
 {
     int i;
 
@@ -154,7 +154,7 @@ void sub_80010600(void)
 }
 #endif
 // Matched
-void sub_80010600(void)
+void ClearMinionsAndItems_80010600(void)
 {
     int i;
     int v = 4;
@@ -170,7 +170,7 @@ void sub_80010600(void)
     }
 }
 // Matched
-int sub_80010650(Item* pItem)
+int AddItem_80010650(Item* pItem)
 {
     int i;
 
@@ -185,7 +185,7 @@ int sub_80010650(Item* pItem)
     return 0;
 }
 // Matched
-int sub_800106B8(void)
+int CountItems_800106B8(void)
 {
     int count;
     int i;
@@ -203,7 +203,7 @@ int sub_800106B8(void)
 // Matched
 char* sub_800106F8(int id, int nth)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return m->field_94;
@@ -213,7 +213,7 @@ char* sub_800106F8(int id, int nth)
 // Matched
 char* sub_80010724(int id, int nth, int idx)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return (char*)m + (idx * 12 + 4);
@@ -223,7 +223,7 @@ char* sub_80010724(int id, int nth, int idx)
 // Matched
 unsigned char sub_80010768(int id, int nth, int idx)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return m->field_7C[idx];
@@ -231,19 +231,19 @@ unsigned char sub_80010768(int id, int nth, int idx)
     return 0;
 }
 // Matched
-char* sub_800107A0(int id, int nth)
+char* GetMinionStatus_800107A0(int id, int nth)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_84;
+        return m->status_84;
     }
     return 0;
 }
 // Matched
 char* sub_800107CC(int id, int nth)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return m->field_CC;
@@ -253,7 +253,7 @@ char* sub_800107CC(int id, int nth)
 // Matched
 char* sub_800107F8(int id, int nth)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return m->field_DE;
@@ -263,7 +263,7 @@ char* sub_800107F8(int id, int nth)
 // Matched
 char* sub_80010824(int id, int nth)
 {
-    Minion* m = sub_80010598(id, nth);
+    Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
         return m->field_F4;

@@ -367,7 +367,7 @@ void sub_800BCEA0(char* a, int b, void* c, short d)
     if (c)
     {
         int i = d;
-        Minion* m = sub_80010598(3, i - 1);
+        Minion* m = GetMinion_80010598(3, i - 1);
         s[0] = 0x33;
         s[1] = 0x3E;
         sub_8002DB48(c, b, 0, s, m, a + 0x1AC + i * 72);
@@ -384,7 +384,7 @@ void sub_800BCF74(short a)
 {
     int x = a - 1;
     int r17 = (int)sub_80010824(3, x);
-    char* r16 = (char*)sub_80010598(3, x);
+    char* r16 = (char*)GetMinion_80010598(3, x);
     sub_8001AEB8(name_800338B0(r16), r16 + 0x84, r17);
 }
 
@@ -477,8 +477,8 @@ int sub_800BD358(MenuCtx* out, int idx)
     return found;
 }
 
-extern int sub_80010548();
-extern int sub_800106B8();
+extern int CountMinions_80010548();
+extern int CountItems_800106B8();
 extern void sub_8003F900();
 extern int name_800C29B8;
 extern int name_8008D678;
@@ -489,8 +489,8 @@ void sub_800BD40C(MenuTask* t, MenuCtx* c)
     c->flags_0 = 1;
     c->sel_2 = 0;
     c->f4 = 0;
-    c->f8 = sub_80010548(3) + 1;
-    c->fC = sub_800106B8();
+    c->f8 = CountMinions_80010548(3) + 1;
+    c->fC = CountItems_800106B8();
     c->f6 = 0;
     sub_800BF8B4(c);
     c->f62 = 0;
@@ -950,7 +950,7 @@ void sub_800BEBFC(int* o, int a)
     short x = *(unsigned short*)((char*)o + 0x2C) + *(unsigned short*)((char*)o + 0x4C);
     if (x < o[2] - 1)
     {
-        m = sub_80010598(3, x);
+        m = GetMinion_80010598(3, x);
         m2 = (char*)m + 0x84;
     }
     s[0] = 0x33;
@@ -1470,7 +1470,7 @@ void sub_800C06E8(MenuCtx* c)
 {
     int found = 0;
     int sum = (unsigned short)c->arr_2A[7] + (unsigned short)c->arr_46[2];
-    char* m = (char*)sub_80010598(3, c->arr_2A[1]);
+    char* m = (char*)GetMinion_80010598(3, c->arr_2A[1]);
     int is = c->sel_2 == 4;
     if (sub_8003D480() && is && c->f24 == 0)
     {

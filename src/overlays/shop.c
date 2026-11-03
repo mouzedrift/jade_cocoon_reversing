@@ -391,7 +391,7 @@ int sub_800B9920()
     {
         items[k].state_0 = 4;
     }
-    sub_80010600();
+    ClearMinionsAndItems_80010600();
     name_800B6CF0 = items;
     name_800B6CE4 = total;
     return total;
@@ -1081,7 +1081,7 @@ void sub_800BB148(ShopUnit4Shop* u)
     }
     for (i = 0; i < 3; i++)
     {
-        r = sub_80010598(3, i);
+        r = GetMinion_80010598(3, i);
         if (r)
         {
             fn_80011CD0((char*)r + 0x84);

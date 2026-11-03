@@ -49,7 +49,7 @@ int sub_8002D738(int a0, int a1, int a2)
 // Matched
 int sub_8002D780(void)
 {
-    int n = sub_80010548(3);
+    int n = CountMinions_80010548(3);
     int i;
     int mask = 0;
     for (i = 0; i < n; i++)

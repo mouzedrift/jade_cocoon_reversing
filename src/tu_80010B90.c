@@ -1322,48 +1322,39 @@ void sub_80011BCC(void)
 void nullsub_2(void)
 {
 }
-typedef struct
-{
-    int field_0;
-    int pad_4;
-    unsigned short field_8;
-    unsigned short field_A;
-    unsigned short field_C;
-    unsigned short field_E;
-} struct_C0C;
 // Matched
-void sub_80011C0C(struct_C0C* a, struct_C0C* b)
+void FillHpMp_80011C0C(EntityStatus* a, EntityStatus* b)
 {
-    a->field_8 = a->field_A = b->field_A;
-    a->field_C = a->field_E = b->field_E;
+    a->hp_8 = a->maxHp_A = b->maxHp_A;
+    a->mp_C = a->maxMp_E = b->maxMp_E;
 }
 // Matched
-void sub_80011C30(struct_C0C* p)
+void ClearStatus_80011C30(EntityStatus* p)
 {
-    p->field_0 &= 0x400;
+    p->status_0 &= 0x400;
 }
-void sub_80011C44(struct_C0C* p)
+void RecoverQuarterHpMp_80011C44(EntityStatus* p)
 {
-    int v = p->field_0 & 0x400;
-    p->field_0 = v;
+    int v = p->status_0 & 0x400;
+    p->status_0 = v;
     if (v == 0)
     {
-        p->field_8 = ((short)p->field_8 + (short)p->field_A / 4 > (short)p->field_A) ? p->field_A : p->field_8 + (short)p->field_A / 4;
-        p->field_C = ((short)p->field_C + (short)p->field_E / 4 > (short)p->field_E) ? p->field_E : p->field_C + (short)p->field_E / 4;
+        p->hp_8 = ((short)p->hp_8 + (short)p->maxHp_A / 4 > (short)p->maxHp_A) ? p->maxHp_A : p->hp_8 + (short)p->maxHp_A / 4;
+        p->mp_C = ((short)p->mp_C + (short)p->maxMp_E / 4 > (short)p->maxMp_E) ? p->maxMp_E : p->mp_C + (short)p->maxMp_E / 4;
     }
 }
 // Matched
-void sub_80011CD0(struct_C0C* p)
+void Heal_80011CD0(EntityStatus* p)
 {
-    p->field_0 = 0;
-    sub_80011C0C(p, p);
+    p->status_0 = 0;
+    FillHpMp_80011C0C(p, p);
 }
 // Matched
-void sub_80011CF4(struct_C0C* p)
+void ReviveOneHp_80011CF4(EntityStatus* p)
 {
     p->pad_4 = 0;
-    p->field_0 = 0;
-    p->field_8 = ((short)p->field_8 + 1 > (short)p->field_A) ? p->field_A : p->field_8 + 1;
+    p->status_0 = 0;
+    p->hp_8 = ((short)p->hp_8 + 1 > (short)p->maxHp_A) ? p->maxHp_A : p->hp_8 + 1;
 }
 typedef struct
 {

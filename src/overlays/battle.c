@@ -91,7 +91,7 @@ extern void sub_800AC708();
 extern void sub_800A9364();
 extern int sub_800A8DAC();
 extern int sub_800A1B2C();
-extern void sub_80011CF4();
+extern void ReviveOneHp_80011CF4();
 extern void sub_8006281C();
 extern void sub_800BA848();
 extern void sub_800BA4F4();
@@ -154,8 +154,8 @@ extern int sub_800349B4();
 extern void sub_80034A84();
 extern void sub_8001E28C();
 extern void sub_800A2924();
-extern void sub_80011C30();
-extern void sub_80011C44();
+extern void ClearStatus_80011C30();
+extern void RecoverQuarterHpMp_80011C44();
 extern void sub_8004E268();
 extern void sub_80020DDC();
 extern void sub_8001C19C();
@@ -191,7 +191,7 @@ extern void sub_800BBDB4();
 extern void sub_800C0DB0();
 extern void sub_800BC324();
 extern void sub_800BBE7C();
-extern char dword_8008BD38[];
+extern char levantStatus_8008BD38[];
 
 typedef struct BatObj_a
 {
@@ -315,7 +315,7 @@ void sub_800BA444(BatTask_a* t)
         sub_800A9364();
         if (sub_800A8DAC() == r)
         {
-            sub_80011CF4(dword_8008BD38);
+            ReviveOneHp_80011CF4(levantStatus_8008BD38);
             t->next_8 = sub_800BA4F4;
             if (sub_800BC820(0x20000) == 0)
             {
@@ -450,11 +450,11 @@ void sub_800BA97C()
 {
     int n;
     int i;
-    sub_80011C30(dword_8008BD38);
-    n = sub_80010548(3);
+    ClearStatus_80011C30(levantStatus_8008BD38);
+    n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
-        sub_80011C44(sub_800107A0(3, i));
+        RecoverQuarterHpMp_80011C44(GetMinionStatus_800107A0(3, i));
     }
 }
 
@@ -1865,7 +1865,7 @@ void sub_800C0A94()
 
 int sub_800C0A9C()
 {
-    int n = sub_80010548(3);
+    int n = CountMinions_80010548(3);
     int r = 0;
     int i;
     for (i = 0; i < n; i++)
@@ -1883,7 +1883,7 @@ int sub_800C0AEC(int a, int* b, int c)
     {
         return 0;
     }
-    h = (int)sub_80010598(3, a);
+    h = (int)GetMinion_80010598(3, a);
     if (h == 0)
     {
         return 0;
@@ -1985,7 +1985,7 @@ void sub_800C0F54(int a)
 
 int sub_800C0F78(int a)
 {
-    sub_800107A0(3, a);
+    GetMinionStatus_800107A0(3, a);
 }
 
 char* sub_800C0F9C()
@@ -2011,7 +2011,7 @@ void sub_800C0FC4(int* p)
 
 int sub_800C100C(int a)
 {
-    int h = (int)sub_80010598(3, a);
+    int h = (int)GetMinion_80010598(3, a);
     if (h)
     {
         return h + 0xDE;
@@ -2021,7 +2021,7 @@ int sub_800C100C(int a)
 
 int sub_800C103C(int a)
 {
-    int h = (int)sub_80010598(3, a);
+    int h = (int)GetMinion_80010598(3, a);
     if (h)
     {
         return h + 0xF4;

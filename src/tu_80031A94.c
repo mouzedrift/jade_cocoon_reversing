@@ -439,7 +439,7 @@ void sub_80033754(unsigned char* dst, unsigned char* src)
 // Matched
 char* sub_80033818(Minion* p)
 {
-    return p->field_84;
+    return p->status_84;
 }
 // Matched
 char* sub_80033820(Minion* p)
@@ -679,7 +679,7 @@ int sub_80033C98(struct_minion_ref* p)
     {
         return 7;
     }
-    if (*(short*)&p->field_C_minion->field_84[0xC] < a)
+    if (*(short*)&p->field_C_minion->status_84[0xC] < a)
     {
         if (p->field_A == 0)
         {
@@ -692,7 +692,7 @@ int sub_80033C98(struct_minion_ref* p)
 int sub_80033D20(struct_minion_ref* p)
 {
     Minion* m = p->field_C_minion;
-    char* q = m->field_84;
+    char* q = m->status_84;
     int r = sub_8001AEC0(m->field_F4, p->field_0 + p->field_2);
     if (dword_8007C438[r].field_0 & 0x40)
     {
@@ -705,7 +705,7 @@ int sub_80033D20(struct_minion_ref* p)
             }
             break;
         case 1:
-            if (r != 0x10 && !(*(int*)m->field_84 & 0x7FB))
+            if (r != 0x10 && !(*(int*)m->status_84 & 0x7FB))
             {
                 return 3;
             }

@@ -858,7 +858,7 @@ void sub_800A284C(int a)
 int sub_800A2898(int a)
 {
     sub_800A2CA8(a, 0);
-    return sub_80010650((Item*)&dword_800B130C[a]);
+    return AddItem_80010650((Item*)&dword_800B130C[a]);
 }
 
 // Matched
@@ -2876,7 +2876,7 @@ typedef struct G2Bits3
 } G2Bits3;
 extern G2Ctx* dword_8008B4CC;
 extern G2Ctx2* dword_8008B4A4;
-extern char byte_8008BD38;
+extern char levantStatus_8008BD38;
 extern G2V12 levantPos_8008BD18;
 extern int dword_8008BDA0;
 extern short word_8008BDA4;
@@ -3067,7 +3067,7 @@ extern G2V12 dword_8007A14C;
 extern G2V12 dword_8007A164;
 extern char dword_8007DC80;
 extern char dword_8007DC88;
-extern unsigned int dword_8008BD38;
+extern unsigned int levantStatus_8008BD38;
 extern void sub_800292D0();
 typedef struct G2L2
 {
@@ -3272,7 +3272,7 @@ void sub_800A8C0C()
 
 char* sub_800A8C34()
 {
-    return &byte_8008BD38;
+    return &levantStatus_8008BD38;
 }
 
 char* sub_800A8C40()
@@ -3514,8 +3514,8 @@ void sub_800A94CC(void)
     sub_800A9414(p, 0, 3);
     sub_800AB150((G2Obj*)p);
     sub_800B80C8(p);
-    p->f3C = dword_8008BD38;
-    sub_800ABECC(dword_8008BD38);
+    p->f3C = levantStatus_8008BD38;
+    sub_800ABECC(levantStatus_8008BD38);
 }
 
 void sub_800A955C()
@@ -4070,7 +4070,7 @@ void sub_800ABDF0(G2Act* a)
 void sub_800ABECC()
 {
     G2V12* r = &dword_8007A164;
-    unsigned int f = dword_8008BD38;
+    unsigned int f = levantStatus_8008BD38;
     if (f & 0x200)
     {
         if (f & 1)
@@ -4687,7 +4687,7 @@ int sub_800AD888()
 
 int sub_800AD8BC()
 {
-    return dword_8008B818 + sub_80010548(0);
+    return dword_8008B818 + CountMinions_80010548(0);
 }
 
 int sub_800AD8E4()

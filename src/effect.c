@@ -70,7 +70,7 @@ void sub_80013E80(void* p, int arg)
 // Matched
 void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)sub_800107A0(a2));
+    sub_80033624(p, (int)GetMinionStatus_800107A0(a2));
 }
 INCLUDE_ASM(sub_80013EE8);
 // Matched
@@ -200,7 +200,7 @@ int sub_80014444(int a0)
     else if (v != 0)
     {
         v = a0 - 1;
-        r = (int)sub_80010598(3, v & 0xFF);
+        r = (int)GetMinion_80010598(3, v & 0xFF);
     }
     return r;
 }

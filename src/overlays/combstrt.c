@@ -38,7 +38,7 @@ extern void* dword_800A4C50[];
 extern void sub_800A16FC();
 extern int sub_800A1AAC(int);
 extern int sub_800A1934(void*);
-extern void sub_80011CD0(void*);
+extern void Heal_80011CD0(void*);
 extern void sub_80031494(int);
 extern void sub_8002ADB4(void*, void*, int, int);
 extern void sub_800A473C(int);
@@ -177,7 +177,7 @@ void sub_800A48C0()
             CombStrtUnit* p = &dword_800A3AA0[i][j];
             if (sub_800A1934(p) == 0)
             {
-                sub_80011CD0(p->field_84 - 0);
+                Heal_80011CD0(p->field_84 - 0);
             }
         }
     }

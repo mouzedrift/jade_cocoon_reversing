@@ -337,7 +337,7 @@ void sub_8003FBD4(int a0)
     int n;
     int i;
     sub_8003F748(a0, playerName_8008BD48);
-    n = sub_80010548(3);
+    n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
         sub_8003F748(a0, sub_800106F8(3, i));
