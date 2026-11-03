@@ -341,12 +341,11 @@ int LoadSeqSlotSound_800303E8(void)
     *(int*)(p + 8) = QueueFileRequest_8003BC84(s);
     return 1;
 }
-#if 0
-// Not matched: the header copy of the buffer pointer gets the other saved register (param used everywhere, copy hoisted into a delay slot)
+// Matched
 void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
 {
-    GenkiSoundHeader* pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
     SoundStruct* sound = req[0];
+    GenkiSoundHeader* pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
 
     if (pSndFileHeader->field_14_sep_size)
     {
@@ -389,8 +388,6 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
         sound->field_10_sep_data_ptr = 0;
     }
 }
-#endif
-INCLUDE_ASM(LoadSoundSeqFromBuffer_800304D0);
 // Matched
 void FreeSeqSlotSound_80030664(void)
 {

@@ -61,7 +61,7 @@ extern void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
 extern void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize);
 extern void CopyBytes_800403C8(char *a1, unsigned char *fileBuffer, int fileSize);
 extern unsigned char sub_800334BC(unsigned char* arr, int idx);
-extern unsigned char sub_80033848(unsigned char* arr, int idx);
+extern int sub_80033848(unsigned char* arr, int idx);
 extern unsigned int XaNoRequestPending_800435A4(void);
 extern void FirFilterSetup_80014574(struct_16* p, int a1, int a2);
 extern void sub_8001D71C(struct_obj_A* p);

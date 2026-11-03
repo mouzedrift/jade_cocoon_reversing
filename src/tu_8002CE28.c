@@ -16,14 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_800741F0);
-INCLUDE_DATA(dword_80074260);
-INCLUDE_DATA(dword_80074290);
-INCLUDE_DATA(dword_80074298);
-INCLUDE_DATA(dword_800742C8);
-INCLUDE_DATA(dword_800742D0);
-INCLUDE_DATA(dword_80074300);
-INCLUDE_DATA(dword_80074308);
 
 typedef struct
 {
@@ -170,4 +162,156 @@ int sub_8002D1A4(int a, short b)
     }
     return off_8008280C[b][a];
 }
-INCLUDE_ASM(sub_8002D250);
+typedef struct
+{
+    unsigned short flags;
+    unsigned short type;
+    int text;
+    int f8;
+    int fC;
+    short x;
+    short y;
+    short w;
+    short h;
+    short mx;
+    short my;
+} MenuItem_D250;
+extern int sub_80033DF4(short* p);
+extern int sub_80034068(short* p);
+// Matched
+int sub_8002D250(short* p, int mode, int sel, int ot)
+{
+    MenuItem_D250 list0[4] = {
+        {8, 4, 0, 0, 0, 0x2E, 0x98, 0x3C, 0xC, 2, 2},
+        {8, 0, 0, 0, 0, 0x26, 0x98, 6, 0xC, 2, 2},
+        {8, 0, 0, 0, 0, 0x6C, 0x98, 6, 0xC, 2, 2},
+        {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
+    };
+    MenuItem_D250 list1[2] = {
+        {8, 4, 0, 0, 0, 0x2E, 0xA6, 0x3C, 0xC, 2, 2},
+        {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
+    };
+    MenuItem_D250 list2[2] = {
+        {8, 4, 0, 0, 0, 0x2E, 0xB3, 0x3C, 0xC, 2, 2},
+        {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
+    };
+    MenuItem_D250 list3[2] = {
+        {8, 4, 0, 0, 0, 0x2E, 0xC0, 0x3C, 0xC, 2, 2},
+        {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
+    };
+    MenuItem_D250* lists[5] = {0};
+    MenuItem_D250* subs[3] = {0};
+    int k = 0;
+    struct_A5A4 s = {2, 0, 8, 0, 0, 0};
+    int n;
+    int cur;
+    int i;
+    int r;
+    int v;
+    int q;
+    int y;
+    MenuItem_D250* m;
+    n = CountMinions_80010548(3);
+    cur = sub_8002D780();
+    s.field_4 = GetTime30Hz_8002C64C();
+    s.field_C = sel;
+    s.field_10 = (MenuItem_1C**)lists;
+    s.field_14 = ot;
+    subs[0] = list1;
+    subs[1] = list2;
+    subs[2] = list3;
+    if (mode == 0 || mode == 3)
+    {
+        q = sub_80014390(0);
+        lists[k] = list0;
+        lists[k][0].text = q + 0x10;
+        p[2] = 0;
+        if (mode == 0)
+        {
+            v = sub_80033DF4(p);
+        }
+        else
+        {
+            v = 0;
+        }
+        if (v == 0 || v == 1)
+        {
+            lists[k][0].flags &= ~2;
+            lists[k][1].flags &= ~2;
+            lists[k][2].flags &= ~2;
+        }
+        else
+        {
+            lists[k][0].flags |= 2;
+            lists[k][1].flags |= 2;
+            lists[k][2].flags |= 2;
+        }
+        k++;
+    }
+    y = 0;
+    for (i = 0; i < n; i++)
+    {
+        r = sub_8002D738(i, p[1], mode);
+        if (r == 1)
+        {
+            p[2] = i + 1;
+            q = sub_80014390(((unsigned char*)p)[4]);
+            v = 0;
+            m = subs[i];
+            lists[k] = m;
+            m->text = q + 0x10;
+            lists[k]->y = 0xA6 + y * 13;
+            if (mode == 0)
+            {
+                v = sub_80033DF4(p);
+            }
+            else if (mode == 1)
+            {
+                v = sub_80034068(p);
+            }
+            else if ((unsigned int)(mode - 2) < 2)
+            {
+                if (sub_80033548((int*)q, 0x400))
+                {
+                    v = 4;
+                }
+            }
+            if (v == 0 || v == 2)
+            {
+                lists[k]->flags &= ~2;
+            }
+            else
+            {
+                lists[k]->flags |= 2;
+            }
+            k++;
+            y++;
+        }
+    }
+    DrawMenuWindows_8002A5A4(&s);
+    SetFontClutOffset_8003F900(1, 0);
+    switch (mode)
+    {
+    case 0:
+        if (sel < 0)
+        {
+            return cur | 1;
+        }
+        return sel;
+    case 1:
+        return p[1];
+    case 2:
+        return sel + 1;
+    case 3:
+        if (sel < 0)
+        {
+            return (cur | 1) & ~(1 << p[1]);
+        }
+        if (sel < p[1])
+        {
+            return sel;
+        }
+        return sel + 1;
+    }
+    return 0;
+}

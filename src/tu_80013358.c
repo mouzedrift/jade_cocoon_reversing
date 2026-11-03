@@ -53,7 +53,7 @@ typedef struct
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
 #if 0
-// Not matched: the original converts dmg with __fixdfsi twice (second result unused) before the zero test; everything else lines up apart from a few register choices
+// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and the chance value ch is in $v1 instead of $v0
 void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, AttackResult* out)
 {
     int crit0;
@@ -135,8 +135,9 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
                 }
                 dmg = dmg * (((signed char*)f1) + q->element_8)[0x20];
                 dmg = dmg / 32.0;
-                v = (int)dmg;
-                if ((int)dmg == 0 || (v += frameCount_8008D3FC & 1) == 0)
+                v = dmg;
+                v = dmg;
+                if (v == 0 || (v += frameCount_8008D3FC & 1) == 0)
                 {
                     v = 1;
                 }
@@ -214,13 +215,13 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
             ra = Rand100_80013E30();
             if (q->element_8 == 11)
             {
-                c = 100;
+                n = 100;
             }
             else
             {
-                c = (v * (((signed car*)f1) + q->element_8)[0x20]) ? v * (((signed car*)f1) + q->element_8)[0x20] / 32 : 0;
+                n = (v * (((signed char*)f1) + q->element_8)[0x20]) ? v * (((signed char*)f1) + q->element_8)[0x20] / 32 : 0;
             }
-            if (ra < c)
+            if (n > ra)
             {
                 goto status;
             }
@@ -246,27 +247,27 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
     {
         for (i = 0; i < 3; i++)
         {
-            if (f1[0] & (1 << (i + 11)))
+            int m = 1 << (i + 11);
+            if (f1[0] & m)
             {
                 break;
             }
         }
         if (i == 0)
         {
-            n = 3;
             out->flags_4 |= 0x800;
+            sub_800184A0(b2, 3);
         }
         else if (i == 1)
         {
-            n = 4;
             out->flags_4 |= 0x1800;
+            sub_800184A0(b2, 4);
         }
         else
         {
-            n = 5;
             out->flags_4 |= 0x3800;
+            sub_800184A0(b2, 5);
         }
-        sub_800184A0(b2, n);
         out->field_8 &= ~0x7FB;
         sub_800184A0(b2, 2);
     }

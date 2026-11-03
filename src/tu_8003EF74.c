@@ -304,23 +304,21 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
 
     return 0;
 }
-#if 0
+// Matched
 void sub_8003F89C(unsigned short* p)
 {
     int i;
-    for (i = 0; i < 10; i++)
+    unsigned short t;
+    for (i = 0; i < 10; i++, p++)
     {
-        unsigned short v = p[i];
-        unsigned short t = (v >> 8) + ((v & 0xFF) << 8);
+        t = (*p >> 8) + ((*p & 0xFF) << 8);
         if ((unsigned short)(t + 0x7D7F) < 0x1A)
         {
-            t = t + 0xFFDF;
-            p[i] = (t >> 8) + ((t & 0xFF) << 8);
+            t += 0xFFDF;
+            *p = (t >> 8) + ((t % 256) << 8);
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_8003F89C);
 
 // Matched
 void SetFontClutOffset_8003F900(int idx, int val)
@@ -532,16 +530,17 @@ void* ListAlloc_8003FDC0(List* l, int size)
     l->count++;
     return n + 1;
 }
-#if 0
+// Matched
 void ListFree_8003FE38(void* a0, void* a1)
 {
-    List* arg0 = (List*)a0;
-    ListNode* n = (ListNode*)((char*)a1 - 8);
-    if (arg0->count)
+    List* l = (List*)a0;
+    ListNode* n = a1;
+    n--;
+    if (l->count)
     {
         if (n->prev == 0)
         {
-            arg0->head = n->next;
+            l->head = n->next;
         }
         else
         {
@@ -549,18 +548,16 @@ void ListFree_8003FE38(void* a0, void* a1)
         }
         if (n->next == 0)
         {
-            arg0->tail = n->prev;
+            l->tail = n->prev;
         }
         else
         {
             n->next->prev = n->prev;
         }
-        arg0->count = arg0->count - 1;
+        l->count--;
         free3_8003FC6C(n);
     }
 }
-#endif
-INCLUDE_ASM(ListFree_8003FE38);
 // Matched
 void ListFreeAll_8003FEC8(void* arg0)
 {
@@ -600,18 +597,18 @@ void PoolDestroy_8003FF7C(Pool* h)
     h->head = 0;
     h->tail = 0;
 }
-#if 0
+// Matched
 void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
 {
     PoolBlock* b = 0;
-    unsigned int s;
-    if (size & 3) s = size + 4 - (size & 3); else s = size;
-    if (!(h->size - h->used < s))
+    unsigned int align = 4;
+    size = (size & 3) ? size + align - (size & 3) : size;
+    if (!(h->size - h->used < size))
     {
-        b = PoolFindFreeSpace_80040150(h, s + 0x10);
+        b = PoolFindFreeSpace_80040150(h, size + 0x10);
     }
     b->magic = 0x8FFFFFFF;
-    b->size = s + 0x10;
+    b->size = size + 0x10;
     b->next = 0;
     b->prev = 0;
     if (h->count == 0)
@@ -628,8 +625,6 @@ void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
     h->count++;
     return b + 1;
 }
-#endif
-INCLUDE_ASM(PoolAlloc_8003FFD0);
 // Matched
 void PoolFree_800400B4(Pool* h, void* p)
 {
@@ -736,21 +731,15 @@ void sub_8004028C(void)
     dword_80098688 = 0;
 }
 extern unsigned long* primAllocPtrs_800960A8[];
-#if 0
+// Matched
 short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
 {
-    unsigned long* ot = (unsigned long*)arg0;
-    unsigned long* cur = primAllocPtrs_800960A8[bDoubleBuffer_8008D428];
-    unsigned long** p;
+    int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
-    p = &primAllocPtrs_800960A8[bDoubleBuffer_8008D428];
-    **p = (**p & 0xFF000000) | (*ot & 0xFFFFFF);
-    *ot = (*ot & 0xFF000000) | ((unsigned long)*p & 0xFFFFFF);
-    *p += arg2;
+    addPrim(arg0, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += arg2 * 4;
     return (short*)cur;
 }
-#endif
-INCLUDE_ASM(AddPrimCopy_80040298);
 // Matched
 void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
 {

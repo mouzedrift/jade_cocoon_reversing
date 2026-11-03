@@ -16,11 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_8007430C);
-INCLUDE_DATA(dword_80074310);
-INCLUDE_DATA(dword_80074314);
-INCLUDE_DATA(dword_80074318);
-INCLUDE_DATA(dword_8007431C);
 INCLUDE_DATA(dword_80074320);
 INCLUDE_DATA(dword_80074360);
 INCLUDE_DATA(dword_80074374);
@@ -75,13 +70,13 @@ extern Pos16* off_80082DCC[7];
 extern Pos16 aHroto[12];
 extern Pos16 aNrutu[12];
 extern void sub_80033864(Minion* m, unsigned char* out);
-extern short sub_8002F424(unsigned char* p);
+extern int sub_8002F424(unsigned char* p);
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002B1B0(short a, int b, int c);
 extern void DrawUiWindow_8002A384(struct_D7D0* p);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 #if 0
-// Not matched: sub_80033848 is declared unsigned char (adds andi 0xff; original treats it as int), and m/pp/table regs are permuted
+// Not matched (19 words): m/pp/table saved registers rotated (s4/s5/s6), and the (short)w sll goes to a0 instead of v0
 void sub_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;
@@ -93,7 +88,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
     struct_D7D0 s;
     char* name;
     Pos16* pp;
-    int w;
+    short w;
     int i;
     int k;
     color = dword_800743CC;
@@ -117,8 +112,8 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         pos.x = off_80082DCC[i]->x + base->x + 3;
         pos.y = off_80082DCC[i]->y + base->y + 4;
         sub_8002FAA0(0, (unsigned short*)pp, (unsigned char*)name, ot);
-        pos.x = (base->x + 4) + off_80082DCC[i]->x;
-        pos.y = (base->y + 0x10) + off_80082DCC[i]->y;
+        pos.x = (unsigned short)(base->x + 4) + off_80082DCC[i]->x;
+        pos.y = (unsigned short)(base->y + 0x10) + off_80082DCC[i]->y;
         if (i == 0)
         {
             sub_80033864(m, buf);

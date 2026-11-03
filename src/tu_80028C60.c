@@ -27,14 +27,15 @@ extern void sub_80027778(char* p, int* q);
 extern void sub_800278BC(char* p, int* q);
 extern int dword_80082668;
 #if 0
-// Not matched (7 words): original combines the size read into lw 0x104 off a $v0 copy of a1 and a single addiu 0x108
+// Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0
 void sub_80028C60(int a0, char* a1)
 {
     int n;
+    char* p;
     MemCopy_800403E8((unsigned int*)cameraState_8008D4F0, (unsigned int*)a1, 0x104);
-    a1 += 0x104;
-    n = *(int*)a1;
-    a1 += 4;
+    p = a1;
+    a1 += 0x108;
+    n = *(int*)(p + 0x104);
     LoadTiy_80028E74(0, 0, 0, (int)a1, (int)&dword_80091C20);
     a1 += n;
     n = *(int*)a1;
@@ -116,7 +117,18 @@ void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-extern void ShiftClutHue_80029D00(void* buf, unsigned int a);
+typedef struct
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    u_long* caddr;
+    int pix_len;
+    RECT prect;
+    u_long* paddr;
+} TimInfo;
+extern void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1);
 typedef struct
 {
     int field_0;
@@ -148,7 +160,7 @@ void LoadTiyTimsRelocated_80028FDC(int a0, int a1, int a2, int a3, int a4, int a
         ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
         if (a6)
         {
-            ShiftClutHue_80029D00(buf, a6);
+            ShiftClutHue_80029D00((TimInfo*)buf, a6);
         }
         if (a5)
         {
@@ -335,17 +347,6 @@ void InitSprtFromTimData_80029868(int a0, int a1, int a2)
     ParseTim_80029708(buf, (void*)a1);
     InitSprtFromTim_800298AC(a0, a2, buf);
 }
-typedef struct
-{
-    int mode_valid;
-    int mode;
-    int clut_len;
-    RECT crect;
-    u_long* caddr;
-    int pix_len;
-    RECT prect;
-    u_long* paddr;
-} TimInfo;
 // Matched
 void InitSprtFromTim_800298AC(int a0, int a1, void* a2)
 {
@@ -408,15 +409,14 @@ void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 }
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
-#if 0
-// Not matched: (a1 >> 16) & 0xFFFE is hoisted out of the loop here (one more saved reg, frame 0x48)
-void ShiftClutHue_80029D00(void* a0, unsigned int a1)
+// Matched
+void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
 {
-    TimInfo* t = (TimInfo*)a0;
     short rgb[4];
     short hsv[4];
     unsigned short* p;
     int i;
+    unsigned int v;
     if (t->mode_valid && t->clut_len)
     {
         p = (unsigned short*)t->caddr;
@@ -427,11 +427,13 @@ void ShiftClutHue_80029D00(void* a0, unsigned int a1)
             {
                 if (a1 & 0x10000)
                 {
-                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + ((a1 >> 16) & 0xFFFE) * 192 / 360;
+                    v = a1 >> 16;
+                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + (v & 0xFFFE) * 192 / 360;
                 }
                 else
                 {
-                    hsv[0] = (short)(hsv[0] + a1 * 192 / 360) % 192;
+                    v = a1 * 192 / 360;
+                    hsv[0] = (short)(hsv[0] + v) % 192;
                 }
                 HsvToRgb555_8002A040(hsv, rgb);
                 PackColor555_80029CB4(&p[i], (unsigned short*)rgb);
@@ -439,8 +441,6 @@ void ShiftClutHue_80029D00(void* a0, unsigned int a1)
         }
     }
 }
-#endif
-INCLUDE_ASM(ShiftClutHue_80029D00);
 // Matched
 int Rgb555ToHsv_80029EA8(short* in, short* out)
 {
