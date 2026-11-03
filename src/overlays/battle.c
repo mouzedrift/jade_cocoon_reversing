@@ -2795,7 +2795,106 @@ void sub_800C04A4(EventEntry* t, BatHelp_a* u)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C04A4);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C064C);
+extern int sub_800C0904(unsigned char* p);
+void sub_800C064C(unsigned char* m, int* o, int c)
+{
+    unsigned char ids[8];
+    int counts[3];
+    int self;
+    int t;
+    self = *(unsigned short*)sub_80019C70(m[2]);
+    o[0] = sub_800338DC(m + 0x4C, ids, counts);
+    o[1] = *(unsigned short*)sub_80019C70(ids[0]);
+    o[2] = *(unsigned short*)sub_80019C70(ids[1]);
+    o[3] = *(unsigned short*)sub_80019C70(ids[2]);
+    o[4] = counts[0];
+    o[5] = counts[1];
+    o[6] = counts[2];
+    if (o[1] == o[2])
+    {
+        if (o[2] == o[3])
+        {
+            o[4] += o[5];
+            o[4] += o[6];
+            o[5] = 0;
+            o[6] = 0;
+            o[0] = 1;
+        }
+        else
+        {
+            o[4] += o[5];
+            o[2] = o[3];
+            o[5] = o[6];
+            o[0] = 2;
+            o[6] = 0;
+        }
+    }
+    else if (o[1] == o[3])
+    {
+        o[4] += o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    else if (o[2] == o[3])
+    {
+        o[5] += o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    o[11] = 0;
+    if (o[1] != self)
+    {
+        if (o[2] == self)
+        {
+            o[2] = o[1];
+            o[1] = self;
+            t = o[5];
+            o[5] = o[4];
+            o[4] = t;
+        }
+        else if (o[3] == self)
+        {
+            o[3] = o[1];
+            o[1] = self;
+            t = o[6];
+            o[6] = o[4];
+            o[4] = t;
+        }
+        else if (o[0] < 2)
+        {
+            o[2] = o[1];
+            o[1] = self;
+            o[5] = o[4];
+            o[4] = 0;
+            o[0] = 2;
+        }
+        else
+        {
+            o[3] = o[1];
+            o[1] = self;
+            o[6] = o[4];
+            o[4] = 0;
+            o[0] = 3;
+        }
+    }
+    o[7] = sub_80019A80(m[0xC8]);
+    o[8] = o[0] - 1;
+    o[10] = *(unsigned short*)sub_80019C70(m[3]);
+    o[12] = c;
+    o[9] = sub_800C0904(m + 0xC2);
+    if (o[9] == -1000)
+    {
+        o[9] = ((unsigned char*)sub_80019C70(m[3]))[2] * 2;
+    }
+    else
+    {
+        o[9] -= ((unsigned char*)sub_80019C70(m[3]))[3] * 2;
+        if (o[9] < 0)
+        {
+            o[9] += 360;
+        }
+    }
+}
 
 int sub_800C0904(unsigned char* p)
 {
