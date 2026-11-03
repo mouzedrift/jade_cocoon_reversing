@@ -493,7 +493,135 @@ void sub_800CC9FC()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCA94);
+typedef struct CombComMsg
+{
+    int f0;
+    int* text;
+} CombComMsg;
+typedef struct CombComCheck
+{
+    short x;
+    short y;
+    short pad_4[3];
+    short sA;
+    int c;
+} CombComCheck;
+extern short* dword_800CD854;
+extern CombComMsg name_800CD46C[];
+extern int dword_800CD454;
+extern int dword_800CD458;
+extern int dword_800CD460;
+extern int sub_800A11D8(int);
+extern char dword_800A3AA0[][3][0xF8];
+extern int sub_800A1958(void*);
+extern int sub_80033C98(CombComCheck* p);
+extern int CheckMagicCastable_80033C08(CombComCheck* p);
+int sub_800CCA94()
+{
+    CombComCheck a;
+    short b[4];
+    int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
+    int* p;
+    a.x = dword_800CD854[4];
+    dword_800CD84C = 0;
+    a.y = dword_800CD854[5];
+    a.sA = 0;
+    b[3] = 0;
+    b[0] = dword_800CD840->f4;
+    b[1] = byte_800CD839 + 8;
+    b[2] = dword_800CD83C;
+    switch (byte_800CD83A)
+    {
+    case 0:
+        p = name_800CD46C[(short)idx].text;
+        if (p == 0)
+        {
+            return 1;
+        }
+        dword_800CD84C = *p;
+        return 0;
+    case 1:
+        a.c = sub_800A11D8(byte_800CD839);
+        switch (sub_80033C98(&a))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+            return 1;
+        case 5:
+            dword_800CD84C = dword_800CD458;
+            return 0;
+        case 7:
+            return 0;
+        }
+        break;
+    case 2:
+        a.c = sub_800A11D8(byte_800CD839);
+        switch (CheckMagicCastable_80033C08(&a))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+            return 1;
+        case 5:
+            dword_800CD84C = dword_800CD458;
+            return 0;
+        case 6:
+            return 0;
+        }
+        break;
+    case 3:
+        if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 2)
+        {
+            switch ((unsigned int)((int (*)(short*))sub_80034124)(b))
+            {
+            case 0:
+                return 1;
+            case 3:
+                dword_800CD84C = dword_800CD460;
+                return 0;
+            case 4:
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+            return 0;
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 3)
+        {
+            switch ((unsigned int)sub_80034068(b))
+            {
+            case 0:
+                return 1;
+            case 3:
+                dword_800CD84C = dword_800CD460;
+                return 0;
+            case 4:
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+            return 0;
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 4)
+        {
+            if (sub_800A1958(dword_800A3AA0[byte_800CD839][dword_800CD83C]))
+            {
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+        }
+        break;
+    case 4:
+    case 5:
+        return 1;
+    }
+    return 1;
+}
 
 int sub_800CCD84()
 {
