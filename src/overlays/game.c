@@ -4010,7 +4010,174 @@ int sub_800A7CFC(int a)
     return 0;
 }
 
+#if 0
+// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
+typedef struct GameCmdA_1
+{
+    int f0;
+    int kind_4;
+    int f8;
+    int fC;
+    int f10;
+    unsigned int f14;
+    int f18;
+    int f1C;
+    int f20;
+    int f24;
+} GameCmdA_1;
+typedef struct GameAnimReq_1
+{
+    int flags;
+    int f4;
+    int f8;
+    short hC;
+    short hE;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+    short h20;
+    short h22;
+    short h24;
+    short h26;
+    short h28;
+    short h2A;
+    int f2C;
+    int f30;
+    char pad_34[0x2c];
+} GameAnimReq_1;
+void sub_800A7D40(int a, GameCmdA_1* c)
+{
+    GameAnimReq_1 s;
+    short** hdr;
+    char* ent;
+    struct_obj_A* obj;
+    int k;
+    int t;
+    int u;
+    int w;
+    if (a < sub_800A7790())
+    {
+        hdr = *(short***)(sub_800A77F4(a) + 0x10);
+        ent = (char*)sub_800A77F4(a) + 0x14;
+        obj = *(struct_obj_A**)(ent + 4);
+        s.flags = 0;
+        s.f4 = 0;
+        s.f8 = 0;
+        s.hC = 0;
+        s.hE = -1;
+        s.f10 = -1;
+        s.f18 = 0;
+        s.h20 = 0;
+        s.h22 = 0;
+        s.f1C = 1;
+        s.h24 = -1;
+        s.h26 = -1;
+        s.h28 = -1;
+        s.h2A = -1;
+        s.f2C = 0;
+        s.f30 = 0;
+        s.f1C = c->f8;
+        k = 0;
+        switch (c->kind_4)
+        {
+        case 0:
+            if (c->f14 != -1)
+                s.h24 = c->f14;
+            else
+                s.h24 = (*hdr)[0x20 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 1:
+            if (c->f14 != -1)
+                s.h24 = c->f14;
+            else
+                s.h24 = (*hdr)[0x22 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 2:
+            if (c->f14 != -1)
+                s.h26 = c->f14;
+            else
+                s.h26 = (*hdr)[0x24 / 2];
+            s.f8 = (int)&c->f18;
+            s.hC = (*hdr)[0x26 / 2];
+            k = 1;
+            break;
+        case 3:
+        case 4:
+            s.f4 = (*(int**)(ent + 8))[c->fC];
+            k = 1;
+            break;
+        case 5:
+            s.f4 = c->f24;
+            k = 1;
+            break;
+        case 6:
+            sub_8001D730(obj, c->fC);
+            k = 0;
+            break;
+        case 7:
+            sub_8001D68C(obj, c->fC);
+            k = 0;
+            break;
+        case 8:
+            sub_8001D6BC(obj, c->fC);
+            k = 0;
+            break;
+        case 9:
+        case 10:
+            s.h28 = c->fC;
+            s.h2A = (c->kind_4 == 10) ? c->f10 : -1;
+            s.hC = (c->f14 & 1) ? -1 : -2;
+            s.f2C = (c->f14 >> 3) & 1;
+            k = 1;
+            s.flags = (c->f14 >> 2) & 1;
+            if (c->f14 & 0x10)
+            {
+                s.flags = s.flags | 2;
+            }
+            break;
+        case 11:
+            s.h28 = c->fC;
+            if (c->f10 >= 0)
+                s.h2A = c->f10;
+            else
+                s.h2A = *(short*)((char*)obj + 0xc2);
+            s.hC = (c->f14 & 1) ? -1 : -2;
+            s.f2C = (c->f14 >> 3) & 1;
+            s.flags = (c->f14 >> 2) & 1;
+            t = s.flags;
+            if (c->f14 & 0x10)
+                t |= 2;
+            s.flags = t;
+            u = t;
+            if (c->f14 & 0x20)
+                u |= 4;
+            s.flags = u;
+            s.f30 = c->f24;
+            k = 1;
+            break;
+        case 13:
+            break;
+        }
+        if (k)
+        {
+            sub_8001E254(obj, &s);
+        }
+        else if (c->f8)
+        {
+            sub_800A5BCC(a + 3);
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
+INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
 
 void sub_800A80C4(int a)
 {
