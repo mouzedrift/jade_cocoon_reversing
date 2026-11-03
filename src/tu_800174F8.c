@@ -22,7 +22,7 @@ void sub_8001761C(int* a0, int* a1);
 // Matched
 void sub_800174F8(char* a0, int a1)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         int* b = e->buffer;
@@ -72,7 +72,7 @@ void sub_800178C0(int* a0, int* a1);
 // Matched
 void sub_80017784(char* a0, int a1, short* a2)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         int* b = e->buffer;
@@ -131,12 +131,12 @@ void sub_800178C0(int* a0, int* a1)
     }
     sub_8004D1EC(t[1], (int)pOT_8008D690, (int)(a1 + 0x44 / 4), (int)(a1 + 0x80 / 4), (int)stru_8008D534, 0x10, (int)v);
 }
-extern EventNode* dword_8008B4A8;
+extern EventNode* effectObjects_8008B4A8;
 extern void MdecEffectTask_80017B10(unsigned int* a0, int* a1);
 // Matched
 void SpawnMdecEffect_80017A6C(int a0, int a1)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     int* q;
     if (e)
     {
@@ -181,7 +181,7 @@ extern int sub_80020F00(void* p, int a, int b);
 // Matched
 void sub_80017BF0(EventEntry* a0, int a1)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     int* q;
     int r;
     if (e)

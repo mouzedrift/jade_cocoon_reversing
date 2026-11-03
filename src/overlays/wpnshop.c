@@ -58,12 +58,12 @@ extern int frameCount_8008D3FC;
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 /* funcs.h declares unsigned short; the callers here use the full register */
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
-extern void sub_8002B004(void* p, int a, int b);
-extern void sub_8002BE10();
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern void DrawMenuBackground_8002BE10();
 extern void sub_8002A4E4(int a);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern unsigned int GetTime30Hz_8002C64C(void);
-extern void sub_8002A5A4(WpnDlg_wpnshop* p);
+extern void DrawMenuWindows_8002A5A4(WpnDlg_wpnshop* p);
 extern char name_800826B0[];
 extern char name_80082680[];
 extern unsigned short name_800BF1EC[];
@@ -330,7 +330,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
 {
     if (uiTiyLoaded_8008B4E8 != 0)
     {
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         sub_8002A4E4(0xE);
         sub_800BCF80(p);
         sub_800BB950(p);
@@ -341,7 +341,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
 // Matched
 void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_8002A4E4(0xE);
     sub_800BCF80(p);
     sub_800BB950(p);
@@ -353,7 +353,7 @@ void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
 // extra callee-saved copy of ctx pointer (s1=s0) in the original
 void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BBDD0(o);
     sub_800BB664(o);
     sub_800BB30C(o);
@@ -771,7 +771,7 @@ void sub_800BB950(WpnObj_wpnshop* o)
     }
     if (p)
     {
-        sub_8002AF10((int)p, (int)&pos, 0xE);
+        DrawLargeTextBox_8002AF10((int)p, (int)&pos, 0xE);
     }
     else
     {
@@ -922,7 +922,7 @@ void sub_800BC194(WpnObj_wpnshop* o)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = o->f_30;
     cfg.f10 = (int)name_800BEAFC;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
 }
 
 // Matched
@@ -944,7 +944,7 @@ void sub_800BC268(WpnObj_wpnshop* o)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = o->f_30;
     cfg.f10 = (int)name_800BEBB4;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
 }
 
 // Matched
@@ -1125,11 +1125,11 @@ void sub_800BCF80(unsigned short* p)
 {
     if ((unsigned int)(*p - 2) < 4)
     {
-        sub_8002B004(name_800826B0, 0, 0xE);
+        DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xE);
     }
     else
     {
-        sub_8002B004(name_80082680, 0, 0xE);
+        DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
     }
 }
 

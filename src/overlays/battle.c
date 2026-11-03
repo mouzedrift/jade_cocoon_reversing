@@ -1904,7 +1904,7 @@ int sub_800C0BA0()
     if (sub_800C0D50() >= 0)
     {
         FreeModelTask_8001098C(0);
-        sub_8001D600(dword_800C9190.obj);
+        DestroyActor_8001D600(dword_800C9190.obj);
         dword_800C918C = -1;
         return 1;
     }
@@ -3193,7 +3193,7 @@ void sub_800C8828(int a)
     p[1] = rect[1];
     p[4] = rect[0] + 2;
     p[5] = rect[1] + 4;
-    sub_8002AE38(s, &p[4], 0xF, rect, 1);
+    DrawTextLinesWindow_8002AE38(s, &p[4], 0xF, rect, 1);
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
@@ -3204,7 +3204,7 @@ void sub_800C88AC(int a)
     s[1] = 0;
     s[2] = 0;
     s[3] = 0;
-    sub_8002AF10((int)s, 0, 0xF);
+    DrawLargeTextBox_8002AF10((int)s, 0, 0xF);
 }
 
 extern unsigned short padPressed_8009194C;

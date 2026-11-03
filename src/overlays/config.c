@@ -63,7 +63,7 @@ extern unsigned int settingsFlags_8008B58C;
 extern int dword_800C5944;
 extern Bytes8Config dword_800C4CD4[];
 extern char dword_800C592C[];
-extern void sub_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
+extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 extern int IsConfirmPressedP1_8003D380(int a);
 extern int IsCancelPressedP1_8003D41C(int a);
 extern void PlaySfx_80031494(int a);
@@ -100,7 +100,7 @@ extern char dword_800C4DDC[];
 extern char dword_800C4E98[];
 extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
-extern void sub_8002A5A4(CfgDlgConfig* p);
+extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
 extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern unsigned int GetTime30Hz_8002C64C(void);
@@ -117,8 +117,8 @@ typedef struct CfgTailConfig
     char c_3;
 } CfgTailConfig;
 extern int frameCount_8008D3FC;
-extern void sub_8002BE10();
-extern void sub_8002B004(void*, int, int);
+extern void DrawMenuBackground_8002BE10();
+extern void DrawButtonHelpBar_8002B004(void*, int, int);
 extern void UpdateMenuCursor_8003D794(void*, int);
 extern void sub_800C2F70();
 extern void sub_800C3060(CfgCtxConfig*);
@@ -143,7 +143,7 @@ void sub_800C2EB4(void)
     CfgTaskConfig* t = &h->t_10;
     CfgCtxConfig* c = t->ctx_14;
     h->t_10.flags_0 = (h->t_10.flags_0 | 1) & 0xFFFF7FFF;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     c->cur_4 = 0;
     c->prev_2 = 0;
     c->f3c = dword_800C4CD4[5];
@@ -164,10 +164,10 @@ void sub_800C2F70(CfgTaskConfig* t, CfgCtxConfig* d)
 {
     short old;
     CfgCtxConfig* c;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(d);
     sub_800C450C(d);
-    sub_8002B004(dword_800C592C, 0, 0xE);
+    DrawButtonHelpBar_8002B004(dword_800C592C, 0, 0xE);
     old = d->f44;
     UpdateMenuCursor_8003D794(&d->f3c, 0);
     c = d;
@@ -514,7 +514,7 @@ void sub_800C38CC(CfgCtxConfig* c)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = c->f44;
     cfg.f10 = (int)dword_800C4DDC;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
     rect[0] = 0x7D;
     rect[1] = 0x12;
     rect[2] = 0x46;
@@ -562,7 +562,7 @@ void sub_800C39C4(CfgCtxConfig* c)
     {
         a.f0 = 2;
     }
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b.f0 = 4;
@@ -587,9 +587,9 @@ void sub_800C39C4(CfgCtxConfig* c)
         d.f0 = 4;
         e.f0 = 4;
     }
-    sub_8002A5A4(&b);
-    sub_8002A5A4(&d);
-    sub_8002A5A4(&e);
+    DrawMenuWindows_8002A5A4(&b);
+    DrawMenuWindows_8002A5A4(&d);
+    DrawMenuWindows_8002A5A4(&e);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -682,7 +682,7 @@ void sub_800C3CA4(CfgCtxConfig* c)
         *t[3] |= 2;
     }
 done:
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b1.f0 = 4;
@@ -727,13 +727,13 @@ done:
         b6.f0 = 4;
         b7.f0 = 4;
     }
-    sub_8002A5A4(&b1);
-    sub_8002A5A4(&b2);
-    sub_8002A5A4(&b3);
-    sub_8002A5A4(&b6);
-    sub_8002A5A4(&b7);
-    sub_8002A5A4(&b4);
-    sub_8002A5A4(&b5);
+    DrawMenuWindows_8002A5A4(&b1);
+    DrawMenuWindows_8002A5A4(&b2);
+    DrawMenuWindows_8002A5A4(&b3);
+    DrawMenuWindows_8002A5A4(&b6);
+    DrawMenuWindows_8002A5A4(&b7);
+    DrawMenuWindows_8002A5A4(&b4);
+    DrawMenuWindows_8002A5A4(&b5);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -828,7 +828,7 @@ void sub_800C4390(CfgCtxConfig* c)
     {
         a.f0 = 2;
     }
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b.f0 = 2;
@@ -837,7 +837,7 @@ void sub_800C4390(CfgCtxConfig* c)
     {
         b.f0 = 4;
     }
-    sub_8002A5A4(&b);
+    DrawMenuWindows_8002A5A4(&b);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -885,7 +885,7 @@ void sub_800C450C(CfgCtxConfig* c)
     rect[3] = 0x12;
     pos[0] = 0xE;
     pos[1] = 0xC5;
-    sub_8002AE38(&p, pos, 0xE, rect, 1);
+    DrawTextLinesWindow_8002AE38(&p, pos, 0xE, rect, 1);
 }
 
 // Matched
@@ -908,10 +908,10 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
     CfgSpinConfig v70;
     CfgSpinConfig v80;
     int v;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(c);
     sub_800C450C(c);
-    sub_8002B004(dword_800C592C, 0, 0xE);
+    DrawButtonHelpBar_8002B004(dword_800C592C, 0, 0xE);
     if (c->prev_2 == 1)
     {
         switch (c->f44)
@@ -1106,7 +1106,7 @@ INCLUDE_OVERLAY_ASM(config, dword_800C2D40);
 // Matched
 void sub_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(c);
     sub_800C4BDC((short)c->f30);
     if (c->f34 >= 0x96 || IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
@@ -1144,7 +1144,7 @@ void sub_800C4BDC(int n)
     rect[3] = 0x22;
     pos[0] = 0xD;
     pos[1] = 0xC4;
-    sub_8002AE38(p, pos, 0xE, rect, 2);
+    DrawTextLinesWindow_8002AE38(p, pos, 0xE, rect, 2);
 }
 
 INCLUDE_OVERLAY_ASM(config, dword_800C4C80);

@@ -187,10 +187,10 @@ typedef struct
 } struct_A5A4;
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddClipTexWindowPrim_80033308(void* a);
-extern void sub_8002A710(void* a, int b);
+extern void DrawMenuWindowContents_8002A710(void* a, int b);
 extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
 // Matched
-void sub_8002A5A4(struct_A5A4* p)
+void DrawMenuWindows_8002A5A4(struct_A5A4* p)
 {
     RECT r;
     int i;
@@ -201,7 +201,7 @@ void sub_8002A5A4(struct_A5A4* p)
         {
             InterpolateWindowRect_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
             AddClipTexWindowPrim_80033308(pOT_8008D454 + p->field_14);
-            sub_8002A710(&p->field_10[i][j], p->field_14);
+            DrawMenuWindowContents_8002A710(&p->field_10[i][j], p->field_14);
             AddTexWindowPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
             sub_8002AAF0(p, i, j, &r);
         }
@@ -209,4 +209,4 @@ void sub_8002A5A4(struct_A5A4* p)
     sub_8003F900(2, 0);
     sub_8003F900(1, 0);
 }
-INCLUDE_ASM(sub_8002A710);
+INCLUDE_ASM(DrawMenuWindowContents_8002A710);

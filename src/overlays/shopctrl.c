@@ -42,7 +42,7 @@ extern void sub_800A6D30(int);
 extern void* sub_800A55B0(int);
 extern void SetFadeMode_8001C19C(int, int);
 extern void LoadUiTiy_8002BF74();
-extern void sub_8002BE10();
+extern void DrawMenuBackground_8002BE10();
 extern void sub_80027478(int, int);
 extern void sub_80037918(int*);
 extern void FreeActiveOverlay_8002C014();
@@ -115,7 +115,7 @@ void sub_800B6900(ShopCtrlTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         if (dword_800B6CF8)
         {
             t->next_8 = sub_800B6AE0;

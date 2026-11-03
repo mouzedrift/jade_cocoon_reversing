@@ -327,3 +327,28 @@ sub_800290FC ShiftVramImageHsv_800290FC
 sub_800292D0 TintVramImage_800292D0
 sub_80029EA8 Rgb555ToHsv_80029EA8
 sub_8002A040 HsvToRgb555_8002A040
+
+# --- field actors (dword_8008D43C list: position at +0x38, y angle at +0x5E, model, anims) ---
+dword_8008D43C actorTasks_8008D43C
+sub_8001D378 InitActors_8001D378
+sub_8001D3C4 FreeActors_8001D3C4
+sub_8001D45C CreateActor_8001D45C
+sub_8001D41C UpdateActorCb_8001D41C
+sub_8001D600 DestroyActor_8001D600
+sub_8001D658 SetActorActive_8001D658
+sub_8001DDFC TurnActorTowards_8001DDFC
+sub_8001DECC FindActorInFront_8001DECC
+sub_8001DFC8 IsActorNear_8001DFC8
+sub_8001E0F4 IsInFrontWithinRange_8001E0F4
+sub_8003B740 IsWithinDistance_8003B740
+
+# --- menu screens / text boxes ---
+sub_8002A5A4 DrawMenuWindows_8002A5A4
+sub_8002A710 DrawMenuWindowContents_8002A710
+sub_8002BE10 DrawMenuBackground_8002BE10
+sub_8002B004 DrawButtonHelpBar_8002B004
+sub_8002AE38 DrawTextLinesWindow_8002AE38
+sub_8002AFA0 DrawTextBox_8002AFA0
+sub_8002AF10 DrawLargeTextBox_8002AF10
+sub_8002AF58 DrawSmallTextBox_8002AF58
+dword_8008B4A8 effectObjects_8008B4A8

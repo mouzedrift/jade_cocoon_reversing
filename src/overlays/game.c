@@ -59,7 +59,7 @@ extern GameEnt_1 dword_800B130C[];
 extern GameSlot_1 dword_800B19F0[];
 extern void sub_800A2D48(GameFlagObj_1* p);
 extern int sub_800A2CA8(int, int);
-extern void sub_8001D600(int** p);
+extern void DestroyActor_8001D600(int** p);
 extern char* dword_8008B520;
 extern void sub_800A170C(void);
 extern int sub_800A2CA8(int, int);
@@ -103,7 +103,7 @@ typedef struct GameS3_1
 {
     unsigned short a, b, c;
 } GameS3_1;
-extern void sub_8003B740(int* a, int* b, unsigned int* out);
+extern void IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 extern int dword_800AEBE4;
 extern void sub_800ADCEC(GameS3_1* out, int a);
 extern void sub_800AD0F8(unsigned a);
@@ -292,7 +292,7 @@ extern void StopSoundSeqs_80030D68(char* s);
 extern void PlayMusic_800300E0(int a, int b);
 extern void sub_800A1474();
 extern char dword_80091CE0[];
-extern int sub_8001DECC(void* a, int b, int c);
+extern int FindActorInFront_8001DECC(void* a, int b, int c);
 extern short* sub_800B322C();
 extern unsigned short* sub_800A53CC();
 extern int sub_800AD154(int a);
@@ -600,7 +600,7 @@ void sub_800A1850(GameHolder_1* p)
     int** v = q->f8;
     p->f0 = 0;
     sub_800A2D28(q);
-    sub_8001D600(v);
+    DestroyActor_8001D600(v);
 }
 
 // Matched
@@ -609,7 +609,7 @@ void sub_800A188C(GameHolder_1* p)
     GameFlagObj_1* q = p->f4;
     int** v = q->f8;
     sub_800A2EC8(q);
-    sub_8001D658(v, 0);
+    SetActorActive_8001D658(v, 0);
 }
 
 // Matched
@@ -618,7 +618,7 @@ void sub_800A18C8(GameHolder_1* p)
     GameFlagObj_1* q = p->f4;
     int** v = q->f8;
     sub_800A2D48(q);
-    sub_8001D658(v, 1);
+    SetActorActive_8001D658(v, 1);
 }
 
 // Matched
@@ -675,7 +675,7 @@ void sub_800A1B78(void)
     {
         if (gCtx_800B1260.f7c[i])
         {
-            sub_8001D600((int**)gCtx_800B1260.f7c[i]);
+            DestroyActor_8001D600((int**)gCtx_800B1260.f7c[i]);
         }
     }
 }
@@ -1111,7 +1111,7 @@ void sub_800A31DC(int unused, GameS3A8C_1* p)
             sub_8001DB58(p->f8, 0x1000, 0);
             break;
         case 1:
-            sub_8001DDFC(p->f8, &dword_8008BD18, 0x155);
+            TurnActorTowards_8001DDFC(p->f8, &dword_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 sub_800A433C(p, 5, 2, 0, -1, c, 2);
@@ -1263,7 +1263,7 @@ void sub_800A3954(int unused, GameA2EEC_1* p)
                 sub_800A433C(p, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
-            sub_8001DDFC(q->f8, &dword_8008BD18, 0x155);
+            TurnActorTowards_8001DDFC(q->f8, &dword_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
                 q->fC = -1;
             break;
@@ -1472,7 +1472,7 @@ void sub_800A44C0(GameP4470_1* p)
     idx = (ang - ((GameO_1*)p->f8)->f5e) & 0xfff;
     w.x = ((GameO_1*)p->f8)->f38 + (((GameO_1*)p->f8)->f38 - ((GameSave4_1*)&saveData_8008B570)->f7a8);
     w.z = ((GameO_1*)p->f8)->f40 + (((GameO_1*)p->f8)->f40 - ((GameSave4_1*)&saveData_8008B570)->f7b0);
-    if (sub_8001DDFC(p->f8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
+    if (TurnActorTowards_8001DDFC(p->f8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
     {
         sub_8001D71C(p->f8);
     }
@@ -1483,7 +1483,7 @@ void sub_800A459C(GameP4470_1* p)
 {
     GameVec3_1 v;
     sub_800A47B8(&dword_8008BD18, (GameVec3_1*)((char*)p->f8 + 0x38), &v);
-    if (sub_8001DDFC(p->f8, &v, 0x155) == 0)
+    if (TurnActorTowards_8001DDFC(p->f8, &v, 0x155) == 0)
     {
         sub_8001D71C(p->f8);
     }
@@ -1500,7 +1500,7 @@ void sub_800A46FC(GameP4470_1* p)
     }
     else
     {
-        r = sub_8001DECC(p->f8, 0x190, 0);
+        r = FindActorInFront_8001DECC(p->f8, 0x190, 0);
         p->f28 = r;
         if (r == 3)
         {
@@ -1549,7 +1549,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A47B8);
 // Matched
 int sub_800A4804(GameP4804_1* p)
 {
-    int r = sub_8001DECC(p->f8, 0x190, 0);
+    int r = FindActorInFront_8001DECC(p->f8, 0x190, 0);
     if (r == 0)
     {
         r = *(int*)(p->f8 + 0x80);
@@ -2192,7 +2192,7 @@ int sub_800A65BC(int a, int b)
 int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
 {
     unsigned int u = 0xfff;
-    sub_8003B740(b, a, &u);
+    IsWithinDistance_8003B740(b, a, &u);
     if (u < (unsigned int)(r * r))
     {
         int d = GameFn_8003B9E0(b, a);
@@ -3076,7 +3076,7 @@ typedef struct G2L2
 extern int dword_8001D060(int);
 extern int sub_800A79C8(int);
 extern int* name_800A7940(int);
-extern void sub_8003B740();
+extern void IsWithinDistance_8003B740();
 extern int name_800B0EC4[];
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
@@ -3151,7 +3151,7 @@ void sub_800A7BF0(int a)
                 sub_8001D730(o, 1);
                 q->b = 0;
             }
-            sub_8001D658((int**)o, 1);
+            SetActorActive_8001D658((int**)o, 1);
             q->a = 0;
         }
     }
@@ -3402,7 +3402,7 @@ int sub_800A9164(int* out)
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            sub_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
                 y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
@@ -3427,7 +3427,7 @@ int sub_800A926C()
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            sub_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
                 y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));

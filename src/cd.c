@@ -123,7 +123,7 @@ void sub_8003B684(int* v)
 }
 #if 0
 // Not matched (33 words): register assignment of the abs() temporaries
-int sub_8003B740(int* a, int* b, unsigned int* c)
+int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
     int sum = -1;
     int ok = 0;
@@ -166,7 +166,7 @@ int sub_8003B740(int* a, int* b, unsigned int* c)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B740);
+INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
 int DistanceSquared3D_8003B80C(int* a, int* b)
 {

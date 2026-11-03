@@ -54,7 +54,7 @@ extern unsigned char byte_800BDF58;
 extern int dword_800BE208;
 extern char dword_800BDECC[];
 extern void DrawLoadingIcon_8003CD5C(int* t);
-extern void sub_8002BE10(void);
+extern void DrawMenuBackground_8002BE10(void);
 extern void sub_800BACBC(void* p);
 extern void sub_800B794C(int* t, int* s);
 extern void sub_800B79F8();
@@ -78,7 +78,7 @@ extern char byte_800B6B9C[];
 extern void sub_8003F264(void* p, int a, int b);
 extern char byte_800B69FC[];
 extern int dword_800BDD64;
-extern void sub_8002A5A4(void* p);
+extern void DrawMenuWindows_8002A5A4(void* p);
 typedef struct
 {
     short x_LOAD;
@@ -295,7 +295,7 @@ void sub_800B85AC(void)
     b.c0_LOAD = 0;
     b.s_LOAD = uiColor_8008B590;
     DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
-    sub_8002A5A4(&dword_800BDD64);
+    DrawMenuWindows_8002A5A4(&dword_800BDD64);
 }
 
 void sub_800B867C(LoadTask_LOAD* t)
@@ -597,7 +597,7 @@ void sub_800BA968(int* t)
 {
     DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9AC;
 }
 
@@ -605,7 +605,7 @@ void sub_800BA9AC(int* t)
 {
     DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9F0;
 }
 

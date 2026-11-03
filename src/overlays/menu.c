@@ -80,7 +80,7 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 extern char name_800C18F4[];
-extern void sub_8002AF10();
+extern void DrawLargeTextBox_8002AF10();
 extern void sub_8002F1C8();
 
 typedef struct MenuRc
@@ -95,7 +95,7 @@ extern int name_800AD288();
 extern MenuRc* name_80014390();
 
 extern int sub_80034140();
-extern void sub_8002B004(void* p, int a, int b);
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern char name_80082680[];
 extern char name_800826B0[];
 extern char name_800C28F0[];
@@ -161,7 +161,7 @@ typedef struct MenuDlg
     int f0, f4, f8, fC, f10, f14;
 } MenuDlg;
 extern MenuDlg name_800BBB7C;
-extern void sub_8002A5A4();
+extern void DrawMenuWindows_8002A5A4();
 extern int name_800C1998[];
 extern void sub_800BE25C();
 extern void sub_800BF8B4();
@@ -179,13 +179,13 @@ INCLUDE_OVERLAY_ASM(menu, dword_800B66C0);
 INCLUDE_OVERLAY_ASM(menu, sub_800BBB9C);
 
 extern int uiTiyLoaded_8008B4E8;
-extern void sub_8002BE10();
+extern void DrawMenuBackground_8002BE10();
 extern void sub_800BBE90();
 void sub_800BBE50(MenuTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         t->next_8 = sub_800BBE90;
     }
 }
@@ -200,7 +200,7 @@ extern void sub_800BBF48();
 void sub_800BBE90(MenuTask* t, void* a)
 {
     void* q;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     SetFadeMode_8001C19C(3, 0x20);
     q = a;
     if (sub_800BD230(a))
@@ -396,7 +396,7 @@ void sub_800BD1B0(MenuTask* t)
 {
     int* p = name_8008D640;
     int f;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     f = p[4] & 0x8001;
     p += 4;
     if (f != 1)
@@ -524,7 +524,7 @@ void sub_800BD590(MenuTask* t, int a)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         sub_800BE4A0(a);
         t->next_8 = sub_800BD5E4;
     }
@@ -532,7 +532,7 @@ void sub_800BD590(MenuTask* t, int a)
 
 void sub_800BD5E4(MenuTask* t, int a)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BE4A0(a);
     SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BD6C8;
@@ -557,7 +557,7 @@ INCLUDE_OVERLAY_ASM(menu, sub_800BD634);
 
 void sub_800BD6C8(MenuTask* t, MenuCtx* c)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BFE18(c);
     if (c->sel_2 == 6)
         sub_800C01AC(c);
@@ -937,7 +937,7 @@ void sub_800BEAE0(MenuCtx* c)
         s = name_80082680;
         break;
     }
-    sub_8002B004(s, 0, 0xE);
+    DrawButtonHelpBar_8002B004(s, 0, 0xE);
 }
 INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
 
@@ -1088,7 +1088,7 @@ void sub_800BF794(MenuCtx* c)
         tmp[1] = (int)name_800B6838;
         tmp[2] = (int)name_800B6838;
         tmp[3] = (int)name_800B6838;
-        sub_8002AF10(tmp, 0, 0xE);
+        DrawLargeTextBox_8002AF10(tmp, 0, 0xE);
         if (padPressed_8009194C == 0)
         {
             if (c->f56 < 0x96)
@@ -1098,7 +1098,7 @@ void sub_800BF794(MenuCtx* c)
     else
     {
         int r = (short)name_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
-        sub_8002AF10(&name_800C1E98[r], 0, 0xE);
+        DrawLargeTextBox_8002AF10(&name_800C1E98[r], 0, 0xE);
         if (!IsConfirmPressedP1_8003D380(0) && !IsCancelPressedP1_8003D41C(0))
             return;
         PlaySfx_80031494(0x7D);
@@ -1323,7 +1323,7 @@ void sub_800BFF84(MenuCtx* c)
     }
     sub_800BF8B4(c);
     sub_800BE38C(c);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BE4A0(c);
 }
 
@@ -1407,7 +1407,7 @@ void sub_800C0428(MenuCtx* c)
         int r = name_800AD288((short)sum, found);
         if (r < 0x2B)
         {
-            sub_8002AF10(&name_800C1BE8[r], found, 0xE);
+            DrawLargeTextBox_8002AF10(&name_800C1BE8[r], found, 0xE);
             found = 1;
         }
     }
@@ -1456,7 +1456,7 @@ void sub_800C05E0(MenuCtx* c)
         int r = (short)sub_800AD7F8((short)sum);
         if (r < 0x26)
         {
-            sub_8002AF10(&name_800C1E98[r], found, 0xE);
+            DrawLargeTextBox_8002AF10(&name_800C1E98[r], found, 0xE);
             found = 1;
         }
     }
@@ -1477,7 +1477,7 @@ void sub_800C06E8(MenuCtx* c)
         int r = name_8001AEC0(m + 0xF4, (short)sum);
         if (r < 0x1E)
         {
-            sub_8002AF10(&name_800C20F8[r], found, 0xE);
+            DrawLargeTextBox_8002AF10(&name_800C20F8[r], found, 0xE);
             found = 1;
         }
     }
@@ -1504,7 +1504,7 @@ void sub_800C07F0(MenuCtx* c)
         d.f0 |= 4;
     d.f8 = (short)s;
     d.fC = c->arr_2A[0];
-    sub_8002A5A4(&d);
+    DrawMenuWindows_8002A5A4(&d);
 }
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C07F0);
@@ -1528,7 +1528,7 @@ void sub_800C08C0(MenuCtx* c)
         d.f0 |= 4;
     d.f8 = (short)s;
     d.fC = c->arr_2A[2];
-    sub_8002A5A4(&d);
+    DrawMenuWindows_8002A5A4(&d);
 }
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800C08C0);

@@ -499,7 +499,7 @@ void sub_800149A4(char* p)
     {
         *(int*)(q + 0x3C) = n;
     }
-    e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;

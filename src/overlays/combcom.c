@@ -200,7 +200,7 @@ void sub_800CBB4C(int p)
     b[1] = 0xC3;
     b[0] = a.x + 2;
     d = p;
-    sub_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
+    DrawTextBox_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
 }
 
 void sub_800CBBE0(int p)
@@ -211,7 +211,7 @@ void sub_800CBBE0(int p)
     d.f4 = 0;
     d.f8 = 0;
     d.fC = 0;
-    sub_8002AF10((int)&d, (int)v, 0xF);
+    DrawLargeTextBox_8002AF10((int)&d, (int)v, 0xF);
 }
 
 void sub_800CBC28()

@@ -45,7 +45,7 @@ extern int sub_800BAE24(int);
 extern void sub_800BB4A8(int);
 extern void UpdateMenuCursor_8003D794(void*, int);
 extern int IsConfirmPressedP1_8003D380(int);
-extern void sub_8002A5A4(void*);
+extern void DrawMenuWindows_8002A5A4(void*);
 extern void sub_800A4364();
 extern void sub_800A4420();
 extern void sub_800A44DC();
@@ -59,7 +59,7 @@ extern void sub_800A1988();
 extern void sub_800B7674(int, int);
 extern int sub_800B793C();
 extern int sub_800B7914();
-extern void sub_8002BE10();
+extern void DrawMenuBackground_8002BE10();
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
 INCLUDE_OVERLAY_ASM(combload, dword_800A4088);
@@ -67,7 +67,7 @@ INCLUDE_OVERLAY_ASM(combload, dword_800A4088);
 void sub_800A40FC(CombLoadTask* t)
 {
     dword_800A47F4 = LoadOverlay_80020BF8(1, 0x10);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t->next_8 = sub_800A4140;
 }
 
@@ -78,7 +78,7 @@ void sub_800A4140(CombLoadTask* t)
         sub_800B7674(dword_800A3A94 == 0 ? 2 : 3, 0);
         t->next_8 = sub_800A41A8;
     }
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
 }
 
 void sub_800A41A8(CombLoadTask* t)
@@ -120,7 +120,7 @@ void sub_800A41FC(CombLoadTask* t)
     {
         str = dword_800A40E4;
     }
-    sub_8002AF58((int)&str, (int)code, 0xF);
+    DrawSmallTextBox_8002AF58((int)&str, (int)code, 0xF);
     switch (dword_800A47F0)
     {
     case 0:
@@ -140,11 +140,11 @@ void sub_800A41FC(CombLoadTask* t)
         sub_800A44DC();
         dword_800A47D4.f4 = GetTime30Hz_8002C64C();
         dword_800A47D4.fC = dword_800A4698.f8;
-        sub_8002A5A4(&dword_800A47D4);
+        DrawMenuWindows_8002A5A4(&dword_800A47D4);
         UpdateMenuCursor_8003D794(&dword_800A4698, 0);
         break;
     }
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
 }
 
 // Near miss: the compiler shares the constant 0x78 between the two stores

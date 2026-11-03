@@ -20,7 +20,7 @@ INCLUDE_DATA(dword_800741EC);
 
 extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
-void sub_8002BE10(void)
+void DrawMenuBackground_8002BE10(void)
 {
     unsigned short pos[2];
     short i;
@@ -261,7 +261,7 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
     {
         return 0;
     }
-    sub_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
+    DrawLargeTextBox_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
     return 1;
 }
 typedef struct

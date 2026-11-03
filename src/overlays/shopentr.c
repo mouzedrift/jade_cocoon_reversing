@@ -58,7 +58,7 @@ extern char str_800B6EA4[];
 extern char str_800B6EB0[];
 
 extern EventNode* dword_8008D4A8;
-extern void sub_8002BE10(void);
+extern void DrawMenuBackground_8002BE10(void);
 extern void sub_8002BA54(void* a0, int a1, void* a2, int a3);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern void DrawNumber_8003EF74(void* a0, int a1, short a2);
@@ -127,7 +127,7 @@ void sub_800B6F1C(void)
             c->flags_C |= 1;
         }
         dword_800B7EAC = 1;
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
     }
 }
 
@@ -135,7 +135,7 @@ void sub_800B6F1C(void)
 void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
 {
     int r;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800B7440(c);
     r = 0;
     if (!(c->flags_C & 1))

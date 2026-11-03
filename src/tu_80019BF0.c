@@ -1690,16 +1690,16 @@ int sub_8001D36C(int v)
     return (unsigned int)(v - 0x19) < 0xD;
 }
 // Matched
-void sub_8001D378(void)
+void InitActors_8001D378(void)
 {
     sub_800204D0();
     sub_800205F0();
     ClearModelAnimRefs_800201A4();
     ListInit_8003FDB0(dword_80091990);
-    StopAllEventEntries_80043B40(dword_8008D43C);
+    StopAllEventEntries_80043B40(actorTasks_8008D43C);
 }
 // Matched
-void sub_8001D3C4(int a0)
+void FreeActors_8001D3C4(int a0)
 {
     if (a0 != 0)
     {
@@ -1708,11 +1708,11 @@ void sub_8001D3C4(int a0)
         sub_800204D0();
     }
     ListFreeAll_8003FEC8(dword_80091990);
-    StopAllEventEntries_80043B40(dword_8008D43C);
+    StopAllEventEntries_80043B40(actorTasks_8008D43C);
     ClearModelAnimRefs_800201A4();
 }
 // Matched
-void sub_8001D41C(int a0, void* a1)
+void UpdateActorCb_8001D41C(int a0, void* a1)
 {
     sub_8001EA28(a1);
     sub_8001F354(a1);
@@ -1720,14 +1720,14 @@ void sub_8001D41C(int a0, void* a1)
     sub_8001F9AC(a1);
 }
 // Matched
-int* sub_8001D45C(int a0)
+int* CreateActor_8001D45C(int a0)
 {
-    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D43C);
+    struct_cb* r = AllocEventEntry_80043AF8(actorTasks_8008D43C);
     int* p;
     if (r != 0)
     {
         p = r->field_14;
-        r->fn_8 = (void (*)(struct_cb*, int*))sub_8001D41C;
+        r->fn_8 = (void (*)(struct_cb*, int*))UpdateActorCb_8001D41C;
         r->flags_0 = (r->flags_0 | 1) & ~0x8000;
         p[0] = (int)r;
         sub_8001E574(p, a0);
@@ -1781,12 +1781,12 @@ int* sub_8001D4DC(char* o, int a1, int a2, int a3)
     s.field_40 = *(int*)(o + 0x148);
     s.field_44 = *(int*)(o + 0x14C);
     s.field_4C = a3;
-    r = sub_8001D45C((int)&s);
+    r = CreateActor_8001D45C((int)&s);
     sub_8001D68C((struct_obj_A*)r, (*(unsigned int*)(o + 4) >> 18) & 1);
     return r;
 }
 // Matched
-void sub_8001D600(char* a0)
+void DestroyActor_8001D600(char* a0)
 {
     int* q = *(int**)a0;
     ReleaseModelAnimRef_80020278(*(short*)(a0 + 0x16), q[1]);
@@ -1794,7 +1794,7 @@ void sub_8001D600(char* a0)
     q[0] = (q[0] & ~1) | 0x8000;
 }
 // Matched
-void sub_8001D658(int** pp, int on)
+void SetActorActive_8001D658(int** pp, int on)
 {
     int* p = *pp;
     if (on)
@@ -2081,7 +2081,7 @@ int sub_8001DC60(char* p, int a1, int a2, int a3)
     {
         d = y - x;
     }
-    if (sub_8003B740(p + 0x38, a1, &dist))
+    if (IsWithinDistance_8003B740(p + 0x38, a1, &dist))
     {
         if (dist < d * d)
         {
@@ -2091,12 +2091,12 @@ int sub_8001DC60(char* p, int a1, int a2, int a3)
     t = d + 0x32;
     if (dist < t * t)
     {
-        if (sub_8001DFC8(p, a1, a3, 1))
+        if (IsActorNear_8001DFC8(p, a1, a3, 1))
         {
             return 1;
         }
     }
-    sub_8001DDFC(p, a1, a2);
+    TurnActorTowards_8001DDFC(p, a1, a2);
     return 0;
 }
 // Matched
@@ -2124,7 +2124,7 @@ int sub_8001DD44(char* o, int mode, int a, int b)
     return r < 0 ? 0 : (a < r ? a : r);
 }
 // Matched
-int sub_8001DDFC(char* o, VECTOR* target, int step)
+int TurnActorTowards_8001DDFC(char* o, VECTOR* target, int step)
 {
     VECTOR d;
     int a;
@@ -2151,7 +2151,7 @@ int sub_8001DDFC(char* o, VECTOR* target, int step)
 }
 #if 0
 // Not matched: register allocation: o/range^2/count land in s2/s4/s3 instead of s3/s2/s4
-int sub_8001DECC(char* o, int range, int checkLevant)
+int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
 {
     EventNode* n;
     EventEntry* e;
@@ -2161,18 +2161,18 @@ int sub_8001DECC(char* o, int range, int checkLevant)
     int found = 0;
     if (checkLevant)
     {
-        found = sub_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, r2);
+        found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, r2);
     }
     if (found == 0)
     {
-        n = (EventNode*)dword_8008D43C;
+        n = (EventNode*)actorTasks_8008D43C;
         count = n->count;
         for (i = 0; i < count; i++)
         {
             e = &n->entry;
             if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)e->buffer)
             {
-                found = sub_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), r2);
+                found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), r2);
                 if (found)
                 {
                     break;
@@ -2184,9 +2184,9 @@ int sub_8001DECC(char* o, int range, int checkLevant)
     return found;
 }
 #endif
-INCLUDE_ASM(sub_8001DECC);
+INCLUDE_ASM(FindActorInFront_8001DECC);
 // Matched
-int sub_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
+int IsActorNear_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
 {
     EventNode* n;
     EventEntry* e;
@@ -2197,12 +2197,12 @@ int sub_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
     if (checkLevant)
     {
         dist = 0xFFF;
-        if (sub_8003B740((VECTOR*)(o + 0x38), &levantPos_8008BD18, &dist) != 0 && dist < range * range)
+        if (IsWithinDistance_8003B740((VECTOR*)(o + 0x38), &levantPos_8008BD18, &dist) != 0 && dist < range * range)
         {
             return 1;
         }
     }
-    n = (EventNode*)dword_8008D43C;
+    n = (EventNode*)actorTasks_8008D43C;
     count = n->count;
     for (i = 0; i < count; i++)
     {
@@ -2210,7 +2210,7 @@ int sub_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
         if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)(b = e->buffer))
         {
             dist = 0xFFF;
-            if (sub_8003B740((VECTOR*)(o + 0x38), (VECTOR*)(b + 0x38), &dist) != 0 && dist < range * range)
+            if (IsWithinDistance_8003B740((VECTOR*)(o + 0x38), (VECTOR*)(b + 0x38), &dist) != 0 && dist < range * range)
             {
                 return 1;
             }
@@ -2221,13 +2221,13 @@ int sub_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
 }
 #if 0
 // Not matched: the final range test becomes a set-on-less-than here, the original branches to return 1 / 0
-int sub_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
+int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
 {
     VECTOR d;
     unsigned int dist;
     int a;
     dist = 0xFFF;
-    if (sub_8003B740(from, to, &dist) != 1)
+    if (IsWithinDistance_8003B740(from, to, &dist) != 1)
     {
         return 0;
     }
@@ -2249,7 +2249,7 @@ int sub_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
     return 0;
 }
 #endif
-INCLUDE_ASM(sub_8001E0F4);
+INCLUDE_ASM(IsInFrontWithinRange_8001E0F4);
 // Matched
 int sub_8001E1C8(struct_obj_A* p)
 {
@@ -5836,7 +5836,7 @@ void sub_80026FAC(void)
     word_80091CB8[0] = -1;
     (&word_80091C40)[1] = -1;
     dword_80082678 = 0;
-    sub_8001D378();
+    InitActors_8001D378();
 }
 extern int dword_80091C74;
 extern int dword_80091CB4;
@@ -5848,7 +5848,7 @@ extern int* messageWindowTask_8008D640;
 extern int* dword_8008D49C;
 extern int* dword_8008D674;
 extern int* fileRequestTasks_8008D488;
-extern void sub_8001D3C4(int a0);
+extern void FreeActors_8001D3C4(int a0);
 extern void sub_800AC73C(void);
 extern void sub_800A54A0(void);
 extern void sub_800A58B4(void);
@@ -5887,7 +5887,7 @@ void sub_80027118(void)
     StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
     sub_800A54A0();
     sub_800A58B4();
-    sub_8001D3C4(dword_80091CA0);
+    FreeActors_8001D3C4(dword_80091CA0);
     sub_800A7784();
     sub_800A170C();
     sub_800A1794();

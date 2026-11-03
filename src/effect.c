@@ -378,7 +378,7 @@ int sub_800147FC(void)
     EventNode* n2;
     int j;
     i = 0;
-    head = dword_8008B4A8;
+    head = effectObjects_8008B4A8;
     c = i;
     count = head->count;
     for (n = head; i < count; i++)

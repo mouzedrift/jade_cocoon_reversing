@@ -26,14 +26,14 @@ extern CombRsltStr dword_800A408C;
 extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
 extern void sub_8002ADB4(void*, void*, int, int);
-extern void sub_8002B004(void*, int, int);
+extern void DrawButtonHelpBar_8002B004(void*, int, int);
 extern void sub_800A41E4();
 extern void DrawSmallNumber3_8002C290(void*, int, int);
 extern void DrawUiTiySprt_8002C06C(void*, int, int);
 extern void sub_800A16FC();
 extern void SetFadeMode_8001C19C(int, int);
 extern void sub_800A4240(int);
-extern void sub_8002BE10();
+extern void DrawMenuBackground_8002BE10();
 
 INCLUDE_OVERLAY_ASM(combrslt, dword_800A4088);
 
@@ -50,8 +50,8 @@ void sub_800A40E0(CombRsltTask* t)
     {
         sub_800A4240(i);
     }
-    sub_8002BE10();
-    sub_8002B004(dword_80082680, 0, 0xF);
+    DrawMenuBackground_8002BE10();
+    DrawButtonHelpBar_8002B004(dword_80082680, 0, 0xF);
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
     {
         SetFadeMode_8001C19C(1, 0x20);

@@ -648,7 +648,7 @@ typedef struct
 extern TitleBlk38M dword_800A06D8, dword_800A0710, dword_800A0748, dword_800A0780;
 extern TitleBlk38M dword_800A07B8, dword_800A07F0, dword_800A0828, dword_800A0860;
 extern TitleCfgM dword_800A0898;
-extern void sub_8002A5A4(TitleCfgM* cfg);
+extern void DrawMenuWindows_8002A5A4(TitleCfgM* cfg);
 
 // Matched
 void sub_800A1780(TitleTaskM* t, int x)
@@ -681,7 +681,7 @@ void sub_800A1780(TitleTaskM* t, int x)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = x;
     cfg.f10 = (int)ptrs;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
 }
 
 extern void sub_800A1AFC();

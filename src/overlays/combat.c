@@ -35,8 +35,8 @@ extern int dword_800A3A8C;
 extern int dword_800A4070;
 extern int dword_800A4080;
 extern int dword_800A39F0[];
-extern void sub_8001D378(void);
-extern void sub_8001D600(void* p);
+extern void InitActors_8001D378(void);
+extern void DestroyActor_8001D600(void* p);
 extern void sub_8001E28C(void* p);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A0D1C(int i);
@@ -380,7 +380,7 @@ void sub_800A0A28(void)
     {
         dword_800A3A08[i].field_0 = m;
     }
-    sub_8001D378();
+    InitActors_8001D378();
 }
 
 // Matched
@@ -466,7 +466,7 @@ void sub_800A0D1C(int i)
     CombatSlotCombat* s = &dword_800A3A08[i];
     if (s->field_3C)
     {
-        sub_8001D600(s->field_3C);
+        DestroyActor_8001D600(s->field_3C);
         s->field_3C = 0;
     }
 }

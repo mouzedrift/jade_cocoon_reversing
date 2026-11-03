@@ -475,7 +475,7 @@ extern unsigned int settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
-extern int dword_8008D43C;
+extern int actorTasks_8008D43C;
 extern int dword_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
@@ -611,7 +611,7 @@ typedef struct EventNode
     EventEntry entry;
 } EventNode;
 extern EventNode* modelTasks_8008D618;
-extern EventNode* dword_8008B4A8;
+extern EventNode* effectObjects_8008B4A8;
 extern EventNode* dword_8008D60C;
 
 typedef struct
