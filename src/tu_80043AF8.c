@@ -397,7 +397,104 @@ void sub_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)s->next_30;
     sub_8004D924();
 }
-INCLUDE_ASM(sub_80046248);
+/* inline copy of sub_8004D224 */
+static inline void GetBonePos(SVECTOR* o, AnimPose* p, int j)
+{
+    if (j == 0)
+    {
+        o->vx = 0;
+        o->vy = 0;
+        o->vz = 0;
+    }
+    else
+    {
+        o->vx = p->pos[j * 3];
+        o->vy = p->pos[j * 3 + 1];
+        o->vz = p->pos[j * 3 + 2];
+    }
+}
+// Matched
+void sub_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
+{
+    int n = 0;
+    SVECTOR* t = (SVECTOR*)getScratchAddr(5);
+    SVECTOR d;
+    int k;
+    int j;
+    int i;
+    if (sk->scale_24)
+    {
+        MATRIX* m = (MATRIX*)getScratchAddr(0);
+        m->m[0][0] = sk->scale_24->vx;
+        m->m[0][1] = 0;
+        m->m[0][2] = 0;
+        m->m[1][0] = 0;
+        m->m[1][1] = sk->scale_24->vy;
+        m->m[1][2] = 0;
+        m->m[2][0] = 0;
+        m->m[2][1] = 0;
+        m->m[2][2] = sk->scale_24->vz;
+        gte_SetRotMatrix(m);
+    }
+    for (i = 0; sk->bones[i].parent >= 0; n++)
+    {
+        j = sk->bones[i].idx;
+        if (n == 1)
+        {
+            if (alt)
+            {
+                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
+                t->vx = sk->pose_14->rot[k];
+                t->vy = sk->pose_14->rot[k + 1];
+                t->vz = sk->pose_14->rot[k + 2];
+                GetBonePos(&d, alt, sk->bones[1].idx);
+                t->vy += d.vy;
+            }
+            else
+            {
+                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
+                t->vx = sk->pose_14->rot[k];
+                t->vy = sk->pose_14->rot[k + 1];
+                t->vz = sk->pose_14->rot[k + 2];
+            }
+        }
+        else if (j == 0)
+        {
+            t->vx = 0;
+            t->vy = 0;
+            t->vz = 0;
+        }
+        else if (alt)
+        {
+            k = j * 3;
+            t->vx = alt->pos[k];
+            t->vy = alt->pos[k + 1];
+            t->vz = alt->pos[k + 2];
+        }
+        else
+        {
+            k = j * 3;
+            t->vx = sk->pose_14->pos[k];
+            t->vy = sk->pose_14->pos[k + 1];
+            t->vz = sk->pose_14->pos[k + 2];
+        }
+        if (sk->scale_24)
+        {
+            gte_ldv0(t);
+            gte_rtv0();
+            gte_stsv(t);
+        }
+        j = sk->bones[i].scale_3;
+        if (sk->bones[i].parent > 0)
+        {
+            t->vx = t->vx * sk->base[j].vx / 4096;
+            t->vy = t->vy * sk->base[j].vy / 4096;
+            t->vz = t->vz * sk->base[j].vz / 4096;
+        }
+        i++;
+        *out++ = *t;
+    }
+}
 /* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
 extern short asc_80084350[];
 #define SIN_TABLE (asc_80084350 + 0xF8)
@@ -449,34 +546,6 @@ void RotMatrixYXZ_80046874(SVECTOR* r, MATRIX* m)
 }
 INCLUDE_ASM(sub_80046A58);
 INCLUDE_ASM(sub_80047E28);
-typedef struct
-{
-    short x;
-    short y;
-    short z;
-} Vec3s;
-
-typedef struct
-{
-    char pad[0x14];
-    Vec3s* pos;
-    Vec3s* rot;
-} AnimPose;
-
-typedef struct
-{
-    short parent;
-    unsigned char idx;
-    char pad[5];
-} AnimBone;
-
-typedef struct
-{
-    char pad[0xC];
-    AnimBone* bones;
-    SVECTOR* base;
-} AnimSkel;
-
 extern SVECTOR dword_80098690[];
 
 /* inlined helpers: the original keeps the bone index in a copy of the argument */
@@ -492,27 +561,12 @@ static inline void GetRot(SVECTOR* o, AnimPose* p, int j)
     else
     {
         k = j + 2;
-        o->vx = p->rot[k].x;
-        o->vy = p->rot[k].y;
-        o->vz = p->rot[k].z;
+        o->vx = p->rot[k * 3];
+        o->vy = p->rot[k * 3 + 1];
+        o->vz = p->rot[k * 3 + 2];
     }
 }
 
-static inline void GetPos(SVECTOR* o, AnimPose* p, int j)
-{
-    if (j == 0)
-    {
-        o->vx = 0;
-        o->vy = 0;
-        o->vz = 0;
-    }
-    else
-    {
-        o->vx = p->pos[j].x;
-        o->vy = p->pos[j].y;
-        o->vz = p->pos[j].z;
-    }
-}
 
 // Matched
 void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, AnimPose* a2, int t2,
@@ -572,9 +626,9 @@ void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, 
         s2.vx = s2.vx - b0.vx;
 
         idx = sk->bones[i].idx + 2;
-        out->rot[idx].x = s.vx + s2.vx;
-        out->rot[idx].y = 0;
-        out->rot[idx].z = 0;
+        out->rot[idx * 3] = s.vx + s2.vx;
+        out->rot[idx * 3 + 1] = 0;
+        out->rot[idx * 3 + 2] = 0;
 
         if (vout != 0)
         {
@@ -583,9 +637,9 @@ void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, 
             vout[i].vz = sk->base[i].vz + (v1[i].vz - sk->base[i].vz) * t1 / 4096 + (v2[i].vz - sk->base[i].vz) * t2 / 4096;
         }
 
-        GetPos(&q0, p0, sk->bones[i].idx);
-        GetPos(&q1, a1, sk->bones[i].idx);
-        GetPos(&q2, a2, sk->bones[i].idx);
+        GetBonePos(&q0, p0, sk->bones[i].idx);
+        GetBonePos(&q1, a1, sk->bones[i].idx);
+        GetBonePos(&q2, a2, sk->bones[i].idx);
         d = &dword_80098690[n];
         d->vx = q0.vx + (q1.vx - q0.vx) * t1 / 4096 + (q2.vx - q0.vx) * t2 / 4096;
         d->vy = q0.vy + (q1.vy - q0.vy) * t1 / 4096 + (q2.vy - q0.vy) * t2 / 4096;
@@ -595,9 +649,9 @@ void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, 
             d->vy -= q0.vy;
         }
         idx = sk->bones[i].idx;
-        out->pos[idx].x = d->vx;
-        out->pos[idx].y = d->vy;
-        out->pos[idx].z = d->vz;
+        out->pos[idx * 3] = d->vx;
+        out->pos[idx * 3 + 1] = d->vy;
+        out->pos[idx * 3 + 2] = d->vz;
     }
 }
 // Matched

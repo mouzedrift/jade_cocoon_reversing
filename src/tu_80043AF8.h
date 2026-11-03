@@ -72,6 +72,35 @@ typedef struct
 } FtgQuadG4Ctx;
 #define FTG_QUAD_G4_CTX ((FtgQuadG4Ctx*)getScratchAddr(0x85))
 
+// skeletal animation
+typedef struct
+{
+    int pad_0;
+    int n_4; // bones; rot holds n + 2 entries per frame ([1] is the root translation)
+    char pad_8[0xC];
+    short* pos; // x, y, z per bone
+    short* rot; // x, y, z per entry
+} AnimPose;
+
+typedef struct
+{
+    short parent; // < 0 ends the list
+    unsigned char idx;
+    unsigned char scale_3; // index into AnimSkel.base (used when parent > 0)
+    char pad[4];
+} AnimBone;
+
+typedef struct
+{
+    char pad[0xC];
+    AnimBone* bones;
+    SVECTOR* base;
+    AnimPose* pose_14;
+    int frame_18;
+    int pad_1C[2];
+    VECTOR* scale_24; // optional per-axis scale (rotation matrix diagonal)
+} AnimSkel;
+
 // draws an FTG object at pos / rot (optional per-axis scale) through sub_8004C7BC
 extern void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot);
 
