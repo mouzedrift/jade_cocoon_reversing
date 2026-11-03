@@ -256,4 +256,23 @@ int LoadData001File_8003CD1C(void)
 
     return 1;
 }
-INCLUDE_ASM(sub_8003CD5C);
+typedef struct
+{
+    int v[14];
+} Ints14_8003CD5C;
+extern Ints14_8003CD5C dword_8007490C;
+extern void sub_80033080(unsigned short* a, int i, int j);
+// Matched
+void sub_8003CD5C(void)
+{
+    unsigned short pos[2];
+    Ints14_8003CD5C t;
+    int n;
+
+    t = dword_8007490C;
+    n = t.v[(unsigned int)frameCount_8008D3FC % 14];
+    pos[0] = 0xF8;
+    pos[1] = 0xBA;
+    sub_80033080(pos, n, 0);
+}
+INCLUDE_ASM(sub_8003CE18);
