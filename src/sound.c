@@ -141,6 +141,43 @@ void sub_8002FF10(char* a, struct_FF10* p)
     }
     *(void (**)(void))(a + 8) = sub_8002FF64;
 }
+#if 0
+// Not matched (case 2 loop: the +0x18 offset is folded into the loop pointer)
+void sub_8002FF64(int a0, char* p)
+{
+    int i;
+    switch (*(unsigned short*)(p + 2))
+    {
+    case 0:
+        if (!sub_8003BE30(*(int*)(p + 0x10)) && !sub_8003BE30(*(int*)(p + 0x14)))
+        {
+            (*(unsigned short*)(p + 2))++;
+        }
+        else
+        {
+            dword_8008B540 = 1;
+        }
+        break;
+    case 1:
+        *(unsigned short*)(p + 2) = 2;
+        break;
+    case 2:
+        for (i = 0; i < 5; i++)
+        {
+            if (((short*)p)[12])
+            {
+                if (--((short*)p)[13] <= 0)
+                {
+                    SsSepStop(((short*)p)[14], ((short*)p)[15]);
+                    ((short*)p)[12] = 0;
+                }
+            }
+            p += 8;
+        }
+        break;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8002FF64);
 extern void sub_80030D68(SoundStruct* p);
 #if 0
