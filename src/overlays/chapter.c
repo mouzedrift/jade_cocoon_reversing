@@ -68,10 +68,10 @@ typedef struct ChapterTask
 
 extern void sub_800B68A8();
 extern void sub_800B6900();
-extern void sub_800B6B18();
+extern void EnterChapterMap_800B6B18();
 extern void sub_800A7690();
 extern void SsSepSetDecrescendo(short, short, short, long);
-void sub_800B66F4(ChapterTask* t, int* st)
+void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
 {
     switch (st[0])
     {
@@ -113,7 +113,7 @@ void sub_800B66F4(ChapterTask* t, int* st)
         {
             sub_800B68A8();
             sub_800B6900();
-            sub_800B6B18();
+            EnterChapterMap_800B6B18();
             t->next_8 = sub_800A7690;
         }
         break;
@@ -183,7 +183,7 @@ void sub_800B6A94(short* p)
     }
 }
 
-void sub_800B6B18()
+void EnterChapterMap_800B6B18()
 {
     ChapterSave* s = (ChapterSave*)&saveData_8008B570;
     ChapterEntry* e = &dword_800B6FE0[s->cur_2DC];

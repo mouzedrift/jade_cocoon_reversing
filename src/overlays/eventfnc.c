@@ -187,12 +187,12 @@ extern char aColiC_800B6D2C[];
 extern int dword_8008B528;
 extern int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n);
 extern void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5);
-extern int sub_800B8028(int* out, EvQuadEventfnc* v);
-extern void sub_800B83E4(int* v, EvMeshEventfnc* m, int i);
+extern int FindDuplicatePoint_800B8028(int* out, EvQuadEventfnc* v);
+extern void GetTriHeight_800B83E4(int* v, EvMeshEventfnc* m, int i);
 
 static inline int EvFindTri(int* out, EvMapEventfnc* map, EvVecEventfnc* pos)
 {
-    int r = sub_800B76B8(map->mesh_28, pos);
+    int r = FindTriAtXZ_800B76B8(map->mesh_28, pos);
     if (r >= 0)
     {
         *out = r;
@@ -202,7 +202,7 @@ static inline int EvFindTri(int* out, EvMapEventfnc* map, EvVecEventfnc* pos)
 }
 
 
-int sub_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
+int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
 {
     EvQuadEventfnc v[4];
     int n[4];
@@ -229,7 +229,7 @@ int sub_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
         }
         if (i >= 2)
         {
-            if (sub_800B8028((int*)pos, v))
+            if (FindDuplicatePoint_800B8028((int*)pos, v))
             {
                 return 3;
             }
@@ -248,7 +248,7 @@ int sub_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
         q2->z_4 = vt[(t1 + 1) % 3].z_4;
         i++;
     }
-    sub_800B83E4((int*)pos, (EvMeshEventfnc*)dword_8008B528, tri);
+    GetTriHeight_800B83E4((int*)pos, (EvMeshEventfnc*)dword_8008B528, tri);
     if (i == 2)
     {
         return 3;
@@ -269,9 +269,9 @@ int sub_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
     return 2;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B73C0);
+INCLUDE_OVERLAY_ASM(eventfnc, MarkSharedEdges_800B73C0);
 
-int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* p)
+int FindTriAtXZ_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* p)
 {
     VECTOR e;
     VECTOR r;
@@ -352,7 +352,7 @@ int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* p)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
 
-void sub_800B7E40(int* p, int a, int b, int c, int* out)
+void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* out)
 {
     int t = (int)&((EvMeshEventfnc*)a)->tris_4[b];
     EvVtxEventfnc* v0 = (EvVtxEventfnc*)(((c + 1) % 3) * 8 + t);
@@ -379,7 +379,7 @@ void sub_800B7E40(int* p, int a, int b, int c, int* out)
     out[2] = d[2];
 }
 
-int sub_800B8028(int* out, EvQuadEventfnc* v)
+int FindDuplicatePoint_800B8028(int* out, EvQuadEventfnc* v)
 {
     int i;
     int j;
@@ -400,9 +400,9 @@ int sub_800B8028(int* out, EvQuadEventfnc* v)
 }
 
 
-extern int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
+extern int FindTriAtXZ_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
 
-int sub_800B80C8(EvEntEventfnc* e)
+int FindLevantMesh_800B80C8(EvEntEventfnc* e)
 {
     unsigned int i;
     unsigned int k = e->f84_84;
@@ -410,7 +410,7 @@ int sub_800B80C8(EvEntEventfnc* e)
     for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++, k++)
     {
         k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
-        r = sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
+        r = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -424,13 +424,13 @@ int sub_800B80C8(EvEntEventfnc* e)
     return 0;
 }
 
-int sub_800B8184(EvVecEventfnc* pos, unsigned int k)
+int FindMeshAtPos_800B8184(EvVecEventfnc* pos, unsigned int k)
 {
     unsigned int i;
     for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++)
     {
         k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
-        if (sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], pos) >= 0)
+        if (FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], pos) >= 0)
         {
             return k;
         }
@@ -440,11 +440,11 @@ int sub_800B8184(EvVecEventfnc* pos, unsigned int k)
 }
 
 extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
-extern void sub_800B7E40(int* p, int a, int b, int c, int* d);
+extern void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* d);
 void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
 {
     sub_800B79E0(a2, p, a1, a3, a4);
-    sub_800B7E40(p, a2, *a3, *a4, a5);
+    SlideAlongEdge_800B7E40(p, a2, *a3, *a4, a5);
     p[0] += a5[2] >> 10;
     p[2] -= a5[0] >> 10;
 }
@@ -464,7 +464,7 @@ int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
             sub_800B79E0((int)(ents + i * 8), a1, (int)p, &t0, &t1);
             if (t0 != -1 && t1 != -1)
             {
-                sub_800B7E40(p, (int)(ents + i * 8), t0, t1, v);
+                SlideAlongEdge_800B7E40(p, (int)(ents + i * 8), t0, t1, v);
                 p[0] -= v[2] >> 10;
                 p[2] += v[0] >> 10;
                 return 0;
@@ -474,7 +474,7 @@ int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
     return 1;
 }
 
-void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
+void GetTriHeight_800B83E4(int* v, EvMeshEventfnc* m, int i)
 {
     EvTriEventfnc* t = &m->tris_4[i];
     v[1] = (t->ny_1A * t->v_0[0].y_2 - t->nx_18 * (v[0] - t->v_0[0].x_0) - t->nz_1C * (v[2] - t->v_0[0].z_4)) / t->ny_1A;
@@ -1889,7 +1889,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
             hit = 0;
             if (c->pc_8->a_4 >= 0)
             {
-                hit = sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes20_20[c->pc_8->a_4], lev) >= 0;
+                hit = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes20_20[c->pc_8->a_4], lev) >= 0;
             }
             else
             {
@@ -2615,7 +2615,7 @@ typedef struct EvBlobPtrEventfnc
     int* p_0;
 } EvBlobPtrEventfnc;
 extern EvBlobPtrEventfnc dword_800AEBBC;
-void sub_800BC854(int* src)
+void LoadRelocBlob_800BC854(int* src)
 {
     int size;
     int n;
@@ -2657,7 +2657,7 @@ void sub_800BC854(int* src)
     }
 }
 #endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC854);
+INCLUDE_OVERLAY_ASM(eventfnc, LoadRelocBlob_800BC854);
 
 extern int dword_800AEBC0[2];
 void sub_800BC98C(int a)
