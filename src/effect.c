@@ -72,7 +72,41 @@ void sub_80013EB4(void* p, int a1, int a2)
 {
     sub_80033624(p, (int)GetMinionStatus_800107A0(a2));
 }
-INCLUDE_ASM(sub_80013EE8);
+int sub_80014200(unsigned char* p);
+// Matched
+void sub_80013EE8(int* out, unsigned char* m, unsigned char* x, int mode)
+{
+    int a;
+    int b;
+    if (mode == 1)
+    {
+        out[0] = m[0x2C];
+        out[2] = m[0x2E];
+        out[4] = sub_80014114(10) + x[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[8] = 0;
+        a = m[0x2D] * (m[0x2D] - 20) / 7;
+        b = m[0x2F] * (m[0x2F] - 20) / 7;
+        out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
+        out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
+        out[5] = sub_8001413C(10);
+        out[7] = 0;
+        out[9] = 100;
+    }
+    else
+    {
+        out[0] = m[0x2C];
+        out[2] = m[0x2E];
+        out[4] = sub_80014114(sub_80014200(m + 0x2C) / 10) + x[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[8] = 0;
+        out[1] = m[0x2D];
+        out[3] = m[0x2F];
+        out[5] = sub_8001413C(sub_80014200(m + 0x2C) / 10);
+        out[7] = 0;
+        out[9] = sub_80014200(m + 0x2C);
+    }
+}
 // Matched
 int sub_80014114(int x)
 {
