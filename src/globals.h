@@ -266,24 +266,6 @@ typedef struct
     int field_14;               // CalcEquippedStats_80033624 returns the largest one of the equipped items
 } EquipmentData;
 
-// object with a flags word at +4
-typedef struct
-{
-    int field_0;
-    unsigned int flags_4;
-    char pad_8[0x12];
-    short field_1A;
-    short field_1C;
-    short pad_1E;
-    short field_20;
-    short field_22;
-    char pad_24[0x68];
-    int field_8C;
-    int field_90;
-    char pad_94[0x40];
-    unsigned int field_D4;
-} struct_obj_A;
-
 // object with a flags word at +0
 typedef struct
 {

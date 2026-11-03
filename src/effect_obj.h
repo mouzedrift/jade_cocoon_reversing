@@ -59,7 +59,8 @@ typedef struct
     int field_AC;
 } EffectObj;
 
-/* arguments of sub_800149A4 (spawn an effect object) */
+/* arguments of sub_800149A4 (spawn an effect object); like EffectObj its pointer fields are still ints, so
+   sub_8001852C casts the ActorEffectReq pointers it copies in */
 typedef struct
 {
     int field_0;
@@ -80,12 +81,6 @@ typedef struct
 
 typedef struct
 {
-    short a;
-    short b;
-} ShortPair2;
-
-typedef struct
-{
     short (*tbl_0)[6];
     int field_4;
     int field_8;
@@ -96,21 +91,23 @@ typedef struct
     int field_34;
 } EffectTarget;
 
-/* passed to sub_800184DC / sub_8001852C, filled by sub_800182B8 */
-typedef struct
+/* effect request: built by sub_8001E28C (tu_80019BF0.c) from an actor, filled by sub_800182B8,
+   played by sub_800184DC / sub_8001852C */
+typedef struct ActorEffectReq
 {
-    int idx_0;
-    ShortPair2* pairs_4;
-    short (*tbl_8)[6];
-    int field_C;
-    int field_10;
-    int field_14;
+    int effect_0;            // effect index (dword_800795F0)
+    struct_4s* hitTimes_4;   // Actor.hitTimes_108
+    short (*tbl_8)[6];       // Actor.effectTbl_14C
+    int* pos_C;              // Actor.pos_38
+    char* bonePos_10;        // Actor.bonePos_1C4
+    MATRIX* boneMatrices_14; // Actor.boneMatrices_1C8
     char pad_18[0x1C];
-    int field_34;
-    int field_38;
+    SVECTOR* boneScale_34;   // Actor.boneScale_144
+    int* scale_38;           // Actor.scale_2C
     int pad_3C;
     int count_40;
-    EffectTarget targets_44[11];
-} EffectSet;
+    EffectTarget targets_44[4]; // filled from the 11 effect-task slots; sub_8001E28C's local is 0x128 bytes
+    int pad_124;
+} ActorEffectReq;
 
 #endif

@@ -250,7 +250,7 @@ void sub_800A1904(void)
         {
             GameAi* q = dword_800B19F0[i].f4;
             sub_800A2EC8(q);
-            sub_8001D6EC((struct_obj_A*)q->actor_8, 1);
+            sub_8001D6EC(q->actor_8, 1);
         }
     }
 }
@@ -265,7 +265,7 @@ void sub_800A1974(void)
         {
             GameAi* q = dword_800B19F0[i].f4;
             sub_800A2D48(q);
-            sub_8001D6EC((struct_obj_A*)q->actor_8, 0);
+            sub_8001D6EC(q->actor_8, 0);
         }
     }
 }
@@ -371,8 +371,8 @@ void sub_800A1BD0(void)
         *(int*)(e + 0xa4) = sub_8001D4DC(o, 0, 0, 0);
         slot = sub_800A17F4((unsigned int*)e, 0);
         slot->f4 = (GameAi*)CreateEnemyAiEvent_800A2D90(*(int*)(e + 0xa4), (char*)slot + 0x24, 0);
-        sub_8001D730((struct_obj_A*)o, 0);
-        sub_8001D68C((struct_obj_A*)o, 0);
+        sub_8001D730(o, 0);
+        sub_8001D68C(o, 0);
         dword_800B1264 = (int*)slot;
     }
     found = 0;
@@ -526,14 +526,14 @@ int sub_800A24F4(int a)
 int sub_800A2550(int a)
 {
     sub_800A2CA8(a, 0);
-    return sub_8001E1C8((struct_obj_A*)gCtx_800B1260.actors_7c[a]);
+    return sub_8001E1C8(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
 int sub_800A2594(int a)
 {
     sub_800A2CA8(a, 0);
-    return sub_8001E1DC((struct_obj_A*)gCtx_800B1260.actors_7c[a]);
+    return sub_8001E1DC(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
@@ -673,7 +673,7 @@ void sub_800A29CC(int a, GameActorInfo* out)
     sub_800A2CA8(a, 0);
     {
         Actor* e = gCtx_800B1260.actors_7c[a];
-        out->f0 = e->f14C;
+        out->f0 = (int)e->effectTbl_14C;
         out->pos_4 = e->pos_38;
         out->f8 = e->bonePos_1C4;
         out->fC = (char*)e->boneMatrices_1C8;
@@ -881,7 +881,7 @@ void sub_800A2EEC(int unused, GameAi* p)
         {
         case -1:
             SetActorState_800A433C(p, 5, 2, 0, -1, 1, 2);
-            sub_8001DB58((struct_obj_A*)p->actor_8, 0x3000, 1);
+            sub_8001DB58(p->actor_8, 0x3000, 1);
             break;
         case 5:
             sub_800A459C(p);
@@ -899,7 +899,7 @@ void sub_800A2FB8(int unused, GameAi* p)
         if (DistanceSquaredXZ_8003B860(p->actor_8->pos_38, &levantPos_8008BD18) <= 0xDBB9F && p->state_c != 0xf)
         {
             SetActorState_800A433C(p, 0xf, 2, 0, -1, 1, 2);
-            sub_8001DB58((struct_obj_A*)p->actor_8, 0x2000, 1);
+            sub_8001DB58(p->actor_8, 0x2000, 1);
         }
         switch (p->state_c)
         {
@@ -924,7 +924,7 @@ void sub_800A2FB8(int unused, GameAi* p)
             if (DistanceSquaredXZ_8003B860(p->actor_8->pos_38, &levantPos_8008BD18) > 0x155CC0)
             {
                 p->state_c = -1;
-                sub_8001DB58((struct_obj_A*)p->actor_8, 0x1000, 1);
+                sub_8001DB58(p->actor_8, 0x1000, 1);
             }
             break;
         }
@@ -942,14 +942,14 @@ void sub_800A31DC(int unused, GameAi* p)
         {
         case -1:
             SetActorState_800A433C(p, 1, 1, 0, c, 1, 2);
-            sub_8001DB58((struct_obj_A*)p->actor_8, 0x1000, 0);
+            sub_8001DB58(p->actor_8, 0x1000, 0);
             break;
         case 1:
             TurnActorTowards_8001DDFC(p->actor_8, &levantPos_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860(p->actor_8->pos_38, &levantPos_8008BD18) <= 0xDBB9F)
             {
                 SetActorState_800A433C(p, 5, 2, 0, -1, c, 2);
-                sub_8001DB58((struct_obj_A*)p->actor_8, 0x3000, 1);
+                sub_8001DB58(p->actor_8, 0x3000, 1);
             }
             break;
         case 5:
@@ -1205,7 +1205,7 @@ void sub_800A3E88(int unused, GameAi* p)
             if (DistanceSquaredXZ_8003B860(q->actor_8->pos_38, &levantPos_8008BD18) <= 0xDBB9F)
             {
                 SetActorState_800A433C(q, 5, 2, 0, -1, 1, 2);
-                sub_8001DB58((struct_obj_A*)q->actor_8, 0x2000, 1);
+                sub_8001DB58(q->actor_8, 0x2000, 1);
             }
             break;
         case 5:
@@ -1258,7 +1258,7 @@ void sub_800A4124(int unused, GameAi* p)
         case -1:
             SetActorState_800A433C(p, 2, 1, 0, p->state_c, 1, 2);
         case 2:
-            sub_8001D6EC((struct_obj_A*)q->actor_8, 1);
+            sub_8001D6EC(q->actor_8, 1);
             if (DistanceSquaredXZ_8003B860(q->actor_8->pos_38, &levantPos_8008BD18) <= 0x61A7F)
                 SetActorState_800A433C(q, 0xf, 2, 0, -1, 1, 2);
             break;
@@ -1323,7 +1323,7 @@ int sub_800A4470(GameAi* p)
     if (p->f2c)
     {
         p->f2c = sub_8001DD44(p->actor_8, p->f28, p->f2c, 0x20);
-        sub_8001D71C((struct_obj_A*)p->actor_8);
+        sub_8001D71C(p->actor_8);
         return 1;
     }
     return 0;
@@ -1345,7 +1345,7 @@ void sub_800A44C0(GameAi* p)
     w.z = p->actor_8->pos_38[2] + (p->actor_8->pos_38[2] - ((GameSave4_1*)&saveData_8008B570)->f7b0);
     if (TurnActorTowards_8001DDFC(p->actor_8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
     {
-        sub_8001D71C((struct_obj_A*)p->actor_8);
+        sub_8001D71C(p->actor_8);
     }
 }
 
@@ -1356,7 +1356,7 @@ void sub_800A459C(GameAi* p)
     ReflectPoint_800A47B8(&levantPos_8008BD18, (GameVec3_1*)p->actor_8->pos_38, &v);
     if (TurnActorTowards_8001DDFC(p->actor_8, &v, 0x155) == 0)
     {
-        sub_8001D71C((struct_obj_A*)p->actor_8);
+        sub_8001D71C(p->actor_8);
     }
 }
 

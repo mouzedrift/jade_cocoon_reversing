@@ -65,7 +65,6 @@ extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
 extern void sub_80018E5C(void* p);
 extern void sub_80018EBC(void* p, int v);
-extern void sub_8001E1DC(void* p);
 extern void sub_800376A0(void* a, void* b);
 extern int sub_800A10C0(int i);
 extern int sub_800A1A3C(Minion* p, int n);
@@ -563,7 +562,7 @@ void sub_800A0E1C(int i, int* src)
 void sub_800A0EE8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_8001E1C8((struct_obj_A*)s->actor_3C);
+    sub_8001E1C8(s->actor_3C);
 }
 
 // Matched
@@ -647,7 +646,7 @@ int sub_800A10F8(int i)
 void sub_800A111C(int i, CombatActorInfo* out)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    out->f0 = s->actor_3C->f14C;
+    out->f0 = (int)s->actor_3C->effectTbl_14C;
     out->pos_4 = s->actor_3C->pos_38;
     out->f8 = s->actor_3C->bonePos_1C4;
     out->fC = (char*)s->actor_3C->boneMatrices_1C8;

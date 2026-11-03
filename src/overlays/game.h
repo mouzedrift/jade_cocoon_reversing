@@ -288,7 +288,6 @@ typedef struct GameSub_1
     int fc;
 } GameSub_1;
 
-extern int sub_8001E1DC(struct_obj_A* p);
 
 extern void sub_80018EBC(Actor* a, int b);
 
@@ -1060,7 +1059,6 @@ extern unsigned char dword_800B11B8[];
 extern int sub_800A7790();
 
 
-extern int sub_8001E1DC(struct_obj_A*);
 
 
 extern void sub_800ABC78();

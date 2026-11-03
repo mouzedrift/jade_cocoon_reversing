@@ -598,7 +598,6 @@ extern void sub_80018E5C(Actor*, int);
 
 extern void sub_80018EBC(Actor*, int);
 
-extern int sub_8001E1DC(void*);
 
 extern int sub_800C0D88();
 

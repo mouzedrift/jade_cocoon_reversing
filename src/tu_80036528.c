@@ -370,7 +370,7 @@ void sub_800375F8(EventEntry* o, CameraCtrl* p)
     }
     else
     {
-        RestoreCameraState_80039698((int*)q);
+        RestoreCameraState_80039698(q);
         sub_80037918(q);
         sub_8003891C(q, &levantPos_8008BD18);
         q->mode_8 = 0;
@@ -415,7 +415,7 @@ void sub_80037770(void)
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 &= ~4;
     p->flags_4 &= ~0x2000;
-    RestoreCameraState_80039698((int*)p);
+    RestoreCameraState_80039698(p);
 }
 extern int dword_80083D00[];
 extern int dword_80084330[];
@@ -465,7 +465,7 @@ void sub_80037828(int a, short b, int c)
 // Matched
 void sub_800378CC(void)
 {
-    sub_800390F4(((CameraCtrl*)cameraTask_8008D4A0->entry.buffer), 1);
+    sub_800390F4(cameraTask_8008D4A0->entry.buffer, 1);
 }
 // Matched
 int GetCameraMode_800378F8(void)
@@ -900,10 +900,8 @@ void sub_80038E2C(CameraCtrl* p, int a, int b)
 extern CamOffset dword_80083C0C[];
 extern int dword_800A85B8;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
-/* sub_800390F4 takes void* in funcs.h */
-#define CAM(p) ((CameraCtrl*)(p))
 // Matched
-void sub_800390F4(void* p_, int arg1)
+void sub_800390F4(CameraCtrl* p_, int arg1)
 {
     int sel = 0;
     unsigned int i;
@@ -911,8 +909,8 @@ void sub_800390F4(void* p_, int arg1)
     unsigned int dist;
     struct_v3 v;
 
-    CAM(p_)->t_C = 0x1000;
-    CAM(p_)->flags_4 &= ~8;
+    p_->t_C = 0x1000;
+    p_->flags_4 &= ~8;
     if (arg1 == 0)
     {
         sel = rand() & 3;
@@ -941,10 +939,10 @@ void sub_800390F4(void* p_, int arg1)
         best = -1;
         for (i = 0; i < 1; i++)
         {
-                    v = CAM(p_)->pos_38;
+                    v = p_->pos_38;
             v.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y1;
-            v.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
-            v.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            v.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            v.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
             dist = DistanceSquared3D_8003B80C((int*)&cameraState_8008D4F0.field_14, (int*)&v);
             if (dist < best)
             {
@@ -953,21 +951,20 @@ void sub_800390F4(void* p_, int arg1)
             }
         }
     }
-    CAM(p_)->lookSrc_1B0 = cameraState_8008D4F0.field_20;
-    CAM(p_)->lookDst_198 = CAM(p_)->pos_38;
-    CAM(p_)->lookDst_198.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y1;
-    CAM(p_)->lookDst_198.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
-    CAM(p_)->lookDst_198.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
-    CAM(p_)->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
-    CAM(p_)->eyeDst_18C = CAM(p_)->pos_38;
-    CAM(p_)->eyeDst_18C.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y0;
-    CAM(p_)->eyeDst_18C.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
-    CAM(p_)->eyeDst_18C.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
-    CAM(p_)->field2ESrc_17C = cameraState_8008D4F0.field_2E;
-    CAM(p_)->field2EDst_180 = dword_80083C0C[sel].field_8;
-    sub_80038D64(CAM(p_), (int*)&CAM(p_)->pos_38);
+    p_->lookSrc_1B0 = cameraState_8008D4F0.field_20;
+    p_->lookDst_198 = p_->pos_38;
+    p_->lookDst_198.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y1;
+    p_->lookDst_198.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    p_->lookDst_198.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    p_->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
+    p_->eyeDst_18C = p_->pos_38;
+    p_->eyeDst_18C.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y0;
+    p_->eyeDst_18C.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    p_->eyeDst_18C.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    p_->field2ESrc_17C = cameraState_8008D4F0.field_2E;
+    p_->field2EDst_180 = dword_80083C0C[sel].field_8;
+    sub_80038D64(p_, (int*)&p_->pos_38);
 }
-#undef CAM
 // Matched
 int sub_800395D0(int* pIdx, int value, int* table)
 {
@@ -986,9 +983,8 @@ void SaveCameraState_80039620(CameraCtrl* o)
     o->savedShake_14C = dword_8008D474;
 }
 // Matched
-void RestoreCameraState_80039698(int* a0)
+void RestoreCameraState_80039698(CameraCtrl* o)
 {
-    CameraCtrl* o = (CameraCtrl*)a0;
     cameraState_8008D4F0 = o->saved_48;
     dword_8008B4F8 = o->savedZoom_184;
     dword_8008D474 = o->savedShake_14C;

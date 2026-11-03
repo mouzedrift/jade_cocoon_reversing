@@ -1243,14 +1243,14 @@ int sub_800A7A9C(int a)
 // Matched
 void sub_800A7AD8(int a)
 {
-    sub_8001D9B0((struct_obj_A*)sub_800A7A60(a));
+    sub_8001D9B0(sub_800A7A60(a));
 }
 
 void sub_800A7B00(int a)
 {
     int i;
     int end;
-    struct_obj_A* o;
+    Actor* o;
     if (a < 0)
     {
         i = 0;
@@ -1263,7 +1263,7 @@ void sub_800A7B00(int a)
     }
     for (; i < end; i++)
     {
-        o = (struct_obj_A*)sub_800A77F4(i)->cb_14.actor_4;
+        o = sub_800A77F4(i)->cb_14.actor_4;
         if (dword_800B0EC4.b[i] == 0)
         {
             if (!(o->flags_4 & 0x2000))
@@ -1272,7 +1272,7 @@ void sub_800A7B00(int a)
                 sub_8001D730(o, 0);
                 dword_800B0EC4.c[i] = 1;
             }
-            if (!(**(unsigned int**)o & 0x8000))
+            if (!(o->task_0->flags & 0x8000))
             {
                 SetActorActive_8001D658(o, 0);
                 dword_800B0EC4.b[i] = 1;
@@ -1284,7 +1284,7 @@ void sub_800A7B00(int a)
 void sub_800A7BF0(int a)
 {
     int i, end;
-    struct_obj_A* o;
+    Actor* o;
     if (a < 0)
     {
         i = 0;
@@ -1297,7 +1297,7 @@ void sub_800A7BF0(int a)
     }
     for (; i < end; i++)
     {
-        o = (struct_obj_A*)sub_800A77F4(i)->cb_14.actor_4;
+        o = sub_800A77F4(i)->cb_14.actor_4;
         if (dword_800B0EC4.b[i])
         {
             if (dword_800B0EC4.c[i])
@@ -1306,7 +1306,7 @@ void sub_800A7BF0(int a)
                 sub_8001D730(o, 1);
                 dword_800B0EC4.c[i] = 0;
             }
-            SetActorActive_8001D658((int**)o, 1);
+            SetActorActive_8001D658(o, 1);
             dword_800B0EC4.b[i] = 0;
         }
     }
@@ -1315,14 +1315,14 @@ void sub_800A7BF0(int a)
 int sub_800A7CB8(int a)
 {
     if (a < sub_800A7790())
-        return sub_8001E1C8((struct_obj_A*)sub_800A77F4(a)->cb_14.actor_4);
+        return sub_8001E1C8(sub_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
 int sub_800A7CFC(int a)
 {
     if (a < sub_800A7790())
-        return sub_8001E1DC((struct_obj_A*)sub_800A77F4(a)->cb_14.actor_4);
+        return sub_8001E1DC(sub_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
@@ -1367,7 +1367,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
     GameAnimReq_1 s;
     GameModelHdr** hdr;
     GameCb_1* ent;
-    struct_obj_A* obj;
+    Actor* obj;
     int k;
     int t;
     int u;
@@ -1376,7 +1376,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
     {
         hdr = sub_800A77F4(a)->hdr_10;
         ent = &sub_800A77F4(a)->cb_14;
-        obj = (struct_obj_A*)ent->actor_4;
+        obj = ent->actor_4;
         s.flags = 0;
         s.f4 = 0;
         s.f8 = 0;

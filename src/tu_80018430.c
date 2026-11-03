@@ -28,12 +28,12 @@ typedef struct
     int field_4;
     short ids_8[6];
 } EffectRow;
-extern ShortPair2 dword_800795F0[];
+extern struct_4s dword_800795F0[];
 extern EffectRow* dword_80091BE0;
 extern int dword_8008D784;
 extern int sub_80018908(int id, short (*tbl)[6]);
 extern void sub_800149A4(EffectArgs* a);
-void sub_8001852C(EffectSet* p, int a1);
+void sub_8001852C(ActorEffectReq* p, int a1);
 // Matched
 void sub_80018430(short v)
 {
@@ -73,15 +73,15 @@ void sub_800184A0(int arg, int bit)
     }
 }
 // Matched
-int sub_800184DC(int a0, int a1)
+int sub_800184DC(ActorEffectReq* a0, int a1)
 {
     EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
-    sub_8001852C((EffectSet*)a0, p->bits_44[a1]);
+    sub_8001852C(a0, p->bits_44[a1]);
     p->flags_28 |= 1;
     return 1;
 }
 // Matched
-void sub_8001852C(EffectSet* p, int a1)
+void sub_8001852C(ActorEffectReq* p, int a1)
 {
     EffectArgs args;
     EffectRow* base;
@@ -98,13 +98,13 @@ void sub_8001852C(EffectSet* p, int a1)
     dword_8008D784 = 0;
     for (n = 0; n < 10; n++)
     {
-        if (p->pairs_4[n].a >= 0)
+        if (p->hitTimes_4[n].field_0 >= 0)
         {
-            p->pairs_4[n].a += dword_800795F0[p->idx_0].b;
+            p->hitTimes_4[n].field_0 += dword_800795F0[p->effect_0].field_2;
         }
-        if (p->pairs_4[n].b >= 0)
+        if (p->hitTimes_4[n].field_2 >= 0)
         {
-            p->pairs_4[n].b += dword_800795F0[p->idx_0].b;
+            p->hitTimes_4[n].field_2 += dword_800795F0[p->effect_0].field_2;
         }
     }
     for (k = 0; k < 10; k++)
@@ -125,22 +125,22 @@ void sub_8001852C(EffectSet* p, int a1)
             {
                 tbl = p->tbl_8;
                 idx = sub_80018908(id, tbl);
-                if (idx == -1 || p->pairs_4[k].a == -1)
+                if (idx == -1 || p->hitTimes_4[k].field_0 == -1)
                 {
                     continue;
                 }
                 args.field_0 = base[k].field_0;
-                args.field_4 = p->field_C;
-                args.field_8 = p->field_10;
-                args.field_C = p->field_C;
-                args.field_10 = p->field_10;
-                args.field_18 = p->field_14;
+                args.field_4 = (int)p->pos_C;
+                args.field_8 = (int)p->bonePos_10;
+                args.field_C = (int)p->pos_C;
+                args.field_10 = (int)p->bonePos_10;
+                args.field_18 = (int)p->boneMatrices_14;
                 args.scale_14 = &tbl[idx][2];
-                args.field_1C = p->pairs_4[k].a;
-                args.field_1E = p->pairs_4[k].b;
+                args.field_1C = p->hitTimes_4[k].field_0;
+                args.field_1E = p->hitTimes_4[k].field_2;
                 args.field_24 = tbl[idx][1];
-                args.field_28 = p->field_34;
-                args.field_2C = p->field_38;
+                args.field_28 = (int)p->boneScale_34;
+                args.field_2C = (int)p->scale_38;
                 args.field_30 = p->targets_44[0].field_34;
                 sub_800149A4(&args);
             }
@@ -150,19 +150,19 @@ void sub_8001852C(EffectSet* p, int a1)
                 {
                     tbl = p->targets_44[i].tbl_0;
                     idx = sub_80018908(id, tbl);
-                    if (idx == -1 || p->pairs_4[k].a == -1)
+                    if (idx == -1 || p->hitTimes_4[k].field_0 == -1)
                     {
                         continue;
                     }
                         args.field_0 = base[k].field_0;
-                    args.field_4 = p->field_C;
-                    args.field_8 = p->field_10;
+                    args.field_4 = (int)p->pos_C;
+                    args.field_8 = (int)p->bonePos_10;
                     args.field_C = p->targets_44[i].field_4;
                     args.field_10 = p->targets_44[i].field_8;
                     args.field_18 = p->targets_44[i].field_C;
                     args.scale_14 = &tbl[idx][2];
-                    args.field_1C = p->pairs_4[k].a;
-                    args.field_1E = p->pairs_4[k].b;
+                    args.field_1C = p->hitTimes_4[k].field_0;
+                    args.field_1E = p->hitTimes_4[k].field_2;
                     args.field_24 = tbl[idx][1];
                     args.field_28 = p->targets_44[i].field_2C;
                     args.field_2C = p->targets_44[i].field_30;
@@ -281,7 +281,7 @@ ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
     {
         d.f1C = 1;
     }
-    r.a = sub_8001E254((struct_obj_A*)obj, &d);
+    r.a = sub_8001E254(obj, &d);
     r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
     if (p[0] != 0x12 && c)
     {

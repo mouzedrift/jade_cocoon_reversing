@@ -162,13 +162,13 @@ typedef struct Actor
     short queuedAnim_FE;        // 0xFE
     int f100;                   // 0x100
     int f104;                   // 0x104
-    short hitTimes_108[10][2];  // 0x108
+    struct_4s hitTimes_108[10]; // 0x108: (start, end) frames, sub_80018E5C
     int effect_130;             // 0x130
     short* bones_134;           // 0x134: 4 shorts per bone, -1 terminated; start of the actor's allocation
     int baseScale_138[3];       // 0x138
     SVECTOR* boneScale_144;     // 0x144
     ActorAnim* anims_148;       // 0x148
-    int f14C;                   // 0x14C
+    short (*effectTbl_14C)[6];  // 0x14C: ActorEffectReq.tbl_8
     RECT image_150;             // 0x150
     short clut_158[2];          // 0x158
     struct_112* model_15C;      // 0x15C
@@ -199,7 +199,7 @@ typedef struct
     int* baseScale_38;
     SVECTOR* boneScale_3C;  // 0: all 0x1000
     ActorAnim* anims_40;
-    int field_44;
+    short (*effectTbl_44)[6]; // -> Actor.effectTbl_14C
     struct_112* model_48;
     int hasMatrices_4C;     // allocate Actor.boneMatrices_1C8
 } ActorDesc;

@@ -336,12 +336,12 @@ extern void sub_800A93A4(void* a0);
 extern void sub_800A29CC(int a0, void* a1);
 extern void sub_800A111C(int a0, void* a1);
 // Matched
-void sub_800182B8(int* p, int mask)
+void sub_800182B8(ActorEffectReq* p, int mask)
 {
     EffectTaskState* t = effectTask_8008D3F8->entry.buffer;
     int i;
     int bit;
-    ((EffectSet*)p)->count_40 = 0;
+    p->count_40 = 0;
     for (i = 0; i < 11; i++)
     {
         bit = 1 << i;
@@ -354,24 +354,24 @@ void sub_800182B8(int* p, int mask)
             case 3:
                 if (sub_800C0D50() >= 0)
                 {
-                    sub_800C0FC4(&((EffectSet*)p)->targets_44[((EffectSet*)p)->count_40]);
+                    sub_800C0FC4(&p->targets_44[p->count_40]);
                     break;
                 }
             case 0:
-                sub_800A93A4(&((EffectSet*)p)->targets_44[((EffectSet*)p)->count_40]);
+                sub_800A93A4(&p->targets_44[p->count_40]);
                 break;
             case 4:
             case 5:
             case 6:
-                sub_800A29CC(i - 4, &((EffectSet*)p)->targets_44[((EffectSet*)p)->count_40]);
+                sub_800A29CC(i - 4, &p->targets_44[p->count_40]);
                 break;
             case 8:
             case 9:
-                sub_800A111C(i - 8, &((EffectSet*)p)->targets_44[((EffectSet*)p)->count_40]);
+                sub_800A111C(i - 8, &p->targets_44[p->count_40]);
                 break;
             }
-            ((EffectSet*)p)->targets_44[((EffectSet*)p)->count_40].field_34 = t->bits_44[i];
-            ((EffectSet*)p)->count_40++;
+            p->targets_44[p->count_40].field_34 = t->bits_44[i];
+            p->count_40++;
         }
     }
 }

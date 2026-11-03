@@ -1351,7 +1351,7 @@ int sub_800C0BF0()
     s.field_44 = (int)sub_80024E64(m);
     s.field_4C = 1;
     dword_800C9190.obj = (Actor*)CreateActor_8001D45C((int)&s);
-    sub_8001D68C((struct_obj_A*)dword_800C9190.obj, 0);
+    sub_8001D68C(dword_800C9190.obj, 0);
     x = (int)sub_80024F00(m, k);
     sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));
         return 1;
@@ -1449,7 +1449,7 @@ int sub_800C0FAC()
 void sub_800C0FC4(BatModelInfo_a* p)
 {
     Actor* q = dword_800C9190.obj;
-    p->f0 = q->f14C;
+    p->f0 = (int)q->effectTbl_14C;
     p->pos_4 = q->pos_38;
     p->f8 = q->bonePos_1C4;
     p->fC = (char*)q->boneMatrices_1C8;

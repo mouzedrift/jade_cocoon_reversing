@@ -88,7 +88,7 @@ void sub_8001EA48(void* arg0)
             n = cmd->arg_6;
             if (o->animIdx_C2 != n)
             {
-                sub_8001D6EC((struct_obj_A*)o, 0);
+                sub_8001D6EC(o, 0);
                 if (n == 0x4003)
                 {
                     n = o->nextAnim_A4;
@@ -133,13 +133,13 @@ void sub_8001EA48(void* arg0)
             o->waitLen_CA = o->loopCount_F4;
             break;
         case 6:
-            sub_8001D9E4((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            sub_8001D9E4(o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 7:
-            sub_8001DA08((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            sub_8001DA08(o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
-            sub_8001DA2C((struct_obj_A*)o);
+            sub_8001DA2C(o);
             break;
         case 9:
             sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
@@ -148,7 +148,7 @@ void sub_8001EA48(void* arg0)
             sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
             break;
         case 11:
-            sub_8001D730((struct_obj_A*)o, cmd->arg_6);
+            sub_8001D730(o, cmd->arg_6);
             break;
         case 12:
             sub_8001D8B4(o, cmd->arg_6);
@@ -171,7 +171,7 @@ void sub_8001EA48(void* arg0)
             {
                 if (!TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
                 {
-                    sub_8001D71C((struct_obj_A*)o);
+                    sub_8001D71C(o);
                     o->flags_4 |= 0x10000;
                     return;
                 }
@@ -212,7 +212,7 @@ void sub_8001EA48(void* arg0)
             }
             else
             {
-                sub_8001D71C((struct_obj_A*)o);
+                sub_8001D71C(o);
                 o->flags_4 |= 0x10000;
                 return;
             }
@@ -225,7 +225,7 @@ void sub_8001EA48(void* arg0)
             }
             break;
         case 22:
-            sub_8001D6EC((struct_obj_A*)o, cmd->arg_6 != 0);
+            sub_8001D6EC(o, cmd->arg_6 != 0);
             break;
         case 23:
             if (++o->waitCount_B0 > cmd->arg_6)
@@ -360,7 +360,7 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
     return -1;
 }
 // Matched
-short sub_8001F268(Actor* o, short* out, ActorScriptCmd* script, int idx)
+short sub_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int idx)
 {
     short* e = o->anims_148[idx].hitFrames_8[0];
     int i;
@@ -368,16 +368,16 @@ short sub_8001F268(Actor* o, short* out, ActorScriptCmd* script, int idx)
     {
         if (e[i * 2] < 0 && e[i * 2 + 1] < 0)
         {
-            out[i * 2] = -1;
-            out[i * 2 + 1] = -1;
+            out[i].field_0 = -1;
+            out[i].field_2 = -1;
         }
         else
         {
-            out[i * 2] = sub_8001F03C((int)o, (int)script, idx, e[i * 2]);
-            out[i * 2 + 1] = sub_8001F03C((int)o, (int)script, idx, e[i * 2 + 1]);
+            out[i].field_0 = sub_8001F03C((int)o, (int)script, idx, e[i * 2]);
+            out[i].field_2 = sub_8001F03C((int)o, (int)script, idx, e[i * 2 + 1]);
         }
     }
-    return out[0];
+    return out[0].field_0;
 }
 extern void sub_8004D288(int* out, ModelAnim* s, int k);
 extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);

@@ -693,11 +693,11 @@ void sub_80034C18(int* p)
             p[3] = 2;
         }
         InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898((struct_obj_A*)p, (int)r, 2);
-        sub_800358CC((struct_obj_A*)p, (int)r, 0);
+        sub_80035898(p, (int)r, 2);
+        sub_800358CC(p, (int)r, 0);
         InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898((struct_obj_A*)p, (int)r, 2);
-        sub_800358CC((struct_obj_A*)p, (int)r, 0);
+        sub_80035898(p, (int)r, 2);
+        sub_800358CC(p, (int)r, 0);
         break;
     case 2:
         sub_800359F8(p);
@@ -744,19 +744,19 @@ void sub_80034C18(int* p)
                 p[9] = v;
             }
         }
-        sub_80035898((struct_obj_A*)p, (int)(p + 0x38 / 4), 2);
-        sub_800358CC((struct_obj_A*)p, (int)(p + 0x38 / 4), 0);
-        sub_80035898((struct_obj_A*)p, (int)(p + 0x40 / 4), 2);
-        sub_800358CC((struct_obj_A*)p, (int)(p + 0x40 / 4), 0);
+        sub_80035898(p, (int)(p + 0x38 / 4), 2);
+        sub_800358CC(p, (int)(p + 0x38 / 4), 0);
+        sub_80035898(p, (int)(p + 0x40 / 4), 2);
+        sub_800358CC(p, (int)(p + 0x40 / 4), 0);
         break;
     case 3:
         sub_800359F8(p);
         sub_80035900(p);
         sub_8003580C(p, p + 0x38 / 4);
-        sub_80035898((struct_obj_A*)p, (int)(p + 0x38 / 4), 2);
-        sub_800358CC((struct_obj_A*)p, (int)(p + 0x38 / 4), 0);
-        sub_80035898((struct_obj_A*)p, (int)(p + 0x40 / 4), 2);
-        sub_800358CC((struct_obj_A*)p, (int)(p + 0x40 / 4), 0);
+        sub_80035898(p, (int)(p + 0x38 / 4), 2);
+        sub_800358CC(p, (int)(p + 0x38 / 4), 0);
+        sub_80035898(p, (int)(p + 0x40 / 4), 2);
+        sub_800358CC(p, (int)(p + 0x40 / 4), 0);
         break;
     case 4:
         p[0x34 / 4]--;
@@ -770,12 +770,12 @@ void sub_80034C18(int* p)
         if (sub_800429A8(r) == 1)
         {
             sub_8003580C(p, (int*)r);
-            sub_80035898((struct_obj_A*)p, (int)r, 2);
-            sub_800358CC((struct_obj_A*)p, (int)r, 0);
+            sub_80035898(p, (int)r, 2);
+            sub_800358CC(p, (int)r, 0);
         }
         InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898((struct_obj_A*)p, (int)r, 2);
-        sub_800358CC((struct_obj_A*)p, (int)r, 0);
+        sub_80035898(p, (int)r, 2);
+        sub_800358CC(p, (int)r, 0);
         break;
     }
     switch (p[4])
@@ -795,14 +795,14 @@ void sub_80034C18(int* p)
         if (sub_800429A8(r) == 1)
         {
             sub_800355EC(p, (int*)r);
-            sub_80035898((struct_obj_A*)p, (int)r, 2);
-            sub_800358CC((struct_obj_A*)p, (int)r, 0);
+            sub_80035898(p, (int)r, 2);
+            sub_800358CC(p, (int)r, 0);
         }
         break;
     case 2:
         sub_800355EC(p, p + 0x4C / 4);
-        sub_80035898((struct_obj_A*)p, (int)(p + 0x4C / 4), 2);
-        sub_800358CC((struct_obj_A*)p, (int)(p + 0x4C / 4), 0);
+        sub_80035898(p, (int)(p + 0x4C / 4), 2);
+        sub_800358CC(p, (int)(p + 0x4C / 4), 0);
         break;
     case 3:
         p[0x48 / 4]--;
@@ -816,8 +816,8 @@ void sub_80034C18(int* p)
         if (sub_800429A8(r) == 1)
         {
             sub_800355EC(p, (int*)r);
-            sub_80035898((struct_obj_A*)p, (int)r, 2);
-            sub_800358CC((struct_obj_A*)p, (int)r, 0);
+            sub_80035898(p, (int)r, 2);
+            sub_800358CC(p, (int)r, 0);
         }
         break;
     }
@@ -973,7 +973,7 @@ int sub_8003580C(MsgWindow* o, unsigned short* r)
     return 1;
 }
 // Matched
-void sub_80035898(struct_obj_A* p, int a1, int a2)
+void sub_80035898(MsgWindow* p, int a1, int a2)
 {
     if (!(p->flags_4 & 0x40000))
     {
@@ -981,7 +981,7 @@ void sub_80035898(struct_obj_A* p, int a1, int a2)
     }
 }
 // Matched
-void sub_800358CC(struct_obj_A* p, int a1, int a2)
+void sub_800358CC(MsgWindow* p, int a1, int a2)
 {
     if (!(p->flags_4 & 0x40000))
     {
@@ -1029,8 +1029,8 @@ void sub_800359F8(MsgWindow* p)
             r[1] = p->titleY_70;
             r[2] = MeasureTextWidth_8003E4C8((int)p->title_74) + 0x11;
             r[3] = 0x12;
-            sub_80035898((struct_obj_A*)p, (int)r, 2);
-            sub_800358CC((struct_obj_A*)p, (int)r, 0);
+            sub_80035898(p, (int)r, 2);
+            sub_800358CC(p, (int)r, 0);
         }
     }
 }

@@ -1484,7 +1484,7 @@ int sub_800BA45C(EvCtxEventfnc* c)
         EvObjEventfnc* o = sub_800A7A60(a - 1);
         if (o->f90_90 == o->f1A_1A)
         {
-            sub_8001D6EC((struct_obj_A*)o, c->pc_8->b_8);
+            sub_8001D6EC(o, c->pc_8->b_8);
             ok = 1;
         }
     }
