@@ -702,8 +702,6 @@ extern short name_800C1950[];
 extern unsigned short name_800C193C[];
 extern unsigned short name_800C1948[];
 extern int name_8001CE70();
-// near miss: gcc cross-jumps the 'moved = 1' tails differently from the original
-#if 0
 void sub_800BE048(MenuCtx* c)
 {
     int moved = 0;
@@ -732,7 +730,6 @@ void sub_800BE048(MenuCtx* c)
         switch (c->sel_2)
         {
         case 0:
-            moved = 1;
             if (c->flags_0 & 1)
                 c->sel_2 = 6;
             else if (c->flags_0 & 2)
@@ -741,17 +738,13 @@ void sub_800BE048(MenuCtx* c)
                 c->sel_2 = 8;
             break;
         case 6:
-            moved = 1;
             c->sel_2 = name_800C193C[c->f60];
             break;
         case 7:
-            moved = 1;
             c->sel_2 = name_800C1948[c->f60];
             break;
-        default:
-            moved = 1;
-            break;
         }
+        moved = 1;
     }
     else if (t == -3)
     {
@@ -776,8 +769,6 @@ end:
         c->f28 = 0;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BE048);
 
 extern short name_800C1974[];
 void sub_800BE25C(short* p)
