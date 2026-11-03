@@ -264,7 +264,7 @@ def make_worker_dir(root, idx):
         shutil.copy(os.path.join(REPO, f), d)
     shutil.copytree(os.path.join(REPO, "src"), os.path.join(d, "src"))
     os.symlink(os.path.join(REPO, "libs"), os.path.join(d, "libs"))
-    for extra in ("asm", "config"):
+    for extra in ("asm", "config", "scripts"):
         if os.path.exists(os.path.join(REPO, extra)):
             os.symlink(os.path.join(REPO, extra), os.path.join(d, extra))
     os.makedirs(os.path.join(d, "build_psyq"))

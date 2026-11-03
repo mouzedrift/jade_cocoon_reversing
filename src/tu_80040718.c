@@ -23,10 +23,11 @@ INCLUDE_DATA(dword_80074AA8);
 INCLUDE_DATA(dword_80074B10);
 
 extern int geomScreenDistance_8008B548;
-#if 0
+// Matched
 void InitGameDefaults_80040718(void)
 {
     int i;
+    int j;
     unknownFlags_8008D678 = 0;
     geomScreenDistance_8008B548 = 0;
     saveData_8008B570.field_1C_settings &= 0xFFFFC07F;
@@ -39,17 +40,15 @@ void InitGameDefaults_80040718(void)
     saveData_8008B570.field_1C_settings |= 0x800000;
     saveData_8008B570.field_1C_settings |= 0x1000000;
     saveData_8008B570.field_1C_settings &= 0xFFFFFFBF;
-    i = 14;
-    while (i >= 0)
+    j = 14;
+    for (i = 0; i < 15; i++)
     {
-        saveData_8008B570.minions[i].id = 4;
-        i--;
+        saveData_8008B570.minions[j].id = 4;
+        j--;
     }
     ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
-#endif
-INCLUDE_ASM(InitGameDefaults_80040718);
 extern int publicTiyPolyFT4s_8008D430;
 extern int publicTiySprts_8008D434;
 extern int publicTiyTPages_8008D440;

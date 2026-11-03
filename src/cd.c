@@ -161,20 +161,22 @@ int ratan2Degrees_8003B56C(int x, int y)
     return d;
 }
 #if 0
-// Not matched (8 words): s1/s2 register assignment swapped
+// Not matched: s1/s2 register assignment of out/len swapped (8 words)
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
-    int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
-    short b;
+    int len;
     int a;
-    b = ratan2(v[0], v[2]);
-    out[1] = b;
-    a = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    int x;
+    int z;
+    len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
+    out[1] = ratan2(v[0], v[2]);
+    x = v[0];
+    z = v[2];
+    a = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(x, z)));
     out[0] = -a;
     out[2] = 0;
     return len;
 }
-
 #endif
 INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched

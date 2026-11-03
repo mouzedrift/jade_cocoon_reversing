@@ -20,20 +20,17 @@
 extern short* publicTiySprts_8008D434;
 extern char* publicTiyTPages_8008D440;
 
-#if 0
-// Not matched: instruction scheduling differs (prologue/lw order)
+// Matched
 void sub_8003CF88(short x, short y, int idx)
 {
-    ((char*)publicTiySprts_8008D434)[0x4B4] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
-    *(short*)((char*)publicTiySprts_8008D434 + 0x4B8) = x;
-    *(short*)((char*)publicTiySprts_8008D434 + 0x4BA) = y;
-    ((char*)publicTiySprts_8008D434)[0x4B5] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
-    ((char*)publicTiySprts_8008D434)[0x4B6] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
+    ((SPRT*)publicTiySprts_8008D434)[60].x0 = x;
+    ((SPRT*)publicTiySprts_8008D434)[60].y0 = y;
+    ((char*)publicTiySprts_8008D434)[0x4B4] = (unsigned int)frameCount_8008D3FC % 16 * 16;
+    ((char*)publicTiySprts_8008D434)[0x4B5] = (unsigned int)frameCount_8008D3FC % 16 * 16;
+    ((char*)publicTiySprts_8008D434)[0x4B6] = (unsigned int)frameCount_8008D3FC % 16 * 16;
     AddPrimCopy_80040298(pOT_8008D454 + idx, (char*)publicTiySprts_8008D434 + 0x4B0, 5);
     AddPrimCopy_80040298(pOT_8008D454 + idx, publicTiyTPages_8008D440 + 0x1E0, 2);
 }
-#endif
-INCLUDE_ASM(sub_8003CF88);
 extern void DrawPublicTiySprt_80033080(void* a, int b, int c);
 extern short* publicTiySprts_8008D434;
 // Matched
