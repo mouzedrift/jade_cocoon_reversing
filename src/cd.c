@@ -16,6 +16,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "gte.h"
 
 extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
@@ -139,6 +140,87 @@ void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* 
         }
     }
 }
+// one vertex of sub_8003A6C4: o = b + t * d (t in 1/4096)
+#define LERP_VTX(o, b, d) \
+    gte_lddp(0x1000);     \
+    gte_ldsv(b);          \
+    gte_gpf12();          \
+    gte_lddp(t);          \
+    gte_ldsv(d);          \
+    gte_gpl12();          \
+    gte_stsv(o);
+
+#define LERP_GROUP(k, size, off, nn, nv)                                          \
+    if (pb->g[k].n * nv)                                                          \
+    {                                                                             \
+        int j;                                                                    \
+        for (i = 0; i < pb->g[k].n; i++)                                          \
+        {                                                                         \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
+            SVECTOR* vb = (SVECTOR*)(pb->g[k].p + i * size + off);                \
+            SVECTOR* vd = (SVECTOR*)(pd->g[k].p + i * size + off);                \
+            for (j = 0; j < nn; j++)                                              \
+            {                                                                     \
+                LERP_VTX(&vo[j], &vb[j], &vd[j]);                                 \
+            }                                                                     \
+            for (j = nn; j < nv; j++)                                             \
+            {                                                                     \
+                LERP_VTX(&vo[j], &vb[j], &vd[j]);                                 \
+            }                                                                     \
+        }                                                                         \
+    }
+
+#if 0
+// Not matched (326 words, all register / scheduling): in every group the original computes the base pointer before
+// the delta one and steps it in place in the second vertex loop (vo / vd get new registers); here base is computed
+// last and copied. Declaration order makes no difference; vb += nn / vb++ in the second loop gets base in place but
+// then vo too (282 words). The edge loops match with the increments in the for header.
+// out = base + t * delta for every vertex / normal (delta from sub_80039FE4)
+void sub_8003A6C4(int t, struct FtgObject* out, struct FtgObject* base, struct FtgObject* delta)
+{
+    PolyGroups* po = (PolyGroups*)out;
+    PolyGroups* pb = (PolyGroups*)base;
+    PolyGroups* pd = (PolyGroups*)delta;
+    int i;
+
+    LERP_GROUP(0, 0x24, 4, 1, 4);
+    LERP_GROUP(1, 0x3C, 0xC, 3, 6);
+    LERP_GROUP(2, 0x30, 0x10, 1, 4);
+    LERP_GROUP(3, 0x48, 0x18, 3, 6);
+    LERP_GROUP(4, 0x2C, 4, 1, 5);
+    LERP_GROUP(5, 0x50, 0x10, 4, 8);
+    LERP_GROUP(6, 0x38, 0x10, 1, 5);
+    LERP_GROUP(7, 0x5C, 0x1C, 4, 8);
+    if (po->n8)
+    {
+        EdgeDelta* eo;
+        EdgeDelta* eb;
+        EdgeDelta* ed;
+        eo = (EdgeDelta*)po->p8;
+        eb = (EdgeDelta*)pb->p8;
+        ed = (EdgeDelta*)pd->p8;
+        for (i = 0; i < po->n8; i++, eo++, eb++, ed++)
+        {
+            LERP_VTX(&eo->a, &eb->a, &ed->a);
+            LERP_VTX(&eo->b, &eb->b, &ed->b);
+        }
+    }
+    if (po->n9)
+    {
+        EdgeDelta* eo;
+        EdgeDelta* eb;
+        EdgeDelta* ed;
+        eo = (EdgeDelta*)po->p9;
+        eb = (EdgeDelta*)pb->p9;
+        ed = (EdgeDelta*)pd->p9;
+        for (i = 0; i < po->n9; i++, eo++, eb++, ed++)
+        {
+            LERP_VTX(&eo->a, &eb->a, &ed->a);
+            LERP_VTX(&eo->b, &eb->b, &ed->b);
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)

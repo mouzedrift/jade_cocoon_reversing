@@ -91,6 +91,17 @@
     : "r"(r0)                           \
     : "memory")
 
+#define gte_stsv(r0) __asm__ volatile( \
+    "mfc2	$12, $9;"                  \
+    "mfc2	$13, $10;"                 \
+    "mfc2	$14, $11;"                 \
+    "sh	$12, 0( %0 );"                \
+    "sh	$13, 2( %0 );"                \
+    "sh	$14, 4( %0 )"                 \
+    :                                 \
+    : "r"(r0)                         \
+    : "$12", "$13", "$14", "memory")
+
 #define gte_stclmv(r0) __asm__ volatile( \
     "mfc2	$12, $9;"                    \
     "mfc2	$13, $10;"                   \
@@ -116,5 +127,10 @@
     "nop;"                           \
     "nop;"                           \
     ".word 0x4b98003d")
+
+#define gte_gpl12() __asm__ volatile( \
+    "nop;"                           \
+    "nop;"                           \
+    ".word 0x4ba8003e")
 
 #endif
