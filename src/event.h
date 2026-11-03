@@ -2,7 +2,7 @@
 #define EVENT_H
 
 /* the buffer of the XA streaming task (xaTask_8008B560->entry.buffer) */
-typedef struct
+typedef struct XaTask
 {
     int flags_0; // bit 0: stop requested
     int cmd_4;   // DsCommand / DsControlF id to DsSync on

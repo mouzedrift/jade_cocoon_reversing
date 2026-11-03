@@ -276,12 +276,12 @@ extern void XaIdleTask_800430E8();
 extern void XaMonitorTask_800432EC();
 
 // Matched
-void XaInitTask_80043054(EventEntry* p, int* q)
+void XaInitTask_80043054(EventEntry* p, XaTask* q)
 {
     SsSetSerialAttr(0, 0, 1);
     xaRequestPending_80096118 = -1;
-    q[0] = 0;
-    ((short*)q)[4] = 0;
+    q->flags_0 = 0;
+    q->state_8 = 0;
     p->cb_8 = (EventEntryFn)XaIdleTask_800430E8;
 }
 // Matched
@@ -291,7 +291,6 @@ void XaStop_800430B0(void)
     DsControlB(9, 0, 0);
 }
 extern int DsSystemStatus(void);
-extern void XaWaitFilterTask_800431C4();
 void XaSetup_800433FC(XaTask* o);
 // Matched
 void XaIdleTask_800430E8(EventEntry* p, XaTask* q0)
@@ -314,21 +313,21 @@ void XaIdleTask_800430E8(EventEntry* p, XaTask* q0)
     }
 }
 // Matched
-void XaWaitFilterTask_800431C4(EventEntry* p, int* q)
+void XaWaitFilterTask_800431C4(EventEntry* p, XaTask* q)
 {
     char buf[8];
-    if (DsSync(((XaTask*)q)->cmd_4, buf) == 2)
+    if (DsSync(q->cmd_4, buf) == 2)
     {
         p->cb_8 = (EventEntryFn)XaStartReadTask_80043204;
     }
 }
 // Matched
-void XaStartReadTask_80043204(EventEntry* p, int* q)
+void XaStartReadTask_80043204(EventEntry* p, XaTask* q)
 {
     if (XaStartRead_800434C4(xaStartPos_80096108))
     {
-        ((XaTask*)q)->cmd_4 = DsControlF(0x11, 0);
-        ((XaTask*)q)->state_8 = 2;
+        q->cmd_4 = DsControlF(0x11, 0);
+        q->state_8 = 2;
         p->cb_8 = (EventEntryFn)XaMonitorTask_800432EC;
     }
 }

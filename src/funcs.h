@@ -25,6 +25,7 @@ struct ModelLoadParams;
 struct ModelAnim;
 struct OverlayLoader;
 struct Fade_8001A41C;
+struct XaTask;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -255,7 +256,7 @@ extern int PlayMovie_80040EB4(int arg0);
 extern int CalcEquippedStats_80033624(void* arg0, int arg1);
 extern int sub_80014390(int arg0);
 extern int StepModelTask_80010AD8(int arg0);
-extern int* FindModelTask_8001091C();
+extern EventEntry* FindModelTask_8001091C();
 extern void PlayGenkiMovie_80040AC4(void);
 extern void PlayCraveMovie_80040B2C(void);
 extern void PlayAnimeMovie_80040D0C(void);
@@ -389,7 +390,7 @@ extern short WrapAngle_8003BA18(int v);
 extern int CompareUInt_8003BA38(unsigned int a, unsigned int b);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void ProcessPads_8001BF50(void);
-extern void XaStartReadTask_80043204(EventEntry* p, int* q);
+extern void XaStartReadTask_80043204(EventEntry* p, struct XaTask* q);
 extern short* GetEquipmentData_8001D190();
 extern int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1);
 extern void LoadModelAnimData_80026A8C(struct ModelAnim* a0, int a1, int a2);
@@ -400,7 +401,7 @@ extern void InitSprtFromTim_800298AC(int a0, int a1, void* a2);
 extern struct_20* sub_800B3274(int a0);
 extern void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
 extern void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4);
-extern void XaWaitFilterTask_800431C4(EventEntry* p, int* q);
+extern void XaWaitFilterTask_800431C4(EventEntry* p, struct XaTask* q);
 extern int GetEquipmentIcon_8001D2D4(void);
 extern void UpdateOverlayLoaderTask_80020CD8(int a0, struct OverlayLoader* p);
 extern void InitModelLoadParams_80025ED0(struct ModelLoadParams* p);
