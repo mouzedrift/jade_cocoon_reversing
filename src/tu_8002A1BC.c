@@ -75,24 +75,21 @@ typedef struct
     int field_4;
 } struct_entry8;
 extern void DrawText_8003E91C(int mode, int a, void* b, int c);
-#if 0
-// Not matched: loop pointer is strength-reduced differently
+// Matched
 void DrawTextList_8002A310(struct_entry8* e, int a1)
 {
+    unsigned short loc[2];
+    int i;
     if (e)
     {
-        while (e->field_4)
+        for (i = 0; e[i].field_4; i++)
         {
-            unsigned short loc[2];
-            loc[0] = e->x;
-            loc[1] = e->y;
-            DrawText_8003E91C(2, e->field_4, loc, a1);
-            e++;
+            loc[0] = e[i].x;
+            loc[1] = e[i].y;
+            DrawText_8003E91C(2, e[i].field_4, loc, a1);
         }
     }
 }
-#endif
-INCLUDE_ASM(DrawTextList_8002A310);
 typedef struct
 {
     int field_0;

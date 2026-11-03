@@ -126,20 +126,24 @@ void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
     DrawWindow_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
 }
 #if 0
-// Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
-void sub_8002AC88(int flags, short* a, int b, short* out)
+// Not matched (5 lines: first branch cross-jumps into the else store; the original keeps three separate stores)
+void sub_8002AC88(int flags, short* a, unsigned int b, short* out)
 {
+    short d;
     if (flags & 4)
     {
-        out[0] = a[0] - (b - a[2]);
+        d = a[2] - b;
+        out[0] = d + a[0];
     }
     else if (flags & 8)
     {
-        out[0] = a[0] + ((unsigned int)(a[2] - b) >> 1);
+        d = (a[2] - b) >> 1;
+        out[0] = a[0] + d;
     }
     else
     {
-        out[0] = a[0];
+        d = a[0];
+        out[0] = d;
     }
     out[1] = a[1];
 }

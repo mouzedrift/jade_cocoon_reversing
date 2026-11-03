@@ -294,34 +294,40 @@ void FreeBgmAndSfx_800315F4(void)
     FreeSound_80030D00(s0[1]);
     FreeSound_80030D00(s0[2]);
 }
-#if 0
-// Not matched (loop pointer gets strength-reduced with folded offsets)
+typedef struct
+{
+    short active;
+    short timer;
+    short access_num;
+    short seq;
+} SeqFade_31638;
+typedef struct
+{
+    char pad_0[0x18];
+    SeqFade_31638 fades[5];
+} SeqFadeTask_31638;
+// Matched
 void FadeOutSfxSeq_80031638(void)
 {
-    char* q;
+    SeqFadeTask_31638* t;
     int i;
-    q = (char*)soundTask_8008D4A4[0x24 / 4];
+    t = (SeqFadeTask_31638*)soundTask_8008D4A4[0x24 / 4];
     if (sfxSound_80091D20.field_4_seq_num >= 0)
     {
-        i = 0;
-        do
+        for (i = 0; i < 5; i++)
         {
-            i++;
-            if (*(short*)(q + 0x18) == 0)
+            if (t->fades[i].active == 0)
             {
-                *(short*)(q + 0x18) = 1;
+                t->fades[i].active = 1;
                 SsSepSetDecrescendo(sfxSound_80091D20.field_C_sep_access_num, sfxSound_80091D20.field_4_seq_num, 0x7F, 0x40);
-                *(short*)(q + 0x1C) = sfxSound_80091D20.field_C_sep_access_num;
-                *(short*)(q + 0x1A) = 0x20;
-                *(short*)(q + 0x1E) = sfxSound_80091D20.field_4_seq_num;
-                break;
+                t->fades[i].access_num = sfxSound_80091D20.field_C_sep_access_num;
+                t->fades[i].seq = sfxSound_80091D20.field_4_seq_num;
+                t->fades[i].timer = 0x20;
+                return;
             }
-            q += 8;
-        } while (i < 5);
+        }
     }
 }
-#endif
-INCLUDE_ASM(FadeOutSfxSeq_80031638);
 // Matched
 int sub_800316DC(void)
 {
