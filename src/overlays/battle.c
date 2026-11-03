@@ -4,6 +4,8 @@
 #include "globals.h"
 
 extern unsigned char dword_800C8B30;
+extern int sub_800A2AB4();
+extern void sub_80018430(int a);
 extern int sub_800AD8E4();
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddDrawAreaPrim_8003326C();
@@ -2062,7 +2064,67 @@ void sub_800BFC10()
     dword_800C9174[2] = 0;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BFC40);
+typedef struct BatXY_a
+{
+    short x;
+    short y;
+} BatXY_a;
+extern int dword_800C9DF8;
+extern int dword_800C9E24;
+extern BatXY_a dword_800C9140[];
+extern char* dword_800C9E28[];
+extern BatXY_a dword_800C9E18[];
+extern EventEntry* dword_800C9E08[];
+extern void sub_800BFDEC();
+extern void sub_800C0074();
+void sub_800BFC40()
+{
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008B568);
+    int m;
+    int n;
+    int i;
+    int b;
+    if (e)
+    {
+        m = sub_800A248C();
+        n = GetCapturedMinionsFromBitfield_8003BA58(m);
+        if (sub_800A2AB4())
+        {
+            m = 0x10;
+        }
+        dword_800C9DF8 = 0;
+        dword_800C9E24 = 0;
+        e->cb_8 = (EventEntryFn)sub_800BFDEC;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        for (i = 0; i < 3; i++)
+        {
+            b = m & (1 << (i + 4));
+            if (b != 0)
+            {
+                e = AllocEventEntry_80043AF8((EventNode*)dword_8008B564);
+                if (e)
+                {
+                    BatXY_a* pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + i * 4));
+                    short* q;
+                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                    q = e->buffer;
+                    *(int*)q = i;
+                    *(int*)(q + 2) = 0;
+                    q[4] = pp->x;
+                    q[5] = pp->y;
+                    q[6] = 0x64;
+                    q[7] = 0x29;
+                    e->cb_8 = (EventEntryFn)sub_800C0074;
+                    dword_800C9E28[i] = (char*)q;
+                    dword_800C9E18[i].x = pp->x;
+                    dword_800C9E18[i].x = pp->x;
+                    dword_800C9E18[i].y = pp->y;
+                    dword_800C9E08[i] = e;
+                }
+            }
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BFDEC);
 
@@ -2074,7 +2136,6 @@ typedef struct BatWin_a
     short from_8[4];
     short rect_10[4];
 } BatWin_a;
-extern int sub_800A2AB4();
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -3746,9 +3807,61 @@ void sub_800C5BC0(BatTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5D04);
+void sub_800C5D04(BatTask* t)
+{
+    if (t->fC == 0)
+    {
+        if (dword_800C8B34 == 0)
+        {
+            t->f8[2] = 0x10;
+            t->f8[0] = 0x15;
+            dword_800C8B34 = 1;
+            t->f8[1] = 1;
+            t->f8[3] = 2;
+        }
+        else
+        {
+            t->f8[0] = 0;
+            t->f8[3] = t->f18;
+        }
+    }
+    else
+    {
+        unsigned char* p = &dword_800C8B30;
+        if (p[1])
+        {
+            t->f8[0] = 6;
+            t->f8[1] = 2;
+            t->f8[3] = t->f18;
+            p[1] = 0;
+        }
+        else
+        {
+            switch (rand() % 3)
+            {
+            case 0:
+                t->f8[0] = 1;
+                t->f8[1] = 0x1B;
+                t->f8[3] = t->f18;
+                sub_80018430(2);
+                break;
+            case 1:
+                t->f8[0] = 6;
+                t->f8[1] = 1;
+                t->f8[3] = t->f18;
+                break;
+            default:
+                t->f8[0] = 6;
+                t->f8[1] = 0;
+                t->f8[3] = t->f8[2];
+                (&dword_800C8B30)[1] = 1;
+                break;
+            }
+        }
+    }
+    dword_800C8B30++;
+}
 
-extern void sub_80018430(int a);
 void sub_800C5EB8(BatTask* t)
 {
     if (t->fC == 0)
