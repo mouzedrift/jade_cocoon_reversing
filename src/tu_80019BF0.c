@@ -163,9 +163,19 @@ extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
 #if 0
-extern struct_8008D4F0 cameraState_8008D4F0;
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
-int sub_80019CC4(VECTOR* pos)
+typedef struct
+{
+    char pad[0x44];
+    struct
+    {
+        int pos[5];
+        int active;
+    } points[8];
+} CamState_80019CC4;
+extern char cameraState_8008D4F0[];
+extern int DistanceSquaredXZ_8003B860(int* a, int* b);
+int sub_80019CC4(int* pos)
 {
     unsigned int i;
     unsigned int best;
@@ -176,13 +186,13 @@ int sub_80019CC4(VECTOR* pos)
     {
         for (i = 0; i < 8; i++)
         {
-            if (cameraState_8008D4F0.points[i].active == 0)
+            if (((CamState_80019CC4*)cameraState_8008D4F0)->points[i].active == 0)
             {
                 break;
             }
-            if (DistanceSquaredXZ_8003B860(&cameraState_8008D4F0.points[i].pos, pos) < best)
+            if (DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos) < best)
             {
-                best = DistanceSquaredXZ_8003B860(&cameraState_8008D4F0.points[i].pos, pos);
+                best = DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos);
                 found = i;
             }
         }
@@ -461,9 +471,92 @@ int sub_8001AF3C(int idx)
     }
     return 0;
 }
+extern void* CreateEventList_800435B4(void* list);
+extern void RunEventList_80043898(void* n);
+extern void sub_800438F8(void* n);
+extern int FreeEventList_80043A5C(void* head);
+extern DRAWENV drawEnv_8008D698[2];
+extern DISPENV dispEnv_8008D750[2];
+extern void InitMovie_8001B1B0(void);
+extern void sub_8001B714(void);
+extern void sub_8001B540(void);
+extern void sub_8001BCE4(int buffer);
+extern void Draw_8001B5EC(void);
+extern void LoadDecodedImage_8001BEC8(void);
+extern void InitPrimBuffers_8001BF90(void);
 #if 0
+// Not matched: the flags address (lui s0) is scheduled after the drawEnv pointers instead of before, and PutDrawEnv's
+// address is added as e0 + i*0x5C instead of i*0x5C + e0
 void DrawIntroMovie_8001AF64(void* a0)
 {
+    void* list;
+    DRAWENV* e0;
+    DRAWENV* e1;
+    int r;
+    int g;
+    int b;
+    SetDispMask(0);
+    InitMovie_8001B1B0();
+    list = CreateEventList_800435B4(a0);
+    e0 = drawEnv_8008D698;
+    e1 = e0 + 1;
+    do
+    {
+        if (unknownFlags_8008D678 & 0x40)
+        {
+            sub_8001B714();
+        }
+        bDoubleBuffer_8008D428 = bDoubleBuffer_8008D428 == 0;
+        ClearOTagRAll_8001B260();
+        AddPrimsAll_8001B3C8();
+        InitPrimBuffers_8001BF90();
+        frameCount_8008D3FC++;
+        ProcessPads_8001BF50();
+        RunEventList_80043898(list);
+        r = drawEnvRed_8008D448[0];
+        g = drawEnvRed_8008D448[1];
+        b = drawEnvRed_8008D448[2];
+        e0->r0 = r;
+        e0->g0 = g;
+        e0->b0 = b;
+        e1->r0 = r;
+        e1->g0 = g;
+        e1->b0 = b;
+        sub_8001B540();
+        if (dword_800918C4)
+        {
+            sub_8001BCE4(bDoubleBuffer_8008D428);
+        }
+        Draw_8001B5EC();
+        if (unknownFlags_8008D678 & 0x10)
+        {
+            SetDispMask(1);
+        }
+        else
+        {
+            SetDispMask(0);
+        }
+        PutDispEnv(&dispEnv_8008D750[bDoubleBuffer_8008D428]);
+        PutDrawEnv(&e0[bDoubleBuffer_8008D428]);
+        if (unknownFlags_8008D678 & 8)
+        {
+            DrawOTag(pOT_8008D78C);
+            DrawOTag(&pOT_8008D454[15]);
+            dword_800918B8++;
+        }
+        else
+        {
+            if (!(unknownFlags_8008D678 & 2) && (unknownFlags_8008D678 & 0x800))
+            {
+                LoadDecodedImage_8001BEC8();
+                unknownFlags_8008D678 &= ~0x800;
+            }
+            DrawOTag(&pOT_8008D788[7]);
+        }
+    } while (bStopDrawingMovie_8008D45C == 0);
+    sub_800438F8(list);
+    DrawSync(0);
+    FreeEventList_80043A5C(list);
 }
 #endif
 INCLUDE_ASM(DrawIntroMovie_8001AF64);
@@ -1914,14 +2007,16 @@ void sub_8001D8B4(char* a0, int a1)
         }
     }
 }
-#if 0
-// Not matched: key and loop counter registers (a2/a3) swapped
+// Matched
 void sub_8001D92C(char* obj, int idx)
 {
-    signed char* e = *(signed char**)(obj + 0x148);
-    int n = ((int*)e)[-1];
-    int key = e[idx * 0x3C];
+    signed char* e;
     int i;
+    int key;
+    int n;
+    e = *(signed char**)(obj + 0x148);
+    key = e[idx * 0x3C];
+    n = ((int*)e)[-1];
     for (i = 0; i < n; i++)
     {
         if (key == e[0] && ((unsigned char*)e)[1] == 1)
@@ -1930,10 +2025,8 @@ void sub_8001D92C(char* obj, int idx)
         }
         e += 0x3C;
     }
-    ReleaseModelAnim_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1]);
+    ReleaseModelAnim_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1], key);
 }
-#endif
-INCLUDE_ASM(sub_8001D92C);
 // Matched
 void sub_8001D9B0(struct_obj_A* p)
 {
@@ -2035,9 +2128,11 @@ void sub_8001DB58(struct_obj_A* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
-void sub_8001DB98(char* o, unsigned char* s)
+// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask (o is a macro for ((char*)arg0) to keep the funcs.h prototype)
+#define o ((char*)arg0)
+void sub_8001DB98(void* arg0, void* arg1)
 {
+    unsigned char* s = arg1;
     short old = *(short*)(o + 0xC2);
     *(short*)(o + 0xC2) = -1;
     *(short*)(o + 0xC4) = 0;
@@ -2056,6 +2151,7 @@ void sub_8001DB98(char* o, unsigned char* s)
         s += s[1] * 4;
     }
 }
+#undef o
 #endif
 INCLUDE_ASM(sub_8001DB98);
 // Matched
@@ -2149,19 +2245,18 @@ int TurnActorTowards_8001DDFC(char* o, VECTOR* target, int step)
     *(short*)(o + 0x5E) += *(short*)(o + 0x1A0);
     return 0;
 }
-#if 0
-// Not matched: register allocation: o/range^2/count land in s2/s4/s3 instead of s3/s2/s4
+// Matched
 int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
 {
     EventNode* n;
     EventEntry* e;
     int count;
     int i;
-    unsigned int r2 = range * range;
     int found = 0;
+    range = range * range;
     if (checkLevant)
     {
-        found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, r2);
+        found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, range);
     }
     if (found == 0)
     {
@@ -2172,7 +2267,7 @@ int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
             e = &n->entry;
             if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)e->buffer)
             {
-                found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), r2);
+                found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), range);
                 if (found)
                 {
                     break;
@@ -2183,8 +2278,6 @@ int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
     }
     return found;
 }
-#endif
-INCLUDE_ASM(FindActorInFront_8001DECC);
 // Matched
 int IsActorNear_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
 {
@@ -2393,7 +2486,7 @@ extern unsigned short word_8007DC8C[];
 extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
-// Not matched: the first flags store goes through a copy (move v1,a0) in the original, and the 0x9C..0xC2 block is scheduled differently
+// Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
 void sub_8001E574(char* o, int* d)
 {
     struct_112* m;
@@ -2408,8 +2501,8 @@ void sub_8001E574(char* o, int* d)
         m = (struct_112*)d[0x48 / 4];
     }
     v = AddModelAnimRef_800201EC((int)m);
-    f = 0x40000;
     *(int*)(o + 4) = 0x40000;
+    f = *(int*)(o + 4);
     if (d[0x30 / 4] != 1)
     {
         f |= 0x2000;
@@ -2466,7 +2559,7 @@ void sub_8001E574(char* o, int* d)
     *(short*)(o + 0xCE) = -1;
     *(int*)(o + 0x9C) = f;
     *(int*)(o + 0xA0) = f;
-    *(int*)(o + 0xA4) = f;
+    *(int*)(o + 0xA4) = *(int*)(o + 0xA0);
     *(short*)(o + 0xC2) = *(short*)(o + 0xC0) = *(short*)(o + 0x9C);
     *(int*)(o + 0x130) = -1;
     *(struct_112**)(o + 0x15C) = m;
@@ -2952,14 +3045,13 @@ void sub_8001F9F0(char* o)
     *(int*)(o + 0x30) = *(int*)(o + 0x13C) * *(short*)(o + 0x26) / 4096;
     *(int*)(o + 0x34) = *(int*)(o + 0x140) * *(short*)(o + 0x26) / 4096;
 }
-#if 0
-// Not matched: one instruction: the > 0x1000 test reads the copy (v1) instead of the sum (v0)
+// Matched
 void sub_8001FB00(char* o)
 {
     unsigned int f = *(unsigned int*)(o + 4);
     int r = 0;
     int v;
-    short w;
+    int w;
     *(int*)(o + 8) = 0;
     if (f & 0x780)
     {
@@ -3004,11 +3096,11 @@ void sub_8001FB00(char* o)
         *(short*)(o + 0x20) = w;
         if (*(unsigned int*)(o + 4) & 0x20)
         {
-            *(int*)(o + 8) = r | 0x80 | ((0x1000 - w) << 16);
+            *(int*)(o + 8) = r | 0x80 | ((0x1000 - *(short*)(o + 0x20)) << 16);
         }
         else
         {
-            *(int*)(o + 8) = r | 0x80 | (w << 16);
+            *(int*)(o + 8) = r | 0x80 | (*(short*)(o + 0x20) << 16);
         }
     }
     if (*(unsigned int*)(o + 4) & 0x800)
@@ -3016,8 +3108,6 @@ void sub_8001FB00(char* o)
         *(int*)(o + 8) |= (*(short*)(o + 0x15A) - *(short*)(o + 0x152)) << 8;
     }
 }
-#endif
-INCLUDE_ASM(sub_8001FB00);
 // Matched
 int sub_8001FC90(char* a0)
 {
