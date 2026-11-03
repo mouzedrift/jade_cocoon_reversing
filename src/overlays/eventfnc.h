@@ -311,7 +311,7 @@ extern int sub_80034ADC(int a, int b);
 
 extern EvObjEventfnc* sub_800A7A60(int a);
 
-extern int* sub_800A55B0(int a);
+extern void* sub_800A55B0(int a);
 
 extern int dword_80091C94;
 

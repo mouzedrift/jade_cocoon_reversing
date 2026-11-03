@@ -63,7 +63,7 @@ void sub_800B66C4(int a)
 void sub_800B6720()
 {
     unsigned short* s;
-    unsigned int* buf = (unsigned int*)sub_800A55B0(3);
+    unsigned int* buf = sub_800A55B0(3);
     MemCopy_800403E8(&cameraState_8008D4F0, buf, 0x104);
     sub_80037918(cameraTask_8008D4A0->entry.buffer);
     s = (unsigned short*)&display_8008B4D8;

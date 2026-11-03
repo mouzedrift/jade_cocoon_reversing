@@ -423,7 +423,7 @@ extern void sub_800BAE2C(int a, int b);
 
 extern void sub_800B66C4(int a);
 
-extern GameTable_1* sub_800A55B0(int a);
+extern void* sub_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
 
 extern int dword_800AEBE8;
 
@@ -625,11 +625,11 @@ extern int dword_8008B554;
 
 extern int name_800AEB80[];
 
-extern int name_800AEBBC;
+extern int* name_800AEBBC; // the relocated script blob (EVENTFNC LoadRelocBlob_800BC854)
 
-extern int name_800AEBC0[];
+extern void* name_800AEBC0[];
 
-extern int name_800AEBC8;
+extern void* name_800AEBC8;
 
 extern int name_800AEBCC[];
 
