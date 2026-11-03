@@ -479,7 +479,7 @@ extern int sub_8001247C(double x);
 extern void sub_800255F0(int a0, int a1, int a2);
 extern void sub_800256B8(int a0, int a1);
 extern void sub_800306FC(int a0);
-extern void sub_800C32DC(int a0, int a1, int a2, int a3);
+extern int sub_800C32DC(int a0, int a1, int a2, int a3);
 extern void sub_800218A8(int a0, void* a1, int a2);
 extern void sub_80039FE4(int a0, int a1, int a2);
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
