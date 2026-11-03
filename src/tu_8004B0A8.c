@@ -236,10 +236,282 @@ void sub_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-INCLUDE_ASM(sub_8004B844);
-INCLUDE_ASM(sub_8004BB9C);
-INCLUDE_ASM(sub_8004BFA8);
-INCLUDE_ASM(sub_8004C21C);
+// Matched
+void sub_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_G3* t = (POLY_G3*)FTG_PRIM_SCRATCH;
+    FtgPolyG3* e = obj->g3_8.items;
+    int i;
+    setPolyG3(t);
+    for (i = 0; i < obj->g3_8.count; i++, e++)
+    {
+        FtgVert* n = e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        gte_stsxy3_g3(t);
+        gte_nclip();
+        gte_stopz(&ctx->opz_10);
+        if (ctx->opz_10 > 0)
+        {
+            gte_avsz3();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c[0]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r0);
+                    gte_ldv0(&e->n[1]);
+                    gte_ldrgb(&e->c[1]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r1);
+                    gte_ldv0(&e->n[2]);
+                    gte_ldrgb(&e->c[2]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r2);
+                }
+                else
+                {
+                    gte_ldrgb(&e->c[0]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                    gte_ldrgb(&e->c[1]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r1);
+                    gte_ldrgb(&e->c[2]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r2);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                }
+                *(POLY_G3*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_G3);
+                ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+                ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(DR_TPAGE);
+            }
+        }
+    }
+}
+// Matched
+void sub_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_G4* t = (POLY_G4*)FTG_PRIM_SCRATCH;
+    FtgPolyG4* e = obj->g4_28.items;
+    int i;
+    setPolyG4(t);
+    for (i = 0; i < obj->g4_28.count; i++, e++)
+    {
+        FtgVert* n = e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        gte_nclip();
+        gte_stopz(&ctx->opz_10);
+        gte_stsxy3_g4(t);
+        gte_ldv0(&e->v[3]);
+        gte_rtps();
+        gte_nclip();
+        gte_stopz(&ctx->opz2_14);
+        if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
+        {
+            gte_avsz4();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                gte_stsxy(&t->x3);
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c[0]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r0);
+                    gte_ldv0(&e->n[1]);
+                    gte_ldrgb(&e->c[1]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r1);
+                    gte_ldv0(&e->n[2]);
+                    gte_ldrgb(&e->c[2]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r2);
+                    gte_ldv0(&e->n[3]);
+                    gte_ldrgb(&e->c[3]);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r3);
+                }
+                else
+                {
+                    gte_ldrgb(&e->c[0]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                    gte_ldrgb(&e->c[1]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r1);
+                    gte_ldrgb(&e->c[2]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r2);
+                    gte_ldrgb(&e->c[3]);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r3);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                }
+                *(POLY_G4*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_G4);
+                ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+                ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(DR_TPAGE);
+            }
+        }
+    }
+}
+// Matched
+void sub_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_FT3* t;
+    FtgPolyFT3* e;
+    int i;
+    if (obj->ft3_10.count == 0)
+    {
+        return;
+    }
+    t = (POLY_FT3*)FTG_PRIM_SCRATCH;
+    e = obj->ft3_10.items;
+    setPolyFT3(t);
+    for (i = 0; i < obj->ft3_10.count; i++, e++)
+    {
+        FtgVert* n = &e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
+        gte_stsxy3_ft3(t);
+        gte_nclip();
+        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+        *(unsigned short*)&t->u2 = e->v[2].uv;
+        gte_stopz(&ctx->opz_10);
+        if (ctx->opz_10 > 0)
+        {
+            gte_avsz3();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    gte_strgb(&t->r0);
+                }
+                else
+                {
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                    t->tpage &= ~0x60;
+                    t->tpage |= ctx->flags_20 & 0x60;
+                }
+                *(POLY_FT3*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_FT3);
+            }
+        }
+    }
+}
+// Matched
+void sub_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+{
+    POLY_FT4* t;
+    FtgPolyFT4* e;
+    int i;
+    if (obj->ft4_30.count == 0)
+    {
+        return;
+    }
+    t = (POLY_FT4*)FTG_PRIM_SCRATCH;
+    e = obj->ft4_30.items;
+    setPolyFT4(t);
+    for (i = 0; i < obj->ft4_30.count; i++, e++)
+    {
+        FtgVert* n = &e->n;
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
+        gte_nclip();
+        gte_stopz(&ctx->opz_10);
+        gte_stsxy3_ft4(t);
+        gte_ldv0(&e->v[3]);
+        gte_rtps();
+        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+        gte_nclip();
+        gte_stopz(&ctx->opz2_14);
+        if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
+        {
+            gte_avsz4();
+            gte_stotz(&ctx->otz_8);
+            if (ctx->otz_8 - 1 < 0xFFFU)
+            {
+                gte_stsxy(&t->x3);
+                if (ctx->flags_20 & 1)
+                {
+                    gte_ldv0(n);
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_ncds();
+                    *(unsigned short*)&t->u2 = e->v[2].uv;
+                    *(unsigned short*)&t->u3 = e->v[3].uv;
+                    gte_strgb(&t->r0);
+                }
+                else
+                {
+                    *(unsigned short*)&t->u2 = e->v[2].uv;
+                    *(unsigned short*)&t->u3 = e->v[3].uv;
+                    gte_ldrgb(&e->c);
+                    gte_lddp(ctx->dq_C);
+                    gte_dpcs();
+                    gte_strgb(&t->r0);
+                }
+                if (ctx->flags_20 & 0x10)
+                {
+                    setSemiTrans(t, 1);
+                    t->tpage &= ~0x60;
+                    t->tpage |= ctx->flags_20 & 0x60;
+                }
+                *(POLY_FT4*)ctx->next_18 = *t;
+                addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
+                ctx->next_18 += sizeof(POLY_FT4);
+            }
+        }
+    }
+}
 INCLUDE_ASM(sub_8004C4F0);
 INCLUDE_ASM(sub_8004C7BC);
 extern unsigned char byte_8008D460[3]; // back colour

@@ -12,8 +12,8 @@ typedef struct FtgDrawCtx
     long opz_10;      // gte_stopz (nclip)
     long opz2_14;     // nclip of the second triangle of a quad
     unsigned char* next_18; // next free primitive
-    int pad_1C;
-    int flags_20; // bit 0: lit (normal + ncds), bit 4: semi-transparent
+    unsigned long clutAdd_1C; // added to the textured kinds' u0 / v0 / clut word (CLUT row offset)
+    int flags_20; // bit 0: lit (normal + ncds), bit 4: semi-transparent, bits 5-6: blend mode for textured kinds
 } FtgDrawCtx;
 
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
