@@ -889,9 +889,9 @@ int HasMagic_80033A90(UnitStats* p, unsigned int idx)
     return TestMagicBit_8001AE2C(&p->magicBits_80, idx);
 }
 // Matched
-int GetItemId_80033AB0(Item* p)
+int GetItemId_80033AB0(UnitStats* p)
 {
-    return p->id;
+    return p->species_5C;
 }
 // Matched
 UnitStatus* GetLevantStatus_80033ABC(SaveData* s)
@@ -909,7 +909,7 @@ Minion* GetSaveMinion_80033ACC(SaveData* s, int idx)
     return &s->minions[idx];
 }
 // Matched
-Item* GetSaveItem_80033AE4(SaveData* s, int idx)
+UnitStats* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }

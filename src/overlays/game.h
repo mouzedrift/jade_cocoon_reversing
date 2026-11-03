@@ -30,12 +30,6 @@ typedef struct GameAi
     int f2c; // turn amount
 } GameAi;
 
-typedef struct GameHolder_1
-{
-    int f0;
-    GameAi* f4;
-} GameHolder_1;
-
 typedef struct GameRec_1
 {
     int f0, f4, f8, fc, f10;
@@ -302,9 +296,9 @@ typedef struct GameActorInfo
 typedef struct GameCtx_1
 {
     int f0;
-    int f4;
-    int f8;
-    int fc[12];
+    GameSlot_1* f4;     // the enemy slot that started the encounter
+    int f8;             // number of fc entries
+    GameSlot_1* fc[12]; // the other enemy slots
     int f3c;
     int f40;
     int f44;
@@ -390,9 +384,9 @@ extern void sub_800A7B00(int a);
 
 extern void sub_800A7BF0(int a);
 
-extern void sub_800A188C(GameHolder_1* p);
+extern void sub_800A188C(GameSlot_1* p);
 
-extern void sub_800A18C8(GameHolder_1* p);
+extern void sub_800A18C8(GameSlot_1* p);
 
 extern GameTab_1 dword_800B0EB8[];
 

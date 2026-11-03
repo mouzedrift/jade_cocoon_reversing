@@ -306,9 +306,9 @@ int sub_800B9920()
     }
     for (k = 0; k < 12; k++)
     {
-        if (saveData_8008B570.items[k].id != 0xD3)
+        if (saveData_8008B570.items[k].species_5C != 0xD3)
         {
-            sub_800B9E94((UnitStats*)&saveData_8008B570.items[k], &items[n], 2); // the items are UnitStats records
+            sub_800B9E94(&saveData_8008B570.items[k], &items[n], 2);
             n++;
         }
     }

@@ -2397,7 +2397,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
     {
         if ((short)(i + c->scroll_3C * 3) < 12)
         {
-            Item* it;
+            UnitStats* it;
             int k = i;
             unsigned short w = name_800C18EC.w;
             unsigned short h = name_800C18EC.h;
@@ -2408,7 +2408,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
             r.x = name_800C18EC.x + dx;
             r.y = name_800C18EC.y + dy;
             it = GetSaveItem_80033AE4(&saveData_8008B570, k + c->scroll_3C * 3);
-            if (it && it->id != 0xD3)
+            if (it && it->species_5C != 0xD3)
                 sub_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
         }
     }

@@ -151,7 +151,7 @@ void ClearMinionsAndItems_80010600(void)
     }
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].id = 0xD3;
+        saveData_8008B570.items[i].species_5C = 0xD3;
     }
 }
 #endif
@@ -168,19 +168,19 @@ void ClearMinionsAndItems_80010600(void)
     v = 0xD3;
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].id = v;
+        saveData_8008B570.items[i].species_5C = v;
     }
 }
 // Matched
-int AddItem_80010650(Item* pItem)
+int AddItem_80010650(UnitStats* pItem)
 {
     int i;
 
     for (i = 0; i < 12; i++)
     {
-        if (saveData_8008B570.items[i].id == 0xD3)
+        if (saveData_8008B570.items[i].species_5C == 0xD3)
         {
-            MemCopy_800403E8(&saveData_8008B570.items[i], pItem, sizeof(Item));
+            MemCopy_800403E8(&saveData_8008B570.items[i], pItem, sizeof(UnitStats));
             return 1;
         }
     }
@@ -195,7 +195,7 @@ int CountItems_800106B8(void)
     count = 0;
     for (i = 0; i < 12; i++)
     {
-        if (saveData_8008B570.items[i].id != 0xD3)
+        if (saveData_8008B570.items[i].species_5C != 0xD3)
         {
             count++;
         }

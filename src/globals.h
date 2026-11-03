@@ -46,12 +46,6 @@ typedef struct EventNode
 
 #include "unit.h" // UnitStatus, UnitStats, Minion
 
-typedef struct
-{
-    char pad_0[0x5C];
-    int id; // 0xD3 = empty slot
-    char pad_60[0x28];
-} Item;
 
 // the settings word (SaveData.settings_1C == settingsFlags_8008B58C.word); most code tests it with masks
 typedef union Settings
@@ -160,7 +154,7 @@ typedef struct
     int pad_980;
     int field_984;
     Minion minions[15];
-    Item items[12];
+    UnitStats items[12]; // stored minion records, species_5C 0xD3 = empty slot
 } SaveData;
 
 

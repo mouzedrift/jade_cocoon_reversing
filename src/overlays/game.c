@@ -213,7 +213,7 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b)
 }
 
 // Matched
-void sub_800A1850(GameHolder_1* p)
+void sub_800A1850(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -223,7 +223,7 @@ void sub_800A1850(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A188C(GameHolder_1* p)
+void sub_800A188C(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -232,7 +232,7 @@ void sub_800A188C(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A18C8(GameHolder_1* p)
+void sub_800A18C8(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -386,19 +386,19 @@ void sub_800A1BD0(void)
             t = *(int**)((char*)s + 0xd0);
             obj = s->f4;
             t = t ? t : name_8007A024;
-            if (!found && gCtx_800B1260.f4 == (int)s)
+            if (!found && gCtx_800B1260.f4 == s)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[0]);
                 found = 1;
                 done = found;
-                gCtx_800B1260.f4 = (int)s;
+                gCtx_800B1260.f4 = s;
             }
             if (!done)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[1]);
-                gCtx_800B1260.fc[gCtx_800B1260.f8] = (int)cur;
+                gCtx_800B1260.fc[gCtx_800B1260.f8] = cur;
                 gCtx_800B1260.f8++;
             }
         }
@@ -447,15 +447,15 @@ char* sub_800A1E3C(void)
 }
 
 // Matched
-int sub_800A1E48(void)
+int* sub_800A1E48(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x38;
+    return gCtx_800B1260.f4->f4->actor_8->pos_38;
 }
 
 // Matched
-int sub_800A1E68(void)
+short* sub_800A1E68(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x5c;
+    return gCtx_800B1260.f4->f4->actor_8->rot_5C;
 }
 
 // Matched
@@ -475,7 +475,7 @@ void sub_800A1E98(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A188C((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A188C(gCtx_800B1260.fc[i]);
     }
     sub_800A7B00(-1);
 }
@@ -486,7 +486,7 @@ void sub_800A1F0C(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A18C8((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A18C8(gCtx_800B1260.fc[i]);
     }
     sub_800A7BF0(-1);
 }
@@ -634,7 +634,7 @@ void sub_800A284C(int a)
 int sub_800A2898(int a)
 {
     sub_800A2CA8(a, 0);
-    return AddItem_80010650((Item*)&gCtx_800B1260.ents_ac[a]);
+    return AddItem_80010650(&gCtx_800B1260.ents_ac[a]);
 }
 
 // Matched
@@ -771,17 +771,17 @@ int sub_800A2BE4(int a)
 }
 
 // Matched
-int sub_800A2C28(int a)
+int* sub_800A2C28(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->pos_38;
+    return gCtx_800B1260.actors_7c[a]->pos_38;
 }
 
 // Matched
-int sub_800A2C68(int a)
+char* sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->bonePos_1C4;
+    return gCtx_800B1260.actors_7c[a]->bonePos_1C4;
 }
 
 int sub_800A2CA8(int a, int b)
