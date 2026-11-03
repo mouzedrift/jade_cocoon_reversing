@@ -326,7 +326,7 @@ int sub_8001098C(int arg0)
     int* q = (int*)buf[1];
     if (q[0x38 / 4] == 5)
     {
-        sub_80024BB0((int*)buf[1]);
+        FreeModelList_80024BB0((int*)buf[1]);
         free3_8003FC6C((void*)buf[1]);
         e->flags = (e->flags & ~1) | 0x8000;
         e->flags = (e->flags & ~4) | 0x8000;

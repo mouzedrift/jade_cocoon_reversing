@@ -31,7 +31,7 @@ extern void sub_800A41E4();
 extern void sub_8002C290(void*, int, int);
 extern void sub_8002C06C(void*, int, int);
 extern void sub_800A16FC();
-extern void sub_8001C19C(int, int);
+extern void SetFadeMode_8001C19C(int, int);
 extern void sub_800A4240(int);
 extern void sub_8002BE10();
 
@@ -54,7 +54,7 @@ void sub_800A40E0(CombRsltTask* t)
     sub_8002B004(dword_80082680, 0, 0xF);
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
     {
-        sub_8001C19C(1, 0x20);
+        SetFadeMode_8001C19C(1, 0x20);
         t->next_8 = sub_800A41E4;
     }
 }
@@ -63,7 +63,7 @@ void sub_800A41E4(CombRsltTask* t, int a)
 {
     if (IsFadeDone_8001C2FC() == 1)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         t->next_8 = sub_800A16FC;
         t->next_8(t, a);
     }

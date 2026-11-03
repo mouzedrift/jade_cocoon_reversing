@@ -48,7 +48,7 @@ extern void sub_800A4D64(CombSelUnit*);
 extern void sub_800A197C(void*);
 extern void sub_800A5538();
 extern int sub_800A5560(CombSelUnit*, int);
-extern int sub_8003DA54(void*);
+extern int GetMenuCursorIndex_8003DA54(void*);
 extern void PlaySfx_80031494(int);
 
 INCLUDE_OVERLAY_ASM(combsel, dword_800A4088);
@@ -217,22 +217,22 @@ void sub_800A5188()
         {
         case 1:
         {
-            CombSelUnit* a = &dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)];
-            CombSelUnit* b = &dword_800A1BC8[byte_800A38D9][(short)sub_8003DA54(dword_800A596C)];
+            CombSelUnit* a = &dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(dword_800A5960)];
+            CombSelUnit* b = &dword_800A1BC8[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(dword_800A596C)];
             MemCopy_800403E8((unsigned int*)a, (unsigned int*)b, 0xF8);
             byte_800A38DB = 2;
             PlaySfx_80031494(0x7E);
             break;
         }
         case 2:
-            if (sub_800A1934(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]) == 1)
+            if (sub_800A1934(&dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(dword_800A5960)]) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
             else
             {
                 PlaySfx_80031494(0x7E);
-                sub_800A197C(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]);
+                sub_800A197C(&dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(dword_800A5960)]);
                 byte_800A38DB = 0;
             }
             break;
@@ -260,7 +260,7 @@ void sub_800A53B0()
         s = word_800A1BC4;
         if (s == 1)
         {
-            short r = sub_8003DA54(dword_800A596C);
+            short r = GetMenuCursorIndex_8003DA54(dword_800A596C);
             if (sub_800A1934(&dword_800A1BC8[byte_800A38D9][r]) == 1)
             {
                 PlaySfx_80031494(0x7C);
@@ -287,7 +287,7 @@ void sub_800A54A0(CombSelTask* t)
     if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
         PlaySfx_80031494(0x7E);
-        if ((short)sub_8003DA54(dword_800A5978) == 0)
+        if ((short)GetMenuCursorIndex_8003DA54(dword_800A5978) == 0)
         {
             XaRequestPlay_80043564(1, 0x678, 0x1F);
             t->next_8 = sub_800A5538;

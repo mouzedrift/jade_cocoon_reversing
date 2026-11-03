@@ -131,7 +131,7 @@ short sub_8002A3E0(int a)
 {
     if (a < 30)
     {
-        return (short)dword_800827BC[((struct_12_c*)dword_8007C438)[a].field_8];
+        return (short)dword_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
     }
     return 36;
 }

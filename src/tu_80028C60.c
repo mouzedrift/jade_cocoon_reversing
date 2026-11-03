@@ -17,7 +17,7 @@
 #include "data_decls.h"
 
 
-extern char dword_8008D4F0[];
+extern char cameraState_8008D4F0[];
 extern int dword_80091C68[];
 extern int dword_8008266C;
 extern int dword_80091C5C;
@@ -31,7 +31,7 @@ extern int dword_80082668;
 void sub_80028C60(int a0, char* a1)
 {
     int n;
-    MemCopy_800403E8((unsigned int*)dword_8008D4F0, (unsigned int*)a1, 0x104);
+    MemCopy_800403E8((unsigned int*)cameraState_8008D4F0, (unsigned int*)a1, 0x104);
     a1 += 0x104;
     n = *(int*)a1;
     a1 += 4;
@@ -73,10 +73,10 @@ void sub_80028DC0(void)
     unsigned short* q;
     if (dword_80082670 == 0)
     {
-        p = dword_8008D4A0[0x24 / 4];
+        p = cameraTask_8008D4A0[0x24 / 4];
         if (dword_80082668)
         {
-            sub_80037AC8((int)levantPos_8008BD18);
+            SetCameraTarget_80037AC8((int)levantPos_8008BD18);
         }
         sub_80037918(p);
         q = (unsigned short*)&display_8008B4D8;

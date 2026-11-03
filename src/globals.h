@@ -98,7 +98,7 @@ typedef struct
     unsigned char field_7;
     short field_8;
     short pad_A;
-} struct_12_b;
+} MagicData;
 
 // base stats per minion species (Meos4's randomizer: "minionStats", StatsStruct)
 typedef struct
@@ -303,7 +303,7 @@ extern int fileBuffer_8008656C;
 extern int cdReadState_80086550[5];
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern int** dword_8008D4C0;
+extern int** overlayLoaderTask_8008D4C0;
 extern struct_12 stru_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int** dword_8008B560;
@@ -316,8 +316,8 @@ extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
-extern int off_800824CC[];
-extern struct_12_b dword_8007C438[];
+extern int modelDescs_800824CC[];
+extern MagicData magicData_8007C438[];
 extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
@@ -405,7 +405,7 @@ extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
 extern int keyItemNames_8007CF30[0x26];
-extern int off_8007C348[0x1E * 2];
+extern int magicNames_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
@@ -414,7 +414,7 @@ extern int dword_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
-extern int** dword_8008D4A0;
+extern int** cameraTask_8008D4A0;
 extern int** dword_8008D464;
 extern int** dword_8008B54C;
 extern int dword_8008B550;
@@ -501,10 +501,10 @@ typedef struct
     struct_112* items;
     void* field_C;
 } struct_112_list;
-int sub_80026630(struct_112_list* p, unsigned int id);
-void sub_800266CC(struct_112* p);
-int sub_8002667C(struct_112_list* p);
-void sub_80024C48(struct_112* p);
+int FindModelIndex_80026630(struct_112_list* p, unsigned int id);
+void ClearModel_800266CC(struct_112* p);
+int FindFreeModelIndex_8002667C(struct_112_list* p);
+void FreeModel_80024C48(struct_112* p);
 void sub_80025C38(struct_112* p, int flag);
 typedef struct
 {
@@ -512,7 +512,7 @@ typedef struct
     int count;
     int items[10];
 } struct_list10;
-int sub_80025D00(struct_list10* p, int* q);
+int AddFileRequest_80025D00(struct_list10* p, int* q);
 void sub_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];

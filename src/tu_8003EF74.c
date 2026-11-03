@@ -65,7 +65,7 @@ INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
 
 // Matched
-void sub_8003EF74(int a0, int a1, int a2)
+void DrawNumber_8003EF74(int a0, int a1, int a2)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, a1);

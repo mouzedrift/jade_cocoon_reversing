@@ -280,14 +280,14 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
 #endif
 INCLUDE_OVERLAY_ASM(title, sub_800A0D18);
 
-extern void sub_8001C19C(int a0, int a1);
+extern void SetFadeMode_8001C19C(int a0, int a1);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern int dword_800A27C0;
 extern int dword_800A2818;
 // Matched
 int sub_800A0EF0(void)
 {
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     drawEnvRed_8008D448[0] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
@@ -412,8 +412,8 @@ extern void sub_8004E2C8(int a0);
             SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78); \
             bgmSound_80091CE0.field_4_seq_num = -1; \
         } \
-        sub_8001C19C(0, 0x20); \
-        sub_8001C19C(1, 0x20); \
+        SetFadeMode_8001C19C(0, 0x20); \
+        SetFadeMode_8001C19C(1, 0x20); \
         (t)->next_8 = sub_800A1AC0; \
     }
 #if 0
@@ -452,7 +452,7 @@ INCLUDE_OVERLAY_ASM(title, sub_800A1174);
 extern void sub_800A1760();
 extern unsigned short padRepeat_800918CC;
 extern void sub_800A14A8();
-extern void sub_8003D794(void* a0, int a1);
+extern void UpdateMenuCursor_8003D794(void* a0, int a1);
 extern void sub_8003BB1C(void);
 extern void sub_800BB5DC(void);
 extern void (*off_800A27E8[])();
@@ -460,7 +460,7 @@ extern void (*off_800A27E8[])();
 void sub_800A1310(TitleTask* t, TitleCtxB* c)
 {
     sub_800A1F98(c->field_C, c->field_14, c);
-    sub_8003D794(c->field_1C, 0);
+    UpdateMenuCursor_8003D794(c->field_1C, 0);
     if (padRepeat_800918CC & 0x5000)
     {
         c->field_0 = 0;
@@ -803,14 +803,14 @@ void sub_800A1D6C(void)
     sub_800A1BCC();
 }
 
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A1DD8(TitleTaskM* t);
 
 // Matched
 void sub_800A1D8C(TitleTaskM* t)
 {
     LoadOverlay_80020BF8(2, 0xF);
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     sub_8002BF74();
     t->fn_8 = sub_800A1DD8;
 }
@@ -823,7 +823,7 @@ void sub_800A1DD8(TitleTaskM* t)
 {
     if (dword_8008B4E8)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         sub_800C2EB4();
         t->fn_8 = sub_800A1E24;
     }
@@ -852,7 +852,7 @@ void sub_800A1E24(TitleTaskM* t, TitleObjM* u)
         FreeActiveOverlay_8002C014();
         sub_800A1F98(u->field_C, u->field_14, u);
         sub_800A1760(u, u->field_24, u->field_0);
-        sub_8001C19C(0, 0x20);
+        SetFadeMode_8001C19C(0, 0x20);
         t->fn_8 = sub_800A1E9C;
     }
 }
@@ -860,7 +860,7 @@ void sub_800A1E24(TitleTaskM* t, TitleObjM* u)
 // Matched
 void sub_800A1E9C(TitleTaskM* t, TitleObjM* u)
 {
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     sub_800A1F98(u->field_C, u->field_14, u);
     sub_800A1760(u, u->field_24, u->field_0);
     t->fn_8 = sub_800A1310;

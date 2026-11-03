@@ -46,10 +46,10 @@ extern unsigned char byte_800918F1;
 extern CombChuiWin dword_80082784;
 extern CombChuiPos dword_80082708;
 extern CombChuiPos dword_80082740;
-extern void sub_8003D794(void*, int);
+extern void UpdateMenuCursor_8003D794(void*, int);
 extern int IsConfirmPressedP1_8003D380(int);
 extern int IsCancelPressedP1_8003D41C(int);
-extern int sub_8003DA54(void*);
+extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_8002A5A4(void*);
 extern void sub_8002BE10();
 extern void sub_800A16FC();
@@ -59,14 +59,14 @@ void sub_800A4394(CombChuiTask* t, int a)
 {
     short rect[4];
     int c;
-    sub_8003D794(&dword_800A45B0, 0);
+    UpdateMenuCursor_8003D794(&dword_800A45B0, 0);
     if (byte_800918F1 == 0xFF)
     {
         dword_800A45B0.sel_8 = 1;
     }
     if (IsConfirmPressedP1_8003D380(1))
     {
-        if ((short)sub_8003DA54(&dword_800A45B0) == 0)
+        if ((short)GetMenuCursorIndex_8003DA54(&dword_800A45B0) == 0)
         {
             byte_800A38D8 = 1;
         }

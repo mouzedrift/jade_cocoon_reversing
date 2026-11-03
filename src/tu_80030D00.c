@@ -349,7 +349,7 @@ int sub_800316EC(unsigned int a0, int a1)
     int k;
     Ent4_316EC* base;
     r = sub_80031870(a0) + 0x26;
-    base = sub_80031B30(sub_80014358(a1) & 0xFF);
+    base = sub_80031B30(LowestSetBit_80014358(a1) & 0xFF);
     base += a0;
     k = base->type;
     sub_80018430(-1);

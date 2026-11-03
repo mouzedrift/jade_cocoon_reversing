@@ -22,17 +22,17 @@ INCLUDE_DATA(dword_8007493C);
 extern EventNode* dword_8008D488;
 extern int QueueFileRequest_8003BC84(int* p);
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
-extern void sub_8003C76C(int* a0, int* a1);
+extern void UpdateFileRequestTask_8003C76C(int* a0, int* a1);
 
 // Matched
-int sub_8003C6C8(int* a0)
+int StartFileRequestTask_8003C6C8(int* a0)
 {
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D488);
     int* buf;
     if (e)
     {
         buf = (int*)e->buffer;
-        e->cb_8 = (EventEntryFn)sub_8003C76C;
+        e->cb_8 = (EventEntryFn)UpdateFileRequestTask_8003C76C;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         buf[0] = QueueFileRequest_8003BC84(a0);
         buf[1] = ((unsigned int)a0[0] >> 2) & 1;
@@ -45,7 +45,7 @@ int sub_8003C6C8(int* a0)
     return 0;
 }
 // Matched
-void sub_8003C76C(int* a0, int* a1)
+void UpdateFileRequestTask_8003C76C(int* a0, int* a1)
 {
     if (a1[1])
     {
@@ -263,7 +263,7 @@ typedef struct
 extern Ints14_8003CD5C dword_8007490C;
 extern void DrawPublicTiySprt_80033080(unsigned short* a, int i, int j);
 // Matched
-void sub_8003CD5C(void)
+void DrawLoadingIcon_8003CD5C(void)
 {
     unsigned short pos[2];
     Ints14_8003CD5C t;

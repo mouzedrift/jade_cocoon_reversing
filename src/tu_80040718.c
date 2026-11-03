@@ -127,7 +127,7 @@ void sub_80040A10(int* a0)
 // Matched
 void ShowCopyright_80040A84(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -142,7 +142,7 @@ void PlayGenkiMovie_80040AC4(void)
 // Matched
 void PlayGenkiMovie_80040AEC(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -157,7 +157,7 @@ void PlayCraveMovie_80040B2C(void)
 // Matched
 void PlayCraveEntertainmentMovie_80040B54(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;

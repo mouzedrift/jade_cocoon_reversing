@@ -49,7 +49,7 @@ typedef struct
     char pad_1B8[0xEC];
     int field_2A4;
 } Msg_353A0;
-extern int sub_80034B88(int n, unsigned int mask);
+extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
 void sub_800353A0(Msg_353A0* o)
 {
@@ -101,7 +101,7 @@ void sub_800353A0(Msg_353A0* o)
         else if (o->field_28 == 1 && IsCancelPressedP1_8003D41C(0) && (o->flags_4 & 0x800))
         {
             o->flags_4 |= 0x10000;
-            o->field_1A = sub_80034B88(o->field_B2 = o->field_B0 - 1, o->field_14);
+            o->field_1A = NthMaskedIndex_80034B88(o->field_B2 = o->field_B0 - 1, o->field_14);
         }
         break;
     }
@@ -109,7 +109,7 @@ void sub_800353A0(Msg_353A0* o)
 extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
 extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
-extern int sub_8003D630(short* m);
+extern int MoveGridCursorP1_8003D630(short* m);
 extern void sub_8002F6F8(void* a0, void* st, int a2);
 // Matched
 void sub_800355EC(Msg_353A0* o, unsigned short* r)
@@ -160,7 +160,7 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
         u.menu.m[2] = 1;
         u.menu.m[3] = o->field_B0;
         u.menu.m[1] = o->field_B2;
-        sub_8003D630((short*)&u.menu.f0);
+        MoveGridCursorP1_8003D630((short*)&u.menu.f0);
         if (o->field_B2 != u.menu.m[1])
         {
             PlaySfx_80031494(0x7F);
@@ -176,7 +176,7 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
     r2.w = r[2] - 8;
     r2.h = 13;
     sub_8002F6F8(&r2, u.st, 0);
-    o->field_1A = sub_80034B88(o->field_B2, o->field_14);
+    o->field_1A = NthMaskedIndex_80034B88(o->field_B2, o->field_14);
 }
 typedef struct
 {

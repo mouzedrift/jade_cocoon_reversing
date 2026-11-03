@@ -162,9 +162,9 @@ extern int sub_800B9888(short i);
 extern ShopItemShop* sub_800B9C5C(int i);
 extern int sub_800B9C10(int i);
 extern ShopItemShop name_8008EF18[];
-extern void sub_8001AE00(unsigned int* b, int i);
-extern int sub_8001AD30(int i);
-extern int sub_8001AE54(unsigned int* b);
+extern void ClearMagicBit_8001AE00(unsigned int* b, int i);
+extern int GetMagicElement_8001AD30(int i);
+extern int CountMagicBits_8001AE54(unsigned int* b);
 extern char name_800B6D04[];
 extern char name_800B6D2C[];
 extern unsigned short name_800BF888[];
@@ -307,7 +307,7 @@ extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
 extern ShopCtxShop name_800C09E0;
 extern int name_800C0A1C;
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_8001D600(void* p);
 extern void sub_8002BE10();
 extern void* memset(void* p, int c, unsigned int n);
@@ -568,7 +568,7 @@ int sub_800B9E94(char* src, char* dst, short c)
         (dst + i)[0x7C] = src[0x42];
         i++;
     }
-    r = sub_80014358(*(short*)(src + 0x42));
+    r = LowestSetBit_80014358(*(short*)(src + 0x42));
     for (j = 0; j < 4; j++)
     {
         (dst + j)[0xC2] = 0;
@@ -753,26 +753,26 @@ void sub_800BAA0C(char* a, char* b)
     *(unsigned int*)(a + 0xF4) = old;
     for (i = 0; i < 30; i++)
     {
-        if (sub_8001AE2C(p, i) && !((1 << sub_8001AD30(i)) & mask))
+        if (TestMagicBit_8001AE2C(p, i) && !((1 << GetMagicElement_8001AD30(i)) & mask))
         {
-            sub_8001AE00(p, i);
+            ClearMagicBit_8001AE00(p, i);
         }
     }
     if (a[0xC2] != 0x20)
     {
-        sub_8001AE00(p, 0x15);
+        ClearMagicBit_8001AE00(p, 0x15);
     }
     if (a[0xC4] != 0x20)
     {
-        sub_8001AE00(p, 0x17);
+        ClearMagicBit_8001AE00(p, 0x17);
     }
     if (a[0xC3] != 0x20)
     {
-        sub_8001AE00(p, 0x18);
+        ClearMagicBit_8001AE00(p, 0x18);
     }
     if (a[0xC5] != 0x20)
     {
-        sub_8001AE00(p, 0x16);
+        ClearMagicBit_8001AE00(p, 0x16);
     }
 }
 #endif
@@ -1008,7 +1008,7 @@ void sub_800BB0F8(ShopTaskShop* t, int a)
 {
     sub_8002BE10();
     sub_800BC380(a);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BB444;
 }
 
@@ -1314,7 +1314,7 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             fl &= ~0x40;
             fl &= ~0x100;
             u->field_24 = fl | 0x80;
-            r = sub_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
+            r = CountMagicBits_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
             if (r < 4)
             {
                 r = 4;
@@ -1750,12 +1750,12 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
                 u->field_24 |= 1;
             }
             fn_800B6C6C((char*)u->field_4C + 0x94, 1);
-            sub_8001C19C(0, 0x20);
+            SetFadeMode_8001C19C(0, 0x20);
         }
         else if (*(short*)((char*)u + 0x94) == 2)
         {
             fn_800B6CC8();
-            sub_8001C19C(0, 0x20);
+            SetFadeMode_8001C19C(0, 0x20);
         }
         u->field_24 &= ~0x800;
         fn_8001ABEC(0);
@@ -1816,7 +1816,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     sub_8002BE10();
     sub_800BC380(u);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     sub_800A7B00(-1);
     t->next_8 = sub_800BB444;
 }
@@ -1837,7 +1837,7 @@ void sub_800BE264(ShopTaskShop* t, int a)
 {
     sub_8002BE10();
     sub_800BC380(a);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BB444;
 }
 

@@ -119,7 +119,7 @@ typedef struct CfgTailConfig
 extern int frameCount_8008D3FC;
 extern void sub_8002BE10();
 extern void sub_8002B004(void*, int, int);
-extern void sub_8003D794(void*, int);
+extern void UpdateMenuCursor_8003D794(void*, int);
 extern void sub_800C2F70();
 extern void sub_800C3060(CfgCtxConfig*);
 extern void sub_800C383C(CfgCtxConfig*);
@@ -169,7 +169,7 @@ void sub_800C2F70(CfgTaskConfig* t, CfgCtxConfig* d)
     sub_800C450C(d);
     sub_8002B004(dword_800C592C, 0, 0xE);
     old = d->f44;
-    sub_8003D794(&d->f3c, 0);
+    UpdateMenuCursor_8003D794(&d->f3c, 0);
     c = d;
     if (old != c->f44)
     {
@@ -894,7 +894,7 @@ int sub_800C45D8(void)
     return dword_800C5944;
 }
 
-extern void sub_8003D630(CfgSpinConfig* p);
+extern void MoveGridCursorP1_8003D630(CfgSpinConfig* p);
 extern void sub_800C2F70();
 
 void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
@@ -923,7 +923,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v10.f8 = 8;
             v10.fA = 1;
             v10.f6 = v;
-            sub_8003D630(&v10);
+            MoveGridCursorP1_8003D630(&v10);
             if (v != v10.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -938,7 +938,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v20.f8 = 8;
             v20.fA = 1;
             v20.f6 = v;
-            sub_8003D630(&v20);
+            MoveGridCursorP1_8003D630(&v20);
             if (v != v20.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -952,7 +952,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v30.f8 = 2;
             v30.fA = 1;
             v30.f6 = c->fc;
-            sub_8003D630(&v30);
+            MoveGridCursorP1_8003D630(&v30);
             if (c->fc != v30.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -972,7 +972,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v10.f8 = 4;
             v10.fA = 1;
             v10.f6 = c->f8;
-            sub_8003D630(&v10);
+            MoveGridCursorP1_8003D630(&v10);
             if (c->f8 != v10.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -987,7 +987,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v20.f8 = 2;
             v20.fA = 1;
             v20.f6 = c->f9;
-            sub_8003D630(&v20);
+            MoveGridCursorP1_8003D630(&v20);
             if (c->f9 != v20.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1002,7 +1002,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v40.f8 = 2;
             v40.fA = 1;
             v40.f6 = c->f11;
-            sub_8003D630(&v40);
+            MoveGridCursorP1_8003D630(&v40);
             if (c->f11 != v40.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1017,7 +1017,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v50.f8 = 2;
             v50.fA = 1;
             v50.f6 = c->f13;
-            sub_8003D630(&v50);
+            MoveGridCursorP1_8003D630(&v50);
             if (c->f13 != v50.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1032,7 +1032,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v60.f8 = 2;
             v60.fA = 1;
             v60.f6 = c->f14;
-            sub_8003D630(&v60);
+            MoveGridCursorP1_8003D630(&v60);
             if (c->f14 != v60.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1047,7 +1047,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v70.f8 = 2;
             v70.fA = 1;
             v70.f6 = c->fb;
-            sub_8003D630(&v70);
+            MoveGridCursorP1_8003D630(&v70);
             if (c->fb != v70.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1062,7 +1062,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v80.f8 = 2;
             v80.fA = 1;
             v80.f6 = c->f10;
-            sub_8003D630(&v80);
+            MoveGridCursorP1_8003D630(&v80);
             if (c->f10 != v80.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1079,7 +1079,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         v10.f8 = 2;
         v10.fA = 1;
         v10.f6 = c->f12;
-        sub_8003D630(&v10);
+        MoveGridCursorP1_8003D630(&v10);
         if (c->f12 != v10.f6)
         {
             PlaySfx_80031494(0x7F);

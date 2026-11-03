@@ -1,6 +1,6 @@
 # asm data symbols whose tail is emitted by C instead (switch jump tables of decompiled functions): name, bytes kept
 word_800749AC 0x24     # head; the jump tables of GameLoop_8004047C and SetDisplayMode_80040658 follow
-dword_8007493C 0x28     # tail of sub_8003CD5C's local int[14], jump table of sub_8003CE18, a zero word; the jump table of sub_8003D090 follows
+dword_8007493C 0x28     # tail of DrawLoadingIcon_8003CD5C's local int[14], jump table of sub_8003CE18, a zero word; the jump table of sub_8003D090 follows
 dword_80074610 0xC      # head; the jump table of sub_800316EC follows
 dword_800746B8 0x4      # zero word after the jump table of sub_800316EC; the jump table of sub_80031870 (tu_80031870) follows
 dword_800746D0 0x4     # zero word after the jump table of sub_80031870; the jump table of sub_80031A04 (tu_800318C8) follows

@@ -86,11 +86,11 @@ void sub_800A0BC0(TstModelA* a)
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0C00);
 
 extern int off_8007DC70;
-extern int sub_80024ADC(int* a, int b, int c);
+extern int InitModelList_80024ADC(int* a, int b, int c);
 extern void sub_80025200(int a, int b, int c, int d, int e);
 void sub_800A0EC8(int* a)
 {
-    sub_80024ADC(&a[5], off_8007DC70, 1);
+    InitModelList_80024ADC(&a[5], off_8007DC70, 1);
     sub_80025200(a[5], a[9], a[8], 2, 0);
     a[8] = 0;
     a[0] = 2;
@@ -112,7 +112,7 @@ void sub_800A19E4(int* a)
 {
     if (a[5])
     {
-        sub_80024BB0(&a[5]);
+        FreeModelList_80024BB0(&a[5]);
     }
     a[5] = 0;
     a[0] = 0;

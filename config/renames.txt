@@ -124,3 +124,95 @@ sub_800306D8 FreeBgmSeqs_800306D8
 sub_800306FC StopSoundSeqById_800306FC
 sub_800315F4 FreeBgmAndSfx_800315F4
 sub_80031638 FadeOutSfxSeq_80031638
+
+# --- magic (30 spells: Agni/Vahli/Ulvi/Malti..., Selahm, Medina, Ad ..., Deva ...) ---
+off_8007C348 magicNames_8007C348
+sub_8001AC2C GetMagicName_8001AC2C
+dword_8007C438 magicData_8007C438
+struct_12_b MagicData
+sub_8001AC58 GetMagicMpCost_8001AC58
+sub_8001AD30 GetMagicElement_8001AD30
+sub_8001AD90 ClearMagicBits_8001AD90
+sub_8001ADAC SetMagicBit_8001ADAC
+sub_8001ADD4 OrMagicBits_8001ADD4
+sub_8001AE00 ClearMagicBit_8001AE00
+sub_8001AE2C TestMagicBit_8001AE2C
+sub_8001AE54 CountMagicBits_8001AE54
+sub_8001AEC0 FindNthMagicBit_8001AEC0
+sub_80033A90 HasMagic_80033A90
+sub_80033C08 CheckMagicCastable_80033C08
+sub_80033AFC CheckItemUsable_80033AFC
+
+# --- screen fade ---
+sub_8001C19C SetFadeMode_8001C19C
+sub_8001C260 BeginFade_8001C260
+sub_8001C290 EndFade_8001C290
+
+# --- button config ---
+sub_8001C874 GetButtonConfig_8001C874
+sub_8001C824 GetButtonConfigBitIndex_8001C824
+sub_8001C8A0 FirstPadButtonBit_8001C8A0
+sub_8001C364 PlayAnimFrameSfx_8001C364
+
+# --- overlay loader task ---
+dword_8008D4C0 overlayLoaderTask_8008D4C0
+sub_80020CB8 InitOverlayLoaderTask_80020CB8
+sub_80020CD8 UpdateOverlayLoaderTask_80020CD8
+sub_80020D68 ResetOverlayLoaderTask_80020D68
+
+# --- 3D models (0x70-byte slots with id_38, descriptors in modelDescs) ---
+off_800824CC modelDescs_800824CC
+sub_800251E4 GetModelDesc_800251E4
+sub_80024ADC InitModelList_80024ADC
+sub_80024BB0 FreeModelList_80024BB0
+sub_80024C48 FreeModel_80024C48
+sub_80024D70 AcquireModel_80024D70
+sub_80026630 FindModelIndex_80026630
+sub_8002667C FindFreeModelIndex_8002667C
+sub_800266CC ClearModel_800266CC
+sub_80024DC4 AreFileRequestsDone_80024DC4
+sub_80025D00 AddFileRequest_80025D00
+
+# --- misc helpers ---
+sub_80013E30 Rand100_80013E30
+sub_80014358 LowestSetBit_80014358
+sub_8001450C FirFilterInit_8001450C
+sub_80014574 FirFilterSetup_80014574
+sub_80014588 FirFilterStep_80014588
+sub_80034B14 CountUntilZero_80034B14
+sub_80034B40 CountMaskedUntilZero_80034B40
+sub_80034B88 NthMaskedIndex_80034B88
+
+# --- loading / file request tasks ---
+sub_8003CD5C DrawLoadingIcon_8003CD5C
+sub_8003C6C8 StartFileRequestTask_8003C6C8
+sub_8003C76C UpdateFileRequestTask_8003C76C
+
+# --- text / menu cursor ---
+sub_8003EF74 DrawNumber_8003EF74
+dword_80086574 fontDefs_80086574
+sub_8003D198 AdjustByShoulderButtons_8003D198
+sub_8003D210 AdjustByLeftRight_8003D210
+sub_8003D4C0 MoveGridCursor_8003D4C0
+sub_8003D630 MoveGridCursorP1_8003D630
+struct_menu MenuCursor
+sub_8003D830 MenuCursorInput_8003D830
+sub_8003D794 UpdateMenuCursor_8003D794
+sub_8003DA54 GetMenuCursorIndex_8003DA54
+
+# --- pad vibration ---
+dword_8008D4B8 vibrationTasks_8008D4B8
+off_80083B30 vibrationPatterns_80083B30
+sub_80036528 StartPadVibration_80036528
+sub_800366A0 UpdatePadVibration_800366A0
+sub_800367F0 StopPadVibrationTask_800367F0
+sub_80036658 StopPadVibration_80036658
+sub_80036678 StopAllPadVibration_80036678
+
+# --- camera ---
+dword_8008D4A0 cameraTask_8008D4A0
+dword_8008D4F0 cameraState_8008D4F0
+sub_800376A8 ResetCameraToLevant_800376A8
+sub_80037AC8 SetCameraTarget_80037AC8
+sub_80039620 SaveCameraState_80039620
+sub_80039698 RestoreCameraState_80039698

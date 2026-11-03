@@ -75,7 +75,7 @@ extern enum GameStates (*overlayCallbacks_800869D0[])(void);
 // Matched
 void ShowDemoDisclaimer_80040C8C(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -84,7 +84,7 @@ void ShowDemoDisclaimer_80040C8C(void)
 // Matched
 void PlayAnimeMovie_80040CCC(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;

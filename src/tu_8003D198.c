@@ -25,7 +25,7 @@ INCLUDE_DATA(word_80074994);
 INCLUDE_DATA(dword_80074998);
 
 // Matched
-int sub_8003D198(int limit, int pos, int step, int idx)
+int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 2)
     {
@@ -49,7 +49,7 @@ int sub_8003D198(int limit, int pos, int step, int idx)
     return pos;
 }
 // Matched
-int sub_8003D210(int limit, int pos, int step, int idx)
+int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 0x2000)
     {
@@ -154,7 +154,7 @@ int IsCircleHeldP2_8003D4A0(void)
     return IsCircleHeld_8003D45C(1);
 }
 // Matched
-int sub_8003D4C0(short* m, int idx)
+int MoveGridCursor_8003D4C0(short* m, int idx)
 {
     int r = 1;
     if (m[4] < 0)
@@ -208,7 +208,7 @@ int sub_8003D4C0(short* m, int idx)
     return r;
 }
 // Matched
-int sub_8003D630(short* m)
+int MoveGridCursorP1_8003D630(short* m)
 {
     int idx = 0;
     if (m[3] < 0)
@@ -257,16 +257,16 @@ typedef struct
     unsigned short field_6;
     short field_8;
     short field_A;
-} struct_menu;
+} MenuCursor;
 
-extern int sub_8003D830();
+extern int MenuCursorInput_8003D830();
 
 // Matched
-int sub_8003D794(struct_menu* p)
+int UpdateMenuCursor_8003D794(MenuCursor* p)
 {
     unsigned short a = p->field_8;
     unsigned short b = p->field_A;
-    int r = sub_8003D830(p);
+    int r = MenuCursorInput_8003D830(p);
     if (r == 0)
     {
         int t = p->field_4 - 1;
@@ -282,9 +282,9 @@ int sub_8003D794(struct_menu* p)
     return r;
 }
 // Matched
-int sub_8003D830(struct_menu* p, int idx)
+int MenuCursorInput_8003D830(MenuCursor* p, int idx)
 {
-    int r = sub_8003D4C0((short*)p, idx);
+    int r = MoveGridCursor_8003D4C0((short*)p, idx);
     int t;
     int t2;
 
@@ -349,12 +349,12 @@ int sub_8003D830(struct_menu* p, int idx)
     }
     if (p->field_6 & 0x40)
     {
-        p->field_A = sub_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
+        p->field_A = AdjustByShoulderButtons_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
     }
     return 0;
 }
 // Matched
-int sub_8003DA54(struct_menu* p)
+int GetMenuCursorIndex_8003DA54(MenuCursor* p)
 {
     return (short)(p->field_8 + p->field_A);
 }
@@ -372,7 +372,7 @@ typedef struct
     unsigned short field_14;
     unsigned short pad_16;
 } FontDef;
-extern FontDef dword_80086574[];
+extern FontDef fontDefs_80086574[];
 extern char* publicTiySprts_8008D434;
 extern char* publicTiyTPages_8008D440;
 // Matched
@@ -383,7 +383,7 @@ void InitFonts_8003DA70(void)
     Font* f;
     for (i = 0; i < 3; i++)
     {
-        e = &dword_80086574[i];
+        e = &fontDefs_80086574[i];
         f = &fonts_80095FB0[i];
         MemCopy_800403E8((unsigned int*)f, (unsigned int*)(publicTiySprts_8008D434 + e->field_0 * 20), 0x14);
         f->w_10 = e->field_6;

@@ -53,7 +53,7 @@ extern int dword_8008B570[];
 extern unsigned char byte_800BDF58;
 extern int dword_800BE208;
 extern char dword_800BDECC[];
-extern void sub_8003CD5C(int* t);
+extern void DrawLoadingIcon_8003CD5C(int* t);
 extern void sub_8002BE10(void);
 extern void sub_800BACBC(void* p);
 extern void sub_800B794C(int* t, int* s);
@@ -595,7 +595,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
 void sub_800BA968(int* t)
 {
-    sub_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
     sub_8002BE10();
     t[2] = (int)sub_800BA9AC;
@@ -603,7 +603,7 @@ void sub_800BA968(int* t)
 
 void sub_800BA9AC(int* t)
 {
-    sub_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
     sub_8002BE10();
     t[2] = (int)sub_800BA9F0;

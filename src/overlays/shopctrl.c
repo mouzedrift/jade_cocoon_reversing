@@ -23,7 +23,7 @@ typedef struct { unsigned int pad:5; unsigned int f5:1; } ShopCtrlFlags;
 extern ShopCtrlFlags dword_8008B58C;
 extern int eventDispatchHalt_8008B540;
 extern short word_8008D474[2];
-extern int dword_8008D4F0;
+extern int cameraState_8008D4F0;
 extern void sub_800B6720();
 extern void sub_800B6840();
 extern void sub_800B6898();
@@ -40,7 +40,7 @@ extern void sub_800A7B00(int);
 extern void sub_800A7BF0(int);
 extern void sub_800A6D30(int);
 extern void* sub_800A55B0(int);
-extern void sub_8001C19C(int, int);
+extern void SetFadeMode_8001C19C(int, int);
 extern void sub_8002BF74();
 extern void sub_8002BE10();
 extern void sub_80027478(int, int);
@@ -64,15 +64,15 @@ void sub_800B6720()
 {
     unsigned short* s;
     unsigned int* buf = (unsigned int*)sub_800A55B0(3);
-    MemCopy_800403E8((unsigned int*)&dword_8008D4F0, buf, 0x104);
-    sub_80037918(dword_8008D4A0[9]);
+    MemCopy_800403E8((unsigned int*)&cameraState_8008D4F0, buf, 0x104);
+    sub_80037918(cameraTask_8008D4A0[9]);
     s = (unsigned short*)&display_8008B4D8;
     SetGeomOffset((short)s[6] / 2 + word_8008D474[0], (short)s[7] / 2 + word_8008D474[1]);
 }
 
 void sub_800B67C0(ShopCtrlTask* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     sub_800A7B00(-1);
     word_800B6CE8 = 0;
     word_800B6CEC = 0;
@@ -137,7 +137,7 @@ void sub_800B6964(ShopCtrlTask* t)
             sub_800A7B00(-1);
             if (word_800B6CEC == 2 && dword_8008B58C.f5 == 1)
             {
-                sub_8001C19C(0, 0x20);
+                SetFadeMode_8001C19C(0, 0x20);
                 t->next_8 = sub_800B6AE0;
             }
             else
@@ -145,7 +145,7 @@ void sub_800B6964(ShopCtrlTask* t)
                 t->next_8 = sub_800B6840;
                 if (word_800B6CEC == 1 && dword_8008B58C.f5 == 1)
                 {
-                    sub_8001C19C(0, 0x20);
+                    SetFadeMode_8001C19C(0, 0x20);
                 }
             }
         }
@@ -198,7 +198,7 @@ void sub_800B6AE0(ShopCtrlTask* t)
         break;
     case 1:
         sub_800B6E4C(dword_800B6CFC, 0x10);
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         break;
     case 2:
         e = AllocEventEntry_80043AF8((EventNode*)dword_8008D670);

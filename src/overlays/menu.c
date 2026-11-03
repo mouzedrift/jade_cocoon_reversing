@@ -201,7 +201,7 @@ void sub_800BBE90(MenuTask* t, void* a)
 {
     void* q;
     sub_8002BE10();
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     q = a;
     if (sub_800BD230(a))
     {
@@ -227,13 +227,13 @@ int sub_800BBF10(unsigned char a, unsigned char b)
 INCLUDE_OVERLAY_ASM(menu, sub_800BBF48);
 
 extern int sub_800272D0();
-extern void sub_80020D68();
+extern void ResetOverlayLoaderTask_80020D68();
 extern void sub_800A6D30();
 void sub_800BC24C(MenuTask* t)
 {
     if (sub_800272D0() == 0)
     {
-        sub_80020D68();
+        ResetOverlayLoaderTask_80020D68();
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
@@ -510,7 +510,7 @@ void sub_800BD40C(MenuTask* t, MenuCtx* c)
     sub_8003F900(2, 0);
     sub_8003F900(1, 0);
     name_800C29BC = 0;
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     name_800C29B8 = 0;
     if (!(name_8008D678 & 0x800000))
         sub_8002BF74();
@@ -534,7 +534,7 @@ void sub_800BD5E4(MenuTask* t, int a)
 {
     sub_8002BE10();
     sub_800BE4A0(a);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BD6C8;
 }
 

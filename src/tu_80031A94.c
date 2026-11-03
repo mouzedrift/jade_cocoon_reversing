@@ -37,7 +37,7 @@ int sub_80031A94(int* p)
     {
         r = 4;
     }
-    base = sub_80031B30(sub_80014358(p[2]) & 0xFF);
+    base = sub_80031B30(LowestSetBit_80014358(p[2]) & 0xFF);
     base += p[1];
     if (base->type == 0xC)
     {
@@ -619,9 +619,9 @@ int sub_80033A70(unsigned char* p, int idx)
     return sub_80031954(p + 0x6C, idx);
 }
 // Matched
-int sub_80033A90(Minion* p, unsigned int idx)
+int HasMagic_80033A90(Minion* p, unsigned int idx)
 {
-    return sub_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
+    return TestMagicBit_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
 }
 // Matched
 int sub_80033AB0(Item* p)
@@ -659,7 +659,7 @@ typedef struct
 extern int sub_80034140(void);
 extern int GetItemFlags_8001CE70(int a);
 // Matched
-int sub_80033AFC(struct_minion_ref* p)
+int CheckItemUsable_80033AFC(struct_minion_ref* p)
 {
     int a = sub_800AD288(p->field_0 + p->field_2, 0);
     if (sub_800AD2C8(p->field_0 + p->field_2, 0) <= 0)
@@ -694,15 +694,15 @@ int sub_80033AFC(struct_minion_ref* p)
     }
     return 0;
 }
-extern int sub_8001AEC0(void* p, int v);
+extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
 // Matched
-int sub_80033C08(short* p)
+int CheckMagicCastable_80033C08(short* p)
 {
     char* q = *(char**)(p + 6);
     short* r = (short*)(q + 0x84);
-    int idx = sub_8001AEC0(q + 0xF4, p[0] + p[1]);
-    int v = sub_8001AC58(idx);
+    int idx = FindNthMagicBit_8001AEC0(q + 0xF4, p[0] + p[1]);
+    int v = GetMagicMpCost_8001AC58(idx);
     if (idx >= 0x1E)
     {
         return 6;
@@ -741,10 +741,10 @@ int sub_80033D20(struct_minion_ref* p)
 {
     Minion* m = p->field_C_minion;
     char* q = m->status_84;
-    int r = sub_8001AEC0(m->field_F4, p->field_0 + p->field_2);
-    if (dword_8007C438[r].field_0 & 0x40)
+    int r = FindNthMagicBit_8001AEC0(m->field_F4, p->field_0 + p->field_2);
+    if (magicData_8007C438[r].field_0 & 0x40)
     {
-        switch (dword_8007C438[r].field_7)
+        switch (magicData_8007C438[r].field_7)
         {
         case 0:
             if (*(short*)&q[8] == *(short*)&q[0xA])

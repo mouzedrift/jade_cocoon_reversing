@@ -51,7 +51,7 @@ extern short tab_800C59B0[];
 extern short tab_800C59B8[];
 extern short tab_800C59C0[];
 extern unsigned short padPressed_8009194C;
-extern int sub_8003D794(void* p, int a1);
+extern int UpdateMenuCursor_8003D794(void* p, int a1);
 extern void sub_8002BE10();
 extern void sub_800AD3F0(int a0);
 extern int sub_800AD308(int a0);
@@ -355,7 +355,7 @@ INCLUDE_OVERLAY_ASM(equip, sub_800C4A94);
 void sub_800C4D50(EquipCtx_equip* c)
 {
     int v;
-    sub_8003D794(&c->r_34, 0);
+    UpdateMenuCursor_8003D794(&c->r_34, 0);
     if (c->s_42 >= 8)
     {
         if (IsConfirmPressedP1_8003D380(0))

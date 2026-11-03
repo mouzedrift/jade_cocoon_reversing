@@ -38,7 +38,7 @@ extern int dword_800A39F0[];
 extern void sub_8001D378(void);
 extern void sub_8001D600(void* p);
 extern void sub_8001E28C(void* p);
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A0D1C(int i);
 extern void sub_800A0B70(int i);
 extern void sub_800A14F0();
@@ -46,11 +46,11 @@ extern void sub_800A1554();
 extern void sub_800A15B4();
 extern char* dword_8007DC78;
 extern int sub_80010850(void* p);
-extern int dword_8008D4F0[];
+extern int cameraState_8008D4F0[];
 extern int dword_8008B4F8;
 extern char dword_800A398C[];
 extern int sub_800A1934(short* p);
-extern void sub_800376A8(void);
+extern void ResetCameraToLevant_800376A8(void);
 extern void sub_80037748(void);
 extern void sub_800368F8(void);
 extern void nullsub_5(void);
@@ -474,7 +474,7 @@ void sub_800A0D1C(int i)
 // Matched
 void sub_800A0D64(int i, int id)
 {
-    unsigned short* q = (unsigned short*)sub_800251E4(id);
+    unsigned short* q = (unsigned short*)GetModelDesc_800251E4(id);
     CombatObjCombat o;
     CombatMsgCombat m;
     sub_80025ED0((int*)&o);
@@ -644,11 +644,11 @@ int sub_800A11D8(int i)
 // Matched
 void sub_800A11F4(void)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D4A0);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        sub_800376A8();
+        ResetCameraToLevant_800376A8();
         sub_80037748();
         e->cb_8 = (EventEntryFn)sub_800368F8;
         e->cb_C = (EventEntryFn)nullsub_5;
@@ -660,15 +660,15 @@ void sub_800A11F4(void)
 // Matched
 void sub_800A127C(void)
 {
-    char* p = (char*)dword_8008D4A0;
+    char* p = (char*)cameraTask_8008D4A0;
     sub_800376A0(p + 0x10, *(void**)(p + 0x24));
-    StopAllEventEntries_80043B40((int*)dword_8008D4A0);
+    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
 }
 
 // Matched
 void sub_800A12B8(void)
 {
-    char* p = (char*)dword_8008D4F0;
+    char* p = (char*)cameraState_8008D4F0;
     char* q;
     *(short*)(p + 0x2E) = 0;
     *(int*)(p + 0x20) = 0;
@@ -758,7 +758,7 @@ void sub_800A14AC(CombatTaskCombat* t)
 // Matched
 void sub_800A14F0(CombatTaskCombat* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     dword_800A4080 = LoadOverlay_80020BF8(1, dword_800A39F0[dword_800A3A8C]);
     t->next_8 = sub_800A1554;
 }
@@ -768,7 +768,7 @@ void sub_800A1554(CombatTaskCombat* t, int x)
 {
     if (GetFileRequestStatus_8003BE30(dword_800A4080) == 0)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         t->next_8 = sub_800A15B4;
         t->next_8(t, x);
     }

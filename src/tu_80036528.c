@@ -62,7 +62,7 @@ typedef struct
     short a;
     short b;
 } ShortPair;
-extern Block104 dword_8008D4F0;
+extern Block104 cameraState_8008D4F0;
 extern ShortPair dword_8008D474;
 typedef struct
 {
@@ -70,7 +70,7 @@ typedef struct
     unsigned char field_2;
     unsigned char field_3;
 } PadVibEntry;
-extern PadVibEntry* off_80083B30[];
+extern PadVibEntry* vibrationPatterns_80083B30[];
 typedef struct
 {
     unsigned char idx;
@@ -79,11 +79,11 @@ typedef struct
     unsigned char pad;
     short field_4;
 } struct_buf_80036528;
-extern EventNode* dword_8008D4B8;
-extern void sub_800366A0(EventEntry* e, struct_buf_80036528* o);
+extern EventNode* vibrationTasks_8008D4B8;
+extern void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o);
 #if 0
 // Not matched: o->idx store is forwarded instead of reloaded, idx/b land in swapped registers
-void sub_80036528(int idx, unsigned char b)
+void StartPadVibration_80036528(int idx, unsigned char b)
 {
     EventNode* n;
     int i;
@@ -92,51 +92,51 @@ void sub_80036528(int idx, unsigned char b)
 
     if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[(unsigned char)idx][1] >> 4) != 7)
     {
-        sub_80036658((unsigned char)idx);
+        StopPadVibration_80036658((unsigned char)idx);
         return;
     }
-    n = dword_8008D4B8;
+    n = vibrationTasks_8008D4B8;
     for (i = 0; i < (unsigned char)idx; i++)
     {
         n = n->next;
     }
     e = &n->entry;
     o = e->buffer;
-    e->cb_8 = (EventEntryFn)sub_800366A0;
+    e->cb_8 = (EventEntryFn)UpdatePadVibration_800366A0;
     o->b = b;
     o->idx = idx;
     o->k = 0;
-    o->field_4 = off_80083B30[(unsigned char)b][0].field_0;
-    padVibration_80095460[o->idx].motor_2[0] = off_80083B30[o->b][o->k].field_2;
-    padVibration_80095460[o->idx].motor_2[1] = off_80083B30[o->b][o->k].field_3;
+    o->field_4 = vibrationPatterns_80083B30[(unsigned char)b][0].field_0;
+    padVibration_80095460[o->idx].motor_2[0] = vibrationPatterns_80083B30[o->b][o->k].field_2;
+    padVibration_80095460[o->idx].motor_2[1] = vibrationPatterns_80083B30[o->b][o->k].field_3;
 }
 #endif
-INCLUDE_ASM(sub_80036528);
+INCLUDE_ASM(StartPadVibration_80036528);
 // Matched
-void sub_80036658(int idx)
+void StopPadVibration_80036658(int idx)
 {
     padVibration_80095460[(unsigned char)idx].motor_2[0] = 0;
     padVibration_80095460[(unsigned char)idx].motor_2[1] = 0;
 }
 // Matched
-void sub_80036678(void)
+void StopAllPadVibration_80036678(void)
 {
-    sub_80036658(0);
-    sub_80036658(1);
+    StopPadVibration_80036658(0);
+    StopPadVibration_80036658(1);
 }
-extern void sub_800367F0(int a0, unsigned char* a1);
+extern void StopPadVibrationTask_800367F0(int a0, unsigned char* a1);
 // Matched
-void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
+void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o)
 {
     if (--o->field_4 <= 0)
     {
         o->k++;
-        o->field_4 = off_80083B30[o->b][o->k].field_0;
-        padVibration_80095460[o->idx].motor_2[0] = off_80083B30[o->b][o->k].field_2;
-        padVibration_80095460[o->idx].motor_2[1] = off_80083B30[o->b][o->k].field_3;
+        o->field_4 = vibrationPatterns_80083B30[o->b][o->k].field_0;
+        padVibration_80095460[o->idx].motor_2[0] = vibrationPatterns_80083B30[o->b][o->k].field_2;
+        padVibration_80095460[o->idx].motor_2[1] = vibrationPatterns_80083B30[o->b][o->k].field_3;
         if (o->field_4 < 0)
         {
-            e->cb_8 = (EventEntryFn)sub_800367F0;
+            e->cb_8 = (EventEntryFn)StopPadVibrationTask_800367F0;
         }
     }
     if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[o->idx][1] >> 4) != 7)
@@ -146,7 +146,7 @@ void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
     }
 }
 // Matched
-void sub_800367F0(int a0, unsigned char* a1)
+void StopPadVibrationTask_800367F0(int a0, unsigned char* a1)
 {
     padVibration_80095460[*a1].motor_2[0] = 0;
     padVibration_80095460[*a1].motor_2[1] = 0;
@@ -177,7 +177,7 @@ void UpdatePadVibration_80036820(int port)
 }
 extern void sub_80037918();
 extern char levantPos_8008BD18[];
-extern void sub_80039620(char* o);
+extern void SaveCameraState_80039620(char* o);
 extern void sub_80038CA8();
 extern void sub_80037F44(int* p);
 extern void sub_800374E0();
@@ -190,7 +190,7 @@ void sub_800368F8(struct_obj_D* p, int* q)
 {
     if (q[1] & 0x100)
     {
-        sub_80039620((char*)q);
+        SaveCameraState_80039620((char*)q);
         q[0xE] = ((int*)levantPos_8008BD18)[0];
         q[0xF] = ((int*)levantPos_8008BD18)[1];
         q[0x10] = ((int*)levantPos_8008BD18)[2];
@@ -316,12 +316,12 @@ void sub_800374E0(struct_obj_D* p, int* q)
     else
     {
         q[3] = 0x1000;
-        *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+        *(struct_v3*)(o + 0x1B0) = cameraState_8008D4F0.field_20;
         *(struct_v3*)(o + 0x198) = *(struct_v3*)(o + 0x68);
         *(struct_v3*)(o + 0x1A4) = *(struct_v3*)(o + 0x5C);
         *(struct_v3*)(o + 0x18C) = *(struct_v3*)(o + 0x5C);
-        q[0x17C / 4] = dword_8008D4F0.field_2E;
-        q[0x180 / 4] = dword_8008D4F0.field_2E;
+        q[0x17C / 4] = cameraState_8008D4F0.field_2E;
+        q[0x180 / 4] = cameraState_8008D4F0.field_2E;
         sub_80038D64(o, (int*)levantPos_8008BD18);
         p->field_8 = (void (*)(void))sub_800375F8;
     }
@@ -345,7 +345,7 @@ void sub_800375F8(int* o, int* p)
     }
     else
     {
-        sub_80039698(q);
+        RestoreCameraState_80039698(q);
         sub_80037918(q);
         sub_8003891C(q, levantPos_8008BD18);
         ((short*)q)[4] = 0;
@@ -360,9 +360,9 @@ extern void sub_80039E14(void);
 extern int geomScreenDistance_8008B548;
 extern short word_8008D51E;
 // Matched
-void sub_800376A8(void)
+void ResetCameraToLevant_800376A8(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     short* sp;
     sub_80039E14();
     dword_8008B4F8 = 0x1000;
@@ -377,22 +377,22 @@ void sub_800376A8(void)
 // Matched
 void sub_80037720(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     p[1] |= 0x2000;
 }
 // Matched
 void sub_80037748(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     p[1] |= 4;
 }
 // Matched
 void sub_80037770(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     p[1] &= ~4;
     p[1] &= ~0x2000;
-    sub_80039698(p);
+    RestoreCameraState_80039698(p);
 }
 extern int dword_80083D00[];
 extern int dword_80084330[];
@@ -422,7 +422,7 @@ __asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
 // Matched
 void sub_80037828(int a, short b, int c)
 {
-    void* p = dword_8008D4A0[0x24 / 4];
+    void* p = cameraTask_8008D4A0[0x24 / 4];
     if (c)
     {
         sub_800390F4(p, 2);
@@ -442,12 +442,12 @@ void sub_80037828(int a, short b, int c)
 // Matched
 void sub_800378CC(void)
 {
-    sub_800390F4(dword_8008D4A0[0x24 / 4], 1);
+    sub_800390F4(cameraTask_8008D4A0[0x24 / 4], 1);
 }
 // Matched
 short sub_800378F8(void)
 {
-    return ((short*)dword_8008D4A0[0x24 / 4])[4];
+    return ((short*)cameraTask_8008D4A0[0x24 / 4])[4];
 }
 typedef struct
 {
@@ -484,7 +484,7 @@ void sub_80037918(struct_obj_37918* p)
 // Matched
 void sub_800379DC(int* v, short n)
 {
-    struct_obj_37918* p = (struct_obj_37918*)dword_8008D4A0[0x24 / 4];
+    struct_obj_37918* p = (struct_obj_37918*)cameraTask_8008D4A0[0x24 / 4];
     p->field_28[0] = v[0];
     p->field_28[1] = v[1];
     p->field_28[2] = v[2];
@@ -494,19 +494,19 @@ void sub_800379DC(int* v, short n)
 // Matched
 void sub_80037A20(int a0, short n)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     ((short*)p)[0x26 / 2] = n;
     p[1] &= ~0x10;
 }
 // Matched
 short sub_80037A4C(void)
 {
-    return ((short*)dword_8008D4A0[0x24 / 4])[0x12];
+    return ((short*)cameraTask_8008D4A0[0x24 / 4])[0x12];
 }
 // Matched
 void sub_80037A6C(int a, int b)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     if (b >= 2)
     {
         p[0x34 / 4] = a;
@@ -521,9 +521,9 @@ void sub_80037A6C(int a, int b)
     }
 }
 // Matched
-void sub_80037AC8(int a0)
+void SetCameraTarget_80037AC8(int a0)
 {
-    *(int*)dword_8008D4A0[0x24 / 4] = a0;
+    *(int*)cameraTask_8008D4A0[0x24 / 4] = a0;
 }
 extern unsigned short dword_80083CE8[][4];
 extern int* sub_800A1E3C(void);
@@ -537,7 +537,7 @@ void sub_80037AE0(unsigned short mask)
     int sel = 0;
     int cnt = 0;
     int i;
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     int* r;
     int v;
     for (i = 0; i < 3; i++)
@@ -565,26 +565,26 @@ void sub_80037AE0(unsigned short mask)
         }
         sub_80038E2C(p, dword_80083CE8[r[0] - 1][sel], v);
         ((unsigned short*)p)[4] = 4;
-        dword_8008D4A0[0x18 / 4] = (int*)sub_80036AB4;
+        cameraTask_8008D4A0[0x18 / 4] = (int*)sub_80036AB4;
     }
 }
 // Matched
 void sub_80037BFC(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     ((short*)p)[0x10 / 2] = 0;
     p[1] |= 0xC0;
 }
 // Matched
 void sub_80037C24(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     p[1] |= 0x100;
 }
 // Matched
 void sub_80037C4C(void)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     p[1] &= ~0x100;
 }
 extern CamOffset dword_80083BE4[];
@@ -598,8 +598,8 @@ void sub_80037C74(int* q)
     q[0xC / 4] = 0;
     dword_8008D474.a = 0;
     dword_8008D474.b = 0;
-    dword_8008D4F0.r_30 = dword_8008D4F0.g_31 = dword_8008D4F0.b_32 = 0x40;
-    dword_8008D4F0.field_2C = 0;
+    cameraState_8008D4F0.r_30 = cameraState_8008D4F0.g_31 = cameraState_8008D4F0.b_32 = 0x40;
+    cameraState_8008D4F0.field_2C = 0;
     if (unknownFlags_8008D678 & 0x2000000)
     {
         sel = 1;
@@ -608,18 +608,18 @@ void sub_80037C74(int* q)
     {
         sel = 0;
     }
-    dword_8008D4F0.field_20.x = q[0x38 / 4] + (word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
-    dword_8008D4F0.field_20.y = ((int*)levantPos_8008BD18)[1] + dword_80083BE4[sel].y1;
-    dword_8008D4F0.field_20.z = q[0x40 / 4] + (-word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
-    dword_8008D4F0.field_14.x = q[0x38 / 4] + (word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
-    dword_8008D4F0.field_14.y = ((int*)levantPos_8008BD18)[1] + dword_80083BE4[sel].y0;
-    dword_8008D4F0.field_14.z = q[0x40 / 4] + (-word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
-    dword_8008D4F0.field_2E = dword_80083BE4[sel].field_8;
-    setVector(&dword_8008D4F0.rot_34, *(short*)(o + 0x164), *(short*)(o + 0x166), *(short*)(o + 0x168));
-    setVector(&dword_8008D4F0.rot_3C, *(short*)(o + 0x174), *(short*)(o + 0x176), *(short*)(o + 0x178));
-    dword_8008D4F0.ent_44[0].rot.vx = 0x800;
-    dword_8008D4F0.ent_44[0].rot.vy = 0x800;
-    dword_8008D4F0.ent_44[0].rot.vz = 0x800;
+    cameraState_8008D4F0.field_20.x = q[0x38 / 4] + (word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
+    cameraState_8008D4F0.field_20.y = ((int*)levantPos_8008BD18)[1] + dword_80083BE4[sel].y1;
+    cameraState_8008D4F0.field_20.z = q[0x40 / 4] + (-word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
+    cameraState_8008D4F0.field_14.x = q[0x38 / 4] + (word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
+    cameraState_8008D4F0.field_14.y = ((int*)levantPos_8008BD18)[1] + dword_80083BE4[sel].y0;
+    cameraState_8008D4F0.field_14.z = q[0x40 / 4] + (-word_80084540[q[0x44 / 4] & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[(q[0x44 / 4] + 0x400) & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
+    cameraState_8008D4F0.field_2E = dword_80083BE4[sel].field_8;
+    setVector(&cameraState_8008D4F0.rot_34, *(short*)(o + 0x164), *(short*)(o + 0x166), *(short*)(o + 0x168));
+    setVector(&cameraState_8008D4F0.rot_3C, *(short*)(o + 0x174), *(short*)(o + 0x176), *(short*)(o + 0x178));
+    cameraState_8008D4F0.ent_44[0].rot.vx = 0x800;
+    cameraState_8008D4F0.ent_44[0].rot.vy = 0x800;
+    cameraState_8008D4F0.ent_44[0].rot.vz = 0x800;
     dword_8008B4F8 = q[0x188 / 4];
 }
 typedef struct
@@ -651,14 +651,14 @@ void sub_80037F44(int* q)
 {
     int i;
 
-    sub_80039620((char*)q);
-    q[0x17C / 4] = dword_8008D4F0.field_2E;
+    SaveCameraState_80039620((char*)q);
+    q[0x17C / 4] = cameraState_8008D4F0.field_2E;
     q[0x180 / 4] = 0xA0;
-    *(struct_v3*)((char*)q + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)((char*)q + 0x1B0) = cameraState_8008D4F0.field_20;
     *(int*)((char*)q + 0x198) = SAVE_LEVANT.pos.x;
     *(int*)((char*)q + 0x19C) = SAVE_LEVANT.pos.y - 0xFA;
     *(int*)((char*)q + 0x1A0) = SAVE_LEVANT.pos.z;
-    *(struct_v3*)((char*)q + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)((char*)q + 0x1A4) = cameraState_8008D4F0.field_14;
     *(int*)((char*)q + 0x18C) = SAVE_LEVANT.pos.x + word_80084540[SAVE_LEVANT.rotY & 0xFFF] * 200 / 4096;
     *(int*)((char*)q + 0x190) = SAVE_LEVANT.pos.y - 0xFA;
     *(int*)((char*)q + 0x194) = SAVE_LEVANT.pos.z + word_80084540[(SAVE_LEVANT.rotY + 0x400) & 0xFFF] * 200 / 4096;
@@ -668,17 +668,17 @@ void sub_80037F44(int* q)
     q[0x44 / 4] = SAVE_LEVANT.rotY;
     for (i = 7; i >= 0; i--)
     {
-        dword_8008D4F0.ent_44[i].field_14 = 0;
+        cameraState_8008D4F0.ent_44[i].field_14 = 0;
     }
-    dword_8008D4F0.ent_44[0].pos = *(struct_v3*)((char*)q + 0x38);
-    setVector(&dword_8008D4F0.ent_44[0].rot, 0, 0, 0);
-    dword_8008D4F0.ent_44[0].field_14 = 0xEA6;
-    dword_8008D4F0.ent_44[0].pos.y -= 1000;
-    ((CamObj_15C*)q)->v15C = dword_8008D4F0.rot_34;
+    cameraState_8008D4F0.ent_44[0].pos = *(struct_v3*)((char*)q + 0x38);
+    setVector(&cameraState_8008D4F0.ent_44[0].rot, 0, 0, 0);
+    cameraState_8008D4F0.ent_44[0].field_14 = 0xEA6;
+    cameraState_8008D4F0.ent_44[0].pos.y -= 1000;
+    ((CamObj_15C*)q)->v15C = cameraState_8008D4F0.rot_34;
     ((CamObj_15C*)q)->v164.vx = 0x7FC;
     ((CamObj_15C*)q)->v164.vy = -0xAA6;
     ((CamObj_15C*)q)->v164.vz = 0x8DE;
-    ((CamObj_15C*)q)->v16C = dword_8008D4F0.rot_3C;
+    ((CamObj_15C*)q)->v16C = cameraState_8008D4F0.rot_3C;
     ((CamObj_15C*)q)->v174.vx = 0x1000;
     ((CamObj_15C*)q)->v174.vy = 0x1000;
     ((CamObj_15C*)q)->v174.vz = 0x1000;
@@ -783,12 +783,12 @@ void sub_80038CA8(int* p)
     char* sd = (char*)&saveData_8008B570;
     p[3] = 0x1000;
     p[1] &= ~8;
-    *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)(o + 0x1B0) = cameraState_8008D4F0.field_20;
     *(struct_v3*)(o + 0x198) = *(struct_v3*)(sd + 0x7A8);
-    *(struct_v3*)(o + 0x1A4) = dword_8008D4F0.field_14;
-    *(struct_v3*)(o + 0x18C) = dword_8008D4F0.field_14;
-    p[0x17C / 4] = dword_8008D4F0.field_2E;
-    p[0x180 / 4] = dword_8008D4F0.field_2E;
+    *(struct_v3*)(o + 0x1A4) = cameraState_8008D4F0.field_14;
+    *(struct_v3*)(o + 0x18C) = cameraState_8008D4F0.field_14;
+    p[0x17C / 4] = cameraState_8008D4F0.field_2E;
+    p[0x180 / 4] = cameraState_8008D4F0.field_2E;
     sub_80038D64(o, (int*)(sd + 0x7A8));
 }
 extern int stru_8008D504[];
@@ -821,17 +821,17 @@ void sub_80038E2C(int* p, int a, int b)
 
     p[3] = 0x1000;
     p[1] &= ~8;
-    *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)(o + 0x1B0) = cameraState_8008D4F0.field_20;
     *(struct_v3*)(o + 0x198) = *(struct_v3*)(o + 0x38);
     *(int*)(o + 0x19C) = *(int*)(sd + 0x7AC) + dword_80083C70[(unsigned short)a].y1;
     *(int*)(o + 0x1A0) += -word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
     *(int*)(o + 0x198) += word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
-    *(struct_v3*)(o + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)(o + 0x1A4) = cameraState_8008D4F0.field_14;
     *(struct_v3*)(o + 0x18C) = *(struct_v3*)(o + 0x38);
     *(int*)(o + 0x190) = *(int*)(sd + 0x7AC) + dword_80083C70[(unsigned short)a].y0 + b;
     *(int*)(o + 0x194) += -word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
     *(int*)(o + 0x18C) += word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
-    p[0x17C / 4] = dword_8008D4F0.field_2E;
+    p[0x17C / 4] = cameraState_8008D4F0.field_2E;
     p[0x180 / 4] = dword_80083C70[(unsigned short)a].field_8;
     sub_80038D64(o, p + 0x38 / 4);
 }
@@ -852,17 +852,17 @@ int sub_800395D0(int* pIdx, int value, int* table)
 }
 
 // Matched
-void sub_80039620(char* o)
+void SaveCameraState_80039620(char* o)
 {
-    *(Block104*)(o + 0x48) = dword_8008D4F0;
+    *(Block104*)(o + 0x48) = cameraState_8008D4F0;
     *(int*)(o + 0x184) = dword_8008B4F8;
     *(ShortPair*)(o + 0x14C) = dword_8008D474;
 }
 // Matched
-void sub_80039698(int* a0)
+void RestoreCameraState_80039698(int* a0)
 {
     char* o = (char*)a0;
-    dword_8008D4F0 = *(Block104*)(o + 0x48);
+    cameraState_8008D4F0 = *(Block104*)(o + 0x48);
     dword_8008B4F8 = *(int*)(o + 0x184);
     dword_8008D474 = *(ShortPair*)(o + 0x14C);
 }
@@ -875,7 +875,7 @@ extern int sub_800AB4D8(int a);
 // Matched
 void sub_8003970C(int idx_, int* a5)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     struct_pair8* t = (struct_pair8*)dword_800B1084;
     int* q;
     int r;
@@ -917,7 +917,7 @@ void sub_8003970C(int idx_, int* a5)
 // Matched
 void sub_8003983C(int idx_, int* a5)
 {
-    int* p = dword_8008D4A0[0x24 / 4];
+    int* p = cameraTask_8008D4A0[0x24 / 4];
     struct_pair8* t = (struct_pair8*)dword_800B1084;
     int* q;
     p[0x1C / 4] = t[(short)idx_].b;
@@ -940,16 +940,16 @@ void sub_80039E14(void)
 {
     VECTOR d;
     int a;
-    D600_VEC->vx = dword_8008D4F0.field_14.x;
-    D600_VEC->vy = dword_8008D4F0.field_14.y;
-    D600_VEC->vz = dword_8008D4F0.field_14.z;
-    d.vx = dword_8008D4F0.field_20.x - dword_8008D4F0.field_14.x;
-    d.vy = dword_8008D4F0.field_20.y - dword_8008D4F0.field_14.y;
-    d.vz = dword_8008D4F0.field_20.z - dword_8008D4F0.field_14.z;
+    D600_VEC->vx = cameraState_8008D4F0.field_14.x;
+    D600_VEC->vy = cameraState_8008D4F0.field_14.y;
+    D600_VEC->vz = cameraState_8008D4F0.field_14.z;
+    d.vx = cameraState_8008D4F0.field_20.x - cameraState_8008D4F0.field_14.x;
+    d.vy = cameraState_8008D4F0.field_20.y - cameraState_8008D4F0.field_14.y;
+    d.vz = cameraState_8008D4F0.field_20.z - cameraState_8008D4F0.field_14.z;
     a = ratan2_8003B548(d.vx, d.vz);
     word_8008D4C8.vy = -a;
     word_8008D4C8.vx = ratan2_8003B548(d.vy, ISqrt_8003B918(LengthSquared2D_8003B8BC(d.vx, d.vz)));
-    word_8008D4C8.vz = dword_8008D4F0.field_2C;
+    word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
     sub_8004D0E8();
 }
 #if 0

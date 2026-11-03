@@ -195,7 +195,7 @@ extern int sub_800BC8E8();
 extern void sub_800BC878();
 extern void sub_80037720();
 extern void sub_80037748();
-extern void sub_8001C19C();
+extern void SetFadeMode_8001C19C();
 extern void sub_8002BF74();
 extern int dword_8008B4E8;
 extern int subInt_800378F8();
@@ -243,7 +243,7 @@ void sub_800A4D48(CombBtlTask* t, int a)
         dword_800A84B8 = 9;
         break;
     case 6:
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         dword_800A84B8 = 7;
     case 7:
         sub_8002BF74();
@@ -645,8 +645,8 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
 void sub_800A73E4()
 {
-    sub_800376A0((int*)dword_8008D4A0 + 4, dword_8008D4A0[9]);
-    StopAllEventEntries_80043B40((int*)dword_8008D4A0);
+    sub_800376A0((int*)cameraTask_8008D4A0 + 4, cameraTask_8008D4A0[9]);
+    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
 }
 
 void sub_800A7420()

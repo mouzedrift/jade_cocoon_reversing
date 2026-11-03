@@ -1175,13 +1175,13 @@ typedef struct
     int field_38;
     int field_3C;
 } struct_B90;
-extern void sub_80024ADC(void* p, int a, int b);
+extern void InitModelList_80024ADC(void* p, int a, int b);
 extern void sub_80025200(int a, int b, int c, int d, int e);
 // Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
 int sub_80010B90(struct_B90* p)
 {
     int i;
-    sub_80024ADC(p, p->field_34, 1);
+    InitModelList_80024ADC(p, p->field_34, 1);
     for (i = 0; i < 3; i++)
     {
         if (i == p->field_30)
@@ -1218,7 +1218,7 @@ typedef struct
     int field_38;
     int field_3C;
 } struct_C30;
-extern int sub_80024DC4(void* p);
+extern int AreFileRequestsDone_80024DC4(void* p);
 // Matched
 int sub_80010C30(struct_C30* p)
 {
@@ -1227,7 +1227,7 @@ int sub_80010C30(struct_C30* p)
     {
         if (p->list->items[i].field_38 != 0xFFFF)
         {
-            if (!sub_80024DC4(&p->list->items[i]))
+            if (!AreFileRequestsDone_80024DC4(&p->list->items[i]))
             {
                 return 0;
             }
@@ -1351,7 +1351,7 @@ void sub_80011B8C(void)
 {
     eventDispatchHalt_8008B540 = 1;
     unknownFlags_8008D678 |= 0x8000000;
-    sub_8001C260();
+    BeginFade_8001C260();
 }
 // Matched
 void sub_80011BCC(void)

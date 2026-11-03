@@ -61,7 +61,7 @@ extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_8002B004(void* p, int a, int b);
 extern void sub_8002BE10();
 extern void sub_8002A4E4(int a);
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern void sub_8002A5A4(WpnDlg_wpnshop* p);
 extern char name_800826B0[];
@@ -78,7 +78,7 @@ extern void sub_800AD058(int a);
 extern int sub_800AD0A4(int a);
 extern void sub_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
-extern void sub_8003D794(void* p, int a1);
+extern void UpdateMenuCursor_8003D794(void* p, int a1);
 extern void DrawTextList_8002A310(void* p, int a);
 extern void sub_800429F8(int a0, int a1);
 extern void sub_80042B38(int a0, int a1);
@@ -221,7 +221,7 @@ extern void sub_80027478(int a, int b);
 extern void sub_800A7BF0(int a);
 extern void sub_800A6D30(int a);
 extern int sub_800272D0(void);
-extern int sub_8003D198(int a, int b, int c, int d);
+extern int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d);
 extern unsigned short padRepeat_800918CC;
 extern int eventDispatchHalt_8008B540;
 extern void sub_800BB194();
@@ -293,7 +293,7 @@ void sub_800BAE2C(int a, int b)
         o->f_48 = 0;
         o->f_4E = 0;
         o->f_50 = 0;
-        sub_8001C19C(0, 0x20);
+        SetFadeMode_8001C19C(0, 0x20);
         sub_800A7B00(-1);
         sub_8002BF74();
         t->cb_8 = (EventEntryFn)sub_800BB130;
@@ -345,7 +345,7 @@ void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
     sub_8002A4E4(0xE);
     sub_800BCF80(p);
     sub_800BB950(p);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BB1F4;
 }
 
@@ -800,7 +800,7 @@ void sub_800BBDD0(WpnObj_wpnshop* o)
         s = o->f_0;
         if ((unsigned short)(s - 10) >= 2 && s != 8 && s != 9)
         {
-            sub_8003D794(o->f_28, 0);
+            UpdateMenuCursor_8003D794(o->f_28, 0);
         }
     }
 }
@@ -1710,7 +1710,7 @@ int sub_800BE084(int a, int b)
             n = n - 1;
         }
     }
-    n = sub_8003D198(b + 1, n, 10, 0);
+    n = AdjustByShoulderButtons_8003D198(b + 1, n, 10, 0);
     if (n == 0)
     {
         n = 1;
