@@ -16,7 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_800720E4);
 
 
 
@@ -26,8 +25,7 @@ int sub_80013358(int idx)
     return dword_80079320[idx];
 }
 INCLUDE_ASM(sub_80013374);
-#if 0
-// Not matched: code matches, but emitting the jump table from C shifts .rdata by 4 (the word before it at 0x800720E4)
+// Matched
 void sub_80013C28(int a0, int a1, int* p, int a3)
 {
     int r;
@@ -72,5 +70,3 @@ void sub_80013C28(int a0, int a1, int* p, int a3)
         sub_80012BB0(a0, a1, p, a3);
     }
 }
-#endif
-INCLUDE_ASM(sub_80013C28);

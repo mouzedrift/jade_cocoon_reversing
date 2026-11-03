@@ -111,3 +111,6 @@ int sub_80013228(int a0, int a1, int* p)
     }
     return q[8] == 8;
 }
+
+// zero word at the end of this TU's .rdata, in front of the jump table of sub_80013C28 (tu_80013358)
+INCLUDE_DATA(dword_800720E4);

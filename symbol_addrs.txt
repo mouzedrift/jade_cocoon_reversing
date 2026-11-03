@@ -3551,4 +3551,4 @@ sub_80014618=0x80014618; // function behind sub_80014588 (was hidden in its span
 sub_80011ADC=0x80011adc; // function behind sub_80011904 (was hidden in its span)
 sub_80011AF8=0x80011af8; // function behind sub_80011904 (was hidden in its span)
 dword_80071B78=0x80071b78; // rodata after the jump table of sub_80010AD8
-dword_800720E4=0x800720e4; // alignment word + jump table of sub_80013C28 (after the one of sub_80013228)
+dword_800720E4=0x800720e4; // alignment word (end of common.c .rdata); the jump table of sub_80013C28 follows (emitted by C, see config/c_rodata.txt)
