@@ -1966,6 +1966,56 @@ void sub_800BC7A8(int a)
     }
 }
 
+
+#if 0
+// Not matched: src/size are allocated to $s1/$s0 (original $s0/$s1); the rest is identical. The global is wrapped in a struct so the stores through it reload it (as the original does)
+typedef struct EvBlobPtrEventfnc
+{
+    int* p_0;
+} EvBlobPtrEventfnc;
+extern EvBlobPtrEventfnc dword_800AEBBC;
+void sub_800BC854(int* src)
+{
+    int size;
+    int n;
+    int i;
+    int j;
+    int m;
+    int* p;
+    int* e;
+    size = *src++;
+    if (dword_800AEBBC.p_0)
+    {
+        ListFree_8003FE38(dword_80091C10, dword_800AEBBC.p_0);
+        dword_800AEBBC.p_0 = 0;
+    }
+    dword_800AEBBC.p_0 = (int*)ListAlloc_8003FDC0(dword_80091C10, size);
+    MemCopy_800403E8((unsigned int*)dword_800AEBBC.p_0, (unsigned int*)src, size);
+    n = dword_800AEBBC.p_0[0];
+    for (i = 0; i < n; i++)
+    {
+        e = (int*)((char*)dword_800AEBBC.p_0 + (i * 8 + 4));
+        *e = (int)dword_800AEBBC.p_0 + *e;
+    }
+    for (i = 0; i < n; i++)
+    {
+        e = (int*)((char*)dword_800AEBBC.p_0 + (i * 8 + 4));
+        m = e[1];
+        p = (int*)e[0];
+        for (j = 0; j < m; j++, p++)
+        {
+            if (*p == -1)
+            {
+                *p = 0;
+            }
+            else
+            {
+                *p = (int)dword_800AEBBC.p_0 + *p;
+            }
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC854);
 
 extern int dword_800AEBC0[2];
