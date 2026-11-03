@@ -80,6 +80,12 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 
+typedef struct MenuPair
+{
+    short a;
+    short b;
+} MenuPair;
+
 typedef struct MenuStatQ
 {
     short b;
@@ -1096,7 +1102,113 @@ void sub_800BD6C8(MenuTask* t, MenuCtx* c)
         t->next_8 = sub_800BD80C;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BD80C);
+typedef struct MenuBox7
+{
+    int w[7];
+} MenuBox7;
+typedef struct MenuUiWin
+{
+    RECT* rect;
+    int f4;
+    short f8;
+    short fA;
+} MenuUiWin;
+extern MenuBox7 name_800BB9A4;
+extern int name_800C2980;
+extern char name_800C2958[];
+extern unsigned short padRepeat_800918CC;
+extern void sub_8002ADB4();
+extern void sub_800BDBFC(char* a, int page);
+extern void DrawUiWindow_8002A384();
+extern void DrawSmallNumber3_8002C290();
+extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+void sub_800BD80C(MenuTask* t, char* a)
+{
+    MenuCol col;
+    MenuBox7 box;
+    MenuUiWin w;
+    RECT r;
+    short pos[2];
+    MenuUiWin w2;
+    RECT r2;
+    MenuPair pr;
+    short p2[2];
+    char* aa = a;
+    if (IsCancelPressedP1_8003D41C(1))
+    {
+        t->next_8 = sub_800BD6C8;
+    }
+    else
+    {
+    if (padRepeat_800918CC & 0x2000)
+        name_800C2980++;
+    if (padRepeat_800918CC & 0x8000)
+        name_800C2980--;
+    if (name_800C2980 < 0)
+        name_800C2980 = 2;
+    if (name_800C2980 >= 3)
+        name_800C2980 = 0;
+    box = name_800BB9A4;
+    col.col = uiColor_8008B590;
+    col.c_2 = 0;
+    col.c_3 = 1;
+    sub_8002ADB4(&box, &col, 0xA, 0);
+    r.x = 0xA;
+    r.y = 0x10;
+    r.w = 0x58;
+    r.h = 0x12;
+    w.rect = &r;
+    w.f4 = 0;
+    w.f8 = 0;
+    w.fA = 0xE;
+    pos[0] = 0x1A;
+    pos[1] = 0x14;
+    DrawUiTiySprt_8002C06C(pos, 0x94, 0xE);
+    pos[0] = 0x42;
+    pos[1] = 0x16;
+    DrawSmallNumber3_8002C290(pos, name_800C2980 + 1, 0xE);
+    DrawUiTiySprt_8002C06C(pos, 0xDA, 0xE);
+    pos[0] += 0xF;
+    DrawSmallNumber3_8002C290(pos, 3, 0xE);
+    DrawUiWindow_8002A384(&w);
+    r.x = 0xE0;
+    r.y = 0x10;
+    r.w = 0x58;
+    r.h = 0x12;
+    w.rect = &r;
+    w.f4 = 0;
+    w.f8 = 0;
+    w.fA = 0xE;
+    pos[0] = 0x108;
+    pos[1] = 0x16;
+    DrawSmallNumber3_8002C290(pos, GetCapturedMinionsCount_800125B8(), 0xE);
+    DrawUiTiySprt_8002C06C(pos, 0xDA, 0xE);
+    pos[0] += 0x1C;
+    DrawSmallNumber3_8002C290(pos, 0xAB, 0xE);
+    DrawUiWindow_8002A384(&w);
+    sub_800BDBFC(aa, name_800C2980);
+    }
+    r2.x = 0xE;
+    r2.y = 0x29;
+    r2.w = 0x124;
+    r2.h = 0xA2;
+    w2.rect = &r2;
+    w2.f4 = 0;
+    w2.f8 = 0;
+    w2.fA = 0xE;
+    DrawUiWindow_8002A384(&w2);
+    pr.a = 2;
+    pr.b = 2;
+    p2[0] = 8;
+    p2[1] = 0x7A;
+    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    pr.b = 0;
+    p2[0] = 0x138;
+    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    SetFontClutOffset_8003F900(1, 0);
+    DrawButtonHelpBar_8002B004(name_800C2958, 0, 0xF);
+    DrawMenuBackground_8002BE10();
+}
 
 extern int sub_800B32D4();
 extern int name_8007A170[];
@@ -2264,11 +2376,6 @@ void sub_800C01D0(MenuObj* o)
     o->f10 = name_800C1BD0[o->f60];
 }
 
-typedef struct MenuPair
-{
-    short a;
-    short b;
-} MenuPair;
 typedef struct MenuCell
 {
     unsigned short x;
