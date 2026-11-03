@@ -4,6 +4,12 @@
 #include "globals.h"
 
 extern unsigned char dword_800C8B30;
+extern int sub_800AD8E4();
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void AddDrawAreaPrim_8003326C();
+extern void AddClipDrawAreaPrim_80033308();
+extern unsigned short padPressed_8009194C;
+extern int MeasureTextWidth_8003E4C8();
 extern int dword_800C9E38;
 extern unsigned char dword_800C9E68;
 extern unsigned char dword_800C9E40;
@@ -2069,9 +2075,6 @@ typedef struct BatWin_a
     short rect_10[4];
 } BatWin_a;
 extern int sub_800A2AB4();
-extern void AddClipDrawAreaPrim_80033308();
-extern void AddDrawAreaPrim_8003326C();
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -2143,6 +2146,63 @@ void sub_800C0440()
     }
 }
 
+#if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
+typedef struct BatHelp_a
+{
+    unsigned int frame_0;
+    short from_4[4];
+    short rect_C[4];
+} BatHelp_a;
+extern unsigned char dword_800793C8[];
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
+extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawUiColorWindow_800424C0();
+void sub_800C04A4(EventEntry* t, BatHelp_a* u)
+{
+    int w;
+    short pos[2];
+    unsigned char* g;
+    if (padPressed_8009194C & 0x100)
+    {
+        *(int*)&saveData_8008B570 ^= 0x10;
+    }
+    if (*(int*)&saveData_8008B570 & 0x10)
+    {
+        return;
+    }
+    if (dword_800C9D74 == 0)
+    {
+        return;
+    }
+    AddClipDrawAreaPrim_80033308(pOT_8008D454);
+    w = MeasureTextWidth_8003E4C8(dword_800C9D74);
+    g = dword_800793C8 + 0x14;
+    if (*(int*)(g + 0x24) == dword_800C9D74)
+    {
+        w += 0x10;
+    }
+    u->from_4[2] = w + 4;
+    u->from_4[3] = 0x14;
+    u->from_4[0] = 0xA;
+    u->from_4[1] = 0x88;
+    pos[0] = u->from_4[0] + 2;
+    pos[1] = u->from_4[1] + 3;
+    DrawText_8003E91C(2, (void*)dword_800C9D74, pos, 0);
+    if (*(int*)(g + 0x24) == dword_800C9D74)
+    {
+        pos[0] += w;
+        pos[1] += 3;
+        sub_8003F264(pos, sub_800AD8E4(), 0);
+    }
+    InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 7);
+    DrawUiColorWindow_800424C0(u->rect_C, 0, pOT_8008D454, 0);
+    if (++u->frame_0 >= 5)
+    {
+        u->frame_0 = 4;
+    }
+    AddDrawAreaPrim_8003326C(u->rect_C, pOT_8008D454);
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C04A4);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C064C);
@@ -2708,7 +2768,45 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     u->frame_0++;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C2E28);
+extern void sub_800C2FC8();
+void sub_800C2E28(int* p, short* q, int c, int d, int e, int n)
+{
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        EventEntry* ev = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+        if (ev)
+        {
+            char* b;
+            ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
+            b = ev->buffer;
+            *(int*)(b + 0x44) = p[0];
+            *(int*)(b + 0x48) = p[1];
+            *(int*)(b + 0x4C) = p[2];
+            *(int*)(b + 0x50) = p[0];
+            *(int*)(b + 0x54) = p[1];
+            *(int*)(b + 0x58) = p[2];
+            *(int*)(b + 0x5C) = p[0];
+            *(int*)(b + 0x60) = p[1];
+            *(int*)(b + 0x64) = p[2];
+            *(int*)(b + 0x68) = p[0];
+            *(int*)(b + 0x6C) = p[1];
+            *(int*)(b + 0x70) = p[2];
+            *(short*)(b + 0x80) = q[0];
+            *(short*)(b + 0x82) = q[1];
+            *(short*)(b + 0x84) = q[2];
+            *(int*)(b + 0x88) = c;
+            *(int*)(b + 0x8C) = d;
+            *(short*)(b + 0x80) = 0;
+            *(short*)(b + 0x84) = 0;
+            *(int*)b = 0;
+            *(int*)(b + 4) = 0;
+            *(short*)(b + 8) = e;
+            *(short*)(b + 0x82) = (i << 12) / n;
+            ev->cb_8 = (EventEntryFn)sub_800C2FC8;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C2FC8);
 
@@ -4107,7 +4205,6 @@ extern unsigned short dword_800C946C;
 extern unsigned short dword_800C94A4;
 extern unsigned short dword_800C9514;
 extern char* dword_800C9E6C;
-extern int sub_800AD8E4();
 void sub_800C71C8()
 {
     if (dword_800C9E49 == 0)
@@ -4391,7 +4488,6 @@ void sub_800C8768()
 
 #if 0 // Not matched: arg setup order only (original computes &s first and &pos last); tried prototypes, separate arrays, &a, statement order
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
-extern int MeasureTextWidth_8003E4C8();
 void sub_800C8828(int a)
 {
     short rect[4];
@@ -4421,7 +4517,6 @@ void sub_800C88AC(int a)
     DrawLargeTextBox_8002AF10((int)s, 0, 0xF);
 }
 
-extern unsigned short padPressed_8009194C;
 extern unsigned char dword_800C9E51;
 extern unsigned char dword_800C9E48;
 extern unsigned char dword_800C9E50;
