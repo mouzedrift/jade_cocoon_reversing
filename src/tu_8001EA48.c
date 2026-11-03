@@ -832,14 +832,13 @@ void ReleaseModelAnimRef_80020278(int a0, int a1)
 int RequestModelAnim_8002032C(int a0, int a1, int a2)
 {
     struct_obj_C* e = &modelAnimRefs_800919A0[a0];
-    unsigned short* s = (unsigned short*)((char*)e + a2 * 2);
     int r = 0;
-    if (s[4] == 0)
+    if (e->field_8[a2] == 0)
     {
         LoadModelAnim_80025440(e->field_0, a2, r);
         r = 1;
     }
-    s[4] |= 1 << a1;
+    e->field_8[a2] |= 1 << a1;
     return r;
 }
 // Matched
@@ -859,7 +858,7 @@ int sub_80020410(int a0, int a1, int a2)
     int i;
     if (((e->field_8[a2] >> a1) & 1) == 0)
     {
-        list = *(int**)(e->field_0 + 0x58);
+        list = (int*)((struct_112*)e->field_0)->field_58;
         if (list != 0)
         {
             for (i = 0; i < list[0]; i++)
@@ -888,61 +887,61 @@ void ClearModelAnimRef_800204AC(struct_obj_C* p)
 // Matched
 void ResetModelLoader_800204D0(void)
 {
-    int* p = (int*)modelLoaderTask_8008B54C[9];
-    int* q = p + 3;
+    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* q = p->slots_C;
     int i;
-    p[0] = 0;
-    p[1] = 1;
-    p[2] = 0;
+    p->state_0 = 0;
+    p->done_4 = 1;
+    p->models_8 = 0;
     for (i = 0; i < 4; i++)
     {
-        q[0] = 0;
-        q[1] = -1;
-        q[2] = 0;
-        q[3] = 0;
-        q[4] = -1;
-        q += 5;
+        q->loaded_0 = 0;
+        q->id_4 = -1;
+        q->sel_8 = 0;
+        q->arg_C = 0;
+        q->animSet_10 = -1;
+        q++;
     }
 }
 // Matched
 void FreeModelLoaderList_8002052C(void)
 {
-    int* p = modelLoaderTask_8008B54C[0x24 / 4];
-    if (p[2])
+    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    if (p->models_8)
     {
-        FreeModelList_80024BB0(p + 2);
+        FreeModelList_80024BB0(&p->models_8);
     }
 }
 // Matched
 void StartModelLoader_8002056C(void)
 {
-    struct_cb* q = (struct_cb*)((char*)modelLoaderTask_8008B54C + 0x10);
-    q->fn_8 = ModelLoaderTask_800209AC;
-    q->flags_0 = (q->flags_0 | 1) & ~0x8000;
-    *q->field_14 = 0;
-    q->fn_8(q, q->field_14);
+    EventEntry* q = &((EventNode*)modelLoaderTask_8008B54C)->entry;
+    q->cb_8 = (EventEntryFn)ModelLoaderTask_800209AC;
+    q->flags = (q->flags | 1) & ~0x8000;
+    ((ModelLoader*)q->buffer)->state_0 = 0;
+    q->cb_8(q, q->buffer);
 }
 // Matched
 int IsModelLoaderDone_800205D0(void)
 {
-    return modelLoaderTask_8008B54C[0x24 / 4][1];
+    return ((ModelLoader*)((EventNode*)modelLoaderTask_8008B54C)->entry.buffer)->done_4;
 }
 // Matched
 void StopModelLoader_800205F0(void)
 {
-    int* n = (int*)modelLoaderTask_8008B54C;
-    n[4] = (n[4] & ~1) | 0x8000;
+    EventEntry* n = &((EventNode*)modelLoaderTask_8008B54C)->entry;
+    n->flags = (n->flags & ~1) | 0x8000;
 }
 // Matched
 int CountLoaderModels_80020614(void)
 {
-    int* p = modelLoaderTask_8008B54C[9];
-    struct_20* e = (struct_20*)(p + 3);
+    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* e = p->slots_C;
     int count = 0;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (e->field_4 >= 0)
+        if (e->id_4 >= 0)
         {
             count++;
         }
@@ -953,17 +952,17 @@ int CountLoaderModels_80020614(void)
 // Matched
 int GetLoaderModelId_80020654(int k)
 {
-    int* p = modelLoaderTask_8008B54C[9];
-    struct_20* e = (struct_20*)(p + 3);
+    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* e = p->slots_C;
     int n = 0;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (e->field_4 >= 0)
+        if (e->id_4 >= 0)
         {
             if (n == k)
             {
-                return e->field_4;
+                return e->id_4;
             }
             n++;
         }
@@ -974,28 +973,28 @@ int GetLoaderModelId_80020654(int k)
 // Matched
 int RequestLoaderModel_800206A0(int id, int a1, int a2, int a3)
 {
-    int* p = modelLoaderTask_8008B54C[9];
-    struct_20* e = (struct_20*)(p + 3);
+    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* e = p->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (id == e->field_4)
+        if (id == e->id_4)
         {
             return 1;
         }
         e++;
     }
-    e = (struct_20*)(p + 3);
+    e = p->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->field_4 == -1)
+        if (e->id_4 == -1)
         {
-            e->field_0 = 0;
-            e->field_4 = id;
-            e->field_8 = a1;
-            e->field_C = a2;
-            e->field_10 = a3;
-            p[1] = 0;
+            e->loaded_0 = 0;
+            e->id_4 = id;
+            e->sel_8 = a1;
+            e->arg_C = a2;
+            e->animSet_10 = a3;
+            p->done_4 = 0;
             return 1;
         }
         e++;
@@ -1005,90 +1004,90 @@ int RequestLoaderModel_800206A0(int id, int a1, int a2, int a3)
 // Matched
 struct_112* AcquireLoaderModel_80020734(int arg)
 {
-    return AcquireModel_80024D70(modelLoaderTask_8008B54C[0x24 / 4][2], arg);
+    return AcquireModel_80024D70(((ModelLoader*)((EventNode*)modelLoaderTask_8008B54C)->entry.buffer)->models_8, arg);
 }
 // Matched
-void FreeLoaderModel_80020768(int a0)
+void FreeLoaderModel_80020768(struct_112* a0)
 {
-    int* base = (int*)modelLoaderTask_8008B54C[9];
-    int* p = base + 4;
+    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p[0] >= 0 && p[3] >= 0)
+        if (p->id_4 >= 0 && p->animSet_10 >= 0)
         {
-            if (a0 == AcquireModel_80024D70(base[2], p[0]))
+            if (a0 == AcquireModel_80024D70(base->models_8, p->id_4))
             {
                 FreeModel_80024C48(a0);
-                p[0] = -1;
+                p->id_4 = -1;
                 return;
             }
         }
-        p += 5;
+        p++;
     }
 }
 // Matched
 void FreeLoaderModelAnimSets_80020814(void)
 {
-    int* base = (int*)modelLoaderTask_8008B54C[9];
-    int* p = base + 7;
+    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p[-3] >= 0 && p[0] >= 0)
+        if (p->id_4 >= 0 && p->animSet_10 >= 0)
         {
-            FreeModelAnimSet_80025884(AcquireModel_80024D70(base[2], p[-3]));
+            FreeModelAnimSet_80025884(AcquireModel_80024D70(base->models_8, p->id_4));
         }
-        p += 5;
+        p++;
     }
 }
 // Matched
 void LoadLoaderModelAnimSets_80020898(void)
 {
-    int* base = (int*)modelLoaderTask_8008B54C[9];
-    int* p = base + 7;
+    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p[-3] >= 0 && p[0] >= 0)
+        if (p->id_4 >= 0 && p->animSet_10 >= 0)
         {
-            LoadModelAnimSet_80025780(AcquireModel_80024D70(base[2], p[-3]), p[0], 1);
+            LoadModelAnimSet_80025780(AcquireModel_80024D70(base->models_8, p->id_4), p->animSet_10, 1);
         }
-        p += 5;
+        p++;
     }
 }
 // Matched
 int AreLoaderModelsLoaded_80020924(void)
 {
-    int* base = (int*)modelLoaderTask_8008B54C[9];
-    int* p = base + 3;
+    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p[1] >= 0)
+        if (p->id_4 >= 0)
         {
-            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(base[2], p[1])) == 0)
+            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(base->models_8, p->id_4)) == 0)
             {
                 return 0;
             }
         }
-        p += 5;
+        p++;
     }
     return 1;
 }
 // Matched
 void ModelLoaderTask_800209AC(struct_cb* p, int* a1)
 {
-    int* q = a1;
-    int s = q[0];
+    ModelLoader* q = (ModelLoader*)a1;
+    int s = q->state_0;
     int t;
     switch (s)
     {
     case 0:
         LoadRequestedModels_80020A38(q);
-        t = q[0];
+        t = q->state_0;
         eventDispatchHalt_8008B540 = 1;
-        q[0] = t + 1;
+        q->state_0 = t + 1;
         break;
     case 1:
         if (AreRequestedModelsLoaded_80020B70(q))
@@ -1100,54 +1099,54 @@ void ModelLoaderTask_800209AC(struct_cb* p, int* a1)
     }
 }
 // Matched
-void LoadRequestedModels_80020A38(int* p)
+void LoadRequestedModels_80020A38(ModelLoader* p)
 {
-    struct_20* e;
+    ModelLoadSlot* e;
     int i;
-    if (p[2] == 0)
+    if (p->models_8 == 0)
     {
-        InitModelList_80024ADC(&p[2], off_8007DC70, 1);
+        InitModelList_80024ADC(&p->models_8, off_8007DC70, 1);
     }
-    e = (struct_20*)(p + 3);
+    e = p->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->field_4 >= 0 && e->field_0 == 0)
+        if (e->id_4 >= 0 && e->loaded_0 == 0)
         {
-            LoadModel_80025200(p[2], e->field_4, e->field_8, e->field_C, 1);
+            LoadModel_80025200(p->models_8, e->id_4, e->sel_8, e->arg_C, 1);
         }
         e++;
     }
-    e = (struct_20*)(p + 3);
+    e = p->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->field_4 >= 0 && e->field_0 == 0)
+        if (e->id_4 >= 0 && e->loaded_0 == 0)
         {
-            if (e->field_10 >= 0)
+            if (e->animSet_10 >= 0)
             {
-                LoadModelAnimSet_80025780(AcquireModel_80024D70(p[2], e->field_4), e->field_10, 1);
+                LoadModelAnimSet_80025780(AcquireModel_80024D70(p->models_8, e->id_4), e->animSet_10, 1);
             }
-            e->field_0 = 1;
+            e->loaded_0 = 1;
         }
         e++;
     }
 }
 // Matched
-int AreRequestedModelsLoaded_80020B70(int* a0)
+int AreRequestedModelsLoaded_80020B70(ModelLoader* a0)
 {
-    int* p = a0 + 3;
+    ModelLoadSlot* p = a0->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p[0] != 0)
+        if (p->loaded_0 != 0)
         {
-            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(a0[2], p[1])) == 0)
+            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(a0->models_8, p->id_4)) == 0)
             {
                 return 0;
             }
         }
-        p += 5;
+        p++;
     }
-    a0[1] = 1;
+    a0->done_4 = 1;
     return 1;
 }
 // Matched
@@ -1670,156 +1669,156 @@ void sub_80021E4C(int* a0, int* a1, unsigned int n)
 }
 // r2 is unused (the original frame has room for it)
 // Matched
-void sub_80021EDC(unsigned char* p, unsigned char* d)
+void sub_80021EDC(FtgPolyFT4* p, POLY_FT4* d)
 {
     RECT r;
     RECT r2;
-    r.x = p[4];
-    r.y = p[5];
-    r.w = p[0xE];
-    r.h = p[0xF];
-    if (p[8] < r.x)
+    r.x = p->u0;
+    r.y = p->v0;
+    r.w = p->u3;
+    r.h = p->v3;
+    if (p->u1 < r.x)
     {
-        r.x = p[8];
+        r.x = p->u1;
     }
-    if (r.x > p[0xC])
+    if (r.x > p->u2)
     {
-        r.x = p[0xC];
+        r.x = p->u2;
     }
-    if (r.x > p[0xE])
+    if (r.x > p->u3)
     {
-        r.x = p[0xE];
+        r.x = p->u3;
     }
-    if (p[9] < r.y)
+    if (p->v1 < r.y)
     {
-        r.y = p[9];
+        r.y = p->v1;
     }
-    if (r.y > p[0xD])
+    if (r.y > p->v2)
     {
-        r.y = p[0xD];
+        r.y = p->v2;
     }
-    if (r.y > p[0xF])
+    if (r.y > p->v3)
     {
-        r.y = p[0xF];
+        r.y = p->v3;
     }
-    if (r.w < p[0xC])
+    if (r.w < p->u2)
     {
-        r.w = p[0xC];
+        r.w = p->u2;
     }
-    if (r.w < p[8])
+    if (r.w < p->u1)
     {
-        r.w = p[8];
+        r.w = p->u1;
     }
-    if (r.w < p[4])
+    if (r.w < p->u0)
     {
-        r.w = p[4];
+        r.w = p->u0;
     }
-    if (r.h < p[0xD])
+    if (r.h < p->v2)
     {
-        r.h = p[0xD];
+        r.h = p->v2;
     }
-    if (r.h < p[9])
+    if (r.h < p->v1)
     {
-        r.h = p[9];
+        r.h = p->v1;
     }
-    if (r.h < p[5])
+    if (r.h < p->v0)
     {
-        r.h = p[5];
+        r.h = p->v0;
     }
-    d[3] = 9;
-    d[7] = 0x2C;
-    d[4] = p[0];
-    d[5] = p[1];
-    d[6] = p[2];
-    d[0xC] = r.x;
-    d[0xD] = r.y;
-    d[0x14] = r.w;
-    d[0x15] = r.y;
-    d[0x1C] = r.x;
-    d[0x1D] = r.h;
-    d[0x24] = r.w;
-    d[0x25] = r.h;
-    *(short*)(d + 8) = 0;
-    *(short*)(d + 0xA) = 0;
-    *(short*)(d + 0x10) = r.w - r.x;
-    *(short*)(d + 0x12) = 0;
-    *(short*)(d + 0x18) = 0;
-    *(short*)(d + 0x1A) = r.h - r.y;
-    *(short*)(d + 0x20) = r.w - r.x;
-    *(short*)(d + 0x22) = r.h - r.y;
-    d[7] = p[3];
-    *(unsigned short*)(d + 0x16) = *(unsigned short*)(p + 0xA);
-    *(unsigned short*)(d + 0xE) = *(unsigned short*)(p + 6);
+    setlen(d, 9);
+    d->code = 0x2C;
+    d->r0 = p->c.r;
+    d->g0 = p->c.g;
+    d->b0 = p->c.b;
+    d->u0 = r.x;
+    d->v0 = r.y;
+    d->u1 = r.w;
+    d->v1 = r.y;
+    d->u2 = r.x;
+    d->v2 = r.h;
+    d->u3 = r.w;
+    d->v3 = r.h;
+    d->x0 = 0;
+    d->y0 = 0;
+    d->x1 = r.w - r.x;
+    d->y1 = 0;
+    d->x2 = 0;
+    d->y2 = r.h - r.y;
+    d->x3 = r.w - r.x;
+    d->y3 = r.h - r.y;
+    d->code = p->c.code;
+    d->tpage = p->tpage;
+    d->clut = p->clut;
 }
 // Matched
-void sub_800221DC(unsigned char* p, unsigned char* d, DR_TPAGE* tp)
+void sub_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
 {
     RECT r;
-    r.x = p[4];
-    r.y = p[5];
-    r.w = p[0xE];
-    r.h = p[0xF];
-    if (p[8] < r.x)
+    r.x = p->u0;
+    r.y = p->v0;
+    r.w = p->u3;
+    r.h = p->v3;
+    if (p->u1 < r.x)
     {
-        r.x = p[8];
+        r.x = p->u1;
     }
-    if (r.x > p[0xC])
+    if (r.x > p->u2)
     {
-        r.x = p[0xC];
+        r.x = p->u2;
     }
-    if (r.x > p[0xE])
+    if (r.x > p->u3)
     {
-        r.x = p[0xE];
+        r.x = p->u3;
     }
-    if (p[9] < r.y)
+    if (p->v1 < r.y)
     {
-        r.y = p[9];
+        r.y = p->v1;
     }
-    if (r.y > p[0xD])
+    if (r.y > p->v2)
     {
-        r.y = p[0xD];
+        r.y = p->v2;
     }
-    if (r.y > p[0xF])
+    if (r.y > p->v3)
     {
-        r.y = p[0xF];
+        r.y = p->v3;
     }
-    if (r.w < p[0xC])
+    if (r.w < p->u2)
     {
-        r.w = p[0xC];
+        r.w = p->u2;
     }
-    if (r.w < p[8])
+    if (r.w < p->u1)
     {
-        r.w = p[8];
+        r.w = p->u1;
     }
-    if (r.w < p[4])
+    if (r.w < p->u0)
     {
-        r.w = p[4];
+        r.w = p->u0;
     }
-    if (r.h < p[0xD])
+    if (r.h < p->v2)
     {
-        r.h = p[0xD];
+        r.h = p->v2;
     }
-    if (r.h < p[9])
+    if (r.h < p->v1)
     {
-        r.h = p[9];
+        r.h = p->v1;
     }
-    if (r.h < p[5])
+    if (r.h < p->v0)
     {
-        r.h = p[5];
+        r.h = p->v0;
     }
-    d[3] = 4;
-    d[7] = 0x64;
-    d[4] = p[0];
-    d[5] = p[1];
-    d[6] = p[2];
-    d[0xC] = r.x;
-    d[0xD] = r.y;
-    *(short*)(d + 8) = 0;
-    *(short*)(d + 0xA) = 0;
-    *(short*)(d + 0x10) = r.w - r.x;
-    *(short*)(d + 0x12) = r.h - r.y;
-    *(unsigned short*)(d + 0xE) = *(unsigned short*)(p + 6);
-    SetDrawTPage(tp, 0, 1, *(unsigned short*)(p + 0xA));
+    setlen(d, 4);
+    d->code = 0x64;
+    d->r0 = p->c.r;
+    d->g0 = p->c.g;
+    d->b0 = p->c.b;
+    d->u0 = r.x;
+    d->v0 = r.y;
+    d->x0 = 0;
+    d->y0 = 0;
+    d->w = r.w - r.x;
+    d->h = r.h - r.y;
+    d->clut = p->clut;
+    SetDrawTPage(tp, 0, 1, p->tpage);
 }
 typedef void (*fn_80022458_a)(unsigned char* body, int a3);
 typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
@@ -2712,18 +2711,18 @@ struct_112* AcquireModel_80024D70(struct_112_list* p, unsigned int id)
 // Matched
 int AreFileRequestsDone_80024DC4(void* a0)
 {
-    int* p = (int*)a0;
+    struct_list10* p = a0;
     int i;
     i = 0;
-    while (i < p[1])
+    while (i < p->count)
     {
-        if (GetFileRequestStatus_8003BE30(p[2 + i]) != 0)
+        if (GetFileRequestStatus_8003BE30(p->items[i]) != 0)
         {
             return 0;
         }
         i++;
     }
-    p[1] = 0;
+    p->count = 0;
     return 1;
 }
 // Matched
@@ -2871,52 +2870,52 @@ int GetModelDesc_800251E4(int idx)
 // Matched
 int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 {
-    int b[16];
+    ModelLoadParams b;
     FileRequestDesc c;
     int two = 1;
     int i;
-    unsigned short* e;
+    ModelDesc* e;
     struct_112* it;
-    int x;
+    ModelVramSlot* x;
     int u;
     int v;
     i = FindModelIndex_80026630(a0, id);
     if (i >= 0)
     {
-        return AreFileRequestsDone_80024DC4((int*)&a0->items[i]) == 0;
+        return AreFileRequestsDone_80024DC4(&a0->items[i]) == 0;
     }
     i = FindFreeModelIndex_8002667C(a0);
     if (i >= 0)
     {
-        e = (unsigned short*)modelDescs_800824CC[id];
+        e = (ModelDesc*)modelDescs_800824CC[id];
         it = &a0->items[i];
-        x = ((int*)a0)[3] + i * 16;
-        InitModelLoadParams_80025ED0(b);
+        x = (ModelVramSlot*)a0->field_C + i;
+        InitModelLoadParams_80025ED0(&b);
         if (sel != -1)
         {
-            b[0] |= 3;
+            b.flags_0 |= 3;
         }
-        b[0] |= 0xC;
+        b.flags_0 |= 0xC;
         v = 0;
-        b[5] = (int)it;
-        b[6] = x;
-        b[1] = (int)e;
-        b[2] = sel;
-        b[3] = a3;
+        b.model_14 = it;
+        b.vram_18 = x;
+        b.desc_4 = e;
+        b.sel_8 = sel;
+        b.mode_C = a3;
         if (sel != -1)
         {
             two = 0;
-            v += e[2];
-            v += e[4];
-            u = e[1];
+            v += e->header_2.size;
+            v += e->tex_6.size;
+            u = e->header_2.offset;
         }
         else
         {
-            u = e[5];
+            u = e->ftg_A.offset;
         }
-        v += e[6];
-        v += e[8];
-        c.fileId_4 = e[0];
+        v += e->ftg_A.size;
+        v += e->anims_E.size;
+        c.fileId_4 = e->fileId_0;
         c.flags_0 = 0x68;
         if (flag == 1)
         {
@@ -2929,17 +2928,17 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
         c.offset_8 = u;
         c.size_C = v;
         c.dest_10 = 0;
-        c.params_14 = b;
+        c.params_14 = &b;
         c.paramsSize_18 = 0x3C;
         c.callback_1C = OnModelFileLoaded_80025D7C;
         AddFileRequest_80025D00((struct_list10*)it, &c);
         if (two != 0)
         {
-            InitModelLoadParams_80025ED0(b);
-            b[0] = 1;
-            b[5] = (int)it;
-            b[1] = (int)e;
-            c.fileId_4 = e[0];
+            InitModelLoadParams_80025ED0(&b);
+            b.flags_0 = 1;
+            b.model_14 = it;
+            b.desc_4 = e;
+            c.fileId_4 = e->fileId_0;
             c.flags_0 = 0x68;
             if (flag == 1)
             {
@@ -2949,9 +2948,9 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
             {
                 c.flags_0 = 0x69;
             }
-            c.offset_8 = e[1];
-            c.size_C = e[2];
-            c.params_14 = b;
+            c.offset_8 = e->header_2.offset;
+            c.size_C = e->header_2.size;
+            c.params_14 = &b;
             c.paramsSize_18 = 0x3C;
             c.dest_10 = 0;
             c.callback_1C = OnModelFileLoaded_80025D7C;
@@ -3032,24 +3031,24 @@ int IsModelAnimLoaded_800255D8(struct_112* p, int idx)
 // Matched
 int sub_800255F0(int a, int idx, int a2)
 {
-    int* a0 = (int*)a;
-    int b[16];
+    struct_112_list* a0 = (struct_112_list*)a;
+    ModelLoadParams b;
     FileRequestDesc c;
-    unsigned int x = a0[2];
-    int y = a0[3];
-    unsigned short* e = (unsigned short*)modelDescs_800824CC[idx];
-    InitModelLoadParams_80025ED0(b);
-    b[0] = 2;
-    b[2] = a2;
+    struct_112* x = a0->items;
+    ModelVramSlot* y = a0->field_C;
+    ModelDesc* e = (ModelDesc*)modelDescs_800824CC[idx];
+    InitModelLoadParams_80025ED0(&b);
+    b.flags_0 = 2;
+    b.sel_8 = a2;
     c.flags_0 = 0x69;
-    b[5] = x;
-    b[6] = y;
-    b[1] = (int)e;
-    c.fileId_4 = e[0];
-    c.offset_8 = e[3];
-    c.size_C = e[4];
+    b.model_14 = x;
+    b.vram_18 = y;
+    b.desc_4 = e;
+    c.fileId_4 = e->fileId_0;
+    c.offset_8 = e->tex_6.offset;
+    c.size_C = e->tex_6.size;
     c.dest_10 = 0;
-    c.params_14 = b;
+    c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)x, &c);
@@ -3059,21 +3058,21 @@ int sub_800255F0(int a, int idx, int a2)
 int sub_800256B8(int a, int id)
 {
     struct_112_list* a0 = (struct_112_list*)a;
-    int b[16];
+    ModelLoadParams b;
     FileRequestDesc c;
     struct_112* it = &a0->items[FindModelIndex_80026630(a0, id)];
-    unsigned short* e = (unsigned short*)modelDescs_800824CC[it->id_38];
-    InitModelLoadParams_80025ED0(b);
-    b[0] = 8;
-    b[5] = (int)it;
-    b[3] = 3;
-    b[1] = (int)e;
+    ModelDesc* e = (ModelDesc*)modelDescs_800824CC[it->id_38];
+    InitModelLoadParams_80025ED0(&b);
+    b.flags_0 = 8;
+    b.model_14 = it;
+    b.mode_C = 3;
+    b.desc_4 = e;
     c.flags_0 = 0x69;
-    c.fileId_4 = e[0];
-    c.offset_8 = e[7];
-    c.size_C = e[8];
+    c.fileId_4 = e->fileId_0;
+    c.offset_8 = e->anims_E.offset;
+    c.size_C = e->anims_E.size;
     c.dest_10 = 0;
-    c.params_14 = b;
+    c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)it, &c);
@@ -3082,21 +3081,21 @@ int sub_800256B8(int a, int id)
 // Matched
 int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
 {
-    int b[16];
+    ModelLoadParams b;
     FileRequestDesc c;
-    unsigned short* e;
+    ModelDesc* e;
     char* t;
     int u;
     int v;
     FreeModelAnimSet_80025884(p);
-    e = (unsigned short*)modelDescs_800824CC[p->id_38];
-    t = (char*)e + (e[9] * 6 + 0x14);
+    e = (ModelDesc*)modelDescs_800824CC[p->id_38];
+    t = (char*)e + (e->animCount_12 * 6 + 0x14);
     u = ((unsigned short*)t)[idx * 2 + 1];
     v = ((unsigned short*)t)[idx * 2 + 2];
-    InitModelLoadParams_80025ED0(b);
-    b[0] = 0x20;
-    b[5] = (int)p;
-    b[1] = (int)e;
+    InitModelLoadParams_80025ED0(&b);
+    b.flags_0 = 0x20;
+    b.model_14 = p;
+    b.desc_4 = e;
     c.flags_0 = 0x68;
     if (flag != 0)
     {
@@ -3106,11 +3105,11 @@ int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
     {
         c.flags_0 = 0x69;
     }
-    c.fileId_4 = e[0];
+    c.fileId_4 = e->fileId_0;
     c.offset_8 = u;
     c.size_C = v;
     c.dest_10 = 0;
-    c.params_14 = b;
+    c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)p, &c);
@@ -3159,26 +3158,26 @@ int IsAnimInModelAnimSet_80025924(int* p, int id)
 // Matched
 int sub_80025974(struct_112* p, int idx, int flag)
 {
-    int b[16];
+    ModelLoadParams b;
     FileRequestDesc c;
-    unsigned short* e;
+    ModelDesc* e;
     char* t;
     int u;
     int v;
-    int* g;
+    struct_112_list* g;
     sub_80025AB0(p);
-    e = (unsigned short*)modelDescs_800824CC[p->id_38];
-    t = (char*)e + (e[9] * 6 + 0x14);
+    e = (ModelDesc*)modelDescs_800824CC[p->id_38];
+    t = (char*)e + (e->animCount_12 * 6 + 0x14);
     t += *(unsigned short*)t * 4 + 2;
-    g = (int*)p->field_0;
+    g = (struct_112_list*)p->field_0;
     u = ((unsigned short*)t)[idx * 2 + 1];
     v = ((unsigned short*)t)[idx * 2 + 2];
-    InitModelLoadParams_80025ED0(b);
-    b[0] = 0x40;
-    b[5] = (int)p;
-    b[6] = g[3] + p->field_30 * 16;
-    b[2] = p->field_34;
-    b[1] = (int)e;
+    InitModelLoadParams_80025ED0(&b);
+    b.flags_0 = 0x40;
+    b.model_14 = p;
+    b.vram_18 = (ModelVramSlot*)g->field_C + p->field_30;
+    b.sel_8 = p->field_34;
+    b.desc_4 = e;
     c.flags_0 = 0x68;
     if (flag != 0)
     {
@@ -3188,11 +3187,11 @@ int sub_80025974(struct_112* p, int idx, int flag)
     {
         c.flags_0 = 0x69;
     }
-    c.fileId_4 = e[0];
+    c.fileId_4 = e->fileId_0;
     c.offset_8 = u;
     c.size_C = v;
     c.dest_10 = 0;
-    c.params_14 = b;
+    c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)p, &c);
@@ -3272,160 +3271,151 @@ int AddFileRequest_80025D00(struct_list10* a0, FileRequestDesc* a1)
 // Matched
 void OnModelFileLoaded_80025D7C(int* a0, int b)
 {
-    if (a0[0] & 1)
+    ModelLoadParams* p = (ModelLoadParams*)a0;
+    if (p->flags_0 & 1)
     {
-        a0[7] = b;
-        b += *(unsigned short*)(a0[1] + 4) << 11;
+        p->header_1C = (ModelHeaderSection*)b;
+        b += p->desc_4->header_2.size << 11;
     }
-    if (a0[0] & 2)
+    if (p->flags_0 & 2)
     {
-        a0[8] = b;
-        b += *(unsigned short*)(a0[1] + 8) << 11;
+        p->tim_20 = (int*)b;
+        b += p->desc_4->tex_6.size << 11;
     }
-    if (a0[0] & 4)
+    if (p->flags_0 & 4)
     {
-        a0[9] = b;
-        b += *(unsigned short*)(a0[1] + 0xC) << 11;
+        p->ftg_24 = (int*)b;
+        b += p->desc_4->ftg_A.size << 11;
     }
-    if (a0[0] & 8)
+    if (p->flags_0 & 8)
     {
-        a0[10] = b;
-        b += *(unsigned short*)(a0[1] + 0x10) << 11;
+        p->anims_28 = (ModelAnimSection*)b;
+        b += p->desc_4->anims_E.size << 11;
     }
-    if (a0[0] & 0x10)
+    if (p->flags_0 & 0x10)
     {
-        a0[11] = b;
+        p->anim_2C = (char*)b;
     }
-    if (a0[0] & 0x20)
+    if (p->flags_0 & 0x20)
     {
-        a0[12] = b;
+        p->animSet_30 = (ModelAnimSetSection*)b;
     }
-    if (a0[0] & 0x40)
+    if (p->flags_0 & 0x40)
     {
-        a0[0] |= 0x80;
-        a0[14] = b + ((int*)b)[1];
-        a0[0] |= 0x40;
-        a0[13] = b + ((int*)b)[2];
-        a0[0] |= 2;
-        a0[8] = b + ((int*)b)[3];
+        p->flags_0 |= 0x80;
+        p->extra_38 = (unsigned char*)(b + ((int*)b)[1]);
+        p->flags_0 |= 0x40;
+        p->ftg2_34 = (int*)(b + ((int*)b)[2]);
+        p->flags_0 |= 2;
+        p->tim_20 = (int*)(b + ((int*)b)[3]);
     }
-    ParseModelFile_80025F14(a0);
+    ParseModelFile_80025F14(p);
 }
 // Matched
-void InitModelLoadParams_80025ED0(int* p)
+void InitModelLoadParams_80025ED0(ModelLoadParams* p)
 {
-    p[2] = -1;
-    p[0] = 0;
-    p[1] = 0;
-    p[3] = 2;
-    p[4] = 0;
-    p[5] = 0;
-    p[6] = 0;
-    p[7] = 0;
-    p[8] = 0;
-    p[9] = 0;
-    p[10] = 0;
-    p[11] = 0;
-    p[13] = 0;
-    p[14] = 0;
+    p->sel_8 = -1;
+    p->flags_0 = 0;
+    p->desc_4 = 0;
+    p->mode_C = 2;
+    p->animIdx_10 = 0;
+    p->model_14 = 0;
+    p->vram_18 = 0;
+    p->header_1C = 0;
+    p->tim_20 = 0;
+    p->ftg_24 = 0;
+    p->anims_28 = 0;
+    p->anim_2C = 0;
+    p->ftg2_34 = 0;
+    p->extra_38 = 0;
 }
 // Matched
-void ParseModelFile_80025F14(int* a0)
+void ParseModelFile_80025F14(ModelLoadParams* a0)
 {
-    if (a0[0] & 1)
+    if (a0->flags_0 & 1)
     {
-        sub_80026014((char*)a0);
+        sub_80026014(a0);
     }
-    if (a0[0] & 2)
+    if (a0->flags_0 & 2)
     {
         LoadModelTextures_8002607C(a0);
     }
-    if (a0[0] & 4)
+    if (a0->flags_0 & 4)
     {
         LoadModelFtg_800260FC(a0);
     }
-    if (a0[0] & 8)
+    if (a0->flags_0 & 8)
     {
         LoadModelAnims_800261C8(a0);
     }
-    if (a0[0] & 0x10)
+    if (a0->flags_0 & 0x10)
     {
         LoadSingleModelAnim_800263CC(a0);
     }
-    if (a0[0] & 0x20)
+    if (a0->flags_0 & 0x20)
     {
         LoadModelAnimSetSection_80026410(a0);
     }
-    if (a0[0] & 0x40)
+    if (a0->flags_0 & 0x40)
     {
         sub_8002651C(a0);
     }
-    if (a0[0] & 0x80)
+    if (a0->flags_0 & 0x80)
     {
-        sub_8002659C((char*)a0);
+        sub_8002659C(a0);
     }
 }
-typedef struct
-{
-    char pad_0[0x14];
-    struct_112* owner_14;
-    int* data_18;
-    int* data_1C;
-    char pad_20[0x14];
-    int* list_34;
-    unsigned char* data_38;
-} struct_loader;
 // Matched
-void sub_80026014(char* a0)
+void sub_80026014(ModelLoadParams* a0)
 {
-    int* q = *(int**)(a0 + 0x1C);
-    struct_112* p = *(struct_112**)(a0 + 0x14);
-    int h = ((int*)p->field_0)[1];
-    int n = q[0];
+    ModelHeaderSection* q = a0->header_1C;
+    struct_112* p = a0->model_14;
+    int h = ((struct_112_list*)p->field_0)->field_4;
+    int n = q->size_0;
     int r;
     p->field_48 = n;
     r = HeapAlloc_8003FC8C(n, h);
     p->field_4C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
+    MemCopy_800403E8((unsigned int*)r, (unsigned int*)a0->header_1C->data_4, n);
 }
 // Matched
-void LoadModelTextures_8002607C(int* a0)
+void LoadModelTextures_8002607C(ModelLoadParams* a0)
 {
-    if (a0[2] != -1)
+    if (a0->sel_8 != -1)
     {
-        int* p = (int*)a0[5];
-        LoadTiyTimsRelocated_80028FDC(0, 0, 0, a0[8], GetTiyFileCount_80028E68((int*)a0[8]), a0[6] + 4, a0[2]);
-        p[0x34 / 4] = a0[2];
+        struct_112* p = a0->model_14;
+        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)a0->tim_20, GetTiyFileCount_80028E68(a0->tim_20), (int)a0->vram_18->reloc_4, a0->sel_8);
+        p->field_34 = a0->sel_8;
     }
 }
 #if 0
 // Not matched: the a0[9] list argument is loaded before the a0[6] load in the original, ours after; insensitive to statement order, types and temporaries
-void LoadModelFtg_800260FC(int* a0)
+void LoadModelFtg_800260FC(ModelLoadParams* a0)
 {
-    int q = a0[6];
-    struct_112* p = (struct_112*)a0[5];
-    int h = ((int*)p->field_0)[1];
+    int q = (int)a0->vram_18;
+    struct_112* p = a0->model_14;
+    int h = ((struct_112_list*)p->field_0)->field_4;
     q += 4;
-    p->field_3C = GetFtgObjectCount_80021738((int*)a0[9]);
+    p->field_3C = GetFtgObjectCount_80021738(a0->ftg_24);
     AllocFtgObjects_80021744(&p->field_50, p->field_3C, h);
-    LoadFtgObjects_80021824((int*)a0[9], (char*)p->field_50, p->field_3C, h, q);
-    if (sub_80021DE4((int*)a0[9]) != 0)
+    LoadFtgObjects_80021824(a0->ftg_24, (FtgObject*)p->field_50, p->field_3C, h, q);
+    if (sub_80021DE4(a0->ftg_24) != 0)
     {
-        sub_80021DF0(&p->field_5C, sub_80021DE4((int*)a0[9]), h);
-        sub_80021E4C((char*)a0[9], &p->field_5C, sub_80021DE4((int*)a0[9]));
+        sub_80021DF0(&p->field_5C, sub_80021DE4(a0->ftg_24), h);
+        sub_80021E4C(a0->ftg_24, &p->field_5C, sub_80021DE4(a0->ftg_24));
     }
 }
 #endif
 INCLUDE_ASM(LoadModelFtg_800260FC);
 // Matched
-void LoadModelAnims_800261C8(int* a0)
+void LoadModelAnims_800261C8(ModelLoadParams* a0)
 {
-    struct_112* p = (struct_112*)a0[5];
-    int h = ((int*)p->field_0)[1];
+    struct_112* p = a0->model_14;
+    int h = ((struct_112_list*)p->field_0)->field_4;
     int i;
     int j;
     int mode;
-    p->field_3E = *(unsigned short*)(a0[1] + 0x12);
+    p->field_3E = a0->desc_4->animCount_12;
     if (p->field_54 == 0)
     {
         AllocModelAnims_80026730((struct_28**)&p->field_54, p->field_3E, h);
@@ -3437,7 +3427,7 @@ void LoadModelAnims_800261C8(int* a0)
     p->field_44 = HeapAlloc_8003FC8C(p->field_3E, h);
     for (i = 0; i < p->field_3E; i++)
     {
-        mode = a0[3];
+        mode = a0->mode_C;
         if (mode == 0)
         {
             if (i == 0)
@@ -3476,41 +3466,41 @@ void LoadModelAnims_800261C8(int* a0)
             }
             else
             {
-                ((unsigned char*)p->field_44)[i] = *(unsigned char*)(a0[1] + 0x14 + i * 2);
+                ((unsigned char*)p->field_44)[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
             }
         }
         else
         {
-            ((unsigned char*)p->field_44)[i] = *(unsigned char*)(a0[1] + 0x14 + i * 2);
+            ((unsigned char*)p->field_44)[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
         }
     }
     for (i = 0, j = 0; i < p->field_3E; i++)
     {
-        if (((unsigned short*)(a0[1] + 0x14))[i] != 0)
+        if ((&a0->desc_4->animFlags_14[0])[i] != 0) // indexed through the decayed pointer, as the original
         {
             if (((unsigned char*)p->field_44)[i] != 0)
             {
-                LoadModelAnimData_80026A8C((char*)p->field_54 + i * 28, a0[10] + ((int*)a0[10])[j + 1], h);
+                LoadModelAnimData_80026A8C(&((ModelAnim*)p->field_54)[i], (int)a0->anims_28 + (&a0->anims_28->offsets_4[0])[j], h);
             }
             j++;
         }
     }
 }
 // Matched
-void LoadSingleModelAnim_800263CC(int* p)
+void LoadSingleModelAnim_800263CC(ModelLoadParams* p)
 {
-    int* tmp27;
-    int** q = (int**)p[5];
-    tmp27 = *(q + 0);
-    LoadModelAnimData_80026A8C((char*)q[0x54 / 4] + p[4] * 28, *(p + 0xB), tmp27[1]);
+    struct_112_list* l;
+    struct_112* q = p->model_14;
+    l = (struct_112_list*)q->field_0;
+    LoadModelAnimData_80026A8C(&((ModelAnim*)q->field_54)[p->animIdx_10], (int)p->anim_2C, l->field_4);
 }
 // Matched
-void LoadModelAnimSetSection_80026410(int* a0)
+void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
 {
-    int* q = (int*)a0[12];
-    struct_112* p = (struct_112*)a0[5];
-    int n = q[0];
-    int h = ((int*)p->field_0)[1];
+    ModelAnimSetSection* q = a0->animSet_30;
+    struct_112* p = a0->model_14;
+    int n = q->count_0;
+    int h = ((struct_112_list*)p->field_0)->field_4;
     int* list = (int*)HeapAlloc_8003FC8C((n + 1) * 4, h);
     int i;
     int id;
@@ -3519,13 +3509,13 @@ void LoadModelAnimSetSection_80026410(int* a0)
     list[0] = n;
     for (i = 0; i < n; i++)
     {
-        id = q[i * 2 + 1];
-        src = (int)q + q[i * 2 + 2];
+        id = q->items_4[i].id;
+        src = (int)q + q->items_4[i].offset;
         if (((unsigned char*)p->field_44)[id] == 0)
         {
             ((int*)p->field_58)[i + 1] = id;
             ((unsigned char*)p->field_44)[id] = 1;
-            LoadModelAnimData_80026A8C((char*)p->field_54 + id * 28, src, h);
+            LoadModelAnimData_80026A8C(&((ModelAnim*)p->field_54)[id], src, h);
         }
         else
         {
@@ -3535,24 +3525,24 @@ void LoadModelAnimSetSection_80026410(int* a0)
 }
 #if 0
 // Not matched: the original loads the list argument (+0x34) right after the owner pointer, ours schedules it first (same as LoadModelFtg_800260FC)
-void sub_8002651C(int* a)
+void sub_8002651C(ModelLoadParams* a)
 {
-    struct_112* p = ((struct_loader*)a)->owner_14;
-    int* list = ((struct_loader*)a)->list_34;
-    int heap = ((int*)p->field_0)[1];
-    int* q = ((struct_loader*)a)->data_18 + 1;
+    struct_112* p = a->model_14;
+    int* list = a->ftg2_34;
+    int heap = ((struct_112_list*)p->field_0)->field_4;
+    short* q = a->vram_18->reloc_4;
     p->field_42 = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->field_68, p->field_42, heap);
-    LoadFtgObjects_80021824(((struct_loader*)a)->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
+    LoadFtgObjects_80021824(a->ftg2_34, (FtgObject*)p->field_68, p->field_42, heap, (int)q);
 }
 #endif
 INCLUDE_ASM(sub_8002651C);
 // Matched
-void sub_8002659C(char* a0)
+void sub_8002659C(ModelLoadParams* a0)
 {
-    unsigned char* q = *(unsigned char**)(a0 + 0x38);
-    struct_112* p = *(struct_112**)(a0 + 0x14);
-    int h = ((int*)p->field_0)[1];
+    unsigned char* q = a0->extra_38;
+    struct_112* p = a0->model_14;
+    int h = ((struct_112_list*)p->field_0)->field_4;
     int r;
     p->field_43 = *q;
     q += 4;

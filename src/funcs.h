@@ -20,6 +20,8 @@ struct FtgSrcPolyFT4;
 struct FtgSrcPolyGT4;
 struct FtgSrcSprites9;
 struct FtgObject;
+struct ModelLoader;
+struct ModelLoadParams;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -398,8 +400,8 @@ extern void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4);
 extern void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q);
 extern int GetEquipmentIcon_8001D2D4(void);
 extern void UpdateOverlayLoaderTask_80020CD8(int a0, int* p);
-extern void InitModelLoadParams_80025ED0(int* p);
-extern void LoadSingleModelAnim_800263CC(int* p);
+extern void InitModelLoadParams_80025ED0(struct ModelLoadParams* p);
+extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);
 extern int sub_800272D0(void);
 extern void sub_80027314(void);
 extern int sub_80027330(short a0);
@@ -479,8 +481,8 @@ extern void sub_800182B8(int* p, int a1);
 extern int sub_800184DC(int a0, int a1);
 extern void ReleaseModelAnim_800203B0(int a0, int a1, int a2);
 extern void TintVramImage_800292D0(void* a0, void* a1, int a2);
-extern void LoadRequestedModels_80020A38(int* p);
-extern int AreRequestedModelsLoaded_80020B70(int* p);
+extern void LoadRequestedModels_80020A38(struct ModelLoader* p);
+extern int AreRequestedModelsLoaded_80020B70(struct ModelLoader* p);
 extern void sub_8001E574();
 
 extern void sub_800127B8(struct_obj_B* p);
@@ -520,10 +522,10 @@ extern void sub_80023F34(struct FtgPolyF4List* a0, struct FtgPolyF4* s, int a2, 
 extern void sub_80024730(struct FtgPolyGT4List* a0, struct FtgSrcPolyGT4* s, int a2, int a3);
 extern int ConsumeFileRequest_8003BFD0(int key, int flag);
 extern void sub_80028DC0(void);
-extern void LoadModelFtg_800260FC(int* a0);
-extern void LoadModelAnims_800261C8(int* a0);
-extern void LoadSingleModelAnim_800263CC(int* p);
-extern void LoadModelAnimSetSection_80026410(int* a0);
-extern void sub_8002651C(int* a0);
+extern void LoadModelFtg_800260FC(struct ModelLoadParams* a0);
+extern void LoadModelAnims_800261C8(struct ModelLoadParams* a0);
+extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);
+extern void LoadModelAnimSetSection_80026410(struct ModelLoadParams* a0);
+extern void sub_8002651C(struct ModelLoadParams* a0);
 extern int AreFileRequestsDone_80024DC4(void* p);
 extern void FreeModelAnims_8002679C(struct_28** a0, int n, int h);

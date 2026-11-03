@@ -280,4 +280,95 @@ typedef struct FtgObject
     FtgSprite* texSprites_50;
 } FtgObject;
 
+// ---------------------------------------------------------------------------------------------
+// model loader task (the buffer of the modelLoaderTask_8008B54C event entry)
+typedef struct
+{
+    int loaded_0; // LoadModel_80025200 issued
+    int id_4;     // -1: free slot
+    int sel_8;
+    int arg_C;
+    int animSet_10; // < 0: none
+} ModelLoadSlot;
+typedef struct ModelLoader
+{
+    int state_0;
+    int done_4;
+    struct_112_list* models_8;
+    ModelLoadSlot slots_C[4];
+} ModelLoader;
+
+// ---------------------------------------------------------------------------------------------
+// model files (modelDescs_800824CC, LoadModel_80025200 / OnModelFileLoaded_80025D7C)
+
+typedef struct
+{
+    unsigned short offset; // sectors into the DATA.001 file
+    unsigned short size;   // sectors
+} ModelSectorSpan;
+
+// model file description (one per model id); the tables after animFlags_14 are variable length:
+// animFlags_14[animCount_12], animation spans[animCount_12], then the animation set and alternate
+// FTG tables (a count followed by spans)
+typedef struct
+{
+    unsigned short fileId_0;
+    ModelSectorSpan header_2;
+    ModelSectorSpan tex_6;
+    ModelSectorSpan ftg_A;
+    ModelSectorSpan anims_E;
+    unsigned short animCount_12;
+    unsigned short animFlags_14[1]; // low byte: initially loaded
+} ModelDesc;
+
+// VRAM placement of one model slot (the 16-byte entries of the struct_112_list field_C table, the
+// shared headers call it struct_16_b)
+typedef struct
+{
+    short field_0;
+    short id_2; // -1 ends the table
+    short reloc_4[6]; // RelocateTPageClut_80022AE8 table
+} ModelVramSlot;
+
+typedef struct
+{
+    int size_0;
+    char data_4[1];
+} ModelHeaderSection;
+typedef struct
+{
+    int count_0;
+    int offsets_4[1]; // from the section start
+} ModelAnimSection;
+typedef struct
+{
+    int count_0;
+    struct
+    {
+        int id;
+        int offset; // from the section start
+    } items_4[1];
+} ModelAnimSetSection;
+
+// OnModelFileLoaded_80025D7C parameters (FileRequestDesc.params_14, 0x3C bytes are copied)
+typedef struct ModelLoadParams
+{
+    unsigned int flags_0; // sections present: 1 header, 2 textures, 4 FTG, 8 anims, 0x10 one anim, 0x20 anim set, 0x40 alternate FTG
+    ModelDesc* desc_4;
+    int sel_8;   // texture slot, -1: none
+    int mode_C;  // which animations start loaded (LoadModelAnims_800261C8)
+    int animIdx_10;
+    struct_112* model_14;
+    ModelVramSlot* vram_18;
+    ModelHeaderSection* header_1C;
+    int* tim_20;
+    int* ftg_24;
+    ModelAnimSection* anims_28;
+    char* anim_2C;
+    ModelAnimSetSection* animSet_30;
+    int* ftg2_34;
+    unsigned char* extra_38;
+    int pad_3C;
+} ModelLoadParams;
+
 #endif
