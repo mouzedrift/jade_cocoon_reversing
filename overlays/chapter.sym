@@ -1,8 +1,10 @@
 dword_800B66C0=0x800b66c0; // overlay header / data
-sub_800B66F4=0x800b66f4;
+jpt_800B66C4=0x800b66c4; // jump table of ChapterIntroTask_800B66F4
+dword_800B66DC=0x800b66dc; // data behind the jump table
+ChapterIntroTask_800B66F4=0x800b66f4;
 sub_800B68A8=0x800b68a8;
 sub_800B6900=0x800b6900;
 sub_800B69BC=0x800b69bc;
 sub_800B6A94=0x800b6a94;
-sub_800B6B18=0x800b6b18;
+EnterChapterMap_800B6B18=0x800b6b18;
 dword_800B6BC4=0x800b6bc4; // data behind the code

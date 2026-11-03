@@ -73,6 +73,12 @@ from the disc, finds its functions (`overlays/<name>.sym`), writes `asm/overlays
 `src/overlays/<name>.c` (`INCLUDE_OVERLAY_ASM(name, sym)` for functions not decompiled yet) into
 `build_psyq/NAME.BIN`. `scripts/ovl_diff.py NAME` lists the functions that differ.
 
+PSY-Q library modules inside an overlay (LOAD carries LIBMCRD.LIB's LIBMCRD, USERFUNC and BIOS) are linked from
+the 4.4 .LIB like the executable's: `config/ovl_lib_objs.txt` gives the modules and where their sections start.
+The overlay's symbols in those ranges get no asm, the C source must not include them, and the overlay's own .bss
+(`gamebss=`) is assembled as .bss so that it lands between the modules' .data and .bss. The modules' references
+into the executable's library code are resolved from `build_psyq/jade_cocoon.map` (build the executable first).
+
 ## Hash check
 
 `python scripts/verify.py SLUS_008.54 <iso>.bin` builds the executable and every overlay and compares the
