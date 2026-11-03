@@ -385,7 +385,7 @@ extern short dword_8007D938[];
 extern int dword_80082670;
 extern short word_8008B862;
 extern int dword_80082678;
-extern short word_80091C40;
+extern short word_80091C40[];
 extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
 extern struct_obj_C dword_800919A0[7];

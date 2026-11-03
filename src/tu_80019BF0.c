@@ -5940,7 +5940,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     }
 }
 extern int dword_8008D648[];
-extern int dword_80082674;
+extern int* dword_80082674;
 extern int dword_80091C98;
 extern int dword_80091C94;
 extern int dword_80091C5C;
@@ -5948,7 +5948,12 @@ extern int dword_80091C58;
 extern int dword_80091C90;
 extern int dword_80091C9C;
 extern int dword_80091C8C;
-extern int stru_80091C78[];
+typedef struct
+{
+    int pos[3];
+    int mapIdx;
+} struct_80091C78;
+extern struct_80091C78 stru_80091C78;
 extern int dword_800B1DC8;
 extern int dword_80091C54;
 extern short word_80091CB8[];
@@ -5992,7 +5997,7 @@ void sub_80026FAC(void)
     dword_80091CA0 = 0;
     dword_80091C9C = 0;
     dword_80091C8C = 0;
-    stru_80091C78[3] = -1;
+    stru_80091C78.mapIdx = -1;
     dword_80091C54 = dword_800B1DC8;
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
@@ -6001,9 +6006,9 @@ void sub_80026FAC(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40 = -1;
+    word_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    (&word_80091C40)[1] = -1;
+    word_80091C40[1] = -1;
     dword_80082678 = 0;
     sub_8001D378();
 }
@@ -6034,9 +6039,9 @@ void sub_80027118(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40 = -1;
+    word_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    (&word_80091C40)[1] = -1;
+    word_80091C40[1] = -1;
     sub_8002741C();
     dword_80082678 = 0;
     dword_80091C74 = -1;
@@ -6118,7 +6123,7 @@ int sub_80027330(short a0)
 {
     if (dword_80082678 == 0)
     {
-        word_80091C40 = a0;
+        word_80091C40[0] = a0;
         return 1;
     }
     return 0;
@@ -6131,7 +6136,7 @@ int sub_80027358(int id)
     short* s;
     if (dword_80082678 == 1)
     {
-        if (word_80091C40 != id)
+        if (word_80091C40[0] != id)
         {
             word_8008B860 = id;
             return 0;
@@ -6480,10 +6485,260 @@ void sub_80028388(struct_obj_D* p, int* q)
     sub_800283C0(p, q);
     p->field_8 = (void (*)(void))sub_800283C0;
 }
+typedef struct
+{
+    short f0;
+    short f2;
+    char pad_4[0xC];
+} MapEntry16;
+extern int sub_800A6D50(int a0);
+extern int dword_800B1228;
+extern MapEntry16** dword_800B0608[];
+extern void sub_80028C60();
 #if 0
+// Not matched: register allocation only: a1 gets s4 instead of s2 (and the load flag / 0x80082678 base registers move with it)
 void sub_800283C0(void* a0, int* a1)
 {
+    int req[8];
+    int req2[8];
+    int req3[8];
+    int s;
+    int load;
+    int wait;
+    s = a1[0];
+    switch (s)
+    {
+    case 0:
+        if (sub_800A6D50(0) != 1 && dword_80082670 == 0)
+        {
+            break;
+        }
+        if (dword_800B1228 & 0x4000)
+        {
+            break;
+        }
+        if (word_80091C40[1] != word_80091C40[0])
+        {
+            req[0] = 0xC69;
+            req[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req[2] = dword_80082674[word_80091C40[0] * 3];
+            req[3] = dword_80082674[word_80091C40[0] * 3 + (dword_80082670 ? 2 : 1)];
+            req[4] = 0;
+            req[5] = 0;
+            req[6] = 0;
+            req[7] = (int)sub_80028C60;
+            a1[1] = QueueFileRequest_8003BC84(req);
+            dword_80082678 = 1;
+            word_80091C40[1] = word_80091C40[0];
+            break;
+        }
+        if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+        {
+            load = 1;
+            wait = 2;
+            if (dword_80082670 == 0)
+            {
+                sub_8002728C();
+            }
+            if (dword_80082678)
+            {
+                if (word_80091C40[0] == saveData_8008B570.mapId_2E4[3].field_0)
+                {
+                    load = 0;
+                }
+                wait = sub_8003BFD0(a1[1], 1);
+                dword_80082678 = 0;
+            }
+            if (load)
+            {
+                req2[0] = 0x46C;
+                req2[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+                req2[2] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
+                req2[3] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (dword_80082670 ? 2 : 1)];
+                req2[4] = 0;
+                req2[5] = 0;
+                req2[6] = 0;
+                req2[7] = (int)sub_80028C60;
+                a1[1] = QueueFileRequest_8003BC84(req2);
+            }
+            word_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
+            word_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
+            saveData_8008B570.mapId_2E4[3].field_2 = saveData_8008B570.mapId_2E4[3].field_0;
+            if (wait)
+            {
+                if (dword_80082670 == 0)
+                {
+                    sub_80027478(4, 1);
+                }
+                eventDispatchHalt_8008B540 = 1;
+                a1[0] = 1;
+            }
+            break;
+        }
+        if (word_80091CB8[6] != word_80091CB8[7])
+        {
+            req3[0] = 0x450;
+            req3[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req3[2] = dword_80082674[word_80091CB8[6] * 3];
+            req3[3] = 0;
+            req3[4] = 0;
+            req3[5] = 0;
+            req3[6] = 0;
+            req3[7] = 0;
+            word_80091CB8[7] = word_80091CB8[6];
+            a1[1] = QueueFileRequest_8003BC84(req3);
+            a1[0] = 2;
+        }
+        break;
+    case 1:
+        if (GetFileRequestStatus_8003BE30(a1[1]) == 0)
+        {
+            dword_80082670 = 0;
+            dword_80082668 = 0;
+            sub_80028DC0();
+            sub_80027478(4, 0);
+            a1[0] = 0;
+        }
+        else
+        {
+            eventDispatchHalt_8008B540 = 1;
+        }
+        break;
+    case 2:
+        if (GetFileRequestStatus_8003BE30(a1[1]) == 0)
+        {
+            a1[0] = 0;
+        }
+        break;
+    }
 }
 #endif
 INCLUDE_ASM(sub_800283C0);
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+    short rx;
+    short ry;
+    short rz;
+} PosRot;
+typedef struct
+{
+    char pad_0[0xC];
+    int fC;
+} MapEntry16b;
+typedef struct
+{
+    char pad_0[0x7A8];
+    PosRot pos;
+} SaveData7A8;
+extern void sub_800A5628(int a0, int* a1, int a2);
+extern void sub_800B73C0(int a0, int a1);
+extern int sub_800B76B8(char* a0, PosRot* a1);
+extern int* sub_80027A88();
+extern unsigned int* dword_80073210;
+extern short dword_80091CA8[];
+extern char* dword_8008B4A4;
+#if 0
+// Not matched: 2 instructions: in the mapIdx >= 0 branch the original loads the index (lhu) before the -1 store to field_2
+void sub_80028808(void* a0, int* a1)
+{
+    char buf[0x104];
+    int n;
+    int* p;
+    unsigned int cnt;
+    unsigned int i;
+    unsigned int j;
+    int a;
+    int c;
+    int c2;
+    p = a1;
+    n = *p++;
+    if (n != 0 && dword_80091C8C == 0)
+    {
+        MemCopy_800403E8(dword_80073210, (unsigned int*)p, n);
+        dword_80091CB4 = ((MapEntry16b*)dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
+    }
+    p = (int*)((char*)p + n);
+    dword_80082668 = 1;
+    dword_8008266C = n != 0;
+    cnt = *p++;
+    for (j = 0; j < cnt; j++)
+    {
+        a = *p++;
+        c = *p++;
+        c2 = *p++;
+        sub_800A5628(a, p, c);
+        p = (int*)((char*)p + c2);
+    }
+    dword_8008B500[0] = saveData_8008B570.mapId_2E4[2].field_0;
+    dword_8008B500[1] = *p++;
+    dword_8008B500[2] = *p++;
+    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)p, 0x104);
+    p = sub_80027A88(&dword_8008B500[3], &dword_8008B500[1], &dword_80091C68, (char*)p + 0x104);
+    sub_800B73C0(dword_8008B500[3], dword_8008B500[1]);
+    p = sub_80027A88(&dword_8008B500[5], &dword_8008B500[4], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[5], dword_8008B500[4]);
+    sub_800275E8((char**)&dword_8008B500[6], dword_8008B500[4], (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500[10], &dword_8008B500[9], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[10], dword_8008B500[9]);
+    p = sub_80027A88(&dword_8008B500[12], &dword_8008B500[11], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[12], dword_8008B500[11]);
+    sub_800275E8((char**)&dword_8008B500[13], dword_8008B500[11], (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500[8], &dword_8008B500[7], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[8], dword_8008B500[7]);
+    cnt = p[0];
+    sub_80027708(p, (int)&dword_80091C68);
+    p = (int*)((char*)p + cnt);
+    cnt = *p++;
+    LoadTiy_80028E74(0, 0, 0, (int)p, (int)&dword_80091C68);
+    p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
+    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500[1] * 12);
+    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500[1] * 12);
+    if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
+    {
+        ((void (*)(int))dword_80091CB4)(0);
+    }
+    if (dword_80091C98)
+    {
+        ((SaveData7A8*)&saveData_8008B570)->pos.x = stru_80091C78.pos[0];
+        ((SaveData7A8*)&saveData_8008B570)->pos.y = stru_80091C78.pos[1];
+        ((SaveData7A8*)&saveData_8008B570)->pos.z = stru_80091C78.pos[2];
+        ((SaveData7A8*)&saveData_8008B570)->pos.rx = dword_80091CA8[0];
+        ((SaveData7A8*)&saveData_8008B570)->pos.ry = dword_80091CA8[1];
+        ((SaveData7A8*)&saveData_8008B570)->pos.rz = dword_80091CA8[2];
+    }
+    dword_80091C98 = 0;
+    if (dword_80091C94)
+    {
+        ((SaveData7A8*)&saveData_8008B570)->pos.x = ((PosRot*)buf)->x;
+        ((SaveData7A8*)&saveData_8008B570)->pos.y = ((PosRot*)buf)->y;
+        ((SaveData7A8*)&saveData_8008B570)->pos.z = ((PosRot*)buf)->z;
+        ((SaveData7A8*)&saveData_8008B570)->pos.rx = ((PosRot*)buf)->rx;
+        ((SaveData7A8*)&saveData_8008B570)->pos.ry = ((PosRot*)buf)->ry;
+        ((SaveData7A8*)&saveData_8008B570)->pos.rz = ((PosRot*)buf)->rz;
+    }
+    dword_80091C94 = 0;
+    if (((int*)&stru_80091C78)[3] >= 0)
+    {
+        saveData_8008B570.mapId_2E4[3].field_0 = ((int*)&stru_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].field_2 = -1;
+        ((int*)&stru_80091C78)[3] = -1;
+    }
+    else
+    {
+        for (i = 0; i < dword_8008B500[1]; i++)
+        {
+            if (sub_800B76B8((char*)dword_8008B500[3] + i * 8, &((SaveData7A8*)&saveData_8008B570)->pos) >= 0)
+            {
+                saveData_8008B570.mapId_2E4[3].field_0 = i;
+                saveData_8008B570.mapId_2E4[3].field_2 = -1;
+                break;
+            }
+        }
+    }
+    *(int*)(*(char**)(dword_8008B4A4 + 0x24) + 0x84) = saveData_8008B570.mapId_2E4[3].field_0;
+}
+#endif
 INCLUDE_ASM(sub_80028808);
