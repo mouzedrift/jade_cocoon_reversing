@@ -5,7 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
-#include "actor.h"
+#include "tu_80019BF0.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -131,18 +131,9 @@ int sub_80019C84(void)
     }
     return v;
 }
-// the block at 0x8008D4F0 (tu_80036528.c copies its first 0x68 bytes as Block104)
-typedef struct
-{
-    VECTOR pos;
-    int field_10;
-    int active;
-} struct_8008D4F0_point;
-typedef struct
-{
-    char pad_0[0x44];
-    struct_8008D4F0_point points[8];
-} struct_8008D4F0;
+extern CameraState cameraState_8008D4F0;
+extern MATRIX dword_80087114; // light matrix
+extern MATRIX dword_80087134; // light colour matrix
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
@@ -165,16 +156,6 @@ extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
 #if 0
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
-typedef struct
-{
-    char pad[0x44];
-    struct
-    {
-        int pos[5];
-        int active;
-    } points[8];
-} CamState_80019CC4;
-extern char cameraState_8008D4F0[];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 int sub_80019CC4(int* pos)
 {
@@ -187,13 +168,13 @@ int sub_80019CC4(int* pos)
     {
         for (i = 0; i < 8; i++)
         {
-            if (((CamState_80019CC4*)cameraState_8008D4F0)->points[i].active == 0)
+            if (cameraState_8008D4F0.points_44[i].active == 0)
             {
                 break;
             }
-            if (DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos) < best)
+            if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
             {
-                best = DistanceSquaredXZ_8003B860(((CamState_80019CC4*)cameraState_8008D4F0)->points[i].pos, pos);
+                best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
                 found = i;
             }
         }
@@ -203,47 +184,31 @@ int sub_80019CC4(int* pos)
 #endif
 INCLUDE_ASM(sub_80019CC4);
 INCLUDE_ASM(sub_80019D84);
-extern short dword_80087114[];
-extern short dword_80087134[];
-extern char cameraState_8008D4F0[];
 // Matched
 void sub_8001A38C(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    unsigned short* g;
-    p[0] = 0;
-    p[1] = 0;
-    g = (unsigned short*)cameraState_8008D4F0;
-    dword_80087114[6] = -g[0x34 / 2];
-    dword_80087114[7] = -g[0x36 / 2];
-    dword_80087114[8] = -g[0x38 / 2];
-    dword_80087134[2] = (short)g[0x3C / 2] / 4;
-    dword_80087134[5] = (short)g[0x3E / 2] / 4;
-    dword_80087134[8] = (short)g[0x40 / 2] / 4;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    CameraState* g;
+    p->flags = 0;
+    p->count = 0;
+    g = &cameraState_8008D4F0;
+    dword_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
+    dword_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
+    dword_80087114.m[2][2] = -(unsigned short)g->lightDir_34.vz;
+    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
 extern unsigned char byte_8008D460[3];
-typedef struct
-{
-    unsigned short flags; // 0x10: flash, 1: fade in, 2: fade out, 4: darken, 8: brighten, 0x20: front OT
-    short count;
-    short pad_4;
-    unsigned short duration;
-} Fade_8001A41C;
-typedef struct
-{
-    char pad_0[0x30];
-    unsigned char rgb[3];
-} CamColor_8001A41C;
 // Matched
-void sub_8001A41C(int** p, unsigned short* q)
+void sub_8001A41C(int** p, Fade_8001A41C* f)
 {
-    Fade_8001A41C* f = (Fade_8001A41C*)q;
     unsigned long* ot;
     POLY_F4 poly;
     DR_TPAGE tp;
     int v;
     SVECTOR* sv;
-    unsigned char* c;
+    CameraState* c;
     unsigned char b;
     if (f->flags & 0x20)
     {
@@ -352,60 +317,60 @@ void sub_8001A41C(int** p, unsigned short* q)
             f->count = f->duration;
         }
     }
-    sv = (SVECTOR*)(cameraState_8008D4F0 + 0x34);
+    sv = &cameraState_8008D4F0.lightDir_34;
     VectorNormalSS(sv, sv);
-    c = (unsigned char*)cameraState_8008D4F0;
-    dword_80087114[0] = *(short*)(c + 0x34);
-    dword_80087114[1] = *(short*)(c + 0x36);
-    dword_80087114[2] = *(short*)(c + 0x38);
+    c = &cameraState_8008D4F0;
+    dword_80087114.m[0][0] = c->lightDir_34.vx;
+    dword_80087114.m[0][1] = c->lightDir_34.vy;
+    dword_80087114.m[0][2] = c->lightDir_34.vz;
     if (unknownFlags_8008D678 & 0x400)
     {
-        dword_80087134[0] = *(short*)(c + 0x3C) * dword_8008D40C >> 12;
-        dword_80087134[3] = *(short*)(c + 0x3E) * dword_8008D40C >> 12;
-        dword_80087134[6] = *(short*)(c + 0x40) * dword_8008D40C >> 12;
+        dword_80087134.m[0][0] = c->lightColor_3C[0] * dword_8008D40C >> 12;
+        dword_80087134.m[1][0] = c->lightColor_3C[1] * dword_8008D40C >> 12;
+        dword_80087134.m[2][0] = c->lightColor_3C[2] * dword_8008D40C >> 12;
     }
     else
     {
-        dword_80087134[0] = *(short*)(c + 0x3C);
-        dword_80087134[3] = *(short*)(c + 0x3E);
-        dword_80087134[6] = *(short*)(c + 0x40);
+        dword_80087134.m[0][0] = c->lightColor_3C[0];
+        dword_80087134.m[1][0] = c->lightColor_3C[1];
+        dword_80087134.m[2][0] = c->lightColor_3C[2];
     }
-    dword_80087114[3] = 0;
-    dword_80087114[4] = 0;
-    dword_80087114[5] = 0;
-    dword_80087114[6] = -dword_80087114[0];
-    dword_80087114[7] = -dword_80087114[1];
-    dword_80087114[8] = -dword_80087114[2];
-    dword_80087134[1] = 0;
-    dword_80087134[4] = 0;
-    dword_80087134[7] = 0;
-    dword_80087134[2] = dword_80087134[0] / 4;
-    dword_80087134[5] = dword_80087134[3] / 4;
-    dword_80087134[8] = dword_80087134[6] / 4;
+    dword_80087114.m[1][0] = 0;
+    dword_80087114.m[1][1] = 0;
+    dword_80087114.m[1][2] = 0;
+    dword_80087114.m[2][0] = -dword_80087114.m[0][0];
+    dword_80087114.m[2][1] = -dword_80087114.m[0][1];
+    dword_80087114.m[2][2] = -dword_80087114.m[0][2];
+    dword_80087134.m[0][1] = 0;
+    dword_80087134.m[1][1] = 0;
+    dword_80087134.m[2][1] = 0;
+    dword_80087134.m[0][2] = dword_80087134.m[0][0] / 4;
+    dword_80087134.m[1][2] = dword_80087134.m[1][0] / 4;
+    dword_80087134.m[2][2] = dword_80087134.m[2][0] / 4;
     if (unknownFlags_8008D678 & 0x400)
     {
-        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0] * dword_8008D40C >> 12;
-        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1] * dword_8008D40C >> 12;
-        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2] * dword_8008D40C >> 12;
+        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0] * dword_8008D40C >> 12;
+        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1] * dword_8008D40C >> 12;
+        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2] * dword_8008D40C >> 12;
     }
     else
     {
-        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0];
-        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1];
-        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2];
+        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0];
+        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1];
+        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2];
     }
 }
 // Matched
 void sub_8001A9A4(void)
 {
-    unsigned short* p;
+    Fade_8001A41C* p;
     unsigned short v;
     dword_8008D40C = 0x1000;
-    p = (unsigned short*)dword_8008D628[9];
-    v = p[0];
+    p = ((EventNode*)dword_8008D628)->entry.buffer;
+    v = p->flags;
     unknownFlags_8008D678 &= ~0x400;
-    p[1] = 0;
-    p[0] = v & 0xFFF0;
+    p->count = 0;
+    p->flags = v & 0xFFF0;
 }
 // Matched
 void sub_8001A9E4(void)
@@ -416,87 +381,87 @@ void sub_8001A9E4(void)
 // Matched
 void sub_8001AA04(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 1;
+    p->count = 0;
+    p->flags |= 1;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AA50(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
     unknownFlags_8008D678 |= 0x400;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 2;
+    p->count = 0;
+    p->flags |= 2;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AAA8(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 4;
+    p->count = 0;
+    p->flags |= 4;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AAF4(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    p[0] &= ~4;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    p->flags &= ~4;
 }
 // Matched
 void sub_8001AB1C(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 8;
+    p->count = 0;
+    p->flags |= 8;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AB68(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    p[1] = 8;
-    p[0] |= 0x10;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    p->count = 8;
+    p->flags |= 0x10;
 }
 // Matched
 int sub_8001AB94(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    unsigned short v = p[0];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    unsigned short v = p->flags;
     if (v & 0x1B)
     {
         return 0;
     }
     if (v & 4)
     {
-        return ((short*)p)[1] == p[3];
+        return p->count == p->duration;
     }
     return 1;
 }
 // Matched
 void sub_8001ABEC(int on)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     if (on)
     {
-        p[0] |= 0x20;
+        p->flags |= 0x20;
     }
     else
     {
-        p[0] &= ~0x20;
+        p->flags &= ~0x20;
     }
 }
 // Matched
@@ -1269,24 +1234,24 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-extern char dword_8007C750[];
+extern SoundCue_8007C750 dword_8007C750[];
 // Matched
-void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2)
+void PlayAnimFrameSfx_8001C364(struct_112* a0, int idx, int a2)
 {
-    int* e = (int*)(*(int*)(a0 + 0x54) + idx * 28);
+    ModelAnim* e = &((ModelAnim*)a0->field_54)[idx];
     int i;
-    for (i = 0; i < e[3]; i++)
+    for (i = 0; i < e->cueCount_C; i++)
     {
-        short* q = (short*)(i * 8 + e[4]);
-        if (a2 == q[0] && q[1] == 0)
+        ModelAnimCue* q = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (int)e->cues_10); // integer sum: the original adds the base second
+        if (a2 == q->frame_0 && q->kind_2 == 0)
         {
-            unsigned int n = (unsigned short)q[2];
+            unsigned int n = (unsigned short)q->arg_4;
             if (n < 0x6E)
             {
-                char* t = (char*)(((short)n << 3) + (int)dword_8007C750);
-                if (*(int*)t == 0)
+                SoundCue_8007C750* t = &dword_8007C750[(short)n];
+                if (t->kind == 0)
                 {
-                    PlaySfx_80031494(*(short*)(t + 4));
+                    PlaySfx_80031494(t->arg);
                 }
             }
         }
@@ -1296,44 +1261,38 @@ extern short dword_8007CAC0[];
 extern short dword_8007CACC[];
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
-extern void sub_80025B5C(void* p, int idx, int sel);
-typedef struct
-{
-    int kind; // 0: sfx, 1: music, 2: sequence, 3: fade out the system sequence
-    short arg;
-    short pad;
-} SoundCue_8007C750;
+extern void sub_80025B5C(struct_112* p, int idx, int sel);
 // Matched
-void sub_8001C440(char* a0, int idx, int key)
+void sub_8001C440(struct_112* a0, int idx, int key)
 {
-    int* e = (int*)(idx * 28 + *(int*)(a0 + 0x54));
-    short* q = (short*)e[4];
-    int n = e[3];
+    ModelAnim* e = (ModelAnim*)(idx * 28 + a0->field_54);
+    ModelAnimCue* q = e->cues_10;
+    int n = e->cueCount_C;
     int i;
     short arg;
-    for (i = 0; i < n; i++, q += 4)
+    for (i = 0; i < n; i++, q++)
     {
-        if (key != q[0])
+        if (key != q->frame_0)
         {
             continue;
         }
-        switch (q[1])
+        switch (q->kind_2)
         {
         case 0:
-            if ((unsigned short)q[2] < 0x6E)
+            if ((unsigned short)q->arg_4 < 0x6E)
             {
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 0)
+                if (dword_8007C750[q->arg_4].kind == 0)
                 {
-                    PlaySfx_80031494(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg);
+                    PlaySfx_80031494(dword_8007C750[q->arg_4].arg);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 1)
+                if (dword_8007C750[q->arg_4].kind == 1)
                 {
-                    PlayMusic_800300E0(((SoundCue_8007C750*)dword_8007C750)[q[2]].arg, 1);
+                    PlayMusic_800300E0(dword_8007C750[q->arg_4].arg, 1);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 2)
+                if (dword_8007C750[q->arg_4].kind == 2)
                 {
-                    arg = ((SoundCue_8007C750*)dword_8007C750)[q[2]].arg;
-                    if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 3)
+                    arg = dword_8007C750[q->arg_4].arg;
+                    if (dword_8007C750[q->arg_4].arg == 3)
                     {
                         arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
                         if (arg > 4)
@@ -1342,7 +1301,7 @@ void sub_8001C440(char* a0, int idx, int key)
                         }
                         arg = dword_8007CACC[arg];
                     }
-                    else if (((SoundCue_8007C750*)dword_8007C750)[q[2]].arg == 2)
+                    else if (dword_8007C750[q->arg_4].arg == 2)
                     {
                         arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
                         if (arg > 4)
@@ -1353,7 +1312,7 @@ void sub_8001C440(char* a0, int idx, int key)
                     }
                     PlaySeqSlot_80031160(arg, 1);
                 }
-                if (((SoundCue_8007C750*)dword_8007C750)[q[2]].kind == 3)
+                if (dword_8007C750[q->arg_4].kind == 3)
                 {
                     if (systemSound_80091D40.field_4_seq_num >= 0)
                     {
@@ -1364,7 +1323,7 @@ void sub_8001C440(char* a0, int idx, int key)
             }
             break;
         case 1:
-            sub_80025B5C(a0, q[2], q[3]);
+            sub_80025B5C(a0, q->arg_4, q->arg_6);
             break;
         }
     }
@@ -2061,7 +2020,7 @@ void FreeActors_8001D3C4(int a0)
     ClearModelAnimRefs_800201A4();
 }
 // Matched
-void UpdateActorCb_8001D41C(int a0, void* a1)
+void UpdateActorCb_8001D41C(EventEntry* e, void* a1)
 {
     sub_8001EA28(a1);
     sub_8001F354(a1);
@@ -2069,78 +2028,58 @@ void UpdateActorCb_8001D41C(int a0, void* a1)
     sub_8001F9AC(a1);
 }
 // Matched
-int* CreateActor_8001D45C(int a0)
+Actor* CreateActor_8001D45C(ActorDesc* a0)
 {
-    struct_cb* r = AllocEventEntry_80043AF8(actorTasks_8008D43C);
-    int* p;
+    EventEntry* r = AllocEventEntry_80043AF8((EventNode*)actorTasks_8008D43C);
+    Actor* p;
     if (r != 0)
     {
-        p = r->field_14;
-        r->fn_8 = (void (*)(struct_cb*, int*))UpdateActorCb_8001D41C;
-        r->flags_0 = (r->flags_0 | 1) & ~0x8000;
-        p[0] = (int)r;
+        p = r->buffer;
+        r->cb_8 = UpdateActorCb_8001D41C;
+        r->flags = (r->flags | 1) & ~0x8000;
+        p->task_0 = r;
         sub_8001E574(p, a0);
         return p;
     }
     return 0;
 }
 // Matched
-int* sub_8001D4DC(Actor* o, int a1, int a2, int a3)
+Actor* sub_8001D4DC(Actor* o, int a1, int a2, int a3)
 {
-    struct
-    {
-        int field_0;
-        int field_4;
-        int pos[3];
-        short rot[3];
-        short pad_1A;
-        int field_1C;
-        int field_20;
-        int field_24;
-        int field_28;
-        int field_2C;
-        int field_30;
-        int field_34;
-        char* field_38;
-        int field_3C;
-        int field_40;
-        int field_44;
-        int field_48;
-        int field_4C;
-    } s;
-    int* r;
-    s.field_48 = *(int*)&o->desc_15C;
-    s.field_0 = -1;
-    s.field_4 = a1;
-    s.pos[0] = o->pos_38[0];
-    s.pos[1] = o->pos_38[1];
-    s.pos[2] = o->pos_38[2];
-    s.rot[0] = o->rot_5C[0];
-    s.rot[1] = o->rot_5C[1];
-    s.rot[2] = o->rot_5C[2];
-    s.field_1C = a2;
-    s.field_20 = o->fC2;
-    s.field_24 = o->f90;
-    s.field_28 = o->f1E;
-    s.field_2C = o->f24;
-    s.field_30 = ((o->flags_4 >> 13) ^ 1) & 1;
-    s.field_34 = o->f134;
-    s.field_38 = (char*)&o->f138[0];
-    s.field_3C = *(int*)&o->f144;
-    s.field_40 = o->f148;
+    ActorDesc s;
+    Actor* r;
+    s.model_48 = o->model_15C;
+    s.modelId_0 = -1;
+    s.kind_4 = a1;
+    s.pos_8[0] = o->pos_38[0];
+    s.pos_8[1] = o->pos_38[1];
+    s.pos_8[2] = o->pos_38[2];
+    s.rot_14[0] = o->rot_5C[0];
+    s.rot_14[1] = o->rot_5C[1];
+    s.rot_14[2] = o->rot_5C[2];
+    s.clutRow_1C = a2;
+    s.animIdx_20 = o->animIdx_C2;
+    s.frame_24 = o->frame_90;
+    s.frameSpeed_28 = o->frameSpeed_1E;
+    s.blendDiv_2C = o->blendDiv_24;
+    s.visible_30 = ((o->flags_4 >> 13) ^ 1) & 1;
+    s.bones_34 = o->bones_134;
+    s.baseScale_38 = o->baseScale_138;
+    s.boneScale_3C = o->boneScale_144;
+    s.anims_40 = o->anims_148;
     s.field_44 = o->f14C;
-    s.field_4C = a3;
-    r = CreateActor_8001D45C((int)&s);
+    s.hasMatrices_4C = a3;
+    r = CreateActor_8001D45C(&s);
     sub_8001D68C((struct_obj_A*)r, (o->flags_4 >> 18) & 1);
     return r;
 }
 // Matched
-void DestroyActor_8001D600(char* a0)
+void DestroyActor_8001D600(Actor* a0)
 {
-    int* q = *(int**)a0;
-    ReleaseModelAnimRef_80020278(*(short*)(a0 + 0x16), q[1]);
+    EventEntry* q = a0->task_0;
+    ReleaseModelAnimRef_80020278(a0->modelRef_16, q->field_4);
     sub_8001EA00(a0);
-    q[0] = (q[0] & ~1) | 0x8000;
+    q->flags = (q->flags & ~1) | 0x8000;
 }
 // Matched
 void SetActorActive_8001D658(int** pp, int on)
@@ -2212,33 +2151,32 @@ void sub_8001D730(struct_obj_A* p, int on)
 void sub_8001D760(Actor* o, int idx, int mode, int a3)
 {
     int base;
-    o->fC2 = idx;
-    o->fA0 = o->f9C;
-    o->f9C = *(signed char*)(idx * 60 + o->f148);
-    o->f18 = *(short*)(idx * 60 + o->f148 + 4);
-    o->f1A = *(short*)(idx * 60 + o->f148 + 6);
-    o->f94 = o->f90;
+    o->animIdx_C2 = idx;
+    o->prevAnim_A0 = o->anim_9C;
+    o->anim_9C = o->anims_148[idx].id_0;
+    o->loopFrame_18 = o->anims_148[idx].loop_4;
+    o->endFrame_1A = o->anims_148[idx].end_6;
+    o->prevFrame_94 = o->frame_90;
     if (mode == -1)
     {
-        o->f90 = *(short*)(idx * 60 + o->f148 + 2);
+        o->frame_90 = o->anims_148[idx].start_2;
     }
     else if (mode == -2)
     {
-        o->f90 = *(short*)(idx * 60 + o->f148 + 4);
+        o->frame_90 = o->anims_148[idx].loop_4;
     }
     else if (mode == -3)
     {
         int r = rand();
-        char* e = (char*)(idx * 60 + o->f148);
-        base = *(short*)(e + 2);
-        o->f90 = base + r % (*(short*)(e + 4) - base);
+        base = o->anims_148[idx].start_2;
+        o->frame_90 = base + r % (o->anims_148[idx].loop_4 - base);
     }
     else
     {
-        o->f90 = mode % o->f1A;
+        o->frame_90 = mode % o->endFrame_1A;
     }
-    o->f1C = 0;
-    o->fAC = 0;
+    o->frameFrac_1C = 0;
+    o->blend_AC = 0;
     o->flags_4 |= 8;
     if (a3)
     {
@@ -2246,42 +2184,41 @@ void sub_8001D760(Actor* o, int idx, int mode, int a3)
     }
 }
 // Matched
-int sub_8001D8A8(short* p)
+int sub_8001D8A8(Actor* p)
 {
-    return p[8] == 0;
+    return p->animLoadState_10 == 0;
 }
 // Matched
-void sub_8001D8B4(char* a0, int a1)
+void sub_8001D8B4(Actor* a0, int a1)
 {
-    unsigned char* q = (unsigned char*)(a1 * 60 + *(int*)(a0 + 0x148));
-    if (q[1] == 0)
+    if (a0->anims_148[a1].kind_1 == 0)
     {
-        if (RequestModelAnim_8002032C(*(short*)(a0 + 0x16), ((int*)*(int*)a0)[1], *(signed char*)q))
+        if (RequestModelAnim_8002032C(a0->modelRef_16, a0->task_0->field_4, a0->anims_148[a1].id_0))
         {
-            *(short*)(a0 + 0x14) = a1;
-            *(short*)(a0 + 0x10) = 2;
+            a0->animLoading_14 = a1;
+            a0->animLoadState_10 = 2;
         }
     }
 }
 // Matched
-void sub_8001D92C(char* obj, int idx)
+void sub_8001D92C(Actor* obj, int idx)
 {
-    signed char* e;
+    ActorAnim* e;
     int i;
     int key;
     int n;
-    e = *(signed char**)(obj + 0x148);
-    key = e[idx * 0x3C];
+    e = obj->anims_148;
+    key = e[idx].id_0;
     n = ((int*)e)[-1];
     for (i = 0; i < n; i++)
     {
-        if (key == e[0] && ((unsigned char*)e)[1] == 1)
+        if (key == e->id_0 && e->kind_1 == 1)
         {
             return;
         }
-        e += 0x3C;
+        e++;
     }
-    ReleaseModelAnim_800203B0(*(short*)(obj + 0x16), (*(int**)obj)[1], key);
+    ReleaseModelAnim_800203B0(obj->modelRef_16, obj->task_0->field_4, key);
 }
 // Matched
 void sub_8001D9B0(struct_obj_A* p)
@@ -2319,38 +2256,38 @@ void sub_8001DA2C(struct_obj_A* p)
     p->flags_4 &= 0xBFFFF81F;
 }
 // Matched
-void sub_8001DA4C(char* p, int div, int from, int to)
+void sub_8001DA4C(Actor* p, int div, int from, int to)
 {
     if (from < 0)
     {
-        from = *(short*)(p + 0x26);
+        from = p->scale_26;
     }
     if (to < from)
     {
-        *(short*)(p + 0x28) = (from - to) / div;
-        *(short*)(p + 0x26) = from;
-        *(short*)(p + 0x2A) = to;
-        *(int*)(p + 4) |= 1;
+        p->scaleStep_28 = (from - to) / div;
+        p->scale_26 = from;
+        p->scaleTarget_2A = to;
+        p->flags_4 |= 1;
     }
     else
     {
-        *(short*)(p + 0x28) = (to - from) / div;
-        *(short*)(p + 0x26) = from;
-        *(short*)(p + 0x2A) = to;
-        *(int*)(p + 4) |= 3;
+        p->scaleStep_28 = (to - from) / div;
+        p->scale_26 = from;
+        p->scaleTarget_2A = to;
+        p->flags_4 |= 3;
     }
 }
 // Matched
-void SetActorTint_8001DAAC(char* o, int a1)
+void SetActorTint_8001DAAC(Actor* o, int a1)
 {
     if (a1 != 0)
     {
-        *(int*)(o + 4) |= 0x800;
-        TintVramImage_800292D0(o + 0x150, o + 0x158, a1);
+        o->flags_4 |= 0x800;
+        TintVramImage_800292D0(&o->image_150, o->clut_158, a1);
     }
     else
     {
-        *(int*)(o + 4) &= ~0x800;
+        o->flags_4 &= ~0x800;
     }
 }
 // Matched
@@ -2358,10 +2295,10 @@ void sub_8001DB00(Actor* o, int* v, int a2)
 {
     if (v != 0)
     {
-        o->target_70[0] = v[0];
-        o->target_70[1] = v[1];
-        o->target_70[2] = v[2];
-        o->f7C = a2;
+        o->target_70.vx = v[0];
+        o->target_70.vy = v[1];
+        o->target_70.vz = v[2];
+        o->target_70.pad = a2;
         o->flags_4 |= 0x4000000;
     }
     else
@@ -2384,30 +2321,29 @@ void sub_8001DB58(struct_obj_A* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask (o is a macro for ((char*)arg0) to keep the funcs.h prototype)
-#define o ((char*)arg0)
+// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
 void sub_8001DB98(void* arg0, void* arg1)
 {
+    Actor* o = arg0;
     unsigned char* s = arg1;
-    short old = *(short*)(o + 0xC2);
-    *(short*)(o + 0xC2) = -1;
-    *(short*)(o + 0xC4) = 0;
-    *(short*)(o + 0xC6) = 1;
-    *(short*)(o + 0xC8) = 0;
-    *(short*)(o + 0xCA) = 0;
-    *(short*)(o + 0xCC) = -1;
-    *(short*)(o + 0xCE) = -1;
-    *(unsigned char**)(o + 0xD0) = s;
-    *(int*)(o + 4) &= ~0x8000;
-    *(int*)(o + 4) |= 0x4000;
-    *(short*)(o + 0xC0) = old;
+    short old = o->animIdx_C2;
+    o->animIdx_C2 = -1;
+    o->scriptPos_C4 = 0;
+    o->scriptLen_C6 = 1;
+    o->wait_C8 = 0;
+    o->waitLen_CA = 0;
+    o->fCC = -1;
+    o->fCE = -1;
+    o->script_D0 = (ActorScriptCmd*)s;
+    o->flags_4 &= ~0x8000;
+    o->flags_4 |= 0x4000;
+    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
-        *(short*)(o + 0xC6) += s[1];
+        o->scriptLen_C6 += s[1];
         s += s[1] * 4;
     }
 }
-#undef o
 #endif
 INCLUDE_ASM(sub_8001DB98);
 // Matched
@@ -2417,11 +2353,11 @@ void sub_8001DC34(void* p, void* s)
     sub_8001EA48(p);
 }
 // Matched
-int sub_8001DC60(char* p, int a1, int a2, int a3)
+int sub_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
 {
     unsigned int dist;
-    int x = *(int*)(p + 0x40);
-    int y = *(int*)(p + 0x4C);
+    int x = p->pos_38[2];
+    int y = p->prevPos_44[2];
     int d;
     int t;
     dist = 0xFFF;
@@ -2433,7 +2369,7 @@ int sub_8001DC60(char* p, int a1, int a2, int a3)
     {
         d = y - x;
     }
-    if (IsWithinDistance_8003B740(p + 0x38, a1, &dist))
+    if (IsWithinDistance_8003B740(p->pos_38, a1, &dist))
     {
         if (dist < d * d)
         {
@@ -2452,7 +2388,7 @@ int sub_8001DC60(char* p, int a1, int a2, int a3)
     return 0;
 }
 // Matched
-int sub_8001DD44(char* o, int mode, int a, int b)
+int sub_8001DD44(Actor* o, int mode, int a, int b)
 {
     int m;
     int r;
@@ -2463,15 +2399,15 @@ int sub_8001DD44(char* o, int mode, int a, int b)
     }
     if (mode == 1)
     {
-        *(int*)(o + 0x19C) = m;
+        o->turn_194.input_8 = m;
     }
     else
     {
-        *(int*)(o + 0x19C) = -m;
+        o->turn_194.input_8 = -m;
     }
     sub_8001D71C((struct_obj_A*)o);
-    FirFilterStep_80014588(o + 0x1A4, o + 0x194, frameCount_8008D3FC);
-    *(short*)(o + 0x5E) += *(short*)(o + 0x1A0);
+    FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
+    o->rot_5C[1] += o->turn_194.output_C;
     r = a - b;
     return r < 0 ? 0 : (a < r ? a : r);
 }
@@ -2483,7 +2419,7 @@ int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
     d.vx = target->vx - o->pos_38[0];
     d.vz = target->vz - o->pos_38[2];
     a = (ratan2_8003B548(d.vx, d.vz) - o->rot_5C[1]) & 0xFFF;
-    o->f19C = 0;
+    o->turn_194.input_8 = 0;
     if (a < step || a >= 0x1000 - step)
     {
         o->rot_5C[1] += a;
@@ -2491,18 +2427,18 @@ int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
     }
     if (a < 0x800)
     {
-        o->f19C = step;
+        o->turn_194.input_8 = step;
     }
     else
     {
-        o->f19C = -step;
+        o->turn_194.input_8 = -step;
     }
-    FirFilterStep_80014588((char*)&o->f1A4, (char*)&o->f194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->f1A0;
+    FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
+    o->rot_5C[1] += o->turn_194.output_C;
     return 0;
 }
 // Matched
-int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
+int FindActorInFront_8001DECC(Actor* o, int range, int checkLevant)
 {
     EventNode* n;
     EventEntry* e;
@@ -2512,7 +2448,7 @@ int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
     range = range * range;
     if (checkLevant)
     {
-        found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), &levantPos_8008BD18, range);
+        found = IsInFrontWithinRange_8001E0F4((VECTOR*)o->pos_38, o->rot_5C[1], &levantPos_8008BD18, range);
     }
     if (found == 0)
     {
@@ -2521,9 +2457,9 @@ int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
         for (i = 0; i < count; i++)
         {
             e = &n->entry;
-            if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)e->buffer)
+            if ((e->flags & 0x8001) == 1 && o->task_0 != ((Actor*)e->buffer)->task_0)
             {
-                found = IsInFrontWithinRange_8001E0F4((VECTOR*)(o + 0x38), *(short*)(o + 0x5E), (VECTOR*)((char*)e->buffer + 0x38), range);
+                found = IsInFrontWithinRange_8001E0F4((VECTOR*)o->pos_38, o->rot_5C[1], (VECTOR*)((Actor*)e->buffer)->pos_38, range);
                 if (found)
                 {
                     break;
@@ -2535,18 +2471,18 @@ int FindActorInFront_8001DECC(char* o, int range, int checkLevant)
     return found;
 }
 // Matched
-int IsActorNear_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
+int IsActorNear_8001DFC8(Actor* o, VECTOR* target, int range, int checkLevant)
 {
     EventNode* n;
     EventEntry* e;
-    char* b;
+    Actor* b;
     int count;
     int i;
     unsigned int dist;
     if (checkLevant)
     {
         dist = 0xFFF;
-        if (IsWithinDistance_8003B740((VECTOR*)(o + 0x38), &levantPos_8008BD18, &dist) != 0 && dist < range * range)
+        if (IsWithinDistance_8003B740((VECTOR*)o->pos_38, &levantPos_8008BD18, &dist) != 0 && dist < range * range)
         {
             return 1;
         }
@@ -2556,10 +2492,10 @@ int IsActorNear_8001DFC8(char* o, VECTOR* target, int range, int checkLevant)
     for (i = 0; i < count; i++)
     {
         e = &n->entry;
-        if ((e->flags & 0x8001) == 1 && *(int*)o != *(int*)(b = e->buffer))
+        if ((e->flags & 0x8001) == 1 && o->task_0 != (b = (Actor*)e->buffer)->task_0)
         {
             dist = 0xFFF;
-            if (IsWithinDistance_8003B740((VECTOR*)(o + 0x38), (VECTOR*)(b + 0x38), &dist) != 0 && dist < range * range)
+            if (IsWithinDistance_8003B740((VECTOR*)o->pos_38, (VECTOR*)b->pos_38, &dist) != 0 && dist < range * range)
             {
                 return 1;
             }
@@ -2605,9 +2541,9 @@ int sub_8001E1C8(struct_obj_A* p)
     return (p->flags_4 & 0x280000) == 0;
 }
 // Matched
-int sub_8001E1DC(struct_obj_F* p)
+int sub_8001E1DC(Actor* p)
 {
-    if (p->field_130 >= 0)
+    if (p->effect_130 >= 0)
     {
         if (IsEffectReady_80014954() == 0)
         {
@@ -2616,7 +2552,7 @@ int sub_8001E1DC(struct_obj_F* p)
     }
     if (p->flags_4 & 0x80000)
     {
-        if (p->field_C < 3)
+        if (p->kind_C < 3)
         {
             return 0;
         }
@@ -2636,102 +2572,102 @@ int sub_8001E254(struct_obj_A* p, void* desc)
 // Matched
 void sub_8001E28C(Actor* o)
 {
-    int s[0x4A];
-    if (o->f130 >= 0)
+    ActorEffectReq s;
+    if (o->effect_130 >= 0)
     {
-        s[0] = o->f130;
-        s[1] = (int)&o->f108;
-        s[2] = o->f14C;
-        s[3] = (int)&o->pos_38[0];
-        s[4] = *(int*)&o->f1C4;
-        s[5] = *(int*)&o->f1C8;
-        s[13] = *(int*)&o->f144;
-        s[14] = (int)&o->f2C;
-        sub_800182B8(s, o->fEC);
-        sub_800184DC((int)s, LowestSetBit_80014358(o->fE8));
-        o->f130 = -1;
+        s.effect_0 = o->effect_130;
+        s.hitTimes_4 = o->hitTimes_108;
+        s.field_8 = o->f14C;
+        s.pos_C = o->pos_38;
+        s.bonePos_10 = o->bonePos_1C4;
+        s.boneMatrices_14 = o->boneMatrices_1C8;
+        s.boneScale_34 = o->boneScale_144;
+        s.scale_38 = o->scale_2C;
+        sub_800182B8((int*)&s, o->effectKinds_EC);
+        sub_800184DC((int)&s, LowestSetBit_80014358(o->effectMask_E8));
+        o->effect_130 = -1;
     }
     o->flags_4 |= 0x20000;
     if (o->f100 != 0)
     {
-        sub_8001EFC4((struct_obj_F*)o);
+        sub_8001EFC4(o);
     }
 }
-extern int dword_8007D95C[];
-extern int dword_8007D980[];
-extern int dword_8007D9A4[];
-extern int dword_8007D9C0[];
+extern ActorScriptCmd dword_8007D95C[];
+extern ActorScriptCmd dword_8007D980[];
+extern ActorScriptCmd dword_8007D9A4[];
+extern ActorScriptCmd dword_8007D9C0[];
 // Matched
-int sub_8001E34C(Actor* o, char* d)
+int sub_8001E34C(Actor* o, ActorActionDesc* d)
 {
     int r;
     int f;
     int g;
-    o->fD4 = *(int*)(d + 0);
-    o->fE0 = *(short*)(d + 0xC);
-    o->fE8 = *(int*)(d + 0x14);
-    o->fEC = *(int*)(d + 0x18);
-    o->fF4 = *(short*)(d + 0x20);
-    o->fF6 = *(short*)(d + 0x22);
-    o->fFC = *(short*)(d + 0x28);
-    o->fFE = *(short*)(d + 0x2A);
-    o->fE0 = *(short*)(d + 0xC);
-    o->f100 = *(int*)(d + 0x2C);
+    o->flags_D4 = d->flags_0;
+    o->fE0 = d->turnStep_C;
+    o->effectMask_E8 = d->effectMask_14;
+    o->effectKinds_EC = d->effectKinds_18;
+    o->loopCount_F4 = d->loopCount_20;
+    o->scaleTarget_F6 = d->scaleTarget_22;
+    o->fFC = d->field_28;
+    o->queuedAnim_FE = d->queuedAnim_2A;
+    o->fE0 = d->turnStep_C;
+    o->f100 = d->field_2C;
     r = 0;
-    if (*(void**)(d + 4))
+    if (d->script_4)
     {
-        sub_8001DC34(o, *(void**)(d + 4));
+        sub_8001DC34(o, d->script_4);
     }
-    if (*(short*)(d + 0xE) >= 0)
+    if (d->hitAnim_E >= 0)
     {
-        r = sub_8001F268(o, (short*)&o->f108, o->fD0, *(short*)(d + 0xE));
+        r = sub_8001F268(o, o->hitTimes_108[0], (int)o->script_D0, d->hitAnim_E);
     }
-    f = *(int*)(d + 0x10);
+    f = d->effect_10;
     if (f >= 0)
     {
-        o->f130 = f;
+        o->effect_130 = f;
         RequestEffect_800148F4(f);
     }
-    if (*(int**)(d + 8))
+    if (d->target_8)
     {
-        o->fDC = *(int**)(d + 8);
-        o->target_70[0] = (*(int**)(d + 8))[0];
-        o->target_70[1] = (*(int**)(d + 8))[1];
-        o->target_70[2] = (*(int**)(d + 8))[2];
-        f = *(short*)(d + 0xC);
+        o->pathTarget_DC = d->target_8;
+        o->target_70.vx = d->target_8[0];
+        o->target_70.vy = d->target_8[1];
+        o->target_70.vz = d->target_8[2];
+        f = d->turnStep_C;
         o->flags_4 |= 0x80000;
-        o->f7C = f;
-        if (*(short*)(d + 0x24) >= 0)
+        o->target_70.pad = f;
+        if (d->nextAnim_24 >= 0)
         {
-            o->fA4 = *(short*)(d + 0x24);
+            o->nextAnim_A4 = d->nextAnim_24;
             sub_8001DC34(o, dword_8007D95C);
         }
         else
         {
-            o->fA4 = *(short*)(d + 0x26);
+            o->nextAnim_A4 = d->nextAnim_26;
             sub_8001DC34(o, dword_8007D980);
         }
     }
-    if (*(int*)(d + 0x30))
+    if (d->path_30)
     {
-        o->f98 = 0;
+        o->pathStep_98 = 0;
         o->flags_4 |= 0x2000000;
-        *(int*)&o->anim_160 = *(int*)(d + 0x30);
+        o->path_160 = d->path_30;
     }
-    if (*(short*)(d + 0x2A) >= 0)
+    if (d->queuedAnim_2A >= 0)
     {
-        o->fA4 = *(short*)(d + 0x28);
-        o->fA8 = *(short*)(d + 0xC);
+        o->nextAnim_A4 = d->field_28;
+        o->startMode_A8 = d->turnStep_C;
         sub_8001DC34(o, dword_8007D9C0);
     }
-    else if (*(short*)(d + 0x28) >= 0)
+    else if (d->field_28 >= 0)
     {
-        o->fA4 = *(short*)(d + 0x28);
-        o->fA8 = *(short*)(d + 0xC);
+        o->nextAnim_A4 = d->field_28;
+        o->startMode_A8 = d->turnStep_C;
         sub_8001DC34(o, dword_8007D9A4);
     }
     g = o->flags_4;
-    if (*(int*)(d + 0x1C))
+    if (d->field_1C)
     {
         g |= 0x800000;
     }
@@ -2743,107 +2679,107 @@ extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
 // Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
-void sub_8001E574(char* o, int* d)
+void sub_8001E574(Actor* o, ActorDesc* d)
 {
     struct_112* m;
     int v;
     int f;
-    if (d[0] >= 0)
+    if (d->modelId_0 >= 0)
     {
-        m = AcquireLoaderModel_80020734(d[0]);
+        m = AcquireLoaderModel_80020734(d->modelId_0);
     }
     else
     {
-        m = (struct_112*)d[0x48 / 4];
+        m = d->model_48;
     }
     v = AddModelAnimRef_800201EC((int)m);
-    *(int*)(o + 4) = 0x40000;
-    f = *(int*)(o + 4);
-    if (d[0x30 / 4] != 1)
+    o->flags_4 = 0x40000;
+    f = o->flags_4;
+    if (d->visible_30 != 1)
     {
         f |= 0x2000;
-        *(int*)(o + 4) = f;
+        o->flags_4 = f;
     }
-    if (d[1] == 2)
+    if (d->kind_4 == 2)
     {
         f |= 0x1000;
-        *(int*)(o + 4) = f;
+        o->flags_4 = f;
     }
-    *(int*)(o + 8) = 0;
-    *(int*)(o + 0xC) = d[1];
-    *(short*)(o + 0x10) = 0;
-    *(short*)(o + 0x12) = -1;
-    *(short*)(o + 0x14) = -1;
-    *(short*)(o + 0x16) = v;
-    *(short*)(o + 0x18) = 0;
-    *(short*)(o + 0x1A) = 0;
-    *(short*)(o + 0x1C) = 0;
-    *(short*)(o + 0x1E) = *(short*)((char*)d + 0x28);
-    *(short*)(o + 0x26) = 0x1000;
-    *(short*)(o + 0x20) = 0;
-    *(short*)(o + 0x22) = 0;
-    *(short*)(o + 0x28) = 0;
-    *(short*)(o + 0x2A) = 0x1000;
-    *(short*)(o + 0x24) = *(short*)((char*)d + 0x2C);
-    *(int*)(o + 0x44) = *(int*)(o + 0x50) = *(int*)(o + 0x38) = d[2];
-    *(int*)(o + 0x48) = *(int*)(o + 0x54) = *(int*)(o + 0x3C) = d[3];
-    *(int*)(o + 0x4C) = *(int*)(o + 0x58) = *(int*)(o + 0x40) = d[4];
-    *(short*)(o + 0x5C) = *(short*)((char*)d + 0x14);
-    *(short*)(o + 0x5E) = *(short*)((char*)d + 0x16);
-    *(short*)(o + 0x60) = *(short*)((char*)d + 0x18);
-    *(int*)(o + 0x64) = 0;
-    *(int*)(o + 0x68) = 0;
-    *(int*)(o + 0x6C) = 0;
-    *(int*)(o + 0x80) = 0;
-    *(int*)(o + 0x84) = 0;
-    *(int*)(o + 0x88) = 0;
-    *(int*)(o + 0x8C) = 0x1000;
-    *(int*)(o + 0x90) = 0;
-    *(int*)(o + 0x94) = 0;
-    *(int*)(o + 0x98) = 0;
-    f = d[8];
-    *(int*)(o + 0xA8) = -1;
-    *(int*)(o + 0xAC) = 0;
-    *(int*)(o + 0xB0) = 0;
-    *(int*)(o + 0xB4) = 0;
-    *(int*)(o + 0xB8) = 0;
-    *(short*)(o + 0xC4) = 0;
-    *(short*)(o + 0xC6) = 0;
-    *(short*)(o + 0xC8) = 0;
-    *(short*)(o + 0xCA) = 0;
-    *(short*)(o + 0xCC) = -1;
-    *(short*)(o + 0xCE) = -1;
-    *(int*)(o + 0x9C) = f;
-    *(int*)(o + 0xA0) = f;
-    *(int*)(o + 0xA4) = *(int*)(o + 0xA0);
-    *(short*)(o + 0xC2) = *(short*)(o + 0xC0) = *(short*)(o + 0x9C);
-    *(int*)(o + 0x130) = -1;
-    *(struct_112**)(o + 0x15C) = m;
-    *(short*)(o + 0x150) = word_8007DC8C[0];
-    *(short*)(o + 0x152) = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
-    *(short*)(o + 0x154) = word_8007DC8C[2];
-    *(short*)(o + 0x156) = word_8007DC8C[3];
-    *(short*)(o + 0x158) = word_8007DC94[0];
-    *(short*)(o + 0x15A) = word_8007DC94[1] + *(short*)((char*)d + 0x1C);
-    *(int*)(o + 0x160) = 0;
+    o->drawMode_8 = 0;
+    o->kind_C = d->kind_4;
+    o->animLoadState_10 = 0;
+    o->animRequest_12 = -1;
+    o->animLoading_14 = -1;
+    o->modelRef_16 = v;
+    o->loopFrame_18 = 0;
+    o->endFrame_1A = 0;
+    o->frameFrac_1C = 0;
+    o->frameSpeed_1E = *(short*)&d->frameSpeed_28;
+    o->scale_26 = 0x1000;
+    o->fade_20 = 0;
+    o->fadeDiv_22 = 0;
+    o->scaleStep_28 = 0;
+    o->scaleTarget_2A = 0x1000;
+    o->blendDiv_24 = *(short*)&d->blendDiv_2C;
+    o->prevPos_44[0] = o->basePos_50[0] = o->pos_38[0] = d->pos_8[0];
+    o->prevPos_44[1] = o->basePos_50[1] = o->pos_38[1] = d->pos_8[1];
+    o->prevPos_44[2] = o->basePos_50[2] = o->pos_38[2] = d->pos_8[2];
+    o->rot_5C[0] = d->rot_14[0];
+    o->rot_5C[1] = d->rot_14[1];
+    o->rot_5C[2] = d->rot_14[2];
+    o->animDelta_64[0] = 0;
+    o->animDelta_64[1] = 0;
+    o->animDelta_64[2] = 0;
+    o->ground_80 = 0;
+    o->prevGround_84 = 0;
+    o->f88 = 0;
+    o->speedScale_8C = 0x1000;
+    o->frame_90 = 0;
+    o->prevFrame_94 = 0;
+    o->pathStep_98 = 0;
+    f = d->animIdx_20;
+    o->startMode_A8 = -1;
+    o->blend_AC = 0;
+    o->waitCount_B0 = 0;
+    o->fB4 = 0;
+    o->fB8 = 0;
+    o->scriptPos_C4 = 0;
+    o->scriptLen_C6 = 0;
+    o->wait_C8 = 0;
+    o->waitLen_CA = 0;
+    o->fCC = -1;
+    o->fCE = -1;
+    o->anim_9C = f;
+    o->prevAnim_A0 = f;
+    o->nextAnim_A4 = o->prevAnim_A0;
+    o->animIdx_C2 = o->prevAnimIdx_C0 = *(short*)&o->anim_9C;
+    o->effect_130 = -1;
+    o->model_15C = m;
+    o->image_150.x = word_8007DC8C[0];
+    o->image_150.y = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    o->image_150.w = word_8007DC8C[2];
+    o->image_150.h = word_8007DC8C[3];
+    o->clut_158[0] = word_8007DC94[0];
+    o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
+    o->path_160 = 0;
     sub_8001E7F0(o, d);
-    FirFilterInit_8001450C((int*)(o + 0x1A4), (struct_16*)(o + 0x194), (int)dword_800795A0, 8);
-    sub_8001D760(o, d[8], d[9], 0);
+    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, (int)dword_800795A0, 8);
+    sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
 INCLUDE_ASM(sub_8001E574);
 // Matched
-void sub_8001E7F0(Actor* o, int* d)
+void sub_8001E7F0(Actor* o, ActorDesc* d)
 {
     short* p;
     int n;
     int size;
     int i;
     char* mem;
-    short* src;
+    SVECTOR* src;
     int sz0;
     int sz1;
-    p = (short*)d[0x34 / 4];
+    p = d->bones_34;
     n = 0;
     while (p[n * 4] != -1)
     {
@@ -2854,56 +2790,56 @@ void sub_8001E7F0(Actor* o, int* d)
     size = sz0;
     size += sz1;
     size += n * 12;
-    if (d[0x4C / 4])
+    if (d->hasMatrices_4C)
     {
         size += n * 32;
     }
     mem = ListAlloc_8003FDC0(dword_80091990, size);
-    *(char**)&o->f134 = mem;
-    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d[0x34 / 4], sz0);
-    o->f138[0] = ((int*)d[0x38 / 4])[0];
-    o->f138[1] = ((int*)d[0x38 / 4])[1];
-    o->f138[2] = ((int*)d[0x38 / 4])[2];
+    o->bones_134 = (short*)mem;
+    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d->bones_34, sz0);
+    o->baseScale_138[0] = d->baseScale_38[0];
+    o->baseScale_138[1] = d->baseScale_38[1];
+    o->baseScale_138[2] = d->baseScale_38[2];
     mem += sz0;
     {
-        short def[4] = {0x1000, 0x1000, 0x1000, 0};
-        o->f144 = mem;
+        SVECTOR def = {0x1000, 0x1000, 0x1000, 0};
+        o->boneScale_144 = (SVECTOR*)mem;
         mem += sz1;
         o->flags_4 |= 0x8000000;
         for (i = 0; i < n; i++)
         {
-            if (d[0x3C / 4])
+            if (d->boneScale_3C)
             {
-                src = (short*)(d[0x3C / 4] + i * 8);
+                src = &d->boneScale_3C[i];
             }
             else
             {
-                src = def;
+                src = &def;
             }
-            ((short*)(o->f144 + i * 8))[0] = src[0];
-            ((short*)(o->f144 + i * 8))[1] = src[1];
-            ((short*)(o->f144 + i * 8))[2] = src[2];
-            ((short*)(o->f144 + i * 8))[3] = src[3];
+            o->boneScale_144[i].vx = src->vx;
+            o->boneScale_144[i].vy = src->vy;
+            o->boneScale_144[i].vz = src->vz;
+            o->boneScale_144[i].pad = src->pad;
         }
     }
-    o->f148 = d[0x40 / 4];
-    o->f14C = d[0x44 / 4];
-    o->f1C4 = mem;
+    o->anims_148 = d->anims_40;
+    o->f14C = d->field_44;
+    o->bonePos_1C4 = mem;
     mem += n * 12;
-    if (d[0x4C / 4])
+    if (d->hasMatrices_4C)
     {
-        o->f1C8 = mem;
+        o->boneMatrices_1C8 = (MATRIX*)mem;
         o->flags_4 |= 0x10000000;
     }
     else
     {
-        o->f1C8 = 0;
+        o->boneMatrices_1C8 = 0;
     }
 }
 // Matched
-void sub_8001EA00(char* p)
+void sub_8001EA00(Actor* p)
 {
-    int v = *(int*)(p + 0x134);
+    int v = (int)p->bones_134;
     ListFree_8003FE38(dword_80091990, (void*)v);
 }
 // Matched
