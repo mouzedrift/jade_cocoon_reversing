@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "msgwin.h"
 
 INCLUDE_DATA(dword_8007474C);
 INCLUDE_DATA(dword_80074780);
@@ -26,19 +27,19 @@ INCLUDE_DATA(dword_80074800);
 // Matched
 int sub_80034068(short* p)
 {
-    char* q = (char*)sub_80014390(((unsigned char*)p)[2]);
+    EntityStatus* q = (EntityStatus*)sub_80014390(((unsigned char*)p)[2]);
     if (magicData_8007C438[p[0]].field_0 & 0x40)
     {
         switch (magicData_8007C438[p[0]].field_7)
         {
         case 0:
-            if (*(short*)&q[8] == *(short*)&q[0xA])
+            if (*(short*)&q->hp_8 == *(short*)&q->maxHp_A)
             {
                 return 3;
             }
             break;
         case 1:
-            if (p[0] != 0x10 && !(*(int*)q & 0x7FB))
+            if (p[0] != 0x10 && !(q->status_0 & 0x7FB))
             {
                 return 3;
             }
@@ -57,7 +58,7 @@ int sub_8003412C(char* p)
 {
     if (p)
     {
-        return *(short*)(p + 0x42);
+        return ((Minion*)p)->field_42;
     }
     return 0;
 }
@@ -67,24 +68,24 @@ extern unsigned char* off_800837D8;
 int sub_80034140(void)
 {
     unsigned char*** t = off_80083800;
-    char* sd = (char*)&saveData_8008B570;
-    unsigned char** tbl = t[*(short*)(sd + 0x2E4)];
+    SaveData* sd = &saveData_8008B570;
+    unsigned char** tbl = t[sd->mapId_2E4[0].field_0];
     unsigned char* list;
     short target;
     short i;
     if (tbl)
     {
-        list = tbl[*(short*)(sd + 0x2E8)];
+        list = tbl[sd->mapId_2E4[1].field_0];
         if (list)
         {
             i = 0;
             if (list == off_800837D8)
             {
-                target = *(short*)(sd + 0x2F0);
+                target = sd->mapId_2E4[3].field_0;
             }
             else
             {
-                target = *(short*)(sd + 0x2EC);
+                target = sd->mapId_2E4[2].field_0;
             }
             while (list[i] != 0xFF)
             {
@@ -113,7 +114,7 @@ extern int MeasureTextWidth_8003E4C8(int str);
 extern void sub_800A6308(int a, void* b);
 extern void sub_800A1B2C(int a, void* b);
 extern short** sub_80034900(short** list);
-extern void UpdateMessageWindow_80034BB8(int* a0, int* a1);
+extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 typedef struct
 {
     char pad_0[0xB4];
@@ -393,48 +394,26 @@ short** sub_80034900(short** list)
     }
     return list;
 }
-typedef struct
-{
-    int v[4];
-} Quad_349B4;
-typedef struct
-{
-    int field_0;
-    int flags_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    Quad_349B4 field_18;
-    char pad_28[0x1BC];
-    signed char field_1E4[1];
-} Unit_349B4;
-typedef struct
-{
-    int flags_0;
-    char pad_4[0x10];
-    Unit_349B4* unit_14;
-} UnitRef_349B4;
 // Matched
-int sub_800349B4(UnitRef_349B4* a0, Quad_349B4* out)
+int sub_800349B4(MsgWindowEntry* a0, MsgResult* out)
 {
-    Unit_349B4* u = a0->unit_14;
+    MsgWindow* u = a0->win_14;
     if (u->flags_4 & 0x200)
     {
-        *out = u->field_18;
+        *out = u->res_18;
         return 1;
     }
     return 0;
 }
 // Matched
-void sub_80034A00(UnitRef_349B4* a0, Quad_349B4* out)
+void sub_80034A00(MsgWindowEntry* a0, MsgResult* out)
 {
-    *out = a0->unit_14->field_18;
+    *out = a0->win_14->res_18;
 }
 // Matched
-int sub_80034A30(UnitRef_349B4* a0)
+int sub_80034A30(MsgWindowEntry* a0)
 {
-    Unit_349B4* u = a0->unit_14;
+    MsgWindow* u = a0->win_14;
     if (u->field_C == 3 || u->field_10 == 2)
     {
         return 1;
@@ -442,37 +421,37 @@ int sub_80034A30(UnitRef_349B4* a0)
     return 0;
 }
 // Matched
-void sub_80034A68(UnitRef_349B4* a0)
+void sub_80034A68(MsgWindowEntry* a0)
 {
-    a0->unit_14->flags_4 |= 0x800;
+    a0->win_14->flags_4 |= 0x800;
 }
 // Matched
-void sub_80034A84(UnitRef_349B4* a0)
+void sub_80034A84(MsgWindowEntry* a0)
 {
-    a0->unit_14->flags_4 |= 0x4000;
+    a0->win_14->flags_4 |= 0x4000;
 }
 // Matched
-void sub_80034AA0(UnitRef_349B4* a0)
+void sub_80034AA0(MsgWindowEntry* a0)
 {
     a0->flags_0 = (a0->flags_0 & ~1) | 0x8000;
 }
 // Matched
-int sub_80034AB8(UnitRef_349B4* a0)
+int sub_80034AB8(MsgWindowEntry* a0)
 {
     return (a0->flags_0 & 0x8001) == 1;
 }
 // Matched
-void sub_80034AD0(UnitRef_349B4* a0, int v)
+void sub_80034AD0(MsgWindowEntry* a0, int v)
 {
-    a0->unit_14->field_14 = v;
+    a0->win_14->mask_14 = v;
 }
 // Matched
-int sub_80034ADC(UnitRef_349B4* a0, int idx)
+int sub_80034ADC(MsgWindowEntry* a0, int idx)
 {
-    Unit_349B4* u = a0->unit_14;
-    if (u->field_1E4[idx] == -2 || u->field_1E4[idx] >= 0)
+    MsgWindow* u = a0->win_14;
+    if (u->marks_1E4[idx] == -2 || u->marks_1E4[idx] >= 0)
     {
-        u->field_1E4[idx] = -2;
+        u->marks_1E4[idx] = -2;
         return 1;
     }
     return 0;
@@ -524,14 +503,14 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-extern void sub_80034C18(int* a);
-extern void sub_800353A0(); /* defined below, takes a Msg_353A0* */
+extern void sub_80034C18(MsgWindow* a);
+extern void sub_800353A0(MsgWindow* o);
 // Matched
-void UpdateMessageWindow_80034BB8(int* a0, int* a1)
+void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1)
 {
     sub_80034C18(a1);
     sub_800353A0(a1);
-    if (a1[2] == 7)
+    if (a1->mode_8 == 7)
     {
         a0[0] = (a0[0] & ~1) | 0x8000;
     }
@@ -850,38 +829,9 @@ INCLUDE_DATA(dword_80074850);
 INCLUDE_DATA(dword_8007485C);
 INCLUDE_DATA(dword_80074864);
 
-typedef struct
-{
-    int field_0;
-    unsigned int flags_4;
-    unsigned int mode_8;
-    char pad_C[8];
-    unsigned int field_14;
-    short pad_18;
-    short field_1A;
-    short pad_1C;
-    unsigned short field_1E;
-    int field_20;
-    int pad_24;
-    int field_28;
-    int field_2C;
-    char pad_30[0x1C];
-    unsigned short x_4C;
-    unsigned short y_4E;
-    int pad_50;
-    int ot_54;
-    char pad_58[0x14];
-    char field_6C[0x44];
-    unsigned short field_B0;
-    short field_B2;
-    char pad_B4[0x100];
-    unsigned short** lines_1B4;
-    char pad_1B8[0xEC];
-    int field_2A4;
-} Msg_353A0;
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
-void sub_800353A0(Msg_353A0* o)
+void sub_800353A0(MsgWindow* o)
 {
     switch (o->mode_8)
     {
@@ -892,12 +842,12 @@ void sub_800353A0(Msg_353A0* o)
             if (o->flags_4 & 0x800)
             {
                 o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-                o->field_1E++;
+                o->res_18.field_1E++;
             }
             if (o->field_2C == 1)
             {
                 o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-                o->field_1E++;
+                o->res_18.field_1E++;
             }
         }
         else if ((settingsFlags_8008B58C & 0xC00000) == 0xC00000 && o->field_2A4 == 1 &&
@@ -906,12 +856,12 @@ void sub_800353A0(Msg_353A0* o)
             if (o->flags_4 & 0x800)
             {
                 o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
-                o->field_1E++;
+                o->res_18.field_1E++;
             }
             if (o->field_2C == 1)
             {
                 o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
-                o->field_1E++;
+                o->res_18.field_1E++;
             }
         }
         break;
@@ -925,13 +875,13 @@ void sub_800353A0(Msg_353A0* o)
         if (IsConfirmPressedP1_8003D380(0) && (o->flags_4 & 0x800))
         {
             o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-            o->field_20 = 1;
-            o->field_1E++;
+            o->res_18.result_20 = 1;
+            o->res_18.field_1E++;
         }
         else if (o->field_28 == 1 && IsCancelPressedP1_8003D41C(0) && (o->flags_4 & 0x800))
         {
             o->flags_4 |= 0x10000;
-            o->field_1A = NthMaskedIndex_80034B88(o->field_B2 = o->field_B0 - 1, o->field_14);
+            o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2 = o->field_B0 - 1, o->mask_14);
         }
         break;
     }
@@ -942,7 +892,7 @@ extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void sub_8002F6F8(void* a0, void* st, int a2);
 // Matched
-void sub_800355EC(Msg_353A0* o, unsigned short* r)
+void sub_800355EC(MsgWindow* o, unsigned short* r)
 {
     RECT clip;
     union
@@ -970,7 +920,7 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
         unsigned short** p = o->lines_1B4;
         while (*p)
         {
-            if (o->field_14 & (1 << i))
+            if (o->mask_14 & (1 << i))
             {
                 u.loc[1] = y;
                 y += 12;
@@ -998,7 +948,7 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
         o->field_B2 = u.menu.m[1];
     }
     sel = o->field_B2;
-    u.st[0] = (int)o->field_6C;
+    u.st[0] = (int)&o->field_6C;
     u.st[1] = 1;
     u.st[2] = 1;
     r2.x = o->x_4C + 4;
@@ -1006,34 +956,19 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
     r2.w = r[2] - 8;
     r2.h = 13;
     sub_8002F6F8(&r2, u.st, 0);
-    o->field_1A = NthMaskedIndex_80034B88(o->field_B2, o->field_14);
+    o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2, o->mask_14);
 }
-typedef struct
-{
-    int field_0;
-    unsigned short x;
-    unsigned short y;
-    unsigned short w;
-    unsigned short h;
-} struct_rect_1B8;
-typedef struct
-{
-    int field_0;
-    unsigned int field_4_flags;
-    char pad_8[0x1B0];
-    struct_rect_1B8 field_1B8;
-} struct_1BC_owner;
 extern int sub_8003DB74(struct_rect_1B8* p, int a);
 // Matched
-int sub_8003580C(struct_1BC_owner* o, unsigned short* r)
+int sub_8003580C(MsgWindow* o, unsigned short* r)
 {
-    o->field_1B8.x = r[0] + 6;
-    o->field_1B8.y = r[1] + 4;
-    o->field_1B8.w = r[2] - 6;
-    o->field_1B8.h = r[3] - 7;
-    if ((short)o->field_1B8.h > 0 && (short)o->field_1B8.w > 0)
+    o->clip_1B8.x = r[0] + 6;
+    o->clip_1B8.y = r[1] + 4;
+    o->clip_1B8.w = r[2] - 6;
+    o->clip_1B8.h = r[3] - 7;
+    if ((short)o->clip_1B8.h > 0 && (short)o->clip_1B8.w > 0)
     {
-        return sub_8003DB74(&o->field_1B8, ((o->field_4_flags >> 18) ^ 1) & 1);
+        return sub_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
     }
     return 1;
 }
@@ -1053,61 +988,49 @@ void sub_800358CC(struct_obj_A* p, int a1, int a2)
         sub_80042B38(a1, 2);
     }
 }
-typedef struct
-{
-    int field_0;
-    unsigned int flags_4;
-    char pad_8[0x5C];
-    unsigned short x;
-    unsigned short y;
-    int field_68;
-    char pad_6C[0x18];
-    int field_84;
-    POLY_FT4 prim;
-} struct_obj_35900;
 // Matched
-void sub_80035900(struct_obj_35900* o)
+void sub_80035900(MsgWindow* o)
 {
     if (!(o->flags_4 & 0x40000) && o->field_84 == 1)
     {
         if (o->field_68)
         {
-            o->prim.x1 = o->x;
-            o->prim.y0 = o->y;
-            o->prim.x0 = o->x + 0x3F;
-            o->prim.y1 = o->y;
-            o->prim.x3 = o->x;
-            o->prim.y2 = o->y + 0x3F;
-            o->prim.x2 = o->x + 0x3F;
-            o->prim.y3 = o->y + 0x3F;
+            o->prim_88.x1 = o->x_64;
+            o->prim_88.y0 = o->y_66;
+            o->prim_88.x0 = o->x_64 + 0x3F;
+            o->prim_88.y1 = o->y_66;
+            o->prim_88.x3 = o->x_64;
+            o->prim_88.y2 = o->y_66 + 0x3F;
+            o->prim_88.x2 = o->x_64 + 0x3F;
+            o->prim_88.y3 = o->y_66 + 0x3F;
         }
         else
         {
-            setXY4(&o->prim, o->x, o->y, o->x + 0x3F, o->y, o->x, o->y + 0x3F, o->x + 0x3F, o->y + 0x3F);
+            setXY4(&o->prim_88, o->x_64, o->y_66, o->x_64 + 0x3F, o->y_66, o->x_64, o->y_66 + 0x3F, o->x_64 + 0x3F, o->y_66 + 0x3F);
         }
-        AddPrimCopy_80040298(pOT_8008D454 + 1, &o->prim, 10);
+        AddPrimCopy_80040298(pOT_8008D454 + 1, &o->prim_88, 10);
     }
 }
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 
 // Matched
-void sub_800359F8(struct_obj_A* p)
+void sub_800359F8(MsgWindow* p)
 {
     short pos[2];
     short r[4];
     if (!(p->flags_4 & 0x40000))
     {
-        if (*(int*)((char*)p + 0x74) != 0)
+        if (p->title_74 != 0)
         {
-            pos[0] = *(unsigned short*)((char*)p + 0x6E) + 7;
-            pos[1] = *(unsigned short*)((char*)p + 0x70) + 4;
-            DrawText_8003E91C(2, *(void**)((char*)p + 0x74), pos, 0);
-            r[0] = *(unsigned short*)((char*)p + 0x6E);
-            r[1] = *(unsigned short*)((char*)p + 0x70);
-            r[2] = MeasureTextWidth_8003E4C8(*(void**)((char*)p + 0x74)) + 0x11;
+            pos[0] = p->titleX_6E + 7;
+            pos[1] = p->titleY_70 + 4;
+            DrawText_8003E91C(2, p->title_74, pos, 0);
+            r[0] = p->titleX_6E;
+            r[1] = p->titleY_70;
+            r[2] = MeasureTextWidth_8003E4C8((int)p->title_74) + 0x11;
             r[3] = 0x12;
-            sub_80035898(p, (int)r, 2);
-            sub_800358CC(p, (int)r, 0);
+            sub_80035898((struct_obj_A*)p, (int)r, 2);
+            sub_800358CC((struct_obj_A*)p, (int)r, 0);
         }
     }
 }
@@ -1118,39 +1041,39 @@ extern void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf);
 EventEntry* OpenItemMessageWindow_80035AC8(int* init)
 {
     EventEntry* e = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
-    int* o;
+    MsgWindow* o;
     if (e)
     {
-        o = (int*)e->buffer;
-        o[0] = (int)e;
-        o[1] = 0;
-        o[0x14 / 4] = 0;
-        ((short*)o)[0x18 / 2] = 0;
-        ((short*)o)[0x1A / 2] = 0;
-        ((short*)o)[0x1C / 2] = 0;
-        ((short*)o)[0x1E / 2] = 0;
-        o[0x20 / 4] = 0;
-        o[0x24 / 4] = 0;
-        o[0x34 / 4] = 0;
-        ((short*)o)[0x38 / 2] = 0;
-        ((short*)o)[0x3A / 2] = 0;
-        ((short*)o)[0x3C / 2] = 0;
-        ((short*)o)[0x3E / 2] = 0;
-        o[0x48 / 4] = 0;
-        ((short*)o)[0x4C / 2] = 0;
-        ((short*)o)[0x4E / 2] = 0;
-        ((short*)o)[0x50 / 2] = 0;
-        ((short*)o)[0x52 / 2] = 0;
-        o[0x54 / 4] = 0;
-        o[0x78 / 4] = 0;
-        o[0x7C / 4] = 0;
-        ((short*)o)[0xB0 / 2] = 0;
-        ((short*)o)[0xB2 / 2] = 0;
-        o[0x1B4 / 4] = 0;
-        MemCopy_800403E8((unsigned int*)(o + 0x214 / 4), (unsigned int*)init, 0x50);
-        o[0x20 / 4] = 0;
-        o[0x24 / 4] = 1;
-        if ((unsigned int)o[0x25C / 4] < 4)
+        o = e->buffer;
+        o->self_0 = (int)e;
+        o->flags_4 = 0;
+        o->mask_14 = 0;
+        o->res_18.count_18 = 0;
+        o->res_18.sel_1A = 0;
+        o->res_18.field_1C = 0;
+        o->res_18.field_1E = 0;
+        o->res_18.result_20 = 0;
+        o->res_18.field_24 = 0;
+        o->field_34 = 0;
+        o->x_38 = 0;
+        o->y_3A = 0;
+        o->w_3C = 0;
+        o->h_3E = 0;
+        o->field_48 = 0;
+        o->x_4C = 0;
+        o->y_4E = 0;
+        o->w_50 = 0;
+        o->h_52 = 0;
+        o->ot_54 = 0;
+        o->field_78 = 0;
+        o->count_7C = 0;
+        o->field_B0 = 0;
+        o->field_B2 = 0;
+        o->lines_1B4 = 0;
+        MemCopy_800403E8((unsigned int*)&o->item_214, (unsigned int*)init, 0x50);
+        o->res_18.result_20 = 0;
+        o->res_18.field_24 = 1;
+        if ((unsigned int)o->item_214.mode_48 < 4)
         {
             PlayMusic_800300E0(1, 1);
         }
@@ -1160,13 +1083,6 @@ EventEntry* OpenItemMessageWindow_80035AC8(int* init)
     }
     return 0;
 }
-typedef struct
-{
-    int type;
-    int id;
-    int count;
-    int pad[2];
-} ItemMsgEntry;
 typedef struct
 {
     int field_0;
