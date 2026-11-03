@@ -35,8 +35,39 @@ typedef struct
     short s4;
     short s6;
     short s8;
-    short pad_A[5];
+    short sA;
+    short sC;
+    short sE;
+    short s10;
+    short s12;
 } NameGrid;
+typedef struct
+{
+    int pad_0;
+    char* chars_4;
+} NameCharRow;
+extern NameCharRow dword_800B8190[][7];
+typedef struct
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+} NameSprite;
+extern NameSprite name_800B82F4;
+extern NameSprite name_800B8388;
+extern char name_800B83A0[];
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
+extern unsigned short uiColor_8008B590;
+extern void sub_800B75EC(int a, char* b);
+extern void sub_800B7414(NameEntry* p);
+extern void sub_800B7A88(NameEntry* p);
+extern void sub_800B7DC4(NameEntry* p);
+extern void sub_800B7E30(NameEntry* p);
+extern void sub_800B7D60(NameEntry* p);
+extern void sub_800B7CD8(NameEntry* p);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 extern NameGrid name_800B8200[];
 extern int sub_800B80E4(NameCursor* p);
 extern int dword_800B83F8;
@@ -139,7 +170,77 @@ void sub_800B6FD8(EventEntry* e, NameEntry* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(name, sub_800B70F4);
+void sub_800B70F4(NameEntry* p)
+{
+    short pos[2];
+    RECT r;
+    unsigned short c[2];
+    unsigned short t[2];
+    int k;
+    switch (p->field_8)
+    {
+    case 0:
+        pos[0] = name_800B8200[0].s10 + (p->field_C % name_800B8200[0].s6) * name_800B8200[0].sC;
+        pos[1] = name_800B8200[0].s12 + (p->field_C / name_800B8200[0].s6) * name_800B8200[0].sE;
+        r.x = pos[0] - 1;
+        r.y = pos[1] - 1;
+        r.w = 0xD;
+        r.h = 0xD;
+        ((unsigned char*)c)[2] = 1;
+        ((unsigned char*)c)[3] = 1;
+        c[0] = uiColor_8008B590;
+        DrawWindow_80042460(&r, c, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
+        name_800B8388.f4 = 0;
+        name_800B82F4.f4 = 0;
+        name_800B8388.f0 = 4;
+        break;
+    case 1:
+        p->pad_A = p->field_C;
+        name_800B8388.f4 = GetTime30Hz_8002C64C();
+        name_800B82F4.f4 = 0;
+        name_800B8388.f0 = 2;
+        break;
+    case 2:
+        name_800B82F4.fC = p->field_C;
+        name_800B82F4.f4 = GetTime30Hz_8002C64C();
+        name_800B8388.f4 = 0;
+        name_800B8388.f0 = 4;
+        break;
+    }
+    name_800B8388.fC = p->pad_A;
+    sub_800B7414(p);
+    DrawMenuWindows_8002A5A4(&name_800B8388);
+    DrawMenuWindows_8002A5A4(&name_800B82F4);
+    t[0] = 0xA;
+    t[1] = 0xD6;
+    DrawButtonHelpBar_8002B004(name_800B83A0, t, 1);
+    r.x = 0xA;
+    r.y = 0x61;
+    r.w = 0xC2;
+    r.h = 0x65;
+    ((unsigned char*)t)[2] = 1;
+    ((unsigned char*)t)[3] = 1;
+    t[0] = uiColor_8008B590;
+    DrawWindow_80042460(&r, t, pOT_8008D454 + 14, 0);
+    for (k = 0; dword_800B8190[p->pad_A][k].chars_4; k++)
+    {
+        sub_800B75EC(dword_800B8190[p->pad_A][k].pad_0, dword_800B8190[p->pad_A][k].chars_4);
+    }
+    switch (p->field_8)
+    {
+    case 0:
+        sub_800B7A88(p);
+        break;
+    case 1:
+        sub_800B7DC4(p);
+        break;
+    case 2:
+        sub_800B7E30(p);
+        break;
+    }
+    sub_800B7D60(p);
+    sub_800B7CD8(p);
+}
 
 typedef struct
 {
@@ -265,12 +366,6 @@ void sub_800B7A88(NameEntry* p)
 
 #if 0
 // Not matched: frame/regalloc: the original keeps 6 saved regs (two copies of the list address, the constant 2 for length_44 - 2) and recomputes the list[i] address for the second EncodeText call
-typedef struct
-{
-    int pad_0;
-    char* chars_4;
-} NameCharRow;
-extern NameCharRow dword_800B8190[];
 extern void sub_800B7C68(NameEntry* p);
 void sub_800B7AB4(NameEntry* p)
 {
@@ -280,7 +375,7 @@ void sub_800B7AB4(NameEntry* p)
     if (IsConfirmPressedP1_8003D380(0) && p->length_44 < 0x13)
     {
         PlaySfx_80031494(0x7E);
-        ((char*)p->name_10)[p->length_44] = dword_800B8190[p->pad_A * 7 + p->field_C / name_800B8200[p->field_8].s6].chars_4[(p->field_C % name_800B8200[p->field_8].s6) * 2];
+        ((char*)p->name_10)[p->length_44] = dword_800B8190[p->pad_A][p->field_C / name_800B8200[p->field_8].s6].chars_4[(p->field_C % name_800B8200[p->field_8].s6) * 2];
         p->length_44 += 2;
     }
     if (IsCancelPressedP1_8003D41C(1))
