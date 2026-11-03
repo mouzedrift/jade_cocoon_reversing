@@ -177,8 +177,8 @@ void sub_800C47A8(void)
         c->a_0[i] = 0;
     }
     c->sel_18 = 0;
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
     c->mask_1E = 0;
     c->field_20 = 0;
     c->mode_1C = 0;
@@ -646,7 +646,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
     prm.e = tab_800C598C;
     prm.f = q->d;
     DrawMenuWindows_8002A5A4(&prm);
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
     v = sub_800AD308(sel + 1) + 1;
     if (v < 3)
     {

@@ -92,7 +92,7 @@ void InitSounds_8002FE7C(void)
 {
     InitSound_8002FE54(&bgmSound_80091CE0);
     InitSound_8002FE54(&sfxSound_80091D20);
-    InitSound_8002FE54(&stru_80091D00);
+    InitSound_8002FE54(&seqSlotSound_80091D00);
 }
 // Matched
 void ResetSoundTask_8002FEB8(void)
@@ -102,7 +102,7 @@ void ResetSoundTask_8002FEB8(void)
     int i;
     *(SoundStruct**)(p + 4) = &bgmSound_80091CE0;
     *(SoundStruct**)(p + 8) = &sfxSound_80091D20;
-    *(SoundStruct**)(p + 0xC) = &stru_80091D00;
+    *(SoundStruct**)(p + 0xC) = &seqSlotSound_80091D00;
     *(short*)(p + 2) = 2;
     q = p + 0x20;
     for (i = 4; i >= 0; i--)
@@ -133,7 +133,7 @@ void InitSoundTask_8002FF10(char* a, struct_FF10* p)
     int i;
     p->field_4 = &bgmSound_80091CE0;
     p->field_8 = &sfxSound_80091D20;
-    p->field_C = &stru_80091D00;
+    p->field_C = &seqSlotSound_80091D00;
     p->field_2 = 2;
     for (i = 4; i >= 0; i--)
     {
@@ -326,9 +326,9 @@ int LoadSeqSlotSound_800303E8(void)
     {
         return 0;
     }
-    stru_80091D00 = systemSound_80091D40;
-    stru_80091D00.field_8_sep_data_ptr = 0;
-    stru_80091D00.field_6_sound_idx = 10;
+    seqSlotSound_80091D00 = systemSound_80091D40;
+    seqSlotSound_80091D00.field_8_sep_data_ptr = 0;
+    seqSlotSound_80091D00.field_6_sound_idx = 10;
     p[1] = 0;
     s[0] = 0x2C;
     s[1] = 0x301;
@@ -394,7 +394,7 @@ INCLUDE_ASM(LoadSoundSeqFromBuffer_800304D0);
 // Matched
 void FreeSeqSlotSound_80030664(void)
 {
-    FreeSoundSeqs_80030EEC(&stru_80091D00);
+    FreeSoundSeqs_80030EEC(&seqSlotSound_80091D00);
 }
 // Matched
 int IsSoundTaskReady_80030688(void)

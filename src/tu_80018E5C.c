@@ -187,7 +187,7 @@ void sub_80018EBC(int a0, unsigned int* a1)
     {
         r = dword_8007A0F8;
     }
-    sub_8001DAAC(a0, r);
+    SetActorTint_8001DAAC(a0, r);
 }
 extern void* minionSpeciesNames_8007A170[];
 extern unsigned char dword_8007BA84[];
