@@ -2,19 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
-
-typedef struct ShopItemShop
-{
-    short state_0;
-    char pad_2[0xF6];
-} ShopItemShop;
-
-typedef struct ShopUnit6Shop
-{
-    short state_0;
-    char pad_2[0x2E];
-    short field_30;
-} ShopUnit6Shop;
+#include "actor.h"
 
 typedef struct ShopCtxShop
 {
@@ -53,13 +41,20 @@ extern void PlaySfx_80031494(int a);
 extern void sub_800BF474();
 extern void sub_800BF4B8();
 extern int name_8008D670;
+// work area of the shop menu task
 typedef struct ShopUnit3Shop
 {
-    short field_0;
+    short field_0; // state
     short field_2;
     short field_4;
     short field_6;
-    char pad_8[0x14];
+    short field_8;
+    short pad_A;
+    short field_C;
+    short pad_E;
+    int field_10;
+    int field_14;
+    int field_18;
     int field_1C;
     int field_20;
     int field_24;
@@ -69,35 +64,37 @@ typedef struct ShopUnit3Shop
     short field_2E;
     short field_30;
     short field_32;
-    char pad_34[8];
+    short field_34;
+    short field_36;
+    short field_38;
+    short field_3A;
     short field_3C;
-    short pad_3E;
+    short field_3E;
     short field_40;
     short field_42;
     short field_44;
     short field_46;
     short field_48;
     short field_4A;
-    void* field_4C;
-    void* field_50;
-    void* field_54;
+    Minion* field_4C;
+    Minion* field_50;
+    Minion* field_54;
     unsigned short field_58;
     unsigned short field_5A;
     unsigned short field_5C;
-    short a5E[7];
-    short field_6C;
-    short field_6E;
-    short pad_70;
-    short a72[2];
-    short field_76;
-    short pad_78;
+    short a5E[10];
+    short a72[4];
     short a7A[2];
     short field_7E;
-    char pad_80[4];
+    short field_80;
+    short pad_82;
     int field_84;
     int field_88;
-    char pad_8C[0xA];
+    int field_8C;
+    int field_90;
+    short field_94;
     short field_96;
+    short field_98;
 } ShopUnit3Shop;
 
 typedef struct ShopTask3Shop
@@ -159,9 +156,9 @@ extern void sub_800BD7A8();
 extern int sub_800BF3B4();
 extern void sub_800BAEDC();
 extern int sub_800B9888(short i);
-extern ShopItemShop* sub_800B9C5C(int i);
+extern Minion* sub_800B9C5C(int i);
 extern int sub_800B9C10(int i);
-extern ShopItemShop name_8008EF18[];
+extern Minion name_8008EF18[];
 extern void ClearMagicBit_8001AE00(unsigned int* b, int i);
 extern int GetMagicElement_8001AD30(int i);
 extern int CountMagicBits_8001AE54(unsigned int* b);
@@ -215,19 +212,6 @@ extern void fn_8001D68C(void* p, int on);
 extern char name_80079140[];
 extern signed char name_8007BA74[];
 extern int sub_800B9E94(char* src, char* dst, short c);
-typedef struct ShopAuxShop
-{
-    char pad_0[0x5C];
-    int field_5C;
-    char pad_60[0x28];
-} ShopAuxShop;
-typedef struct ShopSaveShop
-{
-    char pad_0[0x988];
-    ShopItemShop items[15];
-    ShopAuxShop aux[12];
-} ShopSaveShop;
-extern ShopSaveShop name_8008B570;
 extern int fn_800272D0();
 extern void fn_800A7BF0(int a);
 extern void fn_800A5F9C(int a);
@@ -244,67 +228,13 @@ extern void fn_800AD3F0(int a);
 extern void sub_800B9B44(short* p);
 extern void sub_800BE128();
 extern void sub_800BE07C();
-typedef struct ShopUnit4Shop
-{
-    short s0;
-    short s2;
-    short s4;
-    short s6;
-    short s8;
-    short pad_A;
-    short sC;
-    short pad_E;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    int f20;
-    int f24;
-    short s28;
-    short s2A;
-    short s2C;
-    short s2E;
-    short s30;
-    short s32;
-    short s34;
-    short s36;
-    short s38;
-    short s3A;
-    short s3C;
-    short s3E;
-    short s40;
-    short s42;
-    short s44;
-    short s46;
-    short s48;
-    short s4A;
-    int f4C;
-    int f50;
-    int f54;
-    short s58;
-    short s5A;
-    short s5C;
-    short a5E[10];
-    short a72[4];
-    short a7A[2];
-    short s7E;
-    short s80;
-    short pad_82;
-    int f84;
-    int f88;
-    int f8C;
-    int f90;
-    short s94;
-    short s96;
-    short s98;
-} ShopUnit4Shop;
 extern void fn_80011CD0(void* p);
 extern int fn_800AD888();
 extern void fn_800AD8F4(int a);
 extern char levantStatus_8008BD38[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
-extern ShopItemShop* name_800B6CF0;
+extern Minion* name_800B6CF0;
 extern ShopCtxShop name_800C09E0;
 extern int name_800C0A1C;
 extern void SetFadeMode_8001C19C(int a, int b);
@@ -352,14 +282,14 @@ int sub_800B9888(short i)
 int sub_800B9920()
 {
     int total = 27;
-    ShopItemShop* items = malloc3_8003FC4C(0x1A28);
+    Minion* items = malloc3_8003FC4C(0x1A28);
     short n = 0;
     int k;
     for (k = 0; k < 15; k++)
     {
-        if (name_8008B570.items[k].state_0 == 3)
+        if (saveData_8008B570.minions[k].id == 3)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
@@ -367,29 +297,29 @@ int sub_800B9920()
     {
         for (k = n; k < 3; k++)
         {
-            items[k].state_0 = 4;
+            items[k].id = 4;
         }
     }
     n = 3;
     for (k = 0; k < 15; k++)
     {
-        if (name_8008B570.items[k].state_0 == 2)
+        if (saveData_8008B570.minions[k].id == 2)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
     for (k = 0; k < 12; k++)
     {
-        if (name_8008B570.aux[k].field_5C != 0xD3)
+        if (saveData_8008B570.items[k].id != 0xD3)
         {
-            sub_800B9E94((char*)&name_8008B570.aux[k], (char*)&items[n], 2);
+            sub_800B9E94((char*)&saveData_8008B570.items[k], (char*)&items[n], 2);
             n++;
         }
     }
     for (k = n; k < total; k++)
     {
-        items[k].state_0 = 4;
+        items[k].id = 4;
     }
     ClearMinionsAndItems_80010600();
     name_800B6CF0 = items;
@@ -399,7 +329,7 @@ int sub_800B9920()
 
 void sub_800B9B20(int i)
 {
-    name_800B6CF0[i].state_0 = 4;
+    name_800B6CF0[i].id = 4;
 }
 
 void sub_800B9B44(short* p)
@@ -407,7 +337,7 @@ void sub_800B9B44(short* p)
     *p = 4;
 }
 
-ShopItemShop* sub_800B9B50(int mode, int n)
+Minion* sub_800B9B50(int mode, int n)
 {
     int cnt = 0;
     int i;
@@ -427,12 +357,12 @@ ShopItemShop* sub_800B9B50(int mode, int n)
 
 int sub_800B9C10(int i)
 {
-    return name_800B6CF0[i].state_0;
+    return name_800B6CF0[i].id;
 }
 
 short* sub_800B9C34(int i)
 {
-    return &name_800B6CF0[i].state_0 + 2;
+    return &name_800B6CF0[i].id + 2;
 }
 
 char* sub_800B9C54(char* p)
@@ -440,7 +370,7 @@ char* sub_800B9C54(char* p)
     return p + 4;
 }
 
-ShopItemShop* sub_800B9C5C(int i)
+Minion* sub_800B9C5C(int i)
 {
     return &name_800B6CF0[i];
 }
@@ -452,7 +382,7 @@ int CountItemsInState_800B9C78(int v)
     n = 0;
     for (i = 0; i < name_800B6CE4; i++)
     {
-        if (v == name_800B6CF0[i].state_0)
+        if (v == name_800B6CF0[i].id)
         {
             n++;
         }
@@ -472,7 +402,7 @@ int sub_800B9CDC(int i)
     {
         if (sub_800B9C10(i) == 2)
         {
-            name_800B6CF0[i].state_0 = 3;
+            name_800B6CF0[i].id = 3;
             return 1;
         }
     }
@@ -491,9 +421,9 @@ int sub_800B9D48(short* p)
 
 int sub_800B9D6C(int i)
 {
-    if (name_800B6CF0[i].state_0 == 3)
+    if (name_800B6CF0[i].id == 3)
     {
-        name_800B6CF0[i].state_0 = 2;
+        name_800B6CF0[i].id = 2;
         return 1;
     }
     return 0;
@@ -502,12 +432,12 @@ int sub_800B9D6C(int i)
 int sub_800B9DA8()
 {
     int cnt = name_800B6CE4;
-    ShopItemShop* items = name_800B6CF0;
+    Minion* items = name_800B6CF0;
     int n = 0;
     int i;
     for (i = 0; i < cnt; i++)
     {
-        if (items[i].state_0 != 4)
+        if (items[i].id != 4)
         {
             n++;
         }
@@ -517,9 +447,9 @@ int sub_800B9DA8()
         n = 0;
         for (i = 0; i < cnt; i++)
         {
-            if (items[i].state_0 != 4)
+            if (items[i].id != 4)
             {
-                MemCopy_800403E8((unsigned int*)&name_8008B570.items[n], (unsigned int*)&items[i], 0xF8);
+                MemCopy_800403E8((unsigned int*)&saveData_8008B570.minions[n], (unsigned int*)&items[i], 0xF8);
                 n++;
             }
         }
@@ -1288,12 +1218,12 @@ void sub_800BB0F8(ShopTaskShop* t, int a)
 }
 
 #if 0 // near miss: constant 3 / store scheduling (17 words)
-void sub_800BB148(ShopUnit4Shop* u)
+void sub_800BB148(ShopUnit3Shop* u)
 {
     short i;
     void* r;
-    u->s0 = 0;
-    u->s2 = -2;
+    u->field_0 = 0;
+    u->field_2 = -2;
     for (i = 0; i < 10; i++)
     {
         u->a5E[i] = 0;
@@ -1306,43 +1236,43 @@ void sub_800BB148(ShopUnit4Shop* u)
     {
         u->a7A[i] = 0;
     }
-    u->s36 = 1;
-    u->s3A = 1;
-    u->s40 = 1;
-    u->s42 = 1;
-    u->s44 = 1;
-    u->s46 = 0x40;
-    u->s34 = 3;
-    u->s38 = 3;
-    u->f84 = 0;
-    u->f88 = 0;
-    u->f8C = 0;
-    u->f90 = 0;
-    u->s80 = 0;
-    u->s94 = 0;
-    u->s32 = 0;
-    u->s30 = 0;
-    u->s3E = 0;
-    u->s3C = 0;
-    u->s4A = 0;
-    u->s48 = 0;
-    u->f4C = 0;
-    u->f50 = 0;
-    u->f54 = 0;
-    u->s5C = 0;
-    u->s5A = 0;
-    u->s58 = 0;
-    u->f18 = 0;
-    u->s8 = 0;
-    u->f14 = 0;
-    u->f10 = 0;
-    u->sC = 0;
-    u->s98 = 0;
-    u->s7E = 0;
-    u->f24 = 1;
-    u->f1C = 0;
-    u->f20 = 0;
-    u->f1C = name_800BF8B4[u->s0];
+    u->field_36 = 1;
+    u->field_3A = 1;
+    u->field_40 = 1;
+    u->field_42 = 1;
+    u->field_44 = 1;
+    u->field_46 = 0x40;
+    u->field_34 = 3;
+    u->field_38 = 3;
+    u->field_84 = 0;
+    u->field_88 = 0;
+    u->field_8C = 0;
+    u->field_90 = 0;
+    u->field_80 = 0;
+    u->field_94 = 0;
+    u->field_32 = 0;
+    u->field_30 = 0;
+    u->field_3E = 0;
+    u->field_3C = 0;
+    u->field_4A = 0;
+    u->field_48 = 0;
+    u->field_4C = 0;
+    u->field_50 = 0;
+    u->field_54 = 0;
+    u->field_5C = 0;
+    u->field_5A = 0;
+    u->field_58 = 0;
+    u->field_18 = 0;
+    u->field_8 = 0;
+    u->field_14 = 0;
+    u->field_10 = 0;
+    u->field_C = 0;
+    u->field_98 = 0;
+    u->field_7E = 0;
+    u->field_24 = 1;
+    u->field_1C = 0;
+    u->field_20 = 0;
+    u->field_1C = name_800BF8B4[u->field_0];
     SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
     fn_80011CD0(levantStatus_8008BD38);
@@ -1368,9 +1298,9 @@ void sub_800BB148(ShopUnit4Shop* u)
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BB148);
 
-int sub_800BB38C(ShopUnitShop* p)
+int sub_800BB38C(ShopUnit3Shop* p)
 {
-    switch (*(short*)p)
+    switch (p->field_0)
     {
     case 5:
         if (p->field_84)
@@ -1387,9 +1317,9 @@ int sub_800BB38C(ShopUnitShop* p)
     return 0;
 }
 
-int sub_800BB3E8(ShopUnitShop* p)
+int sub_800BB3E8(ShopUnit3Shop* p)
 {
-    switch (*(short*)p)
+    switch (p->field_0)
     {
     case 5:
         if (p->field_84 == 0)
@@ -1414,90 +1344,90 @@ extern void sub_800BD0D4();
 extern void sub_800BE2B4();
 extern void sub_800B6CB8();
 extern unsigned short padPressed_8009194C;
-void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
+void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
 {
     short old;
     int r;
     DrawMenuBackground_8002BE10();
-    if (u->f24 & 1)
+    if (u->field_24 & 1)
     {
-        u->s4 = CountItemsInState_800B9C78(2);
-        u->s6 = CountItemsInState_800B9C78(3);
-        u->f24 &= ~1;
+        u->field_4 = CountItemsInState_800B9C78(2);
+        u->field_6 = CountItemsInState_800B9C78(3);
+        u->field_24 &= ~1;
     }
-    if (u->s0 != 15 && !(u->f24 & 0x400))
+    if (u->field_0 != 15 && !(u->field_24 & 0x400))
     {
-        u->f24 &= ~0x1C0;
+        u->field_24 &= ~0x1C0;
     }
-    if ((u->f24 & 2) || u->s0 == 11 || u->s0 == 12)
+    if ((u->field_24 & 2) || u->field_0 == 11 || u->field_0 == 12)
     {
         sub_8003CF88(0x11E, 0x3C, 0xE);
     }
-    if (u->f18 == 0)
+    if (u->field_18 == 0)
     {
         sub_800BB798(u);
         sub_800BEBC8(u);
         sub_800BECC8(u);
     }
     sub_800BC380(u);
-    if (u->f18 == 0)
+    if (u->field_18 == 0)
     {
         sub_800BB798(u);
         sub_800BBAAC(u);
-        if (u->f10 || u->f14)
+        if (u->field_10 || u->field_14)
         {
             sub_800BD0D4(u);
         }
-        if (!(u->f24 & 4))
+        if (!(u->field_24 & 4))
         {
-            if (u->s0 == 3 && (u->f24 & 2))
+            if (u->field_0 == 3 && (u->field_24 & 2))
             {
-                old = u->s3C;
-                UpdateMenuCursor_8003D794(&u->s34, 0);
-                if (u->s3C != old)
+                old = u->field_3C;
+                UpdateMenuCursor_8003D794(&u->field_34, 0);
+                if (u->field_3C != old)
                 {
-                    u->s40 = 1;
-                    u->s42 = 1;
-                    u->s44 = 1;
-                    u->s46 = 0;
-                    u->s4A = 0;
-                    u->s48 = 0;
-                    if (u->f24 & 0x40)
+                    u->field_40 = 1;
+                    u->field_42 = 1;
+                    u->field_44 = 1;
+                    u->field_46 = 0;
+                    u->field_4A = 0;
+                    u->field_48 = 0;
+                    if (u->field_24 & 0x40)
                     {
-                        u->s44 = 5;
-                        u->s42 = 5;
+                        u->field_44 = 5;
+                        u->field_42 = 5;
                     }
-                    else if (u->f24 & 0x80)
+                    else if (u->field_24 & 0x80)
                     {
                         sub_800BECC8(u);
-                        r = CountMagicBits_8001AE54((unsigned int*)((char*)u->f54 + 0xF4));
+                        r = CountMagicBits_8001AE54((unsigned int*)u->field_54->field_F4);
                         if (r < 4)
                         {
                             r = 4;
                         }
-                        u->s42 = 4;
-                        u->s40 = 1;
-                        u->s44 = r;
-                        u->s46 = 0x40;
+                        u->field_42 = 4;
+                        u->field_40 = 1;
+                        u->field_44 = r;
+                        u->field_46 = 0x40;
                     }
                 }
-                if (u->f24 & 0x400)
+                if (u->field_24 & 0x400)
                 {
-                    UpdateMenuCursor_8003D794(&u->s40, 0);
+                    UpdateMenuCursor_8003D794(&u->field_40, 0);
                 }
             }
-            if (!(u->f24 & 2))
+            if (!(u->field_24 & 2))
             {
                 sub_800BBE24(u);
-                if (u->s0 == 8 || sub_800BB38C(u))
+                if (u->field_0 == 8 || sub_800BB38C(u))
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (*(short*)u->f4C != 4)
+                        if (u->field_4C->id != 4)
                         {
-                            u->f24 = (u->f24 | 0x20) & ~0x400;
-                            u->f24 &= ~0x1C0;
-                            sub_800BE2B4(u->f54);
+                            u->field_24 = (u->field_24 | 0x20) & ~0x400;
+                            u->field_24 &= ~0x1C0;
+                            sub_800BE2B4(u->field_54);
                         }
                     }
                 }
@@ -1505,20 +1435,20 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
             else
             {
                 sub_800BC2DC(u);
-                if (u->s0 == 3)
+                if (u->field_0 == 3)
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (*(short*)u->f4C != 4)
+                        if (u->field_4C->id != 4)
                         {
-                            u->f24 = (u->f24 | 0x20) & ~0x400;
-                            u->f24 &= ~0x1C0;
-                            sub_800BE2B4(u->f54);
+                            u->field_24 = (u->field_24 | 0x20) & ~0x400;
+                            u->field_24 &= ~0x1C0;
+                            sub_800BE2B4(u->field_54);
                         }
                     }
                     else if (padPressed_8009194C & 0x80)
                     {
-                        u->f24 |= 0x400;
+                        u->field_24 |= 0x400;
                         sub_800BC1A8(u);
                     }
                 }
@@ -1526,11 +1456,11 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (*(short*)u->f4C != 4)
+                        if (u->field_4C->id != 4)
                         {
-                            u->f24 = (u->f24 | 0x20) & ~0x400;
-                            u->f24 &= ~0x1C0;
-                            sub_800BE2B4(u->f54);
+                            u->field_24 = (u->field_24 | 0x20) & ~0x400;
+                            u->field_24 &= ~0x1C0;
+                            sub_800BE2B4(u->field_54);
                         }
                     }
                 }
@@ -1546,9 +1476,9 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
     {
         sub_800BBA3C(u);
     }
-    if (u->sC < 8)
+    if (u->field_C < 8)
     {
-        u->sC++;
+        u->field_C++;
     }
 }
 
@@ -1665,17 +1595,17 @@ void sub_800BB8C4(ShopUnit3Shop* u)
 }
 
 extern unsigned short padPressed_8009194C;
-void sub_800BBA3C(char* u)
+void sub_800BBA3C(ShopUnit3Shop* u)
 {
-    if (*(short*)(u + 0x98) < 0x96)
+    if (u->field_98 < 0x96)
     {
-        *(short*)(u + 0x98) += 1;
+        u->field_98 += 1;
     }
-    if (padPressed_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
+    if (padPressed_8009194C != 0 || u->field_98 >= 0x96)
     {
         SetShopHelpText_800BBB54(u, 0);
-        *(int*)(u + 0x18) = 0;
-        *(short*)(u + 0x98) = 0;
+        u->field_18 = 0;
+        u->field_98 = 0;
     }
 }
 
@@ -1706,40 +1636,40 @@ extern int name_800BF9B8[];
 extern int name_800BFAA8[];
 extern int* name_800BFAB4[];
 extern int* name_800BFAF4[];
-void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
+void SetShopHelpText_800BBB54(ShopUnit3Shop* u, int mode)
 {
     switch ((short)mode)
     {
     case 1:
-        if (u->s96 == 4)
+        if (u->field_96 == 4)
         {
-            name_800BF7C8[0].w4 = name_800BFC04[u->s8][0];
-            name_800BF7C8[1].w4 = name_800BFC04[u->s8][1];
-            name_800BF7C8[2].w4 = name_800BFC04[u->s8][2];
+            name_800BF7C8[0].w4 = name_800BFC04[u->field_8][0];
+            name_800BF7C8[1].w4 = name_800BFC04[u->field_8][1];
+            name_800BF7C8[2].w4 = name_800BFC04[u->field_8][2];
         }
         else
         {
-            name_800BF7C8[0].w4 = name_800BFC68[u->s8][0];
-            name_800BF7C8[1].w4 = name_800BFC68[u->s8][1];
-            name_800BF7C8[2].w4 = name_800BFC68[u->s8][2];
+            name_800BF7C8[0].w4 = name_800BFC68[u->field_8][0];
+            name_800BF7C8[1].w4 = name_800BFC68[u->field_8][1];
+            name_800BF7C8[2].w4 = name_800BFC68[u->field_8][2];
         }
         break;
     case 3:
-        if (u->s96 == 4)
+        if (u->field_96 == 4)
         {
-            name_800BF7C8[0].w4 = name_800BFB34[u->s0][0];
-            name_800BF7C8[1].w4 = name_800BFB34[u->s0][1];
-            name_800BF7C8[2].w4 = name_800BFB34[u->s0][2];
+            name_800BF7C8[0].w4 = name_800BFB34[u->field_0][0];
+            name_800BF7C8[1].w4 = name_800BFB34[u->field_0][1];
+            name_800BF7C8[2].w4 = name_800BFB34[u->field_0][2];
         }
         else
         {
-            name_800BF7C8[0].w4 = name_800BFB74[u->s0][0];
-            name_800BF7C8[1].w4 = name_800BFB74[u->s0][1];
-            name_800BF7C8[2].w4 = name_800BFB74[u->s0][2];
+            name_800BF7C8[0].w4 = name_800BFB74[u->field_0][0];
+            name_800BF7C8[1].w4 = name_800BFB74[u->field_0][1];
+            name_800BF7C8[2].w4 = name_800BFB74[u->field_0][2];
         }
         break;
     case 2:
-        if (u->s96 == 4)
+        if (u->field_96 == 4)
         {
             name_800BF7C8[0].w4 = name_800BF9B8[0];
             name_800BF7C8[1].w4 = name_800BF9B8[1];
@@ -1753,34 +1683,34 @@ void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
         }
         break;
     default:
-        if (u->s0 == 0)
+        if (u->field_0 == 0)
         {
-            if (u->s96 == 4)
+            if (u->field_96 == 4)
             {
-                name_800BF7C8[0].w4 = name_800BFCF4[u->s30][0];
-                name_800BF7C8[1].w4 = name_800BFCF4[u->s30][1];
-                name_800BF7C8[2].w4 = name_800BFCF4[u->s30][2];
+                name_800BF7C8[0].w4 = name_800BFCF4[u->field_30][0];
+                name_800BF7C8[1].w4 = name_800BFCF4[u->field_30][1];
+                name_800BF7C8[2].w4 = name_800BFCF4[u->field_30][2];
             }
             else
             {
-                name_800BF7C8[0].w4 = name_800BFD08[u->s30][0];
-                name_800BF7C8[1].w4 = name_800BFD08[u->s30][1];
-                name_800BF7C8[2].w4 = name_800BFD08[u->s30][2];
+                name_800BF7C8[0].w4 = name_800BFD08[u->field_30][0];
+                name_800BF7C8[1].w4 = name_800BFD08[u->field_30][1];
+                name_800BF7C8[2].w4 = name_800BFD08[u->field_30][2];
             }
         }
         else
         {
-            if (u->s96 == 4)
+            if (u->field_96 == 4)
             {
-                name_800BF7C8[0].w4 = name_800BFAB4[u->s0][0];
-                name_800BF7C8[1].w4 = name_800BFAB4[u->s0][1];
-                name_800BF7C8[2].w4 = name_800BFAB4[u->s0][2];
+                name_800BF7C8[0].w4 = name_800BFAB4[u->field_0][0];
+                name_800BF7C8[1].w4 = name_800BFAB4[u->field_0][1];
+                name_800BF7C8[2].w4 = name_800BFAB4[u->field_0][2];
             }
             else
             {
-                name_800BF7C8[0].w4 = name_800BFAF4[u->s0][0];
-                name_800BF7C8[1].w4 = name_800BFAF4[u->s0][1];
-                name_800BF7C8[2].w4 = name_800BFAF4[u->s0][2];
+                name_800BF7C8[0].w4 = name_800BFAF4[u->field_0][0];
+                name_800BF7C8[1].w4 = name_800BFAF4[u->field_0][1];
+                name_800BF7C8[2].w4 = name_800BFAF4[u->field_0][2];
             }
         }
         break;
@@ -1792,39 +1722,39 @@ void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
 // UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
 // s28/s7E through a copy; with int snd the copies and the r register still differ.
 extern int sub_800BD6C4();
-void sub_800BBE24(ShopUnit4Shop* u)
+void sub_800BBE24(ShopUnit3Shop* u)
 {
     short snd;
     int r;
     int k;
     unsigned int bit;
-    if (u->f24 & 8)
+    if (u->field_24 & 8)
     {
         sub_800BEBC8(u);
         snd = 0;
-        r = (short)UpdateMenuCursor_8003D794(&u->s28, snd);
+        r = (short)UpdateMenuCursor_8003D794(&u->field_28, snd);
         if (r == 4)
         {
             snd = 1;
-            u->s2C = 0x18;
-            u->s2E = 0x50;
-            u->s28 = snd;
-            u->s7E = snd;
-            u->s2A = r;
-            u->s30 = 0;
-            u->f24 &= ~0x10;
+            u->field_2C = 0x18;
+            u->field_2E = 0x50;
+            u->field_28 = snd;
+            u->field_7E = snd;
+            u->field_2A = r;
+            u->field_30 = 0;
+            u->field_24 &= ~0x10;
             sub_800BB798(u);
         }
         else if (r == 3)
         {
             snd = 1;
-            u->s28 = snd;
-            u->s2E = 0x20;
-            u->s2A = r;
-            u->s2C = r;
-            u->s30 = 2;
-            u->s7E = 0;
-            u->f24 |= 0x10;
+            u->field_28 = snd;
+            u->field_2E = 0x20;
+            u->field_2A = r;
+            u->field_2C = r;
+            u->field_30 = 2;
+            u->field_7E = 0;
+            u->field_24 |= 0x10;
             sub_800BB798(u);
         }
         if (snd)
@@ -1834,71 +1764,71 @@ void sub_800BBE24(ShopUnit4Shop* u)
     }
     else
     {
-        UpdateMenuCursor_8003D794(&u->s28, 0);
+        UpdateMenuCursor_8003D794(&u->field_28, 0);
     }
-    if (u->s0 == 15)
+    if (u->field_0 == 15)
     {
-        UpdateMenuCursor_8003D794(&u->s40, 0);
+        UpdateMenuCursor_8003D794(&u->field_40, 0);
     }
     if (IsConfirmPressedP1_8003D380(0))
     {
-        if (u->s0 != 5)
+        if (u->field_0 != 5)
         {
             if (sub_800BD6C4(u))
             {
-                u->f14 = 1;
+                u->field_14 = 1;
             }
-            else if (u->s0 == 2 || u->s0 == 10)
+            else if (u->field_0 == 2 || u->field_0 == 10)
             {
-                if (u->f4C == u->f50)
+                if (u->field_4C == u->field_50)
                 {
-                    u->f14 = 1;
+                    u->field_14 = 1;
                 }
                 else
                 {
-                    u->f10 = 1;
+                    u->field_10 = 1;
                 }
             }
             else
             {
-                u->f10 = 1;
+                u->field_10 = 1;
             }
         }
         else
         {
-            if (*(short*)u->f4C != 4)
+            if (u->field_4C->id != 4)
             {
-                if (u->f24 & 0x10)
+                if (u->field_24 & 0x10)
                 {
-                    bit = 1 << (short)(u->s30 + u->s32);
-                    if (!(u->f88 & bit))
+                    bit = 1 << (short)(u->field_30 + u->field_32);
+                    if (!(u->field_88 & bit))
                     {
-                        u->f88 |= bit;
-                        u->f84 |= bit;
-                        u->s80++;
+                        u->field_88 |= bit;
+                        u->field_84 |= bit;
+                        u->field_80++;
                     }
                     else
                     {
-                        u->f88 &= ~bit;
-                        u->f84 &= ~bit;
-                        u->s80--;
+                        u->field_88 &= ~bit;
+                        u->field_84 &= ~bit;
+                        u->field_80--;
                     }
                 }
                 else
                 {
-                    k = (short)(u->s30 + u->s32);
+                    k = (short)(u->field_30 + u->field_32);
                     bit = 1 << k;
-                    if (!(u->f8C & bit))
+                    if (!(u->field_8C & bit))
                     {
-                        u->f8C |= bit;
-                        u->f84 |= 1 << (k + 3);
-                        u->s80++;
+                        u->field_8C |= bit;
+                        u->field_84 |= 1 << (k + 3);
+                        u->field_80++;
                     }
                     else
                     {
-                        u->f8C &= ~bit;
-                        u->f84 &= ~(1 << (k + 3));
-                        u->s80--;
+                        u->field_8C &= ~bit;
+                        u->field_84 &= ~(1 << (k + 3));
+                        u->field_80--;
                     }
                 }
                 PlaySfx_80031494(0x7E);
@@ -1907,35 +1837,35 @@ void sub_800BBE24(ShopUnit4Shop* u)
     }
     else if (IsCancelPressedP1_8003D41C(0))
     {
-        u->f14 = 1;
+        u->field_14 = 1;
     }
     else if (padPressed_8009194C & 0x80)
     {
-        if (u->s0 == 8)
+        if (u->field_0 == 8)
         {
-            u->s40 = 1;
-            u->s42 = 1;
-            u->s44 = 1;
-            u->s46 = 0;
-            u->s4A = 0;
-            u->s48 = 0;
-            u->f10 = 1;
-            u->f24 |= 0x400;
+            u->field_40 = 1;
+            u->field_42 = 1;
+            u->field_44 = 1;
+            u->field_46 = 0;
+            u->field_4A = 0;
+            u->field_48 = 0;
+            u->field_10 = 1;
+            u->field_24 |= 0x400;
         }
-        else if (u->s0 == 15)
+        else if (u->field_0 == 15)
         {
             sub_800BC1A8(u);
         }
-        else if (sub_800BB3E8((ShopUnitShop*)u) && sub_800B97B0())
+        else if (sub_800BB3E8(u) && sub_800B97B0())
         {
             PlaySfx_80031494(0x7E);
         }
     }
     else if (padPressed_8009194C & 0x20)
     {
-        if (u->s80 > 0 && u->s0 == 5)
+        if (u->field_80 > 0 && u->field_0 == 5)
         {
-            u->f10 = 1;
+            u->field_10 = 1;
         }
     }
 }
@@ -1947,7 +1877,7 @@ void sub_800BC1A8(ShopUnit3Shop* u)
     int fl;
     int r;
     int t;
-    if (*(short*)u->field_54 != 4)
+    if (u->field_54->id != 4)
     {
         fl = u->field_24;
         u->field_40 = 1;
@@ -1967,7 +1897,7 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             t = fl & ~0x40;
             t &= ~0x100;
             u->field_24 = t | 0x80;
-            r = CountMagicBits_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
+            r = CountMagicBits_8001AE54((unsigned int*)u->field_54->field_F4);
             if (r < 4)
             {
                 r = 4;
@@ -2127,13 +2057,13 @@ int sub_800BCF74(ShopUnit3Shop* u)
         return 0;
     case 1:
     case 8:
-        if (*(short*)u->field_4C == 4)
+        if (u->field_4C->id == 4)
         {
             return 2;
         }
         return 0;
     case 2:
-        if (*(short*)u->field_50 == 4)
+        if (u->field_50->id == 4)
         {
             return 2;
         }
@@ -2149,7 +2079,7 @@ int sub_800BCF74(ShopUnit3Shop* u)
         }
         return 0;
     case 14:
-        if (sub_800AD288(u->field_6E + u->field_76, 4) == 0xFF)
+        if (sub_800AD288(u->a5E[8] + u->a72[2], 4) == 0xFF)
         {
             return 4;
         }
@@ -2174,9 +2104,9 @@ int sub_800BD650(short* p)
     return 0;
 }
 
-int sub_800BD678(ShopUnitShop* p)
+int sub_800BD678(ShopUnit3Shop* p)
 {
-    switch (*(short*)p)
+    switch (p->field_0)
     {
     case 1:
     case 2:
@@ -2189,7 +2119,7 @@ int sub_800BD678(ShopUnitShop* p)
     return 0;
 }
 
-int sub_800BD6C4(ShopUnit6Shop* p)
+int sub_800BD6C4(ShopUnit3Shop* p)
 {
     switch (*(short*)p)
     {
@@ -2214,13 +2144,13 @@ void sub_800BD720(ShopUnit3Shop* u)
     {
         if (u->field_24 & 0x200)
         {
-            d = sub_800AD288(u->field_6E + u->field_76, 4);
+            d = sub_800AD288(u->a5E[8] + u->a72[2], 4);
         }
         else
         {
             d = 10;
         }
-        MergeMinions_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
+        MergeMinions_800B9FC8((unsigned char*)u->field_4C, (unsigned char*)u->field_50, name_800C08E8, d);
     }
 }
 
@@ -2354,13 +2284,13 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             }
             if (u->field_24 & 0x200)
             {
-                fn_800AD1E0(fn_800AD288(u->field_6E + u->field_76, 4), 1, 4);
+                fn_800AD1E0(fn_800AD288(u->a5E[8] + u->a72[2], 4), 1, 4);
                 fn_800AD3F0(4);
                 u->field_24 &= ~0x200;
             }
-            *(int*)((char*)u + 0x84) = 0;
-            *(int*)((char*)u + 0x88) = 0;
-            *(int*)((char*)u + 0x8C) = 0;
+            u->field_84 = 0;
+            u->field_88 = 0;
+            u->field_8C = 0;
             u->field_24 |= 1;
             if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
             {
@@ -2372,7 +2302,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
                 break;
             }
         }
-        *(short*)((char*)u + 0x94) = 1;
+        u->field_94 = 1;
         u->field_24 |= 0x800;
         tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
         fn_8001ABEC(1);
@@ -2398,9 +2328,9 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         {
             break;
         }
-        *(int*)((char*)u + 0x84) = 0;
-        *(int*)((char*)u + 0x88) = 0;
-        *(int*)((char*)u + 0x8C) = 0;
+        u->field_84 = 0;
+        u->field_88 = 0;
+        u->field_8C = 0;
         u->field_24 |= 1;
         if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
         {
@@ -2412,7 +2342,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         }
         else
         {
-            *(short*)((char*)u + 0x94) = 2;
+            u->field_94 = 2;
             u->field_24 |= 0x800;
             tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
             fn_8001ABEC(1);
@@ -2422,9 +2352,9 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         break;
     case 9:
         sub_800BAF54((short*)u->field_4C, (short*)u->field_50, u->a7A[0] == 0 ? 3 : 2, u->a7A[1] == 0 ? 3 : 2);
-        *(int*)((char*)u + 0x84) = 0;
-        *(int*)((char*)u + 0x88) = 0;
-        *(int*)((char*)u + 0x8C) = 0;
+        u->field_84 = 0;
+        u->field_88 = 0;
+        u->field_8C = 0;
         u->field_0 = 7;
         u->field_2 = 0;
         u->field_24 |= 1;
@@ -2434,11 +2364,11 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
         tk->next_8 = sub_800BE128;
         tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
-        fn_800B6C6C((char*)u->field_4C + 0x94, 0);
+        fn_800B6C6C(u->field_4C->name_94, 0);
         SetFadeMode_8001C19C(0, 0x20);
-        *(int*)((char*)u + 0x84) = 0;
-        *(int*)((char*)u + 0x88) = 0;
-        *(int*)((char*)u + 0x8C) = 0;
+        u->field_84 = 0;
+        u->field_88 = 0;
+        u->field_8C = 0;
         break;
     case 11:
         u->field_24 |= 4;
@@ -2465,7 +2395,7 @@ void sub_800BDD74(ShopTaskShop* t, void* arg)
         {
             fn_800A5F9C(1);
             t->next_8 = sub_800BE128;
-            fn_800B6C6C((char*)u->field_4C + 0x94, 1);
+            fn_800B6C6C(u->field_4C->name_94, 1);
         }
         else if (u->field_0 == 6)
         {
@@ -2503,17 +2433,17 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
     if (sub_8001AB94())
     {
         tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
-        if (*(short*)((char*)u + 0x94) == 1)
+        if (u->field_94 == 1)
         {
             tk->next_8 = sub_800BE128;
         }
-        else if (*(short*)((char*)u + 0x94) == 2)
+        else if (u->field_94 == 2)
         {
             tk->next_8 = sub_800BE07C;
         }
         tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
         fn_8002C014();
-        if (*(short*)((char*)u + 0x94) == 1)
+        if (u->field_94 == 1)
         {
             sv = (char*)&saveData_8008B570;
             if (!((*(unsigned int*)(sv + 0x1C) >> 5) & 1))
@@ -2532,26 +2462,26 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
                 }
                 if (u->field_24 & 0x200)
                 {
-                    fn_800AD1E0(fn_800AD288(u->field_6E + u->field_76, 4), 1, 4);
+                    fn_800AD1E0(fn_800AD288(u->a5E[8] + u->a72[2], 4), 1, 4);
                     fn_800AD3F0(4);
                     u->field_24 &= ~0x200;
                 }
-                *(int*)((char*)u + 0x84) = 0;
-                *(int*)((char*)u + 0x88) = 0;
-                *(int*)((char*)u + 0x8C) = 0;
+                u->field_84 = 0;
+                u->field_88 = 0;
+                u->field_8C = 0;
                 u->field_24 |= 1;
             }
-            fn_800B6C6C((char*)u->field_4C + 0x94, 1);
+            fn_800B6C6C(u->field_4C->name_94, 1);
             SetFadeMode_8001C19C(0, 0x20);
         }
-        else if (*(short*)((char*)u + 0x94) == 2)
+        else if (u->field_94 == 2)
         {
             fn_800B6CC8();
             SetFadeMode_8001C19C(0, 0x20);
         }
         u->field_24 &= ~0x800;
         fn_8001ABEC(0);
-        *(short*)((char*)u + 0x94) = 0;
+        u->field_94 = 0;
     }
 }
 
@@ -2648,37 +2578,37 @@ void sub_800BE2B4(int a)
 extern void ShopMenuTask_800BB444();
 void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 {
-    char* c;
+    Actor* c;
     int v;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    c = (char*)sub_800BF780();
+    c = (Actor*)sub_800BF780();
     if (padHeld_800918D0[0] & 0x8000)
     {
-        *(unsigned short*)(c + 0x5E) += 0x88;
+        *(unsigned short*)&c->rot_5C[1] += 0x88;
     }
     else if (padHeld_800918D0[0] & 0x2000)
     {
-        *(unsigned short*)(c + 0x5E) -= 0x88;
+        *(unsigned short*)&c->rot_5C[1] -= 0x88;
     }
     if (padHeld_800918D0[0] & 8)
     {
-        v = *(int*)(c + 0x138) + 0x40;
+        v = c->f138[0] + 0x40;
         if (v < 0x1000)
         {
-            *(int*)(c + 0x138) = v;
-            *(int*)(c + 0x13C) += 0x40;
-            *(int*)(c + 0x140) += 0x40;
+            c->f138[0] = v;
+            c->f138[1] += 0x40;
+            c->f138[2] += 0x40;
         }
     }
     else if (padHeld_800918D0[0] & 2)
     {
-        v = *(int*)(c + 0x138) - 0x40;
+        v = c->f138[0] - 0x40;
         if (v > 0x400)
         {
-            *(int*)(c + 0x138) = v;
-            *(int*)(c + 0x13C) -= 0x40;
-            *(int*)(c + 0x140) -= 0x40;
+            c->f138[0] = v;
+            c->f138[1] -= 0x40;
+            c->f138[2] -= 0x40;
         }
     }
     if (IsCancelPressedP1_8003D41C(1))
@@ -2696,7 +2626,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
         }
         if (u->field_0 == 5)
         {
-            *(int*)((char*)u + 0x10) = 0;
+            u->field_10 = 0;
         }
         u->field_24 &= ~0x20;
         t->next_8 = ShopMenuTask_800BB444;
@@ -2704,14 +2634,14 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 }
 
 extern void sub_800BE334();
-void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
+void sub_800BE4D0(ShopTaskShop* t, ShopUnit3Shop* a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     if (ret_800BF520() == 1)
     {
         SetShopHelpText_800BBB54(a, 2);
-        sub_800BF704(*(short*)((char*)a + 0x96));
+        sub_800BF704(a->field_96);
         t->next_8 = sub_800BE334;
     }
 }
@@ -2720,7 +2650,7 @@ extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, i
 extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
 extern ShopSixShop name_800B971C;
 extern char name_800BFE24[];
-void sub_800BE53C(ShopUnit4Shop* u)
+void sub_800BE53C(ShopUnit3Shop* u)
 {
     short r[4];
     short out[4];
@@ -2731,20 +2661,20 @@ void sub_800BE53C(ShopUnit4Shop* u)
     int clut;
     short i;
     char* s;
-    ShopItemShop* e;
+    Minion* e;
     clut = 0;
     if (sub_800BD678(u))
     {
-        sel = u->s30;
+        sel = u->field_30;
     }
     else
     {
         sel = -1;
     }
     h = 8;
-    if (!(u->f20 & 2))
+    if (!(u->field_20 & 2))
     {
-        h = u->sC;
+        h = u->field_C;
     }
     r[2] = 0x40;
     r[3] = 0xE;
@@ -2753,7 +2683,7 @@ void sub_800BE53C(ShopUnit4Shop* u)
         if (sub_800B9C10(i) == 3)
         {
             e = sub_800B9C5C(i);
-            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+            s = (e->id == 4) ? 0 : e->name_94;
         }
         else
         {
@@ -2761,7 +2691,7 @@ void sub_800BE53C(ShopUnit4Shop* u)
         }
         r[0] = 0xD;
         r[1] = i * 15 + 0x5D;
-        if (((unsigned int)u->f84 & (1 << i)) && ((unsigned int)u->f88 & (1 << i)))
+        if (((unsigned int)u->field_84 & (1 << i)) && ((unsigned int)u->field_88 & (1 << i)))
         {
             SetFontClutOffset_8003F900(1, 3);
             clut = 1;
@@ -2784,7 +2714,7 @@ void sub_800BE53C(ShopUnit4Shop* u)
     q.w1 = GetTime30Hz_8002C64C();
     q.w2 = (short)h;
     q.w4 = (int)name_800BFE24;
-    if (u->f24 & 0x10)
+    if (u->field_24 & 0x10)
     {
         q.w3 = (short)sel;
     }
@@ -2792,7 +2722,7 @@ void sub_800BE53C(ShopUnit4Shop* u)
     {
         q.w3 = -1;
     }
-    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    if (u->field_0 == 6 || u->field_0 == 9 || u->field_0 == 3 || u->field_0 == 15)
     {
         q.w0 |= 4;
     }
@@ -2812,7 +2742,7 @@ typedef struct ShopPairShop
 } ShopPairShop;
 extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
 extern char name_800BFF14[];
-void sub_800BE7F0(ShopUnit4Shop* u)
+void sub_800BE7F0(ShopUnit3Shop* u)
 {
     short r[4];
     short out[4];
@@ -2826,22 +2756,22 @@ void sub_800BE7F0(ShopUnit4Shop* u)
     int clut;
     short i;
     char* s;
-    ShopItemShop* e;
+    Minion* e;
     int k;
     base = sub_800BEB60(u);
     clut = 0;
     if (sub_800BD678(u))
     {
-        sel = u->s30;
+        sel = u->field_30;
     }
     else
     {
         sel = -1;
     }
     h = 8;
-    if (!(u->f20 & 2))
+    if (!(u->field_20 & 2))
     {
-        h = u->sC;
+        h = u->field_C;
     }
     r[2] = 0x40;
     r[3] = 0xE;
@@ -2851,7 +2781,7 @@ void sub_800BE7F0(ShopUnit4Shop* u)
         if (sub_800B9C10(k) == 2)
         {
             e = sub_800B9C5C(k);
-            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+            s = (e->id == 4) ? 0 : e->name_94;
         }
         else
         {
@@ -2859,7 +2789,7 @@ void sub_800BE7F0(ShopUnit4Shop* u)
         }
         r[0] = 0xD;
         r[1] = i * 15 + 0x9A;
-        if (((unsigned int)u->f84 & (1 << (i + (short)base + 3))) && ((unsigned int)u->f8C & (1 << (i + (short)base))))
+        if (((unsigned int)u->field_84 & (1 << (i + (short)base + 3))) && ((unsigned int)u->field_8C & (1 << (i + (short)base))))
         {
             SetFontClutOffset_8003F900(1, 3);
             clut = 1;
@@ -2880,7 +2810,7 @@ void sub_800BE7F0(ShopUnit4Shop* u)
     q = name_800B971C;
     q.w1 = GetTime30Hz_8002C64C();
     q.w4 = (int)name_800BFF14;
-    if (u->f24 & 0x10)
+    if (u->field_24 & 0x10)
     {
         q.w3 = -1;
     }
@@ -2888,7 +2818,7 @@ void sub_800BE7F0(ShopUnit4Shop* u)
     {
         q.w3 = sel;
     }
-    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    if (u->field_0 == 6 || u->field_0 == 9 || u->field_0 == 3 || u->field_0 == 15)
     {
         q.w0 |= 4;
     }
@@ -2899,7 +2829,7 @@ void sub_800BE7F0(ShopUnit4Shop* u)
     q.w2 = 8;
     DrawMenuWindows_8002A5A4(&q);
     SetFontClutOffset_8003F900(1, 0);
-    if (!(u->f24 & 0x10))
+    if (!(u->field_24 & 0x10))
     {
         if ((short)base < 20)
         {
@@ -2999,7 +2929,7 @@ void sub_800BECC8(ShopUnit3Shop* u)
         case 0:
             goto def;
         case 2:
-            u->field_54 = name_800C08E8;
+            u->field_54 = (Minion*)name_800C08E8;
             return;
         }
         return;
