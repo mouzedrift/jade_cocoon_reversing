@@ -205,6 +205,40 @@ void sub_800B7A88(NameEntry* p)
     sub_800B7CA4(p);
 }
 
+#if 0
+// Not matched: frame/regalloc: the original keeps 6 saved regs (two copies of the list address, the constant 2 for length_44 - 2) and recomputes the list[i] address for the second EncodeText call
+typedef struct
+{
+    int pad_0;
+    char* chars_4;
+} NameCharRow;
+extern NameCharRow dword_800B8190[];
+extern void sub_800B7C68(NameEntry* p);
+void sub_800B7AB4(NameEntry* p)
+{
+    unsigned short* list[2];
+    short i = 0;
+    list[0] = 0;
+    if (IsConfirmPressedP1_8003D380(0) && p->length_44 < 0x13)
+    {
+        PlaySfx_80031494(0x7E);
+        ((char*)p->name_10)[p->length_44] = dword_800B8190[p->pad_A * 7 + p->field_C / name_800B8200[p->field_8].s6].chars_4[(p->field_C % name_800B8200[p->field_8].s6) * 2];
+        p->length_44 += 2;
+    }
+    if (IsCancelPressedP1_8003D41C(1))
+    {
+        sub_800B7C68(p);
+    }
+    for (i = 0; list[i]; i++)
+    {
+        if (*EncodeText_8003F684(2, list[i]) == ((unsigned char*)p->name_10)[p->length_44 - 2])
+        {
+            ((unsigned char*)p->name_10)[p->length_44 - 2] = *EncodeText_8003F684(2, list[i]);
+            break;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(name, sub_800B7AB4);
 
 void sub_800B7C68(NameEntry* p)
