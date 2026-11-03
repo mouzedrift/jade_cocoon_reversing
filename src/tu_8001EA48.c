@@ -4862,8 +4862,7 @@ extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
 extern char* dword_8008B4A4;
-#if 0
-// Not matched: 2 instructions: in the mapIdx >= 0 branch the original loads the index (lhu) before the -1 store to field_2
+// Matched
 void sub_80028808(void* a0, int* a1)
 {
     char buf[0x104];
@@ -4944,7 +4943,7 @@ void sub_80028808(void* a0, int* a1)
     dword_80091C94 = 0;
     if (((int*)&stru_80091C78)[3] >= 0)
     {
-        saveData_8008B570.mapId_2E4[3].field_0 = ((int*)&stru_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];
         saveData_8008B570.mapId_2E4[3].field_2 = -1;
         ((int*)&stru_80091C78)[3] = -1;
     }
@@ -4962,5 +4961,3 @@ void sub_80028808(void* a0, int* a1)
     }
     *(int*)(*(char**)(dword_8008B4A4 + 0x24) + 0x84) = saveData_8008B570.mapId_2E4[3].field_0;
 }
-#endif
-INCLUDE_ASM(sub_80028808);
