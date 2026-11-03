@@ -31,6 +31,10 @@ typedef struct EventEntry
     void* buffer;
 } EventEntry;
 
+// model and model list (defined in tu_8001EA48.h)
+typedef struct Model Model;
+typedef struct ModelList ModelList;
+
 typedef struct EventNode
 {
     int field_0;
@@ -173,36 +177,6 @@ typedef struct
     short length_6;      // in units of 32 sectors
 } XaRequest;
 
-typedef struct
-{
-    char pad_0[2];
-    short field_2;
-    char pad_4[0xC];
-} struct_16_b;
-
-typedef struct
-{
-    int data[0x15];
-} struct_54;
-
-typedef struct
-{
-    int id;
-    struct_54 d;
-} struct_58;
-
-// object with a header at +0x4C and tables of struct_54 at +0x50 and +0x68
-typedef struct
-{
-    char pad_0[0x3C];
-    unsigned short field_3C;
-    char pad_3E[0xE];
-    int* field_4C;
-    struct_54* field_50;
-    char pad_54[0x14];
-    struct_54* field_68;
-} struct_obj_E;
-
 // font (InitFonts copies a SPRT from the public TIY into the first 0x14 bytes)
 typedef struct
 {
@@ -312,27 +286,6 @@ typedef struct
     char pad_3A[0x36];
 } struct_elem_70;
 
-// 0x40-byte state object driven by StepModelTask_80010AD8 (state_38 indexes its jump table)
-typedef struct
-{
-    int* field_0;
-    int field_4;
-    int arr_8[7];
-    int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
-    int field_34;
-    int state_38;
-    int next_3C;
-} ModelTaskState;
-
-typedef struct
-{
-    int field_0;
-    int field_4;
-    unsigned short field_8[0x23];
-} struct_obj_C;
 
 extern struct_12 accessoryModifiers_8007D848[17];
 extern struct_12 armorModifiers_8007D598[15];
@@ -450,7 +403,6 @@ extern int dword_80082678;
 extern short word_80091C40[];
 extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
-extern struct_obj_C modelAnimRefs_800919A0[7];
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;
@@ -523,51 +475,12 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
-typedef struct
-{
-    int field_0;
-    int field_4;
-    char pad_8[0x28];
-    int field_30;
-    int field_34;
-    unsigned short id_38;
-    unsigned short field_3A;
-    unsigned short field_3C;
-    unsigned short field_3E;
-    unsigned short field_40;
-    unsigned char field_42;
-    unsigned char field_43;
-    int field_44;
-    int field_48;
-    int field_4C;
-    int field_50;
-    int field_54;
-    int field_58;
-    int field_5C;
-    int field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
-} struct_112;
-typedef struct
-{
-    int count;
-    int field_4;
-    struct_112* items;
-    void* field_C;
-} struct_112_list;
-int FindModelIndex_80026630(struct_112_list* p, unsigned int id);
-void ClearModel_800266CC(struct_112* p);
-int FindFreeModelIndex_8002667C(struct_112_list* p);
-void FreeModel_80024C48(struct_112* p);
-void sub_80025C38(struct_112* p, int flag);
-typedef struct
-{
-    int field_0;
-    int count;
-    int items[10];
-} struct_list10;
-int AddFileRequest_80025D00(struct_list10* p, FileRequestDesc* q);
+int FindModelIndex_80026630(ModelList* p, unsigned int id);
+void ClearModel_800266CC(Model* p);
+int FindFreeModelIndex_8002667C(ModelList* p);
+void FreeModel_80024C48(Model* p);
+void sub_80025C38(Model* p, int flag);
+int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
@@ -596,14 +509,6 @@ typedef struct
     short field_0;
     short field_2;
 } struct_4s;
-
-typedef struct
-{
-    char pad_0[0x10];
-    int field_10;
-    int field_14;
-    int field_18;
-} struct_28;
 
 typedef struct
 {

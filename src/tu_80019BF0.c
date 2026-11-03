@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_80019BF0.h"
+#include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -136,7 +137,6 @@ extern MATRIX dword_80087114; // light matrix
 extern MATRIX dword_80087134; // light colour matrix
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
-extern int off_8007DC70;
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 typedef struct
 {
@@ -1236,9 +1236,9 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
 }
 extern SoundCue_8007C750 dword_8007C750[];
 // Matched
-void PlayAnimFrameSfx_8001C364(struct_112* a0, int idx, int a2)
+void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
 {
-    ModelAnim* e = &((ModelAnim*)a0->field_54)[idx];
+    ModelAnim* e = &a0->anims_54[idx];
     int i;
     for (i = 0; i < e->cueCount_C; i++)
     {
@@ -1261,11 +1261,10 @@ extern short dword_8007CAC0[];
 extern short dword_8007CACC[];
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
-extern void sub_80025B5C(struct_112* p, int idx, int sel);
 // Matched
-void sub_8001C440(struct_112* a0, int idx, int key)
+void sub_8001C440(Model* a0, int idx, int key)
 {
-    ModelAnim* e = (ModelAnim*)(idx * 28 + a0->field_54);
+    ModelAnim* e = (ModelAnim*)(idx * 28 + (int)a0->anims_54); // integer sum: the original adds the base second
     ModelAnimCue* q = e->cues_10;
     int n = e->cueCount_C;
     int i;
@@ -2681,7 +2680,7 @@ extern int dword_800795A0[];
 // Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
 void sub_8001E574(Actor* o, ActorDesc* d)
 {
-    struct_112* m;
+    Model* m;
     int v;
     int f;
     if (d->modelId_0 >= 0)
@@ -2692,7 +2691,7 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     {
         m = d->model_48;
     }
-    v = AddModelAnimRef_800201EC((int)m);
+    v = AddModelAnimRef_800201EC(m);
     o->flags_4 = 0x40000;
     f = o->flags_4;
     if (d->visible_30 != 1)

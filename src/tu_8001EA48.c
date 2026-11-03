@@ -20,7 +20,6 @@
 
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
-extern int off_8007DC70;
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 typedef struct
 {
@@ -395,7 +394,7 @@ void sub_8001F354(void* a0)
     short c;
     int sn;
     short a;
-    e = &((ModelAnim*)o->model_15C->field_54)[o->anim_9C];
+    e = &o->model_15C->anims_54[o->anim_9C];
     o->prevPos_44[0] = o->pos_38[0];
     o->prevPos_44[1] = o->pos_38[1];
     o->prevPos_44[2] = o->pos_38[2];
@@ -639,8 +638,8 @@ void sub_8001FD08(void* a0)
     if (!(o->flags_4 & 0x2000) && sub_8001FC90(o))
     {
         v = sub_80019CC4(o->pos_38);
-        o->draw_164.anim_14 = &((ModelAnim*)o->model_15C->field_54)[o->anim_9C];
-        o->draw_164.field_0 = o->model_15C->field_50;
+        o->draw_164.anim_14 = &o->model_15C->anims_54[o->anim_9C];
+        o->draw_164.field_0 = (int)o->model_15C->ftg_50; // ActorDrawArgs.field_0 is still an int
         o->draw_164.pos_4 = o->pos_38;
         o->draw_164.rot_8 = o->rot_5C;
         o->draw_164.bones_C = o->bones_134;
@@ -660,7 +659,7 @@ void sub_8001FD08(void* a0)
         o->draw_164.ot_28 = ot;
         if (o->flags_4 & 0x1000)
         {
-            t = (ModelAnim*)o->model_15C->field_54;
+            t = o->model_15C->anims_54;
         }
         else
         {
@@ -668,8 +667,8 @@ void sub_8001FD08(void* a0)
         }
         if (o->flags_4 & 0x10)
         {
-            sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0],
-                         o->prevFrame_94 % ((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0].frameCount_0,
+            sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
+                         o->prevFrame_94 % o->model_15C->anims_54[o->prevAnim_A0].frameCount_0,
                          0x1000 - o->blend_AC, &stru_8008D534[v], t);
         }
         else
@@ -684,7 +683,7 @@ void sub_8001FD08(void* a0)
         {
             ot2 = pOT_8008D690;
         }
-        sub_800459E4(o->bones_134, &o->model_15C->field_5C, ot2, o->drawMode_8);
+        sub_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
         sub_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }
@@ -776,25 +775,25 @@ void ClearModelAnimRefs_800201A4(void)
     }
 }
 // Matched
-int AddModelAnimRef_800201EC(int a0)
+int AddModelAnimRef_800201EC(Model* a0)
 {
     int i;
-    struct_obj_C* p = modelAnimRefs_800919A0;
+    ModelAnimRef* p = modelAnimRefs_800919A0;
     for (i = 0; i < 7; i++, p++)
     {
-        if (a0 == p->field_0)
+        if (a0 == p->model_0)
         {
-            p->field_4++;
+            p->refs_4++;
             return i;
         }
     }
     p = modelAnimRefs_800919A0;
     for (i = 0; i < 7; i++, p++)
     {
-        if (p->field_0 == 0)
+        if (p->model_0 == 0)
         {
-            p->field_0 = a0;
-            p->field_4 = 1;
+            p->model_0 = a0;
+            p->refs_4 = 1;
             return i;
         }
     }
@@ -804,15 +803,15 @@ int AddModelAnimRef_800201EC(int a0)
 void ReleaseModelAnimRef_80020278(int a0, int a1)
 {
     int i;
-    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
+    ModelAnimRef* e = &modelAnimRefs_800919A0[a0];
     for (i = 0; i < 0x23; i++)
     {
-        if ((e->field_8[i] >> a1) & 1)
+        if ((e->users_8[i] >> a1) & 1)
         {
             ReleaseModelAnim_800203B0(a0, a1, i);
         }
     }
-    if (--e->field_4 == 0)
+    if (--e->refs_4 == 0)
     {
         ClearModelAnimRef_800204AC(e);
     }
@@ -820,34 +819,34 @@ void ReleaseModelAnimRef_80020278(int a0, int a1)
 // Matched
 int RequestModelAnim_8002032C(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
+    ModelAnimRef* e = &modelAnimRefs_800919A0[a0];
     int r = 0;
-    if (e->field_8[a2] == 0)
+    if (e->users_8[a2] == 0)
     {
-        LoadModelAnim_80025440(e->field_0, a2, r);
+        LoadModelAnim_80025440(e->model_0, a2, r);
         r = 1;
     }
-    e->field_8[a2] |= 1 << a1;
+    e->users_8[a2] |= 1 << a1;
     return r;
 }
 // Matched
 void ReleaseModelAnim_800203B0(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
-    if ((e->field_8[a2] &= ~(1 << a1)) == 0)
+    ModelAnimRef* e = &modelAnimRefs_800919A0[a0];
+    if ((e->users_8[a2] &= ~(1 << a1)) == 0)
     {
-        FreeModelAnim_8002556C(e->field_0, a2);
+        FreeModelAnim_8002556C(e->model_0, a2);
     }
 }
 // Matched
 int sub_80020410(int a0, int a1, int a2)
 {
-    struct_obj_C* e = &modelAnimRefs_800919A0[a0];
+    ModelAnimRef* e = &modelAnimRefs_800919A0[a0];
     int* list;
     int i;
-    if (((e->field_8[a2] >> a1) & 1) == 0)
+    if (((e->users_8[a2] >> a1) & 1) == 0)
     {
-        list = (int*)((struct_112*)e->field_0)->field_58;
+        list = e->model_0->animSet_58;
         if (list != 0)
         {
             for (i = 0; i < list[0]; i++)
@@ -863,15 +862,15 @@ int sub_80020410(int a0, int a1, int a2)
     return 1;
 }
 // Matched
-void ClearModelAnimRef_800204AC(struct_obj_C* p)
+void ClearModelAnimRef_800204AC(ModelAnimRef* p)
 {
     int i;
     for (i = 0x22; i >= 0; i--)
     {
-        p->field_8[i] = 0;
+        p->users_8[i] = 0;
     }
-    p->field_0 = 0;
-    p->field_4 = 0;
+    p->model_0 = 0;
+    p->refs_4 = 0;
 }
 // Matched
 void ResetModelLoader_800204D0(void)
@@ -991,12 +990,12 @@ int RequestLoaderModel_800206A0(int id, int a1, int a2, int a3)
     return 0;
 }
 // Matched
-struct_112* AcquireLoaderModel_80020734(int arg)
+Model* AcquireLoaderModel_80020734(int arg)
 {
     return AcquireModel_80024D70(((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->models_8, arg);
 }
 // Matched
-void FreeLoaderModel_80020768(struct_112* a0)
+void FreeLoaderModel_80020768(Model* a0)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* p = base->slots_C;
@@ -1399,12 +1398,12 @@ void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
     if (GetFtgObjectCount_80021738(models))
     {
         out->ftgCount_0 = GetFtgObjectCount_80021738(models);
-        AllocFtgObjects_80021744((int*)&out->ftg_4, out->ftgCount_0, heap);
+        AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, heap);
         LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, heap, a2);
     }
     if (sub_80021DE4(models))
     {
-        sub_80021DF0((int*)&out->mats_8, sub_80021DE4(models), heap);
+        sub_80021DF0(&out->mats_8, sub_80021DE4(models), heap);
         sub_80021E4C(models, &out->mats_8, sub_80021DE4(models));
     }
     else
@@ -1461,9 +1460,9 @@ int GetFtgObjectCount_80021738(int* p)
     return p[1];
 }
 // Matched
-void AllocFtgObjects_80021744(int* p, int idx, int a2)
+void AllocFtgObjects_80021744(FtgObject** p, int idx, int a2)
 {
-    *p = HeapAlloc_8003FC8C(idx * 0x54, a2);
+    *p = HeapAlloc_8003FC8C(idx * 0x54, (struct Pool*)a2);
 }
 // Matched
 void FreeFtgObjects_80021784(FtgObject** a0, unsigned int n, int heap)
@@ -1596,17 +1595,17 @@ int sub_80021DE4(int* p)
     return p[2];
 }
 // Matched
-void sub_80021DF0(int* p, int a1, int a2)
+void sub_80021DF0(FtgMatList* p, int a1, int a2)
 {
-    p[0] = a1;
-    p[1] = HeapAlloc_8003FC8C(a1 * 16, a2);
+    p->count_0 = a1;
+    p->items_4 = HeapAlloc_8003FC8C(a1 * 16, (struct Pool*)a2);
 }
 // p is volatile to keep the store before the load
 // Matched
-void sub_80021E24(volatile int* p, int h)
+void sub_80021E24(volatile FtgMatList* p, int h)
 {
-    p[0] = 0;
-    HeapFree_8003FD18(p[1]);
+    p->count_0 = 0;
+    HeapFree_8003FD18(p->items_4);
 }
 // Matched
 void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n)
@@ -2582,133 +2581,132 @@ void sub_80024AB8(FtgSrcPolyGT4* p, int arg1)
     RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-void InitModelList_80024ADC(struct_112_list** a0, void* a1, int heap)
+void InitModelList_80024ADC(ModelList** a0, ModelVramSlot* a1, int heap)
 {
-    struct_112_list* l;
+    ModelList* l;
     int i;
-    l = *a0 = (struct_112_list*)HeapAlloc_8003FC8C(0x10, (struct Pool*)heap);
-    l->count = sub_80026600(a1);
-    l->field_4 = heap;
-    l->items = (struct_112*)HeapAlloc_8003FC8C(l->count * 0x70, (struct Pool*)heap);
-    l->field_C = a1;
-    for (i = 0; i < l->count; i++)
+    l = *a0 = HeapAlloc_8003FC8C(0x10, (struct Pool*)heap);
+    l->count_0 = sub_80026600(a1);
+    l->heap_4 = heap;
+    l->items_8 = HeapAlloc_8003FC8C(l->count_0 * 0x70, (struct Pool*)heap);
+    l->vram_C = a1;
+    for (i = 0; i < l->count_0; i++)
     {
-        l->items[i].field_0 = (int)l;
-        l->items[i].field_30 = i;
-        ClearModel_800266CC(&l->items[i]);
+        l->items_8[i].list_0 = l;
+        l->items_8[i].slot_30 = i;
+        ClearModel_800266CC(&l->items_8[i]);
     }
 }
 // Matched
-void FreeModelList_80024BB0(struct_112_list** a0)
+void FreeModelList_80024BB0(ModelList** a0)
 {
-    struct_112_list* l = *a0;
+    ModelList* l = *a0;
     int i;
-    for (i = 0; i < l->count; i++)
+    for (i = 0; i < l->count_0; i++)
     {
-        FreeModel_80024C48(&l->items[i]);
+        FreeModel_80024C48(&l->items_8[i]);
     }
-    HeapFree_8003FD18(l->items, l->field_4);
-    HeapFree_8003FD18(l, l->field_4);
+    HeapFree_8003FD18(l->items_8, l->heap_4);
+    HeapFree_8003FD18(l, l->heap_4);
     *a0 = 0;
 }
 // Matched
-void FreeModel_80024C48(struct_112* p)
+void FreeModel_80024C48(Model* p)
 {
     int h;
     sub_80025AB0(p);
     sub_80025C38(p, 1);
-    h = ((struct_112_list*)p->field_0)->field_4;
-    if (p->field_44 != 0)
+    h = p->list_0->heap_4;
+    if (p->animLoaded_44 != 0)
     {
-        HeapFree_8003FD18(p->field_44, h);
+        HeapFree_8003FD18(p->animLoaded_44, h);
     }
-    if (p->field_4C != 0)
+    if (p->header_4C != 0)
     {
-        HeapFree_8003FD18(p->field_4C, h);
+        HeapFree_8003FD18(p->header_4C, h);
     }
-    if (p->field_50 != 0)
+    if (p->ftg_50 != 0)
     {
-        FreeFtgObjects_80021784((int**)&p->field_50, p->field_3C, h);
+        FreeFtgObjects_80021784(&p->ftg_50, p->ftgCount_3C, h);
     }
-    if (p->field_54 != 0)
+    if (p->anims_54 != 0)
     {
-        FreeModelAnims_8002679C((ModelAnim**)&p->field_54, p->field_3E, h);
+        FreeModelAnims_8002679C(&p->anims_54, p->animCount_3E, h);
     }
-    if (p->field_58 != 0)
+    if (p->animSet_58 != 0)
     {
-        HeapFree_8003FD18(p->field_58, h);
+        HeapFree_8003FD18(p->animSet_58, h);
     }
-    if (p->field_60 != 0)
+    if (p->mats_5C.items_4 != 0)
     {
-        sub_80021E24(&p->field_5C, h);
+        sub_80021E24(&p->mats_5C, h);
     }
-    if (p->field_64 != 0)
+    if (p->saved_64 != 0)
     {
-        HeapFree_8003FD18(p->field_64, h);
+        HeapFree_8003FD18(p->saved_64, h);
     }
-    if (p->field_68 != 0)
+    if (p->ftg2_68 != 0)
     {
-        FreeFtgObjects_80021784((int**)&p->field_68, p->field_42, h);
+        FreeFtgObjects_80021784(&p->ftg2_68, p->ftg2Count_42, h);
     }
-    if (p->field_6C != 0)
+    if (p->swaps_6C != 0)
     {
-        HeapFree_8003FD18(p->field_6C, h);
+        HeapFree_8003FD18(p->swaps_6C, h);
     }
     ClearModel_800266CC(p);
 }
 // Matched
-struct_112* AcquireModel_80024D70(struct_112_list* p, unsigned int id)
+Model* AcquireModel_80024D70(ModelList* p, unsigned int id)
 {
     int i = FindModelIndex_80026630(p, id);
     if (i >= 0)
     {
-        struct_112* r = &p->items[i];
-        r->field_3A++;
+        Model* r = &p->items_8[i];
+        r->refs_3A++;
         return r;
     }
     return 0;
 }
 // Matched
-int AreFileRequestsDone_80024DC4(void* a0)
+int AreFileRequestsDone_80024DC4(Model* p)
 {
-    struct_list10* p = a0;
     int i;
     i = 0;
-    while (i < p->count)
+    while (i < p->requestCount_4)
     {
-        if (GetFileRequestStatus_8003BE30(p->items[i]) != 0)
+        if (GetFileRequestStatus_8003BE30(p->requests_8[i]) != 0)
         {
             return 0;
         }
         i++;
     }
-    p->count = 0;
+    p->requestCount_4 = 0;
     return 1;
 }
 // Matched
-char* sub_80024E38(struct_obj_E* p)
+char* sub_80024E38(Model* p)
 {
     char* result = 0;
-    int* hdr = p->field_4C;
-    if (hdr && hdr[0])
+    ModelHeaderData* hdr = p->header_4C;
+    if (hdr && hdr->offset_0)
     {
-        result = (char*)hdr + hdr[0] + 4;
+        result = (char*)hdr + hdr->offset_0 + 4;
     }
     return result;
 }
 // Matched
-char* sub_80024E64(struct_obj_E* p)
+char* sub_80024E64(Model* p)
 {
     char* result = 0;
-    int* hdr = p->field_4C;
-    if (hdr && hdr[1])
+    ModelHeaderData* hdr = p->header_4C;
+    if (hdr && hdr->offset_4)
     {
-        result = (char*)hdr + hdr[1];
+        result = (char*)hdr + hdr->offset_4;
     }
     return result;
 }
 // Matched
-char* sub_80024E90(void* p, int n)
+char* sub_80024E90(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2718,7 +2716,7 @@ char* sub_80024E90(void* p, int n)
     return r;
 }
 // Matched
-char* sub_80024EC8(void* p, int n)
+char* sub_80024EC8(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2728,7 +2726,7 @@ char* sub_80024EC8(void* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F00(void* p, int n)
+char* sub_80024F00(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2738,7 +2736,7 @@ char* sub_80024F00(void* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F38(void* p, int n)
+char* sub_80024F38(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2748,7 +2746,7 @@ char* sub_80024F38(void* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F70(void* p, int n)
+char* sub_80024F70(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2758,9 +2756,9 @@ char* sub_80024F70(void* p, int n)
     return r;
 }
 // Matched
-char* sub_80024FA8(void* a0, int n)
+char* sub_80024FA8(Model* a0, int n)
 {
-    char* hdr = (char*)((struct_112*)a0)->field_4C;
+    char* hdr = (char*)a0->header_4C;
     char* r = 0;
     int i;
     if (hdr)
@@ -2780,43 +2778,43 @@ char* sub_80024FA8(void* a0, int n)
     return r;
 }
 // Matched
-void sub_80024FFC(struct_112* p, int* ids)
+void sub_80024FFC(Model* p, int* ids)
 {
     int n;
     int heap;
     for (n = 0; ids[n] >= 0; n++)
     {
     }
-    heap = ((struct_112_list*)p->field_0)->field_4;
-    p->field_40 = n;
-    p->field_64 = HeapAlloc_8003FC8C(n * sizeof(struct_58), heap);
+    heap = p->list_0->heap_4;
+    p->savedCount_40 = n;
+    p->saved_64 = HeapAlloc_8003FC8C(n * sizeof(ModelSavedFtg), (struct Pool*)heap);
     n--;
     while (n >= 0)
     {
         int id = ids[n];
-        ((struct_58*)p->field_64)[n].id = id;
-        ((struct_58*)p->field_64)[n].d = ((struct_54*)p->field_50)[id];
+        p->saved_64[n].id_0 = id;
+        p->saved_64[n].ftg_4 = p->ftg_50[id];
         n--;
     }
 }
 // Matched
-void sub_8002512C(unsigned int* a0, struct_112* a1, int a2)
+void sub_8002512C(unsigned int* a0, Model* a1, int a2)
 {
     int i;
-    for (i = 0; i < a1->field_40; i++)
+    for (i = 0; i < a1->savedCount_40; i++)
     {
-        struct_58* e = (struct_58*)(i * 0x58 + a1->field_64);
-        if (a2 == e->id)
+        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)a1->saved_64); // integer sum: the original adds the base second
+        if (a2 == e->id_0)
         {
-            MemCopy_800403E8(a0, (unsigned int*)&e->d, 0x54);
+            MemCopy_800403E8(a0, (unsigned int*)&e->ftg_4, 0x54);
             break;
         }
     }
 }
 // Matched
-void sub_800251A0(void* dst, struct_obj_E* src, int a2, int idx)
+void sub_800251A0(void* dst, Model* src, int a2, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->field_50[idx], sizeof(struct_54));
+    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg_50[idx], sizeof(FtgObject));
 }
 // Matched
 void nullsub_4(void)
@@ -2828,28 +2826,28 @@ ModelDesc* GetModelDesc_800251E4(int idx)
     return modelDescs_800824CC[idx];
 }
 // Matched
-int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
+int LoadModel_80025200(ModelList* a0, int id, int sel, int a3, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
     int two = 1;
     int i;
     ModelDesc* e;
-    struct_112* it;
+    Model* it;
     ModelVramSlot* x;
     int u;
     int v;
     i = FindModelIndex_80026630(a0, id);
     if (i >= 0)
     {
-        return AreFileRequestsDone_80024DC4(&a0->items[i]) == 0;
+        return AreFileRequestsDone_80024DC4(&a0->items_8[i]) == 0;
     }
     i = FindFreeModelIndex_8002667C(a0);
     if (i >= 0)
     {
         e = modelDescs_800824CC[id];
-        it = &a0->items[i];
-        x = (ModelVramSlot*)a0->field_C + i;
+        it = &a0->items_8[i];
+        x = a0->vram_C + i;
         InitModelLoadParams_80025ED0(&b);
         if (sel != -1)
         {
@@ -2891,7 +2889,7 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
         c.params_14 = &b;
         c.paramsSize_18 = 0x3C;
         c.callback_1C = OnModelFileLoaded_80025D7C;
-        AddFileRequest_80025D00((struct_list10*)it, &c);
+        AddFileRequest_80025D00(it, &c);
         if (two != 0)
         {
             InitModelLoadParams_80025ED0(&b);
@@ -2914,7 +2912,7 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
             c.paramsSize_18 = 0x3C;
             c.dest_10 = 0;
             c.callback_1C = OnModelFileLoaded_80025D7C;
-            AddFileRequest_80025D00((struct_list10*)it, &c);
+            AddFileRequest_80025D00(it, &c);
         }
         it->id_38 = id;
         return 1;
@@ -2926,7 +2924,7 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 // k*2 into idx*4 + 0x14 instead of keeping (e[9] + k) * 2. The int form ((k + e[9]) * 2 + (int)e) keeps the sum but
 // misplaces &b and the sum register (8 lines). Tried: operand orders, temporaries for e[9]/k, k/idx types, e[k + 1]
 // double reads, statement order, shifts instead of *2; permuter 1500 iters
-int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
+int LoadModelAnim_80025440(Model* p, int idx, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -2935,7 +2933,7 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
     int u;
     int v;
     int k;
-    unsigned char* f = (unsigned char*)p->field_44 + idx;
+    unsigned char* f = p->animLoaded_44 + idx;
     if (*f == 0)
     {
         k = idx * 2 + 10;
@@ -2967,7 +2965,7 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
         c.params_14 = &b;
         c.paramsSize_18 = 0x3C;
         c.callback_1C = OnModelFileLoaded_80025D7C;
-        AddFileRequest_80025D00((struct_list10*)p, &c);
+        AddFileRequest_80025D00(p, &c);
         return 1;
     }
     return AreFileRequestsDone_80024DC4(p) == 0;
@@ -2975,27 +2973,26 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
 #endif
 INCLUDE_ASM(LoadModelAnim_80025440);
 // Matched
-void FreeModelAnim_8002556C(struct_112* p, int idx)
+void FreeModelAnim_8002556C(Model* p, int idx)
 {
-    if (((char*)p->field_44)[idx])
+    if (((char*)p->animLoaded_44)[idx])
     {
-        FreeModelAnimData_800269C4((ModelAnim*)p->field_54, p->field_3E, idx, ((struct_112_list*)p->field_0)->field_4);
-        ((char*)p->field_44)[idx] = 0;
+        FreeModelAnimData_800269C4(p->anims_54, p->animCount_3E, idx, p->list_0->heap_4);
+        p->animLoaded_44[idx] = 0;
     }
 }
 // Matched
-int IsModelAnimLoaded_800255D8(struct_112* p, int idx)
+int IsModelAnimLoaded_800255D8(Model* p, int idx)
 {
-    return ((char*)p->field_44)[idx] != 0;
+    return ((char*)p->animLoaded_44)[idx] != 0;
 }
 // Matched
-int sub_800255F0(int a, int idx, int a2)
+int sub_800255F0(ModelList* a0, int idx, int a2)
 {
-    struct_112_list* a0 = (struct_112_list*)a;
     ModelLoadParams b;
     FileRequestDesc c;
-    struct_112* x = a0->items;
-    ModelVramSlot* y = a0->field_C;
+    Model* x = a0->items_8;
+    ModelVramSlot* y = a0->vram_C;
     ModelDesc* e = modelDescs_800824CC[idx];
     InitModelLoadParams_80025ED0(&b);
     b.flags_0 = 2;
@@ -3011,16 +3008,15 @@ int sub_800255F0(int a, int idx, int a2)
     c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)x, &c);
+    AddFileRequest_80025D00(x, &c);
     return 1;
 }
 // Matched
-int sub_800256B8(int a, int id)
+int sub_800256B8(ModelList* a0, int id)
 {
-    struct_112_list* a0 = (struct_112_list*)a;
     ModelLoadParams b;
     FileRequestDesc c;
-    struct_112* it = &a0->items[FindModelIndex_80026630(a0, id)];
+    Model* it = &a0->items_8[FindModelIndex_80026630(a0, id)];
     ModelDesc* e = modelDescs_800824CC[it->id_38];
     InitModelLoadParams_80025ED0(&b);
     b.flags_0 = 8;
@@ -3035,11 +3031,11 @@ int sub_800256B8(int a, int id)
     c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)it, &c);
+    AddFileRequest_80025D00(it, &c);
     return 1;
 }
 // Matched
-int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
+int LoadModelAnimSet_80025780(Model* p, int idx, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -3072,34 +3068,34 @@ int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
     c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)p, &c);
+    AddFileRequest_80025D00(p, &c);
     return 1;
 }
 // Matched
-void FreeModelAnimSet_80025884(struct_112* p)
+void FreeModelAnimSet_80025884(Model* p)
 {
-    int* list = (int*)p->field_58;
+    int* list = p->animSet_58;
     if (list)
     {
-        int heap = ((struct_112_list*)p->field_0)->field_4;
+        int heap = p->list_0->heap_4;
         int n = list[0];
         int i;
         for (i = 0; i < n; i++)
         {
-            int id = ((int*)p->field_58)[i + 1];
+            int id = p->animSet_58[i + 1];
             if (id >= 0)
             {
                 FreeModelAnim_8002556C(p, id);
             }
         }
-        HeapFree_8003FD18(p->field_58, heap);
-        p->field_58 = 0;
+        HeapFree_8003FD18(p->animSet_58, heap);
+        p->animSet_58 = 0;
     }
 }
 // Matched
-int IsAnimInModelAnimSet_80025924(struct_112* p, int id)
+int IsAnimInModelAnimSet_80025924(Model* p, int id)
 {
-    int* list = (int*)p->field_58;
+    int* list = p->animSet_58;
     int i;
     int n;
     if (list != 0)
@@ -3116,7 +3112,7 @@ int IsAnimInModelAnimSet_80025924(struct_112* p, int id)
     return 0;
 }
 // Matched
-int sub_80025974(struct_112* p, int idx, int flag)
+int sub_80025974(Model* p, int idx, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -3124,19 +3120,19 @@ int sub_80025974(struct_112* p, int idx, int flag)
     char* t;
     int u;
     int v;
-    struct_112_list* g;
+    ModelList* g;
     sub_80025AB0(p);
     e = modelDescs_800824CC[p->id_38];
     t = (char*)e + (e->animCount_12 * 6 + 0x14);
     t += *(unsigned short*)t * 4 + 2;
-    g = (struct_112_list*)p->field_0;
+    g = p->list_0;
     u = ((unsigned short*)t)[idx * 2 + 1];
     v = ((unsigned short*)t)[idx * 2 + 2];
     InitModelLoadParams_80025ED0(&b);
     b.flags_0 = 0x40;
     b.model_14 = p;
-    b.vram_18 = (ModelVramSlot*)g->field_C + p->field_30;
-    b.sel_8 = p->field_34;
+    b.vram_18 = g->vram_C + p->slot_30;
+    b.sel_8 = p->texSel_34;
     b.desc_4 = e;
     c.flags_0 = 0x68;
     if (flag != 0)
@@ -3154,76 +3150,76 @@ int sub_80025974(struct_112* p, int idx, int flag)
     c.params_14 = &b;
     c.paramsSize_18 = 0x3C;
     c.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)p, &c);
+    AddFileRequest_80025D00(p, &c);
     return 1;
 }
 // Matched
-void sub_80025AB0(struct_112* p)
+void sub_80025AB0(Model* p)
 {
-    struct Pool* h = (struct Pool*)((struct_112_list*)p->field_0)->field_4;
-    if (p->field_68)
+    struct Pool* h = (struct Pool*)p->list_0->heap_4;
+    if (p->ftg2_68)
     {
-        FreeFtgObjects_80021784((int**)&p->field_68, p->field_42, h);
-        p->field_42 = 0;
-        p->field_68 = 0;
+        FreeFtgObjects_80021784(&p->ftg2_68, p->ftg2Count_42, h);
+        p->ftg2Count_42 = 0;
+        p->ftg2_68 = 0;
     }
-    if (p->field_6C)
+    if (p->swaps_6C)
     {
-        HeapFree_8003FD18(p->field_6C, h);
-        p->field_43 = 0;
-        p->field_6C = 0;
+        HeapFree_8003FD18(p->swaps_6C, h);
+        p->swapCount_43 = 0;
+        p->swaps_6C = 0;
     }
 }
 // Matched
-void sub_80025B20(void* dst, struct_obj_E* src, int idx)
+void sub_80025B20(void* dst, Model* src, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
+    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg2_68[idx], sizeof(FtgObject));
 }
 // Matched
-void sub_80025B5C(struct_obj_E* p, int idx, int sel)
+void sub_80025B5C(Model* p, int idx, int sel)
 {
-    struct_54 tmp;
+    FtgObject tmp;
     if (idx == sel)
     {
-        sub_8002512C((unsigned int*)&tmp, (struct_112*)p, idx);
+        sub_8002512C((unsigned int*)&tmp, p, idx);
     }
-    else if (sel < p->field_3C)
+    else if (sel < p->ftgCount_3C)
     {
         sub_800251A0(&tmp, p, idx, sel);
     }
     else
     {
-        sub_80025B20(&tmp, p, sel - p->field_3C);
+        sub_80025B20(&tmp, p, sel - p->ftgCount_3C);
     }
-    p->field_50[idx] = tmp;
+    p->ftg_50[idx] = tmp;
 }
 // Matched
-void sub_80025C38(struct_112* p, int flag)
+void sub_80025C38(Model* p, int flag)
 {
     int i;
-    for (i = 0; i < p->field_40; i++)
+    for (i = 0; i < p->savedCount_40; i++)
     {
-        struct_58* e = (struct_58*)(i * 0x58 + p->field_64);
-        sub_80025B5C(p, e->id, e->id);
+        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)p->saved_64); // integer sum, as above
+        sub_80025B5C(p, e->id_0, e->id_0);
     }
     if (flag)
     {
-        for (i = 0; i < p->field_43; i++)
+        for (i = 0; i < p->swapCount_43; i++)
         {
-            short* s = (short*)(i * 4 + p->field_6C);
-            sub_80025B5C(p, s[0], s[1]);
+            ModelFtgSwap* s = (ModelFtgSwap*)(i * 4 + (int)p->swaps_6C);
+            sub_80025B5C(p, s->dst_0, s->src_2);
         }
     }
 }
 // Matched
-int AddFileRequest_80025D00(struct_list10* a0, FileRequestDesc* a1)
+int AddFileRequest_80025D00(Model* a0, FileRequestDesc* a1)
 {
-    if (a0->count < 10)
+    if (a0->requestCount_4 < 10)
     {
         a1->offset_8 <<= 11;
         a1->size_C <<= 11;
-        a0->items[a0->count] = QueueFileRequest_8003BC84(a1);
-        a0->count += 1;
+        a0->requests_8[a0->requestCount_4] = QueueFileRequest_8003BC84(a1);
+        a0->requestCount_4 += 1;
         return 1;
     }
     return 0;
@@ -3329,13 +3325,13 @@ void ParseModelFile_80025F14(ModelLoadParams* a0)
 void sub_80026014(ModelLoadParams* a0)
 {
     ModelHeaderSection* q = a0->header_1C;
-    struct_112* p = a0->model_14;
-    int h = ((struct_112_list*)p->field_0)->field_4;
+    Model* p = a0->model_14;
+    int h = p->list_0->heap_4;
     int n = q->size_0;
-    int r;
-    p->field_48 = n;
-    r = HeapAlloc_8003FC8C(n, h);
-    p->field_4C = r;
+    void* r;
+    p->headerSize_48 = n;
+    r = HeapAlloc_8003FC8C(n, (struct Pool*)h);
+    p->header_4C = r;
     MemCopy_800403E8((unsigned int*)r, (unsigned int*)a0->header_1C->data_4, n);
 }
 // Matched
@@ -3343,9 +3339,9 @@ void LoadModelTextures_8002607C(ModelLoadParams* a0)
 {
     if (a0->sel_8 != -1)
     {
-        struct_112* p = a0->model_14;
+        Model* p = a0->model_14;
         LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)a0->tim_20, GetTiyFileCount_80028E68(a0->tim_20), (int)a0->vram_18->reloc_4, a0->sel_8);
-        p->field_34 = a0->sel_8;
+        p->texSel_34 = a0->sel_8;
     }
 }
 #if 0
@@ -3353,16 +3349,16 @@ void LoadModelTextures_8002607C(ModelLoadParams* a0)
 void LoadModelFtg_800260FC(ModelLoadParams* a0)
 {
     int q = (int)a0->vram_18;
-    struct_112* p = a0->model_14;
-    int h = ((struct_112_list*)p->field_0)->field_4;
+    Model* p = a0->model_14;
+    int h = p->list_0->heap_4;
     q += 4;
-    p->field_3C = GetFtgObjectCount_80021738(a0->ftg_24);
-    AllocFtgObjects_80021744(&p->field_50, p->field_3C, h);
-    LoadFtgObjects_80021824(a0->ftg_24, (FtgObject*)p->field_50, p->field_3C, h, q);
+    p->ftgCount_3C = GetFtgObjectCount_80021738(a0->ftg_24);
+    AllocFtgObjects_80021744(&p->ftg_50, p->ftgCount_3C, h);
+    LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, q);
     if (sub_80021DE4(a0->ftg_24) != 0)
     {
-        sub_80021DF0(&p->field_5C, sub_80021DE4(a0->ftg_24), h);
-        sub_80021E4C(a0->ftg_24, &p->field_5C, sub_80021DE4(a0->ftg_24));
+        sub_80021DF0(&p->mats_5C, sub_80021DE4(a0->ftg_24), h);
+        sub_80021E4C(a0->ftg_24, &p->mats_5C, sub_80021DE4(a0->ftg_24));
     }
 }
 #endif
@@ -3370,77 +3366,77 @@ INCLUDE_ASM(LoadModelFtg_800260FC);
 // Matched
 void LoadModelAnims_800261C8(ModelLoadParams* a0)
 {
-    struct_112* p = a0->model_14;
-    int h = ((struct_112_list*)p->field_0)->field_4;
+    Model* p = a0->model_14;
+    int h = p->list_0->heap_4;
     int i;
     int j;
     int mode;
-    p->field_3E = a0->desc_4->animCount_12;
-    if (p->field_54 == 0)
+    p->animCount_3E = a0->desc_4->animCount_12;
+    if (p->anims_54 == 0)
     {
-        AllocModelAnims_80026730((ModelAnim**)&p->field_54, p->field_3E, h);
+        AllocModelAnims_80026730(&p->anims_54, p->animCount_3E, h);
     }
-    if (p->field_44 != 0)
+    if (p->animLoaded_44 != 0)
     {
-        HeapFree_8003FD18(p->field_44, h);
+        HeapFree_8003FD18(p->animLoaded_44, h);
     }
-    p->field_44 = HeapAlloc_8003FC8C(p->field_3E, h);
-    for (i = 0; i < p->field_3E; i++)
+    p->animLoaded_44 = HeapAlloc_8003FC8C(p->animCount_3E, (struct Pool*)h);
+    for (i = 0; i < p->animCount_3E; i++)
     {
         mode = a0->mode_C;
         if (mode == 0)
         {
             if (i == 0)
             {
-                ((unsigned char*)p->field_44)[0] = 1;
+                p->animLoaded_44[0] = 1;
             }
             else
             {
-                ((unsigned char*)p->field_44)[i] = 0;
+                p->animLoaded_44[i] = 0;
             }
         }
         else if (mode == 1)
         {
             if (i == 0)
             {
-                ((unsigned char*)p->field_44)[0] = 1;
+                p->animLoaded_44[0] = 1;
             }
             else if (i == 1)
             {
-                ((unsigned char*)p->field_44)[1] = 1;
+                p->animLoaded_44[1] = 1;
             }
             else
             {
-                ((unsigned char*)p->field_44)[i] = 0;
+                p->animLoaded_44[i] = 0;
             }
         }
         else if (mode == 3)
         {
             if (i == 0)
             {
-                ((unsigned char*)p->field_44)[0] = 0;
+                p->animLoaded_44[0] = 0;
             }
             else if (i == 1)
             {
-                ((unsigned char*)p->field_44)[1] = 0;
+                p->animLoaded_44[1] = 0;
             }
             else
             {
-                ((unsigned char*)p->field_44)[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
+                p->animLoaded_44[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
             }
         }
         else
         {
-            ((unsigned char*)p->field_44)[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
+            p->animLoaded_44[i] = *(unsigned char*)&a0->desc_4->animFlags_14[i];
         }
     }
-    for (i = 0, j = 0; i < p->field_3E; i++)
+    for (i = 0, j = 0; i < p->animCount_3E; i++)
     {
         if ((&a0->desc_4->animFlags_14[0])[i] != 0) // indexed through the decayed pointer, as the original
         {
-            if (((unsigned char*)p->field_44)[i] != 0)
+            if (p->animLoaded_44[i] != 0)
             {
-                LoadModelAnimData_80026A8C(&((ModelAnim*)p->field_54)[i], (int)a0->anims_28 + (&a0->anims_28->offsets_4[0])[j], h);
+                LoadModelAnimData_80026A8C(&p->anims_54[i], (int)a0->anims_28 + (&a0->anims_28->offsets_4[0])[j], h);
             }
             j++;
         }
@@ -3449,37 +3445,37 @@ void LoadModelAnims_800261C8(ModelLoadParams* a0)
 // Matched
 void LoadSingleModelAnim_800263CC(ModelLoadParams* p)
 {
-    struct_112_list* l;
-    struct_112* q = p->model_14;
-    l = (struct_112_list*)q->field_0;
-    LoadModelAnimData_80026A8C(&((ModelAnim*)q->field_54)[p->animIdx_10], (int)p->anim_2C, l->field_4);
+    ModelList* l;
+    Model* q = p->model_14;
+    l = q->list_0;
+    LoadModelAnimData_80026A8C(&q->anims_54[p->animIdx_10], (int)p->anim_2C, l->heap_4);
 }
 // Matched
 void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
 {
     ModelAnimSetSection* q = a0->animSet_30;
-    struct_112* p = a0->model_14;
+    Model* p = a0->model_14;
     int n = q->count_0;
-    int h = ((struct_112_list*)p->field_0)->field_4;
-    int* list = (int*)HeapAlloc_8003FC8C((n + 1) * 4, h);
+    int h = p->list_0->heap_4;
+    int* list = HeapAlloc_8003FC8C((n + 1) * 4, (struct Pool*)h);
     int i;
     int id;
     int src;
-    p->field_58 = (int)list;
+    p->animSet_58 = list;
     list[0] = n;
     for (i = 0; i < n; i++)
     {
         id = q->items_4[i].id;
         src = (int)q + q->items_4[i].offset;
-        if (((unsigned char*)p->field_44)[id] == 0)
+        if (p->animLoaded_44[id] == 0)
         {
-            ((int*)p->field_58)[i + 1] = id;
-            ((unsigned char*)p->field_44)[id] = 1;
-            LoadModelAnimData_80026A8C(&((ModelAnim*)p->field_54)[id], src, h);
+            p->animSet_58[i + 1] = id;
+            p->animLoaded_44[id] = 1;
+            LoadModelAnimData_80026A8C(&p->anims_54[id], src, h);
         }
         else
         {
-            ((int*)p->field_58)[i + 1] = -1;
+            p->animSet_58[i + 1] = -1;
         }
     }
 }
@@ -3487,13 +3483,13 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
 // Not matched: the original loads the list argument (+0x34) right after the owner pointer, ours schedules it first (same as LoadModelFtg_800260FC)
 void sub_8002651C(ModelLoadParams* a)
 {
-    struct_112* p = a->model_14;
+    Model* p = a->model_14;
     int* list = a->ftg2_34;
-    int heap = ((struct_112_list*)p->field_0)->field_4;
+    int heap = p->list_0->heap_4;
     short* q = a->vram_18->reloc_4;
-    p->field_42 = GetFtgObjectCount_80021738(list);
-    AllocFtgObjects_80021744(&p->field_68, p->field_42, heap);
-    LoadFtgObjects_80021824(a->ftg2_34, (FtgObject*)p->field_68, p->field_42, heap, (int)q);
+    p->ftg2Count_42 = GetFtgObjectCount_80021738(list);
+    AllocFtgObjects_80021744(&p->ftg2_68, p->ftg2Count_42, heap);
+    LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)q);
 }
 #endif
 INCLUDE_ASM(sub_8002651C);
@@ -3501,36 +3497,36 @@ INCLUDE_ASM(sub_8002651C);
 void sub_8002659C(ModelLoadParams* a0)
 {
     unsigned char* q = a0->extra_38;
-    struct_112* p = a0->model_14;
-    int h = ((struct_112_list*)p->field_0)->field_4;
-    int r;
-    p->field_43 = *q;
+    Model* p = a0->model_14;
+    int h = p->list_0->heap_4;
+    void* r;
+    p->swapCount_43 = *q;
     q += 4;
-    r = HeapAlloc_8003FC8C(p->field_43 << 2, h);
-    p->field_6C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)q, p->field_43 << 2);
+    r = HeapAlloc_8003FC8C(p->swapCount_43 << 2, (struct Pool*)h);
+    p->swaps_6C = r;
+    MemCopy_800403E8((unsigned int*)r, (unsigned int*)q, p->swapCount_43 << 2);
 }
 // Matched
-int sub_80026600(struct_16_b* p)
+int sub_80026600(ModelVramSlot* p)
 {
     int n = 0;
-    if (p->field_2 != -1)
+    if (p->id_2 != -1)
     {
         do
         {
             p++;
             n++;
-        } while (p->field_2 != -1);
+        } while (p->id_2 != -1);
     }
     return n;
 }
 // Matched
-int FindModelIndex_80026630(struct_112_list* p, unsigned int id)
+int FindModelIndex_80026630(ModelList* p, unsigned int id)
 {
     int i;
-    for (i = 0; i < p->count; i++)
+    for (i = 0; i < p->count_0; i++)
     {
-        if (p->items[i].id_38 == id)
+        if (p->items_8[i].id_38 == id)
         {
             return i;
         }
@@ -3538,12 +3534,12 @@ int FindModelIndex_80026630(struct_112_list* p, unsigned int id)
     return -1;
 }
 // Matched
-int FindFreeModelIndex_8002667C(struct_112_list* p)
+int FindFreeModelIndex_8002667C(ModelList* p)
 {
     int i;
-    for (i = 0; i < p->count; i++)
+    for (i = 0; i < p->count_0; i++)
     {
-        if (p->items[i].id_38 == 0xFFFF)
+        if (p->items_8[i].id_38 == 0xFFFF)
         {
             return i;
         }
@@ -3551,28 +3547,28 @@ int FindFreeModelIndex_8002667C(struct_112_list* p)
     return -1;
 }
 // Matched
-void ClearModel_800266CC(struct_112* p)
+void ClearModel_800266CC(Model* p)
 {
     p->id_38 = 0xFFFF;
-    p->field_4 = 0;
-    p->field_34 = 0;
-    p->field_3A = 0;
-    p->field_3C = 0;
-    p->field_3E = 0;
-    p->field_40 = 0;
-    p->field_42 = 0;
-    p->field_43 = 0;
-    p->field_44 = 0;
-    p->field_48 = 0;
-    p->field_4C = 0;
-    p->field_50 = 0;
-    p->field_54 = 0;
-    p->field_58 = 0;
-    p->field_5C = 0;
-    p->field_60 = 0;
-    p->field_64 = 0;
-    p->field_68 = 0;
-    p->field_6C = 0;
+    p->requestCount_4 = 0;
+    p->texSel_34 = 0;
+    p->refs_3A = 0;
+    p->ftgCount_3C = 0;
+    p->animCount_3E = 0;
+    p->savedCount_40 = 0;
+    p->ftg2Count_42 = 0;
+    p->swapCount_43 = 0;
+    p->animLoaded_44 = 0;
+    p->headerSize_48 = 0;
+    p->header_4C = 0;
+    p->ftg_50 = 0;
+    p->anims_54 = 0;
+    p->animSet_58 = 0;
+    p->mats_5C.count_0 = 0;
+    p->mats_5C.items_4 = 0;
+    p->saved_64 = 0;
+    p->ftg2_68 = 0;
+    p->swaps_6C = 0;
 }
 // Matched
 int sub_80026724(int* p)
@@ -4168,7 +4164,7 @@ void sub_80027708(int* a0, int a1)
     dword_8008B500.ftgCount_38 = r;
     if (r != 0)
     {
-        AllocFtgObjects_80021744((int*)&dword_8008B500.ftg_3C, r, a1);
+        AllocFtgObjects_80021744(&dword_8008B500.ftg_3C, r, a1);
         LoadFtgObjects_80021824(a0, dword_8008B500.ftg_3C, dword_8008B500.ftgCount_38, a1, 0);
     }
 }
@@ -4335,7 +4331,7 @@ extern int sub_800A683C(int a0);
 extern void sub_800AD124(int a0);
 extern int sub_800A5030(int a0, int a1, int a2);
 extern void sub_800A52AC(int a0);
-extern int sub_800AC38C(void);
+extern Model* sub_800AC38C(void);
 extern int sub_800AD154(int a0);
 extern void sub_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
@@ -4399,7 +4395,7 @@ void sub_80027CF8(void* a0, int* a)
                 {
                     unknownFlags_8008D678 &= ~0x1000000;
                 }
-                sub_80025C38((struct_112*)sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                sub_80025C38(sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 dword_80091CA0 = 0;
                 if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
                 {

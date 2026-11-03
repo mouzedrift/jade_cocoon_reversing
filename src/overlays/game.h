@@ -872,7 +872,7 @@ typedef struct G2Inner2
     int f34;
     int f38;
     char pad_3C[4];
-    struct_obj_E* f40;
+    Model* model_40;
     char pad_44[4];
     G2V12 v48;
     G2V12 v54;
@@ -921,7 +921,7 @@ extern void sub_800AC380(int);
 
 extern int levantEmptyCocoons_8008B818;
 
-extern int* dword_8007DC60;
+extern ModelList* dword_8007DC60; // the GAME overlay's model list
 
 extern unsigned char playerYan_8008B594[];
 
@@ -955,7 +955,7 @@ typedef struct G2Act
     int f34;
     int f38;
     char pad_3C[4];
-    int f40;
+    Model* model_40;
 } G2Act;
 
 extern int sub_800A88E0();
@@ -986,7 +986,7 @@ typedef struct G2Rec
     char pad_38[8];
 } G2Rec;
 
-#define G2REC(a, b) ((G2Rec*)sub_80024E38(dword_8007DC60[2]))
+#define G2REC(a, b) ((G2Rec*)sub_80024E38(dword_8007DC60->items_8))
 
 extern int sub_800AC794(int, int);
 
@@ -1075,7 +1075,6 @@ extern void sub_800AC02C();
 
 extern int sub_800AD670(int, int);
 
-extern int IsAnimInModelAnimSet_80025924(int, int);
 
 extern void PoolInit_8003FF1C(void*, unsigned);
 
@@ -1195,7 +1194,6 @@ extern int eventDispatchHalt_8008B540;
 
 extern void sub_800A9414(void*, int, int);
 
-extern void FreeModelAnim_8002556C(int, int);
 
 extern void PoolDestroy_8003FF7C(void*);
 
@@ -1203,15 +1201,13 @@ extern char dword_800B1DD0;
 
 extern int dword_800B11DC[];
 
-extern int LoadModelAnim_80025440(int, int, int);
 
-extern void LoadModelAnimSet_80025780(int, int, int);
 
 extern int sub_800AC474(int);
 
 extern int sub_800AC3E4();
 
-extern int sub_800AC38C();
+extern Model* sub_800AC38C();
 
 extern unsigned char* sub_800AD58C();
 
@@ -1245,7 +1241,6 @@ typedef struct G2Save
     int f24;
 } G2Save;
 
-extern void FreeModelAnimSet_80025884(int);
 
 extern short word_8008D668[2];
 
@@ -1351,7 +1346,7 @@ typedef struct G2ActB
 
 typedef struct G2Skel_1
 {
-    int f0;
+    FtgObject* ftg_0;
     void* f4;
     void* f8;
     void* bones;
@@ -1379,15 +1374,9 @@ typedef struct G2ActD
     int f30;
     char pad_34[8];
     int f3c;
-    struct_112* model_40;
+    Model* model_40;
 } G2ActD;
 
-// one animation of a model (struct_112.field_54 points to an array of them)
-typedef struct GameAnim
-{
-    unsigned int frames_0;
-    char pad_4[0x18];
-} GameAnim;
 
 extern int sub_80019CC4(void* p);
 

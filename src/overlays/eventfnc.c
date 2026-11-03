@@ -453,7 +453,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     EvLoadEntEventfnc* l;
     int found;
     int i;
-    struct_112* model;
+    Model* model;
     int k;
     int* p0;
     int* p1;
@@ -507,8 +507,8 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
             s.f38 = (int)v;
         }
         s.f3C = (int)sub_80024EC8(model, k);
-        s.f40 = (int)sub_80024E38((struct_obj_E*)model);
-        s.f44 = (int)sub_80024E64((struct_obj_E*)model);
+        s.f40 = (int)sub_80024E38(model);
+        s.f44 = (int)sub_80024E64(model);
         s.f4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);

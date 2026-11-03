@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8001EA48.h"
 #include "tu_80010228.h"
 
 
@@ -288,11 +289,11 @@ int StartModelTask_80010850(void* a0)
         buf->key_0 = e->field_4;
         m = malloc3_8003FC4C(0x40);
         buf->state_4 = m;
-        MemCopy_800403E8((unsigned int*)&m->field_4, (unsigned int*)a0, 0x34);
-        m->field_0 = 0;
+        MemCopy_800403E8((unsigned int*)&m->count_4, (unsigned int*)a0, 0x34);
+        m->models_0 = 0;
         m->state_38 = 1;
         m->next_3C = 1;
-        StepModelTask_80010AD8((int)m);
+        StepModelTask_80010AD8(m);
         return buf->key_0;
     }
     return -1;
@@ -327,7 +328,7 @@ int FreeModelTask_8001098C(int arg0)
     ModelTaskState* q = buf->state_4;
     if (q->state_38 == 5)
     {
-        FreeModelList_80024BB0((int*)buf->state_4);
+        FreeModelList_80024BB0(&buf->state_4->models_0);
         free3_8003FC6C(buf->state_4);
         e->flags = (e->flags & ~1) | 0x8000;
         e->flags = (e->flags & ~4) | 0x8000;
@@ -339,16 +340,16 @@ int FreeModelTask_8001098C(int arg0)
 void RunModelTask_80010A10(int arg0)
 {
     EventEntry* p = FindModelTask_8001091C();
-    StepModelTask_80010AD8((int)((ModelTaskBuf*)p->buffer)->state_4);
+    StepModelTask_80010AD8(((ModelTaskBuf*)p->buffer)->state_4);
 }
 // Matched
-int sub_80010A44(void)
+Model* sub_80010A44(int key)
 {
     ModelTaskBuf* p = FindModelTask_8001091C()->buffer;
     ModelTaskState* q = p->state_4;
     if (q->state_38 == 5)
     {
-        return q->field_0[2];
+        return q->models_0->items_8;
     }
     return 0;
 }
@@ -363,9 +364,8 @@ void ModelTaskFreeCb_80010AB4(int arg0, int* arg1)
     FreeModelTask_8001098C(*arg1);
 }
 // Matched
-int StepModelTask_80010AD8(int arg0)
+int StepModelTask_80010AD8(ModelTaskState* p)
 {
-    ModelTaskState* p = (ModelTaskState*)arg0;
     int cont = 1;
     int r = 0;
     do

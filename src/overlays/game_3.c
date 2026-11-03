@@ -1923,7 +1923,7 @@ void sub_800A9384()
 void sub_800A93A4(int* a)
 {
     G2Inner2* p = dword_8008B4A4->f24;
-    a[0] = (int)sub_80024E64(p->f40);
+    a[0] = (int)sub_80024E64(p->model_40);
     a[1] = (int)&levantPos_8008BD18;
     a[2] = (int)p + 0x590;
     a[3] = (int)p + 0x90;
@@ -1934,7 +1934,7 @@ void sub_800A93A4(int* a)
 void sub_800A9414(void* pv, int b, int c)
 {
     G2Act* p = (G2Act*)pv;
-    sub_80025C38(p->f40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+    sub_80025C38(p->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
     FirFilterInit_8001450C((int*)((char*)p + 0x780), (char*)p + 0x770, (int)&dword_800795C0, 4);
     sub_800AB010(p, b, c, 0);
     p->fC = 0;
@@ -2015,7 +2015,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
 {
     G2Skel_1 sk;
     int v;
-    GameAnim* anim;
+    ModelAnim* anim;
     int flags;
     int st;
     char* sd;
@@ -2026,7 +2026,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
         p->f3c = *(int*)(sd + 0x7c8);
         sub_800ABECC(*(int*)(sd + 0x7c8));
     }
-    anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1c);
+    anim = &p->model_40->anims_54[sub_800AC4A8(p->s1c)];
     if (*(int*)(sd + 0x7c8) & 0x3fd)
     {
         flags = (word_8007DC8A - word_8007DC82) << 8;
@@ -2065,14 +2065,14 @@ void DrawLevantModel_800A9708(G2ActD* p)
     {
         return;
     }
-    sk.f0 = p->model_40->field_50;
+    sk.ftg_0 = p->model_40->ftg_50;
     sk.f4 = &levantPos_8008BD18;
     sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
     sk.bones = &dword_800B0EF8;
     sk.base = &dword_800B0FB0;
     sk.f24 = 0;
     sk.pose = (char*)anim;
-    sk.frame = p->f10 % anim->frames_0;
+    sk.frame = p->f10 % anim->frameCount_0;
     sk.flags = flags;
     sk.pos = (char*)p + 0x590;
     sk.ot = pOT_8008D690;
@@ -2086,10 +2086,10 @@ void DrawLevantModel_800A9708(G2ActD* p)
     }
     else
     {
-        anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1e);
-        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frames_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
+        anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
+        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
     }
-    sub_800459E4(&dword_800B0EF8, &p->model_40->field_5C, pOT_8008D690, sk.flags);
+    sub_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
 
 void sub_800A99DC(G2Q* p)
@@ -2109,7 +2109,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 
 void sub_800AA140(G2Act* p)
 {
-    char* t = (char*)*(int*)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    ModelAnim* t = &p->model_40->anims_54[sub_800AC4A8(p->s1c)];
     sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
 }
 
@@ -2132,7 +2132,7 @@ void sub_800AA1E0(G2Act* a)
 
 void sub_800AA220(G2Act* a)
 {
-    sub_8001C440(a->f40, sub_800AC4A8(a->s1c), a->f10);
+    sub_8001C440(a->model_40, sub_800AC4A8(a->s1c), a->f10);
 }
 
 void sub_800AA25C(G2Act* p)
@@ -2595,7 +2595,7 @@ void sub_800AB8AC()
 void sub_800AB8DC()
 {
     G2Inner2* p = dword_8008B4A4->f24;
-    p->f40 = sub_800AC38C();
+    p->model_40 = sub_800AC38C();
 }
 
 void sub_800AB910()
@@ -2956,9 +2956,9 @@ void sub_800AC380(int v)
     dword_8008BDA0 = v;
 }
 
-int sub_800AC38C()
+Model* sub_800AC38C()
 {
-    return dword_8007DC60[2];
+    return dword_8007DC60->items_8;
 }
 
 void sub_800AC3A4(short v)
@@ -3009,54 +3009,54 @@ int sub_800AC474(int a)
 
 int sub_800AC4A8(int a)
 {
-    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60[2]);
+    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60->items_8);
     return p[sub_800AC794(a, dword_800B11DC[sub_800AC3E4()])].f0;
 }
 
 int sub_800AC518(int a)
 {
-    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60[2]);
+    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60->items_8);
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
     if (p[r].f1)
         return 1;
-    return IsAnimInModelAnimSet_80025924(dword_8007DC60[2], (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
+    return IsAnimInModelAnimSet_80025924(dword_8007DC60->items_8, (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
 }
 
 int sub_800AC5D0(int a, int b)
 {
-    return LoadModelAnim_80025440(dword_8007DC60[2], a, b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60->items_8, a, b) != 0;
 }
 
 int sub_800AC604(int a, int b)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    return LoadModelAnim_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60->items_8, (short)sub_800AC988(a, t), b) != 0;
 }
 
 void sub_800AC678(int a)
 {
-    FreeModelAnim_8002556C(dword_8007DC60[2], a);
+    FreeModelAnim_8002556C(dword_8007DC60->items_8, a);
 }
 
 void sub_800AC6A8(int a)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    FreeModelAnim_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
+    FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)sub_800AC988(a, t));
 }
 
 void sub_800AC708(int a, int b)
 {
-    LoadModelAnimSet_80025780(dword_8007DC60[2], a, b);
+    LoadModelAnimSet_80025780(dword_8007DC60->items_8, a, b);
 }
 
 void sub_800AC73C()
 {
-    FreeModelAnimSet_80025884(dword_8007DC60[2]);
+    FreeModelAnimSet_80025884(dword_8007DC60->items_8);
 }
 
 int sub_800AC768()
 {
-    return AreFileRequestsDone_80024DC4(dword_8007DC60[2]);
+    return AreFileRequestsDone_80024DC4(dword_8007DC60->items_8);
 }
 
 int sub_800AC794(int a, int b)
@@ -3068,7 +3068,7 @@ int sub_800AC794(int a, int b)
 
 unsigned char* sub_800AC7B4(int a)
 {
-    return (unsigned char*)sub_80024E38(dword_8007DC60[2]) + ((a << 10) + 0x380);
+    return (unsigned char*)sub_80024E38(dword_8007DC60->items_8) + ((a << 10) + 0x380);
 }
 
 short sub_800AC7F0(int a, int b)
@@ -3116,13 +3116,13 @@ unsigned char sub_800AC988(int a, int b)
 short* sub_800AC9CC(int a)
 {
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    return &((G2Rec*)sub_80024E38(dword_8007DC60[2]))[r].sC;
+    return &((G2Rec*)sub_80024E38(dword_8007DC60->items_8))[r].sC;
 }
 
 int* sub_800ACA38(int a)
 {
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    return &((G2Rec*)sub_80024E38(dword_8007DC60[2]))[r].f34;
+    return &((G2Rec*)sub_80024E38(dword_8007DC60->items_8))[r].f34;
 }
 
 void sub_800ACAA4(int* a, int* b)
@@ -3165,21 +3165,16 @@ typedef struct G2Ld_1
     int f18;
     int f1C;
 } G2Ld_1;
-extern int dword_8007DC6C;
+extern ModelVramSlot* dword_8007DC6C;
 extern int name_800B1164[];
-extern char dword_800B11CC;
-extern void InitModelList_80024ADC(void* p, int a, int b);
-extern void LoadModel_80025200(int list, int id, int a, int b, int c);
-extern void sub_80025974(void* m, int a, int b);
-extern void sub_80024FFC(void* m, void* p);
-extern void sub_80025C38();
+extern int dword_800B11CC[]; // model FTG ids for sub_80024FFC, -1 ends
 extern void sub_800ACF3C();
 extern void sub_800ACFB8();
 void sub_800ACB64(int* a, G2Ld_1* q)
 {
     int more = 1;
     G2SvB* sd = (G2SvB*)&saveData_8008B570;
-    struct_112* m;
+    Model* m;
     do
     {
         switch (q->state)
@@ -3211,17 +3206,17 @@ void sub_800ACB64(int* a, G2Ld_1* q)
             {
                 if (dword_8007DC60)
                 {
-                    FreeModelList_80024BB0((struct_112_list**)&dword_8007DC60);
+                    FreeModelList_80024BB0(&dword_8007DC60);
                 }
                 InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
-                LoadModel_80025200((int)dword_8007DC60, name_800B1164[sd->f830], 0, 2, 1);
+                LoadModel_80025200(dword_8007DC60, name_800B1164[sd->f830], 0, 2, 1);
                 q->fC = q->f8;
                 q->flags &= ~1;
                 q->f8 = sd->f830;
             }
             else if (q->flags & 2)
             {
-                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
                 sub_80025974(m, sub_800AC3F4(), 1);
                 q->f14 = sub_800AC3E4();
                 q->f10 = sd->h834;
@@ -3240,7 +3235,7 @@ void sub_800ACB64(int* a, G2Ld_1* q)
             q->state = 2;
             break;
         case 2:
-            if (AreFileRequestsDone_80024DC4((void*)dword_8007DC60[2]) == 1)
+            if (AreFileRequestsDone_80024DC4(dword_8007DC60->items_8) == 1)
             {
                 q->state = 3;
             }
@@ -3253,13 +3248,13 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         case 3:
             if ((q->flags & 9) == 8)
             {
-                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
-                sub_80024FFC(m, &dword_800B11CC);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
+                sub_80024FFC(m, dword_800B11CC);
                 q->flags &= ~8;
             }
             if ((q->flags & 0x12) == 0x10)
             {
-                m = AcquireModel_80024D70((struct_112_list*)dword_8007DC60, name_800B1164[sd->f830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
                 sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 q->flags &= ~0x10;
             }
@@ -3282,7 +3277,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
 void sub_800ACF0C()
 {
-    FreeModelList_80024BB0((int*)&dword_8007DC60);
+    FreeModelList_80024BB0(&dword_8007DC60);
     PoolDestroy_8003FF7C(&dword_800B1DD0);
 }
 

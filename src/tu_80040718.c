@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "tu_8001EA48.h"
 
 INCLUDE_DATA(dword_80074A24);
 INCLUDE_DATA(dword_80074A34);
@@ -50,8 +51,6 @@ void InitGameDefaults_80040718(void)
     ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
-extern int publicFtg_8008D4D0;
-extern void LoadFtgObjects_80021824(int* p, int a, int b, int c, int d);
 
 // Matched
 void LoadPublicTiyAndFtg_800407D0(void)

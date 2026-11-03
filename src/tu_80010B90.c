@@ -17,6 +17,8 @@
 #include "data_decls.h"
 #include "unit.h"
 #include "tu_80010B90.h"
+#include "tu_8001EA48.h"
+#include "tu_80010228.h"
 
 INCLUDE_DATA(dword_80071B78);
 
@@ -1165,90 +1167,57 @@ INCLUDE_DATA(dword_80096628);
 INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
-typedef struct
-{
-    int field_0;
-    int pad_4;
-    int items[3];
-    int field_14[7];
-    int field_30;
-    int field_34;
-    int field_38;
-    int field_3C;
-} struct_B90;
-extern void InitModelList_80024ADC(void* p, int a, int b);
-extern int LoadModel_80025200(int a, int b, int c, int d, int e);
 // Matched
-int ModelTaskLoad_80010B90(struct_B90* p)
+int ModelTaskLoad_80010B90(ModelTaskState* p)
 {
     int i;
-    InitModelList_80024ADC(p, p->field_34, 1);
+    InitModelList_80024ADC(&p->models_0, p->vram_34, 1);
     for (i = 0; i < 3; i++)
     {
-        if (i == p->field_30)
+        if (i == p->main_30)
         {
-            LoadModel_80025200(p->field_0, p->items[i], -1, 1, 0);
+            LoadModel_80025200(p->models_0, p->ids_8[i], -1, 1, 0);
         }
         else
         {
-            LoadModel_80025200(p->field_0, p->items[i], -1, 0, 0);
+            LoadModel_80025200(p->models_0, p->ids_8[i], -1, 0, 0);
         }
     }
-    p->field_38 = 4;
-    p->field_3C = 2;
+    p->state_38 = 4;
+    p->next_3C = 2;
     return 1;
 }
-typedef struct
-{
-    char pad_0[0x38];
-    unsigned short field_38;
-    char pad_3A[0x36];
-} struct_C30_item;
-typedef struct
-{
-    int count;
-    int pad_4;
-    struct_C30_item* items;
-} struct_C30_list;
-typedef struct
-{
-    struct_C30_list* list;
-    char pad_4[0x34];
-    int field_38;
-    int field_3C;
-} struct_C30;
-extern int AreFileRequestsDone_80024DC4(void* p);
 // Matched
-int ModelTaskWaitLoad_80010C30(struct_C30* p)
+int ModelTaskWaitLoad_80010C30(ModelTaskState* p)
 {
     int i;
-    for (i = 0; i < p->list->count; i++)
+    for (i = 0; i < p->models_0->count_0; i++)
     {
-        if (p->list->items[i].field_38 != 0xFFFF)
+        if (p->models_0->items_8[i].id_38 != 0xFFFF)
         {
-            if (!AreFileRequestsDone_80024DC4(&p->list->items[i]))
+            if (!AreFileRequestsDone_80024DC4(&p->models_0->items_8[i]))
             {
                 return 0;
             }
         }
     }
-    p->field_38 = p->field_3C;
+    p->state_38 = p->next_3C;
     return 1;
 }
 // Matched
 int sub_80010CDC(ModelTaskState* p)
 {
-    if (p->field_2C >= 0)
+    if (p->texId_2C >= 0)
     {
-        *(unsigned short*)(p->field_0[2] + 0x38) = p->field_2C;
+        p->models_0->items_8->id_38 = p->texId_2C;
     }
     else
     {
-        *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_24];
+        p->models_0->items_8->id_38 = p->ids_8[p->texPart_24];
     }
-    sub_800255F0((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38), p->field_28);
-    *(unsigned short*)(p->field_0[2] + 0x38) = p->arr_8[p->field_30];
-    sub_800256B8((int)p->field_0, *(unsigned short*)(p->field_0[2] + 0x38));
+    sub_800255F0(p->models_0, p->models_0->items_8->id_38, p->texSel_28);
+    p->models_0->items_8->id_38 = p->ids_8[p->main_30];
+    sub_800256B8(p->models_0, p->models_0->items_8->id_38);
     p->state_38 = 4;
     p->next_3C = 5;
     return 1;
@@ -1282,8 +1251,6 @@ typedef struct
     int f24;
     unsigned long* ot;
 } FuseSkel;
-extern void InitModelList_80024ADC(void* p, int a, int b);
-extern void AllocModelAnims_80026730(void* a0, int a1, int a2);
 extern void sub_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
                          char* out, void* vout);
 extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
@@ -1293,19 +1260,19 @@ extern unsigned char dword_80079210[];
 extern int levantPos_8008BD18[];
 #if 0
 // Not matched (37 lines): only the bone entry / matrix pointers are swapped ($s0/$s1) in the scaling block at the end (decl order, temporaries, sv inline, arg-assign form tried)
-int ModelTaskDraw_80010DB0(int* p)
+int ModelTaskDraw_80010DB0(ModelTaskState* p)
 {
-    struct_112_list* list;
-    char* m[3];
+    ModelList* list;
+    Model* m[3];
     FuseSkel sk;
     int v[3];
     VtxBlend vb;
     char buf[0xC0];
     int pos[0x78];
-    char* o;
-    int t;
-    int a6;
-    int a4;
+    Model* o;
+    FtgObject* t;
+    FtgObject* a6;
+    FtgObject* a4;
     int i;
     int k;
     int w0;
@@ -1317,102 +1284,102 @@ int ModelTaskDraw_80010DB0(int* p)
     MATRIX* mat;
     SVECTOR* sv;
 
-    list = (struct_112_list*)p[0];
+    list = p->models_0;
     for (i = 0; i < 3; i++)
     {
-        m[i] = (char*)AcquireModel_80024D70(list, p[2 + i]);
+        m[i] = AcquireModel_80024D70(list, p->ids_8[i]);
     }
-    InitModelList_80024ADC(p, p[0x34 / 4] + 0x20, 1);
-    o = ((char**)p[0])[2];
-    *(short*)(o + 0x38) = *(short*)(m[0] + 0x38);
-    *(short*)(o + 0x3C) = *(short*)(m[0] + 0x3C);
-    t = *(int*)(m[0] + 0x50);
-    *(int*)(o + 0x50) = t;
-    a6 = *(int*)(m[1] + 0x50);
-    a4 = *(int*)(m[2] + 0x50);
-    for (i = 0; i < *(unsigned short*)(o + 0x3C); i++)
+    InitModelList_80024ADC(&p->models_0, p->vram_34 + 2, 1);
+    o = p->models_0->items_8;
+    o->id_38 = m[0]->id_38;
+    o->ftgCount_3C = m[0]->ftgCount_3C;
+    t = m[0]->ftg_50;
+    o->ftg_50 = t;
+    a6 = m[1]->ftg_50;
+    a4 = m[2]->ftg_50;
+    for (i = 0; i < o->ftgCount_3C; i++)
     {
-        int* q0 = (int*)sub_80024F70(m[0], p[8]);
-        int* q1 = (int*)sub_80024F70(m[1], p[8]);
-        int* q2 = (int*)sub_80024F70(m[2], p[8]);
+        int* q0 = (int*)sub_80024F70(m[0], p->record_20);
+        int* q1 = (int*)sub_80024F70(m[1], p->record_20);
+        int* q2 = (int*)sub_80024F70(m[2], p->record_20);
         w0 = q0[i];
         w1 = q1[i];
         w2 = q2[i];
         if (w0 == w1 && w1 == w2)
         {
-            w0 = p[5];
-            w1 = p[6];
-            w2 = p[7];
+            w0 = p->weights_14[0];
+            w1 = p->weights_14[1];
+            w2 = p->weights_14[2];
         }
         else
         {
             w0 = (w0 << 12) / (w0 + w1 + w2);
             w1 = (w1 << 12) / (w0 + w1 + w2);
             w2 = (w2 << 12) / (w0 + w1 + w2);
-            w0 *= p[5];
-            w1 *= p[6];
-            w2 *= p[7];
+            w0 *= p->weights_14[0];
+            w1 *= p->weights_14[1];
+            w2 *= p->weights_14[2];
         }
         w0 = (w0 << 12) / (w0 + w1 + w2);
         w1 = (w1 << 12) / (w0 + w1 + w2);
         w2 = (w2 << 12) / (w0 + w1 + w2);
-        if (p[1] >= 2 && w1 != 0)
+        if (p->count_4 >= 2 && w1 != 0)
         {
-            sub_80039FE4(a6 + i * 0x54, t + i * 0x54, a6 + i * 0x54);
-            sub_8003A6C4(w1, t + i * 0x54, t + i * 0x54, a6 + i * 0x54);
+            sub_80039FE4(&a6[i], &t[i], &a6[i]);
+            sub_8003A6C4(w1, &t[i], &t[i], &a6[i]);
         }
-        if (p[1] >= 3 && w2 != 0)
+        if (p->count_4 >= 3 && w2 != 0)
         {
-            sub_80039FE4(a4 + i * 0x54, t + i * 0x54, a4 + i * 0x54);
-            sub_8003A6C4(w2, t + i * 0x54, t + i * 0x54, a4 + i * 0x54);
+            sub_80039FE4(&a4[i], &t[i], &a4[i]);
+            sub_8003A6C4(w2, &t[i], &t[i], &a4[i]);
         }
     }
-    *(int*)(m[0] + 0x50) = 0;
-    *(int*)(o + 0x5C) = *(int*)(m[0] + 0x5C);
-    *(int*)(o + 0x60) = *(int*)(m[0] + 0x60);
-    *(int*)(m[0] + 0x5C) = 0;
-    *(int*)(m[0] + 0x60) = 0;
+    m[0]->ftg_50 = 0;
+    o->mats_5C.count_0 = m[0]->mats_5C.count_0;
+    o->mats_5C.items_4 = m[0]->mats_5C.items_4;
+    m[0]->mats_5C.count_0 = 0;
+    m[0]->mats_5C.items_4 = 0;
     for (k = 0; k < 5; k++)
     {
         memset(v, 0, 12);
         for (i = 0; i < 3; i++)
         {
             e = sub_80024E90(m[i], k);
-            v[0] += ((int*)e)[0] * p[5 + i] / 4096;
-            v[1] += ((int*)e)[1] * p[5 + i] / 4096;
-            v[2] += ((int*)e)[2] * p[5 + i] / 4096;
+            v[0] += ((int*)e)[0] * p->weights_14[i] / 4096;
+            v[1] += ((int*)e)[1] * p->weights_14[i] / 4096;
+            v[2] += ((int*)e)[2] * p->weights_14[i] / 4096;
         }
         e = sub_80024E90(m[0], k);
         ((int*)e)[0] = v[0];
         ((int*)e)[1] = v[1];
         ((int*)e)[2] = v[2];
     }
-    *(short*)(o + 0x3E) = *(short*)(m[p[0x30 / 4]] + 0x3E);
-    AllocModelAnims_80026730(o + 0x54, *(unsigned short*)(o + 0x3E), 1);
-    (*(int**)(o + 0x54))[0] = 1;
-    (*(int**)(o + 0x54))[2] = 0x20;
-    (*(int**)(o + 0x54))[3] = 0;
-    (*(int**)(o + 0x54))[1] = *(unsigned short*)(o + 0x3C);
-    (*(int**)(o + 0x54))[5] = HeapAlloc_8003FC8C(*(unsigned short*)(o + 0x3C) * 6, (struct Pool*)1);
-    (*(int**)(o + 0x54))[6] = HeapAlloc_8003FC8C((*(unsigned short*)(o + 0x3C) + 2) * 6, (struct Pool*)1);
-    (*(int**)(o + 0x54))[4] = 0;
-    sk.f0 = t;
+    o->animCount_3E = m[p->main_30]->animCount_3E;
+    AllocModelAnims_80026730(&o->anims_54, o->animCount_3E, 1);
+    o->anims_54->frameCount_0 = 1;
+    o->anims_54->divisor_8 = 0x20;
+    o->anims_54->cueCount_C = 0;
+    o->anims_54->boneCount_4 = o->ftgCount_3C;
+    o->anims_54->basePose_14 = HeapAlloc_8003FC8C(o->ftgCount_3C * 6, (struct Pool*)1);
+    o->anims_54->frames_18 = HeapAlloc_8003FC8C((o->ftgCount_3C + 2) * 6, (struct Pool*)1);
+    o->anims_54->cues_10 = 0;
+    sk.f0 = (int)t;
     sk.f4 = levantPos_8008BD18;
     sk.f8 = levantPos_8008BD18 + 3;
     sk.bones = dword_80079140;
-    sk.base = (short*)sub_80024EC8(m[0], p[8]);
-    sk.pose = *(char**)(o + 0x54);
+    sk.base = (short*)sub_80024EC8(m[0], p->record_20);
+    sk.pose = (char*)o->anims_54;
     sk.f18 = 0;
     sk.pos = 0;
     sk.f24 = 0;
     sk.ot = pOT_8008D690;
-    b1 = sub_80024EC8(m[1], p[8]);
-    sub_8004A4FC(&sk, b1, *(char**)(m[1] + 0x54), p[6], sub_80024EC8(m[2], p[8]), *(char**)(m[2] + 0x54), p[7],
-                 *(char**)(m[0] + 0x54), *(char**)(m[0] + 0x54), *(char**)(o + 0x54), 0);
+    b1 = sub_80024EC8(m[1], p->record_20);
+    sub_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], sub_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
+                 p->weights_14[2], (char*)m[0]->anims_54, (char*)m[0]->anims_54, (char*)o->anims_54, 0);
     for (i = 1; i < 3; i++)
     {
-        unsigned short* d = (unsigned short*)sub_80024F00(m[0], p[8]);
-        unsigned short* q = (unsigned short*)sub_80024F00(m[i], p[8]);
+        unsigned short* d = (unsigned short*)sub_80024F00(m[0], p->record_20);
+        unsigned short* q = (unsigned short*)sub_80024F00(m[i], p->record_20);
         int j;
         for (j = 0; j < 3; j++)
         {
@@ -1424,24 +1391,24 @@ int ModelTaskDraw_80010DB0(int* p)
     }
     for (i = 0; i < 3; i++)
     {
-        vb.pos[i] = sub_80024E90(m[i], p[8]);
-        vb.rot[i] = sub_80024EC8(m[i], p[8]);
-        vb.src[i] = (Vtx12*)sub_80024E64((struct_obj_E*)m[i]);
-        vb.w[i] = p[5 + i];
+        vb.pos[i] = sub_80024E90(m[i], p->record_20);
+        vb.rot[i] = sub_80024EC8(m[i], p->record_20);
+        vb.src[i] = (Vtx12*)sub_80024E64(m[i]);
+        vb.w[i] = p->weights_14[i];
     }
     sub_80011904(&vb, vb.src[0]);
-    *(int*)(o + 0x48) = *(int*)(m[p[0x30 / 4]] + 0x48);
-    *(int*)(o + 0x4C) = *(int*)(m[p[0x30 / 4]] + 0x4C);
-    *(int*)(m[p[0x30 / 4]] + 0x48) = 0;
-    *(int*)(m[p[0x30 / 4]] + 0x4C) = 0;
-    sk.pose = *(char**)(m[p[0x30 / 4]] + 0x54) + 0x1C;
+    o->headerSize_48 = m[p->main_30]->headerSize_48;
+    o->header_4C = m[p->main_30]->header_4C;
+    m[p->main_30]->headerSize_48 = 0;
+    m[p->main_30]->header_4C = 0;
+    sk.pose = (char*)&m[p->main_30]->anims_54[1];
     sk.bones = dword_80079210;
     sk.f1C = 0x10;
     sk.f18 = 0;
     sk.pos = pos;
     sk.ot = pOT_8008D690;
-    sub_80046A58(&sk, buf, *(char**)(o + 0x54));
-    ent = (short(*)[6])sub_80024E64((struct_obj_E*)o);
+    sub_80046A58(&sk, buf, (char*)o->anims_54);
+    ent = (short(*)[6])sub_80024E64(o);
     ent += sub_80018908(0x26, ent);
     mat = &dword_80098188[ent[0][1]];
     sv = (SVECTOR*)&ent[0][2];
@@ -1460,9 +1427,9 @@ int ModelTaskDraw_80010DB0(int* p)
     v[0] = sk.pos[ent[0][1] * 3 + 0] + v[0];
     v[1] = sk.pos[ent[0][1] * 3 + 1] + v[1];
     v[2] = sk.pos[ent[0][1] * 3 + 2] + v[2];
-    ((short*)((*(char***)(o + 0x54))[5] + sk.bones[10] * 6))[1] -= v[1];
+    ((short*)o->anims_54->basePose_14)[sk.bones[10] * 3 + 1] -= v[1];
     FreeModelList_80024BB0(&list);
-    p[0x38 / 4] = 3;
+    p->state_38 = 3;
     return 1;
 }
 #endif

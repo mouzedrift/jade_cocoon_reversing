@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "tu_8001EA48.h"
 
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padPressed_8009194C[];
@@ -13,23 +14,15 @@ typedef struct TstModelBone
     short s4;
     unsigned short flags;
 } TstModelBone;
-// one animation of a model (struct_112.field_54 points to an array of them)
-typedef struct TstModelAnim
-{
-    unsigned int frames_0;
-    int f4;
-    int scale_8;
-    char pad_C[0x10];
-} TstModelAnim;
 // parameter block of sub_80046A58
 typedef struct TstModelDraw
 {
-    int f0;
+    FtgObject* ftg_0;
     VECTOR* pos_4;
     char* f8;
     TstModelBone* bones_C;
     char* f10;
-    TstModelAnim* anim_14;
+    ModelAnim* anim_14;
     int frame_18;
     int f1C;
     char* f20;
@@ -44,8 +37,8 @@ typedef struct TstModelD
     int f8;
     int fC;
     int f10;
-    struct_112_list* models_14;
-    struct_112* model_18;
+    ModelList* models_14;
+    Model* model_18;
     int count_1C;
     int f20;
     int modelId_24;
@@ -249,9 +242,6 @@ void sub_800A0C00(TstModelD* c)
     }
 }
 
-extern int off_8007DC70;
-extern int InitModelList_80024ADC(struct_112_list** a, int b, int c);
-extern void LoadModel_80025200(struct_112_list* a, int b, int c, int d, int e);
 void sub_800A0EC8(TstModelD* a)
 {
     InitModelList_80024ADC(&a->models_14, off_8007DC70, 1);
@@ -260,13 +250,10 @@ void sub_800A0EC8(TstModelD* a)
     a->state = 2;
 }
 
-extern void sub_80024FFC(struct_112* p, void* a);
-extern void sub_80025974(struct_112* p, int a, int b);
-extern int LoadModelAnim_80025440(struct_112* p, int a, int b);
-extern char name_800A37E8[];
+extern int name_800A37E8[];
 void sub_800A0F20(TstModelD* a)
 {
-    struct_112* m = AcquireModel_80024D70(a->models_14, a->modelId_24);
+    Model* m = AcquireModel_80024D70(a->models_14, a->modelId_24);
     if (AreFileRequestsDone_80024DC4(m))
     {
         if (a->modelId_24 == 0x28 && a->f1A8 == -1)
@@ -280,10 +267,10 @@ void sub_800A0F20(TstModelD* a)
         {
             int i = 0;
             int found = 0;
-            a->f1AC = m->field_3E;
+            a->f1AC = m->animCount_3E;
             for (; i < a->f1AC; i++)
             {
-                if (((unsigned char*)m->field_44)[i] != 0)
+                if (m->animLoaded_44[i] != 0)
                 {
                     a->f1A8 = i;
                     found = 1;
@@ -417,8 +404,8 @@ void TstModelCameraInput_800A104C(TstModelD* c)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8004D288(VECTOR* out, TstModelAnim* anim, int frame);
-extern void PlayAnimFrameSfx_8001C364(struct_112* a0, int idx, int a2);
+extern void sub_8004D288(VECTOR* out, ModelAnim* anim, int frame);
+extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
 extern void sub_80046A58(void* a, void* b, int c);
 extern void sub_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A3268[];
@@ -429,34 +416,34 @@ void sub_800A1428(TstModelD* c)
     VECTOR pos;
     char z[8];
     VECTOR scale;
-    struct_112* m;
-    TstModelAnim* anim;
+    Model* m;
+    ModelAnim* anim;
     memset(z, 0, 8);
     m = AcquireModel_80024D70(c->models_14, c->modelId_24);
     c->model_18 = m;
-    anim = (TstModelAnim*)m->field_54 + c->f1A8;
-    sub_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frames_0);
-    pos.vx /= anim->scale_8;
-    pos.vy /= anim->scale_8;
-    pos.vz /= anim->scale_8;
+    anim = &m->anims_54[c->f1A8];
+    sub_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frameCount_0);
+    pos.vx /= anim->divisor_8;
+    pos.vy /= anim->divisor_8;
+    pos.vz /= anim->divisor_8;
     pos.vy += 0xFA;
     scale.vx = (c->f1BC + 1) << 12;
     scale.vy = (c->f1BC + 1) << 12;
     scale.vz = (c->f1BC + 1) << 12;
-    c->draw_1C0.anim_14 = (TstModelAnim*)m->field_54 + c->f1A8;
-    c->draw_1C0.f0 = m->field_50;
+    c->draw_1C0.anim_14 = &m->anims_54[c->f1A8];
+    c->draw_1C0.ftg_0 = m->ftg_50;
     c->draw_1C0.pos_4 = &pos;
     c->draw_1C0.f8 = z;
     c->draw_1C0.bones_C = c->bones;
     c->draw_1C0.f10 = name_800A3268;
-    c->draw_1C0.frame_18 = (unsigned)c->f1A4 % c->draw_1C0.anim_14->frames_0;
+    c->draw_1C0.frame_18 = (unsigned)c->f1A4 % c->draw_1C0.anim_14->frameCount_0;
     c->draw_1C0.f1C = 0;
     c->draw_1C0.f20 = name_800A3804;
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->f1A8, c->draw_1C0.frame_18);
     sub_80046A58(&c->draw_1C0, name_800A1EE8, 0);
-    sub_800459E4(c->bones, &m->field_5C, pOT_8008D690, 0);
+    sub_800459E4(c->bones, &m->mats_5C, pOT_8008D690, 0);
 }
 
 void sub_800A1614(TstModelD* c)
@@ -517,11 +504,11 @@ void sub_800A1614(TstModelD* c)
     }
 }
 
-extern void name_8002556C(struct_112* m, int a);
+extern void name_8002556C(Model* m, int a);
 void sub_800A17B8(TstModelD* c)
 {
     unsigned short pad;
-    struct_112* m;
+    Model* m;
     if (padRepeat_800918CC[0] & 0x4000)
     {
         c->f1B0++;
@@ -543,7 +530,7 @@ void sub_800A17B8(TstModelD* c)
             name_8002556C(m, c->f1A8);
             c->f1B4 = 0;
         }
-        if (((unsigned char*)m->field_44)[c->f1B0] == 0)
+        if (m->animLoaded_44[c->f1B0] == 0)
         {
             c->f1B4 = 1;
         }
@@ -578,10 +565,10 @@ void sub_800A18F4(TstModelD* c)
         {
             if (--c->f1A4 < 0)
             {
-                c->f1A4 = c->draw_1C0.anim_14->frames_0 - 1;
+                c->f1A4 = c->draw_1C0.anim_14->frameCount_0 - 1;
             }
         }
-        c->f1A4 = c->f1A4 % c->draw_1C0.anim_14->frames_0;
+        c->f1A4 = c->f1A4 % c->draw_1C0.anim_14->frameCount_0;
     }
     else
     {
