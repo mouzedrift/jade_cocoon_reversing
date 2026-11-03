@@ -28,7 +28,15 @@ typedef struct TstModelD
     TstModelBone bones[41];
     short s170;
     short s172;
-    char pad_174[0x30];
+    short s174;
+    short pad_176;
+    int i178;
+    int i17C;
+    int i180;
+    int i184;
+    int i188;
+    int i18C;
+    char pad_190[0x14];
     int f1A4;
     int f1A8;
     int f1AC;
@@ -36,6 +44,8 @@ typedef struct TstModelD
     int f1B4;
     int f1B8;
     int f1BC;
+    char pad_1C0[0x30];
+    SVECTOR rot_1F0;
 } TstModelD;
 typedef struct TstModelB
 {
@@ -288,7 +298,115 @@ void sub_800A0F20(int* a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A104C);
+typedef struct TstModelMat
+{
+    int w[8];
+} TstModelMat;
+extern unsigned short padHeld_800918D0[];
+extern short word_80084540[];
+extern MATRIX name_800A1E84;
+extern TstModelMat name_800A1EA4;
+extern MATRIX dword_80087114;
+extern TstModelMat dword_80087134;
+extern void sub_800A1A24();
+extern MATRIX* name_8005B558(MATRIX* m0, MATRIX* m1, MATRIX* m2); // MulMatrix0 (PSY-Q)
+extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
+void sub_800A104C(TstModelD* c)
+{
+    MATRIX m;
+    if (padHeld_800918D0[1] & 0x8000)
+    {
+        c->rot_1F0.vy -= 0x20;
+    }
+    else if (padHeld_800918D0[1] & 0x2000)
+    {
+        c->rot_1F0.vy += 0x20;
+    }
+    if (padHeld_800918D0[1] & 0x1000)
+    {
+        c->rot_1F0.vx -= 0x20;
+    }
+    else if (padHeld_800918D0[1] & 0x4000)
+    {
+        c->rot_1F0.vx += 0x20;
+    }
+    c->rot_1F0.vz = 0;
+    PushMatrix();
+    RotMatrixZYX_8004D5CC(&c->rot_1F0, &m);
+    name_8005B558(&name_800A1E84, &m, &dword_80087114);
+    PopMatrix();
+    dword_80087134 = name_800A1EA4;
+    if (padHeld_800918D0[0] & 0x8000)
+    {
+        c->s170 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x2000)
+    {
+        c->s170 += 0x20;
+    }
+    if (padHeld_800918D0[0] & 0x1000)
+    {
+        c->i17C -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x4000)
+    {
+        c->i17C += 0x20;
+    }
+    c->i17C = c->i17C < -500 ? -500 : c->i17C < 501 ? c->i17C : 500;
+    if ((padHeld_800918D0[0] & 0xC) == 0xC)
+    {
+        sub_800A0BC0((TstModelA*)c);
+    }
+    else if (padHeld_800918D0[0] & 4)
+    {
+        c->s174 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 8)
+    {
+        c->s174 += 0x20;
+    }
+    c->s174 = c->s174 < 100 ? 100 : c->s174 < 1201 ? c->s174 : 1200;
+    c->i178 = c->s174 * word_80084540[c->s170 & 0xFFF] / 4096;
+    c->i180 = c->s174 * word_80084540[(c->s170 + 0x400) & 0xFFF] / 4096;
+    if (padHeld_800918D0[0] & 1)
+    {
+        if (padHeld_800918D0[0] & 2)
+        {
+            sub_800A0BC0((TstModelA*)c);
+        }
+        else
+        {
+            c->i188 -= 0x20;
+        }
+    }
+    else if (padHeld_800918D0[0] & 2)
+    {
+        c->i188 += 0x20;
+    }
+    c->i188 = c->i188 < -500 ? -500 : c->i188 < 501 ? c->i188 : 500;
+    c->i184 = 0;
+    c->i18C = 0;
+    sub_800A1A24(c);
+    if (padPressed_8009194C[0] & 0x800)
+    {
+        c->state = 6;
+    }
+    else if (padPressed_8009194C[0] & 0x20)
+    {
+        c->state = 4;
+        c->f1B0 = c->f1A8;
+    }
+    else if (padHeld_800918D0[0] & 0x40)
+    {
+        if (++c->s172 >= 30)
+        {
+            c->fC = 0;
+            c->f10 = 0;
+            c->state = 5;
+            c->s172 = 0;
+        }
+    }
+}
 
 extern void* memset(void* p, int c, unsigned int n);
 extern void sub_8004D288(VECTOR* out, int* anim, int frame);
