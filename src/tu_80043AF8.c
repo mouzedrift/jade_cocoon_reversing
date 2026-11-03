@@ -15,6 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80036528.h"
+#include "tu_80043AF8.h"
 
 INCLUDE_DATA(dword_80098690);
 INCLUDE_DATA(dword_800986A0);
@@ -51,7 +53,42 @@ void StopAllEventEntries_80043B40(EventNode* p)
         p = p->next;
     }
 }
-INCLUDE_ASM(sub_80043B8C);
+extern short word_8008D51E; // projection distance
+extern int sub_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
+// Matched
+int sub_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, short fl)
+{
+    BillboardScratch* s = BILLBOARD_SCRATCH;
+    int shade;
+    s->rel_4.vx = pos->vx - dword_8008D600.vx;
+    s->rel_4.vy = pos->vy - dword_8008D600.vy;
+    s->rel_4.vz = pos->vz - dword_8008D600.vz;
+    gte_ldv0(&s->rel_4);
+    gte_rtps();
+    gte_stsxy(s);
+    gte_stszotz(&s->otz_C);
+    if (s->otz_C - 1 < 0xFFFU)
+    {
+        s->w_10 = (size[0] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        if (s->w_10 > 0x800)
+        {
+            s->w_10 = 0x800;
+        }
+        if (s->h_14 > 0x800)
+        {
+            s->h_14 = 0x800;
+        }
+        p->r0 = p->g0 = p->b0 = s->shade_18 = ((0x80 - (flags >> 16) / 32) * dword_8008D40C) >> 12;
+        if (flags & 0x10)
+        {
+            setSemiTrans(p, 1);
+            p->tpage = (p->tpage & ~0x60) | (flags & 0x60);
+        }
+        return sub_80031BE4(p, pOT_8008D690 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, off, fl);
+    }
+    return 0;
+}
 INCLUDE_ASM(sub_80043DE0);
 INCLUDE_ASM(sub_80044010);
 INCLUDE_ASM(sub_80044D0C);
