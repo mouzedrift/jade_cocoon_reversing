@@ -3122,8 +3122,6 @@ int sub_800A6D50(int a)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6DAC);
-
 typedef struct GameD_1
 {
     int f0;
@@ -3135,6 +3133,102 @@ typedef struct GameD_1
     int f18;
     void (*f1C)(int);
 } GameD_1;
+extern unsigned short padPressed_8009194C;
+extern short word_80091CB8[];
+extern int dword_8008D498;
+extern int dword_8008D480;
+extern int dword_800B1DAC;
+extern int dword_800B06B0[];
+extern int dword_800B06BC;
+extern void sub_800A70F8();
+extern void sub_800A7204();
+extern void sub_800A7280();
+void sub_800A6DAC(GameTask_1* t, GameD_1* q)
+{
+    GameD_1* p;
+    int ov;
+    GameObj5_1* e;
+    q->f0 = -1;
+    unknownFlags_8008D678 &= ~8;
+    p = q;
+    q->f8 = 0;
+    q->fC = 0;
+    q->f10 = 0;
+    q->f14 = 0;
+    q->f1C = 0;
+    if (dword_80091C9C == 1)
+        return;
+    if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
+        return;
+    if (saveData_8008B570.mapId_2E4[1].field_2 != saveData_8008B570.mapId_2E4[1].field_0)
+        return;
+    if (saveData_8008B570.mapId_2E4[2].field_2 != saveData_8008B570.mapId_2E4[2].field_0)
+        return;
+    if (word_80091C40[1] != word_80091C40[0])
+        return;
+    if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+        return;
+    if (word_80091CB8[6] != word_80091CB8[7])
+        return;
+    if (sub_800272D0())
+        return;
+    if (sub_800A5E68() == 0 && dword_800B0EC0 == 1 && gCtx_800B1260.f0 == 0 &&
+        !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
+    {
+        q->f8 = dword_800B0EC0;
+        q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D498);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        q->f0 = 4;
+    }
+    else if (sub_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && dword_800B0EC0 != 1)
+    {
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_800B1DAC);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        p->f0 = 1;
+    }
+    else if (dword_800B06B0[0])
+    {
+        if (dword_800B06B0[1] == 0)
+        {
+            ov = 0xe;
+        }
+        else if (dword_800B06B0[1] == 1)
+        {
+            ov = 0xe;
+        }
+        else if (dword_800B06B0[1] == 2)
+        {
+            ov = 0xc;
+        }
+        else
+        {
+            ov = 0xd;
+        }
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
+        p->f0 = 5;
+        p->f18 = (int)dword_800B06B0;
+        p->f1C = (void (*)(int))sub_800A7204;
+    }
+    else if (sub_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && dword_800B06BC)
+    {
+        p->f8 = 1;
+        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
+        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D480);
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        p->f0 = 6;
+        p->f18 = (int)&dword_800B06BC;
+        p->f1C = (void (*)(int))sub_800A7280;
+    }
+    if (p->f0 >= 0)
+    {
+        sub_800A70F8(t, q);
+    }
+}
+
 extern int GetFileRequestStatus_8003BE30();
 extern void sub_8001C224();
 extern void EndFade_8001C290();
