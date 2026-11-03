@@ -387,7 +387,84 @@ void sub_800BCF74(short a)
     sub_8001AEB8(name_800338B0(r16), r16 + 0x84, r17);
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BCFDC);
+typedef struct MenuCtxB
+{
+    char pad_0[0x4C];
+    int a_4C[3];
+} MenuCtxB;
+
+typedef struct MenuSlot
+{
+    char pad_0[2];
+    unsigned char f2;
+    unsigned char f3;
+    char pad_4[4];
+} MenuSlot;
+extern MenuSlot name_800C29A0[];
+
+typedef struct MenuMsgEnt
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+} MenuMsgEnt;
+
+typedef struct MenuMsg
+{
+    int f0;
+    short* size_4;
+    int f8;
+    MenuMsgEnt e[3];
+    int f48;
+    int f4C;
+} MenuMsg;
+
+extern void* OpenItemMessageWindow_80035AC8();
+void sub_800BCFDC(MenuCtxB* c)
+{
+    MenuMsg m;
+    short sz[2];
+    MenuMsgEnt l[3];
+    short i;
+    short n = 0;
+    sz[0] = 100;
+    sz[1] = 100;
+    for (i = 0; i < 3; i++)
+    {
+        if (c->a_4C[i])
+        {
+            l[n].f0 = name_800C29A0[i].f2;
+            l[n].f4 = name_800C29A0[i].f3;
+            l[n].f8 = 1;
+            l[n].fC = 2;
+            l[n].f10 = name_800C29A0[i].f3;
+            n++;
+        }
+    }
+    if (n < 3)
+    {
+        i = n;
+        do
+        {
+            l[i].f0 = -1;
+            l[i].f4 = 0xFF;
+            l[i].f8 = 0;
+            l[i].fC = 0;
+            l[i].f10 = 0;
+        } while (++i < 3);
+    }
+    m.f0 = 1;
+    m.size_4 = sz;
+    m.f8 = 0;
+    m.e[0] = l[0];
+    m.e[1] = l[1];
+    m.e[2] = l[2];
+    m.f48 = -1;
+    m.f4C = 0;
+    OpenItemMessageWindow_80035AC8(&m);
+}
 
 extern void sub_80034A84();
 extern int* name_8008D640;
@@ -404,18 +481,6 @@ void sub_800BD1B0(MenuTask* t)
         sub_80034A84(p);
 }
 
-typedef struct MenuCtxB
-{
-    char pad_0[0x4C];
-    int a_4C[3];
-} MenuCtxB;
-
-typedef struct MenuSlot
-{
-    char pad_0[3];
-    unsigned char f3;
-    char pad_4[4];
-} MenuSlot;
 
 typedef struct MenuEnt
 {
@@ -425,7 +490,6 @@ typedef struct MenuEnt
     unsigned short a;
 } MenuEnt;
 
-extern MenuSlot name_800C29A0[];
 extern MenuEnt name_800B1238[];
 int sub_800BD230(MenuCtx* c)
 {
