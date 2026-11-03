@@ -4555,8 +4555,7 @@ extern int sub_800AD154(int a0);
 extern void sub_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void sub_80028808(void* a0, int* a1);
-#if 0
-// Not matched: 5 instructions: in case 1 the a1[0] load, the constant 1 and the eventDispatchHalt address get rotated registers (a0/v0/v1)
+// Matched
 void sub_80027CF8(void* a0, int* a)
 {
     int* a1 = a;
@@ -4675,9 +4674,11 @@ void sub_80027CF8(void* a0, int* a)
         req[7] = (int)sub_80028808;
         a1[1] = QueueFileRequest_8003BC84(req);
         sub_80027478(2, 1);
-        n = a1[0];
-        eventDispatchHalt_8008B540 = 1;
-        a1[0] = n + 1;
+        {
+            int z = a1[0];
+            eventDispatchHalt_8008B540 = 1;
+            a1[0] = z + 1;
+        }
         break;
     case 2:
         if (IsSoundTaskReady_800306B0() && IsModelLoaderDone_800205D0() && GetFileRequestStatus_8003BE30(a1[1]) == 0)
@@ -4692,8 +4693,6 @@ void sub_80027CF8(void* a0, int* a)
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_80027CF8);
 // Matched
 // Matched
 void sub_8002830C(struct_obj_D* p)
