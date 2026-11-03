@@ -28,6 +28,8 @@ typedef struct EvVecEventfnc
     int z_8;
 } EvVecEventfnc;
 
+extern EvVecEventfnc levantPos_8008BD18;
+
 typedef struct EvCtxEventfnc
 {
     unsigned int flags_0;
@@ -88,6 +90,25 @@ typedef struct EvObjEventfnc
     int f90_90;
 } EvObjEventfnc;
 
+typedef struct EvTriEventfnc
+{
+    short x_0;
+    short y_2;
+    short z_4;
+    char pad_6[0x12];
+    short nx_18;
+    short ny_1A;
+    short nz_1C;
+    char pad_1E[2];
+} EvTriEventfnc;
+
+typedef struct EvMeshEventfnc
+{
+    short nTris_0;
+    short pad_2;
+    EvTriEventfnc* tris_4;
+} EvMeshEventfnc;
+
 extern EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int a, int b);
 extern EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int a, int b);
 extern EvVecEventfnc* sub_800BBBA0(int a);
@@ -142,9 +163,52 @@ int sub_800B8028(int* out, EvQuadEventfnc* v)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B80C8);
+typedef struct EvMapEventfnc
+{
+    int f0_0;
+    unsigned int nMeshes_4;
+    int f8_8;
+    EvMeshEventfnc* meshes_C;
+} EvMapEventfnc;
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8184);
+extern int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
+
+int sub_800B80C8(EvEntEventfnc* e)
+{
+    unsigned int i;
+    unsigned int k = e->f84_84;
+    int r;
+    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++, k++)
+    {
+        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
+        r = sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
+        if (r >= 0)
+        {
+            e->f80_80 = r;
+            if (e->f84_84 != k)
+            {
+                e->f84_84 = k;
+            }
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int sub_800B8184(EvVecEventfnc* pos, unsigned int k)
+{
+    unsigned int i;
+    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++)
+    {
+        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
+        if (sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], pos) >= 0)
+        {
+            return k;
+        }
+        k++;
+    }
+    return -1;
+}
 
 extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
 extern void sub_800B7E40(int* p, int a, int b, int c, int* d);
@@ -157,24 +221,6 @@ void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
 }
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B82C8);
-
-typedef struct EvTriEventfnc
-{
-    short x_0;
-    short y_2;
-    short z_4;
-    char pad_6[0x12];
-    short nx_18;
-    short ny_1A;
-    short nz_1C;
-    char pad_1E[2];
-} EvTriEventfnc;
-
-typedef struct EvMeshEventfnc
-{
-    int f0_0;
-    EvTriEventfnc* tris_4;
-} EvMeshEventfnc;
 
 void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
 {
@@ -442,7 +488,45 @@ int sub_800B8FB8(EvCtxEventfnc* c)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9020);
+int sub_800B9020(EvCtxEventfnc* c)
+{
+    unsigned int a = c->pc_8->a_4;
+    unsigned int b = c->pc_8->b_8;
+    int slot = a >> 16;
+    int lo = a & 0xFFFF;
+    int mod = b >> 16;
+    int idx = b & 0xFFFF;
+    int r;
+    if (slot == 9)
+    {
+        do
+        {
+            r = rand() % mod;
+        } while (r < lo);
+        c->fEC_EC = r;
+        if (idx < 8)
+        {
+            c->fCC_CC[idx] = r;
+        }
+    }
+    else
+    {
+        c->fEC_EC = c->fCC_CC[slot];
+        if (++c->fCC_CC[slot] >= mod)
+        {
+            if (idx)
+            {
+                c->fCC_CC[slot] = lo;
+            }
+            else
+            {
+                c->fCC_CC[slot] = mod - 1;
+            }
+        }
+    }
+    c->pc_8++;
+    return 1;
+}
 
 #if 0
 extern int sub_800AD154(int a);
@@ -1573,7 +1657,6 @@ int sub_800BBB5C(int* p)
 #endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB5C);
 
-extern EvVecEventfnc levantPos_8008BD18;
 extern EvVecEventfnc* sub_800A7940(int a);
 EvVecEventfnc* sub_800BBBA0(int i)
 {
