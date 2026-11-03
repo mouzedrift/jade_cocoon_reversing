@@ -50,7 +50,6 @@ extern void sub_800A4364();
 extern void sub_800A4420();
 extern void sub_800A44DC();
 extern int dword_800A3A94;
-extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
 extern void sub_800A4140();
 extern void sub_800A41A8();
@@ -156,8 +155,8 @@ void sub_800A4364()
     short* p = (short*)(uiTiySprts_8008D620 + 0x12C);
     p[4] = 0x78;
     p[5] = 0x14;
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x78, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x78, 2);
     r.x = 0x78;
     r.w = 0x7E;
     r.h = 0x12;
@@ -165,7 +164,7 @@ void sub_800A4364()
     b.col_0 = uiColor_8008B590;
     r.y = 0x14;
     b.c_2 = 0;
-    DrawWindow_80042460(&r, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(&r, &b, pOT_8008D454 + 10, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A4364);
@@ -184,20 +183,20 @@ void sub_800A44DC()
     p = (short*)(base + 0xC1C);
     p[4] = 0x66;
     p[5] = 0x2A;
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
     base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0x8E;
     p[5] = 0x2A;
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
     base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0xD4;
     p[5] = 0x2A;
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
     b.c_3 = 1;
     rect[0] = 0x64;
     b.col_0 = uiColor_8008B590;
@@ -205,17 +204,17 @@ void sub_800A44DC()
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
     rect[0] = 0x8C;
     rect[1] = 0x28;
     rect[2] = 0x3C;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
     rect[0] = 0xD2;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A44DC);

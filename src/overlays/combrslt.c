@@ -17,12 +17,19 @@ typedef struct CombRsltBox
     char c_3;
 } CombRsltBox;
 
-typedef struct CombRsltStr
+// sub_8002ADB4's text window (0x1C bytes)
+typedef struct CombRsltText
 {
-    int w[7];
-} CombRsltStr;
+    unsigned short flags_0;
+    short s_2;
+    int ptr_4;
+    int pad_8[2];
+    short x_10;
+    short y_12;
+    int pad_14[2];
+} CombRsltText;
 
-extern CombRsltStr dword_800A408C;
+extern CombRsltText dword_800A408C;
 extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
 extern void sub_8002ADB4(void*, void*, int, int);
@@ -40,7 +47,7 @@ INCLUDE_OVERLAY_ASM(combrslt, dword_800A4088);
 void sub_800A40E0(CombRsltTask* t)
 {
     CombRsltBox box;
-    CombRsltStr str = dword_800A408C;
+    CombRsltText str = dword_800A408C;
     int i;
     box.c_2 = 0;
     box.c_3 = 1;
@@ -158,25 +165,14 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
 #endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A444C);
 
-typedef struct CombRsltSub
-{
-    unsigned short flags_0;
-    short s_2;
-    int ptr_4;
-    int pad_8[2];
-    short x_10;
-    short y_12;
-    int pad_14[2];
-} CombRsltSub;
-
 typedef struct CombRsltPos
 {
     unsigned short x;
     unsigned short y;
 } CombRsltPos;
 
-extern CombRsltSub dword_800A40A8;
-extern CombRsltSub dword_800A40C4;
+extern CombRsltText dword_800A40A8;
+extern CombRsltText dword_800A40C4;
 extern int* dword_800A48B8[];
 extern CombRsltPos dword_800A48C4[];
 extern char byte_800A3AA0[];
@@ -191,8 +187,8 @@ extern void DrawWindow_80042460();
 #if 0
 void sub_800A4554(int i, int j, void* arg)
 {
-    CombRsltSub a = dword_800A40A8;
-    CombRsltSub b;
+    CombRsltText a = dword_800A40A8;
+    CombRsltText b;
     CombRsltPos r1;
     CombRsltPos r2;
     CombRsltPos r3[2];
@@ -235,7 +231,7 @@ void sub_800A4554(int i, int j, void* arg)
         r3[0].y = q->y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
-        DrawWindow_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, GetTime30Hz_8002C64C());
+        DrawWindow_80042460(r3, arg, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
     }
 }
 #endif
