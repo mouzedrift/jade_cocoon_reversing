@@ -14,6 +14,7 @@
 #include "LIBETC.H"
 #include "LIBMCRD.H"
 #include "sound.h"
+#include "soundtask.h"
 #include "data_decls.h"
 
 INCLUDE_DATA(dword_8007447C);
@@ -72,10 +73,10 @@ void StopSoundSeqs_80030D68(SoundStruct* s)
 void FreeSoundVab_80030EA4(short* p)
 {
     SsVabClose(p[0]);
-    if (*(int*)(p + 0xC))
+    if (((SoundStruct*)p)->field_18_vab_header_ptr)
     {
-        free3_8003FC6C(*(void**)(p + 0xC));
-        *(int*)(p + 0xC) = 0;
+        free3_8003FC6C(((SoundStruct*)p)->field_18_vab_header_ptr);
+        ((SoundStruct*)p)->field_18_vab_header_ptr = 0;
     }
 }
 // Matched
@@ -290,39 +291,27 @@ int sub_800315E4(void)
 // Matched
 void FreeBgmAndSfx_800315F4(void)
 {
-    int* s0 = ((int**)soundTask_8008D4A4)[0x24 / 4];
-    FreeSound_80030D00(s0[1]);
-    FreeSound_80030D00(s0[2]);
+    SoundTask* s0 = SOUND_TASK;
+    FreeSound_80030D00((int)s0->bgm_4);
+    FreeSound_80030D00((int)s0->sfx_8);
 }
-typedef struct
-{
-    short active;
-    short timer;
-    short access_num;
-    short seq;
-} SeqFade_31638;
-typedef struct
-{
-    char pad_0[0x18];
-    SeqFade_31638 fades[5];
-} SeqFadeTask_31638;
 // Matched
 void FadeOutSfxSeq_80031638(void)
 {
-    SeqFadeTask_31638* t;
+    SoundTask* t;
     int i;
-    t = (SeqFadeTask_31638*)soundTask_8008D4A4[0x24 / 4];
+    t = SOUND_TASK;
     if (sfxSound_80091D20.field_4_seq_num >= 0)
     {
         for (i = 0; i < 5; i++)
         {
-            if (t->fades[i].active == 0)
+            if (t->fades_18[i].active == 0)
             {
-                t->fades[i].active = 1;
+                t->fades_18[i].active = 1;
                 SsSepSetDecrescendo(sfxSound_80091D20.field_C_sep_access_num, sfxSound_80091D20.field_4_seq_num, 0x7F, 0x40);
-                t->fades[i].access_num = sfxSound_80091D20.field_C_sep_access_num;
-                t->fades[i].seq = sfxSound_80091D20.field_4_seq_num;
-                t->fades[i].timer = 0x20;
+                t->fades_18[i].access_num = sfxSound_80091D20.field_C_sep_access_num;
+                t->fades_18[i].seq = sfxSound_80091D20.field_4_seq_num;
+                t->fades_18[i].timer = 0x20;
                 return;
             }
         }
