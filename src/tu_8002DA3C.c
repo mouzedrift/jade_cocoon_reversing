@@ -18,7 +18,33 @@
 
 INCLUDE_DATA(dword_800743D0);
 
-INCLUDE_ASM(sub_8002DA3C);
+
+extern unsigned char dword_80082EBC[];
+extern unsigned char a1ftf[];
+extern void sub_8002C06C(void* p, int a1, int a2);
+void sub_8002E0D8(unsigned short* p, short a1);
+// Matched
+void sub_8002DA3C(unsigned short* pos, int ot)
+{
+    unsigned short loc[2];
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 4;
+    sub_8002C06C(loc, 0x11, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x11;
+    sub_8002C06C(loc, 0x5C, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x1E;
+    sub_8002C06C(loc, 0x3C, ot);
+    loc[0] = pos[0] + 1;
+    loc[1] = pos[1] + 0x37;
+    sub_8002C06C(loc, 0x54, ot);
+    loc[1] = pos[1] + 0x56;
+    sub_8002C06C(loc, 0x72, ot);
+    loc[0] = pos[0] + 0x4E;
+    loc[1] = pos[1];
+    sub_8002E0D8(loc, ot);
+}
 INCLUDE_ASM(sub_8002DB48);
 extern void sub_80031FF4(int a, void* b, void* c, int d);
 extern void sub_8002C290(void* p, int a1, int a2);
@@ -65,7 +91,28 @@ void sub_8002E0D8(unsigned short* p, short a1)
         sub_8002C06C(pos, dword_80082EBC[i], a1);
     }
 }
-INCLUDE_ASM(sub_8002E188);
+extern void sub_8002C100(unsigned short* pos, int v, short ot);
+// Matched
+void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short ot)
+{
+    unsigned short loc[2];
+    short i;
+    for (i = 0; i < 5; i++)
+    {
+        if (a[i] < b[i])
+        {
+            sub_8002C5D0(1);
+        }
+        else if (b[i] < a[i])
+        {
+            sub_8002C5D0(2);
+        }
+        loc[0] = pos[0] + 0x16;
+        loc[1] = pos[1] + i * 14 + 2;
+        sub_8002C100(loc, b[i], ot);
+        sub_8002C5D0(0);
+    }
+}
 // Matched
 void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
 {

@@ -18,7 +18,7 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-extern void sub_8002C06C(void* p, int a1, int a2);
+extern void sub_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
 void sub_8002BE10(void)
 {
@@ -106,29 +106,28 @@ void FreeActiveOverlay_8002C014(void)
         dword_8008D3F4 = 0;
     }
 }
-#if 0
-// Not matched (5 words: register allocation of the address temporary)
-void sub_8002C06C(unsigned short* p, int a1, int a2)
-{
-    int* q = (int*)loadedOverlayMaybe_8008D620 + a1 * 5;
-    ((unsigned short*)q)[4] = p[0];
-    ((unsigned short*)q)[5] = p[1];
-    sub_80040298(pOT_8008D454 + a2, q, 5);
-    sub_80040298(pOT_8008D454 + a2, (char*)dword_8008D3F4 + a1 * 8, 2);
-}
-#endif
-INCLUDE_ASM(sub_8002C06C);
-INCLUDE_ASM(sub_8002C100);
-INCLUDE_ASM(sub_8002C290);
-INCLUDE_ASM(sub_8002C414);
 typedef struct
 {
     int field_0;
     unsigned char r;
     unsigned char g;
     unsigned char b;
-    char pad_7[13];
+    char pad_7;
+    unsigned short x;
+    unsigned short y;
+    char pad_C[8];
 } OverlayColorEntry;
+// Matched
+void sub_8002C06C(unsigned short* pos, int idx, int ot)
+{
+    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].x = pos[0];
+    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].y = pos[1];
+    sub_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
+    sub_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
+}
+INCLUDE_ASM(sub_8002C100);
+INCLUDE_ASM(sub_8002C290);
+INCLUDE_ASM(sub_8002C414);
 extern unsigned char dword_800826F8[][4];
 // Matched
 void sub_8002C5D0(int a0)

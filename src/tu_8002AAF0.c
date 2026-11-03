@@ -19,6 +19,25 @@
 INCLUDE_DATA(dword_800741C4);
 
 INCLUDE_ASM(sub_8002AAF0);
+#if 0
+// Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
+void sub_8002AC88(int flags, short* a, int b, short* out)
+{
+    if (flags & 4)
+    {
+        out[0] = a[0] - (b - a[2]);
+    }
+    else if (flags & 8)
+    {
+        out[0] = a[0] + ((unsigned int)(a[2] - b) >> 1);
+    }
+    else
+    {
+        out[0] = a[0];
+    }
+    out[1] = a[1];
+}
+#endif
 INCLUDE_ASM(sub_8002AC88);
 // Matched
 void sub_8002ACE8(int flags, unsigned char* out)
@@ -82,7 +101,44 @@ void sub_8002ADB4(char* a0, int a1, int a2, int a3)
     sub_8003F900(1, 0);
     sub_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
 }
-INCLUDE_ASM(sub_8002AE38);
+typedef struct
+{
+    unsigned short x;
+    unsigned short y;
+} Pos16;
+typedef struct
+{
+    unsigned short color;
+    unsigned char b;
+    unsigned char c;
+} struct_text_param;
+extern short uiColor_8008B590;
+extern void sub_8003E91C(int mode, int a, void* b, int c);
+// Matched
+void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4)
+{
+    int* lines = (int*)a0;
+    Pos16 p;
+    struct_text_param t;
+    unsigned int i;
+    p.x = a1->x;
+    p.y = a1->y;
+    for (i = 0; i < a4; i++)
+    {
+        if (lines[i])
+        {
+            sub_8003E91C(2, lines[i], &p, a2);
+        }
+        p.y += 12;
+    }
+    if (a3)
+    {
+        t.c = 1;
+        t.b = 0;
+        t.color = uiColor_8008B590;
+        sub_80042460(a3, (int)&t, &pOT_8008D454[a2], 0);
+    }
+}
 // Matched
 void sub_8002AF10(int a0, int a1, int a2)
 {
@@ -108,12 +164,6 @@ void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
 {
 }
 #endif
-typedef struct
-{
-    unsigned short x;
-    unsigned short y;
-} Pos16;
-extern void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4);
 // Matched
 void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
 {

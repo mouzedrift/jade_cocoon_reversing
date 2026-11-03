@@ -17,4 +17,24 @@
 #include "data_decls.h"
 
 
-INCLUDE_ASM(sub_80031870);
+
+
+// Matched
+int sub_80031870(int a0)
+{
+    switch (a0)
+    {
+    case 0:
+        return 3;
+    case 1:
+        return 0;
+    case 2:
+        return 2;
+    case 3:
+        return 1;
+    case 4:
+        return 4;
+    }
+    return 0;
+}
+INCLUDE_DATA(dword_800746D0);

@@ -20,13 +20,136 @@ INCLUDE_DATA(dword_8007442C);
 INCLUDE_DATA(dword_80074430);
 INCLUDE_DATA(dword_80074434);
 
-INCLUDE_ASM(sub_8002F6F8);
-INCLUDE_ASM(sub_8002F7D0);
+
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_F6F8;
+extern void sub_8002A384(struct_F6F8* p);
+// Matched
+void sub_8002F6F8(int a0, int* st)
+{
+    unsigned char col[4];
+    struct_F6F8 s;
+    short v = 20;
+    if (st[2])
+    {
+        (*(short*)st[0])++;
+        if (*(short*)st[0] == 40)
+        {
+            *(short*)st[0] = 0;
+        }
+        v = *(short*)st[0];
+        if (v > 20)
+        {
+            v = 40 - v;
+        }
+    }
+    col[0] = col[1] = col[2] = v * 8;
+    if (!st[1])
+    {
+        col[0] = col[1] = col[2] = 0xA0;
+    }
+    s.field_8 = 1;
+    s.field_0 = a0;
+    s.field_4 = v;
+    s.field_A = 0xF;
+    sub_8002A384(&s);
+}
+extern unsigned char byte_8008BD38[];
+extern unsigned char dword_80082F04[];
+extern unsigned char dword_80082EBC[];
+extern void sub_8002C06C(void* p, int a1, int a2);
+extern void sub_8002C100(unsigned short* pos, int v, int ot);
+// Matched
+void sub_8002F7D0(unsigned short* pos, short ot)
+{
+    unsigned short loc[2];
+    unsigned char vals[0x18];
+    short i;
+    sub_80033624(vals, (int)byte_8008BD38);
+    for (i = 0; i < 5; i++)
+    {
+        loc[0] = pos[0] + 6;
+        loc[1] = pos[1] + dword_80082F04[i] + 1;
+        sub_8002C06C(loc, dword_80082EBC[i], ot);
+        loc[0] = pos[0] + 0x45;
+        loc[1] = pos[1] + dword_80082F04[i] + 2;
+        sub_8002C100(loc, vals[i], ot);
+    }
+}
 INCLUDE_ASM(sub_8002F8E4);
 // Matched
 short sub_8002FA70(void)
 {
     return sub_80033514((Minion*)sub_80033ABC((char*)&saveData_8008B570));
 }
-INCLUDE_ASM(sub_8002FAA0);
-INCLUDE_ASM(sub_8002FBD8);
+typedef struct
+{
+    unsigned short s[11];
+} NameBuf;
+extern NameBuf dword_80074434;
+extern void sub_8003F748(int a, NameBuf* b);
+extern short sub_8003E4C8(NameBuf* b);
+extern void sub_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
+extern void sub_8003F89C(NameBuf* b);
+extern short sub_8003E6B0(NameBuf* b);
+// Matched
+void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
+{
+    unsigned short loc[2];
+    NameBuf buf = dword_80074434;
+    int w;
+    CopyPlayerName_8003F860(name, buf.s);
+    sub_8003F748(1, &buf);
+    sub_8003F89C(&buf);
+    if (a0 == 1)
+    {
+        w = sub_8003E6B0(&buf);
+    }
+    else if (a0 == 2)
+    {
+        w = sub_8003E6B0(&buf) / 2;
+    }
+    else
+    {
+        w = 0;
+    }
+    loc[0] = pos[0] - w;
+    loc[1] = pos[1];
+    sub_8003E91C(1, &buf, loc, a3);
+}
+// Matched
+void sub_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3)
+{
+    unsigned short loc[2];
+    NameBuf buf = dword_80074434;
+    int w;
+    CopyPlayerName_8003F860(name, buf.s);
+    sub_8003F748(1, &buf);
+    if (a0 == 1)
+    {
+        w = sub_8003E4C8(&buf);
+    }
+    else
+    {
+        w = 0;
+    }
+    loc[0] = pos[0] - w;
+    loc[1] = pos[1];
+    sub_8003E91C(2, &buf, loc, a3);
+}
+extern char* off_80082EC4[];
+extern char* off_80082EE4;
+// Matched
+char* sub_8002FCD8(int idx)
+{
+    if (idx >= 9)
+    {
+        return off_80082EE4;
+    }
+    return off_80082EC4[idx];
+}

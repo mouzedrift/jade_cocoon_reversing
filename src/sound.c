@@ -24,7 +24,57 @@ INCLUDE_DATA(word_80074448);
 INCLUDE_DATA(aAssertionFaile_0);
 INCLUDE_DATA(aSoundC);
 
-INCLUDE_ASM(sub_8002FD0C);
+typedef struct
+{
+    void* field_0;
+    int field_4;
+    short field_8;
+    short field_A;
+} struct_FD0C;
+extern void sub_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
+extern void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3);
+extern void sub_8002A384(struct_FD0C* p);
+// Matched
+void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
+{
+    char buf[8];
+    RECT r;
+    unsigned short loc[2];
+    struct_FD0C s1;
+    struct_FD0C s2;
+    int v;
+    if (flag)
+    {
+        v = frameCount_8008D3FC;
+    }
+    else
+    {
+        v = 0;
+    }
+    r.x = 10;
+    r.y = 0x2C;
+    r.w = 0x44;
+    r.h = 0x44;
+    sub_8004196C(buf, &r, a1, 8, 0);
+    loc[0] = 12;
+    loc[1] = 0x2E;
+    sub_8002A42C(loc, 0, a4, a0);
+    s1.field_8 = a2;
+    s1.field_0 = buf;
+    s1.field_4 = v;
+    s1.field_A = a0;
+    sub_8002A384(&s1);
+    r.x = 0x4E;
+    r.y = 0x2C;
+    r.w = 0x8D;
+    r.h = 0x44;
+    sub_8004196C(buf, &r, a1, 8, 0);
+    s2.field_8 = a2;
+    s2.field_0 = buf;
+    s2.field_4 = v;
+    s2.field_A = a0;
+    sub_8002A384(&s2);
+}
 // Matched
 void InitSound_8002FE54(SoundStruct* arg1)
 {
@@ -91,6 +141,43 @@ void sub_8002FF10(char* a, struct_FF10* p)
     }
     *(void (**)(void))(a + 8) = sub_8002FF64;
 }
+#if 0
+// Not matched (case 2 loop: the +0x18 offset is folded into the loop pointer)
+void sub_8002FF64(int a0, char* p)
+{
+    int i;
+    switch (*(unsigned short*)(p + 2))
+    {
+    case 0:
+        if (!sub_8003BE30(*(int*)(p + 0x10)) && !sub_8003BE30(*(int*)(p + 0x14)))
+        {
+            (*(unsigned short*)(p + 2))++;
+        }
+        else
+        {
+            dword_8008B540 = 1;
+        }
+        break;
+    case 1:
+        *(unsigned short*)(p + 2) = 2;
+        break;
+    case 2:
+        for (i = 0; i < 5; i++)
+        {
+            if (((short*)p)[12])
+            {
+                if (--((short*)p)[13] <= 0)
+                {
+                    SsSepStop(((short*)p)[14], ((short*)p)[15]);
+                    ((short*)p)[12] = 0;
+                }
+            }
+            p += 8;
+        }
+        break;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8002FF64);
 extern void sub_80030D68(SoundStruct* p);
 #if 0
@@ -112,7 +199,32 @@ void sub_8003006C(int a0, int* a1)
 INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(sub_800300E0);
-INCLUDE_ASM(sub_800303E8);
+extern int sub_8003BC84(int* a);
+extern void sub_800304D0(void);
+// Matched
+int sub_800303E8(void)
+{
+    unsigned short* p = dword_8008D4A4[0x24 / 4];
+    int s[8];
+    if (p[1] != 2)
+    {
+        return 0;
+    }
+    stru_80091D00 = stru_80091D40;
+    stru_80091D00.field_8_sep_data_ptr = 0;
+    stru_80091D00.field_6_sound_idx = 10;
+    p[1] = 0;
+    s[0] = 0x2C;
+    s[1] = 0x301;
+    s[5] = (int)(p + 6);
+    s[6] = 4;
+    s[2] = 0;
+    s[3] = 0;
+    s[4] = 0;
+    s[7] = (int)sub_800304D0;
+    *(int*)(p + 8) = sub_8003BC84(s);
+    return 1;
+}
 INCLUDE_ASM(sub_800304D0);
 // Matched
 void sub_80030664(void)
@@ -134,7 +246,25 @@ void sub_800306D8(void)
 {
     sub_80030EEC(&stru_80091CE0);
 }
-INCLUDE_ASM(sub_800306FC);
+extern void sub_80031408(SoundStruct* s, int idx);
+// Matched
+void sub_800306FC(int idx)
+{
+    SoundStruct** p = (SoundStruct**)dword_8008D4A4[0x24 / 4];
+    if (idx < 10)
+    {
+        sub_80031408(&stru_80091D40, idx);
+        return;
+    }
+    if (GetSoundFileId_80030D4C(p[1]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    {
+        sub_80031408(p[1], idx);
+    }
+    if (GetSoundFileId_80030D4C(p[2]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    {
+        sub_80031408(p[2], idx);
+    }
+}
 INCLUDE_ASM(sub_800307B4);
 // Matched
 void ApplyAudioOutputFormat_80030988(void)

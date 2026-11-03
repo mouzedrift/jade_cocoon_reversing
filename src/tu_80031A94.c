@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(jpt_8007470C);
+
 
 typedef struct Ent4
 {
@@ -255,7 +257,61 @@ void sub_80033308(void* p)
     SetTexWindow(&twin, &rect);
     sub_80040298(p, &twin, 3);
 }
-INCLUDE_ASM(sub_80033394);
+// Matched
+void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
+{
+    int ph;
+    int den;
+    int r, g, b;
+    if (period <= 0)
+    {
+        period = 40;
+    }
+    if (half <= 0)
+    {
+        half = 20;
+    }
+    ph = t % period;
+    if (ph < half)
+    {
+        den = half;
+    }
+    else
+    {
+        ph = period - ph;
+        den = period - half;
+    }
+    r = c0[0] + (c1[0] - c0[0]) * ph / den;
+    g = c0[1] + (c1[1] - c0[1]) * ph / den;
+    b = c0[2] + (c1[2] - c0[2]) * ph / den;
+    if (r > 255)
+    {
+        r = 255;
+    }
+    if (g > 255)
+    {
+        g = 255;
+    }
+    if (b > 255)
+    {
+        b = 255;
+    }
+    if (r < 0)
+    {
+        r = 0;
+    }
+    if (g < 0)
+    {
+        g = 0;
+    }
+    if (b < 0)
+    {
+        b = 0;
+    }
+    out[0] = r;
+    out[1] = g;
+    out[2] = b;
+}
 // Matched
 unsigned char sub_800334BC(unsigned char* arr, int idx)
 {
@@ -311,7 +367,32 @@ int sub_80033548(int* p, int mask)
 {
     return (*p & mask) != 0;
 }
-INCLUDE_ASM(sub_8003355C);
+// Matched
+unsigned char sub_8003355C(unsigned char* p, int idx)
+{
+    return (p + idx)[0x20];
+}
+// Matched
+int sub_8003356C(unsigned char* p, unsigned int idx)
+{
+    int r = 0xFF;
+    switch (idx)
+    {
+    case 0:
+        r = p[0x1C];
+        break;
+    case 1:
+        r = p[0x1D];
+        break;
+    case 2:
+        r = p[0x1E];
+        break;
+    case 3:
+        r = p[0x1F];
+        break;
+    }
+    return r;
+}
 extern void sub_80033754(unsigned char* a, unsigned char* b);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
@@ -408,12 +489,72 @@ unsigned char sub_800338B0(char* p)
     sub_800338DC(p + 0x4C, a, b);
     return a[0];
 }
-#if 0
-void sub_800338DC(void* arg0, void* arg1, void* arg2)
+// Matched
+int sub_800338DC(unsigned char* src, unsigned char* ids, int* counts)
 {
+    unsigned char hist[0xD3];
+    int i;
+    int j;
+    int k;
+    int res;
+    int sum;
+    k = 0;
+    res = k;
+    for (i = 0; i < 0xD3; i++)
+    {
+        hist[i] = 0;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        ids[i] = 0xD3;
+        counts[i] = 0;
+    }
+    for (i = 0; i < 0x30; i++)
+    {
+        hist[src[i]]++;
+    }
+    for (i = 0xFF; i >= 0; i--)
+    {
+        for (j = 0; j < 0xD3; j++)
+        {
+            if (hist[j] >= i)
+            {
+                if (i != 0)
+                {
+                    ids[k] = j;
+                }
+                else
+                {
+                    ids[k] = ids[0];
+                    if (res == 0)
+                    {
+                        res = k;
+                    }
+                }
+                counts[k] = i;
+                k++;
+                hist[j] = 0;
+            }
+            if (k >= 3)
+            {
+                if (res == 0)
+                {
+                    res = 3;
+                }
+                goto done;
+            }
+        }
+    }
+done:
+    sum = counts[0] + counts[1] + counts[2];
+    counts[0] <<= 12;
+    counts[1] <<= 12;
+    counts[2] <<= 12;
+    counts[0] /= sum;
+    counts[1] /= sum;
+    counts[2] /= sum;
+    return res;
 }
-#endif
-INCLUDE_ASM(sub_800338DC);
 // Matched
 void* sub_80033A60(void* p)
 {
@@ -459,7 +600,6 @@ Item* sub_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }
-INCLUDE_ASM(sub_80033AFC);
 typedef struct
 {
     short field_0;
@@ -468,6 +608,44 @@ typedef struct
     short field_A;
     Minion* field_C_minion;
 } struct_minion_ref;
+extern int sub_80034140(void);
+extern int sub_8001CE70(int a);
+// Matched
+int sub_80033AFC(struct_minion_ref* p)
+{
+    int a = sub_800AD288(p->field_0 + p->field_2, 0);
+    if (sub_800AD2C8(p->field_0 + p->field_2, 0) <= 0)
+    {
+        return 1;
+    }
+    if (a == 0x29 && p->field_A == 1)
+    {
+        if (sub_80034140())
+        {
+            return 0;
+        }
+        return 3;
+    }
+    if (!(sub_8001CE70(a) & 1) && !(sub_8001CE70(a) & 2))
+    {
+        return 2;
+    }
+    if (p->field_A == 0)
+    {
+        if (!(sub_8001CE70(a) & 2))
+        {
+            return 4;
+        }
+    }
+    else if (p->field_A == 1)
+    {
+        if (!(sub_8001CE70(a) & 1))
+        {
+            return 3;
+        }
+    }
+    return 0;
+}
 extern int sub_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
 // Matched
@@ -510,38 +688,32 @@ int sub_80033C98(struct_minion_ref* p)
     }
     return 0;
 }
-#if 0
-int sub_80033D20(short* p)
+// Matched
+int sub_80033D20(struct_minion_ref* p)
 {
-    char* q = *(char**)(p + 6);
-    short* r = (short*)(q + 0x84);
-    int idx = sub_8001AEC0(q + 0xF4, p[0] + p[1]);
-    if (dword_8007C438[idx].field_0 & 0x40)
+    Minion* m = p->field_C_minion;
+    char* q = m->field_84;
+    int r = sub_8001AEC0(m->field_F4, p->field_0 + p->field_2);
+    if (dword_8007C438[r].field_0 & 0x40)
     {
-        switch (dword_8007C438[idx].field_7)
+        switch (dword_8007C438[r].field_7)
         {
         case 0:
-            if (r[4] != r[5])
-            {
-                return 0;
-            }
-            return 3;
-        case 1:
-            if (idx == 0x10)
-            {
-                return 0;
-            }
-            if (!(*(int*)(q + 0x84) & 0x7FB))
+            if (*(short*)&q[8] == *(short*)&q[0xA])
             {
                 return 3;
             }
-            return 0;
+            break;
+        case 1:
+            if (r != 0x10 && !(*(int*)m->field_84 & 0x7FB))
+            {
+                return 3;
+            }
+            break;
         }
     }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_80033D20);
 // Matched
 int sub_80033DEC(void)
 {

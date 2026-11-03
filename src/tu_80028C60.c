@@ -72,7 +72,55 @@ void sub_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-INCLUDE_ASM(sub_80028FDC);
+extern void sub_80029D00(void* buf, void* a);
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short pad_8[2];
+    unsigned short field_C;
+    unsigned short field_E;
+    char pad_10[0xC];
+    unsigned short field_1C;
+    unsigned short field_1E;
+} struct_97C0_a;
+typedef struct
+{
+    unsigned short field_0;
+    unsigned short field_2;
+    unsigned short field_4;
+    unsigned short field_6;
+    unsigned short field_8;
+    unsigned short field_A;
+} struct_97C0_b;
+void sub_800297C0(struct_97C0_a* a, struct_97C0_b* b);
+// Matched
+void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+{
+    char buf[0x28];
+    unsigned int i;
+    for (i = 0; i < a4; i++)
+    {
+        sub_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
+        if (a6)
+        {
+            sub_80029D00(buf, (void*)a6);
+        }
+        if (a5)
+        {
+            sub_800297C0((struct_97C0_a*)buf, (struct_97C0_b*)a5);
+        }
+        sub_800296A0(buf);
+        if (a0 && a2)
+        {
+            sub_800298AC(*(int*)a0 + i * 20, *(int*)a2 + i * 8, buf);
+        }
+        if (a1)
+        {
+            InitPolyFT4_80029A10((void*)(*(int*)a1 + i * 40), buf);
+        }
+    }
+}
 INCLUDE_ASM(sub_800290FC);
 INCLUDE_ASM(sub_800292D0);
 // Matched
@@ -110,32 +158,32 @@ void sub_800296A0(void* arg0)
     LoadImage((RECT*)&p[7], (u_long*)p[9]);
     DrawSync(0);
 }
-#if 0
-void sub_80029708(void* arg0, void* arg1)
+// Matched
+int sub_80029708(void* arg0, void* arg1)
 {
+    int* out = (int*)arg0;
+    int* in = (int*)arg1;
+    int* q;
+    out[1] = in[1] & 7;
+    q = in + 2;
+    if (in[1] & 8)
+    {
+        out[0] = 1;
+        out[2] = in[2] - 12;
+        *(RECT*)&out[3] = *(RECT*)&in[3];
+        out[5] = (int)&in[5];
+        q = (int*)((char*)q + in[2]);
+    }
+    else
+    {
+        out[0] = 0;
+        out[2] = 0;
+    }
+    out[6] = q[0] - 12;
+    *(RECT*)&out[7] = *(RECT*)&q[1];
+    out[9] = (int)&q[3];
+    return 1;
 }
-#endif
-INCLUDE_ASM(sub_80029708);
-typedef struct
-{
-    int field_0;
-    int field_4;
-    short pad_8[2];
-    unsigned short field_C;
-    unsigned short field_E;
-    char pad_10[0xC];
-    unsigned short field_1C;
-    unsigned short field_1E;
-} struct_97C0_a;
-typedef struct
-{
-    unsigned short field_0;
-    unsigned short field_2;
-    unsigned short field_4;
-    unsigned short field_6;
-    unsigned short field_8;
-    unsigned short field_A;
-} struct_97C0_b;
 // Matched
 void sub_800297C0(struct_97C0_a* a, struct_97C0_b* b)
 {
@@ -163,12 +211,33 @@ void sub_80029868(int a0, int a1, int a2)
     sub_80029708(buf, (void*)a1);
     sub_800298AC(a0, a2, buf);
 }
-#if 0
+typedef struct
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    u_long* caddr;
+    int pix_len;
+    RECT prect;
+    u_long* paddr;
+} TimInfo;
+// Matched
 void sub_800298AC(int a0, int a1, void* a2)
 {
+    SPRT* s = (SPRT*)a0;
+    TimInfo* t = (TimInfo*)a2;
+    SetSprt(s);
+    s->r0 = 0x80;
+    s->g0 = 0x80;
+    s->b0 = 0x80;
+    SetDrawTPage((DR_TPAGE*)a1, 0, 1, GetTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256));
+    s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
+    s->v0 = t->prect.y % 256;
+    s->w = (t->prect.w * 4) >> t->mode;
+    s->h = t->prect.h;
+    s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
 }
-#endif
-INCLUDE_ASM(sub_800298AC);
 // Matched
 void sub_800299DC(void* p, void* q)
 {
@@ -200,5 +269,67 @@ void sub_80029CB4(unsigned short* d, unsigned short* s)
     *d |= s[2] << 10;
 }
 INCLUDE_ASM(sub_80029D00);
-INCLUDE_ASM(sub_80029EA8);
+// Matched
+int sub_80029EA8(short* in, short* out)
+{
+    int idx;
+    int min;
+    int dr, dg, db;
+    idx = 0;
+    out[2] = in[2];
+    if (out[2] < in[0])
+    {
+        out[2] = in[0];
+        idx = 1;
+    }
+    if (in[1] > out[2])
+    {
+        out[2] = in[1];
+        idx = 2;
+    }
+    min = in[2];
+    if (in[0] < min)
+    {
+        min = in[0];
+    }
+    if (in[1] < min)
+    {
+        min = in[1];
+    }
+    if (out[2] == 0)
+    {
+        out[1] = 0;
+    }
+    else
+    {
+        out[1] = ((out[2] - min) * 31) / out[2];
+    }
+    if (out[1] == 0)
+    {
+        out[0] = -1;
+        return 0;
+    }
+    db = out[2] - in[2];
+    dr = out[2] - in[0];
+    min = out[2] - min;
+    dg = out[2] - in[1];
+    switch (idx)
+    {
+    case 0:
+        out[0] = ((dg - dr) * 32) / min + 0x80;
+        break;
+    case 1:
+        out[0] = ((db - dg) * 32) / min;
+        break;
+    case 2:
+        out[0] = ((dr - db) * 32) / min + 0x40;
+        break;
+    }
+    if (out[0] < 0)
+    {
+        out[0] += 0xC0;
+    }
+    out[3] = in[3];
+    return 1;
+}
 INCLUDE_ASM(sub_8002A040);

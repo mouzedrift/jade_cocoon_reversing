@@ -27,25 +27,22 @@ INCLUDE_ASM(sub_8002B3DC);
 INCLUDE_ASM(sub_8002B8DC);
 INCLUDE_ASM(sub_8002BA54);
 // Not matched: original has no zero-divisor check (plain divu), cc1psx/aspsx emit one
-#if 0
+// Matched
 unsigned int sub_8002BC60(unsigned int a, unsigned int b, unsigned int c)
 {
-    unsigned int r;
     if (b < a)
     {
         a = b;
     }
-    if (a == 0)
+    if (a)
     {
-        return 0;
+        a = a * c / b;
+        if (a == 0)
+        {
+            return 1;
+        }
+        return a;
     }
-    r = a * c / b;
-    if (r == 0)
-    {
-        return 1;
-    }
-    return r;
+    return 0;
 }
-#endif
-INCLUDE_ASM(sub_8002BC60);
 INCLUDE_ASM(sub_8002BCAC);
