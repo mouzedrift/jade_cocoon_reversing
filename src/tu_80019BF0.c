@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_80019BF0.h"
+#include "gte.h"
 #include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
@@ -183,7 +184,114 @@ int sub_80019CC4(int* pos)
 }
 #endif
 INCLUDE_ASM(sub_80019CC4);
-INCLUDE_ASM(sub_80019D84);
+extern int dword_8008D3F0;      // range of the global point light (0: none)
+extern int dword_8008D680[3];   // position of the global point light
+extern SVECTOR word_8008D418;   // colour of the global point light
+// Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
+// colour from cameraState), the global point light and the given point light; m is the model's rotation.
+// Matched
+void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m)
+{
+    MATRIX* sm;
+    int* d;
+    CameraState* g;
+    int sq[3];
+    int dist;
+    int t;
+    int x;
+    int y;
+    int z;
+
+    d = (int*)0x1F800014;
+    g = &cameraState_8008D4F0;
+    sm = (MATRIX*)0x1F800000;
+    sm->m[0][0] = dword_80087114.m[0][0];
+    sm->m[0][1] = dword_80087114.m[0][1];
+    sm->m[0][2] = dword_80087114.m[0][2];
+    sm->m[2][0] = -dword_80087114.m[0][0];
+    sm->m[2][1] = -dword_80087114.m[0][1];
+    sm->m[2][2] = -dword_80087114.m[0][2];
+    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
+    if (dword_8008D3F0 != 0)
+    {
+        d[0] = dword_8008D680[0] - (ofs[0] + pos[0]);
+        d[1] = dword_8008D680[1] - (ofs[1] + pos[1]);
+        d[2] = dword_8008D680[2] - (ofs[2] + pos[2]);
+        if (abs(d[0]) < dword_8008D3F0 && abs(d[1]) < dword_8008D3F0 && abs(d[2]) < dword_8008D3F0)
+        {
+            gte_ldlvl(d);
+            gte_sqr0();
+            gte_stlvnl(sq);
+            dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+            if (dist <= dword_8008D3F0)
+            {
+                sm->m[2][0] = (d[0] << 12) / dist;
+                sm->m[2][1] = (d[1] << 12) / dist;
+                sm->m[2][2] = (d[2] << 12) / dist;
+                if (unknownFlags_8008D678 & 0x400)
+                {
+                    t = (((dword_8008D3F0 - dist) << 12) / dword_8008D3F0) * dword_8008D40C >> 12;
+                }
+                else
+                {
+                    t = ((dword_8008D3F0 - dist) << 12) / dword_8008D3F0;
+                }
+                gte_lddp(t);
+                gte_ldsv(&word_8008D418);
+                gte_gpf12();
+                gte_stclmv(&dword_80087134.m[0][2]);
+            }
+        }
+    }
+    d[0] = light->pos_0[0] - (ofs[0] + pos[0]);
+    d[1] = light->pos_0[1] - (ofs[1] + pos[1]);
+    d[2] = light->pos_0[2] - (ofs[2] + pos[2]);
+    gte_ldlvl(d);
+    gte_sqr0();
+    gte_stlvnl(sq);
+    dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+    if (light->range_14 < dist)
+    {
+        dword_80087134.m[0][1] = 0;
+        dword_80087134.m[1][1] = 0;
+        dword_80087134.m[2][1] = 0;
+    }
+    else
+    {
+        x = (d[0] << 12) / dist;
+        y = (d[1] << 12) / dist;
+        z = (d[2] << 12) / dist;
+        ((MATRIX*)0x1F800000)->m[1][0] = x;
+        ((MATRIX*)0x1F800000)->m[1][1] = y;
+        ((MATRIX*)0x1F800000)->m[1][2] = z;
+        if (unknownFlags_8008D678 & 0x400)
+        {
+            t = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * dword_8008D40C >> 12;
+        }
+        else
+        {
+            t = ((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14;
+        }
+        gte_lddp(t);
+        gte_ldsv(&light->color_C);
+        gte_gpf12();
+        gte_stclmv(&dword_80087134.m[0][1]);
+    }
+    gte_SetRotMatrix((MATRIX*)0x1F800000);
+    gte_ldclmv(&m->m[0][0]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][0]);
+    gte_ldclmv(&m->m[0][1]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][1]);
+    gte_ldclmv(&m->m[0][2]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][2]);
+    gte_SetLightMatrix((MATRIX*)0x1F800000);
+    gte_SetColorMatrix(&dword_80087134);
+}
 // Matched
 void sub_8001A38C(void)
 {
