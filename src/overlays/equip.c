@@ -556,8 +556,6 @@ void sub_800C5314(EquipCtx_equip* c)
 extern char tab_800C59E0[][16];
 extern char tab_800C5B50[][16];
 extern char tab_800C5C40[][16];
-#if 0
-// Not matched: original does not merge the three table address computations
 void sub_800C5440(short a0, short a1, int a2)
 {
     int e = 0;
@@ -581,14 +579,15 @@ void sub_800C5440(short a0, short a1, int a2)
             e = (int)tab_800C5C40 + a0 * 16;
         }
         break;
+    default:
+        e = 0;
+        break;
     }
     if (e)
     {
         DrawLargeTextBox_8002AF10(e, a2, 0xe);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(equip, sub_800C5440);
 
 
 #if 0
