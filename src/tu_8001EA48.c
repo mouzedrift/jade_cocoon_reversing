@@ -85,10 +85,7 @@ typedef struct
     char pad_F8[6];
     short field_FE;
 } ScriptObj;
-#if 0
-// Not matched only because of data layout: the code is identical when sub_8001D9E4/sub_8001DA08 take an int
-// second argument, but the jump table (0x800740B8) must sit 8-aligned relative to its TU's .rdata, which needs a
-// TU split before this function (plus "dword_800740B4 0x4" and a dword_8007411C split point in config/c_rodata.txt)
+// Matched
 void sub_8001EA48(void* arg0)
 {
     ScriptObj* o = arg0;
@@ -298,8 +295,7 @@ void sub_8001EA48(void* arg0)
         cmd += cmd[1] * 4;
     }
 }
-#endif
-INCLUDE_ASM(sub_8001EA48);
+INCLUDE_DATA(dword_8007411C);
 // Matched
 void sub_8001EFC4(struct_obj_F* p)
 {

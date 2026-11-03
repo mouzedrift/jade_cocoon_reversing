@@ -2038,7 +2038,7 @@ void sub_8001D9B0(struct_obj_A* p)
     }
 }
 // Matched
-void sub_8001D9E4(struct_obj_A* p, short a1, int a2)
+void sub_8001D9E4(struct_obj_A* p, int a1, int a2)
 {
     p->field_20 = 0;
     p->field_22 = a1;
@@ -2047,7 +2047,7 @@ void sub_8001D9E4(struct_obj_A* p, short a1, int a2)
     p->flags_4 &= ~0x40;
 }
 // Matched
-void sub_8001DA08(struct_obj_A* p, short a1, int a2)
+void sub_8001DA08(struct_obj_A* p, int a1, int a2)
 {
     p->field_20 = 0;
     p->field_22 = a1;

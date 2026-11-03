@@ -1948,6 +1948,7 @@ dword_8007403C=0x8007403c; // size:0x50
 dword_8007408C=0x8007408c; // size:0x24
 dword_800740B0=0x800740b0; // size:0x4
 dword_800740B4=0x800740b4; // size:0x4
+dword_8007411C=0x8007411c; // size:0x28
 dword_8007415C=0x8007415c; // size:0x4
 dword_800741C4=0x800741c4; // size:0x4
 dword_800741C8=0x800741c8; // size:0x4

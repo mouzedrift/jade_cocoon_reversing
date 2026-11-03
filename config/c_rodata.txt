@@ -11,5 +11,6 @@ aCommonC 0xC                # "COMMON.C"; the jump tables of sub_80012BB0, sub_8
 dword_80073210 0x4     # head; the jump table of ProcessPad_8001C8E8 (tu_80019BF0, whose .rdata starts at dword_80073044) follows
 dword_800720E4 0x4      # alignment word; the jump table of sub_80013C28 (tu_80013358) follows
 off_80072278 0x0       # the jump tables of sub_800182B8 (tu_800174F8) and sub_80018C00 (tu_80018430) are emitted by C
-dword_800740B4 0x90     # head; the jump table of HsvToRgb555_8002A040 (tu_80028C60) follows, dword_8007415C starts after it
+dword_800740B4 0x4      # head; the jump table of sub_8001EA48 (tu_8001EA48, whose .rdata starts with it) follows
+dword_8007411C 0x28     # the jump table of HsvToRgb555_8002A040 (tu_80028C60) follows, dword_8007415C starts after it
 aDWorkPsusEvent 0x18       # "D:\WORK\PSUS\EVENT.C"; the jump table of sub_8004AD44 (tu_80043AF8) follows
