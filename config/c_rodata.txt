@@ -6,3 +6,4 @@ dword_800746D0 0x4     # zero word after the jump table of sub_80031870; the jum
 aMainC 0x8               # "MAIN.C"; the jump table of sub_80010AD8 follows (dword_80071B78 starts after it)
 aCommonC 0xEC            # "COMMON.C" and the jump tables of sub_80012BB0; the jump tables of sub_80013228 and sub_80013C28 follow
 dword_800720E4 0x4      # alignment word; the jump table of sub_80013C28 (tu_80013358) follows
+off_80072278 0x0       # the jump table of sub_800182B8 (tu_800174F8) is emitted by C; jtbl_800722A0 (sub_80018C00) follows

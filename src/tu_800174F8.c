@@ -264,4 +264,59 @@ struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, sh
     }
     return dst;
 }
-INCLUDE_ASM(sub_800182B8);
+extern int sub_800C0D50(void);
+extern void sub_800C0FC4(void* a0);
+extern void sub_800A93A4(void* a0);
+extern void sub_800A29CC(int a0, void* a1);
+extern void sub_800A111C(int a0, void* a1);
+typedef struct
+{
+    unsigned char pad[0x34];
+    int value;
+} Entry56;
+typedef struct
+{
+    unsigned char pad[0x40];
+    int count;
+    Entry56 entries[11];
+} EntryList;
+// Matched
+void sub_800182B8(int* p, int mask)
+{
+    unsigned char* t = (unsigned char*)dword_8008D3F8[9];
+    int i;
+    int bit;
+    ((EntryList*)p)->count = 0;
+    for (i = 0; i < 11; i++)
+    {
+        bit = 1 << i;
+        if (mask & bit)
+        {
+            switch (i)
+            {
+            case 1:
+            case 2:
+            case 3:
+                if (sub_800C0D50() >= 0)
+                {
+                    sub_800C0FC4(&((EntryList*)p)->entries[((EntryList*)p)->count]);
+                    break;
+                }
+            case 0:
+                sub_800A93A4(&((EntryList*)p)->entries[((EntryList*)p)->count]);
+                break;
+            case 4:
+            case 5:
+            case 6:
+                sub_800A29CC(i - 4, &((EntryList*)p)->entries[((EntryList*)p)->count]);
+                break;
+            case 8:
+            case 9:
+                sub_800A111C(i - 8, &((EntryList*)p)->entries[((EntryList*)p)->count]);
+                break;
+            }
+            ((EntryList*)p)->entries[((EntryList*)p)->count].value = (t + i)[0x44];
+            ((EntryList*)p)->count++;
+        }
+    }
+}

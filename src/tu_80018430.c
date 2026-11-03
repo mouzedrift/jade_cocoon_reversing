@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
+INCLUDE_DATA(jtbl_800722A0);
+
 
 // Matched
 void sub_80018430(short v)
