@@ -1257,7 +1257,6 @@ int sub_80010CDC(struct_state_obj* p)
 }
 #endif
 INCLUDE_ASM(sub_80010CDC);
-INCLUDE_ASM(sub_80010DB0);
 typedef struct
 {
     int f0;
@@ -1268,10 +1267,210 @@ typedef struct
 } Vtx12;
 typedef struct
 {
-    int pad[6];
+    char* pos[3];
+    char* rot[3];
     Vtx12* src[3];
     int w[3];
 } VtxBlend;
+typedef struct
+{
+    int f0;
+    void* f4;
+    void* f8;
+    unsigned char* bones;
+    short* base;
+    char* pose;
+    int f18;
+    int f1C;
+    int* pos;
+    int f24;
+    unsigned long* ot;
+} FuseSkel;
+extern void sub_80024ADC(void* p, int a, int b);
+extern void sub_80026730(void* a0, int a1, int a2);
+extern void sub_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
+                         char* out, void* vout);
+extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
+void sub_80011904(VtxBlend* p, Vtx12* out);
+extern unsigned char dword_80079140[];
+extern unsigned char dword_80079210[];
+extern int levantPos_8008BD18[];
+#if 0
+// Not matched (~46 lines): registers of the bone entry / matrix pointers are swapped ($s0/$s1), the three weight-table loads are interleaved with the address adds, and the 0x10 store / pOT load at the second skeleton setup are swapped (permuter: nothing)
+int sub_80010DB0(int* p)
+{
+    struct_112_list* list;
+    char* m[3];
+    FuseSkel sk;
+    int v[3];
+    VtxBlend vb;
+    char buf[0xC0];
+    int pos[0x78];
+    char* o;
+    int t;
+    int a6;
+    int a4;
+    int i;
+    int k;
+    int w0;
+    int w1;
+    int w2;
+    char* e;
+    char* b1;
+    short* ent;
+    MATRIX* mat;
+    SVECTOR* sv;
+
+    list = (struct_112_list*)p[0];
+    for (i = 0; i < 3; i++)
+    {
+        m[i] = (char*)sub_80024D70(list, p[2 + i]);
+    }
+    sub_80024ADC(p, p[0x34 / 4] + 0x20, 1);
+    o = ((char**)p[0])[2];
+    *(short*)(o + 0x38) = *(short*)(m[0] + 0x38);
+    *(short*)(o + 0x3C) = *(short*)(m[0] + 0x3C);
+    t = *(int*)(m[0] + 0x50);
+    *(int*)(o + 0x50) = t;
+    a6 = *(int*)(m[1] + 0x50);
+    a4 = *(int*)(m[2] + 0x50);
+    for (i = 0; i < *(unsigned short*)(o + 0x3C); i++)
+    {
+        w0 = (int)sub_80024F70(m[0], p[8]);
+        w1 = (int)sub_80024F70(m[1], p[8]);
+        w2 = (int)sub_80024F70(m[2], p[8]);
+        w0 = *(int*)(w0 + i * 4);
+        w1 = *(int*)(w1 + i * 4);
+        w2 = *(int*)(w2 + i * 4);
+        if (w0 == w1 && w1 == w2)
+        {
+            w0 = p[5];
+            w1 = p[6];
+            w2 = p[7];
+        }
+        else
+        {
+            w0 = (w0 << 12) / (w0 + w1 + w2);
+            w1 = (w1 << 12) / (w0 + w1 + w2);
+            w2 = (w2 << 12) / (w0 + w1 + w2);
+            w0 *= p[5];
+            w1 *= p[6];
+            w2 *= p[7];
+        }
+        w0 = (w0 << 12) / (w0 + w1 + w2);
+        w1 = (w1 << 12) / (w0 + w1 + w2);
+        w2 = (w2 << 12) / (w0 + w1 + w2);
+        if (p[1] >= 2 && w1 != 0)
+        {
+            sub_80039FE4(a6 + i * 0x54, t + i * 0x54, a6 + i * 0x54);
+            sub_8003A6C4(w1, t + i * 0x54, t + i * 0x54, a6 + i * 0x54);
+        }
+        if (p[1] >= 3 && w2 != 0)
+        {
+            sub_80039FE4(a4 + i * 0x54, t + i * 0x54, a4 + i * 0x54);
+            sub_8003A6C4(w2, t + i * 0x54, t + i * 0x54, a4 + i * 0x54);
+        }
+    }
+    *(int*)(m[0] + 0x50) = 0;
+    *(int*)(o + 0x5C) = *(int*)(m[0] + 0x5C);
+    *(int*)(o + 0x60) = *(int*)(m[0] + 0x60);
+    *(int*)(m[0] + 0x5C) = 0;
+    *(int*)(m[0] + 0x60) = 0;
+    for (k = 0; k < 5; k++)
+    {
+        memset(v, 0, 12);
+        for (i = 0; i < 3; i++)
+        {
+            e = sub_80024E90(m[i], k);
+            v[0] += ((int*)e)[0] * p[5 + i] / 4096;
+            v[1] += ((int*)e)[1] * p[5 + i] / 4096;
+            v[2] += ((int*)e)[2] * p[5 + i] / 4096;
+        }
+        e = sub_80024E90(m[0], k);
+        ((int*)e)[0] = v[0];
+        ((int*)e)[1] = v[1];
+        ((int*)e)[2] = v[2];
+    }
+    *(short*)(o + 0x3E) = *(short*)(m[p[0x30 / 4]] + 0x3E);
+    sub_80026730(o + 0x54, *(unsigned short*)(o + 0x3E), 1);
+    (*(int**)(o + 0x54))[0] = 1;
+    (*(int**)(o + 0x54))[2] = 0x20;
+    (*(int**)(o + 0x54))[3] = 0;
+    (*(int**)(o + 0x54))[1] = *(unsigned short*)(o + 0x3C);
+    (*(int**)(o + 0x54))[5] = HeapAlloc_8003FC8C(*(unsigned short*)(o + 0x3C) * 6, (struct Pool*)1);
+    (*(int**)(o + 0x54))[6] = HeapAlloc_8003FC8C((*(unsigned short*)(o + 0x3C) + 2) * 6, (struct Pool*)1);
+    (*(int**)(o + 0x54))[4] = 0;
+    sk.f0 = t;
+    sk.f4 = levantPos_8008BD18;
+    sk.f8 = levantPos_8008BD18 + 3;
+    sk.bones = dword_80079140;
+    sk.base = (short*)sub_80024EC8(m[0], p[8]);
+    sk.pose = *(char**)(o + 0x54);
+    sk.f18 = 0;
+    sk.pos = 0;
+    sk.f24 = 0;
+    sk.ot = pOT_8008D690;
+    b1 = sub_80024EC8(m[1], p[8]);
+    sub_8004A4FC(&sk, b1, *(char**)(m[1] + 0x54), p[6], sub_80024EC8(m[2], p[8]), *(char**)(m[2] + 0x54), p[7],
+                 *(char**)(m[0] + 0x54), *(char**)(m[0] + 0x54), *(char**)(o + 0x54), 0);
+    for (i = 1; i < 3; i++)
+    {
+        unsigned short* d = (unsigned short*)sub_80024F00(m[0], p[8]);
+        unsigned short* q = (unsigned short*)sub_80024F00(m[i], p[8]);
+        int j;
+        for (j = 0; j < 3; j++)
+        {
+            if (q[j] >= 2 && d[j] == 1)
+            {
+                d[j] = 2;
+            }
+        }
+    }
+    for (i = 0; i < 3; i++)
+    {
+        vb.pos[i] = sub_80024E90(m[i], p[8]);
+        vb.rot[i] = sub_80024EC8(m[i], p[8]);
+        vb.src[i] = (Vtx12*)sub_80024E64((struct_obj_E*)m[i]);
+        vb.w[i] = p[5 + i];
+    }
+    sub_80011904(&vb, vb.src[0]);
+    *(int*)(o + 0x48) = *(int*)(m[p[0x30 / 4]] + 0x48);
+    *(int*)(o + 0x4C) = *(int*)(m[p[0x30 / 4]] + 0x4C);
+    *(int*)(m[p[0x30 / 4]] + 0x48) = 0;
+    *(int*)(m[p[0x30 / 4]] + 0x4C) = 0;
+    sk.pose = *(char**)(m[p[0x30 / 4]] + 0x54) + 0x1C;
+    sk.bones = dword_80079210;
+    sk.f1C = 0x10;
+    sk.ot = pOT_8008D690;
+    sk.f18 = 0;
+    sk.pos = pos;
+    sub_80046A58(&sk, buf, *(char**)(o + 0x54));
+    ent = (short*)sub_80024E64((struct_obj_E*)o);
+    ent = (short*)((char*)ent + sub_80018908(0x26, (short(*)[6])ent) * 12);
+    sv = (SVECTOR*)(ent + 2);
+    mat = &dword_80098188[ent[1]];
+    PushMatrix();
+    mat->m[0][0] = mat->m[0][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[0][1] = mat->m[0][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[0][2] = mat->m[0][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
+    mat->m[1][0] = mat->m[1][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[1][1] = mat->m[1][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[1][2] = mat->m[1][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
+    mat->m[2][0] = mat->m[2][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[2][1] = mat->m[2][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[2][2] = mat->m[2][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
+    ApplyMatrix(mat, sv, (VECTOR*)v);
+    PopMatrix();
+    v[0] = sk.pos[ent[1] * 3 + 0] + v[0];
+    v[1] = sk.pos[ent[1] * 3 + 1] + v[1];
+    v[2] = sk.pos[ent[1] * 3 + 2] + v[2];
+    ((short*)((*(char***)(o + 0x54))[5] + sk.bones[10] * 6))[1] -= v[1];
+    sub_80024BB0(&list);
+    p[0x38 / 4] = 3;
+    return 1;
+}
+#endif
+INCLUDE_ASM(sub_80010DB0);
 // Matched
 void sub_80011904(VtxBlend* p, Vtx12* out)
 {
