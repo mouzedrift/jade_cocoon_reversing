@@ -149,10 +149,10 @@ typedef struct
 } NameBuf;
 extern NameBuf dword_80074434;
 extern void DecodeText_8003F748(int a, NameBuf* b);
-extern short sub_8003E4C8(NameBuf* b);
+extern short MeasureTextWidth_8003E4C8(NameBuf* b);
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
 extern void sub_8003F89C(NameBuf* b);
-extern short sub_8003E6B0(NameBuf* b);
+extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched
 void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
 {
@@ -164,11 +164,11 @@ void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
     sub_8003F89C(&buf);
     if (a0 == 1)
     {
-        w = sub_8003E6B0(&buf);
+        w = MeasureTextWidthFont1_8003E6B0(&buf);
     }
     else if (a0 == 2)
     {
-        w = sub_8003E6B0(&buf) / 2;
+        w = MeasureTextWidthFont1_8003E6B0(&buf) / 2;
     }
     else
     {
@@ -188,7 +188,7 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     DecodeText_8003F748(1, &buf);
     if (a0 == 1)
     {
-        w = sub_8003E4C8(&buf);
+        w = MeasureTextWidth_8003E4C8(&buf);
     }
     else
     {

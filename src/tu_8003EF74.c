@@ -265,7 +265,7 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
     return s;
 }
 // Matched
-void sub_8003F7C8(void* a0, unsigned char* a1)
+void EncodeName_8003F7C8(void* a0, unsigned char* a1)
 {
     unsigned short tmp[11];
     unsigned short* p;

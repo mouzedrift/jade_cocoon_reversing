@@ -112,7 +112,7 @@ int sub_80034140(void)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003422C);
+INCLUDE_ASM(OpenMessageWindow_8003422C);
 extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** sub_80034900(short** list)
@@ -273,7 +273,7 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
 extern void sub_80034C18(int* a);
 extern void sub_800353A0(int* a);
 // Matched
-void sub_80034BB8(int* a0, int* a1)
+void UpdateMessageWindow_80034BB8(int* a0, int* a1)
 {
     sub_80034C18(a1);
     sub_800353A0(a1);

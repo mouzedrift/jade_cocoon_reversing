@@ -449,9 +449,9 @@ typedef struct
     short w;
     short h;
 } struct_size_8003E3B4;
-extern int sub_8003E4C8(int str);
+extern int MeasureTextWidth_8003E4C8(int str);
 // Matched
-struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
+struct_size_8003E3B4 MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {
     struct_size_8003E3B4 sz;
     short w;
@@ -462,7 +462,7 @@ struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
     {
         if (mask & (1 << i))
         {
-            w = sub_8003E4C8(list[sz.h]);
+            w = MeasureTextWidth_8003E4C8(list[sz.h]);
             if (sz.w < w)
             {
                 sz.w = w;
@@ -478,10 +478,10 @@ typedef struct
     short w;
     short h;
 } Size2;
-extern int sub_8003E4C8(int str);
+extern int MeasureTextWidth_8003E4C8(int str);
 
 // Matched
-struct_size_8003E3B4 sub_8003E3B4(int* list)
+struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
 {
     struct_size_8003E3B4 sz;
     short w;
@@ -492,7 +492,7 @@ struct_size_8003E3B4 sub_8003E3B4(int* list)
     {
         if (!sub_8003E484(list[i]))
         {
-            w = sub_8003E4C8(list[i]);
+            w = MeasureTextWidth_8003E4C8(list[i]);
             if (sz.w < w)
             {
                 sz.w = w;
@@ -522,12 +522,12 @@ typedef struct
 } TextBuf22;
 extern unsigned short word_80074994[];
 extern TextBuf22 dword_80074998;
-extern int dword_80096038[];
-extern int sub_8003E884(int idx, short n);
+extern int textNumberArgs_80096038[];
+extern int GetCharWidth_8003E884(int idx, short n);
 extern void IntToText_8003F610(unsigned short* buf, int val);
 extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
 // Matched
-int sub_8003E4C8(int str)
+int MeasureTextWidth_8003E4C8(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
@@ -554,7 +554,7 @@ int sub_8003E4C8(int str)
         }
         if (c < 0x7F)
         {
-            w += sub_8003E884(2, (short)c);
+            w += GetCharWidth_8003E884(2, (short)c);
         }
         else
         {
@@ -573,7 +573,7 @@ int sub_8003E4C8(int str)
             case 0x8A:
             case 0x8B:
             case 0x8C:
-                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                IntToText_8003F610(num, textNumberArgs_80096038[k - 0x88]);
                 sub = EncodeText_8003F684(2, num);
                 break;
             case -1:
@@ -585,7 +585,7 @@ int sub_8003E4C8(int str)
     return w;
 }
 // Matched
-int sub_8003E6B0(int str)
+int MeasureTextWidthFont1_8003E6B0(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
@@ -612,7 +612,7 @@ int sub_8003E6B0(int str)
         }
         if (c < 0x71)
         {
-            w += sub_8003E884(1, (short)c);
+            w += GetCharWidth_8003E884(1, (short)c);
         }
         else
         {
@@ -631,7 +631,7 @@ int sub_8003E6B0(int str)
             case 0x8A:
             case 0x8B:
             case 0x8C:
-                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                IntToText_8003F610(num, textNumberArgs_80096038[k - 0x88]);
                 sub = EncodeText_8003F684(1, num);
                 break;
             case -1:

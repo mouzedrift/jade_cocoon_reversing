@@ -298,21 +298,21 @@ typedef struct
     int idx;
     int timer;
 } EffectState;
-void sub_80014638(struct_obj_D* p, void* buf);
+void UpdateEffectTask_80014638(struct_obj_D* p, void* buf);
 // Matched
-void sub_80014618(struct_obj_D* p, int* q)
+void InitEffectTask_80014618(struct_obj_D* p, int* q)
 {
     q[0x28 / 4] = 2;
     q[0x3C / 4] = 0;
     q[0x2C / 4] = 0;
-    p->field_8 = (void (*)(void))sub_80014638;
+    p->field_8 = (void (*)(void))UpdateEffectTask_80014638;
 }
 extern short dword_800795D0[];
 extern short dword_800795F0[];
 extern void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
 int sub_800147FC(void);
 // Matched
-void sub_80014638(struct_obj_D* p, void* buf)
+void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
 {
     EffectState* q = (EffectState*)buf;
     int r;
@@ -403,7 +403,7 @@ int sub_800147FC(void)
     return c;
 }
 // Matched
-void sub_800148A0(void)
+void FreeEffectTask_800148A0(void)
 {
     sub_80020EE0(dword_80091BD0);
     unknownFlags_8008D678 &= ~0x800;
@@ -411,12 +411,12 @@ void sub_800148A0(void)
 // Matched
 int sub_800148D4(void)
 {
-    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 0;
+    return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 0;
 }
 // Matched
 void sub_800148F4(int a0)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 4;
     p[0x38 / 4] = a0;
     if (p[0x2C / 4] != 0)

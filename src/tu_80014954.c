@@ -475,19 +475,19 @@ INCLUDE_DATA(word_80084540);
 // Matched
 int sub_80014954(void)
 {
-    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 2;
+    return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 2;
 }
 // Matched
 void sub_8001497C(void)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 1;
 }
 void sub_80015478(EventEntry* e, void* buf);
 // Matched
 void sub_800149A4(char* p)
 {
-    char* q = (char*)dword_8008D3F8[9];
+    char* q = (char*)effectTask_8008D3F8[9];
     EventEntry* e;
     char* b;
     int n;

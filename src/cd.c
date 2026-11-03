@@ -552,11 +552,11 @@ int CancelFileRequest_8003C060(int key)
     }
     return 2;
 }
-extern int** dword_8008B544;
+extern int** fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
-    int* p = dword_8008B544[0x24 / 4];
+    int* p = fileRequestTask_8008B544[0x24 / 4];
     if (dword_80086568 != a0)
     {
         if (a0 == 1)

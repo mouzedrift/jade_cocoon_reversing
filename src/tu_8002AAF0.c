@@ -290,7 +290,7 @@ typedef struct
     int text;
 } struct_B004_entry;
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
-extern int sub_8003E4C8(int text);
+extern int MeasureTextWidth_8003E4C8(int text);
 // Matched
 void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
 {
@@ -318,7 +318,7 @@ void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
         cur.x = (unsigned short)(cur.x + 1) + ((SPRT*)uiTiySprts_8008D620)[e[i].icon].w;
         cur.y = base.y + 2;
         DrawText_8003E91C(2, e[i].text, &cur, ot);
-        cur.x = sub_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);
+        cur.x = MeasureTextWidth_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);
     }
     r.x = base.x;
     r.y = base.y;

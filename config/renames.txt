@@ -269,3 +269,28 @@ sub_8004251C DrawGouraudRect_8004251C
 sub_80042750 DrawRectOutline_80042750
 sub_80042870 DrawLine_80042870
 sub_8003C060 CancelFileRequest_8003C060
+
+# --- event lists created from the table at 0x80078EB8 (count, flags, buffer size, &list, init, free) ---
+dword_8008B544 fileRequestTask_8008B544
+dword_8008D488 fileRequestTasks_8008D488
+dword_8008B560 xaTask_8008B560
+dword_8008D3F8 effectTask_8008D3F8
+sub_80014618 InitEffectTask_80014618
+sub_80014638 UpdateEffectTask_80014638
+sub_800148A0 FreeEffectTask_800148A0
+sub_800368F8 InitCameraTask_800368F8
+dword_8008D640 messageWindowTask_8008D640
+sub_8003422C OpenMessageWindow_8003422C
+sub_80034BB8 UpdateMessageWindow_80034BB8
+sub_80035AC8 OpenItemMessageWindow_80035AC8
+sub_80035BD8 UpdateItemMessageWindow_80035BD8
+
+# --- text measuring ---
+sub_8003E884 GetCharWidth_8003E884
+sub_8003E4C8 MeasureTextWidth_8003E4C8
+sub_8003E6B0 MeasureTextWidthFont1_8003E6B0
+sub_8003E3B4 MeasureTextLines_8003E3B4
+sub_8003E2A8 MeasureTextLinesMasked_8003E2A8
+dword_80096038 textNumberArgs_80096038
+sub_8003F7C8 EncodeName_8003F7C8
+sub_8001900C InitMinionData_8001900C

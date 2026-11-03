@@ -303,7 +303,7 @@ int sub_800181E8(void)
 // Matched
 struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, short n)
 {
-    struct_4s* dst = (struct_4s*)dword_8008D3F8[9];
+    struct_4s* dst = (struct_4s*)effectTask_8008D3F8[9];
     int i;
     int j;
     short d;
@@ -348,7 +348,7 @@ typedef struct
 // Matched
 void sub_800182B8(int* p, int mask)
 {
-    unsigned char* t = (unsigned char*)dword_8008D3F8[9];
+    unsigned char* t = (unsigned char*)effectTask_8008D3F8[9];
     int i;
     int bit;
     ((EntryList*)p)->count = 0;

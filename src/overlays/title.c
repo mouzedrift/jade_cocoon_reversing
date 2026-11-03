@@ -104,7 +104,7 @@ void sub_800A0A1C(TitleTask* t)
 
 extern int dword_800A2718;
 extern void sub_800B6E4C(void* a0, int a1);
-extern void sub_8003F7C8(void* a0, void* a1);
+extern void EncodeName_8003F7C8(void* a0, void* a1);
 extern void sub_800A0AE8();
 // Matched
 void sub_800A0A70(TitleTask* t)
@@ -113,7 +113,7 @@ void sub_800A0A70(TitleTask* t)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
-            sub_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
+            EncodeName_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
         }
         sub_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
         t->next_8 = sub_800A0AE8;
@@ -882,7 +882,7 @@ extern void sub_800A20F4(void);
 extern void sub_800A2110(void);
 extern void sub_800A2540(void);
 extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
-extern void sub_8003F7C8(void* a, void* b);
+extern void EncodeName_8003F7C8(void* a, void* b);
 
 typedef struct { int a, b, c; } Blk12_;
 extern Blk12_ dword_800B069C;
@@ -1011,7 +1011,7 @@ void sub_800A223C(void)
             ((int*)(s + 0x814))[i] = 0;
         }
     }
-    sub_8003F7C8(byte_800A08B4, SA(0x8008BD48));
+    EncodeName_8003F7C8(byte_800A08B4, SA(0x8008BD48));
     sub_800A2358();
     sub_800A22FC();
     sub_800A2450();

@@ -5844,10 +5844,10 @@ extern int dword_80082668;
 extern int dword_8008266C;
 extern int* dword_800B1DA8;
 extern int* dword_8008D400;
-extern int* dword_8008D640;
+extern int* messageWindowTask_8008D640;
 extern int* dword_8008D49C;
 extern int* dword_8008D674;
-extern int* dword_8008D488;
+extern int* fileRequestTasks_8008D488;
 extern void sub_8001D3C4(int a0);
 extern void sub_800AC73C(void);
 extern void sub_800A54A0(void);
@@ -5881,10 +5881,10 @@ void sub_80027118(void)
         StopAllEventEntries_80043B40(dword_8008D400);
     }
     sub_800AC73C();
-    StopAllEventEntries_80043B40(dword_8008D640);
+    StopAllEventEntries_80043B40(messageWindowTask_8008D640);
     StopAllEventEntries_80043B40(dword_8008D49C);
     StopAllEventEntries_80043B40(dword_8008D674);
-    StopAllEventEntries_80043B40(dword_8008D488);
+    StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
     sub_800A54A0();
     sub_800A58B4();
     sub_8001D3C4(dword_80091CA0);

@@ -306,7 +306,7 @@ extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern int** overlayLoaderTask_8008D4C0;
 extern struct_12 stru_80083594[];
 extern PadVibration padVibration_80095460[];
-extern int** dword_8008B560;
+extern int** xaTask_8008B560;
 extern int personNames_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
@@ -331,7 +331,7 @@ typedef struct
     int field_4;
 } struct_833E4;
 extern struct_833E4 seqSlots_800833E4[];
-extern int** dword_8008D3F8;
+extern int** effectTask_8008D3F8;
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];
 extern char genkiMovie_80086968[];

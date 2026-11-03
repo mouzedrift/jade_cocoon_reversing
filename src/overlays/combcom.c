@@ -178,7 +178,7 @@ void sub_800CBAD4(int a)
     }
 }
 
-extern int sub_8003E4C8(int);
+extern int MeasureTextWidth_8003E4C8(int);
 
 void sub_800CBB4C(int p)
 {
@@ -186,7 +186,7 @@ void sub_800CBB4C(int p)
     short b[2];
     int d;
     int w;
-    a.w = w = sub_8003E4C8(p) + 4;
+    a.w = w = MeasureTextWidth_8003E4C8(p) + 4;
     a.h = 0x12;
     if (byte_800CD839 == 1)
     {

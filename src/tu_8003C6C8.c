@@ -19,7 +19,7 @@
 INCLUDE_DATA(dword_8007490C);
 INCLUDE_DATA(dword_8007493C);
 
-extern EventNode* dword_8008D488;
+extern EventNode* fileRequestTasks_8008D488;
 extern int QueueFileRequest_8003BC84(int* p);
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void UpdateFileRequestTask_8003C76C(int* a0, int* a1);
@@ -27,7 +27,7 @@ extern void UpdateFileRequestTask_8003C76C(int* a0, int* a1);
 // Matched
 int StartFileRequestTask_8003C6C8(int* a0)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D488);
+    EventEntry* e = AllocEventEntry_80043AF8(fileRequestTasks_8008D488);
     int* buf;
     if (e)
     {

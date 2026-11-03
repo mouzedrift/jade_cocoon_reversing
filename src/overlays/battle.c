@@ -3186,7 +3186,7 @@ void sub_800C8828(int a)
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
-    rect[2] = sub_8003E4C8() + 4;
+    rect[2] = MeasureTextWidth_8003E4C8() + 4;
     rect[3] = 0x12;
     s[0] = a;
     p[0] = rect[0];

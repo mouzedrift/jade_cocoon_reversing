@@ -3,7 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 
-extern int sub_8003E4C8(int);
+extern int MeasureTextWidth_8003E4C8(int);
 extern void sub_8002AC88(int, void*, int, void*);
 extern void DrawText_8003E91C(int, int, void*, int);
 
@@ -114,7 +114,7 @@ void sub_800A450C(int* p, unsigned short* q)
     y = q[1];
     while (item)
     {
-        sub_8002AC88(8, q, (short)sub_8003E4C8(item), rect);
+        sub_8002AC88(8, q, (short)MeasureTextWidth_8003E4C8(item), rect);
         rect[1] = y;
         DrawText_8003E91C(2, item, rect, 0);
         p++;

@@ -347,7 +347,7 @@ int XaRequestStop_80043524(void)
     {
         return 0;
     }
-    p = dword_8008B560[0x24 / 4];
+    p = xaTask_8008B560[0x24 / 4];
     *p |= 1;
     return 1;
 }
@@ -362,7 +362,7 @@ void XaRequestPlay_80043564(short a0, short a1, short a2)
 // Matched
 int XaIsIdle_80043584(void)
 {
-    return ((short*)dword_8008B560[0x24 / 4])[4] == 0;
+    return ((short*)xaTask_8008B560[0x24 / 4])[4] == 0;
 }
 // Matched
 unsigned int XaNoRequestPending_800435A4(void)

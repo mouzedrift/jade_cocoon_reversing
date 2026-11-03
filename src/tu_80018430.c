@@ -21,19 +21,19 @@
 // Matched
 void sub_80018430(short v)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     *(short*)(base + 0x40) = v;
 }
 // Matched
 void sub_80018448(short v)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     *(short*)(base + 0x42) = v;
 }
 // Matched
 void sub_80018460(int on)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     if (on)
     {
         *(unsigned int*)(base + 0x28) |= 8;
@@ -46,7 +46,7 @@ void sub_80018460(int on)
 // Matched
 void sub_800184A0(int arg, int bit)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     if (bit == 0)
     {
         (base + arg)[0x44] = 0;
@@ -59,7 +59,7 @@ void sub_800184A0(int arg, int bit)
 // Matched
 int sub_800184DC(int a0, int a1)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     sub_8001852C(a0, *((unsigned char*)p + a1 + 0x44));
     p[0x28 / 4] |= 1;
     return 1;

@@ -186,7 +186,7 @@ extern void sub_800369E0(struct_obj_D* p, int* q);
 
 
 // Matched
-void sub_800368F8(struct_obj_D* p, int* q)
+void InitCameraTask_800368F8(struct_obj_D* p, int* q)
 {
     if (q[1] & 0x100)
     {
@@ -251,7 +251,7 @@ void sub_800369E0(struct_obj_D* p, int* q)
     }
 }
 extern void sub_80038230(int* p);
-extern void sub_800368F8(struct_obj_D* p, int* q);
+extern void InitCameraTask_800368F8(struct_obj_D* p, int* q);
 extern void sub_80036BB0(void);
 
 // Matched
@@ -278,7 +278,7 @@ void sub_80036AB4(struct_obj_D* p, int* q)
     sub_8003891C(r, levantPos_8008BD18);
     r[1] &= ~0x1000;
     *(short*)(r + 2) = 0;
-    p->field_8 = (void (*)(void))sub_800368F8;
+    p->field_8 = (void (*)(void))InitCameraTask_800368F8;
     return;
 run:
     sub_800BC90C(r);
@@ -349,7 +349,7 @@ void sub_800375F8(int* o, int* p)
         sub_80037918(q);
         sub_8003891C(q, levantPos_8008BD18);
         ((short*)q)[4] = 0;
-        o[2] = (int)sub_800368F8;
+        o[2] = (int)InitCameraTask_800368F8;
     }
 }
 // Matched
