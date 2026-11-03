@@ -192,11 +192,11 @@ void sub_800B7144(CtxShopentr* c)
         switch (c->state_14)
         {
         case 2:
-            if (word_800918D0[0] & 0x40)
+            if (padHeld_800918D0[0] & 0x40)
             {
                 c->state_14 = 5;
             }
-            else if (word_800918D0[0] & 4)
+            else if (padHeld_800918D0[0] & 4)
             {
                 c->state_14 = 6;
             }

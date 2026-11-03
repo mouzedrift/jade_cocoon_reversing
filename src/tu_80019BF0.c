@@ -227,13 +227,13 @@ extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(int* p);
 extern int sub_8003C6C8(int* req);
 void sub_80020F5C();
-extern unsigned short dword_800918C8[];
-extern unsigned short word_800918CC[];
-extern unsigned short dword_800918D4[];
-extern unsigned short word_8009194C[];
-extern unsigned short dword_80091950[][16];
-extern signed char dword_800918D8[][4];
-extern unsigned char dword_800918E0[][4];
+extern unsigned short padPrevHeld_800918C8[];
+extern unsigned short padRepeat_800918CC[];
+extern unsigned short padReleased_800918D4[];
+extern unsigned short padPressed_8009194C[];
+extern unsigned short padHoldFrames_80091950[][16];
+extern signed char padAnalog_800918D8[][4];
+extern unsigned char padAnalogMax_800918E0[][4];
 #if 0
 extern struct_8008D4F0 dword_8008D4F0;
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
@@ -881,7 +881,7 @@ void ProcessPads_8001BF50(void)
     for (i = 0; i < 2; i++)
     {
         ProcessPad_8001C8E8(i);
-        sub_80036820(i);
+        UpdatePadVibration_80036820(i);
     }
 }
 // Matched
@@ -1057,23 +1057,23 @@ void sub_8001C364(char* a0, int idx, int a2)
 }
 INCLUDE_ASM(sub_8001C440);
 // Matched
-void sub_8001C6C8(void)
+void ResetButtonConfig_8001C6C8(void)
 {
-    unsigned short* p = dword_8008B578;
+    unsigned short* p = buttonConfig_8008B578;
     int i = 0;
-    unsigned short* q = dword_8007CAF4;
+    unsigned short* q = defaultButtonConfig_8007CAF4;
     for (; i < 10; i++)
     {
         sub_8001C810((short*)p++, *q++);
     }
 }
 // Matched
-int sub_8001C72C(unsigned int a0, unsigned int a1)
+int TestAnyBits_8001C72C(unsigned int a0, unsigned int a1)
 {
     return (a0 & (unsigned short)a1) != 0;
 }
 // Matched
-int sub_8001C73C(unsigned int a0, unsigned int a1)
+int TestAllBits_8001C73C(unsigned int a0, unsigned int a1)
 {
     a1 = (unsigned short)a1;
     if (a1 == 0)
@@ -1083,9 +1083,9 @@ int sub_8001C73C(unsigned int a0, unsigned int a1)
     return (a0 & a1) == a1;
 }
 // Matched
-int sub_8001C75C(unsigned int a0)
+int FindButtonConfig_8001C75C(unsigned int a0)
 {
-    unsigned short* p = dword_8008B578;
+    unsigned short* p = buttonConfig_8008B578;
     int i = 0;
     unsigned int v = (unsigned short)a0;
     for (; i < 10; i++)
@@ -1099,9 +1099,9 @@ int sub_8001C75C(unsigned int a0)
     return -1;
 }
 // Matched
-void sub_8001C79C(int a0, int a1)
+void SwapButtonConfig_8001C79C(int a0, int a1)
 {
-    unsigned short* base = dword_8008B578;
+    unsigned short* base = buttonConfig_8008B578;
     unsigned short* p = &base[a0];
     unsigned short r1 = sub_8001C818(p);
     unsigned short* q = &base[a1];
@@ -1126,7 +1126,7 @@ int sub_8001C824(void)
     unsigned short v = sub_8001C874();
     for (i = 0; i < 14; i++)
     {
-        if (dword_8007CAD8[i] == v)
+        if (padButtonBits_8007CAD8[i] == v)
         {
             break;
         }
@@ -1136,7 +1136,7 @@ int sub_8001C824(void)
 // Matched
 unsigned int sub_8001C874(int a0)
 {
-    unsigned short* p = dword_8008B578;
+    unsigned short* p = buttonConfig_8008B578;
     int i;
     for (i = 0; i < a0; i++)
     {
@@ -1151,7 +1151,7 @@ unsigned int sub_8001C8A0(short mask)
     int i = 0;
     unsigned short* p;
     int m = mask;
-    p = dword_8007CAD8;
+    p = padButtonBits_8007CAD8;
     do
     {
         unsigned int t = *p;
@@ -1172,18 +1172,18 @@ void ProcessPad_8001C8E8(int a0)
 #endif
 INCLUDE_ASM(ProcessPad_8001C8E8);
 // Matched
-void sub_8001CAF0(int port, unsigned short delay, unsigned short rate)
+void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
     int i;
     unsigned short changed;
     unsigned short held;
     unsigned short bit;
     int tick;
-    changed = word_800918D0[port] ^ dword_800918C8[port];
-    word_8009194C[port] = changed & word_800918D0[port];
-    dword_800918D4[port] = changed & ~word_800918D0[port];
-    word_800918CC[port] = word_8009194C[port];
-    held = word_800918D0[port] & dword_800918C8[port];
+    changed = padHeld_800918D0[port] ^ padPrevHeld_800918C8[port];
+    padPressed_8009194C[port] = changed & padHeld_800918D0[port];
+    padReleased_800918D4[port] = changed & ~padHeld_800918D0[port];
+    padRepeat_800918CC[port] = padPressed_8009194C[port];
+    held = padHeld_800918D0[port] & padPrevHeld_800918C8[port];
     tick = frameCount_8008D3FC & (rate - 1);
     for (i = 0; i < 16; i++)
     {
@@ -1191,33 +1191,33 @@ void sub_8001CAF0(int port, unsigned short delay, unsigned short rate)
         held >>= 1;
         if (bit)
         {
-            if (++dword_80091950[port][i] >= delay && tick == 0)
+            if (++padHoldFrames_80091950[port][i] >= delay && tick == 0)
             {
-                word_800918CC[port] |= bit << i;
+                padRepeat_800918CC[port] |= bit << i;
             }
         }
         else
         {
-            dword_80091950[port][i] = 0;
+            padHoldFrames_80091950[port][i] = 0;
         }
     }
 }
 #if 0
 // Not matched: only the order of the first address computations (lui/addiu of the stick and pad tables vs. port*4) differs
-void sub_8001CC04(int port)
+void UpdatePadAnalog_8001CC04(int port)
 {
     signed char* stick;
     unsigned char* pad;
     unsigned char* mx;
     int v;
     int m;
-    stick = dword_800918D8[port];
+    stick = padAnalog_800918D8[port];
     pad = pads_800918E8[port];
     stick[0] = pad[4] + 0x80;
     stick[1] = 0x7F - pad[5];
     stick[2] = pad[6] + 0x80;
     stick[3] = 0x7F - pad[7];
-    mx = dword_800918E0[port];
+    mx = padAnalogMax_800918E0[port];
     v = stick[0];
     m = mx[0];
     if (v < 0)
@@ -1260,14 +1260,14 @@ void sub_8001CC04(int port)
     }
 }
 #endif
-INCLUDE_ASM(sub_8001CC04);
+INCLUDE_ASM(UpdatePadAnalog_8001CC04);
 // Matched
-void sub_8001CD04(int port)
+void ResetPadHoldFrames_8001CD04(int port)
 {
     int i;
     for (i = 0; i < 16; i++)
     {
-        dword_80091950[port][i] = 0;
+        padHoldFrames_80091950[port][i] = 0;
     }
 }
 // Matched

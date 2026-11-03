@@ -45,7 +45,7 @@ void sub_80040718(void)
         saveData_8008B570.minions[i].id = 4;
         i--;
     }
-    sub_8001C6C8();
+    ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
 #endif

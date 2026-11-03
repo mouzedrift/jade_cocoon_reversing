@@ -1251,14 +1251,14 @@ void sub_800BB8C4(ShopUnit3Shop* u)
     }
 }
 
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 void sub_800BBA3C(char* u)
 {
     if (*(short*)(u + 0x98) < 0x96)
     {
         *(short*)(u + 0x98) += 1;
     }
-    if (word_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
+    if (padPressed_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
     {
         sub_800BBB54(u, 0);
         *(int*)(u + 0x18) = 0;
@@ -1861,15 +1861,15 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
     sub_8002BE10();
     sub_800BC380(u);
     c = (char*)sub_800BF780();
-    if (word_800918D0[0] & 0x8000)
+    if (padHeld_800918D0[0] & 0x8000)
     {
         *(unsigned short*)(c + 0x5E) += 0x88;
     }
-    else if (word_800918D0[0] & 0x2000)
+    else if (padHeld_800918D0[0] & 0x2000)
     {
         *(unsigned short*)(c + 0x5E) -= 0x88;
     }
-    if (word_800918D0[0] & 8)
+    if (padHeld_800918D0[0] & 8)
     {
         v = *(int*)(c + 0x138) + 0x40;
         if (v < 0x1000)
@@ -1879,7 +1879,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
             *(int*)(c + 0x140) += 0x40;
         }
     }
-    else if (word_800918D0[0] & 2)
+    else if (padHeld_800918D0[0] & 2)
     {
         v = *(int*)(c + 0x138) - 0x40;
         if (v > 0x400)

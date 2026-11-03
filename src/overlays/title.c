@@ -88,14 +88,14 @@ void sub_800A09C0(TitleTask* t)
 
 
 extern int dword_800A2808;
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 extern void sub_800A0A70();
 // Matched
 void sub_800A0A1C(TitleTask* t)
 {
     if (dword_8008B4E8)
     {
-        word_8009194C = 0;
+        padPressed_8009194C = 0;
         dword_800A2808 = LoadOverlay_80020BF8(1, 0x11);
         t->next_8 = sub_800A0A70;
     }
@@ -436,7 +436,7 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
     sub_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
     sub_800A1F98(c->field_C, c->field_14, c);
-    if (word_8009194C & 0x800)
+    if (padPressed_8009194C & 0x800)
     {
         PlaySfx_80031494(0x7E);
         srand(gnFrame_8008D610);
@@ -450,7 +450,7 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
 INCLUDE_OVERLAY_ASM(title, sub_800A1174);
 
 extern void sub_800A1760();
-extern unsigned short word_800918CC;
+extern unsigned short padRepeat_800918CC;
 extern void sub_800A14A8();
 extern void sub_8003D794(void* a0, int a1);
 extern void sub_8003BB1C(void);
@@ -461,7 +461,7 @@ void sub_800A1310(TitleTask* t, TitleCtxB* c)
 {
     sub_800A1F98(c->field_C, c->field_14, c);
     sub_8003D794(c->field_1C, 0);
-    if (word_800918CC & 0x5000)
+    if (padRepeat_800918CC & 0x5000)
     {
         c->field_0 = 0;
         dword_800A2814 = 0;

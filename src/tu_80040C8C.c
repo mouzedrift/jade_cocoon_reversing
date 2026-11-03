@@ -63,7 +63,7 @@ typedef struct
 } MovieParams;
 
 extern int bMovieFinished_800960FC;
-extern unsigned short word_8009194C[];
+extern unsigned short padPressed_8009194C[];
 
 #define MOVIE_W(i, v) ((i)->is24bpp ? (v) * 3 / 2 : (v))
 
@@ -195,7 +195,7 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
     if (c->skipMask != 0)
     {
         ProcessPad_8001C8E8(0);
-        if (word_8009194C[0] & c->skipMask)
+        if (padPressed_8009194C[0] & c->skipMask)
         {
             return 1;
         }

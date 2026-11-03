@@ -3207,14 +3207,14 @@ void sub_800C88AC(int a)
     sub_8002AF10((int)s, 0, 0xF);
 }
 
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 extern unsigned char dword_800C9E51;
 extern unsigned char dword_800C9E48;
 extern unsigned char dword_800C9E50;
 extern int dword_800C9E7C;
 void sub_800C88E4()
 {
-    if (word_8009194C)
+    if (padPressed_8009194C)
     {
         dword_800C9E51 = 0;
     }

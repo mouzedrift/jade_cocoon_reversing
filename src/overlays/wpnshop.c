@@ -223,7 +223,7 @@ extern void sub_800A7BF0(int a);
 extern void sub_800A6D30(int a);
 extern int sub_800272D0(void);
 extern int sub_8003D198(int a, int b, int c, int d);
-extern unsigned short word_800918CC;
+extern unsigned short padRepeat_800918CC;
 extern int dword_8008B540;
 extern void sub_800BB194();
 extern void sub_800BB1F4();
@@ -1700,11 +1700,11 @@ int sub_800BE084(int a, int b)
 {
     int n = a;
     int t;
-    if ((word_800918CC & 0x1000) && (t = n + 1, t <= b))
+    if ((padRepeat_800918CC & 0x1000) && (t = n + 1, t <= b))
     {
         n = t;
     }
-    else if (word_800918CC & 0x4000)
+    else if (padRepeat_800918CC & 0x4000)
     {
         if (n - 1 > 0)
         {

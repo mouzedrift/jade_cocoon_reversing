@@ -329,7 +329,7 @@ extern void sub_800313C8(int idx);
 extern void sub_8001D41C(int a0, void* a1);
 extern void sub_8001F9AC(void* p);
 extern void ProcessPad_8001C8E8(int a0);
-extern void sub_80036820(int a0);
+extern void UpdatePadVibration_80036820(int a0);
 extern void DrawIntroMovie_8001AF64(void* a0);
 extern void sub_80024BB0(struct_112_list** a0);
 extern void ShowCopyright_80040A84(void);

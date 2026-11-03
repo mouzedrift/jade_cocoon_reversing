@@ -94,7 +94,7 @@ typedef struct MapSel
 } MapSel;
 
 extern MapSel dword_800AEBFC[];
-extern unsigned short word_800918CC;
+extern unsigned short padRepeat_800918CC;
 extern char dword_800B6BE0[];
 extern void sub_8003E91C(int, void*, void*, int);
 extern void sub_8003EF74(void*, int, int);
@@ -120,7 +120,7 @@ extern unsigned short dword_800B8C94[2];
 extern void sub_800B8448();
 extern short word_800B932C;
 extern void sub_8001C19C(int, int);
-extern void sub_8001CD04(int);
+extern void ResetPadHoldFrames_8001CD04(int);
 extern void QueueFileRequest_8003BC84(void*);
 extern void sub_800B6CB4();
 extern void sub_800B6C7C();
@@ -234,7 +234,7 @@ void sub_800B6EE8(MapTask* t, int a1)
     if (dword_800B9430 && IsFadeDone_8001C2FC())
     {
         t->next_8 = sub_800B7044;
-        sub_8001CD04(0);
+        ResetPadHoldFrames_8001CD04(0);
         t->next_8(t, a1);
         sub_8001C19C(3, 0x20);
     }
@@ -576,11 +576,11 @@ void sub_800B860C()
     switch (m[0])
     {
     case 0:
-        if (word_800918CC & 0x1000)
+        if (padRepeat_800918CC & 0x1000)
         {
             m[1] = a - 1;
         }
-        else if (word_800918CC & 0x4000)
+        else if (padRepeat_800918CC & 0x4000)
         {
             m[1] = a + 1;
         }
@@ -608,11 +608,11 @@ void sub_800B860C()
         }
         break;
     case 1:
-        if (word_800918CC & 0x1000)
+        if (padRepeat_800918CC & 0x1000)
         {
             m[2] = b - 1;
         }
-        else if (word_800918CC & 0x4000)
+        else if (padRepeat_800918CC & 0x4000)
         {
             m[2] = b + 1;
         }
@@ -645,11 +645,11 @@ void sub_800B860C()
         }
         break;
     case 2:
-        if (word_800918CC & 0x1000)
+        if (padRepeat_800918CC & 0x1000)
         {
             m[3]--;
         }
-        else if (word_800918CC & 0x4000)
+        else if (padRepeat_800918CC & 0x4000)
         {
             m[3]++;
         }
@@ -715,7 +715,7 @@ void sub_800B8B2C(MapTask* t)
 void sub_800B8B5C()
 {
     int* sel = &dword_800B9438;
-    unsigned short pad = word_800918CC;
+    unsigned short pad = padRepeat_800918CC;
     RECT a;
     RECT b;
     RECT c;

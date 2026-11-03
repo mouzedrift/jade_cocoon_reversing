@@ -16,9 +16,9 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern unsigned short word_8009194C[];
-extern unsigned short dword_800918D4[];
-extern unsigned short word_800918CC[];
+extern unsigned short padPressed_8009194C[];
+extern unsigned short padReleased_800918D4[];
+extern unsigned short padRepeat_800918CC[];
 extern void PlaySfx_80031494(int a1);
 
 INCLUDE_DATA(word_80074994);
@@ -27,13 +27,13 @@ INCLUDE_DATA(dword_80074998);
 // Matched
 int sub_8003D198(int limit, int pos, int step, int idx)
 {
-    if (word_800918CC[idx] & 2)
+    if (padRepeat_800918CC[idx] & 2)
     {
         pos += step;
     }
-    else if (word_800918CC[idx] & 8)
+    else if (padRepeat_800918CC[idx] & 8)
     {
-        if (!(word_800918D0[idx] & 2))
+        if (!(padHeld_800918D0[idx] & 2))
         {
             pos -= step;
         }
@@ -51,13 +51,13 @@ int sub_8003D198(int limit, int pos, int step, int idx)
 // Matched
 int sub_8003D210(int limit, int pos, int step, int idx)
 {
-    if (word_800918CC[idx] & 0x2000)
+    if (padRepeat_800918CC[idx] & 0x2000)
     {
         pos += step;
     }
-    else if (word_800918CC[idx] & 0x8000)
+    else if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (!(word_800918D0[idx] & 0x2000))
+        if (!(padHeld_800918D0[idx] & 0x2000))
         {
             pos -= step;
         }
@@ -77,16 +77,16 @@ int sub_8003D288(int flag, int idx)
 {
     int r = 0;
     unsigned int x;
-    if ((word_8009194C[idx] & 0x40) && !(word_800918D0[idx] & 4) && !(((unsigned short*)dword_800918D4)[idx] & 4))
+    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(((unsigned short*)padReleased_800918D4)[idx] & 4))
     {
         goto done;
     }
-    x = word_8009194C[idx];
+    x = padPressed_8009194C[idx];
     if (!(x & 4))
     {
         goto end;
     }
-    if ((word_800918D0[idx] & 0x40) || (((unsigned short*)dword_800918D4)[idx] & 0x40))
+    if ((padHeld_800918D0[idx] & 0x40) || (((unsigned short*)padReleased_800918D4)[idx] & 0x40))
     {
         if (!(x & 0x40))
         {
@@ -116,7 +116,7 @@ int sub_8003D3A0(int a0)
 int sub_8003D3C0(int arg0, int arg1)
 {
     int r = 0;
-    unsigned short x = word_8009194C[arg1];
+    unsigned short x = padPressed_8009194C[arg1];
     if ((x & 0x10) || (x & 1))
     {
         if (arg0)
@@ -140,7 +140,7 @@ int sub_8003D43C(int a0)
 // Matched
 int sub_8003D45C(int idx)
 {
-    unsigned int f = word_800918D0[idx] & 0x20;
+    unsigned int f = padHeld_800918D0[idx] & 0x20;
     return f != 0;
 }
 // Matched
@@ -161,7 +161,7 @@ int sub_8003D4C0(short* m, int idx)
     {
         m[4] = 0;
     }
-    if (word_800918CC[idx] & 0x2000)
+    if (padRepeat_800918CC[idx] & 0x2000)
     {
         if (m[4] % m[0] == m[0] - 1)
         {
@@ -172,7 +172,7 @@ int sub_8003D4C0(short* m, int idx)
             m[4]++;
         }
     }
-    if (word_800918CC[idx] & 0x8000)
+    if (padRepeat_800918CC[idx] & 0x8000)
     {
         if (m[4] % m[0] == 0)
         {
@@ -183,7 +183,7 @@ int sub_8003D4C0(short* m, int idx)
             m[4]--;
         }
     }
-    if (word_800918CC[idx] & 0x1000)
+    if (padRepeat_800918CC[idx] & 0x1000)
     {
         if (m[4] < m[0])
         {
@@ -194,7 +194,7 @@ int sub_8003D4C0(short* m, int idx)
             m[4] -= m[0];
         }
     }
-    if (word_800918CC[idx] & 0x4000)
+    if (padRepeat_800918CC[idx] & 0x4000)
     {
         if (m[4] > m[0] * (m[1] - 1) - 1)
         {
@@ -215,7 +215,7 @@ int sub_8003D630(short* m)
     {
         m[3] = 0;
     }
-    if (word_800918CC[idx] & 0x2000)
+    if (padRepeat_800918CC[idx] & 0x2000)
     {
         if (m[3] % m[4] == m[4] - 1)
         {
@@ -223,7 +223,7 @@ int sub_8003D630(short* m)
         }
         m[3]++;
     }
-    if (word_800918CC[idx] & 0x8000)
+    if (padRepeat_800918CC[idx] & 0x8000)
     {
         if (m[3] % m[4] == 0)
         {
@@ -231,7 +231,7 @@ int sub_8003D630(short* m)
         }
         m[3]--;
     }
-    if (word_800918CC[idx] & 0x1000)
+    if (padRepeat_800918CC[idx] & 0x1000)
     {
         if (m[3] < m[4])
         {
@@ -239,7 +239,7 @@ int sub_8003D630(short* m)
         }
         m[3] -= m[4];
     }
-    if (word_800918CC[idx] & 0x4000)
+    if (padRepeat_800918CC[idx] & 0x4000)
     {
         if (m[3] > m[4] * (m[5] - 1) - 1)
         {
@@ -346,7 +346,7 @@ int sub_8003DB74(unsigned int* w, int a)
     switch (w[10])
     {
     case 1:
-        if (w[6] == 1 && ((word_800918D0[0] & 0x60F) || (word_8009194C[0] & 0xF0)))
+        if (w[6] == 1 && ((padHeld_800918D0[0] & 0x60F) || (padPressed_8009194C[0] & 0xF0)))
         {
             w[7] = 0x0FFFFFFF;
         }

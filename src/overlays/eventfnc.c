@@ -216,10 +216,10 @@ int sub_800B89A8(EvCtxEventfnc* c)
     return 1;
 }
 
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 int sub_800B89C0(EvCtxEventfnc* c)
 {
-    if (word_8009194C & 0x100)
+    if (padPressed_8009194C & 0x100)
     {
         c->pc_8++;
         return 1;

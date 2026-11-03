@@ -87,12 +87,12 @@ typedef struct
     unsigned char field_7;
 } struct_8;
 
+// per-port vibration state; motor_2 is the actuator data sent with PadSetAct
 typedef struct
 {
-    char pad_0[2];
-    unsigned char field_2;
-    unsigned char field_3;
-} struct_4;
+    unsigned short flags_0; // bit 0: actuators aligned
+    unsigned char motor_2[2];
+} PadVibration;
 
 typedef struct
 {
@@ -275,7 +275,7 @@ extern int dword_80079320[];
 extern struct_8 dword_8007A4B4[];
 extern int** dword_8008D4C0;
 extern struct_12 stru_80083594[];
-extern struct_4 byte_80095460[];
+extern PadVibration padVibration_80095460[];
 extern int** dword_8008B560;
 extern int off_8007CB20[];
 extern int dword_8007CB4C[];
@@ -367,7 +367,7 @@ extern int geomScreenDistance_8008B548;
 extern int dword_8008B4F8;
 extern int dword_800918C4;
 extern unsigned short** dword_8008D4A4;
-extern unsigned short word_800918D0[];
+extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
 extern int dword_80095468[0x10];
 extern int dword_80091990[4];
@@ -486,8 +486,8 @@ int sub_80025D00(struct_list10* p, int* q);
 void sub_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
-extern unsigned short dword_8007CAD8[0xe];
-extern unsigned short dword_8007CAF4[0xa];
+extern unsigned short padButtonBits_8007CAD8[0xe];
+extern unsigned short defaultButtonConfig_8007CAF4[0xa];
 extern int dword_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];
@@ -547,7 +547,7 @@ typedef struct
     int field_130;
 } struct_obj_F;
 
-extern unsigned short dword_8008B578[];
+extern unsigned short buttonConfig_8008B578[];
 // Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
 struct EventEntry;
 typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);

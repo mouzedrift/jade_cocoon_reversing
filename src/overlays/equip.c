@@ -50,7 +50,7 @@ extern EquipTaskOuter_equip* equipTask_8008D4C4;
 extern short tab_800C59B0[];
 extern short tab_800C59B8[];
 extern short tab_800C59C0[];
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 extern int sub_8003D794(void* p, int a1);
 extern void sub_8002BE10();
 extern void sub_800AD3F0(int a0);
@@ -464,7 +464,7 @@ void sub_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
     {
         c->s_46++;
     }
-    if (word_8009194C || c->s_46 >= 0x96)
+    if (padPressed_8009194C || c->s_46 >= 0x96)
     {
         c->field_2C = 1;
         c->s_46 = 0;

@@ -176,7 +176,7 @@ INCLUDE_OVERLAY_ASM(tstcompo, sub_800A15F4);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1804);
 
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 typedef struct TstCompoC
 {
     int state;
@@ -194,7 +194,7 @@ typedef struct TstCompoC
 #if 0 // near miss: original keeps the argument in a2 (register allocation)
 void sub_800A194C(TstCompoC* c)
 {
-    unsigned short pad = word_8009194C;
+    unsigned short pad = padPressed_8009194C;
     if (pad & 0x800)
     {
         c->state = 6;
@@ -214,7 +214,7 @@ void sub_800A194C(TstCompoC* c)
 #endif
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A194C);
 
-extern unsigned short word_8009194C;
+extern unsigned short padPressed_8009194C;
 typedef struct TstCompoE
 {
     int f0;
@@ -229,12 +229,12 @@ typedef struct TstCompoE
     int f190;
     int f194;
 } TstCompoE;
-extern unsigned short word_800918CC;
+extern unsigned short padRepeat_800918CC;
 extern void name_8002556C(int a, int b);
 extern void name_80025440(int a, int b, int c);
 void sub_800A19A4(TstCompoE* c)
 {
-    unsigned short pad = word_800918CC;
+    unsigned short pad = padRepeat_800918CC;
     if (pad & 0x1000)
     {
         int v = c->f18C + 1;
@@ -254,7 +254,7 @@ void sub_800A19A4(TstCompoE* c)
             c->f18C = 1;
         }
     }
-    pad = word_8009194C;
+    pad = padPressed_8009194C;
     if (pad & 0x20)
     {
         if (c->f190)

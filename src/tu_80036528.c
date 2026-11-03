@@ -59,8 +59,8 @@ INCLUDE_ASM(sub_80036528);
 // Matched
 void sub_80036658(int idx)
 {
-    byte_80095460[(unsigned char)idx].field_2 = 0;
-    byte_80095460[(unsigned char)idx].field_3 = 0;
+    padVibration_80095460[(unsigned char)idx].motor_2[0] = 0;
+    padVibration_80095460[(unsigned char)idx].motor_2[1] = 0;
 }
 // Matched
 void sub_80036678(void)
@@ -76,8 +76,8 @@ void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
     {
         o->k++;
         o->field_4 = off_80083B30[o->b][o->k].field_0;
-        byte_80095460[o->idx].field_2 = off_80083B30[o->b][o->k].field_2;
-        byte_80095460[o->idx].field_3 = off_80083B30[o->b][o->k].field_3;
+        padVibration_80095460[o->idx].motor_2[0] = off_80083B30[o->b][o->k].field_2;
+        padVibration_80095460[o->idx].motor_2[1] = off_80083B30[o->b][o->k].field_3;
         if (o->field_4 < 0)
         {
             e->cb_8 = (EventEntryFn)sub_800367F0;
@@ -85,36 +85,36 @@ void sub_800366A0(EventEntry* e, struct_buf_80036528* o)
     }
     if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[o->idx][1] >> 4) != 7)
     {
-        byte_80095460[o->idx].field_2 = 0;
-        byte_80095460[o->idx].field_3 = 0;
+        padVibration_80095460[o->idx].motor_2[0] = 0;
+        padVibration_80095460[o->idx].motor_2[1] = 0;
     }
 }
 // Matched
 void sub_800367F0(int a0, unsigned char* a1)
 {
-    byte_80095460[*a1].field_2 = 0;
-    byte_80095460[*a1].field_3 = 0;
+    padVibration_80095460[*a1].motor_2[0] = 0;
+    padVibration_80095460[*a1].motor_2[1] = 0;
 }
 extern int sub_8005EC34(int a, void* b, int c);
 extern int sub_8005EBB4(int a, void* b);
 extern int dword_80083844[];
 
 // Matched
-void sub_80036820(int port)
+void UpdatePadVibration_80036820(int port)
 {
     int st = PadGetState(port << 4);
     if (st != 0)
     {
         if (st == 1)
         {
-            *(unsigned short*)&byte_80095460[port] &= 0xFFFE;
+            *(unsigned short*)&padVibration_80095460[port] &= 0xFFFE;
         }
-        if (!(*(unsigned short*)&byte_80095460[port] & 1))
+        if (!(*(unsigned short*)&padVibration_80095460[port] & 1))
         {
-            sub_8005EC34(port << 4, &byte_80095460[port].field_2, 2);
+            sub_8005EC34(port << 4, &padVibration_80095460[port].motor_2[0], 2);
             if (st == 2 || (st == 6 && sub_8005EBB4(port << 4, dword_80083844)))
             {
-                *(unsigned short*)&byte_80095460[port] |= 1;
+                *(unsigned short*)&padVibration_80095460[port] |= 1;
             }
         }
     }
