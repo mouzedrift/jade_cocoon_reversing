@@ -358,6 +358,118 @@ void sub_800CC40C()
 #endif
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
 
+#if 0
+// Not matched: register allocation only (44 words): the original gives the list pointer s1 and mode/k s3, f/i s2
+typedef struct CombComItem
+{
+    unsigned short flags;
+    short pad_2;
+    void* text_4;
+    int f8;
+    int fC;
+    short x_10;
+    short y_12;
+    int rest[9];
+} CombComItem;
+extern CombComItem name_800CB690;
+extern CombComItem name_800CB6C8;
+extern CombComItem name_800CB700;
+extern char dword_800A3AA0[][3][0xF8];
+extern int sub_800A1934(void*);
+extern int sub_800A1958(void*);
+extern int sub_80034068(short* p);
+int sub_800CC674(short* arg, int mode, int sel, int f)
+{
+    CombComItem w[3];
+    CombComItem* list[4];
+    CombComItem* items[3];
+    CombComMenu m;
+    short q[2];
+    int res;
+    int i;
+    int k;
+    short x;
+    void* u;
+    CombComItem* p0;
+    CombComItem* it;
+    CombComItem** pk;
+    CombComItem** pi;
+    w[0] = name_800CB690;
+    w[1] = name_800CB6C8;
+    w[2] = name_800CB700;
+    pk = list;
+    memset(pk, 0, 0x10);
+    memset(items, 0, 0xC);
+    p0 = &w[0];
+    m = name_800CB5D0;
+    items[1] = &w[1];
+    items[0] = p0;
+    items[2] = &w[2];
+    m.w[5] = f;
+    x = byte_800CD839 * 62 + 100;
+    w[0].x_10 = x;
+    w[1].x_10 = x;
+    w[2].x_10 = x;
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[3] = sel;
+    m.w[4] = (int)pk;
+    q[0] = arg[0];
+    res = 0;
+    if (mode == 1)
+    {
+        {
+            char* s = (char*)sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            list[0] = p0;
+            p0->text_4 = s + 0x10;
+        }
+        q[1] = arg[1] + 8;
+        if (sub_80034068(q) == 0)
+        {
+            list[0]->flags &= ~2;
+        }
+        else
+        {
+            list[0]->flags |= 2;
+        }
+        res = ((int*)dword_800A4078)[arg[1]];
+    }
+    else
+    {
+        pi = pk;
+        for (k = i = 0; i < 3; i++)
+        {
+            u = dword_800A3AA0[arg[1]][i];
+            if (i != ((int*)dword_800A4078)[byte_800CD839] && sub_800A1934(u) == 0)
+            {
+                it = items[k];
+                *pk = it;
+                it->text_4 = (char*)u + 0x94;
+                if (sub_800A1958(u))
+                {
+                    (*pk)->flags |= 2;
+                }
+                else
+                {
+                    (*pk)->flags &= ~2;
+                }
+                if (sel == k)
+                {
+                    res = i;
+                }
+                pk++;
+                k++;
+            }
+            else
+            {
+                *pi = 0;
+            }
+            pi++;
+        }
+    }
+    DrawMenuWindows_8002A5A4(&m);
+    return res;
+}
+#endif
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC674);
 
 void sub_800CC9FC()
