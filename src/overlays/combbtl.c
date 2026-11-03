@@ -876,7 +876,44 @@ void sub_800A7ECC()
     StartScreenFlash_8001C02C(c);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7EFC);
+extern void sub_800127D0(int a, int b, int c, int d);
+void sub_800A7EFC(EventEntry* e, int* buf)
+{
+    int* p = buf;
+    DVECTOR sxy;
+    SVECTOR v;
+    long z;
+    long flag;
+    int d;
+    v.vx = ((int*)buf[4])[0];
+    v.vy = ((int*)buf[4])[1];
+    v.vz = ((int*)buf[4])[2];
+    v.vx -= dword_8008D600[0].field_0;
+    v.vy -= dword_8008D600[1].field_0;
+    v.vz -= dword_8008D600[2].field_0;
+    RotTransPers(&v, (long*)&sxy, &z, &flag);
+    if (++p[2] > 16)
+    {
+        e->flags = (e->flags & ~1) | 0x8000;
+        return;
+    }
+    d = p[1] / (17 - p[2]);
+    d = -d;
+    p[1] += d;
+    if (p[0] == 1)
+    {
+        int r = sub_80014390((unsigned char)(p[6] + 8));
+        sub_800127D0(p[6] + 8, 0, d, 0);
+        if (*(short*)(r + 8) <= 0)
+        {
+            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)(p[6] + 8)));
+        }
+    }
+    else if (p[0] == 2)
+    {
+        sub_800127D0(p[6] + 8, 2, d, 0);
+    }
+}
 
 void sub_800A8078(short a, short b, short c)
 {
