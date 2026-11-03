@@ -224,7 +224,7 @@ def main(argv):
         "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
         "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
     fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
-    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", cc, "-o", obj])
+    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", "-0", cc, "-o", obj])
     link = os.path.join(b, tag + "_link.txt")
     main_syms = gen_asm.load_symbols(REPO)
     with open(link, "w") as f:
