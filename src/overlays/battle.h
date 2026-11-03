@@ -803,12 +803,11 @@ extern unsigned int dword_800C9E00;
 
 extern int sub_800C0904(unsigned char* p);
 
-extern int* CreateActor_8001D45C(int a0);
 
 
 extern void sub_80019B14(int a, int b, int c);
 
-extern int dword_80079140;
+extern short dword_80079140[]; // default bone table
 
 extern EventNode* dword_8008D60C;
 

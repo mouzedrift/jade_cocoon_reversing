@@ -54,7 +54,7 @@ typedef struct
 // draw arguments handed to sub_80046A58 / sub_80047E28 (Actor.draw_164)
 typedef struct
 {
-    int field_0;            // 0x164: struct_112 field_50
+    struct FtgObject* ftg_0; // 0x164: Model.ftg_50
     int* pos_4;             // 0x168
     short* rot_8;           // 0x16C
     short* bones_C;         // 0x170: Actor.bones_134
@@ -181,7 +181,7 @@ typedef struct Actor
 } Actor;
 
 // actor creation parameters (CreateActor_8001D45C -> sub_8001E574 / sub_8001E7F0; sub_8001D4DC fills one from an actor)
-typedef struct
+typedef struct ActorDesc
 {
     int modelId_0;          // < 0: use model_48
     int kind_4;

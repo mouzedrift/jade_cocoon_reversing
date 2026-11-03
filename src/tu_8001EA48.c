@@ -639,7 +639,7 @@ void sub_8001FD08(void* a0)
     {
         v = sub_80019CC4(o->pos_38);
         o->draw_164.anim_14 = &o->model_15C->anims_54[o->anim_9C];
-        o->draw_164.field_0 = (int)o->model_15C->ftg_50; // ActorDrawArgs.field_0 is still an int
+        o->draw_164.ftg_0 = o->model_15C->ftg_50;
         o->draw_164.pos_4 = o->pos_38;
         o->draw_164.rot_8 = o->rot_5C;
         o->draw_164.bones_C = o->bones_134;

@@ -1300,27 +1300,7 @@ int sub_800C0BA0()
 
 int sub_800C0BF0()
 {
-    struct
-    {
-        int field_0;
-        int field_4;
-        int pos[3];
-        short rot[3];
-        short pad_1A;
-        int field_1C;
-        int field_20;
-        int field_24;
-        int field_28;
-        int field_2C;
-        int field_30;
-        int* field_34;
-        int field_38;
-        int field_3C;
-        int field_40;
-        int field_44;
-        int field_48;
-        int field_4C;
-    } s;
+    ActorDesc s;
     Model* m;
     int k;
     int x;
@@ -1329,28 +1309,28 @@ int sub_800C0BF0()
     {
     m = sub_80010A44(0);
     k = sub_80019A80(((unsigned char*)dword_800C9188)[0xC8]);
-    s.field_0 = -1;
-    s.field_4 = 2;
-    s.pos[0] = dword_800C9190.f4;
-    s.pos[1] = dword_800C9190.f8;
-    s.pos[2] = dword_800C9190.fc;
-    s.rot[0] = 0;
-    s.rot[1] = dword_800C9190.f10;
-    s.rot[2] = 0;
-    s.field_1C = 3;
-    s.field_20 = 4;
-    s.field_24 = -1;
-    s.field_28 = 0x1000;
-    s.field_2C = 4;
-    s.field_30 = 0;
-    s.field_48 = (int)m;
-    s.field_34 = &dword_80079140;
-    s.field_38 = (int)sub_80024E90(m, k);
-    s.field_3C = (int)sub_80024EC8(m, k);
-    s.field_40 = (int)sub_80024E38(m);
-    s.field_44 = (int)sub_80024E64(m);
-    s.field_4C = 1;
-    dword_800C9190.obj = (Actor*)CreateActor_8001D45C((int)&s);
+    s.modelId_0 = -1;
+    s.kind_4 = 2;
+    s.pos_8[0] = dword_800C9190.f4;
+    s.pos_8[1] = dword_800C9190.f8;
+    s.pos_8[2] = dword_800C9190.fc;
+    s.rot_14[0] = 0;
+    s.rot_14[1] = dword_800C9190.f10;
+    s.rot_14[2] = 0;
+    s.clutRow_1C = 3;
+    s.animIdx_20 = 4;
+    s.frame_24 = -1;
+    s.frameSpeed_28 = 0x1000;
+    s.blendDiv_2C = 4;
+    s.visible_30 = 0;
+    s.model_48 = m;
+    s.bones_34 = dword_80079140;
+    s.baseScale_38 = (int*)sub_80024E90(m, k);
+    s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
+    s.anims_40 = (ActorAnim*)sub_80024E38(m);
+    s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+    s.hasMatrices_4C = 1;
+    dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
     x = (int)sub_80024F00(m, k);
     sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));

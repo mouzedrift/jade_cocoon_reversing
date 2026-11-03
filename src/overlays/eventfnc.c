@@ -370,27 +370,6 @@ void sub_800B844C(TaskEventfnc* t)
     }
 }
 
-typedef struct EvActorParamsEventfnc
-{
-    int id_0;
-    int f4;
-    int pos_8[3];
-    short rot_14[3];
-    short pad_1A;
-    int f1C;
-    int f20;
-    int f24;
-    int f28;
-    int f2C;
-    int f30;
-    int* f34;
-    int f38;
-    int f3C;
-    int f40;
-    int f44;
-    int f48;
-    int f4C;
-} EvActorParamsEventfnc;
 typedef struct EvMinionEventfnc
 {
     int data[0x88 / 4];
@@ -436,16 +415,15 @@ typedef struct EvEnemySlotEventfnc
     EvEnemyEventfnc data_8;
 } EvEnemySlotEventfnc;
 extern int InitMinionData_8001900C(EvMinionEventfnc* m, EvPosEventfnc* a1);
-extern Actor* CreateActor_8001D45C(EvActorParamsEventfnc* a0);
 extern void sub_80019B14(int p, char* a1, char* a2);
 extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
 extern int CreateEnemyAiEvent_800A2D90(Actor* a, EvMinionEventfnc* b, int c);
-extern int dword_80079140;
+extern short dword_80079140[]; // default bone table
 
 // Matched
 void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
 {
-    EvActorParamsEventfnc s;
+    ActorDesc s;
     EvMinionEventfnc mi;
     EvEnemyEventfnc e;
     int v[3];
@@ -476,24 +454,24 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     {
         model = AcquireLoaderModel_80020734(*id);
         k = InitMinionData_8001900C(&mi, a);
-        s.id_0 = *id;
-        s.f4 = 0;
+        s.modelId_0 = *id;
+        s.kind_4 = 0;
         s.pos_8[0] = b->pos_0[0];
         s.pos_8[1] = b->pos_0[1];
         s.pos_8[2] = b->pos_0[2];
         s.rot_14[0] = 0;
         s.rot_14[1] = b->rotY_C;
         s.rot_14[2] = 0;
-        s.f1C = 0;
-        s.f20 = 1;
-        s.f24 = -1;
-        s.f28 = 0x1000;
-        s.f2C = 4;
-        s.f30 = 1;
-        s.f34 = &dword_80079140;
+        s.clutRow_1C = 0;
+        s.animIdx_20 = 1;
+        s.frame_24 = -1;
+        s.frameSpeed_28 = 0x1000;
+        s.blendDiv_2C = 4;
+        s.visible_30 = 1;
+        s.bones_34 = dword_80079140;
         if (k >= 4)
         {
-            s.f38 = (int)sub_80024E90(model, k);
+            s.baseScale_38 = (int*)sub_80024E90(model, k);
         }
         else
         {
@@ -504,12 +482,12 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
             v[0] = p0[0] + f;
             v[1] = p0[1] + f;
             v[2] = p0[2] + f;
-            s.f38 = (int)v;
+            s.baseScale_38 = v;
         }
-        s.f3C = (int)sub_80024EC8(model, k);
-        s.f40 = (int)sub_80024E38(model);
-        s.f44 = (int)sub_80024E64(model);
-        s.f4C = 0;
+        s.boneScale_3C = (SVECTOR*)sub_80024EC8(model, k);
+        s.anims_40 = (ActorAnim*)sub_80024E38(model);
+        s.effectTbl_44 = (short (*)[6])sub_80024E64(model);
+        s.hasMatrices_4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
         sub_80019B14((int)actor->bones_134, x, sub_80024F38(model, k));
