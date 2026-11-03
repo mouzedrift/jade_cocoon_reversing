@@ -16,6 +16,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "gte.h"
 
 extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
@@ -139,6 +140,81 @@ void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* 
         }
     }
 }
+#if 0
+// Not matched: size and code right; per group the scheduler orders the three item-pointer setups differently (vo/va/vd: a1,a3,a2 vs a1,a2,a3) and swaps the j / vo-giv registers
+/* o = a + d * t / 4096 */
+#define LERP_SV(o, a, d, t)  \
+    {                        \
+        gte_lddp(0x1000);    \
+        gte_ldsv(a);         \
+        gte_gpf12();         \
+        gte_lddp(t);         \
+        gte_ldsv(d);         \
+        gte_gpl12();         \
+        gte_stsv(o);         \
+    }
+
+#define LERP_GROUP(k, size, off, nn, nv)                                          \
+    if (pa->g[k].n * (nn + nv))                                                   \
+    {                                                                             \
+        int i;                                                                    \
+        int j;                                                                    \
+        for (i = 0; i < pa->g[k].n; i++)                                          \
+        {                                                                         \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
+            SVECTOR* vd = (SVECTOR*)(pd->g[k].p + i * size + off);                \
+            for (j = 0; j < nn; j++)                                              \
+            {                                                                     \
+                LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
+            }                                                                     \
+            for (j = nn; j < nn + nv; j++)                                        \
+            {                                                                     \
+                LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
+            }                                                                     \
+        }                                                                         \
+    }
+
+void sub_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
+{
+    PolyGroups* po = (PolyGroups*)out;
+    PolyGroups* pa = (PolyGroups*)a;
+    PolyGroups* pd = (PolyGroups*)d;
+
+    LERP_GROUP(0, 0x24, 4, 1, 3);
+    LERP_GROUP(1, 0x3C, 0xC, 3, 3);
+    LERP_GROUP(2, 0x30, 0x10, 1, 3);
+    LERP_GROUP(3, 0x48, 0x18, 3, 3);
+    LERP_GROUP(4, 0x2C, 4, 1, 4);
+    LERP_GROUP(5, 0x50, 0x10, 4, 4);
+    LERP_GROUP(6, 0x38, 0x10, 1, 4);
+    LERP_GROUP(7, 0x5C, 0x1C, 4, 4);
+    if (po->n8)
+    {
+        EdgeDelta* eo = (EdgeDelta*)po->p8;
+        EdgeDelta* ea = (EdgeDelta*)pa->p8;
+        EdgeDelta* ed = (EdgeDelta*)pd->p8;
+        int i;
+        for (i = 0; i < po->n8; i++, eo++, ea++, ed++)
+        {
+            LERP_SV(&eo->a, &ea->a, &ed->a, t);
+            LERP_SV(&eo->b, &ea->b, &ed->b, t);
+        }
+    }
+    if (po->n9)
+    {
+        EdgeDelta* eo = (EdgeDelta*)po->p9;
+        EdgeDelta* ea = (EdgeDelta*)pa->p9;
+        EdgeDelta* ed = (EdgeDelta*)pd->p9;
+        int i;
+        for (i = 0; i < po->n9; i++, eo++, ea++, ed++)
+        {
+            LERP_SV(&eo->a, &ea->a, &ed->a, t);
+            LERP_SV(&eo->b, &ea->b, &ed->b, t);
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
