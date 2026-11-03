@@ -12,13 +12,13 @@ void sub_800A096C(void)
 // Matched
 void sub_800A0988(void)
 {
-    *(unsigned short*)(*(int*)(dword_800B1DBC + 0x24)) |= 1;
+    *(unsigned short*)dword_800B1DBC->entry.buffer |= 1;
 }
 
 // Matched
 void sub_800A09B0(void)
 {
-    *(unsigned short*)(*(int*)(dword_800B1DBC + 0x24)) &= 0xFFFE;
+    *(unsigned short*)dword_800B1DBC->entry.buffer &= 0xFFFE;
 }
 
 // Matched
@@ -75,10 +75,10 @@ void sub_800A1444(void)
 // Matched
 void sub_800A1474(GameTask_1* t, GameQ_1* q)
 {
-    if (GetFileRequestStatus_8003BE30(*(int*)q) == 0)
+    if (GetFileRequestStatus_8003BE30(q->req_0) == 0)
     {
         sub_8001AA50(1);
-        *(int*)((char*)q + 8) = sub_800BA9E4();
+        q->f8 = sub_800BA9E4();
         t->next_8 = sub_800BA254;
     }
     eventDispatchHalt_8008B540 = 1;
@@ -87,10 +87,10 @@ void sub_800A1474(GameTask_1* t, GameQ_1* q)
 // Matched
 void sub_800A14E0(GameTask_1* t, GameQ_1* q)
 {
-    if (GetFileRequestStatus_8003BE30(*(int*)q) == 0)
+    if (GetFileRequestStatus_8003BE30(q->req_0) == 0)
     {
         sub_800A6D30(0xa);
-        *(int*)((char*)q + 8) = sub_800BBB94();
+        q->f8 = sub_800BBB94();
         t->next_8 = sub_800A167C;
         unknownFlags_8008D678 &= ~0x4000000;
         dword_800B1228 &= ~0x4000;
@@ -166,7 +166,7 @@ void sub_800A170C(void)
     gCtx_800B1260.f44 = 0;
     for (i = 11; i >= 0; i--)
     {
-        gCtx_800B1260.f7c[i] = 0;
+        gCtx_800B1260.actors_7c[i] = 0;
     }
     gCtx_800B1260.f76c = 0;
     gCtx_800B1260.f770 = 0;
@@ -274,7 +274,7 @@ int CheckEnemyContact_800A19E4(void)
 {
     int i;
     GameSlot_1* s;
-    char* o;
+    GameAi* o;
     unsigned int d;
     int r;
     if (sub_800A5F6C())
@@ -301,11 +301,11 @@ int CheckEnemyContact_800A19E4(void)
     {
         if (s->f0)
         {
-            o = (char*)s->f4;
+            o = s->f4;
             d = 0xfff;
-            if (IsWithinDistance_8003B740((int*)(*(char**)(o + 8) + 0x38), (int*)&dword_8008BD18, &d) == 1)
+            if (IsWithinDistance_8003B740(o->actor_8->pos_38, (int*)&dword_8008BD18, &d) == 1)
             {
-                r = *(int*)(*(char**)(o + 8) + 0x140) * 400 / 4096;
+                r = o->actor_8->f138[2] * 400 / 4096;
                 if (d < r * r)
                 {
                     dword_800B1264 = (int*)s;
@@ -337,9 +337,9 @@ void sub_800A1B78(void)
     int i;
     for (i = 0; i < 12; i++)
     {
-        if (gCtx_800B1260.f7c[i])
+        if (gCtx_800B1260.actors_7c[i])
         {
-            DestroyActor_8001D600((int**)gCtx_800B1260.f7c[i]);
+            DestroyActor_8001D600(gCtx_800B1260.actors_7c[i]);
         }
     }
 }
@@ -500,7 +500,7 @@ int sub_800A248C(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f40; i++)
     {
-        if (gCtx_800B1260.f7c[i] && gCtx_800B1260.f4c[i] == 0)
+        if (gCtx_800B1260.actors_7c[i] && gCtx_800B1260.f4c[i] == 0)
         {
             mask |= 1 << (i + 4);
         }
@@ -512,7 +512,7 @@ int sub_800A248C(void)
 int sub_800A24F4(int a)
 {
     sub_800A2CA8(a, 0);
-    if (gCtx_800B1260.f7c[a] != 0)
+    if (gCtx_800B1260.actors_7c[a] != 0)
     {
         if (gCtx_800B1260.f4c[a] == 0)
         {
@@ -526,20 +526,14 @@ int sub_800A24F4(int a)
 int sub_800A2550(int a)
 {
     sub_800A2CA8(a, 0);
-    {
-        int* g = dword_800B1260;
-        return sub_8001E1C8((struct_obj_A*)g[0x7c / 4 + a]);
-    }
+    return sub_8001E1C8((struct_obj_A*)gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
 int sub_800A2594(int a)
 {
     sub_800A2CA8(a, 0);
-    {
-        int* g = dword_800B1260;
-        return sub_8001E1DC((struct_obj_A*)g[0x7c / 4 + a]);
-    }
+    return sub_8001E1DC((struct_obj_A*)gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
@@ -560,7 +554,7 @@ int sub_800A25F8(int a)
 int sub_800A2618(void* x, int n)
 {
     sub_800A2CA8(n, 0);
-    sub_800C4118(x, &dword_800B130C[n], n, *(int*)((char*)dword_800B130C + n * 4 + 0x690));
+    sub_800C4118(x, &gCtx_800B1260.ents_ac[n], n, gCtx_800B1260.f73c[n]);
     return 1;
 }
 
@@ -613,7 +607,7 @@ int sub_800A2760(unsigned int* p)
     {
         if (p[2] & (1 << i))
         {
-            sub_8001E28C(gCtx_800B1260.f7c[i - 4]);
+            sub_8001E28C(gCtx_800B1260.actors_7c[i - 4]);
         }
     }
     return 1;
@@ -623,10 +617,7 @@ int sub_800A2760(unsigned int* p)
 void sub_800A27FC(int a, int b)
 {
     sub_800A2CA8(a, 0);
-    {
-        int* g = dword_800B1260;
-        sub_80018E5C(g[0x7c / 4 + a], b);
-    }
+    sub_80018E5C(gCtx_800B1260.actors_7c[a], b);
 }
 
 // Matched
@@ -635,8 +626,7 @@ void sub_800A284C(int a)
     sub_800A2CA8(a, 0);
     {
         int v = sub_800A2B60(a);
-        int* g = dword_800B1260;
-        sub_80018EBC(g[0x7c / 4 + a], v);
+        sub_80018EBC(gCtx_800B1260.actors_7c[a], v);
     }
 }
 
@@ -644,7 +634,7 @@ void sub_800A284C(int a)
 int sub_800A2898(int a)
 {
     sub_800A2CA8(a, 0);
-    return AddItem_80010650((Item*)&dword_800B130C[a]);
+    return AddItem_80010650((Item*)&gCtx_800B1260.ents_ac[a]);
 }
 
 // Matched
@@ -668,7 +658,7 @@ void sub_800A2924(int a)
     gCtx_800B1260.f4c[a] = 1;
     if (--gCtx_800B1260.f44 == 0)
     {
-        int x = *(int*)((char*)&gCtx_800B1260 + 0x48);
+        int x = gCtx_800B1260.f48;
         if (x >= 0)
         {
             GameSave2_1* sd = (GameSave2_1*)&saveData_8008B570;
@@ -678,17 +668,17 @@ void sub_800A2924(int a)
 }
 
 // Matched
-void sub_800A29CC(int a, int* out)
+void sub_800A29CC(int a, GameActorInfo* out)
 {
     sub_800A2CA8(a, 0);
     {
-        char* e = (char*)gCtx_800B1260.f7c[a];
-        out[0] = *(int*)(e + 0x14c);
-        out[1] = (int)(e + 0x38);
-        out[2] = *(int*)(e + 0x1c4);
-        out[3] = *(int*)(e + 0x1c8);
-        out[0x2c / 4] = *(int*)(e + 0x144);
-        out[0x30 / 4] = (int)(e + 0x2c);
+        Actor* e = gCtx_800B1260.actors_7c[a];
+        out->f0 = e->f14C;
+        out->pos_4 = e->pos_38;
+        out->f8 = e->f1C4;
+        out->fC = e->f1C8;
+        out->f2C = e->f144;
+        out->f30 = &e->f2C;
     }
 }
 
@@ -704,7 +694,7 @@ int sub_800A2A70(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &dword_800B130C[a];
+        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
         return (int)e + 0x80;
     }
 }
@@ -732,17 +722,17 @@ INCLUDE_OVERLAY_ASM(game, sub_800A2AB4);
 // Matched
 void sub_800A2AE8(void)
 {
-    if (dword_800B1260[0x3c / 4] == 0)
+    if (gCtx_800B1260.f3c == 0)
     {
-        dword_800B1260[0x4c / 4] = 1;
-        dword_800B1260[0x50 / 4] = 0;
-        dword_800B1260[0x3c / 4] = 1;
+        gCtx_800B1260.f4c[0] = 1;
+        gCtx_800B1260.f4c[1] = 0;
+        gCtx_800B1260.f3c = 1;
     }
     else
     {
-        dword_800B1260[0x4c / 4] = 0;
-        dword_800B1260[0x50 / 4] = 1;
-        dword_800B1260[0x3c / 4] = 0;
+        gCtx_800B1260.f4c[0] = 0;
+        gCtx_800B1260.f4c[1] = 1;
+        gCtx_800B1260.f3c = 0;
     }
 }
 
@@ -750,14 +740,14 @@ void sub_800A2AE8(void)
 int sub_800A2B20(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&dword_800B130C[a];
+    return (int)&gCtx_800B1260.ents_ac[a];
 }
 
 // Matched
 int sub_800A2B60(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&dword_800B130C[a];
+    return (int)&gCtx_800B1260.ents_ac[a];
 }
 
 // Matched
@@ -765,7 +755,7 @@ int sub_800A2BA0(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &dword_800B130C[a];
+        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
         return (int)e + 0x6c;
     }
 }
@@ -775,7 +765,7 @@ int sub_800A2BE4(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &dword_800B130C[a];
+        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
         return e->f5c;
     }
 }
@@ -784,20 +774,14 @@ int sub_800A2BE4(int a)
 int sub_800A2C28(int a)
 {
     sub_800A2CA8(a, 0);
-    {
-        int* g = dword_800B1260;
-        return g[0x7c / 4 + a] + 0x38;
-    }
+    return (int)gCtx_800B1260.actors_7c[a]->pos_38;
 }
 
 // Matched
 int sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
-    {
-        int* g = dword_800B1260;
-        return *(int*)(g[0x7c / 4 + a] + 0x1c4);
-    }
+    return (int)gCtx_800B1260.actors_7c[a]->f1C4;
 }
 
 int sub_800A2CA8(int a, int b)
@@ -831,36 +815,36 @@ void sub_800A2D48(GameAi* p)
     sub_8001D760(p->actor_8, p->anim_20, -1, 0);
 }
 
-int* CreateEnemyAiEvent_800A2D90(int a, char* b, int c)
+GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, GameEnt_1* b, int c)
 {
     GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
-    int* q;
+    GameAi* q;
     int v;
     int k;
     int j;
     if (e != 0)
     {
-        q = e->obj_14;
+        q = (GameAi*)e->obj_14;
         e->flags_0 = (e->flags_0 | 1) & ~0x8000;
-        q[0] = (int)e;
-        q[1] = (int)b;
-        q[2] = a;
-        q[10] = 0;
-        q[9] = 0;
-        q[11] = 0;
-        q[8] = -1;
-        q[3] = -1;
-        q[4] = -1;
+        q->flags_0 = &e->flags_0;
+        q->minion_4 = b;
+        q->actor_8 = a;
+        q->f28 = 0;
+        q->timer_24 = 0;
+        q->f2c = 0;
+        q->anim_20 = -1;
+        q->state_c = -1;
+        q->f10 = -1;
         if (c == 0)
         {
             e->fn_8 = sub_800A2EE4;
         }
         else
         {
-            v = *(int*)(b + 0x5c);
+            v = b->f5c;
             if ((unsigned)v < 0x39)
             {
-                j = !(levantCaptureLevel_8008BD7C - (unsigned char)b[0x44] < 5);
+                j = !(levantCaptureLevel_8008BD7C - b->rank_44 < 5);
                 e->fn_8 = name_800ADEB8[v][j];
             }
             else

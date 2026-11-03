@@ -50,10 +50,13 @@ typedef struct GameSlot_1
     char data_8[0xe0];
 } GameSlot_1;
 
+// minion data (0x88 bytes, InitMinionData_8001900C)
 typedef struct GameEnt_1
 {
-    char pad_0[0x5c];
-    int f5c;
+    char pad_0[0x44];
+    unsigned char rank_44;
+    char pad_45[0x17];
+    int f5c; // species
     char pad_60[0x28];
 } GameEnt_1;
 
@@ -85,9 +88,7 @@ extern int* sub_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
-extern int dword_800B1260[];
 
-extern GameEnt_1 dword_800B130C[];
 
 extern GameSlot_1 dword_800B19F0[];
 
@@ -131,7 +132,7 @@ extern int dword_800AEBD8;
 
 extern int dword_800B19E0;
 
-extern int dword_800B1DBC;
+extern EventNode* dword_800B1DBC;
 
 extern int dword_800B0698;
 
@@ -207,9 +208,9 @@ typedef struct GameSub_1
 
 extern int sub_8001E1DC(struct_obj_A* p);
 
-extern void sub_80018EBC(int a, int b);
+extern void sub_80018EBC(Actor* a, int b);
 
-extern void sub_80018E5C(int a, int b);
+extern void sub_80018E5C(Actor* a, int b);
 
 extern void sub_8001D760(Actor* a, int b, int c, int d);
 
@@ -229,6 +230,18 @@ extern int sub_800A77F4(int a);
 
 extern short* dword_800AE254[];
 
+// what sub_800A29CC hands out about an actor
+typedef struct GameActorInfo
+{
+    int f0;
+    int* pos_4;
+    char* f8;
+    char* fC;
+    int pad_10[7];
+    char* f2C;
+    int* f30;
+} GameActorInfo;
+
 typedef struct GameCtx_1
 {
     int f0;
@@ -240,8 +253,10 @@ typedef struct GameCtx_1
     int f44;
     int f48;
     int f4c[12];
-    int f7c[12];
-    char pad_ac[0x76c - 0xac];
+    Actor* actors_7c[12];
+    GameEnt_1 ents_ac[12]; // the encounter's minions (minion data)
+    int f70c[12];
+    int f73c[12];
     int f76c;
     int f770;
     int f774;
@@ -264,9 +279,10 @@ typedef struct GameJ_1
 
 typedef struct GameQ_1
 {
-    char pad_0[4];
+    int req_0; // file request
     int f4;
-    char pad_8[0x34];
+    int f8;
+    char pad_c[0x30];
     int f3c;
 } GameQ_1;
 
@@ -455,7 +471,7 @@ extern int CreateEventList_800435B4(char* p);
 
 extern char dword_800B0DA4[];
 
-extern void sub_8001E28C(int a);
+extern void sub_8001E28C(Actor* a);
 
 extern void sub_80026FAC(void);
 
