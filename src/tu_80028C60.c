@@ -116,7 +116,7 @@ void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-extern void sub_80029D00(void* buf, void* a);
+extern void sub_80029D00(void* buf, unsigned int a);
 typedef struct
 {
     int field_0;
@@ -148,7 +148,7 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
         ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
         if (a6)
         {
-            sub_80029D00(buf, (void*)a6);
+            sub_80029D00(buf, a6);
         }
         if (a5)
         {
@@ -165,7 +165,48 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
         }
     }
 }
-INCLUDE_ASM(sub_800290FC);
+int sub_80029EA8(short* in, short* out);
+int sub_8002A040(short* in, short* out);
+void UnpackColor555_80029C68(unsigned short* d, unsigned short* s);
+void sub_80029CB4(unsigned short* d, unsigned short* s);
+// Matched
+void sub_800290FC(RECT* r, short* dst, short* d)
+{
+    short rgb[4];
+    short hsv[4];
+    RECT r2;
+    unsigned short* buf;
+    unsigned short* p;
+    int x;
+    int y;
+    buf = malloc3_8003FC4C(r->h * (r->w << 1));
+    StoreImage(r, (u_long*)buf);
+    DrawSync(0);
+    p = buf;
+    for (y = 0; y < r->h; y++)
+    {
+        for (x = 0; x < r->w; x++)
+        {
+            UnpackColor555_80029C68((unsigned short*)rgb, p);
+            sub_80029EA8(rgb, hsv);
+            hsv[0] += d[0];
+            hsv[1] += d[1];
+            hsv[1] = (hsv[1] < 0) ? 0 : ((hsv[1] > 31) ? 31 : hsv[1]);
+            hsv[2] += d[2];
+            hsv[2] = (hsv[2] < 0) ? 0 : ((hsv[2] > 31) ? 31 : hsv[2]);
+            sub_8002A040(hsv, rgb);
+            sub_80029CB4(p, (unsigned short*)rgb);
+            p++;
+        }
+    }
+    r2.x = dst[0];
+    r2.y = dst[1];
+    r2.w = r->w;
+    r2.h = r->h;
+    LoadImage(&r2, (u_long*)buf);
+    DrawSync(0);
+    free3_8003FC6C(buf);
+}
 INCLUDE_ASM(sub_800292D0);
 // Matched
 void AllocTiyPrims_800295D8(int* a, int b, int* c, int n, int heap)
@@ -326,6 +367,40 @@ void sub_80029CB4(unsigned short* d, unsigned short* s)
     *d |= s[1] << 5;
     *d |= s[2] << 10;
 }
+int sub_80029EA8(short* in, short* out);
+int sub_8002A040(short* in, short* out);
+#if 0
+// Not matched: (a1 >> 16) & 0xFFFE is hoisted out of the loop here (one more saved reg, frame 0x48)
+void sub_80029D00(void* a0, unsigned int a1)
+{
+    TimInfo* t = (TimInfo*)a0;
+    short rgb[4];
+    short hsv[4];
+    unsigned short* p;
+    int i;
+    if (t->mode_valid && t->clut_len)
+    {
+        p = (unsigned short*)t->caddr;
+        for (i = 0; i < t->crect.w; i++)
+        {
+            UnpackColor555_80029C68((unsigned short*)rgb, &p[i]);
+            if (sub_80029EA8(rgb, hsv))
+            {
+                if (a1 & 0x10000)
+                {
+                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + ((a1 >> 16) & 0xFFFE) * 192 / 360;
+                }
+                else
+                {
+                    hsv[0] = (short)(hsv[0] + a1 * 192 / 360) % 192;
+                }
+                sub_8002A040(hsv, rgb);
+                sub_80029CB4(&p[i], (unsigned short*)rgb);
+            }
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80029D00);
 // Matched
 int sub_80029EA8(short* in, short* out)
