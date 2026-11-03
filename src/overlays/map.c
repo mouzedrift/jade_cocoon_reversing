@@ -307,7 +307,108 @@ void sub_800B7A38(MapTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(map, sub_800B7A90);
+typedef struct MapWin
+{
+    int w[14];
+} MapWin;
+typedef struct MapMenu
+{
+    int w[6];
+} MapMenu;
+extern DISPENV dispEnv_8008D750[2];
+extern char** dword_800B92FC[];
+extern char name_800B6978[];
+extern MapWin name_800B6994;
+extern MapWin name_800B69D4;
+extern MapMenu name_800B6960;
+extern MapSel name_800B9324;
+extern void name_800A75F8();
+extern int MeasureTextWidth_8003E4C8(void* p);
+extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void* memset(void* p, int c, unsigned int n);
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern void sub_800B8338(MapPos* p);
+extern void name_8005AC98(DR_MOVE* p, RECT* r, int x, int y); // SetDrawMove (PSY-Q)
+void sub_800B7A90(MapTask* t, int a)
+{
+    MapPos q;
+    DR_MOVE mv;
+    RECT r0;
+    RECT box;
+    short tp[4];
+    RECT box2;
+    short tp2[4];
+    MapWin w0;
+    MapWin w1;
+    MapWin* list[3];
+    MapMenu m;
+    int y;
+    int wd;
+    short* w = (short*)word_800AEBF8;
+    sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w[0]]), w[0], &q);
+    UpdateMenuCursor_8003D794(&name_800B9324, 0);
+    if (display_8008B4D8.vsyncsPerFrame_4 == 1)
+    {
+        y = display_8008B4D8.field_A_y;
+    }
+    else
+    {
+        y = dispEnv_8008D750[bDoubleBuffer_8008D428 ^ 1].disp.y;
+    }
+    r0.x = 0x140;
+    r0.w = 0x140;
+    r0.y = 0;
+    r0.h = 0xF0;
+    name_8005AC98(&mv, &r0, 0, y);
+    AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
+    wd = MeasureTextWidth_8003E4C8(dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]]);
+    box.x = 0x9E - (short)wd / 2;
+    box.y = 0x12;
+    box.w = wd + 4;
+    box.h = 0x12;
+    tp[0] = 0xA0 - (short)wd / 2;
+    tp[1] = 0x16;
+    DrawText_8003E91C(2, dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]], tp, 0);
+    DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
+    box2.x = 0x74;
+    box2.y = 0xA6;
+    box2.w = 0x58;
+    box2.h = 0x12;
+    tp2[0] = 0x76;
+    tp2[1] = 0xA8;
+    tp2[0] = 0x86;
+    tp2[1] = 0xAA;
+    DrawText_8003E91C(2, name_800B6978, tp2, 0);
+    DrawUiColorWindow_800424C0(&box2, 0, pOT_8008D454, 0);
+    w0 = name_800B6994;
+    w1 = name_800B69D4;
+    memset(list, 0, 0xC);
+    m = name_800B6960;
+    list[0] = &w0;
+    list[1] = &w1;
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[4] = (int)list;
+    m.w[3] = name_800B9324.s8;
+    DrawMenuWindows_8002A5A4(&m);
+    if (IsConfirmPressedP1_8003D380(1))
+    {
+        if ((short)GetMenuCursorIndex_8003DA54(&name_800B9324) == 0)
+        {
+            sub_800B8338((MapPos*)word_800AEBF8);
+            ((void (*)(MapTask*, int))sub_800B6F60)(t, a);
+            t->next_8 = name_800A75F8;
+        }
+        else
+        {
+            t->next_8 = sub_800B6C7C;
+        }
+    }
+    else if (IsCancelPressedP1_8003D41C(1))
+    {
+        t->next_8 = sub_800B6C7C;
+    }
+}
 
 // Matched
 int sub_800B7E54(short a)
