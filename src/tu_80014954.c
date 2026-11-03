@@ -546,5 +546,131 @@ void sub_80014C28(int* a0, int* a1)
         sub_800C32DC(a1[7], 30, 0, 0);
     }
 }
-INCLUDE_ASM(sub_80014CCC);
+typedef struct
+{
+    int pad_0[5];
+    int pos_14[3];
+    int field_20[3];
+    short field_2C;
+    short field_2E;
+} CamView;
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+    short w_C;
+    short h_E;
+    short c_10;
+    short c_12;
+    short c_14;
+    short pad_16;
+    unsigned char rgb_18[4];
+} EffSprite;
+extern CamView dword_8008D4F0;
+extern void sub_80044010(void* a0, int* pos, void* a2, EffSprite* s, int* a4, int* a5, short* sz, short* col,
+                         unsigned char* rgb, int a9, int a10, unsigned long* ot);
+// Matched
+void sub_80014CCC(int* a0, void* buf)
+{
+    int* a1 = (int*)buf;
+    short sz[2];
+    short col[4];
+    int dir[3];
+    int pos[3];
+    int d[3];
+    int pos2[3];
+    unsigned char rgb[4];
+    short sz2[2];
+    int idx;
+    char* e1;
+    char* e2;
+    EffSprite* sp;
+    int dot;
+    int* c;
+    int* t;
+
+    a1[1]++;
+    PushMatrix();
+    ApplyMatrix((MATRIX*)(a1[0x2C / 4] + a1[0x98 / 4] * 32), (SVECTOR*)&a1[0x24 / 4], (VECTOR*)&a1[0x44 / 4]);
+    PopMatrix();
+    a1[0x44 / 4] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 0] + a1[0x44 / 4];
+    a1[0x48 / 4] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 1] + a1[0x48 / 4];
+    a1[0x4C / 4] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 2] + a1[0x4C / 4];
+    a1[0x44 / 4] = ((int*)a1[0x1C / 4])[0] + a1[0x44 / 4];
+    a1[0x48 / 4] = ((int*)a1[0x1C / 4])[1] + a1[0x48 / 4];
+    a1[0x4C / 4] = ((int*)a1[0x1C / 4])[2] + a1[0x4C / 4];
+    e1 = (char*)(dword_80091BD0[0x20 / 4] + sub_80020F00(dword_80091BD0, 0, 0x25) * 52);
+    idx = sub_80020F00(dword_80091BD0, 0, 0x26);
+    e2 = (char*)(dword_80091BD0[0x20 / 4] + idx * 52);
+    sp = *(EffSprite**)*(int*)(e1 + 8);
+    sz[0] = sp->w_C * (word_80084540[(a1[1] << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    sz[1] = sp->h_E * (word_80084540[(a1[1] << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    col[0] = sp->c_10;
+    col[1] = sp->c_12;
+    col[2] = sp->c_14;
+    col[3] = a1[1] * 32;
+    sub_80044010(e1 + 0xC, &a1[0x44 / 4], &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz, col, sp->rgb_18, 2, 0x30,
+                 pOT_8008D690);
+    c = dword_8008D4F0.pos_14;
+    rgb[0] = sp->rgb_18[0] >> 3;
+    rgb[1] = sp->rgb_18[1] >> 3;
+    rgb[2] = sp->rgb_18[1] >> 3;
+    t = c + 3;
+    pos[0] = a1[0x44 / 4] - c[0];
+    pos[1] = a1[0x48 / 4] - c[1];
+    pos[2] = a1[0x4C / 4] - c[2];
+    dir[0] = t[0] - c[0];
+    dir[1] = t[1] - c[1];
+    dir[2] = t[2] - c[2];
+    VectorNormal((VECTOR*)dir, (VECTOR*)dir);
+    dot = (dir[0] * pos[0] + dir[1] * pos[1] + dir[2] * pos[2]) / 4096;
+    pos[0] = dword_8008D4F0.pos_14[0] + dir[0] * dot / 8192;
+    pos[1] = dword_8008D4F0.pos_14[1] + dir[1] * dot / 8192;
+    pos[2] = dword_8008D4F0.pos_14[2] + dir[2] * dot / 8192;
+    if (dword_8008D4F0.field_2E < dot)
+    {
+        sz2[0] = sz[0] / 4;
+        sz2[1] = sz[1] / 4;
+        sub_80044010(e2 + 0xC, pos, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+                     pOT_8008D690);
+    }
+    d[0] = a1[0x44 / 4] - pos[0];
+    d[1] = a1[0x48 / 4] - pos[1];
+    d[2] = a1[0x4C / 4] - pos[2];
+    if (dword_8008D4F0.field_2E * 4 / 3 < dot)
+    {
+        pos2[0] = pos[0] + d[0] / 2;
+        pos2[1] = pos[1] + d[1] / 2;
+        pos2[2] = pos[2] + d[2] / 2;
+        sz2[0] = sz[0];
+        sz2[1] = sz[1];
+        sub_80044010(e2 + 0xC, pos2, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+                     pOT_8008D690);
+    }
+    if (dword_8008D4F0.field_2E * 2 < dot)
+    {
+        pos2[0] = pos[0] - d[0] / 2;
+        pos2[1] = pos[1] - d[1] / 2;
+        pos2[2] = pos[2] - d[2] / 2;
+        sz2[0] = sz[0] / 2;
+        sz2[1] = sz[1] / 2;
+        sub_80044010(e2 + 0xC, pos2, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+                     pOT_8008D690);
+    }
+    if (dword_8008D4F0.field_2E * 4 / 3 < dot)
+    {
+        pos2[0] = pos[0] - d[0] / 4;
+        pos2[1] = pos[1] - d[1] / 4;
+        pos2[2] = pos[2] - d[2] / 4;
+        sz2[0] = sz[0] * 2;
+        sz2[1] = sz[1] * 2;
+        sub_80044010(e2 + 0xC, pos2, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+                     pOT_8008D690);
+    }
+    if (effectOutcomeFlag_8008D780 == 1)
+    {
+        *a0 = (*a0 & ~1) | 0x8000;
+    }
+}
 INCLUDE_ASM(sub_80015478);
