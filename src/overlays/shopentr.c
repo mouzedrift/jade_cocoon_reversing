@@ -285,17 +285,25 @@ void sub_800B72D4(CtxShopentr* c)
 }
 
 // Matched
+// what DrawGauge_8002BA54 takes (struct_BA54 in tu_8002B2A4.c)
+typedef struct GaugeShopentr
+{
+    int state_0;
+    int f4;
+    int value_8;
+    int max_C;
+} GaugeShopentr;
 int sub_800B73A8(CtxShopentr* c)
 {
     short r[2];
-    int v[4];
-    v[0] = 2;
-    v[1] = 0;
-    v[2] = c->counter_16;
-    v[3] = 0x3c;
+    GaugeShopentr v;
+    v.state_0 = 2;
+    v.f4 = 0;
+    v.value_8 = c->counter_16;
+    v.max_C = 0x3c;
     r[0] = 0x8c;
     r[1] = 0xa0;
-    DrawGauge_8002BA54(v, 0, r, 14);
+    DrawGauge_8002BA54(&v, 0, r, 14);
     if (c->counter_16 < 0x3c)
     {
         c->counter_16++;
