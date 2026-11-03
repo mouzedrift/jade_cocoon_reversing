@@ -2334,7 +2334,123 @@ int sub_800BBE18(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBE3C);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC2B4);
+typedef struct EvMsgInfoEventfnc
+{
+    short f0_0;
+    short s2_2;
+    int f4_4;
+    int f8_8;
+    int fC_C;
+} EvMsgInfoEventfnc;
+
+typedef struct EvXaEventfnc
+{
+    short a_0;
+    short b_2;
+    short c_4;
+} EvXaEventfnc;
+
+typedef struct EvVoiceEventfnc
+{
+    unsigned char id_0;
+    unsigned char sub_1;
+    EvXaEventfnc xa_2;
+} EvVoiceEventfnc;
+
+typedef struct EvSettingsEventfnc
+{
+    unsigned int pad_0 : 3;
+    unsigned int b3 : 1;
+    unsigned int b4 : 1;
+    unsigned int pad_5 : 17;
+    unsigned int b22 : 1;
+} EvSettingsEventfnc;
+
+extern int sub_800349B4(int a, EvMsgInfoEventfnc* b);
+extern void sub_800A67B4(EvCtxEventfnc* c);
+extern void sub_80034A84(int a);
+extern int sub_80034A30(int a);
+extern void sub_80034A68(int a);
+extern int dword_800AEBE8;
+extern EvXaEventfnc* dword_800AEBEC;
+extern EvVoiceEventfnc* dword_800AEBF0;
+int sub_800BC2B4(EvCtxEventfnc* c)
+{
+    EvMsgInfoEventfnc info;
+    unsigned int f;
+    int i;
+    EvXaEventfnc* k;
+    SaveData* s;
+    if (c->flags_0 & 0x80)
+    {
+        c->flags_0 &= ~0x80;
+        return 1;
+    }
+    if (c->flags_0 & 2)
+    {
+        if (!sub_800349B4(c->f11C_11C, &info))
+        {
+            return 0;
+        }
+        if (c->flags_0 & 0x100)
+        {
+            if (XaRequestStop_80043524())
+            {
+                c->flags_0 &= ~0x100;
+            }
+        }
+        sub_800A67B4(c);
+        f = c->flags_0;
+        c->flags_0 = f & ~2;
+        if (!info.fC_C)
+        {
+            return 0;
+        }
+        if (f & 0x40)
+        {
+            c->flags_0 = (c->flags_0 & ~0x40) | 0x80;
+        }
+        if (info.f8_8)
+        {
+            c->fEC_EC = info.s2_2;
+        }
+        sub_80034A84(c->f11C_11C);
+        dword_800AEBE8 = 0x8000;
+        dword_800AEBEC = 0;
+        c->f118_118 = 0;
+        return 1;
+    }
+    if (dword_800AEBF0)
+    {
+        k = 0;
+        for (i = 0; dword_800AEBF0[i].xa_2.a_0 >= 0; i++)
+        {
+            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && sub_80034ADC(c->f11C_11C, dword_800AEBF0[i].sub_1))
+            {
+                k = &dword_800AEBF0[i].xa_2;
+            }
+        }
+        if (((EvSettingsEventfnc*)&saveData_8008B570.field_1C_settings)->b22 == 1 && k && dword_800AEBEC != k)
+        {
+            dword_800AEBEC = k;
+            XaRequestPlay_80043564(k->a_0, k->b_2, k->c_4);
+            c->flags_0 |= 0x100;
+        }
+    }
+    if (sub_80034A30(c->f11C_11C))
+    {
+        s = &saveData_8008B570;
+        if (((EvSettingsEventfnc*)&s->field_1C_settings)->b3 == 1 || XaIsIdle_80043584())
+        {
+            if (((EvSettingsEventfnc*)&s->field_1C_settings)->b4 == 1 || !c->f18_18)
+            {
+                sub_80034A68(c->f11C_11C);
+                c->flags_0 |= 2;
+            }
+        }
+    }
+    return 0;
+}
 
 int* sub_800BC560(int* p)
 {
