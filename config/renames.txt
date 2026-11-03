@@ -1,0 +1,354 @@
+# Identifier renames, applied by scripts/apply_renames.py as whole-word replacements across src/, include/,
+# symbol_addrs.txt, config/*.txt and overlays/*.sym. One `OldName NewName` per line.
+# Several old spellings of one address (off_/dword_/stru_ aliases) may map to the same new name.
+# Re-run the script after merging other branches: it is idempotent.
+
+# --- item / equipment / key item tables (names are Shift-JIS fullwidth strings) ---
+off_8007CB78 itemNames_8007CB78
+dword_8007CB78 itemNames_8007CB78
+sub_8001CE20 GetItemName_8001CE20
+dword_8007CED8 itemPrices_8007CED8
+word_8007CED8 itemPrices_8007CED8
+sub_8001CE54 GetItemPrice_8001CE54
+aKkkiqqqqqssssZ itemFlags_8007CC50
+sub_8001CE70 GetItemFlags_8001CE70
+dword_8007CCA8 itemData_8007CCA8
+stru_8007CCA8 itemData_8007CCA8
+sub_8001CDF4 GetItemData_8001CDF4
+byte_8007CEAC itemIcons_8007CEAC
+a44448223333555 itemIcons_8007CEAC
+sub_8001D2AC GetItemIcon_8001D2AC
+off_8007CF30 keyItemNames_8007CF30
+sub_8001D318 GetKeyItemName_8001D318
+dword_8007CFC8 keyItemIcons_8007CFC8
+byte_8007CFC8 keyItemIcons_8007CFC8
+sub_8001D344 GetKeyItemIcon_8001D344
+off_8007CB20 personNames_8007CB20
+sub_8001CD3C GetPersonName_8001CD3C
+off_8007CB08 nameGetters_8007CB08
+
+off_8007CFF0 weaponNames_8007CFF0
+dword_8007CFF0 weaponNames_8007CFF0
+sub_8001CF20 GetWeaponName_8001CF20
+dword_8007D388 weaponPrices_8007D388
+sub_8001CF4C GetWeaponPrice_8001CF4C
+dword_8007D04C weaponData_8007D04C
+stru_8007D04C weaponData_8007D04C
+sub_8001CF84 GetWeaponData_8001CF84
+sub_8001CEF4 GetWeaponStatBonus_8001CEF4
+
+off_8007D3E4 armorNames_8007D3E4
+dword_8007D3E4 armorNames_8007D3E4
+sub_8001CFDC GetArmorName_8001CFDC
+dword_8007D64C armorPrices_8007D64C
+word_8007D64C armorPrices_8007D64C
+sub_8001D008 GetArmorPrice_8001D008
+dword_8007D420 armorData_8007D420
+stru_8007D420 armorData_8007D420
+sub_8001D034 GetArmorData_8001D034
+sub_8001CFB0 GetArmorStatBonus_8001CFB0
+dword_8007D598 armorModifiers_8007D598
+stru_8007D598 armorModifiers_8007D598
+sub_8001CDA0 GetArmorModifiers_8001CDA0
+
+off_8007D66C accessoryNames_8007D66C
+dword_8007D66C accessoryNames_8007D66C
+sub_8001D0A4 GetAccessoryName_8001D0A4
+dword_8007D914 accessoryPrices_8007D914
+word_8007D914 accessoryPrices_8007D914
+sub_8001D0D0 GetAccessoryPrice_8001D0D0
+dword_8007D6B0 accessoryData_8007D6B0
+stru_8007D6B0 accessoryData_8007D6B0
+sub_8001D0FC GetAccessoryData_8001D0FC
+sub_8001D078 GetAccessoryStatBonus_8001D078
+dword_8007D848 accessoryModifiers_8007D848
+stru_8007D848 accessoryModifiers_8007D848
+sub_8001CD74 GetAccessoryModifiers_8001CD74
+
+# equipment by category (0 weapon, 1 armor, 2 accessory)
+sub_8001D128 GetEquipmentName_8001D128
+sub_8001D190 GetEquipmentData_8001D190
+sub_8001D1F8 GetEquipmentPrice_8001D1F8
+dword_8007D938 equipmentIcons_8007D938
+sub_8001D2D4 GetEquipmentIcon_8001D2D4
+sub_80033624 CalcEquippedStats_80033624
+sub_80033754 ApplyEquipmentModifiers_80033754
+
+off_8007A170 minionSpeciesNames_8007A170
+sub_8001CD6C GetPersonIcon_8001CD6C
+
+# --- public TIY (DATA.001 file 9): menu sprites, POLY_FT4s and tpages loaded by LoadPublicTiyAndFtg ---
+dword_8008D434 publicTiySprts_8008D434
+dword_8008D430 publicTiyPolyFT4s_8008D430
+dword_8008D440 publicTiyTPages_8008D440
+sub_80032470 GetPublicTiySprt_80032470
+sub_80033080 DrawPublicTiySprt_80033080
+sub_80033114 DrawPublicTiySprtColored_80033114
+sub_800331C4 AddSprtWithTPage_800331C4
+
+# --- POLY_FT4 copies with mirrored / rotated vertices ---
+sub_800324D8 AddRotatedPolyFT4_800324D8
+sub_80032D34 AddPolyFT4FlipXY_80032D34
+sub_80032DFC AddPolyFT4FlipX_80032DFC
+sub_80032E78 AddPolyFT4FlipY_80032E78
+sub_80032EF4 AddPolyFT4Rot90Ccw_80032EF4
+sub_80032F88 AddPolyFT4Rot90Cw_80032F88
+sub_8003301C AddPolyFT4Copy_8003301C
+sub_80033394 PulseColor_80033394
+sub_8003356C GetEquipmentId_8003356C
+
+# --- SPU reverb ---
+dword_80091CC8 reverbAttr_80091CC8
+sub_8002A1BC InitReverbTask_8002A1BC
+sub_8002A218 UpdateReverb_8002A218
+sub_8002A280 SetReverbMode_8002A280
+sub_8002A2A0 SetReverbDepth_8002A2A0
+sub_8002A2E8 SetReverbDepthLeft_8002A2E8
+sub_8002A2FC SetReverbDepthRight_8002A2FC
+sub_8002A310 DrawTextList_8002A310
+
+# --- sound task / sequences ---
+sub_8002FEB8 ResetSoundTask_8002FEB8
+sub_8002FF10 InitSoundTask_8002FF10
+sub_8002FF64 UpdateSoundTask_8002FF64
+sub_8003006C FreeSoundTask_8003006C
+dword_800833E4 seqSlots_800833E4
+sub_80031160 PlaySeqSlot_80031160
+sub_80031334 StopSeqSlot_80031334
+sub_800303E8 LoadSeqSlotSound_800303E8
+sub_80030664 FreeSeqSlotSound_80030664
+sub_80031260 PlayMusicSeq_80031260
+sub_80030688 IsSoundTaskReady_80030688
+sub_800306B0 IsSoundTaskReady_800306B0
+sub_800306D8 FreeBgmSeqs_800306D8
+sub_800306FC StopSoundSeqById_800306FC
+sub_800315F4 FreeBgmAndSfx_800315F4
+sub_80031638 FadeOutSfxSeq_80031638
+
+# --- magic (30 spells: Agni/Vahli/Ulvi/Malti..., Selahm, Medina, Ad ..., Deva ...) ---
+off_8007C348 magicNames_8007C348
+sub_8001AC2C GetMagicName_8001AC2C
+dword_8007C438 magicData_8007C438
+struct_12_b MagicData
+sub_8001AC58 GetMagicMpCost_8001AC58
+sub_8001AD30 GetMagicElement_8001AD30
+sub_8001AD90 ClearMagicBits_8001AD90
+sub_8001ADAC SetMagicBit_8001ADAC
+sub_8001ADD4 OrMagicBits_8001ADD4
+sub_8001AE00 ClearMagicBit_8001AE00
+sub_8001AE2C TestMagicBit_8001AE2C
+sub_8001AE54 CountMagicBits_8001AE54
+sub_8001AEC0 FindNthMagicBit_8001AEC0
+sub_80033A90 HasMagic_80033A90
+sub_80033C08 CheckMagicCastable_80033C08
+sub_80033AFC CheckItemUsable_80033AFC
+
+# --- screen fade ---
+sub_8001C19C SetFadeMode_8001C19C
+sub_8001C260 BeginFade_8001C260
+sub_8001C290 EndFade_8001C290
+
+# --- button config ---
+sub_8001C874 GetButtonConfig_8001C874
+sub_8001C824 GetButtonConfigBitIndex_8001C824
+sub_8001C8A0 FirstPadButtonBit_8001C8A0
+sub_8001C364 PlayAnimFrameSfx_8001C364
+
+# --- overlay loader task ---
+dword_8008D4C0 overlayLoaderTask_8008D4C0
+sub_80020CB8 InitOverlayLoaderTask_80020CB8
+sub_80020CD8 UpdateOverlayLoaderTask_80020CD8
+sub_80020D68 ResetOverlayLoaderTask_80020D68
+
+# --- 3D models (0x70-byte slots with id_38, descriptors in modelDescs) ---
+off_800824CC modelDescs_800824CC
+sub_800251E4 GetModelDesc_800251E4
+sub_80024ADC InitModelList_80024ADC
+sub_80024BB0 FreeModelList_80024BB0
+sub_80024C48 FreeModel_80024C48
+sub_80024D70 AcquireModel_80024D70
+sub_80026630 FindModelIndex_80026630
+sub_8002667C FindFreeModelIndex_8002667C
+sub_800266CC ClearModel_800266CC
+sub_80024DC4 AreFileRequestsDone_80024DC4
+sub_80025D00 AddFileRequest_80025D00
+
+# --- misc helpers ---
+sub_80013E30 Rand100_80013E30
+sub_80014358 LowestSetBit_80014358
+sub_8001450C FirFilterInit_8001450C
+sub_80014574 FirFilterSetup_80014574
+sub_80014588 FirFilterStep_80014588
+sub_80034B14 CountUntilZero_80034B14
+sub_80034B40 CountMaskedUntilZero_80034B40
+sub_80034B88 NthMaskedIndex_80034B88
+
+# --- loading / file request tasks ---
+sub_8003CD5C DrawLoadingIcon_8003CD5C
+sub_8003C6C8 StartFileRequestTask_8003C6C8
+sub_8003C76C UpdateFileRequestTask_8003C76C
+
+# --- text / menu cursor ---
+sub_8003EF74 DrawNumber_8003EF74
+dword_80086574 fontDefs_80086574
+sub_8003D198 AdjustByShoulderButtons_8003D198
+sub_8003D210 AdjustByLeftRight_8003D210
+sub_8003D4C0 MoveGridCursor_8003D4C0
+sub_8003D630 MoveGridCursorP1_8003D630
+struct_menu MenuCursor
+sub_8003D830 MenuCursorInput_8003D830
+sub_8003D794 UpdateMenuCursor_8003D794
+sub_8003DA54 GetMenuCursorIndex_8003DA54
+
+# --- pad vibration ---
+dword_8008D4B8 vibrationTasks_8008D4B8
+off_80083B30 vibrationPatterns_80083B30
+sub_80036528 StartPadVibration_80036528
+sub_800366A0 UpdatePadVibration_800366A0
+sub_800367F0 StopPadVibrationTask_800367F0
+sub_80036658 StopPadVibration_80036658
+sub_80036678 StopAllPadVibration_80036678
+
+# --- camera ---
+dword_8008D4A0 cameraTask_8008D4A0
+dword_8008D4F0 cameraState_8008D4F0
+sub_800376A8 ResetCameraToLevant_800376A8
+sub_80037AC8 SetCameraTarget_80037AC8
+sub_80039620 SaveCameraState_80039620
+sub_80039698 RestoreCameraState_80039698
+
+# --- UI TIY (DATA.001 file 0x3B, loaded by sub_8002BF74): sprites incl. digit glyphs 0x84.. and 0xCF.. ---
+loadedOverlayMaybe_8008D620 uiTiySprts_8008D620
+dword_8008D3F4 uiTiyTPages_8008D3F4
+dword_8008B4E8 uiTiyLoaded_8008B4E8
+sub_8002BF74 LoadUiTiy_8002BF74
+sub_8002BFCC OnUiTiyLoaded_8002BFCC
+sub_8002C06C DrawUiTiySprt_8002C06C
+sub_8002C100 DrawLargeNumber_8002C100
+sub_8002C290 DrawSmallNumber3_8002C290
+sub_8002C414 DrawSmallNumber9_8002C414
+dword_800826F8 largeDigitColors_800826F8
+sub_8002C5D0 SetLargeDigitColor_8002C5D0
+sub_8002EF5C DrawUiTiySprtRow_8002EF5C
+
+# --- windows (frame colour from uiColor_8008B590) ---
+sub_8004196C InterpolateWindowRect_8004196C
+sub_80042460 DrawWindow_80042460
+sub_800424C0 DrawUiColorWindow_800424C0
+sub_8004226C GetWindowColors_8004226C
+sub_80041ED0 DrawWindowFrame_80041ED0
+sub_8002A384 DrawUiWindow_8002A384
+sub_8002BEC8 DrawAnimatedWindow_8002BEC8
+
+# --- more name tables ---
+off_800834E4 abilityNames_800834E4
+sub_800319CC GetAbilityName_800319CC
+off_80083580 abilityBonusNames_80083580
+sub_800319E8 GetAbilityBonusName_800319E8
+off_80082EC4 rankNames_80082EC4
+sub_8002FCD8 GetRankName_8002FCD8
+off_80083818 itemMessageSuffixes_80083818
+
+# --- boot screens (task callbacks in copyrightData/demoDisclaimerData/introAnimeData) ---
+sub_80040A10 InitCopyrightScreen_80040A10
+sub_800408F4 DrawCopyrightScreen_800408F4
+dword_8008D47C copyrightSprts_8008D47C
+dword_8008B4EC copyrightTPages_8008B4EC
+sub_80040B94 DrawDemoDisclaimer_80040B94
+sub_80040D34 StartIntroAnime_80040D34
+
+# --- math / prim helpers ---
+sub_8004D3D8 RotMatrixXYZ_8004D3D8
+sub_8004D5CC RotMatrixZYX_8004D5CC
+sub_8004D7A8 LerpSVector_8004D7A8
+sub_8004D848 LerpAngles_8004D848
+sub_8003B5D4 VectorToAngles_8003B5D4
+sub_8003BA38 CompareUInt_8003BA38
+sub_80029CB4 PackColor555_80029CB4
+sub_8004251C DrawGouraudRect_8004251C
+sub_80042750 DrawRectOutline_80042750
+sub_80042870 DrawLine_80042870
+sub_8003C060 CancelFileRequest_8003C060
+
+# --- event lists created from the table at 0x80078EB8 (count, flags, buffer size, &list, init, free) ---
+dword_8008B544 fileRequestTask_8008B544
+dword_8008D488 fileRequestTasks_8008D488
+dword_8008B560 xaTask_8008B560
+dword_8008D3F8 effectTask_8008D3F8
+sub_80014618 InitEffectTask_80014618
+sub_80014638 UpdateEffectTask_80014638
+sub_800148A0 FreeEffectTask_800148A0
+sub_800368F8 InitCameraTask_800368F8
+dword_8008D640 messageWindowTask_8008D640
+sub_8003422C OpenMessageWindow_8003422C
+sub_80034BB8 UpdateMessageWindow_80034BB8
+sub_80035AC8 OpenItemMessageWindow_80035AC8
+sub_80035BD8 UpdateItemMessageWindow_80035BD8
+
+# --- text measuring ---
+sub_8003E884 GetCharWidth_8003E884
+sub_8003E4C8 MeasureTextWidth_8003E4C8
+sub_8003E6B0 MeasureTextWidthFont1_8003E6B0
+sub_8003E3B4 MeasureTextLines_8003E3B4
+sub_8003E2A8 MeasureTextLinesMasked_8003E2A8
+dword_80096038 textNumberArgs_80096038
+sub_8003F7C8 EncodeName_8003F7C8
+sub_8001900C InitMinionData_8001900C
+
+# --- model tasks (dword_8008D618 list; state machine load -> wait -> draw -> done) ---
+dword_8008D618 modelTasks_8008D618
+sub_80010850 StartModelTask_80010850
+sub_8001091C FindModelTask_8001091C
+sub_8001098C FreeModelTask_8001098C
+sub_80010A10 RunModelTask_80010A10
+sub_80010A90 ModelTaskUpdateCb_80010A90
+sub_80010AB4 ModelTaskFreeCb_80010AB4
+sub_80010AD8 StepModelTask_80010AD8
+sub_80010B90 ModelTaskLoad_80010B90
+sub_80010C30 ModelTaskWaitLoad_80010C30
+sub_80010DB0 ModelTaskDraw_80010DB0
+struct_state_obj ModelTaskState
+sub_80025200 LoadModel_80025200
+
+# --- model animations (model+0x54: 28-byte entries, +0x44 loaded flags) and their reference counts ---
+sub_80025440 LoadModelAnim_80025440
+sub_8002556C FreeModelAnim_8002556C
+sub_800255D8 IsModelAnimLoaded_800255D8
+dword_800919A0 modelAnimRefs_800919A0
+sub_800201A4 ClearModelAnimRefs_800201A4
+sub_800204AC ClearModelAnimRef_800204AC
+sub_800201EC AddModelAnimRef_800201EC
+sub_80020278 ReleaseModelAnimRef_80020278
+sub_8002032C RequestModelAnim_8002032C
+sub_800203B0 ReleaseModelAnim_800203B0
+
+# --- VRAM image recolouring (StoreImage -> per-pixel 555 colour change -> LoadImage) ---
+sub_800290FC ShiftVramImageHsv_800290FC
+sub_800292D0 TintVramImage_800292D0
+sub_80029EA8 Rgb555ToHsv_80029EA8
+sub_8002A040 HsvToRgb555_8002A040
+
+# --- field actors (dword_8008D43C list: position at +0x38, y angle at +0x5E, model, anims) ---
+dword_8008D43C actorTasks_8008D43C
+sub_8001D378 InitActors_8001D378
+sub_8001D3C4 FreeActors_8001D3C4
+sub_8001D45C CreateActor_8001D45C
+sub_8001D41C UpdateActorCb_8001D41C
+sub_8001D600 DestroyActor_8001D600
+sub_8001D658 SetActorActive_8001D658
+sub_8001DDFC TurnActorTowards_8001DDFC
+sub_8001DECC FindActorInFront_8001DECC
+sub_8001DFC8 IsActorNear_8001DFC8
+sub_8001E0F4 IsInFrontWithinRange_8001E0F4
+sub_8003B740 IsWithinDistance_8003B740
+
+# --- menu screens / text boxes ---
+sub_8002A5A4 DrawMenuWindows_8002A5A4
+sub_8002A710 DrawMenuWindowContents_8002A710
+sub_8002BE10 DrawMenuBackground_8002BE10
+sub_8002B004 DrawButtonHelpBar_8002B004
+sub_8002AE38 DrawTextLinesWindow_8002AE38
+sub_8002AFA0 DrawTextBox_8002AFA0
+sub_8002AF10 DrawLargeTextBox_8002AF10
+sub_8002AF58 DrawSmallTextBox_8002AF58
+dword_8008B4A8 effectObjects_8008B4A8

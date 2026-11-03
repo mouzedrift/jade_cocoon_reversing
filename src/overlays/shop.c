@@ -40,7 +40,7 @@ typedef struct ShopUnitShop
 } ShopUnitShop;
 
 extern int name_8007DC74;
-extern int sub_80010850(void* p);
+extern int StartModelTask_80010850(void* p);
 extern int sub_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
 extern void sub_800BBB54();
@@ -110,7 +110,7 @@ typedef struct ShopTask3Shop
 } ShopTask3Shop;
 
 extern char name_80082680[];
-extern void sub_8002B004(void* p, int a, int b);
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern char name_800BFFE0[];
 extern char name_800C0048[];
 extern char name_800BFF70[];
@@ -140,7 +140,7 @@ extern ShopSixShop name_800B9608;
 extern char name_800C07D4[];
 extern void sub_800B9FC8(void* a, void* b, void* c, int d);
 extern int sub_800AD288(int a, int b);
-extern void sub_8002A5A4(void* p);
+extern void DrawMenuWindows_8002A5A4(void* p);
 extern void sub_800BB148();
 typedef struct ShopEntShop
 {
@@ -152,7 +152,7 @@ extern int* name_800BFD08[];
 extern ShopEntShop name_800BF7C8[];
 extern short name_800BF8B4[];
 extern void sub_800A7B00(int a);
-extern void sub_8002BF74();
+extern void LoadUiTiy_8002BF74();
 extern int sub_800BD678();
 extern void sub_800BD854();
 extern void sub_800BD7A8();
@@ -162,9 +162,9 @@ extern int sub_800B9888(short i);
 extern ShopItemShop* sub_800B9C5C(int i);
 extern int sub_800B9C10(int i);
 extern ShopItemShop name_8008EF18[];
-extern void sub_8001AE00(unsigned int* b, int i);
-extern int sub_8001AD30(int i);
-extern int sub_8001AE54(unsigned int* b);
+extern void ClearMagicBit_8001AE00(unsigned int* b, int i);
+extern int GetMagicElement_8001AD30(int i);
+extern int CountMagicBits_8001AE54(unsigned int* b);
 extern char name_800B6D04[];
 extern char name_800B6D2C[];
 extern unsigned short name_800BF888[];
@@ -307,9 +307,9 @@ extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
 extern ShopCtxShop name_800C09E0;
 extern int name_800C0A1C;
-extern void sub_8001C19C(int a, int b);
-extern void sub_8001D600(void* p);
-extern void sub_8002BE10();
+extern void SetFadeMode_8001C19C(int a, int b);
+extern void DestroyActor_8001D600(void* p);
+extern void DrawMenuBackground_8002BE10();
 extern void* memset(void* p, int c, unsigned int n);
 extern void sub_800BC380();
 extern void sub_800BF574();
@@ -568,7 +568,7 @@ int sub_800B9E94(char* src, char* dst, short c)
         (dst + i)[0x7C] = src[0x42];
         i++;
     }
-    r = sub_80014358(*(short*)(src + 0x42));
+    r = LowestSetBit_80014358(*(short*)(src + 0x42));
     for (j = 0; j < 4; j++)
     {
         (dst + j)[0xC2] = 0;
@@ -753,26 +753,26 @@ void sub_800BAA0C(char* a, char* b)
     *(unsigned int*)(a + 0xF4) = old;
     for (i = 0; i < 30; i++)
     {
-        if (sub_8001AE2C(p, i) && !((1 << sub_8001AD30(i)) & mask))
+        if (TestMagicBit_8001AE2C(p, i) && !((1 << GetMagicElement_8001AD30(i)) & mask))
         {
-            sub_8001AE00(p, i);
+            ClearMagicBit_8001AE00(p, i);
         }
     }
     if (a[0xC2] != 0x20)
     {
-        sub_8001AE00(p, 0x15);
+        ClearMagicBit_8001AE00(p, 0x15);
     }
     if (a[0xC4] != 0x20)
     {
-        sub_8001AE00(p, 0x17);
+        ClearMagicBit_8001AE00(p, 0x17);
     }
     if (a[0xC3] != 0x20)
     {
-        sub_8001AE00(p, 0x18);
+        ClearMagicBit_8001AE00(p, 0x18);
     }
     if (a[0xC5] != 0x20)
     {
-        sub_8001AE00(p, 0x16);
+        ClearMagicBit_8001AE00(p, 0x16);
     }
 }
 #endif
@@ -995,7 +995,7 @@ void sub_800BB058(int a)
         t->flags = (t->flags | 1) & ~0x8000;
         sub_8003F900(2, 0);
         sub_8003F900(1, 0);
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         u->field_96 = a;
         sub_800BB148(u);
         sub_800BC380(u);
@@ -1006,9 +1006,9 @@ void sub_800BB058(int a)
 extern void sub_800BB444();
 void sub_800BB0F8(ShopTaskShop* t, int a)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(a);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BB444;
 }
 
@@ -1314,7 +1314,7 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             fl &= ~0x40;
             fl &= ~0x100;
             u->field_24 = fl | 0x80;
-            r = sub_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
+            r = CountMagicBits_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
             if (r < 4)
             {
                 r = 4;
@@ -1372,61 +1372,61 @@ void sub_800BCCD8(ShopUnit3Shop* u)
     {
     case 1:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else
-            sub_8002B004(name_800C0048, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0048, 0, 0xE);
         break;
     case 2:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else
-            sub_8002B004(name_800BFF70, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFF70, 0, 0xE);
         break;
     case 3:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else if (u->field_24 & 2)
-            sub_8002B004(name_800BFFB8, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFB8, 0, 0xE);
         else
-            sub_8002B004(name_80082680, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
         break;
     case 5:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else if (!u->field_84)
-            sub_8002B004(name_800BFF48, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFF48, 0, 0xE);
         else
-            sub_8002B004(name_800BFF28, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFF28, 0, 0xE);
         break;
     case 8:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else
-            sub_8002B004(name_800BFF90, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFF90, 0, 0xE);
         break;
     case 15:
         if (u->field_24 & 0xC0)
-            sub_8002B004(name_800C0018, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0018, 0, 0xE);
         else
-            sub_8002B004(name_800C0000, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0000, 0, 0xE);
         break;
     case 7:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else
-            sub_8002B004(name_800C0048, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0048, 0, 0xE);
         break;
     case 10:
         if (u->field_24 & 0x20)
-            sub_8002B004(name_800BFFE0, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800BFFE0, 0, 0xE);
         else
-            sub_8002B004(name_800C0070, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0070, 0, 0xE);
         break;
     default:
         if (u->field_24 & 2)
-            sub_8002B004(name_800C0038, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_800C0038, 0, 0xE);
         else
-            sub_8002B004(name_80082680, 0, 0xE);
+            DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
         break;
     }
 }
@@ -1440,7 +1440,7 @@ void sub_800BCEDC(ShopUnit3Shop* u)
     q.w0 = (q.w0 & ~7) | 2;
     q.w3 = u->field_30;
     q.w2 = 8;
-    sub_8002A5A4(&q);
+    DrawMenuWindows_8002A5A4(&q);
 }
 
 #if 0 // near miss: orig shares the field_30 == 0 block with case 4 and cross-jumps the return-2 tails
@@ -1691,7 +1691,7 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BDD74);
 extern void sub_800BDEA8();
 void sub_800BDE44(ShopTaskShop* t, int a)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     if (sub_8001AB94())
     {
@@ -1706,7 +1706,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
     ShopTaskShop* tk;
     char* sv;
     int* p;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(u);
     if (sub_8001AB94())
     {
@@ -1750,12 +1750,12 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
                 u->field_24 |= 1;
             }
             fn_800B6C6C((char*)u->field_4C + 0x94, 1);
-            sub_8001C19C(0, 0x20);
+            SetFadeMode_8001C19C(0, 0x20);
         }
         else if (*(short*)((char*)u + 0x94) == 2)
         {
             fn_800B6CC8();
-            sub_8001C19C(0, 0x20);
+            SetFadeMode_8001C19C(0, 0x20);
         }
         u->field_24 &= ~0x800;
         fn_8001ABEC(0);
@@ -1782,7 +1782,7 @@ void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
     u->field_30 = u->a5E[1];
     u->field_32 = u->a72[0];
     sub_800A7B00(-1);
-    sub_8002BF74();
+    LoadUiTiy_8002BF74();
     t->next_8 = sub_800BE210;
 }
 
@@ -1814,9 +1814,9 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     {
         u->field_30 = 0;
     }
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     sub_800A7B00(-1);
     t->next_8 = sub_800BB444;
 }
@@ -1824,9 +1824,9 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
 extern void sub_800BE264();
 void sub_800BE210(ShopTaskShop* t, int a)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
         sub_800BC380(a);
         t->next_8 = sub_800BE264;
     }
@@ -1835,9 +1835,9 @@ void sub_800BE210(ShopTaskShop* t, int a)
 extern void sub_800BB444();
 void sub_800BE264(ShopTaskShop* t, int a)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(a);
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     t->next_8 = sub_800BB444;
 }
 
@@ -1858,7 +1858,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 {
     char* c;
     int v;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(u);
     c = (char*)sub_800BF780();
     if (padHeld_800918D0[0] & 0x8000)
@@ -1914,7 +1914,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 extern void sub_800BE334();
 void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     if (ret_800BF520() == 1)
     {
@@ -2110,20 +2110,20 @@ void sub_800BF4B8(int a)
     ShopCtxShop* c = &name_800C09E0;
     sub_800BF02C(a, c->pad_4 + 4, name_8007DC74);
     *(int*)c->pad_4 = a;
-    c->field_0 = sub_80010850(c->pad_4 + 4);
+    c->field_0 = StartModelTask_80010850(c->pad_4 + 4);
     c->field_3C = 0;
 }
 
 void sub_800BF520()
 {
-    sub_80010A10(name_800C09E0.field_0);
+    RunModelTask_80010A10(name_800C09E0.field_0);
 }
 
 void sub_800BF548()
 {
     int v = name_800C09E0.field_0;
     name_800C09E0.field_0 = -1;
-    sub_8001098C(v);
+    FreeModelTask_8001098C(v);
 }
 
 #if 0 // near miss: store scheduling / temp registers (17 words)
@@ -2169,7 +2169,7 @@ void sub_800BF6C4()
     ShopCtxShop* c = &name_800C09E0;
     if (c->field_3C)
     {
-        sub_8001D600(c->field_3C);
+        DestroyActor_8001D600(c->field_3C);
         c->field_3C = 0;
     }
 }

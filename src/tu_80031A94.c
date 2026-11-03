@@ -37,7 +37,7 @@ int sub_80031A94(int* p)
     {
         r = 4;
     }
-    base = sub_80031B30(sub_80014358(p[2]) & 0xFF);
+    base = sub_80031B30(LowestSetBit_80014358(p[2]) & 0xFF);
     base += p[1];
     if (base->type == 0xC)
     {
@@ -96,16 +96,16 @@ typedef struct
     int a;
     int b;
 } struct_pair;
-extern struct_20* dword_8008D434;
-extern struct_pair* dword_8008D440;
+extern struct_20* publicTiySprts_8008D434;
+extern struct_pair* publicTiyTPages_8008D440;
 // Matched
-void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
+void GetPublicTiySprt_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
 {
-    *pOut20 = dword_8008D434[idx];
-    *pOut8 = dword_8008D440[idx];
+    *pOut20 = publicTiySprts_8008D434[idx];
+    *pOut8 = publicTiyTPages_8008D440[idx];
 }
 // Matched
-void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
+void AddRotatedPolyFT4_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
 {
     int a = -angle;
     short* c = &word_80084540[(a + 0x400) & 0xFFF];
@@ -122,7 +122,7 @@ void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot
 }
 INCLUDE_ASM(sub_800327A8);
 // Matched
-void sub_80032D34(unsigned short* a, void* b)
+void AddPolyFT4FlipXY_80032D34(unsigned short* a, void* b)
 {
     int dx = (short)a[8] - (short)a[4];
     int dy = (short)a[0xD] - (short)a[5];
@@ -137,7 +137,7 @@ void sub_80032D34(unsigned short* a, void* b)
     r[0x11] = a[5];
 }
 // Matched
-void sub_80032DFC(short* p, int a1)
+void AddPolyFT4FlipX_80032DFC(short* p, int a1)
 {
     int d = p[8] - p[4];
     short* q = AddPrimCopy_80040298((void*)a1, p, 10);
@@ -147,7 +147,7 @@ void sub_80032DFC(short* p, int a1)
     q[16] = p[4];
 }
 // Matched
-void sub_80032E78(unsigned short* p, int a1)
+void AddPolyFT4FlipY_80032E78(unsigned short* p, int a1)
 {
     int d = ((short*)p)[13] - ((short*)p)[5];
     unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
@@ -157,7 +157,7 @@ void sub_80032E78(unsigned short* p, int a1)
     q[17] = p[5];
 }
 // Matched
-void sub_80032EF4(unsigned short* p, int a1)
+void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
@@ -174,7 +174,7 @@ void sub_80032EF4(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void sub_80032F88(unsigned short* p, int a1)
+void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
@@ -191,7 +191,7 @@ void sub_80032F88(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void sub_8003301C(void* a, void* b)
+void AddPolyFT4Copy_8003301C(void* a, void* b)
 {
     AddPrimCopy_80040298(b, a, 10);
 }
@@ -206,26 +206,26 @@ void sub_80033064(unsigned short* p, int v)
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
 // Matched
-void sub_80033080(unsigned short* a, int i, int j)
+void DrawPublicTiySprt_80033080(unsigned short* a, int i, int j)
 {
-    ((unsigned short*)&dword_8008D434[i])[4] = a[0];
-    ((unsigned short*)&dword_8008D434[i])[5] = a[1];
-    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D434[i], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
+    ((unsigned short*)&publicTiySprts_8008D434[i])[4] = a[0];
+    ((unsigned short*)&publicTiySprts_8008D434[i])[5] = a[1];
+    AddPrimCopy_80040298(pOT_8008D454 + j, &publicTiySprts_8008D434[i], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + j, &publicTiyTPages_8008D440[i], 2);
 }
 // Matched
-void sub_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
+void DrawPublicTiySprtColored_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
 {
-    ((unsigned char*)&dword_8008D434[idx])[4] = col[0];
-    ((unsigned char*)&dword_8008D434[idx])[5] = col[1];
-    ((unsigned char*)&dword_8008D434[idx])[6] = col[2];
-    ((unsigned short*)&dword_8008D434[idx])[4] = a[0];
-    ((unsigned short*)&dword_8008D434[idx])[5] = a[1];
-    AddPrimCopy_80040298(c, &dword_8008D434[idx], 5);
-    AddPrimCopy_80040298(c, &dword_8008D440[idx], 2);
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[4] = col[0];
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[5] = col[1];
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[6] = col[2];
+    ((unsigned short*)&publicTiySprts_8008D434[idx])[4] = a[0];
+    ((unsigned short*)&publicTiySprts_8008D434[idx])[5] = a[1];
+    AddPrimCopy_80040298(c, &publicTiySprts_8008D434[idx], 5);
+    AddPrimCopy_80040298(c, &publicTiyTPages_8008D440[idx], 2);
 }
 // Matched
-void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
+void AddSprtWithTPage_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
 {
     if (col)
     {
@@ -273,7 +273,7 @@ void AddClipTexWindowPrim_80033308(void* p)
     AddPrimCopy_80040298(p, &twin, 3);
 }
 // Matched
-void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
+void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
 {
     int ph;
     int den;
@@ -388,7 +388,7 @@ unsigned char sub_8003355C(unsigned char* p, int idx)
     return (p + idx)[0x20];
 }
 // Matched
-int sub_8003356C(unsigned char* p, unsigned int idx)
+int GetEquipmentId_8003356C(unsigned char* p, unsigned int idx)
 {
     int r = 0xFF;
     switch (idx)
@@ -408,21 +408,21 @@ int sub_8003356C(unsigned char* p, unsigned int idx)
     }
     return r;
 }
-extern void sub_80033754(unsigned char* a, unsigned char* b);
+extern void ApplyEquipmentModifiers_80033754(unsigned char* a, unsigned char* b);
 // Matched
 void sub_800335D0(void* pSrc, Minion* m)
 {
     int r;
     MemCopy_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
-    r = sub_80033624(m->field_2C, (int)m);
+    r = CalcEquippedStats_80033624(m->field_2C, (int)m);
     if (r)
     {
         m->field_44 = r;
     }
-    sub_80033754((char*)m + 0x20, m);
+    ApplyEquipmentModifiers_80033754((char*)m + 0x20, m);
 }
 // Matched
-int sub_80033624(void* arg0, int arg1)
+int CalcEquippedStats_80033624(void* arg0, int arg1)
 {
     unsigned char* stats = (unsigned char*)arg1 + 0x2C;
     unsigned char* ids = (unsigned char*)arg1 + 0x1C;
@@ -431,9 +431,9 @@ int sub_80033624(void* arg0, int arg1)
     int j;
     int v;
     int max;
-    tbl[0] = sub_8001CEF4(ids[0]);
-    tbl[1] = sub_8001CFB0(ids[1]);
-    tbl[2] = sub_8001D078(ids[2]);
+    tbl[0] = GetWeaponStatBonus_8001CEF4(ids[0]);
+    tbl[1] = GetArmorStatBonus_8001CFB0(ids[1]);
+    tbl[2] = GetAccessoryStatBonus_8001D078(ids[2]);
     tbl[3] = 0;
     for (i = 0; i < 6; i++)
     {
@@ -461,15 +461,15 @@ int sub_80033624(void* arg0, int arg1)
     return max;
 }
 // Matched
-void sub_80033754(unsigned char* dst, unsigned char* src)
+void ApplyEquipmentModifiers_80033754(unsigned char* dst, unsigned char* src)
 {
     unsigned char* tbl[2];
     int i;
     int j;
     MemCopy_800403E8((unsigned int*)dst, (unsigned int*)(src + 0x20), 12);
     src += 0x1C;
-    tbl[0] = (unsigned char*)sub_8001CDA0(src[1]);
-    tbl[1] = (unsigned char*)sub_8001CD74(src[2]);
+    tbl[0] = (unsigned char*)GetArmorModifiers_8001CDA0(src[1]);
+    tbl[1] = (unsigned char*)GetAccessoryModifiers_8001CD74(src[2]);
     for (j = 0; j < 2; j++)
     {
         if (tbl[j])
@@ -619,9 +619,9 @@ int sub_80033A70(unsigned char* p, int idx)
     return sub_80031954(p + 0x6C, idx);
 }
 // Matched
-int sub_80033A90(Minion* p, unsigned int idx)
+int HasMagic_80033A90(Minion* p, unsigned int idx)
 {
-    return sub_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
+    return TestMagicBit_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
 }
 // Matched
 int sub_80033AB0(Item* p)
@@ -657,9 +657,9 @@ typedef struct
     Minion* field_C_minion;
 } struct_minion_ref;
 extern int sub_80034140(void);
-extern int sub_8001CE70(int a);
+extern int GetItemFlags_8001CE70(int a);
 // Matched
-int sub_80033AFC(struct_minion_ref* p)
+int CheckItemUsable_80033AFC(struct_minion_ref* p)
 {
     int a = sub_800AD288(p->field_0 + p->field_2, 0);
     if (sub_800AD2C8(p->field_0 + p->field_2, 0) <= 0)
@@ -674,35 +674,35 @@ int sub_80033AFC(struct_minion_ref* p)
         }
         return 3;
     }
-    if (!(sub_8001CE70(a) & 1) && !(sub_8001CE70(a) & 2))
+    if (!(GetItemFlags_8001CE70(a) & 1) && !(GetItemFlags_8001CE70(a) & 2))
     {
         return 2;
     }
     if (p->field_A == 0)
     {
-        if (!(sub_8001CE70(a) & 2))
+        if (!(GetItemFlags_8001CE70(a) & 2))
         {
             return 4;
         }
     }
     else if (p->field_A == 1)
     {
-        if (!(sub_8001CE70(a) & 1))
+        if (!(GetItemFlags_8001CE70(a) & 1))
         {
             return 3;
         }
     }
     return 0;
 }
-extern int sub_8001AEC0(void* p, int v);
+extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
 // Matched
-int sub_80033C08(short* p)
+int CheckMagicCastable_80033C08(short* p)
 {
     char* q = *(char**)(p + 6);
     short* r = (short*)(q + 0x84);
-    int idx = sub_8001AEC0(q + 0xF4, p[0] + p[1]);
-    int v = sub_8001AC58(idx);
+    int idx = FindNthMagicBit_8001AEC0(q + 0xF4, p[0] + p[1]);
+    int v = GetMagicMpCost_8001AC58(idx);
     if (idx >= 0x1E)
     {
         return 6;
@@ -741,10 +741,10 @@ int sub_80033D20(struct_minion_ref* p)
 {
     Minion* m = p->field_C_minion;
     char* q = m->status_84;
-    int r = sub_8001AEC0(m->field_F4, p->field_0 + p->field_2);
-    if (dword_8007C438[r].field_0 & 0x40)
+    int r = FindNthMagicBit_8001AEC0(m->field_F4, p->field_0 + p->field_2);
+    if (magicData_8007C438[r].field_0 & 0x40)
     {
-        switch (dword_8007C438[r].field_7)
+        switch (magicData_8007C438[r].field_7)
         {
         case 0:
             if (*(short*)&q[8] == *(short*)&q[0xA])
@@ -789,19 +789,19 @@ int sub_80033DF4(ItemUse_DF4* p)
 {
     Target_DF4* t;
     int full = 0;
-    if (sub_8001CE70(p->item) & 0x80)
+    if (GetItemFlags_8001CE70(p->item) & 0x80)
     {
         return 0;
     }
-    if (sub_8001CE70(p->item) & 4)
+    if (GetItemFlags_8001CE70(p->item) & 4)
     {
         return 0;
     }
-    if (!(sub_8001CE70(p->item) & 8) && p->target == 0)
+    if (!(GetItemFlags_8001CE70(p->item) & 8) && p->target == 0)
     {
         return 2;
     }
-    if (!(sub_8001CE70(p->item) & 0x10) && (p->target == 1 || p->target == 2 || p->target == 3))
+    if (!(GetItemFlags_8001CE70(p->item) & 0x10) && (p->target == 1 || p->target == 2 || p->target == 3))
     {
         return 1;
     }

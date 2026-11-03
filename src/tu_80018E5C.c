@@ -189,7 +189,7 @@ void sub_80018EBC(int a0, unsigned int* a1)
     }
     sub_8001DAAC(a0, r);
 }
-INCLUDE_ASM(sub_8001900C);
+INCLUDE_ASM(InitMinionData_8001900C);
 #if 0
 // Not matched: the clamp to 0..100 stores from each branch and keeps 100 in a register (original: one store of $v0 after $v1 copies); permuter found nothing
 void sub_8001980C(unsigned char* p, unsigned char* s)

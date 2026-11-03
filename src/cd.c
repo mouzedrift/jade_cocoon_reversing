@@ -164,7 +164,7 @@ int ratan2Degrees_8003B56C(int x, int y)
 }
 #if 0
 // Not matched (8 words): s1/s2 register assignment swapped
-int sub_8003B5D4(int* v, short* out)
+int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
     short b;
@@ -178,7 +178,7 @@ int sub_8003B5D4(int* v, short* out)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B5D4);
+INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched
 int Sign_8003B664(int x)
 {
@@ -221,7 +221,7 @@ void sub_8003B684(int* v)
 }
 #if 0
 // Not matched (33 words): register assignment of the abs() temporaries
-int sub_8003B740(int* a, int* b, unsigned int* c)
+int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
     int sum = -1;
     int ok = 0;
@@ -264,7 +264,7 @@ int sub_8003B740(int* a, int* b, unsigned int* c)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B740);
+INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
 int DistanceSquared3D_8003B80C(int* a, int* b)
 {
@@ -346,7 +346,7 @@ short WrapAngle_8003BA18(int v)
     return r;
 }
 // Matched
-int sub_8003BA38(unsigned int a, unsigned int b)
+int CompareUInt_8003BA38(unsigned int a, unsigned int b)
 {
     if (a > b)
     {
@@ -628,7 +628,7 @@ int sub_8003BFD0(int key, int flag)
     return 2;
 }
 // Matched
-int sub_8003C060(int key)
+int CancelFileRequest_8003C060(int key)
 {
     FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)
@@ -639,11 +639,11 @@ int sub_8003C060(int key)
     }
     return 2;
 }
-extern int** dword_8008B544;
+extern int** fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
-    int* p = dword_8008B544[0x24 / 4];
+    int* p = fileRequestTask_8008B544[0x24 / 4];
     if (dword_80086568 != a0)
     {
         if (a0 == 1)
@@ -815,7 +815,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 loop = 0;
                 if (!(t->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
                 {
-                    sub_8003CD5C();
+                    DrawLoadingIcon_8003CD5C();
                 }
             }
             break;

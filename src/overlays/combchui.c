@@ -3,7 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 
-extern int sub_8003E4C8(int);
+extern int MeasureTextWidth_8003E4C8(int);
 extern void sub_8002AC88(int, void*, int, void*);
 extern void DrawText_8003E91C(int, int, void*, int);
 
@@ -46,12 +46,12 @@ extern unsigned char byte_800918F1;
 extern CombChuiWin dword_80082784;
 extern CombChuiPos dword_80082708;
 extern CombChuiPos dword_80082740;
-extern void sub_8003D794(void*, int);
+extern void UpdateMenuCursor_8003D794(void*, int);
 extern int IsConfirmPressedP1_8003D380(int);
 extern int IsCancelPressedP1_8003D41C(int);
-extern int sub_8003DA54(void*);
-extern void sub_8002A5A4(void*);
-extern void sub_8002BE10();
+extern int GetMenuCursorIndex_8003DA54(void*);
+extern void DrawMenuWindows_8002A5A4(void*);
+extern void DrawMenuBackground_8002BE10();
 extern void sub_800A16FC();
 extern void sub_800A450C();
 
@@ -59,14 +59,14 @@ void sub_800A4394(CombChuiTask* t, int a)
 {
     short rect[4];
     int c;
-    sub_8003D794(&dword_800A45B0, 0);
+    UpdateMenuCursor_8003D794(&dword_800A45B0, 0);
     if (byte_800918F1 == 0xFF)
     {
         dword_800A45B0.sel_8 = 1;
     }
     if (IsConfirmPressedP1_8003D380(1))
     {
-        if ((short)sub_8003DA54(&dword_800A45B0) == 0)
+        if ((short)GetMenuCursorIndex_8003DA54(&dword_800A45B0) == 0)
         {
             byte_800A38D8 = 1;
         }
@@ -99,8 +99,8 @@ void sub_800A4394(CombChuiTask* t, int a)
         dword_80082740.x_10 = 0xA0;
         dword_80082740.y_12 = c;
         dword_80082784.fC = dword_800A45B0.sel_8;
-        sub_8002A5A4(&dword_80082784);
-        sub_8002BE10();
+        DrawMenuWindows_8002A5A4(&dword_80082784);
+        DrawMenuBackground_8002BE10();
     }
 }
 
@@ -114,7 +114,7 @@ void sub_800A450C(int* p, unsigned short* q)
     y = q[1];
     while (item)
     {
-        sub_8002AC88(8, q, (short)sub_8003E4C8(item), rect);
+        sub_8002AC88(8, q, (short)MeasureTextWidth_8003E4C8(item), rect);
         rect[1] = y;
         DrawText_8003E91C(2, item, rect, 0);
         p++;

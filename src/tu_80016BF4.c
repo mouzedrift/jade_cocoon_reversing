@@ -95,7 +95,7 @@ void sub_80016E20(int* a0, void* buf)
     if (a1[1] == 0x5D)
     {
         r2 = ratan2Difference_8003B9E0((int*)a1[0x1C / 4], (int*)a1[0x14 / 4]);
-        sub_800306FC(6);
+        StopSoundSeqById_800306FC(6);
         PlaySfx_80031494(0x1A);
         SpawnMdecEffect_80017A6C((int)a1, sub_800C32DC((int)(a1 + 0x44 / 4), 0xB3, 0, r2));
         *a0 = (*a0 & ~1) | 0x8000;
@@ -137,12 +137,12 @@ void sub_80016FC8(int* a0, int* a1)
     }
     a1[1]++;
 }
-extern EventNode* dword_8008B4A8;
+extern EventNode* effectObjects_8008B4A8;
 extern void sub_80017208(int* a0, int* a1);
 // Matched
 void sub_80017158(int* a0, unsigned char* a1)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     int* q;
     if (e)
     {
@@ -179,7 +179,7 @@ void sub_80017290(char* a0, int a1)
 {
     EventEntry* e;
     SpawnMdecEffect_80017A6C((int)a0, 0);
-    e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         int* b = e->buffer;

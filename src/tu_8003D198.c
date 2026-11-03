@@ -25,7 +25,7 @@ INCLUDE_DATA(word_80074994);
 INCLUDE_DATA(dword_80074998);
 
 // Matched
-int sub_8003D198(int limit, int pos, int step, int idx)
+int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 2)
     {
@@ -49,7 +49,7 @@ int sub_8003D198(int limit, int pos, int step, int idx)
     return pos;
 }
 // Matched
-int sub_8003D210(int limit, int pos, int step, int idx)
+int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 0x2000)
     {
@@ -154,7 +154,7 @@ int IsCircleHeldP2_8003D4A0(void)
     return IsCircleHeld_8003D45C(1);
 }
 // Matched
-int sub_8003D4C0(short* m, int idx)
+int MoveGridCursor_8003D4C0(short* m, int idx)
 {
     int r = 1;
     if (m[4] < 0)
@@ -208,7 +208,7 @@ int sub_8003D4C0(short* m, int idx)
     return r;
 }
 // Matched
-int sub_8003D630(short* m)
+int MoveGridCursorP1_8003D630(short* m)
 {
     int idx = 0;
     if (m[3] < 0)
@@ -257,16 +257,16 @@ typedef struct
     unsigned short field_6;
     short field_8;
     short field_A;
-} struct_menu;
+} MenuCursor;
 
-extern int sub_8003D830();
+extern int MenuCursorInput_8003D830();
 
 // Matched
-int sub_8003D794(struct_menu* p)
+int UpdateMenuCursor_8003D794(MenuCursor* p)
 {
     unsigned short a = p->field_8;
     unsigned short b = p->field_A;
-    int r = sub_8003D830(p);
+    int r = MenuCursorInput_8003D830(p);
     if (r == 0)
     {
         int t = p->field_4 - 1;
@@ -282,9 +282,9 @@ int sub_8003D794(struct_menu* p)
     return r;
 }
 // Matched
-int sub_8003D830(struct_menu* p, int idx)
+int MenuCursorInput_8003D830(MenuCursor* p, int idx)
 {
-    int r = sub_8003D4C0((short*)p, idx);
+    int r = MoveGridCursor_8003D4C0((short*)p, idx);
     int t;
     int t2;
 
@@ -349,12 +349,12 @@ int sub_8003D830(struct_menu* p, int idx)
     }
     if (p->field_6 & 0x40)
     {
-        p->field_A = sub_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
+        p->field_A = AdjustByShoulderButtons_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
     }
     return 0;
 }
 // Matched
-int sub_8003DA54(struct_menu* p)
+int GetMenuCursorIndex_8003DA54(MenuCursor* p)
 {
     return (short)(p->field_8 + p->field_A);
 }
@@ -372,9 +372,9 @@ typedef struct
     unsigned short field_14;
     unsigned short pad_16;
 } FontDef;
-extern FontDef dword_80086574[];
-extern char* dword_8008D434;
-extern char* dword_8008D440;
+extern FontDef fontDefs_80086574[];
+extern char* publicTiySprts_8008D434;
+extern char* publicTiyTPages_8008D440;
 // Matched
 void InitFonts_8003DA70(void)
 {
@@ -383,12 +383,12 @@ void InitFonts_8003DA70(void)
     Font* f;
     for (i = 0; i < 3; i++)
     {
-        e = &dword_80086574[i];
+        e = &fontDefs_80086574[i];
         f = &fonts_80095FB0[i];
-        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
+        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(publicTiySprts_8008D434 + e->field_0 * 20), 0x14);
         f->w_10 = e->field_6;
         f->h_12 = e->field_8;
-        f->tpage_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
+        f->tpage_14 = (unsigned short*)(publicTiyTPages_8008D440 + e->field_0 * 8);
         f->field_18 = f->u_C;
         f->field_1A = f->v_D;
         f->firstChar_1E = e->field_4;
@@ -443,7 +443,7 @@ typedef struct
 } TextBuf22;
 extern unsigned short word_80074994[];
 extern TextBuf22 dword_80074998;
-extern int dword_80096038[];
+extern int textNumberArgs_80096038[];
 extern int dword_80086898[][12];
 extern void IntToText_8003F610(unsigned short* buf, int val);
 extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
@@ -571,7 +571,7 @@ void sub_8003DCA4(int draw, TextWindow* w)
                 case 0x8A:
                 case 0x8B:
                 case 0x8C:
-                    IntToText_8003F610(num, dword_80096038[c - 0x88]);
+                    IntToText_8003F610(num, textNumberArgs_80096038[c - 0x88]);
                     sub = EncodeText_8003F684(2, num);
                     break;
                 case 0xC1:
@@ -627,9 +627,9 @@ typedef struct
     short w;
     short h;
 } struct_size_8003E3B4;
-extern int sub_8003E4C8(int str);
+extern int MeasureTextWidth_8003E4C8(int str);
 // Matched
-struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
+struct_size_8003E3B4 MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {
     struct_size_8003E3B4 sz;
     short w;
@@ -640,7 +640,7 @@ struct_size_8003E3B4 sub_8003E2A8(int* list, unsigned int mask)
     {
         if (mask & (1 << i))
         {
-            w = sub_8003E4C8(list[sz.h]);
+            w = MeasureTextWidth_8003E4C8(list[sz.h]);
             if (sz.w < w)
             {
                 sz.w = w;
@@ -656,10 +656,10 @@ typedef struct
     short w;
     short h;
 } Size2;
-extern int sub_8003E4C8(int str);
+extern int MeasureTextWidth_8003E4C8(int str);
 
 // Matched
-struct_size_8003E3B4 sub_8003E3B4(int* list)
+struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
 {
     struct_size_8003E3B4 sz;
     short w;
@@ -670,7 +670,7 @@ struct_size_8003E3B4 sub_8003E3B4(int* list)
     {
         if (!sub_8003E484(list[i]))
         {
-            w = sub_8003E4C8(list[i]);
+            w = MeasureTextWidth_8003E4C8(list[i]);
             if (sz.w < w)
             {
                 sz.w = w;
@@ -694,9 +694,9 @@ int sub_8003E484(int a0)
     }
     return 0;
 }
-extern int sub_8003E884(int idx, short n);
+extern int GetCharWidth_8003E884(int idx, short n);
 // Matched
-int sub_8003E4C8(int str)
+int MeasureTextWidth_8003E4C8(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
@@ -723,7 +723,7 @@ int sub_8003E4C8(int str)
         }
         if (c < 0x7F)
         {
-            w += sub_8003E884(2, (short)c);
+            w += GetCharWidth_8003E884(2, (short)c);
         }
         else
         {
@@ -742,7 +742,7 @@ int sub_8003E4C8(int str)
             case 0x8A:
             case 0x8B:
             case 0x8C:
-                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                IntToText_8003F610(num, textNumberArgs_80096038[k - 0x88]);
                 sub = EncodeText_8003F684(2, num);
                 break;
             case -1:
@@ -754,7 +754,7 @@ int sub_8003E4C8(int str)
     return w;
 }
 // Matched
-int sub_8003E6B0(int str)
+int MeasureTextWidthFont1_8003E6B0(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
@@ -781,7 +781,7 @@ int sub_8003E6B0(int str)
         }
         if (c < 0x71)
         {
-            w += sub_8003E884(1, (short)c);
+            w += GetCharWidth_8003E884(1, (short)c);
         }
         else
         {
@@ -800,7 +800,7 @@ int sub_8003E6B0(int str)
             case 0x8A:
             case 0x8B:
             case 0x8C:
-                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                IntToText_8003F610(num, textNumberArgs_80096038[k - 0x88]);
                 sub = EncodeText_8003F684(1, num);
                 break;
             case -1:

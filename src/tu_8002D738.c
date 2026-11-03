@@ -78,8 +78,8 @@ extern void sub_80033864(Minion* m, unsigned char* out);
 extern short sub_8002F424(unsigned char* p);
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002B1B0(short a, int b, int c);
-extern void sub_8002A384(struct_D7D0* p);
-extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+extern void DrawUiWindow_8002A384(struct_D7D0* p);
+extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 #if 0
 // Not matched: sub_80033848 is declared unsigned char (adds andi 0xff; original treats it as int), and m/pp/table regs are permuted
 void sub_8002D7D0(Minion* m, int ot, Pos16* base)
@@ -133,7 +133,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         s.rect = (int)&rect;
         s.ot = ot;
         s.time = frameCount_8008D3FC;
-        sub_8002A384(&s);
+        DrawUiWindow_8002A384(&s);
     }
     for (k = 0; k < 12; k++)
     {
@@ -141,7 +141,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         p1.y = aHroto[k].y + base->y;
         p2.x = aNrutu[k].x + base->x;
         p2.y = aNrutu[k].y + base->y;
-        sub_80042870((DVECTOR*)&p1, (DVECTOR*)&p2, (unsigned char*)&color, &pOT_8008D454[ot]);
+        DrawLine_80042870((DVECTOR*)&p1, (DVECTOR*)&p2, (unsigned char*)&color, &pOT_8008D454[ot]);
     }
 }
 #endif

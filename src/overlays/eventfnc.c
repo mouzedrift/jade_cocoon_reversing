@@ -1155,10 +1155,10 @@ int sub_800BAB14(EvCtxEventfnc* c)
 }
 
 #if 0
-extern int sub_8001C19C(int a, int b);
+extern int SetFadeMode_8001C19C(int a, int b);
 int sub_800BAB5C(EvCtxEventfnc* c)
 {
-    sub_8001C19C(1, 0x20);
+    SetFadeMode_8001C19C(1, 0x20);
     sub_800A6D30(8);
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
@@ -1291,7 +1291,7 @@ int sub_800BAF08(EvCtxEventfnc* c)
     {
         v = (int)sub_800BBBA0(c->pc_8->a_4);
     }
-    sub_80037AC8(v);
+    SetCameraTarget_80037AC8(v);
     c->pc_8++;
     return 1;
 }
@@ -1363,18 +1363,18 @@ int sub_800BB45C(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB4A4);
 
-extern void sub_80036528(int a, int b);
-extern void sub_80036658(int a);
+extern void StartPadVibration_80036528(int a, int b);
+extern void StopPadVibration_80036658(int a);
 int sub_800BB7D8(EvCtxEventfnc* c)
 {
     EvInsEventfnc* i = c->pc_8;
     if (i->a_4 == 1)
     {
-        sub_80036528(0, *(unsigned char*)&i->b_8);
+        StartPadVibration_80036528(0, *(unsigned char*)&i->b_8);
     }
     else
     {
-        sub_80036658(0);
+        StopPadVibration_80036658(0);
     }
     c->pc_8++;
     return 1;

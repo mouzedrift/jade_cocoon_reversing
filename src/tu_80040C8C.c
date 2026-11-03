@@ -95,7 +95,7 @@ extern enum GameStates (*overlayCallbacks_800869D0[])(void);
 // Matched
 void ShowDemoDisclaimer_80040C8C(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -104,7 +104,7 @@ void ShowDemoDisclaimer_80040C8C(void)
 // Matched
 void PlayAnimeMovie_80040CCC(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -117,7 +117,7 @@ void PlayAnimeMovie_80040D0C(void)
     bStopDrawingMovie_8008D45C = 1;
 }
 // Matched
-void sub_80040D34(struct_obj_D* p)
+void StartIntroAnime_80040D34(struct_obj_D* p)
 {
     if (!(unknownFlags_8008D678 & 0x20))
     {
@@ -443,7 +443,7 @@ void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
     DecDCTin(buf, mode);
 }
 // Matched
-int sub_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
+int InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
 {
     if (cur < 0 || max < cur)
     {

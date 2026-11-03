@@ -28,10 +28,10 @@ int sub_80034068(short* p)
 {
     int* q;
     int idx;
-    struct_12_b* e;
+    MagicData* e;
     q = (int*)sub_80014390(((unsigned char*)p)[2]);
     idx = p[0];
-    e = &dword_8007C438[idx];
+    e = &magicData_8007C438[idx];
     if (e->field_0 & 0x40)
     {
         switch (e->field_7)
@@ -112,7 +112,7 @@ int sub_80034140(void)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003422C);
+INCLUDE_ASM(OpenMessageWindow_8003422C);
 extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** sub_80034900(short** list)
@@ -224,7 +224,7 @@ int sub_80034ADC(UnitRef_349B4* a0, int idx)
     return 0;
 }
 // Matched
-int sub_80034B14(int* p)
+int CountUntilZero_80034B14(int* p)
 {
     int n = 0;
     while (*p)
@@ -235,7 +235,7 @@ int sub_80034B14(int* p)
     return n;
 }
 // Matched
-int sub_80034B40(int* p, unsigned int mask)
+int CountMaskedUntilZero_80034B40(int* p, unsigned int mask)
 {
     int n = 0;
     int i = 0;
@@ -254,7 +254,7 @@ int sub_80034B40(int* p, unsigned int mask)
     return n;
 }
 // Matched
-int sub_80034B88(int n, unsigned int mask)
+int NthMaskedIndex_80034B88(int n, unsigned int mask)
 {
     int i = 0;
     if (n >= 0)
@@ -273,7 +273,7 @@ int sub_80034B88(int n, unsigned int mask)
 extern void sub_80034C18(int* a);
 extern void sub_800353A0(int* a);
 // Matched
-void sub_80034BB8(int* a0, int* a1)
+void UpdateMessageWindow_80034BB8(int* a0, int* a1)
 {
     sub_80034C18(a1);
     sub_800353A0(a1);

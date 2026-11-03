@@ -237,12 +237,12 @@ typedef struct
     int result;
 } NameCursorTbl;
 extern NameCursorTbl name_800B83D8[];
-extern int sub_8003D630();
+extern int MoveGridCursorP1_8003D630();
 extern void PlaySfx_80031494(int);
 int sub_800B80E4(NameCursor* p)
 {
     int old = (short)p->s6;
-    int k = sub_8003D630();
+    int k = MoveGridCursorP1_8003D630();
     if (k)
     {
         sub_800B8020(p, k);

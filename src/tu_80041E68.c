@@ -38,7 +38,7 @@ extern CVECTOR dword_80074BA0;
 extern int byte_80086F9C[];
 extern int dword_80087070[][8];
 // Matched
-void sub_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
+void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
 {
     POLY_F4 p[5];
     DR_TPAGE dm;

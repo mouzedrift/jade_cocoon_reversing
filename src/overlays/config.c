@@ -63,7 +63,7 @@ extern unsigned int settingsFlags_8008B58C;
 extern int dword_800C5944;
 extern Bytes8Config dword_800C4CD4[];
 extern char dword_800C592C[];
-extern void sub_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
+extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 extern int IsConfirmPressedP1_8003D380(int a);
 extern int IsCancelPressedP1_8003D41C(int a);
 extern void PlaySfx_80031494(int a);
@@ -100,9 +100,9 @@ extern char dword_800C4DDC[];
 extern char dword_800C4E98[];
 extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
-extern void sub_8002A5A4(CfgDlgConfig* p);
-extern void sub_8002C06C(void* p, int a, short b);
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
+extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern char dword_800C5298[];
 extern char dword_800C52BC[];
@@ -117,9 +117,9 @@ typedef struct CfgTailConfig
     char c_3;
 } CfgTailConfig;
 extern int frameCount_8008D3FC;
-extern void sub_8002BE10();
-extern void sub_8002B004(void*, int, int);
-extern void sub_8003D794(void*, int);
+extern void DrawMenuBackground_8002BE10();
+extern void DrawButtonHelpBar_8002B004(void*, int, int);
+extern void UpdateMenuCursor_8003D794(void*, int);
 extern void sub_800C2F70();
 extern void sub_800C3060(CfgCtxConfig*);
 extern void sub_800C383C(CfgCtxConfig*);
@@ -143,7 +143,7 @@ void sub_800C2EB4(void)
     CfgTaskConfig* t = &h->t_10;
     CfgCtxConfig* c = t->ctx_14;
     h->t_10.flags_0 = (h->t_10.flags_0 | 1) & 0xFFFF7FFF;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     c->cur_4 = 0;
     c->prev_2 = 0;
     c->f3c = dword_800C4CD4[5];
@@ -164,12 +164,12 @@ void sub_800C2F70(CfgTaskConfig* t, CfgCtxConfig* d)
 {
     short old;
     CfgCtxConfig* c;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(d);
     sub_800C450C(d);
-    sub_8002B004(dword_800C592C, 0, 0xE);
+    DrawButtonHelpBar_8002B004(dword_800C592C, 0, 0xE);
     old = d->f44;
-    sub_8003D794(&d->f3c, 0);
+    UpdateMenuCursor_8003D794(&d->f3c, 0);
     c = d;
     if (old != c->f44)
     {
@@ -514,7 +514,7 @@ void sub_800C38CC(CfgCtxConfig* c)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = c->f44;
     cfg.f10 = (int)dword_800C4DDC;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
     rect[0] = 0x7D;
     rect[1] = 0x12;
     rect[2] = 0x46;
@@ -524,8 +524,8 @@ void sub_800C38CC(CfgCtxConfig* c)
     b.col_8 = uiColor_8008B590;
     b.c_A = 0;
     b.y_2 = 0x15;
-    sub_8002C06C(&b, 0x4F, 0xE);
-    sub_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&b, 0x4F, 0xE);
+    DrawWindow_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
 }
 
 // Matched
@@ -562,7 +562,7 @@ void sub_800C39C4(CfgCtxConfig* c)
     {
         a.f0 = 2;
     }
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b.f0 = 4;
@@ -587,9 +587,9 @@ void sub_800C39C4(CfgCtxConfig* c)
         d.f0 = 4;
         e.f0 = 4;
     }
-    sub_8002A5A4(&b);
-    sub_8002A5A4(&d);
-    sub_8002A5A4(&e);
+    DrawMenuWindows_8002A5A4(&b);
+    DrawMenuWindows_8002A5A4(&d);
+    DrawMenuWindows_8002A5A4(&e);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -600,8 +600,8 @@ void sub_800C39C4(CfgCtxConfig* c)
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.x_0 = 0x8B;
-    sub_8002C06C(&box, 0xDD, 0xE);
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&box, 0xDD, 0xE);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 extern unsigned short* dword_800C5474[];
@@ -682,7 +682,7 @@ void sub_800C3CA4(CfgCtxConfig* c)
         *t[3] |= 2;
     }
 done:
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b1.f0 = 4;
@@ -727,13 +727,13 @@ done:
         b6.f0 = 4;
         b7.f0 = 4;
     }
-    sub_8002A5A4(&b1);
-    sub_8002A5A4(&b2);
-    sub_8002A5A4(&b3);
-    sub_8002A5A4(&b6);
-    sub_8002A5A4(&b7);
-    sub_8002A5A4(&b4);
-    sub_8002A5A4(&b5);
+    DrawMenuWindows_8002A5A4(&b1);
+    DrawMenuWindows_8002A5A4(&b2);
+    DrawMenuWindows_8002A5A4(&b3);
+    DrawMenuWindows_8002A5A4(&b6);
+    DrawMenuWindows_8002A5A4(&b7);
+    DrawMenuWindows_8002A5A4(&b4);
+    DrawMenuWindows_8002A5A4(&b5);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -743,8 +743,8 @@ done:
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.y_2 = 0x15;
-    sub_8002C06C(&box, 0xE8, 0xE);
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 INCLUDE_OVERLAY_ASM(config, dword_800C2D20);
 
@@ -768,10 +768,10 @@ void sub_800C4180(CfgCtxConfig* c)
     box1.col_8 = uiColor_8008B590;
     box1.c_A = 0;
     box1.y_2 = 0x14;
-    sub_8002C06C(&box1, 0x2A, 0xE);
+    DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
     box1.y_2 = 0x15;
-    sub_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
     for (i = 0; i < 4; i++)
     {
         unsigned int n = 0;
@@ -786,7 +786,7 @@ void sub_800C4180(CfgCtxConfig* c)
         }
         tail.col_0 = i;
         tail.c_3 = 1;
-        sub_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
+        DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
@@ -796,10 +796,10 @@ void sub_800C4180(CfgCtxConfig* c)
         box3.c_B = 1;
         box3.x_0 = 0x74;
         box3.y_2 = i * 38 + 0x2C;
-        sub_8002C06C(&box3, 0xCA, 0xE);
+        DrawUiTiySprt_8002C06C(&box3, 0xCA, 0xE);
         box3.x_0 = rect3[0] + 0xE;
         box3.y_2 = rect3[1] + 6;
-        sub_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
     }
 }
 #endif
@@ -828,7 +828,7 @@ void sub_800C4390(CfgCtxConfig* c)
     {
         a.f0 = 2;
     }
-    sub_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&a);
     if (c->f38)
     {
         b.f0 = 2;
@@ -837,7 +837,7 @@ void sub_800C4390(CfgCtxConfig* c)
     {
         b.f0 = 4;
     }
-    sub_8002A5A4(&b);
+    DrawMenuWindows_8002A5A4(&b);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -847,10 +847,10 @@ void sub_800C4390(CfgCtxConfig* c)
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.y_2 = 0x15;
-    sub_8002C06C(&box, 0xAB, 0xE);
+    DrawUiTiySprt_8002C06C(&box, 0xAB, 0xE);
     box.x_0 = 0x8C;
     box.y_2 = 0x15;
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 // Matched
@@ -885,7 +885,7 @@ void sub_800C450C(CfgCtxConfig* c)
     rect[3] = 0x12;
     pos[0] = 0xE;
     pos[1] = 0xC5;
-    sub_8002AE38(&p, pos, 0xE, rect, 1);
+    DrawTextLinesWindow_8002AE38(&p, pos, 0xE, rect, 1);
 }
 
 // Matched
@@ -894,7 +894,7 @@ int sub_800C45D8(void)
     return dword_800C5944;
 }
 
-extern void sub_8003D630(CfgSpinConfig* p);
+extern void MoveGridCursorP1_8003D630(CfgSpinConfig* p);
 extern void sub_800C2F70();
 
 void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
@@ -908,10 +908,10 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
     CfgSpinConfig v70;
     CfgSpinConfig v80;
     int v;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(c);
     sub_800C450C(c);
-    sub_8002B004(dword_800C592C, 0, 0xE);
+    DrawButtonHelpBar_8002B004(dword_800C592C, 0, 0xE);
     if (c->prev_2 == 1)
     {
         switch (c->f44)
@@ -923,7 +923,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v10.f8 = 8;
             v10.fA = 1;
             v10.f6 = v;
-            sub_8003D630(&v10);
+            MoveGridCursorP1_8003D630(&v10);
             if (v != v10.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -938,7 +938,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v20.f8 = 8;
             v20.fA = 1;
             v20.f6 = v;
-            sub_8003D630(&v20);
+            MoveGridCursorP1_8003D630(&v20);
             if (v != v20.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -952,7 +952,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v30.f8 = 2;
             v30.fA = 1;
             v30.f6 = c->fc;
-            sub_8003D630(&v30);
+            MoveGridCursorP1_8003D630(&v30);
             if (c->fc != v30.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -972,7 +972,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v10.f8 = 4;
             v10.fA = 1;
             v10.f6 = c->f8;
-            sub_8003D630(&v10);
+            MoveGridCursorP1_8003D630(&v10);
             if (c->f8 != v10.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -987,7 +987,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v20.f8 = 2;
             v20.fA = 1;
             v20.f6 = c->f9;
-            sub_8003D630(&v20);
+            MoveGridCursorP1_8003D630(&v20);
             if (c->f9 != v20.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1002,7 +1002,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v40.f8 = 2;
             v40.fA = 1;
             v40.f6 = c->f11;
-            sub_8003D630(&v40);
+            MoveGridCursorP1_8003D630(&v40);
             if (c->f11 != v40.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1017,7 +1017,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v50.f8 = 2;
             v50.fA = 1;
             v50.f6 = c->f13;
-            sub_8003D630(&v50);
+            MoveGridCursorP1_8003D630(&v50);
             if (c->f13 != v50.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1032,7 +1032,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v60.f8 = 2;
             v60.fA = 1;
             v60.f6 = c->f14;
-            sub_8003D630(&v60);
+            MoveGridCursorP1_8003D630(&v60);
             if (c->f14 != v60.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1047,7 +1047,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v70.f8 = 2;
             v70.fA = 1;
             v70.f6 = c->fb;
-            sub_8003D630(&v70);
+            MoveGridCursorP1_8003D630(&v70);
             if (c->fb != v70.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1062,7 +1062,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
             v80.f8 = 2;
             v80.fA = 1;
             v80.f6 = c->f10;
-            sub_8003D630(&v80);
+            MoveGridCursorP1_8003D630(&v80);
             if (c->f10 != v80.f6)
             {
                 PlaySfx_80031494(0x7F);
@@ -1079,7 +1079,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         v10.f8 = 2;
         v10.fA = 1;
         v10.f6 = c->f12;
-        sub_8003D630(&v10);
+        MoveGridCursorP1_8003D630(&v10);
         if (c->f12 != v10.f6)
         {
             PlaySfx_80031494(0x7F);
@@ -1106,7 +1106,7 @@ INCLUDE_OVERLAY_ASM(config, dword_800C2D40);
 // Matched
 void sub_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C383C(c);
     sub_800C4BDC((short)c->f30);
     if (c->f34 >= 0x96 || IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
@@ -1144,7 +1144,7 @@ void sub_800C4BDC(int n)
     rect[3] = 0x22;
     pos[0] = 0xD;
     pos[1] = 0xC4;
-    sub_8002AE38(p, pos, 0xE, rect, 2);
+    DrawTextLinesWindow_8002AE38(p, pos, 0xE, rect, 2);
 }
 
 INCLUDE_OVERLAY_ASM(config, dword_800C4C80);

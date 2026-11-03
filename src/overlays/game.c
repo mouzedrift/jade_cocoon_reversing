@@ -39,7 +39,7 @@ typedef struct GameEnt_1
 extern void sub_800A2D28(GameFlagObj_1* p);
 extern void sub_800A2EC8(GameFlagObj_1* p);
 extern void FreeActiveOverlay_8002C014(void);
-extern void sub_80030664(void);
+extern void FreeSeqSlotSound_80030664(void);
 extern GameRec_1 dword_800ADE78;
 extern int dword_800AEB6C[];
 typedef struct GameR6_1
@@ -59,7 +59,7 @@ extern GameEnt_1 dword_800B130C[];
 extern GameSlot_1 dword_800B19F0[];
 extern void sub_800A2D48(GameFlagObj_1* p);
 extern int sub_800A2CA8(int, int);
-extern void sub_8001D600(int** p);
+extern void DestroyActor_8001D600(int** p);
 extern char* dword_8008B520;
 extern void sub_800A170C(void);
 extern int sub_800A2CA8(int, int);
@@ -103,7 +103,7 @@ typedef struct GameS3_1
 {
     unsigned short a, b, c;
 } GameS3_1;
-extern void sub_8003B740(int* a, int* b, unsigned int* out);
+extern void IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 extern int dword_800AEBE4;
 extern void sub_800ADCEC(GameS3_1* out, int a);
 extern void sub_800AD0F8(unsigned a);
@@ -191,7 +191,7 @@ extern int sub_8001DD44(struct_obj_A* a, int b, int c, int d);
 extern void sub_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
 extern void sub_800A7654();
 extern void sub_800A1314();
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800438F8(int a);
 extern void FreeEventList_80043A5C(int a);
 extern void sub_800A6534(int a, int b);
@@ -292,7 +292,7 @@ extern void StopSoundSeqs_80030D68(char* s);
 extern void PlayMusic_800300E0(int a, int b);
 extern void sub_800A1474();
 extern char dword_80091CE0[];
-extern int sub_8001DECC(void* a, int b, int c);
+extern int FindActorInFront_8001DECC(void* a, int b, int c);
 extern short* sub_800B322C();
 extern unsigned short* sub_800A53CC();
 extern int sub_800AD154(int a);
@@ -312,9 +312,9 @@ extern char dword_800B0DA4[];
 extern void sub_8001E28C(int a);
 extern void sub_80026FAC(void);
 extern void GameFn_800A094C(void);
-extern void sub_8002FEB8(void);
+extern void ResetSoundTask_8002FEB8(void);
 extern void sub_8001A38C(void);
-extern void sub_800376A8(void);
+extern void ResetCameraToLevant_800376A8(void);
 extern void sub_800A8140(void);
 extern void sub_800A94CC(void);
 extern GameNode_1* dword_8008D400;
@@ -414,16 +414,16 @@ INCLUDE_OVERLAY_ASM(game, sub_800A0A5C);
 
 extern void sub_800A13B8();
 extern int sub_800A19E4();
-extern void sub_80036528();
+extern void StartPadVibration_80036528();
 void sub_800A1314(GameTask_1* t)
 {
     if (sub_800A19E4() == 1)
         dword_800B1228 |= 0x4000;
     if (dword_800B1228 & 0x4000)
     {
-        sub_80036528(0, 10);
-        sub_8001C19C(0, 0x20);
-        sub_8001C19C(1, 0x20);
+        StartPadVibration_80036528(0, 10);
+        SetFadeMode_8001C19C(0, 0x20);
+        SetFadeMode_8001C19C(1, 0x20);
         sub_800A6D30(2);
         t->next_8 = sub_800A13B8;
         unknownFlags_8008D678 |= 0x4000000;
@@ -449,7 +449,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
 void sub_800A1444(void)
 {
     FreeActiveOverlay_8002C014();
-    sub_80030664();
+    FreeSeqSlotSound_80030664();
     sub_80039FC0();
 }
 
@@ -485,13 +485,13 @@ void sub_800A1578(GameTask_1* t, int** q)
     {
         GameSave_1* sd;
         FreeActiveOverlay_8002C014();
-        sub_8001C19C(0, 0x20);
+        SetFadeMode_8001C19C(0, 0x20);
         sd = (GameSave_1*)&saveData_8008B570;
         if (sd->f2f2 == sd->f2f0)
         {
             sub_80027314();
         }
-        sub_80020D68();
+        ResetOverlayLoaderTask_80020D68();
         t->next_8 = sub_800A15FC;
     }
 }
@@ -516,7 +516,7 @@ void sub_800A167C(GameTask_1* t, GameQ_1* q)
     q->f4--;
     if (q->f4 <= 0)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         t->next_8 = sub_800A1314;
         unknownFlags_8008D678 &= ~0x4000000;
     }
@@ -600,7 +600,7 @@ void sub_800A1850(GameHolder_1* p)
     int** v = q->f8;
     p->f0 = 0;
     sub_800A2D28(q);
-    sub_8001D600(v);
+    DestroyActor_8001D600(v);
 }
 
 // Matched
@@ -609,7 +609,7 @@ void sub_800A188C(GameHolder_1* p)
     GameFlagObj_1* q = p->f4;
     int** v = q->f8;
     sub_800A2EC8(q);
-    sub_8001D658(v, 0);
+    SetActorActive_8001D658(v, 0);
 }
 
 // Matched
@@ -618,7 +618,7 @@ void sub_800A18C8(GameHolder_1* p)
     GameFlagObj_1* q = p->f4;
     int** v = q->f8;
     sub_800A2D48(q);
-    sub_8001D658(v, 1);
+    SetActorActive_8001D658(v, 1);
 }
 
 // Matched
@@ -675,7 +675,7 @@ void sub_800A1B78(void)
     {
         if (gCtx_800B1260.f7c[i])
         {
-            sub_8001D600((int**)gCtx_800B1260.f7c[i]);
+            DestroyActor_8001D600((int**)gCtx_800B1260.f7c[i]);
         }
     }
 }
@@ -1111,7 +1111,7 @@ void sub_800A31DC(int unused, GameS3A8C_1* p)
             sub_8001DB58(p->f8, 0x1000, 0);
             break;
         case 1:
-            sub_8001DDFC(p->f8, &dword_8008BD18, 0x155);
+            TurnActorTowards_8001DDFC(p->f8, &dword_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 sub_800A433C(p, 5, 2, 0, -1, c, 2);
@@ -1263,7 +1263,7 @@ void sub_800A3954(int unused, GameA2EEC_1* p)
                 sub_800A433C(p, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
-            sub_8001DDFC(q->f8, &dword_8008BD18, 0x155);
+            TurnActorTowards_8001DDFC(q->f8, &dword_8008BD18, 0x155);
             if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
                 q->fC = -1;
             break;
@@ -1472,7 +1472,7 @@ void sub_800A44C0(GameP4470_1* p)
     idx = (ang - ((GameO_1*)p->f8)->f5e) & 0xfff;
     w.x = ((GameO_1*)p->f8)->f38 + (((GameO_1*)p->f8)->f38 - ((GameSave4_1*)&saveData_8008B570)->f7a8);
     w.z = ((GameO_1*)p->f8)->f40 + (((GameO_1*)p->f8)->f40 - ((GameSave4_1*)&saveData_8008B570)->f7b0);
-    if (sub_8001DDFC(p->f8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
+    if (TurnActorTowards_8001DDFC(p->f8, (GameVec3_1*)&w, sub_800A48F4(idx * 3)) == 0)
     {
         sub_8001D71C(p->f8);
     }
@@ -1483,7 +1483,7 @@ void sub_800A459C(GameP4470_1* p)
 {
     GameVec3_1 v;
     sub_800A47B8(&dword_8008BD18, (GameVec3_1*)((char*)p->f8 + 0x38), &v);
-    if (sub_8001DDFC(p->f8, &v, 0x155) == 0)
+    if (TurnActorTowards_8001DDFC(p->f8, &v, 0x155) == 0)
     {
         sub_8001D71C(p->f8);
     }
@@ -1500,7 +1500,7 @@ void sub_800A46FC(GameP4470_1* p)
     }
     else
     {
-        r = sub_8001DECC(p->f8, 0x190, 0);
+        r = FindActorInFront_8001DECC(p->f8, 0x190, 0);
         p->f28 = r;
         if (r == 3)
         {
@@ -1549,7 +1549,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A47B8);
 // Matched
 int sub_800A4804(GameP4804_1* p)
 {
-    int r = sub_8001DECC(p->f8, 0x190, 0);
+    int r = FindActorInFront_8001DECC(p->f8, 0x190, 0);
     if (r == 0)
     {
         r = *(int*)(p->f8 + 0x80);
@@ -1848,7 +1848,7 @@ void sub_800A58B4(void)
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
     StopAllEventEntries_80043B40((int*)dword_8008D410);
-    sub_80037AC8((int)&dword_8008BD18);
+    SetCameraTarget_80037AC8((int)&dword_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
         r = &stru_8008D420;
@@ -2192,7 +2192,7 @@ int sub_800A65BC(int a, int b)
 int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
 {
     unsigned int u = 0xfff;
-    sub_8003B740(b, a, &u);
+    IsWithinDistance_8003B740(b, a, &u);
     if (u < (unsigned int)(r * r))
     {
         int d = GameFn_8003B9E0(b, a);
@@ -2458,8 +2458,8 @@ typedef struct GameD_1
 } GameD_1;
 extern int GetFileRequestStatus_8003BE30();
 extern void sub_8001C224();
-extern void sub_8001C290();
-extern void sub_8001C260();
+extern void EndFade_8001C290();
+extern void BeginFade_8001C260();
 extern void sub_800A6DAC();
 void sub_800A70F8(GameTask_1* t, GameD_1* q)
 {
@@ -2476,14 +2476,14 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
         if (q->fC)
             sub_8001C224();
         else
-            sub_8001C290();
+            EndFade_8001C290();
         eventDispatchHalt_8008B540 = r->f10;
     }
     else
     {
         if (q->f14 == 0)
         {
-            sub_8001C260();
+            BeginFade_8001C260();
             q->f14 = 1;
             sub_800A6D30(0xb);
             t->next_8 = sub_800A70F8;
@@ -2540,9 +2540,9 @@ void sub_800A73A8(void)
     unknownFlags_8008D678 &= ~0x8000000;
     sub_80026FAC();
     GameFn_800A094C();
-    sub_8002FEB8();
+    ResetSoundTask_8002FEB8();
     sub_8001A38C();
-    sub_800376A8();
+    ResetCameraToLevant_800376A8();
     sub_800A8140();
     sub_800A94CC();
     dword_80091C94 = dword_800B1DC8[0];
@@ -2942,7 +2942,7 @@ extern int sub_800AC794(int, int);
 extern void sub_800A913C();
 extern void sub_800ABAD4();
 extern void sub_800AB444();
-extern void sub_8001450C(int*, void*, int, int);
+extern void FirFilterInit_8001450C(int*, void*, int, int);
 extern char dword_800795C0;
 typedef struct G2Stat
 {
@@ -3007,7 +3007,7 @@ extern int sub_80025924(int, int);
 extern void PoolInit_8003FF1C(void*, unsigned);
 extern int sub_800ACB64();
 extern void PlaySfx_80031494(int);
-extern void sub_80031160(int, int);
+extern void PlaySeqSlot_80031160(int, int);
 typedef struct G2Sv5
 {
     char pad_0[0x7B6];
@@ -3030,7 +3030,7 @@ typedef struct G2Ent16
     char pad_8[8];
 } G2Ent16;
 extern G2Ent16** name_800B0608[];
-extern void sub_80014588(void*, void*, int);
+extern void FirFilterStep_80014588(void*, void*, int);
 extern char dword_800A07E0[];
 extern char dword_800A0808[];
 extern int sub_8001AC8C(int);
@@ -3066,7 +3066,7 @@ extern G2V12 dword_8007A164;
 extern char dword_8007DC80;
 extern char dword_8007DC88;
 extern unsigned int dword_8008BD38;
-extern void sub_800292D0();
+extern void TintVramImage_800292D0();
 typedef struct G2L2
 {
     int f0;
@@ -3076,17 +3076,17 @@ typedef struct G2L2
 extern int dword_8001D060(int);
 extern int sub_800A79C8(int);
 extern int* name_800A7940(int);
-extern void sub_8003B740();
+extern void IsWithinDistance_8003B740();
 extern int name_800B0EC4[];
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
 extern int eventDispatchHalt_8008B540;
 extern void sub_800A9414(void*, int, int);
-extern void sub_8002556C(int, int);
+extern void FreeModelAnim_8002556C(int, int);
 extern void PoolDestroy_8003FF7C(void*);
 extern char dword_800B1DD0;
 extern int dword_800B11DC[];
-extern int sub_80025440(int, int, int);
+extern int LoadModelAnim_80025440(int, int, int);
 extern void sub_80025780(int, int, int);
 extern int sub_800AC474(int);
 extern int sub_800AC3E4();
@@ -3151,7 +3151,7 @@ void sub_800A7BF0(int a)
                 sub_8001D730(o, 1);
                 q->b = 0;
             }
-            sub_8001D658((int**)o, 1);
+            SetActorActive_8001D658((int**)o, 1);
             q->a = 0;
         }
     }
@@ -3192,7 +3192,7 @@ void sub_800A8138()
 void sub_800A8140()
 {
     G2Inner* p = dword_8008B4CC->f24;
-    sub_8001450C((int*)((char*)p + 0x5C), (char*)p + 0x4C, (int)&dword_800795C0, 4);
+    FirFilterInit_8001450C((int*)((char*)p + 0x5C), (char*)p + 0x4C, (int)&dword_800795C0, 4);
     p->f0 = 0;
     p->f9C = 0;
     p->fC6 = 0;
@@ -3402,7 +3402,7 @@ int sub_800A9164(int* out)
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            sub_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
                 y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
@@ -3427,7 +3427,7 @@ int sub_800A926C()
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            sub_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
                 y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
@@ -3464,7 +3464,7 @@ void sub_800A9414(void* pv, int b, int c)
 {
     G2Act* p = (G2Act*)pv;
     sub_80025C38(p->f40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-    sub_8001450C((int*)((char*)p + 0x780), (char*)p + 0x770, (int)&dword_800795C0, 4);
+    FirFilterInit_8001450C((int*)((char*)p + 0x780), (char*)p + 0x770, (int)&dword_800795C0, 4);
     sub_800AB010(p, b, c, 0);
     p->fC = 0;
     if (sub_800AAFD8(p->s1e) != 1)
@@ -3532,7 +3532,7 @@ void sub_800A99DC(G2Q* p)
     if (p->f4 & 0x40000000)
         p->f778 /= 2;
     p->f4 &= ~0x30000000;
-    sub_80014588((char*)p + 0x780, (char*)p + 0x770, frameCount_8008D3FC);
+    FirFilterStep_80014588((char*)p + 0x780, (char*)p + 0x770, frameCount_8008D3FC);
     ((G2Sv5*)&saveData_8008B570)->u7B6 += p->u77C;
 }
 
@@ -4058,7 +4058,7 @@ void sub_800ABDF0(G2Act* a)
         if (a->f10 == (unsigned short)sub_800AB170(0x1D))
             PlaySfx_80031494(0x44);
         if (a->f10 == (unsigned short)sub_800AB170(a->s1c) - 10)
-            sub_80031160(0x1D, 1);
+            PlaySeqSlot_80031160(0x1D, 1);
     }
     if (a->s1c == 0x1C && a->f10 == 2)
         sub_800AB114((G2Obj*)a);
@@ -4121,7 +4121,7 @@ void sub_800ABECC()
     {
         r = &dword_8007A0F8;
     }
-    sub_800292D0(&dword_8007DC80, &dword_8007DC88, r);
+    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
 }
 
 INCLUDE_OVERLAY_ASM(game, sub_800AC02C);
@@ -4213,24 +4213,24 @@ int sub_800AC518(int a)
 
 int sub_800AC5D0(int a, int b)
 {
-    return sub_80025440(dword_8007DC60[2], a, b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60[2], a, b) != 0;
 }
 
 int sub_800AC604(int a, int b)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    return sub_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60[2], (short)sub_800AC988(a, t), b) != 0;
 }
 
 void sub_800AC678(int a)
 {
-    sub_8002556C(dword_8007DC60[2], a);
+    FreeModelAnim_8002556C(dword_8007DC60[2], a);
 }
 
 void sub_800AC6A8(int a)
 {
     int t = dword_800B11DC[sub_800AC3E4()];
-    sub_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
+    FreeModelAnim_8002556C(dword_8007DC60[2], (short)sub_800AC988(a, t));
 }
 
 void sub_800AC708(int a, int b)
@@ -4245,7 +4245,7 @@ void sub_800AC73C()
 
 void sub_800AC768()
 {
-    sub_80024DC4(dword_8007DC60[2]);
+    AreFileRequestsDone_80024DC4(dword_8007DC60[2]);
 }
 
 int sub_800AC794(int a, int b)
@@ -4328,7 +4328,7 @@ void sub_800ACAA4(int* a, int* b)
     b[8] = -1;
     b[9] = 0;
     sub_800AC380(s->b7E5 != 0xFF);
-    sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
+    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
     PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
@@ -4338,7 +4338,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
 void sub_800ACF0C()
 {
-    sub_80024BB0((int*)&dword_8007DC60);
+    FreeModelList_80024BB0((int*)&dword_8007DC60);
     PoolDestroy_8003FF7C(&dword_800B1DD0);
 }
 
@@ -4758,8 +4758,8 @@ int sub_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 1);
         if (old < 0x17)
             sub_800AD184(old, 1, 1);
-        sub_800AC3A4(*(short*)((char*)sub_8001CF84(a) + 2));
-        sub_8001D034(s->b7E5);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
+        GetArmorData_8001D034(s->b7E5);
         sub_800AC3B0(dword_8001D060(s->b7E5));
         return 1;
     case 1:
@@ -4777,8 +4777,8 @@ int sub_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 2);
         if (old < 0xF)
             sub_800AD184(old, 1, 2);
-        sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
-        sub_8001D034(a);
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+        GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
         return 1;
     case 2:

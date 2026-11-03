@@ -21,7 +21,7 @@ INCLUDE_DATA(dword_800743D0);
 
 extern unsigned char dword_80082EBC[];
 extern unsigned char a1ftf[];
-extern void sub_8002C06C(void* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 void sub_8002E0D8(unsigned short* p, short a1);
 // Matched
 void sub_8002DA3C(unsigned short* pos, int ot)
@@ -29,25 +29,25 @@ void sub_8002DA3C(unsigned short* pos, int ot)
     unsigned short loc[2];
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 4;
-    sub_8002C06C(loc, 0x11, ot);
+    DrawUiTiySprt_8002C06C(loc, 0x11, ot);
     loc[0] = pos[0] + 4;
     loc[1] = pos[1] + 0x11;
-    sub_8002C06C(loc, 0x5C, ot);
+    DrawUiTiySprt_8002C06C(loc, 0x5C, ot);
     loc[0] = pos[0] + 4;
     loc[1] = pos[1] + 0x1E;
-    sub_8002C06C(loc, 0x3C, ot);
+    DrawUiTiySprt_8002C06C(loc, 0x3C, ot);
     loc[0] = pos[0] + 1;
     loc[1] = pos[1] + 0x37;
-    sub_8002C06C(loc, 0x54, ot);
+    DrawUiTiySprt_8002C06C(loc, 0x54, ot);
     loc[1] = pos[1] + 0x56;
-    sub_8002C06C(loc, 0x72, ot);
+    DrawUiTiySprt_8002C06C(loc, 0x72, ot);
     loc[0] = pos[0] + 0x4E;
     loc[1] = pos[1];
     sub_8002E0D8(loc, ot);
 }
 INCLUDE_ASM(sub_8002DB48);
 extern void sub_80031FF4(int a, void* b, void* c, int d);
-extern void sub_8002C290(void* p, int a1, int a2);
+extern void DrawSmallNumber3_8002C290(void* p, int a1, int a2);
 // Matched
 void sub_8002E004(unsigned short* p, int a1, int a2)
 {
@@ -74,11 +74,11 @@ void sub_8002E004(unsigned short* p, int a1, int a2)
     }
     pos[0] = p[0] + 0x14;
     pos[1] = p[1];
-    sub_8002C290(pos, a1, a2);
+    DrawSmallNumber3_8002C290(pos, a1, a2);
 }
 extern unsigned char dword_80082EBC[];
 extern unsigned char a1ftf[];
-extern void sub_8002C06C(void* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void sub_8002E0D8(unsigned short* p, short a1)
 {
@@ -88,10 +88,10 @@ void sub_8002E0D8(unsigned short* p, short a1)
     for (i = 0; i < 5; i++)
     {
         pos[1] = p[1] + a1ftf[i];
-        sub_8002C06C(pos, dword_80082EBC[i], a1);
+        DrawUiTiySprt_8002C06C(pos, dword_80082EBC[i], a1);
     }
 }
-extern void sub_8002C100(unsigned short* pos, int v, short ot);
+extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, short ot);
 // Matched
 void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short ot)
 {
@@ -101,16 +101,16 @@ void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short
     {
         if (a[i] < b[i])
         {
-            sub_8002C5D0(1);
+            SetLargeDigitColor_8002C5D0(1);
         }
         else if (b[i] < a[i])
         {
-            sub_8002C5D0(2);
+            SetLargeDigitColor_8002C5D0(2);
         }
         loc[0] = pos[0] + 0x16;
         loc[1] = pos[1] + i * 14 + 2;
-        sub_8002C100(loc, b[i], ot);
-        sub_8002C5D0(0);
+        DrawLargeNumber_8002C100(loc, b[i], ot);
+        SetLargeDigitColor_8002C5D0(0);
     }
 }
 // Matched
@@ -130,7 +130,7 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
         p[0x1E] = a1;
         break;
     }
-    sub_80033624(a3, p);
+    CalcEquippedStats_80033624(a3, p);
 }
 INCLUDE_ASM(sub_8002E334);
 extern unsigned char dword_80082EA4[];
@@ -186,7 +186,7 @@ void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot)
         {
             q[1] = pos[1] + 0x25;
         }
-        sub_8002C06C(q, dword_80082EA4[i], ot);
+        DrawUiTiySprt_8002C06C(q, dword_80082EA4[i], ot);
         n = a1[dword_80082EB8[i]];
         if (n)
         {
@@ -194,7 +194,7 @@ void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot)
             AddPrimCopy_80040298(&pOT_8008D454[ot], &poly, 5);
         }
     }
-    sub_8002C06C(pos, 0xB, ot);
+    DrawUiTiySprt_8002C06C(pos, 0xB, ot);
 }
 extern unsigned char dword_80082EF0[];
 // Matched
@@ -246,8 +246,8 @@ extern Color_EACC dword_800743D0;
 extern unsigned char dword_80082E9C[];
 extern unsigned char dword_80082EA0[];
 extern void sub_8001419C(unsigned char* p, short* out);
-extern void sub_80042750(RECT* r, unsigned char* rgb, void* ot);
-extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
+extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
 void sub_8002EACC(unsigned char* a0, unsigned short* pos, int a2, short ot)
 {
@@ -260,31 +260,31 @@ void sub_8002EACC(unsigned char* a0, unsigned short* pos, int a2, short ot)
     sub_8001419C(a0 + 0x2C, loc);
     loc[0] += pos[0];
     loc[1] += pos[1];
-    sub_8002C06C(loc, 10, ot);
-    prim = (char*)loadedOverlayMaybe_8008D620;
+    DrawUiTiySprt_8002C06C(loc, 10, ot);
+    prim = (char*)uiTiySprts_8008D620;
     *(unsigned short*)(prim + 0xF8) = pos[0] + 2;
     *(unsigned short*)(prim + 0xFA) = pos[1] + 2;
     SetSemiTrans(prim + 0xF0, 1);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)loadedOverlayMaybe_8008D620 + 0xF0, 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + 0x60, 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)uiTiySprts_8008D620 + 0xF0, 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)uiTiyTPages_8008D3F4 + 0x60, 2);
     r.x = pos[0];
     r.y = pos[1];
     r.w = 0x32;
     r.h = 0x32;
-    sub_80042750(&r, dword_80082E9C, &pOT_8008D454[ot]);
+    DrawRectOutline_80042750(&r, dword_80082E9C, &pOT_8008D454[ot]);
     r.x = pos[0] + 1;
     r.y = pos[1] + 1;
     r.w = 0x30;
     r.h = 0x30;
-    sub_80042750(&r, dword_80082EA0, &pOT_8008D454[ot]);
+    DrawRectOutline_80042750(&r, dword_80082EA0, &pOT_8008D454[ot]);
     a.vx = pos[0] + 2;
     a.vy = pos[1] + 0x1A;
     b.vx = pos[0] + 0x32;
     b.vy = a.vy;
-    sub_80042870(&a, &b, col.c, &pOT_8008D454[ot]);
+    DrawLine_80042870(&a, &b, col.c, &pOT_8008D454[ot]);
     a.vx = pos[0] + 0x19;
     a.vy = pos[1] + 2;
     b.vx = a.vx;
     b.vy = pos[1] + 0x32;
-    sub_80042870(&a, &b, col.c, &pOT_8008D454[ot]);
+    DrawLine_80042870(&a, &b, col.c, &pOT_8008D454[ot]);
 }
