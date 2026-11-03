@@ -2327,40 +2327,38 @@ int sub_8002300C(unsigned char* hdr, unsigned char* p_in, int* a, int k, int h)
     }
     return r;
 }
-#if 0
-// Not matched: same issues as sub_8002300C plus register assignment
-int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h)
+// Matched
+int sub_8002320C(unsigned char* hdr, unsigned char* p_in, int* b, int k, int h)
 {
-    int r = 8;
+    unsigned char* p = p_in;
+    int r;
     int i;
-    unsigned char* q;
+    SrcRec320C* q;
     ((struct_12_20b*)b[1])[k].count = *(int*)p;
     ((struct_12_20b*)b[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
+    r = 8;
     ((struct_12_20b*)b[1])[k].f4 = *(unsigned short*)(p + 4);
     ((struct_12_20b*)b[1])[k].f6 = *(unsigned short*)(p + 6);
-    q = p + r;
+    q = (SrcRec320C*)(p + r);
     for (i = 0; i < *(int*)p; i++)
     {
-        ((struct_12_20b*)b[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
-        ((struct_12_20b*)b[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
-        ((struct_12_20b*)b[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_12_20b*)b[1])[k].items[i].f4 = q[i].h[0];
+        ((struct_12_20b*)b[1])[k].items[i].f6 = q[i].h[1];
+        ((struct_12_20b*)b[1])[k].items[i].f8 = q[i].h[2];
         ((struct_12_20b*)b[1])[k].items[i].fA = 0;
-        ((struct_12_20b*)b[1])[k].items[i].fC = *(unsigned short*)(q + 8);
-        ((struct_12_20b*)b[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
-        ((struct_12_20b*)b[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_12_20b*)b[1])[k].items[i].fC = q[i].h[4];
+        ((struct_12_20b*)b[1])[k].items[i].fE = q[i].h[5];
+        ((struct_12_20b*)b[1])[k].items[i].f10 = q[i].h[6];
         ((struct_12_20b*)b[1])[k].items[i].f12 = 0;
-        ((struct_12_20b*)b[1])[k].items[i].b0 = q[0x10];
-        ((struct_12_20b*)b[1])[k].items[i].b1 = q[0x11];
-        ((struct_12_20b*)b[1])[k].items[i].b2 = q[0x12];
+        ((struct_12_20b*)b[1])[k].items[i].b0 = q[i].b[0];
+        ((struct_12_20b*)b[1])[k].items[i].b1 = q[i].b[1];
+        ((struct_12_20b*)b[1])[k].items[i].b2 = q[i].b[2];
         ((struct_12_20b*)b[1])[k].items[i].b3 = hdr[3];
-        ((struct_12_20b*)b[1])[k].items[i].f12 = q[0xE] + (q[0xF] << 8);
+        ((struct_12_20b*)b[1])[k].items[i].f12 = q[i].e[0] + (q[i].e[1] << 8);
         r += 20;
-        q += 20;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8002320C);
 // Matched
 void sub_80023460(char* p, int arg1)
 {
