@@ -435,12 +435,111 @@ short sub_8001F268(char* o, short* out, int a2, int idx)
     }
     return out[0];
 }
-#if 0
+extern void sub_8004D288(int* out, int* s, int k);
+extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
+// Matched
 void sub_8001F354(void* a0)
 {
+    char* o = a0;
+    int save[3];
+    int* e;
+    int dx;
+    int dz;
+    int v;
+    short* r;
+    int* s;
+    short c;
+    int sn;
+    short a;
+    e = (int*)(*(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0x9C) * 28);
+    *(int*)(o + 0x44) = *(int*)(o + 0x38);
+    *(int*)(o + 0x48) = *(int*)(o + 0x3C);
+    *(int*)(o + 0x4C) = *(int*)(o + 0x40);
+    save[0] = *(int*)(o + 0x64);
+    save[1] = *(int*)(o + 0x68);
+    save[2] = *(int*)(o + 0x6C);
+    sub_8004D288((int*)(o + 0x64), e, *(unsigned int*)(o + 0x90) % e[0]);
+    if (*(unsigned int*)(o + 0x90) % e[0] == 0 || (*(int*)(o + 4) & 8))
+    {
+        *(int*)(o + 4) &= ~8;
+        if (*(int*)(o + 4) & 0x40000)
+        {
+            dx = 0;
+            dz = 0;
+        }
+        else
+        {
+            dx = *(int*)(o + 0x64);
+            dz = *(int*)(o + 0x6C);
+        }
+    }
+    else if (*(int*)(o + 4) & 0x40000)
+    {
+        dx = *(int*)(o + 0x64) - save[0];
+        dz = *(int*)(o + 0x6C) - save[2];
+    }
+    else
+    {
+        dx = *(int*)(o + 0x64);
+        dz = *(int*)(o + 0x6C);
+    }
+    if (dx < 0)
+    {
+        dx = 0;
+    }
+    if (dz < 0)
+    {
+        dz = 0;
+    }
+    if (*(int*)(o + 4) & 0x20000000)
+    {
+        dx = dx * *(int*)(o + 0x8C) / 4096;
+        dz = dz * *(int*)(o + 0x8C) / 4096;
+    }
+    r = *(short**)(o + 0x144);
+    s = (int*)(o + 0x138);
+    if (*(int*)(o + 4) & 0x4000000)
+    {
+        if (TurnActorTowards_8001DDFC(o, (VECTOR*)(o + 0x70), *(int*)(o + 0x7C)))
+        {
+            *(int*)(o + 4) &= ~0x4000000;
+        }
+    }
+    if (*(int*)(o + 4) & 0x2000000)
+    {
+        *(int*)(o + 0x64) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 0];
+        *(int*)(o + 0x68) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 1];
+        *(int*)(o + 0x6C) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 2];
+        *(int*)(o + 0x38) = *(int*)(o + 0x50) + *(int*)(o + 0x64) / *(int*)(*(char**)(o + 0x160) + 4);
+        *(int*)(o + 0x3C) = *(int*)(o + 0x54) + *(int*)(o + 0x68) / *(int*)(*(char**)(o + 0x160) + 4);
+        *(int*)(o + 0x40) = *(int*)(o + 0x58) + *(int*)(o + 0x6C) / *(int*)(*(char**)(o + 0x160) + 4);
+        *(short*)(o + 0x5E) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 3];
+    }
+    else if (*(int*)(o + 4) & 0x1000000)
+    {
+        a = *(short*)(o + 0x5E);
+        sn = (asc_80084350 + 0xF8)[a & 0xFFF];
+        c = (asc_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
+        *(int*)(o + 0x40) = *(int*)(o + 0x58) + (*(int*)(o + 0x6C) * c - *(int*)(o + 0x64) * sn) / 4096 / e[2];
+        *(int*)(o + 0x38) = *(int*)(o + 0x50) + (*(int*)(o + 0x6C) * sn + *(int*)(o + 0x64) * c) / 4096 / e[2];
+        *(int*)(o + 0x3C) = *(int*)(o + 0x54) + *(int*)(o + 0x68) / e[2];
+    }
+    else if (*(int*)(o + 4) & 0x40000)
+    {
+        *(int*)(o + 0x38) += dz * (asc_80084350 + 0xF8)[*(short*)(o + 0x5E) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
+        *(int*)(o + 0x40) += dz * (asc_80084350 + 0xF8)[(*(short*)(o + 0x5E) + 0x400) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
+    }
+    else
+    {
+        *(int*)(o + 0x38) = *(int*)(o + 0x50) + dz * (asc_80084350 + 0xF8)[*(short*)(o + 0x5E) & 0xFFF] / 4096 / e[2];
+        *(int*)(o + 0x40) = *(int*)(o + 0x58) + dz * (asc_80084350 + 0xF8)[(*(short*)(o + 0x5E) + 0x400) & 0xFFF] / 4096 / e[2];
+    }
+    if (*(int*)(o + 4) & 0x40000)
+    {
+        *(int*)(o + 0x84) = *(int*)(o + 0x80);
+        *(int*)(o + 0x80) = sub_800B716C((VECTOR*)(o + 0x38), (VECTOR*)(o + 0x44), (SVECTOR*)(o + 0x5C), o + 0xB4);
+    }
 }
-#endif
-INCLUDE_ASM(sub_8001F354);
 // Matched
 void sub_8001F918(void* a0)
 {

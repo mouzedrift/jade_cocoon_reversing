@@ -220,7 +220,180 @@ void sub_8001A38C(void)
     dword_80087134[5] = (short)g[0x3E / 2] / 4;
     dword_80087134[8] = (short)g[0x40 / 2] / 4;
 }
-INCLUDE_ASM(sub_8001A41C);
+extern unsigned char byte_8008D460[3];
+typedef struct
+{
+    unsigned short flags; // 0x10: flash, 1: fade in, 2: fade out, 4: darken, 8: brighten, 0x20: front OT
+    short count;
+    short pad_4;
+    unsigned short duration;
+} Fade_8001A41C;
+typedef struct
+{
+    char pad_0[0x30];
+    unsigned char rgb[3];
+} CamColor_8001A41C;
+// Matched
+void sub_8001A41C(int** p, unsigned short* q)
+{
+    Fade_8001A41C* f = (Fade_8001A41C*)q;
+    unsigned long* ot;
+    POLY_F4 poly;
+    DR_TPAGE tp;
+    int v;
+    SVECTOR* sv;
+    unsigned char* c;
+    unsigned char b;
+    if (f->flags & 0x20)
+    {
+        ot = pOT_8008D4AC;
+    }
+    else
+    {
+        ot = pOT_8008D5F4;
+    }
+    if (f->flags & 0x10)
+    {
+        b = f->count * 255 / 8;
+        SetPolyF4(&poly);
+        poly.r0 = b;
+        poly.g0 = b;
+        poly.b0 = b;
+        poly.x0 = 0;
+        poly.y0 = 0;
+        poly.x1 = display_8008B4D8.field_C_w;
+        poly.y1 = 0;
+        poly.x2 = 0;
+        poly.y2 = display_8008B4D8.field_E_h;
+        poly.x3 = display_8008B4D8.field_C_w;
+        poly.y3 = display_8008B4D8.field_E_h;
+        SetSemiTrans(&poly, 1);
+        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        setlen(&tp, 1);
+        tp.code[0] = 0xE1000220;
+        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        if (--f->count < 0)
+        {
+            f->flags &= ~0x10;
+        }
+    }
+    else if (f->flags & 1)
+    {
+        dword_8008D40C += 0x1000 / f->duration;
+        if (dword_8008D40C >= 0x1000)
+        {
+            dword_8008D40C = 0x1000;
+            unknownFlags_8008D678 &= ~0x400;
+            f->flags &= ~1;
+        }
+    }
+    else if (f->flags & 2)
+    {
+        dword_8008D40C -= 0x1000 / f->duration;
+        if (dword_8008D40C < 0)
+        {
+            f->flags &= ~2;
+            dword_8008D40C = 0;
+        }
+    }
+    else if (f->flags & 4)
+    {
+        v = f->count << 8;
+        v -= f->count;
+        v /= f->duration;
+        SetPolyF4(&poly);
+        poly.x0 = 0;
+        poly.y0 = 0;
+        poly.x1 = display_8008B4D8.field_C_w;
+        poly.y1 = 0;
+        poly.x2 = 0;
+        poly.y2 = display_8008B4D8.field_E_h;
+        poly.x3 = display_8008B4D8.field_C_w;
+        poly.y3 = display_8008B4D8.field_E_h;
+        poly.r0 = v;
+        poly.g0 = v;
+        poly.b0 = v;
+        SetSemiTrans(&poly, 1);
+        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        setlen(&tp, 1);
+        tp.code[0] = 0xE1000220;
+        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        if (++f->count > f->duration)
+        {
+            f->count = f->duration;
+        }
+    }
+    else if (f->flags & 8)
+    {
+        v = (f->duration - f->count) << 8;
+        v -= f->duration - f->count;
+        v /= f->duration;
+        SetPolyF4(&poly);
+        poly.x0 = 0;
+        poly.y0 = 0;
+        poly.x1 = display_8008B4D8.field_C_w;
+        poly.y1 = 0;
+        poly.x2 = 0;
+        poly.y2 = display_8008B4D8.field_E_h;
+        poly.x3 = display_8008B4D8.field_C_w;
+        poly.y3 = display_8008B4D8.field_E_h;
+        poly.r0 = v;
+        poly.g0 = v;
+        poly.b0 = v;
+        SetSemiTrans(&poly, 1);
+        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        setlen(&tp, 1);
+        tp.code[0] = 0xE1000220;
+        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        if (++f->count > f->duration)
+        {
+            f->flags &= ~8;
+            f->count = f->duration;
+        }
+    }
+    sv = (SVECTOR*)(cameraState_8008D4F0 + 0x34);
+    VectorNormalSS(sv, sv);
+    c = (unsigned char*)cameraState_8008D4F0;
+    dword_80087114[0] = *(short*)(c + 0x34);
+    dword_80087114[1] = *(short*)(c + 0x36);
+    dword_80087114[2] = *(short*)(c + 0x38);
+    if (unknownFlags_8008D678 & 0x400)
+    {
+        dword_80087134[0] = *(short*)(c + 0x3C) * dword_8008D40C >> 12;
+        dword_80087134[3] = *(short*)(c + 0x3E) * dword_8008D40C >> 12;
+        dword_80087134[6] = *(short*)(c + 0x40) * dword_8008D40C >> 12;
+    }
+    else
+    {
+        dword_80087134[0] = *(short*)(c + 0x3C);
+        dword_80087134[3] = *(short*)(c + 0x3E);
+        dword_80087134[6] = *(short*)(c + 0x40);
+    }
+    dword_80087114[3] = 0;
+    dword_80087114[4] = 0;
+    dword_80087114[5] = 0;
+    dword_80087114[6] = -dword_80087114[0];
+    dword_80087114[7] = -dword_80087114[1];
+    dword_80087114[8] = -dword_80087114[2];
+    dword_80087134[1] = 0;
+    dword_80087134[4] = 0;
+    dword_80087134[7] = 0;
+    dword_80087134[2] = dword_80087134[0] / 4;
+    dword_80087134[5] = dword_80087134[3] / 4;
+    dword_80087134[8] = dword_80087134[6] / 4;
+    if (unknownFlags_8008D678 & 0x400)
+    {
+        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0] * dword_8008D40C >> 12;
+        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1] * dword_8008D40C >> 12;
+        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2] * dword_8008D40C >> 12;
+    }
+    else
+    {
+        byte_8008D460[0] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[0];
+        byte_8008D460[1] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[1];
+        byte_8008D460[2] = ((CamColor_8001A41C*)cameraState_8008D4F0)->rgb[2];
+    }
+}
 // Matched
 void sub_8001A9A4(void)
 {
