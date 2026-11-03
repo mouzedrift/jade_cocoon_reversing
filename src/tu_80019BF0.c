@@ -3162,29 +3162,24 @@ void sub_8001FF48(char* o)
         }
     }
 }
-#if 0
-// Not matched: original reuses the -1 of the first compare for the loop (move a3,v0), ours loads it again
-void sub_800200F8(char* o)
+// Matched
+void sub_800200F8(void* a0)
 {
+    char* o = a0;
     int i;
-    MATRIX* src;
     if (*(int*)(o + 4) & 0x10000000)
     {
         if (**(short**)(o + 0x134) != -1)
         {
             i = 0;
-            src = dword_80098188;
             do
             {
-                (*(MATRIX**)(o + 0x1C8))[i] = *src;
+                (*(MATRIX**)(o + 0x1C8))[i] = dword_80098188[i];
                 i++;
-                src++;
             } while ((*(short**)(o + 0x134))[i * 4] != -1);
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_800200F8);
 // Matched
 void ClearModelAnimRefs_800201A4(void)
 {
@@ -3484,17 +3479,19 @@ int AreLoaderModelsLoaded_80020924(void)
     }
     return 1;
 }
-#if 0
-// Not matched: s0/s1 swapped; case 0 loads q[0] before the store and adds a register 1
-void ModelLoaderTask_800209AC(struct_cb* p, int* q)
+// Matched
+void ModelLoaderTask_800209AC(struct_cb* p, int* a1)
 {
+    int* q = a1;
     int s = q[0];
+    int t;
     switch (s)
     {
     case 0:
         LoadRequestedModels_80020A38(q);
+        t = q[0];
         eventDispatchHalt_8008B540 = 1;
-        q[0] += 1;
+        q[0] = t + 1;
         break;
     case 1:
         if (AreRequestedModelsLoaded_80020B70(q))
@@ -3505,8 +3502,6 @@ void ModelLoaderTask_800209AC(struct_cb* p, int* q)
         break;
     }
 }
-#endif
-INCLUDE_ASM(ModelLoaderTask_800209AC);
 // Matched
 void LoadRequestedModels_80020A38(int* p)
 {
@@ -3604,15 +3599,14 @@ void UpdateOverlayLoaderTask_80020CD8(int a0, int* p)
 // Not matched
 int LoadOverlayIfChanged_80020D1C(int a0, int a1)
 {
-    int v = a1;
     int* p = overlayLoaderTask_8008D4C0[9];
-    if (p[0] == v)
+    if (p[0] == a1)
     {
         return -1;
     }
-    p[0] = v;
-    p[1] = v;
-    return LoadOverlay_80020BF8(a0, v);
+    p[0] = a1;
+    p[1] = a1;
+    return LoadOverlay_80020BF8(a0, a1);
 }
 #endif
 INCLUDE_ASM(LoadOverlayIfChanged_80020D1C);
@@ -5523,13 +5517,13 @@ int IsModelAnimLoaded_800255D8(struct_112* p, int idx)
 {
     return ((char*)p->field_44)[idx] != 0;
 }
-#if 0
-// Not matched: a2 and a0[2] swap callee-saved registers (s2/s3)
-int sub_800255F0(int* a0, int idx, int a2)
+// Matched
+int sub_800255F0(int a, int idx, int a2)
 {
+    int* a0 = (int*)a;
     int b[16];
     int c[8];
-    int x = a0[2];
+    unsigned int x = a0[2];
     int y = a0[3];
     unsigned short* e = (unsigned short*)modelDescs_800824CC[idx];
     InitModelLoadParams_80025ED0(b);
@@ -5542,41 +5536,37 @@ int sub_800255F0(int* a0, int idx, int a2)
     c[1] = e[0];
     c[2] = e[3];
     c[3] = e[4];
+    c[4] = 0;
     c[5] = (int)b;
     c[6] = 0x3C;
-    c[4] = 0;
     c[7] = (int)OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)x, c);
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_800255F0);
-#if 0
-// Not matched: item pointer and table entry swap callee-saved registers (s0/s1)
-int sub_800256B8(struct_112_list* a0, int id)
+// Matched
+int sub_800256B8(int a, int id)
 {
+    struct_112_list* a0 = (struct_112_list*)a;
     int b[16];
     int c[8];
     struct_112* it = &a0->items[FindModelIndex_80026630(a0, id)];
     unsigned short* e = (unsigned short*)modelDescs_800824CC[it->id_38];
     InitModelLoadParams_80025ED0(b);
     b[0] = 8;
-    b[3] = 3;
-    c[0] = 0x69;
     b[5] = (int)it;
+    b[3] = 3;
     b[1] = (int)e;
+    c[0] = 0x69;
     c[1] = e[0];
     c[2] = e[7];
     c[3] = e[8];
+    c[4] = 0;
     c[5] = (int)b;
     c[6] = 0x3C;
-    c[4] = 0;
     c[7] = (int)OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00((struct_list10*)it, c);
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_800256B8);
 // Matched
 int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
 {
@@ -5897,7 +5887,7 @@ void LoadModelTextures_8002607C(int* a0)
     }
 }
 #if 0
-// Not matched: load of a0[9] and a0[6] scheduled in swapped order
+// Not matched: the a0[9] list argument is loaded before the a0[6] load in the original, ours after; insensitive to statement order, types and temporaries
 void LoadModelFtg_800260FC(int* a0)
 {
     int q = a0[6];
@@ -6032,16 +6022,16 @@ void LoadModelAnimSetSection_80026410(int* a0)
     }
 }
 #if 0
-// Not matched
-void sub_8002651C(struct_loader* a0)
+// Not matched: the original loads the list argument (+0x34) right after the owner pointer, ours schedules it first (same as LoadModelFtg_800260FC)
+void sub_8002651C(int* a)
 {
-    struct_112* p = a0->owner_14;
-    int* list = a0->list_34;
+    struct_112* p = ((struct_loader*)a)->owner_14;
+    int* list = ((struct_loader*)a)->list_34;
     int heap = ((int*)p->field_0)[1];
-    int* q = a0->data_18 + 1;
+    int* q = ((struct_loader*)a)->data_18 + 1;
     p->field_42 = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->field_68, p->field_42, heap);
-    LoadFtgObjects_80021824(a0->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
+    LoadFtgObjects_80021824(((struct_loader*)a)->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
 }
 #endif
 INCLUDE_ASM(sub_8002651C);
@@ -6140,41 +6130,33 @@ void AllocModelAnims_80026730(struct_28** a0, int a1, int a2)
         p[i].field_18 = 0;
     }
 }
-#if 0
-// Not matched
+// Matched
 void FreeModelAnims_8002679C(struct_28** a0, int n, int heap)
 {
     struct_28* arr;
-    struct_28* e;
     int i;
-    arr = *a0;
-    if (arr)
+    if (*a0)
     {
-        i = 0;
-        e = arr;
-        while (i < n)
+        arr = *a0;
+        for (i = 0; i < n; i++)
         {
-            if (e->field_10)
+            if (arr[i].field_10)
             {
-                HeapFree_8003FD18(e->field_10, heap);
+                HeapFree_8003FD18(arr[i].field_10, heap);
             }
-            if (e->field_14)
+            if (arr[i].field_14)
             {
-                HeapFree_8003FD18(e->field_14, heap);
+                HeapFree_8003FD18(arr[i].field_14, heap);
             }
-            if (e->field_18)
+            if (arr[i].field_18)
             {
-                HeapFree_8003FD18(e->field_18, heap);
+                HeapFree_8003FD18(arr[i].field_18, heap);
             }
-            i++;
-            e++;
         }
         HeapFree_8003FD18(arr, heap);
         *a0 = 0;
     }
 }
-#endif
-INCLUDE_ASM(FreeModelAnims_8002679C);
 // Matched
 void sub_80026870(int* a0, int a1, int a2)
 {
@@ -6182,23 +6164,20 @@ void sub_80026870(int* a0, int a1, int a2)
     AllocModelAnims_80026730((struct_28**)a0, r, a2);
     sub_800268E8(a0[0], a1, r, a2, -1);
 }
-#if 0
-// Not matched: mask test becomes srav/andi, register assignment differs
+// Matched
 void sub_800268E8(int a0, int a1, int n, int h, int mask)
 {
-    struct_28* p = (struct_28*)a0;
     int* q = (int*)a1;
     int i;
-    for (i = 0; i < n; i++, p++)
+    for (i = 0; i < n; i++, a0 += sizeof(struct_28))
     {
-        if ((mask & (1 << i)) && p->field_14 == 0 && p->field_18 == 0)
+        int bit = 1 << i;
+        if ((mask & bit) && ((struct_28*)a0)->field_14 == 0 && ((struct_28*)a0)->field_18 == 0)
         {
-            LoadModelAnimData_80026A8C(p, a1 + q[i + 1], h);
+            LoadModelAnimData_80026A8C((struct_28*)a0, a1 + q[i + 1], h);
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_800268E8);
 // Matched
 void FreeModelAnimData_800269C4(int a0, int n, int sel, int h)
 {
