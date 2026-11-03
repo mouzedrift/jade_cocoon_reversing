@@ -474,4 +474,12 @@ typedef struct
     int sel_10;
 } EffectLoadArg;
 
+// overlay loader task state (the overlayLoaderTask_8008D4C0 entry buffer)
+typedef struct OverlayLoader
+{
+    int wanted_0; // enum OverlayIds; 0x1D: none
+    int loaded_4;
+    int request_8; // LoadOverlay_80020BF8 file request
+} OverlayLoader;
+
 #endif

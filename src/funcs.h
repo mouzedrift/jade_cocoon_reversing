@@ -23,6 +23,7 @@ struct FtgObject;
 struct ModelLoader;
 struct ModelLoadParams;
 struct ModelAnim;
+struct OverlayLoader;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -400,7 +401,7 @@ extern void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
 extern void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4);
 extern void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q);
 extern int GetEquipmentIcon_8001D2D4(void);
-extern void UpdateOverlayLoaderTask_80020CD8(int a0, int* p);
+extern void UpdateOverlayLoaderTask_80020CD8(int a0, struct OverlayLoader* p);
 extern void InitModelLoadParams_80025ED0(struct ModelLoadParams* p);
 extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);
 extern int sub_800272D0(void);
