@@ -2133,7 +2133,150 @@ void sub_800BD854(ShopUnit3Shop* u)
     }
 }
 
+#if 0
+// Not matched (8 words): the two blocks that set tk = name_8008D670 + 0x10 before a call load
+// name_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
+// (When writing this in C, delete the jpt_800B96F4 line behind the function.)
+typedef struct ShopSaveBitsShop
+{
+    unsigned int pad : 5;
+    unsigned int bit5 : 1;
+} ShopSaveBitsShop;
+extern void sub_800BDD74();
+extern void sub_800BDE44();
+extern void sub_80027314();
+extern void sub_8001AAA8(int a);
+extern void fn_800AD184(int a, int b, int c);
+extern int sub_800BAF54(short* a, short* b, short c, short d);
+void sub_800BD9DC(ShopUnit3Shop* u)
+{
+    ShopTaskShop* tk;
+    char* sv;
+    int* p;
+    int any;
+    short i;
+    switch (u->field_0)
+    {
+    case 3:
+        if (u->field_30 != 0)
+        {
+            break;
+        }
+        sv = (char*)&saveData_8008B570;
+        if (((ShopSaveBitsShop*)(sv + 0x1C))->bit5 == 1)
+        {
+            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+            sub_800B9B44((short*)u->field_50);
+            if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
+            {
+                p = (int*)(sv + 0x814);
+                p[1] |= 8;
+            }
+            else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
+            {
+                p = (int*)(sv + 0x814);
+                p[1] |= 4;
+            }
+            if (u->field_24 & 0x200)
+            {
+                fn_800AD1E0(fn_800AD288(u->field_6E + u->field_76, 4), 1, 4);
+                fn_800AD3F0(4);
+                u->field_24 &= ~0x200;
+            }
+            *(int*)((char*)u + 0x84) = 0;
+            *(int*)((char*)u + 0x88) = 0;
+            *(int*)((char*)u + 0x8C) = 0;
+            u->field_24 |= 1;
+            if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+            {
+                tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+                fn_80027478(0x40, 1);
+                fn_8002C014();
+                sub_80027314();
+                tk->next_8 = sub_800BDD74;
+                break;
+            }
+        }
+        *(short*)((char*)u + 0x94) = 1;
+        u->field_24 |= 0x800;
+        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        fn_8001ABEC(1);
+        tk->next_8 = sub_800BDE44;
+        sub_8001AAA8(0x20);
+        break;
+    case 6:
+        if (u->field_30 != 0)
+        {
+            break;
+        }
+        any = 0;
+        for (i = any; i < 27; i++)
+        {
+            if ((unsigned int)u->field_84 & (1 << i))
+            {
+                fn_800AD184(sub_800BAE80((ShopUnitShop*)sub_800B9C5C(i)), 1, 0);
+                sub_800B9B20(i);
+                any = 1;
+            }
+        }
+        if (any == 0)
+        {
+            break;
+        }
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        u->field_24 |= 1;
+        if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+        {
+            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            fn_80027478(0x40, 1);
+            fn_8002C014();
+            sub_80027314();
+            tk->next_8 = sub_800BDD74;
+        }
+        else
+        {
+            *(short*)((char*)u + 0x94) = 2;
+            u->field_24 |= 0x800;
+            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            fn_8001ABEC(1);
+            tk->next_8 = sub_800BDE44;
+            sub_8001AAA8(0x20);
+        }
+        break;
+    case 9:
+        sub_800BAF54((short*)u->field_4C, (short*)u->field_50, u->a7A[0] == 0 ? 3 : 2, u->a7A[1] == 0 ? 3 : 2);
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        u->field_0 = 7;
+        u->field_2 = 0;
+        u->field_24 |= 1;
+        SetShopHelpText_800BBB54(u, 0);
+        break;
+    case 10:
+        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        tk->next_8 = sub_800BE128;
+        tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
+        fn_800B6C6C((char*)u->field_4C + 0x94, 0);
+        SetFadeMode_8001C19C(0, 0x20);
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        break;
+    case 11:
+        u->field_24 |= 4;
+        break;
+    case 12:
+        u->field_0 = 0;
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
+INCLUDE_OVERLAY_ASM(shop, jpt_800B96F4);
+INCLUDE_OVERLAY_ASM(shop, dword_800B971C);
 
 void sub_800BDD74(ShopTaskShop* t, void* arg)
 {
