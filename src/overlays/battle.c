@@ -659,17 +659,14 @@ void sub_800BB894(BatTask_a* t, BatObj_a* u)
     }
 }
 
-#if 0
 void sub_800BB940(BatTask_a* t, BatObj_a* u)
 {
-    int* q;
     if ((*(int*)u->fc & 0x8001) != 1)
     {
         sub_800BC850(0x2000);
-        q = &dword_800ADE78;
-        if (*q == 1)
+        if (dword_800ADE78 == 1)
         {
-            if ((q[4] = sub_800B4318(dword_800C9C88, q)) >= 0)
+            if (((&dword_800ADE78)[4] = sub_800B4318(dword_800C9C88, &dword_800ADE78)) >= 0)
             {
                 sub_800BC838(0x2000);
                 t->next_8 = sub_800BAE74;
@@ -684,8 +681,6 @@ void sub_800BB940(BatTask_a* t, BatObj_a* u)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BB940);
 
 void sub_800BBA24(BatTask_a* t, BatObj_a* u)
 {
@@ -694,7 +689,7 @@ void sub_800BBA24(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
-#if 0 // near miss: u and the hoisted constant 1 swap saved registers (s2/s3)
+#if 0 // Not matched: u and the hoisted constant 1 swap saved registers (s2/s3); tried decl order, int mask, early return, operand order
 void sub_800BBA70(BatTask_a* t, BatObj_a* u)
 {
     unsigned int mask;
@@ -1195,22 +1190,14 @@ void sub_800BDBB0(BatTask_a* t)
     }
 }
 
-#if 0
 void sub_800BDC3C(BatTask_a* t)
 {
     int k;
     if ((short)sub_800BE364() < dword_800C9D94 && sub_800BEA94() == 1)
     {
-        k = dword_800C9D90;
-        dword_800C9D90 = k - 1;
-        if (k != 0)
+        while ((k = dword_800C9D90--) != 0)
         {
-            do
-            {
-                sub_800A2924(dword_800C9DD0[dword_800C9D90]);
-                k = dword_800C9D90;
-                dword_800C9D90 = k - 1;
-            } while (k != 0);
+            sub_800A2924(dword_800C9DD0[dword_800C9D90]);
         }
         t->f0 = (t->f0 & ~1) | 0x8000;
         dword_800B1228 &= ~0x1000;
@@ -1218,11 +1205,9 @@ void sub_800BDC3C(BatTask_a* t)
     else
     {
         sub_800BE3C0();
-        dword_800C9D94++;
     }
+    dword_800C9D94++;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BDC3C);
 
 int sub_800BDD3C()
 {
