@@ -1426,7 +1426,7 @@ int sub_800BC8E8()
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BC90C);
 
-extern void sub_800BEBB8();
+extern void ApplyBattleCommand_800BEBB8();
 extern void sub_80037828(int a, int b, int c);
 extern void sub_800BDB4C();
 void sub_800BDA28(BatTask_a* t)
@@ -1438,7 +1438,7 @@ void sub_800BDA28(BatTask_a* t)
     {
         sub_800BB794();
         sub_800BB7D4();
-        sub_800BEBB8();
+        ApplyBattleCommand_800BEBB8();
         if (!(*(int*)&saveData_8008B570 & 2))
         {
             f = 0;
@@ -1924,7 +1924,265 @@ int sub_800BEB68()
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BEBB8);
+typedef struct BatUnit_a
+{
+    unsigned int flags_0;
+    int f4;
+    short hp_8;
+    short hpLoss_A;
+    short mp_C;
+    short mpLoss_E;
+    char pad10[0x34];
+    unsigned char f44;
+} BatUnit_a;
+
+typedef struct BatCmd_a
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+} BatCmd_a;
+
+typedef struct BatResult_a
+{
+    unsigned short kind_0;
+    unsigned short arg_2;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+    int f20;
+    short f24;
+    short f26;
+} BatResult_a;
+
+extern void sub_80012BB0(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r);
+extern void sub_800B4390(BatUnit_a* a, BatUnit_a* b, int* c, BatResult_a* r, int* e);
+extern void sub_800BF9F0(int a);
+void ApplyBattleCommand_800BEBB8()
+{
+    BatCmd_a cmd;
+    BatResult_a res;
+    BatUnit_a* actor;
+    BatUnit_a* m;
+    int flag;
+    int r;
+    unsigned int i;
+    int bit;
+    int a;
+
+    sub_800BC7DC(dword_800C9C7C);
+    flag = 1;
+    actor = (BatUnit_a*)sub_80014390(dword_800C9C7C);
+    cmd = *(BatCmd_a*)dword_800C9C88;
+    if (dword_800C9C88[0] == 0x12)
+    {
+        actor = (BatUnit_a*)sub_80014390(dword_800C9C7C);
+        actor->flags_0 |= 0x8000;
+    }
+    for (i = 0; i < 7; i++)
+    {
+        r = sub_800BC7DC(i);
+        bit = 1 << i;
+        ((BatSlot_a*)dword_800C9CC8)[i].a = 0x14;
+        ((BatSlot_a*)dword_800C9CC8)[i].b = 0;
+        ((BatSlot_a*)dword_800C9CC8)[i].c = bit;
+        ((BatSlot_a*)dword_800C9CC8)[i].d = 0;
+        if (dword_800C9C88[3] & bit)
+        {
+            m = (BatUnit_a*)sub_80014390(i & 0xFF);
+            res.f24 = (signed char)dword_800C9D82;
+            res.f26 = (signed char)dword_800C9D83;
+            cmd.fC = bit;
+            sub_80012BB0(actor, m, &cmd, &res);
+            if (dword_800ADE78 == 1)
+            {
+                sub_800B4390(actor, m, dword_800C9C88, &res, &dword_800ADE78);
+            }
+            dword_800C9D84 = res.f24;
+            dword_800C9D38[i] = res.f1C;
+            dword_800C9D48[i] = res.f20;
+            if (dword_800C9C7C < 7 && i != dword_800C9C7C)
+            {
+                dword_800C9D38[dword_800C9C7C] += res.f14;
+                dword_800C9D48[dword_800C9C7C] += res.f18;
+                if (dword_800C9D38[dword_800C9C7C] != 0)
+                {
+                    if (dword_800C9D48[dword_800C9C7C] != 0)
+                    {
+                        dword_800C9CBC[dword_800C9C7C] = 3;
+                    }
+                    else
+                    {
+                        dword_800C9CBC[dword_800C9C7C] = 1;
+                    }
+                }
+                else if (dword_800C9D48[dword_800C9C7C] != 0)
+                {
+                    dword_800C9CBC[dword_800C9C7C] = 2;
+                }
+            }
+            if (dword_800C9D38[i] > 0)
+            {
+                if (m->hp_8 < dword_800C9D38[i])
+                {
+                    dword_800C9D38[i] = m->hp_8;
+                }
+            }
+            else if (dword_800C9D38[i] < m->hp_8 - m->hpLoss_A)
+            {
+                dword_800C9D38[i] = m->hp_8 - m->hpLoss_A;
+            }
+            if (dword_800C9D48[i] > 0)
+            {
+                if (m->mp_C < dword_800C9D48[i])
+                {
+                    dword_800C9D48[i] = m->mp_C;
+                }
+            }
+            else if (dword_800C9D48[i] < m->mp_C - m->mpLoss_E)
+            {
+                dword_800C9D48[i] = m->mp_C - m->mpLoss_E;
+            }
+            if (res.fC != 0)
+            {
+                dword_800C9C7E = res.fC;
+            }
+            if (res.f10 != 0)
+            {
+                dword_800C9C80 = res.f10;
+            }
+            if (sub_800BC784(i) == 1)
+            {
+                dword_800C9CBC[i] = res.kind_0;
+                dword_800C9D58[i] = res.f4;
+                dword_800C9CA0[i] = res.f8;
+                switch (res.kind_0)
+                {
+                case 0:
+                    ((BatSlot_a*)dword_800C9CC8)[i].b = res.arg_2;
+                    if (res.arg_2 != 0)
+                    {
+                        flag = 0;
+                    }
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    if (dword_800C9D38[i] > 0 || dword_800C9D48[i] > 0)
+                    {
+                        ((BatSlot_a*)dword_800C9CC8)[i].a = 9;
+                        dword_800C9D78 = 0x72;
+                    }
+                    break;
+                case 4:
+                    ((BatSlot_a*)dword_800C9CC8)[i].a = 10;
+                    dword_800C9D78 = 0x71;
+                    break;
+                case 5:
+                    a = m->flags_0 & 0x8000;
+                    ((BatSlot_a*)dword_800C9CC8)[i].a = a ? 0x14 : 0xC;
+                    dword_800C9D78 = 0x70;
+                    break;
+                case 7:
+                    ((BatSlot_a*)dword_800C9CC8)[i].a = 5;
+                    ((BatSlot_a*)dword_800C9CC8)[i].b = res.arg_2;
+                    dword_800C9C88[1] = res.arg_2;
+                    if (sub_80013358(res.arg_2) == 1)
+                    {
+                        sub_800BF9F0(sub_800A2BE4(i - 4));
+                        if (GetCapturedMinionsFromBitfield_8003BA58(sub_800A248C()) == 1)
+                        {
+                            dword_800C9C88[0] = 0x1A;
+                        }
+                        sub_800BC838(0x40);
+                        if (r == 2)
+                        {
+                            
+                            dword_800B1238[i - 4].c = dword_800C9C7C;
+                            dword_800B1238[i - 4].e = dword_800C9C88[0];
+                            dword_800B1238[i - 4].a = m->f4;
+                            dword_800B1238[i - 4].d = m->f44;
+                        }
+                    }
+                    break;
+                }
+                if (m->hp_8 <= dword_800C9D38[i] || (dword_800C9CA0[i] & 0x600))
+                {
+                    dword_800C9D38[i] = m->hp_8;
+                    ((BatSlot_a*)dword_800C9CC8)[i].a = 0xB;
+                    if (r == 2)
+                    {
+                        sub_800BC838(0x40);
+                        if (sub_800BF9B4(sub_800A2BE4(i - 4)) == 1)
+                        {
+                            sub_800BC838(0x100000);
+                        }
+                        else
+                        {
+                            sub_800BC850(0x100000);
+                        }
+                        if (sub_800A2AB4() == 2)
+                        {
+                            sub_800BC838(2);
+                        }
+                        
+                        dword_800B1238[i - 4].b = sub_800A2BE4(i - 4);
+                        dword_800B1238[i - 4].c = dword_800C9C7C;
+                        dword_800B1238[i - 4].e = dword_800C9C88[0];
+                        dword_800B1238[i - 4].a = m->f4;
+                        dword_800B1238[i - 4].d = m->f44;
+                        if (sub_800BC820(0x100000) == 1)
+                        {
+                            dword_800C9D80 = 0x1C;
+                        }
+                        else
+                        {
+                            dword_800C9D80 = 0x6F;
+                        }
+                    }
+                    else if (r == 0)
+                    {
+                        sub_800BC838(4);
+                        dword_800C9D80 = 0x1C;
+                    }
+                    else
+                    {
+                        sub_800BC838(8);
+                        dword_800C9D80 = 0x6F;
+                    }
+                }
+            }
+            if (i == dword_800C9C7C)
+            {
+                ((BatSlot_a*)dword_800C9CC8)[i].a = 0x14;
+            }
+        }
+    }
+    if (dword_800C9C88[0] == 7)
+    {
+        if (flag == 1)
+        {
+            dword_800C9C88[1] = 0;
+            if (sub_800BC7DC(dword_800C9C7C) == 0)
+            {
+                sub_800BC838(0x80);
+            }
+        }
+        else
+        {
+            dword_800C9C88[1] = 1;
+            if (sub_800BC7DC(dword_800C9C7C) == 2)
+            {
+                dword_800C9C88[0] = 0x14;
+            }
+        }
+    }
+}
 
 void sub_800BF2E8()
 {

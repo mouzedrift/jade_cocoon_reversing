@@ -1,6 +1,7 @@
 dword_800B66C0=0x800b66c0; // overlay header / data
 jpt_800B66DC=0x800b66dc; // jump table of sub_800BAC4C
 dword_800B6700=0x800b6700; // data behind the jump table
+jpt_800B6794=0x800b6794; // jump table of ApplyBattleCommand_800BEBB8
 jpt_800B67B4=0x800b67b4; // jump table of sub_800BF9B4
 dword_800B67F0=0x800b67f0; // data behind the jump table
 jpt_800B67F4=0x800b67f4; // jump table of sub_800BFAF8
@@ -88,7 +89,7 @@ sub_800BE834=0x800be834;
 sub_800BEA94=0x800bea94;
 sub_800BEB50=0x800beb50;
 sub_800BEB68=0x800beb68;
-sub_800BEBB8=0x800bebb8;
+ApplyBattleCommand_800BEBB8=0x800bebb8;
 sub_800BF2E8=0x800bf2e8;
 sub_800BF3AC=0x800bf3ac;
 sub_800BF3DC=0x800bf3dc;
