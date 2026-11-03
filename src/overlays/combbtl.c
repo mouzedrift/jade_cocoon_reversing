@@ -126,7 +126,7 @@ extern void sub_800A5BB4();
 extern void sub_800A5080();
 extern int dword_800A848C;
 extern int dword_800A84D4;
-extern int* dword_800A84B0[2];
+extern int dword_800A84B0[2];
 extern short word_80091CE0[];
 extern char dword_80091D40[];
 extern short word_800A84A4;
@@ -518,7 +518,91 @@ void sub_800A5544(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5638);
+extern void sub_800A58E8(int i);
+extern void sub_800A0ACC(int i, void* u);
+extern int sub_800A758C();
+extern void sub_800A74A0(int i);
+extern void sub_800A75F8(int i);
+extern void sub_800A0E1C(int i, int v);
+extern void sub_800A1068(int i);
+extern void sub_800A599C();
+extern unsigned char byte_800A85BD;
+extern void sub_800A60F0();
+void sub_800A5638(CombBtlTask* t, int a)
+{
+    int i;
+    int any;
+    switch ((unsigned int)dword_800A84B8)
+    {
+    case 10:
+        any = 0;
+        for (i = 0; i < 2; i++)
+        {
+            dword_800A84B0[i] = 0;
+            if (dword_800A4078[i] < 0 || sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]))
+            {
+                sub_800A58E8(i);
+                sub_800A0ACC(i, &dword_800A3AA0[i][dword_800A4078[i]]);
+                any = dword_800A84B0[i] = 1;
+            }
+        }
+        if (any == 1)
+        {
+            dword_800A84B8 = 11;
+        }
+        else
+        {
+            void (*f)() = sub_800A599C;
+            t->next_8 = f;
+            f(t, a);
+        }
+        break;
+    case 11:
+        if (sub_800A758C() == 1)
+        {
+            for (i = 0; i < 2; i++)
+            {
+                if (dword_800A84B0[i] == 1)
+                {
+                    sub_800A74A0(i);
+                    sub_800A75F8(i);
+                }
+            }
+            for (i = 0; i < 2; i++)
+            {
+                sub_800A0E1C(i, sub_800A10DC(i ^ 1));
+                sub_800A1068(i);
+            }
+            dword_800A84B8 = 12;
+        }
+        break;
+    case 12:
+        sub_800A5BB4();
+        sub_800A60F0();
+        dword_800A85B8 = 0;
+        dword_800A8620 = 1;
+        word_800A8488 = 0;
+        byte_800A85BD = dword_800A4078[0];
+        if (dword_800A84B0[0] == 1)
+        {
+            dword_800A84B0[0] = 0;
+            dword_800A85A8.a = 2;
+            dword_800A85A8.b = 0;
+            dword_800A85A8.c = 0x100;
+            dword_800A85A8.d = 0;
+        }
+        if (dword_800A84B0[1] == 1)
+        {
+            dword_800A84B0[1] = 0;
+            dword_800A8610.a = 2;
+            dword_800A8610.b = 0;
+            dword_800A8610.d = 0;
+            dword_800A8610.c = 1 << (dword_800A8620 + 8);
+        }
+        t->next_8 = sub_800A68E0;
+        break;
+    }
+}
 
 void sub_800A58E8(int i)
 {
