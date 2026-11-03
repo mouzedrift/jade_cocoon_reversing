@@ -17,7 +17,7 @@ typedef struct
 
 // Stubs
 extern void sub_8004D924(void);
-extern void sub_80010228(void);
+extern void ShutdownSystems_80010228(void);
 extern void sub_8004DE00(void); // probably a lib function
 extern void CloseEvents_80010328(void);
 extern int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx);
@@ -37,7 +37,7 @@ extern void free3_8003FC6C(void* block);
 extern int sub_80012178(int arg0);
 extern int sub_80012140(int arg0);
 extern int GetCapturedMinionsFromBitfield_8003BA58(int arg0);
-extern int sub_8001C2FC();
+extern int IsFadeDone_8001C2FC();
 extern void GameLoop_8004047C(void);
 extern int LoadData001File_8003CD1C(void);
 extern void InitImage_80010428(void);
@@ -48,7 +48,7 @@ extern void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuf
 extern void* DATA_GetFileBuffer_8003CAA0(int idx);
 extern void sub_8001C290(void);
 extern void sub_8001B230(void);
-extern void sub_80040658(int arg1);
+extern void SetDisplayMode_80040658(int arg1);
 extern void InitEvents_8001028C(void);
 extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
@@ -74,8 +74,8 @@ extern int sub_80031954(void* p, int idx);
 extern int sub_80033548(int* p, int mask);
 extern int sub_8003412C(char* p);
 extern int sub_800181E8(void);
-extern void sub_8001C2CC(void);
-extern void sub_8001C2E4(void);
+extern void StartFadeToBlack_8001C2CC(void);
+extern void StartFadeToWhite_8001C2E4(void);
 extern unsigned char sub_8001D060(int idx);
 extern char* sub_80033830(char* base, int idx);
 extern void sub_80037AC8(int a0);
@@ -135,7 +135,7 @@ extern int sub_8001413C(int x);
 extern int sub_8001AC2C(int idx);
 extern int sub_8001AE2C(unsigned int* bits, unsigned int idx);
 extern unsigned char sub_8001AF3C(int idx);
-extern int sub_8001B6E8();
+extern int WaitVSync_8001B6E8();
 extern void InitEnvironments_8001B7B4(void);
 extern void sub_8001C260(void);
 extern int sub_8001D2AC(int idx);
@@ -440,9 +440,9 @@ extern void sub_8001A9A4(void);
 extern void sub_8001A9E4(void);
 
 extern void sub_800209AC(struct_cb* p, int* q);
-extern void sub_8001C0B4(struct_cb* p, int* q);
-extern void sub_8001BB28(void);
-extern void sub_8001BC00(void);
+extern void ScreenFlashTask_8001C0B4(struct_cb* p, int* q);
+extern void FadeToBlackStep_8001BB28(void);
+extern void FadeToWhiteStep_8001BC00(void);
 
 extern int sub_800A248C(void);
 extern int sub_800A2B20(int a0);

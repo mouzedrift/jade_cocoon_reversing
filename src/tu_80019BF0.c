@@ -623,14 +623,14 @@ void sub_8001B540(void)
     }
     else if (unknownFlags_8008D678 & 0x82)
     {
-        int f = dword_800918B0;
+        int f = fadeFlags_800918B0;
         if (f & 2)
         {
-            sub_8001BC00();
+            FadeToWhiteStep_8001BC00();
         }
         else if (f & 1)
         {
-            sub_8001BB28();
+            FadeToBlackStep_8001BB28();
         }
         InitSprt_8001B9A0(bDoubleBuffer_8008D428);
         unknownFlags_8008D678 &= ~0x80;
@@ -644,11 +644,11 @@ void Draw_8001B5EC(void)
     {
         DrawSync(0);
     }
-    SetGeomOffset(stru_8008B4D8.field_C_w / 2 + dword_8008D474[0], stru_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     SetGeomScreen(geomScreenDistance_8008B548);
     do
     {
-    } while (dword_8008B4B4 < stru_8008B4D8.field_4);
+    } while (vsyncCounter_8008B4B4 < display_8008B4D8.vsyncsPerFrame_4);
     if (unknownFlags_8008D678 & 0x20)
     {
         ResetGraph(1);
@@ -658,16 +658,16 @@ void Draw_8001B5EC(void)
         } while (ODEIsEvenAddressDrawn_800918C0 == r);
         ODEIsEvenAddressDrawn_800918C0 = r;
     }
-    dword_8008B4B4 = 0;
-    dword_8008B4B4 = 0;
+    vsyncCounter_8008B4B4 = 0;
+    vsyncCounter_8008B4B4 = 0;
 }
 // Matched
-int sub_8001B6E8()
+int WaitVSync_8001B6E8()
 {
-    int snapshot = dword_8008B4B4;
+    int snapshot = vsyncCounter_8008B4B4;
     do
     {
-    } while (dword_8008B4B4 <= snapshot);
+    } while (vsyncCounter_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
 // Matched
@@ -678,7 +678,7 @@ void sub_8001B714(void)
         if (dword_800918BC == 0)
         {
             InitEnvironments_8001B7B4();
-            sub_8001B6E8(0);
+            WaitVSync_8001B6E8(0);
             ODEIsEvenAddressDrawn_800918C0 = GetODE() == 0;
         }
         dword_800918BC = dword_800918BC + 1;
@@ -713,29 +713,29 @@ void InitSprt_8001B9A0(int buffer)
     SetShadeTex(&sprt, 1);
     if (buffer)
     {
-        top = stru_8008B4D8.field_A_y;
+        top = display_8008B4D8.field_A_y;
     }
     else
     {
         top = 0x100;
     }
-    for (y = 0; y < stru_8008B4D8.field_E_h; y += 0x40)
+    for (y = 0; y < display_8008B4D8.field_E_h; y += 0x40)
     {
-        for (x = 0; x < stru_8008B4D8.field_C_w; x += 0x40)
+        for (x = 0; x < display_8008B4D8.field_C_w; x += 0x40)
         {
             sprt.x0 = x;
             sprt.y0 = y;
-            sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
+            sprt.u0 = (display_8008B4D8.field_8_x + x) % 64;
             sprt.v0 = y + top;
             AddPrimCopy_80040298(pOT_8008D78C, &sprt, 5);
-            tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
+            tp = GetTPage(2, 0, (display_8008B4D8.field_8_x + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
             AddPrimCopy_80040298(pOT_8008D78C, &tpage, 2);
         }
     }
 }
 // Matched
-void sub_8001BB28(void)
+void FadeToBlackStep_8001BB28(void)
 {
     POLY_F4 poly;
     DR_TPAGE dr;
@@ -743,7 +743,7 @@ void sub_8001BB28(void)
     unsigned short w;
     unsigned short h;
     SetPolyF4(&poly);
-    s = (unsigned short*)&stru_8008B4D8;
+    s = (unsigned short*)&display_8008B4D8;
     w = s[6];
     h = s[7];
     poly.r0 = 8;
@@ -762,14 +762,14 @@ void sub_8001BB28(void)
     setlen(&dr, 1);
     dr.code[0] = 0xE1000240;
     AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
-    dword_800918B4++;
-    if ((unsigned int)dword_800918B4 > 0x20)
+    fadeFrame_800918B4++;
+    if ((unsigned int)fadeFrame_800918B4 > 0x20)
     {
-        dword_800918B0 &= ~1;
+        fadeFlags_800918B0 &= ~1;
     }
 }
 // Matched
-void sub_8001BC00(void)
+void FadeToWhiteStep_8001BC00(void)
 {
     POLY_F4 poly;
     DR_TPAGE dr;
@@ -777,7 +777,7 @@ void sub_8001BC00(void)
     unsigned short w;
     unsigned short h;
     SetPolyF4(&poly);
-    s = (unsigned short*)&stru_8008B4D8;
+    s = (unsigned short*)&display_8008B4D8;
     w = s[6];
     h = s[7];
     poly.r0 = 8;
@@ -796,10 +796,10 @@ void sub_8001BC00(void)
     setlen(&dr, 1);
     dr.code[0] = 0xE1000220;
     AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
-    dword_800918B4++;
-    if ((unsigned int)dword_800918B4 > 0x20)
+    fadeFrame_800918B4++;
+    if ((unsigned int)fadeFrame_800918B4 > 0x20)
     {
-        dword_800918B0 &= ~2;
+        fadeFlags_800918B0 &= ~2;
     }
 }
 // Matched
@@ -835,22 +835,22 @@ void sub_8001BCE4(int buffer)
     SetSemiTrans(&sprt, 1);
     if (buffer)
     {
-        top = stru_8008B4D8.field_A_y;
+        top = display_8008B4D8.field_A_y;
     }
     else
     {
         top = 0x100;
     }
-    for (y = 0; y < stru_8008B4D8.field_E_h; y += 0x40)
+    for (y = 0; y < display_8008B4D8.field_E_h; y += 0x40)
     {
-        for (x = 0; x < stru_8008B4D8.field_C_w; x += 0x40)
+        for (x = 0; x < display_8008B4D8.field_C_w; x += 0x40)
         {
             sprt.x0 = x;
             sprt.y0 = y;
-            sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
+            sprt.u0 = (display_8008B4D8.field_8_x + x) % 64;
             sprt.v0 = y + top;
             AddPrimCopy_80040298(pOT_8008D4AC + 1, &sprt, 5);
-            tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
+            tp = GetTPage(2, 0, (display_8008B4D8.field_8_x + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
             AddPrimCopy_80040298(pOT_8008D4AC + 1, &tpage, 2);
         }
@@ -903,7 +903,7 @@ void sub_8001BF90(void)
     }
 }
 // Matched
-void sub_8001C02C(unsigned char* a0)
+void StartScreenFlash_8001C02C(unsigned char* a0)
 {
     struct_cb* r = sub_80043AF8(dword_8008D61C);
     if (r != 0)
@@ -914,11 +914,11 @@ void sub_8001C02C(unsigned char* a0)
         p[4] = a0[0];
         p[5] = a0[1];
         p[6] = a0[2];
-        r->fn_8 = (void (*)(struct_cb*, int*))sub_8001C0B4;
+        r->fn_8 = (void (*)(struct_cb*, int*))ScreenFlashTask_8001C0B4;
     }
 }
 // Matched
-void sub_8001C0B4(struct_cb* p, int* q)
+void ScreenFlashTask_8001C0B4(struct_cb* p, int* q)
 {
     POLY_F4 poly;
     DR_TPAGE dr;
@@ -936,7 +936,7 @@ void sub_8001C0B4(struct_cb* p, int* q)
     poly.r0 = c[4];
     poly.g0 = c[5];
     poly.b0 = c[6];
-    s = (unsigned short*)&stru_8008B4D8;
+    s = (unsigned short*)&display_8008B4D8;
     w = s[6];
     h = s[7];
     poly.x0 = 0;
@@ -964,11 +964,11 @@ unsigned int a0;
         break;
     case 1:
         sub_8001C260();
-        sub_8001C2CC();
+        StartFadeToBlack_8001C2CC();
         break;
     case 2:
         sub_8001C260();
-        sub_8001C2E4();
+        StartFadeToWhite_8001C2E4();
         break;
     case 3:
         sub_8001C290();
@@ -1002,21 +1002,21 @@ void sub_8001C290(void)
     unknownFlags_8008D678 |= 0x80;
 }
 // Matched
-void sub_8001C2CC(void)
+void StartFadeToBlack_8001C2CC(void)
 {
-    dword_800918B0 = 1;
-    dword_800918B4 = 0;
+    fadeFlags_800918B0 = 1;
+    fadeFrame_800918B4 = 0;
 }
 // Matched
-void sub_8001C2E4(void)
+void StartFadeToWhite_8001C2E4(void)
 {
-    dword_800918B0 = 2;
-    dword_800918B4 = 0;
+    fadeFlags_800918B0 = 2;
+    fadeFrame_800918B4 = 0;
 }
 // Matched
-int sub_8001C2FC()
+int IsFadeDone_8001C2FC()
 {
-    return (dword_800918B0 & 3) == 0;
+    return (fadeFlags_800918B0 & 3) == 0;
 }
 // Matched
 struct_8_id* sub_8001C314(struct_8_list* p, int id)
@@ -5481,7 +5481,7 @@ int sub_80027540(void)
     }
     if (g[2] & 1)
     {
-        if (g[2] == 1 && sub_8001C2FC())
+        if (g[2] == 1 && IsFadeDone_8001C2FC())
         {
             g[3] = 2;
             g[2] &= ~1;

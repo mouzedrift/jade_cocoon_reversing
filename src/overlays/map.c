@@ -231,7 +231,7 @@ void sub_800B6E80(MapTask* t)
 // Matched
 void sub_800B6EE8(MapTask* t, int a1)
 {
-    if (dword_800B9430 && sub_8001C2FC())
+    if (dword_800B9430 && IsFadeDone_8001C2FC())
     {
         t->next_8 = sub_800B7044;
         sub_8001CD04(0);
@@ -299,7 +299,7 @@ void sub_800B7980(MapTask* t)
 // Matched
 void sub_800B7A38(MapTask* t)
 {
-    if (dword_800B9430 && sub_8001C2FC())
+    if (dword_800B9430 && IsFadeDone_8001C2FC())
     {
         t->next_8 = sub_800B7A90;
         sub_8001C19C(3, 0x20);

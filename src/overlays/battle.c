@@ -294,7 +294,7 @@ extern int sub_800C0BA0();
 extern int sub_800C0AEC();
 extern void sub_800BB794();
 extern int sub_800C0F78(int);
-extern void sub_8001C02C(void*);
+extern void StartScreenFlash_8001C02C(void*);
 extern void sub_8001DB00(char*, int, int);
 extern void sub_80018E5C(char*, int);
 extern void sub_80018EBC(char*, int);
@@ -1477,7 +1477,7 @@ void sub_800BF3AC()
     buf[0] = 0xFF;
     buf[1] = 0xFF;
     buf[2] = 0xFF;
-    sub_8001C02C(buf);
+    StartScreenFlash_8001C02C(buf);
 }
 
 #if 0

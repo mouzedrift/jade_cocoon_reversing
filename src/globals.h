@@ -9,12 +9,12 @@
 typedef struct
 {
     int field_0;
-    int field_4;
+    int vsyncsPerFrame_4; // Draw waits until vsyncCounter_8008B4B4 reaches it
     short field_8_x;
     short field_A_y;
     short field_C_w; // word_8008B4E4
     short field_E_h; // word_8008B4E6
-} struct_44;
+} DisplayConfig;
 
 typedef struct
 {
@@ -47,7 +47,7 @@ typedef struct
 typedef struct
 {
     int field_0;
-    int field_4;
+    int playTime_4; // vsyncs, counted by the vsync handler while not paused
     char pad_8[0x14];
     unsigned int field_1C_settings; // == settingsFlags_8008B58C
     char pad_20[0x2C4];
@@ -377,12 +377,12 @@ extern unsigned char byte_8007CEAC[0x2B];
 extern int off_8007CF30[0x26];
 extern int off_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
-extern int dword_800918B0;
+extern int fadeFlags_800918B0;
 extern struct_10 stru_80096110;
 extern int dword_80091C88;
 extern int dword_80091C44;
 extern int* dword_80091C00;
-extern int dword_800918B4;
+extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
 extern int** dword_8008D4A0;
 extern int** dword_8008D464;
@@ -400,11 +400,11 @@ extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
 extern int dword_800918BC;
 extern int ODEIsEvenAddressDrawn_800918C0;
-extern struct_44 stru_8008B4D8;
+extern DisplayConfig display_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
 extern int dword_8008B574;
-extern volatile int dword_8008B4B4;
+extern volatile int vsyncCounter_8008B4B4;
 extern volatile int gnFrame_8008D610;
 extern volatile int dword_8008D450;
 extern volatile int dword_8008D404;

@@ -22,7 +22,7 @@ extern unsigned long SpuWrite0(unsigned long size);
 extern void sub_8006EC08(void);
 extern void sub_8004EDB8(void);
 // Matched
-void sub_80010228(void)
+void ShutdownSystems_80010228(void)
 {
     SsEnd();
     SpuSetTransferStartAddr(0x1010);
@@ -46,7 +46,7 @@ void InitEvents_8001028C(void)
     SetRCnt(RCntCNT3, RCntMdSC, RCntMdINTR);
     StartRCnt(RCntCNT3);
 
-    dword_8008B4B4 = 0;
+    vsyncCounter_8008B4B4 = 0;
     gnFrame_8008D610 = 0;
 }
 // Matched
@@ -64,16 +64,16 @@ void CloseEvents_80010328(void)
 // Matched
 long vsyncEventHandler_800103AC(void)
 {
-    ++dword_8008B4B4;
+    ++vsyncCounter_8008B4B4;
     ++gnFrame_8008D610;
     --dword_8008D450;
     if (!(unknownFlags_8008D678 & 8))
     {
         dword_8008D404++;
-        saveData_8008B570.field_4++;
+        saveData_8008B570.playTime_4++;
     }
 
-    return dword_8008B4B4;
+    return vsyncCounter_8008B4B4;
 }
 // Matched
 void InitImage_80010428(void)

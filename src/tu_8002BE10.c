@@ -144,7 +144,7 @@ void sub_8002C5D0(int a0)
 // Matched
 unsigned int sub_8002C64C(void)
 {
-    return (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
+    return (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
 }
 // Matched
 int sub_8002C670(char* base, int a1, int a2, short idx, short a4)

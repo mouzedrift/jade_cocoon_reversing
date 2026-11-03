@@ -782,7 +782,7 @@ void sub_800C4180(CfgCtxConfig* c)
         tail.c_2 = 1;
         if (c->ff == i)
         {
-            n = (unsigned int)(frameCount_8008D3FC * stru_8008B4D8.field_4) >> 1;
+            n = (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
         }
         tail.col_0 = i;
         tail.c_3 = 1;

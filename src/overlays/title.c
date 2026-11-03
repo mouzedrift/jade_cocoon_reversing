@@ -33,7 +33,7 @@ extern void sub_800A093C();
 void sub_800A08C8(TitleTask* t, TitleCtxA* c)
 {
     RECT r;
-    unsigned short* s = (unsigned short*)&stru_8008B4D8;
+    unsigned short* s = (unsigned short*)&display_8008B4D8;
     dword_800A280C = 0x36;
     dword_800A2810 = 0x18;
     c->field_64 = 0x1E;
@@ -750,7 +750,7 @@ void sub_800A1C18(TitleTaskM* t)
 {
     word_8008B55A = 1;
     LoadOverlay_80020BF8(2, 0x10);
-    sub_80040658(1);
+    SetDisplayMode_80040658(1);
     dword_8008BD80 = -2;
     sub_800B7674(1, 0);
     t->fn_8 = sub_800A1CC0;
@@ -792,7 +792,7 @@ void sub_800A1CC0(TitleTaskM* t)
         else
         {
             t->fn_8 = sub_800A1310;
-            sub_80040658(1);
+            SetDisplayMode_80040658(1);
         }
     }
 }

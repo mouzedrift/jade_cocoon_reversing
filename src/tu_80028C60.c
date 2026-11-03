@@ -35,7 +35,7 @@ void sub_80028DC0(void)
             sub_80037AC8((int)levantPos_8008BD18);
         }
         sub_80037918(p);
-        q = (unsigned short*)&stru_8008B4D8;
+        q = (unsigned short*)&display_8008B4D8;
         SetGeomOffset((short)q[6] / 2 + dword_8008D474[0], (short)q[7] / 2 + dword_8008D474[1]);
     }
 }

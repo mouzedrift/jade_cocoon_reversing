@@ -35,7 +35,7 @@ extern unsigned char byte_800A3A98[2];
 extern short word_800A84D0[2];
 extern void sub_800A0D1C(int);
 extern void sub_800A0B70(int);
-extern void sub_8001C02C(void*);
+extern void StartScreenFlash_8001C02C(void*);
 extern void sub_800376A0(int*, int);
 typedef struct CombBtlUnit
 {
@@ -744,7 +744,7 @@ void sub_800A7ECC()
     c[0] = 0xFF;
     c[1] = 0xFF;
     c[2] = 0xFF;
-    sub_8001C02C(c);
+    StartScreenFlash_8001C02C(c);
 }
 
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7EFC);

@@ -61,7 +61,7 @@ void sub_800A40E0(CombRsltTask* t)
 
 void sub_800A41E4(CombRsltTask* t, int a)
 {
-    if (sub_8001C2FC() == 1)
+    if (IsFadeDone_8001C2FC() == 1)
     {
         sub_8001C19C(3, 0x20);
         t->next_8 = sub_800A16FC;
