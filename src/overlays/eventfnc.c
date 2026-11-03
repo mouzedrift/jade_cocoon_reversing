@@ -96,12 +96,17 @@ typedef struct EvObjEventfnc
     int f90_90;
 } EvObjEventfnc;
 
-typedef struct EvTriEventfnc
+typedef struct EvVtxEventfnc
 {
     short x_0;
     short y_2;
     short z_4;
-    char pad_6[0x12];
+    short pad_6;
+} EvVtxEventfnc;
+
+typedef struct EvTriEventfnc
+{
+    EvVtxEventfnc v_0[3];
     short nx_18;
     short ny_1A;
     short nz_1C;
@@ -161,7 +166,32 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800B76B8);
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B7E40);
+void sub_800B7E40(int* p, int a, int b, int c, int* out)
+{
+    int t = (int)&((EvMeshEventfnc*)a)->tris_4[b];
+    EvVtxEventfnc* v0 = (EvVtxEventfnc*)(((c + 1) % 3) * 8 + t);
+    EvVtxEventfnc* v1 = (EvVtxEventfnc*)((c % 3) * 8 + t);
+    int d[3];
+    int r[3];
+    int len;
+    int k;
+    d[0] = v0->x_0 - v1->x_0;
+    d[1] = v0->y_2 - v1->y_2;
+    d[2] = v0->z_4 - v1->z_4;
+    r[0] = p[0] - v1->x_0;
+    r[1] = p[1] - v1->y_2;
+    r[2] = p[2] - v1->z_4;
+    d[1] = 0;
+    len = ISqrt_8003B918(d[0] * d[0] + d[2] * d[2]);
+    d[0] = (d[0] << 12) / len;
+    d[2] = (d[2] << 12) / len;
+    k = (d[0] * r[0] + d[2] * r[2]) / 4096;
+    p[0] = v1->x_0 + k * d[0] / 4096;
+    p[2] = v1->z_4 + k * d[2] / 4096;
+    out[0] = d[0];
+    out[1] = 0;
+    out[2] = d[2];
+}
 
 typedef struct EvQuadEventfnc
 {
@@ -277,7 +307,7 @@ int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
 void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
 {
     EvTriEventfnc* t = &m->tris_4[i];
-    v[1] = (t->ny_1A * t->y_2 - t->nx_18 * (v[0] - t->x_0) - t->nz_1C * (v[2] - t->z_4)) / t->ny_1A;
+    v[1] = (t->ny_1A * t->v_0[0].y_2 - t->nx_18 * (v[0] - t->v_0[0].x_0) - t->nz_1C * (v[2] - t->v_0[0].z_4)) / t->ny_1A;
 }
 
 typedef struct EvMapEntEventfnc
