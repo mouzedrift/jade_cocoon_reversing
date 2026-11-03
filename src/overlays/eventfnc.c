@@ -30,6 +30,12 @@ typedef struct EvVecEventfnc
 
 extern EvVecEventfnc levantPos_8008BD18;
 
+typedef struct EvRotEventfnc
+{
+    short pad_0;
+    short ang_2;
+} EvRotEventfnc;
+
 typedef struct EvCtxEventfnc
 {
     unsigned int flags_0;
@@ -652,7 +658,34 @@ int sub_800B9218(EvCtxEventfnc* c)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9260);
+extern EvVecEventfnc* sub_800BBBD0(int i);
+extern short dword_8008D474[2];
+extern void sub_80037918(int p);
+extern void SetGeomOffset(long ofx, long ofy);
+int sub_800B9260(EvCtxEventfnc* c)
+{
+    int* q = (int*)c->pc_8->c_C;
+    EvVecEventfnc* pos = sub_800BBBA0(c->pc_8->a_4);
+    EvRotEventfnc* rot = (EvRotEventfnc*)sub_800BBBD0(c->pc_8->a_4);
+    int ang;
+    if (q)
+    {
+        ang = q[3];
+    }
+    else
+    {
+        q = (int*)sub_800BBC00(c, c->pc_8->a_4, 0);
+        ang = sub_800BBC80(c, c->pc_8->a_4, 0)->y_4;
+    }
+    pos->x_0 = q[0];
+    pos->y_4 = q[1];
+    pos->z_8 = q[2];
+    rot->ang_2 = ang;
+    sub_80037918(cameraTask_8008D4A0[0x24 / 4]);
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    c->pc_8++;
+    return 1;
+}
 
 int sub_800B93A8(EvCtxEventfnc* c)
 {
@@ -1752,11 +1785,6 @@ EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int idx, int mode)
     return &c->vec3C_3C[idx];
 }
 
-typedef struct EvRotEventfnc
-{
-    short pad_0;
-    short ang_2;
-} EvRotEventfnc;
 extern short name_80084540[];
 EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
 {
