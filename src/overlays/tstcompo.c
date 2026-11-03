@@ -479,11 +479,13 @@ typedef struct TstCompoA
     short s14C;
     short s14E;
     short s150;
-    char pad_152[6];
+    short pad_152;
+    int i154;
     int i158;
-    char pad_15C[8];
+    int i15C;
+    int i160;
     int i164;
-    char pad_168[4];
+    int i168;
     int i16C;
     int i170;
     int i174;
@@ -507,7 +509,63 @@ void sub_800A1BE0(TstCompoA* a)
     a->i158 = -0xFA;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1C14);
+extern unsigned short padHeld_800918D0[];
+extern short word_80084540[];
+extern void sub_800A1E68();
+void sub_800A1C14(TstCompoA* a)
+{
+    if (padHeld_800918D0[0] & 0x8000)
+    {
+        a->s14C -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x2000)
+    {
+        a->s14C += 0x20;
+    }
+    if (padHeld_800918D0[0] & 0x1000)
+    {
+        a->i158 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x4000)
+    {
+        a->i158 += 0x20;
+    }
+    a->i158 = a->i158 < -1000 ? -1000 : a->i158 < 1001 ? a->i158 : 1000;
+    if ((padHeld_800918D0[0] & 0xC) == 0xC)
+    {
+        sub_800A1BE0(a);
+    }
+    else if (padHeld_800918D0[0] & 4)
+    {
+        a->s150 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 8)
+    {
+        a->s150 += 0x20;
+    }
+    a->s150 = a->s150 < 100 ? 100 : a->s150 < 1201 ? a->s150 : 1200;
+    a->i154 = a->s150 * word_80084540[a->s14C & 0xFFF] / 4096;
+    a->i15C = a->s150 * word_80084540[(a->s14C + 0x400) & 0xFFF] / 4096;
+    if (padHeld_800918D0[0] & 1)
+    {
+        if (padHeld_800918D0[0] & 2)
+        {
+            sub_800A1BE0(a);
+        }
+        else
+        {
+            a->i164 -= 0x20;
+        }
+    }
+    else if (padHeld_800918D0[0] & 2)
+    {
+        a->i164 += 0x20;
+    }
+    a->i164 = a->i164 < -1000 ? -1000 : a->i164 < 1001 ? a->i164 : 1000;
+    a->i160 = 0;
+    a->i168 = 0;
+    sub_800A1E68(a);
+}
 
 typedef struct TstCompoMat
 {
