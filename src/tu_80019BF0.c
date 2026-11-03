@@ -2427,12 +2427,11 @@ void sub_8001DB58(Actor* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
-void sub_8001DB98(void* arg0, void* arg1)
+// Not matched (5 words): the original stores 0xC0 after the flags and copies s to $a3 after the mask; with a saved
+// "old" local stored at the end instead, old and the 0xFFFF7FFF mask swap $a1/$a2 (6 words)
+void sub_8001DB98(Actor* o, unsigned char* s)
 {
-    Actor* o = arg0;
-    unsigned char* s = arg1;
-    short old = o->animIdx_C2;
+    o->prevAnimIdx_C0 = o->animIdx_C2;
     o->animIdx_C2 = -1;
     o->scriptPos_C4 = 0;
     o->scriptLen_C6 = 1;
@@ -2443,7 +2442,6 @@ void sub_8001DB98(void* arg0, void* arg1)
     o->script_D0 = (ActorScriptCmd*)s;
     o->flags_4 &= ~0x8000;
     o->flags_4 |= 0x4000;
-    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
         o->scriptLen_C6 += s[1];

@@ -224,7 +224,7 @@ extern void ListFree_8003FE38(void* arg0, void* arg1);
 struct Pool;
 extern void HeapFree_8003FD18(); // callers pass only the pointer (second arg is whatever is in a1)
 extern void StopPadVibration_80036658(int arg0);
-extern void sub_8001DB98(void* arg0, void* s);
+extern void sub_8001DB98(struct Actor* o, unsigned char* s);
 extern int ParseTim_80029708(void* arg0, void* arg1);
 extern void LoadTimToVram_800296A0(void* arg0);
 extern short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2);
