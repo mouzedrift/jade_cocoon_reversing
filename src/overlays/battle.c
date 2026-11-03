@@ -3,7 +3,123 @@
 
 INCLUDE_OVERLAY_ASM(battle, dword_800B66C0);
 
+typedef struct BatStart_a
+{
+    int f0;
+    int timer_4;
+    int* flags_8;
+    int c_C;
+} BatStart_a;
+typedef struct BatSel_a
+{
+    char pad_0[0x18];
+    int c_18;
+} BatSel_a;
+extern BatSel_a* sub_800A1E3C();
+extern void sub_800BA444();
+extern void sub_800BA52C();
+extern void sub_800BA564();
+extern int sub_800BC820(unsigned int m);
+extern void sub_800A8984(int a);
+extern void sub_8001AAA8(int a);
+extern void StopSoundSeqs_80030D68(void* a);
+extern void StopSeqSlot_80031334(int a);
+extern void SsSepSetDecrescendo(int, int, int, int);
+
+#if 0
+// Not matched (5 words): the original stores u->c_C before dword_800ADE78 = 0 and puts that store in the
+// delay slot of the sub_80037828 call; this C gets the two stores the other way round
+void sub_800BA254(BatTask_a* t, BatStart_a* u)
+{
+    short* p;
+    BatSel_a* r;
+    if ((*u->flags_8 & 0x8001) == 1)
+    {
+        return;
+    }
+    if (IsEffectTaskIdle_800148D4() != 1)
+    {
+        return;
+    }
+    r = sub_800A1E3C();
+    u->c_C = r->c_18;
+    dword_800ADE78 = 0;
+    sub_80037828(2, 0, 0);
+    switch (dword_800B1230)
+    {
+    case 0:
+        StopSoundSeqs_80030D68(dword_80091D40);
+        p = dword_80091CE0;
+        if (p[2] >= 0)
+        {
+            SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
+            p[2] = -1;
+        }
+        StopSeqSlot_80031334(0);
+        PlaySeqSlot_80031160(1, 1);
+        if (dword_800C9C82 != 0)
+        {
+            sub_800A8984(0);
+        }
+        else
+        {
+            sub_800A8984(1);
+        }
+        u->timer_4 = 0x3C;
+        t->next_8 = sub_800BA564;
+        break;
+    case 1:
+        sub_800A8984(0);
+        u->timer_4 = 0;
+        t->next_8 = sub_800BA564;
+        break;
+    case 2:
+        sub_800A8984(0);
+        if (sub_800BC820(0x20000) == 0)
+        {
+            FadeOutSeqSlot_800313C8(0);
+        }
+        else
+        {
+            p = dword_80091CE0;
+            if (p[2] >= 0)
+            {
+                SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
+                p[2] = -1;
+            }
+        }
+        t->next_8 = sub_800BA52C;
+        break;
+    case 3:
+        sub_800A8984(0);
+        sub_8001AAA8(0x3C);
+        t->next_8 = sub_800BA444;
+        break;
+    case 4:
+    case 5:
+        sub_800A8984(0);
+        u->timer_4 = 0x12;
+        if (sub_800BC820(0x20000) == 0)
+        {
+            FadeOutSeqSlot_800313C8(0);
+        }
+        else
+        {
+            p = dword_80091CE0;
+            if (p[2] >= 0)
+            {
+                SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
+                p[2] = -1;
+            }
+        }
+        t->next_8 = sub_800BA52C;
+        break;
+    }
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(battle, sub_800BA254);
+INCLUDE_OVERLAY_ASM(battle, jpt_800B66C4);
 
 void sub_800BA444(BatTask_a* t)
 {
