@@ -42,7 +42,7 @@ extern void FindNthMagicBit_8001AEC0(int, int);
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
 extern int dword_8008D614;
-extern int dword_800CD840;
+extern CombComDlg* dword_800CD840;
 extern int dword_800CD848;
 extern unsigned char byte_800A38D8;
 extern unsigned char byte_800A38DC;
@@ -50,6 +50,9 @@ extern unsigned char byte_800CD83A;
 extern unsigned char byte_800CD838;
 extern unsigned char byte_800CD845;
 extern unsigned char byte_800CD850;
+extern unsigned short padPressed_8009194C[];
+extern unsigned char byte_800CD83B;
+extern int dword_800CD84C;
 extern void sub_800CD16C();
 extern void sub_800CB88C();
 extern void sub_800CB924();
@@ -60,7 +63,7 @@ EventEntry* sub_800CB7AC(int a, int b)
     if (e)
     {
         e->cb_8 = (EventEntryFn)sub_800CD16C;
-        dword_800CD840 = a;
+        dword_800CD840 = (CombComDlg*)a;
         byte_800CD839 = b;
         e->flags = (e->flags | 1) & ~0x8000;
         if (!b)
@@ -233,7 +236,28 @@ INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC674);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CC9FC);
+extern int dword_800CD83C;
+extern unsigned char byte_800A85BC;
+void sub_800CC9FC()
+{
+    byte_800A85BC = dword_800CD83C;
+    if (dword_800CD840->f0 == 0x12)
+    {
+        dword_800CD840->fC = 0;
+        *(int*)sub_80014390((unsigned char)(byte_800CD839 + 8)) |= 0x8000;
+    }
+    else
+    {
+        if (dword_800CD840->f0 == 1 && byte_800CD839 != dword_800CD83C)
+        {
+            return;
+        }
+        if (dword_800CD840->f0 == 8)
+        {
+            dword_800CD840->fC = 0;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CCA94);
 
@@ -248,10 +272,97 @@ int sub_800CCD84()
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CCDD0);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCFCC);
+extern int sub_800CCA94();
+extern void sub_800CCDD0();
+void sub_800CCFCC(EventEntry* e)
+{
+    if (IsConfirmPressed_8003D288(0, dword_800CD848))
+    {
+        if (sub_800CCA94())
+        {
+            PlaySfx_80031494(0x7E);
+            sub_800CCDD0();
+            if (byte_800A38DC)
+            {
+                e->flags = (e->flags & ~1) | 0x8000;
+            }
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+            if (dword_800CD84C)
+            {
+                byte_800CD83B = 0x96;
+                byte_800CD838 = 1;
+            }
+        }
+    }
+    else if (IsCancelPressed_8003D3C0(0, dword_800CD848))
+    {
+        if (byte_800CD83A)
+        {
+            PlaySfx_80031494(0x7D);
+            byte_800CD83A = byte_800CD850;
+            byte_800CD850 = 0;
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CD0C8);
+void sub_800CD0C8()
+{
+    if (padPressed_8009194C[dword_800CD848])
+    {
+        byte_800CD83B = 0;
+    }
+    if (byte_800CD83B == 0)
+    {
+        byte_800CD838 = 0;
+    }
+    else
+    {
+        byte_800CD83B--;
+    }
+    if (dword_800CD84C)
+    {
+        if (byte_800CD83A == 0)
+        {
+            sub_800CBB4C(dword_800CD84C);
+        }
+        else
+        {
+            sub_800CBBE0(dword_800CD84C);
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CD16C);
+extern short* dword_800CD854;
+extern void (*dword_800CD818[])(EventEntry*, void*);
+extern unsigned char byte_800A84A8;
+extern short word_800A82D0;
+extern short word_800A82D2;
+extern int UpdateMenuCursor_8003D794(void* p, int a1);
+extern void sub_800CBEA4();
+void sub_800CD16C(EventEntry* e, void* buf)
+{
+    short* m = sub_800CB974(byte_800CD83A);
+    dword_800CD854 = m;
+    UpdateMenuCursor_8003D794(m, dword_800CD848);
+    if (padPressed_8009194C[dword_800CD848] & 0x800)
+    {
+        byte_800CD83A = 5;
+    }
+    sub_800CBA20(byte_800CD83A);
+    sub_800CBEA4();
+    sub_800CBAD4(byte_800CD83A);
+    dword_800CD818[byte_800CD838](e, buf);
+    if (byte_800CD83A == 4)
+    {
+        byte_800A84A8 &= 0xF3;
+        sub_800CC9FC();
+        word_800A82D0 = 0;
+        word_800A82D2 = 0;
+        e->flags = (e->flags & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800CD28C);
