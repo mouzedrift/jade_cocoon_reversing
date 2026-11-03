@@ -477,19 +477,19 @@ INCLUDE_DATA(word_80084540);
 // Matched
 int IsEffectReady_80014954(void)
 {
-    return EFFECT_STATE->state_2C == 2;
+    return ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->state_2C == 2;
 }
 // Matched
 void StartEffect_8001497C(void)
 {
-    EffectTaskState* p = EFFECT_STATE;
+    EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
     p->flags_28 |= 1;
 }
 void sub_80015478(EventEntry* e, void* buf);
 // Matched
 void sub_800149A4(EffectArgs* p)
 {
-    EffectTaskState* q = EFFECT_STATE;
+    EffectTaskState* q = effectTask_8008D3F8->entry.buffer;
     EventEntry* e;
     EffectObj* b;
     int n;

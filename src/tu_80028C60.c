@@ -77,7 +77,7 @@ void sub_80028DC0(void)
     CameraCtrl* p;
     if (dword_80082670 == 0)
     {
-        p = CAMERA_CTRL;
+        p = cameraTask_8008D4A0->entry.buffer;
         if (dword_80082668)
         {
             SetCameraTarget_80037AC8((int)levantPos_8008BD18);

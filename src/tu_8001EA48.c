@@ -875,7 +875,7 @@ void ClearModelAnimRef_800204AC(struct_obj_C* p)
 // Matched
 void ResetModelLoader_800204D0(void)
 {
-    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* q = p->slots_C;
     int i;
     p->state_0 = 0;
@@ -894,7 +894,7 @@ void ResetModelLoader_800204D0(void)
 // Matched
 void FreeModelLoaderList_8002052C(void)
 {
-    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
     if (p->models_8)
     {
         FreeModelList_80024BB0(&p->models_8);
@@ -903,7 +903,7 @@ void FreeModelLoaderList_8002052C(void)
 // Matched
 void StartModelLoader_8002056C(void)
 {
-    EventEntry* q = &((EventNode*)modelLoaderTask_8008B54C)->entry;
+    EventEntry* q = &modelLoaderTask_8008B54C->entry;
     q->cb_8 = (EventEntryFn)ModelLoaderTask_800209AC;
     q->flags = (q->flags | 1) & ~0x8000;
     ((ModelLoader*)q->buffer)->state_0 = 0;
@@ -912,18 +912,18 @@ void StartModelLoader_8002056C(void)
 // Matched
 int IsModelLoaderDone_800205D0(void)
 {
-    return ((ModelLoader*)((EventNode*)modelLoaderTask_8008B54C)->entry.buffer)->done_4;
+    return ((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->done_4;
 }
 // Matched
 void StopModelLoader_800205F0(void)
 {
-    EventEntry* n = &((EventNode*)modelLoaderTask_8008B54C)->entry;
+    EventEntry* n = &modelLoaderTask_8008B54C->entry;
     n->flags = (n->flags & ~1) | 0x8000;
 }
 // Matched
 int CountLoaderModels_80020614(void)
 {
-    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* e = p->slots_C;
     int count = 0;
     int i;
@@ -940,7 +940,7 @@ int CountLoaderModels_80020614(void)
 // Matched
 int GetLoaderModelId_80020654(int k)
 {
-    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* e = p->slots_C;
     int n = 0;
     int i;
@@ -961,7 +961,7 @@ int GetLoaderModelId_80020654(int k)
 // Matched
 int RequestLoaderModel_800206A0(int id, int a1, int a2, int a3)
 {
-    ModelLoader* p = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* e = p->slots_C;
     int i;
     for (i = 0; i < 4; i++)
@@ -992,12 +992,12 @@ int RequestLoaderModel_800206A0(int id, int a1, int a2, int a3)
 // Matched
 struct_112* AcquireLoaderModel_80020734(int arg)
 {
-    return AcquireModel_80024D70(((ModelLoader*)((EventNode*)modelLoaderTask_8008B54C)->entry.buffer)->models_8, arg);
+    return AcquireModel_80024D70(((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->models_8, arg);
 }
 // Matched
 void FreeLoaderModel_80020768(struct_112* a0)
 {
-    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
@@ -1017,7 +1017,7 @@ void FreeLoaderModel_80020768(struct_112* a0)
 // Matched
 void FreeLoaderModelAnimSets_80020814(void)
 {
-    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
@@ -1032,7 +1032,7 @@ void FreeLoaderModelAnimSets_80020814(void)
 // Matched
 void LoadLoaderModelAnimSets_80020898(void)
 {
-    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
@@ -1047,7 +1047,7 @@ void LoadLoaderModelAnimSets_80020898(void)
 // Matched
 int AreLoaderModelsLoaded_80020924(void)
 {
-    ModelLoader* base = ((EventNode*)modelLoaderTask_8008B54C)->entry.buffer;
+    ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
     ModelLoadSlot* p = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
@@ -1064,7 +1064,7 @@ int AreLoaderModelsLoaded_80020924(void)
     return 1;
 }
 // Matched
-void ModelLoaderTask_800209AC(struct_cb* p, int* a1)
+void ModelLoaderTask_800209AC(EventEntry* p, int* a1)
 {
     ModelLoader* q = (ModelLoader*)a1;
     int s = q->state_0;
@@ -1164,11 +1164,11 @@ int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
     return QueueFileRequest_8003BC84(&req);
 }
 // Matched
-void InitOverlayLoaderTask_80020CB8(struct_cb* p, OverlayLoader* q)
+void InitOverlayLoaderTask_80020CB8(EventEntry* p, OverlayLoader* q)
 {
     q->loaded_4 = -1;
     q->wanted_0 = 0x1D;
-    p->fn_8 = (void (*)(struct struct_cb*, int*))UpdateOverlayLoaderTask_80020CD8;
+    p->cb_8 = (EventEntryFn)UpdateOverlayLoaderTask_80020CD8;
 }
 // Matched
 void UpdateOverlayLoaderTask_80020CD8(int a0, OverlayLoader* p)
@@ -1183,7 +1183,7 @@ void UpdateOverlayLoaderTask_80020CD8(int a0, OverlayLoader* p)
 // Not matched
 int LoadOverlayIfChanged_80020D1C(int a0, int a1)
 {
-    OverlayLoader* p = ((EventNode*)overlayLoaderTask_8008D4C0)->entry.buffer;
+    OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
     if (p->wanted_0 == a1)
     {
         return -1;
@@ -1197,12 +1197,12 @@ INCLUDE_ASM(LoadOverlayIfChanged_80020D1C);
 // Matched
 void ResetOverlayLoaderTask_80020D68(void)
 {
-    ((OverlayLoader*)((EventNode*)overlayLoaderTask_8008D4C0)->entry.buffer)->wanted_0 = 0x1D;
+    ((OverlayLoader*)overlayLoaderTask_8008D4C0->entry.buffer)->wanted_0 = 0x1D;
 }
 // Matched
 int sub_80020D84(void)
 {
-    OverlayLoader* p = ((EventNode*)overlayLoaderTask_8008D4C0)->entry.buffer;
+    OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
     int r;
     if (p->wanted_0 == 0x1D)
     {
@@ -3901,12 +3901,12 @@ extern int dword_80091C74;
 extern int dword_80091CB4;
 extern int dword_80082668;
 extern int dword_8008266C;
-extern int* dword_800B1DA8;
-extern int* dword_8008D400;
-extern int* messageWindowTask_8008D640;
-extern int* dword_8008D49C;
-extern int* dword_8008D674;
-extern int* fileRequestTasks_8008D488;
+extern EventNode* dword_800B1DA8;
+extern EventNode* dword_8008D400;
+extern EventNode* messageWindowTask_8008D640;
+extern EventNode* dword_8008D49C;
+extern EventNode* dword_8008D674;
+extern EventNode* fileRequestTasks_8008D488;
 extern void FreeActors_8001D3C4(int a0);
 extern void sub_800AC73C(void);
 extern void sub_800A54A0(void);
@@ -4308,12 +4308,12 @@ int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
 #endif
 INCLUDE_ASM(sub_80027A88);
 // Matched
-void sub_80027CC0(struct_obj_D* p, int* q)
+void sub_80027CC0(EventEntry* p, int* q)
 {
     q[0] = 0;
     q[1] = 0;
     sub_80027CF8(p, q);
-    p->field_8 = (void (*)(void))sub_80027CF8;
+    p->cb_8 = (EventEntryFn)sub_80027CF8;
 }
 typedef struct
 {
@@ -4479,7 +4479,7 @@ void sub_80027CF8(void* a0, int* a)
 }
 // Matched
 // Matched
-void sub_8002830C(struct_obj_D* p)
+void sub_8002830C(EventEntry* p)
 {
     short* s = (short*)&saveData_8008B570;
     s[0x2E6 / 2] = -1;
@@ -4490,15 +4490,15 @@ void sub_8002830C(struct_obj_D* p)
     dword_80091CA0 = 1;
     sub_80027118();
     sub_8002728C();
-    p->field_8 = (void (*)(void))sub_80027CC0;
+    p->cb_8 = (EventEntryFn)sub_80027CC0;
 }
 // Matched
-void sub_80028388(struct_obj_D* p, int* q)
+void sub_80028388(EventEntry* p, int* q)
 {
     q[0] = 0;
     q[1] = 0;
     sub_800283C0(p, q);
-    p->field_8 = (void (*)(void))sub_800283C0;
+    p->cb_8 = (EventEntryFn)sub_800283C0;
 }
 extern int sub_800A6D50(int a0);
 extern int dword_800B1228;

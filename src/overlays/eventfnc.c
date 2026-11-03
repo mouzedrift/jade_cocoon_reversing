@@ -463,7 +463,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     EvEnemySlotEventfnc* slot;
     id = (unsigned short*)sub_80019C70(a->xy.a);
     found = 0;
-    l = ((EvLoaderEventfnc*)modelLoaderTask_8008B54C[9])->ents_C;
+    l = ((EvLoaderEventfnc*)modelLoaderTask_8008B54C->entry.buffer)->ents_C;
     for (i = 3; i >= 0; i--)
     {
         if (*id == l->id_4)
@@ -951,7 +951,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->y_4 = q[1];
     pos->z_8 = q[2];
     rot->ang_2 = ang;
-    sub_80037918(((EventNode*)cameraTask_8008D4A0)->entry.buffer);
+    sub_80037918(cameraTask_8008D4A0->entry.buffer);
     SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     c->pc_8++;
     return 1;

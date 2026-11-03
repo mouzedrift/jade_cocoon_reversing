@@ -187,7 +187,7 @@ INCLUDE_ASM(sub_80019D84);
 // Matched
 void sub_8001A38C(void)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
     CameraState* g;
     p->flags = 0;
     p->count = 0;
@@ -201,7 +201,7 @@ void sub_8001A38C(void)
 }
 extern unsigned char byte_8008D460[3];
 // Matched
-void sub_8001A41C(int** p, Fade_8001A41C* f)
+void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
 {
     unsigned long* ot;
     POLY_F4 poly;
@@ -366,7 +366,7 @@ void sub_8001A9A4(void)
     Fade_8001A41C* p;
     unsigned short v;
     dword_8008D40C = 0x1000;
-    p = ((EventNode*)dword_8008D628)->entry.buffer;
+    p = dword_8008D628->entry.buffer;
     v = p->flags;
     unknownFlags_8008D678 &= ~0x400;
     p->count = 0;
@@ -381,10 +381,10 @@ void sub_8001A9E4(void)
 // Matched
 void sub_8001AA04(short a0)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
-    int** q;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    EventEntry* q;
     p->duration = a0;
-    q = cameraTask_8008D4A0 + 4;
+    q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 1;
     sub_8001A41C(q, p);
@@ -392,11 +392,11 @@ void sub_8001AA04(short a0)
 // Matched
 void sub_8001AA50(short a0)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
-    int** q;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    EventEntry* q;
     unknownFlags_8008D678 |= 0x400;
     p->duration = a0;
-    q = cameraTask_8008D4A0 + 4;
+    q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 2;
     sub_8001A41C(q, p);
@@ -404,10 +404,10 @@ void sub_8001AA50(short a0)
 // Matched
 void sub_8001AAA8(short a0)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
-    int** q;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    EventEntry* q;
     p->duration = a0;
-    q = cameraTask_8008D4A0 + 4;
+    q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 4;
     sub_8001A41C(q, p);
@@ -415,16 +415,16 @@ void sub_8001AAA8(short a0)
 // Matched
 void sub_8001AAF4(void)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
     p->flags &= ~4;
 }
 // Matched
 void sub_8001AB1C(short a0)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
-    int** q;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    EventEntry* q;
     p->duration = a0;
-    q = cameraTask_8008D4A0 + 4;
+    q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 8;
     sub_8001A41C(q, p);
@@ -432,14 +432,14 @@ void sub_8001AB1C(short a0)
 // Matched
 void sub_8001AB68(void)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
     p->count = 8;
     p->flags |= 0x10;
 }
 // Matched
 int sub_8001AB94(void)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
     unsigned short v = p->flags;
     if (v & 0x1B)
     {
@@ -454,7 +454,7 @@ int sub_8001AB94(void)
 // Matched
 void sub_8001ABEC(int on)
 {
-    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = dword_8008D628->entry.buffer;
     if (on)
     {
         p->flags |= 0x20;
@@ -1107,20 +1107,20 @@ void InitPrimBuffers_8001BF90(void)
 // Matched
 void StartScreenFlash_8001C02C(unsigned char* a0)
 {
-    struct_cb* r = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
+    EventEntry* r = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
     if (r != 0)
     {
-        unsigned char* p = (unsigned char*)r->field_14;
-        r->flags_0 = (r->flags_0 | 1) & ~0x8000;
+        unsigned char* p = (unsigned char*)r->buffer;
+        r->flags = (r->flags | 1) & ~0x8000;
         *(int*)p = 0;
         p[4] = a0[0];
         p[5] = a0[1];
         p[6] = a0[2];
-        r->fn_8 = (void (*)(struct_cb*, int*))ScreenFlashTask_8001C0B4;
+        r->cb_8 = (EventEntryFn)ScreenFlashTask_8001C0B4;
     }
 }
 // Matched
-void ScreenFlashTask_8001C0B4(struct_cb* p, int* q)
+void ScreenFlashTask_8001C0B4(EventEntry* p, int* q)
 {
     POLY_F4 poly;
     DR_TPAGE dr;
@@ -1131,7 +1131,7 @@ void ScreenFlashTask_8001C0B4(struct_cb* p, int* q)
     q[0]++;
     if (q[0] >= 4)
     {
-        p->flags_0 = (p->flags_0 & ~1) | 0x8000;
+        p->flags = (p->flags & ~1) | 0x8000;
         return;
     }
     SetPolyF4(&poly);
@@ -2030,7 +2030,7 @@ void UpdateActorCb_8001D41C(EventEntry* e, void* a1)
 // Matched
 Actor* CreateActor_8001D45C(ActorDesc* a0)
 {
-    EventEntry* r = AllocEventEntry_80043AF8((EventNode*)actorTasks_8008D43C);
+    EventEntry* r = AllocEventEntry_80043AF8(actorTasks_8008D43C);
     Actor* p;
     if (r != 0)
     {
@@ -2452,7 +2452,7 @@ int FindActorInFront_8001DECC(Actor* o, int range, int checkLevant)
     }
     if (found == 0)
     {
-        n = (EventNode*)actorTasks_8008D43C;
+        n = actorTasks_8008D43C;
         count = n->count;
         for (i = 0; i < count; i++)
         {
@@ -2487,7 +2487,7 @@ int IsActorNear_8001DFC8(Actor* o, VECTOR* target, int range, int checkLevant)
             return 1;
         }
     }
-    n = (EventNode*)actorTasks_8008D43C;
+    n = actorTasks_8008D43C;
     count = n->count;
     for (i = 0; i < count; i++)
     {

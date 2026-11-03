@@ -37,19 +37,19 @@ void sub_8001852C(EffectSet* p, int a1);
 // Matched
 void sub_80018430(short v)
 {
-    EffectTaskState* base = EFFECT_STATE;
+    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
     base->field_40 = v;
 }
 // Matched
 void sub_80018448(short v)
 {
-    EffectTaskState* base = EFFECT_STATE;
+    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
     base->field_42 = v;
 }
 // Matched
 void sub_80018460(int on)
 {
-    EffectTaskState* base = EFFECT_STATE;
+    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
     if (on)
     {
         base->flags_28 |= 8;
@@ -62,7 +62,7 @@ void sub_80018460(int on)
 // Matched
 void sub_800184A0(int arg, int bit)
 {
-    EffectTaskState* base = EFFECT_STATE;
+    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
     if (bit == 0)
     {
         base->bits_44[arg] = 0;
@@ -75,7 +75,7 @@ void sub_800184A0(int arg, int bit)
 // Matched
 int sub_800184DC(int a0, int a1)
 {
-    EffectTaskState* p = EFFECT_STATE;
+    EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
     sub_8001852C((EffectSet*)a0, p->bits_44[a1]);
     p->flags_28 |= 1;
     return 1;

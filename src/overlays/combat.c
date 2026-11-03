@@ -679,7 +679,7 @@ int sub_800A11D8(int i)
 // Matched
 void sub_800A11F4(void)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
+    EventEntry* e = AllocEventEntry_80043AF8(cameraTask_8008D4A0);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
@@ -695,9 +695,9 @@ void sub_800A11F4(void)
 // Matched
 void sub_800A127C(void)
 {
-    EventNode* p = (EventNode*)cameraTask_8008D4A0;
+    EventNode* p = cameraTask_8008D4A0;
     sub_800376A0(&p->entry, p->entry.buffer);
-    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
+    StopAllEventEntries_80043B40(cameraTask_8008D4A0);
 }
 
 // Matched

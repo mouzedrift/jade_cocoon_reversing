@@ -1498,16 +1498,16 @@ void sub_80011904(VtxBlend* p, Vtx12* out)
         out[n].z = sum;
     }
 }
-void sub_80011AF8(struct_obj_D* p, int* q);
+void sub_80011AF8(EventEntry* p, int* q);
 // Matched
-void sub_80011ADC(struct_obj_D* p, int* q)
+void sub_80011ADC(EventEntry* p, int* q)
 {
     q[0] = -1;
     q[1] = -1;
-    p->field_8 = (void (*)(void))sub_80011AF8;
+    p->cb_8 = (EventEntryFn)sub_80011AF8;
 }
 // Matched
-void sub_80011AF8(struct_obj_D* p, int* q)
+void sub_80011AF8(EventEntry* p, int* q)
 {
     int* r = q;
     if (q[1] > 0)
@@ -1523,7 +1523,7 @@ void sub_80011AF8(struct_obj_D* p, int* q)
 // Matched
 void sub_80011B24(int a0)
 {
-    Task8008D464Buf* p = TASK_8008D464_BUF;
+    Task8008D464Buf* p = dword_8008D464->entry.buffer;
     switch (a0)
     {
     case 0x29:
@@ -1539,7 +1539,7 @@ void sub_80011B24(int a0)
 // Matched
 int sub_80011B6C(void)
 {
-    return TASK_8008D464_BUF->mode_0;
+    return ((Task8008D464Buf*)dword_8008D464->entry.buffer)->mode_0;
 }
 // Matched
 void sub_80011B8C(void)

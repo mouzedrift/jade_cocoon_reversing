@@ -38,17 +38,17 @@ EventEntry* AllocEventEntry_80043AF8(EventNode* n)
     return 0;
 }
 // Matched
-void StopAllEventEntries_80043B40(int* p)
+void StopAllEventEntries_80043B40(EventNode* p)
 {
-    int n = p[3];
+    int n = p->count;
     int i;
     for (i = 0; i < n; i++)
     {
-        if (p[4] & 1)
+        if (p->entry.flags & 1)
         {
-            p[4] = (p[4] & ~1) | 0x8000;
+            p->entry.flags = (p->entry.flags & ~1) | 0x8000;
         }
-        p = (int*)p[1];
+        p = p->next;
     }
 }
 INCLUDE_ASM(sub_80043B8C);

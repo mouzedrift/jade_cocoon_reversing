@@ -146,11 +146,11 @@ extern void sub_80038CA8(CameraCtrl* p);
 extern void sub_80037F44(CameraCtrl* p);
 extern void sub_800374E0();
 extern int sub_800B8184(int a, int b);
-extern void sub_800369E0(struct_obj_D* p, CameraCtrl* q);
+extern void sub_800369E0(EventEntry* p, CameraCtrl* q);
 
 
 // Matched
-void InitCameraTask_800368F8(struct_obj_D* p, CameraCtrl* q)
+void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
 {
     if (q->flags_4 & 0x100)
     {
@@ -160,7 +160,7 @@ void InitCameraTask_800368F8(struct_obj_D* p, CameraCtrl* q)
         q->pos_38.z = levantPos_8008BD18.pos.z;
         sub_80038CA8(q);
         q->mode_8 = 6;
-        p->field_8 = sub_800374E0;
+        p->cb_8 = (EventEntryFn)sub_800374E0;
     }
     else if (!(q->flags_4 & 0x2000))
     {
@@ -174,21 +174,21 @@ void InitCameraTask_800368F8(struct_obj_D* p, CameraCtrl* q)
     {
         sub_80037F44(q);
         q->mode_8 = 2;
-        p->field_8 = (void (*)(void))sub_800369E0;
-        ((void (*)(struct_obj_D*, CameraCtrl*))p->field_8)(p, q);
+        p->cb_8 = (EventEntryFn)sub_800369E0;
+        p->cb_8(p, q);
     }
     sub_80037918(q);
 }
 extern void sub_80037C74(CameraCtrl* q);
 extern void sub_8003891C(CameraCtrl* p, void* q);
 extern void sub_800BC90C(CameraCtrl* q);
-extern void sub_80036AB4(struct_obj_D* p, CameraCtrl* q);
+extern void sub_80036AB4(EventEntry* p, CameraCtrl* q);
 extern void sub_8001AA04(int a);
 
 
 
 // Matched
-void sub_800369E0(struct_obj_D* p, CameraCtrl* q)
+void sub_800369E0(EventEntry* p, CameraCtrl* q)
 {
     switch (q->mode_8)
     {
@@ -206,7 +206,7 @@ void sub_800369E0(struct_obj_D* p, CameraCtrl* q)
         {
             sub_800390F4(q, 1);
             q->mode_8 = 4;
-            p->field_8 = (void (*)(void))sub_80036AB4;
+            p->cb_8 = (EventEntryFn)sub_80036AB4;
         }
         sub_8003891C(q, &levantPos_8008BD18);
         sub_800BC90C(q);
@@ -214,11 +214,11 @@ void sub_800369E0(struct_obj_D* p, CameraCtrl* q)
     }
 }
 extern void sub_80038230(CameraCtrl* p);
-extern void InitCameraTask_800368F8(struct_obj_D* p, CameraCtrl* q);
-void sub_80036BB0(struct_obj_D* p, CameraCtrl* q);
+extern void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q);
+void sub_80036BB0(EventEntry* p, CameraCtrl* q);
 
 // Matched
-void sub_80036AB4(struct_obj_D* p, CameraCtrl* q)
+void sub_80036AB4(EventEntry* p, CameraCtrl* q)
 {
     CameraCtrl* r = q;
     if (q->flags_4 & 4)
@@ -241,7 +241,7 @@ void sub_80036AB4(struct_obj_D* p, CameraCtrl* q)
     sub_8003891C(r, &levantPos_8008BD18);
     r->flags_4 &= ~0x1000;
     r->mode_8 = 0;
-    p->field_8 = (void (*)(void))InitCameraTask_800368F8;
+    p->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
     return;
 run:
     sub_800BC90C(r);
@@ -249,13 +249,13 @@ run:
     {
         r->mode_8 = 5;
         r->keyIdx_1C4 = 0;
-        p->field_8 = (void (*)(void))sub_80036BB0;
+        p->cb_8 = (EventEntryFn)sub_80036BB0;
         r->t_C = 0;
     }
 }
 #define SPLINE(c) ((int)((c)[0] * t3 + (c)[1] * t2 + (c)[2] * t + (c)[3]))
 // Matched
-void sub_80036BB0(struct_obj_D* p, CameraCtrl* r)
+void sub_80036BB0(EventEntry* p, CameraCtrl* r)
 {
     CameraCtrl* q = r;
     int i;
@@ -278,7 +278,7 @@ void sub_80036BB0(struct_obj_D* p, CameraCtrl* r)
     {
         sub_800390F4(q, 1);
         q->mode_8 = 4;
-        p->field_8 = (void (*)(void))sub_80036AB4;
+        p->cb_8 = (EventEntryFn)sub_80036AB4;
     }
     else
     {
@@ -320,9 +320,9 @@ void sub_80036BB0(struct_obj_D* p, CameraCtrl* r)
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 void sub_80038D64(CameraCtrl* o, int* a);
 extern void sub_80038230(CameraCtrl* p);
-extern void sub_800375F8(struct_obj_D* o, CameraCtrl* p);
+extern void sub_800375F8(EventEntry* o, CameraCtrl* p);
 // Matched
-void sub_800374E0(struct_obj_D* p, CameraCtrl* q)
+void sub_800374E0(EventEntry* p, CameraCtrl* q)
 {
     CameraCtrl* o = q;
     if (q->flags_4 & 0x100)
@@ -348,12 +348,12 @@ void sub_800374E0(struct_obj_D* p, CameraCtrl* q)
         q->field2ESrc_17C = cameraState_8008D4F0.field_2E;
         q->field2EDst_180 = cameraState_8008D4F0.field_2E;
         sub_80038D64(o, (int*)&levantPos_8008BD18);
-        p->field_8 = (void (*)(void))sub_800375F8;
+        p->cb_8 = (EventEntryFn)sub_800375F8;
     }
 }
 extern int dword_8008B4F8;
 // Matched
-void sub_800375F8(struct_obj_D* o, CameraCtrl* p)
+void sub_800375F8(EventEntry* o, CameraCtrl* p)
 {
     CameraCtrl* q = p;
     if (p->t_C > 0)
@@ -374,7 +374,7 @@ void sub_800375F8(struct_obj_D* o, CameraCtrl* p)
         sub_80037918(q);
         sub_8003891C(q, &levantPos_8008BD18);
         q->mode_8 = 0;
-        o->field_8 = (void (*)(void))InitCameraTask_800368F8;
+        o->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
     }
 }
 // Matched
@@ -387,7 +387,7 @@ extern short word_8008D51E;
 // Matched
 void ResetCameraToLevant_800376A8(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     sub_80039E14();
     dword_8008B4F8 = 0x1000;
     geomScreenDistance_8008B548 = (word_8008D51E << 12) / 0x1000;
@@ -400,19 +400,19 @@ void ResetCameraToLevant_800376A8(void)
 // Matched
 void sub_80037720(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 |= 0x2000;
 }
 // Matched
 void sub_80037748(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 |= 4;
 }
 // Matched
 void sub_80037770(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 &= ~4;
     p->flags_4 &= ~0x2000;
     RestoreCameraState_80039698((int*)p);
@@ -445,7 +445,7 @@ __asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
 // Matched
 void sub_80037828(int a, short b, int c)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     if (c)
     {
         sub_800390F4(p, 2);
@@ -465,12 +465,12 @@ void sub_80037828(int a, short b, int c)
 // Matched
 void sub_800378CC(void)
 {
-    sub_800390F4(CAMERA_CTRL, 1);
+    sub_800390F4(((CameraCtrl*)cameraTask_8008D4A0->entry.buffer), 1);
 }
 // Matched
 int GetCameraMode_800378F8(void)
 {
-    return CAMERA_CTRL->mode_8;
+    return ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->mode_8;
 }
 extern void sub_80038A5C(CameraCtrl* p, int a, struct_v3* b, int c);
 // Matched
@@ -498,7 +498,7 @@ void sub_80037918(CameraCtrl* p)
 // Matched
 void sub_800379DC(int* v, short n)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->blendTarget_28.x = v[0];
     p->blendTarget_28.y = v[1];
     p->blendTarget_28.z = v[2];
@@ -508,19 +508,19 @@ void sub_800379DC(int* v, short n)
 // Matched
 void sub_80037A20(int a0, short n)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->blendStep_26 = n;
     p->flags_4 &= ~0x10;
 }
 // Matched
 short sub_80037A4C(void)
 {
-    return CAMERA_CTRL->blend_24;
+    return ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->blend_24;
 }
 // Matched
 void sub_80037A6C(int a, int b)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     if (b >= 2)
     {
         p->zoomTarget_34 = a;
@@ -537,7 +537,7 @@ void sub_80037A6C(int a, int b)
 // Matched
 void SetCameraTarget_80037AC8(int a0)
 {
-    CAMERA_CTRL->target_0 = a0;
+    ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
 }
 extern unsigned short dword_80083CE8[][4];
 extern int* sub_800A1E3C(void);
@@ -551,7 +551,7 @@ void sub_80037AE0(unsigned short mask)
     int sel = 0;
     int cnt = 0;
     int i;
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     int* r;
     int v;
     for (i = 0; i < 3; i++)
@@ -579,26 +579,26 @@ void sub_80037AE0(unsigned short mask)
         }
         sub_80038E2C(p, dword_80083CE8[r[0] - 1][sel], v);
         *(unsigned short*)&p->mode_8 = 4;
-        CAMERA_TASK->entry.cb_8 = (EventEntryFn)sub_80036AB4;
+        cameraTask_8008D4A0->entry.cb_8 = (EventEntryFn)sub_80036AB4;
     }
 }
 // Matched
 void sub_80037BFC(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->shake_10 = 0;
     p->flags_4 |= 0xC0;
 }
 // Matched
 void sub_80037C24(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 |= 0x100;
 }
 // Matched
 void sub_80037C4C(void)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 &= ~0x100;
 }
 extern CamOffset dword_80083BE4[];
@@ -998,7 +998,7 @@ extern int sub_800AB4D8(int a);
 // Matched
 void sub_8003970C(int idx_, int* a5)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     struct_pair8* t = dword_800B1084;
     int* q;
     int r;
@@ -1040,7 +1040,7 @@ void sub_8003970C(int idx_, int* a5)
 // Matched
 void sub_8003983C(int idx_, int* a5)
 {
-    CameraCtrl* p = CAMERA_CTRL;
+    CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     struct_pair8* t = dword_800B1084;
     int* q;
     p->field_1C = t[(short)idx_].b;

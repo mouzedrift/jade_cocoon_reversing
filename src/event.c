@@ -276,13 +276,13 @@ extern void XaIdleTask_800430E8();
 extern void XaMonitorTask_800432EC();
 
 // Matched
-void XaInitTask_80043054(struct_obj_D* p, int* q)
+void XaInitTask_80043054(EventEntry* p, int* q)
 {
     SsSetSerialAttr(0, 0, 1);
     xaRequestPending_80096118 = -1;
     q[0] = 0;
     ((short*)q)[4] = 0;
-    p->field_8 = XaIdleTask_800430E8;
+    p->cb_8 = (EventEntryFn)XaIdleTask_800430E8;
 }
 // Matched
 void XaStop_800430B0(void)
@@ -294,7 +294,7 @@ extern int DsSystemStatus(void);
 extern void XaWaitFilterTask_800431C4();
 void XaSetup_800433FC(XaTask* o);
 // Matched
-void XaIdleTask_800430E8(struct_obj_D* p, XaTask* q0)
+void XaIdleTask_800430E8(EventEntry* p, XaTask* q0)
 {
     XaTask* q = q0;
     int r;
@@ -310,37 +310,37 @@ void XaIdleTask_800430E8(struct_obj_D* p, XaTask* q0)
         xaRequestPending_80096118 = -1;
         q->state_8 = s;
         q->flags_0 &= ~1;
-        p->field_8 = XaWaitFilterTask_800431C4;
+        p->cb_8 = (EventEntryFn)XaWaitFilterTask_800431C4;
     }
 }
 // Matched
-void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q)
+void XaWaitFilterTask_800431C4(EventEntry* p, int* q)
 {
     char buf[8];
     if (DsSync(((XaTask*)q)->cmd_4, buf) == 2)
     {
-        p->field_8 = XaStartReadTask_80043204;
+        p->cb_8 = (EventEntryFn)XaStartReadTask_80043204;
     }
 }
 // Matched
-void XaStartReadTask_80043204(struct_obj_D* p, int* q)
+void XaStartReadTask_80043204(EventEntry* p, int* q)
 {
     if (XaStartRead_800434C4(xaStartPos_80096108))
     {
         ((XaTask*)q)->cmd_4 = DsControlF(0x11, 0);
         ((XaTask*)q)->state_8 = 2;
-        p->field_8 = XaMonitorTask_800432EC;
+        p->cb_8 = (EventEntryFn)XaMonitorTask_800432EC;
     }
 }
 // Matched
-void XaFadeOutTask_80043264(struct_obj_D* p, XaTask* q)
+void XaFadeOutTask_80043264(EventEntry* p, XaTask* q)
 {
     short v = q->vol_A - 14;
     q->vol_A = v;
     if (v < 0)
     {
         q->state_8 = 0;
-        p->field_8 = XaIdleTask_800430E8;
+        p->cb_8 = (EventEntryFn)XaIdleTask_800430E8;
         SsSetSerialVol(0, 0, 0);
         DsControlB(9, 0, 0);
         sub_8003C0A4(0);
@@ -351,7 +351,7 @@ void XaFadeOutTask_80043264(struct_obj_D* p, XaTask* q)
     }
 }
 // Matched
-void XaMonitorTask_800432EC(struct_obj_D* p, XaTask* q)
+void XaMonitorTask_800432EC(EventEntry* p, XaTask* q)
 {
     u_char result[8];
     DslLOC loc;
@@ -363,7 +363,7 @@ void XaMonitorTask_800432EC(struct_obj_D* p, XaTask* q)
         if (DsPosToInt(&loc) > xaEndPos_8009610C || (int)xaRequestPending_80096118 >= 0)
         {
             q->vol_A = 0x70;
-            p->field_8 = XaFadeOutTask_80043264;
+            p->cb_8 = (EventEntryFn)XaFadeOutTask_80043264;
             return;
         }
         SsSetSerialVol(0, 0x70, 0x70);
@@ -373,7 +373,7 @@ void XaMonitorTask_800432EC(struct_obj_D* p, XaTask* q)
     {
         q->vol_A = 0x70;
         q->flags_0 &= ~1;
-        p->field_8 = XaFadeOutTask_80043264;
+        p->cb_8 = (EventEntryFn)XaFadeOutTask_80043264;
     }
 }
 extern int DsCommand(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
@@ -419,7 +419,7 @@ int XaRequestStop_80043524(void)
     {
         return 0;
     }
-    p = XA_TASK;
+    p = xaTask_8008B560->entry.buffer;
     p->flags_0 |= 1;
     return 1;
 }
@@ -434,7 +434,7 @@ void XaRequestPlay_80043564(short a0, short a1, short a2)
 // Matched
 int XaIsIdle_80043584(void)
 {
-    return XA_TASK->state_8 == 0;
+    return ((XaTask*)xaTask_8008B560->entry.buffer)->state_8 == 0;
 }
 // Matched
 unsigned int XaNoRequestPending_800435A4(void)

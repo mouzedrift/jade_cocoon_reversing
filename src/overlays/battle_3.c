@@ -756,10 +756,10 @@ void sub_800BFB80()
 
 void sub_800BFBB8()
 {
-    StopAllEventEntries_80043B40((int*)dword_8008B568);
-    StopAllEventEntries_80043B40((int*)dword_8008B564);
-    StopAllEventEntries_80043B40((int*)dword_8008D4B0);
-    StopAllEventEntries_80043B40((int*)dword_8008D63C);
+    StopAllEventEntries_80043B40(dword_8008B568);
+    StopAllEventEntries_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40(dword_8008D4B0);
+    StopAllEventEntries_80043B40(dword_8008D63C);
 }
 
 void sub_800BFC10()

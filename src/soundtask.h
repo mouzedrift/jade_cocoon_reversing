@@ -23,7 +23,5 @@ typedef struct
     SeqFade fades_18[5];
 } SoundTask;
 
-/* soundTask_8008D4A4 is an EventNode* (declared unsigned short** in globals.h) */
-#define SOUND_TASK ((SoundTask*)((EventNode*)soundTask_8008D4A4)->entry.buffer)
 
 #endif

@@ -48,8 +48,6 @@ typedef struct
     short field_42;
     unsigned char bits_44[12];
 } EffectTaskState;
-#define EFFECT_TASK ((EventNode*)effectTask_8008D3F8)
-#define EFFECT_STATE ((EffectTaskState*)EFFECT_TASK->entry.buffer)
 
 /* buffer of an effect object (an EventEntry of effectObjects_8008B4A8) */
 typedef struct

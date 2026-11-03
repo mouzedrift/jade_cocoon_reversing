@@ -16,6 +16,28 @@ typedef struct
     short field_E_h; // word_8008B4E6
 } DisplayConfig;
 
+// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
+struct EventEntry;
+typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
+typedef struct EventEntry
+{
+    unsigned int flags;
+    int field_4; // nonzero: buffer is not owned
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+    int size;
+    void* buffer;
+} EventEntry;
+
+typedef struct EventNode
+{
+    int field_0;
+    struct EventNode* next;
+    int field_8;
+    int count;
+    EventEntry entry;
+} EventNode;
+
 // HP/MP block shared by Levant (0x8008BD38) and each Minion (status_84);
 // Heal_80011CD0 refills it (Meos4's randomizer calls 0x80011CD0 "healFn")
 typedef struct
@@ -82,12 +104,6 @@ typedef struct
     Item items[12];
 } SaveData;
 
-typedef struct
-{
-    int field_0;
-    int field_4;
-    void (*field_8)(void);
-} struct_obj_D;
 
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
@@ -314,10 +330,8 @@ extern int fileBuffer_8008656C;
 extern int cdReadState_80086550[5];
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern int** overlayLoaderTask_8008D4C0;
 extern struct_12 stru_80083594[];
 extern PadVibration padVibration_80095460[];
-extern int** xaTask_8008B560;
 extern int personNames_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
@@ -342,7 +356,6 @@ typedef struct
     int field_4;
 } struct_833E4;
 extern struct_833E4 seqSlots_800833E4[];
-extern int** effectTask_8008D3F8;
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];
 extern char genkiMovie_80086968[];
@@ -421,7 +434,6 @@ extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;
 extern int dword_8008B4F8;
 extern int dword_800918C4;
-extern unsigned short** soundTask_8008D4A4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
 extern int dword_80095468[0x10];
@@ -439,9 +451,6 @@ extern int dword_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
-extern int** cameraTask_8008D4A0;
-extern int** dword_8008D464;
-extern int** modelLoaderTask_8008B54C;
 extern int dword_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
@@ -488,9 +497,7 @@ extern unsigned long* pOT_8008D3EC;
 extern unsigned int settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
-extern int** dword_8008D628;
-extern int actorTasks_8008D43C;
-extern int screenFlashTasks_8008D61C;
+
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
@@ -567,15 +574,6 @@ typedef struct
     int count;
     struct_12* items;
 } struct_list_14;
-typedef struct struct_cb
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*fn_8)(struct struct_cb*, int*);
-    int field_C;
-    int field_10;
-    int* field_14;
-} struct_cb;
 
 typedef struct
 {
@@ -603,30 +601,19 @@ typedef struct
 } struct_obj_F;
 
 extern unsigned short buttonConfig_8008B578[];
-// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
-struct EventEntry;
-typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
-typedef struct EventEntry
-{
-    unsigned int flags;
-    int field_4; // nonzero: buffer is not owned
-    EventEntryFn cb_8;
-    EventEntryFn cb_C;
-    int size;
-    void* buffer;
-} EventEntry;
-
-typedef struct EventNode
-{
-    int field_0;
-    struct EventNode* next;
-    int field_8;
-    int count;
-    EventEntry entry;
-} EventNode;
 extern EventNode* modelTasks_8008D618;
 extern EventNode* effectObjects_8008B4A8;
 extern EventNode* dword_8008D60C;
+extern EventNode* cameraTask_8008D4A0;
+extern EventNode* effectTask_8008D3F8;
+extern EventNode* xaTask_8008B560;
+extern EventNode* dword_8008D464;
+extern EventNode* soundTask_8008D4A4;
+extern EventNode* modelLoaderTask_8008B54C;
+extern EventNode* overlayLoaderTask_8008D4C0;
+extern EventNode* dword_8008D628;
+extern EventNode* actorTasks_8008D43C;
+extern EventNode* screenFlashTasks_8008D61C;
 
 typedef struct
 {

@@ -106,9 +106,6 @@ typedef struct CameraCtrl
     CamSpline* spline_218;
 } CameraCtrl;
 
-/* cameraTask_8008D4A0 is the EventNode of the camera task */
-#define CAMERA_TASK ((EventNode*)cameraTask_8008D4A0)
-#define CAMERA_CTRL ((CameraCtrl*)CAMERA_TASK->entry.buffer)
 
 /* the object returned by the battle overlay's sub_800C0FAC */
 typedef struct

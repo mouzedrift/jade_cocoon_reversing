@@ -313,21 +313,21 @@ void FirFilterStep_80014588(int* a0, struct_16* a1, unsigned int a2)
     }
     a1->field_C >>= 12;
 }
-void UpdateEffectTask_80014638(struct_obj_D* p, void* buf);
+void UpdateEffectTask_80014638(EventEntry* p, void* buf);
 // Matched
-void InitEffectTask_80014618(struct_obj_D* p, EffectTaskState* q)
+void InitEffectTask_80014618(EventEntry* p, EffectTaskState* q)
 {
     q->flags_28 = 2;
     q->timer_3C = 0;
     q->state_2C = 0;
-    p->field_8 = (void (*)(void))UpdateEffectTask_80014638;
+    p->cb_8 = (EventEntryFn)UpdateEffectTask_80014638;
 }
 extern short dword_800795D0[];
 extern short dword_800795F0[];
 extern void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
 int CountActiveEffectObjects_800147FC(void);
 // Matched
-void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
+void UpdateEffectTask_80014638(EventEntry* p, void* buf)
 {
     EffectTaskState* q = (EffectTaskState*)buf;
     int r;
@@ -426,12 +426,12 @@ void FreeEffectTask_800148A0(void)
 // Matched
 int IsEffectTaskIdle_800148D4(void)
 {
-    return EFFECT_STATE->state_2C == 0;
+    return ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->state_2C == 0;
 }
 // Matched
 void RequestEffect_800148F4(int a0)
 {
-    EffectTaskState* p = EFFECT_STATE;
+    EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
     p->flags_28 |= 4;
     p->idx_38 = a0;
     if (p->state_2C != 0)

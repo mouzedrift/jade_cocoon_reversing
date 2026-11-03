@@ -304,7 +304,7 @@ int sub_800181E8(void)
 // Matched
 struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, short n)
 {
-    struct_4s* dst = EFFECT_STATE->pairs_0;
+    struct_4s* dst = ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->pairs_0;
     int i;
     int j;
     short d;
@@ -338,7 +338,7 @@ extern void sub_800A111C(int a0, void* a1);
 // Matched
 void sub_800182B8(int* p, int mask)
 {
-    EffectTaskState* t = EFFECT_STATE;
+    EffectTaskState* t = effectTask_8008D3F8->entry.buffer;
     int i;
     int bit;
     ((EffectSet*)p)->count_40 = 0;

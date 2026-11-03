@@ -96,7 +96,7 @@ INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 typedef struct TstModelTbl { int a; TstModelBone* bones; int c; } TstModelTbl;
 extern TstModelTbl name_800A33B0[];
 extern void TstModelTask_800A0A8C();
-void TstModelInit_800A09C0(struct_obj_D* task, TstModelD* c)
+void TstModelInit_800A09C0(EventEntry* task, TstModelD* c)
 {
     int i;
     c->state = 0;
@@ -125,7 +125,7 @@ void TstModelInit_800A09C0(struct_obj_D* task, TstModelD* c)
     drawEnvRed_8008D448[0] = 0x40;
     drawEnvRed_8008D448[1] = 0x40;
     drawEnvRed_8008D448[2] = 0x80;
-    task->field_8 = TstModelTask_800A0A8C;
+    task->cb_8 = (EventEntryFn)TstModelTask_800A0A8C;
 }
 
 extern void sub_800A0C00();
@@ -137,7 +137,7 @@ extern void sub_800A17B8();
 extern void sub_800A1614();
 extern void sub_800A18F4();
 extern void sub_800A19E4();
-void TstModelTask_800A0A8C(struct_obj_D* task, TstModelD* c)
+void TstModelTask_800A0A8C(EventEntry* task, TstModelD* c)
 {
     switch (c->state)
     {

@@ -92,7 +92,7 @@ typedef struct TstCompoWork
 } TstCompoWork;
 extern void TstCompoTask_800A097C();
 extern TstCompoBlk8* name_800A250C[];
-void TstCompoInit_800A0800(struct_obj_D* task, TstCompoWork* c)
+void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 {
     c->anim_184 = 3;
     c->state_0 = 0;
@@ -126,7 +126,7 @@ void TstCompoInit_800A0800(struct_obj_D* task, TstCompoWork* c)
     c->f1FC = 0;
     c->f200 = 0;
     c->f204 = 0;
-    task->field_8 = TstCompoTask_800A097C;
+    task->cb_8 = (EventEntryFn)TstCompoTask_800A097C;
 }
 
 // parameters of StartModelTask_80010850 (0x34 bytes)
@@ -178,7 +178,7 @@ extern void sub_800A194C();
 extern void sub_800A19A4();
 extern void sub_800A1AD0();
 extern void TstCompoCameraInput_800A1C14();
-void TstCompoTask_800A097C(struct_obj_D* task, TstCompoWork* c)
+void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
 {
     if (c->state_0 != 1 && c->state_0 != 3 && c->state_0 != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
         (padHeld_800918D0[0] & 0x90A) == 0x90A)

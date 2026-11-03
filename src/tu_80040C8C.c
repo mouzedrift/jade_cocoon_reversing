@@ -117,11 +117,11 @@ void PlayAnimeMovie_80040D0C(void)
     bStopDrawingMovie_8008D45C = 1;
 }
 // Matched
-void StartIntroAnime_80040D34(struct_obj_D* p)
+void StartIntroAnime_80040D34(EventEntry* p)
 {
     if (!(unknownFlags_8008D678 & 0x20))
     {
-        p->field_8 = PlayAnimeMovie_80040D0C;
+        p->cb_8 = (EventEntryFn)PlayAnimeMovie_80040D0C;
     }
 }
 // Matched

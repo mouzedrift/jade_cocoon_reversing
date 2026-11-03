@@ -37,7 +37,7 @@ extern short word_800A84D0[2];
 extern void sub_800A0D1C(int);
 extern void sub_800A0B70(int);
 extern void StartScreenFlash_8001C02C(void*);
-extern void sub_800376A0(int*, int);
+extern void sub_800376A0(void* a, void* b);
 typedef struct CombBtlUnit
 {
     char pad_0[0xF8];
@@ -951,7 +951,7 @@ extern short dword_80087114[];
 extern short dword_80087134[];
 void sub_800A7290()
 {
-    int* e = (int*)AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
+    int* e = (int*)AllocEventEntry_80043AF8(cameraTask_8008D4A0);
     char* p;
     char* q;
     if (e)
@@ -1003,13 +1003,13 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
 void sub_800A73E4()
 {
-    sub_800376A0((int*)cameraTask_8008D4A0 + 4, cameraTask_8008D4A0[9]);
-    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
+    sub_800376A0(&cameraTask_8008D4A0->entry, cameraTask_8008D4A0->entry.buffer);
+    StopAllEventEntries_80043B40(cameraTask_8008D4A0);
 }
 
 void sub_800A7420()
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D628);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D628);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
@@ -1020,7 +1020,7 @@ void sub_800A7420()
 
 void sub_800A7478()
 {
-    StopAllEventEntries_80043B40((int*)dword_8008D628);
+    StopAllEventEntries_80043B40(dword_8008D628);
 }
 
 void sub_800A74A0(int i)
@@ -1074,7 +1074,7 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7694);
 
 void sub_800A7BE4()
 {
-    StopAllEventEntries_80043B40((int*)dword_8008B564);
+    StopAllEventEntries_80043B40(dword_8008B564);
 }
 
 extern unsigned char byte_800A38D8;

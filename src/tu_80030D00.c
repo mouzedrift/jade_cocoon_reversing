@@ -291,7 +291,7 @@ int sub_800315E4(void)
 // Matched
 void FreeBgmAndSfx_800315F4(void)
 {
-    SoundTask* s0 = SOUND_TASK;
+    SoundTask* s0 = soundTask_8008D4A4->entry.buffer;
     FreeSound_80030D00((int)s0->bgm_4);
     FreeSound_80030D00((int)s0->sfx_8);
 }
@@ -300,7 +300,7 @@ void FadeOutSfxSeq_80031638(void)
 {
     SoundTask* t;
     int i;
-    t = SOUND_TASK;
+    t = soundTask_8008D4A4->entry.buffer;
     if (sfxSound_80091D20.field_4_seq_num >= 0)
     {
         for (i = 0; i < 5; i++)

@@ -49,7 +49,7 @@ void sub_800A58B4(void)
     dword_800AEBD8 = -1;
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
-    StopAllEventEntries_80043B40((int*)dword_8008D410);
+    StopAllEventEntries_80043B40((EventNode*)dword_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {

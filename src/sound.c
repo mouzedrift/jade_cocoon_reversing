@@ -98,7 +98,7 @@ void InitSounds_8002FE7C(void)
 // Matched
 void ResetSoundTask_8002FEB8(void)
 {
-    SoundTask* p = SOUND_TASK;
+    SoundTask* p = soundTask_8008D4A4->entry.buffer;
     int i;
     p->bgm_4 = &bgmSound_80091CE0;
     p->sfx_8 = &sfxSound_80091D20;
@@ -191,7 +191,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 // Matched
 int PlayMusic_800300E0(int idx, int a1)
 {
-    SoundTask* t = SOUND_TASK;
+    SoundTask* t = soundTask_8008D4A4->entry.buffer;
     SoundStruct* s;
     FileRequestDesc req;
     int sub;
@@ -277,7 +277,7 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
 int LoadSeqSlotSound_800303E8(void)
 {
-    SoundTask* p = SOUND_TASK;
+    SoundTask* p = soundTask_8008D4A4->entry.buffer;
     FileRequestDesc s;
     if (p->state_2 != 2)
     {
@@ -353,12 +353,12 @@ void FreeSeqSlotSound_80030664(void)
 // Matched
 int IsSoundTaskReady_80030688(void)
 {
-    return SOUND_TASK->state_2 == 2;
+    return ((SoundTask*)soundTask_8008D4A4->entry.buffer)->state_2 == 2;
 }
 // Matched
 int IsSoundTaskReady_800306B0(void)
 {
-    return SOUND_TASK->state_2 == 2;
+    return ((SoundTask*)soundTask_8008D4A4->entry.buffer)->state_2 == 2;
 }
 // Matched
 void FreeBgmSeqs_800306D8(void)
@@ -369,7 +369,7 @@ extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
 void StopSoundSeqById_800306FC(int idx)
 {
-    SoundTask* p = SOUND_TASK;
+    SoundTask* p = soundTask_8008D4A4->entry.buffer;
     if (idx < 10)
     {
         StopSoundSeq_80031408(&systemSound_80091D40, idx);
