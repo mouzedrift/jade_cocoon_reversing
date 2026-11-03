@@ -421,7 +421,7 @@ extern void sub_800A73E4();
 extern void sub_800A7478();
 extern void sub_800A7560();
 extern void sub_800A0A6C();
-extern void sub_80066E38();
+extern void SsUtAllKeyOff();
 extern void sub_800A16FC();
 
 void sub_800A5544(CombBtlTask* t)
@@ -443,7 +443,7 @@ void sub_800A5544(CombBtlTask* t)
         }
         sub_800A0A6C();
         FreeSeqSlotSound_80030664();
-        sub_80066E38(0);
+        SsUtAllKeyOff(0);
         PlayMusic_800300E0(0x8E, 1);
         sub_80039FC0();
         t->next_8 = sub_800A16FC;

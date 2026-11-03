@@ -136,7 +136,7 @@ short sub_8002A3E0(int a)
     return 36;
 }
 extern void sub_800A61CC(int a, void* b, void* c);
-extern void AddTexWindowPrim_8003326C(int a, void* b);
+extern void AddDrawAreaPrim_8003326C(int a, void* b);
 // Matched
 void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
 {
@@ -149,7 +149,7 @@ void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
     AddPrimCopy_80040298(pOT_8008D454 + a3, buf2, 2);
     if (a2)
     {
-        AddTexWindowPrim_8003326C(a2, &pOT_8008D454[a3]);
+        AddDrawAreaPrim_8003326C(a2, &pOT_8008D454[a3]);
     }
 }
 #if 0
@@ -186,7 +186,7 @@ typedef struct
     int field_14;
 } struct_A5A4;
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void AddClipTexWindowPrim_80033308(void* a);
+extern void AddClipDrawAreaPrim_80033308(void* a);
 extern void DrawMenuWindowContents_8002A710(void* a, int b);
 extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
 // Matched
@@ -200,9 +200,9 @@ void DrawMenuWindows_8002A5A4(struct_A5A4* p)
         for (j = 0; !(p->field_10[i][j].flags & 1); j++)
         {
             InterpolateWindowRect_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
-            AddClipTexWindowPrim_80033308(pOT_8008D454 + p->field_14);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + p->field_14);
             DrawMenuWindowContents_8002A710(&p->field_10[i][j], p->field_14);
-            AddTexWindowPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
+            AddDrawAreaPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
             sub_8002AAF0(p, i, j, &r);
         }
     }

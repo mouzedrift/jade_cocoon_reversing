@@ -106,8 +106,8 @@ void sub_800353A0(Msg_353A0* o)
         break;
     }
 }
-extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
-extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void sub_8002F6F8(void* a0, void* st, int a2);
@@ -145,9 +145,9 @@ void sub_800355EC(Msg_353A0* o, unsigned short* r)
                 u.loc[1] = y;
                 y += 12;
                 u.loc[0] = x;
-                AddClipTexWindowPrim_80033308(&pOT_8008D454[o->ot_54]);
+                AddClipDrawAreaPrim_80033308(&pOT_8008D454[o->ot_54]);
                 sub_8003EC2C(*p, u.loc, o->ot_54);
-                AddTexWindowPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
+                AddDrawAreaPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
             }
             p++;
             i++;

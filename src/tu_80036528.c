@@ -151,8 +151,6 @@ void StopPadVibrationTask_800367F0(int a0, unsigned char* a1)
     padVibration_80095460[*a1].motor_2[0] = 0;
     padVibration_80095460[*a1].motor_2[1] = 0;
 }
-extern int sub_8005EC34(int a, void* b, int c);
-extern int sub_8005EBB4(int a, void* b);
 extern int dword_80083844[];
 
 // Matched
@@ -167,8 +165,8 @@ void UpdatePadVibration_80036820(int port)
         }
         if (!(*(unsigned short*)&padVibration_80095460[port] & 1))
         {
-            sub_8005EC34(port << 4, &padVibration_80095460[port].motor_2[0], 2);
-            if (st == 2 || (st == 6 && sub_8005EBB4(port << 4, dword_80083844)))
+            PadSetAct(port << 4, (unsigned char*)&padVibration_80095460[port].motor_2[0], 2);
+            if (st == 2 || (st == 6 && PadSetActAlign(port << 4, (unsigned char*)dword_80083844)))
             {
                 *(unsigned short*)&padVibration_80095460[port] |= 1;
             }
@@ -1091,7 +1089,7 @@ extern DRAWENV drawEnv_8008D698[2];
 void sub_800398B4(int* p, void* q_)
 {
     short* q = (short*)q_;
-    DR_TWIN tw;
+    DR_AREA tw;
     RECT r;
     short* sp;
     int s;
@@ -1114,16 +1112,16 @@ void sub_800398B4(int* p, void* q_)
         r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + stru_8008D420.y;
         r.w = stru_8008D420.w;
         r.h = stru_8008D420.h;
-        SetTexWindow(&tw, &r);
-        *(DR_TWIN*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
+        SetDrawArea(&tw, &r);
+        *(DR_AREA*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
         addPrim(pOT_8008D3EC, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
         r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x;
         r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y;
         r.w = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.w;
         r.h = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.h;
-        SetTexWindow(&tw, &r);
-        *(DR_TWIN*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
+        SetDrawArea(&tw, &r);
+        *(DR_AREA*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
         addPrim(pOT_8008D5F4 + 2, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
         if (p[1] & 0x40)

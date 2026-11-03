@@ -19,8 +19,6 @@
 extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
-extern void sub_80070E30(int a, int* b);
-extern int sub_8006F0E0(int a, int* b, int* c);
 
 INCLUDE_DATA(aDataData0011);
 INCLUDE_DATA(aAssertionFaile_1);
@@ -389,8 +387,8 @@ void DelayLoop_8003BA90(void)
 int sub_8003BADC(int a0)
 {
     int out[2];
-    sub_80070E30(a0, &dword_8008D4D8);
-    while (!sub_8006F0E0(0, &out[0], &out[1]))
+    McxAllInfo(a0, (unsigned char*)&dword_8008D4D8);
+    while (!McxSync(0, (long*)&out[0], (long*)&out[1]))
     {
     }
     return out[1];

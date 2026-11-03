@@ -76,7 +76,7 @@ extern unsigned short padPressed_8009194C[];
 extern MovieInfo strMovies_80086A4C[];
 extern MovieCtx movieCtx_800960C0;
 extern void SsSetSerialVol();
-extern DISPENV* InitDispEnv_8005AA88(DISPENV* env, int x, int y, int w, int h);
+extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 void MovieDctOutCallback_80041424(void);
 int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m);
 void MovieWaitFrameDone_80041724(MovieCtx* c, int unused);
@@ -206,7 +206,7 @@ int PlayMovie_80040EB4(int idx)
         {
             y += m->rect.h;
         }
-        InitDispEnv_8005AA88(&env, x, y, MOVIE_W(m, m->rect.w), m->rect.h);
+        SetDefDispEnv(&env, x, y, MOVIE_W(m, m->rect.w), m->rect.h);
         if (m->is24bpp)
         {
             env.isrgb24 = m->is24bpp;

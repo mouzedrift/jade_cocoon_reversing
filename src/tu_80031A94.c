@@ -514,9 +514,9 @@ void AddSprtWithTPage_800331C4(unsigned short* a, unsigned char* o, void* b, voi
 }
 extern DRAWENV drawEnv_8008D698[2];
 // Matched
-void AddTexWindowPrim_8003326C(unsigned short* a, void* b)
+void AddDrawAreaPrim_8003326C(unsigned short* a, void* b)
 {
-    DR_TWIN twin;
+    DR_AREA area;
     RECT rect;
     DRAWENV* e = drawEnv_8008D698;
     unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
@@ -524,13 +524,13 @@ void AddTexWindowPrim_8003326C(unsigned short* a, void* b)
     rect.y = a[1] + c[1];
     rect.w = a[2];
     rect.h = a[3];
-    SetTexWindow(&twin, &rect);
-    AddPrimCopy_80040298(b, &twin, 3);
+    SetDrawArea(&area, &rect);
+    AddPrimCopy_80040298(b, &area, 3);
 }
 // Matched
-void AddClipTexWindowPrim_80033308(void* p)
+void AddClipDrawAreaPrim_80033308(void* p)
 {
-    DR_TWIN twin;
+    DR_AREA area;
     RECT rect;
     DRAWENV* e = drawEnv_8008D698;
     unsigned short* c = (unsigned short*)&e[bDoubleBuffer_8008D428].clip;
@@ -538,8 +538,8 @@ void AddClipTexWindowPrim_80033308(void* p)
     rect.y = c[1];
     rect.w = c[2];
     rect.h = c[3];
-    SetTexWindow(&twin, &rect);
-    AddPrimCopy_80040298(p, &twin, 3);
+    SetDrawArea(&area, &rect);
+    AddPrimCopy_80040298(p, &area, 3);
 }
 // Matched
 void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)

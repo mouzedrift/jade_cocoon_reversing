@@ -400,8 +400,8 @@ void InitFonts_8003DA70(void)
         f->field_2A = 0;
     }
 }
-extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
-extern void AddTexWindowPrim_8003326C(void* p, unsigned long* ot);
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
+extern void AddDrawAreaPrim_8003326C(void* p, unsigned long* ot);
 typedef struct TextWindow TextWindow;
 void sub_8003DCA4(int draw, TextWindow* w);
 // Matched
@@ -417,9 +417,9 @@ int sub_8003DB74(unsigned int* w, int a)
         w[7] = 0x0FFFFFFF;
     }
     w[8] = w[7];
-    AddClipTexWindowPrim_80033308(pOT_8008D454);
+    AddClipDrawAreaPrim_80033308(pOT_8008D454);
     sub_8003DCA4(a, (TextWindow*)w);
-    AddTexWindowPrim_8003326C(w + 1, pOT_8008D454);
+    AddDrawAreaPrim_8003326C(w + 1, pOT_8008D454);
     switch (w[10])
     {
     case 1:

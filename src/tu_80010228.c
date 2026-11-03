@@ -19,8 +19,8 @@
 
 extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
 extern unsigned long SpuWrite0(unsigned long size);
-extern void sub_8006EC08(void);
-extern void sub_8004EDB8(void);
+extern void McxStopCom(void);
+extern void MemCardEnd(void);
 // Matched
 void ShutdownSystems_80010228(void)
 {
@@ -30,9 +30,9 @@ void ShutdownSystems_80010228(void)
     SsQuit();
     ResetGraph(3);
     StopCallback();
-    sub_8006EC08();
+    McxStopCom();
     PadStopCom();
-    sub_8004EDB8();
+    MemCardEnd();
 }
 // Matched
 void InitEvents_8001028C(void)

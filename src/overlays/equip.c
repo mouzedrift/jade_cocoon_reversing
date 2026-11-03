@@ -156,7 +156,7 @@ extern char name_800826B0[];
 extern char name_800C599C[];
 extern char name_800C59A8[];
 extern void DrawButtonHelpBar_8002B004(void* a0, int a1, int a2);
-extern void AddClipTexWindowPrim_80033308(void* p);
+extern void AddClipDrawAreaPrim_80033308(void* p);
 extern void sub_800C0E04(void* a0, void* a1, int a2);
 extern void sub_800C5314(EquipCtx_equip* c);
 
@@ -283,7 +283,7 @@ void sub_800C4A94(EquipCtx_equip* c)
     {
         if ((c->mask_1E >> i) & 1)
         {
-            AddClipTexWindowPrim_80033308((char*)pOT_8008D454 + ofs);
+            AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
             switch (i)
             {
             case 0:
@@ -308,7 +308,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                     u.q.f = 0;
                     sub_800C5510(&u.q, &r, c->sel_18);
                 }
-                AddClipTexWindowPrim_80033308((char*)pOT_8008D454 + ofs);
+                AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
                 break;
             case 1:
                 if (!(c->flags_44 & 2))
@@ -337,7 +337,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                 {
                     sub_800C5440(sub_800AD288(c->a_0[c->sel_18 + 1] + c->b_C[c->sel_18 + 1], c->sel_18 + 1), c->sel_18, (int)name_800C599C);
                 }
-                AddClipTexWindowPrim_80033308((char*)pOT_8008D454 + ofs);
+                AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
                 break;
             }
             if (c->s_42 == 8)

@@ -2585,14 +2585,14 @@ void sub_800A74F0(GameNode_1* n)
 }
 
 extern void DrawIntroMovie_8001AF64(void* p);
-extern void sub_80066E38(int a);
+extern void SsUtAllKeyOff(int a);
 extern char name_800B0EA4[];
 extern char name_80096090[];
 int sub_800A7574(void)
 {
     DrawIntroMovie_8001AF64(name_800B0EA4);
     ListFreeAll_8003FEC8(name_80096090);
-    sub_80066E38(0);
+    SsUtAllKeyOff(0);
     if (unknownFlags_8008D678 & 0x40000000)
     {
         unknownFlags_8008D678 &= 0xBFFFFFFF;

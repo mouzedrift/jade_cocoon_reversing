@@ -95,8 +95,8 @@ typedef struct
 extern RECT* off_80082E90[];
 extern void sub_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
 extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
-extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
-extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 // Matched
 void sub_8002F8E4(int a0, struct_F8E4* p)
 {
@@ -115,13 +115,13 @@ void sub_8002F8E4(int a0, struct_F8E4* p)
         v = p->field_8;
     }
     InterpolateWindowRect_8004196C(buf, &off_80082E90[p->field_2 - 1][p->field_C], p->field_0, 8, 0);
-    AddTexWindowPrim_8003326C(buf, &pOT_8008D454[p->field_6]);
+    AddDrawAreaPrim_8003326C(buf, &pOT_8008D454[p->field_6]);
     s.field_8 = flag;
     s.field_0 = (int)buf;
     s.field_4 = v;
     s.field_A = p->field_6;
     DrawUiWindow_8002A384(&s);
-    AddClipTexWindowPrim_80033308(&pOT_8008D454[p->field_6]);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[p->field_6]);
 }
 // Matched
 short sub_8002FA0C(short a, short b)

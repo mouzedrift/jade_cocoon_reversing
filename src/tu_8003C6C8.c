@@ -85,7 +85,6 @@ int DATA_GetFileSize_8003C87C(int idx)
 {
     return Data001Files_80075AA0[idx].field_8_size;
 }
-extern int sub_8005384C(int a, int b, int c, int d, int e);
 // Matched
 int CdSeekStart_8003C8A0(int a0)
 {
@@ -93,7 +92,7 @@ int CdSeekStart_8003C8A0(int a0)
     {
         cdReadState_80086550[0] = 0;
         cdReadState_80086550[2] = a0;
-        cdReadState_80086550[4] = sub_8005384C(0xA0, a0, 0x15, 0, -1);
+        cdReadState_80086550[4] = DsPacket(0xA0, (DslLOC*)a0, 0x15, 0, -1);
         return 1;
     }
     return 0;
@@ -102,27 +101,27 @@ int CdSeekStart_8003C8A0(int a0)
 // Matched
 int CdSeekIsComplete_8003C900(void)
 {
-    if (sub_80053B9C(cdReadState_80086550[4], 0) == 2)
+    if (DsSync(cdReadState_80086550[4], 0) == 2)
     {
         cdReadState_80086550[0] = 1;
         return 1;
     }
     return 0;
 }
-extern int sub_80053EB0(void);
+extern int DsSystemStatus(void);
 
 // Matched
 int CdReadStart_8003C944(int a, int b, int c)
 {
     if (cdReadState_80086550[0] != 0)
     {
-        if (sub_80053EB0() == 1)
+        if (DsSystemStatus() == 1)
         {
             cdReadState_80086550[0] = 0;
             cdReadState_80086550[1] = b;
             cdReadState_80086550[2] = a;
             cdReadState_80086550[3] = c;
-            cdReadState_80086550[4] = sub_8005384C(0xA0, a, 6, (int)CdReadSyncCallback_8003C9FC, -1);
+            cdReadState_80086550[4] = DsPacket(0xA0, (DslLOC*)a, 6, (DslCB)CdReadSyncCallback_8003C9FC, -1);
             return 1;
         }
     }

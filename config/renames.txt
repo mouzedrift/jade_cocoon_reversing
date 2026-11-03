@@ -352,3 +352,11 @@ sub_8002AFA0 DrawTextBox_8002AFA0
 sub_8002AF10 DrawLargeTextBox_8002AF10
 sub_8002AF58 DrawSmallTextBox_8002AF58
 dword_8008B4A8 effectObjects_8008B4A8
+
+# --- draw area prims (they call SetDrawArea, not SetTexWindow as first thought) ---
+AddTexWindowPrim_8003326C AddDrawAreaPrim_8003326C
+AddClipTexWindowPrim_80033308 AddClipDrawAreaPrim_80033308
+
+# --- PSY-Q library symbols: the real names from the 4.4 objects (config/lib_objs.txt) ---
+sub_80071818 _mcxStartFastDsr
+sub_800718E0 _mcxStopFastDsr

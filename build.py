@@ -22,6 +22,76 @@ c_files = [tu + ".c" for tu in read_tus()]
 # the PSY-Q library part of the executable, as raw blobs (see scripts/split.py)
 lib_files = ["text", "lib_pad", "lib_rdata", "lib_data", "lib_sbss", "lib_bss"]
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts"))
+
+
+def read_lib_objs():
+    """config/lib_objs.txt: the PSY-Q modules in link order, ("obj", LIB, MODULE) or ("asm", addr, size)"""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "lib_objs.txt")
+    if not os.path.exists(path):
+        return None
+    out = []
+    for line in open(path):
+        f = line.split("#")[0].split()
+        if not f:
+            continue
+        if f[0] == "bsshead":
+            out.append(("bsshead",))
+            continue
+        out.append(("asm", int(f[1], 16), int(f[2], 16)) if f[0] == "asm" else ("obj", f[0], f[1]))
+        # an asm line may go on with "SECTION ADDR SIZE" for data of that piece (split.py puts it in the .s)
+    return out
+
+
+def read_lib_commons():
+    """config/lib_commons.txt: {(LIB, MODULE): [(name, size, addr)]} by address.
+    psylink aligns every .bss contribution to 8 bytes once there are common symbols, which the original link
+    didn't (the game's .bss is packed); defining the commons ourselves (behind their module, where psylink
+    would put them) keeps them out of the link."""
+    out = {}
+    for line in open(os.path.join(CURRENT_DIR, "config", "lib_commons.txt")):
+        f = line.split("#")[0].split()
+        if f:
+            out.setdefault((f[0], f[1]), []).append((f[2], int(f[3], 16), int(f[4], 16)))
+    return {k: sorted(v, key=lambda c: c[2]) for k, v in out.items()}
+
+
+def game_bss_end():
+    """end of the game's .bss: all of it is INCLUDE_DATA pieces (asm/d) behind the bss head"""
+    import layout
+    pos = layout.BSS_START
+    for c_file in c_files:
+        text = open(os.path.join(CURRENT_DIR, "src", c_file)).read()
+        for n in re.findall(r"INCLUDE_DATA\((\w+)\)", text):
+            s = open(os.path.join(CURRENT_DIR, "asm", "d", n + ".s")).read()
+            if "\t.section\t.bss" in s:
+                pos += sum(int(x) for x in re.findall(r"\t\.space\t(\d+)", s))
+    return pos
+
+
+def write_if_changed(path, text):
+    if not os.path.exists(path) or open(path, newline="").read() != text:
+        with open(path, "w", newline="") as f:
+            f.write(text)
+
+
+def extract_lib_objs(psyq_lib, out_dir, wanted):
+    """writes the wanted (LIB, MODULE) of the PSY-Q .LIB files to out_dir/LIB/MODULE.OBJ, returns their paths"""
+    from lib_match import lib_modules
+    paths = {}
+    for lib in sorted({l for l, _ in wanted}):
+        mods = {m: data for m, data in lib_modules(os.path.join(psyq_lib, lib))}
+        d = os.path.join(out_dir, lib.split(".")[0])
+        os.makedirs(d, exist_ok=True)
+        for l, m in wanted:
+            if l != lib:
+                continue
+            path = os.path.join(d, m + ".OBJ")
+            if not os.path.exists(path) or open(path, "rb").read() != mods[m]:
+                open(path, "wb").write(mods[m])
+            paths[(l, m)] = path
+    return paths
+
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(CURRENT_DIR, "build_psyq")
 
@@ -41,6 +111,13 @@ def read_cc43():
 
 
 cc43 = read_cc43()
+
+
+def in_lib(a):
+    """address in the PSY-Q part of the executable (code, .rdata, .data/.sdata, .sbss, .bss)"""
+    import layout as L
+    return (L.GAME_TEXT_END <= a < L.RDATA_START or L.RDATA_GAME_END <= a < L.DATA_START or
+            L.DATA_GAME_END <= a < L.BSS_START or L.BSS_GAME_END <= a < L.BSS_END)
 
 
 def generate_ninja():
@@ -103,9 +180,66 @@ def generate_ninja():
             ninja.build(f"{out_path}.obj", "assemble", f"{out_path}.o")
             linker_deps.append(f"{out_path}.obj")
 
-        for lib in lib_files:
-            out_path = os.path.join(BUILD_DIR, "lib_" + lib if not lib.startswith("lib_") else lib)
-            ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", lib + ".s"))
+        lib_objs = read_lib_objs()
+        lib_syms = set()
+        if lib_objs is None:
+            for lib in lib_files:
+                out_path = os.path.join(BUILD_DIR, "lib_" + lib if not lib.startswith("lib_") else lib)
+                ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", lib + ".s"))
+                linker_deps.append(f"{out_path}.obj")
+        else:
+            # the PSY-Q modules themselves, from the .LIB files; the code that is no 4.4 module stays assembly
+            from objlib.sections import parse_obj_sections
+            commons = read_lib_commons()
+            bss_pos = game_bss_end()
+            paths = extract_lib_objs(psyq_lib, os.path.join(BUILD_DIR, "libobj"),
+                                     [(o[1], o[2]) for o in lib_objs if o[0] == "obj"])
+            for o in lib_objs:
+                if o[0] == "bsshead":
+                    # linked in front of the game so that it starts the bss group
+                    out_path = os.path.join(BUILD_DIR, "lib_bss_head")
+                    ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "bss_head.s"))
+                    linker_deps.insert(0, f"{out_path}.obj")
+                elif o[0] == "asm":
+                    name = "text_%08X" % o[1]
+                    out_path = os.path.join(BUILD_DIR, "lib_" + name)
+                    ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", name + ".s"))
+                    linker_deps.append(f"{out_path}.obj")
+                    for l in open(os.path.join(CURRENT_DIR, "asm", "lib", name + ".s")):
+                        if l.startswith("\t.globl\t"):
+                            lib_syms.add(l.split()[1])
+                else:
+                    secs = parse_obj_sections(paths[(o[1], o[2])])
+                    if ".bss" in secs and secs[".bss"].size and bss_pos % 8:
+                        # the .bss of the PSY-Q modules is on 8 bytes (psylink does that itself only with commons)
+                        name = "libpad_%08X" % bss_pos
+                        src = os.path.join(BUILD_DIR, name + ".s")
+                        write_if_changed(src, "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % (8 - bss_pos % 8))
+                        ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
+                        linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
+                        bss_pos += 8 - bss_pos % 8
+                    linker_deps.append(paths[(o[1], o[2])])
+                    lib_syms.update(secs["__xdefs__"])
+                    bss_pos += secs[".bss"].size if ".bss" in secs else 0
+                    own = commons.get((o[1], o[2]))
+                    if own:
+                        # its common symbols, defined right behind it (see read_lib_commons)
+                        name = "libcom_%s_%s" % (o[1].split(".")[0], o[2])
+                        src = os.path.join(BUILD_DIR, name + ".s")
+                        lines = ["\t.section\t.bss"]
+                        for n, size, a in own:
+                            if not 0 <= a - bss_pos < 8:
+                                print("lib_commons: %s at %08X, but the .bss is at %08X there" % (n, a, bss_pos))
+                            if a > bss_pos:
+                                lines.append("\t.space\t%d" % (a - bss_pos))
+                            lines += ["\t.globl\t%s" % n, "%s:" % n, "\t.space\t%d" % size]
+                            bss_pos = a + size
+                        lines.append("\t.text")
+                        write_if_changed(src, "\r\n".join(lines) + "\r\n")
+                        ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
+                        linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
+            out_path = os.path.join(BUILD_DIR, "lib_pad")
+            ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "lib_pad.s"))
             linker_deps.append(f"{out_path}.obj")
 
         with open(link_path, "w") as f:
@@ -117,10 +251,14 @@ def generate_ninja():
                 f.write("\tsection\t%s,%s\n" % (sec, g))
             for o in linker_deps:
                 f.write('\tinclude "%s"\n' % o)
-            # symbols outside of the image (overlays, buffers behind the executable)
+            # symbols outside of the image (overlays, buffers behind the executable), and with the PSY-Q
+            # modules linked from the .LIB files the names of library code/data they don't define themselves
             for line in open(os.path.join(CURRENT_DIR, "symbol_addrs.txt")):
                 m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
-                if m and int(m.group(2), 16) >= 0x800A05A0:
+                if not m:
+                    continue
+                a = int(m.group(2), 16)
+                if a >= 0x800A05A0 or (lib_objs is not None and m.group(1) not in lib_syms and in_lib(a)):
                     f.write("%s\tequ\t$%s\n" % (m.group(1), m.group(2)))
             f.write("\tregs\tpc=start\n")
 

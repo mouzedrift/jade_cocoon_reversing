@@ -621,8 +621,8 @@ void sub_8001B714(void)
 extern short dword_8007C728[][2];
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
-extern DRAWENV* InitDrawEnv_8005A9C8(DRAWENV* env, int x, int y, int w, int h);
-extern DISPENV* InitDispEnv_8005AA88(DISPENV* env, int x, int y, int w, int h);
+extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
+extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 #if 0
 // Not matched: only the scheduling of the display base address at the top differs (one extra load-delay nop)
 void InitEnvironments_8001B7B4(void)
@@ -643,10 +643,10 @@ void InitEnvironments_8001B7B4(void)
         interlace = 0;
         unknownFlags_8008D678 &= ~0x20;
     }
-    InitDrawEnv_8005A9C8(&drawEnv_8008D698[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    InitDispEnv_8005AA88(&dispEnv_8008D750[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    InitDrawEnv_8005A9C8(&drawEnv_8008D698[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    InitDispEnv_8005AA88(&dispEnv_8008D750[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    SetDefDrawEnv(&drawEnv_8008D698[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    SetDefDispEnv(&dispEnv_8008D750[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    SetDefDrawEnv(&drawEnv_8008D698[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    SetDefDispEnv(&dispEnv_8008D750[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
     drawEnv_8008D698[1].isbg = 1;
     drawEnv_8008D698[0].isbg = 1;
     drawEnv_8008D698[1].dtd = 1;

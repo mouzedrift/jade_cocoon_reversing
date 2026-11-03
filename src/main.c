@@ -348,7 +348,7 @@ int main(void)
     CloseEvents_80010328();
     ExitCriticalSection();
     ShutdownSystems_80010228();
-    sub_8004DE00();
+    _96_remove();
     _96_init();
     LoadExec(name, 0x801FFFF0, 0);
     exit();

@@ -26,18 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_asm  # noqa: E402
 
 OLD_REV = "14e1ab6"             # last commit with the old src/{main,funcs,globals,sound}.c
-BASE = 0x80010000
-GAME_TEXT_END = 0x8004D924
-LIB_TEXT_END = 0x80071B0C       # padding up to the first game .rdata follows
-RDATA_START = 0x80071B18
-RDATA_GAME_END = 0x80074BE0     # PSY-Q .rdata follows (strings of libcd, libgpu, ...)
-DATA_START = 0x80075AA0         # Data001Files, first game .data
-DATA_GAME_END = 0x80087154      # PSY-Q .data / .sdata follows
-DATA_END = 0x8008B450           # .bss starts
-SBSS_START = 0x8008B450         # PSY-Q .sbss
-BSS_START = 0x8008B484          # = $gp, game .bss
-BSS_GAME_END = 0x8009AE60       # PSY-Q .bss follows
-BSS_END = 0x800A05A0
+from layout import *  # noqa: E402,F401,F403
 
 DATA_RE = re.compile(r"(dword|byte|word|stru|off|jpt|flt|dbl|asc|a[A-Z0-9_])")
 
@@ -321,19 +310,41 @@ def main(argv):
         out.append("\t.text")
         write(os.path.join(REPO, "asm", "lib", name + ".s"), "\n".join(out) + "\n")
 
-    # code of the library keeps its symbols so the game can call it by name
-    lib_syms = [(a, n) for a, n in syms if GAME_TEXT_END <= a < LIB_TEXT_END]
-    lib_text = ["\t.text"]
-    pos = GAME_TEXT_END
-    pts = lib_syms
-    if not pts or pts[0][0] != GAME_TEXT_END:
-        pts = [(GAME_TEXT_END, "libtext_%08X" % GAME_TEXT_END)] + pts
-    for (a, n), (b, _) in zip(pts, pts[1:] + [(LIB_TEXT_END, "")]):
-        lib_text.append("\t.globl\t%s" % n)
-        lib_text.append("%s:" % n)
-        for pc in range(a, b, 4):
-            lib_text.append("\t.word\t0x%08x" % struct.unpack("<I", exe[pc - BASE:pc - BASE + 4])[0])
-    write(os.path.join(REPO, "asm", "lib", "text.s"), "\n".join(lib_text) + "\n")
+    # code of the library keeps its symbols so the game can call it by name. With config/lib_objs.txt the
+    # PSY-Q modules are linked from the .LIB files and only the code that is no 4.4 module is assembly
+    # (asm/lib/text_ADDR.s), otherwise all of it is (asm/lib/text.s).
+    def lib_code(name, lo, hi, extra=()):
+        lib_text = []
+        # the code, then the other sections of that piece ("SECTION ADDR SIZE" in config/lib_objs.txt)
+        for sec, lo, hi in [(".text", lo, hi)] + list(extra):
+            pts = [(a, n) for a, n in syms if lo <= a < hi]
+            if not pts or pts[0][0] != lo:
+                pts = [(lo, "lib%s_%08X" % (sec[1:], lo))] + pts
+            lib_text.append("\t.text" if sec == ".text" else "\t.section\t%s" % sec)
+            for (a, n), (b, _) in zip(pts, pts[1:] + [(hi, "")]):
+                lib_text.append("\t.globl\t%s" % n)
+                lib_text.append("%s:" % n)
+                if sec in (".sbss", ".bss"):
+                    lib_text.append("\t.space\t%d" % (b - a))
+                    continue
+                for pc in range(a, b, 4):
+                    lib_text.append("\t.word\t0x%08x" % struct.unpack("<I", exe[pc - BASE:pc - BASE + 4])[0])
+        if len(lib_text) and extra:
+            lib_text.append("\t.text")
+        write(os.path.join(REPO, "asm", "lib", name + ".s"), "\n".join(lib_text) + "\n")
+
+    lib_code("text", GAME_TEXT_END, LIB_TEXT_END)
+    for line in open(os.path.join(REPO, "config", "lib_objs.txt")) if os.path.exists(
+            os.path.join(REPO, "config", "lib_objs.txt")) else ():
+        f = line.split("#")[0].split()
+        if f and f[0] == "bsshead":
+            lo = int(f[1], 16)
+            write(os.path.join(REPO, "asm", "lib", "bss_head.s"), "\t.section\t.bss\n\t.globl\tlibbss_%08X\nlibbss_%08X:\n"
+                  "\t.space\t%d\n\t.text\n" % (lo, lo, int(f[2], 16)))
+        if f and f[0] == "asm":
+            lo = int(f[1], 16)
+            extra = [(f[k], int(f[k + 1], 16), int(f[k + 1], 16) + int(f[k + 2], 16)) for k in range(3, len(f), 3)]
+            lib_code("text_%08X" % lo, lo, lo + int(f[2], 16), extra)
     blob("lib_pad", LIB_TEXT_END, RDATA_START, ".text")
     blob("lib_rdata", RDATA_GAME_END, DATA_START, ".rdata")
     blob("lib_data", DATA_GAME_END, DATA_END, ".data")

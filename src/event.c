@@ -291,7 +291,7 @@ void XaStop_800430B0(void)
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
-extern int sub_80053EB0(void);
+extern int DsSystemStatus(void);
 extern void XaWaitFilterTask_800431C4();
 void XaSetup_800433FC(int* o);
 // Matched
@@ -305,7 +305,7 @@ void XaIdleTask_800430E8(struct_obj_D* p, int* q0)
         q[0] &= ~1;
         xaRequestPending_80096118 = -1;
     }
-    if ((int)xaRequestPending_80096118 >= 0 && (r = sub_80053EB0()) == 1 && (s = sub_8003C0A4(r)) == r)
+    if ((int)xaRequestPending_80096118 >= 0 && (r = DsSystemStatus()) == 1 && (s = sub_8003C0A4(r)) == r)
     {
         XaSetup_800433FC(q);
         xaRequestPending_80096118 = -1;
@@ -318,7 +318,7 @@ void XaIdleTask_800430E8(struct_obj_D* p, int* q0)
 void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q)
 {
     char buf[8];
-    if (sub_80053B9C(q[1], buf) == 2)
+    if (DsSync(q[1], buf) == 2)
     {
         p->field_8 = XaStartReadTask_80043204;
     }
@@ -356,7 +356,7 @@ void XaMonitorTask_800432EC(struct_obj_D* p, int* q)
 {
     u_char result[8];
     DslLOC loc;
-    if (sub_80053B9C(q[1], result) == 2 && q[1])
+    if (DsSync(q[1], result) == 2 && q[1])
     {
         loc.minute = result[5];
         loc.second = result[6];
@@ -377,7 +377,7 @@ void XaMonitorTask_800432EC(struct_obj_D* p, int* q)
         p->field_8 = XaFadeOutTask_80043264;
     }
 }
-extern int sub_80053608(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
+extern int DsCommand(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
 // Matched
 void XaSetup_800433FC(int* o)
 {
@@ -390,7 +390,7 @@ void XaSetup_800433FC(int* o)
     param[1] = xaRequest_80096110.channel_2;
     do
     {
-        r = sub_80053608(0xD, param, 0, -1);
+        r = DsCommand(0xD, param, 0, -1);
         o[1] = r;
     } while (r == 0);
     xaStartPos_80096108 = DsPosToInt(&f.field_0_position);
@@ -398,7 +398,6 @@ void XaSetup_800433FC(int* o)
     xaEndPos_8009610C = xaStartPos_80096108 + xaRequest_80096110.length_6 * 32;
     xaTimer_8008D450 = xaRequest_80096110.length_6 * 1920 / 150;
 }
-extern int sub_8005384C(unsigned char a, void* b, unsigned char c, int d, int e);
 // Matched
 int XaStartRead_800434C4(int a)
 {
@@ -409,7 +408,7 @@ int XaStartRead_800434C4(int a)
     DsIntToPos(a, loc);
     do
     {
-        r = sub_8005384C(c, loc, d, 0, -1);
+        r = DsPacket(c, (DslLOC*)loc, d, 0, -1);
     } while (r == 0);
     return r;
 }

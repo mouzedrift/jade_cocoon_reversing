@@ -433,7 +433,7 @@ void sub_800BA788(BatTask_a* t)
     StopSoundSeqs_80030D68(dword_80091D40);
     StopSeqSlot_80031334(0);
     FreeSeqSlotSound_80030664();
-    sub_80066E38(0);
+    SsUtAllKeyOff(0);
     PlayMusic_800300E0(sub_800315E4(), 1);
     sub_80020898();
     if (dword_80091C74 >= 0)

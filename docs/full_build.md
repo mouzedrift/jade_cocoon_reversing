@@ -16,15 +16,15 @@ python scripts/check_match.py SLUS_008.54 --all   # every "// Matched" function 
 ## Result
 
 Everything the linker places is identical to the original: 126464 of 126464 words (code, `.rdata`,
-`.data`, `.bss`), all 2682 symbols at their original address, 305 functions compiled from C.
+`.data`, `.bss`), all 3516 symbols at their original address (library code and data linked from the
+PSY-Q 4.4 objects), 903 functions compiled from C.
 What is not reproduced: the executable header's size field and the 250 KB of trailing bss/garbage
 after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file hash differs.
 
 ## How it hangs together
 
-* `asm/f/<symbol>.s` code, `asm/d/<symbol>.s` data symbol (each owns the bytes up to the next symbol),
-  `asm/lib/*` the PSY-Q library part as raw blobs (library code is not decompiled; it is only there so
-  the data of the game lands at its real address). The libs are not linked from the `.lib` files.
+* `asm/f/<symbol>.s` code, `asm/d/<symbol>.s` data symbol (each owns the bytes up to the next symbol).
+* The PSY-Q libraries are linked from the real 4.4 objects (see below); library code is not decompiled.
 * TU bounds: `config/tus.txt`. Anchors (`__FILE__` strings) name main/common/effect/sound/cd/event; the
   others are inferred from `.rdata` references and named by address - rename them when you know better.
   Splitting a real TU into pieces does not change the output, only organisation.
@@ -33,6 +33,27 @@ after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file
   line to another TU file keeps the output identical as long as the per-section order is kept.
 * Symbols named after an address (`dword_8007CB78`) that are not in `symbol_addrs.txt` are picked up from
   the C sources and become aliases / split points.
+
+## PSY-Q libraries
+
+`config/lib_objs.txt` is the link order of the library part: `LIB MODULE` lines are modules of
+`libs/psyq4.4/LIB/*.LIB` (build.py extracts them to `build_psyq/libobj/`), `asm ADDR SIZE [SECTION ADDR
+SIZE ...]` lines are code that is no 4.4 module and stays assembly from the executable (`asm/lib/text_ADDR.s`):
+a piece of game code with its own `.rdata` that is linked behind the game TUs (0x8004D924), `strchr`/`strrchr`
+(the game's copy has less alignment padding) and `MCXDSR` (see bsshead). 312 modules, everything else is
+`asm`. `scripts/lib_match.py SLUS_008.54` finds the modules again (`--write` rewrites the file).
+
+Two things psylink 2.73 does differently from the linker the game was built with, worked around in build.py:
+
+* With common (`.comm`) symbols in the link it aligns every `.bss` contribution to 8 bytes, the game's
+  `.bss` is packed. The commons of the modules are therefore defined by build.py itself, behind their
+  module (`config/lib_commons.txt`, addresses read from the code that uses them by
+  `lib_match.py --commons`), and the `.bss` of each module is put on 8 bytes with a pad piece.
+* A group starts on 8 bytes, the `.bss` of the game starts at 0x8008B484 right behind the library `.data`.
+  The last 4 bytes of `MCXDSR`'s `.data` (zero) are a `.bss` piece in front of the game (`bsshead`).
+
+Library symbols get the names the objects export (no `sub_` names); names in `symbol_addrs.txt` for library
+addresses the objects don't export (statics, data inside a module) become `equ`s.
 
 ## Rules when decompiling
 

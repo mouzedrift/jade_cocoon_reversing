@@ -45,7 +45,7 @@ void sub_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     sub_8002E0D8(loc, ot);
 }
-extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002E004(unsigned short* p, int a1, int a2);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
@@ -72,7 +72,7 @@ void sub_8002DB48(unsigned char* m, int ot, int unused, unsigned short* pos, Min
     unsigned short y;
     unsigned int u;
 
-    AddClipTexWindowPrim_80033308(&pOT_8008D454[ot]);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
     sub_8002DA3C(pos, ot);
     x = pos[0];
     loc[0] = x + 0x1E;
@@ -284,7 +284,7 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
     }
     CalcEquippedStats_80033624(a3, p);
 }
-extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern int sub_800AD8E4(void);
 extern void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
@@ -303,7 +303,7 @@ void sub_8002E334(unsigned char* a0, short* a1)
 
     base[0] = 0x4E;
     base[1] = 0x2C;
-    AddClipTexWindowPrim_80033308(&pOT_8008D454[a1[0]]);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[a1[0]]);
     loc[0] = 0xE0;
     loc[1] = 0x31;
     DrawUiTiySprt_8002C06C(loc, 0x82, a1[0]);
@@ -337,7 +337,7 @@ void sub_8002E334(unsigned char* a0, short* a1)
     r[2] = 0x5B;
     r[3] = 0x17;
     DrawAnimatedWindow_8002BEC8((int)buf, (int)r, a1[1], a1[0], *(int*)(a1 + 2), *(int*)(a1 + 4));
-    AddClipTexWindowPrim_80033308(&pOT_8008D454[a1[0]]);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[a1[0]]);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 5;
     DrawUiTiySprt_8002C06C(loc2, 0x11, a1[0]);

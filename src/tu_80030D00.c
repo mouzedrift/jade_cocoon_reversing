@@ -71,7 +71,7 @@ void StopSoundSeqs_80030D68(SoundStruct* s)
 // Matched
 void FreeSoundVab_80030EA4(short* p)
 {
-    sub_8006AF08(p[0]);
+    SsVabClose(p[0]);
     if (*(int*)(p + 0xC))
     {
         free3_8003FC6C(*(void**)(p + 0xC));

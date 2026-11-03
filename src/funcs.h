@@ -18,7 +18,6 @@ typedef struct
 // Stubs
 extern void sub_8004D924(void);
 extern void ShutdownSystems_80010228(void);
-extern void sub_8004DE00(void); // probably a lib function
 extern void CloseEvents_80010328(void);
 extern int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
@@ -366,7 +365,6 @@ extern int CompareUInt_8003BA38(unsigned int a, unsigned int b);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void ProcessPads_8001BF50(void);
 extern void XaStartReadTask_80043204(struct_obj_D* p, int* q);
-extern int sub_80053B9C(int a0, void* a1);
 extern short* GetEquipmentData_8001D190();
 extern int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1);
 extern void sub_80026A8C(void* a0, int a1, int a2);
@@ -377,7 +375,6 @@ extern void InitSprtFromTim_800298AC(int a0, int a1, void* a2);
 extern struct_20* sub_800B3274(int a0);
 extern void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
 extern void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4);
-extern void sub_8006AF08(short a0);
 extern void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q);
 extern int GetEquipmentIcon_8001D2D4(void);
 extern void UpdateOverlayLoaderTask_80020CD8(int a0, int* p);
@@ -468,8 +465,6 @@ extern void sub_8001E574();
 
 extern void sub_800127B8(struct_obj_B* p);
 extern int sub_800A2B60(int a0);
-extern void sub_8006EC08(void);
-extern void sub_8004EDB8(void);
 extern int sub_80012204(int a, int b, int c, int d);
 extern double sub_80012358(int n, int x);
 extern int sub_8001247C(double x);
