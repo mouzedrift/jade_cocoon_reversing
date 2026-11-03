@@ -50,9 +50,9 @@ void InitGameDefaults_80040718(void)
 }
 #endif
 INCLUDE_ASM(InitGameDefaults_80040718);
-extern int dword_8008D430;
-extern int dword_8008D434;
-extern int dword_8008D440;
+extern int publicTiyPolyFT4s_8008D430;
+extern int publicTiySprts_8008D434;
+extern int publicTiyTPages_8008D440;
 extern int dword_8008D4D0;
 extern void sub_80021824(int* p, int a, int b, int c, int d);
 
@@ -61,7 +61,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74(&dword_8008D434, (int)&dword_8008D430, &dword_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74(&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
     sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
@@ -76,17 +76,17 @@ void ReloadPublicTiy_80040898(void)
     LoadTiy_80028E74(0, 0, 0, (int)pFile, 1);
     InitFonts_8003DA70();
 }
-extern int dword_8008D47C;
-extern int dword_8008B4EC;
+extern int copyrightSprts_8008D47C;
+extern int copyrightTPages_8008B4EC;
 
 
 // Matched
-void sub_800408F4(void)
+void DrawCopyrightScreen_800408F4(void)
 {
     if ((unsigned int)frameCount_8008D3FC < 0x190)
     {
         int i;
-        short* e = (short*)dword_8008D47C;
+        short* e = (short*)copyrightSprts_8008D47C;
         e[4] = 0;
         e[5] = 0;
         e[0xE] = 0x100;
@@ -101,33 +101,33 @@ void sub_800408F4(void)
         e[0x37] = 0x100;
         for (i = 0; i < 6; i++)
         {
-            AddPrimCopy_80040298(pOT_8008D3EC, (char*)dword_8008D47C + i * 0x14, 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, (char*)dword_8008B4EC + i * 8, 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, (char*)copyrightSprts_8008D47C + i * 0x14, 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, (char*)copyrightTPages_8008B4EC + i * 8, 2);
         }
     }
     else
     {
-        free3_8003FC6C((void*)dword_8008D47C);
-        free3_8003FC6C((void*)dword_8008B4EC);
+        free3_8003FC6C((void*)copyrightSprts_8008D47C);
+        free3_8003FC6C((void*)copyrightTPages_8008B4EC);
         ReloadPublicTiy_80040898();
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-extern void sub_800408F4(void);
+extern void DrawCopyrightScreen_800408F4(void);
 // Matched
-void sub_80040A10(int* a0)
+void InitCopyrightScreen_80040A10(int* a0)
 {
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
-    dword_8008D47C = 0;
-    dword_8008B4EC = 0;
-    LoadTiy_80028E74(&dword_8008D47C, 0, &dword_8008B4EC, (int)pFile, 1);
+    copyrightSprts_8008D47C = 0;
+    copyrightTPages_8008B4EC = 0;
+    LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, (int)pFile, 1);
     free3_8003FC6C(pFile);
-    a0[2] = (int)sub_800408F4;
+    a0[2] = (int)DrawCopyrightScreen_800408F4;
 }
 // Matched
 void ShowCopyright_80040A84(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -142,7 +142,7 @@ void PlayGenkiMovie_80040AC4(void)
 // Matched
 void PlayGenkiMovie_80040AEC(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -157,7 +157,7 @@ void PlayCraveMovie_80040B2C(void)
 // Matched
 void PlayCraveEntertainmentMovie_80040B54(void)
 {
-    sub_8001C290();
+    EndFade_8001C290();
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
@@ -171,7 +171,7 @@ extern char dword_80074AA8[];
 extern char dword_80074B10[];
 
 // Matched
-void sub_80040B94(void)
+void DrawDemoDisclaimer_80040B94(void)
 {
     if ((unsigned int)frameCount_8008D3FC < 0xC8)
     {

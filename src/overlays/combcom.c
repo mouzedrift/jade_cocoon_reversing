@@ -35,9 +35,9 @@ extern char dword_800CD3CC[];
 extern int dword_800A3A88;
 extern int sub_800A11BC(int);
 extern int sub_800A1AAC(int);
-extern int sub_8003DA54(void*);
-extern int sub_8001AE54(int);
-extern void sub_8001AEC0(int, int);
+extern int GetMenuCursorIndex_8003DA54(void*);
+extern int CountMagicBits_8001AE54(int);
+extern void FindNthMagicBit_8001AEC0(int, int);
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
@@ -85,9 +85,9 @@ EventEntry* sub_800CB7AC(int a, int b)
 
 void sub_800CB88C()
 {
-    if (sub_8001AE54(sub_800A11BC(byte_800CD839)) >= 5)
+    if (CountMagicBits_8001AE54(sub_800A11BC(byte_800CD839)) >= 5)
     {
-        word_800CD2A8 = sub_8001AE54(sub_800A11BC(byte_800CD839));
+        word_800CD2A8 = CountMagicBits_8001AE54(sub_800A11BC(byte_800CD839));
     }
     if (dword_800A3A88 & 2)
     {
@@ -119,7 +119,7 @@ short* sub_800CB974(int a)
         {
             if ((byte_800CD844 & 4) == 0)
             {
-                if ((short)sub_8003DA54(word_800CD28C) == 4)
+                if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 4)
                 {
                     dword_800CD2BC[2] = sub_800A1AAC(byte_800CD839) - 1;
                     return dword_800CD2BC;
@@ -178,7 +178,7 @@ void sub_800CBAD4(int a)
     }
 }
 
-extern int sub_8003E4C8(int);
+extern int MeasureTextWidth_8003E4C8(int);
 
 void sub_800CBB4C(int p)
 {
@@ -186,7 +186,7 @@ void sub_800CBB4C(int p)
     short b[2];
     int d;
     int w;
-    a.w = w = sub_8003E4C8(p) + 4;
+    a.w = w = MeasureTextWidth_8003E4C8(p) + 4;
     a.h = 0x12;
     if (byte_800CD839 == 1)
     {
@@ -200,7 +200,7 @@ void sub_800CBB4C(int p)
     b[1] = 0xC3;
     b[0] = a.x + 2;
     d = p;
-    sub_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
+    DrawTextBox_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
 }
 
 void sub_800CBBE0(int p)
@@ -211,18 +211,18 @@ void sub_800CBBE0(int p)
     d.f4 = 0;
     d.f8 = 0;
     d.fC = 0;
-    sub_8002AF10((int)&d, (int)v, 0xF);
+    DrawLargeTextBox_8002AF10((int)&d, (int)v, 0xF);
 }
 
 void sub_800CBC28()
 {
-    sub_80031BDC((short)sub_8003DA54(dword_800CD298));
+    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
 }
 
 void sub_800CBC58()
 {
     int r = sub_800A11BC(byte_800CD839);
-    sub_8001AEC0(r, (short)sub_8003DA54(dword_800CD2A4));
+    FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
 }
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBCA0);

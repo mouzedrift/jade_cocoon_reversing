@@ -65,7 +65,7 @@ INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
 
 // Matched
-void sub_8003EF74(int a0, int a1, int a2)
+void DrawNumber_8003EF74(int a0, int a1, int a2)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, a1);
@@ -265,7 +265,7 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
     return s;
 }
 // Matched
-void sub_8003F7C8(void* a0, unsigned char* a1)
+void EncodeName_8003F7C8(void* a0, unsigned char* a1)
 {
     unsigned short tmp[11];
     unsigned short* p;
@@ -323,7 +323,7 @@ void sub_8003F89C(unsigned short* p)
 INCLUDE_ASM(sub_8003F89C);
 
 // Matched
-void sub_8003F900(int idx, short val)
+void sub_8003F900(int idx, int val)
 {
     Font* p = &fonts_80095FB0[idx];
     p->field_2A = val;

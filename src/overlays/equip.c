@@ -51,8 +51,8 @@ extern short tab_800C59B0[];
 extern short tab_800C59B8[];
 extern short tab_800C59C0[];
 extern unsigned short padPressed_8009194C;
-extern int sub_8003D794(void* p, int a1);
-extern void sub_8002BE10();
+extern int UpdateMenuCursor_8003D794(void* p, int a1);
+extern void DrawMenuBackground_8002BE10();
 extern void sub_800AD3F0(int a0);
 extern int sub_800AD308(int a0);
 extern int sub_800AD288(int a0, int a1);
@@ -93,7 +93,7 @@ extern void sub_8002F7D0(void* p, int a1);
 extern void sub_8002E288(int a0, int a1, int a2, void* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800C5440(short a0, short a1, int a2);
 typedef struct Widget_equip
 {
@@ -136,9 +136,9 @@ extern char name_800C5838[];
 extern char name_8008D434[];
 extern char name_8008D440[];
 extern int fn_8001D2D4(int a0, int a1);
-extern int sub_8001D128(int a0, int a1);
+extern int GetEquipmentName_8001D128(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
-extern void sub_8002A5A4(void* p);
+extern void DrawMenuWindows_8002A5A4(void* p);
 extern void sub_8002C6DC(int a0, short a1, short a2);
 
 typedef struct
@@ -155,7 +155,7 @@ extern void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel);
 extern char name_800826B0[];
 extern char name_800C599C[];
 extern char name_800C59A8[];
-extern void sub_8002B004(void* a0, int a1, int a2);
+extern void DrawButtonHelpBar_8002B004(void* a0, int a1, int a2);
 extern void AddClipTexWindowPrim_80033308(void* p);
 extern void sub_800C0E04(void* a0, void* a1, int a2);
 extern void sub_800C5314(EquipCtx_equip* c);
@@ -191,7 +191,7 @@ void sub_800C47A8(void)
     c->s_46 = 0;
     c->mask_1E |= 3;
     c->field_20 |= 2;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C497C(c);
     c->s_3C = 0;
     c->s_3E = 0;
@@ -203,7 +203,7 @@ void sub_800C47A8(void)
 // Matched
 void sub_800C48B4(EquipTask_equip* t, EquipCtx_equip* c)
 {
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     if (unknownFlags_8008D678 >= 0)
     {
         sub_800AD3F0(1);
@@ -277,7 +277,7 @@ void sub_800C4A94(EquipCtx_equip* c)
     Quad16_equip q28;
     if (unknownFlags_8008D678 < 0)
     {
-        sub_8002B004(name_800826B0, 0, 0xe);
+        DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xe);
     }
     for (i = 0; i < 4; i++)
     {
@@ -331,7 +331,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                     u.s.a = uiColor_8008B590;
                     u.s.b = 0;
                     u.s.c = 1;
-                    sub_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+                    DrawWindow_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
                 }
                 else
                 {
@@ -355,7 +355,7 @@ INCLUDE_OVERLAY_ASM(equip, sub_800C4A94);
 void sub_800C4D50(EquipCtx_equip* c)
 {
     int v;
-    sub_8003D794(&c->r_34, 0);
+    UpdateMenuCursor_8003D794(&c->r_34, 0);
     if (c->s_42 >= 8)
     {
         if (IsConfirmPressedP1_8003D380(0))
@@ -457,9 +457,9 @@ extern char name_800C5D50[];
 void sub_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
 {
     char* p = name_800C5D50;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800C4A94(c);
-    sub_8002AF10((int)p, 0, 0xe);
+    DrawLargeTextBox_8002AF10((int)p, 0, 0xe);
     if (c->s_46 < 0x96)
     {
         c->s_46++;
@@ -523,7 +523,7 @@ void sub_800C5314(EquipCtx_equip* c)
     int h;
     int mode;
     h = sub_80014390(0);
-    sub_80033624(buf10, h);
+    CalcEquippedStats_80033624(buf10, h);
     r40.x = 0xc2;
     r40.y = 0x31;
     sub_8002F7D0(&r40, 0xe);
@@ -548,7 +548,7 @@ void sub_800C5314(EquipCtx_equip* c)
         u.s.a = uiColor_8008B590;
         u.s.b = 0;
         u.s.c = mode;
-        sub_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+        DrawWindow_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
     }
 }
 
@@ -584,7 +584,7 @@ void sub_800C5440(short a0, short a1, int a2)
     }
     if (e)
     {
-        sub_8002AF10(e, a2, 0xe);
+        DrawLargeTextBox_8002AF10(e, a2, 0xe);
     }
 }
 #endif
@@ -606,7 +606,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
         if (v != 0xff)
         {
             a = fn_8001D2D4(v, sel);
-            v = sub_8001D128(v, sel);
+            v = GetEquipmentName_8001D128(v, sel);
             flag = sub_800AD2C8(i + q->b, sel + 1);
         }
         else
@@ -645,7 +645,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
     prm.d = q->a;
     prm.e = tab_800C598C;
     prm.f = q->d;
-    sub_8002A5A4(&prm);
+    DrawMenuWindows_8002A5A4(&prm);
     sub_8003F900(2, 0);
     v = sub_800AD308(sel + 1) + 1;
     if (v < 3)

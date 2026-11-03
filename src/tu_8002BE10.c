@@ -18,9 +18,9 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-extern void sub_8002C06C(unsigned short* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
-void sub_8002BE10(void)
+void DrawMenuBackground_8002BE10(void)
 {
     unsigned short pos[2];
     short i;
@@ -35,7 +35,7 @@ void sub_8002BE10(void)
                 pos[0] -= 0x40;
             }
             pos[1] = i * 60;
-            sub_8002C06C(pos, 0x95, 0xF);
+            DrawUiTiySprt_8002C06C(pos, 0x95, 0xF);
         }
     }
 }
@@ -46,15 +46,15 @@ typedef struct
     short field_8;
     short field_A;
 } struct_BEC8;
-extern void sub_8004196C(int a, int b, int c, int d, int e);
+extern void InterpolateWindowRect_8004196C(int a, int b, int c, int d, int e);
 extern void AddTexWindowPrim_8003326C(int a, void* b);
 extern void AddClipTexWindowPrim_80033308(void* a);
-extern void sub_8002A384(struct_BEC8* p);
+extern void DrawUiWindow_8002A384(struct_BEC8* p);
 // Matched
-void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
+void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
 {
     struct_BEC8 s;
-    sub_8004196C(a0, a1, a2, 8, 0);
+    InterpolateWindowRect_8004196C(a0, a1, a2, 8, 0);
     AddTexWindowPrim_8003326C(a0, &pOT_8008D454[a3]);
     if (a4)
     {
@@ -67,15 +67,15 @@ void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
     s.field_0 = a0;
     s.field_4 = a5;
     s.field_A = a3;
-    sub_8002A384(&s);
+    DrawUiWindow_8002A384(&s);
     AddClipTexWindowPrim_80033308(&pOT_8008D454[a3]);
 }
 extern void QueueFileRequest_8003BC84(int* a);
 // Matched
-void sub_8002BF74(void)
+void LoadUiTiy_8002BF74(void)
 {
     int s[8];
-    dword_8008B4E8 = 0;
+    uiTiyLoaded_8008B4E8 = 0;
     s[0] = 0x29;
     s[1] = 0x3B;
     s[2] = 0;
@@ -83,27 +83,27 @@ void sub_8002BF74(void)
     s[4] = 0;
     s[5] = 0;
     s[6] = 0;
-    s[7] = (int)sub_8002BFCC;
+    s[7] = (int)OnUiTiyLoaded_8002BFCC;
     QueueFileRequest_8003BC84(s);
 }
 // Matched
-void sub_8002BFCC(int a0, int a1)
+void OnUiTiyLoaded_8002BFCC(int a0, int a1)
 {
-    LoadTiy_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
-    dword_8008B4E8 = 1;
+    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, a1, 1);
+    uiTiyLoaded_8008B4E8 = 1;
 }
 // Matched
 void FreeActiveOverlay_8002C014(void)
 {
-    if (loadedOverlayMaybe_8008D620)
+    if (uiTiySprts_8008D620)
     {
-        free3_8003FC6C((void*)loadedOverlayMaybe_8008D620);
-        loadedOverlayMaybe_8008D620 = 0;
+        free3_8003FC6C((void*)uiTiySprts_8008D620);
+        uiTiySprts_8008D620 = 0;
     }
-    if (dword_8008D3F4)
+    if (uiTiyTPages_8008D3F4)
     {
-        free3_8003FC6C((void*)dword_8008D3F4);
-        dword_8008D3F4 = 0;
+        free3_8003FC6C((void*)uiTiyTPages_8008D3F4);
+        uiTiyTPages_8008D3F4 = 0;
     }
 }
 typedef struct
@@ -118,15 +118,15 @@ typedef struct
     char pad_C[8];
 } OverlayColorEntry;
 // Matched
-void sub_8002C06C(unsigned short* pos, int idx, int ot)
+void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
-    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].x = pos[0];
-    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].y = pos[1];
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
+    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].x = pos[0];
+    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].y = pos[1];
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)uiTiySprts_8008D620)[idx], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)uiTiyTPages_8008D3F4 + idx * 8, 2);
 }
 // Matched
-void sub_8002C100(unsigned short* p, int n, int ot)
+void DrawLargeNumber_8002C100(unsigned short* p, int n, int ot)
 {
     short digits[7];
     unsigned short pos[2];
@@ -152,13 +152,13 @@ void sub_8002C100(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
 // Matched
-void sub_8002C290(unsigned short* p, int n, int ot)
+void DrawSmallNumber3_8002C290(unsigned short* p, int n, int ot)
 {
     short digits[3];
     unsigned short pos[2];
@@ -184,13 +184,13 @@ void sub_8002C290(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
 // Matched
-void sub_8002C414(unsigned short* p, int n, int ot)
+void DrawSmallNumber9_8002C414(unsigned short* p, int n, int ot)
 {
     short digits[9];
     unsigned short pos[2];
@@ -216,8 +216,8 @@ void sub_8002C414(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
@@ -230,16 +230,16 @@ int sub_8002C5A4(int n)
     } while (n);
     return 0;
 }
-extern unsigned char dword_800826F8[][4];
+extern unsigned char largeDigitColors_800826F8[][4];
 // Matched
-void sub_8002C5D0(int a0)
+void SetLargeDigitColor_8002C5D0(int a0)
 {
     short i = 0x84;
     do
     {
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].r = dword_800826F8[a0][0];
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].g = dword_800826F8[a0][1];
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].b = dword_800826F8[a0][2];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].r = largeDigitColors_800826F8[a0][0];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].g = largeDigitColors_800826F8[a0][1];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].b = largeDigitColors_800826F8[a0][2];
         i++;
     } while (i < 0x8e);
 }
@@ -261,7 +261,7 @@ int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
     {
         return 0;
     }
-    sub_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
+    DrawLargeTextBox_8002AF10(a2 + (unsigned char)p[0xdf] * 16, a1, a4);
     return 1;
 }
 typedef struct
@@ -298,12 +298,12 @@ typedef struct
     MenuItem_1C** field_10;
     int field_14;
 } struct_A5A4;
-extern void sub_8002A5A4(struct_A5A4* p);
-extern int sub_80033AFC(short* p);
+extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
+extern int CheckItemUsable_80033AFC(short* p);
 extern int sub_800AD308(int a0);
 extern int dword_800741EC;
-extern int dword_8008D434;
-extern int dword_8008D440;
+extern int publicTiySprts_8008D434;
+extern int publicTiyTPages_8008D440;
 extern int dword_80082820;
 extern int dword_80082824;
 extern MenuItem_1C* off_800829E8[];
@@ -328,8 +328,8 @@ void sub_8002C728(short* a0)
         idx = sub_800AD288(i + a0[1], 0);
         if (idx < 0x2B)
         {
-            v18 = sub_8001D2AC(idx);
-            v19 = sub_8001CE20(idx);
+            v18 = GetItemIcon_8001D2AC(idx);
+            v19 = GetItemName_8001CE20(idx);
             v17 = sub_800AD2C8(i + a0[1], 0);
         }
         else
@@ -340,8 +340,8 @@ void sub_8002C728(short* a0)
         }
         e = &off_800829E8[i];
         (*e)[0].f4 = v18;
-        (*e)[0].f8 = (int)&dword_8008D434;
-        (*e)[0].fC = (int)&dword_8008D440;
+        (*e)[0].f8 = (int)&publicTiySprts_8008D434;
+        (*e)[0].fC = (int)&publicTiyTPages_8008D440;
         (*e)[1].f4 = v19;
         (*e)[2].f4 = v17;
         (*e)[0].x = 0x53;
@@ -352,7 +352,7 @@ void sub_8002C728(short* a0)
         (*e)[2].x = 0xD8;
         (*e)[2].y = y;
         a0[0] = i;
-        if ((short)sub_80033AFC(a0))
+        if ((short)CheckItemUsable_80033AFC(a0))
         {
             (*e)[0].flags |= 2;
             (*e)[1].flags |= 2;
@@ -383,7 +383,7 @@ void sub_8002C728(short* a0)
     s.field_C = saved;
     s.field_10 = off_800829E8;
     s.field_14 = a0[3];
-    sub_8002A5A4(&s);
+    DrawMenuWindows_8002A5A4(&s);
     sub_8003F900(2, 0);
     n = sub_800AD308(0) + 1;
     if (n < 4)
@@ -399,9 +399,9 @@ void sub_8002C728(short* a0)
         sub_8002C6DC((int)&dword_80082824, 1, a0[3]);
     }
 }
-extern int sub_8001AEC0(void* p, int v);
-extern int sub_8001AE54(void* p);
-extern int sub_80033C08(short* p);
+extern int FindNthMagicBit_8001AEC0(void* p, int v);
+extern int CountMagicBits_8001AE54(void* p);
+extern int CheckMagicCastable_80033C08(short* p);
 extern MenuItem_1C* off_80082B54[];
 extern unsigned short word_800829FC[];
 extern unsigned short word_80082A00[];
@@ -438,11 +438,11 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
     }
     for (i = 0; i < 4; i++)
     {
-        idx = sub_8001AEC0(*(char**)(a0 + 6) + 0xF4, i + a0[1]);
+        idx = FindNthMagicBit_8001AEC0(*(char**)(a0 + 6) + 0xF4, i + a0[1]);
         if (idx < 0x1E)
         {
             v17 = sub_8001AF3C(idx);
-            v3 = sub_8001AC2C(idx);
+            v3 = GetMagicName_8001AC2C(idx);
         }
         else
         {
@@ -458,7 +458,7 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
         (*e)[1].x = pos[0] + 0x15;
         (*e)[1].y = pos[1] + y;
         a0[0] = i;
-        if ((short)sub_80033C08(a0))
+        if ((short)CheckMagicCastable_80033C08(a0))
         {
             (*e)[0].flags |= 2;
             (*e)[1].flags |= 2;
@@ -475,9 +475,9 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
     s.field_C = saved;
     s.field_10 = off_80082B54;
     s.field_14 = a0[3];
-    sub_8002A5A4(&s);
+    DrawMenuWindows_8002A5A4(&s);
     sub_8003F900(2, 0);
-    n = sub_8001AE54(*(char**)(a0 + 6) + 0xF4);
+    n = CountMagicBits_8001AE54(*(char**)(a0 + 6) + 0xF4);
     if (n < 4)
     {
         n = 4;

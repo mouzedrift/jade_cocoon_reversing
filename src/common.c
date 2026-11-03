@@ -154,8 +154,8 @@ int sub_80013228(int a0, int a1, int* p)
 {
     struct_u8x12 local = dword_80071F58;
     unsigned char* q = local.c;
-    int b1 = sub_80014358(p[2]);
-    int b2 = sub_80014358(p[3]);
+    int b1 = LowestSetBit_80014358(p[2]);
+    int b2 = LowestSetBit_80014358(p[3]);
     switch (p[0])
     {
     case 0:
@@ -171,7 +171,7 @@ int sub_80013228(int a0, int a1, int* p)
         q = (unsigned char*)sub_8001AD64(p[1]);
         break;
     case 4:
-        q = (unsigned char*)sub_8001CDF4(p[1]);
+        q = (unsigned char*)GetItemData_8001CDF4(p[1]);
         break;
     case 26:
         break;

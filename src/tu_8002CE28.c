@@ -45,11 +45,11 @@ typedef struct
     MenuItem_1C** field_10;
     int field_14;
 } struct_A5A4;
-extern void sub_8002A5A4(struct_A5A4* p);
+extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int sub_80033C98(short* p);
 int sub_8002D1A4(int a, short b);
-extern int off_800834E4[];
-extern int off_80083580[];
+extern int abilityNames_800834E4[];
+extern int abilityBonusNames_80083580[];
 extern MenuItem_1C* off_80082D98[];
 // Matched
 void sub_8002CE28(short* a0, unsigned short* a1)
@@ -79,18 +79,18 @@ void sub_8002CE28(short* a0, unsigned short* a1)
     }
     for (i = 0; i < 5; i++)
     {
-        v20 = off_800834E4[0];
-        v19 = off_80083580[0];
+        v20 = abilityNames_800834E4[0];
+        v19 = abilityBonusNames_80083580[0];
         m = *(unsigned char**)(a0 + 6) + i * 4;
         if (m[0xDE] & 1)
         {
             if (m[0xDF])
             {
-                v20 = off_800834E4[m[0xDF]];
+                v20 = abilityNames_800834E4[m[0xDF]];
             }
             if (m[0xE0])
             {
-                v19 = off_80083580[m[0xE0]];
+                v19 = abilityBonusNames_80083580[m[0xE0]];
             }
             e = &off_80082D98[i];
             (*e)[0].flags &= ~2;
@@ -121,8 +121,8 @@ void sub_8002CE28(short* a0, unsigned short* a1)
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;
         (*e2)[2].f4 = v19;
-        (*e2)[0].f8 = (int)&loadedOverlayMaybe_8008D620;
-        (*e2)[0].fC = (int)&dword_8008D3F4;
+        (*e2)[0].f8 = (int)&uiTiySprts_8008D620;
+        (*e2)[0].fC = (int)&uiTiyTPages_8008D3F4;
         (*e2)[0].x = pos[0];
         y = i * 22;
         (*e2)[0].y = pos[1] + y;
@@ -137,7 +137,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
     s.field_C = saved;
     s.field_10 = off_80082D98;
     s.field_14 = a0[3];
-    sub_8002A5A4(&s);
+    DrawMenuWindows_8002A5A4(&s);
     sub_8003F900(2, 0);
 }
 extern unsigned char dword_800827F0[];

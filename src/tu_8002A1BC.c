@@ -20,50 +20,50 @@
 INCLUDE_DATA(dword_8007415C);
 
 
-extern struct_obj_B dword_80091CC8; // really a SpuReverbAttr
-extern void sub_8002A218(void);
+extern struct_obj_B reverbAttr_80091CC8; // really a SpuReverbAttr
+extern void UpdateReverb_8002A218(void);
 // Matched
-void sub_8002A1BC(int* p)
+void InitReverbTask_8002A1BC(int* p)
 {
-    dword_80091CC8.flags_0 = 0;
-    sub_8002A280(&dword_80091CC8, 0);
-    sub_8002A2A0(&dword_80091CC8, 0x42, 0x42);
-    p[2] = (int)sub_8002A218;
+    reverbAttr_80091CC8.flags_0 = 0;
+    SetReverbMode_8002A280(&reverbAttr_80091CC8, 0);
+    SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
+    p[2] = (int)UpdateReverb_8002A218;
 }
 // Matched
-void sub_8002A218(void)
+void UpdateReverb_8002A218(void)
 {
-    if (dword_80091CC8.flags_0 != 0)
+    if (reverbAttr_80091CC8.flags_0 != 0)
     {
-        SpuSetReverbModeParam((SpuReverbAttr*)&dword_80091CC8);
-        if (dword_80091CC8.flags_0 & 1)
+        SpuSetReverbModeParam((SpuReverbAttr*)&reverbAttr_80091CC8);
+        if (reverbAttr_80091CC8.flags_0 & 1)
         {
-            sub_8002A2A0(&dword_80091CC8, 0x42, 0x42);
-            SpuSetReverbDepth((SpuReverbAttr*)&dword_80091CC8);
+            SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
+            SpuSetReverbDepth((SpuReverbAttr*)&reverbAttr_80091CC8);
         }
-        dword_80091CC8.flags_0 = 0;
+        reverbAttr_80091CC8.flags_0 = 0;
     }
 }
 // Matched
-void sub_8002A280(struct_obj_B* p, short a1)
+void SetReverbMode_8002A280(struct_obj_B* p, short a1)
 {
     p->flags_0 |= 1;
     p->field_4 = (short)(a1 | 0x100);
 }
 // Matched
-void sub_8002A2A0(struct_obj_B* p, short a1, short a2)
+void SetReverbDepth_8002A2A0(struct_obj_B* p, short a1, short a2)
 {
-    sub_8002A2E8(p, a1);
-    sub_8002A2FC(p, a2);
+    SetReverbDepthLeft_8002A2E8(p, a1);
+    SetReverbDepthRight_8002A2FC(p, a2);
 }
 // Matched
-void sub_8002A2E8(struct_obj_B* p, short a1)
+void SetReverbDepthLeft_8002A2E8(struct_obj_B* p, short a1)
 {
     p->flags_0 |= 2;
     p->field_8 = a1;
 }
 // Matched
-void sub_8002A2FC(struct_obj_B* p, short a1)
+void SetReverbDepthRight_8002A2FC(struct_obj_B* p, short a1)
 {
     p->flags_0 |= 4;
     p->field_A = a1;
@@ -77,7 +77,7 @@ typedef struct
 extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 #if 0
 // Not matched: loop pointer is strength-reduced differently
-void sub_8002A310(struct_entry8* e, int a1)
+void DrawTextList_8002A310(struct_entry8* e, int a1)
 {
     if (e)
     {
@@ -92,7 +92,7 @@ void sub_8002A310(struct_entry8* e, int a1)
     }
 }
 #endif
-INCLUDE_ASM(sub_8002A310);
+INCLUDE_ASM(DrawTextList_8002A310);
 typedef struct
 {
     int field_0;
@@ -107,9 +107,9 @@ typedef struct
     unsigned char field_2;
     unsigned char field_3;
 } struct_A384_buf;
-extern void sub_80042460(int a, struct_A384_buf* b, void* c, int d);
+extern void DrawWindow_80042460(int a, struct_A384_buf* b, void* c, int d);
 // Matched
-void sub_8002A384(struct_F1C8* p)
+void DrawUiWindow_8002A384(struct_F1C8* p)
 {
     struct_A384_buf buf;
     unsigned char c = p->field_8;
@@ -117,7 +117,7 @@ void sub_8002A384(struct_F1C8* p)
     buf.field_3 = 1;
     buf.field_2 = c;
     buf.color = col;
-    sub_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
+    DrawWindow_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
 }
 typedef struct
 {
@@ -131,7 +131,7 @@ short sub_8002A3E0(int a)
 {
     if (a < 30)
     {
-        return (short)dword_800827BC[((struct_12_c*)dword_8007C438)[a].field_8];
+        return (short)dword_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
     }
     return 36;
 }
@@ -185,12 +185,12 @@ typedef struct
     struct_A5A4_item** field_10;
     int field_14;
 } struct_A5A4;
-extern void sub_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddClipTexWindowPrim_80033308(void* a);
-extern void sub_8002A710(void* a, int b);
+extern void DrawMenuWindowContents_8002A710(void* a, int b);
 extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
 // Matched
-void sub_8002A5A4(struct_A5A4* p)
+void DrawMenuWindows_8002A5A4(struct_A5A4* p)
 {
     RECT r;
     int i;
@@ -199,9 +199,9 @@ void sub_8002A5A4(struct_A5A4* p)
     {
         for (j = 0; !(p->field_10[i][j].flags & 1); j++)
         {
-            sub_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
+            InterpolateWindowRect_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
             AddClipTexWindowPrim_80033308(pOT_8008D454 + p->field_14);
-            sub_8002A710(&p->field_10[i][j], p->field_14);
+            DrawMenuWindowContents_8002A710(&p->field_10[i][j], p->field_14);
             AddTexWindowPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
             sub_8002AAF0(p, i, j, &r);
         }
@@ -239,17 +239,17 @@ typedef struct
     unsigned short y;
 } Pt;
 extern void sub_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-extern void sub_800331C4(unsigned short* a, char* o, char* b, unsigned long* c, unsigned char* col);
-extern int sub_8003E6B0(int text);
-extern int sub_8003E4C8(int text);
+extern void AddSprtWithTPage_800331C4(unsigned short* a, char* o, char* b, unsigned long* c, unsigned char* col);
+extern int MeasureTextWidthFont1_8003E6B0(int text);
+extern int MeasureTextWidth_8003E4C8(int text);
 extern void sub_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
 extern void sub_8003F264(unsigned short* pos, int v, int ot);
 extern void sub_8003EFBC(unsigned short* pos, int v, int ot);
-extern void sub_8002C100(unsigned short* pos, int v, int ot);
+extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 #if 0
 // Not matched (2 words): in case 1 the original loads p->fC before p->text; needs "dword_8007415C 0x48" in config/c_rodata.txt (its jump table)
-void sub_8002A710(void* a, int ot)
+void DrawMenuWindowContents_8002A710(void* a, int ot)
 {
     MenuItemD* p = a;
     unsigned char col[8];
@@ -276,19 +276,19 @@ void sub_8002A710(void* a, int ot)
             sub_8002ACE8(p->flags, col);
             sub_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
             mode = p->text;
-            sub_800331C4(loc, (char*)&((Elem20*)*p->f8)[mode], (char*)&((Elem8*)*p->fC)[mode], pOT_8008D454 + ot, col);
+            AddSprtWithTPage_800331C4(loc, (char*)&((Elem20*)*p->f8)[mode], (char*)&((Elem8*)*p->fC)[mode], pOT_8008D454 + ot, col);
         }
         break;
     case 2:
         sub_8002AD08(p->flags);
-        sub_8002AC88(p->flags, r, sub_8003E6B0(p->text), loc);
+        sub_8002AC88(p->flags, r, MeasureTextWidthFont1_8003E6B0(p->text), loc);
         mode = 1;
         loc[1] += 2;
         DrawText_8003E91C(mode, p->text, loc, ot);
         break;
     case 3:
         sub_8002AD44(p->flags);
-        sub_8002AC88(p->flags, r, sub_8003E4C8(p->text), loc);
+        sub_8002AC88(p->flags, r, MeasureTextWidth_8003E4C8(p->text), loc);
         mode = 2;
         loc[1] += 2;
         DrawText_8003E91C(mode, p->text, loc, ot);
@@ -345,10 +345,10 @@ void sub_8002A710(void* a, int ot)
         sub_8002AD80(p->flags);
         loc[0] = r[0] + r[2] - 3;
         loc[1] = r[1] + 2;
-        sub_8002C100(loc, p->text, ot);
-        sub_8002C5D0(0);
+        DrawLargeNumber_8002C100(loc, p->text, ot);
+        SetLargeDigitColor_8002C5D0(0);
         break;
     }
 }
 #endif
-INCLUDE_ASM(sub_8002A710);
+INCLUDE_ASM(DrawMenuWindowContents_8002A710);

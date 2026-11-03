@@ -139,12 +139,12 @@ extern int dword_800A8480[2];
 extern int dword_800A85F0[2];
 extern int sub_800CB7AC(void*, int);
 extern int sub_800A0B3C(int);
-extern void sub_80031334(int);
+extern void StopSeqSlot_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
-extern void sub_80030664();
+extern void FreeSeqSlotSound_80030664();
 extern void SsSepSetDecrescendo(int, int, int, int);
 extern void sub_8001AA50(int);
-extern void sub_80031160(int, int);
+extern void PlaySeqSlot_80031160(int, int);
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4088);
 
@@ -189,15 +189,15 @@ void sub_800A4CFC()
     }
 }
 
-extern int sub_800303E8();
-extern int sub_80030688();
+extern int LoadSeqSlotSound_800303E8();
+extern int IsSoundTaskReady_80030688();
 extern int sub_800BC8E8();
 extern void sub_800BC878();
 extern void sub_80037720();
 extern void sub_80037748();
-extern void sub_8001C19C();
-extern void sub_8002BF74();
-extern int dword_8008B4E8;
+extern void SetFadeMode_8001C19C();
+extern void LoadUiTiy_8002BF74();
+extern int uiTiyLoaded_8008B4E8;
 extern int subInt_800378F8();
 extern void sub_800A7290();
 extern void sub_800A7420();
@@ -208,17 +208,17 @@ void sub_800A4D48(CombBtlTask* t, int a)
     switch (dword_800A84B8)
     {
     case 0:
-        if (!sub_800303E8())
+        if (!LoadSeqSlotSound_800303E8())
         {
             break;
         }
         dword_800A84B8 = 1;
     case 1:
-        if (!sub_80030688())
+        if (!IsSoundTaskReady_80030688())
         {
             break;
         }
-        sub_800315F4();
+        FreeBgmAndSfx_800315F4();
         dword_800A84B8 = 2;
     case 2:
         if (!PlayMusic_800300E0(0x99, 1))
@@ -243,13 +243,13 @@ void sub_800A4D48(CombBtlTask* t, int a)
         dword_800A84B8 = 9;
         break;
     case 6:
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         dword_800A84B8 = 7;
     case 7:
-        sub_8002BF74();
+        LoadUiTiy_8002BF74();
         dword_800A84B8 = 8;
     case 8:
-        if (!dword_8008B4E8)
+        if (!uiTiyLoaded_8008B4E8)
         {
             break;
         }
@@ -308,8 +308,8 @@ void sub_800A5000(CombBtlTask* t)
         SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
         word_80091CE0[2] = -1;
     }
-    sub_80031334(0);
-    sub_80031160(1, 1);
+    StopSeqSlot_80031334(0);
+    PlaySeqSlot_80031160(1, 1);
     dword_800A84D4 = 0x78;
     t->next_8 = sub_800A5080;
 }
@@ -319,9 +319,9 @@ void sub_800A5080(CombBtlTask* t)
     if (--dword_800A84D4 <= 0)
     {
         FadeOutSeqSlot_800313C8(0);
-        sub_80031334(0);
+        StopSeqSlot_80031334(0);
         StopSoundSeqs_80030D68(dword_80091D40);
-        sub_80030664();
+        FreeSeqSlotSound_80030664();
         t->next_8 = sub_800A50E4;
     }
 }
@@ -442,7 +442,7 @@ void sub_800A5544(CombBtlTask* t)
             }
         }
         sub_800A0A6C();
-        sub_80030664();
+        FreeSeqSlotSound_80030664();
         sub_80066E38(0);
         PlayMusic_800300E0(0x8E, 1);
         sub_80039FC0();
@@ -476,7 +476,7 @@ int sub_800A5B70(int a)
     r = sub_80014390((a + 8) & 0xFF);
     if (r)
     {
-        sub_80033624(buf, r);
+        CalcEquippedStats_80033624(buf, r);
         v = buf[4] + 0xA;
     }
     else
@@ -645,8 +645,8 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
 void sub_800A73E4()
 {
-    sub_800376A0((int*)dword_8008D4A0 + 4, dword_8008D4A0[9]);
-    StopAllEventEntries_80043B40((int*)dword_8008D4A0);
+    sub_800376A0((int*)cameraTask_8008D4A0 + 4, cameraTask_8008D4A0[9]);
+    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
 }
 
 void sub_800A7420()

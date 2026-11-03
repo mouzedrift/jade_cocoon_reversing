@@ -41,7 +41,105 @@ void sub_80039FC0(void)
 {
     sub_80020EE0(dword_80095468);
 }
-INCLUDE_ASM(sub_80039FE4);
+typedef struct
+{
+    short n;
+    short pad;
+    char* p;
+} PolyGroup;
+typedef struct
+{
+    PolyGroup g[8];
+    int n8;
+    char* p8;
+    int n9;
+    int field_4C;
+    char* p9;
+} PolyGroups;
+typedef struct
+{
+    char pad[4];
+    SVECTOR a;
+    SVECTOR b;
+} EdgeDelta;
+
+#define DIFF_GROUP(k, size, off, nv)                                              \
+    if (pb->g[k].n * nv)                                                          \
+    {                                                                             \
+        int j;                                                                    \
+        for (i = 0; i < pb->g[k].n; i++)                                          \
+        {                                                                         \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
+            SVECTOR* vb = (SVECTOR*)(pb->g[k].p + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
+            for (j = 0; j < nv; j++)                                              \
+            {                                                                     \
+                vo[j].vx = va[j].vx - vb[j].vx;                                   \
+                vo[j].vy = va[j].vy - vb[j].vy;                                   \
+                vo[j].vz = va[j].vz - vb[j].vz;                                   \
+            }                                                                     \
+        }                                                                         \
+    }
+
+// Matched
+void sub_80039FE4(int a0, int a1, int a2)
+{
+    PolyGroups* pa = (PolyGroups*)a0;
+    PolyGroups* pb = (PolyGroups*)a1;
+    PolyGroups* po = (PolyGroups*)a2;
+    int i;
+
+    DIFF_GROUP(0, 0x24, 4, 4);
+    DIFF_GROUP(1, 0x3C, 0xC, 6);
+    DIFF_GROUP(2, 0x30, 0x10, 4);
+    DIFF_GROUP(3, 0x48, 0x18, 6);
+    DIFF_GROUP(4, 0x2C, 4, 5);
+    DIFF_GROUP(5, 0x50, 0x10, 8);
+    DIFF_GROUP(6, 0x38, 0x10, 5);
+    DIFF_GROUP(7, 0x5C, 0x1C, 8);
+    if (pa->n8)
+    {
+        EdgeDelta* ea;
+        EdgeDelta* eb;
+        EdgeDelta* eo;
+        ea = (EdgeDelta*)pa->p8;
+        eb = (EdgeDelta*)pb->p8;
+        eo = (EdgeDelta*)po->p8;
+        for (i = 0; i < pa->n8; i++)
+        {
+            eo->a.vx = ea->a.vx - eb->a.vx;
+            eo->a.vy = ea->a.vy - eb->a.vy;
+            eo->a.vz = ea->a.vz - eb->a.vz;
+            eo->b.vx = ea->b.vx - eb->b.vx;
+            eo->b.vy = ea->b.vy - eb->b.vy;
+            eo->b.vz = ea->b.vz - eb->b.vz;
+            ea++;
+            eb++;
+            eo++;
+        }
+    }
+    if (pa->n9)
+    {
+        EdgeDelta* ea;
+        EdgeDelta* eb;
+        EdgeDelta* eo;
+        ea = (EdgeDelta*)pa->p9;
+        eb = (EdgeDelta*)pb->p9;
+        eo = (EdgeDelta*)po->p9;
+        for (i = 0; i < pa->n9; i++)
+        {
+            eo->a.vx = ea->a.vx - eb->a.vx;
+            eo->a.vy = ea->a.vy - eb->a.vy;
+            eo->a.vz = ea->a.vz - eb->a.vz;
+            eo->b.vx = ea->b.vx - eb->b.vx;
+            eo->b.vy = ea->b.vy - eb->b.vy;
+            eo->b.vz = ea->b.vz - eb->b.vz;
+            ea++;
+            eb++;
+            eo++;
+        }
+    }
+}
 INCLUDE_ASM(sub_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
@@ -66,7 +164,7 @@ int ratan2Degrees_8003B56C(int x, int y)
 }
 #if 0
 // Not matched (8 words): s1/s2 register assignment swapped
-int sub_8003B5D4(int* v, short* out)
+int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
     short b;
@@ -80,7 +178,7 @@ int sub_8003B5D4(int* v, short* out)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B5D4);
+INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched
 int Sign_8003B664(int x)
 {
@@ -123,7 +221,7 @@ void sub_8003B684(int* v)
 }
 #if 0
 // Not matched (33 words): register assignment of the abs() temporaries
-int sub_8003B740(int* a, int* b, unsigned int* c)
+int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
     int sum = -1;
     int ok = 0;
@@ -166,7 +264,7 @@ int sub_8003B740(int* a, int* b, unsigned int* c)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B740);
+INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
 int DistanceSquared3D_8003B80C(int* a, int* b)
 {
@@ -248,7 +346,7 @@ short WrapAngle_8003BA18(int v)
     return r;
 }
 // Matched
-int sub_8003BA38(unsigned int a, unsigned int b)
+int CompareUInt_8003BA38(unsigned int a, unsigned int b)
 {
     if (a > b)
     {
@@ -463,15 +561,14 @@ FileRequest* FindFileRequest_8003BED4(int key)
     }
     return 0;
 }
-#if 0
-// Not matched (6 words): load of list[0] scheduled before the field_10 store
+// Matched
 void RemoveFileRequest_8003BF18(FileRequest* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
-    int* list = &fileRequestQueue_80086540;
+    struct_head_8003BC84* list = (struct_head_8003BC84*)&fileRequestQueue_80086540;
     if (n->next == 0)
     {
-        list[2] = n->field_4;
+        list->first = (FileRequest*)n->field_4;
     }
     else
     {
@@ -479,18 +576,15 @@ void RemoveFileRequest_8003BF18(FileRequest* n)
     }
     if (n->field_4 == 0)
     {
-        list[3] = (int)n->next;
+        list->last = n->next;
     }
     else
     {
         ((FileRequest*)n->field_4)->next = n->next;
     }
     n->fileId_10 = 0x10000;
-    list[0]--;
+    list->count--;
 }
-
-#endif
-INCLUDE_ASM(RemoveFileRequest_8003BF18);
 // Matched
 int IsFileRequestQueueIdle_8003BF88(void)
 {
@@ -500,18 +594,11 @@ int IsFileRequestQueueIdle_8003BF88(void)
     }
     return 0;
 }
-// Not matched: no jr after the store, execution falls through into GetFileBuffer_8003BFC0
-#if 0
-void SetFileBufferInUse_8003BFB8(int arg0)
+// Matched
+void* SetFileBufferInUse_8003BFB8(int arg0)
 {
     fileBufferInUse_80086564 = arg0;
-}
-#endif
-INCLUDE_ASM(SetFileBufferInUse_8003BFB8);
-// Matched
-int GetFileBuffer_8003BFC0(void)
-{
-    return fileBuffer_8008656C;
+    return (void*)fileBuffer_8008656C;
 }
 // Matched
 int sub_8003BFD0(int key, int flag)
@@ -541,7 +628,7 @@ int sub_8003BFD0(int key, int flag)
     return 2;
 }
 // Matched
-int sub_8003C060(int key)
+int CancelFileRequest_8003C060(int key)
 {
     FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)
@@ -552,11 +639,11 @@ int sub_8003C060(int key)
     }
     return 2;
 }
-extern int** dword_8008B544;
+extern int** fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
-    int* p = dword_8008B544[0x24 / 4];
+    int* p = fileRequestTask_8008B544[0x24 / 4];
     if (dword_80086568 != a0)
     {
         if (a0 == 1)
@@ -575,7 +662,8 @@ int sub_8003C0A4(int a0)
     }
     return 0;
 }
-extern void ProcessFileRequests_8003C184(void);
+typedef struct FileTask FileTask;
+void ProcessFileRequests_8003C184(int* a0, FileTask* t);
 // Matched
 void InitFileRequestTask_8003C128(int* a0, int* a1)
 {
@@ -587,7 +675,212 @@ void InitFileRequestTask_8003C128(int* a0, int* a1)
     a1[10] = 0;
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
-INCLUDE_ASM(ProcessFileRequests_8003C184);
+struct FileTask
+{
+    FileRequest* cur;
+    Data001File file;
+    char pad_10[0xC];
+    int state;
+    int buf;
+    int sectors;
+    int retry;
+};
+extern FileRequest* dword_80086548;
+extern int CdSeekStart_8003C8A0(DslLOC* loc);
+extern int CdReadStart_8003C944(DslLOC* loc, int buf, int sectors);
+// Matched
+void ProcessFileRequests_8003C184(int* a0, FileTask* t)
+{
+    int loop;
+    FileRequest* r;
+
+    if (fileBufferInUse_80086564 != 0 || dword_80086568 != 0)
+    {
+        return;
+    }
+    loop = 1;
+    if (t->cur == 0)
+    {
+        t->state = 0;
+        t->cur = dword_80086548;
+    }
+    while (loop)
+    {
+        if (t->cur == 0)
+        {
+            break;
+        }
+        switch (t->state)
+        {
+        case 0:
+            t->cur->flags_C |= 0x100;
+            if (t->cur->flags_C & 4)
+            {
+                if (t->retry < 2)
+                {
+                    t->retry++;
+                    dword_8008B550 = 0x3D000;
+                    unknownFlags_8008D678 |= 0x200;
+                    loop = 0;
+                    break;
+                }
+            }
+            t->state = 1;
+        case 1:
+            DATA_GetFile_8003C7CC(&t->file, t->cur->fileId_10);
+            if (t->cur->flags_C & 0x40)
+            {
+                DsIntToPos(DsPosToInt(&t->file.field_0_position) + ((unsigned int)((int*)t->cur)[0x14 / 4] >> 11), &t->file.field_0_position);
+                t->sectors = (unsigned int)((int*)t->cur)[0x18 / 4] >> 11;
+            }
+            else
+            {
+                t->sectors = t->file.field_4_sectors;
+            }
+            if (t->cur->flags_C & 2)
+            {
+                t->cur->flags_C |= 1;
+            }
+            if (t->cur->flags_C & 1)
+            {
+                if (fileBuffer_8008656C != 0 && !((unsigned int)(t->sectors << 11) > 0x1ADB0))
+                {
+                    t->cur->flags_C |= 0x200;
+                    t->buf = fileBuffer_8008656C;
+                }
+                else
+                {
+                    t->buf = (int)malloc3_8003FC4C(t->sectors << 11);
+                }
+            }
+            else
+            {
+                t->buf = 0x801B9250;
+            }
+            if (t->cur->flags_C & 0x10)
+            {
+                t->state = 2;
+            }
+            else if (t->cur->flags_C & 8)
+            {
+                t->state = 5;
+            }
+            else
+            {
+                t->state = 7;
+            }
+            break;
+        case 2:
+            if (CdSeekStart_8003C8A0(&t->file.field_0_position))
+            {
+                t->state = 3;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 3:
+            if (CdSeekIsComplete_8003C900())
+            {
+                t->state = 10;
+            }
+            else
+            {
+                goto wait;
+            }
+            break;
+        case 5:
+            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            {
+                t->state = 6;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 6:
+            if (CdReadIsIdle_8003C9EC())
+            {
+                if (t->cur->flags_C & 2)
+                {
+                    MemCopy_800403E8((unsigned int*)t->cur->dest_1C, (unsigned int*)t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
+                }
+                t->state = 8;
+            }
+            else
+            {
+            wait:
+                loop = 0;
+                if (!(t->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
+                {
+                    DrawLoadingIcon_8003CD5C();
+                }
+            }
+            break;
+        case 7:
+            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            {
+                while (!CdReadIsIdle_8003C9EC())
+                {
+                }
+                t->state = 8;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 8:
+            if (t->cur->flags_C & 0x800)
+            {
+                t->cur->flags_C |= 0x1000;
+                t->cur->dest_1C = t->buf;
+                if (!(t->cur->flags_C & 0x2000))
+                {
+                    loop = 0;
+                    break;
+                }
+            }
+            t->cur->flags_C &= ~0x1000;
+            t->state = 9;
+            break;
+        case 9:
+            if (t->cur->callback_24)
+            {
+                ((void (*)(int, int))t->cur->callback_24)(t->cur->field_20, t->buf);
+            }
+            if (t->cur->flags_C & 1)
+            {
+                if (t->buf)
+                {
+                    if (!(t->cur->flags_C & 0x200))
+                    {
+                        free3_8003FC6C((void*)t->buf);
+                    }
+                    t->buf = 0;
+                }
+            }
+            t->state = 10;
+        case 10:
+            r = (FileRequest*)t->cur->field_4;
+            if ((r == 0 || !(r->flags_C & 4)) && t->retry != 0)
+            {
+                loop = 0;
+                t->retry--;
+                dword_8008B550 = 0;
+                unknownFlags_8008D678 &= ~0x200;
+                break;
+            }
+            r = t->cur;
+            t->cur = (FileRequest*)r->field_4;
+            RemoveFileRequest_8003BF18(r);
+            t->state = 0;
+            break;
+        }
+    }
+}
 // Matched
 void AssertFileRequestQueueEmpty_8003C684(void)
 {

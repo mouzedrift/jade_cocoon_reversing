@@ -1175,22 +1175,22 @@ typedef struct
     int field_38;
     int field_3C;
 } struct_B90;
-extern void sub_80024ADC(void* p, int a, int b);
-extern void sub_80025200(int a, int b, int c, int d, int e);
+extern void InitModelList_80024ADC(void* p, int a, int b);
+extern void LoadModel_80025200(int a, int b, int c, int d, int e);
 // Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
-int sub_80010B90(struct_B90* p)
+int ModelTaskLoad_80010B90(struct_B90* p)
 {
     int i;
-    sub_80024ADC(p, p->field_34, 1);
+    InitModelList_80024ADC(p, p->field_34, 1);
     for (i = 0; i < 3; i++)
     {
         if (i == p->field_30)
         {
-            sub_80025200(p->field_0, p->items[i], -1, 1, 0);
+            LoadModel_80025200(p->field_0, p->items[i], -1, 1, 0);
         }
         else
         {
-            sub_80025200(p->field_0, p->items[i], -1, 0, 0);
+            LoadModel_80025200(p->field_0, p->items[i], -1, 0, 0);
         }
     }
     p->field_38 = 4;
@@ -1198,7 +1198,7 @@ int sub_80010B90(struct_B90* p)
     return 1;
 }
 #endif
-INCLUDE_ASM(sub_80010B90);
+INCLUDE_ASM(ModelTaskLoad_80010B90);
 typedef struct
 {
     char pad_0[0x38];
@@ -1218,16 +1218,16 @@ typedef struct
     int field_38;
     int field_3C;
 } struct_C30;
-extern int sub_80024DC4(void* p);
+extern int AreFileRequestsDone_80024DC4(void* p);
 // Matched
-int sub_80010C30(struct_C30* p)
+int ModelTaskWaitLoad_80010C30(struct_C30* p)
 {
     int i;
     for (i = 0; i < p->list->count; i++)
     {
         if (p->list->items[i].field_38 != 0xFFFF)
         {
-            if (!sub_80024DC4(&p->list->items[i]))
+            if (!AreFileRequestsDone_80024DC4(&p->list->items[i]))
             {
                 return 0;
             }
@@ -1238,7 +1238,7 @@ int sub_80010C30(struct_C30* p)
 }
 #if 0
 // Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
-int sub_80010CDC(struct_state_obj* p)
+int sub_80010CDC(ModelTaskState* p)
 {
     if (p->field_2C >= 0)
     {
@@ -1257,7 +1257,7 @@ int sub_80010CDC(struct_state_obj* p)
 }
 #endif
 INCLUDE_ASM(sub_80010CDC);
-INCLUDE_ASM(sub_80010DB0);
+INCLUDE_ASM(ModelTaskDraw_80010DB0);
 typedef struct
 {
     int f0;
@@ -1351,7 +1351,7 @@ void sub_80011B8C(void)
 {
     eventDispatchHalt_8008B540 = 1;
     unknownFlags_8008D678 |= 0x8000000;
-    sub_8001C260();
+    BeginFade_8001C260();
 }
 // Matched
 void sub_80011BCC(void)
