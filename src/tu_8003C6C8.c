@@ -20,7 +20,7 @@ INCLUDE_DATA(dword_8007490C);
 INCLUDE_DATA(dword_8007493C);
 
 extern EventNode* dword_8008D488;
-extern int sub_8003BC84(int* p);
+extern int QueueFileRequest_8003BC84(int* p);
 extern EventEntry* sub_80043AF8(EventNode* n);
 extern void sub_8003C76C(int* a0, int* a1);
 
@@ -34,7 +34,7 @@ int sub_8003C6C8(int* a0)
         buf = (int*)e->buffer;
         e->cb_8 = (EventEntryFn)sub_8003C76C;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        buf[0] = sub_8003BC84(a0);
+        buf[0] = QueueFileRequest_8003BC84(a0);
         buf[1] = ((unsigned int)a0[0] >> 2) & 1;
         if (buf[1])
         {
@@ -51,7 +51,7 @@ void sub_8003C76C(int* a0, int* a1)
     {
         dword_8008B540 = 1;
     }
-    if (sub_8003BE30(a1[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(a1[0]) == 0)
     {
         a0[0] = (a0[0] & ~1) | 0x8000;
     }
@@ -87,24 +87,24 @@ int DATA_GetFileSize_8003C87C(int idx)
 }
 extern int sub_8005384C(int a, int b, int c, int d, int e);
 // Matched
-int sub_8003C8A0(int a0)
+int CdSeekStart_8003C8A0(int a0)
 {
-    if (dword_80086550[0] != 0)
+    if (cdReadState_80086550[0] != 0)
     {
-        dword_80086550[0] = 0;
-        dword_80086550[2] = a0;
-        dword_80086550[4] = sub_8005384C(0xA0, a0, 0x15, 0, -1);
+        cdReadState_80086550[0] = 0;
+        cdReadState_80086550[2] = a0;
+        cdReadState_80086550[4] = sub_8005384C(0xA0, a0, 0x15, 0, -1);
         return 1;
     }
     return 0;
 }
 
 // Matched
-int sub_8003C900(void)
+int CdSeekIsComplete_8003C900(void)
 {
-    if (sub_80053B9C(dword_80086550[4], 0) == 2)
+    if (sub_80053B9C(cdReadState_80086550[4], 0) == 2)
     {
-        dword_80086550[0] = 1;
+        cdReadState_80086550[0] = 1;
         return 1;
     }
     return 0;
@@ -112,46 +112,46 @@ int sub_8003C900(void)
 extern int sub_80053EB0(void);
 
 // Matched
-int sub_8003C944(int a, int b, int c)
+int CdReadStart_8003C944(int a, int b, int c)
 {
-    if (dword_80086550[0] != 0)
+    if (cdReadState_80086550[0] != 0)
     {
         if (sub_80053EB0() == 1)
         {
-            dword_80086550[0] = 0;
-            dword_80086550[1] = b;
-            dword_80086550[2] = a;
-            dword_80086550[3] = c;
-            dword_80086550[4] = sub_8005384C(0xA0, a, 6, (int)sub_8003C9FC, -1);
+            cdReadState_80086550[0] = 0;
+            cdReadState_80086550[1] = b;
+            cdReadState_80086550[2] = a;
+            cdReadState_80086550[3] = c;
+            cdReadState_80086550[4] = sub_8005384C(0xA0, a, 6, (int)CdReadSyncCallback_8003C9FC, -1);
             return 1;
         }
     }
     return 0;
 }
 // Matched
-int sub_8003C9EC(void)
+int CdReadIsIdle_8003C9EC(void)
 {
-    return dword_80086550[0];
+    return cdReadState_80086550[0];
 }
 // Matched
-void sub_8003C9FC(unsigned char mode)
+void CdReadSyncCallback_8003C9FC(unsigned char mode)
 {
     if (mode == 2)
     {
-        DsStartReadySystem(sub_8003CA30, -1);
+        DsStartReadySystem(CdReadReadyCallback_8003CA30, -1);
     }
 }
 // Matched
-void sub_8003CA30(unsigned char mode)
+void CdReadReadyCallback_8003CA30(unsigned char mode)
 {
     if (mode == 1)
     {
-        DsGetSector((void*)dword_80086550[1], 0x200);
-        dword_80086550[1] += 0x800;
-        dword_80086550[3]--;
-        if (dword_80086550[3] == 0)
+        DsGetSector((void*)cdReadState_80086550[1], 0x200);
+        cdReadState_80086550[1] += 0x800;
+        cdReadState_80086550[3]--;
+        if (cdReadState_80086550[3] == 0)
         {
-            dword_80086550[0] = mode;
+            cdReadState_80086550[0] = mode;
             DsEndReadySystem();
         }
     }
@@ -169,7 +169,7 @@ void* DATA_GetFileBuffer_8003CAA0(int idx)
     return pFileBuffer;
 }
 // Matched
-void sub_8003CAEC(int idx, unsigned int* pDest)
+void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest)
 {
     void* pBuffer = DATA_GetFileBuffer_8003CAA0(idx);
     sub_800403E8(pDest, pBuffer, DATA_GetFileSize_8003C87C(idx));

@@ -75,7 +75,7 @@ typedef struct CombatColorCombat
     unsigned char b;
     unsigned char cd;
 } CombatColorCombat;
-extern void sub_8003BC84(void* p);
+extern void QueueFileRequest_8003BC84(void* p);
 extern void sub_80025D7C();
 extern char* off_8007DC70;
 typedef struct CombatObjCombat
@@ -141,7 +141,7 @@ typedef struct CombatSpawnCombat
     int field_48;
     int field_4C;
 } CombatSpawnCombat;
-extern int sub_8003B56C(int a, int b);
+extern int ratan2Degrees_8003B56C(int a, int b);
 extern void sub_80029A10(void* a, void* b);
 extern int sub_800A0968(unsigned char* a);
 typedef struct CombatShortPair_combat
@@ -365,7 +365,7 @@ int sub_800A0968(unsigned char* a)
     int p5 = t[0xDC6 / 2] * a[2];
     int p6 = t[0xDC6 / 2] * a[1];
     int p7 = t[0x5C6 / 2] * a[1];
-    return sub_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
+    return ratan2Degrees_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
 }
 #endif
 
@@ -491,7 +491,7 @@ void sub_800A0D64(int i, int id)
     m.field_14 = &o;
     m.field_18 = 0x3C;
     m.field_1C = sub_80025D7C;
-    sub_8003BC84(&m);
+    QueueFileRequest_8003BC84(&m);
 }
 
 // Matched
@@ -766,7 +766,7 @@ void sub_800A14F0(CombatTaskCombat* t)
 // Matched
 void sub_800A1554(CombatTaskCombat* t, int x)
 {
-    if (sub_8003BE30(dword_800A4080) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800A4080) == 0)
     {
         sub_8001C19C(3, 0x20);
         t->next_8 = sub_800A15B4;

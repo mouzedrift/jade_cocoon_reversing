@@ -457,7 +457,7 @@ void sub_800A1444(void)
 // Matched
 void sub_800A1474(GameTask_1* t, GameQ_1* q)
 {
-    if (sub_8003BE30(*(int*)q) == 0)
+    if (GetFileRequestStatus_8003BE30(*(int*)q) == 0)
     {
         sub_8001AA50(1);
         *(int*)((char*)q + 8) = sub_800BA9E4();
@@ -469,7 +469,7 @@ void sub_800A1474(GameTask_1* t, GameQ_1* q)
 // Matched
 void sub_800A14E0(GameTask_1* t, GameQ_1* q)
 {
-    if (sub_8003BE30(*(int*)q) == 0)
+    if (GetFileRequestStatus_8003BE30(*(int*)q) == 0)
     {
         sub_800A6D30(0xa);
         *(int*)((char*)q + 8) = sub_800BBB94();
@@ -1076,7 +1076,7 @@ typedef struct GameA2EEC_1
 } GameA2EEC_1;
 extern int sub_800A4278();
 extern void sub_800A433C();
-extern unsigned int sub_8003B860(void* a, void* b);
+extern unsigned int DistanceSquaredXZ_8003B860(void* a, void* b);
 void sub_800A2EEC(int unused, GameA2EEC_1* p)
 {
     if (sub_800A4278(p) == 0)
@@ -1089,7 +1089,7 @@ void sub_800A2EEC(int unused, GameA2EEC_1* p)
             break;
         case 5:
             sub_800A459C((GameP4470_1*)p);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
                 p->fC = -1;
             break;
         }
@@ -1113,7 +1113,7 @@ void sub_800A31DC(int unused, GameS3A8C_1* p)
             break;
         case 1:
             sub_8001DDFC(p->f8, &dword_8008BD18, 0x155);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 sub_800A433C(p, 5, 2, 0, -1, c, 2);
                 sub_8001DB58(p->f8, 0x3000, 1);
@@ -1121,7 +1121,7 @@ void sub_800A31DC(int unused, GameS3A8C_1* p)
             break;
         case 5:
             sub_800A459C((GameP4470_1*)p);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
                 q->fC = -1;
             break;
         }
@@ -1142,7 +1142,7 @@ void sub_800A333C(int unused, GameS3A8C_1* p)
         case -1:
             sub_800A433C(p, 0xd, 0x17, 0, -2, 0, 2);
         case 0xd:
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 x = sub_800AB39C() & 0xFFFFFFF;
                 if (x == 1)
@@ -1151,7 +1151,7 @@ void sub_800A333C(int unused, GameS3A8C_1* p)
             break;
         case 0xf:
             sub_800A45F8(p);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
                 sub_800A433C(p, 1, 1, 0x32, -1, 1, 2);
             break;
         case 1:
@@ -1232,7 +1232,7 @@ void sub_800A3804(int unused, GameS3A8C_1* p)
             sub_800A433C(p, 1, 1, 0, c, 1, 2);
             break;
         case 1:
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
                 sub_800A433C(p, 0xa, 4, 0x28, -1, 1, 2);
             break;
         case 0xa:
@@ -1241,7 +1241,7 @@ void sub_800A3804(int unused, GameS3A8C_1* p)
             break;
         case 0xf:
             sub_800A45F8(p);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) > 0x1CFDE0)
                 p->fC = -1;
             break;
         }
@@ -1260,12 +1260,12 @@ void sub_800A3954(int unused, GameA2EEC_1* p)
             break;
         case 0xf:
             sub_800A45F8(p);
-            if (sub_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860((char*)p->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
                 sub_800A433C(p, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
             sub_8001DDFC(q->f8, &dword_8008BD18, 0x155);
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
                 q->fC = -1;
             break;
         }
@@ -1372,7 +1372,7 @@ void sub_800A3E88(int unused, GameA2EEC_1* p)
         case -1:
             sub_800A433C(p, 0x10, 0x12, 0, p->fC, 1, 2);
         case 0x10:
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0xDBB9F)
             {
                 sub_800A433C(q, 5, 2, 0, -1, 1, 2);
                 sub_8001DB58(q->f8, 0x2000, 1);
@@ -1380,7 +1380,7 @@ void sub_800A3E88(int unused, GameA2EEC_1* p)
             break;
         case 5:
             sub_800A44C0(q);
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0x155CC0)
                 q->fC = -1;
             break;
         }
@@ -1429,12 +1429,12 @@ void sub_800A4124(int unused, GameS3A8C_1* p)
             sub_800A433C(p, 2, 1, 0, p->fC, 1, 2);
         case 2:
             sub_8001D6EC(q->f8, 1);
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0x61A7F)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) <= 0x61A7F)
                 sub_800A433C(q, 0xf, 2, 0, -1, 1, 2);
             break;
         case 0xf:
             sub_800A45F8(q);
-            if (sub_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
+            if (DistanceSquaredXZ_8003B860((char*)q->f8 + 0x38, &dword_8008BD18) > 0xDBBA0)
                 sub_800A433C(q, 2, 1, 0, -1, 1, 2);
             break;
         }
@@ -2186,7 +2186,7 @@ void sub_800A6564(GameJ_1* p, int b)
 // Matched
 int sub_800A65BC(int a, int b)
 {
-    return (unsigned int)(sub_8003BA18((short)(a - b)) + 0x198) < 0x331;
+    return (unsigned int)(WrapAngle_8003BA18((short)(a - b)) + 0x198) < 0x331;
 }
 
 // Matched
@@ -2197,7 +2197,7 @@ int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
     if (u < (unsigned int)(r * r))
     {
         int d = GameFn_8003B9E0(b, a);
-        if ((unsigned int)(sub_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -2213,7 +2213,7 @@ int sub_800A66A4(int* p, int* x, unsigned short* q)
     if (v >= 0 && sub_800A6504(v))
     {
         int d = GameFn_8003B9E0(x, p + 1);
-        if ((unsigned int)(sub_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -2457,7 +2457,7 @@ typedef struct GameD_1
     int f18;
     void (*f1C)(int);
 } GameD_1;
-extern int sub_8003BE30();
+extern int GetFileRequestStatus_8003BE30();
 extern void sub_8001C224();
 extern void sub_8001C290();
 extern void sub_8001C260();
@@ -2467,7 +2467,7 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
     int c = 0;
     GameD_1* r = q;
     if (q->f8)
-        c = (unsigned)sub_8003BE30(q->f4) > 0;
+        c = (unsigned)GetFileRequestStatus_8003BE30(q->f4) > 0;
     if (c == 0)
     {
         if (q->f1C)
@@ -2615,7 +2615,7 @@ void sub_800A75F8(GameTask_1* t, void** q)
 // Matched
 void sub_800A7654(GameTask_1* t, int* q)
 {
-    if (sub_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
     {
         t->next_8 = sub_800B6BFC;
     }
@@ -2631,7 +2631,7 @@ void sub_800A7690(GameTask_1* t, void** q)
 // Matched
 void sub_800A76D8(GameTask_1* t, int* q)
 {
-    if (sub_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
     {
         t->next_8 = sub_800B66DC;
     }
@@ -3408,7 +3408,7 @@ int sub_800A9164(int* out)
             sub_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
-                y = sub_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
                 *out = y;
                 if ((unsigned)(y + 0x3FF) < 0x7FF)
                     return 1;
@@ -3433,7 +3433,7 @@ int sub_800A926C()
             sub_8003B740(G2LEV, v, &best);
             if (best <= 0x9C3F)
             {
-                y = sub_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
                 if (!((unsigned)(y + 0x400) < 0x801))
                     return 1;
             }

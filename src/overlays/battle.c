@@ -71,7 +71,7 @@ extern int sub_800A2550();
 extern int sub_800148D4();
 extern int sub_800C09D4();
 extern int sub_800B4318();
-extern void sub_8003B95C();
+extern void Midpoint3D_8003B95C();
 extern void sub_800BAE74();
 extern void sub_800BC850(unsigned int);
 
@@ -939,7 +939,7 @@ int sub_800BC28C()
 
 void sub_800BC324(BatTask_a* t, int a)
 {
-    if (sub_8003BE30(dword_800C9D7C) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800C9D7C) == 0)
     {
         t->next_8 = sub_800BDA28;
         t->next_8(t, a);
@@ -1057,7 +1057,7 @@ BatV12_a* sub_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n)
             do
             {
                 BatV12_a* p = &src[i];
-                sub_8003B95C(&tmp, p, &src[i + 1]);
+                Midpoint3D_8003B95C(&tmp, p, &src[i + 1]);
                 *p = tmp;
                 i++;
             } while (i < n);

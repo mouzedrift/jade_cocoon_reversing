@@ -137,7 +137,7 @@ void sub_800A1A24(int* c)
     v[2] = c[0x18C / 4] - c[0x180 / 4];
     yaw = ratan2_8003B548(v[0], v[2]);
     name_8008D4C8[1] = -yaw;
-    name_8008D4C8[0] = name_8003B548(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
     name_8008D4C8[2] = 0;
     name_8008D460[0] = 0x40;
     name_8008D460[1] = 0x40;

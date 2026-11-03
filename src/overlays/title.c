@@ -54,7 +54,7 @@ extern void sub_800A09C0();
 void sub_800A093C(TitleTask* t, TitleCtxA* c)
 {
     void* buf;
-    if (sub_8003BC34() == 0)
+    if (GetFileRequestCount_8003BC34() == 0)
     {
         c->field_70 = 0;
         c->field_74 = 0;
@@ -109,7 +109,7 @@ extern void sub_800A0AE8();
 // Matched
 void sub_800A0A70(TitleTask* t)
 {
-    if (sub_8003BE30(dword_800A2808) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800A2808) == 0)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {

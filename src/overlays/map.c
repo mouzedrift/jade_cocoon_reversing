@@ -121,7 +121,7 @@ extern void sub_800B8448();
 extern short word_800B932C;
 extern void sub_8001C19C(int, int);
 extern void sub_8001CD04(int);
-extern void sub_8003BC84(void*);
+extern void QueueFileRequest_8003BC84(void*);
 extern void sub_800B6CB4();
 extern void sub_800B6C7C();
 extern void sub_800B6DE0(MapTask*, int);
@@ -193,7 +193,7 @@ void sub_800B6D90(int* p, int a1)
     p[5] = 0;
     p[6] = 0;
     p[7] = (int)sub_800B6DE0;
-    sub_8003BC84(p);
+    QueueFileRequest_8003BC84(p);
 }
 
 // Matched

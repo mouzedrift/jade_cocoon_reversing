@@ -17,7 +17,7 @@
 #include "data_decls.h"
 
 extern int dword_80086568;
-extern void sub_8003BF18(struct_node_C* n);
+extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
 extern void sub_80070E30(int a, int* b);
 extern int sub_8006F0E0(int a, int* b, int* c);
@@ -49,7 +49,7 @@ short ratan2_8003B548(long y, long x)
     return ratan2(y, x);
 }
 // Matched
-int sub_8003B56C(int x, int y)
+int ratan2Degrees_8003B56C(int x, int y)
 {
     int r = ratan2(y, x);
     int d;
@@ -68,12 +68,12 @@ int sub_8003B56C(int x, int y)
 // Not matched (8 words): s1/s2 register assignment swapped
 int sub_8003B5D4(int* v, short* out)
 {
-    int len = sub_8003B918(((int (*)(int*))sub_8003B8DC)(v));
+    int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
     short b;
     int a;
     b = ratan2(v[0], v[2]);
     out[1] = b;
-    a = (short)ratan2(v[1], sub_8003B918(sub_8003B8BC(v[0], v[2])));
+    a = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
     out[0] = -a;
     out[2] = 0;
     return len;
@@ -82,7 +82,7 @@ int sub_8003B5D4(int* v, short* out)
 #endif
 INCLUDE_ASM(sub_8003B5D4);
 // Matched
-int sub_8003B664(int x)
+int Sign_8003B664(int x)
 {
     if (x > 0)
     {
@@ -168,7 +168,7 @@ int sub_8003B740(int* a, int* b, unsigned int* c)
 #endif
 INCLUDE_ASM(sub_8003B740);
 // Matched
-int sub_8003B80C(int* a, int* b)
+int DistanceSquared3D_8003B80C(int* a, int* b)
 {
     int dx = a[0] - b[0];
     int dy = a[1] - b[1];
@@ -176,33 +176,33 @@ int sub_8003B80C(int* a, int* b)
     return dx * dx + dy * dy + dz * dz;
 }
 // Matched
-int sub_8003B860(int* a, int* b)
+int DistanceSquaredXZ_8003B860(int* a, int* b)
 {
     int dx = a[0] - b[0];
     int dz = a[2] - b[2];
     return dx * dx + dz * dz;
 }
 // Matched
-int sub_8003B898(int x0, int y0, int x1, int y1)
+int DistanceSquared2D_8003B898(int x0, int y0, int x1, int y1)
 {
     int dx = x1 - x0;
     int dy = y1 - y0;
     return dx * dx + dy * dy;
 }
 // Matched
-int sub_8003B8BC(int x, int y)
+int LengthSquared2D_8003B8BC(int x, int y)
 {
     return x * x + y * y;
 }
 // Matched
-int sub_8003B8DC(int* p, int a1)
+int LengthSquared3D_8003B8DC(int* p, int a1)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Matched
-unsigned int sub_8003B918(unsigned int n)
+unsigned int ISqrt_8003B918(unsigned int n)
 {
     int x;
     int y;
@@ -223,7 +223,7 @@ unsigned int sub_8003B918(unsigned int n)
     return 0;
 }
 // Matched
-Vec3i* sub_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
+Vec3i* Midpoint3D_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
 {
     Vec3i t;
     t.x = (a->x + b->x) / 2;
@@ -238,7 +238,7 @@ short ratan2Difference_8003B9E0(int* a, int* b)
     return ratan2(b[0] - a[0], b[2] - a[2]);
 }
 // Matched
-short sub_8003BA18(int v)
+short WrapAngle_8003BA18(int v)
 {
     short r = v & 0xFFF;
     if (r >= 0x800)
@@ -279,7 +279,7 @@ int GetCapturedMinionsFromBitfield_8003BA58(int arg0)
     return result;
 }
 // Matched
-void sub_8003BA90(void)
+void DelayLoop_8003BA90(void)
 {
     float f = 0;
     while (f < 621.0f)
@@ -321,71 +321,71 @@ long cdRomEventErrorHandler_8003BBAC(void)
     exit(1);
 }
 // Matched
-void sub_8003BBE4(void)
+void InitFileRequestQueue_8003BBE4(void)
 {
     int v = 0x10000;
     int i;
-    dword_80086540 = 0;
-    ((int*)&dword_80086540)[1] = 0;
-    ((int*)&dword_80086540)[2] = 0;
-    ((int*)&dword_80086540)[3] = 0;
+    fileRequestQueue_80086540 = 0;
+    ((int*)&fileRequestQueue_80086540)[1] = 0;
+    ((int*)&fileRequestQueue_80086540)[2] = 0;
+    ((int*)&fileRequestQueue_80086540)[3] = 0;
     for (i = 0x13; i >= 0; i--)
     {
-        dword_80095C90[i].field_10 = v;
+        fileRequests_80095C90[i].fileId_10 = v;
     }
     dword_80086564 = 0;
     dword_80086568 = 0;
 }
 // Matched
-int sub_8003BC34(void)
+int GetFileRequestCount_8003BC34(void)
 {
-    return dword_80086540;
+    return fileRequestQueue_80086540;
 }
 // Matched
-int sub_8003BC44(void)
+int FindFreeFileRequest_8003BC44(void)
 {
     int i;
     for (i = 0; i < 0x14; i++)
     {
-        if (dword_80095C90[i].field_10 == 0x10000)
+        if (fileRequests_80095C90[i].fileId_10 == 0x10000)
         {
             return i;
         }
     }
     return -1;
 }
-extern unsigned char dword_800954C0[][0x64];
+extern unsigned char fileRequestParams_800954C0[][0x64];
 typedef struct
 {
     int count;
     int nextkey;
-    struct_node_C* first;
-    struct_node_C* last;
+    FileRequest* first;
+    FileRequest* last;
 } struct_head_8003BC84;
 // Matched
-int sub_8003BC84(int* req)
+int QueueFileRequest_8003BC84(int* req)
 {
-    struct_head_8003BC84* head = (struct_head_8003BC84*)&dword_80086540;
-    int i = sub_8003BC44();
-    struct_node_C* n = (struct_node_C*)&dword_80095C90[i];
-    struct_node_C* t;
-    struct_node_C* nx;
+    struct_head_8003BC84* head = (struct_head_8003BC84*)&fileRequestQueue_80086540;
+    int i = FindFreeFileRequest_8003BC44();
+    FileRequest* n = (FileRequest*)&fileRequests_80095C90[i];
+    FileRequest* t;
+    FileRequest* nx;
     n->next = 0;
     n->field_4 = 0;
     n->key = head->nextkey;
-    n->field_C = req[0];
-    n->field_10 = req[1];
+    n->flags_C = req[0];
+    n->fileId_10 = req[1];
     ((int*)n)[0x14 / 4] = req[2];
     ((int*)n)[0x18 / 4] = req[3];
-    n->field_1C = req[4];
-    n->field_24 = req[7];
+    n->dest_1C = req[4];
+    n->callback_24 = req[7];
     if (req[6] == 0 || req[5] == 0)
     {
         n->field_20 = 0;
     }
     else
     {
-        n->field_20 = (int)dword_800954C0[i];
+        n->field_20 = (int)fileRequestParams_800954C0[i];
         sub_800403E8((unsigned int*)n->field_20, (unsigned int*)req[5], req[6]);
     }
     if (head->count == 0)
@@ -395,13 +395,13 @@ int sub_8003BC84(int* req)
     else
     {
         t = head->last;
-        if (t->field_C & 0x10)
+        if (t->flags_C & 0x10)
         {
             do
             {
                 t = t->next;
                 nx = t->next;
-            } while (nx->field_C & 0x10);
+            } while (nx->flags_C & 0x10);
             n->next = nx;
             n->field_4 = (int)t;
             t->next = n;
@@ -422,14 +422,14 @@ void nullsub_6(void)
 {
 }
 // Matched
-int sub_8003BE30(int arg0)
+int GetFileRequestStatus_8003BE30(int arg0)
 {
-    struct_node_C* n = sub_8003BED4(arg0);
+    FileRequest* n = FindFileRequest_8003BED4(arg0);
     if (n)
     {
-        if (n->field_C & 0x100)
+        if (n->flags_C & 0x100)
         {
-            if (n->field_C & 0x1000)
+            if (n->flags_C & 0x1000)
             {
                 return 3;
             }
@@ -440,20 +440,20 @@ int sub_8003BE30(int arg0)
     return 0;
 }
 // Matched
-int sub_8003BE88(int key)
+int CancelFileRequest_8003BE88(int key)
 {
-    struct_node_C* n = sub_8003BED4(key);
-    if (n && !(n->field_C & 0x100))
+    FileRequest* n = FindFileRequest_8003BED4(key);
+    if (n && !(n->flags_C & 0x100))
     {
-        sub_8003BF18(n);
+        RemoveFileRequest_8003BF18(n);
         return 1;
     }
     return 0;
 }
 // Matched
-struct_node_C* sub_8003BED4(int key)
+FileRequest* FindFileRequest_8003BED4(int key)
 {
-    struct_node_C* p;
+    FileRequest* p;
     for (p = dword_8008654C; p; p = p->next)
     {
         if (key == p->key)
@@ -465,10 +465,10 @@ struct_node_C* sub_8003BED4(int key)
 }
 #if 0
 // Not matched (6 words): load of list[0] scheduled before the field_10 store
-void sub_8003BF18(struct_node_C* n)
+void RemoveFileRequest_8003BF18(FileRequest* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
-    int* list = &dword_80086540;
+    int* list = &fileRequestQueue_80086540;
     if (n->next == 0)
     {
         list[2] = n->field_4;
@@ -483,18 +483,18 @@ void sub_8003BF18(struct_node_C* n)
     }
     else
     {
-        ((struct_node_C*)n->field_4)->next = n->next;
+        ((FileRequest*)n->field_4)->next = n->next;
     }
-    n->field_10 = 0x10000;
+    n->fileId_10 = 0x10000;
     list[0]--;
 }
 
 #endif
-INCLUDE_ASM(sub_8003BF18);
+INCLUDE_ASM(RemoveFileRequest_8003BF18);
 // Matched
-int sub_8003BF88(void)
+int IsFileRequestQueueIdle_8003BF88(void)
 {
-    if (dword_80086540 == 0 && dword_80086564 == 0)
+    if (fileRequestQueue_80086540 == 0 && dword_80086564 == 0)
     {
         return 1;
     }
@@ -516,25 +516,25 @@ int sub_8003BFC0(void)
 // Matched
 int sub_8003BFD0(int key, int flag)
 {
-    struct_node_C* n = sub_8003BED4(key);
+    FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)
     {
-        unsigned int f = n->field_C;
+        unsigned int f = n->flags_C;
         if (f & 0x1000)
         {
-            void (*cb)(int, int) = (void (*)(int, int))n->field_24;
-            n->field_C = f | 0x2000;
+            void (*cb)(int, int) = (void (*)(int, int))n->callback_24;
+            n->flags_C = f | 0x2000;
             if (cb)
             {
-                cb(n->field_20, n->field_1C);
-                n->field_24 = 0;
+                cb(n->field_20, n->dest_1C);
+                n->callback_24 = 0;
                 return 0;
             }
             return 2;
         }
         if (flag)
         {
-            n->field_C = f | 0x2000;
+            n->flags_C = f | 0x2000;
             return 1;
         }
     }
@@ -543,11 +543,11 @@ int sub_8003BFD0(int key, int flag)
 // Matched
 int sub_8003C060(int key)
 {
-    struct_node_C* n = sub_8003BED4(key);
+    FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)
     {
-        n->field_24 = 0;
-        n->field_C |= 0x2000;
+        n->callback_24 = 0;
+        n->flags_C |= 0x2000;
         return 0;
     }
     return 2;
@@ -575,23 +575,23 @@ int sub_8003C0A4(int a0)
     }
     return 0;
 }
-extern void sub_8003C184(void);
+extern void ProcessFileRequests_8003C184(void);
 // Matched
-void sub_8003C128(int* a0, int* a1)
+void InitFileRequestTask_8003C128(int* a0, int* a1)
 {
-    sub_8003BBE4();
+    InitFileRequestQueue_8003BBE4();
     dword_8008656C = 0x801B9250;
     a1[0] = 0;
     a1[7] = 0;
     a1[8] = 0;
     a1[10] = 0;
-    a0[2] = (int)sub_8003C184;
+    a0[2] = (int)ProcessFileRequests_8003C184;
 }
-INCLUDE_ASM(sub_8003C184);
+INCLUDE_ASM(ProcessFileRequests_8003C184);
 // Matched
-void sub_8003C684(void)
+void AssertFileRequestQueueEmpty_8003C684(void)
 {
-    if (dword_80086540)
+    if (fileRequestQueue_80086540)
     {
         printf(aAssertionFaile_1, aCdC, 878);
         exit(1);

@@ -70,7 +70,7 @@ void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
     sub_8002A384(&s);
     sub_80033308(&pOT_8008D454[a3]);
 }
-extern void sub_8003BC84(int* a);
+extern void QueueFileRequest_8003BC84(int* a);
 // Matched
 void sub_8002BF74(void)
 {
@@ -84,7 +84,7 @@ void sub_8002BF74(void)
     s[5] = 0;
     s[6] = 0;
     s[7] = (int)sub_8002BFCC;
-    sub_8003BC84(s);
+    QueueFileRequest_8003BC84(s);
 }
 // Matched
 void sub_8002BFCC(int a0, int a1)

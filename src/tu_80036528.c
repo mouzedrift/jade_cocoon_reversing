@@ -235,7 +235,7 @@ run:
     }
 }
 INCLUDE_ASM(sub_80036BB0);
-extern int sub_8003B860(int* a, int* b);
+extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 void sub_80038D64(char* o, int* a);
 extern void sub_80038230(int* p);
 extern char levantPos_8008BD18[];
@@ -596,16 +596,16 @@ void sub_80038CA8(int* p)
     sub_80038D64(o, (int*)(sd + 0x7A8));
 }
 extern int stru_8008D504[];
-extern int sub_8003B860(int* a, int* b);
+extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 
 // Matched
 void sub_80038D64(char* p, int* a1)
 {
     int d;
     *(short*)(p + 0x150) = ratan2Difference_8003B9E0(a1, stru_8008D504) & 0xFFF;
-    *(int*)(p + 0x154) = sub_8003B918(sub_8003B860(a1, stru_8008D504));
+    *(int*)(p + 0x154) = ISqrt_8003B918(DistanceSquaredXZ_8003B860(a1, stru_8008D504));
     *(short*)(p + 0x152) = ratan2Difference_8003B9E0(a1, (int*)(p + 0x18C)) & 0xFFF;
-    *(int*)(p + 0x158) = sub_8003B918(sub_8003B860(a1, (int*)(p + 0x18C)));
+    *(int*)(p + 0x158) = ISqrt_8003B918(DistanceSquaredXZ_8003B860(a1, (int*)(p + 0x18C)));
     d = *(short*)(p + 0x152) - *(short*)(p + 0x150);
     if (d > 0x800)
     {
@@ -730,7 +730,7 @@ void sub_80039E14(void)
     d.vz = dword_8008D4F0.field_20.z - dword_8008D4F0.field_14.z;
     a = ratan2_8003B548(d.vx, d.vz);
     word_8008D4C8.vy = -a;
-    word_8008D4C8.vx = ratan2_8003B548(d.vy, sub_8003B918(sub_8003B8BC(d.vx, d.vz)));
+    word_8008D4C8.vx = ratan2_8003B548(d.vy, ISqrt_8003B918(LengthSquared2D_8003B8BC(d.vx, d.vz)));
     word_8008D4C8.vz = dword_8008D4F0.field_2C;
     sub_8004D0E8();
 }

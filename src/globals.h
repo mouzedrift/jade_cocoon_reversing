@@ -268,9 +268,9 @@ extern unsigned short word_8007D914[0x11];
 extern unsigned int dword_80096118;
 extern int dword_80091CFC;
 extern int dword_80083BD0;
-extern int dword_80086540;
+extern int fileRequestQueue_80086540;
 extern int dword_8008656C;
-extern int dword_80086550[5];
+extern int cdReadState_80086550[5];
 extern int dword_80079320[];
 extern struct_8 dword_8007A4B4[];
 extern int** dword_8008D4C0;
@@ -293,15 +293,7 @@ extern int dword_80091C20;
 extern int dword_80091C30[];
 extern int dword_80091C60[];
 extern unsigned short word_8007CED8[];
-typedef struct
-{
-    char pad_0[0x10];
-    int field_10;
-    char pad_14[0x14];
-} struct_obj_Q;
-
 extern unsigned char byte_8007CFC8[0x26];
-extern struct_obj_Q dword_80095C90[0x14];
 extern short word_80091D0C;
 typedef struct
 {
@@ -342,18 +334,20 @@ typedef struct
     unsigned char data[0x14];
 } struct_20_u8;
 
-typedef struct struct_node_C
+// file load request (cd.c queue); fileId_10 == 0x10000 marks a free pool entry
+typedef struct FileRequest
 {
-    struct struct_node_C* next;
+    struct FileRequest* next;
     int field_4;
     int key;
-    unsigned int field_C;
-    int field_10;
+    unsigned int flags_C; // 0x100 / 0x1000: GetFileRequestStatus returns 2 / 3
+    int fileId_10;        // DATA.001 file id
     char pad_14[8];
-    int field_1C;
-    int field_20;
-    int field_24;
-} struct_node_C;
+    int dest_1C;          // destination buffer
+    int field_20;         // copy of the request parameters (fileRequestParams_800954C0)
+    int callback_24;      // void (*)(int params, int dest)
+} FileRequest;
+extern FileRequest fileRequests_80095C90[0x14];
 
 extern int** dword_800B1DC4;
 extern int** dword_800B1DB8;
@@ -362,7 +356,7 @@ extern int dword_80082670;
 extern short word_8008B862;
 extern int dword_80082678;
 extern short word_80091C40;
-extern struct_node_C* dword_8008654C;
+extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
 extern struct_obj_C dword_800919A0[7];
 extern int loadedOverlayMaybe_8008D620;

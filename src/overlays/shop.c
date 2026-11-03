@@ -2086,7 +2086,7 @@ int sub_800BF3B4(unsigned char* p)
     int t6 = g[1].field_5C6 * p[2];
     int t7 = g[1].field_5C6 * p[1];
     int t8 = g[0].field_5C6 * p[1];
-    return sub_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
+    return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BF3B4);

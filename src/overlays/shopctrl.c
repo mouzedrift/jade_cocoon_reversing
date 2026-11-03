@@ -97,7 +97,7 @@ void sub_800B6840(ShopCtrlTask* t)
 
 void sub_800B6898(ShopCtrlTask* t)
 {
-    if (sub_8003BE30(dword_800B6CF4) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800B6CF4) == 0)
     {
         if (dword_800B6CF8)
         {

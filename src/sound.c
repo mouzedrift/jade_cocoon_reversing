@@ -149,7 +149,7 @@ void sub_8002FF64(int a0, char* p)
     switch (*(unsigned short*)(p + 2))
     {
     case 0:
-        if (!sub_8003BE30(*(int*)(p + 0x10)) && !sub_8003BE30(*(int*)(p + 0x14)))
+        if (!GetFileRequestStatus_8003BE30(*(int*)(p + 0x10)) && !GetFileRequestStatus_8003BE30(*(int*)(p + 0x14)))
         {
             (*(unsigned short*)(p + 2))++;
         }
@@ -199,7 +199,7 @@ void sub_8003006C(int a0, int* a1)
 INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(sub_800300E0);
-extern int sub_8003BC84(int* a);
+extern int QueueFileRequest_8003BC84(int* a);
 extern void sub_800304D0(void);
 // Matched
 int sub_800303E8(void)
@@ -222,7 +222,7 @@ int sub_800303E8(void)
     s[3] = 0;
     s[4] = 0;
     s[7] = (int)sub_800304D0;
-    *(int*)(p + 8) = sub_8003BC84(s);
+    *(int*)(p + 8) = QueueFileRequest_8003BC84(s);
     return 1;
 }
 INCLUDE_ASM(sub_800304D0);

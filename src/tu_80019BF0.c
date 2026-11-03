@@ -112,11 +112,11 @@ INCLUDE_DATA(dword_8007403C);
 INCLUDE_DATA(dword_8007408C);
 INCLUDE_DATA(dword_800740B0);
 INCLUDE_DATA(dword_800740B4);
-INCLUDE_DATA(dword_80086540);
+INCLUDE_DATA(fileRequestQueue_80086540);
 INCLUDE_DATA(dword_80086544);
 INCLUDE_DATA(dword_80086548);
 INCLUDE_DATA(dword_8008654C);
-INCLUDE_DATA(dword_80086550);
+INCLUDE_DATA(cdReadState_80086550);
 INCLUDE_DATA(dword_80086554);
 INCLUDE_DATA(dword_80086558);
 INCLUDE_DATA(dword_8008655C);
@@ -224,7 +224,7 @@ typedef struct
     unsigned int** ppDest;
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
-extern int sub_8003BC84(int* p);
+extern int QueueFileRequest_8003BC84(int* p);
 extern int sub_8003C6C8(int* req);
 void sub_80020F5C();
 extern unsigned short dword_800918C8[];
@@ -252,9 +252,9 @@ int sub_80019CC4(VECTOR* pos)
             {
                 break;
             }
-            if (sub_8003B860(&dword_8008D4F0.points[i].pos, pos) < best)
+            if (DistanceSquaredXZ_8003B860(&dword_8008D4F0.points[i].pos, pos) < best)
             {
-                best = sub_8003B860(&dword_8008D4F0.points[i].pos, pos);
+                best = DistanceSquaredXZ_8003B860(&dword_8008D4F0.points[i].pos, pos);
                 found = i;
             }
         }
@@ -2907,7 +2907,7 @@ int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
         req[0] = 0x22;
         break;
     case 2:
-        sub_8003CAEC(overlays_8007D9E8[overlayIdx].fileIdx, *overlays_8007D9E8[overlayIdx].ppDest);
+        DATA_ReadFileInto_8003CAEC(overlays_8007D9E8[overlayIdx].fileIdx, *overlays_8007D9E8[overlayIdx].ppDest);
         return -1;
     case 1:
     case 3:
@@ -2921,7 +2921,7 @@ int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
     req[5] = 0;
     req[6] = 0;
     req[7] = 0;
-    return sub_8003BC84(req);
+    return QueueFileRequest_8003BC84(req);
 }
 // Matched
 void sub_80020CB8(struct_cb* p, int* q)
@@ -2967,7 +2967,7 @@ int sub_80020D84(void)
     int r;
     if (p[0] == 0x1D)
     {
-        r = sub_8003BE30(p[2]) == 0;
+        r = GetFileRequestStatus_8003BE30(p[2]) == 0;
     }
     else
     {
@@ -3018,7 +3018,7 @@ void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
 // Matched
 int sub_80020EBC(int* p)
 {
-    return sub_8003BE30(*p) == 0;
+    return GetFileRequestStatus_8003BE30(*p) == 0;
 }
 // Matched
 void sub_80020EE0(int* p)
@@ -4134,7 +4134,7 @@ int sub_80024DC4(void* a0)
     i = 0;
     while (i < p[1])
     {
-        if (sub_8003BE30(p[2 + i]) != 0)
+        if (GetFileRequestStatus_8003BE30(p[2 + i]) != 0)
         {
             return 0;
         }
@@ -4676,7 +4676,7 @@ int sub_80025D00(struct_list10* a0, int* a1)
     {
         a1[2] <<= 11;
         a1[3] <<= 11;
-        a0->items[a0->count] = sub_8003BC84(a1);
+        a0->items[a0->count] = QueueFileRequest_8003BC84(a1);
         a0->count += 1;
         return 1;
     }
@@ -5411,7 +5411,7 @@ int sub_80027358(int id)
             return 0;
         }
         p = dword_800B1DB8[9];
-        if (sub_8003BE30(p[1]) != 3)
+        if (GetFileRequestStatus_8003BE30(p[1]) != 3)
         {
             return 0;
         }

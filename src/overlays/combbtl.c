@@ -160,7 +160,7 @@ void sub_800A4B8C(CombBtlTask* t, int a)
 
 void sub_800A4C40(CombBtlTask* t, int a)
 {
-    if (sub_8003BE30(dword_800A85A0) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800A85A0) == 0)
     {
         dword_800A84A0 = -1;
         dword_800A8498 = -1;
@@ -528,7 +528,7 @@ void sub_800A5EB8(CombBtlTask* t)
 
 void sub_800A5EF8(CombBtlTask* t)
 {
-    if (sub_8003BE30(dword_800A85A0) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800A85A0) == 0)
     {
         sub_800A5BB4();
         dword_800A848C = sub_800CB7AC(&dword_800A8600, dword_800A85B8);

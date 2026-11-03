@@ -73,7 +73,7 @@ void sub_800A40FC(CombLoadTask* t)
 
 void sub_800A4140(CombLoadTask* t)
 {
-    if (sub_8003BE30(dword_800A47F4) == 0)
+    if (GetFileRequestStatus_8003BE30(dword_800A47F4) == 0)
     {
         sub_800B7674(dword_800A3A94 == 0 ? 2 : 3, 0);
         t->next_8 = sub_800A41A8;
