@@ -427,7 +427,7 @@ extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
 extern int** cameraTask_8008D4A0;
 extern int** dword_8008D464;
-extern int** dword_8008B54C;
+extern int** modelLoaderTask_8008B54C;
 extern int dword_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
@@ -524,7 +524,7 @@ typedef struct
     int items[10];
 } struct_list10;
 int AddFileRequest_80025D00(struct_list10* p, int* q);
-void sub_80025D7C(int* a0, int b);
+void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
 extern unsigned short padButtonBits_8007CAD8[0xe];

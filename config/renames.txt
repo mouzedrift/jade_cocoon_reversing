@@ -407,3 +407,55 @@ sub_80033ABC GetLevantStatus_80033ABC
 sub_80033AB0 GetItemId_80033AB0
 sub_80033858 GetMinionId_80033858
 sub_800378F8 GetCameraMode_800378F8
+
+# --- model files: request params -> OnModelFileLoaded -> sections by flag (1 data, 2 TIY, 4 FTG, 8 anims, 0x10 one anim, 0x20 anim set) ---
+sub_80025ED0 InitModelLoadParams_80025ED0
+sub_80025D7C OnModelFileLoaded_80025D7C
+sub_80025F14 ParseModelFile_80025F14
+sub_8002607C LoadModelTextures_8002607C
+sub_800260FC LoadModelFtg_800260FC
+sub_800261C8 LoadModelAnims_800261C8
+sub_800263CC LoadSingleModelAnim_800263CC
+sub_80026410 LoadModelAnimSetSection_80026410
+sub_80025780 LoadModelAnimSet_80025780
+sub_80025884 FreeModelAnimSet_80025884
+sub_80025924 IsAnimInModelAnimSet_80025924
+sub_80026730 AllocModelAnims_80026730
+sub_8002679C FreeModelAnims_8002679C
+sub_800269C4 FreeModelAnimData_800269C4
+sub_80026A8C LoadModelAnimData_80026A8C
+sub_80028FDC LoadTiyTimsRelocated_80028FDC
+sub_80029D00 ShiftClutHue_80029D00
+sub_800297C0 RelocateTimInfo_800297C0
+
+# --- model loader task (dword_8008B54C: up to 4 requested models, loaded into their own model list) ---
+dword_8008B54C modelLoaderTask_8008B54C
+sub_800204D0 ResetModelLoader_800204D0
+sub_8002052C FreeModelLoaderList_8002052C
+sub_8002056C StartModelLoader_8002056C
+sub_800205D0 IsModelLoaderDone_800205D0
+sub_800205F0 StopModelLoader_800205F0
+sub_80020614 CountLoaderModels_80020614
+sub_80020654 GetLoaderModelId_80020654
+sub_800206A0 RequestLoaderModel_800206A0
+sub_80020734 AcquireLoaderModel_80020734
+sub_80020768 FreeLoaderModel_80020768
+sub_80020814 FreeLoaderModelAnimSets_80020814
+sub_80020898 LoadLoaderModelAnimSets_80020898
+sub_80020924 AreLoaderModelsLoaded_80020924
+sub_800209AC ModelLoaderTask_800209AC
+sub_80020A38 LoadRequestedModels_80020A38
+sub_80020B70 AreRequestedModelsLoaded_80020B70
+
+# --- menu window items (flags: 2 greyed out, 4 right aligned, 8 centred) and gauges ---
+sub_8002AC88 AlignMenuItem_8002AC88
+sub_8002ACE8 GetMenuItemColor_8002ACE8
+sub_8002AD08 SetMenuItemFont1Clut_8002AD08
+sub_8002AD44 SetMenuItemFont2Clut_8002AD44
+sub_8002AD80 SetMenuItemDigitColor_8002AD80
+sub_8002BA54 DrawGauge_8002BA54
+sub_8002BC60 ScaleGaugeLength_8002BC60
+sub_8002BCAC DrawGaugeBar_8002BCAC
+
+# --- sound ---
+stru_80091D00 seqSlotSound_80091D00

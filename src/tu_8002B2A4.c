@@ -164,10 +164,10 @@ typedef struct
     int field_8;
     int field_C;
 } struct_BA54;
-unsigned int sub_8002BC60(unsigned int a, unsigned int b, unsigned int c);
-void sub_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot);
+unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned int c);
+void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot);
 // Matched
-void sub_8002BA54(struct_BA54* a0, int arg1, short* a2, int a3)
+void DrawGauge_8002BA54(struct_BA54* a0, int arg1, short* a2, int a3)
 {
     short pos[2];
     int idx;
@@ -212,7 +212,7 @@ void sub_8002BA54(struct_BA54* a0, int arg1, short* a2, int a3)
         idx = 0x14;
         break;
     }
-    w = sub_8002BC60(a0->field_8, a0->field_C, c);
+    w = ScaleGaugeLength_8002BC60(a0->field_8, a0->field_C, c);
     t = a0->field_4;
     if (t)
     {
@@ -234,21 +234,21 @@ void sub_8002BA54(struct_BA54* a0, int arg1, short* a2, int a3)
         }
         else
         {
-            n = sub_8002BC60(m, a0->field_C, c);
+            n = ScaleGaugeLength_8002BC60(m, a0->field_C, c);
         }
         if (frameCount_8008D3FC & 0x10)
         {
-            sub_8002BCAC(0x14, n, pos, a1, a3);
+            DrawGaugeBar_8002BCAC(0x14, n, pos, a1, a3);
         }
     }
     pos[0] = a2[0] + 8;
     pos[1] = a2[1] + 2;
-    sub_8002BCAC(idx, w, pos, a1, a3);
+    DrawGaugeBar_8002BCAC(idx, w, pos, a1, a3);
     DrawUiTiySprt_8002C06C(a2, e, a3);
 }
 // Not matched: original has no zero-divisor check (plain divu), cc1psx/aspsx emit one
 // Matched
-unsigned int sub_8002BC60(unsigned int a, unsigned int b, unsigned int c)
+unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned int c)
 {
     if (b < a)
     {
@@ -270,7 +270,7 @@ extern int publicTiyPolyFT4s_8008D430;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 extern void sub_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
-void sub_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot)
+void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot)
 {
     POLY_FT4 poly;
     CVECTOR c0;

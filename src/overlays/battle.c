@@ -435,7 +435,7 @@ void sub_800BA788(BatTask_a* t)
     FreeSeqSlotSound_80030664();
     SsUtAllKeyOff(0);
     PlayMusic_800300E0(sub_800315E4(), 1);
-    sub_80020898();
+    LoadLoaderModelAnimSets_80020898();
     if (dword_80091C74 >= 0)
     {
         sub_800AC708(dword_80091C74, 1);

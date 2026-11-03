@@ -50,7 +50,7 @@ extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* n
 extern void sub_8002E004(unsigned short* p, int a1, int a2);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
-extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void sub_80033864(Minion* m, unsigned char* out);
 extern void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot);
 extern void sub_8002EACC(unsigned char* a0, unsigned short* pos, int a2, short ot);
@@ -149,7 +149,7 @@ void sub_8002DB48(unsigned char* m, int ot, int unused, unsigned short* pos, Min
     w[3] = 0x4000000;
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x2B;
-    sub_8002BA54(w, 0, loc, ot);
+    DrawGauge_8002BA54(w, 0, loc, ot);
     sub_80033864(mn, buf);
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 4;
@@ -288,7 +288,7 @@ extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern int sub_800AD8E4(void);
 extern void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
-extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void sub_8002EE28(short* a, unsigned short* pos, short c, int d);
 // Matched
 void sub_8002E334(unsigned char* a0, short* a1)
@@ -353,7 +353,7 @@ void sub_8002E334(unsigned char* a0, short* a1)
     loc2[1] = base[1] + 0x14;
     v[2] = *(short*)(a0 + 8);
     v[3] = *(short*)(a0 + 0xA);
-    sub_8002BA54(v, 0, loc2, a1[0]);
+    DrawGauge_8002BA54(v, 0, loc2, a1[0]);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
     sub_8002EE28((short*)(a0 + 8), loc2, a1[0], 1);
@@ -376,7 +376,7 @@ void sub_8002E334(unsigned char* a0, short* a1)
         w[2] -= 0x4000000;
     }
     w[3] = 0x4000000;
-    sub_8002BA54(w, 0, loc2, a1[0]);
+    DrawGauge_8002BA54(w, 0, loc2, a1[0]);
 }
 extern unsigned char dword_80082EA4[];
 extern unsigned char dword_80082EA8[][4];

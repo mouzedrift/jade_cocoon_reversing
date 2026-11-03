@@ -98,8 +98,8 @@ extern int sub_800BBDD8(int a);
 extern char dword_80091C10[];
 extern int dword_800AEBD8;
 extern void sub_800B8940(int* p);
-extern void sub_800206A0(int a, int b, int c, int d);
-extern void sub_8002056C(void);
+extern void RequestLoaderModel_800206A0(int a, int b, int c, int d);
+extern void StartModelLoader_8002056C(void);
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
 
@@ -205,9 +205,9 @@ void sub_800B8940(int* p)
     for (; i < 3; i++)
     {
         unsigned short* e = (unsigned short*)sub_80019C70(*q++);
-        sub_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
+        RequestLoaderModel_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
     }
-    sub_8002056C();
+    StartModelLoader_8002056C();
 }
 
 int sub_800B89A8(EvCtxEventfnc* c)

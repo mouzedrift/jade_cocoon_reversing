@@ -4,7 +4,7 @@
 #include "globals.h"
 
 extern int MeasureTextWidth_8003E4C8(int);
-extern void sub_8002AC88(int, void*, int, void*);
+extern void AlignMenuItem_8002AC88(int, void*, int, void*);
 extern void DrawText_8003E91C(int, int, void*, int);
 
 INCLUDE_OVERLAY_ASM(combchui, dword_800A4088);
@@ -114,7 +114,7 @@ void sub_800A450C(int* p, unsigned short* q)
     y = q[1];
     while (item)
     {
-        sub_8002AC88(8, q, (short)MeasureTextWidth_8003E4C8(item), rect);
+        AlignMenuItem_8002AC88(8, q, (short)MeasureTextWidth_8003E4C8(item), rect);
         rect[1] = y;
         DrawText_8003E91C(2, item, rect, 0);
         p++;

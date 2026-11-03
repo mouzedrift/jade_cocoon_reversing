@@ -127,7 +127,7 @@ void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
 }
 #if 0
 // Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
-void sub_8002AC88(int flags, short* a, int b, short* out)
+void AlignMenuItem_8002AC88(int flags, short* a, int b, short* out)
 {
     if (flags & 4)
     {
@@ -144,9 +144,9 @@ void sub_8002AC88(int flags, short* a, int b, short* out)
     out[1] = a[1];
 }
 #endif
-INCLUDE_ASM(sub_8002AC88);
+INCLUDE_ASM(AlignMenuItem_8002AC88);
 // Matched
-void sub_8002ACE8(int flags, unsigned char* out)
+void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
 {
     unsigned char val;
     if (flags & 2)
@@ -162,7 +162,7 @@ void sub_8002ACE8(int flags, unsigned char* out)
     out[2] = val;
 }
 // Matched
-void sub_8002AD08(int flags)
+void SetMenuItemFont1Clut_8002AD08(int flags)
 {
     if (flags & 2)
     {
@@ -174,7 +174,7 @@ void sub_8002AD08(int flags)
     }
 }
 // Matched
-void sub_8002AD44(int flags)
+void SetMenuItemFont2Clut_8002AD44(int flags)
 {
     if (flags & 2)
     {
@@ -186,7 +186,7 @@ void sub_8002AD44(int flags)
     }
 }
 // Matched
-void sub_8002AD80(int flags)
+void SetMenuItemDigitColor_8002AD80(int flags)
 {
     if (flags & 2)
     {
