@@ -80,6 +80,16 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 
+typedef struct MenuEnt
+{
+    char pad_0[4];
+    short s4;
+    unsigned short idx_6;
+    unsigned short u8;
+    unsigned short a;
+} MenuEnt;
+extern MenuEnt name_800B1238[];
+
 typedef struct MenuQuad
 {
     short a;
@@ -184,7 +194,88 @@ extern void sub_800BD6C8();
 
 INCLUDE_OVERLAY_ASM(menu, dword_800B66C0);
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BBB9C);
+typedef struct MenuStatus
+{
+    int f0;
+    int f4;
+    char pad_8[0x40];
+} MenuStatus;
+typedef struct MenuMain
+{
+    int f0;
+    char pad_4[0x30];
+    int a34[4];
+    short count_44;
+    short s46;
+    int i48;
+    char pad_4C[0xC];
+    short s58;
+    short pad_5A;
+    int a5C[4];
+    int a6C[4];
+    int a7C[4];
+    MenuStatus st_8C[4];
+    MenuStatus st_1AC[4];
+    int a2CC[4];
+    int i2DC;
+} MenuMain;
+extern void sub_800BBE50();
+extern void LoadUiTiy_8002BF74();
+extern void sub_800122A0();
+EventEntry* sub_800BBB9C(EventNode* n)
+{
+    EventEntry* t = AllocEventEntry_80043AF8(n);
+    MenuMain* c;
+    short i;
+    MenuStatus* p;
+    if (t)
+    {
+        LoadUiTiy_8002BF74();
+        c = t->buffer;
+        t->flags = (t->flags | 1) & ~0x8000;
+        c->s46 = 0;
+        c->i48 = 1;
+        for (i = 0; i < 4; i++)
+        {
+            c->a34[i] = 0;
+            c->a6C[i] = 0;
+            c->a7C[i] = 0;
+            c->a2CC[i] = 0;
+            c->a5C[i] = 0;
+        }
+        c->i2DC = 0;
+        for (i = 0; i < 3; i++)
+        {
+            int ok = 0;
+            if (name_800B1238[i].a == 7)
+                continue;
+            if (name_800B1238[i].idx_6)
+                p = (MenuStatus*)GetMinionStatus_800107A0(3, name_800B1238[i].idx_6 - 1);
+            else
+                p = (MenuStatus*)levantStatus_8008BD38;
+            if (name_800B1238[i].idx_6 || name_800B1238[i].a == 5 || name_800B1238[i].a == 0x1A)
+                ok = 1;
+            if (ok && !(p->f0 & 0x400))
+                sub_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
+        }
+        c->s58 = 0;
+        c->count_44 = CountMinions_80010548(3) + 1;
+        c->f0 = 0;
+        p = (MenuStatus*)levantStatus_8008BD38;
+        MemCopy_800403E8((unsigned int*)&c->st_8C[0], (unsigned int*)p, 0x48);
+        MemCopy_800403E8((unsigned int*)&c->st_1AC[0], (unsigned int*)p, 0x48);
+        c->a2CC[0] = p->f4;
+        for (i = 1; i < c->count_44; i++)
+        {
+            p = (MenuStatus*)GetMinionStatus_800107A0(3, i - 1);
+            MemCopy_800403E8((unsigned int*)&c->st_8C[i], (unsigned int*)p, 0x48);
+            MemCopy_800403E8((unsigned int*)&c->st_1AC[i], (unsigned int*)p, 0x48);
+            c->a2CC[i] = p->f4;
+        }
+        t->cb_8 = (EventEntryFn)sub_800BBE50;
+    }
+    return t;
+}
 
 extern int uiTiyLoaded_8008B4E8;
 extern void DrawMenuBackground_8002BE10();
@@ -490,15 +581,7 @@ void sub_800BD1B0(MenuTask* t)
 }
 
 
-typedef struct MenuEnt
-{
-    char pad_0[4];
-    short s4;
-    char pad_6[4];
-    unsigned short a;
-} MenuEnt;
 
-extern MenuEnt name_800B1238[];
 int sub_800BD230(MenuCtx* c)
 {
     short i;
