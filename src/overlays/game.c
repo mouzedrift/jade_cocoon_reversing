@@ -1545,10 +1545,6 @@ void sub_800A4940(int a, int b)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A49CC);
-
-#if 0
-// Not matched: logic and bitfield layout right; callee-saved registers differ and b*5 / the table address get hoisted out of the loop, the original computes b*5 in the found path
 typedef struct GameSpawnEnt_1
 {
     unsigned int chance : 8;
@@ -1567,6 +1563,144 @@ typedef struct GameSpawnOut_1
 } GameSpawnOut_1;
 extern GameSpawnOut_1 name_800AEB00[][3];
 extern int sub_800B330C(void);
+extern GameSpawnEnt_1* sub_800B2B40();
+extern short* name_800AE9DC[];
+extern GameSpawnEnt_1 name_800AE524[][3];
+void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned short* f);
+
+#if 0
+// Not matched (3 words long, registers differ): the original clears e[] with a scratch counter, keeps c in $s7 and
+// dword_800AEB6C in $fp, and leaves the 0x8000 loop unrotated (bottom "i < c[0]" exit, then a jump back to the
+// "i < 3" test); the original also reloads *f for the == 0 test
+int sub_800A49CC(int a, int b, int* c, int* e)
+{
+    int n;
+    unsigned short* f;
+    unsigned short* t;
+    int i;
+    GameSpawnEnt_1* tbl;
+    int r;
+    int bits;
+    int j;
+    int k;
+    GameSpawnOut_1* d;
+    GameSpawnEnt_1* q;
+    int* o;
+    n = 0;
+    f = 0;
+    if (unknownFlags_8008D678 & 0x20000)
+    {
+        f = (unsigned short*)sub_800B322C();
+    }
+    else
+    {
+        t = sub_800A53CC();
+        if (t != 0)
+        {
+            f = t + a;
+        }
+    }
+    if (f == 0)
+    {
+        return n;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        e[i] = 0;
+        e[i + 3] = 0;
+    }
+    tbl = 0;
+    if (unknownFlags_8008D678 & 0x20000)
+    {
+        tbl = sub_800B2B40();
+    }
+    else
+    {
+        r = sub_800A52EC(name_800AE9DC, 0x49, b);
+        if (r >= 0)
+        {
+            tbl = name_800AE524[r];
+        }
+    }
+    if (tbl == 0)
+    {
+        return n;
+    }
+    if (*f & 0x8000)
+    {
+        *f &= 0x7FFF;
+        for (i = 0; i < c[0]; i++, n++)
+        {
+            if (i >= 3)
+            {
+                break;
+            }
+            sub_800A4DD0(n, i, c, tbl, e, f);
+        }
+    }
+    else if (*f == 0)
+    {
+        if (c[0] == 0)
+        {
+            return n;
+        }
+        if (rand() % 3 == 0)
+        {
+            return n;
+        }
+        if (c[0] < 3)
+        {
+            k = rand() % c[0];
+        }
+        else
+        {
+            k = rand() % 3;
+        }
+        sub_800A4DD0(n, k, c, tbl, e, f);
+        n++;
+    }
+    else
+    {
+        bits = *f;
+        d = name_800AEB00[0];
+        o = e + n;
+        for (j = 0; j < 3; j++, d += 3, bits >>= 5)
+        {
+            if (bits & 0x10)
+            {
+                q = &tbl[bits & 3];
+                d[0].f0 = dword_800AEB6C[q->k0];
+                d[1].f0 = dword_800AEB6C[q->k1];
+                d[2].f0 = dword_800AEB6C[q->k2];
+                d[0].f4 = q->v0 << 26;
+                d[1].f4 = q->v1 << 26;
+                d[2].f4 = q->v2 << 26;
+                if (unknownFlags_8008D678 & 0x20000)
+                {
+                    k = (sub_800B330C() - 1) / 4 + 1;
+                    if (k >= 8)
+                    {
+                        k = 7;
+                    }
+                    d[0].f4 = (q->v0 + k) << 26;
+                    d[1].f4 = (q->v1 + k) << 26;
+                    d[2].f4 = (q->v2 + k) << 26;
+                }
+                n++;
+                o[0] = (int)d;
+                o[3] = c[1] + j * 16;
+                o++;
+            }
+        }
+    }
+    return n;
+}
+#endif
+
+INCLUDE_OVERLAY_ASM(game, sub_800A49CC);
+
+#if 0
+// Not matched: logic and bitfield layout right; callee-saved registers differ and b*5 / the table address get hoisted out of the loop, the original computes b*5 in the found path
 void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned short* f)
 {
     int r = rand() % 16;
