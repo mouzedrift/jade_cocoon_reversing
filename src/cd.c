@@ -41,7 +41,105 @@ void sub_80039FC0(void)
 {
     sub_80020EE0(dword_80095468);
 }
-INCLUDE_ASM(sub_80039FE4);
+typedef struct
+{
+    short n;
+    short pad;
+    char* p;
+} PolyGroup;
+typedef struct
+{
+    PolyGroup g[8];
+    int n8;
+    char* p8;
+    int n9;
+    int field_4C;
+    char* p9;
+} PolyGroups;
+typedef struct
+{
+    char pad[4];
+    SVECTOR a;
+    SVECTOR b;
+} EdgeDelta;
+
+#define DIFF_GROUP(k, size, off, nv)                                              \
+    if (pb->g[k].n * nv)                                                          \
+    {                                                                             \
+        int j;                                                                    \
+        for (i = 0; i < pb->g[k].n; i++)                                          \
+        {                                                                         \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
+            SVECTOR* vb = (SVECTOR*)(pb->g[k].p + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
+            for (j = 0; j < nv; j++)                                              \
+            {                                                                     \
+                vo[j].vx = va[j].vx - vb[j].vx;                                   \
+                vo[j].vy = va[j].vy - vb[j].vy;                                   \
+                vo[j].vz = va[j].vz - vb[j].vz;                                   \
+            }                                                                     \
+        }                                                                         \
+    }
+
+// Matched
+void sub_80039FE4(int a0, int a1, int a2)
+{
+    PolyGroups* pa = (PolyGroups*)a0;
+    PolyGroups* pb = (PolyGroups*)a1;
+    PolyGroups* po = (PolyGroups*)a2;
+    int i;
+
+    DIFF_GROUP(0, 0x24, 4, 4);
+    DIFF_GROUP(1, 0x3C, 0xC, 6);
+    DIFF_GROUP(2, 0x30, 0x10, 4);
+    DIFF_GROUP(3, 0x48, 0x18, 6);
+    DIFF_GROUP(4, 0x2C, 4, 5);
+    DIFF_GROUP(5, 0x50, 0x10, 8);
+    DIFF_GROUP(6, 0x38, 0x10, 5);
+    DIFF_GROUP(7, 0x5C, 0x1C, 8);
+    if (pa->n8)
+    {
+        EdgeDelta* ea;
+        EdgeDelta* eb;
+        EdgeDelta* eo;
+        ea = (EdgeDelta*)pa->p8;
+        eb = (EdgeDelta*)pb->p8;
+        eo = (EdgeDelta*)po->p8;
+        for (i = 0; i < pa->n8; i++)
+        {
+            eo->a.vx = ea->a.vx - eb->a.vx;
+            eo->a.vy = ea->a.vy - eb->a.vy;
+            eo->a.vz = ea->a.vz - eb->a.vz;
+            eo->b.vx = ea->b.vx - eb->b.vx;
+            eo->b.vy = ea->b.vy - eb->b.vy;
+            eo->b.vz = ea->b.vz - eb->b.vz;
+            ea++;
+            eb++;
+            eo++;
+        }
+    }
+    if (pa->n9)
+    {
+        EdgeDelta* ea;
+        EdgeDelta* eb;
+        EdgeDelta* eo;
+        ea = (EdgeDelta*)pa->p9;
+        eb = (EdgeDelta*)pb->p9;
+        eo = (EdgeDelta*)po->p9;
+        for (i = 0; i < pa->n9; i++)
+        {
+            eo->a.vx = ea->a.vx - eb->a.vx;
+            eo->a.vy = ea->a.vy - eb->a.vy;
+            eo->a.vz = ea->a.vz - eb->a.vz;
+            eo->b.vx = ea->b.vx - eb->b.vx;
+            eo->b.vy = ea->b.vy - eb->b.vy;
+            eo->b.vz = ea->b.vz - eb->b.vz;
+            ea++;
+            eb++;
+            eo++;
+        }
+    }
+}
 INCLUDE_ASM(sub_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
