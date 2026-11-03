@@ -1906,7 +1906,83 @@ int sub_800C0990(MenuCtx* o, int m)
     return o->f28;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C09B0);
+typedef struct MenuWinItem
+{
+    unsigned short flags_0;
+    short pad_2;
+    void* data_4;
+    void* spr_8;
+    void* tp_C;
+    short x_10;
+    short y_12;
+    char pad_14[8];
+} MenuWinItem;
+extern MenuWinItem* name_800C28C4[];
+extern int publicTiySprts_8008D434;
+extern int publicTiyTPages_8008D440;
+extern int GetKeyItemIcon_8001D344();
+extern void sub_8002C6DC();
+extern char name_800C276C[];
+extern char name_800C2770[];
+void sub_800C09B0(short* a)
+{
+    MenuDlg d;
+    short i;
+    short w;
+    short saved = a[0];
+    int n;
+    w = 8;
+    for (i = 0; i < 4; i++)
+    {
+        int id = (short)sub_800AD7F8(i + a[1]);
+        int icon;
+        void* nm;
+        if (id < 0x26)
+        {
+            icon = GetKeyItemIcon_8001D344(id);
+            nm = (void*)GetKeyItemName_8001D318(id);
+        }
+        else
+        {
+            icon = -1;
+            nm = name_800B6838;
+        }
+        name_800C28C4[i][0].data_4 = (void*)icon;
+        name_800C28C4[i][0].spr_8 = &publicTiySprts_8008D434;
+        name_800C28C4[i][0].tp_C = &publicTiyTPages_8008D440;
+        name_800C28C4[i][1].data_4 = nm;
+        name_800C28C4[i][0].x_10 = 0x61;
+        name_800C28C4[i][0].y_12 = i * 22 + 0x36;
+        name_800C28C4[i][1].x_10 = 0x76;
+        name_800C28C4[i][1].y_12 = i * 22 + 0x36;
+        a[0] = i;
+        if (sub_800C0C3C(id) == 0)
+        {
+            name_800C28C4[i][0].flags_0 |= 2;
+            name_800C28C4[i][1].flags_0 |= 2;
+        }
+        else
+        {
+            name_800C28C4[i][0].flags_0 &= ~2;
+            name_800C28C4[i][1].flags_0 &= ~2;
+        }
+    }
+    d.f0 = a[2];
+    d.f4 = frameCount_8008D3FC;
+    d.f8 = w;
+    d.fC = saved;
+    d.f10 = (int)name_800C28C4;
+    d.f14 = a[3];
+    DrawMenuWindows_8002A5A4(&d);
+    SetFontClutOffset_8003F900(2, 0);
+    n = sub_800AD79C();
+    if (n < 4)
+        n = 4;
+    if (a[1] != 0)
+        sub_8002C6DC(name_800C276C, 3, a[3]);
+    if (a[1] < n - 4 && n >= 5)
+        sub_8002C6DC(name_800C2770, 1, a[3]);
+}
 
 
 extern int sub_800A5E80();
