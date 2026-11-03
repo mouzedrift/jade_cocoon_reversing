@@ -44,27 +44,27 @@ int GetTiyFileCount_80028E68(int* p)
 {
     return p[0];
 }
-extern void sub_800295D8(int* a0, int a1, int* a2, int a3, int a4);
-extern void sub_80028EEC(int* a0, int a1, int* a2, int a3, int a4);
+extern void AllocTiyPrims_800295D8(int* a0, int a1, int* a2, int a3, int a4);
+extern void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4);
 // Matched
-void sub_80028E74(int* a0, int a1, int* a2, int a3, int a4)
+void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4)
 {
     int v = *(int*)a3;
-    sub_800295D8(a0, a1, a2, v, a4);
-    sub_80028EEC(a0, a1, a2, a3, v);
+    AllocTiyPrims_800295D8(a0, a1, a2, v, a4);
+    LoadTiyTims_80028EEC(a0, a1, a2, a3, v);
 }
 // Matched
-void sub_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
+void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
 {
     char buf[0x28];
     unsigned int i;
     for (i = 0; i < (unsigned int)a4; i++)
     {
-        sub_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
-        sub_800296A0(buf);
+        ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
+        LoadTimToVram_800296A0(buf);
         if (a0 && a2)
         {
-            sub_800298AC(*a0 + i * 20, *a2 + i * 8, buf);
+            InitSprtFromTim_800298AC(*a0 + i * 20, *a2 + i * 8, buf);
         }
         if (a1)
         {
@@ -101,7 +101,7 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
     unsigned int i;
     for (i = 0; i < a4; i++)
     {
-        sub_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
+        ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
         if (a6)
         {
             sub_80029D00(buf, (void*)a6);
@@ -110,10 +110,10 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
         {
             sub_800297C0((struct_97C0_a*)buf, (struct_97C0_b*)a5);
         }
-        sub_800296A0(buf);
+        LoadTimToVram_800296A0(buf);
         if (a0 && a2)
         {
-            sub_800298AC(*(int*)a0 + i * 20, *(int*)a2 + i * 8, buf);
+            InitSprtFromTim_800298AC(*(int*)a0 + i * 20, *(int*)a2 + i * 8, buf);
         }
         if (a1)
         {
@@ -124,7 +124,7 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 INCLUDE_ASM(sub_800290FC);
 INCLUDE_ASM(sub_800292D0);
 // Matched
-void sub_800295D8(int* a, int b, int* c, int n, int heap)
+void AllocTiyPrims_800295D8(int* a, int b, int* c, int n, int heap)
 {
     if (a)
     {
@@ -140,14 +140,14 @@ void sub_800295D8(int* a, int b, int* c, int n, int heap)
     }
 }
 // Matched
-void sub_80029674(void* p)
+void LoadTim_80029674(void* p)
 {
     char buf[0x28];
-    sub_80029708(buf, p);
-    sub_800296A0(buf);
+    ParseTim_80029708(buf, p);
+    LoadTimToVram_800296A0(buf);
 }
 // Matched
-void sub_800296A0(void* arg0)
+void LoadTimToVram_800296A0(void* arg0)
 {
     int* p = (int*)arg0;
     if (p[0] == 1 && p[2] != 0)
@@ -159,7 +159,7 @@ void sub_800296A0(void* arg0)
     DrawSync(0);
 }
 // Matched
-int sub_80029708(void* arg0, void* arg1)
+int ParseTim_80029708(void* arg0, void* arg1)
 {
     int* out = (int*)arg0;
     int* in = (int*)arg1;
@@ -205,11 +205,11 @@ void sub_800297C0(struct_97C0_a* a, struct_97C0_b* b)
     a->field_1E += b->field_2;
 }
 // Matched
-void sub_80029868(int a0, int a1, int a2)
+void InitSprtFromTimData_80029868(int a0, int a1, int a2)
 {
     char buf[0x28];
-    sub_80029708(buf, (void*)a1);
-    sub_800298AC(a0, a2, buf);
+    ParseTim_80029708(buf, (void*)a1);
+    InitSprtFromTim_800298AC(a0, a2, buf);
 }
 typedef struct
 {
@@ -223,7 +223,7 @@ typedef struct
     u_long* paddr;
 } TimInfo;
 // Matched
-void sub_800298AC(int a0, int a1, void* a2)
+void InitSprtFromTim_800298AC(int a0, int a1, void* a2)
 {
     SPRT* s = (SPRT*)a0;
     TimInfo* t = (TimInfo*)a2;
@@ -239,10 +239,10 @@ void sub_800298AC(int a0, int a1, void* a2)
     s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
 }
 // Matched
-void sub_800299DC(void* p, void* q)
+void InitPolyFT4FromTimData_800299DC(void* p, void* q)
 {
     char buf[0x28];
-    sub_80029708(buf, q);
+    ParseTim_80029708(buf, q);
     InitPolyFT4_80029A10(p, buf);
 }
 #if 0
@@ -252,7 +252,7 @@ void InitPolyFT4_80029A10(void* a0, void* a1)
 #endif
 INCLUDE_ASM(InitPolyFT4_80029A10);
 // Matched
-void sub_80029C68(unsigned short* d, unsigned short* s)
+void UnpackColor555_80029C68(unsigned short* d, unsigned short* s)
 {
     d[3] = *s & 0x8000;
     d[0] = *s & 0x1f;

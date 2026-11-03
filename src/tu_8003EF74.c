@@ -743,7 +743,7 @@ void GameLoop_8004047C(void)
         switch (currentGameState_8008D4B4)
         {
             case eGameBoot_0:
-                sub_80040718();
+                InitGameDefaults_80040718();
                 LoadPublicTiyAndFtg_800407D0();
                 currentGameState_8008D4B4 = eIntroCopyright_1;
                 break;

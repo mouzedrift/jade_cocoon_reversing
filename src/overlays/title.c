@@ -59,7 +59,7 @@ void sub_800A093C(TitleTask* t, TitleCtxA* c)
         c->field_70 = 0;
         c->field_74 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x39);
-        sub_80028E74((int*)&c->field_70, 0, (int*)&c->field_74, (int)buf, 1);
+        LoadTiy_80028E74((int*)&c->field_70, 0, (int*)&c->field_74, (int)buf, 1);
         free3_8003FC6C(buf);
         t->next_8 = sub_800A09C0;
     }
@@ -342,7 +342,7 @@ void sub_800A0F6C(TitleTask* t, TitleCtxB* c)
         c->field_C = 0;
         c->field_14 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x36);
-        sub_80028E74((int*)&c->field_C, 0, (int*)&c->field_14, (int)buf, 1);
+        LoadTiy_80028E74((int*)&c->field_C, 0, (int*)&c->field_14, (int)buf, 1);
         free3_8003FC6C(buf);
         (t->next_8 = sub_800A1070)(t, c);
     }

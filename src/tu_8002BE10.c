@@ -89,7 +89,7 @@ void sub_8002BF74(void)
 // Matched
 void sub_8002BFCC(int a0, int a1)
 {
-    sub_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
+    LoadTiy_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
     dword_8008B4E8 = 1;
 }
 // Matched

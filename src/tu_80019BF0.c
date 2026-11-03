@@ -2941,7 +2941,7 @@ void sub_80020CD8(int a0, int* p)
 }
 #if 0
 // Not matched
-int sub_80020D1C(int a0, int a1)
+int LoadOverlayIfChanged_80020D1C(int a0, int a1)
 {
     int v = a1;
     int* p = dword_8008D4C0[9];
@@ -2954,7 +2954,7 @@ int sub_80020D1C(int a0, int a1)
     return LoadOverlay_80020BF8(a0, v);
 }
 #endif
-INCLUDE_ASM(sub_80020D1C);
+INCLUDE_ASM(LoadOverlayIfChanged_80020D1C);
 // Matched
 void sub_80020D68(void)
 {

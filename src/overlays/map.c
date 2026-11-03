@@ -202,11 +202,11 @@ void sub_800B6DE0(MapTask* t, int a1)
     sub_800B6FAC(t);
     if (dword_800B9434 == 1)
     {
-        sub_80028E74(&dword_800B931C, 0, &dword_800B9320, a1, 1);
+        LoadTiy_80028E74(&dword_800B931C, 0, &dword_800B9320, a1, 1);
     }
     else
     {
-        sub_80028E74(&dword_800B9314, 0, &dword_800B9318, a1, 1);
+        LoadTiy_80028E74(&dword_800B9314, 0, &dword_800B9318, a1, 1);
     }
     dword_800B9430 = 1;
 }

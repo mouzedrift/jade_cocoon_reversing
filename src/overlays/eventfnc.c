@@ -1818,7 +1818,7 @@ void sub_800BC98C(int a)
         ListFree_8003FE38(dword_80091C10, dword_800AEBC0[1]);
         dword_800AEBC0[1] = 0;
     }
-    sub_80028E74(&dword_800AEBC0[0], 0, &dword_800AEBC0[1], a, (int)dword_80091C10);
+    LoadTiy_80028E74(&dword_800AEBC0[0], 0, &dword_800AEBC0[1], a, (int)dword_80091C10);
 }
 
 #if 0

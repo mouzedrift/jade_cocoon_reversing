@@ -138,7 +138,7 @@ extern void sub_80018EBC(int a, int b);
 extern void sub_80018E5C(int a, int b);
 extern void sub_8001D760(int** a, int b, int c, int d);
 extern int sub_800A52EC(short** a, int b, int c);
-extern void* sub_80020D1C(int a, int b);
+extern void* LoadOverlayIfChanged_80020D1C(int a, int b);
 extern void sub_800A76D8();
 extern void sub_800B78B8(int a);
 extern void sub_800B78D0();
@@ -439,7 +439,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     sub_800AC73C();
     sub_80020814();
     sub_80037720();
-    *q = sub_80020D1C(1, 6);
+    *q = LoadOverlayIfChanged_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
     StopSoundSeqs_80030D68(dword_80091CE0);
     PlayMusic_800300E0(0, 1);
@@ -2606,7 +2606,7 @@ int sub_800A7574(void)
 // Matched
 void sub_800A75F8(GameTask_1* t, void** q)
 {
-    *q = sub_80020D1C(1, 0xa);
+    *q = LoadOverlayIfChanged_80020D1C(1, 0xa);
     t->next_8 = sub_800A7654;
     unknownFlags_8008D678 |= 0x4000000;
 }
@@ -2623,7 +2623,7 @@ void sub_800A7654(GameTask_1* t, int* q)
 // Matched
 void sub_800A7690(GameTask_1* t, void** q)
 {
-    *q = sub_80020D1C(1, 0x14);
+    *q = LoadOverlayIfChanged_80020D1C(1, 0x14);
     t->next_8 = sub_800A76D8;
 }
 

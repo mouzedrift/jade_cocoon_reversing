@@ -24,7 +24,7 @@ INCLUDE_DATA(dword_80074B10);
 
 extern int geomScreenDistance_8008B548;
 #if 0
-void sub_80040718(void)
+void InitGameDefaults_80040718(void)
 {
     int i;
     unknownFlags_8008D678 = 0;
@@ -49,7 +49,7 @@ void sub_80040718(void)
     word_8008B558[1] = 0;
 }
 #endif
-INCLUDE_ASM(sub_80040718);
+INCLUDE_ASM(InitGameDefaults_80040718);
 extern int dword_8008D430;
 extern int dword_8008D434;
 extern int dword_8008D440;
@@ -61,7 +61,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    sub_80028E74(&dword_8008D434, (int)&dword_8008D430, &dword_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74(&dword_8008D434, (int)&dword_8008D430, &dword_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
     sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
@@ -69,11 +69,11 @@ void LoadPublicTiyAndFtg_800407D0(void)
     sub_8003DA70();
 }
 // Matched
-void sub_80040898(void)
+void ReloadPublicTiy_80040898(void)
 {
     void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68((int*)pFile);
-    sub_80028E74(0, 0, 0, (int)pFile, 1);
+    LoadTiy_80028E74(0, 0, 0, (int)pFile, 1);
     sub_8003DA70();
 }
 extern int dword_8008D47C;
@@ -109,7 +109,7 @@ void sub_800408F4(void)
     {
         free3_8003FC6C((void*)dword_8008D47C);
         free3_8003FC6C((void*)dword_8008B4EC);
-        sub_80040898();
+        ReloadPublicTiy_80040898();
         bStopDrawingMovie_8008D45C = 1;
     }
 }
@@ -120,7 +120,7 @@ void sub_80040A10(int* a0)
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     dword_8008D47C = 0;
     dword_8008B4EC = 0;
-    sub_80028E74(&dword_8008D47C, 0, &dword_8008B4EC, (int)pFile, 1);
+    LoadTiy_80028E74(&dword_8008D47C, 0, &dword_8008B4EC, (int)pFile, 1);
     free3_8003FC6C(pFile);
     a0[2] = (int)sub_800408F4;
 }
