@@ -108,10 +108,10 @@ void sub_800BC90C(BatStageObj_a* p)
             a = -cam[1];
             v.vx += sinTable_80084540[a & 0xFFF];
             v.vy = levantPos_8008BD18.pos_0[1] - 0x352;
-            v.vx -= ((int*)dword_8008D600)[0];
-            v.vy -= ((int*)dword_8008D600)[1];
+            v.vx -= dword_8008D600.vx;
+            v.vy -= dword_8008D600.vy;
             v.vz += sinTable_80084540[(a + 0x400) & 0xFFF];
-            v.vz -= ((int*)dword_8008D600)[2];
+            v.vz -= dword_8008D600.vz;
             sv.vx = v.vx;
             sv.vy = v.vy;
             sv.vz = v.vz;
@@ -669,7 +669,7 @@ void sub_800BE3C0()
             v = dword_800C9C88.kind_0;
             if (v == 5)
             {
-                if (((BatSettingsBits*)&settingsFlags_8008B58C)->b21 == 1)
+                if (((BatSettingsBits*)&settingsFlags_8008B58C.word)->b21 == 1)
                 {
                     StartPadVibration_80036528(0, 3);
                 }

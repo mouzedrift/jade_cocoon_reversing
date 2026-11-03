@@ -1593,7 +1593,7 @@ G2Pair_1 sub_800A8A30(int* c, int mode)
     }
     p->fC6 = name_800B1084[c[0]].a;
     p->fCC = name_800B1084[c[0]].b;
-    if (p->fCC == 8 && (int)((settingsFlags_8008B58C >> 21) & 1) == 1)
+    if (p->fCC == 8 && (int)((settingsFlags_8008B58C.word >> 21) & 1) == 1)
     {
         p->fCC = 7;
     }
@@ -2082,12 +2082,12 @@ void DrawLevantModel_800A9708(G2ActD* p)
     }
     if (!(p->f0 & 0x10))
     {
-        sub_80046A58(&sk, stru_8008D534 + v * 24, 0);
+        sub_80046A58(&sk, &stru_8008D534[v], 0);
     }
     else
     {
         anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1e);
-        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frames_0, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
+        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frames_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
     }
     sub_800459E4(&dword_800B0EF8, &p->model_40->field_5C, pOT_8008D690, sk.flags);
 }

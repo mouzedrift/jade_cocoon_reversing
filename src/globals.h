@@ -80,13 +80,38 @@ typedef struct
     char pad_60[0x28];
 } Item;
 
+// the settings word (SaveData.settings_1C == settingsFlags_8008B58C.word); most code tests it with masks
+typedef union Settings
+{
+    unsigned int word;
+    struct
+    {
+        unsigned int a_0 : 3; // 3 = ... (compared by eventfnc / combbtl / tu_8003D198)
+        unsigned int b_3 : 1;
+        unsigned int c_4 : 1;
+        unsigned int d_5 : 1;
+        unsigned int e_6 : 1;
+        unsigned int bgmVol_7 : 7;
+        unsigned int sfxVol_14 : 7;
+        unsigned int h_21 : 1;
+        unsigned int i_22 : 1;
+        unsigned int j_23 : 1;
+        unsigned int k_24 : 1;
+        unsigned int l_25 : 7;
+    } bits;
+} Settings;
+
 typedef struct
 {
-    int field_0;
+    int field_0; // bit 6: config.c
     int playTime_4; // vsyncs, counted by the vsync handler while not paused
     unsigned short buttonConfig_8[10]; // == buttonConfig_8008B578
-    unsigned int field_1C_settings; // == settingsFlags_8008B58C; bits 7..13 BGM volume, 14..20 SFX volume
-    int uiColor_20;   // uiColor_8008B590
+    Settings settings_1C; // == settingsFlags_8008B58C.word
+    union
+    {
+        int i;           // uiColor_8008B590
+        unsigned char b; // read as a byte by CONFIG
+    } uiColor_20;
     int yan_24;       // playerYan_8008B594 (money)
     char pad_28[0x2B4];
     short chapter_2DC; // 0x8008B84C (Meos4: currentChapter)
@@ -342,7 +367,6 @@ extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
-extern int modelDescs_800824CC[];
 extern MagicData magicData_8007C438[];
 extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
@@ -493,7 +517,7 @@ extern unsigned long* pOT_8008D5F4;
 extern unsigned long* pOT_8008B4C8;
 extern unsigned long* pOT_8008D3EC;
 
-extern unsigned int settingsFlags_8008B58C;
+extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
@@ -572,7 +596,6 @@ typedef struct
     short field_0;
     short field_2;
 } struct_4s;
-extern struct_4s dword_8008D600[3];
 
 typedef struct
 {

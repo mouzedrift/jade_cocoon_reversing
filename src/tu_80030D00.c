@@ -107,16 +107,10 @@ void FreeSoundSeqs_80030EEC(void* arg0)
         s->field_10_sep_data_ptr = 0;
     }
 }
-typedef struct
-{
-    short field_0_file_id;
-    short field_2_seq;
-    int field_4;
-} SoundSeqInfo;
 // Matched
 void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops)
 {
-    int v = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
+    int v = soundFiles_80082F0C[idx].field_2_seq;
     int a;
     int b;
     if (v >= 0x10)
@@ -131,11 +125,11 @@ void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops)
     }
     if (idx == 0)
     {
-        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 7) & 0x7F, (settingsFlags_8008B58C >> 7) & 0x7F);
+        SsSepSetVol(a, b, (settingsFlags_8008B58C.word >> 7) & 0x7F, (settingsFlags_8008B58C.word >> 7) & 0x7F);
     }
     else
     {
-        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 14) & 0x7F, (settingsFlags_8008B58C >> 14) & 0x7F);
+        SsSepSetVol(a, b, (settingsFlags_8008B58C.word >> 14) & 0x7F, (settingsFlags_8008B58C.word >> 14) & 0x7F);
     }
     SsSepPlay(a, b, 1, loops);
     SsSepSetCrescendo(a, b, 1, 1);
@@ -158,11 +152,11 @@ void PlaySeqSlot_80031160(unsigned int idx, short loops)
     b = seqSlots_800833E4[idx].field_4;
     if (idx < 2)
     {
-        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 7) & 0x7F, (settingsFlags_8008B58C >> 7) & 0x7F);
+        SsSepSetVol(a, b, (settingsFlags_8008B58C.word >> 7) & 0x7F, (settingsFlags_8008B58C.word >> 7) & 0x7F);
     }
     else
     {
-        SsSepSetVol(a, b, (settingsFlags_8008B58C >> 14) & 0x7F, (settingsFlags_8008B58C >> 14) & 0x7F);
+        SsSepSetVol(a, b, (settingsFlags_8008B58C.word >> 14) & 0x7F, (settingsFlags_8008B58C.word >> 14) & 0x7F);
     }
     SsSepPlay(a, b, 1, loops);
     SsSepSetCrescendo(a, b, 1, 1);
@@ -170,22 +164,22 @@ void PlaySeqSlot_80031160(unsigned int idx, short loops)
 // Matched
 void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops)
 {
-    int seq = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
+    int seq = soundFiles_80082F0C[idx].field_2_seq;
     if (seq >= 0)
     {
         if (s == &bgmSound_80091CE0)
         {
-            SsSepSetVol(s->field_C_sep_access_num, seq, (settingsFlags_8008B58C >> 7) & 0x7F,
-                        (settingsFlags_8008B58C >> 7) & 0x7F);
+            SsSepSetVol(s->field_C_sep_access_num, seq, (settingsFlags_8008B58C.word >> 7) & 0x7F,
+                        (settingsFlags_8008B58C.word >> 7) & 0x7F);
         }
         else
         {
-            SsSepSetVol(s->field_C_sep_access_num, seq, (settingsFlags_8008B58C >> 14) & 0x7F,
-                        (settingsFlags_8008B58C >> 14) & 0x7F);
+            SsSepSetVol(s->field_C_sep_access_num, seq, (settingsFlags_8008B58C.word >> 14) & 0x7F,
+                        (settingsFlags_8008B58C.word >> 14) & 0x7F);
         }
-        SsSepPlay(s->field_C_sep_access_num, ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq, 1, loops);
-        SsSepSetCrescendo(s->field_C_sep_access_num, ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq, 1, 1);
-        s->field_4_seq_num = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
+        SsSepPlay(s->field_C_sep_access_num, soundFiles_80082F0C[idx].field_2_seq, 1, loops);
+        SsSepSetCrescendo(s->field_C_sep_access_num, soundFiles_80082F0C[idx].field_2_seq, 1, 1);
+        s->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
     }
 }
 // Matched
@@ -239,15 +233,15 @@ void PlaySfx_80031494(int a1)
     {
         SsVoKeyOn((sfxSound_80091D20.field_0_vab_id << 8) + a1,
                   0x3C00u,
-                  (settingsFlags_8008B58C >> 14) & 0x7F,
-                  (settingsFlags_8008B58C >> 14) & 0x7F);
+                  (settingsFlags_8008B58C.word >> 14) & 0x7F,
+                  (settingsFlags_8008B58C.word >> 14) & 0x7F);
     }
     else
     {
         SsVoKeyOn((systemSound_80091D40.field_0_vab_id << 8) + a1,
                   0x3C00u,
-                  (settingsFlags_8008B58C >> 14) & 0x7F,
-                  (settingsFlags_8008B58C >> 14) & 0x7F);
+                  (settingsFlags_8008B58C.word >> 14) & 0x7F,
+                  (settingsFlags_8008B58C.word >> 14) & 0x7F);
     }
 }
 // Matched
@@ -262,7 +256,7 @@ short SfxKeyOn_800314F4(int a)
     {
         s = &systemSound_80091D40;
     }
-    return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.field_1C_settings >> 14) & 0x7F, (saveData_8008B570.field_1C_settings >> 14) & 0x7F);
+    return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.settings_1C.word >> 14) & 0x7F, (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
 }
 // Matched
 void SfxKeyOff_80031574(short a, short b)

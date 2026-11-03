@@ -23,7 +23,6 @@ extern char aAssertionFaile_3[];
 extern char aEffectC[];
 extern unsigned char dword_8007C2E4[];
 extern short word_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
-extern int stru_8008D534[4];
 extern struct_u8x4 dword_80072270;
 extern int dword_8007A0A4[];
 extern int dword_8007A0B0[];

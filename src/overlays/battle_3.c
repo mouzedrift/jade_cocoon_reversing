@@ -424,9 +424,9 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     v.vx = u->pos_10[0];
     v.vy = u->pos_10[2];
     v.vz = u->pos_10[4];
-    v.vx -= dword_8008D600[0].field_0;
-    v.vy -= dword_8008D600[1].field_0;
-    v.vz -= dword_8008D600[2].field_0;
+    v.vx -= dword_8008D600.vx;
+    v.vy -= dword_8008D600.vy;
+    v.vz -= dword_8008D600.vz;
     RotTransPers(&v, (long*)&sxy, &p, &flag);
     u->frame_8++;
     if (u->frame_8 > 0x10)

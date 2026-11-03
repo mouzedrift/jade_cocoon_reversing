@@ -80,7 +80,7 @@ void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
     short* c = (short*)pos;
     c0 = dword_800741E4;
     c1 = dword_800741E8;
-    idx = dword_8008279C[(short)saveData_8008B570.uiColor_20 * 3 + p.a];
+    idx = dword_8008279C[(short)saveData_8008B570.uiColor_20.i * 3 + p.a];
     publicTiyPolyFT4s_8008D430[idx].x0 = 1 - publicTiySprts_8008D434[idx].w / 2;
     publicTiyPolyFT4s_8008D430[idx].y0 = 1 - publicTiySprts_8008D434[idx].h / 2;
     publicTiyPolyFT4s_8008D430[idx].x1 = publicTiySprts_8008D434[idx].w / 2;

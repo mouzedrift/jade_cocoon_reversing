@@ -310,7 +310,7 @@ typedef struct
 // model file description (one per model id); the tables after animFlags_14 are variable length:
 // animFlags_14[animCount_12], animation spans[animCount_12], then the animation set and alternate
 // FTG tables (a count followed by spans)
-typedef struct
+typedef struct ModelDesc
 {
     unsigned short fileId_0;
     ModelSectorSpan header_2;
@@ -320,6 +320,7 @@ typedef struct
     unsigned short animCount_12;
     unsigned short animFlags_14[1]; // low byte: initially loaded
 } ModelDesc;
+extern ModelDesc* modelDescs_800824CC[];
 
 // VRAM placement of one model slot (the 16-byte entries of the struct_112_list field_C table, the
 // shared headers call it struct_16_b)

@@ -9,6 +9,7 @@
 #include "actor.h"
 
 #include "tu_8001EA48.h"
+#include "tu_80036528.h"
 
 extern unsigned char dword_800C8B30;
 
@@ -45,7 +46,6 @@ extern int dword_800C9E4C;
 extern int dword_800C9E78;
 
 
-extern char stru_8008D534[];
 
 extern unsigned char dword_800C9E49;
 

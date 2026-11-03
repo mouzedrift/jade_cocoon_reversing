@@ -183,9 +183,9 @@ void sub_800429F8(int a0, int a1)
         r.h = p[3] - 4;
         for (i = 0; i < 4; i++)
         {
-            rgb[i][0] = off_80087028[(short)saveData_8008B570.uiColor_20][0];
-            rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20][1];
-            rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20][2];
+            rgb[i][0] = off_80087028[(short)saveData_8008B570.uiColor_20.i][0];
+            rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20.i][1];
+            rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20.i][2];
         }
         DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
     }

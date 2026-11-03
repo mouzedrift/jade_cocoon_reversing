@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "tu_80036528.h"
 
 typedef struct CombBtlTask
 {
@@ -468,7 +469,7 @@ int sub_800A5408(int which, int text, int c)
     cfg[1] = 0;
     cfg[2] = text;
     cfg[3] = (int)tbl[which];
-    cfg[4] = (settingsFlags_8008B58C & 7) != 3;
+    cfg[4] = (settingsFlags_8008B58C.word & 7) != 3;
     cfg[5] = 0;
     cfg[6] = 0;
     cfg[7] = 0;
@@ -478,7 +479,7 @@ int sub_800A5408(int which, int text, int c)
     cfg[11] = 1;
     cfg[12] = 0;
     cfg[13] = 0;
-    cfg[14] = (settingsFlags_8008B58C >> 3) & 1;
+    cfg[14] = (settingsFlags_8008B58C.word >> 3) & 1;
     cfg[15] = 1;
     cfg[16] = 0;
     return (int)OpenMessageWindow_8003422C(cfg);
@@ -1186,9 +1187,9 @@ void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     v.vx = buf->pos_10[0];
     v.vy = buf->pos_10[1];
     v.vz = buf->pos_10[2];
-    v.vx -= dword_8008D600[0].field_0;
-    v.vy -= dword_8008D600[1].field_0;
-    v.vz -= dword_8008D600[2].field_0;
+    v.vx -= dword_8008D600.vx;
+    v.vy -= dword_8008D600.vy;
+    v.vz -= dword_8008D600.vz;
     RotTransPers(&v, (long*)&sxy, &z, &flag);
     if (++p->frame_8 > 16)
     {
@@ -1265,7 +1266,7 @@ void sub_800A816C(EventEntry* e)
     }
     if (!(dword_800A3A88 & 8))
     {
-        v = (settingsFlags_8008B58C >> 3) & 1;
+        v = (settingsFlags_8008B58C.word >> 3) & 1;
         if (v == 1 && (dword_800A3A88 & 4))
         {
             if (!(dword_800A3A88 & 0x10))

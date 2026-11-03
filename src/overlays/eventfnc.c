@@ -2501,8 +2501,8 @@ int sub_800BBE3C(EvCtxEventfnc* c)
     c0 = 0;
     c4 = 0;
     cc = 1;
-    skip = (settingsFlags_8008B58C & 7) != 3;
-    c8 = settingsFlags_8008B58C & 0x18;
+    skip = (settingsFlags_8008B58C.word & 7) != 3;
+    c8 = settingsFlags_8008B58C.word & 0x18;
     pc = c->pc_8;
     c8 = c8 == 0x18;
     pos = (unsigned short*)ret;
@@ -2734,7 +2734,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
                 k = &dword_800AEBF0[i].xa_2;
             }
         }
-        if (((EvSettingsEventfnc*)&saveData_8008B570.field_1C_settings)->b22 == 1 && k && dword_800AEBEC != k)
+        if (saveData_8008B570.settings_1C.bits.i_22 == 1 && k && dword_800AEBEC != k)
         {
             dword_800AEBEC = k;
             XaRequestPlay_80043564(k->a_0, k->b_2, k->c_4);
@@ -2744,9 +2744,9 @@ int sub_800BC2B4(EvCtxEventfnc* c)
     if (sub_80034A30(c->f11C_11C))
     {
         s = &saveData_8008B570;
-        if (((EvSettingsEventfnc*)&s->field_1C_settings)->b3 == 1 || XaIsIdle_80043584())
+        if (s->settings_1C.bits.b_3 == 1 || XaIsIdle_80043584())
         {
-            if (((EvSettingsEventfnc*)&s->field_1C_settings)->b4 == 1 || !c->f18_18)
+            if (s->settings_1C.bits.c_4 == 1 || !c->f18_18)
             {
                 sub_80034A68(c->f11C_11C);
                 c->flags_0 |= 2;

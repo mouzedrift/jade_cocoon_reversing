@@ -177,13 +177,6 @@ void FreeSoundTask_8003006C(int a0, int* a1)
 #endif
 INCLUDE_ASM(FreeSoundTask_8003006C);
 
-typedef struct
-{
-    short field_0_file_id;
-    short field_2_seq;
-    short field_4;
-    short field_6_sub_sound;
-} SoundSeqInfo_300E0;
 extern void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops);
 extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
@@ -202,13 +195,13 @@ int PlayMusic_800300E0(int idx, int a1)
     }
     if (t->bgm_4->field_6_sound_idx == idx)
     {
-        if (t->bgm_4->field_4_seq_num == ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq)
+        if (t->bgm_4->field_4_seq_num == soundFiles_80082F0C[idx].field_2_seq)
         {
             return 1;
         }
         SsSepStop(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num);
         SsSepSetVol(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num, 0, 0);
-        t->bgm_4->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
+        t->bgm_4->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(t->bgm_4, idx, 1);
         return 1;
     }
@@ -216,13 +209,13 @@ int PlayMusic_800300E0(int idx, int a1)
     {
         SsSepStop(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num);
         SsSepSetVol(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num, 0, 0);
-        t->bgm_4->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
+        t->bgm_4->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(t->bgm_4, idx, 1);
         return 1;
     }
     if (t->sfx_8 && GetSoundFileId_80030D4C(t->sfx_8->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
     {
-        t->sfx_8->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
+        t->sfx_8->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(t->sfx_8, idx, 1);
         return 1;
     }
@@ -255,7 +248,7 @@ int PlayMusic_800300E0(int idx, int a1)
     req.paramsSize_18 = 4;
     req.callback_1C = LoadSoundFromBuffer_800307B4;
     t->request_10 = QueueFileRequest_8003BC84(&req);
-    sub = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_6_sub_sound;
+    sub = soundFiles_80082F0C[idx].field_6_sub_sound;
     if (sub >= 0)
     {
         t->sfx_8->field_6_sound_idx = sub;
@@ -385,12 +378,6 @@ void StopSoundSeqById_800306FC(int idx)
     }
 }
 extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
-typedef struct
-{
-    short field_0_file_id;
-    short field_2_seq;
-    int field_4;
-} SoundSeqInfo_307B4;
 // Matched
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader)
 {
@@ -441,7 +428,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
     SsUtSetReverbDepth(50, 50);
     sound->field_4_seq_num = -1;
 
-    if (sound->field_8_sep_data_ptr && ((SoundSeqInfo_307B4*)soundFiles_80082F0C)[sound->field_6_sound_idx].field_2_seq >= 0)
+    if (sound->field_8_sep_data_ptr && soundFiles_80082F0C[sound->field_6_sound_idx].field_2_seq >= 0)
     {
         PlayMusicSeq_80031260(sound, sound->field_6_sound_idx, 1);
     }
@@ -449,7 +436,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 // Matched
 void ApplyAudioOutputFormat_80030988(void)
 {
-    if (!((settingsFlags_8008B58C >> 6) & 1))
+    if (!((settingsFlags_8008B58C.word >> 6) & 1))
     {
         SsSetStereo();
     }
@@ -465,7 +452,7 @@ void ApplyBgmVolume_800309D8(SoundStruct* s)
     int i;
     for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
     {
-        int vol = (saveData_8008B570.field_1C_settings >> 7) & 0x7F;
+        int vol = (saveData_8008B570.settings_1C.word >> 7) & 0x7F;
         SsSepSetVol(s->field_C_sep_access_num, i, vol, vol);
     }
 }

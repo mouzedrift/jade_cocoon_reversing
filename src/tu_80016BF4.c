@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "tu_80036528.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"

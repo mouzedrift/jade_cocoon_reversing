@@ -35,11 +35,10 @@ typedef struct
 typedef struct
 {
   short field_0_file_id;
-  unsigned char field_2;
-  unsigned char field_3;
+  short field_2_seq; // sequence played from the file (-1 = none)
   unsigned char field_4_seq_count;
   unsigned char field_5_seq_count;
-  short field_6;
+  short field_6_sub_sound;
 } SoundInfo;
 
 extern int GetSoundFileId_80030D4C(int idx);

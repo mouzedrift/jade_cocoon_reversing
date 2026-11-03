@@ -31,16 +31,16 @@ void InitGameDefaults_80040718(void)
     int j;
     unknownFlags_8008D678 = 0;
     geomScreenDistance_8008B548 = 0;
-    saveData_8008B570.field_1C_settings &= 0xFFFFC07F;
-    saveData_8008B570.field_1C_settings |= 0x2800;
-    saveData_8008B570.field_1C_settings &= 0xFFE03FFF;
-    saveData_8008B570.field_1C_settings |= 0x100000;
-    saveData_8008B570.field_1C_settings |= 0x200038;
-    saveData_8008B570.field_1C_settings &= 0xFFFFFFF8;
-    saveData_8008B570.field_1C_settings |= 0x400002;
-    saveData_8008B570.field_1C_settings |= 0x800000;
-    saveData_8008B570.field_1C_settings |= 0x1000000;
-    saveData_8008B570.field_1C_settings &= 0xFFFFFFBF;
+    saveData_8008B570.settings_1C.word &= 0xFFFFC07F;
+    saveData_8008B570.settings_1C.word |= 0x2800;
+    saveData_8008B570.settings_1C.word &= 0xFFE03FFF;
+    saveData_8008B570.settings_1C.word |= 0x100000;
+    saveData_8008B570.settings_1C.word |= 0x200038;
+    saveData_8008B570.settings_1C.word &= 0xFFFFFFF8;
+    saveData_8008B570.settings_1C.word |= 0x400002;
+    saveData_8008B570.settings_1C.word |= 0x800000;
+    saveData_8008B570.settings_1C.word |= 0x1000000;
+    saveData_8008B570.settings_1C.word &= 0xFFFFFFBF;
     j = 14;
     for (i = 0; i < 15; i++)
     {

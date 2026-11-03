@@ -2446,7 +2446,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
         if (u->field_94 == 1)
         {
             sv = &saveData_8008B570;
-            if (!((sv->field_1C_settings >> 5) & 1))
+            if (!((sv->settings_1C.word >> 5) & 1))
             {
                 MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
                 sub_800B9B44((short*)u->field_50);

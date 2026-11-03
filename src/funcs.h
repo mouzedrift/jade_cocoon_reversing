@@ -26,6 +26,7 @@ struct ModelAnim;
 struct OverlayLoader;
 struct Fade_8001A41C;
 struct XaTask;
+struct ModelDesc;
 struct EffectFile;
 struct TimInfo;
 
@@ -268,7 +269,7 @@ extern int sub_8001CD34(void);
 extern int GetPersonIcon_8001CD6C(void);
 extern int sub_8001CE4C(void);
 extern unsigned short GetItemPrice_8001CE54(int idx);
-extern int GetModelDesc_800251E4(int idx);
+extern struct ModelDesc* GetModelDesc_800251E4(int idx);
 extern short ratan2_8003B548(long y, long x);
 extern int DATA_GetFileSize_8003C87C(int idx);
 extern int IsPoolBlock_80040274(int a0, int* a1);

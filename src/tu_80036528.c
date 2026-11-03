@@ -757,7 +757,6 @@ void sub_8003856C(CameraCtrl* p)
 extern void sub_8003856C(CameraCtrl* p);
 extern void sub_800398B4(CameraCtrl* p, void* q);
 extern int dword_8008D4BC;
-#define D600_VEC ((VECTOR*)dword_8008D600)
 typedef struct
 {
     DVECTOR xy;
@@ -781,9 +780,9 @@ void sub_8003891C(CameraCtrl* p, void* q)
     sv.vy = v->y;
     sv.vz = v->z;
     sv.vy -= 0x15E;
-    sv.vx -= D600_VEC->vx;
-    sv.vy -= D600_VEC->vy;
-    sv.vz -= D600_VEC->vz;
+    sv.vx -= dword_8008D600.vx;
+    sv.vy -= dword_8008D600.vy;
+    sv.vz -= dword_8008D600.vz;
     geomScreenDistance_8008B548 = b >> 12;
     SetGeomScreen(a / 4096);
     word_8008D668.z = RotTransPers(&sv, (long*)&word_8008D668.xy, &pr, &flag);
@@ -820,17 +819,17 @@ void sub_80038A5C(CameraCtrl* p, int a, struct_v3* b, int t)
     sv.vy = v->y;
     sv.vz = v->z;
     sv.vy -= 0x15E;
-    sv.vx -= D600_VEC->vx;
-    sv.vy -= D600_VEC->vy;
-    sv.vz -= D600_VEC->vz;
+    sv.vx -= dword_8008D600.vx;
+    sv.vy -= dword_8008D600.vy;
+    sv.vz -= dword_8008D600.vz;
     word_8008D668.z = RotTransPers(&sv, (long*)&word_8008D668.xy, &pr, &flag);
     sv2.vx = b->x;
     sv2.vy = b->y;
     sv2.vz = b->z;
     sv2.vy -= 0x15E;
-    sv2.vx -= D600_VEC->vx;
-    sv2.vy -= D600_VEC->vy;
-    sv2.vz -= D600_VEC->vz;
+    sv2.vx -= dword_8008D600.vx;
+    sv2.vy -= dword_8008D600.vy;
+    sv2.vz -= dword_8008D600.vz;
     tmp.z = RotTransPers(&sv2, (long*)&tmp.xy, &pr, &flag);
     word_8008D668.xy.vx += (tmp.xy.vx - word_8008D668.xy.vx) * t / 4096;
     word_8008D668.xy.vy += (tmp.xy.vy - word_8008D668.xy.vy) * t / 4096;
@@ -1006,7 +1005,7 @@ void sub_8003970C(int idx_, int* a5)
     p->spline_218 = (CamSpline*)a5;
     p->flags_4 |= 8;
     r = (short)sub_800AB4D8(0xE);
-    if (((settingsFlags_8008B58C & 0x200000) >> 21) == 1)
+    if (((settingsFlags_8008B58C.word & 0x200000) >> 21) == 1)
     {
         q = p->keys_1C8;
         p->keys_1C8[0] = 0;
@@ -1144,9 +1143,9 @@ void sub_80039E14(void)
 {
     VECTOR d;
     int a;
-    D600_VEC->vx = cameraState_8008D4F0.field_14.x;
-    D600_VEC->vy = cameraState_8008D4F0.field_14.y;
-    D600_VEC->vz = cameraState_8008D4F0.field_14.z;
+    dword_8008D600.vx = cameraState_8008D4F0.field_14.x;
+    dword_8008D600.vy = cameraState_8008D4F0.field_14.y;
+    dword_8008D600.vz = cameraState_8008D4F0.field_14.z;
     d.vx = cameraState_8008D4F0.field_20.x - cameraState_8008D4F0.field_14.x;
     d.vy = cameraState_8008D4F0.field_20.y - cameraState_8008D4F0.field_14.y;
     d.vz = cameraState_8008D4F0.field_20.z - cameraState_8008D4F0.field_14.z;

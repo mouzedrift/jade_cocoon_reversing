@@ -850,7 +850,7 @@ void sub_800353A0(MsgWindow* o)
                 o->res_18.field_1E++;
             }
         }
-        else if ((settingsFlags_8008B58C & 0xC00000) == 0xC00000 && o->field_2A4 == 1 &&
+        else if ((settingsFlags_8008B58C.word & 0xC00000) == 0xC00000 && o->field_2A4 == 1 &&
                  XaNoRequestPending_800435A4() == 1 && XaIsIdle_80043584() == 1)
         {
             if (o->flags_4 & 0x800)

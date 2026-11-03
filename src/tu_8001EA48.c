@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "tu_80036528.h"
 #include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
@@ -616,9 +617,9 @@ int sub_8001FC90(Actor* a0)
     v.vx = *(unsigned short*)&a0->pos_38[0];
     v.vy = *(unsigned short*)&a0->pos_38[1];
     v.vz = *(unsigned short*)&a0->pos_38[2];
-    v.vx -= dword_8008D600[0].field_0;
-    v.vy -= dword_8008D600[1].field_0;
-    v.vz -= dword_8008D600[2].field_0;
+    v.vx -= dword_8008D600.vx;
+    v.vy -= dword_8008D600.vy;
+    v.vz -= dword_8008D600.vz;
     RotTransPers(&v, &sxy, &p, &flag);
     return flag >= 0;
 }
@@ -669,11 +670,11 @@ void sub_8001FD08(void* a0)
         {
             sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0],
                          o->prevFrame_94 % ((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0].frameCount_0,
-                         0x1000 - o->blend_AC, (char*)stru_8008D534 + v * 24, t);
+                         0x1000 - o->blend_AC, &stru_8008D534[v], t);
         }
         else
         {
-            sub_80046A58(&o->draw_164, (char*)stru_8008D534 + v * 24, t);
+            sub_80046A58(&o->draw_164, &stru_8008D534[v], t);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {
@@ -2822,7 +2823,7 @@ void nullsub_4(void)
 {
 }
 // Matched
-int GetModelDesc_800251E4(int idx)
+ModelDesc* GetModelDesc_800251E4(int idx)
 {
     return modelDescs_800824CC[idx];
 }
@@ -2846,7 +2847,7 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
     i = FindFreeModelIndex_8002667C(a0);
     if (i >= 0)
     {
-        e = (ModelDesc*)modelDescs_800824CC[id];
+        e = modelDescs_800824CC[id];
         it = &a0->items[i];
         x = (ModelVramSlot*)a0->field_C + i;
         InitModelLoadParams_80025ED0(&b);
@@ -2995,7 +2996,7 @@ int sub_800255F0(int a, int idx, int a2)
     FileRequestDesc c;
     struct_112* x = a0->items;
     ModelVramSlot* y = a0->field_C;
-    ModelDesc* e = (ModelDesc*)modelDescs_800824CC[idx];
+    ModelDesc* e = modelDescs_800824CC[idx];
     InitModelLoadParams_80025ED0(&b);
     b.flags_0 = 2;
     b.sel_8 = a2;
@@ -3020,7 +3021,7 @@ int sub_800256B8(int a, int id)
     ModelLoadParams b;
     FileRequestDesc c;
     struct_112* it = &a0->items[FindModelIndex_80026630(a0, id)];
-    ModelDesc* e = (ModelDesc*)modelDescs_800824CC[it->id_38];
+    ModelDesc* e = modelDescs_800824CC[it->id_38];
     InitModelLoadParams_80025ED0(&b);
     b.flags_0 = 8;
     b.model_14 = it;
@@ -3047,7 +3048,7 @@ int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
     int u;
     int v;
     FreeModelAnimSet_80025884(p);
-    e = (ModelDesc*)modelDescs_800824CC[p->id_38];
+    e = modelDescs_800824CC[p->id_38];
     t = (char*)e + (e->animCount_12 * 6 + 0x14);
     u = ((unsigned short*)t)[idx * 2 + 1];
     v = ((unsigned short*)t)[idx * 2 + 2];
@@ -3125,7 +3126,7 @@ int sub_80025974(struct_112* p, int idx, int flag)
     int v;
     struct_112_list* g;
     sub_80025AB0(p);
-    e = (ModelDesc*)modelDescs_800824CC[p->id_38];
+    e = modelDescs_800824CC[p->id_38];
     t = (char*)e + (e->animCount_12 * 6 + 0x14);
     t += *(unsigned short*)t * 4 + 2;
     g = (struct_112_list*)p->field_0;

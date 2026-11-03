@@ -149,6 +149,9 @@ extern int sub_800BBDD8(int a);
 
 extern char dword_80091C10[];
 
+// the low halves of dword_8008D600 (VECTOR camera eye), read with lhu by sub_800BC5C8
+extern unsigned short word_8008D600[];
+
 extern int dword_800AEBD8;
 
 extern void sub_800B8940(int* ids);
@@ -441,15 +444,6 @@ typedef struct EvVoiceEventfnc
     EvXaEventfnc xa_2;
 } EvVoiceEventfnc;
 
-typedef struct EvSettingsEventfnc
-{
-    unsigned int pad_0 : 3;
-    unsigned int b3 : 1;
-    unsigned int b4 : 1;
-    unsigned int pad_5 : 17;
-    unsigned int b22 : 1;
-} EvSettingsEventfnc;
-
 extern int sub_800349B4(int a, EvMsgInfoEventfnc* b);
 
 extern void sub_800A67B4(EvCtxEventfnc* c);
@@ -466,7 +460,6 @@ extern EvXaEventfnc* dword_800AEBEC;
 
 extern EvVoiceEventfnc* dword_800AEBF0;
 
-extern unsigned short word_8008D600[];
 
 extern void sub_8005BBC8();
 

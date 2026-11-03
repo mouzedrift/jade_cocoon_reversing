@@ -293,7 +293,7 @@ void DrawNameField_800B7414(NameEntry* p)
     r.y = 0x24;
     r.w = 0xB8;
     r.h = 0x14;
-    c1.color = saveData_8008B570.uiColor_20;
+    c1.color = saveData_8008B570.uiColor_20.i;
     c1.a = 0;
     c1.b = 1;
     DrawWindow_80042460(&r, &c1, pOT_8008D454 + 14, 0);
@@ -301,7 +301,7 @@ void DrawNameField_800B7414(NameEntry* p)
     r.y = 0x27;
     r.w = 8;
     r.h = 0xC;
-    c2.color = saveData_8008B570.uiColor_20;
+    c2.color = saveData_8008B570.uiColor_20.i;
     c2.a = 1;
     c2.b = 1;
     DrawWindow_80042460(&r, &c2, pOT_8008D454 + 14, GetTime30Hz_8002C64C());

@@ -365,14 +365,14 @@ void sub_800A49DC(int side, int slot)
         w.y_12 = xy[1];
         c1.c_2 = 0;
         c1.c_3 = 1;
-        c1.col_0 = saveData_8008B570.uiColor_20;
+        c1.col_0 = saveData_8008B570.uiColor_20.i;
         sub_8002ADB4(&w, &c1, 0xF, 0);
         pos[0] = xy[0] + 0x2F;
         pos[1] = xy[1];
         sub_8002F078(u->field_84, pos, 0, 0xF);
         c2.c_2 = 0;
         c2.c_3 = 1;
-        c2.col_0 = saveData_8008B570.uiColor_20;
+        c2.col_0 = saveData_8008B570.uiColor_20.i;
         r1.x = xy[0] + 0x32;
         r1.y = xy[1];
         r1.w = 0x5E;
@@ -383,7 +383,7 @@ void sub_800A49DC(int side, int slot)
         sub_800A1844(u, pos2, 0);
         c3.c_2 = 0;
         c3.c_3 = 1;
-        c3.col_0 = saveData_8008B570.uiColor_20;
+        c3.col_0 = saveData_8008B570.uiColor_20.i;
         r2.x = xy[0];
         r2.y = xy[1] + 0x14;
         r2.w = 0x90;

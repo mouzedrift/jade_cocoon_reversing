@@ -6,25 +6,6 @@
 
 typedef struct { char b[8]; } Bytes8Config;
 
-typedef struct CfgSettingsConfig
-{
-    unsigned int w0;
-    char pad_4[0x18];
-    unsigned int a_1C : 3;
-    unsigned int b_1C : 1;
-    unsigned int c_1C : 1;
-    unsigned int d_1C : 1;
-    unsigned int e_1C : 1;
-    unsigned int f_1C : 7;
-    unsigned int g_1C : 7;
-    unsigned int h_1C : 1;
-    unsigned int i_1C : 1;
-    unsigned int j_1C : 1;
-    unsigned int k_1C : 1;
-    unsigned int l_1C : 7;
-    unsigned char b_20;
-} CfgSettingsConfig;
-
 typedef struct CfgCtxConfig
 {
     char pad_0[2];
@@ -58,8 +39,6 @@ typedef struct CfgHolderConfig
     CfgTaskConfig t_10;
 } CfgHolderConfig;
 extern CfgHolderConfig* dword_8008B4B8;
-extern CfgSettingsConfig dword_8008B570;
-extern unsigned int settingsFlags_8008B58C;
 extern int dword_800C5944;
 extern Bytes8Config dword_800C4CD4[];
 extern char dword_800C592C[];
@@ -204,25 +183,25 @@ INCLUDE_OVERLAY_ASM(config, sub_800C2F70);
 // Matched
 void sub_800C3060(CfgCtxConfig* c)
 {
-    CfgSettingsConfig* s = &dword_8008B570;
+    SaveData* s = &saveData_8008B570;
     c->f14 = ((unsigned char*)s)[0x1F] & 1;
-    c->f8 = s->a_1C;
-    c->f9 = s->b_1C;
-    c->fa = s->c_1C;
-    c->fb = s->d_1C;
-    c->fc = s->e_1C;
-    c->fd = s->f_1C / 16;
-    c->fe = s->g_1C / 16;
+    c->f8 = s->settings_1C.bits.a_0;
+    c->f9 = s->settings_1C.bits.b_3;
+    c->fa = s->settings_1C.bits.c_4;
+    c->fb = s->settings_1C.bits.d_5;
+    c->fc = s->settings_1C.bits.e_6;
+    c->fd = s->settings_1C.bits.bgmVol_7 / 16;
+    c->fe = s->settings_1C.bits.sfxVol_14 / 16;
     c->f15 = c->fd;
     c->f16 = c->fe;
-    c->ff = s->b_20;
-    c->f10 = s->h_1C;
-    c->f11 = s->i_1C;
+    c->ff = s->uiColor_20.b;
+    c->f10 = s->settings_1C.bits.h_21;
+    c->f11 = s->settings_1C.bits.i_22;
     if (c->f14 == 0)
     {
         c->f11 = 1;
     }
-    if (dword_8008B570.w0 & 0x40)
+    if (saveData_8008B570.field_0 & 0x40)
     {
         c->f12 = 0;
     }
@@ -231,7 +210,7 @@ void sub_800C3060(CfgCtxConfig* c)
         c->f12 = 1;
     }
     c->fa = c->f9;
-    c->f13 = (settingsFlags_8008B58C >> 0x17) & 1;
+    c->f13 = (settingsFlags_8008B58C.word >> 0x17) & 1;
     if (c->f14 == 0)
     {
         c->f13 = 1;
@@ -252,13 +231,13 @@ void sub_800C31DC(CfgCtxConfig* c)
             switch (c->f44)
             {
             case 0:
-                c->f15 = dword_8008B570.f_1C / 16;
+                c->f15 = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
                 break;
             case 1:
-                c->f16 = dword_8008B570.g_1C / 16;
+                c->f16 = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
                 break;
             case 2:
-                dword_8008B570.e_1C = c->fc;
+                saveData_8008B570.settings_1C.bits.e_6 = c->fc;
                 break;
             }
         }
@@ -270,59 +249,59 @@ void sub_800C31DC(CfgCtxConfig* c)
             {
             case 0:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->a_1C = c->f8;
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.a_0 = c->f8;
                 }
                 break;
             case 1:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
+                SaveData* s = &saveData_8008B570;
                 unsigned char t = c->f9;
-                s->b_1C = t;
-                s->c_1C = t;
-                s->c_1C = c->fa;
+                s->settings_1C.bits.b_3 = t;
+                s->settings_1C.bits.c_4 = t;
+                s->settings_1C.bits.c_4 = c->fa;
                 }
                 break;
             case 2:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->i_1C = c->f11;
-                if (s->i_1C == 0)
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.i_22 = c->f11;
+                if (s->settings_1C.bits.i_22 == 0)
                 {
                     c->f13 = 0;
-                    s->j_1C = 0;
+                    s->settings_1C.bits.j_23 = 0;
                 }
                 }
                 break;
             case 3:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->j_1C = c->f13;
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.j_23 = c->f13;
                 }
                 break;
             case 4:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->k_1C = c->f14;
-                if (s->k_1C == 0)
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.k_24 = c->f14;
+                if (s->settings_1C.bits.k_24 == 0)
                 {
                     c->f11 = 1;
-                    s->i_1C = 1;
+                    s->settings_1C.bits.i_22 = 1;
                     c->f13 = 1;
-                    s->j_1C = 1;
+                    s->settings_1C.bits.j_23 = 1;
                 }
                 }
                 break;
             case 5:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->d_1C = c->fb;
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.d_5 = c->fb;
                 }
                 break;
             case 6:
                 {
-                CfgSettingsConfig* s = &dword_8008B570;
-                s->h_1C = c->f10;
+                SaveData* s = &saveData_8008B570;
+                s->settings_1C.bits.h_21 = c->f10;
                 }
                 break;
             }
@@ -339,11 +318,11 @@ void sub_800C31DC(CfgCtxConfig* c)
         {
             if (c->f12 == 0)
             {
-                dword_8008B570.w0 |= 0x40;
+                saveData_8008B570.field_0 |= 0x40;
             }
             else
             {
-                dword_8008B570.w0 &= ~0x40;
+                saveData_8008B570.field_0 &= ~0x40;
             }
         }
         break;
@@ -545,10 +524,10 @@ void sub_800C39C4(CfgCtxConfig* c)
     a.fC = c->f44;
     a.f10 = (int)dword_800C4E98;
     b.f4 = GetTime30Hz_8002C64C();
-    b.fC = dword_8008B570.f_1C / 16;
+    b.fC = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
     b.f10 = (int)dword_800C5298;
     d.f4 = GetTime30Hz_8002C64C();
-    d.fC = dword_8008B570.g_1C / 16;
+    d.fC = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
     d.f10 = (int)dword_800C52BC;
     e.f4 = GetTime30Hz_8002C64C();
     e.fC = c->fc;
@@ -917,7 +896,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         switch (c->f44)
         {
         case 0:
-            v = dword_8008B570.f_1C / 16;
+            v = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
             v10.f0 = 0;
             v10.f4 = 0;
             v10.f8 = 8;
@@ -929,10 +908,10 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
                 PlaySfx_80031494(0x7F);
             }
             v = v10.f6;
-            dword_8008B570.f_1C = v * 16;
+            saveData_8008B570.settings_1C.bits.bgmVol_7 = v * 16;
             break;
         case 1:
-            v = dword_8008B570.g_1C / 16;
+            v = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
             v20.f0 = 0;
             v20.f4 = 0;
             v20.f8 = 8;
@@ -944,7 +923,7 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
                 PlaySfx_80031494(0x7F);
             }
             v = v20.f6;
-            dword_8008B570.g_1C = v * 16;
+            saveData_8008B570.settings_1C.bits.sfxVol_14 = v * 16;
             break;
         case 2:
             v30.f0 = 0;
@@ -1094,8 +1073,8 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
     }
     else if (IsCancelPressedP1_8003D41C(1))
     {
-        dword_8008B570.f_1C = c->f15 * 16;
-        dword_8008B570.g_1C = c->f16 * 16;
+        saveData_8008B570.settings_1C.bits.bgmVol_7 = c->f15 * 16;
+        saveData_8008B570.settings_1C.bits.sfxVol_14 = c->f16 * 16;
         sub_800C3060(c);
         t->next_8 = sub_800C2F70;
         c->f38 = 0;

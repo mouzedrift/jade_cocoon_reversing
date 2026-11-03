@@ -406,7 +406,7 @@ void sub_8003DCA4(int draw, TextWindow* w);
 // Matched
 int sub_8003DB74(unsigned int* w, int a)
 {
-    if (w[9] >= 3 - (settingsFlags_8008B58C & 7))
+    if (w[9] >= 3 - (settingsFlags_8008B58C.word & 7))
     {
         w[9] = 0;
         w[7]++;

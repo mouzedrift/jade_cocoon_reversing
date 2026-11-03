@@ -772,7 +772,7 @@ void sub_800BCB98(MenuMain* c, int b)
     r.h = 0x44;
     col.c_2 = 0;
     col.c_3 = 1;
-    col.col = saveData_8008B570.uiColor_20;
+    col.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col, &pOT_8008D454[b], 0);
     pos[0] = 0x61;
     pos[1] = 0x80;
@@ -786,7 +786,7 @@ void sub_800BCB98(MenuMain* c, int b)
     r.h = 0x15;
     col2.c_2 = 0;
     col2.c_3 = 1;
-    col2.col = saveData_8008B570.uiColor_20;
+    col2.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
     ra = sub_800121A8(c->st_1AC[0].rank_44);
     rb = sub_800121A8(levantStatus_8008BD38.rank_44);
