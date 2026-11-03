@@ -160,10 +160,48 @@ extern int dword_800AEBF0;
 
 extern int dword_800B0EC0;
 
+// model header of a party member (first word: model id)
+typedef struct GameModelHdr
+{
+    int id_0;
+    char pad_4[0x1C];
+    short f20;
+    short f22;
+    short f24;
+    short f26;
+    short pad_28;
+    short f2A;
+} GameModelHdr;
+
+// the part of a party member its callbacks get (GameMember.cb_14)
+typedef struct GameCb_1
+{
+    int f0;
+    Actor* actor_4;
+    int* f8;
+    int (*cb_c)();
+    void (*cb_10)();
+} GameCb_1;
+
+// what Actor.desc_15C of a party member points to
+typedef struct GameActorDesc
+{
+    char pad_0[0x30];
+    int clut_30; // index into name_8007DCAC / name_8007DCBC
+} GameActorDesc;
+
+// a party member (dword_800B0EC4.a)
+typedef struct GameMember
+{
+    char pad_0[0x10];
+    GameModelHdr** hdr_10;
+    GameCb_1 cb_14;
+} GameMember;
+
 typedef struct GameList_1
 {
     int count;
-    int a[4];
+    GameMember* a[4];
     int b[4];
     int c[4];
 } GameList_1;
@@ -172,7 +210,8 @@ extern GameList_1 dword_800B0EC4;
 
 extern int dword_800AEBF4;
 
-extern int sub_800A77F4(int a);
+extern GameMember* sub_800A77F4(int a);
+extern GameActorDesc* sub_800A7A1C(int a);
 
 extern int dword_800AEBD8;
 
@@ -237,12 +276,6 @@ typedef struct GameTask_1
     void (*next_8)();
 } GameTask_1;
 
-typedef struct GameCb_1
-{
-    char pad_0[0xc];
-    int (*cb_c)();
-    void (*cb_10)();
-} GameCb_1;
 
 typedef struct GameSub_1
 {
@@ -272,7 +305,8 @@ extern void sub_800B78D0();
 
 extern int sub_800A7790(void);
 
-extern int sub_800A77F4(int a);
+extern GameMember* sub_800A77F4(int a);
+extern GameActorDesc* sub_800A7A1C(int a);
 
 extern short* dword_800AE254[];
 
@@ -1020,19 +1054,12 @@ extern int dword_800B116C[];
 
 extern unsigned char dword_800B11B8[];
 
-typedef struct G2Ent18
-{
-    char pad_0[0x18];
-    struct_obj_A* f18;
-} G2Ent18;
 
 extern int sub_800A7790();
 
-extern G2Ent18* name_800A77F4(int);
 
 extern int sub_8001E1DC(struct_obj_A*);
 
-extern void name_8001E28C(struct_obj_A*);
 
 extern void sub_800ABC78();
 
@@ -1102,14 +1129,6 @@ extern void sub_8004ED78(int);
 
 extern int sub_8003B9E0(int*, int*);
 
-typedef struct G2L
-{
-    char pad_0[0x14];
-    int a;
-    char pad_18[0xC];
-    int b;
-} G2L;
-
 extern G2V12 dword_8007A0A4;
 
 extern G2V12 dword_8007A0B0;
@@ -1165,7 +1184,6 @@ extern int* name_800A7940(int);
 
 extern int IsWithinDistance_8003B740();
 
-extern int name_800B0EC4[];
 
 extern int sub_800A6D50(int);
 
