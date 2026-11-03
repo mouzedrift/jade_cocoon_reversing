@@ -220,7 +220,30 @@ void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
     p[2] -= a5[0] >> 10;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B82C8);
+int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
+{
+    int i;
+    int t0;
+    int t1;
+    int v[4];
+    for (i = 0; i < n; i++)
+    {
+        if (flags[i])
+        {
+            t1 = -1;
+            t0 = -1;
+            sub_800B79E0((int)(ents + i * 8), a1, (int)p, &t0, &t1);
+            if (t0 != -1 && t1 != -1)
+            {
+                sub_800B7E40(p, (int)(ents + i * 8), t0, t1, v);
+                p[0] -= v[2] >> 10;
+                p[2] += v[0] >> 10;
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
 
 void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
 {
