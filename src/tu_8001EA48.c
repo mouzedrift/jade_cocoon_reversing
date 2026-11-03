@@ -2287,38 +2287,46 @@ void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
 }
 #endif
 INCLUDE_ASM(sub_80022CC4);
-#if 0
-// Not matched: s/p regs fixed by copying p; remaining: the source pointer becomes a biased induction variable (q+0x12) instead of plain q
+// 20-byte source records read by sub_8002300C / sub_8002320C
+typedef struct
+{
+    unsigned short h[8];
+    unsigned char b[4];
+} SrcRec300C;
+typedef struct
+{
+    unsigned short h[7];
+    unsigned char e[2];
+    unsigned char b[4];
+} SrcRec320C;
+// Matched
 int sub_8002300C(unsigned char* hdr, unsigned char* p_in, int* a, int k, int h)
 {
     unsigned char* p = p_in;
     int r = 4;
     int i;
-    unsigned char* q;
+    SrcRec300C* q;
     ((struct_8_20b*)a[1])[k].count = *(int*)p;
     ((struct_8_20b*)a[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
-    q = p + r;
+    q = (SrcRec300C*)(p + r);
     for (i = 0; i < *(int*)p; i++)
     {
-        ((struct_8_20b*)a[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
-        ((struct_8_20b*)a[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
-        ((struct_8_20b*)a[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_8_20b*)a[1])[k].items[i].f4 = q[i].h[0];
+        ((struct_8_20b*)a[1])[k].items[i].f6 = q[i].h[1];
+        ((struct_8_20b*)a[1])[k].items[i].f8 = q[i].h[2];
         ((struct_8_20b*)a[1])[k].items[i].fA = 0;
-        ((struct_8_20b*)a[1])[k].items[i].fC = *(unsigned short*)(q + 8);
-        ((struct_8_20b*)a[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
-        ((struct_8_20b*)a[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_8_20b*)a[1])[k].items[i].fC = q[i].h[4];
+        ((struct_8_20b*)a[1])[k].items[i].fE = q[i].h[5];
+        ((struct_8_20b*)a[1])[k].items[i].f10 = q[i].h[6];
         ((struct_8_20b*)a[1])[k].items[i].f12 = 0;
-        ((struct_8_20b*)a[1])[k].items[i].b0 = q[0x10];
-        ((struct_8_20b*)a[1])[k].items[i].b1 = q[0x11];
-        ((struct_8_20b*)a[1])[k].items[i].b2 = q[0x12];
+        ((struct_8_20b*)a[1])[k].items[i].b0 = q[i].b[0];
+        ((struct_8_20b*)a[1])[k].items[i].b1 = q[i].b[1];
+        ((struct_8_20b*)a[1])[k].items[i].b2 = q[i].b[2];
         ((struct_8_20b*)a[1])[k].items[i].b3 = 0;
-        q += 20;
         r += 20;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8002300C);
 #if 0
 // Not matched: same issues as sub_8002300C plus register assignment
 int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h)
