@@ -193,7 +193,48 @@ void sub_800A0F20(int* a)
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A104C);
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1428);
+extern void* memset(void* p, int c, unsigned int n);
+extern void sub_8004D288(VECTOR* out, int* anim, int frame);
+extern void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2);
+extern void sub_80046A58(void* a, void* b, int c);
+extern void sub_800459E4(void* a, void* b, void* c, int d);
+extern char name_800A3268[];
+extern char name_800A3804[];
+extern char name_800A1EE8[];
+void sub_800A1428(int* c)
+{
+    VECTOR pos;
+    char z[8];
+    VECTOR scale;
+    char* m;
+    int* anim;
+    memset(z, 0, 8);
+    m = (char*)AcquireModel_80024D70((struct_112_list*)c[5], c[9]);
+    c[6] = (int)m;
+    anim = (int*)(*(char**)(m + 0x54) + c[0x1A8 / 4] * 28);
+    sub_8004D288(&pos, anim, (unsigned)c[0x1A4 / 4] % anim[0]);
+    pos.vx /= anim[2];
+    pos.vy /= anim[2];
+    pos.vz /= anim[2];
+    pos.vy += 0xFA;
+    scale.vx = (c[0x1BC / 4] + 1) << 12;
+    scale.vy = (c[0x1BC / 4] + 1) << 12;
+    scale.vz = (c[0x1BC / 4] + 1) << 12;
+    c[0x1D4 / 4] = (int)(*(char**)(m + 0x54) + c[0x1A8 / 4] * 28);
+    c[0x1C0 / 4] = *(int*)(m + 0x50);
+    c[0x1C4 / 4] = (int)&pos;
+    c[0x1C8 / 4] = (int)z;
+    c[0x1CC / 4] = (int)(c + 10);
+    c[0x1D0 / 4] = (int)name_800A3268;
+    c[0x1D8 / 4] = (unsigned)c[0x1A4 / 4] % *(unsigned*)c[0x1D4 / 4];
+    c[0x1DC / 4] = 0;
+    c[0x1E0 / 4] = (int)name_800A3804;
+    c[0x1E4 / 4] = (int)&scale;
+    c[0x1E8 / 4] = (int)pOT_8008D690;
+    PlayAnimFrameSfx_8001C364(m, c[0x1A8 / 4], c[0x1D8 / 4]);
+    sub_80046A58(c + 0x1C0 / 4, name_800A1EE8, 0);
+    sub_800459E4(c + 10, m + 0x5C, pOT_8008D690, 0);
+}
 
 typedef struct TstModelBone
 {
