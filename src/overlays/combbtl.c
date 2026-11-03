@@ -89,7 +89,7 @@ extern CombBtlB16 dword_800A4AEC;
 extern void sub_800A0BA8(int, void*, void*);
 typedef struct CombBtlD
 {
-    short s0;
+    unsigned short s0;
     short s2;
     int w[8];
     short s24;
@@ -899,7 +899,66 @@ void sub_800A7BE4()
     StopAllEventEntries_80043B40(dword_8008B564);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7C0C);
+extern unsigned char byte_800A38D8;
+extern void sub_80037BFC(int a);
+extern void StartPadVibration_80036528(int pad, int kind);
+extern void sub_800A7E34(int a, int b, int c);
+extern void sub_800A7ECC();
+void sub_800A7C0C(int side)
+{
+    int me;
+    int other;
+    if (side == 0)
+    {
+        other = byte_800A38D8;
+        me = 0;
+    }
+    else
+    {
+        me = byte_800A38D8;
+        other = 0;
+    }
+    switch (dword_800A85C8.s0)
+    {
+    case 0:
+        break;
+    case 1:
+        sub_800A7E34(side, dword_800A85C8.s0, word_800A8470[side]);
+        if (word_800A8470[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(me, 0);
+            StartPadVibration_80036528(other, 2);
+        }
+        break;
+    case 2:
+        sub_800A7E34(side, dword_800A85C8.s0, word_800A8474[side]);
+        if (word_800A8474[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
+        }
+        break;
+    case 3:
+        sub_800A7E34(side, 1, word_800A8470[side]);
+        sub_800A7E34(side, 2, word_800A8474[side]);
+        if (word_800A8470[side] > 0 || word_800A8474[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
+        }
+        break;
+    case 4:
+        sub_800A7E34(side, 1, word_800A8470[side]);
+        sub_80037BFC(0x1E);
+        StartPadVibration_80036528(side ? byte_800A38D8 : 0, 1);
+        sub_800A7ECC();
+        break;
+    case 5:
+        StartPadVibration_80036528(0, 0x26);
+        break;
+    }
+}
 
 void sub_800A7E34(int a, int b, int c)
 {
