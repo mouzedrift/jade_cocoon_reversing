@@ -16,6 +16,20 @@ typedef struct FtgDrawCtx
     int flags_20; // bit 0: lit (normal + ncds), bit 4: semi-transparent, bits 5-6: blend mode for textured kinds
 } FtgDrawCtx;
 
+// a projected FTG sprite vertex (sub_8004C4F0), three per sprite triple
+typedef struct FtgSpriteVtx
+{
+    long sxy_0;
+    long sz_4;
+    unsigned short uv_8;
+    unsigned short pad_A;
+    unsigned long rgbc_C;
+    long pad_10;
+} FtgSpriteVtx;
+extern FtgSpriteVtx* dword_80098180;        // next free sprite vertex
+extern FtgSpriteVtx* dword_800987D8[][56];  // per slot: the projected vertices, three per triple
+extern unsigned long dword_8009AAD8;        // tpage / clut word of the textured sprites
+
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
 #define FTG_PRIM_SCRATCH getScratchAddr(0x78)
 #define FTG_DRAW_CTX ((FtgDrawCtx*)getScratchAddr(0x85))
