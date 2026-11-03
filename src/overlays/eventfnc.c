@@ -158,7 +158,29 @@ void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B82C8);
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B83E4);
+typedef struct EvTriEventfnc
+{
+    short x_0;
+    short y_2;
+    short z_4;
+    char pad_6[0x12];
+    short nx_18;
+    short ny_1A;
+    short nz_1C;
+    char pad_1E[2];
+} EvTriEventfnc;
+
+typedef struct EvMeshEventfnc
+{
+    int f0_0;
+    EvTriEventfnc* tris_4;
+} EvMeshEventfnc;
+
+void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
+{
+    EvTriEventfnc* t = &m->tris_4[i];
+    v[1] = (t->ny_1A * t->y_2 - t->nx_18 * (v[0] - t->x_0) - t->nz_1C * (v[2] - t->z_4)) / t->ny_1A;
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B844C);
 
@@ -368,6 +390,7 @@ int sub_800B8E9C(EvCtxEventfnc* c)
 }
 
 #if 0
+// Not matched: the original copies p to $v1 and stores ret_C in the return delay slot (stores 8,4,C); no source order reproduced it
 int sub_800B8F14(EvCtxEventfnc* c)
 {
     EvInsEventfnc* p = (EvInsEventfnc*)c->pc_8[c->fEC_EC].c_C;
@@ -1021,48 +1044,15 @@ int sub_800BA7A4(EvCtxEventfnc* c)
     return 0;
 }
 
-#if 0
-extern unsigned short word_8008B84C;
-extern int sub_800A6D30(int a);
-int sub_800BA82C(EvCtxEventfnc* c)
-{
-    word_8008B84C = *(unsigned short*)&c->pc_8->b_8;
-    sub_800A6D30(0);
-    c->pc_8++;
-    eventDispatchHalt_8008B540 = 1;
-    return 1;
-}
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA82C);
-
-#if 0
-extern unsigned short word_8008B850;
-int sub_800BA880(EvCtxEventfnc* c)
-{
-    word_8008B850 = *(unsigned short*)&c->pc_8->b_8;
-    c->pc_8++;
-    return 1;
-}
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA880);
-
-extern void sub_800ADC5C(unsigned short* v, int a);
-int sub_800BA8AC(EvCtxEventfnc* c)
-{
-    unsigned short v[3];
-    v[0] = ((unsigned short*)&c->pc_8->a_4)[0];
-    v[1] = ((unsigned short*)&c->pc_8->b_8)[1];
-    v[2] = ((unsigned short*)&c->pc_8->b_8)[0];
-    sub_800ADC5C(v, c->pc_8->c_C);
-    c->pc_8++;
-    return 1;
-}
-
 extern int dword_80091C94;
 extern int eventDispatchHalt_8008B540;
 typedef struct EvSaveEventfnc
 {
-    char pad_0[0x2E4];
+    char pad_0[0x2DC];
+    unsigned short f2DC_2DC;
+    short pad_2DE;
+    unsigned short f2E0_2E0;
+    short pad_2E2;
     unsigned short f2E4_2E4;
     short pad_2E6;
     unsigned short f2E8_2E8;
@@ -1076,6 +1066,42 @@ typedef struct EvSaveEventfnc
     short pad_7B4;
     unsigned short f7B6_7B6;
 } EvSaveEventfnc;
+
+extern int sub_800A6D30(int a);
+#if 0
+// Not matched: the tail is scheduled differently (the constant 1 lands in $v0 and the halt store sinks below the pc store; original: $v1, halt store first)
+int sub_800BA82C(EvCtxEventfnc* c)
+{
+    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
+    s->f2DC_2DC = *(unsigned short*)&c->pc_8->b_8;
+    sub_800A6D30(0);
+    eventDispatchHalt_8008B540 = 1;
+    c->pc_8++;
+    return 1;
+}
+#endif
+INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA82C);
+
+int sub_800BA880(EvCtxEventfnc* c)
+{
+    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
+    s->f2E0_2E0 = *(unsigned short*)&c->pc_8->b_8;
+    c->pc_8++;
+    return 1;
+}
+
+extern void sub_800ADC5C(unsigned short* v, int a);
+int sub_800BA8AC(EvCtxEventfnc* c)
+{
+    unsigned short v[3];
+    v[0] = ((unsigned short*)&c->pc_8->a_4)[0];
+    v[1] = ((unsigned short*)&c->pc_8->b_8)[1];
+    v[2] = ((unsigned short*)&c->pc_8->b_8)[0];
+    sub_800ADC5C(v, c->pc_8->c_C);
+    c->pc_8++;
+    return 1;
+}
+
 int sub_800BA930(EvCtxEventfnc* c)
 {
     EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
@@ -1506,6 +1532,7 @@ int sub_800BBAE4(int i)
 }
 
 #if 0
+// Not matched: p is copied to $a1 in the original, $v0 here (if/else, ternary, early return all tried)
 extern int sub_800A8EC4(int* p);
 extern int sub_800A7D40(int a);
 int sub_800BBB18(int* p)
@@ -1526,6 +1553,7 @@ int sub_800BBB18(int* p)
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB18);
 
 #if 0
+// Not matched: same $a1/$v0 copy register as sub_800BBB18
 extern int sub_800A9008(int* p);
 extern int sub_800A80C4(int a);
 int sub_800BBB5C(int* p)
@@ -1822,6 +1850,7 @@ void sub_800BC98C(int a)
 }
 
 #if 0
+// Not matched: a/b land in $s1/$s0 in the original, swapped here (param types, temporaries, call-embedded assignment tried)
 extern int dword_800AEBC8;
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
