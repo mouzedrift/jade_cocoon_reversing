@@ -266,6 +266,8 @@ def main(argv):
     b = fb.BUILD
     tag = "overlay_" + name.lower()
     inc = ["-I", os.path.join(fb.PSYQ, "INCLUDE"), "-I", os.path.join(REPO, "src")]
+    # extra defines for experiments, e.g. JC_DEFINES=DEBUG_TTY (see docs/testing_in_emulator.md); unset = matching build
+    inc += ["-D" + d for d in os.environ.get("JC_DEFINES", "").split()]
     objs = []
     for i, src in enumerate(srcs):
         pre, cc, obj = (os.path.join(b, tag + ("_%d" % (i + 1) if i else "") + e) for e in (".preproc", ".o", ".obj"))
@@ -316,10 +318,26 @@ def main(argv):
     finally:
         os.chdir(cwd)
     built = open(os.path.join(b, tag + ".exe"), "rb").read()[0x800:]
-    built = built[:len(data)]
-    built += b"\0" * (len(data) - len(built))  # .bss at the end of the overlay file
+    # end of everything linked (.bss included) from the map; more than the original only for modified
+    # (e.g. debug) builds, which are then written in full (scripts/patch_disc.py can place them)
+    end = max(int(m.group(1), 16) + 1 for m in re.finditer(r"^ [0-9A-F]{8} ([0-9A-F]{8}) [0-9A-F]{8} ",
+                                                              open(os.path.join(b, tag + ".map")).read(), re.M))
+    size = max(len(data), end - base + (-(end - base) % 4))
+    built = built[:size]
+    built += b"\0" * (size - len(built))  # .bss at the end of the overlay file
     diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
     print("%s.BIN: %d of %d words identical" % (name, len(data) // 4 - diff, len(data) // 4))
+    if size > len(data):
+        print("%s.BIN: %d bytes longer than the original" % (name, size - len(data)))
+    # the generated assembly refers to code and data by number (j to non-symbol targets, lui/addiu pairs,
+    # pointer tables in .word data), so a modified build is only usable if nothing moved
+    mapped = {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$",
+                                                                       open(os.path.join(b, tag + ".map")).read(), re.M)}
+    moved = sorted((a, n) for a, n in syms if n in mapped and mapped[n] != a)
+    if moved:
+        print("%s.BIN: warning: %d symbols moved (first %s 0x%08X -> 0x%08X): the generated assembly still uses "
+              "the old addresses, this build will not run correctly" % (name, len(moved), moved[0][1], moved[0][0],
+                                                                         mapped[moved[0][1]]))
     open(os.path.join(b, name + ".BIN"), "wb").write(built)
     open(os.path.join(b, name + ".orig"), "wb").write(data)
     return 1 if diff else 0

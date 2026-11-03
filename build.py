@@ -138,6 +138,8 @@ def generate_ninja():
         psyq_include = os.path.join(psyq_path, "INCLUDE")
         project_src = os.path.join(CURRENT_DIR, "src")
         includes = f"-I {psyq_include} -I {project_src}"
+        # extra defines for experiments, e.g. JC_DEFINES=DEBUG_TTY (see docs/testing_in_emulator.md); unset = matching build
+        includes += "".join(f" -D{d}" for d in os.environ.get("JC_DEFINES", "").split())
 
         psyq_lib = os.path.join(psyq_path, "LIB")
         pysq_lib = f"/l {psyq_lib}"
