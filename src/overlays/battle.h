@@ -105,7 +105,7 @@ extern BatCmd_a dword_800C9E58;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);
 
-extern unsigned char dword_800C9E54;
+extern int dword_800C9E54;
 
 extern int dword_800C9E3C;
 
@@ -130,7 +130,7 @@ extern void FadeOutSeqSlot_800313C8(int);
 
 extern EventNode* dword_8008D624;
 
-extern char dword_800C9D82;
+extern signed char dword_800C9D82;
 
 extern char dword_800C9D83;
 
@@ -1082,7 +1082,7 @@ extern BatMenu_a* dword_800C9E44;
 
 extern BatMenuItem_a* dword_800C9E6C;
 
-extern unsigned short dword_800C9E5C;
+extern int dword_800C9E5C;
 
 extern int dword_800C93A0;
 
@@ -1146,7 +1146,7 @@ extern struct BatState dword_800C9630;
 
 extern short dword_800C92E0;
 
-extern unsigned char dword_800C9E54;
+extern int dword_800C9E54;
 
 extern unsigned char dword_800C9C99;
 
@@ -1159,7 +1159,7 @@ extern int dword_800C9978[][4];
 
 extern char dword_800C9B58[];
 
-extern unsigned short dword_800C9E5C;
+extern int dword_800C9E5C;
 
 extern unsigned short dword_800C968C[][2];
 
