@@ -804,22 +804,31 @@ typedef struct G2V12
     int c;
 } G2V12;
 
-typedef struct G2Inner2
+// Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
+// (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
+typedef struct G2Act
 {
     unsigned int f0;
-    int f4;
+    int f4; // input bits
     int f8;
     int fC;
-    char pad_10[0x10];
+    int f10; // animation frame
+    int f14; // blend animation frame
+    unsigned short u18;
+    unsigned short u1a;
+    short s1c;
+    short s1e;
     short s20;
-    short f22;
-    short f24;
-    char pad_26[2];
-    short f28;
-    char pad_2A[0xA];
+    unsigned short u22;
+    short s24;
+    short s26;
+    short s28;
+    short s2A;
+    int f2C;
+    int f30;
     int f34;
     int f38;
-    char pad_3C[4];
+    int f3c;
     Model* model_40;
     char pad_44[4];
     G2V12 v48;
@@ -828,12 +837,17 @@ typedef struct G2Inner2
     char pad_6C[0xC];
     int f78;
     int f7c;
-} G2Inner2;
+    char pad_80[0x10];
+    MATRIX mats_90[40];
+    char pad_590[0x1E8];
+    int f778;
+    unsigned short u77C;
+} G2Act;
 
 typedef struct G2Ctx2
 {
     char pad_0[0x24];
-    G2Inner2* f24;
+    G2Act* f24;
 } G2Ctx2;
 
 extern G2Ctx* dword_8008B4CC;
@@ -858,31 +872,6 @@ extern void sub_800AC380(int);
 extern int levantEmptyCocoons_8008B818;
 
 extern ModelList* dword_8007DC60; // the GAME overlay's model list
-
-typedef struct G2Act
-{
-    unsigned int f0;
-    int f4; // input bits
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    char pad_18[4];
-    short s1c;
-    short s1e;
-    short s20;
-    unsigned short u22;
-    short s24;
-    short s26;
-    short s28;
-    short s2A;
-    int f2C;
-    char pad_30[4];
-    int f34;
-    int f38;
-    char pad_3C[4];
-    Model* model_40;
-} G2Act;
 
 extern int sub_800A88E0();
 
@@ -974,15 +963,6 @@ extern void sub_800ACB64();
 extern void PlaySfx_80031494(int);
 
 extern void PlaySeqSlot_80031160(int, int);
-
-typedef struct G2Q
-{
-    char pad_0[4];
-    unsigned int f4;
-    char pad_8[0x770];
-    int f778;
-    unsigned short u77C;
-} G2Q;
 
 typedef struct G2Ent16
 {
@@ -1196,25 +1176,6 @@ typedef struct G2Init_1
 
 extern void sub_800B80C8(void* p);
 
-typedef struct G2ActB
-{
-    unsigned int f0;
-    char pad_4[0xc];
-    int f10;
-    char pad_14[4];
-    unsigned short u18;
-    unsigned short u1a;
-    short s1c;
-    char pad_1e[8];
-    short s26;
-    char pad_28[0x20];
-    int v48[3];
-    char pad_54[0x3c];
-    MATRIX mats_90[40];
-    char pad_590[0x1e8];
-    int f778;
-} G2ActB;
-
 typedef struct G2Skel_1
 {
     FtgObject* ftg_0;
@@ -1229,24 +1190,6 @@ typedef struct G2Skel_1
     int f24;
     unsigned long* ot;
 } G2Skel_1;
-
-typedef struct G2ActD
-{
-    unsigned int f0;
-    char pad_4[0xc];
-    unsigned int f10;
-    unsigned int f14;
-    char pad_18[4];
-    short s1c;
-    short s1e;
-    char pad_20[6];
-    short s26;
-    char pad_28[8];
-    int f30;
-    char pad_34[8];
-    int f3c;
-    Model* model_40;
-} G2ActD;
 
 
 extern int sub_80019CC4(void* p);

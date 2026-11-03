@@ -1922,7 +1922,7 @@ void sub_800A9384()
 
 void sub_800A93A4(int* a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     a[0] = (int)sub_80024E64(p->model_40);
     a[1] = (int)&levantPos_8008BD18;
     a[2] = (int)p + 0x590;
@@ -1970,13 +1970,13 @@ void sub_800A955C()
 {
 }
 
-void sub_800A9564(int a, G2ActB* p)
+void sub_800A9564(int a, G2Act* p)
 {
     int i;
     p->f778 = 0;
-    p->v48[0] = levantPos_8008BD18.pos.x;
-    p->v48[1] = levantPos_8008BD18.pos.y;
-    p->v48[2] = levantPos_8008BD18.pos.z;
+    p->v48.a = levantPos_8008BD18.pos.x;
+    p->v48.b = levantPos_8008BD18.pos.y;
+    p->v48.c = levantPos_8008BD18.pos.z;
     if (p->s26 >= 0x1000)
     {
         p->f0 &= ~0x10;
@@ -2011,7 +2011,7 @@ void sub_800A9564(int a, G2ActB* p)
     }
 }
 
-void DrawLevantModel_800A9708(G2ActD* p)
+void DrawLevantModel_800A9708(G2Act* p)
 {
     G2Skel_1 sk;
     int v;
@@ -2092,7 +2092,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
     sub_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
 
-void sub_800A99DC(G2Q* p)
+void sub_800A99DC(G2Act* p)
 {
     if (p->f4 & 0x10000000)
         p->f778 = -0x40;
@@ -2395,7 +2395,7 @@ unsigned short sub_800AB170(int a)
 
 void sub_800AB1A4(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     p->f0 |= 0x20;
     if (a == 1)
     {
@@ -2406,7 +2406,7 @@ void sub_800AB1A4(int a)
 
 int sub_800AB1EC(int a, int b, int c, int d)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (!(p->f0 & 1))
     {
         if (b == 1)
@@ -2473,12 +2473,12 @@ int sub_800AB39C()
 
 void sub_800AB3BC()
 {
-    dword_8008B4A4->f24->f28 = 0;
+    dword_8008B4A4->f24->s28 = 0;
 }
 
 void sub_800AB3D4()
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (!(p->f0 & 0x100))
     {
         p->f0 |= 0x4100;
@@ -2493,7 +2493,7 @@ void sub_800AB3D4()
 
 void sub_800AB444(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (p->f0 & 0x100)
     {
         if (a == 1)
@@ -2594,7 +2594,7 @@ void sub_800AB8AC()
 
 void sub_800AB8DC()
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     p->model_40 = sub_800AC38C();
 }
 
@@ -2615,9 +2615,9 @@ int sub_800AB958()
 
 void sub_800AB978(short a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
-    p->f24 = -1;
-    p->f22 = a;
+    G2Act* p = dword_8008B4A4->f24;
+    p->s24 = -1;
+    p->u22 = a;
     p->f0 &= ~0x20;
 }
 
@@ -2647,7 +2647,7 @@ void sub_800AB9A8(int a, int b, int c)
 
 void sub_800ABAA4(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     p->f78 = a;
     p->f7c = 0;
     p->f0 |= 0x400000;
@@ -2655,7 +2655,7 @@ void sub_800ABAA4(int a)
 
 void sub_800ABAD4()
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     p->f0 &= ~0x400000;
     sub_800ABC78(0);
     p->f0 = (p->f0 & ~0x800) | 8;
@@ -2675,7 +2675,7 @@ int sub_800ABB70()
 
 void sub_800ABB98(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (a == 1)
         p->f0 |= 0x100000;
     else
@@ -2684,7 +2684,7 @@ void sub_800ABB98(int a)
 
 void sub_800ABBD8(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (a)
     {
         p->f0 &= ~0x20000;
@@ -2698,7 +2698,7 @@ void sub_800ABBD8(int a)
 
 void sub_800ABC34(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (a)
         p->f0 &= ~0x40000;
     else
@@ -2707,7 +2707,7 @@ void sub_800ABC34(int a)
 
 void sub_800ABC78(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (a)
     {
         p->f0 |= 0x80000;
@@ -2944,7 +2944,7 @@ void sub_800AC318()
 
 void sub_800AC340(int a)
 {
-    G2Inner2* p = dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (a)
         p->f0 |= 0x1000000;
     else
