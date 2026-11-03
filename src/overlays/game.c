@@ -188,7 +188,7 @@ typedef struct GameQ_1
     int f3c;
 } GameQ_1;
 extern int sub_8001DD44(struct_obj_A* a, int b, int c, int d);
-extern void sub_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
+extern void ReflectPoint_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
 extern void sub_800A7654();
 extern void sub_800A1314();
 extern void SetFadeMode_8001C19C(int a, int b);
@@ -923,23 +923,20 @@ int sub_800A2A70(int a)
 }
 
 #if 0
-// Not matched
+// Not matched: early returns give the right registers but a second `jr $ra` for
+// the last return; a result variable (if/else, nested, goto, ternary) lands in $v1.
 int sub_800A2AB4(void)
 {
-    int r;
-    if (dword_800B1260[0x774 / 4] == 0)
+    GameCtx_1* c = &gCtx_800B1260;
+    if (c->f774 == 0)
     {
-        r = 0;
+        return 0;
     }
-    else if (dword_800B1260[0x3c / 4] == 0)
+    if (c->f3c == 0)
     {
-        r = 1;
+        return 1;
     }
-    else
-    {
-        r = 2;
-    }
-    return r;
+    return 2;
 }
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800A2AB4);
@@ -1444,7 +1441,11 @@ INCLUDE_OVERLAY_ASM(game, sub_800A4278);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A433C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A43FC);
+void sub_800A43FC(GameP4470_1* p)
+{
+    p->f2c = 0x1000 / (rand() % 16) / 2;
+    p->f28 = (rand() & 1) ? 1 : 2;
+}
 
 // Matched
 int sub_800A4470(GameP4470_1* p)
@@ -1482,7 +1483,7 @@ void sub_800A44C0(GameP4470_1* p)
 void sub_800A459C(GameP4470_1* p)
 {
     GameVec3_1 v;
-    sub_800A47B8(&dword_8008BD18, (GameVec3_1*)((char*)p->f8 + 0x38), &v);
+    ReflectPoint_800A47B8(&dword_8008BD18, (GameVec3_1*)((char*)p->f8 + 0x38), &v);
     if (TurnActorTowards_8001DDFC(p->f8, &v, 0x155) == 0)
     {
         sub_8001D71C(p->f8);
@@ -1528,23 +1529,16 @@ void sub_800A46FC(GameP4470_1* p)
     }
 }
 
-#if 0
-// Not matched
-void sub_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out)
+void ReflectPoint_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out)
 {
-    int t, d;
-    t = b->x;
-    d = t - a->x;
-    out->x = d + t;
-    t = b->y;
-    d = t - a->y;
-    out->y = d + t;
-    t = b->z;
-    d = t - a->z;
-    out->z = d + t;
+    int t;
+    t = b->x - a->x;
+    out->x = b->x + t;
+    t = b->y - a->y;
+    out->y = b->y + t;
+    t = b->z - a->z;
+    out->z = b->z + t;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A47B8);
 
 // Matched
 int sub_800A4804(GameP4804_1* p)
@@ -1606,8 +1600,6 @@ int sub_800A48F4(int a)
     return r;
 }
 
-#if 0
-// Not matched
 void sub_800A4940(int a, int b)
 {
     unsigned short* p;
@@ -1618,18 +1610,16 @@ void sub_800A4940(int a, int b)
     else
     {
         p = (unsigned short*)sub_800A53CC();
+        if (p)
+        {
+            p += b;
+        }
     }
     if (p)
     {
-        p += b;
-        if (p)
-        {
-            *p &= ~(0x1f << (a * 5));
-        }
+        *p &= ~(0x1f << (a * 5));
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A4940);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A49CC);
 
@@ -2670,18 +2660,16 @@ int sub_800A7790(void)
     return dword_800B0EC4.count;
 }
 
-#if 0
-// Not matched
-void sub_800A77A0(int a)
+int sub_800A77A0(int a)
 {
     GameList_1* l = &dword_800B0EC4;
-    l->a[l->count] = a;
+    int i = l->count;
+    l->a[i] = a;
     l->b[l->count] = 0;
     l->c[l->count] = 0;
     l->count++;
+    return i;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800A77A0);
 
 // Matched
 int sub_800A77F4(int a)
