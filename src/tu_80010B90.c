@@ -1423,19 +1423,148 @@ int sub_80011D28(int a0)
 
 #endif
 INCLUDE_ASM(sub_80011D28);
+int sub_80011D98(Minion* m, int arg1);
 // Matched
 void sub_80011D78(void* arg0)
 {
     sub_80011D98(arg0, 1);
 }
-#if 0
-void sub_80011D98(void* arg0, int arg1)
+extern int sub_80011D28(int a0);
+extern int sub_800142B8(unsigned char* p);
+extern int sub_80014308(unsigned char* p);
+typedef struct
 {
-}
-#endif
-INCLUDE_ASM(sub_80011D98);
+    char pad_0[0x2C];
+    unsigned char field_2C[6];
+    unsigned char field_32[6];
+    unsigned char field_38[6];
+} MinionGrowth;
+#define MINION_FIELD_4(m) (*(unsigned int*)&(m)->pad_2[1])
 // Matched
-int sub_80012140(int arg0)
+int sub_80011D98(Minion* m, int arg1)
+{
+    unsigned int acc[6];
+    unsigned char kind[6];
+    int i;
+    int j;
+    int k;
+    int t;
+    int n;
+    int levels;
+    int add;
+    int v;
+    int r;
+    int a;
+    int b;
+    int oldA;
+    int oldE;
+
+    n = 0;
+    for (i = 0; i < 6; i++)
+    {
+        kind[i] = sub_80011D28(((MinionGrowth*)m)->field_32[i]);
+    }
+    levels = MINION_FIELD_4(m) >> 26;
+    for (j = 0; j < 6; j++)
+    {
+        acc[j] = ((MinionGrowth*)m)->field_38[j] * 10;
+    }
+    while (MINION_FIELD_4(m) >> 26)
+    {
+        add = 0;
+        if (arg1 == 1)
+        {
+            add = 500;
+        }
+        MINION_FIELD_4(m) += 0xFC000000;
+        for (i = 0; i < 6; i++)
+        {
+            if (kind[i] != 21)
+            {
+                acc[i] += sub_80013E00(kind[i], add);
+                add /= 2;
+            }
+        }
+        n++;
+    }
+    m->field_44 += n;
+    if (m->pad_45[0] == 0)
+    {
+        for (k = 0; k < 6; k++)
+        {
+            v = m->field_2C[k] + acc[k] / 1000;
+            r = (acc[k] % 1000) / 10;
+            if (v >= 0)
+            {
+                t = v;
+                if (t > 100)
+                {
+                    t = 100;
+                }
+                m->field_2C[k] = t;
+            }
+            else
+            {
+                m->field_2C[k] = 0;
+            }
+            if (r >= 0)
+            {
+                t = r;
+                if (t > 100)
+                {
+                    t = 100;
+                }
+                ((MinionGrowth*)m)->field_38[k] = t;
+            }
+            else
+            {
+                ((MinionGrowth*)m)->field_38[k] = 0;
+            }
+        }
+        a = sub_80012140(m->field_44, m);
+        b = sub_80012178(m->field_44, m);
+        oldA = m->field_A;
+        oldE = m->field_E;
+        a = a * (sub_80014308(m->field_2C) * 40 + 6000) / 10000;
+        b = b * (sub_800142B8(m->field_2C) * 40 + 6000) / 10000;
+        if (a >= 0)
+        {
+            t = a;
+            if (t > 999)
+            {
+                t = 999;
+            }
+            m->field_A = t;
+        }
+        else
+        {
+            m->field_A = 0;
+        }
+        if (b >= 0)
+        {
+            t = b;
+            if (t > 999)
+            {
+                t = 999;
+            }
+            m->field_E = t;
+        }
+        else
+        {
+            m->field_E = 0;
+        }
+        if (sub_80033548((int*)m, 0x400) == 0)
+        {
+            m->field_8 += a - oldA;
+            m->field_C += b - oldE;
+        }
+        m->field_8 = (m->field_8 < 0) ? 0 : (m->field_8 > 999) ? 999 : m->field_8;
+        m->field_C = (m->field_C < 0) ? 0 : (m->field_C > 999) ? 999 : m->field_C;
+    }
+    return levels;
+}
+// Matched
+int sub_80012140(int arg0, void* unused)
 {
     int result;
     int var_v0;
@@ -1452,7 +1581,7 @@ int sub_80012140(int arg0)
     return result;
 }
 // Matched
-int sub_80012178(int arg0)
+int sub_80012178(int arg0, void* unused)
 {
     return (arg0 * 3) + 20;
 }

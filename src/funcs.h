@@ -34,8 +34,8 @@ extern int sub_80040D5C(void);
 // Matches
 extern void* malloc3_8003FC4C(unsigned int s);
 extern void free3_8003FC6C(void* block);
-extern int sub_80012178(int arg0);
-extern int sub_80012140(int arg0);
+extern int sub_80012178(int arg0, void* arg1);
+extern int sub_80012140(int arg0, void* arg1);
 extern int GetCapturedMinionsFromBitfield_8003BA58(int arg0);
 extern int IsFadeDone_8001C2FC();
 extern void GameLoop_8004047C(void);
@@ -91,7 +91,6 @@ extern void sub_8002A280(struct_obj_B* p, short a1);
 extern void sub_8002ACE8(int flags, unsigned char* out);
 extern unsigned char sub_80033528(unsigned char* p, int idx);
 extern int sub_80033A70(unsigned char* p, int idx);
-extern void sub_80011D98(void* arg0, int arg1);
 extern void sub_8001EA48(void* arg0);
 
 extern void ListFreeAll_8003FEC8(void* arg0);
