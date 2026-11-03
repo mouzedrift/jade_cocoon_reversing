@@ -2287,72 +2287,78 @@ void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
 }
 #endif
 INCLUDE_ASM(sub_80022CC4);
-#if 0
-// Not matched: s/p regs fixed by copying p; remaining: the source pointer becomes a biased induction variable (q+0x12) instead of plain q
+// 20-byte source records read by sub_8002300C / sub_8002320C
+typedef struct
+{
+    unsigned short h[8];
+    unsigned char b[4];
+} SrcRec300C;
+typedef struct
+{
+    unsigned short h[7];
+    unsigned char e[2];
+    unsigned char b[4];
+} SrcRec320C;
+// Matched
 int sub_8002300C(unsigned char* hdr, unsigned char* p_in, int* a, int k, int h)
 {
     unsigned char* p = p_in;
     int r = 4;
     int i;
-    unsigned char* q;
+    SrcRec300C* q;
     ((struct_8_20b*)a[1])[k].count = *(int*)p;
     ((struct_8_20b*)a[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
-    q = p + r;
+    q = (SrcRec300C*)(p + r);
     for (i = 0; i < *(int*)p; i++)
     {
-        ((struct_8_20b*)a[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
-        ((struct_8_20b*)a[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
-        ((struct_8_20b*)a[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_8_20b*)a[1])[k].items[i].f4 = q[i].h[0];
+        ((struct_8_20b*)a[1])[k].items[i].f6 = q[i].h[1];
+        ((struct_8_20b*)a[1])[k].items[i].f8 = q[i].h[2];
         ((struct_8_20b*)a[1])[k].items[i].fA = 0;
-        ((struct_8_20b*)a[1])[k].items[i].fC = *(unsigned short*)(q + 8);
-        ((struct_8_20b*)a[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
-        ((struct_8_20b*)a[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_8_20b*)a[1])[k].items[i].fC = q[i].h[4];
+        ((struct_8_20b*)a[1])[k].items[i].fE = q[i].h[5];
+        ((struct_8_20b*)a[1])[k].items[i].f10 = q[i].h[6];
         ((struct_8_20b*)a[1])[k].items[i].f12 = 0;
-        ((struct_8_20b*)a[1])[k].items[i].b0 = q[0x10];
-        ((struct_8_20b*)a[1])[k].items[i].b1 = q[0x11];
-        ((struct_8_20b*)a[1])[k].items[i].b2 = q[0x12];
+        ((struct_8_20b*)a[1])[k].items[i].b0 = q[i].b[0];
+        ((struct_8_20b*)a[1])[k].items[i].b1 = q[i].b[1];
+        ((struct_8_20b*)a[1])[k].items[i].b2 = q[i].b[2];
         ((struct_8_20b*)a[1])[k].items[i].b3 = 0;
-        q += 20;
         r += 20;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8002300C);
-#if 0
-// Not matched: same issues as sub_8002300C plus register assignment
-int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h)
+// Matched
+int sub_8002320C(unsigned char* hdr, unsigned char* p_in, int* b, int k, int h)
 {
-    int r = 8;
+    unsigned char* p = p_in;
+    int r;
     int i;
-    unsigned char* q;
+    SrcRec320C* q;
     ((struct_12_20b*)b[1])[k].count = *(int*)p;
     ((struct_12_20b*)b[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
+    r = 8;
     ((struct_12_20b*)b[1])[k].f4 = *(unsigned short*)(p + 4);
     ((struct_12_20b*)b[1])[k].f6 = *(unsigned short*)(p + 6);
-    q = p + r;
+    q = (SrcRec320C*)(p + r);
     for (i = 0; i < *(int*)p; i++)
     {
-        ((struct_12_20b*)b[1])[k].items[i].f4 = *(unsigned short*)(q + 0);
-        ((struct_12_20b*)b[1])[k].items[i].f6 = *(unsigned short*)(q + 2);
-        ((struct_12_20b*)b[1])[k].items[i].f8 = *(unsigned short*)(q + 4);
+        ((struct_12_20b*)b[1])[k].items[i].f4 = q[i].h[0];
+        ((struct_12_20b*)b[1])[k].items[i].f6 = q[i].h[1];
+        ((struct_12_20b*)b[1])[k].items[i].f8 = q[i].h[2];
         ((struct_12_20b*)b[1])[k].items[i].fA = 0;
-        ((struct_12_20b*)b[1])[k].items[i].fC = *(unsigned short*)(q + 8);
-        ((struct_12_20b*)b[1])[k].items[i].fE = *(unsigned short*)(q + 0xA);
-        ((struct_12_20b*)b[1])[k].items[i].f10 = *(unsigned short*)(q + 0xC);
+        ((struct_12_20b*)b[1])[k].items[i].fC = q[i].h[4];
+        ((struct_12_20b*)b[1])[k].items[i].fE = q[i].h[5];
+        ((struct_12_20b*)b[1])[k].items[i].f10 = q[i].h[6];
         ((struct_12_20b*)b[1])[k].items[i].f12 = 0;
-        ((struct_12_20b*)b[1])[k].items[i].b0 = q[0x10];
-        ((struct_12_20b*)b[1])[k].items[i].b1 = q[0x11];
-        ((struct_12_20b*)b[1])[k].items[i].b2 = q[0x12];
+        ((struct_12_20b*)b[1])[k].items[i].b0 = q[i].b[0];
+        ((struct_12_20b*)b[1])[k].items[i].b1 = q[i].b[1];
+        ((struct_12_20b*)b[1])[k].items[i].b2 = q[i].b[2];
         ((struct_12_20b*)b[1])[k].items[i].b3 = hdr[3];
-        ((struct_12_20b*)b[1])[k].items[i].f12 = q[0xE] + (q[0xF] << 8);
+        ((struct_12_20b*)b[1])[k].items[i].f12 = q[i].e[0] + (q[i].e[1] << 8);
         r += 20;
-        q += 20;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_8002320C);
 // Matched
 void sub_80023460(char* p, int arg1)
 {
@@ -2938,30 +2944,28 @@ char* sub_80024F70(void* p, int n)
     }
     return r;
 }
-#if 0
-// Not matched: the original keeps the 0 result in v0 and copies it into the loop counter; ours keeps the result in a2
+// Matched
 char* sub_80024FA8(void* a0, int n)
 {
     char* hdr = *(char**)((char*)a0 + 0x4C);
     char* r = 0;
-    int i = 0;
+    int i;
     if (hdr)
     {
         int off = *(int*)(hdr + 8);
         if (off)
         {
-            hdr = hdr + off + 8;
-            for (; i < n; i++)
+            hdr += off;
+            hdr += 8;
+            for (i = 0; i < n; i++)
             {
                 hdr += *(int*)(hdr + 0x14);
             }
-            return hdr;
+            r = hdr;
         }
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_80024FA8);
 // Matched
 void sub_80024FFC(struct_112* p, int* ids)
 {
@@ -3105,7 +3109,10 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
     return 2;
 }
 #if 0
-// Not matched: the table-entry sum lands in the wrong one of v0/v1, and &b is set up one slot early
+// Not matched (5 lines): the pointer-add form below fixes the &b scheduling and the v0/v1 choice, but gcc then folds
+// k*2 into idx*4 + 0x14 instead of keeping (e[9] + k) * 2. The int form ((k + e[9]) * 2 + (int)e) keeps the sum but
+// misplaces &b and the sum register (8 lines). Tried: operand orders, temporaries for e[9]/k, k/idx types, e[k + 1]
+// double reads, statement order, shifts instead of *2; permuter 1500 iters
 int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
 {
     int b[16];
@@ -3120,7 +3127,9 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
     {
         k = idx * 2 + 10;
         e = (unsigned short*)modelDescs_800824CC[p->id_38];
-        t = (unsigned short*)((k + e[9]) * 2 + (int)e);
+        t = e;
+        t += e[9];
+        t += k;
         u = t[0];
         v = t[1];
         *f = 1;
@@ -3848,13 +3857,9 @@ void FreeModelAnimData_800269C4(int a0, int n, int sel, int h)
         }
     }
 }
-#if 0
-// Not matched: original copies src[0] through a temporary into n (s3) and orders the param copies before the flag init; the last loop reads the source before computing the k*8 dest offset
+// Matched
 void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
 {
-    int* o = a0;
-    int* src = (int*)a1;
-    int h = a2;
     int f1 = 0;
     int f2 = f1;
     unsigned int n;
@@ -3865,22 +3870,22 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     unsigned int j;
     int r;
     int k;
-    o[0] = src[0];
-    o[1] = src[1];
-    n = o[0];
-    m = o[1];
+    ((int*)a0)[0] = ((int*)a1)[0];
+    n = ((int*)a0)[0];
+    ((int*)a0)[1] = ((int*)a1)[1];
+    m = ((int*)a0)[1];
     if ((int)n < 0)
     {
         n &= 0x7FFFFFFF;
-        s = (unsigned short*)(src + 3);
-        o[0] = n;
-        o[2] = src[2];
+        s = (unsigned short*)(((int*)a1) + 3);
+        ((int*)a0)[0] = n;
+        ((int*)a0)[2] = ((int*)a1)[2];
         f1 = 1;
     }
     else
     {
-        o[2] = 0x20;
-        s = (unsigned short*)(src + 2);
+        ((int*)a0)[2] = 0x20;
+        s = (unsigned short*)(((int*)a1) + 2);
     }
     if ((int)m < 0)
     {
@@ -3889,18 +3894,18 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     }
     else
     {
-        o[3] = 0;
+        ((int*)a0)[3] = 0;
     }
-    o[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)h);
-    o[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)h);
-    d = (unsigned short*)o[5];
+    ((int*)a0)[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    ((int*)a0)[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    d = (unsigned short*)((int*)a0)[5];
     for (i = 0; i < m; i++)
     {
         *d++ = *s++;
         *d++ = *s++;
         *d++ = *s++;
     }
-    d = (unsigned short*)o[6];
+    d = (unsigned short*)((int*)a0)[6];
     for (j = 0; j < n; j++)
     {
         *d++ = *s++;
@@ -3924,27 +3929,27 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
         {
             r += 4;
         }
-        s = (unsigned short*)((char*)src + r);
+        s = (unsigned short*)((char*)((int*)a1) + r);
         if (r & 3)
         {
             r += 2;
-            s = (unsigned short*)((char*)src + r);
+            s = (unsigned short*)((char*)((int*)a1) + r);
         }
-        o[3] = *(int*)s;
+        ((int*)a0)[3] = *(int*)s;
         s += 2;
-        o[4] = HeapAlloc_8003FC8C(o[3] * 8, (struct Pool*)h);
-        for (k = 0; k < o[3]; k++)
+        ((int*)a0)[4] = HeapAlloc_8003FC8C(((int*)a0)[3] * 8, (struct Pool*)a2);
+        k = 0;
+        while (k < ((int*)a0)[3])
         {
-            ((unsigned short*)o[4])[k * 4 + 0] = s[0];
-            ((unsigned short*)o[4])[k * 4 + 1] = s[1];
-            ((unsigned short*)o[4])[k * 4 + 2] = s[2];
-            ((unsigned short*)o[4])[k * 4 + 3] = s[3];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 0] = s[0];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 1] = s[1];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 2] = s[2];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 3] = s[3];
+            k++;
             s += 4;
         }
     }
 }
-#endif
-INCLUDE_ASM(LoadModelAnimData_80026A8C);
 // Matched
 int sub_80026D6C(int* p)
 {
@@ -4555,8 +4560,7 @@ extern int sub_800AD154(int a0);
 extern void sub_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void sub_80028808(void* a0, int* a1);
-#if 0
-// Not matched: 5 instructions: in case 1 the a1[0] load, the constant 1 and the eventDispatchHalt address get rotated registers (a0/v0/v1)
+// Matched
 void sub_80027CF8(void* a0, int* a)
 {
     int* a1 = a;
@@ -4675,9 +4679,11 @@ void sub_80027CF8(void* a0, int* a)
         req[7] = (int)sub_80028808;
         a1[1] = QueueFileRequest_8003BC84(req);
         sub_80027478(2, 1);
-        n = a1[0];
-        eventDispatchHalt_8008B540 = 1;
-        a1[0] = n + 1;
+        {
+            int z = a1[0];
+            eventDispatchHalt_8008B540 = 1;
+            a1[0] = z + 1;
+        }
         break;
     case 2:
         if (IsSoundTaskReady_800306B0() && IsModelLoaderDone_800205D0() && GetFileRequestStatus_8003BE30(a1[1]) == 0)
@@ -4692,8 +4698,6 @@ void sub_80027CF8(void* a0, int* a)
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_80027CF8);
 // Matched
 // Matched
 void sub_8002830C(struct_obj_D* p)
@@ -4863,8 +4867,7 @@ extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
 extern char* dword_8008B4A4;
-#if 0
-// Not matched: 2 instructions: in the mapIdx >= 0 branch the original loads the index (lhu) before the -1 store to field_2
+// Matched
 void sub_80028808(void* a0, int* a1)
 {
     char buf[0x104];
@@ -4945,7 +4948,7 @@ void sub_80028808(void* a0, int* a1)
     dword_80091C94 = 0;
     if (((int*)&stru_80091C78)[3] >= 0)
     {
-        saveData_8008B570.mapId_2E4[3].field_0 = ((int*)&stru_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];
         saveData_8008B570.mapId_2E4[3].field_2 = -1;
         ((int*)&stru_80091C78)[3] = -1;
     }
@@ -4963,5 +4966,3 @@ void sub_80028808(void* a0, int* a1)
     }
     *(int*)(*(char**)(dword_8008B4A4 + 0x24) + 0x84) = saveData_8008B570.mapId_2E4[3].field_0;
 }
-#endif
-INCLUDE_ASM(sub_80028808);

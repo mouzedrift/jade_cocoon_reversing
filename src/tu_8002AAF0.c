@@ -125,26 +125,24 @@ void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
     }
     DrawWindow_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
 }
-#if 0
-// Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
+// Matched
 void AlignMenuItem_8002AC88(int flags, short* a, int b, short* out)
 {
     if (flags & 4)
     {
-        out[0] = a[0] - (b - a[2]);
+        out[0] = a[0] + (a[2] - b);
+        out[1] = a[1];
+        return;
     }
-    else if (flags & 8)
+    if (flags & 8)
     {
         out[0] = a[0] + ((unsigned int)(a[2] - b) >> 1);
+        out[1] = a[1];
+        return;
     }
-    else
-    {
-        out[0] = a[0];
-    }
+    out[0] = a[0];
     out[1] = a[1];
 }
-#endif
-INCLUDE_ASM(AlignMenuItem_8002AC88);
 // Matched
 void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
 {
