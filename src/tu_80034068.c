@@ -23,32 +23,30 @@ INCLUDE_DATA(dword_800747D0);
 INCLUDE_DATA(dword_800747E8);
 INCLUDE_DATA(dword_80074800);
 
-#if 0
-// Not matched (register allocation: entry pointer / call result / index swapped between a0, a1, a2)
+// Matched
 int sub_80034068(short* p)
 {
-    int* q;
-    q = (int*)sub_80014390(((unsigned char*)p)[2]);
+    char* q = (char*)sub_80014390(((unsigned char*)p)[2]);
     if (magicData_8007C438[p[0]].field_0 & 0x40)
     {
         switch (magicData_8007C438[p[0]].field_7)
         {
         case 0:
-            if (((short*)q)[4] != ((short*)q)[5])
-                return 0;
-            return 3;
-        case 1:
-            if (p[0] == 0x10)
-                return 0;
-            if (!(q[0] & 0x7FB))
+            if (*(short*)&q[8] == *(short*)&q[0xA])
+            {
                 return 3;
-            return 0;
+            }
+            break;
+        case 1:
+            if (p[0] != 0x10 && !(*(int*)q & 0x7FB))
+            {
+                return 3;
+            }
+            break;
         }
     }
     return 0;
 }
-#endif
-INCLUDE_ASM(sub_80034068);
 // Matched
 int sub_80034124(void)
 {

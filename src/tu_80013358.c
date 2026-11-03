@@ -53,7 +53,7 @@ typedef struct
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
 #if 0
-// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and the chance value ch is in $v1 instead of $v0
+// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and n (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (c/n: call deleted), (int)dmg in the test, n = 100 hoisted, if/else and nested ternary for n, ra < n, n renamed to other locals
 void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, AttackResult* out)
 {
     int crit0;

@@ -452,7 +452,7 @@ typedef struct
     EventEntryFn cb_C;
 } EventDesc;
 #if 0
-// Not matched: only next/next2 get swapped registers ($s6/$s7)
+// Not matched: only next/next2 get swapped registers ($s6/$s7, 7 words). Also tried: declaration orders, static inline node-init helper, next2 = next + 1 / n + 2 / next2++ forms, head->next = head + 1, separate count-loop vars, int i, idx = 0 outside the for; permuter 1000: nothing
 EventNode* CreateEventList_800435B4(EventDesc** list)
 {
     EventDesc** p;

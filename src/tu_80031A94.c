@@ -56,32 +56,37 @@ int sub_80031B0C(Ent4* base, int idx)
     }
     return r;
 }
-extern Ent4* sub_800A11A0(int a0, int a1);
-extern Ent4* sub_800A2BA0(int a0, int a1);
+extern Ent4* sub_800A11A0(int a0);
+extern Ent4* sub_800A2BA0(int a0);
 
 
 
 #if 0
-// Not matched
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_80014390 / sub_8001449C. Tried: two-arg calls (t, t & 0xFF), int/unsigned t, t used in all three branches; permuter 1500: nothing
 Ent4* sub_80031B30(int a0)
 {
     Ent4* r = 0;
     unsigned int v = a0 & 0xFF;
-    int t;
+    unsigned int t;
     if (v >= 8)
     {
         t = a0 - 8;
-        r = sub_800A11A0(t & 0xFF, t);
+        r = sub_800A11A0(t & 0xFF);
     }
     else if (v >= 4)
     {
         int flags = sub_800A248C();
         int bit = 1 << v;
-        if (flags & bit) { t = a0 - 4; r = sub_800A2BA0(t & 0xFF, t); }
+        if (flags & bit)
+        {
+            t = a0 - 4;
+            r = sub_800A2BA0(t & 0xFF);
+        }
     }
     else if (v != 0)
     {
-        r = (Ent4*)sub_800107F8(3, (a0 - 1) & 0xFF);
+        t = a0 - 1;
+        r = (Ent4*)sub_800107F8(3, t & 0xFF);
     }
     return r;
 }
