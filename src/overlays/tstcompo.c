@@ -611,26 +611,37 @@ typedef struct TstCompoEnt
 extern unsigned short uiColor_8008B590;
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawWindow_80042460(int a, void* b, void* c, int d);
+// window style for DrawWindow_80042460
+typedef struct TstCompoWinStyle
+{
+    unsigned short color_0;
+    unsigned char colors_2; // GetWindowColors_8004226C
+    unsigned char frame_3;  // DrawWindowFrame_80041ED0
+} TstCompoWinStyle;
 void DrawTextListWindow_800A2030(int p, TstCompoEnt* e, int idx)
 {
-    unsigned short t[2];
+    union
+    {
+        unsigned short pos[2];
+        TstCompoWinStyle style;
+    } t; // the text position, then the window style
     if (e)
     {
         int i = 0;
         while (e[i].p)
         {
-            t[0] = e[i].a;
-            t[1] = e[i].b;
-            DrawText_8003E91C(1, e[i].p, t, idx);
+            t.pos[0] = e[i].a;
+            t.pos[1] = e[i].b;
+            DrawText_8003E91C(1, e[i].p, t.pos, idx);
             i++;
         }
     }
     if (p)
     {
-        ((unsigned char*)t)[2] = 1;
-        ((unsigned char*)t)[3] = 1;
-        t[0] = uiColor_8008B590;
-        DrawWindow_80042460(p, t, pOT_8008D454 + idx, 0);
+        t.style.colors_2 = 1;
+        t.style.frame_3 = 1;
+        t.style.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(p, &t.style, pOT_8008D454 + idx, 0);
     }
 }
 
