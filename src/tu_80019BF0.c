@@ -2526,7 +2526,100 @@ void sub_8001EFC4(struct_obj_F* p)
     }
     p->flags_4 &= 0xFF17FFFF;
 }
-INCLUDE_ASM(sub_8001F03C);
+typedef struct
+{
+    signed char id;
+    char pad_1;
+    short start;
+    short loop;
+    short end;
+    char pad_8[0x34];
+} struct_3c;
+// Matched
+int sub_8001F03C(int a0, int a1, int a2, int a3)
+{
+    char* o = (char*)a0;
+    unsigned char* s = (unsigned char*)a1;
+    int t;
+    int rep;
+    int flag;
+    int start;
+    int loop;
+    int idx;
+    int end;
+    t = 0;
+    rep = t;
+    flag = t;
+    while (s[0] != 0)
+    {
+        if (s[0] == 1)
+        {
+            idx = *(short*)(s + 6);
+            if (flag == 0)
+            {
+                start = (*(struct_3c**)(o + 0x148))[idx].start;
+            }
+            else
+            {
+                start = (*(struct_3c**)(o + 0x148))[idx].loop;
+            }
+            loop = (*(struct_3c**)(o + 0x148))[idx].loop;
+            end = (*(struct_3c**)(o + 0x148))[idx].end;
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].id == (*(struct_3c**)(o + 0x148))[idx].id && end >= a3)
+            {
+                return ((t + a3 - start) << 12) / *(short*)(o + 0x1E);
+            }
+            if (start == loop)
+            {
+                t += (end - start + 1) * (rep + 1);
+            }
+            else
+            {
+                t += (end - loop + 1) * (rep + 1);
+                t += loop - start;
+            }
+            t--;
+            flag = 0;
+        }
+        else if (s[0] == 0x14)
+        {
+            if (a2 >= 0x4000 && a2 == *(short*)(s + 6))
+            {
+                return (t << 12) / *(short*)(o + 0x1E);
+            }
+        }
+        else if (s[0] == 0xF)
+        {
+            t = 0;
+        }
+        else if (s[0] == 2)
+        {
+            flag = 1;
+        }
+        else if (s[0] == 4)
+        {
+            rep = *(short*)(s + 6) - 1;
+        }
+        else if (s[0] == 5)
+        {
+            rep = *(short*)(o + 0xF4) - 1;
+        }
+        else if (s[0] == 0x17)
+        {
+            t += *(short*)(s + 6);
+        }
+        else if (s[0] == 0 || s[0] == 0x10)
+        {
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].end < a3)
+            {
+                t += a3 - (*(struct_3c**)(o + 0x148))[a2].end;
+            }
+            return (t << 12) / *(short*)(o + 0x1E);
+        }
+        s += s[1] * 4;
+    }
+    return -1;
+}
 // Matched
 short sub_8001F268(char* o, short* out, int a2, int idx)
 {
