@@ -3703,10 +3703,10 @@ typedef struct
     int b;
     int c;
 } struct_3i;
-#if 0
-// Not matched: only register allocation differs (arg gets s6 instead of s4, the call loops swap their two induction registers)
-void OnEffectFileLoaded_80020F5C(int* arg, int* hdr)
+// Matched
+void OnEffectFileLoaded_80020F5C(int* arg_in, int* hdr)
 {
+    int* arg = arg_in;
     int* out = (int*)arg[0];
     int* p1 = (int*)((char*)hdr + hdr[1]);
     int* p2 = (int*)((char*)hdr + hdr[2]);
@@ -3746,7 +3746,8 @@ void OnEffectFileLoaded_80020F5C(int* arg, int* hdr)
         out[8] = (int)ListAlloc_8003FDC0(out + 1, n * 0x34);
         for (i = 0; i < out[7]; i++)
         {
-            sub_80021298((int*)((char*)p3 + p3[i + 1]), (int*)(out[8] + i * 0x34), (int)(arg + 1), arg[4], (int)(out + 1));
+            int* d = (int*)(out[8] + i * 0x34);
+            sub_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)(arg + 1), arg[4], (int)(out + 1));
         }
     }
     n = p4[0];
@@ -3756,7 +3757,8 @@ void OnEffectFileLoaded_80020F5C(int* arg, int* hdr)
         out[10] = (int)ListAlloc_8003FDC0(out + 1, n * 0x1C);
         for (i = 0; i < out[9]; i++)
         {
-            sub_80021464((int*)((char*)p4 + p4[i + 1]), (int*)(out[10] + i * 0x1C), (int)(arg + 1), arg[4], (int)(out + 1));
+            int* d = (int*)(out[10] + i * 0x1C);
+            sub_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)(arg + 1), arg[4], (int)(out + 1));
         }
     }
     n = p5[0];
@@ -3781,8 +3783,6 @@ void OnEffectFileLoaded_80020F5C(int* arg, int* hdr)
         LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)(arg + 1), arg[4]);
     }
 }
-#endif
-INCLUDE_ASM(OnEffectFileLoaded_80020F5C);
 typedef struct
 {
     unsigned char b[4];
@@ -4641,9 +4641,10 @@ void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
 #endif
 INCLUDE_ASM(sub_80022CC4);
 #if 0
-// Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
-int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
+// Not matched: s/p regs fixed by copying p; remaining: the source pointer becomes a biased induction variable (q+0x12) instead of plain q
+int sub_8002300C(unsigned char* hdr, unsigned char* p_in, int* a, int k, int h)
 {
+    unsigned char* p = p_in;
     int r = 4;
     int i;
     unsigned char* q;
@@ -4664,8 +4665,8 @@ int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
         ((struct_8_20b*)a[1])[k].items[i].b1 = q[0x11];
         ((struct_8_20b*)a[1])[k].items[i].b2 = q[0x12];
         ((struct_8_20b*)a[1])[k].items[i].b3 = 0;
-        r += 20;
         q += 20;
+        r += 20;
     }
     return r;
 }
@@ -6735,7 +6736,7 @@ typedef struct
 } struct_8_20v;
 #if 0
 // Not matched: s1/s2 swapped (p vs arr+i) and the source-item address is strength-reduced differently
-unsigned char* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
+int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
 {
     struct_8_20v* arr;
     unsigned int i;
@@ -6750,7 +6751,7 @@ unsigned char* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
     if (hdr[1] == 0)
     {
         *out = 0;
-        return (unsigned char*)hdr + hdr[0];
+        return (int*)((unsigned char*)hdr + hdr[0]);
     }
     for (i = 0; i < hh[1]; i++)
     {
@@ -6780,7 +6781,7 @@ unsigned char* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
         }
     }
     *out = arr;
-    return (unsigned char*)hdr + hh[0];
+    return (int*)((unsigned char*)hdr + hh[0]);
 }
 #endif
 INCLUDE_ASM(sub_80027A88);
@@ -6831,10 +6832,10 @@ extern int sub_800A6D50(int a0);
 extern int dword_800B1228;
 extern MapEntry16** dword_800B0608[];
 extern void sub_80028C60();
-#if 0
-// Not matched: register allocation only: a1 gets s4 instead of s2 (and the load flag / 0x80082678 base registers move with it)
-void sub_800283C0(void* a0, int* a1)
+// Matched
+void sub_800283C0(void* a0, int* a)
 {
+    int* a1 = a;
     int req[8];
     int req2[8];
     int req3[8];
@@ -6948,8 +6949,6 @@ void sub_800283C0(void* a0, int* a1)
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_800283C0);
 typedef struct
 {
     int x;
