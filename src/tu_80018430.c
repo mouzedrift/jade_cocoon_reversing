@@ -178,7 +178,7 @@ ShortPair sub_80018A4C(char* obj, int* p, int* a2, int c)
     {
         d.f1C = 1;
     }
-    r.a = ((int (*)(char*, ActionDesc*))sub_8001E254)(obj, &d);
+    r.a = sub_8001E254((struct_obj_A*)obj, &d);
     r.b = sub_8001F03C((int)obj, *(int*)(obj + 0xD0), -1, 0x10);
     if (p[0] != 0x12 && c)
     {

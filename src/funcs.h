@@ -297,7 +297,7 @@ extern void sub_80011B8C(void);
 extern void sub_80011BCC(void);
 extern int CriticalRateTransform_80014164(int x);
 extern int sub_80014358(unsigned int mask);
-extern void sub_8001E254(struct_obj_A* p);
+extern int sub_8001E254(struct_obj_A* p, void* desc);
 extern char* sub_80024E90(void* p, int n);
 extern char* sub_80024EC8(void* p, int n);
 extern char* sub_80024F00(void* p, int n);

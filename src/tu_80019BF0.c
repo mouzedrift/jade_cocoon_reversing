@@ -2279,10 +2279,10 @@ int sub_8001E1DC(struct_obj_F* p)
     return 1;
 }
 // Matched
-void sub_8001E254(struct_obj_A* p)
+int sub_8001E254(struct_obj_A* p, void* desc)
 {
     p->flags_4 = (p->flags_4 & 0xFFFDFFFF) | 0x600000;
-    sub_8001E34C(p);
+    return sub_8001E34C(p, desc);
 }
 // Matched
 void sub_8001E28C(char* o)
