@@ -5705,7 +5705,199 @@ void sub_800C7424(unsigned char a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C7530);
+typedef struct BatUseQ_a
+{
+    short f0;
+    short f2;
+    short f4;
+    short f6;
+    short f8;
+    short fA;
+    int minion_C;
+} BatUseQ_a;
+typedef struct BatTgtQ_a
+{
+    short f0;
+    short f2;
+    short f4;
+    short f6;
+} BatTgtQ_a;
+extern char* dword_800C9E44;
+extern char* dword_800C9E6C;
+extern unsigned short dword_800C9E5C;
+extern int dword_800C93A0;
+extern int dword_800C9380;
+extern int dword_800C939C;
+extern int dword_800C9398;
+extern int dword_800C9390;
+extern int dword_800C937C;
+extern int GetMenuCursorIndex_8003DA54(void*);
+extern int CheckItemUsable_80033AFC(BatUseQ_a* q);
+extern int CheckMagicCastable_80033C08(BatUseQ_a* q);
+extern int sub_80033C98(BatUseQ_a* q);
+extern int sub_80033DF4(BatTgtQ_a* q);
+extern int sub_80034068(BatTgtQ_a* q);
+extern unsigned char sub_800C78D0();
+int sub_800C7530()
+{
+    BatUseQ_a q;
+    BatTgtQ_a b;
+    short idx;
+    int* p;
+    idx = GetMenuCursorIndex_8003DA54(dword_800C9E44);
+    q.f0 = ((short*)dword_800C9E44)[4];
+    q.f2 = ((short*)dword_800C9E44)[5];
+    q.fA = 0;
+    dword_800C9E7C = 0;
+    switch (dword_800C9E50)
+    {
+    case 0:
+        p = *(int**)(dword_800C9E6C + idx * 8 + 4);
+        if (p == 0)
+        {
+            return 1;
+        }
+        dword_800C9E7C = *p;
+        return 0;
+    case 1:
+        switch (CheckItemUsable_80033AFC(&q))
+        {
+        case 0:
+            return 1;
+        case 1:
+            return 0;
+        case 2:
+        case 4:
+            dword_800C9E7C = dword_800C93A0;
+            return 0;
+        case 3:
+        case 5:
+        case 6:
+        case 7:
+        default:
+            return 1;
+        }
+    case 2:
+        q.minion_C = (int)GetMinion_80010598(3, dword_800C9C7C - 1);
+        switch (sub_80033C98(&q))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+        default:
+            return 1;
+        case 5:
+            dword_800C9E7C = dword_800C9380;
+            return 0;
+        case 7:
+            return 0;
+        }
+    case 3:
+        q.minion_C = (int)GetMinion_80010598(3, dword_800C9C7C - 1);
+        switch (CheckMagicCastable_80033C08(&q))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+        default:
+            return 1;
+        case 5:
+            dword_800C9E7C = dword_800C9380;
+            return 0;
+        case 6:
+            return 0;
+        }
+    case 4:
+        b.f0 = dword_800C9E5C;
+        b.f2 = dword_800C9C7C;
+        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f6 = 0;
+        if (sub_800C78D0() == 4)
+        {
+            switch (sub_80033DF4(&b))
+            {
+            case 0:
+                return 1;
+            case 1:
+                dword_800C9E7C = dword_800C939C;
+                return 0;
+            case 2:
+                dword_800C9E7C = dword_800C9398;
+                return 0;
+            case 3:
+                dword_800C9E7C = dword_800C9390;
+                return 0;
+            case 4:
+                break;
+            default:
+                return 1;
+            }
+        }
+        else if (sub_800C78D0() == 6)
+        {
+            switch (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            {
+            case 0:
+                return 1;
+            case 1:
+                dword_800C9E7C = dword_800C939C;
+                return 0;
+            case 2:
+                return 0;
+            case 3:
+                dword_800C9E7C = dword_800C9390;
+                return 0;
+            case 4:
+                break;
+            default:
+                return 1;
+            }
+        }
+        else if (sub_800C78D0() == 7)
+        {
+            switch (sub_80034068(&b))
+            {
+            case 0:
+                return 1;
+            case 1:
+                dword_800C9E7C = dword_800C939C;
+                return 0;
+            case 2:
+                return 0;
+            case 3:
+                dword_800C9E7C = dword_800C9390;
+                return 0;
+            case 4:
+                break;
+            default:
+                return 1;
+            }
+        }
+        else if (sub_800C78D0() == 2 || sub_800C78D0() == 8)
+        {
+            if (sub_80033548((int*)sub_80014390(dword_800C9E54), 0x400) == 0)
+            {
+                return 1;
+            }
+        }
+        else
+        {
+            return 1;
+        }
+        dword_800C9E7C = dword_800C937C;
+        return 0;
+    case 5:
+    default:
+        return 1;
+    }
+}
+INCLUDE_OVERLAY_ASM(battle, dword_800BA238);
 
 extern unsigned char dword_800C9648[];
 unsigned char sub_800C78D0()
