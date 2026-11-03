@@ -34,7 +34,7 @@ typedef struct UnitSkill
     unsigned char field_3;
 } UnitSkill;
 
-/* 20 bytes copied from sub_80019C28 by sub_800199A0 */
+/* a unit's five ability slots; species defaults come from sub_80019C28 (copied by sub_800199A0) */
 typedef struct
 {
     UnitSkill slot[5];

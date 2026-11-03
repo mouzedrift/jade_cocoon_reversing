@@ -351,14 +351,6 @@ extern char demoDisclaimer_800869A8[];
 extern char introAnime_800869C8[];
 typedef struct
 {
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-} struct_20;
-typedef struct
-{
     int m[3];
 } struct_int3;
 typedef struct
@@ -412,7 +404,6 @@ extern short word_8008B862;
 extern int dword_80082678;
 extern short word_80091C40[];
 extern FileRequest* dword_8008654C;
-extern struct_20 dword_8007A9F8[];
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;

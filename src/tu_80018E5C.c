@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "actor.h"
 #include "unit.h"
+#include "tu_80019BF0.h"
 
 INCLUDE_DATA(dword_80072310);
 INCLUDE_DATA(dword_80072324);
@@ -407,7 +408,7 @@ void sub_8001980C(unsigned char* p, MinionBaseStats* s)
 // Matched
 void sub_800199A0(UnitStats* p)
 {
-    p->skills_6C = *(UnitSkills*)sub_80019C28(p->species_5C);
+    p->skills_6C = *sub_80019C28(p->species_5C);
 }
 // Matched
 void sub_80019A20(UnitStats* a0)

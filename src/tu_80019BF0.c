@@ -108,7 +108,7 @@ unsigned char GetMinionEnhancementBody_80019C0C(int idx)
     return minionBaseStats_8007A4B4[idx].enhancementBody;
 }
 // Matched
-struct_20* sub_80019C28(unsigned int idx)
+UnitSkills* sub_80019C28(unsigned int idx)
 {
     if (0xC9 > idx)
     {

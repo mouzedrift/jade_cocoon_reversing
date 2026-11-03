@@ -3,6 +3,12 @@
 
 #include "actor.h"
 #include "effect_obj.h"
+#include "unit.h"
+
+// each species' starting skills: 0xC9 in the exe, the rest from the overlay (sub_800B3274)
+extern UnitSkills dword_8007A9F8[];
+extern UnitSkills* sub_800B3274(int a0);
+extern UnitSkills* sub_80019C28(unsigned int idx);
 
 // per-species model description (dword_8007BD30, sub_80019C70)
 typedef struct
