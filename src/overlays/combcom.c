@@ -228,7 +228,57 @@ int sub_800CBC58()
     return FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBCA0);
+typedef struct CombComWin
+{
+    int w[14];
+} CombComWin;
+typedef struct CombComMenu
+{
+    int w[6];
+} CombComMenu;
+typedef struct CombComColor
+{
+    unsigned short color;
+    unsigned char a;
+    unsigned char b;
+} CombComColor;
+extern CombComWin name_800CB4F0;
+extern CombComWin name_800CB528;
+extern CombComWin name_800CB560;
+extern CombComWin name_800CB598;
+extern CombComMenu name_800CB5D0;
+extern short word_800CD2D0;
+extern unsigned short uiColor_8008B590;
+extern void* memset(void* p, int c, unsigned int n);
+extern void sub_8002ADB4(void* a, void* b, int c, int d);
+extern void DrawMenuWindows_8002A5A4(void* p);
+void sub_800CBCA0()
+{
+    CombComColor col;
+    CombComWin a;
+    CombComWin b;
+    CombComWin c;
+    CombComWin d;
+    void* list[4];
+    CombComMenu m;
+    a = name_800CB4F0;
+    b = name_800CB528;
+    c = name_800CB560;
+    d = name_800CB598;
+    memset(list, 0, 0x10);
+    m = name_800CB5D0;
+    list[0] = &b;
+    list[1] = &c;
+    list[2] = &d;
+    col.color = uiColor_8008B590;
+    col.a = 0;
+    col.b = 1;
+    sub_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[4] = (int)list;
+    m.w[3] = word_800CD2D0;
+    DrawMenuWindows_8002A5A4(&m);
+}
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
 
