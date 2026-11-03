@@ -109,6 +109,27 @@ typedef struct EvMeshEventfnc
     EvTriEventfnc* tris_4;
 } EvMeshEventfnc;
 
+typedef struct EvSaveEventfnc
+{
+    char pad_0[0x2DC];
+    unsigned short f2DC_2DC;
+    short pad_2DE;
+    unsigned short f2E0_2E0;
+    short pad_2E2;
+    short f2E4_2E4;
+    short pad_2E6;
+    short f2E8_2E8;
+    short pad_2EA;
+    short f2EC_2EC;
+    short f2EE_2EE;
+    char pad_2F0[0x7A8 - 0x2F0];
+    int f7A8_7A8;
+    int f7AC_7AC;
+    int f7B0_7B0;
+    short pad_7B4;
+    unsigned short f7B6_7B6;
+} EvSaveEventfnc;
+
 extern EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int a, int b);
 extern EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int a, int b);
 extern EvVecEventfnc* sub_800BBBA0(int a);
@@ -251,7 +272,47 @@ void sub_800B83E4(int* v, EvMeshEventfnc* m, int i)
     v[1] = (t->ny_1A * t->y_2 - t->nx_18 * (v[0] - t->x_0) - t->nz_1C * (v[2] - t->z_4)) / t->ny_1A;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B844C);
+typedef struct EvMapEntEventfnc
+{
+    short id_0;
+    char pad_2[2];
+    short f4_4;
+    unsigned short f6_6;
+    char pad_8[8];
+} EvMapEntEventfnc;
+
+typedef struct EvSpawnEventfnc
+{
+    int a_0[3];
+    int b_C[3];
+    short f18_18;
+    short f1A_1A;
+} EvSpawnEventfnc;
+
+extern EvMapEntEventfnc** dword_800B0608[];
+extern int sub_800A49CC(int a, int b, int* c, EvSpawnEventfnc* d);
+extern void sub_800B8568(int a, int b, int c, int d);
+
+void sub_800B844C(int* t)
+{
+    EvSaveEventfnc* s;
+    EvSpawnEventfnc sp;
+    int i;
+    int n;
+    if (IsModelLoaderDone_800205D0())
+    {
+        EvMapEntEventfnc*** tbl = dword_800B0608;
+        s = (EvSaveEventfnc*)&saveData_8008B570;
+        sp.f1A_1A = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f6_6;
+        sp.f18_18 = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EC_2EC].f6_6;
+        n = sub_800A49CC(tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f4_4, sp.f18_18, dword_80091C60, &sp);
+        for (i = 0; i < n; i++)
+        {
+            sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
+        }
+        t[0] = (t[0] & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8568);
 
@@ -1145,26 +1206,6 @@ int sub_800BA7A4(EvCtxEventfnc* c)
 
 extern int dword_80091C94;
 extern int eventDispatchHalt_8008B540;
-typedef struct EvSaveEventfnc
-{
-    char pad_0[0x2DC];
-    unsigned short f2DC_2DC;
-    short pad_2DE;
-    unsigned short f2E0_2E0;
-    short pad_2E2;
-    unsigned short f2E4_2E4;
-    short pad_2E6;
-    unsigned short f2E8_2E8;
-    short pad_2EA;
-    unsigned short f2EC_2EC;
-    short f2EE_2EE;
-    char pad_2F0[0x7A8 - 0x2F0];
-    int f7A8_7A8;
-    int f7AC_7AC;
-    int f7B0_7B0;
-    short pad_7B4;
-    unsigned short f7B6_7B6;
-} EvSaveEventfnc;
 
 extern int sub_800A6D30(int a);
 #if 0
