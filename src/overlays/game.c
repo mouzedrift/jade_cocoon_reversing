@@ -105,7 +105,7 @@ typedef struct GameS3_1
 } GameS3_1;
 extern void IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 extern int dword_800AEBE4;
-extern void sub_800ADCEC(GameS3_1* out, int a);
+extern void sub_800ADCEC();
 extern void sub_800AD0F8(unsigned a);
 extern int dword_80091C54;
 extern int dword_80091C9C;
@@ -2211,7 +2211,38 @@ INCLUDE_OVERLAY_ASM(game, sub_800A61CC);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A6308);
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6434);
+extern char aAssertionFaile_800A0660[];
+extern char aEventcomC_800A0688[];
+void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
+{
+    int icon;
+    switch (kind)
+    {
+    case 0:
+        break;
+    case 1:
+        sub_800A61CC(id, b, c);
+        break;
+    case 2:
+        icon = GetItemIcon_8001D2AC(id);
+        goto draw;
+    case 3:
+        icon = GetKeyItemIcon_8001D344(id);
+        goto draw;
+    case 4:
+    case 5:
+    case 6:
+        icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, kind - 4);
+    draw:
+        GetPublicTiySprt_80032470(icon, b, c);
+        break;
+    case 7:
+        printf(aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
+        exit(1);
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(game, dword_800A06B8);
 
 // Matched
 int sub_800A6504(int a)
@@ -4900,7 +4931,6 @@ void sub_800ADC5C(unsigned short* p, int b)
     }
 }
 
-#if 0
 void sub_800ADCEC(short* out, int key)
 {
     int i, j, k;
@@ -4912,28 +4942,51 @@ void sub_800ADCEC(short* out, int key)
         for (j = 0; row[j]; j++)
         {
             e = row[j];
-            k = 0;
-            if (e->id != -1)
+            for (k = 0; e[k].id != -1; k++)
             {
-                do
+                if (key == e[k].s6)
                 {
-                    if (key == e[k].s6)
-                    {
-                        out[0] = i;
-                        out[1] = j;
-                        out[2] = k;
-                        out[3] = e[k].u4;
-                        return;
-                    }
-                    k++;
-                } while (e[k].id != -1);
+                    out[0] = i;
+                    out[1] = j;
+                    out[2] = k;
+                    out[3] = e[k].u4;
+                    return;
+                }
             }
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800ADCEC);
 
+#if 0
+// Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
+void sub_800ADDAC(void)
+{
+    GameS3_1 v;
+    int r;
+    int i;
+    int key;
+    G2Ent16* e;
+    v.a = saveData_8008B570.mapId_2E4[0].field_0;
+    v.b = saveData_8008B570.mapId_2E4[1].field_0;
+    v.c = saveData_8008B570.mapId_2E4[2].field_0;
+    r = sub_800ADC1C(&v);
+    e = name_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+    key = saveData_8008B570.mapId_2E4[2].field_0;
+    i = 0;
+    if (e->id >= 0)
+    {
+        do
+        {
+            if (key == (short)e[i].u4 && (r == -1 || r == e[i].s6))
+            {
+                saveData_8008B570.mapId_2E4[2].field_0 = i;
+                return;
+            }
+            i++;
+        } while (e[i].id >= 0);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800ADDAC);
 
 INCLUDE_OVERLAY_ASM(game, dword_800ADE78);
