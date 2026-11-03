@@ -25,7 +25,7 @@ LOAD_ADDRESSES = {
     "PLCOM": 0x800C9E88, "ENCOM": 0x800C9E88, "MAP": 0x800B66C0, "SHOPCTRL": 0x800B66C0,
     "SHOP": 0x800B6D00, "WPNSHOP": 0x800B66C0, "CONFIG": 0x800C29D0, "LOAD": 0x800B66C0,
     "NAME": 0x800B6D00, "EQUIP": 0x800C29D0, "SHOPENTR": 0x800B6D00, "CHAPTER": 0x800B66C0,
-    "PIERCE": 0x800B66C0, "COMBCHUI": 0x800A4088, "COMBSEL": 0x800A4088, "COMBLOAD": 0x800A4088,
+    "PIERCE": 0x800C6F40, "COMBCHUI": 0x800A4088, "COMBSEL": 0x800A4088, "COMBLOAD": 0x800A4088,
     "COMBCOM": 0x800C9E88, "COMBSTRT": 0x800A4088, "COMBBTL": 0x800A4088, "COMBRSLT": 0x800A4088,
     "EVENTFNC": 0x800B6D00, "BTLEXEC": 0x800C9E88,
 }
@@ -266,7 +266,7 @@ def main(argv):
         "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
         "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
     fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
-    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-0", "-G0", "-q", cc, "-o", obj])  # -0: bare div, like the original
+    fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", "-0", cc, "-o", obj])
     link = os.path.join(b, tag + "_link.txt")
     main_syms = gen_asm.load_symbols(REPO)
     with open(link, "w") as f:

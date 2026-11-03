@@ -43,7 +43,7 @@ extern int name_8007DC74;
 extern int StartModelTask_80010850(void* p);
 extern int sub_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
-extern void sub_800BBB54();
+extern void SetShopHelpText_800BBB54();
 extern void sub_800BF704();
 extern int ret_800BF520();
 extern int sub_8001AB94();
@@ -138,7 +138,7 @@ extern unsigned short name_800BFD5C[];
 extern char name_800C08E8[];
 extern ShopSixShop name_800B9608;
 extern char name_800C07D4[];
-extern void sub_800B9FC8(void* a, void* b, void* c, int d);
+extern int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d);
 extern int sub_800AD288(int a, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void sub_800BB148();
@@ -249,7 +249,7 @@ typedef struct ShopUnit4Shop
     short s0;
     short s2;
     short s4;
-    short pad_6;
+    short s6;
     short s8;
     short pad_A;
     short sC;
@@ -445,33 +445,20 @@ ShopItemShop* sub_800B9C5C(int i)
     return &name_800B6CF0[i];
 }
 
-#if 0 // near miss: i/n register swap
-int sub_800B9C78(int v)
+int CountItemsInState_800B9C78(int v)
 {
-    int n;
     int i;
-    int cnt;
-    ShopItemShop* p;
+    int n;
     n = 0;
-    i = n;
-    if (name_800B6CE4 > 0)
+    for (i = 0; i < name_800B6CE4; i++)
     {
-        cnt = name_800B6CE4;
-        p = name_800B6CF0;
-        do
+        if (v == name_800B6CF0[i].state_0)
         {
-            if (v == p->state_0)
-            {
-                n++;
-            }
-            i++;
-            p++;
-        } while (i < cnt);
+            n++;
+        }
     }
     return n;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9C78);
 
 int sub_800B9CCC(short* p)
 {
@@ -481,7 +468,7 @@ int sub_800B9CCC(short* p)
 
 int sub_800B9CDC(int i)
 {
-    if (sub_800B9C78(3) < 3)
+    if (CountItemsInState_800B9C78(3) < 3)
     {
         if (sub_800B9C10(i) == 2)
         {
@@ -512,16 +499,13 @@ int sub_800B9D6C(int i)
     return 0;
 }
 
-#if 0 // near miss: i/p register swap
 int sub_800B9DA8()
 {
     int cnt = name_800B6CE4;
     ShopItemShop* items = name_800B6CF0;
     int n = 0;
-    int i = 0;
-    ShopItemShop* p;
-    ShopItemShop* dst;
-    for (; i < cnt; i++)
+    int i;
+    for (i = 0; i < cnt; i++)
     {
         if (items[i].state_0 != 4)
         {
@@ -530,43 +514,31 @@ int sub_800B9DA8()
     }
     if (n < 16)
     {
-        i = 0;
-        if (i < cnt)
+        n = 0;
+        for (i = 0; i < cnt; i++)
         {
-            dst = name_8008EF18;
-            p = items;
-            do
+            if (items[i].state_0 != 4)
             {
-                if (p->state_0 != 4)
-                {
-                    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)p, 0xF8);
-                    dst++;
-                }
-                i++;
-                p++;
-            } while (i < cnt);
+                MemCopy_800403E8((unsigned int*)&name_8008B570.items[n], (unsigned int*)&items[i], 0xF8);
+                n++;
+            }
         }
         free3_8003FC6C(items);
         return 1;
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9DA8);
 
-#if 0 // near miss: lbu/addiu order in first loop
 int sub_800B9E94(char* src, char* dst, short c)
 {
     int i;
-    int k;
     unsigned int j;
     unsigned int r;
     *(short*)dst = c;
-    for (i = 0, k = 4; i < 6; k += 12)
+    for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)(dst + k), (unsigned int*)(src + 0x10));
+        sub_80019AF4((unsigned int*)(dst + 4 + i * 12), (unsigned int*)(src + 0x10));
         (dst + i)[0x7C] = src[0x42];
-        i++;
     }
     r = LowestSetBit_80014358(*(short*)(src + 0x42));
     for (j = 0; j < 4; j++)
@@ -590,10 +562,144 @@ int sub_800B9E94(char* src, char* dst, short c)
     MemCopy_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800B9E94);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800B9FC8);
+typedef struct ShopIdxShop
+{
+    int v[4];
+} ShopIdxShop;
+extern ShopIdxShop name_800B6D38;
+extern void InitMinionData_8001900C(void* out, void* in);
+extern void FillHpMp_80011C0C(void* a, void* b);
+extern void sub_80011D98(void* a, int b);
+extern void sub_800BAB38(char* a, char* b);
+extern void sub_800BA368(unsigned char* d, unsigned char* s);
+extern void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
+extern void sub_800BA4CC(signed char* d, signed char* a, signed char* b);
+extern void sub_800BA650(unsigned char* d);
+extern void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t);
+extern void sub_800BA72C(unsigned char* a, unsigned char* b);
+extern void sub_800BAA0C(char* a, char* b);
+extern int sub_800BACD0(unsigned char* d);
+int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d)
+{
+    ShopIdxShop idx;
+    unsigned char tmp[0x88];
+    unsigned char* p;
+    int i;
+    int n;
+    int t;
+    int r;
+    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, 0xF8);
+    c[3] = b[3];
+    p = (unsigned char*)sub_8001CD58(d);
+    if (p[0] != 0xFF)
+    {
+        c[3] = p[0];
+    }
+    sub_800BAB38((char*)c, (char*)b);
+    for (i = 0; i < 4; i++)
+    {
+        (c + i)[0xC2] = ((c + i)[0xC2] + (b + i)[0xC2]) >> 1;
+    }
+    n = 0;
+    idx = name_800B6D38;
+    for (i = 0; i < 4; i++)
+    {
+        if ((c + i)[0xC2] & 1)
+        {
+            n++;
+        }
+    }
+restart:
+    for (i = 0; i < 3; i++)
+    {
+        if ((c + idx.v[i])[0xC2] < (c + idx.v[i + 1])[0xC2])
+        {
+            t = idx.v[i];
+            idx.v[i] = idx.v[i + 1];
+            idx.v[i + 1] = t;
+            goto restart;
+        }
+    }
+    if (n == 2)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            p = c + idx.v[i];
+            t = p[0xC2];
+            if (t & 1)
+            {
+                if (n >= 2)
+                {
+                    p[0xC2] = t + 1;
+                }
+                else
+                {
+                    p[0xC2] = t - 1;
+                }
+                n--;
+            }
+        }
+    }
+    if (n == 4)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            p = c + idx.v[i];
+            t = p[0xC2];
+            if (t & 1)
+            {
+                if (n >= 3)
+                {
+                    p[0xC2] = t + 1;
+                }
+                else
+                {
+                    p[0xC2] = t - 1;
+                }
+                n--;
+            }
+        }
+    }
+    for (i = 3; i >= 0; i--)
+    {
+    }
+    *(unsigned short*)(c + 0xC6) = 0;
+    if (c[0xC2] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) = 1;
+    }
+    if (c[0xC5] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 8;
+    }
+    if (c[0xC4] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 4;
+    }
+    if (c[0xC3] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 2;
+    }
+    sub_800BA368(c, a);
+    sub_800BA3C8(c + 0xB0, a + 0xB0, b + 0xB0);
+    sub_800BA4CC((signed char*)c, (signed char*)a, (signed char*)b);
+    sub_800BA650(c);
+    sub_800BA6D0((ShopUnitShop*)c, (ShopUnitShop*)a, (ShopUnitShop*)b);
+    sub_80011D98(c + 0x84, 2);
+    sub_800BA72C(c, b);
+    sub_800BAA0C((char*)c, (char*)b);
+    FillHpMp_80011C0C(c + 0x84, c + 0x84);
+    r = sub_800BACD0(c);
+    if (r > 0)
+    {
+        idx.v[0] = r;
+        idx.v[1] = (c[0xC8] << 26) + *(int*)(c + 0x88);
+        InitMinionData_8001900C(tmp, &idx);
+        sub_800B9E94((char*)tmp, (char*)c, *(short*)c);
+    }
+    return 1;
+}
 
 void sub_800BA340(unsigned int* a)
 {
@@ -646,7 +752,6 @@ unsigned char sub_800BA46C(unsigned char a, unsigned char b)
     return out;
 }
 
-#if 0 // near miss: first loop i/x register assignment (20 words)
 void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
 {
     int tmp[4];
@@ -655,10 +760,13 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     int v;
     int y;
     int x;
-    for (i = 0; i < 12; i++)
+    int t;
+    int r;
+    int k;
+    for (k = 0; k < 12; k++)
     {
-        x = (a + i)[0xA4];
-        y = (b + i)[0xA4];
+        x = (a + k)[0xA4];
+        y = (b + k)[0xA4];
         if (x < y)
         {
             x = x * 2;
@@ -668,27 +776,32 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
             y = y * 2;
         }
         v = (x + y) / 3;
-        if (v < -128)
+        if (v >= -128)
         {
-            v = -128;
+            t = v;
+            if (t > 127)
+            {
+                t = 127;
+            }
+            r = t;
         }
-        else if (v >= 128)
+        else
         {
-            v = 127;
+            r = -128;
         }
-        (d + i)[0xA4] = v;
+        (d + k)[0xA4] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 4; j++)
         {
-            tmp[j] += (unsigned char)d[0xC2 + i] * name_8007BA74[i * 4 + j];
+            tmp[j] += (unsigned char)(d + i)[0xC2] * name_8007BA74[j + i * 4];
         }
     }
     for (i = 0; i < 4; i++)
     {
-        d[0xA4 + i] = tmp[i] / 32;
+        (d + i)[0xA4] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -700,34 +813,24 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     {
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BA4CC);
 
-#if 0 // near miss: pointer induction var
 void sub_800BA650(unsigned char* d)
 {
     int i;
     int v;
+    int r;
+    int t;
     unsigned char* p;
-    for (i = 0, p = d; i < 6; i++, p = d + i)
+    for (i = 0; i < 6; i++)
     {
+        p = d + i;
         v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
-        if (v < 0)
-        {
-            v = 0;
-        }
-        else if (v > 100)
-        {
-            v = 100;
-        }
-        p[0xB0] = v;
+        if (v >= 0) { t = v; if (t > 100) t = 100; r = t; } else r = 0; p[0xB0] = r;
     }
     for (i = 5; i >= 0; i--)
     {
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BA650);
 
 void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
 {
@@ -736,15 +839,189 @@ void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
     d->field_88 += sub_80012204(s->field_C8, s->field_88, t->field_C8, t->field_88);
 }
 
+#if 0
+// Not matched (25 words): only the registers of &t.e[i] (a3 in the original) and m (t0) are swapped.
+// (When writing this in C, delete the jpt_800B6D4C line behind the function.)
+typedef struct ShopSlotShop
+{
+    unsigned char c[4];
+} ShopSlotShop;
+typedef struct ShopSlots5Shop
+{
+    ShopSlotShop e[5];
+} ShopSlots5Shop;
+void sub_800BA72C(unsigned char* a, unsigned char* b)
+{
+    ShopSlots5Shop t;
+    ShopSlotShop* ae;
+    ShopSlotShop* be;
+    int i;
+    int mask;
+    int r;
+    int m;
+    int v;
+    t = *(ShopSlots5Shop*)(a + 0xDE);
+    ae = (ShopSlotShop*)(a + 0xDE);
+    be = (ShopSlotShop*)(b + 0xDE);
+    for (i = 0; i < 5; i++)
+    {
+        t.e[i].c[0] |= (ae[i].c[0] | be[i].c[0]) & 1;
+    }
+    mask = *(short*)(a + 0xC6);
+    for (i = 0; i < 5; i++)
+    {
+        switch (t.e[i].c[1])
+        {
+        case 2:
+            if (!(mask & 4))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 3:
+            if (!(mask & 8))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 4:
+            if (!(mask & 1))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        case 5:
+            if (!(mask & 2))
+            {
+                t.e[i].c[1] = 0;
+            }
+            break;
+        }
+        if (t.e[i].c[0] & 1)
+        {
+            m = *(short*)(a + 0xC6);
+            r = -1;
+            switch (ae[i].c[1])
+            {
+            case 0:
+            case 1:
+                r = ae[i].c[1];
+                break;
+            case 2:
+                if (m & 4)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 3:
+                if (m & 8)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 4:
+                if (m & 1)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            case 5:
+                if (m & 2)
+                {
+                    r = ae[i].c[1];
+                }
+                break;
+            default:
+                r = ae[i].c[1];
+                break;
+            }
+            if (r >= 0)
+            {
+                t.e[i].c[1] = r;
+            }
+            r = -1;
+            switch (be[i].c[1])
+            {
+            case 0:
+            case 1:
+                break;
+            case 2:
+                if (m & 4)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 3:
+                if (m & 8)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 4:
+                if (m & 1)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            case 5:
+                if (m & 2)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            default:
+                if (t.e[i].c[1] == 0)
+                {
+                    r = be[i].c[1];
+                }
+                break;
+            }
+            if (r >= 0)
+            {
+                t.e[i].c[1] = r;
+            }
+            if (t.e[i].c[1] == 1)
+            {
+                t.e[i].c[1] = 0;
+            }
+        }
+        else
+        {
+            t.e[i].c[1] = 0;
+        }
+        if (t.e[i].c[0] & 1)
+        {
+            v = be[i].c[2];
+            if (v == 1)
+            {
+                t.e[i].c[2] = 1;
+                t.e[i].c[3] = 0;
+            }
+            else if (v != 0 && v < 5)
+            {
+                t.e[i].c[2] = v;
+                t.e[i].c[3] = 1;
+            }
+        }
+        else
+        {
+            t.e[i].c[2] = 0;
+            t.e[i].c[3] = 0;
+        }
+    }
+    MemCopy_800403E8((unsigned int*)(a + 0xDE), (unsigned int*)&t, 0x14);
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
+INCLUDE_OVERLAY_ASM(shop, jpt_800B6D4C);
+INCLUDE_OVERLAY_ASM(shop, dword_800B6D7C);
 
-#if 0 // near miss: orig keeps (1 << x) & mask as sllv/and, we get sra/andi
 void sub_800BAA0C(char* a, char* b)
 {
     unsigned int old = *(unsigned int*)(a + 0xF4);
     unsigned int* p = (unsigned int*)(a + 0xF4);
     int i;
-    int mask;
+    unsigned int mask;
     if (sub_800BAB30(b))
     {
         old |= *(unsigned int*)(b + 0xF4);
@@ -753,7 +1030,7 @@ void sub_800BAA0C(char* a, char* b)
     *(unsigned int*)(a + 0xF4) = old;
     for (i = 0; i < 30; i++)
     {
-        if (TestMagicBit_8001AE2C(p, i) && !((1 << GetMagicElement_8001AD30(i)) & mask))
+        if (TestMagicBit_8001AE2C(p, i) && (mask & (1 << GetMagicElement_8001AD30(i))) == 0)
         {
             ClearMagicBit_8001AE00(p, i);
         }
@@ -775,8 +1052,6 @@ void sub_800BAA0C(char* a, char* b)
         ClearMagicBit_8001AE00(p, 0x16);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BAA0C);
 
 int sub_800BAB30()
 {
@@ -1003,13 +1278,13 @@ void sub_800BB058(int a)
     }
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BB0F8(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     SetFadeMode_8001C19C(3, 0x20);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 #if 0 // near miss: constant 3 / store scheduling (17 words)
@@ -1068,7 +1343,7 @@ void sub_800BB148(ShopUnit4Shop* u)
     u->f1C = 0;
     u->f20 = 0;
     u->f1C = name_800BF8B4[u->s0];
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
     fn_80011CD0(levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
@@ -1112,32 +1387,175 @@ int sub_800BB38C(ShopUnitShop* p)
     return 0;
 }
 
-#if 0 // near miss: reg alloc of field_84 load
 int sub_800BB3E8(ShopUnitShop* p)
 {
     switch (*(short*)p)
     {
     case 5:
-        if (p->field_84)
+        if (p->field_84 == 0)
         {
-            return 0;
-        }
     case 1:
     case 7:
-        return 1;
+            return 1;
+        }
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB3E8);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BB444);
+extern int UpdateMenuCursor_8003D794(void* p, int a);
+extern void sub_800BEBC8();
+extern void sub_800BECC8();
+extern void sub_800BBAAC();
+extern void sub_800BBA3C();
+extern void sub_800BBE24();
+extern void sub_800BC2DC();
+extern void sub_800BC1A8();
+extern void sub_800BD0D4();
+extern void sub_800BE2B4();
+extern void sub_800B6CB8();
+extern unsigned short padPressed_8009194C;
+void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
+{
+    short old;
+    int r;
+    DrawMenuBackground_8002BE10();
+    if (u->f24 & 1)
+    {
+        u->s4 = CountItemsInState_800B9C78(2);
+        u->s6 = CountItemsInState_800B9C78(3);
+        u->f24 &= ~1;
+    }
+    if (u->s0 != 15 && !(u->f24 & 0x400))
+    {
+        u->f24 &= ~0x1C0;
+    }
+    if ((u->f24 & 2) || u->s0 == 11 || u->s0 == 12)
+    {
+        sub_8003CF88(0x11E, 0x3C, 0xE);
+    }
+    if (u->f18 == 0)
+    {
+        sub_800BB798(u);
+        sub_800BEBC8(u);
+        sub_800BECC8(u);
+    }
+    sub_800BC380(u);
+    if (u->f18 == 0)
+    {
+        sub_800BB798(u);
+        sub_800BBAAC(u);
+        if (u->f10 || u->f14)
+        {
+            sub_800BD0D4(u);
+        }
+        if (!(u->f24 & 4))
+        {
+            if (u->s0 == 3 && (u->f24 & 2))
+            {
+                old = u->s3C;
+                UpdateMenuCursor_8003D794(&u->s34, 0);
+                if (u->s3C != old)
+                {
+                    u->s40 = 1;
+                    u->s42 = 1;
+                    u->s44 = 1;
+                    u->s46 = 0;
+                    u->s4A = 0;
+                    u->s48 = 0;
+                    if (u->f24 & 0x40)
+                    {
+                        u->s44 = 5;
+                        u->s42 = 5;
+                    }
+                    else if (u->f24 & 0x80)
+                    {
+                        sub_800BECC8(u);
+                        r = CountMagicBits_8001AE54((unsigned int*)((char*)u->f54 + 0xF4));
+                        if (r < 4)
+                        {
+                            r = 4;
+                        }
+                        u->s42 = 4;
+                        u->s40 = 1;
+                        u->s44 = r;
+                        u->s46 = 0x40;
+                    }
+                }
+                if (u->f24 & 0x400)
+                {
+                    UpdateMenuCursor_8003D794(&u->s40, 0);
+                }
+            }
+            if (!(u->f24 & 2))
+            {
+                sub_800BBE24(u);
+                if (u->s0 == 8 || sub_800BB38C(u))
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sub_800BC2DC(u);
+                if (u->s0 == 3)
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                    else if (padPressed_8009194C & 0x80)
+                    {
+                        u->f24 |= 0x400;
+                        sub_800BC1A8(u);
+                    }
+                }
+                else if (sub_800BB38C(u))
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+            sub_800B6CB8();
+        }
+    }
+    else
+    {
+        sub_800BBA3C(u);
+    }
+    if (u->sC < 8)
+    {
+        u->sC++;
+    }
+}
 
-#if 0 // near miss: load order of table entries
 void sub_800BB798(ShopUnit3Shop* u)
 {
+    short a;
     unsigned short b;
-    int a;
     unsigned short c;
     a = name_800BFD1C[u->field_0];
     b = name_800BFD3C[u->field_0];
@@ -1155,14 +1573,11 @@ void sub_800BB798(ShopUnit3Shop* u)
         u->a7A[(short)c] = u->field_7E;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB798);
 
-#if 0 // near miss: load order of table entries
 void sub_800BB828(ShopUnit3Shop* u)
 {
     unsigned short b;
-    int a;
+    short a;
     unsigned short c;
     a = name_800BFD1C[u->field_0];
     b = name_800BFD3C[u->field_0];
@@ -1180,8 +1595,6 @@ void sub_800BB828(ShopUnit3Shop* u)
         u->field_7E = u->a7A[(short)c];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB828);
 
 void sub_800BB8C4(ShopUnit3Shop* u)
 {
@@ -1260,7 +1673,7 @@ void sub_800BBA3C(char* u)
     }
     if (padPressed_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
     {
-        sub_800BBB54(u, 0);
+        SetShopHelpText_800BBB54(u, 0);
         *(int*)(u + 0x18) = 0;
         *(short*)(u + 0x98) = 0;
     }
@@ -1285,15 +1698,255 @@ void sub_800BBAAC(ShopUnit3Shop* u)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BBB54);
+extern int* name_800BFC04[];
+extern int* name_800BFC68[];
+extern int* name_800BFB34[];
+extern int* name_800BFB74[];
+extern int name_800BF9B8[];
+extern int name_800BFAA8[];
+extern int* name_800BFAB4[];
+extern int* name_800BFAF4[];
+void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
+{
+    switch ((short)mode)
+    {
+    case 1:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BFC04[u->s8][0];
+            name_800BF7C8[1].w4 = name_800BFC04[u->s8][1];
+            name_800BF7C8[2].w4 = name_800BFC04[u->s8][2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFC68[u->s8][0];
+            name_800BF7C8[1].w4 = name_800BFC68[u->s8][1];
+            name_800BF7C8[2].w4 = name_800BFC68[u->s8][2];
+        }
+        break;
+    case 3:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BFB34[u->s0][0];
+            name_800BF7C8[1].w4 = name_800BFB34[u->s0][1];
+            name_800BF7C8[2].w4 = name_800BFB34[u->s0][2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFB74[u->s0][0];
+            name_800BF7C8[1].w4 = name_800BFB74[u->s0][1];
+            name_800BF7C8[2].w4 = name_800BFB74[u->s0][2];
+        }
+        break;
+    case 2:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BF9B8[0];
+            name_800BF7C8[1].w4 = name_800BF9B8[1];
+            name_800BF7C8[2].w4 = name_800BF9B8[2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFAA8[0];
+            name_800BF7C8[1].w4 = name_800BFAA8[1];
+            name_800BF7C8[2].w4 = name_800BFAA8[2];
+        }
+        break;
+    default:
+        if (u->s0 == 0)
+        {
+            if (u->s96 == 4)
+            {
+                name_800BF7C8[0].w4 = name_800BFCF4[u->s30][0];
+                name_800BF7C8[1].w4 = name_800BFCF4[u->s30][1];
+                name_800BF7C8[2].w4 = name_800BFCF4[u->s30][2];
+            }
+            else
+            {
+                name_800BF7C8[0].w4 = name_800BFD08[u->s30][0];
+                name_800BF7C8[1].w4 = name_800BFD08[u->s30][1];
+                name_800BF7C8[2].w4 = name_800BFD08[u->s30][2];
+            }
+        }
+        else
+        {
+            if (u->s96 == 4)
+            {
+                name_800BF7C8[0].w4 = name_800BFAB4[u->s0][0];
+                name_800BF7C8[1].w4 = name_800BFAB4[u->s0][1];
+                name_800BF7C8[2].w4 = name_800BFAB4[u->s0][2];
+            }
+            else
+            {
+                name_800BF7C8[0].w4 = name_800BFAF4[u->s0][0];
+                name_800BF7C8[1].w4 = name_800BFAF4[u->s0][1];
+                name_800BF7C8[2].w4 = name_800BFAF4[u->s0][2];
+            }
+        }
+        break;
+    }
+}
 
+#if 0
+// Not matched (34 words): only the f24 & 8 block differs. The original passes snd (in s1) to
+// UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
+// s28/s7E through a copy; with int snd the copies and the r register still differ.
+extern int sub_800BD6C4();
+void sub_800BBE24(ShopUnit4Shop* u)
+{
+    short snd;
+    int r;
+    int k;
+    unsigned int bit;
+    if (u->f24 & 8)
+    {
+        sub_800BEBC8(u);
+        snd = 0;
+        r = (short)UpdateMenuCursor_8003D794(&u->s28, snd);
+        if (r == 4)
+        {
+            snd = 1;
+            u->s2C = 0x18;
+            u->s2E = 0x50;
+            u->s28 = snd;
+            u->s7E = snd;
+            u->s2A = r;
+            u->s30 = 0;
+            u->f24 &= ~0x10;
+            sub_800BB798(u);
+        }
+        else if (r == 3)
+        {
+            snd = 1;
+            u->s28 = snd;
+            u->s2E = 0x20;
+            u->s2A = r;
+            u->s2C = r;
+            u->s30 = 2;
+            u->s7E = 0;
+            u->f24 |= 0x10;
+            sub_800BB798(u);
+        }
+        if (snd)
+        {
+            PlaySfx_80031494(0x7F);
+        }
+    }
+    else
+    {
+        UpdateMenuCursor_8003D794(&u->s28, 0);
+    }
+    if (u->s0 == 15)
+    {
+        UpdateMenuCursor_8003D794(&u->s40, 0);
+    }
+    if (IsConfirmPressedP1_8003D380(0))
+    {
+        if (u->s0 != 5)
+        {
+            if (sub_800BD6C4(u))
+            {
+                u->f14 = 1;
+            }
+            else if (u->s0 == 2 || u->s0 == 10)
+            {
+                if (u->f4C == u->f50)
+                {
+                    u->f14 = 1;
+                }
+                else
+                {
+                    u->f10 = 1;
+                }
+            }
+            else
+            {
+                u->f10 = 1;
+            }
+        }
+        else
+        {
+            if (*(short*)u->f4C != 4)
+            {
+                if (u->f24 & 0x10)
+                {
+                    bit = 1 << (short)(u->s30 + u->s32);
+                    if (!(u->f88 & bit))
+                    {
+                        u->f88 |= bit;
+                        u->f84 |= bit;
+                        u->s80++;
+                    }
+                    else
+                    {
+                        u->f88 &= ~bit;
+                        u->f84 &= ~bit;
+                        u->s80--;
+                    }
+                }
+                else
+                {
+                    k = (short)(u->s30 + u->s32);
+                    bit = 1 << k;
+                    if (!(u->f8C & bit))
+                    {
+                        u->f8C |= bit;
+                        u->f84 |= 1 << (k + 3);
+                        u->s80++;
+                    }
+                    else
+                    {
+                        u->f8C &= ~bit;
+                        u->f84 &= ~(1 << (k + 3));
+                        u->s80--;
+                    }
+                }
+                PlaySfx_80031494(0x7E);
+            }
+        }
+    }
+    else if (IsCancelPressedP1_8003D41C(0))
+    {
+        u->f14 = 1;
+    }
+    else if (padPressed_8009194C & 0x80)
+    {
+        if (u->s0 == 8)
+        {
+            u->s40 = 1;
+            u->s42 = 1;
+            u->s44 = 1;
+            u->s46 = 0;
+            u->s4A = 0;
+            u->s48 = 0;
+            u->f10 = 1;
+            u->f24 |= 0x400;
+        }
+        else if (u->s0 == 15)
+        {
+            sub_800BC1A8(u);
+        }
+        else if (sub_800BB3E8((ShopUnitShop*)u) && sub_800B97B0())
+        {
+            PlaySfx_80031494(0x7E);
+        }
+    }
+    else if (padPressed_8009194C & 0x20)
+    {
+        if (u->s80 > 0 && u->s0 == 5)
+        {
+            u->f10 = 1;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
-#if 0 // near miss: orig does not fold the two flag masks (and/and with separate constants)
 void sub_800BC1A8(ShopUnit3Shop* u)
 {
     int fl;
     int r;
+    int t;
     if (*(short*)u->field_54 != 4)
     {
         fl = u->field_24;
@@ -1311,9 +1964,9 @@ void sub_800BC1A8(ShopUnit3Shop* u)
         }
         else if (fl & 0x40)
         {
-            fl &= ~0x40;
-            fl &= ~0x100;
-            u->field_24 = fl | 0x80;
+            t = fl & ~0x40;
+            t &= ~0x100;
+            u->field_24 = t | 0x80;
             r = CountMagicBits_8001AE54((unsigned int*)((char*)u->field_54 + 0xF4));
             if (r < 4)
             {
@@ -1326,9 +1979,9 @@ void sub_800BC1A8(ShopUnit3Shop* u)
         }
         else if (fl & 0x80)
         {
-            fl &= ~0x40;
-            fl &= ~0x80;
-            u->field_24 = fl | 0x100;
+            int t2 = fl & ~0x40;
+            t2 &= ~0x80;
+            u->field_24 = t2 | 0x100;
         }
         else if (fl & 0x100)
         {
@@ -1336,14 +1989,12 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             u->field_24 = fl2;
             if (u->field_0 == 3 && (fl & 2))
             {
-                u->field_24 = fl2 & ~0x401;
+                u->field_24 = fl2 & ~0x400;
             }
         }
         PlaySfx_80031494(0x7F);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BC1A8);
 
 void sub_800BC2DC(ShopUnit3Shop* u)
 {
@@ -1358,7 +2009,7 @@ void sub_800BC2DC(ShopUnit3Shop* u)
         else
         {
             PlaySfx_80031494(0x7E);
-            sub_800BBB54(u, 0);
+            SetShopHelpText_800BBB54(u, 0);
             u->field_24 &= ~2;
         }
     }
@@ -1569,18 +2220,20 @@ void sub_800BD720(ShopUnit3Shop* u)
         {
             d = 10;
         }
-        sub_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
+        MergeMinions_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
     }
 }
 
-#if 0 // near miss: tab/v register swap
 void sub_800BD7A8(ShopUnit3Shop* u)
 {
     short i;
-    unsigned short v = u->field_20;
+    unsigned short v;
+    int s;
+    v = u->field_20;
     u->field_1C = 0;
+    s = name_800BF8B4[u->field_0];
     u->field_20 = 0;
-    u->field_1C = name_800BF8B4[u->field_0];
+    u->field_1C = s;
     for (i = 0; i < 7; i++)
     {
         if ((v >> i) & 1)
@@ -1592,8 +2245,6 @@ void sub_800BD7A8(ShopUnit3Shop* u)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BD7A8);
 
 void sub_800BD854(ShopUnit3Shop* u)
 {
@@ -1657,11 +2308,154 @@ void sub_800BD854(ShopUnit3Shop* u)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
-
-#if 0 // near miss: t/u register swap (10 words)
-void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
+#if 0
+// Not matched (8 words): the two blocks that set tk = name_8008D670 + 0x10 before a call load
+// name_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
+// (When writing this in C, delete the jpt_800B96F4 line behind the function.)
+typedef struct ShopSaveBitsShop
 {
+    unsigned int pad : 5;
+    unsigned int bit5 : 1;
+} ShopSaveBitsShop;
+extern void sub_800BDD74();
+extern void sub_800BDE44();
+extern void sub_80027314();
+extern void sub_8001AAA8(int a);
+extern void fn_800AD184(int a, int b, int c);
+extern int sub_800BAF54(short* a, short* b, short c, short d);
+void sub_800BD9DC(ShopUnit3Shop* u)
+{
+    ShopTaskShop* tk;
+    char* sv;
+    int* p;
+    int any;
+    short i;
+    switch (u->field_0)
+    {
+    case 3:
+        if (u->field_30 != 0)
+        {
+            break;
+        }
+        sv = (char*)&saveData_8008B570;
+        if (((ShopSaveBitsShop*)(sv + 0x1C))->bit5 == 1)
+        {
+            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+            sub_800B9B44((short*)u->field_50);
+            if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
+            {
+                p = (int*)(sv + 0x814);
+                p[1] |= 8;
+            }
+            else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
+            {
+                p = (int*)(sv + 0x814);
+                p[1] |= 4;
+            }
+            if (u->field_24 & 0x200)
+            {
+                fn_800AD1E0(fn_800AD288(u->field_6E + u->field_76, 4), 1, 4);
+                fn_800AD3F0(4);
+                u->field_24 &= ~0x200;
+            }
+            *(int*)((char*)u + 0x84) = 0;
+            *(int*)((char*)u + 0x88) = 0;
+            *(int*)((char*)u + 0x8C) = 0;
+            u->field_24 |= 1;
+            if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+            {
+                tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+                fn_80027478(0x40, 1);
+                fn_8002C014();
+                sub_80027314();
+                tk->next_8 = sub_800BDD74;
+                break;
+            }
+        }
+        *(short*)((char*)u + 0x94) = 1;
+        u->field_24 |= 0x800;
+        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        fn_8001ABEC(1);
+        tk->next_8 = sub_800BDE44;
+        sub_8001AAA8(0x20);
+        break;
+    case 6:
+        if (u->field_30 != 0)
+        {
+            break;
+        }
+        any = 0;
+        for (i = any; i < 27; i++)
+        {
+            if ((unsigned int)u->field_84 & (1 << i))
+            {
+                fn_800AD184(sub_800BAE80((ShopUnitShop*)sub_800B9C5C(i)), 1, 0);
+                sub_800B9B20(i);
+                any = 1;
+            }
+        }
+        if (any == 0)
+        {
+            break;
+        }
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        u->field_24 |= 1;
+        if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+        {
+            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            fn_80027478(0x40, 1);
+            fn_8002C014();
+            sub_80027314();
+            tk->next_8 = sub_800BDD74;
+        }
+        else
+        {
+            *(short*)((char*)u + 0x94) = 2;
+            u->field_24 |= 0x800;
+            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            fn_8001ABEC(1);
+            tk->next_8 = sub_800BDE44;
+            sub_8001AAA8(0x20);
+        }
+        break;
+    case 9:
+        sub_800BAF54((short*)u->field_4C, (short*)u->field_50, u->a7A[0] == 0 ? 3 : 2, u->a7A[1] == 0 ? 3 : 2);
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        u->field_0 = 7;
+        u->field_2 = 0;
+        u->field_24 |= 1;
+        SetShopHelpText_800BBB54(u, 0);
+        break;
+    case 10:
+        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        tk->next_8 = sub_800BE128;
+        tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
+        fn_800B6C6C((char*)u->field_4C + 0x94, 0);
+        SetFadeMode_8001C19C(0, 0x20);
+        *(int*)((char*)u + 0x84) = 0;
+        *(int*)((char*)u + 0x88) = 0;
+        *(int*)((char*)u + 0x8C) = 0;
+        break;
+    case 11:
+        u->field_24 |= 4;
+        break;
+    case 12:
+        u->field_0 = 0;
+        break;
+    }
+}
+#endif
+INCLUDE_OVERLAY_ASM(shop, sub_800BD9DC);
+INCLUDE_OVERLAY_ASM(shop, jpt_800B96F4);
+INCLUDE_OVERLAY_ASM(shop, dword_800B971C);
+
+void sub_800BDD74(ShopTaskShop* t, void* arg)
+{
+    ShopUnit3Shop* u = (ShopUnit3Shop*)arg;
     extern void sub_800BE128();
     extern void sub_800BE07C();
     if (fn_800272D0() == 0)
@@ -1685,8 +2479,6 @@ void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
         eventDispatchHalt_8008B540 = 1;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BDD74);
 
 extern void sub_800BDEA8();
 void sub_800BDE44(ShopTaskShop* t, int a)
@@ -1769,7 +2561,7 @@ void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
     u->field_0 = 5;
     u->field_2 = 0;
     sub_800BD7A8(u);
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     if (sub_800BD678(u))
     {
         u->field_24 |= 8;
@@ -1798,7 +2590,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     u->field_2 = 0;
     sub_800BD7A8(u);
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     if (sub_800BD678(u))
     {
         u->field_24 |= 8;
@@ -1818,7 +2610,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     sub_800BC380(u);
     SetFadeMode_8001C19C(3, 0x20);
     sub_800A7B00(-1);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 extern void sub_800BE264();
@@ -1832,13 +2624,13 @@ void sub_800BE210(ShopTaskShop* t, int a)
     }
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BE264(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     SetFadeMode_8001C19C(3, 0x20);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 extern void sub_800BE4D0();
@@ -1853,7 +2645,7 @@ void sub_800BE2B4(int a)
     *(void (**)())(g + 8) = sub_800BE4D0;
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 {
     char* c;
@@ -1896,18 +2688,18 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
         unknownFlags_8008D678 &= ~0x4000000;
         if (u->field_0 == 3)
         {
-            sub_800BBB54(u, 3);
+            SetShopHelpText_800BBB54(u, 3);
         }
         else
         {
-            sub_800BBB54(u, 0);
+            SetShopHelpText_800BBB54(u, 0);
         }
         if (u->field_0 == 5)
         {
             *(int*)((char*)u + 0x10) = 0;
         }
         u->field_24 &= ~0x20;
-        t->next_8 = sub_800BB444;
+        t->next_8 = ShopMenuTask_800BB444;
     }
 }
 
@@ -1918,15 +2710,215 @@ void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
     sub_800BC380(a);
     if (ret_800BF520() == 1)
     {
-        sub_800BBB54(a, 2);
+        SetShopHelpText_800BBB54(a, 2);
         sub_800BF704(*(short*)((char*)a + 0x96));
         t->next_8 = sub_800BE334;
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE53C);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern ShopSixShop name_800B971C;
+extern char name_800BFE24[];
+void sub_800BE53C(ShopUnit4Shop* u)
+{
+    short r[4];
+    short out[4];
+    unsigned short p[2];
+    ShopSixShop q;
+    short sel;
+    short h;
+    int clut;
+    short i;
+    char* s;
+    ShopItemShop* e;
+    clut = 0;
+    if (sub_800BD678(u))
+    {
+        sel = u->s30;
+    }
+    else
+    {
+        sel = -1;
+    }
+    h = 8;
+    if (!(u->f20 & 2))
+    {
+        h = u->sC;
+    }
+    r[2] = 0x40;
+    r[3] = 0xE;
+    for (i = 0; i < 3; i++)
+    {
+        if (sub_800B9C10(i) == 3)
+        {
+            e = sub_800B9C5C(i);
+            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+        }
+        else
+        {
+            s = 0;
+        }
+        r[0] = 0xD;
+        r[1] = i * 15 + 0x5D;
+        if (((unsigned int)u->f84 & (1 << i)) && ((unsigned int)u->f88 & (1 << i)))
+        {
+            SetFontClutOffset_8003F900(1, 3);
+            clut = 1;
+        }
+        InterpolateWindowRect_8004196C(out, r, (short)h, 8, 0);
+        p[0] = r[0] + r[2] / 2;
+        p[1] = r[1] + 3;
+        if (s)
+        {
+            sub_8002FAA0(2, p, s, 0xE);
+        }
+        if (clut)
+        {
+            SetFontClutOffset_8003F900(1, 0);
+            clut = 0;
+        }
+        SetFontClutOffset_8003F900(1, 0);
+    }
+    q = name_800B971C;
+    q.w1 = GetTime30Hz_8002C64C();
+    q.w2 = (short)h;
+    q.w4 = (int)name_800BFE24;
+    if (u->f24 & 0x10)
+    {
+        q.w3 = (short)sel;
+    }
+    else
+    {
+        q.w3 = -1;
+    }
+    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    {
+        q.w0 |= 4;
+    }
+    else
+    {
+        q.w0 |= 2;
+    }
+    q.w2 = 8;
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(1, 0);
+}
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE7F0);
+typedef struct ShopPairShop
+{
+    short a;
+    short b;
+} ShopPairShop;
+extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
+extern char name_800BFF14[];
+void sub_800BE7F0(ShopUnit4Shop* u)
+{
+    short r[4];
+    short out[4];
+    ShopPairShop p;
+    ShopSixShop q;
+    ShopPairShop pos1;
+    ShopPairShop pos2;
+    int base;
+    short sel;
+    short h;
+    int clut;
+    short i;
+    char* s;
+    ShopItemShop* e;
+    int k;
+    base = sub_800BEB60(u);
+    clut = 0;
+    if (sub_800BD678(u))
+    {
+        sel = u->s30;
+    }
+    else
+    {
+        sel = -1;
+    }
+    h = 8;
+    if (!(u->f20 & 2))
+    {
+        h = u->sC;
+    }
+    r[2] = 0x40;
+    r[3] = 0xE;
+    for (i = 0; i < 4; i++)
+    {
+        k = i + (short)base + 3;
+        if (sub_800B9C10(k) == 2)
+        {
+            e = sub_800B9C5C(k);
+            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+        }
+        else
+        {
+            s = 0;
+        }
+        r[0] = 0xD;
+        r[1] = i * 15 + 0x9A;
+        if (((unsigned int)u->f84 & (1 << (i + (short)base + 3))) && ((unsigned int)u->f8C & (1 << (i + (short)base))))
+        {
+            SetFontClutOffset_8003F900(1, 3);
+            clut = 1;
+        }
+        InterpolateWindowRect_8004196C(out, r, h, 8, 0);
+        p.a = r[0] + r[2] / 2;
+        p.b = r[1] + 3;
+        if (s)
+        {
+            sub_8002FAA0(2, (unsigned short*)&p, s, 0xE);
+        }
+        if (clut)
+        {
+            SetFontClutOffset_8003F900(1, 0);
+            clut = 0;
+        }
+    }
+    q = name_800B971C;
+    q.w1 = GetTime30Hz_8002C64C();
+    q.w4 = (int)name_800BFF14;
+    if (u->f24 & 0x10)
+    {
+        q.w3 = -1;
+    }
+    else
+    {
+        q.w3 = sel;
+    }
+    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    {
+        q.w0 |= 4;
+    }
+    else
+    {
+        q.w0 |= 2;
+    }
+    q.w2 = 8;
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(1, 0);
+    if (!(u->f24 & 0x10))
+    {
+        if ((short)base < 20)
+        {
+            p.a = 2;
+            p.b = 1;
+            pos1.a = 0x52;
+            pos1.b = 0xCB;
+            sub_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
+        }
+        if ((short)base != 0)
+        {
+            p.a = 2;
+            p.b = 3;
+            pos2.a = 0x52;
+            pos2.b = 0xA2;
+            sub_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
+        }
+    }
+}
 
 int sub_800BEB60(ShopUnit3Shop* u)
 {
@@ -2021,8 +3013,211 @@ def:
     u->field_54 = u->field_4C;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BED48);
+typedef struct ShopWgtShop
+{
+    unsigned short flags_0;
+    short pad_2;
+    int val_4;
+    void* p_8;
+    void* p_C;
+    short x_10;
+    short y_12;
+    int pad_14;
+    int pad_18;
+} ShopWgtShop;
+extern ShopWgtShop* name_800C0258[];
+extern char name_800B6D7C[];
+extern char name_8008D434[];
+extern char name_8008D440[];
+extern char name_800C0090[];
+extern char name_800C0094[];
+extern void sub_8002C6DC(void* p, int a, int b);
+void DrawPersonList_800BED48(short* s)
+{
+    ShopSixShop q;
+    short h = 8;
+    short prev = s[0];
+    short i;
+    int id;
+    int icon;
+    int name;
+    int cnt;
+    int y;
+    int n;
+    for (i = 0; i < 4; i++)
+    {
+        id = sub_800AD288(i + s[1], 4);
+        if (id < 11)
+        {
+            icon = ((int (*)(int))GetPersonIcon_8001CD6C)(id);
+            name = GetPersonName_8001CD3C(id);
+            cnt = sub_800AD2C8(i + s[1], 4);
+        }
+        else
+        {
+            icon = -1;
+            name = (int)name_800B6D7C;
+            cnt = 0;
+        }
+        name_800C0258[i][0].val_4 = icon;
+        name_800C0258[i][0].p_8 = name_8008D434;
+        name_800C0258[i][0].p_C = name_8008D440;
+        name_800C0258[i][1].val_4 = name;
+        name_800C0258[i][2].val_4 = cnt;
+        name_800C0258[i][0].x_10 = 0x7B;
+        y = i * 22 + 0x68;
+        name_800C0258[i][0].y_12 = y;
+        name_800C0258[i][1].x_10 = 0x90;
+        name_800C0258[i][1].y_12 = y;
+        name_800C0258[i][2].x_10 = 0xFB;
+        name_800C0258[i][2].y_12 = y;
+        s[0] = i;
+        if (cnt == 0)
+        {
+            name_800C0258[i][0].flags_0 |= 0x40;
+            name_800C0258[i][1].flags_0 |= 0x40;
+            name_800C0258[i][2].flags_0 |= 0x40;
+        }
+        else
+        {
+            name_800C0258[i][0].flags_0 &= ~0x40;
+            name_800C0258[i][1].flags_0 &= ~0x40;
+            name_800C0258[i][2].flags_0 &= ~0x40;
+        }
+    }
+    q.w0 = s[2];
+    q.w1 = frameCount_8008D3FC;
+    q.w2 = h;
+    q.w3 = prev;
+    q.w4 = (int)name_800C0258;
+    q.w5 = s[3];
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(2, 0);
+    n = sub_800AD308(4) + 1;
+    if (n < 4)
+    {
+        n = 4;
+    }
+    if (s[1] != 0)
+    {
+        sub_8002C6DC(name_800C0090, 3, s[3]);
+    }
+    if (s[1] < n - 4 && n >= 5)
+    {
+        sub_8002C6DC(name_800C0094, 1, s[3]);
+    }
+}
 
+#if 0
+// Not matched (17 words): the original cross-jumps the all-equal case into the o[1] == o[3] tail
+// (o[4] += o[6]) and reloads o[6] in the o[2] != o[3] case; here the two tails get different registers.
+typedef struct ShopLocalShop
+{
+    unsigned char b[4];
+    int pad_4;
+    int w[3];
+} ShopLocalShop;
+extern int sub_800BF2E4(unsigned char* p);
+void sub_800BF02C(unsigned char* a, int* o, int c)
+{
+    ShopLocalShop l;
+    unsigned int h = *(unsigned short*)sub_80019C70(a[2]);
+    int t;
+    o[0] = sub_800338DC(a + 0x4C, l.b, l.w);
+    o[1] = *(unsigned short*)sub_80019C70(l.b[0]);
+    o[2] = *(unsigned short*)sub_80019C70(l.b[1]);
+    o[3] = *(unsigned short*)sub_80019C70(l.b[2]);
+    o[4] = l.w[0];
+    o[5] = l.w[1];
+    o[6] = l.w[2];
+    if (o[1] == o[2])
+    {
+        if (o[2] == o[3])
+        {
+            o[4] = o[4] + o[5] + o[6];
+            o[5] = 0;
+            o[6] = 0;
+            o[0] = 1;
+        }
+        else
+        {
+            t = o[6];
+            o[0] = 2;
+            o[4] = o[4] + o[5];
+            o[6] = 0;
+            o[2] = o[3];
+            o[5] = t;
+        }
+    }
+    else if (o[1] == o[3])
+    {
+        o[4] = o[4] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    else if (o[2] == o[3])
+    {
+        o[5] = o[5] + o[6];
+        o[6] = 0;
+        o[0] = 2;
+    }
+    o[11] = 0;
+    if (o[1] != h)
+    {
+        if (o[2] == h)
+        {
+            t = o[5];
+            o[2] = o[1];
+            o[1] = h;
+            o[5] = o[4];
+            o[4] = t;
+        }
+        else if (o[3] == h)
+        {
+            t = o[6];
+            o[3] = o[1];
+            o[1] = h;
+            o[6] = o[4];
+            o[4] = t;
+        }
+        else if (o[0] < 2)
+        {
+            t = o[4];
+            o[2] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 2;
+            o[5] = t;
+        }
+        else
+        {
+            t = o[4];
+            o[3] = o[1];
+            o[1] = h;
+            o[4] = 0;
+            o[0] = 3;
+            o[6] = t;
+        }
+    }
+    o[7] = sub_80019A80(a[0xC8]);
+    o[8] = o[0] - 1;
+    o[10] = *(unsigned short*)sub_80019C70(a[3]);
+    o[12] = c;
+    o[9] = sub_800BF2E4(a + 0xC2);
+    if (o[9] == -1000)
+    {
+        o[9] = ((unsigned char*)sub_80019C70(a[3]))[2] << 1;
+    }
+    else
+    {
+        o[9] = o[9] - (((unsigned char*)sub_80019C70(a[3]))[3] << 1);
+        if (o[9] < 0)
+        {
+            o[9] = o[9] + 0x168;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BF02C);
 
 int sub_800BF2E4(unsigned char* p)
@@ -2074,22 +3269,19 @@ done:
     return r;
 }
 
-#if 0 // near miss: temp register numbering of the eight products
 int sub_800BF3B4(unsigned char* p)
 {
-    ShopBigShop* g = name_80084540;
-    int t1 = g[0].field_5C6 * p[0];
-    int t2 = g[3].field_5C6 * p[0];
-    int t3 = g[3].field_5C6 * p[3];
-    int t4 = g[2].field_5C6 * p[3];
-    int t5 = g[2].field_5C6 * p[2];
-    int t6 = g[1].field_5C6 * p[2];
-    int t7 = g[1].field_5C6 * p[1];
-    int t8 = g[0].field_5C6 * p[1];
+    int t2, t1, t4, t3, t5, t6, t7, t8;
+    t1 = name_80084540[0].field_5C6 * p[0];
+    t2 = name_80084540[3].field_5C6 * p[0];
+    t3 = name_80084540[3].field_5C6 * p[3];
+    t4 = name_80084540[2].field_5C6 * p[3];
+    t5 = name_80084540[2].field_5C6 * p[2];
+    t6 = name_80084540[1].field_5C6 * p[2];
+    t7 = name_80084540[1].field_5C6 * p[1];
+    t8 = name_80084540[0].field_5C6 * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BF3B4);
 
 void sub_800BF474()
 {
