@@ -486,7 +486,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     case 4:
     case 5:
     case 6:
-        icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, kind - 4);
+        icon = GetEquipmentIcon_8001D2D4(id, kind - 4);
     draw:
         GetPublicTiySprt_80032470(icon, b, c);
         break;
@@ -3157,7 +3157,7 @@ void sub_800ACAA4(int* a, int* b)
     b[8] = -1;
     b[9] = 0;
     sub_800AC380(s->levantStatus_7C8.field_1C[1] != 0xFF);
-    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0]) + 2));
+    sub_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
     PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
@@ -3701,7 +3701,7 @@ int SetEquipment_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 1);
         if (old < 0x17)
             sub_800AD184(old, 1, 1);
-        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
+        sub_800AC3A4(GetWeaponData_8001CF84(a)->field_2);
         GetArmorData_8001D034(s->levantStatus_7C8.field_1C[1]);
         sub_800AC3B0(dword_8001D060(s->levantStatus_7C8.field_1C[1]));
         break;
@@ -3720,7 +3720,7 @@ int SetEquipment_800AD9EC(int a, int b)
         sub_800AD1E0(a, 1, 2);
         if (old < 0xF)
             sub_800AD184(old, 1, 2);
-        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0]) + 2));
+        sub_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
         GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
         break;

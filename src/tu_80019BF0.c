@@ -1907,21 +1907,21 @@ int GetEquipmentName_8001D128(int a0, unsigned int a1)
     return r;
 }
 // Matched
-short* GetEquipmentData_8001D190(a0, a1)
+EquipmentData* GetEquipmentData_8001D190(a0, a1)
 unsigned int a0;
 unsigned int a1;
 {
-    short* r = 0;
+    EquipmentData* r = 0;
     switch (a1)
     {
     case 0:
-        r = (short*)GetWeaponData_8001CF84(a0);
+        r = GetWeaponData_8001CF84(a0);
         break;
     case 1:
-        r = (short*)GetArmorData_8001D034(a0);
+        r = GetArmorData_8001D034(a0);
         break;
     case 2:
-        r = (short*)GetAccessoryData_8001D0FC(a0);
+        r = GetAccessoryData_8001D0FC(a0);
         break;
     }
     return r;
@@ -1966,10 +1966,10 @@ int GetItemIcon_8001D2AC(int idx)
 // Matched
 int GetEquipmentIcon_8001D2D4(void)
 {
-    short* p = GetEquipmentData_8001D190();
+    EquipmentData* p = GetEquipmentData_8001D190();
     if (p != 0)
     {
-        return equipmentIcons_8007D938[*p];
+        return equipmentIcons_8007D938[p->icon_0];
     }
     return 0x24;
 }

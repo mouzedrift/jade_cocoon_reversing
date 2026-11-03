@@ -279,7 +279,7 @@ extern void PlayGenkiMovie_80040AC4(void);
 extern void PlayCraveMovie_80040B2C(void);
 extern void PlayAnimeMovie_80040D0C(void);
 extern int sub_8001CD34(void);
-extern int GetPersonIcon_8001CD6C(void);
+extern int GetPersonIcon_8001CD6C(); // callers pass the person id, which it ignores
 extern int sub_8001CE4C(void);
 extern unsigned short GetItemPrice_8001CE54(int idx);
 extern struct ModelDesc* GetModelDesc_800251E4(int idx);
@@ -424,7 +424,7 @@ extern int CompareUInt_8003BA38(unsigned int a, unsigned int b);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void ProcessPads_8001BF50(void);
 extern void XaStartReadTask_80043204(EventEntry* p, struct XaTask* q);
-extern short* GetEquipmentData_8001D190();
+extern EquipmentData* GetEquipmentData_8001D190(); // (idx, kind); GetEquipmentIcon_8001D2D4 passes its own arguments on
 extern int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1);
 extern void LoadModelAnimData_80026A8C(struct ModelAnim* a0, int a1, int a2);
 extern void FreeSound_80030D00(struct SoundStruct* p);
@@ -434,7 +434,7 @@ extern void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, struct TimInfo* t);
 extern void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
 extern void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap);
 extern void XaWaitFilterTask_800431C4(EventEntry* p, struct XaTask* q);
-extern int GetEquipmentIcon_8001D2D4(void);
+extern int GetEquipmentIcon_8001D2D4(); // (idx, kind), handed on to GetEquipmentData_8001D190
 extern void UpdateOverlayLoaderTask_80020CD8(int a0, struct OverlayLoader* p);
 extern void InitModelLoadParams_80025ED0(struct ModelLoadParams* p);
 extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);

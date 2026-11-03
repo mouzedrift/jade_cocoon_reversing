@@ -2758,7 +2758,7 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
         int id = sub_800AD990(i);
         if (id != 0xFF)
         {
-            icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, i);
+            icon = GetEquipmentIcon_8001D2D4(id, i);
             nm = (void*)GetEquipmentName_8001D128(id, i);
         }
         else

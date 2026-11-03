@@ -1246,10 +1246,10 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 case 1:
                 case 2:
                 case 3:
-                    GetPublicTiySprt_80032470(((int (*)(int, int))GetEquipmentIcon_8001D2D4)(o->entries[i].id, o->entries[i].type - 1), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetEquipmentIcon_8001D2D4(o->entries[i].id, o->entries[i].type - 1), &spr[i], &tp[i]);
                     break;
                 case 4:
-                    GetPublicTiySprt_80032470(((int (*)(int))GetPersonIcon_8001CD6C)(o->entries[i].id), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetPersonIcon_8001CD6C(o->entries[i].id), &spr[i], &tp[i]);
                     break;
                 }
                 spr[i].r0 = 0x80;

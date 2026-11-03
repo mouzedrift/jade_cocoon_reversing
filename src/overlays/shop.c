@@ -2971,7 +2971,7 @@ void DrawPersonList_800BED48(short* s)
         id = sub_800AD288(i + s[1], 4);
         if (id < 11)
         {
-            icon = ((int (*)(int))GetPersonIcon_8001CD6C)(id);
+            icon = GetPersonIcon_8001CD6C(id);
             name = GetPersonName_8001CD3C(id);
             cnt = sub_800AD2C8(i + s[1], 4);
         }
