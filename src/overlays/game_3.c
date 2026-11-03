@@ -50,7 +50,7 @@ void sub_800A58B4(void)
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
     StopAllEventEntries_80043B40((int*)dword_8008D410);
-    SetCameraTarget_80037AC8((int)&dword_8008BD18);
+    SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
         r = &stru_8008D420;
@@ -1974,9 +1974,9 @@ void sub_800A9564(int a, G2ActB* p)
 {
     int i;
     p->f778 = 0;
-    p->v48[0] = dword_8008BD18.x;
-    p->v48[1] = dword_8008BD18.y;
-    p->v48[2] = dword_8008BD18.z;
+    p->v48[0] = levantPos_8008BD18.x;
+    p->v48[1] = levantPos_8008BD18.y;
+    p->v48[2] = levantPos_8008BD18.z;
     if (p->s26 >= 0x1000)
     {
         p->f0 &= ~0x10;
@@ -2015,7 +2015,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
 {
     G2Skel_1 sk;
     int v;
-    char* anim;
+    GameAnim* anim;
     int flags;
     int st;
     char* sd;
@@ -2026,7 +2026,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
         p->f3c = *(int*)(sd + 0x7c8);
         sub_800ABECC(*(int*)(sd + 0x7c8));
     }
-    anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1c);
     if (*(int*)(sd + 0x7c8) & 0x3fd)
     {
         flags = (word_8007DC8A - word_8007DC82) << 8;
@@ -2065,14 +2065,14 @@ void DrawLevantModel_800A9708(G2ActD* p)
     {
         return;
     }
-    sk.f0 = *(int*)(p->f40 + 0x50);
+    sk.f0 = p->model_40->field_50;
     sk.f4 = &levantPos_8008BD18;
     sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
     sk.bones = &dword_800B0EF8;
     sk.base = &dword_800B0FB0;
     sk.f24 = 0;
-    sk.pose = anim;
-    sk.frame = p->f10 % *(unsigned int*)anim;
+    sk.pose = (char*)anim;
+    sk.frame = p->f10 % anim->frames_0;
     sk.flags = flags;
     sk.pos = (char*)p + 0x590;
     sk.ot = pOT_8008D690;
@@ -2086,10 +2086,10 @@ void DrawLevantModel_800A9708(G2ActD* p)
     }
     else
     {
-        anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1e) * 28;
-        sub_80047E28(&sk, &dword_800B0FB0, anim, p->f14 % *(unsigned int*)anim, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
+        anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1e);
+        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frames_0, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
     }
-    sub_800459E4(&dword_800B0EF8, p->f40 + 0x5c, pOT_8008D690, sk.flags);
+    sub_800459E4(&dword_800B0EF8, &p->model_40->field_5C, pOT_8008D690, sk.flags);
 }
 
 void sub_800A99DC(G2Q* p)
@@ -2482,9 +2482,9 @@ void sub_800AB3D4()
     if (!(p->f0 & 0x100))
     {
         p->f0 |= 0x4100;
-        p->v60.a = levantPos_8008BD18.a;
-        p->v60.b = levantPos_8008BD18.b;
-        p->v60.c = levantPos_8008BD18.c;
+        p->v60.a = levantPos_8008BD18.x;
+        p->v60.b = levantPos_8008BD18.y;
+        p->v60.c = levantPos_8008BD18.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;
@@ -2501,9 +2501,9 @@ void sub_800AB444(int a)
         else
             p->f0 &= ~0x1000;
         p->f0 &= ~0x100;
-        dword_8008BD18.x = p->v60.a;
-        dword_8008BD18.y = p->v60.b;
-        dword_8008BD18.z = p->v60.c;
+        levantPos_8008BD18.x = p->v60.a;
+        levantPos_8008BD18.y = p->v60.b;
+        levantPos_8008BD18.z = p->v60.c;
         p->v48.a = p->v60.a;
         p->v48.b = p->v60.b;
         p->v48.c = p->v60.c;
@@ -2711,9 +2711,9 @@ void sub_800ABC78(int a)
     if (a)
     {
         p->f0 |= 0x80000;
-        p->v60.a = levantPos_8008BD18.a;
-        p->v60.b = levantPos_8008BD18.b;
-        p->v60.c = levantPos_8008BD18.c;
+        p->v60.a = levantPos_8008BD18.x;
+        p->v60.b = levantPos_8008BD18.y;
+        p->v60.c = levantPos_8008BD18.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;

@@ -384,7 +384,7 @@ extern void sub_800A6534(int a, int b);
 
 extern void sub_800A654C(int a, int b);
 
-extern GameVec3_1 dword_8008BD18;
+extern GameVec3_1 levantPos_8008BD18; // saveData_8008B570 + 0x7A8
 
 extern int dword_800AEB7C;
 
@@ -903,7 +903,6 @@ extern G2Ctx2* dword_8008B4A4;
 
 extern char levantStatus_8008BD38;
 
-extern G2V12 levantPos_8008BD18;
 
 extern int dword_8008BDA0;
 
@@ -1378,8 +1377,15 @@ typedef struct G2ActD
     int f30;
     char pad_34[8];
     int f3c;
-    char* f40;
+    struct_112* model_40;
 } G2ActD;
+
+// one animation of a model (struct_112.field_54 points to an array of them)
+typedef struct GameAnim
+{
+    unsigned int frames_0;
+    char pad_4[0x18];
+} GameAnim;
 
 extern int sub_80019CC4(void* p);
 
