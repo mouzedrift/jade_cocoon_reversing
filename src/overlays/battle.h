@@ -7,6 +7,8 @@
 #include "globals.h"
 
 #include "actor.h"
+#include "minion_menu.h"
+#include "tu_80019BF0.h"
 
 #include "tu_8001EA48.h"
 #include "tu_80036528.h"
@@ -88,12 +90,12 @@ typedef struct BatCmd_a
 
 typedef struct BatTask
 {
-    int f0;
-    unsigned char* f4;
+    unsigned int* f0;  // &f10->magicBits_80
+    UnitSkills* f4;    // &f10->skills_6C
     BatCmd_a* f8;
     int fC;
-    Minion* f10;
-    unsigned char* f14;
+    UnitStats* f10;    // the acting encounter minion
+    UnitStatus* f14;   // its target: Levant or one of his minions
     int f18;
     int f1C;
 } BatTask;
@@ -196,7 +198,7 @@ extern int dword_80091C74;
 
 extern int dword_8007DC74;
 
-extern int dword_800C9188;
+extern Minion* dword_800C9188;
 
 extern short dword_80091CE0[];
 
@@ -421,7 +423,7 @@ extern void sub_800BC324();
 
 extern void sub_800BBE7C();
 
-extern char levantStatus_8008BD38[];
+
 
 typedef struct BatObj_a
 {
@@ -732,17 +734,7 @@ extern void StartPadVibration_80036528(int a, int b);
 
 extern unsigned char dword_800C9134[];
 
-typedef struct BatUnit_a
-{
-    unsigned int flags_0;
-    int f4;
-    short hp_8;
-    short hpLoss_A;
-    short mp_C;
-    short mpLoss_E;
-    char pad10[0x34];
-    unsigned char f44;
-} BatUnit_a;
+
 
 
 typedef struct BatResult_a
@@ -761,9 +753,9 @@ typedef struct BatResult_a
     short f26;
 } BatResult_a;
 
-extern void sub_80012BB0(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r);
+extern void sub_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
-extern void sub_800B4390(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r, int* e);
+extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, int* e);
 
 extern void sub_800BF9F0(int a);
 
@@ -1051,7 +1043,7 @@ extern void BattleMenuTask_800C8A08();
 
 extern int sub_800AD308(int a);
 
-extern int CountMagicBits_8001AE54(char* h);
+extern int CountMagicBits_8001AE54(unsigned int* h);
 
 extern int dword_800C9628[];
 
@@ -1087,16 +1079,7 @@ extern BatMenuItem_a* dword_800C9E6C;
 
 extern BatMenu_a* dword_800C9338[];
 
-typedef struct BatUseQ_a
-{
-    short f0;
-    short f2;
-    short f4;
-    short f6;
-    short f8;
-    short fA;
-    int minion_C;
-} BatUseQ_a;
+
 
 typedef struct BatTgtQ_a
 {
@@ -1126,11 +1109,11 @@ extern int dword_800C937C;
 
 extern int GetMenuCursorIndex_8003DA54(void*);
 
-extern int CheckItemUsable_80033AFC(BatUseQ_a* q);
+extern int CheckItemUsable_80033AFC(struct_minion_ref* q);
 
-extern int CheckMagicCastable_80033C08(BatUseQ_a* q);
+extern int CheckMagicCastable_80033C08(struct_minion_ref* q);
 
-extern int sub_80033C98(BatUseQ_a* q);
+extern int sub_80033C98(struct_minion_ref* q);
 
 extern int sub_80033DF4(BatTgtQ_a* q);
 
@@ -1158,7 +1141,7 @@ extern int sub_80031B30(int a);
 
 extern int sub_80031B0C(int a, int b);
 
-extern int FindNthMagicBit_8001AEC0(char* h, int n);
+extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
 extern int sub_8001ACE4(int a);
 
@@ -1178,16 +1161,7 @@ extern unsigned char dword_800C9E54;
 
 extern unsigned char dword_800C9C99;
 
-typedef struct BatWin_a
-{
-    short x;
-    short y;
-    short w;
-    short h;
-    short c;
-    short d;
-    int p;
-} BatWin_a;
+
 
 
 extern int dword_800C96C8[][4];
@@ -1216,7 +1190,7 @@ extern void sub_8002C728(void* a0);
 
 extern void sub_8002CE28(void* a0, int a1);
 
-extern int sub_80031A04(int a0, int a1);
+extern int sub_80031A04(UnitSkills* a0, int a1);
 
 extern void sub_8002CAC8(void* a0, void* a1);
 
@@ -1236,7 +1210,7 @@ extern short dword_800C9180;
 
 extern short dword_800C9182;
 
-extern int sub_80013228(BatUnit_a* a, BatUnit_a* b, BatCmd_a* c, BatResult_a* r);
+extern int sub_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern unsigned char dword_800C9E72[];
 

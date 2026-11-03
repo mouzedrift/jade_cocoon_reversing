@@ -26,50 +26,51 @@ INCLUDE_DATA(byte_800793C4);
 INCLUDE_DATA(dword_800793C8);
 
 // Matched
-void sub_80012794(struct_obj_B* p, int a1)
+void sub_80012794(UnitStatus* p, int a1)
 {
-    if (p->flags_0 & 0x3F8)
+    if (p->status_0 & 0x3F8)
     {
         a1 &= ~0x3F8;
     }
-    p->flags_0 |= a1;
+    p->status_0 |= a1;
 }
 // Matched
-void sub_800127B8(struct_obj_B* p)
+void sub_800127B8(UnitStatus* p)
 {
-    p->field_4 = 0;
-    p->field_8 = 0;
-    p->flags_0 |= 0x400;
+    p->exp_4 = 0;
+    p->hp_8 = 0;
+    p->status_0 |= 0x400;
 }
 // Matched
 void sub_800127D0(int a0, int a1, int a2, int a3)
 {
-    int v = sub_80014390(a0 & 0xFF);
+    UnitStatus* v = sub_80014390(a0 & 0xFF);
+
     if (v != 0)
     {
         sub_80012614(v, a1, a2, a3);
     }
 }
 // Matched
-void sub_80012828(int* p, unsigned int* f)
+void sub_80012828(int* p, UnitStatus* f)
 {
-    if (*f & 1)
+    if (f->status_0 & 1)
     {
         p[0] = p[0] * 4 / 5;
         p[2] = p[2] * 4 / 5;
     }
-    if (*f & 2)
+    if (f->status_0 & 2)
     {
         p[1] = p[1] * 2 / 3;
         p[3] = p[3] * 2 / 3;
         p[5] = 0;
     }
-    if (*f & 0x3F8)
+    if (f->status_0 & 0x3F8)
     {
         p[4] = p[4] * 3 / 5;
         p[5] = p[5] * 3 / 5;
     }
-    if (*f & 0x8000)
+    if (f->status_0 & 0x8000)
     {
         p[3] = (0x7FFF < p[3] + p[3] * 5) ? 0x7FFF : p[3] + p[3] * 5;
         p[1] = (0x7FFF < p[1] + p[1] * 5) ? 0x7FFF : p[1] + p[1] * 5;
@@ -169,17 +170,17 @@ extern int sub_80031B30(int a0);
 extern int sub_80031A04(int a0, int a1);
 extern struct_12* sub_8001AD64(unsigned int idx);
 extern struct_12* sub_8001D260(void);
-extern void sub_800335D0(int a0, int* out);
-extern void sub_80013EE8(int* out, int* f, Stats12* s, int a3);
-extern void sub_80013374(Stats12* s, int* f0, int* f1, int* r0, int* r1, int* p, ActionResult* out);
+extern void sub_800335D0(UnitStatus* src, UnitStatus* out);
+extern void sub_80013EE8(int* out, UnitStatus* f, Stats12* s, int a3);
+extern void sub_80013374(Stats12* s, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, ActionResult* out);
 extern int Rand100_80013E30(void);
 // Matched
-void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
+void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
 {
     int r1[12];
     int r2[12];
-    int f1[18];
-    int f2[18];
+    UnitStatus f1;
+    UnitStatus f2;
     struct_u8x12 local = dword_80071F58;
     Stats12* q;
     int b1;
@@ -233,12 +234,12 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
     case 26:
         break;
     }
-    sub_800335D0(a0, f1);
-    sub_800335D0(a1, f2);
-    sub_80013EE8(r1, f1, q, p[2]);
-    sub_80013EE8(r2, f2, q, p[3]);
-    sub_80012828(r1, (unsigned int*)f1);
-    sub_80012828(r2, (unsigned int*)f2);
+    sub_800335D0(a0, &f1);
+    sub_800335D0(a1, &f2);
+    sub_80013EE8(r1, &f1, q, p[2]);
+    sub_80013EE8(r2, &f2, q, p[3]);
+    sub_80012828(r1, &f1);
+    sub_80012828(r2, &f2);
     if (out->field_24 == ((unsigned char*)q)[8] && q->s2 != 0)
     {
         q->s2 = (0xFFFF < q->s2 + 60) ? -1 : (unsigned short)q->s2 + 60;
@@ -283,20 +284,20 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
     case 1:
     case 4:
     case 6:
-        sub_80013374(q, f1, f2, r1, r2, p, out);
+        sub_80013374(q, &f1, &f2, r1, r2, p, out);
         break;
     case 5:
     case 26:
-        sa = sub_800334CC((Minion*)a1);
-        sb = sub_800334D8((Minion*)a1);
+        sa = sub_800334CC(a1);
+        sb = sub_800334D8(a1);
         out->kind_0 = 7;
         v = sa / sb;
-        c = sub_80033514((Minion*)a1);
+        c = sub_80033514(a1);
         if (c > 40)
         {
             c = 40;
         }
-        d = (sub_80033514((Minion*)a0) - c) * 10 / 12;
+        d = (sub_80033514(a0) - c) * 10 / 12;
         if (d > 0)
         {
             if (d > 5)
@@ -314,7 +315,7 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
             }
             v /= 1 << d;
         }
-        if (sub_80033548((int*)a1, 2))
+        if (sub_80033548(a1, 2))
         {
             v <<= 3;
         }
@@ -348,9 +349,10 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
         {
             out->field_2 = 1;
         }
-        if (sub_80033548((int*)a1, 2))
+        if (sub_80033548(a1, 2))
         {
             out->field_2 = 0;
+
         }
         break;
     }

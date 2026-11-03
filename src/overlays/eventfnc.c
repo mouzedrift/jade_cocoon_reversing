@@ -391,10 +391,7 @@ typedef struct EvActorParamsEventfnc
     int f48;
     int f4C;
 } EvActorParamsEventfnc;
-typedef struct EvMinionEventfnc
-{
-    int data[0x88 / 4];
-} EvMinionEventfnc;
+
 typedef struct EvEnemyEventfnc
 {
     int f0;
@@ -404,7 +401,7 @@ typedef struct EvEnemyEventfnc
     int f10;
     int idx_14;
     int f18;
-    EvMinionEventfnc minion_1C;
+    UnitStats minion_1C;
     Actor* actor_A4;
     int fA8;
     int fAC;
@@ -435,18 +432,18 @@ typedef struct EvEnemySlotEventfnc
     int aiEvent_4;
     EvEnemyEventfnc data_8;
 } EvEnemySlotEventfnc;
-extern int InitMinionData_8001900C(EvMinionEventfnc* m, EvPosEventfnc* a1);
+
 extern Actor* CreateActor_8001D45C(EvActorParamsEventfnc* a0);
 extern void sub_80019B14(int p, char* a1, char* a2);
 extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
-extern int CreateEnemyAiEvent_800A2D90(Actor* a, EvMinionEventfnc* b, int c);
+extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern int dword_80079140;
 
 // Matched
 void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
 {
     EvActorParamsEventfnc s;
-    EvMinionEventfnc mi;
+    UnitStats mi;
     EvEnemyEventfnc e;
     int v[3];
     unsigned short* id;
@@ -461,7 +458,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     Actor* actor;
     char* x;
     EvEnemySlotEventfnc* slot;
-    id = (unsigned short*)sub_80019C70(a->xy.a);
+    id = &sub_80019C70(a->xy.a)->modelId_0;
     found = 0;
     l = ((EvLoaderEventfnc*)modelLoaderTask_8008B54C->entry.buffer)->ents_C;
     for (i = 3; i >= 0; i--)
@@ -475,7 +472,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     if (found)
     {
         model = AcquireLoaderModel_80020734(*id);
-        k = InitMinionData_8001900C(&mi, a);
+        k = InitMinionData_8001900C(&mi, &a->xy.a);
         s.id_0 = *id;
         s.f4 = 0;
         s.pos_8[0] = b->pos_0[0];
@@ -499,7 +496,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         {
             p0 = (int*)sub_80024E90(model, k);
             p1 = (int*)sub_80024E90(model, k + 1);
-            f = sub_80019AD0((char*)&mi);
+            f = sub_80019AD0(&mi);
             f = ((p1[0] - p0[0]) * f) / 4096;
             v[0] = p0[0] + f;
             v[1] = p0[1] + f;
@@ -577,20 +574,16 @@ void sub_800B8928()
     }
 }
 
-// model description from sub_80019C70
-typedef struct EvModelDescEventfnc
-{
-    unsigned short id_0;
-    unsigned char f2;
-} EvModelDescEventfnc;
+
 void sub_800B8940(int* ids)
 {
     int i = 0;
     int* q = ids;
     for (; i < 3; i++)
     {
-        EvModelDescEventfnc* e = (EvModelDescEventfnc*)sub_80019C70(*q++);
-        RequestLoaderModel_800206A0(e->id_0, e->f2 << 1, 3, -1);
+        MinionModelDesc* e = sub_80019C70(*q++);
+        RequestLoaderModel_800206A0(e->modelId_0, e->field_2 << 1, 3, -1);
+
     }
     StartModelLoader_8002056C();
 }
@@ -1225,8 +1218,9 @@ int sub_800B9D08(EvCtxEventfnc* c)
 int sub_800B9D50(EvCtxEventfnc* c)
 {
     int i;
-    char* p;
+    UnitStatus* p;
     Heal_80011CD0(sub_800A8C34());
+
     for (i = 0; i < CountMinions_80010548(3); i++)
     {
         p = GetMinionStatus_800107A0(3, i);

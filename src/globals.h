@@ -52,26 +52,7 @@ typedef struct
     unsigned short maxMp_E;
 } EntityStatus;
 
-typedef struct
-{
-    short id; // 4 = empty slot
-    short pad_2[3];
-    short field_8;
-    short field_A;
-    short field_C;
-    short field_E;
-    char pad_10[0x1C];
-    unsigned char field_2C[0x16];
-    short field_42;
-    unsigned char field_44;
-    char pad_45[0x37];
-    unsigned char field_7C[8];
-    char status_84[0x10]; // EntityStatus
-    char name_94[0x38]; // starts with the name (charTables_8008685C encoding, see DecodeNames_8003FBD4)
-    char field_CC[0x12];
-    char field_DE[0x16];
-    char field_F4[4];
-} Minion;
+#include "unit.h" // UnitStatus, UnitStats, Minion
 
 typedef struct
 {
@@ -570,7 +551,7 @@ typedef struct
 int AddFileRequest_80025D00(struct_list10* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
-extern int dword_8007BD30[];
+
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
 extern int dword_8008D4DC;

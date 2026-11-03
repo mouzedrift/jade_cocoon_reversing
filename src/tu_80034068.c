@@ -27,13 +27,13 @@ INCLUDE_DATA(dword_80074800);
 // Matched
 int sub_80034068(short* p)
 {
-    EntityStatus* q = (EntityStatus*)sub_80014390(((unsigned char*)p)[2]);
+    UnitStatus* q = sub_80014390(((unsigned char*)p)[2]);
     if (magicData_8007C438[p[0]].field_0 & 0x40)
     {
         switch (magicData_8007C438[p[0]].field_7)
         {
         case 0:
-            if (*(short*)&q->hp_8 == *(short*)&q->maxHp_A)
+            if (q->hp_8 == q->maxHp_A)
             {
                 return 3;
             }
@@ -54,11 +54,11 @@ int sub_80034124(void)
     return 0;
 }
 // Matched
-int sub_8003412C(char* p)
+int sub_8003412C(UnitStatus* p)
 {
     if (p)
     {
-        return ((Minion*)p)->field_42;
+        return p->elementMask_42;
     }
     return 0;
 }

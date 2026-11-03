@@ -55,9 +55,9 @@ extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void sub_80033864(Minion* m, unsigned char* out);
 extern void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot);
-extern void sub_8002EACC(UnitStats* a0, unsigned short* pos, int a2, short ot);
+extern void sub_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot);
 // Matched
-void sub_8002DB48(UnitStats* m, int ot, int unused, unsigned short* pos, Minion* mn, UnitStats* cmp)
+void sub_8002DB48(UnitStatus* m, int ot, int unused, unsigned short* pos, Minion* mn, UnitStatus* cmp)
 {
     short i;
     short j;
@@ -116,7 +116,7 @@ void sub_8002DB48(UnitStats* m, int ot, int unused, unsigned short* pos, Minion*
     }
     if (cmp)
     {
-        d = *(short*)&cmp->maxHp_A - *(short*)&m->maxHp_A;
+        d = cmp->maxHp_A - m->maxHp_A;
         if (d)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -129,7 +129,7 @@ void sub_8002DB48(UnitStats* m, int ot, int unused, unsigned short* pos, Minion*
     sub_8002EFC4((char*)&m->hp_8, 0, 0, loc, ot, 1);
     if (cmp)
     {
-        d = *(short*)&cmp->maxMp_E - *(short*)&m->maxMp_E;
+        d = cmp->maxMp_E - m->maxMp_E;
         if (d)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -159,10 +159,10 @@ void sub_8002DB48(UnitStats* m, int ot, int unused, unsigned short* pos, Minion*
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 0x3D;
     sub_8002EACC(m, loc, (int)mn->field_CC, ot);
-    CalcEquippedStats_80033624(st, (int)m);
+    CalcEquippedStats_80033624(st, m);
     if (cmp)
     {
-        CalcEquippedStats_80033624(st2, (int)cmp);
+        CalcEquippedStats_80033624(st2, cmp);
         for (i = 0; i < 5; i++)
         {
             d = st2[i] - st[i];
@@ -268,10 +268,11 @@ void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short
     }
 }
 // Matched
-void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
+void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* a3)
 {
-    UnitStats* p = 0;
-    MemCopy_800403E8(0, a0, 0x48);
+    UnitStatus* p = 0; // works on a copy at address 0 (the scratch area)
+    MemCopy_800403E8(0, (unsigned int*)a0, sizeof(UnitStatus));
+
     switch (a2)
     {
     case 0:
@@ -284,7 +285,7 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
         p->field_1C[2] = a1;
         break;
     }
-    CalcEquippedStats_80033624(a3, (int)p);
+    CalcEquippedStats_80033624(a3, p);
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern int sub_800AD8E4(void);
@@ -293,7 +294,7 @@ extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* n
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void sub_8002EE28(short* a, unsigned short* pos, short c, int d);
 // Matched
-void sub_8002E334(UnitStats* a0, MenuDrawArgs* a1)
+void sub_8002E334(UnitStatus* a0, MenuDrawArgs* a1)
 {
     short r[4];
     unsigned short loc2[2];
@@ -353,8 +354,8 @@ void sub_8002E334(UnitStats* a0, MenuDrawArgs* a1)
     v[1] = 0;
     loc2[0] = base[0] + 0x22;
     loc2[1] = base[1] + 0x14;
-    v[2] = *(short*)&a0->hp_8;
-    v[3] = *(short*)&a0->maxHp_A;
+    v[2] = a0->hp_8;
+    v[3] = a0->maxHp_A;
     DrawGauge_8002BA54(v, 0, loc2, a1->ot_0);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
@@ -496,7 +497,7 @@ extern void sub_8001419C(unsigned char* p, short* out);
 extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
-void sub_8002EACC(UnitStats* a0, unsigned short* pos, int a2, short ot)
+void sub_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot)
 {
     short loc[2];
     DVECTOR a;

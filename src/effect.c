@@ -60,30 +60,30 @@ int Rand100_80013E30(void)
     return rand() % 100;
 }
 // Matched
-void sub_80013E80(void* p, int arg)
+void sub_80013E80(unsigned char* p, int arg)
 {
     CalcEquippedStats_80033624(p, sub_80014390(arg & 0xFF));
 }
 // Matched
-void sub_80013EB4(void* p, int a1, int a2)
+void sub_80013EB4(unsigned char* p, int a1, int a2)
 {
-    CalcEquippedStats_80033624(p, (int)GetMinionStatus_800107A0(a2));
+    CalcEquippedStats_80033624(p, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
 }
 int sub_80014200(unsigned char* p);
 // Matched
-void sub_80013EE8(int* out, unsigned char* m, unsigned char* x, int mode)
+void sub_80013EE8(int* out, UnitStatus* m, unsigned char* x, int mode)
 {
     int a;
     int b;
     if (mode == 1)
     {
-        out[0] = m[0x2C];
-        out[2] = m[0x2E];
+        out[0] = m->stats_2C[0];
+        out[2] = m->stats_2C[2];
         out[4] = sub_80014114(10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
         out[8] = 0;
-        a = m[0x2D] * (m[0x2D] - 20) / 7;
-        b = m[0x2F] * (m[0x2F] - 20) / 7;
+        a = m->stats_2C[1] * (m->stats_2C[1] - 20) / 7;
+        b = m->stats_2C[3] * (m->stats_2C[3] - 20) / 7;
         out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
         out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
         out[5] = sub_8001413C(10);
@@ -92,16 +92,17 @@ void sub_80013EE8(int* out, unsigned char* m, unsigned char* x, int mode)
     }
     else
     {
-        out[0] = m[0x2C];
-        out[2] = m[0x2E];
-        out[4] = sub_80014114(sub_80014200(m + 0x2C) / 10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[0] = m->stats_2C[0];
+        out[2] = m->stats_2C[2];
+        out[4] = sub_80014114(sub_80014200(m->stats_2C) / 10) + x[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
         out[8] = 0;
-        out[1] = m[0x2D];
-        out[3] = m[0x2F];
-        out[5] = sub_8001413C(sub_80014200(m + 0x2C) / 10);
+        out[1] = m->stats_2C[1];
+        out[3] = m->stats_2C[3];
+        out[5] = sub_8001413C(sub_80014200(m->stats_2C) / 10);
         out[7] = 0;
-        out[9] = sub_80014200(m + 0x2C);
+        out[9] = sub_80014200(m->stats_2C);
+
     }
 }
 // Matched

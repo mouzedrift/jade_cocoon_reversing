@@ -202,22 +202,22 @@ int CountItems_800106B8(void)
     return count;
 }
 // Matched
-char* GetMinionName_800106F8(int id, int nth)
+unsigned char* GetMinionName_800106F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->name_94;
+        return m->status_84.name_10;
     }
     return 0;
 }
 // Matched
-char* sub_80010724(int id, int nth, int idx)
+unsigned char* sub_80010724(int id, int nth, int idx)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return (char*)m + (idx * 12 + 4);
+        return m->ancestors_4[idx];
     }
     return 0;
 }
@@ -232,17 +232,17 @@ unsigned char sub_80010768(int id, int nth, int idx)
     return 0;
 }
 // Matched
-char* GetMinionStatus_800107A0(int id, int nth)
+UnitStatus* GetMinionStatus_800107A0(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->status_84;
+        return &m->status_84;
     }
     return 0;
 }
 // Matched
-char* sub_800107CC(int id, int nth)
+unsigned char* sub_800107CC(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
@@ -252,22 +252,23 @@ char* sub_800107CC(int id, int nth)
     return 0;
 }
 // Matched
-char* sub_800107F8(int id, int nth)
+UnitSkills* sub_800107F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_DE;
+        return &m->skills_DE;
     }
     return 0;
 }
 // Matched
-char* sub_80010824(int id, int nth)
+unsigned int* sub_80010824(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_F4;
+        return &m->magicBits_F4;
+
     }
     return 0;
 }

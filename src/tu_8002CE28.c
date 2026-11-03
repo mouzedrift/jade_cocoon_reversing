@@ -54,7 +54,6 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
     short i;
     int v20;
     int v19;
-    unsigned char* m;
     MenuItem_1C** e;
     MenuItem_1C** e2;
     int y;
@@ -74,17 +73,17 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
     {
         v20 = abilityNames_800834E4[0];
         v19 = abilityBonusNames_80083580[0];
-        m = (unsigned char*)a0->field_C_minion + i * 4;
-        if (m[0xDE] & 1)
+        if (a0->field_C_minion->skills_DE.slot[i].flags_0 & 1)
         {
-            if (m[0xDF])
+            if (a0->field_C_minion->skills_DE.slot[i].id_1)
             {
-                v20 = abilityNames_800834E4[m[0xDF]];
+                v20 = abilityNames_800834E4[a0->field_C_minion->skills_DE.slot[i].id_1];
             }
-            if (m[0xE0])
+            if (a0->field_C_minion->skills_DE.slot[i].bonus_2)
             {
-                v19 = abilityBonusNames_80083580[m[0xE0]];
+                v19 = abilityBonusNames_80083580[a0->field_C_minion->skills_DE.slot[i].bonus_2];
             }
+
             e = &off_80082D98[i];
             (*e)[0].flags &= ~2;
             (*e)[1].flags &= ~2;
@@ -109,7 +108,7 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
             off_80082D98[i][1].flags |= 2;
             off_80082D98[i][2].flags |= 2;
         }
-        y = sub_8002D1A4(((unsigned char*)sub_800318C8(((unsigned char*)a0->field_C_minion + (i << 2))[0xDF]))[8], i);
+        y = sub_8002D1A4(((unsigned char*)sub_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1))[8], i);
         e2 = &off_80082D98[i];
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;
@@ -209,7 +208,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
     int i;
     int r;
     int v;
-    int q;
+    UnitStatus* q;
     int y;
     MenuItem_D250* m;
     n = CountMinions_80010548(3);
@@ -225,7 +224,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
     {
         q = sub_80014390(0);
         lists[k] = list0;
-        lists[k][0].text = q + 0x10;
+        lists[k][0].text = (int)q->name_10;
         p[2] = 0;
         if (mode == 0)
         {
@@ -260,7 +259,8 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
             v = 0;
             m = subs[i];
             lists[k] = m;
-            m->text = q + 0x10;
+            m->text = (int)q->name_10;
+
             lists[k]->y = 0xA6 + y * 13;
             if (mode == 0)
             {
@@ -272,7 +272,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
             }
             else if ((unsigned int)(mode - 2) < 2)
             {
-                if (sub_80033548((int*)q, 0x400))
+                if (sub_80033548(q, 0x400))
                 {
                     v = 4;
                 }

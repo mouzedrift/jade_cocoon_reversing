@@ -3,6 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "actor.h"
+#include "tu_80019BF0.h"
 
 typedef struct ShopCtxShop
 {
@@ -18,14 +19,6 @@ typedef struct ShopTaskShop
     void (*next_8)();
 } ShopTaskShop;
 
-typedef struct ShopUnitShop
-{
-    char pad_0[0x84];
-    int field_84;
-    int field_88;
-    char pad_8C[0x3C];
-    unsigned char field_C8;
-} ShopUnitShop;
 
 extern int name_8007DC74;
 extern int StartModelTask_80010850(void* p);
@@ -132,10 +125,10 @@ typedef struct ShopSixShop
 extern short name_800BFD1C[];
 extern unsigned short name_800BFD3C[];
 extern unsigned short name_800BFD5C[];
-extern char name_800C08E8[];
+extern Minion name_800C08E8; // the merge result
 extern ShopSixShop name_800B9608;
 extern char name_800C07D4[];
-extern int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d);
+extern int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d);
 extern int sub_800AD288(int a, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void sub_800BB148();
@@ -211,7 +204,8 @@ extern void fn_80019B14(int a, int b, int c);
 extern void fn_8001D68C(void* p, int on);
 extern char name_80079140[];
 extern signed char name_8007BA74[];
-extern int sub_800B9E94(char* src, char* dst, short c);
+extern int sub_800B9E94(UnitStats* src, Minion* dst, short c);
+
 extern int fn_800272D0();
 extern void fn_800A7BF0(int a);
 extern void fn_800A5F9C(int a);
@@ -228,10 +222,10 @@ extern void fn_800AD3F0(int a);
 extern void sub_800B9B44(short* p);
 extern void sub_800BE128();
 extern void sub_800BE07C();
-extern void fn_80011CD0(void* p);
+extern void fn_80011CD0(UnitStatus* p);
 extern int fn_800AD888();
 extern void fn_800AD8F4(int a);
-extern char levantStatus_8008BD38[];
+
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern Minion* name_800B6CF0;
@@ -313,7 +307,7 @@ int sub_800B9920()
     {
         if (saveData_8008B570.items[k].id != 0xD3)
         {
-            sub_800B9E94((char*)&saveData_8008B570.items[k], (char*)&items[n], 2);
+            sub_800B9E94((UnitStats*)&saveData_8008B570.items[k], &items[n], 2); // the items are UnitStats records
             n++;
         }
     }
@@ -459,37 +453,37 @@ int sub_800B9DA8()
     return 0;
 }
 
-int sub_800B9E94(char* src, char* dst, short c)
+int sub_800B9E94(UnitStats* src, Minion* dst, short c)
 {
     int i;
     unsigned int j;
     unsigned int r;
-    *(short*)dst = c;
+    dst->id = c;
     for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)(dst + 4 + i * 12), (unsigned int*)(src + 0x10));
-        (dst + i)[0x7C] = src[0x42];
+        sub_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
+        dst->field_7C[i] = src->st_0.elementMask_42;
     }
-    r = LowestSetBit_80014358(*(short*)(src + 0x42));
+    r = LowestSetBit_80014358(src->st_0.elementMask_42);
     for (j = 0; j < 4; j++)
     {
-        (dst + j)[0xC2] = 0;
+        dst->status_84.element_3E[j] = 0;
     }
     if (r >= 4)
     {
         printf(name_800B6D04, name_800B6D2C, 0x1AB);
         exit(1);
     }
-    (dst + r)[0xC2] = 0x20;
+    dst->status_84.element_3E[r] = 0x20;
     for (i = 0; i < 0x30; i++)
     {
-        (dst + i)[0x4C] = src[0x5C];
+        dst->species_4C[i] = src->species_5C;
     }
-    dst[2] = src[0x5C];
-    dst[3] = src[0x5C];
-    MemCopy_800403E8((unsigned int*)(dst + 0x84), (unsigned int*)src, 0x48);
-    MemCopy_800403E8((unsigned int*)(dst + 0xDE), (unsigned int*)(src + 0x6C), 0x14);
-    MemCopy_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
+    dst->species_2 = src->species_5C;
+    dst->field_3 = src->species_5C;
+    MemCopy_800403E8((unsigned int*)&dst->status_84, (unsigned int*)&src->st_0, sizeof(UnitStatus));
+    MemCopy_800403E8((unsigned int*)&dst->skills_DE, (unsigned int*)&src->skills_6C, sizeof(UnitSkills));
+    MemCopy_800403E8(&dst->magicBits_F4, &src->magicBits_80, 4);
     return 1;
 }
 
@@ -498,44 +492,42 @@ typedef struct ShopIdxShop
     int v[4];
 } ShopIdxShop;
 extern ShopIdxShop name_800B6D38;
-extern void InitMinionData_8001900C(void* out, void* in);
-extern void FillHpMp_80011C0C(void* a, void* b);
-extern void sub_80011D98(void* a, int b);
-extern void sub_800BAB38(char* a, char* b);
-extern void sub_800BA368(unsigned char* d, unsigned char* s);
+extern int sub_80011D98(UnitStatus* a, int b);
+extern void sub_800BAB38(Minion* a, Minion* b);
+extern void sub_800BA368(Minion* d, Minion* s);
 extern void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
-extern void sub_800BA4CC(signed char* d, signed char* a, signed char* b);
-extern void sub_800BA650(unsigned char* d);
-extern void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t);
-extern void sub_800BA72C(unsigned char* a, unsigned char* b);
-extern void sub_800BAA0C(char* a, char* b);
-extern int sub_800BACD0(unsigned char* d);
-int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d)
+extern void sub_800BA4CC(Minion* d, Minion* a, Minion* b);
+extern void sub_800BA650(Minion* d);
+extern void sub_800BA6D0(Minion* d, Minion* s, Minion* t);
+extern void sub_800BA72C(Minion* a, Minion* b);
+extern void sub_800BAA0C(Minion* a, Minion* b);
+extern int sub_800BACD0(Minion* d);
+int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
 {
     ShopIdxShop idx;
-    unsigned char tmp[0x88];
+    UnitStats tmp;
     unsigned char* p;
     int i;
     int n;
     int t;
     int r;
-    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, 0xF8);
-    c[3] = b[3];
+    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, sizeof(Minion));
+    c->field_3 = b->field_3;
     p = (unsigned char*)sub_8001CD58(d);
     if (p[0] != 0xFF)
     {
-        c[3] = p[0];
+        c->field_3 = p[0];
     }
-    sub_800BAB38((char*)c, (char*)b);
+    sub_800BAB38(c, b);
     for (i = 0; i < 4; i++)
     {
-        (c + i)[0xC2] = ((c + i)[0xC2] + (b + i)[0xC2]) >> 1;
+        c->status_84.element_3E[i] = (c->status_84.element_3E[i] + b->status_84.element_3E[i]) >> 1;
     }
     n = 0;
     idx = name_800B6D38;
     for (i = 0; i < 4; i++)
     {
-        if ((c + i)[0xC2] & 1)
+        if (c->status_84.element_3E[i] & 1)
         {
             n++;
         }
@@ -543,7 +535,7 @@ int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, 
 restart:
     for (i = 0; i < 3; i++)
     {
-        if ((c + idx.v[i])[0xC2] < (c + idx.v[i + 1])[0xC2])
+        if (c->status_84.element_3E[idx.v[i]] < c->status_84.element_3E[idx.v[i + 1]])
         {
             t = idx.v[i];
             idx.v[i] = idx.v[i + 1];
@@ -555,17 +547,19 @@ restart:
     {
         for (i = 0; i < 4; i++)
         {
-            p = c + idx.v[i];
+            p = (unsigned char*)c + idx.v[i]; // p[0xC2] == status_84.element_3E[idx.v[i]]; the struct form changes the codegen
             t = p[0xC2];
             if (t & 1)
             {
                 if (n >= 2)
                 {
-                    p[0xC2] = t + 1;
+                    p[0xC2] = t
+ + 1;
                 }
                 else
                 {
-                    p[0xC2] = t - 1;
+                    p[0xC2] = t
+ - 1;
                 }
                 n--;
             }
@@ -575,17 +569,19 @@ restart:
     {
         for (i = 0; i < 4; i++)
         {
-            p = c + idx.v[i];
+            p = (unsigned char*)c + idx.v[i]; // p[0xC2] == status_84.element_3E[idx.v[i]]; the struct form changes the codegen
             t = p[0xC2];
             if (t & 1)
             {
                 if (n >= 3)
                 {
-                    p[0xC2] = t + 1;
+                    p[0xC2] = t
+ + 1;
                 }
                 else
                 {
-                    p[0xC2] = t - 1;
+                    p[0xC2] = t
+ - 1;
                 }
                 n--;
             }
@@ -594,39 +590,39 @@ restart:
     for (i = 3; i >= 0; i--)
     {
     }
-    *(unsigned short*)(c + 0xC6) = 0;
-    if (c[0xC2] >= 8)
+    c->status_84.elementMask_42 = 0;
+    if (c->status_84.element_3E[0] >= 8)
     {
-        *(unsigned short*)(c + 0xC6) = 1;
+        c->status_84.elementMask_42 = 1;
     }
-    if (c[0xC5] >= 8)
+    if (c->status_84.element_3E[3] >= 8)
     {
-        *(unsigned short*)(c + 0xC6) |= 8;
+        *(unsigned short*)&c->status_84.elementMask_42 |= 8;
     }
-    if (c[0xC4] >= 8)
+    if (c->status_84.element_3E[2] >= 8)
     {
-        *(unsigned short*)(c + 0xC6) |= 4;
+        *(unsigned short*)&c->status_84.elementMask_42 |= 4;
     }
-    if (c[0xC3] >= 8)
+    if (c->status_84.element_3E[1] >= 8)
     {
-        *(unsigned short*)(c + 0xC6) |= 2;
+        *(unsigned short*)&c->status_84.elementMask_42 |= 2;
     }
     sub_800BA368(c, a);
-    sub_800BA3C8(c + 0xB0, a + 0xB0, b + 0xB0);
-    sub_800BA4CC((signed char*)c, (signed char*)a, (signed char*)b);
+    sub_800BA3C8(c->status_84.stats_2C, a->status_84.stats_2C, b->status_84.stats_2C);
+    sub_800BA4CC(c, a, b);
     sub_800BA650(c);
-    sub_800BA6D0((ShopUnitShop*)c, (ShopUnitShop*)a, (ShopUnitShop*)b);
-    sub_80011D98(c + 0x84, 2);
+    sub_800BA6D0(c, a, b);
+    sub_80011D98(&c->status_84, 2);
     sub_800BA72C(c, b);
-    sub_800BAA0C((char*)c, (char*)b);
-    FillHpMp_80011C0C(c + 0x84, c + 0x84);
+    sub_800BAA0C(c, b);
+    FillHpMp_80011C0C(&c->status_84, &c->status_84);
     r = sub_800BACD0(c);
     if (r > 0)
     {
         idx.v[0] = r;
-        idx.v[1] = (c[0xC8] << 26) + *(int*)(c + 0x88);
-        InitMinionData_8001900C(tmp, &idx);
-        sub_800B9E94((char*)tmp, (char*)c, *(short*)c);
+        idx.v[1] = (c->status_84.level_44 << 26) + c->status_84.exp_4;
+        InitMinionData_8001900C(&tmp, idx.v);
+        sub_800B9E94(&tmp, c, c->id);
     }
     return 1;
 }
@@ -636,15 +632,15 @@ void sub_800BA340(unsigned int* a)
     MemCopy_800403E8(a, name_800C07F0, 0xF8);
 }
 
-void sub_800BA368(unsigned char* d, unsigned char* s)
+void sub_800BA368(Minion* d, Minion* s)
 {
     int i;
     for (i = 0; i < 6; i++)
     {
-        (d + i)[0xB0] = (s + i)[0xB0] - (s + i)[0xB6] / 20;
+        d->status_84.stats_2C[i] = s->status_84.stats_2C[i] - s->status_84.base_32[i] / 20;
     }
-    *(unsigned short*)(d + 0x8E) = *(unsigned short*)(s + 0x8E);
-    *(unsigned short*)(d + 0x92) = *(unsigned short*)(s + 0x92);
+    d->status_84.maxHp_A = s->status_84.maxHp_A;
+    d->status_84.maxMp_E = s->status_84.maxMp_E;
 }
 
 void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b)
@@ -682,7 +678,7 @@ unsigned char sub_800BA46C(unsigned char a, unsigned char b)
     return out;
 }
 
-void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
+void sub_800BA4CC(Minion* d, Minion* a, Minion* b)
 {
     int tmp[4];
     int j;
@@ -695,8 +691,8 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     int k;
     for (k = 0; k < 12; k++)
     {
-        x = (a + k)[0xA4];
-        y = (b + k)[0xA4];
+        x = (signed char)a->status_84.field_20[k];
+        y = (signed char)b->status_84.field_20[k];
         if (x < y)
         {
             x = x * 2;
@@ -719,19 +715,19 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
         {
             r = -128;
         }
-        (d + k)[0xA4] = r;
+        d->status_84.field_20[k] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 4; j++)
         {
-            tmp[j] += (unsigned char)(d + i)[0xC2] * name_8007BA74[j + i * 4];
+            tmp[j] += d->status_84.element_3E[i] * name_8007BA74[j + i * 4];
         }
     }
     for (i = 0; i < 4; i++)
     {
-        (d + i)[0xA4] = tmp[i] / 32;
+        d->status_84.field_20[i] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -744,7 +740,7 @@ void sub_800BA4CC(signed char* d, signed char* a, signed char* b)
     }
 }
 
-void sub_800BA650(unsigned char* d)
+void sub_800BA650(Minion* d)
 {
     int i;
     int v;
@@ -753,124 +749,120 @@ void sub_800BA650(unsigned char* d)
     unsigned char* p;
     for (i = 0; i < 6; i++)
     {
-        p = d + i;
+        // p[0xB0] / p[0xB6] == status_84.stats_2C[i] / base_32[i]; indexing the fields lets the compiler strength-reduce the loop
+        p = (unsigned char*)d + i;
         v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
         if (v >= 0) { t = v; if (t > 100) t = 100; r = t; } else r = 0; p[0xB0] = r;
     }
+
+
     for (i = 5; i >= 0; i--)
     {
     }
 }
 
-void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t)
+void sub_800BA6D0(Minion* d, Minion* s, Minion* t)
 {
-    d->field_C8 = s->field_C8;
-    d->field_88 = s->field_88;
-    d->field_88 += sub_80012204(s->field_C8, s->field_88, t->field_C8, t->field_88);
+    d->status_84.level_44 = s->status_84.level_44;
+    d->status_84.exp_4 = s->status_84.exp_4;
+    d->status_84.exp_4 += sub_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
 }
 
 #if 0
-// Not matched (25 words): only the registers of &t.e[i] (a3 in the original) and m (t0) are swapped.
+// Not matched (25 words): only the registers of &t.slot[i] (a3 in the original) and m (t0) are swapped.
 // (When writing this in C, delete the jpt_800B6D4C line behind the function.)
-typedef struct ShopSlotShop
+
+void sub_800BA72C(Minion* a, Minion* b)
 {
-    unsigned char c[4];
-} ShopSlotShop;
-typedef struct ShopSlots5Shop
-{
-    ShopSlotShop e[5];
-} ShopSlots5Shop;
-void sub_800BA72C(unsigned char* a, unsigned char* b)
-{
-    ShopSlots5Shop t;
-    ShopSlotShop* ae;
-    ShopSlotShop* be;
+    UnitSkills t;
+    UnitSkill* ae;
+    UnitSkill* be;
     int i;
     int mask;
     int r;
     int m;
     int v;
-    t = *(ShopSlots5Shop*)(a + 0xDE);
-    ae = (ShopSlotShop*)(a + 0xDE);
-    be = (ShopSlotShop*)(b + 0xDE);
+    t = a->skills_DE;
+    ae = a->skills_DE.slot;
+    be = b->skills_DE.slot;
     for (i = 0; i < 5; i++)
     {
-        t.e[i].c[0] |= (ae[i].c[0] | be[i].c[0]) & 1;
+        t.slot[i].flags_0 |= (ae[i].flags_0 | be[i].flags_0) & 1;
     }
-    mask = *(short*)(a + 0xC6);
+    mask = a->status_84.elementMask_42;
     for (i = 0; i < 5; i++)
     {
-        switch (t.e[i].c[1])
+        switch (t.slot[i].id_1)
         {
         case 2:
             if (!(mask & 4))
             {
-                t.e[i].c[1] = 0;
+                t.slot[i].id_1 = 0;
             }
             break;
         case 3:
             if (!(mask & 8))
             {
-                t.e[i].c[1] = 0;
+                t.slot[i].id_1 = 0;
             }
             break;
         case 4:
             if (!(mask & 1))
             {
-                t.e[i].c[1] = 0;
+                t.slot[i].id_1 = 0;
             }
             break;
         case 5:
             if (!(mask & 2))
             {
-                t.e[i].c[1] = 0;
+                t.slot[i].id_1 = 0;
             }
             break;
         }
-        if (t.e[i].c[0] & 1)
+        if (t.slot[i].flags_0 & 1)
         {
-            m = *(short*)(a + 0xC6);
+            m = a->status_84.elementMask_42;
             r = -1;
-            switch (ae[i].c[1])
+            switch (ae[i].id_1)
             {
             case 0:
             case 1:
-                r = ae[i].c[1];
+                r = ae[i].id_1;
                 break;
             case 2:
                 if (m & 4)
                 {
-                    r = ae[i].c[1];
+                    r = ae[i].id_1;
                 }
                 break;
             case 3:
                 if (m & 8)
                 {
-                    r = ae[i].c[1];
+                    r = ae[i].id_1;
                 }
                 break;
             case 4:
                 if (m & 1)
                 {
-                    r = ae[i].c[1];
+                    r = ae[i].id_1;
                 }
                 break;
             case 5:
                 if (m & 2)
                 {
-                    r = ae[i].c[1];
+                    r = ae[i].id_1;
                 }
                 break;
             default:
-                r = ae[i].c[1];
+                r = ae[i].id_1;
                 break;
             }
             if (r >= 0)
             {
-                t.e[i].c[1] = r;
+                t.slot[i].id_1 = r;
             }
             r = -1;
-            switch (be[i].c[1])
+            switch (be[i].id_1)
             {
             case 0:
             case 1:
@@ -878,86 +870,86 @@ void sub_800BA72C(unsigned char* a, unsigned char* b)
             case 2:
                 if (m & 4)
                 {
-                    r = be[i].c[1];
+                    r = be[i].id_1;
                 }
                 break;
             case 3:
                 if (m & 8)
                 {
-                    r = be[i].c[1];
+                    r = be[i].id_1;
                 }
                 break;
             case 4:
                 if (m & 1)
                 {
-                    r = be[i].c[1];
+                    r = be[i].id_1;
                 }
                 break;
             case 5:
                 if (m & 2)
                 {
-                    r = be[i].c[1];
+                    r = be[i].id_1;
                 }
                 break;
             default:
-                if (t.e[i].c[1] == 0)
+                if (t.slot[i].id_1 == 0)
                 {
-                    r = be[i].c[1];
+                    r = be[i].id_1;
                 }
                 break;
             }
             if (r >= 0)
             {
-                t.e[i].c[1] = r;
+                t.slot[i].id_1 = r;
             }
-            if (t.e[i].c[1] == 1)
+            if (t.slot[i].id_1 == 1)
             {
-                t.e[i].c[1] = 0;
+                t.slot[i].id_1 = 0;
             }
         }
         else
         {
-            t.e[i].c[1] = 0;
+            t.slot[i].id_1 = 0;
         }
-        if (t.e[i].c[0] & 1)
+        if (t.slot[i].flags_0 & 1)
         {
-            v = be[i].c[2];
+            v = be[i].bonus_2;
             if (v == 1)
             {
-                t.e[i].c[2] = 1;
-                t.e[i].c[3] = 0;
+                t.slot[i].bonus_2 = 1;
+                t.slot[i].field_3 = 0;
             }
             else if (v != 0 && v < 5)
             {
-                t.e[i].c[2] = v;
-                t.e[i].c[3] = 1;
+                t.slot[i].bonus_2 = v;
+                t.slot[i].field_3 = 1;
             }
         }
         else
         {
-            t.e[i].c[2] = 0;
-            t.e[i].c[3] = 0;
+            t.slot[i].bonus_2 = 0;
+            t.slot[i].field_3 = 0;
         }
     }
-    MemCopy_800403E8((unsigned int*)(a + 0xDE), (unsigned int*)&t, 0x14);
+    MemCopy_800403E8((unsigned int*)&a->skills_DE, (unsigned int*)&t, sizeof(UnitSkills));
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
 INCLUDE_OVERLAY_ASM(shop, jpt_800B6D4C);
 INCLUDE_OVERLAY_ASM(shop, dword_800B6D7C);
 
-void sub_800BAA0C(char* a, char* b)
+void sub_800BAA0C(Minion* a, Minion* b)
 {
-    unsigned int old = *(unsigned int*)(a + 0xF4);
-    unsigned int* p = (unsigned int*)(a + 0xF4);
+    unsigned int old = a->magicBits_F4;
+    unsigned int* p = &a->magicBits_F4;
     int i;
     unsigned int mask;
     if (sub_800BAB30(b))
     {
-        old |= *(unsigned int*)(b + 0xF4);
+        old |= b->magicBits_F4;
     }
-    mask = *(short*)(a + 0xC6);
-    *(unsigned int*)(a + 0xF4) = old;
+    mask = a->status_84.elementMask_42;
+    a->magicBits_F4 = old;
     for (i = 0; i < 30; i++)
     {
         if (TestMagicBit_8001AE2C(p, i) && (mask & (1 << GetMagicElement_8001AD30(i))) == 0)
@@ -965,19 +957,19 @@ void sub_800BAA0C(char* a, char* b)
             ClearMagicBit_8001AE00(p, i);
         }
     }
-    if (a[0xC2] != 0x20)
+    if ((char)a->status_84.element_3E[0] != 0x20)
     {
         ClearMagicBit_8001AE00(p, 0x15);
     }
-    if (a[0xC4] != 0x20)
+    if ((char)a->status_84.element_3E[2] != 0x20)
     {
         ClearMagicBit_8001AE00(p, 0x17);
     }
-    if (a[0xC3] != 0x20)
+    if ((char)a->status_84.element_3E[1] != 0x20)
     {
         ClearMagicBit_8001AE00(p, 0x18);
     }
-    if (a[0xC5] != 0x20)
+    if ((char)a->status_84.element_3E[3] != 0x20)
     {
         ClearMagicBit_8001AE00(p, 0x16);
     }
@@ -989,7 +981,7 @@ int sub_800BAB30()
 }
 
 #if 0 // near miss: compiler strength-reduces the first loop to pointer increments (96 of 102 words differ)
-void sub_800BAB38(char* a, char* b)
+void sub_800BAB38(Minion* a, Minion* b)
 {
     unsigned char tmp[0x30];
     unsigned int e[18];
@@ -1002,44 +994,44 @@ void sub_800BAB38(char* a, char* b)
         {
             if (i * 2 < 0x30)
             {
-                tmp[i] = a[i * 2 + 0x4C];
+                tmp[i] = a->species_4C[i * 2];
             }
             else
             {
-                tmp[i] = a[i * 6 - 0x8F + 0x4C];
+                tmp[i] = a->species_4C[i * 6 - 0x8F];
             }
         }
         else
         {
-            tmp[i] = b[i * 3 - 0x60 + 0x4C];
+            tmp[i] = b->species_4C[i * 3 - 0x60];
         }
     }
-    MemCopy_800403E8((unsigned int*)(a + 0x4C), (unsigned int*)tmp, 0x30);
-    sub_80019AF4(e, (unsigned int*)(a + 0x94));
-    sub_80019AF4(e + 3, (unsigned int*)(b + 0x94));
-    sub_80019AF4(e + 6, (unsigned int*)(a + 4));
-    sub_80019AF4(e + 9, (unsigned int*)(a + 0x10));
-    sub_80019AF4(e + 12, (unsigned int*)(b + 4));
-    sub_80019AF4(e + 15, (unsigned int*)(b + 0x10));
+    MemCopy_800403E8((unsigned int*)a->species_4C, (unsigned int*)tmp, 0x30);
+    sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
+    sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
+    sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
+    sub_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
+    sub_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
+    sub_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
     for (j = 0; j < 6; j++)
     {
-        sub_80019AF4((unsigned int*)(a + 4 + j * 12), e + j * 3);
+        sub_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
     }
-    g[0] = a[0xC6];
-    g[1] = b[0xC6];
-    g[2] = a[0x7C];
-    g[3] = a[0x7D];
-    g[4] = b[0x7C];
-    g[5] = b[0x7D];
+    g[0] = a->status_84.elementMask_42;
+    g[1] = b->status_84.elementMask_42;
+    g[2] = a->field_7C[0];
+    g[3] = a->field_7C[1];
+    g[4] = b->field_7C[0];
+    g[5] = b->field_7C[1];
     for (j = 0; j < 6; j++)
     {
-        (a + j)[0x7C] = g[j];
+        a->field_7C[j] = g[j];
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BAB38);
 
-int sub_800BACD0(unsigned char* d)
+int sub_800BACD0(Minion* d)
 {
     int r = -1;
     int n6 = 0;
@@ -1052,7 +1044,7 @@ int sub_800BACD0(unsigned char* d)
     unsigned char v;
     for (; i < 0x30; i++)
     {
-        v = (d + i)[0x4C];
+        v = d->species_4C[i];
         if (v == 0x1E || v == 0xB1 || v == 0xB2 || v == 0xB3 || v == 0xB4)
         {
             n1++;
@@ -1089,9 +1081,9 @@ int sub_800BACD0(unsigned char* d)
     return r;
 }
 
-int sub_800BAE80(ShopUnitShop* p)
+int sub_800BAE80(Minion* p)
 {
-    unsigned int v = p->field_C8;
+    unsigned int v = p->status_84.level_44;
     int r;
     if (v < 4)
     {
@@ -1275,7 +1267,7 @@ void sub_800BB148(ShopUnit3Shop* u)
     u->field_1C = name_800BF8B4[u->field_0];
     SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
-    fn_80011CD0(levantStatus_8008BD38);
+    fn_80011CD0(&levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
     {
         r = GetSaveItem_80033AE4(&saveData_8008B570, i);
@@ -1289,7 +1281,7 @@ void sub_800BB148(ShopUnit3Shop* u)
         r = GetMinion_80010598(3, i);
         if (r)
         {
-            fn_80011CD0((char*)r + 0x84);
+            fn_80011CD0(&r->status_84);
         }
     }
     sub_800B9920();
@@ -1400,7 +1392,7 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
                     else if (u->field_24 & 0x80)
                     {
                         sub_800BECC8(u);
-                        r = CountMagicBits_8001AE54((unsigned int*)u->field_54->field_F4);
+                        r = CountMagicBits_8001AE54(&u->field_54->magicBits_F4);
                         if (r < 4)
                         {
                             r = 4;
@@ -1897,7 +1889,7 @@ void sub_800BC1A8(ShopUnit3Shop* u)
             t = fl & ~0x40;
             t &= ~0x100;
             u->field_24 = t | 0x80;
-            r = CountMagicBits_8001AE54((unsigned int*)u->field_54->field_F4);
+            r = CountMagicBits_8001AE54(&u->field_54->magicBits_F4);
             if (r < 4)
             {
                 r = 4;
@@ -2150,7 +2142,7 @@ void sub_800BD720(ShopUnit3Shop* u)
         {
             d = 10;
         }
-        MergeMinions_800B9FC8((unsigned char*)u->field_4C, (unsigned char*)u->field_50, name_800C08E8, d);
+        MergeMinions_800B9FC8(u->field_4C, u->field_50, &name_800C08E8, d);
     }
 }
 
@@ -2270,14 +2262,14 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         sv = (char*)&saveData_8008B570;
         if (((ShopSaveBitsShop*)(sv + 0x1C))->bit5 == 1)
         {
-            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
             sub_800B9B44((short*)u->field_50);
-            if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
+            if (u->field_4C->species_4C[0] == 0x23)
             {
                 p = (int*)(sv + 0x814);
                 p[1] |= 8;
             }
-            else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
+            else if (u->field_4C->species_4C[0] == 0x22)
             {
                 p = (int*)(sv + 0x814);
                 p[1] |= 4;
@@ -2319,7 +2311,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         {
             if ((unsigned int)u->field_84 & (1 << i))
             {
-                fn_800AD184(sub_800BAE80((ShopUnitShop*)sub_800B9C5C(i)), 1, 0);
+                fn_800AD184(sub_800BAE80(sub_800B9C5C(i)), 1, 0);
                 sub_800B9B20(i);
                 any = 1;
             }
@@ -2364,7 +2356,8 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         tk = (ShopTaskShop*)&name_8008D670->entry;
         tk->next_8 = sub_800BE128;
         tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
-        fn_800B6C6C(u->field_4C->name_94, 0);
+        fn_800B6C6C(u->field_4C->status_84.name_10
+, 0);
         SetFadeMode_8001C19C(0, 0x20);
         u->field_84 = 0;
         u->field_88 = 0;
@@ -2395,7 +2388,8 @@ void sub_800BDD74(ShopTaskShop* t, void* arg)
         {
             fn_800A5F9C(1);
             t->next_8 = sub_800BE128;
-            fn_800B6C6C(u->field_4C->name_94, 1);
+            fn_800B6C6C(u->field_4C->status_84.name_10
+, 1);
         }
         else if (u->field_0 == 6)
         {
@@ -2448,14 +2442,14 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
             sv = &saveData_8008B570;
             if (!((sv->settings_1C.word >> 5) & 1))
             {
-                MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+                MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
                 sub_800B9B44((short*)u->field_50);
-                if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
+                if (u->field_4C->species_4C[0] == 0x23)
                 {
                     p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 8;
                 }
-                else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
+                else if (u->field_4C->species_4C[0] == 0x22)
                 {
                     p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 4;
@@ -2471,7 +2465,8 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
                 u->field_8C = 0;
                 u->field_24 |= 1;
             }
-            fn_800B6C6C(u->field_4C->name_94, 1);
+            fn_800B6C6C(u->field_4C->status_84.name_10
+, 1);
             SetFadeMode_8001C19C(0, 0x20);
         }
         else if (u->field_94 == 2)
@@ -2683,7 +2678,8 @@ void sub_800BE53C(ShopUnit3Shop* u)
         if (sub_800B9C10(i) == 3)
         {
             e = sub_800B9C5C(i);
-            s = (e->id == 4) ? 0 : e->name_94;
+            s = (e->id == 4) ? 0 : e->status_84.name_10
+;
         }
         else
         {
@@ -2781,7 +2777,8 @@ void sub_800BE7F0(ShopUnit3Shop* u)
         if (sub_800B9C10(k) == 2)
         {
             e = sub_800B9C5C(k);
-            s = (e->id == 4) ? 0 : e->name_94;
+            s = (e->id == 4) ? 0 : e->status_84.name_10
+;
         }
         else
         {
@@ -2929,7 +2926,7 @@ void sub_800BECC8(ShopUnit3Shop* u)
         case 0:
             goto def;
         case 2:
-            u->field_54 = (Minion*)name_800C08E8;
+            u->field_54 = &name_800C08E8;
             return;
         }
         return;
@@ -3048,15 +3045,15 @@ typedef struct ShopLocalShop
     int w[3];
 } ShopLocalShop;
 extern int sub_800BF2E4(unsigned char* p);
-void sub_800BF02C(unsigned char* a, int* o, int c)
+void sub_800BF02C(Minion* a, int* o, int c)
 {
     ShopLocalShop l;
-    unsigned int h = *(unsigned short*)sub_80019C70(a[2]);
+    unsigned int h = sub_80019C70(a->species_2)->modelId_0;
     int t;
-    o[0] = sub_800338DC(a + 0x4C, l.b, l.w);
-    o[1] = *(unsigned short*)sub_80019C70(l.b[0]);
-    o[2] = *(unsigned short*)sub_80019C70(l.b[1]);
-    o[3] = *(unsigned short*)sub_80019C70(l.b[2]);
+    o[0] = sub_800338DC(a->species_4C, l.b, l.w);
+    o[1] = sub_80019C70(l.b[0])->modelId_0;
+    o[2] = sub_80019C70(l.b[1])->modelId_0;
+    o[3] = sub_80019C70(l.b[2])->modelId_0;
     o[4] = l.w[0];
     o[5] = l.w[1];
     o[6] = l.w[2];
@@ -3129,18 +3126,19 @@ void sub_800BF02C(unsigned char* a, int* o, int c)
             o[6] = t;
         }
     }
-    o[7] = sub_80019A80(a[0xC8]);
+    o[7] = sub_80019A80(a->status_84.level_44);
     o[8] = o[0] - 1;
-    o[10] = *(unsigned short*)sub_80019C70(a[3]);
+    o[10] = sub_80019C70(a->field_3)->modelId_0;
     o[12] = c;
-    o[9] = sub_800BF2E4(a + 0xC2);
+    o[9] = sub_800BF2E4(a->status_84.element_3E);
     if (o[9] == -1000)
     {
-        o[9] = ((unsigned char*)sub_80019C70(a[3]))[2] << 1;
+        o[9] = sub_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o[9] = o[9] - (((unsigned char*)sub_80019C70(a[3]))[3] << 1);
+        o[9] = o[9] - (sub_80019C70(a->field_3)->field_3 << 1);
+
         if (o[9] < 0)
         {
             o[9] = o[9] + 0x168;

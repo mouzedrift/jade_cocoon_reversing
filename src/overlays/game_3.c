@@ -1642,7 +1642,7 @@ void sub_800A8C0C()
     dword_8008B4CC->f24->f0 |= 4;
 }
 
-char* sub_800A8C34()
+UnitStatus* sub_800A8C34()
 {
     return &levantStatus_8008BD38;
 }

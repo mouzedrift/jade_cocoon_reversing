@@ -3,6 +3,16 @@
 
 #include "actor.h"
 
+// per-species model description (dword_8007BD30, sub_80019C70)
+typedef struct
+{
+    unsigned short modelId_0;
+    unsigned char field_2; // angles in units of 2 degrees (sub_800C064C)
+    unsigned char field_3;
+} MinionModelDesc;
+extern MinionModelDesc dword_8007BD30[];
+extern MinionModelDesc* sub_80019C70(int idx);
+
 // effect request built by sub_8001E28C and handed to sub_800182B8 / sub_800184DC
 // (tu_80018430.c calls it EffectSet, tu_800174F8.c EntryList)
 typedef struct

@@ -116,7 +116,8 @@ struct_20* sub_80019C28(unsigned int idx)
     return sub_800B3274(idx - 0x39);
 }
 // Matched
-int* sub_80019C70(int idx)
+MinionModelDesc* sub_80019C70(int idx)
+
 {
     return &dword_8007BD30[idx];
 }
