@@ -6072,7 +6072,111 @@ void sub_800C7D54(unsigned char a)
 }
 INCLUDE_OVERLAY_ASM(battle, sub_800C7DA8);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C83B0);
+typedef struct BatAct_a
+{
+    int f0;
+    int f4;
+    int targets_8;
+    int mask_C;
+} BatAct_a;
+typedef struct BatDmg_a
+{
+    int f0;
+    int f4;
+    int f8;
+    int dx_C;
+    int dy_10;
+    int dx_14;
+    int dy_18;
+    int dx_1C;
+    int dy_20;
+    short h24;
+    short h26;
+} BatDmg_a;
+typedef struct BatRange_a
+{
+    char pad0[8];
+    short lo_8;
+    short hi_A;
+    short lo_C;
+    short hi_E;
+} BatRange_a;
+extern short dword_800C9180;
+extern short dword_800C9182;
+extern void sub_80012BB0(int a, BatRange_a* b, BatAct_a* c, BatDmg_a* d);
+extern int sub_80013228(int a, BatRange_a* b, BatAct_a* c, BatDmg_a* d);
+void sub_800C83B0()
+{
+    BatTgtQ_a b;
+    BatAct_a a;
+    BatDmg_a d;
+    unsigned int i;
+    int bit;
+    int self;
+    BatRange_a* m;
+    a = *(BatAct_a*)dword_800C9E58;
+    if (dword_800C9E50 == 4)
+    {
+        dword_800C9180 = 0;
+        dword_800C9182 = 0;
+        self = sub_80014390(dword_800C9C7C);
+        for (i = 0; i < 4; i++)
+        {
+            bit = 1 << i;
+            if ((((BatAct_a*)dword_800C9E58)->mask_C & bit) && i == dword_800C9C99)
+            {
+                m = (BatRange_a*)sub_80014390(i & 0xFF);
+                d.h24 = (signed char)dword_800C9D82;
+                d.h26 = (signed char)dword_800C9D83;
+                a.mask_C = bit;
+                sub_80012BB0(self, m, &a, &d);
+                if (sub_80013228(self, m, &a, &d) == 0 && (((BatAct_a*)dword_800C9E58)->targets_8 & bit))
+                {
+                    dword_800C9180 -= d.dx_C;
+                    dword_800C9182 -= d.dy_10;
+                    dword_800C9180 -= d.dx_14;
+                    dword_800C9182 -= d.dy_18;
+                }
+                dword_800C9180 -= d.dx_1C;
+                dword_800C9182 -= d.dy_20;
+                if (dword_800C9180 > m->hi_A - m->lo_8)
+                {
+                    dword_800C9180 = m->hi_A - m->lo_8;
+                }
+                if (dword_800C9182 > m->hi_E - m->lo_C)
+                {
+                    dword_800C9182 = m->hi_E - m->lo_C;
+                }
+            }
+        }
+        b.f0 = dword_800C9E5C;
+        b.f2 = dword_800C9C7C;
+        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f6 = 0;
+        if (sub_800C78D0() == 4)
+        {
+            if (sub_80033DF4(&b))
+            {
+                dword_800C9180 = 0;
+                dword_800C9182 = 0;
+            }
+        }
+        else if (sub_800C78D0() == 6)
+        {
+            if (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            {
+                dword_800C9180 = 0;
+            }
+        }
+        else if (sub_800C78D0() == 7)
+        {
+            if (sub_80034068(&b))
+            {
+                dword_800C9180 = 0;
+            }
+        }
+    }
+}
 
 extern unsigned char dword_800C9E72[];
 void sub_800C8694(unsigned char a)
