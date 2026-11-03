@@ -3699,7 +3699,121 @@ void sub_80021824(int* a0, char* a1, int a2, int a3, int a4)
         a1 += 0x54;
     }
 }
-INCLUDE_ASM(sub_800218A8);
+typedef struct
+{
+    short n;
+    short pad;
+    char* p;
+} ModelList;
+typedef struct
+{
+    ModelList l[8];
+    int n8;
+    char* p8;
+    int n9;
+    unsigned short f4C;
+    unsigned short f4E;
+    char* p9;
+} Model54;
+#define S ((Model54*)a0)
+#define D ((Model54*)a1)
+// Matched
+void sub_800218A8(int a0, void* a1, int a2)
+{
+    char* buf;
+    int size;
+    int i;
+    size = S->l[0].n * 0x24 + S->l[1].n * 0x3C;
+    size += S->l[2].n * 0x30;
+    size += S->l[3].n * 0x48;
+    size += S->l[4].n * 0x2C;
+    size += S->l[5].n * 0x50;
+    size += S->l[6].n * 0x38;
+    size += S->l[7].n * 0x5C;
+    size += S->n8 * 0x14;
+    size += S->n9 * 0x14;
+    if (size)
+    {
+        buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
+    }
+    else
+    {
+        buf = 0;
+    }
+    D->l[0].n = S->l[0].n;
+    D->l[0].p = buf;
+    buf += S->l[0].n * 0x24;
+    D->l[1].n = S->l[1].n;
+    D->l[1].p = buf;
+    buf += S->l[1].n * 0x3C;
+    D->l[2].n = S->l[2].n;
+    D->l[2].p = buf;
+    buf += S->l[2].n * 0x30;
+    D->l[3].n = S->l[3].n;
+    D->l[3].p = buf;
+    buf += S->l[3].n * 0x48;
+    D->l[4].n = S->l[4].n;
+    D->l[4].p = buf;
+    buf += S->l[4].n * 0x2C;
+    D->l[5].n = S->l[5].n;
+    D->l[5].p = buf;
+    buf += S->l[5].n * 0x50;
+    D->l[6].n = S->l[6].n;
+    D->l[6].p = buf;
+    buf += S->l[6].n * 0x38;
+    D->l[7].n = S->l[7].n;
+    D->l[7].p = buf;
+    buf += S->l[7].n * 0x5C;
+    D->n8 = S->n8;
+    D->p8 = buf;
+    buf += S->n8 * 0x14;
+    D->n9 = S->n9;
+    D->p9 = buf;
+    for (i = 0; i < D->l[0].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[0].p + i * 0x24), (unsigned int*)(S->l[0].p + i * 0x24), 0x24);
+    }
+    for (i = 0; i < D->l[1].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[1].p + i * 0x3C), (unsigned int*)(S->l[1].p + i * 0x3C), 0x3C);
+    }
+    for (i = 0; i < D->l[2].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[2].p + i * 0x30), (unsigned int*)(S->l[2].p + i * 0x30), 0x30);
+    }
+    for (i = 0; i < D->l[3].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[3].p + i * 0x48), (unsigned int*)(S->l[3].p + i * 0x48), 0x48);
+    }
+    for (i = 0; i < D->l[4].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[4].p + i * 0x2C), (unsigned int*)(S->l[4].p + i * 0x2C), 0x2C);
+    }
+    for (i = 0; i < D->l[5].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[5].p + i * 0x50), (unsigned int*)(S->l[5].p + i * 0x50), 0x50);
+    }
+    for (i = 0; i < D->l[6].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[6].p + i * 0x38), (unsigned int*)(S->l[6].p + i * 0x38), 0x38);
+    }
+    for (i = 0; i < D->l[7].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[7].p + i * 0x5C), (unsigned int*)(S->l[7].p + i * 0x5C), 0x5C);
+    }
+    for (i = 0; i < D->n8; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->p8 + i * 0x14), (unsigned int*)(S->p8 + i * 0x14), 0x14);
+    }
+    for (i = 0; i < D->n9; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->p9 + i * 0x14), (unsigned int*)(S->p9 + i * 0x14), 0x14);
+    }
+    D->f4C = S->f4C;
+    D->f4E = S->f4E;
+}
+#undef S
+#undef D
 // Matched
 int sub_80021DE4(int* p)
 {
