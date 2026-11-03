@@ -30,6 +30,10 @@ extern FtgSpriteVtx* dword_80098180;        // next free sprite vertex
 extern FtgSpriteVtx* dword_800987D8[][56];  // per slot: the projected vertices, three per triple
 extern unsigned long dword_8009AAD8;        // tpage / clut word of the textured sprites
 
+// draws an FTG object with the current GTE matrices (flags: see FtgDrawCtx.flags_20, bits 8-15 CLUT
+// row offset, bit 7 + bits 16-31 depth cue); slot indexes dword_800987D8
+extern void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
+
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
 #define FTG_PRIM_SCRATCH getScratchAddr(0x78)
 #define FTG_DRAW_CTX ((FtgDrawCtx*)getScratchAddr(0x85))

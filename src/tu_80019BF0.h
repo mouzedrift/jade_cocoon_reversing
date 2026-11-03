@@ -20,6 +20,9 @@ typedef struct
 extern MinionModelDesc dword_8007BD30[];
 extern MinionModelDesc* sub_80019C70(int idx);
 
+// lighting for a model at pos (rotation m); sets the light matrix from dword_80087114
+extern void sub_80019D84(VECTOR* pos, VECTOR* ofs, void* cam, MATRIX* m);
+
 
 // sound cue table dword_8007C750 (ModelAnimCue.arg_4 indexes it)
 typedef struct

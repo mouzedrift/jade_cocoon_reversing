@@ -17,6 +17,8 @@
 #include "data_decls.h"
 #include "tu_80036528.h"
 #include "tu_80043AF8.h"
+#include "tu_80019BF0.h"
+#include "tu_8004B0A8.h"
 
 INCLUDE_DATA(dword_80098690);
 INCLUDE_DATA(dword_800986A0);
@@ -120,7 +122,46 @@ int sub_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
     return 0;
 }
 INCLUDE_ASM(sub_80044010);
-INCLUDE_ASM(sub_80044D0C);
+extern MATRIX dword_80087114; // light matrix
+// Matched
+void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot)
+{
+    MATRIX* m;
+    VECTOR zero;
+    PushMatrix();
+    RotMatrixYXZ_80046874(rot, (MATRIX*)getScratchAddr(0));
+    gte_ReadRotMatrix((MATRIX*)getScratchAddr(8));
+    m = (MATRIX*)getScratchAddr(8);
+    m->t[0] = pos->vx - dword_8008D600.vx;
+    m->t[1] = pos->vy - dword_8008D600.vy;
+    m->t[2] = pos->vz - dword_8008D600.vz;
+    ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
+    gte_MulMatrix0((MATRIX*)getScratchAddr(8), (MATRIX*)getScratchAddr(0), (MATRIX*)getScratchAddr(8));
+    if (scale)
+    {
+        m->m[0][0] = m->m[0][0] * scale->vx / 4096;
+        m->m[0][1] = m->m[0][1] * scale->vy / 4096;
+        m->m[0][2] = m->m[0][2] * scale->vz / 4096;
+        m->m[1][0] = m->m[1][0] * scale->vx / 4096;
+        m->m[1][1] = m->m[1][1] * scale->vy / 4096;
+        m->m[1][2] = m->m[1][2] * scale->vz / 4096;
+        m->m[2][0] = m->m[2][0] * scale->vx / 4096;
+        m->m[2][1] = m->m[2][1] * scale->vy / 4096;
+        m->m[2][2] = m->m[2][2] * scale->vz / 4096;
+    }
+    gte_SetRotMatrix((MATRIX*)getScratchAddr(8));
+    gte_SetTransMatrix((MATRIX*)getScratchAddr(8));
+    PushMatrix();
+    zero.vx = 0;
+    zero.vy = 0;
+    zero.vz = 0;
+    *(MATRIX*)getScratchAddr(8) = *(MATRIX*)getScratchAddr(0);
+    sub_80019D84(pos, &zero, cam, (MATRIX*)getScratchAddr(8));
+    PopMatrix();
+    sub_8004C7BC(obj, ot, flags, slot);
+    PopMatrix();
+    gte_SetLightMatrix(&dword_80087114);
+}
 INCLUDE_ASM(sub_800451BC);
 INCLUDE_ASM(sub_80045534);
 INCLUDE_ASM(sub_800459E4);

@@ -2,6 +2,7 @@
 #define _TU_80043AF8_H_
 
 #include "gte.h"
+#include "tu_8001EA48.h"
 
 // billboard sprite projection (sub_80043B8C), in the scratchpad at 0x1F800214
 typedef struct
@@ -15,5 +16,8 @@ typedef struct
     unsigned char shade_18;
 } BillboardScratch;
 #define BILLBOARD_SCRATCH ((BillboardScratch*)getScratchAddr(0x85))
+
+// draws an FTG object at pos / rot (optional per-axis scale) through sub_8004C7BC
+extern void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot);
 
 #endif

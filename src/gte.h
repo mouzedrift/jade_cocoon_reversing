@@ -604,4 +604,6 @@
         :                                                       \
         : "g"( r0 ) )
 
+#include "GTEMAC.H"
+
 #endif

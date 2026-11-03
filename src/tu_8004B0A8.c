@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "gte.h"
 #include "tu_8004B0A8.h"
+#include "tu_80043AF8.h"
 
 INCLUDE_DATA(dword_8008713C);
 INCLUDE_DATA(dword_80087140);
@@ -803,7 +804,6 @@ void sub_8004D0E8(void)
     gte_SetRotMatrix(m);
     gte_SetTransMatrix(m);
 }
-extern void sub_80044D0C(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale, int a7);
 
 // Matched
 void sub_8004D1EC(struct FtgObject* a0, unsigned long* a1, void* a2, void* a3, void* a4, int a5, void* a6)
