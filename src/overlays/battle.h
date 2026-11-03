@@ -759,6 +759,26 @@ extern EventNode* dword_8008D60C;
 
 extern void sub_800C17EC();
 
+// one sprite of an effect frame (0x1C bytes)
+typedef struct BatFxElem_a
+{
+    int f0;
+    int f4;
+    int f8;
+    short size_C[2];
+    short f10[4];
+    int f18;
+} BatFxElem_a;
+
+// sprite effect animation (0x34 bytes, the table at effectFile_80091BD0[0x20 / 4])
+typedef struct BatFxAnim_a
+{
+    int count_0; // frames
+    unsigned char* counts_4; // sprites per frame
+    BatFxElem_a** frames_8;
+    int state_C[10];
+} BatFxAnim_a;
+
 typedef struct BatSpark_a
 {
     int frame_0;
@@ -770,7 +790,7 @@ typedef struct BatSpark_a
     int base_1C[3];
     int vel_28[3];
     short rot_34[4];
-    int* anim_3C;
+    BatFxAnim_a* anim_3C;
     int* target_40;
     int* offset_44;
 } BatSpark_a;
@@ -796,7 +816,7 @@ typedef struct BatShard_a
     int base_1C[3];
     int vel_28[3];
     short rot_34[4];
-    int* anim_3C;
+    void* obj_3C; // BatClip_a or a model
 } BatShard_a;
 
 extern void PlaySfx_80031494(int id);
@@ -835,8 +855,8 @@ typedef struct BatTrail_a
     int pos_44[3];
     BatVec_a trail_50[4];
     short rot_80[4];
-    int* anim_88;
-    int* model_8C;
+    BatFxAnim_a* anim_88;
+    struct BatClip_a* clip_8C;
 } BatTrail_a;
 
 extern void sub_80044D0C();
@@ -876,7 +896,9 @@ typedef struct BatClip_a
 typedef struct BatAnim_a
 {
     int frame_0;
-    char pad4[0x40];
+    int f4;
+    short speed_8;
+    char padA[0x3A];
     int pos_44[3];
     char pad50[0x32];
     short rot_82;

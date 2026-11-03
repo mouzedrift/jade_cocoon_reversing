@@ -1556,7 +1556,7 @@ typedef struct BatDrop_a
     int vel_28[3];
     short rot_34[4];
     int pad3C;
-    int* anim_40;
+    BatFxAnim_a* anim_40;
 } BatDrop_a;
 
 // Matched
@@ -1565,8 +1565,8 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     int v[3];
     short s[4];
     short w[4];
-    int* d;
-    char* e;
+    BatFxAnim_a* d;
+    BatFxElem_a* e;
     u->vel_28[0] = u->vel_28[0] * 15 / 16;
     u->vel_28[1] = u->vel_28[1] * 15 / 16 + u->size_8 / 8;
     u->vel_28[2] = u->vel_28[2] * 15 / 16;
@@ -1574,7 +1574,7 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     u->pos_10[1] += u->vel_28[1];
     u->pos_10[2] += u->vel_28[2];
     d = u->anim_40;
-    e = ((char**)d[2])[0];
+    e = d->frames_8[0];
     v[0] = u->pos_10[0];
     v[1] = u->pos_10[1];
     v[2] = u->pos_10[2];
@@ -1586,13 +1586,13 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
         t->flags = (t->flags & ~1) | 0x8000;
     }
     u->size_8 -= 0x40;
-    s[0] = *(short*)(e + 0xC) * u->size_8 / 4096;
-    s[1] = *(short*)(e + 0xE) * u->size_8 / 4096;
+    s[0] = e->size_C[0] * u->size_8 / 4096;
+    s[1] = e->size_C[1] * u->size_8 / 4096;
     w[0] = 0x14;
     w[1] = 0;
     w[2] = 0;
     u->rot_34[1] += 0x80;
-    sub_80044010(&d[3], v, u->rot_34, e, e + 4, e + 8, s, w, e + 0x18, 0, 0x30, pOT_8008D690);
+    sub_80044010(d->state_C, v, u->rot_34, &e->f0, &e->f4, &e->f8, s, w, &e->f18, 0, 0x30, pOT_8008D690);
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
@@ -1605,28 +1605,28 @@ void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
         EventEntry* ev = AllocEventEntry_80043AF8(dword_8008D60C);
         if (ev)
         {
-            char* b = ev->buffer;
+            BatSpark_a* b = ev->buffer;
             ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
-            *(int*)(b + 0x1C) = p[0];
-            *(int*)(b + 0x20) = p[1];
-            *(int*)(b + 0x24) = p[2];
-            *(int*)(b + 0x10) = p[0];
-            *(int*)(b + 0x14) = p[1];
-            *(int*)(b + 0x18) = p[2];
-            *(short*)(b + 0x34) = q[0];
-            *(short*)(b + 0x36) = q[1];
-            *(short*)(b + 0x38) = q[2];
-            *(int*)(b + 0x3C) = c;
-            *(int*)(b + 0x28) = ((rand() & 0x7F) - 0x3F) << 10;
-            *(int*)(b + 0x2C) = -(rand() & 0x3F) << 10;
-            *(int*)(b + 0x30) = ((rand() & 0x7F) - 0x3F) << 10;
-            *(short*)(b + 0x34) = 0;
-            *(short*)(b + 0x36) = 0;
-            *(short*)(b + 0x38) = 0;
-            *(int*)b = 0;
-            *(short*)(b + 8) = ((rand() & 0xFFF) >> 1) + 0x800;
-            *(int*)(b + 0x40) = e;
-            *(int*)(b + 0x44) = f;
+            b->base_1C[0] = p[0];
+            b->base_1C[1] = p[1];
+            b->base_1C[2] = p[2];
+            b->pos_10[0] = p[0];
+            b->pos_10[1] = p[1];
+            b->pos_10[2] = p[2];
+            b->rot_34[0] = q[0];
+            b->rot_34[1] = q[1];
+            b->rot_34[2] = q[2];
+            b->anim_3C = (BatFxAnim_a*)c;
+            b->vel_28[0] = ((rand() & 0x7F) - 0x3F) << 10;
+            b->vel_28[1] = -(rand() & 0x3F) << 10;
+            b->vel_28[2] = ((rand() & 0x7F) - 0x3F) << 10;
+            b->rot_34[0] = 0;
+            b->rot_34[1] = 0;
+            b->rot_34[2] = 0;
+            b->frame_0 = 0;
+            b->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
+            b->target_40 = (int*)e;
+            b->offset_44 = (int*)f;
             ev->cb_8 = (EventEntryFn)sub_800C17EC;
         }
     }
@@ -1635,9 +1635,9 @@ void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
 void sub_800C17EC(EventEntry* t, BatSpark_a* u)
 {
     int s[3];
-    int* d;
+    BatFxAnim_a* d;
     int i;
-    char* e;
+    BatFxElem_a* e;
     int* a = u->target_40;
     int* b = u->offset_44;
     u->vel_28[0] = u->vel_28[0] * 31 / 32 + ((a[0] + b[0] - u->pos_10[0]) << 5);
@@ -1650,12 +1650,12 @@ void sub_800C17EC(EventEntry* t, BatSpark_a* u)
     u->pos_10[1] += s[1];
     u->pos_10[2] += s[2];
     d = u->anim_3C;
-    if (u->frame_0 / 4096 < d[0])
+    if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
         {
-            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
-            sub_80044010(&d[3], u->pos_10, u->rot_34, e, e + 4, e + 8, e + 0xC, (int*)dword_800795D4, e + 0x18, 0, 0x30, pOT_8008D690);
+            e = d->frames_8[u->frame_0 / 4096] + i;
+            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, (int*)dword_800795D4, &e->f18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1670,47 +1670,34 @@ void sub_800C1A5C(int* p, short* q, int c, int d)
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
     if (e)
     {
-        char* b;
+        BatSpark_a* b;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         b = e->buffer;
-        *(int*)(b + 0x10) = p[0];
-        *(int*)(b + 0x14) = p[1];
-        *(int*)(b + 0x18) = p[2];
-        *(short*)(b + 0x34) = q[0];
-        *(short*)(b + 0x36) = q[1];
-        *(short*)(b + 0x38) = q[2];
-        *(int*)(b + 0x3C) = c;
-        *(int*)b = 0;
-        *(short*)(b + 8) = d;
+        b->pos_10[0] = p[0];
+        b->pos_10[1] = p[1];
+        b->pos_10[2] = p[2];
+        b->rot_34[0] = q[0];
+        b->rot_34[1] = q[1];
+        b->rot_34[2] = q[2];
+        b->anim_3C = (BatFxAnim_a*)c;
+        b->frame_0 = 0;
+        b->speed_8 = d;
         e->cb_8 = (EventEntryFn)sub_800C1B2C;
     }
 }
 
 #if 0 // Not matched: register permutation only (u/d/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
-typedef struct BatFx_a
+void sub_800C1B2C(EventEntry* t, BatSpark_a* u)
 {
-    int frame_0;
-    int f4;
-    short speed_8;
-    short padA;
-    int padC;
-    int pos_10[3];
-    char pad1C[0x18];
-    short rot_34[4];
-    int* anim_3C;
-} BatFx_a;
-extern void sub_80044010();
-void sub_800C1B2C(EventEntry* t, BatFx_a* u)
-{
-    int* d = u->anim_3C;
+    BatFxAnim_a* d = u->anim_3C;
     int i;
-    char* e;
-    if (u->frame_0 / 4096 < d[0])
+    BatFxElem_a* e;
+    if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
         {
-            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
-            sub_80044010(&d[3], u->pos_10, u->rot_34, e, e + 4, e + 8, e + 0xC, e + 0x10, e + 0x18, 0, 0x30, pOT_8008D690);
+            e = d->frames_8[u->frame_0 / 4096] + i;
+            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1731,20 +1718,20 @@ void sub_800C1C5C(int* p, short* q, int c)
         EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
         if (e)
         {
-            char* b = e->buffer;
+            BatSpark_a* b = e->buffer;
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            *(int*)(b + 0x10) = p[0];
-            *(int*)(b + 0x14) = p[1];
-            *(int*)(b + 0x18) = p[2];
-            *(short*)(b + 0x34) = q[0];
-            *(short*)(b + 0x36) = q[1];
-            *(short*)(b + 0x38) = q[2];
-            *(int*)(b + 0x3C) = c;
-            *(int*)(b + 0x28) = ((rand() & 0x3F) - 0x1F) << 10;
-            *(int*)(b + 0x2C) = ((rand() & 0x3F) - 0x1F) << 10;
-            *(int*)(b + 0x30) = ((rand() & 0x3F) - 0x1F) << 10;
-            *(int*)b = 0;
-            *(short*)(b + 8) = ((rand() & 0xFFF) >> 1) + 0x800;
+            b->pos_10[0] = p[0];
+            b->pos_10[1] = p[1];
+            b->pos_10[2] = p[2];
+            b->rot_34[0] = q[0];
+            b->rot_34[1] = q[1];
+            b->rot_34[2] = q[2];
+            b->anim_3C = (BatFxAnim_a*)c;
+            b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
+            b->vel_28[1] = ((rand() & 0x3F) - 0x1F) << 10;
+            b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
+            b->frame_0 = 0;
+            b->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
             e->cb_8 = (EventEntryFn)sub_800C1DA4;
         }
     }
@@ -1753,9 +1740,9 @@ void sub_800C1C5C(int* p, short* q, int c)
 void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
 {
     int s[3];
-    int* d;
+    BatFxAnim_a* d;
     int i;
-    char* e;
+    BatFxElem_a* e;
     int* sd;
     u->vel_28[0] = u->vel_28[0] * 15 / 16;
     u->vel_28[1] = u->vel_28[1] * 15 / 16 + 0x200;
@@ -1773,12 +1760,12 @@ void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
         u->pos_10[1] = sd[0x7AC / 4];
     }
     d = u->anim_3C;
-    if (u->frame_0 / 4096 < d[0])
+    if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
         {
-            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
-            sub_80044010(&d[3], u->pos_10, u->rot_34, e, e + 4, e + 8, e + 0xC, e + 0x10, e + 0x18, 0, 0x30, pOT_8008D690);
+            e = d->frames_8[u->frame_0 / 4096] + i;
+            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1796,23 +1783,23 @@ void sub_800C1FFC(int* p, short* q, int c, int d, int n)
         EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
         if (e)
         {
-            char* b = e->buffer;
+            BatSpark_a* b = e->buffer;
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            *(int*)(b + 0x1C) = p[0];
-            *(int*)(b + 0x20) = p[1];
-            *(int*)(b + 0x24) = p[2];
-            *(short*)(b + 0x34) = q[0];
-            *(short*)(b + 0x36) = q[1];
-            *(short*)(b + 0x38) = q[2];
-            *(int*)(b + 0x3C) = c;
-            *(int*)(b + 0x28) = ((rand() & 0x3F) - 0x1F) << 10;
-            *(int*)(b + 0x2C) = -(rand() & 0x1F) << 10;
-            *(int*)(b + 0x30) = ((rand() & 0x3F) - 0x1F) << 10;
-            *(int*)(b + 0x10) = 0;
-            *(int*)(b + 0x14) = 0;
-            *(int*)(b + 0x18) = 0;
-            *(int*)b = 0;
-            *(short*)(b + 8) = d + ((rand() & 0xFFF) >> 1) + 0x800;
+            b->base_1C[0] = p[0];
+            b->base_1C[1] = p[1];
+            b->base_1C[2] = p[2];
+            b->rot_34[0] = q[0];
+            b->rot_34[1] = q[1];
+            b->rot_34[2] = q[2];
+            b->anim_3C = (BatFxAnim_a*)c;
+            b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
+            b->vel_28[1] = -(rand() & 0x1F) << 10;
+            b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
+            b->pos_10[0] = 0;
+            b->pos_10[1] = 0;
+            b->pos_10[2] = 0;
+            b->frame_0 = 0;
+            b->speed_8 = d + ((rand() & 0xFFF) >> 1) + 0x800;
             e->cb_8 = (EventEntryFn)sub_800C2170;
         }
     }
@@ -1820,9 +1807,9 @@ void sub_800C1FFC(int* p, short* q, int c, int d, int n)
 
 void sub_800C2170(EventEntry* t, BatSpark_a* u)
 {
-    int* d;
+    BatFxAnim_a* d;
     int i;
-    char* e;
+    BatFxElem_a* e;
     u->rot_34[1] += 0x40;
     u->vel_28[0] = u->vel_28[0] * 12 / 13;
     u->vel_28[1] = u->vel_28[1] * 12 / 13 - 0x400;
@@ -1837,16 +1824,16 @@ void sub_800C2170(EventEntry* t, BatSpark_a* u)
         u->pos_10[2] += s[2];
     }
     d = u->anim_3C;
-    if (u->frame_0 / 4096 < d[0])
+    if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
         {
             short c[3];
-            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
+            e = d->frames_8[u->frame_0 / 4096] + i;
             c[0] = u->pos_10[0];
             c[1] = u->pos_10[1];
             c[2] = u->pos_10[2];
-            sub_80044010(&d[3], u->base_1C, u->rot_34, e, e + 4, e + 8, e + 0xC, c, e + 0x18, 0, 0x30, pOT_8008D690);
+            sub_80044010(d->state_C, u->base_1C, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, c, &e->f18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1901,8 +1888,8 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
                 n = sub_80020F00(effectFile_80091BD0, 1, 0x19);
                 e->flags = (e->flags | 1) & 0xFFFF7FFF;
                 {
-                    int* ent = (int*)(effectFile_80091BD0[0x28 / 4] + n * 28);
-                    b->anim_3C = (int*)(ent[1] + (i % 8) * 84);
+                    BatClip_a* ent = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+                    b->obj_3C = ent->models_4 + (i % 8) * 84;
                 }
                 e->cb_8 = (EventEntryFn)sub_800C273C;
             }
@@ -1939,7 +1926,7 @@ void sub_800C273C(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC((int)u->anim_3C, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    sub_8004D1EC((int)u->obj_3C, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
     u->frame_0++;
 }
 
@@ -1961,7 +1948,7 @@ void sub_800C2914(BatSrc_a* p, int id)
         b->frame_0 = 0;
         n = sub_80020F00(effectFile_80091BD0, 1, id);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        b->anim_3C = (int*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+        b->obj_3C = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
         e->cb_8 = (EventEntryFn)sub_800C23D0;
     }
     for (i = 0; i < 8; i++)
@@ -1995,7 +1982,7 @@ void sub_800C2914(BatSrc_a* p, int id)
             b->rot_34[2] = rand() & 0x1000;
             n = sub_80020F00(effectFile_80091BD0, 1, id);
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            b->anim_3C = (int*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+            b->obj_3C = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
             e->cb_8 = (EventEntryFn)sub_800C2CD8;
         }
     }
@@ -2003,7 +1990,7 @@ void sub_800C2914(BatSrc_a* p, int id)
 
 void sub_800C2CD8(EventEntry* t, BatShard_a* u)
 {
-    int* d = u->anim_3C;
+    BatClip_a* d = u->obj_3C;
     int v[4];
     int s[3];
     if (u->frame_0 >= 0x1A)
@@ -2024,7 +2011,7 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(d[1], (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    sub_8004D1EC((int)d->models_4, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
     u->frame_0++;
 }
 
@@ -2036,32 +2023,32 @@ void sub_800C2E28(int* p, short* q, int c, int d, int e, int n)
         EventEntry* ev = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
         if (ev)
         {
-            char* b;
+            BatTrail_a* b;
             ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
             b = ev->buffer;
-            *(int*)(b + 0x44) = p[0];
-            *(int*)(b + 0x48) = p[1];
-            *(int*)(b + 0x4C) = p[2];
-            *(int*)(b + 0x50) = p[0];
-            *(int*)(b + 0x54) = p[1];
-            *(int*)(b + 0x58) = p[2];
-            *(int*)(b + 0x5C) = p[0];
-            *(int*)(b + 0x60) = p[1];
-            *(int*)(b + 0x64) = p[2];
-            *(int*)(b + 0x68) = p[0];
-            *(int*)(b + 0x6C) = p[1];
-            *(int*)(b + 0x70) = p[2];
-            *(short*)(b + 0x80) = q[0];
-            *(short*)(b + 0x82) = q[1];
-            *(short*)(b + 0x84) = q[2];
-            *(int*)(b + 0x88) = c;
-            *(int*)(b + 0x8C) = d;
-            *(short*)(b + 0x80) = 0;
-            *(short*)(b + 0x84) = 0;
-            *(int*)b = 0;
-            *(int*)(b + 4) = 0;
-            *(short*)(b + 8) = e;
-            *(short*)(b + 0x82) = (i << 12) / n;
+            b->pos_44[0] = p[0];
+            b->pos_44[1] = p[1];
+            b->pos_44[2] = p[2];
+            b->trail_50[0].x = p[0];
+            b->trail_50[0].y = p[1];
+            b->trail_50[0].z = p[2];
+            b->trail_50[1].x = p[0];
+            b->trail_50[1].y = p[1];
+            b->trail_50[1].z = p[2];
+            b->trail_50[2].x = p[0];
+            b->trail_50[2].y = p[1];
+            b->trail_50[2].z = p[2];
+            b->rot_80[0] = q[0];
+            b->rot_80[1] = q[1];
+            b->rot_80[2] = q[2];
+            b->anim_88 = (BatFxAnim_a*)c;
+            b->clip_8C = (BatClip_a*)d;
+            b->rot_80[0] = 0;
+            b->rot_80[2] = 0;
+            b->frame_0 = 0;
+            b->count_4 = 0;
+            b->speed_8 = e;
+            b->rot_80[1] = (i << 12) / n;
             ev->cb_8 = (EventEntryFn)sub_800C2FC8;
         }
     }
@@ -2069,17 +2056,17 @@ void sub_800C2E28(int* p, short* q, int c, int d, int e, int n)
 
 void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
 {
-    int* d = u->anim_88;
+    BatFxAnim_a* d = u->anim_88;
     int i;
     int* r;
-    char* e;
-    if (u->frame_0 / 4096 < d[0])
+    BatFxElem_a* e;
+    if (u->frame_0 / 4096 < d->count_0)
     {
         r = 0;
-        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
         {
-            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
-            r = sub_80044010(&d[3], u->pos_44, u->rot_80, e, e + 4, e + 8, e + 0xC, e + 0x10, e + 0x18, 0, 0x30, pOT_8008D690);
+            e = d->frames_8[u->frame_0 / 4096] + i;
+            r = sub_80044010(d->state_C, u->pos_44, u->rot_80, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
         }
         u->trail_50[0].x = u->pos_44[0] + r[0];
         u->trail_50[0].y = u->pos_44[1] + r[1];
@@ -2097,11 +2084,11 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
             u->trail_50[1].z = u->trail_50[0].z;
         }
         u->frame_0 += u->speed_8;
-        sub_80044D0C(u->model_8C[1], pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
-        sub_80044D0C(u->model_8C[1] + 0x54, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
-        sub_80044D0C(u->model_8C[1] + 0xA8, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
-        sub_80044D0C(u->model_8C[1] + 0xFC, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
-        sub_800459E4(dword_800C91A4, u->model_8C + 2, pOT_8008D690, 0x30);
+        sub_80044D0C(u->clip_8C->models_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
+        sub_80044D0C(u->clip_8C->models_4 + 0x54, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
+        sub_80044D0C(u->clip_8C->models_4 + 0xA8, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
+        sub_80044D0C(u->clip_8C->models_4 + 0xFC, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
+        sub_800459E4(dword_800C91A4, &u->clip_8C->f8, pOT_8008D690, 0x30);
     }
     else
     {
@@ -2125,24 +2112,24 @@ int sub_800C32DC(int a0, int a1, int a2, int a3)
 {
     int* pos = (int*)a0;
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    char* b;
+    BatAnim_a* b;
     int idx;
-    int t;
+    BatClip_a* t;
     if (e != 0)
     {
     b = e->buffer;
-    *(int*)(b + 0x44) = pos[0];
-    *(int*)(b + 0x48) = pos[1];
-    *(int*)(b + 0x4C) = pos[2];
-    *(int*)b = 0;
-    *(short*)(b + 8) = 0;
-    *(short*)(b + 0x82) = a3;
+    b->pos_44[0] = pos[0];
+    b->pos_44[1] = pos[1];
+    b->pos_44[2] = pos[2];
+    b->frame_0 = 0;
+    b->speed_8 = 0;
+    b->rot_82 = a3;
     idx = sub_80020F00(effectFile_80091BD0, 1, a1);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    t = effectFile_80091BD0[0x28 / 4] + idx * 28;
-    *(int*)(b + 0x88) = t + a2 * 28;
+    t = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
+    b->clip_88 = t + a2;
     e->cb_8 = (EventEntryFn)sub_800C33E4;
-    return *(int*)(t + 0x14);
+    return t->frames_14;
     }
     return -1;
 }
