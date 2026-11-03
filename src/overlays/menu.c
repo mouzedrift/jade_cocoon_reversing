@@ -1206,7 +1206,93 @@ void sub_800BEFAC(MenuCtx* a, short b)
     }
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BF0F4);
+extern void sub_8002E334();
+extern void InterpolateWindowRect_8004196C();
+extern void AddDrawAreaPrim_8003326C();
+extern void sub_8002FD0C();
+extern void sub_8002F7D0();
+extern void DrawAnimatedWindow_8002BEC8();
+extern int GetRankName_8002FCD8();
+extern int sub_800AD02C();
+extern void DrawLargeNumber_8002C100();
+extern void AddClipDrawAreaPrim_80033308();
+extern void sub_800C0E04(short* a, short* pos, short c);
+extern char name_800C2994[];
+extern char name_800C298C[];
+extern char name_800C1BE0[];
+extern char name_800C18DC[];
+extern char name_800C18E4[];
+typedef struct MenuStatQ
+{
+    short b;
+    short s;
+    int z4;
+    int z8;
+} MenuStatQ;
+typedef struct MenuEquipQ
+{
+    short w[6];
+    int z;
+} MenuEquipQ;
+void sub_800BF0F4(MenuCtx* a, short b)
+{
+    short pos[2];
+    int tmp[2];
+    MenuStatQ q;
+    short pp[2];
+    MenuEquipQ w;
+    int t50[2];
+    short pos2[2];
+    int s = sub_800C0990(a, 1);
+    char* lv;
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
+    lv = levantStatus_8008BD38;
+    pos[0] = 0xA;
+    pos[1] = 0x2C;
+    q.b = b;
+    q.s = s;
+    q.z4 = 0;
+    q.z8 = 0;
+    sub_8002E334(lv, &q);
+    InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
+    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
+    InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
+    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
+    sub_8002FD0C(b, (short)s, 0, 0, tmp);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
+    pos[0] = 0xD1;
+    pos[1] = 0x88;
+    sub_8002F7D0(pos, 0xE);
+    DrawAnimatedWindow_8002BEC8(tmp, name_800C1BE0, (short)s, b, 0, 0);
+    w.w[0] = -1;
+    pp[0] = 0xA;
+    pp[1] = 0x88;
+    w.w[1] = 0;
+    w.w[2] = 1;
+    w.w[3] = b;
+    w.w[4] = 0;
+    w.w[5] = 1;
+    w.z = 0;
+    sub_800C0E04(w.w, pp, s);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
+    pos[0] = 0xF;
+    pos[1] = 0x77;
+    DrawUiTiySprt_8002C06C(pos, 0xC2, b);
+    pos2[0] = 0x2F;
+    pos2[1] = 0x77;
+    DrawText_8003E91C(2, GetRankName_8002FCD8(sub_800121A8(((unsigned char*)lv)[0x44])), pos2, b);
+    DrawAnimatedWindow_8002BEC8(t50, name_800C18DC, (short)s, b, 0, 0);
+    pos[0] = 0x9A;
+    pos[1] = 0x75;
+    DrawUiTiySprt_8002C06C(pos, 0x7B, b);
+    pos[0] = 0x104;
+    pos[1] = 0x76;
+    DrawLargeNumber_8002C100(pos, sub_800AD02C(), b);
+    pos[0] = 0x104;
+    pos[1] = 0x76;
+    DrawUiTiySprt_8002C06C(pos, 0xE9, b);
+    DrawAnimatedWindow_8002BEC8(t50, name_800C18E4, (short)s, b, 0, 0);
+}
 
 extern void sub_800AD1E0();
 void sub_800BF3AC(MenuObj* o)
