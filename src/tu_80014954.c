@@ -483,7 +483,56 @@ void sub_8001497C(void)
     int* p = dword_8008D3F8[9];
     p[0x28 / 4] |= 1;
 }
-INCLUDE_ASM(sub_800149A4);
+void sub_80015478(EventEntry* e, void* buf);
+// Matched
+void sub_800149A4(char* p)
+{
+    char* q = (char*)dword_8008D3F8[9];
+    EventEntry* e;
+    char* b;
+    int n;
+    int m;
+    n = *(short*)(p + 0x1E);
+    m = *(int*)(q + 0x3C);
+    effectOutcomeFlag_8008D780 = 0;
+    if (m < n)
+    {
+        *(int*)(q + 0x3C) = n;
+    }
+    e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    if (e)
+    {
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        b = (char*)e->buffer;
+        *(short*)(b + 0xE) = *(short*)(p + 0);
+        *(int*)(b + 0x14) = *(int*)(p + 0x4);
+        *(int*)(b + 0x18) = *(int*)(p + 0x8);
+        *(int*)(b + 0x1C) = *(int*)(p + 0xC);
+        *(int*)(b + 0x20) = *(int*)(p + 0x10);
+        *(int*)(b + 0x2C) = *(int*)(p + 0x18);
+        *(short*)(b + 0xC) = *(short*)(p + 0x1C);
+        *(short*)(b + 0xA) = *(short*)(p + 0x1E);
+        *(int*)(b + 0x0) = 0;
+        *(int*)(b + 0x4) = 0;
+        *(short*)(b + 0x8) = 0;
+        *(int*)(b + 0x98) = *(int*)(p + 0x24);
+        *(int*)(b + 0x9C) = *(int*)(p + 0x28);
+        *(int*)(b + 0xA0) = *(int*)(p + 0x2C);
+        *(unsigned char*)(b + 0xA5) = *(unsigned char*)(q + 0x40);
+        *(short*)(b + 0xA6) = *(short*)(q + 0x42);
+        *(int*)(b + 0xAC) = *(int*)(p + 0x30);
+        *(short*)(b + 0x24) = (*(short**)(p + 0x14))[0] * ((short*)(*(int*)(p + 0x28) + *(int*)(b + 0x98) * 8))[0] / 4096;
+        *(short*)(b + 0x26) = (*(short**)(p + 0x14))[1] * ((short*)(*(int*)(p + 0x28) + *(int*)(b + 0x98) * 8))[1] / 4096;
+        *(short*)(b + 0x28) = (*(short**)(p + 0x14))[2] * ((short*)(*(int*)(p + 0x28) + *(int*)(b + 0x98) * 8))[2] / 4096;
+        if (*(int*)(p + 0x2C))
+        {
+            *(short*)(b + 0x24) = *(short*)(b + 0x24) * (*(int**)(p + 0x2C))[0] / 4096;
+            *(short*)(b + 0x26) = *(short*)(b + 0x26) * (*(int**)(p + 0x2C))[1] / 4096;
+            *(short*)(b + 0x28) = *(short*)(b + 0x28) * (*(int**)(p + 0x2C))[2] / 4096;
+        }
+        e->cb_8 = sub_80015478;
+    }
+}
 // Matched
 void sub_80014C28(int* a0, int* a1)
 {
