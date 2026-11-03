@@ -445,7 +445,7 @@ void sub_800378CC(void)
     sub_800390F4(dword_8008D4A0[0x24 / 4], 1);
 }
 // Matched
-short sub_800378F8(void)
+int sub_800378F8(void)
 {
     return ((short*)dword_8008D4A0[0x24 / 4])[4];
 }
@@ -687,8 +687,87 @@ void sub_80037F44(int* q)
     sub_80038D64((char*)q, (int*)levantPos_8008BD18);
     q[0xC / 4] = 0x1000;
 }
-INCLUDE_ASM(sub_80038230);
-INCLUDE_ASM(sub_8003856C);
+#define I32(o, off) (*(int*)((char*)(o) + (off)))
+#define I16(o, off) (*(short*)((char*)(o) + (off)))
+#define U16(o, off) (*(unsigned short*)((char*)(o) + (off)))
+#define EASE(p) (0x1000 - word_80084540[(((p)[3] / 4) + 0x400) & 0xFFF])
+// Matched
+void sub_80038230(int* p)
+{
+    short ang;
+    short r;
+
+    dword_8008D4F0.field_20.x = I32(p, 0x198) + (I32(p, 0x1B0) - I32(p, 0x198)) * EASE(p) / 4096;
+    dword_8008D4F0.field_20.y = I32(p, 0x19C) + (I32(p, 0x1B4) - I32(p, 0x19C)) * EASE(p) / 4096;
+    dword_8008D4F0.field_20.z = I32(p, 0x1A0) + (I32(p, 0x1B8) - I32(p, 0x1A0)) * EASE(p) / 4096;
+
+    ang = U16(p, 0x152) + (I16(p, 0x150) - I16(p, 0x152)) * EASE(p) / 4096;
+    r = U16(p, 0x158) + (I32(p, 0x154) - I32(p, 0x158)) * EASE(p) / 4096;
+    dword_8008D4F0.field_14.x = p[0x38 / 4] + r * word_80084540[ang & 0xFFF] / 4096;
+    dword_8008D4F0.field_14.y = I32(p, 0x190) + (I32(p, 0x1A8) - I32(p, 0x190)) * EASE(p) / 4096;
+    dword_8008D4F0.field_14.z = p[0x40 / 4] + r * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    dword_8008D4F0.field_2E = U16(p, 0x180) + (I32(p, 0x17C) - I32(p, 0x180)) * EASE(p) / 4096;
+    if (p[3] == 0)
+    {
+        dword_8008D4F0.field_14 = *(struct_v3*)((char*)p + 0x18C);
+    }
+    sub_8003891C(p, levantPos_8008BD18);
+}
+extern double pow(double, double);
+extern int dword_8008D4BC;
+extern int dword_8008D66C;
+// Matched
+void sub_8003856C(int* p)
+{
+    unsigned int u;
+    float f;
+
+    dword_8008D4BC = dword_8008B4F8;
+    if (sub_800378F8() != 0)
+    {
+        return;
+    }
+    u = p[0x34 / 4];
+    if (u < (unsigned int)dword_8008B4F8 && (p[1] & 0x20))
+    {
+
+        f = (float)dword_8008B4F8 * pow((float)u / (float)*(unsigned short*)((char*)p + 0xA), 1.0f / (float)*(unsigned short*)((char*)p + 0x12));
+        dword_8008B4F8 = f;
+        if ((unsigned int)p[0x34 / 4] >= (unsigned int)dword_8008B4F8)
+        {
+            p[1] &= ~0x20;
+        }
+    }
+    else if ((unsigned int)dword_8008B4F8 < u && (p[1] & 0x20))
+    {
+
+        f = (float)dword_8008B4F8 * pow((float)u / (float)*(unsigned short*)((char*)p + 0xA), 1.0f / (float)*(unsigned short*)((char*)p + 0x12));
+        dword_8008B4F8 = f;
+        if ((unsigned int)dword_8008B4F8 >= (unsigned int)p[0x34 / 4])
+        {
+            p[1] &= ~0x20;
+        }
+    }
+    if (dword_8008B4F8 < 0x1000)
+    {
+        dword_8008B4F8 = 0x1000;
+        p[1] &= ~0x20;
+    }
+    if (dword_8008B4F8 > 0x10000)
+    {
+        dword_8008B4F8 = 0x10000;
+        p[1] &= ~0x20;
+    }
+    if (dword_8008D66C * 4 < word_8008D51E * dword_8008B4F8 / 4096)
+    {
+        dword_8008B4F8 = (dword_8008D66C << 14) / word_8008D51E;
+        if (dword_8008B4F8 < 0x1000)
+        {
+            dword_8008B4F8 = 0x1000;
+        }
+        p[1] &= ~0x20;
+    }
+}
 extern void sub_8003856C(int* p);
 extern void sub_800398B4(int* p, void* q);
 extern int dword_8008D4BC;

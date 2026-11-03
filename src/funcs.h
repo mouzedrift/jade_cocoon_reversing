@@ -213,7 +213,7 @@ extern unsigned char GetMinionEnhancementBody_80019C0C(int idx);
 extern void sub_80020D68(void);
 extern struct_12* sub_800318C8(int idx);
 extern int sub_80033A90(Minion* p, unsigned int idx);
-extern short sub_800378F8(void);
+extern int sub_800378F8(void);
 extern short sub_80037A4C(void);
 extern int Sign_8003B664(int x);
 extern int LengthSquared2D_8003B8BC(int x, int y);

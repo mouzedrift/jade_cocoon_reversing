@@ -89,8 +89,243 @@ int sub_80031BDC(int a0)
 {
     return a0;
 }
-INCLUDE_ASM(sub_80031BE4);
-INCLUDE_ASM(sub_80031FF4);
+// Matched
+int sub_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl)
+{
+    int d;
+    int w;
+    int h;
+    int x0;
+    int y0;
+    short lo;
+    short hi;
+    unsigned short flags;
+
+    flags = fl;
+    if (sx < 0)
+    {
+        sx = -sx;
+        flags = fl ^ 0x100;
+    }
+    if (sy < 0)
+    {
+        sy = -sy;
+        flags ^= 0x200;
+    }
+    w = (p->u3 - p->u0 >= 0 ? p->u3 - p->u0 : p->u0 - p->u3) * sx / 256;
+    h = (p->v3 - p->v0 >= 0 ? p->v3 - p->v0 : p->v0 - p->v3) * sy / 256;
+    if (w > 0x200)
+    {
+        w = 0x200;
+    }
+    if (h > 0x200)
+    {
+        h = 0x200;
+    }
+    switch (flags & 3)
+    {
+    case 1:
+        x0 = x;
+        break;
+    case 2:
+        x0 = x - w;
+        break;
+    case 0:
+        x0 = x - w / 2;
+        break;
+    default:
+        x0 = x - w / 2;
+        break;
+    }
+    switch (flags & 0x30)
+    {
+    case 0x10:
+        y0 = y;
+        break;
+    case 0x20:
+        y0 = y - h;
+        break;
+    case 0:
+        y0 = y - h / 2;
+        break;
+    default:
+        y0 = y - h / 2;
+        break;
+    }
+    if (off)
+    {
+        x0 += off[0] * sx / 256;
+        y0 += off[1] * sy / 256;
+    }
+    if ((flags & 0x300) == 0x300)
+    {
+        p->x1 = x0;
+        p->y2 = y0;
+        p->x0 = x0 + w;
+        p->y3 = y0;
+        p->x3 = x0;
+        p->y0 = y0 + h;
+        p->x2 = x0 + w;
+        p->y1 = y0 + h;
+    }
+    else if (flags & 0x100)
+    {
+        p->x1 = x0;
+        p->y0 = y0;
+        p->x0 = x0 + w;
+        p->y1 = y0;
+        p->x3 = x0;
+        p->y2 = y0 + h;
+        p->x2 = x0 + w;
+        p->y3 = y0 + h;
+    }
+    else if (flags & 0x200)
+    {
+        p->x0 = x0;
+        p->y2 = y0;
+        p->x1 = x0 + w;
+        p->y3 = y0;
+        p->x2 = x0;
+        p->y0 = y0 + h;
+        p->x3 = x0 + w;
+        p->y1 = y0 + h;
+    }
+    else
+    {
+        p->x0 = x0;
+        p->y0 = y0;
+        p->x1 = x0 + w;
+        p->y1 = y0;
+        p->x2 = x0;
+        p->y2 = y0 + h;
+        p->x3 = x0 + w;
+        p->y3 = y0 + h;
+    }
+    if (p->x0 > p->x1)
+    {
+        hi = p->x0;
+        lo = p->x1;
+    }
+    else
+    {
+        lo = p->x0;
+        hi = p->x1;
+    }
+    if (hi < p->x2)
+    {
+        hi = p->x2;
+    }
+    else if (p->x2 < lo)
+    {
+        lo = p->x2;
+    }
+    if (hi < p->x3)
+    {
+        hi = p->x3;
+    }
+    else if (p->x3 < lo)
+    {
+        lo = p->x3;
+    }
+    if (lo > 0x140 || hi < 0)
+    {
+        return 0;
+    }
+    if (p->y0 > p->y1)
+    {
+        hi = p->y0;
+        lo = p->y1;
+    }
+    else
+    {
+        lo = p->y0;
+        hi = p->y1;
+    }
+    if (hi < p->y2)
+    {
+        hi = p->y2;
+    }
+    else if (p->y2 < lo)
+    {
+        lo = p->y2;
+    }
+    if (hi < p->y3)
+    {
+        hi = p->y3;
+    }
+    else if (p->y3 < lo)
+    {
+        lo = p->y3;
+    }
+    if (lo > 0xF0 || hi < 0)
+    {
+        return 0;
+    }
+    AddPrimCopy_80040298(ot, p, 10);
+    return 1;
+}
+extern int dword_8008D430;
+extern struct_20* dword_8008D434;
+#define FT4_TBL ((POLY_FT4*)dword_8008D430)
+#define ROT_X(x, y, a) ((x) * word_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * word_80084540[(a) & 0xFFF] / 4096)
+#define ROT_Y(x, y, a) ((x) * word_80084540[(a) & 0xFFF] / 4096 + (y) * word_80084540[((a) + 0x400) & 0xFFF] / 4096)
+#define SZ ((unsigned short*)&dword_8008D434[idx])
+// Matched
+void sub_80031FF4(int idx, unsigned long* ot, unsigned short* pos, int angle)
+{
+    POLY_FT4 poly;
+    short x;
+    short y;
+    int rx;
+    int ry;
+
+    setPolyFT4(&poly);
+    poly.r0 = FT4_TBL[idx].r0;
+    poly.g0 = FT4_TBL[idx].g0;
+    poly.b0 = FT4_TBL[idx].b0;
+    poly.code = FT4_TBL[idx].code;
+    poly.clut = FT4_TBL[idx].clut;
+    poly.tpage = FT4_TBL[idx].tpage;
+    poly.u0 = FT4_TBL[idx].u0;
+    poly.v0 = FT4_TBL[idx].v0;
+    poly.u1 = FT4_TBL[idx].u1;
+    poly.v1 = FT4_TBL[idx].v1;
+    poly.u2 = FT4_TBL[idx].u2;
+    poly.v2 = FT4_TBL[idx].v2;
+    poly.u3 = FT4_TBL[idx].u3;
+    poly.v3 = FT4_TBL[idx].v3;
+    poly.x0 = 1 - (short)SZ[8] / 2;
+    poly.y0 = 1 - (short)SZ[9] / 2;
+    poly.x1 = (short)SZ[8] / 2;
+    poly.y1 = 1 - (short)SZ[9] / 2;
+    poly.x2 = 1 - (short)SZ[8] / 2;
+    poly.y2 = (short)SZ[9] / 2;
+    poly.x3 = (short)SZ[8] / 2;
+    poly.y3 = (short)SZ[9] / 2;
+    x = poly.x0;
+    y = poly.y0;
+    rx = ROT_X(x, y, angle);
+    ry = ROT_Y(x, y, angle);
+    poly.x0 = pos[0] + rx;
+    poly.y0 = pos[1] + ry;
+    x = poly.x1;
+    y = poly.y1;
+    rx = ROT_X(x, y, angle);
+    ry = ROT_Y(x, y, angle);
+    poly.x1 = pos[0] + rx;
+    poly.y1 = pos[1] + ry;
+    x = poly.x2;
+    y = poly.y2;
+    rx = ROT_X(x, y, angle);
+    ry = ROT_Y(x, y, angle);
+    poly.x2 = pos[0] + rx;
+    poly.y2 = pos[1] + ry;
+    rx = ROT_X(poly.x3, poly.y3, angle);
+    ry = ROT_Y(poly.x3, poly.y3, angle);
+    poly.x3 = pos[0] + rx;
+    poly.y3 = pos[1] + ry;
+    AddPrimCopy_80040298(ot, &poly, 10);
+}
 typedef struct
 {
     int a;

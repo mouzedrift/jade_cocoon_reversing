@@ -132,7 +132,100 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
     }
     sub_80033624(a3, p);
 }
-INCLUDE_ASM(sub_8002E334);
+extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern int sub_800AD8E4(void);
+extern void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
+extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
+extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void sub_8002EE28(short* a, unsigned short* pos, short c, int d);
+// Matched
+void sub_8002E334(unsigned char* a0, short* a1)
+{
+    short r[4];
+    unsigned short loc2[2];
+    unsigned short base[2];
+    unsigned short loc[2];
+    int buf[2];
+    int v[4];
+    int w[4];
+
+    base[0] = 0x4E;
+    base[1] = 0x2C;
+    AddClipTexWindowPrim_80033308(&pOT_8008D454[a1[0]]);
+    loc[0] = 0xE0;
+    loc[1] = 0x31;
+    sub_8002C06C(loc, 0x82, a1[0]);
+    loc[0] = 0x132;
+    loc[1] = 0x32;
+    sub_8002C100(loc, sub_800AD8E4(), a1[0]);
+    r[0] = 0xDB;
+    r[1] = 0x2C;
+    r[2] = 0x5B;
+    r[3] = 0x17;
+    sub_8002BEC8((int)buf, (int)r, a1[1], a1[0], *(int*)(a1 + 2), *(int*)(a1 + 4));
+    loc[0] = 0xE0;
+    loc[1] = 0x48;
+    sub_8002C06C(loc, 0x52, a1[0]);
+    loc[0] = 0x132;
+    loc[1] = 0x49;
+    sub_8002C100(loc, CountItems_800106B8(), a1[0]);
+    r[1] = 0x43;
+    r[0] = 0xDB;
+    r[2] = 0x5B;
+    r[3] = 0x16;
+    sub_8002BEC8((int)buf, (int)r, a1[1], a1[0], *(int*)(a1 + 2), *(int*)(a1 + 4));
+    loc[0] = 0xE0;
+    loc[1] = 0x5E;
+    sub_8002C06C(loc, 0x6F, a1[0]);
+    loc[0] = 0x132;
+    loc[1] = 0x5F;
+    sub_8002C100(loc, GetCapturedMinionsCount_800125B8(), a1[0]);
+    r[0] = 0xDB;
+    r[1] = 0x59;
+    r[2] = 0x5B;
+    r[3] = 0x17;
+    sub_8002BEC8((int)buf, (int)r, a1[1], a1[0], *(int*)(a1 + 2), *(int*)(a1 + 4));
+    AddClipTexWindowPrim_80033308(&pOT_8008D454[a1[0]]);
+    loc2[0] = base[0] + 4;
+    loc2[1] = base[1] + 5;
+    sub_8002C06C(loc2, 0x11, a1[0]);
+    loc2[0] = base[0] + 0x25;
+    loc2[1] = base[1] + 6;
+    DrawLargeText_8002FBD8(0, loc2, a0 + 0x10, a1[0]);
+    loc2[0] = base[0] + 4;
+    loc2[1] = base[1] + 0x15;
+    sub_8002C06C(loc2, 0x12, a1[0]);
+    v[0] = 0;
+    v[1] = 0;
+    loc2[0] = base[0] + 0x22;
+    loc2[1] = base[1] + 0x14;
+    v[2] = *(short*)(a0 + 8);
+    v[3] = *(short*)(a0 + 0xA);
+    sub_8002BA54(v, 0, loc2, a1[0]);
+    loc2[0] = base[0] + 0x3C;
+    loc2[1] = base[1] + 0x1C;
+    sub_8002EE28((short*)(a0 + 8), loc2, a1[0], 1);
+    loc2[0] = base[0] + 4;
+    loc2[1] = base[1] + 0x24;
+    sub_8002C06C(loc2, 0x70, a1[0]);
+    loc2[0] = base[0] + 0x80;
+    loc2[1] = base[1] + 0x25;
+    sub_8002C100(loc2, a0[0x44], a1[0]);
+    loc2[0] = base[0] + 4;
+    loc2[1] = base[1] + 0x34;
+    sub_8002C06C(loc2, 0xE2, a1[0]);
+    w[0] = 2;
+    w[1] = 0;
+    loc2[0] = base[0] + 0x4B;
+    loc2[1] = base[1] + 0x36;
+    w[2] = *(int*)(a0 + 4);
+    while (w[2] > 0x4000000)
+    {
+        w[2] -= 0x4000000;
+    }
+    w[3] = 0x4000000;
+    sub_8002BA54(w, 0, loc2, a1[0]);
+}
 extern unsigned char dword_80082EA4[];
 extern unsigned char dword_80082EA8[][4];
 extern unsigned char dword_80082EB8[];
