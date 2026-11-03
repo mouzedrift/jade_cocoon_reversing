@@ -3703,8 +3703,6 @@ void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
     *a0 += tp;
     *a1 = v * 64 + (u >> 4);
 }
-INCLUDE_ASM(sub_80022B84);
-INCLUDE_ASM(sub_80022CC4);
 typedef struct
 {
     unsigned char b0;
@@ -3732,6 +3730,70 @@ typedef struct
     unsigned short f4;
     unsigned short f6;
 } struct_12_20b;
+#if 0
+// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 bytes)
+void sub_80022B84(int* c, int* x, int* y)
+{
+    int n;
+    int i;
+    int a;
+    int b;
+    int k;
+    int* r;
+    unsigned char* q;
+    unsigned char* t;
+    a = 0;
+    q = (unsigned char*)c;
+    r = (int*)q;
+    q += 0x28;
+    n = r[0] + r[1] + r[2] + r[3] + r[4] + r[5] + r[6] + r[7] + r[8] + r[9];
+    b = 0;
+    for (i = 0; i < n; i++)
+    {
+        t = q;
+        q += 4;
+        switch (*t)
+        {
+        case 1:
+            q += 0x3C;
+            break;
+        case 0:
+        case 2:
+            q += 0x24;
+            break;
+        case 3:
+            q += 0x40;
+            break;
+        case 5:
+            q += 0x50;
+            break;
+        case 4:
+        case 6:
+            q += 0x2C;
+            break;
+        case 7:
+            q += 0x54;
+            break;
+        case 8:
+            r = (int*)q;
+            k = r[0];
+            q = (unsigned char*)(r + 1) + k * 20;
+            a += k;
+            break;
+        case 9:
+            r = (int*)q;
+            k = r[0];
+            q = (unsigned char*)(r + 2) + k * 20;
+            b += k;
+            break;
+        }
+    }
+    *x = a;
+    *y = b;
+}
+#endif
+INCLUDE_ASM(sub_80022B84);
+INCLUDE_ASM(sub_80022CC4);
 #if 0
 // Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
 int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
