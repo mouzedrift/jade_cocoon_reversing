@@ -453,7 +453,7 @@ int FindNthMagicBit_8001AEC0(unsigned int* bits, int n)
     return 0x1E;
 }
 // Matched
-unsigned char sub_8001AF3C(int idx)
+int sub_8001AF3C(int idx)
 {
     if (idx < 0x1E)
     {
@@ -2495,9 +2495,255 @@ void sub_8001EA28(void* arg0)
 {
     sub_8001EA48(arg0);
 }
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    int field_8;
+    int field_C;
+    char pad_10[0xA];
+    short field_1A;
+    char pad_1C[0xA];
+    short field_26;
+    char pad_28[0x48];
+    VECTOR target_70;
+    char pad_80[0x10];
+    int field_90;
+    char pad_94[0x10];
+    int field_A4;
+    int field_A8;
+    int pad_AC;
+    int field_B0;
+    char pad_B4[8];
+    short field_BC;
+    short field_BE;
+    short field_C0;
+    short field_C2;
+    short field_C4;
+    short field_C6;
+    short field_C8;
+    short field_CA;
+    char pad_CC[4];
+    unsigned char* script_D0;
+    unsigned int field_D4;
+    char pad_D8[0x1C];
+    unsigned short field_F4;
+    short field_F6;
+    char pad_F8[6];
+    short field_FE;
+} ScriptObj;
 #if 0
+// Not matched only because of data layout: the code is identical when sub_8001D9E4/sub_8001DA08 take an int
+// second argument, but the jump table (0x800740B8) must sit 8-aligned relative to its TU's .rdata, which needs a
+// TU split before this function (plus "dword_800740B4 0x4" and a dword_8007411C split point in config/c_rodata.txt)
 void sub_8001EA48(void* arg0)
 {
+    ScriptObj* o = arg0;
+    int done;
+    int flag22;
+    int flag21;
+    int target;
+    unsigned char* cmd;
+    int n;
+    int mode;
+    int r;
+    flag22 = 0;
+    flag21 = flag22;
+    done = flag22;
+    target = o->field_90;
+    if (o->field_C6 <= 0)
+    {
+        return;
+    }
+    if (o->flags_4 & 0x4000)
+    {
+        if (++o->field_C8 >= o->field_CA)
+        {
+            o->field_C8 = 0;
+            o->field_CA = 0;
+            o->flags_4 |= 0x10000;
+        }
+    }
+    if (o->flags_4 & 0x10000)
+    {
+        target = -1;
+    }
+    cmd = o->script_D0 + o->field_C4 * 4;
+    while (!done)
+    {
+        if (target != *(short*)(cmd + 2) && o->field_90 != *(short*)(cmd + 2) && *(short*)(cmd + 2) != -2)
+        {
+            return;
+        }
+        o->flags_4 &= ~0x10000;
+        switch (cmd[0])
+        {
+        case 0:
+            o->flags_4 &= 0xFF17FFFF;
+            return;
+        case 1:
+            n = *(short*)(cmd + 6);
+            if (o->field_C2 != n)
+            {
+                sub_8001D6EC((struct_obj_A*)o, 0);
+                if (n == 0x4003)
+                {
+                    n = o->field_A4;
+                    o->field_C2 = o->field_A4;
+                    o->field_A4 = o->field_FE;
+                    o->field_FE = -1;
+                }
+                else
+                {
+                    o->field_C2 = n;
+                }
+                mode = flag22 ? -2 : -1;
+                if (o->field_A8 >= 0)
+                {
+                    mode = o->field_A8;
+                    o->field_A8 = -1;
+                }
+                sub_8001D760((char*)o, n, mode, flag21);
+            }
+            done = 1;
+            break;
+        case 2:
+            flag22 = 1;
+            break;
+        case 3:
+            if (!(o->flags_4 & 0x2000000))
+            {
+                r = o->field_D4;
+                if (!(r & 1))
+                {
+                    flag21 = 1;
+                }
+                o->field_D4 = r & ~1;
+            }
+            break;
+        case 4:
+            o->field_C8 = 0;
+            o->field_CA = *(short*)(cmd + 6);
+            break;
+        case 5:
+            o->field_C8 = 0;
+            o->field_CA = o->field_F4;
+            break;
+        case 6:
+            sub_8001D9E4((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            break;
+        case 7:
+            sub_8001DA08((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            break;
+        case 8:
+            sub_8001DA2C((struct_obj_A*)o);
+            break;
+        case 9:
+            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, *(short*)(cmd + 6));
+            break;
+        case 10:
+            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, o->field_F6);
+            break;
+        case 11:
+            sub_8001D730((struct_obj_A*)o, *(short*)(cmd + 6));
+            break;
+        case 12:
+            sub_8001D8B4((char*)o, *(short*)(cmd + 6));
+            break;
+        case 13:
+            if (sub_8001D8A8((short*)o))
+            {
+                break;
+            }
+            else
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+        case 14:
+            sub_8001D92C((char*)o, *(short*)(cmd + 6));
+            break;
+        case 15:
+            if ((o->flags_4 & 0x4080000) && o->field_C < 3)
+            {
+                if (!TurnActorTowards_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+                {
+                    sub_8001D71C((struct_obj_A*)o);
+                    o->flags_4 |= 0x10000;
+                    return;
+                }
+                o->flags_4 &= ~0x80000;
+            }
+            o->flags_4 &= ~0x400000;
+            if (!(o->flags_4 & 0x20000))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            o->flags_4 &= ~0x20000;
+            break;
+        case 16:
+            sub_8001EFC4((struct_obj_F*)o);
+            break;
+        case 17:
+            if (o->field_C2 != o->field_C0)
+            {
+                o->field_C2 = o->field_C0;
+                sub_8001D760((char*)o, o->field_C0, -2, flag21);
+            }
+            break;
+        case 18:
+            if (!sub_8001DC60((char*)o, (int)&o->target_70, o->target_70.pad, 200))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            target = -1;
+            o->flags_4 &= ~0x80000;
+            break;
+        case 19:
+            if (TurnActorTowards_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+            {
+                target = -1;
+                o->flags_4 &= ~0x80000;
+            }
+            else
+            {
+                sub_8001D71C((struct_obj_A*)o);
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 21:
+            if (o->field_CA != 0 || o->field_90 != o->field_1A || (o->flags_4 & 0x2000000))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 22:
+            sub_8001D6EC((struct_obj_A*)o, *(short*)(cmd + 6) != 0);
+            break;
+        case 23:
+            if (++o->field_B0 > *(short*)(cmd + 6))
+            {
+                o->field_B0 = 0;
+            }
+            else
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 24:
+            o->field_BC = 0;
+            o->field_BE = *(short*)(cmd + 6);
+            o->flags_4 = o->flags_4 | *(short*)(cmd + 0xA) | 0x40000000;
+            break;
+        }
+        o->field_C4 += cmd[1];
+        cmd += cmd[1] * 4;
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001EA48);
@@ -3453,6 +3699,95 @@ int sub_80020F00(struct_list_14* p, int a, int b)
     }
     return -1;
 }
+void sub_80021298(int* src, int* out, int a2, int a3, int heap);
+void sub_80021464(int* hdr, int* out, int a2, int a3, int heap);
+int LoadMdecImages_800215E8(int* hdr, int* out, int heap);
+void sub_800216E8(int* a0, int a1, int a2);
+typedef struct
+{
+    int a;
+    int b;
+    int c;
+} struct_3i;
+#if 0
+// Not matched: only register allocation differs (arg gets s6 instead of s4, the call loops swap their two induction registers)
+void sub_80020F5C(int* arg, int* hdr)
+{
+    int* out = (int*)arg[0];
+    int* p1 = (int*)((char*)hdr + hdr[1]);
+    int* p2 = (int*)((char*)hdr + hdr[2]);
+    int* p3 = (int*)((char*)hdr + hdr[3]);
+    int* p4 = (int*)((char*)hdr + hdr[4]);
+    int* p5 = (int*)((char*)hdr + hdr[5]);
+    int* p6 = (int*)((char*)hdr + hdr[6]);
+    int i;
+    int max;
+    int r;
+    int n;
+    int* src;
+    out[5] = 0;
+    out[7] = 0;
+    out[9] = 0;
+    out[11] = 0;
+    out[4] = (int)ListAlloc_8003FDC0(out + 1, p1[0]);
+    MemCopy_800403E8((unsigned int*)out[4], (unsigned int*)(p1 + 1), p1[0]);
+    n = p2[0];
+    if (n)
+    {
+        out[5] = n;
+        out[6] = (int)ListAlloc_8003FDC0(out + 1, n * 12);
+        src = p2 + 1;
+        for (i = 0; i < out[5]; i++)
+        {
+            ((struct_3i*)out[6])[i].a = src[0];
+            ((struct_3i*)out[6])[i].b = src[1];
+            ((struct_3i*)out[6])[i].c = src[2];
+            src += 3;
+        }
+    }
+    n = p3[0];
+    if (n)
+    {
+        out[7] = n;
+        out[8] = (int)ListAlloc_8003FDC0(out + 1, n * 0x34);
+        for (i = 0; i < out[7]; i++)
+        {
+            sub_80021298((int*)((char*)p3 + p3[i + 1]), (int*)(out[8] + i * 0x34), (int)(arg + 1), arg[4], (int)(out + 1));
+        }
+    }
+    n = p4[0];
+    if (n)
+    {
+        out[9] = n;
+        out[10] = (int)ListAlloc_8003FDC0(out + 1, n * 0x1C);
+        for (i = 0; i < out[9]; i++)
+        {
+            sub_80021464((int*)((char*)p4 + p4[i + 1]), (int*)(out[10] + i * 0x1C), (int)(arg + 1), arg[4], (int)(out + 1));
+        }
+    }
+    n = p5[0];
+    if (n)
+    {
+        out[11] = n;
+        out[12] = (int)ListAlloc_8003FDC0(out + 1, n * 8);
+        i = 0;
+        max = i;
+        for (; i < out[11]; i++)
+        {
+            r = LoadMdecImages_800215E8((int*)((char*)p5 + p5[i + 1]), (int*)(out[12] + i * 8), (int)(out + 1));
+            if (max < r)
+            {
+                max = r;
+            }
+        }
+        sub_800216E8(out + 13, max, (int)(out + 1));
+    }
+    if (GetTiyFileCount_80028E68(p6))
+    {
+        sub_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)(arg + 1), arg[4]);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80020F5C);
 typedef struct
 {
@@ -3610,7 +3945,121 @@ void sub_80021824(int* a0, char* a1, int a2, int a3, int a4)
         a1 += 0x54;
     }
 }
-INCLUDE_ASM(sub_800218A8);
+typedef struct
+{
+    short n;
+    short pad;
+    char* p;
+} ModelList;
+typedef struct
+{
+    ModelList l[8];
+    int n8;
+    char* p8;
+    int n9;
+    unsigned short f4C;
+    unsigned short f4E;
+    char* p9;
+} Model54;
+#define S ((Model54*)a0)
+#define D ((Model54*)a1)
+// Matched
+void sub_800218A8(int a0, void* a1, int a2)
+{
+    char* buf;
+    int size;
+    int i;
+    size = S->l[0].n * 0x24 + S->l[1].n * 0x3C;
+    size += S->l[2].n * 0x30;
+    size += S->l[3].n * 0x48;
+    size += S->l[4].n * 0x2C;
+    size += S->l[5].n * 0x50;
+    size += S->l[6].n * 0x38;
+    size += S->l[7].n * 0x5C;
+    size += S->n8 * 0x14;
+    size += S->n9 * 0x14;
+    if (size)
+    {
+        buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
+    }
+    else
+    {
+        buf = 0;
+    }
+    D->l[0].n = S->l[0].n;
+    D->l[0].p = buf;
+    buf += S->l[0].n * 0x24;
+    D->l[1].n = S->l[1].n;
+    D->l[1].p = buf;
+    buf += S->l[1].n * 0x3C;
+    D->l[2].n = S->l[2].n;
+    D->l[2].p = buf;
+    buf += S->l[2].n * 0x30;
+    D->l[3].n = S->l[3].n;
+    D->l[3].p = buf;
+    buf += S->l[3].n * 0x48;
+    D->l[4].n = S->l[4].n;
+    D->l[4].p = buf;
+    buf += S->l[4].n * 0x2C;
+    D->l[5].n = S->l[5].n;
+    D->l[5].p = buf;
+    buf += S->l[5].n * 0x50;
+    D->l[6].n = S->l[6].n;
+    D->l[6].p = buf;
+    buf += S->l[6].n * 0x38;
+    D->l[7].n = S->l[7].n;
+    D->l[7].p = buf;
+    buf += S->l[7].n * 0x5C;
+    D->n8 = S->n8;
+    D->p8 = buf;
+    buf += S->n8 * 0x14;
+    D->n9 = S->n9;
+    D->p9 = buf;
+    for (i = 0; i < D->l[0].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[0].p + i * 0x24), (unsigned int*)(S->l[0].p + i * 0x24), 0x24);
+    }
+    for (i = 0; i < D->l[1].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[1].p + i * 0x3C), (unsigned int*)(S->l[1].p + i * 0x3C), 0x3C);
+    }
+    for (i = 0; i < D->l[2].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[2].p + i * 0x30), (unsigned int*)(S->l[2].p + i * 0x30), 0x30);
+    }
+    for (i = 0; i < D->l[3].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[3].p + i * 0x48), (unsigned int*)(S->l[3].p + i * 0x48), 0x48);
+    }
+    for (i = 0; i < D->l[4].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[4].p + i * 0x2C), (unsigned int*)(S->l[4].p + i * 0x2C), 0x2C);
+    }
+    for (i = 0; i < D->l[5].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[5].p + i * 0x50), (unsigned int*)(S->l[5].p + i * 0x50), 0x50);
+    }
+    for (i = 0; i < D->l[6].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[6].p + i * 0x38), (unsigned int*)(S->l[6].p + i * 0x38), 0x38);
+    }
+    for (i = 0; i < D->l[7].n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->l[7].p + i * 0x5C), (unsigned int*)(S->l[7].p + i * 0x5C), 0x5C);
+    }
+    for (i = 0; i < D->n8; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->p8 + i * 0x14), (unsigned int*)(S->p8 + i * 0x14), 0x14);
+    }
+    for (i = 0; i < D->n9; i++)
+    {
+        MemCopy_800403E8((unsigned int*)(D->p9 + i * 0x14), (unsigned int*)(S->p9 + i * 0x14), 0x14);
+    }
+    D->f4C = S->f4C;
+    D->f4E = S->f4E;
+}
+#undef S
+#undef D
 // Matched
 int sub_80021DE4(int* p)
 {
@@ -3815,7 +4264,8 @@ void sub_80022B84(int* c, int* x, int* y);
 int sub_80022634(struct_22634* out, int* c, int h);
 int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h);
 int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
-void sub_80022CC4(int a0, int* a, int* b, int h);
+typedef struct struct_22CC4 struct_22CC4;
+void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h);
 // Matched
 int sub_80022458(int a0, unsigned char* a1, int h, int a3)
 {
@@ -3868,7 +4318,7 @@ int sub_80022458(int a0, unsigned char* a1, int h, int a3)
             break;
         }
     }
-    sub_80022CC4(a0, A, B, h);
+    sub_80022CC4((struct_22CC4*)a0, (struct_22634*)A, (struct_22634*)B, h);
     sub_800229E0(A, B, h);
     return (int)a1;
 }
@@ -4049,9 +4499,9 @@ typedef struct
 typedef struct
 {
     int count;
-    struct_20_b* items;
     unsigned short f4;
     unsigned short f6;
+    struct_20_b* items;
 } struct_12_20b;
 #if 0
 // Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
@@ -4116,6 +4566,85 @@ void sub_80022B84(int* c, int* x, int* y)
 }
 #endif
 INCLUDE_ASM(sub_80022B84);
+struct struct_22CC4
+{
+    char pad_0[0x40];
+    int n1;
+    struct_20_b* d1;
+    int n2;
+    unsigned short f4C;
+    unsigned short f4E;
+    struct_20_b* d2;
+};
+#if 0
+// Not matched: first loop swaps the j/k registers and fills the first beqz delay slot; second loop has the j++/n++ increments in the other order
+void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
+{
+    int j;
+    int n;
+    int k;
+    struct_8_20b* e;
+    struct_12_20b* f;
+    if (a->n)
+    {
+        j = 0;
+        e = (struct_8_20b*)a->p;
+        k = 0;
+        for (n = 0; n < a0->n1; n++)
+        {
+            if (j >= ((struct_8_20b*)a->p)[k].count)
+            {
+                k++;
+                j = 0;
+                e = &((struct_8_20b*)a->p)[k];
+            }
+            a0->d1[n].f4 = e->items[j].f4;
+            a0->d1[n].f6 = e->items[j].f6;
+            a0->d1[n].f8 = e->items[j].f8;
+            a0->d1[n].fA = 0;
+            a0->d1[n].fC = e->items[j].fC;
+            a0->d1[n].fE = e->items[j].fE;
+            a0->d1[n].f10 = e->items[j].f10;
+            a0->d1[n].f12 = 0;
+            a0->d1[n].b0 = e->items[j].b0;
+            a0->d1[n].b1 = e->items[j].b1;
+            a0->d1[n].b2 = e->items[j].b2;
+            a0->d1[n].b3 = 0;
+            j++;
+        }
+    }
+    if (b->n)
+    {
+        j = 0;
+        a0->f4C = ((struct_12_20b*)b->p)->f4;
+        a0->f4E = ((struct_12_20b*)b->p)->f6;
+        f = (struct_12_20b*)b->p;
+        k = 0;
+        for (n = 0; n < a0->n2; n++, j++)
+        {
+            if (j >= ((struct_12_20b*)b->p)[k].count)
+            {
+                k++;
+                j = 0;
+                f = &((struct_12_20b*)b->p)[k];
+            }
+            a0->d2[n].f4 = f->items[j].f4;
+            a0->d2[n].f6 = f->items[j].f6;
+            a0->d2[n].f8 = f->items[j].f8;
+            a0->d2[n].fA = 0;
+            a0->d2[n].fC = f->items[j].fC;
+            a0->d2[n].fE = f->items[j].fE;
+            a0->d2[n].f10 = f->items[j].f10;
+            a0->d2[n].f12 = 0;
+            a0->d2[n].b0 = f->items[j].b0;
+            a0->d2[n].b1 = f->items[j].b1;
+            a0->d2[n].b2 = f->items[j].b2;
+            a0->d2[n].b3 = f->items[j].b3;
+            a0->d2[n].f12 = f->items[j].f12;
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80022CC4);
 #if 0
 // Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
@@ -5771,7 +6300,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     }
 }
 extern int dword_8008D648[];
-extern int dword_80082674;
+extern int* dword_80082674;
 extern int dword_80091C98;
 extern int dword_80091C94;
 extern int dword_80091C5C;
@@ -5779,7 +6308,12 @@ extern int dword_80091C58;
 extern int dword_80091C90;
 extern int dword_80091C9C;
 extern int dword_80091C8C;
-extern int stru_80091C78[];
+typedef struct
+{
+    int pos[3];
+    int mapIdx;
+} struct_80091C78;
+extern struct_80091C78 stru_80091C78;
 extern int dword_800B1DC8;
 extern int dword_80091C54;
 extern short word_80091CB8[];
@@ -5823,7 +6357,7 @@ void sub_80026FAC(void)
     dword_80091CA0 = 0;
     dword_80091C9C = 0;
     dword_80091C8C = 0;
-    stru_80091C78[3] = -1;
+    stru_80091C78.mapIdx = -1;
     dword_80091C54 = dword_800B1DC8;
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
@@ -5832,9 +6366,9 @@ void sub_80026FAC(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40 = -1;
+    word_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    (&word_80091C40)[1] = -1;
+    word_80091C40[1] = -1;
     dword_80082678 = 0;
     InitActors_8001D378();
 }
@@ -5865,9 +6399,9 @@ void sub_80027118(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40 = -1;
+    word_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    (&word_80091C40)[1] = -1;
+    word_80091C40[1] = -1;
     sub_8002741C();
     dword_80082678 = 0;
     dword_80091C74 = -1;
@@ -5949,7 +6483,7 @@ int sub_80027330(short a0)
 {
     if (dword_80082678 == 0)
     {
-        word_80091C40 = a0;
+        word_80091C40[0] = a0;
         return 1;
     }
     return 0;
@@ -5962,7 +6496,7 @@ int sub_80027358(int id)
     short* s;
     if (dword_80082678 == 1)
     {
-        if (word_80091C40 != id)
+        if (word_80091C40[0] != id)
         {
             word_8008B860 = id;
             return 0;
@@ -6311,10 +6845,260 @@ void sub_80028388(struct_obj_D* p, int* q)
     sub_800283C0(p, q);
     p->field_8 = (void (*)(void))sub_800283C0;
 }
+typedef struct
+{
+    short f0;
+    short f2;
+    char pad_4[0xC];
+} MapEntry16;
+extern int sub_800A6D50(int a0);
+extern int dword_800B1228;
+extern MapEntry16** dword_800B0608[];
+extern void sub_80028C60();
 #if 0
+// Not matched: register allocation only: a1 gets s4 instead of s2 (and the load flag / 0x80082678 base registers move with it)
 void sub_800283C0(void* a0, int* a1)
 {
+    int req[8];
+    int req2[8];
+    int req3[8];
+    int s;
+    int load;
+    int wait;
+    s = a1[0];
+    switch (s)
+    {
+    case 0:
+        if (sub_800A6D50(0) != 1 && dword_80082670 == 0)
+        {
+            break;
+        }
+        if (dword_800B1228 & 0x4000)
+        {
+            break;
+        }
+        if (word_80091C40[1] != word_80091C40[0])
+        {
+            req[0] = 0xC69;
+            req[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req[2] = dword_80082674[word_80091C40[0] * 3];
+            req[3] = dword_80082674[word_80091C40[0] * 3 + (dword_80082670 ? 2 : 1)];
+            req[4] = 0;
+            req[5] = 0;
+            req[6] = 0;
+            req[7] = (int)sub_80028C60;
+            a1[1] = QueueFileRequest_8003BC84(req);
+            dword_80082678 = 1;
+            word_80091C40[1] = word_80091C40[0];
+            break;
+        }
+        if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+        {
+            load = 1;
+            wait = 2;
+            if (dword_80082670 == 0)
+            {
+                sub_8002728C();
+            }
+            if (dword_80082678)
+            {
+                if (word_80091C40[0] == saveData_8008B570.mapId_2E4[3].field_0)
+                {
+                    load = 0;
+                }
+                wait = sub_8003BFD0(a1[1], 1);
+                dword_80082678 = 0;
+            }
+            if (load)
+            {
+                req2[0] = 0x46C;
+                req2[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+                req2[2] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
+                req2[3] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (dword_80082670 ? 2 : 1)];
+                req2[4] = 0;
+                req2[5] = 0;
+                req2[6] = 0;
+                req2[7] = (int)sub_80028C60;
+                a1[1] = QueueFileRequest_8003BC84(req2);
+            }
+            word_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
+            word_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
+            saveData_8008B570.mapId_2E4[3].field_2 = saveData_8008B570.mapId_2E4[3].field_0;
+            if (wait)
+            {
+                if (dword_80082670 == 0)
+                {
+                    sub_80027478(4, 1);
+                }
+                eventDispatchHalt_8008B540 = 1;
+                a1[0] = 1;
+            }
+            break;
+        }
+        if (word_80091CB8[6] != word_80091CB8[7])
+        {
+            req3[0] = 0x450;
+            req3[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req3[2] = dword_80082674[word_80091CB8[6] * 3];
+            req3[3] = 0;
+            req3[4] = 0;
+            req3[5] = 0;
+            req3[6] = 0;
+            req3[7] = 0;
+            word_80091CB8[7] = word_80091CB8[6];
+            a1[1] = QueueFileRequest_8003BC84(req3);
+            a1[0] = 2;
+        }
+        break;
+    case 1:
+        if (GetFileRequestStatus_8003BE30(a1[1]) == 0)
+        {
+            dword_80082670 = 0;
+            dword_80082668 = 0;
+            sub_80028DC0();
+            sub_80027478(4, 0);
+            a1[0] = 0;
+        }
+        else
+        {
+            eventDispatchHalt_8008B540 = 1;
+        }
+        break;
+    case 2:
+        if (GetFileRequestStatus_8003BE30(a1[1]) == 0)
+        {
+            a1[0] = 0;
+        }
+        break;
+    }
 }
 #endif
 INCLUDE_ASM(sub_800283C0);
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+    short rx;
+    short ry;
+    short rz;
+} PosRot;
+typedef struct
+{
+    char pad_0[0xC];
+    int fC;
+} MapEntry16b;
+typedef struct
+{
+    char pad_0[0x7A8];
+    PosRot pos;
+} SaveData7A8;
+extern void sub_800A5628(int a0, int* a1, int a2);
+extern void sub_800B73C0(int a0, int a1);
+extern int sub_800B76B8(char* a0, PosRot* a1);
+extern int* sub_80027A88();
+extern unsigned int* dword_80073210;
+extern short dword_80091CA8[];
+extern char* dword_8008B4A4;
+#if 0
+// Not matched: 2 instructions: in the mapIdx >= 0 branch the original loads the index (lhu) before the -1 store to field_2
+void sub_80028808(void* a0, int* a1)
+{
+    char buf[0x104];
+    int n;
+    int* p;
+    unsigned int cnt;
+    unsigned int i;
+    unsigned int j;
+    int a;
+    int c;
+    int c2;
+    p = a1;
+    n = *p++;
+    if (n != 0 && dword_80091C8C == 0)
+    {
+        MemCopy_800403E8(dword_80073210, (unsigned int*)p, n);
+        dword_80091CB4 = ((MapEntry16b*)dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
+    }
+    p = (int*)((char*)p + n);
+    dword_80082668 = 1;
+    dword_8008266C = n != 0;
+    cnt = *p++;
+    for (j = 0; j < cnt; j++)
+    {
+        a = *p++;
+        c = *p++;
+        c2 = *p++;
+        sub_800A5628(a, p, c);
+        p = (int*)((char*)p + c2);
+    }
+    dword_8008B500[0] = saveData_8008B570.mapId_2E4[2].field_0;
+    dword_8008B500[1] = *p++;
+    dword_8008B500[2] = *p++;
+    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)p, 0x104);
+    p = sub_80027A88(&dword_8008B500[3], &dword_8008B500[1], &dword_80091C68, (char*)p + 0x104);
+    sub_800B73C0(dword_8008B500[3], dword_8008B500[1]);
+    p = sub_80027A88(&dword_8008B500[5], &dword_8008B500[4], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[5], dword_8008B500[4]);
+    sub_800275E8((char**)&dword_8008B500[6], dword_8008B500[4], (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500[10], &dword_8008B500[9], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[10], dword_8008B500[9]);
+    p = sub_80027A88(&dword_8008B500[12], &dword_8008B500[11], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[12], dword_8008B500[11]);
+    sub_800275E8((char**)&dword_8008B500[13], dword_8008B500[11], (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500[8], &dword_8008B500[7], &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500[8], dword_8008B500[7]);
+    cnt = p[0];
+    sub_80027708(p, (int)&dword_80091C68);
+    p = (int*)((char*)p + cnt);
+    cnt = *p++;
+    LoadTiy_80028E74(0, 0, 0, (int)p, (int)&dword_80091C68);
+    p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
+    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500[1] * 12);
+    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500[1] * 12);
+    if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
+    {
+        ((void (*)(int))dword_80091CB4)(0);
+    }
+    if (dword_80091C98)
+    {
+        ((SaveData7A8*)&saveData_8008B570)->pos.x = stru_80091C78.pos[0];
+        ((SaveData7A8*)&saveData_8008B570)->pos.y = stru_80091C78.pos[1];
+        ((SaveData7A8*)&saveData_8008B570)->pos.z = stru_80091C78.pos[2];
+        ((SaveData7A8*)&saveData_8008B570)->pos.rx = dword_80091CA8[0];
+        ((SaveData7A8*)&saveData_8008B570)->pos.ry = dword_80091CA8[1];
+        ((SaveData7A8*)&saveData_8008B570)->pos.rz = dword_80091CA8[2];
+    }
+    dword_80091C98 = 0;
+    if (dword_80091C94)
+    {
+        ((SaveData7A8*)&saveData_8008B570)->pos.x = ((PosRot*)buf)->x;
+        ((SaveData7A8*)&saveData_8008B570)->pos.y = ((PosRot*)buf)->y;
+        ((SaveData7A8*)&saveData_8008B570)->pos.z = ((PosRot*)buf)->z;
+        ((SaveData7A8*)&saveData_8008B570)->pos.rx = ((PosRot*)buf)->rx;
+        ((SaveData7A8*)&saveData_8008B570)->pos.ry = ((PosRot*)buf)->ry;
+        ((SaveData7A8*)&saveData_8008B570)->pos.rz = ((PosRot*)buf)->rz;
+    }
+    dword_80091C94 = 0;
+    if (((int*)&stru_80091C78)[3] >= 0)
+    {
+        saveData_8008B570.mapId_2E4[3].field_0 = ((int*)&stru_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].field_2 = -1;
+        ((int*)&stru_80091C78)[3] = -1;
+    }
+    else
+    {
+        for (i = 0; i < dword_8008B500[1]; i++)
+        {
+            if (sub_800B76B8((char*)dword_8008B500[3] + i * 8, &((SaveData7A8*)&saveData_8008B570)->pos) >= 0)
+            {
+                saveData_8008B570.mapId_2E4[3].field_0 = i;
+                saveData_8008B570.mapId_2E4[3].field_2 = -1;
+                break;
+            }
+        }
+    }
+    *(int*)(*(char**)(dword_8008B4A4 + 0x24) + 0x84) = saveData_8008B570.mapId_2E4[3].field_0;
+}
+#endif
 INCLUDE_ASM(sub_80028808);

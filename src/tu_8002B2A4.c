@@ -55,12 +55,74 @@ void sub_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
         DrawUiTiySprt_8002C06C(pos, v, c);
     }
 }
-INCLUDE_ASM(sub_8002B3DC);
 typedef struct
 {
     unsigned short a;
     unsigned short b;
 } UShortPair;
+extern CVECTOR dword_800741E4;
+extern CVECTOR dword_800741E8;
+extern int publicTiyPolyFT4s_8008D430;
+extern int publicTiySprts_8008D434;
+extern int publicTiyTPages_8008D440;
+extern short dword_8008279C[];
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+#if 0
+// Not matched: same shape; the original reloads publicTiyPolyFT4s_8008D430 one division earlier in the third vertex (CSE path length) and allocates registers differently
+void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
+{
+    CVECTOR c0;
+    CVECTOR c1;
+    short idx;
+    int ang;
+    int x;
+    int y;
+    int nx;
+    int ny;
+    short* c = (short*)pos;
+    c0 = dword_800741E4;
+    c1 = dword_800741E8;
+    idx = dword_8008279C[(short)saveData_8008B570.uiColor_20 * 3 + p.a];
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1 = ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2 = ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3 = ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3 = ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
+    ang = p.b << 10;
+    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0;
+    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0;
+    nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
+    ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0 = c[0] + nx;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0 = c[1] + ny;
+    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1;
+    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1;
+    nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
+    ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1 = c[0] + nx;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1 = c[1] + ny;
+    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2;
+    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2;
+    nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
+    ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2 = c[0] + nx;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2 = c[1] + ny;
+    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3;
+    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3;
+    nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
+    ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3 = c[0] + nx;
+    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3 = c[1] + ny;
+    setSemiTrans(&((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx], 0);
+    PulseColor_80033394((unsigned char*)&((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 0x28, 0xA);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx], 10);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)publicTiyTPages_8008D440 + idx * 8, 2);
+}
+#endif
+INCLUDE_ASM(sub_8002B3DC);
 extern void sub_8002B3DC(UShortPair p, int b, int c, int d);
 // Matched
 void sub_8002B8DC(UShortPair a, short* p, int c, int d)

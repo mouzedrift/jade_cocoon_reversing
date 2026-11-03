@@ -133,7 +133,7 @@ extern int sub_80014114(int x);
 extern int sub_8001413C(int x);
 extern int GetMagicName_8001AC2C(int idx);
 extern int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx);
-extern unsigned char sub_8001AF3C(int idx);
+extern int sub_8001AF3C(int idx);
 extern int WaitVSync_8001B6E8();
 extern void InitEnvironments_8001B7B4(void);
 extern void BeginFade_8001C260(void);

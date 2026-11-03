@@ -209,4 +209,146 @@ void DrawMenuWindows_8002A5A4(struct_A5A4* p)
     sub_8003F900(2, 0);
     sub_8003F900(1, 0);
 }
+typedef struct
+{
+    unsigned short flags;
+    unsigned short type;
+    int text;
+    char** f8;
+    char** fC;
+    unsigned short x;
+    unsigned short y;
+    unsigned short w;
+    unsigned short h;
+    short mx;
+    short my;
+} MenuItemD;
+typedef struct
+{
+    char pad_0[0x10];
+    short f10;
+    char pad_12[2];
+} Elem20;
+typedef struct
+{
+    char pad_0[8];
+} Elem8;
+typedef struct
+{
+    unsigned short x;
+    unsigned short y;
+} Pt;
+extern void sub_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
+extern void AddSprtWithTPage_800331C4(unsigned short* a, char* o, char* b, unsigned long* c, unsigned char* col);
+extern int MeasureTextWidthFont1_8003E6B0(int text);
+extern int MeasureTextWidth_8003E4C8(int text);
+extern void sub_8002FAA0(int a0, unsigned short* pos, int name, int a3);
+extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
+extern void sub_8003F264(unsigned short* pos, int v, int ot);
+extern void sub_8003EFBC(unsigned short* pos, int v, int ot);
+extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
+#if 0
+// Not matched (2 words): in case 1 the original loads p->fC before p->text; needs "dword_8007415C 0x48" in config/c_rodata.txt (its jump table)
+void DrawMenuWindowContents_8002A710(void* a, int ot)
+{
+    MenuItemD* p = a;
+    unsigned char col[8];
+    unsigned short r[4];
+    unsigned short loc[2];
+    int mode;
+    if (p->flags & 0x40)
+    {
+        return;
+    }
+    if (p->type == 0)
+    {
+        return;
+    }
+    r[0] = p->x + p->mx;
+    r[1] = p->y + p->my;
+    r[2] = p->w - p->mx * 2;
+    r[3] = p->h - p->my * 2;
+    switch (p->type)
+    {
+    case 1:
+        if ((unsigned int)p->text < 0xFFFFFFFF)
+        {
+            sub_8002ACE8(p->flags, col);
+            sub_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
+            mode = p->text;
+            AddSprtWithTPage_800331C4(loc, (char*)&((Elem20*)*p->f8)[mode], (char*)&((Elem8*)*p->fC)[mode], pOT_8008D454 + ot, col);
+        }
+        break;
+    case 2:
+        sub_8002AD08(p->flags);
+        sub_8002AC88(p->flags, r, MeasureTextWidthFont1_8003E6B0(p->text), loc);
+        mode = 1;
+        loc[1] += 2;
+        DrawText_8003E91C(mode, p->text, loc, ot);
+        break;
+    case 3:
+        sub_8002AD44(p->flags);
+        sub_8002AC88(p->flags, r, MeasureTextWidth_8003E4C8(p->text), loc);
+        mode = 2;
+        loc[1] += 2;
+        DrawText_8003E91C(mode, p->text, loc, ot);
+        break;
+    case 4:
+        sub_8002AD08(p->flags);
+        loc[0] = r[0];
+        loc[1] = r[1];
+        if (p->flags & 4)
+        {
+            sub_8002FAA0(1, loc, p->text, ot);
+        }
+        else if (p->flags & 8)
+        {
+            loc[0] += (short)r[2] / 2;
+            sub_8002FAA0(2, loc, p->text, ot);
+        }
+        else
+        {
+            sub_8002FAA0(0, loc, p->text, ot);
+        }
+        break;
+    case 5:
+        sub_8002AD44(p->flags);
+        loc[0] = r[0];
+        loc[1] = r[1];
+        if (p->flags & 4)
+        {
+            DrawLargeText_8002FBD8(1, loc, p->text, ot);
+        }
+        else if (p->flags & 8)
+        {
+            loc[0] += (short)r[2] / 2;
+            DrawLargeText_8002FBD8(2, loc, p->text, ot);
+        }
+        else
+        {
+            DrawLargeText_8002FBD8(0, loc, p->text, ot);
+        }
+        break;
+    case 6:
+        sub_8002AD08(p->flags);
+        loc[0] = r[0] + r[2];
+        loc[1] = r[1];
+        sub_8003F264(loc, p->text, ot);
+        break;
+    case 7:
+        sub_8002AD44(p->flags);
+        loc[0] = r[0] + r[2];
+        loc[1] = r[1];
+        sub_8003EFBC(loc, p->text, ot);
+        break;
+    case 8:
+        sub_8002AD80(p->flags);
+        loc[0] = r[0] + r[2] - 3;
+        loc[1] = r[1] + 2;
+        DrawLargeNumber_8002C100(loc, p->text, ot);
+        SetLargeDigitColor_8002C5D0(0);
+        break;
+    }
+}
+#endif
 INCLUDE_ASM(DrawMenuWindowContents_8002A710);
