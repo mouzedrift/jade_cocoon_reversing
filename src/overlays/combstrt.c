@@ -144,7 +144,35 @@ void sub_800A46FC()
     PlaySfx_80031494(0x7F);
 }
 
-INCLUDE_OVERLAY_ASM(combstrt, sub_800A473C);
+extern int rand(void);
+extern int sub_800A4878(int idx, int* arr, int n);
+void sub_800A473C(int side)
+{
+    int used[10];
+    int order[10];
+    CombStrtUnit tmp[10];
+    int n = sub_800A1AAC(side);
+    CombStrtUnit* units = dword_800A3AA0[side];
+    int i;
+    if (n < 2)
+    {
+        return;
+    }
+    for (i = 0; i < n; i++)
+    {
+        used[i] = -1;
+        order[i] = -1;
+    }
+    for (i = 0; i < n; i++)
+    {
+        order[i] = sub_800A4878(rand() % (n - i), used, n);
+        MemCopy_800403E8((unsigned int*)&tmp[i], (unsigned int*)&units[order[i]], 0xF8);
+    }
+    for (i = 0; i < n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)&units[i], (unsigned int*)&tmp[i], 0xF8);
+    }
+}
 
 int sub_800A4878(int idx, int* arr, int n)
 {
