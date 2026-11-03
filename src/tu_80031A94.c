@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "minion_menu.h"
 
 
 
@@ -927,14 +928,6 @@ Item* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }
-typedef struct
-{
-    short field_0;
-    short field_2;
-    short pad_4[3];
-    short field_A;
-    Minion* field_C_minion;
-} struct_minion_ref;
 extern int sub_80034140(void);
 extern int GetItemFlags_8001CE70(int a);
 // Matched
@@ -976,11 +969,11 @@ int CheckItemUsable_80033AFC(struct_minion_ref* p)
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int sub_80031A04(void* p, int idx);
 // Matched
-int CheckMagicCastable_80033C08(short* p)
+int CheckMagicCastable_80033C08(struct_minion_ref* p)
 {
-    char* q = *(char**)(p + 6);
-    short* r = (short*)(q + 0x84);
-    int idx = FindNthMagicBit_8001AEC0(q + 0xF4, p[0] + p[1]);
+    Minion* q = p->field_C_minion;
+    short* r = (short*)q->status_84;
+    int idx = FindNthMagicBit_8001AEC0(q->field_F4, p->field_0 + p->field_2);
     int v = GetMagicMpCost_8001AC58(idx);
     if (idx >= 0x1E)
     {
@@ -990,7 +983,7 @@ int CheckMagicCastable_80033C08(short* p)
     {
         return 0;
     }
-    if (p[5] == 0)
+    if (p->field_A == 0)
     {
         return 5;
     }
