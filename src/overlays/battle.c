@@ -2187,8 +2187,6 @@ void sub_800BFAF8(int x)
     sub_80018430(a);
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B6848);
-
 void sub_800BFB80()
 {
     sub_800BFC10();
@@ -3079,7 +3077,90 @@ int sub_800C32DC(int a0, int a1, int a2, int a3)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C33E4);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C371C);
+typedef struct BatGlow_a
+{
+    int frame_0;
+    int end_4;
+    char pad8[0x14];
+    int* base_1C;
+    int* path_20;
+    char pad24[0xC];
+    int f30;
+    char pad34[0x10];
+    char f44[0x44];
+    int* f88;
+    char pad8C[8];
+    int* f94;
+    int idx_98;
+    char pad9C[4];
+    int* scale_A0;
+} BatGlow_a;
+
+extern char dword_800795D4[];
+extern void sub_800C3B50(int* p, int id);
+extern void sub_8003A6C4();
+extern void sub_80021804(int* p, int heap);
+extern void free3_8003FC6C(void* p);
+extern void sub_800C4090(int a0, int a1, int c, int a3);
+
+void sub_800C371C(EventEntry* t, void* arg)
+{
+    unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
+    BatGlow_a* u = arg;
+    int* m = u->f88;
+    if (u->frame_0 < u->end_4 && effectOutcomeFlag_8008D780 == 0)
+    {
+        int s[4];
+        int v[4];
+        int a;
+        u->f30 += 0x100;
+        if (u->f30 > 0x1000)
+        {
+            u->f30 = 0x1000;
+        }
+        s[0] = u->scale_A0[0] * 3 / 2;
+        s[1] = u->scale_A0[1] * 3 / 2;
+        s[2] = u->scale_A0[2] * 3 / 2;
+        a = u->f30;
+        v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
+        v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
+        v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
+        sub_8003A6C4(a, m[1], m[1] + 0x54, u->f94);
+        sub_8004D1EC(m[1], (int)pOT_8008D690, (int)v, (int)dword_800795D4, (int)stru_8008D534, ((0x1000 - a) << 16) | 0xB0, (int)s);
+        sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
+        u->frame_0++;
+    }
+    else
+    {
+        int s[4];
+        int v[4];
+        int a;
+        s[0] = u->scale_A0[0] * 3 / 2;
+        s[1] = u->scale_A0[1] * 3 / 2;
+        s[2] = u->scale_A0[2] * 3 / 2;
+        a = u->f30;
+        v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
+        v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
+        v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
+        sub_8003A6C4(a, m[1], m[1] + 0x54, u->f94);
+        sub_8004D1EC(m[1], (int)pOT_8008D690, (int)v, (int)dword_800795D4, (int)stru_8008D534, ((0x1000 - a) << 16) | 0xB0, (int)s);
+        if (u->f30 == 0x1000)
+        {
+            sub_800C3B50(v, 0x25);
+        }
+        sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
+        if (u->f30 <= 0)
+        {
+            sub_800C410C();
+            sub_80021804(u->f94, 1);
+            free3_8003FC6C(u->f94);
+            t->flags = (t->flags & ~1) | 0x8000;
+        }
+        u->f30 -= 0x100;
+    }
+}
+
+INCLUDE_OVERLAY_ASM(battle, dword_800B684C);
 
 #if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
 extern char* dword_8008B4A4;
