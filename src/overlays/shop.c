@@ -40,7 +40,7 @@ extern void sub_8001AB1C(int a);
 extern void PlaySfx_80031494(int a);
 extern void sub_800BF474();
 extern void sub_800BF4B8();
-extern int name_8008D670;
+extern EventNode* name_8008D670; // the shop menu task list
 // work area of the shop menu task
 typedef struct ShopUnit3Shop
 {
@@ -1192,7 +1192,7 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BAF54);
 extern void sub_800BB0F8();
 void sub_800BB058(int a)
 {
-    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)name_8008D670);
+    EventEntry* t = AllocEventEntry_80043AF8(name_8008D670);
     ShopUnit3Shop* u;
     if (t)
     {
@@ -2294,7 +2294,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             u->field_24 |= 1;
             if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
             {
-                tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+                tk = (ShopTaskShop*)&name_8008D670->entry;
                 fn_80027478(0x40, 1);
                 fn_8002C014();
                 sub_80027314();
@@ -2304,7 +2304,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         }
         u->field_94 = 1;
         u->field_24 |= 0x800;
-        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        tk = (ShopTaskShop*)&name_8008D670->entry;
         fn_8001ABEC(1);
         tk->next_8 = sub_800BDE44;
         sub_8001AAA8(0x20);
@@ -2334,7 +2334,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         u->field_24 |= 1;
         if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
         {
-            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_80027478(0x40, 1);
             fn_8002C014();
             sub_80027314();
@@ -2344,7 +2344,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         {
             u->field_94 = 2;
             u->field_24 |= 0x800;
-            tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+            tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_8001ABEC(1);
             tk->next_8 = sub_800BDE44;
             sub_8001AAA8(0x20);
@@ -2361,7 +2361,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         SetShopHelpText_800BBB54(u, 0);
         break;
     case 10:
-        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        tk = (ShopTaskShop*)&name_8008D670->entry;
         tk->next_8 = sub_800BE128;
         tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
         fn_800B6C6C(u->field_4C->name_94, 0);
@@ -2426,13 +2426,13 @@ void sub_800BDE44(ShopTaskShop* t, int a)
 void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
 {
     ShopTaskShop* tk;
-    char* sv;
+    SaveData* sv;
     int* p;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
     if (sub_8001AB94())
     {
-        tk = (ShopTaskShop*)((char*)name_8008D670 + 0x10);
+        tk = (ShopTaskShop*)&name_8008D670->entry;
         if (u->field_94 == 1)
         {
             tk->next_8 = sub_800BE128;
@@ -2445,19 +2445,19 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
         fn_8002C014();
         if (u->field_94 == 1)
         {
-            sv = (char*)&saveData_8008B570;
-            if (!((*(unsigned int*)(sv + 0x1C) >> 5) & 1))
+            sv = &saveData_8008B570;
+            if (!((sv->field_1C_settings >> 5) & 1))
             {
                 MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
                 sub_800B9B44((short*)u->field_50);
                 if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
                 {
-                    p = (int*)(sv + 0x814);
+                    p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 8;
                 }
                 else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
                 {
-                    p = (int*)(sv + 0x814);
+                    p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 4;
                 }
                 if (u->field_24 & 0x200)
@@ -2566,13 +2566,13 @@ void sub_800BE264(ShopTaskShop* t, int a)
 extern void sub_800BE4D0();
 void sub_800BE2B4(int a)
 {
-    char* g = (char*)name_8008D670 + 0x10;
+    ShopTaskShop* g = (ShopTaskShop*)&name_8008D670->entry;
     PlaySfx_80031494(0x7E);
     sub_800BF474();
     unknownFlags_8008D678 |= 0x10000;
     unknownFlags_8008D678 |= 0x4000000;
     sub_800BF4B8(a);
-    *(void (**)())(g + 8) = sub_800BE4D0;
+    g->next_8 = sub_800BE4D0;
 }
 
 extern void ShopMenuTask_800BB444();
