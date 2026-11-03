@@ -222,14 +222,14 @@ INCLUDE_OVERLAY_ASM(menu, dword_800B66C0);
 typedef struct MenuStatus
 {
     int f0;
-    int f4;
+    unsigned int exp_4;
     char pad_8[0x40];
 } MenuStatus;
 typedef struct MenuMain
 {
     int f0;
     char pad_4[0x30];
-    int a34[4];
+    unsigned int a34[4];
     short count_44;
     short s46;
     int i48;
@@ -237,11 +237,11 @@ typedef struct MenuMain
     short s58;
     short pad_5A;
     int a5C[4];
-    int a6C[4];
+    unsigned int a6C[4];
     int a7C[4];
     MenuStatus st_8C[4];
     MenuStatus st_1AC[4];
-    int a2CC[4];
+    unsigned int a2CC[4];
     int i2DC;
 } MenuMain;
 extern void sub_800BBE50();
@@ -289,13 +289,13 @@ EventEntry* sub_800BBB9C(EventNode* n)
         p = (MenuStatus*)levantStatus_8008BD38;
         MemCopy_800403E8((unsigned int*)&c->st_8C[0], (unsigned int*)p, 0x48);
         MemCopy_800403E8((unsigned int*)&c->st_1AC[0], (unsigned int*)p, 0x48);
-        c->a2CC[0] = p->f4;
+        c->a2CC[0] = p->exp_4;
         for (i = 1; i < c->count_44; i++)
         {
             p = (MenuStatus*)GetMinionStatus_800107A0(3, i - 1);
             MemCopy_800403E8((unsigned int*)&c->st_8C[i], (unsigned int*)p, 0x48);
             MemCopy_800403E8((unsigned int*)&c->st_1AC[i], (unsigned int*)p, 0x48);
-            c->a2CC[i] = p->f4;
+            c->a2CC[i] = p->exp_4;
         }
         t->cb_8 = (EventEntryFn)sub_800BBE50;
     }
@@ -537,7 +537,79 @@ void sub_800BC2A8(MenuMain* c)
     }
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BC56C);
+extern void sub_800BCF74(short a);
+extern void PlayMusic_800300E0();
+void sub_800BC56C(MenuMain* c)
+{
+    short i;
+    int any;
+    if (IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
+    {
+        any = 0;
+        for (i = 0; i < c->count_44; i++)
+        {
+            c->st_8C[i].exp_4 += c->a6C[i] - c->a34[i];
+            if (c->st_8C[i].exp_4 > 0x3FFFFFF)
+                c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+            if (c->a5C[i])
+                c->a7C[i] = 1;
+            if (i > 0 && c->a5C[i])
+                sub_800BCF74(i - 1);
+        }
+        c->f0 |= 0x80;
+        PlaySfx_80031494(0x7E);
+        for (i = 0; i < c->count_44; i++)
+        {
+            if (c->a7C[i])
+                any = 1;
+        }
+        if (any)
+            PlayMusic_800300E0(4, 1);
+    }
+    else
+    {
+        int busy = 0;
+        for (i = 0; i < c->count_44; i++)
+        {
+            if (c->a34[i] < c->a6C[i])
+            {
+                busy = 1;
+                break;
+            }
+        }
+        if (busy)
+        {
+            for (i = 0; i < c->count_44; i++)
+            {
+                if (c->a34[i] < c->a6C[i])
+                {
+                    unsigned int d = c->a6C[i] >> 5;
+                    if (d == 0)
+                        d = c->a6C[i] & 0x1F;
+                    c->a2CC[i] += d;
+                    c->a34[i] += d;
+                    if (c->st_8C[i].exp_4 > 0x3FFFFFF || (c->st_8C[i].exp_4 += d) > 0x3FFFFFF)
+                    {
+                        unsigned int rest = c->st_8C[i].exp_4 - 0x4000000;
+                        c->st_8C[i].exp_4 = 0x4000000;
+                        c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+                        if (i > 0)
+                            sub_800BCF74(i - 1);
+                        c->st_8C[i].exp_4 = rest;
+                        c->a2CC[i] = rest;
+                        c->a7C[i] = 1;
+                        PlayMusic_800300E0(4, 1);
+                    }
+                }
+            }
+            PlaySfx_80031494(0x7F);
+        }
+        else
+        {
+            c->f0 |= 0x80;
+        }
+    }
+}
 
 void sub_800BC8A8(void)
 {
