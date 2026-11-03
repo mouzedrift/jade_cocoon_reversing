@@ -21,10 +21,10 @@ extern int dword_800BE2D8;
 extern int dword_800BE2DC;
 extern int dword_800BE2E0;
 extern int** dword_8008D480;
-extern int sub_8004EE8C(void);
-extern void sub_8004EDE8(void);
-extern void sub_8004EE54(void);
-extern int sub_8004EDD8(void);
+extern int StopCARD(void);
+extern void InitCARD(void);
+extern void StartCARD(void);
+extern int _bu_init(void);
 extern int sub_800BC9DC(int a, int* b, int* c);
 extern void sub_800BB9F4();
 extern void sub_800BB68C();
@@ -66,9 +66,9 @@ extern void sub_800BAAE0();
 extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
-extern void sub_80056FEC(int a, int b);
+extern void VSyncCallbacks(int a, int b);
 extern void sub_800BD558(void);
-extern void sub_8004FE08(int a);
+extern void TestEvent(int a);
 extern void sub_800BD17C(void);
 extern void sub_800BD35C(void);
 extern void sub_800BD06C(void);
@@ -93,13 +93,13 @@ extern int dword_800BE2B4;
 extern int dword_800BE2B8;
 extern int dword_800BE2BC;
 extern int dword_800BE2C0;
-extern int sub_8004DE68(void);
-extern void sub_8004DE38(int a);
-extern void sub_8004DE78(void);
+extern int EnterCriticalSection(void);
+extern void CloseEvent(int a);
+extern void ExitCriticalSection(void);
 extern void sub_800BD60C(void);
 extern int sub_800BD7EC(void);
-extern void sub_8004FA18(void);
-extern void sub_8004FA08(int a, int b, void* c);
+extern void _new_card(void);
+extern void _card_write(int a, int b, void* c);
 typedef struct
 {
     char c_LOAD[8];
@@ -122,7 +122,7 @@ extern Bytes8_LOAD dword_800B6B8C;
 extern Bytes8_LOAD dword_800B6A24;
 extern Bytes8_LOAD dword_800B6BA0;
 extern Bytes8_LOAD dword_800B6B94;
-extern unsigned short word_8008B590;
+extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void sub_8002C06C(void* a, int b, int c);
 extern void sub_80042460(void* a, void* b, void* c, int d);
@@ -179,7 +179,7 @@ extern Opts_LOAD dword_800BDF4C;
 extern Row16_LOAD stru_800BDF4C[];
 extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 extern void sub_800B8BD4(void* t);
-extern void sub_80031494(int a);
+extern void PlaySfx_80031494(int a);
 extern void sub_800BADF4(void);
 extern int sub_800BAE4C(int n);
 extern int sub_800BAE2C(void);
@@ -293,7 +293,7 @@ void sub_800B85AC(void)
     a = dword_800B6A24;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
-    b.s_LOAD = word_8008B590;
+    b.s_LOAD = uiColor_8008B590;
     sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
     sub_8002A5A4(&dword_800BDD64);
 }
@@ -329,7 +329,7 @@ void sub_800B8984(void)
     a = dword_800B6B8C;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
-    b.s_LOAD = word_8008B590;
+    b.s_LOAD = uiColor_8008B590;
     sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
@@ -350,7 +350,7 @@ void sub_800B8A20(void)
     a = dword_800B6B94;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
-    b.s_LOAD = word_8008B590;
+    b.s_LOAD = uiColor_8008B590;
     sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 #endif
@@ -375,7 +375,7 @@ void sub_800B8AE4(void)
     a = dword_800B6BA0;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
-    b.s_LOAD = word_8008B590;
+    b.s_LOAD = uiColor_8008B590;
     sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
@@ -411,7 +411,7 @@ void sub_800B92C0(LoadTask_LOAD* t)
 {
     if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
-        sub_80031494(0x7E);
+        PlaySfx_80031494(0x7E);
         sub_800BADF4();
         t->f24_LOAD = 0x12;
     }
@@ -437,7 +437,7 @@ void sub_800B9360(LoadTask_LOAD* t)
     case 0:
     case 3:
         sub_800BAFB0(dword_800BDF4C.f1C_LOAD);
-        sub_80031494(0x7E);
+        PlaySfx_80031494(0x7E);
         if (dword_800BDF4C.fC_LOAD == 0)
         {
             if (sub_800BAE2C() || sub_800BAE3C())
@@ -518,16 +518,16 @@ void sub_800B952C(LoadTask_LOAD* t)
                 if (sub_800BAE4C(n))
                 {
                     t->f24_LOAD = 4;
-                    sub_80031494(0x7E);
+                    PlaySfx_80031494(0x7E);
                 }
                 else
                 {
-                    sub_80031494(0x7C);
+                    PlaySfx_80031494(0x7C);
                 }
             }
             else
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
         }
         else if (dword_800BDF4C.fC_LOAD == 0)
@@ -537,17 +537,17 @@ void sub_800B952C(LoadTask_LOAD* t)
                 if (!sub_800BAE4C(n) && sub_800BAE2C() <= 0)
                 {
                     t->f24_LOAD = 9;
-                    sub_80031494(0x7C);
+                    PlaySfx_80031494(0x7C);
                 }
                 else
                 {
                     t->f24_LOAD = 4;
-                    sub_80031494(0x7E);
+                    PlaySfx_80031494(0x7E);
                 }
             }
             else
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
         }
     }
@@ -563,7 +563,7 @@ void sub_800B9654(LoadTask_LOAD* t)
     {
         if (dword_800BDF4C.f4C_LOAD == 0)
         {
-            sub_80031494(0x7E);
+            PlaySfx_80031494(0x7E);
             if (dword_800BDF4C.fC_LOAD == 1)
             {
                 sub_800BADF4();
@@ -577,7 +577,7 @@ void sub_800B9654(LoadTask_LOAD* t)
         }
         else
         {
-            sub_80031494(0x7D);
+            PlaySfx_80031494(0x7D);
             t->f24_LOAD = 3;
         }
     }
@@ -765,7 +765,7 @@ void sub_800BB5DC(void)
     st->f4C_LOAD = 1;
     st->f48_LOAD = 1;
     sub_800BD35C();
-    sub_80056FEC(7, (int)sub_800BD06C);
+    VSyncCallbacks(7, (int)sub_800BD06C);
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB5DC);
@@ -778,7 +778,7 @@ void sub_800BB64C(void)
     while (st->f0_LOAD)
     {
     }
-    sub_80056FEC(7, 0);
+    VSyncCallbacks(7, 0);
     sub_800BD558();
 }
 #endif
@@ -961,8 +961,8 @@ int sub_800BCF64(int a)
     for (i = 0; i < 15; i++)
     {
         sub_800BD60C();
-        sub_8004FA18();
-        sub_8004FA08(a, i, buf);
+        _new_card();
+        _card_write(a, i, buf);
         if (sub_800BD7EC())
         {
             return 0;
@@ -1115,9 +1115,9 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD318);
 // Not matched: epilogue order differs (addiu sp before jr, nop in delay slot)
 int sub_800BD32C(void)
 {
-    sub_8004EDE8();
-    sub_8004EE54();
-    return sub_8004EDD8();
+    InitCARD();
+    StartCARD();
+    return _bu_init();
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD32C);
@@ -1128,7 +1128,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD35C);
 // Not matched: epilogue order differs
 int sub_800BD538(void)
 {
-    return sub_8004EE8C();
+    return StopCARD();
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD538);
@@ -1137,18 +1137,18 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD538);
 // Not matched: register allocation of the lui/lw pairs differs ($a0 in the original)
 void sub_800BD558(void)
 {
-    int r = sub_8004DE68();
-    sub_8004DE38(dword_800BE2A4);
-    sub_8004DE38(dword_800BE2A8);
-    sub_8004DE38(dword_800BE2AC);
-    sub_8004DE38(dword_800BE2B0);
-    sub_8004DE38(dword_800BE2B4);
-    sub_8004DE38(dword_800BE2B8);
-    sub_8004DE38(dword_800BE2BC);
-    sub_8004DE38(dword_800BE2C0);
+    int r = EnterCriticalSection();
+    CloseEvent(dword_800BE2A4);
+    CloseEvent(dword_800BE2A8);
+    CloseEvent(dword_800BE2AC);
+    CloseEvent(dword_800BE2B0);
+    CloseEvent(dword_800BE2B4);
+    CloseEvent(dword_800BE2B8);
+    CloseEvent(dword_800BE2BC);
+    CloseEvent(dword_800BE2C0);
     if (r == 1)
     {
-        sub_8004DE78();
+        ExitCriticalSection();
     }
 }
 #endif
@@ -1158,14 +1158,14 @@ INCLUDE_OVERLAY_ASM(load, sub_800BD558);
 // Not matched: hand-written assembly style (stores via the assembler macro with $at, results re-read from the stored variables); not producible from C
 void sub_800BD60C(void)
 {
-    sub_8004FE08(dword_800BE2A4);
-    sub_8004FE08(dword_800BE2A8);
-    sub_8004FE08(dword_800BE2AC);
-    sub_8004FE08(dword_800BE2B0);
-    sub_8004FE08(dword_800BE2B4);
-    sub_8004FE08(dword_800BE2B8);
-    sub_8004FE08(dword_800BE2BC);
-    sub_8004FE08(dword_800BE2C0);
+    TestEvent(dword_800BE2A4);
+    TestEvent(dword_800BE2A8);
+    TestEvent(dword_800BE2AC);
+    TestEvent(dword_800BE2B0);
+    TestEvent(dword_800BE2B4);
+    TestEvent(dword_800BE2B8);
+    TestEvent(dword_800BE2BC);
+    TestEvent(dword_800BE2C0);
     dword_800BE2C4 = dword_800BE2C8 = dword_800BE2CC = dword_800BE2D0 = 0;
     dword_800BE2D4 = dword_800BE2D8 = dword_800BE2DC = dword_800BE2E0 = 0;
 }

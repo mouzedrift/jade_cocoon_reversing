@@ -49,7 +49,7 @@ extern void sub_800A197C(void*);
 extern void sub_800A5538();
 extern int sub_800A5560(CombSelUnit*, int);
 extern int sub_8003DA54(void*);
-extern void sub_80031494(int);
+extern void PlaySfx_80031494(int);
 
 INCLUDE_OVERLAY_ASM(combsel, dword_800A4088);
 
@@ -122,29 +122,29 @@ void sub_800A4E94(CombSelTask* t, int a)
         switch (word_800A1BC4)
         {
         case 0:
-            sub_80031494(0x7E);
+            PlaySfx_80031494(0x7E);
             t->next_8 = sub_800A16FC;
             t->next_8(t, a);
             break;
         case 1:
             if (sub_800A5560(dword_800A1BC8[byte_800A38D9], 6) == 1)
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
             else
             {
-                sub_80031494(0x7E);
+                PlaySfx_80031494(0x7E);
                 byte_800A38DB = 2;
             }
             break;
         case 2:
             if (sub_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
             else
             {
-                sub_80031494(0x7E);
+                PlaySfx_80031494(0x7E);
                 byte_800A38DB = 1;
             }
             break;
@@ -152,7 +152,7 @@ void sub_800A4E94(CombSelTask* t, int a)
             sub_800A5080(t, a);
             break;
         case 4:
-            sub_80031494(0x7E);
+            PlaySfx_80031494(0x7E);
             byte_800A38DB = 3;
             word_800A5980 = 1;
             break;
@@ -181,13 +181,13 @@ void sub_800A5080(CombSelTask* t, int a)
 {
     if (sub_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
     {
-        sub_80031494(0x7C);
+        PlaySfx_80031494(0x7C);
     }
     else
     {
         byte_800A38DB = 0;
         dword_800A1BBC.field_8 = 3;
-        sub_80031494(0x7E);
+        PlaySfx_80031494(0x7E);
         switch (byte_800A38D9)
         {
         case 0:
@@ -221,17 +221,17 @@ void sub_800A5188()
             CombSelUnit* b = &dword_800A1BC8[byte_800A38D9][(short)sub_8003DA54(dword_800A596C)];
             MemCopy_800403E8((unsigned int*)a, (unsigned int*)b, 0xF8);
             byte_800A38DB = 2;
-            sub_80031494(0x7E);
+            PlaySfx_80031494(0x7E);
             break;
         }
         case 2:
             if (sub_800A1934(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]) == 1)
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
             else
             {
-                sub_80031494(0x7E);
+                PlaySfx_80031494(0x7E);
                 sub_800A197C(&dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)]);
                 byte_800A38DB = 0;
             }
@@ -263,12 +263,12 @@ void sub_800A53B0()
             short r = sub_8003DA54(dword_800A596C);
             if (sub_800A1934(&dword_800A1BC8[byte_800A38D9][r]) == 1)
             {
-                sub_80031494(0x7C);
+                PlaySfx_80031494(0x7C);
             }
             else
             {
                 byte_800A38DB = 1;
-                sub_80031494(0x7E);
+                PlaySfx_80031494(0x7E);
             }
         }
     }
@@ -286,7 +286,7 @@ void sub_800A54A0(CombSelTask* t)
 {
     if (sub_8003D288(0, dword_800A3A94))
     {
-        sub_80031494(0x7E);
+        PlaySfx_80031494(0x7E);
         if ((short)sub_8003DA54(dword_800A5978) == 0)
         {
             XaRequestPlay_80043564(1, 0x678, 0x1F);

@@ -235,7 +235,7 @@ extern void fn_800B6C6C(void* p, int a);
 extern void fn_800B6CC8();
 extern void fn_80027478(int a, int b);
 extern void fn_800A6D30(int a);
-extern int name_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern void fn_8002C014();
 extern void fn_8001ABEC(int a);
 extern int fn_800AD288(int a, int b);
@@ -301,7 +301,7 @@ typedef struct ShopUnit4Shop
 extern void fn_80011CD0(void* p);
 extern int fn_800AD888();
 extern void fn_800AD8F4(int a);
-extern char name_8008BD38[];
+extern char levantStatus_8008BD38[];
 extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern ShopItemShop* name_800B6CF0;
@@ -1070,7 +1070,7 @@ void sub_800BB148(ShopUnit4Shop* u)
     u->f1C = name_800BF8B4[u->s0];
     sub_800BBB54(u, 0);
     sub_800BD854(u);
-    fn_80011CD0(name_8008BD38);
+    fn_80011CD0(levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
     {
         r = sub_80033AE4(&saveData_8008B570, i);
@@ -1682,7 +1682,7 @@ void sub_800BDD74(ShopTaskShop* t, ShopUnit3Shop* u)
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
         fn_80027478(0x40, 0);
         fn_800A6D30(1);
-        name_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
 }
 #endif

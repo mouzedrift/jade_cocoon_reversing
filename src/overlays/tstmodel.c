@@ -122,7 +122,7 @@ extern int name_8008D600[];
 extern short name_8008D4C8[];
 extern unsigned char name_8008D460[];
 extern short name_8008D474[];
-extern int name_8008B548;
+extern int geomScreenDistance_8008B548;
 extern int name_8003B548();
 extern void name_8004D0E8();
 void sub_800A1A24(int* c)
@@ -144,7 +144,7 @@ void sub_800A1A24(int* c)
     name_8008D460[2] = 0x40;
     name_8008D474[0] = 0;
     name_8008D474[1] = 0;
-    name_8008B548 = 0xA0;
+    geomScreenDistance_8008B548 = 0xA0;
     name_8004D0E8();
 }
 
@@ -188,7 +188,7 @@ void sub_800A1CAC(TstModelB* p, int k)
 extern int sub_800A1B48();
 #if 0 // near miss: the original shares the shifted copy of sE between both tests
 extern int name_8003D198();
-extern void name_80031494();
+extern void PlaySfx_80031494();
 int sub_800A1D70(TstModelB* p)
 {
     int old = (short)p->s6;
@@ -200,7 +200,7 @@ int sub_800A1D70(TstModelB* p)
         if (ts >= p->s8)
         {
             p->sE = t - p->s8;
-            name_80031494(0x7F);
+            PlaySfx_80031494(0x7F);
             return 8;
         }
     }
@@ -209,7 +209,7 @@ int sub_800A1D70(TstModelB* p)
         if (ts < p->sC - p->s8 * p->sA)
         {
             p->sE = t + p->s8;
-            name_80031494(0x7F);
+            PlaySfx_80031494(0x7F);
             return 7;
         }
     }
@@ -217,7 +217,7 @@ int sub_800A1D70(TstModelB* p)
     p->sE = name_8003D198(p->sC - p->s8 * p->sA + 1, (short)p->sE, p->s8 * p->sA, 0);
     if (old != (short)p->s6)
     {
-        name_80031494(0x7F);
+        PlaySfx_80031494(0x7F);
     }
     return 9;
 }

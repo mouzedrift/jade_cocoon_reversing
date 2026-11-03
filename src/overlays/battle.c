@@ -86,13 +86,13 @@ extern void sub_800A2618();
 extern int sub_800C6EFC();
 extern void sub_800BB940();
 extern void sub_800A1B78();
-extern void sub_8002C014();
+extern void FreeActiveOverlay_8002C014();
 extern void sub_800AC708();
 extern void sub_800A9364();
 extern int sub_800A8DAC();
 extern int sub_800A1B2C();
 extern void ReviveOneHp_80011CF4();
-extern void sub_8006281C();
+extern void SsSepSetDecrescendo();
 extern void sub_800BA848();
 extern void sub_800BA4F4();
 extern void sub_800C064C();
@@ -137,7 +137,7 @@ extern short dword_800C9DC0[];
 extern short dword_800C9D8C[2];
 extern EventNode* dword_8008B4C0;
 extern int dword_800ADE88;
-extern int word_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern int dword_80083BD0;
 typedef struct BatRow_a
 {
@@ -156,13 +156,13 @@ extern void sub_8001E28C();
 extern void sub_800A2924();
 extern void ClearStatus_80011C30();
 extern void RecoverQuarterHpMp_80011C44();
-extern void sub_8004E268();
+extern void memset();
 extern void sub_80020DDC();
 extern void sub_8001C19C();
 extern void sub_800A2AE8();
 extern void sub_80031160();
 extern void sub_80018A4C();
-extern int sub_80020BF8();
+extern int LoadOverlay_80020BF8();
 extern void sub_8001AAF4();
 extern void sub_800A8D48();
 extern void sub_800A25D8();
@@ -326,7 +326,7 @@ void sub_800BA444(BatTask_a* t)
                 short* p = dword_80091CE0;
                 if (p[2] >= 0)
                 {
-                    sub_8006281C(p[6], p[2], 0x7F, 0x78);
+                    SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
                     p[2] = -1;
                 }
             }
@@ -368,7 +368,7 @@ void sub_800BA564(BatTask_a* t, BatObj_a* u)
                     short* p = dword_80091CE0;
                     if (p[2] >= 0)
                     {
-                        sub_8006281C(p[6], p[2], 0x7F, 0x78);
+                        SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
                         p[2] = -1;
                     }
                 }
@@ -396,7 +396,7 @@ void sub_800BA624(BatTask_a* t, BatObj_a* u)
 
 void sub_800BA6A0(BatTask_a* t, BatObj_a* u)
 {
-    word_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     sub_8001C19C(0, 0x20);
     if (--u->f4 <= 0)
     {
@@ -428,7 +428,7 @@ void sub_800BA788(BatTask_a* t)
     sub_8001C19C(0, 0x20);
     sub_800C0BA0();
     sub_800A1B78();
-    sub_8002C014();
+    FreeActiveOverlay_8002C014();
     sub_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
     sub_80031334(0);
@@ -440,7 +440,7 @@ void sub_800BA788(BatTask_a* t)
     {
         sub_800AC708(dword_80091C74, 1);
     }
-    word_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     t->next_8 = sub_800BA848;
 }
 
@@ -925,7 +925,7 @@ int sub_800BC28C()
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         if (sub_800BC820(0x80000) == 1)
         {
-            dword_800C9D7C = sub_80020BF8(1, 0x1E);
+            dword_800C9D7C = LoadOverlay_80020BF8(1, 0x1E);
             e->cb_8 = (EventEntryFn)sub_800BC324;
             sub_800BC850(0x80000);
         }
@@ -1158,7 +1158,7 @@ int sub_800BC868()
 void sub_800BC878()
 {
     char buf[4];
-    sub_8004E268(buf, 0, 4);
+    memset(buf, 0, 4);
     sub_80020DDC(dword_800C8EAC[dword_80083BD0].b, dword_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
@@ -1938,7 +1938,7 @@ BatCol_a sub_800C0DDC(int* p, int c)
 {
     BatCol_a buf;
     int mask;
-    sub_8004E268(&buf, 0, 4);
+    memset(&buf, 0, 4);
     if (p[0] != 0x14 && (p[2] & (mask = 1 << (dword_800C918C + 1))))
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
@@ -2156,7 +2156,7 @@ void sub_800C4328(BatTask* t)
     {
         sub_800C6AFC(t, 6, 0);
     }
-    else if (sub_8004E298() & 1)
+    else if (rand() & 1)
     {
         sub_800C6AFC(t, 6, 1);
     }
@@ -2168,7 +2168,7 @@ void sub_800C4328(BatTask* t)
 
 void sub_800C43D8(BatTask* t)
 {
-    if (sub_8004E298(t) & 1)
+    if (rand(t) & 1)
     {
         sub_800C6AFC(t, 1, 8);
     }
@@ -2180,7 +2180,7 @@ void sub_800C43D8(BatTask* t)
 
 void sub_800C4424(BatTask* t)
 {
-    if (sub_8004E298(t) & 1)
+    if (rand(t) & 1)
     {
         sub_800C6AFC(t, 6, 2);
     }
@@ -2198,7 +2198,7 @@ void sub_800C4470(int a)
 
 void sub_800C4494(BatTask* t)
 {
-    int x = sub_8004E298();
+    int x = rand();
     if (x % 3)
     {
         sub_800C6AFC(t, 6, 3);
@@ -2210,7 +2210,7 @@ void sub_800C4494(BatTask* t)
 }
 void sub_800C44FC(BatTask* t)
 {
-    if (sub_8004E298(t) & 1)
+    if (rand(t) & 1)
     {
         sub_800C6AFC(t, 6, 1);
     }
@@ -2224,7 +2224,7 @@ void sub_800C4548(BatTask* t)
 {
     if (sub_800C6DF8(t, 0xD) == 0)
     {
-        if (sub_8004E298() & 1)
+        if (rand() & 1)
         {
             sub_800C6C44(t);
         }
@@ -2264,7 +2264,7 @@ int sub_800C4B34(BatTask* t)
         {
             return r;
         }
-        if (sub_8004E298() & 1)
+        if (rand() & 1)
         {
             r = sub_800C6C44(t);
             if (r)
@@ -2290,7 +2290,7 @@ int sub_800C4BE4(BatTask* t)
         short y = sub_800334CC(s);
         if (x < y)
         {
-            if (sub_8004E298() & 1)
+            if (rand() & 1)
             {
                 r = sub_800C6C44(t);
                 if (r)
@@ -2319,7 +2319,7 @@ int sub_800C4C74(BatTask* t)
 int sub_800C4CBC(BatTask* t)
 {
     int r;
-    int m = sub_8004E298() % 100;
+    int m = rand() % 100;
     if (m < 30)
     {
         r = sub_800C6BD0(t, 0);
@@ -2351,7 +2351,7 @@ int sub_800C4D38(BatTask* t)
 int sub_800C4DB8(BatTask* t)
 {
     int r;
-    int m = sub_8004E298() % 100;
+    int m = rand() % 100;
     if (m < 50)
     {
         r = sub_800C6BD0(t, 9);
@@ -2366,7 +2366,7 @@ int sub_800C4DB8(BatTask* t)
 int sub_800C4E34(BatTask* t)
 {
     int r;
-    if (sub_8004E298() % 10 < 7)
+    if (rand() % 10 < 7)
     {
         r = sub_800C6A8C(t);
         if (r)
@@ -2435,11 +2435,11 @@ int sub_800C507C(BatTask* t)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C50B0);
 
-extern int sub_8004E298();
+extern int rand();
 int sub_800C51D8(BatTask* t)
 {
     int r;
-    if (sub_8004E298(t) & 1)
+    if (rand(t) & 1)
     {
         r = sub_800C6A8C(t);
     }
@@ -2471,7 +2471,7 @@ int sub_800C5220(BatTask* t)
 int sub_800C5290(BatTask* t)
 {
     int r;
-    if (sub_8004E298() % 10 < 6)
+    if (rand() % 10 < 6)
     {
         r = sub_800C6BD0(t, 2);
         if (r)
@@ -2485,7 +2485,7 @@ int sub_800C5290(BatTask* t)
 int sub_800C5304(BatTask* t)
 {
     int r;
-    if (sub_800C6EC8(t, 1) == 0 && sub_8004E298() % 10 < 7)
+    if (sub_800C6EC8(t, 1) == 0 && rand() % 10 < 7)
     {
         r = sub_800C6BD0(t, 0x11);
         if (r)
@@ -2493,7 +2493,7 @@ int sub_800C5304(BatTask* t)
             return r;
         }
     }
-    if (sub_8004E298() & 1)
+    if (rand() & 1)
     {
         r = sub_800C6A8C(t);
         if (r)
@@ -2507,7 +2507,7 @@ int sub_800C5304(BatTask* t)
 int sub_800C53B0(BatTask* t)
 {
     int r;
-    if (sub_8004E298() % 10 < 6)
+    if (rand() % 10 < 6)
     {
         r = sub_800C6BD0(t, 5);
         if (r)
@@ -2560,7 +2560,7 @@ int sub_800C5510(BatTask* t)
     {
         return sub_800C6C58(t);
     }
-    r = sub_8004E298() & 1;
+    r = rand() & 1;
     if (r)
     {
         return r;
@@ -2584,7 +2584,7 @@ int sub_800C5510(BatTask* t)
 int sub_800C5594(BatTask* t)
 {
     int r;
-    if (sub_8004E298() % 10 < 7)
+    if (rand() % 10 < 7)
     {
         r = sub_800C6A8C(t);
         if (r)
@@ -3152,12 +3152,12 @@ void sub_800C8768()
     {
         if (sub_800C7530())
         {
-            sub_80031494(0x7E);
+            PlaySfx_80031494(0x7E);
             sub_800C7A6C();
         }
         else
         {
-            sub_80031494(0x7C);
+            PlaySfx_80031494(0x7C);
             if (dword_800C9E7C)
             {
                 dword_800C9E51 = 0x96;
@@ -3170,7 +3170,7 @@ void sub_800C8768()
         if (dword_800C9E50)
         {
             unsigned char c;
-            sub_80031494(0x7D);
+            PlaySfx_80031494(0x7D);
             c = dword_800C9E40;
             dword_800C9E40 = 0;
             dword_800C9E50 = c;

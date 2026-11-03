@@ -104,7 +104,7 @@ extern char name_800C2910[];
 extern char name_800C2930[];
 extern char name_800C2958[];
 extern char name_800C2968[];
-extern unsigned short name_8009194C;
+extern unsigned short padPressed_8009194C;
 extern void sub_800BE294();
 extern short name_800C1B74[];
 extern short name_800C1B98[];
@@ -136,7 +136,7 @@ extern void sub_800C00D4();
 extern void sub_800AD1E0();
 extern void sub_800C0084();
 
-extern char name_8008BD38[];
+extern char levantStatus_8008BD38[];
 
 extern int sub_800BF540();
 extern void sub_800BE048();
@@ -452,7 +452,7 @@ int sub_800BD230(MenuCtx* c)
     return found;
 }
 
-extern int sub_8004E298();
+extern int rand();
 extern MenuRow name_800C1080[];
 int sub_800BD358(MenuCtx* out, int idx)
 {
@@ -460,8 +460,8 @@ int sub_800BD358(MenuCtx* out, int idx)
     int found = 0;
     int a;
     int b;
-    a = sub_8004E298();
-    b = sub_8004E298();
+    a = rand();
+    b = rand();
     if (a < r->lim_0)
     {
         ((unsigned char*)out)[2] = r->a_2;
@@ -580,7 +580,7 @@ void sub_800BD6C8(MenuTask* t, MenuCtx* c)
     }
     if (c->f28 < 8)
         c->f28++;
-    if ((name_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
+    if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
         t->next_8 = sub_800BD80C;
 }
 
@@ -1050,7 +1050,7 @@ void sub_800BF3E0(MenuCtx* c)
         tmp.w[0] = 4;
         p = name_80014390(*(unsigned char*)&c->arr_2A[5]);
         if (p)
-            sub_80013C28(name_8008BD38, p, &tmp, &tmp.w[4]);
+            sub_80013C28(levantStatus_8008BD38, p, &tmp, &tmp.w[4]);
         sub_800C00F8(&tmp, &tmp.w[4]);
         sub_800AD1E0(r17, 1, 0);
         break;
@@ -1089,7 +1089,7 @@ void sub_800BF794(MenuCtx* c)
         tmp[2] = (int)name_800B6838;
         tmp[3] = (int)name_800B6838;
         sub_8002AF10(tmp, 0, 0xE);
-        if (name_8009194C == 0)
+        if (padPressed_8009194C == 0)
         {
             if (c->f56 < 0x96)
                 return;
@@ -1238,7 +1238,7 @@ void sub_800BFCA8(MenuCtx* c)
         {
             c->f1C = 1;
         }
-        else if ((name_8009194C & 0x80) && c->sel_2 == 1)
+        else if ((padPressed_8009194C & 0x80) && c->sel_2 == 1)
         {
             int r;
             sub_800AD3F0(0);
@@ -1461,7 +1461,7 @@ void sub_800C05E0(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0 && c->sel_2 != 0x10)
-        sub_8002F1C8(name_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
+        sub_8002F1C8(levantStatus_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
 }
 
 extern int name_8001AEC0();
@@ -1601,7 +1601,7 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     if (sub_80033DF4(&q) == 0 && sub_800C0DD4(r17))
     {
         int v;
-        sub_80013C28(name_8008BD38, r16, &tmp, &tmp.w[4]);
+        sub_80013C28(levantStatus_8008BD38, r16, &tmp, &tmp.w[4]);
         out[0] = -tmp.w[11];
         out[1] = -tmp.w[12];
         v = r16->xA - r16->x8;

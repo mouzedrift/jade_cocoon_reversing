@@ -142,7 +142,7 @@ extern int sub_800A0B3C(int);
 extern void sub_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
 extern void sub_80030664();
-extern void sub_8006281C(int, int, int, int);
+extern void SsSepSetDecrescendo(int, int, int, int);
 extern void sub_8001AA50(int);
 extern void sub_80031160(int, int);
 
@@ -305,7 +305,7 @@ void sub_800A5000(CombBtlTask* t)
 {
     if (word_80091CE0[2] >= 0)
     {
-        sub_8006281C(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
+        SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
         word_80091CE0[2] = -1;
     }
     sub_80031334(0);
@@ -408,7 +408,7 @@ void sub_800A54CC(CombBtlTask* t)
     FadeOutSeqSlot_800313C8(0);
     if (word_80091CE0[2] >= 0)
     {
-        sub_8006281C(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
+        SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
         word_80091CE0[2] = -1;
     }
     sub_8001AA50(0x1E);

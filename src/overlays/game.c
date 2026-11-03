@@ -373,7 +373,7 @@ typedef struct GameLst_1
 extern GameLst_1 dword_800B09FC[];
 extern GameLst_1* dword_800B0D74[];
 extern void sub_800A6CCC();
-extern void sub_80030988(void);
+extern void ApplyAudioOutputFormat_80030988(void);
 extern void sub_800A6C00();
 extern void sub_800A6A48();
 extern void sub_800A6B00();
@@ -2337,7 +2337,7 @@ void sub_800A6968(GameTask_1* t, GameQ_1* q)
     {
         goto end;
     }
-    sub_80030988();
+    ApplyAudioOutputFormat_80030988();
     sub_800A73A8();
     sub_800A6C00(t, q);
     sub_800A6A48(t, q);
@@ -2584,13 +2584,13 @@ void sub_800A74F0(GameNode_1* n)
     }
 }
 
-extern void sub_8001AF64(void* p);
+extern void DrawIntroMovie_8001AF64(void* p);
 extern void sub_80066E38(int a);
 extern char name_800B0EA4[];
 extern char name_80096090[];
 int sub_800A7574(void)
 {
-    sub_8001AF64(name_800B0EA4);
+    DrawIntroMovie_8001AF64(name_800B0EA4);
     ListFreeAll_8003FEC8(name_80096090);
     sub_80066E38(0);
     if (unknownFlags_8008D678 & 0x40000000)
@@ -2883,7 +2883,7 @@ extern short word_8008BDA6;
 extern char dword_800B1DF8;
 extern char dword_800B0FB0;
 extern void sub_800AC380(int);
-extern int dword_8008B818;
+extern int levantEmptyCocoons_8008B818;
 extern int* dword_8007DC60;
 extern unsigned char playerYan_8008B594[];
 #define G2SAVE ((unsigned char*)&saveData_8008B570)
@@ -3006,7 +3006,7 @@ extern int sub_800AD670(int, int);
 extern int sub_80025924(int, int);
 extern void PoolInit_8003FF1C(void*, unsigned);
 extern int sub_800ACB64();
-extern void sub_80031494(int);
+extern void PlaySfx_80031494(int);
 extern void sub_80031160(int, int);
 typedef struct G2Sv5
 {
@@ -4056,7 +4056,7 @@ void sub_800ABDF0(G2Act* a)
     if (a->s1c == 0x1D)
     {
         if (a->f10 == (unsigned short)sub_800AB170(0x1D))
-            sub_80031494(0x44);
+            PlaySfx_80031494(0x44);
         if (a->f10 == (unsigned short)sub_800AB170(a->s1c) - 10)
             sub_80031160(0x1D, 1);
     }
@@ -4684,12 +4684,12 @@ int sub_800AD888()
 
 int sub_800AD8BC()
 {
-    return dword_8008B818 + CountMinions_80010548(0);
+    return levantEmptyCocoons_8008B818 + CountMinions_80010548(0);
 }
 
 int sub_800AD8E4()
 {
-    return dword_8008B818;
+    return levantEmptyCocoons_8008B818;
 }
 
 int sub_800AD8F4(int a)
@@ -4701,7 +4701,7 @@ int sub_800AD8F4(int a)
         v = 12;
         ret = 0;
     }
-    dword_8008B818 = v;
+    levantEmptyCocoons_8008B818 = v;
     return ret;
 }
 
@@ -4714,7 +4714,7 @@ int sub_800AD944(int a)
         v = 0;
         ret = v;
     }
-    dword_8008B818 = v;
+    levantEmptyCocoons_8008B818 = v;
     return ret;
 }
 

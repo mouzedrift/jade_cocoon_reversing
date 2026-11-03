@@ -201,7 +201,7 @@ extern void sub_800BB664();
 extern void sub_800BB30C();
 extern int sub_8003D380(int a);
 extern int sub_8003D41C(int a);
-extern unsigned short name_8009194C;
+extern unsigned short padPressed_8009194C;
 extern void sub_800BD1A8();
 extern void sub_800BD278();
 extern void sub_800BD378();
@@ -517,7 +517,7 @@ void sub_800BB664(WpnObj_wpnshop* o)
         {
             o->f_50++;
         }
-        if (name_8009194C || o->f_50 >= 150)
+        if (padPressed_8009194C || o->f_50 >= 150)
         {
             o->f_3A = name_800BE840[o->f_0];
             o->f_4 &= ~1;

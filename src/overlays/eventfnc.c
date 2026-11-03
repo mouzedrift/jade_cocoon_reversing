@@ -1716,7 +1716,7 @@ typedef struct EvSlotEventfnc
     int fC_C;
     int f10_10;
 } EvSlotEventfnc;
-extern void sub_8004E268(void* p, int v, int n);
+extern void memset(void* p, int v, int n);
 #if 0
 // Not matched: loop induction variables are allocated differently (the original strength-reduces only the slot offset)
 void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
@@ -1725,7 +1725,7 @@ void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
     int i;
     int off = 0xC;
     EvSlotEventfnc* p;
-    sub_8004E268(local, 0, 0x20);
+    memset(local, 0, 0x20);
     local[0] = 2;
     local[5] = 3;
     for (i = 0; i < 3; i++, off += 0x14)

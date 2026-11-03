@@ -238,7 +238,7 @@ typedef struct
 } NameCursorTbl;
 extern NameCursorTbl name_800B83D8[];
 extern int sub_8003D630();
-extern void sub_80031494(int);
+extern void PlaySfx_80031494(int);
 int sub_800B80E4(NameCursor* p)
 {
     int old = (short)p->s6;
@@ -248,13 +248,13 @@ int sub_800B80E4(NameCursor* p)
         sub_800B8020(p, k);
         if (p->flags & name_800B83D8[k - 1].mask)
         {
-            sub_80031494(0x7F);
+            PlaySfx_80031494(0x7F);
             return name_800B83D8[k - 1].result;
         }
     }
     if (old != (short)p->s6)
     {
-        sub_80031494(0x7F);
+        PlaySfx_80031494(0x7F);
     }
     return 0;
 }

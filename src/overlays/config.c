@@ -59,7 +59,7 @@ typedef struct CfgHolderConfig
 } CfgHolderConfig;
 extern CfgHolderConfig* dword_8008B4B8;
 extern CfgSettingsConfig dword_8008B570;
-extern unsigned int dword_8008B58C;
+extern unsigned int settingsFlags_8008B58C;
 extern int dword_800C5944;
 extern Bytes8Config dword_800C4CD4[];
 extern char dword_800C592C[];
@@ -231,7 +231,7 @@ void sub_800C3060(CfgCtxConfig* c)
         c->f12 = 1;
     }
     c->fa = c->f9;
-    c->f13 = (dword_8008B58C >> 0x17) & 1;
+    c->f13 = (settingsFlags_8008B58C >> 0x17) & 1;
     if (c->f14 == 0)
     {
         c->f13 = 1;

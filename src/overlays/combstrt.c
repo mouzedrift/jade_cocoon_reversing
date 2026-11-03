@@ -39,7 +39,7 @@ extern void sub_800A16FC();
 extern int sub_800A1AAC(int);
 extern int sub_800A1934(void*);
 extern void Heal_80011CD0(void*);
-extern void sub_80031494(int);
+extern void PlaySfx_80031494(int);
 extern void sub_8002ADB4(void*, void*, int, int);
 extern void sub_800A473C(int);
 extern void sub_800A49DC(int, int);
@@ -141,7 +141,7 @@ void sub_800A46FC()
     {
         sub_800A473C(i);
     }
-    sub_80031494(0x7F);
+    PlaySfx_80031494(0x7F);
 }
 
 INCLUDE_OVERLAY_ASM(combstrt, sub_800A473C);

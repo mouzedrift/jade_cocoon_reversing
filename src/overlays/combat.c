@@ -142,7 +142,7 @@ typedef struct CombatSpawnCombat
     int field_4C;
 } CombatSpawnCombat;
 extern int ratan2Degrees_8003B56C(int a, int b);
-extern void sub_80029A10(void* a, void* b);
+extern void InitPolyFT4_80029A10(void* a, void* b);
 extern int sub_800A0968(unsigned char* a);
 typedef struct CombatShortPair_combat
 {
@@ -1005,7 +1005,7 @@ void sub_800A1B2C(int i, void* p)
     r.field_E = dword_8007DCBC[i].b;
     r.field_10 = 0x100;
     r.field_12 = 1;
-    sub_80029A10(p, &r);
+    InitPolyFT4_80029A10(p, &r);
 }
 
 INCLUDE_OVERLAY_ASM(combat, dword_800A1BBC);
