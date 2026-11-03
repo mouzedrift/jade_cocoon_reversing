@@ -81,7 +81,63 @@ void sub_8002F7D0(unsigned short* pos, short ot)
         sub_8002C100(loc, vals[i], ot);
     }
 }
-INCLUDE_ASM(sub_8002F8E4);
+typedef struct
+{
+    short field_0;
+    short field_2;
+    short field_4;
+    short field_6;
+    int field_8;
+    short field_C;
+    short pad_E;
+    unsigned int field_10;
+} struct_F8E4;
+extern RECT* off_80082E90[];
+extern void sub_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
+extern void sub_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
+extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
+extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+// Matched
+void sub_8002F8E4(int a0, struct_F8E4* p)
+{
+    unsigned short loc[2];
+    char buf[8];
+    struct_F6F8 s;
+    int v;
+    int flag;
+    loc[0] = off_80082E90[p->field_2 - 1][p->field_C].x;
+    loc[1] = 0x72;
+    sub_8002ECE0(a0, loc, p->field_C, p->field_6);
+    v = 0;
+    flag = v < p->field_10;
+    if (p->field_4 == p->field_C)
+    {
+        v = p->field_8;
+    }
+    sub_8004196C(buf, &off_80082E90[p->field_2 - 1][p->field_C], p->field_0, 8, 0);
+    AddTexWindowPrim_8003326C(buf, &pOT_8008D454[p->field_6]);
+    s.field_8 = flag;
+    s.field_0 = (int)buf;
+    s.field_4 = v;
+    s.field_A = p->field_6;
+    sub_8002A384(&s);
+    AddClipTexWindowPrim_80033308(&pOT_8008D454[p->field_6]);
+}
+// Matched
+short sub_8002FA0C(short a, short b)
+{
+    short r = 0;
+    int i;
+    if (a > 0)
+    {
+        i = a - 1;
+        if (i < 3 && b < 3)
+        {
+            r = off_80082E90[i][b].x;
+        }
+    }
+    return r;
+}
 // Matched
 short sub_8002FA70(void)
 {
