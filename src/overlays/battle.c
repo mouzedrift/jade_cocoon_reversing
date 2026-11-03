@@ -284,7 +284,7 @@ extern void sub_800BC144();
 extern void sub_800BC850(unsigned int);
 extern int sub_800BC28C();
 extern int sub_800BC1A8();
-extern void sub_800BE058();
+extern struct BatPair_a* sub_800BE058();
 extern void sub_800BFC10();
 extern void sub_800BFC40();
 extern void sub_800C01D8();
@@ -775,6 +775,35 @@ void sub_800BBC84(BatTask_a* t)
     sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18, levantPos_8008BD18[7]);
 }
 
+#if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / dword_800ADE78 load order and the shared lui of sub_800BAE74 in the branch delay slot
+extern int sub_800C0BF0();
+extern void sub_800C0F1C();
+void sub_800BBCC8(BatTask_a* t, BatObj_a* u)
+{
+    BatObj_a* v = u;
+    if (sub_800C0BF0(t) == 1)
+    {
+        dword_800C9C88[0] = 2;
+        dword_800C9C88[3] = 0;
+        dword_800C9C99 = dword_800C9C98;
+        dword_800C9C7C = dword_800C9C98;
+        dword_800C9C82 = dword_800C9C98;
+        dword_800C9C88[2] = 1 << dword_800C9C98;
+        u->fc = sub_800BC28C();
+        if (dword_800ADE78 == 1)
+        {
+            u->next_8 = sub_800BAE74;
+        }
+        else
+        {
+            sub_800BF770(dword_800C9C68, dword_800C9C7C);
+            v->next_8 = sub_800BAE74;
+        }
+        sub_800C0F1C();
+        t->next_8 = sub_800BC144;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BBCC8);
 
 void sub_800BBDB4(BatTask_a* t, BatObj_a* u)
@@ -1343,7 +1372,34 @@ void sub_800BDFAC()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BE058);
+extern void sub_800A8A30();
+extern void sub_800A2684();
+BatPair_a* sub_800BE058(BatPair_a* out, int* p, int c, int a)
+{
+    BatPair_a r;
+    if ((*(int*)&saveData_8008B570 & 0x20) || sub_800BC570(a) == 0)
+    {
+        r.a = 0;
+        r.b = 0;
+    }
+    else
+    {
+        switch ((unsigned int)sub_800BC7DC(a))
+        {
+        case 0:
+            sub_800A8A30(&r, p, c);
+            break;
+        case 1:
+            sub_800C0DDC(&r, p, c);
+            break;
+        case 2:
+            sub_800A2684(&r, p, c);
+            break;
+        }
+    }
+    *out = r;
+    return out;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BE14C);
 
@@ -1838,6 +1894,21 @@ int sub_800C0904(unsigned char* p)
     return r;
 }
 
+#if 0 // Not matched: temp register numbering of the eight products (same function as SHOP sub_800BF3B4)
+extern short word_80084540[];
+int sub_800C09D4(unsigned char* p)
+{
+    int t1 = word_80084540[0x2E3] * p[0];
+    int t2 = word_80084540[0xEE3] * p[0];
+    int t3 = word_80084540[0xEE3] * p[3];
+    int t4 = word_80084540[0xAE3] * p[3];
+    int t5 = word_80084540[0xAE3] * p[2];
+    int t6 = word_80084540[0x6E3] * p[2];
+    int t7 = word_80084540[0x6E3] * p[1];
+    int t8 = word_80084540[0x2E3] * p[1];
+    return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C09D4);
 
 void sub_800C0A94()
@@ -2068,7 +2139,27 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C1654);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C17EC);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1A5C);
+extern void sub_800C1B2C();
+void sub_800C1A5C(int* p, short* q, int c, int d)
+{
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    if (e)
+    {
+        char* b;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        b = e->buffer;
+        *(int*)(b + 0x10) = p[0];
+        *(int*)(b + 0x14) = p[1];
+        *(int*)(b + 0x18) = p[2];
+        *(short*)(b + 0x34) = q[0];
+        *(short*)(b + 0x36) = q[1];
+        *(short*)(b + 0x38) = q[2];
+        *(int*)(b + 0x3C) = c;
+        *(int*)b = 0;
+        *(short*)(b + 8) = d;
+        e->cb_8 = (EventEntryFn)sub_800C1B2C;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1B2C);
 
@@ -2100,7 +2191,41 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C371C);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C3B50);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C3D34);
+typedef struct BatFade_a
+{
+    char pad0[0x30];
+    int f30;
+    char pad34[0x10];
+    char f44[0x3C];
+    char f80[8];
+    int* f88;
+    char pad8C[8];
+    int* f94;
+} BatFade_a;
+
+extern void sub_8003A6C4();
+extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
+extern void sub_80021804(int* p, int heap);
+extern void free3_8003FC6C(void* p);
+extern char stru_8008D534[];
+
+void sub_800C3D34(EventEntry* t, BatFade_a* u)
+{
+    int* m = u->f88;
+    int v = u->f30 - 0x100;
+    u->f30 = v;
+    if (v > 0)
+    {
+        sub_8003A6C4(v, m[1], m[1] + 0x54, u->f94);
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+        sub_80021804(u->f94, 1);
+        free3_8003FC6C(u->f94);
+    }
+    sub_8004D1EC(m[1], (int)pOT_8008D690, (int)u->f44, (int)u->f80, (int)stru_8008D534, ((0x1000 - u->f30) << 16) | 0xB0, 0);
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C3DF8);
 
@@ -2705,9 +2830,61 @@ void sub_800C58AC(BatTask* t)
     *t->f8 = 0x12;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C58BC);
+extern unsigned char dword_800C8B30;
+void sub_800C58BC(BatTask* t)
+{
+    unsigned char k = dword_800C8B30 % 6;
+    switch (k)
+    {
+    case 0:
+        t->f8[0] = 6;
+        t->f8[1] = 2;
+        t->f8[3] = t->f18;
+        break;
+    case 2:
+        t->f8[0] = 6;
+        t->f8[1] = 3;
+        t->f8[3] = t->f18;
+        break;
+    case 4:
+        t->f8[0] = 6;
+        t->f8[1] = 1;
+        t->f8[3] = t->f18;
+        break;
+    case 1:
+    case 3:
+    case 5:
+        t->f8[0] = 0;
+        t->f8[3] = t->f18;
+        break;
+    }
+    dword_800C8B30++;
+}
+INCLUDE_OVERLAY_ASM(battle, dword_800B68AC);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C59A0);
+void sub_800C59A0(BatTask* t)
+{
+    unsigned char k = dword_800C8B30 % 3;
+    switch (k)
+    {
+    case 0:
+        t->f8[0] = 6;
+        t->f8[1] = 3;
+        t->f8[3] = t->f18;
+        break;
+    case 1:
+        t->f8[0] = 6;
+        t->f8[1] = 2;
+        t->f8[3] = t->f18;
+        break;
+    case 2:
+        t->f8[0] = 6;
+        t->f8[1] = 1;
+        t->f8[3] = t->f18;
+        break;
+    }
+    dword_800C8B30++;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C5A7C);
 
@@ -2918,7 +3095,49 @@ void sub_800C71A0()
     dword_800C9640 = dword_800C9628[dword_800C9E49];
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C71C8);
+extern char dword_800C9378[];
+extern char dword_800C9384[];
+extern char dword_800C9388[];
+extern char dword_800C938C[];
+extern char dword_800C93A4[];
+extern char dword_800C93D4[];
+extern char* dword_800C93B8[];
+extern unsigned short dword_800C946C;
+extern unsigned short dword_800C94A4;
+extern unsigned short dword_800C9514;
+extern char* dword_800C9E6C;
+extern int sub_800AD8E4();
+void sub_800C71C8()
+{
+    if (dword_800C9E49 == 0)
+    {
+        if (sub_800C0A9C() == 0)
+        {
+            dword_800C93B8[0] = dword_800C9378;
+            dword_800C946C |= 2;
+        }
+        if (sub_800C7334() == 0)
+        {
+            dword_800C93B8[2] = dword_800C9384;
+            dword_800C94A4 |= 2;
+        }
+        else if (sub_800AD8E4() == 0)
+        {
+            dword_800C93B8[2] = dword_800C9388;
+            dword_800C94A4 |= 2;
+        }
+        if (sub_800C72B8() == 0)
+        {
+            dword_800C93B8[6] = dword_800C938C;
+            dword_800C9514 |= 2;
+        }
+        dword_800C9E6C = dword_800C93A4;
+    }
+    else
+    {
+        dword_800C9E6C = dword_800C93D4;
+    }
+}
 
 extern int dword_800C9E4C;
 int sub_800C72B8()
