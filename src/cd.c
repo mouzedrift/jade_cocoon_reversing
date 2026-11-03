@@ -247,7 +247,7 @@ int ratan2Degrees_8003B56C(int x, int y)
 // Not matched: s1/s2 register assignment of out/len swapped (8 words). Also tried: declaration order, unsigned len, direct out[] stores, short a (loses the sext), copy pointer o = out, passing out as the 3D call's 2nd arg, b/a reuse; permuter 1500: nothing
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
-    int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
+    int len = ISqrt_8003B918(LengthSquared3D_8003B8DC(v));
     short b;
     int a;
     b = ratan2(v[0], v[2]);
@@ -352,7 +352,7 @@ int LengthSquared2D_8003B8BC(int x, int y)
     return x * x + y * y;
 }
 // Matched
-int LengthSquared3D_8003B8DC(int* p, int a1)
+int LengthSquared3D_8003B8DC(int* p)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }

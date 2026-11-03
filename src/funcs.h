@@ -370,7 +370,7 @@ extern void sub_800251A0(void* dst, Model* src, int a2, int idx);
 extern void sub_80025B20(void* dst, Model* src, int idx);
 extern void SetMenuItemFont1Clut_8002AD08(int flags);
 extern void SetMenuItemFont2Clut_8002AD44(int flags);
-extern int LengthSquared3D_8003B8DC(int* p, int a1);
+extern int LengthSquared3D_8003B8DC(int* p);
 extern void sub_8001DB58(struct Actor* p, int a1, int a2);
 extern int FindFreeFileRequest_8003BC44(void);
 extern void sub_8003E268(unsigned short* p);
