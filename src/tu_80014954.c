@@ -495,11 +495,11 @@ void sub_800149A4(EffectArgs* p)
     int n;
     int m;
     n = p->field_1E;
-    m = q->field_3C;
+    m = q->timer_3C;
     effectOutcomeFlag_8008D780 = 0;
     if (m < n)
     {
-        q->field_3C = n;
+        q->timer_3C = n;
     }
     e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)

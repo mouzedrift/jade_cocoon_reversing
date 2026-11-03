@@ -29,6 +29,9 @@ typedef struct
     EffectSpriteDef* sprites_20;
     int field_24;
     EffectModel* models_28;
+    int pad_2C[2];
+    int vlc_34; // MDEC VLC table
+    int img_38; // decoded image buffer
 } EffectFile;
 #define EFFECT_FILE ((EffectFile*)effectFile_80091BD0)
 
@@ -36,10 +39,11 @@ typedef struct
 typedef struct
 {
     struct_4s pairs_0[10]; // sub_80018200
-    unsigned int flags_28;
-    int state_2C;
-    int pad_30[3];
-    int field_3C;
+    unsigned int flags_28; // 1: start, 2: file freed, 4: load requested, 8: sub_80018460
+    int state_2C;          // UpdateEffectTask_80014638: 0 idle, 1 loading, 2 loaded, 3 running
+    int pad_30[2];
+    int idx_38;            // effect file index (RequestEffect_800148F4)
+    int timer_3C;
     short field_40;
     short field_42;
     unsigned char bits_44[12];
