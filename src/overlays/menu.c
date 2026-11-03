@@ -974,20 +974,18 @@ typedef struct MenuLoc
     int g;
 } MenuLoc;
 extern void sub_8002F8E4();
-// near miss: saved register assignment differs
-#if 0
 void sub_800BEFAC(MenuCtx* a, short b)
 {
     MenuLoc loc;
     int v = sub_800C0990(a, 4);
-    int j = 0;
+    short j = 0;
     if (a->f8 - 1 > 0)
     {
         do
         {
-            MenuRc* r18 = name_80014390((j + 1) & 0xFF);
+            MenuRc* r18 = name_80014390((unsigned char)(j + 1));
+            short r17;
             int r16;
-            int r17;
             if ((*(int*)a & 0xFFFF0002) == 2)
             {
                 r17 = a->f60;
@@ -1009,11 +1007,9 @@ void sub_800BEFAC(MenuCtx* a, short b)
             sub_8002F8E4(r18, &loc);
             AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
             j++;
-        } while ((short)j < a->f8 - 1);
+        } while (j < a->f8 - 1);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BEFAC);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF0F4);
 
@@ -1102,13 +1098,11 @@ void sub_800BF794(MenuCtx* c)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BF8B4);
 
-// near miss: register allocation (context pointer ends up in a1 instead of a2)
-#if 0
 int sub_800BFB10(MenuCtx* c)
 {
-    unsigned short cnt = *(unsigned short*)&c->f8;
-    int n = cnt - 1;
-    if (c->flags_0 & 1)
+    int n = *(unsigned short*)&c->f8 - 1;
+    unsigned short fl = c->flags_0;
+    if (fl & 1)
     {
         if ((short)n != 0)
         {
@@ -1130,26 +1124,22 @@ int sub_800BFB10(MenuCtx* c)
         c->flags_0 &= ~1;
         return 1;
     }
-    if (c->flags_0 & 2)
+    if (fl & 2)
     {
-        unsigned short t = c->f60;
-        unsigned short fl = c->flags_0;
+        c->arr_2A[1] = c->f60;
         c->f58 = 1;
         c->f5A = 1;
         c->f5C = 1;
         c->f5E = 0x10;
         c->f60 = 0;
-        c->arr_2A[1] = t;
-        c->flags_0 = (fl & ~2) | 4;
+        c->flags_0 = (c->flags_0 & ~2) | 4;
         return 1;
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BFB10);
 
 // Not matched: first block: original ORs the flags with a register holding 1 (or v1,v1,v0)
-// and copies fl first; tried n = 1 / r = 1 temporaries (gives ori)
+// and copies fl first; tried n = 1 / r = 1 temporaries, | n, return n (all give ori)
 #if 0
 int sub_800BFBE0(MenuCtx* c)
 {
@@ -1477,12 +1467,10 @@ void sub_800C06E8(MenuCtx* c)
 }
 
 extern char name_800C2660[];
-// near miss: c and s swap their saved registers
-#if 0
 void sub_800C07F0(MenuCtx* c)
 {
-    int s;
     MenuDlg d;
+    int s;
     d = name_800BBB7C;
     s = sub_800C0990(c, 1);
     d.f4 = GetTime30Hz_8002C64C();
@@ -1493,20 +1481,16 @@ void sub_800C07F0(MenuCtx* c)
         d.f0 |= 2;
     else
         d.f0 |= 4;
-    d.f8 = (short)s;
     d.fC = c->arr_2A[0];
+    d.f8 = (short)s;
     DrawMenuWindows_8002A5A4(&d);
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800C07F0);
 
 extern char name_800C2758[];
-// near miss: c and s swap their saved registers
-#if 0
 void sub_800C08C0(MenuCtx* c)
 {
-    int s;
     MenuDlg d;
+    int s;
     d = name_800BBB7C;
     s = sub_800C0990(c, 0x80);
     d.f4 = GetTime30Hz_8002C64C();
@@ -1517,12 +1501,10 @@ void sub_800C08C0(MenuCtx* c)
         d.f0 |= 2;
     else
         d.f0 |= 4;
-    d.f8 = (short)s;
     d.fC = c->arr_2A[2];
+    d.f8 = (short)s;
     DrawMenuWindows_8002A5A4(&d);
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800C08C0);
 
 int sub_800C0990(MenuCtx* o, int m)
 {
