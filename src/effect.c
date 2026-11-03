@@ -254,7 +254,17 @@ void sub_80014588(int* a0, struct_16* a1, unsigned int a2)
     }
     a1->field_C >>= 12;
 }
-void sub_80014638(struct_obj_D* p, int* q);
+typedef struct
+{
+    int pad0[10];
+    int flags;
+    int state;
+    int pad30;
+    int pad34;
+    int idx;
+    int timer;
+} EffectState;
+void sub_80014638(struct_obj_D* p, void* buf);
 // Matched
 void sub_80014618(struct_obj_D* p, int* q)
 {
@@ -263,7 +273,65 @@ void sub_80014618(struct_obj_D* p, int* q)
     q[0x2C / 4] = 0;
     p->field_8 = (void (*)(void))sub_80014638;
 }
-INCLUDE_ASM(sub_80014638);
+extern short dword_800795D0[];
+extern short dword_800795F0[];
+extern void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
+int sub_800147FC(void);
+// Matched
+void sub_80014638(struct_obj_D* p, void* buf)
+{
+    EffectState* q = (EffectState*)buf;
+    int r;
+    int vlc;
+    int img;
+    if (q->timer > 0)
+    {
+        q->timer--;
+    }
+    switch ((unsigned int)q->state)
+    {
+    case 0:
+        if (q->flags & 4)
+        {
+            q->flags &= ~2;
+            q->flags &= ~4;
+            if (q->idx >= 0x46)
+            {
+                q->idx = 0x12;
+            }
+            sub_80020DDC(dword_800795F0[q->idx * 2], dword_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            q->state = 1;
+        }
+        break;
+    case 1:
+        r = sub_80020EBC(dword_80091BD0);
+        if (r == 1 && IsFileRequestQueueIdle_8003BF88() == r)
+        {
+            vlc = dword_80091BD0[0x34 / 4];
+            img = dword_80091BD0[0x38 / 4];
+            q->state = 2;
+            mdecEffectVlcBuffer_8008D42C = (unsigned long*)vlc;
+            decodedImageData_8008B4A0 = (unsigned long*)img;
+        }
+        break;
+    case 2:
+        if (q->flags & 1)
+        {
+            q->flags &= ~1;
+            q->state = 3;
+        }
+        break;
+    case 3:
+        if (sub_800147FC() == 0 && q->timer == 0 && !(q->flags & 2))
+        {
+            sub_80020EE0(dword_80091BD0);
+            unknownFlags_8008D678 &= ~0x800;
+            q->state = 0;
+            q->flags |= 2;
+        }
+        break;
+    }
+}
 // Matched
 int sub_800147FC(void)
 {
