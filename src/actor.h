@@ -23,8 +23,7 @@ typedef struct
     short arg_6;
 } ModelAnimCue;
 
-// loaded model animation (the Model.anims_54 table, 0x1C bytes each; LoadModelAnimData_80026A8C;
-// the shared headers call it struct_28)
+// loaded model animation (the Model.anims_54 table, 0x1C bytes each; LoadModelAnimData_80026A8C)
 typedef struct ModelAnim
 {
     unsigned int frameCount_0;

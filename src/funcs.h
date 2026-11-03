@@ -554,7 +554,11 @@ extern void sub_80023F34(struct FtgPolyF4List* a0, struct FtgPolyF4* s, int a2, 
 extern void sub_80024730(struct FtgPolyGT4List* a0, struct FtgSrcPolyGT4* s, int a2, int a3);
 extern int ConsumeFileRequest_8003BFD0(int key, int flag);
 extern void sub_80028DC0(void);
+extern void ParseModelFile_80025F14(struct ModelLoadParams* a0);
+extern void sub_80026014(struct ModelLoadParams* a0);
+extern void LoadModelTextures_8002607C(struct ModelLoadParams* a0);
 extern void LoadModelFtg_800260FC(struct ModelLoadParams* a0);
+extern void sub_8002659C(struct ModelLoadParams* a0);
 extern void LoadModelAnims_800261C8(struct ModelLoadParams* a0);
 extern void LoadSingleModelAnim_800263CC(struct ModelLoadParams* p);
 extern void LoadModelAnimSetSection_80026410(struct ModelLoadParams* a0);

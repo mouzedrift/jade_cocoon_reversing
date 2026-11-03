@@ -3156,7 +3156,7 @@ int sub_80025974(Model* p, int idx, int flag)
 // Matched
 void sub_80025AB0(Model* p)
 {
-    struct Pool* h = (struct Pool*)p->list_0->heap_4;
+    int h = p->list_0->heap_4;
     if (p->ftg2_68)
     {
         FreeFtgObjects_80021784(&p->ftg2_68, p->ftg2Count_42, h);
@@ -3578,7 +3578,7 @@ int sub_80026724(int* p)
 // Matched
 void AllocModelAnims_80026730(ModelAnim** a0, int a1, int a2)
 {
-    ModelAnim* p = (ModelAnim*)HeapAlloc_8003FC8C(a1 * 28, a2);
+    ModelAnim* p = HeapAlloc_8003FC8C(a1 * 28, (struct Pool*)a2);
     int i;
     *a0 = p;
     for (i = 0; i < a1; i++)

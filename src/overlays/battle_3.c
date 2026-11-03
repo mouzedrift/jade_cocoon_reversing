@@ -1321,7 +1321,7 @@ int sub_800C0BF0()
         int field_48;
         int field_4C;
     } s;
-    void* m;
+    Model* m;
     int k;
     int x;
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
