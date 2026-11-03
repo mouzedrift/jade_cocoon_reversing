@@ -99,7 +99,56 @@ void sub_800A0918()
     p[12] = dword_8007DC74;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A097C);
+extern unsigned short padHeld_800918D0[];
+extern void sub_800A0AB8();
+extern void sub_800A1320();
+extern void sub_800A1354();
+extern void sub_800A13B8();
+extern void sub_800A1468();
+extern void sub_800A15F4();
+extern void sub_800A1804();
+extern void sub_800A194C();
+extern void sub_800A19A4();
+extern void sub_800A1AD0();
+extern void sub_800A1C14();
+void sub_800A097C(int* task, int* c)
+{
+    if (c[0] != 1 && c[0] != 3 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
+        (padHeld_800918D0[0] & 0x90A) == 0x90A)
+    {
+        sub_800A1AD0(c);
+        bStopDrawingMovie_8008D45C = 1;
+        return;
+    }
+    switch (c[0])
+    {
+    case 0:
+        sub_800A0AB8(c);
+        break;
+    case 1:
+        sub_800A1320(c);
+        break;
+    case 2:
+        sub_800A1354(c);
+        break;
+    case 3:
+        sub_800A13B8(c);
+        break;
+    case 4:
+        sub_800A194C(c);
+        sub_800A1C14(c);
+        sub_800A1468(c);
+        sub_800A1804(c);
+        break;
+    case 5:
+        sub_800A15F4(c);
+        sub_800A19A4(c);
+        break;
+    case 6:
+        sub_800A1AD0(c);
+        break;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
 
