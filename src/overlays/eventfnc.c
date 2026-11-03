@@ -390,7 +390,6 @@ int sub_800B8D08(EvCtxEventfnc* c)
     return 1;
 }
 
-#if 0
 extern void sub_800A8E38(void);
 extern void sub_800A785C(int a);
 int sub_800B8DDC(EvCtxEventfnc* c)
@@ -415,8 +414,6 @@ int sub_800B8DDC(EvCtxEventfnc* c)
     c->pc_8++;
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8DDC);
 
 int sub_800B8E9C(EvCtxEventfnc* c)
 {
