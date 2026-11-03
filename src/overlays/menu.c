@@ -195,15 +195,12 @@ extern void sub_800BCFDC();
 extern void sub_800BC2A8();
 extern void sub_800BD1B0();
 extern void sub_800BBF48();
-// near miss: original keeps a second copy of the argument in another saved register
-#if 0
-void sub_800BBE90(MenuTask* t, void* a)
+void sub_800BBE90(MenuTask* t, int a)
 {
-    void* q;
+    int q = a;
     DrawMenuBackground_8002BE10();
     SetFadeMode_8001C19C(3, 0x20);
-    q = a;
-    if (sub_800BD230(a))
+    if (sub_800BD230(q))
     {
         sub_800BCFDC(a);
         t->next_8 = sub_800BD1B0;
@@ -214,8 +211,6 @@ void sub_800BBE90(MenuTask* t, void* a)
         t->next_8 = sub_800BBF48;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BBE90);
 
 extern int sub_800121A8();
 int sub_800BBF10(unsigned char a, unsigned char b)
@@ -538,8 +533,6 @@ void sub_800BD5E4(MenuTask* t, int a)
     t->next_8 = sub_800BD6C8;
 }
 
-// near miss: original has an extra register copy of i / 32
-#if 0
 void sub_800BD634(void)
 {
     int i;
@@ -547,13 +540,13 @@ void sub_800BD634(void)
     {
         if (sub_800BDD94(i) && (unsigned)(i - 0x25) >= 4)
         {
-            int q = i / 32;
-            ((MenuSaveView*)&saveData_8008B570)->flags_814[q] |= 1 << (i - q * 32);
+            int r = i / 32;
+            int q = r;
+            r = i - q * 32;
+            ((MenuSaveView*)&saveData_8008B570)->flags_814[q] |= 1 << r;
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BD634);
 
 void sub_800BD6C8(MenuTask* t, MenuCtx* c)
 {
@@ -595,19 +588,18 @@ int sub_800BDB74(int a)
     return sub_800B32D4(a - 0xC9);
 }
 
-// near miss: a kept in a different register
-#if 0
 int sub_800BDBB8(int a)
 {
     int q = a / 32;
-    return (((MenuSaveView*)&saveData_8008B570)->flags_814[q] & (1 << (a - q * 32))) != 0;
+    int r = a - q * 32;
+    return (((MenuSaveView*)&saveData_8008B570)->flags_814[q] & (1 << r)) != 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BDBB8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BDBFC);
 
-// near miss: 1 word (delay slot of the last return)
+// Not matched: 1 word, the delay slot of the last bnez holds "li v0,1" in the original (the final
+// fall-through returns no value); tried no final return, return;, uninitialised return var (gives
+// move v0,a1), merged conditions, if/else chain into a variable
 #if 0
 int sub_800BDD94(int a)
 {
@@ -1156,7 +1148,8 @@ int sub_800BFB10(MenuCtx* c)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BFB10);
 
-// near miss: register allocation of the flags copy
+// Not matched: first block: original ORs the flags with a register holding 1 (or v1,v1,v0)
+// and copies fl first; tried n = 1 / r = 1 temporaries (gives ori)
 #if 0
 int sub_800BFBE0(MenuCtx* c)
 {
@@ -1281,24 +1274,22 @@ void sub_800BFE18(MenuCtx* c)
 extern void AddClipDrawAreaPrim_80033308();
 extern void sub_800C07F0();
 extern int name_8008D678;
-// near miss: scheduling of the global load vs. prologue
-#if 0
 void sub_800BFEC0(MenuTask* t, int a)
 {
-    if (name_8008D678 < 0)
+    int x;
+    x = a;
+    if (name_8008D678 >= 0)
     {
-        AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
-        sub_800C07F0(a);
-        AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
+        sub_800BFF84(x);
+        t->next_8 = sub_800BD6C8;
     }
     else
     {
-        sub_800BFF84(a);
-        t->next_8 = sub_800BD6C8;
+        AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
+        sub_800C07F0(x);
+        AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BFEC0);
 
 extern int name_800C45D8();
 extern void sub_800BFF84();
@@ -1545,7 +1536,8 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C09B0);
 
 extern int sub_800A5E80();
 extern int sub_800C1000();
-// near miss: compiler turns the tail into a boolean (sltu)
+// Not matched: compiler turns the tail into a boolean (sltu); also tried r = 1 / r = 0 tail,
+// == 0 inverted tests, nested if (r), return r && sub_800C1000()
 #if 0
 int sub_800C0C3C(void* a)
 {
@@ -1613,16 +1605,22 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     }
 }
 
-// near miss: compiler folds the range tests differently
-#if 0
 int sub_800C0DD4(int a)
 {
-    if ((a >= 0 && a < 3) || (a >= 9 && a < 14))
+    switch (a)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+    case 13:
         return 1;
+    }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800C0DD4);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800C0E04);
 
