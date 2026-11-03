@@ -406,12 +406,45 @@ void sub_800335D0(void* pSrc, Minion* m)
     }
     sub_80033754((char*)m + 0x20, m);
 }
-#if 0
-void sub_80033624(void* arg0, int arg1)
+// Matched
+int sub_80033624(void* arg0, int arg1)
 {
+    unsigned char* stats = (unsigned char*)arg1 + 0x2C;
+    unsigned char* ids = (unsigned char*)arg1 + 0x1C;
+    int* tbl[4];
+    int i;
+    int j;
+    int v;
+    int max;
+    tbl[0] = sub_8001CEF4(ids[0]);
+    tbl[1] = sub_8001CFB0(ids[1]);
+    tbl[2] = sub_8001D078(ids[2]);
+    tbl[3] = 0;
+    for (i = 0; i < 6; i++)
+    {
+        v = stats[i];
+        for (j = 0; j < 4; j++)
+        {
+            if (tbl[j])
+            {
+                v += ((signed char*)tbl[j])[i];
+            }
+        }
+        ((unsigned char*)arg0)[i] = v < 0 ? 0 : (v < 100 ? v : 99);
+    }
+    max = 0;
+    for (j = 0; j < 4; j++)
+    {
+        if (tbl[j])
+        {
+            if (max < tbl[j][4])
+            {
+                max = tbl[j][4];
+            }
+        }
+    }
+    return max;
 }
-#endif
-INCLUDE_ASM(sub_80033624);
 // Matched
 void sub_80033754(unsigned char* dst, unsigned char* src)
 {
