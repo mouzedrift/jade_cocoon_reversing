@@ -50,7 +50,7 @@ INCLUDE_OVERLAY_ASM(combstrt, sub_800A4170);
 
 void sub_800A43FC()
 {
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         if (word_800A4BF8 == 0)
         {
@@ -73,11 +73,11 @@ void sub_800A43FC()
 
 void sub_800A4498()
 {
-    if (sub_8003D380(1) && word_800A4BF8 == 1)
+    if (IsConfirmPressedP1_8003D380(1) && word_800A4BF8 == 1)
     {
         byte_800A4C14 = byte_800A4C14 + 1;
     }
-    else if (sub_8003D380(1))
+    else if (IsConfirmPressedP1_8003D380(1))
     {
         byte_800A4C14 = 3;
         word_800A4C94 = 0;
@@ -88,12 +88,12 @@ void sub_800A4498()
 
 void sub_800A4524(CombStrtTask* t)
 {
-    if (sub_8003D380(1) && word_800A4BF8 == 1)
+    if (IsConfirmPressedP1_8003D380(1) && word_800A4BF8 == 1)
     {
         t->next_8 = sub_800A16FC;
         dword_800A3A88 &= ~1;
     }
-    else if (sub_8003D380(1))
+    else if (IsConfirmPressedP1_8003D380(1))
     {
         byte_800A4C14 = 1;
         dword_800A3A88 |= 1;

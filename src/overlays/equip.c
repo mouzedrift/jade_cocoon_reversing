@@ -358,7 +358,7 @@ void sub_800C4D50(EquipCtx_equip* c)
     sub_8003D794(&c->r_34, 0);
     if (c->s_42 >= 8)
     {
-        if (sub_8003D380(0))
+        if (IsConfirmPressedP1_8003D380(0))
         {
             v = tab_800C59B0[c->idx_1A + 1];
             if (v != -1)
@@ -370,7 +370,7 @@ void sub_800C4D50(EquipCtx_equip* c)
                 c->field_28 = 1;
             }
         }
-        else if (sub_8003D41C(1))
+        else if (IsCancelPressedP1_8003D41C(1))
         {
             c->field_2C = 1;
         }
@@ -494,7 +494,7 @@ void sub_800C51B0(EquipCtx_equip* c)
         sub_800C5064(c);
         break;
     }
-    if (sub_8003D480() && c->mode_1C == 0 && sub_800AD990(c->sel_18) != 0xff)
+    if (IsCircleHeldP1_8003D480() && c->mode_1C == 0 && sub_800AD990(c->sel_18) != 0xff)
     {
         c->flags_44 |= 4;
     }
@@ -502,7 +502,7 @@ void sub_800C51B0(EquipCtx_equip* c)
     {
         c->flags_44 &= ~4;
     }
-    if (sub_8003D480() && c->mode_1C == 1 && c->s_40 != 0xff)
+    if (IsCircleHeldP1_8003D480() && c->mode_1C == 1 && c->s_40 != 0xff)
     {
         c->flags_44 |= 2;
     }

@@ -73,7 +73,7 @@ int sub_8003D210(int limit, int pos, int step, int idx)
     return pos;
 }
 // Matched
-int sub_8003D288(int flag, int idx)
+int IsConfirmPressed_8003D288(int flag, int idx)
 {
     int r = 0;
     unsigned int x;
@@ -103,17 +103,17 @@ end:
     return r;
 }
 // Matched
-int sub_8003D380(int a0)
+int IsConfirmPressedP1_8003D380(int a0)
 {
-    return sub_8003D288(a0, 0);
+    return IsConfirmPressed_8003D288(a0, 0);
 }
 // Matched
-int sub_8003D3A0(int a0)
+int IsConfirmPressedP2_8003D3A0(int a0)
 {
-    return sub_8003D288(a0, 1);
+    return IsConfirmPressed_8003D288(a0, 1);
 }
 // Matched
-int sub_8003D3C0(int arg0, int arg1)
+int IsCancelPressed_8003D3C0(int arg0, int arg1)
 {
     int r = 0;
     unsigned short x = padPressed_8009194C[arg1];
@@ -128,30 +128,30 @@ int sub_8003D3C0(int arg0, int arg1)
     return r;
 }
 // Matched
-int sub_8003D41C(int a0)
+int IsCancelPressedP1_8003D41C(int a0)
 {
-    return sub_8003D3C0(a0, 0);
+    return IsCancelPressed_8003D3C0(a0, 0);
 }
 // Matched
-int sub_8003D43C(int a0)
+int IsCancelPressedP2_8003D43C(int a0)
 {
-    return sub_8003D3C0(a0, 1);
+    return IsCancelPressed_8003D3C0(a0, 1);
 }
 // Matched
-int sub_8003D45C(int idx)
+int IsCircleHeld_8003D45C(int idx)
 {
     unsigned int f = padHeld_800918D0[idx] & 0x20;
     return f != 0;
 }
 // Matched
-int sub_8003D480(void)
+int IsCircleHeldP1_8003D480(void)
 {
-    return sub_8003D45C(0);
+    return IsCircleHeld_8003D45C(0);
 }
 // Matched
-int sub_8003D4A0(void)
+int IsCircleHeldP2_8003D4A0(void)
 {
-    return sub_8003D45C(1);
+    return IsCircleHeld_8003D45C(1);
 }
 // Matched
 int sub_8003D4C0(short* m, int idx)

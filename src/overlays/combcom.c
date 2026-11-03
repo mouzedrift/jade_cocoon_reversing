@@ -149,7 +149,7 @@ void sub_800CBA20(int a)
     {
         dword_800CD41C[0] = 4;
     }
-    dword_800CD41C[1] = sub_8002C64C();
+    dword_800CD41C[1] = GetTime30Hz_8002C64C();
     if (dword_800CD41C[2] < 8)
     {
         dword_800CD41C[2]++;

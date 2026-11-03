@@ -64,8 +64,8 @@ extern int dword_800C5944;
 extern Bytes8Config dword_800C4CD4[];
 extern char dword_800C592C[];
 extern void sub_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
-extern int sub_8003D380(int a);
-extern int sub_8003D41C(int a);
+extern int IsConfirmPressedP1_8003D380(int a);
+extern int IsCancelPressedP1_8003D41C(int a);
 extern void PlaySfx_80031494(int a);
 extern int* dword_800C4CC0[];
 extern char dword_800C2D40[];
@@ -103,7 +103,7 @@ extern unsigned short uiColor_8008B590;
 extern void sub_8002A5A4(CfgDlgConfig* p);
 extern void sub_8002C06C(void* p, int a, short b);
 extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
-extern unsigned int sub_8002C64C(void);
+extern unsigned int GetTime30Hz_8002C64C(void);
 extern char dword_800C5298[];
 extern char dword_800C52BC[];
 extern char dword_800C52E0[];
@@ -358,12 +358,12 @@ void sub_800C3540(CfgCtxConfig* c)
     case 0:
         if (dword_800C5944 != 0)
         {
-            if (sub_8003D380(1))
+            if (IsConfirmPressedP1_8003D380(1))
             {
                 c->cur_4 = c->f44 + 1;
                 c->f6 = c->f44;
             }
-            else if (sub_8003D41C(1))
+            else if (IsCancelPressedP1_8003D41C(1))
             {
                 c->cur_4 = 5;
             }
@@ -372,12 +372,12 @@ void sub_800C3540(CfgCtxConfig* c)
     case 1:
         if (dword_800C5944 != 0)
         {
-            if (sub_8003D380(1))
+            if (IsConfirmPressedP1_8003D380(1))
             {
                 dword_8008B4B8->t_10.next_8 = sub_800C45E8;
                 c->f38 = 1;
             }
-            else if (sub_8003D41C(1))
+            else if (IsCancelPressedP1_8003D41C(1))
             {
                 sub_800C3060(c);
                 c->cur_4 = 0;
@@ -388,7 +388,7 @@ void sub_800C3540(CfgCtxConfig* c)
     case 2:
         if (dword_800C5944 != 0)
         {
-            if (sub_8003D380(0))
+            if (IsConfirmPressedP1_8003D380(0))
             {
                 if (c->f14 == 0 && (unsigned short)(c->f44 - 2) < 2)
                 {
@@ -409,7 +409,7 @@ void sub_800C3540(CfgCtxConfig* c)
                     PlaySfx_80031494(0x7E);
                 }
             }
-            else if (sub_8003D41C(1))
+            else if (IsCancelPressedP1_8003D41C(1))
             {
                 sub_800C3060(c);
                 c->cur_4 = 0;
@@ -421,11 +421,11 @@ void sub_800C3540(CfgCtxConfig* c)
         if (dword_800C5944 != 0)
         {
             c->ff = c->f44;
-            if (sub_8003D380(1))
+            if (IsConfirmPressedP1_8003D380(1))
             {
                 sub_800C31DC(c);
             }
-            else if (sub_8003D41C(1))
+            else if (IsCancelPressedP1_8003D41C(1))
             {
                 sub_800C3060(c);
                 c->cur_4 = 0;
@@ -436,12 +436,12 @@ void sub_800C3540(CfgCtxConfig* c)
     case 4:
         if (dword_800C5944 != 0)
         {
-            if (sub_8003D380(1))
+            if (IsConfirmPressedP1_8003D380(1))
             {
                 dword_8008B4B8->t_10.next_8 = sub_800C45E8;
                 c->f38 = 1;
             }
-            else if (sub_8003D41C(1))
+            else if (IsCancelPressedP1_8003D41C(1))
             {
                 sub_800C3060(c);
                 c->cur_4 = 0;
@@ -511,7 +511,7 @@ void sub_800C38CC(CfgCtxConfig* c)
     CfgDlgConfig cfg;
     CfgBoxConfig b;
     cfg = dword_800C2CD0;
-    cfg.f4 = sub_8002C64C();
+    cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = c->f44;
     cfg.f10 = (int)dword_800C4DDC;
     sub_8002A5A4(&cfg);
@@ -541,16 +541,16 @@ void sub_800C39C4(CfgCtxConfig* c)
     b = dword_800C2CE8;
     d = dword_800C2CE8;
     e = dword_800C2CE8;
-    a.f4 = sub_8002C64C();
+    a.f4 = GetTime30Hz_8002C64C();
     a.fC = c->f44;
     a.f10 = (int)dword_800C4E98;
-    b.f4 = sub_8002C64C();
+    b.f4 = GetTime30Hz_8002C64C();
     b.fC = dword_8008B570.f_1C / 16;
     b.f10 = (int)dword_800C5298;
-    d.f4 = sub_8002C64C();
+    d.f4 = GetTime30Hz_8002C64C();
     d.fC = dword_8008B570.g_1C / 16;
     d.f10 = (int)dword_800C52BC;
-    e.f4 = sub_8002C64C();
+    e.f4 = GetTime30Hz_8002C64C();
     e.fC = c->fc;
     e.f10 = (int)dword_800C52E0;
     ApplyBgmVolume_800309D8(&stru_80091CE0);
@@ -634,29 +634,29 @@ void sub_800C3CA4(CfgCtxConfig* c)
     b5 = dword_800C2CE8;
     b6 = dword_800C2CE8;
     b7 = dword_800C2CE8;
-    a.f4 = sub_8002C64C();
+    a.f4 = GetTime30Hz_8002C64C();
     a.fC = c->f44;
     t = dword_800C5474;
     a.f10 = (int)t;
-    b1.f4 = sub_8002C64C();
+    b1.f4 = GetTime30Hz_8002C64C();
     b1.fC = c->f8;
     b1.f10 = (int)dword_800C5574;
-    b2.f4 = sub_8002C64C();
+    b2.f4 = GetTime30Hz_8002C64C();
     b2.fC = (*(unsigned int*)&c->f8 & 0xFFFF00) != 0;
     b2.f10 = (int)dword_800C55F8;
-    b3.f4 = sub_8002C64C();
+    b3.f4 = GetTime30Hz_8002C64C();
     b3.fC = c->f11;
     b3.f10 = (int)dword_800C5674;
-    b4.f4 = sub_8002C64C();
+    b4.f4 = GetTime30Hz_8002C64C();
     b4.fC = c->fb;
     b4.f10 = (int)dword_800C56F0;
-    b5.f4 = sub_8002C64C();
+    b5.f4 = GetTime30Hz_8002C64C();
     b5.fC = c->f10;
     b5.f10 = (int)dword_800C576C;
-    b6.f4 = sub_8002C64C();
+    b6.f4 = GetTime30Hz_8002C64C();
     b6.fC = c->f13;
     b6.f10 = (int)dword_800C57E8;
-    b7.f4 = sub_8002C64C();
+    b7.f4 = GetTime30Hz_8002C64C();
     b7.fC = c->f14;
     b7.f10 = (int)dword_800C5864;
     if (c->f38)
@@ -814,10 +814,10 @@ void sub_800C4390(CfgCtxConfig* c)
     CfgBoxConfig box;
     a = dword_800C2CE8;
     b = dword_800C2CE8;
-    a.f4 = sub_8002C64C();
+    a.f4 = GetTime30Hz_8002C64C();
     a.fC = 0;
     a.f10 = (int)dword_800C58A8;
-    b.f4 = sub_8002C64C();
+    b.f4 = GetTime30Hz_8002C64C();
     b.fC = c->f12;
     b.f10 = (int)dword_800C5920;
     if (c->f38)
@@ -1086,13 +1086,13 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         }
         c->f12 = v10.f6;
     }
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         sub_800C31DC(c);
         t->next_8 = sub_800C2F70;
         c->f38 = 0;
     }
-    else if (sub_8003D41C(1))
+    else if (IsCancelPressedP1_8003D41C(1))
     {
         dword_8008B570.f_1C = c->f15 * 16;
         dword_8008B570.g_1C = c->f16 * 16;
@@ -1109,7 +1109,7 @@ void sub_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
     sub_8002BE10();
     sub_800C383C(c);
     sub_800C4BDC((short)c->f30);
-    if (c->f34 >= 0x96 || sub_8003D380(0) || sub_8003D41C(0))
+    if (c->f34 >= 0x96 || IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
     {
         PlaySfx_80031494(0x7D);
         t->next_8 = sub_800C2F70;

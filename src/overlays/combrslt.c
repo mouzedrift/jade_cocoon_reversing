@@ -52,7 +52,7 @@ void sub_800A40E0(CombRsltTask* t)
     }
     sub_8002BE10();
     sub_8002B004(dword_80082680, 0, 0xF);
-    if (sub_8003D380(1) || sub_8003D41C(1))
+    if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
     {
         sub_8001C19C(1, 0x20);
         t->next_8 = sub_800A41E4;
@@ -107,12 +107,12 @@ void sub_800A4240(int i)
     }
     box.col_0 = uiColor_8008B590;
     box.c_3 = 1;
-    sub_8002ADB4(dword_800A4830[i], &box, 0xF, sub_8002C64C());
-    sub_8002ADB4(dword_800A4870[i], &box, 0xF, sub_8002C64C());
+    sub_8002ADB4(dword_800A4830[i], &box, 0xF, GetTime30Hz_8002C64C());
+    sub_8002ADB4(dword_800A4870[i], &box, 0xF, GetTime30Hz_8002C64C());
     pos[0] = dword_800A48B0[i][8];
     pos[1] = dword_800A48B0[i][9];
     sub_800A444C(pos, 0xF, byte_800A3A90[i ^ 1], byte_800A3A90[i]);
-    sub_8002ADB4(dword_800A48B0[i], &box, 0xF, sub_8002C64C());
+    sub_8002ADB4(dword_800A48B0[i], &box, 0xF, GetTime30Hz_8002C64C());
     j = 0;
     u = byte_800A3A98[i];
     if (u < 3 && u != 0)
@@ -216,7 +216,7 @@ void sub_800A4554(int i, int j, void* arg)
         q = dword_800A48C4 + j + i * 3;
         a.x_10 = q->x;
         a.y_12 = q->y;
-        sub_8002ADB4(&a, arg, 0xF, sub_8002C64C());
+        sub_8002ADB4(&a, arg, 0xF, GetTime30Hz_8002C64C());
         b = dword_800A40C4;
         b.x_10 = q->x + 0x32;
         b.y_12 = q->y;
@@ -227,7 +227,7 @@ void sub_800A4554(int i, int j, void* arg)
             sub_8002F078(e + 0x84, &r1, 0, 0xF);
             b.s_2 = 0;
         }
-        sub_8002ADB4(&b, arg, 0xF, sub_8002C64C());
+        sub_8002ADB4(&b, arg, 0xF, GetTime30Hz_8002C64C());
         r2.x = q->x;
         r2.y = q->y + 0x14;
         sub_800A1844(e, &r2, a.flags_0);
@@ -235,7 +235,7 @@ void sub_800A4554(int i, int j, void* arg)
         r3[0].y = q->y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
-        sub_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, sub_8002C64C());
+        sub_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, GetTime30Hz_8002C64C());
     }
 }
 #endif

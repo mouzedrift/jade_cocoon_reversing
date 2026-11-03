@@ -117,7 +117,7 @@ extern short word_800A5980;
 
 void sub_800A4E94(CombSelTask* t, int a)
 {
-    if (sub_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
         switch (word_800A1BC4)
         {
@@ -158,7 +158,7 @@ void sub_800A4E94(CombSelTask* t, int a)
             break;
         }
     }
-    else if (sub_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
         switch (byte_800A38D9)
         {
@@ -211,7 +211,7 @@ extern char dword_800A5960[];
 
 void sub_800A5188()
 {
-    if (sub_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
         switch (word_800A1BC4)
         {
@@ -238,7 +238,7 @@ void sub_800A5188()
             break;
         }
     }
-    else if (sub_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
         switch (word_800A1BC4)
         {
@@ -255,7 +255,7 @@ void sub_800A5188()
 void sub_800A53B0()
 {
     short s;
-    if (sub_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
         s = word_800A1BC4;
         if (s == 1)
@@ -272,7 +272,7 @@ void sub_800A53B0()
             }
         }
     }
-    else if (sub_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
         byte_800A38DB = 0;
         if (sub_800A1AAC(byte_800A38D9))
@@ -284,7 +284,7 @@ void sub_800A53B0()
 
 void sub_800A54A0(CombSelTask* t)
 {
-    if (sub_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
         PlaySfx_80031494(0x7E);
         if ((short)sub_8003DA54(dword_800A5978) == 0)
@@ -297,7 +297,7 @@ void sub_800A54A0(CombSelTask* t)
             byte_800A38DB = 0;
         }
     }
-    else if (sub_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
         byte_800A38DB = 0;
     }

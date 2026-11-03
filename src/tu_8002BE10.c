@@ -142,7 +142,7 @@ void sub_8002C5D0(int a0)
     } while (i < 0x8e);
 }
 // Matched
-unsigned int sub_8002C64C(void)
+unsigned int GetTime30Hz_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
 }

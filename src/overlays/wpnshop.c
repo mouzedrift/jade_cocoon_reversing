@@ -62,7 +62,7 @@ extern void sub_8002B004(void* p, int a, int b);
 extern void sub_8002BE10();
 extern void sub_8002A4E4(int a);
 extern void sub_8001C19C(int a, int b);
-extern unsigned int sub_8002C64C(void);
+extern unsigned int GetTime30Hz_8002C64C(void);
 extern void sub_8002A5A4(WpnDlg_wpnshop* p);
 extern char name_800826B0[];
 extern char name_80082680[];
@@ -109,7 +109,7 @@ extern void sub_8002E288(int a0, int a1, int a2, void* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
 #define f_26 f_20[3]
-extern int sub_8003D480(void);
+extern int IsCircleHeldP1_8003D480(void);
 extern char name_800BEBC4[];
 extern char name_800BEBC8[];
 extern char name_800BEBCC[];
@@ -199,8 +199,8 @@ extern void sub_800AD9EC(int a, int b);
 extern void sub_800BBDD0();
 extern void sub_800BB664();
 extern void sub_800BB30C();
-extern int sub_8003D380(int a);
-extern int sub_8003D41C(int a);
+extern int IsConfirmPressedP1_8003D380(int a);
+extern int IsCancelPressedP1_8003D41C(int a);
 extern unsigned short padPressed_8009194C;
 extern void sub_800BD1A8();
 extern void sub_800BD278();
@@ -501,11 +501,11 @@ void sub_800BB664(WpnObj_wpnshop* o)
 {
     if (o->f_48 == 8 && !(o->f_4 & 1))
     {
-        if (sub_8003D380(0))
+        if (IsConfirmPressedP1_8003D380(0))
         {
             o->f_40 = 1;
         }
-        else if (sub_8003D41C(0))
+        else if (IsCancelPressedP1_8003D41C(0))
         {
             o->f_44 = 1;
         }
@@ -699,7 +699,7 @@ void sub_800BB950(WpnObj_wpnshop* o)
     if (p)
     {
         p = 0;
-        if (sub_8003D480())
+        if (IsCircleHeldP1_8003D480())
         {
             pos.x = 0xA;
             pos.y = 0x12;
@@ -919,7 +919,7 @@ void sub_800BC194(WpnObj_wpnshop* o)
 {
     WpnDlg_wpnshop cfg;
     cfg = name_800BADF0;
-    cfg.f4 = sub_8002C64C();
+    cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = o->f_30;
     cfg.f10 = (int)name_800BEAFC;
     sub_8002A5A4(&cfg);
@@ -941,7 +941,7 @@ void sub_800BC268(WpnObj_wpnshop* o)
 {
     WpnDlg_wpnshop cfg;
     cfg = name_800BADF0;
-    cfg.f4 = sub_8002C64C();
+    cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = o->f_30;
     cfg.f10 = (int)name_800BEBB4;
     sub_8002A5A4(&cfg);

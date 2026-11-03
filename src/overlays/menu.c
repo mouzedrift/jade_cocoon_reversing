@@ -119,8 +119,8 @@ extern void sub_800BD80C();
 
 extern int sub_800AD7F8();
 extern MenuQ name_800C1E98[];
-extern int sub_8003D380();
-extern int sub_8003D41C();
+extern int IsConfirmPressedP1_8003D380();
+extern int IsCancelPressedP1_8003D41C();
 
 extern int sub_800BFB10();
 extern int sub_800BFBE0();
@@ -313,7 +313,7 @@ void sub_800BC9E8(MenuPad* p)
             {
                 if (p->f0 & (1 << n))
                 {
-                    if (sub_8003D380(1) || sub_8003D41C(1))
+                    if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
                         p->f0 |= 0x40;
                     return;
                 }
@@ -325,7 +325,7 @@ void sub_800BC9E8(MenuPad* p)
             s = i;
             if (p->arr_5C[s] > 0)
             {
-                if (sub_8003D380(1) || sub_8003D41C(1))
+                if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
                 {
                     int f = p->f0;
                     if (f & 0x20)
@@ -401,7 +401,7 @@ void sub_800BD1B0(MenuTask* t)
     p += 4;
     if (f != 1)
         t->next_8 = sub_800BBF48;
-    if (sub_8003D380(1) || sub_8003D41C(1))
+    if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
         sub_80034A84(p);
 }
 
@@ -1099,7 +1099,7 @@ void sub_800BF794(MenuCtx* c)
     {
         int r = (short)name_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
         sub_8002AF10(&name_800C1E98[r], 0, 0xE);
-        if (!sub_8003D380(0) && !sub_8003D41C(0))
+        if (!IsConfirmPressedP1_8003D380(0) && !IsCancelPressedP1_8003D41C(0))
             return;
         PlaySfx_80031494(0x7D);
     }
@@ -1221,7 +1221,7 @@ void sub_800BFCA8(MenuCtx* c)
     }
     if (c->f28 >= 8)
     {
-        if (sub_8003D380(0))
+        if (IsConfirmPressedP1_8003D380(0))
         {
             if (c->sel_2 == 0x10 && c->f60 == 1)
             {
@@ -1234,7 +1234,7 @@ void sub_800BFCA8(MenuCtx* c)
                 c->f18 = 1;
             }
         }
-        else if (sub_8003D41C(1))
+        else if (IsCancelPressedP1_8003D41C(1))
         {
             c->f1C = 1;
         }
@@ -1402,7 +1402,7 @@ void sub_800C0428(MenuCtx* c)
     int found = 0;
     int sum = (unsigned short)c->arr_2A[3] + (unsigned short)c->arr_46[0];
     int is = c->sel_2 == 1;
-    if (sub_8003D480() && is && c->f24 == 0)
+    if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
     {
         int r = name_800AD288((short)sum, found);
         if (r < 0x2B)
@@ -1451,7 +1451,7 @@ void sub_800C05E0(MenuCtx* c)
     int found = 0;
     int sum = (unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1];
     int is = c->sel_2 == 0xE;
-    if (sub_8003D480() && is && c->f24 == 0)
+    if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
     {
         int r = (short)sub_800AD7F8((short)sum);
         if (r < 0x26)
@@ -1472,7 +1472,7 @@ void sub_800C06E8(MenuCtx* c)
     int sum = (unsigned short)c->arr_2A[7] + (unsigned short)c->arr_46[2];
     char* m = (char*)GetMinion_80010598(3, c->arr_2A[1]);
     int is = c->sel_2 == 4;
-    if (sub_8003D480() && is && c->f24 == 0)
+    if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
     {
         int r = name_8001AEC0(m + 0xF4, (short)sum);
         if (r < 0x1E)
@@ -1494,7 +1494,7 @@ void sub_800C07F0(MenuCtx* c)
     MenuDlg d;
     d = name_800BBB7C;
     s = sub_800C0990(c, 1);
-    d.f4 = sub_8002C64C();
+    d.f4 = GetTime30Hz_8002C64C();
     d.f8 = (short)s;
     d.f10 = (int)name_800C2660;
     d.f0 &= ~7;
@@ -1518,7 +1518,7 @@ void sub_800C08C0(MenuCtx* c)
     MenuDlg d;
     d = name_800BBB7C;
     s = sub_800C0990(c, 0x80);
-    d.f4 = sub_8002C64C();
+    d.f4 = GetTime30Hz_8002C64C();
     d.f8 = (short)s;
     d.f10 = (int)name_800C2758;
     d.f0 &= ~7;

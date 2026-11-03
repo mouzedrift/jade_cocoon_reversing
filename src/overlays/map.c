@@ -585,7 +585,7 @@ void sub_800B860C()
             m[1] = a + 1;
         }
         m[1] = m[1] < 0 ? 0 : m[1] < 6 ? m[1] : 5;
-        if (sub_8003D380(1) == 1)
+        if (IsConfirmPressedP1_8003D380(1) == 1)
         {
             m[0]++;
         }
@@ -617,11 +617,11 @@ void sub_800B860C()
             m[2] = b + 1;
         }
         m[2] = m[2] < 0 ? 0 : (dword_800B0624[m[1]] - 1 < m[2] ? dword_800B0624[m[1]] - 1 : m[2]);
-        if (sub_8003D380(1) == 1)
+        if (IsConfirmPressedP1_8003D380(1) == 1)
         {
             m[0]++;
         }
-        else if (sub_8003D41C(1) == 1)
+        else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
             m[2] = 0;
             m[0]--;
@@ -664,7 +664,7 @@ void sub_800B860C()
             } while (p->id != -1);
         }
         m[3] = m[3] < 0 ? 0 : (n - 1 < m[3] ? n - 1 : m[3]);
-        if (sub_8003D380(1) == 1)
+        if (IsConfirmPressedP1_8003D380(1) == 1)
         {
             MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
             short fl = dword_800B93F8[m[1]];
@@ -685,7 +685,7 @@ void sub_800B860C()
         }
         else
         {
-            if (sub_8003D41C(1) == 1)
+            if (IsCancelPressedP1_8003D41C(1) == 1)
             {
                 m[3] = 0;
                 m[0]--;
@@ -729,7 +729,7 @@ void sub_800B8B5C()
         dword_800B9438++;
     }
     *sel = *sel < 0 ? 0 : *sel < 7 ? *sel : 6;
-    r = sub_8003D380(1);
+    r = IsConfirmPressedP1_8003D380(1);
     if (r == 1)
     {
         MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
@@ -738,7 +738,7 @@ void sub_800B8B5C()
         sub_800A6D30(0);
         eventDispatchHalt_8008B540 = r;
     }
-    sub_8003D41C(1);
+    IsCancelPressedP1_8003D41C(1);
     a.x = 0x6E;
     a.y = 0x78;
     b.x = 0x78;

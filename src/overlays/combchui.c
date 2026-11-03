@@ -47,8 +47,8 @@ extern CombChuiWin dword_80082784;
 extern CombChuiPos dword_80082708;
 extern CombChuiPos dword_80082740;
 extern void sub_8003D794(void*, int);
-extern int sub_8003D380(int);
-extern int sub_8003D41C(int);
+extern int IsConfirmPressedP1_8003D380(int);
+extern int IsCancelPressedP1_8003D41C(int);
 extern int sub_8003DA54(void*);
 extern void sub_8002A5A4(void*);
 extern void sub_8002BE10();
@@ -64,7 +64,7 @@ void sub_800A4394(CombChuiTask* t, int a)
     {
         dword_800A45B0.sel_8 = 1;
     }
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         if ((short)sub_8003DA54(&dword_800A45B0) == 0)
         {
@@ -77,7 +77,7 @@ void sub_800A4394(CombChuiTask* t, int a)
         t->next_8 = sub_800A16FC;
         t->next_8(t, a);
     }
-    else if (sub_8003D41C(1))
+    else if (IsCancelPressedP1_8003D41C(1))
     {
         byte_800A38D8 = 0;
         t->next_8 = sub_800A16FC;
@@ -91,7 +91,7 @@ void sub_800A4394(CombChuiTask* t, int a)
         c = 0xC8;
         rect[3] = c;
         sub_800A450C(dword_800A45BC, rect);
-        dword_80082784.f4 = sub_8002C64C();
+        dword_80082784.f4 = GetTime30Hz_8002C64C();
         dword_80082784.f8 = 8;
         dword_80082784.f14 = 0;
         dword_80082708.x_10 = 0x72;

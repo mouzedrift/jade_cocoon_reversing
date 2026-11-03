@@ -468,7 +468,7 @@ void sub_800A1310(TitleTask* t, TitleCtxB* c)
     }
     sub_800A1760(c, c->field_24, c->field_0);
     c->field_0 = c->field_0 + 1;
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         dword_800A2814 = 0;
         off_800A27E8[c->field_24](t, c);
@@ -483,7 +483,7 @@ void sub_800A1310(TitleTask* t, TitleCtxB* c)
             }
         }
     }
-    else if (sub_8003D41C(1))
+    else if (IsCancelPressedP1_8003D41C(1))
     {
         dword_800A2814 = 0;
         t->next_8 = sub_800A1070;
@@ -570,7 +570,7 @@ void sub_800A158C(TitleTask* t)
     r3.x = 0x10;
     r3.y = 0x8A;
     sub_8003E91C(2, str_800A0640, &r3, 0);
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         t->next_8 = sub_800A1310;
         sub_800A1B74(t);
@@ -618,7 +618,7 @@ void sub_800A166C(TitleTaskM* t)
     r3.x = 0x10;
     r3.y = 0x7A;
     sub_8003E91C(2, dword_800A069C, &r3, 0);
-    if (sub_8003D380(1))
+    if (IsConfirmPressedP1_8003D380(1))
     {
         t->fn_8 = sub_800A1310;
         sub_800A1B74(t);
@@ -678,7 +678,7 @@ void sub_800A1780(TitleTaskM* t, int x)
     ptrs[1] = &b1;
     ptrs[2] = &b2;
     ptrs[3] = &b3;
-    cfg.f4 = sub_8002C64C();
+    cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = x;
     cfg.f10 = (int)ptrs;
     sub_8002A5A4(&cfg);

@@ -1347,7 +1347,7 @@ INCLUDE_OVERLAY_ASM(shop, sub_800BC1A8);
 
 void sub_800BC2DC(ShopUnit3Shop* u)
 {
-    if (sub_8003D380(0) || sub_8003D41C(0))
+    if (IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
     {
         int fl = u->field_24;
         if ((fl & 0x400) && u->field_0 == 3 && (fl & 2))
@@ -1435,7 +1435,7 @@ INCLUDE_OVERLAY_ASM(shop, dword_800B9608);
 void sub_800BCEDC(ShopUnit3Shop* u)
 {
     ShopSixShop q = name_800B9608;
-    q.w1 = sub_8002C64C();
+    q.w1 = GetTime30Hz_8002C64C();
     q.w4 = (int)name_800C07D4;
     q.w0 = (q.w0 & ~7) | 2;
     q.w3 = u->field_30;
@@ -1889,7 +1889,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
             *(int*)(c + 0x140) -= 0x40;
         }
     }
-    if (sub_8003D41C(1))
+    if (IsCancelPressedP1_8003D41C(1))
     {
         sub_800BF750();
         unknownFlags_8008D678 &= ~0x10000;

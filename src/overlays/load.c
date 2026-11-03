@@ -137,8 +137,8 @@ typedef struct
     char pad32_LOAD[0x22];
     unsigned f54_LOAD;
 } LoadTask_LOAD;
-extern int sub_8003D288(int a, int b);
-extern int sub_8003D3C0(int a, int b);
+extern int IsConfirmPressed_8003D288(int a, int b);
+extern int IsCancelPressed_8003D3C0(int a, int b);
 extern void sub_800BD18C(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
@@ -383,7 +383,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
 
 void sub_800B9220(LoadTask_LOAD* t)
 {
-    if (sub_8003D288(1, (t->f54_LOAD >> 6) & 1))
+    if (IsConfirmPressed_8003D288(1, (t->f54_LOAD >> 6) & 1))
     {
         switch (byte_800BDF58)
         {
@@ -399,7 +399,7 @@ void sub_800B9220(LoadTask_LOAD* t)
             break;
         }
     }
-    else if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    else if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         t->f28_LOAD = 5;
     }
@@ -409,13 +409,13 @@ void sub_800B9220(LoadTask_LOAD* t)
 // Not matched: only a dead byte load (lbu $v1) of the options struct in the prologue is missing
 void sub_800B92C0(LoadTask_LOAD* t)
 {
-    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
         PlaySfx_80031494(0x7E);
         sub_800BADF4();
         t->f24_LOAD = 0x12;
     }
-    else if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    else if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         if (t->f54_LOAD & 0x24)
         {
@@ -485,11 +485,11 @@ void sub_800B9470(LoadTask_LOAD* t)
     {
         t->f24_LOAD = 1;
     }
-    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         t->f24_LOAD = 1;
     }
-    if (sub_8003D288(1, (t->f54_LOAD >> 6) & 1))
+    if (IsConfirmPressed_8003D288(1, (t->f54_LOAD >> 6) & 1))
     {
         if (dword_800BDF4C.f2C_LOAD == 0)
         {
@@ -505,11 +505,11 @@ void sub_800B9470(LoadTask_LOAD* t)
 void sub_800B952C(LoadTask_LOAD* t)
 {
     int n = dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD;
-    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         t->f24_LOAD = 1;
     }
-    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
         if (dword_800BDF4C.fC_LOAD == 1)
         {
@@ -555,11 +555,11 @@ void sub_800B952C(LoadTask_LOAD* t)
 
 void sub_800B9654(LoadTask_LOAD* t)
 {
-    if (sub_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
+    if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         t->f24_LOAD = 3;
     }
-    if (sub_8003D288(0, (t->f54_LOAD >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
         if (dword_800BDF4C.f4C_LOAD == 0)
         {

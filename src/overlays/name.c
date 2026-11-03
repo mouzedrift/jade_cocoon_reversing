@@ -120,7 +120,7 @@ void sub_800B7D60(NameEntry* p)
 
 void sub_800B7DC4(NameEntry* p)
 {
-    if (sub_8003D380(0))
+    if (IsConfirmPressedP1_8003D380(0))
     {
         if (p->field_C >= 2)
         {
@@ -132,7 +132,7 @@ void sub_800B7DC4(NameEntry* p)
         }
         p->pad_A = p->field_C;
     }
-    if (sub_8003D41C(0))
+    if (IsCancelPressedP1_8003D41C(0))
     {
         p->field_8 = 0;
         p->field_C = p->pad_E;

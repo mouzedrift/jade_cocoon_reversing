@@ -44,7 +44,7 @@ extern CombLoadDlg dword_800A47D4;
 extern int sub_800BAE24(int);
 extern void sub_800BB4A8(int);
 extern void sub_8003D794(void*, int);
-extern int sub_8003D380(int);
+extern int IsConfirmPressedP1_8003D380(int);
 extern void sub_8002A5A4(void*);
 extern void sub_800A4364();
 extern void sub_800A4420();
@@ -129,7 +129,7 @@ void sub_800A41FC(CombLoadTask* t)
         {
             sub_800BB4A8(dword_800A468C[0].f8);
             sub_8003D794(&dword_800A468C[0], 0);
-            if (sub_8003D380(1))
+            if (IsConfirmPressedP1_8003D380(1))
             {
                 dword_800A47F0 = 1;
             }
@@ -138,7 +138,7 @@ void sub_800A41FC(CombLoadTask* t)
     case 1:
         sub_800A4420();
         sub_800A44DC();
-        dword_800A47D4.f4 = sub_8002C64C();
+        dword_800A47D4.f4 = GetTime30Hz_8002C64C();
         dword_800A47D4.fC = dword_800A4698.f8;
         sub_8002A5A4(&dword_800A47D4);
         sub_8003D794(&dword_800A4698, 0);

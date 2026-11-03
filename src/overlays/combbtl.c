@@ -388,12 +388,12 @@ void sub_800A5290(CombBtlTask* t)
     box.c_2 = 1;
     box.c_3 = 1;
     box.col_0 = ui_8008B570.col_20;
-    sub_8002ADB4(&a, &box, 0xF, sub_8002C64C());
+    sub_8002ADB4(&a, &box, 0xF, GetTime30Hz_8002C64C());
     b = dword_800A4A70;
     box.c_2 = 1;
     box.c_3 = 1;
     box.col_0 = ui_8008B570.col_20;
-    sub_8002ADB4(&b, &box, 0xF, sub_8002C64C());
+    sub_8002ADB4(&b, &box, 0xF, GetTime30Hz_8002C64C());
     if (dword_800A82DC == 0 || (dword_800A82DC->flags & 0x8001) != 1)
     {
         dword_800A82DC = 0;

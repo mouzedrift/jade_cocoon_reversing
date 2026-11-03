@@ -3082,7 +3082,7 @@ void sub_800C7CE8(unsigned char a)
     {
         dword_800C9630.f0 = 4;
     }
-    dword_800C9630.f4 = sub_8002C64C();
+    dword_800C9630.f4 = GetTime30Hz_8002C64C();
     n = dword_800C9630.f8;
     if (n < 8)
     {
@@ -3148,7 +3148,7 @@ void sub_800C8710()
 extern unsigned char dword_800C9E40;
 void sub_800C8768()
 {
-    if (sub_8003D380(0))
+    if (IsConfirmPressedP1_8003D380(0))
     {
         if (sub_800C7530())
         {
@@ -3165,7 +3165,7 @@ void sub_800C8768()
             }
         }
     }
-    else if (sub_8003D41C(0))
+    else if (IsCancelPressedP1_8003D41C(0))
     {
         if (dword_800C9E50)
         {

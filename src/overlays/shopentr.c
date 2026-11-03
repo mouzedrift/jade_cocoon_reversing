@@ -64,8 +64,8 @@ extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
 extern void sub_8003EF74(void* a0, int a1, short a2);
 extern void sub_8003F264(void* a0, int a1, short a2);
 extern void sub_8003D794(CtxShopentr* c, int a1);
-extern int sub_8003D380(int a0);
-extern int sub_8003D41C(int a0);
+extern int IsConfirmPressedP1_8003D380(int a0);
+extern int IsCancelPressedP1_8003D41C(int a0);
 extern void sub_800B6CA0(void);
 extern void sub_800B7520(CtxShopentr* c);
 extern void sub_800B7440(CtxShopentr* c);
@@ -142,7 +142,7 @@ void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
     {
         sub_8003D794(c, r);
     }
-    if (sub_8003D380(0))
+    if (IsConfirmPressedP1_8003D380(0))
     {
         if (!(c->flags_C & 1))
         {
@@ -154,7 +154,7 @@ void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
             r = 1;
         }
     }
-    else if (sub_8003D41C(0))
+    else if (IsCancelPressedP1_8003D41C(0))
     {
         if (!(c->flags_C & 1))
         {
