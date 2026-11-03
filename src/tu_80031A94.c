@@ -56,25 +56,28 @@ int sub_80031B0C(Ent4* base, int idx)
     }
     return r;
 }
-extern Ent4* sub_800A11A0(int a0);
-extern Ent4* sub_800A2BA0(int a0);
+extern Ent4* sub_800A11A0(int a0, int a1);
+extern Ent4* sub_800A2BA0(int a0, int a1);
 
 
 
 #if 0
+// Not matched
 Ent4* sub_80031B30(int a0)
 {
     Ent4* r = 0;
     unsigned int v = a0 & 0xFF;
+    int t;
     if (v >= 8)
     {
-        r = sub_800A11A0((a0 - 8) & 0xFF);
+        t = a0 - 8;
+        r = sub_800A11A0(t & 0xFF, t);
     }
     else if (v >= 4)
     {
         int flags = sub_800A248C();
         int bit = 1 << v;
-        if (flags & bit) { r = sub_800A2BA0((a0 - 4) & 0xFF); }
+        if (flags & bit) { t = a0 - 4; r = sub_800A2BA0(t & 0xFF, t); }
     }
     else if (v != 0)
     {
@@ -774,7 +777,7 @@ char* sub_80033830(char* base, int idx)
     return base + (idx * 12 + 4);
 }
 // Matched
-unsigned char sub_80033848(unsigned char* arr, int idx)
+int sub_80033848(unsigned char* arr, int idx)
 {
     unsigned char* p = arr + idx;
     return p[0x7C];

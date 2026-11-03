@@ -27,14 +27,15 @@ extern void sub_80027778(char* p, int* q);
 extern void sub_800278BC(char* p, int* q);
 extern int dword_80082668;
 #if 0
-// Not matched (7 words): original combines the size read into lw 0x104 off a $v0 copy of a1 and a single addiu 0x108
+// Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0
 void sub_80028C60(int a0, char* a1)
 {
     int n;
+    char* p;
     MemCopy_800403E8((unsigned int*)cameraState_8008D4F0, (unsigned int*)a1, 0x104);
-    a1 += 0x104;
-    n = *(int*)a1;
-    a1 += 4;
+    p = a1;
+    a1 += 0x108;
+    n = *(int*)(p + 0x104);
     LoadTiy_80028E74(0, 0, 0, (int)a1, (int)&dword_80091C20);
     a1 += n;
     n = *(int*)a1;
@@ -409,14 +410,14 @@ void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
 #if 0
-// Not matched: (a1 >> 16) & 0xFFFE is hoisted out of the loop here (one more saved reg, frame 0x48)
-void ShiftClutHue_80029D00(void* a0, unsigned int a1)
+// Not matched (17 words): only the saved registers of t and the two division constants are rotated (s3/s4/s5)
+void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
 {
-    TimInfo* t = (TimInfo*)a0;
     short rgb[4];
     short hsv[4];
     unsigned short* p;
     int i;
+    unsigned int v;
     if (t->mode_valid && t->clut_len)
     {
         p = (unsigned short*)t->caddr;
@@ -427,11 +428,13 @@ void ShiftClutHue_80029D00(void* a0, unsigned int a1)
             {
                 if (a1 & 0x10000)
                 {
-                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + ((a1 >> 16) & 0xFFFE) * 192 / 360;
+                    v = a1 >> 16;
+                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + (v & 0xFFFE) * 192 / 360;
                 }
                 else
                 {
-                    hsv[0] = (short)(hsv[0] + a1 * 192 / 360) % 192;
+                    v = a1 * 192 / 360;
+                    hsv[0] = (short)(hsv[0] + v) % 192;
                 }
                 HsvToRgb555_8002A040(hsv, rgb);
                 PackColor555_80029CB4(&p[i], (unsigned short*)rgb);

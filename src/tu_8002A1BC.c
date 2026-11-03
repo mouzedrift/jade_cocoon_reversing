@@ -149,24 +149,22 @@ void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
         AddDrawAreaPrim_8003326C(a2, &pOT_8008D454[a3]);
     }
 }
-#if 0
 extern char aFb[];
-// Not matched (33 words): the original reads the pair at 0x800827EC through its own address, not through aFb
+extern unsigned short dword_800827EC[];
+// Matched
 void sub_8002A4E4(short a0)
 {
     unsigned short buf1[10];
     char buf2[8];
     sub_80042B38((int)aFb, a0);
     sub_800A61CC(1, buf1, buf2);
-    buf1[4] = ((unsigned short*)aFb)[4];
-    buf1[5] = ((unsigned short*)aFb)[5];
+    buf1[4] = dword_800827EC[0];
+    buf1[5] = dword_800827EC[1];
     AddPrimCopy_80040298(pOT_8008D454 + a0, buf1, 5);
     AddPrimCopy_80040298(pOT_8008D454 + a0, buf2, 2);
     sub_800429F8((int)aFb, a0);
 }
 
-#endif
-INCLUDE_ASM(sub_8002A4E4);
 typedef struct
 {
     unsigned short flags;
