@@ -32,6 +32,34 @@ python3 build.py
 
 Objects and binaries will be output to the `build_psyq` directory.
 
+### Building overlays
+
+```bash
+python3 scripts/overlays.py BATTLE "Jade Cocoon (USA).bin" SLUS_008.54   # builds build_psyq/BATTLE.BIN, prints words identical
+python3 scripts/ovl_diff.py BATTLE                                       # functions that differ from the disc
+```
+
+## Testing in the emulator
+
+`scripts/patch_disc.py` writes rebuilt overlays (and optionally the rebuilt executable) into a copy of the disc
+image, fixing up the sector EDC/ECC and writing a matching `.cue`:
+
+```bash
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" BATTLE MENU       # build_psyq/NAME.BIN -> build_psyq/jade_cocoon_patched.bin/.cue
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" --all --exe       # every built overlay + build_psyq/jade_cocoon.exe as SLUS_008.54
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" MENU=file.bin -o out.bin
+```
+
+The input image is never modified. Overlays that outgrow their slot are appended to the end of the image and the
+executable's file table is updated.
+
+**Limit:** code that is not decompiled yet is assembled with absolute addresses, so a rebuild that changes the
+size of anything (e.g. adding a `DEBUG_PRINTF` from `src/debug_tty.h`) moves code and data behind it and breaks
+those references. Same-size changes (a constant, a swapped branch) are safe. To find out what struct fields mean
+without rebuilding, use the Lua watches in `scripts/pcsx-redux/pcsx.lua`.
+
+Details: [docs/testing_in_emulator.md](docs/testing_in_emulator.md).
+
 ## Main Executable
 
 Based on `Jade Cocoon - Story of the Tamamayu (USA)`
