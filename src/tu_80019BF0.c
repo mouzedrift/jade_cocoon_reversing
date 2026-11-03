@@ -3033,7 +3033,58 @@ int sub_80020F00(struct_list_14* p, int a, int b)
     return -1;
 }
 INCLUDE_ASM(sub_80020F5C);
-INCLUDE_ASM(sub_80021298);
+typedef struct
+{
+    unsigned char b[4];
+} struct_b4;
+typedef struct
+{
+    unsigned char b[8];
+} struct_b8;
+typedef struct
+{
+    struct_b4 f0;
+    struct_b4 f4;
+    struct_b4 f8;
+    struct_b4 fC;
+    struct_b8 f10;
+    struct_b4 f18;
+} struct_1c;
+// Matched
+void sub_80021298(int* src, int* out, int a2, int a3, int heap)
+{
+    int buf[10];
+    int i;
+    int j;
+    int n;
+    struct_1c* d;
+    struct_1c* s;
+    out[0] = *src++;
+    out[1] = (int)ListAlloc_8003FDC0(heap, out[0]);
+    out[2] = (int)ListAlloc_8003FDC0(heap, out[0] * 4);
+    for (i = 0; i < out[0]; i++)
+    {
+        n = *src++;
+        s = (struct_1c*)src;
+        d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
+        ((unsigned char*)out[1])[i] = n;
+        ((struct_1c**)out[2])[i] = d;
+        for (j = 0; j < ((unsigned char*)out[1])[i]; j++)
+        {
+            d->f0 = s->f0;
+            d->f4 = s->f4;
+            d->f8 = s->f8;
+            d->fC = s->fC;
+            d->f10 = s->f10;
+            d->f18 = s->f18;
+            d++;
+            s++;
+        }
+        src = (int*)s;
+    }
+    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)src, 0x28);
+    InitPolyFT4_80029A10(out + 3, buf);
+}
 // Matched
 void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
 {
@@ -3556,6 +3607,33 @@ void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
 }
 INCLUDE_ASM(sub_80022B84);
 INCLUDE_ASM(sub_80022CC4);
+typedef struct
+{
+    unsigned char b0;
+    unsigned char b1;
+    unsigned char b2;
+    unsigned char b3;
+    unsigned short f4;
+    unsigned short f6;
+    unsigned short f8;
+    unsigned short fA;
+    unsigned short fC;
+    unsigned short fE;
+    unsigned short f10;
+    unsigned short f12;
+} struct_20_b;
+typedef struct
+{
+    int count;
+    struct_20_b* items;
+} struct_8_20b;
+typedef struct
+{
+    int count;
+    struct_20_b* items;
+    unsigned short f4;
+    unsigned short f6;
+} struct_12_20b;
 #if 0
 // Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
 int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
@@ -5589,7 +5667,129 @@ void sub_80027778(int* a0, int h)
     }
     dword_8008D648[3] = (int)arr;
 }
+typedef struct
+{
+    unsigned char a;
+    unsigned char b;
+    unsigned short c;
+} struct_4b;
+typedef struct
+{
+    unsigned int count;
+    struct_4b* items;
+} struct_8_4b;
+typedef struct
+{
+    short a;
+    short b;
+} struct_2s;
+#if 0
+// Not matched: only the prologue order of the a0/a1 copies into s4/s5 differs
+void sub_800278BC(int* a0, int h)
+{
+    unsigned int i;
+    unsigned int j;
+    int n;
+    int* q;
+    struct_4b* r;
+    struct_2s* e;
+    n = a0[0];
+    dword_8008D648[4] = n;
+    dword_8008D648[5] = (int)ListAlloc_8003FDC0(h, n * 8);
+    for (i = 0; i < dword_8008D648[4]; i++)
+    {
+        q = (int*)((char*)a0 + a0[i + 1]);
+        ((struct_8_4b*)dword_8008D648[5])[i].count = *q;
+        ((struct_8_4b*)dword_8008D648[5])[i].items = (struct_4b*)ListAlloc_8003FDC0(h, ((struct_8_4b*)dword_8008D648[5])[i].count * 4);
+        r = (struct_4b*)(q + 1);
+        for (j = 0; j < ((struct_8_4b*)dword_8008D648[5])[i].count; j++)
+        {
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].a = r[j].a;
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].b = r[j].b;
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].c = r[j].c;
+        }
+    }
+    dword_8008D648[6] = (int)ListAlloc_8003FDC0(h, dword_8008D648[4] * 4);
+    for (i = 0; i < dword_8008D648[4]; i++)
+    {
+        e = (struct_2s*)(i * 4 + dword_8008D648[6]);
+        e->b = 0;
+        e->a = 0;
+    }
+}
+#endif
 INCLUDE_ASM(sub_800278BC);
+typedef struct
+{
+    short x;
+    short y;
+    short z;
+    short pad;
+} struct_a88_sv;
+typedef struct
+{
+    int field_0;
+    struct_a88_sv v[4];
+} struct_a88_24;
+typedef struct
+{
+    struct_a88_sv v[4];
+} struct_20v;
+typedef struct
+{
+    unsigned short n;
+    struct_20v* items;
+} struct_8_20v;
+#if 0
+// Not matched: s1/s2 swapped (p vs arr+i) and the source-item address is strength-reduced differently
+unsigned char* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
+{
+    struct_8_20v* arr;
+    unsigned int i;
+    unsigned int j;
+    unsigned char* p;
+    unsigned char* rec;
+    int* hh;
+    p = (unsigned char*)hdr + 0x10;
+    hh = hdr;
+    arr = (struct_8_20v*)ListAlloc_8003FDC0(heap, hdr[1] * 8);
+    *count = hdr[1];
+    if (hdr[1] == 0)
+    {
+        *out = 0;
+        return (unsigned char*)hdr + hdr[0];
+    }
+    for (i = 0; i < hh[1]; i++)
+    {
+        rec = p;
+        arr[i].n = *(unsigned short*)rec;
+        p = rec + 0x28;
+        arr[i].items = (struct_20v*)ListAlloc_8003FDC0(heap, *(int*)rec * 32);
+        for (j = 0; j < *(unsigned int*)rec; j++)
+        {
+            arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
+            arr[i].items[j].v[3].y = ((struct_a88_24*)(rec + 0x2C))[j].v[0].y;
+            arr[i].items[j].v[3].z = ((struct_a88_24*)(rec + 0x2C))[j].v[0].z;
+            arr[i].items[j].v[3].pad = 0;
+            arr[i].items[j].v[0].x = ((struct_a88_24*)(rec + 0x2C))[j].v[1].x;
+            arr[i].items[j].v[0].y = ((struct_a88_24*)(rec + 0x2C))[j].v[1].y;
+            arr[i].items[j].v[0].z = ((struct_a88_24*)(rec + 0x2C))[j].v[1].z;
+            arr[i].items[j].v[0].pad = 0;
+            arr[i].items[j].v[1].x = ((struct_a88_24*)(rec + 0x2C))[j].v[2].x;
+            arr[i].items[j].v[1].y = ((struct_a88_24*)(rec + 0x2C))[j].v[2].y;
+            arr[i].items[j].v[1].z = ((struct_a88_24*)(rec + 0x2C))[j].v[2].z;
+            arr[i].items[j].v[1].pad = 0;
+            arr[i].items[j].v[2].x = ((struct_a88_24*)(rec + 0x2C))[j].v[3].x;
+            arr[i].items[j].v[2].y = ((struct_a88_24*)(rec + 0x2C))[j].v[3].y;
+            arr[i].items[j].v[2].z = ((struct_a88_24*)(rec + 0x2C))[j].v[3].z;
+            arr[i].items[j].v[2].pad = 0;
+            p += 0x28;
+        }
+    }
+    *out = arr;
+    return (unsigned char*)hdr + hh[0];
+}
+#endif
 INCLUDE_ASM(sub_80027A88);
 // Matched
 void sub_80027CC0(struct_obj_D* p, int* q)
