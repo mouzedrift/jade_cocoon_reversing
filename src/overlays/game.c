@@ -5108,7 +5108,6 @@ short sub_800AB750(int a)
     }
     return sub_800AB170(a);
 }
-INCLUDE_OVERLAY_ASM(game, dword_800A0920);
 
 int sub_800AB85C()
 {
@@ -5372,7 +5371,104 @@ void sub_800ABECC()
     TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800AC02C);
+void sub_800AC02C(G2Act* p)
+{
+    switch (p->f8)
+    {
+    case 0x15:
+        if (p->s26 >= 0x1000)
+        {
+            p->f0 &= ~0x10;
+            sub_800AC604(p->s20, 0);
+            p->f8 = 0x16;
+        }
+        break;
+    case 0x16:
+        if (sub_800AC768() == 1)
+        {
+            p->f8 = 0x17;
+        }
+        break;
+    case 0x17:
+        if (p->f0 & 0x20)
+        {
+            if (p->f0 & 0x100000)
+            {
+                sub_800AB010(p, 0x18, p->s20, (unsigned short)sub_800AC834(p->s20, sub_800AC474(p->s20)));
+            }
+            else
+            {
+                sub_800AB010(p, 0x18, p->s20, 0);
+            }
+            p->f0 &= ~0x8000;
+            if (p->s24 >= 0)
+            {
+                p->f0 &= ~0x800;
+            }
+        }
+        break;
+    case 0x18:
+        if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)))
+        {
+            if (p->s24 < 0)
+            {
+                sub_800AB010(p, 0, 3, 0);
+                p->fC = 0;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+            }
+            else
+            {
+                if (p->f0 & 0x100000)
+                {
+                    sub_800AB010(p, -1, p->s24, 0);
+                }
+                else
+                {
+                    sub_800AB010(p, -1, p->s24, (unsigned short)sub_800AC834(p->s24, sub_800AC474(p->s24)));
+                }
+                p->s20 = p->u22;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+                p->f0 |= 0x800;
+            }
+        }
+        if (p->s20 != (short)p->u22)
+        {
+            if (sub_800AC604((short)p->u22, 0) == 0)
+            {
+                p->s20 = p->u22;
+                p->f8 = 0x17;
+                if (sub_800AAFD8(p->s20) == 1)
+                {
+                    p->f0 |= 0x10;
+                }
+            }
+            else
+            {
+                sub_800AB010(p, 0x19, 3, 0);
+                p->f0 |= 0x10;
+            }
+        }
+        break;
+    case 0x19:
+        if (p->s26 >= 0x1000)
+        {
+            p->f0 &= ~0x10;
+            sub_800AAFD8(p->s20);
+            p->s20 = p->u22;
+            sub_800AC604(p->s20, 0);
+            p->f8 = 0x16;
+        }
+        break;
+    case 0x1a:
+        break;
+    }
+}
 
 void sub_800AC318()
 {
@@ -5491,9 +5587,9 @@ void sub_800AC73C()
     FreeModelAnimSet_80025884(dword_8007DC60[2]);
 }
 
-void sub_800AC768()
+int sub_800AC768()
 {
-    AreFileRequestsDone_80024DC4(dword_8007DC60[2]);
+    return AreFileRequestsDone_80024DC4(dword_8007DC60[2]);
 }
 
 int sub_800AC794(int a, int b)
