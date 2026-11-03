@@ -37,7 +37,7 @@ extern int sub_800A11BC(int);
 extern int sub_800A1AAC(int);
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern int CountMagicBits_8001AE54(int);
-extern void FindNthMagicBit_8001AEC0(int, int);
+extern int FindNthMagicBit_8001AEC0(int, int);
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
@@ -217,15 +217,15 @@ void sub_800CBBE0(int p)
     DrawLargeTextBox_8002AF10((int)&d, (int)v, 0xF);
 }
 
-void sub_800CBC28()
+int sub_800CBC28()
 {
-    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
+    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
 }
 
-void sub_800CBC58()
+int sub_800CBC58()
 {
     int r = sub_800A11BC(byte_800CD839);
-    FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
+    return FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
 }
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBCA0);
@@ -270,7 +270,63 @@ int sub_800CCD84()
     return 1 << ((byte_800CD839 ^ 1) + 8);
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCDD0);
+extern unsigned char byte_800CD494[];
+extern unsigned char byte_800CD49C[];
+extern int dword_800CD524[];
+extern char dword_800CD2C8[];
+extern int sub_800A11A0(int);
+extern int sub_80031B0C(int, int);
+extern int sub_8001ACE4(int);
+void sub_800CCDD0()
+{
+    int v;
+    byte_800CD850 = byte_800CD83A;
+    switch (byte_800CD83A)
+    {
+    case 0:
+        byte_800CD844 = byte_800CD494[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        byte_800CD83A = byte_800CD49C[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        dword_800CD840->f0 = dword_800CD524[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        break;
+    case 1:
+        v = sub_800A11A0(byte_800CD839);
+        byte_800CD844 = sub_80031B0C(v, sub_800CBC28());
+        byte_800CD83A = 4;
+        dword_800CD840->f4 = sub_800CBC28();
+        break;
+    case 2:
+        byte_800CD844 = sub_8001ACE4(sub_800CBC58());
+        if (byte_800CD844 & 2)
+        {
+            byte_800CD83A = 3;
+        }
+        else
+        {
+            byte_800CD83A = 4;
+        }
+        dword_800CD840->f4 = sub_800CBC58();
+        break;
+    case 3:
+        byte_800CD83A = 4;
+        break;
+    case 5:
+        switch ((short)GetMenuCursorIndex_8003DA54(dword_800CD2C8))
+        {
+        case 0:
+            byte_800CD850 = 0;
+            byte_800CD83A = 0;
+            break;
+        case 1:
+            byte_800A38DC = 1;
+            break;
+        case 2:
+            byte_800A38DC = 2;
+            break;
+        }
+        break;
+    }
+    dword_800CD840->fC = sub_800CCD84();
+}
 
 extern int sub_800CCA94();
 extern void sub_800CCDD0();
