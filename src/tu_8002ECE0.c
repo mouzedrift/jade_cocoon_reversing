@@ -40,7 +40,7 @@ INCLUDE_DATA(dword_80074424);
 INCLUDE_DATA(dword_80074428);
 
 extern void sub_8002F23C(int a0, int a1, int a2, unsigned short* a3, int a4, int a5);
-extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 void sub_8002F120(char* a0, unsigned short* pos, int a2, short a3);
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
@@ -69,7 +69,7 @@ void sub_8002ECE0(char* a0, unsigned short* pos, int a2, short ot)
     st[3] = 0x4000000;
     loc[0] = pos[0] + 0x20;
     loc[1] = pos[1] + 0x42;
-    sub_8002BA54(st, 0, loc, (short)ot);
+    DrawGauge_8002BA54(st, 0, loc, (short)ot);
     loc[0] = pos[0];
     loc[1] = pos[1] + 0x24;
     sub_8002F120(a0, loc, 0, ot);
@@ -135,7 +135,7 @@ void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short a2)
         loc[0] += 7;
     } while (count > 0);
 }
-extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void sub_8002EE28(short* a, unsigned short* pos, short c, int d);
 extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 // Matched
@@ -150,7 +150,7 @@ void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5)
     local[3] = ((short*)a0)[1];
     pos[0] = a3[0];
     pos[1] = a3[1];
-    sub_8002BA54(local, a2, pos, a4);
+    DrawGauge_8002BA54(local, a2, pos, a4);
     pos[0] = a3[0] + 8;
     pos[1] = a3[1] + 7;
     sub_8002EE28(a0, pos, (short)a4, a5);

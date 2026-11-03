@@ -59,7 +59,7 @@ extern char str_800B6EB0[];
 
 extern EventNode* dword_8008D4A8;
 extern void DrawMenuBackground_8002BE10(void);
-extern void sub_8002BA54(void* a0, int a1, void* a2, int a3);
+extern void DrawGauge_8002BA54(void* a0, int a1, void* a2, int a3);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern void DrawNumber_8003EF74(void* a0, int a1, short a2);
 extern void sub_8003F264(void* a0, int a1, short a2);
@@ -295,7 +295,7 @@ int sub_800B73A8(CtxShopentr* c)
     v[3] = 0x3c;
     r[0] = 0x8c;
     r[1] = 0xa0;
-    sub_8002BA54(v, 0, r, 14);
+    DrawGauge_8002BA54(v, 0, r, 14);
     if (c->counter_16 < 0x3c)
     {
         c->counter_16++;

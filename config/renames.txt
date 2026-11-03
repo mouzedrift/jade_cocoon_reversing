@@ -360,3 +360,109 @@ AddClipTexWindowPrim_80033308 AddClipDrawAreaPrim_80033308
 # --- PSY-Q library symbols: the real names from the 4.4 objects (config/lib_objs.txt) ---
 sub_80071818 _mcxStartFastDsr
 sub_800718E0 _mcxStopFastDsr
+
+# --- effect task (state 0 idle -> 1 loading the effect file -> 2 ready -> 3 playing) and effect files ---
+sub_800148D4 IsEffectTaskIdle_800148D4
+sub_800148F4 RequestEffect_800148F4
+sub_80014954 IsEffectReady_80014954
+sub_8001497C StartEffect_8001497C
+sub_800147FC CountActiveEffectObjects_800147FC
+sub_80020DDC LoadEffectFile_80020DDC
+sub_80020F5C OnEffectFileLoaded_80020F5C
+sub_80020EBC IsEffectFileLoaded_80020EBC
+sub_80020EE0 FreeEffectFile_80020EE0
+dword_80091BD0 effectFile_80091BD0
+
+# --- FTG objects (DATA.001 file 10, also inside model files): 0x54-byte objects of 10 primitive types ---
+sub_80021738 GetFtgObjectCount_80021738
+sub_80021744 AllocFtgObjects_80021744
+sub_80021824 LoadFtgObjects_80021824
+sub_80022458 LoadFtgObject_80022458
+sub_80021784 FreeFtgObjects_80021784
+sub_800229B0 FreeFtgObject_800229B0
+sub_80022AE8 RelocateTPageClut_80022AE8
+off_8007DAE0 ftgPrimLoaders_8007DAE0
+dword_8007DB08 ftgPrimRelocators_8007DB08
+dword_8008D4D0 publicFtg_8008D4D0
+
+# --- fonts / semi-transparency mode (tpage bits 5-6) ---
+sub_8003F900 SetFontClutOffset_8003F900
+sub_8003F9E8 SetFontAbr_8003F9E8
+sub_80033048 SetDrTPageAbr_80033048
+sub_80033064 SetPolyFT4Abr_80033064
+
+# --- memory card / file requests / event lists ---
+sub_8003BADC GetMemCardInfoSync_8003BADC
+sub_8003BB1C CheckMemCards_8003BB1C
+dword_8008D4D8 memCardInfo_8008D4D8
+sub_8003BFD0 ConsumeFileRequest_8003BFD0
+off_80086570 data001Path_80086570
+sub_800438F8 RunEventListFreeCallbacks_800438F8
+dword_8008D61C screenFlashTasks_8008D61C
+
+# --- save data accessors ---
+sub_80033ACC GetSaveMinion_80033ACC
+sub_80033AE4 GetSaveItem_80033AE4
+sub_80033ABC GetLevantStatus_80033ABC
+sub_80033AB0 GetItemId_80033AB0
+sub_80033858 GetMinionId_80033858
+sub_800378F8 GetCameraMode_800378F8
+
+# --- model files: request params -> OnModelFileLoaded -> sections by flag (1 data, 2 TIY, 4 FTG, 8 anims, 0x10 one anim, 0x20 anim set) ---
+sub_80025ED0 InitModelLoadParams_80025ED0
+sub_80025D7C OnModelFileLoaded_80025D7C
+sub_80025F14 ParseModelFile_80025F14
+sub_8002607C LoadModelTextures_8002607C
+sub_800260FC LoadModelFtg_800260FC
+sub_800261C8 LoadModelAnims_800261C8
+sub_800263CC LoadSingleModelAnim_800263CC
+sub_80026410 LoadModelAnimSetSection_80026410
+sub_80025780 LoadModelAnimSet_80025780
+sub_80025884 FreeModelAnimSet_80025884
+sub_80025924 IsAnimInModelAnimSet_80025924
+sub_80026730 AllocModelAnims_80026730
+sub_8002679C FreeModelAnims_8002679C
+sub_800269C4 FreeModelAnimData_800269C4
+sub_80026A8C LoadModelAnimData_80026A8C
+sub_80028FDC LoadTiyTimsRelocated_80028FDC
+sub_80029D00 ShiftClutHue_80029D00
+sub_800297C0 RelocateTimInfo_800297C0
+
+# --- model loader task (dword_8008B54C: up to 4 requested models, loaded into their own model list) ---
+dword_8008B54C modelLoaderTask_8008B54C
+sub_800204D0 ResetModelLoader_800204D0
+sub_8002052C FreeModelLoaderList_8002052C
+sub_8002056C StartModelLoader_8002056C
+sub_800205D0 IsModelLoaderDone_800205D0
+sub_800205F0 StopModelLoader_800205F0
+sub_80020614 CountLoaderModels_80020614
+sub_80020654 GetLoaderModelId_80020654
+sub_800206A0 RequestLoaderModel_800206A0
+sub_80020734 AcquireLoaderModel_80020734
+sub_80020768 FreeLoaderModel_80020768
+sub_80020814 FreeLoaderModelAnimSets_80020814
+sub_80020898 LoadLoaderModelAnimSets_80020898
+sub_80020924 AreLoaderModelsLoaded_80020924
+sub_800209AC ModelLoaderTask_800209AC
+sub_80020A38 LoadRequestedModels_80020A38
+sub_80020B70 AreRequestedModelsLoaded_80020B70
+
+# --- menu window items (flags: 2 greyed out, 4 right aligned, 8 centred) and gauges ---
+sub_8002AC88 AlignMenuItem_8002AC88
+sub_8002ACE8 GetMenuItemColor_8002ACE8
+sub_8002AD08 SetMenuItemFont1Clut_8002AD08
+sub_8002AD44 SetMenuItemFont2Clut_8002AD44
+sub_8002AD80 SetMenuItemDigitColor_8002AD80
+sub_8002BA54 DrawGauge_8002BA54
+sub_8002BC60 ScaleGaugeLength_8002BC60
+sub_8002BCAC DrawGaugeBar_8002BCAC
+
+# --- sound ---
+stru_80091D00 seqSlotSound_80091D00
+
+# --- element icons (UI TIY sprite ids per enum Element, lit / unlit) ---
+dword_800827BC elementIcons_800827BC
+dword_800827D0 elementIconsUnlit_800827D0
+sub_8002B2A4 DrawElementIcons_8002B2A4
+sub_8002A3E0 GetMagicElementIcon_8002A3E0
+sub_8001DAAC SetActorTint_8001DAAC

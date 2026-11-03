@@ -29,13 +29,11 @@ INCLUDE_DATA(dword_800795E8);
 INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
-#if 0
-// Not matched (7 words): result register and branch polarity
+// Matched
 int sub_80013DB0(void)
 {
-    int r = rand();
-    int v;
-    if (r % 6)
+    int v = rand() % 6;
+    if (v)
     {
         v = 1;
     }
@@ -45,8 +43,6 @@ int sub_80013DB0(void)
     }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_80013DB0);
 // Matched
 int sub_80013E00(unsigned int idx, int add)
 {
@@ -215,9 +211,38 @@ int LowestSetBit_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-int sub_80014390(int arg0)
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C
+extern int sub_800A10C0(int a0);
+int sub_80014390(int a0)
 {
-    return 0;
+    int r = 0;
+    unsigned int v = a0 & 0xFF;
+    unsigned int w;
+    if (v >= 8)
+    {
+        w = a0 - 8;
+        r = sub_800A10C0(w & 0xFF);
+    }
+    else if (v >= 4)
+    {
+        int flags = sub_800A248C();
+        int m = 1 << v;
+        if (flags & m)
+        {
+            w = a0 - 4;
+            r = sub_800A2B60(w & 0xFF);
+        }
+    }
+    else if (v != 0)
+    {
+        w = a0 - 1;
+        r = (int)GetMinionStatus_800107A0(3, w & 0xFF);
+    }
+    else
+    {
+        r = (int)&saveData_8008B570.levantStatus_7C8;
+    }
+    return r;
 }
 #endif
 INCLUDE_ASM(sub_80014390);
@@ -239,7 +264,7 @@ int sub_80014444(int a0)
     return r;
 }
 #if 0
-// Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
+// Not matched (11 words): only the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1); K&R char param or u_char a0 get closer but add a mask (permuter 500: no)
 int sub_8001449C(int a0)
 {
     int r = 0;
@@ -250,12 +275,11 @@ int sub_8001449C(int a0)
         int m = 1 << a0;
         if (flags & m)
         {
-            r = sub_800A2B20((unsigned char)v);
+            r = sub_800A2B20(v & 0xFF);
         }
     }
     return r;
 }
-
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched
@@ -309,8 +333,8 @@ void InitEffectTask_80014618(struct_obj_D* p, int* q)
 }
 extern short dword_800795D0[];
 extern short dword_800795F0[];
-extern void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
-int sub_800147FC(void);
+extern void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
+int CountActiveEffectObjects_800147FC(void);
 // Matched
 void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
 {
@@ -333,16 +357,16 @@ void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
             {
                 q->idx = 0x12;
             }
-            sub_80020DDC(dword_800795F0[q->idx * 2], dword_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            LoadEffectFile_80020DDC(dword_800795F0[q->idx * 2], effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
             q->state = 1;
         }
         break;
     case 1:
-        r = sub_80020EBC(dword_80091BD0);
+        r = IsEffectFileLoaded_80020EBC(effectFile_80091BD0);
         if (r == 1 && IsFileRequestQueueIdle_8003BF88() == r)
         {
-            vlc = dword_80091BD0[0x34 / 4];
-            img = dword_80091BD0[0x38 / 4];
+            vlc = effectFile_80091BD0[0x34 / 4];
+            img = effectFile_80091BD0[0x38 / 4];
             q->state = 2;
             mdecEffectVlcBuffer_8008D42C = (unsigned long*)vlc;
             decodedImageData_8008B4A0 = (unsigned long*)img;
@@ -356,9 +380,9 @@ void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
         }
         break;
     case 3:
-        if (sub_800147FC() == 0 && q->timer == 0 && !(q->flags & 2))
+        if (CountActiveEffectObjects_800147FC() == 0 && q->timer == 0 && !(q->flags & 2))
         {
-            sub_80020EE0(dword_80091BD0);
+            FreeEffectFile_80020EE0(effectFile_80091BD0);
             unknownFlags_8008D678 &= ~0x800;
             q->state = 0;
             q->flags |= 2;
@@ -367,7 +391,7 @@ void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
     }
 }
 // Matched
-int sub_800147FC(void)
+int CountActiveEffectObjects_800147FC(void)
 {
     int i;
     int c;
@@ -405,16 +429,16 @@ int sub_800147FC(void)
 // Matched
 void FreeEffectTask_800148A0(void)
 {
-    sub_80020EE0(dword_80091BD0);
+    FreeEffectFile_80020EE0(effectFile_80091BD0);
     unknownFlags_8008D678 &= ~0x800;
 }
 // Matched
-int sub_800148D4(void)
+int IsEffectTaskIdle_800148D4(void)
 {
     return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 0;
 }
 // Matched
-void sub_800148F4(int a0)
+void RequestEffect_800148F4(int a0)
 {
     int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 4;

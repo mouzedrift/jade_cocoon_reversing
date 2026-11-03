@@ -332,3 +332,10 @@ EventEntry* OpenItemMessageWindow_80035AC8(int* init)
     return 0;
 }
 INCLUDE_ASM(UpdateItemMessageWindow_80035BD8);
+// Matched
+void InitPadVibration_800364E4(int* p)
+{
+    padVibration_80095460[p[1]].flags_0 = 0;
+    padVibration_80095460[p[1]].motor_2[0] = 0;
+    padVibration_80095460[p[1]].motor_2[1] = 0;
+}

@@ -56,25 +56,28 @@ int sub_80031B0C(Ent4* base, int idx)
     }
     return r;
 }
-extern Ent4* sub_800A11A0(int a0);
-extern Ent4* sub_800A2BA0(int a0);
+extern Ent4* sub_800A11A0(int a0, int a1);
+extern Ent4* sub_800A2BA0(int a0, int a1);
 
 
 
 #if 0
+// Not matched
 Ent4* sub_80031B30(int a0)
 {
     Ent4* r = 0;
     unsigned int v = a0 & 0xFF;
+    int t;
     if (v >= 8)
     {
-        r = sub_800A11A0((a0 - 8) & 0xFF);
+        t = a0 - 8;
+        r = sub_800A11A0(t & 0xFF, t);
     }
     else if (v >= 4)
     {
         int flags = sub_800A248C();
         int bit = 1 << v;
-        if (flags & bit) { r = sub_800A2BA0((a0 - 4) & 0xFF); }
+        if (flags & bit) { t = a0 - 4; r = sub_800A2BA0(t & 0xFF, t); }
     }
     else if (v != 0)
     {
@@ -355,14 +358,18 @@ void AddRotatedPolyFT4_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int a
     p->y3 = cy + (h + (-*s * w + *c * h) / 4096) / 2;
     AddPrimCopy_80040298(ot, p, 10);
 }
-#if 0
-// Not matched: only the scheduling of the v1 store against the sine table address differs (7 lines)
+// Matched
 void sub_800327A8(POLY_FT4* p, int cx, int cy, int w, int h, int du, int dv, int angle, void* ot)
 {
-    short* c = &word_80084540[(angle + 0x400) & 0xFFF];
     short* s = &word_80084540[angle & 0xFFF];
+    short* c = &word_80084540[(angle + 0x400) & 0xFFF];
 
-    setUVWH(p, p->u0, p->v0, du, dv);
+    p->u1 = p->u0 + du;
+    p->v1 = p->v0;
+    p->u2 = p->u0;
+    p->v2 = p->v0 + dv;
+    p->u3 = p->u0 + du;
+    p->v3 = p->v0 + dv;
     p->x0 = cx + (w / 2 + (*c * (-w / 2) + *s * (-h / 2)) / 4096);
     p->y0 = cy + (h / 2 + (-*s * (-w / 2) + *c * (-h / 2)) / 4096);
     p->x1 = cx + (w / 2 + (*c * (w / 2) + *s * (-h / 2)) / 4096);
@@ -373,8 +380,6 @@ void sub_800327A8(POLY_FT4* p, int cx, int cy, int w, int h, int du, int dv, int
     p->y3 = cy + (h / 2 + (-*s * (w / 2) + *c * (h / 2)) / 4096);
     AddPrimCopy_80040298(ot, p, 10);
 }
-#endif
-INCLUDE_ASM(sub_800327A8);
 // Matched
 void sub_80032A88(POLY_FT4* p, int cx, int cy, int w, int h, int angle)
 {
@@ -465,12 +470,12 @@ void AddPolyFT4Copy_8003301C(void* a, void* b)
     AddPrimCopy_80040298(b, a, 10);
 }
 // Matched
-void sub_80033048(unsigned short* p, int v)
+void SetDrTPageAbr_80033048(unsigned short* p, int v)
 {
     p[2] = (p[2] & 0xFF9F) | ((v & 3) << 5);
 }
 // Matched
-void sub_80033064(unsigned short* p, int v)
+void SetPolyFT4Abr_80033064(unsigned short* p, int v)
 {
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
@@ -774,13 +779,13 @@ char* sub_80033830(char* base, int idx)
     return base + (idx * 12 + 4);
 }
 // Matched
-unsigned char sub_80033848(unsigned char* arr, int idx)
+int sub_80033848(unsigned char* arr, int idx)
 {
     unsigned char* p = arr + idx;
     return p[0x7C];
 }
 // Matched
-short sub_80033858(Minion* p)
+short GetMinionId_80033858(Minion* p)
 {
     return p->id;
 }
@@ -893,12 +898,12 @@ int HasMagic_80033A90(Minion* p, unsigned int idx)
     return TestMagicBit_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
 }
 // Matched
-int sub_80033AB0(Item* p)
+int GetItemId_80033AB0(Item* p)
 {
     return p->id;
 }
 // Matched
-char* sub_80033ABC(char* p)
+char* GetLevantStatus_80033ABC(char* p)
 {
     return p + 0x7C8;
 }
@@ -908,12 +913,12 @@ char* sub_80033AC4(char* p)
     return p + 0x7BC;
 }
 // Matched
-Minion* sub_80033ACC(SaveData* s, int idx)
+Minion* GetSaveMinion_80033ACC(SaveData* s, int idx)
 {
     return &s->minions[idx];
 }
 // Matched
-Item* sub_80033AE4(SaveData* s, int idx)
+Item* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }

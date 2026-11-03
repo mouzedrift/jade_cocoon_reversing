@@ -52,8 +52,8 @@ INCLUDE_DATA(dword_80086560);
 INCLUDE_DATA(fileBufferInUse_80086564);
 INCLUDE_DATA(dword_80086568);
 INCLUDE_DATA(fileBuffer_8008656C);
-/* char* off_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
-INCLUDE_DATA(off_80086570);
+/* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
+INCLUDE_DATA(data001Path_80086570);
 INCLUDE_DATA(fontDefs_80086574);
 INCLUDE_DATA(dword_800865B8);
 INCLUDE_DATA(charTables_8008685C);
@@ -154,7 +154,7 @@ typedef struct
 extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(int* p);
 extern int StartFileRequestTask_8003C6C8(int* req);
-void sub_80020F5C();
+void OnEffectFileLoaded_80020F5C();
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];
@@ -646,7 +646,7 @@ int sub_8001AF3C(int idx)
 }
 extern void* CreateEventList_800435B4(void* list);
 extern void RunEventList_80043898(void* n);
-extern void sub_800438F8(void* n);
+extern void RunEventListFreeCallbacks_800438F8(void* n);
 extern int FreeEventList_80043A5C(void* head);
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
@@ -727,7 +727,7 @@ void DrawIntroMovie_8001AF64(void* a0)
             DrawOTag(&pOT_8008D788[7]);
         }
     } while (bStopDrawingMovie_8008D45C == 0);
-    sub_800438F8(list);
+    RunEventListFreeCallbacks_800438F8(list);
     DrawSync(0);
     FreeEventList_80043A5C(list);
 }
@@ -1143,7 +1143,7 @@ void InitPrimBuffers_8001BF90(void)
 // Matched
 void StartScreenFlash_8001C02C(unsigned char* a0)
 {
-    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D61C);
+    struct_cb* r = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
     if (r != 0)
     {
         unsigned char* p = (unsigned char*)r->field_14;
@@ -2042,8 +2042,8 @@ int sub_8001D36C(int v)
 // Matched
 void InitActors_8001D378(void)
 {
-    sub_800204D0();
-    sub_800205F0();
+    ResetModelLoader_800204D0();
+    StopModelLoader_800205F0();
     ClearModelAnimRefs_800201A4();
     ListInit_8003FDB0(dword_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
@@ -2053,9 +2053,9 @@ void FreeActors_8001D3C4(int a0)
 {
     if (a0 != 0)
     {
-        sub_800205F0();
-        sub_8002052C();
-        sub_800204D0();
+        StopModelLoader_800205F0();
+        FreeModelLoaderList_8002052C();
+        ResetModelLoader_800204D0();
     }
     ListFreeAll_8003FEC8(dword_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
@@ -2342,7 +2342,7 @@ void sub_8001DA4C(char* p, int div, int from, int to)
     }
 }
 // Matched
-void sub_8001DAAC(char* o, int a1)
+void SetActorTint_8001DAAC(char* o, int a1)
 {
     if (a1 != 0)
     {
@@ -2610,7 +2610,7 @@ int sub_8001E1DC(struct_obj_F* p)
 {
     if (p->field_130 >= 0)
     {
-        if (sub_80014954() == 0)
+        if (IsEffectReady_80014954() == 0)
         {
             return 0;
         }
@@ -2691,7 +2691,7 @@ int sub_8001E34C(char* o, char* d)
     if (f >= 0)
     {
         *(int*)(o + 0x130) = f;
-        sub_800148F4(f);
+        RequestEffect_800148F4(f);
     }
     if (*(int**)(d + 8))
     {
@@ -2751,7 +2751,7 @@ void sub_8001E574(char* o, int* d)
     int f;
     if (d[0] >= 0)
     {
-        m = sub_80020734(d[0]);
+        m = AcquireLoaderModel_80020734(d[0]);
     }
     else
     {

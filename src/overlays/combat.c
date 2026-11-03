@@ -76,7 +76,7 @@ typedef struct CombatColorCombat
     unsigned char cd;
 } CombatColorCombat;
 extern void QueueFileRequest_8003BC84(void* p);
-extern void sub_80025D7C();
+extern void OnModelFileLoaded_80025D7C();
 extern char* off_8007DC70;
 typedef struct CombatObjCombat
 {
@@ -477,7 +477,7 @@ void sub_800A0D64(int i, int id)
     unsigned short* q = (unsigned short*)GetModelDesc_800251E4(id);
     CombatObjCombat o;
     CombatMsgCombat m;
-    sub_80025ED0((int*)&o);
+    InitModelLoadParams_80025ED0((int*)&o);
     o.field_0 = 2;
     o.field_14 = 0;
     o.field_4 = (int)q;
@@ -490,7 +490,7 @@ void sub_800A0D64(int i, int id)
     m.field_10 = 0;
     m.field_14 = &o;
     m.field_18 = 0x3C;
-    m.field_1C = sub_80025D7C;
+    m.field_1C = OnModelFileLoaded_80025D7C;
     QueueFileRequest_8003BC84(&m);
 }
 
@@ -905,11 +905,11 @@ void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
     {
         if (flags & 2)
         {
-            sub_8003F900(1, 1);
+            SetFontClutOffset_8003F900(1, 1);
         }
         else
         {
-            sub_8003F900(1, 0);
+            SetFontClutOffset_8003F900(1, 0);
         }
         q = a + 0x84;
         v[0] = pt[0] + 5;

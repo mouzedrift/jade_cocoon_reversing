@@ -2,11 +2,13 @@
 aCdC 0xc     # "CD.C" and a zero word; the jump table of ProcessFileRequests_8003C184 follows
 dword_80074B10 0x64     # strings; the jump table of InterpolateWindowRect_8004196C follows
 word_800749AC 0x8     # head (the jump table of sub_8003EC2C follows); the jump tables of GameLoop_8004047C and SetDisplayMode_80040658 follow
-dword_8007493C 0x28     # tail of DrawLoadingIcon_8003CD5C's local int[14], jump table of sub_8003CE18, a zero word; the jump table of sub_8003D090 follows
+dword_8007493C 0x8      # tail of DrawLoadingIcon_8003CD5C's local int[14]; the jump table of sub_8003CE18 follows
+dword_80074960 0x4      # zero word after the jump table of sub_8003CE18; the jump table of sub_8003D090 follows
 dword_80074610 0xC      # head; the jump table of sub_800316EC follows
 dword_800746B8 0x4      # zero word after the jump table of sub_800316EC; the jump table of sub_80031870 (tu_80031870) follows
 dword_800746D0 0x4     # zero word after the jump table of sub_80031870; the jump table of sub_80031A04 (tu_800318C8) follows
 aMainC 0x8               # "MAIN.C"; the jump table of StepModelTask_80010AD8 follows (dword_80071B78 starts after it)
+dword_80071B78 0x390      # strings; the jump table of sub_80012614 follows
 aCommonC 0xC                # "COMMON.C"; the jump tables of sub_80012BB0, sub_80013228 and sub_80013C28 follow
 dword_80073210 0x4     # head; the jump table of ProcessPad_8001C8E8 (tu_80019BF0, whose .rdata starts at dword_80073044) follows
 dword_800720E4 0x4      # alignment word; the jump table of sub_80013C28 (tu_80013358) follows
@@ -14,3 +16,5 @@ off_80072278 0x0       # the jump tables of sub_800182B8 (tu_800174F8) and sub_8
 dword_8007408C 0x24     # sub_8001E7F0's local short[4] initialiser follows (end of tu_80019BF0), then the jump table of sub_8001EA48 (start of tu_8001EA48)
 dword_8007411C 0x28     # the jump table of HsvToRgb555_8002A040 (tu_80028C60) follows, dword_8007415C starts after it
 aDWorkPsusEvent 0x18       # "D:\WORK\PSUS\EVENT.C"; the jump table of sub_8004AD44 (tu_80043AF8) follows
+dword_8007415C 0x48     # SJIS strings; the jump table of DrawMenuWindowContents_8002A710 (tu_8002A1BC) follows
+dword_80074864 0x20     # head and the jump table of an asm function of tu_800353A0; the jump table of sub_80039ED8 (tu_80036528) follows

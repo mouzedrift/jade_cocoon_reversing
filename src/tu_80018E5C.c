@@ -187,7 +187,7 @@ void sub_80018EBC(int a0, unsigned int* a1)
     {
         r = dword_8007A0F8;
     }
-    sub_8001DAAC(a0, r);
+    SetActorTint_8001DAAC(a0, r);
 }
 extern void* minionSpeciesNames_8007A170[];
 extern unsigned char dword_8007BA84[];
@@ -367,31 +367,43 @@ void InitMinionData_8001900C(char* m, int* a1)
 }
 #endif
 INCLUDE_ASM(InitMinionData_8001900C);
-#if 0
-// Not matched: the clamp to 0..100 stores from each branch and keeps 100 in a register (original: one store of $v0 after $v1 copies); permuter found nothing
-void sub_8001980C(unsigned char* p, unsigned char* s)
+// Matched
+void sub_8001980C(unsigned char* p, MinionBaseStats* s)
 {
     int i;
     int j;
     int v;
-    p[6] = (s[0] < 200) ? s[0] : 200;
-    p[8] = (s[1] < 200) ? s[1] : 200;
-    p[10] = (s[4] < 200) ? s[4] : 200;
-    p[7] = (s[2] < 200) ? s[2] : 200;
-    p[9] = (s[3] < 200) ? s[3] : 200;
-    p[11] = (s[5] < 200) ? s[5] : 200;
+    p[6] = (s->attack < 200) ? s->attack : 200;
+    p[8] = (s->magicAttack < 200) ? s->magicAttack : 200;
+    p[10] = (s->speed < 200) ? s->speed : 200;
+    p[7] = (s->defense < 200) ? s->defense : 200;
+    p[9] = (s->magicDefense < 200) ? s->magicDefense : 200;
+    p[11] = (s->critical < 200) ? s->critical : 200;
     for (i = 0; i < 6; i++)
     {
-        v = (unsigned char)((p + i)[6] / 10) + 10;
-        (p + i)[0] = (v < 0) ? 0 : ((v > 100) ? 100 : v);
+        int r;
+        unsigned char* q = p + i;
+        v = (unsigned char)(q[6] / 10) + 10;
+        if (v >= 0)
+        {
+            int t = v;
+            if (t > 100)
+            {
+                t = 100;
+            }
+            r = t;
+        }
+        else
+        {
+            r = 0;
+        }
+        q[0] = r;
     }
     for (j = 0; j < 6; j++)
     {
         (p + j)[12] = rand() % 100;
     }
 }
-#endif
-INCLUDE_ASM(sub_8001980C);
 typedef struct
 {
     char b[20];
