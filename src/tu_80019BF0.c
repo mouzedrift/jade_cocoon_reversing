@@ -6201,8 +6201,99 @@ void FreeModelAnimData_800269C4(int a0, int n, int sel, int h)
     }
 }
 #if 0
+// Not matched: original copies src[0] through a temporary into n (s3) and orders the param copies before the flag init; the last loop reads the source before computing the k*8 dest offset
 void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
 {
+    int* o = a0;
+    int* src = (int*)a1;
+    int h = a2;
+    int f1 = 0;
+    int f2 = f1;
+    unsigned int n;
+    unsigned int m;
+    unsigned short* s;
+    unsigned short* d;
+    unsigned int i;
+    unsigned int j;
+    int r;
+    int k;
+    o[0] = src[0];
+    o[1] = src[1];
+    n = o[0];
+    m = o[1];
+    if ((int)n < 0)
+    {
+        n &= 0x7FFFFFFF;
+        s = (unsigned short*)(src + 3);
+        o[0] = n;
+        o[2] = src[2];
+        f1 = 1;
+    }
+    else
+    {
+        o[2] = 0x20;
+        s = (unsigned short*)(src + 2);
+    }
+    if ((int)m < 0)
+    {
+        m &= 0x7FFFFFFF;
+        f2 = 1;
+    }
+    else
+    {
+        o[3] = 0;
+    }
+    o[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)h);
+    o[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)h);
+    d = (unsigned short*)o[5];
+    for (i = 0; i < m; i++)
+    {
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+    }
+    d = (unsigned short*)o[6];
+    for (j = 0; j < n; j++)
+    {
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        *d++ = *s++;
+        for (i = 0; i < m; i++)
+        {
+            *d++ = *s++;
+            *d++ = *s++;
+            *d++ = *s++;
+        }
+    }
+    if (f2)
+    {
+        r = m * 6 + 8;
+        r += (m * 6 + 0xC) * n;
+        if (f1)
+        {
+            r += 4;
+        }
+        s = (unsigned short*)((char*)src + r);
+        if (r & 3)
+        {
+            r += 2;
+            s = (unsigned short*)((char*)src + r);
+        }
+        o[3] = *(int*)s;
+        s += 2;
+        o[4] = HeapAlloc_8003FC8C(o[3] * 8, (struct Pool*)h);
+        for (k = 0; k < o[3]; k++)
+        {
+            ((unsigned short*)o[4])[k * 4 + 0] = s[0];
+            ((unsigned short*)o[4])[k * 4 + 1] = s[1];
+            ((unsigned short*)o[4])[k * 4 + 2] = s[2];
+            ((unsigned short*)o[4])[k * 4 + 3] = s[3];
+            s += 4;
+        }
+    }
 }
 #endif
 INCLUDE_ASM(LoadModelAnimData_80026A8C);
@@ -6793,9 +6884,164 @@ void sub_80027CC0(struct_obj_D* p, int* q)
     sub_80027CF8(p, q);
     p->field_8 = (void (*)(void))sub_80027CF8;
 }
-#if 0
-void sub_80027CF8(void* a0, int* a1)
+typedef struct
 {
+    short f0;
+    short f2;
+    short f4;
+    short f6;
+    short f8;
+    short fA;
+    char pad_C[4];
+} MapEntry16;
+extern MapEntry16** dword_800B0608[];
+#define MAP_ENTRY_CF8(i) dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
+extern int dword_800B0EC0;
+extern int dword_80091CB0;
+extern void sub_800ADDAC(void);
+extern int sub_800A683C(int a0);
+extern void sub_800AD124(int a0);
+extern int sub_800A5030(int a0, int a1, int a2);
+extern void sub_800A52AC(int a0);
+extern int sub_800AC38C(void);
+extern int sub_800AD154(int a0);
+extern void sub_800B88A4(int a0);
+extern void PlayMusic_800300E0(int a, int b);
+extern void sub_80028808(void* a0, int* a1);
+#if 0
+// Not matched: only the end-of-state a1[0]++ and eventDispatchHalt = 1 pairs swap registers (loaded state vs the constant 1)
+void sub_80027CF8(void* a0, int* a)
+{
+    int* a1 = a;
+    short v[2];
+    int req[8];
+    MapEntry16* e;
+    int t;
+    int m;
+    int n;
+    switch (a1[0])
+    {
+    case 0:
+        m = dword_800B0EC0;
+        if (m == 1 && sub_80020D84() == 0)
+        {
+            eventDispatchHalt_8008B540 = m;
+        }
+        else if (sub_80027540() != 0)
+        {
+            if (dword_80091C9C != 1 &&
+                saveData_8008B570.mapId_2E4[0].field_2 == saveData_8008B570.mapId_2E4[0].field_0 &&
+                saveData_8008B570.mapId_2E4[1].field_2 == saveData_8008B570.mapId_2E4[1].field_0 &&
+                saveData_8008B570.mapId_2E4[2].field_2 == saveData_8008B570.mapId_2E4[2].field_0)
+            {
+            }
+            else
+            {
+                if (dword_80091C54)
+                {
+                    sub_800ADDAC();
+                }
+                if (sub_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6)
+                {
+                    sub_800AD124(0);
+                }
+                e = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+                for (dword_80091CB0 = 0; e[dword_80091CB0].f0 != -1; dword_80091CB0++)
+                {
+                }
+                v[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).f6;
+                v[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6;
+                t = sub_800A5030(v[0], v[1], dword_80091C90);
+                sub_800A52AC(v[0]);
+                dword_80091C54 = 1;
+                dword_80082670 = 0;
+                dword_80091C9C = 0;
+                saveData_8008B570.mapId_2E4[0].field_2 = saveData_8008B570.mapId_2E4[0].field_0;
+                saveData_8008B570.mapId_2E4[1].field_2 = saveData_8008B570.mapId_2E4[1].field_0;
+                saveData_8008B570.mapId_2E4[2].field_2 = saveData_8008B570.mapId_2E4[2].field_0;
+                if ((unsigned short)(saveData_8008B570.mapId_2E4[0].field_0 - 1) < 2)
+                {
+                    unknownFlags_8008D678 |= 0x1000000;
+                }
+                else
+                {
+                    unknownFlags_8008D678 &= ~0x1000000;
+                }
+                sub_80025C38((struct_112*)sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                dword_80091CA0 = 0;
+                if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
+                {
+                    dword_80091CA0 = 1;
+                }
+                dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA;
+                sub_80027118();
+                sub_8002728C();
+                m = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f8;
+                if (m >= 0)
+                {
+                    if (sub_800AD154(12) == 1 && m == 0xD)
+                    {
+                        m = 0xF;
+                    }
+                    else if (sub_800AD154(12) == 2 && m == 0xD)
+                    {
+                        m = 0x91;
+                    }
+                    else if (sub_800AD154(12) == 3 && m == 0x29)
+                    {
+                        m = 0x26;
+                    }
+                    else if (sub_800AD154(12) == 4 && m == 0x2A)
+                    {
+                        m = 0x25;
+                    }
+                    PlayMusic_800300E0(m, 1);
+                    sub_800315D8(m);
+                    sub_80027478(0x20, 1);
+                }
+                if (dword_80091C90 == 0 && dword_80091C58 != 0)
+                {
+                    sub_800B88A4(t);
+                    n = a1[0];
+                    eventDispatchHalt_8008B540 = 1;
+                    a1[0] = n + 1;
+                    sub_80027478(0x10, 1);
+                    break;
+                }
+                a1[0] += 1;
+            }
+        }
+        if (a1[0] != 1)
+        {
+            break;
+        }
+    case 1:
+        req[0] = 0x2C;
+        req[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f0;
+        req[2] = 0;
+        req[3] = 0;
+        req[4] = 0;
+        req[5] = 0;
+        req[6] = 0;
+        req[7] = (int)sub_80028808;
+        a1[1] = QueueFileRequest_8003BC84(req);
+        sub_80027478(2, 1);
+        n = a1[0];
+        eventDispatchHalt_8008B540 = 1;
+        a1[0] = n + 1;
+        break;
+    case 2:
+        if (IsSoundTaskReady_800306B0() && IsModelLoaderDone_800205D0() && GetFileRequestStatus_8003BE30(a1[1]) == 0)
+        {
+            sub_80027478(0x72, 0);
+            a1[0] = 0;
+        }
+        else
+        {
+            eventDispatchHalt_8008B540 = 1;
+        }
+        break;
+    }
 }
 #endif
 INCLUDE_ASM(sub_80027CF8);
@@ -6822,15 +7068,8 @@ void sub_80028388(struct_obj_D* p, int* q)
     sub_800283C0(p, q);
     p->field_8 = (void (*)(void))sub_800283C0;
 }
-typedef struct
-{
-    short f0;
-    short f2;
-    char pad_4[0xC];
-} MapEntry16;
 extern int sub_800A6D50(int a0);
 extern int dword_800B1228;
-extern MapEntry16** dword_800B0608[];
 extern void sub_80028C60();
 // Matched
 void sub_800283C0(void* a0, int* a)
