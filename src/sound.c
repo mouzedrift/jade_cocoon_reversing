@@ -200,7 +200,7 @@ INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(PlayMusic_800300E0);
 extern int QueueFileRequest_8003BC84(int* a);
-extern void LoadSoundSeqFromBuffer_800304D0(void);
+void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
 int sub_800303E8(void)
 {
@@ -225,6 +225,55 @@ int sub_800303E8(void)
     *(int*)(p + 8) = QueueFileRequest_8003BC84(s);
     return 1;
 }
+#if 0
+// Not matched: the header copy of the buffer pointer gets the other saved register (param used everywhere, copy hoisted into a delay slot)
+void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
+{
+    GenkiSoundHeader* pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
+    SoundStruct* sound = req[0];
+
+    if (pSndFileHeader->field_14_sep_size)
+    {
+        sound->field_8_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
+        ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
+                               (int*)((char*)pSndFileHeader + pSndFileHeader->field_10),
+                               pSndFileHeader->field_14_sep_size / sizeof(int));
+
+        sound->field_C_sep_access_num =
+            SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
+        if (sound->field_C_sep_access_num == -1)
+        {
+            printf(aAssertionFaile_0, aSoundC, 411);
+            exit(1);
+        }
+        SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
+    }
+    else
+    {
+        sound->field_8_sep_data_ptr = 0;
+    }
+
+    if (pSndFileHeader->field_1C_sep_size)
+    {
+        sound->field_10_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
+        ReadBytesInto_80040388((int*)sound->field_10_sep_data_ptr,
+                               (int*)(pSndFileBuffer + pSndFileHeader->field_18_sep_data2_ptr),
+                               pSndFileHeader->field_1C_sep_size / sizeof(int));
+        sound->field_14_sep_access_num =
+            SsSepOpen(sound->field_10_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count);
+        if (sound->field_14_sep_access_num == -1)
+        {
+            printf(aAssertionFaile_0, aSoundC, 426);
+            exit(1);
+        }
+        SsSepSetVol(sound->field_14_sep_access_num, 1, 0, 0);
+    }
+    else
+    {
+        sound->field_10_sep_data_ptr = 0;
+    }
+}
+#endif
 INCLUDE_ASM(LoadSoundSeqFromBuffer_800304D0);
 // Matched
 void sub_80030664(void)
@@ -265,7 +314,68 @@ void sub_800306FC(int idx)
         StopSoundSeq_80031408(p[2], idx);
     }
 }
-INCLUDE_ASM(LoadSoundFromBuffer_800307B4);
+extern void sub_80031260(SoundStruct* s, int idx, short loops);
+typedef struct
+{
+    short field_0_file_id;
+    short field_2_seq;
+    int field_4;
+} SoundSeqInfo_307B4;
+// Matched
+void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader)
+{
+    SoundStruct* sound = req[0];
+
+    sound->field_18_vab_header_ptr = (unsigned char*)malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
+
+    ReadBytesInto_80040388((int*)sound->field_18_vab_header_ptr,
+                           (int*)((char*)pSndFileHeader + pSndFileHeader->field_0_header_start),
+                           pSndFileHeader->field_4_vab_header_size / sizeof(int));
+
+    sound->field_0_vab_id = SsVabOpenHead(sound->field_18_vab_header_ptr, -1);
+    if (sound->field_0_vab_id == -1)
+    {
+        printf(aAssertionFaile_0, aSoundC, 540);
+        exit(1);
+    }
+
+    if (SsVabTransBody((unsigned char*)((char*)pSndFileHeader + pSndFileHeader->field_8), sound->field_0_vab_id) == -1)
+    {
+        printf(aAssertionFaile_0, aSoundC, 546);
+        exit(1);
+    }
+    SsVabTransCompleted(1);
+
+    if (pSndFileHeader->field_14_sep_size)
+    {
+        sound->field_8_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
+        ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
+                               (int*)((char*)pSndFileHeader + pSndFileHeader->field_10),
+                               pSndFileHeader->field_14_sep_size / sizeof(int));
+
+        sound->field_C_sep_access_num =
+            SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
+        if (sound->field_C_sep_access_num == -1)
+        {
+            printf(aAssertionFaile_0, aSoundC, 559);
+            exit(1);
+        }
+        SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
+    }
+    else
+    {
+        sound->field_8_sep_data_ptr = 0;
+    }
+    sound->field_10_sep_data_ptr = 0;
+
+    SsUtSetReverbDepth(50, 50);
+    sound->field_4_seq_num = -1;
+
+    if (sound->field_8_sep_data_ptr && ((SoundSeqInfo_307B4*)soundFiles_80082F0C)[sound->field_6_sound_idx].field_2_seq >= 0)
+    {
+        sub_80031260(sound, sound->field_6_sound_idx, 1);
+    }
+}
 // Matched
 void ApplyAudioOutputFormat_80030988(void)
 {
