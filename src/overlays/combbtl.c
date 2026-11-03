@@ -139,12 +139,12 @@ extern int dword_800A8480[2];
 extern int dword_800A85F0[2];
 extern int sub_800CB7AC(void*, int);
 extern int sub_800A0B3C(int);
-extern void sub_80031334(int);
+extern void StopSeqSlot_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
-extern void sub_80030664();
+extern void FreeSeqSlotSound_80030664();
 extern void SsSepSetDecrescendo(int, int, int, int);
 extern void sub_8001AA50(int);
-extern void sub_80031160(int, int);
+extern void PlaySeqSlot_80031160(int, int);
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4088);
 
@@ -189,8 +189,8 @@ void sub_800A4CFC()
     }
 }
 
-extern int sub_800303E8();
-extern int sub_80030688();
+extern int LoadSeqSlotSound_800303E8();
+extern int IsSoundTaskReady_80030688();
 extern int sub_800BC8E8();
 extern void sub_800BC878();
 extern void sub_80037720();
@@ -208,17 +208,17 @@ void sub_800A4D48(CombBtlTask* t, int a)
     switch (dword_800A84B8)
     {
     case 0:
-        if (!sub_800303E8())
+        if (!LoadSeqSlotSound_800303E8())
         {
             break;
         }
         dword_800A84B8 = 1;
     case 1:
-        if (!sub_80030688())
+        if (!IsSoundTaskReady_80030688())
         {
             break;
         }
-        sub_800315F4();
+        FreeBgmAndSfx_800315F4();
         dword_800A84B8 = 2;
     case 2:
         if (!PlayMusic_800300E0(0x99, 1))
@@ -308,8 +308,8 @@ void sub_800A5000(CombBtlTask* t)
         SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
         word_80091CE0[2] = -1;
     }
-    sub_80031334(0);
-    sub_80031160(1, 1);
+    StopSeqSlot_80031334(0);
+    PlaySeqSlot_80031160(1, 1);
     dword_800A84D4 = 0x78;
     t->next_8 = sub_800A5080;
 }
@@ -319,9 +319,9 @@ void sub_800A5080(CombBtlTask* t)
     if (--dword_800A84D4 <= 0)
     {
         FadeOutSeqSlot_800313C8(0);
-        sub_80031334(0);
+        StopSeqSlot_80031334(0);
         StopSoundSeqs_80030D68(dword_80091D40);
-        sub_80030664();
+        FreeSeqSlotSound_80030664();
         t->next_8 = sub_800A50E4;
     }
 }
@@ -442,7 +442,7 @@ void sub_800A5544(CombBtlTask* t)
             }
         }
         sub_800A0A6C();
-        sub_80030664();
+        FreeSeqSlotSound_80030664();
         sub_80066E38(0);
         PlayMusic_800300E0(0x8E, 1);
         sub_80039FC0();

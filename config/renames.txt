@@ -76,3 +76,51 @@ sub_80033754 ApplyEquipmentModifiers_80033754
 
 off_8007A170 minionSpeciesNames_8007A170
 sub_8001CD6C GetPersonIcon_8001CD6C
+
+# --- public TIY (DATA.001 file 9): menu sprites, POLY_FT4s and tpages loaded by LoadPublicTiyAndFtg ---
+dword_8008D434 publicTiySprts_8008D434
+dword_8008D430 publicTiyPolyFT4s_8008D430
+dword_8008D440 publicTiyTPages_8008D440
+sub_80032470 GetPublicTiySprt_80032470
+sub_80033080 DrawPublicTiySprt_80033080
+sub_80033114 DrawPublicTiySprtColored_80033114
+sub_800331C4 AddSprtWithTPage_800331C4
+
+# --- POLY_FT4 copies with mirrored / rotated vertices ---
+sub_800324D8 AddRotatedPolyFT4_800324D8
+sub_80032D34 AddPolyFT4FlipXY_80032D34
+sub_80032DFC AddPolyFT4FlipX_80032DFC
+sub_80032E78 AddPolyFT4FlipY_80032E78
+sub_80032EF4 AddPolyFT4Rot90Ccw_80032EF4
+sub_80032F88 AddPolyFT4Rot90Cw_80032F88
+sub_8003301C AddPolyFT4Copy_8003301C
+sub_80033394 PulseColor_80033394
+sub_8003356C GetEquipmentId_8003356C
+
+# --- SPU reverb ---
+dword_80091CC8 reverbAttr_80091CC8
+sub_8002A1BC InitReverbTask_8002A1BC
+sub_8002A218 UpdateReverb_8002A218
+sub_8002A280 SetReverbMode_8002A280
+sub_8002A2A0 SetReverbDepth_8002A2A0
+sub_8002A2E8 SetReverbDepthLeft_8002A2E8
+sub_8002A2FC SetReverbDepthRight_8002A2FC
+sub_8002A310 DrawTextList_8002A310
+
+# --- sound task / sequences ---
+sub_8002FEB8 ResetSoundTask_8002FEB8
+sub_8002FF10 InitSoundTask_8002FF10
+sub_8002FF64 UpdateSoundTask_8002FF64
+sub_8003006C FreeSoundTask_8003006C
+dword_800833E4 seqSlots_800833E4
+sub_80031160 PlaySeqSlot_80031160
+sub_80031334 StopSeqSlot_80031334
+sub_800303E8 LoadSeqSlotSound_800303E8
+sub_80030664 FreeSeqSlotSound_80030664
+sub_80031260 PlayMusicSeq_80031260
+sub_80030688 IsSoundTaskReady_80030688
+sub_800306B0 IsSoundTaskReady_800306B0
+sub_800306D8 FreeBgmSeqs_800306D8
+sub_800306FC StopSoundSeqById_800306FC
+sub_800315F4 FreeBgmAndSfx_800315F4
+sub_80031638 FadeOutSfxSeq_80031638

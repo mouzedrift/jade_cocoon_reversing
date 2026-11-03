@@ -330,7 +330,7 @@ typedef struct
     int field_0;
     int field_4;
 } struct_833E4;
-extern struct_833E4 dword_800833E4[];
+extern struct_833E4 seqSlots_800833E4[];
 extern int** dword_8008D3F8;
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];

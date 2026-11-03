@@ -50,9 +50,9 @@ void InitGameDefaults_80040718(void)
 }
 #endif
 INCLUDE_ASM(InitGameDefaults_80040718);
-extern int dword_8008D430;
-extern int dword_8008D434;
-extern int dword_8008D440;
+extern int publicTiyPolyFT4s_8008D430;
+extern int publicTiySprts_8008D434;
+extern int publicTiyTPages_8008D440;
 extern int dword_8008D4D0;
 extern void sub_80021824(int* p, int a, int b, int c, int d);
 
@@ -61,7 +61,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74(&dword_8008D434, (int)&dword_8008D430, &dword_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74(&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
     sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);

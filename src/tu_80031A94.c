@@ -96,16 +96,16 @@ typedef struct
     int a;
     int b;
 } struct_pair;
-extern struct_20* dword_8008D434;
-extern struct_pair* dword_8008D440;
+extern struct_20* publicTiySprts_8008D434;
+extern struct_pair* publicTiyTPages_8008D440;
 // Matched
-void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
+void GetPublicTiySprt_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
 {
-    *pOut20 = dword_8008D434[idx];
-    *pOut8 = dword_8008D440[idx];
+    *pOut20 = publicTiySprts_8008D434[idx];
+    *pOut8 = publicTiyTPages_8008D440[idx];
 }
 // Matched
-void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
+void AddRotatedPolyFT4_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
 {
     int a = -angle;
     short* c = &word_80084540[(a + 0x400) & 0xFFF];
@@ -122,7 +122,7 @@ void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot
 }
 INCLUDE_ASM(sub_800327A8);
 // Matched
-void sub_80032D34(unsigned short* a, void* b)
+void AddPolyFT4FlipXY_80032D34(unsigned short* a, void* b)
 {
     int dx = (short)a[8] - (short)a[4];
     int dy = (short)a[0xD] - (short)a[5];
@@ -137,7 +137,7 @@ void sub_80032D34(unsigned short* a, void* b)
     r[0x11] = a[5];
 }
 // Matched
-void sub_80032DFC(short* p, int a1)
+void AddPolyFT4FlipX_80032DFC(short* p, int a1)
 {
     int d = p[8] - p[4];
     short* q = AddPrimCopy_80040298((void*)a1, p, 10);
@@ -147,7 +147,7 @@ void sub_80032DFC(short* p, int a1)
     q[16] = p[4];
 }
 // Matched
-void sub_80032E78(unsigned short* p, int a1)
+void AddPolyFT4FlipY_80032E78(unsigned short* p, int a1)
 {
     int d = ((short*)p)[13] - ((short*)p)[5];
     unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
@@ -157,7 +157,7 @@ void sub_80032E78(unsigned short* p, int a1)
     q[17] = p[5];
 }
 // Matched
-void sub_80032EF4(unsigned short* p, int a1)
+void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
@@ -174,7 +174,7 @@ void sub_80032EF4(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void sub_80032F88(unsigned short* p, int a1)
+void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
@@ -191,7 +191,7 @@ void sub_80032F88(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void sub_8003301C(void* a, void* b)
+void AddPolyFT4Copy_8003301C(void* a, void* b)
 {
     AddPrimCopy_80040298(b, a, 10);
 }
@@ -206,26 +206,26 @@ void sub_80033064(unsigned short* p, int v)
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
 // Matched
-void sub_80033080(unsigned short* a, int i, int j)
+void DrawPublicTiySprt_80033080(unsigned short* a, int i, int j)
 {
-    ((unsigned short*)&dword_8008D434[i])[4] = a[0];
-    ((unsigned short*)&dword_8008D434[i])[5] = a[1];
-    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D434[i], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
+    ((unsigned short*)&publicTiySprts_8008D434[i])[4] = a[0];
+    ((unsigned short*)&publicTiySprts_8008D434[i])[5] = a[1];
+    AddPrimCopy_80040298(pOT_8008D454 + j, &publicTiySprts_8008D434[i], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + j, &publicTiyTPages_8008D440[i], 2);
 }
 // Matched
-void sub_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
+void DrawPublicTiySprtColored_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
 {
-    ((unsigned char*)&dword_8008D434[idx])[4] = col[0];
-    ((unsigned char*)&dword_8008D434[idx])[5] = col[1];
-    ((unsigned char*)&dword_8008D434[idx])[6] = col[2];
-    ((unsigned short*)&dword_8008D434[idx])[4] = a[0];
-    ((unsigned short*)&dword_8008D434[idx])[5] = a[1];
-    AddPrimCopy_80040298(c, &dword_8008D434[idx], 5);
-    AddPrimCopy_80040298(c, &dword_8008D440[idx], 2);
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[4] = col[0];
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[5] = col[1];
+    ((unsigned char*)&publicTiySprts_8008D434[idx])[6] = col[2];
+    ((unsigned short*)&publicTiySprts_8008D434[idx])[4] = a[0];
+    ((unsigned short*)&publicTiySprts_8008D434[idx])[5] = a[1];
+    AddPrimCopy_80040298(c, &publicTiySprts_8008D434[idx], 5);
+    AddPrimCopy_80040298(c, &publicTiyTPages_8008D440[idx], 2);
 }
 // Matched
-void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
+void AddSprtWithTPage_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
 {
     if (col)
     {
@@ -273,7 +273,7 @@ void AddClipTexWindowPrim_80033308(void* p)
     AddPrimCopy_80040298(p, &twin, 3);
 }
 // Matched
-void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
+void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
 {
     int ph;
     int den;
@@ -388,7 +388,7 @@ unsigned char sub_8003355C(unsigned char* p, int idx)
     return (p + idx)[0x20];
 }
 // Matched
-int sub_8003356C(unsigned char* p, unsigned int idx)
+int GetEquipmentId_8003356C(unsigned char* p, unsigned int idx)
 {
     int r = 0xFF;
     switch (idx)

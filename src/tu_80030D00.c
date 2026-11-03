@@ -141,12 +141,12 @@ void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops)
     s->field_4_seq_num = b;
 }
 // Matched
-void sub_80031160(unsigned int idx, short loops)
+void PlaySeqSlot_80031160(unsigned int idx, short loops)
 {
     SoundStruct* s = &stru_80091D00;
     int a;
     int b;
-    if (dword_800833E4[idx].field_0 == 1)
+    if (seqSlots_800833E4[idx].field_0 == 1)
     {
         a = s->field_14_sep_access_num;
     }
@@ -154,7 +154,7 @@ void sub_80031160(unsigned int idx, short loops)
     {
         a = s->field_C_sep_access_num;
     }
-    b = dword_800833E4[idx].field_4;
+    b = seqSlots_800833E4[idx].field_4;
     if (idx < 2)
     {
         SsSepSetVol(a, b, (settingsFlags_8008B58C >> 7) & 0x7F, (settingsFlags_8008B58C >> 7) & 0x7F);
@@ -167,7 +167,7 @@ void sub_80031160(unsigned int idx, short loops)
     SsSepSetCrescendo(a, b, 1, 1);
 }
 // Matched
-void sub_80031260(SoundStruct* s, int idx, short loops)
+void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops)
 {
     int seq = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
     if (seq >= 0)
@@ -188,12 +188,12 @@ void sub_80031260(SoundStruct* s, int idx, short loops)
     }
 }
 // Matched
-void sub_80031334(int idx)
+void StopSeqSlot_80031334(int idx)
 {
     SoundStruct* s = &stru_80091D00;
     int a;
     short b;
-    if (dword_800833E4[idx].field_0 == 1)
+    if (seqSlots_800833E4[idx].field_0 == 1)
     {
         a = s->field_14_sep_access_num;
     }
@@ -201,14 +201,14 @@ void sub_80031334(int idx)
     {
         a = s->field_C_sep_access_num;
     }
-    b = dword_800833E4[idx].field_4;
+    b = seqSlots_800833E4[idx].field_4;
     SsSepStop(a, b);
     SsSepSetVol(a, b, 0, 0);
 }
 // Matched
 void FadeOutSeqSlot_800313C8(int idx)
 {
-    SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
+    SsSepSetDecrescendo(word_80091D0C, seqSlots_800833E4[idx].field_4, 0x7F, 0x78);
 }
 // Matched
 void StopSoundSeq_80031408(SoundStruct* s, int idx)
@@ -288,7 +288,7 @@ int sub_800315E4(void)
     return dword_80091CFC;
 }
 // Matched
-void sub_800315F4(void)
+void FreeBgmAndSfx_800315F4(void)
 {
     int* s0 = ((int**)soundTask_8008D4A4)[0x24 / 4];
     FreeSound_80030D00(s0[1]);
@@ -296,7 +296,7 @@ void sub_800315F4(void)
 }
 #if 0
 // Not matched (loop pointer gets strength-reduced with folded offsets)
-void sub_80031638(void)
+void FadeOutSfxSeq_80031638(void)
 {
     char* q;
     int i;
@@ -321,7 +321,7 @@ void sub_80031638(void)
     }
 }
 #endif
-INCLUDE_ASM(sub_80031638);
+INCLUDE_ASM(FadeOutSfxSeq_80031638);
 // Matched
 int sub_800316DC(void)
 {

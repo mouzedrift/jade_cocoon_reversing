@@ -373,8 +373,8 @@ typedef struct
     unsigned short pad_16;
 } FontDef;
 extern FontDef dword_80086574[];
-extern char* dword_8008D434;
-extern char* dword_8008D440;
+extern char* publicTiySprts_8008D434;
+extern char* publicTiyTPages_8008D440;
 // Matched
 void InitFonts_8003DA70(void)
 {
@@ -385,10 +385,10 @@ void InitFonts_8003DA70(void)
     {
         e = &dword_80086574[i];
         f = &fonts_80095FB0[i];
-        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
+        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(publicTiySprts_8008D434 + e->field_0 * 20), 0x14);
         f->w_10 = e->field_6;
         f->h_12 = e->field_8;
-        f->tpage_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
+        f->tpage_14 = (unsigned short*)(publicTiyTPages_8008D440 + e->field_0 * 8);
         f->field_18 = f->u_C;
         f->field_1A = f->v_D;
         f->firstChar_1E = e->field_4;

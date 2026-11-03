@@ -39,7 +39,7 @@ typedef struct GameEnt_1
 extern void sub_800A2D28(GameFlagObj_1* p);
 extern void sub_800A2EC8(GameFlagObj_1* p);
 extern void FreeActiveOverlay_8002C014(void);
-extern void sub_80030664(void);
+extern void FreeSeqSlotSound_80030664(void);
 extern GameRec_1 dword_800ADE78;
 extern int dword_800AEB6C[];
 typedef struct GameR6_1
@@ -312,7 +312,7 @@ extern char dword_800B0DA4[];
 extern void sub_8001E28C(int a);
 extern void sub_80026FAC(void);
 extern void GameFn_800A094C(void);
-extern void sub_8002FEB8(void);
+extern void ResetSoundTask_8002FEB8(void);
 extern void sub_8001A38C(void);
 extern void sub_800376A8(void);
 extern void sub_800A8140(void);
@@ -449,7 +449,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
 void sub_800A1444(void)
 {
     FreeActiveOverlay_8002C014();
-    sub_80030664();
+    FreeSeqSlotSound_80030664();
     sub_80039FC0();
 }
 
@@ -2540,7 +2540,7 @@ void sub_800A73A8(void)
     unknownFlags_8008D678 &= ~0x8000000;
     sub_80026FAC();
     GameFn_800A094C();
-    sub_8002FEB8();
+    ResetSoundTask_8002FEB8();
     sub_8001A38C();
     sub_800376A8();
     sub_800A8140();
@@ -3007,7 +3007,7 @@ extern int sub_80025924(int, int);
 extern void PoolInit_8003FF1C(void*, unsigned);
 extern int sub_800ACB64();
 extern void PlaySfx_80031494(int);
-extern void sub_80031160(int, int);
+extern void PlaySeqSlot_80031160(int, int);
 typedef struct G2Sv5
 {
     char pad_0[0x7B6];
@@ -4058,7 +4058,7 @@ void sub_800ABDF0(G2Act* a)
         if (a->f10 == (unsigned short)sub_800AB170(0x1D))
             PlaySfx_80031494(0x44);
         if (a->f10 == (unsigned short)sub_800AB170(a->s1c) - 10)
-            sub_80031160(0x1D, 1);
+            PlaySeqSlot_80031160(0x1D, 1);
     }
     if (a->s1c == 0x1C && a->f10 == 2)
         sub_800AB114((G2Obj*)a);

@@ -160,7 +160,7 @@ extern void memset();
 extern void sub_80020DDC();
 extern void sub_8001C19C();
 extern void sub_800A2AE8();
-extern void sub_80031160();
+extern void PlaySeqSlot_80031160();
 extern void sub_80018A4C();
 extern int LoadOverlay_80020BF8();
 extern void sub_8001AAF4();
@@ -431,8 +431,8 @@ void sub_800BA788(BatTask_a* t)
     FreeActiveOverlay_8002C014();
     sub_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
-    sub_80031334(0);
-    sub_80030664();
+    StopSeqSlot_80031334(0);
+    FreeSeqSlotSound_80030664();
     sub_80066E38(0);
     PlayMusic_800300E0(sub_800315E4(), 1);
     sub_80020898();
@@ -760,7 +760,7 @@ void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
     }
     else
     {
-        sub_80031160(0x11, 1);
+        PlaySeqSlot_80031160(0x11, 1);
         u->fc = sub_800BC28C();
         u->next_8 = sub_800BBC84;
         t->next_8 = sub_800BC144;
@@ -2034,7 +2034,7 @@ void sub_800C106C(unsigned int* a, int* b)
     if (--b[1] < 0)
     {
         *a = (*a & ~1) | 0x8000;
-        sub_80031334(b[0]);
+        StopSeqSlot_80031334(b[0]);
     }
 }
 
@@ -2045,7 +2045,7 @@ void sub_800C10B8(int a, int b)
     if (a > 0 && e)
     {
         int* q;
-        sub_80031160(b, 1);
+        PlaySeqSlot_80031160(b, 1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q = e->buffer;
         q[0] = b;

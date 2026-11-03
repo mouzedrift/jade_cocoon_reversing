@@ -16,7 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern short* dword_8008D434;
+extern short* publicTiySprts_8008D434;
 
 INCLUDE_DATA(aDWorkPsusEvent);
 extern char aDWorkPsusEvent[];
@@ -30,7 +30,7 @@ extern void sub_80041ED0(int a, RECT* r, int c, int d);
 extern unsigned char** off_80087064[];
 extern unsigned char* off_80087050[];
 extern int dword_80086FB0[][3];
-extern void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
 void sub_8004226C(int a, RECT* r, int c, int d)
 {
@@ -79,7 +79,7 @@ void sub_8004226C(int a, RECT* r, int c, int d)
         c1[0] = off_80087050[d][0];
         c1[1] = off_80087050[d][1];
         c1[2] = off_80087050[d][2];
-        sub_80033394(out, c0, c1, c, 40, 10);
+        PulseColor_80033394(out, c0, c1, c, 40, 10);
     }
 }
 // Matched
@@ -157,7 +157,7 @@ void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 // Matched
 int sub_800429A8(short* p)
 {
-    short* g = dword_8008D434;
+    short* g = publicTiySprts_8008D434;
     if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
     {
         return 1;
@@ -169,7 +169,7 @@ extern unsigned char* off_80087028[];
 void sub_800429F8(int a0, int a1)
 {
     short* p = (short*)a0;
-    short* g = dword_8008D434;
+    short* g = publicTiySprts_8008D434;
     unsigned char rgb[4][4];
     RECT r;
     short i;

@@ -79,7 +79,7 @@ extern int sub_800AD0A4(int a);
 extern void sub_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
 extern void sub_8003D794(void* p, int a1);
-extern void sub_8002A310(void* p, int a);
+extern void DrawTextList_8002A310(void* p, int a);
 extern void sub_800429F8(int a0, int a1);
 extern void sub_80042B38(int a0, int a1);
 extern unsigned short name_800BE870[];
@@ -602,7 +602,7 @@ void sub_800BB868(WpnObj_wpnshop* o, WpnRect_wpnshop* r, int a2, int a3, short i
 void sub_800BB8CC(WpnObj_wpnshop* o)
 {
     sub_8002A4E4(0xE);
-    sub_8002A310(name_800BE134, 0xE);
+    DrawTextList_8002A310(name_800BE134, 0xE);
     sub_800429F8((int)name_800BE7C4, 0xE);
     sub_80042B38((int)name_800BE7C4, 0xE);
     if (o->f_0 < 0x11)

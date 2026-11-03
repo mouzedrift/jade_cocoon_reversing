@@ -446,7 +446,7 @@ SoundInfo soundFiles_80082F0C[155] =
   { SOUND_TAISEN_SND, 0u, 0u, 1u, 0u, -1 },
   { SOUND_SAIRASU_SND, 255u, 255u, 1u, 0u, 44 }
 };
-INCLUDE_DATA(dword_800833E4);
+INCLUDE_DATA(seqSlots_800833E4);
 INCLUDE_DATA(off_800834E4);
 INCLUDE_DATA(off_80083580);
 INCLUDE_DATA(dword_80083594);
@@ -538,7 +538,7 @@ void sub_80014C28(int* a0, int* a1)
 {
     if (effectOutcomeFlag_8008D780 == 1)
     {
-        sub_800306FC(6);
+        StopSoundSeqById_800306FC(6);
         *a0 = (*a0 & ~1) | 0x8000;
     }
     if (++a1[1] % 10 == 0)

@@ -204,8 +204,8 @@ unsigned int sub_8002BC60(unsigned int a, unsigned int b, unsigned int c)
     return 0;
 }
 extern CVECTOR dword_800741E8;
-extern int dword_8008D430;
-extern void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+extern int publicTiyPolyFT4s_8008D430;
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 extern void sub_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
 void sub_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot)
@@ -218,20 +218,20 @@ void sub_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot)
         c0 = dword_800741E8;
         c1 = dword_800741E8;
         setPolyFT4(&poly);
-        poly.code = ((POLY_FT4*)dword_8008D430)[idx].code;
-        poly.clut = ((POLY_FT4*)dword_8008D430)[idx].clut;
-        poly.tpage = ((POLY_FT4*)dword_8008D430)[idx].tpage;
-        poly.u0 = ((POLY_FT4*)dword_8008D430)[idx].u0;
-        poly.v0 = ((POLY_FT4*)dword_8008D430)[idx].v0;
-        poly.u1 = ((POLY_FT4*)dword_8008D430)[idx].u1;
-        poly.v1 = ((POLY_FT4*)dword_8008D430)[idx].v1;
-        poly.u2 = ((POLY_FT4*)dword_8008D430)[idx].u2;
-        poly.v2 = ((POLY_FT4*)dword_8008D430)[idx].v2;
-        poly.u3 = ((POLY_FT4*)dword_8008D430)[idx].u3;
-        poly.v3 = ((POLY_FT4*)dword_8008D430)[idx].v3;
+        poly.code = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].code;
+        poly.clut = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].clut;
+        poly.tpage = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].tpage;
+        poly.u0 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u0;
+        poly.v0 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v0;
+        poly.u1 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u1;
+        poly.v1 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v1;
+        poly.u2 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u2;
+        poly.v2 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v2;
+        poly.u3 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u3;
+        poly.v3 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v3;
         setShadeTex(&poly, 0);
         scale *= 512;
-        sub_80033394(&poly.r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 40, 10);
+        PulseColor_80033394(&poly.r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 40, 10);
         sub_80031BE4(&poly, pOT_8008D454 + ot, pos[0], pos[1], scale, 0x100, 0, 0x11);
     }
 }

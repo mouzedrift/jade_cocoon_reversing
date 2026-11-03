@@ -231,7 +231,7 @@ typedef struct TitleStr4
     char c[4];
 } TitleStr4;
 
-extern void sub_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
+extern void PulseColor_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
 extern unsigned long* pOT_8008D3EC;
 extern int dword_800A05A0;
 #if 0
@@ -271,7 +271,7 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         s4 = *(TitleStr4*)((char*)&dword_800A05A0 + 4);
         p[i].field_8 = 0x6F;
         p[i].field_A = y;
-        sub_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
+        PulseColor_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
         SetSemiTrans(&p[i], 1);
         AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
         AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
@@ -281,7 +281,7 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
 INCLUDE_OVERLAY_ASM(title, sub_800A0D18);
 
 extern void sub_8001C19C(int a0, int a1);
-extern void sub_80031260(void* a0, int a1, int a2);
+extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern int dword_800A27C0;
 extern int dword_800A2818;
 // Matched
@@ -292,7 +292,7 @@ int sub_800A0EF0(void)
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
-    sub_80031260(&bgmSound_80091CE0, 0x1B, 1);
+    PlayMusicSeq_80031260(&bgmSound_80091CE0, 0x1B, 1);
     DrawIntroMovie_8001AF64(&dword_800A27C0);
     FreeSound_80030D00((int)&bgmSound_80091CE0);
     return dword_800A2818;
@@ -881,7 +881,7 @@ extern void sub_800A2424(void);
 extern void sub_800A20F4(void);
 extern void sub_800A2110(void);
 extern void sub_800A2540(void);
-extern void sub_80033394(void* a, void* b, void* c, int d, int e, int f);
+extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
 extern void sub_8003F7C8(void* a, void* b);
 
 typedef struct { int a, b, c; } Blk12_;
@@ -939,7 +939,7 @@ void sub_800A1F98(char* p, char* q)
     loc = dword_800A08B0;
     e5->y_A = y;
     e5->x_8 = 0x55;
-    sub_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
+    PulseColor_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(e5, 1);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, e5, 5);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
