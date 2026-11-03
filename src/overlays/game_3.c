@@ -35,21 +35,21 @@ int sub_800A5854(void)
 
 void sub_800A58B4(void)
 {
-    GameNode_1* n = dword_8008D410;
+    EventNode* n = dword_8008D410;
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     GameRect_1* r;
     for (i = 0; i < cnt; i++)
     {
-        GameObj5_1* o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
-            sub_800A6168(o, o->obj_14);
-        n = n->next_4;
+        EventEntry* o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
+            sub_800A6168(o, o->buffer);
+        n = n->next;
     }
     dword_800AEBD8 = -1;
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
-    StopAllEventEntries_80043B40((EventNode*)dword_8008D410);
+    StopAllEventEntries_80043B40(dword_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
@@ -68,14 +68,14 @@ void sub_800A58B4(void)
 }
 
 // Matched
-GameObj5_1* sub_800A59D0(int v)
+EventEntry* sub_800A59D0(int v)
 {
-    GameObj5_1* p = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D410);
+    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D410);
     if (p)
     {
-        GameEvCtx* q = p->obj_14;
+        GameEvCtx* q = p->buffer;
         int i;
-        p->flags_0 = ((((p->flags_0 | 1) & ~0x8000) | 4) & ~0x8000);
+        p->flags = ((((p->flags | 1) & ~0x8000) | 4) & ~0x8000);
         q->start_4 = v;
         q->pc_8 = v;
         q->ret_C = v;
@@ -86,8 +86,8 @@ GameObj5_1* sub_800A59D0(int v)
             q->fCC[i] = 0;
         }
         sub_800A5B54(q);
-        p->fn_8 = sub_800A6060;
-        p->fn_c = sub_800A6168;
+        p->cb_8 = sub_800A6060;
+        p->cb_C = sub_800A6168;
         dword_800AEBDC++;
         return p;
     }
@@ -95,38 +95,38 @@ GameObj5_1* sub_800A59D0(int v)
 }
 
 // Matched
-GameObj5_1* sub_800A5AA0(int a, int b)
+EventEntry* sub_800A5AA0(int a, int b)
 {
-    GameObj5_1* r = sub_800A59D0(a);
-    GameEvCtx* t = r->obj_14;
+    EventEntry* r = sub_800A59D0(a);
+    GameEvCtx* t = r->buffer;
     t->f120 = b;
     return r;
 }
 
 // Matched
-int sub_800A5AD0(GameObj5_1* p)
+int sub_800A5AD0(EventEntry* p)
 {
-    return ((GameEvCtx*)p->obj_14)->id_10;
+    return ((GameEvCtx*)p->buffer)->id_10;
 }
 
 // Matched
 int sub_800A5AE4(int a)
 {
-    GameNode_1* n = dword_8008D410;
-    GameObj5_1* o;
+    EventNode* n = dword_8008D410;
+    EventEntry* o;
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
+        o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
         {
-            if (a == ((GameEvCtx*)o->obj_14)->id_10)
+            if (a == ((GameEvCtx*)o->buffer)->id_10)
             {
                 return (int)o;
             }
         }
-        n = n->next_4;
+        n = n->next;
     }
     return 0;
 }
@@ -165,40 +165,40 @@ void sub_800A5B54(GameEvCtx* p)
 // Matched
 void sub_800A5BCC(int a)
 {
-    GameNode_1* n = dword_8008D410;
+    EventNode* n = dword_8008D410;
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        GameObj5_1* o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
+        EventEntry* o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->obj_14;
+            GameEvCtx* q = o->buffer;
             int m = 1 << a;
             q->f18 &= ~m;
             q->f20 &= ~m;
         }
-        n = n->next_4;
+        n = n->next;
     }
 }
 
 int sub_800A5C40(int a)
 {
     int r = sub_800A5E68();
-    GameNode_1* n = dword_8008D410;
-    int cnt = n->count_c;
+    EventNode* n = dword_8008D410;
+    int cnt = n->count;
     int i;
     GameEvCtx* o;
     GameEvEnt* q;
     int v;
     int k;
-    GameObj5_1* e;
+    EventEntry* e;
     for (i = 0; i < cnt; i++)
     {
-        e = &n->sub_10;
-        if ((e->flags_0 & 0x8001) == 1)
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1)
         {
-            o = e->obj_14;
+            o = e->buffer;
             if (r == 0 && (o->flags_0 & 8) && o->fC8 == a)
             {
                 o->flags_0 |= 4;
@@ -206,16 +206,16 @@ int sub_800A5C40(int a)
                 break;
             }
         }
-        n = n->next_4;
+        n = n->next;
     }
     n = dword_8008D400;
-    cnt = n->count_c;
+    cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        e = &n->sub_10;
-        if ((e->flags_0 & 0x8001) == 1)
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1)
         {
-            q = e->obj_14;
+            q = e->buffer;
             if (r)
             {
                 q->f78 = 0;
@@ -240,7 +240,7 @@ int sub_800A5C40(int a)
                 }
             }
         }
-        n = n->next_4;
+        n = n->next;
     }
     return r;
 }
@@ -248,15 +248,15 @@ int sub_800A5C40(int a)
 // Matched
 GameEvEnt* sub_800A5DDC(int a, int b, GameEvEnt* c)
 {
-    GameNode_1* n = dword_8008D400;
+    EventNode* n = dword_8008D400;
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        GameObj5_1* o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
+        EventEntry* o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->obj_14;
+            GameEvEnt* q = o->buffer;
             if (c != q)
             {
                 if (b == 0)
@@ -275,7 +275,7 @@ GameEvEnt* sub_800A5DDC(int a, int b, GameEvEnt* c)
                 }
             }
         }
-        n = n->next_4;
+        n = n->next;
     }
     return 0;
 }
@@ -288,32 +288,32 @@ int sub_800A5E68(void)
 
 int sub_800A5E80(int a)
 {
-    GameNode_1* n = dword_8008D400;
+    EventNode* n = dword_8008D400;
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        GameObj5_1* o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
+        EventEntry* o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->obj_14;
+            GameEvEnt* q = o->buffer;
             if (q->f78 != 0 && (q->f84 & 0xBFFFFFFF) == a)
                 return 1;
         }
-        n = n->next_4;
+        n = n->next;
     }
     n = dword_8008D410;
-    cnt = n->count_c;
+    cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        GameObj5_1* o = &n->sub_10;
-        if ((o->flags_0 & 0x8001) == 1)
+        EventEntry* o = &n->entry;
+        if ((o->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->obj_14;
+            GameEvCtx* q = o->buffer;
             if (q->fC8 == a)
                 return 1;
         }
-        n = n->next_4;
+        n = n->next;
     }
     return 0;
 }
@@ -663,7 +663,7 @@ void sub_800A6968(GameTask_1* t, GameQ_1* q)
         i = 0;
         do
         {
-            sub_800A7450((GameNode_1*)*l0[i].p0);
+            sub_800A7450(*l0[i].p0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
@@ -699,7 +699,7 @@ void sub_800A6A48(GameTask_1* t, GameStage_1* q)
             {
                 if (l->f4 & 0x1000)
                 {
-                    sub_800A7450((GameNode_1*)*l->p0);
+                    sub_800A7450(*l->p0);
                 }
                 l++;
             } while (l->p0 != 0);
@@ -717,7 +717,7 @@ void sub_800A6B00(GameTask_1* t, GameQ_1* q)
         i = 0;
         do
         {
-            sub_800A7450((GameNode_1*)*l0[i].p0);
+            sub_800A7450(*l0[i].p0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
@@ -751,7 +751,7 @@ void sub_800A6C00(GameTask_1* t, int* q)
         do
         {
             if (l->f4 & (one << q[2]))
-                sub_800A74F0((GameNode_1*)*l->p0);
+                sub_800A74F0(*l->p0);
             l++;
         } while (l->p0 != 0);
     }
@@ -801,7 +801,7 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
 {
     GameD_1* p;
     int ov;
-    GameObj5_1* e;
+    EventEntry* e;
     q->f0 = -1;
     unknownFlags_8008D678 &= ~8;
     p = q;
@@ -831,16 +831,16 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
     {
         q->f8 = dword_800B0EC0;
         q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
-        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D498);
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        e = AllocEventEntry_80043AF8(dword_8008D498);
+        e->flags = (e->flags | 1) & ~0x8000;
         q->f0 = 4;
     }
     else if (sub_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && dword_800B0EC0 != 1)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
-        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_800B1DAC);
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        e = AllocEventEntry_80043AF8(dword_800B1DAC);
+        e->flags = (e->flags | 1) & ~0x8000;
         p->f0 = 1;
     }
     else if (dword_800B06B0[0])
@@ -871,8 +871,8 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
-        e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D480);
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        e = AllocEventEntry_80043AF8(dword_8008D480);
+        e->flags = (e->flags | 1) & ~0x8000;
         p->f0 = 6;
         p->f18 = (int)&dword_800B06BC;
         p->f1C = (void (*)(int))sub_800A7280;
@@ -1005,38 +1005,38 @@ void sub_800A73A8(void)
 }
 
 // Matched
-void sub_800A7450(GameNode_1* n)
+void sub_800A7450(EventNode* n)
 {
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
         if (eventDispatchHalt_8008B540)
         {
             break;
         }
-        if ((n->sub_10.flags_0 & 0x8001) == 1)
+        if ((n->entry.flags & 0x8001) == 1)
         {
-            GameObj5_1* o = &n->sub_10;
-            o->fn_8(o, o->obj_14);
+            EventEntry* o = &n->entry;
+            o->cb_8(o, o->buffer);
         }
-        n = n->next_4;
+        n = n->next;
     }
 }
 
 // Matched
-void sub_800A74F0(GameNode_1* n)
+void sub_800A74F0(EventNode* n)
 {
     int i;
-    int cnt = n->count_c;
+    int cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
-        if ((n->sub_10.flags_0 & 0x8004) == 4)
+        if ((n->entry.flags & 0x8004) == 4)
         {
-            GameObj5_1* o = &n->sub_10;
-            o->fn_c(o, o->obj_14);
+            EventEntry* o = &n->entry;
+            o->cb_C(o, o->buffer);
         }
-        n = n->next_4;
+        n = n->next;
     }
 }
 

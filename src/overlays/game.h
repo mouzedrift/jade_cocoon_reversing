@@ -13,7 +13,6 @@
 
 extern void sub_800A6D30(int a);
 
-struct GameObj5_1;
 
 // AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the name_800ADEB8 state handlers)
 typedef struct GameAi
@@ -119,7 +118,7 @@ typedef struct GameEvEnt
     int f8C;
 } GameEvEnt;
 
-extern struct GameObj5_1* sub_800A59D0(int a);
+extern EventEntry* sub_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
@@ -396,24 +395,6 @@ extern int dword_800B199C[];
 
 extern short sinTable_80084540[];
 
-typedef struct GameObj5_1
-{
-    unsigned int flags_0;
-    char pad_4[4];
-    void (*fn_8)();
-    void (*fn_c)();
-    int pad_10;
-    void* obj_14; // the work area (EventEntry.buffer)
-} GameObj5_1;
-
-typedef struct GameNode_1
-{
-    char pad_0[4];
-    struct GameNode_1* next_4;
-    char pad_8[4];
-    int count_c;
-    GameObj5_1 sub_10;
-} GameNode_1;
 
 typedef struct GameObjList_1
 {
@@ -434,7 +415,7 @@ typedef struct GameTable_1
     GameTabEnt_1 e[1];
 } GameTable_1;
 
-extern GameNode_1* dword_8008D410;
+extern EventNode* dword_8008D410;
 
 extern void sub_800A8EA4();
 
@@ -530,7 +511,7 @@ extern void sub_800A8140(void);
 
 extern void sub_800A94CC(void);
 
-extern GameNode_1* dword_8008D400;
+extern EventNode* dword_8008D400;
 
 extern GameRect_1 stru_8008D420;
 
@@ -586,7 +567,7 @@ extern void sub_800A46FC(GameAi* p);
 
 typedef struct GameLst_1
 {
-    int** p0;
+    EventNode** p0; // a list head variable; 0 ends the table
     int f4;
 } GameLst_1;
 
@@ -606,7 +587,7 @@ extern void sub_800A6B00();
 
 extern void sub_800A73A8(void);
 
-extern void sub_800A7450(GameNode_1* n);
+extern void sub_800A7450(EventNode* n);
 
 extern void sub_800A13B8();
 
@@ -614,11 +595,11 @@ extern int CheckEnemyContact_800A19E4();
 
 extern void StartPadVibration_80036528();
 
-extern int dword_8008D49C;
+extern EventNode* dword_8008D49C;
 
 extern unsigned char levantCaptureLevel_8008BD7C;
 
-extern void sub_800A2EE4(void);
+extern void sub_800A2EE4(EventEntry* e, void* ai);
 
 extern void (*name_800ADEB8[][2])();
 
@@ -720,11 +701,11 @@ extern unsigned short padPressed_8009194C;
 
 extern short word_80091CB8[];
 
-extern int dword_8008D498;
+extern EventNode* dword_8008D498;
 
-extern int dword_8008D480;
+extern EventNode* dword_8008D480;
 
-extern int dword_800B1DAC;
+extern EventNode* dword_800B1DAC;
 
 extern int dword_800B06B0[];
 

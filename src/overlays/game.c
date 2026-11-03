@@ -817,16 +817,16 @@ void sub_800A2D48(GameAi* p)
 
 GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
 {
-    GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D49C);
     GameAi* q;
     int v;
     int k;
     int j;
     if (e != 0)
     {
-        q = e->obj_14;
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
-        q->flags_0 = &e->flags_0;
+        q = e->buffer;
+        e->flags = (e->flags | 1) & ~0x8000;
+        q->flags_0 = &e->flags;
         q->minion_4 = b;
         q->actor_8 = a;
         q->f28 = 0;
@@ -837,7 +837,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
         q->f10 = -1;
         if (c == 0)
         {
-            e->fn_8 = sub_800A2EE4;
+            e->cb_8 = sub_800A2EE4;
         }
         else
         {
@@ -846,7 +846,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
             {
                 j = !(levantCaptureLevel_8008BD7C - b->st_0.level_44 < 5);
 
-                e->fn_8 = name_800ADEB8[v][j];
+                e->cb_8 = name_800ADEB8[v][j];
             }
             else
             {
@@ -855,7 +855,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
                 {
                     k = (k - 0x39) / 4;
                 }
-                e->fn_8 = name_800ADEB8[k][0];
+                e->cb_8 = name_800ADEB8[k][0];
             }
         }
         return q;
@@ -870,7 +870,7 @@ void sub_800A2EC8(GameAi* p)
 }
 
 // Matched
-void sub_800A2EE4(void)
+void sub_800A2EE4(EventEntry* e, void* ai)
 {
 }
 
