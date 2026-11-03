@@ -1973,7 +1973,88 @@ int sub_800BE364()
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BE3C0);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BE834);
+extern void sub_800BF3DC(int a, int b, int c, int d, int e);
+extern void sub_800BF3AC();
+extern void sub_80037BFC(int a);
+extern void StartPadVibration_80036528(int a, int b);
+extern unsigned char dword_800C9134[];
+void sub_800BE834(int idx, int b)
+{
+    switch (dword_800C9CBC[idx])
+    {
+    case 0:
+        break;
+    case 1:
+        sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
+        if (dword_800C9D38[idx] > 0)
+        {
+            sub_80037BFC(0x1E);
+            if (idx == 0)
+            {
+                StartPadVibration_80036528(0, 0);
+            }
+            else
+            {
+                StartPadVibration_80036528(0, 2);
+            }
+        }
+        break;
+    case 2:
+        sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0);
+        if (dword_800C9D48[idx] > 0)
+        {
+            sub_80037BFC(0x1E);
+            if (idx == 0)
+            {
+                StartPadVibration_80036528(0, 0);
+            }
+            else
+            {
+                StartPadVibration_80036528(0, 2);
+            }
+        }
+        break;
+    case 3:
+        sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
+        sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0xC);
+        if (dword_800C9D38[idx] > 0 || dword_800C9D48[idx] > 0)
+        {
+            sub_80037BFC(0x1E);
+            if (idx == 0)
+            {
+                StartPadVibration_80036528(0, 0);
+            }
+            else
+            {
+                StartPadVibration_80036528(0, 2);
+            }
+        }
+        break;
+    case 4:
+        sub_800BF3DC(idx, 2, 0, b, 0);
+        sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0xC);
+        sub_800BF3AC();
+        sub_80037BFC(0x1E);
+        if (idx == 0)
+        {
+            StartPadVibration_80036528(0, 1);
+        }
+        else
+        {
+            StartPadVibration_80036528(0, 2);
+        }
+        break;
+    case 5:
+        StartPadVibration_80036528(0, 0x26);
+        break;
+    case 6:
+        break;
+    case 7:
+        StartPadVibration_80036528(0, dword_800C9134[((BatSlot_a*)dword_800C9CC8)[idx].b]);
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(battle, dword_800B6794);
 
 #if 0 // Not matched: the shared 'return 1' block sits after the sub_800BEB68 test in the original (here it lands at the end and the last test flips); tried goto/early-return layouts
 int sub_800BEA94()
