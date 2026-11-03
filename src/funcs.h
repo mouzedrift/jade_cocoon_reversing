@@ -477,4 +477,7 @@ extern int sub_80010CDC();
 extern int sub_80010DB0();
 extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode);
 
+extern void sub_80012BB0(int a0, int a1, int* p, int a3);
+extern int sub_80013DB0(void);
+
 #endif

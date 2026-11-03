@@ -19,10 +19,58 @@
 INCLUDE_DATA(dword_800720E4);
 
 
+
 // Matched
 int sub_80013358(int idx)
 {
     return dword_80079320[idx];
 }
 INCLUDE_ASM(sub_80013374);
+#if 0
+// Not matched: code matches, but emitting the jump table from C shifts .rdata by 4 (the word before it at 0x800720E4)
+void sub_80013C28(int a0, int a1, int* p, int a3)
+{
+    int r;
+    if (p[0] == 4)
+    {
+        switch (p[1])
+        {
+        case 3:
+            r = rand() % 6;
+            if (r == 0)
+            {
+                r = 1;
+            }
+            else if (r == 5)
+            {
+                r = 3;
+            }
+            else
+            {
+                r = 2;
+            }
+            sub_80012614(a1, 1, r, 0);
+            sub_80012614(a1, 0, r, 0);
+            break;
+        case 4:
+            sub_80012614(a1, 5, sub_80013DB0(), 0);
+            break;
+        case 5:
+            sub_80012614(a1, 7, sub_80013DB0(), 0);
+            break;
+        case 6:
+            sub_80012614(a1, 9, sub_80013DB0(), 0);
+            break;
+        case 7:
+            sub_80012614(a1, 0xB, sub_80013DB0(), 0);
+            break;
+        case 8:
+            sub_80012614(a1, 0xD, sub_80013DB0(), 0);
+            break;
+        }
+        sub_80011B24(p[1]);
+        sub_80012BB0(a0, a1, p, a3);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80013C28);
