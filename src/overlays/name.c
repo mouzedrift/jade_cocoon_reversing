@@ -19,7 +19,7 @@ typedef struct
 extern int dword_800B83F8;
 extern char defaultName_800B83B8[0x14];
 extern unsigned short padPressed_8009194C;
-extern short name_800C8204;
+extern short name_800B8204[];
 extern void sub_800B7AB4(NameEntry* p);
 extern void sub_800B7F08(NameEntry* p);
 extern int sub_800B7F70(NameEntry* p);
@@ -77,13 +77,11 @@ void sub_800B7CA4(NameEntry* p)
     }
 }
 
-#if 0
-// Not matched: the original loads the limit after the sign extension of the incremented index
 void sub_800B7CD8(NameEntry* p)
 {
     if (padPressed_8009194C & 2)
     {
-        if (++p->pad_A > name_800C8204 - 1)
+        if (++p->pad_A > name_800B8204[0] - 1)
         {
             p->pad_A = 0;
         }
@@ -93,13 +91,10 @@ void sub_800B7CD8(NameEntry* p)
         p->pad_A--;
         if (p->pad_A < 0)
         {
-            p->pad_A = name_800C8204 - 1;
+            p->pad_A = name_800B8204[0] - 1;
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(name, sub_800B7CD8);
 
 // Matched
 void sub_800B7D60(NameEntry* p)

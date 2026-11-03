@@ -399,12 +399,10 @@ void sub_800B8128(short a, short b, MapPos* out)
     }
 }
 
-#if 0
-// Not matched: s0/s1 swapped for i and cnt
-short sub_800B81D0(MapPos* p)
+int sub_800B81D0(MapPos* p)
 {
     int i;
-    int cnt = 0;
+    short cnt = 0;
     MapPos q;
     q.a = p->a;
     for (i = 0; i < word_800B8C98[p->a]; i++)
@@ -421,8 +419,6 @@ short sub_800B81D0(MapPos* p)
     }
     return cnt;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B81D0);
 
 // Matched
 int sub_800B8290(MapPos* p)
@@ -450,31 +446,30 @@ int sub_800B8290(MapPos* p)
     return r != -1;
 }
 
-#if 0
-// Not matched: block layout (the original tests 0xFE/0xFF first and has p in a2)
 void sub_800B8338(MapPos* p)
 {
     unsigned char c = dword_800B9348[p->a][p->b];
-    MapSaveView* v;
-    if (c >= 0xF0)
+    if (c == 0xFE || c == 0xFF)
     {
-        if (c != 0xFE && c != 0xFF)
-        {
-            sub_800AD16C(4, c - 0xEF);
-        }
-        v = (MapSaveView*)&saveData_8008B570;
-        v->f2E4 = 4;
-        v->f2E8 = 0;
-        v->f2EC = 0;
-        v->f2EE = -1;
+        MAPV->f2E4 = 4;
+        MAPV->f2E8 = 0;
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
+    }
+    else if (c >= 0xF0)
+    {
+        sub_800AD16C(4, c - 0xEF);
+        MAPV->f2E4 = 4;
+        MAPV->f2E8 = 0;
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
     }
     else
     {
-        v = (MapSaveView*)&saveData_8008B570;
-        v->f2E4 = dword_800B9360[p->a];
-        v->f2E8 = dword_800B9348[p->a][p->b];
-        v->f2EC = 0;
-        v->f2EE = -1;
+        MAPV->f2E4 = dword_800B9360[p->a];
+        MAPV->f2E8 = dword_800B9348[p->a][p->b];
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
     }
     sub_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
@@ -482,8 +477,6 @@ void sub_800B8338(MapPos* p)
     dword_80091C94 = 1;
     eventDispatchHalt_8008B540 = 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
 // Matched
 void sub_800B8448(MapPos* out)
@@ -555,8 +548,6 @@ void sub_800B85CC(MapTask* t)
     f();
 }
 
-#if 0
-// Not matched: scheduling of the loads in the last case (about 20 words differ)
 void sub_800B860C()
 {
     int* m = dword_800B9420;
@@ -654,51 +645,39 @@ void sub_800B860C()
             m[3]++;
         }
         n = 0;
-        if (list->id != -1)
+        while (list[n].id != -1)
         {
-            MapEntry* p = list;
-            do
-            {
-                p++;
-                n++;
-            } while (p->id != -1);
+            n++;
         }
         m[3] = m[3] < 0 ? 0 : (n - 1 < m[3] ? n - 1 : m[3]);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
-            short fl = dword_800B93F8[m[1]];
-            sv->f2EC = m[3];
-            sv->f2E4 = m[1];
-            sv->f2E2 = -1;
-            sv->f2E6 = -1;
-            sv->f2EA = -1;
-            sv->f2EE = -1;
+            MAPV->f2E0 = dword_800B93F8[m[1]];
+            MAPV->f2E4 = m[1];
+            MAPV->f2E8 = m[2];
+            MAPV->f2EC = m[3];
+            MAPV->f2E2 = -1;
+            MAPV->f2E6 = -1;
+            MAPV->f2EA = -1;
+            MAPV->f2EE = -1;
             dword_80091C94 = 1;
-            sv->f2E8 = m[2];
             dword_80091C54 = 0;
-            sv->f2E0 = fl;
             sub_800A8DEC();
             sub_800A6D30(1);
             SetFadeMode_8001C19C(0, 0x20);
             eventDispatchHalt_8008B540 = 1;
         }
-        else
+        else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            if (IsCancelPressedP1_8003D41C(1) == 1)
-            {
-                m[3] = 0;
-                m[0]--;
-            }
-            r3.x = 0x1E;
-            r3.y = 0x14;
-            DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
+            m[3] = 0;
+            m[0]--;
         }
+        r3.x = 0x1E;
+        r3.y = 0x14;
+        DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B860C);
 
 
 // Matched
@@ -710,8 +689,6 @@ void sub_800B8B2C(MapTask* t)
     f();
 }
 
-#if 0
-// Not matched: the original loads the constant 0x78 twice (no CSE between a.y and b.x)
 void sub_800B8B5C()
 {
     int* sel = &dword_800B9438;
@@ -741,14 +718,12 @@ void sub_800B8B5C()
     IsCancelPressedP1_8003D41C(1);
     a.x = 0x6E;
     a.y = 0x78;
-    b.x = 0x78;
-    b.y = 0x82;
+    b.x = a.x + 10;
+    b.y = a.y + 10;
     DrawText_8003E91C(2, dword_800B6BE0, &b, 0);
     c.x = a.x + 0x50;
     c.y = a.y + 0xA;
     DrawNumber_8003EF74(&c, *sel + 1, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8B5C);
 
 INCLUDE_OVERLAY_ASM(map, dword_800B8C94);
