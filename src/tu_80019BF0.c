@@ -2495,9 +2495,255 @@ void sub_8001EA28(void* arg0)
 {
     sub_8001EA48(arg0);
 }
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    int field_8;
+    int field_C;
+    char pad_10[0xA];
+    short field_1A;
+    char pad_1C[0xA];
+    short field_26;
+    char pad_28[0x48];
+    VECTOR target_70;
+    char pad_80[0x10];
+    int field_90;
+    char pad_94[0x10];
+    int field_A4;
+    int field_A8;
+    int pad_AC;
+    int field_B0;
+    char pad_B4[8];
+    short field_BC;
+    short field_BE;
+    short field_C0;
+    short field_C2;
+    short field_C4;
+    short field_C6;
+    short field_C8;
+    short field_CA;
+    char pad_CC[4];
+    unsigned char* script_D0;
+    unsigned int field_D4;
+    char pad_D8[0x1C];
+    unsigned short field_F4;
+    short field_F6;
+    char pad_F8[6];
+    short field_FE;
+} ScriptObj;
 #if 0
+// Not matched only because of data layout: the code is identical when sub_8001D9E4/sub_8001DA08 take an int
+// second argument, but the jump table (0x800740B8) must sit 8-aligned relative to its TU's .rdata, which needs a
+// TU split before this function (plus "dword_800740B4 0x4" and a dword_8007411C split point in config/c_rodata.txt)
 void sub_8001EA48(void* arg0)
 {
+    ScriptObj* o = arg0;
+    int done;
+    int flag22;
+    int flag21;
+    int target;
+    unsigned char* cmd;
+    int n;
+    int mode;
+    int r;
+    flag22 = 0;
+    flag21 = flag22;
+    done = flag22;
+    target = o->field_90;
+    if (o->field_C6 <= 0)
+    {
+        return;
+    }
+    if (o->flags_4 & 0x4000)
+    {
+        if (++o->field_C8 >= o->field_CA)
+        {
+            o->field_C8 = 0;
+            o->field_CA = 0;
+            o->flags_4 |= 0x10000;
+        }
+    }
+    if (o->flags_4 & 0x10000)
+    {
+        target = -1;
+    }
+    cmd = o->script_D0 + o->field_C4 * 4;
+    while (!done)
+    {
+        if (target != *(short*)(cmd + 2) && o->field_90 != *(short*)(cmd + 2) && *(short*)(cmd + 2) != -2)
+        {
+            return;
+        }
+        o->flags_4 &= ~0x10000;
+        switch (cmd[0])
+        {
+        case 0:
+            o->flags_4 &= 0xFF17FFFF;
+            return;
+        case 1:
+            n = *(short*)(cmd + 6);
+            if (o->field_C2 != n)
+            {
+                sub_8001D6EC((struct_obj_A*)o, 0);
+                if (n == 0x4003)
+                {
+                    n = o->field_A4;
+                    o->field_C2 = o->field_A4;
+                    o->field_A4 = o->field_FE;
+                    o->field_FE = -1;
+                }
+                else
+                {
+                    o->field_C2 = n;
+                }
+                mode = flag22 ? -2 : -1;
+                if (o->field_A8 >= 0)
+                {
+                    mode = o->field_A8;
+                    o->field_A8 = -1;
+                }
+                sub_8001D760((char*)o, n, mode, flag21);
+            }
+            done = 1;
+            break;
+        case 2:
+            flag22 = 1;
+            break;
+        case 3:
+            if (!(o->flags_4 & 0x2000000))
+            {
+                r = o->field_D4;
+                if (!(r & 1))
+                {
+                    flag21 = 1;
+                }
+                o->field_D4 = r & ~1;
+            }
+            break;
+        case 4:
+            o->field_C8 = 0;
+            o->field_CA = *(short*)(cmd + 6);
+            break;
+        case 5:
+            o->field_C8 = 0;
+            o->field_CA = o->field_F4;
+            break;
+        case 6:
+            sub_8001D9E4((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            break;
+        case 7:
+            sub_8001DA08((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            break;
+        case 8:
+            sub_8001DA2C((struct_obj_A*)o);
+            break;
+        case 9:
+            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, *(short*)(cmd + 6));
+            break;
+        case 10:
+            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, o->field_F6);
+            break;
+        case 11:
+            sub_8001D730((struct_obj_A*)o, *(short*)(cmd + 6));
+            break;
+        case 12:
+            sub_8001D8B4((char*)o, *(short*)(cmd + 6));
+            break;
+        case 13:
+            if (sub_8001D8A8((short*)o))
+            {
+                break;
+            }
+            else
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+        case 14:
+            sub_8001D92C((char*)o, *(short*)(cmd + 6));
+            break;
+        case 15:
+            if ((o->flags_4 & 0x4080000) && o->field_C < 3)
+            {
+                if (!sub_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+                {
+                    sub_8001D71C((struct_obj_A*)o);
+                    o->flags_4 |= 0x10000;
+                    return;
+                }
+                o->flags_4 &= ~0x80000;
+            }
+            o->flags_4 &= ~0x400000;
+            if (!(o->flags_4 & 0x20000))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            o->flags_4 &= ~0x20000;
+            break;
+        case 16:
+            sub_8001EFC4((struct_obj_F*)o);
+            break;
+        case 17:
+            if (o->field_C2 != o->field_C0)
+            {
+                o->field_C2 = o->field_C0;
+                sub_8001D760((char*)o, o->field_C0, -2, flag21);
+            }
+            break;
+        case 18:
+            if (!sub_8001DC60((char*)o, (int)&o->target_70, o->target_70.pad, 200))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            target = -1;
+            o->flags_4 &= ~0x80000;
+            break;
+        case 19:
+            if (sub_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+            {
+                target = -1;
+                o->flags_4 &= ~0x80000;
+            }
+            else
+            {
+                sub_8001D71C((struct_obj_A*)o);
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 21:
+            if (o->field_CA != 0 || o->field_90 != o->field_1A || (o->flags_4 & 0x2000000))
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 22:
+            sub_8001D6EC((struct_obj_A*)o, *(short*)(cmd + 6) != 0);
+            break;
+        case 23:
+            if (++o->field_B0 > *(short*)(cmd + 6))
+            {
+                o->field_B0 = 0;
+            }
+            else
+            {
+                o->flags_4 |= 0x10000;
+                return;
+            }
+            break;
+        case 24:
+            o->field_BC = 0;
+            o->field_BE = *(short*)(cmd + 6);
+            o->flags_4 = o->flags_4 | *(short*)(cmd + 0xA) | 0x40000000;
+            break;
+        }
+        o->field_C4 += cmd[1];
+        cmd += cmd[1] * 4;
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001EA48);
