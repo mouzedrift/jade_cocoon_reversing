@@ -610,7 +610,49 @@ void sub_8003891C(int* p, void* q)
         sub_800398B4(p, &word_8008D668);
     }
 }
-INCLUDE_ASM(sub_80038A5C);
+// Matched
+void sub_80038A5C(struct_obj_37918* p, int a, int* b, int t)
+{
+    int* v = (int*)a;
+    SVECTOR sv;
+    SVECTOR sv2;
+    ScreenPosZ tmp;
+    long pr;
+    long flag;
+    int s;
+    unsigned int g;
+
+    sub_80039E14();
+    sub_8003856C((int*)p);
+    g = word_8008D51E * dword_8008D4BC;
+    s = word_8008D51E * dword_8008B4F8;
+    geomScreenDistance_8008B548 = g >> 12;
+    SetGeomScreen(s / 4096);
+    sv.vx = v[0];
+    sv.vy = v[1];
+    sv.vz = v[2];
+    sv.vy -= 0x15E;
+    sv.vx -= D600_VEC->vx;
+    sv.vy -= D600_VEC->vy;
+    sv.vz -= D600_VEC->vz;
+    word_8008D668.z = RotTransPers(&sv, (long*)&word_8008D668.xy, &pr, &flag);
+    sv2.vx = b[0];
+    sv2.vy = b[1];
+    sv2.vz = b[2];
+    sv2.vy -= 0x15E;
+    sv2.vx -= D600_VEC->vx;
+    sv2.vy -= D600_VEC->vy;
+    sv2.vz -= D600_VEC->vz;
+    tmp.z = RotTransPers(&sv2, (long*)&tmp.xy, &pr, &flag);
+    word_8008D668.xy.vx += (tmp.xy.vx - word_8008D668.xy.vx) * t / 4096;
+    word_8008D668.xy.vy += (tmp.xy.vy - word_8008D668.xy.vy) * t / 4096;
+    word_8008D668.z += (tmp.z - word_8008D668.z) * t / 4096;
+    SetGeomScreen(geomScreenDistance_8008B548);
+    if (!(p->flags_4 & 0x800))
+    {
+        sub_800398B4((int*)p, &word_8008D668);
+    }
+}
 // Matched
 void sub_80038CA8(int* p)
 {
@@ -647,7 +689,41 @@ void sub_80038D64(char* p, int* a1)
         *(short*)(p + 0x152) = *(unsigned short*)(p + 0x152) + 0x1000;
     }
 }
-INCLUDE_ASM(sub_80038E2C);
+typedef struct
+{
+    short x0;
+    short y0;
+    short z0;
+    short pad_6;
+    int field_8;
+    short x1;
+    short y1;
+    short z1;
+    short pad_12;
+} CamOffset_80083C70;
+extern CamOffset_80083C70 dword_80083C70[];
+// Matched
+void sub_80038E2C(int* p, int a, int b)
+{
+    char* o = (char*)p;
+    char* sd = (char*)&saveData_8008B570;
+
+    p[3] = 0x1000;
+    p[1] &= ~8;
+    *(struct_v3*)(o + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)(o + 0x198) = *(struct_v3*)(o + 0x38);
+    *(int*)(o + 0x19C) = *(int*)(sd + 0x7AC) + dword_80083C70[(unsigned short)a].y1;
+    *(int*)(o + 0x1A0) += -word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
+    *(int*)(o + 0x198) += word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
+    *(struct_v3*)(o + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)(o + 0x18C) = *(struct_v3*)(o + 0x38);
+    *(int*)(o + 0x190) = *(int*)(sd + 0x7AC) + dword_80083C70[(unsigned short)a].y0 + b;
+    *(int*)(o + 0x194) += -word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
+    *(int*)(o + 0x18C) += word_80084540[(p[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[p[0x44 / 4] & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
+    p[0x17C / 4] = dword_8008D4F0.field_2E;
+    p[0x180 / 4] = dword_80083C70[(unsigned short)a].field_8;
+    sub_80038D64(o, p + 0x38 / 4);
+}
 #if 0
 void sub_800390F4(void* arg0, int arg1)
 {
