@@ -61,7 +61,7 @@ extern char** dword_800B93E0[];
 extern unsigned char dword_800B93F8[];
 extern int dword_80091C54;
 extern void sub_8003D034(void*, int);
-#define SEL dword_800AEBFC[(short)word_800AEBF8[0]]
+#define SEL dword_800AEBFC[word_800AEBF8.a]
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
 extern void sub_800A6D30(int);
@@ -107,8 +107,8 @@ typedef struct MapSelState
 extern MapSelState dword_800B9420;
 extern FileRequestDesc dword_800B9400[];
 extern MapRow dword_800B9220[];
-extern unsigned short word_800AEBF8[2];
-extern unsigned short dword_800B8C94[2];
+extern MapPos word_800AEBF8;  // the selected destination (GAME data)
+extern MapPos dword_800B8C94; // the one selected when the menu opened
 extern void sub_800B8448();
 extern short word_800B932C;
 extern void SetFadeMode_8001C19C(int, int);
@@ -133,9 +133,9 @@ INCLUDE_OVERLAY_ASM(map, dword_800B66C0);
 void sub_800B6BFC(MapTask* t, int a1)
 {
     void (*f)();
-    dword_800B8C94[0] = word_800AEBF8[0];
-    dword_800B8C94[1] = word_800AEBF8[1];
-    sub_800B8448(word_800AEBF8);
+    dword_800B8C94.a = word_800AEBF8.a;
+    dword_800B8C94.b = word_800AEBF8.b;
+    sub_800B8448(&word_800AEBF8);
     f = sub_800B6C7C;
     t->next_8 = f;
     f(t, a1);
@@ -153,7 +153,7 @@ void sub_800B6C7C(MapTask* t)
 void sub_800B6CB4(MapTask* t)
 {
     int a;
-    dword_800B8CA4 = sub_800B7E54((short)word_800AEBF8[0]);
+    dword_800B8CA4 = sub_800B7E54(word_800AEBF8.a);
     sub_800B7EE0();
     if (sub_800AD154(0xC) == 1)
     {
@@ -165,11 +165,11 @@ void sub_800B6CB4(MapTask* t)
     }
     else
     {
-        a = dword_800B9220[(short)word_800AEBF8[0]].f10;
+        a = dword_800B9220[word_800AEBF8.a].f10;
     }
     PlayMusic_800300E0(a, 1);
     dword_800B9434 = 0;
-    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f0);
+    sub_800B6D90(dword_800B9400, dword_800B9220[word_800AEBF8.a].f0);
     t->next_8 = sub_800B6E5C;
 }
 
@@ -216,7 +216,7 @@ void sub_800B6E5C(MapTask* t)
 void sub_800B6E80(MapTask* t)
 {
     dword_800B9434 = 1;
-    sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f4);
+    sub_800B6D90(dword_800B9400, dword_800B9220[word_800AEBF8.a].f4);
     t->next_8 = sub_800B6EE8;
 }
 
@@ -233,7 +233,7 @@ void sub_800B6EE8(MapTask* t, int a1)
 }
 
 // Matched
-void sub_800B6F60(MapTask* t)
+void sub_800B6F60(MapTask* t, int a1)
 {
     sub_800B6FAC(t);
     t->flags_0 &= ~4;
@@ -279,11 +279,11 @@ void sub_800B7980(MapTask* t)
 {
     MapPos q;
     MapElem* e;
-    short* w = (short*)word_800AEBF8;
-    int r = GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w[0]]);
-    sub_800B8128((short)r, w[0], &q);
+    MapPos* w = &word_800AEBF8;
+    int r = GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w->a]);
+    sub_800B8128((short)r, w->a, &q);
     dword_800B9434 = 0;
-    e = dword_800B9220[(short)word_800AEBF8[0]].f14 + q.b;
+    e = dword_800B9220[word_800AEBF8.a].f14 + q.b;
     sub_800B6D90(dword_800B9400, e->f18);
     t->next_8 = sub_800B7A38;
 }
@@ -343,8 +343,8 @@ void sub_800B7A90(MapTask* t, int a)
     MapMenu m;
     int y;
     int wd;
-    short* w = (short*)word_800AEBF8;
-    sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w[0]]), w[0], &q);
+    MapPos* w = &word_800AEBF8;
+    sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w->a]), w->a, &q);
     UpdateMenuCursor_8003D794(&name_800B9324, 0);
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -360,14 +360,14 @@ void sub_800B7A90(MapTask* t, int a)
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
-    wd = MeasureTextWidth_8003E4C8(dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]]);
+    wd = MeasureTextWidth_8003E4C8(dword_800B92FC[word_800AEBF8.a][word_800AEBF8.b]);
     box.x = 0x9E - (short)wd / 2;
     box.y = 0x12;
     box.w = wd + 4;
     box.h = 0x12;
     tp[0] = 0xA0 - (short)wd / 2;
     tp[1] = 0x16;
-    DrawText_8003E91C(2, dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]], tp, 0);
+    DrawText_8003E91C(2, dword_800B92FC[word_800AEBF8.a][word_800AEBF8.b], tp, 0);
     DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
     box2.x = 0x74;
     box2.y = 0xA6;
@@ -393,8 +393,8 @@ void sub_800B7A90(MapTask* t, int a)
     {
         if ((short)GetMenuCursorIndex_8003DA54(&name_800B9324) == 0)
         {
-            sub_800B8338((MapPos*)word_800AEBF8);
-            ((void (*)(MapTask*, int))sub_800B6F60)(t, a);
+            sub_800B8338(&word_800AEBF8);
+            sub_800B6F60(t, a);
             t->next_8 = name_800A75F8;
         }
         else
@@ -444,7 +444,7 @@ void sub_800B7EE0()
         SEL.s6 = 0x40;
     }
     SEL.s4 = dword_800B8CA4;
-    if ((short)word_800AEBF8[0] != (short)dword_800B8C94[0] || (short)word_800AEBF8[1] != (short)dword_800B8C94[1])
+    if (word_800AEBF8.a != dword_800B8C94.a || word_800AEBF8.b != dword_800B8C94.b)
     {
         SEL.s8 = 0;
         SEL.sA = 0;
@@ -452,7 +452,7 @@ void sub_800B7EE0()
     else
     {
         r = GetMenuCursorIndex_8003DA54(&SEL);
-        sub_800B8128((short)r, (short)word_800AEBF8[0], &q);
+        sub_800B8128((short)r, word_800AEBF8.a, &q);
         if (!sub_800B8290(&q))
         {
             SEL.s8 = 0;
@@ -460,7 +460,7 @@ void sub_800B7EE0()
         }
         else
         {
-            n = sub_800B81D0((MapPos*)word_800AEBF8);
+            n = sub_800B81D0(&word_800AEBF8);
             if (dword_800B8CA4 < 4)
             {
                 SEL.s8 = n;
