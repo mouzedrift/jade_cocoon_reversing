@@ -5319,16 +5319,17 @@ char* sub_80024FA8(void* a0, int n)
 }
 #endif
 INCLUDE_ASM(sub_80024FA8);
-#if 0
-// Not matched: only the placement of the field_40 store and n-- before the HeapAlloc call differs
+// Matched
 void sub_80024FFC(struct_112* p, int* ids)
 {
     int n;
+    int heap;
     for (n = 0; ids[n] >= 0; n++)
     {
     }
+    heap = ((int*)p->field_0)[1];
     p->field_40 = n;
-    p->field_64 = HeapAlloc_8003FC8C(n * sizeof(struct_58), ((int*)p->field_0)[1]);
+    p->field_64 = HeapAlloc_8003FC8C(n * sizeof(struct_58), heap);
     n--;
     while (n >= 0)
     {
@@ -5338,8 +5339,6 @@ void sub_80024FFC(struct_112* p, int* ids)
         n--;
     }
 }
-#endif
-INCLUDE_ASM(sub_80024FFC);
 // Matched
 void sub_8002512C(unsigned int* a0, char* a1, int a2)
 {
