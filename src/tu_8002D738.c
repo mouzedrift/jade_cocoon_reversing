@@ -70,13 +70,15 @@ extern Pos16* off_80082DCC[7];
 extern Pos16 aHroto[12];
 extern Pos16 aNrutu[12];
 extern void sub_80033864(Minion* m, unsigned char* out);
-extern int sub_8002F424(unsigned char* p);
+extern short sub_8002F424(unsigned char* p);
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002B1B0(short a, int b, int c);
 extern void DrawUiWindow_8002A384(struct_D7D0* p);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 #if 0
-// Not matched (19 words): m/pp/table saved registers rotated (s4/s5/s6), and the (short)w sll goes to a0 instead of v0
+// Not matched (4 words): writing pos.y through pp once gets the m/pp/table saved registers right (19 words with pos.y),
+// but that store then goes through $s4 instead of $sp; the (short)w sll goes to a0 instead of v0 (int / u_short /
+// u_char w, ternary: no)
 void sub_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;
@@ -110,7 +112,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
             name = sub_80033830(m, i - 1);
         }
         pos.x = off_80082DCC[i]->x + base->x + 3;
-        pos.y = off_80082DCC[i]->y + base->y + 4;
+        pp->y = off_80082DCC[i]->y + base->y + 4;
         sub_8002FAA0(0, (unsigned short*)pp, name, ot);
         pos.x = (unsigned short)(base->x + 4) + off_80082DCC[i]->x;
         pos.y = (unsigned short)(base->y + 0x10) + off_80082DCC[i]->y;
