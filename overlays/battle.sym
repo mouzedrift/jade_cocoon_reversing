@@ -15,6 +15,7 @@ jpt_800BA20C=0x800ba20c; // jump table of sub_800C7530
 dword_800BA220=0x800ba220; // data behind the jump table
 jpt_800BA224=0x800ba224; // jump table of sub_800C7530
 dword_800BA238=0x800ba238; // data behind the jump table
+jpt_800BA23C=0x800ba23c; // jump table of sub_800C7A6C
 sub_800BA254=0x800ba254;
 sub_800BA444=0x800ba444;
 sub_800BA4F4=0x800ba4f4;

@@ -5724,7 +5724,7 @@ typedef struct BatTgtQ_a
 } BatTgtQ_a;
 extern char* dword_800C9E44;
 extern char* dword_800C9E6C;
-extern unsigned short dword_800C9E5C;
+extern int dword_800C9E5C;
 extern int dword_800C93A0;
 extern int dword_800C9380;
 extern int dword_800C939C;
@@ -5953,7 +5953,77 @@ void sub_800C7A1C()
     FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0));
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C7A6C);
+extern unsigned char dword_800C9660[];
+extern unsigned char dword_800C9654[];
+extern int dword_800C96A4[];
+extern unsigned int dword_800C9E64;
+extern int sub_8001CE8C(int a);
+extern int sub_80031B30(int a);
+extern int sub_80031B0C(int a, int b);
+extern int FindNthMagicBit_8001AEC0(char* h, int n);
+extern int sub_8001ACE4(int a);
+void sub_800C7A6C()
+{
+    int h;
+    char* m;
+    dword_800C9E40 = dword_800C9E50;
+    switch (dword_800C9E50)
+    {
+    case 0:
+        dword_800C9E68 = dword_800C9660[sub_800C78D0()];
+        dword_800C9E50 = dword_800C9654[sub_800C78D0()];
+        dword_800C9E58[0] = dword_800C96A4[sub_800C78D0()];
+        break;
+    case 1:
+        dword_800C9E68 = sub_8001CE8C(((int (*)())sub_800C79B8)());
+        dword_800C9E50 = 4;
+        dword_800C9E5C = ((int (*)())sub_800C79B8)();
+        break;
+    case 2:
+        h = sub_80031B30(dword_800C9C7C);
+        dword_800C9E68 = sub_80031B0C(h, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
+        dword_800C9E50 = 4;
+        dword_800C9E5C = ((int (*)())sub_800C79EC)();
+        break;
+    case 3:
+        m = sub_80010824(3, dword_800C9C7C - 1);
+        dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        dword_800C9E50 = 4;
+        dword_800C9E5C = ((int (*)())sub_800C7A1C)();
+        break;
+    case 4:
+        dword_800C9E50 = 5;
+        dword_800C9E64 = sub_800C791C();
+        break;
+    case 5:
+        break;
+    }
+    if (dword_800C9E50 == 4)
+    {
+        if (sub_800C78D0() == 4)
+        {
+            dword_800C9320[0].f2 = dword_800C9E4B + 1;
+            dword_800C9320[0].count_4 = dword_800C9E4B + 1;
+        }
+        else if (sub_800C78D0() == 2)
+        {
+            dword_800C9320[0].f2 = dword_800C9E4B;
+            dword_800C9320[0].count_4 = dword_800C9E4B;
+        }
+        else if (sub_800C78D0() == 7)
+        {
+            dword_800C9320[0].f2 = 1;
+            dword_800C9320[0].count_4 = 1;
+        }
+        else if (sub_800C78D0() == 8)
+        {
+            dword_800C9320[0].f2 = dword_800C9E4B;
+            dword_800C9320[0].count_4 = dword_800C9E4B;
+        }
+        dword_800C9320[0].cursor_8 = 0;
+        dword_800C9320[0].scroll_A = 0;
+    }
+}
 
 struct BatState
 {
