@@ -379,24 +379,21 @@ int sub_800A0898(unsigned char* a)
     return r;
 }
 
-#if 0
-// Not matched: register allocation of the products differs (6 words)
+// Matched
 int sub_800A0968(unsigned char* a)
 {
     short* t = dword_80084540;
-    int p0 = t[0x5C6 / 2] * a[0];
-    int p1 = t[0x1DC6 / 2] * a[0];
-    int p2 = t[0x1DC6 / 2] * a[3];
-    int p3 = t[0x15C6 / 2] * a[3];
-    int p4 = t[0x15C6 / 2] * a[2];
-    int p5 = t[0xDC6 / 2] * a[2];
-    int p6 = t[0xDC6 / 2] * a[1];
-    int p7 = t[0x5C6 / 2] * a[1];
+    int p1, p0, p3, p2, p4, p5, p6, p7;
+    p0 = t[0x5C6 / 2] * a[0];
+    p1 = t[0x1DC6 / 2] * a[0];
+    p2 = t[0x1DC6 / 2] * a[3];
+    p3 = t[0x15C6 / 2] * a[3];
+    p4 = t[0x15C6 / 2] * a[2];
+    p5 = t[0xDC6 / 2] * a[2];
+    p6 = t[0xDC6 / 2] * a[1];
+    p7 = t[0x5C6 / 2] * a[1];
     return ratan2Degrees_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A0968);
 
 // Matched
 void sub_800A0A28(void)
@@ -565,23 +562,20 @@ void sub_800A0F1C(int i)
     sub_8001E1DC(s->actor_3C);
 }
 
-#if 0
-// Not matched: register allocation differs (out/p swapped in s2/s1)
+// Matched
 CombatColorCombat sub_800A0F50(int i, int* p, int x)
 {
     CombatColorCombat c;
     CombatSlotCombat* s;
     memset(&c, 0, 4);
     s = &dword_800A3A08[i];
-    if (*p != 0x14)
+    if (*p == 0x14)
     {
-        Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
+        return c;
     }
+    Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
     return c;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A0F50);
 
 // Matched
 void sub_800A0FF0(int i, int* p)

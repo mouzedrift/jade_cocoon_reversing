@@ -1222,23 +1222,21 @@ int sub_800C0904(unsigned char* p)
     return r;
 }
 
-#if 0 // Not matched: temp register numbering of the eight products (same function as SHOP sub_800BF3B4)
+// Matched
 extern short word_80084540[];
 int sub_800C09D4(unsigned char* p)
 {
-    int t1 = word_80084540[0x2E3] * p[0];
-    int t2 = word_80084540[0xEE3] * p[0];
-    int t3 = word_80084540[0xEE3] * p[3];
-    int t4 = word_80084540[0xAE3] * p[3];
-    int t5 = word_80084540[0xAE3] * p[2];
-    int t6 = word_80084540[0x6E3] * p[2];
-    int t7 = word_80084540[0x6E3] * p[1];
-    int t8 = word_80084540[0x2E3] * p[1];
+    int t2, t1, t4, t3, t5, t6, t7, t8;
+    t1 = word_80084540[0x2E3] * p[0];
+    t2 = word_80084540[0xEE3] * p[0];
+    t3 = word_80084540[0xEE3] * p[3];
+    t4 = word_80084540[0xAE3] * p[3];
+    t5 = word_80084540[0xAE3] * p[2];
+    t6 = word_80084540[0x6E3] * p[2];
+    t7 = word_80084540[0x6E3] * p[1];
+    t8 = word_80084540[0x2E3] * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C09D4);
 
 void sub_800C0A94()
 {
@@ -1353,22 +1351,24 @@ void sub_800C0DB0(int a)
     sub_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
-#if 0 // Not matched: struct-return copy: 'move v0,s1' is scheduled before the lwl/lwr copy (original: after); tried explicit out-pointer form
+// Matched
 BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
 {
     BatCol_a buf;
     int mask;
     memset(&buf, 0, 4);
-    if (p->kind_0 != 0x14 && (p->mask_8 & (mask = 1 << (dword_800C918C + 1))))
+    if (p->kind_0 == 0x14)
+    {
+        *out = buf;
+        return out;
+    }
+    if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0DDC);
 
 int sub_800C0E84(BatCmd_a* p)
 {
@@ -4715,7 +4715,7 @@ void sub_800C8768()
     }
 }
 
-#if 0 // Not matched: arg setup order only (original computes &s first and &pos last); tried prototypes, separate arrays, &a, statement order
+// Matched
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 void sub_800C8828(int a)
 {
@@ -4725,7 +4725,7 @@ void sub_800C8828(int a)
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
-    rect[2] = MeasureTextWidth_8003E4C8() + 4;
+    rect[2] = MeasureTextWidth_8003E4C8(a) + 4;
     rect[3] = 0x12;
     s[0] = a;
     p[0] = rect[0];
@@ -4734,9 +4734,6 @@ void sub_800C8828(int a)
     pos[1] = rect[1] + 4;
     DrawTextLinesWindow_8002AE38(s, pos, 0xF, rect, 1);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
 
 void sub_800C88AC(int a)
 {

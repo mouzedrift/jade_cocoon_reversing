@@ -768,19 +768,16 @@ int sub_800B8E9C(EvCtxEventfnc* c)
     return 0;
 }
 
-#if 0
-// Not matched: the original copies p to $v1 and stores ret_C in the return delay slot (stores 8,4,C); no source order reproduced it
+// Matched
 int sub_800B8F14(EvCtxEventfnc* c)
 {
     EvInsEventfnc* p = (EvInsEventfnc*)c->pc_8[c->fEC_EC].c_C;
     c->fEC_EC = 0;
     c->pc_8 = p;
-    c->ret_C = c->start_4 = p;
+    c->start_4 = p;
+    c->ret_C = c->pc_8;
     return 1;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8F14);
 
 int sub_800B8F44(EvCtxEventfnc* c)
 {
