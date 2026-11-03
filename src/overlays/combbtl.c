@@ -534,6 +534,57 @@ void sub_800A58E8(int i)
     } while (sub_800A1934(u) || sub_800A1958(u));
 }
 
+#if 0
+// Not matched: the original has a jump to the loop increment right after the i == 1 block (one word longer) plus a t0/a3 swap; tried continue/while/switch forms
+extern int sub_800A5B70(int a);
+extern void sub_800378CC();
+extern int dword_8008D610;
+extern int dword_800A82E8;
+extern unsigned char byte_800A85BD;
+extern void sub_800A5C64();
+void sub_800A599C(CombBtlTask* t, int a)
+{
+    int gauge[2];
+    int i;
+    dword_800A85B8 = -1;
+    dword_800A8620 = -1;
+    if (word_800A84D0[0] == 0 && word_800A84D0[1] == 0)
+    {
+        *(short*)((char*)word_800A84D0 + (dword_8008D610 & 2)) += 100;
+    }
+    for (i = 0; i < 2; i++)
+    {
+        gauge[i] = (short)sub_800A5B70(i);
+    }
+    while (dword_800A85B8 < 0)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            word_800A84D0[i] += gauge[i];
+            if (word_800A84D0[i] >= 1000)
+            {
+                word_800A84D0[i] -= 1000;
+                dword_800A85B8 = i;
+                dword_800A8620 = i ^ 1;
+                if (i == 1)
+                {
+                    word_800A84D0[1] += gauge[1];
+                }
+            }
+        }
+    }
+    if (dword_800A85B8 >= 0)
+    {
+        void (*f)();
+        sub_800378CC();
+        dword_800A82E8++;
+        byte_800A85BD = dword_800A4078[dword_800A85B8];
+        f = sub_800A5C64;
+        t->next_8 = f;
+        f(t, a);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A599C);
 
 int sub_800A5B70(int a)
