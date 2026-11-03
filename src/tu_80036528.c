@@ -55,6 +55,37 @@ typedef struct
     short field_4;
 } struct_buf_80036528;
 extern EventNode* dword_8008D4B8;
+extern void sub_800366A0(EventEntry* e, struct_buf_80036528* o);
+#if 0
+// Not matched: o->idx store is forwarded instead of reloaded, idx/b land in swapped registers
+void sub_80036528(int idx, unsigned char b)
+{
+    EventNode* n;
+    int i;
+    struct_buf_80036528* o;
+    EventEntry* e;
+
+    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[(unsigned char)idx][1] >> 4) != 7)
+    {
+        sub_80036658((unsigned char)idx);
+        return;
+    }
+    n = dword_8008D4B8;
+    for (i = 0; i < (unsigned char)idx; i++)
+    {
+        n = n->next;
+    }
+    e = &n->entry;
+    o = e->buffer;
+    e->cb_8 = (EventEntryFn)sub_800366A0;
+    o->b = b;
+    o->idx = idx;
+    o->k = 0;
+    o->field_4 = off_80083B30[(unsigned char)b][0].field_0;
+    padVibration_80095460[o->idx].motor_2[0] = off_80083B30[o->b][o->k].field_2;
+    padVibration_80095460[o->idx].motor_2[1] = off_80083B30[o->b][o->k].field_3;
+}
+#endif
 INCLUDE_ASM(sub_80036528);
 // Matched
 void sub_80036658(int idx)

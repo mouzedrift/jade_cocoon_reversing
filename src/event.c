@@ -85,12 +85,32 @@ int sub_800429A8(short* p)
     }
     return 0;
 }
-#if 0
+extern unsigned char* off_80087028[];
+extern void sub_8004251C(RECT* r, unsigned char (*rgb)[4], int n, unsigned long* ot);
+// Matched
 void sub_800429F8(int a0, int a1)
 {
+    short* p = (short*)a0;
+    short* g = dword_8008D434;
+    unsigned char rgb[4][4];
+    RECT r;
+    short i;
+
+    if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
+    {
+        r.x = p[0] + 3;
+        r.y = p[1] + 2;
+        r.w = p[2] - 6;
+        r.h = p[3] - 4;
+        for (i = 0; i < 4; i++)
+        {
+            rgb[i][0] = off_80087028[(short)saveData_8008B570.uiColor_20][0];
+            rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20][1];
+            rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20][2];
+        }
+        sub_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
+    }
 }
-#endif
-INCLUDE_ASM(sub_800429F8);
 #if 0
 void sub_80042B38(int a0, int a1)
 {

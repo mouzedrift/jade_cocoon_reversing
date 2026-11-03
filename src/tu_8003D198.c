@@ -440,5 +440,128 @@ int sub_8003E484(int a0)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003E4C8);
-INCLUDE_ASM(sub_8003E6B0);
+typedef struct
+{
+    unsigned short s[11];
+} TextBuf22;
+extern unsigned short word_80074994[];
+extern TextBuf22 dword_80074998;
+extern int dword_80096038[];
+extern int sub_8003E884(int idx, short n);
+extern void IntToText_8003F610(unsigned short* buf, int val);
+extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
+// Matched
+int sub_8003E4C8(int str)
+{
+    unsigned short num[12];
+    TextBuf22 name;
+    unsigned short* s;
+    unsigned short* sub;
+    short w;
+    int k;
+    unsigned short c;
+
+    sub = word_80074994;
+    w = 0;
+    name = dword_80074998;
+    k = -1;
+    s = EncodeText_8003F684(2, (unsigned short*)str);
+    while (*s != 0 || *sub != 0)
+    {
+        if (*sub != 0 && sub != NULL)
+        {
+            c = *sub++;
+        }
+        else
+        {
+            c = *s++;
+        }
+        if (c < 0x7F)
+        {
+            w += sub_8003E884(2, (short)c);
+        }
+        else
+        {
+            switch (c)
+            {
+            case 0x86:
+            case 0x87:
+                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                {
+                    DecodeText_8003F748(1, name.s);
+                }
+                sub = EncodeText_8003F684(2, name.s);
+                break;
+            case 0x88:
+            case 0x89:
+            case 0x8A:
+            case 0x8B:
+            case 0x8C:
+                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                sub = EncodeText_8003F684(2, num);
+                break;
+            case -1:
+                w += 14;
+                break;
+            }
+        }
+    }
+    return w;
+}
+// Matched
+int sub_8003E6B0(int str)
+{
+    unsigned short num[12];
+    TextBuf22 name;
+    unsigned short* s;
+    unsigned short* sub;
+    short w;
+    int k;
+    unsigned short c;
+
+    sub = word_80074994;
+    w = 0;
+    name = dword_80074998;
+    k = -1;
+    s = EncodeText_8003F684(1, (unsigned short*)str);
+    while (*s != 0 || *sub != 0)
+    {
+        if (*sub != 0 && sub != NULL)
+        {
+            c = *sub++;
+        }
+        else
+        {
+            c = *s++;
+        }
+        if (c < 0x71)
+        {
+            w += sub_8003E884(1, (short)c);
+        }
+        else
+        {
+            switch (c)
+            {
+            case 0x86:
+            case 0x87:
+                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                {
+                    DecodeText_8003F748(1, name.s);
+                }
+                sub = EncodeText_8003F684(2, name.s);
+                break;
+            case 0x88:
+            case 0x89:
+            case 0x8A:
+            case 0x8B:
+            case 0x8C:
+                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                sub = EncodeText_8003F684(1, num);
+                break;
+            case -1:
+                break;
+            }
+        }
+    }
+    return w;
+}
