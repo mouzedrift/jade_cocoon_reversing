@@ -4054,7 +4054,7 @@ typedef struct
     unsigned short f6;
 } struct_12_20b;
 #if 0
-// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 bytes)
+// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
 void sub_80022B84(int* c, int* x, int* y)
 {
     int n;

@@ -1258,7 +1258,51 @@ int sub_80010CDC(struct_state_obj* p)
 #endif
 INCLUDE_ASM(sub_80010CDC);
 INCLUDE_ASM(sub_80010DB0);
-INCLUDE_ASM(sub_80011904);
+typedef struct
+{
+    int f0;
+    short x;
+    short y;
+    short z;
+    short pad;
+} Vtx12;
+typedef struct
+{
+    int pad[6];
+    Vtx12* src[3];
+    int w[3];
+} VtxBlend;
+// Matched
+void sub_80011904(VtxBlend* p, Vtx12* out)
+{
+    int n;
+    int k;
+    float sum;
+    float f;
+    for (n = 0; n < 43; n++)
+    {
+        for (k = 0, sum = 0; k < 3; k++)
+        {
+            f = (float)p->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)p->src[k][n].x;
+        }
+        out[n].x = sum;
+        sum = 0;
+        for (k = 0; k < 3; k++)
+        {
+            f = (float)p->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)p->src[k][n].y;
+        }
+        out[n].y = sum;
+        sum = 0;
+        for (k = 0; k < 3; k++)
+        {
+            f = (float)p->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)p->src[k][n].z;
+        }
+        out[n].z = sum;
+    }
+}
 void sub_80011AF8(struct_obj_D* p, int* q);
 // Matched
 void sub_80011ADC(struct_obj_D* p, int* q)
@@ -1528,15 +1572,15 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     return totalMinions;
 }
 #if 0
-// Not matched: the clamped value lives in $a2 instead of $v1 (the jump table is emitted by C: see config/c_rodata.txt)
+// Not matched: the clamped value lives in $a2 instead of $v1 (needs "dword_80071B78 0x390" in config/c_rodata.txt so the jump table comes from C)
 void sub_80012614(int a0, int sel, int delta, int mask)
 {
+    int r;
+    int v;
     char* p = (char*)a0;
     unsigned short* sp = 0;
     unsigned char* bp = 0;
     int max = 0;
-    int r;
-    int v;
     switch (sel)
     {
     case 0:

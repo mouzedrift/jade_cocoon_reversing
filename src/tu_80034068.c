@@ -113,7 +113,116 @@ int sub_80034140(void)
     return 0;
 }
 INCLUDE_ASM(sub_8003422C);
-INCLUDE_ASM(sub_80034900);
+extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
+// Matched
+short** sub_80034900(short** list)
+{
+    short** p = list;
+    short* t;
+    while (*p)
+    {
+        t = (short*)EncodeText_8003F684(2, (unsigned short*)*p);
+        if (*t == 0xC1)
+        {
+            *t = 0xC2;
+            return list;
+        }
+        if (*t == 0xC2)
+        {
+            return p;
+        }
+        p++;
+        if (!*p)
+        {
+            p++;
+        }
+    }
+    return list;
+}
+typedef struct
+{
+    int v[4];
+} Quad_349B4;
+typedef struct
+{
+    int field_0;
+    int flags_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    Quad_349B4 field_18;
+    char pad_28[0x1BC];
+    signed char field_1E4[1];
+} Unit_349B4;
+typedef struct
+{
+    int flags_0;
+    char pad_4[0x10];
+    Unit_349B4* unit_14;
+} UnitRef_349B4;
+// Matched
+int sub_800349B4(UnitRef_349B4* a0, Quad_349B4* out)
+{
+    Unit_349B4* u = a0->unit_14;
+    if (u->flags_4 & 0x200)
+    {
+        *out = u->field_18;
+        return 1;
+    }
+    return 0;
+}
+// Matched
+void sub_80034A00(UnitRef_349B4* a0, Quad_349B4* out)
+{
+    *out = a0->unit_14->field_18;
+}
+// Matched
+int sub_80034A30(UnitRef_349B4* a0)
+{
+    Unit_349B4* u = a0->unit_14;
+    if (u->field_C == 3 || u->field_10 == 2)
+    {
+        return 1;
+    }
+    return 0;
+}
+// Matched
+void sub_80034A68(UnitRef_349B4* a0)
+{
+    a0->unit_14->flags_4 |= 0x800;
+}
+// Matched
+void sub_80034A84(UnitRef_349B4* a0)
+{
+    a0->unit_14->flags_4 |= 0x4000;
+}
+// Matched
+void sub_80034AA0(UnitRef_349B4* a0)
+{
+    a0->flags_0 = (a0->flags_0 & ~1) | 0x8000;
+}
+// Matched
+int sub_80034AB8(UnitRef_349B4* a0)
+{
+    return (a0->flags_0 & 0x8001) == 1;
+}
+// Matched
+void sub_80034AD0(UnitRef_349B4* a0, int v)
+{
+    a0->unit_14->field_14 = v;
+}
+// Matched
+int sub_80034ADC(UnitRef_349B4* a0, int idx)
+{
+    Unit_349B4* u = a0->unit_14;
+    if (u->field_1E4[idx] == -2 || u->field_1E4[idx] >= 0)
+    {
+        u->field_1E4[idx] = -2;
+        return 1;
+    }
+    return 0;
+}
 // Matched
 int sub_80034B14(int* p)
 {

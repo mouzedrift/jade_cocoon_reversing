@@ -166,7 +166,9 @@ typedef struct
     unsigned char r_4;
     unsigned char g_5;
     unsigned char b_6;
-    char pad_7[5];
+    unsigned char code_7;
+    short x0_8;
+    short y0_A;
     unsigned char u_C;
     unsigned char v_D;
     unsigned short clut_E;

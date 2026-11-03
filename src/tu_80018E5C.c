@@ -190,6 +190,30 @@ void sub_80018EBC(int a0, unsigned int* a1)
     sub_8001DAAC(a0, r);
 }
 INCLUDE_ASM(sub_8001900C);
+#if 0
+// Not matched: the clamp to 0..100 stores from each branch and keeps 100 in a register (original: one store of $v0 after $v1 copies); permuter found nothing
+void sub_8001980C(unsigned char* p, unsigned char* s)
+{
+    int i;
+    int j;
+    int v;
+    p[6] = (s[0] < 200) ? s[0] : 200;
+    p[8] = (s[1] < 200) ? s[1] : 200;
+    p[10] = (s[4] < 200) ? s[4] : 200;
+    p[7] = (s[2] < 200) ? s[2] : 200;
+    p[9] = (s[3] < 200) ? s[3] : 200;
+    p[11] = (s[5] < 200) ? s[5] : 200;
+    for (i = 0; i < 6; i++)
+    {
+        v = (unsigned char)((p + i)[6] / 10) + 10;
+        (p + i)[0] = (v < 0) ? 0 : ((v > 100) ? 100 : v);
+    }
+    for (j = 0; j < 6; j++)
+    {
+        (p + j)[12] = rand() % 100;
+    }
+}
+#endif
 INCLUDE_ASM(sub_8001980C);
 typedef struct
 {

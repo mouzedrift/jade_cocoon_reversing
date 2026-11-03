@@ -27,7 +27,61 @@ extern short uiColor_8008B590;
 extern void sub_8004226C(int a, RECT* r, int c, int d);
 extern void sub_80041ED0(int a, RECT* r, int c, int d);
 
-INCLUDE_ASM(sub_8004226C);
+extern unsigned char** off_80087064[];
+extern unsigned char* off_80087050[];
+extern int dword_80086FB0[][3];
+extern void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+// Matched
+void sub_8004226C(int a, RECT* r, int c, int d)
+{
+    unsigned char* out = (unsigned char*)r;
+    unsigned char c0[4];
+    unsigned char c1[4];
+    int cr;
+    int cg;
+    int cb;
+
+    out[0] = off_80087064[(short)a][d][0];
+    out[1] = off_80087064[(short)a][d][1];
+    out[2] = off_80087064[(short)a][d][2];
+    if ((short)a == 1)
+    {
+        cr = out[0] * dword_80086FB0[d][0] / 100;
+        cg = out[1] * dword_80086FB0[d][1] / 100;
+        cb = out[2] * dword_80086FB0[d][2] / 100;
+        if (cr > 0xFF)
+        {
+            cr = 0xFF;
+        }
+        if (cg > 0xFF)
+        {
+            cg = 0xFF;
+        }
+        if (cb > 0xFF)
+        {
+            cb = 0xFF;
+        }
+        if (cr < 0)
+        {
+            cr = 0;
+        }
+        if (cg < 0)
+        {
+            cg = 0;
+        }
+        if (cb < 0)
+        {
+            cb = 0;
+        }
+        c0[0] = cr;
+        c0[1] = cg;
+        c0[2] = cb;
+        c1[0] = off_80087050[d][0];
+        c1[1] = off_80087050[d][1];
+        c1[2] = off_80087050[d][2];
+        sub_80033394(out, c0, c1, c, 40, 10);
+    }
+}
 // Matched
 void sub_80042460(int a0, unsigned char* p, int a2, int a3)
 {
@@ -42,7 +96,32 @@ void sub_800424C0(int a0, short a1, int a2, int a3)
     sub_8004226C(a1, &r, a3, uiColor_8008B590);
     sub_80041ED0(a0, &r, a2, 1);
 }
-INCLUDE_ASM(sub_8004251C);
+// Matched
+void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
+{
+    POLY_G4 p;
+    DR_TPAGE dt;
+
+    SetPolyG4(&p);
+    if (abr)
+    {
+        setSemiTrans(&p, 1);
+    }
+    setRGB0(&p, rgb[0][0], rgb[0][1], rgb[0][2]);
+    setRGB1(&p, rgb[1][0], rgb[1][1], rgb[1][2]);
+    setRGB2(&p, rgb[2][0], rgb[2][1], rgb[2][2]);
+    setRGB3(&p, rgb[3][0], rgb[3][1], rgb[3][2]);
+    setXY4(&p, r->x, r->y, r->x + r->w, r->y, r->x, r->y + r->h, r->x + r->w, r->y + r->h);
+    AddPrimCopy_80040298(ot, &p, 9);
+    if (abr)
+    {
+        SetDrawTPage(&dt, 0, 1, GetTPage(0, abr - 1, 0, 0));
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+        addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    }
+}
 extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
 void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
@@ -85,12 +164,31 @@ int sub_800429A8(short* p)
     }
     return 0;
 }
-#if 0
+extern unsigned char* off_80087028[];
+// Matched
 void sub_800429F8(int a0, int a1)
 {
+    short* p = (short*)a0;
+    short* g = dword_8008D434;
+    unsigned char rgb[4][4];
+    RECT r;
+    short i;
+
+    if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
+    {
+        r.x = p[0] + 3;
+        r.y = p[1] + 2;
+        r.w = p[2] - 6;
+        r.h = p[3] - 4;
+        for (i = 0; i < 4; i++)
+        {
+            rgb[i][0] = off_80087028[(short)saveData_8008B570.uiColor_20][0];
+            rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20][1];
+            rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20][2];
+        }
+        sub_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
+    }
 }
-#endif
-INCLUDE_ASM(sub_800429F8);
 #if 0
 void sub_80042B38(int a0, int a1)
 {
@@ -271,6 +369,101 @@ unsigned int XaNoRequestPending_800435A4(void)
 {
     return xaRequestPending_80096118 >> 31;
 }
+typedef struct
+{
+    unsigned int count;
+    unsigned int flags;
+    int size;
+    EventNode** out;
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+} EventDesc;
+#if 0
+// Not matched: only next/next2 get swapped registers ($s6/$s7)
+EventNode* CreateEventList_800435B4(EventDesc** list)
+{
+    EventDesc** p;
+    EventDesc* d;
+    EventNode* next;
+    EventNode* head;
+    int idx;
+    char* buf;
+    EventNode* n;
+    EventNode* next2;
+    EventNode* prev;
+    EventNode* last;
+    unsigned int i;
+    unsigned int flags;
+
+    buf = NULL;
+    idx = 0;
+    for (p = list; *p != NULL; p++)
+    {
+        d = *p;
+        idx += d->count;
+    }
+    head = malloc3_dbg((idx + 1) * sizeof(EventNode), aDWorkPsusEvent, 0xDC);
+    prev = NULL;
+    n = head;
+    next = head + 1;
+    head->field_0 = (int)prev;
+    next2 = head + 2;
+    last = head;
+    head->next = next;
+    head->entry.size = 0;
+    head->entry.buffer = NULL;
+    head->entry.flags = 0;
+    head->entry.field_4 = 0;
+    head->field_8 = 0;
+    head->count = 0;
+    head->entry.cb_8 = NULL;
+    head->entry.cb_C = NULL;
+    for (idx = 0, p = list; *p != NULL; p++)
+    {
+        d = *p;
+        if (d->out != NULL)
+        {
+            *d->out = n;
+        }
+        if (d->size != 0)
+        {
+            buf = malloc3_dbg(d->size * d->count, aDWorkPsusEvent, 0xF1);
+        }
+        for (i = 0; i < d->count; i++)
+        {
+            n->field_0 = (int)prev;
+            n->next = next;
+            n->entry.size = 0;
+            n->entry.buffer = NULL;
+            n->entry.flags = 0;
+            n->entry.field_4 = 0;
+            n->field_8 = 0;
+            n->count = 0;
+            n->entry.cb_8 = NULL;
+            n->entry.cb_C = NULL;
+            if (d->size != 0)
+            {
+                n->entry.buffer = buf;
+                n->entry.size = d->size;
+                buf += d->size;
+            }
+            n->entry.cb_8 = d->cb_8;
+            n->entry.cb_C = d->cb_C;
+            flags = d->flags;
+            n->field_8 = idx++;
+            n->entry.flags = flags;
+            n->count = d->count;
+            n->entry.field_4 = i;
+            prev = last = n;
+            n = next;
+            next = next2;
+            next2++;
+        }
+    }
+    last->next = NULL;
+    return head;
+}
+#endif
 INCLUDE_ASM(CreateEventList_800435B4);
 // Matched
 void* EventEntryAllocBuffer_800437E8(int* a0, int size)

@@ -78,12 +78,34 @@ void FreeSoundVab_80030EA4(short* p)
         *(int*)(p + 0xC) = 0;
     }
 }
-#if 0
+// Matched
 void FreeSoundSeqs_80030EEC(void* arg0)
 {
+    SoundStruct* s = arg0;
+    int i;
+    if (s->field_8_sep_data_ptr)
+    {
+        for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
+        {
+            SsSepStop(s->field_C_sep_access_num, (short)i);
+            SsSepSetVol(s->field_C_sep_access_num, (short)i, 0, 0);
+        }
+        SsSepClose(s->field_C_sep_access_num);
+        free3_8003FC6C(s->field_8_sep_data_ptr);
+        s->field_8_sep_data_ptr = 0;
+    }
+    if (s->field_10_sep_data_ptr)
+    {
+        for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_5_seq_count; i++)
+        {
+            SsSepStop(s->field_14_sep_access_num, (short)i);
+            SsSepSetVol(s->field_14_sep_access_num, (short)i, 0, 0);
+        }
+        SsSepClose(s->field_14_sep_access_num);
+        free3_8003FC6C(s->field_10_sep_data_ptr);
+        s->field_10_sep_data_ptr = 0;
+    }
 }
-#endif
-INCLUDE_ASM(FreeSoundSeqs_80030EEC);
 typedef struct
 {
     short field_0_file_id;
@@ -310,4 +332,103 @@ int sub_800316E4(void)
 {
     return 0;
 }
-INCLUDE_ASM(sub_800316EC);
+extern int sub_80031870(int a0);
+typedef struct
+{
+    unsigned char a;
+    unsigned char type;
+    unsigned char b;
+    unsigned char c;
+} Ent4_316EC;
+extern Ent4_316EC* sub_80031B30(int a0);
+extern void sub_80018430(short v);
+// Matched
+int sub_800316EC(unsigned int a0, int a1)
+{
+    int r;
+    int k;
+    Ent4_316EC* base;
+    r = sub_80031870(a0) + 0x26;
+    base = sub_80031B30(sub_80014358(a1) & 0xFF);
+    base += a0;
+    k = base->type;
+    sub_80018430(-1);
+    if (a0 >= 4)
+    {
+        r = 0x1E;
+    }
+    switch (k)
+    {
+    case 2:
+        sub_80018430(2);
+        break;
+    case 3:
+        sub_80018430(3);
+        break;
+    case 4:
+        sub_80018430(0);
+        break;
+    case 5:
+    case 23:
+    case 25:
+    case 29:
+        sub_80018430(1);
+        break;
+    case 6:
+    case 20:
+        sub_80018430(4);
+        break;
+    case 7:
+    case 22:
+        sub_80018430(5);
+        break;
+    case 9:
+        sub_80018430(10);
+        break;
+    case 10:
+        sub_80018430(8);
+        break;
+    case 11:
+    case 19:
+        sub_80018430(9);
+        break;
+    case 16:
+        r = 0x26;
+    case 8:
+        sub_80018430(6);
+        break;
+    case 17:
+        r = 0x3C;
+        break;
+    case 18:
+        r = 0x3B;
+        break;
+    case 21:
+        r = 0x1E;
+        break;
+    case 24:
+        r = 0x22;
+        break;
+    case 38:
+        r = 0x34;
+        break;
+    case 34:
+    case 35:
+    case 36:
+    case 37:
+        r = k + 0x1D;
+        sub_80018430(k - 0x22);
+        break;
+    case 33:
+        r = 0x19;
+        break;
+    case 28:
+        r = -1;
+        break;
+    case 0:
+    case 1:
+        break;
+    }
+    return r;
+}
+INCLUDE_DATA(dword_800746B8);
