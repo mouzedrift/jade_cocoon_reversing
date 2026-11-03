@@ -141,7 +141,65 @@ void sub_800B6FD8(EventEntry* e, NameEntry* p)
 
 INCLUDE_OVERLAY_ASM(name, sub_800B70F4);
 
-INCLUDE_OVERLAY_ASM(name, sub_800B7414);
+typedef struct
+{
+    unsigned short color;
+    unsigned char a;
+    unsigned char b;
+} NameWinColor;
+typedef struct
+{
+    short x;
+    short y;
+    void* text;
+} NameTextItem;
+extern void DrawText_8003E91C(int a, void* b, void* c, int d);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+extern void DrawUiTiySprt_8002C06C(void* pos, int a, int b);
+extern int MeasureTextWidth_8003E4C8(void* p);
+extern char name_800B6E48[];
+void sub_800B7414(NameEntry* p)
+{
+    NameTextItem item;
+    short pos[2];
+    short pos2[2];
+    RECT r;
+    NameWinColor c1;
+    NameWinColor c2;
+    short pos3[2];
+    int i;
+    item.x = 0x74;
+    item.y = 0x28;
+    item.text = p->name_10;
+    pos[0] = 0x74;
+    pos[1] = 0x28;
+    DrawText_8003E91C(2, p->name_10, pos, 1);
+    pos2[0] = 0x49;
+    pos2[1] = 0x28;
+    DrawUiTiySprt_8002C06C(pos2, 0x11, 1);
+    r.x = 0x45;
+    r.y = 0x24;
+    r.w = 0xB8;
+    r.h = 0x14;
+    c1.color = saveData_8008B570.uiColor_20;
+    c1.a = 0;
+    c1.b = 1;
+    DrawWindow_80042460(&r, &c1, pOT_8008D454 + 14, 0);
+    r.x = MeasureTextWidth_8003E4C8(p->name_10) + 0x74;
+    r.y = 0x27;
+    r.w = 8;
+    r.h = 0xC;
+    c2.color = saveData_8008B570.uiColor_20;
+    c2.a = 1;
+    c2.b = 1;
+    DrawWindow_80042460(&r, &c2, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
+    for (i = 0; i <= 9 - p->length_44 / 2; i++)
+    {
+        pos3[0] = MeasureTextWidth_8003E4C8(p->name_10) + 0x74 + i * 8;
+        pos3[1] = 0x30;
+        DrawText_8003E91C(2, name_800B6E48, pos3, 1);
+    }
+}
 
 INCLUDE_OVERLAY_ASM(name, sub_800B75EC);
 
