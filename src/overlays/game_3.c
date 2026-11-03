@@ -68,45 +68,45 @@ void sub_800A58B4(void)
 }
 
 // Matched
-int* sub_800A59D0(int v)
+GameObj5_1* sub_800A59D0(int v)
 {
     GameObj5_1* p = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D410);
     if (p)
     {
-        int* q = p->obj_14;
+        GameEvCtx* q = p->obj_14;
         int i;
         p->flags_0 = ((((p->flags_0 | 1) & ~0x8000) | 4) & ~0x8000);
-        q[1] = v;
-        q[2] = v;
-        q[3] = v;
-        q[4] = dword_800AEBDC;
-        q[0x114 / 4] = 0;
+        q->start_4 = v;
+        q->pc_8 = v;
+        q->ret_C = v;
+        q->id_10 = dword_800AEBDC;
+        q->f114 = 0;
         for (i = 7; i >= 0; i--)
         {
-            q[51 + i] = 0;
+            q->fCC[i] = 0;
         }
         sub_800A5B54(q);
         p->fn_8 = sub_800A6060;
         p->fn_c = sub_800A6168;
         dword_800AEBDC++;
-        return (int*)p;
+        return p;
     }
     return 0;
 }
 
 // Matched
-GameR5_1* sub_800A5AA0(int a, int b)
+GameObj5_1* sub_800A5AA0(int a, int b)
 {
-    GameR5_1* r = (GameR5_1*)sub_800A59D0(a);
-    GameR6_1* t = r->f14;
+    GameObj5_1* r = sub_800A59D0(a);
+    GameEvCtx* t = r->obj_14;
     t->f120 = b;
     return r;
 }
 
 // Matched
-int sub_800A5AD0(int* p)
+int sub_800A5AD0(GameObj5_1* p)
 {
-    return *(int*)(p[5] + 0x10);
+    return ((GameEvCtx*)p->obj_14)->id_10;
 }
 
 // Matched
@@ -121,7 +121,7 @@ int sub_800A5AE4(int a)
         o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            if (a == o->obj_14[4])
+            if (a == ((GameEvCtx*)o->obj_14)->id_10)
             {
                 return (int)o;
             }
@@ -132,33 +132,33 @@ int sub_800A5AE4(int a)
 }
 
 // Matched
-void sub_800A5B54(int* p)
+void sub_800A5B54(GameEvCtx* p)
 {
     int i;
-    p[5] = 0;
-    p[6] = 0;
-    p[7] = 0;
-    p[8] = 0;
-    p[0] = 0;
-    p[0xb4 / 4] = 0;
-    p[0xb8 / 4] = 0;
-    p[0xbc / 4] = 0;
-    p[0xc0 / 4] = 0;
-    p[0xc4 / 4] = 0;
-    p[0xc8 / 4] = -1;
-    p[0xec / 4] = 0;
-    p[0x110 / 4] = 0;
-    p[0x118 / 4] = 0;
-    ((short*)p)[0x100 / 2] = -1;
-    ((short*)p)[0x102 / 2] = -1;
-    p[0x104 / 4] = -1;
-    p[0x108 / 4] = 0;
-    p[0x11c / 4] = 0;
-    p[0x120 / 4] = 0;
-    p[0xf0 / 4] = 0;
+    p->f14 = 0;
+    p->f18 = 0;
+    p->f1C = 0;
+    p->f20 = 0;
+    p->flags_0 = 0;
+    p->fB4 = 0;
+    p->fB8 = 0;
+    p->fBC = 0;
+    p->fC0 = 0;
+    p->fC4 = 0;
+    p->fC8 = -1;
+    p->fEC = 0;
+    p->f110 = 0;
+    p->f118 = 0;
+    p->f100 = -1;
+    p->f102 = -1;
+    p->f104 = -1;
+    p->f108 = 0;
+    p->f11C = 0;
+    p->f120 = 0;
+    p->fF0 = 0;
     for (i = 4; i >= 0; i--)
     {
-        p[9 + i] = 0;
+        p->f24[i] = 0;
     }
 }
 
@@ -173,10 +173,10 @@ void sub_800A5BCC(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
+            GameEvCtx* q = o->obj_14;
             int m = 1 << a;
-            q[6] &= ~m;
-            q[8] &= ~m;
+            q->f18 &= ~m;
+            q->f20 &= ~m;
         }
         n = n->next_4;
     }
@@ -188,8 +188,8 @@ int sub_800A5C40(int a)
     GameNode_1* n = dword_8008D410;
     int cnt = n->count_c;
     int i;
-    int* o;
-    int* q;
+    GameEvCtx* o;
+    GameEvEnt* q;
     int v;
     int k;
     GameObj5_1* e;
@@ -199,9 +199,9 @@ int sub_800A5C40(int a)
         if ((e->flags_0 & 0x8001) == 1)
         {
             o = e->obj_14;
-            if (r == 0 && (o[0] & 8) && o[0xc8 / 4] == a)
+            if (r == 0 && (o->flags_0 & 8) && o->fC8 == a)
             {
-                o[0] |= 4;
+                o->flags_0 |= 4;
                 r = 1;
                 break;
             }
@@ -218,22 +218,22 @@ int sub_800A5C40(int a)
             q = e->obj_14;
             if (r)
             {
-                q[0x78 / 4] = 0;
+                q->f78 = 0;
             }
-            else if (q[0x78 / 4])
+            else if (q->f78)
             {
                 k = 1;
-                v = q[0x84 / 4];
+                v = q->f84;
                 if (v != -1 && (v & 0x40000000))
                 {
                     k = (unsigned)((v & ~0x40000000) ^ a) < k;
                 }
                 if (k)
                 {
-                    q[0x7c / 4] = 0;
-                    if (q[0x88 / 4])
+                    q->f7C = 0;
+                    if (q->f88)
                     {
-                        sub_800A59D0(q[0x88 / 4]);
+                        sub_800A59D0(q->f88);
                         dword_800AEBD8 = dword_800AEBDC - 1;
                         r = 1;
                     }
@@ -246,7 +246,7 @@ int sub_800A5C40(int a)
 }
 
 // Matched
-int* sub_800A5DDC(int a, int b, int* c)
+GameEvEnt* sub_800A5DDC(int a, int b, GameEvEnt* c)
 {
     GameNode_1* n = dword_8008D400;
     int i;
@@ -256,19 +256,19 @@ int* sub_800A5DDC(int a, int b, int* c)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
+            GameEvEnt* q = o->obj_14;
             if (c != q)
             {
                 if (b == 0)
                 {
-                    if (a == q[1])
+                    if (a == q->f4)
                     {
                         return q;
                     }
                 }
                 else
                 {
-                    if (a == q[4])
+                    if (a == q->id_10)
                     {
                         return q;
                     }
@@ -296,8 +296,8 @@ int sub_800A5E80(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
-            if (q[0x78 / 4] != 0 && (q[0x84 / 4] & 0xBFFFFFFF) == a)
+            GameEvEnt* q = o->obj_14;
+            if (q->f78 != 0 && (q->f84 & 0xBFFFFFFF) == a)
                 return 1;
         }
         n = n->next_4;
@@ -309,8 +309,8 @@ int sub_800A5E80(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
-            if (q[0xc8 / 4] == a)
+            GameEvCtx* q = o->obj_14;
+            if (q->fC8 == a)
                 return 1;
         }
         n = n->next_4;

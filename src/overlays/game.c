@@ -824,7 +824,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, GameEnt_1* b, int c)
     int j;
     if (e != 0)
     {
-        q = (GameAi*)e->obj_14;
+        q = e->obj_14;
         e->flags_0 = (e->flags_0 | 1) & ~0x8000;
         q->flags_0 = &e->flags_0;
         q->minion_4 = b;

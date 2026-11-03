@@ -72,19 +72,65 @@ extern GameRec_1 dword_800ADE78;
 
 extern int dword_800AEB6C[];
 
-typedef struct GameR6_1
+// context of an event script (list dword_8008D410); same layout as EvCtxEventfnc in eventfnc.h
+typedef struct GameEvCtx
 {
-    char pad_0[0x120];
+    unsigned int flags_0;
+    int start_4;
+    int pc_8;
+    int ret_C;
+    int id_10;
+    int f14;
+    int f18;
+    int f1C;
+    int f20;
+    int f24[6];
+    int vec3C[5][3];
+    int vec78[5][3];
+    int fB4;
+    int fB8;
+    int fBC;
+    int fC0;
+    unsigned int fC4;
+    int fC8;
+    int fCC[8];
+    int fEC;
+    int fF0;
+    int fF4;
+    int fF8;
+    int fFC;
+    short f100;
+    short f102;
+    int f104;
+    int f108;
+    int pad_10C;
+    int f110;
+    int f114;
+    int f118;
+    int f11C;
     int f120;
-} GameR6_1;
+} GameEvCtx;
 
-typedef struct GameR5_1
+// an event entity (list dword_8008D400); same layout as EvEntEventfnc in eventfnc.h
+typedef struct GameEvEnt
 {
-    char pad_0[0x14];
-    GameR6_1* f14;
-} GameR5_1;
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int id_10;
+    char pad_14[0x34];
+    int pos_48[3];
+    char pad_54[0x24];
+    int f78;
+    int f7C;
+    int f80;
+    int f84;
+    int f88;
+    int f8C;
+} GameEvEnt;
 
-extern int* sub_800A59D0(int a);
+extern struct GameObj5_1* sub_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
@@ -360,7 +406,7 @@ typedef struct GameObj5_1
     void (*fn_8)();
     void (*fn_c)();
     int pad_10;
-    int* obj_14;
+    void* obj_14; // the work area (EventEntry.buffer)
 } GameObj5_1;
 
 typedef struct GameNode_1
@@ -522,7 +568,7 @@ extern GameMapEnt_1** dword_800B0608[];
 
 extern void sub_800A4940(int a, int b);
 
-extern void sub_800A5B54(int* p);
+extern void sub_800A5B54(GameEvCtx* p);
 
 extern void sub_800A6060();
 
