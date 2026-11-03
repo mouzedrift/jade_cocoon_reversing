@@ -37,12 +37,12 @@ extern int sub_800A11BC(int);
 extern int sub_800A1AAC(int);
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern int CountMagicBits_8001AE54(int);
-extern void FindNthMagicBit_8001AEC0(int, int);
+extern int FindNthMagicBit_8001AEC0(int, int);
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800C9E88);
 
 extern int dword_8008D614;
-extern int dword_800CD840;
+extern CombComDlg* dword_800CD840;
 extern int dword_800CD848;
 extern unsigned char byte_800A38D8;
 extern unsigned char byte_800A38DC;
@@ -50,7 +50,14 @@ extern unsigned char byte_800CD83A;
 extern unsigned char byte_800CD838;
 extern unsigned char byte_800CD845;
 extern unsigned char byte_800CD850;
+extern unsigned short padPressed_8009194C[];
+extern unsigned char byte_800CD83B;
+extern int dword_800CD84C;
 extern void sub_800CD16C();
+extern int dword_800CD83C;
+extern unsigned char byte_800A85BC;
+extern short word_800A82D0;
+extern short word_800A82D2;
 extern void sub_800CB88C();
 extern void sub_800CB924();
 
@@ -60,7 +67,7 @@ EventEntry* sub_800CB7AC(int a, int b)
     if (e)
     {
         e->cb_8 = (EventEntryFn)sub_800CD16C;
-        dword_800CD840 = a;
+        dword_800CD840 = (CombComDlg*)a;
         byte_800CD839 = b;
         e->flags = (e->flags | 1) & ~0x8000;
         if (!b)
@@ -214,28 +221,407 @@ void sub_800CBBE0(int p)
     DrawLargeTextBox_8002AF10((int)&d, (int)v, 0xF);
 }
 
-void sub_800CBC28()
+int sub_800CBC28()
 {
-    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
+    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
 }
 
-void sub_800CBC58()
+int sub_800CBC58()
 {
     int r = sub_800A11BC(byte_800CD839);
-    FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
+    return FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4));
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBCA0);
+typedef struct CombComWin
+{
+    int w[14];
+} CombComWin;
+typedef struct CombComMenu
+{
+    int w[6];
+} CombComMenu;
+typedef struct CombComColor
+{
+    unsigned short color;
+    unsigned char a;
+    unsigned char b;
+} CombComColor;
+extern CombComWin name_800CB4F0;
+extern CombComWin name_800CB528;
+extern CombComWin name_800CB560;
+extern CombComWin name_800CB598;
+extern CombComMenu name_800CB5D0;
+extern short word_800CD2D0;
+extern unsigned short uiColor_8008B590;
+extern void* memset(void* p, int c, unsigned int n);
+extern void sub_8002ADB4(void* a, void* b, int c, int d);
+extern void DrawMenuWindows_8002A5A4(void* p);
+void sub_800CBCA0()
+{
+    CombComColor col;
+    CombComWin a;
+    CombComWin b;
+    CombComWin c;
+    CombComWin d;
+    void* list[4];
+    CombComMenu m;
+    a = name_800CB4F0;
+    b = name_800CB528;
+    c = name_800CB560;
+    d = name_800CB598;
+    memset(list, 0, 0x10);
+    m = name_800CB5D0;
+    list[0] = &b;
+    list[1] = &c;
+    list[2] = &d;
+    col.color = uiColor_8008B590;
+    col.a = 0;
+    col.b = 1;
+    sub_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[4] = (int)list;
+    m.w[3] = word_800CD2D0;
+    DrawMenuWindows_8002A5A4(&m);
+}
 
 INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
 
+#if 0
+// Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
+typedef struct CombComBox
+{
+    char pad_0[8];
+    short x0;
+    short x1;
+    short y0;
+    short y1;
+} CombComBox;
+extern int sub_80012BB0(void* a, void* b, void* c, int* d);
+extern int sub_80013228(void* a, void* b, void* c, int* d);
+extern int sub_80034068(short* p);
+void sub_800CC40C()
+{
+    short arg[4];
+    int out[10];
+    unsigned int i;
+    void* src;
+    CombComBox* t;
+    if (byte_800CD83A == 3)
+    {
+        word_800A82D0 = 0;
+        word_800A82D2 = 0;
+        src = (void*)sub_80014390((unsigned char)(byte_800CD839 + 8));
+        for (i = 0; i < 2; i++)
+        {
+            int bit = 1 << (i + 8);
+            if (dword_800CD840->fC & bit)
+            {
+                t = (CombComBox*)sub_80014390((unsigned char)(i + 8));
+                sub_80012BB0(src, t, dword_800CD840, out);
+                if (!sub_80013228(src, t, dword_800CD840, out))
+                {
+                    bit = 1 << i;
+                    if (dword_800CD840->f8 & bit)
+                    {
+                    word_800A82D0 -= out[3];
+                    word_800A82D2 -= out[4];
+                    word_800A82D0 -= out[5];
+                    word_800A82D2 -= out[6];
+                    word_800A82D0 -= out[7];
+                    word_800A82D2 -= out[8];
+                    if (t->x1 - t->x0 < word_800A82D0)
+                    {
+                        word_800A82D0 = t->x1 - t->x0;
+                    }
+                    if (t->y1 - t->y0 < word_800A82D2)
+                    {
+                        word_800A82D2 = t->y1 - t->y0;
+                    }
+                    }
+                }
+            }
+        }
+        arg[0] = dword_800CD840->f4;
+        arg[1] = byte_800CD839 + 8;
+        arg[2] = dword_800CD83C;
+        arg[3] = 0;
+        if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 6)
+        {
+            ((int (*)(short*))sub_80034124)(arg);
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && sub_80034068(arg))
+        {
+            word_800A82D0 = 0;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC40C);
 
+#if 0
+// Not matched: register allocation only (44 words): the original gives the list pointer s1 and mode/k s3, f/i s2
+typedef struct CombComItem
+{
+    unsigned short flags;
+    short pad_2;
+    void* text_4;
+    int f8;
+    int fC;
+    short x_10;
+    short y_12;
+    int rest[9];
+} CombComItem;
+extern CombComItem name_800CB690;
+extern CombComItem name_800CB6C8;
+extern CombComItem name_800CB700;
+extern char dword_800A3AA0[][3][0xF8];
+extern int sub_800A1934(void*);
+extern int sub_800A1958(void*);
+extern int sub_80034068(short* p);
+int sub_800CC674(short* arg, int mode, int sel, int f)
+{
+    CombComItem w[3];
+    CombComItem* list[4];
+    CombComItem* items[3];
+    CombComMenu m;
+    short q[2];
+    int res;
+    int i;
+    int k;
+    short x;
+    void* u;
+    CombComItem* p0;
+    CombComItem* it;
+    CombComItem** pk;
+    CombComItem** pi;
+    w[0] = name_800CB690;
+    w[1] = name_800CB6C8;
+    w[2] = name_800CB700;
+    pk = list;
+    memset(pk, 0, 0x10);
+    memset(items, 0, 0xC);
+    p0 = &w[0];
+    m = name_800CB5D0;
+    items[1] = &w[1];
+    items[0] = p0;
+    items[2] = &w[2];
+    m.w[5] = f;
+    x = byte_800CD839 * 62 + 100;
+    w[0].x_10 = x;
+    w[1].x_10 = x;
+    w[2].x_10 = x;
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[3] = sel;
+    m.w[4] = (int)pk;
+    q[0] = arg[0];
+    res = 0;
+    if (mode == 1)
+    {
+        {
+            char* s = (char*)sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            list[0] = p0;
+            p0->text_4 = s + 0x10;
+        }
+        q[1] = arg[1] + 8;
+        if (sub_80034068(q) == 0)
+        {
+            list[0]->flags &= ~2;
+        }
+        else
+        {
+            list[0]->flags |= 2;
+        }
+        res = ((int*)dword_800A4078)[arg[1]];
+    }
+    else
+    {
+        pi = pk;
+        for (k = i = 0; i < 3; i++)
+        {
+            u = dword_800A3AA0[arg[1]][i];
+            if (i != ((int*)dword_800A4078)[byte_800CD839] && sub_800A1934(u) == 0)
+            {
+                it = items[k];
+                *pk = it;
+                it->text_4 = (char*)u + 0x94;
+                if (sub_800A1958(u))
+                {
+                    (*pk)->flags |= 2;
+                }
+                else
+                {
+                    (*pk)->flags &= ~2;
+                }
+                if (sel == k)
+                {
+                    res = i;
+                }
+                pk++;
+                k++;
+            }
+            else
+            {
+                *pi = 0;
+            }
+            pi++;
+        }
+    }
+    DrawMenuWindows_8002A5A4(&m);
+    return res;
+}
+#endif
 INCLUDE_OVERLAY_ASM(combcom, sub_800CC674);
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CC9FC);
+void sub_800CC9FC()
+{
+    byte_800A85BC = dword_800CD83C;
+    if (dword_800CD840->f0 == 0x12)
+    {
+        dword_800CD840->fC = 0;
+        *(int*)sub_80014390((unsigned char)(byte_800CD839 + 8)) |= 0x8000;
+    }
+    else
+    {
+        if (dword_800CD840->f0 == 1 && byte_800CD839 != dword_800CD83C)
+        {
+            return;
+        }
+        if (dword_800CD840->f0 == 8)
+        {
+            dword_800CD840->fC = 0;
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCA94);
+typedef struct CombComMsg
+{
+    int f0;
+    int* text;
+} CombComMsg;
+typedef struct CombComCheck
+{
+    short x;
+    short y;
+    short pad_4[3];
+    short sA;
+    int c;
+} CombComCheck;
+extern short* dword_800CD854;
+extern CombComMsg name_800CD46C[];
+extern int dword_800CD454;
+extern int dword_800CD458;
+extern int dword_800CD460;
+extern int sub_800A11D8(int);
+extern char dword_800A3AA0[][3][0xF8];
+extern int sub_800A1958(void*);
+extern int sub_80033C98(CombComCheck* p);
+extern int CheckMagicCastable_80033C08(CombComCheck* p);
+int sub_800CCA94()
+{
+    CombComCheck a;
+    short b[4];
+    int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
+    int* p;
+    a.x = dword_800CD854[4];
+    dword_800CD84C = 0;
+    a.y = dword_800CD854[5];
+    a.sA = 0;
+    b[3] = 0;
+    b[0] = dword_800CD840->f4;
+    b[1] = byte_800CD839 + 8;
+    b[2] = dword_800CD83C;
+    switch (byte_800CD83A)
+    {
+    case 0:
+        p = name_800CD46C[(short)idx].text;
+        if (p == 0)
+        {
+            return 1;
+        }
+        dword_800CD84C = *p;
+        return 0;
+    case 1:
+        a.c = sub_800A11D8(byte_800CD839);
+        switch (sub_80033C98(&a))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+            return 1;
+        case 5:
+            dword_800CD84C = dword_800CD458;
+            return 0;
+        case 7:
+            return 0;
+        }
+        break;
+    case 2:
+        a.c = sub_800A11D8(byte_800CD839);
+        switch (CheckMagicCastable_80033C08(&a))
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+            return 1;
+        case 5:
+            dword_800CD84C = dword_800CD458;
+            return 0;
+        case 6:
+            return 0;
+        }
+        break;
+    case 3:
+        if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 2)
+        {
+            switch ((unsigned int)((int (*)(short*))sub_80034124)(b))
+            {
+            case 0:
+                return 1;
+            case 3:
+                dword_800CD84C = dword_800CD460;
+                return 0;
+            case 4:
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+            return 0;
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 3)
+        {
+            switch ((unsigned int)sub_80034068(b))
+            {
+            case 0:
+                return 1;
+            case 3:
+                dword_800CD84C = dword_800CD460;
+                return 0;
+            case 4:
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+            return 0;
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 4)
+        {
+            if (sub_800A1958(dword_800A3AA0[byte_800CD839][dword_800CD83C]))
+            {
+                dword_800CD84C = dword_800CD454;
+                return 0;
+            }
+        }
+        break;
+    case 4:
+    case 5:
+        return 1;
+    }
+    return 1;
+}
 
 int sub_800CCD84()
 {
@@ -246,12 +632,153 @@ int sub_800CCD84()
     return 1 << ((byte_800CD839 ^ 1) + 8);
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCDD0);
+extern unsigned char byte_800CD494[];
+extern unsigned char byte_800CD49C[];
+extern int dword_800CD524[];
+extern char dword_800CD2C8[];
+extern int sub_800A11A0(int);
+extern int sub_80031B0C(int, int);
+extern int sub_8001ACE4(int);
+void sub_800CCDD0()
+{
+    int v;
+    byte_800CD850 = byte_800CD83A;
+    switch (byte_800CD83A)
+    {
+    case 0:
+        byte_800CD844 = byte_800CD494[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        byte_800CD83A = byte_800CD49C[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        dword_800CD840->f0 = dword_800CD524[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)];
+        break;
+    case 1:
+        v = sub_800A11A0(byte_800CD839);
+        byte_800CD844 = sub_80031B0C(v, sub_800CBC28());
+        byte_800CD83A = 4;
+        dword_800CD840->f4 = sub_800CBC28();
+        break;
+    case 2:
+        byte_800CD844 = sub_8001ACE4(sub_800CBC58());
+        if (byte_800CD844 & 2)
+        {
+            byte_800CD83A = 3;
+        }
+        else
+        {
+            byte_800CD83A = 4;
+        }
+        dword_800CD840->f4 = sub_800CBC58();
+        break;
+    case 3:
+        byte_800CD83A = 4;
+        break;
+    case 5:
+        switch ((short)GetMenuCursorIndex_8003DA54(dword_800CD2C8))
+        {
+        case 0:
+            byte_800CD850 = 0;
+            byte_800CD83A = 0;
+            break;
+        case 1:
+            byte_800A38DC = 1;
+            break;
+        case 2:
+            byte_800A38DC = 2;
+            break;
+        }
+        break;
+    }
+    dword_800CD840->fC = sub_800CCD84();
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CCFCC);
+extern int sub_800CCA94();
+extern void sub_800CCDD0();
+void sub_800CCFCC(EventEntry* e)
+{
+    if (IsConfirmPressed_8003D288(0, dword_800CD848))
+    {
+        if (sub_800CCA94())
+        {
+            PlaySfx_80031494(0x7E);
+            sub_800CCDD0();
+            if (byte_800A38DC)
+            {
+                e->flags = (e->flags & ~1) | 0x8000;
+            }
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+            if (dword_800CD84C)
+            {
+                byte_800CD83B = 0x96;
+                byte_800CD838 = 1;
+            }
+        }
+    }
+    else if (IsCancelPressed_8003D3C0(0, dword_800CD848))
+    {
+        if (byte_800CD83A)
+        {
+            PlaySfx_80031494(0x7D);
+            byte_800CD83A = byte_800CD850;
+            byte_800CD850 = 0;
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CD0C8);
+void sub_800CD0C8()
+{
+    if (padPressed_8009194C[dword_800CD848])
+    {
+        byte_800CD83B = 0;
+    }
+    if (byte_800CD83B == 0)
+    {
+        byte_800CD838 = 0;
+    }
+    else
+    {
+        byte_800CD83B--;
+    }
+    if (dword_800CD84C)
+    {
+        if (byte_800CD83A == 0)
+        {
+            sub_800CBB4C(dword_800CD84C);
+        }
+        else
+        {
+            sub_800CBBE0(dword_800CD84C);
+        }
+    }
+}
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CD16C);
+extern short* dword_800CD854;
+extern void (*dword_800CD818[])(EventEntry*, void*);
+extern unsigned char byte_800A84A8;
+extern int UpdateMenuCursor_8003D794(void* p, int a1);
+extern void sub_800CBEA4();
+void sub_800CD16C(EventEntry* e, void* buf)
+{
+    short* m = sub_800CB974(byte_800CD83A);
+    dword_800CD854 = m;
+    UpdateMenuCursor_8003D794(m, dword_800CD848);
+    if (padPressed_8009194C[dword_800CD848] & 0x800)
+    {
+        byte_800CD83A = 5;
+    }
+    sub_800CBA20(byte_800CD83A);
+    sub_800CBEA4();
+    sub_800CBAD4(byte_800CD83A);
+    dword_800CD818[byte_800CD838](e, buf);
+    if (byte_800CD83A == 4)
+    {
+        byte_800A84A8 &= 0xF3;
+        sub_800CC9FC();
+        word_800A82D0 = 0;
+        word_800A82D2 = 0;
+        e->flags = (e->flags & ~1) | 0x8000;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(combcom, dword_800CD28C);

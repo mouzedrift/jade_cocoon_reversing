@@ -33,7 +33,7 @@ extern void sub_800B6964();
 extern void sub_800B6A6C();
 extern void sub_800B67C0();
 extern void sub_800B681C();
-extern void sub_800B6E4C(int, int);
+extern void StartNameEntry_800B6E4C(int, int);
 extern void sub_800B9DA8();
 extern void sub_800BB058(int);
 extern void sub_800A7B00(int);
@@ -197,7 +197,7 @@ void sub_800B6AE0(ShopCtrlTask* t)
         }
         break;
     case 1:
-        sub_800B6E4C(dword_800B6CFC, 0x10);
+        StartNameEntry_800B6E4C(dword_800B6CFC, 0x10);
         SetFadeMode_8001C19C(3, 0x20);
         break;
     case 2:

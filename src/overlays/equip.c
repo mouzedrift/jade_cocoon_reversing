@@ -157,7 +157,7 @@ extern char name_800C599C[];
 extern char name_800C59A8[];
 extern void DrawButtonHelpBar_8002B004(void* a0, int a1, int a2);
 extern void AddClipDrawAreaPrim_80033308(void* p);
-extern void sub_800C0E04(void* a0, void* a1, int a2);
+extern void DrawEquipmentWindow_800C0E04(void* a0, void* a1, int a2);
 extern void sub_800C5314(EquipCtx_equip* c);
 
 
@@ -326,7 +326,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                     q28.d = 0xe;
                     q28.e = 0;
                     q28.f = 0;
-                    sub_800C0E04(&q28, &r, 8);
+                    DrawEquipmentWindow_800C0E04(&q28, &r, 8);
                     sub_800C5314(c);
                     u.s.a = uiColor_8008B590;
                     u.s.b = 0;
@@ -556,8 +556,6 @@ void sub_800C5314(EquipCtx_equip* c)
 extern char tab_800C59E0[][16];
 extern char tab_800C5B50[][16];
 extern char tab_800C5C40[][16];
-#if 0
-// Not matched: original does not merge the three table address computations
 void sub_800C5440(short a0, short a1, int a2)
 {
     int e = 0;
@@ -581,14 +579,15 @@ void sub_800C5440(short a0, short a1, int a2)
             e = (int)tab_800C5C40 + a0 * 16;
         }
         break;
+    default:
+        e = 0;
+        break;
     }
     if (e)
     {
         DrawLargeTextBox_8002AF10(e, a2, 0xe);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(equip, sub_800C5440);
 
 
 #if 0

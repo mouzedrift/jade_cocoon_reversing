@@ -3,6 +3,9 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern unsigned short padPressed_8009194C;
+extern unsigned short padRepeat_800918CC;
+
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
 
 typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
@@ -40,9 +43,9 @@ typedef struct TstCompoD
     int f228;
     int f22C;
 } TstCompoD;
-extern void sub_800A097C();
+extern void TstCompoTask_800A097C();
 extern TstCompoBlk8* name_800A250C[];
-void sub_800A0800(int* task, TstCompoD* c)
+void TstCompoInit_800A0800(int* task, TstCompoD* c)
 {
     c->f184 = 3;
     c->f0 = 0;
@@ -76,7 +79,7 @@ void sub_800A0800(int* task, TstCompoD* c)
     c->f1FC = 0;
     c->f200 = 0;
     c->f204 = 0;
-    task[2] = (int)sub_800A097C;
+    task[2] = (int)TstCompoTask_800A097C;
 }
 
 extern int name_800A2768[];
@@ -99,7 +102,56 @@ void sub_800A0918()
     p[12] = dword_8007DC74;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A097C);
+extern unsigned short padHeld_800918D0[];
+extern void sub_800A0AB8();
+extern void sub_800A1320();
+extern void sub_800A1354();
+extern void sub_800A13B8();
+extern void sub_800A1468();
+extern void sub_800A15F4();
+extern void sub_800A1804();
+extern void sub_800A194C();
+extern void sub_800A19A4();
+extern void sub_800A1AD0();
+extern void TstCompoCameraInput_800A1C14();
+void TstCompoTask_800A097C(int* task, int* c)
+{
+    if (c[0] != 1 && c[0] != 3 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
+        (padHeld_800918D0[0] & 0x90A) == 0x90A)
+    {
+        sub_800A1AD0(c);
+        bStopDrawingMovie_8008D45C = 1;
+        return;
+    }
+    switch (c[0])
+    {
+    case 0:
+        sub_800A0AB8(c);
+        break;
+    case 1:
+        sub_800A1320(c);
+        break;
+    case 2:
+        sub_800A1354(c);
+        break;
+    case 3:
+        sub_800A13B8(c);
+        break;
+    case 4:
+        sub_800A194C(c);
+        TstCompoCameraInput_800A1C14(c);
+        sub_800A1468(c);
+        sub_800A1804(c);
+        break;
+    case 5:
+        sub_800A15F4(c);
+        sub_800A19A4(c);
+        break;
+    case 6:
+        sub_800A1AD0(c);
+        break;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
 
@@ -112,52 +164,37 @@ void sub_800A1320(int* a)
 
 extern int name_80010A10(int);
 extern int name_80010A44(int);
-extern int name_800A2784;
-extern void sub_800A1AFC(int* a);
-#if 0 // near miss: store scheduling
+extern void sub_800A1AFC();
 void sub_800A1354(int* a)
 {
-    int v;
     if (name_80010A10(0))
     {
         a[1] = name_80010A44(0);
         sub_800A1AFC(a);
         a[0x188 / 4] = -1;
         a[0x198 / 4] = 0;
-        v = name_800A2784;
+        a[0x19C / 4] = name_800A2768[7];
         a[0] = 3;
-        a[0x19C / 4] = v;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
 extern int name_80024DC4(int);
-#if 0
 void sub_800A13B8(int* a)
 {
     if (name_80024DC4(a[1]))
     {
         if (a[0x188 / 4] <= 0)
         {
-            int i = 0;
+            int i;
             char* b = (char*)a[1];
-            int n;
-            int m = n = *(unsigned short*)(b + 0x3E);
-            a[0x188 / 4] = n;
-            if (m != 0)
+            a[0x188 / 4] = *(unsigned short*)(b + 0x3E);
+            for (i = 0; i < a[0x188 / 4]; i++)
             {
-                char* base = *(char**)(b + 0x44);
-                do
+                if ((*(unsigned char**)(a[1] + 0x44))[i] != 0)
                 {
-                    int c = base[i];
-                    i++;
-                    if (c != 0)
-                    {
-                        a[0x184 / 4] = i;
-                        break;
-                    }
-                } while (i < m);
+                    a[0x184 / 4] = i;
+                    break;
+                }
             }
         }
         else
@@ -167,16 +204,138 @@ void sub_800A13B8(int* a)
         a[0] = 4;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A13B8);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1468);
+extern void* memset(void* p, int c, unsigned int n);
+extern void sub_80046A58(void* a, void* b, int c);
+extern void sub_800459E4(void* a, void* b, void* c, int d);
+extern char name_800A2588[];
+extern char name_800A2570[];
+void sub_800A1468(int* c)
+{
+    VECTOR pos;
+    char z[8];
+    VECTOR scale;
+    memset(z, 0, 8);
+    pos.vx = c[0x16C / 4];
+    pos.vy = c[0x170 / 4];
+    pos.vz = c[0x174 / 4];
+    pos.vy += 0xFA;
+    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
+    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
+    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
+    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
+    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
+    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + c[0x184 / 4] * 28);
+    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
+    c[0x1AC / 4] = (int)&pos;
+    c[0x1B0 / 4] = (int)z;
+    c[0x1B4 / 4] = (int)(c + 3);
+    c[0x1B8 / 4] = c[0x1A4 / 4];
+    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
+    c[0x1C4 / 4] = 0;
+    c[0x1C8 / 4] = (int)name_800A2588;
+    c[0x1CC / 4] = (int)&scale;
+    c[0x1D0 / 4] = (int)pOT_8008D690;
+    sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
+    sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+}
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A15F4);
+extern void sub_80047E28(void* a, int b, void* c, int d, int e, void* f, int g);
+void sub_800A15F4(int* c)
+{
+    VECTOR pos;
+    char z[8];
+    VECTOR scale;
+    unsigned int* anim;
+    memset(z, 0, 8);
+    pos.vx = c[0x16C / 4];
+    pos.vy = c[0x170 / 4];
+    pos.vz = c[0x174 / 4];
+    pos.vy += 0xFA;
+    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
+    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
+    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
+    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
+    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
+    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + 3 * 28);
+    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
+    c[0x1AC / 4] = (int)&pos;
+    c[0x1B0 / 4] = (int)z;
+    c[0x1B4 / 4] = (int)(c + 3);
+    c[0x1B8 / 4] = c[0x1A4 / 4];
+    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
+    c[0x1C4 / 4] = 0;
+    c[0x1C8 / 4] = (int)name_800A2588;
+    c[0x1CC / 4] = (int)&scale;
+    c[0x1D0 / 4] = (int)pOT_8008D690;
+    c[0x1FC / 4] += 0x88;
+    c[0x180 / 4]++;
+    if ((unsigned)c[0x1FC / 4] >= 0x1000)
+    {
+        sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
+        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+    }
+    else
+    {
+        anim = (unsigned int*)(*(char**)(c[1] + 0x54) + c[0x204 / 4] * 28);
+        sub_80047E28(c + 0x1A8 / 4, c[0x1B8 / 4], anim, (unsigned)c[0x200 / 4] % anim[0], 0x1000 - c[0x1FC / 4],
+                     name_800A2570, *(int*)(c[1] + 0x54));
+        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+    }
+}
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1804);
+typedef struct TstCompoF
+{
+    char pad_0[0x14E];
+    short s14E;
+    char pad_150[0x30];
+    int i180;
+    char pad_184[0x10];
+    int i194;
+    int i198;
+    int i19C;
+    char pad_1A0[0x1C];
+    unsigned int* p1BC;
+} TstCompoF;
+void sub_800A1804(TstCompoF* c)
+{
+    if (c->i194)
+    {
+        if (padRepeat_800918CC & 0x80)
+        {
+            c->i180++;
+        }
+        else if (padRepeat_800918CC & 0x10)
+        {
+            if (--c->i180 < 0)
+            {
+                c->i180 = *c->p1BC - 1;
+            }
+        }
+        c->i180 = c->i180 % *c->p1BC;
+    }
+    else
+    {
+        c->i180++;
+    }
+    if (padPressed_8009194C & 0x40)
+    {
+        c->s14E = 0;
+        c->i194 = !c->i194;
+    }
+    if (c->i194 == 0)
+    {
+        if (padPressed_8009194C & 0x100)
+        {
+            c->i198 = (c->i198 + 1) & 3;
+        }
+        if (padPressed_8009194C & 0x10)
+        {
+            c->i19C = (c->i19C + 1) % 5;
+        }
+    }
+}
 
-extern unsigned short padPressed_8009194C;
 typedef struct TstCompoC
 {
     int state;
@@ -191,30 +350,22 @@ typedef struct TstCompoC
     int f204;
 } TstCompoC;
 
-#if 0 // near miss: original keeps the argument in a2 (register allocation)
 void sub_800A194C(TstCompoC* c)
 {
-    unsigned short pad = padPressed_8009194C;
-    if (pad & 0x800)
+    if (padPressed_8009194C & 0x800)
     {
         c->state = 6;
     }
-    else if (pad & 0x20)
+    else if (padPressed_8009194C & 0x20)
     {
-        int x = c->f184;
-        int y = c->f180;
-        int z = x;
         c->state = 5;
         c->f1FC = 0;
-        c->f18C = x;
-        c->f200 = y;
-        c->f204 = z;
+        c->f18C = c->f184;
+        c->f200 = c->f180;
+        c->f204 = c->f184;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A194C);
 
-extern unsigned short padPressed_8009194C;
 typedef struct TstCompoE
 {
     int f0;
@@ -229,7 +380,6 @@ typedef struct TstCompoE
     int f190;
     int f194;
 } TstCompoE;
-extern unsigned short padRepeat_800918CC;
 extern void name_8002556C(int a, int b);
 extern void name_80025440(int a, int b, int c);
 void sub_800A19A4(TstCompoE* c)
@@ -292,7 +442,36 @@ void sub_800A1AD0(int* a)
     *a = 0;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1AFC);
+typedef struct TstCompoBone
+{
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+} TstCompoBone;
+extern TstCompoBone dword_80079140[];
+extern void sub_80019B14(void* p, char* a1, char* a2);
+extern char* sub_80024F00(void* p, int n);
+extern char* sub_80024F38(void* p, int n);
+typedef struct TstCompoSkel
+{
+    int f0;
+    int f4;
+    int f8;
+    TstCompoBone bones[1];
+} TstCompoSkel;
+void sub_800A1AFC(TstCompoSkel* a)
+{
+    int i;
+    char* r;
+    for (i = 0; dword_80079140[i].s0 >= 0; i++)
+    {
+        a->bones[i] = dword_80079140[i];
+    }
+    a->bones[i] = dword_80079140[i];
+    r = sub_80024F00((void*)a->f4, name_800A2768[7]);
+    sub_80019B14(a->bones, r, sub_80024F38((void*)a->f4, name_800A2768[7]));
+}
 
 typedef struct TstCompoA
 {
@@ -300,11 +479,13 @@ typedef struct TstCompoA
     short s14C;
     short s14E;
     short s150;
-    char pad_152[6];
+    short pad_152;
+    int i154;
     int i158;
-    char pad_15C[8];
+    int i15C;
+    int i160;
     int i164;
-    char pad_168[4];
+    int i168;
     int i16C;
     int i170;
     int i174;
@@ -328,9 +509,103 @@ void sub_800A1BE0(TstCompoA* a)
     a->i158 = -0xFA;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1C14);
+extern unsigned short padHeld_800918D0[];
+extern short word_80084540[];
+extern void SetCameraLookAt_800A1E68();
+void TstCompoCameraInput_800A1C14(TstCompoA* a)
+{
+    if (padHeld_800918D0[0] & 0x8000)
+    {
+        a->s14C -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x2000)
+    {
+        a->s14C += 0x20;
+    }
+    if (padHeld_800918D0[0] & 0x1000)
+    {
+        a->i158 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 0x4000)
+    {
+        a->i158 += 0x20;
+    }
+    a->i158 = a->i158 < -1000 ? -1000 : a->i158 < 1001 ? a->i158 : 1000;
+    if ((padHeld_800918D0[0] & 0xC) == 0xC)
+    {
+        sub_800A1BE0(a);
+    }
+    else if (padHeld_800918D0[0] & 4)
+    {
+        a->s150 -= 0x20;
+    }
+    else if (padHeld_800918D0[0] & 8)
+    {
+        a->s150 += 0x20;
+    }
+    a->s150 = a->s150 < 100 ? 100 : a->s150 < 1201 ? a->s150 : 1200;
+    a->i154 = a->s150 * word_80084540[a->s14C & 0xFFF] / 4096;
+    a->i15C = a->s150 * word_80084540[(a->s14C + 0x400) & 0xFFF] / 4096;
+    if (padHeld_800918D0[0] & 1)
+    {
+        if (padHeld_800918D0[0] & 2)
+        {
+            sub_800A1BE0(a);
+        }
+        else
+        {
+            a->i164 -= 0x20;
+        }
+    }
+    else if (padHeld_800918D0[0] & 2)
+    {
+        a->i164 += 0x20;
+    }
+    a->i164 = a->i164 < -1000 ? -1000 : a->i164 < 1001 ? a->i164 : 1000;
+    a->i160 = 0;
+    a->i168 = 0;
+    SetCameraLookAt_800A1E68(a);
+}
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1E68);
+typedef struct TstCompoMat
+{
+    int w[8];
+} TstCompoMat;
+extern int name_8008D600[];
+extern short name_8008D4C8[];
+extern unsigned char name_8008D460[];
+extern short name_8008D474[];
+extern int geomScreenDistance_8008B548;
+extern int name_8003B548();
+extern void name_8004D0E8();
+extern TstCompoMat dword_8007C2EC;
+extern TstCompoMat dword_8007C30C;
+extern TstCompoMat dword_80087114;
+extern TstCompoMat dword_80087134;
+void SetCameraLookAt_800A1E68(int* c)
+{
+    int v[3];
+    int yaw;
+    name_8008D600[0] = c[0x154 / 4];
+    name_8008D600[1] = c[0x158 / 4];
+    name_8008D600[2] = c[0x15C / 4];
+    v[0] = c[0x160 / 4] - c[0x154 / 4];
+    v[1] = c[0x164 / 4] - c[0x158 / 4];
+    v[2] = c[0x168 / 4] - c[0x15C / 4];
+    yaw = ratan2_8003B548(v[0], v[2]);
+    name_8008D4C8[1] = -yaw;
+    name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    name_8008D4C8[2] = 0;
+    name_8008D460[0] = 0x40;
+    name_8008D460[1] = 0x40;
+    name_8008D460[2] = 0x40;
+    name_8008D474[0] = 0;
+    name_8008D474[1] = 0;
+    geomScreenDistance_8008B548 = 0xA0;
+    dword_80087114 = dword_8007C2EC;
+    dword_80087134 = dword_8007C30C;
+    name_8004D0E8();
+}
 
 extern char name_800A2560[];
 // Matched
@@ -340,7 +615,6 @@ int sub_800A200C()
     return 6;
 }
 
-#if 0 // near miss: loop pointer strength reduction differs
 typedef struct TstCompoEnt
 {
     unsigned short a;
@@ -350,17 +624,18 @@ typedef struct TstCompoEnt
 extern unsigned short uiColor_8008B590;
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawWindow_80042460(int a, void* b, void* c, int d);
-void sub_800A2030(int p, TstCompoEnt* e, int idx)
+void DrawTextListWindow_800A2030(int p, TstCompoEnt* e, int idx)
 {
     unsigned short t[2];
     if (e)
     {
-        while (e->p)
+        int i = 0;
+        while (e[i].p)
         {
-            t[0] = e->a;
-            t[1] = e->b;
-            DrawText_8003E91C(1, e->p, t, idx);
-            e++;
+            t[0] = e[i].a;
+            t[1] = e[i].b;
+            DrawText_8003E91C(1, e[i].p, t, idx);
+            i++;
         }
     }
     if (p)
@@ -371,7 +646,5 @@ void sub_800A2030(int p, TstCompoEnt* e, int idx)
         DrawWindow_80042460(p, t, pOT_8008D454 + idx, 0);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A2030);
 
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A20EC);

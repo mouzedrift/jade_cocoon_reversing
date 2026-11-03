@@ -23,6 +23,18 @@ typedef struct CombStrtUnit
     char field_84[0x74];
 } CombStrtUnit;
 
+typedef struct CombStrtWin
+{
+    int f0;
+    void* text_4;
+    int f8;
+    int fC;
+    short x_10;
+    short y_12;
+    int f14;
+    int f18;
+} CombStrtWin;
+
 extern short word_800A4BF8;
 extern unsigned char byte_800A4C14;
 extern int dword_800A3A88;
@@ -41,11 +53,110 @@ extern int sub_800A1934(void*);
 extern void Heal_80011CD0(void*);
 extern void PlaySfx_80031494(int);
 extern void sub_8002ADB4(void*, void*, int, int);
-extern void sub_800A473C(int);
+extern void ShuffleTeam_800A473C(int);
 extern void sub_800A49DC(int, int);
 
 INCLUDE_OVERLAY_ASM(combstrt, dword_800A4088);
 
+#if 0
+// Not matched: CSE/regalloc of the %hi parts: the original keeps byte_800A4C14's high half in s2 from the != 3 test on and rematerialises word_800A4C8C's
+typedef struct CombStrtMenu
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+} CombStrtMenu;
+typedef struct CombStrtPos
+{
+    short s0;
+    char pad_2[0xE];
+    short x_10;
+    short y_12;
+} CombStrtPos;
+typedef struct CombStrtCursor
+{
+    char pad_0[8];
+    short sel_8;
+} CombStrtCursor;
+extern CombStrtWin name_800A4138;
+extern CombStrtMenu dword_80082784;
+extern CombStrtPos dword_80082708;
+extern CombStrtPos dword_80082740;
+extern char dword_800826E8[];
+extern short word_800A4C00;
+extern short word_800A4C8C;
+extern unsigned short word_800A4BFC[];
+extern void* dword_800A4C04[];
+extern void (*dword_800A4C7C[])(CombStrtTask*, int);
+extern CombStrtCursor name_800A4BF0;
+extern void sub_800A48C0();
+extern void sub_800A4958(int i);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
+extern void DrawMenuBackground_8002BE10();
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+void sub_800A4170(CombStrtTask* t, int a)
+{
+    CombStrtBox col;
+    CombStrtWin w;
+    int i;
+    int old;
+    w = name_800A4138;
+    col.c_2 = 0;
+    col.c_3 = 1;
+    col.col_0 = uiColor_8008B590;
+    sub_8002ADB4(&w, &col, 0xF, 0);
+    sub_800A48C0();
+    if (sub_800A1AAC(0) < 2u && sub_800A1AAC(1) < 2u)
+    {
+        if (byte_800A4C14 == 0xFF)
+        {
+            word_800A4BF8 = word_800A4C00;
+        }
+        byte_800A4C14 = 2;
+    }
+    else if (byte_800A4C14 == 0xFF)
+    {
+        byte_800A4C14 = 0;
+    }
+    for (i = 0; i < 2; i++)
+    {
+        sub_800A4958(i);
+    }
+    if (byte_800A4C14 != 3)
+    {
+        dword_80082784.f0 = 10;
+        dword_80082784.f4 = GetTime30Hz_8002C64C();
+        dword_80082784.f14 = 10;
+        dword_80082708.s0 = 8;
+        dword_80082740.s0 = 8;
+        dword_80082708.x_10 = 0xC8;
+        dword_80082708.y_12 = 0xC3;
+        dword_80082740.x_10 = 0xF6;
+        dword_80082740.y_12 = 0xC3;
+        dword_80082784.f8 = word_800A4C8C;
+        dword_80082784.fC = word_800A4BF8;
+        DrawMenuWindows_8002A5A4(&dword_80082784);
+        if (++word_800A4C8C >= 9)
+        {
+            word_800A4C8C = 8;
+        }
+    }
+    DrawSmallTextBox_8002AF58((int)dword_800A4C04[byte_800A4C14], 0, 0xF);
+    DrawButtonHelpBar_8002B004(dword_800826E8, 0, 0xF);
+    DrawMenuBackground_8002BE10();
+    UpdateMenuCursor_8003D794(&name_800A4BF0, 0);
+    old = byte_800A4C14;
+    dword_800A4C7C[old](t, a);
+    if (old != byte_800A4C14)
+    {
+        name_800A4BF0.sel_8 = word_800A4BFC[byte_800A4C14];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combstrt, sub_800A4170);
 
 void sub_800A43FC()
@@ -107,7 +218,7 @@ void sub_800A45B8()
     switch (st)
     {
     case 0:
-        sub_800A46FC();
+        ShuffleTeams_800A46FC();
         if (word_800A4C90 < word_800A4C94++)
         {
             word_800A4C92 = 1;
@@ -123,7 +234,7 @@ void sub_800A45B8()
         }
         break;
     case 2:
-        sub_800A46FC();
+        ShuffleTeams_800A46FC();
         word_800A4C92 = 1;
         word_800A4C94 = 0;
         if (word_800A4C90 < word_800A4C96++)
@@ -134,19 +245,47 @@ void sub_800A45B8()
     }
 }
 
-void sub_800A46FC()
+void ShuffleTeams_800A46FC()
 {
     int i;
     for (i = 0; i < 2; i++)
     {
-        sub_800A473C(i);
+        ShuffleTeam_800A473C(i);
     }
     PlaySfx_80031494(0x7F);
 }
 
-INCLUDE_OVERLAY_ASM(combstrt, sub_800A473C);
+extern int rand(void);
+extern int PickNthFreeSlot_800A4878(int idx, int* arr, int n);
+void ShuffleTeam_800A473C(int side)
+{
+    int used[10];
+    int order[10];
+    CombStrtUnit tmp[10];
+    int n = sub_800A1AAC(side);
+    CombStrtUnit* units = dword_800A3AA0[side];
+    int i;
+    if (n < 2)
+    {
+        return;
+    }
+    for (i = 0; i < n; i++)
+    {
+        used[i] = -1;
+        order[i] = -1;
+    }
+    for (i = 0; i < n; i++)
+    {
+        order[i] = PickNthFreeSlot_800A4878(rand() % (n - i), used, n);
+        MemCopy_800403E8((unsigned int*)&tmp[i], (unsigned int*)&units[order[i]], 0xF8);
+    }
+    for (i = 0; i < n; i++)
+    {
+        MemCopy_800403E8((unsigned int*)&units[i], (unsigned int*)&tmp[i], 0xF8);
+    }
+}
 
-int sub_800A4878(int idx, int* arr, int n)
+int PickNthFreeSlot_800A4878(int idx, int* arr, int n)
 {
     int i;
     int cnt = 0;
@@ -197,6 +336,62 @@ void sub_800A4958(int i)
     }
 }
 
+#if 0
+// Not matched: s0/s1 swapped between slot and side*3 (register allocation), the rest matches
+extern CombStrtWin name_800A4154;
+extern void* dword_800A4C58[];
+extern short dword_800A4C64[][3][2];
+extern void sub_8002F078(void* a, void* b, int c, int d);
+extern void sub_800A1844(void* a, void* b, int c);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+void sub_800A49DC(int side, int slot)
+{
+    CombStrtBox c1;
+    CombStrtWin w;
+    short pos[4];
+    CombStrtBox c2;
+    RECT r1;
+    short pos2[4];
+    CombStrtBox c3;
+    RECT r2;
+    CombStrtUnit* u = &dword_800A3AA0[side][slot];
+    short* xy;
+    if (sub_800A1934(u) != 1)
+    {
+        w = name_800A4154;
+        w.text_4 = dword_800A4C58[slot];
+        xy = dword_800A4C64[side][slot];
+        w.x_10 = xy[0];
+        w.y_12 = xy[1];
+        c1.c_2 = 0;
+        c1.c_3 = 1;
+        c1.col_0 = saveData_8008B570.uiColor_20;
+        sub_8002ADB4(&w, &c1, 0xF, 0);
+        pos[0] = xy[0] + 0x2F;
+        pos[1] = xy[1];
+        sub_8002F078(u->field_84, pos, 0, 0xF);
+        c2.c_2 = 0;
+        c2.c_3 = 1;
+        c2.col_0 = saveData_8008B570.uiColor_20;
+        r1.x = xy[0] + 0x32;
+        r1.y = xy[1];
+        r1.w = 0x5E;
+        r1.h = 0x14;
+        DrawWindow_80042460(&r1, &c2, pOT_8008D454 + 15, 0);
+        pos2[0] = xy[0];
+        pos2[1] = xy[1] + 0x14;
+        sub_800A1844(u, pos2, 0);
+        c3.c_2 = 0;
+        c3.c_3 = 1;
+        c3.col_0 = saveData_8008B570.uiColor_20;
+        r2.x = xy[0];
+        r2.y = xy[1] + 0x14;
+        r2.w = 0x90;
+        r2.h = 0x13;
+        DrawWindow_80042460(&r2, &c3, pOT_8008D454 + 15, 0);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combstrt, sub_800A49DC);
 
 INCLUDE_OVERLAY_ASM(combstrt, dword_800A4BF0);

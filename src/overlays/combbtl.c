@@ -89,7 +89,7 @@ extern CombBtlB16 dword_800A4AEC;
 extern void sub_800A0BA8(int, void*, void*);
 typedef struct CombBtlD
 {
-    short s0;
+    unsigned short s0;
     short s2;
     int w[8];
     short s24;
@@ -99,8 +99,8 @@ typedef struct CombBtlD
 extern CombBtlD dword_800A85C8;
 extern int dword_800A85B8;
 extern int dword_800A8620;
-extern int xarr_800A85B8[1];
-extern int xarr_800A8620[1];
+extern int xarr_800A85B8[];
+extern int xarr_800A8620[];
 extern CombBtl4 dword_800A8610;
 extern int dword_800A84C0;
 extern int dword_800A84A0;
@@ -126,7 +126,7 @@ extern void sub_800A5BB4();
 extern void sub_800A5080();
 extern int dword_800A848C;
 extern int dword_800A84D4;
-extern int* dword_800A84B0[2];
+extern int dword_800A84B0[2];
 extern short word_80091CE0[];
 extern char dword_80091D40[];
 extern short word_800A84A4;
@@ -326,7 +326,45 @@ void sub_800A5080(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A50E4);
+extern unsigned char byte_800A3A90[];
+extern void sub_800A54CC();
+extern void sub_800A51EC();
+void sub_800A50E4(CombBtlTask* t)
+{
+    int r = IsEffectTaskIdle_800148D4();
+    if (r == 1)
+    {
+        if (dword_800A85F8 < 0)
+        {
+            if (byte_800A38DC == r)
+            {
+                dword_800A85F8 = dword_800A85B8;
+                byte_800A3A90[dword_800A85B8]++;
+                if (byte_800A3A90[dword_800A85B8] >= 100)
+                {
+                    byte_800A3A90[dword_800A85B8] = 99;
+                }
+            }
+            else
+            {
+                t->next_8 = sub_800A54CC;
+                return;
+            }
+        }
+        else
+        {
+            byte_800A38DC = 0;
+            byte_800A3A98[dword_800A85F8] = r;
+            byte_800A3A90[dword_800A85F8]++;
+            if (byte_800A3A90[dword_800A85F8] >= 100)
+            {
+                byte_800A3A90[dword_800A85F8] = 99;
+            }
+        }
+        t->next_8 = sub_800A51EC;
+        dword_800A84D4 = 0x1E;
+    }
+}
 
 extern void sub_800A8078(short, short, short);
 extern int sub_800A8098();
@@ -401,6 +439,36 @@ void sub_800A5290(CombBtlTask* t)
     }
 }
 
+#if 0
+// Not matched: the index scaling becomes sllv by the register holding 2 (CSE with kinds[0]); the original shifts by a constant
+extern EventEntry* OpenMessageWindow_8003422C(int* cfg);
+extern int dword_800A4A8C[];
+extern int dword_800A4A94[];
+int sub_800A5408(int which, int text, int c)
+{
+    int cfg[18];
+    int kinds[2] = {2, 3};
+    int* tbl[2] = {dword_800A4A8C, dword_800A4A94};
+    cfg[0] = 2;
+    cfg[1] = 0;
+    cfg[2] = text;
+    cfg[3] = (int)tbl[which];
+    cfg[4] = (settingsFlags_8008B58C & 7) != 3;
+    cfg[5] = 0;
+    cfg[6] = 0;
+    cfg[7] = 0;
+    cfg[8] = 7;
+    cfg[9] = kinds[which];
+    cfg[10] = c;
+    cfg[11] = 1;
+    cfg[12] = 0;
+    cfg[13] = 0;
+    cfg[14] = (settingsFlags_8008B58C >> 3) & 1;
+    cfg[15] = 1;
+    cfg[16] = 0;
+    return (int)OpenMessageWindow_8003422C(cfg);
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
 void sub_800A54CC(CombBtlTask* t)
@@ -450,7 +518,91 @@ void sub_800A5544(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5638);
+extern void sub_800A58E8(int i);
+extern void sub_800A0ACC(int i, void* u);
+extern int sub_800A758C();
+extern void sub_800A74A0(int i);
+extern void sub_800A75F8(int i);
+extern void sub_800A0E1C(int i, int v);
+extern void sub_800A1068(int i);
+extern void sub_800A599C();
+extern unsigned char byte_800A85BD;
+extern void sub_800A60F0();
+void sub_800A5638(CombBtlTask* t, int a)
+{
+    int i;
+    int any;
+    switch ((unsigned int)dword_800A84B8)
+    {
+    case 10:
+        any = 0;
+        for (i = 0; i < 2; i++)
+        {
+            dword_800A84B0[i] = 0;
+            if (dword_800A4078[i] < 0 || sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]))
+            {
+                sub_800A58E8(i);
+                sub_800A0ACC(i, &dword_800A3AA0[i][dword_800A4078[i]]);
+                any = dword_800A84B0[i] = 1;
+            }
+        }
+        if (any == 1)
+        {
+            dword_800A84B8 = 11;
+        }
+        else
+        {
+            void (*f)() = sub_800A599C;
+            t->next_8 = f;
+            f(t, a);
+        }
+        break;
+    case 11:
+        if (sub_800A758C() == 1)
+        {
+            for (i = 0; i < 2; i++)
+            {
+                if (dword_800A84B0[i] == 1)
+                {
+                    sub_800A74A0(i);
+                    sub_800A75F8(i);
+                }
+            }
+            for (i = 0; i < 2; i++)
+            {
+                sub_800A0E1C(i, sub_800A10DC(i ^ 1));
+                sub_800A1068(i);
+            }
+            dword_800A84B8 = 12;
+        }
+        break;
+    case 12:
+        sub_800A5BB4();
+        sub_800A60F0();
+        dword_800A85B8 = 0;
+        dword_800A8620 = 1;
+        word_800A8488 = 0;
+        byte_800A85BD = dword_800A4078[0];
+        if (dword_800A84B0[0] == 1)
+        {
+            dword_800A84B0[0] = 0;
+            dword_800A85A8.a = 2;
+            dword_800A85A8.b = 0;
+            dword_800A85A8.c = 0x100;
+            dword_800A85A8.d = 0;
+        }
+        if (dword_800A84B0[1] == 1)
+        {
+            dword_800A84B0[1] = 0;
+            dword_800A8610.a = 2;
+            dword_800A8610.b = 0;
+            dword_800A8610.d = 0;
+            dword_800A8610.c = 1 << (dword_800A8620 + 8);
+        }
+        t->next_8 = sub_800A68E0;
+        break;
+    }
+}
 
 void sub_800A58E8(int i)
 {
@@ -466,6 +618,57 @@ void sub_800A58E8(int i)
     } while (sub_800A1934(u) || sub_800A1958(u));
 }
 
+#if 0
+// Not matched: the original has a jump to the loop increment right after the i == 1 block (one word longer) plus a t0/a3 swap; tried continue/while/switch forms
+extern int sub_800A5B70(int a);
+extern void sub_800378CC();
+extern int dword_8008D610;
+extern int dword_800A82E8;
+extern unsigned char byte_800A85BD;
+extern void sub_800A5C64();
+void sub_800A599C(CombBtlTask* t, int a)
+{
+    int gauge[2];
+    int i;
+    dword_800A85B8 = -1;
+    dword_800A8620 = -1;
+    if (word_800A84D0[0] == 0 && word_800A84D0[1] == 0)
+    {
+        *(short*)((char*)word_800A84D0 + (dword_8008D610 & 2)) += 100;
+    }
+    for (i = 0; i < 2; i++)
+    {
+        gauge[i] = (short)sub_800A5B70(i);
+    }
+    while (dword_800A85B8 < 0)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            word_800A84D0[i] += gauge[i];
+            if (word_800A84D0[i] >= 1000)
+            {
+                word_800A84D0[i] -= 1000;
+                dword_800A85B8 = i;
+                dword_800A8620 = i ^ 1;
+                if (i == 1)
+                {
+                    word_800A84D0[1] += gauge[1];
+                }
+            }
+        }
+    }
+    if (dword_800A85B8 >= 0)
+    {
+        void (*f)();
+        sub_800378CC();
+        dword_800A82E8++;
+        byte_800A85BD = dword_800A4078[dword_800A85B8];
+        f = sub_800A5C64;
+        t->next_8 = f;
+        f(t, a);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A599C);
 
 int sub_800A5B70(int a)
@@ -488,6 +691,7 @@ int sub_800A5B70(int a)
 
 // Near miss: the original loads the two shift counts only after all the stores
 #if 0
+// Not matched: the original loads the two shift counts after all the stores (alias/scheduling), tried array/struct/pointer forms
 void sub_800A5BB4()
 {
     dword_800A8600.a = 0x14;
@@ -518,7 +722,86 @@ void sub_800A5BB4()
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5BB4);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5C64);
+extern unsigned char byte_800A84A8;
+extern unsigned char byte_800A85FC[];
+extern int dword_800A8490;
+extern void sub_800A5BB4();
+extern void sub_800A60F0();
+extern void sub_800A5EB8();
+extern void name_800BF7C4(void* u, short* a, short* b);
+extern int name_800BFA4C(int a, int b);
+typedef struct CombBtlActor
+{
+    int flags;
+    int f4;
+    short s8;
+} CombBtlActor;
+void sub_800A5C64(CombBtlTask* t)
+{
+    CombBtlActor* u;
+    int flags0;
+    int fl;
+    int r;
+    sub_800A5BB4();
+    word_800A8488 = 0;
+    byte_800A84A8 &= 0xFC;
+    sub_800A60F0();
+    u = (CombBtlActor*)sub_80014390((unsigned char)(dword_800A85B8 + 8));
+    flags0 = u->flags;
+    name_800BF7C4(u, &word_800A84BC, &word_800A84C4);
+    if (word_800A84BC != 0)
+    {
+        if (word_800A84C4 != 0)
+        {
+            byte_800A85FC[dword_800A85B8] = 3;
+            dword_800A85C8.s0 = 3;
+        }
+        else
+        {
+            byte_800A85FC[dword_800A85B8] = 1;
+            dword_800A85C8.s0 = 1;
+        }
+    }
+    else if (word_800A8474)
+    {
+        byte_800A85FC[dword_800A85B8] = 2;
+        dword_800A85C8.s0 = 2;
+    }
+    fl = u->flags;
+    r = name_800BFA4C(fl, flags0);
+    dword_800A85A8.a = r;
+    dword_800A85A8.d = 0;
+    if (fl & 0x200)
+    {
+        t->next_8 = sub_800A68E0;
+        word_800A84A6 = 0x6F;
+        byte_800A84A8 |= 1;
+        dword_800A8490 = dword_800A85B8;
+        byte_800A84A8 |= 2;
+    }
+    else if (u->s8 - word_800A84BC <= 0)
+    {
+        dword_800A85A8.a = 0xB;
+        word_800A84BC = u->s8;
+        t->next_8 = sub_800A68E0;
+        word_800A84A6 = 0x6F;
+        byte_800A84A8 |= 1;
+        dword_800A8490 = dword_800A85B8;
+    }
+    else if (fl & 2)
+    {
+        t->next_8 = sub_800A4EC8;
+    }
+    else if (r == 0x14)
+    {
+        t->next_8 = sub_800A5EB8;
+    }
+    else
+    {
+        byte_800A84A8 |= 2;
+        t->next_8 = sub_800A68E0;
+    }
+}
 
 void sub_800A5EB8(CombBtlTask* t)
 {
@@ -641,6 +924,66 @@ CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
     return r;
 }
 
+#if 0
+// Not matched: scheduling/regalloc around the 0x1000 store and the cb_C address (15 words); the flags store only stays ahead of the camera stores with e as int*
+extern void ResetCameraToLevant_800376A8(void);
+extern void InitCameraTask_800368F8(void);
+extern int cameraState_8008D4F0[];
+extern int dword_8008B4F8;
+extern short dword_8007C2EC[];
+extern short dword_8007C30C[];
+extern short dword_80087114[];
+extern short dword_80087134[];
+void sub_800A7290()
+{
+    int* e = (int*)AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
+    char* p;
+    char* q;
+    if (e)
+    {
+        e[0] = (e[0] | 1) & ~0x8000;
+        ResetCameraToLevant_800376A8();
+        sub_80037748();
+        e[2] = (int)InitCameraTask_800368F8;
+        dword_8008B4F8 = 0x1000;
+        e[3] = (int)nullsub_5;
+        e[0] = (e[0] | 4) & ~0x8000;
+        p = (char*)cameraState_8008D4F0;
+        *(short*)(p + 0x2E) = 0;
+        *(int*)(p + 0x20) = 0;
+        *(int*)(p + 0x24) = 0;
+        *(int*)(p + 0x28) = 0;
+        *(int*)(p + 0x14) = 0;
+        *(int*)(p + 0x18) = 0;
+        *(int*)(p + 0x1C) = 0;
+        *(short*)(p + 0x34) = 0;
+        *(short*)(p + 0x36) = 0;
+        *(short*)(p + 0x38) = 0;
+        *(short*)(p + 0x3C) = 0;
+        *(short*)(p + 0x3E) = 0;
+        *(short*)(p + 0x40) = 0;
+        q = (char*)&saveData_8008B570;
+        *(int*)(q + 0x7A8) = 0;
+        *(int*)(q + 0x7AC) = 0;
+        *(int*)(q + 0x7B0) = 0;
+        *(short*)(q + 0x7B4) = 0;
+        *(short*)(q + 0x7B6) = 0;
+        *(short*)(q + 0x7B8) = 0;
+        *(short*)(p + 0x34) = dword_8007C2EC[0];
+        *(short*)(p + 0x36) = dword_8007C2EC[1];
+        *(short*)(p + 0x38) = dword_8007C2EC[2];
+        *(short*)(p + 0x3C) = dword_8007C30C[0];
+        *(short*)(p + 0x3E) = dword_8007C30C[3];
+        *(short*)(p + 0x40) = dword_8007C30C[6];
+        dword_80087114[0] = dword_8007C2EC[0];
+        dword_80087114[1] = dword_8007C2EC[1];
+        dword_80087114[2] = dword_8007C2EC[2];
+        dword_80087134[0] = dword_8007C30C[0];
+        dword_80087134[3] = dword_8007C30C[3];
+        dword_80087134[6] = dword_8007C30C[6];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A7290);
 
 void sub_800A73E4()
@@ -719,7 +1062,66 @@ void sub_800A7BE4()
     StopAllEventEntries_80043B40(dword_8008B564);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7C0C);
+extern unsigned char byte_800A38D8;
+extern void sub_80037BFC(int a);
+extern void StartPadVibration_80036528(int pad, int kind);
+extern void sub_800A7E34(int a, int b, int c);
+extern void sub_800A7ECC();
+void PlayHitFeedback_800A7C0C(int side)
+{
+    int me;
+    int other;
+    if (side == 0)
+    {
+        other = byte_800A38D8;
+        me = 0;
+    }
+    else
+    {
+        me = byte_800A38D8;
+        other = 0;
+    }
+    switch (dword_800A85C8.s0)
+    {
+    case 0:
+        break;
+    case 1:
+        sub_800A7E34(side, dword_800A85C8.s0, word_800A8470[side]);
+        if (word_800A8470[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(me, 0);
+            StartPadVibration_80036528(other, 2);
+        }
+        break;
+    case 2:
+        sub_800A7E34(side, dword_800A85C8.s0, word_800A8474[side]);
+        if (word_800A8474[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
+        }
+        break;
+    case 3:
+        sub_800A7E34(side, 1, word_800A8470[side]);
+        sub_800A7E34(side, 2, word_800A8474[side]);
+        if (word_800A8470[side] > 0 || word_800A8474[side] > 0)
+        {
+            sub_80037BFC(0x1E);
+            StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
+        }
+        break;
+    case 4:
+        sub_800A7E34(side, 1, word_800A8470[side]);
+        sub_80037BFC(0x1E);
+        StartPadVibration_80036528(side ? byte_800A38D8 : 0, 1);
+        sub_800A7ECC();
+        break;
+    case 5:
+        StartPadVibration_80036528(0, 0x26);
+        break;
+    }
+}
 
 void sub_800A7E34(int a, int b, int c)
 {
@@ -747,7 +1149,44 @@ void sub_800A7ECC()
     StartScreenFlash_8001C02C(c);
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7EFC);
+extern void sub_800127D0(int a, int b, int c, int d);
+void sub_800A7EFC(EventEntry* e, int* buf)
+{
+    int* p = buf;
+    DVECTOR sxy;
+    SVECTOR v;
+    long z;
+    long flag;
+    int d;
+    v.vx = ((int*)buf[4])[0];
+    v.vy = ((int*)buf[4])[1];
+    v.vz = ((int*)buf[4])[2];
+    v.vx -= dword_8008D600[0].field_0;
+    v.vy -= dword_8008D600[1].field_0;
+    v.vz -= dword_8008D600[2].field_0;
+    RotTransPers(&v, (long*)&sxy, &z, &flag);
+    if (++p[2] > 16)
+    {
+        e->flags = (e->flags & ~1) | 0x8000;
+        return;
+    }
+    d = p[1] / (17 - p[2]);
+    d = -d;
+    p[1] += d;
+    if (p[0] == 1)
+    {
+        int r = sub_80014390((unsigned char)(p[6] + 8));
+        sub_800127D0(p[6] + 8, 0, d, 0);
+        if (*(short*)(r + 8) <= 0)
+        {
+            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)(p[6] + 8)));
+        }
+    }
+    else if (p[0] == 2)
+    {
+        sub_800127D0(p[6] + 8, 2, d, 0);
+    }
+}
 
 void sub_800A8078(short a, short b, short c)
 {

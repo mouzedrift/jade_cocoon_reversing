@@ -307,7 +307,108 @@ void sub_800B7A38(MapTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(map, sub_800B7A90);
+typedef struct MapWin
+{
+    int w[14];
+} MapWin;
+typedef struct MapMenu
+{
+    int w[6];
+} MapMenu;
+extern DISPENV dispEnv_8008D750[2];
+extern char** dword_800B92FC[];
+extern char name_800B6978[];
+extern MapWin name_800B6994;
+extern MapWin name_800B69D4;
+extern MapMenu name_800B6960;
+extern MapSel name_800B9324;
+extern void name_800A75F8();
+extern int MeasureTextWidth_8003E4C8(void* p);
+extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void* memset(void* p, int c, unsigned int n);
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern void sub_800B8338(MapPos* p);
+extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
+void sub_800B7A90(MapTask* t, int a)
+{
+    MapPos q;
+    DR_MOVE mv;
+    RECT r0;
+    RECT box;
+    short tp[4];
+    RECT box2;
+    short tp2[4];
+    MapWin w0;
+    MapWin w1;
+    MapWin* list[3];
+    MapMenu m;
+    int y;
+    int wd;
+    short* w = (short*)word_800AEBF8;
+    sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w[0]]), w[0], &q);
+    UpdateMenuCursor_8003D794(&name_800B9324, 0);
+    if (display_8008B4D8.vsyncsPerFrame_4 == 1)
+    {
+        y = display_8008B4D8.field_A_y;
+    }
+    else
+    {
+        y = dispEnv_8008D750[bDoubleBuffer_8008D428 ^ 1].disp.y;
+    }
+    r0.x = 0x140;
+    r0.w = 0x140;
+    r0.y = 0;
+    r0.h = 0xF0;
+    SetDrawMove(&mv, &r0, 0, y);
+    AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
+    wd = MeasureTextWidth_8003E4C8(dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]]);
+    box.x = 0x9E - (short)wd / 2;
+    box.y = 0x12;
+    box.w = wd + 4;
+    box.h = 0x12;
+    tp[0] = 0xA0 - (short)wd / 2;
+    tp[1] = 0x16;
+    DrawText_8003E91C(2, dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]], tp, 0);
+    DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
+    box2.x = 0x74;
+    box2.y = 0xA6;
+    box2.w = 0x58;
+    box2.h = 0x12;
+    tp2[0] = 0x76;
+    tp2[1] = 0xA8;
+    tp2[0] = 0x86;
+    tp2[1] = 0xAA;
+    DrawText_8003E91C(2, name_800B6978, tp2, 0);
+    DrawUiColorWindow_800424C0(&box2, 0, pOT_8008D454, 0);
+    w0 = name_800B6994;
+    w1 = name_800B69D4;
+    memset(list, 0, 0xC);
+    m = name_800B6960;
+    list[0] = &w0;
+    list[1] = &w1;
+    m.w[1] = GetTime30Hz_8002C64C();
+    m.w[4] = (int)list;
+    m.w[3] = name_800B9324.s8;
+    DrawMenuWindows_8002A5A4(&m);
+    if (IsConfirmPressedP1_8003D380(1))
+    {
+        if ((short)GetMenuCursorIndex_8003DA54(&name_800B9324) == 0)
+        {
+            sub_800B8338((MapPos*)word_800AEBF8);
+            ((void (*)(MapTask*, int))sub_800B6F60)(t, a);
+            t->next_8 = name_800A75F8;
+        }
+        else
+        {
+            t->next_8 = sub_800B6C7C;
+        }
+    }
+    else if (IsCancelPressedP1_8003D41C(1))
+    {
+        t->next_8 = sub_800B6C7C;
+    }
+}
 
 // Matched
 int sub_800B7E54(short a)
@@ -399,12 +500,10 @@ void sub_800B8128(short a, short b, MapPos* out)
     }
 }
 
-#if 0
-// Not matched: s0/s1 swapped for i and cnt
-short sub_800B81D0(MapPos* p)
+int sub_800B81D0(MapPos* p)
 {
     int i;
-    int cnt = 0;
+    short cnt = 0;
     MapPos q;
     q.a = p->a;
     for (i = 0; i < word_800B8C98[p->a]; i++)
@@ -421,8 +520,6 @@ short sub_800B81D0(MapPos* p)
     }
     return cnt;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B81D0);
 
 // Matched
 int sub_800B8290(MapPos* p)
@@ -450,31 +547,30 @@ int sub_800B8290(MapPos* p)
     return r != -1;
 }
 
-#if 0
-// Not matched: block layout (the original tests 0xFE/0xFF first and has p in a2)
 void sub_800B8338(MapPos* p)
 {
     unsigned char c = dword_800B9348[p->a][p->b];
-    MapSaveView* v;
-    if (c >= 0xF0)
+    if (c == 0xFE || c == 0xFF)
     {
-        if (c != 0xFE && c != 0xFF)
-        {
-            sub_800AD16C(4, c - 0xEF);
-        }
-        v = (MapSaveView*)&saveData_8008B570;
-        v->f2E4 = 4;
-        v->f2E8 = 0;
-        v->f2EC = 0;
-        v->f2EE = -1;
+        MAPV->f2E4 = 4;
+        MAPV->f2E8 = 0;
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
+    }
+    else if (c >= 0xF0)
+    {
+        sub_800AD16C(4, c - 0xEF);
+        MAPV->f2E4 = 4;
+        MAPV->f2E8 = 0;
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
     }
     else
     {
-        v = (MapSaveView*)&saveData_8008B570;
-        v->f2E4 = dword_800B9360[p->a];
-        v->f2E8 = dword_800B9348[p->a][p->b];
-        v->f2EC = 0;
-        v->f2EE = -1;
+        MAPV->f2E4 = dword_800B9360[p->a];
+        MAPV->f2E8 = dword_800B9348[p->a][p->b];
+        MAPV->f2EC = 0;
+        MAPV->f2EE = -1;
     }
     sub_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
@@ -482,8 +578,6 @@ void sub_800B8338(MapPos* p)
     dword_80091C94 = 1;
     eventDispatchHalt_8008B540 = 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8338);
 
 // Matched
 void sub_800B8448(MapPos* out)
@@ -555,8 +649,6 @@ void sub_800B85CC(MapTask* t)
     f();
 }
 
-#if 0
-// Not matched: scheduling of the loads in the last case (about 20 words differ)
 void sub_800B860C()
 {
     int* m = dword_800B9420;
@@ -654,51 +746,39 @@ void sub_800B860C()
             m[3]++;
         }
         n = 0;
-        if (list->id != -1)
+        while (list[n].id != -1)
         {
-            MapEntry* p = list;
-            do
-            {
-                p++;
-                n++;
-            } while (p->id != -1);
+            n++;
         }
         m[3] = m[3] < 0 ? 0 : (n - 1 < m[3] ? n - 1 : m[3]);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
-            short fl = dword_800B93F8[m[1]];
-            sv->f2EC = m[3];
-            sv->f2E4 = m[1];
-            sv->f2E2 = -1;
-            sv->f2E6 = -1;
-            sv->f2EA = -1;
-            sv->f2EE = -1;
+            MAPV->f2E0 = dword_800B93F8[m[1]];
+            MAPV->f2E4 = m[1];
+            MAPV->f2E8 = m[2];
+            MAPV->f2EC = m[3];
+            MAPV->f2E2 = -1;
+            MAPV->f2E6 = -1;
+            MAPV->f2EA = -1;
+            MAPV->f2EE = -1;
             dword_80091C94 = 1;
-            sv->f2E8 = m[2];
             dword_80091C54 = 0;
-            sv->f2E0 = fl;
             sub_800A8DEC();
             sub_800A6D30(1);
             SetFadeMode_8001C19C(0, 0x20);
             eventDispatchHalt_8008B540 = 1;
         }
-        else
+        else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            if (IsCancelPressedP1_8003D41C(1) == 1)
-            {
-                m[3] = 0;
-                m[0]--;
-            }
-            r3.x = 0x1E;
-            r3.y = 0x14;
-            DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
+            m[3] = 0;
+            m[0]--;
         }
+        r3.x = 0x1E;
+        r3.y = 0x14;
+        DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B860C);
 
 
 // Matched
@@ -710,8 +790,6 @@ void sub_800B8B2C(MapTask* t)
     f();
 }
 
-#if 0
-// Not matched: the original loads the constant 0x78 twice (no CSE between a.y and b.x)
 void sub_800B8B5C()
 {
     int* sel = &dword_800B9438;
@@ -741,14 +819,12 @@ void sub_800B8B5C()
     IsCancelPressedP1_8003D41C(1);
     a.x = 0x6E;
     a.y = 0x78;
-    b.x = 0x78;
-    b.y = 0x82;
+    b.x = a.x + 10;
+    b.y = a.y + 10;
     DrawText_8003E91C(2, dword_800B6BE0, &b, 0);
     c.x = a.x + 0x50;
     c.y = a.y + 0xA;
     DrawNumber_8003EF74(&c, *sel + 1, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, sub_800B8B5C);
 
 INCLUDE_OVERLAY_ASM(map, dword_800B8C94);

@@ -103,7 +103,7 @@ void sub_800A0A1C(TitleTask* t)
 
 
 extern int dword_800A2718;
-extern void sub_800B6E4C(void* a0, int a1);
+extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern void EncodeName_8003F7C8(void* a0, void* a1);
 extern void sub_800A0AE8();
 // Matched
@@ -115,14 +115,14 @@ void sub_800A0A70(TitleTask* t)
         {
             EncodeName_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
         }
-        sub_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
+        StartNameEntry_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
         t->next_8 = sub_800A0AE8;
     }
 }
 
 
 extern void sub_800A0D18();
-extern int sub_800B6FC8(void);
+extern int IsNameEntryActive_800B6FC8(void);
 extern void sub_800A0C28();
 // Matched
 void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
@@ -154,7 +154,7 @@ void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
         }
     }
     sub_800A0D18(c->field_70, c->field_74, 0, c);
-    if (sub_800B6FC8() == 0)
+    if (IsNameEntryActive_800B6FC8() == 0)
     {
         FreeActiveOverlay_8002C014();
         t->next_8 = sub_800A0C28;
@@ -401,7 +401,6 @@ typedef struct TitleSmall
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800A1F98();
 extern void sub_800A1AC0();
-extern void sub_800A1310();
 extern void sub_8004E2C8(int a0);
 #define TITLE_TIMEOUT(t, c) \
     if (++dword_800A2814 >= 0x1771) \
@@ -416,8 +415,13 @@ extern void sub_8004E2C8(int a0);
         SetFadeMode_8001C19C(1, 0x20); \
         (t)->next_8 = sub_800A1AC0; \
     }
-#if 0
-// Not matched: register allocation / scheduling differs
+typedef struct TitleSprtXY
+{
+    char pad_0[0x30];
+    short x_30;
+    short y_32;
+} TitleSprtXY;
+
 void sub_800A1174(TitleTask* t, TitleCtxB* c)
 {
     TitleSmall s;
@@ -430,8 +434,8 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     s.b = 1;
     s.c = 1;
     s.a = 4;
-    *(short*)(c->field_C + 0x30) = 0x54;
-    *(short*)(c->field_C + 0x32) = 0xA7;
+    ((TitleSprtXY*)c->field_C)->x_30 = 0x54;
+    ((TitleSprtXY*)c->field_C)->y_32 = 0xA7;
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
     DrawWindow_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
@@ -446,8 +450,6 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     }
     TITLE_TIMEOUT(t, d)
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, sub_800A1174);
 
 extern void sub_800A1760();
 extern unsigned short padRepeat_800918CC;
@@ -598,10 +600,7 @@ typedef struct
 extern char dword_800A05A8[];
 extern char dword_800A0658[];
 extern char dword_800A069C[];
-extern int dword_800A2818;
-extern void sub_800BB64C(void);
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
-extern void sub_800A1310();
 extern void sub_800A1B74(TitleTaskM* t);
 
 // Matched
@@ -684,7 +683,6 @@ void sub_800A1780(TitleTaskM* t, int x)
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
-extern void sub_800A1AFC();
 
 // Matched
 void sub_800A1AC0(TitleTaskM* t, int* cnt)
@@ -840,7 +838,6 @@ typedef struct
     short field_24;
 } TitleObjM;
 extern int sub_800C45D8(void);
-extern void sub_800A1F98();
 extern void sub_800A1E9C();
 
 // Matched
@@ -873,10 +870,8 @@ void sub_800A1F00(TitleTaskM* t)
     sub_800A1AFC(t, 0xC);
 }
 
-extern void sub_800A1AFC();
 extern void sub_800A2358(void);
 extern void sub_800A22FC(void);
-extern void sub_800A2450(void);
 extern void sub_800A2424(void);
 extern void sub_800A20F4(void);
 extern void sub_800A2110(void);

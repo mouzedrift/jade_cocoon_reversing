@@ -154,8 +154,8 @@ typedef struct WpnBox2_wpnshop
 } WpnBox2_wpnshop;
 extern void DrawUiWindow_8002A384(void* p);
 extern int sub_800AD02C(void);
-extern int sub_800BDF68();
-extern int sub_800BDE38();
+extern int GetMaxBuyItemCount_800BDF68(short id);
+extern int GetMaxBuyEquipCount_800BDE38(short id, short kind);
 typedef struct WpnPos_wpnshop
 {
     unsigned short x;
@@ -227,6 +227,7 @@ extern int eventDispatchHalt_8008B540;
 extern void sub_800BB194();
 extern void sub_800BB1F4();
 extern unsigned int sub_800AD990(int a);
+extern int sub_800AD4D8(int a, int b, int c);
 typedef struct WpnTask_wpnshop
 {
     unsigned int flags_0;
@@ -239,8 +240,9 @@ extern char name_800BEBB4[];
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800B66C0);
 
 #if 0
-// register allocation only: original has b in s1, t in s2, a in s3
-void sub_800BAE2C(int a, int b)
+// Not matched: with b as short the registers match; left is the scheduling of the o->f_18 = 1 store
+// and the name_800BE7CC[o->f_0] load among the field clears (17 words)
+void sub_800BAE2C(int a, short b)
 {
     WpnObj_wpnshop* o;
     EventEntry* t = AllocEventEntry_80043AF8((EventNode*)dword_8008D3E0);
@@ -349,10 +351,9 @@ void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
     t->next_8 = sub_800BB1F4;
 }
 
-#if 0
-// extra callee-saved copy of ctx pointer (s1=s0) in the original
 void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
 {
+    WpnObj_wpnshop* p = o;
     DrawMenuBackground_8002BE10();
     sub_800BBDD0(o);
     sub_800BB664(o);
@@ -361,7 +362,7 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
     {
         o->f_48++;
     }
-    if (o->f_4 & 2)
+    if (p->f_4 & 2)
     {
         sub_80027478(0x40, 1);
         FreeActiveOverlay_8002C014();
@@ -369,8 +370,6 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
         t->next_8 = sub_800BB298;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BB1F4);
 
 // Matched
 void sub_800BB298(WpnTask_wpnshop* t)
@@ -1226,7 +1225,7 @@ void sub_800BD278(WpnObj_wpnshop* o)
     int r;
     if (o->f_40)
     {
-        r = sub_800BDF68((short)sub_800BDDB0(s, o->f_1E));
+        r = GetMaxBuyItemCount_800BDF68((short)sub_800BDDB0(s, o->f_1E));
         if (r > 0)
         {
             if (o->f_12 == 0)
@@ -1413,19 +1412,19 @@ void sub_800BD760(WpnObj_wpnshop* o)
     switch (o->f_0)
     {
     case 8:
-        v = sub_800BDE38((short)o->f_14, o->f_10);
+        v = GetMaxBuyEquipCount_800BDE38((short)o->f_14, o->f_10);
         break;
     case 9:
         v = sub_800AD2C8(o->f_36 + o->f_38, o->f_10 + 1);
         break;
     case 10:
-        v = sub_800BDF68((short)o->f_14);
+        v = GetMaxBuyItemCount_800BDF68((short)o->f_14);
         break;
     case 11:
         v = sub_800AD2C8(o->f_36 + o->f_38, 0);
         break;
     }
-    o->f_18 = sub_800BE084(o->f_18, v);
+    o->f_18 = AdjustBuyQuantity_800BE084(o->f_18, v);
     if (o->f_18 != prev)
     {
         PlaySfx_80031494(0x7F);
@@ -1493,7 +1492,7 @@ void sub_800BD9A8(WpnObj_wpnshop* o)
     int r;
     if (o->f_40)
     {
-        r = sub_800BDE38((short)sub_800BDD2C(s, o->f_10, o->f_1E), o->f_10);
+        r = GetMaxBuyEquipCount_800BDE38((short)sub_800BDD2C(s, o->f_10, o->f_1E), o->f_10);
         if (r > 0)
         {
             PlaySfx_80031494(0x7E);
@@ -1596,20 +1595,18 @@ void sub_800BDCB4(int a, int b, int c)
     sub_800AD058((x * 3 / 4) * c);
 }
 
-#if 0
-// switch/if chain order differs: original tests 1,0,2 with blocks in order 0,1,2
-int sub_800BDD2C(int n, int sel, int mask)
+int sub_800BDD2C(int n, unsigned int sel, int mask)
 {
     int c = 0;
     unsigned short* p;
     n++;
     switch (sel)
     {
-    case 1:
-        p = name_800BF274;
-        break;
     case 0:
         p = name_800BF244;
+        break;
+    case 1:
+        p = name_800BF274;
         break;
     case 2:
         p = name_800BF294;
@@ -1631,8 +1628,6 @@ int sub_800BDD2C(int n, int sel, int mask)
     }
     return c - 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDD2C);
 
 // Matched
 int sub_800BDDB0(int n, int mask)
@@ -1669,9 +1664,57 @@ short sub_800BDDF8(unsigned short* p, int n, int mask)
     return c;
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDE38);
+int GetMaxBuyEquipCount_800BDE38(short id, short kind)
+{
+    int have;
+    int n;
+    if (sub_800AD4D8(id, 1, kind + 1) != 0)
+    {
+        have = sub_800AD254(id, kind + 1);
+        n = sub_800AD02C() / GetEquipmentPrice_8001D1F8(id, kind);
+        if (n > 20)
+        {
+            n = 20;
+        }
+        if (n + have > 20)
+        {
+            n = 20 - have;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    if (id == sub_800AD990(kind) && n >= 2 && n == 20 - sub_800AD254(id, kind + 1))
+    {
+        n--;
+    }
+    return n;
+}
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BDF68);
+int GetMaxBuyItemCount_800BDF68(short id)
+{
+    int have;
+    int n;
+    if (sub_800AD4D8(id, 1, 0) != 0)
+    {
+        have = sub_800AD254(id, 0);
+        n = sub_800AD02C() / GETINT_8001CE54(id);
+        if (n > 20)
+        {
+            n = 20;
+        }
+        if (n + have > 20)
+        {
+            n = 20 - have;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return n;
+}
 
 // Matched
 short sub_800BE00C(WpnObj_wpnshop* o, short i)
@@ -1693,22 +1736,15 @@ short sub_800BE058(WpnObj_wpnshop* o, short i)
     return o->f_36;
 }
 
-#if 0
-// register allocation: original copies a to a new reg, keeps b in a1
-int sub_800BE084(int a, int b)
+int AdjustBuyQuantity_800BE084(int n, int b)
 {
-    int n = a;
-    int t;
-    if ((padRepeat_800918CC & 0x1000) && (t = n + 1, t <= b))
+    if ((padRepeat_800918CC & 0x1000) && n + 1 <= b)
     {
-        n = t;
+        n++;
     }
-    else if (padRepeat_800918CC & 0x4000)
+    else if ((padRepeat_800918CC & 0x4000) && n - 1 > 0)
     {
-        if (n - 1 > 0)
-        {
-            n = n - 1;
-        }
+        n--;
     }
     n = AdjustByShoulderButtons_8003D198(b + 1, n, 10, 0);
     if (n == 0)
@@ -1717,7 +1753,5 @@ int sub_800BE084(int a, int b)
     }
     return n;
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BE084);
 
 INCLUDE_OVERLAY_ASM(wpnshop, dword_800BE110);
