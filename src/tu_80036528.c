@@ -117,7 +117,7 @@ void StopPadVibrationTask_800367F0(int a0, unsigned char* a1)
     padVibration_80095460[*a1].motor_2[0] = 0;
     padVibration_80095460[*a1].motor_2[1] = 0;
 }
-extern int dword_80083844[];
+extern unsigned char dword_80083844[];
 
 // Matched
 void UpdatePadVibration_80036820(int port)
@@ -132,7 +132,7 @@ void UpdatePadVibration_80036820(int port)
         if (!(padVibration_80095460[port].flags_0 & 1))
         {
             PadSetAct(port << 4, (unsigned char*)&padVibration_80095460[port].motor_2[0], 2);
-            if (st == 2 || (st == 6 && PadSetActAlign(port << 4, (unsigned char*)dword_80083844)))
+            if (st == 2 || (st == 6 && PadSetActAlign(port << 4, dword_80083844)))
             {
                 padVibration_80095460[port].flags_0 |= 1;
             }
