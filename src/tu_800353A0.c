@@ -20,8 +20,164 @@ INCLUDE_DATA(dword_80074850);
 INCLUDE_DATA(dword_8007485C);
 INCLUDE_DATA(dword_80074864);
 
-INCLUDE_ASM(sub_800353A0);
-INCLUDE_ASM(sub_800355EC);
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    unsigned int mode_8;
+    char pad_C[8];
+    unsigned int field_14;
+    short pad_18;
+    short field_1A;
+    short pad_1C;
+    unsigned short field_1E;
+    int field_20;
+    int pad_24;
+    int field_28;
+    int field_2C;
+    char pad_30[0x1C];
+    unsigned short x_4C;
+    unsigned short y_4E;
+    int pad_50;
+    int ot_54;
+    char pad_58[0x14];
+    char field_6C[0x44];
+    unsigned short field_B0;
+    short field_B2;
+    char pad_B4[0x100];
+    unsigned short** lines_1B4;
+    char pad_1B8[0xEC];
+    int field_2A4;
+} Msg_353A0;
+extern int sub_80034B88(int n, unsigned int mask);
+// Matched
+void sub_800353A0(Msg_353A0* o)
+{
+    switch (o->mode_8)
+    {
+    case 1:
+    case 2:
+        if (IsConfirmPressedP1_8003D380(0))
+        {
+            if (o->flags_4 & 0x800)
+            {
+                o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
+                o->field_1E++;
+            }
+            if (o->field_2C == 1)
+            {
+                o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
+                o->field_1E++;
+            }
+        }
+        else if ((settingsFlags_8008B58C & 0xC00000) == 0xC00000 && o->field_2A4 == 1 &&
+                 XaNoRequestPending_800435A4() == 1 && XaIsIdle_80043584() == 1)
+        {
+            if (o->flags_4 & 0x800)
+            {
+                o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
+                o->field_1E++;
+            }
+            if (o->field_2C == 1)
+            {
+                o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
+                o->field_1E++;
+            }
+        }
+        break;
+    case 4:
+        if (IsConfirmPressedP1_8003D380(0))
+        {
+            o->flags_4 |= 0x200;
+        }
+        break;
+    case 3:
+        if (IsConfirmPressedP1_8003D380(0) && (o->flags_4 & 0x800))
+        {
+            o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
+            o->field_20 = 1;
+            o->field_1E++;
+        }
+        else if (o->field_28 == 1 && IsCancelPressedP1_8003D41C(0) && (o->flags_4 & 0x800))
+        {
+            o->flags_4 |= 0x10000;
+            o->field_1A = sub_80034B88(o->field_B2 = o->field_B0 - 1, o->field_14);
+        }
+        break;
+    }
+}
+extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
+extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
+extern int sub_8003D630(short* m);
+extern void sub_8002F6F8(void* a0, void* st, int a2);
+// Matched
+void sub_800355EC(Msg_353A0* o, unsigned short* r)
+{
+    RECT clip;
+    union
+    {
+        unsigned short loc[2];
+        int st[3];
+        struct
+        {
+            int pad[2];
+            int f0;
+            short m[4];
+        } menu;
+    } u;
+    RECT r2;
+    int sel;
+    clip.x = r[0] + 6;
+    clip.y = r[1] + 4;
+    clip.w = r[2] - 6;
+    clip.h = r[3] - 7;
+    if (clip.h > 0 && clip.w > 0)
+    {
+        int i = 0;
+        unsigned short x = o->x_4C + 8;
+        unsigned short y = o->y_4E + 4;
+        unsigned short** p = o->lines_1B4;
+        while (*p)
+        {
+            if (o->field_14 & (1 << i))
+            {
+                u.loc[1] = y;
+                y += 12;
+                u.loc[0] = x;
+                AddClipTexWindowPrim_80033308(&pOT_8008D454[o->ot_54]);
+                sub_8003EC2C(*p, u.loc, o->ot_54);
+                AddTexWindowPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
+            }
+            p++;
+            i++;
+        }
+    }
+    if (o->mode_8 == 3)
+    {
+        u.menu.f0 = 0;
+        u.menu.m[0] = 0;
+        u.menu.m[2] = 1;
+        u.menu.m[3] = o->field_B0;
+        u.menu.m[1] = o->field_B2;
+        sub_8003D630((short*)&u.menu.f0);
+        if (o->field_B2 != u.menu.m[1])
+        {
+            PlaySfx_80031494(0x7F);
+        }
+        o->field_B2 = u.menu.m[1];
+    }
+    sel = o->field_B2;
+    u.st[0] = (int)o->field_6C;
+    u.st[1] = 1;
+    u.st[2] = 1;
+    r2.x = o->x_4C + 4;
+    r2.y = o->y_4E + sel * 12 + 3;
+    r2.w = r[2] - 8;
+    r2.h = 13;
+    sub_8002F6F8(&r2, u.st, 0);
+    o->field_1A = sub_80034B88(o->field_B2, o->field_14);
+}
 typedef struct
 {
     int field_0;
