@@ -933,7 +933,7 @@ typedef struct G2Sv
 typedef struct G2Act
 {
     unsigned int f0;
-    char pad_4[4];
+    int f4; // input bits
     int f8;
     int fC;
     int f10;

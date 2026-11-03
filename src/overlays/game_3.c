@@ -2113,9 +2113,9 @@ void sub_800AA140(G2Act* p)
     sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
 }
 
-int sub_800AA1C0(int* p)
+int sub_800AA1C0(G2Act* p)
 {
-    return p[1] & 0xFFFFFFF;
+    return p->f4 & 0xFFFFFFF;
 }
 
 int sub_800AA1D4(unsigned char* p)
@@ -2151,29 +2151,29 @@ void sub_800AA25C(G2Act* p)
     {
         return;
     }
-    if (sub_800AA1C0((int*)p) == 1)
+    if (sub_800AA1C0(p) == 1)
     {
         sub_800AB010(p, 5, 2, 0);
         return;
     }
-    if (sub_800AA1C0((int*)p) == 2)
+    if (sub_800AA1C0(p) == 2)
     {
         sub_800AB010(p, 4, 1, 0);
         return;
     }
-    if (sub_800AA1C0((int*)p) == 4)
+    if (sub_800AA1C0(p) == 4)
     {
         sub_800AB010(p, 2, 0, 0);
         p->f0 &= ~0x200000;
         return;
     }
-    if (*(int*)((char*)p + 4) & 0x30000000)
+    if (p->f4 & 0x30000000)
     {
         sub_800AB010(p, 2, 0, 0);
         p->f0 |= 0x200000;
         return;
     }
-    if (sub_800AA1C0((int*)p) == 3)
+    if (sub_800AA1C0(p) == 3)
     {
         sub_800AA1E0(p);
         return;
