@@ -16,7 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_80073040);
 INCLUDE_DATA(dword_80073044);
 INCLUDE_DATA(dword_80073048);
 INCLUDE_DATA(dword_8007304C);
@@ -41,77 +40,6 @@ INCLUDE_DATA(overlayAddr4_80073204);
 INCLUDE_DATA(overlayAddr5_80073208);
 INCLUDE_DATA(overlayAddr6_8007320C);
 INCLUDE_DATA(dword_80073210);
-INCLUDE_DATA(dword_80073234);
-INCLUDE_DATA(dword_80073238);
-INCLUDE_DATA(dword_8007324C);
-INCLUDE_DATA(dword_8007327C);
-INCLUDE_DATA(dword_800732A8);
-INCLUDE_DATA(dword_800732D8);
-INCLUDE_DATA(dword_800732F4);
-INCLUDE_DATA(dword_80073310);
-INCLUDE_DATA(dword_80073330);
-INCLUDE_DATA(dword_80073350);
-INCLUDE_DATA(dword_80073388);
-INCLUDE_DATA(dword_800733B8);
-INCLUDE_DATA(dword_800733D0);
-INCLUDE_DATA(dword_800733F0);
-INCLUDE_DATA(dword_80073410);
-INCLUDE_DATA(dword_800734DC);
-INCLUDE_DATA(dword_8007355C);
-INCLUDE_DATA(dword_800735EC);
-INCLUDE_DATA(dword_80073628);
-INCLUDE_DATA(dword_80073648);
-INCLUDE_DATA(dword_8007366C);
-INCLUDE_DATA(dword_800736D0);
-INCLUDE_DATA(dword_800736EC);
-INCLUDE_DATA(dword_80073724);
-INCLUDE_DATA(dword_80073740);
-INCLUDE_DATA(dword_80073760);
-INCLUDE_DATA(dword_8007377C);
-INCLUDE_DATA(dword_800737A0);
-INCLUDE_DATA(dword_800737B4);
-INCLUDE_DATA(dword_800737C8);
-INCLUDE_DATA(dword_80073910);
-INCLUDE_DATA(dword_8007393C);
-INCLUDE_DATA(dword_800739F4);
-INCLUDE_DATA(dword_80073A14);
-INCLUDE_DATA(dword_80073A28);
-INCLUDE_DATA(dword_80073A48);
-INCLUDE_DATA(dword_80073A84);
-INCLUDE_DATA(dword_80073AAC);
-INCLUDE_DATA(dword_80073ACC);
-INCLUDE_DATA(dword_80073B00);
-INCLUDE_DATA(dword_80073B20);
-INCLUDE_DATA(dword_80073B44);
-INCLUDE_DATA(dword_80073B68);
-INCLUDE_DATA(dword_80073B78);
-INCLUDE_DATA(dword_80073BB0);
-INCLUDE_DATA(dword_80073BC4);
-INCLUDE_DATA(dword_80073BDC);
-INCLUDE_DATA(dword_80073C14);
-INCLUDE_DATA(dword_80073C58);
-INCLUDE_DATA(dword_80073C80);
-INCLUDE_DATA(dword_80073CB0);
-INCLUDE_DATA(dword_80073CCC);
-INCLUDE_DATA(dword_80073CE0);
-INCLUDE_DATA(dword_80073CF8);
-INCLUDE_DATA(dword_80073D18);
-INCLUDE_DATA(dword_80073D34);
-INCLUDE_DATA(dword_80073D54);
-INCLUDE_DATA(dword_80073DD0);
-INCLUDE_DATA(dword_80073E18);
-INCLUDE_DATA(dword_80073ED8);
-INCLUDE_DATA(dword_80073F24);
-INCLUDE_DATA(dword_80073F40);
-INCLUDE_DATA(dword_80073F5C);
-INCLUDE_DATA(dword_80073FA4);
-INCLUDE_DATA(dword_80073FC0);
-INCLUDE_DATA(dword_80073FF8);
-INCLUDE_DATA(dword_8007400C);
-INCLUDE_DATA(dword_8007403C);
-INCLUDE_DATA(dword_8007408C);
-INCLUDE_DATA(dword_800740B0);
-INCLUDE_DATA(dword_800740B4);
 INCLUDE_DATA(fileRequestQueue_80086540);
 INCLUDE_DATA(dword_80086544);
 INCLUDE_DATA(dword_80086548);
@@ -690,6 +618,50 @@ void sub_8001B714(void)
         unknownFlags_8008D678 |= 0x10;
     }
 }
+extern short dword_8007C728[][2];
+extern DRAWENV drawEnv_8008D698[2];
+extern DISPENV dispEnv_8008D750[2];
+extern DRAWENV* InitDrawEnv_8005A9C8(DRAWENV* env, int x, int y, int w, int h);
+extern DISPENV* InitDispEnv_8005AA88(DISPENV* env, int x, int y, int w, int h);
+#if 0
+// Not matched: only the scheduling of the display base address at the top differs (one extra load-delay nop)
+void InitEnvironments_8001B7B4(void)
+{
+    int interlace;
+    int off;
+    display_8008B4D8.field_C_w = dword_8007C728[display_8008B4D8.field_0][0];
+    display_8008B4D8.field_E_h = dword_8007C728[display_8008B4D8.field_0][1];
+    off = 240;
+    if (display_8008B4D8.field_E_h == 480)
+    {
+        off = 0;
+        interlace = 1;
+        unknownFlags_8008D678 |= 0x20;
+    }
+    else
+    {
+        interlace = 0;
+        unknownFlags_8008D678 &= ~0x20;
+    }
+    InitDrawEnv_8005A9C8(&drawEnv_8008D698[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDispEnv_8005AA88(&dispEnv_8008D750[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDrawEnv_8005A9C8(&drawEnv_8008D698[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    InitDispEnv_8005AA88(&dispEnv_8008D750[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    drawEnv_8008D698[1].isbg = 1;
+    drawEnv_8008D698[0].isbg = 1;
+    drawEnv_8008D698[1].dtd = 1;
+    drawEnv_8008D698[0].dtd = 1;
+    dispEnv_8008D750[1].isinter = interlace;
+    dispEnv_8008D750[0].isinter = interlace;
+    dispEnv_8008D750[1].isrgb24 = 0;
+    dispEnv_8008D750[0].isrgb24 = 0;
+    dword_8008D474[0] = display_8008B4D8.field_8_x;
+    dword_8008D474[1] = display_8008B4D8.field_A_y;
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomScreen(geomScreenDistance_8008B548);
+    SetFarColor(0, 0, 0);
+}
+#endif
 INCLUDE_ASM(InitEnvironments_8001B7B4);
 // Matched
 void InitSprt_8001B9A0(int buffer)
@@ -1165,12 +1137,138 @@ unsigned int sub_8001C8A0(short mask)
     } while (i < 10);
     return r;
 }
-#if 0
-void ProcessPad_8001C8E8(int a0)
+// Matched
+void ProcessPad_8001C8E8(int port)
 {
+    int i;
+    unsigned short delay;
+    unsigned short rate;
+    pads_800918E8[port][8] = 0;
+    if (pads_800918E8[port][0] != 0xFF)
+    {
+        padPrevHeld_800918C8[port] = padHeld_800918D0[port];
+        padHeld_800918D0[port] = ~((pads_800918E8[port][2] << 8) | pads_800918E8[port][3]);
+        if (display_8008B4D8.vsyncsPerFrame_4 >= 2)
+        {
+            delay = 0x14;
+            rate = 1;
+        }
+        else
+        {
+            delay = 0x28;
+            rate = 2;
+        }
+        switch (pads_800918E8[port][1] >> 4)
+        {
+        case 1:
+        case 2:
+        case 3:
+        case 5:
+        case 6:
+        case 8:
+            break;
+        case 7:
+            UpdatePadAnalog_8001CC04(port);
+            if (pads_800918E8[port][8] == 1)
+            {
+                delay *= 2;
+                rate = 0x10;
+            }
+            else if (pads_800918E8[port][8] == 2)
+            {
+                delay = delay * 1.5;
+                rate = 8;
+            }
+        case 4:
+            UpdatePadRepeat_8001CAF0(port, delay, rate);
+            break;
+        }
+    }
+    else
+    {
+        padHeld_800918D0[port] = 0;
+        padPrevHeld_800918C8[port] = 0;
+        padPressed_8009194C[port] = 0;
+        padReleased_800918D4[port] = 0;
+        padRepeat_800918CC[port] = 0;
+        for (i = 0; i < 16; i++)
+        {
+            padHoldFrames_80091950[port][i] = 0;
+        }
+    }
 }
-#endif
-INCLUDE_ASM(ProcessPad_8001C8E8);
+// .rdata that follows the jump table of ProcessPad_8001C8E8 (the compiler's table is emitted between)
+INCLUDE_DATA(dword_80073234);
+INCLUDE_DATA(dword_80073238);
+INCLUDE_DATA(dword_8007324C);
+INCLUDE_DATA(dword_8007327C);
+INCLUDE_DATA(dword_800732A8);
+INCLUDE_DATA(dword_800732D8);
+INCLUDE_DATA(dword_800732F4);
+INCLUDE_DATA(dword_80073310);
+INCLUDE_DATA(dword_80073330);
+INCLUDE_DATA(dword_80073350);
+INCLUDE_DATA(dword_80073388);
+INCLUDE_DATA(dword_800733B8);
+INCLUDE_DATA(dword_800733D0);
+INCLUDE_DATA(dword_800733F0);
+INCLUDE_DATA(dword_80073410);
+INCLUDE_DATA(dword_800734DC);
+INCLUDE_DATA(dword_8007355C);
+INCLUDE_DATA(dword_800735EC);
+INCLUDE_DATA(dword_80073628);
+INCLUDE_DATA(dword_80073648);
+INCLUDE_DATA(dword_8007366C);
+INCLUDE_DATA(dword_800736D0);
+INCLUDE_DATA(dword_800736EC);
+INCLUDE_DATA(dword_80073724);
+INCLUDE_DATA(dword_80073740);
+INCLUDE_DATA(dword_80073760);
+INCLUDE_DATA(dword_8007377C);
+INCLUDE_DATA(dword_800737A0);
+INCLUDE_DATA(dword_800737B4);
+INCLUDE_DATA(dword_800737C8);
+INCLUDE_DATA(dword_80073910);
+INCLUDE_DATA(dword_8007393C);
+INCLUDE_DATA(dword_800739F4);
+INCLUDE_DATA(dword_80073A14);
+INCLUDE_DATA(dword_80073A28);
+INCLUDE_DATA(dword_80073A48);
+INCLUDE_DATA(dword_80073A84);
+INCLUDE_DATA(dword_80073AAC);
+INCLUDE_DATA(dword_80073ACC);
+INCLUDE_DATA(dword_80073B00);
+INCLUDE_DATA(dword_80073B20);
+INCLUDE_DATA(dword_80073B44);
+INCLUDE_DATA(dword_80073B68);
+INCLUDE_DATA(dword_80073B78);
+INCLUDE_DATA(dword_80073BB0);
+INCLUDE_DATA(dword_80073BC4);
+INCLUDE_DATA(dword_80073BDC);
+INCLUDE_DATA(dword_80073C14);
+INCLUDE_DATA(dword_80073C58);
+INCLUDE_DATA(dword_80073C80);
+INCLUDE_DATA(dword_80073CB0);
+INCLUDE_DATA(dword_80073CCC);
+INCLUDE_DATA(dword_80073CE0);
+INCLUDE_DATA(dword_80073CF8);
+INCLUDE_DATA(dword_80073D18);
+INCLUDE_DATA(dword_80073D34);
+INCLUDE_DATA(dword_80073D54);
+INCLUDE_DATA(dword_80073DD0);
+INCLUDE_DATA(dword_80073E18);
+INCLUDE_DATA(dword_80073ED8);
+INCLUDE_DATA(dword_80073F24);
+INCLUDE_DATA(dword_80073F40);
+INCLUDE_DATA(dword_80073F5C);
+INCLUDE_DATA(dword_80073FA4);
+INCLUDE_DATA(dword_80073FC0);
+INCLUDE_DATA(dword_80073FF8);
+INCLUDE_DATA(dword_8007400C);
+INCLUDE_DATA(dword_8007403C);
+INCLUDE_DATA(dword_8007408C);
+INCLUDE_DATA(dword_800740B0);
+INCLUDE_DATA(dword_800740B4);
 // Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
@@ -1202,21 +1300,18 @@ void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rat
         }
     }
 }
-#if 0
-// Not matched: only the order of the first address computations (lui/addiu of the stick and pad tables vs. port*4) differs
+// Matched
 void UpdatePadAnalog_8001CC04(int port)
 {
     signed char* stick;
-    unsigned char* pad;
     unsigned char* mx;
     int v;
     int m;
+    padAnalog_800918D8[port][0] = pads_800918E8[port][4] + 0x80;
+    padAnalog_800918D8[port][1] = 0x7F - pads_800918E8[port][5];
+    padAnalog_800918D8[port][2] = pads_800918E8[port][6] + 0x80;
+    padAnalog_800918D8[port][3] = 0x7F - pads_800918E8[port][7];
     stick = padAnalog_800918D8[port];
-    pad = pads_800918E8[port];
-    stick[0] = pad[4] + 0x80;
-    stick[1] = 0x7F - pad[5];
-    stick[2] = pad[6] + 0x80;
-    stick[3] = 0x7F - pad[7];
     mx = padAnalogMax_800918E0[port];
     v = stick[0];
     m = mx[0];
@@ -1259,8 +1354,6 @@ void UpdatePadAnalog_8001CC04(int port)
         mx[1] = v;
     }
 }
-#endif
-INCLUDE_ASM(UpdatePadAnalog_8001CC04);
 // Matched
 void ResetPadHoldFrames_8001CD04(int port)
 {
@@ -1966,9 +2059,9 @@ void sub_8001DB98(char* o, unsigned char* s)
 #endif
 INCLUDE_ASM(sub_8001DB98);
 // Matched
-void sub_8001DC34(void* p)
+void sub_8001DC34(void* p, void* s)
 {
-    sub_8001DB98(p);
+    sub_8001DB98(p, s);
     sub_8001EA48(p);
 }
 // Matched
@@ -2215,12 +2308,180 @@ void sub_8001E28C(char* o)
         sub_8001EFC4((struct_obj_F*)o);
     }
 }
-#if 0
-void sub_8001E34C(void* a0)
+extern int dword_8007D95C[];
+extern int dword_8007D980[];
+extern int dword_8007D9A4[];
+extern int dword_8007D9C0[];
+// Matched
+int sub_8001E34C(char* o, char* d)
 {
+    int r;
+    int f;
+    int g;
+    *(int*)(o + 0xD4) = *(int*)(d + 0);
+    *(short*)(o + 0xE0) = *(short*)(d + 0xC);
+    *(int*)(o + 0xE8) = *(int*)(d + 0x14);
+    *(int*)(o + 0xEC) = *(int*)(d + 0x18);
+    *(short*)(o + 0xF4) = *(short*)(d + 0x20);
+    *(short*)(o + 0xF6) = *(short*)(d + 0x22);
+    *(short*)(o + 0xFC) = *(short*)(d + 0x28);
+    *(short*)(o + 0xFE) = *(short*)(d + 0x2A);
+    *(short*)(o + 0xE0) = *(short*)(d + 0xC);
+    *(int*)(o + 0x100) = *(int*)(d + 0x2C);
+    r = 0;
+    if (*(void**)(d + 4))
+    {
+        sub_8001DC34(o, *(void**)(d + 4));
+    }
+    if (*(short*)(d + 0xE) >= 0)
+    {
+        r = sub_8001F268(o, (short*)(o + 0x108), *(int*)(o + 0xD0), *(short*)(d + 0xE));
+    }
+    f = *(int*)(d + 0x10);
+    if (f >= 0)
+    {
+        *(int*)(o + 0x130) = f;
+        sub_800148F4(f);
+    }
+    if (*(int**)(d + 8))
+    {
+        *(int**)(o + 0xDC) = *(int**)(d + 8);
+        *(int*)(o + 0x70) = (*(int**)(d + 8))[0];
+        *(int*)(o + 0x74) = (*(int**)(d + 8))[1];
+        *(int*)(o + 0x78) = (*(int**)(d + 8))[2];
+        f = *(short*)(d + 0xC);
+        *(int*)(o + 4) |= 0x80000;
+        *(int*)(o + 0x7C) = f;
+        if (*(short*)(d + 0x24) >= 0)
+        {
+            *(int*)(o + 0xA4) = *(short*)(d + 0x24);
+            sub_8001DC34(o, dword_8007D95C);
+        }
+        else
+        {
+            *(int*)(o + 0xA4) = *(short*)(d + 0x26);
+            sub_8001DC34(o, dword_8007D980);
+        }
+    }
+    if (*(int*)(d + 0x30))
+    {
+        *(int*)(o + 0x98) = 0;
+        *(int*)(o + 4) |= 0x2000000;
+        *(int*)(o + 0x160) = *(int*)(d + 0x30);
+    }
+    if (*(short*)(d + 0x2A) >= 0)
+    {
+        *(int*)(o + 0xA4) = *(short*)(d + 0x28);
+        *(int*)(o + 0xA8) = *(short*)(d + 0xC);
+        sub_8001DC34(o, dword_8007D9C0);
+    }
+    else if (*(short*)(d + 0x28) >= 0)
+    {
+        *(int*)(o + 0xA4) = *(short*)(d + 0x28);
+        *(int*)(o + 0xA8) = *(short*)(d + 0xC);
+        sub_8001DC34(o, dword_8007D9A4);
+    }
+    g = *(int*)(o + 4);
+    if (*(int*)(d + 0x1C))
+    {
+        g |= 0x800000;
+    }
+    *(int*)(o + 4) = g;
+    return r;
+}
+extern unsigned short word_8007DC8C[];
+extern unsigned short word_8007DC94[];
+extern int dword_800795A0[];
+#if 0
+// Not matched: the first flags store goes through a copy (move v1,a0) in the original, and the 0x9C..0xC2 block is scheduled differently
+void sub_8001E574(char* o, int* d)
+{
+    struct_112* m;
+    int v;
+    int f;
+    if (d[0] >= 0)
+    {
+        m = sub_80020734(d[0]);
+    }
+    else
+    {
+        m = (struct_112*)d[0x48 / 4];
+    }
+    v = sub_800201EC((int)m);
+    f = 0x40000;
+    *(int*)(o + 4) = 0x40000;
+    if (d[0x30 / 4] != 1)
+    {
+        f |= 0x2000;
+        *(int*)(o + 4) = f;
+    }
+    if (d[1] == 2)
+    {
+        f |= 0x1000;
+        *(int*)(o + 4) = f;
+    }
+    *(int*)(o + 8) = 0;
+    *(int*)(o + 0xC) = d[1];
+    *(short*)(o + 0x10) = 0;
+    *(short*)(o + 0x12) = -1;
+    *(short*)(o + 0x14) = -1;
+    *(short*)(o + 0x16) = v;
+    *(short*)(o + 0x18) = 0;
+    *(short*)(o + 0x1A) = 0;
+    *(short*)(o + 0x1C) = 0;
+    *(short*)(o + 0x1E) = *(short*)((char*)d + 0x28);
+    *(short*)(o + 0x26) = 0x1000;
+    *(short*)(o + 0x20) = 0;
+    *(short*)(o + 0x22) = 0;
+    *(short*)(o + 0x28) = 0;
+    *(short*)(o + 0x2A) = 0x1000;
+    *(short*)(o + 0x24) = *(short*)((char*)d + 0x2C);
+    *(int*)(o + 0x44) = *(int*)(o + 0x50) = *(int*)(o + 0x38) = d[2];
+    *(int*)(o + 0x48) = *(int*)(o + 0x54) = *(int*)(o + 0x3C) = d[3];
+    *(int*)(o + 0x4C) = *(int*)(o + 0x58) = *(int*)(o + 0x40) = d[4];
+    *(short*)(o + 0x5C) = *(short*)((char*)d + 0x14);
+    *(short*)(o + 0x5E) = *(short*)((char*)d + 0x16);
+    *(short*)(o + 0x60) = *(short*)((char*)d + 0x18);
+    *(int*)(o + 0x64) = 0;
+    *(int*)(o + 0x68) = 0;
+    *(int*)(o + 0x6C) = 0;
+    *(int*)(o + 0x80) = 0;
+    *(int*)(o + 0x84) = 0;
+    *(int*)(o + 0x88) = 0;
+    *(int*)(o + 0x8C) = 0x1000;
+    *(int*)(o + 0x90) = 0;
+    *(int*)(o + 0x94) = 0;
+    *(int*)(o + 0x98) = 0;
+    f = d[8];
+    *(int*)(o + 0xA8) = -1;
+    *(int*)(o + 0xAC) = 0;
+    *(int*)(o + 0xB0) = 0;
+    *(int*)(o + 0xB4) = 0;
+    *(int*)(o + 0xB8) = 0;
+    *(short*)(o + 0xC4) = 0;
+    *(short*)(o + 0xC6) = 0;
+    *(short*)(o + 0xC8) = 0;
+    *(short*)(o + 0xCA) = 0;
+    *(short*)(o + 0xCC) = -1;
+    *(short*)(o + 0xCE) = -1;
+    *(int*)(o + 0x9C) = f;
+    *(int*)(o + 0xA0) = f;
+    *(int*)(o + 0xA4) = f;
+    *(short*)(o + 0xC2) = *(short*)(o + 0xC0) = *(short*)(o + 0x9C);
+    *(int*)(o + 0x130) = -1;
+    *(struct_112**)(o + 0x15C) = m;
+    *(short*)(o + 0x150) = word_8007DC8C[0];
+    *(short*)(o + 0x152) = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    *(short*)(o + 0x154) = word_8007DC8C[2];
+    *(short*)(o + 0x156) = word_8007DC8C[3];
+    *(short*)(o + 0x158) = word_8007DC94[0];
+    *(short*)(o + 0x15A) = word_8007DC94[1] + *(short*)((char*)d + 0x1C);
+    *(int*)(o + 0x160) = 0;
+    sub_8001E7F0(o, d);
+    sub_8001450C((int*)(o + 0x1A4), (struct_16*)(o + 0x194), (int)dword_800795A0, 8);
+    sub_8001D760(o, d[8], d[9], 0);
 }
 #endif
-INCLUDE_ASM(sub_8001E34C);
 INCLUDE_ASM(sub_8001E574);
 INCLUDE_ASM(sub_8001E7F0);
 // Matched
@@ -2265,7 +2526,100 @@ void sub_8001EFC4(struct_obj_F* p)
     }
     p->flags_4 &= 0xFF17FFFF;
 }
-INCLUDE_ASM(sub_8001F03C);
+typedef struct
+{
+    signed char id;
+    char pad_1;
+    short start;
+    short loop;
+    short end;
+    char pad_8[0x34];
+} struct_3c;
+// Matched
+int sub_8001F03C(int a0, int a1, int a2, int a3)
+{
+    char* o = (char*)a0;
+    unsigned char* s = (unsigned char*)a1;
+    int t;
+    int rep;
+    int flag;
+    int start;
+    int loop;
+    int idx;
+    int end;
+    t = 0;
+    rep = t;
+    flag = t;
+    while (s[0] != 0)
+    {
+        if (s[0] == 1)
+        {
+            idx = *(short*)(s + 6);
+            if (flag == 0)
+            {
+                start = (*(struct_3c**)(o + 0x148))[idx].start;
+            }
+            else
+            {
+                start = (*(struct_3c**)(o + 0x148))[idx].loop;
+            }
+            loop = (*(struct_3c**)(o + 0x148))[idx].loop;
+            end = (*(struct_3c**)(o + 0x148))[idx].end;
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].id == (*(struct_3c**)(o + 0x148))[idx].id && end >= a3)
+            {
+                return ((t + a3 - start) << 12) / *(short*)(o + 0x1E);
+            }
+            if (start == loop)
+            {
+                t += (end - start + 1) * (rep + 1);
+            }
+            else
+            {
+                t += (end - loop + 1) * (rep + 1);
+                t += loop - start;
+            }
+            t--;
+            flag = 0;
+        }
+        else if (s[0] == 0x14)
+        {
+            if (a2 >= 0x4000 && a2 == *(short*)(s + 6))
+            {
+                return (t << 12) / *(short*)(o + 0x1E);
+            }
+        }
+        else if (s[0] == 0xF)
+        {
+            t = 0;
+        }
+        else if (s[0] == 2)
+        {
+            flag = 1;
+        }
+        else if (s[0] == 4)
+        {
+            rep = *(short*)(s + 6) - 1;
+        }
+        else if (s[0] == 5)
+        {
+            rep = *(short*)(o + 0xF4) - 1;
+        }
+        else if (s[0] == 0x17)
+        {
+            t += *(short*)(s + 6);
+        }
+        else if (s[0] == 0 || s[0] == 0x10)
+        {
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].end < a3)
+            {
+                t += a3 - (*(struct_3c**)(o + 0x148))[a2].end;
+            }
+            return (t << 12) / *(short*)(o + 0x1E);
+        }
+        s += s[1] * 4;
+    }
+    return -1;
+}
 // Matched
 short sub_8001F268(char* o, short* out, int a2, int idx)
 {
@@ -2353,13 +2707,13 @@ void sub_8001F9F0(char* o)
     *(int*)(o + 0x34) = *(int*)(o + 0x140) * *(short*)(o + 0x26) / 4096;
 }
 #if 0
-// Not matched: the clamp of 0x20 keeps the sum and the clamped value in two registers in the original (move v1,v0); here they are coalesced
+// Not matched: one instruction: the > 0x1000 test reads the copy (v1) instead of the sum (v0)
 void sub_8001FB00(char* o)
 {
     unsigned int f = *(unsigned int*)(o + 4);
     int r = 0;
     int v;
-    int w;
+    short w;
     *(int*)(o + 8) = 0;
     if (f & 0x780)
     {
@@ -2389,10 +2743,10 @@ void sub_8001FB00(char* o)
     if (*(unsigned int*)(o + 4) & 0x60)
     {
         v = *(short*)(o + 0x20) + 0x1000 / *(short*)(o + 0x22);
-        w = v;
         if (v >= 0)
         {
-            if (w > 0x1000)
+            w = v;
+            if (v > 0x1000)
             {
                 w = 0x1000;
             }
@@ -2404,11 +2758,11 @@ void sub_8001FB00(char* o)
         *(short*)(o + 0x20) = w;
         if (*(unsigned int*)(o + 4) & 0x20)
         {
-            *(int*)(o + 8) = r | 0x80 | ((0x1000 - *(short*)(o + 0x20)) << 16);
+            *(int*)(o + 8) = r | 0x80 | ((0x1000 - w) << 16);
         }
         else
         {
-            *(int*)(o + 8) = r | 0x80 | (*(short*)(o + 0x20) << 16);
+            *(int*)(o + 8) = r | 0x80 | (w << 16);
         }
     }
     if (*(unsigned int*)(o + 4) & 0x800)
@@ -2434,19 +2788,81 @@ int sub_8001FC90(char* a0)
     RotTransPers(&v, &sxy, &p, &flag);
     return flag >= 0;
 }
+extern int sub_80019CC4();
+extern void sub_8001C440();
+extern void sub_80047E28();
+extern void sub_80046A58();
+extern void sub_800459E4();
 #if 0
+// Not matched: only the store to 0x184 is not moved into the delay slot of the 0x10000 flag test
 void sub_8001FD08(void* a0)
 {
+    char* o = (char*)a0;
+    int v;
+    char* t;
+    unsigned long* ot;
+    unsigned long* ot2;
+    if (!(*(int*)(o + 4) & 0x2000) && sub_8001FC90(o))
+    {
+        v = sub_80019CC4((VECTOR*)(o + 0x38));
+        *(char**)(o + 0x178) = *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0x9C) * 28;
+        *(int*)(o + 0x164) = *(int*)(*(char**)(o + 0x15C) + 0x50);
+        *(char**)(o + 0x168) = o + 0x38;
+        *(char**)(o + 0x16C) = o + 0x5C;
+        *(int*)(o + 0x170) = *(int*)(o + 0x134);
+        *(int*)(o + 0x174) = *(int*)(o + 0x144);
+        *(unsigned int*)(o + 0x17C) = *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178);
+        *(int*)(o + 0x180) = *(int*)(o + 8);
+        *(char**)(o + 0x188) = o + 0x2C;
+        *(int*)(o + 0x184) = *(int*)(o + 0x1C4);
+        if (unknownFlags_8008D678 & 0x10000)
+        {
+            ot = pOT_8008B4C8;
+        }
+        else
+        {
+            ot = pOT_8008D690;
+        }
+        *(unsigned long**)(o + 0x18C) = ot;
+        if (*(int*)(o + 4) & 0x1000)
+        {
+            t = *(char**)(*(char**)(o + 0x15C) + 0x54);
+        }
+        else
+        {
+            t = 0;
+        }
+        if (*(int*)(o + 4) & 0x10)
+        {
+            sub_80047E28(o + 0x164, *(int*)(o + 0x174), *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28,
+                         *(unsigned int*)(o + 0x94) % *(unsigned int*)(*(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28),
+                         0x1000 - *(int*)(o + 0xAC), (char*)stru_8008D534 + v * 24, t);
+        }
+        else
+        {
+            sub_80046A58(o + 0x164, (char*)stru_8008D534 + v * 24, t);
+        }
+        if (unknownFlags_8008D678 & 0x10000)
+        {
+            ot2 = pOT_8008B4C8;
+        }
+        else
+        {
+            ot2 = pOT_8008D690;
+        }
+        sub_800459E4(*(int*)(o + 0x134), *(char**)(o + 0x15C) + 0x5C, ot2, *(int*)(o + 8));
+        sub_8001C440(*(int*)(o + 0x15C), *(int*)(o + 0x9C), *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178));
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001FD08);
-#if 0
-// Not matched: instruction scheduling/regs differ in places; the original clears 0x10 and bit 31 with two separate ands
+// Matched
 void sub_8001FF48(char* o)
 {
-    int f = *(int*)(o + 4);
-    *(int*)(o + 4) = f & ~0x4000;
-    if (!(f & 4))
+    int g;
+    int f;
+    *(int*)(o + 4) &= ~0x4000;
+    if (!(*(int*)(o + 4) & 4))
     {
         *(short*)(o + 0x1C) += *(short*)(o + 0x1E);
         if (*(short*)(o + 0x1C) >= 0x1000)
@@ -2477,7 +2893,8 @@ void sub_8001FF48(char* o)
         }
         if (*(int*)(o + 0xAC) >= 0x1000)
         {
-            *(int*)(o + 4) = *(int*)(o + 4) & ~0x10 & ~0x80000000;
+            g = *(int*)(o + 4) & ~0x10;
+            *(int*)(o + 4) = g & 0x7FFFFFFF;
         }
         f = *(int*)(o + 4);
     }
@@ -2488,9 +2905,9 @@ void sub_8001FF48(char* o)
         {
             *(int*)(o + 0x90) = *(short*)(o + 0x1A);
             *(int*)(o + 4) = (*(int*)(o + 4) & ~0x2000000) | 0x4008;
+            *(int*)(o + 0x50) = *(int*)(o + 0x38);
             *(int*)(o + 0x54) = *(int*)(o + 0x3C);
             *(int*)(o + 0x58) = *(int*)(o + 0x40);
-            *(int*)(o + 0x50) = *(int*)(o + 0x38);
             if (*(int*)(o + 0xD4) & 4)
             {
                 *(int*)(o + 4) |= 0x80000000;
@@ -2499,8 +2916,6 @@ void sub_8001FF48(char* o)
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_8001FF48);
 #if 0
 // Not matched: original reuses the -1 of the first compare for the loop (move a3,v0), ours loads it again
 void sub_800200F8(char* o)
@@ -2750,9 +3165,9 @@ int sub_800206A0(int id, int a1, int a2, int a3)
     return 0;
 }
 // Matched
-void sub_80020734(int arg)
+struct_112* sub_80020734(int arg)
 {
-    sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
+    return sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
 }
 // Matched
 void sub_80020768(int a0)
@@ -3039,9 +3454,59 @@ int sub_80020F00(struct_list_14* p, int a, int b)
     return -1;
 }
 INCLUDE_ASM(sub_80020F5C);
-INCLUDE_ASM(sub_80021298);
-#if 0
-// Not matched: only the load order of images[0]/images[1] in the size products differs
+typedef struct
+{
+    unsigned char b[4];
+} struct_b4;
+typedef struct
+{
+    unsigned char b[8];
+} struct_b8;
+typedef struct
+{
+    struct_b4 f0;
+    struct_b4 f4;
+    struct_b4 f8;
+    struct_b4 fC;
+    struct_b8 f10;
+    struct_b4 f18;
+} struct_1c;
+// Matched
+void sub_80021298(int* src, int* out, int a2, int a3, int heap)
+{
+    int buf[10];
+    int i;
+    int j;
+    int n;
+    struct_1c* d;
+    struct_1c* s;
+    out[0] = *src++;
+    out[1] = (int)ListAlloc_8003FDC0(heap, out[0]);
+    out[2] = (int)ListAlloc_8003FDC0(heap, out[0] * 4);
+    for (i = 0; i < out[0]; i++)
+    {
+        n = *src++;
+        s = (struct_1c*)src;
+        d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
+        ((unsigned char*)out[1])[i] = n;
+        ((struct_1c**)out[2])[i] = d;
+        for (j = 0; j < ((unsigned char*)out[1])[i]; j++)
+        {
+            d->f0 = s->f0;
+            d->f4 = s->f4;
+            d->f8 = s->f8;
+            d->fC = s->fC;
+            d->f10 = s->f10;
+            d->f18 = s->f18;
+            d++;
+            s++;
+        }
+        src = (int*)s;
+    }
+    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)src, 0x28);
+    InitPolyFT4_80029A10(out + 3, buf);
+}
+// Matched
 void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
@@ -3068,12 +3533,10 @@ void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
     {
         out[4] = images[0];
         out[5] = images[1];
-        out[6] = (int)ListAlloc_8003FDC0(heap, images[1] * 40 * images[0]);
-        MemCopy_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[1] * 40 * images[0]);
+        out[6] = (int)ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
+        MemCopy_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[0] * 40 * images[1]);
     }
 }
-#endif
-INCLUDE_ASM(sub_80021464);
 // Matched
 int LoadMdecImages_800215E8(int* hdr, int* out, int heap)
 {
@@ -3563,6 +4026,95 @@ void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
     *a0 += tp;
     *a1 = v * 64 + (u >> 4);
 }
+typedef struct
+{
+    unsigned char b0;
+    unsigned char b1;
+    unsigned char b2;
+    unsigned char b3;
+    unsigned short f4;
+    unsigned short f6;
+    unsigned short f8;
+    unsigned short fA;
+    unsigned short fC;
+    unsigned short fE;
+    unsigned short f10;
+    unsigned short f12;
+} struct_20_b;
+typedef struct
+{
+    int count;
+    struct_20_b* items;
+} struct_8_20b;
+typedef struct
+{
+    int count;
+    struct_20_b* items;
+    unsigned short f4;
+    unsigned short f6;
+} struct_12_20b;
+#if 0
+// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
+void sub_80022B84(int* c, int* x, int* y)
+{
+    int n;
+    int i;
+    int a;
+    int b;
+    int k;
+    int* r;
+    unsigned char* q;
+    unsigned char* t;
+    a = 0;
+    q = (unsigned char*)c;
+    r = (int*)q;
+    q += 0x28;
+    n = r[0] + r[1] + r[2] + r[3] + r[4] + r[5] + r[6] + r[7] + r[8] + r[9];
+    b = 0;
+    for (i = 0; i < n; i++)
+    {
+        t = q;
+        q += 4;
+        switch (*t)
+        {
+        case 1:
+            q += 0x3C;
+            break;
+        case 0:
+        case 2:
+            q += 0x24;
+            break;
+        case 3:
+            q += 0x40;
+            break;
+        case 5:
+            q += 0x50;
+            break;
+        case 4:
+        case 6:
+            q += 0x2C;
+            break;
+        case 7:
+            q += 0x54;
+            break;
+        case 8:
+            r = (int*)q;
+            k = r[0];
+            q = (unsigned char*)(r + 1) + k * 20;
+            a += k;
+            break;
+        case 9:
+            r = (int*)q;
+            k = r[0];
+            q = (unsigned char*)(r + 2) + k * 20;
+            b += k;
+            break;
+        }
+    }
+    *x = a;
+    *y = b;
+}
+#endif
 INCLUDE_ASM(sub_80022B84);
 INCLUDE_ASM(sub_80022CC4);
 #if 0
@@ -4239,7 +4791,7 @@ char* sub_80024FA8(void* a0, int n)
 #endif
 INCLUDE_ASM(sub_80024FA8);
 #if 0
-// Not matched: induction variables for ids[] and the 0x58 offset created in swapped order
+// Not matched: only the placement of the field_40 store and n-- before the HeapAlloc call differs
 void sub_80024FFC(struct_112* p, int* ids)
 {
     int n;
@@ -4248,10 +4800,13 @@ void sub_80024FFC(struct_112* p, int* ids)
     }
     p->field_40 = n;
     p->field_64 = HeapAlloc_8003FC8C(n * sizeof(struct_58), ((int*)p->field_0)[1]);
-    for (n--; n >= 0; n--)
+    n--;
+    while (n >= 0)
     {
-        ((struct_58*)p->field_64)[n].id = ids[n];
-        ((struct_58*)p->field_64)[n].d = ((struct_54*)p->field_50)[ids[n]];
+        int id = ids[n];
+        ((struct_58*)p->field_64)[n].id = id;
+        ((struct_58*)p->field_64)[n].d = ((struct_54*)p->field_50)[id];
+        n--;
     }
 }
 #endif
@@ -4379,7 +4934,7 @@ int sub_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
     return 2;
 }
 #if 0
-// Not matched: table-entry address arithmetic: operand order and scheduling differ
+// Not matched: the table-entry sum lands in the wrong one of v0/v1, and &b is set up one slot early
 int sub_80025440(struct_112* p, int idx, int flag)
 {
     int b[16];
@@ -4388,11 +4943,13 @@ int sub_80025440(struct_112* p, int idx, int flag)
     unsigned short* t;
     int u;
     int v;
+    int k;
     unsigned char* f = (unsigned char*)p->field_44 + idx;
     if (*f == 0)
     {
+        k = idx * 2 + 10;
         e = (unsigned short*)off_800824CC[p->id_38];
-        t = e + (e[9] + (idx * 2 + 10));
+        t = (unsigned short*)((k + e[9]) * 2 + (int)e);
         u = t[0];
         v = t[1];
         *f = 1;
@@ -5555,12 +6112,18 @@ void sub_80027708(int* a0, int a1)
         sub_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
     }
 }
-#if 0
-// Not matched: inner copy loop: original copies the entry pointer to a temp register (a2)
+typedef struct
+{
+    int field_0;
+    int count;
+    unsigned short field_8;
+    unsigned short field_A;
+    unsigned short* items;
+} struct_27778;
+// Matched
 void sub_80027778(int* a0, int h)
 {
     struct_27778* arr;
-    struct_27778* e;
     unsigned int i;
     int j;
     int* src;
@@ -5574,23 +6137,142 @@ void sub_80027778(int* a0, int h)
     for (i = 0; i < dword_8008D648[0]; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
-        e = &arr[i];
-        e->field_0 = *src++;
-        e->count = *src++;
+        arr[i].field_0 = *src++;
+        arr[i].count = *src++;
         q = (unsigned short*)src;
-        e->field_8 = *q++;
-        e->field_A = *q++;
-        e->items = (unsigned short*)ListAlloc_8003FDC0(h, e->count * 2);
-        for (j = 0; j < e->count; j++)
+        arr[i].field_8 = *q++;
+        arr[i].field_A = *q++;
+        arr[i].items = (unsigned short*)ListAlloc_8003FDC0(h, arr[i].count * 2);
+        for (j = 0; j < arr[i].count; j++)
         {
-            e->items[j] = *q++;
+            arr[i].items[j] = *q++;
         }
     }
     dword_8008D648[3] = (int)arr;
 }
+typedef struct
+{
+    unsigned char a;
+    unsigned char b;
+    unsigned short c;
+} struct_4b;
+typedef struct
+{
+    unsigned int count;
+    struct_4b* items;
+} struct_8_4b;
+typedef struct
+{
+    short a;
+    short b;
+} struct_2s;
+#if 0
+// Not matched: only the prologue order of the a0/a1 copies into s4/s5 differs
+void sub_800278BC(int* a0, int h)
+{
+    unsigned int i;
+    unsigned int j;
+    int n;
+    int* q;
+    struct_4b* r;
+    struct_2s* e;
+    n = a0[0];
+    dword_8008D648[4] = n;
+    dword_8008D648[5] = (int)ListAlloc_8003FDC0(h, n * 8);
+    for (i = 0; i < dword_8008D648[4]; i++)
+    {
+        q = (int*)((char*)a0 + a0[i + 1]);
+        ((struct_8_4b*)dword_8008D648[5])[i].count = *q;
+        ((struct_8_4b*)dword_8008D648[5])[i].items = (struct_4b*)ListAlloc_8003FDC0(h, ((struct_8_4b*)dword_8008D648[5])[i].count * 4);
+        r = (struct_4b*)(q + 1);
+        for (j = 0; j < ((struct_8_4b*)dword_8008D648[5])[i].count; j++)
+        {
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].a = r[j].a;
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].b = r[j].b;
+            ((struct_8_4b*)dword_8008D648[5])[i].items[j].c = r[j].c;
+        }
+    }
+    dword_8008D648[6] = (int)ListAlloc_8003FDC0(h, dword_8008D648[4] * 4);
+    for (i = 0; i < dword_8008D648[4]; i++)
+    {
+        e = (struct_2s*)(i * 4 + dword_8008D648[6]);
+        e->b = 0;
+        e->a = 0;
+    }
+}
 #endif
-INCLUDE_ASM(sub_80027778);
 INCLUDE_ASM(sub_800278BC);
+typedef struct
+{
+    short x;
+    short y;
+    short z;
+    short pad;
+} struct_a88_sv;
+typedef struct
+{
+    int field_0;
+    struct_a88_sv v[4];
+} struct_a88_24;
+typedef struct
+{
+    struct_a88_sv v[4];
+} struct_20v;
+typedef struct
+{
+    unsigned short n;
+    struct_20v* items;
+} struct_8_20v;
+#if 0
+// Not matched: s1/s2 swapped (p vs arr+i) and the source-item address is strength-reduced differently
+unsigned char* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
+{
+    struct_8_20v* arr;
+    unsigned int i;
+    unsigned int j;
+    unsigned char* p;
+    unsigned char* rec;
+    int* hh;
+    p = (unsigned char*)hdr + 0x10;
+    hh = hdr;
+    arr = (struct_8_20v*)ListAlloc_8003FDC0(heap, hdr[1] * 8);
+    *count = hdr[1];
+    if (hdr[1] == 0)
+    {
+        *out = 0;
+        return (unsigned char*)hdr + hdr[0];
+    }
+    for (i = 0; i < hh[1]; i++)
+    {
+        rec = p;
+        arr[i].n = *(unsigned short*)rec;
+        p = rec + 0x28;
+        arr[i].items = (struct_20v*)ListAlloc_8003FDC0(heap, *(int*)rec * 32);
+        for (j = 0; j < *(unsigned int*)rec; j++)
+        {
+            arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
+            arr[i].items[j].v[3].y = ((struct_a88_24*)(rec + 0x2C))[j].v[0].y;
+            arr[i].items[j].v[3].z = ((struct_a88_24*)(rec + 0x2C))[j].v[0].z;
+            arr[i].items[j].v[3].pad = 0;
+            arr[i].items[j].v[0].x = ((struct_a88_24*)(rec + 0x2C))[j].v[1].x;
+            arr[i].items[j].v[0].y = ((struct_a88_24*)(rec + 0x2C))[j].v[1].y;
+            arr[i].items[j].v[0].z = ((struct_a88_24*)(rec + 0x2C))[j].v[1].z;
+            arr[i].items[j].v[0].pad = 0;
+            arr[i].items[j].v[1].x = ((struct_a88_24*)(rec + 0x2C))[j].v[2].x;
+            arr[i].items[j].v[1].y = ((struct_a88_24*)(rec + 0x2C))[j].v[2].y;
+            arr[i].items[j].v[1].z = ((struct_a88_24*)(rec + 0x2C))[j].v[2].z;
+            arr[i].items[j].v[1].pad = 0;
+            arr[i].items[j].v[2].x = ((struct_a88_24*)(rec + 0x2C))[j].v[3].x;
+            arr[i].items[j].v[2].y = ((struct_a88_24*)(rec + 0x2C))[j].v[3].y;
+            arr[i].items[j].v[2].z = ((struct_a88_24*)(rec + 0x2C))[j].v[3].z;
+            arr[i].items[j].v[2].pad = 0;
+            p += 0x28;
+        }
+    }
+    *out = arr;
+    return (unsigned char*)hdr + hh[0];
+}
+#endif
 INCLUDE_ASM(sub_80027A88);
 // Matched
 void sub_80027CC0(struct_obj_D* p, int* q)

@@ -123,6 +123,7 @@ INCLUDE_DATA(dword_80072FE8);
 INCLUDE_DATA(dword_80073008);
 INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
+INCLUDE_DATA(dword_80073040); // kept here so tu_80019BF0's .rdata starts at 4 mod 8 (its switch tables use .align 3)
 
 // Matched
 int sub_80018E5C(char* a0, unsigned int a1)
