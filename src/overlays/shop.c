@@ -43,7 +43,7 @@ extern int name_8007DC74;
 extern int StartModelTask_80010850(void* p);
 extern int sub_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
-extern void sub_800BBB54();
+extern void SetShopHelpText_800BBB54();
 extern void sub_800BF704();
 extern int ret_800BF520();
 extern int sub_8001AB94();
@@ -249,7 +249,7 @@ typedef struct ShopUnit4Shop
     short s0;
     short s2;
     short s4;
-    short pad_6;
+    short s6;
     short s8;
     short pad_A;
     short sC;
@@ -967,13 +967,13 @@ void sub_800BB058(int a)
     }
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BB0F8(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     SetFadeMode_8001C19C(3, 0x20);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 #if 0 // near miss: constant 3 / store scheduling (17 words)
@@ -1032,7 +1032,7 @@ void sub_800BB148(ShopUnit4Shop* u)
     u->f1C = 0;
     u->f20 = 0;
     u->f1C = name_800BF8B4[u->s0];
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
     fn_80011CD0(levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
@@ -1091,7 +1091,155 @@ int sub_800BB3E8(ShopUnitShop* p)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BB444);
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern void sub_800BEBC8();
+extern void sub_800BECC8();
+extern void sub_800BBAAC();
+extern void sub_800BBA3C();
+extern void sub_800BBE24();
+extern void sub_800BC2DC();
+extern void sub_800BC1A8();
+extern void sub_800BD0D4();
+extern void sub_800BE2B4();
+extern void sub_800B6CB8();
+extern unsigned short padPressed_8009194C;
+void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit4Shop* u)
+{
+    short old;
+    int r;
+    DrawMenuBackground_8002BE10();
+    if (u->f24 & 1)
+    {
+        u->s4 = sub_800B9C78(2);
+        u->s6 = sub_800B9C78(3);
+        u->f24 &= ~1;
+    }
+    if (u->s0 != 15 && !(u->f24 & 0x400))
+    {
+        u->f24 &= ~0x1C0;
+    }
+    if ((u->f24 & 2) || u->s0 == 11 || u->s0 == 12)
+    {
+        sub_8003CF88(0x11E, 0x3C, 0xE);
+    }
+    if (u->f18 == 0)
+    {
+        sub_800BB798(u);
+        sub_800BEBC8(u);
+        sub_800BECC8(u);
+    }
+    sub_800BC380(u);
+    if (u->f18 == 0)
+    {
+        sub_800BB798(u);
+        sub_800BBAAC(u);
+        if (u->f10 || u->f14)
+        {
+            sub_800BD0D4(u);
+        }
+        if (!(u->f24 & 4))
+        {
+            if (u->s0 == 3 && (u->f24 & 2))
+            {
+                old = u->s3C;
+                UpdateMenuCursor_8003D794(&u->s34, 0);
+                if (u->s3C != old)
+                {
+                    u->s40 = 1;
+                    u->s42 = 1;
+                    u->s44 = 1;
+                    u->s46 = 0;
+                    u->s4A = 0;
+                    u->s48 = 0;
+                    if (u->f24 & 0x40)
+                    {
+                        u->s44 = 5;
+                        u->s42 = 5;
+                    }
+                    else if (u->f24 & 0x80)
+                    {
+                        sub_800BECC8(u);
+                        r = CountMagicBits_8001AE54((unsigned int*)((char*)u->f54 + 0xF4));
+                        if (r < 4)
+                        {
+                            r = 4;
+                        }
+                        u->s42 = 4;
+                        u->s40 = 1;
+                        u->s44 = r;
+                        u->s46 = 0x40;
+                    }
+                }
+                if (u->f24 & 0x400)
+                {
+                    UpdateMenuCursor_8003D794(&u->s40, 0);
+                }
+            }
+            if (!(u->f24 & 2))
+            {
+                sub_800BBE24(u);
+                if (u->s0 == 8 || sub_800BB38C(u))
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sub_800BC2DC(u);
+                if (u->s0 == 3)
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                    else if (padPressed_8009194C & 0x80)
+                    {
+                        u->f24 |= 0x400;
+                        sub_800BC1A8(u);
+                    }
+                }
+                else if (sub_800BB38C(u))
+                {
+                    if (padPressed_8009194C & 0x20)
+                    {
+                        if (*(short*)u->f4C != 4)
+                        {
+                            u->f24 = (u->f24 | 0x20) & ~0x400;
+                            u->f24 &= ~0x1C0;
+                            sub_800BE2B4(u->f54);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+            sub_800B6CB8();
+        }
+    }
+    else
+    {
+        sub_800BBA3C(u);
+    }
+    if (u->sC < 8)
+    {
+        u->sC++;
+    }
+}
 
 void sub_800BB798(ShopUnit3Shop* u)
 {
@@ -1214,7 +1362,7 @@ void sub_800BBA3C(char* u)
     }
     if (padPressed_8009194C != 0 || *(short*)(u + 0x98) >= 0x96)
     {
-        sub_800BBB54(u, 0);
+        SetShopHelpText_800BBB54(u, 0);
         *(int*)(u + 0x18) = 0;
         *(short*)(u + 0x98) = 0;
     }
@@ -1239,7 +1387,94 @@ void sub_800BBAAC(ShopUnit3Shop* u)
     }
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BBB54);
+extern int* name_800BFC04[];
+extern int* name_800BFC68[];
+extern int* name_800BFB34[];
+extern int* name_800BFB74[];
+extern int name_800BF9B8[];
+extern int name_800BFAA8[];
+extern int* name_800BFAB4[];
+extern int* name_800BFAF4[];
+void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
+{
+    switch ((short)mode)
+    {
+    case 1:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BFC04[u->s8][0];
+            name_800BF7C8[1].w4 = name_800BFC04[u->s8][1];
+            name_800BF7C8[2].w4 = name_800BFC04[u->s8][2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFC68[u->s8][0];
+            name_800BF7C8[1].w4 = name_800BFC68[u->s8][1];
+            name_800BF7C8[2].w4 = name_800BFC68[u->s8][2];
+        }
+        break;
+    case 3:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BFB34[u->s0][0];
+            name_800BF7C8[1].w4 = name_800BFB34[u->s0][1];
+            name_800BF7C8[2].w4 = name_800BFB34[u->s0][2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFB74[u->s0][0];
+            name_800BF7C8[1].w4 = name_800BFB74[u->s0][1];
+            name_800BF7C8[2].w4 = name_800BFB74[u->s0][2];
+        }
+        break;
+    case 2:
+        if (u->s96 == 4)
+        {
+            name_800BF7C8[0].w4 = name_800BF9B8[0];
+            name_800BF7C8[1].w4 = name_800BF9B8[1];
+            name_800BF7C8[2].w4 = name_800BF9B8[2];
+        }
+        else
+        {
+            name_800BF7C8[0].w4 = name_800BFAA8[0];
+            name_800BF7C8[1].w4 = name_800BFAA8[1];
+            name_800BF7C8[2].w4 = name_800BFAA8[2];
+        }
+        break;
+    default:
+        if (u->s0 == 0)
+        {
+            if (u->s96 == 4)
+            {
+                name_800BF7C8[0].w4 = name_800BFCF4[u->s30][0];
+                name_800BF7C8[1].w4 = name_800BFCF4[u->s30][1];
+                name_800BF7C8[2].w4 = name_800BFCF4[u->s30][2];
+            }
+            else
+            {
+                name_800BF7C8[0].w4 = name_800BFD08[u->s30][0];
+                name_800BF7C8[1].w4 = name_800BFD08[u->s30][1];
+                name_800BF7C8[2].w4 = name_800BFD08[u->s30][2];
+            }
+        }
+        else
+        {
+            if (u->s96 == 4)
+            {
+                name_800BF7C8[0].w4 = name_800BFAB4[u->s0][0];
+                name_800BF7C8[1].w4 = name_800BFAB4[u->s0][1];
+                name_800BF7C8[2].w4 = name_800BFAB4[u->s0][2];
+            }
+            else
+            {
+                name_800BF7C8[0].w4 = name_800BFAF4[u->s0][0];
+                name_800BF7C8[1].w4 = name_800BFAF4[u->s0][1];
+                name_800BF7C8[2].w4 = name_800BFAF4[u->s0][2];
+            }
+        }
+        break;
+    }
+}
 
 INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
@@ -1310,7 +1545,7 @@ void sub_800BC2DC(ShopUnit3Shop* u)
         else
         {
             PlaySfx_80031494(0x7E);
-            sub_800BBB54(u, 0);
+            SetShopHelpText_800BBB54(u, 0);
             u->field_24 &= ~2;
         }
     }
@@ -1719,7 +1954,7 @@ void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
     u->field_0 = 5;
     u->field_2 = 0;
     sub_800BD7A8(u);
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     if (sub_800BD678(u))
     {
         u->field_24 |= 8;
@@ -1748,7 +1983,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     u->field_2 = 0;
     sub_800BD7A8(u);
-    sub_800BBB54(u, 0);
+    SetShopHelpText_800BBB54(u, 0);
     if (sub_800BD678(u))
     {
         u->field_24 |= 8;
@@ -1768,7 +2003,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
     sub_800BC380(u);
     SetFadeMode_8001C19C(3, 0x20);
     sub_800A7B00(-1);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 extern void sub_800BE264();
@@ -1782,13 +2017,13 @@ void sub_800BE210(ShopTaskShop* t, int a)
     }
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BE264(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
     SetFadeMode_8001C19C(3, 0x20);
-    t->next_8 = sub_800BB444;
+    t->next_8 = ShopMenuTask_800BB444;
 }
 
 extern void sub_800BE4D0();
@@ -1803,7 +2038,7 @@ void sub_800BE2B4(int a)
     *(void (**)())(g + 8) = sub_800BE4D0;
 }
 
-extern void sub_800BB444();
+extern void ShopMenuTask_800BB444();
 void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
 {
     char* c;
@@ -1846,18 +2081,18 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
         unknownFlags_8008D678 &= ~0x4000000;
         if (u->field_0 == 3)
         {
-            sub_800BBB54(u, 3);
+            SetShopHelpText_800BBB54(u, 3);
         }
         else
         {
-            sub_800BBB54(u, 0);
+            SetShopHelpText_800BBB54(u, 0);
         }
         if (u->field_0 == 5)
         {
             *(int*)((char*)u + 0x10) = 0;
         }
         u->field_24 &= ~0x20;
-        t->next_8 = sub_800BB444;
+        t->next_8 = ShopMenuTask_800BB444;
     }
 }
 
@@ -1868,7 +2103,7 @@ void sub_800BE4D0(ShopTaskShop* t, ShopUnitShop* a)
     sub_800BC380(a);
     if (ret_800BF520() == 1)
     {
-        sub_800BBB54(a, 2);
+        SetShopHelpText_800BBB54(a, 2);
         sub_800BF704(*(short*)((char*)a + 0x96));
         t->next_8 = sub_800BE334;
     }
@@ -2058,7 +2293,101 @@ def:
     u->field_54 = u->field_4C;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BED48);
+typedef struct ShopWgtShop
+{
+    unsigned short flags_0;
+    short pad_2;
+    int val_4;
+    void* p_8;
+    void* p_C;
+    short x_10;
+    short y_12;
+    int pad_14;
+    int pad_18;
+} ShopWgtShop;
+extern ShopWgtShop* name_800C0258[];
+extern char name_800B6D7C[];
+extern char name_8008D434[];
+extern char name_8008D440[];
+extern int name_8008D3FC;
+extern char name_800C0090[];
+extern char name_800C0094[];
+extern void sub_8002C6DC(void* p, int a, int b);
+void DrawPersonList_800BED48(short* s)
+{
+    ShopSixShop q;
+    short h = 8;
+    short prev = s[0];
+    short i;
+    int id;
+    int icon;
+    int name;
+    int cnt;
+    int y;
+    int n;
+    for (i = 0; i < 4; i++)
+    {
+        id = sub_800AD288(i + s[1], 4);
+        if (id < 11)
+        {
+            icon = ((int (*)(int))GetPersonIcon_8001CD6C)(id);
+            name = GetPersonName_8001CD3C(id);
+            cnt = sub_800AD2C8(i + s[1], 4);
+        }
+        else
+        {
+            icon = -1;
+            name = (int)name_800B6D7C;
+            cnt = 0;
+        }
+        name_800C0258[i][0].val_4 = icon;
+        name_800C0258[i][0].p_8 = name_8008D434;
+        name_800C0258[i][0].p_C = name_8008D440;
+        name_800C0258[i][1].val_4 = name;
+        name_800C0258[i][2].val_4 = cnt;
+        name_800C0258[i][0].x_10 = 0x7B;
+        y = i * 22 + 0x68;
+        name_800C0258[i][0].y_12 = y;
+        name_800C0258[i][1].x_10 = 0x90;
+        name_800C0258[i][1].y_12 = y;
+        name_800C0258[i][2].x_10 = 0xFB;
+        name_800C0258[i][2].y_12 = y;
+        s[0] = i;
+        if (cnt == 0)
+        {
+            name_800C0258[i][0].flags_0 |= 0x40;
+            name_800C0258[i][1].flags_0 |= 0x40;
+            name_800C0258[i][2].flags_0 |= 0x40;
+        }
+        else
+        {
+            name_800C0258[i][0].flags_0 &= ~0x40;
+            name_800C0258[i][1].flags_0 &= ~0x40;
+            name_800C0258[i][2].flags_0 &= ~0x40;
+        }
+    }
+    q.w0 = s[2];
+    q.w1 = name_8008D3FC;
+    q.w2 = h;
+    q.w3 = prev;
+    q.w4 = (int)name_800C0258;
+    q.w5 = s[3];
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(2, 0);
+    n = sub_800AD308(4) + 1;
+    if (n < 4)
+    {
+        n = 4;
+    }
+    if (s[1] != 0)
+    {
+        sub_8002C6DC(name_800C0090, 3, s[3]);
+    }
+    if (s[1] < n - 4 && n >= 5)
+    {
+        sub_8002C6DC(name_800C0094, 1, s[3]);
+    }
+}
 
 #if 0
 // Not matched (17 words): the original cross-jumps the all-equal case into the o[1] == o[3] tail
