@@ -17,19 +17,20 @@ typedef struct CombBtlNode
 
 extern CombBtlNode* dword_800A82DC;
 
-typedef struct CombBtl4
+// a battle command (same layout as BATTLE.BIN's BatCmd_a)
+typedef struct CombBtlCmd
 {
-    int a;
-    int b;
-    int c;
-    int d;
-} CombBtl4;
+    int kind_0; // 0x14: none
+    int arg_4;
+    int mask_8; // acting unit bits
+    int targets_C; // target unit bits
+} CombBtlCmd;
 
 extern short word_800A82E0[4];
-extern int* dword_8008B564;
+extern EventNode* dword_8008B564;
 extern int dword_800A85A0;
-extern CombBtl4 dword_800A8600;
-extern CombBtl4 dword_800A85A8;
+extern CombBtlCmd dword_800A8600;
+extern CombBtlCmd dword_800A85A8;
 extern int dword_800A4078[2];
 extern unsigned char byte_800A3A98[2];
 extern short word_800A84D0[2];
@@ -44,13 +45,13 @@ typedef struct CombBtlUnit
 
 typedef struct CombBtlHist
 {
-    int a;
-    char pad_4[0x10];
+    int unit_0;
+    CombBtlCmd cmd_4;
 } CombBtlHist;
 
 extern CombBtlUnit dword_800A3AA0[2][3];
 extern CombBtlHist dword_800A84D8[];
-extern int dword_8008D778;
+extern EventNode* dword_8008D778;
 extern void sub_8001A38C();
 extern void sub_8001A41C();
 extern int sub_800A1958(void*);
@@ -76,32 +77,40 @@ extern short word_800A82D4[][2];
 extern void sub_800A7694();
 typedef struct CombBtlA24
 {
-    int w[6];
+    int pos_0[2][3]; // per side
 } CombBtlA24;
 
 typedef struct CombBtlB16
 {
-    char c[16];
+    unsigned char f0[2][8]; // per side
 } CombBtlB16;
 
 extern CombBtlA24 dword_800A4AD4;
 extern CombBtlB16 dword_800A4AEC;
 extern void sub_800A0BA8(int, void*, void*);
-typedef struct CombBtlD
+// a command's result (same layout as BATTLE.BIN's BatResult_a)
+typedef struct CombBtlResult
 {
-    unsigned short s0;
-    short s2;
-    int w[8];
-    short s24;
-    short s26;
-} CombBtlD;
+    unsigned short kind_0;
+    short arg_2;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int f1C;
+    int f20;
+    short f24;
+    short f26;
+} CombBtlResult;
 
-extern CombBtlD dword_800A85C8;
+extern CombBtlResult dword_800A85C8;
 extern int dword_800A85B8;
 extern int dword_800A8620;
 extern int xarr_800A85B8[];
 extern int xarr_800A8620[];
-extern CombBtl4 dword_800A8610;
+extern CombBtlCmd dword_800A8610;
 extern int dword_800A84C0;
 extern int dword_800A84A0;
 extern int dword_800A8498;
@@ -124,7 +133,7 @@ extern void sub_800A50E4();
 extern void sub_800A5544();
 extern void sub_800A5BB4();
 extern void sub_800A5080();
-extern int dword_800A848C;
+extern EventEntry* dword_800A848C;
 extern int dword_800A84D4;
 extern int dword_800A84B0[2];
 extern short word_80091CE0[];
@@ -137,7 +146,7 @@ extern short word_800A8470[2];
 extern short word_800A8474[2];
 extern int dword_800A8480[2];
 extern int dword_800A85F0[2];
-extern int sub_800CB7AC(void*, int);
+extern EventEntry* sub_800CB7AC(void*, int);
 extern int sub_800A0B3C(int);
 extern void StopSeqSlot_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
@@ -393,7 +402,13 @@ void sub_800A51EC(CombBtlTask* t)
 
 typedef struct CombBtlA28
 {
-    int w[7];
+    int f0;
+    int x_4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
 } CombBtlA28;
 
 typedef struct CombBtlBox
@@ -422,7 +437,7 @@ void sub_800A5290(CombBtlTask* t)
     CombBtlA28 b;
     pair[0] = 0x33;
     pair[1] = 0xDF;
-    a.w[1] = pair[dword_800A85F8 ^ 1];
+    a.x_4 = pair[dword_800A85F8 ^ 1];
     box.c_2 = 1;
     box.c_3 = 1;
     box.col_0 = ui_8008B570.col_20;
@@ -586,18 +601,18 @@ void sub_800A5638(CombBtlTask* t, int a)
         if (dword_800A84B0[0] == 1)
         {
             dword_800A84B0[0] = 0;
-            dword_800A85A8.a = 2;
-            dword_800A85A8.b = 0;
-            dword_800A85A8.c = 0x100;
-            dword_800A85A8.d = 0;
+            dword_800A85A8.kind_0 = 2;
+            dword_800A85A8.arg_4 = 0;
+            dword_800A85A8.mask_8 = 0x100;
+            dword_800A85A8.targets_C = 0;
         }
         if (dword_800A84B0[1] == 1)
         {
             dword_800A84B0[1] = 0;
-            dword_800A8610.a = 2;
-            dword_800A8610.b = 0;
-            dword_800A8610.d = 0;
-            dword_800A8610.c = 1 << (dword_800A8620 + 8);
+            dword_800A8610.kind_0 = 2;
+            dword_800A8610.arg_4 = 0;
+            dword_800A8610.targets_C = 0;
+            dword_800A8610.mask_8 = 1 << (dword_800A8620 + 8);
         }
         t->next_8 = sub_800A68E0;
         break;
@@ -694,30 +709,30 @@ int sub_800A5B70(int a)
 // Not matched: the original loads the two shift counts after all the stores (alias/scheduling), tried array/struct/pointer forms
 void sub_800A5BB4()
 {
-    dword_800A8600.a = 0x14;
-    dword_800A8600.b = 0;
-    dword_800A85A8.a = 0x14;
-    dword_800A85A8.b = 0;
-    dword_800A8610.a = 0x14;
-    dword_800A8610.b = 0;
-    dword_800A85C8.s0 = 0;
-    dword_800A85C8.s24 = -1;
-    dword_800A85C8.s26 = -1;
-    dword_800A85C8.s2 = 0;
-    dword_800A85C8.w[0] = 0;
-    dword_800A85C8.w[1] = 0;
-    dword_800A85C8.w[2] = 0;
-    dword_800A85C8.w[3] = 0;
-    dword_800A85C8.w[4] = 0;
-    dword_800A85C8.w[5] = 0;
-    dword_800A85C8.w[6] = 0;
-    dword_800A85C8.w[7] = 0;
-    dword_800A8600.c = 1 << (xarr_800A85B8[0] + 8);
-    dword_800A8600.d = 1 << (xarr_800A8620[0] + 8);
-    dword_800A85A8.c = 1 << (xarr_800A85B8[0] + 8);
-    dword_800A85A8.d = 1 << (xarr_800A8620[0] + 8);
-    dword_800A8610.c = 1 << (xarr_800A8620[0] + 8);
-    dword_800A8610.d = 1 << (xarr_800A85B8[0] + 8);
+    dword_800A8600.kind_0 = 0x14;
+    dword_800A8600.arg_4 = 0;
+    dword_800A85A8.kind_0 = 0x14;
+    dword_800A85A8.arg_4 = 0;
+    dword_800A8610.kind_0 = 0x14;
+    dword_800A8610.arg_4 = 0;
+    dword_800A85C8.kind_0 = 0;
+    dword_800A85C8.f24 = -1;
+    dword_800A85C8.f26 = -1;
+    dword_800A85C8.arg_2 = 0;
+    dword_800A85C8.f4 = 0;
+    dword_800A85C8.f8 = 0;
+    dword_800A85C8.fC = 0;
+    dword_800A85C8.f10 = 0;
+    dword_800A85C8.f14 = 0;
+    dword_800A85C8.f18 = 0;
+    dword_800A85C8.f1C = 0;
+    dword_800A85C8.f20 = 0;
+    dword_800A8600.mask_8 = 1 << (xarr_800A85B8[0] + 8);
+    dword_800A8600.targets_C = 1 << (xarr_800A8620[0] + 8);
+    dword_800A85A8.mask_8 = 1 << (xarr_800A85B8[0] + 8);
+    dword_800A85A8.targets_C = 1 << (xarr_800A8620[0] + 8);
+    dword_800A8610.mask_8 = 1 << (xarr_800A8620[0] + 8);
+    dword_800A8610.targets_C = 1 << (xarr_800A85B8[0] + 8);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5BB4);
@@ -732,9 +747,9 @@ extern void name_800BF7C4(void* u, short* a, short* b);
 extern int name_800BFA4C(int a, int b);
 typedef struct CombBtlActor
 {
-    int flags;
+    int flags_0;
     int f4;
-    short s8;
+    short hp_8;
 } CombBtlActor;
 void sub_800A5C64(CombBtlTask* t)
 {
@@ -747,30 +762,30 @@ void sub_800A5C64(CombBtlTask* t)
     byte_800A84A8 &= 0xFC;
     sub_800A60F0();
     u = (CombBtlActor*)sub_80014390((unsigned char)(dword_800A85B8 + 8));
-    flags0 = u->flags;
+    flags0 = u->flags_0;
     name_800BF7C4(u, &word_800A84BC, &word_800A84C4);
     if (word_800A84BC != 0)
     {
         if (word_800A84C4 != 0)
         {
             byte_800A85FC[dword_800A85B8] = 3;
-            dword_800A85C8.s0 = 3;
+            dword_800A85C8.kind_0 = 3;
         }
         else
         {
             byte_800A85FC[dword_800A85B8] = 1;
-            dword_800A85C8.s0 = 1;
+            dword_800A85C8.kind_0 = 1;
         }
     }
     else if (word_800A8474)
     {
         byte_800A85FC[dword_800A85B8] = 2;
-        dword_800A85C8.s0 = 2;
+        dword_800A85C8.kind_0 = 2;
     }
-    fl = u->flags;
+    fl = u->flags_0;
     r = name_800BFA4C(fl, flags0);
-    dword_800A85A8.a = r;
-    dword_800A85A8.d = 0;
+    dword_800A85A8.kind_0 = r;
+    dword_800A85A8.targets_C = 0;
     if (fl & 0x200)
     {
         t->next_8 = sub_800A68E0;
@@ -779,10 +794,10 @@ void sub_800A5C64(CombBtlTask* t)
         dword_800A8490 = dword_800A85B8;
         byte_800A84A8 |= 2;
     }
-    else if (u->s8 - word_800A84BC <= 0)
+    else if (u->hp_8 - word_800A84BC <= 0)
     {
-        dword_800A85A8.a = 0xB;
-        word_800A84BC = u->s8;
+        dword_800A85A8.kind_0 = 0xB;
+        word_800A84BC = u->hp_8;
         t->next_8 = sub_800A68E0;
         word_800A84A6 = 0x6F;
         byte_800A84A8 |= 1;
@@ -821,7 +836,7 @@ void sub_800A5EF8(CombBtlTask* t)
 
 void sub_800A5F60(CombBtlTask* t, int a)
 {
-    if ((*(unsigned int*)dword_800A848C & 0x8001) != 1)
+    if ((dword_800A848C->flags & 0x8001) != 1)
     {
         sub_800A601C();
         if (byte_800A38DC)
@@ -847,21 +862,21 @@ void sub_800A601C()
     {
         MemCopy_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
     }
-    dword_800A84D8[0].a = dword_800A85B8;
-    MemCopy_800403E8((unsigned int*)((char*)dword_800A84D8 + 4), (unsigned int*)&dword_800A8600, 0x10);
+    dword_800A84D8[0].unit_0 = dword_800A85B8;
+    MemCopy_800403E8((unsigned int*)&dword_800A84D8[0].cmd_4, (unsigned int*)&dword_800A8600, 0x10);
 }
 
 void sub_800A60A4()
 {
-    int a = dword_800A8600.a;
-    dword_800A85A8.a = a;
-    dword_800A85A8.b = dword_800A8600.b;
-    dword_800A85A8.c = dword_800A8600.c;
-    dword_800A85A8.d = dword_800A8600.d;
+    int a = dword_800A8600.kind_0;
+    dword_800A85A8.kind_0 = a;
+    dword_800A85A8.arg_4 = dword_800A8600.arg_4;
+    dword_800A85A8.mask_8 = dword_800A8600.mask_8;
+    dword_800A85A8.targets_C = dword_800A8600.targets_C;
     if (a == 8)
     {
-        dword_800A85A8.a = 3;
-        dword_800A85A8.b = 0;
+        dword_800A85A8.kind_0 = 3;
+        dword_800A85A8.arg_4 = 0;
     }
 }
 
@@ -1012,7 +1027,7 @@ void sub_800A74A0(int i)
 {
     CombBtlA24 a = dword_800A4AD4;
     CombBtlB16 b = dword_800A4AEC;
-    sub_800A0BA8(i, (char*)&a + i * 12, (char*)&b + i * 8);
+    sub_800A0BA8(i, a.pos_0[i], b.f0[i]);
 }
 
 void sub_800A7560(int a)
@@ -1039,7 +1054,7 @@ int sub_800A758C()
 
 void sub_800A75F8(int a)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008B564);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B564);
     CombBtlObj* p;
     if (e)
     {
@@ -1059,13 +1074,23 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A7694);
 
 void sub_800A7BE4()
 {
-    StopAllEventEntries_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40((int*)dword_8008B564);
 }
 
 extern unsigned char byte_800A38D8;
 extern void sub_80037BFC(int a);
 extern void StartPadVibration_80036528(int pad, int kind);
 extern void sub_800A7E34(int a, int b, int c);
+typedef struct CombBtlHitNum
+{
+    int kind_0; // 1 hp, 2 mp
+    int amount_4;
+    int frame_8;
+    int fC;
+    int* pos_10;
+    int f14;
+    int side_18;
+} CombBtlHitNum;
 extern void sub_800A7ECC();
 void PlayHitFeedback_800A7C0C(int side)
 {
@@ -1081,12 +1106,12 @@ void PlayHitFeedback_800A7C0C(int side)
         me = byte_800A38D8;
         other = 0;
     }
-    switch (dword_800A85C8.s0)
+    switch (dword_800A85C8.kind_0)
     {
     case 0:
         break;
     case 1:
-        sub_800A7E34(side, dword_800A85C8.s0, word_800A8470[side]);
+        sub_800A7E34(side, dword_800A85C8.kind_0, word_800A8470[side]);
         if (word_800A8470[side] > 0)
         {
             sub_80037BFC(0x1E);
@@ -1095,7 +1120,7 @@ void PlayHitFeedback_800A7C0C(int side)
         }
         break;
     case 2:
-        sub_800A7E34(side, dword_800A85C8.s0, word_800A8474[side]);
+        sub_800A7E34(side, dword_800A85C8.kind_0, word_800A8474[side]);
         if (word_800A8474[side] > 0)
         {
             sub_80037BFC(0x1E);
@@ -1125,17 +1150,17 @@ void PlayHitFeedback_800A7C0C(int side)
 
 void sub_800A7E34(int a, int b, int c)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D778);
-    int* p;
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D778);
+    CombBtlHitNum* p;
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        p = (int*)e->buffer;
-        p[0] = b;
-        p[2] = 0;
-        p[1] = c;
-        p[6] = a;
-        p[4] = sub_800A10DC(a);
+        p = e->buffer;
+        p->kind_0 = b;
+        p->frame_8 = 0;
+        p->amount_4 = c;
+        p->side_18 = a;
+        p->pos_10 = (int*)sub_800A10DC(a);
         e->cb_8 = (EventEntryFn)sub_800A7EFC;
     }
 }
@@ -1150,41 +1175,41 @@ void sub_800A7ECC()
 }
 
 extern void sub_800127D0(int a, int b, int c, int d);
-void sub_800A7EFC(EventEntry* e, int* buf)
+void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
 {
-    int* p = buf;
+    CombBtlHitNum* p = buf;
     DVECTOR sxy;
     SVECTOR v;
     long z;
     long flag;
     int d;
-    v.vx = ((int*)buf[4])[0];
-    v.vy = ((int*)buf[4])[1];
-    v.vz = ((int*)buf[4])[2];
+    v.vx = buf->pos_10[0];
+    v.vy = buf->pos_10[1];
+    v.vz = buf->pos_10[2];
     v.vx -= dword_8008D600[0].field_0;
     v.vy -= dword_8008D600[1].field_0;
     v.vz -= dword_8008D600[2].field_0;
     RotTransPers(&v, (long*)&sxy, &z, &flag);
-    if (++p[2] > 16)
+    if (++p->frame_8 > 16)
     {
         e->flags = (e->flags & ~1) | 0x8000;
         return;
     }
-    d = p[1] / (17 - p[2]);
+    d = p->amount_4 / (17 - p->frame_8);
     d = -d;
-    p[1] += d;
-    if (p[0] == 1)
+    p->amount_4 += d;
+    if (p->kind_0 == 1)
     {
-        int r = sub_80014390((unsigned char)(p[6] + 8));
-        sub_800127D0(p[6] + 8, 0, d, 0);
-        if (*(short*)(r + 8) <= 0)
+        CombBtlActor* r = (CombBtlActor*)sub_80014390((unsigned char)(p->side_18 + 8));
+        sub_800127D0(p->side_18 + 8, 0, d, 0);
+        if (r->hp_8 <= 0)
         {
-            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)(p[6] + 8)));
+            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)(p->side_18 + 8)));
         }
     }
-    else if (p[0] == 2)
+    else if (p->kind_0 == 2)
     {
-        sub_800127D0(p[6] + 8, 2, d, 0);
+        sub_800127D0(p->side_18 + 8, 2, d, 0);
     }
 }
 
@@ -1196,7 +1221,7 @@ void sub_800A8078(short a, short b, short c)
     word_800A82E0[3] = c;
 }
 
-extern int** dword_8008D458;
+extern EventNode* dword_8008D458;
 extern int dword_800A8478;
 extern unsigned int dword_800A3A88;
 extern int sub_800A5408();
@@ -1204,7 +1229,7 @@ extern void sub_800A816C();
 
 int sub_800A8098(int a, int b, int c)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D458);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D458);
     if (e)
     {
         e->cb_8 = (EventEntryFn)sub_800A816C;
