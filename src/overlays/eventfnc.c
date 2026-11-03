@@ -196,6 +196,8 @@ typedef struct EvMapEventfnc
     unsigned int nMeshes_4;
     int f8_8;
     EvMeshEventfnc* meshes_C;
+    char pad_10[0x10];
+    EvMeshEventfnc* meshes20_20;
 } EvMapEventfnc;
 
 extern int sub_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
@@ -1655,7 +1657,61 @@ int sub_800BAF68(EvCtxEventfnc* c)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BAFAC);
+extern int sub_800A7790(void);
+extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c);
+int sub_800BAFAC(EvCtxEventfnc* c)
+{
+    EvVecEventfnc* lev;
+    EvRotEventfnc* rot;
+    EvVecEventfnc* p;
+    int i;
+    int hit;
+    unsigned int dist;
+    if (dword_800AEBD8 >= 0 && dword_800AEBD8 != c->f10_10)
+    {
+        return 0;
+    }
+    if (c->flags_0 & 4)
+    {
+        c->flags_0 &= ~0xC;
+        c->pc_8++;
+        return 1;
+    }
+    c->flags_0 &= ~0xC;
+    lev = sub_800BBBA0(0);
+    rot = (EvRotEventfnc*)sub_800BBBD0(0);
+    for (i = 1; i < sub_800A7790() + 1; i++)
+    {
+        int bit = 1 << i;
+        if (c->pc_8->b_8 & bit)
+        {
+            p = sub_800BBBA0(i);
+            hit = 0;
+            if (c->pc_8->a_4 >= 0)
+            {
+                hit = sub_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes20_20[c->pc_8->a_4], lev) >= 0;
+            }
+            else
+            {
+                dist = 0xFFF;
+                IsWithinDistance_8003B740((int*)lev, (int*)p, &dist);
+                if (dist <= 0x15F8F)
+                {
+                    hit = 1;
+                }
+            }
+            if (hit)
+            {
+                if ((unsigned int)(WrapAngle_8003BA18((short)(rot->ang_2 - ratan2Difference_8003B9E0((int*)lev, (int*)p))) + 0x198) < 0x331)
+                {
+                    c->flags_0 |= 8;
+                    break;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 int sub_800BB180(EvCtxEventfnc* c)
 {
