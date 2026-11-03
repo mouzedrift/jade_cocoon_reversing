@@ -320,7 +320,12 @@ extern void sub_800A94CC(void);
 extern GameNode_1* dword_8008D400;
 extern GameRect_1 stru_8008D420;
 extern int dword_80091C94;
-extern void sub_800A72C8(int* p);
+typedef struct GameMode2_1
+{
+    int a;
+    int b;
+} GameMode2_1;
+extern GameMode2_1* sub_800A72C8(GameMode2_1* out);
 typedef struct GameMapEnt_1
 {
     int pad_0;
@@ -812,6 +817,40 @@ int sub_800A2618(void* x, int n)
     return 1;
 }
 
+#if 0
+// Not matched: hidden return pointer gets $s6 instead of $s3 (and 'move $v0' is placed before the final struct copy); tried explicit out pointer, void, do-while, goto
+typedef struct GamePair_1
+{
+    short a;
+    short b;
+} GamePair_1;
+typedef struct GameCtxA_1
+{
+    char pad_0[0x7c];
+    int obj_7c[3];
+    char pad_88[0x70c - 0x88];
+    int f70c[3];
+} GameCtxA_1;
+extern void* memset(void* p, int c, unsigned int n);
+extern GamePair_1 sub_80018A4C(int obj, int* p, int a2, int c);
+GamePair_1 sub_800A2684(int* p, int c)
+{
+    GamePair_1 r;
+    int i;
+    memset(&r, 0, 4);
+    if (p[0] != 0x14)
+    {
+        for (i = 4; i < 7; i++)
+        {
+            if (((unsigned)p[2] & (1 << i)) != 0)
+            {
+                r = sub_80018A4C(((GameCtxA_1*)&gCtx_800B1260)->obj_7c[i - 4], p, ((GameCtxA_1*)&gCtx_800B1260)->f70c[i - 4], c);
+            }
+        }
+    }
+    return r;
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A2684);
 
 // Matched
@@ -2384,7 +2423,7 @@ void sub_800A68CC(GameTask_1* t, int* q)
 {
     int i;
     int* d = dword_800B1DC8;
-    sub_800A72C8(d);
+    sub_800A72C8((GameMode2_1*)d);
     q[0] = d[1];
     q[1] = q[0];
     q[2] = q[0];
@@ -2631,7 +2670,41 @@ void sub_800A7280(GameSub_1* p)
     p->f0 = 0;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A72C8);
+GameMode2_1* sub_800A72C8(GameMode2_1* out)
+{
+    GameMode2_1 r;
+    GameS3_1 v;
+    if (unknownFlags_8008D678 & 0x40000000)
+    {
+        r.a = 0;
+        r.b = 1;
+        sub_800ADCEC(&v, 0x159);
+        saveData_8008B570.mapId_2E4[0].field_2 = -1;
+        saveData_8008B570.mapId_2E4[1].field_2 = -1;
+        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        dword_80091C94 = 1;
+        saveData_8008B570.mapId_2E4[0].field_0 = v.a;
+        saveData_8008B570.mapId_2E4[1].field_0 = v.b;
+        saveData_8008B570.mapId_2E4[2].field_0 = v.c;
+    }
+    else if ((unsigned short)word_8008B558[1] == 1)
+    {
+        r.a = 0;
+        r.b = 1;
+    }
+    else if ((unsigned short)word_8008B558[1] == 4)
+    {
+        r.a = 1;
+        r.b = 1;
+    }
+    else
+    {
+        r.a = 1;
+        r.b = 0;
+    }
+    *out = r;
+    return out;
+}
 
 void sub_800A73A8(void)
 {
@@ -2899,7 +2972,40 @@ void sub_800A7AD8(int a)
     sub_8001D9B0((struct_obj_A*)sub_800A7A60(a));
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A7B00);
+void sub_800A7B00(int a)
+{
+    int i;
+    int end;
+    struct_obj_A* o;
+    if (a < 0)
+    {
+        i = 0;
+        end = sub_800A7790();
+    }
+    else
+    {
+        i = a;
+        end = a + 1;
+    }
+    for (; i < end; i++)
+    {
+        o = *(struct_obj_A**)(sub_800A77F4(i) + 0x18);
+        if (dword_800B0EC4.b[i] == 0)
+        {
+            if (!(*(unsigned int*)((char*)o + 4) & 0x2000))
+            {
+                sub_8001D6EC(o, 1);
+                sub_8001D730(o, 0);
+                dword_800B0EC4.c[i] = 1;
+            }
+            if (!(**(unsigned int**)o & 0x8000))
+            {
+                SetActorActive_8001D658(o, 0);
+                dword_800B0EC4.b[i] = 1;
+            }
+        }
+    }
+}
 
 /* ---- GAME second half (G2) ---- */
 typedef struct G2Inner
@@ -3680,12 +3786,13 @@ void sub_800AA3F0(G2Act* a)
 }
 
 #if 0
+// Not matched: the original reloads p->f2C after the v19 select (lw 0x2c before 'sw 0x18'); here the compare's value is reused, so everything after is 2 words short
 void sub_800AA430(G2Act* p)
 {
     G2L2 L;
     int v19;
     short* r17;
-    unsigned short r16;
+    int r16;
     if (p->f2C != 0x46)
     {
         v19 = 4;
@@ -3693,7 +3800,7 @@ void sub_800AA430(G2Act* p)
             v19 = p->s2A;
         L.f0 = p->f2C;
         r17 = sub_800AC9CC(p->s20);
-        r16 = sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+        r16 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
         L.f4 = sub_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
         sub_800A93A4(L.rest);
         sub_800182B8(&L, p->f38);
@@ -3736,11 +3843,8 @@ int sub_800AAFD8(int a)
     return 0;
 }
 
-#if 0
 void sub_800AB010(G2Act* p, int a, int b, int c)
 {
-    unsigned short t;
-    int t3;
     if (c == 0)
         c = (short)sub_800AC7F0(b, sub_800AC474(b));
     if (p->f8 == a && p->s1c == b)
@@ -3750,21 +3854,22 @@ void sub_800AB010(G2Act* p, int a, int b, int c)
     {
         p->f8 = a;
     }
+    else if (a < 0)
+    {
+        unsigned short t = p->s1c;
+        int t3 = p->f10;
+        p->s1c = b;
+        p->f10 = c;
+        p->s26 = 0;
+        p->s1e = t;
+        p->f14 = t3;
+    }
     else
     {
-        if (a < 0)
-        {
-            t3 = p->f10;
-            t = p->s1c;
-            p->s1c = b;
-        }
-        else
-        {
-            t3 = p->f10;
-            t = p->s1c;
-            p->f8 = a;
-            p->s1c = b;
-        }
+        unsigned short t = p->s1c;
+        int t3 = p->f10;
+        p->f8 = a;
+        p->s1c = b;
         p->f10 = c;
         p->s26 = 0;
         p->s1e = t;
@@ -3777,8 +3882,6 @@ void sub_800AB010(G2Act* p, int a, int b, int c)
             p->f0 |= 0x10;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AB010);
 
 void sub_800AB114(G2Obj* p)
 {
@@ -4012,7 +4115,6 @@ void sub_800AB978(short a)
     p->f0 &= ~0x20;
 }
 
-#if 0
 void sub_800AB9A8(int a, int b, int c)
 {
     G2Act* p = (G2Act*)dword_8008B4A4->f24;
@@ -4028,16 +4130,14 @@ void sub_800AB9A8(int a, int b, int c)
     else
     {
         printf(dword_800A07E0, dword_800A0808, 0x6B9);
-        sub_8004ED78(1);
-        p->u22 = a;
-        p->s20 = a;
-        p->s24 = b;
-        p->f0 &= ~0x20;
-        p->f0 &= ~1;
+        exit(1);
     }
+    p->u22 = a;
+    p->s20 = a;
+    p->s24 = b;
+    p->f0 &= ~0x20;
+    p->f0 &= ~1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AB9A8);
 
 void sub_800ABAA4(int a)
 {
