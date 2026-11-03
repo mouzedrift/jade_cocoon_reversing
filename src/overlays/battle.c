@@ -648,6 +648,63 @@ void sub_800BB168(BatTask_a* t, BatObj_a* u)
     }
 }
 
+#if 0 // Not matched: prologue scheduling only: 'li a0,4' lands after 'move s2,a1' (original: before); tried param types, store order
+extern void sub_800BFBB8();
+void sub_800BB1B0(BatTask_a* t, BatObj_a* u)
+{
+    if (sub_800BC820(4) == 1)
+    {
+        sub_800BC850(4);
+        dword_800B1230 = 3;
+    }
+    else if (sub_800BC820(0x80) == 1)
+    {
+        sub_800BC850(0x80);
+        dword_800B1230 = 2;
+    }
+    else if (sub_800BC820(0x100) == 1)
+    {
+        if (dword_800C9C82 != 0)
+        {
+            dword_800C9C7C = dword_800C9C82;
+            dword_800C9C88[0] = 3;
+            dword_800C9C88[1] = 0;
+            dword_800C9C88[3] = 0;
+            dword_800C9C88[2] = 1 << dword_800C9C7C;
+            t->next_8 = (void (*)())sub_800BC174();
+            u->f4 = (int)sub_800BB1B0;
+            u->next_8 = sub_800BB1B0;
+            return;
+        }
+        if (sub_800BC820(0x2000) == 1)
+        {
+            dword_800B1230 = 5;
+        }
+        else
+        {
+            dword_800B1230 = 4;
+        }
+        sub_800BC850(0x100);
+    }
+    else
+    {
+        if (sub_800A248C() != 0)
+        {
+            return;
+        }
+        if (sub_800BC820(0x40) == 1)
+        {
+            dword_800B1230 = 0;
+        }
+        else
+        {
+            dword_800B1230 = 1;
+        }
+    }
+    sub_800BFBB8();
+    t->f0 = (t->f0 & ~1) | 0x8000;
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BB1B0);
 
 void sub_800BB314(BatTask_a* t)
@@ -1657,7 +1714,51 @@ int sub_800BF47C()
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BF4D0);
+extern void sub_800127D0(int a0, int a1, int a2, int a3);
+void sub_800BF4D0(EventEntry* t, int* u)
+{
+    DVECTOR sxy;
+    SVECTOR v;
+    long p;
+    long flag;
+    int x;
+    v.vx = ((unsigned short*)u[4])[0];
+    v.vy = ((unsigned short*)u[4])[2];
+    v.vz = ((unsigned short*)u[4])[4];
+    v.vx -= dword_8008D600[0].field_0;
+    v.vy -= dword_8008D600[1].field_0;
+    v.vz -= dword_8008D600[2].field_0;
+    RotTransPers(&v, (long*)&sxy, &p, &flag);
+    u[2]++;
+    if (u[2] > 0x10)
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+        return;
+    }
+    if (u[2] > 8)
+    {
+        u[3] -= 4;
+    }
+    else
+    {
+        u[3] += 4;
+    }
+    x = u[1] / (0x11 - u[2]);
+    x = -x;
+    u[1] += x;
+    if (u[0] == 0)
+    {
+        sub_800127D0(u[6], 0, x, 0);
+        if (*(short*)(sub_80014390((unsigned char)u[6]) + 8) <= 0)
+        {
+            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)u[6]));
+        }
+    }
+    if (u[0] == 1)
+    {
+        sub_800127D0(u[6], 2, x, 0);
+    }
+}
 
 #if 0 // Not matched: cse keeps 500 in a register for case 2 (original reloads it), which reorders the init stores; tried if-chains, struct, returns, default
 void sub_800BF648(short* p, int mode)
@@ -1914,6 +2015,57 @@ INCLUDE_OVERLAY_ASM(battle, sub_800BFC40);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BFDEC);
 
+#if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
+typedef struct BatWin_a
+{
+    int slot_0;
+    int frame_4;
+    short from_8[4];
+    short rect_10[4];
+} BatWin_a;
+extern int sub_800A2AB4();
+extern void AddClipDrawAreaPrim_80033308();
+extern void AddDrawAreaPrim_8003326C();
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void sub_8002F1C8();
+extern int dword_800C9164[];
+void sub_800C0074(EventEntry* t, void* arg)
+{
+    int k;
+    int m;
+    int r;
+    BatWin_a* u;
+    if (dword_800B1228 & 0x10000)
+    {
+        return;
+    }
+    u = arg;
+    r = sub_800A2AB4();
+    k = 0;
+    if (r != 1)
+    {
+        k = 1;
+        if (sub_800A2AB4() != 2)
+        {
+            k = u->slot_0;
+        }
+    }
+    m = sub_80014390((k + 4) & 0xFF);
+    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x28);
+    SetFontClutOffset_8003F900(1, 0);
+    InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
+    if (sub_800BF980(sub_800A2BE4(k)))
+    {
+        sub_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 1);
+    }
+    else
+    {
+        sub_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 0);
+    }
+    u->frame_4++;
+    AddDrawAreaPrim_8003326C(u->rect_10, (char*)pOT_8008D454 + 0x28);
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
 void sub_800C01D8()
@@ -2398,7 +2550,36 @@ void sub_800C1C5C(int* p, short* q, int c)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1DA4);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1FFC);
+extern void sub_800C2170();
+void sub_800C1FFC(int* p, short* q, int c, int d, int n)
+{
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        if (e)
+        {
+            char* b = e->buffer;
+            e->flags = (e->flags | 1) & 0xFFFF7FFF;
+            *(int*)(b + 0x1C) = p[0];
+            *(int*)(b + 0x20) = p[1];
+            *(int*)(b + 0x24) = p[2];
+            *(short*)(b + 0x34) = q[0];
+            *(short*)(b + 0x36) = q[1];
+            *(short*)(b + 0x38) = q[2];
+            *(int*)(b + 0x3C) = c;
+            *(int*)(b + 0x28) = ((rand() & 0x3F) - 0x1F) << 10;
+            *(int*)(b + 0x2C) = -(rand() & 0x1F) << 10;
+            *(int*)(b + 0x30) = ((rand() & 0x3F) - 0x1F) << 10;
+            *(int*)(b + 0x10) = 0;
+            *(int*)(b + 0x14) = 0;
+            *(int*)(b + 0x18) = 0;
+            *(int*)b = 0;
+            *(short*)(b + 8) = d + ((rand() & 0xFFF) >> 1) + 0x800;
+            e->cb_8 = (EventEntryFn)sub_800C2170;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C2170);
 
