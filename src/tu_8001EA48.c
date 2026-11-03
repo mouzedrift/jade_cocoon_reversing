@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "actor.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -333,7 +334,7 @@ typedef struct
 // Matched
 int sub_8001F03C(int a0, int a1, int a2, int a3)
 {
-    char* o = (char*)a0;
+    Actor* o = (Actor*)a0;
     unsigned char* s = (unsigned char*)a1;
     int t;
     int rep;
@@ -352,17 +353,17 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
             idx = *(short*)(s + 6);
             if (flag == 0)
             {
-                start = (*(struct_3c**)(o + 0x148))[idx].start;
+                start = (*(struct_3c**)&o->f148)[idx].start;
             }
             else
             {
-                start = (*(struct_3c**)(o + 0x148))[idx].loop;
+                start = (*(struct_3c**)&o->f148)[idx].loop;
             }
-            loop = (*(struct_3c**)(o + 0x148))[idx].loop;
-            end = (*(struct_3c**)(o + 0x148))[idx].end;
-            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].id == (*(struct_3c**)(o + 0x148))[idx].id && end >= a3)
+            loop = (*(struct_3c**)&o->f148)[idx].loop;
+            end = (*(struct_3c**)&o->f148)[idx].end;
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)&o->f148)[a2].id == (*(struct_3c**)&o->f148)[idx].id && end >= a3)
             {
-                return ((t + a3 - start) << 12) / *(short*)(o + 0x1E);
+                return ((t + a3 - start) << 12) / o->f1E;
             }
             if (start == loop)
             {
@@ -380,7 +381,7 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
         {
             if (a2 >= 0x4000 && a2 == *(short*)(s + 6))
             {
-                return (t << 12) / *(short*)(o + 0x1E);
+                return (t << 12) / o->f1E;
             }
         }
         else if (s[0] == 0xF)
@@ -397,7 +398,7 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
         }
         else if (s[0] == 5)
         {
-            rep = *(short*)(o + 0xF4) - 1;
+            rep = o->fF4 - 1;
         }
         else if (s[0] == 0x17)
         {
@@ -405,11 +406,11 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
         }
         else if (s[0] == 0 || s[0] == 0x10)
         {
-            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)(o + 0x148))[a2].end < a3)
+            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)&o->f148)[a2].end < a3)
             {
-                t += a3 - (*(struct_3c**)(o + 0x148))[a2].end;
+                t += a3 - (*(struct_3c**)&o->f148)[a2].end;
             }
-            return (t << 12) / *(short*)(o + 0x1E);
+            return (t << 12) / o->f1E;
         }
         s += s[1] * 4;
     }
@@ -440,7 +441,7 @@ extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
 void sub_8001F354(void* a0)
 {
-    char* o = a0;
+    Actor* o = a0;
     int save[3];
     int* e;
     int dx;
@@ -451,37 +452,37 @@ void sub_8001F354(void* a0)
     short c;
     int sn;
     short a;
-    e = (int*)(*(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0x9C) * 28);
-    *(int*)(o + 0x44) = *(int*)(o + 0x38);
-    *(int*)(o + 0x48) = *(int*)(o + 0x3C);
-    *(int*)(o + 0x4C) = *(int*)(o + 0x40);
-    save[0] = *(int*)(o + 0x64);
-    save[1] = *(int*)(o + 0x68);
-    save[2] = *(int*)(o + 0x6C);
-    sub_8004D288((int*)(o + 0x64), e, *(unsigned int*)(o + 0x90) % e[0]);
-    if (*(unsigned int*)(o + 0x90) % e[0] == 0 || (*(int*)(o + 4) & 8))
+    e = (int*)(*(char**)(o->desc_15C + 0x54) + o->f9C * 28);
+    o->prevPos_44[0] = o->pos_38[0];
+    o->prevPos_44[1] = o->pos_38[1];
+    o->prevPos_44[2] = o->pos_38[2];
+    save[0] = o->animDelta_64[0];
+    save[1] = o->animDelta_64[1];
+    save[2] = o->animDelta_64[2];
+    sub_8004D288((int*)&o->animDelta_64[0], e, (unsigned int)o->f90 % e[0]);
+    if ((unsigned int)o->f90 % e[0] == 0 || (o->flags_4 & 8))
     {
-        *(int*)(o + 4) &= ~8;
-        if (*(int*)(o + 4) & 0x40000)
+        o->flags_4 &= ~8;
+        if (o->flags_4 & 0x40000)
         {
             dx = 0;
             dz = 0;
         }
         else
         {
-            dx = *(int*)(o + 0x64);
-            dz = *(int*)(o + 0x6C);
+            dx = o->animDelta_64[0];
+            dz = o->animDelta_64[2];
         }
     }
-    else if (*(int*)(o + 4) & 0x40000)
+    else if (o->flags_4 & 0x40000)
     {
-        dx = *(int*)(o + 0x64) - save[0];
-        dz = *(int*)(o + 0x6C) - save[2];
+        dx = o->animDelta_64[0] - save[0];
+        dz = o->animDelta_64[2] - save[2];
     }
     else
     {
-        dx = *(int*)(o + 0x64);
-        dz = *(int*)(o + 0x6C);
+        dx = o->animDelta_64[0];
+        dz = o->animDelta_64[2];
     }
     if (dx < 0)
     {
@@ -491,73 +492,73 @@ void sub_8001F354(void* a0)
     {
         dz = 0;
     }
-    if (*(int*)(o + 4) & 0x20000000)
+    if (o->flags_4 & 0x20000000)
     {
-        dx = dx * *(int*)(o + 0x8C) / 4096;
-        dz = dz * *(int*)(o + 0x8C) / 4096;
+        dx = dx * o->f8C / 4096;
+        dz = dz * o->f8C / 4096;
     }
-    r = *(short**)(o + 0x144);
-    s = (int*)(o + 0x138);
-    if (*(int*)(o + 4) & 0x4000000)
+    r = *(short**)&o->f144;
+    s = (int*)&o->f138[0];
+    if (o->flags_4 & 0x4000000)
     {
-        if (TurnActorTowards_8001DDFC(o, (VECTOR*)(o + 0x70), *(int*)(o + 0x7C)))
+        if (TurnActorTowards_8001DDFC(o, (VECTOR*)&o->target_70[0], o->f7C))
         {
-            *(int*)(o + 4) &= ~0x4000000;
+            o->flags_4 &= ~0x4000000;
         }
     }
-    if (*(int*)(o + 4) & 0x2000000)
+    if (o->flags_4 & 0x2000000)
     {
-        *(int*)(o + 0x64) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 0];
-        *(int*)(o + 0x68) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 1];
-        *(int*)(o + 0x6C) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 2];
-        *(int*)(o + 0x38) = *(int*)(o + 0x50) + *(int*)(o + 0x64) / *(int*)(*(char**)(o + 0x160) + 4);
-        *(int*)(o + 0x3C) = *(int*)(o + 0x54) + *(int*)(o + 0x68) / *(int*)(*(char**)(o + 0x160) + 4);
-        *(int*)(o + 0x40) = *(int*)(o + 0x58) + *(int*)(o + 0x6C) / *(int*)(*(char**)(o + 0x160) + 4);
-        *(short*)(o + 0x5E) = (*(short**)(*(char**)(o + 0x160) + 8))[*(int*)(o + 0x98) * 4 + 3];
+        o->animDelta_64[0] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 0];
+        o->animDelta_64[1] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 1];
+        o->animDelta_64[2] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 2];
+        o->pos_38[0] = o->f50[0] + o->animDelta_64[0] / *(int*)(o->anim_160 + 4);
+        o->pos_38[1] = o->f50[1] + o->animDelta_64[1] / *(int*)(o->anim_160 + 4);
+        o->pos_38[2] = o->f50[2] + o->animDelta_64[2] / *(int*)(o->anim_160 + 4);
+        o->rot_5C[1] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 3];
     }
-    else if (*(int*)(o + 4) & 0x1000000)
+    else if (o->flags_4 & 0x1000000)
     {
-        a = *(short*)(o + 0x5E);
+        a = o->rot_5C[1];
         sn = (asc_80084350 + 0xF8)[a & 0xFFF];
         c = (asc_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
-        *(int*)(o + 0x40) = *(int*)(o + 0x58) + (*(int*)(o + 0x6C) * c - *(int*)(o + 0x64) * sn) / 4096 / e[2];
-        *(int*)(o + 0x38) = *(int*)(o + 0x50) + (*(int*)(o + 0x6C) * sn + *(int*)(o + 0x64) * c) / 4096 / e[2];
-        *(int*)(o + 0x3C) = *(int*)(o + 0x54) + *(int*)(o + 0x68) / e[2];
+        o->pos_38[2] = o->f50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sn) / 4096 / e[2];
+        o->pos_38[0] = o->f50[0] + (o->animDelta_64[2] * sn + o->animDelta_64[0] * c) / 4096 / e[2];
+        o->pos_38[1] = o->f50[1] + o->animDelta_64[1] / e[2];
     }
-    else if (*(int*)(o + 4) & 0x40000)
+    else if (o->flags_4 & 0x40000)
     {
-        *(int*)(o + 0x38) += dz * (asc_80084350 + 0xF8)[*(short*)(o + 0x5E) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
-        *(int*)(o + 0x40) += dz * (asc_80084350 + 0xF8)[(*(short*)(o + 0x5E) + 0x400) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
+        o->pos_38[0] += dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
+        o->pos_38[2] += dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
     }
     else
     {
-        *(int*)(o + 0x38) = *(int*)(o + 0x50) + dz * (asc_80084350 + 0xF8)[*(short*)(o + 0x5E) & 0xFFF] / 4096 / e[2];
-        *(int*)(o + 0x40) = *(int*)(o + 0x58) + dz * (asc_80084350 + 0xF8)[(*(short*)(o + 0x5E) + 0x400) & 0xFFF] / 4096 / e[2];
+        o->pos_38[0] = o->f50[0] + dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e[2];
+        o->pos_38[2] = o->f50[2] + dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e[2];
     }
-    if (*(int*)(o + 4) & 0x40000)
+    if (o->flags_4 & 0x40000)
     {
-        *(int*)(o + 0x84) = *(int*)(o + 0x80);
-        *(int*)(o + 0x80) = sub_800B716C((VECTOR*)(o + 0x38), (VECTOR*)(o + 0x44), (SVECTOR*)(o + 0x5C), o + 0xB4);
+        o->f84 = o->f80;
+        o->f80 = sub_800B716C((VECTOR*)&o->pos_38[0], (VECTOR*)&o->prevPos_44[0], (SVECTOR*)&o->rot_5C[0], (char*)&o->fB4);
     }
 }
 // Matched
 void sub_8001F918(void* a0)
 {
-    char* p = a0;
-    switch (*(short*)(p + 0x10))
+    Actor* p = a0;
+    switch (p->f10)
     {
     case 0:
         break;
     case 1:
-        RequestModelAnim_8002032C(*(short*)(p + 0x16), ((int*)*(int*)p)[1], *(short*)(p + 0x12));
-        *(unsigned short*)(p + 0x14) = *(unsigned short*)(p + 0x12);
-        *(short*)(p + 0x12) = -1;
-        *(short*)(p + 0x10) = 2;
+        RequestModelAnim_8002032C(p->f16, ((int*)p->task_0)[1], p->f12);
+        *(unsigned short*)&p->f14 = *(unsigned short*)&p->f12;
+        p->f12 = -1;
+        p->f10 = 2;
         break;
     case 2:
-        if (AreFileRequestsDone_80024DC4((int*)*(int*)(p + 0x15C)))
+        if (AreFileRequestsDone_80024DC4((int*)*(int*)&p->desc_15C))
         {
-            *(short*)(p + 0x10) = 0;
+            p->f10 = 0;
         }
         break;
     }
@@ -572,42 +573,42 @@ void sub_8001F9AC(void* p)
     sub_800200F8(p);
 }
 // Matched
-void sub_8001F9F0(char* o)
+void sub_8001F9F0(Actor* o)
 {
-    unsigned int f = *(unsigned int*)(o + 4);
+    unsigned int f = o->flags_4;
     if (f & 1)
     {
         if (f & 2)
         {
-            *(short*)(o + 0x26) += *(short*)(o + 0x28);
-            if (*(short*)(o + 0x2A) < *(short*)(o + 0x26))
+            o->f26 += o->f28;
+            if (o->f2A < o->f26)
             {
-                *(short*)(o + 0x26) = *(short*)(o + 0x2A);
-                *(unsigned int*)(o + 4) &= ~3;
+                o->f26 = o->f2A;
+                o->flags_4 &= ~3;
             }
         }
         else
         {
-            *(short*)(o + 0x26) -= *(short*)(o + 0x28);
-            if (*(short*)(o + 0x26) < *(short*)(o + 0x2A))
+            o->f26 -= o->f28;
+            if (o->f26 < o->f2A)
             {
-                *(short*)(o + 0x26) = *(short*)(o + 0x2A);
-                *(unsigned int*)(o + 4) &= ~1;
+                o->f26 = o->f2A;
+                o->flags_4 &= ~1;
             }
         }
     }
-    *(int*)(o + 0x2C) = *(int*)(o + 0x138) * *(short*)(o + 0x26) / 4096;
-    *(int*)(o + 0x30) = *(int*)(o + 0x13C) * *(short*)(o + 0x26) / 4096;
-    *(int*)(o + 0x34) = *(int*)(o + 0x140) * *(short*)(o + 0x26) / 4096;
+    o->f2C = o->f138[0] * o->f26 / 4096;
+    o->f30 = o->f138[1] * o->f26 / 4096;
+    o->f34 = o->f138[2] * o->f26 / 4096;
 }
 // Matched
-void sub_8001FB00(char* o)
+void sub_8001FB00(Actor* o)
 {
-    unsigned int f = *(unsigned int*)(o + 4);
+    unsigned int f = o->flags_4;
     int r = 0;
     int v;
     int w;
-    *(int*)(o + 8) = 0;
+    o->f8 = 0;
     if (f & 0x780)
     {
         if (f & 0x80)
@@ -627,15 +628,15 @@ void sub_8001FB00(char* o)
             r = 0x70;
         }
     }
-    if (*(unsigned int*)(o + 4) & 0x40000000)
+    if (o->flags_4 & 0x40000000)
     {
-        v = (asc_80084350 + 0xF8)[(*(short*)(o + 0xBC) * *(short*)(o + 0xBE) + 0x400) & 0xFFF];
-        (*(short*)(o + 0xBC))++;
-        *(int*)(o + 8) = r | 0x80 | (-((v + 0x1000) / 2) << 16);
+        v = (asc_80084350 + 0xF8)[(o->fBC * o->fBE + 0x400) & 0xFFF];
+        (o->fBC)++;
+        o->f8 = r | 0x80 | (-((v + 0x1000) / 2) << 16);
     }
-    if (*(unsigned int*)(o + 4) & 0x60)
+    if (o->flags_4 & 0x60)
     {
-        v = *(short*)(o + 0x20) + 0x1000 / *(short*)(o + 0x22);
+        v = o->f20 + 0x1000 / o->f22;
         if (v >= 0)
         {
             w = v;
@@ -648,19 +649,19 @@ void sub_8001FB00(char* o)
         {
             w = 0;
         }
-        *(short*)(o + 0x20) = w;
-        if (*(unsigned int*)(o + 4) & 0x20)
+        o->f20 = w;
+        if (o->flags_4 & 0x20)
         {
-            *(int*)(o + 8) = r | 0x80 | ((0x1000 - *(short*)(o + 0x20)) << 16);
+            o->f8 = r | 0x80 | ((0x1000 - o->f20) << 16);
         }
         else
         {
-            *(int*)(o + 8) = r | 0x80 | (*(short*)(o + 0x20) << 16);
+            o->f8 = r | 0x80 | (o->f20 << 16);
         }
     }
-    if (*(unsigned int*)(o + 4) & 0x800)
+    if (o->flags_4 & 0x800)
     {
-        *(int*)(o + 8) |= (*(short*)(o + 0x15A) - *(short*)(o + 0x152)) << 8;
+        o->f8 |= (o->f15A - o->f152) << 8;
     }
 }
 // Matched
@@ -684,32 +685,27 @@ extern void sub_8001C440();
 extern void sub_80047E28();
 extern void sub_80046A58();
 extern void sub_800459E4();
-typedef struct
-{
-    char pad_0[0x184];
-    int field_184;
-} ActorTail_8001FD08;
 // Matched
 void sub_8001FD08(void* a0)
 {
-    char* o = (char*)a0;
+    Actor* o = (Actor*)a0;
     int v;
     char* t;
     unsigned long* ot;
     unsigned long* ot2;
-    if (!(*(int*)(o + 4) & 0x2000) && sub_8001FC90(o))
+    if (!(o->flags_4 & 0x2000) && sub_8001FC90(o))
     {
-        v = sub_80019CC4((VECTOR*)(o + 0x38));
-        *(char**)(o + 0x178) = *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0x9C) * 28;
-        *(int*)(o + 0x164) = *(int*)(*(char**)(o + 0x15C) + 0x50);
-        *(char**)(o + 0x168) = o + 0x38;
-        *(char**)(o + 0x16C) = o + 0x5C;
-        *(int*)(o + 0x170) = *(int*)(o + 0x134);
-        *(int*)(o + 0x174) = *(int*)(o + 0x144);
-        *(unsigned int*)(o + 0x17C) = *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178);
-        *(int*)(o + 0x180) = *(int*)(o + 8);
-        *(char**)(o + 0x188) = o + 0x2C;
-        ((ActorTail_8001FD08*)o)->field_184 = *(int*)(o + 0x1C4);
+        v = sub_80019CC4((VECTOR*)&o->pos_38[0]);
+        *(char**)&o->f178 = *(char**)(o->desc_15C + 0x54) + o->f9C * 28;
+        o->f164 = *(int*)(o->desc_15C + 0x50);
+        o->f168 = (char*)&o->pos_38[0];
+        o->f16C = (char*)&o->rot_5C[0];
+        o->f170 = o->f134;
+        o->f174 = *(int*)&o->f144;
+        o->f17C = o->f90 % *o->f178;
+        o->f180 = o->f8;
+        o->f188 = (char*)&o->f2C;
+        o->f184 = (int)o->f1C4;
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -718,24 +714,24 @@ void sub_8001FD08(void* a0)
         {
             ot = pOT_8008D690;
         }
-        *(unsigned long**)(o + 0x18C) = ot;
-        if (*(int*)(o + 4) & 0x1000)
+        o->f18C = ot;
+        if (o->flags_4 & 0x1000)
         {
-            t = *(char**)(*(char**)(o + 0x15C) + 0x54);
+            t = *(char**)(o->desc_15C + 0x54);
         }
         else
         {
             t = 0;
         }
-        if (*(int*)(o + 4) & 0x10)
+        if (o->flags_4 & 0x10)
         {
-            sub_80047E28(o + 0x164, *(int*)(o + 0x174), *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28,
-                         *(unsigned int*)(o + 0x94) % *(unsigned int*)(*(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28),
-                         0x1000 - *(int*)(o + 0xAC), (char*)stru_8008D534 + v * 24, t);
+            sub_80047E28((char*)&o->f164, o->f174, *(char**)(o->desc_15C + 0x54) + o->fA0 * 28,
+                         o->f94 % *(unsigned int*)(*(char**)(o->desc_15C + 0x54) + o->fA0 * 28),
+                         0x1000 - o->fAC, (char*)stru_8008D534 + v * 24, t);
         }
         else
         {
-            sub_80046A58(o + 0x164, (char*)stru_8008D534 + v * 24, t);
+            sub_80046A58((char*)&o->f164, (char*)stru_8008D534 + v * 24, t);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {
@@ -745,66 +741,66 @@ void sub_8001FD08(void* a0)
         {
             ot2 = pOT_8008D690;
         }
-        sub_800459E4(*(int*)(o + 0x134), *(char**)(o + 0x15C) + 0x5C, ot2, *(int*)(o + 8));
-        sub_8001C440(*(int*)(o + 0x15C), *(int*)(o + 0x9C), *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178));
+        sub_800459E4(o->f134, o->desc_15C + 0x5C, ot2, o->f8);
+        sub_8001C440(*(int*)&o->desc_15C, o->f9C, o->f90 % *o->f178);
     }
 }
 // Matched
-void sub_8001FF48(char* o)
+void sub_8001FF48(Actor* o)
 {
     int g;
     int f;
-    *(int*)(o + 4) &= ~0x4000;
-    if (!(*(int*)(o + 4) & 4))
+    o->flags_4 &= ~0x4000;
+    if (!(o->flags_4 & 4))
     {
-        *(short*)(o + 0x1C) += *(short*)(o + 0x1E);
-        if (*(short*)(o + 0x1C) >= 0x1000)
+        o->f1C += o->f1E;
+        if (o->f1C >= 0x1000)
         {
-            *(short*)(o + 0x1C) -= 0x1000;
-            (*(int*)(o + 0x90))++;
+            o->f1C -= 0x1000;
+            (o->f90)++;
         }
-        if (*(int*)(o + 0x90) == *(short*)(o + 0x1A))
+        if (o->f90 == o->f1A)
         {
-            *(int*)(o + 4) |= 0x4000;
+            o->flags_4 |= 0x4000;
         }
-        else if (*(short*)(o + 0x1A) < *(int*)(o + 0x90))
+        else if (o->f1A < o->f90)
         {
-            *(int*)(o + 4) |= 8;
-            *(int*)(o + 0x90) = *(short*)(o + 0x18);
+            o->flags_4 |= 8;
+            o->f90 = o->f18;
         }
     }
-    f = *(int*)(o + 4);
+    f = o->flags_4;
     if (f & 0x10)
     {
         if (f < 0)
         {
-            *(int*)(o + 0xAC) += 0x111;
+            o->fAC += 0x111;
         }
         else
         {
-            *(int*)(o + 0xAC) += 0x1000 / *(short*)(o + 0x24);
+            o->fAC += 0x1000 / o->f24;
         }
-        if (*(int*)(o + 0xAC) >= 0x1000)
+        if (o->fAC >= 0x1000)
         {
-            g = *(int*)(o + 4) & ~0x10;
-            *(int*)(o + 4) = g & 0x7FFFFFFF;
+            g = o->flags_4 & ~0x10;
+            o->flags_4 = g & 0x7FFFFFFF;
         }
-        f = *(int*)(o + 4);
+        f = o->flags_4;
     }
     if (f & 0x2000000)
     {
-        *(int*)(o + 4) = f & ~0x4000;
-        if (++*(int*)(o + 0x98) >= **(int**)(o + 0x160))
+        o->flags_4 = f & ~0x4000;
+        if (++o->f98 >= **(int**)&o->anim_160)
         {
-            *(int*)(o + 0x90) = *(short*)(o + 0x1A);
-            *(int*)(o + 4) = (*(int*)(o + 4) & ~0x2000000) | 0x4008;
-            *(int*)(o + 0x50) = *(int*)(o + 0x38);
-            *(int*)(o + 0x54) = *(int*)(o + 0x3C);
-            *(int*)(o + 0x58) = *(int*)(o + 0x40);
-            if (*(int*)(o + 0xD4) & 4)
+            o->f90 = o->f1A;
+            o->flags_4 = (o->flags_4 & ~0x2000000) | 0x4008;
+            o->f50[0] = o->pos_38[0];
+            o->f50[1] = o->pos_38[1];
+            o->f50[2] = o->pos_38[2];
+            if (o->fD4 & 4)
             {
-                *(int*)(o + 4) |= 0x80000000;
-                *(int*)(o + 0xD4) &= ~1;
+                o->flags_4 |= 0x80000000;
+                o->fD4 &= ~1;
             }
         }
     }

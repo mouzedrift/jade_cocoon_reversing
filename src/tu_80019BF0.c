@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "actor.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -2084,7 +2085,7 @@ int* CreateActor_8001D45C(int a0)
     return 0;
 }
 // Matched
-int* sub_8001D4DC(char* o, int a1, int a2, int a3)
+int* sub_8001D4DC(Actor* o, int a1, int a2, int a3)
 {
     struct
     {
@@ -2108,29 +2109,29 @@ int* sub_8001D4DC(char* o, int a1, int a2, int a3)
         int field_4C;
     } s;
     int* r;
-    s.field_48 = *(int*)(o + 0x15C);
+    s.field_48 = *(int*)&o->desc_15C;
     s.field_0 = -1;
     s.field_4 = a1;
-    s.pos[0] = *(int*)(o + 0x38);
-    s.pos[1] = *(int*)(o + 0x3C);
-    s.pos[2] = *(int*)(o + 0x40);
-    s.rot[0] = *(short*)(o + 0x5C);
-    s.rot[1] = *(short*)(o + 0x5E);
-    s.rot[2] = *(short*)(o + 0x60);
+    s.pos[0] = o->pos_38[0];
+    s.pos[1] = o->pos_38[1];
+    s.pos[2] = o->pos_38[2];
+    s.rot[0] = o->rot_5C[0];
+    s.rot[1] = o->rot_5C[1];
+    s.rot[2] = o->rot_5C[2];
     s.field_1C = a2;
-    s.field_20 = *(short*)(o + 0xC2);
-    s.field_24 = *(int*)(o + 0x90);
-    s.field_28 = *(short*)(o + 0x1E);
-    s.field_2C = *(short*)(o + 0x24);
-    s.field_30 = ((*(unsigned int*)(o + 4) >> 13) ^ 1) & 1;
-    s.field_34 = *(int*)(o + 0x134);
-    s.field_38 = o + 0x138;
-    s.field_3C = *(int*)(o + 0x144);
-    s.field_40 = *(int*)(o + 0x148);
-    s.field_44 = *(int*)(o + 0x14C);
+    s.field_20 = o->fC2;
+    s.field_24 = o->f90;
+    s.field_28 = o->f1E;
+    s.field_2C = o->f24;
+    s.field_30 = ((o->flags_4 >> 13) ^ 1) & 1;
+    s.field_34 = o->f134;
+    s.field_38 = (char*)&o->f138[0];
+    s.field_3C = *(int*)&o->f144;
+    s.field_40 = o->f148;
+    s.field_44 = o->f14C;
     s.field_4C = a3;
     r = CreateActor_8001D45C((int)&s);
-    sub_8001D68C((struct_obj_A*)r, (*(unsigned int*)(o + 4) >> 18) & 1);
+    sub_8001D68C((struct_obj_A*)r, (o->flags_4 >> 18) & 1);
     return r;
 }
 // Matched
@@ -2208,40 +2209,40 @@ void sub_8001D730(struct_obj_A* p, int on)
     }
 }
 // Matched
-void sub_8001D760(char* o, int idx, int mode, int a3)
+void sub_8001D760(Actor* o, int idx, int mode, int a3)
 {
     int base;
-    *(short*)(o + 0xC2) = idx;
-    *(int*)(o + 0xA0) = *(int*)(o + 0x9C);
-    *(int*)(o + 0x9C) = *(signed char*)(idx * 60 + *(int*)(o + 0x148));
-    *(short*)(o + 0x18) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 4);
-    *(short*)(o + 0x1A) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 6);
-    *(int*)(o + 0x94) = *(int*)(o + 0x90);
+    o->fC2 = idx;
+    o->fA0 = o->f9C;
+    o->f9C = *(signed char*)(idx * 60 + o->f148);
+    o->f18 = *(short*)(idx * 60 + o->f148 + 4);
+    o->f1A = *(short*)(idx * 60 + o->f148 + 6);
+    o->f94 = o->f90;
     if (mode == -1)
     {
-        *(int*)(o + 0x90) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 2);
+        o->f90 = *(short*)(idx * 60 + o->f148 + 2);
     }
     else if (mode == -2)
     {
-        *(int*)(o + 0x90) = *(short*)(idx * 60 + *(int*)(o + 0x148) + 4);
+        o->f90 = *(short*)(idx * 60 + o->f148 + 4);
     }
     else if (mode == -3)
     {
         int r = rand();
-        char* e = (char*)(idx * 60 + *(int*)(o + 0x148));
+        char* e = (char*)(idx * 60 + o->f148);
         base = *(short*)(e + 2);
-        *(int*)(o + 0x90) = base + r % (*(short*)(e + 4) - base);
+        o->f90 = base + r % (*(short*)(e + 4) - base);
     }
     else
     {
-        *(int*)(o + 0x90) = mode % *(short*)(o + 0x1A);
+        o->f90 = mode % o->f1A;
     }
-    *(short*)(o + 0x1C) = 0;
-    *(int*)(o + 0xAC) = 0;
-    *(int*)(o + 4) |= 8;
+    o->f1C = 0;
+    o->fAC = 0;
+    o->flags_4 |= 8;
     if (a3)
     {
-        *(int*)(o + 4) |= 0x10;
+        o->flags_4 |= 0x10;
     }
 }
 // Matched
@@ -2353,19 +2354,19 @@ void SetActorTint_8001DAAC(char* o, int a1)
     }
 }
 // Matched
-void sub_8001DB00(char* o, int* v, int a2)
+void sub_8001DB00(Actor* o, int* v, int a2)
 {
     if (v != 0)
     {
-        *(int*)(o + 0x70) = v[0];
-        *(int*)(o + 0x74) = v[1];
-        *(int*)(o + 0x78) = v[2];
-        *(int*)(o + 0x7C) = a2;
-        *(int*)(o + 4) |= 0x4000000;
+        o->target_70[0] = v[0];
+        o->target_70[1] = v[1];
+        o->target_70[2] = v[2];
+        o->f7C = a2;
+        o->flags_4 |= 0x4000000;
     }
     else
     {
-        *(int*)(o + 4) &= ~0x4000000;
+        o->flags_4 &= ~0x4000000;
     }
 }
 // Matched
@@ -2475,29 +2476,29 @@ int sub_8001DD44(char* o, int mode, int a, int b)
     return r < 0 ? 0 : (a < r ? a : r);
 }
 // Matched
-int TurnActorTowards_8001DDFC(char* o, VECTOR* target, int step)
+int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
 {
     VECTOR d;
     int a;
-    d.vx = target->vx - *(int*)(o + 0x38);
-    d.vz = target->vz - *(int*)(o + 0x40);
-    a = (ratan2_8003B548(d.vx, d.vz) - *(short*)(o + 0x5E)) & 0xFFF;
-    *(int*)(o + 0x19C) = 0;
+    d.vx = target->vx - o->pos_38[0];
+    d.vz = target->vz - o->pos_38[2];
+    a = (ratan2_8003B548(d.vx, d.vz) - o->rot_5C[1]) & 0xFFF;
+    o->f19C = 0;
     if (a < step || a >= 0x1000 - step)
     {
-        *(short*)(o + 0x5E) += a;
+        o->rot_5C[1] += a;
         return 1;
     }
     if (a < 0x800)
     {
-        *(int*)(o + 0x19C) = step;
+        o->f19C = step;
     }
     else
     {
-        *(int*)(o + 0x19C) = -step;
+        o->f19C = -step;
     }
-    FirFilterStep_80014588(o + 0x1A4, o + 0x194, frameCount_8008D3FC);
-    *(short*)(o + 0x5E) += *(short*)(o + 0x1A0);
+    FirFilterStep_80014588((char*)&o->f1A4, (char*)&o->f194, frameCount_8008D3FC);
+    o->rot_5C[1] += o->f1A0;
     return 0;
 }
 // Matched
@@ -2633,25 +2634,25 @@ int sub_8001E254(struct_obj_A* p, void* desc)
     return sub_8001E34C(p, desc);
 }
 // Matched
-void sub_8001E28C(char* o)
+void sub_8001E28C(Actor* o)
 {
     int s[0x4A];
-    if (*(int*)(o + 0x130) >= 0)
+    if (o->f130 >= 0)
     {
-        s[0] = *(int*)(o + 0x130);
-        s[1] = (int)(o + 0x108);
-        s[2] = *(int*)(o + 0x14C);
-        s[3] = (int)(o + 0x38);
-        s[4] = *(int*)(o + 0x1C4);
-        s[5] = *(int*)(o + 0x1C8);
-        s[13] = *(int*)(o + 0x144);
-        s[14] = (int)(o + 0x2C);
-        sub_800182B8(s, *(int*)(o + 0xEC));
-        sub_800184DC((int)s, LowestSetBit_80014358(*(int*)(o + 0xE8)));
-        *(int*)(o + 0x130) = -1;
+        s[0] = o->f130;
+        s[1] = (int)&o->f108;
+        s[2] = o->f14C;
+        s[3] = (int)&o->pos_38[0];
+        s[4] = *(int*)&o->f1C4;
+        s[5] = *(int*)&o->f1C8;
+        s[13] = *(int*)&o->f144;
+        s[14] = (int)&o->f2C;
+        sub_800182B8(s, o->fEC);
+        sub_800184DC((int)s, LowestSetBit_80014358(o->fE8));
+        o->f130 = -1;
     }
-    *(int*)(o + 4) |= 0x20000;
-    if (*(int*)(o + 0x100) != 0)
+    o->flags_4 |= 0x20000;
+    if (o->f100 != 0)
     {
         sub_8001EFC4((struct_obj_F*)o);
     }
@@ -2661,21 +2662,21 @@ extern int dword_8007D980[];
 extern int dword_8007D9A4[];
 extern int dword_8007D9C0[];
 // Matched
-int sub_8001E34C(char* o, char* d)
+int sub_8001E34C(Actor* o, char* d)
 {
     int r;
     int f;
     int g;
-    *(int*)(o + 0xD4) = *(int*)(d + 0);
-    *(short*)(o + 0xE0) = *(short*)(d + 0xC);
-    *(int*)(o + 0xE8) = *(int*)(d + 0x14);
-    *(int*)(o + 0xEC) = *(int*)(d + 0x18);
-    *(short*)(o + 0xF4) = *(short*)(d + 0x20);
-    *(short*)(o + 0xF6) = *(short*)(d + 0x22);
-    *(short*)(o + 0xFC) = *(short*)(d + 0x28);
-    *(short*)(o + 0xFE) = *(short*)(d + 0x2A);
-    *(short*)(o + 0xE0) = *(short*)(d + 0xC);
-    *(int*)(o + 0x100) = *(int*)(d + 0x2C);
+    o->fD4 = *(int*)(d + 0);
+    o->fE0 = *(short*)(d + 0xC);
+    o->fE8 = *(int*)(d + 0x14);
+    o->fEC = *(int*)(d + 0x18);
+    o->fF4 = *(short*)(d + 0x20);
+    o->fF6 = *(short*)(d + 0x22);
+    o->fFC = *(short*)(d + 0x28);
+    o->fFE = *(short*)(d + 0x2A);
+    o->fE0 = *(short*)(d + 0xC);
+    o->f100 = *(int*)(d + 0x2C);
     r = 0;
     if (*(void**)(d + 4))
     {
@@ -2683,58 +2684,58 @@ int sub_8001E34C(char* o, char* d)
     }
     if (*(short*)(d + 0xE) >= 0)
     {
-        r = sub_8001F268(o, (short*)(o + 0x108), *(int*)(o + 0xD0), *(short*)(d + 0xE));
+        r = sub_8001F268(o, (short*)&o->f108, o->fD0, *(short*)(d + 0xE));
     }
     f = *(int*)(d + 0x10);
     if (f >= 0)
     {
-        *(int*)(o + 0x130) = f;
+        o->f130 = f;
         RequestEffect_800148F4(f);
     }
     if (*(int**)(d + 8))
     {
-        *(int**)(o + 0xDC) = *(int**)(d + 8);
-        *(int*)(o + 0x70) = (*(int**)(d + 8))[0];
-        *(int*)(o + 0x74) = (*(int**)(d + 8))[1];
-        *(int*)(o + 0x78) = (*(int**)(d + 8))[2];
+        o->fDC = *(int**)(d + 8);
+        o->target_70[0] = (*(int**)(d + 8))[0];
+        o->target_70[1] = (*(int**)(d + 8))[1];
+        o->target_70[2] = (*(int**)(d + 8))[2];
         f = *(short*)(d + 0xC);
-        *(int*)(o + 4) |= 0x80000;
-        *(int*)(o + 0x7C) = f;
+        o->flags_4 |= 0x80000;
+        o->f7C = f;
         if (*(short*)(d + 0x24) >= 0)
         {
-            *(int*)(o + 0xA4) = *(short*)(d + 0x24);
+            o->fA4 = *(short*)(d + 0x24);
             sub_8001DC34(o, dword_8007D95C);
         }
         else
         {
-            *(int*)(o + 0xA4) = *(short*)(d + 0x26);
+            o->fA4 = *(short*)(d + 0x26);
             sub_8001DC34(o, dword_8007D980);
         }
     }
     if (*(int*)(d + 0x30))
     {
-        *(int*)(o + 0x98) = 0;
-        *(int*)(o + 4) |= 0x2000000;
-        *(int*)(o + 0x160) = *(int*)(d + 0x30);
+        o->f98 = 0;
+        o->flags_4 |= 0x2000000;
+        *(int*)&o->anim_160 = *(int*)(d + 0x30);
     }
     if (*(short*)(d + 0x2A) >= 0)
     {
-        *(int*)(o + 0xA4) = *(short*)(d + 0x28);
-        *(int*)(o + 0xA8) = *(short*)(d + 0xC);
+        o->fA4 = *(short*)(d + 0x28);
+        o->fA8 = *(short*)(d + 0xC);
         sub_8001DC34(o, dword_8007D9C0);
     }
     else if (*(short*)(d + 0x28) >= 0)
     {
-        *(int*)(o + 0xA4) = *(short*)(d + 0x28);
-        *(int*)(o + 0xA8) = *(short*)(d + 0xC);
+        o->fA4 = *(short*)(d + 0x28);
+        o->fA8 = *(short*)(d + 0xC);
         sub_8001DC34(o, dword_8007D9A4);
     }
-    g = *(int*)(o + 4);
+    g = o->flags_4;
     if (*(int*)(d + 0x1C))
     {
         g |= 0x800000;
     }
-    *(int*)(o + 4) = g;
+    o->flags_4 = g;
     return r;
 }
 extern unsigned short word_8007DC8C[];
@@ -2832,7 +2833,7 @@ void sub_8001E574(char* o, int* d)
 #endif
 INCLUDE_ASM(sub_8001E574);
 // Matched
-void sub_8001E7F0(char* o, int* d)
+void sub_8001E7F0(Actor* o, int* d)
 {
     short* p;
     int n;
@@ -2858,17 +2859,17 @@ void sub_8001E7F0(char* o, int* d)
         size += n * 32;
     }
     mem = ListAlloc_8003FDC0(dword_80091990, size);
-    *(char**)(o + 0x134) = mem;
+    *(char**)&o->f134 = mem;
     MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d[0x34 / 4], sz0);
-    *(int*)(o + 0x138) = ((int*)d[0x38 / 4])[0];
-    *(int*)(o + 0x13C) = ((int*)d[0x38 / 4])[1];
-    *(int*)(o + 0x140) = ((int*)d[0x38 / 4])[2];
+    o->f138[0] = ((int*)d[0x38 / 4])[0];
+    o->f138[1] = ((int*)d[0x38 / 4])[1];
+    o->f138[2] = ((int*)d[0x38 / 4])[2];
     mem += sz0;
     {
         short def[4] = {0x1000, 0x1000, 0x1000, 0};
-        *(char**)(o + 0x144) = mem;
+        o->f144 = mem;
         mem += sz1;
-        *(int*)(o + 4) |= 0x8000000;
+        o->flags_4 |= 0x8000000;
         for (i = 0; i < n; i++)
         {
             if (d[0x3C / 4])
@@ -2879,24 +2880,24 @@ void sub_8001E7F0(char* o, int* d)
             {
                 src = def;
             }
-            ((short*)(*(char**)(o + 0x144) + i * 8))[0] = src[0];
-            ((short*)(*(char**)(o + 0x144) + i * 8))[1] = src[1];
-            ((short*)(*(char**)(o + 0x144) + i * 8))[2] = src[2];
-            ((short*)(*(char**)(o + 0x144) + i * 8))[3] = src[3];
+            ((short*)(o->f144 + i * 8))[0] = src[0];
+            ((short*)(o->f144 + i * 8))[1] = src[1];
+            ((short*)(o->f144 + i * 8))[2] = src[2];
+            ((short*)(o->f144 + i * 8))[3] = src[3];
         }
     }
-    *(int*)(o + 0x148) = d[0x40 / 4];
-    *(int*)(o + 0x14C) = d[0x44 / 4];
-    *(char**)(o + 0x1C4) = mem;
+    o->f148 = d[0x40 / 4];
+    o->f14C = d[0x44 / 4];
+    o->f1C4 = mem;
     mem += n * 12;
     if (d[0x4C / 4])
     {
-        *(char**)(o + 0x1C8) = mem;
-        *(int*)(o + 4) |= 0x10000000;
+        o->f1C8 = mem;
+        o->flags_4 |= 0x10000000;
     }
     else
     {
-        *(char**)(o + 0x1C8) = 0;
+        o->f1C8 = 0;
     }
 }
 // Matched

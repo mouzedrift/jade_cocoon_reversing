@@ -1,6 +1,8 @@
 #ifndef _FUNCS_H_
 #define _FUNCS_H_
 
+struct Actor;
+
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
 #include "LIBGTE.H"
@@ -272,10 +274,10 @@ extern void sub_800283C0(void* a0, int* a1);
 extern void sub_8003CF88(short a0, short a1, int a2);
 extern void sub_8001F354(void* a0);
 extern void sub_8001F918(void* a0);
-extern void sub_8001F9F0(char* o);
-extern void sub_8001FB00(char* o);
+extern void sub_8001F9F0(struct Actor* o);
+extern void sub_8001FB00(struct Actor* o);
 extern void sub_8001FD08(void* a0);
-extern void sub_8001FF48(char* o);
+extern void sub_8001FF48(struct Actor* o);
 extern void sub_800200F8(void* a0);
 extern int DsControlB(unsigned char com, unsigned char* param, unsigned char* result);
 extern int GetKeyItemIcon_8001D344(int idx);
@@ -452,7 +454,7 @@ extern void sub_800C410C(void);
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest);
 extern int IsActorNear_8001DFC8(char* o, VECTOR* target, int a2, int a3);
-extern int TurnActorTowards_8001DDFC(char* o, VECTOR* target, int step);
+extern int TurnActorTowards_8001DDFC(struct Actor* o, VECTOR* target, int step);
 extern int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range);
 extern void sub_8001EFC4(struct_obj_F* p);
 extern void sub_800182B8(int* p, int a1);
