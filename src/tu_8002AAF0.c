@@ -18,7 +18,113 @@
 
 INCLUDE_DATA(dword_800741C4);
 
-INCLUDE_ASM(sub_8002AAF0);
+typedef struct
+{
+    unsigned short flags;
+    char pad_2[0x1A];
+} struct_AAF0_item;
+typedef struct
+{
+    int flags;
+    int field_4;
+    int field_8;
+    int field_C;
+    struct_AAF0_item** items;
+    int ot;
+} struct_AAF0;
+typedef struct
+{
+    unsigned short color;
+    unsigned char b;
+    unsigned char c;
+} struct_AAF0_param;
+extern short uiColor_8008B590;
+extern void sub_80042460(void* a, int b, void* c, int d);
+// Matched
+void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
+{
+    struct_AAF0_param t;
+    int k;
+    int f;
+    struct_AAF0_item* it = &p->items[i][j];
+    k = 0;
+    if (it->flags & 0x20)
+    {
+        return;
+    }
+    f = p->flags;
+    if (f & 8)
+    {
+        t.c = 0;
+    }
+    else if (f & 0x10)
+    {
+        t.c = 1;
+    }
+    else if (f & 0x20)
+    {
+        t.c = 2;
+    }
+    else if (f & 0x40)
+    {
+        t.c = 3;
+    }
+    else if (f & 0x80)
+    {
+        t.c = 4;
+    }
+    else
+    {
+        t.c = 1;
+    }
+    f = p->flags;
+    if (f & 1)
+    {
+        t.b = 0;
+    }
+    else if (f & 2)
+    {
+        t.b = 1;
+        if (p->field_C == i)
+        {
+            k = p->field_4;
+        }
+    }
+    else if ((f & 4) && p->field_C == i)
+    {
+        t.b = 2;
+    }
+    else
+    {
+        t.b = 0;
+    }
+    f = p->flags;
+    if (!(f & 0x100))
+    {
+        t.color = uiColor_8008B590;
+    }
+    else if (f & 0x2000)
+    {
+        t.color = 4;
+    }
+    else if (f & 0x1000)
+    {
+        t.color = 3;
+    }
+    else if (f & 0x800)
+    {
+        t.color = 2;
+    }
+    else if (f & 0x400)
+    {
+        t.color = 1;
+    }
+    else
+    {
+        t.color = 0;
+    }
+    sub_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
+}
 #if 0
 // Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
 void sub_8002AC88(int flags, short* a, int b, short* out)
@@ -178,7 +284,51 @@ void sub_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
     p.y = ((Pos16*)a3)->y + 5;
     sub_8002AE38(a0, &p, a2, a3, a4);
 }
-INCLUDE_ASM(sub_8002B004);
+typedef struct
+{
+    int icon;
+    int text;
+} struct_B004_entry;
+extern void sub_8002C06C(void* p, int a1, int a2);
+extern int sub_8003E4C8(int text);
+// Matched
+void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
+{
+    Pos16 cur;
+    Pos16 base;
+    RECT r;
+    struct_text_param t;
+    int i;
+    i = 0;
+    if (a1)
+    {
+        base.x = a1->x;
+        base.y = a1->y;
+    }
+    else
+    {
+        base.x = 10;
+        base.y = 0xD6;
+    }
+    cur.x = base.x + 2;
+    for (; e[i].icon >= 0; i++)
+    {
+        cur.y = base.y + (14 - ((SPRT*)loadedOverlayMaybe_8008D620)[e[i].icon].h) / 2;
+        sub_8002C06C(&cur, e[i].icon, ot);
+        cur.x = (unsigned short)(cur.x + 1) + ((SPRT*)loadedOverlayMaybe_8008D620)[e[i].icon].w;
+        cur.y = base.y + 2;
+        DrawText_8003E91C(2, e[i].text, &cur, ot);
+        cur.x = sub_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);
+    }
+    r.x = base.x;
+    r.y = base.y;
+    r.w = 0x12C;
+    r.h = 0xE;
+    t.c = 1;
+    t.b = 0;
+    t.color = uiColor_8008B590;
+    sub_80042460(&r, (int)&t, &pOT_8008D454[ot], 0);
+}
 typedef struct
 {
     short s[8];

@@ -16,7 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(jpt_8007470C);
+
 
 
 typedef struct Ent4
@@ -104,7 +104,22 @@ void sub_80032470(int idx, struct_20* pOut20, struct_pair* pOut8)
     *pOut20 = dword_8008D434[idx];
     *pOut8 = dword_8008D440[idx];
 }
-INCLUDE_ASM(sub_800324D8);
+// Matched
+void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
+{
+    int a = -angle;
+    short* c = &word_80084540[(a + 0x400) & 0xFFF];
+    short* s = &word_80084540[(a + 0x800) & 0xFFF];
+    p->x0 = cx + (w + (*c * -w + *s * -h) / 4096) / 2;
+    p->y0 = cy + (h + (-*s * -w + *c * -h) / 4096) / 2;
+    p->x1 = cx + (w + (*c * w + *s * -h) / 4096) / 2;
+    p->y1 = cy + (h + (-*s * w + *c * -h) / 4096) / 2;
+    p->x2 = cx + (w + (*c * -w + *s * h) / 4096) / 2;
+    p->y2 = cy + (h + (-*s * -w + *c * h) / 4096) / 2;
+    p->x3 = cx + (w + (*c * w + *s * h) / 4096) / 2;
+    p->y3 = cy + (h + (-*s * w + *c * h) / 4096) / 2;
+    AddPrimCopy_80040298(ot, p, 10);
+}
 INCLUDE_ASM(sub_800327A8);
 // Matched
 void sub_80032D34(unsigned short* a, void* b)
@@ -406,12 +421,45 @@ void sub_800335D0(void* pSrc, Minion* m)
     }
     sub_80033754((char*)m + 0x20, m);
 }
-#if 0
-void sub_80033624(void* arg0, int arg1)
+// Matched
+int sub_80033624(void* arg0, int arg1)
 {
+    unsigned char* stats = (unsigned char*)arg1 + 0x2C;
+    unsigned char* ids = (unsigned char*)arg1 + 0x1C;
+    int* tbl[4];
+    int i;
+    int j;
+    int v;
+    int max;
+    tbl[0] = sub_8001CEF4(ids[0]);
+    tbl[1] = sub_8001CFB0(ids[1]);
+    tbl[2] = sub_8001D078(ids[2]);
+    tbl[3] = 0;
+    for (i = 0; i < 6; i++)
+    {
+        v = stats[i];
+        for (j = 0; j < 4; j++)
+        {
+            if (tbl[j])
+            {
+                v += ((signed char*)tbl[j])[i];
+            }
+        }
+        ((unsigned char*)arg0)[i] = v < 0 ? 0 : (v < 100 ? v : 99);
+    }
+    max = 0;
+    for (j = 0; j < 4; j++)
+    {
+        if (tbl[j])
+        {
+            if (max < tbl[j][4])
+            {
+                max = tbl[j][4];
+            }
+        }
+    }
+    return max;
 }
-#endif
-INCLUDE_ASM(sub_80033624);
 // Matched
 void sub_80033754(unsigned char* dst, unsigned char* src)
 {
@@ -719,4 +767,126 @@ int sub_80033DEC(void)
 {
     return 0;
 }
-INCLUDE_ASM(sub_80033DF4);
+typedef struct
+{
+    short item;
+    short pad_2;
+    short target;
+} ItemUse_DF4;
+typedef struct
+{
+    int status;
+    int pad_4;
+    short hp;
+    short maxHp;
+    short mp;
+    short maxMp;
+    char pad_10[0x1C];
+    unsigned char stats[6];
+} Target_DF4;
+// Matched
+int sub_80033DF4(ItemUse_DF4* p)
+{
+    Target_DF4* t;
+    int full = 0;
+    if (sub_8001CE70(p->item) & 0x80)
+    {
+        return 0;
+    }
+    if (sub_8001CE70(p->item) & 4)
+    {
+        return 0;
+    }
+    if (!(sub_8001CE70(p->item) & 8) && p->target == 0)
+    {
+        return 2;
+    }
+    if (!(sub_8001CE70(p->item) & 0x10) && (p->target == 1 || p->target == 2 || p->target == 3))
+    {
+        return 1;
+    }
+    t = (Target_DF4*)sub_80014390(p->target & 0xFF);
+    if (p->item != 13 && (t->status & 0x400))
+    {
+        return 4;
+    }
+    switch (p->item)
+    {
+    case 0:
+    case 1:
+    case 2:
+        if (t->hp == t->maxHp)
+        {
+            full = 1;
+        }
+        break;
+    case 3:
+        if (t->maxHp == 999)
+        {
+            full = 1;
+        }
+        break;
+    case 4:
+        if (t->stats[0] >= 99)
+        {
+            full = 1;
+        }
+        break;
+    case 5:
+        if (t->stats[4] >= 99)
+        {
+            full = 1;
+        }
+        break;
+    case 6:
+        if (t->stats[1] >= 99)
+        {
+            full = 1;
+        }
+        break;
+    case 7:
+        if (t->stats[2] >= 99)
+        {
+            full = 1;
+        }
+        break;
+    case 8:
+        if (t->stats[3] >= 99)
+        {
+            full = 1;
+        }
+        break;
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+        if (t->hp == t->maxHp && t->mp == t->maxMp)
+        {
+            full = 1;
+        }
+        break;
+    case 13:
+        if (!(t->status & 0x7FB) && t->hp == t->maxHp && t->mp == t->maxMp)
+        {
+            full = 1;
+        }
+        break;
+    case 14:
+        if (!(t->status & 1))
+        {
+            full = 1;
+        }
+        break;
+    case 15:
+        if (!(t->status & 0x3F8))
+        {
+            full = 1;
+        }
+        break;
+    }
+    if (full == 1)
+    {
+        return 3;
+    }
+    return 0;
+}

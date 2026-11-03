@@ -259,7 +259,7 @@ typedef struct
     short field_A;
 } struct_menu;
 
-extern int sub_8003D830(struct_menu* p);
+extern int sub_8003D830();
 
 // Matched
 int sub_8003D794(struct_menu* p)
@@ -281,7 +281,83 @@ int sub_8003D794(struct_menu* p)
     }
     return r;
 }
-INCLUDE_ASM(sub_8003D830);
+// Matched
+int sub_8003D830(struct_menu* p, int idx)
+{
+    int r = sub_8003D4C0((short*)p, idx);
+    int t;
+    int t2;
+
+    if (p->field_6 & 0x40)
+    {
+        if (r & 8)
+        {
+            if (p->field_A >= p->field_0)
+            {
+                p->field_A -= p->field_0;
+                return 8;
+            }
+        }
+        else if (r & 0x10)
+        {
+            if (p->field_A < p->field_4 - p->field_0 * p->field_2)
+            {
+                p->field_A += p->field_0;
+                return 7;
+            }
+        }
+    }
+    if (p->field_6 & 1)
+    {
+        if (r & 2)
+        {
+            t = p->field_0 - 1;
+            p->field_8 -= t;
+        }
+        if (r & 4)
+        {
+            p->field_8 += p->field_0 - 1;
+        }
+    }
+    if (p->field_6 & 2)
+    {
+        if (r & 8)
+        {
+            p->field_8 += p->field_0 * (p->field_2 - 1);
+        }
+        if (r & 0x10)
+        {
+            t2 = p->field_0 - p->field_2 * p->field_0;
+            p->field_8 += t2;
+        }
+    }
+    if ((p->field_6 & 4) && (r & 2))
+    {
+        return 1;
+    }
+    if ((p->field_6 & 8) && (r & 4))
+    {
+        return 2;
+    }
+    if ((p->field_6 & 0x10) && (r & 8))
+    {
+        return 3;
+    }
+    if ((p->field_6 & 0x20) && (r & 0x10))
+    {
+        return 4;
+    }
+    if (p->field_6 & 0x40)
+    {
+        p->field_A = sub_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
+    }
+    return 0;
+}
+// Matched
+int sub_8003DA54(struct_menu* p)
+{
+    return (short)(p->field_8 + p->field_A);
+}
 typedef struct
 {
     unsigned short field_0;
@@ -440,5 +516,128 @@ int sub_8003E484(int a0)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003E4C8);
-INCLUDE_ASM(sub_8003E6B0);
+typedef struct
+{
+    unsigned short s[11];
+} TextBuf22;
+extern unsigned short word_80074994[];
+extern TextBuf22 dword_80074998;
+extern int dword_80096038[];
+extern int sub_8003E884(int idx, short n);
+extern void IntToText_8003F610(unsigned short* buf, int val);
+extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
+// Matched
+int sub_8003E4C8(int str)
+{
+    unsigned short num[12];
+    TextBuf22 name;
+    unsigned short* s;
+    unsigned short* sub;
+    short w;
+    int k;
+    unsigned short c;
+
+    sub = word_80074994;
+    w = 0;
+    name = dword_80074998;
+    k = -1;
+    s = EncodeText_8003F684(2, (unsigned short*)str);
+    while (*s != 0 || *sub != 0)
+    {
+        if (*sub != 0 && sub != NULL)
+        {
+            c = *sub++;
+        }
+        else
+        {
+            c = *s++;
+        }
+        if (c < 0x7F)
+        {
+            w += sub_8003E884(2, (short)c);
+        }
+        else
+        {
+            switch (c)
+            {
+            case 0x86:
+            case 0x87:
+                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                {
+                    DecodeText_8003F748(1, name.s);
+                }
+                sub = EncodeText_8003F684(2, name.s);
+                break;
+            case 0x88:
+            case 0x89:
+            case 0x8A:
+            case 0x8B:
+            case 0x8C:
+                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                sub = EncodeText_8003F684(2, num);
+                break;
+            case -1:
+                w += 14;
+                break;
+            }
+        }
+    }
+    return w;
+}
+// Matched
+int sub_8003E6B0(int str)
+{
+    unsigned short num[12];
+    TextBuf22 name;
+    unsigned short* s;
+    unsigned short* sub;
+    short w;
+    int k;
+    unsigned short c;
+
+    sub = word_80074994;
+    w = 0;
+    name = dword_80074998;
+    k = -1;
+    s = EncodeText_8003F684(1, (unsigned short*)str);
+    while (*s != 0 || *sub != 0)
+    {
+        if (*sub != 0 && sub != NULL)
+        {
+            c = *sub++;
+        }
+        else
+        {
+            c = *s++;
+        }
+        if (c < 0x71)
+        {
+            w += sub_8003E884(1, (short)c);
+        }
+        else
+        {
+            switch (c)
+            {
+            case 0x86:
+            case 0x87:
+                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                {
+                    DecodeText_8003F748(1, name.s);
+                }
+                sub = EncodeText_8003F684(2, name.s);
+                break;
+            case 0x88:
+            case 0x89:
+            case 0x8A:
+            case 0x8B:
+            case 0x8C:
+                IntToText_8003F610(num, dword_80096038[k - 0x88]);
+                sub = EncodeText_8003F684(1, num);
+                break;
+            case -1:
+                break;
+            }
+        }
+    }
+    return w;
+}
