@@ -23,6 +23,18 @@ typedef struct CombStrtUnit
     char field_84[0x74];
 } CombStrtUnit;
 
+typedef struct CombStrtWin
+{
+    int f0;
+    void* text_4;
+    int f8;
+    int fC;
+    short x_10;
+    short y_12;
+    int f14;
+    int f18;
+} CombStrtWin;
+
 extern short word_800A4BF8;
 extern unsigned char byte_800A4C14;
 extern int dword_800A3A88;
@@ -46,6 +58,105 @@ extern void sub_800A49DC(int, int);
 
 INCLUDE_OVERLAY_ASM(combstrt, dword_800A4088);
 
+#if 0
+// Not matched: CSE/regalloc of the %hi parts: the original keeps byte_800A4C14's high half in s2 from the != 3 test on and rematerialises word_800A4C8C's
+typedef struct CombStrtMenu
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+} CombStrtMenu;
+typedef struct CombStrtPos
+{
+    short s0;
+    char pad_2[0xE];
+    short x_10;
+    short y_12;
+} CombStrtPos;
+typedef struct CombStrtCursor
+{
+    char pad_0[8];
+    short sel_8;
+} CombStrtCursor;
+extern CombStrtWin name_800A4138;
+extern CombStrtMenu dword_80082784;
+extern CombStrtPos dword_80082708;
+extern CombStrtPos dword_80082740;
+extern char dword_800826E8[];
+extern short word_800A4C00;
+extern short word_800A4C8C;
+extern unsigned short word_800A4BFC[];
+extern void* dword_800A4C04[];
+extern void (*dword_800A4C7C[])(CombStrtTask*, int);
+extern CombStrtCursor name_800A4BF0;
+extern void sub_800A48C0();
+extern void sub_800A4958(int i);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
+extern void DrawMenuBackground_8002BE10();
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+void sub_800A4170(CombStrtTask* t, int a)
+{
+    CombStrtBox col;
+    CombStrtWin w;
+    int i;
+    int old;
+    w = name_800A4138;
+    col.c_2 = 0;
+    col.c_3 = 1;
+    col.col_0 = uiColor_8008B590;
+    sub_8002ADB4(&w, &col, 0xF, 0);
+    sub_800A48C0();
+    if (sub_800A1AAC(0) < 2u && sub_800A1AAC(1) < 2u)
+    {
+        if (byte_800A4C14 == 0xFF)
+        {
+            word_800A4BF8 = word_800A4C00;
+        }
+        byte_800A4C14 = 2;
+    }
+    else if (byte_800A4C14 == 0xFF)
+    {
+        byte_800A4C14 = 0;
+    }
+    for (i = 0; i < 2; i++)
+    {
+        sub_800A4958(i);
+    }
+    if (byte_800A4C14 != 3)
+    {
+        dword_80082784.f0 = 10;
+        dword_80082784.f4 = GetTime30Hz_8002C64C();
+        dword_80082784.f14 = 10;
+        dword_80082708.s0 = 8;
+        dword_80082740.s0 = 8;
+        dword_80082708.x_10 = 0xC8;
+        dword_80082708.y_12 = 0xC3;
+        dword_80082740.x_10 = 0xF6;
+        dword_80082740.y_12 = 0xC3;
+        dword_80082784.f8 = word_800A4C8C;
+        dword_80082784.fC = word_800A4BF8;
+        DrawMenuWindows_8002A5A4(&dword_80082784);
+        if (++word_800A4C8C >= 9)
+        {
+            word_800A4C8C = 8;
+        }
+    }
+    DrawSmallTextBox_8002AF58((int)dword_800A4C04[byte_800A4C14], 0, 0xF);
+    DrawButtonHelpBar_8002B004(dword_800826E8, 0, 0xF);
+    DrawMenuBackground_8002BE10();
+    UpdateMenuCursor_8003D794(&name_800A4BF0, 0);
+    old = byte_800A4C14;
+    dword_800A4C7C[old](t, a);
+    if (old != byte_800A4C14)
+    {
+        name_800A4BF0.sel_8 = word_800A4BFC[byte_800A4C14];
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(combstrt, sub_800A4170);
 
 void sub_800A43FC()
@@ -227,17 +338,6 @@ void sub_800A4958(int i)
 
 #if 0
 // Not matched: s0/s1 swapped between slot and side*3 (register allocation), the rest matches
-typedef struct CombStrtWin
-{
-    int f0;
-    void* text_4;
-    int f8;
-    int fC;
-    short x_10;
-    short y_12;
-    int f14;
-    int f18;
-} CombStrtWin;
 extern CombStrtWin name_800A4154;
 extern void* dword_800A4C58[];
 extern short dword_800A4C64[][3][2];
