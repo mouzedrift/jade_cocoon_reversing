@@ -134,7 +134,6 @@ int sub_80019C84(void)
 extern CameraState cameraState_8008D4F0;
 extern MATRIX dword_80087114; // light matrix
 extern MATRIX dword_80087134; // light colour matrix
-extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -1294,7 +1293,7 @@ void sub_8001C440(struct_112* a0, int idx, int key)
                     arg = dword_8007C750[q->arg_4].arg;
                     if (dword_8007C750[q->arg_4].arg == 3)
                     {
-                        arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
+                        arg = (char)saveData_8008B570.level_80C >> 2;
                         if (arg > 4)
                         {
                             arg = 4;
@@ -1303,7 +1302,7 @@ void sub_8001C440(struct_112* a0, int idx, int key)
                     }
                     else if (dword_8007C750[q->arg_4].arg == 2)
                     {
-                        arg = saveData_8008B570.pad_7E2[0x80C - 0x7E2] >> 2;
+                        arg = (char)saveData_8008B570.level_80C >> 2;
                         if (arg > 4)
                         {
                             arg = 4;
@@ -2448,7 +2447,7 @@ int FindActorInFront_8001DECC(Actor* o, int range, int checkLevant)
     range = range * range;
     if (checkLevant)
     {
-        found = IsInFrontWithinRange_8001E0F4((VECTOR*)o->pos_38, o->rot_5C[1], &levantPos_8008BD18, range);
+        found = IsInFrontWithinRange_8001E0F4((VECTOR*)o->pos_38, o->rot_5C[1], (VECTOR*)&levantPos_8008BD18.pos, range);
     }
     if (found == 0)
     {
@@ -2482,7 +2481,7 @@ int IsActorNear_8001DFC8(Actor* o, VECTOR* target, int range, int checkLevant)
     if (checkLevant)
     {
         dist = 0xFFF;
-        if (IsWithinDistance_8003B740((VECTOR*)o->pos_38, &levantPos_8008BD18, &dist) != 0 && dist < range * range)
+        if (IsWithinDistance_8003B740((VECTOR*)o->pos_38, (VECTOR*)&levantPos_8008BD18.pos, &dist) != 0 && dist < range * range)
         {
             return 1;
         }

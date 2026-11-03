@@ -12,7 +12,7 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
 {
     EvMsgEventfnc m;
     unsigned short v[3];
-    EvSaveEventfnc* s;
+    SaveData* s;
     int k;
     switch (st[0])
     {
@@ -54,8 +54,8 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
         {
             sub_800AC6A8(st[1]);
             sub_800A8E38();
-            s = (EvSaveEventfnc*)&saveData_8008B570;
-            if (s->f2E4_2E4 == 4 && s->f2E8_2E8 == 0 && dword_800B0608[4][0][s->f2EC_2EC].f4_4 == 0)
+            s = &saveData_8008B570;
+            if (s->mapId_2E4[0].field_0 == 4 && s->mapId_2E4[1].field_0 == 0 && dword_800B0608[4][0][s->mapId_2E4[2].field_0].f4_4 == 0)
             {
                 int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
                 k = tbl2[word_8008B860];
@@ -71,11 +71,11 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
             dword_80091C54 = 0;
             dword_80091C8C = 0;
             dword_800B0EC0 = 1;
-            s = (EvSaveEventfnc*)&saveData_8008B570;
-            s->f2F0_2F0 = 0;
-            s->f2E4_2E4 = v[0];
-            s->f2E8_2E8 = v[1];
-            s->f2EC_2EC = v[2];
+            s = &saveData_8008B570;
+            s->mapId_2E4[3].field_0 = 0;
+            s->mapId_2E4[0].field_0 = v[0];
+            s->mapId_2E4[1].field_0 = v[1];
+            s->mapId_2E4[2].field_0 = v[2];
             unknownFlags_8008D678 &= ~0x20000;
             t->next_8 = sub_800A7720;
         }

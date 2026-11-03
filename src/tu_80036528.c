@@ -140,7 +140,6 @@ void UpdatePadVibration_80036820(int port)
     }
 }
 extern void sub_80037918(CameraCtrl* p);
-extern LevantPos levantPos_8008BD18;
 extern void SaveCameraState_80039620(CameraCtrl* o);
 extern void sub_80038CA8(CameraCtrl* p);
 extern void sub_80037F44(CameraCtrl* p);
@@ -180,7 +179,7 @@ void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
     sub_80037918(q);
 }
 extern void sub_80037C74(CameraCtrl* q);
-extern void sub_8003891C(CameraCtrl* p, void* q);
+extern void sub_8003891C(CameraCtrl* p, struct_v3* v);
 extern void sub_800BC90C(CameraCtrl* q);
 extern void sub_80036AB4(EventEntry* p, CameraCtrl* q);
 extern void sub_8001AA04(int a);
@@ -208,7 +207,7 @@ void sub_800369E0(EventEntry* p, CameraCtrl* q)
             q->mode_8 = 4;
             p->cb_8 = (EventEntryFn)sub_80036AB4;
         }
-        sub_8003891C(q, &levantPos_8008BD18);
+        sub_8003891C(q, &levantPos_8008BD18.pos);
         sub_800BC90C(q);
         break;
     }
@@ -238,7 +237,7 @@ void sub_80036AB4(EventEntry* p, CameraCtrl* q)
         }
     }
     sub_80037918(r);
-    sub_8003891C(r, &levantPos_8008BD18);
+    sub_8003891C(r, &levantPos_8008BD18.pos);
     r->flags_4 &= ~0x1000;
     r->mode_8 = 0;
     p->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
@@ -313,7 +312,7 @@ void sub_80036BB0(EventEntry* p, CameraCtrl* r)
         cameraState_8008D4F0.field_20.z = q->splinePos_1BC->vz - x * word_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * word_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
         cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
     }
-    sub_8003891C(q, &levantPos_8008BD18);
+    sub_8003891C(q, &levantPos_8008BD18.pos);
     sub_800BC90C(q);
 }
 #undef SPLINE
@@ -347,7 +346,7 @@ void sub_800374E0(EventEntry* p, CameraCtrl* q)
         o->eyeDst_18C = o->saved_48.field_14;
         q->field2ESrc_17C = cameraState_8008D4F0.field_2E;
         q->field2EDst_180 = cameraState_8008D4F0.field_2E;
-        sub_80038D64(o, (int*)&levantPos_8008BD18);
+        sub_80038D64(o, &levantPos_8008BD18.pos.x);
         p->cb_8 = (EventEntryFn)sub_800375F8;
     }
 }
@@ -372,7 +371,7 @@ void sub_800375F8(EventEntry* o, CameraCtrl* p)
     {
         RestoreCameraState_80039698((int*)q);
         sub_80037918(q);
-        sub_8003891C(q, &levantPos_8008BD18);
+        sub_8003891C(q, &levantPos_8008BD18.pos);
         q->mode_8 = 0;
         o->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
     }
@@ -644,17 +643,17 @@ void sub_80037F44(CameraCtrl* q)
     q->field2ESrc_17C = cameraState_8008D4F0.field_2E;
     q->field2EDst_180 = 0xA0;
     q->lookSrc_1B0 = cameraState_8008D4F0.field_20;
-    q->lookDst_198.x = SAVE_LEVANT.pos.x;
-    q->lookDst_198.y = SAVE_LEVANT.pos.y - 0xFA;
-    q->lookDst_198.z = SAVE_LEVANT.pos.z;
+    q->lookDst_198.x = saveData_8008B570.levant_7A8.pos.x;
+    q->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y - 0xFA;
+    q->lookDst_198.z = saveData_8008B570.levant_7A8.pos.z;
     q->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
-    q->eyeDst_18C.x = SAVE_LEVANT.pos.x + word_80084540[SAVE_LEVANT.rot_C.vy & 0xFFF] * 200 / 4096;
-    q->eyeDst_18C.y = SAVE_LEVANT.pos.y - 0xFA;
-    q->eyeDst_18C.z = SAVE_LEVANT.pos.z + word_80084540[(SAVE_LEVANT.rot_C.vy + 0x400) & 0xFFF] * 200 / 4096;
-    q->pos_38.x = SAVE_LEVANT.pos.x + word_80084540[SAVE_LEVANT.rot_C.vy & 0xFFF] * 500 / 4096;
-    q->pos_38.y = SAVE_LEVANT.pos.y + 0xFA;
-    q->pos_38.z = SAVE_LEVANT.pos.z + word_80084540[(SAVE_LEVANT.rot_C.vy + 0x400) & 0xFFF] * 500 / 4096;
-    q->rotY_44 = SAVE_LEVANT.rot_C.vy;
+    q->eyeDst_18C.x = saveData_8008B570.levant_7A8.pos.x + word_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 200 / 4096;
+    q->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y - 0xFA;
+    q->eyeDst_18C.z = saveData_8008B570.levant_7A8.pos.z + word_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 200 / 4096;
+    q->pos_38.x = saveData_8008B570.levant_7A8.pos.x + word_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 500 / 4096;
+    q->pos_38.y = saveData_8008B570.levant_7A8.pos.y + 0xFA;
+    q->pos_38.z = saveData_8008B570.levant_7A8.pos.z + word_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 500 / 4096;
+    q->rotY_44 = saveData_8008B570.levant_7A8.rot.vy;
     for (i = 7; i >= 0; i--)
     {
         cameraState_8008D4F0.ent_44[i].field_14 = 0;
@@ -673,7 +672,7 @@ void sub_80037F44(CameraCtrl* q)
     q->rot_174.vz = 0x1000;
     q->savedZoom_184 = dword_8008B4F8;
     q->field_188 = 0x1000;
-    sub_80038D64(q, (int*)&levantPos_8008BD18);
+    sub_80038D64(q, &levantPos_8008BD18.pos.x);
     q->t_C = 0x1000;
 }
 #define EASE(p) (0x1000 - word_80084540[(((p)->t_C / 4) + 0x400) & 0xFFF])
@@ -697,7 +696,7 @@ void sub_80038230(CameraCtrl* p)
     {
         cameraState_8008D4F0.field_14 = p->eyeDst_18C;
     }
-    sub_8003891C(p, &levantPos_8008BD18);
+    sub_8003891C(p, &levantPos_8008BD18.pos);
 }
 extern double pow(double, double);
 extern int dword_8008D4BC;
@@ -764,9 +763,8 @@ typedef struct
 } ScreenPosZ;
 extern ScreenPosZ word_8008D668;
 // Matched
-void sub_8003891C(CameraCtrl* p, void* q)
+void sub_8003891C(CameraCtrl* p, struct_v3* v)
 {
-    struct_v3* v = q;
     SVECTOR sv;
     long pr;
     long flag;
@@ -847,12 +845,12 @@ void sub_80038CA8(CameraCtrl* p)
     p->t_C = 0x1000;
     p->flags_4 &= ~8;
     o->lookSrc_1B0 = cameraState_8008D4F0.field_20;
-    o->lookDst_198 = SAVE_LEVANT.pos;
+    o->lookDst_198 = saveData_8008B570.levant_7A8.pos;
     o->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
     o->eyeDst_18C = cameraState_8008D4F0.field_14;
     p->field2ESrc_17C = cameraState_8008D4F0.field_2E;
     p->field2EDst_180 = cameraState_8008D4F0.field_2E;
-    sub_80038D64(o, (int*)&SAVE_LEVANT);
+    sub_80038D64(o, &saveData_8008B570.levant_7A8.pos.x);
 }
 extern int stru_8008D504[];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
@@ -885,12 +883,12 @@ void sub_80038E2C(CameraCtrl* p, int a, int b)
     p->flags_4 &= ~8;
     o->lookSrc_1B0 = cameraState_8008D4F0.field_20;
     o->lookDst_198 = o->pos_38;
-    o->lookDst_198.y = SAVE_LEVANT.pos.y + dword_80083C70[(unsigned short)a].y1;
+    o->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C70[(unsigned short)a].y1;
     o->lookDst_198.z += -word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
     o->lookDst_198.x += word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
     o->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
     o->eyeDst_18C = o->pos_38;
-    o->eyeDst_18C.y = SAVE_LEVANT.pos.y + dword_80083C70[(unsigned short)a].y0 + b;
+    o->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C70[(unsigned short)a].y0 + b;
     o->eyeDst_18C.z += -word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
     o->eyeDst_18C.x += word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
     p->field2ESrc_17C = cameraState_8008D4F0.field_2E;
@@ -942,7 +940,7 @@ void sub_800390F4(void* p_, int arg1)
         for (i = 0; i < 1; i++)
         {
                     v = CAM(p_)->pos_38;
-            v.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y1;
+            v.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y1;
             v.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
             v.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
             dist = DistanceSquared3D_8003B80C((int*)&cameraState_8008D4F0.field_14, (int*)&v);
@@ -955,12 +953,12 @@ void sub_800390F4(void* p_, int arg1)
     }
     CAM(p_)->lookSrc_1B0 = cameraState_8008D4F0.field_20;
     CAM(p_)->lookDst_198 = CAM(p_)->pos_38;
-    CAM(p_)->lookDst_198.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y1;
+    CAM(p_)->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y1;
     CAM(p_)->lookDst_198.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
     CAM(p_)->lookDst_198.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
     CAM(p_)->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
     CAM(p_)->eyeDst_18C = CAM(p_)->pos_38;
-    CAM(p_)->eyeDst_18C.y = SAVE_LEVANT.pos.y + dword_80083C0C[sel].y0;
+    CAM(p_)->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y0;
     CAM(p_)->eyeDst_18C.z += -word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
     CAM(p_)->eyeDst_18C.x += word_80084540[(CAM(p_)->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[CAM(p_)->rotY_44 & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
     CAM(p_)->field2ESrc_17C = cameraState_8008D4F0.field_2E;
@@ -1033,8 +1031,8 @@ void sub_8003970C(int idx_, int* a5)
         q[7] = r + 0x10E;
         q[8] = -1;
     }
-    p->splinePos_1BC = (VECTOR*)&levantPos_8008BD18;
-    p->splineRot_1C0 = &levantPos_8008BD18.rot_C;
+    p->splinePos_1BC = (VECTOR*)&levantPos_8008BD18.pos;
+    p->splineRot_1C0 = &levantPos_8008BD18.rot;
 }
 // Matched
 void sub_8003983C(int idx_, int* a5)
@@ -1051,8 +1049,8 @@ void sub_8003983C(int idx_, int* a5)
     q[2] = 0x50;
     q[3] = 0x78;
     q[4] = -1;
-    p->splinePos_1BC = (VECTOR*)&levantPos_8008BD18;
-    p->splineRot_1C0 = &levantPos_8008BD18.rot_C;
+    p->splinePos_1BC = (VECTOR*)&levantPos_8008BD18.pos;
+    p->splineRot_1C0 = &levantPos_8008BD18.rot;
 }
 typedef struct
 {

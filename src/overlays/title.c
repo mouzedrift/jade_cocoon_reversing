@@ -859,13 +859,12 @@ extern void sub_800A2540(void);
 extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
 extern void EncodeName_8003F7C8(void* a, void* b);
 
-typedef struct { int a, b, c; } Blk12_;
-extern Blk12_ dword_800B069C;
+extern struct_v3 dword_800B069C; // Levant's start position
 extern int dword_80091C94;
 extern char byte_800A08B4[];
-typedef struct { char c[8]; } Blk8_;
-extern Blk8_ dword_800B06A8;
-// Levant's 0x48-byte status block (saveData_8008B570 + 0x7C8; SaveData only has its first 0x10 bytes)
+extern SVECTOR dword_800B06A8; // Levant's start rotation
+// Levant's 0x48-byte status block (saveData_8008B570.levantStatus_7C8 ..; SaveData has it as separate fields, so the
+// block copies go through this type)
 typedef struct
 {
     int status_0; // EntityStatus
@@ -877,46 +876,8 @@ typedef struct
 } Blk72_;
 extern Blk72_ dword_800A2730;
 
-extern int playerYan_8008B594;
 extern int dword_8008B554;
-// saveData_8008B570 with the fields SaveData (globals.h) does not have yet
-typedef struct TitleSave
-{
-    int field_0;
-    int playTime_4;
-    char pad_8[0x2D4];
-    short chapter_2DC;
-    short f2DE;
-    short f2E0;
-    short f2E2;
-    short f2E4; // mapId_2E4[0].field_0
-    short f2E6;
-    short f2E8;
-    short f2EA;
-    short f2EC;
-    short f2EE;
-    short f2F0;
-    short f2F2;
-    int f2F4;
-    char pad_2F8[0x4B0];
-    Blk12_ levantPos_7A8;
-    Blk8_ levantRot_7B4;
-    char pad_7BC[0xC];
-    Blk72_ levantStatus_7C8;
-    int f810;
-    int minionBits_814[7];
-    char pad_830[8];
-    unsigned short f838[12];
-    unsigned short f850[18];
-    unsigned short f874[44];
-    unsigned short f8CC[22];
-    unsigned short f8F8[10];
-    unsigned short f90C[16];
-    unsigned short f92C[42];
-    int pad_980;
-    int f984;
-} TitleSave;
-#define SDECL TitleSave* s = (TitleSave*)&saveData_8008B570
+#define SDECL SaveData* s = &saveData_8008B570
 
 // Matched
 void sub_800A1F38(void* a)
@@ -973,29 +934,29 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 void sub_800A20F4(void)
 {
     SDECL;
-    s->levantStatus_7C8.f1C = 0;
-    s->levantStatus_7C8.f1D = 0xFF;
-    s->levantStatus_7C8.f1E = 0xFF;
+    s->weaponId_7E4 = 0;
+    s->armorId_7E5 = 0xFF;
+    s->otherId_7E6 = 0xFF;
 }
 
 // Matched
 void sub_800A2110(void)
 {
-    ((TitleSave*)&saveData_8008B570)->f2F4 = 0;
+    saveData_8008B570.nMapVars_2F4 = 0;
 }
 
 void sub_800A211C(void)
 {
     SDECL;
-    s->f984 = 5;
+    s->field_984 = 5;
     saveData_8008B570.field_0 = 0;
-    s->f2DE = -1;
+    s->chapterNext_2DE = -1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
-    s->levantPos_7A8 = dword_800B069C;
-    s->levantRot_7B4 = dword_800B06A8;
-    s->levantStatus_7C8 = dword_800A2730;
-    ((TitleSave*)&saveData_8008B570)->f810 = -2;
+    s->levant_7A8.pos = dword_800B069C;
+    s->levant_7A8.rot = dword_800B06A8;
+    *(Blk72_*)&s->levantStatus_7C8 = dword_800A2730;
+    saveData_8008B570.field_810 = -2;
     sub_800A2358();
     sub_800A20F4();
     sub_800A2110();
@@ -1008,7 +969,7 @@ void sub_800A2214(void)
     SDECL;
     for (i = 6; i >= 0; i--)
     {
-        s->minionBits_814[i] = 0;
+        s->allMinionsBitfields_814[i] = 0;
     }
 }
 
@@ -1016,14 +977,14 @@ void sub_800A223C(void)
 {
     {
         SDECL;
-        s->levantStatus_7C8 = dword_800A2730;
+        *(Blk72_*)&s->levantStatus_7C8 = dword_800A2730;
     }
     {
         int i;
         SDECL;
         for (i = 6; i >= 0; i--)
         {
-            s->minionBits_814[i] = 0;
+            s->allMinionsBitfields_814[i] = 0;
         }
     }
     EncodeName_8003F7C8(byte_800A08B4, saveData_8008B570.playerName_7D8);
@@ -1037,21 +998,21 @@ void sub_800A223C(void)
 // Not matched: gcc computes the base registers before the first store (original: store, then addiu of the base, saveData base = base - 0x24)
 void sub_800A22FC(void)
 {
-    char* b;
-    char* s;
-    playerYan_8008B594 = 0x64;
-    b = (char*)&playerYan_8008B594;
-    s = (char*)&saveData_8008B570;
-    b[5] = 3;
-    b[6] = 0xE;
-    b[4] = 0;
-    b[7] = 1;
-    s[0x7E4] = 1;
-    s[0x7E5] = 0;
-    s[0x7E6] = 0xFF;
-    if (*(unsigned int*)(b + 0x284) < 10)
+    SaveInventory* b;
+    SaveData* s;
+    playerYan_8008B594.yan_0 = 0x64;
+    b = &playerYan_8008B594;
+    s = &saveData_8008B570;
+    b->inventory_4[0][0].count = 3;
+    b->inventory_4[0][1].id = 0xE;
+    b->inventory_4[0][0].id = 0;
+    b->inventory_4[0][1].count = 1;
+    s->weaponId_7E4 = 1;
+    s->armorId_7E5 = 0;
+    s->otherId_7E6 = 0xFF;
+    if ((unsigned int)b->emptyCocoons_284 < 10)
     {
-        *(int*)(s + 0x2A8) = 10;
+        s->inv_24.emptyCocoons_284 = 10;
     }
 }
 #endif
@@ -1059,40 +1020,41 @@ INCLUDE_OVERLAY_ASM(title, sub_800A22FC);
 
 void sub_800A2358(void)
 {
-    char* b;
-    char* p;
+    SaveInventory* b;
+    unsigned char* p;
     int i;
     int j;
     int k;
-    playerYan_8008B594 = 0;
-    b = (char*)&playerYan_8008B594;
+    playerYan_8008B594.yan_0 = 0;
+    b = &playerYan_8008B594;
     for (i = 0; i < 0x40; i++)
     {
-        b[4 + i * 2] = 0xFF;
-        b[5 + i * 2] = 0;
+        b->inventory_4[0][i].id = 0xFF;
+        b->inventory_4[0][i].count = 0;
     }
     for (i = 0; i < 0x40; i++)
     {
-        b[0x204 + i * 2] = 0xFF;
-        b[0x205 + i * 2] = 0;
+        b->inventory_4[4][i].id = 0xFF;
+        b->inventory_4[4][i].count = 0;
     }
     for (i = 0; i < 0x40; i++)
     {
-        b[0x184 + i * 2] = 0xFF;
-        b[0x104 + i * 2] = 0xFF;
-        b[0x84 + i * 2] = 0xFF;
-        b[0x185 + i * 2] = 0;
-        b[0x105 + i * 2] = 0;
-        b[0x85 + i * 2] = 0;
+        b->inventory_4[3][i].id = 0xFF;
+        b->inventory_4[2][i].id = 0xFF;
+        b->inventory_4[1][i].id = 0xFF;
+        b->inventory_4[3][i].count = 0;
+        b->inventory_4[2][i].count = 0;
+        b->inventory_4[1][i].count = 0;
     }
-    *(int*)(b + 0x284) = 0;
-    *(int*)(b + 0x288) = 0;
-    *(int*)(b + 0x28C) = 0;
-    for (j = 0x12, p = b + 0x12; j >= 0; j--, p--)
+    b->emptyCocoons_284 = 0;
+    b->flags_288[0] = 0;
+    b->flags_288[1] = 0;
+    // walked with a byte pointer (p = b + j; indexing bits_290[j] does not get the pointer decrement)
+    for (j = 0x12, p = (unsigned char*)b + 0x12; j >= 0; j--, p--)
     {
         p[0x290] = 0;
     }
-    for (k = 0x13, p = b + 0x13; k >= 0; k--, p--)
+    for (k = 0x13, p = (unsigned char*)b + 0x13; k >= 0; k--, p--)
     {
         p[0x2A3] = 0;
     }
@@ -1106,11 +1068,11 @@ void sub_800A2424(void)
 void sub_800A242C(void)
 {
     SDECL;
-    s->f2E2 = -1;
-    s->f2E6 = -1;
-    s->f2EA = -1;
-    s->f2EE = -1;
-    s->f2F2 = -1;
+    s->field_2E2 = -1;
+    s->mapId_2E4[0].field_2 = -1;
+    s->mapId_2E4[1].field_2 = -1;
+    s->mapId_2E4[2].field_2 = -1;
+    s->mapId_2E4[3].field_2 = -1;
 }
 
 void sub_800A2450(void)
@@ -1143,35 +1105,35 @@ void sub_800A24E0(void)
 void sub_800A2540(void)
 {
     dword_8008B554 = 1;
-    FILL(f838, 12)
-    FILL(f850, 18)
-    FILL(f874, 44)
-    FILL(f8CC, 22)
-    FILL(f8F8, 10)
-    FILL(f90C, 16)
-    FILL(f92C, 42)
+    FILL(tbl_838, 12)
+    FILL(tbl_850, 18)
+    FILL(tbl_874, 44)
+    FILL(tbl_8CC, 22)
+    FILL(tbl_8F8, 10)
+    FILL(tbl_90C, 16)
+    FILL(tbl_92C, 42)
 }
 
 void sub_800A2650(void)
 {
     SDECL;
-    s->f2DE = -1;
-    s->f2E0 = 1;
-    s->f2E2 = -1;
-    s->f2E6 = -1;
-    s->f2EA = -1;
-    s->f2EE = -1;
-    s->f2F2 = -1;
-    s->f2E8 = 4;
+    s->chapterNext_2DE = -1;
+    s->field_2E0 = 1;
+    s->field_2E2 = -1;
+    s->mapId_2E4[0].field_2 = -1;
+    s->mapId_2E4[1].field_2 = -1;
+    s->mapId_2E4[2].field_2 = -1;
+    s->mapId_2E4[3].field_2 = -1;
+    s->mapId_2E4[1].field_0 = 4;
     dword_80091C94 = 1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
-    s->f810 = 0;
-    s->f2E4 = 0;
-    s->f2EC = 0;
-    s->f2F0 = 0;
-    s->levantPos_7A8 = dword_800B069C;
-    s->levantRot_7B4 = dword_800B06A8;
+    s->field_810 = 0;
+    s->mapId_2E4[0].field_0 = 0;
+    s->mapId_2E4[2].field_0 = 0;
+    s->mapId_2E4[3].field_0 = 0;
+    s->levant_7A8.pos = dword_800B069C;
+    s->levant_7A8.rot = dword_800B06A8;
     sub_800A2110();
     sub_800A2540();
 }

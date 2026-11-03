@@ -18,7 +18,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -4019,7 +4018,6 @@ int sub_80027330(short a0)
 int sub_80027358(int id)
 {
     int* p;
-    short* s;
     if (dword_80082678 == 1)
     {
         if (word_80091C40[0] != id)
@@ -4035,9 +4033,8 @@ int sub_80027358(int id)
         sub_8002728C();
         ConsumeFileRequest_8003BFD0(p[1], 0);
         sub_80028DC0();
-        s = (short*)&saveData_8008B570;
-        s[0x2F0 / 2] = id;
-        s[0x2F2 / 2] = id;
+        saveData_8008B570.mapId_2E4[3].field_0 = id;
+        saveData_8008B570.mapId_2E4[3].field_2 = id;
         dword_80082678 = 0;
         return 1;
     }
@@ -4482,11 +4479,10 @@ void sub_80027CF8(void* a0, int* a)
 // Matched
 void sub_8002830C(EventEntry* p)
 {
-    short* s = (short*)&saveData_8008B570;
-    s[0x2E6 / 2] = -1;
-    s[0x2EA / 2] = -1;
-    s[0x2EE / 2] = -1;
-    s[0x2F2 / 2] = -1;
+    saveData_8008B570.mapId_2E4[0].field_2 = -1;
+    saveData_8008B570.mapId_2E4[1].field_2 = -1;
+    saveData_8008B570.mapId_2E4[2].field_2 = -1;
+    saveData_8008B570.mapId_2E4[3].field_2 = -1;
     unknownFlags_8008D678 &= ~0x20000;
     dword_80091CA0 = 1;
     sub_80027118();
@@ -4621,28 +4617,20 @@ void sub_800283C0(void* a0, int* a)
         break;
     }
 }
+// the 0x104-byte header of a map file (sub_80028808)
 typedef struct
 {
-    int x;
-    int y;
-    int z;
-    short rx;
-    short ry;
-    short rz;
-} PosRot;
+    LevantPos start_0; // where Levant starts
+    char pad_14[0xF0];
+} MapFileHeader;
 typedef struct
 {
     char pad_0[0xC];
     int fC;
 } MapEntry16b;
-typedef struct
-{
-    char pad_0[0x7A8];
-    PosRot pos;
-} SaveData7A8;
 extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
-extern int sub_800B76B8(MapMesh* a0, PosRot* a1);
+extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
@@ -4650,7 +4638,7 @@ extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched
 void sub_80028808(void* a0, int* a1)
 {
-    char buf[0x104];
+    MapFileHeader buf;
     int n;
     int* p;
     unsigned int cnt;
@@ -4681,7 +4669,7 @@ void sub_80028808(void* a0, int* a1)
     dword_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
     dword_8008B500.nMeshes_4 = *p++;
     dword_8008B500.f8_8 = *p++;
-    MemCopy_800403E8((unsigned int*)buf, (unsigned int*)p, 0x104);
+    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)p, sizeof(buf));
     p = sub_80027A88(&dword_8008B500.meshes_C, &dword_8008B500.nMeshes_4, &dword_80091C68, (char*)p + 0x104);
     sub_800B73C0(dword_8008B500.meshes_C, dword_8008B500.nMeshes_4);
     p = sub_80027A88(&dword_8008B500.ents_14, &dword_8008B500.nEnts_10, &dword_80091C68, p);
@@ -4708,22 +4696,22 @@ void sub_80028808(void* a0, int* a1)
     }
     if (dword_80091C98)
     {
-        ((SaveData7A8*)&saveData_8008B570)->pos.x = stru_80091C78.pos[0];
-        ((SaveData7A8*)&saveData_8008B570)->pos.y = stru_80091C78.pos[1];
-        ((SaveData7A8*)&saveData_8008B570)->pos.z = stru_80091C78.pos[2];
-        ((SaveData7A8*)&saveData_8008B570)->pos.rx = dword_80091CA8[0];
-        ((SaveData7A8*)&saveData_8008B570)->pos.ry = dword_80091CA8[1];
-        ((SaveData7A8*)&saveData_8008B570)->pos.rz = dword_80091CA8[2];
+        saveData_8008B570.levant_7A8.pos.x = stru_80091C78.pos[0];
+        saveData_8008B570.levant_7A8.pos.y = stru_80091C78.pos[1];
+        saveData_8008B570.levant_7A8.pos.z = stru_80091C78.pos[2];
+        saveData_8008B570.levant_7A8.rot.vx = dword_80091CA8[0];
+        saveData_8008B570.levant_7A8.rot.vy = dword_80091CA8[1];
+        saveData_8008B570.levant_7A8.rot.vz = dword_80091CA8[2];
     }
     dword_80091C98 = 0;
     if (dword_80091C94)
     {
-        ((SaveData7A8*)&saveData_8008B570)->pos.x = ((PosRot*)buf)->x;
-        ((SaveData7A8*)&saveData_8008B570)->pos.y = ((PosRot*)buf)->y;
-        ((SaveData7A8*)&saveData_8008B570)->pos.z = ((PosRot*)buf)->z;
-        ((SaveData7A8*)&saveData_8008B570)->pos.rx = ((PosRot*)buf)->rx;
-        ((SaveData7A8*)&saveData_8008B570)->pos.ry = ((PosRot*)buf)->ry;
-        ((SaveData7A8*)&saveData_8008B570)->pos.rz = ((PosRot*)buf)->rz;
+        saveData_8008B570.levant_7A8.pos.x = buf.start_0.pos.x;
+        saveData_8008B570.levant_7A8.pos.y = buf.start_0.pos.y;
+        saveData_8008B570.levant_7A8.pos.z = buf.start_0.pos.z;
+        saveData_8008B570.levant_7A8.rot.vx = buf.start_0.rot.vx;
+        saveData_8008B570.levant_7A8.rot.vy = buf.start_0.rot.vy;
+        saveData_8008B570.levant_7A8.rot.vz = buf.start_0.rot.vz;
     }
     dword_80091C94 = 0;
     if (((int*)&stru_80091C78)[3] >= 0)
@@ -4736,7 +4724,7 @@ void sub_80028808(void* a0, int* a1)
     {
         for (i = 0; i < (int)dword_8008B500.nMeshes_4; i++)
         {
-            if (sub_800B76B8(&dword_8008B500.meshes_C[i], &((SaveData7A8*)&saveData_8008B570)->pos) >= 0)
+            if (sub_800B76B8(&dword_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
             {
                 saveData_8008B570.mapId_2E4[3].field_0 = i;
                 saveData_8008B570.mapId_2E4[3].field_2 = -1;

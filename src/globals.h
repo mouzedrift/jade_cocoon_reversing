@@ -99,7 +99,49 @@ typedef union Settings
         unsigned int k_24 : 1;
         unsigned int l_25 : 7;
     } bits;
+    unsigned char bytes[4]; // tested bytewise (tu_80034068)
 } Settings;
+
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} struct_v3;
+
+// Levant's position + rotation (SaveData.levant_7A8 == levantPos_8008BD18; rot == levantRot_8008BD24)
+typedef struct LevantPos
+{
+    struct_v3 pos;
+    SVECTOR rot; // rot.vy: facing angle
+} LevantPos;
+
+// one inventory slot (SaveData.inv_24.inventory_4; GAME's sub_800AD604 returns a category's table)
+typedef struct
+{
+    unsigned char id;    // 0xFF = empty
+    unsigned char count;
+} InvSlot;
+
+// saveData_8008B570.inv_24 == playerYan_8008B594 (code reaches it through either symbol)
+typedef struct
+{
+    int yan_0; // money
+    InvSlot inventory_4[5][0x40];
+    int emptyCocoons_284; // levantEmptyCocoons_8008B818
+    unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's sub_800AD68C
+    unsigned char bits_290[0x13]; // bit flags (GAME's sub_800AD0D4 / sub_800AD0F8)
+    unsigned char vars_2A3[0x14]; // GAME's sub_800AD154 / sub_800AD16C
+} SaveInventory;
+
+// a value saved per map (SaveData.mapVars_2F8, GAME's sub_800ADBA0 / sub_800ADC5C), keyed by the map ids
+typedef struct
+{
+    short area_0;
+    short map_2;
+    short sub_4;
+    short value_6;
+} SaveMapVar;
 
 typedef struct
 {
@@ -109,27 +151,57 @@ typedef struct
     Settings settings_1C; // == settingsFlags_8008B58C.word
     union
     {
-        int i;           // uiColor_8008B590
-        unsigned char b; // read as a byte by CONFIG
+        int i;            // uiColor_8008B590
+        unsigned char b;  // read as a byte by CONFIG
+        unsigned short h; // read as a halfword by WPNSHOP
     } uiColor_20;
-    int yan_24;       // playerYan_8008B594 (money)
-    char pad_28[0x2B4];
+    SaveInventory inv_24; // == playerYan_8008B594
     short chapter_2DC; // 0x8008B84C (Meos4: currentChapter)
-    char pad_2DE[6];
+    short chapterNext_2DE; // next chapter to play the intro of (CHAPTER)
+    short field_2E0;
+    short field_2E2;
     struct
     {
         short field_0;
         short field_2;
-    } mapId_2E4[4]; // 0x8008B854: [0..2].field_0 identify the map (Meos4: mapId)
-    char pad_2F4[0x4D4];
+    } mapId_2E4[4]; // 0x8008B854: [0..2].field_0 identify the map (Meos4: mapId); [3].field_0 = mesh
+    int nMapVars_2F4;
+    SaveMapVar mapVars_2F8[150];
+    LevantPos levant_7A8; // == levantPos_8008BD18
+    char field_7BC[0xC]; // returned by sub_80033AC4
+    // Levant's 0x48-byte status block (same layout as a minion's status_84)
     EntityStatus levantStatus_7C8; // levantStatus_8008BD38
     unsigned char playerName_7D8[MAX_PLAYER_NAME_LENGTH]; // playerName_8008BD48
-    char pad_7E2[0x32];
+    char pad_7E2[2];
+    unsigned char weaponId_7E4; // equippedWeaponId_8008BD54
+    unsigned char armorId_7E5;  // equippedArmor_8008BD55
+    unsigned char otherId_7E6;  // byte_8008BD56
+    char pad_7E7[0x25];
+    unsigned char level_80C; // levantCaptureLevel_8008BD7C (rank)
+    char pad_80D[3];
+    int field_810; // == dword_8008BD80
     unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
-    char pad_830[0x158];
+    int field_830; // model index (GAME's sub_800ACB64)
+    short field_834;
+    short field_836;
+    unsigned short tbl_838[12]; // the tables GAME's sub_800A53CC picks by mapId_2E4[0]/[1] (TITLE fills them with 0x8000)
+    unsigned short tbl_850[18];
+    unsigned short tbl_874[44];
+    unsigned short tbl_8CC[22];
+    unsigned short tbl_8F8[10];
+    unsigned short tbl_90C[16];
+    unsigned short tbl_92C[42];
+    int pad_980;
+    int field_984;
     Minion minions[15];
     Item items[12];
 } SaveData;
+
+typedef char SaveData_check_7A8[(int)&((SaveData*)0)->levant_7A8 == 0x7A8 ? 1 : -1];
+typedef char SaveData_check_810[(int)&((SaveData*)0)->field_810 == 0x810 ? 1 : -1];
+typedef char SaveData_check_988[(int)&((SaveData*)0)->minions == 0x988 ? 1 : -1];
+typedef char SaveData_check_80C[(int)&((SaveData*)0)->level_80C == 0x80C ? 1 : -1];
+typedef char SaveData_check_2DC[(int)&((SaveData*)0)->chapter_2DC == 0x2DC ? 1 : -1];
 
 
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
@@ -496,6 +568,9 @@ extern volatile int gnFrame_8008D610;
 extern volatile int xaTimer_8008D450;
 extern volatile int dword_8008D404;
 extern SaveData saveData_8008B570;
+extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
+extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
+extern SVECTOR levantRot_8008BD24;   // == saveData_8008B570.levant_7A8.rot
 extern unsigned int allMinionsBitfields_8008BD84[7];
 extern unsigned char playerName_8008BD48[MAX_PLAYER_NAME_LENGTH];
 extern unsigned long bDoubleBuffer_8008D428;

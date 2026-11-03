@@ -236,18 +236,6 @@ extern int* dword_8008D46C;
 
 extern int* dword_800B1264;
 
-typedef struct GameSave3_1
-{
-    char pad_0[0x2e4];
-    short f2e4;
-    short pad_2e6;
-    short f2e8;
-    short pad_2ea;
-    short f2ec;
-    short pad_2ee;
-    short f2f0;
-} GameSave3_1;
-
 typedef struct GameS3_1
 {
     unsigned short a, b, c;
@@ -266,11 +254,6 @@ extern int dword_80091C54;
 extern int dword_80091C9C;
 
 extern int dword_80091C8C;
-
-typedef struct GameVec3_1
-{
-    int x, y, z;
-} GameVec3_1;
 
 typedef struct GameTask_1
 {
@@ -371,7 +354,7 @@ typedef struct GameQ_1
 
 extern int sub_8001DD44(Actor* a, int b, int c, int d);
 
-extern void ReflectPoint_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
+extern void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out);
 
 extern void sub_800A7654();
 
@@ -387,7 +370,6 @@ extern void sub_800A6534(int a, int b);
 
 extern void sub_800A654C(int a, int b);
 
-extern GameVec3_1 levantPos_8008BD18; // saveData_8008B570 + 0x7A8
 
 extern int dword_800AEB7C;
 
@@ -428,13 +410,6 @@ extern int dword_800AEBD8;
 extern int dword_800B199C[];
 
 extern short sinTable_80084540[];
-
-typedef struct GameSave_1
-{
-    char pad_0[0x2f0];
-    short f2f0;
-    short f2f2;
-} GameSave_1;
 
 typedef struct GameObj5_1
 {
@@ -591,24 +566,6 @@ typedef struct GameMapEnt_1
     char pad_6[10];
 } GameMapEnt_1;
 
-typedef struct GameSave2_1
-{
-    char pad_0[0x2e4];
-    short f2e4;
-    short pad_2e6;
-    short f2e8;
-    short pad_2ea;
-    short f2ec;
-    char pad_2ee[0x54A];
-    unsigned short f838[12]; // the tables sub_800A53CC picks by f2e4/f2e8 (title.c fills them with 0x8000)
-    unsigned short f850[18];
-    unsigned short f874[44];
-    unsigned short f8cc[22];
-    unsigned short f8f8[10];
-    unsigned short f90c[16];
-    unsigned short f92c[42];
-} GameSave2_1;
-
 extern GameMapEnt_1** dword_800B0608[];
 
 extern void sub_800A4940(int a, int b);
@@ -627,14 +584,6 @@ typedef struct GameVec4_1
 {
     int x, y, z, w;
 } GameVec4_1;
-
-typedef struct GameSave4_1
-{
-    char pad_0[0x7a8];
-    int f7a8;
-    int pad_7ac;
-    int f7b0;
-} GameSave4_1;
 
 typedef struct GameO_1
 {
@@ -888,18 +837,6 @@ typedef struct G2Ctx2
     G2Inner2* f24;
 } G2Ctx2;
 
-typedef struct G2Bits
-{
-    char pad_0[0x290];
-    unsigned char b[0x20];
-} G2Bits;
-
-typedef struct G2Bits3
-{
-    char pad_0[0x2A3];
-    unsigned char c[0x20];
-} G2Bits3;
-
 extern G2Ctx* dword_8008B4CC;
 
 extern G2Ctx2* dword_8008B4A4;
@@ -922,16 +859,6 @@ extern void sub_800AC380(int);
 extern int levantEmptyCocoons_8008B818;
 
 extern int* dword_8007DC60;
-
-extern unsigned char playerYan_8008B594[];
-
-#define G2SAVE ((unsigned char*)&saveData_8008B570)
-
-typedef struct G2Sv
-{
-    char pad_0[0x2FE];
-    short s;
-} G2Sv;
 
 typedef struct G2Act
 {
@@ -1000,15 +927,6 @@ extern void FirFilterInit_8001450C(int*, void*, int, int);
 
 extern char dword_800795C0;
 
-typedef struct G2Stat
-{
-    char pad_0[0x7D0];
-    unsigned short cur;
-    unsigned short max;
-    unsigned short cur2;
-    unsigned short max2;
-} G2Stat;
-
 typedef struct G2P
 {
     short s0;
@@ -1017,40 +935,15 @@ typedef struct G2P
     unsigned short u6;
 } G2P;
 
-typedef struct G2E
-{
-    char pad_0[0x2F8];
-    short a;
-    short b;
-    short c;
-    short d;
-} G2E;
-
-typedef struct G2Save2
-{
-    char pad_0[0x2F4];
-    int n;
-} G2Save2;
-
 extern unsigned char equippedWeaponId_8008BD54;
 
 extern unsigned char equippedArmor_8008BD55;
 
 extern unsigned char byte_8008BD56;
 
-extern unsigned char* sub_800AD4D8();
+extern InvSlot* sub_800AD4D8();
 
 extern int sub_800AD8E4();
-
-typedef struct G2Sv4
-{
-    char pad_0[0x7E4];
-    unsigned char b7E4;
-    unsigned char b7E5;
-    char pad_7E6[0x4A];
-    int f830;
-    short s834;
-} G2Sv4;
 
 extern int dword_800B116C[];
 
@@ -1084,12 +977,6 @@ extern void sub_800ACB64();
 extern void PlaySfx_80031494(int);
 
 extern void PlaySeqSlot_80031160(int, int);
-
-typedef struct G2Sv5
-{
-    char pad_0[0x7B6];
-    unsigned short u7B6;
-} G2Sv5;
 
 typedef struct G2Q
 {
@@ -1126,8 +1013,6 @@ extern int sub_800189F8();
 extern short word_8008D782;
 
 extern void sub_8004ED78(int);
-
-#define G2LEV ((G2V12*)((char*)&saveData_8008B570 + 0x7A8))
 
 extern int sub_8003B9E0(int*, int*);
 
@@ -1213,9 +1098,9 @@ extern int sub_800AC3E4();
 
 extern int sub_800AC38C();
 
-extern unsigned char* sub_800AD58C();
+extern InvSlot* sub_800AD58C();
 
-extern unsigned char* sub_800AD604(int);
+extern InvSlot* sub_800AD604(int);
 
 extern int sub_800AD374(int);
 
@@ -1231,19 +1116,7 @@ extern unsigned char* sub_800AC7B4(int);
 
 extern int sub_800AD73C(int);
 
-typedef struct G2Flags
-{
-    char pad_0[0x288];
-    unsigned int w[2];
-} G2Flags;
-
 extern int sub_800AD8BC();
-
-typedef struct G2Save
-{
-    char pad_0[0x24];
-    int f24;
-} G2Save;
 
 extern void FreeModelAnimSet_80025884(int);
 
