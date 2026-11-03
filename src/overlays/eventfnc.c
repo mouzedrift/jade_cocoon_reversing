@@ -3,6 +3,76 @@
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
 
+#if 0
+// Not matched: FindLevantMesh_800B80C8 is inlined here; the original keeps its result in $s3 and sets it to 1 before
+// the mesh loop (0 on exhaustion), this C returns it in $v0, one saved register and one word short
+int sub_800B6DD4(EvEntEventfnc* o)
+{
+    EvQuadEventfnc v[4];
+    int n[4];
+    int ret;
+    int i;
+    int found;
+    EvVtxEventfnc* vt;
+    EvQuadEventfnc* q;
+    EvQuadEventfnc* q2;
+    int d;
+    ret = 0;
+    i = 0;
+    sub_800B82C8((int*)&levantPos_8008BD18, (int*)&o->pos_48, ((EvMapEventfnc*)dword_8008B500)->ents_14,
+                 ((EvMapEventfnc*)dword_8008B500)->entFlags_18, ((EvMapEventfnc*)dword_8008B500)->nEnts_10);
+    o->f8C_8C = -1;
+    o->f88_88 = -1;
+    for (;;)
+    {
+        found = EvFindLevantMesh(o);
+        if (found)
+        {
+            break;
+        }
+        if (i >= 2)
+        {
+            if (FindDuplicatePoint_800B8028((int*)&levantPos_8008BD18, v))
+            {
+                return ret;
+            }
+            printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
+            exit(1);
+        }
+        sub_800B8220((int*)&levantPos_8008BD18, (int)&o->pos_48, (int)&((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
+        vt = ((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
+        q = (EvQuadEventfnc*)(i * 16 + (int)v);
+        q->x_0 = vt[o->f8C_8C % 3].x_0;
+        q->y_2 = vt[o->f8C_8C % 3].y_2;
+        q->z_4 = vt[o->f8C_8C % 3].z_4;
+        q2 = q + 1;
+        q2->x_0 = vt[(o->f8C_8C + 1) % 3].x_0;
+        q2->y_2 = vt[(o->f8C_8C + 1) % 3].y_2;
+        q2->z_4 = vt[(o->f8C_8C + 1) % 3].z_4;
+        i++;
+    }
+    GetTriHeight_800B83E4((int*)&levantPos_8008BD18, &((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84], o->f80_80);
+    if (o->f88_88 == -1)
+    {
+        return ret;
+    }
+    if (o->f8C_8C == -1)
+    {
+        return ret;
+    }
+    d = (*(unsigned short*)((char*)&levantPos_8008BD18 + 0xE) - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
+    if (d > 0xC00 || (d > 0x400 && d < 0x800))
+    {
+        ret = 1;
+    }
+    else
+    {
+        ret = -1;
+    }
+    return ret;
+}
+#endif
+
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B6DD4);
 
 int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)

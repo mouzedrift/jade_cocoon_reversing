@@ -14,22 +14,24 @@ typedef struct EvInsEventfnc
     int c_C;
 } EvInsEventfnc;
 
-typedef struct EvEntEventfnc
-{
-    char pad_0[0x7C];
-    int f7C_7C;
-    int f80_80;
-    int f84_84;
-    int pad_88;
-    int f8C_8C;
-} EvEntEventfnc;
-
 typedef struct EvVecEventfnc
 {
     int x_0;
     int y_4;
     int z_8;
 } EvVecEventfnc;
+
+typedef struct EvEntEventfnc
+{
+    char pad_0[0x48];
+    EvVecEventfnc pos_48;
+    char pad_54[0x28];
+    int f7C_7C;
+    int f80_80;
+    int f84_84;
+    int f88_88;
+    int f8C_8C;
+} EvEntEventfnc;
 
 extern EvVecEventfnc levantPos_8008BD18;
 
@@ -159,7 +161,10 @@ typedef struct EvMapEventfnc
     unsigned int nMeshes_4;
     int f8_8;
     EvMeshEventfnc* meshes_C;
-    char pad_10[0x10];
+    int nEnts_10;
+    char* ents_14;
+    unsigned char* entFlags_18;
+    char pad_1C[4];
     EvMeshEventfnc* meshes20_20;
     int f24_24;
     EvMeshEventfnc* mesh_28;
@@ -218,6 +223,29 @@ static inline int EvFindTri(int* out, EvMapEventfnc* map, EvVecEventfnc* pos)
 }
 
 extern int FindTriAtXZ_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
+
+// FindLevantMesh_800B80C8, inlined into sub_800B6DD4
+static inline int EvFindLevantMesh(EvEntEventfnc* e)
+{
+    unsigned int i;
+    unsigned int k = e->f84_84;
+    int r;
+    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++, k++)
+    {
+        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
+        r = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
+        if (r >= 0)
+        {
+            e->f80_80 = r;
+            if (e->f84_84 != k)
+            {
+                e->f84_84 = k;
+            }
+            return 1;
+        }
+    }
+    return 0;
+}
 
 extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
 
