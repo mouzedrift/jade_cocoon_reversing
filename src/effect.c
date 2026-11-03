@@ -88,10 +88,52 @@ int sub_80014164(int x)
 {
     return (x * x * x) / 400;
 }
-INCLUDE_ASM(sub_8001419C);
-INCLUDE_ASM(sub_80014200);
-#if 0
-// Not matched
+// Matched
+void sub_8001419C(unsigned char* p, short* out)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int x = p[10] * 47 / (p[10] + a);
+    int y = p[8] * 47 / (p[8] + p[6]);
+    out[0] = x;
+    out[1] = y;
+}
+// Matched
+int sub_80014200(unsigned char* p)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int v = p[10] * 200 / (p[10] + a);
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
+    {
+        v = 1;
+    }
+    return v;
+}
+// Matched
+int sub_8001425C(unsigned char* p)
+{
+    int a = (p[7] + p[9]) >> 1;
+    int v = a * 200 / (a + p[10]);
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
+    {
+        v = 1;
+    }
+    return v;
+}
+// Matched
 int sub_800142B8(unsigned char* p)
 {
     int v = p[8] * 200 / (p[8] + p[6]);
@@ -108,25 +150,23 @@ int sub_800142B8(unsigned char* p)
     }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_800142B8);
-#if 0
-// Not matched
+// Matched
 int sub_80014308(unsigned char* p)
 {
     int v = p[6] * 200 / (p[6] + p[8]);
-    if (v <= 0)
+    if (v > 0)
+    {
+        if (v > 200)
+        {
+            v = 200;
+        }
+    }
+    else
     {
         v = 1;
     }
-    else if (v >= 0xC9)
-    {
-        v = 0xC8;
-    }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_80014308);
 // Matched
 int sub_80014358(unsigned int mask)
 {
@@ -147,24 +187,23 @@ int sub_80014390(int arg0)
 }
 #endif
 INCLUDE_ASM(sub_80014390);
-#if 0
-// Not matched (13 words): the masked copy of a0 lands in $a0 instead of $a1
+// Matched
 int sub_80014444(int a0)
 {
+    unsigned int v = a0 & 0xFF;
     int r = 0;
-    if ((a0 & 0xFF) >= 8)
+    if (v >= 8)
     {
-        r = sub_800A11D8((a0 - 8) & 0xFF);
+        v = a0 - 8;
+        r = sub_800A11D8(v & 0xFF);
     }
-    else if ((a0 & 0xFF) != 0)
+    else if (v != 0)
     {
-        r = (int)sub_80010598(3, (a0 - 1) & 0xFF);
+        v = a0 - 1;
+        r = (int)sub_80010598(3, v & 0xFF);
     }
     return r;
 }
-
-#endif
-INCLUDE_ASM(sub_80014444);
 #if 0
 // Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
 int sub_8001449C(int a0)
@@ -203,41 +242,64 @@ void sub_80014574(struct_16* p, int a1, int a2)
     p->field_8 = 0;
     p->field_C = 0;
 }
-INCLUDE_ASM(sub_80014588);
+// Matched
+void sub_80014588(int* a0, struct_16* a1, unsigned int a2)
+{
+    unsigned int i;
+    a0[a2 % a1->field_4] = a1->field_8;
+    a1->field_C = 0;
+    for (i = 0; i < a1->field_4; i++)
+    {
+        a1->field_C += a0[(a2 - i) % a1->field_4] * ((int*)a1->field_0)[i];
+    }
+    a1->field_C >>= 12;
+}
+void sub_80014638(struct_obj_D* p, int* q);
+// Matched
+void sub_80014618(struct_obj_D* p, int* q)
+{
+    q[0x28 / 4] = 2;
+    q[0x3C / 4] = 0;
+    q[0x2C / 4] = 0;
+    p->field_8 = (void (*)(void))sub_80014638;
+}
 INCLUDE_ASM(sub_80014638);
-#if 0
-extern EventNode* dword_8008B4A8;
-extern EventNode* dword_8008D60C;
-// Not matched: 16 words, loop counter/accumulator register assignment
+// Matched
 int sub_800147FC(void)
 {
-    int i = 0;
-    int n = i;
-    EventNode* p = dword_8008B4A8;
-    int count = p->count;
-    for (i = 0; i < count; i++)
+    int i;
+    int c;
+    EventNode* head;
+    EventNode* n;
+    int count;
+    EventNode* head2;
+    EventNode* n2;
+    int j;
+    i = 0;
+    head = dword_8008B4A8;
+    c = i;
+    count = head->count;
+    for (n = head; i < count; i++)
     {
-        if ((p->entry.flags & 0x8001) == 1)
+        if ((n->entry.flags & 0x8001) == 1)
         {
-            n++;
+            c++;
         }
-        p = p->next;
+        n = n->next;
     }
-    p = dword_8008D60C;
-    count = p->count;
-    for (i = 0; i < count; i++)
+    head2 = dword_8008D60C;
+    j = 0;
+    count = head2->count;
+    for (n2 = head2; j < count; j++)
     {
-        if ((p->entry.flags & 0x8001) == 1)
+        if ((n2->entry.flags & 0x8001) == 1)
         {
-            n++;
+            c++;
         }
-        p = p->next;
+        n2 = n2->next;
     }
-    return n;
+    return c;
 }
-
-#endif
-INCLUDE_ASM(sub_800147FC);
 // Matched
 void sub_800148A0(void)
 {

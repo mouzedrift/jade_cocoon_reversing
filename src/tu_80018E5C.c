@@ -124,29 +124,70 @@ INCLUDE_DATA(dword_80073008);
 INCLUDE_DATA(dword_80073028);
 INCLUDE_DATA(dword_8007303C);
 
-#if 0
-// Not matched (14 words): basic block order
+// Matched
 int sub_80018E5C(char* a0, unsigned int a1)
 {
     struct_4s* t = (struct_4s*)(a0 + 0x108);
     int v = 0;
-    if (a1 >= 10)
+    switch (a1)
     {
-        if (a1 == 10)
-        {
-            v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
-        }
-    }
-    else
-    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
         v = t[a1].field_0;
+        break;
+    case 10:
+        v = sub_8001F03C((int)a0, ((int*)a0)[0xD0 / 4], -1, 0x10);
+        break;
     }
     return v;
 }
-
-#endif
-INCLUDE_ASM(sub_80018E5C);
-INCLUDE_ASM(sub_80018EBC);
+// Matched
+void sub_80018EBC(int a0, unsigned int* a1)
+{
+    unsigned int f = *a1;
+    int* r = 0;
+    if (f & 0x200)
+    {
+        r = (f & 1) ? dword_8007A14C : dword_8007A0EC;
+    }
+    else if (f & 0x100)
+    {
+        r = (f & 1) ? dword_8007A140 : dword_8007A0E0;
+    }
+    else if (f & 0x80)
+    {
+        r = (f & 1) ? dword_8007A134 : dword_8007A0D4;
+    }
+    else if (f & 0x40)
+    {
+        r = (f & 1) ? dword_8007A128 : dword_8007A0C8;
+    }
+    else if (f & 0x20)
+    {
+        r = (f & 1) ? dword_8007A11C : dword_8007A0BC;
+    }
+    else if (f & 0x10)
+    {
+        r = (f & 1) ? dword_8007A110 : dword_8007A0B0;
+    }
+    else if (f & 0x8)
+    {
+        r = (f & 1) ? sub_8007A104 : dword_8007A0A4;
+    }
+    else if (f & 1)
+    {
+        r = dword_8007A0F8;
+    }
+    sub_8001DAAC(a0, r);
+}
 INCLUDE_ASM(sub_8001900C);
 INCLUDE_ASM(sub_8001980C);
 typedef struct
@@ -201,47 +242,36 @@ void sub_80019AF4(unsigned int* arg0, unsigned int* arg1)
 {
     sub_800403E8(arg0, arg1, 12);
 }
-#if 0
-typedef struct
+// Matched
+void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2)
 {
-    unsigned int v[3];
-} struct_u3;
-extern unsigned int dword_8007303C[];
-// Not matched (5 words): the +6 field offset is folded into the pointer
-void sub_80019B14(unsigned char* base, unsigned short* a1, unsigned short* a2)
-{
-    struct_u3 local;
-    int j;
+    struct_int3 masks;
     int k;
-    short* q;
-    unsigned int m1;
-    unsigned int m2;
-    local = *(struct_u3*)dword_8007303C;
-    for (j = 0; j < 3; j++)
+    int i;
+    masks = dword_8007303C;
+    for (k = 0; k < 3; k++)
     {
-        m1 = m2 = 0;
-        if (a1[j] < 2)
+        int set = 0;
+        int clr = 0;
+        if (a1[k] < 2)
         {
-            m1 = local.v[j];
+            clr = masks.m[k];
         }
-        if (a2[j] == 0)
+        if (a2[k] == 0)
         {
-            m2 = local.v[j];
+            set = masks.m[k];
         }
-        q = (short*)base;
-        for (k = 0; k < 25; k++)
+        for (i = 0; i < 25; i++)
         {
-            if (m1 & (1 << k))
+            int bit = 1 << i;
+            if (clr & bit)
             {
-                q[3] &= ~2;
+                p[i * 4 + 3] &= ~2;
             }
-            if (m2 & (1 << k))
+            if (set & bit)
             {
-                q[3] |= 0x10;
+                p[i * 4 + 3] |= 0x10;
             }
-            q += 4;
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_80019B14);

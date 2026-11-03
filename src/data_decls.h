@@ -21,5 +21,25 @@ extern char name[];
 
 extern char aAssertionFaile_3[];
 extern char aEffectC[];
+extern unsigned char dword_8007C2E4[];
+extern short word_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
+extern int stru_8008D534[4];
+extern struct_u8x4 dword_80072270;
+extern int dword_8007A0A4[];
+extern int dword_8007A0B0[];
+extern int dword_8007A0BC[];
+extern int dword_8007A0C8[];
+extern int dword_8007A0D4[];
+extern int dword_8007A0E0[];
+extern int dword_8007A0EC[];
+extern int dword_8007A0F8[];
+extern int sub_8007A104[];
+extern int dword_8007A110[];
+extern int dword_8007A11C[];
+extern int dword_8007A128[];
+extern int dword_8007A134[];
+extern int dword_8007A140[];
+extern int dword_8007A14C[];
+extern struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
 
 #endif

@@ -470,6 +470,7 @@ INCLUDE_DATA(dword_80083CE8);
 INCLUDE_DATA(dword_80083D00);
 INCLUDE_DATA(dword_80084330);
 INCLUDE_DATA(asc_80084350);
+INCLUDE_DATA(word_80084540);
 
 // Matched
 int sub_80014954(void)
@@ -483,6 +484,18 @@ void sub_8001497C(void)
     p[0x28 / 4] |= 1;
 }
 INCLUDE_ASM(sub_800149A4);
-INCLUDE_ASM(sub_80014C28);
+// Matched
+void sub_80014C28(int* a0, int* a1)
+{
+    if (word_8008D780 == 1)
+    {
+        sub_800306FC(6);
+        *a0 = (*a0 & ~1) | 0x8000;
+    }
+    if (++a1[1] % 10 == 0)
+    {
+        sub_800C32DC(a1[7], 30, 0, 0);
+    }
+}
 INCLUDE_ASM(sub_80014CCC);
 INCLUDE_ASM(sub_80015478);
