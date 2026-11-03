@@ -1369,10 +1369,10 @@ int sub_800C0BF0()
     s.field_40 = (int)sub_80024E38(m);
     s.field_44 = (int)sub_80024E64(m);
     s.field_4C = 1;
-    dword_800C9190.obj = (char*)CreateActor_8001D45C((int)&s);
+    dword_800C9190.obj = (Actor*)CreateActor_8001D45C((int)&s);
     sub_8001D68C((struct_obj_A*)dword_800C9190.obj, 0);
     x = (int)sub_80024F00(m, k);
-    sub_80019B14(*(int*)(dword_800C9190.obj + 0x134), x, (int)sub_80024F38(m, k));
+    sub_80019B14(dword_800C9190.obj->f134, x, (int)sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1455,25 +1455,25 @@ int sub_800C0F78(int a)
     GetMinionStatus_800107A0(3, a);
 }
 
-char* sub_800C0F9C()
+int* sub_800C0F9C()
 {
-    return dword_800C9190.obj + 0x38;
+    return dword_800C9190.obj->pos_38;
 }
 
 int sub_800C0FAC()
 {
-    return *(int*)(dword_800C9190.obj + 0x1C4);
+    return (int)dword_800C9190.obj->f1C4;
 }
 
 void sub_800C0FC4(int* p)
 {
-    char* q = dword_800C9190.obj;
-    p[0] = *(int*)(q + 0x14C);
-    p[1] = (int)(q + 0x38);
-    p[2] = *(int*)(q + 0x1C4);
-    p[3] = *(int*)(q + 0x1C8);
-    p[11] = *(int*)(q + 0x144);
-    p[12] = (int)(q + 0x2C);
+    Actor* q = dword_800C9190.obj;
+    p[0] = q->f14C;
+    p[1] = (int)q->pos_38;
+    p[2] = (int)q->f1C4;
+    p[3] = (int)q->f1C8;
+    p[11] = (int)q->f144;
+    p[12] = (int)&q->f2C;
 }
 
 int sub_800C100C(int a)
@@ -1581,7 +1581,7 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     v[0] /= 1024;
     v[1] /= 1024;
     v[2] /= 1024;
-    if (((int*)levantPos_8008BD18)[1] < v[1] || u->size_8 < 0x800)
+    if (levantPos_8008BD18.pos_0[1] < v[1] || u->size_8 < 0x800)
     {
         t->flags = (t->flags & ~1) | 0x8000;
     }
@@ -2246,16 +2246,15 @@ void sub_800C371C(EventEntry* t, void* arg)
 
 
 #if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
-extern char* dword_8008B4A4;
 extern void PlaySfx_80031494(int id);
 extern void sub_800C3DF8();
 extern void sub_800C3D34();
 void sub_800C3B50(int* p, int id)
 {
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    char* b;
-    int* ent;
-    int* q;
+    BatOrb_a* b;
+    BatClip_a* ent;
+    BatHero_a* q;
     int f;
     int idx;
     if (e == 0)
@@ -2263,37 +2262,37 @@ void sub_800C3B50(int* p, int id)
         return;
     }
     b = e->buffer;
-    *(int*)(b + 0x44) = p[0];
-    *(int*)(b + 0x48) = p[1];
-    *(int*)(b + 0x4C) = p[2];
-    *(int*)b = 0;
-    *(short*)(b + 0xE) = sub_80020F00(effectFile_80091BD0, 0, id);
-    *(int*)(b + 0x30) = 0x1000;
-    *(int*)(b + 0x34) = 0;
-    *(short*)(b + 0x84) = 0;
-    *(short*)(b + 0x82) = 0;
-    *(short*)(b + 0x80) = 0;
-    *(int*)(b + 0x38) = 0;
-    *(int*)(b + 0x3C) = -0xC8;
-    *(int*)(b + 0x40) = 0;
+    b->pos_44[0] = p[0];
+    b->pos_44[1] = p[1];
+    b->pos_44[2] = p[2];
+    b->frame_0 = 0;
+    b->fx_E = sub_80020F00(effectFile_80091BD0, 0, id);
+    b->alpha_30 = 0x1000;
+    b->f34 = 0;
+    b->rot_80[2] = 0;
+    b->rot_80[1] = 0;
+    b->rot_80[0] = 0;
+    b->vel_38[0] = 0;
+    b->vel_38[1] = -0xC8;
+    b->vel_38[2] = 0;
     f = (&effectOutcomeFlag_8008D780)[1];
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     if (f == 0)
     {
     idx = sub_80020F00(effectFile_80091BD0, 1, 0x1F);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    ent = (int*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
-    *(int**)(b + 0x88) = ent;
-    *(void**)(b + 0x94) = malloc3_8003FC4C(0x54);
-    sub_800218A8(ent[1], *(void**)(b + 0x94), 1);
-    sub_80039FE4(ent[1], ent[1] + 0x54, *(int*)(b + 0x94));
-    q = *(int**)(dword_8008B4A4 + 0x24);
-    *(int*)(b + 0x44) = q[0x5E4 / 4];
-    *(int*)(b + 0x48) = q[0x5E8 / 4];
-    *(int*)(b + 0x4C) = q[0x5EC / 4];
-    *(int*)(b + 0x44) += ((int*)levantPos_8008BD18)[0];
-    *(int*)(b + 0x48) += ((int*)levantPos_8008BD18)[1];
-    *(int*)(b + 0x4C) += ((int*)levantPos_8008BD18)[2];
+    ent = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
+    b->clip_88 = ent;
+    b->model_94 = malloc3_8003FC4C(0x54);
+    sub_800218A8((int)ent->models_4, b->model_94, 1);
+    sub_80039FE4((int)ent->models_4, (int)(ent->models_4 + 0x54), (int)b->model_94);
+    q = dword_8008B4A4->hero_24;
+    b->pos_44[0] = q->pos_5E4[0];
+    b->pos_44[1] = q->pos_5E4[1];
+    b->pos_44[2] = q->pos_5E4[2];
+    b->pos_44[0] += levantPos_8008BD18.pos_0[0];
+    b->pos_44[1] += levantPos_8008BD18.pos_0[1];
+    b->pos_44[2] += levantPos_8008BD18.pos_0[2];
     e->cb_8 = (EventEntryFn)sub_800C3D34;
     PlaySfx_80031494(0x3F);
     }
@@ -2307,38 +2306,38 @@ void sub_800C3B50(int* p, int id)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C3B50);
 
-void sub_800C3D34(EventEntry* t, BatFade_a* u)
+void sub_800C3D34(EventEntry* t, BatOrb_a* u)
 {
-    int* m = u->f88;
-    int v = u->f30 - 0x100;
-    u->f30 = v;
+    BatClip_a* m = u->clip_88;
+    int v = u->alpha_30 - 0x100;
+    u->alpha_30 = v;
     if (v > 0)
     {
-        sub_8003A6C4(v, m[1], m[1] + 0x54, u->f94);
+        sub_8003A6C4(v, (int)m->models_4, (int)(m->models_4 + 0x54), (int)u->model_94);
     }
     else
     {
         t->flags = (t->flags & ~1) | 0x8000;
-        sub_80021804(u->f94, 1);
-        free3_8003FC6C(u->f94);
+        sub_80021804(u->model_94, 1);
+        free3_8003FC6C(u->model_94);
     }
-    sub_8004D1EC(m[1], (int)pOT_8008D690, (int)u->f44, (int)u->f80, (int)stru_8008D534, ((0x1000 - u->f30) << 16) | 0xB0, 0);
+    sub_8004D1EC((int)m->models_4, (int)pOT_8008D690, (int)u->pos_44, (int)u->rot_80, (int)stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
 }
 
 void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
 {
     int v[3];
-    int* q;
+    BatHero_a* q;
     BatOrb_a* w;
     w = u;
     sub_800C1A5C(u->pos_44, (short*)dword_800795D4, effectFile_80091BD0[0x20 / 4] + u->fx_E * 52, 0x1000);
-    q = *(int**)(dword_8008B4A4 + 0x24);
-    v[0] = q[0x5E4 / 4];
-    v[1] = q[0x5E8 / 4];
-    v[2] = q[0x5EC / 4];
-    v[0] += ((int*)levantPos_8008BD18)[0];
-    v[1] += ((int*)levantPos_8008BD18)[1];
-    v[2] += ((int*)levantPos_8008BD18)[2];
+    q = dword_8008B4A4->hero_24;
+    v[0] = q->pos_5E4[0];
+    v[1] = q->pos_5E4[1];
+    v[2] = q->pos_5E4[2];
+    v[0] += levantPos_8008BD18.pos_0[0];
+    v[1] += levantPos_8008BD18.pos_0[1];
+    v[2] += levantPos_8008BD18.pos_0[2];
     if (DistanceSquared3D_8003B80C(v, u->pos_44) >= 0x57E5)
     {
         u->vel_38[0] += ((v[0] - u->pos_44[0]) << 10) / 70;

@@ -6,6 +6,8 @@
 
 #include "globals.h"
 
+#include "actor.h"
+
 extern unsigned char dword_800C8B30;
 
 extern int sub_800A2AB4();
@@ -468,13 +470,20 @@ typedef struct BatTask_a
 } BatTask_a;
 
 
-extern short levantPos_8008BD18[];
+typedef struct BatLevant_a
+{
+    int pos_0[3];
+    short fC;
+    short angle_E;
+} BatLevant_a;
+
+extern BatLevant_a levantPos_8008BD18;
 
 extern unsigned int dword_800B1228;
 
 typedef struct BatCtx_a
 {
-    char* obj;
+    Actor* obj;
     int f4;
     int f8;
     int fc;
@@ -551,11 +560,11 @@ extern int sub_800C0F78(int);
 
 extern void StartScreenFlash_8001C02C(void*);
 
-extern void sub_8001DB00(char*, int, int);
+extern void sub_8001DB00(Actor*, int, int);
 
-extern void sub_80018E5C(char*, int);
+extern void sub_80018E5C(Actor*, int);
 
-extern void sub_80018EBC(char*, int);
+extern void sub_80018EBC(Actor*, int);
 
 extern int sub_8001E1DC(void*);
 
@@ -934,17 +943,6 @@ extern void free3_8003FC6C(void* p);
 
 extern void sub_800C4090(int a0, int a1, int c, int a3);
 
-typedef struct BatFade_a
-{
-    char pad0[0x30];
-    int f30;
-    char pad34[0x10];
-    char f44[0x3C];
-    char f80[8];
-    int* f88;
-    char pad8C[8];
-    int* f94;
-} BatFade_a;
 
 extern void sub_8003A6C4();
 
@@ -957,12 +955,31 @@ typedef struct BatOrb_a
     int frame_0;
     char pad4[0xA];
     short fx_E;
-    char pad10[0x28];
+    char pad10[0x20];
+    int alpha_30;
+    int f34;
     int vel_38[3];
     int pos_44[3];
+    char pad50[0x30];
+    short rot_80[4];
+    BatClip_a* clip_88;
+    char pad8C[8];
+    int* model_94; // malloc'd copy of the clip's first model
 } BatOrb_a;
 
-extern char* dword_8008B4A4;
+typedef struct BatHero_a
+{
+    char pad0[0x5E4];
+    int pos_5E4[3];
+} BatHero_a;
+
+typedef struct BatScene_a
+{
+    char pad0[0x24];
+    BatHero_a* hero_24;
+} BatScene_a;
+
+extern BatScene_a* dword_8008B4A4;
 
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 

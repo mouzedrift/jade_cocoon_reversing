@@ -155,7 +155,7 @@ void sub_800BC90C(BatStageObj_a* p)
             v.vz = p->z_40;
             a = -cam[1];
             v.vx += sinTable_80084540[a & 0xFFF];
-            v.vy = *(int*)&levantPos_8008BD18[2] - 0x352;
+            v.vy = levantPos_8008BD18.pos_0[1] - 0x352;
             v.vx -= ((int*)dword_8008D600)[0];
             v.vy -= ((int*)dword_8008D600)[1];
             v.vz += sinTable_80084540[(a + 0x400) & 0xFFF];
@@ -351,7 +351,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 pos.vx = p->x_38;
                 pos.vy = p->y_3C;
                 pos.vz = p->z_40;
-                pos.vy = *(int*)&levantPos_8008BD18[2];
+                pos.vy = levantPos_8008BD18.pos_0[1];
                 if (dword_80083BD0 == 0x13 && i == 0)
                 {
                     sc[0] *= 3;
@@ -431,7 +431,7 @@ void sub_800BDBB0(BatTask_a* t)
     {
         if (dword_800C9C88.kind_0 == 2 && dword_800C9C7C == 0)
         {
-            sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18, levantPos_8008BD18[7]);
+            sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18.pos_0, levantPos_8008BD18.angle_E);
         }
         dword_800C9D90 = 0;
         dword_800C9D94 = 0;

@@ -987,7 +987,7 @@ void sub_800BBC84(BatTask_a* t)
 {
     t->next_8 = sub_800BBCC8;
     sub_800C0BA0(t);
-    sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18, levantPos_8008BD18[7]);
+    sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18.pos_0, levantPos_8008BD18.angle_E);
 }
 
 #if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / dword_800ADE78 load order and the shared lui of sub_800BAE74 in the branch delay slot
@@ -1316,7 +1316,7 @@ int sub_800BC6CC(int a)
             if (m == 0)
             {
             case 0:
-                r = (int)levantPos_8008BD18;
+                r = (int)levantPos_8008BD18.pos_0;
                 break;
             }
             if (m == k)
