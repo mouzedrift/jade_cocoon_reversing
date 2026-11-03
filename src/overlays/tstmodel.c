@@ -6,9 +6,53 @@
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padPressed_8009194C[];
 
+typedef struct TstModelBone
+{
+    short s0;
+    short s2;
+    short s4;
+    unsigned short flags;
+} TstModelBone;
+typedef struct TstModelD
+{
+    int state;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int count_1C;
+    int f20;
+    int f24;
+    TstModelBone bones[41];
+    short s170;
+    short s172;
+    char pad_174[0x30];
+    int f1A4;
+    int f1A8;
+    int f1AC;
+    int f1B0;
+    int f1B4;
+    int f1B8;
+    int f1BC;
+} TstModelD;
+typedef struct TstModelB
+{
+    int flags;
+    unsigned short s4;
+    unsigned short s6;
+    short s8;
+    short sA;
+    short sC;
+    unsigned short sE;
+} TstModelB;
+extern TstModelBone dword_800A09B8;
+extern int sub_800A1D70();
+
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 
-typedef struct TstModelTbl { int a; int b; int c; } TstModelTbl;
+typedef struct TstModelTbl { int a; TstModelBone* bones; int c; } TstModelTbl;
 extern TstModelTbl name_800A33B0[];
 extern void sub_800A0A8C();
 void sub_800A09C0(int* task, int* c)
@@ -132,7 +176,60 @@ void sub_800A0BC0(TstModelA* a)
     a->i17C = -0xFA;
 }
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A0C00);
+void sub_800A0C00(TstModelD* c)
+{
+    TstModelB cur;
+    TstModelBone tmp;
+    int i;
+    TstModelTbl* tbl;
+    cur.s8 = 1;
+    cur.flags = 0;
+    cur.s4 = 0;
+    cur.sA = 0x12;
+    cur.s6 = c->f4;
+    cur.sC = c->count_1C;
+    cur.sE = c->f8;
+    sub_800A1D70(&cur);
+    if (c->f4 != (short)cur.s6 || c->f8 != (short)cur.sE)
+    {
+        PlaySfx_80031494(0x7F);
+    }
+    c->f4 = (short)cur.s6;
+    c->f8 = (short)cur.sE;
+    for (i = 0; i < 0x12; i++)
+    {
+        if (c->f4 == i)
+        {
+            tmp = dword_800A09B8;
+        }
+    }
+    if (padRepeat_800918CC[0] & 0x2000)
+    {
+        c->f20++;
+    }
+    else if (padRepeat_800918CC[0] & 0x8000)
+    {
+        c->f20--;
+    }
+    c->f20 = c->f20 < 0 ? 0 : c->f20 < 0xC0 ? c->f20 : 0xBF;
+    tbl = name_800A33B0;
+    if (padPressed_8009194C[0] & 0x20)
+    {
+        c->f1B8 = 0;
+        c->f24 = tbl[c->f8 + c->f4].a;
+        c->f1A8 = -1;
+        c->f1AC = -1;
+        c->f1BC = 0;
+        c->f1B8 = 0;
+        c->f1B4 = 0;
+        c->state = 1;
+        for (i = 0; name_800A33B0[c->f8 + c->f4].bones[i].s0 >= 0; i++)
+        {
+            c->bones[i] = name_800A33B0[c->f8 + c->f4].bones[i];
+        }
+        c->bones[i] = name_800A33B0[c->f8 + c->f4].bones[i];
+    }
+}
 
 extern int off_8007DC70;
 extern int InitModelList_80024ADC(int* a, int b, int c);
@@ -236,37 +333,6 @@ void sub_800A1428(int* c)
     sub_800459E4(c + 10, m + 0x5C, pOT_8008D690, 0);
 }
 
-typedef struct TstModelBone
-{
-    short s0;
-    short s2;
-    short s4;
-    unsigned short flags;
-} TstModelBone;
-typedef struct TstModelD
-{
-    int state;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    char pad_14[0x14];
-    TstModelBone bones[41];
-    short s170;
-    short s172;
-} TstModelD;
-typedef struct TstModelB
-{
-    int flags;
-    unsigned short s4;
-    unsigned short s6;
-    short s8;
-    short sA;
-    short sC;
-    unsigned short sE;
-} TstModelB;
-extern TstModelBone dword_800A09B8;
-extern int sub_800A1D70();
 void sub_800A1614(TstModelD* c)
 {
     TstModelB cur;
