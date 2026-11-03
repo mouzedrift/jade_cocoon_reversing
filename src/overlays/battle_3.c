@@ -1325,15 +1325,15 @@ int sub_800C0BF0()
     s.visible_30 = 0;
     s.model_48 = m;
     s.bones_34 = dword_80079140;
-    s.baseScale_38 = (int*)sub_80024E90(m, k);
-    s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
-    s.anims_40 = (ActorAnim*)sub_80024E38(m);
-    s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+    s.baseScale_38 = sub_80024E90(m, k);
+    s.boneScale_3C = sub_80024EC8(m, k);
+    s.anims_40 = sub_80024E38(m);
+    s.effectTbl_44 = sub_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
-    x = (int)sub_80024F00(m, k);
-    sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));
+    x = sub_80024F00(m, k);
+    sub_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;

@@ -410,7 +410,6 @@ typedef struct EvEnemySlotEventfnc
     int aiEvent_4;
     EvEnemyEventfnc data_8;
 } EvEnemySlotEventfnc;
-extern void sub_80019B14(int p, char* a1, char* a2);
 extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
 extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern short dword_80079140[]; // default bone table
@@ -432,7 +431,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     int* p1;
     int f;
     Actor* actor;
-    char* x;
+    unsigned short* x;
     EvEnemySlotEventfnc* slot;
     id = &sub_80019C70(a->xy.a)->modelId_0;
     found = 0;
@@ -466,12 +465,12 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         s.bones_34 = dword_80079140;
         if (k >= 4)
         {
-            s.baseScale_38 = (int*)sub_80024E90(model, k);
+            s.baseScale_38 = sub_80024E90(model, k);
         }
         else
         {
-            p0 = (int*)sub_80024E90(model, k);
-            p1 = (int*)sub_80024E90(model, k + 1);
+            p0 = sub_80024E90(model, k);
+            p1 = sub_80024E90(model, k + 1);
             f = sub_80019AD0(&mi);
             f = ((p1[0] - p0[0]) * f) / 4096;
             v[0] = p0[0] + f;
@@ -479,13 +478,13 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
             v[2] = p0[2] + f;
             s.baseScale_38 = v;
         }
-        s.boneScale_3C = (SVECTOR*)sub_80024EC8(model, k);
-        s.anims_40 = (ActorAnim*)sub_80024E38(model);
-        s.effectTbl_44 = (short (*)[6])sub_80024E64(model);
+        s.boneScale_3C = sub_80024EC8(model, k);
+        s.anims_40 = sub_80024E38(model);
+        s.effectTbl_44 = sub_80024E64(model);
         s.hasMatrices_4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
-        sub_80019B14((int)actor->bones_134, x, sub_80024F38(model, k));
+        sub_80019B14(actor->bones_134, x, sub_80024F38(model, k));
         e.f0 = 2;
         e.f4 = 3;
         e.f8 = 1;

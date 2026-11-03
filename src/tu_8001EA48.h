@@ -386,6 +386,15 @@ typedef struct
     int size_14;      // to the next record
 } ModelHeaderRecord;
 
+// sections of Model.header_4C; what each one holds depends on the model kind
+extern void* sub_80024E38(Model* p);
+extern void* sub_80024E64(Model* p);
+extern void* sub_80024E90(Model* p, int n);
+extern void* sub_80024EC8(Model* p, int n);
+extern void* sub_80024F00(Model* p, int n);
+extern void* sub_80024F38(Model* p, int n);
+extern void* sub_80024F70(Model* p, int n);
+
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
 

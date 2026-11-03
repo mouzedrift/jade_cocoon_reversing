@@ -18,6 +18,7 @@
 #include "actor.h"
 #include "unit.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 INCLUDE_DATA(dword_80072310);
 INCLUDE_DATA(dword_80072324);

@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "tu_8001EA48.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 typedef struct EvInsEventfnc
 {

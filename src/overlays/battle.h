@@ -9,6 +9,7 @@
 #include "actor.h"
 #include "minion_menu.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 #include "tu_8001EA48.h"
 #include "tu_80036528.h"
@@ -789,7 +790,6 @@ extern int sub_800C0904(unsigned char* p);
 
 
 
-extern void sub_80019B14(int a, int b, int c);
 
 extern short dword_80079140[]; // default bone table
 

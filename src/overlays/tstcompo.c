@@ -278,7 +278,7 @@ void sub_800A1468(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
@@ -310,7 +310,7 @@ void sub_800A15F4(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);

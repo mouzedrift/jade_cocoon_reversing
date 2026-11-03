@@ -2683,7 +2683,7 @@ int AreFileRequestsDone_80024DC4(Model* p)
     return 1;
 }
 // Matched
-char* sub_80024E38(Model* p)
+void* sub_80024E38(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2694,7 +2694,7 @@ char* sub_80024E38(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E64(Model* p)
+void* sub_80024E64(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2705,7 +2705,7 @@ char* sub_80024E64(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E90(Model* p, int n)
+void* sub_80024E90(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2715,7 +2715,7 @@ char* sub_80024E90(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024EC8(Model* p, int n)
+void* sub_80024EC8(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2725,7 +2725,7 @@ char* sub_80024EC8(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F00(Model* p, int n)
+void* sub_80024F00(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2735,7 +2735,7 @@ char* sub_80024F00(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F38(Model* p, int n)
+void* sub_80024F38(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2745,7 +2745,7 @@ char* sub_80024F38(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F70(Model* p, int n)
+void* sub_80024F70(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)

@@ -893,8 +893,6 @@ typedef struct G2Rec
     char pad_38[8];
 } G2Rec;
 
-#define G2REC(a, b) ((G2Rec*)sub_80024E38(dword_8007DC60->items_8))
-
 extern int sub_800AC794(int, int);
 
 extern void sub_800A913C();

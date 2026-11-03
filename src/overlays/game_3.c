@@ -3009,13 +3009,13 @@ int sub_800AC474(int a)
 
 int sub_800AC4A8(int a)
 {
-    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60->items_8);
+    G2Rec* p = sub_80024E38(dword_8007DC60->items_8);
     return p[sub_800AC794(a, dword_800B11DC[sub_800AC3E4()])].f0;
 }
 
 int sub_800AC518(int a)
 {
-    G2Rec* p = (G2Rec*)sub_80024E38(dword_8007DC60->items_8);
+    G2Rec* p = sub_80024E38(dword_8007DC60->items_8);
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
     if (p[r].f1)
         return 1;
@@ -3073,56 +3073,74 @@ unsigned char* sub_800AC7B4(int a)
 
 short sub_800AC7F0(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].s4;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].s4;
 }
 
 short sub_800AC834(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].s6;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].s6;
 }
 
 short sub_800AC878(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].s8;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].s8;
 }
 
 unsigned short sub_800AC8BC(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].sA;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].sA;
 }
 
 unsigned char sub_800AC900(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].f3;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].f3;
 }
 
 short sub_800AC944(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].sC;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].sC;
 }
 
 unsigned char sub_800AC988(int a, int b)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, b);
-    return G2REC(a, b)[r].f0;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return p[r].f0;
 }
 
 short* sub_800AC9CC(int a)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    return &((G2Rec*)sub_80024E38(dword_8007DC60->items_8))[r].sC;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return &p[r].sC;
 }
 
 int* sub_800ACA38(int a)
 {
+    G2Rec* p;
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    return &((G2Rec*)sub_80024E38(dword_8007DC60->items_8))[r].f34;
+    p = sub_80024E38(dword_8007DC60->items_8);
+    return &p[r].f34;
 }
 
 void sub_800ACAA4(int* a, int* b)
