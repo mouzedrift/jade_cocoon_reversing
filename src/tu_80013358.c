@@ -24,6 +24,267 @@ int sub_80013358(int idx)
 {
     return dword_80079320[idx];
 }
+typedef struct
+{
+    unsigned short flags_0;
+    short power_2;
+    signed char c4;
+    unsigned char c5;
+    unsigned char c6;
+    signed char hit_7;
+    unsigned char element_8;
+    unsigned char kind_9;
+    unsigned char c_A;
+    unsigned char c_B;
+} AttackDesc;
+typedef struct
+{
+    unsigned short kind_0;
+    short field_2;
+    int flags_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
+    int field_20;
+} AttackResult;
+extern double sqrt(double);
+extern int sub_80013E30(void);
+#if 0
+// Not matched: the original converts dmg with __fixdfsi twice (second result unused) before the zero test; everything else lines up apart from a few register choices
+void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, AttackResult* out)
+{
+    int crit0;
+    int crit1;
+    int b2;
+    int atk;
+    int def;
+    int hit;
+    int eva;
+    int a;
+    int b;
+    int v;
+    int i;
+    int n;
+    int c;
+    int ra;
+    int ch;
+    double d;
+    double dmg;
+
+    crit0 = 0;
+    crit1 = 0;
+    hit = 0;
+    eva = 0;
+    atk = 0;
+    def = 0;
+    b2 = sub_80014358(p[3]);
+    switch (q->kind_9)
+    {
+    case 0:
+        atk = r0[0];
+        hit = r0[4];
+        def = r1[1];
+        eva = r1[5];
+        crit0 = r0[6];
+        crit1 = r1[7];
+        break;
+    case 1:
+        atk = r0[2];
+        def = r1[3];
+        hit = 100;
+        break;
+    case 2:
+        atk = q->power_2;
+        def = 1;
+        hit = 100;
+        break;
+    }
+    if ((((signed char*)f1) + q->element_8)[0x20] < 0)
+    {
+        def = 1;
+        eva = def;
+    }
+    if (def == 0)
+    {
+        def = 1;
+    }
+    if (q->power_2 != 0)
+    {
+        a = sub_80013E30();
+        b = sub_80013E30();
+        if (!(hit - eva < a) || sub_80033548(f1, 2) != 0)
+        {
+            out->kind_0 = 1;
+            if (q->element_8 != 0xFF)
+            {
+                d = atk * 100 / def;
+                d = sqrt(d);
+                dmg = (double)(atk * (((unsigned char*)f0)[0x44] + 3)) * d / 10.0 * q->power_2 / 100.0 / 20.0;
+                if (b < crit0 - crit1 + q->hit_7 && q->kind_9 == 0)
+                {
+                    out->kind_0 = 4;
+                    dmg = dmg * 7.0 / 4.0;
+                }
+                if (q->element_8 < 4)
+                {
+                    d = sqrt(sqrt((((unsigned char*)f0) + q->element_8)[0x3E] * 1250));
+                    dmg = dmg * (d / 10.0);
+                }
+                dmg = dmg * (((signed char*)f1) + q->element_8)[0x20];
+                dmg = dmg / 32.0;
+                v = (int)dmg;
+                if ((int)dmg == 0 || (v += frameCount_8008D3FC & 1) == 0)
+                {
+                    v = 1;
+                }
+            }
+            else
+            {
+                v = atk;
+            }
+            if (sub_80033548(f1, 0x400) && (q->c_A != 0 || !(q->flags_0 & 0x400)))
+            {
+                v = 0;
+            }
+            if (q->c_B == 0)
+            {
+                out->field_1C = v;
+                if (q->element_8 == 8 && v > 0)
+                {
+                    if (sub_800334D8((Minion*)f1) < v)
+                    {
+                        v = sub_800334D8((Minion*)f1);
+                    }
+                    out->field_14 = -v;
+                }
+            }
+            else if (q->c_B == 1)
+            {
+                v /= 2;
+                out->field_20 = v;
+                out->kind_0 = 2;
+                if (q->element_8 == 8 && v > 0)
+                {
+                    if (sub_800334F0((Minion*)f1) < v)
+                    {
+                        v = sub_800334F0((Minion*)f1);
+                    }
+                    out->field_18 = -v;
+                }
+            }
+            else if (q->c_B == 3)
+            {
+                c = (((signed char*)f1) + q->element_8)[0x20];
+                if (rand() % 32 < c)
+                {
+                    out->field_1C = sub_800334D8((Minion*)f1) - 1;
+                    out->kind_0 = 4;
+                    out->flags_4 |= 2;
+                }
+                else
+                {
+                    goto miss;
+                }
+            }
+            else if (q->c_B == 2)
+            {
+                out->field_1C = v;
+                out->kind_0 = 3;
+                out->field_20 = v / 5 * 2;
+            }
+        }
+        else
+        {
+        miss:
+            out->kind_0 = 5;
+        }
+    }
+    if (out->field_1C > 0 || out->field_20 > 0)
+    {
+        out->flags_4 |= 2;
+    }
+    if (q->power_2 == 0 || out->kind_0 != 5)
+    {
+        v = (q->c6 + r0[8]) * r1[9] / 100;
+        if (q->c_A == 3)
+        {
+            ra = sub_80013E30();
+            if (q->element_8 == 11)
+            {
+                c = 100;
+            }
+            else
+            {
+                c = (v * (((signed car*)f1) + q->element_8)[0x20]) ? v * (((signed car*)f1) + q->element_8)[0x20] / 32 : 0;
+            }
+            if (ra < c)
+            {
+                goto status;
+            }
+            if (q->flags_0 & 0x7FB)
+            {
+                sub_800184A0(b2, 2);
+            }
+        }
+        else if (q->c_A == 0)
+        {
+            if (q->flags_0 & 0x3800)
+            {
+            status:
+                out->field_8 |= q->flags_0;
+            }
+            else
+            {
+                out->flags_4 |= q->flags_0;
+            }
+        }
+    }
+    if (sub_80033548(f1, 0x3800) && (q->flags_0 & 0x7FB) && q->c_A == 3)
+    {
+        for (i = 0; i < 3; i++)
+        {
+            if (f1[0] & (1 << (i + 11)))
+            {
+                break;
+            }
+        }
+        if (i == 0)
+        {
+            n = 3;
+            out->flags_4 |= 0x800;
+        }
+        else if (i == 1)
+        {
+            n = 4;
+            out->flags_4 |= 0x1800;
+        }
+        else
+        {
+            n = 5;
+            out->flags_4 |= 0x3800;
+        }
+        sub_800184A0(b2, n);
+        out->field_8 &= ~0x7FB;
+        sub_800184A0(b2, 2);
+    }
+    if (out->field_1C == 0 && out->field_20 == 0 && out->field_8 != 0 && out->flags_4 != 0)
+    {
+        out->kind_0 = 5;
+    }
+    if (out->field_8 & 0x400)
+    {
+        out->field_1C = sub_800334D8((Minion*)f1);
+        out->kind_0 = 1;
+    }
+    if (sub_80033548(f1, 2))
+    {
+        out->field_8 &= ~2;
+    }
+}
+#endif
 INCLUDE_ASM(sub_80013374);
 extern void sub_80012BB0(int a0, int a1, int* p, int a3);
 // Matched
