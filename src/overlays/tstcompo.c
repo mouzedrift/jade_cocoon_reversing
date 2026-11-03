@@ -349,7 +349,7 @@ typedef struct TstCompoEnt
 } TstCompoEnt;
 extern unsigned short uiColor_8008B590;
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
-extern void sub_80042460(int a, void* b, void* c, int d);
+extern void DrawWindow_80042460(int a, void* b, void* c, int d);
 void sub_800A2030(int p, TstCompoEnt* e, int idx)
 {
     unsigned short t[2];
@@ -368,7 +368,7 @@ void sub_800A2030(int p, TstCompoEnt* e, int idx)
         ((unsigned char*)t)[2] = 1;
         ((unsigned char*)t)[3] = 1;
         t[0] = uiColor_8008B590;
-        sub_80042460(p, t, pOT_8008D454 + idx, 0);
+        DrawWindow_80042460(p, t, pOT_8008D454 + idx, 0);
     }
 }
 #endif

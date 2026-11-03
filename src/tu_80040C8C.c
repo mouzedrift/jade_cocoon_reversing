@@ -97,7 +97,7 @@ void PlayAnimeMovie_80040D0C(void)
     bStopDrawingMovie_8008D45C = 1;
 }
 // Matched
-void sub_80040D34(struct_obj_D* p)
+void StartIntroAnime_80040D34(struct_obj_D* p)
 {
     if (!(unknownFlags_8008D678 & 0x20))
     {
@@ -353,4 +353,4 @@ void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
     DecDCTinSync(0);
     DecDCTin(buf, mode);
 }
-INCLUDE_ASM(sub_8004196C);
+INCLUDE_ASM(InterpolateWindowRect_8004196C);

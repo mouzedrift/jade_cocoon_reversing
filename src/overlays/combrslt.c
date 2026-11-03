@@ -28,8 +28,8 @@ extern char dword_80082680[];
 extern void sub_8002ADB4(void*, void*, int, int);
 extern void sub_8002B004(void*, int, int);
 extern void sub_800A41E4();
-extern void sub_8002C290(void*, int, int);
-extern void sub_8002C06C(void*, int, int);
+extern void DrawSmallNumber3_8002C290(void*, int, int);
+extern void DrawUiTiySprt_8002C06C(void*, int, int);
 extern void sub_800A16FC();
 extern void SetFadeMode_8001C19C(int, int);
 extern void sub_800A4240(int);
@@ -134,26 +134,26 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
     v[0] = x + 0x12;
     v[1] = y + 4;
     v[1] = y + 7;
-    sub_8002C290(v, b, a);
+    DrawSmallNumber3_8002C290(v, b, a);
     x = p[0];
     v[0] = x + 0x1C;
     y = p[1];
     v[0] = x + 0x14;
     v[1] = y + 5;
-    sub_8002C06C(v, 0xAE, a);
+    DrawUiTiySprt_8002C06C(v, 0xAE, a);
     x = p[0];
     v[0] = x + 0x43;
     y = p[1];
     v[0] = x + 0x39;
     v[1] = y + 4;
     v[1] = y + 7;
-    sub_8002C290(v, c, a);
+    DrawSmallNumber3_8002C290(v, c, a);
     x = p[0];
     v[0] = x + 0x43;
     y = p[1];
     v[0] = x + 0x3B;
     v[1] = y + 5;
-    sub_8002C06C(v, 0x4D, a);
+    DrawUiTiySprt_8002C06C(v, 0x4D, a);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A444C);
@@ -185,7 +185,7 @@ extern int sub_800A1958();
 extern int sub_800A1934();
 extern void sub_800A1844();
 extern void sub_8002F078();
-extern void sub_80042460();
+extern void DrawWindow_80042460();
 
 // Near miss: register allocation of the q / j*4 address computation
 #if 0
@@ -235,7 +235,7 @@ void sub_800A4554(int i, int j, void* arg)
         r3[0].y = q->y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
-        sub_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, GetTime30Hz_8002C64C());
+        DrawWindow_80042460(r3, arg, (char*)pOT_8008D454 + 0x3C, GetTime30Hz_8002C64C());
     }
 }
 #endif

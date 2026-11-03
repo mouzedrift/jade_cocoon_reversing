@@ -168,7 +168,7 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 int sub_80029EA8(short* in, short* out);
 int sub_8002A040(short* in, short* out);
 void UnpackColor555_80029C68(unsigned short* d, unsigned short* s);
-void sub_80029CB4(unsigned short* d, unsigned short* s);
+void PackColor555_80029CB4(unsigned short* d, unsigned short* s);
 // Matched
 void sub_800290FC(RECT* r, short* dst, short* d)
 {
@@ -195,7 +195,7 @@ void sub_800290FC(RECT* r, short* dst, short* d)
             hsv[2] += d[2];
             hsv[2] = (hsv[2] < 0) ? 0 : ((hsv[2] > 31) ? 31 : hsv[2]);
             sub_8002A040(hsv, rgb);
-            sub_80029CB4(p, (unsigned short*)rgb);
+            PackColor555_80029CB4(p, (unsigned short*)rgb);
             p++;
         }
     }
@@ -234,7 +234,7 @@ void sub_800292D0(void* a0, void* a1, int a2)
                 o[1] = ((c[1] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[1] * ((short*)a2)[4] / 4096;
                 o[2] = ((c[2] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[2] * ((short*)a2)[4] / 4096;
                 o[3] = c[3];
-                sub_80029CB4(p, (unsigned short*)o);
+                PackColor555_80029CB4(p, (unsigned short*)o);
             }
             p++;
         }
@@ -398,7 +398,7 @@ void UnpackColor555_80029C68(unsigned short* d, unsigned short* s)
     d[2] = (*s >> 10) & 0x1f;
 }
 // Matched
-void sub_80029CB4(unsigned short* d, unsigned short* s)
+void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 {
     *d = 0;
     *d = s[3];
@@ -434,7 +434,7 @@ void sub_80029D00(void* a0, unsigned int a1)
                     hsv[0] = (short)(hsv[0] + a1 * 192 / 360) % 192;
                 }
                 sub_8002A040(hsv, rgb);
-                sub_80029CB4(&p[i], (unsigned short*)rgb);
+                PackColor555_80029CB4(&p[i], (unsigned short*)rgb);
             }
         }
     }

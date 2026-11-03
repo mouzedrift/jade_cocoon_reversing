@@ -216,3 +216,56 @@ sub_800376A8 ResetCameraToLevant_800376A8
 sub_80037AC8 SetCameraTarget_80037AC8
 sub_80039620 SaveCameraState_80039620
 sub_80039698 RestoreCameraState_80039698
+
+# --- UI TIY (DATA.001 file 0x3B, loaded by sub_8002BF74): sprites incl. digit glyphs 0x84.. and 0xCF.. ---
+loadedOverlayMaybe_8008D620 uiTiySprts_8008D620
+dword_8008D3F4 uiTiyTPages_8008D3F4
+dword_8008B4E8 uiTiyLoaded_8008B4E8
+sub_8002BF74 LoadUiTiy_8002BF74
+sub_8002BFCC OnUiTiyLoaded_8002BFCC
+sub_8002C06C DrawUiTiySprt_8002C06C
+sub_8002C100 DrawLargeNumber_8002C100
+sub_8002C290 DrawSmallNumber3_8002C290
+sub_8002C414 DrawSmallNumber9_8002C414
+dword_800826F8 largeDigitColors_800826F8
+sub_8002C5D0 SetLargeDigitColor_8002C5D0
+sub_8002EF5C DrawUiTiySprtRow_8002EF5C
+
+# --- windows (frame colour from uiColor_8008B590) ---
+sub_8004196C InterpolateWindowRect_8004196C
+sub_80042460 DrawWindow_80042460
+sub_800424C0 DrawUiColorWindow_800424C0
+sub_8004226C GetWindowColors_8004226C
+sub_80041ED0 DrawWindowFrame_80041ED0
+sub_8002A384 DrawUiWindow_8002A384
+sub_8002BEC8 DrawAnimatedWindow_8002BEC8
+
+# --- more name tables ---
+off_800834E4 abilityNames_800834E4
+sub_800319CC GetAbilityName_800319CC
+off_80083580 abilityBonusNames_80083580
+sub_800319E8 GetAbilityBonusName_800319E8
+off_80082EC4 rankNames_80082EC4
+sub_8002FCD8 GetRankName_8002FCD8
+off_80083818 itemMessageSuffixes_80083818
+
+# --- boot screens (task callbacks in copyrightData/demoDisclaimerData/introAnimeData) ---
+sub_80040A10 InitCopyrightScreen_80040A10
+sub_800408F4 DrawCopyrightScreen_800408F4
+dword_8008D47C copyrightSprts_8008D47C
+dword_8008B4EC copyrightTPages_8008B4EC
+sub_80040B94 DrawDemoDisclaimer_80040B94
+sub_80040D34 StartIntroAnime_80040D34
+
+# --- math / prim helpers ---
+sub_8004D3D8 RotMatrixXYZ_8004D3D8
+sub_8004D5CC RotMatrixZYX_8004D5CC
+sub_8004D7A8 LerpSVector_8004D7A8
+sub_8004D848 LerpAngles_8004D848
+sub_8003B5D4 VectorToAngles_8003B5D4
+sub_8003BA38 CompareUInt_8003BA38
+sub_80029CB4 PackColor555_80029CB4
+sub_8004251C DrawGouraudRect_8004251C
+sub_80042750 DrawRectOutline_80042750
+sub_80042870 DrawLine_80042870
+sub_8003C060 CancelFileRequest_8003C060

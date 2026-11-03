@@ -55,7 +55,7 @@ typedef struct WpnCol_wpnshop
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern int frameCount_8008D3FC;
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 /* funcs.h declares unsigned short; the callers here use the full register */
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
 extern void sub_8002B004(void* p, int a, int b);
@@ -71,7 +71,7 @@ extern void sub_800BCF80();
 extern void sub_800BB950();
 extern void sub_800BC0AC();
 extern WpnDlg_wpnshop name_800BADF0;
-extern int dword_8008B4E8;
+extern int uiTiyLoaded_8008B4E8;
 extern int sub_800AD184(int a, int b, int c);
 extern void sub_800AD1E0(int a, int b, int c);
 extern void sub_800AD058(int a);
@@ -152,7 +152,7 @@ typedef struct WpnBox2_wpnshop
     short x;
     short y;
 } WpnBox2_wpnshop;
-extern void sub_8002A384(void* p);
+extern void DrawUiWindow_8002A384(void* p);
 extern int sub_800AD02C(void);
 extern int sub_800BDF68();
 extern int sub_800BDE38();
@@ -169,8 +169,8 @@ extern int sub_800AD2C8(int a, int b);
 extern int sub_800AD254(int a, int b);
 extern int sub_800AD288(int a, int b);
 extern int sub_800AD73C(int a);
-extern void sub_8002C06C(void* p, int a, short b);
-extern void sub_8002C414(void* p, int a, short b);
+extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
+extern void DrawSmallNumber9_8002C414(void* p, int a, short b);
 extern unsigned short name_800BE868[];
 extern unsigned short name_800BE86C[];
 typedef struct WpnBox_wpnshop
@@ -295,7 +295,7 @@ void sub_800BAE2C(int a, int b)
         o->f_50 = 0;
         SetFadeMode_8001C19C(0, 0x20);
         sub_800A7B00(-1);
-        sub_8002BF74();
+        LoadUiTiy_8002BF74();
         t->cb_8 = (EventEntryFn)sub_800BB130;
     }
 }
@@ -328,7 +328,7 @@ int sub_800BB088(WpnObj_wpnshop* o)
 // Matched
 void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
 {
-    if (dword_8008B4E8 != 0)
+    if (uiTiyLoaded_8008B4E8 != 0)
     {
         sub_8002BE10();
         sub_8002A4E4(0xE);
@@ -594,7 +594,7 @@ void sub_800BB868(WpnObj_wpnshop* o, WpnRect_wpnshop* r, int a2, int a3, short i
         c.col_0 = uiColor_8008B590;
         c.c_2 = 1;
         c.c_3 = 1;
-        sub_80042460(r, &c, dword_8008D454 + 0x38, frameCount_8008D3FC);
+        DrawWindow_80042460(r, &c, dword_8008D454 + 0x38, frameCount_8008D3FC);
     }
 }
 
@@ -847,14 +847,14 @@ void sub_800BBED0(void* unused, WpnPos_wpnshop* p)
     b.c_B = 1;
     b.x_0 = p->x + 4;
     b.y_2 = p->y + 3;
-    sub_8002C06C(&b, 0x7A, 0xE);
+    DrawUiTiySprt_8002C06C(&b, 0x7A, 0xE);
     b.x_0 = p->x + 0x60;
     b.y_2 = p->y + 6;
-    sub_8002C414(&b, sub_800AD02C(), 0xE);
+    DrawSmallNumber9_8002C414(&b, sub_800AD02C(), 0xE);
     b.x_0 = p->x + 0x61;
     b.y_2 = p->y + 4;
-    sub_8002C06C(&b, 0xEA, 0xE);
-    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
+    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
 }
 
 #if 0
@@ -872,13 +872,13 @@ void sub_800BBFD4(int a)
     r.y = 0x4D;
     b.c_A = 0;
     b.y_2 = 0x50;
-    sub_8002C06C(&b, 0x93, 0xE);
+    DrawUiTiySprt_8002C06C(&b, 0x93, 0xE);
     b.x_0 = 0xB8;
     b.y_2 = 0x52;
-    sub_8002C414(&b, a, 0xE);
+    DrawSmallNumber9_8002C414(&b, a, 0xE);
     b.x_0 = 0x77;
     b.y_2 = 0x4D;
-    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(wpnshop, sub_800BBFD4);
@@ -904,13 +904,13 @@ void sub_800BC0AC(WpnObj_wpnshop* o, int k)
     b.x_0 = 0x7B;
     b.col_8 = uiColor_8008B590;
     b.y_2 = 0x61;
-    sub_8002C06C(&b, 0x53, 0xE);
+    DrawUiTiySprt_8002C06C(&b, 0x53, 0xE);
     b.x_0 = 0xB8;
     b.y_2 = 0x63;
-    sub_8002C414(&b, o->f_18, 0xE);
+    DrawSmallNumber9_8002C414(&b, o->f_18, 0xE);
     b.x_0 = 0x77;
     b.y_2 = 0x5E;
-    sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
+    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
 }
 
 
@@ -1008,8 +1008,8 @@ void sub_800BCABC(WpnObj_wpnshop* o, short k)
         d.b = 0xE;
         box.x = 0x54;
         box.y = 0x50;
-        sub_8002C06C(&box, 0xB6, 0xE);
-        sub_8002A384(&d);
+        DrawUiTiySprt_8002C06C(&box, 0xB6, 0xE);
+        DrawUiWindow_8002A384(&d);
     }
 }
 
@@ -1074,7 +1074,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
     s50.b = 0;
     s50.c = 1;
     s50.a = WPNSAVE->f20;
-    sub_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
     if (o->f_0 != 0x11)
     {
         u.p.a = 2;
@@ -1091,7 +1091,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
             u.s.b = 0;
             u.s.c = 1;
             u.s.a = WPNSAVE->f20;
-            sub_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
+            DrawWindow_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
         }
     }
 }
@@ -1168,14 +1168,14 @@ void sub_800BCFCC(WpnObj_wpnshop* o)
         b.col_8 = uiColor_8008B590;
         b.c_A = 0;
         b.y_2 = 0x60;
-        sub_8002C06C(&b, 0xCE, 0xE);
+        DrawUiTiySprt_8002C06C(&b, 0xCE, 0xE);
         b.x_0 = 0x11D;
         b.y_2 = 0x64;
-        sub_8002C414(&b, v * o->f_18, 0xE);
+        DrawSmallNumber9_8002C414(&b, v * o->f_18, 0xE);
         b.x_0 = 0x11E;
         b.y_2 = 0x62;
-        sub_8002C06C(&b, 0xEA, 0xE);
-        sub_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+        DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
+        DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
     }
 }
 

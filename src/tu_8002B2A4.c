@@ -24,7 +24,7 @@ INCLUDE_DATA(dword_800741E8);
 
 extern int dword_800827D0[];
 extern int dword_800827BC[];
-extern void sub_8002C06C(void* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void sub_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
 {
@@ -51,8 +51,8 @@ void sub_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
         {
             v = dword_800827D0[i];
         }
-        SetShadeTex((SPRT*)loadedOverlayMaybe_8008D620 + v, 1);
-        sub_8002C06C(pos, v, c);
+        SetShadeTex((SPRT*)uiTiySprts_8008D620 + v, 1);
+        DrawUiTiySprt_8002C06C(pos, v, c);
     }
 }
 INCLUDE_ASM(sub_8002B3DC);
@@ -182,7 +182,7 @@ void sub_8002BA54(struct_BA54* a0, int arg1, short* a2, int a3)
     pos[0] = a2[0] + 8;
     pos[1] = a2[1] + 2;
     sub_8002BCAC(idx, w, pos, a1, a3);
-    sub_8002C06C(a2, e, a3);
+    DrawUiTiySprt_8002C06C(a2, e, a3);
 }
 // Not matched: original has no zero-divisor check (plain divu), cc1psx/aspsx emit one
 // Matched

@@ -71,17 +71,17 @@ int sub_80031968(void* p)
     }
     return n;
 }
-extern int off_800834E4[];
-extern int off_80083580[];
+extern int abilityNames_800834E4[];
+extern int abilityBonusNames_80083580[];
 // Matched
-int sub_800319CC(int idx)
+int GetAbilityName_800319CC(int idx)
 {
-    return off_800834E4[idx];
+    return abilityNames_800834E4[idx];
 }
 // Matched
-int sub_800319E8(int idx)
+int GetAbilityBonusName_800319E8(int idx)
 {
-    return off_80083580[idx];
+    return abilityBonusNames_80083580[idx];
 }
 // Matched
 int sub_80031A04(unsigned char* p, int idx)

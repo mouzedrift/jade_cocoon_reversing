@@ -41,7 +41,7 @@ extern void sub_800A7BF0(int);
 extern void sub_800A6D30(int);
 extern void* sub_800A55B0(int);
 extern void SetFadeMode_8001C19C(int, int);
-extern void sub_8002BF74();
+extern void LoadUiTiy_8002BF74();
 extern void sub_8002BE10();
 extern void sub_80027478(int, int);
 extern void sub_80037918(int*);
@@ -77,13 +77,13 @@ void sub_800B67C0(ShopCtrlTask* t)
     word_800B6CE8 = 0;
     word_800B6CEC = 0;
     dword_800B6CF8 = 0;
-    sub_8002BF74();
+    LoadUiTiy_8002BF74();
     t->next_8 = sub_800B681C;
 }
 
 void sub_800B681C(ShopCtrlTask* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         t->next_8 = sub_800B6840;
     }
@@ -101,7 +101,7 @@ void sub_800B6898(ShopCtrlTask* t)
     {
         if (dword_800B6CF8)
         {
-            sub_8002BF74();
+            LoadUiTiy_8002BF74();
             t->next_8 = sub_800B6900;
         }
         else
@@ -113,7 +113,7 @@ void sub_800B6898(ShopCtrlTask* t)
 
 void sub_800B6900(ShopCtrlTask* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         sub_8002BE10();
         if (dword_800B6CF8)

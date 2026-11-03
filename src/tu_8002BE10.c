@@ -18,7 +18,7 @@
 
 INCLUDE_DATA(dword_800741EC);
 
-extern void sub_8002C06C(unsigned short* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
 void sub_8002BE10(void)
 {
@@ -35,7 +35,7 @@ void sub_8002BE10(void)
                 pos[0] -= 0x40;
             }
             pos[1] = i * 60;
-            sub_8002C06C(pos, 0x95, 0xF);
+            DrawUiTiySprt_8002C06C(pos, 0x95, 0xF);
         }
     }
 }
@@ -46,15 +46,15 @@ typedef struct
     short field_8;
     short field_A;
 } struct_BEC8;
-extern void sub_8004196C(int a, int b, int c, int d, int e);
+extern void InterpolateWindowRect_8004196C(int a, int b, int c, int d, int e);
 extern void AddTexWindowPrim_8003326C(int a, void* b);
 extern void AddClipTexWindowPrim_80033308(void* a);
-extern void sub_8002A384(struct_BEC8* p);
+extern void DrawUiWindow_8002A384(struct_BEC8* p);
 // Matched
-void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
+void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
 {
     struct_BEC8 s;
-    sub_8004196C(a0, a1, a2, 8, 0);
+    InterpolateWindowRect_8004196C(a0, a1, a2, 8, 0);
     AddTexWindowPrim_8003326C(a0, &pOT_8008D454[a3]);
     if (a4)
     {
@@ -67,15 +67,15 @@ void sub_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5)
     s.field_0 = a0;
     s.field_4 = a5;
     s.field_A = a3;
-    sub_8002A384(&s);
+    DrawUiWindow_8002A384(&s);
     AddClipTexWindowPrim_80033308(&pOT_8008D454[a3]);
 }
 extern void QueueFileRequest_8003BC84(int* a);
 // Matched
-void sub_8002BF74(void)
+void LoadUiTiy_8002BF74(void)
 {
     int s[8];
-    dword_8008B4E8 = 0;
+    uiTiyLoaded_8008B4E8 = 0;
     s[0] = 0x29;
     s[1] = 0x3B;
     s[2] = 0;
@@ -83,27 +83,27 @@ void sub_8002BF74(void)
     s[4] = 0;
     s[5] = 0;
     s[6] = 0;
-    s[7] = (int)sub_8002BFCC;
+    s[7] = (int)OnUiTiyLoaded_8002BFCC;
     QueueFileRequest_8003BC84(s);
 }
 // Matched
-void sub_8002BFCC(int a0, int a1)
+void OnUiTiyLoaded_8002BFCC(int a0, int a1)
 {
-    LoadTiy_80028E74(&loadedOverlayMaybe_8008D620, 0, &dword_8008D3F4, a1, 1);
-    dword_8008B4E8 = 1;
+    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, a1, 1);
+    uiTiyLoaded_8008B4E8 = 1;
 }
 // Matched
 void FreeActiveOverlay_8002C014(void)
 {
-    if (loadedOverlayMaybe_8008D620)
+    if (uiTiySprts_8008D620)
     {
-        free3_8003FC6C((void*)loadedOverlayMaybe_8008D620);
-        loadedOverlayMaybe_8008D620 = 0;
+        free3_8003FC6C((void*)uiTiySprts_8008D620);
+        uiTiySprts_8008D620 = 0;
     }
-    if (dword_8008D3F4)
+    if (uiTiyTPages_8008D3F4)
     {
-        free3_8003FC6C((void*)dword_8008D3F4);
-        dword_8008D3F4 = 0;
+        free3_8003FC6C((void*)uiTiyTPages_8008D3F4);
+        uiTiyTPages_8008D3F4 = 0;
     }
 }
 typedef struct
@@ -118,15 +118,15 @@ typedef struct
     char pad_C[8];
 } OverlayColorEntry;
 // Matched
-void sub_8002C06C(unsigned short* pos, int idx, int ot)
+void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
-    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].x = pos[0];
-    ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].y = pos[1];
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
+    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].x = pos[0];
+    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].y = pos[1];
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)uiTiySprts_8008D620)[idx], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)uiTiyTPages_8008D3F4 + idx * 8, 2);
 }
 // Matched
-void sub_8002C100(unsigned short* p, int n, int ot)
+void DrawLargeNumber_8002C100(unsigned short* p, int n, int ot)
 {
     short digits[7];
     unsigned short pos[2];
@@ -152,13 +152,13 @@ void sub_8002C100(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
 // Matched
-void sub_8002C290(unsigned short* p, int n, int ot)
+void DrawSmallNumber3_8002C290(unsigned short* p, int n, int ot)
 {
     short digits[3];
     unsigned short pos[2];
@@ -184,13 +184,13 @@ void sub_8002C290(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
 // Matched
-void sub_8002C414(unsigned short* p, int n, int ot)
+void DrawSmallNumber9_8002C414(unsigned short* p, int n, int ot)
 {
     short digits[9];
     unsigned short pos[2];
@@ -216,8 +216,8 @@ void sub_8002C414(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)loadedOverlayMaybe_8008D620)[digits[j]].w - 1);
-            sub_8002C06C(pos, digits[j], ot);
+            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
 }
@@ -230,16 +230,16 @@ int sub_8002C5A4(int n)
     } while (n);
     return 0;
 }
-extern unsigned char dword_800826F8[][4];
+extern unsigned char largeDigitColors_800826F8[][4];
 // Matched
-void sub_8002C5D0(int a0)
+void SetLargeDigitColor_8002C5D0(int a0)
 {
     short i = 0x84;
     do
     {
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].r = dword_800826F8[a0][0];
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].g = dword_800826F8[a0][1];
-        ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[i].b = dword_800826F8[a0][2];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].r = largeDigitColors_800826F8[a0][0];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].g = largeDigitColors_800826F8[a0][1];
+        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].b = largeDigitColors_800826F8[a0][2];
         i++;
     } while (i < 0x8e);
 }

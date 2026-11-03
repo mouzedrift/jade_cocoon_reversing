@@ -5991,7 +5991,7 @@ void sub_8002741C(void)
     if (dword_80082678 == 1)
     {
         p = dword_800B1DB8[9];
-        sub_8003C060(p[1]);
+        CancelFileRequest_8003C060(p[1]);
         dword_80082678 = 0;
         p[0] = 0;
     }

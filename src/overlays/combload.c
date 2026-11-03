@@ -60,7 +60,7 @@ extern void sub_800B7674(int, int);
 extern int sub_800B793C();
 extern int sub_800B7914();
 extern void sub_8002BE10();
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
 INCLUDE_OVERLAY_ASM(combload, dword_800A4088);
 
@@ -153,11 +153,11 @@ void sub_800A4364()
 {
     RECT r;
     CombLoadBox b;
-    short* p = (short*)(loadedOverlayMaybe_8008D620 + 0x12C);
+    short* p = (short*)(uiTiySprts_8008D620 + 0x12C);
     p[4] = 0x78;
     p[5] = 0x14;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x78, 2);
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x78, 2);
     r.x = 0x78;
     r.w = 0x7E;
     r.h = 0x12;
@@ -165,7 +165,7 @@ void sub_800A4364()
     b.col_0 = uiColor_8008B590;
     r.y = 0x14;
     b.c_2 = 0;
-    sub_80042460(&r, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(&r, &b, dword_8008D454 + 0x28, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A4364);
@@ -180,24 +180,24 @@ void sub_800A44DC()
     CombLoadBox b;
     short* p;
     int base;
-    base = loadedOverlayMaybe_8008D620;
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0x66;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
-    base = loadedOverlayMaybe_8008D620;
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0x8E;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
-    base = loadedOverlayMaybe_8008D620;
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0xD4;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
     b.c_3 = 1;
     rect[0] = 0x64;
     b.col_0 = uiColor_8008B590;
@@ -205,17 +205,17 @@ void sub_800A44DC()
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
     rect[0] = 0x8C;
     rect[1] = 0x28;
     rect[2] = 0x3C;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
     rect[0] = 0xD2;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A44DC);

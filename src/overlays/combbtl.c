@@ -196,8 +196,8 @@ extern void sub_800BC878();
 extern void sub_80037720();
 extern void sub_80037748();
 extern void SetFadeMode_8001C19C();
-extern void sub_8002BF74();
-extern int dword_8008B4E8;
+extern void LoadUiTiy_8002BF74();
+extern int uiTiyLoaded_8008B4E8;
 extern int subInt_800378F8();
 extern void sub_800A7290();
 extern void sub_800A7420();
@@ -246,10 +246,10 @@ void sub_800A4D48(CombBtlTask* t, int a)
         SetFadeMode_8001C19C(3, 0x20);
         dword_800A84B8 = 7;
     case 7:
-        sub_8002BF74();
+        LoadUiTiy_8002BF74();
         dword_800A84B8 = 8;
     case 8:
-        if (!dword_8008B4E8)
+        if (!uiTiyLoaded_8008B4E8)
         {
             break;
         }

@@ -93,7 +93,7 @@ extern void sub_8002F7D0(void* p, int a1);
 extern void sub_8002E288(int a0, int a1, int a2, void* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800C5440(short a0, short a1, int a2);
 typedef struct Widget_equip
 {
@@ -331,7 +331,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                     u.s.a = uiColor_8008B590;
                     u.s.b = 0;
                     u.s.c = 1;
-                    sub_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+                    DrawWindow_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
                 }
                 else
                 {
@@ -548,7 +548,7 @@ void sub_800C5314(EquipCtx_equip* c)
         u.s.a = uiColor_8008B590;
         u.s.b = 0;
         u.s.c = mode;
-        sub_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+        DrawWindow_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
     }
 }
 

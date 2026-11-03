@@ -66,7 +66,7 @@ int ratan2Degrees_8003B56C(int x, int y)
 }
 #if 0
 // Not matched (8 words): s1/s2 register assignment swapped
-int sub_8003B5D4(int* v, short* out)
+int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
     short b;
@@ -80,7 +80,7 @@ int sub_8003B5D4(int* v, short* out)
 }
 
 #endif
-INCLUDE_ASM(sub_8003B5D4);
+INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched
 int Sign_8003B664(int x)
 {
@@ -248,7 +248,7 @@ short WrapAngle_8003BA18(int v)
     return r;
 }
 // Matched
-int sub_8003BA38(unsigned int a, unsigned int b)
+int CompareUInt_8003BA38(unsigned int a, unsigned int b)
 {
     if (a > b)
     {
@@ -541,7 +541,7 @@ int sub_8003BFD0(int key, int flag)
     return 2;
 }
 // Matched
-int sub_8003C060(int key)
+int CancelFileRequest_8003C060(int key)
 {
     FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)

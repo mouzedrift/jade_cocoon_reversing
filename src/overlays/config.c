@@ -101,8 +101,8 @@ extern char dword_800C4E98[];
 extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
 extern void sub_8002A5A4(CfgDlgConfig* p);
-extern void sub_8002C06C(void* p, int a, short b);
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern char dword_800C5298[];
 extern char dword_800C52BC[];
@@ -524,8 +524,8 @@ void sub_800C38CC(CfgCtxConfig* c)
     b.col_8 = uiColor_8008B590;
     b.c_A = 0;
     b.y_2 = 0x15;
-    sub_8002C06C(&b, 0x4F, 0xE);
-    sub_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&b, 0x4F, 0xE);
+    DrawWindow_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
 }
 
 // Matched
@@ -600,8 +600,8 @@ void sub_800C39C4(CfgCtxConfig* c)
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.x_0 = 0x8B;
-    sub_8002C06C(&box, 0xDD, 0xE);
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&box, 0xDD, 0xE);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 extern unsigned short* dword_800C5474[];
@@ -743,8 +743,8 @@ done:
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.y_2 = 0x15;
-    sub_8002C06C(&box, 0xE8, 0xE);
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 INCLUDE_OVERLAY_ASM(config, dword_800C2D20);
 
@@ -768,10 +768,10 @@ void sub_800C4180(CfgCtxConfig* c)
     box1.col_8 = uiColor_8008B590;
     box1.c_A = 0;
     box1.y_2 = 0x14;
-    sub_8002C06C(&box1, 0x2A, 0xE);
+    DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
     box1.y_2 = 0x15;
-    sub_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
     for (i = 0; i < 4; i++)
     {
         unsigned int n = 0;
@@ -786,7 +786,7 @@ void sub_800C4180(CfgCtxConfig* c)
         }
         tail.col_0 = i;
         tail.c_3 = 1;
-        sub_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
+        DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
@@ -796,10 +796,10 @@ void sub_800C4180(CfgCtxConfig* c)
         box3.c_B = 1;
         box3.x_0 = 0x74;
         box3.y_2 = i * 38 + 0x2C;
-        sub_8002C06C(&box3, 0xCA, 0xE);
+        DrawUiTiySprt_8002C06C(&box3, 0xCA, 0xE);
         box3.x_0 = rect3[0] + 0xE;
         box3.y_2 = rect3[1] + 6;
-        sub_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
     }
 }
 #endif
@@ -847,10 +847,10 @@ void sub_800C4390(CfgCtxConfig* c)
     box.col_8 = uiColor_8008B590;
     box.c_A = 0;
     box.y_2 = 0x15;
-    sub_8002C06C(&box, 0xAB, 0xE);
+    DrawUiTiySprt_8002C06C(&box, 0xAB, 0xE);
     box.x_0 = 0x8C;
     box.y_2 = 0x15;
-    sub_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 // Matched

@@ -107,9 +107,9 @@ typedef struct
     unsigned char field_2;
     unsigned char field_3;
 } struct_A384_buf;
-extern void sub_80042460(int a, struct_A384_buf* b, void* c, int d);
+extern void DrawWindow_80042460(int a, struct_A384_buf* b, void* c, int d);
 // Matched
-void sub_8002A384(struct_F1C8* p)
+void DrawUiWindow_8002A384(struct_F1C8* p)
 {
     struct_A384_buf buf;
     unsigned char c = p->field_8;
@@ -117,7 +117,7 @@ void sub_8002A384(struct_F1C8* p)
     buf.field_3 = 1;
     buf.field_2 = c;
     buf.color = col;
-    sub_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
+    DrawWindow_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
 }
 typedef struct
 {
@@ -185,7 +185,7 @@ typedef struct
     struct_A5A4_item** field_10;
     int field_14;
 } struct_A5A4;
-extern void sub_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddClipTexWindowPrim_80033308(void* a);
 extern void sub_8002A710(void* a, int b);
 extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
@@ -199,7 +199,7 @@ void sub_8002A5A4(struct_A5A4* p)
     {
         for (j = 0; !(p->field_10[i][j].flags & 1); j++)
         {
-            sub_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
+            InterpolateWindowRect_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
             AddClipTexWindowPrim_80033308(pOT_8008D454 + p->field_14);
             sub_8002A710(&p->field_10[i][j], p->field_14);
             AddTexWindowPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);

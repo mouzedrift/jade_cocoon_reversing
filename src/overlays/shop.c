@@ -152,7 +152,7 @@ extern int* name_800BFD08[];
 extern ShopEntShop name_800BF7C8[];
 extern short name_800BF8B4[];
 extern void sub_800A7B00(int a);
-extern void sub_8002BF74();
+extern void LoadUiTiy_8002BF74();
 extern int sub_800BD678();
 extern void sub_800BD854();
 extern void sub_800BD7A8();
@@ -1782,7 +1782,7 @@ void sub_800BE07C(ShopTaskShop* t, ShopUnit3Shop* u)
     u->field_30 = u->a5E[1];
     u->field_32 = u->a72[0];
     sub_800A7B00(-1);
-    sub_8002BF74();
+    LoadUiTiy_8002BF74();
     t->next_8 = sub_800BE210;
 }
 
@@ -1824,7 +1824,7 @@ void sub_800BE128(ShopTaskShop* t, ShopUnit3Shop* u)
 extern void sub_800BE264();
 void sub_800BE210(ShopTaskShop* t, int a)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         sub_8002BE10();
         sub_800BC380(a);

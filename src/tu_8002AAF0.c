@@ -39,7 +39,7 @@ typedef struct
     unsigned char c;
 } struct_AAF0_param;
 extern short uiColor_8008B590;
-extern void sub_80042460(void* a, int b, void* c, int d);
+extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
 void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
 {
@@ -123,7 +123,7 @@ void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
     {
         t.color = 0;
     }
-    sub_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
+    DrawWindow_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
 }
 #if 0
 // Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
@@ -190,22 +190,22 @@ void sub_8002AD80(int flags)
 {
     if (flags & 2)
     {
-        sub_8002C5D0(3);
+        SetLargeDigitColor_8002C5D0(3);
     }
     else
     {
-        sub_8002C5D0(0);
+        SetLargeDigitColor_8002C5D0(0);
     }
 }
 extern void sub_8002A710(void* a, int b);
-extern void sub_80042460(void* a, int b, void* c, int d);
+extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
 void sub_8002ADB4(char* a0, int a1, int a2, int a3)
 {
     sub_8002A710(a0, a2);
     sub_8003F900(2, 0);
     sub_8003F900(1, 0);
-    sub_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
+    DrawWindow_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
 }
 typedef struct
 {
@@ -242,7 +242,7 @@ void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4)
         t.c = 1;
         t.b = 0;
         t.color = uiColor_8008B590;
-        sub_80042460(a3, (int)&t, &pOT_8008D454[a2], 0);
+        DrawWindow_80042460(a3, (int)&t, &pOT_8008D454[a2], 0);
     }
 }
 // Matched
@@ -289,7 +289,7 @@ typedef struct
     int icon;
     int text;
 } struct_B004_entry;
-extern void sub_8002C06C(void* p, int a1, int a2);
+extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 extern int sub_8003E4C8(int text);
 // Matched
 void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
@@ -313,9 +313,9 @@ void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
     cur.x = base.x + 2;
     for (; e[i].icon >= 0; i++)
     {
-        cur.y = base.y + (14 - ((SPRT*)loadedOverlayMaybe_8008D620)[e[i].icon].h) / 2;
-        sub_8002C06C(&cur, e[i].icon, ot);
-        cur.x = (unsigned short)(cur.x + 1) + ((SPRT*)loadedOverlayMaybe_8008D620)[e[i].icon].w;
+        cur.y = base.y + (14 - ((SPRT*)uiTiySprts_8008D620)[e[i].icon].h) / 2;
+        DrawUiTiySprt_8002C06C(&cur, e[i].icon, ot);
+        cur.x = (unsigned short)(cur.x + 1) + ((SPRT*)uiTiySprts_8008D620)[e[i].icon].w;
         cur.y = base.y + 2;
         DrawText_8003E91C(2, e[i].text, &cur, ot);
         cur.x = sub_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);
@@ -327,7 +327,7 @@ void sub_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
     t.c = 1;
     t.b = 0;
     t.color = uiColor_8008B590;
-    sub_80042460(&r, (int)&t, &pOT_8008D454[ot], 0);
+    DrawWindow_80042460(&r, (int)&t, &pOT_8008D454[ot], 0);
 }
 typedef struct
 {

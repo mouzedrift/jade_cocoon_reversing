@@ -24,15 +24,15 @@ extern char aDWorkPsusEvent[];
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
 extern short uiColor_8008B590;
-extern void sub_8004226C(int a, RECT* r, int c, int d);
-extern void sub_80041ED0(int a, RECT* r, int c, int d);
+extern void GetWindowColors_8004226C(int a, RECT* r, int c, int d);
+extern void DrawWindowFrame_80041ED0(int a, RECT* r, int c, int d);
 
 extern unsigned char** off_80087064[];
 extern unsigned char* off_80087050[];
 extern int dword_80086FB0[][3];
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
-void sub_8004226C(int a, RECT* r, int c, int d)
+void GetWindowColors_8004226C(int a, RECT* r, int c, int d)
 {
     unsigned char* out = (unsigned char*)r;
     unsigned char c0[4];
@@ -83,21 +83,21 @@ void sub_8004226C(int a, RECT* r, int c, int d)
     }
 }
 // Matched
-void sub_80042460(int a0, unsigned char* p, int a2, int a3)
+void DrawWindow_80042460(int a0, unsigned char* p, int a2, int a3)
 {
     RECT r;
-    sub_8004226C(p[2], &r, a3, *(short*)p);
-    sub_80041ED0(a0, &r, a2, p[3]);
+    GetWindowColors_8004226C(p[2], &r, a3, *(short*)p);
+    DrawWindowFrame_80041ED0(a0, &r, a2, p[3]);
 }
 // Matched
-void sub_800424C0(int a0, short a1, int a2, int a3)
+void DrawUiColorWindow_800424C0(int a0, short a1, int a2, int a3)
 {
     RECT r;
-    sub_8004226C(a1, &r, a3, uiColor_8008B590);
-    sub_80041ED0(a0, &r, a2, 1);
+    GetWindowColors_8004226C(a1, &r, a3, uiColor_8008B590);
+    DrawWindowFrame_80041ED0(a0, &r, a2, 1);
 }
 // Matched
-void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
+void DrawGouraudRect_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
 {
     POLY_G4 p;
     DR_TPAGE dt;
@@ -122,9 +122,9 @@ void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned 
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
-extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
-void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
+void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot)
 {
     LINE_F4 l;
     DVECTOR a;
@@ -137,10 +137,10 @@ void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
     a.vy = l.y0;
     b.vx = l.x3;
     b.vy = l.y3;
-    sub_80042870(&a, &b, rgb, ot);
+    DrawLine_80042870(&a, &b, rgb, ot);
 }
 // Matched
-void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
+void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 {
     LINE_F2 l;
     DR_TPAGE dt;
@@ -186,7 +186,7 @@ void sub_800429F8(int a0, int a1)
             rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20][1];
             rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20][2];
         }
-        sub_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
+        DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
     }
 }
 #if 0

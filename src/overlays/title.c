@@ -81,7 +81,7 @@ void sub_800A09C0(TitleTask* t)
     }
     if (r)
     {
-        sub_8002BF74();
+        LoadUiTiy_8002BF74();
         t->next_8 = sub_800A0A1C;
     }
 }
@@ -93,7 +93,7 @@ extern void sub_800A0A70();
 // Matched
 void sub_800A0A1C(TitleTask* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         padPressed_8009194C = 0;
         dword_800A2808 = LoadOverlay_80020BF8(1, 0x11);
@@ -398,7 +398,7 @@ typedef struct TitleSmall
     char c;
 } TitleSmall;
 
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800A1F98();
 extern void sub_800A1AC0();
 extern void sub_800A1310();
@@ -434,7 +434,7 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     *(short*)(c->field_C + 0x32) = 0xA7;
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
-    sub_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
+    DrawWindow_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
     sub_800A1F98(c->field_C, c->field_14, c);
     if (padPressed_8009194C & 0x800)
     {
@@ -811,7 +811,7 @@ void sub_800A1D8C(TitleTaskM* t)
 {
     LoadOverlay_80020BF8(2, 0xF);
     SetFadeMode_8001C19C(0, 0x20);
-    sub_8002BF74();
+    LoadUiTiy_8002BF74();
     t->fn_8 = sub_800A1DD8;
 }
 
@@ -821,7 +821,7 @@ extern void sub_800A1E24();
 // Matched
 void sub_800A1DD8(TitleTaskM* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         SetFadeMode_8001C19C(3, 0x20);
         sub_800C2EB4();

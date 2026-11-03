@@ -34,4 +34,4 @@ int sub_80041E68(int mode, int a, int b, int c)
     }
     return -1;
 }
-INCLUDE_ASM(sub_80041ED0);
+INCLUDE_ASM(DrawWindowFrame_80041ED0);
