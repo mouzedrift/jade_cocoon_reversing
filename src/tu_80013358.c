@@ -25,6 +25,7 @@ int sub_80013358(int idx)
     return dword_80079320[idx];
 }
 INCLUDE_ASM(sub_80013374);
+extern void sub_80012BB0(int a0, int a1, int* p, int a3);
 // Matched
 void sub_80013C28(int a0, int a1, int* p, int a3)
 {
