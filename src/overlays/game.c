@@ -208,7 +208,7 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b)
     GameSlot_1* r = sub_800A17BC();
     r->f0 = 1;
     r->f4 = b;
-    MemCopy_800403E8((unsigned int*)r->data_8, src, 0xe0);
+    MemCopy_800403E8(r->data_8, src, 0xe0);
     return r;
 }
 

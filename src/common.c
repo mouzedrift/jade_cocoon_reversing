@@ -96,7 +96,7 @@ unsigned char* sub_800129B0(Stats12* out, unsigned char* in, int a2)
     int kind = in[1];
     Minion* mn;
     UnitStats* u;
-    MemCopy_800403E8((unsigned int*)out, (unsigned int*)sub_800318C8(kind), 12);
+    MemCopy_800403E8(out, sub_800318C8(kind), 12);
     mn = sub_80014444(a2 & 0xFF);
     if (mn)
     {
@@ -217,7 +217,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     case 0:
         if (p[2] == 1)
         {
-            MemCopy_800403E8((unsigned int*)&local, (unsigned int*)sub_8001D260(), 12);
+            MemCopy_800403E8(&local, sub_8001D260(), 12);
         }
         break;
     case 6:
@@ -226,11 +226,11 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         out->field_10 = sub_80031A04(t, p[1]);
         break;
     case 1:
-        MemCopy_800403E8((unsigned int*)&local, (unsigned int*)sub_8001AD64(p[1]), 12);
+        MemCopy_800403E8(&local, sub_8001AD64(p[1]), 12);
         out->field_10 = GetMagicMpCost_8001AC58(p[1]);
         break;
     case 4:
-        MemCopy_800403E8((unsigned int*)&local, (unsigned int*)GetItemData_8001CDF4(p[1]), 12);
+        MemCopy_800403E8(&local, GetItemData_8001CDF4(p[1]), 12);
         break;
     case 26:
         break;

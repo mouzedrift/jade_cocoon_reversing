@@ -9,6 +9,9 @@
 extern UnitSkills dword_8007A9F8[];
 extern UnitSkills* sub_800B3274(int a0);
 extern UnitSkills* sub_80019C28(unsigned int idx);
+// each species' name (plain text, EncodeName_8003F7C8 converts it); species from 0xC9 on come from sub_800B32D4
+extern char* minionSpeciesNames_8007A170[];
+extern char* sub_800B32D4(int a0);
 
 // per-species model description (dword_8007BD30, sub_80019C70)
 typedef struct

@@ -2869,7 +2869,7 @@ void LoadRelocBlob_800BC854(int* src)
         dword_800AEBBC.p_0 = 0;
     }
     dword_800AEBBC.p_0 = (int*)ListAlloc_8003FDC0(dword_80091C10, size);
-    MemCopy_800403E8((unsigned int*)dword_800AEBBC.p_0, (unsigned int*)src, size);
+    MemCopy_800403E8(dword_800AEBBC.p_0, src, size);
     n = dword_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {

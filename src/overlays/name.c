@@ -125,8 +125,8 @@ void StartNameEntry_800B6E4C(int a, int flags)
         CopyPlayerName_8003F860((unsigned char*)a, (unsigned short*)&buf);
         DecodeText_8003F748(1, &buf);
         sub_800B8018(&buf);
-        MemCopy_800403E8((unsigned int*)p->field_28, (unsigned int*)&buf, 0x14);
-        MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)&buf, 0x14);
+        MemCopy_800403E8(p->field_28, &buf, 0x14);
+        MemCopy_800403E8(p->name_10, &buf, 0x14);
         p->c_24 = 0;
         p->c_25 = 0;
         p->length_44 = SavedNameLength_800B7F70(p);
@@ -578,7 +578,7 @@ void RestoreSavedName_800B7F08(NameEntry* p)
     int i;
     short* s;
 
-    MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)p->field_28, 0x14);
+    MemCopy_800403E8(p->name_10, p->field_28, 0x14);
     s = p->field_28;
     i = 0;
     for (i = 0; i < 10; s++)
@@ -609,7 +609,7 @@ int SavedNameLength_800B7F70(NameEntry* p)
 // Matched
 void ResetNameToDefault_800B7FA0(NameEntry* p)
 {
-    MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)defaultName_800B83B8, 0x14);
+    MemCopy_800403E8(p->name_10, defaultName_800B83B8, 0x14);
     p->length_44 = 0;
 }
 

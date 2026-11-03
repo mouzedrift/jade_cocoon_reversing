@@ -2795,7 +2795,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     mem = ListAlloc_8003FDC0(dword_80091990, size);
     o->bones_134 = (short*)mem;
-    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d->bones_34, sz0);
+    MemCopy_800403E8(mem, d->bones_34, sz0);
     o->baseScale_138[0] = d->baseScale_38[0];
     o->baseScale_138[1] = d->baseScale_38[1];
     o->baseScale_138[2] = d->baseScale_38[2];

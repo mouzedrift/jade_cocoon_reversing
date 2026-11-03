@@ -678,7 +678,7 @@ extern void ApplyEquipmentModifiers_80033754(unsigned char* a, UnitStatus* b);
 void sub_800335D0(UnitStatus* pSrc, UnitStatus* m)
 {
     int r;
-    MemCopy_800403E8((unsigned int*)m, (unsigned int*)pSrc, sizeof(UnitStatus));
+    MemCopy_800403E8(m, pSrc, sizeof(UnitStatus));
     r = CalcEquippedStats_80033624(m->stats_2C, m);
     if (r)
     {
@@ -732,7 +732,7 @@ void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src)
     int i;
     int j;
     unsigned char* ids;
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)src->field_20, 12);
+    MemCopy_800403E8(dst, src->field_20, 12);
     ids = src->field_1C;
     tbl[0] = (unsigned char*)GetArmorModifiers_8001CDA0(ids[1]);
     tbl[1] = (unsigned char*)GetAccessoryModifiers_8001CD74(ids[2]);

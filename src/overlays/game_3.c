@@ -3489,9 +3489,9 @@ void sub_800AD3F0(int a)
         r = sub_800AD58C(i, a);
         if (r)
         {
-            MemCopy_800403E8((unsigned*)tmp, (unsigned*)&tbl[cnt], 2);
-            MemCopy_800403E8((unsigned*)&tbl[cnt], (unsigned*)r, 2);
-            MemCopy_800403E8((unsigned*)r, (unsigned*)tmp, 2);
+            MemCopy_800403E8(tmp, &tbl[cnt], 2);
+            MemCopy_800403E8(&tbl[cnt], r, 2);
+            MemCopy_800403E8(r, tmp, 2);
             cnt++;
         }
     }

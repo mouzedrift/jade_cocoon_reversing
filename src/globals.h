@@ -316,8 +316,7 @@ extern unsigned int xaRequestPending_80096118;
 extern int dword_80091CFC;
 extern int dword_80083BD0;
 extern int fileRequestQueue_80086540;
-extern int fileBuffer_8008656C;
-extern int cdReadState_80086550[5];
+extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern struct_12 stru_80083594[];
@@ -377,9 +376,9 @@ typedef struct FileRequest
     int fileId_10;        // DATA.001 file id
     int offset_14;        // from FileRequestDesc.offset_8
     int size_18;          // from FileRequestDesc.size_C
-    int dest_1C;          // destination buffer
-    int field_20;         // copy of the request parameters (fileRequestParams_800954C0)
-    int callback_24;      // void (*)(int params, int dest)
+    void* dest_1C;        // destination buffer
+    void* params_20;      // copy of the request parameters (fileRequestParams_800954C0)
+    void (*callback_24)(void* params, void* data);
 } FileRequest;
 
 // what QueueFileRequest_8003BC84 takes; copied into a FileRequest (params_14 into fileRequestParams_800954C0)

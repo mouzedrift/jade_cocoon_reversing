@@ -790,7 +790,7 @@ void CopyBytes_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
   while ( fileSize );
 }
 // Matched
-void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize)
+void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize)
 {
   unsigned int *overlayAddr_copy; // $s2
   unsigned char *pFileBuffer; // $s3
@@ -798,7 +798,7 @@ void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsig
   unsigned int alignedFileSize; // $s0
 
   overlayAddr_copy = overlayAddr;
-  pFileBuffer = (unsigned char *)fileBuffer;
+  pFileBuffer = fileBuffer;
   fileSize_copy = fileSize;
   if ( fileSize )
   {
@@ -810,7 +810,7 @@ void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsig
         fileSize_copy = fileSize & 7;
         if ( alignedFileSize )
         {
-          CopyDoubleWords_80040360(overlayAddr, (int *)fileBuffer, alignedFileSize);
+          CopyDoubleWords_80040360(overlayAddr, fileBuffer, alignedFileSize);
           overlayAddr_copy += 2 * alignedFileSize;
           pFileBuffer += 8 * alignedFileSize;
         }

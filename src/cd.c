@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_8001EA48.h"
+#include "tu_8003C6C8.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -452,16 +453,16 @@ int QueueFileRequest_8003BC84(FileRequestDesc* req)
     n->fileId_10 = req->fileId_4;
     n->offset_14 = req->offset_8;
     n->size_18 = req->size_C;
-    n->dest_1C = (int)req->dest_10;
-    n->callback_24 = (int)req->callback_1C;
+    n->dest_1C = req->dest_10;
+    n->callback_24 = req->callback_1C;
     if (req->paramsSize_18 == 0 || req->params_14 == 0)
     {
-        n->field_20 = 0;
+        n->params_20 = 0;
     }
     else
     {
-        n->field_20 = (int)fileRequestParams_800954C0[i];
-        MemCopy_800403E8((unsigned int*)n->field_20, (unsigned int*)req->params_14, req->paramsSize_18);
+        n->params_20 = fileRequestParams_800954C0[i];
+        MemCopy_800403E8(n->params_20, req->params_14, req->paramsSize_18);
     }
     if (head->count == 0)
     {
@@ -575,7 +576,7 @@ int IsFileRequestQueueIdle_8003BF88(void)
 void* SetFileBufferInUse_8003BFB8(int arg0)
 {
     fileBufferInUse_80086564 = arg0;
-    return (void*)fileBuffer_8008656C;
+    return fileBuffer_8008656C;
 }
 // Matched
 int ConsumeFileRequest_8003BFD0(int key, int flag)
@@ -586,11 +587,11 @@ int ConsumeFileRequest_8003BFD0(int key, int flag)
         unsigned int f = n->flags_C;
         if (f & 0x1000)
         {
-            void (*cb)(int, int) = (void (*)(int, int))n->callback_24;
+            void (*cb)(void*, void*) = n->callback_24;
             n->flags_C = f | 0x2000;
             if (cb)
             {
-                cb(n->field_20, n->dest_1C);
+                cb(n->params_20, n->dest_1C);
                 n->callback_24 = 0;
                 return 0;
             }
@@ -623,7 +624,7 @@ struct FileTask
     Data001File file;
     char pad_10[0xC];
     int state;
-    int buf;
+    void* buf;
     int sectors;
     int retry;
 };
@@ -655,7 +656,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t);
 void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
 {
     InitFileRequestQueue_8003BBE4();
-    fileBuffer_8008656C = 0x801B9250;
+    fileBuffer_8008656C = (void*)0x801B9250;
     a1->cur = 0;
     a1->state = 0;
     a1->buf = 0;
@@ -663,8 +664,6 @@ void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
 extern FileRequest* dword_80086548;
-extern int CdSeekStart_8003C8A0(DslLOC* loc);
-extern int CdReadStart_8003C944(DslLOC* loc, int buf, int sectors);
 // Matched
 void ProcessFileRequests_8003C184(int* a0, FileTask* t)
 {
@@ -727,12 +726,12 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 }
                 else
                 {
-                    t->buf = (int)malloc3_8003FC4C(t->sectors << 11);
+                    t->buf = malloc3_8003FC4C(t->sectors << 11);
                 }
             }
             else
             {
-                t->buf = 0x801B9250;
+                t->buf = (void*)0x801B9250;
             }
             if (t->cur->flags_C & 0x10)
             {
@@ -782,7 +781,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             {
                 if (t->cur->flags_C & 2)
                 {
-                    MemCopy_800403E8((unsigned int*)t->cur->dest_1C, (unsigned int*)t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
+                    MemCopy_800403E8(t->cur->dest_1C, t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
                 }
                 t->state = 8;
             }
@@ -826,7 +825,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
         case 9:
             if (t->cur->callback_24)
             {
-                ((void (*)(int, int))t->cur->callback_24)(t->cur->field_20, t->buf);
+                t->cur->callback_24(t->cur->params_20, t->buf);
             }
             if (t->cur->flags_C & 1)
             {
@@ -834,7 +833,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 {
                     if (!(t->cur->flags_C & 0x200))
                     {
-                        free3_8003FC6C((void*)t->buf);
+                        free3_8003FC6C(t->buf);
                     }
                     t->buf = 0;
                 }

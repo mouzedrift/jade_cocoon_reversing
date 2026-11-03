@@ -180,7 +180,7 @@ int AddItem_80010650(Item* pItem)
     {
         if (saveData_8008B570.items[i].id == 0xD3)
         {
-            MemCopy_800403E8((unsigned int*)&saveData_8008B570.items[i], (unsigned int*)pItem, sizeof(Item));
+            MemCopy_800403E8(&saveData_8008B570.items[i], pItem, sizeof(Item));
             return 1;
         }
     }
@@ -290,7 +290,7 @@ int StartModelTask_80010850(void* a0)
         buf->key_0 = e->field_4;
         m = malloc3_8003FC4C(0x40);
         buf->state_4 = m;
-        MemCopy_800403E8((unsigned int*)&m->count_4, (unsigned int*)a0, 0x34);
+        MemCopy_800403E8(&m->count_4, a0, 0x34);
         m->models_0 = 0;
         m->state_38 = 1;
         m->next_3C = 1;

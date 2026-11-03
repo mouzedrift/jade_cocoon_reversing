@@ -1020,7 +1020,7 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 3;
                 PlaySfx_80031494(0x7E);
-                MemCopy_800403E8((unsigned int*)(s->summaries_LOAD + n * 128), (unsigned int*)(s->fileBuf_LOAD + 0x280), 0x80);
+                MemCopy_800403E8(s->summaries_LOAD + n * 128, s->fileBuf_LOAD + 0x280, 0x80);
                 ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
                 break;
             case 1:
@@ -1501,7 +1501,7 @@ void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
     h->f52_LOAD.c_LOAD[4] = 0;
     h->f57_LOAD = 0;
     h->f5C_LOAD = 0;
-    MemCopy_800403E8((unsigned int*)h->f200_LOAD, (unsigned int*)dword_800BE0B8, 0x80);
+    MemCopy_800403E8(h->f200_LOAD, dword_800BE0B8, 0x80);
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, BuildCardHeader_800BB2AC);

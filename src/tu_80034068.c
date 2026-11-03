@@ -1070,7 +1070,7 @@ EventEntry* OpenItemMessageWindow_80035AC8(int* init)
         o->field_B0 = 0;
         o->field_B2 = 0;
         o->lines_1B4 = 0;
-        MemCopy_800403E8((unsigned int*)&o->item_214, (unsigned int*)init, 0x50);
+        MemCopy_800403E8(&o->item_214, init, 0x50);
         o->res_18.result_20 = 0;
         o->res_18.field_24 = 1;
         if ((unsigned int)o->item_214.mode_48 < 4)

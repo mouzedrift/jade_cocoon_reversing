@@ -193,7 +193,6 @@ void sub_80018EBC(int a0, UnitStatus* a1)
     }
     SetActorTint_8001DAAC(a0, r);
 }
-extern void* minionSpeciesNames_8007A170[];
 extern unsigned char dword_8007BA84[];
 extern unsigned char dword_8007BA74[];
 extern int dword_8007A67C[];
@@ -209,7 +208,7 @@ extern void sub_80019A20(UnitStats* a0);
 int InitMinionData_8001900C(UnitStats* m, int* a1)
 {
     MinionBaseStats st;
-    void** name;
+    char** name;
     int r;
     unsigned int id;
     unsigned int id2;
@@ -311,16 +310,16 @@ int InitMinionData_8001900C(UnitStats* m, int* a1)
     id2 = m->species_5C;
     if (id2 < 0x39)
     {
-        MemCopy_800403E8((unsigned int*)m->st_0.field_20, (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+        MemCopy_800403E8(m->st_0.field_20, dword_8007BA84 + id2 * 12, 12);
     }
     else if (id2 < 0xC9)
     {
         id2 = (id2 - 0x39) / 4;
-        MemCopy_800403E8((unsigned int*)m->st_0.field_20, (unsigned int*)(dword_8007BA84 + id2 * 12), 12);
+        MemCopy_800403E8(m->st_0.field_20, dword_8007BA84 + id2 * 12, 12);
     }
     else
     {
-        MemCopy_800403E8((unsigned int*)m->st_0.field_20, (unsigned int*)sub_800B32F0(id2 - 0xC9), 12);
+        MemCopy_800403E8(m->st_0.field_20, sub_800B32F0(id2 - 0xC9), 12);
     }
     if (m->species_5C - 0x25 < 4)
     {
@@ -336,7 +335,7 @@ int InitMinionData_8001900C(UnitStats* m, int* a1)
         id2 = m->species_5C;
         if (!(id2 - 0x2B < 0xE) && !(id2 - 0xC9 < 0xA))
         {
-            MemCopy_800403E8((unsigned int*)m->st_0.field_20, (unsigned int*)(dword_8007BA74 + st.element * 4), 4);
+            MemCopy_800403E8(m->st_0.field_20, dword_8007BA74 + st.element * 4, 4);
         }
     }
     m->st_0.exp_4 += a1[1];

@@ -283,7 +283,7 @@ int sub_800B9920()
     {
         if (saveData_8008B570.minions[k].id == 3)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
+            MemCopy_800403E8(&items[n], &saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
@@ -299,7 +299,7 @@ int sub_800B9920()
     {
         if (saveData_8008B570.minions[k].id == 2)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
+            MemCopy_800403E8(&items[n], &saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
@@ -443,7 +443,7 @@ int sub_800B9DA8()
         {
             if (items[i].id != 4)
             {
-                MemCopy_800403E8((unsigned int*)&saveData_8008B570.minions[n], (unsigned int*)&items[i], 0xF8);
+                MemCopy_800403E8(&saveData_8008B570.minions[n], &items[i], 0xF8);
                 n++;
             }
         }
@@ -481,8 +481,8 @@ int sub_800B9E94(UnitStats* src, Minion* dst, short c)
     }
     dst->species_2 = src->species_5C;
     dst->field_3 = src->species_5C;
-    MemCopy_800403E8((unsigned int*)&dst->status_84, (unsigned int*)&src->st_0, sizeof(UnitStatus));
-    MemCopy_800403E8((unsigned int*)&dst->skills_DE, (unsigned int*)&src->skills_6C, sizeof(UnitSkills));
+    MemCopy_800403E8(&dst->status_84, &src->st_0, sizeof(UnitStatus));
+    MemCopy_800403E8(&dst->skills_DE, &src->skills_6C, sizeof(UnitSkills));
     MemCopy_800403E8(&dst->magicBits_F4, &src->magicBits_80, 4);
     return 1;
 }
@@ -511,7 +511,7 @@ int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
     int n;
     int t;
     int r;
-    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, sizeof(Minion));
+    MemCopy_800403E8(c, a, sizeof(Minion));
     c->field_3 = b->field_3;
     p = (unsigned char*)sub_8001CD58(d);
     if (p[0] != 0xFF)
@@ -931,7 +931,7 @@ void sub_800BA72C(Minion* a, Minion* b)
             t.slot[i].field_3 = 0;
         }
     }
-    MemCopy_800403E8((unsigned int*)&a->skills_DE, (unsigned int*)&t, sizeof(UnitSkills));
+    MemCopy_800403E8(&a->skills_DE, &t, sizeof(UnitSkills));
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
@@ -1006,7 +1006,7 @@ void sub_800BAB38(Minion* a, Minion* b)
             tmp[i] = b->species_4C[i * 3 - 0x60];
         }
     }
-    MemCopy_800403E8((unsigned int*)a->species_4C, (unsigned int*)tmp, 0x30);
+    MemCopy_800403E8(a->species_4C, tmp, 0x30);
     sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
     sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
     sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
@@ -2257,7 +2257,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         sv = &saveData_8008B570;
         if (sv->settings_1C.bits.d_5 == 1)
         {
-            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
+            MemCopy_800403E8(u->field_4C, &name_800C08E8, sizeof(Minion));
             sub_800B9B44((short*)u->field_50);
             if (u->field_4C->species_4C[0] == 0x23)
             {
@@ -2437,7 +2437,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
             sv = &saveData_8008B570;
             if (!((sv->settings_1C.word >> 5) & 1))
             {
-                MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
+                MemCopy_800403E8(u->field_4C, &name_800C08E8, sizeof(Minion));
                 sub_800B9B44((short*)u->field_50);
                 if (u->field_4C->species_4C[0] == 0x23)
                 {
