@@ -3852,13 +3852,9 @@ void FreeModelAnimData_800269C4(int a0, int n, int sel, int h)
         }
     }
 }
-#if 0
-// Not matched: original copies src[0] through a temporary into n (s3) and orders the param copies before the flag init; the last loop reads the source before computing the k*8 dest offset
+// Matched
 void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
 {
-    int* o = a0;
-    int* src = (int*)a1;
-    int h = a2;
     int f1 = 0;
     int f2 = f1;
     unsigned int n;
@@ -3869,22 +3865,22 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     unsigned int j;
     int r;
     int k;
-    o[0] = src[0];
-    o[1] = src[1];
-    n = o[0];
-    m = o[1];
+    ((int*)a0)[0] = ((int*)a1)[0];
+    n = ((int*)a0)[0];
+    ((int*)a0)[1] = ((int*)a1)[1];
+    m = ((int*)a0)[1];
     if ((int)n < 0)
     {
         n &= 0x7FFFFFFF;
-        s = (unsigned short*)(src + 3);
-        o[0] = n;
-        o[2] = src[2];
+        s = (unsigned short*)(((int*)a1) + 3);
+        ((int*)a0)[0] = n;
+        ((int*)a0)[2] = ((int*)a1)[2];
         f1 = 1;
     }
     else
     {
-        o[2] = 0x20;
-        s = (unsigned short*)(src + 2);
+        ((int*)a0)[2] = 0x20;
+        s = (unsigned short*)(((int*)a1) + 2);
     }
     if ((int)m < 0)
     {
@@ -3893,18 +3889,18 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
     }
     else
     {
-        o[3] = 0;
+        ((int*)a0)[3] = 0;
     }
-    o[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)h);
-    o[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)h);
-    d = (unsigned short*)o[5];
+    ((int*)a0)[5] = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    ((int*)a0)[6] = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    d = (unsigned short*)((int*)a0)[5];
     for (i = 0; i < m; i++)
     {
         *d++ = *s++;
         *d++ = *s++;
         *d++ = *s++;
     }
-    d = (unsigned short*)o[6];
+    d = (unsigned short*)((int*)a0)[6];
     for (j = 0; j < n; j++)
     {
         *d++ = *s++;
@@ -3928,27 +3924,27 @@ void LoadModelAnimData_80026A8C(void* a0, int a1, int a2)
         {
             r += 4;
         }
-        s = (unsigned short*)((char*)src + r);
+        s = (unsigned short*)((char*)((int*)a1) + r);
         if (r & 3)
         {
             r += 2;
-            s = (unsigned short*)((char*)src + r);
+            s = (unsigned short*)((char*)((int*)a1) + r);
         }
-        o[3] = *(int*)s;
+        ((int*)a0)[3] = *(int*)s;
         s += 2;
-        o[4] = HeapAlloc_8003FC8C(o[3] * 8, (struct Pool*)h);
-        for (k = 0; k < o[3]; k++)
+        ((int*)a0)[4] = HeapAlloc_8003FC8C(((int*)a0)[3] * 8, (struct Pool*)a2);
+        k = 0;
+        while (k < ((int*)a0)[3])
         {
-            ((unsigned short*)o[4])[k * 4 + 0] = s[0];
-            ((unsigned short*)o[4])[k * 4 + 1] = s[1];
-            ((unsigned short*)o[4])[k * 4 + 2] = s[2];
-            ((unsigned short*)o[4])[k * 4 + 3] = s[3];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 0] = s[0];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 1] = s[1];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 2] = s[2];
+            ((unsigned short*)((int*)a0)[4])[k * 4 + 3] = s[3];
+            k++;
             s += 4;
         }
     }
 }
-#endif
-INCLUDE_ASM(LoadModelAnimData_80026A8C);
 // Matched
 int sub_80026D6C(int* p)
 {
