@@ -603,28 +603,24 @@ void RunEventListUntilAbort_80043958(EventNode* n)
         } while (n && eventDispatchHalt_8008B540 == 0);
     }
 }
-#if 0
-// Not matched: gcc hoists out+0xc into a3
+// Matched
 void sub_800439E0(unsigned int** arr, unsigned int* out)
 {
     unsigned int* p;
     unsigned int i;
-    out += 4;
     while (*arr)
     {
         p = *arr;
         for (i = 0; i < p[0]; i++)
         {
-            out[2] = p[4];
-            out[3] = p[5];
-            out[0] = p[1];
+            out[6] = p[4];
+            out[7] = p[5];
+            out[4] = p[1];
         }
         arr++;
         out += 10;
     }
 }
-#endif
-INCLUDE_ASM(sub_800439E0);
 // Matched
 int FreeEventList_80043A5C(EventNode* head)
 {

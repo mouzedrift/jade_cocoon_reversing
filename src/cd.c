@@ -220,26 +220,26 @@ void sub_8003B684(int* v)
     }
 }
 #if 0
-// Not matched: sum/ok get t3/t2 instead of t2/t3, plus the dx*dx/dy*dy mflo registers (11 words)
+// Not matched: the four mflo temporaries get v0/a3/v1/a0 instead of a0/v0/v1/a3 (5 words)
 int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
-    int sum = -1;
+    unsigned int sum = -1;
     unsigned int r = *c;
-    int ok = 0;
+    short ok = 0;
     unsigned int dx;
     unsigned int dy;
     unsigned int dz;
     dx = abs(a[0] - b[0]);
-    if (r >= dx)
+    if (dx <= r)
     {
         dy = abs(a[1] - b[1]);
-        if (r >= dy)
+        if (dy <= r)
         {
             dz = abs(a[2] - b[2]);
-            if (r >= dz)
+            if (dz <= r)
             {
                 sum = dx * dx + dy * dy + dz * dz;
-                ok = !(r * r < (unsigned int)sum);
+                ok = !(r * r < sum);
             }
         }
     }
