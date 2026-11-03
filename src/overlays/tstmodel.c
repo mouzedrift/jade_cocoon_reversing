@@ -195,7 +195,94 @@ INCLUDE_OVERLAY_ASM(tstmodel, sub_800A104C);
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1428);
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1614);
+typedef struct TstModelBone
+{
+    short s0;
+    short s2;
+    short s4;
+    unsigned short flags;
+} TstModelBone;
+typedef struct TstModelD
+{
+    int state;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    char pad_14[0x14];
+    TstModelBone bones[41];
+    short s170;
+    short s172;
+} TstModelD;
+typedef struct TstModelB
+{
+    int flags;
+    unsigned short s4;
+    unsigned short s6;
+    short s8;
+    short sA;
+    short sC;
+    unsigned short sE;
+} TstModelB;
+extern TstModelBone dword_800A09B8;
+extern int sub_800A1D70();
+void sub_800A1614(TstModelD* c)
+{
+    TstModelB cur;
+    TstModelBone tmp;
+    int n;
+    int i;
+    unsigned short pad;
+    for (n = 0; c->bones[n].s0 >= 0; n++)
+    {
+    }
+    cur.s8 = 1;
+    cur.flags = 0;
+    cur.s4 = 0;
+    cur.sA = 6;
+    cur.s6 = c->fC;
+    cur.sC = n;
+    cur.sE = c->f10;
+    sub_800A1D70(&cur);
+    if (c->fC != (short)cur.s6 || c->f10 != (short)cur.sE)
+    {
+        PlaySfx_80031494(0x7F);
+    }
+    c->fC = (short)cur.s6;
+    c->f10 = (short)cur.sE;
+    for (i = 0; i < 6; i++)
+    {
+        tmp = dword_800A09B8;
+    }
+    pad = padPressed_8009194C[0];
+    if (pad & 0x20)
+    {
+        if (c->bones[c->f10 + c->fC].flags & 2)
+        {
+            c->bones[c->f10 + c->fC].flags &= ~2;
+        }
+        else
+        {
+            c->bones[c->f10 + c->fC].flags |= 2;
+        }
+    }
+    else if (pad & 0x10)
+    {
+        if (c->bones[c->f10 + c->fC].flags & 0x10)
+        {
+            c->bones[c->f10 + c->fC].flags &= ~0x10;
+        }
+        else
+        {
+            c->bones[c->f10 + c->fC].flags |= 0x10;
+        }
+    }
+    else if (pad & 0x40)
+    {
+        c->s172 = 0;
+        c->state = 3;
+    }
+}
 
 extern void name_8002556C(struct_112* m, int a);
 void sub_800A17B8(int* c)
@@ -380,16 +467,6 @@ int sub_800A1B48(short* m)
     return 0;
 }
 
-typedef struct TstModelB
-{
-    int flags;
-    unsigned short s4;
-    unsigned short s6;
-    short s8;
-    short sA;
-    short sC;
-    unsigned short sE;
-} TstModelB;
 extern short name_800A37F4[];
 extern short name_800A37FC[];
 void sub_800A1CAC(TstModelB* p, int k)
