@@ -4,6 +4,15 @@
 #include "globals.h"
 
 extern unsigned char dword_800C8B30;
+extern int dword_800C9E38;
+extern unsigned char dword_800C9E68;
+extern unsigned char dword_800C9E40;
+extern unsigned char dword_800C9E72[];
+extern unsigned char dword_800C9E80[];
+extern unsigned char dword_800C9E4A;
+extern int dword_800C9E4C;
+extern int dword_800C9E78;
+extern int dword_800C9E58[];
 extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern char stru_8008D534[];
 extern unsigned char dword_800C9E49;
@@ -1566,7 +1575,43 @@ BatPair_a* sub_800BE058(BatPair_a* out, int* p, int c, int a)
     return out;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BE14C);
+extern void sub_800A8C0C(int b);
+extern void sub_800A2760(int* p, int b);
+extern void sub_800377B4(int a, int b, int c);
+void sub_800BE14C(int* p, int b, int k)
+{
+    int r;
+    if (*(int*)&saveData_8008B570 & 0x20)
+    {
+        return;
+    }
+    if (sub_800BC570(k) == 0)
+    {
+        return;
+    }
+    r = sub_800BC7DC(k);
+    switch ((unsigned int)r)
+    {
+    case 0:
+        sub_800A8C0C(b);
+        break;
+    case 1:
+        sub_800C0E84(p, b);
+        break;
+    case 2:
+        sub_800A2760(p, b);
+        if (p[0] == 0x13 || p[0] == 0xB || p[0] == 7 || (p[0] == 5 && sub_80013358(p[1]) == 1) || (p[0] == 0x1A && sub_80013358(p[1]) == 1))
+        {
+            dword_800C9DD0[dword_800C9D90] = k - 4;
+            dword_800C9D90++;
+        }
+        break;
+    }
+    if (!(*(int*)&saveData_8008B570 & 2) && b == 0)
+    {
+        sub_800377B4(r, (short)p[0], k - 4);
+    }
+}
 
 void sub_800BE2C8()
 {
@@ -2458,7 +2503,41 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C1220);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1654);
+extern void sub_800C17EC();
+void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
+{
+    int i;
+    for (i = 0; i < 30; i++)
+    {
+        EventEntry* ev = AllocEventEntry_80043AF8(dword_8008D60C);
+        if (ev)
+        {
+            char* b = ev->buffer;
+            ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
+            *(int*)(b + 0x1C) = p[0];
+            *(int*)(b + 0x20) = p[1];
+            *(int*)(b + 0x24) = p[2];
+            *(int*)(b + 0x10) = p[0];
+            *(int*)(b + 0x14) = p[1];
+            *(int*)(b + 0x18) = p[2];
+            *(short*)(b + 0x34) = q[0];
+            *(short*)(b + 0x36) = q[1];
+            *(short*)(b + 0x38) = q[2];
+            *(int*)(b + 0x3C) = c;
+            *(int*)(b + 0x28) = ((rand() & 0x7F) - 0x3F) << 10;
+            *(int*)(b + 0x2C) = -(rand() & 0x3F) << 10;
+            *(int*)(b + 0x30) = ((rand() & 0x7F) - 0x3F) << 10;
+            *(short*)(b + 0x34) = 0;
+            *(short*)(b + 0x36) = 0;
+            *(short*)(b + 0x38) = 0;
+            *(int*)b = 0;
+            *(short*)(b + 8) = ((rand() & 0xFFF) >> 1) + 0x800;
+            *(int*)(b + 0x40) = e;
+            *(int*)(b + 0x44) = f;
+            ev->cb_8 = (EventEntryFn)sub_800C17EC;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C17EC);
 
@@ -3571,7 +3650,52 @@ void sub_800C5BC0(BatTask* t)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C5D04);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C5EB8);
+extern void sub_80018430(int a);
+void sub_800C5EB8(BatTask* t)
+{
+    if (t->fC == 0)
+    {
+        if (dword_800C8B34 == 0)
+        {
+            t->f8[2] = 0x10;
+            t->f8[0] = 0x15;
+            dword_800C8B34 = 1;
+            t->f8[1] = 1;
+            t->f8[3] = 2;
+        }
+        else
+        {
+            t->f8[0] = 0;
+            t->f8[3] = t->f18;
+        }
+    }
+    else
+    {
+        switch (rand() % 3)
+        {
+        case 0:
+            if (sub_800334F0((Minion*)t->f14))
+            {
+                t->f8[0] = 6;
+                t->f8[1] = 1;
+                t->f8[3] = t->f18;
+                break;
+            }
+        case 1:
+            t->f8[0] = 1;
+            t->f8[1] = 0x19;
+            t->f8[3] = t->f18;
+            sub_80018430(0);
+            break;
+        case 2:
+            t->f8[0] = 6;
+            t->f8[1] = 3;
+            t->f8[3] = t->f18;
+            break;
+        }
+    }
+    dword_800C8B30++;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6038);
 
@@ -3877,11 +4001,62 @@ int sub_800C6EE4(BatTask* t)
     return t->f14[0x2d] > t->f14[0x2f];
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C6EFC);
+extern EventNode* dword_8008D468;
+extern unsigned char dword_800C9E4B;
+extern unsigned char dword_800C9E70;
+extern void sub_800C71A0();
+extern void sub_800C8A08();
+int sub_800C6EFC()
+{
+    int i;
+    int m;
+    int n = 0;
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D468);
+    if (e)
+    {
+        e->cb_8 = (EventEntryFn)sub_800C8A08;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        if (dword_800C9C7C == 0)
+        {
+            dword_800C9E49 = 0;
+        }
+        else
+        {
+            dword_800C9E49 = 1;
+        }
+        dword_800C9E58[0] = 0;
+        dword_800C9E58[1] = 0;
+        dword_800C9E58[3] = 0;
+        dword_800C9E58[2] = 1 << dword_800C9C7C;
+        dword_800C9E78 = sub_800C0A9C();
+        dword_800C9E4B = GetCapturedMinionsFromBitfield_8003BA58(dword_800C9E78);
+        dword_800C9E4C = sub_800A248C();
+        dword_800C9E4A = GetCapturedMinionsFromBitfield_8003BA58(dword_800C9E4C);
+        for (i = 0; i < 3; i++)
+        {
+            m = 1 << (i + 4);
+            if (dword_800C9E4C & m)
+            {
+                dword_800C9E80[n] = i + 4;
+                dword_800C9E72[n] = m;
+                n++;
+            }
+        }
+        dword_800C9E50 = 0;
+        dword_800C9E40 = 0;
+        dword_800C9E48 = 0;
+        dword_800C9E68 = 4;
+        dword_800C9E70 = 0;
+        sub_800C7088();
+        sub_800C71A0();
+        sub_800C71C8();
+        dword_800C9E38 = -1;
+    }
+    return (int)e;
+}
 
 extern int sub_800AD308(int a);
 extern int CountMagicBits_8001AE54(char* h);
-extern unsigned char dword_800C9E4A;
 void sub_800C7088()
 {
     if (dword_800C9E49 == 0)
@@ -3965,7 +4140,6 @@ void sub_800C71C8()
     }
 }
 
-extern int dword_800C9E4C;
 int sub_800C72B8()
 {
     int i;
@@ -4001,7 +4175,6 @@ int sub_800C7334()
     return 1;
 }
 extern char* dword_800C9338[];
-extern unsigned char dword_800C9E68;
 char* sub_800C73B8(unsigned char a)
 {
     if (a == 4)
@@ -4018,7 +4191,6 @@ char* sub_800C73B8(unsigned char a)
     }
     return dword_800C9338[a];
 }
-extern unsigned char dword_800C9E80[];
 void sub_800C7424(unsigned char a)
 {
     sub_800BFC10();
@@ -4062,8 +4234,6 @@ unsigned char sub_800C78D0()
     return dword_800C9648[dword_800C9E49 + (short)GetMenuCursorIndex_8003DA54(dword_800C92D8) * 2];
 }
 
-extern int dword_800C9E78;
-extern unsigned char dword_800C9E72[];
 #if 0 // Not matched: b and r swap registers (v1/a0); tried declaration order, int b, re-reading the global, early returns
 int sub_800C791C()
 {
@@ -4176,7 +4346,6 @@ void sub_800C8694(unsigned char a)
     }
 }
 
-extern int dword_800C9E38;
 extern int dword_800C9E3C;
 void sub_800C8710()
 {
@@ -4188,7 +4357,6 @@ void sub_800C8710()
     }
 }
 
-extern unsigned char dword_800C9E40;
 void sub_800C8768()
 {
     if (IsConfirmPressedP1_8003D380(0))
@@ -4285,7 +4453,6 @@ void sub_800C88E4()
     }
 }
 
-extern int dword_800C9E58[];
 extern unsigned int dword_800C9E64;
 void sub_800C8970()
 {
