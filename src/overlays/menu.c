@@ -343,7 +343,91 @@ int sub_800BBF10(unsigned char a, unsigned char b)
     return x < sub_800121A8(b);
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BBF48);
+extern void sub_800BC56C();
+extern void sub_800BC9E8();
+extern void sub_800BCB98();
+extern void sub_800BCEA0(char* a, int b, void* c, short d);
+extern void sub_800BC24C();
+extern char name_800C172C[];
+extern int name_8008D678;
+extern void FreeActiveOverlay_8002C014();
+extern void sub_800A6D30();
+void sub_800BBF48(MenuTask* t, MenuMain* c)
+{
+    void* p = 0;
+    short i;
+    int m;
+    if (!(c->f0 & 0x80))
+    {
+        sub_800BC56C(c);
+    }
+    else if (!(c->f0 & 0x40))
+    {
+        for (i = 0; i < c->count_44; i++)
+        {
+            p = name_80014390(i & 0xFF);
+            MemCopy_800403E8((unsigned int*)p, (unsigned int*)&c->st_8C[i], 0x48);
+        }
+        sub_800BC9E8(c);
+    }
+    m = 1;
+    if (c->f0 & (m << c->count_44))
+        DrawButtonHelpBar_8002B004(name_800C172C, 0, 0xE);
+    if (c->f0 & 0x20)
+    {
+        if (!(c->f0 & 2))
+        {
+            sub_800BCB98(c, 0xF);
+            if (c->s46 >= 0x80)
+                c->i48 = 0;
+            if (c->i48)
+                c->s46 += 4;
+            else if (c->s46 >= 5)
+                c->s46 -= 4;
+        }
+        else
+        {
+            for (i = 1; i < c->count_44; i++)
+            {
+                int m2 = 1 << (i + 1);
+                if (!(c->f0 & m2))
+                {
+                    p = name_80014390(i & 0xFF);
+                    break;
+                }
+            }
+            if (p)
+                sub_800BCEA0((char*)c, 0xE, p, i);
+        }
+    }
+    else
+    {
+        sub_800BC2A8(c);
+    }
+    DrawMenuBackground_8002BE10();
+    if (c->f0 & 0x40)
+    {
+        t->next_8 = sub_800BC24C;
+        SetFadeMode_8001C19C(0, 0x20);
+        FreeActiveOverlay_8002C014();
+        if (saveData_8008B570.mapId_2E4[3].field_2 == saveData_8008B570.mapId_2E4[3].field_0)
+            sub_80027314();
+    }
+    else if (padPressed_8009194C & 0x20)
+    {
+        i = 1;
+        if (c->f0 & (i << c->count_44))
+        {
+            MenuTask* g;
+            name_8008D678 |= 0x800000;
+            g = (MenuTask*)(name_8008D498 + 0x10);
+            g->flags_0 = (g->flags_0 | 1) & ~0x8000;
+            sub_800A6D30(4);
+            eventDispatchHalt_8008B540 = 1;
+            t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        }
+    }
+}
 
 extern int sub_800272D0();
 extern void ResetOverlayLoaderTask_80020D68();
