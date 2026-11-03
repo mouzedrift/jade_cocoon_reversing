@@ -242,8 +242,7 @@ extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3
 extern void sub_8003F264(unsigned short* pos, int v, int ot);
 extern void sub_8003EFBC(unsigned short* pos, int v, int ot);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
-#if 0
-// Not matched (2 words): in case 1 the original loads p->fC before p->text; needs "dword_8007415C 0x48" in config/c_rodata.txt (its jump table)
+// Matched
 void DrawMenuWindowContents_8002A710(void* a, int ot)
 {
     MenuItemD* p = a;
@@ -270,8 +269,11 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         {
             GetMenuItemColor_8002ACE8(p->flags, col);
             AlignMenuItem_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
-            mode = p->text;
-            AddSprtWithTPage_800331C4(loc, (char*)&((Elem20*)*p->f8)[mode], (char*)&((Elem8*)*p->fC)[mode], pOT_8008D454 + ot, col);
+            {
+                char** fc = p->fC;
+                mode = p->text;
+                AddSprtWithTPage_800331C4(loc, (char*)((Elem20*)*p->f8 + mode), (char*)((Elem8*)*fc + mode), pOT_8008D454 + ot, col);
+            }
         }
         break;
     case 2:
@@ -345,5 +347,3 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         break;
     }
 }
-#endif
-INCLUDE_ASM(DrawMenuWindowContents_8002A710);

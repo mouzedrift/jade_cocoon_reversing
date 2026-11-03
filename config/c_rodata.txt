@@ -13,3 +13,4 @@ dword_800720E4 0x4      # alignment word; the jump table of sub_80013C28 (tu_800
 off_80072278 0x0       # the jump tables of sub_800182B8 (tu_800174F8) and sub_80018C00 (tu_80018430) are emitted by C
 dword_800740B4 0x90     # head; the jump table of HsvToRgb555_8002A040 (tu_80028C60) follows, dword_8007415C starts after it
 aDWorkPsusEvent 0x18       # "D:\WORK\PSUS\EVENT.C"; the jump table of sub_8004AD44 (tu_80043AF8) follows
+dword_8007415C 0x48     # SJIS strings; the jump table of DrawMenuWindowContents_8002A710 (tu_8002A1BC) follows
