@@ -638,7 +638,86 @@ void sub_800A5BB4()
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5BB4);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5C64);
+extern unsigned char byte_800A84A8;
+extern unsigned char byte_800A85FC[];
+extern int dword_800A8490;
+extern void sub_800A5BB4();
+extern void sub_800A60F0();
+extern void sub_800A5EB8();
+extern void name_800BF7C4(void* u, short* a, short* b);
+extern int name_800BFA4C(int a, int b);
+typedef struct CombBtlActor
+{
+    int flags;
+    int f4;
+    short s8;
+} CombBtlActor;
+void sub_800A5C64(CombBtlTask* t)
+{
+    CombBtlActor* u;
+    int flags0;
+    int fl;
+    int r;
+    sub_800A5BB4();
+    word_800A8488 = 0;
+    byte_800A84A8 &= 0xFC;
+    sub_800A60F0();
+    u = (CombBtlActor*)sub_80014390((unsigned char)(dword_800A85B8 + 8));
+    flags0 = u->flags;
+    name_800BF7C4(u, &word_800A84BC, &word_800A84C4);
+    if (word_800A84BC != 0)
+    {
+        if (word_800A84C4 != 0)
+        {
+            byte_800A85FC[dword_800A85B8] = 3;
+            dword_800A85C8.s0 = 3;
+        }
+        else
+        {
+            byte_800A85FC[dword_800A85B8] = 1;
+            dword_800A85C8.s0 = 1;
+        }
+    }
+    else if (word_800A8474)
+    {
+        byte_800A85FC[dword_800A85B8] = 2;
+        dword_800A85C8.s0 = 2;
+    }
+    fl = u->flags;
+    r = name_800BFA4C(fl, flags0);
+    dword_800A85A8.a = r;
+    dword_800A85A8.d = 0;
+    if (fl & 0x200)
+    {
+        t->next_8 = sub_800A68E0;
+        word_800A84A6 = 0x6F;
+        byte_800A84A8 |= 1;
+        dword_800A8490 = dword_800A85B8;
+        byte_800A84A8 |= 2;
+    }
+    else if (u->s8 - word_800A84BC <= 0)
+    {
+        dword_800A85A8.a = 0xB;
+        word_800A84BC = u->s8;
+        t->next_8 = sub_800A68E0;
+        word_800A84A6 = 0x6F;
+        byte_800A84A8 |= 1;
+        dword_800A8490 = dword_800A85B8;
+    }
+    else if (fl & 2)
+    {
+        t->next_8 = sub_800A4EC8;
+    }
+    else if (r == 0x14)
+    {
+        t->next_8 = sub_800A5EB8;
+    }
+    else
+    {
+        byte_800A84A8 |= 2;
+        t->next_8 = sub_800A68E0;
+    }
+}
 
 void sub_800A5EB8(CombBtlTask* t)
 {
