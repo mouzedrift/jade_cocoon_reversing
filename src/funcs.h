@@ -285,7 +285,7 @@ extern int sub_8001D344(int idx);
 extern int sub_8001D36C(int v);
 extern void sub_8001D658(int** pp, int on);
 extern void sub_8001D9B0(struct_obj_A* p);
-extern void sub_80020734(int arg);
+extern struct_112* sub_80020734(int arg);
 extern void sub_80021DF0(int* p, int a1, int a2);
 extern void sub_80021744(int* p, int idx, int a2);
 extern void InitPolyFT4FromTimData_800299DC(void* p, void* q);
@@ -467,7 +467,7 @@ extern void sub_800203B0(int a0, int a1, int a2);
 extern void sub_800292D0(void* a0, void* a1, int a2);
 extern void sub_80020A38(int* p);
 extern int sub_80020B70(int* p);
-extern void sub_8001E574(int* p, int a1);
+extern void sub_8001E574();
 
 extern void sub_800127B8(struct_obj_B* p);
 extern int sub_800A2B60(int a0);

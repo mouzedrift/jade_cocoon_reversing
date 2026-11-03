@@ -2389,6 +2389,99 @@ int sub_8001E34C(char* o, char* d)
     *(int*)(o + 4) = g;
     return r;
 }
+extern unsigned short word_8007DC8C[];
+extern unsigned short word_8007DC94[];
+extern int dword_800795A0[];
+#if 0
+// Not matched: the first flags store goes through a copy (move v1,a0) in the original, and the 0x9C..0xC2 block is scheduled differently
+void sub_8001E574(char* o, int* d)
+{
+    struct_112* m;
+    int v;
+    int f;
+    if (d[0] >= 0)
+    {
+        m = sub_80020734(d[0]);
+    }
+    else
+    {
+        m = (struct_112*)d[0x48 / 4];
+    }
+    v = sub_800201EC((int)m);
+    f = 0x40000;
+    *(int*)(o + 4) = 0x40000;
+    if (d[0x30 / 4] != 1)
+    {
+        f |= 0x2000;
+        *(int*)(o + 4) = f;
+    }
+    if (d[1] == 2)
+    {
+        f |= 0x1000;
+        *(int*)(o + 4) = f;
+    }
+    *(int*)(o + 8) = 0;
+    *(int*)(o + 0xC) = d[1];
+    *(short*)(o + 0x10) = 0;
+    *(short*)(o + 0x12) = -1;
+    *(short*)(o + 0x14) = -1;
+    *(short*)(o + 0x16) = v;
+    *(short*)(o + 0x18) = 0;
+    *(short*)(o + 0x1A) = 0;
+    *(short*)(o + 0x1C) = 0;
+    *(short*)(o + 0x1E) = *(short*)((char*)d + 0x28);
+    *(short*)(o + 0x26) = 0x1000;
+    *(short*)(o + 0x20) = 0;
+    *(short*)(o + 0x22) = 0;
+    *(short*)(o + 0x28) = 0;
+    *(short*)(o + 0x2A) = 0x1000;
+    *(short*)(o + 0x24) = *(short*)((char*)d + 0x2C);
+    *(int*)(o + 0x44) = *(int*)(o + 0x50) = *(int*)(o + 0x38) = d[2];
+    *(int*)(o + 0x48) = *(int*)(o + 0x54) = *(int*)(o + 0x3C) = d[3];
+    *(int*)(o + 0x4C) = *(int*)(o + 0x58) = *(int*)(o + 0x40) = d[4];
+    *(short*)(o + 0x5C) = *(short*)((char*)d + 0x14);
+    *(short*)(o + 0x5E) = *(short*)((char*)d + 0x16);
+    *(short*)(o + 0x60) = *(short*)((char*)d + 0x18);
+    *(int*)(o + 0x64) = 0;
+    *(int*)(o + 0x68) = 0;
+    *(int*)(o + 0x6C) = 0;
+    *(int*)(o + 0x80) = 0;
+    *(int*)(o + 0x84) = 0;
+    *(int*)(o + 0x88) = 0;
+    *(int*)(o + 0x8C) = 0x1000;
+    *(int*)(o + 0x90) = 0;
+    *(int*)(o + 0x94) = 0;
+    *(int*)(o + 0x98) = 0;
+    f = d[8];
+    *(int*)(o + 0xA8) = -1;
+    *(int*)(o + 0xAC) = 0;
+    *(int*)(o + 0xB0) = 0;
+    *(int*)(o + 0xB4) = 0;
+    *(int*)(o + 0xB8) = 0;
+    *(short*)(o + 0xC4) = 0;
+    *(short*)(o + 0xC6) = 0;
+    *(short*)(o + 0xC8) = 0;
+    *(short*)(o + 0xCA) = 0;
+    *(short*)(o + 0xCC) = -1;
+    *(short*)(o + 0xCE) = -1;
+    *(int*)(o + 0x9C) = f;
+    *(int*)(o + 0xA0) = f;
+    *(int*)(o + 0xA4) = f;
+    *(short*)(o + 0xC2) = *(short*)(o + 0xC0) = *(short*)(o + 0x9C);
+    *(int*)(o + 0x130) = -1;
+    *(struct_112**)(o + 0x15C) = m;
+    *(short*)(o + 0x150) = word_8007DC8C[0];
+    *(short*)(o + 0x152) = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    *(short*)(o + 0x154) = word_8007DC8C[2];
+    *(short*)(o + 0x156) = word_8007DC8C[3];
+    *(short*)(o + 0x158) = word_8007DC94[0];
+    *(short*)(o + 0x15A) = word_8007DC94[1] + *(short*)((char*)d + 0x1C);
+    *(int*)(o + 0x160) = 0;
+    sub_8001E7F0(o, d);
+    sub_8001450C((int*)(o + 0x1A4), (struct_16*)(o + 0x194), (int)dword_800795A0, 8);
+    sub_8001D760(o, d[8], d[9], 0);
+}
+#endif
 INCLUDE_ASM(sub_8001E574);
 INCLUDE_ASM(sub_8001E7F0);
 // Matched
@@ -2917,9 +3010,9 @@ int sub_800206A0(int id, int a1, int a2, int a3)
     return 0;
 }
 // Matched
-void sub_80020734(int arg)
+struct_112* sub_80020734(int arg)
 {
-    sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
+    return sub_80024D70(dword_8008B54C[0x24 / 4][2], arg);
 }
 // Matched
 void sub_80020768(int a0)
