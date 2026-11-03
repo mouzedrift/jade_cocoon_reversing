@@ -1,7 +1,7 @@
 #ifndef TU_80018430_H
 #define TU_80018430_H
 
-/* the object Actor.f148 points to (sub_80018A4C) */
+/* the object Actor.anims_148 points to, as sub_80018A4C reads it (actor.h types it as ActorAnim*) */
 typedef struct
 {
     char pad_0[0x24];

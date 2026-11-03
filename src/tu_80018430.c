@@ -247,15 +247,15 @@ ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
     memset(&r, 0, 4);
     if (p[0] == 0x16)
     {
-        q = &((ActorData148*)obj->f148)->rec_65C;
+        q = &((ActorData148*)obj->anims_148)->rec_65C;
         if (q->field_24 < 0)
         {
-            q->field_24 = ((ActorData148*)obj->f148)->field_656;
+            q->field_24 = ((ActorData148*)obj->anims_148)->field_656;
             q->field_26 = q->field_24 + 30;
         }
         if (q->field_26 - q->field_24 < 30)
         {
-            q->field_24 = ((ActorData148*)obj->f148)->field_656;
+            q->field_24 = ((ActorData148*)obj->anims_148)->field_656;
             q->field_26 = q->field_24 + 30;
         }
     }
@@ -282,7 +282,7 @@ ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
         d.f1C = 1;
     }
     r.a = sub_8001E254((struct_obj_A*)obj, &d);
-    r.b = sub_8001F03C((int)obj, obj->fD0, -1, 0x10);
+    r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
     if (p[0] != 0x12 && c)
     {
         r.a = 0;

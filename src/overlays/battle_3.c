@@ -1353,7 +1353,7 @@ int sub_800C0BF0()
     dword_800C9190.obj = (Actor*)CreateActor_8001D45C((int)&s);
     sub_8001D68C((struct_obj_A*)dword_800C9190.obj, 0);
     x = (int)sub_80024F00(m, k);
-    sub_80019B14(dword_800C9190.obj->f134, x, (int)sub_80024F38(m, k));
+    sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1443,7 +1443,7 @@ int* sub_800C0F9C()
 
 int sub_800C0FAC()
 {
-    return (int)dword_800C9190.obj->f1C4;
+    return (int)dword_800C9190.obj->bonePos_1C4;
 }
 
 void sub_800C0FC4(BatModelInfo_a* p)
@@ -1451,10 +1451,10 @@ void sub_800C0FC4(BatModelInfo_a* p)
     Actor* q = dword_800C9190.obj;
     p->f0 = q->f14C;
     p->pos_4 = q->pos_38;
-    p->f8 = q->f1C4;
-    p->fC = q->f1C8;
-    p->f2C = q->f144;
-    p->f30 = &q->f2C;
+    p->f8 = q->bonePos_1C4;
+    p->fC = (char*)q->boneMatrices_1C8;
+    p->f2C = (char*)q->boneScale_144;
+    p->f30 = q->scale_2C;
 }
 
 int sub_800C100C(int a)

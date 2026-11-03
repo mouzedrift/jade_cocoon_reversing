@@ -130,7 +130,7 @@ INCLUDE_DATA(dword_80073040); // kept here so tu_80019BF0's .rdata starts at 4 m
 // Matched
 int sub_80018E5C(Actor* a0, unsigned int a1)
 {
-    struct_4s* t = (struct_4s*)&a0->f108;
+    struct_4s* t = (struct_4s*)a0->hitTimes_108;
     int v = 0;
     switch (a1)
     {
@@ -147,7 +147,7 @@ int sub_80018E5C(Actor* a0, unsigned int a1)
         v = t[a1].field_0;
         break;
     case 10:
-        v = sub_8001F03C((int)a0, a0->fD0, -1, 0x10);
+        v = sub_8001F03C((int)a0, (int)a0->script_D0, -1, 0x10);
         break;
     }
     return v;
