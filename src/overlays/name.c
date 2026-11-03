@@ -43,7 +43,7 @@ typedef struct
 } NameGrid;
 typedef struct
 {
-    int pad_0;
+    DVECTOR pos;
     char* chars_4;
 } NameCharRow;
 extern NameCharRow dword_800B8190[][7];
@@ -60,7 +60,7 @@ extern char name_800B83A0[];
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
 extern unsigned short uiColor_8008B590;
-extern void sub_800B75EC(int a, char* b);
+extern void sub_800B75EC(NameCharRow row);
 extern void sub_800B7414(NameEntry* p);
 extern void sub_800B7A88(NameEntry* p);
 extern void sub_800B7DC4(NameEntry* p);
@@ -224,7 +224,7 @@ void sub_800B70F4(NameEntry* p)
     DrawWindow_80042460(&r, t, pOT_8008D454 + 14, 0);
     for (k = 0; dword_800B8190[p->pad_A][k].chars_4; k++)
     {
-        sub_800B75EC(dword_800B8190[p->pad_A][k].pad_0, dword_800B8190[p->pad_A][k].chars_4);
+        sub_800B75EC(dword_800B8190[p->pad_A][k]);
     }
     switch (p->field_8)
     {
@@ -302,7 +302,60 @@ void sub_800B7414(NameEntry* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(name, sub_800B75EC);
+extern int dword_80086898[][12];
+void sub_800B75EC(NameCharRow row)
+{
+    Font* p = &fonts_80095FB0[2];
+    unsigned short* s = EncodeText_8003F684(2, (unsigned short*)row.chars_4);
+    int col;
+    unsigned short c;
+    short k;
+    int off;
+    int v;
+    int q;
+    c = *s;
+    while (c != 0)
+    {
+        s++;
+        if (c < 0x7F)
+        {
+            off = 2;
+            for (k = 12; k != 0; k--)
+            {
+                if (c - 1 < dword_80086898[1][k - 1])
+                {
+                    off -= k;
+                    break;
+                }
+            }
+            off = -off;
+            off /= 2;
+            v = c - 1;
+            q = v / 126;
+            p->clut_E = GetClut(p->clutX_20, p->clutY_22 + q);
+            v = v % 126;
+            col = v % (unsigned short)p->field_1C;
+            v = v / (unsigned short)p->field_1C;
+            p->u_C = p->field_18 + p->w_10 * col;
+            p->v_D = p->field_1A + p->h_12 * v;
+            p->x0_8 = row.pos.vx + off;
+            p->y0_A = row.pos.vy;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            addPrim(&pOT_8008D454[0], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+        }
+        row.pos.vx += 0x10;
+        c = *s;
+    }
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    addPrim(&pOT_8008D454[0], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+}
 
 void sub_800B78EC(NameEntry* p)
 {
