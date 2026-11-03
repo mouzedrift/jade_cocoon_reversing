@@ -459,3 +459,10 @@ sub_8002BCAC DrawGaugeBar_8002BCAC
 
 # --- sound ---
 stru_80091D00 seqSlotSound_80091D00
+
+# --- element icons (UI TIY sprite ids per enum Element, lit / unlit) ---
+dword_800827BC elementIcons_800827BC
+dword_800827D0 elementIconsUnlit_800827D0
+sub_8002B2A4 DrawElementIcons_8002B2A4
+sub_8002A3E0 GetMagicElementIcon_8002A3E0
+sub_8001DAAC SetActorTint_8001DAAC

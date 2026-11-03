@@ -22,11 +22,11 @@ INCLUDE_DATA(dword_800741E0);
 INCLUDE_DATA(dword_800741E4);
 INCLUDE_DATA(dword_800741E8);
 
-extern int dword_800827D0[];
-extern int dword_800827BC[];
+extern int elementIconsUnlit_800827D0[];
+extern int elementIcons_800827BC[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
-void sub_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
+void DrawElementIcons_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
 {
     short pos[2];
     int i;
@@ -37,19 +37,19 @@ void sub_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
         pos[1] = b[1] + d[i][1];
         if (a == 0)
         {
-            v = dword_800827D0[4];
+            v = elementIconsUnlit_800827D0[4];
         }
         else if ((a >> i) & 1)
         {
-            v = dword_800827BC[i];
+            v = elementIcons_800827BC[i];
         }
         else if (e == 0)
         {
-            v = dword_800827D0[4];
+            v = elementIconsUnlit_800827D0[4];
         }
         else
         {
-            v = dword_800827D0[i];
+            v = elementIconsUnlit_800827D0[i];
         }
         SetShadeTex((SPRT*)uiTiySprts_8008D620 + v, 1);
         DrawUiTiySprt_8002C06C(pos, v, c);

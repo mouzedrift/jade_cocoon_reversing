@@ -1992,7 +1992,7 @@ void sub_8001DA4C(char* p, int div, int from, int to)
     }
 }
 // Matched
-void sub_8001DAAC(char* o, int a1)
+void SetActorTint_8001DAAC(char* o, int a1)
 {
     if (a1 != 0)
     {

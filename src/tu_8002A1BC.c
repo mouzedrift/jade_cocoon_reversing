@@ -125,13 +125,13 @@ typedef struct
     int field_4;
     int field_8;
 } struct_12_c;
-extern int dword_800827BC[];
+extern int elementIcons_800827BC[];
 // Matched
-short sub_8002A3E0(int a)
+short GetMagicElementIcon_8002A3E0(int a)
 {
     if (a < 30)
     {
-        return (short)dword_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
+        return (short)elementIcons_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
     }
     return 36;
 }
