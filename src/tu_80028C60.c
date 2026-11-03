@@ -17,7 +17,7 @@
 #include "data_decls.h"
 
 
-extern char dword_8008D4F0[];
+extern char cameraState_8008D4F0[];
 extern int dword_80091C68[];
 extern int dword_8008266C;
 extern int dword_80091C5C;
@@ -31,7 +31,7 @@ extern int dword_80082668;
 void sub_80028C60(int a0, char* a1)
 {
     int n;
-    MemCopy_800403E8((unsigned int*)dword_8008D4F0, (unsigned int*)a1, 0x104);
+    MemCopy_800403E8((unsigned int*)cameraState_8008D4F0, (unsigned int*)a1, 0x104);
     a1 += 0x104;
     n = *(int*)a1;
     a1 += 4;
@@ -73,10 +73,10 @@ void sub_80028DC0(void)
     unsigned short* q;
     if (dword_80082670 == 0)
     {
-        p = dword_8008D4A0[0x24 / 4];
+        p = cameraTask_8008D4A0[0x24 / 4];
         if (dword_80082668)
         {
-            sub_80037AC8((int)levantPos_8008BD18);
+            SetCameraTarget_80037AC8((int)levantPos_8008BD18);
         }
         sub_80037918(p);
         q = (unsigned short*)&display_8008B4D8;
@@ -165,12 +165,12 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
         }
     }
 }
-int sub_80029EA8(short* in, short* out);
-int sub_8002A040(short* in, short* out);
+int Rgb555ToHsv_80029EA8(short* in, short* out);
+int HsvToRgb555_8002A040(short* in, short* out);
 void UnpackColor555_80029C68(unsigned short* d, unsigned short* s);
-void sub_80029CB4(unsigned short* d, unsigned short* s);
+void PackColor555_80029CB4(unsigned short* d, unsigned short* s);
 // Matched
-void sub_800290FC(RECT* r, short* dst, short* d)
+void ShiftVramImageHsv_800290FC(RECT* r, short* dst, short* d)
 {
     short rgb[4];
     short hsv[4];
@@ -188,14 +188,14 @@ void sub_800290FC(RECT* r, short* dst, short* d)
         for (x = 0; x < r->w; x++)
         {
             UnpackColor555_80029C68((unsigned short*)rgb, p);
-            sub_80029EA8(rgb, hsv);
+            Rgb555ToHsv_80029EA8(rgb, hsv);
             hsv[0] += d[0];
             hsv[1] += d[1];
             hsv[1] = (hsv[1] < 0) ? 0 : ((hsv[1] > 31) ? 31 : hsv[1]);
             hsv[2] += d[2];
             hsv[2] = (hsv[2] < 0) ? 0 : ((hsv[2] > 31) ? 31 : hsv[2]);
-            sub_8002A040(hsv, rgb);
-            sub_80029CB4(p, (unsigned short*)rgb);
+            HsvToRgb555_8002A040(hsv, rgb);
+            PackColor555_80029CB4(p, (unsigned short*)rgb);
             p++;
         }
     }
@@ -208,7 +208,7 @@ void sub_800290FC(RECT* r, short* dst, short* d)
     free3_8003FC6C(buf);
 }
 // Matched
-void sub_800292D0(void* a0, void* a1, int a2)
+void TintVramImage_800292D0(void* a0, void* a1, int a2)
 {
     short c[4];
     short o[4];
@@ -234,7 +234,7 @@ void sub_800292D0(void* a0, void* a1, int a2)
                 o[1] = ((c[1] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[1] * ((short*)a2)[4] / 4096;
                 o[2] = ((c[2] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[2] * ((short*)a2)[4] / 4096;
                 o[3] = c[3];
-                sub_80029CB4(p, (unsigned short*)o);
+                PackColor555_80029CB4(p, (unsigned short*)o);
             }
             p++;
         }
@@ -398,7 +398,7 @@ void UnpackColor555_80029C68(unsigned short* d, unsigned short* s)
     d[2] = (*s >> 10) & 0x1f;
 }
 // Matched
-void sub_80029CB4(unsigned short* d, unsigned short* s)
+void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 {
     *d = 0;
     *d = s[3];
@@ -406,8 +406,8 @@ void sub_80029CB4(unsigned short* d, unsigned short* s)
     *d |= s[1] << 5;
     *d |= s[2] << 10;
 }
-int sub_80029EA8(short* in, short* out);
-int sub_8002A040(short* in, short* out);
+int Rgb555ToHsv_80029EA8(short* in, short* out);
+int HsvToRgb555_8002A040(short* in, short* out);
 #if 0
 // Not matched: (a1 >> 16) & 0xFFFE is hoisted out of the loop here (one more saved reg, frame 0x48)
 void sub_80029D00(void* a0, unsigned int a1)
@@ -423,7 +423,7 @@ void sub_80029D00(void* a0, unsigned int a1)
         for (i = 0; i < t->crect.w; i++)
         {
             UnpackColor555_80029C68((unsigned short*)rgb, &p[i]);
-            if (sub_80029EA8(rgb, hsv))
+            if (Rgb555ToHsv_80029EA8(rgb, hsv))
             {
                 if (a1 & 0x10000)
                 {
@@ -433,8 +433,8 @@ void sub_80029D00(void* a0, unsigned int a1)
                 {
                     hsv[0] = (short)(hsv[0] + a1 * 192 / 360) % 192;
                 }
-                sub_8002A040(hsv, rgb);
-                sub_80029CB4(&p[i], (unsigned short*)rgb);
+                HsvToRgb555_8002A040(hsv, rgb);
+                PackColor555_80029CB4(&p[i], (unsigned short*)rgb);
             }
         }
     }
@@ -442,7 +442,7 @@ void sub_80029D00(void* a0, unsigned int a1)
 #endif
 INCLUDE_ASM(sub_80029D00);
 // Matched
-int sub_80029EA8(short* in, short* out)
+int Rgb555ToHsv_80029EA8(short* in, short* out)
 {
     int idx;
     int min;
@@ -505,7 +505,7 @@ int sub_80029EA8(short* in, short* out)
     return 1;
 }
 // Matched
-int sub_8002A040(short* in, short* out)
+int HsvToRgb555_8002A040(short* in, short* out)
 {
     int sector;
     short f;

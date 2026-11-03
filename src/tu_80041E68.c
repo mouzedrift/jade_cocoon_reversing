@@ -34,4 +34,82 @@ int sub_80041E68(int mode, int a, int b, int c)
     }
     return -1;
 }
-INCLUDE_ASM(sub_80041ED0);
+extern CVECTOR dword_80074BA0;
+extern int byte_80086F9C[];
+extern int dword_80087070[][8];
+// Matched
+void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
+{
+    POLY_F4 p[5];
+    DR_TPAGE dm;
+    CVECTOR col = dword_80074BA0;
+    int abe;
+    int i;
+    int cr;
+    int cg;
+    int cb;
+
+    if (semi)
+    {
+        abe = 1;
+        semi = semi - 1;
+    }
+    else
+    {
+        abe = 0;
+        semi = 0;
+    }
+    for (i = 0; i < 5; i++)
+    {
+        setPolyF4(&p[i]);
+        setSemiTrans(&p[i], abe);
+        if (rgb)
+        {
+            cr = rgb[0] * byte_80086F9C[i] / 100;
+            cg = rgb[1] * byte_80086F9C[i] / 100;
+            cb = rgb[2] * byte_80086F9C[i] / 100;
+            if (cr > 255)
+            {
+                cr = 255;
+            }
+            if (cg > 255)
+            {
+                cg = 255;
+            }
+            if (cb > 255)
+            {
+                cb = 255;
+            }
+            if (cr < 0)
+            {
+                cr = 0;
+            }
+            if (cg < 0)
+            {
+                cg = 0;
+            }
+            if (cb < 0)
+            {
+                cb = 0;
+            }
+            col.r = cr;
+            col.g = cg;
+            col.b = cb;
+        }
+        setRGB0(&p[i], col.r, col.g, col.b);
+        p[i].x0 = sub_80041E68(dword_80087070[i][0], r->x, r->w, 2);
+        p[i].y0 = sub_80041E68(dword_80087070[i][1], r->y, r->h, 2);
+        p[i].x1 = sub_80041E68(dword_80087070[i][2], r->x, r->w, 2);
+        p[i].y1 = sub_80041E68(dword_80087070[i][3], r->y, r->h, 2);
+        p[i].x2 = sub_80041E68(dword_80087070[i][4], r->x, r->w, 2);
+        p[i].y2 = sub_80041E68(dword_80087070[i][5], r->y, r->h, 2);
+        p[i].x3 = sub_80041E68(dword_80087070[i][6], r->x, r->w, 2);
+        p[i].y3 = sub_80041E68(dword_80087070[i][7], r->y, r->h, 2);
+        AddPrimCopy_80040298(ot, &p[i], 6);
+    }
+    setDrawTPage(&dm, 0, 0, GetTPage(0, semi, 0, 0));
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)&dm)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)&dm)[1];
+    addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+}

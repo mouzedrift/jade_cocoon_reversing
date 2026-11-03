@@ -81,19 +81,19 @@ void sub_8001852C(EffectSet* p, int a1);
 // Matched
 void sub_80018430(short v)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     *(short*)(base + 0x40) = v;
 }
 // Matched
 void sub_80018448(short v)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     *(short*)(base + 0x42) = v;
 }
 // Matched
 void sub_80018460(int on)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     if (on)
     {
         *(unsigned int*)(base + 0x28) |= 8;
@@ -106,7 +106,7 @@ void sub_80018460(int on)
 // Matched
 void sub_800184A0(int arg, int bit)
 {
-    unsigned char* base = (unsigned char*)dword_8008D3F8[0x24 / 4];
+    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
     if (bit == 0)
     {
         (base + arg)[0x44] = 0;
@@ -119,7 +119,7 @@ void sub_800184A0(int arg, int bit)
 // Matched
 int sub_800184DC(int a0, int a1)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     sub_8001852C((EffectSet*)a0, *((unsigned char*)p + a1 + 0x44));
     p[0x28 / 4] |= 1;
     return 1;
@@ -259,9 +259,9 @@ INCLUDE_ASM(sub_80018908);
 int sub_800189F8(void)
 {
     SaveData* sd = &saveData_8008B570;
-    struct_24* p = sub_8001CF84(*((unsigned char*)sd + 0x7E4));
+    EquipmentData* p = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
     sub_800BFAF8(*((unsigned char*)sd + 0x7E4));
-    return dword_80079708[((short*)p)[1]];
+    return dword_80079708[p->field_2];
 }
 typedef struct
 {

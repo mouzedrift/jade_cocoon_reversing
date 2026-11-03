@@ -241,7 +241,7 @@ void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
 extern short asc_80084350[];
 #define SIN_TABLE (asc_80084350 + 0xF8)
 // Matched
-void sub_8004D3D8(SVECTOR* r, MATRIX* m)
+void RotMatrixXYZ_8004D3D8(SVECTOR* r, MATRIX* m)
 {
     int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
     int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
@@ -264,7 +264,7 @@ void sub_8004D3D8(SVECTOR* r, MATRIX* m)
     m->m[2][1] = ((cz * sx) >> 12) - ((b * cx) >> 12);
 }
 // Matched
-void sub_8004D5CC(SVECTOR* r, MATRIX* m)
+void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m)
 {
     int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
     int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
@@ -287,14 +287,14 @@ void sub_8004D5CC(SVECTOR* r, MATRIX* m)
     m->m[1][2] = -((cz * sx) >> 12) + ((b * cx) >> 12);
 }
 // Matched
-void sub_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
+void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
     out->vx = a->vx + (b->vx - a->vx) * t / 4096;
     out->vy = a->vy + (b->vy - a->vy) * t / 4096;
     out->vz = a->vz + (b->vz - a->vz) * t / 4096;
 }
 // Matched
-void sub_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
+void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
     int d;
     d = (b->vx - a->vx) & 0xFFF;

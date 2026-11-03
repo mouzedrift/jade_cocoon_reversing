@@ -81,7 +81,7 @@ void sub_800A09C0(TitleTask* t)
     }
     if (r)
     {
-        sub_8002BF74();
+        LoadUiTiy_8002BF74();
         t->next_8 = sub_800A0A1C;
     }
 }
@@ -93,7 +93,7 @@ extern void sub_800A0A70();
 // Matched
 void sub_800A0A1C(TitleTask* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         padPressed_8009194C = 0;
         dword_800A2808 = LoadOverlay_80020BF8(1, 0x11);
@@ -104,7 +104,7 @@ void sub_800A0A1C(TitleTask* t)
 
 extern int dword_800A2718;
 extern void sub_800B6E4C(void* a0, int a1);
-extern void sub_8003F7C8(void* a0, void* a1);
+extern void EncodeName_8003F7C8(void* a0, void* a1);
 extern void sub_800A0AE8();
 // Matched
 void sub_800A0A70(TitleTask* t)
@@ -113,7 +113,7 @@ void sub_800A0A70(TitleTask* t)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
-            sub_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
+            EncodeName_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
         }
         sub_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
         t->next_8 = sub_800A0AE8;
@@ -231,7 +231,7 @@ typedef struct TitleStr4
     char c[4];
 } TitleStr4;
 
-extern void sub_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
+extern void PulseColor_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
 extern unsigned long* pOT_8008D3EC;
 extern int dword_800A05A0;
 #if 0
@@ -271,7 +271,7 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         s4 = *(TitleStr4*)((char*)&dword_800A05A0 + 4);
         p[i].field_8 = 0x6F;
         p[i].field_A = y;
-        sub_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
+        PulseColor_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
         SetSemiTrans(&p[i], 1);
         AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
         AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
@@ -280,19 +280,19 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
 #endif
 INCLUDE_OVERLAY_ASM(title, sub_800A0D18);
 
-extern void sub_8001C19C(int a0, int a1);
-extern void sub_80031260(void* a0, int a1, int a2);
+extern void SetFadeMode_8001C19C(int a0, int a1);
+extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern int dword_800A27C0;
 extern int dword_800A2818;
 // Matched
 int sub_800A0EF0(void)
 {
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     drawEnvRed_8008D448[0] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
-    sub_80031260(&bgmSound_80091CE0, 0x1B, 1);
+    PlayMusicSeq_80031260(&bgmSound_80091CE0, 0x1B, 1);
     DrawIntroMovie_8001AF64(&dword_800A27C0);
     FreeSound_80030D00((int)&bgmSound_80091CE0);
     return dword_800A2818;
@@ -398,7 +398,7 @@ typedef struct TitleSmall
     char c;
 } TitleSmall;
 
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800A1F98();
 extern void sub_800A1AC0();
 extern void sub_800A1310();
@@ -412,8 +412,8 @@ extern void sub_8004E2C8(int a0);
             SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78); \
             bgmSound_80091CE0.field_4_seq_num = -1; \
         } \
-        sub_8001C19C(0, 0x20); \
-        sub_8001C19C(1, 0x20); \
+        SetFadeMode_8001C19C(0, 0x20); \
+        SetFadeMode_8001C19C(1, 0x20); \
         (t)->next_8 = sub_800A1AC0; \
     }
 #if 0
@@ -434,7 +434,7 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     *(short*)(c->field_C + 0x32) = 0xA7;
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
     AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
-    sub_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
+    DrawWindow_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
     sub_800A1F98(c->field_C, c->field_14, c);
     if (padPressed_8009194C & 0x800)
     {
@@ -452,7 +452,7 @@ INCLUDE_OVERLAY_ASM(title, sub_800A1174);
 extern void sub_800A1760();
 extern unsigned short padRepeat_800918CC;
 extern void sub_800A14A8();
-extern void sub_8003D794(void* a0, int a1);
+extern void UpdateMenuCursor_8003D794(void* a0, int a1);
 extern void sub_8003BB1C(void);
 extern void sub_800BB5DC(void);
 extern void (*off_800A27E8[])();
@@ -460,7 +460,7 @@ extern void (*off_800A27E8[])();
 void sub_800A1310(TitleTask* t, TitleCtxB* c)
 {
     sub_800A1F98(c->field_C, c->field_14, c);
-    sub_8003D794(c->field_1C, 0);
+    UpdateMenuCursor_8003D794(c->field_1C, 0);
     if (padRepeat_800918CC & 0x5000)
     {
         c->field_0 = 0;
@@ -648,7 +648,7 @@ typedef struct
 extern TitleBlk38M dword_800A06D8, dword_800A0710, dword_800A0748, dword_800A0780;
 extern TitleBlk38M dword_800A07B8, dword_800A07F0, dword_800A0828, dword_800A0860;
 extern TitleCfgM dword_800A0898;
-extern void sub_8002A5A4(TitleCfgM* cfg);
+extern void DrawMenuWindows_8002A5A4(TitleCfgM* cfg);
 
 // Matched
 void sub_800A1780(TitleTaskM* t, int x)
@@ -681,7 +681,7 @@ void sub_800A1780(TitleTaskM* t, int x)
     cfg.f4 = GetTime30Hz_8002C64C();
     cfg.fC = x;
     cfg.f10 = (int)ptrs;
-    sub_8002A5A4(&cfg);
+    DrawMenuWindows_8002A5A4(&cfg);
 }
 
 extern void sub_800A1AFC();
@@ -803,15 +803,15 @@ void sub_800A1D6C(void)
     sub_800A1BCC();
 }
 
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A1DD8(TitleTaskM* t);
 
 // Matched
 void sub_800A1D8C(TitleTaskM* t)
 {
     LoadOverlay_80020BF8(2, 0xF);
-    sub_8001C19C(0, 0x20);
-    sub_8002BF74();
+    SetFadeMode_8001C19C(0, 0x20);
+    LoadUiTiy_8002BF74();
     t->fn_8 = sub_800A1DD8;
 }
 
@@ -821,9 +821,9 @@ extern void sub_800A1E24();
 // Matched
 void sub_800A1DD8(TitleTaskM* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         sub_800C2EB4();
         t->fn_8 = sub_800A1E24;
     }
@@ -852,7 +852,7 @@ void sub_800A1E24(TitleTaskM* t, TitleObjM* u)
         FreeActiveOverlay_8002C014();
         sub_800A1F98(u->field_C, u->field_14, u);
         sub_800A1760(u, u->field_24, u->field_0);
-        sub_8001C19C(0, 0x20);
+        SetFadeMode_8001C19C(0, 0x20);
         t->fn_8 = sub_800A1E9C;
     }
 }
@@ -860,7 +860,7 @@ void sub_800A1E24(TitleTaskM* t, TitleObjM* u)
 // Matched
 void sub_800A1E9C(TitleTaskM* t, TitleObjM* u)
 {
-    sub_8001C19C(3, 0x20);
+    SetFadeMode_8001C19C(3, 0x20);
     sub_800A1F98(u->field_C, u->field_14, u);
     sub_800A1760(u, u->field_24, u->field_0);
     t->fn_8 = sub_800A1310;
@@ -881,8 +881,8 @@ extern void sub_800A2424(void);
 extern void sub_800A20F4(void);
 extern void sub_800A2110(void);
 extern void sub_800A2540(void);
-extern void sub_80033394(void* a, void* b, void* c, int d, int e, int f);
-extern void sub_8003F7C8(void* a, void* b);
+extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
+extern void EncodeName_8003F7C8(void* a, void* b);
 
 typedef struct { int a, b, c; } Blk12_;
 extern Blk12_ dword_800B069C;
@@ -939,7 +939,7 @@ void sub_800A1F98(char* p, char* q)
     loc = dword_800A08B0;
     e5->y_A = y;
     e5->x_8 = 0x55;
-    sub_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
+    PulseColor_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(e5, 1);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, e5, 5);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
@@ -1011,7 +1011,7 @@ void sub_800A223C(void)
             ((int*)(s + 0x814))[i] = 0;
         }
     }
-    sub_8003F7C8(byte_800A08B4, SA(0x8008BD48));
+    EncodeName_8003F7C8(byte_800A08B4, SA(0x8008BD48));
     sub_800A2358();
     sub_800A22FC();
     sub_800A2450();

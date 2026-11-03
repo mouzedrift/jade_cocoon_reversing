@@ -31,9 +31,9 @@ typedef struct
     short field_8;
     short field_A;
 } struct_FD0C;
-extern void sub_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
 extern void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3);
-extern void sub_8002A384(struct_FD0C* p);
+extern void DrawUiWindow_8002A384(struct_FD0C* p);
 // Matched
 void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
 {
@@ -55,7 +55,7 @@ void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
     r.y = 0x2C;
     r.w = 0x44;
     r.h = 0x44;
-    sub_8004196C(buf, &r, a1, 8, 0);
+    InterpolateWindowRect_8004196C(buf, &r, a1, 8, 0);
     loc[0] = 12;
     loc[1] = 0x2E;
     sub_8002A42C(loc, 0, a4, a0);
@@ -63,17 +63,17 @@ void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
     s1.field_0 = buf;
     s1.field_4 = v;
     s1.field_A = a0;
-    sub_8002A384(&s1);
+    DrawUiWindow_8002A384(&s1);
     r.x = 0x4E;
     r.y = 0x2C;
     r.w = 0x8D;
     r.h = 0x44;
-    sub_8004196C(buf, &r, a1, 8, 0);
+    InterpolateWindowRect_8004196C(buf, &r, a1, 8, 0);
     s2.field_8 = a2;
     s2.field_0 = buf;
     s2.field_4 = v;
     s2.field_A = a0;
-    sub_8002A384(&s2);
+    DrawUiWindow_8002A384(&s2);
 }
 // Matched
 void InitSound_8002FE54(SoundStruct* arg1)
@@ -95,7 +95,7 @@ void InitSounds_8002FE7C(void)
     InitSound_8002FE54(&stru_80091D00);
 }
 // Matched
-void sub_8002FEB8(void)
+void ResetSoundTask_8002FEB8(void)
 {
     char* p = (char*)soundTask_8008D4A4[0x24 / 4];
     char* q;
@@ -111,7 +111,7 @@ void sub_8002FEB8(void)
         q -= 8;
     }
 }
-extern void sub_8002FF64();
+extern void UpdateSoundTask_8002FF64();
 typedef struct
 {
     short field_0;
@@ -128,7 +128,7 @@ typedef struct
     } e[5];
 } struct_FF10;
 // Matched
-void sub_8002FF10(char* a, struct_FF10* p)
+void InitSoundTask_8002FF10(char* a, struct_FF10* p)
 {
     int i;
     p->field_4 = &bgmSound_80091CE0;
@@ -139,7 +139,7 @@ void sub_8002FF10(char* a, struct_FF10* p)
     {
         p->e[i].a = 0;
     }
-    *(void (**)(void))(a + 8) = sub_8002FF64;
+    *(void (**)(void))(a + 8) = UpdateSoundTask_8002FF64;
 }
 typedef struct
 {
@@ -158,7 +158,7 @@ typedef struct
     SeqFade_FF64 fades[5];
 } SoundTask_FF64;
 // Matched
-void sub_8002FF64(int a0, SoundTask_FF64* p)
+void UpdateSoundTask_8002FF64(int a0, SoundTask_FF64* p)
 {
     int i;
     switch (p->state_2)
@@ -194,7 +194,7 @@ void sub_8002FF64(int a0, SoundTask_FF64* p)
 extern void StopSoundSeqs_80030D68(SoundStruct* p);
 #if 0
 // Not matched: register allocation of the sequence number
-void sub_8003006C(int a0, int* a1)
+void FreeSoundTask_8003006C(int a0, int* a1)
 {
     SoundStruct* s = &bgmSound_80091CE0;
     short seq = s->field_4_seq_num;
@@ -208,7 +208,7 @@ void sub_8003006C(int a0, int* a1)
     FreeSound_80030D00(a1[2]);
 }
 #endif
-INCLUDE_ASM(sub_8003006C);
+INCLUDE_ASM(FreeSoundTask_8003006C);
 
 typedef struct
 {
@@ -228,7 +228,7 @@ typedef struct
     short field_6_sub_sound;
 } SoundSeqInfo_300E0;
 extern void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops);
-extern void sub_80031260(SoundStruct* s, int idx, short loops);
+extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 extern int QueueFileRequest_8003BC84(int* a);
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
@@ -252,7 +252,7 @@ int PlayMusic_800300E0(int idx, int a1)
         SsSepStop(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num);
         SsSepSetVol(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num, 0, 0);
         t->bgm_4->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
-        sub_80031260(t->bgm_4, idx, 1);
+        PlayMusicSeq_80031260(t->bgm_4, idx, 1);
         return 1;
     }
     if (GetSoundFileId_80030D4C(t->bgm_4->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
@@ -260,13 +260,13 @@ int PlayMusic_800300E0(int idx, int a1)
         SsSepStop(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num);
         SsSepSetVol(t->bgm_4->field_C_sep_access_num, t->bgm_4->field_4_seq_num, 0, 0);
         t->bgm_4->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
-        sub_80031260(t->bgm_4, idx, 1);
+        PlayMusicSeq_80031260(t->bgm_4, idx, 1);
         return 1;
     }
     if (t->bgm2_8 && GetSoundFileId_80030D4C(t->bgm2_8->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
     {
         t->bgm2_8->field_4_seq_num = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_2_seq;
-        sub_80031260(t->bgm2_8, idx, 1);
+        PlayMusicSeq_80031260(t->bgm2_8, idx, 1);
         return 1;
     }
     if (t->state_2 != 2)
@@ -318,7 +318,7 @@ int PlayMusic_800300E0(int idx, int a1)
 extern int QueueFileRequest_8003BC84(int* a);
 void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
-int sub_800303E8(void)
+int LoadSeqSlotSound_800303E8(void)
 {
     unsigned short* p = soundTask_8008D4A4[0x24 / 4];
     int s[8];
@@ -392,28 +392,28 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
 #endif
 INCLUDE_ASM(LoadSoundSeqFromBuffer_800304D0);
 // Matched
-void sub_80030664(void)
+void FreeSeqSlotSound_80030664(void)
 {
     FreeSoundSeqs_80030EEC(&stru_80091D00);
 }
 // Matched
-int sub_80030688(void)
+int IsSoundTaskReady_80030688(void)
 {
     return soundTask_8008D4A4[0x24 / 4][1] == 2;
 }
 // Matched
-int sub_800306B0(void)
+int IsSoundTaskReady_800306B0(void)
 {
     return soundTask_8008D4A4[0x24 / 4][1] == 2;
 }
 // Matched
-void sub_800306D8(void)
+void FreeBgmSeqs_800306D8(void)
 {
     FreeSoundSeqs_80030EEC(&bgmSound_80091CE0);
 }
 extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
-void sub_800306FC(int idx)
+void StopSoundSeqById_800306FC(int idx)
 {
     SoundStruct** p = (SoundStruct**)soundTask_8008D4A4[0x24 / 4];
     if (idx < 10)
@@ -430,7 +430,7 @@ void sub_800306FC(int idx)
         StopSoundSeq_80031408(p[2], idx);
     }
 }
-extern void sub_80031260(SoundStruct* s, int idx, short loops);
+extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 typedef struct
 {
     short field_0_file_id;
@@ -489,7 +489,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 
     if (sound->field_8_sep_data_ptr && ((SoundSeqInfo_307B4*)soundFiles_80082F0C)[sound->field_6_sound_idx].field_2_seq >= 0)
     {
-        sub_80031260(sound, sound->field_6_sound_idx, 1);
+        PlayMusicSeq_80031260(sound, sound->field_6_sound_idx, 1);
     }
 }
 // Matched

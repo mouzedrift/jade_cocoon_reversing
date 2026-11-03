@@ -51,7 +51,7 @@ typedef struct
     int field_20;
 } AttackResult;
 extern double sqrt(double);
-extern int sub_80013E30(void);
+extern int Rand100_80013E30(void);
 #if 0
 // Not matched: the original converts dmg with __fixdfsi twice (second result unused) before the zero test; everything else lines up apart from a few register choices
 void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, AttackResult* out)
@@ -80,7 +80,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
     eva = 0;
     atk = 0;
     def = 0;
-    b2 = sub_80014358(p[3]);
+    b2 = LowestSetBit_80014358(p[3]);
     switch (q->kind_9)
     {
     case 0:
@@ -113,8 +113,8 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
     }
     if (q->power_2 != 0)
     {
-        a = sub_80013E30();
-        b = sub_80013E30();
+        a = Rand100_80013E30();
+        b = Rand100_80013E30();
         if (!(hit - eva < a) || sub_80033548(f1, 2) != 0)
         {
             out->kind_0 = 1;
@@ -211,7 +211,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
         v = (q->c6 + r0[8]) * r1[9] / 100;
         if (q->c_A == 3)
         {
-            ra = sub_80013E30();
+            ra = Rand100_80013E30();
             if (q->element_8 == 11)
             {
                 c = 100;

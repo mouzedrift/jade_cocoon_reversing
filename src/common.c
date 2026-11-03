@@ -171,7 +171,7 @@ extern struct_12* sub_8001D260(void);
 extern void sub_800335D0(int a0, int* out);
 extern void sub_80013EE8(int* out, int* f, Stats12* s, int a3);
 extern void sub_80013374(Stats12* s, int* f0, int* f1, int* r0, int* r1, int* p, ActionResult* out);
-extern int sub_80013E30(void);
+extern int Rand100_80013E30(void);
 // Matched
 void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
 {
@@ -196,8 +196,8 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
     int j;
     int r;
 
-    b1 = sub_80014358(p[2]);
-    b2 = sub_80014358(p[3]);
+    b1 = LowestSetBit_80014358(p[2]);
+    b2 = LowestSetBit_80014358(p[3]);
     out->kind_0 = 0;
     out->flags_4 = 0;
     out->field_8 = 0;
@@ -224,10 +224,10 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
         break;
     case 1:
         MemCopy_800403E8((unsigned int*)&local, (unsigned int*)sub_8001AD64(p[1]), 12);
-        out->field_10 = sub_8001AC58(p[1]);
+        out->field_10 = GetMagicMpCost_8001AC58(p[1]);
         break;
     case 4:
-        MemCopy_800403E8((unsigned int*)&local, (unsigned int*)sub_8001CDF4(p[1]), 12);
+        MemCopy_800403E8((unsigned int*)&local, (unsigned int*)GetItemData_8001CDF4(p[1]), 12);
         break;
     case 26:
         break;
@@ -337,7 +337,7 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
         out->flags_4 |= 2;
         break;
     case 7:
-        v = sub_80013E30();
+        v = Rand100_80013E30();
         out->kind_0 = 0;
         if (v < 81)
         {
@@ -364,8 +364,8 @@ int sub_80013228(int a0, int a1, int* p)
 {
     struct_u8x12 local = dword_80071F58;
     unsigned char* q = local.c;
-    int b1 = sub_80014358(p[2]);
-    int b2 = sub_80014358(p[3]);
+    int b1 = LowestSetBit_80014358(p[2]);
+    int b2 = LowestSetBit_80014358(p[3]);
     switch (p[0])
     {
     case 0:
@@ -381,7 +381,7 @@ int sub_80013228(int a0, int a1, int* p)
         q = (unsigned char*)sub_8001AD64(p[1]);
         break;
     case 4:
-        q = (unsigned char*)sub_8001CDF4(p[1]);
+        q = (unsigned char*)GetItemData_8001CDF4(p[1]);
         break;
     case 26:
         break;

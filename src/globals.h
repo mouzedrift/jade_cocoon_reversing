@@ -89,16 +89,17 @@ typedef struct
     void (*field_8)(void);
 } struct_obj_D;
 
+// one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;
-    unsigned char field_4;
+    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
+    unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char field_6;
     unsigned char field_7;
-    short field_8;
+    short field_8;         // enum Element (GetMagicElement_8001AD30)
     short pad_A;
-} struct_12_b;
+} MagicData;
 
 // base stats per minion species (Meos4's randomizer: "minionStats", StatsStruct)
 typedef struct
@@ -212,6 +213,16 @@ typedef struct
     int field_14;
 } struct_24;
 
+// weapon / armor / accessory table entry (weaponData_8007D04C, armorData_8007D420, accessoryData_8007D6B0)
+typedef struct
+{
+    short icon_0;               // index into equipmentIcons_8007D938
+    short field_2;
+    signed char statBonus_4[6]; // added to the six base stats by CalcEquippedStats_80033624
+    char pad_A[0xA];
+    int field_14;               // CalcEquippedStats_80033624 returns the largest one of the equipped items
+} EquipmentData;
+
 // object with a flags word at +4
 typedef struct
 {
@@ -258,7 +269,7 @@ typedef struct
     char pad_3A[0x36];
 } struct_elem_70;
 
-// 0x40-byte state object driven by sub_80010AD8 (state_38 indexes its jump table)
+// 0x40-byte state object driven by StepModelTask_80010AD8 (state_38 indexes its jump table)
 typedef struct
 {
     int* field_0;
@@ -271,7 +282,7 @@ typedef struct
     int field_34;
     int state_38;
     int next_3C;
-} struct_state_obj;
+} ModelTaskState;
 
 typedef struct
 {
@@ -280,21 +291,21 @@ typedef struct
     unsigned short field_8[0x23];
 } struct_obj_C;
 
-extern struct_12 stru_8007D848[17];
-extern struct_12 stru_8007D598[15];
+extern struct_12 accessoryModifiers_8007D848[17];
+extern struct_12 armorModifiers_8007D598[15];
 extern unsigned char byte_8007CC24[0x2b];
-extern unsigned short aKkkiqqqqqssssZ[];
-extern struct_12 stru_8007CCA8[0x2b];
-extern int dword_8007CB78[0x2b];
-extern struct_24 stru_8007D04C[0x17];
-extern int dword_8007CFF0[0x17];
-extern int dword_8007D388[0x17];
-extern struct_24 stru_8007D420[0xf];
-extern int dword_8007D3E4[0xf];
-extern unsigned short word_8007D64C[0xf];
-extern struct_24 stru_8007D6B0[0x11];
-extern int dword_8007D66C[0x11];
-extern unsigned short word_8007D914[0x11];
+extern unsigned short itemFlags_8007CC50[];
+extern struct_12 itemData_8007CCA8[0x2b];
+extern int itemNames_8007CB78[0x2b];
+extern EquipmentData weaponData_8007D04C[0x17];
+extern int weaponNames_8007CFF0[0x17];
+extern int weaponPrices_8007D388[0x17];
+extern EquipmentData armorData_8007D420[0xf];
+extern int armorNames_8007D3E4[0xf];
+extern unsigned short armorPrices_8007D64C[0xf];
+extern EquipmentData accessoryData_8007D6B0[0x11];
+extern int accessoryNames_8007D66C[0x11];
+extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;
 extern int dword_80091CFC;
 extern int dword_80083BD0;
@@ -303,11 +314,11 @@ extern int fileBuffer_8008656C;
 extern int cdReadState_80086550[5];
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern int** dword_8008D4C0;
+extern int** overlayLoaderTask_8008D4C0;
 extern struct_12 stru_80083594[];
 extern PadVibration padVibration_80095460[];
-extern int** dword_8008B560;
-extern int off_8007CB20[];
+extern int** xaTask_8008B560;
+extern int personNames_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
@@ -316,22 +327,22 @@ extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
-extern int off_800824CC[];
-extern struct_12_b dword_8007C438[];
+extern int modelDescs_800824CC[];
+extern MagicData magicData_8007C438[];
 extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
 extern int dword_80091C60[];
-extern unsigned short word_8007CED8[];
-extern unsigned char byte_8007CFC8[0x26];
+extern unsigned short itemPrices_8007CED8[];
+extern unsigned char keyItemIcons_8007CFC8[0x26];
 extern short word_80091D0C;
 typedef struct
 {
     int field_0;
     int field_4;
 } struct_833E4;
-extern struct_833E4 dword_800833E4[];
-extern int** dword_8008D3F8;
+extern struct_833E4 seqSlots_800833E4[];
+extern int** effectTask_8008D3F8;
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];
 extern char genkiMovie_80086968[];
@@ -381,17 +392,17 @@ extern FileRequest fileRequests_80095C90[0x14];
 
 extern int** dword_800B1DC4;
 extern int** dword_800B1DB8;
-extern short dword_8007D938[];
+extern short equipmentIcons_8007D938[];
 extern int dword_80082670;
 extern short word_8008B862;
 extern int dword_80082678;
 extern short word_80091C40;
 extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
-extern struct_obj_C dword_800919A0[7];
-extern int loadedOverlayMaybe_8008D620;
-extern int dword_8008D3F4;
-extern int dword_8008B4E8;
+extern struct_obj_C modelAnimRefs_800919A0[7];
+extern int uiTiySprts_8008D620;
+extern int uiTiyTPages_8008D3F4;
+extern int uiTiyLoaded_8008B4E8;
 extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;
 extern int dword_8008B4F8;
@@ -403,9 +414,9 @@ extern int dword_80095468[0x10];
 extern int dword_80091990[4];
 extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
-extern unsigned char byte_8007CEAC[0x2B];
-extern int off_8007CF30[0x26];
-extern int off_8007C348[0x1E * 2];
+extern unsigned char itemIcons_8007CEAC[0x2B];
+extern int keyItemNames_8007CF30[0x26];
+extern int magicNames_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
@@ -414,7 +425,7 @@ extern int dword_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
-extern int** dword_8008D4A0;
+extern int** cameraTask_8008D4A0;
 extern int** dword_8008D464;
 extern int** dword_8008B54C;
 extern int dword_8008B550;
@@ -464,7 +475,7 @@ extern unsigned int settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
-extern int dword_8008D43C;
+extern int actorTasks_8008D43C;
 extern int dword_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
@@ -501,10 +512,10 @@ typedef struct
     struct_112* items;
     void* field_C;
 } struct_112_list;
-int sub_80026630(struct_112_list* p, unsigned int id);
-void sub_800266CC(struct_112* p);
-int sub_8002667C(struct_112_list* p);
-void sub_80024C48(struct_112* p);
+int FindModelIndex_80026630(struct_112_list* p, unsigned int id);
+void ClearModel_800266CC(struct_112* p);
+int FindFreeModelIndex_8002667C(struct_112_list* p);
+void FreeModel_80024C48(struct_112* p);
 void sub_80025C38(struct_112* p, int flag);
 typedef struct
 {
@@ -512,7 +523,7 @@ typedef struct
     int count;
     int items[10];
 } struct_list10;
-int sub_80025D00(struct_list10* p, int* q);
+int AddFileRequest_80025D00(struct_list10* p, int* q);
 void sub_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
@@ -599,8 +610,8 @@ typedef struct EventNode
     int count;
     EventEntry entry;
 } EventNode;
-extern EventNode* dword_8008D618;
-extern EventNode* dword_8008B4A8;
+extern EventNode* modelTasks_8008D618;
+extern EventNode* effectObjects_8008B4A8;
 extern EventNode* dword_8008D60C;
 
 typedef struct

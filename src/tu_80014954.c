@@ -42,7 +42,7 @@ INCLUDE_DATA(dword_8007A128);
 INCLUDE_DATA(dword_8007A134);
 INCLUDE_DATA(dword_8007A140);
 INCLUDE_DATA(dword_8007A14C);
-INCLUDE_DATA(off_8007A170);
+INCLUDE_DATA(minionSpeciesNames_8007A170);
 INCLUDE_DATA(minionBaseStats_8007A4B4);
 INCLUDE_DATA(dword_8007A67C);
 INCLUDE_DATA(dword_8007A68C);
@@ -54,8 +54,8 @@ INCLUDE_DATA(dword_8007BA84);
 INCLUDE_DATA(dword_8007BD30);
 INCLUDE_DATA(dword_8007C2E4);
 INCLUDE_DATA(sub_8007C30C);
-INCLUDE_DATA(off_8007C348);
-INCLUDE_DATA(dword_8007C438);
+INCLUDE_DATA(magicNames_8007C348);
+INCLUDE_DATA(magicData_8007C438);
 INCLUDE_DATA(dword_8007C5A0);
 INCLUDE_DATA(dword_8007C708);
 INCLUDE_DATA(dword_8007C728);
@@ -64,34 +64,34 @@ INCLUDE_DATA(dword_8007CAC0);
 INCLUDE_DATA(dword_8007CACC);
 INCLUDE_DATA(padButtonBits_8007CAD8);
 INCLUDE_DATA(defaultButtonConfig_8007CAF4);
-INCLUDE_DATA(off_8007CB08);
-INCLUDE_DATA(off_8007CB20);
+INCLUDE_DATA(nameGetters_8007CB08);
+INCLUDE_DATA(personNames_8007CB20);
 INCLUDE_DATA(dword_8007CB4C);
-INCLUDE_DATA(off_8007CB78);
+INCLUDE_DATA(itemNames_8007CB78);
 INCLUDE_DATA(dword_8007CC24);
-INCLUDE_DATA(aKkkiqqqqqssssZ);
-INCLUDE_DATA(dword_8007CCA8);
-INCLUDE_DATA(a44448223333555);
-INCLUDE_DATA(dword_8007CED8);
-INCLUDE_DATA(off_8007CF30);
-INCLUDE_DATA(dword_8007CFC8);
-INCLUDE_DATA(off_8007CFF0);
-INCLUDE_DATA(dword_8007D04C);
+INCLUDE_DATA(itemFlags_8007CC50);
+INCLUDE_DATA(itemData_8007CCA8);
+INCLUDE_DATA(itemIcons_8007CEAC);
+INCLUDE_DATA(itemPrices_8007CED8);
+INCLUDE_DATA(keyItemNames_8007CF30);
+INCLUDE_DATA(keyItemIcons_8007CFC8);
+INCLUDE_DATA(weaponNames_8007CFF0);
+INCLUDE_DATA(weaponData_8007D04C);
 INCLUDE_DATA(dword_8007D050);
 INCLUDE_DATA(dword_8007D274);
-INCLUDE_DATA(dword_8007D388);
-INCLUDE_DATA(off_8007D3E4);
-INCLUDE_DATA(dword_8007D420);
+INCLUDE_DATA(weaponPrices_8007D388);
+INCLUDE_DATA(armorNames_8007D3E4);
+INCLUDE_DATA(armorData_8007D420);
 INCLUDE_DATA(dword_8007D424);
 INCLUDE_DATA(dword_8007D588);
-INCLUDE_DATA(dword_8007D598);
-INCLUDE_DATA(dword_8007D64C);
-INCLUDE_DATA(off_8007D66C);
-INCLUDE_DATA(dword_8007D6B0);
+INCLUDE_DATA(armorModifiers_8007D598);
+INCLUDE_DATA(armorPrices_8007D64C);
+INCLUDE_DATA(accessoryNames_8007D66C);
+INCLUDE_DATA(accessoryData_8007D6B0);
 INCLUDE_DATA(dword_8007D6B4);
-INCLUDE_DATA(dword_8007D848);
-INCLUDE_DATA(dword_8007D914);
-INCLUDE_DATA(dword_8007D938);
+INCLUDE_DATA(accessoryModifiers_8007D848);
+INCLUDE_DATA(accessoryPrices_8007D914);
+INCLUDE_DATA(equipmentIcons_8007D938);
 INCLUDE_DATA(dword_8007D95C);
 INCLUDE_DATA(dword_8007D980);
 INCLUDE_DATA(dword_8007D9A4);
@@ -217,13 +217,13 @@ INCLUDE_DATA(byte_80082334);
 INCLUDE_DATA(byte_800823A0);
 INCLUDE_DATA(dword_800823E8);
 INCLUDE_DATA(byte_80082480);
-INCLUDE_DATA(off_800824CC);
+INCLUDE_DATA(modelDescs_800824CC);
 INCLUDE_DATA(dword_80082668);
 INCLUDE_DATA(dword_8008266C);
 INCLUDE_DATA(dword_80082670);
 INCLUDE_DATA(dword_80082674);
 INCLUDE_DATA(dword_80082678);
-INCLUDE_DATA(dword_800826F8);
+INCLUDE_DATA(largeDigitColors_800826F8);
 INCLUDE_DATA(aRx);
 INCLUDE_DATA(dword_8008276C);
 INCLUDE_DATA(dword_8008279C);
@@ -283,7 +283,7 @@ INCLUDE_DATA(dword_80082EA4);
 INCLUDE_DATA(dword_80082EA8);
 INCLUDE_DATA(dword_80082EB8);
 INCLUDE_DATA(dword_80082EBC);
-INCLUDE_DATA(off_80082EC4);
+INCLUDE_DATA(rankNames_80082EC4);
 INCLUDE_DATA(off_80082EE4);
 INCLUDE_DATA(a1ftf);
 INCLUDE_DATA(dword_80082EF0);
@@ -446,9 +446,9 @@ SoundInfo soundFiles_80082F0C[155] =
   { SOUND_TAISEN_SND, 0u, 0u, 1u, 0u, -1 },
   { SOUND_SAIRASU_SND, 255u, 255u, 1u, 0u, 44 }
 };
-INCLUDE_DATA(dword_800833E4);
-INCLUDE_DATA(off_800834E4);
-INCLUDE_DATA(off_80083580);
+INCLUDE_DATA(seqSlots_800833E4);
+INCLUDE_DATA(abilityNames_800834E4);
+INCLUDE_DATA(abilityBonusNames_80083580);
 INCLUDE_DATA(dword_80083594);
 INCLUDE_DATA(dword_80083784);
 INCLUDE_DATA(dword_80083788);
@@ -456,11 +456,11 @@ INCLUDE_DATA(dword_800837C4);
 INCLUDE_DATA(off_800837D8);
 INCLUDE_DATA(dword_800837EC);
 INCLUDE_DATA(off_80083800);
-INCLUDE_DATA(off_80083818);
+INCLUDE_DATA(itemMessageSuffixes_80083818);
 INCLUDE_DATA(off_80083820);
 INCLUDE_DATA(dword_80083844);
 INCLUDE_DATA(dword_8008384C);
-INCLUDE_DATA(off_80083B30);
+INCLUDE_DATA(vibrationPatterns_80083B30);
 INCLUDE_DATA(dword_80083BD0);
 INCLUDE_DATA(dword_80083BD4);
 INCLUDE_DATA(dword_80083BE4);
@@ -475,19 +475,19 @@ INCLUDE_DATA(word_80084540);
 // Matched
 int sub_80014954(void)
 {
-    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 2;
+    return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 2;
 }
 // Matched
 void sub_8001497C(void)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 1;
 }
 void sub_80015478(EventEntry* e, void* buf);
 // Matched
 void sub_800149A4(char* p)
 {
-    char* q = (char*)dword_8008D3F8[9];
+    char* q = (char*)effectTask_8008D3F8[9];
     EventEntry* e;
     char* b;
     int n;
@@ -499,7 +499,7 @@ void sub_800149A4(char* p)
     {
         *(int*)(q + 0x3C) = n;
     }
-    e = AllocEventEntry_80043AF8(dword_8008B4A8);
+    e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
@@ -538,7 +538,7 @@ void sub_80014C28(int* a0, int* a1)
 {
     if (effectOutcomeFlag_8008D780 == 1)
     {
-        sub_800306FC(6);
+        StopSoundSeqById_800306FC(6);
         *a0 = (*a0 & ~1) | 0x8000;
     }
     if (++a1[1] % 10 == 0)
@@ -567,7 +567,7 @@ typedef struct
     short pad_16;
     unsigned char rgb_18[4];
 } EffSprite;
-extern CamView dword_8008D4F0;
+extern CamView cameraState_8008D4F0;
 extern void sub_80044010(void* a0, int* pos, void* a2, EffSprite* s, int* a4, int* a5, short* sz, short* col,
                          unsigned char* rgb, int a9, int a10, unsigned long* ot);
 // Matched
@@ -612,7 +612,7 @@ void sub_80014CCC(int* a0, void* buf)
     col[3] = a1[1] * 32;
     sub_80044010(e1 + 0xC, &a1[0x44 / 4], &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
-    c = dword_8008D4F0.pos_14;
+    c = cameraState_8008D4F0.pos_14;
     rgb[0] = sp->rgb_18[0] >> 3;
     rgb[1] = sp->rgb_18[1] >> 3;
     rgb[2] = sp->rgb_18[1] >> 3;
@@ -625,10 +625,10 @@ void sub_80014CCC(int* a0, void* buf)
     dir[2] = t[2] - c[2];
     VectorNormal((VECTOR*)dir, (VECTOR*)dir);
     dot = (dir[0] * pos[0] + dir[1] * pos[1] + dir[2] * pos[2]) / 4096;
-    pos[0] = dword_8008D4F0.pos_14[0] + dir[0] * dot / 8192;
-    pos[1] = dword_8008D4F0.pos_14[1] + dir[1] * dot / 8192;
-    pos[2] = dword_8008D4F0.pos_14[2] + dir[2] * dot / 8192;
-    if (dword_8008D4F0.field_2E < dot)
+    pos[0] = cameraState_8008D4F0.pos_14[0] + dir[0] * dot / 8192;
+    pos[1] = cameraState_8008D4F0.pos_14[1] + dir[1] * dot / 8192;
+    pos[2] = cameraState_8008D4F0.pos_14[2] + dir[2] * dot / 8192;
+    if (cameraState_8008D4F0.field_2E < dot)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
@@ -638,7 +638,7 @@ void sub_80014CCC(int* a0, void* buf)
     d[0] = a1[0x44 / 4] - pos[0];
     d[1] = a1[0x48 / 4] - pos[1];
     d[2] = a1[0x4C / 4] - pos[2];
-    if (dword_8008D4F0.field_2E * 4 / 3 < dot)
+    if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
     {
         pos2[0] = pos[0] + d[0] / 2;
         pos2[1] = pos[1] + d[1] / 2;
@@ -648,7 +648,7 @@ void sub_80014CCC(int* a0, void* buf)
         sub_80044010(e2 + 0xC, pos2, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    if (dword_8008D4F0.field_2E * 2 < dot)
+    if (cameraState_8008D4F0.field_2E * 2 < dot)
     {
         pos2[0] = pos[0] - d[0] / 2;
         pos2[1] = pos[1] - d[1] / 2;
@@ -658,7 +658,7 @@ void sub_80014CCC(int* a0, void* buf)
         sub_80044010(e2 + 0xC, pos2, &a1[0x80 / 4], sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    if (dword_8008D4F0.field_2E * 4 / 3 < dot)
+    if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
     {
         pos2[0] = pos[0] - d[0] / 4;
         pos2[1] = pos[1] - d[1] / 4;

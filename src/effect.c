@@ -58,19 +58,19 @@ int sub_80013E00(unsigned int idx, int add)
     return result;
 }
 // Matched
-int sub_80013E30(void)
+int Rand100_80013E30(void)
 {
     return rand() % 100;
 }
 // Matched
 void sub_80013E80(void* p, int arg)
 {
-    sub_80033624(p, sub_80014390(arg & 0xFF));
+    CalcEquippedStats_80033624(p, sub_80014390(arg & 0xFF));
 }
 // Matched
 void sub_80013EB4(void* p, int a1, int a2)
 {
-    sub_80033624(p, (int)GetMinionStatus_800107A0(a2));
+    CalcEquippedStats_80033624(p, (int)GetMinionStatus_800107A0(a2));
 }
 int sub_80014200(unsigned char* p);
 // Matched
@@ -202,7 +202,7 @@ int sub_80014308(unsigned char* p)
     return v;
 }
 // Matched
-int sub_80014358(unsigned int mask)
+int LowestSetBit_80014358(unsigned int mask)
 {
     unsigned int i;
     for (i = 0; i < 32; i++)
@@ -259,17 +259,17 @@ int sub_8001449C(int a0)
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched
-void sub_8001450C(int* a0, struct_16* a1, int a2, int a3)
+void FirFilterInit_8001450C(int* a0, struct_16* a1, int a2, int a3)
 {
     unsigned int i;
-    sub_80014574(a1, a2, a3);
+    FirFilterSetup_80014574(a1, a2, a3);
     for (i = 0; i < a1->field_4; i++)
     {
         a0[i] = 0;
     }
 }
 // Matched
-void sub_80014574(struct_16* p, int a1, int a2)
+void FirFilterSetup_80014574(struct_16* p, int a1, int a2)
 {
     p->field_0 = a1;
     p->field_4 = a2;
@@ -277,7 +277,7 @@ void sub_80014574(struct_16* p, int a1, int a2)
     p->field_C = 0;
 }
 // Matched
-void sub_80014588(int* a0, struct_16* a1, unsigned int a2)
+void FirFilterStep_80014588(int* a0, struct_16* a1, unsigned int a2)
 {
     unsigned int i;
     a0[a2 % a1->field_4] = a1->field_8;
@@ -298,21 +298,21 @@ typedef struct
     int idx;
     int timer;
 } EffectState;
-void sub_80014638(struct_obj_D* p, void* buf);
+void UpdateEffectTask_80014638(struct_obj_D* p, void* buf);
 // Matched
-void sub_80014618(struct_obj_D* p, int* q)
+void InitEffectTask_80014618(struct_obj_D* p, int* q)
 {
     q[0x28 / 4] = 2;
     q[0x3C / 4] = 0;
     q[0x2C / 4] = 0;
-    p->field_8 = (void (*)(void))sub_80014638;
+    p->field_8 = (void (*)(void))UpdateEffectTask_80014638;
 }
 extern short dword_800795D0[];
 extern short dword_800795F0[];
 extern void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
 int sub_800147FC(void);
 // Matched
-void sub_80014638(struct_obj_D* p, void* buf)
+void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
 {
     EffectState* q = (EffectState*)buf;
     int r;
@@ -378,7 +378,7 @@ int sub_800147FC(void)
     EventNode* n2;
     int j;
     i = 0;
-    head = dword_8008B4A8;
+    head = effectObjects_8008B4A8;
     c = i;
     count = head->count;
     for (n = head; i < count; i++)
@@ -403,7 +403,7 @@ int sub_800147FC(void)
     return c;
 }
 // Matched
-void sub_800148A0(void)
+void FreeEffectTask_800148A0(void)
 {
     sub_80020EE0(dword_80091BD0);
     unknownFlags_8008D678 &= ~0x800;
@@ -411,12 +411,12 @@ void sub_800148A0(void)
 // Matched
 int sub_800148D4(void)
 {
-    return ((int*)dword_8008D3F8[9])[0x2C / 4] == 0;
+    return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 0;
 }
 // Matched
 void sub_800148F4(int a0)
 {
-    int* p = dword_8008D3F8[9];
+    int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 4;
     p[0x38 / 4] = a0;
     if (p[0x2C / 4] != 0)

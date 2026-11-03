@@ -189,7 +189,7 @@ void sub_80018EBC(int a0, unsigned int* a1)
     }
     sub_8001DAAC(a0, r);
 }
-extern void* off_8007A170[];
+extern void* minionSpeciesNames_8007A170[];
 extern unsigned char dword_8007BA84[];
 extern unsigned char dword_8007BA74[];
 extern int dword_8007A67C[];
@@ -197,13 +197,13 @@ extern int dword_8007A68C[];
 extern int dword_8007A69C[];
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
-extern void sub_8003F7C8(void* a0, unsigned char* a1);
+extern void EncodeName_8003F7C8(void* a0, unsigned char* a1);
 extern void sub_8001980C(unsigned char* p, MinionBaseStats* s);
 extern void sub_800199A0(char* p);
 extern void sub_80019A20(char* a0);
 #if 0
 // Not matched: register allocation only - the two 4-byte resistance loops swap counter/pointer registers ($v0/$v1) and the constant 8 is not hoisted; two m+index adds have operands swapped (permuter: nothing)
-void sub_8001900C(char* m, int* a1)
+void InitMinionData_8001900C(char* m, int* a1)
 {
     MinionBaseStats st;
     void** name;
@@ -219,10 +219,10 @@ void sub_8001900C(char* m, int* a1)
 
     n = a1[0];
     *(int*)(m + 0x5C) = n;
-    name = &off_8007A170[n];
+    name = &minionSpeciesNames_8007A170[n];
     r = dword_8008D4DC;
-    sub_8003F7C8(*name, (unsigned char*)(m + 0x10));
-    sub_8003F7C8(*name, (unsigned char*)(m + 0x60));
+    EncodeName_8003F7C8(*name, (unsigned char*)(m + 0x10));
+    EncodeName_8003F7C8(*name, (unsigned char*)(m + 0x60));
     id = *(unsigned int*)(m + 0x5C);
     if (id < 0x39)
     {
@@ -366,7 +366,7 @@ void sub_8001900C(char* m, int* a1)
     sub_80019A80(m[0x44]);
 }
 #endif
-INCLUDE_ASM(sub_8001900C);
+INCLUDE_ASM(InitMinionData_8001900C);
 #if 0
 // Not matched: the clamp to 0..100 stores from each branch and keeps 100 in a register (original: one store of $v0 after $v1 copies); permuter found nothing
 void sub_8001980C(unsigned char* p, unsigned char* s)

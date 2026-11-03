@@ -43,9 +43,9 @@ extern CombLoadObj dword_800A4698;
 extern CombLoadDlg dword_800A47D4;
 extern int sub_800BAE24(int);
 extern void sub_800BB4A8(int);
-extern void sub_8003D794(void*, int);
+extern void UpdateMenuCursor_8003D794(void*, int);
 extern int IsConfirmPressedP1_8003D380(int);
-extern void sub_8002A5A4(void*);
+extern void DrawMenuWindows_8002A5A4(void*);
 extern void sub_800A4364();
 extern void sub_800A4420();
 extern void sub_800A44DC();
@@ -59,15 +59,15 @@ extern void sub_800A1988();
 extern void sub_800B7674(int, int);
 extern int sub_800B793C();
 extern int sub_800B7914();
-extern void sub_8002BE10();
-extern void sub_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawMenuBackground_8002BE10();
+extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
 INCLUDE_OVERLAY_ASM(combload, dword_800A4088);
 
 void sub_800A40FC(CombLoadTask* t)
 {
     dword_800A47F4 = LoadOverlay_80020BF8(1, 0x10);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t->next_8 = sub_800A4140;
 }
 
@@ -78,7 +78,7 @@ void sub_800A4140(CombLoadTask* t)
         sub_800B7674(dword_800A3A94 == 0 ? 2 : 3, 0);
         t->next_8 = sub_800A41A8;
     }
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
 }
 
 void sub_800A41A8(CombLoadTask* t)
@@ -120,7 +120,7 @@ void sub_800A41FC(CombLoadTask* t)
     {
         str = dword_800A40E4;
     }
-    sub_8002AF58((int)&str, (int)code, 0xF);
+    DrawSmallTextBox_8002AF58((int)&str, (int)code, 0xF);
     switch (dword_800A47F0)
     {
     case 0:
@@ -128,7 +128,7 @@ void sub_800A41FC(CombLoadTask* t)
         if (!found)
         {
             sub_800BB4A8(dword_800A468C[0].f8);
-            sub_8003D794(&dword_800A468C[0], 0);
+            UpdateMenuCursor_8003D794(&dword_800A468C[0], 0);
             if (IsConfirmPressedP1_8003D380(1))
             {
                 dword_800A47F0 = 1;
@@ -140,11 +140,11 @@ void sub_800A41FC(CombLoadTask* t)
         sub_800A44DC();
         dword_800A47D4.f4 = GetTime30Hz_8002C64C();
         dword_800A47D4.fC = dword_800A4698.f8;
-        sub_8002A5A4(&dword_800A47D4);
-        sub_8003D794(&dword_800A4698, 0);
+        DrawMenuWindows_8002A5A4(&dword_800A47D4);
+        UpdateMenuCursor_8003D794(&dword_800A4698, 0);
         break;
     }
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
 }
 
 // Near miss: the compiler shares the constant 0x78 between the two stores
@@ -153,11 +153,11 @@ void sub_800A4364()
 {
     RECT r;
     CombLoadBox b;
-    short* p = (short*)(loadedOverlayMaybe_8008D620 + 0x12C);
+    short* p = (short*)(uiTiySprts_8008D620 + 0x12C);
     p[4] = 0x78;
     p[5] = 0x14;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x78, 2);
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x78, 2);
     r.x = 0x78;
     r.w = 0x7E;
     r.h = 0x12;
@@ -165,7 +165,7 @@ void sub_800A4364()
     b.col_0 = uiColor_8008B590;
     r.y = 0x14;
     b.c_2 = 0;
-    sub_80042460(&r, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(&r, &b, dword_8008D454 + 0x28, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A4364);
@@ -180,24 +180,24 @@ void sub_800A44DC()
     CombLoadBox b;
     short* p;
     int base;
-    base = loadedOverlayMaybe_8008D620;
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0x66;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
-    base = loadedOverlayMaybe_8008D620;
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0x8E;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
-    base = loadedOverlayMaybe_8008D620;
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    base = uiTiySprts_8008D620;
     p = (short*)(base + 0xC1C);
     p[4] = 0xD4;
     p[5] = 0x2A;
     AddPrimCopy_80040298(dword_8008D454 + 0x28, p, 5);
-    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)dword_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(dword_8008D454 + 0x28, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
     b.c_3 = 1;
     rect[0] = 0x64;
     b.col_0 = uiColor_8008B590;
@@ -205,17 +205,17 @@ void sub_800A44DC()
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
     rect[0] = 0x8C;
     rect[1] = 0x28;
     rect[2] = 0x3C;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
     rect[0] = 0xD2;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    sub_80042460(rect, &b, dword_8008D454 + 0x28, 0);
+    DrawWindow_80042460(rect, &b, dword_8008D454 + 0x28, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A44DC);

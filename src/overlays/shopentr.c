@@ -58,12 +58,12 @@ extern char str_800B6EA4[];
 extern char str_800B6EB0[];
 
 extern EventNode* dword_8008D4A8;
-extern void sub_8002BE10(void);
+extern void DrawMenuBackground_8002BE10(void);
 extern void sub_8002BA54(void* a0, int a1, void* a2, int a3);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
-extern void sub_8003EF74(void* a0, int a1, short a2);
+extern void DrawNumber_8003EF74(void* a0, int a1, short a2);
 extern void sub_8003F264(void* a0, int a1, short a2);
-extern void sub_8003D794(CtxShopentr* c, int a1);
+extern void UpdateMenuCursor_8003D794(CtxShopentr* c, int a1);
 extern int IsConfirmPressedP1_8003D380(int a0);
 extern int IsCancelPressedP1_8003D41C(int a0);
 extern void sub_800B6CA0(void);
@@ -127,7 +127,7 @@ void sub_800B6F1C(void)
             c->flags_C |= 1;
         }
         dword_800B7EAC = 1;
-        sub_8002BE10();
+        DrawMenuBackground_8002BE10();
     }
 }
 
@@ -135,12 +135,12 @@ void sub_800B6F1C(void)
 void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
 {
     int r;
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     sub_800B7440(c);
     r = 0;
     if (!(c->flags_C & 1))
     {
-        sub_8003D794(c, r);
+        UpdateMenuCursor_8003D794(c, r);
     }
     if (IsConfirmPressedP1_8003D380(0))
     {
@@ -393,7 +393,7 @@ void sub_800B7684(CtxShopentr* c)
         a.y = i * 19 + 0x50;
         q[1] = a.y;
         q[0] = a.x;
-        sub_8003EF74(q, c->field_A + i + 1, col);
+        DrawNumber_8003EF74(q, c->field_A + i + 1, col);
         p[0] = 0x82;
         p[1] = a.y;
         sub_800B7B64((RectShopentr*)p, 0x14, 0x19);
@@ -522,13 +522,13 @@ void sub_800B7B64(RectShopentr* p, short a1, short a2)
     unsigned short l20[2];
     l10[0] = p->x;
     l10[1] = p->y;
-    sub_8003EF74(l10, a1, 14);
+    DrawNumber_8003EF74(l10, a1, 14);
     l18[0] = p->x + 0x18;
     l18[1] = 0x3c;
     DrawText_8003E91C(2, str_800B6F04, l18, 14);
     l20[0] = p->x + 0x24;
     l20[1] = p->y;
-    sub_8003EF74(l20, a2, 14);
+    DrawNumber_8003EF74(l20, a2, 14);
 }
 
 // Matched
