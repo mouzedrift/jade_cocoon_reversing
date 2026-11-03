@@ -35,24 +35,24 @@ extern int dword_800A3A8C;
 extern int dword_800A4070;
 extern int dword_800A4080;
 extern int dword_800A39F0[];
-extern void sub_8001D378(void);
-extern void sub_8001D600(void* p);
+extern void InitActors_8001D378(void);
+extern void DestroyActor_8001D600(void* p);
 extern void sub_8001E28C(void* p);
-extern void sub_8001C19C(int a, int b);
+extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A0D1C(int i);
 extern void sub_800A0B70(int i);
 extern void sub_800A14F0();
 extern void sub_800A1554();
 extern void sub_800A15B4();
 extern char* dword_8007DC78;
-extern int sub_80010850(void* p);
-extern int dword_8008D4F0[];
+extern int StartModelTask_80010850(void* p);
+extern int cameraState_8008D4F0[];
 extern int dword_8008B4F8;
 extern char dword_800A398C[];
 extern int sub_800A1934(short* p);
-extern void sub_800376A8(void);
+extern void ResetCameraToLevant_800376A8(void);
 extern void sub_80037748(void);
-extern void sub_800368F8(void);
+extern void InitCameraTask_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
 extern unsigned char* Cbt_80019C70(int idx);
@@ -175,7 +175,7 @@ extern unsigned char byte_800A38DB;
 extern short word_800A1BC4;
 extern char data_8008EEF8[];
 extern void PlayMusic_800300E0(int a, int b);
-extern void sub_8002BF74(void);
+extern void LoadUiTiy_8002BF74(void);
 extern void sub_800A197C(short* p);
 extern void sub_800A0D64(int a, int b);
 extern void sub_800A14AC();
@@ -380,7 +380,7 @@ void sub_800A0A28(void)
     {
         dword_800A3A08[i].field_0 = m;
     }
-    sub_8001D378();
+    InitActors_8001D378();
 }
 
 // Matched
@@ -403,7 +403,7 @@ void sub_800A0ACC(int i, int x)
     CombatSlotCombat* s = &dword_800A3A08[i];
     sub_800A05E0((unsigned char*)x, (int*)s->pad_8, (int)(dword_8007DC78 + (i << 6)));
     s->field_4 = (char*)x;
-    s->field_0 = sub_80010850(s->pad_8);
+    s->field_0 = StartModelTask_80010850(s->pad_8);
     s->field_3C = 0;
 }
 
@@ -411,7 +411,7 @@ void sub_800A0ACC(int i, int x)
 void sub_800A0B3C(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80010A10(s->field_0);
+    RunModelTask_80010A10(s->field_0);
 }
 
 // Matched
@@ -420,7 +420,7 @@ void sub_800A0B70(int i)
     CombatSlotCombat* s = &dword_800A3A08[i];
     int v = s->field_0;
     s->field_0 = -1;
-    sub_8001098C(v);
+    FreeModelTask_8001098C(v);
 }
 
 // Matched
@@ -466,7 +466,7 @@ void sub_800A0D1C(int i)
     CombatSlotCombat* s = &dword_800A3A08[i];
     if (s->field_3C)
     {
-        sub_8001D600(s->field_3C);
+        DestroyActor_8001D600(s->field_3C);
         s->field_3C = 0;
     }
 }
@@ -474,7 +474,7 @@ void sub_800A0D1C(int i)
 // Matched
 void sub_800A0D64(int i, int id)
 {
-    unsigned short* q = (unsigned short*)sub_800251E4(id);
+    unsigned short* q = (unsigned short*)GetModelDesc_800251E4(id);
     CombatObjCombat o;
     CombatMsgCombat m;
     sub_80025ED0((int*)&o);
@@ -644,13 +644,13 @@ int sub_800A11D8(int i)
 // Matched
 void sub_800A11F4(void)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D4A0);
+    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)cameraTask_8008D4A0);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        sub_800376A8();
+        ResetCameraToLevant_800376A8();
         sub_80037748();
-        e->cb_8 = (EventEntryFn)sub_800368F8;
+        e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
         e->cb_C = (EventEntryFn)nullsub_5;
         e->flags = (e->flags | 4) & ~0x8000;
         sub_800A12B8();
@@ -660,15 +660,15 @@ void sub_800A11F4(void)
 // Matched
 void sub_800A127C(void)
 {
-    char* p = (char*)dword_8008D4A0;
+    char* p = (char*)cameraTask_8008D4A0;
     sub_800376A0(p + 0x10, *(void**)(p + 0x24));
-    StopAllEventEntries_80043B40((int*)dword_8008D4A0);
+    StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
 }
 
 // Matched
 void sub_800A12B8(void)
 {
-    char* p = (char*)dword_8008D4F0;
+    char* p = (char*)cameraState_8008D4F0;
     char* q;
     *(short*)(p + 0x2E) = 0;
     *(int*)(p + 0x20) = 0;
@@ -728,7 +728,7 @@ void sub_800A13A0(CombatTaskCombat* t)
         off += 0x2E8;
     }
     PlayMusic_800300E0(0x8E, 1);
-    sub_8002BF74();
+    LoadUiTiy_8002BF74();
     sub_800A0D64(2, 0x42);
     sub_800A0D64(3, 0x41);
     t->next_8 = sub_800A14AC;
@@ -746,7 +746,7 @@ void sub_800A148C(void)
 // Matched
 void sub_800A14AC(CombatTaskCombat* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         dword_800A3A8C = 0;
         dword_800A4070 = 0;
@@ -758,7 +758,7 @@ void sub_800A14AC(CombatTaskCombat* t)
 // Matched
 void sub_800A14F0(CombatTaskCombat* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     dword_800A4080 = LoadOverlay_80020BF8(1, dword_800A39F0[dword_800A3A8C]);
     t->next_8 = sub_800A1554;
 }
@@ -768,7 +768,7 @@ void sub_800A1554(CombatTaskCombat* t, int x)
 {
     if (GetFileRequestStatus_8003BE30(dword_800A4080) == 0)
     {
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         t->next_8 = sub_800A15B4;
         t->next_8(t, x);
     }

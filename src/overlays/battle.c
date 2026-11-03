@@ -96,7 +96,7 @@ extern void SsSepSetDecrescendo();
 extern void sub_800BA848();
 extern void sub_800BA4F4();
 extern void sub_800C064C();
-extern void sub_80010850();
+extern void StartModelTask_80010850();
 extern int sub_800BF784();
 extern void sub_800BC468();
 
@@ -158,9 +158,9 @@ extern void ClearStatus_80011C30();
 extern void RecoverQuarterHpMp_80011C44();
 extern void memset();
 extern void sub_80020DDC();
-extern void sub_8001C19C();
+extern void SetFadeMode_8001C19C();
 extern void sub_800A2AE8();
-extern void sub_80031160();
+extern void PlaySeqSlot_80031160();
 extern void sub_80018A4C();
 extern int LoadOverlay_80020BF8();
 extern void sub_8001AAF4();
@@ -380,8 +380,8 @@ void sub_800BA564(BatTask_a* t, BatObj_a* u)
 
 void sub_800BA624(BatTask_a* t, BatObj_a* u)
 {
-    sub_8001C19C(0, 0x20);
-    sub_8001C19C(1, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(1, 0x20);
     sub_8001AAF4();
     if (dword_800B1230 == 2)
     {
@@ -397,7 +397,7 @@ void sub_800BA624(BatTask_a* t, BatObj_a* u)
 void sub_800BA6A0(BatTask_a* t, BatObj_a* u)
 {
     eventDispatchHalt_8008B540 = 1;
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     if (--u->f4 <= 0)
     {
         if (dword_800B1230 == 2)
@@ -425,14 +425,14 @@ void sub_800BA720()
 
 void sub_800BA788(BatTask_a* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     sub_800C0BA0();
     sub_800A1B78();
     FreeActiveOverlay_8002C014();
     sub_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
-    sub_80031334(0);
-    sub_80030664();
+    StopSeqSlot_80031334(0);
+    FreeSeqSlotSound_80030664();
     sub_80066E38(0);
     PlayMusic_800300E0(sub_800315E4(), 1);
     sub_80020898();
@@ -760,7 +760,7 @@ void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
     }
     else
     {
-        sub_80031160(0x11, 1);
+        PlaySeqSlot_80031160(0x11, 1);
         u->fc = sub_800BC28C();
         u->next_8 = sub_800BBC84;
         t->next_8 = sub_800BC144;
@@ -1587,7 +1587,7 @@ int sub_800BF784(int a)
     {
         return 0;
     }
-    sub_80033624(buf, p);
+    CalcEquippedStats_80033624(buf, p);
     return buf[4] + 10;
 }
 
@@ -1890,7 +1890,7 @@ int sub_800C0AEC(int a, int* b, int c)
     }
     dword_800C9188 = h;
     sub_800C064C(h, buf, dword_8007DC74);
-    sub_80010850(buf);
+    StartModelTask_80010850(buf);
     dword_800C9190.f4 = b[0];
     dword_800C9190.f8 = b[1];
     dword_800C9190.fc = b[2];
@@ -1903,8 +1903,8 @@ int sub_800C0BA0()
 {
     if (sub_800C0D50() >= 0)
     {
-        sub_8001098C(0);
-        sub_8001D600(dword_800C9190.obj);
+        FreeModelTask_8001098C(0);
+        DestroyActor_8001D600(dword_800C9190.obj);
         dword_800C918C = -1;
         return 1;
     }
@@ -2034,7 +2034,7 @@ void sub_800C106C(unsigned int* a, int* b)
     if (--b[1] < 0)
     {
         *a = (*a & ~1) | 0x8000;
-        sub_80031334(b[0]);
+        StopSeqSlot_80031334(b[0]);
     }
 }
 
@@ -2045,7 +2045,7 @@ void sub_800C10B8(int a, int b)
     if (a > 0 && e)
     {
         int* q;
-        sub_80031160(b, 1);
+        PlaySeqSlot_80031160(b, 1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q = e->buffer;
         q[0] = b;
@@ -2863,9 +2863,9 @@ void sub_800C6C7C(int* out)
 }
 int sub_800C6CFC(unsigned int a, unsigned int* b, short* c)
 {
-    if (sub_8001AE2C(b, a) != 0)
+    if (TestMagicBit_8001AE2C(b, a) != 0)
     {
-        if (dword_8007C438[a].field_4 <= c[6])
+        if (magicData_8007C438[a].field_4 <= c[6])
         {
             return 1;
         }
@@ -3003,7 +3003,7 @@ extern char dword_800C92D8[];
 extern unsigned char dword_800C9648[];
 unsigned char sub_800C78D0()
 {
-    return dword_800C9648[dword_800C9E49 + (short)sub_8003DA54(dword_800C92D8) * 2];
+    return dword_800C9648[dword_800C9E49 + (short)GetMenuCursorIndex_8003DA54(dword_800C92D8) * 2];
 }
 
 extern int dword_800C9E78;
@@ -3027,7 +3027,7 @@ int sub_800C791C()
     }
     else if (b & 4)
     {
-        short i = sub_8003DA54(dword_800C9314);
+        short i = GetMenuCursorIndex_8003DA54(dword_800C9314);
         r = dword_800C9E72[i];
     }
     else
@@ -3041,14 +3041,14 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C791C);
 extern char dword_800C9308[];
 void sub_800C79B8()
 {
-    sub_800AD288((short)sub_8003DA54(dword_800C9308), 0);
+    sub_800AD288((short)GetMenuCursorIndex_8003DA54(dword_800C9308), 0);
 }
 
-extern int sub_8003DA54(void*);
+extern int GetMenuCursorIndex_8003DA54(void*);
 extern char dword_800C92E4[];
 void sub_800C79EC()
 {
-    sub_80031BDC((short)sub_8003DA54(dword_800C92E4));
+    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
 }
 
 extern char dword_800C92F0[];
@@ -3056,7 +3056,7 @@ extern unsigned char dword_800C9C7C;
 void sub_800C7A1C()
 {
     char* h = sub_80010824(3, dword_800C9C7C - 1);
-    sub_8001AEC0(h, (short)sub_8003DA54(dword_800C92F0));
+    FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0));
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C7A6C);
@@ -3125,7 +3125,7 @@ void sub_800C8694(unsigned char a)
 {
     if (a == 4 && (dword_800C9E68 & 5) == 4)
     {
-        dword_800C9E3C = dword_800C9E72[(short)sub_8003DA54(dword_800C9314)];
+        dword_800C9E3C = dword_800C9E72[(short)GetMenuCursorIndex_8003DA54(dword_800C9314)];
     }
     else
     {
@@ -3186,14 +3186,14 @@ void sub_800C8828(int a)
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
-    rect[2] = sub_8003E4C8() + 4;
+    rect[2] = MeasureTextWidth_8003E4C8() + 4;
     rect[3] = 0x12;
     s[0] = a;
     p[0] = rect[0];
     p[1] = rect[1];
     p[4] = rect[0] + 2;
     p[5] = rect[1] + 4;
-    sub_8002AE38(s, &p[4], 0xF, rect, 1);
+    DrawTextLinesWindow_8002AE38(s, &p[4], 0xF, rect, 1);
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
@@ -3204,7 +3204,7 @@ void sub_800C88AC(int a)
     s[1] = 0;
     s[2] = 0;
     s[3] = 0;
-    sub_8002AF10((int)s, 0, 0xF);
+    DrawLargeTextBox_8002AF10((int)s, 0, 0xF);
 }
 
 extern unsigned short padPressed_8009194C;
@@ -3260,7 +3260,7 @@ void sub_800C8970()
     {
         dword_800C9C88[3] = dword_800C9E58[3];
     }
-    dword_800C9C98 = sub_80014358(dword_800C9E64);
+    dword_800C9C98 = LowestSetBit_80014358(dword_800C9E64);
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C8A08);

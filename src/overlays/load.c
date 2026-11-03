@@ -48,13 +48,13 @@ typedef struct
     int f54_LOAD;
 } LoadState_LOAD;
 extern LoadState_LOAD dword_800BE1F4;
-extern int dword_8008B4E8;
+extern int uiTiyLoaded_8008B4E8;
 extern int dword_8008B570[];
 extern unsigned char byte_800BDF58;
 extern int dword_800BE208;
 extern char dword_800BDECC[];
-extern void sub_8003CD5C(int* t);
-extern void sub_8002BE10(void);
+extern void DrawLoadingIcon_8003CD5C(int* t);
+extern void DrawMenuBackground_8002BE10(void);
 extern void sub_800BACBC(void* p);
 extern void sub_800B794C(int* t, int* s);
 extern void sub_800B79F8();
@@ -78,7 +78,7 @@ extern char byte_800B6B9C[];
 extern void sub_8003F264(void* p, int a, int b);
 extern char byte_800B69FC[];
 extern int dword_800BDD64;
-extern void sub_8002A5A4(void* p);
+extern void DrawMenuWindows_8002A5A4(void* p);
 typedef struct
 {
     short x_LOAD;
@@ -124,8 +124,8 @@ extern Bytes8_LOAD dword_800B6BA0;
 extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
-extern void sub_8002C06C(void* a, int b, int c);
-extern void sub_80042460(void* a, void* b, void* c, int d);
+extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
     char pad0_LOAD[0x20];
@@ -208,7 +208,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800B7674);
 
 void sub_800B7894(int* t)
 {
-    if (dword_8008B4E8)
+    if (uiTiyLoaded_8008B4E8)
     {
         t[2] = (int)sub_800B794C;
     }
@@ -294,8 +294,8 @@ void sub_800B85AC(void)
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
     b.s_LOAD = uiColor_8008B590;
-    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
-    sub_8002A5A4(&dword_800BDD64);
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    DrawMenuWindows_8002A5A4(&dword_800BDD64);
 }
 
 void sub_800B867C(LoadTask_LOAD* t)
@@ -325,12 +325,12 @@ void sub_800B8984(void)
 {
     Bytes8_LOAD a;
     Tail4_LOAD b;
-    sub_8002C06C(&dword_800BD998[byte_800BDF58], dword_800BD998[byte_800BDF58].f4_LOAD, dword_800BD998[byte_800BDF58].f6_LOAD);
+    DrawUiTiySprt_8002C06C(&dword_800BD998[byte_800BDF58], dword_800BD998[byte_800BDF58].f4_LOAD, dword_800BD998[byte_800BDF58].f6_LOAD);
     a = dword_800B6B8C;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
     b.s_LOAD = uiColor_8008B590;
-    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
 #if 0
@@ -343,15 +343,15 @@ void sub_800B8A20(void)
     Tail4_LOAD b;
     p0.x_LOAD = 0xBF;
     p0.y_LOAD = 0x15;
-    sub_8002C06C(&p0, 0x27, 1);
+    DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
     p1.x_LOAD = 0x124;
     p1.y_LOAD = 0x15;
-    sub_8002C06C(&p1, (byte_800BDF68 == 1) << 1, 1);
+    DrawUiTiySprt_8002C06C(&p1, (byte_800BDF68 == 1) << 1, 1);
     a = dword_800B6B94;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
     b.s_LOAD = uiColor_8008B590;
-    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
@@ -376,7 +376,7 @@ void sub_800B8AE4(void)
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
     b.s_LOAD = uiColor_8008B590;
-    sub_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
 INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
@@ -595,17 +595,17 @@ INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
 void sub_800BA968(int* t)
 {
-    sub_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9AC;
 }
 
 void sub_800BA9AC(int* t)
 {
-    sub_8003CD5C(t);
+    DrawLoadingIcon_8003CD5C(t);
     sub_800BACBC(dword_800BDECC);
-    sub_8002BE10();
+    DrawMenuBackground_8002BE10();
     t[2] = (int)sub_800BA9F0;
 }
 

@@ -28,7 +28,7 @@ typedef struct
     short field_8;
     short field_A;
 } struct_F6F8;
-extern void sub_8002A384(struct_F6F8* p);
+extern void DrawUiWindow_8002A384(struct_F6F8* p);
 // Matched
 void sub_8002F6F8(int a0, int* st)
 {
@@ -57,28 +57,28 @@ void sub_8002F6F8(int a0, int* st)
     s.field_0 = a0;
     s.field_4 = v;
     s.field_A = 0xF;
-    sub_8002A384(&s);
+    DrawUiWindow_8002A384(&s);
 }
 extern unsigned char levantStatus_8008BD38[];
 extern unsigned char dword_80082F04[];
 extern unsigned char dword_80082EBC[];
-extern void sub_8002C06C(void* p, int a1, int a2);
-extern void sub_8002C100(unsigned short* pos, int v, int ot);
+extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
+extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void sub_8002F7D0(unsigned short* pos, short ot)
 {
     unsigned short loc[2];
     unsigned char vals[0x18];
     short i;
-    sub_80033624(vals, (int)levantStatus_8008BD38);
+    CalcEquippedStats_80033624(vals, (int)levantStatus_8008BD38);
     for (i = 0; i < 5; i++)
     {
         loc[0] = pos[0] + 6;
         loc[1] = pos[1] + dword_80082F04[i] + 1;
-        sub_8002C06C(loc, dword_80082EBC[i], ot);
+        DrawUiTiySprt_8002C06C(loc, dword_80082EBC[i], ot);
         loc[0] = pos[0] + 0x45;
         loc[1] = pos[1] + dword_80082F04[i] + 2;
-        sub_8002C100(loc, vals[i], ot);
+        DrawLargeNumber_8002C100(loc, vals[i], ot);
     }
 }
 typedef struct
@@ -94,7 +94,7 @@ typedef struct
 } struct_F8E4;
 extern RECT* off_80082E90[];
 extern void sub_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
-extern void sub_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
 extern void AddTexWindowPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
 // Matched
@@ -114,13 +114,13 @@ void sub_8002F8E4(int a0, struct_F8E4* p)
     {
         v = p->field_8;
     }
-    sub_8004196C(buf, &off_80082E90[p->field_2 - 1][p->field_C], p->field_0, 8, 0);
+    InterpolateWindowRect_8004196C(buf, &off_80082E90[p->field_2 - 1][p->field_C], p->field_0, 8, 0);
     AddTexWindowPrim_8003326C(buf, &pOT_8008D454[p->field_6]);
     s.field_8 = flag;
     s.field_0 = (int)buf;
     s.field_4 = v;
     s.field_A = p->field_6;
-    sub_8002A384(&s);
+    DrawUiWindow_8002A384(&s);
     AddClipTexWindowPrim_80033308(&pOT_8008D454[p->field_6]);
 }
 // Matched
@@ -149,10 +149,10 @@ typedef struct
 } NameBuf;
 extern NameBuf dword_80074434;
 extern void DecodeText_8003F748(int a, NameBuf* b);
-extern short sub_8003E4C8(NameBuf* b);
+extern short MeasureTextWidth_8003E4C8(NameBuf* b);
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
 extern void sub_8003F89C(NameBuf* b);
-extern short sub_8003E6B0(NameBuf* b);
+extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched
 void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
 {
@@ -164,11 +164,11 @@ void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
     sub_8003F89C(&buf);
     if (a0 == 1)
     {
-        w = sub_8003E6B0(&buf);
+        w = MeasureTextWidthFont1_8003E6B0(&buf);
     }
     else if (a0 == 2)
     {
-        w = sub_8003E6B0(&buf) / 2;
+        w = MeasureTextWidthFont1_8003E6B0(&buf) / 2;
     }
     else
     {
@@ -188,7 +188,7 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     DecodeText_8003F748(1, &buf);
     if (a0 == 1)
     {
-        w = sub_8003E4C8(&buf);
+        w = MeasureTextWidth_8003E4C8(&buf);
     }
     else
     {
@@ -198,14 +198,14 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     loc[1] = pos[1];
     DrawText_8003E91C(2, &buf, loc, a3);
 }
-extern char* off_80082EC4[];
+extern char* rankNames_80082EC4[];
 extern char* off_80082EE4;
 // Matched
-char* sub_8002FCD8(int idx)
+char* GetRankName_8002FCD8(int idx)
 {
     if (idx >= 9)
     {
         return off_80082EE4;
     }
-    return off_80082EC4[idx];
+    return rankNames_80082EC4[idx];
 }

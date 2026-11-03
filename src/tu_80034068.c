@@ -28,10 +28,10 @@ int sub_80034068(short* p)
 {
     int* q;
     int idx;
-    struct_12_b* e;
+    MagicData* e;
     q = (int*)sub_80014390(((unsigned char*)p)[2]);
     idx = p[0];
-    e = &dword_8007C438[idx];
+    e = &magicData_8007C438[idx];
     if (e->field_0 & 0x40)
     {
         switch (e->field_7)
@@ -112,19 +112,19 @@ int sub_80034140(void)
     }
     return 0;
 }
-extern EventNode* dword_8008D640;
+extern EventNode* messageWindowTask_8008D640;
 typedef struct
 {
     short w;
     short h;
 } Size_8003422C;
-extern Size_8003422C sub_8003E3B4(int* list);
-extern Size_8003422C sub_8003E2A8(int* list, unsigned int mask);
-extern int sub_8003E4C8(int str);
+extern Size_8003422C MeasureTextLines_8003E3B4(int* list);
+extern Size_8003422C MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
+extern int MeasureTextWidth_8003E4C8(int str);
 extern void sub_800A6308(int a, void* b);
 extern void sub_800A1B2C(int a, void* b);
 extern short** sub_80034900(short** list);
-extern void sub_80034BB8(int* a0, int* a1);
+extern void UpdateMessageWindow_80034BB8(int* a0, int* a1);
 typedef struct
 {
     char pad_0[0xB4];
@@ -140,7 +140,7 @@ typedef struct
 #define WI(off) (*(int*)((char*)w + (off)))
 #if 0
 // Not matched: 41 lines; scheduling of the 0x14 store vs the 0x8/0xC/0x10 stores, and the shared tail (x+0xA) lands in a0 instead of v0
-EventEntry* sub_8003422C(int* cfg)
+EventEntry* OpenMessageWindow_8003422C(int* cfg)
 {
     unsigned short x;
     EventEntry* e;
@@ -153,7 +153,7 @@ EventEntry* sub_8003422C(int* cfg)
     int c;
     signed char* q;
 
-    e = AllocEventEntry_80043AF8(dword_8008D640);
+    e = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
     if (!e)
     {
         return 0;
@@ -225,7 +225,7 @@ EventEntry* sub_8003422C(int* cfg)
         {
             WS(0x1C)++;
             WL(WI(0x7C)++) = (int*)list;
-            sz = sub_8003E3B4((int*)list);
+            sz = MeasureTextLines_8003E3B4((int*)list);
             if (WS(0x3C) < sz.w)
             {
                 WS(0x3C) = sz.w;
@@ -251,11 +251,11 @@ EventEntry* sub_8003422C(int* cfg)
         {
             WI(0x1B4) = (int)p;
         }
-        sz = sub_8003E2A8((int*)WI(0x1B4), WI(0x14));
-        WS(0x18) = sub_80034B14((int*)WI(0x1B4));
+        sz = MeasureTextLinesMasked_8003E2A8((int*)WI(0x1B4), WI(0x14));
+        WS(0x18) = CountUntilZero_80034B14((int*)WI(0x1B4));
         WS(0x50) = sz.w;
         WS(0x52) = sz.h;
-        WS(0xB0) = sub_80034B40((int*)WI(0x1B4), WI(0x14));
+        WS(0xB0) = CountMaskedUntilZero_80034B40((int*)WI(0x1B4), WI(0x14));
     }
     c = -1;
     WS(0x1BC) = 0;
@@ -288,7 +288,7 @@ EventEntry* sub_8003422C(int* cfg)
             WS(0x42) = ((short*)cfg[0x4 / 4])[0] + ((short*)cfg[0x4 / 4])[1];
             WS(0x38) = WS(0x40) + 0x45;
             WS(0x3A) = WS(0x42) + 0xE;
-            WS(0x6E) = WS(0x38) + WS(0x3C) - sub_8003E4C8(WI(0x74)) - 0x10;
+            WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
             WS(0x70) = WS(0x3A) - 0xC;
         }
         else
@@ -299,7 +299,7 @@ EventEntry* sub_8003422C(int* cfg)
                 WS(0x42) = WS(0x40) = 0x10;
                 WS(0x38) = WS(0x40) + 0x44;
                 WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - sub_8003E4C8(WI(0x74)) - 0x10;
+                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
                 WS(0x70) = WS(0x3A) + WS(0x3E) - 2;
                 break;
             case 1:
@@ -307,7 +307,7 @@ EventEntry* sub_8003422C(int* cfg)
                 WS(0x42) = 0x74;
                 WS(0x38) = WS(0x40) + 0x44;
                 WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - sub_8003E4C8(WI(0x74)) - 0x10;
+                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
                 WS(0x70) = WS(0x3A) - 0x10;
                 break;
             case 2:
@@ -315,7 +315,7 @@ EventEntry* sub_8003422C(int* cfg)
                 WS(0x42) = 0xA1;
                 WS(0x38) = WS(0x40) + 0x44;
                 WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - sub_8003E4C8(WI(0x74)) - 0x10;
+                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
                 WS(0x70) = WS(0x3A) - 0x10;
                 break;
             }
@@ -330,7 +330,7 @@ EventEntry* sub_8003422C(int* cfg)
             WS(0x42) = ((short*)cfg[0x4 / 4])[0] + ((short*)cfg[0x4 / 4])[1];
             WS(0x38) = WS(0x40) + 0x45;
             WS(0x3A) = WS(0x42) + 0xD;
-            WS(0x6E) = WS(0x38) + WS(0x3C) - sub_8003E4C8(WI(0x74)) - 0x10;
+            WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
             WS(0x70) = WS(0x3A) - 0xC;
         }
         else
@@ -341,7 +341,7 @@ EventEntry* sub_8003422C(int* cfg)
                 WS(0x42) = WS(0x38) = 0x10;
                 WS(0x40) = WS(0x38) + 0xDA;
                 WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x40) + WS(0x44) - sub_8003E4C8(WI(0x74)) - 0x10;
+                WS(0x6E) = WS(0x40) + WS(0x44) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
                 WS(0x70) = WS(0x42) + WS(0x46) - 2;
                 break;
             case 1:
@@ -372,12 +372,12 @@ EventEntry* sub_8003422C(int* cfg)
     WS(0x66) = WS(0x42) + 2;
     WS(0x1B8) = WS(0x38) + 7;
     WS(0x1BA) = WS(0x3A) + 4;
-    e->cb_8 = (EventEntryFn)sub_80034BB8;
+    e->cb_8 = (EventEntryFn)UpdateMessageWindow_80034BB8;
     e->flags = (e->flags | 1) & ~0x8000;
     return e;
 }
 #endif
-INCLUDE_ASM(sub_8003422C);
+INCLUDE_ASM(OpenMessageWindow_8003422C);
 extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** sub_80034900(short** list)
@@ -489,7 +489,7 @@ int sub_80034ADC(UnitRef_349B4* a0, int idx)
     return 0;
 }
 // Matched
-int sub_80034B14(int* p)
+int CountUntilZero_80034B14(int* p)
 {
     int n = 0;
     while (*p)
@@ -500,7 +500,7 @@ int sub_80034B14(int* p)
     return n;
 }
 // Matched
-int sub_80034B40(int* p, unsigned int mask)
+int CountMaskedUntilZero_80034B40(int* p, unsigned int mask)
 {
     int n = 0;
     int i = 0;
@@ -519,7 +519,7 @@ int sub_80034B40(int* p, unsigned int mask)
     return n;
 }
 // Matched
-int sub_80034B88(int n, unsigned int mask)
+int NthMaskedIndex_80034B88(int n, unsigned int mask)
 {
     int i = 0;
     if (n >= 0)
@@ -538,7 +538,7 @@ int sub_80034B88(int n, unsigned int mask)
 extern void sub_80034C18(int* a);
 extern void sub_800353A0(int* a);
 // Matched
-void sub_80034BB8(int* a0, int* a1)
+void UpdateMessageWindow_80034BB8(int* a0, int* a1)
 {
     sub_80034C18(a1);
     sub_800353A0(a1);
@@ -548,7 +548,7 @@ void sub_80034BB8(int* a0, int* a1)
     }
 }
 extern void PlaySfx_80031494(int id);
-extern void sub_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern int sub_800429A8(void* r);
 extern int sub_8003580C(int* o, int* r);
 extern void sub_800359F8(int* p);
@@ -723,10 +723,10 @@ void sub_80034C18(int* p)
             p[0x34 / 4] = 8;
             p[3] = 2;
         }
-        sub_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
+        InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
         sub_80035898((struct_obj_A*)p, (int)r, 2);
         sub_800358CC((struct_obj_A*)p, (int)r, 0);
-        sub_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
+        InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
         sub_80035898((struct_obj_A*)p, (int)r, 2);
         sub_800358CC((struct_obj_A*)p, (int)r, 0);
         break;
@@ -797,14 +797,14 @@ void sub_80034C18(int* p)
             p[3] = 0;
             p[2] = 7;
         }
-        sub_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
+        InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
         if (sub_800429A8(r) == 1)
         {
             sub_8003580C(p, (int*)r);
             sub_80035898((struct_obj_A*)p, (int)r, 2);
             sub_800358CC((struct_obj_A*)p, (int)r, 0);
         }
-        sub_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
+        InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
         sub_80035898((struct_obj_A*)p, (int)r, 2);
         sub_800358CC((struct_obj_A*)p, (int)r, 0);
         break;
@@ -822,7 +822,7 @@ void sub_80034C18(int* p)
             p[2] = 3;
             p[9] = 1;
         }
-        sub_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
+        InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
         if (sub_800429A8(r) == 1)
         {
             sub_800355EC(p, (int*)r);
@@ -843,7 +843,7 @@ void sub_80034C18(int* p)
             p[4] = 0;
             p[2] = 6;
         }
-        sub_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
+        InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
         if (sub_800429A8(r) == 1)
         {
             sub_800355EC(p, (int*)r);

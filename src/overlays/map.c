@@ -78,7 +78,7 @@ typedef struct MapSaveView
     short f2EE;
 } MapSaveView;
 
-extern int sub_8003DA54(void*);
+extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
 extern void sub_800A6D30(int);
 extern void sub_800AD16C(int, int);
@@ -97,7 +97,7 @@ extern MapSel dword_800AEBFC[];
 extern unsigned short padRepeat_800918CC;
 extern char dword_800B6BE0[];
 extern void DrawText_8003E91C(int, void*, void*, int);
-extern void sub_8003EF74(void*, int, int);
+extern void DrawNumber_8003EF74(void*, int, int);
 extern int dword_800B9438;
 extern unsigned char dword_800B9368[];
 extern int dword_800B8CA4;
@@ -119,7 +119,7 @@ extern unsigned short word_800AEBF8[2];
 extern unsigned short dword_800B8C94[2];
 extern void sub_800B8448();
 extern short word_800B932C;
-extern void sub_8001C19C(int, int);
+extern void SetFadeMode_8001C19C(int, int);
 extern void ResetPadHoldFrames_8001CD04(int);
 extern void QueueFileRequest_8003BC84(void*);
 extern void sub_800B6CB4();
@@ -153,7 +153,7 @@ void sub_800B6BFC(MapTask* t, int a1)
 // Matched
 void sub_800B6C7C(MapTask* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     t->next_8 = sub_800B6CB4;
 }
 
@@ -236,7 +236,7 @@ void sub_800B6EE8(MapTask* t, int a1)
         t->next_8 = sub_800B7044;
         ResetPadHoldFrames_8001CD04(0);
         t->next_8(t, a1);
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
     }
 }
 
@@ -278,7 +278,7 @@ INCLUDE_OVERLAY_ASM(map, sub_800B7044);
 // Matched
 void sub_800B7948(MapTask* t)
 {
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     t->next_8 = sub_800B7980;
 }
 
@@ -288,7 +288,7 @@ void sub_800B7980(MapTask* t)
     MapPos q;
     MapElem* e;
     short* w = (short*)word_800AEBF8;
-    int r = sub_8003DA54(&dword_800AEBFC[w[0]]);
+    int r = GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w[0]]);
     sub_800B8128((short)r, w[0], &q);
     dword_800B9434 = 0;
     e = dword_800B9220[(short)word_800AEBF8[0]].f14 + q.b;
@@ -302,7 +302,7 @@ void sub_800B7A38(MapTask* t)
     if (dword_800B9430 && IsFadeDone_8001C2FC())
     {
         t->next_8 = sub_800B7A90;
-        sub_8001C19C(3, 0x20);
+        SetFadeMode_8001C19C(3, 0x20);
         word_800B932C = 0;
     }
 }
@@ -352,7 +352,7 @@ void sub_800B7EE0()
     }
     else
     {
-        r = sub_8003DA54(&SEL);
+        r = GetMenuCursorIndex_8003DA54(&SEL);
         sub_800B8128((short)r, (short)word_800AEBF8[0], &q);
         if (!sub_800B8290(&q))
         {
@@ -477,7 +477,7 @@ void sub_800B8338(MapPos* p)
         v->f2EE = -1;
     }
     sub_800A8DEC();
-    sub_8001C19C(0, 0x20);
+    SetFadeMode_8001C19C(0, 0x20);
     sub_800A6D30(1);
     dword_80091C94 = 1;
     eventDispatchHalt_8008B540 = 1;
@@ -680,7 +680,7 @@ void sub_800B860C()
             sv->f2E0 = fl;
             sub_800A8DEC();
             sub_800A6D30(1);
-            sub_8001C19C(0, 0x20);
+            SetFadeMode_8001C19C(0, 0x20);
             eventDispatchHalt_8008B540 = 1;
         }
         else
@@ -746,7 +746,7 @@ void sub_800B8B5C()
     DrawText_8003E91C(2, dword_800B6BE0, &b, 0);
     c.x = a.x + 0x50;
     c.y = a.y + 0xA;
-    sub_8003EF74(&c, *sel + 1, 0);
+    DrawNumber_8003EF74(&c, *sel + 1, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8B5C);

@@ -16,7 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern short* dword_8008D434;
+extern short* publicTiySprts_8008D434;
 
 INCLUDE_DATA(aDWorkPsusEvent);
 extern char aDWorkPsusEvent[];
@@ -24,15 +24,15 @@ extern char aDWorkPsusEvent[];
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
 extern short uiColor_8008B590;
-extern void sub_8004226C(int a, RECT* r, int c, int d);
-extern void sub_80041ED0(int a, RECT* r, int c, int d);
+extern void GetWindowColors_8004226C(int a, RECT* r, int c, int d);
+extern void DrawWindowFrame_80041ED0(int a, RECT* r, int c, int d);
 
 extern unsigned char** off_80087064[];
 extern unsigned char* off_80087050[];
 extern int dword_80086FB0[][3];
-extern void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
-void sub_8004226C(int a, RECT* r, int c, int d)
+void GetWindowColors_8004226C(int a, RECT* r, int c, int d)
 {
     unsigned char* out = (unsigned char*)r;
     unsigned char c0[4];
@@ -79,25 +79,25 @@ void sub_8004226C(int a, RECT* r, int c, int d)
         c1[0] = off_80087050[d][0];
         c1[1] = off_80087050[d][1];
         c1[2] = off_80087050[d][2];
-        sub_80033394(out, c0, c1, c, 40, 10);
+        PulseColor_80033394(out, c0, c1, c, 40, 10);
     }
 }
 // Matched
-void sub_80042460(int a0, unsigned char* p, int a2, int a3)
+void DrawWindow_80042460(int a0, unsigned char* p, int a2, int a3)
 {
     RECT r;
-    sub_8004226C(p[2], &r, a3, *(short*)p);
-    sub_80041ED0(a0, &r, a2, p[3]);
+    GetWindowColors_8004226C(p[2], &r, a3, *(short*)p);
+    DrawWindowFrame_80041ED0(a0, &r, a2, p[3]);
 }
 // Matched
-void sub_800424C0(int a0, short a1, int a2, int a3)
+void DrawUiColorWindow_800424C0(int a0, short a1, int a2, int a3)
 {
     RECT r;
-    sub_8004226C(a1, &r, a3, uiColor_8008B590);
-    sub_80041ED0(a0, &r, a2, 1);
+    GetWindowColors_8004226C(a1, &r, a3, uiColor_8008B590);
+    DrawWindowFrame_80041ED0(a0, &r, a2, 1);
 }
 // Matched
-void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
+void DrawGouraudRect_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
 {
     POLY_G4 p;
     DR_TPAGE dt;
@@ -122,9 +122,9 @@ void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned 
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
-extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
-void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
+void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot)
 {
     LINE_F4 l;
     DVECTOR a;
@@ -137,10 +137,10 @@ void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
     a.vy = l.y0;
     b.vx = l.x3;
     b.vy = l.y3;
-    sub_80042870(&a, &b, rgb, ot);
+    DrawLine_80042870(&a, &b, rgb, ot);
 }
 // Matched
-void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
+void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 {
     LINE_F2 l;
     DR_TPAGE dt;
@@ -157,7 +157,7 @@ void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
 // Matched
 int sub_800429A8(short* p)
 {
-    short* g = dword_8008D434;
+    short* g = publicTiySprts_8008D434;
     if (p[2] >= g[0x63C / 2] + g[0x678 / 2] && p[3] >= g[0x63E / 2] + g[0x67A / 2])
     {
         return 1;
@@ -169,7 +169,7 @@ extern unsigned char* off_80087028[];
 void sub_800429F8(int a0, int a1)
 {
     short* p = (short*)a0;
-    short* g = dword_8008D434;
+    short* g = publicTiySprts_8008D434;
     unsigned char rgb[4][4];
     RECT r;
     short i;
@@ -186,12 +186,86 @@ void sub_800429F8(int a0, int a1)
             rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20][1];
             rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20][2];
         }
-        sub_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
+        DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
     }
 }
+extern POLY_FT4* publicTiyPolyFT4s_8008D430;
+extern DR_TPAGE* publicTiyTPages_8008D440;
+#define EVT_SPRT ((SPRT*)publicTiySprts_8008D434)
 #if 0
+// Not matched: register allocation (g/the sprite base gets $t7 instead of $s2, shifting the temporaries of the rect setup)
 void sub_80042B38(int a0, int a1)
 {
+    short* p = (short*)a0;
+    RECT r[8];
+
+    if (p[2] >= EVT_SPRT[79].w + EVT_SPRT[82].w && p[3] >= EVT_SPRT[79].h + EVT_SPRT[82].h)
+    {
+        r[0].w = EVT_SPRT[79].w;
+        r[0].h = EVT_SPRT[79].h;
+        r[1].w = EVT_SPRT[82].w;
+        r[1].h = EVT_SPRT[82].h;
+        r[2].w = EVT_SPRT[80].w;
+        r[2].h = EVT_SPRT[80].h;
+        r[3].w = EVT_SPRT[81].w;
+        r[3].h = EVT_SPRT[81].h;
+        r[4].w = EVT_SPRT[86].w;
+        r[4].h = EVT_SPRT[86].h;
+        r[5].w = EVT_SPRT[83].w;
+        r[5].h = EVT_SPRT[83].h;
+        r[6].w = EVT_SPRT[84].w;
+        r[6].h = EVT_SPRT[84].h;
+        r[7].w = EVT_SPRT[85].w;
+        r[7].h = EVT_SPRT[85].h;
+
+        r[0].x = p[0];
+        r[0].y = p[1];
+        r[4].x = r[0].x + r[0].w;
+        r[4].y = p[1];
+        r[4].w = p[2] - (r[0].w + r[1].w);
+        r[1].x = r[4].x + r[4].w;
+        r[1].y = p[1];
+        r[6].x = p[0];
+        r[6].y = r[0].y + r[0].h;
+        r[6].w = r[6].w - 1;
+        r[6].h = p[3] - (r[0].h + r[2].h);
+        r[7].x = p[0] + p[2] - r[7].w;
+        r[7].y = r[1].y + r[1].h;
+        r[7].w = r[7].w - 1;
+        r[7].h = r[6].h;
+        r[2].x = p[0];
+        r[2].y = r[6].y + r[6].h;
+        r[5].x = r[2].x + r[2].w;
+        r[5].y = p[1] + p[3] - r[5].h;
+        r[5].w = r[4].w;
+        r[3].x = r[5].x + r[5].w;
+        r[3].y = r[2].y;
+
+        EVT_SPRT[79].x0 = r[0].x;
+        EVT_SPRT[79].y0 = r[0].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[79], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyTPages_8008D440[79], 2);
+        EVT_SPRT[82].x0 = r[1].x;
+        EVT_SPRT[82].y0 = r[1].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[82], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyTPages_8008D440[82], 2);
+        EVT_SPRT[80].x0 = r[2].x;
+        EVT_SPRT[80].y0 = r[2].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[80], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyTPages_8008D440[80], 2);
+        EVT_SPRT[81].x0 = r[3].x;
+        EVT_SPRT[81].y0 = r[3].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[81], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyTPages_8008D440[81], 2);
+        setXYWH(&publicTiyPolyFT4s_8008D430[86], r[4].x, r[4].y, r[4].w, r[4].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyPolyFT4s_8008D430[86], 10);
+        setXYWH(&publicTiyPolyFT4s_8008D430[83], r[5].x, r[5].y, r[5].w, r[5].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyPolyFT4s_8008D430[83], 10);
+        setXYWH(&publicTiyPolyFT4s_8008D430[84], r[6].x, r[6].y, r[6].w, r[6].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyPolyFT4s_8008D430[84], 10);
+        setXYWH(&publicTiyPolyFT4s_8008D430[85], r[7].x, r[7].y, r[7].w, r[7].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &publicTiyPolyFT4s_8008D430[85], 10);
+    }
 }
 #endif
 INCLUDE_ASM(sub_80042B38);
@@ -347,7 +421,7 @@ int XaRequestStop_80043524(void)
     {
         return 0;
     }
-    p = dword_8008B560[0x24 / 4];
+    p = xaTask_8008B560[0x24 / 4];
     *p |= 1;
     return 1;
 }
@@ -362,7 +436,7 @@ void XaRequestPlay_80043564(short a0, short a1, short a2)
 // Matched
 int XaIsIdle_80043584(void)
 {
-    return ((short*)dword_8008B560[0x24 / 4])[4] == 0;
+    return ((short*)xaTask_8008B560[0x24 / 4])[4] == 0;
 }
 // Matched
 unsigned int XaNoRequestPending_800435A4(void)

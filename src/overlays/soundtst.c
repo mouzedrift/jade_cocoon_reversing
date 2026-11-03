@@ -10,7 +10,7 @@ INCLUDE_OVERLAY_ASM(soundtst, dword_800A05A0);
 extern char name_800AA340[];
 int sub_800A51AC()
 {
-    sub_8001C290();
+    EndFade_8001C290();
     DrawIntroMovie_8001AF64(name_800AA340);
     return 6;
 }
