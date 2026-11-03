@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "unit.h"
 #include "tiy.h"
 #include "minion_menu.h"
 
@@ -694,8 +695,8 @@ void sub_800335D0(void* pSrc, Minion* m)
 // Matched
 int CalcEquippedStats_80033624(void* arg0, int arg1)
 {
-    unsigned char* stats = (unsigned char*)arg1 + 0x2C;
-    unsigned char* ids = (unsigned char*)arg1 + 0x1C;
+    unsigned char* stats = ((UnitStats*)arg1)->stats_2C;
+    unsigned char* ids = ((UnitStats*)arg1)->field_1C;
     int* tbl[4];
     int i;
     int j;
@@ -886,7 +887,7 @@ char* sub_80033A68(char* p)
 // Matched
 int sub_80033A70(unsigned char* p, int idx)
 {
-    return sub_80031954(p + 0x6C, idx);
+    return sub_80031954(&((UnitStats*)p)->skills_6C, idx);
 }
 // Matched
 int HasMagic_80033A90(Minion* p, unsigned int idx)

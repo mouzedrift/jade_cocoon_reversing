@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "unit.h"
 
 INCLUDE_DATA(dword_800743D4);
 INCLUDE_DATA(dword_800743D8);
@@ -39,12 +40,12 @@ INCLUDE_DATA(dword_80074420);
 INCLUDE_DATA(dword_80074424);
 INCLUDE_DATA(dword_80074428);
 
-extern void sub_8002F23C(int a0, int a1, int a2, unsigned short* a3, int a4, int a5);
+extern void sub_8002F23C(UnitStats* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 void sub_8002F120(char* a0, unsigned short* pos, int a2, short a3);
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
-void sub_8002ECE0(char* a0, unsigned short* pos, int a2, short ot)
+void sub_8002ECE0(UnitStats* a0, unsigned short* pos, int a2, short ot)
 {
     unsigned short loc[2];
     unsigned int st[4];
@@ -54,13 +55,13 @@ void sub_8002ECE0(char* a0, unsigned short* pos, int a2, short ot)
     r.y = pos[1];
     r.w = 0;
     r.h = 0;
-    sub_8002F23C((int)a0, 0, frameCount_8008D3FC, (unsigned short*)&r, (short)ot, 0);
+    sub_8002F23C(a0, 0, frameCount_8008D3FC, (unsigned short*)&r, (short)ot, 0);
     loc[0] = pos[0] + 7;
     loc[1] = pos[1] + 0x37;
     DrawUiTiySprt_8002C06C(loc, 0x3B, ot);
     st[0] = 2;
     st[1] = 0;
-    x = ((unsigned int*)a0)[1];
+    x = a0->exp_4;
     while (x > 0x4000000)
     {
         x -= 0x4000000;
@@ -72,7 +73,7 @@ void sub_8002ECE0(char* a0, unsigned short* pos, int a2, short ot)
     DrawGauge_8002BA54(st, 0, loc, (short)ot);
     loc[0] = pos[0];
     loc[1] = pos[1] + 0x24;
-    sub_8002F120(a0, loc, 0, ot);
+    sub_8002F120((char*)a0, loc, 0, ot);
 }
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 extern void DrawSmallNumber3_8002C290(unsigned short* pos, int val, int ot);
@@ -184,7 +185,7 @@ typedef struct
     short field_8;
     short field_A;
 } struct_F1C8;
-extern void sub_8002F23C(int a0, int a1, int a2, unsigned short* a3, int a4, int a5);
+extern void sub_8002F23C(UnitStats* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawUiWindow_8002A384(struct_F1C8* p);
 // Matched
 void sub_8002F1C8(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
@@ -201,15 +202,15 @@ void sub_8002F1C8(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002B228(short a, unsigned short* pos, int ot, int flags);
 // Matched
-void sub_8002F23C(int a0, int a1, int a2, unsigned short* pos, int a4, int a5)
+void sub_8002F23C(UnitStats* a0, int a1, int a2, unsigned short* pos, int a4, int a5)
 {
     unsigned short loc[2];
     loc[0] = pos[0] + 7;
     loc[1] = pos[1] + 3;
-    sub_8002FAA0(0, loc, (unsigned char*)a0 + 0x10, a4);
+    sub_8002FAA0(0, loc, a0->name_10, a4);
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0xB;
-    sub_8002EFC4((char*)a0 + 8, a1, a2, loc, a4, (a5 ^ 1) & 1);
+    sub_8002EFC4((char*)&a0->hp_8, a1, a2, loc, a4, (a5 ^ 1) & 1);
     loc[0] = pos[0] + 0x45;
     loc[1] = pos[1] + 4;
     sub_8002B228(sub_8003412C((char*)a0), loc, a4, a5);
