@@ -103,7 +103,7 @@ typedef struct GameS3_1
 {
     unsigned short a, b, c;
 } GameS3_1;
-extern void IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
+extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 extern int dword_800AEBE4;
 extern void sub_800ADCEC();
 extern void sub_800AD0F8(unsigned a);
@@ -418,11 +418,11 @@ INCLUDE_OVERLAY_ASM(game, sub_800A0A04);
 INCLUDE_OVERLAY_ASM(game, sub_800A0A5C);
 
 extern void sub_800A13B8();
-extern int sub_800A19E4();
+extern int CheckEnemyContact_800A19E4();
 extern void StartPadVibration_80036528();
 void sub_800A1314(GameTask_1* t)
 {
-    if (sub_800A19E4() == 1)
+    if (CheckEnemyContact_800A19E4() == 1)
         dword_800B1228 |= 0x4000;
     if (dword_800B1228 & 0x4000)
     {
@@ -656,7 +656,52 @@ void sub_800A1974(void)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A19E4);
+int CheckEnemyContact_800A19E4(void)
+{
+    int i;
+    GameSlot_1* s;
+    char* o;
+    unsigned int d;
+    int r;
+    if (sub_800A5F6C())
+    {
+        return 1;
+    }
+    if (dword_800B0EC0 != 1)
+    {
+        return 0;
+    }
+    if (dword_80091C9C)
+    {
+        return 0;
+    }
+    if (((GameSave_1*)&saveData_8008B570)->f2f0 != ((GameSave_1*)&saveData_8008B570)->f2f2)
+    {
+        return 0;
+    }
+    if (sub_800A5E68())
+    {
+        return 0;
+    }
+    for (i = 0, s = dword_800B19F0; i < 3; i++, s++)
+    {
+        if (s->f0)
+        {
+            o = (char*)s->f4;
+            d = 0xfff;
+            if (IsWithinDistance_8003B740((int*)(*(char**)(o + 8) + 0x38), (int*)&dword_8008BD18, &d) == 1)
+            {
+                r = *(int*)(*(char**)(o + 8) + 0x140) * 400 / 4096;
+                if (d < r * r)
+                {
+                    dword_800B1264 = (int*)s;
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 // Matched
 int sub_800A1B2C(void)
@@ -1082,7 +1127,56 @@ void sub_800A2D48(GameFlagObj_1* p)
     sub_8001D760(p->f8, p->f20, -1, 0);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A2D90);
+extern int dword_8008D49C;
+extern unsigned char levantCaptureLevel_8008BD7C;
+extern void sub_800A2EE4(void);
+extern void (*name_800ADEB8[][2])();
+int* CreateEnemyAiEvent_800A2D90(int a, char* b, int c)
+{
+    GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
+    int* q;
+    int v;
+    int k;
+    int j;
+    if (e != 0)
+    {
+        q = e->obj_14;
+        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
+        q[0] = (int)e;
+        q[1] = (int)b;
+        q[2] = a;
+        q[10] = 0;
+        q[9] = 0;
+        q[11] = 0;
+        q[8] = -1;
+        q[3] = -1;
+        q[4] = -1;
+        if (c == 0)
+        {
+            e->fn_8 = sub_800A2EE4;
+        }
+        else
+        {
+            v = *(int*)(b + 0x5c);
+            if ((unsigned)v < 0x39)
+            {
+                j = !(levantCaptureLevel_8008BD7C - (unsigned char)b[0x44] < 5);
+                e->fn_8 = name_800ADEB8[v][j];
+            }
+            else
+            {
+                k = v;
+                if (k >= 0x39)
+                {
+                    k = (k - 0x39) / 4;
+                }
+                e->fn_8 = name_800ADEB8[k][0];
+            }
+        }
+        return q;
+    }
+    return 0;
+}
 
 // Matched
 void sub_800A2EC8(GameFlagObj_1* p)
@@ -2284,9 +2378,93 @@ void sub_800A6168(GameTask_1* t, GameQ_1* q)
     t->f0 = (((t->f0 & ~1) | 0x8000) & ~4) | 0x8000;
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A61CC);
+typedef struct GameTim_1
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    u_long* caddr;
+    int pix_len;
+    RECT prect;
+    u_long* paddr;
+} GameTim_1;
+typedef struct GameXY_1
+{
+    unsigned short x;
+    unsigned short y;
+} GameXY_1;
+extern GameXY_1 name_8007DCA4;
+extern GameXY_1 name_8007DCA8;
+extern GameXY_1 name_8007DCAC[];
+extern GameXY_1 name_8007DCBC[];
+void sub_800A61CC(int a, void* b, void* c)
+{
+    GameTim_1 t;
+    int i;
+    if (a == 0)
+    {
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCA4.x;
+        t.prect.y = name_8007DCA4.y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCA8.x;
+        t.crect.y = name_8007DCA8.y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    else
+    {
+        i = sub_800A7A1C(a - 1);
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
+        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
+        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    InitSprtFromTim_800298AC((int)b, (int)c, &t);
+}
 
-INCLUDE_OVERLAY_ASM(game, sub_800A6308);
+void sub_800A6308(int a, void* poly)
+{
+    GameTim_1 t;
+    int i;
+    if (a == 0)
+    {
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCA4.x;
+        t.prect.y = name_8007DCA4.y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCA8.x;
+        t.crect.y = name_8007DCA8.y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    else
+    {
+        i = sub_800A7A1C(a - 1);
+        t.mode_valid = 1;
+        t.mode = 1;
+        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
+        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.w = 0x20;
+        t.prect.h = 0x40;
+        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
+        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.w = 0x100;
+        t.crect.h = 1;
+    }
+    InitPolyFT4_80029A10(poly, &t);
+}
 
 extern char aAssertionFaile_800A0660[];
 extern char aEventcomC_800A0688[];
@@ -3324,7 +3502,7 @@ typedef struct G2L2
 extern int dword_8001D060(int);
 extern int sub_800A79C8(int);
 extern int* name_800A7940(int);
-extern void IsWithinDistance_8003B740();
+extern int IsWithinDistance_8003B740();
 extern int name_800B0EC4[];
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
