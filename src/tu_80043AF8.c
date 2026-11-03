@@ -264,8 +264,139 @@ void sub_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* ro
     }
     PopMatrix();
 }
+#if 0
+// Not matched: register allocation / scheduling (the flags stay in $a3 in the original, -0x61 and the masked flags in $t8/$t9)
+void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
+{
+    FtgQuadCtx* s = FTG_QUAD_CTX;
+    POLY_GT4* t;
+    unsigned int i;
+    s->next_14 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
+    t = (POLY_GT4*)FTG_PRIM_SCRATCH;
+    t->tpage = dword_8009AAD8.tc.tpage;
+    t->clut = dword_8009AAD8.tc.clut;
+    s->ref_28 = list->items;
+    for (i = 0; i < list->count; i++)
+    {
+        s->slot_10 = s->ref_28->v[0].slot;
+        s->attr_0 = slots[s->slot_10].pad;
+        if (s->attr_0 & 2)
+        {
+            if ((flags & 0x10) && !(s->attr_0 & 4))
+            {
+                s->attr_0 = flags | (s->attr_0 & ~0x60);
+            }
+            else
+            {
+                s->attr_0 |= flags & ~0x60;
+            }
+            s->v_18[0] = dword_800987D8[s->slot_10][s->ref_28->v[0].idx];
+            s->v_18[1] = dword_800987D8[s->ref_28->v[1].slot][s->ref_28->v[1].idx];
+            s->v_18[2] = dword_800987D8[s->ref_28->v[2].slot][s->ref_28->v[2].idx];
+            s->v_18[3] = dword_800987D8[s->ref_28->v[3].slot][s->ref_28->v[3].idx];
+            *(long*)&t->x0 = s->v_18[0]->sxy_0;
+            *(long*)&t->x1 = s->v_18[1]->sxy_0;
+            *(long*)&t->x2 = s->v_18[2]->sxy_0;
+            gte_ldsxy3(*(long*)&t->x0, *(long*)&t->x1, *(long*)&t->x2);
+            gte_nclip();
+            *(long*)&t->x3 = s->v_18[3]->sxy_0;
+            gte_stopz(&s->opz_8);
+            gte_ldsxy3(*(long*)&t->x1, *(long*)&t->x2, *(long*)&t->x3);
+            gte_nclip();
+            s->otz_4 = (s->v_18[0]->sz_4 + s->v_18[1]->sz_4 + s->v_18[2]->sz_4 + s->v_18[3]->sz_4) / 16;
+            gte_stopz(&s->opz2_C);
+            if (s->opz_8 > 0 || s->opz2_C < 0)
+            {
+                if (s->otz_4 - 1 < 0xFFFU)
+                {
+                    *(unsigned long*)&t->r0 = s->v_18[0]->rgbc_C;
+                    *(unsigned long*)&t->r1 = s->v_18[1]->rgbc_C;
+                    *(unsigned long*)&t->r2 = s->v_18[2]->rgbc_C;
+                    *(unsigned long*)&t->r3 = s->v_18[3]->rgbc_C;
+                    *(unsigned short*)&t->u0 = s->v_18[0]->uv_8;
+                    *(unsigned short*)&t->u1 = s->v_18[1]->uv_8;
+                    *(unsigned long*)&t->u2 = *(unsigned long*)&s->v_18[2]->uv_8;
+                    *(unsigned long*)&t->u3 = *(unsigned long*)&s->v_18[3]->uv_8;
+                    setPolyGT4(t);
+                    if (s->attr_0 & 0x10)
+                    {
+                        setSemiTrans(t, 1);
+                        t->tpage &= ~0x60;
+                        t->tpage |= s->attr_0 & 0x60;
+                    }
+                    *(POLY_GT4*)s->next_14 = *t;
+                    addPrim(ot + ((s->otz_4 >> 2) & 0x3FF), s->next_14);
+                    s->next_14 += sizeof(POLY_GT4);
+                }
+            }
+        }
+        s->ref_28++;
+    }
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)s->next_14;
+    sub_8004D924();
+}
+#endif
 INCLUDE_ASM(sub_800459E4);
-INCLUDE_ASM(sub_80045E48);
+// Matched
+void sub_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
+{
+    FtgQuadG4Ctx* s = FTG_QUAD_G4_CTX;
+    unsigned int i;
+    int otz;
+    s->next_30 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
+    s->ref_44 = list->items;
+    setlen(&s->tpage_8, 1);
+    s->tpage_8.code[0] = 0xE1000200;
+    if (flags & 0x10)
+    {
+        s->tpage_8.code[0] |= flags & 0x60;
+    }
+    else
+    {
+        s->tpage_8.code[0] |= 0x20;
+    }
+    for (i = 0; i < list->count; i++)
+    {
+        s->v_34[0] = dword_800987D8[s->ref_44->v[0].slot][s->ref_44->v[0].idx];
+        s->v_34[1] = dword_800987D8[s->ref_44->v[1].slot][s->ref_44->v[1].idx];
+        s->v_34[2] = dword_800987D8[s->ref_44->v[2].slot][s->ref_44->v[2].idx];
+        s->v_34[3] = dword_800987D8[s->ref_44->v[3].slot][s->ref_44->v[3].idx];
+        otz = (s->v_34[0]->sz_4 + s->v_34[1]->sz_4 + s->v_34[2]->sz_4 + s->v_34[3]->sz_4) / 4;
+        if (otz - 1 < 0xFFFU)
+        {
+            gte_ldsxy3(s->v_34[0]->sxy_0, s->v_34[1]->sxy_0, s->v_34[2]->sxy_0);
+            gte_nclip();
+            gte_stopz(&s->opz_0);
+            gte_ldsxy3(s->v_34[1]->sxy_0, s->v_34[2]->sxy_0, s->v_34[3]->sxy_0);
+            gte_nclip();
+            gte_stopz(&s->opz2_4);
+            if (s->opz_0 > 0 || s->opz2_4 < 0)
+            {
+                *(long*)&((POLY_G4*)s->next_30)->x0 = s->v_34[0]->sxy_0;
+                *(long*)&((POLY_G4*)s->next_30)->x1 = s->v_34[1]->sxy_0;
+                *(long*)&((POLY_G4*)s->next_30)->x2 = s->v_34[2]->sxy_0;
+                *(long*)&((POLY_G4*)s->next_30)->x3 = s->v_34[3]->sxy_0;
+                *(unsigned long*)&((POLY_G4*)s->next_30)->r0 = s->v_34[0]->rgbc_C;
+                *(unsigned long*)&((POLY_G4*)s->next_30)->r1 = s->v_34[1]->rgbc_C;
+                *(unsigned long*)&((POLY_G4*)s->next_30)->r2 = s->v_34[2]->rgbc_C;
+                *(unsigned long*)&((POLY_G4*)s->next_30)->r3 = s->v_34[3]->rgbc_C;
+                setPolyG4((POLY_G4*)s->next_30);
+                if (flags & 0x10)
+                {
+                    setSemiTrans((POLY_G4*)s->next_30, 1);
+                }
+                addPrim(ot + ((otz >> 2) & 0x3FF), s->next_30);
+                s->next_30 += sizeof(POLY_G4);
+                *(DR_TPAGE*)s->next_30 = s->tpage_8;
+                addPrim(ot + ((otz >> 2) & 0x3FF), s->next_30);
+                s->next_30 += sizeof(DR_TPAGE);
+            }
+        }
+        s->ref_44++;
+    }
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)s->next_30;
+    sub_8004D924();
+}
 INCLUDE_ASM(sub_80046248);
 /* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
 extern short asc_80084350[];

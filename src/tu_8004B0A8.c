@@ -532,7 +532,7 @@ void sub_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slo
     {
         gte_ldv3(&s[0].p1, &s[1].p1, &s[2].p1);
         gte_rtpt();
-        dword_8009AAD8 = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
+        dword_8009AAD8.word = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
         gte_stsxy3(&o[0].sxy_0, &o[1].sxy_0, &o[2].sxy_0);
         gte_stsz3(&o[0].sz_4, &o[1].sz_4, &o[2].sz_4);
         if (ctx->flags_20 & 1)

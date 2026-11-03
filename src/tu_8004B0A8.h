@@ -28,7 +28,16 @@ typedef struct FtgSpriteVtx
 } FtgSpriteVtx;
 extern FtgSpriteVtx* dword_80098180;        // next free sprite vertex
 extern FtgSpriteVtx* dword_800987D8[][56];  // per slot: the projected vertices, three per triple
-extern unsigned long dword_8009AAD8;        // tpage / clut word of the textured sprites
+typedef union
+{
+    unsigned long word;
+    struct
+    {
+        unsigned short tpage;
+        unsigned short clut;
+    } tc;
+} FtgTPageClut;
+extern FtgTPageClut dword_8009AAD8; // tpage / clut of the textured sprites
 
 // draws an FTG object with the current GTE matrices (flags: see FtgDrawCtx.flags_20, bits 8-15 CLUT
 // row offset, bit 7 + bits 16-31 depth cue); slot indexes dword_800987D8
