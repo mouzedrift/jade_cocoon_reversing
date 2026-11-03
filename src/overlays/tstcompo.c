@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "tu_8001EA48.h"
 
 extern unsigned short padPressed_8009194C;
 extern unsigned short padRepeat_800918CC;
@@ -16,21 +17,15 @@ typedef struct TstCompoBone
     short s4;
     short s6;
 } TstCompoBone;
-// one animation of a model (struct_112.field_54 points to an array of them)
-typedef struct TstCompoAnim
-{
-    unsigned int frames_0;
-    char pad_4[0x18];
-} TstCompoAnim;
 // parameter block of sub_80046A58 / sub_80047E28
 typedef struct TstCompoDraw
 {
-    int f0;
+    FtgObject* ftg_0;
     VECTOR* pos_4;
     char* f8;
     TstCompoBone* bones_C;
     char* f10;
-    TstCompoAnim* anim_14;
+    ModelAnim* anim_14;
     int frame_18;
     int f1C;
     char* f20;
@@ -41,7 +36,7 @@ typedef struct TstCompoDraw
 typedef struct TstCompoWork
 {
     int state_0;
-    struct_112* model_4;
+    Model* model_4;
     int f8;
     TstCompoBone bones_C[40];
     short yaw_14C;
@@ -227,7 +222,7 @@ void sub_800A1320(TstCompoWork* a)
 }
 
 extern int name_80010A10(int);
-extern struct_112* name_80010A44(int);
+extern Model* name_80010A44(int);
 extern void sub_800A1AFC();
 void sub_800A1354(TstCompoWork* a)
 {
@@ -242,7 +237,7 @@ void sub_800A1354(TstCompoWork* a)
     }
 }
 
-extern int name_80024DC4(struct_112*);
+extern int name_80024DC4(Model*);
 void sub_800A13B8(TstCompoWork* a)
 {
     if (name_80024DC4(a->model_4))
@@ -250,10 +245,10 @@ void sub_800A13B8(TstCompoWork* a)
         if (a->animCount_188 <= 0)
         {
             int i;
-            a->animCount_188 = a->model_4->field_3E;
+            a->animCount_188 = a->model_4->animCount_3E;
             for (i = 0; i < a->animCount_188; i++)
             {
-                if (((unsigned char*)a->model_4->field_44)[i] != 0)
+                if (a->model_4->animLoaded_44[i] != 0)
                 {
                     a->anim_184 = i;
                     break;
@@ -269,7 +264,7 @@ void sub_800A13B8(TstCompoWork* a)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_80046A58(void* a, void* b, int c);
+extern void sub_80046A58(void* a, void* b, void* c);
 extern void sub_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A2588[];
 extern char name_800A2570[];
@@ -288,28 +283,28 @@ void sub_800A1468(TstCompoWork* c)
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
     c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
-    c->draw_1A8.anim_14 = (TstCompoAnim*)c->model_4->field_54 + c->anim_184;
-    c->draw_1A8.f0 = c->model_4->field_50;
+    c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
+    c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
     c->draw_1A8.f8 = z;
     c->draw_1A8.bones_C = c->bones_C;
     c->draw_1A8.f10 = c->f1A4;
-    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frames_0;
+    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
     c->draw_1A8.f1C = 0;
     c->draw_1A8.f20 = name_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
-    sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->field_54);
-    sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
+    sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+    sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
-extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, int g);
+extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
 void sub_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
     char z[8];
     VECTOR scale;
-    TstCompoAnim* anim;
+    ModelAnim* anim;
     memset(z, 0, 8);
     pos.vx = c->pos_16C[0];
     pos.vy = c->pos_16C[1];
@@ -320,13 +315,13 @@ void sub_800A15F4(TstCompoWork* c)
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
     c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
-    c->draw_1A8.anim_14 = (TstCompoAnim*)c->model_4->field_54 + 3;
-    c->draw_1A8.f0 = c->model_4->field_50;
+    c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
+    c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
     c->draw_1A8.f8 = z;
     c->draw_1A8.bones_C = c->bones_C;
     c->draw_1A8.f10 = c->f1A4;
-    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frames_0;
+    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
     c->draw_1A8.f1C = 0;
     c->draw_1A8.f20 = name_800A2588;
     c->draw_1A8.scale_24 = &scale;
@@ -335,15 +330,15 @@ void sub_800A15F4(TstCompoWork* c)
     c->frame_180++;
     if ((unsigned)c->f1FC >= 0x1000)
     {
-        sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->field_54);
-        sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
+        sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+        sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
-        anim = (TstCompoAnim*)c->model_4->field_54 + c->f204;
-        sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frames_0, 0x1000 - c->f1FC,
-                     name_800A2570, c->model_4->field_54);
-        sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
+        anim = &c->model_4->anims_54[c->f204];
+        sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
+                     name_800A2570, c->model_4->anims_54);
+        sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
 }
 
@@ -359,10 +354,10 @@ void sub_800A1804(TstCompoWork* c)
         {
             if (--c->frame_180 < 0)
             {
-                c->frame_180 = c->draw_1A8.anim_14->frames_0 - 1;
+                c->frame_180 = c->draw_1A8.anim_14->frameCount_0 - 1;
             }
         }
-        c->frame_180 = c->frame_180 % c->draw_1A8.anim_14->frames_0;
+        c->frame_180 = c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
     }
     else
     {
@@ -402,8 +397,8 @@ void sub_800A194C(TstCompoWork* c)
     }
 }
 
-extern void name_8002556C(struct_112* a, int b);
-extern void name_80025440(struct_112* a, int b, int c);
+extern void name_8002556C(Model* a, int b);
+extern void name_80025440(Model* a, int b, int c);
 void sub_800A19A4(TstCompoWork* c)
 {
     unsigned short pad = padRepeat_800918CC;
@@ -434,7 +429,7 @@ void sub_800A19A4(TstCompoWork* c)
             name_8002556C(c->model_4, c->anim_184);
             c->f190 = 0;
         }
-        if (((unsigned char*)c->model_4->field_44)[c->f18C] == 0)
+        if (c->model_4->animLoaded_44[c->f18C] == 0)
         {
             c->f190 = 1;
         }
@@ -466,8 +461,6 @@ void sub_800A1AD0(TstCompoWork* a)
 
 extern TstCompoBone dword_80079140[];
 extern void sub_80019B14(void* p, char* a1, char* a2);
-extern char* sub_80024F00(void* p, int n);
-extern char* sub_80024F38(void* p, int n);
 void sub_800A1AFC(TstCompoWork* a)
 {
     int i;

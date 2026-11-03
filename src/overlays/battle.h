@@ -805,7 +805,6 @@ extern int sub_800C0904(unsigned char* p);
 
 extern int* CreateActor_8001D45C(int a0);
 
-extern int sub_80010A44();
 
 extern void sub_80019B14(int a, int b, int c);
 

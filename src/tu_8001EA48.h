@@ -279,6 +279,7 @@ typedef struct FtgObject
     unsigned short clut_4E;
     FtgSprite* texSprites_50;
 } FtgObject;
+extern FtgObject* publicFtg_8008D4D0; // the public FTG file (LoadPublicTiyAndFtg_800407D0)
 
 // ---------------------------------------------------------------------------------------------
 // model loader task (the buffer of the modelLoaderTask_8008B54C event entry)
@@ -294,7 +295,7 @@ typedef struct ModelLoader
 {
     int state_0;
     int done_4;
-    struct_112_list* models_8;
+    ModelList* models_8;
     ModelLoadSlot slots_C[4];
 } ModelLoader;
 
@@ -322,14 +323,14 @@ typedef struct ModelDesc
 } ModelDesc;
 extern ModelDesc* modelDescs_800824CC[];
 
-// VRAM placement of one model slot (the 16-byte entries of the struct_112_list field_C table, the
-// shared headers call it struct_16_b)
-typedef struct
+// VRAM placement of one model slot (the 16-byte entries of the ModelList.vram_C table)
+typedef struct ModelVramSlot
 {
     short field_0;
     short id_2; // -1 ends the table
     short reloc_4[6]; // RelocateTPageClut_80022AE8 table
 } ModelVramSlot;
+extern ModelVramSlot* off_8007DC70; // the model loader list's slots
 
 typedef struct
 {
@@ -359,7 +360,7 @@ typedef struct ModelLoadParams
     int sel_8;   // texture slot, -1: none
     int mode_C;  // which animations start loaded (LoadModelAnims_800261C8)
     int animIdx_10;
-    struct_112* model_14;
+    Model* model_14;
     ModelVramSlot* vram_18;
     ModelHeaderSection* header_1C;
     int* tim_20;
@@ -372,7 +373,7 @@ typedef struct ModelLoadParams
     int pad_3C;
 } ModelLoadParams;
 
-// model header section (struct_112 field_4C, copied by sub_80026014)
+// model header section (Model.header_4C, copied by sub_80026014)
 typedef struct
 {
     int offset_0;  // sub_80024E38: data at offset_0 + 4
@@ -388,12 +389,74 @@ typedef struct
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
 
-// FTG material list (sub_80021DF0 / sub_80021E4C; also struct_112 field_5C)
-typedef struct
+// FTG material list (sub_80021DF0 / sub_80021E4C; also Model.mats_5C)
+typedef struct FtgMatList
 {
     int count_0;
     unsigned short (*items_4)[8];
 } FtgMatList;
+
+// ---------------------------------------------------------------------------------------------
+// loaded models (InitModelList_80024ADC, LoadModel_80025200, FreeModel_80024C48)
+
+// an FTG object saved by sub_80024FFC before it gets swapped (Model.saved_64)
+typedef struct
+{
+    int id_0; // index into Model.ftg_50
+    FtgObject ftg_4;
+} ModelSavedFtg;
+
+// FTG object swap of the alternate set (Model.swaps_6C, sub_80025C38)
+typedef struct
+{
+    short dst_0; // index into Model.ftg_50
+    short src_2; // < Model.ftgCount_3C: Model.ftg_50 index, else Model.ftg2_68 index + ftgCount_3C
+} ModelFtgSwap;
+
+// one model of a ModelList (0x70 bytes). The first 0x30 bytes double as the model's file request
+// list (AddFileRequest_80025D00 / AreFileRequestsDone_80024DC4)
+struct Model
+{
+    ModelList* list_0;          // owner
+    int requestCount_4;
+    int requests_8[10];         // QueueFileRequest_8003BC84 ids
+    int slot_30;                // index into the owner's items_8 / vram_C
+    int texSel_34;              // texture slot (ModelLoadParams.sel_8)
+    unsigned short id_38;       // 0xFFFF: free
+    unsigned short refs_3A;     // AcquireModel_80024D70 count
+    unsigned short ftgCount_3C;
+    unsigned short animCount_3E;
+    unsigned short savedCount_40;
+    unsigned char ftg2Count_42;
+    unsigned char swapCount_43;
+    unsigned char* animLoaded_44; // per animation: data loaded
+    int headerSize_48;
+    ModelHeaderData* header_4C;
+    FtgObject* ftg_50;          // ftgCount_3C objects
+    ModelAnim* anims_54;        // animCount_3E animations
+    int* animSet_58;            // count, then the animation ids it loaded (-1: was already loaded)
+    FtgMatList mats_5C;
+    ModelSavedFtg* saved_64;    // savedCount_40 entries
+    FtgObject* ftg2_68;         // alternate FTG set, ftg2Count_42 objects (sub_8002651C)
+    ModelFtgSwap* swaps_6C;     // swapCount_43 entries
+};
+
+struct ModelList
+{
+    int count_0;
+    int heap_4;
+    Model* items_8;
+    ModelVramSlot* vram_C; // one per model, ended by id_2 == -1
+};
+
+// modelAnimRefs_800919A0 entry: users of a model's animations
+typedef struct ModelAnimRef
+{
+    Model* model_0;
+    int refs_4;
+    unsigned short users_8[0x23]; // per animation: bit per user
+} ModelAnimRef;
+extern ModelAnimRef modelAnimRefs_800919A0[7];
 
 typedef struct
 {

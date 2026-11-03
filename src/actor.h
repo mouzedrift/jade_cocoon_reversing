@@ -23,8 +23,7 @@ typedef struct
     short arg_6;
 } ModelAnimCue;
 
-// loaded model animation (the struct_112 field_54 table, 0x1C bytes each; LoadModelAnimData_80026A8C;
-// the shared headers call it struct_28)
+// loaded model animation (the Model.anims_54 table, 0x1C bytes each; LoadModelAnimData_80026A8C)
 typedef struct ModelAnim
 {
     unsigned int frameCount_0;
@@ -171,7 +170,7 @@ typedef struct Actor
     short (*effectTbl_14C)[6];  // 0x14C: ActorEffectReq.tbl_8
     RECT image_150;             // 0x150
     short clut_158[2];          // 0x158
-    struct_112* model_15C;      // 0x15C
+    Model* model_15C;           // 0x15C
     ActorPath* path_160;        // 0x160
     ActorDrawArgs draw_164;     // 0x164
     int f190;                   // 0x190
@@ -200,7 +199,7 @@ typedef struct
     SVECTOR* boneScale_3C;  // 0: all 0x1000
     ActorAnim* anims_40;
     short (*effectTbl_44)[6]; // -> Actor.effectTbl_14C
-    struct_112* model_48;
+    Model* model_48;
     int hasMatrices_4C;     // allocate Actor.boneMatrices_1C8
 } ActorDesc;
 

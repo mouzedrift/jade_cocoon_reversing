@@ -1321,13 +1321,13 @@ int sub_800C0BF0()
         int field_48;
         int field_4C;
     } s;
-    void* m;
+    Model* m;
     int k;
     int x;
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
-    m = (void*)sub_80010A44(0);
+    m = sub_80010A44(0);
     k = sub_80019A80(((unsigned char*)dword_800C9188)[0xC8]);
     s.field_0 = -1;
     s.field_4 = 2;
