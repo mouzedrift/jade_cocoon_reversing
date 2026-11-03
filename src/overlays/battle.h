@@ -302,16 +302,19 @@ extern int eventDispatchHalt_8008B540;
 
 extern int dword_80083BD0;
 
-typedef struct BatRow_a
+// per battle stage (indexed by dword_80083BD0)
+typedef struct BatStage_a
 {
-    int a;
-    unsigned short b;
-    short c;
-    int d;
-    int e;
-} BatRow_a;
+    unsigned short* list_0;
+    unsigned short effect_4; // effect file to load
+    unsigned char model_6;
+    unsigned char f7;
+    short floor_8;
+    short anim_A;
+    unsigned short* models_C;
+} BatStage_a;
 
-extern BatRow_a dword_800C8EAC[];
+extern BatStage_a dword_800C8EAC[];
 
 extern int sub_80034AB8();
 
@@ -606,9 +609,9 @@ extern int dword_80091C9C;
 
 extern short sinTable_80084540[];
 
-extern int sub_800A1E48(void);
+extern int* sub_800A1E48(void); // GAME.BIN: an actor's pos_38
 
-extern int sub_800A1E68(void);
+extern short* sub_800A1E68(void); // GAME.BIN: the same actor's rot_5C
 
 extern int LoadSeqSlotSound_800303E8();
 
@@ -1091,9 +1094,15 @@ extern char dword_800C9388[];
 
 extern char dword_800C938C[];
 
-extern char dword_800C93A4[];
+typedef struct BatMenuItem_a
+{
+    int* text;
+    int* data_4;
+} BatMenuItem_a;
 
-extern char dword_800C93D4[];
+extern BatMenuItem_a dword_800C93A4[];
+
+extern BatMenuItem_a dword_800C93D4[];
 
 extern char* dword_800C93B8[];
 
@@ -1103,9 +1112,9 @@ extern unsigned short dword_800C94A4;
 
 extern unsigned short dword_800C9514;
 
-extern char* dword_800C9E6C;
+extern BatMenuItem_a* dword_800C9E6C;
 
-extern char* dword_800C9338[];
+extern BatMenu_a* dword_800C9338[];
 
 typedef struct BatUseQ_a
 {
@@ -1126,9 +1135,9 @@ typedef struct BatTgtQ_a
     short f6;
 } BatTgtQ_a;
 
-extern char* dword_800C9E44;
+extern BatMenu_a* dword_800C9E44;
 
-extern char* dword_800C9E6C;
+extern BatMenuItem_a* dword_800C9E6C;
 
 extern unsigned short dword_800C9E5C;
 
@@ -1209,11 +1218,6 @@ typedef struct BatWin_a
     int p;
 } BatWin_a;
 
-typedef struct BatMenuItem_a
-{
-    int* text;
-    int f4;
-} BatMenuItem_a;
 
 extern int dword_800C96C8[][4];
 
@@ -1251,7 +1255,7 @@ extern void DrawButtonHelpBar_8002B004(int a0, int a1, int a2);
 
 extern void sub_800C8828(int a);
 
-extern char* dword_800C9E44;
+extern BatMenu_a* dword_800C9E44;
 
 extern short dword_800C9180;
 
@@ -1277,7 +1281,7 @@ extern int dword_800C9E7C;
 
 extern unsigned int dword_800C9E64;
 
-extern char* dword_800C9E44;
+extern BatMenu_a* dword_800C9E44;
 
 extern void (*dword_800C966C[])(EventEntry* t, int a);
 

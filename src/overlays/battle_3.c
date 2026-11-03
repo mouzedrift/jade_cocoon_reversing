@@ -4095,7 +4095,7 @@ int sub_800C7334()
     return 1;
 }
 
-char* sub_800C73B8(unsigned char a)
+BatMenu_a* sub_800C73B8(unsigned char a)
 {
     if (a == 4)
     {
@@ -4154,14 +4154,14 @@ int sub_800C7530()
     short idx;
     int* p;
     idx = GetMenuCursorIndex_8003DA54(dword_800C9E44);
-    q.f0 = ((short*)dword_800C9E44)[4];
-    q.f2 = ((short*)dword_800C9E44)[5];
+    q.f0 = dword_800C9E44->cursor_8;
+    q.f2 = dword_800C9E44->scroll_A;
     q.fA = 0;
     dword_800C9E7C = 0;
     switch (dword_800C9E50)
     {
     case 0:
-        p = *(int**)(dword_800C9E6C + idx * 8 + 4);
+        p = dword_800C9E6C[idx].data_4;
         if (p == 0)
         {
             return 1;
@@ -4474,7 +4474,7 @@ void BattleMenuDraw_800C7DA8()
         if (dword_800C9E50 == 0)
         {
             k = 1;
-            sub_800C8828(*((BatMenuItem_a*)dword_800C9E6C)[(short)GetMenuCursorIndex_8003DA54(dword_800C92D8)].text);
+            sub_800C8828(*dword_800C9E6C[(short)GetMenuCursorIndex_8003DA54(dword_800C92D8)].text);
         }
         else if (dword_800C9E50 == 1)
         {

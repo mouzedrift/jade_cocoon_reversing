@@ -344,9 +344,9 @@ int sub_800BAAD8()
     int px = sd[0x7A8 / 4];
     int pz = sd[0x7B0 / 4];
     short ang = *(unsigned short*)((char*)sd + 0x7B6);
-    int x = *(int*)sub_800A1E48();
-    int z = ((int*)sub_800A1E48())[2];
-    short* rot = (short*)sub_800A1E68();
+    int x = sub_800A1E48()[0];
+    int z = sub_800A1E48()[2];
+    short* rot = sub_800A1E68();
     int a;
     if (sinTable_80084540[(ang - rot[1] + 0x400) & 0xFFF] >= 0)
     {
@@ -1395,7 +1395,7 @@ void sub_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].b, dword_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].effect_4, dword_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
 }

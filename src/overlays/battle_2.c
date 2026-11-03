@@ -6,17 +6,6 @@ INCLUDE_OVERLAY_ASM(battle, dword_800B6700);
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
       // Its .rdata (initializer at 0x800B6700, switch table at 0x800B6710) comes out right since this file was split off.
-typedef struct BatStage_a
-{
-    unsigned short* list_0;
-    short f4;
-    unsigned char model_6;
-    unsigned char f7;
-    short floor_8;
-    short anim_A;
-    unsigned short* models_C;
-} BatStage_a;
-
 typedef struct BatFxEnt_a
 {
     short u_0;
@@ -87,10 +76,10 @@ void sub_800BC90C(BatStageObj_a* p)
     int i;
 
     unknownFlags_8008D678 &= ~0x10000;
-    idx = sub_80020F00(dword_80095468, 1, ((BatStage_a*)dword_800C8EAC)[dword_80083BD0].model_6);
+    idx = sub_80020F00(dword_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
     sub_8004D1EC((int)((BatFxMdl_a*)dword_80095468[10])[idx].parts_4, (int)pOT_8008B4C8, (int)&p->x_38, (int)dword_800C9124, (int)stru_8008D534, 1, (int)scale);
     {
-        unsigned short* list = ((BatStage_a*)dword_800C8EAC)[dword_80083BD0].list_0;
+        unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
         char* sd = (char*)&saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
@@ -136,7 +125,7 @@ void sub_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (((BatStage_a*)dword_800C8EAC)[dword_80083BD0].floor_8 >= 0)
+    if (dword_800C8EAC[dword_80083BD0].floor_8 >= 0)
     {
         for (i = 0; i < 32; i++)
         {
@@ -164,7 +153,7 @@ void sub_800BC90C(BatStageObj_a* p)
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
-            poly = ((BatFxGrp_a*)dword_80095468[8])[((BatStage_a*)dword_800C8EAC)[dword_80083BD0].floor_8 + i % 4].poly_C;
+            poly = ((BatFxGrp_a*)dword_80095468[8])[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
             x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * word_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
@@ -180,7 +169,7 @@ void sub_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (((BatStage_a*)dword_800C8EAC)[dword_80083BD0].anim_A >= 0)
+    if (dword_800C8EAC[dword_80083BD0].anim_A >= 0)
     {
         int cols = 0;
         unsigned int n = 0;
@@ -209,7 +198,7 @@ void sub_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, ((BatStage_a*)dword_800C8EAC)[dword_80083BD0].anim_A)];
+            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j;
             for (j = 0; j < g->n_0; j++)
             {
@@ -284,7 +273,7 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, ((BatStage_a*)dword_800C8EAC)[dword_80083BD0].anim_A)];
+            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j = ((unsigned int)frameCount_8008D3FC % (g->n_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->counts_4[j]; k++)
@@ -328,11 +317,11 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         }
     }
-    if (((BatStage_a*)dword_800C8EAC)[dword_80083BD0].models_C != 0)
+    if (dword_800C8EAC[dword_80083BD0].models_C != 0)
     {
         for (i = 0; i < 3; i++)
         {
-            unsigned short* ent = &((BatStage_a*)dword_800C8EAC)[dword_80083BD0].models_C[i * 4];
+            unsigned short* ent = &dword_800C8EAC[dword_80083BD0].models_C[i * 4];
             int id = ent[0];
             int fl = ent[1];
             unsigned long* ot = pOT_8008B4C8;
