@@ -49,69 +49,32 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-typedef struct
-{
-    int field_0;
-    unsigned int flags_4;
-    int field_8;
-    int field_C;
-    char pad_10[0xA];
-    short field_1A;
-    char pad_1C[0xA];
-    short field_26;
-    char pad_28[0x48];
-    VECTOR target_70;
-    char pad_80[0x10];
-    int field_90;
-    char pad_94[0x10];
-    int field_A4;
-    int field_A8;
-    int pad_AC;
-    int field_B0;
-    char pad_B4[8];
-    short field_BC;
-    short field_BE;
-    short field_C0;
-    short field_C2;
-    short field_C4;
-    short field_C6;
-    short field_C8;
-    short field_CA;
-    char pad_CC[4];
-    unsigned char* script_D0;
-    unsigned int field_D4;
-    char pad_D8[0x1C];
-    unsigned short field_F4;
-    short field_F6;
-    char pad_F8[6];
-    short field_FE;
-} ScriptObj;
 // Matched
 void sub_8001EA48(void* arg0)
 {
-    ScriptObj* o = arg0;
+    Actor* o = arg0;
     int done;
     int flag22;
     int flag21;
     int target;
-    unsigned char* cmd;
+    ActorScriptCmd* cmd;
     int n;
     int mode;
     int r;
     flag22 = 0;
     flag21 = flag22;
     done = flag22;
-    target = o->field_90;
-    if (o->field_C6 <= 0)
+    target = o->frame_90;
+    if (o->scriptLen_C6 <= 0)
     {
         return;
     }
     if (o->flags_4 & 0x4000)
     {
-        if (++o->field_C8 >= o->field_CA)
+        if (++o->wait_C8 >= o->waitLen_CA)
         {
-            o->field_C8 = 0;
-            o->field_CA = 0;
+            o->wait_C8 = 0;
+            o->waitLen_CA = 0;
             o->flags_4 |= 0x10000;
         }
     }
@@ -119,42 +82,42 @@ void sub_8001EA48(void* arg0)
     {
         target = -1;
     }
-    cmd = o->script_D0 + o->field_C4 * 4;
+    cmd = (ActorScriptCmd*)((unsigned int*)o->script_D0 + o->scriptPos_C4);
     while (!done)
     {
-        if (target != *(short*)(cmd + 2) && o->field_90 != *(short*)(cmd + 2) && *(short*)(cmd + 2) != -2)
+        if (target != cmd->frame_2 && o->frame_90 != cmd->frame_2 && cmd->frame_2 != -2)
         {
             return;
         }
         o->flags_4 &= ~0x10000;
-        switch (cmd[0])
+        switch (cmd->op_0)
         {
         case 0:
             o->flags_4 &= 0xFF17FFFF;
             return;
         case 1:
-            n = *(short*)(cmd + 6);
-            if (o->field_C2 != n)
+            n = cmd->arg_6;
+            if (o->animIdx_C2 != n)
             {
                 sub_8001D6EC((struct_obj_A*)o, 0);
                 if (n == 0x4003)
                 {
-                    n = o->field_A4;
-                    o->field_C2 = o->field_A4;
-                    o->field_A4 = o->field_FE;
-                    o->field_FE = -1;
+                    n = o->nextAnim_A4;
+                    o->animIdx_C2 = o->nextAnim_A4;
+                    o->nextAnim_A4 = o->queuedAnim_FE;
+                    o->queuedAnim_FE = -1;
                 }
                 else
                 {
-                    o->field_C2 = n;
+                    o->animIdx_C2 = n;
                 }
                 mode = flag22 ? -2 : -1;
-                if (o->field_A8 >= 0)
+                if (o->startMode_A8 >= 0)
                 {
-                    mode = o->field_A8;
-                    o->field_A8 = -1;
+                    mode = o->startMode_A8;
+                    o->startMode_A8 = -1;
                 }
-                sub_8001D760((char*)o, n, mode, flag21);
+                sub_8001D760(o, n, mode, flag21);
             }
             done = 1;
             break;
@@ -164,45 +127,45 @@ void sub_8001EA48(void* arg0)
         case 3:
             if (!(o->flags_4 & 0x2000000))
             {
-                r = o->field_D4;
+                r = o->flags_D4;
                 if (!(r & 1))
                 {
                     flag21 = 1;
                 }
-                o->field_D4 = r & ~1;
+                o->flags_D4 = r & ~1;
             }
             break;
         case 4:
-            o->field_C8 = 0;
-            o->field_CA = *(short*)(cmd + 6);
+            o->wait_C8 = 0;
+            o->waitLen_CA = cmd->arg_6;
             break;
         case 5:
-            o->field_C8 = 0;
-            o->field_CA = o->field_F4;
+            o->wait_C8 = 0;
+            o->waitLen_CA = o->loopCount_F4;
             break;
         case 6:
-            sub_8001D9E4((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            sub_8001D9E4((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 7:
-            sub_8001DA08((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), *(short*)(cmd + 6));
+            sub_8001DA08((struct_obj_A*)o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
             sub_8001DA2C((struct_obj_A*)o);
             break;
         case 9:
-            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, *(short*)(cmd + 6));
+            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
             break;
         case 10:
-            sub_8001DA4C((char*)o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->field_26, o->field_F6);
+            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
             break;
         case 11:
-            sub_8001D730((struct_obj_A*)o, *(short*)(cmd + 6));
+            sub_8001D730((struct_obj_A*)o, cmd->arg_6);
             break;
         case 12:
-            sub_8001D8B4((char*)o, *(short*)(cmd + 6));
+            sub_8001D8B4(o, cmd->arg_6);
             break;
         case 13:
-            if (sub_8001D8A8((short*)o))
+            if (sub_8001D8A8(o))
             {
                 break;
             }
@@ -212,12 +175,12 @@ void sub_8001EA48(void* arg0)
                 return;
             }
         case 14:
-            sub_8001D92C((char*)o, *(short*)(cmd + 6));
+            sub_8001D92C(o, cmd->arg_6);
             break;
         case 15:
-            if ((o->flags_4 & 0x4080000) && o->field_C < 3)
+            if ((o->flags_4 & 0x4080000) && o->kind_C < 3)
             {
-                if (!TurnActorTowards_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+                if (!TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
                 {
                     sub_8001D71C((struct_obj_A*)o);
                     o->flags_4 |= 0x10000;
@@ -234,17 +197,17 @@ void sub_8001EA48(void* arg0)
             o->flags_4 &= ~0x20000;
             break;
         case 16:
-            sub_8001EFC4((struct_obj_F*)o);
+            sub_8001EFC4(o);
             break;
         case 17:
-            if (o->field_C2 != o->field_C0)
+            if (o->animIdx_C2 != o->prevAnimIdx_C0)
             {
-                o->field_C2 = o->field_C0;
-                sub_8001D760((char*)o, o->field_C0, -2, flag21);
+                o->animIdx_C2 = o->prevAnimIdx_C0;
+                sub_8001D760(o, o->prevAnimIdx_C0, -2, flag21);
             }
             break;
         case 18:
-            if (!sub_8001DC60((char*)o, (int)&o->target_70, o->target_70.pad, 200))
+            if (!sub_8001DC60(o, &o->target_70, o->target_70.pad, 200))
             {
                 o->flags_4 |= 0x10000;
                 return;
@@ -253,7 +216,7 @@ void sub_8001EA48(void* arg0)
             o->flags_4 &= ~0x80000;
             break;
         case 19:
-            if (TurnActorTowards_8001DDFC((char*)o, &o->target_70, o->target_70.pad))
+            if (TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
             {
                 target = -1;
                 o->flags_4 &= ~0x80000;
@@ -266,19 +229,19 @@ void sub_8001EA48(void* arg0)
             }
             break;
         case 21:
-            if (o->field_CA != 0 || o->field_90 != o->field_1A || (o->flags_4 & 0x2000000))
+            if (o->waitLen_CA != 0 || o->frame_90 != o->endFrame_1A || (o->flags_4 & 0x2000000))
             {
                 o->flags_4 |= 0x10000;
                 return;
             }
             break;
         case 22:
-            sub_8001D6EC((struct_obj_A*)o, *(short*)(cmd + 6) != 0);
+            sub_8001D6EC((struct_obj_A*)o, cmd->arg_6 != 0);
             break;
         case 23:
-            if (++o->field_B0 > *(short*)(cmd + 6))
+            if (++o->waitCount_B0 > cmd->arg_6)
             {
-                o->field_B0 = 0;
+                o->waitCount_B0 = 0;
             }
             else
             {
@@ -287,24 +250,24 @@ void sub_8001EA48(void* arg0)
             }
             break;
         case 24:
-            o->field_BC = 0;
-            o->field_BE = *(short*)(cmd + 6);
-            o->flags_4 = o->flags_4 | *(short*)(cmd + 0xA) | 0x40000000;
+            o->pulse_BC = 0;
+            o->pulseRate_BE = cmd->arg_6;
+            o->flags_4 = o->flags_4 | cmd->arg_A | 0x40000000;
             break;
         }
-        o->field_C4 += cmd[1];
-        cmd += cmd[1] * 4;
+        o->scriptPos_C4 += cmd->len_1;
+        cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
 INCLUDE_DATA(dword_8007411C);
 // Matched
-void sub_8001EFC4(struct_obj_F* p)
+void sub_8001EFC4(Actor* p)
 {
     unsigned int f = p->flags_4;
     int n;
     if (f & 0x800000)
     {
-        n = p->field_C;
+        n = p->kind_C;
         if (n < 0)
         {
             if (f & 0x200000)
@@ -322,20 +285,11 @@ void sub_8001EFC4(struct_obj_F* p)
     }
     p->flags_4 &= 0xFF17FFFF;
 }
-typedef struct
-{
-    signed char id;
-    char pad_1;
-    short start;
-    short loop;
-    short end;
-    char pad_8[0x34];
-} struct_3c;
 // Matched
 int sub_8001F03C(int a0, int a1, int a2, int a3)
 {
     Actor* o = (Actor*)a0;
-    unsigned char* s = (unsigned char*)a1;
+    ActorScriptCmd* s = (ActorScriptCmd*)a1;
     int t;
     int rep;
     int flag;
@@ -346,24 +300,24 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
     t = 0;
     rep = t;
     flag = t;
-    while (s[0] != 0)
+    while (s->op_0 != 0)
     {
-        if (s[0] == 1)
+        if (s->op_0 == 1)
         {
-            idx = *(short*)(s + 6);
+            idx = s->arg_6;
             if (flag == 0)
             {
-                start = (*(struct_3c**)&o->f148)[idx].start;
+                start = o->anims_148[idx].start_2;
             }
             else
             {
-                start = (*(struct_3c**)&o->f148)[idx].loop;
+                start = o->anims_148[idx].loop_4;
             }
-            loop = (*(struct_3c**)&o->f148)[idx].loop;
-            end = (*(struct_3c**)&o->f148)[idx].end;
-            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)&o->f148)[a2].id == (*(struct_3c**)&o->f148)[idx].id && end >= a3)
+            loop = o->anims_148[idx].loop_4;
+            end = o->anims_148[idx].end_6;
+            if (a2 != -1 && a2 < 0x4000 && o->anims_148[a2].id_0 == o->anims_148[idx].id_0 && end >= a3)
             {
-                return ((t + a3 - start) << 12) / o->f1E;
+                return ((t + a3 - start) << 12) / o->frameSpeed_1E;
             }
             if (start == loop)
             {
@@ -377,49 +331,49 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
             t--;
             flag = 0;
         }
-        else if (s[0] == 0x14)
+        else if (s->op_0 == 0x14)
         {
-            if (a2 >= 0x4000 && a2 == *(short*)(s + 6))
+            if (a2 >= 0x4000 && a2 == s->arg_6)
             {
-                return (t << 12) / o->f1E;
+                return (t << 12) / o->frameSpeed_1E;
             }
         }
-        else if (s[0] == 0xF)
+        else if (s->op_0 == 0xF)
         {
             t = 0;
         }
-        else if (s[0] == 2)
+        else if (s->op_0 == 2)
         {
             flag = 1;
         }
-        else if (s[0] == 4)
+        else if (s->op_0 == 4)
         {
-            rep = *(short*)(s + 6) - 1;
+            rep = s->arg_6 - 1;
         }
-        else if (s[0] == 5)
+        else if (s->op_0 == 5)
         {
-            rep = o->fF4 - 1;
+            rep = o->loopCount_F4 - 1;
         }
-        else if (s[0] == 0x17)
+        else if (s->op_0 == 0x17)
         {
-            t += *(short*)(s + 6);
+            t += s->arg_6;
         }
-        else if (s[0] == 0 || s[0] == 0x10)
+        else if (s->op_0 == 0 || s->op_0 == 0x10)
         {
-            if (a2 != -1 && a2 < 0x4000 && (*(struct_3c**)&o->f148)[a2].end < a3)
+            if (a2 != -1 && a2 < 0x4000 && o->anims_148[a2].end_6 < a3)
             {
-                t += a3 - (*(struct_3c**)&o->f148)[a2].end;
+                t += a3 - o->anims_148[a2].end_6;
             }
-            return (t << 12) / o->f1E;
+            return (t << 12) / o->frameSpeed_1E;
         }
-        s += s[1] * 4;
+        s = (ActorScriptCmd*)((unsigned int*)s + s->len_1);
     }
     return -1;
 }
 // Matched
-short sub_8001F268(char* o, short* out, int a2, int idx)
+short sub_8001F268(Actor* o, short* out, ActorScriptCmd* script, int idx)
 {
-    short* e = (short*)(*(char**)(o + 0x148) + idx * 60 + 8);
+    short* e = o->anims_148[idx].hitFrames_8[0];
     int i;
     for (i = 0; i < 10; i++)
     {
@@ -430,37 +384,37 @@ short sub_8001F268(char* o, short* out, int a2, int idx)
         }
         else
         {
-            out[i * 2] = sub_8001F03C((int)o, a2, idx, e[i * 2]);
-            out[i * 2 + 1] = sub_8001F03C((int)o, a2, idx, e[i * 2 + 1]);
+            out[i * 2] = sub_8001F03C((int)o, (int)script, idx, e[i * 2]);
+            out[i * 2 + 1] = sub_8001F03C((int)o, (int)script, idx, e[i * 2 + 1]);
         }
     }
     return out[0];
 }
-extern void sub_8004D288(int* out, int* s, int k);
+extern void sub_8004D288(int* out, ModelAnim* s, int k);
 extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
 void sub_8001F354(void* a0)
 {
     Actor* o = a0;
     int save[3];
-    int* e;
+    ModelAnim* e;
     int dx;
     int dz;
     int v;
-    short* r;
+    SVECTOR* r;
     int* s;
     short c;
     int sn;
     short a;
-    e = (int*)(*(char**)(o->desc_15C + 0x54) + o->f9C * 28);
+    e = &((ModelAnim*)o->model_15C->field_54)[o->anim_9C];
     o->prevPos_44[0] = o->pos_38[0];
     o->prevPos_44[1] = o->pos_38[1];
     o->prevPos_44[2] = o->pos_38[2];
     save[0] = o->animDelta_64[0];
     save[1] = o->animDelta_64[1];
     save[2] = o->animDelta_64[2];
-    sub_8004D288((int*)&o->animDelta_64[0], e, (unsigned int)o->f90 % e[0]);
-    if ((unsigned int)o->f90 % e[0] == 0 || (o->flags_4 & 8))
+    sub_8004D288(o->animDelta_64, e, o->frame_90 % e->frameCount_0);
+    if (o->frame_90 % e->frameCount_0 == 0 || (o->flags_4 & 8))
     {
         o->flags_4 &= ~8;
         if (o->flags_4 & 0x40000)
@@ -494,71 +448,71 @@ void sub_8001F354(void* a0)
     }
     if (o->flags_4 & 0x20000000)
     {
-        dx = dx * o->f8C / 4096;
-        dz = dz * o->f8C / 4096;
+        dx = dx * o->speedScale_8C / 4096;
+        dz = dz * o->speedScale_8C / 4096;
     }
-    r = *(short**)&o->f144;
-    s = (int*)&o->f138[0];
+    r = o->boneScale_144;
+    s = o->baseScale_138;
     if (o->flags_4 & 0x4000000)
     {
-        if (TurnActorTowards_8001DDFC(o, (VECTOR*)&o->target_70[0], o->f7C))
+        if (TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
         {
             o->flags_4 &= ~0x4000000;
         }
     }
     if (o->flags_4 & 0x2000000)
     {
-        o->animDelta_64[0] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 0];
-        o->animDelta_64[1] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 1];
-        o->animDelta_64[2] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 2];
-        o->pos_38[0] = o->f50[0] + o->animDelta_64[0] / *(int*)(o->anim_160 + 4);
-        o->pos_38[1] = o->f50[1] + o->animDelta_64[1] / *(int*)(o->anim_160 + 4);
-        o->pos_38[2] = o->f50[2] + o->animDelta_64[2] / *(int*)(o->anim_160 + 4);
-        o->rot_5C[1] = (*(short**)(o->anim_160 + 8))[o->f98 * 4 + 3];
+        o->animDelta_64[0] = o->path_160->steps_8[o->pathStep_98][0];
+        o->animDelta_64[1] = o->path_160->steps_8[o->pathStep_98][1];
+        o->animDelta_64[2] = o->path_160->steps_8[o->pathStep_98][2];
+        o->pos_38[0] = o->basePos_50[0] + o->animDelta_64[0] / o->path_160->divisor_4;
+        o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / o->path_160->divisor_4;
+        o->pos_38[2] = o->basePos_50[2] + o->animDelta_64[2] / o->path_160->divisor_4;
+        o->rot_5C[1] = o->path_160->steps_8[o->pathStep_98][3];
     }
     else if (o->flags_4 & 0x1000000)
     {
         a = o->rot_5C[1];
         sn = (asc_80084350 + 0xF8)[a & 0xFFF];
         c = (asc_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
-        o->pos_38[2] = o->f50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sn) / 4096 / e[2];
-        o->pos_38[0] = o->f50[0] + (o->animDelta_64[2] * sn + o->animDelta_64[0] * c) / 4096 / e[2];
-        o->pos_38[1] = o->f50[1] + o->animDelta_64[1] / e[2];
+        o->pos_38[2] = o->basePos_50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sn) / 4096 / e->divisor_8;
+        o->pos_38[0] = o->basePos_50[0] + (o->animDelta_64[2] * sn + o->animDelta_64[0] * c) / 4096 / e->divisor_8;
+        o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / e->divisor_8;
     }
     else if (o->flags_4 & 0x40000)
     {
-        o->pos_38[0] += dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
-        o->pos_38[2] += dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r[2] / 4096 * s[2] / 4096 / e[2];
+        o->pos_38[0] += dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
+        o->pos_38[2] += dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
     }
     else
     {
-        o->pos_38[0] = o->f50[0] + dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e[2];
-        o->pos_38[2] = o->f50[2] + dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e[2];
+        o->pos_38[0] = o->basePos_50[0] + dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e->divisor_8;
+        o->pos_38[2] = o->basePos_50[2] + dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e->divisor_8;
     }
     if (o->flags_4 & 0x40000)
     {
-        o->f84 = o->f80;
-        o->f80 = sub_800B716C((VECTOR*)&o->pos_38[0], (VECTOR*)&o->prevPos_44[0], (SVECTOR*)&o->rot_5C[0], (char*)&o->fB4);
+        o->prevGround_84 = o->ground_80;
+        o->ground_80 = sub_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
     }
 }
 // Matched
 void sub_8001F918(void* a0)
 {
     Actor* p = a0;
-    switch (p->f10)
+    switch (p->animLoadState_10)
     {
     case 0:
         break;
     case 1:
-        RequestModelAnim_8002032C(p->f16, ((int*)p->task_0)[1], p->f12);
-        *(unsigned short*)&p->f14 = *(unsigned short*)&p->f12;
-        p->f12 = -1;
-        p->f10 = 2;
+        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->field_4, p->animRequest_12);
+        *(unsigned short*)&p->animLoading_14 = *(unsigned short*)&p->animRequest_12;
+        p->animRequest_12 = -1;
+        p->animLoadState_10 = 2;
         break;
     case 2:
-        if (AreFileRequestsDone_80024DC4((int*)*(int*)&p->desc_15C))
+        if (AreFileRequestsDone_80024DC4(p->model_15C))
         {
-            p->f10 = 0;
+            p->animLoadState_10 = 0;
         }
         break;
     }
@@ -580,26 +534,26 @@ void sub_8001F9F0(Actor* o)
     {
         if (f & 2)
         {
-            o->f26 += o->f28;
-            if (o->f2A < o->f26)
+            o->scale_26 += o->scaleStep_28;
+            if (o->scaleTarget_2A < o->scale_26)
             {
-                o->f26 = o->f2A;
+                o->scale_26 = o->scaleTarget_2A;
                 o->flags_4 &= ~3;
             }
         }
         else
         {
-            o->f26 -= o->f28;
-            if (o->f26 < o->f2A)
+            o->scale_26 -= o->scaleStep_28;
+            if (o->scale_26 < o->scaleTarget_2A)
             {
-                o->f26 = o->f2A;
+                o->scale_26 = o->scaleTarget_2A;
                 o->flags_4 &= ~1;
             }
         }
     }
-    o->f2C = o->f138[0] * o->f26 / 4096;
-    o->f30 = o->f138[1] * o->f26 / 4096;
-    o->f34 = o->f138[2] * o->f26 / 4096;
+    o->scale_2C[0] = o->baseScale_138[0] * o->scale_26 / 4096;
+    o->scale_2C[1] = o->baseScale_138[1] * o->scale_26 / 4096;
+    o->scale_2C[2] = o->baseScale_138[2] * o->scale_26 / 4096;
 }
 // Matched
 void sub_8001FB00(Actor* o)
@@ -608,7 +562,7 @@ void sub_8001FB00(Actor* o)
     int r = 0;
     int v;
     int w;
-    o->f8 = 0;
+    o->drawMode_8 = 0;
     if (f & 0x780)
     {
         if (f & 0x80)
@@ -630,13 +584,13 @@ void sub_8001FB00(Actor* o)
     }
     if (o->flags_4 & 0x40000000)
     {
-        v = (asc_80084350 + 0xF8)[(o->fBC * o->fBE + 0x400) & 0xFFF];
-        (o->fBC)++;
-        o->f8 = r | 0x80 | (-((v + 0x1000) / 2) << 16);
+        v = (asc_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
+        (o->pulse_BC)++;
+        o->drawMode_8 = r | 0x80 | (-((v + 0x1000) / 2) << 16);
     }
     if (o->flags_4 & 0x60)
     {
-        v = o->f20 + 0x1000 / o->f22;
+        v = o->fade_20 + 0x1000 / o->fadeDiv_22;
         if (v >= 0)
         {
             w = v;
@@ -649,31 +603,31 @@ void sub_8001FB00(Actor* o)
         {
             w = 0;
         }
-        o->f20 = w;
+        o->fade_20 = w;
         if (o->flags_4 & 0x20)
         {
-            o->f8 = r | 0x80 | ((0x1000 - o->f20) << 16);
+            o->drawMode_8 = r | 0x80 | ((0x1000 - o->fade_20) << 16);
         }
         else
         {
-            o->f8 = r | 0x80 | (o->f20 << 16);
+            o->drawMode_8 = r | 0x80 | (o->fade_20 << 16);
         }
     }
     if (o->flags_4 & 0x800)
     {
-        o->f8 |= (o->f15A - o->f152) << 8;
+        o->drawMode_8 |= (o->clut_158[1] - o->image_150.y) << 8;
     }
 }
 // Matched
-int sub_8001FC90(char* a0)
+int sub_8001FC90(Actor* a0)
 {
     SVECTOR v;
     long sxy;
     long p;
     long flag;
-    v.vx = *(unsigned short*)(a0 + 0x38);
-    v.vy = *(unsigned short*)(a0 + 0x3C);
-    v.vz = *(unsigned short*)(a0 + 0x40);
+    v.vx = *(unsigned short*)&a0->pos_38[0];
+    v.vy = *(unsigned short*)&a0->pos_38[1];
+    v.vz = *(unsigned short*)&a0->pos_38[2];
     v.vx -= dword_8008D600[0].field_0;
     v.vy -= dword_8008D600[1].field_0;
     v.vz -= dword_8008D600[2].field_0;
@@ -690,22 +644,22 @@ void sub_8001FD08(void* a0)
 {
     Actor* o = (Actor*)a0;
     int v;
-    char* t;
+    ModelAnim* t;
     unsigned long* ot;
     unsigned long* ot2;
     if (!(o->flags_4 & 0x2000) && sub_8001FC90(o))
     {
-        v = sub_80019CC4((VECTOR*)&o->pos_38[0]);
-        *(char**)&o->f178 = *(char**)(o->desc_15C + 0x54) + o->f9C * 28;
-        o->f164 = *(int*)(o->desc_15C + 0x50);
-        o->f168 = (char*)&o->pos_38[0];
-        o->f16C = (char*)&o->rot_5C[0];
-        o->f170 = o->f134;
-        o->f174 = *(int*)&o->f144;
-        o->f17C = o->f90 % *o->f178;
-        o->f180 = o->f8;
-        o->f188 = (char*)&o->f2C;
-        o->f184 = (int)o->f1C4;
+        v = sub_80019CC4(o->pos_38);
+        o->draw_164.anim_14 = &((ModelAnim*)o->model_15C->field_54)[o->anim_9C];
+        o->draw_164.field_0 = o->model_15C->field_50;
+        o->draw_164.pos_4 = o->pos_38;
+        o->draw_164.rot_8 = o->rot_5C;
+        o->draw_164.bones_C = o->bones_134;
+        o->draw_164.boneScale_10 = o->boneScale_144;
+        o->draw_164.frame_18 = o->frame_90 % o->draw_164.anim_14->frameCount_0;
+        o->draw_164.drawMode_1C = o->drawMode_8;
+        o->draw_164.scale_24 = o->scale_2C;
+        o->draw_164.bonePos_20 = (int)o->bonePos_1C4;
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -714,10 +668,10 @@ void sub_8001FD08(void* a0)
         {
             ot = pOT_8008D690;
         }
-        o->f18C = ot;
+        o->draw_164.ot_28 = ot;
         if (o->flags_4 & 0x1000)
         {
-            t = *(char**)(o->desc_15C + 0x54);
+            t = (ModelAnim*)o->model_15C->field_54;
         }
         else
         {
@@ -725,13 +679,13 @@ void sub_8001FD08(void* a0)
         }
         if (o->flags_4 & 0x10)
         {
-            sub_80047E28((char*)&o->f164, o->f174, *(char**)(o->desc_15C + 0x54) + o->fA0 * 28,
-                         o->f94 % *(unsigned int*)(*(char**)(o->desc_15C + 0x54) + o->fA0 * 28),
-                         0x1000 - o->fAC, (char*)stru_8008D534 + v * 24, t);
+            sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0],
+                         o->prevFrame_94 % ((ModelAnim*)o->model_15C->field_54)[o->prevAnim_A0].frameCount_0,
+                         0x1000 - o->blend_AC, (char*)stru_8008D534 + v * 24, t);
         }
         else
         {
-            sub_80046A58((char*)&o->f164, (char*)stru_8008D534 + v * 24, t);
+            sub_80046A58(&o->draw_164, (char*)stru_8008D534 + v * 24, t);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {
@@ -741,8 +695,8 @@ void sub_8001FD08(void* a0)
         {
             ot2 = pOT_8008D690;
         }
-        sub_800459E4(o->f134, o->desc_15C + 0x5C, ot2, o->f8);
-        sub_8001C440(*(int*)&o->desc_15C, o->f9C, o->f90 % *o->f178);
+        sub_800459E4(o->bones_134, &o->model_15C->field_5C, ot2, o->drawMode_8);
+        sub_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }
 // Matched
@@ -753,20 +707,20 @@ void sub_8001FF48(Actor* o)
     o->flags_4 &= ~0x4000;
     if (!(o->flags_4 & 4))
     {
-        o->f1C += o->f1E;
-        if (o->f1C >= 0x1000)
+        o->frameFrac_1C += o->frameSpeed_1E;
+        if (o->frameFrac_1C >= 0x1000)
         {
-            o->f1C -= 0x1000;
-            (o->f90)++;
+            o->frameFrac_1C -= 0x1000;
+            (o->frame_90)++;
         }
-        if (o->f90 == o->f1A)
+        if (o->frame_90 == o->endFrame_1A)
         {
             o->flags_4 |= 0x4000;
         }
-        else if (o->f1A < o->f90)
+        else if (o->endFrame_1A < o->frame_90)
         {
             o->flags_4 |= 8;
-            o->f90 = o->f18;
+            o->frame_90 = o->loopFrame_18;
         }
     }
     f = o->flags_4;
@@ -774,13 +728,13 @@ void sub_8001FF48(Actor* o)
     {
         if (f < 0)
         {
-            o->fAC += 0x111;
+            o->blend_AC += 0x111;
         }
         else
         {
-            o->fAC += 0x1000 / o->f24;
+            o->blend_AC += 0x1000 / o->blendDiv_24;
         }
-        if (o->fAC >= 0x1000)
+        if (o->blend_AC >= 0x1000)
         {
             g = o->flags_4 & ~0x10;
             o->flags_4 = g & 0x7FFFFFFF;
@@ -790,17 +744,17 @@ void sub_8001FF48(Actor* o)
     if (f & 0x2000000)
     {
         o->flags_4 = f & ~0x4000;
-        if (++o->f98 >= **(int**)&o->anim_160)
+        if (++o->pathStep_98 >= **(int**)&o->path_160)
         {
-            o->f90 = o->f1A;
+            o->frame_90 = o->endFrame_1A;
             o->flags_4 = (o->flags_4 & ~0x2000000) | 0x4008;
-            o->f50[0] = o->pos_38[0];
-            o->f50[1] = o->pos_38[1];
-            o->f50[2] = o->pos_38[2];
-            if (o->fD4 & 4)
+            o->basePos_50[0] = o->pos_38[0];
+            o->basePos_50[1] = o->pos_38[1];
+            o->basePos_50[2] = o->pos_38[2];
+            if (o->flags_D4 & 4)
             {
                 o->flags_4 |= 0x80000000;
-                o->fD4 &= ~1;
+                o->flags_D4 &= ~1;
             }
         }
     }
@@ -808,18 +762,18 @@ void sub_8001FF48(Actor* o)
 // Matched
 void sub_800200F8(void* a0)
 {
-    char* o = a0;
+    Actor* o = a0;
     int i;
-    if (*(int*)(o + 4) & 0x10000000)
+    if (o->flags_4 & 0x10000000)
     {
-        if (**(short**)(o + 0x134) != -1)
+        if (o->bones_134[0] != -1)
         {
             i = 0;
             do
             {
-                (*(MATRIX**)(o + 0x1C8))[i] = dword_80098188[i];
+                o->boneMatrices_1C8[i] = dword_80098188[i];
                 i++;
-            } while ((*(short**)(o + 0x134))[i * 4] != -1);
+            } while (o->bones_134[i * 4] != -1);
         }
     }
 }
