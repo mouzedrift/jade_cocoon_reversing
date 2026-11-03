@@ -2784,7 +2784,9 @@ extern unsigned short word_8007DC8C[];
 extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
-// Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
+// Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
+// register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
+// anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
 void sub_8001E574(Actor* o, ActorDesc* d)
 {
     Model* m;
@@ -2804,8 +2806,8 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     if (d->visible_30 != 1)
     {
         f |= 0x2000;
-        o->flags_4 = f;
     }
+    o->flags_4 = f;
     if (d->kind_4 == 2)
     {
         f |= 0x1000;
@@ -2862,7 +2864,7 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->effect_130 = -1;
     o->model_15C = m;
     o->image_150.x = word_8007DC8C[0];
-    o->image_150.y = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    o->image_150.y = word_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
     o->image_150.w = word_8007DC8C[2];
     o->image_150.h = word_8007DC8C[3];
     o->clut_158[0] = word_8007DC94[0];
