@@ -81,9 +81,8 @@ typedef struct
 } struct_buf_80036528;
 extern EventNode* vibrationTasks_8008D4B8;
 extern void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o);
-#if 0
-// Not matched: o->idx store is forwarded instead of reloaded, idx/b land in swapped registers
-void StartPadVibration_80036528(int idx, unsigned char b)
+// Matched
+void StartPadVibration_80036528(int idx, int b)
 {
     EventNode* n;
     int i;
@@ -106,12 +105,10 @@ void StartPadVibration_80036528(int idx, unsigned char b)
     o->b = b;
     o->idx = idx;
     o->k = 0;
-    o->field_4 = vibrationPatterns_80083B30[(unsigned char)b][0].field_0;
+    o->field_4 = vibrationPatterns_80083B30[o->b][0].field_0;
     padVibration_80095460[o->idx].motor_2[0] = vibrationPatterns_80083B30[o->b][o->k].field_2;
     padVibration_80095460[o->idx].motor_2[1] = vibrationPatterns_80083B30[o->b][o->k].field_3;
 }
-#endif
-INCLUDE_ASM(StartPadVibration_80036528);
 // Matched
 void StopPadVibration_80036658(int idx)
 {
@@ -250,7 +247,7 @@ void sub_800369E0(struct_obj_D* p, int* q)
 }
 extern void sub_80038230(int* p);
 extern void InitCameraTask_800368F8(struct_obj_D* p, int* q);
-extern void sub_80036BB0(void);
+void sub_80036BB0(struct_obj_D* p, int* q);
 
 // Matched
 void sub_80036AB4(struct_obj_D* p, int* q)
@@ -284,11 +281,83 @@ run:
     {
         *(short*)(r + 2) = 5;
         r[0x71] = 0;
-        p->field_8 = sub_80036BB0;
+        p->field_8 = (void (*)(void))sub_80036BB0;
         r[3] = 0;
     }
 }
-INCLUDE_ASM(sub_80036BB0);
+typedef struct
+{
+    char pad[0x1C8];
+    int keys[8];
+} CamKeys;
+typedef struct
+{
+    float c[11][4];
+} CamSpline;
+#define SPLINE(c) ((int)((c)[0] * t3 + (c)[1] * t2 + (c)[2] * t + (c)[3]))
+// Matched
+void sub_80036BB0(struct_obj_D* p, int* r)
+{
+    int* q = r;
+    int i;
+    int k;
+    int n;
+    float t;
+    float t2;
+    float t3;
+    int ang;
+    CamSpline* sp;
+    VECTOR v;
+    int ex;
+    int ey;
+    int ez;
+    int x;
+    int y;
+    int z;
+
+    if (!sub_800395D0(&q[0x71], ++q[3], &q[0x72]) || !(q[1] & 8))
+    {
+        sub_800390F4(q, 1);
+        *(short*)(q + 2) = 4;
+        p->field_8 = (void (*)(void))sub_80036AB4;
+    }
+    else
+    {
+        i = q[0x71];
+        k = ((CamKeys*)q)->keys[i];
+        n = i + 1;
+        t = (float)(q[3] - k) / (float)(((CamKeys*)q)->keys[n] - k);
+        t2 = t * t;
+        t3 = t2 * t;
+        sp = (CamSpline*)q[0x86];
+        ang = SPLINE(sp[i].c[3]);
+        v.vx = SPLINE(sp[i].c[0]);
+        v.vy = SPLINE(sp[i].c[1]);
+        v.vz = SPLINE(sp[i].c[2]);
+        ex = SPLINE(sp[i].c[4]);
+        ey = SPLINE(sp[i].c[5]);
+        ez = SPLINE(sp[i].c[6]);
+        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        y = v.vy + ey;
+        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.x = ((VECTOR*)q[0x6F])->vx + x * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.y = ((VECTOR*)q[0x6F])->vy + y;
+        cameraState_8008D4F0.field_14.z = ((VECTOR*)q[0x6F])->vz - x * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096 + z * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096;
+        ex = SPLINE(sp[i].c[8]);
+        ey = SPLINE(sp[i].c[9]);
+        ez = SPLINE(sp[i].c[10]);
+        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        y = v.vy + ey;
+        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.x = ((VECTOR*)q[0x6F])->vx + x * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.y = ((VECTOR*)q[0x6F])->vy + y;
+        cameraState_8008D4F0.field_20.z = ((VECTOR*)q[0x6F])->vz - x * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096 + z * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
+    }
+    sub_8003891C(q, levantPos_8008BD18);
+    sub_800BC90C(q);
+}
+#undef SPLINE
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 void sub_80038D64(char* o, int* a);
 extern void sub_80038230(int* p);
@@ -1177,38 +1246,35 @@ void sub_80039E14(void)
     word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
     sub_8004D0E8();
 }
-#if 0
-// Not matched: target is a symbol at 0x8008D540 (inside stru_8008D534, data split lives in main.c); also needs its jump table via config/c_rodata.txt (dword_80074864 0x20)
+// Matched
 void sub_80039ED8(int mode)
 {
     switch ((short)(mode + 1))
     {
     case 0:
-        stru_8008D534.v[0] = 0x800;
-        stru_8008D534.v[1] = 0x800;
-        stru_8008D534.v[2] = 0x800;
+        ((short*)stru_8008D534)[6] = 0x800;
+        ((short*)stru_8008D534)[7] = 0x800;
+        ((short*)stru_8008D534)[8] = 0x800;
         break;
     case 1:
-        stru_8008D534.v[0] = 0x1000;
-        stru_8008D534.v[1] = 0;
-        stru_8008D534.v[2] = 0x6B0;
+        ((short*)stru_8008D534)[6] = 0x1000;
+        ((short*)stru_8008D534)[7] = 0;
+        ((short*)stru_8008D534)[8] = 0x6B0;
         break;
     case 4:
-        stru_8008D534.v[0] = 0x150;
-        stru_8008D534.v[1] = 0;
-        stru_8008D534.v[2] = 0x1000;
+        ((short*)stru_8008D534)[6] = 0x150;
+        ((short*)stru_8008D534)[7] = 0;
+        ((short*)stru_8008D534)[8] = 0x1000;
         break;
     case 3:
-        stru_8008D534.v[0] = 0;
-        stru_8008D534.v[1] = 0x1000;
-        stru_8008D534.v[2] = 0x940;
+        ((short*)stru_8008D534)[6] = 0;
+        ((short*)stru_8008D534)[7] = 0x1000;
+        ((short*)stru_8008D534)[8] = 0x940;
         break;
     case 2:
-        stru_8008D534.v[0] = 0xEB0;
-        stru_8008D534.v[1] = 0x1000;
-        stru_8008D534.v[2] = 0;
+        ((short*)stru_8008D534)[6] = 0xEB0;
+        ((short*)stru_8008D534)[7] = 0x1000;
+        ((short*)stru_8008D534)[8] = 0;
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_80039ED8);

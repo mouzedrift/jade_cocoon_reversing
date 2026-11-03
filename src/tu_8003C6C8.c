@@ -274,4 +274,46 @@ void DrawLoadingIcon_8003CD5C(void)
     pos[1] = 0xBA;
     DrawPublicTiySprt_80033080(pos, n, 0);
 }
-INCLUDE_ASM(sub_8003CE18);
+extern SPRT* publicTiySprts_8008D434;
+extern char* publicTiyTPages_8008D440;
+// Matched
+void sub_8003CE18(short x, short y)
+{
+    SPRT* s;
+    unsigned int f = (unsigned int)frameCount_8008D3FC % 150;
+    switch (f)
+    {
+    case 0:
+    case 6:
+        s = publicTiySprts_8008D434;
+        s += 71;
+        s->x0 = x;
+        s->y0 = y;
+        SetSemiTrans(s, 1);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
+        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x238, 2);
+        break;
+    case 1:
+    case 3:
+    case 5:
+        s = publicTiySprts_8008D434;
+        s += 71;
+        s->x0 = x;
+        s->y0 = y;
+        SetSemiTrans(s, 1);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
+        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x238, 2);
+        break;
+    case 2:
+    case 4:
+        s = publicTiySprts_8008D434;
+        s += 72;
+        s->x0 = x;
+        s->y0 = y;
+        SetSemiTrans(s, 1);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[72], 5);
+        AddPrimCopy_80040298(pOT_8008D454, publicTiyTPages_8008D440 + 0x240, 2);
+        break;
+    }
+}
+INCLUDE_DATA(dword_80074960);

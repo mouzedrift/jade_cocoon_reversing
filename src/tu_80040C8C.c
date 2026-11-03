@@ -294,12 +294,10 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
 extern MovieCtx movieCtx_800960C0;
 extern int dword_800960F8;
 extern int dword_80096100;
-/* libcd's StCdIntrFlag lives in the PSY-Q .bss blob (0x8009AE6C), which has no symbols of its own */
-extern char lib_bss[];
-#define StCdIntrFlag (*(int*)(lib_bss + (0x8009AE6C - 0x8009AE60)))
+extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
 #if 0
-// Not matched: field_14 is loaded straight into $s0 and hoisted above the slice copy (orig: lw $v0; move $s0,$v0 after the copy), 1 instruction short
+// Not matched: field_14/dword_80096100 loads are hoisted above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
@@ -312,7 +310,8 @@ void MovieDctOutCallback_80041424(void)
         StCdIntrFlag = 0;
     }
     r = movieCtx_800960C0.slice;
-    movieCtx_800960C0.field_14 = (id = movieCtx_800960C0.field_14) == 0;
+    id = movieCtx_800960C0.field_14;
+    movieCtx_800960C0.field_14 = (movieCtx_800960C0.field_14 + 1) & 1;
     if (dword_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
     {
         dword_80096100 = 0;
