@@ -25,9 +25,9 @@ extern int StopCARD(void);
 extern void InitCARD(void);
 extern void StartCARD(void);
 extern int _bu_init(void);
-extern int sub_800BC9DC(int a, int* b, int* c);
-extern void sub_800BB9F4();
-extern void sub_800BB68C();
+extern int MemCardSync(int a, int* b, int* c);
+extern void MemCardAccept();
+extern void MemCardExist();
 extern void sub_800B7674(int a, int b);
 typedef struct
 {
@@ -67,10 +67,10 @@ extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0(int* t);
 extern void sub_8004F5E8(int a);
 extern void VSyncCallbacks(int a, int b);
-extern void sub_800BD558(void);
+extern void _card_stop(void);
 extern void TestEvent(int a);
-extern void sub_800BD17C(void);
-extern void sub_800BD35C(void);
+extern void UserFuncInit(void);
+extern void _card_start(void);
 extern void sub_800BD06C(void);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern char byte_800B682C[];
@@ -96,8 +96,8 @@ extern int dword_800BE2C0;
 extern int EnterCriticalSection(void);
 extern void CloseEvent(int a);
 extern void ExitCriticalSection(void);
-extern void sub_800BD60C(void);
-extern int sub_800BD7EC(void);
+extern void _clr_card_event(void);
+extern int _get_card_event_x(void);
 extern void _new_card(void);
 extern void _card_write(int a, int b, void* c);
 typedef struct
@@ -139,7 +139,7 @@ typedef struct
 } LoadTask_LOAD;
 extern int IsConfirmPressed_8003D288(int a, int b);
 extern int IsCancelPressed_8003D3C0(int a, int b);
-extern void sub_800BD18C(void* fn, int a);
+extern void UserFuncOpen(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 extern char byte_800B73A0[];
@@ -635,7 +635,7 @@ void sub_800BADF4(void)
 {
     int a = 0;
     int b = 0;
-    sub_800BC9DC(0, &b, &a);
+    MemCardSync(0, &b, &a);
 }
 
 int sub_800BAE24(void)
@@ -667,13 +667,13 @@ int sub_800BAE68(int a)
     int off = a << 4;
     x[0] = 0;
     x[1] = 0;
-    r = sub_800BC9DC(1, &x[0], &x[1]);
+    r = MemCardSync(1, &x[0], &x[1]);
     switch (r)
     {
     case 0:
         break;
     case -1:
-        sub_800BB9F4(off);
+        MemCardAccept(off);
         break;
     case 1:
         if (x[0] == 2)
@@ -693,13 +693,13 @@ int sub_800BAF0C(int a)
     int off = a << 4;
     x[0] = 0;
     x[1] = 0;
-    r = sub_800BC9DC(1, &x[0], &x[1]);
+    r = MemCardSync(1, &x[0], &x[1]);
     switch (r)
     {
     case 0:
         break;
     case -1:
-        sub_800BB68C(off);
+        MemCardExist(off);
         break;
     case 1:
         if (x[0] == 1)
@@ -749,449 +749,107 @@ INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB4A8);
 
-#if 0
-// Not matched: the original reloads the zero it stored to f54 (for f50) and uses a smaller frame; not reproduced
-void sub_800BB5DC(void)
-{
-    LoadState_LOAD* st = &dword_800BE1F4;
-    st->fC_LOAD = 0;
-    sub_800BD17C();
-    st->f44_LOAD = 0;
-    st->f0_LOAD = 0;
-    st->f4_LOAD = 0;
-    st->f8_LOAD = 0;
-    st->f50_LOAD = st->f54_LOAD = 0;
-    st->f14_LOAD = -1;
-    st->f4C_LOAD = 1;
-    st->f48_LOAD = 1;
-    sub_800BD35C();
-    VSyncCallbacks(7, (int)sub_800BD06C);
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB5DC);
+// 0x800BB5DC..0x800BD93C is PSY-Q 4.4 library code (LIBMCRD.LIB modules LIBMCRD, USERFUNC and BIOS,
+// identical code): not decompiled. It could be linked from the library like the exe's lib code.
+INCLUDE_OVERLAY_ASM(load, MemCardStart);
 
-#if 0
-// Not matched: the original keeps the address of the state field in a register (la); psyq 4.4 folds it into the offsets
-void sub_800BB64C(void)
-{
-    LoadState_LOAD* st = &dword_800BE1F4;
-    while (st->f0_LOAD)
-    {
-    }
-    VSyncCallbacks(7, 0);
-    sub_800BD558();
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB64C);
+INCLUDE_OVERLAY_ASM(load, MemCardStop);
 
-#if 0
-// Not matched: the original keeps the address of the state struct in a register (la); the compiler folds it
-int sub_800BB68C(int a)
-{
-    if (dword_800BE1F4.f0_LOAD > 0)
-    {
-        printf(byte_800B73A0);
-        return 0;
-    }
-    dword_800BE1F4.f0_LOAD = 1;
-    dword_800BE1F4.f4_LOAD = 0;
-    dword_800BE1F4.f8_LOAD = 0;
-    dword_800BE1F4.f10_LOAD = a;
-    sub_800BD18C(sub_800BB6F4, a);
-    return 1;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB68C);
+INCLUDE_OVERLAY_ASM(load, MemCardExist);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BB6F4);
 
-#if 0
-// Not matched: same as sub_800BB68C
-int sub_800BB9F4(int a)
-{
-    if (dword_800BE1F4.f0_LOAD > 0)
-    {
-        printf(byte_800B73A0);
-        return 0;
-    }
-    dword_800BE1F4.f0_LOAD = 2;
-    dword_800BE1F4.f4_LOAD = 0;
-    dword_800BE1F4.f8_LOAD = 0;
-    dword_800BE1F4.f10_LOAD = a;
-    sub_800BD18C(sub_800BBA5C, a);
-    return 1;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BB9F4);
+INCLUDE_OVERLAY_ASM(load, MemCardAccept);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBA5C);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BBD04);
+INCLUDE_OVERLAY_ASM(load, MemCardOpen);
 
-#if 0
-// Not matched: same: la of the global kept in $s0
-void sub_800BBE8C(void)
-{
-    int* p = &dword_800BE208;
-    if (*p >= 0)
-    {
-        sub_8004F5E8(*p);
-        *p = -1;
-    }
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BBE8C);
+INCLUDE_OVERLAY_ASM(load, MemCardClose);
 
-#if 0
-// Not matched: the original addresses the state through a register holding &state.f14 (negative offsets); psyq 4.4 uses &state
-int sub_800BBED0(int a, int b, int c)
-{
-    char* msg;
-    if (dword_800BE1F4.f14_LOAD < 0)
-    {
-        msg = byte_800B74C4;
-    }
-    else if (dword_800BE1F4.f0_LOAD > 0)
-    {
-        msg = byte_800B73A0;
-    }
-    else if (c & 0x7F)
-    {
-        msg = byte_800B74E8;
-    }
-    else if (b & 0x7F)
-    {
-        msg = byte_800B7514;
-    }
-    else
-    {
-        dword_800BE1F4.f0_LOAD = 5;
-        dword_800BE1F4.f4_LOAD = 0;
-        dword_800BE1F4.f8_LOAD = 0;
-        dword_800BE1F4.f18_LOAD = b;
-        dword_800BE1F4.f20_LOAD = a;
-        dword_800BE1F4.f1C_LOAD = c;
-        sub_800BD18C(sub_800BBF88, b);
-        return 1;
-    }
-    printf(msg);
-    return 0;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BBED0);
+INCLUDE_OVERLAY_ASM(load, MemCardReadData);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BBF88);
 
-#if 0
-// Not matched: same as sub_800BBED0
-int sub_800BC0C4(int a, int b, int c)
-{
-    char* msg;
-    if (dword_800BE1F4.f14_LOAD < 0)
-    {
-        msg = byte_800B74C4;
-    }
-    else if (dword_800BE1F4.f0_LOAD > 0)
-    {
-        msg = byte_800B73A0;
-    }
-    else if (c & 0x7F)
-    {
-        msg = byte_800B74E8;
-    }
-    else if (b & 0x7F)
-    {
-        msg = byte_800B7514;
-    }
-    else
-    {
-        dword_800BE1F4.f0_LOAD = 6;
-        dword_800BE1F4.f4_LOAD = 0;
-        dword_800BE1F4.f8_LOAD = 0;
-        dword_800BE1F4.f18_LOAD = b;
-        dword_800BE1F4.f20_LOAD = a;
-        dword_800BE1F4.f1C_LOAD = c;
-        sub_800BD18C(sub_800BC17C, b);
-        return 1;
-    }
-    printf(msg);
-    return 0;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BC0C4);
+INCLUDE_OVERLAY_ASM(load, MemCardWriteData);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC17C);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BC2B8);
+INCLUDE_OVERLAY_ASM(load, MemCardReadFile);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC3D0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BC510);
+INCLUDE_OVERLAY_ASM(load, MemCardWriteFile);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BC628);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BC768);
+INCLUDE_OVERLAY_ASM(load, MemCardGetDirentry);
 
-// Not matched: the original keeps &var in a register (lui/addiu) for the load and the store
-INCLUDE_OVERLAY_ASM(load, sub_800BC9C8);
+INCLUDE_OVERLAY_ASM(load, MemCardCallback);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BC9DC);
+INCLUDE_OVERLAY_ASM(load, MemCardSync);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BCAF8);
+INCLUDE_OVERLAY_ASM(load, MemCardCreateFile);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BCCF4);
+INCLUDE_OVERLAY_ASM(load, MemCardDeleteFile);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BCEA8);
+INCLUDE_OVERLAY_ASM(load, MemCardFormat);
 
-#if 0
-// Not matched: the original keeps the address of the state struct in a register (la) and fills the buffer with a decrementing pointer
-int sub_800BCF64(int a)
-{
-    char buf[128];
-    int i;
-    if (dword_800BE1F4.f0_LOAD)
-    {
-        printf(byte_800B7544);
-        return -1;
-    }
-    for (i = 127; i >= 0; i--)
-    {
-        buf[i] = -1;
-    }
-    for (i = 0; i < 15; i++)
-    {
-        sub_800BD60C();
-        _new_card();
-        _card_write(a, i, buf);
-        if (sub_800BD7EC())
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BCF64);
+INCLUDE_OVERLAY_ASM(load, MemCardUnformat);
 
-#if 0
-// Not matched: branch order differs
-int sub_800BD018(int a)
-{
-    int r = 0;
-    if (a == 1)
-    {
-        r = 2;
-    }
-    else if (a < 2)
-    {
-        if (a != 0)
-        {
-            r = a | 0x8000;
-        }
-    }
-    else if (a == 2)
-    {
-        r = 1;
-    }
-    else if (a == 4)
-    {
-        r = 3;
-    }
-    else
-    {
-        r = a | 0x8000;
-    }
-    return r;
-}
-#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD018);
 
-#if 0
-// Not matched: the copied pair and the counters are reloaded separately
-void sub_800BD06C(void)
-{
-    if (!sub_800BD274())
-    {
-        sub_800BD208();
-        if (sub_800BD274())
-        {
-            dword_800BE1F4.f8_LOAD = 1;
-            dword_800BE1E4[0] = dword_800BE1F4.f0_LOAD;
-            dword_800BE1E4[1] = dword_800BE1F4.f4_LOAD;
-            dword_800BE1F4.f0_LOAD = 0;
-            dword_800BE1F4.f4_LOAD = 0;
-            if (dword_800BE1F4.f44_LOAD)
-            {
-                ((void (*)(int, int))dword_800BE1F4.f44_LOAD)(dword_800BE1E4[0], dword_800BE1E4[1]);
-            }
-        }
-    }
-    dword_800BE1F4.f50_LOAD++;
-    dword_800BE1F4.f54_LOAD++;
-}
-#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD06C);
 
-#if 0
-// Not matched: the original moves both arguments to $a2/$a3 before the 6 byte block copy
-void sub_800BD118(int n, Bytes6_LOAD* out)
-{
-    *out = dword_800B7624;
-    out->c_LOAD[2] = (n / 16) + 0x30;
-    out->c_LOAD[3] = (n % 16) + 0x30;
-}
-#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BD118);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD174);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD17C);
+INCLUDE_OVERLAY_ASM(load, UserFuncInit);
 
-#if 0
-// Not matched: address computation of the clearing loop differs
-void sub_800BD18C(void* fn, int a)
-{
-    int n = dword_800BE174 + 1;
-    int i;
-    if (n >= 4)
-    {
-        printf(byte_800B7630);
-        return;
-    }
-    dword_800BE174 = n;
-    dword_800BE294[n] = (int (*)())fn;
-    for (i = 3; i >= 0; i--)
-    {
-        dword_800BE254[n * 4 + i] = 0;
-    }
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD18C);
+INCLUDE_OVERLAY_ASM(load, UserFuncOpen);
 
-#if 0
-// Not matched: the symbol address is reloaded (lui) instead of kept in a saved register
-void sub_800BD208(void)
-{
-    int i = dword_800BE174;
-    if (i >= 0)
-    {
-        if (dword_800BE294[i](dword_800BE254 + i * 16))
-        {
-            dword_800BE174 = dword_800BE174 - 1;
-        }
-    }
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD208);
+INCLUDE_OVERLAY_ASM(load, UserFuncExecute);
 
-unsigned sub_800BD274(void)
+unsigned UserFuncComplete(void)
 {
     return (unsigned)dword_800BE174 >> 31;
 }
 
 INCLUDE_OVERLAY_ASM(load, sub_800BD284);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD2A0);
+INCLUDE_OVERLAY_ASM(load, funcEvSpIOE);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD2B4);
+INCLUDE_OVERLAY_ASM(load, funcEvSpError);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD2C8);
+INCLUDE_OVERLAY_ASM(load, funcEvSpTimeout);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD2DC);
+INCLUDE_OVERLAY_ASM(load, funcEvSpNewcard);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD2F0);
+INCLUDE_OVERLAY_ASM(load, funcEvSpIOEx);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD304);
+INCLUDE_OVERLAY_ASM(load, funcEvSpErrorx);
 
-// Not decompilable as plain C: the store is "sw $v0,sym" (lui $at) in the delay slot, as hand-written asm does
-INCLUDE_OVERLAY_ASM(load, sub_800BD318);
+INCLUDE_OVERLAY_ASM(load, funcEvSpTimeoutx);
 
-#if 0
-// Not matched: epilogue order differs (addiu sp before jr, nop in delay slot)
-int sub_800BD32C(void)
-{
-    InitCARD();
-    StartCARD();
-    return _bu_init();
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD32C);
+INCLUDE_OVERLAY_ASM(load, funcEvSpNewcardx);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD35C);
+INCLUDE_OVERLAY_ASM(load, _card_open);
 
-#if 0
-// Not matched: epilogue order differs
-int sub_800BD538(void)
-{
-    return StopCARD();
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD538);
+INCLUDE_OVERLAY_ASM(load, _card_start);
 
-#if 0
-// Not matched: register allocation of the lui/lw pairs differs ($a0 in the original)
-void sub_800BD558(void)
-{
-    int r = EnterCriticalSection();
-    CloseEvent(dword_800BE2A4);
-    CloseEvent(dword_800BE2A8);
-    CloseEvent(dword_800BE2AC);
-    CloseEvent(dword_800BE2B0);
-    CloseEvent(dword_800BE2B4);
-    CloseEvent(dword_800BE2B8);
-    CloseEvent(dword_800BE2BC);
-    CloseEvent(dword_800BE2C0);
-    if (r == 1)
-    {
-        ExitCriticalSection();
-    }
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD558);
+INCLUDE_OVERLAY_ASM(load, _card_close);
 
-#if 0
-// Not matched: hand-written assembly style (stores via the assembler macro with $at, results re-read from the stored variables); not producible from C
-void sub_800BD60C(void)
-{
-    TestEvent(dword_800BE2A4);
-    TestEvent(dword_800BE2A8);
-    TestEvent(dword_800BE2AC);
-    TestEvent(dword_800BE2B0);
-    TestEvent(dword_800BE2B4);
-    TestEvent(dword_800BE2B8);
-    TestEvent(dword_800BE2BC);
-    TestEvent(dword_800BE2C0);
-    dword_800BE2C4 = dword_800BE2C8 = dword_800BE2CC = dword_800BE2D0 = 0;
-    dword_800BE2D4 = dword_800BE2D8 = dword_800BE2DC = dword_800BE2E0 = 0;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD60C);
+INCLUDE_OVERLAY_ASM(load, _card_stop);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD714);
+INCLUDE_OVERLAY_ASM(load, _clr_card_event);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BD7EC);
+INCLUDE_OVERLAY_ASM(load, _get_card_event);
 
-#if 0
-// Not matched: load scheduling differs
-int sub_800BD8C4(void)
-{
-    return dword_800BE2C4 + dword_800BE2C8 * 2 + dword_800BE2CC * 4 + dword_800BE2D0 * 8;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD8C4);
+INCLUDE_OVERLAY_ASM(load, _get_card_event_x);
 
-#if 0
-// Not matched: load scheduling differs
-int sub_800BD900(void)
-{
-    return dword_800BE2D4 + dword_800BE2D8 * 2 + dword_800BE2DC * 4 + dword_800BE2E0 * 8;
-}
-#endif
-INCLUDE_OVERLAY_ASM(load, sub_800BD900);
+INCLUDE_OVERLAY_ASM(load, _chk_card_event);
+
+INCLUDE_OVERLAY_ASM(load, _chk_card_event_x);
 
 INCLUDE_OVERLAY_ASM(load, dword_800BD93C);
