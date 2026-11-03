@@ -304,26 +304,21 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
 
     return 0;
 }
-#if 0
-// Not matched: second byte swap re-reads the unmasked sum for the low byte (2 regs differ)
+// Matched
 void sub_8003F89C(unsigned short* p)
 {
     int i;
     unsigned short t;
-    unsigned char lo;
     for (i = 0; i < 10; i++, p++)
     {
         t = (*p >> 8) + ((*p & 0xFF) << 8);
         if ((unsigned short)(t + 0x7D7F) < 0x1A)
         {
             t += 0xFFDF;
-            lo = t;
-            *p = (t >> 8) + (lo << 8);
+            *p = (t >> 8) + ((t % 256) << 8);
         }
     }
 }
-#endif
-INCLUDE_ASM(sub_8003F89C);
 
 // Matched
 void sub_8003F900(int idx, int val)
@@ -602,19 +597,18 @@ void PoolDestroy_8003FF7C(Pool* h)
     h->head = 0;
     h->tail = 0;
 }
-#if 0
-// Not matched: rounding is folded to size-((size&3)-4) and computed straight into s0; original computes (size+4)-(size&3) in a1 then copies
+// Matched
 void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
 {
     PoolBlock* b = 0;
-    unsigned int r = size & 3;
-    unsigned int s = r ? size + 4 - r : size;
-    if (!(h->size - h->used < s))
+    unsigned int align = 4;
+    size = (size & 3) ? size + align - (size & 3) : size;
+    if (!(h->size - h->used < size))
     {
-        b = PoolFindFreeSpace_80040150(h, s + 0x10);
+        b = PoolFindFreeSpace_80040150(h, size + 0x10);
     }
     b->magic = 0x8FFFFFFF;
-    b->size = s + 0x10;
+    b->size = size + 0x10;
     b->next = 0;
     b->prev = 0;
     if (h->count == 0)
@@ -631,8 +625,6 @@ void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
     h->count++;
     return b + 1;
 }
-#endif
-INCLUDE_ASM(PoolAlloc_8003FFD0);
 // Matched
 void PoolFree_800400B4(Pool* h, void* p)
 {

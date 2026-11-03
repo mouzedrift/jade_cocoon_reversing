@@ -297,7 +297,7 @@ extern int dword_80096100;
 extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
 #if 0
-// Not matched: field_14 and dword_80096100 are loaded above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
+// Not matched: field_14/dword_80096100 loads are hoisted above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
