@@ -658,7 +658,7 @@ void sub_800BE3C0()
         }
         else if (v == 0x13)
         {
-            sub_800127B8((struct_obj_B*)sub_80014390(dword_800C9C7C));
+            sub_800127B8(sub_80014390(dword_800C9C7C));
         }
         if (dword_800C9C88.kind_0 == 7 && dword_800C9C7C != 0)
         {

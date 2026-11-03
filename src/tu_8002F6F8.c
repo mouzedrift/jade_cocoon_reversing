@@ -59,7 +59,7 @@ void sub_8002F6F8(int a0, int* st)
     s.field_A = 0xF;
     DrawUiWindow_8002A384(&s);
 }
-extern unsigned char levantStatus_8008BD38[];
+
 extern unsigned char dword_80082F04[];
 extern unsigned char dword_80082EBC[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
@@ -70,7 +70,7 @@ void sub_8002F7D0(unsigned short* pos, short ot)
     unsigned short loc[2];
     unsigned char vals[0x18];
     short i;
-    CalcEquippedStats_80033624(vals, (int)levantStatus_8008BD38);
+    CalcEquippedStats_80033624(vals, &levantStatus_8008BD38);
     for (i = 0; i < 5; i++)
     {
         loc[0] = pos[0] + 6;
@@ -141,7 +141,7 @@ short sub_8002FA0C(short a, short b)
 // Matched
 short sub_8002FA70(void)
 {
-    return sub_80033514((Minion*)GetLevantStatus_80033ABC(&saveData_8008B570));
+    return sub_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
 typedef struct
 {

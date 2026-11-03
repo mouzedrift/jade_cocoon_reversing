@@ -1642,7 +1642,7 @@ void sub_800A8C0C()
     dword_8008B4CC->f24->f0 |= 4;
 }
 
-char* sub_800A8C34()
+UnitStatus* sub_800A8C34()
 {
     return &levantStatus_8008BD38;
 }
@@ -2988,7 +2988,7 @@ int sub_800AC3F4()
     int r;
     if (s->field_830)
     {
-        r = ((int (*)(int))sub_8001D060)(s->armorId_7E5) + dword_800B11B8[s->field_834];
+        r = ((int (*)(int))sub_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
     }
     else
     {
@@ -3138,8 +3138,8 @@ void sub_800ACAA4(int* a, int* b)
     b[7] = -1;
     b[8] = -1;
     b[9] = 0;
-    sub_800AC380(s->armorId_7E5 != 0xFF);
-    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->weaponId_7E4) + 2));
+    sub_800AC380(s->levantStatus_7C8.field_1C[1] != 0xFF);
+    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0]) + 2));
     PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
@@ -3679,13 +3679,13 @@ int SetEquipment_800AD9EC(int a, int b)
             goto fail;
         }
         s = &saveData_8008B570;
-        s->weaponId_7E4 = a;
+        s->levantStatus_7C8.field_1C[0] = a;
         sub_800AD1E0(a, 1, 1);
         if (old < 0x17)
             sub_800AD184(old, 1, 1);
         sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
-        GetArmorData_8001D034(s->armorId_7E5);
-        sub_800AC3B0(dword_8001D060(s->armorId_7E5));
+        GetArmorData_8001D034(s->levantStatus_7C8.field_1C[1]);
+        sub_800AC3B0(dword_8001D060(s->levantStatus_7C8.field_1C[1]));
         break;
     case 1:
         if (old == 0xFF)
@@ -3698,11 +3698,11 @@ int SetEquipment_800AD9EC(int a, int b)
             goto fail;
         }
         s = &saveData_8008B570;
-        s->armorId_7E5 = a;
+        s->levantStatus_7C8.field_1C[1] = a;
         sub_800AD1E0(a, 1, 2);
         if (old < 0xF)
             sub_800AD184(old, 1, 2);
-        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->weaponId_7E4) + 2));
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0]) + 2));
         GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
         break;

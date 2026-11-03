@@ -88,9 +88,9 @@ typedef struct
 
 extern short uiColor_8008B590;
 extern char name_800C59A0[];
-extern int sub_80014390(int a0);
+
 extern void sub_8002F7D0(void* p, int a1);
-extern void sub_8002E288(int a0, int a1, int a2, void* p);
+extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
@@ -517,10 +517,10 @@ void sub_800C51B0(EquipCtx_equip* c)
 // Matched
 void sub_800C5314(EquipCtx_equip* c)
 {
-    char buf10[0x18];
-    char buf28[0x18];
+    unsigned char buf10[0x18];
+    unsigned char buf28[0x18];
     Rect8_equip r40;
-    int h;
+    UnitStatus* h;
     int mode;
     h = sub_80014390(0);
     CalcEquippedStats_80033624(buf10, h);

@@ -4,6 +4,7 @@
 #include "globals.h"
 
 #include "actor.h"
+#include "tu_80019BF0.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
 typedef struct CombatModelParams
@@ -56,9 +57,9 @@ extern CombatSlotCombat dword_800A3A08[];
 extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
 extern void sub_80018E5C(void* p);
-extern void sub_80018EBC(void* p, int v);
+extern void sub_80018EBC(void* p, UnitStatus* v);
 extern void sub_800376A0(void* a, void* b);
-extern int sub_800A10C0(int i);
+
 extern int sub_800A1A3C(Minion* p, int n);
 
 typedef struct CombatTaskCombat
@@ -92,7 +93,7 @@ extern void sub_80037748(void);
 extern void InitCameraTask_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
-extern unsigned char* Cbt_80019C70(int idx);
+extern MinionModelDesc* Cbt_80019C70(int idx);
 extern int Cbt_800338DC(void* a, void* b, void* c);
 typedef struct CombatLocalCombat
 {
@@ -100,7 +101,8 @@ typedef struct CombatLocalCombat
     int pad_4;
     int w[3];
 } CombatLocalCombat;
-extern void Cbt_8002FAA0(int a, void* b, char* c, int d);
+extern void Cbt_8002FAA0(int a, void* b, unsigned char* c, int d);
+
 extern void Cbt_8002C290(void* a, int b, int c);
 extern void Cbt_8002B1B0(int a, void* b, int c);
 extern void* memset(void* p, int c, unsigned int n);
@@ -114,7 +116,6 @@ typedef struct CombatColorCombat
 } CombatColorCombat;
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void OnModelFileLoaded_80025D7C();
-extern char* off_8007DC70;
 typedef struct CombatObjCombat
 {
     int field_0;
@@ -228,7 +229,7 @@ typedef struct CombatReqCombat
     int field_30;
     char pad_34[0x2C];
 } CombatReqCombat;
-extern void sub_800A05E0(unsigned char* a, CombatModelParams* o, int c);
+extern void sub_800A05E0(Minion* a, CombatModelParams* o, int c);
 extern int sub_800A0898(unsigned char* a);
 
 
@@ -236,15 +237,15 @@ INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 
 #if 0
 // Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
-void sub_800A05E0(unsigned char* a, CombatModelParams* o, int c)
+void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
 {
     CombatLocalCombat l;
-    unsigned int h = *(unsigned short*)Cbt_80019C70(a[2]);
+    unsigned int h = Cbt_80019C70(a->species_2)->modelId_0;
     int t;
-    o->count_0 = Cbt_800338DC(a + 0x4C, l.b, l.w);
-    o->parts_4[0] = *(unsigned short*)Cbt_80019C70(l.b[0]);
-    o->parts_4[1] = *(unsigned short*)Cbt_80019C70(l.b[1]);
-    o->parts_4[2] = *(unsigned short*)Cbt_80019C70(l.b[2]);
+    o->count_0 = Cbt_800338DC(a->species_4C, l.b, l.w);
+    o->parts_4[0] = Cbt_80019C70(l.b[0])->modelId_0;
+    o->parts_4[1] = Cbt_80019C70(l.b[1])->modelId_0;
+    o->parts_4[2] = Cbt_80019C70(l.b[2])->modelId_0;
     o->weights_10[0] = l.w[0];
     o->weights_10[1] = l.w[1];
     o->weights_10[2] = l.w[2];
@@ -317,18 +318,18 @@ void sub_800A05E0(unsigned char* a, CombatModelParams* o, int c)
             o->weights_10[2] = t;
         }
     }
-    o->modelId_1C = Cbt_80019A80(a[0xC8]);
+    o->modelId_1C = Cbt_80019A80(a->status_84.level_44);
     o->f20 = o->count_0 - 1;
-    o->f28 = *(unsigned short*)Cbt_80019C70(a[3]);
+    o->f28 = Cbt_80019C70(a->field_3)->modelId_0;
     o->f30 = c;
-    o->angle_24 = sub_800A0898(a + 0xC2);
+    o->angle_24 = sub_800A0898(a->status_84.element_3E);
     if (o->angle_24 == -1000)
     {
-        o->angle_24 = Cbt_80019C70(a[3])[2] << 1;
+        o->angle_24 = Cbt_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o->angle_24 = o->angle_24 - (Cbt_80019C70(a[3])[3] << 1);
+        o->angle_24 = o->angle_24 - (Cbt_80019C70(a->field_3)->field_3 << 1);
         if (o->angle_24 < 0)
         {
             o->angle_24 = o->angle_24 + 0x168;
@@ -427,7 +428,7 @@ void sub_800A0A6C(void)
 void sub_800A0ACC(int i, Minion* x)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_800A05E0((unsigned char*)x, &s->params_8, (int)(dword_8007DC78 + (i << 6)));
+    sub_800A05E0(x, &s->params_8, (int)(dword_8007DC78 + (i << 6)));
     s->minion_4 = x;
     s->task_0 = StartModelTask_80010850(&s->params_8);
     s->actor_3C = 0;
@@ -455,7 +456,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
     CombatSlotCombat* s = &dword_800A3A08[i];
     CombatSpawnCombat r;
     int h = Cbt_80010A44(s->task_0);
-    int v = Cbt_80019A80(((unsigned char*)s->minion_4)[0xC8]);
+    int v = Cbt_80019A80(s->minion_4->status_84.level_44);
     int x;
     int y;
     r.field_0 = -1;
@@ -508,7 +509,7 @@ void sub_800A0D64(int i, int id)
     o.field_14 = 0;
     o.field_4 = (int)q;
     o.field_8 = 0;
-    o.field_18 = (int)(off_8007DC70 + (i << 4));
+    o.field_18 = (int)&off_8007DC70[i];
     m.flags_0 = 0x69;
     m.fileId_4 = q[0];
     m.offset_8 = q[3] << 11;
@@ -610,14 +611,14 @@ void sub_800A1068(int i)
 int sub_800A10A4(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->minion_4 + 4;
+    return (int)s->minion_4->ancestors_4;
 }
 
 // Matched
-int sub_800A10C0(int i)
+UnitStatus* sub_800A10C0(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)&s->minion_4->status_84;
+    return &s->minion_4->status_84;
 }
 
 // Matched
@@ -650,22 +651,23 @@ void sub_800A111C(int i, CombatActorInfo* out)
 int sub_800A11A0(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->minion_4->field_DE;
+    return (int)&s->minion_4->skills_DE;
 }
 
 // Matched
 int sub_800A11BC(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->minion_4->field_F4;
+    return (int)&s->minion_4->magicBits_F4;
 }
 
 // Matched
-int sub_800A11D8(int i)
+Minion* sub_800A11D8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->minion_4;
+    return s->minion_4;
 }
+
 
 // Matched
 void sub_800A11F4(void)
@@ -925,7 +927,7 @@ void sub_800A16FC(CombatTaskCombat* t)
 // Matched
 void sub_800A1844(Minion* a, unsigned short* pt, unsigned int flags)
 {
-    char* q;
+    UnitStatus* q;
     unsigned short v[2];
     if (sub_800A1934(a) != 1)
     {
@@ -937,16 +939,16 @@ void sub_800A1844(Minion* a, unsigned short* pt, unsigned int flags)
         {
             SetFontClutOffset_8003F900(1, 0);
         }
-        q = a->status_84;
+        q = &a->status_84;
         v[0] = pt[0] + 5;
         v[1] = pt[1] + 6;
-        Cbt_8002FAA0(0, v, a->name_94, 0);
+        Cbt_8002FAA0(0, v, a->status_84.name_10, 0);
         v[0] = pt[0] + 0x50;
         v[1] = pt[1] + 6;
-        Cbt_8002C290(v, *(unsigned char*)(q + 0x44), 0);
+        Cbt_8002C290(v, q->level_44, 0);
         v[0] = pt[0] + 0x54;
         v[1] = pt[1] + 3;
-        Cbt_8002B1B0(*(short*)(q + 0x42), v, 0);
+        Cbt_8002B1B0(q->elementMask_42, v, 0);
     }
 }
 
@@ -963,7 +965,7 @@ int sub_800A1934(Minion* p)
 // Matched
 void sub_800A1958(Minion* p)
 {
-    sub_80033548((int*)p->status_84, 0x400);
+    sub_80033548(&p->status_84, 0x400);
 }
 
 // Matched

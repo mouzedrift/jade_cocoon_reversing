@@ -321,25 +321,18 @@ int sub_800316E4(void)
     return 0;
 }
 extern int sub_80031870(int a0);
-typedef struct
-{
-    unsigned char a;
-    unsigned char type;
-    unsigned char b;
-    unsigned char c;
-} Ent4_316EC;
-extern Ent4_316EC* sub_80031B30(int a0);
+extern UnitSkill* sub_80031B30(int a0);
 extern void sub_80018430(short v);
 // Matched
 int sub_800316EC(unsigned int a0, int a1)
 {
     int r;
     int k;
-    Ent4_316EC* base;
+    UnitSkill* base;
     r = sub_80031870(a0) + 0x26;
     base = sub_80031B30(LowestSetBit_80014358(a1) & 0xFF);
     base += a0;
-    k = base->type;
+    k = base->id_1;
     sub_80018430(-1);
     if (a0 >= 4)
     {

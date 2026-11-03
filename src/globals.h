@@ -44,38 +44,7 @@ typedef struct EventNode
     EventEntry entry;
 } EventNode;
 
-// HP/MP block shared by Levant (0x8008BD38) and each Minion (status_84);
-// Heal_80011CD0 refills it (Meos4's randomizer calls 0x80011CD0 "healFn")
-typedef struct
-{
-    int status_0; // status effect bits (0x400 survives ClearStatus_80011C30)
-    int pad_4;
-    unsigned short hp_8;
-    unsigned short maxHp_A;
-    unsigned short mp_C;
-    unsigned short maxMp_E;
-} EntityStatus;
-
-typedef struct
-{
-    short id; // 4 = empty slot
-    short pad_2[3];
-    short field_8;
-    short field_A;
-    short field_C;
-    short field_E;
-    char pad_10[0x1C];
-    unsigned char field_2C[0x16];
-    short field_42;
-    unsigned char field_44;
-    char pad_45[0x37];
-    unsigned char field_7C[8];
-    char status_84[0x10]; // EntityStatus
-    char name_94[0x38]; // starts with the name (charTables_8008685C encoding, see DecodeNames_8003FBD4)
-    char field_CC[0x12];
-    char field_DE[0x16];
-    char field_F4[4];
-} Minion;
+#include "unit.h" // UnitStatus, UnitStats, Minion
 
 typedef struct
 {
@@ -174,15 +143,8 @@ typedef struct
     LevantPos levant_7A8; // == levantPos_8008BD18
     char field_7BC[0xC]; // returned by sub_80033AC4
     // Levant's 0x48-byte status block (same layout as a minion's status_84)
-    EntityStatus levantStatus_7C8; // levantStatus_8008BD38
-    unsigned char playerName_7D8[MAX_PLAYER_NAME_LENGTH]; // playerName_8008BD48
-    char pad_7E2[2];
-    unsigned char weaponId_7E4; // equippedWeaponId_8008BD54
-    unsigned char armorId_7E5;  // equippedArmor_8008BD55
-    unsigned char otherId_7E6;  // byte_8008BD56
-    char pad_7E7[0x25];
-    unsigned char level_80C; // levantCaptureLevel_8008BD7C (rank)
-    char pad_80D[3];
+    UnitStatus levantStatus_7C8; // levantStatus_8008BD38: name_10 == playerName_8008BD48, field_1C[0..2] the
+                                 // equipped weapon / armor / accessory, level_44 the rank (levantCaptureLevel_8008BD7C)
     int field_810; // == dword_8008BD80
     unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
     int field_830; // model index (GAME's sub_800ACB64)
@@ -534,7 +496,7 @@ void sub_80025C38(Model* p, int flag);
 int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
-extern int dword_8007BD30[];
+
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
 extern int dword_8008D4DC;

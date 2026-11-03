@@ -6,6 +6,7 @@
 
 #include "globals.h"
 #include "tu_8001EA48.h"
+#include "tu_80019BF0.h"
 
 typedef struct EvInsEventfnc
 {
@@ -292,11 +293,11 @@ extern int sub_800AD058(int a);
 
 extern int sub_800AD8F4(int a);
 
-extern char* sub_800A8C34();
+extern UnitStatus* sub_800A8C34();
 
-extern void Heal_80011CD0();
 
-extern void FillHpMp_80011C0C();
+
+
 
 extern EvEntEventfnc* sub_800A5DDC(int a, int b, int c);
 

@@ -625,7 +625,7 @@ void sub_800A284C(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        int v = sub_800A2B60(a);
+        UnitStatus* v = sub_800A2B60(a);
         sub_80018EBC(gCtx_800B1260.actors_7c[a], v);
     }
 }
@@ -694,8 +694,8 @@ int sub_800A2A70(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
-        return (int)e + 0x80;
+        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        return (int)&e->magicBits_80;
     }
 }
 
@@ -737,17 +737,17 @@ void sub_800A2AE8(void)
 }
 
 // Matched
-int sub_800A2B20(int a)
+UnitStats* sub_800A2B20(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&gCtx_800B1260.ents_ac[a];
+    return &gCtx_800B1260.ents_ac[a];
 }
 
 // Matched
-int sub_800A2B60(int a)
+UnitStatus* sub_800A2B60(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)&gCtx_800B1260.ents_ac[a];
+    return &gCtx_800B1260.ents_ac[a].st_0;
 }
 
 // Matched
@@ -755,8 +755,8 @@ int sub_800A2BA0(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
-        return (int)e + 0x6c;
+        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        return (int)&e->skills_6C;
     }
 }
 
@@ -765,8 +765,8 @@ int sub_800A2BE4(int a)
 {
     sub_800A2CA8(a, 0);
     {
-        GameEnt_1* e = &gCtx_800B1260.ents_ac[a];
-        return e->f5c;
+        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        return e->species_5C;
     }
 }
 
@@ -815,7 +815,7 @@ void sub_800A2D48(GameAi* p)
     sub_8001D760(p->actor_8, p->anim_20, -1, 0);
 }
 
-GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, GameEnt_1* b, int c)
+GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
 {
     GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
     GameAi* q;
@@ -841,10 +841,11 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, GameEnt_1* b, int c)
         }
         else
         {
-            v = b->f5c;
+            v = b->species_5C;
             if ((unsigned)v < 0x39)
             {
-                j = !(levantCaptureLevel_8008BD7C - b->rank_44 < 5);
+                j = !(levantCaptureLevel_8008BD7C - b->st_0.level_44 < 5);
+
                 e->fn_8 = name_800ADEB8[v][j];
             }
             else

@@ -129,7 +129,7 @@ void sub_800BA444(BatTask_a* t)
         sub_800A9364();
         if (sub_800A8DAC() == r)
         {
-            ReviveOneHp_80011CF4(levantStatus_8008BD38);
+            ReviveOneHp_80011CF4(&levantStatus_8008BD38);
             t->next_8 = sub_800BA4F4;
             if (sub_800BC820(0x20000) == 0)
             {
@@ -299,7 +299,7 @@ void sub_800BA97C()
 {
     int n;
     int i;
-    ClearStatus_80011C30(levantStatus_8008BD38);
+    ClearStatus_80011C30(&levantStatus_8008BD38);
     n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
@@ -674,15 +674,15 @@ void sub_800BB314(BatTask_a* t)
 #if 0 // Not matched: only u and flags swap saved registers (s5/s6); reducing flags refs flips them; tried decl order, types, split ifs, tail variable
 void sub_800BB380(BatTask_a* t, BatObj_a* u)
 {
-    BatUnit_a* m;
+    UnitStatus* m;
     int flags;
     int kind;
     int r;
     unsigned int f;
     sub_800BB74C();
     sub_800BB7D4();
-    m = (BatUnit_a*)sub_80014390(dword_800C9C7C);
-    flags = m->flags_0;
+    m = sub_80014390(dword_800C9C7C);
+    flags = m->status_0;
     kind = sub_800BC7DC(dword_800C9C7C);
     sub_800BF7C4(m, &dword_800C9C7E, &dword_800C9C80);
     if (dword_800C9C7E != 0)
@@ -919,7 +919,7 @@ void sub_800BBA70(BatTask_a* t, BatObj_a* u)
         {
             if (mask & (1 << i))
             {
-                int f = *(int*)sub_80014390(i & 0xFF);
+                int f = sub_80014390(i & 0xFF)->status_0;
                 if (f & 0x200)
                 {
                     s[i].kind_0 = 0x13;
@@ -1132,14 +1132,14 @@ int sub_800BC1A8(unsigned int mask)
 {
     int i;
     int m;
-    BatUnit_a* mn;
+    UnitStatus* mn;
     int c;
     for (i = 0; i < 7; i++)
     {
         m = 1 << i;
         if (mask & m)
         {
-            mn = (BatUnit_a*)sub_80014390(i & 0xFF);
+            mn = sub_80014390(i & 0xFF);
             c = (unsigned char)dword_800C9CBC[i];
             if (c != 0 && c != 5 && c != 6 && mn->hp_8 > 0)
             {
@@ -1147,7 +1147,7 @@ int sub_800BC1A8(unsigned int mask)
                 {
                     return 1;
                 }
-                if (mn->flags_0 & 0x8000)
+                if (mn->status_0 & 0x8000)
                 {
                     return 1;
                 }

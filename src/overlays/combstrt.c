@@ -17,11 +17,6 @@ typedef struct CombStrtBox
     char c_3;
 } CombStrtBox;
 
-typedef struct CombStrtUnit
-{
-    char pad_0[0x84];
-    char field_84[0x74];
-} CombStrtUnit;
 
 typedef struct CombStrtWin
 {
@@ -45,12 +40,11 @@ extern short word_800A4C96;
 extern unsigned int dword_8008D3FC;
 extern unsigned short word_8008D3FC;
 extern unsigned short uiColor_8008B590;
-extern CombStrtUnit dword_800A3AA0[2][3];
+extern Minion dword_800A3AA0[2][3];
 extern void* dword_800A4C50[];
 extern void sub_800A16FC();
 extern int sub_800A1AAC(int);
-extern int sub_800A1934(void*);
-extern void Heal_80011CD0(void*);
+extern int sub_800A1934(Minion*);
 extern void PlaySfx_80031494(int);
 extern void sub_8002ADB4(void*, void*, int, int);
 extern void ShuffleTeam_800A473C(int);
@@ -261,9 +255,9 @@ void ShuffleTeam_800A473C(int side)
 {
     int used[10];
     int order[10];
-    CombStrtUnit tmp[10];
+    Minion tmp[10];
     int n = sub_800A1AAC(side);
-    CombStrtUnit* units = dword_800A3AA0[side];
+    Minion* units = dword_800A3AA0[side];
     int i;
     if (n < 2)
     {
@@ -313,10 +307,10 @@ void sub_800A48C0()
     {
         for (j = 0; j < 3; j++)
         {
-            CombStrtUnit* p = &dword_800A3AA0[i][j];
+            Minion* p = &dword_800A3AA0[i][j];
             if (sub_800A1934(p) == 0)
             {
-                Heal_80011CD0(p->field_84 - 0);
+                Heal_80011CD0(&p->status_84);
             }
         }
     }
@@ -354,7 +348,7 @@ void sub_800A49DC(int side, int slot)
     short pos2[4];
     CombStrtBox c3;
     RECT r2;
-    CombStrtUnit* u = &dword_800A3AA0[side][slot];
+    Minion* u = &dword_800A3AA0[side][slot];
     short* xy;
     if (sub_800A1934(u) != 1)
     {
@@ -369,7 +363,7 @@ void sub_800A49DC(int side, int slot)
         sub_8002ADB4(&w, &c1, 0xF, 0);
         pos[0] = xy[0] + 0x2F;
         pos[1] = xy[1];
-        sub_8002F078(u->field_84, pos, 0, 0xF);
+        sub_8002F078(&u->status_84, pos, 0, 0xF);
         c2.c_2 = 0;
         c2.c_3 = 1;
         c2.col_0 = saveData_8008B570.uiColor_20.i;

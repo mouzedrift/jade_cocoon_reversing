@@ -134,16 +134,8 @@ extern char name_800C18F4[];
 extern void DrawLargeTextBox_8002AF10();
 extern void sub_8002F1C8();
 
-typedef struct MenuRc
-{
-    char pad_0[8];
-    short x8;
-    short xA;
-    short xC;
-    short xE;
-} MenuRc;
 extern int name_800AD288();
-extern MenuRc* name_80014390();
+extern UnitStatus* name_80014390();
 
 extern int sub_80034140();
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
@@ -242,16 +234,6 @@ extern void sub_800BD6C8();
 
 INCLUDE_OVERLAY_ASM(menu, dword_800B66C0);
 
-// status block of Levant (levantStatus_8008BD38) or of a minion (GetMinionStatus_800107A0); starts with an EntityStatus
-typedef struct MenuStatus
-{
-    int f0;
-    unsigned int exp_4;
-    char pad_8[0x3C];
-    unsigned char rank_44; // sub_800121A8 -> GetRankName_8002FCD8
-    char pad_45[3];
-} MenuStatus;
-extern MenuStatus levantStatus_8008BD38;
 typedef struct MenuMain
 {
     int f0;
@@ -266,8 +248,8 @@ typedef struct MenuMain
     int a5C[4];
     unsigned int a6C[4];
     int a7C[4];
-    MenuStatus st_8C[4];
-    MenuStatus st_1AC[4];
+    UnitStatus st_8C[4];
+    UnitStatus st_1AC[4];
     unsigned int a2CC[4];
     int i2DC;
 } MenuMain;
@@ -279,7 +261,7 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
     EventEntry* t = AllocEventEntry_80043AF8(n);
     MenuMain* c;
     short i;
-    MenuStatus* p;
+    UnitStatus* p;
     if (t)
     {
         LoadUiTiy_8002BF74();
@@ -302,12 +284,12 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
             if (name_800B1238[i].a == 7)
                 continue;
             if (name_800B1238[i].idx_6)
-                p = (MenuStatus*)GetMinionStatus_800107A0(3, name_800B1238[i].idx_6 - 1);
+                p = GetMinionStatus_800107A0(3, name_800B1238[i].idx_6 - 1);
             else
                 p = &levantStatus_8008BD38;
             if (name_800B1238[i].idx_6 || name_800B1238[i].a == 5 || name_800B1238[i].a == 0x1A)
                 ok = 1;
-            if (ok && !(p->f0 & 0x400))
+            if (ok && !(p->status_0 & 0x400))
                 sub_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
         }
         c->s58 = 0;
@@ -319,7 +301,7 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
         c->a2CC[0] = p->exp_4;
         for (i = 1; i < c->count_44; i++)
         {
-            p = (MenuStatus*)GetMinionStatus_800107A0(3, i - 1);
+            p = GetMinionStatus_800107A0(3, i - 1);
             MemCopy_800403E8((unsigned int*)&c->st_8C[i], (unsigned int*)p, 0x48);
             MemCopy_800403E8((unsigned int*)&c->st_1AC[i], (unsigned int*)p, 0x48);
             c->a2CC[i] = p->exp_4;
@@ -715,7 +697,7 @@ void sub_800BC9E8(MenuMain* p)
                         if (s == 0)
                         {
                             sv = &saveData_8008B570;
-                            if (sub_800BBF10(p->st_1AC[0].rank_44, sv->level_80C))
+                            if (sub_800BBF10(p->st_1AC[0].level_44, sv->levantStatus_7C8.level_44))
                                 p->f0 |= 0x20;
                             else
                                 p->f0 |= 2;
@@ -773,7 +755,7 @@ void sub_800BCB98(MenuMain* c, int b)
     DrawUiTiySprt_8002C06C(pos, 0x11, 0xE);
     pos[0] = 0x81;
     pos[1] = 0x81;
-    DrawLargeText_8002FBD8(0, pos, saveData_8008B570.playerName_7D8, b);
+    DrawLargeText_8002FBD8(0, pos, saveData_8008B570.levantStatus_7C8.name_10, b);
     r.x = 0x5C;
     r.y = 0x7B;
     r.w = 0x89;
@@ -782,8 +764,8 @@ void sub_800BCB98(MenuMain* c, int b)
     col2.c_3 = 1;
     col2.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
-    ra = sub_800121A8(c->st_1AC[0].rank_44);
-    rb = sub_800121A8(levantStatus_8008BD38.rank_44);
+    ra = sub_800121A8(c->st_1AC[0].level_44);
+    rb = sub_800121A8(levantStatus_8008BD38.level_44);
     if (ra < rb)
     {
         if (c->i48)
@@ -855,7 +837,7 @@ void sub_800BCF74(short a)
     int x = a - 1;
     int r17 = (int)sub_80010824(3, x);
     Minion* r16 = GetMinion_80010598(3, x);
-    sub_8001AEB8(name_800338B0(r16), r16->status_84, r17);
+    sub_8001AEB8(name_800338B0(r16), &r16->status_84, r17);
 }
 
 typedef struct MenuSlot
@@ -1603,13 +1585,13 @@ extern void sub_8002DB48();
 void sub_800BEBFC(MenuCtx* o, int a)
 {
     Minion* m = 0;
-    char* m2 = 0;
+    UnitStatus* m2 = 0;
     short s[2];
     short x = (unsigned short)o->arr_2A[1] + (unsigned short)o->arr_46[3];
     if (x < o->f8 - 1)
     {
         m = GetMinion_80010598(3, x);
-        m2 = m->status_84;
+        m2 = &m->status_84;
     }
     s[0] = 0x33;
     s[1] = 0x3E;
@@ -1705,7 +1687,7 @@ void sub_800BEFAC(MenuCtx* a, short b)
     {
         do
         {
-            MenuRc* r18 = name_80014390((unsigned char)(j + 1));
+            UnitStatus* r18 = name_80014390((unsigned char)(j + 1));
             short r17;
             int r16;
             if ((*(int*)a & 0xFFFF0002) == 2)
@@ -1759,7 +1741,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
     int t50[2];
     short pos2[2];
     int s = sub_800C0990(a, 1);
-    MenuStatus* lv;
+    UnitStatus* lv;
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     lv = &levantStatus_8008BD38;
     pos[0] = 0xA;
@@ -1795,7 +1777,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
     DrawUiTiySprt_8002C06C(pos, 0xC2, b);
     pos2[0] = 0x2F;
     pos2[1] = 0x77;
-    DrawText_8003E91C(2, GetRankName_8002FCD8(sub_800121A8(lv->rank_44)), pos2, b);
+    DrawText_8003E91C(2, GetRankName_8002FCD8(sub_800121A8(lv->level_44)), pos2, b);
     DrawAnimatedWindow_8002BEC8(t50, name_800C18DC, (short)s, b, 0, 0);
     pos[0] = 0x9A;
     pos[1] = 0x75;
@@ -1824,7 +1806,7 @@ void sub_800BF3E0(MenuCtx* c)
 {
     MenuTmp tmp;
     int r17;
-    MenuRc* p;
+    UnitStatus* p;
     int s;
     switch (c->sel_2)
     {
@@ -2469,7 +2451,7 @@ void sub_800C0428(MenuCtx* c)
         int tmp[2];
         unsigned short u = 0;
         int a = 0;
-        MenuRc* r;
+        UnitStatus* r;
         if (c->sel_2 == 2)
         {
             u = c->arr_2A[5];
@@ -2523,11 +2505,11 @@ void sub_800C06E8(MenuCtx* c)
 {
     int found = 0;
     int sum = (unsigned short)c->arr_2A[7] + (unsigned short)c->arr_46[2];
-    char* m = (char*)GetMinion_80010598(3, c->arr_2A[1]);
+    Minion* m = GetMinion_80010598(3, c->arr_2A[1]);
     int is = c->sel_2 == 4;
     if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
     {
-        int r = name_8001AEC0(m + 0xF4, (short)sum);
+        int r = name_8001AEC0(&m->magicBits_F4, (short)sum);
         if (r < 0x1E)
         {
             DrawLargeTextBox_8002AF10(&name_800C20F8[r], found, 0xE);
@@ -2535,7 +2517,8 @@ void sub_800C06E8(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0)
-        sub_8002F1C8(m + 0x84, 0, 0, 0, name_800C18F4, 0xE, 0);
+        sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 0xE, 0);
+
 }
 
 extern char name_800C2660[];
@@ -2698,7 +2681,7 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     MenuTmp tmp;
     MenuQuad q;
     int r17;
-    MenuRc* r16;
+    UnitStatus* r16;
     unsigned short u = c->arr_2A[5];
     r17 = name_800AD288(c->arr_2A[3] + c->arr_46[0], 0);
     r16 = name_80014390(u & 0xFF);
@@ -2717,10 +2700,10 @@ void sub_800C0CA4(MenuCtx* c, int* out)
         sub_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
         out[0] = -tmp.d_10.x_1C;
         out[1] = -tmp.d_10.y_20;
-        v = r16->xA - r16->x8;
+        v = r16->maxHp_A - r16->hp_8;
         if (v < out[0])
             out[0] = v;
-        v = r16->xE - r16->xC;
+        v = r16->maxMp_E - r16->mp_C;
         if (v < out[1])
             out[1] = v;
     }

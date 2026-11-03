@@ -117,7 +117,8 @@ struct_20* sub_80019C28(unsigned int idx)
     return sub_800B3274(idx - 0x39);
 }
 // Matched
-int* sub_80019C70(int idx)
+MinionModelDesc* sub_80019C70(int idx)
+
 {
     return &dword_8007BD30[idx];
 }
@@ -1292,7 +1293,7 @@ void sub_8001C440(Model* a0, int idx, int key)
                     arg = dword_8007C750[q->arg_4].arg;
                     if (dword_8007C750[q->arg_4].arg == 3)
                     {
-                        arg = (char)saveData_8008B570.level_80C >> 2;
+                        arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
                         {
                             arg = 4;
@@ -1301,7 +1302,7 @@ void sub_8001C440(Model* a0, int idx, int key)
                     }
                     else if (dword_8007C750[q->arg_4].arg == 2)
                     {
-                        arg = (char)saveData_8008B570.level_80C >> 2;
+                        arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
                         {
                             arg = 4;

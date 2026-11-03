@@ -14,12 +14,12 @@
 extern void sub_800A6D30(int a);
 
 struct GameObj5_1;
-struct GameEnt_1;
+
 // AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the name_800ADEB8 state handlers)
 typedef struct GameAi
 {
     unsigned int* flags_0;     // the flags of its event entry (q[0] = the entry)
-    struct GameEnt_1* minion_4; // minion data (in the enemy slot)
+    UnitStats* minion_4; // minion data (in the enemy slot)
     Actor* actor_8;
     int state_c;
     int f10;
@@ -53,15 +53,7 @@ typedef struct GameSlot_1
     char data_8[0xe0];
 } GameSlot_1;
 
-// minion data (0x88 bytes, InitMinionData_8001900C)
-typedef struct GameEnt_1
-{
-    char pad_0[0x44];
-    unsigned char rank_44;
-    char pad_45[0x17];
-    int f5c; // species
-    char pad_60[0x28];
-} GameEnt_1;
+
 
 extern void sub_800A2D28(GameAi* p);
 
@@ -272,7 +264,7 @@ typedef struct GameSub_1
 } GameSub_1;
 
 
-extern void sub_80018EBC(Actor* a, int b);
+extern void sub_80018EBC(Actor* a, UnitStatus* b);
 
 extern void sub_80018E5C(Actor* a, int b);
 
@@ -319,7 +311,7 @@ typedef struct GameCtx_1
     int f48;
     int f4c[12];
     Actor* actors_7c[12];
-    GameEnt_1 ents_ac[12]; // the encounter's minions (minion data)
+    UnitStats ents_ac[12]; // the encounter's minions (minion data)
     int f70c[12];
     int f73c[12];
     int f76c;
@@ -854,7 +846,7 @@ extern G2Ctx* dword_8008B4CC;
 
 extern G2Ctx2* dword_8008B4A4;
 
-extern char levantStatus_8008BD38;
+
 
 
 extern int dword_8008BDA0;

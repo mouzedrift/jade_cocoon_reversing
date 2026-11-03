@@ -54,7 +54,7 @@ extern double sqrt(double);
 extern int Rand100_80013E30(void);
 #if 0
 // Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and n (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (c/n: call deleted), (int)dmg in the test, n = 100 hoisted, if/else and nested ternary for n, ra < n, n renamed to other locals
-void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, AttackResult* out)
+void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, AttackResult* out)
 {
     int crit0;
     int crit1;
@@ -102,7 +102,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
         hit = 100;
         break;
     }
-    if ((((signed char*)f1) + q->element_8)[0x20] < 0)
+    if ((signed char)f1->field_20[q->element_8] < 0)
     {
         def = 1;
         eva = def;
@@ -122,7 +122,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
             {
                 d = atk * 100 / def;
                 d = sqrt(d);
-                dmg = (double)(atk * (((unsigned char*)f0)[0x44] + 3)) * d / 10.0 * q->power_2 / 100.0 / 20.0;
+                dmg = (double)(atk * (f0->level_44 + 3)) * d / 10.0 * q->power_2 / 100.0 / 20.0;
                 if (b < crit0 - crit1 + q->hit_7 && q->kind_9 == 0)
                 {
                     out->kind_0 = 4;
@@ -130,10 +130,10 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
                 }
                 if (q->element_8 < 4)
                 {
-                    d = sqrt(sqrt((((unsigned char*)f0) + q->element_8)[0x3E] * 1250));
+                    d = sqrt(sqrt(f0->element_3E[q->element_8] * 1250));
                     dmg = dmg * (d / 10.0);
                 }
-                dmg = dmg * (((signed char*)f1) + q->element_8)[0x20];
+                dmg = dmg * (signed char)f1->field_20[q->element_8];
                 dmg = dmg / 32.0;
                 v = dmg;
                 v = dmg;
@@ -155,9 +155,9 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
                 out->field_1C = v;
                 if (q->element_8 == 8 && v > 0)
                 {
-                    if (sub_800334D8((Minion*)f1) < v)
+                    if (sub_800334D8(f1) < v)
                     {
-                        v = sub_800334D8((Minion*)f1);
+                        v = sub_800334D8(f1);
                     }
                     out->field_14 = -v;
                 }
@@ -169,19 +169,19 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
                 out->kind_0 = 2;
                 if (q->element_8 == 8 && v > 0)
                 {
-                    if (sub_800334F0((Minion*)f1) < v)
+                    if (sub_800334F0(f1) < v)
                     {
-                        v = sub_800334F0((Minion*)f1);
+                        v = sub_800334F0(f1);
                     }
                     out->field_18 = -v;
                 }
             }
             else if (q->c_B == 3)
             {
-                c = (((signed char*)f1) + q->element_8)[0x20];
+                c = (signed char)f1->field_20[q->element_8];
                 if (rand() % 32 < c)
                 {
-                    out->field_1C = sub_800334D8((Minion*)f1) - 1;
+                    out->field_1C = sub_800334D8(f1) - 1;
                     out->kind_0 = 4;
                     out->flags_4 |= 2;
                 }
@@ -219,7 +219,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
             }
             else
             {
-                n = (v * (((signed char*)f1) + q->element_8)[0x20]) ? v * (((signed char*)f1) + q->element_8)[0x20] / 32 : 0;
+                n = (v * (signed char)f1->field_20[q->element_8]) ? v * (signed char)f1->field_20[q->element_8] / 32 : 0;
             }
             if (n > ra)
             {
@@ -248,7 +248,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
         for (i = 0; i < 3; i++)
         {
             int m = 1 << (i + 11);
-            if (f1[0] & m)
+            if (f1->status_0 & m)
             {
                 break;
             }
@@ -277,7 +277,7 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
     }
     if (out->field_8 & 0x400)
     {
-        out->field_1C = sub_800334D8((Minion*)f1);
+        out->field_1C = sub_800334D8(f1);
         out->kind_0 = 1;
     }
     if (sub_80033548(f1, 2))
@@ -287,9 +287,9 @@ void sub_80013374(AttackDesc* q, int* f0, int* f1, int* r0, int* r1, int* p, Att
 }
 #endif
 INCLUDE_ASM(sub_80013374);
-extern void sub_80012BB0(int a0, int a1, int* p, int a3);
+extern void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, int a3);
 // Matched
-void sub_80013C28(int a0, int a1, int* p, int a3)
+void sub_80013C28(UnitStatus* a0, UnitStatus* a1, int* p, int a3)
 {
     int r;
     if (p[0] == 4)

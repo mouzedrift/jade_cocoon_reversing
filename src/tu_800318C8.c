@@ -26,7 +26,7 @@ struct_12* sub_800318C8(int idx)
 int sub_800318E4(unsigned int idx, int nth)
 {
     Minion* m = GetMinion_80010598(3, nth - 1);
-    if (m && sub_80031954(m->field_DE, idx))
+    if (m && sub_80031954(&m->skills_DE, idx))
     {
         if (idx < 0xff)
         {

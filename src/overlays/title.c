@@ -112,9 +112,9 @@ void sub_800A0A70(TitleTask* t)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
-            EncodeName_8003F7C8(&dword_800A2718, saveData_8008B570.playerName_7D8);
+            EncodeName_8003F7C8(&dword_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
         }
-        StartNameEntry_800B6E4C(saveData_8008B570.playerName_7D8, 0);
+        StartNameEntry_800B6E4C(saveData_8008B570.levantStatus_7C8.name_10, 0);
         t->next_8 = sub_800A0AE8;
     }
 }
@@ -863,18 +863,7 @@ extern struct_v3 dword_800B069C; // Levant's start position
 extern int dword_80091C94;
 extern char byte_800A08B4[];
 extern SVECTOR dword_800B06A8; // Levant's start rotation
-// Levant's 0x48-byte status block (saveData_8008B570.levantStatus_7C8 ..; SaveData has it as separate fields, so the
-// block copies go through this type)
-typedef struct
-{
-    int status_0; // EntityStatus
-    char pad_4[0x18];
-    unsigned char f1C;
-    unsigned char f1D;
-    unsigned char f1E;
-    char pad_1F[0x29];
-} Blk72_;
-extern Blk72_ dword_800A2730;
+extern UnitStatus dword_800A2730; // Levant's initial status block
 
 extern int dword_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
@@ -934,9 +923,9 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 void sub_800A20F4(void)
 {
     SDECL;
-    s->weaponId_7E4 = 0;
-    s->armorId_7E5 = 0xFF;
-    s->otherId_7E6 = 0xFF;
+    s->levantStatus_7C8.field_1C[0] = 0;
+    s->levantStatus_7C8.field_1C[1] = 0xFF;
+    s->levantStatus_7C8.field_1C[2] = 0xFF;
 }
 
 // Matched
@@ -955,7 +944,7 @@ void sub_800A211C(void)
     s->chapter_2DC = 0;
     s->levant_7A8.pos = dword_800B069C;
     s->levant_7A8.rot = dword_800B06A8;
-    *(Blk72_*)&s->levantStatus_7C8 = dword_800A2730;
+    s->levantStatus_7C8 = dword_800A2730;
     saveData_8008B570.field_810 = -2;
     sub_800A2358();
     sub_800A20F4();
@@ -977,7 +966,7 @@ void sub_800A223C(void)
 {
     {
         SDECL;
-        *(Blk72_*)&s->levantStatus_7C8 = dword_800A2730;
+        s->levantStatus_7C8 = dword_800A2730;
     }
     {
         int i;
@@ -987,7 +976,7 @@ void sub_800A223C(void)
             s->allMinionsBitfields_814[i] = 0;
         }
     }
-    EncodeName_8003F7C8(byte_800A08B4, saveData_8008B570.playerName_7D8);
+    EncodeName_8003F7C8(byte_800A08B4, saveData_8008B570.levantStatus_7C8.name_10);
     sub_800A2358();
     sub_800A22FC();
     sub_800A2450();
@@ -1007,9 +996,9 @@ void sub_800A22FC(void)
     b->inventory_4[0][1].id = 0xE;
     b->inventory_4[0][0].id = 0;
     b->inventory_4[0][1].count = 1;
-    s->weaponId_7E4 = 1;
-    s->armorId_7E5 = 0;
-    s->otherId_7E6 = 0xFF;
+    s->levantStatus_7C8.field_1C[0] = 1;
+    s->levantStatus_7C8.field_1C[1] = 0;
+    s->levantStatus_7C8.field_1C[2] = 0xFF;
     if ((unsigned int)b->emptyCocoons_284 < 10)
     {
         s->inv_24.emptyCocoons_284 = 10;

@@ -1528,38 +1528,38 @@ void nullsub_2(void)
 {
 }
 // Matched
-void FillHpMp_80011C0C(EntityStatus* a, EntityStatus* b)
+void FillHpMp_80011C0C(UnitStatus* a, UnitStatus* b)
 {
     a->hp_8 = a->maxHp_A = b->maxHp_A;
     a->mp_C = a->maxMp_E = b->maxMp_E;
 }
 // Matched
-void ClearStatus_80011C30(EntityStatus* p)
+void ClearStatus_80011C30(UnitStatus* p)
 {
     p->status_0 &= 0x400;
 }
-void RecoverQuarterHpMp_80011C44(EntityStatus* p)
+void RecoverQuarterHpMp_80011C44(UnitStatus* p)
 {
     int v = p->status_0 & 0x400;
     p->status_0 = v;
     if (v == 0)
     {
-        p->hp_8 = ((short)p->hp_8 + (short)p->maxHp_A / 4 > (short)p->maxHp_A) ? p->maxHp_A : p->hp_8 + (short)p->maxHp_A / 4;
-        p->mp_C = ((short)p->mp_C + (short)p->maxMp_E / 4 > (short)p->maxMp_E) ? p->maxMp_E : p->mp_C + (short)p->maxMp_E / 4;
+        p->hp_8 = (p->hp_8 + p->maxHp_A / 4 > p->maxHp_A) ? p->maxHp_A : p->hp_8 + p->maxHp_A / 4;
+        p->mp_C = (p->mp_C + p->maxMp_E / 4 > p->maxMp_E) ? p->maxMp_E : p->mp_C + p->maxMp_E / 4;
     }
 }
 // Matched
-void Heal_80011CD0(EntityStatus* p)
+void Heal_80011CD0(UnitStatus* p)
 {
     p->status_0 = 0;
     FillHpMp_80011C0C(p, p);
 }
 // Matched
-void ReviveOneHp_80011CF4(EntityStatus* p)
+void ReviveOneHp_80011CF4(UnitStatus* p)
 {
-    p->pad_4 = 0;
+    p->exp_4 = 0;
     p->status_0 = 0;
-    p->hp_8 = ((short)p->hp_8 + 1 > (short)p->maxHp_A) ? p->maxHp_A : p->hp_8 + 1;
+    p->hp_8 = (p->hp_8 + 1 > p->maxHp_A) ? p->maxHp_A : p->hp_8 + 1;
 }
 typedef struct
 {
@@ -1579,25 +1579,17 @@ int sub_80011D28(int a0)
     }
     return 9;
 }
-int sub_80011D98(Minion* m, int arg1);
+int sub_80011D98(UnitStatus* m, int arg1);
 // Matched
-void sub_80011D78(void* arg0)
+void sub_80011D78(UnitStatus* arg0)
 {
     sub_80011D98(arg0, 1);
 }
 extern int sub_80011D28(int a0);
 extern int sub_800142B8(unsigned char* p);
 extern int sub_80014308(unsigned char* p);
-typedef struct
-{
-    char pad_0[0x2C];
-    unsigned char field_2C[6];
-    unsigned char field_32[6];
-    unsigned char field_38[6];
-} MinionGrowth;
-#define MINION_FIELD_4(m) (*(unsigned int*)&(m)->pad_2[1])
 // Matched
-int sub_80011D98(Minion* m, int arg1)
+int sub_80011D98(UnitStatus* m, int arg1)
 {
     unsigned int acc[6];
     unsigned char kind[6];
@@ -1618,21 +1610,21 @@ int sub_80011D98(Minion* m, int arg1)
     n = 0;
     for (i = 0; i < 6; i++)
     {
-        kind[i] = sub_80011D28(((MinionGrowth*)m)->field_32[i]);
+        kind[i] = sub_80011D28(m->base_32[i]);
     }
-    levels = MINION_FIELD_4(m) >> 26;
+    levels = m->exp_4 >> 26;
     for (j = 0; j < 6; j++)
     {
-        acc[j] = ((MinionGrowth*)m)->field_38[j] * 10;
+        acc[j] = m->frac_38[j] * 10;
     }
-    while (MINION_FIELD_4(m) >> 26)
+    while (m->exp_4 >> 26)
     {
         add = 0;
         if (arg1 == 1)
         {
             add = 500;
         }
-        MINION_FIELD_4(m) += 0xFC000000;
+        m->exp_4 += 0xFC000000;
         for (i = 0; i < 6; i++)
         {
             if (kind[i] != 21)
@@ -1643,12 +1635,12 @@ int sub_80011D98(Minion* m, int arg1)
         }
         n++;
     }
-    m->field_44 += n;
-    if (m->pad_45[0] == 0)
+    m->level_44 += n;
+    if (m->field_45 == 0)
     {
         for (k = 0; k < 6; k++)
         {
-            v = m->field_2C[k] + acc[k] / 1000;
+            v = m->stats_2C[k] + acc[k] / 1000;
             r = (acc[k] % 1000) / 10;
             if (v >= 0)
             {
@@ -1657,11 +1649,11 @@ int sub_80011D98(Minion* m, int arg1)
                 {
                     t = 100;
                 }
-                m->field_2C[k] = t;
+                m->stats_2C[k] = t;
             }
             else
             {
-                m->field_2C[k] = 0;
+                m->stats_2C[k] = 0;
             }
             if (r >= 0)
             {
@@ -1670,19 +1662,19 @@ int sub_80011D98(Minion* m, int arg1)
                 {
                     t = 100;
                 }
-                ((MinionGrowth*)m)->field_38[k] = t;
+                m->frac_38[k] = t;
             }
             else
             {
-                ((MinionGrowth*)m)->field_38[k] = 0;
+                m->frac_38[k] = 0;
             }
         }
-        a = sub_80012140(m->field_44, m);
-        b = sub_80012178(m->field_44, m);
-        oldA = m->field_A;
-        oldE = m->field_E;
-        a = a * (sub_80014308(m->field_2C) * 40 + 6000) / 10000;
-        b = b * (sub_800142B8(m->field_2C) * 40 + 6000) / 10000;
+        a = sub_80012140(m->level_44, m);
+        b = sub_80012178(m->level_44, m);
+        oldA = m->maxHp_A;
+        oldE = m->maxMp_E;
+        a = a * (sub_80014308(m->stats_2C) * 40 + 6000) / 10000;
+        b = b * (sub_800142B8(m->stats_2C) * 40 + 6000) / 10000;
         if (a >= 0)
         {
             t = a;
@@ -1690,11 +1682,11 @@ int sub_80011D98(Minion* m, int arg1)
             {
                 t = 999;
             }
-            m->field_A = t;
+            m->maxHp_A = t;
         }
         else
         {
-            m->field_A = 0;
+            m->maxHp_A = 0;
         }
         if (b >= 0)
         {
@@ -1703,19 +1695,19 @@ int sub_80011D98(Minion* m, int arg1)
             {
                 t = 999;
             }
-            m->field_E = t;
+            m->maxMp_E = t;
         }
         else
         {
-            m->field_E = 0;
+            m->maxMp_E = 0;
         }
-        if (sub_80033548((int*)m, 0x400) == 0)
+        if (sub_80033548(m, 0x400) == 0)
         {
-            m->field_8 += a - oldA;
-            m->field_C += b - oldE;
+            m->hp_8 += a - oldA;
+            m->mp_C += b - oldE;
         }
-        m->field_8 = (m->field_8 < 0) ? 0 : (m->field_8 > 999) ? 999 : m->field_8;
-        m->field_C = (m->field_C < 0) ? 0 : (m->field_C > 999) ? 999 : m->field_C;
+        m->hp_8 = (m->hp_8 < 0) ? 0 : (m->hp_8 > 999) ? 999 : m->hp_8;
+        m->mp_C = (m->mp_C < 0) ? 0 : (m->mp_C > 999) ? 999 : m->mp_C;
     }
     return levels;
 }
@@ -1742,7 +1734,7 @@ int sub_80012178(int arg0, void* unused)
     return (arg0 * 3) + 20;
 }
 // Matched
-void sub_80012188(void* p)
+void sub_80012188(UnitStatus* p)
 {
     sub_80011D98(p, 0);
 }
@@ -1786,7 +1778,7 @@ int sub_80012204(int a, int b, int c, int d)
 // Matched
 void sub_800122A0(int a0, int a1, int* a2)
 {
-    UnitStats* p = (UnitStats*)sub_80014390(a0 & 0xFF);
+    UnitStatus* p = sub_80014390(a0 & 0xFF);
     int v = *a2;
     if (v != 0)
     {
@@ -1857,30 +1849,29 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     return totalMinions;
 }
 // Matched
-void sub_80012614(int a0, int sel, int delta, int mask)
+void sub_80012614(UnitStatus* p, int sel, int delta, int mask)
 {
     int v;
     int r;
-    UnitStats* p = (UnitStats*)a0;
     unsigned short* sp = 0;
     unsigned char* bp = 0;
     int max = 0;
     switch (sel)
     {
     case 0:
-        max = *(short*)&p->maxHp_A;
-        sp = &p->hp_8;
+        max = p->maxHp_A;
+        sp = (unsigned short*)&p->hp_8;
         break;
     case 1:
-        sp = &p->maxHp_A;
+        sp = (unsigned short*)&p->maxHp_A;
         max = 999;
         break;
     case 2:
-        max = *(short*)&p->maxMp_E;
-        sp = &p->mp_C;
+        max = p->maxMp_E;
+        sp = (unsigned short*)&p->mp_C;
         break;
     case 3:
-        sp = &p->maxMp_E;
+        sp = (unsigned short*)&p->maxMp_E;
         max = 999;
         break;
     case 4:
@@ -1909,7 +1900,8 @@ void sub_80012614(int a0, int sel, int delta, int mask)
         max = 99;
         break;
     case 16:
-        sub_80012794((struct_obj_B*)p, mask);
+        sub_80012794(p, mask);
+
         break;
     case 17:
         p->status_0 &= ~mask;

@@ -86,7 +86,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
     CVECTOR color;
     unsigned char buf[4];
     struct_D7D0 s;
-    char* name;
+    unsigned char* name;
     Pos16* pp;
     short w;
     int i;
@@ -103,15 +103,15 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         rect.h = 0xF;
         if (i == 0)
         {
-            name = m->name_94;
+            name = m->status_84.name_10;
         }
         else
         {
-            name = sub_80033830((char*)m, i - 1);
+            name = sub_80033830(m, i - 1);
         }
         pos.x = off_80082DCC[i]->x + base->x + 3;
         pos.y = off_80082DCC[i]->y + base->y + 4;
-        sub_8002FAA0(0, (unsigned short*)pp, (unsigned char*)name, ot);
+        sub_8002FAA0(0, (unsigned short*)pp, name, ot);
         pos.x = (unsigned short)(base->x + 4) + off_80082DCC[i]->x;
         pos.y = (unsigned short)(base->y + 0x10) + off_80082DCC[i]->y;
         if (i == 0)
@@ -121,7 +121,8 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         }
         else
         {
-            w = sub_80033848((unsigned char*)m, i - 1);
+            w = sub_80033848(m, i - 1);
+
         }
         sub_8002B1B0(w, (int)pp, ot);
         s.field_8 = 0;

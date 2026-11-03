@@ -60,30 +60,30 @@ int Rand100_80013E30(void)
     return rand() % 100;
 }
 // Matched
-void sub_80013E80(void* p, int arg)
+void sub_80013E80(unsigned char* p, int arg)
 {
     CalcEquippedStats_80033624(p, sub_80014390(arg & 0xFF));
 }
 // Matched
-void sub_80013EB4(void* p, int a1, int a2)
+void sub_80013EB4(unsigned char* p, int a1, int a2)
 {
-    CalcEquippedStats_80033624(p, (int)GetMinionStatus_800107A0(a2));
+    CalcEquippedStats_80033624(p, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
 }
 int sub_80014200(unsigned char* p);
 // Matched
-void sub_80013EE8(int* out, unsigned char* m, unsigned char* x, int mode)
+void sub_80013EE8(int* out, UnitStatus* m, unsigned char* x, int mode)
 {
     int a;
     int b;
     if (mode == 1)
     {
-        out[0] = m[0x2C];
-        out[2] = m[0x2E];
+        out[0] = m->stats_2C[0];
+        out[2] = m->stats_2C[2];
         out[4] = sub_80014114(10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
         out[8] = 0;
-        a = m[0x2D] * (m[0x2D] - 20) / 7;
-        b = m[0x2F] * (m[0x2F] - 20) / 7;
+        a = m->stats_2C[1] * (m->stats_2C[1] - 20) / 7;
+        b = m->stats_2C[3] * (m->stats_2C[3] - 20) / 7;
         out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
         out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
         out[5] = sub_8001413C(10);
@@ -92,16 +92,17 @@ void sub_80013EE8(int* out, unsigned char* m, unsigned char* x, int mode)
     }
     else
     {
-        out[0] = m[0x2C];
-        out[2] = m[0x2E];
-        out[4] = sub_80014114(sub_80014200(m + 0x2C) / 10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m[0x37] / 10));
+        out[0] = m->stats_2C[0];
+        out[2] = m->stats_2C[2];
+        out[4] = sub_80014114(sub_80014200(m->stats_2C) / 10) + x[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
         out[8] = 0;
-        out[1] = m[0x2D];
-        out[3] = m[0x2F];
-        out[5] = sub_8001413C(sub_80014200(m + 0x2C) / 10);
+        out[1] = m->stats_2C[1];
+        out[3] = m->stats_2C[3];
+        out[5] = sub_8001413C(sub_80014200(m->stats_2C) / 10);
         out[7] = 0;
-        out[9] = sub_80014200(m + 0x2C);
+        out[9] = sub_80014200(m->stats_2C);
+
     }
 }
 // Matched
@@ -213,10 +214,9 @@ int LowestSetBit_80014358(unsigned int mask)
 }
 #if 0
 // Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C / sub_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
-extern int sub_800A10C0(int a0);
-int sub_80014390(int a0)
+UnitStatus* sub_80014390(int a0)
 {
-    int r = 0;
+    UnitStatus* r = 0;
     unsigned int v = a0 & 0xFF;
     unsigned int w;
     if (v >= 8)
@@ -237,21 +237,21 @@ int sub_80014390(int a0)
     else if (v != 0)
     {
         w = a0 - 1;
-        r = (int)GetMinionStatus_800107A0(3, w & 0xFF);
+        r = GetMinionStatus_800107A0(3, w & 0xFF);
     }
     else
     {
-        r = (int)&saveData_8008B570.levantStatus_7C8;
+        r = &levantStatus_8008BD38; // == saveData_8008B570.levantStatus_7C8
     }
     return r;
 }
 #endif
 INCLUDE_ASM(sub_80014390);
 // Matched
-int sub_80014444(int a0)
+Minion* sub_80014444(int a0)
 {
     unsigned int v = a0 & 0xFF;
-    int r = 0;
+    Minion* r = 0;
     if (v >= 8)
     {
         v = a0 - 8;
@@ -260,15 +260,15 @@ int sub_80014444(int a0)
     else if (v != 0)
     {
         v = a0 - 1;
-        r = (int)GetMinion_80010598(3, v & 0xFF);
+        r = GetMinion_80010598(3, v & 0xFF);
     }
     return r;
 }
 #if 0
 // Not matched (2 words): with an int a0 the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1, 11 words); u_char a0 (here) gets them right but masks a0 on entry (andi instead of move, a0 - 4 taken from the masked copy). a0 = 1 << a0 / a0 = flags & m also fix the registers but write $s0; tried K&R int/u_char, a0 copies, range test a0 >= 4 && a0 < 7, early returns, if/else r = 0; permuter 1500: best is this
-int sub_8001449C(unsigned char a0)
+UnitStats* sub_8001449C(unsigned char a0)
 {
-    int r = 0;
+    UnitStats* r = 0;
     int v = a0 - 4;
     if ((unsigned char)v < 3)
     {

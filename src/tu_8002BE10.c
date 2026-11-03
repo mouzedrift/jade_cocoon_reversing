@@ -427,7 +427,7 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
     }
     for (i = 0; i < 4; i++)
     {
-        idx = FindNthMagicBit_8001AEC0(a0->field_C_minion->field_F4, i + a0->field_2);
+        idx = FindNthMagicBit_8001AEC0(&a0->field_C_minion->magicBits_F4, i + a0->field_2);
         if (idx < 0x1E)
         {
             v17 = sub_8001AF3C(idx);
@@ -466,7 +466,7 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
     s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
-    n = CountMagicBits_8001AE54(a0->field_C_minion->field_F4);
+    n = CountMagicBits_8001AE54(&a0->field_C_minion->magicBits_F4);
     if (n < 4)
     {
         n = 4;
