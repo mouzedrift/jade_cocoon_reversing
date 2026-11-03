@@ -227,8 +227,73 @@ void sub_80017CE4(EventEntry* e, void* buf)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-INCLUDE_ASM(sub_80017E30);
-INCLUDE_ASM(sub_80017FF8);
+extern int dword_800795D4;
+void sub_80017FF8(EventEntry* e, void* buf);
+// Matched
+void sub_80017E30(EventEntry* e, void* buf)
+{
+    int* a1 = (int*)buf;
+    int* t = (int*)a1[0x88 / 4];
+    int pos[3];
+    int v[3];
+    int* vp;
+    if ((a1[0x30 / 4] -= 0x80) <= 0)
+    {
+        a1[0] = 0x1000;
+        a1[0x30 / 4] = 0;
+        e->cb_8 = sub_80017FF8;
+    }
+    sub_8003A6C4(0x1000 - a1[0x30 / 4], t[1], t[1] + 0x54, a1[0x94 / 4]);
+    if (a1[0xA0 / 4])
+    {
+        vp = v;
+        v[0] = ((int*)a1[0xA0 / 4])[0] * 3 / 2;
+        v[1] = ((int*)a1[0xA0 / 4])[1] * 3 / 2;
+        v[2] = ((int*)a1[0xA0 / 4])[2] * 3 / 2;
+    }
+    else
+    {
+        vp = 0;
+    }
+    pos[0] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 0] + ((int*)a1[0x1C / 4])[0];
+    pos[1] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 1] + ((int*)a1[0x1C / 4])[1];
+    pos[2] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 2] + ((int*)a1[0x1C / 4])[2];
+    sub_8004D1EC(t[1], (int)pOT_8008D690, (int)pos, (int)&dword_800795D4, (int)stru_8008D534, (a1[0x30 / 4] << 16) | 0xB0, (int)vp);
+}
+// Matched
+void sub_80017FF8(EventEntry* e, void* buf)
+{
+    int* a1 = (int*)buf;
+    int* t = (int*)a1[0x88 / 4];
+    int pos[3];
+    int v[3];
+    int* vp;
+    if ((a1[0] -= 0x80) > 0)
+    {
+        sub_8003A6C4(0x1000 - a1[0x30 / 4], t[1], t[1] + 0x54, a1[0x94 / 4]);
+        if (a1[0xA0 / 4])
+        {
+            vp = v;
+            v[0] = ((int*)a1[0xA0 / 4])[0] * 3 / 2;
+            v[1] = ((int*)a1[0xA0 / 4])[1] * 3 / 2;
+            v[2] = ((int*)a1[0xA0 / 4])[2] * 3 / 2;
+        }
+        else
+        {
+            vp = 0;
+        }
+        pos[0] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 0] + ((int*)a1[0x1C / 4])[0];
+        pos[1] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 1] + ((int*)a1[0x1C / 4])[1];
+        pos[2] = ((int*)a1[0x20 / 4])[a1[0x98 / 4] * 3 + 2] + ((int*)a1[0x1C / 4])[2];
+        sub_8004D1EC(t[1], (int)pOT_8008D690, (int)pos, (int)&dword_800795D4, (int)stru_8008D534, (a1[0x30 / 4] << 16) | 0xB0, (int)vp);
+    }
+    else
+    {
+        e->flags = (e->flags & ~1) | 0x8000;
+        sub_80021804(a1[0x94 / 4], 1);
+        free3_8003FC6C((void*)a1[0x94 / 4]);
+    }
+}
 // Matched
 int sub_800181E8(void)
 {
