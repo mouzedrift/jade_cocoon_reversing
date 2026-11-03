@@ -139,16 +139,16 @@ void sub_800178C0(int* a0, int* a1)
     sub_8004D1EC(t[1], (int)pOT_8008D690, (int)(a1 + 0x44 / 4), (int)(a1 + 0x80 / 4), (int)stru_8008D534, 0x10, (int)v);
 }
 extern EventNode* dword_8008B4A8;
-extern void sub_80017B10(unsigned int* a0, int* a1);
+extern void MdecEffectTask_80017B10(unsigned int* a0, int* a1);
 // Matched
-void sub_80017A6C(int a0, int a1)
+void SpawnMdecEffect_80017A6C(int a0, int a1)
 {
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4A8);
     int* q;
     if (e)
     {
         q = (int*)e->buffer;
-        q[0x8C / 4] = (int)dword_80091C00;
+        q[0x8C / 4] = (int)mdecEffectSchedule_80091C00;
         q[0] = 0;
         if (a1 > 0)
         {
@@ -158,21 +158,21 @@ void sub_80017A6C(int a0, int a1)
         {
             q[1] = sub_800181E8();
         }
-        e->cb_8 = (EventEntryFn)sub_80017B10;
+        e->cb_8 = (EventEntryFn)MdecEffectTask_80017B10;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         AllocMdecVLCBufferInFileBuffer_8004188C();
         DecDCTReset(0);
     }
 }
 // Matched
-void sub_80017B10(unsigned int* a0, int* a1)
+void MdecEffectTask_80017B10(unsigned int* a0, int* a1)
 {
     int* t = (int*)a1[0x8C / 4];
-    if (++a1[0] < a1[1] && word_8008D780 == 0)
+    if (++a1[0] < a1[1] && effectOutcomeFlag_8008D780 == 0)
     {
         if (!(unknownFlags_8008D678 & 0x800))
         {
-            DecodeMdec_80041920(((unsigned long**)t[1])[a1[0] % t[0]], dword_8008D42C, 2);
+            DecodeMdec_80041920(((unsigned long**)t[1])[a1[0] % t[0]], mdecEffectVlcBuffer_8008D42C, 2);
             unknownFlags_8008D678 |= 0x800;
         }
     }
@@ -240,7 +240,7 @@ INCLUDE_ASM(sub_80017FF8);
 // Matched
 int sub_800181E8(void)
 {
-    return *dword_80091C00;
+    return *mdecEffectSchedule_80091C00;
 }
 // Matched
 // Matched

@@ -127,7 +127,7 @@ void sub_800359F8(struct_obj_A* p)
     }
 }
 extern EventNode* dword_8008D640;
-extern void sub_800300E0(int a, int b);
+extern void PlayMusic_800300E0(int a, int b);
 extern void sub_80035BD8(EventEntry* e, void* buf);
 // Matched
 EventEntry* sub_80035AC8(int* init)
@@ -167,7 +167,7 @@ EventEntry* sub_80035AC8(int* init)
         o[0x24 / 4] = 1;
         if ((unsigned int)o[0x25C / 4] < 4)
         {
-            sub_800300E0(1, 1);
+            PlayMusic_800300E0(1, 1);
         }
         e->cb_8 = sub_80035BD8;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;

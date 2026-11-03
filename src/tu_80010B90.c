@@ -1305,7 +1305,7 @@ int sub_80011B6C(void)
 // Matched
 void sub_80011B8C(void)
 {
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     unknownFlags_8008D678 |= 0x8000000;
     sub_8001C260();
 }

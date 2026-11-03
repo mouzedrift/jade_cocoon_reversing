@@ -102,7 +102,7 @@ extern int dword_800B9438;
 extern unsigned char dword_800B9368[];
 extern int dword_800B8CA4;
 extern int sub_800AD154(int);
-extern void sub_800300E0(int, int);
+extern void PlayMusic_800300E0(int, int);
 extern void sub_800B6E5C();
 extern int sub_800B81D0(MapPos*);
 extern int dword_800B9430;
@@ -175,7 +175,7 @@ void sub_800B6CB4(MapTask* t)
     {
         a = dword_800B9220[(short)word_800AEBF8[0]].f10;
     }
-    sub_800300E0(a, 1);
+    PlayMusic_800300E0(a, 1);
     dword_800B9434 = 0;
     sub_800B6D90(dword_800B9400, dword_800B9220[(short)word_800AEBF8[0]].f0);
     t->next_8 = sub_800B6E5C;
@@ -480,7 +480,7 @@ void sub_800B8338(MapPos* p)
     sub_8001C19C(0, 0x20);
     sub_800A6D30(1);
     dword_80091C94 = 1;
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 #endif
 INCLUDE_OVERLAY_ASM(map, sub_800B8338);
@@ -681,7 +681,7 @@ void sub_800B860C()
             sub_800A8DEC();
             sub_800A6D30(1);
             sub_8001C19C(0, 0x20);
-            dword_8008B540 = 1;
+            eventDispatchHalt_8008B540 = 1;
         }
         else
         {
@@ -736,7 +736,7 @@ void sub_800B8B5C()
         sv->f2DE = -5;
         sv->f2DC = *sel;
         sub_800A6D30(0);
-        dword_8008B540 = r;
+        eventDispatchHalt_8008B540 = r;
     }
     sub_8003D41C(1);
     a.x = 0x6E;

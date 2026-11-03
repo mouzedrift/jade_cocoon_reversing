@@ -224,7 +224,7 @@ extern void sub_800A6D30(int a);
 extern int sub_800272D0(void);
 extern int sub_8003D198(int a, int b, int c, int d);
 extern unsigned short padRepeat_800918CC;
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern void sub_800BB194();
 extern void sub_800BB1F4();
 extern unsigned int sub_800AD990(int a);
@@ -383,7 +383,7 @@ void sub_800BB298(WpnTask_wpnshop* t)
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
         sub_80027478(0x40, 0);
         sub_800A6D30(1);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
 }
 

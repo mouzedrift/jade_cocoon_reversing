@@ -290,7 +290,7 @@ extern void sub_800AC73C();
 extern void sub_80020814(void);
 extern void sub_80037720(void);
 extern void StopSoundSeqs_80030D68(char* s);
-extern void sub_800300E0(int a, int b);
+extern void PlayMusic_800300E0(int a, int b);
 extern void sub_800A1474();
 extern char dword_80091CE0[];
 extern int sub_8001DECC(void* a, int b, int c);
@@ -443,7 +443,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     *q = sub_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
     StopSoundSeqs_80030D68(dword_80091CE0);
-    sub_800300E0(0, 1);
+    PlayMusic_800300E0(0, 1);
 }
 
 // Matched
@@ -463,7 +463,7 @@ void sub_800A1474(GameTask_1* t, GameQ_1* q)
         *(int*)((char*)q + 8) = sub_800BA9E4();
         t->next_8 = sub_800BA254;
     }
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 
 // Matched
@@ -477,7 +477,7 @@ void sub_800A14E0(GameTask_1* t, GameQ_1* q)
         unknownFlags_8008D678 &= ~0x4000000;
         dword_800B1228 &= ~0x4000;
     }
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 
 void sub_800A1578(GameTask_1* t, int** q)
@@ -503,12 +503,12 @@ void sub_800A15FC(GameTask_1* t, GameQ_1* q)
     if (sub_800272D0() == 0)
     {
         sub_800A6D30(1);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
         t->next_8 = sub_800A167C;
         q->f4 = 2;
         dword_800B1228 &= ~0x4000;
     }
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 
 // Matched
@@ -2310,7 +2310,7 @@ void sub_800A68CC(GameTask_1* t, int* q)
         p--;
     }
     q[0xf] = CreateEventList_800435B4(dword_800B0DA4);
-    dword_8008B540 = 0;
+    eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
     t->next_8 = sub_800A6968;
 }
@@ -2327,14 +2327,14 @@ void sub_800A6968(GameTask_1* t, GameQ_1* q)
         do
         {
             sub_800A7450((GameNode_1*)*l->p0);
-            if (dword_8008B540)
+            if (eventDispatchHalt_8008B540)
             {
                 goto end;
             }
             l++;
         } while (l->p0 != 0);
     }
-    if (dword_8008B540)
+    if (eventDispatchHalt_8008B540)
     {
         goto end;
     }
@@ -2344,7 +2344,7 @@ void sub_800A6968(GameTask_1* t, GameQ_1* q)
     sub_800A6A48(t, q);
     t->next_8 = sub_800A6B00;
 end:
-    dword_8008B540 = 0;
+    eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
 }
 #endif
@@ -2363,7 +2363,7 @@ void sub_800A6B00(GameTask_1* t, GameQ_1* q)
         do
         {
             sub_800A7450((GameNode_1*)*l->p0);
-            if (dword_8008B540)
+            if (eventDispatchHalt_8008B540)
             {
                 goto end;
             }
@@ -2381,7 +2381,7 @@ void sub_800A6B00(GameTask_1* t, GameQ_1* q)
         sub_800A6A48(t, q);
     }
 end:
-    dword_8008B540 = 0;
+    eventDispatchHalt_8008B540 = 0;
     dword_800B0698 = 0;
 }
 #endif
@@ -2478,7 +2478,7 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
             sub_8001C224();
         else
             sub_8001C290();
-        dword_8008B540 = r->f10;
+        eventDispatchHalt_8008B540 = r->f10;
     }
     else
     {
@@ -2489,7 +2489,7 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
             sub_800A6D30(0xb);
             t->next_8 = sub_800A70F8;
         }
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
 }
 
@@ -2556,7 +2556,7 @@ void sub_800A7450(GameNode_1* n)
     int cnt = n->count_c;
     for (i = 0; i < cnt; i++)
     {
-        if (dword_8008B540)
+        if (eventDispatchHalt_8008B540)
         {
             break;
         }
@@ -3082,7 +3082,7 @@ extern void sub_8003B740();
 extern int name_800B0EC4[];
 extern int sub_800A6D50(int);
 extern void sub_800A6D30(int);
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern void sub_800A9414(void*, int, int);
 extern void sub_8002556C(int, int);
 extern void PoolDestroy_8003FF7C(void*);
@@ -3185,7 +3185,7 @@ void sub_800A80C4(int a)
 void sub_800A8108()
 {
     sub_800A6D30(sub_800A6D50(1));
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 
 void sub_800A8138()

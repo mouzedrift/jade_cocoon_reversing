@@ -65,14 +65,14 @@ void sub_80017208(int* a0, int* a1)
         a0[0] = (a0[0] & ~1) | 0x8000;
     }
 }
-void sub_80017A6C(int a0, int a1);
+void SpawnMdecEffect_80017A6C(int a0, int a1);
 void sub_800173A8(int* a0, int* a1);
 extern int sub_80020F00(void* p, int a, int b);
 // Matched
 void sub_80017290(char* a0, int a1)
 {
     EventEntry* e;
-    sub_80017A6C((int)a0, 0);
+    SpawnMdecEffect_80017A6C((int)a0, 0);
     e = AllocEventEntry_80043AF8(dword_8008B4A8);
     if (e)
     {

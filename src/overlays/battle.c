@@ -35,7 +35,7 @@ typedef struct BatMin_a
 } BatMin_a;
 
 extern int sub_800BC6CC();
-extern void sub_800313C8(int);
+extern void FadeOutSeqSlot_800313C8(int);
 
 extern EventNode* dword_8008D624;
 extern char dword_800C9D82;
@@ -216,7 +216,7 @@ extern EventNode* dword_8008D63C;
 extern EventNode* dword_8008D778;
 extern int dword_800C9D74;
 extern int dword_800C9D7C;
-extern short word_8008D780;
+extern short effectOutcomeFlag_8008D780;
 extern void sub_800BBA70();
 extern void sub_800BBE00();
 extern void sub_800BC05C();
@@ -319,7 +319,7 @@ void sub_800BA444(BatTask_a* t)
             t->next_8 = sub_800BA4F4;
             if (sub_800BC820(0x20000) == 0)
             {
-                sub_800313C8(0);
+                FadeOutSeqSlot_800313C8(0);
             }
             else
             {
@@ -361,7 +361,7 @@ void sub_800BA564(BatTask_a* t, BatObj_a* u)
             {
                 if (sub_800BC820(0x20000) == 0)
                 {
-                    sub_800313C8(0);
+                    FadeOutSeqSlot_800313C8(0);
                 }
                 else
                 {
@@ -434,7 +434,7 @@ void sub_800BA788(BatTask_a* t)
     sub_80031334(0);
     sub_80030664();
     sub_80066E38(0);
-    sub_800300E0(sub_800315E4(), 1);
+    PlayMusic_800300E0(sub_800315E4(), 1);
     sub_80020898();
     if (dword_80091C74 >= 0)
     {
@@ -1449,7 +1449,7 @@ int sub_800BEB68()
             return 0;
         }
     }
-    word_8008D780 = 1;
+    effectOutcomeFlag_8008D780 = 1;
     return 1;
 }
 

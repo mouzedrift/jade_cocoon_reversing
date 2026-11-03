@@ -885,7 +885,7 @@ void ProcessPads_8001BF50(void)
     }
 }
 // Matched
-void sub_8001BF90(void)
+void InitPrimBuffers_8001BF90(void)
 {
     if (unknownFlags_8008D678 & 0x200)
     {
@@ -2832,7 +2832,7 @@ void sub_800209AC(struct_cb* p, int* q)
     {
     case 0:
         sub_80020A38(q);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
         q[0] += 1;
         break;
     case 1:
@@ -2840,7 +2840,7 @@ void sub_800209AC(struct_cb* p, int* q)
         {
             sub_800205F0();
         }
-        dword_8008B540 = s;
+        eventDispatchHalt_8008B540 = s;
         break;
     }
 }

@@ -235,7 +235,7 @@ void sub_800BC24C(MenuTask* t)
     {
         sub_80020D68();
         sub_800A6D30(1);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
 }
@@ -1340,7 +1340,7 @@ void sub_800BFFFC(MenuTask* t)
         t->next_8 = sub_800BD40C;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 
 extern void sub_80027478();

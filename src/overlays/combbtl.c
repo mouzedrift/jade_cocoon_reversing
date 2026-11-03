@@ -117,7 +117,7 @@ extern void sub_800A616C();
 extern void sub_800A5000();
 extern void sub_80039FA4(int);
 extern void sub_800A0A28();
-extern int sub_800300E0(int, int);
+extern int PlayMusic_800300E0(int, int);
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
 extern void sub_800A50E4();
@@ -155,7 +155,7 @@ void sub_800A4B8C(CombBtlTask* t, int a)
     t->next_8 = sub_800A4C40;
     t->next_8(t, a);
     StopSoundSeqs_80030D68((int)word_80091CE0);
-    sub_800300E0(0, 1);
+    PlayMusic_800300E0(0, 1);
 }
 
 void sub_800A4C40(CombBtlTask* t, int a)
@@ -221,7 +221,7 @@ void sub_800A4D48(CombBtlTask* t, int a)
         sub_800315F4();
         dword_800A84B8 = 2;
     case 2:
-        if (!sub_800300E0(0x99, 1))
+        if (!PlayMusic_800300E0(0x99, 1))
         {
             break;
         }
@@ -318,7 +318,7 @@ void sub_800A5080(CombBtlTask* t)
 {
     if (--dword_800A84D4 <= 0)
     {
-        sub_800313C8(0);
+        FadeOutSeqSlot_800313C8(0);
         sub_80031334(0);
         StopSoundSeqs_80030D68(dword_80091D40);
         sub_80030664();
@@ -405,7 +405,7 @@ INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
 void sub_800A54CC(CombBtlTask* t)
 {
-    sub_800313C8(0);
+    FadeOutSeqSlot_800313C8(0);
     if (word_80091CE0[2] >= 0)
     {
         sub_8006281C(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
@@ -444,7 +444,7 @@ void sub_800A5544(CombBtlTask* t)
         sub_800A0A6C();
         sub_80030664();
         sub_80066E38(0);
-        sub_800300E0(0x8E, 1);
+        PlayMusic_800300E0(0x8E, 1);
         sub_80039FC0();
         t->next_8 = sub_800A16FC;
     }

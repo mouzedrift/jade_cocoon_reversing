@@ -174,7 +174,7 @@ extern unsigned char byte_800A38DA;
 extern unsigned char byte_800A38DB;
 extern short word_800A1BC4;
 extern char data_8008EEF8[];
-extern void sub_800300E0(int a, int b);
+extern void PlayMusic_800300E0(int a, int b);
 extern void sub_8002BF74(void);
 extern void sub_800A197C(short* p);
 extern void sub_800A0D64(int a, int b);
@@ -727,7 +727,7 @@ void sub_800A13A0(CombatTaskCombat* t)
         }
         off += 0x2E8;
     }
-    sub_800300E0(0x8E, 1);
+    PlayMusic_800300E0(0x8E, 1);
     sub_8002BF74();
     sub_800A0D64(2, 0x42);
     sub_800A0D64(3, 0x41);

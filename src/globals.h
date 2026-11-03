@@ -60,15 +60,24 @@ typedef struct
 {
     int field_0;
     int playTime_4; // vsyncs, counted by the vsync handler while not paused
-    char pad_8[0x14];
-    unsigned int field_1C_settings; // == settingsFlags_8008B58C
-    char pad_20[0x2C4];
+    unsigned short buttonConfig_8[10]; // == buttonConfig_8008B578
+    unsigned int field_1C_settings; // == settingsFlags_8008B58C; bits 7..13 BGM volume, 14..20 SFX volume
+    int uiColor_20;   // uiColor_8008B590
+    int yan_24;       // playerYan_8008B594 (money)
+    char pad_28[0x2B4];
+    short chapter_2DC; // 0x8008B84C (Meos4: currentChapter)
+    char pad_2DE[6];
     struct
     {
         short field_0;
         short field_2;
-    } field_2E4[4];
-    char pad_2F4[0x694];
+    } mapId_2E4[4]; // 0x8008B854: [0..2].field_0 identify the map (Meos4: mapId)
+    char pad_2F4[0x4D4];
+    EntityStatus levantStatus_7C8; // levantStatus_8008BD38
+    unsigned char playerName_7D8[MAX_PLAYER_NAME_LENGTH]; // playerName_8008BD48
+    char pad_7E2[0x32];
+    unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
+    char pad_830[0x158];
     Minion minions[15];
     Item items[12];
 } SaveData;
@@ -298,7 +307,7 @@ extern int** dword_8008B560;
 extern int off_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern int dword_8008B500[];
 extern int dword_80091CA0;
 extern int dword_800918B8;
@@ -384,7 +393,7 @@ extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;
 extern int dword_8008B4F8;
 extern int dword_800918C4;
-extern unsigned short** dword_8008D4A4;
+extern unsigned short** soundTask_8008D4A4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
 extern int dword_80095468[0x10];
@@ -399,7 +408,7 @@ extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
 extern int dword_80091C88;
 extern int dword_80091C44;
-extern int* dword_80091C00;
+extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
 extern int** dword_8008D4A0;
@@ -599,8 +608,8 @@ typedef struct
 } Vec3i;
 
 extern int dword_8008D4D8;
-extern short word_8008D780;
-extern unsigned long* dword_8008D42C;
+extern short effectOutcomeFlag_8008D780;
+extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 extern int dword_8008B500[];
 

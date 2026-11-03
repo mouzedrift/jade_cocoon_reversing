@@ -175,7 +175,7 @@ void sub_800B88A4(int a)
     if (a)
     {
         sub_800B8940((int*)a);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
     p = dword_8008D674;
     p[4] = (p[4] | 1) & 0xFFFF7FFF;
@@ -1029,7 +1029,7 @@ int sub_800BA82C(EvCtxEventfnc* c)
     word_8008B84C = *(unsigned short*)&c->pc_8->b_8;
     sub_800A6D30(0);
     c->pc_8++;
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     return 1;
 }
 #endif
@@ -1059,7 +1059,7 @@ int sub_800BA8AC(EvCtxEventfnc* c)
 }
 
 extern int dword_80091C94;
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 typedef struct EvSaveEventfnc
 {
     char pad_0[0x2E4];
@@ -1096,7 +1096,7 @@ int sub_800BA930(EvCtxEventfnc* c)
     {
         dword_80091C94 = 1;
     }
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 1;
 }
@@ -1118,7 +1118,7 @@ int sub_800BA9E4(EvCtxEventfnc* c)
     *(unsigned short*)(s + 0x2E4) = v[0];
     *(unsigned short*)(s + 0x2E8) = v[1];
     *(unsigned short*)(s + 0x2EC) = v[2];
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 0;
 }
@@ -1160,7 +1160,7 @@ int sub_800BAB5C(EvCtxEventfnc* c)
 {
     sub_8001C19C(1, 0x20);
     sub_800A6D30(8);
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 1;
 }

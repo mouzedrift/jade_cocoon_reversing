@@ -21,7 +21,7 @@ extern int dword_8008D438;
 extern int dword_8008D670;
 typedef struct { unsigned int pad:5; unsigned int f5:1; } ShopCtrlFlags;
 extern ShopCtrlFlags dword_8008B58C;
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern short word_8008D474[2];
 extern int dword_8008D4F0;
 extern void sub_800B6720();
@@ -169,7 +169,7 @@ void sub_800B6A6C(ShopCtrlTask* t)
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
         sub_80027478(0x40, 0);
         sub_800A6D30(1);
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
 }
 

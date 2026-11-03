@@ -487,7 +487,7 @@ INCLUDE_ASM(sub_800149A4);
 // Matched
 void sub_80014C28(int* a0, int* a1)
 {
-    if (word_8008D780 == 1)
+    if (effectOutcomeFlag_8008D780 == 1)
     {
         sub_800306FC(6);
         *a0 = (*a0 & ~1) | 0x8000;

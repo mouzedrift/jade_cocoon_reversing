@@ -325,7 +325,7 @@ void sub_800438F8(EventNode* n)
 // Matched
 void RunEventListUntilAbort_80043958(EventNode* n)
 {
-    if (dword_8008B540 == 0)
+    if (eventDispatchHalt_8008B540 == 0)
     {
         do
         {
@@ -334,7 +334,7 @@ void RunEventListUntilAbort_80043958(EventNode* n)
                 n->entry.cb_8(&n->entry, n->entry.buffer);
             }
             n = n->next;
-        } while (n && dword_8008B540 == 0);
+        } while (n && eventDispatchHalt_8008B540 == 0);
     }
 }
 #if 0

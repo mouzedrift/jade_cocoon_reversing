@@ -84,7 +84,7 @@ int sub_8001413C(int x)
     return (x * x) / 5;
 }
 // Matched
-int sub_80014164(int x)
+int CriticalRateTransform_80014164(int x)
 {
     return (x * x * x) / 400;
 }

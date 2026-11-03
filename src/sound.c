@@ -97,7 +97,7 @@ void InitSounds_8002FE7C(void)
 // Matched
 void sub_8002FEB8(void)
 {
-    char* p = (char*)dword_8008D4A4[0x24 / 4];
+    char* p = (char*)soundTask_8008D4A4[0x24 / 4];
     char* q;
     int i;
     *(SoundStruct**)(p + 4) = &stru_80091CE0;
@@ -155,7 +155,7 @@ void sub_8002FF64(int a0, char* p)
         }
         else
         {
-            dword_8008B540 = 1;
+            eventDispatchHalt_8008B540 = 1;
         }
         break;
     case 1:
@@ -198,13 +198,13 @@ void sub_8003006C(int a0, int* a1)
 #endif
 INCLUDE_ASM(sub_8003006C);
 
-INCLUDE_ASM(sub_800300E0);
+INCLUDE_ASM(PlayMusic_800300E0);
 extern int QueueFileRequest_8003BC84(int* a);
 extern void LoadSoundSeqFromBuffer_800304D0(void);
 // Matched
 int sub_800303E8(void)
 {
-    unsigned short* p = dword_8008D4A4[0x24 / 4];
+    unsigned short* p = soundTask_8008D4A4[0x24 / 4];
     int s[8];
     if (p[1] != 2)
     {
@@ -234,12 +234,12 @@ void sub_80030664(void)
 // Matched
 int sub_80030688(void)
 {
-    return dword_8008D4A4[0x24 / 4][1] == 2;
+    return soundTask_8008D4A4[0x24 / 4][1] == 2;
 }
 // Matched
 int sub_800306B0(void)
 {
-    return dword_8008D4A4[0x24 / 4][1] == 2;
+    return soundTask_8008D4A4[0x24 / 4][1] == 2;
 }
 // Matched
 void sub_800306D8(void)
@@ -250,7 +250,7 @@ extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
 void sub_800306FC(int idx)
 {
-    SoundStruct** p = (SoundStruct**)dword_8008D4A4[0x24 / 4];
+    SoundStruct** p = (SoundStruct**)soundTask_8008D4A4[0x24 / 4];
     if (idx < 10)
     {
         StopSoundSeq_80031408(&stru_80091D40, idx);

@@ -184,7 +184,7 @@ void sub_80031334(int idx)
     SsSepSetVol(a, b, 0, 0);
 }
 // Matched
-void sub_800313C8(int idx)
+void FadeOutSeqSlot_800313C8(int idx)
 {
     SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
 }
@@ -268,7 +268,7 @@ int sub_800315E4(void)
 // Matched
 void sub_800315F4(void)
 {
-    int* s0 = ((int**)dword_8008D4A4)[0x24 / 4];
+    int* s0 = ((int**)soundTask_8008D4A4)[0x24 / 4];
     FreeSound_80030D00(s0[1]);
     FreeSound_80030D00(s0[2]);
 }
@@ -278,7 +278,7 @@ void sub_80031638(void)
 {
     char* q;
     int i;
-    q = (char*)dword_8008D4A4[0x24 / 4];
+    q = (char*)soundTask_8008D4A4[0x24 / 4];
     if (stru_80091D20.field_4_seq_num >= 0)
     {
         i = 0;

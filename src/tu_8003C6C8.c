@@ -38,7 +38,7 @@ int sub_8003C6C8(int* a0)
         buf[1] = ((unsigned int)a0[0] >> 2) & 1;
         if (buf[1])
         {
-            dword_8008B540 = 1;
+            eventDispatchHalt_8008B540 = 1;
         }
         return buf[0];
     }
@@ -49,7 +49,7 @@ void sub_8003C76C(int* a0, int* a1)
 {
     if (a1[1])
     {
-        dword_8008B540 = 1;
+        eventDispatchHalt_8008B540 = 1;
     }
     if (GetFileRequestStatus_8003BE30(a1[0]) == 0)
     {

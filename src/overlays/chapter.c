@@ -42,7 +42,7 @@ extern int dword_800B70A4[];
 extern ChapterEntry dword_800B6FE0[];
 extern int dword_80091C54;
 extern int dword_80091C94;
-extern int dword_8008B540;
+extern int eventDispatchHalt_8008B540;
 extern void sub_800AD16C(int, int);
 extern void sub_800ADC5C(ChapterVec*, int);
 extern void sub_800ADCEC(ChapterVec*, int);
@@ -140,7 +140,7 @@ void sub_800B6B18()
     s->z_2EC = v.z;
     s->field_2E0 = f0;
     sub_800A6D30(1);
-    dword_8008B540 = 1;
+    eventDispatchHalt_8008B540 = 1;
 }
 #endif
 INCLUDE_OVERLAY_ASM(chapter, sub_800B6B18);

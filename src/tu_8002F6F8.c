@@ -123,7 +123,7 @@ void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
     sub_8003E91C(1, &buf, loc, a3);
 }
 // Matched
-void sub_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3)
+void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3)
 {
     unsigned short loc[2];
     NameBuf buf = dword_80074434;
