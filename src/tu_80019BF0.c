@@ -6678,10 +6678,10 @@ typedef struct
     short a;
     short b;
 } struct_2s;
-#if 0
-// Not matched: only the prologue order of the a0/a1 copies into s4/s5 differs
-void sub_800278BC(int* a0, int h)
+// Matched
+void sub_800278BC(int* a, int h)
 {
+    int* a0 = a;
     unsigned int i;
     unsigned int j;
     int n;
@@ -6712,8 +6712,6 @@ void sub_800278BC(int* a0, int h)
         e->a = 0;
     }
 }
-#endif
-INCLUDE_ASM(sub_800278BC);
 typedef struct
 {
     short x;
