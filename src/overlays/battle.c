@@ -123,7 +123,7 @@ extern int dword_800C9188;
 extern short dword_80091CE0[];
 extern void sub_800B42A8();
 extern void sub_800A2618();
-extern int sub_800C6EFC();
+extern int StartBattleMenu_800C6EFC();
 extern void sub_800BB940();
 extern void sub_800A1B78();
 extern void FreeActiveOverlay_8002C014();
@@ -890,7 +890,7 @@ void sub_800BB894(BatTask_a* t, BatObj_a* u)
     }
     else
     {
-        u->fc = sub_800C6EFC();
+        u->fc = StartBattleMenu_800C6EFC();
         t->next_8 = sub_800BB940;
     }
 }
@@ -4445,8 +4445,8 @@ extern EventNode* dword_8008D468;
 extern unsigned char dword_800C9E4B;
 extern unsigned char dword_800C9E70;
 extern void sub_800C71A0();
-extern void sub_800C8A08();
-int sub_800C6EFC()
+extern void BattleMenuTask_800C8A08();
+int StartBattleMenu_800C6EFC()
 {
     int i;
     int m;
@@ -4454,7 +4454,7 @@ int sub_800C6EFC()
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D468);
     if (e)
     {
-        e->cb_8 = (EventEntryFn)sub_800C8A08;
+        e->cb_8 = (EventEntryFn)BattleMenuTask_800C8A08;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         if (dword_800C9C7C == 0)
         {
@@ -4919,7 +4919,7 @@ extern short dword_800C9180;
 extern short dword_800C9182;
 extern void UpdateMenuCursor_8003D794();
 extern void sub_800C83B0();
-void sub_800C8A08(EventEntry* t, int a)
+void BattleMenuTask_800C8A08(EventEntry* t, int a)
 {
     dword_800C9E44 = sub_800C73B8(dword_800C9E50);
     sub_800C7424(dword_800C9E50);
