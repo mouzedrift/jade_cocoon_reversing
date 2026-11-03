@@ -1746,6 +1746,97 @@ int sub_800BB214(EvCtxEventfnc* c)
     return 0;
 }
 
+#if 0
+// Not matched: 4 words short - the compiler eliminates the loop counter (compares the src pointer instead); the original keeps i in $s5
+typedef struct EvPartySrcEventfnc
+{
+    int f0_0[5];
+    int f14_14;
+    int ids_18[3];
+    struct
+    {
+        int a_0;
+        int b_4;
+        int c_8;
+    } e_24[3];
+} EvPartySrcEventfnc;
+
+typedef struct EvPartyEventfnc
+{
+    int f0_0[5];
+    int f14_14;
+    int f18_18;
+    char pad_1C[0xA4 - 0x1C];
+    int fA4_A4[3];
+    struct
+    {
+        int a_0;
+        int b_4;
+    } fB0_B0[3];
+    int fC8_C8[3];
+    int fD4_D4[3];
+} EvPartyEventfnc;
+
+extern EvPartyEventfnc dword_800B1CB8;
+extern int dword_800AEBE0;
+extern int dword_800AEBE4;
+extern int dword_800B1260;
+extern int sub_800A7A9C(int i);
+int sub_800BB27C(EvCtxEventfnc* c)
+{
+    EvPartySrcEventfnc* s;
+    int i;
+    int k;
+    switch (c->fB8_B8)
+    {
+    case 0:
+        s = (EvPartySrcEventfnc*)c->pc_8->c_C;
+        dword_800AEBE4 = s->f14_14;
+        dword_800B1CB8.f0_0[0] = s->f0_0[0];
+        dword_800B1CB8.f0_0[1] = s->f0_0[1];
+        dword_800B1CB8.f0_0[2] = s->f0_0[2];
+        dword_800B1CB8.f0_0[3] = s->f0_0[3];
+        dword_800B1CB8.f0_0[4] = s->f0_0[4];
+        dword_800B1CB8.f14_14 = -1;
+        dword_800B1CB8.f18_18 = 0;
+        for (i = 0; i < 3; i++)
+        {
+            k = s->ids_18[i];
+            if (k != 5)
+            {
+                dword_800B1CB8.fA4_A4[i] = (int)sub_800A7A60(k - 1);
+                dword_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
+                dword_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
+                dword_800B1CB8.fC8_C8[i] = sub_800A7A9C(k - 1);
+            }
+            else
+            {
+                dword_800B1CB8.fA4_A4[i] = 0;
+                dword_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
+                dword_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
+                dword_800B1CB8.fC8_C8[i] = 0;
+            }
+            dword_800B1CB8.fD4_D4[i] = s->e_24[i].c_8;
+        }
+        dword_800AEBE0 = 1;
+        c->fB8_B8++;
+    case 1:
+        c->fB8_B8++;
+        return 0;
+    case 2:
+        if (dword_800B1260)
+        {
+            return 0;
+        }
+        dword_800AEBE4 = 1;
+        dword_800AEBE0 = 0;
+        c->fB8_B8 = 0;
+        c->pc_8++;
+        return 1;
+    }
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB27C);
 
 extern int dword_800B1230;
