@@ -1108,10 +1108,10 @@ void sub_800BC05C(BatTask_a* t, BatObj_a* u)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BC05C);
 
-void sub_800BC0FC(BatTask_a* t, int* u)
+void sub_800BC0FC(BatTask_a* t, BatTask_a* u)
 {
-    u[3] = sub_800BC28C(t);
-    u[2] = u[1];
+    u->fc = (int*)sub_800BC28C(t);
+    u->next_8 = (void (*)())u->f4;
     t->next_8 = sub_800BC144;
 }
 

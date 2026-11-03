@@ -3879,11 +3879,11 @@ void sub_800C6C7C(int* out)
     }
 }
 
-int sub_800C6CFC(unsigned int a, unsigned int* b, short* c)
+int sub_800C6CFC(unsigned int a, unsigned int* b, Minion* c)
 {
     if (TestMagicBit_8001AE2C(b, a) != 0)
     {
-        if (magicData_8007C438[a].field_4 <= c[6])
+        if (magicData_8007C438[a].field_4 <= c->field_C)
         {
             return 1;
         }
@@ -3891,14 +3891,14 @@ int sub_800C6CFC(unsigned int a, unsigned int* b, short* c)
     return 0;
 }
 
-int sub_800C6D6C(unsigned char* a, short* b)
+int sub_800C6D6C(unsigned char* a, Minion* b)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
         if (a[i * 4] & 1)
         {
-            short h = b[6];
+            short h = b->field_C;
             if (!(h < sub_80031A04(a, i)))
             {
                 return i;
