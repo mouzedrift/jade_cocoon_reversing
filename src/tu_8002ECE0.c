@@ -258,4 +258,79 @@ short sub_8002F424(unsigned char* p)
     }
     return mask;
 }
-INCLUDE_ASM(sub_8002F480);
+typedef struct
+{
+    char pad_0[0x10];
+    RECT r;
+    int field_18;
+} Icon_F480;
+typedef struct
+{
+    int m[3];
+} Mask_F480;
+typedef struct
+{
+    unsigned short color;
+    unsigned char b;
+    unsigned char c;
+} TextParam_F480;
+extern Icon_F480 dword_800743D4;
+extern Icon_F480 dword_800743F0;
+extern Icon_F480 dword_8007440C;
+extern Mask_F480 dword_80074428;
+extern short uiColor_8008B590;
+extern void sub_8002ADB4(char* a0, int a1, int a2, int a3);
+// Matched
+void sub_8002F480(int* flags, unsigned short* pos, int ot, int reverse)
+{
+    Icon_F480 i0 = dword_800743D4;
+    Icon_F480 i1 = dword_800743F0;
+    Icon_F480 i2 = dword_8007440C;
+    TextParam_F480 t;
+    Icon_F480* icons[3];
+    Mask_F480 masks = dword_80074428;
+    unsigned short loc[2];
+    int i;
+    int j;
+    icons[0] = &i0;
+    icons[1] = &i1;
+    icons[2] = &i2;
+    if (pos)
+    {
+        loc[0] = pos[0];
+        loc[1] = pos[1];
+    }
+    else
+    {
+        loc[0] = 0xD2;
+        loc[1] = 0xAC;
+    }
+    t.b = 0;
+    t.c = 1;
+    t.color = uiColor_8008B590;
+    for (i = 0; i < 3; i++)
+    {
+        j = i;
+        if (reverse)
+        {
+            j = 2 - i;
+        }
+        if (*flags & masks.m[j])
+        {
+            if (!reverse)
+            {
+                icons[j]->r.x = loc[0];
+                icons[j]->r.y = loc[1];
+                sub_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+                loc[0] += icons[j]->r.w;
+            }
+            else
+            {
+                loc[0] -= icons[j]->r.w;
+                icons[j]->r.x = loc[0];
+                icons[j]->r.y = loc[1];
+                sub_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+            }
+        }
+    }
+}
