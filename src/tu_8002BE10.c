@@ -278,5 +278,237 @@ void sub_8002C6DC(int a0, short a1, short a2)
     p.b = a1;
     sub_8002B3DC(p, frameCount_8008D3FC, a0, a2);
 }
-INCLUDE_ASM(sub_8002C728);
-INCLUDE_ASM(sub_8002CAC8);
+typedef struct
+{
+    unsigned short flags;
+    short pad_2;
+    int f4;
+    int f8;
+    int fC;
+    short x;
+    short y;
+    char pad_14[8];
+} MenuItem_1C;
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+    int field_C;
+    MenuItem_1C** field_10;
+    int field_14;
+} struct_A5A4;
+extern void sub_8002A5A4(struct_A5A4* p);
+extern int sub_80033AFC(short* p);
+extern int sub_800AD308(int a0);
+extern int dword_800741EC;
+extern int dword_8008D434;
+extern int dword_8008D440;
+extern int dword_80082820;
+extern int dword_80082824;
+extern MenuItem_1C* off_800829E8[];
+// Matched
+void sub_8002C728(short* a0)
+{
+    struct_A5A4 s;
+    short saved;
+    short w;
+    short i;
+    int idx;
+    int v17;
+    int v18;
+    int v19;
+    MenuItem_1C** e;
+    int y;
+    int n;
+    saved = a0[0];
+    w = 8;
+    for (i = 0; i < 4; i++)
+    {
+        idx = sub_800AD288(i + a0[1], 0);
+        if (idx < 0x2B)
+        {
+            v18 = sub_8001D2AC(idx);
+            v19 = sub_8001CE20(idx);
+            v17 = sub_800AD2C8(i + a0[1], 0);
+        }
+        else
+        {
+            v18 = -1;
+            v19 = (int)&dword_800741EC;
+            v17 = 0;
+        }
+        e = &off_800829E8[i];
+        (*e)[0].f4 = v18;
+        (*e)[0].f8 = (int)&dword_8008D434;
+        (*e)[0].fC = (int)&dword_8008D440;
+        (*e)[1].f4 = v19;
+        (*e)[2].f4 = v17;
+        (*e)[0].x = 0x53;
+        y = i * 22 + 0x36;
+        (*e)[0].y = y;
+        (*e)[1].x = 0x68;
+        (*e)[1].y = y;
+        (*e)[2].x = 0xD8;
+        (*e)[2].y = y;
+        a0[0] = i;
+        if ((short)sub_80033AFC(a0))
+        {
+            (*e)[0].flags |= 2;
+            (*e)[1].flags |= 2;
+            (*e)[2].flags |= 2;
+        }
+        else
+        {
+            (*e)[0].flags &= ~2;
+            (*e)[1].flags &= ~2;
+            (*e)[2].flags &= ~2;
+        }
+        if (v17 == 0)
+        {
+            off_800829E8[i][0].flags |= 0x40;
+            off_800829E8[i][1].flags |= 0x40;
+            off_800829E8[i][2].flags |= 0x40;
+        }
+        else
+        {
+            off_800829E8[i][0].flags &= ~0x40;
+            off_800829E8[i][1].flags &= ~0x40;
+            off_800829E8[i][2].flags &= ~0x40;
+        }
+    }
+    s.field_0 = a0[2];
+    s.field_4 = frameCount_8008D3FC;
+    s.field_8 = w;
+    s.field_C = saved;
+    s.field_10 = off_800829E8;
+    s.field_14 = a0[3];
+    sub_8002A5A4(&s);
+    sub_8003F900(2, 0);
+    n = sub_800AD308(0) + 1;
+    if (n < 4)
+    {
+        n = 4;
+    }
+    if (a0[1])
+    {
+        sub_8002C6DC((int)&dword_80082820, 3, a0[3]);
+    }
+    if (a0[1] < n - 4 && n >= 5)
+    {
+        sub_8002C6DC((int)&dword_80082824, 1, a0[3]);
+    }
+}
+extern int sub_8001AEC0(void* p, int v);
+extern int sub_8001AE54(void* p);
+extern int sub_80033C08(short* p);
+extern MenuItem_1C* off_80082B54[];
+extern unsigned short word_800829FC[];
+extern unsigned short word_80082A00[];
+// Matched
+void sub_8002CAC8(short* a0, unsigned short* a1)
+{
+    unsigned short pos[2];
+    struct_A5A4 s;
+    unsigned short r[2];
+    short saved;
+    short w;
+    short i;
+    int idx;
+    int v17;
+    int v3;
+    MenuItem_1C** e;
+    int y;
+    int n;
+    saved = a0[0];
+    w = 8;
+    if (a1)
+    {
+        pos[0] = a1[0];
+        pos[1] = a1[1];
+    }
+    else
+    {
+        pos[0] = 0x60;
+        pos[1] = 0x36;
+    }
+    if (*(char**)(a0 + 6) == 0)
+    {
+        return;
+    }
+    for (i = 0; i < 4; i++)
+    {
+        idx = sub_8001AEC0(*(char**)(a0 + 6) + 0xF4, i + a0[1]);
+        if (idx < 0x1E)
+        {
+            v17 = sub_8001AF3C(idx);
+            v3 = sub_8001AC2C(idx);
+        }
+        else
+        {
+            v17 = -1;
+            v3 = (int)&dword_800741EC;
+        }
+        e = &off_80082B54[i];
+        (*e)[0].f4 = v17;
+        (*e)[1].f4 = v3;
+        (*e)[0].x = pos[0];
+        y = i * 22;
+        (*e)[0].y = pos[1] + y;
+        (*e)[1].x = pos[0] + 0x15;
+        (*e)[1].y = pos[1] + y;
+        a0[0] = i;
+        if ((short)sub_80033C08(a0))
+        {
+            (*e)[0].flags |= 2;
+            (*e)[1].flags |= 2;
+        }
+        else
+        {
+            (*e)[0].flags &= ~2;
+            (*e)[1].flags &= ~2;
+        }
+    }
+    s.field_0 = a0[2];
+    s.field_4 = frameCount_8008D3FC;
+    s.field_8 = w;
+    s.field_C = saved;
+    s.field_10 = off_80082B54;
+    s.field_14 = a0[3];
+    sub_8002A5A4(&s);
+    sub_8003F900(2, 0);
+    n = sub_8001AE54(*(char**)(a0 + 6) + 0xF4);
+    if (n < 4)
+    {
+        n = 4;
+    }
+    if (a0[1])
+    {
+        if (a1)
+        {
+            r[0] = word_800829FC[0] + a1[0] - 0x60;
+            r[1] = word_800829FC[1] + a1[1] - 0x36;
+        }
+        else
+        {
+            r[0] = word_800829FC[0];
+            r[1] = word_800829FC[1];
+        }
+        sub_8002C6DC((int)r, 3, a0[3]);
+    }
+    if (a0[1] < n - 4 && n >= 5)
+    {
+        if (a1)
+        {
+            r[0] = word_80082A00[0] + a1[0] - 0x60;
+            r[1] = word_80082A00[1] + a1[1] - 0x36;
+        }
+        else
+        {
+            r[0] = word_80082A00[0];
+            r[1] = word_80082A00[1];
+        }
+        sub_8002C6DC((int)r, 1, a0[3]);
+    }
+}
+

@@ -3565,6 +3565,7 @@ byte_800C9C7C=0x800c9c7c; // overlay data referenced from the game code
 sub_800A61CC=0x800a61cc;
 sub_800AD288=0x800ad288; // overlay function called from the game code
 sub_800AD2C8=0x800ad2c8; // overlay function called from the game code
+sub_800AD308=0x800ad308; // overlay function called from the game code
 sub_8001425C=0x8001425c; // function behind sub_80014200 (was hidden in its span)
 sub_80014618=0x80014618; // function behind sub_80014588 (was hidden in its span)
 sub_80011ADC=0x80011adc; // function behind sub_80011904 (was hidden in its span)

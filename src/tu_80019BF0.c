@@ -453,7 +453,7 @@ int sub_8001AEC0(unsigned int* bits, int n)
     return 0x1E;
 }
 // Matched
-unsigned char sub_8001AF3C(int idx)
+int sub_8001AF3C(int idx)
 {
     if (idx < 0x1E)
     {
@@ -3453,6 +3453,95 @@ int sub_80020F00(struct_list_14* p, int a, int b)
     }
     return -1;
 }
+void sub_80021298(int* src, int* out, int a2, int a3, int heap);
+void sub_80021464(int* hdr, int* out, int a2, int a3, int heap);
+int LoadMdecImages_800215E8(int* hdr, int* out, int heap);
+void sub_800216E8(int* a0, int a1, int a2);
+typedef struct
+{
+    int a;
+    int b;
+    int c;
+} struct_3i;
+#if 0
+// Not matched: only register allocation differs (arg gets s6 instead of s4, the call loops swap their two induction registers)
+void sub_80020F5C(int* arg, int* hdr)
+{
+    int* out = (int*)arg[0];
+    int* p1 = (int*)((char*)hdr + hdr[1]);
+    int* p2 = (int*)((char*)hdr + hdr[2]);
+    int* p3 = (int*)((char*)hdr + hdr[3]);
+    int* p4 = (int*)((char*)hdr + hdr[4]);
+    int* p5 = (int*)((char*)hdr + hdr[5]);
+    int* p6 = (int*)((char*)hdr + hdr[6]);
+    int i;
+    int max;
+    int r;
+    int n;
+    int* src;
+    out[5] = 0;
+    out[7] = 0;
+    out[9] = 0;
+    out[11] = 0;
+    out[4] = (int)ListAlloc_8003FDC0(out + 1, p1[0]);
+    MemCopy_800403E8((unsigned int*)out[4], (unsigned int*)(p1 + 1), p1[0]);
+    n = p2[0];
+    if (n)
+    {
+        out[5] = n;
+        out[6] = (int)ListAlloc_8003FDC0(out + 1, n * 12);
+        src = p2 + 1;
+        for (i = 0; i < out[5]; i++)
+        {
+            ((struct_3i*)out[6])[i].a = src[0];
+            ((struct_3i*)out[6])[i].b = src[1];
+            ((struct_3i*)out[6])[i].c = src[2];
+            src += 3;
+        }
+    }
+    n = p3[0];
+    if (n)
+    {
+        out[7] = n;
+        out[8] = (int)ListAlloc_8003FDC0(out + 1, n * 0x34);
+        for (i = 0; i < out[7]; i++)
+        {
+            sub_80021298((int*)((char*)p3 + p3[i + 1]), (int*)(out[8] + i * 0x34), (int)(arg + 1), arg[4], (int)(out + 1));
+        }
+    }
+    n = p4[0];
+    if (n)
+    {
+        out[9] = n;
+        out[10] = (int)ListAlloc_8003FDC0(out + 1, n * 0x1C);
+        for (i = 0; i < out[9]; i++)
+        {
+            sub_80021464((int*)((char*)p4 + p4[i + 1]), (int*)(out[10] + i * 0x1C), (int)(arg + 1), arg[4], (int)(out + 1));
+        }
+    }
+    n = p5[0];
+    if (n)
+    {
+        out[11] = n;
+        out[12] = (int)ListAlloc_8003FDC0(out + 1, n * 8);
+        i = 0;
+        max = i;
+        for (; i < out[11]; i++)
+        {
+            r = LoadMdecImages_800215E8((int*)((char*)p5 + p5[i + 1]), (int*)(out[12] + i * 8), (int)(out + 1));
+            if (max < r)
+            {
+                max = r;
+            }
+        }
+        sub_800216E8(out + 13, max, (int)(out + 1));
+    }
+    if (GetTiyFileCount_80028E68(p6))
+    {
+        sub_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)(arg + 1), arg[4]);
+    }
+}
+#endif
 INCLUDE_ASM(sub_80020F5C);
 typedef struct
 {
@@ -3815,7 +3904,8 @@ void sub_80022B84(int* c, int* x, int* y);
 int sub_80022634(struct_22634* out, int* c, int h);
 int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h);
 int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
-void sub_80022CC4(int a0, int* a, int* b, int h);
+typedef struct struct_22CC4 struct_22CC4;
+void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h);
 // Matched
 int sub_80022458(int a0, unsigned char* a1, int h, int a3)
 {
@@ -3868,7 +3958,7 @@ int sub_80022458(int a0, unsigned char* a1, int h, int a3)
             break;
         }
     }
-    sub_80022CC4(a0, A, B, h);
+    sub_80022CC4((struct_22CC4*)a0, (struct_22634*)A, (struct_22634*)B, h);
     sub_800229E0(A, B, h);
     return (int)a1;
 }
@@ -4049,9 +4139,9 @@ typedef struct
 typedef struct
 {
     int count;
-    struct_20_b* items;
     unsigned short f4;
     unsigned short f6;
+    struct_20_b* items;
 } struct_12_20b;
 #if 0
 // Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
@@ -4116,6 +4206,85 @@ void sub_80022B84(int* c, int* x, int* y)
 }
 #endif
 INCLUDE_ASM(sub_80022B84);
+struct struct_22CC4
+{
+    char pad_0[0x40];
+    int n1;
+    struct_20_b* d1;
+    int n2;
+    unsigned short f4C;
+    unsigned short f4E;
+    struct_20_b* d2;
+};
+#if 0
+// Not matched: first loop swaps the j/k registers and fills the first beqz delay slot; second loop has the j++/n++ increments in the other order
+void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h)
+{
+    int j;
+    int n;
+    int k;
+    struct_8_20b* e;
+    struct_12_20b* f;
+    if (a->n)
+    {
+        j = 0;
+        e = (struct_8_20b*)a->p;
+        k = 0;
+        for (n = 0; n < a0->n1; n++)
+        {
+            if (j >= ((struct_8_20b*)a->p)[k].count)
+            {
+                k++;
+                j = 0;
+                e = &((struct_8_20b*)a->p)[k];
+            }
+            a0->d1[n].f4 = e->items[j].f4;
+            a0->d1[n].f6 = e->items[j].f6;
+            a0->d1[n].f8 = e->items[j].f8;
+            a0->d1[n].fA = 0;
+            a0->d1[n].fC = e->items[j].fC;
+            a0->d1[n].fE = e->items[j].fE;
+            a0->d1[n].f10 = e->items[j].f10;
+            a0->d1[n].f12 = 0;
+            a0->d1[n].b0 = e->items[j].b0;
+            a0->d1[n].b1 = e->items[j].b1;
+            a0->d1[n].b2 = e->items[j].b2;
+            a0->d1[n].b3 = 0;
+            j++;
+        }
+    }
+    if (b->n)
+    {
+        j = 0;
+        a0->f4C = ((struct_12_20b*)b->p)->f4;
+        a0->f4E = ((struct_12_20b*)b->p)->f6;
+        f = (struct_12_20b*)b->p;
+        k = 0;
+        for (n = 0; n < a0->n2; n++, j++)
+        {
+            if (j >= ((struct_12_20b*)b->p)[k].count)
+            {
+                k++;
+                j = 0;
+                f = &((struct_12_20b*)b->p)[k];
+            }
+            a0->d2[n].f4 = f->items[j].f4;
+            a0->d2[n].f6 = f->items[j].f6;
+            a0->d2[n].f8 = f->items[j].f8;
+            a0->d2[n].fA = 0;
+            a0->d2[n].fC = f->items[j].fC;
+            a0->d2[n].fE = f->items[j].fE;
+            a0->d2[n].f10 = f->items[j].f10;
+            a0->d2[n].f12 = 0;
+            a0->d2[n].b0 = f->items[j].b0;
+            a0->d2[n].b1 = f->items[j].b1;
+            a0->d2[n].b2 = f->items[j].b2;
+            a0->d2[n].b3 = f->items[j].b3;
+            a0->d2[n].f12 = f->items[j].f12;
+        }
+    }
+}
+#endif
 INCLUDE_ASM(sub_80022CC4);
 #if 0
 // Not matched: source pointer becomes a biased induction variable; s2/s3 swapped
