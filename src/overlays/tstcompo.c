@@ -3,6 +3,9 @@
 #include "funcs.h"
 #include "globals.h"
 
+extern unsigned short padPressed_8009194C;
+extern unsigned short padRepeat_800918CC;
+
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
 
 typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
@@ -202,13 +205,95 @@ void sub_800A13B8(int* a)
     }
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1468);
+extern void* memset(void* p, int c, unsigned int n);
+extern void sub_80046A58(void* a, void* b, int c);
+extern void sub_800459E4(void* a, void* b, void* c, int d);
+extern char name_800A2588[];
+extern char name_800A2570[];
+void sub_800A1468(int* c)
+{
+    VECTOR pos;
+    char z[8];
+    VECTOR scale;
+    memset(z, 0, 8);
+    pos.vx = c[0x16C / 4];
+    pos.vy = c[0x170 / 4];
+    pos.vz = c[0x174 / 4];
+    pos.vy += 0xFA;
+    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
+    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
+    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
+    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
+    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
+    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + c[0x184 / 4] * 28);
+    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
+    c[0x1AC / 4] = (int)&pos;
+    c[0x1B0 / 4] = (int)z;
+    c[0x1B4 / 4] = (int)(c + 3);
+    c[0x1B8 / 4] = c[0x1A4 / 4];
+    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
+    c[0x1C4 / 4] = 0;
+    c[0x1C8 / 4] = (int)name_800A2588;
+    c[0x1CC / 4] = (int)&scale;
+    c[0x1D0 / 4] = (int)pOT_8008D690;
+    sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
+    sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+}
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A15F4);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1804);
+typedef struct TstCompoF
+{
+    char pad_0[0x14E];
+    short s14E;
+    char pad_150[0x30];
+    int i180;
+    char pad_184[0x10];
+    int i194;
+    int i198;
+    int i19C;
+    char pad_1A0[0x1C];
+    unsigned int* p1BC;
+} TstCompoF;
+void sub_800A1804(TstCompoF* c)
+{
+    if (c->i194)
+    {
+        if (padRepeat_800918CC & 0x80)
+        {
+            c->i180++;
+        }
+        else if (padRepeat_800918CC & 0x10)
+        {
+            if (--c->i180 < 0)
+            {
+                c->i180 = *c->p1BC - 1;
+            }
+        }
+        c->i180 = c->i180 % *c->p1BC;
+    }
+    else
+    {
+        c->i180++;
+    }
+    if (padPressed_8009194C & 0x40)
+    {
+        c->s14E = 0;
+        c->i194 = !c->i194;
+    }
+    if (c->i194 == 0)
+    {
+        if (padPressed_8009194C & 0x100)
+        {
+            c->i198 = (c->i198 + 1) & 3;
+        }
+        if (padPressed_8009194C & 0x10)
+        {
+            c->i19C = (c->i19C + 1) % 5;
+        }
+    }
+}
 
-extern unsigned short padPressed_8009194C;
 typedef struct TstCompoC
 {
     int state;
@@ -239,7 +324,6 @@ void sub_800A194C(TstCompoC* c)
     }
 }
 
-extern unsigned short padPressed_8009194C;
 typedef struct TstCompoE
 {
     int f0;
@@ -254,7 +338,6 @@ typedef struct TstCompoE
     int f190;
     int f194;
 } TstCompoE;
-extern unsigned short padRepeat_800918CC;
 extern void name_8002556C(int a, int b);
 extern void name_80025440(int a, int b, int c);
 void sub_800A19A4(TstCompoE* c)
