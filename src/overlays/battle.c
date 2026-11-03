@@ -4227,7 +4227,7 @@ void sub_800C45A8(BatTask* t)
     }
 }
 
-extern void sub_800C473C();
+extern int sub_800C473C();
 void sub_800C46FC()
 {
     sub_800C473C();
@@ -4238,7 +4238,71 @@ void sub_800C471C()
     sub_800C473C();
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C473C);
+extern int sub_800C6BD0();
+extern int sub_800C6EC8();
+extern int sub_800C6DF8();
+extern int sub_800C6A8C();
+extern int sub_800C6A68();
+int sub_800C473C(BatTask* t)
+{
+    unsigned char* s = (unsigned char*)t->f10;
+    int r;
+    int i;
+    if ((sub_800BC868() == 0 || sub_800BC868() == -1) && (r = sub_800C6BD0(t, 0x16)))
+    {
+        return r;
+    }
+    if ((sub_800BC868() == 1 || sub_800BC868() == -1) && (r = sub_800C6BD0(t, 0x15)))
+    {
+        return r;
+    }
+    if ((sub_800BC868() == 2 || sub_800BC868() == -1) && (r = sub_800C6BD0(t, 0x18)))
+    {
+        return r;
+    }
+    if ((sub_800BC868() == 3 || sub_800BC868() == -1) && (r = sub_800C6BD0(t, 0x17)))
+    {
+        return r;
+    }
+    if (sub_800C6EC8(t, 0x3F8) == 0 && rand() % 10 < 7 && (r = sub_800C6BD0(t, 0x13)))
+    {
+        return r;
+    }
+    if (sub_800C6EC8(t, 2) == 0 && rand() % 10 < 7 && (r = sub_800C6BD0(t, 0x12)))
+    {
+        return r;
+    }
+    if (sub_800C6EC8(t, 1) == 0 && rand() % 10 < 7 && (r = sub_800C6BD0(t, 0x11)))
+    {
+        return r;
+    }
+    if ((rand() & 1) && (r = sub_800C6BD0(t, 0x14)))
+    {
+        return r;
+    }
+    if ((r = sub_800C6DF8(t, 0xD)))
+    {
+        return r;
+    }
+    if (s[0x2D] > s[0x2F])
+    {
+        if (rand() % 10 < 8 && (r = sub_800C6A8C(t)))
+        {
+            return r;
+        }
+    }
+    else
+    {
+        for (i = 0; i < 12; i++)
+        {
+            if ((r = sub_800C6BD0(t, i)))
+            {
+                return r;
+            }
+        }
+    }
+    return sub_800C6A68(t);
+}
 
 int sub_800C4A40(BatTask* t)
 {
