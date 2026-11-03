@@ -684,8 +684,12 @@ extern void sub_8001C440();
 extern void sub_80047E28();
 extern void sub_80046A58();
 extern void sub_800459E4();
-#if 0
-// Not matched: only the store to 0x184 is not moved into the delay slot of the 0x10000 flag test
+typedef struct
+{
+    char pad_0[0x184];
+    int field_184;
+} ActorTail_8001FD08;
+// Matched
 void sub_8001FD08(void* a0)
 {
     char* o = (char*)a0;
@@ -705,7 +709,7 @@ void sub_8001FD08(void* a0)
         *(unsigned int*)(o + 0x17C) = *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178);
         *(int*)(o + 0x180) = *(int*)(o + 8);
         *(char**)(o + 0x188) = o + 0x2C;
-        *(int*)(o + 0x184) = *(int*)(o + 0x1C4);
+        ((ActorTail_8001FD08*)o)->field_184 = *(int*)(o + 0x1C4);
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -745,8 +749,6 @@ void sub_8001FD08(void* a0)
         sub_8001C440(*(int*)(o + 0x15C), *(int*)(o + 0x9C), *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178));
     }
 }
-#endif
-INCLUDE_ASM(sub_8001FD08);
 // Matched
 void sub_8001FF48(char* o)
 {
