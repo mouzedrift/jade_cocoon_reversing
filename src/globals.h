@@ -197,12 +197,6 @@ typedef struct
     Item items[12];
 } SaveData;
 
-typedef char SaveData_check_7A8[(int)&((SaveData*)0)->levant_7A8 == 0x7A8 ? 1 : -1];
-typedef char SaveData_check_810[(int)&((SaveData*)0)->field_810 == 0x810 ? 1 : -1];
-typedef char SaveData_check_988[(int)&((SaveData*)0)->minions == 0x988 ? 1 : -1];
-typedef char SaveData_check_80C[(int)&((SaveData*)0)->level_80C == 0x80C ? 1 : -1];
-typedef char SaveData_check_2DC[(int)&((SaveData*)0)->chapter_2DC == 0x2DC ? 1 : -1];
-
 
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct

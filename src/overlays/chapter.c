@@ -11,23 +11,6 @@ typedef struct ChapterVec
     short z;
 } ChapterVec;
 
-// view on saveData_8008B570 (+0x2DC)
-typedef struct ChapterSave
-{
-    char pad_0[0x2DC];
-    short cur_2DC;
-    short next_2DE;
-    short field_2E0;
-    short pad_2E2;
-    short x_2E4;
-    short pad_2E6;
-    short y_2E8;
-    short pad_2EA;
-    short z_2EC;
-    short pad_2EE;
-    short field_2F0;
-} ChapterSave;
-
 typedef struct ChapterEntry
 {
     short field_0;
@@ -55,7 +38,6 @@ extern void sub_800B6A94(short*);
 
 INCLUDE_OVERLAY_ASM(chapter, dword_800B66C0);
 
-#define CHAPTER_SAVE ((ChapterSave*)&saveData_8008B570)
 
 extern int PlayMusic_800300E0(int idx, int a1);
 
@@ -76,8 +58,8 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
     switch (st[0])
     {
     case 0:
-        PlayMusic_800300E0(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].music_8, 1);
-        sub_800315D8(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].music_8);
+        PlayMusic_800300E0(dword_800B6FE0[saveData_8008B570.chapter_2DC].music_8, 1);
+        sub_800315D8(dword_800B6FE0[saveData_8008B570.chapter_2DC].music_8);
         st[0]++;
         break;
     case 1:
@@ -92,8 +74,8 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
         st[0]++;
         break;
     case 4:
-        PlayMovie_80040EB4(dword_800B6FE0[CHAPTER_SAVE->cur_2DC].movie_10);
-        if (dword_800B6FE0[CHAPTER_SAVE->cur_2DC].fadeBgm_C)
+        PlayMovie_80040EB4(dword_800B6FE0[saveData_8008B570.chapter_2DC].movie_10);
+        if (dword_800B6FE0[saveData_8008B570.chapter_2DC].fadeBgm_C)
         {
             if (bgmSound_80091CE0.field_4_seq_num >= 0)
             {
@@ -135,16 +117,16 @@ void sub_800B68A8()
 void sub_800B6900()
 {
     int i;
-    if (CHAPTER_SAVE->next_2DE < 0)
+    if (saveData_8008B570.chapterNext_2DE < 0)
     {
-        CHAPTER_SAVE->next_2DE = 0;
+        saveData_8008B570.chapterNext_2DE = 0;
     }
-    for (i = CHAPTER_SAVE->next_2DE; i <= CHAPTER_SAVE->cur_2DC; i++)
+    for (i = saveData_8008B570.chapterNext_2DE; i <= saveData_8008B570.chapter_2DC; i++)
     {
         sub_800B69BC((int**)dword_800B6FE0[i].field_14);
         sub_800B6A94((short*)dword_800B6FE0[i].field_18);
     }
-    CHAPTER_SAVE->next_2DE = CHAPTER_SAVE->cur_2DC + 1;
+    saveData_8008B570.chapterNext_2DE = saveData_8008B570.chapter_2DC + 1;
 }
 
 void sub_800B69BC(int** p)
@@ -185,18 +167,18 @@ void sub_800B6A94(short* p)
 
 void EnterChapterMap_800B6B18()
 {
-    ChapterSave* s = (ChapterSave*)&saveData_8008B570;
-    ChapterEntry* e = &dword_800B6FE0[s->cur_2DC];
+    SaveData* s = &saveData_8008B570;
+    ChapterEntry* e = &dword_800B6FE0[s->chapter_2DC];
     ChapterVec v;
     sub_800ADCEC(&v, e->field_4);
     dword_80091C54 = 0;
-    s->next_2DE = s->cur_2DC + 1;
+    s->chapterNext_2DE = s->chapter_2DC + 1;
     s->field_2E0 = e->field_0;
     dword_80091C94 = 1;
-    s->x_2E4 = v.x;
-    s->y_2E8 = v.y;
-    s->z_2EC = v.z;
-    s->field_2F0 = 0;
+    s->mapId_2E4[0].field_0 = v.x;
+    s->mapId_2E4[1].field_0 = v.y;
+    s->mapId_2E4[2].field_0 = v.z;
+    s->mapId_2E4[3].field_0 = 0;
     sub_800A6D30(1);
     eventDispatchHalt_8008B540 = 1;
 }

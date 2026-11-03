@@ -45,7 +45,6 @@ extern short word_800B8C98[];
 extern int sub_800AD0D4(int);
 extern int sub_800ADC1C(MapQuery*);
 extern int sub_800B8290(MapPos*);
-#define MAPV ((MapSaveView*)&saveData_8008B570)
 typedef struct MapEntry
 {
     short id;
@@ -63,21 +62,6 @@ extern unsigned char dword_800B93F8[];
 extern int dword_80091C54;
 extern void sub_8003D034(void*, int);
 #define SEL dword_800AEBFC[(short)word_800AEBF8[0]]
-typedef struct MapSaveView
-{
-    char pad_0[0x2DC];
-    short f2DC;
-    short f2DE;
-    short f2E0;
-    short f2E2;
-    short f2E4;
-    short f2E6;
-    short f2E8;
-    short f2EA;
-    short f2EC;
-    short f2EE;
-} MapSaveView;
-
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
 extern void sub_800A6D30(int);
@@ -566,25 +550,25 @@ void sub_800B8338(MapPos* p)
     unsigned char c = dword_800B9348[p->a][p->b];
     if (c == 0xFE || c == 0xFF)
     {
-        MAPV->f2E4 = 4;
-        MAPV->f2E8 = 0;
-        MAPV->f2EC = 0;
-        MAPV->f2EE = -1;
+        saveData_8008B570.mapId_2E4[0].field_0 = 4;
+        saveData_8008B570.mapId_2E4[1].field_0 = 0;
+        saveData_8008B570.mapId_2E4[2].field_0 = 0;
+        saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
     else if (c >= 0xF0)
     {
         sub_800AD16C(4, c - 0xEF);
-        MAPV->f2E4 = 4;
-        MAPV->f2E8 = 0;
-        MAPV->f2EC = 0;
-        MAPV->f2EE = -1;
+        saveData_8008B570.mapId_2E4[0].field_0 = 4;
+        saveData_8008B570.mapId_2E4[1].field_0 = 0;
+        saveData_8008B570.mapId_2E4[2].field_0 = 0;
+        saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
     else
     {
-        MAPV->f2E4 = dword_800B9360[p->a];
-        MAPV->f2E8 = dword_800B9348[p->a][p->b];
-        MAPV->f2EC = 0;
-        MAPV->f2EE = -1;
+        saveData_8008B570.mapId_2E4[0].field_0 = dword_800B9360[p->a];
+        saveData_8008B570.mapId_2E4[1].field_0 = dword_800B9348[p->a][p->b];
+        saveData_8008B570.mapId_2E4[2].field_0 = 0;
+        saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
     sub_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
@@ -596,15 +580,15 @@ void sub_800B8338(MapPos* p)
 // Matched
 void sub_800B8448(MapPos* out)
 {
-    unsigned short t = MAPV->f2E4;
+    unsigned short t = saveData_8008B570.mapId_2E4[0].field_0;
     MapQuery q;
     unsigned char* tbl;
     unsigned char cnt;
     if ((unsigned short)(t - 4) < 2)
     {
-        if (MAPV->f2E8 == 0)
+        if (saveData_8008B570.mapId_2E4[1].field_0 == 0)
         {
-            int f = MAPV->f2E0;
+            int f = saveData_8008B570.field_2E0;
             out->b = 12;
             out->a = f == 1;
             return;
@@ -628,20 +612,20 @@ void sub_800B8448(MapPos* out)
     }
     else if ((unsigned short)(t - 1) >= 3)
     {
-        int f = MAPV->f2E0;
+        int f = saveData_8008B570.field_2E0;
         out->b = 0;
         out->a = f == 1;
         return;
     }
     else
     {
-        out->a = MAPV->f2E0 == 1;
+        out->a = saveData_8008B570.field_2E0 == 1;
     }
     tbl = dword_800B9348[out->a];
     cnt = dword_800B9368[out->a];
     for (out->b = 0; out->b < cnt; out->b++)
     {
-        if (MAPV->f2E8 == tbl[out->b])
+        if (saveData_8008B570.mapId_2E4[1].field_0 == tbl[out->b])
         {
             return;
         }
@@ -767,14 +751,14 @@ void sub_800B860C()
         m->entry_C = m->entry_C < 0 ? 0 : (n - 1 < m->entry_C ? n - 1 : m->entry_C);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            MAPV->f2E0 = dword_800B93F8[m->area_4];
-            MAPV->f2E4 = m->area_4;
-            MAPV->f2E8 = m->map_8;
-            MAPV->f2EC = m->entry_C;
-            MAPV->f2E2 = -1;
-            MAPV->f2E6 = -1;
-            MAPV->f2EA = -1;
-            MAPV->f2EE = -1;
+            saveData_8008B570.field_2E0 = dword_800B93F8[m->area_4];
+            saveData_8008B570.mapId_2E4[0].field_0 = m->area_4;
+            saveData_8008B570.mapId_2E4[1].field_0 = m->map_8;
+            saveData_8008B570.mapId_2E4[2].field_0 = m->entry_C;
+            saveData_8008B570.field_2E2 = -1;
+            saveData_8008B570.mapId_2E4[0].field_2 = -1;
+            saveData_8008B570.mapId_2E4[1].field_2 = -1;
+            saveData_8008B570.mapId_2E4[2].field_2 = -1;
             dword_80091C94 = 1;
             dword_80091C54 = 0;
             sub_800A8DEC();
@@ -824,9 +808,9 @@ void sub_800B8B5C()
     r = IsConfirmPressedP1_8003D380(1);
     if (r == 1)
     {
-        MapSaveView* sv = (MapSaveView*)&saveData_8008B570;
-        sv->f2DE = -5;
-        sv->f2DC = *sel;
+        SaveData* sv = &saveData_8008B570;
+        sv->chapterNext_2DE = -5;
+        sv->chapter_2DC = *sel;
         sub_800A6D30(0);
         eventDispatchHalt_8008B540 = r;
     }

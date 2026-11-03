@@ -252,12 +252,6 @@ typedef struct MenuStatus
     char pad_45[3];
 } MenuStatus;
 extern MenuStatus levantStatus_8008BD38;
-// saveData_8008B570 beyond what SaveData has: Levant's whole status block
-typedef struct MenuSaveView
-{
-    char pad_0[0x7C8];
-    MenuStatus levant_7C8; // == levantStatus_8008BD38
-} MenuSaveView;
 typedef struct MenuMain
 {
     int f0;
@@ -688,7 +682,7 @@ void sub_800BC9E8(MenuMain* p)
     short i;
     short s;
     int m;
-    MenuSaveView* sv;
+    SaveData* sv;
     i = 0;
     if (p->count_44 > 0)
     {
@@ -720,8 +714,8 @@ void sub_800BC9E8(MenuMain* p)
                     {
                         if (s == 0)
                         {
-                            sv = (MenuSaveView*)&saveData_8008B570;
-                            if (sub_800BBF10(p->st_1AC[0].rank_44, sv->levant_7C8.rank_44))
+                            sv = &saveData_8008B570;
+                            if (sub_800BBF10(p->st_1AC[0].rank_44, sv->level_80C))
                                 p->f0 |= 0x20;
                             else
                                 p->f0 |= 2;

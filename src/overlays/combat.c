@@ -52,14 +52,6 @@ typedef struct CombatCameraState
     short f3C[3];
 } CombatCameraState;
 
-// Levant's position and rotation in saveData_8008B570 (not in SaveData yet)
-typedef struct CombatSaveView
-{
-    char pad_0[0x7A8];
-    int levantPos_7A8[3];
-    short levantRot_7B4[3];
-} CombatSaveView;
-
 extern CombatSlotCombat dword_800A3A08[];
 extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
@@ -704,7 +696,7 @@ void sub_800A127C(void)
 void sub_800A12B8(void)
 {
     CombatCameraState* p = &cameraState_8008D4F0;
-    CombatSaveView* q;
+    SaveData* q;
     p->f2E = 0;
     p->f20[0] = 0;
     p->f20[1] = 0;
@@ -719,13 +711,13 @@ void sub_800A12B8(void)
     p->f3C[1] = 0;
     p->f3C[2] = 0;
     dword_8008B4F8 = 0x1000;
-    q = (CombatSaveView*)&saveData_8008B570;
-    q->levantPos_7A8[0] = 0;
-    q->levantPos_7A8[1] = 0;
-    q->levantPos_7A8[2] = 0;
-    q->levantRot_7B4[0] = 0;
-    q->levantRot_7B4[1] = 0;
-    q->levantRot_7B4[2] = 0;
+    q = &saveData_8008B570;
+    q->levant_7A8.pos.x = 0;
+    q->levant_7A8.pos.y = 0;
+    q->levant_7A8.pos.z = 0;
+    q->levant_7A8.rot.vx = 0;
+    q->levant_7A8.rot.vy = 0;
+    q->levant_7A8.rot.vz = 0;
 }
 
 // Matched
