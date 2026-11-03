@@ -12,6 +12,8 @@ typedef struct
     int field_4;
     short field_8_x;
     short field_A_y;
+    short field_C_w; // word_8008B4E4
+    short field_E_h; // word_8008B4E6
 } struct_44;
 
 typedef struct
@@ -245,7 +247,7 @@ typedef struct
 {
     int field_0;
     int field_4;
-    short field_8[0x23];
+    unsigned short field_8[0x23];
 } struct_obj_C;
 
 extern struct_12 stru_8007D848[17];
@@ -597,5 +599,6 @@ extern int dword_80091C30[];
 extern int dword_80091C60[];
 
 extern short word_8008B860;
+extern MATRIX dword_80098188[];
 
 #endif
