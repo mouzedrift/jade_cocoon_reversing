@@ -419,7 +419,6 @@ extern void StopAllEventEntries_80043B40(int* p);
 
 extern void* ListAlloc_8003FDC0();
 extern void sub_80012614(int a0, int a1, int a2, int a3);
-extern void sub_8001852C(int a0, int a1);
 extern unsigned int sub_8001C874();
 extern void sub_800BFAF8(int a0);
 extern struct_8_id* sub_8001C314(struct_8_list* p, int id);

@@ -18,6 +18,66 @@
 
 
 
+typedef struct
+{
+    short a;
+    short b;
+} ShortPair2;
+typedef struct
+{
+    short (*tbl_0)[6];
+    int field_4;
+    int field_8;
+    int field_C;
+    char pad_10[0x1C];
+    int field_2C;
+    int field_30;
+    int field_34;
+} EffectTarget;
+typedef struct
+{
+    int idx_0;
+    ShortPair2* pairs_4;
+    short (*tbl_8)[6];
+    int field_C;
+    int field_10;
+    int field_14;
+    char pad_18[0x1C];
+    int field_34;
+    int field_38;
+    int pad_3C;
+    int count_40;
+    EffectTarget targets_44[1];
+} EffectSet;
+typedef struct
+{
+    int field_0;
+    int field_4;
+    short ids_8[6];
+} EffectRow;
+typedef struct
+{
+    int field_0;
+    int field_4;
+    int field_8;
+    int field_C;
+    int field_10;
+    int field_14;
+    int field_18;
+    short field_1C;
+    short field_1E;
+    int pad_20;
+    int field_24;
+    int field_28;
+    int field_2C;
+    int field_30;
+} EffectArgs;
+extern ShortPair2 dword_800795F0[];
+extern EffectRow* dword_80091BE0;
+extern int dword_8008D784;
+extern int sub_80018908(int id, short (*tbl)[6]);
+extern void sub_800149A4(EffectArgs* a);
+void sub_8001852C(EffectSet* p, int a1);
 // Matched
 void sub_80018430(short v)
 {
@@ -60,11 +120,103 @@ void sub_800184A0(int arg, int bit)
 int sub_800184DC(int a0, int a1)
 {
     int* p = dword_8008D3F8[9];
-    sub_8001852C(a0, *((unsigned char*)p + a1 + 0x44));
+    sub_8001852C((EffectSet*)a0, *((unsigned char*)p + a1 + 0x44));
     p[0x28 / 4] |= 1;
     return 1;
 }
-INCLUDE_ASM(sub_8001852C);
+// Matched
+void sub_8001852C(EffectSet* p, int a1)
+{
+    EffectArgs args;
+    EffectRow* base;
+    int i;
+    int j;
+    int k;
+    int n;
+    int mode;
+    int id;
+    int idx;
+    short (*tbl)[6];
+
+    base = dword_80091BE0;
+    dword_8008D784 = 0;
+    for (n = 0; n < 10; n++)
+    {
+        if (p->pairs_4[n].a >= 0)
+        {
+            p->pairs_4[n].a += dword_800795F0[p->idx_0].b;
+        }
+        if (p->pairs_4[n].b >= 0)
+        {
+            p->pairs_4[n].b += dword_800795F0[p->idx_0].b;
+        }
+    }
+    for (k = 0; k < 10; k++)
+    {
+        if (base[k].field_0 == -1)
+        {
+            continue;
+        }
+        for (j = 0; j < 6; j++)
+        {
+            id = *(short*)((char*)base + (k * 20 + j * 2) + 8);
+            mode = base[k].field_4;
+            if (id == -1)
+            {
+                continue;
+            }
+            if (mode == 0)
+            {
+                tbl = p->tbl_8;
+                idx = sub_80018908(id, tbl);
+                if (idx == -1 || p->pairs_4[k].a == -1)
+                {
+                    continue;
+                }
+                args.field_0 = base[k].field_0;
+                args.field_4 = p->field_C;
+                args.field_8 = p->field_10;
+                args.field_C = p->field_C;
+                args.field_10 = p->field_10;
+                args.field_18 = p->field_14;
+                args.field_14 = (int)&tbl[idx][2];
+                args.field_1C = p->pairs_4[k].a;
+                args.field_1E = p->pairs_4[k].b;
+                args.field_24 = tbl[idx][1];
+                args.field_28 = p->field_34;
+                args.field_2C = p->field_38;
+                args.field_30 = p->targets_44[0].field_34;
+                sub_800149A4(&args);
+            }
+            else if (mode == 1)
+            {
+                for (i = 0; i < p->count_40; i++)
+                {
+                    tbl = p->targets_44[i].tbl_0;
+                    idx = sub_80018908(id, tbl);
+                    if (idx == -1 || p->pairs_4[k].a == -1)
+                    {
+                        continue;
+                    }
+                        args.field_0 = base[k].field_0;
+                    args.field_4 = p->field_C;
+                    args.field_8 = p->field_10;
+                    args.field_C = p->targets_44[i].field_4;
+                    args.field_10 = p->targets_44[i].field_8;
+                    args.field_18 = p->targets_44[i].field_C;
+                    args.field_14 = (int)&tbl[idx][2];
+                    args.field_1C = p->pairs_4[k].a;
+                    args.field_1E = p->pairs_4[k].b;
+                    args.field_24 = tbl[idx][1];
+                    args.field_28 = p->targets_44[i].field_2C;
+                    args.field_2C = p->targets_44[i].field_30;
+                    args.field_30 = p->targets_44[i].field_34;
+                    sub_800149A4(&args);
+                }
+            }
+        }
+    }
+}
 #if 0
 // Not matched: registers of i and the row pointer are swapped
 int sub_80018908(int id, short (*tbl)[6])
