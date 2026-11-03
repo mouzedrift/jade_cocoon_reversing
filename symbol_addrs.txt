@@ -2043,6 +2043,7 @@ aAssertionFaile_1=0x800748ac; // size:0x26
 aCdC=0x800748d4; // size:0x5
 dword_8007490C=0x8007490c; // size:0x30
 dword_8007493C=0x8007493c; // size:0x8
+dword_80074960=0x80074960; // size:0x4
 word_80074994=0x80074994; // size:0x2
 dword_80074998=0x80074998; // size:0x4
 dword_8007499C=0x8007499c; // size:0x4

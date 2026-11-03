@@ -81,9 +81,8 @@ typedef struct
 } struct_buf_80036528;
 extern EventNode* vibrationTasks_8008D4B8;
 extern void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o);
-#if 0
-// Not matched: o->idx store is forwarded instead of reloaded, idx/b land in swapped registers
-void StartPadVibration_80036528(int idx, unsigned char b)
+// Matched
+void StartPadVibration_80036528(int idx, int b)
 {
     EventNode* n;
     int i;
@@ -106,12 +105,10 @@ void StartPadVibration_80036528(int idx, unsigned char b)
     o->b = b;
     o->idx = idx;
     o->k = 0;
-    o->field_4 = vibrationPatterns_80083B30[(unsigned char)b][0].field_0;
+    o->field_4 = vibrationPatterns_80083B30[o->b][0].field_0;
     padVibration_80095460[o->idx].motor_2[0] = vibrationPatterns_80083B30[o->b][o->k].field_2;
     padVibration_80095460[o->idx].motor_2[1] = vibrationPatterns_80083B30[o->b][o->k].field_3;
 }
-#endif
-INCLUDE_ASM(StartPadVibration_80036528);
 // Matched
 void StopPadVibration_80036658(int idx)
 {
