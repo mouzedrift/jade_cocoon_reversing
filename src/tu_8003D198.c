@@ -259,7 +259,7 @@ typedef struct
     short field_A;
 } struct_menu;
 
-extern int sub_8003D830(struct_menu* p);
+extern int sub_8003D830();
 
 // Matched
 int sub_8003D794(struct_menu* p)
@@ -281,7 +281,83 @@ int sub_8003D794(struct_menu* p)
     }
     return r;
 }
-INCLUDE_ASM(sub_8003D830);
+// Matched
+int sub_8003D830(struct_menu* p, int idx)
+{
+    int r = sub_8003D4C0((short*)p, idx);
+    int t;
+    int t2;
+
+    if (p->field_6 & 0x40)
+    {
+        if (r & 8)
+        {
+            if (p->field_A >= p->field_0)
+            {
+                p->field_A -= p->field_0;
+                return 8;
+            }
+        }
+        else if (r & 0x10)
+        {
+            if (p->field_A < p->field_4 - p->field_0 * p->field_2)
+            {
+                p->field_A += p->field_0;
+                return 7;
+            }
+        }
+    }
+    if (p->field_6 & 1)
+    {
+        if (r & 2)
+        {
+            t = p->field_0 - 1;
+            p->field_8 -= t;
+        }
+        if (r & 4)
+        {
+            p->field_8 += p->field_0 - 1;
+        }
+    }
+    if (p->field_6 & 2)
+    {
+        if (r & 8)
+        {
+            p->field_8 += p->field_0 * (p->field_2 - 1);
+        }
+        if (r & 0x10)
+        {
+            t2 = p->field_0 - p->field_2 * p->field_0;
+            p->field_8 += t2;
+        }
+    }
+    if ((p->field_6 & 4) && (r & 2))
+    {
+        return 1;
+    }
+    if ((p->field_6 & 8) && (r & 4))
+    {
+        return 2;
+    }
+    if ((p->field_6 & 0x10) && (r & 8))
+    {
+        return 3;
+    }
+    if ((p->field_6 & 0x20) && (r & 0x10))
+    {
+        return 4;
+    }
+    if (p->field_6 & 0x40)
+    {
+        p->field_A = sub_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
+    }
+    return 0;
+}
+// Matched
+int sub_8003DA54(struct_menu* p)
+{
+    return (short)(p->field_8 + p->field_A);
+}
 typedef struct
 {
     unsigned short field_0;

@@ -369,6 +369,101 @@ unsigned int XaNoRequestPending_800435A4(void)
 {
     return xaRequestPending_80096118 >> 31;
 }
+typedef struct
+{
+    unsigned int count;
+    unsigned int flags;
+    int size;
+    EventNode** out;
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+} EventDesc;
+#if 0
+// Not matched: only next/next2 get swapped registers ($s6/$s7)
+EventNode* CreateEventList_800435B4(EventDesc** list)
+{
+    EventDesc** p;
+    EventDesc* d;
+    EventNode* next;
+    EventNode* head;
+    int idx;
+    char* buf;
+    EventNode* n;
+    EventNode* next2;
+    EventNode* prev;
+    EventNode* last;
+    unsigned int i;
+    unsigned int flags;
+
+    buf = NULL;
+    idx = 0;
+    for (p = list; *p != NULL; p++)
+    {
+        d = *p;
+        idx += d->count;
+    }
+    head = malloc3_dbg((idx + 1) * sizeof(EventNode), aDWorkPsusEvent, 0xDC);
+    prev = NULL;
+    n = head;
+    next = head + 1;
+    head->field_0 = (int)prev;
+    next2 = head + 2;
+    last = head;
+    head->next = next;
+    head->entry.size = 0;
+    head->entry.buffer = NULL;
+    head->entry.flags = 0;
+    head->entry.field_4 = 0;
+    head->field_8 = 0;
+    head->count = 0;
+    head->entry.cb_8 = NULL;
+    head->entry.cb_C = NULL;
+    for (idx = 0, p = list; *p != NULL; p++)
+    {
+        d = *p;
+        if (d->out != NULL)
+        {
+            *d->out = n;
+        }
+        if (d->size != 0)
+        {
+            buf = malloc3_dbg(d->size * d->count, aDWorkPsusEvent, 0xF1);
+        }
+        for (i = 0; i < d->count; i++)
+        {
+            n->field_0 = (int)prev;
+            n->next = next;
+            n->entry.size = 0;
+            n->entry.buffer = NULL;
+            n->entry.flags = 0;
+            n->entry.field_4 = 0;
+            n->field_8 = 0;
+            n->count = 0;
+            n->entry.cb_8 = NULL;
+            n->entry.cb_C = NULL;
+            if (d->size != 0)
+            {
+                n->entry.buffer = buf;
+                n->entry.size = d->size;
+                buf += d->size;
+            }
+            n->entry.cb_8 = d->cb_8;
+            n->entry.cb_C = d->cb_C;
+            flags = d->flags;
+            n->field_8 = idx++;
+            n->entry.flags = flags;
+            n->count = d->count;
+            n->entry.field_4 = i;
+            prev = last = n;
+            n = next;
+            next = next2;
+            next2++;
+        }
+    }
+    last->next = NULL;
+    return head;
+}
+#endif
 INCLUDE_ASM(CreateEventList_800435B4);
 // Matched
 void* EventEntryAllocBuffer_800437E8(int* a0, int size)
