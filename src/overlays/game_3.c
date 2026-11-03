@@ -347,19 +347,19 @@ void sub_800A5FAC(void)
 {
     if (dword_800AEBE4)
     {
-        GameSave3_1* sd = (GameSave3_1*)&saveData_8008B570;
+        SaveData* sd = &saveData_8008B570;
         GameS3_1 v;
-        sub_800AD16C(4, sd->f2e8 + 4);
+        sub_800AD16C(4, sd->mapId_2E4[1].field_0 + 4);
         sub_800ADCEC(&v, sub_800A683C(-1));
         sub_800AD0F8(0);
         dword_80091C94 = 1;
         dword_80091C54 = 0;
-        sd->f2f0 = 0;
+        sd->mapId_2E4[3].field_0 = 0;
         dword_80091C9C = 1;
         dword_80091C8C = 0;
-        sd->f2e4 = v.a;
-        sd->f2e8 = v.b;
-        sd->f2ec = v.c;
+        sd->mapId_2E4[0].field_0 = v.a;
+        sd->mapId_2E4[1].field_0 = v.b;
+        sd->mapId_2E4[2].field_0 = v.c;
         unknownFlags_8008D678 &= ~0x20000;
     }
 }
@@ -1654,28 +1654,28 @@ char* sub_800A8C40()
 
 void sub_800A8C4C(int a)
 {
-    G2Stat* s = (G2Stat*)&saveData_8008B570;
-    s->cur -= a;
-    if ((short)s->cur < 0)
+    SaveData* s = &saveData_8008B570;
+    s->levantStatus_7C8.hp_8 -= a;
+    if ((short)s->levantStatus_7C8.hp_8 < 0)
     {
-        s->cur = 0;
+        s->levantStatus_7C8.hp_8 = 0;
         return;
     }
-    if ((short)s->max < (short)s->cur)
-        s->cur = s->max;
+    if ((short)s->levantStatus_7C8.maxHp_A < (short)s->levantStatus_7C8.hp_8)
+        s->levantStatus_7C8.hp_8 = s->levantStatus_7C8.maxHp_A;
 }
 
 void sub_800A8CA0(int a)
 {
-    G2Stat* s = (G2Stat*)&saveData_8008B570;
-    s->cur2 -= a;
-    if ((short)s->cur2 < 0)
+    SaveData* s = &saveData_8008B570;
+    s->levantStatus_7C8.mp_C -= a;
+    if ((short)s->levantStatus_7C8.mp_C < 0)
     {
-        s->cur2 = 0;
+        s->levantStatus_7C8.mp_C = 0;
         return;
     }
-    if ((short)s->max2 < (short)s->cur2)
-        s->cur2 = s->max2;
+    if ((short)s->levantStatus_7C8.maxMp_E < (short)s->levantStatus_7C8.mp_C)
+        s->levantStatus_7C8.mp_C = s->levantStatus_7C8.maxMp_E;
 }
 
 void sub_800A8CF4()
@@ -1873,10 +1873,10 @@ int sub_800A9164(int* out)
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            IsWithinDistance_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, v, &best);
             if (best <= 0x9C3F)
             {
-                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                y = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, v)));
                 *out = y;
                 if ((unsigned)(y + 0x3FF) < 0x7FF)
                     return 1;
@@ -1898,10 +1898,10 @@ int sub_800A926C()
         if (sub_800A79C8(i))
         {
             v = name_800A7940(i);
-            IsWithinDistance_8003B740(G2LEV, v, &best);
+            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, v, &best);
             if (best <= 0x9C3F)
             {
-                y = WrapAngle_8003BA18((short)(((G2Sv5*)&saveData_8008B570)->u7B6 - sub_8003B9E0((int*)G2LEV, v)));
+                y = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, v)));
                 if (!((unsigned)(y + 0x400) < 0x801))
                     return 1;
             }
@@ -1974,9 +1974,9 @@ void sub_800A9564(int a, G2ActB* p)
 {
     int i;
     p->f778 = 0;
-    p->v48[0] = levantPos_8008BD18.x;
-    p->v48[1] = levantPos_8008BD18.y;
-    p->v48[2] = levantPos_8008BD18.z;
+    p->v48[0] = levantPos_8008BD18.pos.x;
+    p->v48[1] = levantPos_8008BD18.pos.y;
+    p->v48[2] = levantPos_8008BD18.pos.z;
     if (p->s26 >= 0x1000)
     {
         p->f0 &= ~0x10;
@@ -2018,8 +2018,8 @@ void DrawLevantModel_800A9708(G2ActD* p)
     ModelAnim* anim;
     int flags;
     int st;
-    char* sd;
-    v = sub_80019CC4((char*)&saveData_8008B570 + 0x7a8);
+    char* sd; // read as a scalar: through SaveData* gcc reloads the status after the p->f3c store
+    v = sub_80019CC4(&saveData_8008B570.levant_7A8);
     sd = (char*)&saveData_8008B570;
     if (p->f3c != *(int*)(sd + 0x7c8))
     {
@@ -2066,8 +2066,8 @@ void DrawLevantModel_800A9708(G2ActD* p)
         return;
     }
     sk.ftg_0 = p->model_40->ftg_50;
-    sk.f4 = &levantPos_8008BD18;
-    sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
+    sk.f4 = &levantPos_8008BD18.pos;
+    sk.f8 = &levantPos_8008BD18.rot;
     sk.bones = &dword_800B0EF8;
     sk.base = &dword_800B0FB0;
     sk.f24 = 0;
@@ -2102,7 +2102,7 @@ void sub_800A99DC(G2Q* p)
         p->f778 /= 2;
     p->f4 &= ~0x30000000;
     FirFilterStep_80014588((char*)p + 0x780, (char*)p + 0x770, frameCount_8008D3FC);
-    ((G2Sv5*)&saveData_8008B570)->u7B6 += p->u77C;
+    saveData_8008B570.levant_7A8.rot.vy += p->u77C;
 }
 
 INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
@@ -2482,9 +2482,9 @@ void sub_800AB3D4()
     if (!(p->f0 & 0x100))
     {
         p->f0 |= 0x4100;
-        p->v60.a = levantPos_8008BD18.x;
-        p->v60.b = levantPos_8008BD18.y;
-        p->v60.c = levantPos_8008BD18.z;
+        p->v60.a = levantPos_8008BD18.pos.x;
+        p->v60.b = levantPos_8008BD18.pos.y;
+        p->v60.c = levantPos_8008BD18.pos.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;
@@ -2501,9 +2501,9 @@ void sub_800AB444(int a)
         else
             p->f0 &= ~0x1000;
         p->f0 &= ~0x100;
-        levantPos_8008BD18.x = p->v60.a;
-        levantPos_8008BD18.y = p->v60.b;
-        levantPos_8008BD18.z = p->v60.c;
+        levantPos_8008BD18.pos.x = p->v60.a;
+        levantPos_8008BD18.pos.y = p->v60.b;
+        levantPos_8008BD18.pos.z = p->v60.c;
         p->v48.a = p->v60.a;
         p->v48.b = p->v60.b;
         p->v48.c = p->v60.c;
@@ -2711,9 +2711,9 @@ void sub_800ABC78(int a)
     if (a)
     {
         p->f0 |= 0x80000;
-        p->v60.a = levantPos_8008BD18.x;
-        p->v60.b = levantPos_8008BD18.y;
-        p->v60.c = levantPos_8008BD18.z;
+        p->v60.a = levantPos_8008BD18.pos.x;
+        p->v60.b = levantPos_8008BD18.pos.y;
+        p->v60.c = levantPos_8008BD18.pos.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;
@@ -2984,15 +2984,15 @@ int sub_800AC3E4()
 
 int sub_800AC3F4()
 {
-    G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    SaveData* s = &saveData_8008B570;
     int r;
-    if (s->f830)
+    if (s->field_830)
     {
-        r = ((int (*)(int))sub_8001D060)(s->b7E5) + dword_800B11B8[s->s834];
+        r = ((int (*)(int))sub_8001D060)(s->armorId_7E5) + dword_800B11B8[s->field_834];
     }
     else
     {
-        r = dword_800B116C[s->s834];
+        r = dword_800B116C[s->field_834];
     }
     return r;
 }
@@ -3127,7 +3127,7 @@ int* sub_800ACA38(int a)
 
 void sub_800ACAA4(int* a, int* b)
 {
-    G2Sv4* s = (G2Sv4*)&saveData_8008B570;
+    SaveData* s = &saveData_8008B570;
     b[0] = 0;
     b[1] = 0;
     b[2] = -1;
@@ -3138,8 +3138,8 @@ void sub_800ACAA4(int* a, int* b)
     b[7] = -1;
     b[8] = -1;
     b[9] = 0;
-    sub_800AC380(s->b7E5 != 0xFF);
-    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+    sub_800AC380(s->armorId_7E5 != 0xFF);
+    sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->weaponId_7E4) + 2));
     PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
@@ -3147,13 +3147,6 @@ void sub_800ACAA4(int* a, int* b)
 
 #if 0
 // Not matched: control flow follows the original, but loop.c also hoists the 0x800B0000 high half of &dword_800B1DD0 into an eighth saved register, so the frame and everything after shift
-typedef struct G2SvB
-{
-    char pad_0[0x830];
-    int f830;
-    short h834;
-    short h836;
-} G2SvB;
 typedef struct G2Ld_1
 {
     int state;
@@ -3173,20 +3166,20 @@ extern void sub_800ACFB8();
 void sub_800ACB64(int* a, G2Ld_1* q)
 {
     int more = 1;
-    G2SvB* sd = (G2SvB*)&saveData_8008B570;
+    SaveData* sd = &saveData_8008B570;
     Model* m;
     do
     {
         switch (q->state)
         {
         case 0:
-            if (q->f8 != sd->f830)
+            if (q->f8 != sd->field_830)
             {
                 q->f10 = -1;
                 q->flags |= 0xd;
-                sub_800AC3A4(sd->h834);
+                sub_800AC3A4(sd->field_834);
             }
-            if (q->f10 != sd->h834 || q->f18 != sd->h836)
+            if (q->f10 != sd->field_834 || q->f18 != sd->field_836)
             {
                 q->flags |= 0x16;
                 sub_800ACF3C(q);
@@ -3209,19 +3202,19 @@ void sub_800ACB64(int* a, G2Ld_1* q)
                     FreeModelList_80024BB0(&dword_8007DC60);
                 }
                 InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
-                LoadModel_80025200(dword_8007DC60, name_800B1164[sd->f830], 0, 2, 1);
+                LoadModel_80025200(dword_8007DC60, name_800B1164[sd->field_830], 0, 2, 1);
                 q->fC = q->f8;
                 q->flags &= ~1;
-                q->f8 = sd->f830;
+                q->f8 = sd->field_830;
             }
             else if (q->flags & 2)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
                 sub_80025974(m, sub_800AC3F4(), 1);
                 q->f14 = sub_800AC3E4();
-                q->f10 = sd->h834;
+                q->f10 = sd->field_834;
                 q->f1C = sub_800AC464();
-                q->f18 = sd->h836;
+                q->f18 = sd->field_836;
                 q->flags &= ~2;
             }
             else if (q->flags & 4)
@@ -3248,13 +3241,13 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         case 3:
             if ((q->flags & 9) == 8)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
                 sub_80024FFC(m, dword_800B11CC);
                 q->flags &= ~8;
             }
             if ((q->flags & 0x12) == 0x10)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->f830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
                 sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 q->flags &= ~0x10;
             }
@@ -3309,7 +3302,7 @@ void sub_800ACFB8()
 
 int sub_800AD02C()
 {
-    int v = *(int*)playerYan_8008B594;
+    int v = playerYan_8008B594.yan_0;
     if (v > 9999999)
         v = 9999999;
     return v;
@@ -3317,15 +3310,15 @@ int sub_800AD02C()
 
 int sub_800AD058(int a)
 {
-    G2Save* s = (G2Save*)&saveData_8008B570;
+    SaveData* s = &saveData_8008B570;
     int v;
-    if (s->f24 <= 9999998)
+    if (s->inv_24.yan_0 <= 9999998)
     {
-        v = s->f24 + a;
+        v = s->inv_24.yan_0 + a;
         if (v <= 9999998)
-            s->f24 = v;
+            s->inv_24.yan_0 = v;
         else
-            s->f24 = 9999999;
+            s->inv_24.yan_0 = 9999999;
         return 1;
     }
     return 0;
@@ -3333,10 +3326,10 @@ int sub_800AD058(int a)
 
 int sub_800AD0A4(int a)
 {
-    G2Save* s = (G2Save*)&saveData_8008B570;
-    if (s->f24 >= a)
+    SaveData* s = &saveData_8008B570;
+    if (s->inv_24.yan_0 >= a)
     {
-        s->f24 -= a;
+        s->inv_24.yan_0 -= a;
         return 1;
     }
     return 0;
@@ -3344,37 +3337,37 @@ int sub_800AD0A4(int a)
 
 int sub_800AD0D4(unsigned a)
 {
-    return (playerYan_8008B594[0x290 + (a >> 3)] >> (a & 7)) & 1;
+    return (playerYan_8008B594.bits_290[a >> 3] >> (a & 7)) & 1;
 }
 
 void sub_800AD0F8(unsigned a)
 {
-    ((G2Bits*)playerYan_8008B594)->b[a >> 3] |= 1 << (a & 7);
+    playerYan_8008B594.bits_290[a >> 3] |= 1 << (a & 7);
 }
 
 void sub_800AD124(unsigned a)
 {
-    ((G2Bits*)playerYan_8008B594)->b[a >> 3] &= ~(1 << (a & 7));
+    playerYan_8008B594.bits_290[a >> 3] &= ~(1 << (a & 7));
 }
 
 int sub_800AD154(int a)
 {
-    return playerYan_8008B594[a + 0x2A3];
+    return playerYan_8008B594.vars_2A3[a];
 }
 
 int sub_800AD16C(int a, int b)
 {
-    ((G2Bits3*)playerYan_8008B594)->c[a] = b;
+    playerYan_8008B594.vars_2A3[a] = b;
     return b;
 }
 
 int sub_800AD184(int a, int b, int c)
 {
-    unsigned char* r = sub_800AD4D8(a, b, c);
+    InvSlot* r = sub_800AD4D8(a, b, c);
     if (r && a != 0xFF)
     {
-        r[0] = a;
-        r[1] += b;
+        r->id = a;
+        r->count += b;
         return 1;
     }
     return 0;
@@ -3382,14 +3375,14 @@ int sub_800AD184(int a, int b, int c)
 
 int sub_800AD1E0(int a, int b, int c)
 {
-    unsigned char* r = sub_800AD58C(a, c);
+    InvSlot* r = sub_800AD58C(a, c);
     if (r)
     {
-        if (sub_800AD67C(r[1], b))
+        if (sub_800AD67C(r->count, b))
         {
-            r[1] -= b;
-            if (r[1] == 0)
-                r[0] = 0xFF;
+            r->count -= b;
+            if (r->count == 0)
+                r->id = 0xFF;
             return 1;
         }
     }
@@ -3398,38 +3391,38 @@ int sub_800AD1E0(int a, int b, int c)
 
 int sub_800AD254()
 {
-    unsigned char* r = sub_800AD58C();
+    InvSlot* r = sub_800AD58C();
     if (r)
-        return r[1];
+        return r->count;
     return 0;
 }
 
 int sub_800AD288(int a, int b)
 {
-    unsigned char* p = sub_800AD604(b);
+    InvSlot* p = sub_800AD604(b);
     if (p)
-        return p[a * 2];
+        return p[a].id;
     return 0xFF;
 }
 
 int sub_800AD2C8(int a, int b)
 {
-    unsigned char* p = sub_800AD604(b);
+    InvSlot* p = sub_800AD604(b);
     if (p)
-        return p[a * 2 + 1];
+        return p[a].count;
     return 0;
 }
 
 int sub_800AD308(int a)
 {
-    unsigned char* p = sub_800AD604(a);
+    InvSlot* p = sub_800AD604(a);
     int n = sub_800AD374(a);
     int i;
     if (p)
     {
         for (i = n - 1; i > 0; i--)
         {
-            if (p[i * 2] != 0xFF)
+            if (p[i].id != 0xFF)
                 return i;
         }
     }
@@ -3469,33 +3462,33 @@ void sub_800AD3F0(int a)
 {
     unsigned char tmp[2];
     int n = sub_800AD374(a);
-    unsigned char* tbl = sub_800AD604(a);
+    InvSlot* tbl = sub_800AD604(a);
     short cnt = 0;
     short i;
-    unsigned char* r;
+    InvSlot* r;
     for (i = 0; i < n; i++)
     {
         r = sub_800AD58C(i, a);
         if (r)
         {
-            MemCopy_800403E8((unsigned*)tmp, (unsigned*)(tbl + cnt * 2), 2);
-            MemCopy_800403E8((unsigned*)(tbl + cnt * 2), (unsigned*)r, 2);
+            MemCopy_800403E8((unsigned*)tmp, (unsigned*)&tbl[cnt], 2);
+            MemCopy_800403E8((unsigned*)&tbl[cnt], (unsigned*)r, 2);
             MemCopy_800403E8((unsigned*)r, (unsigned*)tmp, 2);
             cnt++;
         }
     }
 }
 
-unsigned char* sub_800AD4D8(int a, int b, int c)
+InvSlot* sub_800AD4D8(int a, int b, int c)
 {
-    unsigned char* r = sub_800AD58C(a, c);
+    InvSlot* r = sub_800AD58C(a, c);
     if (r)
     {
-        if (sub_800AD670(r[1], b))
+        if (sub_800AD670(r->count, b))
         {
             if ((unsigned)(c - 1) < 3 && a == sub_800AD990(c - 1))
             {
-                if (!(r[1] + b < 0x14))
+                if (!(r->count + b < 0x14))
                     return 0;
             }
             return r;
@@ -3505,36 +3498,36 @@ unsigned char* sub_800AD4D8(int a, int b, int c)
     return sub_800AD58C(0xFF, c);
 }
 
-unsigned char* sub_800AD58C(int a, int b)
+InvSlot* sub_800AD58C(int a, int b)
 {
     int n = sub_800AD374(b);
-    unsigned char* p = sub_800AD604(b);
+    InvSlot* p = sub_800AD604(b);
     int i;
     if (p != 0)
     {
         for (i = 0; i < n; i++)
         {
-            if (a == p[i * 2])
-                return &p[i * 2];
+            if (a == p[i].id)
+                return &p[i];
         }
     }
     return 0;
 }
 
-unsigned char* sub_800AD604(int n)
+InvSlot* sub_800AD604(int n)
 {
     switch ((unsigned)n)
     {
     case 0:
-        return (unsigned char*)&saveData_8008B570 + 0x28;
+        return saveData_8008B570.inv_24.inventory_4[0];
     case 1:
-        return (unsigned char*)&saveData_8008B570 + 0xA8;
+        return saveData_8008B570.inv_24.inventory_4[1];
     case 2:
-        return (unsigned char*)&saveData_8008B570 + 0x128;
+        return saveData_8008B570.inv_24.inventory_4[2];
     case 3:
-        return (unsigned char*)&saveData_8008B570 + 0x1A8;
+        return saveData_8008B570.inv_24.inventory_4[3];
     case 4:
-        return (unsigned char*)&saveData_8008B570 + 0x228;
+        return saveData_8008B570.inv_24.inventory_4[4];
     }
     return 0;
 }
@@ -3553,10 +3546,10 @@ int sub_800AD67C(int a, int b)
 
 int sub_800AD68C(int n)
 {
-    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    SaveInventory* f = &playerYan_8008B594;
     if (n < 0x40)
     {
-        f->w[n / 32] |= 1 << (n % 32);
+        f->flags_288[n / 32] |= 1 << (n % 32);
         return 1;
     }
     return 0;
@@ -3564,17 +3557,17 @@ int sub_800AD68C(int n)
 
 void sub_800AD6E4(int n)
 {
-    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    SaveInventory* f = &playerYan_8008B594;
     if (n < 0x40)
-        f->w[n / 32] &= ~(1 << (n % 32));
+        f->flags_288[n / 32] &= ~(1 << (n % 32));
 }
 
 int sub_800AD73C(int n)
 {
-    G2Flags* f = (G2Flags*)playerYan_8008B594;
+    SaveInventory* f = &playerYan_8008B594;
     if (n < 0x40)
     {
-        if (f->w[n / 32] & (1 << (n % 32)))
+        if (f->flags_288[n / 32] & (1 << (n % 32)))
             return 1;
     }
     return 0;
@@ -3672,7 +3665,7 @@ unsigned int sub_800AD990(int a)
 int SetEquipment_800AD9EC(int a, int b)
 {
     unsigned char old = sub_800AD990(b);
-    G2Sv4* s;
+    SaveData* s;
     switch ((unsigned)b)
     {
     case 0:
@@ -3685,14 +3678,14 @@ int SetEquipment_800AD9EC(int a, int b)
         {
             goto fail;
         }
-        s = (G2Sv4*)&saveData_8008B570;
-        s->b7E4 = a;
+        s = &saveData_8008B570;
+        s->weaponId_7E4 = a;
         sub_800AD1E0(a, 1, 1);
         if (old < 0x17)
             sub_800AD184(old, 1, 1);
         sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
-        GetArmorData_8001D034(s->b7E5);
-        sub_800AC3B0(dword_8001D060(s->b7E5));
+        GetArmorData_8001D034(s->armorId_7E5);
+        sub_800AC3B0(dword_8001D060(s->armorId_7E5));
         break;
     case 1:
         if (old == 0xFF)
@@ -3704,12 +3697,12 @@ int SetEquipment_800AD9EC(int a, int b)
         {
             goto fail;
         }
-        s = (G2Sv4*)&saveData_8008B570;
-        s->b7E5 = a;
+        s = &saveData_8008B570;
+        s->armorId_7E5 = a;
         sub_800AD1E0(a, 1, 2);
         if (old < 0xF)
             sub_800AD184(old, 1, 2);
-        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
+        sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->weaponId_7E4) + 2));
         GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
         break;
@@ -3727,12 +3720,11 @@ int SetEquipment_800AD9EC(int a, int b)
 
 int sub_800ADBA0(short* p)
 {
-    char* base = (char*)&saveData_8008B570;
+    SaveData* base = &saveData_8008B570;
     int i;
-    for (i = 0; i < ((G2Save2*)base)->n; i++)
+    for (i = 0; i < base->nMapVars_2F4; i++)
     {
-        G2E* q = (G2E*)(base + i * 8);
-        if (q->a == p[0] && q->b == p[1] && q->c == p[2])
+        if (base->mapVars_2F8[i].area_0 == p[0] && base->mapVars_2F8[i].map_2 == p[1] && base->mapVars_2F8[i].sub_4 == p[2])
             return i;
     }
     return -1;
@@ -3742,7 +3734,7 @@ int sub_800ADC1C(short* p)
 {
     int r = sub_800ADBA0(p);
     if (r != -1)
-        r = ((G2Sv*)((char*)&saveData_8008B570 + r * 8))->s;
+        r = saveData_8008B570.mapVars_2F8[r].value_6;
     return r;
 }
 
@@ -3753,12 +3745,11 @@ void sub_800ADC5C(unsigned short* p, int b)
     {
         i = sub_800ADBA0((short*)p);
         if (i == -1)
-            i = ((G2Save2*)&saveData_8008B570)->n++;
-#define G2EN ((G2E*)((char*)&saveData_8008B570 + i * 8))
-        G2EN->a = p[0];
-        G2EN->b = p[1];
-        G2EN->c = p[2];
-        G2EN->d = b;
+            i = saveData_8008B570.nMapVars_2F4++;
+        saveData_8008B570.mapVars_2F8[i].area_0 = p[0];
+        saveData_8008B570.mapVars_2F8[i].map_2 = p[1];
+        saveData_8008B570.mapVars_2F8[i].sub_4 = p[2];
+        saveData_8008B570.mapVars_2F8[i].value_6 = b;
     }
 }
 

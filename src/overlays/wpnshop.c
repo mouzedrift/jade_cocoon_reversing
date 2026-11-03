@@ -182,18 +182,6 @@ typedef struct WpnBox_wpnshop
     char c_A;
     char c_B;
 } WpnBox_wpnshop;
-typedef struct WpnSave_wpnshop
-{
-    char pad_0[0x20];
-    unsigned short f20;
-    char pad_22[0x2BA];
-    short f2DC;
-    char pad_2DE[6];
-    short f2E4;
-    char pad_2E6[2];
-    short f2E8;
-} WpnSave_wpnshop;
-#define WPNSAVE ((WpnSave_wpnshop*)&saveData_8008B570)
 extern void FreeActiveOverlay_8002C014(void);
 extern void sub_800AD9EC(int a, int b);
 extern void sub_800BBDD0();
@@ -320,7 +308,7 @@ int sub_800BB088(WpnObj_wpnshop* o)
     {
         r = 8;
     }
-    if (WPNSAVE->f2DC == 0 && WPNSAVE->f2E4 == 0 && WPNSAVE->f2E8 == 4 && o->f_4C == 3)
+    if (saveData_8008B570.chapter_2DC == 0 && saveData_8008B570.mapId_2E4[0].field_0 == 0 && saveData_8008B570.mapId_2E4[1].field_0 == 4 && o->f_4C == 3)
     {
         r = 0x10;
     }
@@ -1072,7 +1060,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
     r48.h = 0x4D;
     s50.b = 0;
     s50.c = 1;
-    s50.a = WPNSAVE->f20;
+    s50.a = saveData_8008B570.uiColor_20.h;
     DrawWindow_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
     if (o->f_0 != 0x11)
     {
@@ -1089,7 +1077,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
             r60.h = 0x4D;
             u.s.b = 0;
             u.s.c = 1;
-            u.s.a = WPNSAVE->f20;
+            u.s.a = saveData_8008B570.uiColor_20.h;
             DrawWindow_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
         }
     }

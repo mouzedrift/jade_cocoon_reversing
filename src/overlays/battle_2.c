@@ -43,7 +43,7 @@ void sub_800BC90C(BatStageObj_a* p)
     sub_8004D1EC(dword_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, stru_8008D534, 1, scale);
     {
         unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
-        char* sd = (char*)&saveData_8008B570;
+        SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, *list)];
@@ -63,7 +63,7 @@ void sub_800BC90C(BatStageObj_a* p)
                     pos.vz = p->z_40;
                     pos.vx += e->pos_10[0];
                     pos.vz += e->pos_10[2];
-                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
+                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
                     if (e->size_C[1] != 0)
                     {
                         col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
@@ -107,7 +107,7 @@ void sub_800BC90C(BatStageObj_a* p)
             v.vz = p->z_40;
             a = -cam[1];
             v.vx += sinTable_80084540[a & 0xFFF];
-            v.vy = levantPos_8008BD18.pos_0[1] - 0x352;
+            v.vy = levantPos_8008BD18.pos.y - 0x352;
             v.vx -= dword_8008D600.vx;
             v.vy -= dword_8008D600.vy;
             v.vz += sinTable_80084540[(a + 0x400) & 0xFFF];
@@ -189,7 +189,7 @@ void sub_800BC90C(BatStageObj_a* p)
                     int dv;
                     int uu;
                     int vv;
-                    char* sd;
+                    SaveData* sd;
                     BatLight_a* l;
                     if (dword_800C9D8C[1] < 0 && dword_800C9D8C[0] < 0)
                     {
@@ -198,13 +198,13 @@ void sub_800BC90C(BatStageObj_a* p)
                     }
                     du = t % cols;
                     dv = t / cols;
-                    sd = (char*)&saveData_8008B570;
+                    sd = &saveData_8008B570;
                     pos.vx = p->x_38;
                     pos.vy = p->y_3C;
                     pos.vz = p->z_40;
                     pos.vx += e->pos_10[0];
                     pos.vz += e->pos_10[2];
-                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
+                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
                     du = du * (e->w_4 + 1);
                     dv = dv * (e->h_6 + 1);
                     uu = e->u_0 + du;
@@ -249,7 +249,7 @@ void sub_800BC90C(BatStageObj_a* p)
                     int d;
                     int ang;
                     EffectSpriteFrame* e = &g->frames_8[j][k];
-                    char* sd = (char*)&saveData_8008B570;
+                    SaveData* sd = &saveData_8008B570;
                     BatLight_a* l = (BatLight_a*)cameraState_8008D4F0;
                     pos.vx = p->x_38;
                     pos.vy = p->y_3C;
@@ -258,7 +258,7 @@ void sub_800BC90C(BatStageObj_a* p)
                     ang = ratan2_8003B548(e->pos_10[0], e->pos_10[2]) + m * 512;
                     pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * d / 4096;
                     pos.vz += sinTable_80084540[ang & 0xFFF] * d / 4096;
-                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
+                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
                     g->poly_C.u0 = e->u_0;
                     g->poly_C.v0 = e->v_2;
                     g->poly_C.u1 = e->u_0 + e->w_4;
@@ -303,7 +303,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 pos.vx = p->x_38;
                 pos.vy = p->y_3C;
                 pos.vz = p->z_40;
-                pos.vy = levantPos_8008BD18.pos_0[1];
+                pos.vy = levantPos_8008BD18.pos.y;
                 if (dword_80083BD0 == 0x13 && i == 0)
                 {
                     sc[0] *= 3;
@@ -336,7 +336,7 @@ void sub_800BDA28(BatTask_a* t)
         sub_800BB794();
         sub_800BB7D4();
         ApplyBattleCommand_800BEBB8();
-        if (!(*(int*)&saveData_8008B570 & 2))
+        if (!(saveData_8008B570.field_0 & 2))
         {
             f = 0;
             for (i = 4; i < 7; i++)
@@ -383,7 +383,7 @@ void sub_800BDBB0(BatTask_a* t)
     {
         if (dword_800C9C88.kind_0 == 2 && dword_800C9C7C == 0)
         {
-            sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18.pos_0, levantPos_8008BD18.angle_E);
+            sub_800C0AEC(dword_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
         }
         dword_800C9D90 = 0;
         dword_800C9D94 = 0;
@@ -415,7 +415,7 @@ int sub_800BDD3C()
     unsigned char i;
     int r;
     int m;
-    if (*(int*)&saveData_8008B570 & 0x20)
+    if (saveData_8008B570.field_0 & 0x20)
     {
         return 1;
     }
@@ -450,7 +450,7 @@ int sub_800BDE04()
     unsigned char i;
     int r;
     int m;
-    if (*(int*)&saveData_8008B570 & 0x20)
+    if (saveData_8008B570.field_0 & 0x20)
     {
         return 1;
     }
@@ -486,7 +486,7 @@ void sub_800BDEBC()
     int x;
     int y;
     int ny;
-    if (!(*(int*)&saveData_8008B570 & 0x20))
+    if (!(saveData_8008B570.field_0 & 0x20))
     {
         x = dword_800C9C88.mask_8;
         if (x & 0xF)
@@ -547,7 +547,7 @@ void sub_800BDFAC()
 BatPair_a* sub_800BE058(BatPair_a* out, BatCmd_a* p, int c, int a)
 {
     BatPair_a r;
-    if ((*(int*)&saveData_8008B570 & 0x20) || sub_800BC570(a) == 0)
+    if ((saveData_8008B570.field_0 & 0x20) || sub_800BC570(a) == 0)
     {
         r.a = 0;
         r.b = 0;
@@ -574,7 +574,7 @@ BatPair_a* sub_800BE058(BatPair_a* out, BatCmd_a* p, int c, int a)
 void sub_800BE14C(BatCmd_a* p, int b, int k)
 {
     int r;
-    if (*(int*)&saveData_8008B570 & 0x20)
+    if (saveData_8008B570.field_0 & 0x20)
     {
         return;
     }
@@ -600,7 +600,7 @@ void sub_800BE14C(BatCmd_a* p, int b, int k)
         }
         break;
     }
-    if (!(*(int*)&saveData_8008B570 & 2) && b == 0)
+    if (!(saveData_8008B570.field_0 & 2) && b == 0)
     {
         sub_800377B4(r, (short)p->kind_0, k - 4);
     }

@@ -141,7 +141,7 @@ short sub_8002FA0C(short a, short b)
 // Matched
 short sub_8002FA70(void)
 {
-    return sub_80033514((Minion*)GetLevantStatus_80033ABC((char*)&saveData_8008B570));
+    return sub_80033514((Minion*)GetLevantStatus_80033ABC(&saveData_8008B570));
 }
 typedef struct
 {

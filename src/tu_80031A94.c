@@ -900,14 +900,14 @@ int GetItemId_80033AB0(Item* p)
     return p->id;
 }
 // Matched
-char* GetLevantStatus_80033ABC(char* p)
+EntityStatus* GetLevantStatus_80033ABC(SaveData* s)
 {
-    return p + 0x7C8;
+    return &s->levantStatus_7C8;
 }
 // Matched
-char* sub_80033AC4(char* p)
+char* sub_80033AC4(SaveData* s)
 {
-    return p + 0x7BC;
+    return s->field_7BC;
 }
 // Matched
 Minion* GetSaveMinion_80033ACC(SaveData* s, int idx)

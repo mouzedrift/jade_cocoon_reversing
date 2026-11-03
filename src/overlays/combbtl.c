@@ -954,7 +954,7 @@ void sub_800A7290()
 {
     int* e = (int*)AllocEventEntry_80043AF8(cameraTask_8008D4A0);
     char* p;
-    char* q;
+    SaveData* q;
     if (e)
     {
         e[0] = (e[0] | 1) & ~0x8000;
@@ -978,13 +978,13 @@ void sub_800A7290()
         *(short*)(p + 0x3C) = 0;
         *(short*)(p + 0x3E) = 0;
         *(short*)(p + 0x40) = 0;
-        q = (char*)&saveData_8008B570;
-        *(int*)(q + 0x7A8) = 0;
-        *(int*)(q + 0x7AC) = 0;
-        *(int*)(q + 0x7B0) = 0;
-        *(short*)(q + 0x7B4) = 0;
-        *(short*)(q + 0x7B6) = 0;
-        *(short*)(q + 0x7B8) = 0;
+        q = &saveData_8008B570;
+        q->levant_7A8.pos.x = 0;
+        q->levant_7A8.pos.y = 0;
+        q->levant_7A8.pos.z = 0;
+        q->levant_7A8.rot.vx = 0;
+        q->levant_7A8.rot.vy = 0;
+        q->levant_7A8.rot.vz = 0;
         *(short*)(p + 0x34) = dword_8007C2EC[0];
         *(short*)(p + 0x36) = dword_8007C2EC[1];
         *(short*)(p + 0x38) = dword_8007C2EC[2];

@@ -1257,7 +1257,6 @@ extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
 void sub_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char dword_80079140[];
 extern unsigned char dword_80079210[];
-extern int levantPos_8008BD18[];
 #if 0
 // Not matched (37 lines): only the bone entry / matrix pointers are swapped ($s0/$s1) in the scaling block at the end (decl order, temporaries, sv inline, arg-assign form tried)
 int ModelTaskDraw_80010DB0(ModelTaskState* p)
@@ -1364,8 +1363,8 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     o->anims_54->frames_18 = HeapAlloc_8003FC8C((o->ftgCount_3C + 2) * 6, (struct Pool*)1);
     o->anims_54->cues_10 = 0;
     sk.f0 = (int)t;
-    sk.f4 = levantPos_8008BD18;
-    sk.f8 = levantPos_8008BD18 + 3;
+    sk.f4 = &levantPos_8008BD18.pos;
+    sk.f8 = &levantPos_8008BD18.rot;
     sk.bones = dword_80079140;
     sk.base = (short*)sub_80024EC8(m[0], p->record_20);
     sk.pose = (char*)o->anims_54;

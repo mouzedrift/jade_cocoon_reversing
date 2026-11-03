@@ -494,14 +494,6 @@ typedef struct BatTask_a
 } BatTask_a;
 
 
-typedef struct BatLevant_a
-{
-    int pos_0[3];
-    short fC;
-    short angle_E;
-} BatLevant_a;
-
-extern BatLevant_a levantPos_8008BD18;
 
 extern unsigned int dword_800B1228;
 

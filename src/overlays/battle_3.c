@@ -82,7 +82,7 @@ void sub_800BE834(int idx, int b)
 #if 0 // Not matched: the shared 'return 1' block sits after the sub_800BEB68 test in the original (here it lands at the end and the last test flips); tried goto/early-return layouts
 int sub_800BEA94()
 {
-    if (!(*(int*)&saveData_8008B570 & 0x20))
+    if (!(saveData_8008B570.field_0 & 0x20))
     {
         if (sub_800BF47C() == 1)
         {
@@ -1034,9 +1034,9 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
     unsigned char* g;
     if (padPressed_8009194C & 0x100)
     {
-        *(int*)&saveData_8008B570 ^= 0x10;
+        saveData_8008B570.field_0 ^= 0x10;
     }
-    if (*(int*)&saveData_8008B570 & 0x10)
+    if (saveData_8008B570.field_0 & 0x10)
     {
         return;
     }
@@ -1542,7 +1542,7 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     v[0] /= 1024;
     v[1] /= 1024;
     v[2] /= 1024;
-    if (levantPos_8008BD18.pos_0[1] < v[1] || u->size_8 < 0x800)
+    if (levantPos_8008BD18.pos.y < v[1] || u->size_8 < 0x800)
     {
         t->flags = (t->flags & ~1) | 0x8000;
     }
@@ -1704,7 +1704,7 @@ void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
     EffectSprite* d;
     int i;
     EffectSpriteFrame* e;
-    int* sd;
+    SaveData* sd;
     u->vel_28[0] = u->vel_28[0] * 15 / 16;
     u->vel_28[1] = u->vel_28[1] * 15 / 16 + 0x200;
     u->vel_28[2] = u->vel_28[2] * 15 / 16;
@@ -1714,11 +1714,11 @@ void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
     u->pos_10[0] += s[0];
     u->pos_10[1] += s[1];
     u->pos_10[2] += s[2];
-    sd = (int*)&saveData_8008B570;
-    if (u->pos_10[1] > sd[0x7AC / 4])
+    sd = &saveData_8008B570;
+    if (u->pos_10[1] > sd->levant_7A8.pos.y)
     {
         u->vel_28[1] = -u->vel_28[1];
-        u->pos_10[1] = sd[0x7AC / 4];
+        u->pos_10[1] = sd->levant_7A8.pos.y;
     }
     d = u->anim_3C;
     if (u->frame_0 / 4096 < d->count_0)
@@ -2251,9 +2251,9 @@ void sub_800C3B50(int* p, int id)
     b->pos_44[0] = q->pos_5E4[0];
     b->pos_44[1] = q->pos_5E4[1];
     b->pos_44[2] = q->pos_5E4[2];
-    b->pos_44[0] += levantPos_8008BD18.pos_0[0];
-    b->pos_44[1] += levantPos_8008BD18.pos_0[1];
-    b->pos_44[2] += levantPos_8008BD18.pos_0[2];
+    b->pos_44[0] += levantPos_8008BD18.pos.x;
+    b->pos_44[1] += levantPos_8008BD18.pos.y;
+    b->pos_44[2] += levantPos_8008BD18.pos.z;
     e->cb_8 = (EventEntryFn)sub_800C3D34;
     PlaySfx_80031494(0x3F);
     }
@@ -2296,9 +2296,9 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
     v[2] = q->pos_5E4[2];
-    v[0] += levantPos_8008BD18.pos_0[0];
-    v[1] += levantPos_8008BD18.pos_0[1];
-    v[2] += levantPos_8008BD18.pos_0[2];
+    v[0] += levantPos_8008BD18.pos.x;
+    v[1] += levantPos_8008BD18.pos.y;
+    v[2] += levantPos_8008BD18.pos.z;
     if (DistanceSquared3D_8003B80C(v, u->pos_44) >= 0x57E5)
     {
         u->vel_38[0] += ((v[0] - u->pos_44[0]) << 10) / 70;

@@ -187,7 +187,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     WI(0x30) = cfg[0x38 / 4];
     n = cfg[0x44 / 4];
     WI(0x2A4) = n;
-    if (!(((unsigned char*)&saveData_8008B570)[0x1F] & 1) && n == 1)
+    if (!(saveData_8008B570.settings_1C.bytes[3] & 1) && n == 1)
     {
         WI(0x4) |= 0x40000;
     }

@@ -340,10 +340,10 @@ EventEntry* sub_800BA9E4()
 
 int sub_800BAAD8()
 {
-    int* sd = (int*)&saveData_8008B570;
-    int px = sd[0x7A8 / 4];
-    int pz = sd[0x7B0 / 4];
-    short ang = *(unsigned short*)((char*)sd + 0x7B6);
+    SaveData* sd = &saveData_8008B570;
+    int px = sd->levant_7A8.pos.x;
+    int pz = sd->levant_7A8.pos.z;
+    short ang = (unsigned short)sd->levant_7A8.rot.vy;
     int x = sub_800A1E48()[0];
     int z = sub_800A1E48()[2];
     short* rot = sub_800A1E68();
@@ -987,7 +987,7 @@ void sub_800BBC84(BatTask_a* t)
 {
     t->next_8 = sub_800BBCC8;
     sub_800C0BA0(t);
-    sub_800C0AEC(dword_800C9C98 - 1, levantPos_8008BD18.pos_0, levantPos_8008BD18.angle_E);
+    sub_800C0AEC(dword_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
 }
 
 #if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / dword_800ADE78 load order and the shared lui of sub_800BAE74 in the branch delay slot
@@ -1316,7 +1316,7 @@ int sub_800BC6CC(int a)
             if (m == 0)
             {
             case 0:
-                r = (int)levantPos_8008BD18.pos_0;
+                r = (int)&levantPos_8008BD18.pos;
                 break;
             }
             if (m == k)

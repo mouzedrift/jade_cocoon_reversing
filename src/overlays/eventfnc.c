@@ -20,7 +20,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
     int d;
     ret = 0;
     i = 0;
-    sub_800B82C8((int*)&levantPos_8008BD18, (int*)&o->pos_48, dword_8008B500.ents_14,
+    sub_800B82C8(&levantPos_8008BD18.pos.x, (int*)&o->pos_48, dword_8008B500.ents_14,
                  dword_8008B500.entFlags_18, dword_8008B500.nEnts_10);
     o->f8C_8C = -1;
     o->f88_88 = -1;
@@ -33,14 +33,14 @@ int sub_800B6DD4(EvEntEventfnc* o)
         }
         if (i >= 2)
         {
-            if (FindDuplicatePoint_800B8028((int*)&levantPos_8008BD18, v))
+            if (FindDuplicatePoint_800B8028(&levantPos_8008BD18.pos.x, v))
             {
                 return ret;
             }
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        sub_800B8220((int*)&levantPos_8008BD18, (int)&o->pos_48, (int)&dword_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
+        sub_800B8220(&levantPos_8008BD18.pos.x, (int)&o->pos_48, (int)&dword_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
         vt = dword_8008B500.meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[o->f8C_8C % 3].x_0;
@@ -52,7 +52,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
         q2->z_4 = vt[(o->f8C_8C + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4((int*)&levantPos_8008BD18, &dword_8008B500.meshes_C[o->f84_84], o->f80_80);
+    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &dword_8008B500.meshes_C[o->f84_84], o->f80_80);
     if (o->f88_88 == -1)
     {
         return ret;
@@ -61,7 +61,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
     {
         return ret;
     }
-    d = (*(unsigned short*)((char*)&levantPos_8008BD18 + 0xE) - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
+    d = ((unsigned short)levantPos_8008BD18.rot.vy - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
     if (d > 0xC00 || (d > 0x400 && d < 0x800))
     {
         ret = 1;
@@ -281,7 +281,7 @@ int FindLevantMesh_800B80C8(EvEntEventfnc* e)
     for (i = 0; i < dword_8008B500.nMeshes_4; i++, k++)
     {
         k %= dword_8008B500.nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], &levantPos_8008BD18);
+        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -351,17 +351,17 @@ void GetTriHeight_800B83E4(int* v, MapMesh* m, int i)
 
 void sub_800B844C(TaskEventfnc* t)
 {
-    EvSaveEventfnc* s;
+    SaveData* s;
     EvSpawnEventfnc sp;
     int i;
     int n;
     if (IsModelLoaderDone_800205D0())
     {
         EvMapEntEventfnc*** tbl = dword_800B0608;
-        s = (EvSaveEventfnc*)&saveData_8008B570;
-        sp.f1A_1A = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f6_6;
-        sp.f18_18 = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EC_2EC].f6_6;
-        n = sub_800A49CC(tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f4_4, sp.f18_18, &dword_80091C60, &sp);
+        s = &saveData_8008B570;
+        sp.f1A_1A = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f6_6;
+        sp.f18_18 = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_0].f6_6;
+        n = sub_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &dword_80091C60, &sp);
         for (i = 0; i < n; i++)
         {
             sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
@@ -1561,8 +1561,8 @@ int sub_800BA7A4(EvCtxEventfnc* c)
 // Not matched: the tail is scheduled differently (the constant 1 lands in $v0 and the halt store sinks below the pc store; original: $v1, halt store first)
 int sub_800BA82C(EvCtxEventfnc* c)
 {
-    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
-    s->f2DC_2DC = *(unsigned short*)&c->pc_8->b_8;
+    SaveData* s = &saveData_8008B570;
+    s->chapter_2DC = *(unsigned short*)&c->pc_8->b_8;
     sub_800A6D30(0);
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
@@ -1574,8 +1574,8 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA82C);
 
 int sub_800BA880(EvCtxEventfnc* c)
 {
-    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
-    s->f2E0_2E0 = *(unsigned short*)&c->pc_8->b_8;
+    SaveData* s = &saveData_8008B570;
+    s->field_2E0 = *(unsigned short*)&c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }
@@ -1593,19 +1593,19 @@ int sub_800BA8AC(EvCtxEventfnc* c)
 
 int sub_800BA930(EvCtxEventfnc* c)
 {
-    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
+    SaveData* s = &saveData_8008B570;
     int* p;
-    s->f2E4_2E4 = ((unsigned short*)&c->pc_8->a_4)[0];
-    s->f2E8_2E8 = ((unsigned short*)&c->pc_8->b_8)[1];
-    s->f2EC_2EC = ((unsigned short*)&c->pc_8->b_8)[0];
-    s->f2EE_2EE = -1;
+    s->mapId_2E4[0].field_0 = ((unsigned short*)&c->pc_8->a_4)[0];
+    s->mapId_2E4[1].field_0 = ((unsigned short*)&c->pc_8->b_8)[1];
+    s->mapId_2E4[2].field_0 = ((unsigned short*)&c->pc_8->b_8)[0];
+    s->mapId_2E4[2].field_2 = -1;
     p = (int*)c->pc_8->c_C;
     if (p)
     {
-        s->f7A8_7A8 = p[0];
-        s->f7AC_7AC = p[1];
-        s->f7B0_7B0 = p[2];
-        s->f7B6_7B6 = p[3];
+        s->levant_7A8.pos.x = p[0];
+        s->levant_7A8.pos.y = p[1];
+        s->levant_7A8.pos.z = p[2];
+        s->levant_7A8.rot.vy = p[3];
     }
     else
     {
@@ -1619,15 +1619,15 @@ int sub_800BA930(EvCtxEventfnc* c)
 int sub_800BA9E4(EvCtxEventfnc* c)
 {
     unsigned short v[3];
-    EvSaveEventfnc* s;
+    SaveData* s;
     sub_800ADCEC(v, c->pc_8->b_8);
     dword_80091C9C = 1;
     dword_80091C54 = 0;
     dword_80091C94 = 1;
-    s = (EvSaveEventfnc*)&saveData_8008B570;
-    s->f2E4_2E4 = v[0];
-    s->f2E8_2E8 = v[1];
-    s->f2EC_2EC = v[2];
+    s = &saveData_8008B570;
+    s->mapId_2E4[0].field_0 = v[0];
+    s->mapId_2E4[1].field_0 = v[1];
+    s->mapId_2E4[2].field_0 = v[2];
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 0;
@@ -1785,10 +1785,10 @@ int sub_800BAF08(EvCtxEventfnc* c)
 
 int sub_800BAF68(EvCtxEventfnc* c)
 {
-    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
+    SaveData* s = &saveData_8008B570;
     unsigned short v = *(unsigned short*)&c->pc_8->b_8;
-    s->f2F0_2F0 = v;
-    if ((short)v == s->f2F2_2F2)
+    s->mapId_2E4[3].field_0 = v;
+    if ((short)v == s->mapId_2E4[3].field_2)
     {
         c->pc_8++;
         return 1;
@@ -2306,7 +2306,7 @@ EvVecEventfnc* sub_800BBBA0(int i)
     EvVecEventfnc* r;
     if (i == 0)
     {
-        r = &levantPos_8008BD18;
+        r = (EvVecEventfnc*)&levantPos_8008BD18.pos;
     }
     else
     {
@@ -2320,7 +2320,7 @@ EvVecEventfnc* sub_800BBBD0(int i)
     EvVecEventfnc* r;
     if (i == 0)
     {
-        r = &levantRot_8008BD24;
+        r = (EvVecEventfnc*)&levantRot_8008BD24;
     }
     else
     {

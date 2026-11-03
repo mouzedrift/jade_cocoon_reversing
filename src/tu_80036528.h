@@ -5,13 +5,6 @@
 
 typedef struct
 {
-    int x;
-    int y;
-    int z;
-} struct_v3;
-
-typedef struct
-{
     struct_v3 pos;
     SVECTOR rot;
     int field_14;
@@ -43,21 +36,6 @@ typedef struct
     short a;
     short b;
 } ShortPair;
-
-/* levantPos_8008BD18 (== saveData_8008B570 + 0x7A8) */
-typedef struct
-{
-    struct_v3 pos;
-    SVECTOR rot_C;
-} LevantPos;
-
-/* view of saveData_8008B570 for the part globals.h still pads */
-typedef struct
-{
-    char pad_0[0x7A8];
-    LevantPos levant_7A8;
-} SaveDataLevant;
-#define SAVE_LEVANT (((SaveDataLevant*)&saveData_8008B570)->levant_7A8)
 
 /* one cubic per key: c[n] = {t^3, t^2, t, 1} coefficients */
 typedef struct

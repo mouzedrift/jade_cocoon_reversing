@@ -2242,11 +2242,6 @@ void sub_800BD854(ShopUnit3Shop* u)
 // Not matched (8 words): the two blocks that set tk = name_8008D670 + 0x10 before a call load
 // name_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
 // (When writing this in C, delete the jpt_800B96F4 line behind the function.)
-typedef struct ShopSaveBitsShop
-{
-    unsigned int pad : 5;
-    unsigned int bit5 : 1;
-} ShopSaveBitsShop;
 extern void sub_800BDD74();
 extern void sub_800BDE44();
 extern void sub_80027314();
@@ -2256,7 +2251,7 @@ extern int sub_800BAF54(short* a, short* b, short c, short d);
 void sub_800BD9DC(ShopUnit3Shop* u)
 {
     ShopTaskShop* tk;
-    char* sv;
+    SaveData* sv;
     int* p;
     int any;
     short i;
@@ -2267,19 +2262,19 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         {
             break;
         }
-        sv = (char*)&saveData_8008B570;
-        if (((ShopSaveBitsShop*)(sv + 0x1C))->bit5 == 1)
+        sv = &saveData_8008B570;
+        if (sv->settings_1C.bits.d_5 == 1)
         {
             MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
             sub_800B9B44((short*)u->field_50);
             if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
             {
-                p = (int*)(sv + 0x814);
+                p = (int*)sv->allMinionsBitfields_814;
                 p[1] |= 8;
             }
             else if (((unsigned char*)u->field_4C)[0x4C] == 0x22)
             {
-                p = (int*)(sv + 0x814);
+                p = (int*)sv->allMinionsBitfields_814;
                 p[1] |= 4;
             }
             if (u->field_24 & 0x200)
@@ -2292,7 +2287,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             u->field_88 = 0;
             u->field_8C = 0;
             u->field_24 |= 1;
-            if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+            if (saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
                 tk = (ShopTaskShop*)&name_8008D670->entry;
                 fn_80027478(0x40, 1);
@@ -2332,7 +2327,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         u->field_88 = 0;
         u->field_8C = 0;
         u->field_24 |= 1;
-        if (((ShopSaveBitsShop*)((char*)&saveData_8008B570 + 0x1C))->bit5 == 1)
+        if (saveData_8008B570.settings_1C.bits.d_5 == 1)
         {
             tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_80027478(0x40, 1);
