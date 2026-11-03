@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80010228.h"
 
 
 extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
@@ -275,24 +276,24 @@ extern EventNode* modelTasks_8008D618;
 int StartModelTask_80010850(void* a0)
 {
     EventEntry* e = AllocEventEntry_80043AF8(modelTasks_8008D618);
-    int* buf;
-    int* m;
+    ModelTaskBuf* buf;
+    ModelTaskState* m;
     if (e != 0)
     {
         e->cb_8 = (EventEntryFn)ModelTaskUpdateCb_80010A90;
-        buf = (int*)e->buffer;
+        buf = e->buffer;
         e->cb_C = (EventEntryFn)ModelTaskFreeCb_80010AB4;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->flags = (e->flags | 4) & 0xFFFF7FFF;
-        buf[0] = e->field_4;
+        buf->key_0 = e->field_4;
         m = malloc3_8003FC4C(0x40);
-        buf[1] = (int)m;
-        MemCopy_800403E8((unsigned int*)(m + 1), (unsigned int*)a0, 0x34);
-        m[0] = 0;
-        m[0x38 / 4] = 1;
-        m[0x3C / 4] = 1;
+        buf->state_4 = m;
+        MemCopy_800403E8((unsigned int*)&m->field_4, (unsigned int*)a0, 0x34);
+        m->field_0 = 0;
+        m->state_38 = 1;
+        m->next_3C = 1;
         StepModelTask_80010AD8((int)m);
-        return buf[0];
+        return buf->key_0;
     }
     return -1;
 }
@@ -309,7 +310,7 @@ int key;
         e = &n->entry;
         if ((e->flags & 0x8001) == 1)
         {
-            if (*(int*)e->buffer == key)
+            if (((ModelTaskBuf*)e->buffer)->key_0 == key)
             {
                 return (int*)e;
             }
@@ -322,12 +323,12 @@ int key;
 int FreeModelTask_8001098C(int arg0)
 {
     EventEntry* e = (EventEntry*)FindModelTask_8001091C();
-    int* buf = (int*)e->buffer;
-    int* q = (int*)buf[1];
-    if (q[0x38 / 4] == 5)
+    ModelTaskBuf* buf = e->buffer;
+    ModelTaskState* q = buf->state_4;
+    if (q->state_38 == 5)
     {
-        FreeModelList_80024BB0((int*)buf[1]);
-        free3_8003FC6C((void*)buf[1]);
+        FreeModelList_80024BB0((int*)buf->state_4);
+        free3_8003FC6C(buf->state_4);
         e->flags = (e->flags & ~1) | 0x8000;
         e->flags = (e->flags & ~4) | 0x8000;
         return 1;
@@ -338,16 +339,16 @@ int FreeModelTask_8001098C(int arg0)
 void RunModelTask_80010A10(int arg0)
 {
     int* p = FindModelTask_8001091C();
-    StepModelTask_80010AD8(((int**)p)[0x14 / 4][1]);
+    StepModelTask_80010AD8((int)((ModelTaskBuf*)((EventEntry*)p)->buffer)->state_4);
 }
 // Matched
 int sub_80010A44(void)
 {
-    int* p = (int*)((int*)FindModelTask_8001091C())[5];
-    int* q = (int*)p[1];
-    if (q[0x38 / 4] == 5)
+    ModelTaskBuf* p = ((EventEntry*)FindModelTask_8001091C())->buffer;
+    ModelTaskState* q = p->state_4;
+    if (q->state_38 == 5)
     {
-        return ((int*)q[0])[2];
+        return q->field_0[2];
     }
     return 0;
 }

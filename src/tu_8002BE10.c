@@ -15,6 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
+#include "minion_menu.h"
 
 INCLUDE_DATA(dword_800741EC);
 
@@ -106,24 +108,13 @@ void FreeActiveOverlay_8002C014(void)
         uiTiyTPages_8008D3F4 = 0;
     }
 }
-typedef struct
-{
-    int field_0;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    char pad_7;
-    unsigned short x;
-    unsigned short y;
-    char pad_C[8];
-} OverlayColorEntry;
 // Matched
 void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
-    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].x = pos[0];
-    ((OverlayColorEntry*)uiTiySprts_8008D620)[idx].y = pos[1];
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)uiTiySprts_8008D620)[idx], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)uiTiyTPages_8008D3F4 + idx * 8, 2);
+    ((SPRT*)uiTiySprts_8008D620)[idx].x0 = pos[0];
+    ((SPRT*)uiTiySprts_8008D620)[idx].y0 = pos[1];
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((SPRT*)uiTiySprts_8008D620)[idx], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((DR_TPAGE*)uiTiyTPages_8008D3F4)[idx], 2);
 }
 // Matched
 void DrawLargeNumber_8002C100(unsigned short* p, int n, int ot)
@@ -237,9 +228,9 @@ void SetLargeDigitColor_8002C5D0(int a0)
     short i = 0x84;
     do
     {
-        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].r = largeDigitColors_800826F8[a0][0];
-        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].g = largeDigitColors_800826F8[a0][1];
-        ((OverlayColorEntry*)uiTiySprts_8008D620)[i].b = largeDigitColors_800826F8[a0][2];
+        ((SPRT*)uiTiySprts_8008D620)[i].r0 = largeDigitColors_800826F8[a0][0];
+        ((SPRT*)uiTiySprts_8008D620)[i].g0 = largeDigitColors_800826F8[a0][1];
+        ((SPRT*)uiTiySprts_8008D620)[i].b0 = largeDigitColors_800826F8[a0][2];
         i++;
     } while (i < 0x8e);
 }
@@ -299,16 +290,14 @@ typedef struct
     int field_14;
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
-extern int CheckItemUsable_80033AFC(short* p);
+extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
 extern int sub_800AD308(int a0);
 extern int dword_800741EC;
-extern int publicTiySprts_8008D434;
-extern int publicTiyTPages_8008D440;
 extern int dword_80082820;
 extern int dword_80082824;
 extern MenuItem_1C* off_800829E8[];
 // Matched
-void sub_8002C728(short* a0)
+void sub_8002C728(struct_minion_ref* a0)
 {
     struct_A5A4 s;
     short saved;
@@ -321,16 +310,16 @@ void sub_8002C728(short* a0)
     MenuItem_1C** e;
     int y;
     int n;
-    saved = a0[0];
+    saved = a0->field_0;
     w = 8;
     for (i = 0; i < 4; i++)
     {
-        idx = sub_800AD288(i + a0[1], 0);
+        idx = sub_800AD288(i + a0->field_2, 0);
         if (idx < 0x2B)
         {
             v18 = GetItemIcon_8001D2AC(idx);
             v19 = GetItemName_8001CE20(idx);
-            v17 = sub_800AD2C8(i + a0[1], 0);
+            v17 = sub_800AD2C8(i + a0->field_2, 0);
         }
         else
         {
@@ -351,7 +340,7 @@ void sub_8002C728(short* a0)
         (*e)[1].y = y;
         (*e)[2].x = 0xD8;
         (*e)[2].y = y;
-        a0[0] = i;
+        a0->field_0 = i;
         if ((short)CheckItemUsable_80033AFC(a0))
         {
             (*e)[0].flags |= 2;
@@ -377,12 +366,12 @@ void sub_8002C728(short* a0)
             off_800829E8[i][2].flags &= ~0x40;
         }
     }
-    s.field_0 = a0[2];
+    s.field_0 = a0->field_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
     s.field_10 = off_800829E8;
-    s.field_14 = a0[3];
+    s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
     n = sub_800AD308(0) + 1;
@@ -390,23 +379,23 @@ void sub_8002C728(short* a0)
     {
         n = 4;
     }
-    if (a0[1])
+    if (a0->field_2)
     {
-        sub_8002C6DC((int)&dword_80082820, 3, a0[3]);
+        sub_8002C6DC((int)&dword_80082820, 3, a0->field_6);
     }
-    if (a0[1] < n - 4 && n >= 5)
+    if (a0->field_2 < n - 4 && n >= 5)
     {
-        sub_8002C6DC((int)&dword_80082824, 1, a0[3]);
+        sub_8002C6DC((int)&dword_80082824, 1, a0->field_6);
     }
 }
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int CountMagicBits_8001AE54(void* p);
-extern int CheckMagicCastable_80033C08(short* p);
+extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 extern MenuItem_1C* off_80082B54[];
 extern unsigned short word_800829FC[];
 extern unsigned short word_80082A00[];
 // Matched
-void sub_8002CAC8(short* a0, unsigned short* a1)
+void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
 {
     unsigned short pos[2];
     struct_A5A4 s;
@@ -420,7 +409,7 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
     MenuItem_1C** e;
     int y;
     int n;
-    saved = a0[0];
+    saved = a0->field_0;
     w = 8;
     if (a1)
     {
@@ -432,13 +421,13 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
         pos[0] = 0x60;
         pos[1] = 0x36;
     }
-    if (*(char**)(a0 + 6) == 0)
+    if (a0->field_C_minion == 0)
     {
         return;
     }
     for (i = 0; i < 4; i++)
     {
-        idx = FindNthMagicBit_8001AEC0(*(char**)(a0 + 6) + 0xF4, i + a0[1]);
+        idx = FindNthMagicBit_8001AEC0(a0->field_C_minion->field_F4, i + a0->field_2);
         if (idx < 0x1E)
         {
             v17 = sub_8001AF3C(idx);
@@ -457,7 +446,7 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
         (*e)[0].y = pos[1] + y;
         (*e)[1].x = pos[0] + 0x15;
         (*e)[1].y = pos[1] + y;
-        a0[0] = i;
+        a0->field_0 = i;
         if ((short)CheckMagicCastable_80033C08(a0))
         {
             (*e)[0].flags |= 2;
@@ -469,20 +458,20 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
             (*e)[1].flags &= ~2;
         }
     }
-    s.field_0 = a0[2];
+    s.field_0 = a0->field_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
     s.field_10 = off_80082B54;
-    s.field_14 = a0[3];
+    s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
-    n = CountMagicBits_8001AE54(*(char**)(a0 + 6) + 0xF4);
+    n = CountMagicBits_8001AE54(a0->field_C_minion->field_F4);
     if (n < 4)
     {
         n = 4;
     }
-    if (a0[1])
+    if (a0->field_2)
     {
         if (a1)
         {
@@ -494,9 +483,9 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
             r[0] = word_800829FC[0];
             r[1] = word_800829FC[1];
         }
-        sub_8002C6DC((int)r, 3, a0[3]);
+        sub_8002C6DC((int)r, 3, a0->field_6);
     }
-    if (a0[1] < n - 4 && n >= 5)
+    if (a0->field_2 < n - 4 && n >= 5)
     {
         if (a1)
         {
@@ -508,7 +497,7 @@ void sub_8002CAC8(short* a0, unsigned short* a1)
             r[0] = word_80082A00[0];
             r[1] = word_80082A00[1];
         }
-        sub_8002C6DC((int)r, 1, a0[3]);
+        sub_8002C6DC((int)r, 1, a0->field_6);
     }
 }
 

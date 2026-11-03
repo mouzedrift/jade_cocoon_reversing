@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
@@ -77,7 +78,7 @@ int IsConfirmPressed_8003D288(int flag, int idx)
 {
     int r = 0;
     unsigned int x;
-    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(((unsigned short*)padReleased_800918D4)[idx] & 4))
+    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(padReleased_800918D4[idx] & 4))
     {
         goto done;
     }
@@ -86,7 +87,7 @@ int IsConfirmPressed_8003D288(int flag, int idx)
     {
         goto end;
     }
-    if ((padHeld_800918D0[idx] & 0x40) || (((unsigned short*)padReleased_800918D4)[idx] & 0x40))
+    if ((padHeld_800918D0[idx] & 0x40) || (padReleased_800918D4[idx] & 0x40))
     {
         if (!(x & 0x40))
         {
@@ -373,8 +374,6 @@ typedef struct
     unsigned short pad_16;
 } FontDef;
 extern FontDef fontDefs_80086574[];
-extern char* publicTiySprts_8008D434;
-extern char* publicTiyTPages_8008D440;
 // Matched
 void InitFonts_8003DA70(void)
 {
@@ -385,10 +384,10 @@ void InitFonts_8003DA70(void)
     {
         e = &fontDefs_80086574[i];
         f = &fonts_80095FB0[i];
-        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(publicTiySprts_8008D434 + e->field_0 * 20), 0x14);
+        MemCopy_800403E8((unsigned int*)f, (unsigned int*)&publicTiySprts_8008D434[e->field_0], 0x14);
         f->w_10 = e->field_6;
         f->h_12 = e->field_8;
-        f->tpage_14 = (unsigned short*)(publicTiyTPages_8008D440 + e->field_0 * 8);
+        f->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[e->field_0];
         f->field_18 = f->u_C;
         f->field_1A = f->v_D;
         f->firstChar_1E = e->field_4;

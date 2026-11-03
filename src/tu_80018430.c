@@ -18,60 +18,16 @@
 
 
 
-typedef struct
-{
-    short a;
-    short b;
-} ShortPair2;
-typedef struct
-{
-    short (*tbl_0)[6];
-    int field_4;
-    int field_8;
-    int field_C;
-    char pad_10[0x1C];
-    int field_2C;
-    int field_30;
-    int field_34;
-} EffectTarget;
-typedef struct
-{
-    int idx_0;
-    ShortPair2* pairs_4;
-    short (*tbl_8)[6];
-    int field_C;
-    int field_10;
-    int field_14;
-    char pad_18[0x1C];
-    int field_34;
-    int field_38;
-    int pad_3C;
-    int count_40;
-    EffectTarget targets_44[1];
-} EffectSet;
+#include "effect_obj.h"
+#include "actor.h"
+#include "tu_80018430.h"
+
 typedef struct
 {
     int field_0;
     int field_4;
     short ids_8[6];
 } EffectRow;
-typedef struct
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    short field_1C;
-    short field_1E;
-    int pad_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
-} EffectArgs;
 extern ShortPair2 dword_800795F0[];
 extern EffectRow* dword_80091BE0;
 extern int dword_8008D784;
@@ -81,47 +37,47 @@ void sub_8001852C(EffectSet* p, int a1);
 // Matched
 void sub_80018430(short v)
 {
-    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
-    *(short*)(base + 0x40) = v;
+    EffectTaskState* base = EFFECT_STATE;
+    base->field_40 = v;
 }
 // Matched
 void sub_80018448(short v)
 {
-    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
-    *(short*)(base + 0x42) = v;
+    EffectTaskState* base = EFFECT_STATE;
+    base->field_42 = v;
 }
 // Matched
 void sub_80018460(int on)
 {
-    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
+    EffectTaskState* base = EFFECT_STATE;
     if (on)
     {
-        *(unsigned int*)(base + 0x28) |= 8;
+        base->flags_28 |= 8;
     }
     else
     {
-        *(unsigned int*)(base + 0x28) &= ~8;
+        base->flags_28 &= ~8;
     }
 }
 // Matched
 void sub_800184A0(int arg, int bit)
 {
-    unsigned char* base = (unsigned char*)effectTask_8008D3F8[0x24 / 4];
+    EffectTaskState* base = EFFECT_STATE;
     if (bit == 0)
     {
-        (base + arg)[0x44] = 0;
+        base->bits_44[arg] = 0;
     }
     else
     {
-        (base + arg)[0x44] |= 1 << bit;
+        base->bits_44[arg] |= 1 << bit;
     }
 }
 // Matched
 int sub_800184DC(int a0, int a1)
 {
-    int* p = effectTask_8008D3F8[9];
-    sub_8001852C((EffectSet*)a0, *((unsigned char*)p + a1 + 0x44));
-    p[0x28 / 4] |= 1;
+    EffectTaskState* p = EFFECT_STATE;
+    sub_8001852C((EffectSet*)a0, p->bits_44[a1]);
+    p->flags_28 |= 1;
     return 1;
 }
 // Matched
@@ -179,7 +135,7 @@ void sub_8001852C(EffectSet* p, int a1)
                 args.field_C = p->field_C;
                 args.field_10 = p->field_10;
                 args.field_18 = p->field_14;
-                args.field_14 = (int)&tbl[idx][2];
+                args.scale_14 = &tbl[idx][2];
                 args.field_1C = p->pairs_4[k].a;
                 args.field_1E = p->pairs_4[k].b;
                 args.field_24 = tbl[idx][1];
@@ -204,7 +160,7 @@ void sub_8001852C(EffectSet* p, int a1)
                     args.field_C = p->targets_44[i].field_4;
                     args.field_10 = p->targets_44[i].field_8;
                     args.field_18 = p->targets_44[i].field_C;
-                    args.field_14 = (int)&tbl[idx][2];
+                    args.scale_14 = &tbl[idx][2];
                     args.field_1C = p->pairs_4[k].a;
                     args.field_1E = p->pairs_4[k].b;
                     args.field_24 = tbl[idx][1];
@@ -283,24 +239,24 @@ typedef struct
 } ActionDesc;
 extern int sub_80018C00(ActionDesc* d, int* p, int* a2);
 // Matched
-ShortPair sub_80018A4C(char* obj, int* p, int* a2, int c)
+ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
 {
     ShortPair r;
     ActionDesc d;
-    char* q;
+    ActorRec65C* q;
     memset(&r, 0, 4);
     if (p[0] == 0x16)
     {
-        q = *(char**)(obj + 0x148) + 0x65C;
-        if (*(short*)(q + 0x24) < 0)
+        q = &((ActorData148*)obj->f148)->rec_65C;
+        if (q->field_24 < 0)
         {
-            *(short*)(q + 0x24) = *(short*)(*(char**)(obj + 0x148) + 0x656);
-            *(short*)(q + 0x26) = *(short*)(q + 0x24) + 30;
+            q->field_24 = ((ActorData148*)obj->f148)->field_656;
+            q->field_26 = q->field_24 + 30;
         }
-        if (*(short*)(q + 0x26) - *(short*)(q + 0x24) < 30)
+        if (q->field_26 - q->field_24 < 30)
         {
-            *(short*)(q + 0x24) = *(short*)(*(char**)(obj + 0x148) + 0x656);
-            *(short*)(q + 0x26) = *(short*)(q + 0x24) + 30;
+            q->field_24 = ((ActorData148*)obj->f148)->field_656;
+            q->field_26 = q->field_24 + 30;
         }
     }
     d.fE = -1;
@@ -326,7 +282,7 @@ ShortPair sub_80018A4C(char* obj, int* p, int* a2, int c)
         d.f1C = 1;
     }
     r.a = sub_8001E254((struct_obj_A*)obj, &d);
-    r.b = sub_8001F03C((int)obj, *(int*)(obj + 0xD0), -1, 0x10);
+    r.b = sub_8001F03C((int)obj, obj->fD0, -1, 0x10);
     if (p[0] != 0x12 && c)
     {
         r.a = 0;

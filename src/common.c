@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "unit.h"
 
 INCLUDE_DATA(dword_80071F58);
 INCLUDE_DATA(dword_80071F5C);
@@ -103,7 +104,7 @@ unsigned char* sub_800129B0(Stats12* out, unsigned char* in, int a2)
     m = sub_8001449C(a2 & 0xFF);
     if (m)
     {
-        id = ((int*)m)[0x5C / 4];
+        id = ((UnitStats*)m)->species_5C;
     }
     if (id != 0xD3)
     {
@@ -263,7 +264,7 @@ void sub_80012BB0(int a0, int a1, int* p, ActionResult* out)
     m = sub_8001449C(b1 & 0xFF);
     if (m)
     {
-        id = ((int*)m)[0x5C / 4];
+        id = ((UnitStats*)m)->species_5C;
     }
     if (id != 0xD3)
     {

@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "effect_obj.h"
 
 INCLUDE_DATA(aAssertionFaile_3);
 INCLUDE_DATA(aEffectC);
@@ -312,23 +313,13 @@ void FirFilterStep_80014588(int* a0, struct_16* a1, unsigned int a2)
     }
     a1->field_C >>= 12;
 }
-typedef struct
-{
-    int pad0[10];
-    int flags;
-    int state;
-    int pad30;
-    int pad34;
-    int idx;
-    int timer;
-} EffectState;
 void UpdateEffectTask_80014638(struct_obj_D* p, void* buf);
 // Matched
-void InitEffectTask_80014618(struct_obj_D* p, int* q)
+void InitEffectTask_80014618(struct_obj_D* p, EffectTaskState* q)
 {
-    q[0x28 / 4] = 2;
-    q[0x3C / 4] = 0;
-    q[0x2C / 4] = 0;
+    q->flags_28 = 2;
+    q->timer_3C = 0;
+    q->state_2C = 0;
     p->field_8 = (void (*)(void))UpdateEffectTask_80014638;
 }
 extern short dword_800795D0[];
@@ -338,54 +329,54 @@ int CountActiveEffectObjects_800147FC(void);
 // Matched
 void UpdateEffectTask_80014638(struct_obj_D* p, void* buf)
 {
-    EffectState* q = (EffectState*)buf;
+    EffectTaskState* q = (EffectTaskState*)buf;
     int r;
     int vlc;
     int img;
-    if (q->timer > 0)
+    if (q->timer_3C > 0)
     {
-        q->timer--;
+        q->timer_3C--;
     }
-    switch ((unsigned int)q->state)
+    switch ((unsigned int)q->state_2C)
     {
     case 0:
-        if (q->flags & 4)
+        if (q->flags_28 & 4)
         {
-            q->flags &= ~2;
-            q->flags &= ~4;
-            if (q->idx >= 0x46)
+            q->flags_28 &= ~2;
+            q->flags_28 &= ~4;
+            if (q->idx_38 >= 0x46)
             {
-                q->idx = 0x12;
+                q->idx_38 = 0x12;
             }
-            LoadEffectFile_80020DDC(dword_800795F0[q->idx * 2], effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
-            q->state = 1;
+            LoadEffectFile_80020DDC(dword_800795F0[q->idx_38 * 2], effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            q->state_2C = 1;
         }
         break;
     case 1:
         r = IsEffectFileLoaded_80020EBC(effectFile_80091BD0);
         if (r == 1 && IsFileRequestQueueIdle_8003BF88() == r)
         {
-            vlc = effectFile_80091BD0[0x34 / 4];
-            img = effectFile_80091BD0[0x38 / 4];
-            q->state = 2;
+            vlc = EFFECT_FILE->vlc_34;
+            img = EFFECT_FILE->img_38;
+            q->state_2C = 2;
             mdecEffectVlcBuffer_8008D42C = (unsigned long*)vlc;
             decodedImageData_8008B4A0 = (unsigned long*)img;
         }
         break;
     case 2:
-        if (q->flags & 1)
+        if (q->flags_28 & 1)
         {
-            q->flags &= ~1;
-            q->state = 3;
+            q->flags_28 &= ~1;
+            q->state_2C = 3;
         }
         break;
     case 3:
-        if (CountActiveEffectObjects_800147FC() == 0 && q->timer == 0 && !(q->flags & 2))
+        if (CountActiveEffectObjects_800147FC() == 0 && q->timer_3C == 0 && !(q->flags_28 & 2))
         {
             FreeEffectFile_80020EE0(effectFile_80091BD0);
             unknownFlags_8008D678 &= ~0x800;
-            q->state = 0;
-            q->flags |= 2;
+            q->state_2C = 0;
+            q->flags_28 |= 2;
         }
         break;
     }
@@ -435,15 +426,15 @@ void FreeEffectTask_800148A0(void)
 // Matched
 int IsEffectTaskIdle_800148D4(void)
 {
-    return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 0;
+    return EFFECT_STATE->state_2C == 0;
 }
 // Matched
 void RequestEffect_800148F4(int a0)
 {
-    int* p = effectTask_8008D3F8[9];
-    p[0x28 / 4] |= 4;
-    p[0x38 / 4] = a0;
-    if (p[0x2C / 4] != 0)
+    EffectTaskState* p = EFFECT_STATE;
+    p->flags_28 |= 4;
+    p->idx_38 = a0;
+    if (p->state_2C != 0)
     {
         printf(aAssertionFaile_3, aEffectC, 0x124);
         exit(1);

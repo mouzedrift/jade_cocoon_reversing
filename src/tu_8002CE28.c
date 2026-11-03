@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "minion_menu.h"
 
 
 typedef struct
@@ -38,13 +39,13 @@ typedef struct
     int field_14;
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
-extern int sub_80033C98(short* p);
+extern int sub_80033C98(struct_minion_ref* p);
 int sub_8002D1A4(int a, short b);
 extern int abilityNames_800834E4[];
 extern int abilityBonusNames_80083580[];
 extern MenuItem_1C* off_80082D98[];
 // Matched
-void sub_8002CE28(short* a0, unsigned short* a1)
+void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
 {
     struct_A5A4 s;
     unsigned short pos[2];
@@ -57,7 +58,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
     MenuItem_1C** e;
     MenuItem_1C** e2;
     int y;
-    saved = a0[0];
+    saved = a0->field_0;
     w = 8;
     if (a1)
     {
@@ -73,7 +74,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
     {
         v20 = abilityNames_800834E4[0];
         v19 = abilityBonusNames_80083580[0];
-        m = *(unsigned char**)(a0 + 6) + i * 4;
+        m = (unsigned char*)a0->field_C_minion + i * 4;
         if (m[0xDE] & 1)
         {
             if (m[0xDF])
@@ -88,7 +89,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
             (*e)[0].flags &= ~2;
             (*e)[1].flags &= ~2;
             (*e)[2].flags &= ~2;
-            a0[0] = i;
+            a0->field_0 = i;
             if ((short)sub_80033C98(a0))
             {
                 (*e)[0].flags |= 2;
@@ -108,7 +109,7 @@ void sub_8002CE28(short* a0, unsigned short* a1)
             off_80082D98[i][1].flags |= 2;
             off_80082D98[i][2].flags |= 2;
         }
-        y = sub_8002D1A4(((unsigned char*)sub_800318C8((*(unsigned char**)(a0 + 6) + (i << 2))[0xDF]))[8], i);
+        y = sub_8002D1A4(((unsigned char*)sub_800318C8(((unsigned char*)a0->field_C_minion + (i << 2))[0xDF]))[8], i);
         e2 = &off_80082D98[i];
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;
@@ -123,12 +124,12 @@ void sub_8002CE28(short* a0, unsigned short* a1)
         (*e2)[2].x = pos[0] + 0x83;
         (*e2)[2].y = pos[1] + y;
     }
-    s.field_0 = a0[2];
+    s.field_0 = a0->field_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
     s.field_10 = off_80082D98;
-    s.field_14 = a0[3];
+    s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
 }

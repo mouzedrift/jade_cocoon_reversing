@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 INCLUDE_DATA(dword_80074A24);
 INCLUDE_DATA(dword_80074A34);
@@ -49,9 +50,6 @@ void InitGameDefaults_80040718(void)
     ResetButtonConfig_8001C6C8();
     word_8008B558[1] = 0;
 }
-extern int publicTiyPolyFT4s_8008D430;
-extern int publicTiySprts_8008D434;
-extern int publicTiyTPages_8008D440;
 extern int publicFtg_8008D4D0;
 extern void LoadFtgObjects_80021824(int* p, int a, int b, int c, int d);
 
@@ -60,7 +58,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74(&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74((int*)&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, (int*)&publicTiyTPages_8008D440, (int)pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
     LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);
@@ -75,8 +73,8 @@ void ReloadPublicTiy_80040898(void)
     LoadTiy_80028E74(0, 0, 0, (int)pFile, 1);
     InitFonts_8003DA70();
 }
-extern int copyrightSprts_8008D47C;
-extern int copyrightTPages_8008B4EC;
+extern SPRT* copyrightSprts_8008D47C;
+extern DR_TPAGE* copyrightTPages_8008B4EC;
 
 
 // Matched
@@ -85,29 +83,29 @@ void DrawCopyrightScreen_800408F4(void)
     if ((unsigned int)frameCount_8008D3FC < 0x190)
     {
         int i;
-        short* e = (short*)copyrightSprts_8008D47C;
-        e[4] = 0;
-        e[5] = 0;
-        e[0xE] = 0x100;
-        e[0xF] = 0;
-        e[0x18] = 0x200;
-        e[0x19] = 0;
-        e[0x22] = 0;
-        e[0x23] = 0x100;
-        e[0x2C] = 0x100;
-        e[0x2D] = 0x100;
-        e[0x36] = 0x200;
-        e[0x37] = 0x100;
+        SPRT* e = copyrightSprts_8008D47C;
+        e[0].x0 = 0;
+        e[0].y0 = 0;
+        e[1].x0 = 0x100;
+        e[1].y0 = 0;
+        e[2].x0 = 0x200;
+        e[2].y0 = 0;
+        e[3].x0 = 0;
+        e[3].y0 = 0x100;
+        e[4].x0 = 0x100;
+        e[4].y0 = 0x100;
+        e[5].x0 = 0x200;
+        e[5].y0 = 0x100;
         for (i = 0; i < 6; i++)
         {
-            AddPrimCopy_80040298(pOT_8008D3EC, (char*)copyrightSprts_8008D47C + i * 0x14, 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, (char*)copyrightTPages_8008B4EC + i * 8, 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightSprts_8008D47C[i], 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightTPages_8008B4EC[i], 2);
         }
     }
     else
     {
-        free3_8003FC6C((void*)copyrightSprts_8008D47C);
-        free3_8003FC6C((void*)copyrightTPages_8008B4EC);
+        free3_8003FC6C(copyrightSprts_8008D47C);
+        free3_8003FC6C(copyrightTPages_8008B4EC);
         ReloadPublicTiy_80040898();
         bStopDrawingMovie_8008D45C = 1;
     }
@@ -119,7 +117,7 @@ void InitCopyrightScreen_80040A10(int* a0)
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     copyrightSprts_8008D47C = 0;
     copyrightTPages_8008B4EC = 0;
-    LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, (int)pFile, 1);
+    LoadTiy_80028E74((int*)&copyrightSprts_8008D47C, 0, (int*)&copyrightTPages_8008B4EC, (int)pFile, 1);
     free3_8003FC6C(pFile);
     a0[2] = (int)DrawCopyrightScreen_800408F4;
 }

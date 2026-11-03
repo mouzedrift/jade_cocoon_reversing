@@ -15,31 +15,29 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 
-extern short* publicTiySprts_8008D434;
-extern char* publicTiyTPages_8008D440;
 
 // Matched
 void sub_8003CF88(short x, short y, int idx)
 {
-    ((SPRT*)publicTiySprts_8008D434)[60].x0 = x;
-    ((SPRT*)publicTiySprts_8008D434)[60].y0 = y;
-    ((char*)publicTiySprts_8008D434)[0x4B4] = (unsigned int)frameCount_8008D3FC % 16 * 16;
-    ((char*)publicTiySprts_8008D434)[0x4B5] = (unsigned int)frameCount_8008D3FC % 16 * 16;
-    ((char*)publicTiySprts_8008D434)[0x4B6] = (unsigned int)frameCount_8008D3FC % 16 * 16;
-    AddPrimCopy_80040298(pOT_8008D454 + idx, (char*)publicTiySprts_8008D434 + 0x4B0, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, publicTiyTPages_8008D440 + 0x1E0, 2);
+    publicTiySprts_8008D434[60].x0 = x;
+    publicTiySprts_8008D434[60].y0 = y;
+    publicTiySprts_8008D434[60].r0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
+    publicTiySprts_8008D434[60].g0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
+    publicTiySprts_8008D434[60].b0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[60], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[60], 2);
 }
 extern void DrawPublicTiySprt_80033080(void* a, int b, int c);
-extern short* publicTiySprts_8008D434;
 // Matched
 void sub_8003D034(unsigned short* pPos, int a1)
 {
     short r[2];
     r[0] = pPos[0] - 13;
     r[1] = pPos[1] - 6;
-    SetSemiTrans((char*)publicTiySprts_8008D434 + 0x64, 1);
+    SetSemiTrans(&publicTiySprts_8008D434[5], 1);
     DrawPublicTiySprt_80033080(r, 5, a1);
 }
 // Matched
@@ -69,9 +67,9 @@ void sub_8003D090(short x, short y, int a2, int a3, int idx)
         break;
     }
     t = r + 0x10;
-    *(short*)((char*)publicTiySprts_8008D434 + 0x6C) = x - t;
-    *(short*)((char*)publicTiySprts_8008D434 + 0x6E) = y - 10;
-    SetSemiTrans((char*)publicTiySprts_8008D434 + 0x64, 1);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, (char*)publicTiySprts_8008D434 + 0x64, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, publicTiyTPages_8008D440 + 0x28, 2);
+    publicTiySprts_8008D434[5].x0 = x - t;
+    publicTiySprts_8008D434[5].y0 = y - 10;
+    SetSemiTrans(&publicTiySprts_8008D434[5], 1);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[5], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[5], 2);
 }

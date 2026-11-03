@@ -615,17 +615,28 @@ int CancelFileRequest_8003C060(int key)
     }
     return 2;
 }
-extern int** fileRequestTask_8008B544;
+typedef struct FileTask FileTask;
+struct FileTask
+{
+    FileRequest* cur;
+    Data001File file;
+    char pad_10[0xC];
+    int state;
+    int buf;
+    int sectors;
+    int retry;
+};
+extern EventNode* fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
-    int* p = fileRequestTask_8008B544[0x24 / 4];
+    FileTask* p = fileRequestTask_8008B544->entry.buffer;
     if (dword_80086568 != a0)
     {
         if (a0 == 1)
         {
-            int* q = (int*)p[0];
-            if (q == 0 || (p[0x1C / 4] == 8 && (q[0xC / 4] & 0x1000)))
+            FileRequest* q = p->cur;
+            if (q == 0 || (p->state == 8 && (q->flags_C & 0x1000)))
             {
                 dword_80086568 = a0;
             }
@@ -638,29 +649,18 @@ int sub_8003C0A4(int a0)
     }
     return 0;
 }
-typedef struct FileTask FileTask;
 void ProcessFileRequests_8003C184(int* a0, FileTask* t);
 // Matched
-void InitFileRequestTask_8003C128(int* a0, int* a1)
+void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
 {
     InitFileRequestQueue_8003BBE4();
     fileBuffer_8008656C = 0x801B9250;
-    a1[0] = 0;
-    a1[7] = 0;
-    a1[8] = 0;
-    a1[10] = 0;
+    a1->cur = 0;
+    a1->state = 0;
+    a1->buf = 0;
+    a1->retry = 0;
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
-struct FileTask
-{
-    FileRequest* cur;
-    Data001File file;
-    char pad_10[0xC];
-    int state;
-    int buf;
-    int sectors;
-    int retry;
-};
 extern FileRequest* dword_80086548;
 extern int CdSeekStart_8003C8A0(DslLOC* loc);
 extern int CdReadStart_8003C944(DslLOC* loc, int buf, int sectors);
@@ -706,8 +706,8 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             DATA_GetFile_8003C7CC(&t->file, t->cur->fileId_10);
             if (t->cur->flags_C & 0x40)
             {
-                DsIntToPos(DsPosToInt(&t->file.field_0_position) + ((unsigned int)((int*)t->cur)[0x14 / 4] >> 11), &t->file.field_0_position);
-                t->sectors = (unsigned int)((int*)t->cur)[0x18 / 4] >> 11;
+                DsIntToPos(DsPosToInt(&t->file.field_0_position) + ((unsigned int)t->cur->offset_14 >> 11), &t->file.field_0_position);
+                t->sectors = (unsigned int)t->cur->size_18 >> 11;
             }
             else
             {

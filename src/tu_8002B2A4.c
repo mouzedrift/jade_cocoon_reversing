@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tiy.h"
 
 INCLUDE_DATA(dword_800741D8);
 INCLUDE_DATA(dword_800741DC);
@@ -62,9 +63,6 @@ typedef struct
 } UShortPair;
 extern CVECTOR dword_800741E4;
 extern CVECTOR dword_800741E8;
-extern int publicTiyPolyFT4s_8008D430;
-extern int publicTiySprts_8008D434;
-extern int publicTiyTPages_8008D440;
 extern short dword_8008279C[];
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 #if 0
@@ -83,43 +81,43 @@ void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
     c0 = dword_800741E4;
     c1 = dword_800741E8;
     idx = dword_8008279C[(short)saveData_8008B570.uiColor_20 * 3 + p.a];
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1 = ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2 = 1 - ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2 = ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3 = ((SPRT*)publicTiySprts_8008D434)[idx].w / 2;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3 = ((SPRT*)publicTiySprts_8008D434)[idx].h / 2;
+    publicTiyPolyFT4s_8008D430[idx].x0 = 1 - publicTiySprts_8008D434[idx].w / 2;
+    publicTiyPolyFT4s_8008D430[idx].y0 = 1 - publicTiySprts_8008D434[idx].h / 2;
+    publicTiyPolyFT4s_8008D430[idx].x1 = publicTiySprts_8008D434[idx].w / 2;
+    publicTiyPolyFT4s_8008D430[idx].y1 = 1 - publicTiySprts_8008D434[idx].h / 2;
+    publicTiyPolyFT4s_8008D430[idx].x2 = 1 - publicTiySprts_8008D434[idx].w / 2;
+    publicTiyPolyFT4s_8008D430[idx].y2 = publicTiySprts_8008D434[idx].h / 2;
+    publicTiyPolyFT4s_8008D430[idx].x3 = publicTiySprts_8008D434[idx].w / 2;
+    publicTiyPolyFT4s_8008D430[idx].y3 = publicTiySprts_8008D434[idx].h / 2;
     ang = p.b << 10;
-    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0;
-    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0;
+    x = publicTiyPolyFT4s_8008D430[idx].x0;
+    y = publicTiyPolyFT4s_8008D430[idx].y0;
     nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
     ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x0 = c[0] + nx;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y0 = c[1] + ny;
-    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1;
-    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1;
+    publicTiyPolyFT4s_8008D430[idx].x0 = c[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y0 = c[1] + ny;
+    x = publicTiyPolyFT4s_8008D430[idx].x1;
+    y = publicTiyPolyFT4s_8008D430[idx].y1;
     nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
     ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x1 = c[0] + nx;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y1 = c[1] + ny;
-    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2;
-    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2;
+    publicTiyPolyFT4s_8008D430[idx].x1 = c[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y1 = c[1] + ny;
+    x = publicTiyPolyFT4s_8008D430[idx].x2;
+    y = publicTiyPolyFT4s_8008D430[idx].y2;
     nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
     ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x2 = c[0] + nx;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y2 = c[1] + ny;
-    x = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3;
-    y = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3;
+    publicTiyPolyFT4s_8008D430[idx].x2 = c[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y2 = c[1] + ny;
+    x = publicTiyPolyFT4s_8008D430[idx].x3;
+    y = publicTiyPolyFT4s_8008D430[idx].y3;
     nx = x * word_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * word_80084540[ang & 0xFFF] / 4096;
     ny = x * word_80084540[ang & 0xFFF] / 4096 + y * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].x3 = c[0] + nx;
-    ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].y3 = c[1] + ny;
-    setSemiTrans(&((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx], 0);
-    PulseColor_80033394((unsigned char*)&((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 0x28, 0xA);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx], 10);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)publicTiyTPages_8008D440 + idx * 8, 2);
+    publicTiyPolyFT4s_8008D430[idx].x3 = c[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y3 = c[1] + ny;
+    setSemiTrans(&publicTiyPolyFT4s_8008D430[idx], 0);
+    PulseColor_80033394((unsigned char*)&publicTiyPolyFT4s_8008D430[idx].r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 0x28, 0xA);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyPolyFT4s_8008D430[idx], 10);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], 2);
 }
 #endif
 INCLUDE_ASM(sub_8002B3DC);
@@ -266,7 +264,6 @@ unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned 
     return 0;
 }
 extern CVECTOR dword_800741E8;
-extern int publicTiyPolyFT4s_8008D430;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 extern void sub_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
@@ -280,17 +277,17 @@ void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int o
         c0 = dword_800741E8;
         c1 = dword_800741E8;
         setPolyFT4(&poly);
-        poly.code = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].code;
-        poly.clut = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].clut;
-        poly.tpage = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].tpage;
-        poly.u0 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u0;
-        poly.v0 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v0;
-        poly.u1 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u1;
-        poly.v1 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v1;
-        poly.u2 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u2;
-        poly.v2 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v2;
-        poly.u3 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].u3;
-        poly.v3 = ((POLY_FT4*)publicTiyPolyFT4s_8008D430)[idx].v3;
+        poly.code = publicTiyPolyFT4s_8008D430[idx].code;
+        poly.clut = publicTiyPolyFT4s_8008D430[idx].clut;
+        poly.tpage = publicTiyPolyFT4s_8008D430[idx].tpage;
+        poly.u0 = publicTiyPolyFT4s_8008D430[idx].u0;
+        poly.v0 = publicTiyPolyFT4s_8008D430[idx].v0;
+        poly.u1 = publicTiyPolyFT4s_8008D430[idx].u1;
+        poly.v1 = publicTiyPolyFT4s_8008D430[idx].v1;
+        poly.u2 = publicTiyPolyFT4s_8008D430[idx].u2;
+        poly.v2 = publicTiyPolyFT4s_8008D430[idx].v2;
+        poly.u3 = publicTiyPolyFT4s_8008D430[idx].u3;
+        poly.v3 = publicTiyPolyFT4s_8008D430[idx].v3;
         setShadeTex(&poly, 0);
         scale *= 512;
         PulseColor_80033394(&poly.r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 40, 10);
