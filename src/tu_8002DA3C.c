@@ -45,7 +45,159 @@ void sub_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     sub_8002E0D8(loc, ot);
 }
-INCLUDE_ASM(sub_8002DB48);
+extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
+extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
+extern void sub_8002E004(unsigned short* p, int a1, int a2);
+extern void sub_8002C100(unsigned short* pos, int v, int ot);
+extern void sub_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
+extern void sub_8002BA54(void* a, int b, void* c, int d);
+extern void sub_80033864(Minion* m, unsigned char* out);
+extern void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot);
+extern void sub_8002EACC(unsigned char* a0, unsigned short* pos, int a2, short ot);
+// Matched
+void sub_8002DB48(unsigned char* m, int ot, int unused, unsigned short* pos, Minion* mn, unsigned char* cmp)
+{
+    short i;
+    short j;
+    unsigned char buf[8];
+    unsigned short loc[2];
+    unsigned short loc2[2];
+    unsigned int w[4];
+    unsigned char st[0x18];
+    unsigned char st2[0x18];
+    unsigned short loc3[2];
+    unsigned short loc4[2];
+    int d;
+    unsigned short x;
+    unsigned short y;
+    unsigned int u;
+
+    AddClipTexWindowPrim_80033308(&pOT_8008D454[ot]);
+    sub_8002DA3C(pos, ot);
+    x = pos[0];
+    loc[0] = x + 0x1E;
+    y = pos[1];
+    loc[1] = y + 3;
+    loc[0] = x + 0x26;
+    loc[1] = y + 5;
+    DrawLargeText_8002FBD8(0, loc, m + 0x10, ot);
+    loc[0] = pos[0] + 0x42;
+    loc[1] = pos[1] + 0x11;
+    d = 0;
+    if (cmp)
+    {
+        d = cmp[0x44] - m[0x44];
+        if (d)
+        {
+            loc2[0] = pos[0] + 0x43;
+            loc2[1] = pos[1] + 0x14;
+            sub_8002E004(loc2, d, ot);
+        }
+    }
+    if (d < 0)
+    {
+        sub_8002C5D0(1);
+    }
+    else if (d > 0)
+    {
+        sub_8002C5D0(2);
+    }
+    else
+    {
+        sub_8002C5D0(0);
+    }
+    loc[1] += 1;
+    sub_8002C100(loc, m[0x44], ot);
+    if (d)
+    {
+        sub_8002C5D0(0);
+    }
+    if (cmp)
+    {
+        d = *(short*)(cmp + 0xA) - *(short*)(m + 0xA);
+        if (d)
+        {
+            loc2[0] = pos[0] + 0x2F;
+            loc2[1] = pos[1] + 0x3A;
+            sub_8002E004(loc2, d, ot);
+        }
+    }
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 0x45;
+    sub_8002EFC4((char*)m + 8, 0, 0, loc, ot, 1);
+    if (cmp)
+    {
+        d = *(short*)(cmp + 0xE) - *(short*)(m + 0xE);
+        if (d)
+        {
+            loc2[0] = pos[0] + 0x2F;
+            loc2[1] = pos[1] + 0x59;
+            sub_8002E004(loc2, d, ot);
+        }
+    }
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 0x63;
+    sub_8002EFC4((char*)m + 0xC, 0, 0, loc, ot, 1);
+    w[0] = 2;
+    w[1] = 0;
+    u = *(unsigned int*)(m + 4);
+    while (u > 0x4000000)
+    {
+        u -= 0x4000000;
+    }
+    w[2] = u;
+    w[3] = 0x4000000;
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 0x2B;
+    sub_8002BA54(w, 0, loc, ot);
+    sub_80033864(mn, buf);
+    loc[0] = pos[0] + 0xA2;
+    loc[1] = pos[1] + 4;
+    sub_8002E730(loc, buf, ot);
+    loc[0] = pos[0] + 0xA2;
+    loc[1] = pos[1] + 0x3D;
+    sub_8002EACC(m, loc, (int)mn + 0xCC, ot);
+    sub_80033624(st, (int)m);
+    if (cmp)
+    {
+        sub_80033624(st2, (int)cmp);
+        for (i = 0; i < 5; i++)
+        {
+            d = st2[i] - st[i];
+            if (d < 0)
+            {
+                sub_8002C5D0(1);
+            }
+            else if (d > 0)
+            {
+                sub_8002C5D0(2);
+            }
+            else
+            {
+                sub_8002C5D0(0);
+            }
+            loc3[0] = pos[0] + 0x8C;
+            loc3[1] = pos[1] + a1ftf[i] + 1;
+            sub_8002C100(loc3, st[i], ot);
+            if (d)
+            {
+                sub_8002C5D0(0);
+                loc3[0] = pos[0] + 0x8C;
+                loc3[1] = pos[1] + a1ftf[i] + 3;
+                sub_8002E004(loc3, d, ot);
+            }
+        }
+    }
+    else
+    {
+        loc4[0] = pos[0] + 0x8C;
+        for (j = 0; j < 5; j++)
+        {
+            loc4[1] = pos[1] + a1ftf[j] + 1;
+            sub_8002C100(loc4, st[j], ot);
+        }
+    }
+}
 extern void sub_80031FF4(int a, void* b, void* c, int d);
 extern void sub_8002C290(void* p, int a1, int a2);
 // Matched
@@ -91,7 +243,7 @@ void sub_8002E0D8(unsigned short* p, short a1)
         sub_8002C06C(pos, dword_80082EBC[i], a1);
     }
 }
-extern void sub_8002C100(unsigned short* pos, int v, short ot);
+extern void sub_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short ot)
 {

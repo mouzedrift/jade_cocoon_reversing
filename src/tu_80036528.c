@@ -914,12 +914,79 @@ void sub_80038E2C(int* p, int a, int b)
     p[0x180 / 4] = dword_80083C70[(unsigned short)a].field_8;
     sub_80038D64(o, p + 0x38 / 4);
 }
-#if 0
-void sub_800390F4(void* arg0, int arg1)
+extern CamOffset dword_80083C0C[];
+typedef struct
 {
+    char pad_0[0x7AC];
+    int y_7AC;
+} SaveLevantY;
+extern int dword_800A85B8;
+extern int DistanceSquared3D_8003B80C(int* a, int* b);
+// Matched
+void sub_800390F4(void* p_, int arg1)
+{
+    int sel = 0;
+    unsigned int i;
+    unsigned int best;
+    unsigned int dist;
+    struct_v3 v;
+
+    ((int*)p_)[3] = 0x1000;
+    ((int*)p_)[1] &= ~8;
+    if (arg1 == 0)
+    {
+        sel = rand() & 3;
+    }
+    else if (arg1 == 2)
+    {
+        sel = 3;
+    }
+    else if (unknownFlags_8008D678 & 0x2000000)
+    {
+        if (dword_800A85B8 < 0)
+        {
+            sel = 4;
+        }
+        else if (dword_800A85B8 == 0)
+        {
+            sel = 1;
+        }
+        else
+        {
+            sel = 2;
+        }
+    }
+    else
+    {
+        best = -1;
+        for (i = 0; i < 1; i++)
+        {
+                    v = *(struct_v3*)((char*)p_ + 0x38);
+            v.y = ((SaveLevantY*)&saveData_8008B570)->y_7AC + dword_80083C0C[sel].y1;
+            v.z += -word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            v.x += word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            dist = DistanceSquared3D_8003B80C((int*)&dword_8008D4F0.field_14, (int*)&v);
+            if (dist < best)
+            {
+                best = dist;
+                sel = i;
+            }
+        }
+    }
+    *(struct_v3*)((char*)p_ + 0x1B0) = dword_8008D4F0.field_20;
+    *(struct_v3*)((char*)p_ + 0x198) = *(struct_v3*)((char*)p_ + 0x38);
+    *(int*)((char*)p_ + 0x19C) = ((SaveLevantY*)&saveData_8008B570)->y_7AC + dword_80083C0C[sel].y1;
+    *(int*)((char*)p_ + 0x1A0) += -word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    *(int*)((char*)p_ + 0x198) += word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    *(struct_v3*)((char*)p_ + 0x1A4) = dword_8008D4F0.field_14;
+    *(struct_v3*)((char*)p_ + 0x18C) = *(struct_v3*)((char*)p_ + 0x38);
+    *(int*)((char*)p_ + 0x190) = ((SaveLevantY*)&saveData_8008B570)->y_7AC + dword_80083C0C[sel].y0;
+    *(int*)((char*)p_ + 0x194) += -word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    *(int*)((char*)p_ + 0x18C) += word_80084540[(((int*)p_)[0x44 / 4] + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[((int*)p_)[0x44 / 4] & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    ((int*)p_)[0x17C / 4] = dword_8008D4F0.field_2E;
+    ((int*)p_)[0x180 / 4] = dword_80083C0C[sel].field_8;
+    sub_80038D64((char*)p_, (int*)p_ + 0x38 / 4);
 }
-#endif
-INCLUDE_ASM(sub_800390F4);
 // Matched
 int sub_800395D0(int* pIdx, int value, int* table)
 {
@@ -1011,7 +1078,88 @@ void sub_8003983C(int idx_, int* a5)
     p[0x1BC / 4] = (int)levantPos_8008BD18;
     p[0x1C0 / 4] = (int)levantPos_8008BD18 + 0xC;
 }
-INCLUDE_ASM(sub_800398B4);
+typedef struct
+{
+    short x, y, w, h;
+} ShortRect;
+extern ShortRect stru_8008D420;
+extern short* dword_8008D654;
+extern signed char dword_80083BD4[];
+extern DRAWENV drawEnv_8008D698[2];
+#define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
+// Matched
+void sub_800398B4(int* p, void* q_)
+{
+    short* q = (short*)q_;
+    DR_TWIN tw;
+    RECT r;
+    short* sp;
+    int s;
+    int lx;
+    int ly;
+
+    if (!(p[1] & 4))
+    {
+        dword_8008D474.a = dword_8008D474.a - (q[0] - (stru_8008D420.x + stru_8008D420.w / 2));
+        dword_8008D474.b = dword_8008D474.b - (q[1] - (stru_8008D420.y + stru_8008D420.h / 2));
+        sp = dword_8008D654;
+        s = dword_8008B4F8 << 5;
+        lx = sp[4] * s / 4096 - stru_8008D420.w;
+        ly = sp[5] * s / 4096 - stru_8008D420.h;
+        dword_8008D474.a = CLAMP_HALF(dword_8008D474.a, lx);
+        dword_8008D474.b = CLAMP_HALF(dword_8008D474.b, ly);
+        dword_8008D474.a = dword_8008D474.a - (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
+        dword_8008D474.b = dword_8008D474.b - (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
+        r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x + stru_8008D420.x;
+        r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + stru_8008D420.y;
+        r.w = stru_8008D420.w;
+        r.h = stru_8008D420.h;
+        SetTexWindow(&tw, &r);
+        *(DR_TWIN*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
+        addPrim(pOT_8008D3EC, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
+        r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x;
+        r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y;
+        r.w = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.w;
+        r.h = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.h;
+        SetTexWindow(&tw, &r);
+        *(DR_TWIN*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
+        addPrim(pOT_8008D5F4 + 2, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
+        if (p[1] & 0x40)
+        {
+            if (p[1] & 0x80)
+            {
+                dword_8008D474.b += dword_80083BD4[*(short*)(p + 4)];
+            }
+            else
+            {
+                dword_8008D474.a += dword_80083BD4[*(short*)(p + 4)];
+            }
+            if ((unsigned short)++*(short*)(p + 4) >= 15)
+            {
+                p[1] &= ~0x40;
+            }
+        }
+    }
+    else if (p[1] & 0x40)
+    {
+        if (p[1] & 0x80)
+        {
+            dword_8008D474.b = dword_80083BD4[*(short*)(p + 4)];
+        }
+        else
+        {
+            dword_8008D474.a = dword_80083BD4[*(short*)(p + 4)];
+        }
+        if ((unsigned short)++*(short*)(p + 4) >= 15)
+        {
+            dword_8008D474.a = 0;
+            dword_8008D474.b = 0;
+            p[1] &= ~0x40;
+        }
+    }
+}
 extern SVECTOR word_8008D4C8;
 extern void sub_8004D0E8(void);
 // Matched
