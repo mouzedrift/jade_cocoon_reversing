@@ -3742,7 +3742,81 @@ void sub_800A8A10()
     sub_800AB354();
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A8A30);
+typedef struct G2Pair_1
+{
+    short a;
+    short b;
+} G2Pair_1;
+typedef struct G2Mode_1
+{
+    int a;
+    int b;
+} G2Mode_1;
+typedef struct G2InnerC
+{
+    unsigned int f0;
+    char pad_4[0x30];
+    int f34;
+    int f38;
+    char pad_3C[0x8a];
+    short fC6;
+    char pad_C8[4];
+    int fCC;
+} G2InnerC;
+extern G2Mode_1 name_800B1084[];
+extern unsigned int settingsFlags_8008B58C;
+G2Pair_1 sub_800A8A30(int* c, int mode)
+{
+    G2Pair_1 r;
+    unsigned int u;
+    G2InnerC* p = (G2InnerC*)dword_8008B4CC->f24;
+    if (name_800B1084[c[0]].a == 0x10)
+    {
+        p->fC6 = 5;
+        r.a = 0;
+        r.b = 0;
+        return r;
+    }
+    p->fC6 = name_800B1084[c[0]].a;
+    p->fCC = name_800B1084[c[0]].b;
+    if (p->fCC == 8 && (int)((settingsFlags_8008B58C >> 21) & 1) == 1)
+    {
+        p->fCC = 7;
+    }
+    sub_800AC340(c[0] == 0x1a);
+    u = (p->f0 | 2) & ~4;
+    p->f38 = c[1];
+    p->f34 = c[3];
+    p->f0 = u;
+    switch (mode)
+    {
+    case 0:
+        p->f0 = u | 8;
+        break;
+    case 1:
+        p->f0 = u & ~8;
+        break;
+    }
+    if (c[0] == 0x12)
+    {
+        sub_800AB264();
+    }
+    else
+    {
+        sub_800AB28C();
+    }
+    if (c[0] == 0x10)
+    {
+        sub_800AB2B4();
+    }
+    else
+    {
+        sub_800AB2DC();
+    }
+    r.a = sub_800AB750(p->fCC);
+    r.b = sub_800AB4D8(p->fCC);
+    return r;
+}
 
 int sub_800A8BE4()
 {
@@ -5453,8 +5527,7 @@ unsigned int sub_800AD990(int a)
     return r;
 }
 
-#if 0
-int sub_800AD9EC(int a, int b)
+int SetEquipment_800AD9EC(int a, int b)
 {
     unsigned char old = sub_800AD990(b);
     G2Sv4* s;
@@ -5468,7 +5541,7 @@ int sub_800AD9EC(int a, int b)
         }
         else if (a == 0xFF)
         {
-            return 0;
+            goto fail;
         }
         s = (G2Sv4*)&saveData_8008B570;
         s->b7E4 = a;
@@ -5478,7 +5551,7 @@ int sub_800AD9EC(int a, int b)
         sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(a) + 2));
         GetArmorData_8001D034(s->b7E5);
         sub_800AC3B0(dword_8001D060(s->b7E5));
-        return 1;
+        break;
     case 1:
         if (old == 0xFF)
         {
@@ -5487,7 +5560,7 @@ int sub_800AD9EC(int a, int b)
         }
         else if (a == 0xFF)
         {
-            return 0;
+            goto fail;
         }
         s = (G2Sv4*)&saveData_8008B570;
         s->b7E5 = a;
@@ -5497,18 +5570,18 @@ int sub_800AD9EC(int a, int b)
         sub_800AC3A4(*(short*)((char*)GetWeaponData_8001CF84(s->b7E4) + 2));
         GetArmorData_8001D034(a);
         sub_800AC3B0(dword_8001D060(a));
-        return 1;
+        break;
+    fail:
+        return 0;
     case 2:
         byte_8008BD56 = a;
         sub_800AD1E0(a, 1, 3);
         if (old != 0xFF)
             sub_800AD184(old, 1, 3);
-        return 1;
+        break;
     }
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, sub_800AD9EC);
 
 int sub_800ADBA0(short* p)
 {
