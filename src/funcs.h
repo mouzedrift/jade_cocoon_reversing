@@ -24,6 +24,7 @@ struct ModelLoader;
 struct ModelLoadParams;
 struct ModelAnim;
 struct OverlayLoader;
+struct Fade_8001A41C;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -431,7 +432,7 @@ extern void FreeSoundVab_80030EA4(short* p);
 extern int CountMaskedUntilZero_80034B40(int* p, unsigned int mask);
 
 extern void InitFonts_8003DA70(void);
-extern void sub_8001A41C(int** p, unsigned short* q);
+extern void sub_8001A41C(int** p, struct Fade_8001A41C* q);
 extern unsigned int sub_800AD990(int a0);
 extern void ResetModelLoader_800204D0(void);
 extern void StopModelLoader_800205F0(void);

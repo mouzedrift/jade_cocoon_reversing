@@ -4645,7 +4645,7 @@ extern int sub_800B76B8(char* a0, PosRot* a1);
 extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
-extern char* dword_8008B4A4;
+extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched
 void sub_80028808(void* a0, int* a1)
 {
@@ -4743,5 +4743,5 @@ void sub_80028808(void* a0, int* a1)
             }
         }
     }
-    *(int*)(*(char**)(dword_8008B4A4 + 0x24) + 0x84) = saveData_8008B570.mapId_2E4[3].field_0;
+    ((GameTaskState*)dword_8008B4A4->entry.buffer)->mapPoint_84 = saveData_8008B570.mapId_2E4[3].field_0;
 }

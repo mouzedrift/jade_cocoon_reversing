@@ -187,10 +187,10 @@ INCLUDE_ASM(sub_80019D84);
 // Matched
 void sub_8001A38C(void)
 {
-    unsigned short* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     CameraState* g;
-    p[0] = 0;
-    p[1] = 0;
+    p->flags = 0;
+    p->count = 0;
     g = &cameraState_8008D4F0;
     dword_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
     dword_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
@@ -200,17 +200,9 @@ void sub_8001A38C(void)
     dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
 extern unsigned char byte_8008D460[3];
-typedef struct
-{
-    unsigned short flags; // 0x10: flash, 1: fade in, 2: fade out, 4: darken, 8: brighten, 0x20: front OT
-    short count;
-    short pad_4;
-    unsigned short duration;
-} Fade_8001A41C;
 // Matched
-void sub_8001A41C(int** p, unsigned short* q)
+void sub_8001A41C(int** p, Fade_8001A41C* f)
 {
-    Fade_8001A41C* f = (Fade_8001A41C*)q;
     unsigned long* ot;
     POLY_F4 poly;
     DR_TPAGE tp;
@@ -371,14 +363,14 @@ void sub_8001A41C(int** p, unsigned short* q)
 // Matched
 void sub_8001A9A4(void)
 {
-    unsigned short* p;
+    Fade_8001A41C* p;
     unsigned short v;
     dword_8008D40C = 0x1000;
-    p = (unsigned short*)dword_8008D628[9];
-    v = p[0];
+    p = ((EventNode*)dword_8008D628)->entry.buffer;
+    v = p->flags;
     unknownFlags_8008D678 &= ~0x400;
-    p[1] = 0;
-    p[0] = v & 0xFFF0;
+    p->count = 0;
+    p->flags = v & 0xFFF0;
 }
 // Matched
 void sub_8001A9E4(void)
@@ -389,87 +381,87 @@ void sub_8001A9E4(void)
 // Matched
 void sub_8001AA04(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 1;
+    p->count = 0;
+    p->flags |= 1;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AA50(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
     unknownFlags_8008D678 |= 0x400;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 2;
+    p->count = 0;
+    p->flags |= 2;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AAA8(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 4;
+    p->count = 0;
+    p->flags |= 4;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AAF4(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    p[0] &= ~4;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    p->flags &= ~4;
 }
 // Matched
 void sub_8001AB1C(short a0)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     int** q;
-    p[3] = a0;
+    p->duration = a0;
     q = cameraTask_8008D4A0 + 4;
-    p[1] = 0;
-    p[0] |= 8;
+    p->count = 0;
+    p->flags |= 8;
     sub_8001A41C(q, p);
 }
 // Matched
 void sub_8001AB68(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    p[1] = 8;
-    p[0] |= 0x10;
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    p->count = 8;
+    p->flags |= 0x10;
 }
 // Matched
 int sub_8001AB94(void)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
-    unsigned short v = p[0];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
+    unsigned short v = p->flags;
     if (v & 0x1B)
     {
         return 0;
     }
     if (v & 4)
     {
-        return ((short*)p)[1] == p[3];
+        return p->count == p->duration;
     }
     return 1;
 }
 // Matched
 void sub_8001ABEC(int on)
 {
-    unsigned short* p = (unsigned short*)dword_8008D628[9];
+    Fade_8001A41C* p = ((EventNode*)dword_8008D628)->entry.buffer;
     if (on)
     {
-        p[0] |= 0x20;
+        p->flags |= 0x20;
     }
     else
     {
-        p[0] &= ~0x20;
+        p->flags &= ~0x20;
     }
 }
 // Matched

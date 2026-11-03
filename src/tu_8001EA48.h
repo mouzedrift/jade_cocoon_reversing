@@ -518,4 +518,11 @@ typedef struct
     struct_2s* pairs_18;
 } struct_8008D648;
 
+// buffer of the GAME overlay task dword_8008B4A4 (overlays/game.h has the full view)
+typedef struct
+{
+    char pad_0[0x84];
+    int mapPoint_84; // saveData_8008B570.mapId_2E4[3] after a map load
+} GameTaskState;
+
 #endif
