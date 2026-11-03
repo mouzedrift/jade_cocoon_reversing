@@ -2588,7 +2588,74 @@ void sub_800BFC40()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BFDEC);
+extern unsigned int dword_800C9E00;
+void sub_800BFDEC()
+{
+    int m;
+    int n;
+    int diff;
+    int i;
+    int k;
+    int one;
+    int bit;
+    BatXY_a* pp;
+    m = sub_800A248C();
+    if (m != 0 && sub_800A2AB4() != 0)
+    {
+        m = 0x10;
+    }
+    n = GetCapturedMinionsFromBitfield_8003BA58(m);
+    if (dword_800C9E24 != m)
+    {
+        diff = (dword_800C9E24 | m) ^ m;
+        dword_800C9E24 = m;
+        one = 1;
+        dword_800C9DF8 |= one;
+        dword_800C9E00 = 0;
+        for (i = 0; i < 3; i++)
+        {
+            if (diff & (one << (i + 4)))
+            {
+                if (sub_800A2AB4() != 2)
+                {
+                    dword_800C9E08[i]->flags &= ~1;
+                    dword_800C9E08[i]->flags |= 0x8000;
+                }
+                else
+                {
+                    sub_800BC838(0x10000);
+                }
+            }
+            if (m & (one << (i + 4)))
+            {
+                dword_800C9E18[i].x = ((short*)dword_800C9E28[i])[4];
+                dword_800C9E18[i].y = ((short*)dword_800C9E28[i])[5];
+            }
+        }
+    }
+    if (dword_800C9DF8 & 1)
+    {
+        if (dword_800C9E00 < 4)
+        {
+            dword_800C9E00++;
+            k = 0;
+            for (i = 0, bit = 1; i < 3; i++)
+            {
+                if (m & (bit << (i + 4)))
+                {
+                    pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + k * 4));
+                    ((short*)dword_800C9E28[i])[4] += (pp->x - ((short*)dword_800C9E28[i])[4]) * dword_800C9E00 >> 2;
+                    ((short*)dword_800C9E28[i])[5] += (pp->y - ((short*)dword_800C9E28[i])[5]) * dword_800C9E00 >> 2;
+                    k++;
+                }
+            }
+        }
+        else
+        {
+            dword_800C9DF8 &= ~1;
+        }
+    }
+}
 
 #if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
 typedef struct BatWin_a
