@@ -1,9 +1,13 @@
 dword_800A05A0=0x800a05a0; // overlay header / data
 jpt_800A0698=0x800a0698; // jump table of GetIconSprtByKind_800A6434
 dword_800A06B8=0x800a06b8; // data behind the jump table
+jpt_800A0738=0x800a0738; // jump table of sub_800A8EC4
+dword_800A0770=0x800a0770; // data behind the jump table
+dword_800A07A8=0x800a07a8; // data behind the jump table
 jpt_800A0818=0x800a0818; // jump table of sub_800AB4D8
 dword_800A0870=0x800a0870; // data behind the jump table
 dword_800A08C8=0x800a08c8; // data behind the jump table
+dword_800A0920=0x800a0920; // data behind the jump table
 jpt_800A0938=0x800a0938; // jump table of sub_800AD604
 dword_800A094C=0x800a094c; // data behind the jump table
 sub_800A096C=0x800a096c;
