@@ -201,12 +201,12 @@ int CountItems_800106B8(void)
     return count;
 }
 // Matched
-char* sub_800106F8(int id, int nth)
+char* GetMinionName_800106F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_94;
+        return m->name_94;
     }
     return 0;
 }

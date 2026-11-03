@@ -16,8 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 
-extern void sub_8003F610(unsigned short* buf, int val);
-extern void sub_8003E91C(int mode, int* buf, int a, int b);
+extern void IntToText_8003F610(unsigned short* buf, int val);
+extern void DrawText_8003E91C(int mode, int* buf, int a, int b);
 
 typedef struct CharTable
 {
@@ -25,10 +25,10 @@ typedef struct CharTable
     int field_4;
     int count;
 } CharTable;
-extern CharTable dword_8008685C[];
-extern unsigned short* sub_8003F748(int mode, unsigned short* s);
-extern void sub_8003F58C(unsigned char* buf, int val);
-extern int sub_8003FB60(unsigned short* s);
+extern CharTable charTables_8008685C[];
+extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
+extern void IntToSjisReversed_8003F58C(unsigned char* buf, int val);
+extern int WStrLen_8003FB60(unsigned short* s);
 
 typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
 typedef struct List { int count; ListNode* head; ListNode* tail; } List;
@@ -68,20 +68,20 @@ INCLUDE_DATA(dword_80098688);
 void sub_8003EF74(int a0, int a1, int a2)
 {
     unsigned short buf[12];
-    sub_8003F610(buf, a1);
-    sub_8003E91C(2, (int*)buf, a0, a2);
+    IntToText_8003F610(buf, a1);
+    DrawText_8003E91C(2, (int*)buf, a0, a2);
 }
 INCLUDE_ASM(sub_8003EFBC);
 INCLUDE_ASM(sub_8003F264);
 // Matched
-void sub_8003F544(int a0, int a1, int a2)
+void DrawNumber_8003F544(int a0, int a1, int a2)
 {
     unsigned short buf[12];
-    sub_8003F610(buf, a1);
-    sub_8003E91C(1, (int*)buf, a0, a2);
+    IntToText_8003F610(buf, a1);
+    DrawText_8003E91C(1, (int*)buf, a0, a2);
 }
 // Matched
-void sub_8003F58C(unsigned char* buf, int val)
+void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
 {
     int neg = 1;
     if (val >= 0)
@@ -106,23 +106,23 @@ void sub_8003F58C(unsigned char* buf, int val)
     buf[1] = 0;
 }
 // Matched
-void sub_8003F610(unsigned short* out, int val)
+void IntToText_8003F610(unsigned short* out, int val)
 {
     unsigned short tmp[12];
     unsigned short* start = out;
     int n;
-    sub_8003F58C((unsigned char*)tmp, val);
-    n = sub_8003FB60(tmp);
+    IntToSjisReversed_8003F58C((unsigned char*)tmp, val);
+    n = WStrLen_8003FB60(tmp);
     do
     {
         n--;
         *out++ = tmp[n];
     } while (n);
     *out = 0;
-    sub_8003F684(2, start);
+    EncodeText_8003F684(2, start);
 }
 // Matched
-unsigned short* sub_8003F684(int mode, unsigned short* s)
+unsigned short* EncodeText_8003F684(int mode, unsigned short* s)
 {
     unsigned short* p = s;
     unsigned short j;
@@ -130,9 +130,9 @@ unsigned short* sub_8003F684(int mode, unsigned short* s)
     {
         while (*(unsigned char*)p)
         {
-            unsigned short* tbl = dword_8008685C[mode].tbl;
+            unsigned short* tbl = charTables_8008685C[mode].tbl;
             unsigned short c = *p;
-            for (j = 0; j < dword_8008685C[mode].count; j++, tbl++)
+            for (j = 0; j < charTables_8008685C[mode].count; j++, tbl++)
             {
                 if (c == *tbl)
                 {
@@ -146,9 +146,9 @@ unsigned short* sub_8003F684(int mode, unsigned short* s)
     return s;
 }
 // Matched
-unsigned short* sub_8003F748(int mode, unsigned short* s)
+unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
 {
-    unsigned short* tbl = dword_8008685C[mode].tbl;
+    unsigned short* tbl = charTables_8008685C[mode].tbl;
     unsigned short* p = s;
     if (s && *(unsigned char*)s)
     {
@@ -171,7 +171,7 @@ void sub_8003F7C8(void* a0, unsigned char* a1)
     int flag = 0;
     int i;
     MemCopy_800403E8(tmp, a0, 0x16);
-    p = sub_8003F684(1, sub_8003F748(2, tmp));
+    p = EncodeText_8003F684(1, DecodeText_8003F748(2, tmp));
     for (i = 0; i < 10; i++)
     {
         int c = 0;
@@ -224,54 +224,54 @@ INCLUDE_ASM(sub_8003F89C);
 // Matched
 void sub_8003F900(int idx, short val)
 {
-    struct_2C* p = &dword_80095FB0[idx];
+    Font* p = &fonts_80095FB0[idx];
     p->field_2A = val;
 }
 // Matched
-void sub_8003F928(int idx, int dy)
+void SetFontClutRow_8003F928(int idx, int dy)
 {
-    struct_2C* p = &dword_80095FB0[idx];
-    p->field_E = GetClut(p->field_20, p->field_22 + dy);
+    Font* p = &fonts_80095FB0[idx];
+    p->clut_E = GetClut(p->clutX_20, p->clutY_22 + dy);
 }
 // Matched
-void sub_8003F978(int idx, int val)
+void SetFontGrey_8003F978(int idx, int val)
 {
-    struct_2C* p = &dword_80095FB0[idx];
-    p->field_4 = val;
-    p->field_5 = val;
-    p->field_6 = val;
+    Font* p = &fonts_80095FB0[idx];
+    p->r_4 = val;
+    p->g_5 = val;
+    p->b_6 = val;
 }
 // Matched
-void sub_8003F9A8(int idx, unsigned char* rgb)
+void SetFontColor_8003F9A8(int idx, unsigned char* rgb)
 {
-    struct_2C* p = &dword_80095FB0[idx];
-    p->field_4 = rgb[0];
-    p->field_5 = rgb[1];
-    p->field_6 = rgb[2];
+    Font* p = &fonts_80095FB0[idx];
+    p->r_4 = rgb[0];
+    p->g_5 = rgb[1];
+    p->b_6 = rgb[2];
 }
 // Matched
 void sub_8003F9E8(int idx, int v)
 {
-    struct_2C* p = &dword_80095FB0[idx];
-    sub_80033048(p->field_14, v);
+    Font* p = &fonts_80095FB0[idx];
+    sub_80033048(p->tpage_14, v);
 }
 // Matched
-void sub_8003FA2C(int idx, int abe)
+void SetFontSemiTrans_8003FA2C(int idx, int abe)
 {
-    struct_2C* p = &dword_80095FB0[idx];
-    SetSemiTrans(p->field_14, abe);
+    Font* p = &fonts_80095FB0[idx];
+    SetSemiTrans(p->tpage_14, abe);
 }
 // Matched
-int sub_8003FA70(int idx, unsigned char* str)
+int MeasureText_8003FA70(int idx, unsigned char* str)
 {
     int sum = 0;
     int i = 0;
     int c = str[0];
-    struct_2C* p = &dword_80095FB0[idx];
+    Font* p = &fonts_80095FB0[idx];
     if (c)
     {
-        int base = p->field_1E - 0x20;
-        unsigned char* tbl = p->field_24;
+        int base = p->firstChar_1E - 0x20;
+        unsigned char* tbl = p->widths_24;
         do
         {
             c += base;
@@ -281,7 +281,7 @@ int sub_8003FA70(int idx, unsigned char* str)
             }
             else
             {
-                sum += p->field_10;
+                sum += p->w_10;
             }
             i++;
             c = str[i];
@@ -290,7 +290,7 @@ int sub_8003FA70(int idx, unsigned char* str)
     return sum;
 }
 // Matched
-int sub_8003FAF0(unsigned char* s)
+int StrLen_8003FAF0(unsigned char* s)
 {
     int n = 0;
     while (s[n])
@@ -300,7 +300,7 @@ int sub_8003FAF0(unsigned char* s)
     return n;
 }
 // Matched
-int sub_8003FB24(unsigned char* s)
+int SjisStrLen_8003FB24(unsigned char* s)
 {
     int n = 0;
     while (s[n])
@@ -310,7 +310,7 @@ int sub_8003FB24(unsigned char* s)
     return n / 2;
 }
 // Matched
-int sub_8003FB60(unsigned short* s)
+int WStrLen_8003FB60(unsigned short* s)
 {
     int n = 0;
     while (*s)
@@ -321,7 +321,7 @@ int sub_8003FB60(unsigned short* s)
     return n;
 }
 // Matched
-void sub_8003FB8C(char* d, char* s)
+void StrCopy_8003FB8C(char* d, char* s)
 {
     int i = 0;
     while (s[i])
@@ -332,15 +332,15 @@ void sub_8003FB8C(char* d, char* s)
     d[i] = s[i];
 }
 // Matched
-void sub_8003FBD4(int a0)
+void DecodeNames_8003FBD4(int a0)
 {
     int n;
     int i;
-    sub_8003F748(a0, playerName_8008BD48);
+    DecodeText_8003F748(a0, playerName_8008BD48);
     n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
-        sub_8003F748(a0, sub_800106F8(3, i));
+        DecodeText_8003F748(a0, GetMinionName_800106F8(3, i));
     }
 }
 // Matched

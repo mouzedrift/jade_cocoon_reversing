@@ -102,7 +102,7 @@ void sub_80035900(struct_obj_35900* o)
         AddPrimCopy_80040298(pOT_8008D454 + 1, &o->prim, 10);
     }
 }
-extern void sub_8003E91C(int mode, void* str, void* pos, int z);
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern int sub_8003E4C8(void* str);
 
 // Matched
@@ -116,7 +116,7 @@ void sub_800359F8(struct_obj_A* p)
         {
             pos[0] = *(unsigned short*)((char*)p + 0x6E) + 7;
             pos[1] = *(unsigned short*)((char*)p + 0x70) + 4;
-            sub_8003E91C(2, *(void**)((char*)p + 0x74), pos, 0);
+            DrawText_8003E91C(2, *(void**)((char*)p + 0x74), pos, 0);
             r[0] = *(unsigned short*)((char*)p + 0x6E);
             r[1] = *(unsigned short*)((char*)p + 0x70);
             r[2] = sub_8003E4C8(*(void**)((char*)p + 0x74)) + 0x11;

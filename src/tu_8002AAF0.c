@@ -113,7 +113,7 @@ typedef struct
     unsigned char c;
 } struct_text_param;
 extern short uiColor_8008B590;
-extern void sub_8003E91C(int mode, int a, void* b, int c);
+extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
 void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4)
 {
@@ -127,7 +127,7 @@ void sub_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4)
     {
         if (lines[i])
         {
-            sub_8003E91C(2, lines[i], &p, a2);
+            DrawText_8003E91C(2, lines[i], &p, a2);
         }
         p.y += 12;
     }

@@ -300,25 +300,25 @@ extern FontDef dword_80086574[];
 extern char* dword_8008D434;
 extern char* dword_8008D440;
 // Matched
-void sub_8003DA70(void)
+void InitFonts_8003DA70(void)
 {
     int i;
     FontDef* e;
-    struct_2C* f;
+    Font* f;
     for (i = 0; i < 3; i++)
     {
         e = &dword_80086574[i];
-        f = &dword_80095FB0[i];
+        f = &fonts_80095FB0[i];
         MemCopy_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
-        f->field_10 = e->field_6;
-        f->field_12 = e->field_8;
-        f->field_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
-        f->field_18 = f->field_C;
-        f->field_1A = f->field_D;
-        f->field_1E = e->field_4;
-        f->field_20 = e->field_A;
-        f->field_22 = e->field_C;
-        f->field_24 = e->field_10;
+        f->w_10 = e->field_6;
+        f->h_12 = e->field_8;
+        f->tpage_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
+        f->field_18 = f->u_C;
+        f->field_1A = f->v_D;
+        f->firstChar_1E = e->field_4;
+        f->clutX_20 = e->field_A;
+        f->clutY_22 = e->field_C;
+        f->widths_24 = e->field_10;
         f->field_1C = e->field_2;
         f->field_28 = e->field_14;
         f->field_2A = 0;
@@ -430,7 +430,7 @@ struct_size_8003E3B4 sub_8003E3B4(int* list)
 // Matched
 int sub_8003E484(int a0)
 {
-    int v = *sub_8003F684(2, (unsigned short*)a0);
+    int v = *EncodeText_8003F684(2, (unsigned short*)a0);
     if (v < 0xC3)
     {
         if (v >= 0x91)

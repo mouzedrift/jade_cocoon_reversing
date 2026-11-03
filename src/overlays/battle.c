@@ -1980,7 +1980,7 @@ void sub_800C0F1C()
 
 void sub_800C0F54(int a)
 {
-    sub_800106F8(3, a);
+    GetMinionName_800106F8(3, a);
 }
 
 int sub_800C0F78(int a)

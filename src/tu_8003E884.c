@@ -27,9 +27,9 @@ INCLUDE_DATA(word_800749AC);
 // Matched
 int sub_8003E884(int idx, short n)
 {
-    struct_2C* p = &dword_80095FB0[idx];
+    Font* p = &fonts_80095FB0[idx];
     short k = 12;
-    int r = p->field_10;
+    int r = p->w_10;
     int v = n - 1;
     for (; k != 0; k--)
     {
@@ -41,5 +41,5 @@ int sub_8003E884(int idx, short n)
     }
     return r;
 }
-INCLUDE_ASM(sub_8003E91C);
+INCLUDE_ASM(DrawText_8003E91C);
 INCLUDE_ASM(sub_8003EC2C);

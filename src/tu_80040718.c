@@ -66,7 +66,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
     sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
     sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
     LoadSound_80030A84(0, &stru_80091D40);
-    sub_8003DA70();
+    InitFonts_8003DA70();
 }
 // Matched
 void ReloadPublicTiy_80040898(void)
@@ -74,7 +74,7 @@ void ReloadPublicTiy_80040898(void)
     void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68((int*)pFile);
     LoadTiy_80028E74(0, 0, 0, (int)pFile, 1);
-    sub_8003DA70();
+    InitFonts_8003DA70();
 }
 extern int dword_8008D47C;
 extern int dword_8008B4EC;
@@ -163,7 +163,7 @@ void PlayCraveEntertainmentMovie_80040B54(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(craveEntertainmentMovie_80086988);
 }
-extern void sub_8003E91C(int mode, void* str, void* pos, int z);
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern char dword_80074A24[];
 extern char dword_80074A34[];
 extern char dword_80074A88[];
@@ -182,19 +182,19 @@ void sub_80040B94(void)
         short p4[2];
         p0[0] = 0x10;
         p0[1] = 0xA2;
-        sub_8003E91C(2, dword_80074A24, p0, 0);
+        DrawText_8003E91C(2, dword_80074A24, p0, 0);
         p1[0] = 0x10;
         p1[1] = 0xAE;
-        sub_8003E91C(2, dword_80074A34, p1, 0);
+        DrawText_8003E91C(2, dword_80074A34, p1, 0);
         p2[0] = 0x10;
         p2[1] = 0xBA;
-        sub_8003E91C(2, dword_80074A88, p2, 0);
+        DrawText_8003E91C(2, dword_80074A88, p2, 0);
         p3[0] = 0x10;
         p3[1] = 0xC6;
-        sub_8003E91C(2, dword_80074AA8, p3, 0);
+        DrawText_8003E91C(2, dword_80074AA8, p3, 0);
         p4[0] = 0x10;
         p4[1] = 0xD2;
-        sub_8003E91C(2, dword_80074B10, p4, 0);
+        DrawText_8003E91C(2, dword_80074B10, p4, 0);
     }
     else
     {

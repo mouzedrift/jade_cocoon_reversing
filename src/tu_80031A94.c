@@ -437,7 +437,7 @@ void sub_80033754(unsigned char* dst, unsigned char* src)
     }
 }
 // Matched
-char* sub_80033818(Minion* p)
+char* GetMinionStatusOf_80033818(Minion* p)
 {
     return p->status_84;
 }
@@ -447,9 +447,9 @@ char* sub_80033820(Minion* p)
     return p->field_CC;
 }
 // Matched
-char* sub_80033828(Minion* p)
+char* GetMinionNameOf_80033828(Minion* p)
 {
-    return p->field_94;
+    return p->name_94;
 }
 // Matched
 char* sub_80033830(char* base, int idx)

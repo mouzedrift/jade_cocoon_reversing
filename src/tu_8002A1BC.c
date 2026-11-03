@@ -72,7 +72,7 @@ typedef struct
     unsigned short y;
     int field_4;
 } struct_entry8;
-extern void sub_8003E91C(int mode, int a, void* b, int c);
+extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 #if 0
 // Not matched: loop pointer is strength-reduced differently
 void sub_8002A310(struct_entry8* e, int a1)
@@ -84,7 +84,7 @@ void sub_8002A310(struct_entry8* e, int a1)
             unsigned short loc[2];
             loc[0] = e->x;
             loc[1] = e->y;
-            sub_8003E91C(2, e->field_4, loc, a1);
+            DrawText_8003E91C(2, e->field_4, loc, a1);
             e++;
         }
     }

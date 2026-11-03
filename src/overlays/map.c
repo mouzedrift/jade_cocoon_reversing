@@ -96,7 +96,7 @@ typedef struct MapSel
 extern MapSel dword_800AEBFC[];
 extern unsigned short padRepeat_800918CC;
 extern char dword_800B6BE0[];
-extern void sub_8003E91C(int, void*, void*, int);
+extern void DrawText_8003E91C(int, void*, void*, int);
 extern void sub_8003EF74(void*, int, int);
 extern int dword_800B9438;
 extern unsigned char dword_800B9368[];
@@ -591,14 +591,14 @@ void sub_800B860C()
         }
         r1.x = 0x1E;
         r1.y = 0x14;
-        sub_8003E91C(2, dword_800B6B98, &r1, 0);
+        DrawText_8003E91C(2, dword_800B6B98, &r1, 0);
         for (i = 0; i < 6; i++)
         {
             str = dword_800B9370[i];
             d = i == m[1] ? (frameCount_8008D3FC & 0xF) : 0;
             r2.x = 0x1E + d;
             r2.y = 0x32 + i * 14;
-            sub_8003E91C(2, str, &r2, 0);
+            DrawText_8003E91C(2, str, &r2, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
@@ -628,14 +628,14 @@ void sub_800B860C()
         }
         r2.x = 0x1E;
         r2.y = 0x14;
-        sub_8003E91C(2, dword_800B6BAC, &r2, 0);
+        DrawText_8003E91C(2, dword_800B6BAC, &r2, 0);
         for (i = 0; i < dword_800B0624[m[1]]; i++)
         {
             str = dword_800B93E0[m[1]][i];
             d = i == m[2] ? (frameCount_8008D3FC & 0xF) : 0;
             r3.x = 0x1E + d;
             r3.y = 0x32 + i * 14;
-            sub_8003E91C(2, str, &r3, 0);
+            DrawText_8003E91C(2, str, &r3, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
@@ -692,7 +692,7 @@ void sub_800B860C()
             }
             r3.x = 0x1E;
             r3.y = 0x14;
-            sub_8003E91C(2, dword_800B6BCC, &r3, 0);
+            DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
         }
         break;
     }
@@ -743,7 +743,7 @@ void sub_800B8B5C()
     a.y = 0x78;
     b.x = 0x78;
     b.y = 0x82;
-    sub_8003E91C(2, dword_800B6BE0, &b, 0);
+    DrawText_8003E91C(2, dword_800B6BE0, &b, 0);
     c.x = a.x + 0x50;
     c.y = a.y + 0xA;
     sub_8003EF74(&c, *sel + 1, 0);

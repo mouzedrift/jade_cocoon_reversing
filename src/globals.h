@@ -43,7 +43,7 @@ typedef struct
     char pad_45[0x37];
     unsigned char field_7C[8];
     char status_84[0x10]; // EntityStatus
-    char field_94[0x38];
+    char name_94[0x38]; // starts with the name (charTables_8008685C encoding, see DecodeNames_8003FBD4)
     char field_CC[0x12];
     char field_DE[0x16];
     char field_F4[4];
@@ -159,29 +159,30 @@ typedef struct
     struct_54* field_68;
 } struct_obj_E;
 
+// font (InitFonts copies a SPRT from the public TIY into the first 0x14 bytes)
 typedef struct
 {
     char pad_0[4];
-    unsigned char field_4;
-    unsigned char field_5;
-    unsigned char field_6;
+    unsigned char r_4;
+    unsigned char g_5;
+    unsigned char b_6;
     char pad_7[5];
-    unsigned char field_C;
-    unsigned char field_D;
-    unsigned short field_E;
-    short field_10;
-    short field_12;
-    unsigned short* field_14;
+    unsigned char u_C;
+    unsigned char v_D;
+    unsigned short clut_E;
+    short w_10;
+    short h_12;
+    unsigned short* tpage_14;
     short field_18;
     short field_1A;
     short field_1C;
-    unsigned short field_1E;
-    short field_20;
-    short field_22;
-    unsigned char* field_24;
+    unsigned short firstChar_1E;
+    short clutX_20;
+    short clutY_22;
+    unsigned char* widths_24;
     short field_28;
     short field_2A;
-} struct_2C;
+} Font;
 
 
 typedef struct
@@ -398,7 +399,7 @@ extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
 extern int dword_80095468[0x10];
 extern int dword_80091990[4];
-extern struct_2C dword_80095FB0[];
+extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
 extern unsigned char byte_8007CEAC[0x2B];
 extern int off_8007CF30[0x26];

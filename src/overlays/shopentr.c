@@ -60,7 +60,7 @@ extern char str_800B6EB0[];
 extern EventNode* dword_8008D4A8;
 extern void sub_8002BE10(void);
 extern void sub_8002BA54(void* a0, int a1, void* a2, int a3);
-extern void sub_8003E91C(int a0, char* a1, void* a2, short a3);
+extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern void sub_8003EF74(void* a0, int a1, short a2);
 extern void sub_8003F264(void* a0, int a1, short a2);
 extern void sub_8003D794(CtxShopentr* c, int a1);
@@ -353,7 +353,7 @@ void sub_800B7594(CtxShopentr* c)
     unsigned short r[2];
     r[0] = word_800B7CC8[0];
     r[1] = word_800B7CC8[1];
-    sub_8003E91C(2, str_800B6E74, r, 14);
+    DrawText_8003E91C(2, str_800B6E74, r, 14);
 }
 
 // Matched
@@ -364,13 +364,13 @@ void sub_800B75DC(CtxShopentr* c)
     unsigned short u[2];
     r[0] = word_800B7CD0[0];
     r[1] = word_800B7CD0[1];
-    sub_8003E91C(2, str_800B6E90, r, 14);
+    DrawText_8003E91C(2, str_800B6E90, r, 14);
     q[0] = word_800B7CD8[0];
     q[1] = word_800B7CD8[1];
-    sub_8003E91C(2, str_800B6EA4, q, 14);
+    DrawText_8003E91C(2, str_800B6EA4, q, 14);
     u[0] = word_800B7CE0[0];
     u[1] = word_800B7CE0[1];
-    sub_8003E91C(2, str_800B6EB0, u, 14);
+    DrawText_8003E91C(2, str_800B6EB0, u, 14);
 }
 
 // Matched
@@ -403,16 +403,16 @@ void sub_800B7684(CtxShopentr* c)
     }
     l28[0] = 0x82;
     l28[1] = 0x20;
-    sub_8003E91C(2, str_800B6EBC, l28, col);
+    DrawText_8003E91C(2, str_800B6EBC, l28, col);
     l30[0] = 0x50;
     l30[1] = 0x3c;
-    sub_8003E91C(2, str_800B6EC8, l30, col);
+    DrawText_8003E91C(2, str_800B6EC8, l30, col);
     l38[0] = 0x82;
     l38[1] = 0x3c;
-    sub_8003E91C(2, str_800B6ED0, l38, col);
+    DrawText_8003E91C(2, str_800B6ED0, l38, col);
     l40[0] = 0xd2;
     l40[1] = 0x3c;
-    sub_8003E91C(2, str_800B6EDC, l40, col);
+    DrawText_8003E91C(2, str_800B6EDC, l40, col);
     p[0] = 0x20;
     p[1] = 0x50;
     sub_800B7A90((RectShopentr*)p, c->field_8 + c->field_A + 1, 0xf);
@@ -475,16 +475,16 @@ void sub_800B7858(CtxShopentr* c)
     }
     l28[0] = 0x8c;
     l28[1] = 0x20;
-    sub_8003E91C(2, str_800B6EE4, l28, col);
+    DrawText_8003E91C(2, str_800B6EE4, l28, col);
     l30[0] = 0x50;
     l30[1] = 0x3c;
-    sub_8003E91C(2, str_800B6EEC, l30, col);
+    DrawText_8003E91C(2, str_800B6EEC, l30, col);
     l38[0] = 0x8c;
     l38[1] = 0x3c;
-    sub_8003E91C(2, str_800B6EF4, l38, col);
+    DrawText_8003E91C(2, str_800B6EF4, l38, col);
     l40[0] = 0xd2;
     l40[1] = 0x3c;
-    sub_8003E91C(2, str_800B6EFC, l40, col);
+    DrawText_8003E91C(2, str_800B6EFC, l40, col);
     p[0] = 0x20;
     p[1] = 0x50;
     sub_800B7A90((RectShopentr*)p, c->field_8 + c->field_A + 1, 0x19);
@@ -504,7 +504,7 @@ void sub_800B7A90(RectShopentr* p, short a1, short a2)
     sub_8003F264(l18, a1, 14);
     l20[0] = p->x + 0x12;
     l20[1] = p->y + 2;
-    sub_8003E91C(1, str_800B6F04, l20, 14);
+    DrawText_8003E91C(1, str_800B6F04, l20, 14);
     l28[0] = p->x + 0x2a;
     l28[1] = p->y + 2;
     sub_8003F264(l28, a2, 14);
@@ -525,7 +525,7 @@ void sub_800B7B64(RectShopentr* p, short a1, short a2)
     sub_8003EF74(l10, a1, 14);
     l18[0] = p->x + 0x18;
     l18[1] = 0x3c;
-    sub_8003E91C(2, str_800B6F04, l18, 14);
+    DrawText_8003E91C(2, str_800B6F04, l18, 14);
     l20[0] = p->x + 0x24;
     l20[1] = p->y;
     sub_8003EF74(l20, a2, 14);
@@ -543,7 +543,7 @@ void sub_800B7C08(RectShopentr* p)
     sub_8003F264(l10, 0, 14);
     l18[0] = p->x + 0x10;
     l18[1] = p->y;
-    sub_8003E91C(1, str_800B6F08, l18, 14);
+    DrawText_8003E91C(1, str_800B6F08, l18, 14);
     l20[0] = p->x + 0x20;
     l20[1] = p->y;
     sub_8003F264(l20, 0, 14);

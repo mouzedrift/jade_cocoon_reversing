@@ -549,7 +549,7 @@ extern char str_800A05A8[];
 extern char str_800A05BC[];
 extern char str_800A0604[];
 extern char str_800A0640[];
-extern void sub_8003E91C(int mode, void* str, void* pos, int c);
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int c);
 // Matched
 void sub_800A158C(TitleTask* t)
 {
@@ -560,16 +560,16 @@ void sub_800A158C(TitleTask* t)
     sub_800BB64C();
     r0.x = 0x10;
     r0.y = 0x5A;
-    sub_8003E91C(2, str_800A05A8, &r0, 0);
+    DrawText_8003E91C(2, str_800A05A8, &r0, 0);
     r1.x = 0x10;
     r1.y = 0x6A;
-    sub_8003E91C(2, str_800A05BC, &r1, 0);
+    DrawText_8003E91C(2, str_800A05BC, &r1, 0);
     r2.x = 0x10;
     r2.y = 0x7A;
-    sub_8003E91C(2, str_800A0604, &r2, 0);
+    DrawText_8003E91C(2, str_800A0604, &r2, 0);
     r3.x = 0x10;
     r3.y = 0x8A;
-    sub_8003E91C(2, str_800A0640, &r3, 0);
+    DrawText_8003E91C(2, str_800A0640, &r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
         t->next_8 = sub_800A1310;
@@ -600,7 +600,7 @@ extern char dword_800A0658[];
 extern char dword_800A069C[];
 extern int dword_800A2818;
 extern void sub_800BB64C(void);
-extern void sub_8003E91C(int mode, void* buf, void* rect, int c);
+extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
 extern void sub_800A1310();
 extern void sub_800A1B74(TitleTaskM* t);
 
@@ -611,13 +611,13 @@ void sub_800A166C(TitleTaskM* t)
     sub_800BB64C();
     r1.x = 0x10;
     r1.y = 0x5A;
-    sub_8003E91C(2, dword_800A05A8, &r1, 0);
+    DrawText_8003E91C(2, dword_800A05A8, &r1, 0);
     r2.x = 0x10;
     r2.y = 0x6A;
-    sub_8003E91C(2, dword_800A0658, &r2, 0);
+    DrawText_8003E91C(2, dword_800A0658, &r2, 0);
     r3.x = 0x10;
     r3.y = 0x7A;
-    sub_8003E91C(2, dword_800A069C, &r3, 0);
+    DrawText_8003E91C(2, dword_800A069C, &r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
         t->fn_8 = sub_800A1310;

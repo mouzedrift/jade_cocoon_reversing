@@ -92,9 +92,9 @@ typedef struct
     unsigned short s[11];
 } NameBuf;
 extern NameBuf dword_80074434;
-extern void sub_8003F748(int a, NameBuf* b);
+extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short sub_8003E4C8(NameBuf* b);
-extern void sub_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
+extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
 extern void sub_8003F89C(NameBuf* b);
 extern short sub_8003E6B0(NameBuf* b);
 // Matched
@@ -104,7 +104,7 @@ void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
     NameBuf buf = dword_80074434;
     int w;
     CopyPlayerName_8003F860(name, buf.s);
-    sub_8003F748(1, &buf);
+    DecodeText_8003F748(1, &buf);
     sub_8003F89C(&buf);
     if (a0 == 1)
     {
@@ -120,7 +120,7 @@ void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3)
     }
     loc[0] = pos[0] - w;
     loc[1] = pos[1];
-    sub_8003E91C(1, &buf, loc, a3);
+    DrawText_8003E91C(1, &buf, loc, a3);
 }
 // Matched
 void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3)
@@ -129,7 +129,7 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     NameBuf buf = dword_80074434;
     int w;
     CopyPlayerName_8003F860(name, buf.s);
-    sub_8003F748(1, &buf);
+    DecodeText_8003F748(1, &buf);
     if (a0 == 1)
     {
         w = sub_8003E4C8(&buf);
@@ -140,7 +140,7 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     }
     loc[0] = pos[0] - w;
     loc[1] = pos[1];
-    sub_8003E91C(2, &buf, loc, a3);
+    DrawText_8003E91C(2, &buf, loc, a3);
 }
 extern char* off_80082EC4[];
 extern char* off_80082EE4;
