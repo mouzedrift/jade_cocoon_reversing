@@ -53,7 +53,7 @@ void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
     setLineF4(&l);
     setRGB0(&l, rgb[0], rgb[1], rgb[2]);
     setXY4(&l, r->x, r->y, r->x + r->w, r->y, r->x + r->w, r->y + r->h, r->x, r->y + r->h);
-    sub_80040298(ot, &l, 7);
+    AddPrimCopy_80040298(ot, &l, 7);
     a.vx = l.x0;
     a.vy = l.y0;
     b.vx = l.x3;
@@ -68,12 +68,12 @@ void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
     setLineF2(&l);
     setRGB0(&l, rgb[0], rgb[1], rgb[2]);
     setXY2(&l, a->vx, a->vy, b->vx, b->vy);
-    sub_80040298(ot, &l, 4);
+    AddPrimCopy_80040298(ot, &l, 4);
     SetDrawTPage(&dt, 0, 1, GetTPage(0, 0, 0, 0));
-    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
-    ((u_long*)dword_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
-    addPrim(ot, dword_800960A8[bDoubleBuffer_8008D428]);
-    dword_800960A8[bDoubleBuffer_8008D428] += 8;
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+    addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
 int sub_800429A8(short* p)

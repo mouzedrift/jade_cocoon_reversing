@@ -117,7 +117,7 @@ void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short
 void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
 {
     char* p = 0;
-    sub_800403E8(0, a0, 0x48);
+    MemCopy_800403E8(0, a0, 0x48);
     switch (a2)
     {
     case 0:

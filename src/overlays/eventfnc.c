@@ -1785,7 +1785,7 @@ void sub_800BC7A8(int a)
     }
     if (dword_800AEB80.f4_4)
     {
-        sub_8003FEC8(&dword_800AEB80.f4_4);
+        ListFreeAll_8003FEC8(&dword_800AEB80.f4_4);
     }
     t.g_0 = &dword_800AEB80;
     t.s_4[5] = 0;
@@ -1795,7 +1795,7 @@ void sub_800BC7A8(int a)
     t.s_4[1] = 0;
     t.s_4[0] = 0;
     t.f10_10 = 0;
-    sub_8003FDB0(&dword_800AEB80.f4_4);
+    ListInit_8003FDB0(&dword_800AEB80.f4_4);
     sub_80020F5C(&t, a);
     if (dword_800AEB80.f2C_2C)
     {
@@ -1810,12 +1810,12 @@ void sub_800BC98C(int a)
 {
     if (dword_800AEBC0[0])
     {
-        sub_8003FE38(dword_80091C10, dword_800AEBC0[0]);
+        ListFree_8003FE38(dword_80091C10, dword_800AEBC0[0]);
         dword_800AEBC0[0] = 0;
     }
     if (dword_800AEBC0[1])
     {
-        sub_8003FE38(dword_80091C10, dword_800AEBC0[1]);
+        ListFree_8003FE38(dword_80091C10, dword_800AEBC0[1]);
         dword_800AEBC0[1] = 0;
     }
     sub_80028E74(&dword_800AEBC0[0], 0, &dword_800AEBC0[1], a, (int)dword_80091C10);
@@ -1825,9 +1825,9 @@ void sub_800BC98C(int a)
 extern int dword_800AEBC8;
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
-    unsigned int* r = (unsigned int*)sub_8003FDC0(dword_80091C10);
+    unsigned int* r = (unsigned int*)ListAlloc_8003FDC0(dword_80091C10);
     dword_800AEBC8 = (int)r;
-    sub_800403E8(r, a, (unsigned int)b);
+    MemCopy_800403E8(r, a, (unsigned int)b);
 }
 #endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCA18);

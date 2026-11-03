@@ -122,8 +122,8 @@ void sub_8002C06C(unsigned short* pos, int idx, int ot)
 {
     ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].x = pos[0];
     ((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx].y = pos[1];
-    sub_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
-    sub_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &((OverlayColorEntry*)loadedOverlayMaybe_8008D620)[idx], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], (char*)dword_8008D3F4 + idx * 8, 2);
 }
 INCLUDE_ASM(sub_8002C100);
 INCLUDE_ASM(sub_8002C290);

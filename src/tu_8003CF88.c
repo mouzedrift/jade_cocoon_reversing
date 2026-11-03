@@ -29,8 +29,8 @@ void sub_8003CF88(short x, short y, int idx)
     *(short*)((char*)dword_8008D434 + 0x4BA) = y;
     ((char*)dword_8008D434)[0x4B5] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
     ((char*)dword_8008D434)[0x4B6] = ((*(volatile int*)&frameCount_8008D3FC) & 0xF) << 4;
-    sub_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x4B0, 5);
-    sub_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x1E0, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x4B0, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x1E0, 2);
 }
 #endif
 INCLUDE_ASM(sub_8003CF88);
@@ -75,6 +75,6 @@ void sub_8003D090(short x, short y, int a2, int a3, int idx)
     *(short*)((char*)dword_8008D434 + 0x6C) = x - t;
     *(short*)((char*)dword_8008D434 + 0x6E) = y - 10;
     SetSemiTrans((char*)dword_8008D434 + 0x64, 1);
-    sub_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x64, 5);
-    sub_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x28, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, (char*)dword_8008D434 + 0x64, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, dword_8008D440 + 0x28, 2);
 }

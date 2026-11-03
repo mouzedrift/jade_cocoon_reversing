@@ -240,7 +240,7 @@ int sub_80019AD0(char* p)
 // Matched
 void sub_80019AF4(unsigned int* arg0, unsigned int* arg1)
 {
-    sub_800403E8(arg0, arg1, 12);
+    MemCopy_800403E8(arg0, arg1, 12);
 }
 // Matched
 void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2)

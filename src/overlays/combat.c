@@ -955,7 +955,7 @@ void sub_800A1988(void)
     byte_800A38DA = 0;
     for (i = 0; i < 15; i++)
     {
-        sub_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&((CombatBlkA_combat*)dword_800A1BC8)[byte_800A38DA]), (unsigned int*)src, 0xF8);
+        MemCopy_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&((CombatBlkA_combat*)dword_800A1BC8)[byte_800A38DA]), (unsigned int*)src, 0xF8);
         src += 0xF8;
         byte_800A38DA++;
     }

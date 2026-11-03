@@ -259,8 +259,8 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         {
                 p[i].field_8 = ((i % 2) * 5) << 5;
             p[i].field_A = y;
-            sub_80040298(pOT_8008D3EC, &p[i], 5);
-            sub_80040298(pOT_8008D3EC, q + i * 8, 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
         }
     }
     else
@@ -273,8 +273,8 @@ void sub_800A0D18(TitleEnt* p, char* q, int mode, TitleCtxA* c)
         p[i].field_A = y;
         sub_80033394(&p[i].field_4, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
         SetSemiTrans(&p[i], 1);
-        sub_80040298(pOT_8008D3EC, &p[i], 5);
-        sub_80040298(pOT_8008D3EC, q + i * 8, 2);
+        AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
+        AddPrimCopy_80040298(pOT_8008D3EC, q + i * 8, 2);
     }
 }
 #endif
@@ -432,8 +432,8 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     s.a = 4;
     *(short*)(c->field_C + 0x30) = 0x54;
     *(short*)(c->field_C + 0x32) = 0xA7;
-    sub_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
-    sub_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
+    AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_C + 0x28, 5);
+    AddPrimCopy_80040298((char*)pOT_8008D454 + 0x38, c->field_14 + 0x10, 2);
     sub_80042460(&r, &s, (char*)pOT_8008D454 + 0x38, (unsigned int)frameCount_8008D3FC >> 1);
     sub_800A1F98(c->field_C, c->field_14, c);
     if (word_8009194C & 0x800)
@@ -941,16 +941,16 @@ void sub_800A1F98(char* p, char* q)
     e5->x_8 = 0x55;
     sub_80033394(p + 0x68, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(e5, 1);
-    sub_80040298((void*)pOT_8008D3EC, e5, 5);
-    sub_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, e5, 5);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, q + 0x28, 2);
     y = 0;
     for (i = 7; i < 9; i++)
     {
         e = (Sprite20_*)((int)i * 20 + (int)p);
         e->x_8 = (i - 7) * 5 << 5;
         e->y_A = y;
-        sub_80040298((void*)pOT_8008D3EC, e, 5);
-        sub_80040298((void*)pOT_8008D3EC, q + i * 8, 2);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, e, 5);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, q + i * 8, 2);
     }
 }
 

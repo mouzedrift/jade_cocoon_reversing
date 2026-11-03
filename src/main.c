@@ -313,7 +313,7 @@ INCLUDE_DATA(word_8009602A);
 INCLUDE_DATA(word_80096030);
 INCLUDE_DATA(word_80096032);
 INCLUDE_DATA(dword_80096038);
-INCLUDE_DATA(dword_80096090);
+INCLUDE_DATA(defaultAllocList_80096090);
 
 // Matched
 int main(void)
@@ -340,7 +340,7 @@ int main(void)
 
     InitEvents_8001028C();
     ExitCriticalSection();
-    sub_8003FDB0(dword_80096090);
+    ListInit_8003FDB0(defaultAllocList_80096090);
     InitImage_80010428();
     SetGameBootState_80040470();
     GameLoop_8004047C();

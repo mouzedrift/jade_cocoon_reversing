@@ -33,16 +33,16 @@ extern int sub_8003FB60(unsigned short* s);
 typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
 typedef struct List { int count; ListNode* head; ListNode* tail; } List;
 
-struct Heap;
-typedef struct HeapBlock
+struct Pool;
+typedef struct PoolBlock
 {
     int magic;
     unsigned int size;
-    struct HeapBlock* prev;
-    struct HeapBlock* next;
-} HeapBlock;
+    struct PoolBlock* prev;
+    struct PoolBlock* next;
+} PoolBlock;
 
-typedef struct Heap
+typedef struct Pool
 {
     int magic;
     int inited;
@@ -51,15 +51,15 @@ typedef struct Heap
     int field_10;
     unsigned int used;
     void* buffer;
-    HeapBlock* head;
-    HeapBlock* tail;
-} Heap;
+    PoolBlock* head;
+    PoolBlock* tail;
+} Pool;
 
-extern HeapBlock* sub_80040150(Heap* h, unsigned int size);
-extern void* sub_8003FFD0(Heap* h, unsigned int size);
-extern void sub_800400B4(Heap* h, void* p);
-extern void* sub_8003FDC0(List* l, int size);
-extern void sub_8003FE38(void* arg0, void* arg1);
+extern PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size);
+extern void* PoolAlloc_8003FFD0(Pool* h, unsigned int size);
+extern void PoolFree_800400B4(Pool* h, void* p);
+extern void* ListAlloc_8003FDC0(List* l, int size);
+extern void ListFree_8003FE38(void* arg0, void* arg1);
 
 INCLUDE_DATA(dword_80098198);
 INCLUDE_DATA(dword_80098688);
@@ -170,7 +170,7 @@ void sub_8003F7C8(void* a0, unsigned char* a1)
     unsigned short* p;
     int flag = 0;
     int i;
-    sub_800403E8(tmp, a0, 0x16);
+    MemCopy_800403E8(tmp, a0, 0x16);
     p = sub_8003F684(1, sub_8003F748(2, tmp));
     for (i = 0; i < 10; i++)
     {
@@ -354,12 +354,12 @@ void free3_8003FC6C(void* block)
     free3(block);
 }
 // Matched
-int sub_8003FC8C(int size, Heap* h)
+int HeapAlloc_8003FC8C(int size, Pool* h)
 {
     switch ((int)h)
     {
     case 0:
-        return (int)sub_8003FDC0((List*)dword_80096090, size);
+        return (int)ListAlloc_8003FDC0((List*)defaultAllocList_80096090, size);
     case 1:
         return (int)malloc3_8003FC4C(size);
     default:
@@ -367,21 +367,21 @@ int sub_8003FC8C(int size, Heap* h)
         {
             if (h->inited != 0)
             {
-                return (int)sub_8003FFD0(h, size);
+                return (int)PoolAlloc_8003FFD0(h, size);
             }
             return (int)malloc3_8003FC4C(size);
         }
         break;
     }
-    return (int)sub_8003FDC0((List*)h, size);
+    return (int)ListAlloc_8003FDC0((List*)h, size);
 }
 // Matched
-void sub_8003FD18(int ptr, Heap* h)
+void HeapFree_8003FD18(int ptr, Pool* h)
 {
     switch ((int)h)
     {
     case 0:
-        sub_8003FE38(dword_80096090, (void*)ptr);
+        ListFree_8003FE38(defaultAllocList_80096090, (void*)ptr);
         break;
     case 1:
         free3_8003FC6C((void*)ptr);
@@ -389,9 +389,9 @@ void sub_8003FD18(int ptr, Heap* h)
     default:
         if (h->magic == (int)0x8FFFFFFF)
         {
-            if (sub_80040274((int)h, (int*)ptr))
+            if (IsPoolBlock_80040274((int)h, (int*)ptr))
             {
-                sub_800400B4(h, (void*)ptr);
+                PoolFree_800400B4(h, (void*)ptr);
             }
             else
             {
@@ -400,20 +400,20 @@ void sub_8003FD18(int ptr, Heap* h)
         }
         else
         {
-            sub_8003FE38(h, (void*)ptr);
+            ListFree_8003FE38(h, (void*)ptr);
         }
         break;
     }
 }
 // Matched
-void sub_8003FDB0(int* p)
+void ListInit_8003FDB0(int* p)
 {
     p[0] = 0;
     p[1] = 0;
     p[2] = 0;
 }
 // Matched
-void* sub_8003FDC0(List* l, int size)
+void* ListAlloc_8003FDC0(List* l, int size)
 {
     ListNode* n = (ListNode*)malloc3_8003FC4C(size + 8);
     n->prev = 0;
@@ -432,7 +432,7 @@ void* sub_8003FDC0(List* l, int size)
     return n + 1;
 }
 #if 0
-void sub_8003FE38(void* a0, void* a1)
+void ListFree_8003FE38(void* a0, void* a1)
 {
     List* arg0 = (List*)a0;
     ListNode* n = (ListNode*)((char*)a1 - 8);
@@ -459,9 +459,9 @@ void sub_8003FE38(void* a0, void* a1)
     }
 }
 #endif
-INCLUDE_ASM(sub_8003FE38);
+INCLUDE_ASM(ListFree_8003FE38);
 // Matched
-void sub_8003FEC8(void* arg0)
+void ListFreeAll_8003FEC8(void* arg0)
 {
     List* l = (List*)arg0;
     ListNode* n = l->tail;
@@ -471,10 +471,10 @@ void sub_8003FEC8(void* arg0)
         n = n->prev;
         free3_8003FC6C(cur);
     }
-    sub_8003FDB0((int*)l);
+    ListInit_8003FDB0((int*)l);
 }
 // Matched
-void sub_8003FF1C(Heap* h, unsigned int size)
+void PoolInit_8003FF1C(Pool* h, unsigned int size)
 {
     void* buf = malloc3_8003FC4C(size);
     h->magic = 0x8FFFFFFF;
@@ -487,7 +487,7 @@ void sub_8003FF1C(Heap* h, unsigned int size)
     h->tail = 0;
 }
 // Matched
-void sub_8003FF7C(Heap* h)
+void PoolDestroy_8003FF7C(Pool* h)
 {
     free3_8003FC6C(h->buffer);
     h->magic = 0x8FFFFFFF;
@@ -500,14 +500,14 @@ void sub_8003FF7C(Heap* h)
     h->tail = 0;
 }
 #if 0
-void* sub_8003FFD0(Heap* h, unsigned int size)
+void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
 {
-    HeapBlock* b = 0;
+    PoolBlock* b = 0;
     unsigned int s;
     if (size & 3) s = size + 4 - (size & 3); else s = size;
     if (!(h->size - h->used < s))
     {
-        b = sub_80040150(h, s + 0x10);
+        b = PoolFindFreeSpace_80040150(h, s + 0x10);
     }
     b->magic = 0x8FFFFFFF;
     b->size = s + 0x10;
@@ -528,14 +528,14 @@ void* sub_8003FFD0(Heap* h, unsigned int size)
     return b + 1;
 }
 #endif
-INCLUDE_ASM(sub_8003FFD0);
+INCLUDE_ASM(PoolAlloc_8003FFD0);
 // Matched
-void sub_800400B4(Heap* h, void* p)
+void PoolFree_800400B4(Pool* h, void* p)
 {
-    HeapBlock* b;
+    PoolBlock* b;
     if (h->count)
     {
-        b = (HeapBlock*)p - 1;
+        b = (PoolBlock*)p - 1;
         if (b->prev == 0)
         {
             h->head = b->next;
@@ -563,15 +563,15 @@ void sub_80040148(int* p, int v)
     p[1] = v;
 }
 // Matched
-HeapBlock* sub_80040150(Heap* h, unsigned int size)
+PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
 {
     char* best = 0;
     char* pos = (char*)h->buffer;
     unsigned int bestsz;
     unsigned int total = h->size;
-    HeapBlock* blk = h->head;
+    PoolBlock* blk = h->head;
     char* end;
-    HeapBlock* b;
+    PoolBlock* b;
     unsigned int i;
     int j;
     unsigned int gap;
@@ -622,10 +622,10 @@ HeapBlock* sub_80040150(Heap* h, unsigned int size)
             }
         }
     }
-    return (HeapBlock*)best;
+    return (PoolBlock*)best;
 }
 // Matched
-int sub_80040274(int a0, int* a1)
+int IsPoolBlock_80040274(int a0, int* a1)
 {
     return a1[-4] == 0x8FFFFFFF;
 }
@@ -634,24 +634,24 @@ void sub_8004028C(void)
 {
     dword_80098688 = 0;
 }
-extern unsigned long* name_800960A8[];
+extern unsigned long* primAllocPtrs_800960A8[];
 #if 0
-short* sub_80040298(void* arg0, void* arg1, int arg2)
+short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
 {
     unsigned long* ot = (unsigned long*)arg0;
-    unsigned long* cur = name_800960A8[bDoubleBuffer_8008D428];
+    unsigned long* cur = primAllocPtrs_800960A8[bDoubleBuffer_8008D428];
     unsigned long** p;
     ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
-    p = &name_800960A8[bDoubleBuffer_8008D428];
+    p = &primAllocPtrs_800960A8[bDoubleBuffer_8008D428];
     **p = (**p & 0xFF000000) | (*ot & 0xFFFFFF);
     *ot = (*ot & 0xFF000000) | ((unsigned long)*p & 0xFFFFFF);
     *p += arg2;
     return (short*)cur;
 }
 #endif
-INCLUDE_ASM(sub_80040298);
+INCLUDE_ASM(AddPrimCopy_80040298);
 // Matched
-void sub_80040360(int *pOut, int *pDataToWrite, int fileSize)
+void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
 {
   int result; // $v0
   int v4; // $v1
@@ -681,7 +681,7 @@ void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
     } while (count);
 }
 // Matched
-void sub_800403A8(unsigned short* pOut, unsigned short* pSource, int count)
+void CopyHalfwords_800403A8(unsigned short* pOut, unsigned short* pSource, int count)
 {
     do
     {
@@ -690,7 +690,7 @@ void sub_800403A8(unsigned short* pOut, unsigned short* pSource, int count)
     } while (count);
 }
 // Matched
-void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
+void CopyBytes_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
 {
   do
   {
@@ -700,7 +700,7 @@ void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
   while ( fileSize );
 }
 // Matched
-void sub_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize)
+void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize)
 {
   unsigned int *overlayAddr_copy; // $s2
   unsigned char *pFileBuffer; // $s3
@@ -720,14 +720,14 @@ void sub_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned 
         fileSize_copy = fileSize & 7;
         if ( alignedFileSize )
         {
-          sub_80040360(overlayAddr, (int *)fileBuffer, alignedFileSize);
+          CopyDoubleWords_80040360(overlayAddr, (int *)fileBuffer, alignedFileSize);
           overlayAddr_copy += 2 * alignedFileSize;
           pFileBuffer += 8 * alignedFileSize;
         }
       }
     }
     if ( fileSize_copy )
-      sub_800403C8(overlayAddr_copy, pFileBuffer, fileSize_copy);
+      CopyBytes_800403C8(overlayAddr_copy, pFileBuffer, fileSize_copy);
   }
 }
 // Matched

@@ -64,7 +64,7 @@ void sub_800B6720()
 {
     unsigned short* s;
     unsigned int* buf = (unsigned int*)sub_800A55B0(3);
-    sub_800403E8((unsigned int*)&dword_8008D4F0, buf, 0x104);
+    MemCopy_800403E8((unsigned int*)&dword_8008D4F0, buf, 0x104);
     sub_80037918(dword_8008D4A0[9]);
     s = (unsigned short*)&stru_8008B4D8;
     SetGeomOffset((short)s[6] / 2 + word_8008D474[0], (short)s[7] / 2 + word_8008D474[1]);

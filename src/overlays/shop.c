@@ -359,7 +359,7 @@ int sub_800B9920()
     {
         if (name_8008B570.items[k].state_0 == 3)
         {
-            sub_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
             n++;
         }
     }
@@ -375,7 +375,7 @@ int sub_800B9920()
     {
         if (name_8008B570.items[k].state_0 == 2)
         {
-            sub_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
+            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&name_8008B570.items[k], 0xF8);
             n++;
         }
     }
@@ -539,7 +539,7 @@ int sub_800B9DA8()
             {
                 if (p->state_0 != 4)
                 {
-                    sub_800403E8((unsigned int*)dst, (unsigned int*)p, 0xF8);
+                    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)p, 0xF8);
                     dst++;
                 }
                 i++;
@@ -585,9 +585,9 @@ int sub_800B9E94(char* src, char* dst, short c)
     }
     dst[2] = src[0x5C];
     dst[3] = src[0x5C];
-    sub_800403E8((unsigned int*)(dst + 0x84), (unsigned int*)src, 0x48);
-    sub_800403E8((unsigned int*)(dst + 0xDE), (unsigned int*)(src + 0x6C), 0x14);
-    sub_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
+    MemCopy_800403E8((unsigned int*)(dst + 0x84), (unsigned int*)src, 0x48);
+    MemCopy_800403E8((unsigned int*)(dst + 0xDE), (unsigned int*)(src + 0x6C), 0x14);
+    MemCopy_800403E8((unsigned int*)(dst + 0xF4), (unsigned int*)(src + 0x80), 4);
     return 1;
 }
 #endif
@@ -597,7 +597,7 @@ INCLUDE_OVERLAY_ASM(shop, sub_800B9FC8);
 
 void sub_800BA340(unsigned int* a)
 {
-    sub_800403E8(a, name_800C07F0, 0xF8);
+    MemCopy_800403E8(a, name_800C07F0, 0xF8);
 }
 
 void sub_800BA368(unsigned char* d, unsigned char* s)
@@ -809,7 +809,7 @@ void sub_800BAB38(char* a, char* b)
             tmp[i] = b[i * 3 - 0x60 + 0x4C];
         }
     }
-    sub_800403E8((unsigned int*)(a + 0x4C), (unsigned int*)tmp, 0x30);
+    MemCopy_800403E8((unsigned int*)(a + 0x4C), (unsigned int*)tmp, 0x30);
     sub_80019AF4(e, (unsigned int*)(a + 0x94));
     sub_80019AF4(e + 3, (unsigned int*)(b + 0x94));
     sub_80019AF4(e + 6, (unsigned int*)(a + 4));
@@ -923,10 +923,10 @@ void sub_800BAEDC(unsigned int* a, unsigned int* b)
 {
     unsigned int t1[0x3E];
     unsigned int t2[0x3E];
-    sub_800403E8(t1, a, 0xF8);
-    sub_800403E8(t2, b, 0xF8);
-    sub_800403E8(a, t2, 0xF8);
-    sub_800403E8(b, t1, 0xF8);
+    MemCopy_800403E8(t1, a, 0xF8);
+    MemCopy_800403E8(t2, b, 0xF8);
+    MemCopy_800403E8(a, t2, 0xF8);
+    MemCopy_800403E8(b, t1, 0xF8);
 }
 
 #if 0 // near miss: orig jumps from the b==3 case into the b==4 copy of the *a = 3 store (cross-jump)
@@ -1726,7 +1726,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
             sv = (char*)&saveData_8008B570;
             if (!((*(unsigned int*)(sv + 0x1C) >> 5) & 1))
             {
-                sub_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
+                MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)name_800C08E8, 0xF8);
                 sub_800B9B44((short*)u->field_50);
                 if (((unsigned char*)u->field_4C)[0x4C] == 0x23)
                 {

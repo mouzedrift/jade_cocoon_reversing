@@ -143,8 +143,8 @@ void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
     sub_800A61CC(a1, buf1, buf2);
     buf1[4] = pos[0];
     buf1[5] = pos[1];
-    sub_80040298(pOT_8008D454 + a3, buf1, 5);
-    sub_80040298(pOT_8008D454 + a3, buf2, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + a3, buf1, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + a3, buf2, 2);
     if (a2)
     {
         sub_8003326C(a2, &pOT_8008D454[a3]);
@@ -161,8 +161,8 @@ void sub_8002A4E4(short a0)
     sub_800A61CC(1, buf1, buf2);
     buf1[4] = ((unsigned short*)aFb)[4];
     buf1[5] = ((unsigned short*)aFb)[5];
-    sub_80040298(pOT_8008D454 + a0, buf1, 5);
-    sub_80040298(pOT_8008D454 + a0, buf2, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + a0, buf1, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + a0, buf2, 2);
     sub_800429F8((int)aFb, a0);
 }
 

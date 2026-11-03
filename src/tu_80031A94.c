@@ -111,7 +111,7 @@ void sub_80032D34(unsigned short* a, void* b)
 {
     int dx = (short)a[8] - (short)a[4];
     int dy = (short)a[0xD] - (short)a[5];
-    short* r = sub_80040298(b, a, 10);
+    short* r = AddPrimCopy_80040298(b, a, 10);
     r[4] = a[4] + dx;
     r[5] = a[5] + dy;
     r[8] = a[4];
@@ -125,7 +125,7 @@ void sub_80032D34(unsigned short* a, void* b)
 void sub_80032DFC(short* p, int a1)
 {
     int d = p[8] - p[4];
-    short* q = sub_80040298((void*)a1, p, 10);
+    short* q = AddPrimCopy_80040298((void*)a1, p, 10);
     q[4] = p[4] + d;
     q[8] = p[4];
     q[12] = p[4] + d;
@@ -135,7 +135,7 @@ void sub_80032DFC(short* p, int a1)
 void sub_80032E78(unsigned short* p, int a1)
 {
     int d = ((short*)p)[13] - ((short*)p)[5];
-    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
     q[5] = p[5] + d;
     q[9] = p[5] + d;
     q[13] = p[5];
@@ -146,7 +146,7 @@ void sub_80032EF4(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
     unsigned short t;
     q[4] = p[12];
     q[5] = p[13];
@@ -163,7 +163,7 @@ void sub_80032F88(unsigned short* p, int a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)sub_80040298((void*)a1, p, 10);
+    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
     unsigned short t;
     q[4] = p[8];
     q[5] = p[9];
@@ -178,7 +178,7 @@ void sub_80032F88(unsigned short* p, int a1)
 // Matched
 void sub_8003301C(void* a, void* b)
 {
-    sub_80040298(b, a, 10);
+    AddPrimCopy_80040298(b, a, 10);
 }
 // Matched
 void sub_80033048(unsigned short* p, int v)
@@ -195,8 +195,8 @@ void sub_80033080(unsigned short* a, int i, int j)
 {
     ((unsigned short*)&dword_8008D434[i])[4] = a[0];
     ((unsigned short*)&dword_8008D434[i])[5] = a[1];
-    sub_80040298(pOT_8008D454 + j, &dword_8008D434[i], 5);
-    sub_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D434[i], 5);
+    AddPrimCopy_80040298(pOT_8008D454 + j, &dword_8008D440[i], 2);
 }
 // Matched
 void sub_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
@@ -206,8 +206,8 @@ void sub_80033114(unsigned short* a, int idx, void* c, unsigned char* col)
     ((unsigned char*)&dword_8008D434[idx])[6] = col[2];
     ((unsigned short*)&dword_8008D434[idx])[4] = a[0];
     ((unsigned short*)&dword_8008D434[idx])[5] = a[1];
-    sub_80040298(c, &dword_8008D434[idx], 5);
-    sub_80040298(c, &dword_8008D440[idx], 2);
+    AddPrimCopy_80040298(c, &dword_8008D434[idx], 5);
+    AddPrimCopy_80040298(c, &dword_8008D440[idx], 2);
 }
 // Matched
 void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigned char* col)
@@ -225,8 +225,8 @@ void sub_800331C4(unsigned short* a, unsigned char* o, void* b, void* c, unsigne
     }
     *(unsigned short*)(o + 8) = a[0];
     *(unsigned short*)(o + 0xA) = a[1];
-    sub_80040298(c, o, 5);
-    sub_80040298(c, b, 2);
+    AddPrimCopy_80040298(c, o, 5);
+    AddPrimCopy_80040298(c, b, 2);
 }
 extern DRAWENV drawEnv_8008D698[2];
 // Matched
@@ -241,7 +241,7 @@ void sub_8003326C(unsigned short* a, void* b)
     rect.w = a[2];
     rect.h = a[3];
     SetTexWindow(&twin, &rect);
-    sub_80040298(b, &twin, 3);
+    AddPrimCopy_80040298(b, &twin, 3);
 }
 // Matched
 void sub_80033308(void* p)
@@ -255,7 +255,7 @@ void sub_80033308(void* p)
     rect.w = c[2];
     rect.h = c[3];
     SetTexWindow(&twin, &rect);
-    sub_80040298(p, &twin, 3);
+    AddPrimCopy_80040298(p, &twin, 3);
 }
 // Matched
 void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half)
@@ -398,7 +398,7 @@ extern void sub_80033754(unsigned char* a, unsigned char* b);
 void sub_800335D0(void* pSrc, Minion* m)
 {
     int r;
-    sub_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
+    MemCopy_800403E8((unsigned int*)m, (unsigned int*)pSrc, 0x48);
     r = sub_80033624(m->field_2C, (int)m);
     if (r)
     {
@@ -418,7 +418,7 @@ void sub_80033754(unsigned char* dst, unsigned char* src)
     unsigned char* tbl[2];
     int i;
     int j;
-    sub_800403E8((unsigned int*)dst, (unsigned int*)(src + 0x20), 12);
+    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)(src + 0x20), 12);
     src += 0x1C;
     tbl[0] = (unsigned char*)sub_8001CDA0(src[1]);
     tbl[1] = (unsigned char*)sub_8001CD74(src[2]);

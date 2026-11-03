@@ -205,7 +205,7 @@ typedef struct GameTab_1
     void (*fn)();
 } GameTab_1;
 extern void FreeMdecBuffer_800418CC(void);
-extern void sub_800418FC(void);
+extern void ReleaseMdecVLCFileBuffer_800418FC(void);
 extern void sub_800B8A34(GameQ_1* q);
 extern void sub_800C4118(void* a, void* b, int c, int d);
 extern void sub_8001AA50(int a);
@@ -590,7 +590,7 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameFlagObj_1* b)
     GameSlot_1* r = sub_800A17BC();
     r->f0 = 1;
     r->f4 = b;
-    sub_800403E8((unsigned int*)r->data_8, src, 0xe0);
+    MemCopy_800403E8((unsigned int*)r->data_8, src, 0xe0);
     return r;
 }
 
@@ -1765,25 +1765,25 @@ void sub_800A54A0(void)
     if (dword_800AEB7C != 2)
         sub_800A5854();
     if (name_800AEB80[1])
-        sub_8003FEC8(&name_800AEB80[1]);
+        ListFreeAll_8003FEC8(&name_800AEB80[1]);
     if (name_800AEBBC)
     {
-        sub_8003FE38(name_80091C10, name_800AEBBC);
+        ListFree_8003FE38(name_80091C10, name_800AEBBC);
         name_800AEBBC = 0;
     }
     if (name_800AEBC0[0])
     {
-        sub_8003FE38(name_80091C10, name_800AEBC0[0]);
+        ListFree_8003FE38(name_80091C10, name_800AEBC0[0]);
         name_800AEBC0[0] = 0;
     }
     if (name_800AEBC0[1])
     {
-        sub_8003FE38(name_80091C10, name_800AEBC0[1]);
+        ListFree_8003FE38(name_80091C10, name_800AEBC0[1]);
         name_800AEBC0[1] = 0;
     }
     if (name_800AEBC8)
     {
-        sub_8003FE38(name_80091C10, name_800AEBC8);
+        ListFree_8003FE38(name_80091C10, name_800AEBC8);
         name_800AEBC8 = 0;
     }
     if (name_800AEBCC[1])
@@ -1808,7 +1808,7 @@ void sub_800A5804(int a)
     }
     else if (a == 1)
     {
-        sub_8004188C();
+        AllocMdecVLCBufferInFileBuffer_8004188C();
     }
     dword_800AEB7C = a;
 }
@@ -1823,7 +1823,7 @@ int sub_800A5854(void)
     }
     else if (old == 1)
     {
-        sub_800418FC();
+        ReleaseMdecVLCFileBuffer_800418FC();
     }
     dword_800AEB7C = 2;
     return old;
@@ -2592,7 +2592,7 @@ extern char name_80096090[];
 int sub_800A7574(void)
 {
     sub_8001AF64(name_800B0EA4);
-    sub_8003FEC8(name_80096090);
+    ListFreeAll_8003FEC8(name_80096090);
     sub_80066E38(0);
     if (unknownFlags_8008D678 & 0x40000000)
     {
@@ -3005,7 +3005,7 @@ extern void sub_800AACF8();
 extern void sub_800AC02C();
 extern int sub_800AD670(int, int);
 extern int sub_80025924(int, int);
-extern void sub_8003FF1C(void*, unsigned);
+extern void PoolInit_8003FF1C(void*, unsigned);
 extern int sub_800ACB64();
 extern void sub_80031494(int);
 extern void sub_80031160(int, int);
@@ -3085,7 +3085,7 @@ extern void sub_800A6D30(int);
 extern int dword_8008B540;
 extern void sub_800A9414(void*, int, int);
 extern void sub_8002556C(int, int);
-extern void sub_8003FF7C(void*);
+extern void PoolDestroy_8003FF7C(void*);
 extern char dword_800B1DD0;
 extern int dword_800B11DC[];
 extern int sub_80025440(int, int, int);
@@ -4332,7 +4332,7 @@ void sub_800ACAA4(int* a, int* b)
     b[9] = 0;
     sub_800AC380(s->b7E5 != 0xFF);
     sub_800AC3A4(*(short*)((char*)sub_8001CF84(s->b7E4) + 2));
-    sub_8003FF1C(&dword_800B1DD0, 0x2BF20);
+    PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
     sub_800ACB64(a, b);
     a[2] = (int)sub_800ACB64;
 }
@@ -4342,7 +4342,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 void sub_800ACF0C()
 {
     sub_80024BB0((int*)&dword_8007DC60);
-    sub_8003FF7C(&dword_800B1DD0);
+    PoolDestroy_8003FF7C(&dword_800B1DD0);
 }
 
 void sub_800ACF3C(G2Act* p)
@@ -4542,9 +4542,9 @@ void sub_800AD3F0(int a)
         r = sub_800AD58C(i, a);
         if (r)
         {
-            sub_800403E8((unsigned*)tmp, (unsigned*)(tbl + cnt * 2), 2);
-            sub_800403E8((unsigned*)(tbl + cnt * 2), (unsigned*)r, 2);
-            sub_800403E8((unsigned*)r, (unsigned*)tmp, 2);
+            MemCopy_800403E8((unsigned*)tmp, (unsigned*)(tbl + cnt * 2), 2);
+            MemCopy_800403E8((unsigned*)(tbl + cnt * 2), (unsigned*)r, 2);
+            MemCopy_800403E8((unsigned*)r, (unsigned*)tmp, 2);
             cnt++;
         }
     }

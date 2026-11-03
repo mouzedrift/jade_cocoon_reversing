@@ -178,7 +178,7 @@ int sub_80010650(Item* pItem)
     {
         if (saveData_8008B570.items[i].id == 0xD3)
         {
-            sub_800403E8((unsigned int*)&saveData_8008B570.items[i], (unsigned int*)pItem, sizeof(Item));
+            MemCopy_800403E8((unsigned int*)&saveData_8008B570.items[i], (unsigned int*)pItem, sizeof(Item));
             return 1;
         }
     }
@@ -287,7 +287,7 @@ int sub_80010850(void* a0)
         buf[0] = e->field_4;
         m = malloc3_8003FC4C(0x40);
         buf[1] = (int)m;
-        sub_800403E8((unsigned int*)(m + 1), (unsigned int*)a0, 0x34);
+        MemCopy_800403E8((unsigned int*)(m + 1), (unsigned int*)a0, 0x34);
         m[0] = 0;
         m[0x38 / 4] = 1;
         m[0x3C / 4] = 1;

@@ -147,7 +147,7 @@ void sub_800B7F08(NameEntry* p)
     int i;
     short* s;
 
-    sub_800403E8((unsigned int*)p->name_10, (unsigned int*)p->field_28, 0x14);
+    MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)p->field_28, 0x14);
     s = p->field_28;
     i = 0;
     for (i = 0; i < 10; s++)
@@ -178,7 +178,7 @@ int sub_800B7F70(NameEntry* p)
 // Matched
 void sub_800B7FA0(NameEntry* p)
 {
-    sub_800403E8((unsigned int*)p->name_10, (unsigned int*)defaultName_800B83B8, 0x14);
+    MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)defaultName_800B83B8, 0x14);
     p->length_44 = 0;
 }
 

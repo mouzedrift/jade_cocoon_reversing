@@ -99,7 +99,7 @@ void sub_80035900(struct_obj_35900* o)
         {
             setXY4(&o->prim, o->x, o->y, o->x + 0x3F, o->y, o->x, o->y + 0x3F, o->x + 0x3F, o->y + 0x3F);
         }
-        sub_80040298(pOT_8008D454 + 1, &o->prim, 10);
+        AddPrimCopy_80040298(pOT_8008D454 + 1, &o->prim, 10);
     }
 }
 extern void sub_8003E91C(int mode, void* str, void* pos, int z);
@@ -162,7 +162,7 @@ EventEntry* sub_80035AC8(int* init)
         ((short*)o)[0xB0 / 2] = 0;
         ((short*)o)[0xB2 / 2] = 0;
         o[0x1B4 / 4] = 0;
-        sub_800403E8((unsigned int*)(o + 0x214 / 4), (unsigned int*)init, 0x50);
+        MemCopy_800403E8((unsigned int*)(o + 0x214 / 4), (unsigned int*)init, 0x50);
         o[0x20 / 4] = 0;
         o[0x24 / 4] = 1;
         if ((unsigned int)o[0x25C / 4] < 4)

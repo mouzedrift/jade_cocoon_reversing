@@ -128,15 +128,15 @@ void sub_800295D8(int* a, int b, int* c, int n, int heap)
 {
     if (a)
     {
-        *a = sub_8003FC8C(n * 20, (struct Heap*)heap);
+        *a = HeapAlloc_8003FC8C(n * 20, (struct Pool*)heap);
     }
     if (b)
     {
-        *(int*)b = sub_8003FC8C(n * 40, (struct Heap*)heap);
+        *(int*)b = HeapAlloc_8003FC8C(n * 40, (struct Pool*)heap);
     }
     if (c)
     {
-        *c = sub_8003FC8C(n * 8, (struct Heap*)heap);
+        *c = HeapAlloc_8003FC8C(n * 8, (struct Pool*)heap);
     }
 }
 // Matched

@@ -333,7 +333,7 @@ void InitFileRequestQueue_8003BBE4(void)
     {
         fileRequests_80095C90[i].fileId_10 = v;
     }
-    dword_80086564 = 0;
+    fileBufferInUse_80086564 = 0;
     dword_80086568 = 0;
 }
 // Matched
@@ -386,7 +386,7 @@ int QueueFileRequest_8003BC84(int* req)
     else
     {
         n->field_20 = (int)fileRequestParams_800954C0[i];
-        sub_800403E8((unsigned int*)n->field_20, (unsigned int*)req[5], req[6]);
+        MemCopy_800403E8((unsigned int*)n->field_20, (unsigned int*)req[5], req[6]);
     }
     if (head->count == 0)
     {
@@ -494,24 +494,24 @@ INCLUDE_ASM(RemoveFileRequest_8003BF18);
 // Matched
 int IsFileRequestQueueIdle_8003BF88(void)
 {
-    if (fileRequestQueue_80086540 == 0 && dword_80086564 == 0)
+    if (fileRequestQueue_80086540 == 0 && fileBufferInUse_80086564 == 0)
     {
         return 1;
     }
     return 0;
 }
-// Not matched: no jr after the store, execution falls through into sub_8003BFC0
+// Not matched: no jr after the store, execution falls through into GetFileBuffer_8003BFC0
 #if 0
-void sub_8003BFB8(int arg0)
+void SetFileBufferInUse_8003BFB8(int arg0)
 {
-    dword_80086564 = arg0;
+    fileBufferInUse_80086564 = arg0;
 }
 #endif
-INCLUDE_ASM(sub_8003BFB8);
+INCLUDE_ASM(SetFileBufferInUse_8003BFB8);
 // Matched
-int sub_8003BFC0(void)
+int GetFileBuffer_8003BFC0(void)
 {
-    return dword_8008656C;
+    return fileBuffer_8008656C;
 }
 // Matched
 int sub_8003BFD0(int key, int flag)
@@ -580,7 +580,7 @@ extern void ProcessFileRequests_8003C184(void);
 void InitFileRequestTask_8003C128(int* a0, int* a1)
 {
     InitFileRequestQueue_8003BBE4();
-    dword_8008656C = 0x801B9250;
+    fileBuffer_8008656C = 0x801B9250;
     a1[0] = 0;
     a1[7] = 0;
     a1[8] = 0;

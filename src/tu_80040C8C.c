@@ -125,7 +125,7 @@ enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId)
     return overlayCallbacks_800869D0[overlayId]();
 }
 // Matched
-void sub_80040E28(MovieInfo* m)
+void ClearMovieRect_80040E28(MovieInfo* m)
 {
     RECT r;
     r.x = m->rect.x;
@@ -141,7 +141,7 @@ void PlayMovie_80040EB4(int arg0)
 #endif
 INCLUDE_ASM(PlayMovie_80040EB4);
 // Matched
-void sub_80041240(MovieCtx* c, MovieInfo* i)
+void InitMovieCtx_80041240(MovieCtx* c, MovieInfo* i)
 {
     int x;
     int y;
@@ -178,7 +178,7 @@ void sub_80041240(MovieCtx* c, MovieInfo* i)
     c->slice.h = i->field_16;
 }
 // Matched
-void sub_80041358(int a0, int ring, int* stream)
+void InitMovieStream_80041358(int a0, int ring, int* stream)
 {
     DecDCTReset(0);
     DecDCToutCallback((void (*)())ring);
@@ -202,7 +202,7 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
     }
     return 0;
 }
-extern MovieCtx dword_800960C0;
+extern MovieCtx movieCtx_800960C0;
 extern int dword_800960F8;
 extern int dword_80096100;
 /* libcd's StCdIntrFlag lives in the PSY-Q .bss blob (0x8009AE6C), which has no symbols of its own */
@@ -211,7 +211,7 @@ extern char lib_bss[];
 extern void StCdInterrupt(void);
 #if 0
 // Not matched: slice-size product / rectid toggle scheduling differs (~60 lines)
-void sub_80041424(void)
+void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
     MovieRect r2;
@@ -222,38 +222,38 @@ void sub_80041424(void)
         StCdInterrupt();
         StCdIntrFlag = 0;
     }
-    r = dword_800960C0.slice;
-    id = dword_800960C0.field_14;
-    dword_800960C0.field_14 = dword_800960C0.field_14 ? 0 : 1;
-    if (dword_80096100 == 1 && (rem = dword_800960C0.rect[dword_800960C0.field_28].w % dword_800960C0.slice.w) != 0)
+    r = movieCtx_800960C0.slice;
+    id = movieCtx_800960C0.field_14;
+    movieCtx_800960C0.field_14 = movieCtx_800960C0.field_14 ? 0 : 1;
+    if (dword_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
     {
         dword_80096100 = 0;
-        dword_800960C0.slice.x += rem;
+        movieCtx_800960C0.slice.x += rem;
     }
     else
     {
-        dword_800960C0.slice.x += dword_800960C0.slice.w;
+        movieCtx_800960C0.slice.x += movieCtx_800960C0.slice.w;
     }
-    if (dword_800960C0.slice.x < dword_800960C0.rect[dword_800960C0.field_28].x + dword_800960C0.rect[dword_800960C0.field_28].w)
+    if (movieCtx_800960C0.slice.x < movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x + movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w)
     {
-        DecDCTout(dword_800960C0.imgbuf[dword_800960C0.field_14], (dword_800960C0.slice.w * 16 * ((dword_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], (movieCtx_800960C0.slice.w * 16 * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
     }
     else
     {
-        dword_800960C0.field_34 = 1;
-        dword_800960C0.field_28 = dword_800960C0.field_28 ? 0 : 1;
-        dword_800960C0.slice.x = dword_800960C0.rect[dword_800960C0.field_28].x;
+        movieCtx_800960C0.field_34 = 1;
+        movieCtx_800960C0.field_28 = movieCtx_800960C0.field_28 ? 0 : 1;
+        movieCtx_800960C0.slice.x = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x;
         dword_80096100 = 1;
-        dword_800960C0.slice.y = dword_800960C0.rect[dword_800960C0.field_28].y;
+        movieCtx_800960C0.slice.y = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].y;
     }
-    LoadImage((RECT*)&r, dword_800960C0.imgbuf[id]);
+    LoadImage((RECT*)&r, movieCtx_800960C0.imgbuf[id]);
 }
 #endif
-INCLUDE_ASM(sub_80041424);
+INCLUDE_ASM(MovieDctOutCallback_80041424);
 extern short movieWidth_80086F98;
 extern short movieHeight_80086F9A;
 // Matched
-int sub_800415D8(MovieCtx* c, MovieInfo* m)
+int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m)
 {
     u_long* addr;
     u_long* hdr;
@@ -266,7 +266,7 @@ int sub_800415D8(MovieCtx* c, MovieInfo* m)
     }
     if (movieWidth_80086F98 != ((u_short*)hdr)[8] || movieHeight_80086F9A != ((u_short*)hdr)[9])
     {
-        sub_80040E28(m);
+        ClearMovieRect_80040E28(m);
         movieWidth_80086F98 = ((u_short*)hdr)[8];
         movieHeight_80086F9A = ((u_short*)hdr)[9];
     }
@@ -279,7 +279,7 @@ int sub_800415D8(MovieCtx* c, MovieInfo* m)
     return 1;
 }
 // Matched
-void sub_80041724(MovieCtx* c)
+void MovieWaitFrameDone_80041724(MovieCtx* c)
 {
     volatile int timeout = 0x13880;
     while (!c->field_34)
@@ -295,7 +295,7 @@ void sub_80041724(MovieCtx* c)
     c->field_34 = 0;
 }
 // Matched
-void sub_800417BC(DslLOC* loc, MovieParams* p)
+void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* p)
 {
     unsigned char mode[8];
     if (p->doubleSpeed)
@@ -327,11 +327,11 @@ void AllocMdecVLCBuffer_80041848(void)
     }
 }
 // Matched
-void sub_8004188C(void)
+void AllocMdecVLCBufferInFileBuffer_8004188C(void)
 {
     if (!mdecVLCBuffer_80086F94)
     {
-        mdecVLCBuffer_80086F94 = sub_8003BFB8(1);
+        mdecVLCBuffer_80086F94 = SetFileBufferInUse_8003BFB8(1);
         DecDCTvlcBuild(mdecVLCBuffer_80086F94);
     }
 }
@@ -342,9 +342,9 @@ void FreeMdecBuffer_800418CC(void)
     mdecVLCBuffer_80086F94 = 0;
 }
 // Matched
-void sub_800418FC(void)
+void ReleaseMdecVLCFileBuffer_800418FC(void)
 {
-    sub_8003BFB8(0);
+    SetFileBufferInUse_8003BFB8(0);
     mdecVLCBuffer_80086F94 = 0;
 }
 // Matched

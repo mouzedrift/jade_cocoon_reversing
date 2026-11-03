@@ -42,7 +42,7 @@ after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file
   reference the existing symbol (`printf(aAssertionFaile_0, aSoundC, 631)`), or for switch tables
   truncate the asm chunk (`config/c_rodata.txt`) so the compiler's table replaces it.
 * A symbol span larger than the compiled function means a hidden function follows: add it to
-  `symbol_addrs.txt` (`sub_8001C314`, `sub_800403A8` were found like this).
+  `symbol_addrs.txt` (`sub_8001C314`, `CopyHalfwords_800403A8` were found like this).
 * `sym_diff.py` shows the first symbol that drifts: the one before it has the wrong size.
 
 ## Overlays

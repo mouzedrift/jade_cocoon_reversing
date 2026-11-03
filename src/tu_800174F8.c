@@ -160,7 +160,7 @@ void sub_80017A6C(int a0, int a1)
         }
         e->cb_8 = (EventEntryFn)sub_80017B10;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        sub_8004188C();
+        AllocMdecVLCBufferInFileBuffer_8004188C();
         DecDCTReset(0);
     }
 }
@@ -178,7 +178,7 @@ void sub_80017B10(unsigned int* a0, int* a1)
     }
     else
     {
-        sub_800418FC();
+        ReleaseMdecVLCFileBuffer_800418FC();
         unknownFlags_8008D678 &= ~0x800;
         *a0 = (*a0 & ~1) | 0x8000;
     }

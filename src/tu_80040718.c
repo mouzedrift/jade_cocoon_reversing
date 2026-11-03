@@ -101,8 +101,8 @@ void sub_800408F4(void)
         e[0x37] = 0x100;
         for (i = 0; i < 6; i++)
         {
-            sub_80040298(pOT_8008D3EC, (char*)dword_8008D47C + i * 0x14, 5);
-            sub_80040298(pOT_8008D3EC, (char*)dword_8008B4EC + i * 8, 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, (char*)dword_8008D47C + i * 0x14, 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, (char*)dword_8008B4EC + i * 8, 2);
         }
     }
     else

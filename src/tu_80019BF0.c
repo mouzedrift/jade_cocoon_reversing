@@ -121,9 +121,9 @@ INCLUDE_DATA(dword_80086554);
 INCLUDE_DATA(dword_80086558);
 INCLUDE_DATA(dword_8008655C);
 INCLUDE_DATA(dword_80086560);
-INCLUDE_DATA(dword_80086564);
+INCLUDE_DATA(fileBufferInUse_80086564);
 INCLUDE_DATA(dword_80086568);
-INCLUDE_DATA(dword_8008656C);
+INCLUDE_DATA(fileBuffer_8008656C);
 /* char* off_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
 INCLUDE_DATA(off_80086570);
 INCLUDE_DATA(dword_80086574);
@@ -727,10 +727,10 @@ void InitSprt_8001B9A0(int buffer)
             sprt.y0 = y;
             sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
             sprt.v0 = y + top;
-            sub_80040298(pOT_8008D78C, &sprt, 5);
+            AddPrimCopy_80040298(pOT_8008D78C, &sprt, 5);
             tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
-            sub_80040298(pOT_8008D78C, &tpage, 2);
+            AddPrimCopy_80040298(pOT_8008D78C, &tpage, 2);
         }
     }
 }
@@ -758,10 +758,10 @@ void sub_8001BB28(void)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 1);
-    sub_80040298(pOT_8008D78C, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D78C, &poly, 6);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000240;
-    sub_80040298(pOT_8008D78C, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
     dword_800918B4++;
     if ((unsigned int)dword_800918B4 > 0x20)
     {
@@ -792,10 +792,10 @@ void sub_8001BC00(void)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 1);
-    sub_80040298(pOT_8008D78C, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D78C, &poly, 6);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000220;
-    sub_80040298(pOT_8008D78C, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
     dword_800918B4++;
     if ((unsigned int)dword_800918B4 > 0x20)
     {
@@ -822,9 +822,9 @@ void sub_8001BCE4(int buffer)
         return;
     }
     SetDrawStp(&stp, 1);
-    sub_80040298(pOT_8008D4AC + 3, &stp, 3);
+    AddPrimCopy_80040298(pOT_8008D4AC + 3, &stp, 3);
     SetDrawStp(&stp, 0);
-    sub_80040298(pOT_8008D4AC, &stp, 3);
+    AddPrimCopy_80040298(pOT_8008D4AC, &stp, 3);
     SetSprt(&sprt);
     sprt.r0 = 0x80;
     sprt.g0 = 0x80;
@@ -849,15 +849,15 @@ void sub_8001BCE4(int buffer)
             sprt.y0 = y;
             sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
             sprt.v0 = y + top;
-            sub_80040298(pOT_8008D4AC + 1, &sprt, 5);
+            AddPrimCopy_80040298(pOT_8008D4AC + 1, &sprt, 5);
             tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
-            sub_80040298(pOT_8008D4AC + 1, &tpage, 2);
+            AddPrimCopy_80040298(pOT_8008D4AC + 1, &tpage, 2);
         }
     }
 }
 // Matched
-void sub_8001BEC8(void)
+void LoadDecodedImage_8001BEC8(void)
 {
     RECT rect;
     unsigned long* p = decodedImageData_8008B4A0;
@@ -889,17 +889,17 @@ void sub_8001BF90(void)
 {
     if (unknownFlags_8008D678 & 0x200)
     {
-        dword_800960A8[0] = dword_8008B550 + 0x801B9250;
-        dword_800960A0[0] = dword_8008B550 + 0x801B9250;
-        dword_800960A8[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
-        dword_800960A0[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
+        primAllocPtr_800960A8[0] = dword_8008B550 + 0x801B9250;
+        primBufferStart_800960A0[0] = dword_8008B550 + 0x801B9250;
+        primAllocPtr_800960A8[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
+        primBufferStart_800960A0[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
     }
     else
     {
-        dword_800960A8[0] = 0x801D4000;
-        dword_800960A0[0] = 0x801D4000;
-        dword_800960A8[1] = 0x801E8000;
-        dword_800960A0[1] = 0x801E8000;
+        primAllocPtr_800960A8[0] = 0x801D4000;
+        primBufferStart_800960A0[0] = 0x801D4000;
+        primAllocPtr_800960A8[1] = 0x801E8000;
+        primBufferStart_800960A0[1] = 0x801E8000;
     }
 }
 // Matched
@@ -948,10 +948,10 @@ void sub_8001C0B4(struct_cb* p, int* q)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 0);
-    sub_80040298(pOT_8008D5F4, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D5F4, &poly, 6);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000220;
-    sub_80040298(pOT_8008D5F4, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D5F4, &dr, 2);
 }
 // Matched
 void sub_8001C19C(a0)
@@ -1602,7 +1602,7 @@ void sub_8001D378(void)
     sub_800204D0();
     sub_800205F0();
     sub_800201A4();
-    sub_8003FDB0(dword_80091990);
+    ListInit_8003FDB0(dword_80091990);
     sub_80043B40(dword_8008D43C);
 }
 // Matched
@@ -1614,7 +1614,7 @@ void sub_8001D3C4(int a0)
         sub_8002052C();
         sub_800204D0();
     }
-    sub_8003FEC8(dword_80091990);
+    ListFreeAll_8003FEC8(dword_80091990);
     sub_80043B40(dword_8008D43C);
     sub_800201A4();
 }
@@ -2227,7 +2227,7 @@ INCLUDE_ASM(sub_8001E7F0);
 void sub_8001EA00(char* p)
 {
     int v = *(int*)(p + 0x134);
-    sub_8003FE38(dword_80091990, (void*)v);
+    ListFree_8003FE38(dword_80091990, (void*)v);
 }
 // Matched
 void sub_8001EA28(void* arg0)
@@ -2996,7 +2996,7 @@ void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
     arg.c[0] = a3[0];
     arg.c[1] = a3[1];
     arg.d = a4;
-    sub_8003FDB0(out + 1);
+    ListInit_8003FDB0(out + 1);
     req[0] = 0x28;
     if (a5)
     {
@@ -3023,7 +3023,7 @@ int sub_80020EBC(int* p)
 // Matched
 void sub_80020EE0(int* p)
 {
-    sub_8003FEC8(p + 1);
+    ListFreeAll_8003FEC8(p + 1);
 }
 // Matched
 int sub_80020F00(struct_list_14* p, int a, int b)
@@ -3068,14 +3068,14 @@ void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
     {
         out[4] = images[0];
         out[5] = images[1];
-        out[6] = (int)sub_8003FDC0(heap, images[1] * 40 * images[0]);
-        sub_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[1] * 40 * images[0]);
+        out[6] = (int)ListAlloc_8003FDC0(heap, images[1] * 40 * images[0]);
+        MemCopy_800403E8((unsigned int*)out[6], (unsigned int*)(images + 2), images[1] * 40 * images[0]);
     }
 }
 #endif
 INCLUDE_ASM(sub_80021464);
 // Matched
-int sub_800215E8(int* hdr, int* out, int heap)
+int LoadMdecImages_800215E8(int* hdr, int* out, int heap)
 {
     int i;
     int max;
@@ -3084,15 +3084,15 @@ int sub_800215E8(int* hdr, int* out, int heap)
     int n;
     int count = hdr[0];
     out[0] = count;
-    out[1] = (int)sub_8003FDC0(heap, count * 4);
+    out[1] = (int)ListAlloc_8003FDC0(heap, count * 4);
     i = 0;
     max = i;
     for (; i < out[0]; i++)
     {
         size = hdr[i * 2 + 2];
         src = (unsigned long*)((char*)hdr + hdr[i * 2 + 1]);
-        ((int*)out[1])[i] = (int)sub_8003FDC0(heap, size);
-        sub_800403E8((unsigned int*)((int*)out[1])[i], (unsigned int*)src, size);
+        ((int*)out[1])[i] = (int)ListAlloc_8003FDC0(heap, size);
+        MemCopy_800403E8((unsigned int*)((int*)out[1])[i], (unsigned int*)src, size);
         n = DecDCTBufSize(src);
         if (max < n)
         {
@@ -3104,8 +3104,8 @@ int sub_800215E8(int* hdr, int* out, int heap)
 // Matched
 void sub_800216E8(int* a0, int a1, int a2)
 {
-    a0[0] = sub_8003FDC0(a2, (a1 + 1) * 4);
-    a0[1] = sub_8003FDC0(a2, 0x2000);
+    a0[0] = ListAlloc_8003FDC0(a2, (a1 + 1) * 4);
+    a0[1] = ListAlloc_8003FDC0(a2, 0x2000);
 }
 // Matched
 int sub_80021738(int* p)
@@ -3115,7 +3115,7 @@ int sub_80021738(int* p)
 // Matched
 void sub_80021744(int* p, int idx, int a2)
 {
-    *p = sub_8003FC8C(idx * 0x54, a2);
+    *p = HeapAlloc_8003FC8C(idx * 0x54, a2);
 }
 // Matched
 void sub_80021784(int** a0, unsigned int n, int heap)
@@ -3127,7 +3127,7 @@ void sub_80021784(int** a0, unsigned int n, int heap)
         sub_800229B0((int*)p, heap);
         p += 0x54;
     }
-    sub_8003FD18(*a0, heap);
+    HeapFree_8003FD18(*a0, heap);
     *a0 = 0;
 }
 // Matched
@@ -3157,14 +3157,14 @@ int sub_80021DE4(int* p)
 void sub_80021DF0(int* p, int a1, int a2)
 {
     p[0] = a1;
-    p[1] = sub_8003FC8C(a1 * 16, a2);
+    p[1] = HeapAlloc_8003FC8C(a1 * 16, a2);
 }
 // Matched
 // p is volatile to keep the store before the load
 void sub_80021E24(volatile int* p, int h)
 {
     p[0] = 0;
-    sub_8003FD18(p[1]);
+    HeapFree_8003FD18(p[1]);
 }
 // Matched
 void sub_80021E4C(int* a0, int* a1, unsigned int n)
@@ -3439,7 +3439,7 @@ int sub_80022634(struct_22634* out, int* c, int h)
     total += c[9];
     if (size != 0)
     {
-        p = (char*)sub_8003FC8C(size, h);
+        p = (char*)HeapAlloc_8003FC8C(size, h);
     }
     out[0].n = c[0];
     out[0].p = (int)p;
@@ -3486,7 +3486,7 @@ int sub_800228F8(struct_cnt_ptr* a0, struct_cnt_ptr* a1, int* a2, int heap)
     n = a2[8];
     if (n)
     {
-        a0->ptr = sub_8003FC8C(n << 3, (struct Heap*)heap);
+        a0->ptr = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
     }
     else
     {
@@ -3497,7 +3497,7 @@ int sub_800228F8(struct_cnt_ptr* a0, struct_cnt_ptr* a1, int* a2, int heap)
     n += m;
     if (m)
     {
-        a1->ptr = sub_8003FC8C(m * 12, (struct Heap*)heap);
+        a1->ptr = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
     }
     else
     {
@@ -3511,7 +3511,7 @@ void sub_800229B0(int* p, int heap)
     int a = p[1];
     if (a)
     {
-        sub_8003FD18(a, heap);
+        HeapFree_8003FD18(a, heap);
     }
 }
 // Matched
@@ -3524,10 +3524,10 @@ void sub_800229E0(int* a0, int* a1, int h)
         {
             if (((int*)a0[1])[i * 2 + 1] != 0)
             {
-                sub_8003FD18(((int*)a0[1])[i * 2 + 1], h);
+                HeapFree_8003FD18(((int*)a0[1])[i * 2 + 1], h);
             }
         }
-        sub_8003FD18(a0[1], h);
+        HeapFree_8003FD18(a0[1], h);
     }
     if (a1[1] != 0)
     {
@@ -3535,10 +3535,10 @@ void sub_800229E0(int* a0, int* a1, int h)
         {
             if (((struct_12*)a1[1])[i].field_8 != 0)
             {
-                sub_8003FD18(((struct_12*)a1[1])[i].field_8, h);
+                HeapFree_8003FD18(((struct_12*)a1[1])[i].field_8, h);
             }
         }
-        sub_8003FD18(a1[1], h);
+        HeapFree_8003FD18(a1[1], h);
     }
 }
 // Matched
@@ -3573,7 +3573,7 @@ int sub_8002300C(unsigned char* hdr, unsigned char* p, int* a, int k, int h)
     int i;
     unsigned char* q;
     ((struct_8_20b*)a[1])[k].count = *(int*)p;
-    ((struct_8_20b*)a[1])[k].items = (struct_20_b*)sub_8003FC8C(*(int*)p * 20, h);
+    ((struct_8_20b*)a[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
     q = p + r;
     for (i = 0; i < *(int*)p; i++)
     {
@@ -3604,7 +3604,7 @@ int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h)
     int i;
     unsigned char* q;
     ((struct_12_20b*)b[1])[k].count = *(int*)p;
-    ((struct_12_20b*)b[1])[k].items = (struct_20_b*)sub_8003FC8C(*(int*)p * 20, h);
+    ((struct_12_20b*)b[1])[k].items = (struct_20_b*)HeapAlloc_8003FC8C(*(int*)p * 20, h);
     ((struct_12_20b*)b[1])[k].f4 = *(unsigned short*)(p + 4);
     ((struct_12_20b*)b[1])[k].f6 = *(unsigned short*)(p + 6);
     q = p + r;
@@ -4044,10 +4044,10 @@ void sub_80024ADC(struct_112_list** a0, void* a1, int heap)
 {
     struct_112_list* l;
     int i;
-    l = *a0 = (struct_112_list*)sub_8003FC8C(0x10, (struct Heap*)heap);
+    l = *a0 = (struct_112_list*)HeapAlloc_8003FC8C(0x10, (struct Pool*)heap);
     l->count = sub_80026600(a1);
     l->field_4 = heap;
-    l->items = (struct_112*)sub_8003FC8C(l->count * 0x70, (struct Heap*)heap);
+    l->items = (struct_112*)HeapAlloc_8003FC8C(l->count * 0x70, (struct Pool*)heap);
     l->field_C = a1;
     for (i = 0; i < l->count; i++)
     {
@@ -4065,8 +4065,8 @@ void sub_80024BB0(struct_112_list** a0)
     {
         sub_80024C48(&l->items[i]);
     }
-    sub_8003FD18(l->items, l->field_4);
-    sub_8003FD18(l, l->field_4);
+    HeapFree_8003FD18(l->items, l->field_4);
+    HeapFree_8003FD18(l, l->field_4);
     *a0 = 0;
 }
 // Matched
@@ -4078,11 +4078,11 @@ void sub_80024C48(struct_112* p)
     h = ((int*)p->field_0)[1];
     if (p->field_44 != 0)
     {
-        sub_8003FD18(p->field_44, h);
+        HeapFree_8003FD18(p->field_44, h);
     }
     if (p->field_4C != 0)
     {
-        sub_8003FD18(p->field_4C, h);
+        HeapFree_8003FD18(p->field_4C, h);
     }
     if (p->field_50 != 0)
     {
@@ -4094,7 +4094,7 @@ void sub_80024C48(struct_112* p)
     }
     if (p->field_58 != 0)
     {
-        sub_8003FD18(p->field_58, h);
+        HeapFree_8003FD18(p->field_58, h);
     }
     if (p->field_60 != 0)
     {
@@ -4102,7 +4102,7 @@ void sub_80024C48(struct_112* p)
     }
     if (p->field_64 != 0)
     {
-        sub_8003FD18(p->field_64, h);
+        HeapFree_8003FD18(p->field_64, h);
     }
     if (p->field_68 != 0)
     {
@@ -4110,7 +4110,7 @@ void sub_80024C48(struct_112* p)
     }
     if (p->field_6C != 0)
     {
-        sub_8003FD18(p->field_6C, h);
+        HeapFree_8003FD18(p->field_6C, h);
     }
     sub_800266CC(p);
 }
@@ -4247,7 +4247,7 @@ void sub_80024FFC(struct_112* p, int* ids)
     {
     }
     p->field_40 = n;
-    p->field_64 = sub_8003FC8C(n * sizeof(struct_58), ((int*)p->field_0)[1]);
+    p->field_64 = HeapAlloc_8003FC8C(n * sizeof(struct_58), ((int*)p->field_0)[1]);
     for (n--; n >= 0; n--)
     {
         ((struct_58*)p->field_64)[n].id = ids[n];
@@ -4265,7 +4265,7 @@ void sub_8002512C(unsigned int* a0, char* a1, int a2)
         int* e = (int*)(i * 0x58 + *(int*)(a1 + 0x64));
         if (a2 == e[0])
         {
-            sub_800403E8(a0, (unsigned int*)(e + 1), 0x54);
+            MemCopy_800403E8(a0, (unsigned int*)(e + 1), 0x54);
             break;
         }
     }
@@ -4273,7 +4273,7 @@ void sub_8002512C(unsigned int* a0, char* a1, int a2)
 // Matched
 void sub_800251A0(void* dst, struct_obj_E* src, int a2, int idx)
 {
-    sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_50[idx], sizeof(struct_54));
+    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->field_50[idx], sizeof(struct_54));
 }
 // Matched
 void nullsub_4(void)
@@ -4546,7 +4546,7 @@ void sub_80025884(struct_112* p)
                 sub_8002556C(p, id);
             }
         }
-        sub_8003FD18(p->field_58, heap);
+        HeapFree_8003FD18(p->field_58, heap);
         p->field_58 = 0;
     }
 }
@@ -4614,7 +4614,7 @@ int sub_80025974(struct_112* p, int idx, int flag)
 // Matched
 void sub_80025AB0(struct_112* p)
 {
-    struct Heap* h = (struct Heap*)((int*)p->field_0)[1];
+    struct Pool* h = (struct Pool*)((int*)p->field_0)[1];
     if (p->field_68)
     {
         sub_80021784((int**)&p->field_68, p->field_42, h);
@@ -4623,7 +4623,7 @@ void sub_80025AB0(struct_112* p)
     }
     if (p->field_6C)
     {
-        sub_8003FD18(p->field_6C, h);
+        HeapFree_8003FD18(p->field_6C, h);
         p->field_43 = 0;
         p->field_6C = 0;
     }
@@ -4631,7 +4631,7 @@ void sub_80025AB0(struct_112* p)
 // Matched
 void sub_80025B20(void* dst, struct_obj_E* src, int idx)
 {
-    sub_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
+    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->field_68[idx], sizeof(struct_54));
 }
 // Matched
 void sub_80025B5C(struct_obj_E* p, int idx, int sel)
@@ -4797,9 +4797,9 @@ void sub_80026014(char* a0)
     int n = q[0];
     int r;
     p->field_48 = n;
-    r = sub_8003FC8C(n, h);
+    r = HeapAlloc_8003FC8C(n, h);
     p->field_4C = r;
-    sub_800403E8((unsigned int*)r, (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
+    MemCopy_800403E8((unsigned int*)r, (unsigned int*)(*(int*)(a0 + 0x1C) + 4), n);
 }
 // Matched
 void sub_8002607C(int* a0)
@@ -4845,9 +4845,9 @@ void sub_800261C8(int* a0)
     }
     if (p->field_44 != 0)
     {
-        sub_8003FD18(p->field_44, h);
+        HeapFree_8003FD18(p->field_44, h);
     }
-    p->field_44 = sub_8003FC8C(p->field_3E, h);
+    p->field_44 = HeapAlloc_8003FC8C(p->field_3E, h);
     for (i = 0; i < p->field_3E; i++)
     {
         mode = a0[3];
@@ -4924,7 +4924,7 @@ void sub_80026410(int* a0)
     struct_112* p = (struct_112*)a0[5];
     int n = q[0];
     int h = ((int*)p->field_0)[1];
-    int* list = (int*)sub_8003FC8C((n + 1) * 4, h);
+    int* list = (int*)HeapAlloc_8003FC8C((n + 1) * 4, h);
     int i;
     int id;
     int src;
@@ -4969,9 +4969,9 @@ void sub_8002659C(char* a0)
     int r;
     p->field_43 = *q;
     q += 4;
-    r = sub_8003FC8C(p->field_43 << 2, h);
+    r = HeapAlloc_8003FC8C(p->field_43 << 2, h);
     p->field_6C = r;
-    sub_800403E8((unsigned int*)r, (unsigned int*)q, p->field_43 << 2);
+    MemCopy_800403E8((unsigned int*)r, (unsigned int*)q, p->field_43 << 2);
 }
 // Matched
 int sub_80026600(struct_16_b* p)
@@ -5045,7 +5045,7 @@ int sub_80026724(int* p)
 // Matched
 void sub_80026730(struct_28** a0, int a1, int a2)
 {
-    struct_28* p = (struct_28*)sub_8003FC8C(a1 * 28, a2);
+    struct_28* p = (struct_28*)HeapAlloc_8003FC8C(a1 * 28, a2);
     int i;
     *a0 = p;
     for (i = 0; i < a1; i++)
@@ -5071,20 +5071,20 @@ void sub_8002679C(struct_28** a0, int n, int heap)
         {
             if (e->field_10)
             {
-                sub_8003FD18(e->field_10, heap);
+                HeapFree_8003FD18(e->field_10, heap);
             }
             if (e->field_14)
             {
-                sub_8003FD18(e->field_14, heap);
+                HeapFree_8003FD18(e->field_14, heap);
             }
             if (e->field_18)
             {
-                sub_8003FD18(e->field_18, heap);
+                HeapFree_8003FD18(e->field_18, heap);
             }
             i++;
             e++;
         }
-        sub_8003FD18(arr, heap);
+        HeapFree_8003FD18(arr, heap);
         *a0 = 0;
     }
 }
@@ -5125,10 +5125,10 @@ void sub_800269C4(int a0, int n, int sel, int h)
         {
             if (p->field_10 != 0)
             {
-                sub_8003FD18(p->field_10, h);
+                HeapFree_8003FD18(p->field_10, h);
             }
-            sub_8003FD18(p->field_14, h);
-            sub_8003FD18(p->field_18, h);
+            HeapFree_8003FD18(p->field_14, h);
+            HeapFree_8003FD18(p->field_18, h);
             p->field_10 = 0;
             p->field_14 = 0;
             p->field_18 = 0;
@@ -5149,7 +5149,7 @@ int sub_80026D6C(int* p)
 // Matched
 void sub_80026D78(struct_12** a0, int a1, int a2)
 {
-    struct_12* p = (struct_12*)sub_8003FC8C(a1 * 12, a2);
+    struct_12* p = (struct_12*)HeapAlloc_8003FC8C(a1 * 12, a2);
     int i;
     for (i = 0; i < a1; i++)
     {
@@ -5168,10 +5168,10 @@ void sub_80026DE8(struct_12** a0, int n, int h)
     {
         if (p->field_8 != 0)
         {
-            sub_8003FD18(p->field_8, h);
+            HeapFree_8003FD18(p->field_8, h);
         }
     }
-    sub_8003FD18(*a0, h);
+    HeapFree_8003FD18(*a0, h);
     *a0 = 0;
 }
 // Matched
@@ -5201,7 +5201,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = (unsigned short*)sub_8003FC8C(p->field_0 * 8, a2);
+    d = (unsigned short*)HeapAlloc_8003FC8C(p->field_0 * 8, a2);
     p->field_8 = (int)d;
     for (i = 0; i < p->field_0; i++)
     {
@@ -5232,10 +5232,10 @@ extern int dword_80091C48;
 // Matched
 void sub_80026FAC(void)
 {
-    sub_8003FDB0(&dword_80091C68);
-    sub_8003FDB0(&dword_80091C20);
-    sub_8003FDB0(&dword_80091C10);
-    sub_8003FDB0(&dword_80091C48);
+    ListInit_8003FDB0(&dword_80091C68);
+    ListInit_8003FDB0(&dword_80091C20);
+    ListInit_8003FDB0(&dword_80091C10);
+    ListInit_8003FDB0(&dword_80091C48);
     dword_80091C30[0] = 0x3A;
     dword_80091C30[1] = 0;
     dword_80091C30[2] = 0;
@@ -5334,18 +5334,18 @@ void sub_80027118(void)
     sub_800A7784();
     sub_800A170C();
     sub_800A1794();
-    sub_8003FEC8(&dword_80091C10);
-    sub_8003FEC8(&dword_80091C68);
+    ListFreeAll_8003FEC8(&dword_80091C10);
+    ListFreeAll_8003FEC8(&dword_80091C68);
     if (!(unknownFlags_8008D678 & 0x20000))
     {
-        sub_8003FEC8(&dword_80091C48);
+        ListFreeAll_8003FEC8(&dword_80091C48);
     }
 }
 // Matched
 void sub_8002728C(void)
 {
     dword_80091C44 = -1;
-    sub_8003FEC8(&dword_80091C20);
+    ListFreeAll_8003FEC8(&dword_80091C20);
 }
 // Matched
 void sub_800272BC(int a0, int a1)
@@ -5507,7 +5507,7 @@ void sub_800275E8(char** a0, int a1, int a2)
     int i;
     if (a1 != 0)
     {
-        p = (char*)sub_8003FDC0(a2, a1);
+        p = (char*)ListAlloc_8003FDC0(a2, a1);
         *a0 = p;
         q = p;
         for (i = 0; i < a1; i++)
@@ -5530,7 +5530,7 @@ int* sub_80027650(int* a0, int a1, int h)
     g[0] = n;
     if (n != 0)
     {
-        d = (int*)sub_8003FDC0(h, n * 16);
+        d = (int*)ListAlloc_8003FDC0(h, n * 16);
         g[1] = (int)d;
         for (i = 0; i < g[0]; i++)
         {
@@ -5570,7 +5570,7 @@ void sub_80027778(int* a0, int h)
     dword_8008D648[2] = a0[1];
     n = a0[2];
     dword_8008D648[0] = n;
-    arr = (struct_27778*)sub_8003FDC0(h, n * 16);
+    arr = (struct_27778*)ListAlloc_8003FDC0(h, n * 16);
     for (i = 0; i < dword_8008D648[0]; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
@@ -5580,7 +5580,7 @@ void sub_80027778(int* a0, int h)
         q = (unsigned short*)src;
         e->field_8 = *q++;
         e->field_A = *q++;
-        e->items = (unsigned short*)sub_8003FDC0(h, e->count * 2);
+        e->items = (unsigned short*)ListAlloc_8003FDC0(h, e->count * 2);
         for (j = 0; j < e->count; j++)
         {
             e->items[j] = *q++;

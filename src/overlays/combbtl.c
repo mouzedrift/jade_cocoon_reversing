@@ -562,10 +562,10 @@ void sub_800A601C()
     int i;
     for (i = 10; i > 0; i--)
     {
-        sub_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
+        MemCopy_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
     }
     dword_800A84D8[0].a = dword_800A85B8;
-    sub_800403E8((unsigned int*)((char*)dword_800A84D8 + 4), (unsigned int*)&dword_800A8600, 0x10);
+    MemCopy_800403E8((unsigned int*)((char*)dword_800A84D8 + 4), (unsigned int*)&dword_800A8600, 0x10);
 }
 
 void sub_800A60A4()

@@ -91,7 +91,7 @@ void sub_800A4D64(CombSelUnit* base)
             {
                 if (sub_800A1934(&base[j]) == 0)
                 {
-                    sub_800403E8((unsigned int*)&base[i], (unsigned int*)&base[j], 0xF8);
+                    MemCopy_800403E8((unsigned int*)&base[i], (unsigned int*)&base[j], 0xF8);
                     sub_800A197C(&base[j]);
                     break;
                 }
@@ -219,7 +219,7 @@ void sub_800A5188()
         {
             CombSelUnit* a = &dword_800A3AA0[byte_800A38D9][(short)sub_8003DA54(dword_800A5960)];
             CombSelUnit* b = &dword_800A1BC8[byte_800A38D9][(short)sub_8003DA54(dword_800A596C)];
-            sub_800403E8((unsigned int*)a, (unsigned int*)b, 0xF8);
+            MemCopy_800403E8((unsigned int*)a, (unsigned int*)b, 0xF8);
             byte_800A38DB = 2;
             sub_80031494(0x7E);
             break;

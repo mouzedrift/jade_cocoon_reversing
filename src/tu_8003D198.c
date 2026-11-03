@@ -309,7 +309,7 @@ void sub_8003DA70(void)
     {
         e = &dword_80086574[i];
         f = &dword_80095FB0[i];
-        sub_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
+        MemCopy_800403E8((unsigned int*)f, (unsigned int*)(dword_8008D434 + e->field_0 * 20), 0x14);
         f->field_10 = e->field_6;
         f->field_12 = e->field_8;
         f->field_14 = (unsigned short*)(dword_8008D440 + e->field_0 * 8);
