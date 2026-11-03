@@ -55,13 +55,21 @@ def load_symbols():
 def c_data_names(known, known_addrs=()):
     """name -> address; names whose address is already known under another name are returned too"""
     """data symbols the C sources/headers use that are named after their address but are not in symbol_addrs.txt"""
+    """A name only becomes a new split point when it is declared as data (extern or initialised definition):
+    macros, typedefs or comments that merely end in an address are ignored (SIN_TBL_80084540 once shifted the data)."""
     found = {}
-    for fn in os.listdir(os.path.join(REPO, "src")):
-        if fn.endswith((".c", ".h")):
-            for name, addr in re.findall(r"\b(\w+_([0-9A-F]{8}))\b", open(os.path.join(REPO, "src", fn)).read()):
-                a = int(addr, 16)
-                if RDATA_START <= a < BSS_GAME_END and name not in known:
-                    found[name] = a
+    srcs = [open(os.path.join(REPO, "src", fn)).read() for fn in os.listdir(os.path.join(REPO, "src")) if fn.endswith((".c", ".h"))]
+    text = "\n".join(srcs)
+    for name, addr in re.findall(r"\b(\w+_([0-9A-F]{8}))\b", text):
+        a = int(addr, 16)
+        if RDATA_START <= a < BSS_GAME_END and name not in known and name not in found:
+            dims = r"\s*(?:\[[^\]]*\]\s*)*"
+            declared = re.search(r"\bextern\s[^;(){}]*?\b" + name + r"\b" + dims + ";", text) or \
+                re.search(r"^[\w \t*]*\b" + name + r"\b" + dims + "=", text, re.M)
+            if declared or a in known_addrs:
+                found[name] = a
+            else:
+                print("split.py: ignoring %s (not declared as data; rename it or add it to symbol_addrs.txt)" % name)
     return found
 
 
