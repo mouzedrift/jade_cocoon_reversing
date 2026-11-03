@@ -29,13 +29,11 @@ INCLUDE_DATA(dword_800795E8);
 INCLUDE_DATA(dword_800795EC);
 INCLUDE_DATA(dword_800795F0);
 
-#if 0
-// Not matched (7 words): result register and branch polarity
+// Matched
 int sub_80013DB0(void)
 {
-    int r = rand();
-    int v;
-    if (r % 6)
+    int v = rand() % 6;
+    if (v)
     {
         v = 1;
     }
@@ -45,8 +43,6 @@ int sub_80013DB0(void)
     }
     return v;
 }
-#endif
-INCLUDE_ASM(sub_80013DB0);
 // Matched
 int sub_80013E00(unsigned int idx, int add)
 {
@@ -215,9 +211,38 @@ int LowestSetBit_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-int sub_80014390(int arg0)
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C
+extern int sub_800A10C0(int a0);
+int sub_80014390(int a0)
 {
-    return 0;
+    int r = 0;
+    unsigned int v = a0 & 0xFF;
+    unsigned int w;
+    if (v >= 8)
+    {
+        w = a0 - 8;
+        r = sub_800A10C0(w & 0xFF);
+    }
+    else if (v >= 4)
+    {
+        int flags = sub_800A248C();
+        int m = 1 << v;
+        if (flags & m)
+        {
+            w = a0 - 4;
+            r = sub_800A2B60(w & 0xFF);
+        }
+    }
+    else if (v != 0)
+    {
+        w = a0 - 1;
+        r = (int)GetMinionStatus_800107A0(3, w & 0xFF);
+    }
+    else
+    {
+        r = (int)&saveData_8008B570.levantStatus_7C8;
+    }
+    return r;
 }
 #endif
 INCLUDE_ASM(sub_80014390);
@@ -239,7 +264,7 @@ int sub_80014444(int a0)
     return r;
 }
 #if 0
-// Not matched (12 words): masked copy of a0 - 4 is kept in a register by CSE
+// Not matched (11 words): only the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1); K&R char param or u_char a0 get closer but add a mask (permuter 500: no)
 int sub_8001449C(int a0)
 {
     int r = 0;
@@ -250,12 +275,11 @@ int sub_8001449C(int a0)
         int m = 1 << a0;
         if (flags & m)
         {
-            r = sub_800A2B20((unsigned char)v);
+            r = sub_800A2B20(v & 0xFF);
         }
     }
     return r;
 }
-
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched

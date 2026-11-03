@@ -1163,7 +1163,6 @@ INCLUDE_DATA(dword_80096628);
 INCLUDE_DATA(dword_80098180);
 INCLUDE_DATA(dword_80098188);
 
-#if 0
 typedef struct
 {
     int field_0;
@@ -1176,8 +1175,8 @@ typedef struct
     int field_3C;
 } struct_B90;
 extern void InitModelList_80024ADC(void* p, int a, int b);
-extern void LoadModel_80025200(int a, int b, int c, int d, int e);
-// Not matched: 4 words, constants 4/2 stored through $v1 instead of $v0
+extern int LoadModel_80025200(int a, int b, int c, int d, int e);
+// Matched
 int ModelTaskLoad_80010B90(struct_B90* p)
 {
     int i;
@@ -1197,8 +1196,6 @@ int ModelTaskLoad_80010B90(struct_B90* p)
     p->field_3C = 2;
     return 1;
 }
-#endif
-INCLUDE_ASM(ModelTaskLoad_80010B90);
 typedef struct
 {
     char pad_0[0x38];
@@ -1236,8 +1233,7 @@ int ModelTaskWaitLoad_80010C30(struct_C30* p)
     p->field_38 = p->field_3C;
     return 1;
 }
-#if 0
-// Not matched: the two constants stored to +0x38/+0x3C are built in $v1 instead of $v0
+// Matched
 int sub_80010CDC(ModelTaskState* p)
 {
     if (p->field_2C >= 0)
@@ -1255,8 +1251,6 @@ int sub_80010CDC(ModelTaskState* p)
     p->next_3C = 5;
     return 1;
 }
-#endif
-INCLUDE_ASM(sub_80010CDC);
 typedef struct
 {
     int f0;
@@ -1296,7 +1290,7 @@ extern unsigned char dword_80079140[];
 extern unsigned char dword_80079210[];
 extern int levantPos_8008BD18[];
 #if 0
-// Not matched (~46 lines): registers of the bone entry / matrix pointers are swapped ($s0/$s1), the three weight-table loads are interleaved with the address adds, and the 0x10 store / pOT load at the second skeleton setup are swapped (permuter: nothing)
+// Not matched (37 lines): only the bone entry / matrix pointers are swapped ($s0/$s1) in the scaling block at the end (decl order, temporaries, sv inline, arg-assign form tried)
 int ModelTaskDraw_80010DB0(int* p)
 {
     struct_112_list* list;
@@ -1317,7 +1311,7 @@ int ModelTaskDraw_80010DB0(int* p)
     int w2;
     char* e;
     char* b1;
-    short* ent;
+    short (*ent)[6];
     MATRIX* mat;
     SVECTOR* sv;
 
@@ -1336,12 +1330,12 @@ int ModelTaskDraw_80010DB0(int* p)
     a4 = *(int*)(m[2] + 0x50);
     for (i = 0; i < *(unsigned short*)(o + 0x3C); i++)
     {
-        w0 = (int)sub_80024F70(m[0], p[8]);
-        w1 = (int)sub_80024F70(m[1], p[8]);
-        w2 = (int)sub_80024F70(m[2], p[8]);
-        w0 = *(int*)(w0 + i * 4);
-        w1 = *(int*)(w1 + i * 4);
-        w2 = *(int*)(w2 + i * 4);
+        int* q0 = (int*)sub_80024F70(m[0], p[8]);
+        int* q1 = (int*)sub_80024F70(m[1], p[8]);
+        int* q2 = (int*)sub_80024F70(m[2], p[8]);
+        w0 = q0[i];
+        w1 = q1[i];
+        w2 = q2[i];
         if (w0 == w1 && w1 == w2)
         {
             w0 = p[5];
@@ -1441,29 +1435,29 @@ int ModelTaskDraw_80010DB0(int* p)
     sk.pose = *(char**)(m[p[0x30 / 4]] + 0x54) + 0x1C;
     sk.bones = dword_80079210;
     sk.f1C = 0x10;
-    sk.ot = pOT_8008D690;
     sk.f18 = 0;
     sk.pos = pos;
+    sk.ot = pOT_8008D690;
     sub_80046A58(&sk, buf, *(char**)(o + 0x54));
-    ent = (short*)sub_80024E64((struct_obj_E*)o);
-    ent = (short*)((char*)ent + sub_80018908(0x26, (short(*)[6])ent) * 12);
-    sv = (SVECTOR*)(ent + 2);
-    mat = &dword_80098188[ent[1]];
+    ent = (short(*)[6])sub_80024E64((struct_obj_E*)o);
+    ent += sub_80018908(0x26, ent);
+    mat = &dword_80098188[ent[0][1]];
+    sv = (SVECTOR*)&ent[0][2];
     PushMatrix();
-    mat->m[0][0] = mat->m[0][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
-    mat->m[0][1] = mat->m[0][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
-    mat->m[0][2] = mat->m[0][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
-    mat->m[1][0] = mat->m[1][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
-    mat->m[1][1] = mat->m[1][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
-    mat->m[1][2] = mat->m[1][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
-    mat->m[2][0] = mat->m[2][0] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 0] / 4096;
-    mat->m[2][1] = mat->m[2][1] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 1] / 4096;
-    mat->m[2][2] = mat->m[2][2] * sk.base[sk.bones[ent[1] * 8 + 2] * 4 + 2] / 4096;
+    mat->m[0][0] = mat->m[0][0] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[0][1] = mat->m[0][1] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[0][2] = mat->m[0][2] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 2] / 4096;
+    mat->m[1][0] = mat->m[1][0] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[1][1] = mat->m[1][1] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[1][2] = mat->m[1][2] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 2] / 4096;
+    mat->m[2][0] = mat->m[2][0] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 0] / 4096;
+    mat->m[2][1] = mat->m[2][1] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 1] / 4096;
+    mat->m[2][2] = mat->m[2][2] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 2] / 4096;
     ApplyMatrix(mat, sv, (VECTOR*)v);
     PopMatrix();
-    v[0] = sk.pos[ent[1] * 3 + 0] + v[0];
-    v[1] = sk.pos[ent[1] * 3 + 1] + v[1];
-    v[2] = sk.pos[ent[1] * 3 + 2] + v[2];
+    v[0] = sk.pos[ent[0][1] * 3 + 0] + v[0];
+    v[1] = sk.pos[ent[0][1] * 3 + 1] + v[1];
+    v[2] = sk.pos[ent[0][1] * 3 + 2] + v[2];
     ((short*)((*(char***)(o + 0x54))[5] + sk.bones[10] * 6))[1] -= v[1];
     FreeModelList_80024BB0(&list);
     p[0x38 / 4] = 3;
@@ -1604,24 +1598,19 @@ typedef struct
     unsigned short limit;
     unsigned short value;
 } struct_D28;
-#if 0
-// Not matched (8 words): register allocation of the table pointer
+// Matched
 int sub_80011D28(int a0)
 {
-    struct_D28* p = (struct_D28*)word_80079374;
-    while (p->limit != 0)
+    int i;
+    for (i = 0; ((struct_D28*)word_80079374)[i].limit != 0; i++)
     {
-        if (!(a0 < p->limit))
+        if (a0 >= ((struct_D28*)word_80079374)[i].limit)
         {
-            return p->value;
+            return ((struct_D28*)word_80079374)[i].value;
         }
-        p++;
     }
     return 9;
 }
-
-#endif
-INCLUDE_ASM(sub_80011D28);
 int sub_80011D98(Minion* m, int arg1);
 // Matched
 void sub_80011D78(void* arg0)
@@ -1861,7 +1850,7 @@ double sub_80012358(int n, int x)
     return r;
 }
 #if 0
-// Not matched: the original loads 67108864.0 into $s0/$s1 before the first subtraction (here it is an immediate)
+// Not matched: the original keeps 67108864.0 in $s0/$s1 (the variable t) for the first subtraction, here CSE folds it to an immediate (loop shapes, short i, permuter 500: no)
 int sub_8001247C(double x)
 {
     double t = 67108864.0;
