@@ -5,13 +5,16 @@
 typedef struct
 {
     unsigned short flags_0;
-    char pad_2[6];
+    char pad_2[2];
+    int field_4;
     short field_8;
     short pad_A;
     short field_C;
     unsigned short pad_E;
     short name_10[10]; // SJIS characters, the first byte of a full-width character is >= 0x81
-    short buffer_24[2];
+    char c_24;
+    char c_25;
+    short pad_26;
     short field_28[10];
     short pad_3C[2];
     int field_40;
@@ -28,14 +31,6 @@ extern void sub_800B7CA4(NameEntry* p);
 
 INCLUDE_OVERLAY_ASM(name, dword_800B6D00);
 
-INCLUDE_OVERLAY_ASM(name, sub_800B6E4C);
-
-// Matched
-int sub_800B6FC8(void)
-{
-    return dword_800B83F8;
-}
-
 extern void DrawMenuBackground_8002BE10();
 extern void EncodeName_8003F7C8(void* name, int a);
 extern void DecodeText_8003F748(int a, void* name);
@@ -44,6 +39,56 @@ extern void name_800B6CA0();
 extern void sub_800B78EC(NameEntry* p);
 extern void sub_800B70F4(NameEntry* p);
 extern void sub_800B8018();
+
+typedef struct NameBuf
+{
+    short s[11];
+} NameBuf;
+extern NameBuf name_800B6E30;
+extern EventNode* name_8008D484;
+void sub_800B6FD8();
+void sub_800B6E4C(int a, int flags)
+{
+    EventEntry* e = AllocEventEntry_80043AF8(name_8008D484);
+    NameEntry* p;
+    NameBuf buf;
+    if (e)
+    {
+        e->flags = (e->flags | 1) & ~0x8000;
+        p = (NameEntry*)e->buffer;
+        p->flags_0 = flags;
+        p->field_4 = 0;
+        p->field_8 = 0;
+        p->pad_A = 0;
+        p->field_C = 0;
+        p->pad_E = 0;
+        p->length_44 = 0;
+        p->field_40 = a;
+        buf = name_800B6E30;
+        CopyPlayerName_8003F860((unsigned char*)a, (unsigned short*)&buf);
+        DecodeText_8003F748(1, &buf);
+        sub_800B8018(&buf);
+        MemCopy_800403E8((unsigned int*)p->field_28, (unsigned int*)&buf, 0x14);
+        MemCopy_800403E8((unsigned int*)p->name_10, (unsigned int*)&buf, 0x14);
+        p->c_24 = 0;
+        p->c_25 = 0;
+        p->length_44 = sub_800B7F70(p);
+        if (p->flags_0 & 0x10)
+        {
+            DrawMenuBackground_8002BE10();
+        }
+        sub_800B70F4(p);
+        dword_800B83F8 = 1;
+        e->cb_8 = (EventEntryFn)sub_800B6FD8;
+    }
+}
+
+// Matched
+int sub_800B6FC8(void)
+{
+    return dword_800B83F8;
+}
+
 void sub_800B6FD8(EventEntry* e, NameEntry* p)
 {
     NameEntry* q = p;
