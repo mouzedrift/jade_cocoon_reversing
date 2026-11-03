@@ -113,7 +113,7 @@ extern int dword_800B9320;
 extern int dword_800B9434;
 extern int dword_800B9438;
 extern int dword_800B9420[4];
-extern int dword_800B9400[];
+extern FileRequestDesc dword_800B9400[];
 extern MapRow dword_800B9220[];
 extern unsigned short word_800AEBF8[2];
 extern unsigned short dword_800B8C94[2];
@@ -121,7 +121,7 @@ extern void sub_800B8448();
 extern short word_800B932C;
 extern void SetFadeMode_8001C19C(int, int);
 extern void ResetPadHoldFrames_8001CD04(int);
-extern void QueueFileRequest_8003BC84(void*);
+extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void sub_800B6CB4();
 extern void sub_800B6C7C();
 extern void sub_800B6DE0(MapTask*, int);
@@ -182,17 +182,17 @@ void sub_800B6CB4(MapTask* t)
 }
 
 // Matched
-void sub_800B6D90(int* p, int a1)
+void sub_800B6D90(FileRequestDesc* p, int a1)
 {
     dword_800B9430 = 0;
-    p[0] = 0x2C;
-    p[1] = a1;
-    p[2] = 0;
-    p[3] = 0;
-    p[4] = 0;
-    p[5] = 0;
-    p[6] = 0;
-    p[7] = (int)sub_800B6DE0;
+    p->flags_0 = 0x2C;
+    p->fileId_4 = a1;
+    p->offset_8 = 0;
+    p->size_C = 0;
+    p->dest_10 = 0;
+    p->params_14 = 0;
+    p->paramsSize_18 = 0;
+    p->callback_1C = sub_800B6DE0;
     QueueFileRequest_8003BC84(p);
 }
 

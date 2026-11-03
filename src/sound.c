@@ -229,14 +229,14 @@ typedef struct
 } SoundSeqInfo_300E0;
 extern void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops);
 extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
-extern int QueueFileRequest_8003BC84(int* a);
+extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
 int PlayMusic_800300E0(int idx, int a1)
 {
     SoundTask_300E0* t = (SoundTask_300E0*)soundTask_8008D4A4[0x24 / 4];
     SoundStruct* s;
-    int req[8];
+    FileRequestDesc req;
     int sub;
     if (idx < 10)
     {
@@ -289,39 +289,39 @@ int PlayMusic_800300E0(int idx, int a1)
     }
     t->bgm_4->field_6_sound_idx = idx;
     t->state_2 = 0;
-    req[0] = 0x2C;
-    req[1] = GetSoundFileId_80030D4C(t->bgm_4->field_6_sound_idx);
-    req[5] = (int)&t->bgm_4;
-    req[2] = 0;
-    req[3] = 0;
-    req[4] = 0;
-    req[6] = 4;
-    req[7] = (int)LoadSoundFromBuffer_800307B4;
-    t->request_10 = QueueFileRequest_8003BC84(req);
+    req.flags_0 = 0x2C;
+    req.fileId_4 = GetSoundFileId_80030D4C(t->bgm_4->field_6_sound_idx);
+    req.params_14 = &t->bgm_4;
+    req.offset_8 = 0;
+    req.size_C = 0;
+    req.dest_10 = 0;
+    req.paramsSize_18 = 4;
+    req.callback_1C = LoadSoundFromBuffer_800307B4;
+    t->request_10 = QueueFileRequest_8003BC84(&req);
     sub = ((SoundSeqInfo_300E0*)soundFiles_80082F0C)[idx].field_6_sub_sound;
     if (sub >= 0)
     {
         t->bgm2_8->field_6_sound_idx = sub;
         t->state_2 = 0;
-        req[0] = 0x2C;
-        req[1] = GetSoundFileId_80030D4C(t->bgm2_8->field_6_sound_idx);
-        req[2] = 0;
-        req[3] = 0;
-        req[4] = 0;
-        req[5] = (int)&t->bgm2_8;
-        req[6] = 4;
-        req[7] = (int)LoadSoundFromBuffer_800307B4;
-        t->request_14 = QueueFileRequest_8003BC84(req);
+        req.flags_0 = 0x2C;
+        req.fileId_4 = GetSoundFileId_80030D4C(t->bgm2_8->field_6_sound_idx);
+        req.offset_8 = 0;
+        req.size_C = 0;
+        req.dest_10 = 0;
+        req.params_14 = &t->bgm2_8;
+        req.paramsSize_18 = 4;
+        req.callback_1C = LoadSoundFromBuffer_800307B4;
+        t->request_14 = QueueFileRequest_8003BC84(&req);
     }
     return 1;
 }
-extern int QueueFileRequest_8003BC84(int* a);
+extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
 int LoadSeqSlotSound_800303E8(void)
 {
     unsigned short* p = soundTask_8008D4A4[0x24 / 4];
-    int s[8];
+    FileRequestDesc s;
     if (p[1] != 2)
     {
         return 0;
@@ -330,15 +330,15 @@ int LoadSeqSlotSound_800303E8(void)
     seqSlotSound_80091D00.field_8_sep_data_ptr = 0;
     seqSlotSound_80091D00.field_6_sound_idx = 10;
     p[1] = 0;
-    s[0] = 0x2C;
-    s[1] = 0x301;
-    s[5] = (int)(p + 6);
-    s[6] = 4;
-    s[2] = 0;
-    s[3] = 0;
-    s[4] = 0;
-    s[7] = (int)LoadSoundSeqFromBuffer_800304D0;
-    *(int*)(p + 8) = QueueFileRequest_8003BC84(s);
+    s.flags_0 = 0x2C;
+    s.fileId_4 = 0x301;
+    s.params_14 = (p + 6);
+    s.paramsSize_18 = 4;
+    s.offset_8 = 0;
+    s.size_C = 0;
+    s.dest_10 = 0;
+    s.callback_1C = LoadSoundSeqFromBuffer_800304D0;
+    *(int*)(p + 8) = QueueFileRequest_8003BC84(&s);
     return 1;
 }
 // Matched

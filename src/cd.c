@@ -437,7 +437,7 @@ typedef struct
     FileRequest* last;
 } struct_head_8003BC84;
 // Matched
-int QueueFileRequest_8003BC84(int* req)
+int QueueFileRequest_8003BC84(FileRequestDesc* req)
 {
     struct_head_8003BC84* head = (struct_head_8003BC84*)&fileRequestQueue_80086540;
     int i = FindFreeFileRequest_8003BC44();
@@ -447,20 +447,20 @@ int QueueFileRequest_8003BC84(int* req)
     n->next = 0;
     n->field_4 = 0;
     n->key = head->nextkey;
-    n->flags_C = req[0];
-    n->fileId_10 = req[1];
-    ((int*)n)[0x14 / 4] = req[2];
-    ((int*)n)[0x18 / 4] = req[3];
-    n->dest_1C = req[4];
-    n->callback_24 = req[7];
-    if (req[6] == 0 || req[5] == 0)
+    n->flags_C = req->flags_0;
+    n->fileId_10 = req->fileId_4;
+    n->offset_14 = req->offset_8;
+    n->size_18 = req->size_C;
+    n->dest_1C = (int)req->dest_10;
+    n->callback_24 = (int)req->callback_1C;
+    if (req->paramsSize_18 == 0 || req->params_14 == 0)
     {
         n->field_20 = 0;
     }
     else
     {
         n->field_20 = (int)fileRequestParams_800954C0[i];
-        MemCopy_800403E8((unsigned int*)n->field_20, (unsigned int*)req[5], req[6]);
+        MemCopy_800403E8((unsigned int*)n->field_20, (unsigned int*)req->params_14, req->paramsSize_18);
     }
     if (head->count == 0)
     {

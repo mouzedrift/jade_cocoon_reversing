@@ -38,8 +38,8 @@ typedef struct
     unsigned int** ppDest;
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
-extern int QueueFileRequest_8003BC84(int* p);
-extern int StartFileRequestTask_8003C6C8(int* req);
+extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
+extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
@@ -1203,28 +1203,28 @@ int AreRequestedModelsLoaded_80020B70(int* a0)
 // Matched
 int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
 {
-    int req[8];
+    FileRequestDesc req;
     switch (mode)
     {
     case 0:
-        req[0] = 0x22;
+        req.flags_0 = 0x22;
         break;
     case 2:
         DATA_ReadFileInto_8003CAEC(overlays_8007D9E8[overlayIdx].fileIdx, *overlays_8007D9E8[overlayIdx].ppDest);
         return -1;
     case 1:
     case 3:
-        req[0] = 0x2A;
+        req.flags_0 = 0x2A;
         break;
     }
-    req[1] = overlays_8007D9E8[overlayIdx].fileIdx;
-    req[2] = 0;
-    req[3] = 0;
-    req[4] = (int)*overlays_8007D9E8[overlayIdx].ppDest;
-    req[5] = 0;
-    req[6] = 0;
-    req[7] = 0;
-    return QueueFileRequest_8003BC84(req);
+    req.fileId_4 = overlays_8007D9E8[overlayIdx].fileIdx;
+    req.offset_8 = 0;
+    req.size_C = 0;
+    req.dest_10 = *overlays_8007D9E8[overlayIdx].ppDest;
+    req.params_14 = 0;
+    req.paramsSize_18 = 0;
+    req.callback_1C = 0;
+    return QueueFileRequest_8003BC84(&req);
 }
 // Matched
 void InitOverlayLoaderTask_80020CB8(struct_cb* p, int* q)
@@ -1281,7 +1281,7 @@ int sub_80020D84(void)
 // Matched
 void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
 {
-    int req[8];
+    FileRequestDesc req;
     struct
     {
         int* out;
@@ -1299,23 +1299,23 @@ void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int
     arg.c[1] = a3[1];
     arg.d = a4;
     ListInit_8003FDB0(out + 1);
-    req[0] = 0x28;
+    req.flags_0 = 0x28;
     if (a5)
     {
-        req[0] |= 4;
+        req.flags_0 |= 4;
     }
     else
     {
-        req[0] |= 1;
+        req.flags_0 |= 1;
     }
-    req[1] = a0;
-    req[2] = 0;
-    req[3] = 0;
-    req[4] = 0;
-    req[5] = (int)&arg;
-    req[6] = 0x14;
-    req[7] = (int)OnEffectFileLoaded_80020F5C;
-    *out = StartFileRequestTask_8003C6C8(req);
+    req.fileId_4 = a0;
+    req.offset_8 = 0;
+    req.size_C = 0;
+    req.dest_10 = 0;
+    req.params_14 = &arg;
+    req.paramsSize_18 = 0x14;
+    req.callback_1C = OnEffectFileLoaded_80020F5C;
+    *out = StartFileRequestTask_8003C6C8(&req);
 }
 // Matched
 int IsEffectFileLoaded_80020EBC(int* p)
@@ -3018,7 +3018,7 @@ int GetModelDesc_800251E4(int idx)
 int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 {
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     int two = 1;
     int i;
     unsigned short* e;
@@ -3062,46 +3062,46 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
         }
         v += e[6];
         v += e[8];
-        c[1] = e[0];
-        c[0] = 0x68;
+        c.fileId_4 = e[0];
+        c.flags_0 = 0x68;
         if (flag == 1)
         {
-            c[0] = 0x6C;
+            c.flags_0 = 0x6C;
         }
         else
         {
-            c[0] = 0x69;
+            c.flags_0 = 0x69;
         }
-        c[2] = u;
-        c[3] = v;
-        c[4] = 0;
-        c[5] = (int)b;
-        c[6] = 0x3C;
-        c[7] = (int)OnModelFileLoaded_80025D7C;
-        AddFileRequest_80025D00((struct_list10*)it, c);
+        c.offset_8 = u;
+        c.size_C = v;
+        c.dest_10 = 0;
+        c.params_14 = b;
+        c.paramsSize_18 = 0x3C;
+        c.callback_1C = OnModelFileLoaded_80025D7C;
+        AddFileRequest_80025D00((struct_list10*)it, &c);
         if (two != 0)
         {
             InitModelLoadParams_80025ED0(b);
             b[0] = 1;
             b[5] = (int)it;
             b[1] = (int)e;
-            c[1] = e[0];
-            c[0] = 0x68;
+            c.fileId_4 = e[0];
+            c.flags_0 = 0x68;
             if (flag == 1)
             {
-                c[0] = 0x6C;
+                c.flags_0 = 0x6C;
             }
             else
             {
-                c[0] = 0x69;
+                c.flags_0 = 0x69;
             }
-            c[2] = e[1];
-            c[3] = e[2];
-            c[5] = (int)b;
-            c[6] = 0x3C;
-            c[4] = 0;
-            c[7] = (int)OnModelFileLoaded_80025D7C;
-            AddFileRequest_80025D00((struct_list10*)it, c);
+            c.offset_8 = e[1];
+            c.size_C = e[2];
+            c.params_14 = b;
+            c.paramsSize_18 = 0x3C;
+            c.dest_10 = 0;
+            c.callback_1C = OnModelFileLoaded_80025D7C;
+            AddFileRequest_80025D00((struct_list10*)it, &c);
         }
         it->id_38 = id;
         return 1;
@@ -3116,7 +3116,7 @@ int LoadModel_80025200(struct_112_list* a0, int id, int sel, int a3, int flag)
 int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
 {
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     unsigned short* e;
     unsigned short* t;
     int u;
@@ -3138,23 +3138,23 @@ int LoadModelAnim_80025440(struct_112* p, int idx, int flag)
         b[5] = (int)p;
         b[1] = (int)e;
         b[4] = idx;
-        c[0] = 0x68;
+        c.flags_0 = 0x68;
         if (flag != 0)
         {
-            c[0] = 0x6C;
+            c.flags_0 = 0x6C;
         }
         else
         {
-            c[0] = 0x69;
+            c.flags_0 = 0x69;
         }
-        c[1] = e[0];
-        c[2] = u;
-        c[3] = v;
-        c[4] = 0;
-        c[5] = (int)b;
-        c[6] = 0x3C;
-        c[7] = (int)OnModelFileLoaded_80025D7C;
-        AddFileRequest_80025D00((struct_list10*)p, c);
+        c.fileId_4 = e[0];
+        c.offset_8 = u;
+        c.size_C = v;
+        c.dest_10 = 0;
+        c.params_14 = b;
+        c.paramsSize_18 = 0x3C;
+        c.callback_1C = OnModelFileLoaded_80025D7C;
+        AddFileRequest_80025D00((struct_list10*)p, &c);
         return 1;
     }
     return AreFileRequestsDone_80024DC4((int*)p) == 0;
@@ -3180,25 +3180,25 @@ int sub_800255F0(int a, int idx, int a2)
 {
     int* a0 = (int*)a;
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     unsigned int x = a0[2];
     int y = a0[3];
     unsigned short* e = (unsigned short*)modelDescs_800824CC[idx];
     InitModelLoadParams_80025ED0(b);
     b[0] = 2;
     b[2] = a2;
-    c[0] = 0x69;
+    c.flags_0 = 0x69;
     b[5] = x;
     b[6] = y;
     b[1] = (int)e;
-    c[1] = e[0];
-    c[2] = e[3];
-    c[3] = e[4];
-    c[4] = 0;
-    c[5] = (int)b;
-    c[6] = 0x3C;
-    c[7] = (int)OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)x, c);
+    c.fileId_4 = e[0];
+    c.offset_8 = e[3];
+    c.size_C = e[4];
+    c.dest_10 = 0;
+    c.params_14 = b;
+    c.paramsSize_18 = 0x3C;
+    c.callback_1C = OnModelFileLoaded_80025D7C;
+    AddFileRequest_80025D00((struct_list10*)x, &c);
     return 1;
 }
 // Matched
@@ -3206,7 +3206,7 @@ int sub_800256B8(int a, int id)
 {
     struct_112_list* a0 = (struct_112_list*)a;
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     struct_112* it = &a0->items[FindModelIndex_80026630(a0, id)];
     unsigned short* e = (unsigned short*)modelDescs_800824CC[it->id_38];
     InitModelLoadParams_80025ED0(b);
@@ -3214,22 +3214,22 @@ int sub_800256B8(int a, int id)
     b[5] = (int)it;
     b[3] = 3;
     b[1] = (int)e;
-    c[0] = 0x69;
-    c[1] = e[0];
-    c[2] = e[7];
-    c[3] = e[8];
-    c[4] = 0;
-    c[5] = (int)b;
-    c[6] = 0x3C;
-    c[7] = (int)OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)it, c);
+    c.flags_0 = 0x69;
+    c.fileId_4 = e[0];
+    c.offset_8 = e[7];
+    c.size_C = e[8];
+    c.dest_10 = 0;
+    c.params_14 = b;
+    c.paramsSize_18 = 0x3C;
+    c.callback_1C = OnModelFileLoaded_80025D7C;
+    AddFileRequest_80025D00((struct_list10*)it, &c);
     return 1;
 }
 // Matched
 int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
 {
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     unsigned short* e;
     char* t;
     int u;
@@ -3243,23 +3243,23 @@ int LoadModelAnimSet_80025780(struct_112* p, int idx, int flag)
     b[0] = 0x20;
     b[5] = (int)p;
     b[1] = (int)e;
-    c[0] = 0x68;
+    c.flags_0 = 0x68;
     if (flag != 0)
     {
-        c[0] = 0x6C;
+        c.flags_0 = 0x6C;
     }
     else
     {
-        c[0] = 0x69;
+        c.flags_0 = 0x69;
     }
-    c[1] = e[0];
-    c[2] = u;
-    c[3] = v;
-    c[4] = 0;
-    c[5] = (int)b;
-    c[6] = 0x3C;
-    c[7] = (int)OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)p, c);
+    c.fileId_4 = e[0];
+    c.offset_8 = u;
+    c.size_C = v;
+    c.dest_10 = 0;
+    c.params_14 = b;
+    c.paramsSize_18 = 0x3C;
+    c.callback_1C = OnModelFileLoaded_80025D7C;
+    AddFileRequest_80025D00((struct_list10*)p, &c);
     return 1;
 }
 // Matched
@@ -3306,7 +3306,7 @@ int IsAnimInModelAnimSet_80025924(int* p, int id)
 int sub_80025974(struct_112* p, int idx, int flag)
 {
     int b[16];
-    int c[8];
+    FileRequestDesc c;
     unsigned short* e;
     char* t;
     int u;
@@ -3325,23 +3325,23 @@ int sub_80025974(struct_112* p, int idx, int flag)
     b[6] = g[3] + p->field_30 * 16;
     b[2] = p->field_34;
     b[1] = (int)e;
-    c[0] = 0x68;
+    c.flags_0 = 0x68;
     if (flag != 0)
     {
-        c[0] = 0x6C;
+        c.flags_0 = 0x6C;
     }
     else
     {
-        c[0] = 0x69;
+        c.flags_0 = 0x69;
     }
-    c[1] = e[0];
-    c[2] = u;
-    c[3] = v;
-    c[4] = 0;
-    c[5] = (int)b;
-    c[6] = 0x3C;
-    c[7] = (int)OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00((struct_list10*)p, c);
+    c.fileId_4 = e[0];
+    c.offset_8 = u;
+    c.size_C = v;
+    c.dest_10 = 0;
+    c.params_14 = b;
+    c.paramsSize_18 = 0x3C;
+    c.callback_1C = OnModelFileLoaded_80025D7C;
+    AddFileRequest_80025D00((struct_list10*)p, &c);
     return 1;
 }
 // Matched
@@ -3403,12 +3403,12 @@ void sub_80025C38(struct_112* p, int flag)
     }
 }
 // Matched
-int AddFileRequest_80025D00(struct_list10* a0, int* a1)
+int AddFileRequest_80025D00(struct_list10* a0, FileRequestDesc* a1)
 {
     if (a0->count < 10)
     {
-        a1[2] <<= 11;
-        a1[3] <<= 11;
+        a1->offset_8 <<= 11;
+        a1->size_C <<= 11;
         a0->items[a0->count] = QueueFileRequest_8003BC84(a1);
         a0->count += 1;
         return 1;
@@ -4565,7 +4565,7 @@ void sub_80027CF8(void* a0, int* a)
 {
     int* a1 = a;
     short v[2];
-    int req[8];
+    FileRequestDesc req;
     MapEntry16* e;
     int t;
     int m;
@@ -4669,15 +4669,15 @@ void sub_80027CF8(void* a0, int* a)
             break;
         }
     case 1:
-        req[0] = 0x2C;
-        req[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f0;
-        req[2] = 0;
-        req[3] = 0;
-        req[4] = 0;
-        req[5] = 0;
-        req[6] = 0;
-        req[7] = (int)sub_80028808;
-        a1[1] = QueueFileRequest_8003BC84(req);
+        req.flags_0 = 0x2C;
+        req.fileId_4 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f0;
+        req.offset_8 = 0;
+        req.size_C = 0;
+        req.dest_10 = 0;
+        req.params_14 = 0;
+        req.paramsSize_18 = 0;
+        req.callback_1C = sub_80028808;
+        a1[1] = QueueFileRequest_8003BC84(&req);
         sub_80027478(2, 1);
         {
             int z = a1[0];
@@ -4728,9 +4728,9 @@ extern void sub_80028C60();
 void sub_800283C0(void* a0, int* a)
 {
     int* a1 = a;
-    int req[8];
-    int req2[8];
-    int req3[8];
+    FileRequestDesc req;
+    FileRequestDesc req2;
+    FileRequestDesc req3;
     int s;
     int load;
     int wait;
@@ -4748,15 +4748,15 @@ void sub_800283C0(void* a0, int* a)
         }
         if (word_80091C40[1] != word_80091C40[0])
         {
-            req[0] = 0xC69;
-            req[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-            req[2] = dword_80082674[word_80091C40[0] * 3];
-            req[3] = dword_80082674[word_80091C40[0] * 3 + (dword_80082670 ? 2 : 1)];
-            req[4] = 0;
-            req[5] = 0;
-            req[6] = 0;
-            req[7] = (int)sub_80028C60;
-            a1[1] = QueueFileRequest_8003BC84(req);
+            req.flags_0 = 0xC69;
+            req.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req.offset_8 = dword_80082674[word_80091C40[0] * 3];
+            req.size_C = dword_80082674[word_80091C40[0] * 3 + (dword_80082670 ? 2 : 1)];
+            req.dest_10 = 0;
+            req.params_14 = 0;
+            req.paramsSize_18 = 0;
+            req.callback_1C = sub_80028C60;
+            a1[1] = QueueFileRequest_8003BC84(&req);
             dword_80082678 = 1;
             word_80091C40[1] = word_80091C40[0];
             break;
@@ -4780,15 +4780,15 @@ void sub_800283C0(void* a0, int* a)
             }
             if (load)
             {
-                req2[0] = 0x46C;
-                req2[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-                req2[2] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
-                req2[3] = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (dword_80082670 ? 2 : 1)];
-                req2[4] = 0;
-                req2[5] = 0;
-                req2[6] = 0;
-                req2[7] = (int)sub_80028C60;
-                a1[1] = QueueFileRequest_8003BC84(req2);
+                req2.flags_0 = 0x46C;
+                req2.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+                req2.offset_8 = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
+                req2.size_C = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (dword_80082670 ? 2 : 1)];
+                req2.dest_10 = 0;
+                req2.params_14 = 0;
+                req2.paramsSize_18 = 0;
+                req2.callback_1C = sub_80028C60;
+                a1[1] = QueueFileRequest_8003BC84(&req2);
             }
             word_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
             word_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
@@ -4806,16 +4806,16 @@ void sub_800283C0(void* a0, int* a)
         }
         if (word_80091CB8[6] != word_80091CB8[7])
         {
-            req3[0] = 0x450;
-            req3[1] = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-            req3[2] = dword_80082674[word_80091CB8[6] * 3];
-            req3[3] = 0;
-            req3[4] = 0;
-            req3[5] = 0;
-            req3[6] = 0;
-            req3[7] = 0;
+            req3.flags_0 = 0x450;
+            req3.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req3.offset_8 = dword_80082674[word_80091CB8[6] * 3];
+            req3.size_C = 0;
+            req3.dest_10 = 0;
+            req3.params_14 = 0;
+            req3.paramsSize_18 = 0;
+            req3.callback_1C = 0;
             word_80091CB8[7] = word_80091CB8[6];
-            a1[1] = QueueFileRequest_8003BC84(req3);
+            a1[1] = QueueFileRequest_8003BC84(&req3);
             a1[0] = 2;
         }
         break;

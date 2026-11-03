@@ -383,11 +383,25 @@ typedef struct FileRequest
     int key;
     unsigned int flags_C; // 0x100 / 0x1000: GetFileRequestStatus returns 2 / 3
     int fileId_10;        // DATA.001 file id
-    char pad_14[8];
+    int offset_14;        // from FileRequestDesc.offset_8
+    int size_18;          // from FileRequestDesc.size_C
     int dest_1C;          // destination buffer
     int field_20;         // copy of the request parameters (fileRequestParams_800954C0)
     int callback_24;      // void (*)(int params, int dest)
 } FileRequest;
+
+// what QueueFileRequest_8003BC84 takes; copied into a FileRequest (params_14 into fileRequestParams_800954C0)
+typedef struct FileRequestDesc
+{
+    unsigned int flags_0;  // -> FileRequest.flags_C; bit 2: StartFileRequestTask_8003C6C8 waits for it
+    int fileId_4;          // DATA.001 file id
+    int offset_8;          // offset into the file (AddFileRequest_80025D00 converts sectors to bytes)
+    int size_C;            // bytes to read (likewise converted from sectors)
+    void* dest_10;         // destination buffer, 0 = the loader's own
+    void* params_14;       // paramsSize_18 bytes, copied and passed to callback_1C
+    int paramsSize_18;
+    void* callback_1C;     // void (*)(void* params, void* data)
+} FileRequestDesc;
 extern FileRequest fileRequests_80095C90[0x14];
 
 extern int** dword_800B1DC4;
@@ -523,7 +537,7 @@ typedef struct
     int count;
     int items[10];
 } struct_list10;
-int AddFileRequest_80025D00(struct_list10* p, int* q);
+int AddFileRequest_80025D00(struct_list10* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];

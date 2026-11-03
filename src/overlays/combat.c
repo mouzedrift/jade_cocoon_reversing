@@ -75,7 +75,7 @@ typedef struct CombatColorCombat
     unsigned char b;
     unsigned char cd;
 } CombatColorCombat;
-extern void QueueFileRequest_8003BC84(void* p);
+extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void OnModelFileLoaded_80025D7C();
 extern char* off_8007DC70;
 typedef struct CombatObjCombat
@@ -94,17 +94,6 @@ typedef struct CombatObjCombat
     int field_2C;
     char pad_30[0x10];
 } CombatObjCombat;
-typedef struct CombatMsgCombat
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    void* field_14;
-    int field_18;
-    void* field_1C;
-} CombatMsgCombat;
 extern int Cbt_80010A44(int a);
 extern int Cbt_80019A80(int a);
 extern int Cbt_80024E90(int a, int b);
@@ -476,21 +465,21 @@ void sub_800A0D64(int i, int id)
 {
     unsigned short* q = (unsigned short*)GetModelDesc_800251E4(id);
     CombatObjCombat o;
-    CombatMsgCombat m;
+    FileRequestDesc m;
     InitModelLoadParams_80025ED0((int*)&o);
     o.field_0 = 2;
     o.field_14 = 0;
     o.field_4 = (int)q;
     o.field_8 = 0;
     o.field_18 = (int)(off_8007DC70 + (i << 4));
-    m.field_0 = 0x69;
-    m.field_4 = q[0];
-    m.field_8 = q[3] << 11;
-    m.field_C = q[4] << 11;
-    m.field_10 = 0;
-    m.field_14 = &o;
-    m.field_18 = 0x3C;
-    m.field_1C = OnModelFileLoaded_80025D7C;
+    m.flags_0 = 0x69;
+    m.fileId_4 = q[0];
+    m.offset_8 = q[3] << 11;
+    m.size_C = q[4] << 11;
+    m.dest_10 = 0;
+    m.params_14 = &o;
+    m.paramsSize_18 = 0x3C;
+    m.callback_1C = OnModelFileLoaded_80025D7C;
     QueueFileRequest_8003BC84(&m);
 }
 

@@ -70,21 +70,21 @@ void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int
     DrawUiWindow_8002A384(&s);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[a3]);
 }
-extern void QueueFileRequest_8003BC84(int* a);
+extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 // Matched
 void LoadUiTiy_8002BF74(void)
 {
-    int s[8];
+    FileRequestDesc s;
     uiTiyLoaded_8008B4E8 = 0;
-    s[0] = 0x29;
-    s[1] = 0x3B;
-    s[2] = 0;
-    s[3] = 0;
-    s[4] = 0;
-    s[5] = 0;
-    s[6] = 0;
-    s[7] = (int)OnUiTiyLoaded_8002BFCC;
-    QueueFileRequest_8003BC84(s);
+    s.flags_0 = 0x29;
+    s.fileId_4 = 0x3B;
+    s.offset_8 = 0;
+    s.size_C = 0;
+    s.dest_10 = 0;
+    s.params_14 = 0;
+    s.paramsSize_18 = 0;
+    s.callback_1C = OnUiTiyLoaded_8002BFCC;
+    QueueFileRequest_8003BC84(&s);
 }
 // Matched
 void OnUiTiyLoaded_8002BFCC(int a0, int a1)

@@ -152,8 +152,8 @@ typedef struct
     unsigned int** ppDest;
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
-extern int QueueFileRequest_8003BC84(int* p);
-extern int StartFileRequestTask_8003C6C8(int* req);
+extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
+extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
