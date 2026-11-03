@@ -249,7 +249,7 @@ int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFi
 // Matched
 int LoadData001File_8003CD1C(void)
 {
-    while (DsSearchFile(&Data001File_800954A8, off_80086570) == 0)
+    while (DsSearchFile(&Data001File_800954A8, data001Path_80086570) == 0)
     {
     }
 

@@ -98,8 +98,8 @@ extern int sub_800BBDD8(int a);
 extern char dword_80091C10[];
 extern int dword_800AEBD8;
 extern void sub_800B8940(int* p);
-extern void sub_800206A0(int a, int b, int c, int d);
-extern void sub_8002056C(void);
+extern void RequestLoaderModel_800206A0(int a, int b, int c, int d);
+extern void StartModelLoader_8002056C(void);
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
 
@@ -205,9 +205,9 @@ void sub_800B8940(int* p)
     for (; i < 3; i++)
     {
         unsigned short* e = (unsigned short*)sub_80019C70(*q++);
-        sub_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
+        RequestLoaderModel_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
     }
-    sub_8002056C();
+    StartModelLoader_8002056C();
 }
 
 int sub_800B89A8(EvCtxEventfnc* c)
@@ -1775,7 +1775,7 @@ extern int dword_800AEB7C;
 extern EvGfxEventfnc dword_800AEB80;
 extern void sub_800A5854(void);
 extern void sub_800A5804(int a);
-extern void sub_80020F5C(EvGfxArgEventfnc* p, int a);
+extern void OnEffectFileLoaded_80020F5C(EvGfxArgEventfnc* p, int a);
 void sub_800BC7A8(int a)
 {
     EvGfxArgEventfnc t;
@@ -1796,7 +1796,7 @@ void sub_800BC7A8(int a)
     t.s_4[0] = 0;
     t.f10_10 = 0;
     ListInit_8003FDB0(&dword_800AEB80.f4_4);
-    sub_80020F5C(&t, a);
+    OnEffectFileLoaded_80020F5C(&t, a);
     if (dword_800AEB80.f2C_2C)
     {
         sub_800A5804(0);

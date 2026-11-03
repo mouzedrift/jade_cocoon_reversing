@@ -116,7 +116,7 @@ void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-extern void sub_80029D00(void* buf, unsigned int a);
+extern void ShiftClutHue_80029D00(void* buf, unsigned int a);
 typedef struct
 {
     int field_0;
@@ -137,9 +137,9 @@ typedef struct
     unsigned short field_8;
     unsigned short field_A;
 } struct_97C0_b;
-void sub_800297C0(struct_97C0_a* a, struct_97C0_b* b);
+void RelocateTimInfo_800297C0(struct_97C0_a* a, struct_97C0_b* b);
 // Matched
-void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+void LoadTiyTimsRelocated_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 {
     char buf[0x28];
     unsigned int i;
@@ -148,11 +148,11 @@ void sub_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
         ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
         if (a6)
         {
-            sub_80029D00(buf, a6);
+            ShiftClutHue_80029D00(buf, a6);
         }
         if (a5)
         {
-            sub_800297C0((struct_97C0_a*)buf, (struct_97C0_b*)a5);
+            RelocateTimInfo_800297C0((struct_97C0_a*)buf, (struct_97C0_b*)a5);
         }
         LoadTimToVram_800296A0(buf);
         if (a0 && a2)
@@ -309,7 +309,7 @@ int ParseTim_80029708(void* arg0, void* arg1)
     return 1;
 }
 // Matched
-void sub_800297C0(struct_97C0_a* a, struct_97C0_b* b)
+void RelocateTimInfo_800297C0(struct_97C0_a* a, struct_97C0_b* b)
 {
     if (a->field_0)
     {
@@ -410,7 +410,7 @@ int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
 #if 0
 // Not matched: (a1 >> 16) & 0xFFFE is hoisted out of the loop here (one more saved reg, frame 0x48)
-void sub_80029D00(void* a0, unsigned int a1)
+void ShiftClutHue_80029D00(void* a0, unsigned int a1)
 {
     TimInfo* t = (TimInfo*)a0;
     short rgb[4];
@@ -440,7 +440,7 @@ void sub_80029D00(void* a0, unsigned int a1)
     }
 }
 #endif
-INCLUDE_ASM(sub_80029D00);
+INCLUDE_ASM(ShiftClutHue_80029D00);
 // Matched
 int Rgb555ToHsv_80029EA8(short* in, short* out)
 {

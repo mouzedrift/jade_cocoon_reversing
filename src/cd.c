@@ -37,7 +37,7 @@ int sub_80039FB0(void)
 // Matched
 void sub_80039FC0(void)
 {
-    sub_80020EE0(dword_80095468);
+    FreeEffectFile_80020EE0(dword_80095468);
 }
 typedef struct
 {
@@ -384,23 +384,23 @@ void DelayLoop_8003BA90(void)
     }
 }
 // Matched
-int sub_8003BADC(int a0)
+int GetMemCardInfoSync_8003BADC(int a0)
 {
     int out[2];
-    McxAllInfo(a0, (unsigned char*)&dword_8008D4D8);
+    McxAllInfo(a0, (unsigned char*)&memCardInfo_8008D4D8);
     while (!McxSync(0, (long*)&out[0], (long*)&out[1]))
     {
     }
     return out[1];
 }
 // Matched
-void sub_8003BB1C(void)
+void CheckMemCards_8003BB1C(void)
 {
     int i;
     int r;
     for (i = 0; i < 2; i++)
     {
-        r = sub_8003BADC(i << 4);
+        r = GetMemCardInfoSync_8003BADC(i << 4);
         if (r == 0 || r == 3)
         {
             unknownFlags_8008D678 |= 0x1000;
@@ -599,7 +599,7 @@ void* SetFileBufferInUse_8003BFB8(int arg0)
     return (void*)fileBuffer_8008656C;
 }
 // Matched
-int sub_8003BFD0(int key, int flag)
+int ConsumeFileRequest_8003BFD0(int key, int flag)
 {
     FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)

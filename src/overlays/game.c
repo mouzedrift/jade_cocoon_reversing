@@ -192,7 +192,7 @@ extern void sub_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
 extern void sub_800A7654();
 extern void sub_800A1314();
 extern void SetFadeMode_8001C19C(int a, int b);
-extern void sub_800438F8(int a);
+extern void RunEventListFreeCallbacks_800438F8(int a);
 extern void FreeEventList_80043A5C(int a);
 extern void sub_800A6534(int a, int b);
 extern void sub_800A654C(int a, int b);
@@ -286,7 +286,7 @@ extern void sub_800A895C();
 extern void sub_800A1BD0();
 extern void sub_800A1E98();
 extern void sub_800AC73C();
-extern void sub_80020814(void);
+extern void FreeLoaderModelAnimSets_80020814(void);
 extern void sub_80037720(void);
 extern void StopSoundSeqs_80030D68(char* s);
 extern void PlayMusic_800300E0(int a, int b);
@@ -437,7 +437,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     sub_800A1BD0();
     sub_800A1E98();
     sub_800AC73C();
-    sub_80020814();
+    FreeLoaderModelAnimSets_80020814();
     sub_80037720();
     *q = LoadOverlayIfChanged_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
@@ -2410,7 +2410,7 @@ void sub_800A6C00(GameTask_1* t, int* q)
 // Matched
 void sub_800A6CCC(GameTask_1* t, GameQ_1* q)
 {
-    sub_800438F8(q->f3c);
+    RunEventListFreeCallbacks_800438F8(q->f3c);
     FreeEventList_80043A5C(q->f3c);
     bStopDrawingMovie_8008D45C = 1;
     t->f0 = (t->f0 & ~1) | 0x8000;
@@ -3003,7 +3003,7 @@ extern void sub_800AA51C();
 extern void sub_800AACF8();
 extern void sub_800AC02C();
 extern int sub_800AD670(int, int);
-extern int sub_80025924(int, int);
+extern int IsAnimInModelAnimSet_80025924(int, int);
 extern void PoolInit_8003FF1C(void*, unsigned);
 extern int sub_800ACB64();
 extern void PlaySfx_80031494(int);
@@ -3034,7 +3034,7 @@ extern void FirFilterStep_80014588(void*, void*, int);
 extern char dword_800A07E0[];
 extern char dword_800A0808[];
 extern int sub_8001AC8C(int);
-extern void sub_800148F4(int);
+extern void RequestEffect_800148F4(int);
 extern int sub_800189F8();
 extern short word_8008D782;
 extern void sub_8004ED78(int);
@@ -3087,7 +3087,7 @@ extern void PoolDestroy_8003FF7C(void*);
 extern char dword_800B1DD0;
 extern int dword_800B11DC[];
 extern int LoadModelAnim_80025440(int, int, int);
-extern void sub_80025780(int, int, int);
+extern void LoadModelAnimSet_80025780(int, int, int);
 extern int sub_800AC474(int);
 extern int sub_800AC3E4();
 extern int sub_800AC38C();
@@ -3111,7 +3111,7 @@ typedef struct G2Save
     char pad_0[0x24];
     int f24;
 } G2Save;
-extern void sub_80025884(int);
+extern void FreeModelAnimSet_80025884(int);
 extern short word_8008D668[2];
 extern int sub_800AB304();
 extern int sub_800AB354();
@@ -4015,34 +4015,34 @@ void sub_800ABCF4(G2Act* p)
     if (p->s20 == 0x19)
     {
         p->f2C = sub_8001AC8C(p->f34);
-        sub_800148F4(p->f2C);
+        RequestEffect_800148F4(p->f2C);
     }
     else if ((unsigned short)(p->s20 - 7) < 2)
     {
         p->f2C = 0x25;
-        sub_800148F4(0x25);
+        RequestEffect_800148F4(0x25);
         sub_80013358(p->f34);
         word_8008D782 = sub_80013358(p->f34);
     }
     else if (p->s20 == 0x1A)
     {
         p->f2C = 0x39;
-        sub_800148F4(p->f2C);
+        RequestEffect_800148F4(p->f2C);
     }
     else if (p->s20 == 0x1C)
     {
         p->f2C = 0x3A;
-        sub_800148F4(p->f2C);
+        RequestEffect_800148F4(p->f2C);
     }
     else if (p->s20 == 0x10)
     {
         p->f2C = sub_800189F8();
-        sub_800148F4(p->f2C);
+        RequestEffect_800148F4(p->f2C);
     }
     else if (p->s20 == 0x1D)
     {
         p->f2C = ((int (*)(int))sub_8001CDCC)(p->f34);
-        sub_800148F4(p->f2C);
+        RequestEffect_800148F4(p->f2C);
     }
 }
 
@@ -4208,7 +4208,7 @@ int sub_800AC518(int a)
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
     if (p[r].f1)
         return 1;
-    return sub_80025924(dword_8007DC60[2], (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
+    return IsAnimInModelAnimSet_80025924(dword_8007DC60[2], (short)sub_800AC988(a, dword_800B11DC[sub_800AC3E4()]));
 }
 
 int sub_800AC5D0(int a, int b)
@@ -4235,12 +4235,12 @@ void sub_800AC6A8(int a)
 
 void sub_800AC708(int a, int b)
 {
-    sub_80025780(dword_8007DC60[2], a, b);
+    LoadModelAnimSet_80025780(dword_8007DC60[2], a, b);
 }
 
 void sub_800AC73C()
 {
-    sub_80025884(dword_8007DC60[2]);
+    FreeModelAnimSet_80025884(dword_8007DC60[2]);
 }
 
 void sub_800AC768()

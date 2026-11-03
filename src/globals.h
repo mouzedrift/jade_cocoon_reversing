@@ -427,7 +427,7 @@ extern int fadeFrame_800918B4;
 extern unsigned char byte_8007D588[16];
 extern int** cameraTask_8008D4A0;
 extern int** dword_8008D464;
-extern int** dword_8008B54C;
+extern int** modelLoaderTask_8008B54C;
 extern int dword_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
@@ -476,7 +476,7 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
 extern int actorTasks_8008D43C;
-extern int dword_8008D61C;
+extern int screenFlashTasks_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
@@ -524,12 +524,12 @@ typedef struct
     int items[10];
 } struct_list10;
 int AddFileRequest_80025D00(struct_list10* p, int* q);
-void sub_80025D7C(int* a0, int b);
+void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 extern int dword_8007BD30[];
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
-extern int dword_80091BD0[4];
+extern int effectFile_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];
 typedef struct
@@ -621,7 +621,7 @@ typedef struct
     int z;
 } Vec3i;
 
-extern int dword_8008D4D8;
+extern int memCardInfo_8008D4D8;
 extern short effectOutcomeFlag_8008D780;
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 

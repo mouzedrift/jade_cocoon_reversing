@@ -38,9 +38,9 @@ void sub_800174F8(char* a0, int a1)
         ((short*)b)[0x82 / 2] = 0;
         ((short*)b)[0x80 / 2] = 0;
         ((short*)b)[0x86 / 2] = 0;
-        idx = sub_80020F00((struct_list_14*)dword_80091BD0, 1, a1);
+        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        p = (int*)(dword_80091BD0[0x28 / 4] + idx * 28);
+        p = (int*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
         b[0x88 / 4] = (int)p;
         b[0x94 / 4] = (int)malloc3_8003FC4C(0x54);
         sub_800218A8(p[1], (void*)b[0x94 / 4], 1);
@@ -88,9 +88,9 @@ void sub_80017784(char* a0, int a1, short* a2)
         ((short*)b)[0x80 / 2] = a2[0];
         ((short*)b)[0x82 / 2] = a2[1];
         ((short*)b)[0x84 / 2] = a2[2];
-        idx = sub_80020F00((struct_list_14*)dword_80091BD0, 1, a1);
+        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        p = (int*)(dword_80091BD0[0x28 / 4] + idx * 28);
+        p = (int*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
         b[0x88 / 4] = (int)p;
         b[0x94 / 4] = (int)malloc3_8003FC4C(0x54);
         sub_800218A8(p[1], (void*)b[0x94 / 4], 1);
@@ -196,9 +196,9 @@ void sub_80017BF0(EventEntry* a0, int a1)
         ((short*)q)[0x84 / 2] = 0;
         ((short*)q)[0x82 / 2] = 0;
         ((short*)q)[0x80 / 2] = 0;
-        r = sub_80020F00(dword_80091BD0, 1, a1);
+        r = sub_80020F00(effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        q[0x88 / 4] = ((int*)dword_80091BD0)[0x28 / 4] + r * 28;
+        q[0x88 / 4] = ((int*)effectFile_80091BD0)[0x28 / 4] + r * 28;
         e->cb_8 = sub_80017CE4;
     }
 }

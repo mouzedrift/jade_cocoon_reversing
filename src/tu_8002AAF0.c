@@ -126,31 +126,27 @@ void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
     DrawWindow_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
 }
 #if 0
-// Not matched (5 lines: first branch cross-jumps into the else store; the original keeps three separate stores)
-void sub_8002AC88(int flags, short* a, unsigned int b, short* out)
+// Not matched (2 words: first branch emits subu/subu; written as a[0] + (a[2] - b) gcc cross-jumps it into the second branch)
+void AlignMenuItem_8002AC88(int flags, short* a, int b, short* out)
 {
-    short d;
     if (flags & 4)
     {
-        d = a[2] - b;
-        out[0] = d + a[0];
+        out[0] = a[0] - (b - a[2]);
     }
     else if (flags & 8)
     {
-        d = (a[2] - b) >> 1;
-        out[0] = a[0] + d;
+        out[0] = a[0] + ((unsigned int)(a[2] - b) >> 1);
     }
     else
     {
-        d = a[0];
-        out[0] = d;
+        out[0] = a[0];
     }
     out[1] = a[1];
 }
 #endif
-INCLUDE_ASM(sub_8002AC88);
+INCLUDE_ASM(AlignMenuItem_8002AC88);
 // Matched
-void sub_8002ACE8(int flags, unsigned char* out)
+void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
 {
     unsigned char val;
     if (flags & 2)
@@ -166,31 +162,31 @@ void sub_8002ACE8(int flags, unsigned char* out)
     out[2] = val;
 }
 // Matched
-void sub_8002AD08(int flags)
+void SetMenuItemFont1Clut_8002AD08(int flags)
 {
     if (flags & 2)
     {
-        sub_8003F900(1, 1);
+        SetFontClutOffset_8003F900(1, 1);
     }
     else
     {
-        sub_8003F900(1, 0);
+        SetFontClutOffset_8003F900(1, 0);
     }
 }
 // Matched
-void sub_8002AD44(int flags)
+void SetMenuItemFont2Clut_8002AD44(int flags)
 {
     if (flags & 2)
     {
-        sub_8003F900(2, 1);
+        SetFontClutOffset_8003F900(2, 1);
     }
     else
     {
-        sub_8003F900(2, 0);
+        SetFontClutOffset_8003F900(2, 0);
     }
 }
 // Matched
-void sub_8002AD80(int flags)
+void SetMenuItemDigitColor_8002AD80(int flags)
 {
     if (flags & 2)
     {
@@ -207,8 +203,8 @@ extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 void sub_8002ADB4(char* a0, int a1, int a2, int a3)
 {
     DrawMenuWindowContents_8002A710(a0, a2);
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
 }
 typedef struct
@@ -338,10 +334,10 @@ typedef struct
     short s[8];
 } Block16;
 extern Block16 dword_800741C4;
-extern void sub_8002B2A4(short a, int b, int c, Block16* d, int e);
+extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched
 void sub_8002B1B0(short a, int b, int c)
 {
     Block16 local = dword_800741C4;
-    sub_8002B2A4(a, b, c, &local, 0);
+    DrawElementIcons_8002B2A4(a, b, c, &local, 0);
 }

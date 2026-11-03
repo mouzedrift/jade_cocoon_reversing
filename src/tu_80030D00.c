@@ -143,7 +143,7 @@ void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops)
 // Matched
 void PlaySeqSlot_80031160(unsigned int idx, short loops)
 {
-    SoundStruct* s = &stru_80091D00;
+    SoundStruct* s = &seqSlotSound_80091D00;
     int a;
     int b;
     if (seqSlots_800833E4[idx].field_0 == 1)
@@ -190,7 +190,7 @@ void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops)
 // Matched
 void StopSeqSlot_80031334(int idx)
 {
-    SoundStruct* s = &stru_80091D00;
+    SoundStruct* s = &seqSlotSound_80091D00;
     int a;
     short b;
     if (seqSlots_800833E4[idx].field_0 == 1)

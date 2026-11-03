@@ -993,8 +993,8 @@ void sub_800BB058(int a)
     {
         u = t->buffer;
         t->flags = (t->flags | 1) & ~0x8000;
-        sub_8003F900(2, 0);
-        sub_8003F900(1, 0);
+        SetFontClutOffset_8003F900(2, 0);
+        SetFontClutOffset_8003F900(1, 0);
         DrawMenuBackground_8002BE10();
         u->field_96 = a;
         sub_800BB148(u);
@@ -1073,7 +1073,7 @@ void sub_800BB148(ShopUnit4Shop* u)
     fn_80011CD0(levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
     {
-        r = sub_80033AE4(&saveData_8008B570, i);
+        r = GetSaveItem_80033AE4(&saveData_8008B570, i);
         if (r)
         {
             fn_80011CD0(r);
