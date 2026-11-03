@@ -577,7 +577,7 @@ void RunEventList_80043898(EventNode* n)
     } while (n);
 }
 // Matched
-void sub_800438F8(EventNode* n)
+void RunEventListFreeCallbacks_800438F8(EventNode* n)
 {
     do
     {

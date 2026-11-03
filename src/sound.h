@@ -49,7 +49,7 @@ extern void LoadSound_80030A84(short soundId, SoundStruct* sound);
 
 extern SoundStruct bgmSound_80091CE0;
 extern SoundStruct sfxSound_80091D20;
-extern SoundStruct stru_80091D00;
+extern SoundStruct seqSlotSound_80091D00;
 extern SoundStruct systemSound_80091D40;
 
 #endif

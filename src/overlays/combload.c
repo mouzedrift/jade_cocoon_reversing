@@ -106,7 +106,7 @@ void sub_800A41FC(CombLoadTask* t)
             found = 1;
         }
     }
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
     code[0] = 0xC3;
     if (found)
     {

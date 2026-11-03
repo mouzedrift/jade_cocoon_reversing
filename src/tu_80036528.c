@@ -512,7 +512,7 @@ void sub_800378CC(void)
     sub_800390F4(cameraTask_8008D4A0[0x24 / 4], 1);
 }
 // Matched
-int sub_800378F8(void)
+int GetCameraMode_800378F8(void)
 {
     return ((short*)cameraTask_8008D4A0[0x24 / 4])[4];
 }
@@ -790,7 +790,7 @@ void sub_8003856C(int* p)
     float f;
 
     dword_8008D4BC = dword_8008B4F8;
-    if (sub_800378F8() != 0)
+    if (GetCameraMode_800378F8() != 0)
     {
         return;
     }

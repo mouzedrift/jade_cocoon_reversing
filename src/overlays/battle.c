@@ -68,7 +68,7 @@ extern int dword_800ADE88;
 extern int sub_800C0D60();
 extern int sub_800A89F0();
 extern int sub_800A2550();
-extern int sub_800148D4();
+extern int IsEffectTaskIdle_800148D4();
 extern int sub_800C09D4();
 extern int sub_800B4318();
 extern void Midpoint3D_8003B95C();
@@ -157,7 +157,7 @@ extern void sub_800A2924();
 extern void ClearStatus_80011C30();
 extern void RecoverQuarterHpMp_80011C44();
 extern void memset();
-extern void sub_80020DDC();
+extern void LoadEffectFile_80020DDC();
 extern void SetFadeMode_8001C19C();
 extern void sub_800A2AE8();
 extern void PlaySeqSlot_80031160();
@@ -435,7 +435,7 @@ void sub_800BA788(BatTask_a* t)
     FreeSeqSlotSound_80030664();
     SsUtAllKeyOff(0);
     PlayMusic_800300E0(sub_800315E4(), 1);
-    sub_80020898();
+    LoadLoaderModelAnimSets_80020898();
     if (dword_80091C74 >= 0)
     {
         sub_800AC708(dword_80091C74, 1);
@@ -1159,14 +1159,14 @@ void sub_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    sub_80020DDC(dword_800C8EAC[dword_80083BD0].b, dword_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].b, dword_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
 }
 
 void sub_800BC8E8()
 {
-    sub_80020EBC(dword_80095468);
+    IsEffectFileLoaded_80020EBC(dword_80095468);
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BC90C);
@@ -1262,7 +1262,7 @@ int sub_800BDD3C()
             }
         }
     }
-    return sub_800148D4() != 0;
+    return IsEffectTaskIdle_800148D4() != 0;
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BDD3C);

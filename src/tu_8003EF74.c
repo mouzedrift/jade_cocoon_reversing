@@ -321,7 +321,7 @@ void sub_8003F89C(unsigned short* p)
 }
 
 // Matched
-void sub_8003F900(int idx, int val)
+void SetFontClutOffset_8003F900(int idx, int val)
 {
     Font* p = &fonts_80095FB0[idx];
     p->field_2A = val;
@@ -349,10 +349,10 @@ void SetFontColor_8003F9A8(int idx, unsigned char* rgb)
     p->b_6 = rgb[2];
 }
 // Matched
-void sub_8003F9E8(int idx, int v)
+void SetFontAbr_8003F9E8(int idx, int v)
 {
     Font* p = &fonts_80095FB0[idx];
-    sub_80033048(p->tpage_14, v);
+    SetDrTPageAbr_80033048(p->tpage_14, v);
 }
 // Matched
 void SetFontSemiTrans_8003FA2C(int idx, int abe)

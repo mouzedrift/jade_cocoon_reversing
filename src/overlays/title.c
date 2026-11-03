@@ -453,7 +453,7 @@ extern void sub_800A1760();
 extern unsigned short padRepeat_800918CC;
 extern void sub_800A14A8();
 extern void UpdateMenuCursor_8003D794(void* a0, int a1);
-extern void sub_8003BB1C(void);
+extern void CheckMemCards_8003BB1C(void);
 extern void sub_800BB5DC(void);
 extern void (*off_800A27E8[])();
 // Matched
@@ -474,7 +474,7 @@ void sub_800A1310(TitleTask* t, TitleCtxB* c)
         off_800A27E8[c->field_24](t, c);
         if ((unsigned short)c->field_24 < 2)
         {
-            sub_8003BB1C();
+            CheckMemCards_8003BB1C();
             if (c->field_24 == 0)
             {
                 LoadOverlay_80020BF8(2, 0x10);

@@ -1287,7 +1287,7 @@ typedef struct
     unsigned long* ot;
 } FuseSkel;
 extern void InitModelList_80024ADC(void* p, int a, int b);
-extern void sub_80026730(void* a0, int a1, int a2);
+extern void AllocModelAnims_80026730(void* a0, int a1, int a2);
 extern void sub_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
                          char* out, void* vout);
 extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
@@ -1392,7 +1392,7 @@ int ModelTaskDraw_80010DB0(int* p)
         ((int*)e)[2] = v[2];
     }
     *(short*)(o + 0x3E) = *(short*)(m[p[0x30 / 4]] + 0x3E);
-    sub_80026730(o + 0x54, *(unsigned short*)(o + 0x3E), 1);
+    AllocModelAnims_80026730(o + 0x54, *(unsigned short*)(o + 0x3E), 1);
     (*(int**)(o + 0x54))[0] = 1;
     (*(int**)(o + 0x54))[2] = 0x20;
     (*(int**)(o + 0x54))[3] = 0;
