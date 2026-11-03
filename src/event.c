@@ -27,7 +27,61 @@ extern short uiColor_8008B590;
 extern void sub_8004226C(int a, RECT* r, int c, int d);
 extern void sub_80041ED0(int a, RECT* r, int c, int d);
 
-INCLUDE_ASM(sub_8004226C);
+extern unsigned char** off_80087064[];
+extern unsigned char* off_80087050[];
+extern int dword_80086FB0[][3];
+extern void sub_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
+// Matched
+void sub_8004226C(int a, RECT* r, int c, int d)
+{
+    unsigned char* out = (unsigned char*)r;
+    unsigned char c0[4];
+    unsigned char c1[4];
+    int cr;
+    int cg;
+    int cb;
+
+    out[0] = off_80087064[(short)a][d][0];
+    out[1] = off_80087064[(short)a][d][1];
+    out[2] = off_80087064[(short)a][d][2];
+    if ((short)a == 1)
+    {
+        cr = out[0] * dword_80086FB0[d][0] / 100;
+        cg = out[1] * dword_80086FB0[d][1] / 100;
+        cb = out[2] * dword_80086FB0[d][2] / 100;
+        if (cr > 0xFF)
+        {
+            cr = 0xFF;
+        }
+        if (cg > 0xFF)
+        {
+            cg = 0xFF;
+        }
+        if (cb > 0xFF)
+        {
+            cb = 0xFF;
+        }
+        if (cr < 0)
+        {
+            cr = 0;
+        }
+        if (cg < 0)
+        {
+            cg = 0;
+        }
+        if (cb < 0)
+        {
+            cb = 0;
+        }
+        c0[0] = cr;
+        c0[1] = cg;
+        c0[2] = cb;
+        c1[0] = off_80087050[d][0];
+        c1[1] = off_80087050[d][1];
+        c1[2] = off_80087050[d][2];
+        sub_80033394(out, c0, c1, c, 40, 10);
+    }
+}
 // Matched
 void sub_80042460(int a0, unsigned char* p, int a2, int a3)
 {
@@ -42,7 +96,32 @@ void sub_800424C0(int a0, short a1, int a2, int a3)
     sub_8004226C(a1, &r, a3, uiColor_8008B590);
     sub_80041ED0(a0, &r, a2, 1);
 }
-INCLUDE_ASM(sub_8004251C);
+// Matched
+void sub_8004251C(RECT* r, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
+{
+    POLY_G4 p;
+    DR_TPAGE dt;
+
+    SetPolyG4(&p);
+    if (abr)
+    {
+        setSemiTrans(&p, 1);
+    }
+    setRGB0(&p, rgb[0][0], rgb[0][1], rgb[0][2]);
+    setRGB1(&p, rgb[1][0], rgb[1][1], rgb[1][2]);
+    setRGB2(&p, rgb[2][0], rgb[2][1], rgb[2][2]);
+    setRGB3(&p, rgb[3][0], rgb[3][1], rgb[3][2]);
+    setXY4(&p, r->x, r->y, r->x + r->w, r->y, r->x, r->y + r->h, r->x + r->w, r->y + r->h);
+    AddPrimCopy_80040298(ot, &p, 9);
+    if (abr)
+    {
+        SetDrawTPage(&dt, 0, 1, GetTPage(0, abr - 1, 0, 0));
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+        addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    }
+}
 extern void sub_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
 void sub_80042750(RECT* r, unsigned char* rgb, void* ot)
@@ -86,7 +165,6 @@ int sub_800429A8(short* p)
     return 0;
 }
 extern unsigned char* off_80087028[];
-extern void sub_8004251C(RECT* r, unsigned char (*rgb)[4], int n, unsigned long* ot);
 // Matched
 void sub_800429F8(int a0, int a1)
 {
