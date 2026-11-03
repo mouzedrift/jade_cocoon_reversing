@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "event.h"
 
 
 INCLUDE_DATA(aDWorkPsusEvent);
@@ -291,24 +292,24 @@ void XaStop_800430B0(void)
 }
 extern int DsSystemStatus(void);
 extern void XaWaitFilterTask_800431C4();
-void XaSetup_800433FC(int* o);
+void XaSetup_800433FC(XaTask* o);
 // Matched
-void XaIdleTask_800430E8(struct_obj_D* p, int* q0)
+void XaIdleTask_800430E8(struct_obj_D* p, XaTask* q0)
 {
-    int* q = q0;
+    XaTask* q = q0;
     int r;
     int s;
-    if (q[0] & 1)
+    if (q->flags_0 & 1)
     {
-        q[0] &= ~1;
+        q->flags_0 &= ~1;
         xaRequestPending_80096118 = -1;
     }
     if ((int)xaRequestPending_80096118 >= 0 && (r = DsSystemStatus()) == 1 && (s = sub_8003C0A4(r)) == r)
     {
         XaSetup_800433FC(q);
         xaRequestPending_80096118 = -1;
-        ((short*)q)[4] = s;
-        q[0] &= ~1;
+        q->state_8 = s;
+        q->flags_0 &= ~1;
         p->field_8 = XaWaitFilterTask_800431C4;
     }
 }
@@ -316,7 +317,7 @@ void XaIdleTask_800430E8(struct_obj_D* p, int* q0)
 void XaWaitFilterTask_800431C4(struct_obj_D* p, int* q)
 {
     char buf[8];
-    if (DsSync(q[1], buf) == 2)
+    if (DsSync(((XaTask*)q)->cmd_4, buf) == 2)
     {
         p->field_8 = XaStartReadTask_80043204;
     }
@@ -326,19 +327,19 @@ void XaStartReadTask_80043204(struct_obj_D* p, int* q)
 {
     if (XaStartRead_800434C4(xaStartPos_80096108))
     {
-        q[1] = DsControlF(0x11, 0);
-        ((short*)q)[4] = 2;
+        ((XaTask*)q)->cmd_4 = DsControlF(0x11, 0);
+        ((XaTask*)q)->state_8 = 2;
         p->field_8 = XaMonitorTask_800432EC;
     }
 }
 // Matched
-void XaFadeOutTask_80043264(struct_obj_D* p, short* q)
+void XaFadeOutTask_80043264(struct_obj_D* p, XaTask* q)
 {
-    short v = q[5] - 14;
-    q[5] = v;
+    short v = q->vol_A - 14;
+    q->vol_A = v;
     if (v < 0)
     {
-        q[4] = 0;
+        q->state_8 = 0;
         p->field_8 = XaIdleTask_800430E8;
         SsSetSerialVol(0, 0, 0);
         DsControlB(9, 0, 0);
@@ -350,34 +351,34 @@ void XaFadeOutTask_80043264(struct_obj_D* p, short* q)
     }
 }
 // Matched
-void XaMonitorTask_800432EC(struct_obj_D* p, int* q)
+void XaMonitorTask_800432EC(struct_obj_D* p, XaTask* q)
 {
     u_char result[8];
     DslLOC loc;
-    if (DsSync(q[1], result) == 2 && q[1])
+    if (DsSync(q->cmd_4, result) == 2 && q->cmd_4)
     {
         loc.minute = result[5];
         loc.second = result[6];
         loc.sector = result[7];
         if (DsPosToInt(&loc) > xaEndPos_8009610C || (int)xaRequestPending_80096118 >= 0)
         {
-            ((short*)q)[5] = 0x70;
+            q->vol_A = 0x70;
             p->field_8 = XaFadeOutTask_80043264;
             return;
         }
         SsSetSerialVol(0, 0x70, 0x70);
-        q[1] = DsControlF(0x11, 0);
+        q->cmd_4 = DsControlF(0x11, 0);
     }
-    if (xaTimer_8008D450 < -1000 || (q[0] & 1))
+    if (xaTimer_8008D450 < -1000 || (q->flags_0 & 1))
     {
-        ((short*)q)[5] = 0x70;
-        q[0] &= ~1;
+        q->vol_A = 0x70;
+        q->flags_0 &= ~1;
         p->field_8 = XaFadeOutTask_80043264;
     }
 }
 extern int DsCommand(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
 // Matched
-void XaSetup_800433FC(int* o)
+void XaSetup_800433FC(XaTask* o)
 {
     Data001File f;
     u_char result[8];
@@ -389,7 +390,7 @@ void XaSetup_800433FC(int* o)
     do
     {
         r = DsCommand(0xD, param, 0, -1);
-        o[1] = r;
+        o->cmd_4 = r;
     } while (r == 0);
     xaStartPos_80096108 = DsPosToInt(&f.field_0_position);
     xaStartPos_80096108 += xaRequest_80096110.startSector_4 * 32;
@@ -413,13 +414,13 @@ int XaStartRead_800434C4(int a)
 // Matched
 int XaRequestStop_80043524(void)
 {
-    int* p;
+    XaTask* p;
     if ((int)xaRequestPending_80096118 >= 0)
     {
         return 0;
     }
-    p = xaTask_8008B560[0x24 / 4];
-    *p |= 1;
+    p = XA_TASK;
+    p->flags_0 |= 1;
     return 1;
 }
 // Matched
@@ -433,7 +434,7 @@ void XaRequestPlay_80043564(short a0, short a1, short a2)
 // Matched
 int XaIsIdle_80043584(void)
 {
-    return ((short*)xaTask_8008B560[0x24 / 4])[4] == 0;
+    return XA_TASK->state_8 == 0;
 }
 // Matched
 unsigned int XaNoRequestPending_800435A4(void)
