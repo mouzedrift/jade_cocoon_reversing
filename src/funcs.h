@@ -204,7 +204,6 @@ extern int sub_80033AB0(Item* p);
 extern void sub_80039FA4(int a0);
 extern int sub_80039FB0(void);
 extern int GetFileRequestCount_8003BC34(void);
-extern int GetFileBuffer_8003BFC0(void);
 extern int CdReadIsIdle_8003C9EC(void);
 extern void ListInit_8003FDB0(int* p);
 extern int sub_80013358(int idx);

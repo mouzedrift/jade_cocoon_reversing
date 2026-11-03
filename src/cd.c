@@ -561,15 +561,14 @@ FileRequest* FindFileRequest_8003BED4(int key)
     }
     return 0;
 }
-#if 0
-// Not matched (6 words): load of list[0] scheduled before the field_10 store
+// Matched
 void RemoveFileRequest_8003BF18(FileRequest* n)
 {
     // n->next (offset 0) is the previous node, n->field_4 the next one
-    int* list = &fileRequestQueue_80086540;
+    struct_head_8003BC84* list = (struct_head_8003BC84*)&fileRequestQueue_80086540;
     if (n->next == 0)
     {
-        list[2] = n->field_4;
+        list->first = (FileRequest*)n->field_4;
     }
     else
     {
@@ -577,18 +576,15 @@ void RemoveFileRequest_8003BF18(FileRequest* n)
     }
     if (n->field_4 == 0)
     {
-        list[3] = (int)n->next;
+        list->last = n->next;
     }
     else
     {
         ((FileRequest*)n->field_4)->next = n->next;
     }
     n->fileId_10 = 0x10000;
-    list[0]--;
+    list->count--;
 }
-
-#endif
-INCLUDE_ASM(RemoveFileRequest_8003BF18);
 // Matched
 int IsFileRequestQueueIdle_8003BF88(void)
 {
@@ -598,18 +594,11 @@ int IsFileRequestQueueIdle_8003BF88(void)
     }
     return 0;
 }
-// Not matched: no jr after the store, execution falls through into GetFileBuffer_8003BFC0
-#if 0
-void SetFileBufferInUse_8003BFB8(int arg0)
+// Matched
+void* SetFileBufferInUse_8003BFB8(int arg0)
 {
     fileBufferInUse_80086564 = arg0;
-}
-#endif
-INCLUDE_ASM(SetFileBufferInUse_8003BFB8);
-// Matched
-int GetFileBuffer_8003BFC0(void)
-{
-    return fileBuffer_8008656C;
+    return (void*)fileBuffer_8008656C;
 }
 // Matched
 int sub_8003BFD0(int key, int flag)

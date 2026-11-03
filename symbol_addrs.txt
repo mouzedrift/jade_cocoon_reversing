@@ -794,7 +794,6 @@ FindFileRequest_8003BED4=0x8003bed4;
 RemoveFileRequest_8003BF18=0x8003bf18;
 IsFileRequestQueueIdle_8003BF88=0x8003bf88;
 SetFileBufferInUse_8003BFB8=0x8003bfb8;
-GetFileBuffer_8003BFC0=0x8003bfc0;
 sub_8003BFD0=0x8003bfd0;
 sub_8003C060=0x8003c060;
 sub_8003C0A4=0x8003c0a4;
