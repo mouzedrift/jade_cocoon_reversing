@@ -244,7 +244,7 @@ extern EvMapEntEventfnc** dword_800B0608[];
 
 extern int sub_800A49CC(int a, int b, int* c, EvSpawnEventfnc* d);
 
-extern void sub_800B8568(int a, int b, int c, int d);
+extern void sub_800B8568();
 
 extern int* dword_8008D674;
 

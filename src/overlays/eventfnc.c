@@ -299,7 +299,168 @@ void sub_800B844C(int* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8568);
+typedef struct EvPairEventfnc
+{
+    int a;
+    int b;
+} EvPairEventfnc;
+typedef struct EvPosEventfnc
+{
+    EvPairEventfnc xy;
+    int z;
+} EvPosEventfnc;
+typedef struct EvActorParamsEventfnc
+{
+    int id_0;
+    int f4;
+    int pos_8[3];
+    short rot_14[3];
+    short pad_1A;
+    int f1C;
+    int f20;
+    int f24;
+    int f28;
+    int f2C;
+    int f30;
+    int* f34;
+    int f38;
+    int f3C;
+    int f40;
+    int f44;
+    int f48;
+    int f4C;
+} EvActorParamsEventfnc;
+typedef struct EvMinionEventfnc
+{
+    int data[0x88 / 4];
+} EvMinionEventfnc;
+typedef struct EvEnemyEventfnc
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int idx_14;
+    int f18;
+    EvMinionEventfnc minion_1C;
+    int* actor_A4;
+    int fA8;
+    int fAC;
+    EvPairEventfnc xy_B0[3];
+    int fC8;
+    int fCC;
+    int fD0;
+    int z_D4[3];
+} EvEnemyEventfnc;
+typedef struct EvLoadEntEventfnc
+{
+    int f0;
+    int id_4;
+    int pad_8[3];
+} EvLoadEntEventfnc;
+extern int InitMinionData_8001900C(EvMinionEventfnc* m, EvPosEventfnc* a1);
+extern int* CreateActor_8001D45C(EvActorParamsEventfnc* a0);
+extern void sub_80019B14(int p, char* a1, char* a2);
+extern char* sub_800A17F4(EvEnemyEventfnc* src, int b);
+extern int CreateEnemyAiEvent_800A2D90(int* a, char* b, int c);
+extern int dword_80079140;
+
+// Matched
+void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
+{
+    EvActorParamsEventfnc s;
+    EvMinionEventfnc mi;
+    EvEnemyEventfnc e;
+    int v[3];
+    unsigned short* id;
+    EvLoadEntEventfnc* l;
+    int found;
+    int i;
+    struct_112* model;
+    int k;
+    char* p0;
+    char* p1;
+    int f;
+    int* actor;
+    char* x;
+    char* slot;
+    id = (unsigned short*)sub_80019C70(a->xy.a);
+    found = 0;
+    l = (EvLoadEntEventfnc*)((char*)modelLoaderTask_8008B54C[9] + 0xC);
+    for (i = 3; i >= 0; i--)
+    {
+        if (*id == l->id_4)
+        {
+            found = 1;
+        }
+        l++;
+    }
+    if (found)
+    {
+        model = AcquireLoaderModel_80020734(*id);
+        k = InitMinionData_8001900C(&mi, a);
+        s.id_0 = *id;
+        s.f4 = 0;
+        s.pos_8[0] = b[0];
+        s.pos_8[1] = b[1];
+        s.pos_8[2] = b[2];
+        s.rot_14[0] = 0;
+        s.rot_14[1] = *(short*)(b + 3);
+        s.rot_14[2] = 0;
+        s.f1C = 0;
+        s.f20 = 1;
+        s.f24 = -1;
+        s.f28 = 0x1000;
+        s.f2C = 4;
+        s.f30 = 1;
+        s.f34 = &dword_80079140;
+        if (k >= 4)
+        {
+            s.f38 = (int)sub_80024E90(model, k);
+        }
+        else
+        {
+            p0 = sub_80024E90(model, k);
+            p1 = sub_80024E90(model, k + 1);
+            f = sub_80019AD0((char*)&mi);
+            f = ((*(int*)p1 - *(int*)p0) * f) / 4096;
+            v[0] = *(int*)p0 + f;
+            v[1] = *(int*)(p0 + 4) + f;
+            v[2] = *(int*)(p0 + 8) + f;
+            s.f38 = (int)v;
+        }
+        s.f3C = (int)sub_80024EC8(model, k);
+        s.f40 = (int)sub_80024E38((struct_obj_E*)model);
+        s.f44 = (int)sub_80024E64((struct_obj_E*)model);
+        s.f4C = 0;
+        actor = CreateActor_8001D45C(&s);
+        x = sub_80024F00(model, k);
+        sub_80019B14(actor[0x134 / 4], x, sub_80024F38(model, k));
+        e.f0 = 2;
+        e.f4 = 3;
+        e.f8 = 1;
+        e.fC = 1;
+        e.f10 = 1;
+        e.idx_14 = d;
+        e.f18 = 1;
+        e.minion_1C = mi;
+        e.actor_A4 = actor;
+        e.fA8 = 0;
+        e.fAC = 0;
+        e.xy_B0[0] = a[0].xy;
+        e.xy_B0[1] = a[1].xy;
+        e.xy_B0[2] = a[2].xy;
+        e.fC8 = 0;
+        e.fCC = 0;
+        e.fD0 = 0;
+        e.z_D4[0] = a[0].z;
+        e.z_D4[1] = a[1].z;
+        e.z_D4[2] = a[2].z;
+        slot = sub_800A17F4(&e, 0);
+        *(int*)(slot + 4) = CreateEnemyAiEvent_800A2D90(actor, slot + 0x24, c);
+    }
+}
 
 void sub_800B88A4(int a)
 {
