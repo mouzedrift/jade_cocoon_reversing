@@ -1480,7 +1480,84 @@ void sub_800C01D0(MenuObj* o)
     o->f10 = name_800C1BD0[o->f60];
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800C01F4);
+typedef struct MenuPair
+{
+    short a;
+    short b;
+} MenuPair;
+typedef struct MenuCell
+{
+    unsigned short x;
+    unsigned short y;
+    unsigned short w;
+    unsigned short h;
+} MenuCell;
+extern MenuCell name_800C18EC;
+extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+typedef struct MenuItemGrid
+{
+    char pad_0[0xC];
+    int count_C;
+    char pad_10[0x2C];
+    short scroll_3C;
+} MenuItemGrid;
+void sub_800C01F4(MenuItemGrid* c)
+{
+    MenuCell r;
+    MenuPair pr;
+    short pa[2];
+    short pb[2];
+    short i;
+    short max;
+    int n = c->count_C;
+    if (n == 0)
+        return;
+    max = 0;
+    if (n >= 10)
+    {
+        short rows;
+        int q = n / 3;
+        rows = q;
+        if (n % 3 != 0)
+            rows = q + 1;
+        max = rows - 3;
+    }
+    for (i = 0; i < 9; i++)
+    {
+        if ((short)(i + c->scroll_3C * 3) < 12)
+        {
+            Item* it;
+            int k = i;
+            unsigned short w = name_800C18EC.w;
+            unsigned short h = name_800C18EC.h;
+            int dx = w * (k % 3);
+            int dy = h * (k / 3);
+            r.w = w;
+            r.h = h;
+            r.x = name_800C18EC.x + dx;
+            r.y = name_800C18EC.y + dy;
+            it = GetSaveItem_80033AE4(&saveData_8008B570, k + c->scroll_3C * 3);
+            if (it && it->id != 0xD3)
+                sub_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
+        }
+    }
+    if (c->scroll_3C != 0)
+    {
+        pr.a = 2;
+        pr.b = 3;
+        pa[0] = 0xA0;
+        pa[1] = 0x2D;
+        sub_8002B3DC(pr, frameCount_8008D3FC, pa, 0xE);
+    }
+    if (c->scroll_3C < max)
+    {
+        pr.a = 2;
+        pr.b = 1;
+        pb[0] = 0xA0;
+        pb[1] = 0xC4;
+        sub_8002B3DC(pr, frameCount_8008D3FC, pb, 0xE);
+    }
+}
 
 extern MenuQ name_800C1BE8[];
 void sub_800C0428(MenuCtx* c)
