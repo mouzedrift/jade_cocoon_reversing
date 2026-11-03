@@ -323,7 +323,7 @@ void sub_8003F89C(unsigned short* p)
 INCLUDE_ASM(sub_8003F89C);
 
 // Matched
-void sub_8003F900(int idx, short val)
+void sub_8003F900(int idx, int val)
 {
     Font* p = &fonts_80095FB0[idx];
     p->field_2A = val;

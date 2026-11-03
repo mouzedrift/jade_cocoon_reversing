@@ -8,7 +8,10 @@
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
+/* the game calls SsSetSerialVol without the header's short prototype (no sign extension) */
+#define SsSetSerialVol SsSetSerialVol_proto
 #include "LIBSND.H"
+#undef SsSetSerialVol
 #include "LIBMCX.H"
 #include "LIBPRESS.H"
 #include "LIBETC.H"
@@ -29,7 +32,7 @@ typedef struct
 
 typedef struct
 {
-    char pad_0[4];
+    int fileId;
     int is24bpp;
     char pad_8[2];
     short field_A;
@@ -39,6 +42,11 @@ typedef struct
     char pad_14[2];
     unsigned short field_16;
     MovieRect rect;
+    RECT screen;
+    int skipMask;
+    unsigned short volL;
+    unsigned short volR;
+    int doubleSpeed;
 } MovieInfo;
 
 typedef struct
@@ -64,6 +72,18 @@ typedef struct
 
 extern int bMovieFinished_800960FC;
 extern unsigned short padPressed_8009194C[];
+
+extern MovieInfo strMovies_80086A4C[];
+extern MovieCtx movieCtx_800960C0;
+extern void SsSetSerialVol();
+extern DISPENV* InitDispEnv_8005AA88(DISPENV* env, int x, int y, int w, int h);
+void MovieDctOutCallback_80041424(void);
+int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m);
+void MovieWaitFrameDone_80041724(MovieCtx* c, int unused);
+void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* p);
+void InitMovieCtx_80041240(MovieCtx* c, MovieInfo* i);
+void InitMovieStream_80041358(int a0, int ring, int* stream);
+int SkipMovieButtonPressed_800413BC(MovieParams* c);
 
 #define MOVIE_W(i, v) ((i)->is24bpp ? (v) * 3 / 2 : (v))
 
@@ -134,12 +154,81 @@ void ClearMovieRect_80040E28(MovieInfo* m)
     r.h = m->rect.h * 2;
     ClearImage(&r, 0, 0, 0);
 }
-#if 0
-void PlayMovie_80040EB4(int arg0)
+// Matched
+int PlayMovie_80040EB4(int idx)
 {
+    MovieInfo* m;
+    DISPENV env;
+    Data001File f;
+    RECT unused_40; /* unused locals: the original frame has room for them */
+    DslLOC loc;
+    RECT unused_50;
+    int n;
+    int top;
+    int x;
+    int y;
+
+    SetDispMask(0);
+    m = &strMovies_80086A4C[idx];
+    ClearMovieRect_80040E28(m);
+    DATA_GetFile_8003C7CC(&f, m->fileId);
+    SsSetSerialAttr(0, 0, 1);
+    SsSetSerialVol(0, m->volL * 0x70 / 0x1000, m->volR * 0x70 / 0x1000);
+    InitMovieCtx_80041240(&movieCtx_800960C0, m);
+    AllocMdecVLCBuffer_80041848();
+    ringBufferStart_800960B0 = (unsigned long*)0x801DB250;
+    InitMovieStream_80041358((int)&f, (int)MovieDctOutCallback_80041424, (int*)m);
+    bMovieFinished_800960FC = 0;
+    do
+    {
+        loc = f.field_0_position;
+        MovieStartCdStream_800417BC(&loc, (MovieParams*)m);
+    } while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, m));
+    while (!SkipMovieButtonPressed_800413BC((MovieParams*)m))
+    {
+        DecDCTin(movieCtx_800960C0.vlcbuf[movieCtx_800960C0.field_8], m->is24bpp ? 3 : 2);
+        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+        while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, m))
+        {
+            n = StGetBackloc(&loc);
+            if (m->field_A < n || n <= 0)
+            {
+                loc = f.field_0_position;
+            }
+            MovieStartCdStream_800417BC(&loc, (MovieParams*)m);
+        }
+        MovieWaitFrameDone_80041724(&movieCtx_800960C0, 0);
+        VSync(0);
+        top = movieCtx_800960C0.field_28 == 0;
+        x = MOVIE_W(m, m->rect.x);
+        y = m->rect.y;
+        if (top)
+        {
+            y += m->rect.h;
+        }
+        InitDispEnv_8005AA88(&env, x, y, MOVIE_W(m, m->rect.w), m->rect.h);
+        if (m->is24bpp)
+        {
+            env.isrgb24 = m->is24bpp;
+            env.disp.w = env.disp.w * 2 / 3;
+        }
+        env.screen.x = m->screen.x;
+        env.screen.y = m->screen.y;
+        env.screen.w = m->screen.w;
+        env.screen.h = m->screen.h;
+        PutDispEnv(&env);
+        SetDispMask(1);
+    }
+    DecDCToutCallback(0);
+    StUnSetRing();
+    DsControlB(9, 0, 0);
+    SsSetSerialVol(0, 0, 0);
+    ClearMovieRect_80040E28(m);
+    FreeMdecBuffer_800418CC();
+    mdecVLCBuffer_80086F94 = 0;
+    sub_8001B230();
+    return 1;
 }
-#endif
-INCLUDE_ASM(PlayMovie_80040EB4);
 // Matched
 void InitMovieCtx_80041240(MovieCtx* c, MovieInfo* i)
 {
@@ -278,7 +367,7 @@ int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m)
     return 1;
 }
 // Matched
-void MovieWaitFrameDone_80041724(MovieCtx* c)
+void MovieWaitFrameDone_80041724(MovieCtx* c, int unused)
 {
     volatile int timeout = 0x13880;
     while (!c->field_34)
@@ -353,4 +442,81 @@ void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
     DecDCTinSync(0);
     DecDCTin(buf, mode);
 }
-INCLUDE_ASM(sub_8004196C);
+// Matched
+int sub_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
+{
+    if (cur < 0 || max < cur)
+    {
+        cur = max;
+    }
+    switch (mode)
+    {
+    case 0:
+        d->w = s->w * cur / max;
+        d->h = s->h * cur / max;
+        d->x = s->x + s->w / 2 - d->w / 2;
+        d->y = s->y + s->h / 2 - d->h / 2;
+        break;
+    case 1:
+        d->w = s->w * cur / max;
+        d->h = s->h * cur / max;
+        d->x = s->x;
+        d->y = s->y;
+        break;
+    case 2:
+        d->w = s->w * cur / max;
+        d->h = s->h * cur / max;
+        d->x = s->x;
+        d->y = s->y + s->h - d->h;
+        break;
+    case 3:
+        d->w = s->w * cur / max;
+        d->h = s->h * cur / max;
+        d->x = s->x + s->w - d->w;
+        d->y = s->y;
+        break;
+    case 4:
+        d->w = s->w * cur / max;
+        d->h = s->h * cur / max;
+        d->x = s->x + s->w - d->w;
+        d->y = s->y + s->h - d->h;
+        break;
+    case 5:
+        d->x = s->x;
+        d->y = s->y;
+        d->w = s->w;
+        d->h = s->h * cur / max;
+        break;
+    case 6:
+        d->w = s->w;
+        d->h = s->h * cur / max;
+        d->x = s->x;
+        d->y = s->y + s->h - d->h;
+        break;
+    case 7:
+        d->w = s->w * cur / max;
+        d->h = s->h;
+        d->x = s->x;
+        d->y = s->y;
+        break;
+    case 8:
+        d->w = s->w * cur / max;
+        d->h = s->h;
+        d->x = s->x + s->w - d->w;
+        d->y = s->y;
+        break;
+    case 9:
+        d->w = s->w;
+        d->h = s->h * cur / max;
+        d->x = s->x;
+        d->y = s->y + s->h / 2 - d->h / 2;
+        break;
+    case 10:
+        d->w = s->w * cur / max;
+        d->h = s->h;
+        d->x = s->x + s->w / 2 - d->w / 2;
+        d->y = s->y;
+        break;
+    }
+    return max == cur;
+}

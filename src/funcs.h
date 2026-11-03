@@ -156,7 +156,7 @@ extern void sub_8001EA00(char* p);
 extern void sub_80021E24(volatile int* p, int h);
 extern int sub_800306B0(void);
 extern void sub_80036678(void);
-extern void sub_8003F900(int idx, short val);
+extern void sub_8003F900(int idx, int val);
 extern void sub_80040D34(struct_obj_D* p);
 extern void sub_8001DC34(void* p, void* s);
 extern char* sub_80024E38(struct_obj_E* p);
