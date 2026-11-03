@@ -4,6 +4,8 @@
 #include "globals.h"
 
 extern unsigned char dword_800C8B30;
+extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
+extern char stru_8008D534[];
 extern unsigned char dword_800C9E49;
 typedef struct BatMenu_a
 {
@@ -2069,7 +2071,70 @@ int sub_800C0BA0()
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C0BF0);
+extern int* CreateActor_8001D45C(int a0);
+extern int sub_80010A44();
+extern void sub_80019B14(int a, int b, int c);
+extern int dword_80079140;
+int sub_800C0BF0()
+{
+    struct
+    {
+        int field_0;
+        int field_4;
+        int pos[3];
+        short rot[3];
+        short pad_1A;
+        int field_1C;
+        int field_20;
+        int field_24;
+        int field_28;
+        int field_2C;
+        int field_30;
+        int* field_34;
+        int field_38;
+        int field_3C;
+        int field_40;
+        int field_44;
+        int field_48;
+        int field_4C;
+    } s;
+    void* m;
+    int k;
+    int x;
+    // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
+    if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
+    {
+    m = (void*)sub_80010A44(0);
+    k = sub_80019A80(((unsigned char*)dword_800C9188)[0xC8]);
+    s.field_0 = -1;
+    s.field_4 = 2;
+    s.pos[0] = dword_800C9190.f4;
+    s.pos[1] = dword_800C9190.f8;
+    s.pos[2] = dword_800C9190.fc;
+    s.rot[0] = 0;
+    s.rot[1] = dword_800C9190.f10;
+    s.rot[2] = 0;
+    s.field_1C = 3;
+    s.field_20 = 4;
+    s.field_24 = -1;
+    s.field_28 = 0x1000;
+    s.field_2C = 4;
+    s.field_30 = 0;
+    s.field_48 = (int)m;
+    s.field_34 = &dword_80079140;
+    s.field_38 = (int)sub_80024E90(m, k);
+    s.field_3C = (int)sub_80024EC8(m, k);
+    s.field_40 = (int)sub_80024E38(m);
+    s.field_44 = (int)sub_80024E64(m);
+    s.field_4C = 1;
+    dword_800C9190.obj = (char*)CreateActor_8001D45C((int)&s);
+    sub_8001D68C((struct_obj_A*)dword_800C9190.obj, 0);
+    x = (int)sub_80024F00(m, k);
+    sub_80019B14(*(int*)(dword_800C9190.obj + 0x134), x, (int)sub_80024F38(m, k));
+        return 1;
+    }
+    return 0;
+}
 
 int sub_800C0D50()
 {
@@ -2303,7 +2368,33 @@ void sub_800C1B2C(EventEntry* t, BatFx_a* u)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C1B2C);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1C5C);
+extern void sub_800C1DA4();
+void sub_800C1C5C(int* p, short* q, int c)
+{
+    int i;
+    for (i = 0; i < 16; i++)
+    {
+        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        if (e)
+        {
+            char* b = e->buffer;
+            e->flags = (e->flags | 1) & 0xFFFF7FFF;
+            *(int*)(b + 0x10) = p[0];
+            *(int*)(b + 0x14) = p[1];
+            *(int*)(b + 0x18) = p[2];
+            *(short*)(b + 0x34) = q[0];
+            *(short*)(b + 0x36) = q[1];
+            *(short*)(b + 0x38) = q[2];
+            *(int*)(b + 0x3C) = c;
+            *(int*)(b + 0x28) = ((rand() & 0x3F) - 0x1F) << 10;
+            *(int*)(b + 0x2C) = ((rand() & 0x3F) - 0x1F) << 10;
+            *(int*)(b + 0x30) = ((rand() & 0x3F) - 0x1F) << 10;
+            *(int*)b = 0;
+            *(short*)(b + 8) = ((rand() & 0xFFF) >> 1) + 0x800;
+            e->cb_8 = (EventEntryFn)sub_800C1DA4;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1DA4);
 
@@ -2317,7 +2408,45 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C273C);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C2914);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C2CD8);
+typedef struct BatShard_a
+{
+    int frame_0;
+    int f4;
+    short f8;
+    short fA;
+    int scale_C;
+    int pos_10[3];
+    int base_1C[3];
+    int vel_28[3];
+    short rot_34[4];
+    int* anim_3C;
+} BatShard_a;
+void sub_800C2CD8(EventEntry* t, BatShard_a* u)
+{
+    int* d = u->anim_3C;
+    int v[4];
+    int s[3];
+    if (u->frame_0 >= 0x1A)
+    {
+        if (u->frame_0 < 0x1E)
+        {
+            u->pos_10[0] += u->vel_28[0];
+            u->pos_10[1] += u->vel_28[1];
+            u->pos_10[2] += u->vel_28[2];
+        }
+        else
+        {
+            t->flags = (t->flags & ~1) | 0x8000;
+        }
+    }
+    u->rot_34[2] += 0xAA;
+    s[0] = s[1] = s[2] = u->scale_C;
+    v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
+    v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
+    v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
+    sub_8004D1EC(d[1], (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    u->frame_0++;
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C2E28);
 
@@ -2370,10 +2499,8 @@ typedef struct BatFade_a
 } BatFade_a;
 
 extern void sub_8003A6C4();
-extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern void sub_80021804(int* p, int heap);
 extern void free3_8003FC6C(void* p);
-extern char stru_8008D534[];
 
 void sub_800C3D34(EventEntry* t, BatFade_a* u)
 {
@@ -2507,7 +2634,25 @@ void sub_800C4548(BatTask* t)
         }
     }
 }
-INCLUDE_OVERLAY_ASM(battle, sub_800C45A8);
+void sub_800C45A8(BatTask* t)
+{
+    if (sub_800C6EC8(t, 0x3F8) == 0 && rand() % 10 < 7)
+    {
+        sub_800C6AFC(t, 6, 0);
+    }
+    else if (sub_800C6EC8(t, 2) == 0 && rand() % 10 < 7)
+    {
+        sub_800C6AFC(t, 6, 1);
+    }
+    else if (sub_800C6EC8(t, 1) == 0 && rand() % 10 < 7)
+    {
+        sub_800C6AFC(t, 6, 2);
+    }
+    else
+    {
+        sub_800C6A68(t);
+    }
+}
 
 extern void sub_800C473C();
 void sub_800C46FC()
