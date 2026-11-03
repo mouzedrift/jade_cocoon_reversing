@@ -20,28 +20,28 @@
 INCLUDE_DATA(dword_8007415C);
 
 
-extern struct_obj_B reverbAttr_80091CC8; // really a SpuReverbAttr
+extern SpuReverbAttr reverbAttr_80091CC8;
 extern void UpdateReverb_8002A218(void);
 // Matched
 void InitReverbTask_8002A1BC(int* p)
 {
-    reverbAttr_80091CC8.flags_0 = 0;
-    SetReverbMode_8002A280(&reverbAttr_80091CC8, 0);
-    SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
+    reverbAttr_80091CC8.mask = 0;
+    SetReverbMode_8002A280((struct_obj_B*)&reverbAttr_80091CC8, 0);
+    SetReverbDepth_8002A2A0((struct_obj_B*)&reverbAttr_80091CC8, 0x42, 0x42);
     p[2] = (int)UpdateReverb_8002A218;
 }
 // Matched
 void UpdateReverb_8002A218(void)
 {
-    if (reverbAttr_80091CC8.flags_0 != 0)
+    if (reverbAttr_80091CC8.mask != 0)
     {
-        SpuSetReverbModeParam((SpuReverbAttr*)&reverbAttr_80091CC8);
-        if (reverbAttr_80091CC8.flags_0 & 1)
+        SpuSetReverbModeParam(&reverbAttr_80091CC8);
+        if (reverbAttr_80091CC8.mask & 1)
         {
-            SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
-            SpuSetReverbDepth((SpuReverbAttr*)&reverbAttr_80091CC8);
+            SetReverbDepth_8002A2A0((struct_obj_B*)&reverbAttr_80091CC8, 0x42, 0x42);
+            SpuSetReverbDepth(&reverbAttr_80091CC8);
         }
-        reverbAttr_80091CC8.flags_0 = 0;
+        reverbAttr_80091CC8.mask = 0;
     }
 }
 // Matched

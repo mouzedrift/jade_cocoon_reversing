@@ -78,7 +78,7 @@ int IsConfirmPressed_8003D288(int flag, int idx)
 {
     int r = 0;
     unsigned int x;
-    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(((unsigned short*)padReleased_800918D4)[idx] & 4))
+    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(padReleased_800918D4[idx] & 4))
     {
         goto done;
     }
@@ -87,7 +87,7 @@ int IsConfirmPressed_8003D288(int flag, int idx)
     {
         goto end;
     }
-    if ((padHeld_800918D0[idx] & 0x40) || (((unsigned short*)padReleased_800918D4)[idx] & 0x40))
+    if ((padHeld_800918D0[idx] & 0x40) || (padReleased_800918D4[idx] & 0x40))
     {
         if (!(x & 0x40))
         {

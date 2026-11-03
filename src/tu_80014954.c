@@ -675,7 +675,7 @@ void sub_80014CCC(int* a0, void* buf)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-extern int dword_800795D4;
+extern SVECTOR dword_800795D4;
 extern int dword_800795DC;
 extern int dword_800795E0;
 extern int dword_800795E4;
@@ -959,9 +959,9 @@ void sub_80015478(EventEntry* e, void* buf)
         case 3:
         {
             short s[3];
-            s[0] = ((short*)&dword_800795D4)[0];
-            s[1] = ((short*)&dword_800795D4)[1];
-            s[2] = ((short*)&dword_800795D4)[2];
+            s[0] = dword_800795D4.vx;
+            s[1] = dword_800795D4.vy;
+            s[2] = dword_800795D4.vz;
             for (i = 0; i < 3; i++)
             {
                 s[1] = (i << 12) / 3;
@@ -1050,9 +1050,9 @@ void sub_80015478(EventEntry* e, void* buf)
         {
             short s[3];
             PlaySeqSlot_80031160(0x16, 1);
-            s[0] = ((short*)&dword_800795D4)[0];
-            s[1] = ((short*)&dword_800795D4)[1];
-            s[2] = ((short*)&dword_800795D4)[2];
+            s[0] = dword_800795D4.vx;
+            s[1] = dword_800795D4.vy;
+            s[2] = dword_800795D4.vz;
             for (i = 0; i < 5; i++)
             {
                 s[1] = (i << 12) / 5;
@@ -1084,9 +1084,9 @@ void sub_80015478(EventEntry* e, void* buf)
         case 12:
         {
             short s[3];
-            s[0] = ((short*)&dword_800795D4)[0];
-            s[1] = ((short*)&dword_800795D4)[1];
-            s[2] = ((short*)&dword_800795D4)[2];
+            s[0] = dword_800795D4.vx;
+            s[1] = dword_800795D4.vy;
+            s[2] = dword_800795D4.vz;
             SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->field_1C, 0xB1, 0, 0));
             break;
         }
