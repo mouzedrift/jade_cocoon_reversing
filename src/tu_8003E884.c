@@ -18,11 +18,6 @@
 
 extern int dword_80086898[][12];
 
-INCLUDE_DATA(dword_8007499C);
-INCLUDE_DATA(dword_800749A0);
-INCLUDE_DATA(dword_800749A4);
-INCLUDE_DATA(dword_800749A8);
-INCLUDE_DATA(word_800749AC);
 
 // Matched
 int GetCharWidth_8003E884(int idx, short n)

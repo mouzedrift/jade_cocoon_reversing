@@ -11,19 +11,19 @@ extern Data001File Data001Files_80075AA0[1108];
 extern SoundInfo soundFiles_80082F0C[155];
 extern enum GameStates currentGameState_8008D4B4;
 
-extern char aAssertionFaile[];
-extern char aAssertionFaile_0[];
-extern char aAssertionFaile_1[];
-extern char aCdC[];
-extern char aMainC[];
-extern char aSoundC[];
-extern char name[];
+extern const char aAssertionFaile[];
+extern const char aAssertionFaile_0[];
+extern const char aAssertionFaile_1[];
+extern const char aCdC[];
+extern const char aMainC[];
+extern const char aSoundC[];
+extern const char name[];
 
-extern char aAssertionFaile_3[];
-extern char aEffectC[];
+extern const char aAssertionFaile_3[];
+extern const char aEffectC[];
 extern unsigned char dword_8007C2E4[];
 extern short word_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
-extern struct_u8x4 dword_80072270;
+extern const struct_u8x4 dword_80072270;
 extern int dword_8007A0A4[];
 extern int dword_8007A0B0[];
 extern int dword_8007A0BC[];
@@ -39,6 +39,6 @@ extern int dword_8007A128[];
 extern int dword_8007A134[];
 extern int dword_8007A140[];
 extern int dword_8007A14C[];
-extern struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
+extern const struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
 
 #endif

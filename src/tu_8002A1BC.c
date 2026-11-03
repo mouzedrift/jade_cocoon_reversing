@@ -16,8 +16,14 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002A1BC.h"
 
-INCLUDE_DATA(dword_8007415C);
+const char dword_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
+const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+const char aDescription_80074178[] = "\202c\202\205\202\223\202\203\202\222\202\211\202\220\202\224\202\211\202\217\202\216"; // Description
+const char aYes_80074190[] = "\202x\202\205\202\223"; // Yes
+const char aNo_80074198[] = "\202m\202\217"; // No
+const int dword_800741A0 = 0;
 
 
 extern SpuReverbAttr reverbAttr_80091CC8;

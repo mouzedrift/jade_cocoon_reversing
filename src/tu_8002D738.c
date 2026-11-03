@@ -15,14 +15,18 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002D738.h"
 
-INCLUDE_DATA(dword_80074320);
-INCLUDE_DATA(dword_80074360);
-INCLUDE_DATA(dword_80074374);
-INCLUDE_DATA(dword_80074380);
-INCLUDE_DATA(dword_80074398);
-INCLUDE_DATA(dword_800743B4);
-INCLUDE_DATA(dword_800743CC);
+const char dword_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
+const char aConqueror_80074334[] = "\202b\202\217\202\216\202\221\202\225\202\205\202\222\202\217\202\222"; // Conqueror
+const char aVindicator_80074348[] = "\202u\202\211\202\216\202\204\202\211\202\203\202\201\202\224\202\217\202\222"; // Vindicator
+const char dword_80074360[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216"; // Champion
+const char dword_80074374[] = "\202g\202\205\202\222\202\217"; // Hero
+const char dword_80074380[] = "\202h\202\215\202\215\202\201\202\203\202\225\202\214\202\201\202\224\202\205"; // Immaculate
+const char dword_80074398[] = "\202`\202\204\202\205\202\220\202\224"; // Adept
+const char aNovice_800743A4[] = "\202m\202\217\202\226\202\211\202\203\202\205"; // Novice
+const char dword_800743B4[] = "\202`\202\220\202\220\202\222\202\205\202\216\202\224\202\211\202\203\202\205"; // Apprentice
+const CVECTOR dword_800743CC = { 128, 128, 128 };
 
 // Matched
 int sub_8002D738(int a0, int a1, int a2)
@@ -65,7 +69,7 @@ typedef struct
     short field_8;
     short ot;
 } struct_D7D0;
-extern CVECTOR dword_800743CC;
+extern const CVECTOR dword_800743CC;
 extern Pos16* off_80082DCC[7];
 extern Pos16 aHroto[12];
 extern Pos16 aNrutu[12];

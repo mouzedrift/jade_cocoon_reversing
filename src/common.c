@@ -16,12 +16,11 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "unit.h"
+#include "common_tu.h"
 
-INCLUDE_DATA(dword_80071F58);
-INCLUDE_DATA(dword_80071F5C);
-INCLUDE_DATA(dword_80071F60);
-INCLUDE_DATA(aAssertionFaile_2);
-INCLUDE_DATA(aCommonC);
+const struct_u8x12 dword_80071F58 = { { 0, 0, 100, 0, 255, 115, 0, 0, 10, 0, 3, 0 } };
+const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
+const char aCommonC[] = "COMMON.C";
 INCLUDE_DATA(byte_800793C4);
 INCLUDE_DATA(dword_800793C8);
 
@@ -161,11 +160,11 @@ typedef struct
     short field_24;
     short field_26;
 } ActionResult;
-extern char aAssertionFaile_2[];
-extern char aCommonC[];
+extern const char aAssertionFaile_2[];
+extern const char aCommonC[];
 extern unsigned char byte_800793C4[];
 extern unsigned char dword_800793C8[][4];
-extern struct_u8x12 dword_80071F58;
+extern const struct_u8x12 dword_80071F58;
 extern int sub_80031B30(int a0);
 extern int sub_80031A04(int a0, int a1);
 extern struct_12* sub_8001AD64(unsigned int idx);
@@ -394,4 +393,4 @@ int sub_80013228(int a0, int a1, int* p)
 }
 
 // zero word at the end of this TU's .rdata, in front of the jump table of sub_80013C28 (tu_80013358)
-INCLUDE_DATA(dword_800720E4);
+const int dword_800720E4 = 0;

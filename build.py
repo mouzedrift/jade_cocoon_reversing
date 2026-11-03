@@ -57,16 +57,9 @@ def read_lib_commons():
 
 
 def game_bss_end():
-    """end of the game's .bss: all of it is INCLUDE_DATA pieces (asm/d) behind the bss head"""
+    """end of the game's .bss (the PSY-Q modules' .bss follows); the game's variables are C (BSS) and INCLUDE_DATA pieces"""
     import layout
-    pos = layout.BSS_START
-    for c_file in c_files:
-        text = open(os.path.join(CURRENT_DIR, "src", c_file)).read()
-        for n in re.findall(r"INCLUDE_DATA\((\w+)\)", text):
-            s = open(os.path.join(CURRENT_DIR, "asm", "d", n + ".s")).read()
-            if "\t.section\t.bss" in s:
-                pos += sum(int(x) for x in re.findall(r"\t\.space\t(\d+)", s))
-    return pos
+    return layout.BSS_GAME_END
 
 
 def write_if_changed(path, text):

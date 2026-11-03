@@ -16,29 +16,12 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "unit.h"
+#include "tu_8002ECE0.h"
 
-INCLUDE_DATA(dword_800743D4);
-INCLUDE_DATA(dword_800743D8);
-INCLUDE_DATA(off_800743DC);
-INCLUDE_DATA(off_800743E0);
-INCLUDE_DATA(dword_800743E4);
-INCLUDE_DATA(dword_800743E8);
-INCLUDE_DATA(dword_800743EC);
-INCLUDE_DATA(dword_800743F0);
-INCLUDE_DATA(dword_800743F4);
-INCLUDE_DATA(off_800743F8);
-INCLUDE_DATA(off_800743FC);
-INCLUDE_DATA(dword_80074400);
-INCLUDE_DATA(dword_80074404);
-INCLUDE_DATA(dword_80074408);
-INCLUDE_DATA(dword_8007440C);
-INCLUDE_DATA(dword_80074410);
-INCLUDE_DATA(off_80074414);
-INCLUDE_DATA(off_80074418);
-INCLUDE_DATA(dword_8007441C);
-INCLUDE_DATA(dword_80074420);
-INCLUDE_DATA(dword_80074424);
-INCLUDE_DATA(dword_80074428);
+const Icon_F480 dword_800743D4 = { { 16, 0, 1, 0, 151, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 210, 172, 21, 20 }, 0x40003 };
+const Icon_F480 dword_800743F0 = { { 16, 0, 1, 0, 189, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50003 };
+const Icon_F480 dword_8007440C = { { 16, 0, 1, 0, 177, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50006 };
+const Mask_F480 dword_80074428 = { { 1, 0x3F8, 2 } };
 
 extern void sub_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
@@ -262,24 +245,10 @@ short sub_8002F424(unsigned char* p)
 }
 typedef struct
 {
-    char pad_0[0x10];
-    RECT r;
-    int field_18;
-} Icon_F480;
-typedef struct
-{
-    int m[3];
-} Mask_F480;
-typedef struct
-{
     unsigned short color;
     unsigned char b;
     unsigned char c;
 } TextParam_F480;
-extern Icon_F480 dword_800743D4;
-extern Icon_F480 dword_800743F0;
-extern Icon_F480 dword_8007440C;
-extern Mask_F480 dword_80074428;
 extern short uiColor_8008B590;
 extern void sub_8002ADB4(char* a0, int a1, int a2, int a3);
 // Matched

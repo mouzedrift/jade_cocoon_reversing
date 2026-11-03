@@ -16,20 +16,28 @@
 #include "sound.h"
 #include "soundtask.h"
 #include "data_decls.h"
+#include "tu_80030D00.h"
 
-INCLUDE_DATA(dword_8007447C);
-INCLUDE_DATA(dword_80074494);
-INCLUDE_DATA(dword_800744AC);
-INCLUDE_DATA(dword_800744C0);
-INCLUDE_DATA(dword_80074520);
-INCLUDE_DATA(dword_80074540);
-INCLUDE_DATA(dword_8007455C);
-INCLUDE_DATA(dword_800745A8);
-INCLUDE_DATA(dword_800745C4);
-INCLUDE_DATA(dword_800745D0);
-INCLUDE_DATA(dword_800745E8);
-INCLUDE_DATA(dword_80074600);
-INCLUDE_DATA(dword_80074610);
+const char dword_8007447C[] = "\202q\202\205\202\216\202\204\201@\202v\202\211\202\216\202\207\202\223"; // Rend Wings
+const char dword_80074494[] = "\202a\202\222\202\205\202\201\202\213\201@\202k\202\205\202\207\202\223"; // Break Legs
+const char dword_800744AC[] = "\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // Critical
+const char dword_800744C0[] = "\202`\202\214\202\214\201@\202d\202\216\202\205\202\215\202\211\202\205\202\223"; // All Enemies
+const char aAbsorbMana_800744D8[] = "\202`\202\202\202\223\202\217\202\222\202\202\201@\202l\202\201\202\216\202\201"; // Absorb Mana
+const char aAbsorbHP_800744F0[] = "\202`\202\202\202\223\202\217\202\222\202\202\201@\202g\202o"; // Absorb HP
+const char aDestroyMana_80074504[] = "\202c\202\205\202\223\202\224\202\222\202\217\202\231\201@\202l\202\201\202\216\202\201"; // Destroy Mana
+const char dword_80074520[] = "\202e\202\214\202\205\202\223\202\210\201@\202\224\202\217\201@\202r\202\224\202\217\202\216\202\205"; // Flesh to Stone
+const char dword_80074540[] = "\202r\202\214\202\205\202\205\202\220"; // Sleep
+const char aPoison_8007454C[] = "\202o\202\217\202\211\202\223\202\217\202\216"; // Poison
+const char dword_8007455C[] = "\202v\202\211\202\216\202\204\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Wind Attack
+const char aFireAttack_80074574[] = "\202e\202\211\202\222\202\205\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Fire Attack
+const char aWaterAttack_8007458C[] = "\202v\202\201\202\224\202\205\202\222\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Water Attack
+const char dword_800745A8[] = "\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Earth Attack
+const char dword_800745C4[] = "\201[\201[\201[\201["; // ーーーー
+const char dword_800745D0[] = "\201{\201@\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // + Critical
+const char dword_800745E8[] = "\201{\201@\202`\202\203\202\203\202\225\202\222\202\201\202\203\202\231"; // + Accuracy
+const char dword_80074600[] = "\201{\201@\202o\202\217\202\227\202\205\202\222"; // + Power
+const char dword_80074610[] = "\201[\201[\201["; // ーーー
+const int dword_80074618 = 0;
 
 // Matched
 void FreeSound_80030D00(SoundStruct* p)
@@ -412,4 +420,4 @@ int sub_800316EC(unsigned int a0, int a1)
     }
     return r;
 }
-INCLUDE_DATA(dword_800746B8);
+const int dword_800746B8 = 0;

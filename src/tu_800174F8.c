@@ -17,8 +17,9 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_obj.h"
+#include "tu_800174F8.h"
 
-INCLUDE_DATA(off_80072278);
+const int off_80072278[0] = {  };
 
 void sub_8001761C(int* a0, EffectObj* a1);
 // Matched

@@ -16,14 +16,16 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "tu_8003D198.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
 extern unsigned short padRepeat_800918CC[];
 extern void PlaySfx_80031494(int a1);
 
-INCLUDE_DATA(word_80074994);
-INCLUDE_DATA(dword_80074998);
+const unsigned short word_80074994[2] = { 0 };
+const TextBuf22 dword_80074998 = { { 0xFFFF } };
+const int dword_800749B0 = 0;
 
 // Matched
 int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
@@ -436,12 +438,6 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     return 0;
 }
-typedef struct
-{
-    unsigned short s[11];
-} TextBuf22;
-extern unsigned short word_80074994[];
-extern TextBuf22 dword_80074998;
 extern int textNumberArgs_80096038[];
 extern int dword_80086898[][12];
 extern void IntToText_8003F610(unsigned short* buf, int val);

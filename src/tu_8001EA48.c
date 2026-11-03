@@ -246,7 +246,7 @@ void sub_8001EA48(void* arg0)
         cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
-INCLUDE_DATA(dword_8007411C);
+INCLUDE_DATA(dword_8007411C); // the jump table of sub_80022B84 (asm)
 // Matched
 void sub_8001EFC4(Actor* p)
 {

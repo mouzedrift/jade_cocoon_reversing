@@ -18,7 +18,7 @@
 #include "tiy.h"
 #include "minion_menu.h"
 
-INCLUDE_DATA(dword_800741EC);
+const int dword_800741EC = 0;
 
 extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
@@ -292,7 +292,7 @@ typedef struct
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
 extern int sub_800AD308(int a0);
-extern int dword_800741EC;
+extern const int dword_800741EC;
 extern int dword_80082820;
 extern int dword_80082824;
 extern MenuItem_1C* off_800829E8[];

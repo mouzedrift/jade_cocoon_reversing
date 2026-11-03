@@ -15,10 +15,9 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002F6F8.h"
 
-INCLUDE_DATA(dword_8007442C);
-INCLUDE_DATA(dword_80074430);
-INCLUDE_DATA(dword_80074434);
+const NameBuf dword_80074434 = { { 0xFFFF } };
 
 
 typedef struct
@@ -143,11 +142,6 @@ short sub_8002FA70(void)
 {
     return sub_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
-typedef struct
-{
-    unsigned short s[11];
-} NameBuf;
-extern NameBuf dword_80074434;
 extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short MeasureTextWidth_8003E4C8(NameBuf* b);
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);

@@ -16,9 +16,9 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(name);
-INCLUDE_DATA(aAssertionFaile);
-INCLUDE_DATA(aMainC);
+const char name[] = "cdrom:\\SLUS_008.54;1";
+const char aAssertionFaile[] = "Assertion failed: file \"%s\", line %d\n";
+const char aMainC[] = "MAIN.C";
 INCLUDE_DATA(dword_8008B484);
 INCLUDE_DATA(dword_8008B488);
 INCLUDE_DATA(cdRomEventDescError_8008B490);

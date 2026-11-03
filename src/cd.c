@@ -16,14 +16,16 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "cd.h"
 
 extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
 
-INCLUDE_DATA(aDataData0011);
-INCLUDE_DATA(aAssertionFaile_1);
-INCLUDE_DATA(aCdC);
+const char aDataData0011[] = "\\DATA\\DATA.001;1";
+const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
+const char aCdC[] = "CD.C";
+const int dword_800748DC = 0;
 
 // Matched
 void sub_80039FA4(int a0)

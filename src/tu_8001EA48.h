@@ -679,5 +679,6 @@ typedef struct
 } MapList16;
 extern MapList16 dword_80091C60;
 
+
 #endif
 

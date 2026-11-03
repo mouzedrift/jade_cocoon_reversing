@@ -16,9 +16,11 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_obj.h"
+#include "effect.h"
 
-INCLUDE_DATA(aAssertionFaile_3);
-INCLUDE_DATA(aEffectC);
+const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
+const char aEffectC[] = "EFFECT.C";
+const int dword_80072134 = 0x80E8E8;
 INCLUDE_DATA(dword_800795A0);
 INCLUDE_DATA(dword_800795D0);
 INCLUDE_DATA(dword_800795D4);

@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80031870.h"
 
 
 
@@ -37,4 +38,4 @@ int sub_80031870(int a0)
     }
     return 0;
 }
-INCLUDE_DATA(dword_800746D0);
+const int dword_800746D0 = 0;

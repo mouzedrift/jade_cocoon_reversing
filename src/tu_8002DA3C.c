@@ -18,7 +18,7 @@
 #include "unit.h"
 #include "tu_8002DA3C.h"
 
-INCLUDE_DATA(dword_800743D0);
+const Color_EACC dword_800743D0 = { "```" };
 
 
 extern unsigned char dword_80082EBC[];
@@ -486,11 +486,6 @@ void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir)
         break;
     }
 }
-typedef struct
-{
-    unsigned char c[4];
-} Color_EACC;
-extern Color_EACC dword_800743D0;
 extern unsigned char dword_80082E9C[];
 extern unsigned char dword_80082EA0[];
 extern void sub_8001419C(unsigned char* p, short* out);

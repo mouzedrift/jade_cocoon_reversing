@@ -16,7 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_80074BA0);
+const CVECTOR dword_80074BA0 = { 128, 128, 128 };
 
 // Matched
 int sub_80041E68(int mode, int a, int b, int c)
@@ -34,7 +34,7 @@ int sub_80041E68(int mode, int a, int b, int c)
     }
     return -1;
 }
-extern CVECTOR dword_80074BA0;
+extern const CVECTOR dword_80074BA0;
 extern int byte_80086F9C[];
 extern int dword_80087070[][8];
 // Matched

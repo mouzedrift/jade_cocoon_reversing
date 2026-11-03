@@ -19,8 +19,8 @@
 #include "event.h"
 
 
-INCLUDE_DATA(aDWorkPsusEvent);
-extern char aDWorkPsusEvent[];
+const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";
+extern const char aDWorkPsusEvent[];
 #define malloc3_dbg ((void* (*)(int, const char*, int))malloc3_8003FC4C)
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
