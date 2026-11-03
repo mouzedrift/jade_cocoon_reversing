@@ -599,7 +599,52 @@ int sub_800BDBB8(int a)
     return (((MenuSaveView*)&saveData_8008B570)->flags_814[q] & (1 << r)) != 0;
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BDBFC);
+extern char name_800BB9C0[];
+extern void DrawText_8003E91C();
+extern void sub_8003F89C();
+void sub_800BDBFC(char* a, int page)
+{
+    short pos[2];
+    int cnt = 0;
+    int flag = 0;
+    int i = 0;
+    int hi = (page + 1) * 64;
+    int lo = page * 64;
+    char* buf = a + 0x64;
+    for (i = 0; i < 0xD3; i++)
+    {
+        if (sub_800BDD94(i) == 0)
+            continue;
+        if (cnt < hi && cnt >= lo)
+        {
+            pos[0] = (cnt % 4) * 72 + 0x12;
+            pos[1] = ((cnt - lo) / 4) * 10 + 0x2B;
+            DrawText_8003E91C(1, name_800BB9C0, pos, 0xE);
+        }
+        if (sub_800BDBB8(i) && cnt < hi && cnt >= lo)
+        {
+            MemCopy_800403E8((unsigned int*)buf, (unsigned int*)sub_800BDB74(i), 0x16);
+            pos[0] += 8;
+            if (buf)
+            {
+                sub_8003F89C(buf);
+                DrawText_8003E91C(1, buf, pos, 0xE);
+            }
+        }
+        if ((unsigned)(i - 0x24) < 5)
+        {
+            if (flag == 1)
+            {
+                if (i == 0x28)
+                    cnt++;
+            }
+            else
+                flag = 1;
+        }
+        else
+            cnt++;
+    }
+}
 
 // Not matched: 1 word, the delay slot of the last bnez holds "li v0,1" in the original (the final
 // fall-through returns no value); tried no final return, return;, uninitialised return var (gives
