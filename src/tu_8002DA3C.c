@@ -134,5 +134,46 @@ void sub_8002E288(unsigned int* a0, int a1, int a2, void* a3)
 }
 INCLUDE_ASM(sub_8002E334);
 INCLUDE_ASM(sub_8002E730);
-INCLUDE_ASM(sub_8002E944);
+extern unsigned char dword_80082EF0[];
+// Matched
+void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir)
+{
+    int n = dword_80082EF0[idx];
+    int w = 26;
+    switch (dir)
+    {
+    case 0:
+        p->x0 = pos[0] + w;
+        p->y0 = pos[1] + w;
+        p->x1 = p->x0;
+        p->y1 = pos[1] - (n - w) - 1;
+        p->x2 = pos[0] - (n - w) - 1;
+        p->y2 = p->y0;
+        break;
+    case 1:
+        p->x0 = pos[0];
+        p->y0 = pos[1] + w;
+        p->x1 = p->x0;
+        p->y1 = pos[1] - (n - w) - 1;
+        p->x2 = pos[0] + n;
+        p->y2 = p->y0;
+        break;
+    case 2:
+        p->x0 = pos[0];
+        p->y0 = pos[1];
+        p->x1 = p->x0;
+        p->y1 = pos[1] + n;
+        p->x2 = pos[0] + n;
+        p->y2 = p->y0;
+        break;
+    case 3:
+        p->x0 = pos[0] + w;
+        p->y0 = pos[1];
+        p->x1 = p->x0;
+        p->y1 = pos[1] + n;
+        p->x2 = pos[0] - (n - w);
+        p->y2 = p->y0;
+        break;
+    }
+}
 INCLUDE_ASM(sub_8002EACC);
