@@ -338,7 +338,6 @@ extern int personNames_8007CB20[];
 extern int dword_8007CB4C[];
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
-extern int dword_8008B500[];
 extern int dword_80091CA0;
 extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
@@ -348,7 +347,6 @@ extern MagicData magicData_8007C438[];
 extern struct_12 dword_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
-extern int dword_80091C60[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
 extern short word_80091D0C;
@@ -620,13 +618,11 @@ extern int memCardInfo_8008D4D8;
 extern short effectOutcomeFlag_8008D780;
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
-extern int dword_8008B500[];
 
 extern int dword_80091CA0;
 
 extern int dword_80091C30[];
 
-extern int dword_80091C60[];
 
 extern short word_8008B860;
 extern MATRIX dword_80098188[];

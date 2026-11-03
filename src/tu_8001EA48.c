@@ -3856,12 +3856,12 @@ void sub_80026FAC(void)
     dword_80091C30[1] = 0;
     dword_80091C30[2] = 0;
     dword_80091C30[3] = -1;
-    dword_8008B500[1] = 0;
-    dword_8008B500[2] = 0;
-    dword_8008B500[3] = 0;
-    dword_8008B500[10] = 0;
-    dword_8008B500[14] = 0;
-    dword_8008B500[15] = 0;
+    dword_8008B500.nMeshes_4 = 0;
+    dword_8008B500.f8_8 = 0;
+    dword_8008B500.meshes_C = 0;
+    dword_8008B500.mesh_28 = 0;
+    dword_8008B500.ftgCount_38 = 0;
+    dword_8008B500.ftg_3C = 0;
     dword_8008D648.count_0 = 0;
     dword_8008D648.field_4 = 0;
     dword_8008D648.field_8 = 0;
@@ -4116,14 +4116,14 @@ int sub_80027540(void)
     return 1;
 }
 // Matched
-void sub_800275E8(char** a0, int a1, int a2)
+void sub_800275E8(unsigned char** a0, int a1, int a2)
 {
-    char* p;
-    char* q;
+    unsigned char* p;
+    unsigned char* q;
     int i;
     if (a1 != 0)
     {
-        p = (char*)ListAlloc_8003FDC0(a2, a1);
+        p = ListAlloc_8003FDC0(a2, a1);
         *a0 = p;
         q = p;
         for (i = 0; i < a1; i++)
@@ -4136,25 +4136,25 @@ void sub_800275E8(char** a0, int a1, int a2)
 int* sub_80027650(int* a0, int a1, int h)
 {
     int* src;
-    int* d;
+    int (*d)[4];
     int n;
     int i;
-    int* g = dword_80091C60;
+    MapList16* g = &dword_80091C60;
     a0 += 1;
     n = *a0++;
     src = a0;
-    g[0] = n;
+    g->count_0 = n;
     if (n != 0)
     {
-        d = (int*)ListAlloc_8003FDC0(h, n * 16);
-        g[1] = (int)d;
-        for (i = 0; i < g[0]; i++)
+        d = ListAlloc_8003FDC0(h, n * 16);
+        g->items_4 = d;
+        for (i = 0; i < g->count_0; i++)
         {
-            d[0] = src[0];
-            d[1] = src[1];
-            d[2] = src[2];
-            d[3] = src[3];
-            d += 4;
+            (*d)[0] = src[0];
+            (*d)[1] = src[1];
+            (*d)[2] = src[2];
+            (*d)[3] = src[3];
+            d++;
             src += 4;
         }
     }
@@ -4164,11 +4164,11 @@ int* sub_80027650(int* a0, int a1, int h)
 void sub_80027708(int* a0, int a1)
 {
     int r = GetFtgObjectCount_80021738(a0);
-    dword_8008B500[0x38 / 4] = r;
+    dword_8008B500.ftgCount_38 = r;
     if (r != 0)
     {
-        AllocFtgObjects_80021744(&dword_8008B500[0x3C / 4], r, a1);
-        LoadFtgObjects_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
+        AllocFtgObjects_80021744((int*)&dword_8008B500.ftg_3C, r, a1);
+        LoadFtgObjects_80021824(a0, dword_8008B500.ftg_3C, dword_8008B500.ftgCount_38, a1, 0);
     }
 }
 // Matched
@@ -4640,8 +4640,8 @@ typedef struct
     PosRot pos;
 } SaveData7A8;
 extern void sub_800A5628(int a0, int* a1, int a2);
-extern void sub_800B73C0(int a0, int a1);
-extern int sub_800B76B8(char* a0, PosRot* a1);
+extern void sub_800B73C0(MapMesh* a0, int a1);
+extern int sub_800B76B8(MapMesh* a0, PosRot* a1);
 extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
@@ -4677,30 +4677,30 @@ void sub_80028808(void* a0, int* a1)
         sub_800A5628(a, p, c);
         p = (int*)((char*)p + c2);
     }
-    dword_8008B500[0] = saveData_8008B570.mapId_2E4[2].field_0;
-    dword_8008B500[1] = *p++;
-    dword_8008B500[2] = *p++;
+    dword_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
+    dword_8008B500.nMeshes_4 = *p++;
+    dword_8008B500.f8_8 = *p++;
     MemCopy_800403E8((unsigned int*)buf, (unsigned int*)p, 0x104);
-    p = sub_80027A88(&dword_8008B500[3], &dword_8008B500[1], &dword_80091C68, (char*)p + 0x104);
-    sub_800B73C0(dword_8008B500[3], dword_8008B500[1]);
-    p = sub_80027A88(&dword_8008B500[5], &dword_8008B500[4], &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500[5], dword_8008B500[4]);
-    sub_800275E8((char**)&dword_8008B500[6], dword_8008B500[4], (int)&dword_80091C68);
-    p = sub_80027A88(&dword_8008B500[10], &dword_8008B500[9], &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500[10], dword_8008B500[9]);
-    p = sub_80027A88(&dword_8008B500[12], &dword_8008B500[11], &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500[12], dword_8008B500[11]);
-    sub_800275E8((char**)&dword_8008B500[13], dword_8008B500[11], (int)&dword_80091C68);
-    p = sub_80027A88(&dword_8008B500[8], &dword_8008B500[7], &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500[8], dword_8008B500[7]);
+    p = sub_80027A88(&dword_8008B500.meshes_C, &dword_8008B500.nMeshes_4, &dword_80091C68, (char*)p + 0x104);
+    sub_800B73C0(dword_8008B500.meshes_C, dword_8008B500.nMeshes_4);
+    p = sub_80027A88(&dword_8008B500.ents_14, &dword_8008B500.nEnts_10, &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500.ents_14, dword_8008B500.nEnts_10);
+    sub_800275E8(&dword_8008B500.entFlags_18, dword_8008B500.nEnts_10, (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500.mesh_28, &dword_8008B500.nMesh_24, &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500.mesh_28, dword_8008B500.nMesh_24);
+    p = sub_80027A88(&dword_8008B500.ents_30, &dword_8008B500.nEnts_2C, &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500.ents_30, dword_8008B500.nEnts_2C);
+    sub_800275E8(&dword_8008B500.entFlags_34, dword_8008B500.nEnts_2C, (int)&dword_80091C68);
+    p = sub_80027A88(&dword_8008B500.meshes20_20, &dword_8008B500.nMeshes20_1C, &dword_80091C68, p);
+    sub_800B73C0(dword_8008B500.meshes20_20, dword_8008B500.nMeshes20_1C);
     cnt = p[0];
     sub_80027708(p, (int)&dword_80091C68);
     p = (int*)((char*)p + cnt);
     cnt = *p++;
     LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
     p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
-    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500[1] * 12);
-    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500[1] * 12);
+    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
+    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500.nMeshes_4 * 12);
     if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
     {
         ((void (*)(int))dword_80091CB4)(0);
@@ -4733,9 +4733,9 @@ void sub_80028808(void* a0, int* a1)
     }
     else
     {
-        for (i = 0; i < dword_8008B500[1]; i++)
+        for (i = 0; i < (int)dword_8008B500.nMeshes_4; i++)
         {
-            if (sub_800B76B8((char*)dword_8008B500[3] + i * 8, &((SaveData7A8*)&saveData_8008B570)->pos) >= 0)
+            if (sub_800B76B8(&dword_8008B500.meshes_C[i], &((SaveData7A8*)&saveData_8008B570)->pos) >= 0)
             {
                 saveData_8008B570.mapId_2E4[3].field_0 = i;
                 saveData_8008B570.mapId_2E4[3].field_2 = -1;

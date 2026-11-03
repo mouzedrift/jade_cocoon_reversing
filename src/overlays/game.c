@@ -1550,13 +1550,13 @@ extern int sub_800B330C(void);
 extern GameSpawnEnt_1* sub_800B2B40();
 extern short* name_800AE9DC[];
 extern GameSpawnEnt_1 name_800AE524[][3];
-void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned short* f);
+void sub_800A4DD0(int a, int b, MapList16* c, GameSpawnEnt_1* p, int* e, unsigned short* f);
 
 #if 0
 // Not matched (3 words long, registers differ): the original clears e[] with a scratch counter, keeps c in $s7 and
-// dword_800AEB6C in $fp, and leaves the 0x8000 loop unrotated (bottom "i < c[0]" exit, then a jump back to the
+// dword_800AEB6C in $fp, and leaves the 0x8000 loop unrotated (bottom "i < c->count_0" exit, then a jump back to the
 // "i < 3" test); the original also reloads *f for the == 0 test
-int sub_800A49CC(int a, int b, int* c, int* e)
+int sub_800A49CC(int a, int b, MapList16* c, int* e)
 {
     int n;
     unsigned short* f;
@@ -1613,7 +1613,7 @@ int sub_800A49CC(int a, int b, int* c, int* e)
     if (*f & 0x8000)
     {
         *f &= 0x7FFF;
-        for (i = 0; i < c[0]; i++, n++)
+        for (i = 0; i < c->count_0; i++, n++)
         {
             if (i >= 3)
             {
@@ -1624,7 +1624,7 @@ int sub_800A49CC(int a, int b, int* c, int* e)
     }
     else if (*f == 0)
     {
-        if (c[0] == 0)
+        if (c->count_0 == 0)
         {
             return n;
         }
@@ -1632,9 +1632,9 @@ int sub_800A49CC(int a, int b, int* c, int* e)
         {
             return n;
         }
-        if (c[0] < 3)
+        if (c->count_0 < 3)
         {
-            k = rand() % c[0];
+            k = rand() % c->count_0;
         }
         else
         {
@@ -1672,7 +1672,7 @@ int sub_800A49CC(int a, int b, int* c, int* e)
                 }
                 n++;
                 o[0] = (int)d;
-                o[3] = c[1] + j * 16;
+                o[3] = (int)&c->items_4[j];
                 o++;
             }
         }
@@ -1685,7 +1685,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A49CC);
 
 #if 0
 // Not matched: logic and bitfield layout right; callee-saved registers differ and b*5 / the table address get hoisted out of the loop, the original computes b*5 in the found path
-void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned short* f)
+void sub_800A4DD0(int a, int b, MapList16* c, GameSpawnEnt_1* p, int* e, unsigned short* f)
 {
     int r = rand() % 16;
     int i;
@@ -1720,7 +1720,7 @@ void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned shor
                 d[2].f4 = (q->v2 + k) << 26;
             }
             o[0] = (int)d;
-            o[3] = c[1] + b * 16;
+            o[3] = (int)&c->items_4[b];
             *f |= (unsigned short)(i | 0x10) << (b * 5);
             return;
         }

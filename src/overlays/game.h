@@ -8,6 +8,8 @@
 
 #include "actor.h"
 
+#include "tu_8001EA48.h"
+
 extern void sub_800A6D30(int a);
 
 struct GameObj5_1;

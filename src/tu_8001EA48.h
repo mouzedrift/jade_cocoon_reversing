@@ -558,4 +558,62 @@ typedef struct
     int mapPoint_84; // saveData_8008B570.mapId_2E4[3] after a map load
 } GameTaskState;
 
+
+// ---------------------------------------------------------------------------------------------
+// collision meshes of the current map (dword_8008B500, filled by sub_80028C60's loader)
+
+typedef struct MapVtx
+{
+    short x_0;
+    short y_2;
+    short z_4;
+    short pad_6;
+} MapVtx;
+
+typedef struct MapTri
+{
+    MapVtx v_0[3];
+    short nx_18;
+    short ny_1A;
+    short nz_1C;
+    char pad_1E[2];
+} MapTri;
+
+typedef struct MapMesh
+{
+    short nTris_0;
+    short pad_2;
+    MapTri* tris_4;
+} MapMesh;
+
+typedef struct MapState
+{
+    int id_0; // saveData_8008B570.mapId_2E4[2].field_0
+    unsigned int nMeshes_4;
+    int f8_8;
+    MapMesh* meshes_C; // the floor, one mesh per area (saveData mapId_2E4[3])
+    int nEnts_10;
+    MapMesh* ents_14; // walls
+    unsigned char* entFlags_18; // 1 = wall enabled
+    int nMeshes20_1C;
+    MapMesh* meshes20_20;
+    int nMesh_24;
+    MapMesh* mesh_28;
+    int nEnts_2C;
+    MapMesh* ents_30;
+    unsigned char* entFlags_34;
+    int ftgCount_38;
+    FtgObject* ftg_3C;
+} MapState;
+extern MapState dword_8008B500;
+
+// 16-byte records loaded with the map (sub_80027650)
+typedef struct
+{
+    int count_0;
+    int (*items_4)[4];
+} MapList16;
+extern MapList16 dword_80091C60;
+
 #endif
+

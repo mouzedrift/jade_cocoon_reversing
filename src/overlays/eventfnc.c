@@ -14,14 +14,14 @@ int sub_800B6DD4(EvEntEventfnc* o)
     int ret;
     int i;
     int found;
-    EvVtxEventfnc* vt;
+    MapVtx* vt;
     EvQuadEventfnc* q;
     EvQuadEventfnc* q2;
     int d;
     ret = 0;
     i = 0;
-    sub_800B82C8((int*)&levantPos_8008BD18, (int*)&o->pos_48, ((EvMapEventfnc*)dword_8008B500)->ents_14,
-                 ((EvMapEventfnc*)dword_8008B500)->entFlags_18, ((EvMapEventfnc*)dword_8008B500)->nEnts_10);
+    sub_800B82C8((int*)&levantPos_8008BD18, (int*)&o->pos_48, dword_8008B500.ents_14,
+                 dword_8008B500.entFlags_18, dword_8008B500.nEnts_10);
     o->f8C_8C = -1;
     o->f88_88 = -1;
     for (;;)
@@ -40,8 +40,8 @@ int sub_800B6DD4(EvEntEventfnc* o)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        sub_800B8220((int*)&levantPos_8008BD18, (int)&o->pos_48, (int)&((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
-        vt = ((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
+        sub_800B8220((int*)&levantPos_8008BD18, (int)&o->pos_48, (int)&dword_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
+        vt = dword_8008B500.meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[o->f8C_8C % 3].x_0;
         q->y_2 = vt[o->f8C_8C % 3].y_2;
@@ -52,7 +52,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
         q2->z_4 = vt[(o->f8C_8C + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4((int*)&levantPos_8008BD18, &((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84], o->f80_80);
+    GetTriHeight_800B83E4((int*)&levantPos_8008BD18, &dword_8008B500.meshes_C[o->f84_84], o->f80_80);
     if (o->f88_88 == -1)
     {
         return ret;
@@ -85,10 +85,10 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
     int t1;
     int i;
     int d;
-    EvVtxEventfnc* vt;
+    MapVtx* vt;
     EvQuadEventfnc* q;
     EvQuadEventfnc* q2;
-    if (!sub_800B82C8((int*)pos, a1, ((EvMapEventfnc*)dword_8008B500)->ents_30, ((EvMapEventfnc*)dword_8008B500)->entFlags_34, ((EvMapEventfnc*)dword_8008B500)->nEnts_2C))
+    if (!sub_800B82C8((int*)pos, a1, dword_8008B500.ents_30, dword_8008B500.entFlags_34, dword_8008B500.nEnts_2C))
     {
         return 3;
     }
@@ -97,7 +97,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
     i = 0;
     for (;;)
     {
-        if (EvFindTri(&tri, (EvMapEventfnc*)dword_8008B500, pos))
+        if (EvFindTri(&tri, &dword_8008B500, pos))
         {
             break;
         }
@@ -110,8 +110,8 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
             exit(1);
         }
-        sub_800B8220((int*)pos, (int)a1, (int)((EvMapEventfnc*)dword_8008B500)->mesh_28, &t0, &t1, n);
-        vt = ((EvMapEventfnc*)dword_8008B500)->mesh_28->tris_4[t0].v_0;
+        sub_800B8220((int*)pos, (int)a1, (int)dword_8008B500.mesh_28, &t0, &t1, n);
+        vt = dword_8008B500.mesh_28->tris_4[t0].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[t1 % 3].x_0;
         q->y_2 = vt[t1 % 3].y_2;
@@ -122,7 +122,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
         q2->z_4 = vt[(t1 + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4((int*)pos, ((EvMapEventfnc*)dword_8008B500)->mesh_28, tri);
+    GetTriHeight_800B83E4((int*)pos, dword_8008B500.mesh_28, tri);
     if (i == 2)
     {
         return 3;
@@ -145,7 +145,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
 
 INCLUDE_OVERLAY_ASM(eventfnc, MarkSharedEdges_800B73C0);
 
-int FindTriAtXZ_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* p)
+int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* p)
 {
     VECTOR e;
     VECTOR r;
@@ -228,9 +228,9 @@ INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
 
 void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* out)
 {
-    int t = (int)&((EvMeshEventfnc*)a)->tris_4[b];
-    EvVtxEventfnc* v0 = (EvVtxEventfnc*)(((c + 1) % 3) * 8 + t);
-    EvVtxEventfnc* v1 = (EvVtxEventfnc*)((c % 3) * 8 + t);
+    int t = (int)&((MapMesh*)a)->tris_4[b];
+    MapVtx* v0 = (MapVtx*)(((c + 1) % 3) * 8 + t);
+    MapVtx* v1 = (MapVtx*)((c % 3) * 8 + t);
     int d[3];
     int r[3];
     int len;
@@ -278,10 +278,10 @@ int FindLevantMesh_800B80C8(EvEntEventfnc* e)
     unsigned int i;
     unsigned int k = e->f84_84;
     int r;
-    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++, k++)
+    for (i = 0; i < dword_8008B500.nMeshes_4; i++, k++)
     {
-        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
+        k %= dword_8008B500.nMeshes_4;
+        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], &levantPos_8008BD18);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -298,10 +298,10 @@ int FindLevantMesh_800B80C8(EvEntEventfnc* e)
 int FindMeshAtPos_800B8184(EvVecEventfnc* pos, unsigned int k)
 {
     unsigned int i;
-    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++)
+    for (i = 0; i < dword_8008B500.nMeshes_4; i++)
     {
-        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
-        if (FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], pos) >= 0)
+        k %= dword_8008B500.nMeshes_4;
+        if (FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], pos) >= 0)
         {
             return k;
         }
@@ -318,7 +318,7 @@ void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
     p[2] -= a5[0] >> 10;
 }
 
-int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
+int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n)
 {
     int i;
     int t0;
@@ -330,10 +330,10 @@ int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
         {
             t1 = -1;
             t0 = -1;
-            sub_800B79E0((int)(ents + i * 8), a1, (int)p, &t0, &t1);
+            sub_800B79E0((int)&ents[i], a1, (int)p, &t0, &t1);
             if (t0 != -1 && t1 != -1)
             {
-                SlideAlongEdge_800B7E40(p, (int)(ents + i * 8), t0, t1, v);
+                SlideAlongEdge_800B7E40(p, (int)&ents[i], t0, t1, v);
                 p[0] -= v[2] >> 10;
                 p[2] += v[0] >> 10;
                 return 0;
@@ -343,9 +343,9 @@ int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n)
     return 1;
 }
 
-void GetTriHeight_800B83E4(int* v, EvMeshEventfnc* m, int i)
+void GetTriHeight_800B83E4(int* v, MapMesh* m, int i)
 {
-    EvTriEventfnc* t = &m->tris_4[i];
+    MapTri* t = &m->tris_4[i];
     v[1] = (t->ny_1A * t->v_0[0].y_2 - t->nx_18 * (v[0] - t->v_0[0].x_0) - t->nz_1C * (v[2] - t->v_0[0].z_4)) / t->ny_1A;
 }
 
@@ -361,7 +361,7 @@ void sub_800B844C(TaskEventfnc* t)
         s = (EvSaveEventfnc*)&saveData_8008B570;
         sp.f1A_1A = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f6_6;
         sp.f18_18 = tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EC_2EC].f6_6;
-        n = sub_800A49CC(tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f4_4, sp.f18_18, dword_80091C60, &sp);
+        n = sub_800A49CC(tbl[s->f2E4_2E4][s->f2E8_2E8][s->f2EE_2EE].f4_4, sp.f18_18, &dword_80091C60, &sp);
         for (i = 0; i < n; i++)
         {
             sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
@@ -1848,7 +1848,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
             hit = 0;
             if (c->pc_8->a_4 >= 0)
             {
-                hit = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes20_20[c->pc_8->a_4], lev) >= 0;
+                hit = FindTriAtXZ_800B76B8(&dword_8008B500.meshes20_20[c->pc_8->a_4], lev) >= 0;
             }
             else
             {

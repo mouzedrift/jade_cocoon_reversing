@@ -5,6 +5,7 @@
 #include "funcs.h"
 
 #include "globals.h"
+#include "tu_8001EA48.h"
 
 typedef struct EvInsEventfnc
 {
@@ -101,30 +102,6 @@ typedef struct EvObjEventfnc
     int f90_90;
 } EvObjEventfnc;
 
-typedef struct EvVtxEventfnc
-{
-    short x_0;
-    short y_2;
-    short z_4;
-    short pad_6;
-} EvVtxEventfnc;
-
-typedef struct EvTriEventfnc
-{
-    EvVtxEventfnc v_0[3];
-    short nx_18;
-    short ny_1A;
-    short nz_1C;
-    char pad_1E[2];
-} EvTriEventfnc;
-
-typedef struct EvMeshEventfnc
-{
-    short nTris_0;
-    short pad_2;
-    EvTriEventfnc* tris_4;
-} EvMeshEventfnc;
-
 typedef struct EvSaveEventfnc
 {
     char pad_0[0x2DC];
@@ -156,24 +133,6 @@ typedef struct EvQuadEventfnc
     short pad_6;
 } EvQuadEventfnc;
 
-typedef struct EvMapEventfnc
-{
-    int f0_0;
-    unsigned int nMeshes_4;
-    int f8_8;
-    EvMeshEventfnc* meshes_C;
-    int nEnts_10;
-    char* ents_14;
-    unsigned char* entFlags_18;
-    char pad_1C[4];
-    EvMeshEventfnc* meshes20_20;
-    int f24_24;
-    EvMeshEventfnc* mesh_28;
-    int nEnts_2C;
-    char* ents_30;
-    unsigned char* entFlags_34;
-} EvMapEventfnc;
-
 extern EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int a, int b);
 
 extern EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int a, int b);
@@ -203,15 +162,15 @@ extern char aAssertionFaile_800B6D04[];
 extern char aColiC_800B6D2C[];
 
 
-extern int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n);
+extern int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n);
 
 extern void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5);
 
 extern int FindDuplicatePoint_800B8028(int* out, EvQuadEventfnc* v);
 
-extern void GetTriHeight_800B83E4(int* v, EvMeshEventfnc* m, int i);
+extern void GetTriHeight_800B83E4(int* v, MapMesh* m, int i);
 
-static inline int EvFindTri(int* out, EvMapEventfnc* map, EvVecEventfnc* pos)
+static inline int EvFindTri(int* out, MapState* map, EvVecEventfnc* pos)
 {
     int r = FindTriAtXZ_800B76B8(map->mesh_28, pos);
     if (r >= 0)
@@ -222,7 +181,7 @@ static inline int EvFindTri(int* out, EvMapEventfnc* map, EvVecEventfnc* pos)
     return 0;
 }
 
-extern int FindTriAtXZ_800B76B8(EvMeshEventfnc* m, EvVecEventfnc* pos);
+extern int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* pos);
 
 // FindLevantMesh_800B80C8, inlined into sub_800B6DD4
 static inline int EvFindLevantMesh(EvEntEventfnc* e)
@@ -230,10 +189,10 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
     unsigned int i;
     unsigned int k = e->f84_84;
     int r;
-    for (i = 0; i < ((EvMapEventfnc*)dword_8008B500)->nMeshes_4; i++, k++)
+    for (i = 0; i < dword_8008B500.nMeshes_4; i++, k++)
     {
-        k %= ((EvMapEventfnc*)dword_8008B500)->nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&((EvMapEventfnc*)dword_8008B500)->meshes_C[k], &levantPos_8008BD18);
+        k %= dword_8008B500.nMeshes_4;
+        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], &levantPos_8008BD18);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -286,7 +245,7 @@ typedef struct EvSpawnEventfnc
 
 extern EvMapEntEventfnc** dword_800B0608[];
 
-extern int sub_800A49CC(int a, int b, int* c, EvSpawnEventfnc* d);
+extern int sub_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
 
 extern void sub_800B8568();
 

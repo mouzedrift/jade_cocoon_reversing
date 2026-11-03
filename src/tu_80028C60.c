@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -60,7 +61,7 @@ void sub_80028C60(int a0, char* a1)
     {
         LoadTiy_80028E74(0, 0, 0, (int*)(a1 + 4), (int)dword_80091C68);
     }
-    sub_800272BC(dword_8008B500[0], word_8008B860);
+    sub_800272BC(dword_8008B500.id_0, word_8008B860);
     if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
     {
         dword_80091CB4(1);
