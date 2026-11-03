@@ -133,7 +133,8 @@ typedef struct EvSaveEventfnc
     short pad_2EA;
     short f2EC_2EC;
     short f2EE_2EE;
-    char pad_2F0[0x7A8 - 0x2F0];
+    short f2F0_2F0;
+    char pad_2F2[0x7A8 - 0x2F2];
     int f7A8_7A8;
     int f7AC_7AC;
     int f7B0_7B0;
@@ -2524,6 +2525,93 @@ void sub_800BCB00(TaskEventfnc* t, int* x)
     t->next_8 = sub_800BCB3C;
 }
 
+extern void sub_800AC604(int a, int b);
+extern int sub_800AC768(void);
+extern void sub_800AC6A8(int a);
+extern int sub_8001AB94(void);
+extern void sub_8001AAA8(int a);
+extern int sub_800A8EC4(int* p);
+extern void sub_800A7720();
+extern short word_8008B858;
+extern short word_8008B860;
+extern int dword_80091C8C;
+#if 0
+// Not matched: the original jump table sits at 0x800B6DC0, 4 bytes after where cc1psx's .align 3 puts it (this function's .rdata looks 8-aligned on its own, as if from a separate TU); needs carve.py + a split of dword_800B6D4C at 0x800B6D98 for the table initializer
+extern int dword_800B0EC0;
+void sub_800BCB3C(TaskEventfnc* t, int* st)
+{
+    EvMsgEventfnc m;
+    unsigned short v[3];
+    EvSaveEventfnc* s;
+    int k;
+    switch (st[0])
+    {
+    case 0:
+        sub_800A1904();
+        sub_800A8E0C();
+        sub_800A8DEC();
+        sub_800AC604(st[1], 0);
+        st[0] = 1;
+        break;
+    case 1:
+        if (sub_800AC768())
+        {
+            st[0] = 2;
+        }
+        break;
+    case 2:
+        if (sub_800A8E7C())
+        {
+            st[0] = 3;
+        }
+        break;
+    case 3:
+        if (sub_800A8FE0())
+        {
+            m.m0_0 = 0;
+            m.m4_4 = 9;
+            m.m8_8 = 0;
+            m.mC_C = st[1];
+            m.m10_10 = 0;
+            m.m14_14 = 1;
+            sub_800A8EC4((int*)&m);
+            sub_8001AAA8(0x3C);
+            st[0] = 4;
+        }
+        break;
+    case 4:
+        if (sub_8001AB94())
+        {
+            sub_800AC6A8(st[1]);
+            sub_800A8E38();
+            s = (EvSaveEventfnc*)&saveData_8008B570;
+            if (s->f2E4_2E4 == 4 && s->f2E8_2E8 == 0 && dword_800B0608[4][0][s->f2EC_2EC].f4_4 == 0)
+            {
+                int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
+                k = tbl2[word_8008B860];
+            }
+            else
+            {
+                k = word_8008B858 + 4;
+            }
+            sub_800AD16C(4, k);
+            sub_800ADCEC(v, sub_800A683C(-1));
+            dword_80091C9C = 1;
+            dword_80091C94 = 1;
+            dword_80091C54 = 0;
+            dword_80091C8C = 0;
+            dword_800B0EC0 = 1;
+            s->f2F0_2F0 = 0;
+            s->f2E4_2E4 = v[0];
+            s->f2E8_2E8 = v[1];
+            s->f2EC_2EC = v[2];
+            unknownFlags_8008D678 &= ~0x20000;
+            t->next_8 = sub_800A7720;
+        }
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCB3C);
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800BCDBC);
