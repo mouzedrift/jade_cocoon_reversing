@@ -80,6 +80,18 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 
+typedef struct MenuLoc
+{
+    short a;
+    short b;
+    short c;
+    short d;
+    int e;
+    short f;
+    short pad_1E;
+    int g;
+} MenuLoc;
+
 typedef struct MenuEnt
 {
     char pad_0[4];
@@ -334,7 +346,99 @@ void sub_800BC24C(MenuTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(menu, sub_800BC2A8);
+extern void sub_8002E334();
+extern void sub_8002FD0C();
+extern void sub_8002F8E4();
+extern void AddClipDrawAreaPrim_80033308();
+extern void sub_800BC934(int a, int b);
+typedef struct MenuPartyQ
+{
+    short x;
+    short y;
+    int f4;
+    int f8;
+} MenuPartyQ;
+void sub_800BC2A8(MenuMain* c)
+{
+    short pos[2];
+    MenuPartyQ q20;
+    MenuPartyQ q30;
+    MenuLoc loc;
+    void* st;
+    short i;
+    pos[0] = 0xA;
+    pos[1] = 0x2C;
+    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
+    if (!(c->f0 & 2))
+        st = &c->st_8C[0];
+    else
+        st = levantStatus_8008BD38;
+    pos[0] = 0xA;
+    pos[1] = 0x2C;
+    if (c->a7C[0] && !(c->f0 & 2))
+    {
+        q20.x = 0xE;
+        q20.y = 8;
+        q20.f4 = 1;
+        q20.f8 = frameCount_8008D3FC;
+        sub_8002E334(st, &q20);
+        sub_8002FD0C(0xE, 8, 1, 1, 0);
+    }
+    else
+    {
+        q30.x = 0xE;
+        q30.y = 8;
+        q30.f4 = 0;
+        q30.f8 = 0;
+        sub_8002E334(st, &q30);
+        sub_8002FD0C(0xE, 8, 0, 0, 0);
+    }
+    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
+    for (i = 0; i < c->count_44 - 1; i++)
+    {
+        int g = 0;
+        int e = 0;
+        short cv = -1;
+        int m = 1 << (i + 2);
+        if (c->f0 & m)
+        {
+            st = name_80014390((unsigned char)(i + 1));
+        }
+        else
+        {
+            st = &c->st_8C[i + 1];
+            if (c->a7C[i + 1])
+            {
+                g = 1;
+                e = frameCount_8008D3FC;
+                cv = i;
+            }
+        }
+        loc.a = 8;
+        loc.b = c->count_44 - 1;
+        loc.c = cv;
+        loc.d = 0xE;
+        loc.e = e;
+        loc.f = i;
+        loc.g = g;
+        sub_8002F8E4(st, &loc);
+    }
+    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x38);
+    for (i = 0; i < c->count_44; i++)
+    {
+        if (c->a7C[i])
+        {
+            int m = 1 << (i + 1);
+            if (!(c->f0 & m))
+            {
+                if (i == 0)
+                    sub_800BC8A8();
+                else
+                    sub_800BC934(i, (short)(c->count_44 - 1));
+            }
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BC56C);
 
@@ -1157,17 +1261,6 @@ void sub_800BEC8C(int unused, int a, short b)
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
-typedef struct MenuLoc
-{
-    short a;
-    short b;
-    short c;
-    short d;
-    int e;
-    short f;
-    short pad_1E;
-    int g;
-} MenuLoc;
 extern void sub_8002F8E4();
 void sub_800BEFAC(MenuCtx* a, short b)
 {
