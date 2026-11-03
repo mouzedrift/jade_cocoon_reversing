@@ -79,6 +79,14 @@ typedef struct MenuQ
 {
     int w[4];
 } MenuQ;
+
+typedef struct MenuQuad
+{
+    short a;
+    short b;
+    unsigned short c;
+    short d;
+} MenuQuad;
 extern char name_800C18F4[];
 extern void DrawLargeTextBox_8002AF10();
 extern void sub_8002F1C8();
@@ -1166,7 +1174,104 @@ void sub_800BF3E0(MenuCtx* c)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BF3E0);
 
+typedef struct MenuUseQ
+{
+    short a;
+    short b;
+    short c;
+    short d;
+    short e;
+    short f;
+    int g;
+} MenuUseQ;
+extern int CheckItemUsable_80033AFC();
+extern int sub_80033DF4();
+extern int sub_800AD73C();
+extern int sub_800A5E80();
+extern int sub_800C1000();
+// Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
+// slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
+// tried a single ret variable (goes to a saved reg), && in the 14 tail, case order 6/7/4 fall-through
+#if 0
+int sub_800BF540(MenuCtx* c)
+{
+    MenuUseQ q;
+    MenuQuad q2;
+    short r;
+    short s;
+    switch (c->sel_2)
+    {
+    case 1:
+        q.a = c->arr_2A[3];
+        q.b = c->arr_46[0];
+        q.c = 0;
+        q.d = 0;
+        q.e = 0;
+        q.f = 1;
+        q.g = 0;
+        r = CheckItemUsable_80033AFC(&q);
+        if (r == 1)
+            return 1;
+        if (r <= 0)
+            return 0;
+        return (r < 4) ? 2 : 0;
+    case 2:
+        s = c->arr_2A[3] + c->arr_46[0];
+        if (sub_800AD2C8(s, 0) == 0)
+            return 1;
+        q2.a = sub_800AD288(s, 0);
+        q2.b = 0;
+        q2.c = c->arr_2A[5];
+        q2.d = 1;
+        r = sub_80033DF4(&q2);
+        switch (r)
+        {
+        case 2:
+            return 0xA;
+        case 1:
+            return 0xB;
+        case 4:
+            return 0xC;
+        case 3:
+            return 0xD;
+        }
+        return 0;
+    case 6:
+        if (c->f60 == 2)
+            return 0xF;
+        if (c->f60 != 0)
+            return 0;
+        if (c->fC != 0)
+            return 0;
+        return 9;
+    case 7:
+        if ((unsigned short)c->f60 - 2 >= 2u)
+            return 0;
+    case 4:
+        return 0xF;
+    case 14:
+    {
+        int v;
+        s = sub_800AD7F8((short)((unsigned short)c->arr_2A[4] + (unsigned short)c->arr_46[1]));
+        if (sub_800AD73C(s) == 0)
+            return 3;
+        if (sub_8001D36C(s))
+            return 0xE;
+        if (s)
+            v = sub_800A5E80(s);
+        else
+            v = sub_80034140();
+        if (v != 0 && sub_800C1000() != 0)
+            return 0;
+        return 2;
+    }
+    }
+    return 0;
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BF540);
+INCLUDE_OVERLAY_ASM(menu, jpt_800BBB08);
+INCLUDE_OVERLAY_ASM(menu, dword_800BBB40);
 
 extern int name_800C18FC[];
 extern char name_800B6838[];
@@ -1727,13 +1832,6 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
 
 
-typedef struct MenuQuad
-{
-    short a;
-    short b;
-    unsigned short c;
-    short d;
-} MenuQuad;
 
 extern int sub_80033DF4();
 void sub_800C0CA4(MenuCtx* c, int* out)
