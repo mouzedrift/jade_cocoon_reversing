@@ -9,6 +9,23 @@ extern int cardSaveCount_800BE150;
 extern int dword_800BE174;
 extern int (*dword_800BE294[])();
 extern char* cardSaveNames_800BE188[];
+// saveData_8008B570 with the fields SaveData (globals.h) does not have yet
+typedef struct
+{
+    int field_0;
+    char pad_4[0x2DE];
+    short f2E2_LOAD;
+    short f2E4_LOAD;
+    short f2E6_LOAD; // mapId_2E4[0].field_2
+    short f2E8_LOAD;
+    short f2EA_LOAD;
+    short f2EC_LOAD;
+    short f2EE_LOAD;
+    short f2F0_LOAD;
+    short f2F2_LOAD;
+    char pad_2F4[0x51C];
+    int f810_LOAD; // == dword_8008BD80
+} SaveView_LOAD;
 // a task (EventEntry of the event lists) as its callbacks see it
 typedef struct
 {
@@ -27,7 +44,6 @@ extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long by
 extern void LoadMenuInit_800B7674(int mode, int b);
 extern void sub_800B7894();
 extern int uiTiyLoaded_8008B4E8;
-extern int dword_8008B570[];
 extern char* dword_800BDECC[];
 extern char* dword_800BDEDC[];
 extern char* dword_800BDEEC[];
@@ -369,8 +385,8 @@ void sub_800B78B8(int v)
 void sub_800B78D0(void)
 {
     LoadTask_LOAD* t;
-    dword_8008B570[516] = -1;
-    dword_8008B570[0] |= 0x180;
+    ((SaveView_LOAD*)&saveData_8008B570)->f810_LOAD = -1;
+    saveData_8008B570.field_0 |= 0x180;
     t = dword_8008D480->entry.buffer;
     t->s30_LOAD = 1;
     stru_800BDF4C[0].fC_LOAD = 0;
@@ -1183,12 +1199,12 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
         }
         if (s->f54_LOAD & 1)
         {
-            short* m = (short*)&saveData_8008B570;
-            m[0x2E2 / 2] = -1;
-            m[0x2E6 / 2] = -1;
-            m[0x2EA / 2] = -1;
-            m[0x2EE / 2] = -1;
-            m[0x2F2 / 2] = -1;
+            SaveView_LOAD* m = (SaveView_LOAD*)&saveData_8008B570;
+            m->f2E2_LOAD = -1;
+            m->f2E6_LOAD = -1;
+            m->f2EA_LOAD = -1;
+            m->f2EE_LOAD = -1;
+            m->f2F2_LOAD = -1;
             dword_80091C54 = 0;
             if (!(s->f54_LOAD & 4))
             {
