@@ -1177,38 +1177,35 @@ void sub_80039E14(void)
     word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
     sub_8004D0E8();
 }
-#if 0
-// Not matched: target is a symbol at 0x8008D540 (inside stru_8008D534, data split lives in main.c); also needs its jump table via config/c_rodata.txt (dword_80074864 0x20)
+// Matched
 void sub_80039ED8(int mode)
 {
     switch ((short)(mode + 1))
     {
     case 0:
-        stru_8008D534.v[0] = 0x800;
-        stru_8008D534.v[1] = 0x800;
-        stru_8008D534.v[2] = 0x800;
+        ((short*)stru_8008D534)[6] = 0x800;
+        ((short*)stru_8008D534)[7] = 0x800;
+        ((short*)stru_8008D534)[8] = 0x800;
         break;
     case 1:
-        stru_8008D534.v[0] = 0x1000;
-        stru_8008D534.v[1] = 0;
-        stru_8008D534.v[2] = 0x6B0;
+        ((short*)stru_8008D534)[6] = 0x1000;
+        ((short*)stru_8008D534)[7] = 0;
+        ((short*)stru_8008D534)[8] = 0x6B0;
         break;
     case 4:
-        stru_8008D534.v[0] = 0x150;
-        stru_8008D534.v[1] = 0;
-        stru_8008D534.v[2] = 0x1000;
+        ((short*)stru_8008D534)[6] = 0x150;
+        ((short*)stru_8008D534)[7] = 0;
+        ((short*)stru_8008D534)[8] = 0x1000;
         break;
     case 3:
-        stru_8008D534.v[0] = 0;
-        stru_8008D534.v[1] = 0x1000;
-        stru_8008D534.v[2] = 0x940;
+        ((short*)stru_8008D534)[6] = 0;
+        ((short*)stru_8008D534)[7] = 0x1000;
+        ((short*)stru_8008D534)[8] = 0x940;
         break;
     case 2:
-        stru_8008D534.v[0] = 0xEB0;
-        stru_8008D534.v[1] = 0x1000;
-        stru_8008D534.v[2] = 0;
+        ((short*)stru_8008D534)[6] = 0xEB0;
+        ((short*)stru_8008D534)[7] = 0x1000;
+        ((short*)stru_8008D534)[8] = 0;
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_80039ED8);

@@ -220,39 +220,23 @@ void sub_8003B684(int* v)
     }
 }
 #if 0
-// Not matched (33 words): register assignment of the abs() temporaries
+// Not matched: sum/ok get t3/t2 instead of t2/t3, plus the dx*dx/dy*dy mflo registers (11 words)
 int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
     int sum = -1;
-    int ok = 0;
     unsigned int r = *c;
-    int t;
-    int dx;
-    int dy;
-    int dz;
-    t = a[0] - b[0];
-    dx = t;
-    if (t < 0)
+    int ok = 0;
+    unsigned int dx;
+    unsigned int dy;
+    unsigned int dz;
+    dx = abs(a[0] - b[0]);
+    if (r >= dx)
     {
-        dx = -dx;
-    }
-    if (r >= (unsigned int)dx)
-    {
-        t = a[1] - b[1];
-        dy = t;
-        if (t < 0)
+        dy = abs(a[1] - b[1]);
+        if (r >= dy)
         {
-            dy = -dy;
-        }
-        if (r >= (unsigned int)dy)
-        {
-            t = a[2] - b[2];
-            dz = t;
-            if (t < 0)
-            {
-                dz = -dz;
-            }
-            if (r >= (unsigned int)dz)
+            dz = abs(a[2] - b[2]);
+            if (r >= dz)
             {
                 sum = dx * dx + dy * dy + dz * dz;
                 ok = !(r * r < (unsigned int)sum);
@@ -262,7 +246,6 @@ int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
     *c = sum;
     return ok;
 }
-
 #endif
 INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
