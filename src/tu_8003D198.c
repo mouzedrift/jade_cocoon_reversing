@@ -402,7 +402,8 @@ void InitFonts_8003DA70(void)
 }
 extern void AddClipTexWindowPrim_80033308(unsigned long* ot);
 extern void AddTexWindowPrim_8003326C(void* p, unsigned long* ot);
-extern void sub_8003DCA4(int a, unsigned int* w);
+typedef struct TextWindow TextWindow;
+void sub_8003DCA4(int draw, TextWindow* w);
 // Matched
 int sub_8003DB74(unsigned int* w, int a)
 {
@@ -417,7 +418,7 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     w[8] = w[7];
     AddClipTexWindowPrim_80033308(pOT_8008D454);
-    sub_8003DCA4(a, w);
+    sub_8003DCA4(a, (TextWindow*)w);
     AddTexWindowPrim_8003326C(w + 1, pOT_8008D454);
     switch (w[10])
     {
@@ -436,7 +437,184 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     return 0;
 }
-INCLUDE_ASM(sub_8003DCA4);
+typedef struct
+{
+    unsigned short s[11];
+} TextBuf22;
+extern unsigned short word_80074994[];
+extern TextBuf22 dword_80074998;
+extern int dword_80096038[];
+extern int dword_80086898[][12];
+extern void IntToText_8003F610(unsigned short* buf, int val);
+extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
+struct TextWindow
+{
+    short x;
+    short y;
+    char pad_4[8];
+    int* lines;
+    int ot;
+    char pad_14[8];
+    int limit;
+    char pad_20[8];
+    int state;
+    signed char flags[1];
+};
+// Matched
+void sub_8003DCA4(int draw, TextWindow* w)
+{
+    unsigned short num[12];
+    TextBuf22 name;
+    int limit;
+    int count;
+    int y;
+    Font* f;
+    unsigned short* s;
+    unsigned short* sub;
+    int* lines;
+    int nl;
+    int x;
+    int ci;
+    unsigned short c;
+    short k;
+    int i;
+    int n;
+    int col;
+
+    sub = word_80074994;
+    count = 0;
+    name = dword_80074998;
+    x = w->x;
+    y = w->y;
+    f = &fonts_80095FB0[2];
+    lines = w->lines;
+    limit = w->limit;
+    nl = 0;
+    while (*lines != 0)
+    {
+        s = EncodeText_8003F684(2, (unsigned short*)*lines++);
+        while (*s != 0 || *sub != 0)
+        {
+            if (count >= limit)
+            {
+                goto done;
+            }
+            if (*sub != 0)
+            {
+                c = *sub++;
+            }
+            else
+            {
+                c = *s++;
+            }
+            ci = c;
+            if (c < 0x7F)
+            {
+                if (draw)
+                {
+                    f->clut_E = GetClut(f->clutX_20, f->clutY_22 + (ci - 1) / (unsigned short)f->field_28 + (unsigned short)f->field_2A);
+                    n = (ci - 1) % (unsigned short)f->field_28;
+                    col = n % (unsigned short)f->field_1C;
+                    n = n / (unsigned short)f->field_1C;
+                    f->x0_8 = x;
+                    f->y0_A = y;
+                    f->u_C = f->field_18 + f->w_10 * col;
+                    f->v_D = f->field_1A + f->h_12 * n;
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f)[0];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f)[1];
+                    count++;
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)f)[2];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)f)[3];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)f)[4];
+                    addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+                    for (k = 12; k != 0; k--)
+                    {
+                        if (ci - 1 < dword_80086898[1][k - 1])
+                        {
+                            x -= k;
+                            break;
+                        }
+                    }
+                    x += f->w_10;
+                }
+            }
+            else
+            {
+                switch (ci)
+                {
+                case -1:
+                    break;
+                case 0x81:
+                    sub_8003F900(2, 3);
+                    break;
+                case 0x7F:
+                    sub_8003F900(2, 0);
+                    break;
+                case 0x80:
+                case 0x82:
+                case 0x83:
+                case 0x84:
+                case 0x85:
+                    sub_8003F900(2, c - 0x7F);
+                    break;
+                case 0x86:
+                case 0x87:
+                    if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                    {
+                        DecodeText_8003F748(1, name.s);
+                    }
+                    sub = EncodeText_8003F684(2, name.s);
+                    break;
+                case 0x88:
+                case 0x89:
+                case 0x8A:
+                case 0x8B:
+                case 0x8C:
+                    IntToText_8003F610(num, dword_80096038[c - 0x88]);
+                    sub = EncodeText_8003F684(2, num);
+                    break;
+                case 0xC1:
+                case 0xC2:
+                    nl = 1;
+                    break;
+                case 0x91 ... 0xC0:
+                    {
+                        for (i = 0; i < (int)(c - 0x91); i++)
+                        {
+                            w->flags[i] = -2;
+                        }
+                        if (w->flags[c - 0x91] == -1)
+                        {
+                            w->flags[c - 0x91] = c - 0x91;
+                        }
+                        nl = 1;
+                    }
+                    break;
+                }
+            }
+        }
+        if (nl == 1)
+        {
+            nl = 0;
+        }
+        else
+        {
+            x = w->x;
+            y += 12;
+        }
+    }
+    w->state = 10;
+done:
+    if (draw)
+    {
+        sub_8003F900(2, 0);
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f->tpage_14)[0];
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f->tpage_14)[1];
+        addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    }
+}
 // Matched
 void sub_8003E268(unsigned short* p)
 {
@@ -516,16 +694,7 @@ int sub_8003E484(int a0)
     }
     return 0;
 }
-typedef struct
-{
-    unsigned short s[11];
-} TextBuf22;
-extern unsigned short word_80074994[];
-extern TextBuf22 dword_80074998;
-extern int dword_80096038[];
 extern int sub_8003E884(int idx, short n);
-extern void IntToText_8003F610(unsigned short* buf, int val);
-extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
 // Matched
 int sub_8003E4C8(int str)
 {

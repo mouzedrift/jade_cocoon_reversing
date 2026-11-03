@@ -189,9 +189,83 @@ void sub_800429F8(int a0, int a1)
         sub_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
     }
 }
+extern POLY_FT4* dword_8008D430;
+extern DR_TPAGE* dword_8008D440;
+#define EVT_SPRT ((SPRT*)dword_8008D434)
 #if 0
+// Not matched: register allocation (g/the sprite base gets $t7 instead of $s2, shifting the temporaries of the rect setup)
 void sub_80042B38(int a0, int a1)
 {
+    short* p = (short*)a0;
+    RECT r[8];
+
+    if (p[2] >= EVT_SPRT[79].w + EVT_SPRT[82].w && p[3] >= EVT_SPRT[79].h + EVT_SPRT[82].h)
+    {
+        r[0].w = EVT_SPRT[79].w;
+        r[0].h = EVT_SPRT[79].h;
+        r[1].w = EVT_SPRT[82].w;
+        r[1].h = EVT_SPRT[82].h;
+        r[2].w = EVT_SPRT[80].w;
+        r[2].h = EVT_SPRT[80].h;
+        r[3].w = EVT_SPRT[81].w;
+        r[3].h = EVT_SPRT[81].h;
+        r[4].w = EVT_SPRT[86].w;
+        r[4].h = EVT_SPRT[86].h;
+        r[5].w = EVT_SPRT[83].w;
+        r[5].h = EVT_SPRT[83].h;
+        r[6].w = EVT_SPRT[84].w;
+        r[6].h = EVT_SPRT[84].h;
+        r[7].w = EVT_SPRT[85].w;
+        r[7].h = EVT_SPRT[85].h;
+
+        r[0].x = p[0];
+        r[0].y = p[1];
+        r[4].x = r[0].x + r[0].w;
+        r[4].y = p[1];
+        r[4].w = p[2] - (r[0].w + r[1].w);
+        r[1].x = r[4].x + r[4].w;
+        r[1].y = p[1];
+        r[6].x = p[0];
+        r[6].y = r[0].y + r[0].h;
+        r[6].w = r[6].w - 1;
+        r[6].h = p[3] - (r[0].h + r[2].h);
+        r[7].x = p[0] + p[2] - r[7].w;
+        r[7].y = r[1].y + r[1].h;
+        r[7].w = r[7].w - 1;
+        r[7].h = r[6].h;
+        r[2].x = p[0];
+        r[2].y = r[6].y + r[6].h;
+        r[5].x = r[2].x + r[2].w;
+        r[5].y = p[1] + p[3] - r[5].h;
+        r[5].w = r[4].w;
+        r[3].x = r[5].x + r[5].w;
+        r[3].y = r[2].y;
+
+        EVT_SPRT[79].x0 = r[0].x;
+        EVT_SPRT[79].y0 = r[0].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[79], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D440[79], 2);
+        EVT_SPRT[82].x0 = r[1].x;
+        EVT_SPRT[82].y0 = r[1].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[82], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D440[82], 2);
+        EVT_SPRT[80].x0 = r[2].x;
+        EVT_SPRT[80].y0 = r[2].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[80], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D440[80], 2);
+        EVT_SPRT[81].x0 = r[3].x;
+        EVT_SPRT[81].y0 = r[3].y;
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &EVT_SPRT[81], 5);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D440[81], 2);
+        setXYWH(&dword_8008D430[86], r[4].x, r[4].y, r[4].w, r[4].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D430[86], 10);
+        setXYWH(&dword_8008D430[83], r[5].x, r[5].y, r[5].w, r[5].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D430[83], 10);
+        setXYWH(&dword_8008D430[84], r[6].x, r[6].y, r[6].w, r[6].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D430[84], 10);
+        setXYWH(&dword_8008D430[85], r[7].x, r[7].y, r[7].w, r[7].h);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)a1, &dword_8008D430[85], 10);
+    }
 }
 #endif
 INCLUDE_ASM(sub_80042B38);
