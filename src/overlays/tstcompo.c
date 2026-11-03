@@ -112,52 +112,37 @@ void sub_800A1320(int* a)
 
 extern int name_80010A10(int);
 extern int name_80010A44(int);
-extern int name_800A2784;
 extern void sub_800A1AFC(int* a);
-#if 0 // near miss: store scheduling
 void sub_800A1354(int* a)
 {
-    int v;
     if (name_80010A10(0))
     {
         a[1] = name_80010A44(0);
         sub_800A1AFC(a);
         a[0x188 / 4] = -1;
         a[0x198 / 4] = 0;
-        v = name_800A2784;
+        a[0x19C / 4] = name_800A2768[7];
         a[0] = 3;
-        a[0x19C / 4] = v;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1354);
 
 extern int name_80024DC4(int);
-#if 0
 void sub_800A13B8(int* a)
 {
     if (name_80024DC4(a[1]))
     {
         if (a[0x188 / 4] <= 0)
         {
-            int i = 0;
+            int i;
             char* b = (char*)a[1];
-            int n;
-            int m = n = *(unsigned short*)(b + 0x3E);
-            a[0x188 / 4] = n;
-            if (m != 0)
+            a[0x188 / 4] = *(unsigned short*)(b + 0x3E);
+            for (i = 0; i < a[0x188 / 4]; i++)
             {
-                char* base = *(char**)(b + 0x44);
-                do
+                if ((*(unsigned char**)(a[1] + 0x44))[i] != 0)
                 {
-                    int c = base[i];
-                    i++;
-                    if (c != 0)
-                    {
-                        a[0x184 / 4] = i;
-                        break;
-                    }
-                } while (i < m);
+                    a[0x184 / 4] = i;
+                    break;
+                }
             }
         }
         else
@@ -167,8 +152,6 @@ void sub_800A13B8(int* a)
         a[0] = 4;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A13B8);
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1468);
 
@@ -191,28 +174,21 @@ typedef struct TstCompoC
     int f204;
 } TstCompoC;
 
-#if 0 // near miss: original keeps the argument in a2 (register allocation)
 void sub_800A194C(TstCompoC* c)
 {
-    unsigned short pad = padPressed_8009194C;
-    if (pad & 0x800)
+    if (padPressed_8009194C & 0x800)
     {
         c->state = 6;
     }
-    else if (pad & 0x20)
+    else if (padPressed_8009194C & 0x20)
     {
-        int x = c->f184;
-        int y = c->f180;
-        int z = x;
         c->state = 5;
         c->f1FC = 0;
-        c->f18C = x;
-        c->f200 = y;
-        c->f204 = z;
+        c->f18C = c->f184;
+        c->f200 = c->f180;
+        c->f204 = c->f184;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A194C);
 
 extern unsigned short padPressed_8009194C;
 typedef struct TstCompoE
@@ -340,7 +316,6 @@ int sub_800A200C()
     return 6;
 }
 
-#if 0 // near miss: loop pointer strength reduction differs
 typedef struct TstCompoEnt
 {
     unsigned short a;
@@ -355,12 +330,13 @@ void sub_800A2030(int p, TstCompoEnt* e, int idx)
     unsigned short t[2];
     if (e)
     {
-        while (e->p)
+        int i = 0;
+        while (e[i].p)
         {
-            t[0] = e->a;
-            t[1] = e->b;
-            DrawText_8003E91C(1, e->p, t, idx);
-            e++;
+            t[0] = e[i].a;
+            t[1] = e[i].b;
+            DrawText_8003E91C(1, e[i].p, t, idx);
+            i++;
         }
     }
     if (p)
@@ -371,7 +347,5 @@ void sub_800A2030(int p, TstCompoEnt* e, int idx)
         DrawWindow_80042460(p, t, pOT_8008D454 + idx, 0);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A2030);
 
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A20EC);
