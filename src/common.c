@@ -49,7 +49,32 @@ void sub_800127D0(int a0, int a1, int a2, int a3)
         sub_80012614(v, a1, a2, a3);
     }
 }
-INCLUDE_ASM(sub_80012828);
+// Matched
+void sub_80012828(int* p, unsigned int* f)
+{
+    if (*f & 1)
+    {
+        p[0] = p[0] * 4 / 5;
+        p[2] = p[2] * 4 / 5;
+    }
+    if (*f & 2)
+    {
+        p[1] = p[1] * 2 / 3;
+        p[3] = p[3] * 2 / 3;
+        p[5] = 0;
+    }
+    if (*f & 0x3F8)
+    {
+        p[4] = p[4] * 3 / 5;
+        p[5] = p[5] * 3 / 5;
+    }
+    if (*f & 0x8000)
+    {
+        p[3] = (0x7FFF < p[3] + p[3] * 5) ? 0x7FFF : p[3] + p[3] * 5;
+        p[1] = (0x7FFF < p[1] + p[1] * 5) ? 0x7FFF : p[1] + p[1] * 5;
+        p[5] = 0;
+    }
+}
 INCLUDE_ASM(sub_800129B0);
 INCLUDE_ASM(sub_80012BB0);
 extern struct_u8x12 dword_80071F58;
