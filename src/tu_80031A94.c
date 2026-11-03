@@ -355,7 +355,41 @@ void sub_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot
     p->y3 = cy + (h + (-*s * w + *c * h) / 4096) / 2;
     AddPrimCopy_80040298(ot, p, 10);
 }
+#if 0
+// Not matched: only the scheduling of the v1 store against the sine table address differs (7 lines)
+void sub_800327A8(POLY_FT4* p, int cx, int cy, int w, int h, int du, int dv, int angle, void* ot)
+{
+    short* c = &word_80084540[(angle + 0x400) & 0xFFF];
+    short* s = &word_80084540[angle & 0xFFF];
+
+    setUVWH(p, p->u0, p->v0, du, dv);
+    p->x0 = cx + (w / 2 + (*c * (-w / 2) + *s * (-h / 2)) / 4096);
+    p->y0 = cy + (h / 2 + (-*s * (-w / 2) + *c * (-h / 2)) / 4096);
+    p->x1 = cx + (w / 2 + (*c * (w / 2) + *s * (-h / 2)) / 4096);
+    p->y1 = cy + (h / 2 + (-*s * (w / 2) + *c * (-h / 2)) / 4096);
+    p->x2 = cx + (w / 2 + (*c * (-w / 2) + *s * (h / 2)) / 4096);
+    p->y2 = cy + (h / 2 + (-*s * (-w / 2) + *c * (h / 2)) / 4096);
+    p->x3 = cx + (w / 2 + (*c * (w / 2) + *s * (h / 2)) / 4096);
+    p->y3 = cy + (h / 2 + (-*s * (w / 2) + *c * (h / 2)) / 4096);
+    AddPrimCopy_80040298(ot, p, 10);
+}
+#endif
 INCLUDE_ASM(sub_800327A8);
+// Matched
+void sub_80032A88(POLY_FT4* p, int cx, int cy, int w, int h, int angle)
+{
+    int a = -angle;
+    short* c = &word_80084540[(a + 0x400) & 0xFFF];
+    short* s = &word_80084540[(a + 0x800) & 0xFFF];
+    p->x0 = cx + (w + (*c * -w + *s * -h) / 4096) / 2;
+    p->y0 = cy + (h + (-*s * -w + *c * -h) / 4096) / 2;
+    p->x1 = cx + (w + (*c * w + *s * -h) / 4096) / 2;
+    p->y1 = cy + (h + (-*s * w + *c * -h) / 4096) / 2;
+    p->x2 = cx + (w + (*c * -w + *s * h) / 4096) / 2;
+    p->y2 = cy + (h + (-*s * -w + *c * h) / 4096) / 2;
+    p->x3 = cx + (w + (*c * w + *s * h) / 4096) / 2;
+    p->y3 = cy + (h + (-*s * w + *c * h) / 4096) / 2;
+}
 // Matched
 void sub_80032D34(unsigned short* a, void* b)
 {
