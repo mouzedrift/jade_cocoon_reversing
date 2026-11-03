@@ -240,7 +240,49 @@ void sub_800A1468(int* c)
     sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A15F4);
+extern void sub_80047E28(void* a, int b, void* c, int d, int e, void* f, int g);
+void sub_800A15F4(int* c)
+{
+    VECTOR pos;
+    char z[8];
+    VECTOR scale;
+    unsigned int* anim;
+    memset(z, 0, 8);
+    pos.vx = c[0x16C / 4];
+    pos.vy = c[0x170 / 4];
+    pos.vz = c[0x174 / 4];
+    pos.vy += 0xFA;
+    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
+    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
+    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
+    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
+    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
+    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + 3 * 28);
+    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
+    c[0x1AC / 4] = (int)&pos;
+    c[0x1B0 / 4] = (int)z;
+    c[0x1B4 / 4] = (int)(c + 3);
+    c[0x1B8 / 4] = c[0x1A4 / 4];
+    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
+    c[0x1C4 / 4] = 0;
+    c[0x1C8 / 4] = (int)name_800A2588;
+    c[0x1CC / 4] = (int)&scale;
+    c[0x1D0 / 4] = (int)pOT_8008D690;
+    c[0x1FC / 4] += 0x88;
+    c[0x180 / 4]++;
+    if ((unsigned)c[0x1FC / 4] >= 0x1000)
+    {
+        sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
+        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+    }
+    else
+    {
+        anim = (unsigned int*)(*(char**)(c[1] + 0x54) + c[0x204 / 4] * 28);
+        sub_80047E28(c + 0x1A8 / 4, c[0x1B8 / 4], anim, (unsigned)c[0x200 / 4] % anim[0], 0x1000 - c[0x1FC / 4],
+                     name_800A2570, *(int*)(c[1] + 0x54));
+        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+    }
+}
 
 typedef struct TstCompoF
 {
@@ -467,7 +509,45 @@ void sub_800A1BE0(TstCompoA* a)
 
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1C14);
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1E68);
+typedef struct TstCompoMat
+{
+    int w[8];
+} TstCompoMat;
+extern int name_8008D600[];
+extern short name_8008D4C8[];
+extern unsigned char name_8008D460[];
+extern short name_8008D474[];
+extern int geomScreenDistance_8008B548;
+extern int name_8003B548();
+extern void name_8004D0E8();
+extern TstCompoMat dword_8007C2EC;
+extern TstCompoMat dword_8007C30C;
+extern TstCompoMat dword_80087114;
+extern TstCompoMat dword_80087134;
+void sub_800A1E68(int* c)
+{
+    int v[3];
+    int yaw;
+    name_8008D600[0] = c[0x154 / 4];
+    name_8008D600[1] = c[0x158 / 4];
+    name_8008D600[2] = c[0x15C / 4];
+    v[0] = c[0x160 / 4] - c[0x154 / 4];
+    v[1] = c[0x164 / 4] - c[0x158 / 4];
+    v[2] = c[0x168 / 4] - c[0x15C / 4];
+    yaw = ratan2_8003B548(v[0], v[2]);
+    name_8008D4C8[1] = -yaw;
+    name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    name_8008D4C8[2] = 0;
+    name_8008D460[0] = 0x40;
+    name_8008D460[1] = 0x40;
+    name_8008D460[2] = 0x40;
+    name_8008D474[0] = 0;
+    name_8008D474[1] = 0;
+    geomScreenDistance_8008B548 = 0xA0;
+    dword_80087114 = dword_8007C2EC;
+    dword_80087134 = dword_8007C30C;
+    name_8004D0E8();
+}
 
 extern char name_800A2560[];
 // Matched
