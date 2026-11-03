@@ -17,6 +17,19 @@ typedef struct
 } BillboardScratch;
 #define BILLBOARD_SCRATCH ((BillboardScratch*)getScratchAddr(0x85))
 
+// wireframe triangles (sub_80045534): edges whose vertex pad is set are drawn grey
+typedef struct
+{
+    SVECTOR v[3]; // pad: edge v[i] -> v[i + 1] is an inner edge
+    long pad_18[2];
+} WireTri;
+typedef struct
+{
+    short count;
+    short pad;
+    WireTri* items;
+} WireTriList;
+
 // draws an FTG object at pos / rot (optional per-axis scale) through sub_8004C7BC
 extern void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot);
 

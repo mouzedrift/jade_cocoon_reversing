@@ -34,6 +34,8 @@ extern unsigned long dword_8009AAD8;        // tpage / clut word of the textured
 // row offset, bit 7 + bits 16-31 depth cue); slot indexes dword_800987D8
 extern void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
 
+extern void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
+
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
 #define FTG_PRIM_SCRATCH getScratchAddr(0x78)
 #define FTG_DRAW_CTX ((FtgDrawCtx*)getScratchAddr(0x85))

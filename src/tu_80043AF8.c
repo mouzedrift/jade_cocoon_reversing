@@ -199,7 +199,71 @@ void sub_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, void* cam, int
     gte_SetLightMatrix(&dword_80087114);
     PopMatrix();
 }
-INCLUDE_ASM(sub_80045534);
+// Matched
+void sub_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
+{
+    MATRIX* m;
+    LINE_F2 line;
+    long opz;
+    long otz;
+    long* sxy;
+    WireTri* e;
+    int i;
+    int j;
+    PushMatrix();
+    RotMatrixZYX_8004D5CC(rot, (MATRIX*)getScratchAddr(0));
+    gte_ReadRotMatrix((MATRIX*)getScratchAddr(8));
+    m = (MATRIX*)getScratchAddr(8);
+    m->t[0] = pos->vx - dword_8008D600.vx;
+    m->t[1] = pos->vy - dword_8008D600.vy;
+    m->t[2] = pos->vz - dword_8008D600.vz;
+    ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
+    gte_MulMatrix0((MATRIX*)getScratchAddr(8), (MATRIX*)getScratchAddr(0), (MATRIX*)getScratchAddr(8));
+    gte_SetRotMatrix((MATRIX*)getScratchAddr(8));
+    gte_SetTransMatrix((MATRIX*)getScratchAddr(8));
+    sxy = (long*)FTG_PRIM_SCRATCH;
+    e = list->items;
+    setLineF2(&line);
+    for (i = 0; i < list->count; i++, e++)
+    {
+        gte_ldv3c(e->v);
+        gte_rtpt();
+        gte_stsxy3(&sxy[0], &sxy[1], &sxy[2]);
+        gte_nclip();
+        gte_stopz(&opz);
+        if (opz >= 0)
+        {
+            gte_avsz3();
+            gte_stotz(&otz);
+            if (otz - 1 < 0xFFFU)
+            {
+                SVECTOR* v = e->v;
+                for (j = 0; j < 3; j++)
+                {
+                    if (v[j].pad)
+                    {
+                        line.r0 = line.g0 = line.b0 = 0x40;
+                    }
+                    else
+                    {
+                        line.r0 = rgb[0];
+                        line.g0 = rgb[1];
+                        line.b0 = rgb[2];
+                    }
+                    *(long*)&line.x0 = sxy[j % 3];
+                    *(long*)&line.x1 = sxy[(j + 1) % 3];
+                    ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((unsigned long*)&line)[0];
+                    ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((unsigned long*)&line)[1];
+                    ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((unsigned long*)&line)[2];
+                    ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((unsigned long*)&line)[3];
+                    addPrim(ot + ((otz >> 2) & 0x3FF), primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(LINE_F2);
+                }
+            }
+        }
+    }
+    PopMatrix();
+}
 INCLUDE_ASM(sub_800459E4);
 INCLUDE_ASM(sub_80045E48);
 INCLUDE_ASM(sub_80046248);
