@@ -43,9 +43,9 @@ typedef struct TstCompoD
     int f228;
     int f22C;
 } TstCompoD;
-extern void sub_800A097C();
+extern void TstCompoTask_800A097C();
 extern TstCompoBlk8* name_800A250C[];
-void sub_800A0800(int* task, TstCompoD* c)
+void TstCompoInit_800A0800(int* task, TstCompoD* c)
 {
     c->f184 = 3;
     c->f0 = 0;
@@ -79,7 +79,7 @@ void sub_800A0800(int* task, TstCompoD* c)
     c->f1FC = 0;
     c->f200 = 0;
     c->f204 = 0;
-    task[2] = (int)sub_800A097C;
+    task[2] = (int)TstCompoTask_800A097C;
 }
 
 extern int name_800A2768[];
@@ -113,8 +113,8 @@ extern void sub_800A1804();
 extern void sub_800A194C();
 extern void sub_800A19A4();
 extern void sub_800A1AD0();
-extern void sub_800A1C14();
-void sub_800A097C(int* task, int* c)
+extern void TstCompoCameraInput_800A1C14();
+void TstCompoTask_800A097C(int* task, int* c)
 {
     if (c[0] != 1 && c[0] != 3 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
         (padHeld_800918D0[0] & 0x90A) == 0x90A)
@@ -139,7 +139,7 @@ void sub_800A097C(int* task, int* c)
         break;
     case 4:
         sub_800A194C(c);
-        sub_800A1C14(c);
+        TstCompoCameraInput_800A1C14(c);
         sub_800A1468(c);
         sub_800A1804(c);
         break;
@@ -511,8 +511,8 @@ void sub_800A1BE0(TstCompoA* a)
 
 extern unsigned short padHeld_800918D0[];
 extern short word_80084540[];
-extern void sub_800A1E68();
-void sub_800A1C14(TstCompoA* a)
+extern void SetCameraLookAt_800A1E68();
+void TstCompoCameraInput_800A1C14(TstCompoA* a)
 {
     if (padHeld_800918D0[0] & 0x8000)
     {
@@ -564,7 +564,7 @@ void sub_800A1C14(TstCompoA* a)
     a->i164 = a->i164 < -1000 ? -1000 : a->i164 < 1001 ? a->i164 : 1000;
     a->i160 = 0;
     a->i168 = 0;
-    sub_800A1E68(a);
+    SetCameraLookAt_800A1E68(a);
 }
 
 typedef struct TstCompoMat
@@ -582,7 +582,7 @@ extern TstCompoMat dword_8007C2EC;
 extern TstCompoMat dword_8007C30C;
 extern TstCompoMat dword_80087114;
 extern TstCompoMat dword_80087134;
-void sub_800A1E68(int* c)
+void SetCameraLookAt_800A1E68(int* c)
 {
     int v[3];
     int yaw;
@@ -624,7 +624,7 @@ typedef struct TstCompoEnt
 extern unsigned short uiColor_8008B590;
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawWindow_80042460(int a, void* b, void* c, int d);
-void sub_800A2030(int p, TstCompoEnt* e, int idx)
+void DrawTextListWindow_800A2030(int p, TstCompoEnt* e, int idx)
 {
     unsigned short t[2];
     if (e)

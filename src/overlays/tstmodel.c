@@ -64,8 +64,8 @@ INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 
 typedef struct TstModelTbl { int a; TstModelBone* bones; int c; } TstModelTbl;
 extern TstModelTbl name_800A33B0[];
-extern void sub_800A0A8C();
-void sub_800A09C0(int* task, int* c)
+extern void TstModelTask_800A0A8C();
+void TstModelInit_800A09C0(int* task, int* c)
 {
     int i;
     c[0] = 0;
@@ -94,19 +94,19 @@ void sub_800A09C0(int* task, int* c)
     drawEnvRed_8008D448[0] = 0x40;
     drawEnvRed_8008D448[1] = 0x40;
     drawEnvRed_8008D448[2] = 0x80;
-    task[2] = (int)sub_800A0A8C;
+    task[2] = (int)TstModelTask_800A0A8C;
 }
 
 extern void sub_800A0C00();
 extern void sub_800A0EC8();
 extern void sub_800A0F20();
-extern void sub_800A104C();
+extern void TstModelCameraInput_800A104C();
 extern void sub_800A1428();
 extern void sub_800A17B8();
 extern void sub_800A1614();
 extern void sub_800A18F4();
 extern void sub_800A19E4();
-void sub_800A0A8C(int* task, int* c)
+void TstModelTask_800A0A8C(int* task, int* c)
 {
     switch (c[0])
     {
@@ -120,7 +120,7 @@ void sub_800A0A8C(int* task, int* c)
         sub_800A0F20(c);
         break;
     case 3:
-        sub_800A104C(c);
+        TstModelCameraInput_800A104C(c);
         sub_800A1428(c);
         sub_800A18F4(c);
         break;
@@ -308,10 +308,10 @@ extern MATRIX name_800A1E84;
 extern TstModelMat name_800A1EA4;
 extern MATRIX dword_80087114;
 extern TstModelMat dword_80087134;
-extern void sub_800A1A24();
+extern void SetCameraLookAt_800A1A24();
 extern MATRIX* name_8005B558(MATRIX* m0, MATRIX* m1, MATRIX* m2); // MulMatrix0 (PSY-Q)
 extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
-void sub_800A104C(TstModelD* c)
+void TstModelCameraInput_800A104C(TstModelD* c)
 {
     MATRIX m;
     if (padHeld_800918D0[1] & 0x8000)
@@ -386,7 +386,7 @@ void sub_800A104C(TstModelD* c)
     c->i188 = c->i188 < -500 ? -500 : c->i188 < 501 ? c->i188 : 500;
     c->i184 = 0;
     c->i18C = 0;
-    sub_800A1A24(c);
+    SetCameraLookAt_800A1A24(c);
     if (padPressed_8009194C[0] & 0x800)
     {
         c->state = 6;
@@ -619,7 +619,7 @@ extern short name_8008D474[];
 extern int geomScreenDistance_8008B548;
 extern int name_8003B548();
 extern void name_8004D0E8();
-void sub_800A1A24(int* c)
+void SetCameraLookAt_800A1A24(int* c)
 {
     int v[3];
     int yaw;
@@ -650,7 +650,7 @@ int sub_800A1B24()
     return 6;
 }
 
-int sub_800A1B48(short* m)
+int MoveGridCursor_800A1B48(short* m)
 {
     int idx = 0;
     if (m[3] < 0)
@@ -709,13 +709,13 @@ void sub_800A1CAC(TstModelB* p, int k)
     }
 }
 
-extern int sub_800A1B48();
+extern int MoveGridCursor_800A1B48();
 extern int name_8003D198();
 extern void PlaySfx_80031494();
 int sub_800A1D70(TstModelB* p)
 {
     int old = (short)p->s6;
-    int k = sub_800A1B48(p);
+    int k = MoveGridCursor_800A1B48(p);
     unsigned short t = p->sE;
     int ts = t << 16;
     if (k == 3)

@@ -1,7 +1,7 @@
 dword_800A4088=0x800a4088; // overlay header / data
 jpt_800A4A2C=0x800a4a2c; // jump table of sub_800A4D48
 dword_800A4A54=0x800a4a54; // data behind the jump table
-jpt_800A4B74=0x800a4b74; // jump table of sub_800A7C0C
+jpt_800A4B74=0x800a4b74; // jump table of PlayHitFeedback_800A7C0C
 sub_800A4B8C=0x800a4b8c;
 sub_800A4C40=0x800a4c40;
 sub_800A4CFC=0x800a4cfc;
@@ -41,7 +41,7 @@ sub_800A758C=0x800a758c;
 sub_800A75F8=0x800a75f8;
 sub_800A7694=0x800a7694;
 sub_800A7BE4=0x800a7be4;
-sub_800A7C0C=0x800a7c0c;
+PlayHitFeedback_800A7C0C=0x800a7c0c;
 sub_800A7E34=0x800a7e34;
 sub_800A7ECC=0x800a7ecc;
 sub_800A7EFC=0x800a7efc;

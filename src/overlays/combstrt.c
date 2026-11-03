@@ -53,7 +53,7 @@ extern int sub_800A1934(void*);
 extern void Heal_80011CD0(void*);
 extern void PlaySfx_80031494(int);
 extern void sub_8002ADB4(void*, void*, int, int);
-extern void sub_800A473C(int);
+extern void ShuffleTeam_800A473C(int);
 extern void sub_800A49DC(int, int);
 
 INCLUDE_OVERLAY_ASM(combstrt, dword_800A4088);
@@ -218,7 +218,7 @@ void sub_800A45B8()
     switch (st)
     {
     case 0:
-        sub_800A46FC();
+        ShuffleTeams_800A46FC();
         if (word_800A4C90 < word_800A4C94++)
         {
             word_800A4C92 = 1;
@@ -234,7 +234,7 @@ void sub_800A45B8()
         }
         break;
     case 2:
-        sub_800A46FC();
+        ShuffleTeams_800A46FC();
         word_800A4C92 = 1;
         word_800A4C94 = 0;
         if (word_800A4C90 < word_800A4C96++)
@@ -245,19 +245,19 @@ void sub_800A45B8()
     }
 }
 
-void sub_800A46FC()
+void ShuffleTeams_800A46FC()
 {
     int i;
     for (i = 0; i < 2; i++)
     {
-        sub_800A473C(i);
+        ShuffleTeam_800A473C(i);
     }
     PlaySfx_80031494(0x7F);
 }
 
 extern int rand(void);
-extern int sub_800A4878(int idx, int* arr, int n);
-void sub_800A473C(int side)
+extern int PickNthFreeSlot_800A4878(int idx, int* arr, int n);
+void ShuffleTeam_800A473C(int side)
 {
     int used[10];
     int order[10];
@@ -276,7 +276,7 @@ void sub_800A473C(int side)
     }
     for (i = 0; i < n; i++)
     {
-        order[i] = sub_800A4878(rand() % (n - i), used, n);
+        order[i] = PickNthFreeSlot_800A4878(rand() % (n - i), used, n);
         MemCopy_800403E8((unsigned int*)&tmp[i], (unsigned int*)&units[order[i]], 0xF8);
     }
     for (i = 0; i < n; i++)
@@ -285,7 +285,7 @@ void sub_800A473C(int side)
     }
 }
 
-int sub_800A4878(int idx, int* arr, int n)
+int PickNthFreeSlot_800A4878(int idx, int* arr, int n)
 {
     int i;
     int cnt = 0;

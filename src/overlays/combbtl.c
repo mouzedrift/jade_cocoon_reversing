@@ -1067,7 +1067,7 @@ extern void sub_80037BFC(int a);
 extern void StartPadVibration_80036528(int pad, int kind);
 extern void sub_800A7E34(int a, int b, int c);
 extern void sub_800A7ECC();
-void sub_800A7C0C(int side)
+void PlayHitFeedback_800A7C0C(int side)
 {
     int me;
     int other;
