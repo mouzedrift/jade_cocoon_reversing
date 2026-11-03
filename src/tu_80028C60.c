@@ -117,7 +117,18 @@ void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
         }
     }
 }
-extern void ShiftClutHue_80029D00(void* buf, unsigned int a);
+typedef struct
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    u_long* caddr;
+    int pix_len;
+    RECT prect;
+    u_long* paddr;
+} TimInfo;
+extern void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1);
 typedef struct
 {
     int field_0;
@@ -149,7 +160,7 @@ void LoadTiyTimsRelocated_80028FDC(int a0, int a1, int a2, int a3, int a4, int a
         ParseTim_80029708(buf, (char*)a3 + ((int*)a3)[i + 1]);
         if (a6)
         {
-            ShiftClutHue_80029D00(buf, a6);
+            ShiftClutHue_80029D00((TimInfo*)buf, a6);
         }
         if (a5)
         {
@@ -336,17 +347,6 @@ void InitSprtFromTimData_80029868(int a0, int a1, int a2)
     ParseTim_80029708(buf, (void*)a1);
     InitSprtFromTim_800298AC(a0, a2, buf);
 }
-typedef struct
-{
-    int mode_valid;
-    int mode;
-    int clut_len;
-    RECT crect;
-    u_long* caddr;
-    int pix_len;
-    RECT prect;
-    u_long* paddr;
-} TimInfo;
 // Matched
 void InitSprtFromTim_800298AC(int a0, int a1, void* a2)
 {
@@ -409,8 +409,7 @@ void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 }
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
-#if 0
-// Not matched (17 words): only the saved registers of t and the two division constants are rotated (s3/s4/s5)
+// Matched
 void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
 {
     short rgb[4];
@@ -442,8 +441,6 @@ void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
         }
     }
 }
-#endif
-INCLUDE_ASM(ShiftClutHue_80029D00);
 // Matched
 int Rgb555ToHsv_80029EA8(short* in, short* out)
 {
