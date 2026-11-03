@@ -50,7 +50,7 @@ typedef struct EvCtxEventfnc
     int f24_24[6];
     EvVecEventfnc vec3C_3C[5];
     EvVecEventfnc vec78_78[5];
-    int padB4_B4;
+    int fB4_B4;
     int fB8_B8;
     int fBC_BC;
     int fC0_C0;
@@ -69,7 +69,7 @@ typedef struct EvCtxEventfnc
     char pad_10C[4];
     int* f110_110;
     int f114_114;
-    char pad_118[4];
+    int f118_118;
     int f11C_11C;
     EvEntEventfnc* ent_120;
 } EvCtxEventfnc;
@@ -1119,7 +1119,75 @@ int sub_800B9FD8(EvCtxEventfnc* c)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA020);
+extern void sub_800BC7A0(EvCtxEventfnc* c);
+extern int sub_800BBE3C(EvCtxEventfnc* c);
+extern int sub_800BC2B4(EvCtxEventfnc* c);
+extern int XaRequestStop_80043524(void);
+int sub_800BA020(EvCtxEventfnc* c)
+{
+    EvInsEventfnc* pc = c->pc_8;
+    switch (c->fB4_B4)
+    {
+    case 0:
+        if (pc->op_0 == 0x3F)
+        {
+            c->fB4_B4 = 3;
+            c->flags_0 &= ~0x40;
+            return 1;
+        }
+        c->fB4_B4++;
+    case 1:
+        sub_800BC7A0(c);
+        if (!sub_800BBE3C(c))
+        {
+            break;
+        }
+        c->f110_110 = (int*)c->pc_8;
+        c->fB4_B4++;
+    case 2:
+        if (pc->op_0 == 0x38 || pc->op_0 == 0x3A)
+        {
+            c->fB4_B4 = 0;
+            c->flags_0 |= 0x40;
+            c->pc_8++;
+            return 1;
+        }
+        c->fB4_B4++;
+    case 3:
+        if (!sub_800BC2B4(c))
+        {
+            break;
+        }
+        c->fB4_B4++;
+    case 4:
+        if (c->flags_0 & 0x100)
+        {
+            if (!XaRequestStop_80043524())
+            {
+                break;
+            }
+            c->flags_0 &= ~0x100;
+        }
+    case 5:
+        if (c->f118_118)
+        {
+            c->fB4_B4 = 2;
+            c->pc_8++;
+            return 1;
+        }
+        if ((*(int*)c->f11C_11C & 0x8001) == 1)
+        {
+            break;
+        }
+        c->f11C_11C = 0;
+        c->fB4_B4 = 0;
+        c->pc_8++;
+        return 1;
+    }
+    c->pc_8 = pc;
+    return 0;
+}
+INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D4C);
 
 int sub_800BA1DC(EvCtxEventfnc* c)
 {
@@ -2027,7 +2095,7 @@ void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
 #endif
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC6C4);
 
-void sub_800BC7A0(void)
+void sub_800BC7A0(EvCtxEventfnc* c)
 {
 }
 
