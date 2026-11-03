@@ -737,7 +737,102 @@ int sub_800BAE10()
     return sub_800A248C() == 0;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BAE74);
+extern int sub_800B4200(int* p);
+extern int sub_800B41D0(int* p);
+extern int* sub_800B41A8(int* p);
+extern int* dword_800C9C78;
+extern void sub_800BB100();
+extern void sub_800BB314();
+void sub_800BAE74(BatTask_a* t, BatObj_a* u)
+{
+    BatObj_a* v = u;
+    int* q;
+    int f;
+    sub_800BC850(0x8000);
+    sub_800BC850(0x10000);
+    if (dword_800ADE78 == 1)
+    {
+        if ((&dword_800ADE78)[4] >= 0)
+        {
+            dword_800C9C7C = 10;
+            u->fc = sub_800B4200(&dword_800ADE78);
+            t->next_8 = sub_800BB100;
+            return;
+        }
+        if (sub_800BC820(0x2000) == 1)
+        {
+            sub_800BC838(0x100);
+            sub_800BB1B0(t, u);
+            t->next_8 = sub_800BB1B0;
+            return;
+        }
+        (&dword_800ADE78)[3]++;
+        if (sub_800B41D0(&dword_800ADE78) == 1)
+        {
+            sub_800BC838(0x100);
+            sub_800BB1B0(t, u);
+            t->next_8 = sub_800BB1B0;
+            return;
+        }
+        q = sub_800B41A8(&dword_800ADE78);
+        f = *q;
+        dword_800C9C78 = q;
+        if (f == 0)
+        {
+            dword_800C9C7C = dword_800C9C82;
+        }
+        else
+        {
+            dword_800C9C7C = *dword_800C9C78;
+        }
+        if (dword_800C9C7C == 10)
+        {
+            int* p = &dword_800ADE78;
+            p[4] = dword_800C9C78[5];
+            v->fc = sub_800B4200(p);
+            t->next_8 = sub_800BB100;
+            return;
+        }
+    }
+    else
+    {
+        if (sub_800BAE10())
+        {
+            sub_800BB1B0(t, u);
+            t->next_8 = sub_800BB1B0;
+            return;
+        }
+        if (sub_800BC820(8) == 1)
+        {
+            sub_800BC850(8);
+            dword_800C9C7C = 0;
+            dword_800C9C88[0] = 3;
+            dword_800C9C88[1] = 0;
+            dword_800C9C88[2] = 1;
+            dword_800C9C88[3] = 0;
+            sub_800BC838(0x8000);
+            t->next_8 = sub_800BBE00;
+            u->next_8 = (void (*)())(u->f4 = (int)sub_800BAE74);
+            return;
+        }
+        if (sub_800BC820(2) == 1)
+        {
+            sub_800BC850(2);
+            dword_800C9C98 = 4;
+            dword_800C9C7C = 4;
+            dword_800C9C88[0] = 3;
+            dword_800C9C88[1] = 0;
+            dword_800C9C88[2] = 0x10;
+            dword_800C9C88[3] = 0;
+            sub_800BC838(0x10000);
+            t->next_8 = sub_800BC05C;
+            v->next_8 = (void (*)())(v->f4 = (int)sub_800BAE74);
+            return;
+        }
+        dword_800C9C7C = 7;
+    }
+    t->next_8 = sub_800BB314;
+}
 
 void sub_800BB100(BatTask_a* t, BatObj_a* u)
 {
@@ -827,6 +922,141 @@ void sub_800BB314(BatTask_a* t)
     dword_800C9C99 = dword_800C9C82;
 }
 
+extern void sub_800BB74C();
+extern void sub_800BB7D4();
+extern void sub_800BB860();
+#if 0 // Not matched: only u and flags swap saved registers (s5/s6); reducing flags refs flips them; tried decl order, types, split ifs, tail variable
+void sub_800BB380(BatTask_a* t, BatObj_a* u)
+{
+    BatMin_a* m;
+    int flags;
+    int kind;
+    int r;
+    unsigned int f;
+    sub_800BB74C();
+    sub_800BB7D4();
+    m = (BatMin_a*)sub_80014390(dword_800C9C7C);
+    flags = m->f0;
+    kind = sub_800BC7DC(dword_800C9C7C);
+    sub_800BF7C4((unsigned char*)m, &dword_800C9C7E, &dword_800C9C80);
+    if (dword_800C9C7E != 0)
+    {
+        if (dword_800C9C80 != 0)
+        {
+            dword_800C9CBC[dword_800C9C7C] = 3;
+        }
+        else
+        {
+            dword_800C9CBC[dword_800C9C7C] = 1;
+        }
+    }
+    else if (dword_800C9C80 != 0)
+    {
+        dword_800C9CBC[dword_800C9C7C] = 2;
+    }
+    f = m->f0;
+    r = sub_800BFA4C(f, flags);
+    dword_800C9C88[0] = r;
+    dword_800C9C88[1] = 0;
+    dword_800C9C88[3] = 0;
+    if (r == 0x13)
+    {
+        switch ((unsigned int)kind)
+        {
+        case 0:
+            sub_800BC838(4);
+            dword_800C9D80 = 0x1C;
+            break;
+        case 1:
+            sub_800BC838(8);
+            dword_800C9D80 = 0x6F;
+            break;
+        case 2:
+            sub_800BC838(0x40);
+            if (sub_800BF9B4(sub_800A2BE4(dword_800C9C7C - 4)) == 1)
+            {
+                sub_800BC838(0x100000);
+                dword_800C9D80 = 0x1C;
+            }
+            else
+            {
+                sub_800BC850(0x100000);
+                dword_800C9D80 = 0x6F;
+            }
+            if (sub_800A2AB4() == 2)
+            {
+                sub_800BC838(2);
+            }
+            break;
+        }
+        sub_800BC838(0x1000);
+        t->next_8 = (void (*)())sub_800BC174();
+        u->f4 = (int)(u->next_8 = sub_800BAE74);
+        return;
+    }
+    if (m->h8 - dword_800C9C7E <= 0)
+    {
+        dword_800C9C88[0] = 0xB;
+        dword_800C9C7E = m->h8;
+        switch ((unsigned int)kind)
+        {
+        case 0:
+            sub_800BC838(4);
+            dword_800C9D80 = 0x1C;
+            break;
+        case 1:
+            sub_800BC838(8);
+            dword_800C9D80 = 0x6F;
+            break;
+        case 2:
+            sub_800BC838(0x40);
+            if (sub_800BF9B4(sub_800A2BE4(dword_800C9C7C - 4)) == 1)
+            {
+                sub_800BC838(0x100000);
+                dword_800C9D80 = 0x1C;
+            }
+            else
+            {
+                sub_800BC850(0x100000);
+                dword_800C9D80 = 0x6F;
+            }
+            if (sub_800A2AB4() == 2)
+            {
+                sub_800BC838(2);
+            }
+            break;
+        }
+        sub_800BC838(0x1000);
+        t->next_8 = (void (*)())sub_800BC174();
+        u->f4 = (int)(u->next_8 = sub_800BAE74);
+        return;
+    }
+    if (((f & 0x10000) && (flags & 0x10000)) || ((f & 2) && (flags & 2)))
+    {
+        t->next_8 = sub_800BAE74;
+        return;
+    }
+    if (dword_800C9C88[0] == 0x14)
+    {
+        t->next_8 = sub_800BB860;
+        return;
+    }
+    sub_800BC838(0x1000);
+    t->next_8 = (void (*)())sub_800BC174();
+    if (f & 0x200)
+    {
+        u->f4 = (int)(u->next_8 = sub_800BAE74);
+    }
+    else if (f & 0x10002)
+    {
+        u->f4 = (int)(u->next_8 = sub_800BAE74);
+    }
+    else
+    {
+        u->f4 = (int)(u->next_8 = sub_800BB860);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BB380);
 
 void sub_800BB74C()
