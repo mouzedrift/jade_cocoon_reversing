@@ -656,6 +656,93 @@ void sub_800BC9E8(MenuPad* p)
     }
 }
 
+extern void sub_8002A42C(short* p, int a, int b, short c);
+extern void DrawLargeText_8002FBD8();
+extern int GetRankName_8002FCD8();
+// Not matched: frame/stack layout matches, but saved-register assignment differs (the 0x80
+// constant, &r, 1 and the pOT/b*4 values are rotated by one s-register) and the brightness uses
+// -0x80 - x instead of 0x80 - x
+#if 0
+void sub_800BCB98(MenuMain* c, int b)
+{
+    short pos[2];
+    RECT r;
+    MenuCol col;
+    MenuCol col2;
+    short t[2];
+    short t2[2];
+    int ra;
+    int rb;
+    pos[0] = 0x80;
+    pos[1] = 0x36;
+    sub_8002A42C(pos, 0, 0, b);
+    r.x = 0x7E;
+    r.y = 0x34;
+    r.w = 0x44;
+    r.h = 0x44;
+    col.c_2 = 0;
+    col.c_3 = 1;
+    col.col = saveData_8008B570.uiColor_20;
+    DrawWindow_80042460(&r, &col, &pOT_8008D454[b], 0);
+    pos[0] = 0x61;
+    pos[1] = 0x80;
+    DrawUiTiySprt_8002C06C(pos, 0x11, 0xE);
+    pos[0] = 0x81;
+    pos[1] = 0x81;
+    DrawLargeText_8002FBD8(0, pos, saveData_8008B570.playerName_7D8, b);
+    r.x = 0x5C;
+    r.y = 0x7B;
+    r.w = 0x89;
+    r.h = 0x15;
+    col2.c_2 = 0;
+    col2.c_3 = 1;
+    col2.col = saveData_8008B570.uiColor_20;
+    DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
+    ra = sub_800121A8(((MenuPadB*)c)->b_1F0);
+    rb = sub_800121A8(((unsigned char*)&saveData_8008B570.levantStatus_7C8)[0x44]);
+    if (ra < rb)
+    {
+        if (c->i48)
+        {
+            SetSemiTrans(&fonts_80095FB0[2], 1);
+            t[0] = 0x81;
+            t[1] = 0x99;
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - (unsigned char)c->s46;
+            DrawText_8003E91C(2, GetRankName_8002FCD8(ra), t, b);
+        }
+        else
+        {
+            SetSemiTrans(&fonts_80095FB0[2], 1);
+            t2[0] = 0x81;
+            t2[1] = 0x99;
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - (unsigned char)c->s46;
+            DrawText_8003E91C(2, GetRankName_8002FCD8(rb), t2, b);
+        }
+        fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80;
+        SetSemiTrans(&fonts_80095FB0[2], 0);
+    }
+    else
+    {
+        t[0] = 0x81;
+        t[1] = 0x99;
+        DrawText_8003E91C(2, GetRankName_8002FCD8(rb), t, b);
+    }
+    {
+        MenuCol* col3 = (MenuCol*)t;
+        pos[0] = 0x61;
+        pos[1] = 0x99;
+        DrawUiTiySprt_8002C06C(pos, 0xC2, 0xE);
+        r.x = 0x5C;
+        r.y = 0x93;
+        r.w = 0x89;
+        r.h = 0x15;
+        col3->c_2 = 0;
+        col3->c_3 = 1;
+        col3->col = uiColor_8008B590;
+        DrawWindow_80042460(&r, col3, &pOT_8008D454[b], 0);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BCB98);
 
 extern char name_800C1060[];
