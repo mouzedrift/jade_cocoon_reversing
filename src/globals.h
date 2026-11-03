@@ -323,7 +323,7 @@ extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern ActionData stru_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
-extern int dword_8007CB4C[];
+extern unsigned char dword_8007CB4C[][4]; // per person (sub_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
 extern int dword_80091CA0;

@@ -1681,9 +1681,9 @@ int GetPersonName_8001CD3C(int idx)
     return personNames_8007CB20[idx];
 }
 // Matched
-int* sub_8001CD58(int idx)
+unsigned char* sub_8001CD58(int idx)
 {
-    return &dword_8007CB4C[idx];
+    return dword_8007CB4C[idx];
 }
 // Matched
 int GetPersonIcon_8001CD6C(void)

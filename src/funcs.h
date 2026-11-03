@@ -267,7 +267,7 @@ extern int IsCircleHeldP2_8003D4A0(void);
 extern void XaRequestPlay_80043564(short a0, short a1, short a2);
 extern int XaIsIdle_80043584(void);
 extern int GetPersonName_8001CD3C(int idx);
-extern int* sub_8001CD58(int idx);
+extern unsigned char* sub_8001CD58(int idx);
 extern int IsConfirmPressed_8003D288(int arg0, int arg1);
 extern int IsCancelPressed_8003D3C0(int arg0, int arg1);
 extern int PlayMovie_80040EB4(int arg0);

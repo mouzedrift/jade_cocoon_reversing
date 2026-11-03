@@ -230,7 +230,8 @@ extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern Minion* name_800B6CF0;
 extern ShopCtxShop name_800C09E0;
-extern int name_800C0A1C;
+extern Actor* name_800C0A1C; // the minion shown in the shop
+Actor* sub_800BF780();
 extern void SetFadeMode_8001C19C(int a, int b);
 extern void DestroyActor_8001D600(void* p);
 extern void DrawMenuBackground_8002BE10();
@@ -513,7 +514,7 @@ int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
     int r;
     MemCopy_800403E8(c, a, sizeof(Minion));
     c->field_3 = b->field_3;
-    p = (unsigned char*)sub_8001CD58(d);
+    p = sub_8001CD58(d);
     if (p[0] != 0xFF)
     {
         c->field_3 = p[0];
@@ -2572,7 +2573,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
     int v;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    c = (Actor*)sub_800BF780();
+    c = sub_800BF780();
     if (padHeld_800918D0[0] & 0x8000)
     {
         *(unsigned short*)&c->rot_5C[1] += 0x88;
@@ -3305,7 +3306,7 @@ void sub_800BF750()
     sub_800BF484();
 }
 
-int sub_800BF780()
+Actor* sub_800BF780()
 {
     return name_800C0A1C;
 }
