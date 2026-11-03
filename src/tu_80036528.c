@@ -1149,6 +1149,7 @@ void sub_80039E14(void)
     word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
     sub_8004D0E8();
 }
+// stru_8008D534[0].rot.vx/vy/vz through the CamEntry type changes the scheduling, so the short view stays
 // Matched
 void sub_80039ED8(int mode)
 {

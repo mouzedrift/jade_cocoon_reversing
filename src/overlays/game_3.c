@@ -2623,7 +2623,7 @@ void sub_800AB978(short a)
 
 void sub_800AB9A8(int a, int b, int c)
 {
-    G2Act* p = (G2Act*)dword_8008B4A4->f24;
+    G2Act* p = dword_8008B4A4->f24;
     if (sub_800AC604(a, 0) == 0 && (b < 0 || sub_800AC604(b, 0) == 0))
     {
         sub_800AB010(p, 0x17, a, 0);
