@@ -629,7 +629,100 @@ loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the origina
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BABC4);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BAC4C);
+extern int LoadSeqSlotSound_800303E8();
+extern int IsSoundTaskReady_80030688();
+extern void sub_80037748();
+extern void LoadUiTiy_8002BF74();
+
+extern void sub_800BFB80();
+void sub_800BAC4C(BatTask_a* t)
+{
+    int k;
+    int m;
+    switch (dword_800C9C58)
+    {
+    case 0:
+        if (LoadSeqSlotSound_800303E8() == 0)
+        {
+            break;
+        }
+        dword_800C9C58 = 1;
+    case 1:
+        if (IsSoundTaskReady_80030688() == 0)
+        {
+            break;
+        }
+        k = sub_800A2BE4(0);
+        if (sub_800BF980(k))
+        {
+            sub_800BC838(0x20000);
+            if (k == 0x37)
+            {
+                m = 0x92;
+            }
+            else if (k == 0x32)
+            {
+                m = 0x23;
+            }
+            else
+            {
+                m = 0x24;
+            }
+            if (PlayMusic_800300E0(m, 1) == 0)
+            {
+                break;
+            }
+        }
+        else
+        {
+            sub_800BC850(0x20000);
+            FreeBgmAndSfx_800315F4();
+            PlaySeqSlot_80031160(0, 1);
+        }
+        dword_800C9C58 = 2;
+    case 2:
+        sub_800BC878();
+        dword_800C9C58 = 3;
+        break;
+    case 3:
+        if (sub_800BC8E8() == 0)
+        {
+            break;
+        }
+        dword_800C9C58 = 4;
+    case 4:
+        if (IsFadeDone_8001C2FC() == 0)
+        {
+            break;
+        }
+        SetFadeMode_8001C19C(3, 0x20);
+        sub_80037748();
+        dword_800C9C58 = 5;
+    case 5:
+        if (((int (*)())sub_8001AB94)() == 0) // called without its argument here
+        {
+            break;
+        }
+        dword_800C9C58 = 6;
+    case 6:
+        LoadUiTiy_8002BF74();
+        dword_800C9C58 = 7;
+    case 7:
+        if (uiTiyLoaded_8008B4E8 == 0)
+        {
+            break;
+        }
+        sub_800BFB80();
+        dword_800C9C58 = 8;
+    case 8:
+        if (GetCameraMode_800378F8() >= 4u)
+        {
+            t->next_8 = sub_800BAE74;
+        }
+        break;
+    }
+}
+INCLUDE_OVERLAY_ASM(battle, dword_800B6700);
 
 int sub_800BAE10()
 {
@@ -1326,9 +1419,9 @@ void sub_800BC878()
     dword_800C9D8C[0] = -1;
 }
 
-void sub_800BC8E8()
+int sub_800BC8E8()
 {
-    IsEffectFileLoaded_80020EBC(dword_80095468);
+    return IsEffectFileLoaded_80020EBC(dword_80095468);
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BC90C);
@@ -1889,6 +1982,64 @@ int sub_800BF784(int a)
     return buf[4] + 10;
 }
 
+#if 0 // Not matched: body close with a goto loop; prologue saves are not interleaved with the arg copies in the original and b/f/table-base get different saved registers
+typedef struct BatChance_a
+{
+    unsigned int mask;
+    unsigned int chance;
+} BatChance_a;
+extern BatChance_a dword_800C9138[];
+extern int GetEquipmentId_8003356C(unsigned char* p, unsigned int idx);
+extern unsigned int Rand100_80013E30();
+void sub_800BF7C4(unsigned char* p, short* a, short* b)
+{
+    unsigned int f = *(unsigned int*)p;
+    unsigned int f0 = f;
+    int i;
+    BatChance_a* e;
+    *a = 0;
+    *b = 0;
+    f = sub_800BFA34(f);
+    if ((GetEquipmentId_8003356C(p, 2) & 0xFF) == 0x10)
+    {
+        f |= 0x4000;
+    }
+    if (f0 & 1)
+    {
+        *a = *(short*)(p + 0xA) / 10;
+        f &= ~2;
+    }
+    else if (f & 0x4000)
+    {
+        *a = -(short)(*(short*)(p + 0xA) / 20);
+    }
+    if (f0 & 0x8000)
+    {
+        *b = -((p[0x44] >> 2) + 3);
+        f &= ~0x8000;
+    }
+    if (f & 0x200)
+    {
+        *a = *(short*)(p + 8);
+    }
+    i = 0;
+loop:
+    e = &dword_800C9138[i];
+    if (f0 & e->mask)
+    {
+        if (Rand100_80013E30() >= e->chance)
+        {
+            f &= ~e->mask;
+        }
+    }
+    i++;
+    if (i < 1)
+    {
+        goto loop;
+    }
+    *(unsigned int*)p = f;
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BF7C4);
 
 int sub_800BF980(int x)
@@ -2785,10 +2936,6 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C2170);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C23D0);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C273C);
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C2914);
-
 typedef struct BatShard_a
 {
     int frame_0;
@@ -2802,6 +2949,37 @@ typedef struct BatShard_a
     short rot_34[4];
     int* anim_3C;
 } BatShard_a;
+void sub_800C273C(EventEntry* t, BatShard_a* u)
+{
+    int v[4];
+    int s[3];
+    u->vel_28[1] += 0x1000;
+    u->vel_28[0] = u->vel_28[0] * 31 / 32;
+    u->vel_28[1] = u->vel_28[1] * 31 / 32;
+    u->vel_28[2] = u->vel_28[2] * 31 / 32;
+    u->pos_10[0] += u->vel_28[0];
+    u->pos_10[1] += u->vel_28[1];
+    u->pos_10[2] += u->vel_28[2];
+    if (u->pos_10[1] > 0)
+    {
+        u->vel_28[1] = -u->vel_28[1] * 3 / 4;
+        u->pos_10[1] = 0;
+        if (u->vel_28[1] >= -0xFFF)
+        {
+            t->flags = (t->flags & ~1) | 0x8000;
+        }
+    }
+    u->rot_34[2] += u->rot_34[3];
+    s[0] = s[1] = s[2] = u->scale_C;
+    v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
+    v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
+    v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
+    sub_8004D1EC((int)u->anim_3C, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    u->frame_0++;
+}
+
+INCLUDE_OVERLAY_ASM(battle, sub_800C2914);
+
 void sub_800C2CD8(EventEntry* t, BatShard_a* u)
 {
     int* d = u->anim_3C;
@@ -3908,6 +4086,57 @@ void sub_800C5EB8(BatTask* t)
     dword_800C8B30++;
 }
 
+#if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; dword_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
+void sub_800C6038(BatTask* t)
+{
+    if (t->fC == 0)
+    {
+        if (dword_800C8B34 == 0)
+        {
+            t->f8[2] = 0x10;
+            t->f8[0] = 0x15;
+            dword_800C8B34 = 1;
+            t->f8[1] = 1;
+            t->f8[3] = 2;
+        }
+        else
+        {
+            t->f8[0] = 0;
+            t->f8[3] = t->f18;
+        }
+    }
+    else if (dword_800C8B30 != 0 && sub_800C6EC8(t, 2))
+    {
+        t->f8[0] = 6;
+        t->f8[1] = 0;
+        t->f8[3] = t->f8[2];
+        dword_800C8B30 = 0;
+    }
+    else
+    {
+        dword_800C8B30++;
+        switch (rand() % 3)
+        {
+        case 0:
+            t->f8[0] = 1;
+            t->f8[1] = 0x1C;
+            t->f8[3] = t->f18;
+            sub_80018430(1);
+            break;
+        case 1:
+            t->f8[0] = 6;
+            t->f8[1] = 1;
+            t->f8[3] = t->f18;
+            break;
+        case 2:
+            t->f8[0] = 6;
+            t->f8[1] = 3;
+            t->f8[3] = t->f18;
+            break;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C6038);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C61FC);
