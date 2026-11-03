@@ -20,7 +20,6 @@
 
 #include "effect_obj.h"
 #include "actor.h"
-#include "tu_80018430.h"
 
 typedef struct
 {
@@ -219,67 +218,50 @@ typedef struct
     short a;
     short b;
 } ShortPair;
-typedef struct
-{
-    int f0;
-    int f4;
-    int f8;
-    short fC;
-    short fE;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    short f20;
-    short f22;
-    short f24[4];
-    int f2C;
-    int f30;
-    int pad[11];
-} ActionDesc;
-extern int sub_80018C00(ActionDesc* d, int* p, int* a2);
+extern int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** a2);
 // Matched
-ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
+ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
 {
     ShortPair r;
-    ActionDesc d;
-    ActorRec65C* q;
+    ActorActionDesc d;
+    short (*q)[2];
     memset(&r, 0, 4);
     if (p[0] == 0x16)
     {
-        q = &((ActorData148*)obj->anims_148)->rec_65C;
-        if (q->field_24 < 0)
+        /* animation 27: its last hit window is at least 30 frames from its start */
+        q = obj->anims_148[27].hitFrames_8;
+        if (q[9][0] < 0)
         {
-            q->field_24 = ((ActorData148*)obj->anims_148)->field_656;
-            q->field_26 = q->field_24 + 30;
+            q[9][0] = obj->anims_148[27].start_2;
+            q[9][1] = q[9][0] + 30;
         }
-        if (q->field_26 - q->field_24 < 30)
+        if (q[9][1] - q[9][0] < 30)
         {
-            q->field_24 = ((ActorData148*)obj->anims_148)->field_656;
-            q->field_26 = q->field_24 + 30;
+            q[9][0] = obj->anims_148[27].start_2;
+            q[9][1] = q[9][0] + 30;
         }
     }
-    d.fE = -1;
-    d.f10 = -1;
-    d.f24[0] = -1;
-    d.f24[1] = -1;
-    d.f24[2] = -1;
-    d.f24[3] = -1;
-    d.f0 = 0;
-    d.f4 = 0;
-    d.f8 = 0;
-    d.fC = 0;
-    d.f18 = 0;
-    d.f20 = 0;
-    d.f22 = 0;
-    d.f1C = 1;
-    d.f2C = 0;
-    d.f30 = 0;
-    d.f1C = (c == 0);
-    d.f14 = p[2];
+    d.hitAnim_E = -1;
+    d.effect_10 = -1;
+    d.nextAnim_24 = -1;
+    d.nextAnim_26 = -1;
+    d.field_28 = -1;
+    d.queuedAnim_2A = -1;
+    d.flags_0 = 0;
+    d.script_4 = 0;
+    d.target_8 = 0;
+    d.turnStep_C = 0;
+    d.effectKinds_18 = 0;
+    d.loopCount_20 = 0;
+    d.scaleTarget_22 = 0;
+    d.field_1C = 1;
+    d.field_2C = 0;
+    d.path_30 = 0;
+    d.field_1C = (c == 0);
+    d.effectMask_14 = p[2];
     if (sub_80018C00(&d, p, a2))
     {
-        d.f1C = 1;
+        d.field_1C = 1;
     }
     r.a = sub_8001E254(obj, &d);
     r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
@@ -289,13 +271,13 @@ ShortPair sub_80018A4C(Actor* obj, int* p, int* a2, int c)
     }
     return r;
 }
-extern int off_8007A024[];
+extern ActorScriptCmd* off_8007A024[]; // the default action scripts
 extern int dword_800B129C[];
 extern int sub_8001AC8C(int idx);
 extern int sub_80031870(int a0);
 extern int sub_800316EC(int a0, int a1);
 // Matched
-int sub_80018C00(ActionDesc* d, int* p, int* t)
+int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** t)
 {
     int r;
     if (t == 0)
@@ -305,99 +287,99 @@ int sub_80018C00(ActionDesc* d, int* p, int* t)
     switch (p[0])
     {
     case 0:
-        d->f4 = t[0x8 / 4];
-        d->fE = 5;
-        d->f10 = 0x13;
-        d->f18 = p[3];
+        d->script_4 = t[2];
+        d->hitAnim_E = 5;
+        d->effect_10 = 0x13;
+        d->effectKinds_18 = p[3];
         break;
     case 1:
-        d->f4 = t[0x24 / 4];
-        d->fC = p[1];
-        d->fE = 0xC;
-        d->f10 = sub_8001AC8C(p[1]);
-        d->f18 = p[3];
+        d->script_4 = t[9];
+        d->turnStep_C = p[1];
+        d->hitAnim_E = 0xC;
+        d->effect_10 = sub_8001AC8C(p[1]);
+        d->effectKinds_18 = p[3];
         break;
     case 2:
-        d->fE = 4;
-        d->f10 = 0x3A;
-        d->f4 = t[0x44 / 4];
-        d->f18 = p[2];
+        d->hitAnim_E = 4;
+        d->effect_10 = 0x3A;
+        d->script_4 = t[17];
+        d->effectKinds_18 = p[2];
         break;
     case 3:
-        d->fE = 4;
-        d->f10 = 0x39;
-        d->f4 = t[0x48 / 4];
-        d->f18 = p[2];
+        d->hitAnim_E = 4;
+        d->effect_10 = 0x39;
+        d->script_4 = t[18];
+        d->effectKinds_18 = p[2];
         break;
     case 6:
         r = sub_80031870(p[1]);
-        d->f4 = t[0xC / 4 + r];
-        d->fC = r;
-        d->fE = r + 6;
-        d->f10 = sub_800316EC(p[1], p[2]);
-        d->f18 = p[3];
+        d->script_4 = t[3 + r];
+        d->turnStep_C = r;
+        d->hitAnim_E = r + 6;
+        d->effect_10 = sub_800316EC(p[1], p[2]);
+        d->effectKinds_18 = p[3];
         break;
     case 7:
-        d->f4 = t[0x34 / 4];
-        d->fE = 4;
+        d->script_4 = t[13];
+        d->hitAnim_E = 4;
         break;
     case 9:
-        d->f4 = t[0x28 / 4];
-        d->fE = 0xD;
+        d->script_4 = t[10];
+        d->hitAnim_E = 0xD;
         break;
     case 10:
-        d->f4 = t[0x2C / 4];
-        d->fE = 0xE;
+        d->script_4 = t[11];
+        d->hitAnim_E = 0xE;
         break;
     case 11:
-        d->f4 = t[0x40 / 4];
-        d->fE = 0x15;
+        d->script_4 = t[16];
+        d->hitAnim_E = 0x15;
         break;
     case 12:
-        d->f4 = t[0x30 / 4];
-        d->fE = 0x14;
+        d->script_4 = t[12];
+        d->hitAnim_E = 0x14;
         break;
     case 13:
-        d->f4 = t[0x50 / 4];
+        d->script_4 = t[20];
         break;
     case 14:
-        d->f4 = t[0x4C / 4];
+        d->script_4 = t[19];
         break;
     case 15:
-        d->f4 = t[0x58 / 4];
-        d->fE = 0x18;
+        d->script_4 = t[22];
+        d->hitAnim_E = 0x18;
         break;
     case 16:
-        d->f4 = t[0x54 / 4];
-        d->fE = 0x17;
+        d->script_4 = t[21];
+        d->hitAnim_E = 0x17;
         break;
     case 18:
-        d->f4 = t[0x38 / 4];
-        d->fE = 0x12;
+        d->script_4 = t[14];
+        d->hitAnim_E = 0x12;
         break;
     case 17:
-        d->f4 = t[0x3C / 4];
-        d->fE = 0x13;
+        d->script_4 = t[15];
+        d->hitAnim_E = 0x13;
         break;
     case 19:
-        d->f4 = t[0x5C / 4];
-        d->fE = 0x19;
+        d->script_4 = t[23];
+        d->hitAnim_E = 0x19;
         break;
     case 21:
-        d->fE = 0x1A;
-        d->f10 = dword_800B129C[0] ? 0x3A : 0x39;
-        d->f4 = t[0x44 / 4];
-        d->f18 = p[2];
+        d->hitAnim_E = 0x1A;
+        d->effect_10 = dword_800B129C[0] ? 0x3A : 0x39;
+        d->script_4 = t[17];
+        d->effectKinds_18 = p[2];
         break;
     case 22:
-        d->fE = 0x1B;
-        d->f10 = dword_800B129C[0] ? 0x39 : 0x3A;
-        d->f4 = t[0x48 / 4];
-        d->f18 = p[2];
+        d->hitAnim_E = 0x1B;
+        d->effect_10 = dword_800B129C[0] ? 0x39 : 0x3A;
+        d->script_4 = t[18];
+        d->effectKinds_18 = p[2];
         break;
     case 5:
     case 26:
-        d->f4 = t[0x70 / 4 + p[1]];
+        d->script_4 = t[0x70 / 4 + p[1]];
         break;
     case 27:
         break;

@@ -224,6 +224,7 @@ typedef struct
     short queuedAnim_2A;
     int field_2C;
     ActorPath* path_30;
+    int pad_34[11]; // sub_80018A4C's local is 0x60 bytes
 } ActorActionDesc;
 
 #endif
