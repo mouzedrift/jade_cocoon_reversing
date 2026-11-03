@@ -66,7 +66,7 @@ void sub_80017208(int* a0, int* a1)
     }
 }
 void SpawnMdecEffect_80017A6C(int a0, int a1);
-void sub_800173A8(int* a0, int* a1);
+void sub_800173A8(int* a0, void* buf);
 extern int sub_80020F00(void* p, int a, int b);
 // Matched
 void sub_80017290(char* a0, int a1)
@@ -95,10 +95,10 @@ void sub_80017290(char* a0, int a1)
         e->cb_8 = (EventEntryFn)sub_800173A8;
     }
 }
-#if 0
-// Not matched: only the scheduling of the a0/a1 copies into $s0/$s1 differs
-void sub_800173A8(int* a0, int* a1)
+// Matched
+void sub_800173A8(int* a0, void* buf)
 {
+    int* a1 = (int*)buf;
     int* t = (int*)a1[0x88 / 4];
     struct_u8x4 col;
     int v[3];
@@ -119,5 +119,3 @@ void sub_800173A8(int* a0, int* a1)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-#endif
-INCLUDE_ASM(sub_800173A8);

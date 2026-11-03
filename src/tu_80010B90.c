@@ -1528,15 +1528,15 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     return totalMinions;
 }
 #if 0
-// Not matched: the clamped value lives in $a2 instead of $v1 (the jump table is emitted by C: see config/c_rodata.txt)
+// Not matched: the clamped value lives in $a2 instead of $v1 (needs "dword_80071B78 0x390" in config/c_rodata.txt so the jump table comes from C)
 void sub_80012614(int a0, int sel, int delta, int mask)
 {
+    int r;
+    int v;
     char* p = (char*)a0;
     unsigned short* sp = 0;
     unsigned char* bp = 0;
     int max = 0;
-    int r;
-    int v;
     switch (sel)
     {
     case 0:

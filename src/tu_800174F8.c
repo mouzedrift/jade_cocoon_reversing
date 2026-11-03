@@ -48,8 +48,7 @@ void sub_800174F8(char* a0, int a1)
         e->cb_8 = (EventEntryFn)sub_8001761C;
     }
 }
-#if 0
-// Not matched: the original reloads a1[0] for the sine index (here it is CSEd)
+// Matched
 void sub_8001761C(int* a0, int* a1)
 {
     int* t = (int*)a1[0x88 / 4];
@@ -59,11 +58,7 @@ void sub_8001761C(int* a0, int* a1)
     a1[0x30 / 4] += a1[0x34 / 4];
     v[0] = v[1] = v[2] = a1[0x30 / 4] / 4096;
     ((short*)a1)[0x82 / 2] += 0x80;
-    f = 0;
-    if (a1[0] >= 45)
-    {
-        f = ((a1[0] - 44) << 24) | 0x80;
-    }
+    f = (a1[0] < 45) ? 0 : (((a1[0] - 44) << 24) | 0x80);
     sub_8003A6C4(word_80084540[(a1[0] * 512) & 0xE00] / 2 + 0x800, t[1], t[1] + 0x54, a1[0x94 / 4]);
     sub_8004D1EC(t[1], (int)pOT_8008D690, (int)(a1 + 0x44 / 4), (int)(a1 + 0x80 / 4), (int)stru_8008D534, f | 0x31, (int)v);
     if (a1[0]++ > 60)
@@ -73,8 +68,6 @@ void sub_8001761C(int* a0, int* a1)
         free3_8003FC6C((void*)a1[0x94 / 4]);
     }
 }
-#endif
-INCLUDE_ASM(sub_8001761C);
 void sub_800178C0(int* a0, int* a1);
 // Matched
 void sub_80017784(char* a0, int a1, short* a2)
@@ -209,10 +202,11 @@ void sub_80017BF0(EventEntry* a0, int a1)
         e->cb_8 = sub_80017CE4;
     }
 }
-#if 0
-// Not matched: callee-saved registers of a1 and i are swapped
-void sub_80017CE4(int* a0, int* a1)
+// Matched
+void sub_80017CE4(EventEntry* e, void* buf)
 {
+    int* a0 = (int*)e;
+    int* a1 = (int*)buf;
     int* t = (int*)a1[0x88 / 4];
     int i;
     int v[3];
@@ -233,8 +227,6 @@ void sub_80017CE4(int* a0, int* a1)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-#endif
-INCLUDE_ASM(sub_80017CE4);
 INCLUDE_ASM(sub_80017E30);
 INCLUDE_ASM(sub_80017FF8);
 // Matched
