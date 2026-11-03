@@ -293,29 +293,32 @@ typedef struct MenuPadB
     unsigned char b_1F0;
 } MenuPadB;
 
-// near miss: the original keeps 1 in a register (sllv) and hoists the saveData base out of the loop
-#if 0
 void sub_800BC9E8(MenuPad* p)
 {
     short i;
     short s;
+    int m;
+    SaveData* sv;
+    i = 0;
     if (p->s44 > 0)
     {
-        for (i = 0; i < p->s44; i++)
+        do
         {
-            int n = p->s44;
-            if (i == n - 1)
+            if (i == p->s44 - 1)
             {
-                if (p->f0 & (1 << n))
+                m = 1 << p->s44;
+                if (p->f0 & m)
                 {
                     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
                         p->f0 |= 0x40;
                     return;
                 }
             }
-            else if (p->f0 & (1 << (i + 1)))
+            else
             {
-                continue;
+                int m2 = 1 << (i + 1);
+                if (p->f0 & m2)
+                    continue;
             }
             s = i;
             if (p->arr_5C[s] > 0)
@@ -323,21 +326,24 @@ void sub_800BC9E8(MenuPad* p)
                 if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
                 {
                     int f = p->f0;
-                    if (f & 0x20)
+                    if (!(f & 0x20))
                     {
-                        p->f0 = (f | (1 << (s + 1))) & ~0x20;
-                    }
-                    else if (s != 0)
-                    {
-                        p->f0 = f | 0x20;
-                    }
-                    else if (sub_800BBF10(((MenuPadB*)p)->b_1F0, ((unsigned char*)&saveData_8008B570)[0x80C]))
-                    {
-                        p->f0 |= 0x20;
+                        if (s == 0)
+                        {
+                            sv = &saveData_8008B570;
+                            if (sub_800BBF10(((MenuPadB*)p)->b_1F0, ((unsigned char*)sv)[0x80C]))
+                                p->f0 |= 0x20;
+                            else
+                                p->f0 |= 2;
+                        }
+                        else
+                        {
+                            p->f0 = f | 0x20;
+                        }
                     }
                     else
                     {
-                        p->f0 |= 2;
+                        p->f0 = (f | (1 << (s + 1))) & ~0x20;
                     }
                 }
             }
@@ -346,11 +352,9 @@ void sub_800BC9E8(MenuPad* p)
                 p->f0 |= 1 << (s + 1);
             }
             return;
-        }
+        } while (++i < p->s44);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BC9E8);
 
 INCLUDE_OVERLAY_ASM(menu, sub_800BCB98);
 
@@ -1021,7 +1025,8 @@ void sub_800BF3AC(MenuObj* o)
 }
 
 extern void sub_800A911C();
-// near miss: original tests s == 0 via sltiu + bnez (one word more)
+// Not matched: original tests s == 0 via sltiu + bnez (one word more); also tried
+// (unsigned)s < 1 and short s (both fold to beqz)
 #if 0
 void sub_800BF3E0(MenuCtx* c)
 {
