@@ -3041,7 +3041,55 @@ void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C17EC);
+typedef struct BatSpark_a
+{
+    int frame_0;
+    int f4;
+    short speed_8;
+    short padA;
+    int padC;
+    int pos_10[3];
+    int base_1C[3];
+    int vel_28[3];
+    short rot_34[4];
+    int* anim_3C;
+    int* target_40;
+    int* offset_44;
+} BatSpark_a;
+extern int dword_800795D4;
+extern void sub_80044010();
+void sub_800C17EC(EventEntry* t, BatSpark_a* u)
+{
+    int s[3];
+    int* d;
+    int i;
+    char* e;
+    int* a = u->target_40;
+    int* b = u->offset_44;
+    u->vel_28[0] = u->vel_28[0] * 31 / 32 + ((a[0] + b[0] - u->pos_10[0]) << 5);
+    u->vel_28[1] = u->vel_28[1] * 31 / 32 + ((a[1] + b[1] - u->pos_10[1]) << 5);
+    u->vel_28[2] = u->vel_28[2] * 31 / 32 + ((a[2] + b[2] - u->pos_10[2]) << 5);
+    s[0] = u->vel_28[0] / 1024;
+    s[1] = u->vel_28[1] / 1024;
+    s[2] = u->vel_28[2] / 1024;
+    u->pos_10[0] += s[0];
+    u->pos_10[1] += s[1];
+    u->pos_10[2] += s[2];
+    d = u->anim_3C;
+    if (u->frame_0 / 4096 < d[0])
+    {
+        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        {
+            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
+            sub_80044010(&d[3], u->pos_10, u->rot_34, e, e + 4, e + 8, e + 0xC, &dword_800795D4, e + 0x18, 0, 0x30, pOT_8008D690);
+        }
+        u->frame_0 += u->speed_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 extern void sub_800C1B2C();
 void sub_800C1A5C(int* p, short* q, int c, int d)
@@ -3129,7 +3177,43 @@ void sub_800C1C5C(int* p, short* q, int c)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1DA4);
+void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
+{
+    int s[3];
+    int* d;
+    int i;
+    char* e;
+    int* sd;
+    u->vel_28[0] = u->vel_28[0] * 15 / 16;
+    u->vel_28[1] = u->vel_28[1] * 15 / 16 + 0x200;
+    u->vel_28[2] = u->vel_28[2] * 15 / 16;
+    s[0] = u->vel_28[0] / 1024;
+    s[1] = u->vel_28[1] / 1024;
+    s[2] = u->vel_28[2] / 1024;
+    u->pos_10[0] += s[0];
+    u->pos_10[1] += s[1];
+    u->pos_10[2] += s[2];
+    sd = (int*)&saveData_8008B570;
+    if (u->pos_10[1] > sd[0x7AC / 4])
+    {
+        u->vel_28[1] = -u->vel_28[1];
+        u->pos_10[1] = sd[0x7AC / 4];
+    }
+    d = u->anim_3C;
+    if (u->frame_0 / 4096 < d[0])
+    {
+        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        {
+            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
+            sub_80044010(&d[3], u->pos_10, u->rot_34, e, e + 4, e + 8, e + 0xC, e + 0x10, e + 0x18, 0, 0x30, pOT_8008D690);
+        }
+        u->frame_0 += u->speed_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 extern void sub_800C2170();
 void sub_800C1FFC(int* p, short* q, int c, int d, int n)
@@ -3162,9 +3246,43 @@ void sub_800C1FFC(int* p, short* q, int c, int d, int n)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C2170);
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C23D0);
+void sub_800C2170(EventEntry* t, BatSpark_a* u)
+{
+    int* d;
+    int i;
+    char* e;
+    u->rot_34[1] += 0x40;
+    u->vel_28[0] = u->vel_28[0] * 12 / 13;
+    u->vel_28[1] = u->vel_28[1] * 12 / 13 - 0x400;
+    u->vel_28[2] = u->vel_28[2] * 12 / 13;
+    {
+        int s[3];
+        s[0] = u->vel_28[0] / 1024;
+        s[1] = u->vel_28[1] / 1024;
+        s[2] = u->vel_28[2] / 1024;
+        u->pos_10[0] += s[0];
+        u->pos_10[1] += s[1];
+        u->pos_10[2] += s[2];
+    }
+    d = u->anim_3C;
+    if (u->frame_0 / 4096 < d[0])
+    {
+        for (i = 0; i < ((unsigned char*)d[1])[u->frame_0 / 4096]; i++)
+        {
+            short c[3];
+            e = ((char**)d[2])[u->frame_0 / 4096] + i * 0x1C;
+            c[0] = u->pos_10[0];
+            c[1] = u->pos_10[1];
+            c[2] = u->pos_10[2];
+            sub_80044010(&d[3], u->base_1C, u->rot_34, e, e + 4, e + 8, e + 0xC, c, e + 0x18, 0, 0x30, pOT_8008D690);
+        }
+        u->frame_0 += u->speed_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 typedef struct BatShard_a
 {
@@ -3179,6 +3297,66 @@ typedef struct BatShard_a
     short rot_34[4];
     int* anim_3C;
 } BatShard_a;
+extern void PlaySfx_80031494(int id);
+extern int sub_80020F00(void* p, int a, int b);
+extern void sub_800C273C();
+#if 0 // Not matched: only u and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer
+void sub_800C23D0(EventEntry* t, BatSpark_a* u)
+{
+    int i;
+    int a;
+    int k;
+    int n;
+    EventEntry* e;
+    BatShard_a* b;
+    if (++u->frame_0 >= 30)
+    {
+        PlaySfx_80031494(0x4F);
+        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, effectFile_80091BD0[0x20 / 4] + sub_80020F00(effectFile_80091BD0, 0, 0x21) * 52, 0x1000);
+        for (i = 0; i < 24; i++)
+        {
+            e = AllocEventEntry_80043AF8(dword_8008D60C);
+            if (e)
+            {
+                b = e->buffer;
+                b->base_1C[0] = u->pos_10[0];
+                b->base_1C[1] = u->pos_10[1];
+                b->base_1C[2] = u->pos_10[2];
+                b->frame_0 = 0;
+                b->scale_C = (rand() & 0x7FF) + 0x800;
+                b->pos_10[0] = 0;
+                b->pos_10[1] = 0;
+                b->pos_10[2] = 0;
+                a = (i << 12) / 24;
+                b->vel_28[0] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[a & 0xFFF] / 4096;
+                b->vel_28[2] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[(a + 0x400) & 0xFFF] / 4096;
+                k = rand() & 0x1FF;
+                a = k + 0x200;
+                b->vel_28[1] = -((rand() & 0x1F) + 0x28) * sinTable_80084540[a] / 4096;
+                b->vel_28[0] = b->vel_28[0] * sinTable_80084540[k | 0x600] / 4096;
+                b->vel_28[2] = b->vel_28[2] * sinTable_80084540[k | 0x600] / 4096;
+                b->vel_28[0] <<= 10;
+                b->vel_28[1] <<= 10;
+                b->vel_28[2] <<= 10;
+                b->rot_34[0] = rand() & 0x1000;
+                b->rot_34[1] = rand() & 0x1000;
+                b->rot_34[2] = rand() & 0x1000;
+                b->rot_34[3] = (rand() & 0x1FF) + 0x100;
+                n = sub_80020F00(effectFile_80091BD0, 1, 0x19);
+                e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                {
+                    int* ent = (int*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+                    b->anim_3C = (int*)(ent[1] + (i % 8) * 84);
+                }
+                e->cb_8 = (EventEntryFn)sub_800C273C;
+            }
+        }
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
+#endif
+INCLUDE_OVERLAY_ASM(battle, sub_800C23D0);
+
 void sub_800C273C(EventEntry* t, BatShard_a* u)
 {
     int v[4];
