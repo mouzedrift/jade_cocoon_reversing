@@ -3081,6 +3081,65 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C33E4);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C371C);
 
+#if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
+extern char* dword_8008B4A4;
+extern void PlaySfx_80031494(int id);
+extern void sub_800C3DF8();
+extern void sub_800C3D34();
+void sub_800C3B50(int* p, int id)
+{
+    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+    char* b;
+    int* ent;
+    int* q;
+    int f;
+    int idx;
+    if (e == 0)
+    {
+        return;
+    }
+    b = e->buffer;
+    *(int*)(b + 0x44) = p[0];
+    *(int*)(b + 0x48) = p[1];
+    *(int*)(b + 0x4C) = p[2];
+    *(int*)b = 0;
+    *(short*)(b + 0xE) = sub_80020F00(effectFile_80091BD0, 0, id);
+    *(int*)(b + 0x30) = 0x1000;
+    *(int*)(b + 0x34) = 0;
+    *(short*)(b + 0x84) = 0;
+    *(short*)(b + 0x82) = 0;
+    *(short*)(b + 0x80) = 0;
+    *(int*)(b + 0x38) = 0;
+    *(int*)(b + 0x3C) = -0xC8;
+    *(int*)(b + 0x40) = 0;
+    f = (&effectOutcomeFlag_8008D780)[1];
+    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+    if (f == 0)
+    {
+    idx = sub_80020F00(effectFile_80091BD0, 1, 0x1F);
+    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+    ent = (int*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
+    *(int**)(b + 0x88) = ent;
+    *(void**)(b + 0x94) = malloc3_8003FC4C(0x54);
+    sub_800218A8(ent[1], *(void**)(b + 0x94), 1);
+    sub_80039FE4(ent[1], ent[1] + 0x54, *(int*)(b + 0x94));
+    q = *(int**)(dword_8008B4A4 + 0x24);
+    *(int*)(b + 0x44) = q[0x5E4 / 4];
+    *(int*)(b + 0x48) = q[0x5E8 / 4];
+    *(int*)(b + 0x4C) = q[0x5EC / 4];
+    *(int*)(b + 0x44) += ((int*)levantPos_8008BD18)[0];
+    *(int*)(b + 0x48) += ((int*)levantPos_8008BD18)[1];
+    *(int*)(b + 0x4C) += ((int*)levantPos_8008BD18)[2];
+    e->cb_8 = (EventEntryFn)sub_800C3D34;
+    PlaySfx_80031494(0x3F);
+    }
+    else
+    {
+        PlaySfx_80031494(0x47);
+        e->cb_8 = (EventEntryFn)sub_800C3DF8;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C3B50);
 
 typedef struct BatFade_a
