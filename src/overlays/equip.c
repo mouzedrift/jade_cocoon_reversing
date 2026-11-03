@@ -331,7 +331,7 @@ void sub_800C4A94(EquipCtx_equip* c)
                     u.s.a = uiColor_8008B590;
                     u.s.b = 0;
                     u.s.c = 1;
-                    DrawWindow_80042460(name_800C59A8, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+                    DrawWindow_80042460(name_800C59A8, &u.s, pOT_8008D454 + 14, 0);
                 }
                 else
                 {
@@ -548,7 +548,7 @@ void sub_800C5314(EquipCtx_equip* c)
         u.s.a = uiColor_8008B590;
         u.s.b = 0;
         u.s.c = mode;
-        DrawWindow_80042460(name_800C59A0, &u.s, (char*)pOT_8008D454 + 0x38, 0);
+        DrawWindow_80042460(name_800C59A0, &u.s, pOT_8008D454 + 14, 0);
     }
 }
 

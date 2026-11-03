@@ -1,5 +1,6 @@
 // EVENTFNC.BIN, source file 1 of 2
 #include "eventfnc.h"
+#include "actor.h"
 
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
 
@@ -41,7 +42,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
         }
         sub_800B8220((int*)&levantPos_8008BD18, (int)&o->pos_48, (int)&((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
         vt = ((EvMapEventfnc*)dword_8008B500)->meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
-        q = (EvQuadEventfnc*)(i * 16 + (int)v);
+        q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[o->f8C_8C % 3].x_0;
         q->y_2 = vt[o->f8C_8C % 3].y_2;
         q->z_4 = vt[o->f8C_8C % 3].z_4;
@@ -111,7 +112,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
         }
         sub_800B8220((int*)pos, (int)a1, (int)((EvMapEventfnc*)dword_8008B500)->mesh_28, &t0, &t1, n);
         vt = ((EvMapEventfnc*)dword_8008B500)->mesh_28->tris_4[t0].v_0;
-        q = (EvQuadEventfnc*)(i * 16 + (int)v);
+        q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[t1 % 3].x_0;
         q->y_2 = vt[t1 % 3].y_2;
         q->z_4 = vt[t1 % 3].z_4;
@@ -121,7 +122,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
         q2->z_4 = vt[(t1 + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4((int*)pos, (EvMeshEventfnc*)dword_8008B528, tri);
+    GetTriHeight_800B83E4((int*)pos, ((EvMapEventfnc*)dword_8008B500)->mesh_28, tri);
     if (i == 2)
     {
         return 3;
@@ -348,7 +349,7 @@ void GetTriHeight_800B83E4(int* v, EvMeshEventfnc* m, int i)
     v[1] = (t->ny_1A * t->v_0[0].y_2 - t->nx_18 * (v[0] - t->v_0[0].x_0) - t->nz_1C * (v[2] - t->v_0[0].z_4)) / t->ny_1A;
 }
 
-void sub_800B844C(int* t)
+void sub_800B844C(TaskEventfnc* t)
 {
     EvSaveEventfnc* s;
     EvSpawnEventfnc sp;
@@ -365,20 +366,10 @@ void sub_800B844C(int* t)
         {
             sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
         }
-        t[0] = (t[0] & ~1) | 0x8000;
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
 }
 
-typedef struct EvPairEventfnc
-{
-    int a;
-    int b;
-} EvPairEventfnc;
-typedef struct EvPosEventfnc
-{
-    EvPairEventfnc xy;
-    int z;
-} EvPosEventfnc;
 typedef struct EvActorParamsEventfnc
 {
     int id_0;
@@ -414,7 +405,7 @@ typedef struct EvEnemyEventfnc
     int idx_14;
     int f18;
     EvMinionEventfnc minion_1C;
-    int* actor_A4;
+    Actor* actor_A4;
     int fA8;
     int fAC;
     EvPairEventfnc xy_B0[3];
@@ -429,15 +420,30 @@ typedef struct EvLoadEntEventfnc
     int id_4;
     int pad_8[3];
 } EvLoadEntEventfnc;
+// work area of the model loader task (modelLoaderTask_8008B54C)
+typedef struct EvLoaderEventfnc
+{
+    int f0;
+    int f4;
+    int f8;
+    EvLoadEntEventfnc ents_C[4];
+} EvLoaderEventfnc;
+// an enemy slot of the GAME overlay (GameSlot_1): sub_800A17F4 copies the EvEnemyEventfnc into data_8
+typedef struct EvEnemySlotEventfnc
+{
+    int f0;
+    int aiEvent_4;
+    EvEnemyEventfnc data_8;
+} EvEnemySlotEventfnc;
 extern int InitMinionData_8001900C(EvMinionEventfnc* m, EvPosEventfnc* a1);
-extern int* CreateActor_8001D45C(EvActorParamsEventfnc* a0);
+extern Actor* CreateActor_8001D45C(EvActorParamsEventfnc* a0);
 extern void sub_80019B14(int p, char* a1, char* a2);
-extern char* sub_800A17F4(EvEnemyEventfnc* src, int b);
-extern int CreateEnemyAiEvent_800A2D90(int* a, char* b, int c);
+extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
+extern int CreateEnemyAiEvent_800A2D90(Actor* a, EvMinionEventfnc* b, int c);
 extern int dword_80079140;
 
 // Matched
-void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
+void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
 {
     EvActorParamsEventfnc s;
     EvMinionEventfnc mi;
@@ -449,15 +455,15 @@ void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
     int i;
     struct_112* model;
     int k;
-    char* p0;
-    char* p1;
+    int* p0;
+    int* p1;
     int f;
-    int* actor;
+    Actor* actor;
     char* x;
-    char* slot;
+    EvEnemySlotEventfnc* slot;
     id = (unsigned short*)sub_80019C70(a->xy.a);
     found = 0;
-    l = (EvLoadEntEventfnc*)((char*)modelLoaderTask_8008B54C[9] + 0xC);
+    l = ((EvLoaderEventfnc*)modelLoaderTask_8008B54C[9])->ents_C;
     for (i = 3; i >= 0; i--)
     {
         if (*id == l->id_4)
@@ -472,11 +478,11 @@ void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
         k = InitMinionData_8001900C(&mi, a);
         s.id_0 = *id;
         s.f4 = 0;
-        s.pos_8[0] = b[0];
-        s.pos_8[1] = b[1];
-        s.pos_8[2] = b[2];
+        s.pos_8[0] = b->pos_0[0];
+        s.pos_8[1] = b->pos_0[1];
+        s.pos_8[2] = b->pos_0[2];
         s.rot_14[0] = 0;
-        s.rot_14[1] = *(short*)(b + 3);
+        s.rot_14[1] = b->rotY_C;
         s.rot_14[2] = 0;
         s.f1C = 0;
         s.f20 = 1;
@@ -491,13 +497,13 @@ void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
         }
         else
         {
-            p0 = sub_80024E90(model, k);
-            p1 = sub_80024E90(model, k + 1);
+            p0 = (int*)sub_80024E90(model, k);
+            p1 = (int*)sub_80024E90(model, k + 1);
             f = sub_80019AD0((char*)&mi);
-            f = ((*(int*)p1 - *(int*)p0) * f) / 4096;
-            v[0] = *(int*)p0 + f;
-            v[1] = *(int*)(p0 + 4) + f;
-            v[2] = *(int*)(p0 + 8) + f;
+            f = ((p1[0] - p0[0]) * f) / 4096;
+            v[0] = p0[0] + f;
+            v[1] = p0[1] + f;
+            v[2] = p0[2] + f;
             s.f38 = (int)v;
         }
         s.f3C = (int)sub_80024EC8(model, k);
@@ -506,7 +512,7 @@ void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
         s.f4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
-        sub_80019B14(actor[0x134 / 4], x, sub_80024F38(model, k));
+        sub_80019B14(actor->f134, x, sub_80024F38(model, k));
         e.f0 = 2;
         e.f4 = 3;
         e.f8 = 1;
@@ -528,28 +534,37 @@ void sub_800B8568(EvPosEventfnc* a, int* b, int c, int d)
         e.z_D4[1] = a[1].z;
         e.z_D4[2] = a[2].z;
         slot = sub_800A17F4(&e, 0);
-        *(int*)(slot + 4) = CreateEnemyAiEvent_800A2D90(actor, slot + 0x24, c);
+        slot->aiEvent_4 = CreateEnemyAiEvent_800A2D90(actor, &slot->data_8.minion_1C, c);
     }
 }
 
+// work area of the encounter task (dword_8008D674, sub_800B844C)
+typedef struct EvEncWorkEventfnc
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+} EvEncWorkEventfnc;
 void sub_800B88A4(int a)
 {
-    int* p;
-    int* q;
+    EventEntry* p;
+    EvEncWorkEventfnc* q;
     if (a)
     {
         sub_800B8940((int*)a);
         eventDispatchHalt_8008B540 = 1;
     }
-    p = dword_8008D674;
-    p[4] = (p[4] | 1) & 0xFFFF7FFF;
-    p += 4;
-    q = (int*)p[5];
-    q[2] = 0;
-    q[3] = 0;
-    q[4] = 0;
-    q[5] = 0;
-    p[2] = (int)sub_800B844C;
+    p = &dword_8008D674->entry;
+    p->flags = (p->flags | 1) & 0xFFFF7FFF;
+    q = (EvEncWorkEventfnc*)p->buffer;
+    q->f8 = 0;
+    q->fC = 0;
+    q->f10 = 0;
+    q->f14 = 0;
+    p->cb_8 = (EventEntryFn)sub_800B844C;
     sub_800A170C();
     sub_800A1794();
 }
@@ -562,14 +577,20 @@ void sub_800B8928()
     }
 }
 
-void sub_800B8940(int* p)
+// model description from sub_80019C70
+typedef struct EvModelDescEventfnc
+{
+    unsigned short id_0;
+    unsigned char f2;
+} EvModelDescEventfnc;
+void sub_800B8940(int* ids)
 {
     int i = 0;
-    int* q = p;
+    int* q = ids;
     for (; i < 3; i++)
     {
-        unsigned short* e = (unsigned short*)sub_80019C70(*q++);
-        RequestLoaderModel_800206A0(e[0], ((unsigned char*)e)[2] << 1, 3, -1);
+        EvModelDescEventfnc* e = (EvModelDescEventfnc*)sub_80019C70(*q++);
+        RequestLoaderModel_800206A0(e->id_0, e->f2 << 1, 3, -1);
     }
     StartModelLoader_8002056C();
 }
@@ -930,7 +951,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->y_4 = q[1];
     pos->z_8 = q[2];
     rot->ang_2 = ang;
-    sub_80037918(cameraTask_8008D4A0[0x24 / 4]);
+    sub_80037918(((EventNode*)cameraTask_8008D4A0)->entry.buffer);
     SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     c->pc_8++;
     return 1;
@@ -1786,10 +1807,10 @@ int sub_800BAF08(EvCtxEventfnc* c)
 
 int sub_800BAF68(EvCtxEventfnc* c)
 {
-    char* s = (char*)&saveData_8008B570;
+    EvSaveEventfnc* s = (EvSaveEventfnc*)&saveData_8008B570;
     unsigned short v = *(unsigned short*)&c->pc_8->b_8;
-    *(unsigned short*)(s + 0x2F0) = v;
-    if ((short)v == *(short*)(s + 0x2F2))
+    s->f2F0_2F0 = v;
+    if ((short)v == s->f2F2_2F2)
     {
         c->pc_8++;
         return 1;

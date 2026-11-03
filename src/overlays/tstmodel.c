@@ -13,6 +13,30 @@ typedef struct TstModelBone
     short s4;
     unsigned short flags;
 } TstModelBone;
+// one animation of a model (struct_112.field_54 points to an array of them)
+typedef struct TstModelAnim
+{
+    unsigned int frames_0;
+    int f4;
+    int scale_8;
+    char pad_C[0x10];
+} TstModelAnim;
+// parameter block of sub_80046A58
+typedef struct TstModelDraw
+{
+    int f0;
+    VECTOR* pos_4;
+    char* f8;
+    TstModelBone* bones_C;
+    char* f10;
+    TstModelAnim* anim_14;
+    int frame_18;
+    int f1C;
+    char* f20;
+    VECTOR* scale_24;
+    unsigned long* ot_28;
+} TstModelDraw;
+// work area of the TSTMODEL task (TstModelInit_800A09C0)
 typedef struct TstModelD
 {
     int state;
@@ -20,11 +44,11 @@ typedef struct TstModelD
     int f8;
     int fC;
     int f10;
-    int f14;
-    int f18;
+    struct_112_list* models_14;
+    struct_112* model_18;
     int count_1C;
     int f20;
-    int f24;
+    int modelId_24;
     TstModelBone bones[41];
     short s170;
     short s172;
@@ -36,7 +60,13 @@ typedef struct TstModelD
     int i184;
     int i188;
     int i18C;
-    char pad_190[0x14];
+    int i190;
+    int i194;
+    int i198;
+    short s19C;
+    short s19E;
+    short s1A0;
+    short pad_1A2;
     int f1A4;
     int f1A8;
     int f1AC;
@@ -44,14 +74,15 @@ typedef struct TstModelD
     int f1B4;
     int f1B8;
     int f1BC;
-    char pad_1C0[0x30];
+    TstModelDraw draw_1C0;
+    int pad_1EC;
     SVECTOR rot_1F0;
 } TstModelD;
 typedef struct TstModelB
 {
     int flags;
     unsigned short s4;
-    unsigned short s6;
+    short s6;
     short s8;
     short sA;
     short sC;
@@ -65,36 +96,36 @@ INCLUDE_OVERLAY_ASM(tstmodel, dword_800A05A0);
 typedef struct TstModelTbl { int a; TstModelBone* bones; int c; } TstModelTbl;
 extern TstModelTbl name_800A33B0[];
 extern void TstModelTask_800A0A8C();
-void TstModelInit_800A09C0(int* task, int* c)
+void TstModelInit_800A09C0(struct_obj_D* task, TstModelD* c)
 {
     int i;
-    c[0] = 0;
-    c[1] = 0;
-    c[2] = 0;
-    c[3] = 0;
-    c[4] = 0;
-    c[5] = 0;
-    c[8] = 0;
-    ((short*)c)[0x172 / 2] = 0;
-    c[7] = 0;
+    c->state = 0;
+    c->f4 = 0;
+    c->f8 = 0;
+    c->fC = 0;
+    c->f10 = 0;
+    c->models_14 = 0;
+    c->f20 = 0;
+    c->s172 = 0;
+    c->count_1C = 0;
     if (name_800A33B0[0].a >= 0)
     {
         do
         {
-            i = c[7] + 1;
-            c[7] = i;
+            i = c->count_1C + 1;
+            c->count_1C = i;
         } while (name_800A33B0[i].a >= 0);
     }
-    c[0x1B8 / 4] = 0;
-    c[0x1A8 / 4] = 0;
-    c[0x1B4 / 4] = 0;
-    c[0x1A4 / 4] = 0;
-    c[0x1BC / 4] = 0;
+    c->f1B8 = 0;
+    c->f1A8 = 0;
+    c->f1B4 = 0;
+    c->f1A4 = 0;
+    c->f1BC = 0;
     sub_800A0BC0(c);
     drawEnvRed_8008D448[0] = 0x40;
     drawEnvRed_8008D448[1] = 0x40;
     drawEnvRed_8008D448[2] = 0x80;
-    task[2] = (int)TstModelTask_800A0A8C;
+    task->field_8 = TstModelTask_800A0A8C;
 }
 
 extern void sub_800A0C00();
@@ -106,9 +137,9 @@ extern void sub_800A17B8();
 extern void sub_800A1614();
 extern void sub_800A18F4();
 extern void sub_800A19E4();
-void TstModelTask_800A0A8C(int* task, int* c)
+void TstModelTask_800A0A8C(struct_obj_D* task, TstModelD* c)
 {
-    switch (c[0])
+    switch (c->state)
     {
     case 0:
         sub_800A0C00(c);
@@ -136,7 +167,7 @@ void TstModelTask_800A0A8C(int* task, int* c)
         sub_800A19E4(c);
         break;
     }
-    if ((unsigned)(c[0] - 1) >= 2 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
+    if ((unsigned)(c->state - 1) >= 2 && c->state != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
         (padHeld_800918D0[0] & 0x90A) == 0x90A)
     {
         sub_800A19E4(c);
@@ -145,31 +176,8 @@ void TstModelTask_800A0A8C(int* task, int* c)
 }
 INCLUDE_OVERLAY_ASM(tstmodel, dword_800A09B8);
 
-typedef struct TstModelA
-{
-    char pad_0[0x170];
-    short s170;
-    short s172;
-    short s174;
-    char pad_176[6];
-    int i17C;
-    char pad_180[8];
-    int i188;
-    char pad_18C[4];
-    int i190;
-    int i194;
-    int i198;
-    short s19C;
-    short s19E;
-    short s1A0;
-    char pad_1A2[0x4E];
-    short s1F0;
-    short s1F2;
-    short s1F4;
-} TstModelA;
-
 // Matched
-void sub_800A0BC0(TstModelA* a)
+void sub_800A0BC0(TstModelD* a)
 {
     a->s174 = 0x4B0;
     a->s170 = 0;
@@ -179,9 +187,9 @@ void sub_800A0BC0(TstModelA* a)
     a->s19C = 0;
     a->s19E = 0;
     a->s1A0 = 0;
-    a->s1F0 = 0;
-    a->s1F2 = 0;
-    a->s1F4 = 0;
+    a->rot_1F0.vx = 0;
+    a->rot_1F0.vy = 0;
+    a->rot_1F0.vz = 0;
     a->i188 = -0xFA;
     a->i17C = -0xFA;
 }
@@ -200,11 +208,11 @@ void sub_800A0C00(TstModelD* c)
     cur.sC = c->count_1C;
     cur.sE = c->f8;
     sub_800A1D70(&cur);
-    if (c->f4 != (short)cur.s6 || c->f8 != (short)cur.sE)
+    if (c->f4 != cur.s6 || c->f8 != (short)cur.sE)
     {
         PlaySfx_80031494(0x7F);
     }
-    c->f4 = (short)cur.s6;
+    c->f4 = cur.s6;
     c->f8 = (short)cur.sE;
     for (i = 0; i < 0x12; i++)
     {
@@ -226,7 +234,7 @@ void sub_800A0C00(TstModelD* c)
     if (padPressed_8009194C[0] & 0x20)
     {
         c->f1B8 = 0;
-        c->f24 = tbl[c->f8 + c->f4].a;
+        c->modelId_24 = tbl[c->f8 + c->f4].a;
         c->f1A8 = -1;
         c->f1AC = -1;
         c->f1BC = 0;
@@ -242,59 +250,59 @@ void sub_800A0C00(TstModelD* c)
 }
 
 extern int off_8007DC70;
-extern int InitModelList_80024ADC(int* a, int b, int c);
-extern void LoadModel_80025200(int a, int b, int c, int d, int e);
-void sub_800A0EC8(int* a)
+extern int InitModelList_80024ADC(struct_112_list** a, int b, int c);
+extern void LoadModel_80025200(struct_112_list* a, int b, int c, int d, int e);
+void sub_800A0EC8(TstModelD* a)
 {
-    InitModelList_80024ADC(&a[5], off_8007DC70, 1);
-    LoadModel_80025200(a[5], a[9], a[8], 2, 0);
-    a[8] = 0;
-    a[0] = 2;
+    InitModelList_80024ADC(&a->models_14, off_8007DC70, 1);
+    LoadModel_80025200(a->models_14, a->modelId_24, a->f20, 2, 0);
+    a->f20 = 0;
+    a->state = 2;
 }
 
 extern void sub_80024FFC(struct_112* p, void* a);
 extern void sub_80025974(struct_112* p, int a, int b);
 extern int LoadModelAnim_80025440(struct_112* p, int a, int b);
 extern char name_800A37E8[];
-void sub_800A0F20(int* a)
+void sub_800A0F20(TstModelD* a)
 {
-    struct_112* m = AcquireModel_80024D70((struct_112_list*)a[5], a[9]);
+    struct_112* m = AcquireModel_80024D70(a->models_14, a->modelId_24);
     if (AreFileRequestsDone_80024DC4(m))
     {
-        if (a[9] == 0x28 && a[0x1A8 / 4] == -1)
+        if (a->modelId_24 == 0x28 && a->f1A8 == -1)
         {
-            a[0x1A8 / 4] = 0;
+            a->f1A8 = 0;
             sub_80024FFC(m, name_800A37E8);
             sub_80025974(m, 5, 0);
             return;
         }
-        if (a[0x1AC / 4] <= 0)
+        if (a->f1AC <= 0)
         {
             int i = 0;
             int found = 0;
-            a[0x1AC / 4] = m->field_3E;
-            for (; i < a[0x1AC / 4]; i++)
+            a->f1AC = m->field_3E;
+            for (; i < a->f1AC; i++)
             {
                 if (((unsigned char*)m->field_44)[i] != 0)
                 {
-                    a[0x1A8 / 4] = i;
+                    a->f1A8 = i;
                     found = 1;
                     break;
                 }
             }
             if (!found)
             {
-                a[0x1B0 / 4] = 0;
+                a->f1B0 = 0;
                 LoadModelAnim_80025440(m, 0, 0);
                 return;
             }
         }
         else
         {
-            a[0x1A8 / 4] = a[0x1B0 / 4];
+            a->f1A8 = a->f1B0;
         }
         sub_80025C38(m, 1);
-        a[0] = 3;
+        a->state = 3;
     }
 }
 
@@ -355,7 +363,7 @@ void TstModelCameraInput_800A104C(TstModelD* c)
     c->i17C = c->i17C < -500 ? -500 : c->i17C < 501 ? c->i17C : 500;
     if ((padHeld_800918D0[0] & 0xC) == 0xC)
     {
-        sub_800A0BC0((TstModelA*)c);
+        sub_800A0BC0(c);
     }
     else if (padHeld_800918D0[0] & 4)
     {
@@ -372,7 +380,7 @@ void TstModelCameraInput_800A104C(TstModelD* c)
     {
         if (padHeld_800918D0[0] & 2)
         {
-            sub_800A0BC0((TstModelA*)c);
+            sub_800A0BC0(c);
         }
         else
         {
@@ -409,46 +417,46 @@ void TstModelCameraInput_800A104C(TstModelD* c)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8004D288(VECTOR* out, int* anim, int frame);
-extern void PlayAnimFrameSfx_8001C364(char* a0, int idx, int a2);
+extern void sub_8004D288(VECTOR* out, TstModelAnim* anim, int frame);
+extern void PlayAnimFrameSfx_8001C364(struct_112* a0, int idx, int a2);
 extern void sub_80046A58(void* a, void* b, int c);
 extern void sub_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A3268[];
 extern char name_800A3804[];
 extern char name_800A1EE8[];
-void sub_800A1428(int* c)
+void sub_800A1428(TstModelD* c)
 {
     VECTOR pos;
     char z[8];
     VECTOR scale;
-    char* m;
-    int* anim;
+    struct_112* m;
+    TstModelAnim* anim;
     memset(z, 0, 8);
-    m = (char*)AcquireModel_80024D70((struct_112_list*)c[5], c[9]);
-    c[6] = (int)m;
-    anim = (int*)(*(char**)(m + 0x54) + c[0x1A8 / 4] * 28);
-    sub_8004D288(&pos, anim, (unsigned)c[0x1A4 / 4] % anim[0]);
-    pos.vx /= anim[2];
-    pos.vy /= anim[2];
-    pos.vz /= anim[2];
+    m = AcquireModel_80024D70(c->models_14, c->modelId_24);
+    c->model_18 = m;
+    anim = (TstModelAnim*)m->field_54 + c->f1A8;
+    sub_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frames_0);
+    pos.vx /= anim->scale_8;
+    pos.vy /= anim->scale_8;
+    pos.vz /= anim->scale_8;
     pos.vy += 0xFA;
-    scale.vx = (c[0x1BC / 4] + 1) << 12;
-    scale.vy = (c[0x1BC / 4] + 1) << 12;
-    scale.vz = (c[0x1BC / 4] + 1) << 12;
-    c[0x1D4 / 4] = (int)(*(char**)(m + 0x54) + c[0x1A8 / 4] * 28);
-    c[0x1C0 / 4] = *(int*)(m + 0x50);
-    c[0x1C4 / 4] = (int)&pos;
-    c[0x1C8 / 4] = (int)z;
-    c[0x1CC / 4] = (int)(c + 10);
-    c[0x1D0 / 4] = (int)name_800A3268;
-    c[0x1D8 / 4] = (unsigned)c[0x1A4 / 4] % *(unsigned*)c[0x1D4 / 4];
-    c[0x1DC / 4] = 0;
-    c[0x1E0 / 4] = (int)name_800A3804;
-    c[0x1E4 / 4] = (int)&scale;
-    c[0x1E8 / 4] = (int)pOT_8008D690;
-    PlayAnimFrameSfx_8001C364(m, c[0x1A8 / 4], c[0x1D8 / 4]);
-    sub_80046A58(c + 0x1C0 / 4, name_800A1EE8, 0);
-    sub_800459E4(c + 10, m + 0x5C, pOT_8008D690, 0);
+    scale.vx = (c->f1BC + 1) << 12;
+    scale.vy = (c->f1BC + 1) << 12;
+    scale.vz = (c->f1BC + 1) << 12;
+    c->draw_1C0.anim_14 = (TstModelAnim*)m->field_54 + c->f1A8;
+    c->draw_1C0.f0 = m->field_50;
+    c->draw_1C0.pos_4 = &pos;
+    c->draw_1C0.f8 = z;
+    c->draw_1C0.bones_C = c->bones;
+    c->draw_1C0.f10 = name_800A3268;
+    c->draw_1C0.frame_18 = (unsigned)c->f1A4 % c->draw_1C0.anim_14->frames_0;
+    c->draw_1C0.f1C = 0;
+    c->draw_1C0.f20 = name_800A3804;
+    c->draw_1C0.scale_24 = &scale;
+    c->draw_1C0.ot_28 = pOT_8008D690;
+    PlayAnimFrameSfx_8001C364(m, c->f1A8, c->draw_1C0.frame_18);
+    sub_80046A58(&c->draw_1C0, name_800A1EE8, 0);
+    sub_800459E4(c->bones, &m->field_5C, pOT_8008D690, 0);
 }
 
 void sub_800A1614(TstModelD* c)
@@ -469,11 +477,11 @@ void sub_800A1614(TstModelD* c)
     cur.sC = n;
     cur.sE = c->f10;
     sub_800A1D70(&cur);
-    if (c->fC != (short)cur.s6 || c->f10 != (short)cur.sE)
+    if (c->fC != cur.s6 || c->f10 != (short)cur.sE)
     {
         PlaySfx_80031494(0x7F);
     }
-    c->fC = (short)cur.s6;
+    c->fC = cur.s6;
     c->f10 = (short)cur.sE;
     for (i = 0; i < 6; i++)
     {
@@ -510,106 +518,94 @@ void sub_800A1614(TstModelD* c)
 }
 
 extern void name_8002556C(struct_112* m, int a);
-void sub_800A17B8(int* c)
+void sub_800A17B8(TstModelD* c)
 {
     unsigned short pad;
     struct_112* m;
     if (padRepeat_800918CC[0] & 0x4000)
     {
-        c[0x1B0 / 4]++;
+        c->f1B0++;
     }
     else if (padRepeat_800918CC[0] & 0x1000)
     {
-        if (--c[0x1B0 / 4] < 0)
+        if (--c->f1B0 < 0)
         {
-            c[0x1B0 / 4] = c[0x1AC / 4] - 1;
+            c->f1B0 = c->f1AC - 1;
         }
     }
-    c[0x1B0 / 4] = (unsigned)c[0x1B0 / 4] % c[0x1AC / 4];
+    c->f1B0 = (unsigned)c->f1B0 % c->f1AC;
     pad = padPressed_8009194C[0];
     if (pad & 0x20)
     {
-        m = AcquireModel_80024D70((struct_112_list*)c[5], c[9]);
-        if (c[0x1B4 / 4])
+        m = AcquireModel_80024D70(c->models_14, c->modelId_24);
+        if (c->f1B4)
         {
-            name_8002556C(m, c[0x1A8 / 4]);
-            c[0x1B4 / 4] = 0;
+            name_8002556C(m, c->f1A8);
+            c->f1B4 = 0;
         }
-        if (((unsigned char*)m->field_44)[c[0x1B0 / 4]] == 0)
+        if (((unsigned char*)m->field_44)[c->f1B0] == 0)
         {
-            c[0x1B4 / 4] = 1;
+            c->f1B4 = 1;
         }
         else
         {
-            c[0x1B4 / 4] = 0;
+            c->f1B4 = 0;
         }
-        if (c[0x1B4 / 4])
+        if (c->f1B4)
         {
-            LoadModelAnim_80025440(m, c[0x1B0 / 4], 0);
+            LoadModelAnim_80025440(m, c->f1B0, 0);
         }
-        c[0x1B8 / 4] = 0;
-        c[0x1A4 / 4] = 0;
-        c[0] = 2;
+        c->f1B8 = 0;
+        c->f1A4 = 0;
+        c->state = 2;
     }
     else if (pad & 0x40)
     {
-        ((short*)c)[0x172 / 2] = 0;
-        c[0] = 3;
+        c->s172 = 0;
+        c->state = 3;
     }
 }
 
-typedef struct TstModelC
+void sub_800A18F4(TstModelD* c)
 {
-    char pad_0[0x172];
-    short s172;
-    char pad_174[0x30];
-    int i1A4;
-    char pad_1A8[0x10];
-    int i1B8;
-    int i1BC;
-    char pad_1C0[0x14];
-    unsigned int* p1D4;
-} TstModelC;
-void sub_800A18F4(TstModelC* c)
-{
-    if (c->i1B8)
+    if (c->f1B8)
     {
         if (padRepeat_800918CC[0] & 0x80)
         {
-            c->i1A4++;
+            c->f1A4++;
         }
         else if (padRepeat_800918CC[0] & 0x10)
         {
-            if (--c->i1A4 < 0)
+            if (--c->f1A4 < 0)
             {
-                c->i1A4 = *c->p1D4 - 1;
+                c->f1A4 = c->draw_1C0.anim_14->frames_0 - 1;
             }
         }
-        c->i1A4 = c->i1A4 % *c->p1D4;
+        c->f1A4 = c->f1A4 % c->draw_1C0.anim_14->frames_0;
     }
     else
     {
-        c->i1A4++;
+        c->f1A4++;
     }
     if (padPressed_8009194C[0] & 0x40)
     {
         c->s172 = 0;
-        c->i1B8 = !c->i1B8;
+        c->f1B8 = !c->f1B8;
     }
     if (padPressed_8009194C[0] & 0x100)
     {
-        c->i1BC = (c->i1BC + 1) & 3;
+        c->f1BC = (c->f1BC + 1) & 3;
     }
 }
 
-void sub_800A19E4(int* a)
+void sub_800A19E4(TstModelD* a)
 {
-    if (a[5])
+    if (a->models_14)
     {
-        FreeModelList_80024BB0(&a[5]);
+        FreeModelList_80024BB0(&a->models_14);
     }
-    a[5] = 0;
-    a[0] = 0;
+    a->models_14 = 0;
+    a->state = 0;
 }
 
 extern int name_8008D600[];
@@ -619,16 +615,16 @@ extern short name_8008D474[];
 extern int geomScreenDistance_8008B548;
 extern int name_8003B548();
 extern void name_8004D0E8();
-void SetCameraLookAt_800A1A24(int* c)
+void SetCameraLookAt_800A1A24(TstModelD* c)
 {
     int v[3];
     int yaw;
-    name_8008D600[0] = c[0x178 / 4];
-    name_8008D600[1] = c[0x17C / 4];
-    name_8008D600[2] = c[0x180 / 4];
-    v[0] = c[0x184 / 4] - c[0x178 / 4];
-    v[1] = c[0x188 / 4] - c[0x17C / 4];
-    v[2] = c[0x18C / 4] - c[0x180 / 4];
+    name_8008D600[0] = c->i178;
+    name_8008D600[1] = c->i17C;
+    name_8008D600[2] = c->i180;
+    v[0] = c->i184 - c->i178;
+    v[1] = c->i188 - c->i17C;
+    v[2] = c->i18C - c->i180;
     yaw = ratan2_8003B548(v[0], v[2]);
     name_8008D4C8[1] = -yaw;
     name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
@@ -650,44 +646,44 @@ int sub_800A1B24()
     return 6;
 }
 
-int MoveGridCursor_800A1B48(short* m)
+int MoveGridCursor_800A1B48(TstModelB* m)
 {
     int idx = 0;
-    if (m[3] < 0)
+    if (m->s6 < 0)
     {
-        m[3] = 0;
+        m->s6 = 0;
     }
     if (padRepeat_800918CC[idx] & 0x2000)
     {
-        if (m[3] % m[4] == m[4] - 1)
+        if (m->s6 % m->s8 == m->s8 - 1)
         {
             return 1;
         }
-        m[3]++;
+        m->s6++;
     }
     if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (m[3] % m[4] == 0)
+        if (m->s6 % m->s8 == 0)
         {
             return 2;
         }
-        m[3]--;
+        m->s6--;
     }
     if (padRepeat_800918CC[idx] & 0x1000)
     {
-        if (m[3] < m[4])
+        if (m->s6 < m->s8)
         {
             return 3;
         }
-        m[3] -= m[4];
+        m->s6 -= m->s8;
     }
     if (padRepeat_800918CC[idx] & 0x4000)
     {
-        if (m[3] > m[4] * (m[5] - 1) - 1)
+        if (m->s6 > m->s8 * (m->sA - 1) - 1)
         {
             return 4;
         }
-        m[3] = m[3] + m[4];
+        m->s6 = m->s6 + m->s8;
     }
     return 0;
 }
@@ -714,7 +710,7 @@ extern int name_8003D198();
 extern void PlaySfx_80031494();
 int sub_800A1D70(TstModelB* p)
 {
-    int old = (short)p->s6;
+    int old = p->s6;
     int k = MoveGridCursor_800A1B48(p);
     unsigned short t = p->sE;
     int ts = t << 16;
@@ -738,7 +734,7 @@ int sub_800A1D70(TstModelB* p)
     }
     sub_800A1CAC(p, k);
     p->sE = name_8003D198(p->sC - p->s8 * p->sA + 1, (short)p->sE, p->s8 * p->sA, 0);
-    if (old != (short)p->s6)
+    if (old != p->s6)
     {
         PlaySfx_80031494(0x7F);
     }

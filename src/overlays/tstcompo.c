@@ -9,17 +9,64 @@ extern unsigned short padRepeat_800918CC;
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
 
 typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
-typedef struct TstCompoD
+typedef struct TstCompoBone
+{
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+} TstCompoBone;
+// one animation of a model (struct_112.field_54 points to an array of them)
+typedef struct TstCompoAnim
+{
+    unsigned int frames_0;
+    char pad_4[0x18];
+} TstCompoAnim;
+// parameter block of sub_80046A58 / sub_80047E28
+typedef struct TstCompoDraw
 {
     int f0;
-    char pad_4[0x17C];
-    int f180;
-    int f184;
-    char pad_188[8];
+    VECTOR* pos_4;
+    char* f8;
+    TstCompoBone* bones_C;
+    char* f10;
+    TstCompoAnim* anim_14;
+    int frame_18;
+    int f1C;
+    char* f20;
+    VECTOR* scale_24;
+    unsigned long* ot_28;
+} TstCompoDraw;
+// work area of the TSTCOMPO task (TstCompoInit_800A0800)
+typedef struct TstCompoWork
+{
+    int state_0;
+    struct_112* model_4;
+    int f8;
+    TstCompoBone bones_C[40];
+    short yaw_14C;
+    short s14E;
+    short dist_150;
+    short pad_152;
+    int eye_154[3];
+    int at_160[3];
+    int pos_16C[3];
+    short s178;
+    short s17A;
+    short s17C;
+    short pad_17E;
+    int frame_180;
+    int anim_184;
+    int animCount_188;
+    int f18C;
     int f190;
     int f194;
     int f198;
-    char pad_19C[0x3C];
+    int f19C;
+    int* scale_1A0;
+    char* f1A4;
+    TstCompoDraw draw_1A8;
+    int pad_1D4;
     TstCompoBlk8 f1D8;
     short f1E0;
     short f1E2;
@@ -42,16 +89,16 @@ typedef struct TstCompoD
     int f224;
     int f228;
     int f22C;
-} TstCompoD;
+} TstCompoWork;
 extern void TstCompoTask_800A097C();
 extern TstCompoBlk8* name_800A250C[];
-void TstCompoInit_800A0800(int* task, TstCompoD* c)
+void TstCompoInit_800A0800(struct_obj_D* task, TstCompoWork* c)
 {
-    c->f184 = 3;
-    c->f0 = 0;
+    c->anim_184 = 3;
+    c->state_0 = 0;
     c->f194 = 0;
     c->f190 = 0;
-    c->f180 = 0;
+    c->frame_180 = 0;
     c->f198 = 0;
     drawEnvRed_8008D448[0] = 0x40;
     drawEnvRed_8008D448[1] = 0x40;
@@ -79,27 +126,44 @@ void TstCompoInit_800A0800(int* task, TstCompoD* c)
     c->f1FC = 0;
     c->f200 = 0;
     c->f204 = 0;
-    task[2] = (int)TstCompoTask_800A097C;
+    task->field_8 = TstCompoTask_800A097C;
 }
 
-extern int name_800A2768[];
+// parameters of StartModelTask_80010850 (0x34 bytes)
+typedef struct TstCompoModelParams
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int f18;
+    int modelId_1C;
+    int f20;
+    int f24;
+    int f28;
+    int f2C;
+    int f30;
+} TstCompoModelParams;
+extern TstCompoModelParams name_800A2768;
 extern int dword_8007DC74;
 void sub_800A0918()
 {
-    int* p = name_800A2768;
-    p[0] = 3;
-    p[1] = 1;
-    p[2] = 0xC;
-    p[3] = 0x29;
-    p[4] = 0x555;
-    p[5] = 0x555;
-    p[6] = 0x555;
-    p[7] = 4;
-    p[8] = 0;
-    p[9] = 0;
-    p[10] = 0x4C;
-    p[11] = 0;
-    p[12] = dword_8007DC74;
+    TstCompoModelParams* p = &name_800A2768;
+    p->f0 = 3;
+    p->f4 = 1;
+    p->f8 = 0xC;
+    p->fC = 0x29;
+    p->f10 = 0x555;
+    p->f14 = 0x555;
+    p->f18 = 0x555;
+    p->modelId_1C = 4;
+    p->f20 = 0;
+    p->f24 = 0;
+    p->f28 = 0x4C;
+    p->f2C = 0;
+    p->f30 = dword_8007DC74;
 }
 
 extern unsigned short padHeld_800918D0[];
@@ -114,16 +178,16 @@ extern void sub_800A194C();
 extern void sub_800A19A4();
 extern void sub_800A1AD0();
 extern void TstCompoCameraInput_800A1C14();
-void TstCompoTask_800A097C(int* task, int* c)
+void TstCompoTask_800A097C(struct_obj_D* task, TstCompoWork* c)
 {
-    if (c[0] != 1 && c[0] != 3 && c[0] != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
+    if (c->state_0 != 1 && c->state_0 != 3 && c->state_0 != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
         (padHeld_800918D0[0] & 0x90A) == 0x90A)
     {
         sub_800A1AD0(c);
         bStopDrawingMovie_8008D45C = 1;
         return;
     }
-    switch (c[0])
+    switch (c->state_0)
     {
     case 0:
         sub_800A0AB8(c);
@@ -156,52 +220,51 @@ void TstCompoTask_800A097C(int* task, int* c)
 INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
 
 extern void name_80010850();
-void sub_800A1320(int* a)
+void sub_800A1320(TstCompoWork* a)
 {
-    name_80010850(name_800A2768);
-    a[0] = 2;
+    name_80010850(&name_800A2768);
+    a->state_0 = 2;
 }
 
 extern int name_80010A10(int);
-extern int name_80010A44(int);
+extern struct_112* name_80010A44(int);
 extern void sub_800A1AFC();
-void sub_800A1354(int* a)
+void sub_800A1354(TstCompoWork* a)
 {
     if (name_80010A10(0))
     {
-        a[1] = name_80010A44(0);
+        a->model_4 = name_80010A44(0);
         sub_800A1AFC(a);
-        a[0x188 / 4] = -1;
-        a[0x198 / 4] = 0;
-        a[0x19C / 4] = name_800A2768[7];
-        a[0] = 3;
+        a->animCount_188 = -1;
+        a->f198 = 0;
+        a->f19C = name_800A2768.modelId_1C;
+        a->state_0 = 3;
     }
 }
 
-extern int name_80024DC4(int);
-void sub_800A13B8(int* a)
+extern int name_80024DC4(struct_112*);
+void sub_800A13B8(TstCompoWork* a)
 {
-    if (name_80024DC4(a[1]))
+    if (name_80024DC4(a->model_4))
     {
-        if (a[0x188 / 4] <= 0)
+        if (a->animCount_188 <= 0)
         {
             int i;
-            char* b = (char*)a[1];
-            a[0x188 / 4] = *(unsigned short*)(b + 0x3E);
-            for (i = 0; i < a[0x188 / 4]; i++)
+            a->animCount_188 = a->model_4->field_3E;
+            for (i = 0; i < a->animCount_188; i++)
             {
-                if ((*(unsigned char**)(a[1] + 0x44))[i] != 0)
+                if (((unsigned char*)a->model_4->field_44)[i] != 0)
                 {
-                    a[0x184 / 4] = i;
+                    a->anim_184 = i;
                     break;
                 }
             }
         }
         else
         {
-            a[0x184 / 4] = a[0x18C / 4];
+            a->anim_184 = a->f18C;
         }
-        a[0] = 4;
+        a->state_0 = 4;
     }
 }
 
@@ -210,185 +273,144 @@ extern void sub_80046A58(void* a, void* b, int c);
 extern void sub_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A2588[];
 extern char name_800A2570[];
-void sub_800A1468(int* c)
+void sub_800A1468(TstCompoWork* c)
 {
     VECTOR pos;
     char z[8];
     VECTOR scale;
     memset(z, 0, 8);
-    pos.vx = c[0x16C / 4];
-    pos.vy = c[0x170 / 4];
-    pos.vz = c[0x174 / 4];
+    pos.vx = c->pos_16C[0];
+    pos.vy = c->pos_16C[1];
+    pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
-    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
-    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
-    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
-    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
-    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + c[0x184 / 4] * 28);
-    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
-    c[0x1AC / 4] = (int)&pos;
-    c[0x1B0 / 4] = (int)z;
-    c[0x1B4 / 4] = (int)(c + 3);
-    c[0x1B8 / 4] = c[0x1A4 / 4];
-    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
-    c[0x1C4 / 4] = 0;
-    c[0x1C8 / 4] = (int)name_800A2588;
-    c[0x1CC / 4] = (int)&scale;
-    c[0x1D0 / 4] = (int)pOT_8008D690;
-    sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
-    sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    scale.vx = c->scale_1A0[0] + (c->f198 << 12);
+    scale.vy = c->scale_1A0[1] + (c->f198 << 12);
+    scale.vz = c->scale_1A0[2] + (c->f198 << 12);
+    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->draw_1A8.anim_14 = (TstCompoAnim*)c->model_4->field_54 + c->anim_184;
+    c->draw_1A8.f0 = c->model_4->field_50;
+    c->draw_1A8.pos_4 = &pos;
+    c->draw_1A8.f8 = z;
+    c->draw_1A8.bones_C = c->bones_C;
+    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frames_0;
+    c->draw_1A8.f1C = 0;
+    c->draw_1A8.f20 = name_800A2588;
+    c->draw_1A8.scale_24 = &scale;
+    c->draw_1A8.ot_28 = pOT_8008D690;
+    sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->field_54);
+    sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
 }
 
-extern void sub_80047E28(void* a, int b, void* c, int d, int e, void* f, int g);
-void sub_800A15F4(int* c)
+extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, int g);
+void sub_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
     char z[8];
     VECTOR scale;
-    unsigned int* anim;
+    TstCompoAnim* anim;
     memset(z, 0, 8);
-    pos.vx = c[0x16C / 4];
-    pos.vy = c[0x170 / 4];
-    pos.vz = c[0x174 / 4];
+    pos.vx = c->pos_16C[0];
+    pos.vy = c->pos_16C[1];
+    pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c[0x1A0 / 4] = (int)sub_80024E90((void*)c[1], c[0x19C / 4]);
-    scale.vx = ((int*)c[0x1A0 / 4])[0] + (c[0x198 / 4] << 12);
-    scale.vy = ((int*)c[0x1A0 / 4])[1] + (c[0x198 / 4] << 12);
-    scale.vz = ((int*)c[0x1A0 / 4])[2] + (c[0x198 / 4] << 12);
-    c[0x1A4 / 4] = (int)sub_80024EC8((void*)c[1], c[0x19C / 4]);
-    c[0x1BC / 4] = (int)(*(char**)(c[1] + 0x54) + 3 * 28);
-    c[0x1A8 / 4] = *(int*)(c[1] + 0x50);
-    c[0x1AC / 4] = (int)&pos;
-    c[0x1B0 / 4] = (int)z;
-    c[0x1B4 / 4] = (int)(c + 3);
-    c[0x1B8 / 4] = c[0x1A4 / 4];
-    c[0x1C0 / 4] = (unsigned)c[0x180 / 4] % *(unsigned*)c[0x1BC / 4];
-    c[0x1C4 / 4] = 0;
-    c[0x1C8 / 4] = (int)name_800A2588;
-    c[0x1CC / 4] = (int)&scale;
-    c[0x1D0 / 4] = (int)pOT_8008D690;
-    c[0x1FC / 4] += 0x88;
-    c[0x180 / 4]++;
-    if ((unsigned)c[0x1FC / 4] >= 0x1000)
+    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    scale.vx = c->scale_1A0[0] + (c->f198 << 12);
+    scale.vy = c->scale_1A0[1] + (c->f198 << 12);
+    scale.vz = c->scale_1A0[2] + (c->f198 << 12);
+    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->draw_1A8.anim_14 = (TstCompoAnim*)c->model_4->field_54 + 3;
+    c->draw_1A8.f0 = c->model_4->field_50;
+    c->draw_1A8.pos_4 = &pos;
+    c->draw_1A8.f8 = z;
+    c->draw_1A8.bones_C = c->bones_C;
+    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frames_0;
+    c->draw_1A8.f1C = 0;
+    c->draw_1A8.f20 = name_800A2588;
+    c->draw_1A8.scale_24 = &scale;
+    c->draw_1A8.ot_28 = pOT_8008D690;
+    c->f1FC += 0x88;
+    c->frame_180++;
+    if ((unsigned)c->f1FC >= 0x1000)
     {
-        sub_80046A58(c + 0x1A8 / 4, name_800A2570, *(int*)(c[1] + 0x54));
-        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+        sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->field_54);
+        sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
     }
     else
     {
-        anim = (unsigned int*)(*(char**)(c[1] + 0x54) + c[0x204 / 4] * 28);
-        sub_80047E28(c + 0x1A8 / 4, c[0x1B8 / 4], anim, (unsigned)c[0x200 / 4] % anim[0], 0x1000 - c[0x1FC / 4],
-                     name_800A2570, *(int*)(c[1] + 0x54));
-        sub_800459E4(c + 3, (char*)c[1] + 0x5C, pOT_8008D690, 0);
+        anim = (TstCompoAnim*)c->model_4->field_54 + c->f204;
+        sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frames_0, 0x1000 - c->f1FC,
+                     name_800A2570, c->model_4->field_54);
+        sub_800459E4(c->bones_C, &c->model_4->field_5C, pOT_8008D690, 0);
     }
 }
 
-typedef struct TstCompoF
+void sub_800A1804(TstCompoWork* c)
 {
-    char pad_0[0x14E];
-    short s14E;
-    char pad_150[0x30];
-    int i180;
-    char pad_184[0x10];
-    int i194;
-    int i198;
-    int i19C;
-    char pad_1A0[0x1C];
-    unsigned int* p1BC;
-} TstCompoF;
-void sub_800A1804(TstCompoF* c)
-{
-    if (c->i194)
+    if (c->f194)
     {
         if (padRepeat_800918CC & 0x80)
         {
-            c->i180++;
+            c->frame_180++;
         }
         else if (padRepeat_800918CC & 0x10)
         {
-            if (--c->i180 < 0)
+            if (--c->frame_180 < 0)
             {
-                c->i180 = *c->p1BC - 1;
+                c->frame_180 = c->draw_1A8.anim_14->frames_0 - 1;
             }
         }
-        c->i180 = c->i180 % *c->p1BC;
+        c->frame_180 = c->frame_180 % c->draw_1A8.anim_14->frames_0;
     }
     else
     {
-        c->i180++;
+        c->frame_180++;
     }
     if (padPressed_8009194C & 0x40)
     {
         c->s14E = 0;
-        c->i194 = !c->i194;
+        c->f194 = !c->f194;
     }
-    if (c->i194 == 0)
+    if (c->f194 == 0)
     {
         if (padPressed_8009194C & 0x100)
         {
-            c->i198 = (c->i198 + 1) & 3;
+            c->f198 = (c->f198 + 1) & 3;
         }
         if (padPressed_8009194C & 0x10)
         {
-            c->i19C = (c->i19C + 1) % 5;
+            c->f19C = (c->f19C + 1) % 5;
         }
     }
 }
 
-typedef struct TstCompoC
-{
-    int state;
-    char pad_4[0x17C];
-    int f180;
-    int f184;
-    char pad_188[4];
-    int f18C;
-    char pad_190[0x6C];
-    int f1FC;
-    int f200;
-    int f204;
-} TstCompoC;
-
-void sub_800A194C(TstCompoC* c)
+void sub_800A194C(TstCompoWork* c)
 {
     if (padPressed_8009194C & 0x800)
     {
-        c->state = 6;
+        c->state_0 = 6;
     }
     else if (padPressed_8009194C & 0x20)
     {
-        c->state = 5;
+        c->state_0 = 5;
         c->f1FC = 0;
-        c->f18C = c->f184;
-        c->f200 = c->f180;
-        c->f204 = c->f184;
+        c->f18C = c->anim_184;
+        c->f200 = c->frame_180;
+        c->f204 = c->anim_184;
     }
 }
 
-typedef struct TstCompoE
-{
-    int f0;
-    int f4;
-    char pad_8[0x146];
-    short s14E;
-    char pad_150[0x30];
-    int f180;
-    int f184;
-    int f188;
-    int f18C;
-    int f190;
-    int f194;
-} TstCompoE;
-extern void name_8002556C(int a, int b);
-extern void name_80025440(int a, int b, int c);
-void sub_800A19A4(TstCompoE* c)
+extern void name_8002556C(struct_112* a, int b);
+extern void name_80025440(struct_112* a, int b, int c);
+void sub_800A19A4(TstCompoWork* c)
 {
     unsigned short pad = padRepeat_800918CC;
     if (pad & 0x1000)
     {
         int v = c->f18C + 1;
-        int t = c->f188 - 1;
+        int t = c->animCount_188 - 1;
         c->f18C = v;
         if (t < v)
         {
@@ -409,10 +431,10 @@ void sub_800A19A4(TstCompoE* c)
     {
         if (c->f190)
         {
-            name_8002556C(c->f4, c->f184);
+            name_8002556C(c->model_4, c->anim_184);
             c->f190 = 0;
         }
-        if (*(unsigned char*)(*(int*)(c->f4 + 0x44) + c->f18C) == 0)
+        if (((unsigned char*)c->model_4->field_44)[c->f18C] == 0)
         {
             c->f190 = 1;
         }
@@ -422,130 +444,95 @@ void sub_800A19A4(TstCompoE* c)
         }
         if (c->f190)
         {
-            name_80025440(c->f4, c->f18C, 0);
+            name_80025440(c->model_4, c->f18C, 0);
         }
         c->f194 = 0;
-        c->f180 = 0;
-        c->f0 = 3;
+        c->frame_180 = 0;
+        c->state_0 = 3;
     }
     else if (pad & 0x40)
     {
         c->s14E = 0;
-        c->f0 = 4;
+        c->state_0 = 4;
     }
 }
 
 // Matched
-void sub_800A1AD0(int* a)
+void sub_800A1AD0(TstCompoWork* a)
 {
     FreeModelTask_8001098C(0);
-    *a = 0;
+    a->state_0 = 0;
 }
 
-typedef struct TstCompoBone
-{
-    short s0;
-    short s2;
-    short s4;
-    short s6;
-} TstCompoBone;
 extern TstCompoBone dword_80079140[];
 extern void sub_80019B14(void* p, char* a1, char* a2);
 extern char* sub_80024F00(void* p, int n);
 extern char* sub_80024F38(void* p, int n);
-typedef struct TstCompoSkel
-{
-    int f0;
-    int f4;
-    int f8;
-    TstCompoBone bones[1];
-} TstCompoSkel;
-void sub_800A1AFC(TstCompoSkel* a)
+void sub_800A1AFC(TstCompoWork* a)
 {
     int i;
     char* r;
     for (i = 0; dword_80079140[i].s0 >= 0; i++)
     {
-        a->bones[i] = dword_80079140[i];
+        a->bones_C[i] = dword_80079140[i];
     }
-    a->bones[i] = dword_80079140[i];
-    r = sub_80024F00((void*)a->f4, name_800A2768[7]);
-    sub_80019B14(a->bones, r, sub_80024F38((void*)a->f4, name_800A2768[7]));
+    a->bones_C[i] = dword_80079140[i];
+    r = sub_80024F00(a->model_4, name_800A2768.modelId_1C);
+    sub_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
 }
 
-typedef struct TstCompoA
-{
-    char pad_0[0x14C];
-    short s14C;
-    short s14E;
-    short s150;
-    short pad_152;
-    int i154;
-    int i158;
-    int i15C;
-    int i160;
-    int i164;
-    int i168;
-    int i16C;
-    int i170;
-    int i174;
-    short s178;
-    short s17A;
-    short s17C;
-} TstCompoA;
-
 // Matched
-void sub_800A1BE0(TstCompoA* a)
+void sub_800A1BE0(TstCompoWork* a)
 {
-    a->s150 = 0x4B0;
-    a->s14C = 0;
-    a->i16C = 0;
-    a->i170 = 0;
-    a->i174 = 0;
+    a->dist_150 = 0x4B0;
+    a->yaw_14C = 0;
+    a->pos_16C[0] = 0;
+    a->pos_16C[1] = 0;
+    a->pos_16C[2] = 0;
     a->s178 = 0;
     a->s17A = 0;
     a->s17C = 0;
-    a->i164 = -0xFA;
-    a->i158 = -0xFA;
+    a->at_160[1] = -0xFA;
+    a->eye_154[1] = -0xFA;
 }
 
 extern unsigned short padHeld_800918D0[];
 extern short word_80084540[];
 extern void SetCameraLookAt_800A1E68();
-void TstCompoCameraInput_800A1C14(TstCompoA* a)
+void TstCompoCameraInput_800A1C14(TstCompoWork* a)
 {
     if (padHeld_800918D0[0] & 0x8000)
     {
-        a->s14C -= 0x20;
+        a->yaw_14C -= 0x20;
     }
     else if (padHeld_800918D0[0] & 0x2000)
     {
-        a->s14C += 0x20;
+        a->yaw_14C += 0x20;
     }
     if (padHeld_800918D0[0] & 0x1000)
     {
-        a->i158 -= 0x20;
+        a->eye_154[1] -= 0x20;
     }
     else if (padHeld_800918D0[0] & 0x4000)
     {
-        a->i158 += 0x20;
+        a->eye_154[1] += 0x20;
     }
-    a->i158 = a->i158 < -1000 ? -1000 : a->i158 < 1001 ? a->i158 : 1000;
+    a->eye_154[1] = a->eye_154[1] < -1000 ? -1000 : a->eye_154[1] < 1001 ? a->eye_154[1] : 1000;
     if ((padHeld_800918D0[0] & 0xC) == 0xC)
     {
         sub_800A1BE0(a);
     }
     else if (padHeld_800918D0[0] & 4)
     {
-        a->s150 -= 0x20;
+        a->dist_150 -= 0x20;
     }
     else if (padHeld_800918D0[0] & 8)
     {
-        a->s150 += 0x20;
+        a->dist_150 += 0x20;
     }
-    a->s150 = a->s150 < 100 ? 100 : a->s150 < 1201 ? a->s150 : 1200;
-    a->i154 = a->s150 * word_80084540[a->s14C & 0xFFF] / 4096;
-    a->i15C = a->s150 * word_80084540[(a->s14C + 0x400) & 0xFFF] / 4096;
+    a->dist_150 = a->dist_150 < 100 ? 100 : a->dist_150 < 1201 ? a->dist_150 : 1200;
+    a->eye_154[0] = a->dist_150 * word_80084540[a->yaw_14C & 0xFFF] / 4096;
+    a->eye_154[2] = a->dist_150 * word_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)
@@ -554,16 +541,16 @@ void TstCompoCameraInput_800A1C14(TstCompoA* a)
         }
         else
         {
-            a->i164 -= 0x20;
+            a->at_160[1] -= 0x20;
         }
     }
     else if (padHeld_800918D0[0] & 2)
     {
-        a->i164 += 0x20;
+        a->at_160[1] += 0x20;
     }
-    a->i164 = a->i164 < -1000 ? -1000 : a->i164 < 1001 ? a->i164 : 1000;
-    a->i160 = 0;
-    a->i168 = 0;
+    a->at_160[1] = a->at_160[1] < -1000 ? -1000 : a->at_160[1] < 1001 ? a->at_160[1] : 1000;
+    a->at_160[0] = 0;
+    a->at_160[2] = 0;
     SetCameraLookAt_800A1E68(a);
 }
 
@@ -582,16 +569,16 @@ extern TstCompoMat dword_8007C2EC;
 extern TstCompoMat dword_8007C30C;
 extern TstCompoMat dword_80087114;
 extern TstCompoMat dword_80087134;
-void SetCameraLookAt_800A1E68(int* c)
+void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int v[3];
     int yaw;
-    name_8008D600[0] = c[0x154 / 4];
-    name_8008D600[1] = c[0x158 / 4];
-    name_8008D600[2] = c[0x15C / 4];
-    v[0] = c[0x160 / 4] - c[0x154 / 4];
-    v[1] = c[0x164 / 4] - c[0x158 / 4];
-    v[2] = c[0x168 / 4] - c[0x15C / 4];
+    name_8008D600[0] = c->eye_154[0];
+    name_8008D600[1] = c->eye_154[1];
+    name_8008D600[2] = c->eye_154[2];
+    v[0] = c->at_160[0] - c->eye_154[0];
+    v[1] = c->at_160[1] - c->eye_154[1];
+    v[2] = c->at_160[2] - c->eye_154[2];
     yaw = ratan2_8003B548(v[0], v[2]);
     name_8008D4C8[1] = -yaw;
     name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
@@ -624,26 +611,37 @@ typedef struct TstCompoEnt
 extern unsigned short uiColor_8008B590;
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawWindow_80042460(int a, void* b, void* c, int d);
+// window style for DrawWindow_80042460
+typedef struct TstCompoWinStyle
+{
+    unsigned short color_0;
+    unsigned char colors_2; // GetWindowColors_8004226C
+    unsigned char frame_3;  // DrawWindowFrame_80041ED0
+} TstCompoWinStyle;
 void DrawTextListWindow_800A2030(int p, TstCompoEnt* e, int idx)
 {
-    unsigned short t[2];
+    union
+    {
+        unsigned short pos[2];
+        TstCompoWinStyle style;
+    } t; // the text position, then the window style
     if (e)
     {
         int i = 0;
         while (e[i].p)
         {
-            t[0] = e[i].a;
-            t[1] = e[i].b;
-            DrawText_8003E91C(1, e[i].p, t, idx);
+            t.pos[0] = e[i].a;
+            t.pos[1] = e[i].b;
+            DrawText_8003E91C(1, e[i].p, t.pos, idx);
             i++;
         }
     }
     if (p)
     {
-        ((unsigned char*)t)[2] = 1;
-        ((unsigned char*)t)[3] = 1;
-        t[0] = uiColor_8008B590;
-        DrawWindow_80042460(p, t, pOT_8008D454 + idx, 0);
+        t.style.colors_2 = 1;
+        t.style.frame_3 = 1;
+        t.style.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(p, &t.style, pOT_8008D454 + idx, 0);
     }
 }
 

@@ -50,7 +50,7 @@ void sub_800A58B4(void)
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
     StopAllEventEntries_80043B40((int*)dword_8008D410);
-    SetCameraTarget_80037AC8((int)&dword_8008BD18);
+    SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
         r = &stru_8008D420;
@@ -68,45 +68,45 @@ void sub_800A58B4(void)
 }
 
 // Matched
-int* sub_800A59D0(int v)
+GameObj5_1* sub_800A59D0(int v)
 {
     GameObj5_1* p = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D410);
     if (p)
     {
-        int* q = p->obj_14;
+        GameEvCtx* q = p->obj_14;
         int i;
         p->flags_0 = ((((p->flags_0 | 1) & ~0x8000) | 4) & ~0x8000);
-        q[1] = v;
-        q[2] = v;
-        q[3] = v;
-        q[4] = dword_800AEBDC;
-        q[0x114 / 4] = 0;
+        q->start_4 = v;
+        q->pc_8 = v;
+        q->ret_C = v;
+        q->id_10 = dword_800AEBDC;
+        q->f114 = 0;
         for (i = 7; i >= 0; i--)
         {
-            q[51 + i] = 0;
+            q->fCC[i] = 0;
         }
         sub_800A5B54(q);
         p->fn_8 = sub_800A6060;
         p->fn_c = sub_800A6168;
         dword_800AEBDC++;
-        return (int*)p;
+        return p;
     }
     return 0;
 }
 
 // Matched
-GameR5_1* sub_800A5AA0(int a, int b)
+GameObj5_1* sub_800A5AA0(int a, int b)
 {
-    GameR5_1* r = (GameR5_1*)sub_800A59D0(a);
-    GameR6_1* t = r->f14;
+    GameObj5_1* r = sub_800A59D0(a);
+    GameEvCtx* t = r->obj_14;
     t->f120 = b;
     return r;
 }
 
 // Matched
-int sub_800A5AD0(int* p)
+int sub_800A5AD0(GameObj5_1* p)
 {
-    return *(int*)(p[5] + 0x10);
+    return ((GameEvCtx*)p->obj_14)->id_10;
 }
 
 // Matched
@@ -121,7 +121,7 @@ int sub_800A5AE4(int a)
         o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            if (a == o->obj_14[4])
+            if (a == ((GameEvCtx*)o->obj_14)->id_10)
             {
                 return (int)o;
             }
@@ -132,33 +132,33 @@ int sub_800A5AE4(int a)
 }
 
 // Matched
-void sub_800A5B54(int* p)
+void sub_800A5B54(GameEvCtx* p)
 {
     int i;
-    p[5] = 0;
-    p[6] = 0;
-    p[7] = 0;
-    p[8] = 0;
-    p[0] = 0;
-    p[0xb4 / 4] = 0;
-    p[0xb8 / 4] = 0;
-    p[0xbc / 4] = 0;
-    p[0xc0 / 4] = 0;
-    p[0xc4 / 4] = 0;
-    p[0xc8 / 4] = -1;
-    p[0xec / 4] = 0;
-    p[0x110 / 4] = 0;
-    p[0x118 / 4] = 0;
-    ((short*)p)[0x100 / 2] = -1;
-    ((short*)p)[0x102 / 2] = -1;
-    p[0x104 / 4] = -1;
-    p[0x108 / 4] = 0;
-    p[0x11c / 4] = 0;
-    p[0x120 / 4] = 0;
-    p[0xf0 / 4] = 0;
+    p->f14 = 0;
+    p->f18 = 0;
+    p->f1C = 0;
+    p->f20 = 0;
+    p->flags_0 = 0;
+    p->fB4 = 0;
+    p->fB8 = 0;
+    p->fBC = 0;
+    p->fC0 = 0;
+    p->fC4 = 0;
+    p->fC8 = -1;
+    p->fEC = 0;
+    p->f110 = 0;
+    p->f118 = 0;
+    p->f100 = -1;
+    p->f102 = -1;
+    p->f104 = -1;
+    p->f108 = 0;
+    p->f11C = 0;
+    p->f120 = 0;
+    p->fF0 = 0;
     for (i = 4; i >= 0; i--)
     {
-        p[9 + i] = 0;
+        p->f24[i] = 0;
     }
 }
 
@@ -173,10 +173,10 @@ void sub_800A5BCC(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
+            GameEvCtx* q = o->obj_14;
             int m = 1 << a;
-            q[6] &= ~m;
-            q[8] &= ~m;
+            q->f18 &= ~m;
+            q->f20 &= ~m;
         }
         n = n->next_4;
     }
@@ -188,8 +188,8 @@ int sub_800A5C40(int a)
     GameNode_1* n = dword_8008D410;
     int cnt = n->count_c;
     int i;
-    int* o;
-    int* q;
+    GameEvCtx* o;
+    GameEvEnt* q;
     int v;
     int k;
     GameObj5_1* e;
@@ -199,9 +199,9 @@ int sub_800A5C40(int a)
         if ((e->flags_0 & 0x8001) == 1)
         {
             o = e->obj_14;
-            if (r == 0 && (o[0] & 8) && o[0xc8 / 4] == a)
+            if (r == 0 && (o->flags_0 & 8) && o->fC8 == a)
             {
-                o[0] |= 4;
+                o->flags_0 |= 4;
                 r = 1;
                 break;
             }
@@ -218,22 +218,22 @@ int sub_800A5C40(int a)
             q = e->obj_14;
             if (r)
             {
-                q[0x78 / 4] = 0;
+                q->f78 = 0;
             }
-            else if (q[0x78 / 4])
+            else if (q->f78)
             {
                 k = 1;
-                v = q[0x84 / 4];
+                v = q->f84;
                 if (v != -1 && (v & 0x40000000))
                 {
                     k = (unsigned)((v & ~0x40000000) ^ a) < k;
                 }
                 if (k)
                 {
-                    q[0x7c / 4] = 0;
-                    if (q[0x88 / 4])
+                    q->f7C = 0;
+                    if (q->f88)
                     {
-                        sub_800A59D0(q[0x88 / 4]);
+                        sub_800A59D0(q->f88);
                         dword_800AEBD8 = dword_800AEBDC - 1;
                         r = 1;
                     }
@@ -246,7 +246,7 @@ int sub_800A5C40(int a)
 }
 
 // Matched
-int* sub_800A5DDC(int a, int b, int* c)
+GameEvEnt* sub_800A5DDC(int a, int b, GameEvEnt* c)
 {
     GameNode_1* n = dword_8008D400;
     int i;
@@ -256,19 +256,19 @@ int* sub_800A5DDC(int a, int b, int* c)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
+            GameEvEnt* q = o->obj_14;
             if (c != q)
             {
                 if (b == 0)
                 {
-                    if (a == q[1])
+                    if (a == q->f4)
                     {
                         return q;
                     }
                 }
                 else
                 {
-                    if (a == q[4])
+                    if (a == q->id_10)
                     {
                         return q;
                     }
@@ -296,8 +296,8 @@ int sub_800A5E80(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
-            if (q[0x78 / 4] != 0 && (q[0x84 / 4] & 0xBFFFFFFF) == a)
+            GameEvEnt* q = o->obj_14;
+            if (q->f78 != 0 && (q->f84 & 0xBFFFFFFF) == a)
                 return 1;
         }
         n = n->next_4;
@@ -309,8 +309,8 @@ int sub_800A5E80(int a)
         GameObj5_1* o = &n->sub_10;
         if ((o->flags_0 & 0x8001) == 1)
         {
-            int* q = o->obj_14;
-            if (q[0xc8 / 4] == a)
+            GameEvCtx* q = o->obj_14;
+            if (q->fC8 == a)
                 return 1;
         }
         n = n->next_4;
@@ -364,23 +364,23 @@ void sub_800A5FAC(void)
     }
 }
 
-void sub_800A6060(GameTask_1* t, GameRun_1* q)
+void sub_800A6060(GameTask_1* t, GameEvCtx* q)
 {
     while (1)
     {
         if (dword_800B0EC0 != 1)
             break;
-        if (name_800BCDBC[*(int*)q->f8](q) == 0)
+        if (name_800BCDBC[*(int*)q->pc_8](q) == 0)
             break;
     }
-    if (q->f0 & 0x40)
+    if (q->flags_0 & 0x40)
         sub_800BC2B4(q);
-    if (q->f0 & 0x10)
+    if (q->flags_0 & 0x10)
     {
-        q->f0 &= ~0x10;
-        q->f8 = (int**)q->fC;
+        q->flags_0 &= ~0x10;
+        q->pc_8 = q->ret_C;
     }
-    if (q->f0 & 1)
+    if (q->flags_0 & 1)
     {
         t->f0 &= ~1;
         t->f0 |= 0x8000;
@@ -390,9 +390,9 @@ void sub_800A6060(GameTask_1* t, GameRun_1* q)
 }
 
 // Matched
-void sub_800A6168(GameTask_1* t, GameQ_1* q)
+void sub_800A6168(GameTask_1* t, GameEvCtx* q)
 {
-    if (dword_800AEBD8 == *(int*)((char*)q + 0x10))
+    if (dword_800AEBD8 == q->id_10)
     {
         sub_800B8A34(q);
     }
@@ -402,7 +402,7 @@ void sub_800A6168(GameTask_1* t, GameQ_1* q)
 void sub_800A61CC(int a, void* b, void* c)
 {
     GameTim_1 t;
-    int i;
+    GameActorDesc* i;
     if (a == 0)
     {
         t.mode_valid = 1;
@@ -421,12 +421,12 @@ void sub_800A61CC(int a, void* b, void* c)
         i = sub_800A7A1C(a - 1);
         t.mode_valid = 1;
         t.mode = 1;
-        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
-        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.x = name_8007DCAC[i->clut_30].x;
+        t.prect.y = name_8007DCAC[i->clut_30].y;
         t.prect.w = 0x20;
         t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
-        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.x = name_8007DCBC[i->clut_30].x;
+        t.crect.y = name_8007DCBC[i->clut_30].y;
         t.crect.w = 0x100;
         t.crect.h = 1;
     }
@@ -436,7 +436,7 @@ void sub_800A61CC(int a, void* b, void* c)
 void sub_800A6308(int a, void* poly)
 {
     GameTim_1 t;
-    int i;
+    GameActorDesc* i;
     if (a == 0)
     {
         t.mode_valid = 1;
@@ -455,12 +455,12 @@ void sub_800A6308(int a, void* poly)
         i = sub_800A7A1C(a - 1);
         t.mode_valid = 1;
         t.mode = 1;
-        t.prect.x = name_8007DCAC[*(int*)(i + 0x30)].x;
-        t.prect.y = name_8007DCAC[*(int*)(i + 0x30)].y;
+        t.prect.x = name_8007DCAC[i->clut_30].x;
+        t.prect.y = name_8007DCAC[i->clut_30].y;
         t.prect.w = 0x20;
         t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[*(int*)(i + 0x30)].x;
-        t.crect.y = name_8007DCBC[*(int*)(i + 0x30)].y;
+        t.crect.x = name_8007DCBC[i->clut_30].x;
+        t.crect.y = name_8007DCBC[i->clut_30].y;
         t.crect.w = 0x100;
         t.crect.h = 1;
     }
@@ -1122,7 +1122,7 @@ int sub_800A7790(void)
     return dword_800B0EC4.count;
 }
 
-int sub_800A77A0(int a)
+int sub_800A77A0(GameMember* a)
 {
     GameList_1* l = &dword_800B0EC4;
     int i = l->count;
@@ -1134,7 +1134,7 @@ int sub_800A77A0(int a)
 }
 
 // Matched
-int sub_800A77F4(int a)
+GameMember* sub_800A77F4(int a)
 {
     return dword_800B0EC4.a[a];
 }
@@ -1144,7 +1144,7 @@ int sub_800A7810(int a)
 {
     if (a < sub_800A7790())
     {
-        GameCb_1* p = (GameCb_1*)(sub_800A77F4(a) + 0x14);
+        GameCb_1* p = &sub_800A77F4(a)->cb_14;
         return p->cb_c(p);
     }
     return 0;
@@ -1155,7 +1155,7 @@ void sub_800A785C(int a)
 {
     if (a < sub_800A7790())
     {
-        GameCb_1* p = (GameCb_1*)(sub_800A77F4(a) + 0x14);
+        GameCb_1* p = &sub_800A77F4(a)->cb_14;
         p->cb_10(p);
     }
 }
@@ -1165,7 +1165,7 @@ int sub_800A78A8(int a)
 {
     if (a < sub_800A7790())
     {
-        return ***(int***)(sub_800A77F4(a) + 0x10);
+        return (*sub_800A77F4(a)->hdr_10)->id_0;
     }
     return 0;
 }
@@ -1175,7 +1175,7 @@ int sub_800A78F4(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(short*)(**(int**)(sub_800A77F4(a) + 0x10) + 0x2a);
+        return (*sub_800A77F4(a)->hdr_10)->f2A;
     }
     return 0;
 }
@@ -1185,7 +1185,7 @@ int sub_800A7940(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(int*)(sub_800A77F4(a) + 0x18) + 0x38;
+        return (int)sub_800A77F4(a)->cb_14.actor_4->pos_38;
     }
     return 0;
 }
@@ -1195,7 +1195,7 @@ int sub_800A7984(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(int*)(sub_800A77F4(a) + 0x18) + 0x5c;
+        return (int)sub_800A77F4(a)->cb_14.actor_4->rot_5C;
     }
     return 0;
 }
@@ -1205,17 +1205,17 @@ int sub_800A79C8(int a)
 {
     if (a < sub_800A7790())
     {
-        return ((*(unsigned int*)(*(int*)(sub_800A77F4(a) + 0x18) + 4) >> 13) ^ 1) & 1;
+        return ((sub_800A77F4(a)->cb_14.actor_4->flags_4 >> 13) ^ 1) & 1;
     }
     return 0;
 }
 
 // Matched
-int sub_800A7A1C(int a)
+GameActorDesc* sub_800A7A1C(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(int*)(*(int*)(sub_800A77F4(a) + 0x18) + 0x15c);
+        return (GameActorDesc*)sub_800A77F4(a)->cb_14.actor_4->desc_15C;
     }
     return 0;
 }
@@ -1225,7 +1225,7 @@ int sub_800A7A60(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(int*)(sub_800A77F4(a) + 0x18);
+        return (int)sub_800A77F4(a)->cb_14.actor_4;
     }
     return 0;
 }
@@ -1235,7 +1235,7 @@ int sub_800A7A9C(int a)
 {
     if (a < sub_800A7790())
     {
-        return *(int*)(sub_800A77F4(a) + 0x1c);
+        return (int)sub_800A77F4(a)->cb_14.f8;
     }
     return 0;
 }
@@ -1263,10 +1263,10 @@ void sub_800A7B00(int a)
     }
     for (; i < end; i++)
     {
-        o = *(struct_obj_A**)(sub_800A77F4(i) + 0x18);
+        o = (struct_obj_A*)sub_800A77F4(i)->cb_14.actor_4;
         if (dword_800B0EC4.b[i] == 0)
         {
-            if (!(*(unsigned int*)((char*)o + 4) & 0x2000))
+            if (!(o->flags_4 & 0x2000))
             {
                 sub_8001D6EC(o, 1);
                 sub_8001D730(o, 0);
@@ -1284,7 +1284,6 @@ void sub_800A7B00(int a)
 void sub_800A7BF0(int a)
 {
     int i, end;
-    G2L* q;
     struct_obj_A* o;
     if (a < 0)
     {
@@ -1298,18 +1297,17 @@ void sub_800A7BF0(int a)
     }
     for (; i < end; i++)
     {
-        q = (G2L*)&name_800B0EC4[i];
-        o = name_800A77F4(i)->f18;
-        if (q->a)
+        o = (struct_obj_A*)sub_800A77F4(i)->cb_14.actor_4;
+        if (dword_800B0EC4.b[i])
         {
-            if (q->b)
+            if (dword_800B0EC4.c[i])
             {
                 sub_8001D6EC(o, 0);
                 sub_8001D730(o, 1);
-                q->b = 0;
+                dword_800B0EC4.c[i] = 0;
             }
             SetActorActive_8001D658((int**)o, 1);
-            q->a = 0;
+            dword_800B0EC4.b[i] = 0;
         }
     }
 }
@@ -1317,14 +1315,14 @@ void sub_800A7BF0(int a)
 int sub_800A7CB8(int a)
 {
     if (a < sub_800A7790())
-        return sub_8001E1C8(name_800A77F4(a)->f18);
+        return sub_8001E1C8((struct_obj_A*)sub_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
 int sub_800A7CFC(int a)
 {
     if (a < sub_800A7790())
-        return sub_8001E1DC(name_800A77F4(a)->f18);
+        return sub_8001E1DC((struct_obj_A*)sub_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
@@ -1367,8 +1365,8 @@ typedef struct GameAnimReq_1
 void sub_800A7D40(int a, GameCmdA_1* c)
 {
     GameAnimReq_1 s;
-    short** hdr;
-    char* ent;
+    GameModelHdr** hdr;
+    GameCb_1* ent;
     struct_obj_A* obj;
     int k;
     int t;
@@ -1376,9 +1374,9 @@ void sub_800A7D40(int a, GameCmdA_1* c)
     int w;
     if (a < sub_800A7790())
     {
-        hdr = *(short***)(sub_800A77F4(a) + 0x10);
-        ent = (char*)sub_800A77F4(a) + 0x14;
-        obj = *(struct_obj_A**)(ent + 4);
+        hdr = sub_800A77F4(a)->hdr_10;
+        ent = &sub_800A77F4(a)->cb_14;
+        obj = (struct_obj_A*)ent->actor_4;
         s.flags = 0;
         s.f4 = 0;
         s.f8 = 0;
@@ -1403,32 +1401,32 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             if (c->f14 != -1)
                 s.h24 = c->f14;
             else
-                s.h24 = (*hdr)[0x20 / 2];
+                s.h24 = (*hdr)->f20;
             s.f8 = (int)&c->f18;
-            s.hC = (*hdr)[0x26 / 2];
+            s.hC = (*hdr)->f26;
             k = 1;
             break;
         case 1:
             if (c->f14 != -1)
                 s.h24 = c->f14;
             else
-                s.h24 = (*hdr)[0x22 / 2];
+                s.h24 = (*hdr)->f22;
             s.f8 = (int)&c->f18;
-            s.hC = (*hdr)[0x26 / 2];
+            s.hC = (*hdr)->f26;
             k = 1;
             break;
         case 2:
             if (c->f14 != -1)
                 s.h26 = c->f14;
             else
-                s.h26 = (*hdr)[0x24 / 2];
+                s.h26 = (*hdr)->f24;
             s.f8 = (int)&c->f18;
-            s.hC = (*hdr)[0x26 / 2];
+            s.hC = (*hdr)->f26;
             k = 1;
             break;
         case 3:
         case 4:
-            s.f4 = (*(int**)(ent + 8))[c->fC];
+            s.f4 = ent->f8[c->fC];
             k = 1;
             break;
         case 5:
@@ -1502,7 +1500,7 @@ INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
 void sub_800A80C4(int a)
 {
     if (a < sub_800A7790())
-        name_8001E28C(name_800A77F4(a)->f18);
+        sub_8001E28C(sub_800A77F4(a)->cb_14.actor_4);
 }
 
 void sub_800A8108()
@@ -1976,9 +1974,9 @@ void sub_800A9564(int a, G2ActB* p)
 {
     int i;
     p->f778 = 0;
-    p->v48[0] = dword_8008BD18.x;
-    p->v48[1] = dword_8008BD18.y;
-    p->v48[2] = dword_8008BD18.z;
+    p->v48[0] = levantPos_8008BD18.x;
+    p->v48[1] = levantPos_8008BD18.y;
+    p->v48[2] = levantPos_8008BD18.z;
     if (p->s26 >= 0x1000)
     {
         p->f0 &= ~0x10;
@@ -2017,7 +2015,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
 {
     G2Skel_1 sk;
     int v;
-    char* anim;
+    GameAnim* anim;
     int flags;
     int st;
     char* sd;
@@ -2028,7 +2026,7 @@ void DrawLevantModel_800A9708(G2ActD* p)
         p->f3c = *(int*)(sd + 0x7c8);
         sub_800ABECC(*(int*)(sd + 0x7c8));
     }
-    anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1c);
     if (*(int*)(sd + 0x7c8) & 0x3fd)
     {
         flags = (word_8007DC8A - word_8007DC82) << 8;
@@ -2067,14 +2065,14 @@ void DrawLevantModel_800A9708(G2ActD* p)
     {
         return;
     }
-    sk.f0 = *(int*)(p->f40 + 0x50);
+    sk.f0 = p->model_40->field_50;
     sk.f4 = &levantPos_8008BD18;
     sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
     sk.bones = &dword_800B0EF8;
     sk.base = &dword_800B0FB0;
     sk.f24 = 0;
-    sk.pose = anim;
-    sk.frame = p->f10 % *(unsigned int*)anim;
+    sk.pose = (char*)anim;
+    sk.frame = p->f10 % anim->frames_0;
     sk.flags = flags;
     sk.pos = (char*)p + 0x590;
     sk.ot = pOT_8008D690;
@@ -2088,10 +2086,10 @@ void DrawLevantModel_800A9708(G2ActD* p)
     }
     else
     {
-        anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1e) * 28;
-        sub_80047E28(&sk, &dword_800B0FB0, anim, p->f14 % *(unsigned int*)anim, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
+        anim = (GameAnim*)p->model_40->field_54 + sub_800AC4A8(p->s1e);
+        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frames_0, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
     }
-    sub_800459E4(&dword_800B0EF8, p->f40 + 0x5c, pOT_8008D690, sk.flags);
+    sub_800459E4(&dword_800B0EF8, &p->model_40->field_5C, pOT_8008D690, sk.flags);
 }
 
 void sub_800A99DC(G2Q* p)
@@ -2115,9 +2113,9 @@ void sub_800AA140(G2Act* p)
     sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
 }
 
-int sub_800AA1C0(int* p)
+int sub_800AA1C0(G2Act* p)
 {
-    return p[1] & 0xFFFFFFF;
+    return p->f4 & 0xFFFFFFF;
 }
 
 int sub_800AA1D4(unsigned char* p)
@@ -2153,29 +2151,29 @@ void sub_800AA25C(G2Act* p)
     {
         return;
     }
-    if (sub_800AA1C0((int*)p) == 1)
+    if (sub_800AA1C0(p) == 1)
     {
         sub_800AB010(p, 5, 2, 0);
         return;
     }
-    if (sub_800AA1C0((int*)p) == 2)
+    if (sub_800AA1C0(p) == 2)
     {
         sub_800AB010(p, 4, 1, 0);
         return;
     }
-    if (sub_800AA1C0((int*)p) == 4)
+    if (sub_800AA1C0(p) == 4)
     {
         sub_800AB010(p, 2, 0, 0);
         p->f0 &= ~0x200000;
         return;
     }
-    if (*(int*)((char*)p + 4) & 0x30000000)
+    if (p->f4 & 0x30000000)
     {
         sub_800AB010(p, 2, 0, 0);
         p->f0 |= 0x200000;
         return;
     }
-    if (sub_800AA1C0((int*)p) == 3)
+    if (sub_800AA1C0(p) == 3)
     {
         sub_800AA1E0(p);
         return;
@@ -2484,9 +2482,9 @@ void sub_800AB3D4()
     if (!(p->f0 & 0x100))
     {
         p->f0 |= 0x4100;
-        p->v60.a = levantPos_8008BD18.a;
-        p->v60.b = levantPos_8008BD18.b;
-        p->v60.c = levantPos_8008BD18.c;
+        p->v60.a = levantPos_8008BD18.x;
+        p->v60.b = levantPos_8008BD18.y;
+        p->v60.c = levantPos_8008BD18.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;
@@ -2503,9 +2501,9 @@ void sub_800AB444(int a)
         else
             p->f0 &= ~0x1000;
         p->f0 &= ~0x100;
-        dword_8008BD18.x = p->v60.a;
-        dword_8008BD18.y = p->v60.b;
-        dword_8008BD18.z = p->v60.c;
+        levantPos_8008BD18.x = p->v60.a;
+        levantPos_8008BD18.y = p->v60.b;
+        levantPos_8008BD18.z = p->v60.c;
         p->v48.a = p->v60.a;
         p->v48.b = p->v60.b;
         p->v48.c = p->v60.c;
@@ -2713,9 +2711,9 @@ void sub_800ABC78(int a)
     if (a)
     {
         p->f0 |= 0x80000;
-        p->v60.a = levantPos_8008BD18.a;
-        p->v60.b = levantPos_8008BD18.b;
-        p->v60.c = levantPos_8008BD18.c;
+        p->v60.a = levantPos_8008BD18.x;
+        p->v60.b = levantPos_8008BD18.y;
+        p->v60.c = levantPos_8008BD18.z;
         p->v54.a = p->v48.a;
         p->v54.b = p->v48.b;
         p->v54.c = p->v48.c;

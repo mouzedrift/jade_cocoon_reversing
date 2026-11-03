@@ -139,7 +139,8 @@ typedef struct EvSaveEventfnc
     short f2EC_2EC;
     short f2EE_2EE;
     short f2F0_2F0;
-    char pad_2F2[0x7A8 - 0x2F2];
+    short f2F2_2F2;
+    char pad_2F4[0x7A8 - 0x2F4];
     int f7A8_7A8;
     int f7AC_7AC;
     int f7B0_7B0;
@@ -191,7 +192,7 @@ extern char dword_80091C10[];
 
 extern int dword_800AEBD8;
 
-extern void sub_800B8940(int* p);
+extern void sub_800B8940(int* ids);
 
 extern void RequestLoaderModel_800206A0(int a, int b, int c, int d);
 
@@ -201,7 +202,6 @@ extern char aAssertionFaile_800B6D04[];
 
 extern char aColiC_800B6D2C[];
 
-extern int dword_8008B528;
 
 extern int sub_800B82C8(int* p, int* a1, char* ents, unsigned char* flags, int n);
 
@@ -260,10 +260,26 @@ typedef struct EvMapEntEventfnc
     char pad_8[8];
 } EvMapEntEventfnc;
 
+typedef struct EvPairEventfnc
+{
+    int a;
+    int b;
+} EvPairEventfnc;
+typedef struct EvPosEventfnc
+{
+    EvPairEventfnc xy;
+    int z;
+} EvPosEventfnc;
+// where an encounter's actor is placed
+typedef struct EvPlaceEventfnc
+{
+    int pos_0[3];
+    short rotY_C;
+} EvPlaceEventfnc;
 typedef struct EvSpawnEventfnc
 {
-    int a_0[3];
-    int b_C[3];
+    EvPosEventfnc* a_0[3];
+    EvPlaceEventfnc* b_C[3];
     short f18_18;
     short f1A_1A;
 } EvSpawnEventfnc;
@@ -274,7 +290,7 @@ extern int sub_800A49CC(int a, int b, int* c, EvSpawnEventfnc* d);
 
 extern void sub_800B8568();
 
-extern int* dword_8008D674;
+extern EventNode* dword_8008D674;
 
 extern void sub_800A170C();
 
@@ -312,7 +328,7 @@ extern EvVecEventfnc* sub_800BBBD0(int i);
 
 extern short dword_8008D474[2];
 
-extern void sub_80037918(int p);
+extern void sub_80037918(void* p);
 
 extern void SetGeomOffset(long ofx, long ofy);
 

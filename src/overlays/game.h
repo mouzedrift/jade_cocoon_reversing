@@ -6,21 +6,31 @@
 
 #include "globals.h"
 
+#include "actor.h"
+
 extern void sub_800A6D30(int a);
 
-typedef struct GameFlagObj_1
+struct GameObj5_1;
+struct GameEnt_1;
+// AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the name_800ADEB8 state handlers)
+typedef struct GameAi
 {
-    unsigned int* flags_0;
-    int pad_4;
-    int** f8;
-    char pad_c[0x14];
-    int f20;
-} GameFlagObj_1;
+    unsigned int* flags_0;     // the flags of its event entry (q[0] = the entry)
+    struct GameEnt_1* minion_4; // minion data (in the enemy slot)
+    Actor* actor_8;
+    int state_c;
+    int f10;
+    char pad_14[0xC];
+    int anim_20;
+    int timer_24;
+    int f28; // turn direction (FindActorInFront_8001DECC)
+    int f2c; // turn amount
+} GameAi;
 
 typedef struct GameHolder_1
 {
     int f0;
-    GameFlagObj_1* f4;
+    GameAi* f4;
 } GameHolder_1;
 
 typedef struct GameRec_1
@@ -36,20 +46,23 @@ typedef struct GameV3_1
 typedef struct GameSlot_1
 {
     int f0;
-    struct GameFlagObj_1* f4;
+    GameAi* f4;
     char data_8[0xe0];
 } GameSlot_1;
 
+// minion data (0x88 bytes, InitMinionData_8001900C)
 typedef struct GameEnt_1
 {
-    char pad_0[0x5c];
-    int f5c;
+    char pad_0[0x44];
+    unsigned char rank_44;
+    char pad_45[0x17];
+    int f5c; // species
     char pad_60[0x28];
 } GameEnt_1;
 
-extern void sub_800A2D28(GameFlagObj_1* p);
+extern void sub_800A2D28(GameAi* p);
 
-extern void sub_800A2EC8(GameFlagObj_1* p);
+extern void sub_800A2EC8(GameAi* p);
 
 extern void FreeActiveOverlay_8002C014(void);
 
@@ -59,33 +72,77 @@ extern GameRec_1 dword_800ADE78;
 
 extern int dword_800AEB6C[];
 
-typedef struct GameR6_1
+// context of an event script (list dword_8008D410); same layout as EvCtxEventfnc in eventfnc.h
+typedef struct GameEvCtx
 {
-    char pad_0[0x120];
+    unsigned int flags_0;
+    int start_4;
+    int pc_8;
+    int ret_C;
+    int id_10;
+    int f14;
+    int f18;
+    int f1C;
+    int f20;
+    int f24[6];
+    int vec3C[5][3];
+    int vec78[5][3];
+    int fB4;
+    int fB8;
+    int fBC;
+    int fC0;
+    unsigned int fC4;
+    int fC8;
+    int fCC[8];
+    int fEC;
+    int fF0;
+    int fF4;
+    int fF8;
+    int fFC;
+    short f100;
+    short f102;
+    int f104;
+    int f108;
+    int pad_10C;
+    int f110;
+    int f114;
+    int f118;
+    int f11C;
     int f120;
-} GameR6_1;
+} GameEvCtx;
 
-typedef struct GameR5_1
+// an event entity (list dword_8008D400); same layout as EvEntEventfnc in eventfnc.h
+typedef struct GameEvEnt
 {
-    char pad_0[0x14];
-    GameR6_1* f14;
-} GameR5_1;
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int id_10;
+    char pad_14[0x34];
+    int pos_48[3];
+    char pad_54[0x24];
+    int f78;
+    int f7C;
+    int f80;
+    int f84;
+    int f88;
+    int f8C;
+} GameEvEnt;
 
-extern int* sub_800A59D0(int a);
+extern struct GameObj5_1* sub_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
-extern int dword_800B1260[];
 
-extern GameEnt_1 dword_800B130C[];
 
 extern GameSlot_1 dword_800B19F0[];
 
-extern void sub_800A2D48(GameFlagObj_1* p);
+extern void sub_800A2D48(GameAi* p);
 
 extern int sub_800A2CA8(int, int);
 
-extern void DestroyActor_8001D600(int** p);
+extern void DestroyActor_8001D600(Actor* p);
 
 extern char* dword_8008B520;
 
@@ -103,10 +160,48 @@ extern int dword_800AEBF0;
 
 extern int dword_800B0EC0;
 
+// model header of a party member (first word: model id)
+typedef struct GameModelHdr
+{
+    int id_0;
+    char pad_4[0x1C];
+    short f20;
+    short f22;
+    short f24;
+    short f26;
+    short pad_28;
+    short f2A;
+} GameModelHdr;
+
+// the part of a party member its callbacks get (GameMember.cb_14)
+typedef struct GameCb_1
+{
+    int f0;
+    Actor* actor_4;
+    int* f8;
+    int (*cb_c)();
+    void (*cb_10)();
+} GameCb_1;
+
+// what Actor.desc_15C of a party member points to
+typedef struct GameActorDesc
+{
+    char pad_0[0x30];
+    int clut_30; // index into name_8007DCAC / name_8007DCBC
+} GameActorDesc;
+
+// a party member (dword_800B0EC4.a)
+typedef struct GameMember
+{
+    char pad_0[0x10];
+    GameModelHdr** hdr_10;
+    GameCb_1 cb_14;
+} GameMember;
+
 typedef struct GameList_1
 {
     int count;
-    int a[4];
+    GameMember* a[4];
     int b[4];
     int c[4];
 } GameList_1;
@@ -115,13 +210,14 @@ extern GameList_1 dword_800B0EC4;
 
 extern int dword_800AEBF4;
 
-extern int sub_800A77F4(int a);
+extern GameMember* sub_800A77F4(int a);
+extern GameActorDesc* sub_800A7A1C(int a);
 
 extern int dword_800AEBD8;
 
 extern int dword_800B19E0;
 
-extern int dword_800B1DBC;
+extern EventNode* dword_800B1DBC;
 
 extern int dword_800B0698;
 
@@ -180,12 +276,6 @@ typedef struct GameTask_1
     void (*next_8)();
 } GameTask_1;
 
-typedef struct GameCb_1
-{
-    char pad_0[0xc];
-    int (*cb_c)();
-    void (*cb_10)();
-} GameCb_1;
 
 typedef struct GameSub_1
 {
@@ -197,11 +287,11 @@ typedef struct GameSub_1
 
 extern int sub_8001E1DC(struct_obj_A* p);
 
-extern void sub_80018EBC(int a, int b);
+extern void sub_80018EBC(Actor* a, int b);
 
-extern void sub_80018E5C(int a, int b);
+extern void sub_80018E5C(Actor* a, int b);
 
-extern void sub_8001D760(int** a, int b, int c, int d);
+extern void sub_8001D760(Actor* a, int b, int c, int d);
 
 extern int sub_800A52EC(short** a, int b, int c);
 
@@ -215,9 +305,22 @@ extern void sub_800B78D0();
 
 extern int sub_800A7790(void);
 
-extern int sub_800A77F4(int a);
+extern GameMember* sub_800A77F4(int a);
+extern GameActorDesc* sub_800A7A1C(int a);
 
 extern short* dword_800AE254[];
+
+// what sub_800A29CC hands out about an actor
+typedef struct GameActorInfo
+{
+    int f0;
+    int* pos_4;
+    char* f8;
+    char* fC;
+    int pad_10[7];
+    char* f2C;
+    int* f30;
+} GameActorInfo;
 
 typedef struct GameCtx_1
 {
@@ -230,8 +333,10 @@ typedef struct GameCtx_1
     int f44;
     int f48;
     int f4c[12];
-    int f7c[12];
-    char pad_ac[0x76c - 0xac];
+    Actor* actors_7c[12];
+    GameEnt_1 ents_ac[12]; // the encounter's minions (minion data)
+    int f70c[12];
+    int f73c[12];
     int f76c;
     int f770;
     int f774;
@@ -246,15 +351,6 @@ typedef struct GameCtx_1
 
 extern GameCtx_1 gCtx_800B1260;
 
-typedef struct GameP4470_1
-{
-    char pad_0[8];
-    struct_obj_A* f8;
-    char pad_c[0x1c];
-    int f28;
-    int f2c;
-} GameP4470_1;
-
 typedef struct GameJ_1
 {
     short h0;
@@ -263,13 +359,14 @@ typedef struct GameJ_1
 
 typedef struct GameQ_1
 {
-    char pad_0[4];
+    int req_0; // file request
     int f4;
-    char pad_8[0x34];
+    int f8;
+    char pad_c[0x30];
     int f3c;
 } GameQ_1;
 
-extern int sub_8001DD44(struct_obj_A* a, int b, int c, int d);
+extern int sub_8001DD44(Actor* a, int b, int c, int d);
 
 extern void ReflectPoint_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
 
@@ -287,7 +384,7 @@ extern void sub_800A6534(int a, int b);
 
 extern void sub_800A654C(int a, int b);
 
-extern GameVec3_1 dword_8008BD18;
+extern GameVec3_1 levantPos_8008BD18; // saveData_8008B570 + 0x7A8
 
 extern int dword_800AEB7C;
 
@@ -301,7 +398,7 @@ extern void FreeMdecBuffer_800418CC(void);
 
 extern void ReleaseMdecVLCFileBuffer_800418FC(void);
 
-extern void sub_800B8A34(GameQ_1* q);
+extern void sub_800B8A34(GameEvCtx* q);
 
 extern void sub_800C4118(void* a, void* b, int c, int d);
 
@@ -343,7 +440,7 @@ typedef struct GameObj5_1
     void (*fn_8)();
     void (*fn_c)();
     int pad_10;
-    int* obj_14;
+    void* obj_14; // the work area (EventEntry.buffer)
 } GameObj5_1;
 
 typedef struct GameNode_1
@@ -399,15 +496,6 @@ typedef struct GameV6_1
     int a, b, c, d, e, f;
 } GameV6_1;
 
-typedef struct GameP4804_1
-{
-    char pad_0[8];
-    char* f8;
-    char pad_c[0x18];
-    int f24;
-    int f28;
-} GameP4804_1;
-
 extern char aAssertionFaile_800A05A4[];
 
 extern char aFile_800A05CC[];
@@ -432,7 +520,7 @@ extern void sub_800A1474();
 
 extern char dword_80091CE0[];
 
-extern int FindActorInFront_8001DECC(void* a, int b, int c);
+extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
 extern short* sub_800B322C();
 
@@ -463,7 +551,7 @@ extern int CreateEventList_800435B4(char* p);
 
 extern char dword_800B0DA4[];
 
-extern void sub_8001E28C(int a);
+extern void sub_8001E28C(Actor* a);
 
 extern void sub_80026FAC(void);
 
@@ -508,13 +596,21 @@ typedef struct GameSave2_1
     short f2e8;
     short pad_2ea;
     short f2ec;
+    char pad_2ee[0x54A];
+    unsigned short f838[12]; // the tables sub_800A53CC picks by f2e4/f2e8 (title.c fills them with 0x8000)
+    unsigned short f850[18];
+    unsigned short f874[44];
+    unsigned short f8cc[22];
+    unsigned short f8f8[10];
+    unsigned short f90c[16];
+    unsigned short f92c[42];
 } GameSave2_1;
 
 extern GameMapEnt_1** dword_800B0608[];
 
 extern void sub_800A4940(int a, int b);
 
-extern void sub_800A5B54(int* p);
+extern void sub_800A5B54(GameEvCtx* p);
 
 extern void sub_800A6060();
 
@@ -549,7 +645,7 @@ typedef struct GameO_1
 
 extern int sub_800A48F4(int a);
 
-extern void sub_800A46FC(GameP4470_1* p);
+extern void sub_800A46FC(GameAi* p);
 
 typedef struct GameLst_1
 {
@@ -589,22 +685,6 @@ extern void sub_800A2EE4(void);
 
 extern void (*name_800ADEB8[][2])();
 
-typedef struct GameS3A8C_1
-{
-    char pad_0[8];
-    struct_obj_A* f8;
-    int fC;
-    char pad_10[0x14];
-    int f24;
-} GameS3A8C_1;
-
-typedef struct GameA2EEC_1
-{
-    char pad_0[8];
-    struct_obj_A* f8;
-    int fC;
-} GameA2EEC_1;
-
 extern int sub_800A4278();
 
 extern void SetActorState_800A433C();
@@ -616,18 +696,6 @@ extern int sub_800AB39C();
 extern void sub_800A43FC();
 
 extern void sub_800A44C0();
-
-typedef struct GameAi_1
-{
-    char pad_0[8];
-    int** obj_8;
-    int state_c;
-    char pad_10[0x10];
-    int anim_20;
-    int timer_24;
-    int f28;
-    int f2c;
-} GameAi_1;
 
 extern int* sub_800B3198(void);
 
@@ -657,17 +725,9 @@ extern int name_800AEBEC;
 
 extern unsigned int name_80091C38;
 
-typedef struct GameRun_1
-{
-    unsigned int f0;
-    int f4;
-    int** f8;
-    int fC;
-} GameRun_1;
+extern int (*name_800BCDBC[])(GameEvCtx*);
 
-extern int (*name_800BCDBC[])(GameRun_1*);
-
-extern void sub_800BC2B4(GameRun_1* q);
+extern void sub_800BC2B4(GameEvCtx* q);
 
 typedef struct GameTim_1
 {
@@ -843,7 +903,6 @@ extern G2Ctx2* dword_8008B4A4;
 
 extern char levantStatus_8008BD38;
 
-extern G2V12 levantPos_8008BD18;
 
 extern int dword_8008BDA0;
 
@@ -874,7 +933,7 @@ typedef struct G2Sv
 typedef struct G2Act
 {
     unsigned int f0;
-    char pad_4[4];
+    int f4; // input bits
     int f8;
     int fC;
     int f10;
@@ -994,19 +1053,12 @@ extern int dword_800B116C[];
 
 extern unsigned char dword_800B11B8[];
 
-typedef struct G2Ent18
-{
-    char pad_0[0x18];
-    struct_obj_A* f18;
-} G2Ent18;
 
 extern int sub_800A7790();
 
-extern G2Ent18* name_800A77F4(int);
 
 extern int sub_8001E1DC(struct_obj_A*);
 
-extern void name_8001E28C(struct_obj_A*);
 
 extern void sub_800ABC78();
 
@@ -1076,14 +1128,6 @@ extern void sub_8004ED78(int);
 
 extern int sub_8003B9E0(int*, int*);
 
-typedef struct G2L
-{
-    char pad_0[0x14];
-    int a;
-    char pad_18[0xC];
-    int b;
-} G2L;
-
 extern G2V12 dword_8007A0A4;
 
 extern G2V12 dword_8007A0B0;
@@ -1139,7 +1183,6 @@ extern int* name_800A7940(int);
 
 extern int IsWithinDistance_8003B740();
 
-extern int name_800B0EC4[];
 
 extern int sub_800A6D50(int);
 
@@ -1334,8 +1377,15 @@ typedef struct G2ActD
     int f30;
     char pad_34[8];
     int f3c;
-    char* f40;
+    struct_112* model_40;
 } G2ActD;
+
+// one animation of a model (struct_112.field_54 points to an array of them)
+typedef struct GameAnim
+{
+    unsigned int frames_0;
+    char pad_4[0x18];
+} GameAnim;
 
 extern int sub_80019CC4(void* p);
 

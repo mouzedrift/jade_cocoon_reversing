@@ -112,7 +112,15 @@ extern int dword_800B931C;
 extern int dword_800B9320;
 extern int dword_800B9434;
 extern int dword_800B9438;
-extern int dword_800B9420[4];
+// state of the map select (sub_800B860C)
+typedef struct MapSelState
+{
+    int step_0;
+    int area_4;
+    int map_8;
+    int entry_C;
+} MapSelState;
+extern MapSelState dword_800B9420;
 extern FileRequestDesc dword_800B9400[];
 extern MapRow dword_800B9220[];
 extern unsigned short word_800AEBF8[2];
@@ -311,9 +319,15 @@ typedef struct MapWin
 {
     int w[14];
 } MapWin;
+// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in tu_8002CE28.c)
 typedef struct MapMenu
 {
-    int w[6];
+    int f0;
+    int time_4;
+    int f8;
+    int sel_C;
+    MapWin** windows_10;
+    int f14;
 } MapMenu;
 extern DISPENV dispEnv_8008D750[2];
 extern char** dword_800B92FC[];
@@ -387,9 +401,9 @@ void sub_800B7A90(MapTask* t, int a)
     m = name_800B6960;
     list[0] = &w0;
     list[1] = &w1;
-    m.w[1] = GetTime30Hz_8002C64C();
-    m.w[4] = (int)list;
-    m.w[3] = name_800B9324.s8;
+    m.time_4 = GetTime30Hz_8002C64C();
+    m.windows_10 = list;
+    m.sel_C = name_800B9324.s8;
     DrawMenuWindows_8002A5A4(&m);
     if (IsConfirmPressedP1_8003D380(1))
     {
@@ -638,22 +652,22 @@ void sub_800B8448(MapPos* out)
 // Matched
 void sub_800B85CC(MapTask* t)
 {
-    int* p;
+    MapSelState* p;
     void (*f)() = sub_800B860C;
-    dword_800B9420[0] = 0;
-    p = dword_800B9420;
-    p[1] = 0;
-    p[2] = 0;
-    p[3] = 0;
+    dword_800B9420.step_0 = 0;
+    p = &dword_800B9420;
+    p->area_4 = 0;
+    p->map_8 = 0;
+    p->entry_C = 0;
     t->next_8 = f;
     f();
 }
 
 void sub_800B860C()
 {
-    int* m = dword_800B9420;
-    int a = m[1];
-    int b = m[2];
+    MapSelState* m = &dword_800B9420;
+    int a = m->area_4;
+    int b = m->map_8;
     MapEntry* list = dword_800B0608[a][b];
     RECT r1;
     RECT r2;
@@ -665,21 +679,21 @@ void sub_800B860C()
     char* str;
     int v;
     int c;
-    switch (m[0])
+    switch (m->step_0)
     {
     case 0:
         if (padRepeat_800918CC & 0x1000)
         {
-            m[1] = a - 1;
+            m->area_4 = a - 1;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m[1] = a + 1;
+            m->area_4 = a + 1;
         }
-        m[1] = m[1] < 0 ? 0 : m[1] < 6 ? m[1] : 5;
+        m->area_4 = m->area_4 < 0 ? 0 : m->area_4 < 6 ? m->area_4 : 5;
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            m[0]++;
+            m->step_0++;
         }
         r1.x = 0x1E;
         r1.y = 0x14;
@@ -687,7 +701,7 @@ void sub_800B860C()
         for (i = 0; i < 6; i++)
         {
             str = dword_800B9370[i];
-            d = i == m[1] ? (frameCount_8008D3FC & 0xF) : 0;
+            d = i == m->area_4 ? (frameCount_8008D3FC & 0xF) : 0;
             r2.x = 0x1E + d;
             r2.y = 0x32 + i * 14;
             DrawText_8003E91C(2, str, &r2, 0);
@@ -695,36 +709,36 @@ void sub_800B860C()
         if (frameCount_8008D3FC & 3)
         {
             r2.x = 0x1E;
-            r2.y = m[1] * 14 + 0x32;
+            r2.y = m->area_4 * 14 + 0x32;
             sub_8003D034(&r2, 0);
         }
         break;
     case 1:
         if (padRepeat_800918CC & 0x1000)
         {
-            m[2] = b - 1;
+            m->map_8 = b - 1;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m[2] = b + 1;
+            m->map_8 = b + 1;
         }
-        m[2] = m[2] < 0 ? 0 : (dword_800B0624[m[1]] - 1 < m[2] ? dword_800B0624[m[1]] - 1 : m[2]);
+        m->map_8 = m->map_8 < 0 ? 0 : (dword_800B0624[m->area_4] - 1 < m->map_8 ? dword_800B0624[m->area_4] - 1 : m->map_8);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            m[0]++;
+            m->step_0++;
         }
         else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            m[2] = 0;
-            m[0]--;
+            m->map_8 = 0;
+            m->step_0--;
         }
         r2.x = 0x1E;
         r2.y = 0x14;
         DrawText_8003E91C(2, dword_800B6BAC, &r2, 0);
-        for (i = 0; i < dword_800B0624[m[1]]; i++)
+        for (i = 0; i < dword_800B0624[m->area_4]; i++)
         {
-            str = dword_800B93E0[m[1]][i];
-            d = i == m[2] ? (frameCount_8008D3FC & 0xF) : 0;
+            str = dword_800B93E0[m->area_4][i];
+            d = i == m->map_8 ? (frameCount_8008D3FC & 0xF) : 0;
             r3.x = 0x1E + d;
             r3.y = 0x32 + i * 14;
             DrawText_8003E91C(2, str, &r3, 0);
@@ -732,31 +746,31 @@ void sub_800B860C()
         if (frameCount_8008D3FC & 3)
         {
             r3.x = 0x1E;
-            r3.y = m[2] * 14 + 0x32;
+            r3.y = m->map_8 * 14 + 0x32;
             sub_8003D034(&r3, 0);
         }
         break;
     case 2:
         if (padRepeat_800918CC & 0x1000)
         {
-            m[3]--;
+            m->entry_C--;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m[3]++;
+            m->entry_C++;
         }
         n = 0;
         while (list[n].id != -1)
         {
             n++;
         }
-        m[3] = m[3] < 0 ? 0 : (n - 1 < m[3] ? n - 1 : m[3]);
+        m->entry_C = m->entry_C < 0 ? 0 : (n - 1 < m->entry_C ? n - 1 : m->entry_C);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            MAPV->f2E0 = dword_800B93F8[m[1]];
-            MAPV->f2E4 = m[1];
-            MAPV->f2E8 = m[2];
-            MAPV->f2EC = m[3];
+            MAPV->f2E0 = dword_800B93F8[m->area_4];
+            MAPV->f2E4 = m->area_4;
+            MAPV->f2E8 = m->map_8;
+            MAPV->f2EC = m->entry_C;
             MAPV->f2E2 = -1;
             MAPV->f2E6 = -1;
             MAPV->f2EA = -1;
@@ -770,8 +784,8 @@ void sub_800B860C()
         }
         else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            m[3] = 0;
-            m[0]--;
+            m->entry_C = 0;
+            m->step_0--;
         }
         r3.x = 0x1E;
         r3.y = 0x14;

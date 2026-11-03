@@ -20,6 +20,13 @@ typedef struct
     int field_40;
     short length_44; // length of name_10 in bytes
 } NameEntry;
+// window style for DrawWindow_80042460
+typedef struct
+{
+    unsigned short color_0;
+    unsigned char colors_2; // GetWindowColors_8004226C
+    unsigned char frame_3;  // DrawWindowFrame_80041ED0
+} NameWinStyle;
 typedef struct
 {
     int flags;
@@ -174,8 +181,12 @@ void UpdateNameEntry_800B70F4(NameEntry* p)
 {
     short pos[2];
     RECT r;
-    unsigned short c[2];
-    unsigned short t[2];
+    NameWinStyle c;
+    union
+    {
+        unsigned short pos[2];
+        NameWinStyle style;
+    } t; // the help bar position, then the style of the character window
     int k;
     switch (p->field_8)
     {
@@ -186,10 +197,10 @@ void UpdateNameEntry_800B70F4(NameEntry* p)
         r.y = pos[1] - 1;
         r.w = 0xD;
         r.h = 0xD;
-        ((unsigned char*)c)[2] = 1;
-        ((unsigned char*)c)[3] = 1;
-        c[0] = uiColor_8008B590;
-        DrawWindow_80042460(&r, c, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
+        c.colors_2 = 1;
+        c.frame_3 = 1;
+        c.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(&r, &c, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
         name_800B8388.f4 = 0;
         name_800B82F4.f4 = 0;
         name_800B8388.f0 = 4;
@@ -211,17 +222,17 @@ void UpdateNameEntry_800B70F4(NameEntry* p)
     DrawNameField_800B7414(p);
     DrawMenuWindows_8002A5A4(&name_800B8388);
     DrawMenuWindows_8002A5A4(&name_800B82F4);
-    t[0] = 0xA;
-    t[1] = 0xD6;
-    DrawButtonHelpBar_8002B004(name_800B83A0, t, 1);
+    t.pos[0] = 0xA;
+    t.pos[1] = 0xD6;
+    DrawButtonHelpBar_8002B004(name_800B83A0, t.pos, 1);
     r.x = 0xA;
     r.y = 0x61;
     r.w = 0xC2;
     r.h = 0x65;
-    ((unsigned char*)t)[2] = 1;
-    ((unsigned char*)t)[3] = 1;
-    t[0] = uiColor_8008B590;
-    DrawWindow_80042460(&r, t, pOT_8008D454 + 14, 0);
+    t.style.colors_2 = 1;
+    t.style.frame_3 = 1;
+    t.style.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&r, &t.style, pOT_8008D454 + 14, 0);
     for (k = 0; dword_800B8190[p->pad_A][k].chars_4; k++)
     {
         DrawCharRow_800B75EC(dword_800B8190[p->pad_A][k]);

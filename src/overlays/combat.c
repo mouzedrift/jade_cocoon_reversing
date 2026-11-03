@@ -3,26 +3,72 @@
 #include "funcs.h"
 #include "globals.h"
 
+#include "actor.h"
+
+// parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
+typedef struct CombatModelParams
+{
+    int count_0;        // number of different parts
+    int parts_4[3];
+    int weights_10[3];
+    int modelId_1C;
+    int f20;
+    int angle_24;
+    int f28;
+    int f2C;
+    int f30;
+} CombatModelParams;
+
 typedef struct CombatSlotCombat
 {
-    int field_0;
-    char* field_4;
-    char pad_8[0x34];
-    char* field_3C;
+    int task_0;         // StartModelTask_80010850 id, -1 = free
+    Minion* minion_4;
+    CombatModelParams params_8;
+    Actor* actor_3C;
 } CombatSlotCombat;
 
-typedef struct CombatBlkC_combat { char pad[0xF8]; } CombatBlkC_combat;
-typedef struct CombatBlkA_combat { char pad[744]; } CombatBlkA_combat;
-typedef struct CombatBlkB_combat { char pad[3720]; } CombatBlkB_combat;
+// what sub_800A111C hands out about a slot's actor
+typedef struct CombatActorInfo
+{
+    int f0;
+    int* pos_4;
+    char* f8;
+    char* fC;
+    int pad_10[7];
+    char* f2C;
+    int* f30;
+} CombatActorInfo;
+
+// the part of cameraState_8008D4F0 that sub_800A12B8 resets
+typedef struct CombatCameraState
+{
+    char pad_0[0x14];
+    int f14[3];
+    int f20[3];
+    short pad_2C;
+    short f2E;
+    char pad_30[4];
+    SVECTOR rot_34;
+    short f3C[3];
+} CombatCameraState;
+
+// Levant's position and rotation in saveData_8008B570 (not in SaveData yet)
+typedef struct CombatSaveView
+{
+    char pad_0[0x7A8];
+    int levantPos_7A8[3];
+    short levantRot_7B4[3];
+} CombatSaveView;
+
 extern CombatSlotCombat dword_800A3A08[];
-extern CombatBlkA_combat dword_800A3AA0[];
-extern CombatBlkB_combat dword_800A1BC8[];
+extern Minion dword_800A3AA0[][3];
+extern Minion dword_800A1BC8[][15];
 extern void sub_80018E5C(void* p);
 extern void sub_80018EBC(void* p, int v);
 extern void sub_8001E1DC(void* p);
 extern void sub_800376A0(void* a, void* b);
 extern int sub_800A10C0(int i);
-extern int sub_800A1A3C(CombatBlkC_combat* p, int n);
+extern int sub_800A1A3C(Minion* p, int n);
 
 typedef struct CombatTaskCombat
 {
@@ -46,10 +92,10 @@ extern void sub_800A1554();
 extern void sub_800A15B4();
 extern char* dword_8007DC78;
 extern int StartModelTask_80010850(void* p);
-extern int cameraState_8008D4F0[];
+extern CombatCameraState cameraState_8008D4F0;
 extern int dword_8008B4F8;
 extern char dword_800A398C[];
-extern int sub_800A1934(short* p);
+extern int sub_800A1934(Minion* p);
 extern void ResetCameraToLevant_800376A8(void);
 extern void sub_80037748(void);
 extern void InitCameraTask_800368F8(void);
@@ -104,7 +150,7 @@ extern int Cbt_8001D45C(void* p);
 extern int Cbt_80024F00(int a, int b);
 extern int Cbt_80024F38(int a, int b);
 extern void Cbt_80019B14(int a, int b, int c);
-extern void Cbt_8001D68C(char* p, int on);
+extern void Cbt_8001D68C(Actor* p, int on);
 extern int dword_80079140[];
 typedef struct CombatSpawnCombat
 {
@@ -165,7 +211,7 @@ extern short word_800A1BC4;
 extern char data_8008EEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
-extern void sub_800A197C(short* p);
+extern void sub_800A197C(Minion* p);
 extern void sub_800A0D64(int a, int b);
 extern void sub_800A14AC();
 extern void CombatReq_8001E34C(void* p, void* q);
@@ -191,7 +237,7 @@ typedef struct CombatReqCombat
     int field_30;
     char pad_34[0x2C];
 } CombatReqCombat;
-extern void sub_800A05E0(unsigned char* a, int* o, int c);
+extern void sub_800A05E0(unsigned char* a, CombatModelParams* o, int c);
 extern int sub_800A0898(unsigned char* a);
 
 
@@ -199,102 +245,102 @@ INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 
 #if 0
 // Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
-void sub_800A05E0(unsigned char* a, int* o, int c)
+void sub_800A05E0(unsigned char* a, CombatModelParams* o, int c)
 {
     CombatLocalCombat l;
     unsigned int h = *(unsigned short*)Cbt_80019C70(a[2]);
     int t;
-    o[0] = Cbt_800338DC(a + 0x4C, l.b, l.w);
-    o[1] = *(unsigned short*)Cbt_80019C70(l.b[0]);
-    o[2] = *(unsigned short*)Cbt_80019C70(l.b[1]);
-    o[3] = *(unsigned short*)Cbt_80019C70(l.b[2]);
-    o[4] = l.w[0];
-    o[5] = l.w[1];
-    o[6] = l.w[2];
-    if (o[1] == o[2])
+    o->count_0 = Cbt_800338DC(a + 0x4C, l.b, l.w);
+    o->parts_4[0] = *(unsigned short*)Cbt_80019C70(l.b[0]);
+    o->parts_4[1] = *(unsigned short*)Cbt_80019C70(l.b[1]);
+    o->parts_4[2] = *(unsigned short*)Cbt_80019C70(l.b[2]);
+    o->weights_10[0] = l.w[0];
+    o->weights_10[1] = l.w[1];
+    o->weights_10[2] = l.w[2];
+    if (o->parts_4[0] == o->parts_4[1])
     {
-        if (o[2] == o[3])
+        if (o->parts_4[1] == o->parts_4[2])
         {
-            o[4] += o[5];
-            o[5] = 0;
-            o[6] = 0;
-            o[0] = 1;
+            o->weights_10[0] += o->weights_10[1];
+            o->weights_10[1] = 0;
+            o->weights_10[2] = 0;
+            o->count_0 = 1;
         }
         else
         {
-            t = o[6];
-            o[0] = 2;
-            o[4] = o[4] + o[5];
-            o[6] = 0;
-            o[2] = o[3];
-            o[5] = t;
+            t = o->weights_10[2];
+            o->count_0 = 2;
+            o->weights_10[0] = o->weights_10[0] + o->weights_10[1];
+            o->weights_10[2] = 0;
+            o->parts_4[1] = o->parts_4[2];
+            o->weights_10[1] = t;
         }
     }
-    else if (o[1] == o[3])
+    else if (o->parts_4[0] == o->parts_4[2])
     {
-        o[4] = o[4] + o[6];
-        o[6] = 0;
-        o[0] = 2;
+        o->weights_10[0] = o->weights_10[0] + o->weights_10[2];
+        o->weights_10[2] = 0;
+        o->count_0 = 2;
     }
-    else if (o[2] == o[3])
+    else if (o->parts_4[1] == o->parts_4[2])
     {
-        o[5] = o[5] + o[6];
-        o[6] = 0;
-        o[0] = 2;
+        o->weights_10[1] = o->weights_10[1] + o->weights_10[2];
+        o->weights_10[2] = 0;
+        o->count_0 = 2;
     }
-    o[11] = 0;
-    if (o[1] != h)
+    o->f2C = 0;
+    if (o->parts_4[0] != h)
     {
-        if (o[2] == h)
+        if (o->parts_4[1] == h)
         {
-            t = o[5];
-            o[2] = o[1];
-            o[1] = h;
-            o[5] = o[4];
-            o[4] = t;
+            t = o->weights_10[1];
+            o->parts_4[1] = o->parts_4[0];
+            o->parts_4[0] = h;
+            o->weights_10[1] = o->weights_10[0];
+            o->weights_10[0] = t;
         }
-        else if (o[3] == h)
+        else if (o->parts_4[2] == h)
         {
-            t = o[6];
-            o[3] = o[1];
-            o[1] = h;
-            o[6] = o[4];
-            o[4] = t;
+            t = o->weights_10[2];
+            o->parts_4[2] = o->parts_4[0];
+            o->parts_4[0] = h;
+            o->weights_10[2] = o->weights_10[0];
+            o->weights_10[0] = t;
         }
-        else if (o[0] < 2)
+        else if (o->count_0 < 2)
         {
-            t = o[4];
-            o[2] = o[1];
-            o[1] = h;
-            o[4] = 0;
-            o[0] = 2;
-            o[5] = t;
+            t = o->weights_10[0];
+            o->parts_4[1] = o->parts_4[0];
+            o->parts_4[0] = h;
+            o->weights_10[0] = 0;
+            o->count_0 = 2;
+            o->weights_10[1] = t;
         }
         else
         {
-            t = o[4];
-            o[3] = o[1];
-            o[1] = h;
-            o[4] = 0;
-            o[0] = 3;
-            o[6] = t;
+            t = o->weights_10[0];
+            o->parts_4[2] = o->parts_4[0];
+            o->parts_4[0] = h;
+            o->weights_10[0] = 0;
+            o->count_0 = 3;
+            o->weights_10[2] = t;
         }
     }
-    o[7] = Cbt_80019A80(a[0xC8]);
-    o[8] = o[0] - 1;
-    o[10] = *(unsigned short*)Cbt_80019C70(a[3]);
-    o[12] = c;
-    o[9] = sub_800A0898(a + 0xC2);
-    if (o[9] == -1000)
+    o->modelId_1C = Cbt_80019A80(a[0xC8]);
+    o->f20 = o->count_0 - 1;
+    o->f28 = *(unsigned short*)Cbt_80019C70(a[3]);
+    o->f30 = c;
+    o->angle_24 = sub_800A0898(a + 0xC2);
+    if (o->angle_24 == -1000)
     {
-        o[9] = Cbt_80019C70(a[3])[2] << 1;
+        o->angle_24 = Cbt_80019C70(a[3])[2] << 1;
     }
     else
     {
-        o[9] = o[9] - (Cbt_80019C70(a[3])[3] << 1);
-        if (o[9] < 0)
+        o->angle_24 = o->angle_24 - (Cbt_80019C70(a[3])[3] << 1);
+        if (o->angle_24 < 0)
         {
-            o[9] = o[9] + 0x168;
+            o->angle_24 = o->angle_24 + 0x168;
         }
     }
 }
@@ -367,7 +413,7 @@ void sub_800A0A28(void)
     int m = -1;
     for (i = 1; i >= 0; i--)
     {
-        dword_800A3A08[i].field_0 = m;
+        dword_800A3A08[i].task_0 = m;
     }
     InitActors_8001D378();
 }
@@ -378,7 +424,7 @@ void sub_800A0A6C(void)
     int i;
     for (i = 0; i < 2; i++)
     {
-        if (dword_800A3A08[i].field_0 >= 0)
+        if (dword_800A3A08[i].task_0 >= 0)
         {
             sub_800A0D1C(i);
             sub_800A0B70(i);
@@ -387,28 +433,28 @@ void sub_800A0A6C(void)
 }
 
 // Matched
-void sub_800A0ACC(int i, int x)
+void sub_800A0ACC(int i, Minion* x)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_800A05E0((unsigned char*)x, (int*)s->pad_8, (int)(dword_8007DC78 + (i << 6)));
-    s->field_4 = (char*)x;
-    s->field_0 = StartModelTask_80010850(s->pad_8);
-    s->field_3C = 0;
+    sub_800A05E0((unsigned char*)x, &s->params_8, (int)(dword_8007DC78 + (i << 6)));
+    s->minion_4 = x;
+    s->task_0 = StartModelTask_80010850(&s->params_8);
+    s->actor_3C = 0;
 }
 
 // Matched
 void sub_800A0B3C(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    RunModelTask_80010A10(s->field_0);
+    RunModelTask_80010A10(s->task_0);
 }
 
 // Matched
 void sub_800A0B70(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    int v = s->field_0;
-    s->field_0 = -1;
+    int v = s->task_0;
+    s->task_0 = -1;
     FreeModelTask_8001098C(v);
 }
 
@@ -417,8 +463,8 @@ void sub_800A0BA8(int i, int* src, short* sh)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
     CombatSpawnCombat r;
-    int h = Cbt_80010A44(s->field_0);
-    int v = Cbt_80019A80(*(unsigned char*)(s->field_4 + 0xC8));
+    int h = Cbt_80010A44(s->task_0);
+    int v = Cbt_80019A80(((unsigned char*)s->minion_4)[0xC8]);
     int x;
     int y;
     r.field_0 = -1;
@@ -442,21 +488,21 @@ void sub_800A0BA8(int i, int* src, short* sh)
     r.field_40 = Cbt_80024E38(h);
     r.field_44 = Cbt_80024E64(h);
     r.field_4C = 1;
-    s->field_3C = (char*)Cbt_8001D45C(&r);
+    s->actor_3C = (Actor*)Cbt_8001D45C(&r);
     x = Cbt_80024F00(h, v);
     y = Cbt_80024F38(h, v);
-    Cbt_80019B14(*(int*)(s->field_3C + 0x134), x, y);
-    Cbt_8001D68C(s->field_3C, 0);
+    Cbt_80019B14(s->actor_3C->f134, x, y);
+    Cbt_8001D68C(s->actor_3C, 0);
 }
 
 // Matched
 void sub_800A0D1C(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    if (s->field_3C)
+    if (s->actor_3C)
     {
-        DestroyActor_8001D600(s->field_3C);
-        s->field_3C = 0;
+        DestroyActor_8001D600(s->actor_3C);
+        s->actor_3C = 0;
     }
 }
 
@@ -504,27 +550,27 @@ void sub_800A0E1C(int i, int* src)
     r.field_2A = -1;
     r.field_2C = 0;
     r.field_30 = 0;
-    *(int*)(s->field_3C + 0x70) = src[0];
-    *(int*)(s->field_3C + 0x74) = src[1];
-    *(int*)(s->field_3C + 0x78) = src[2];
-    r.field_8 = s->field_3C + 0x70;
+    s->actor_3C->target_70[0] = src[0];
+    s->actor_3C->target_70[1] = src[1];
+    s->actor_3C->target_70[2] = src[2];
+    r.field_8 = s->actor_3C->target_70;
     r.field_C = 0x100;
     r.field_26 = 2;
-    CombatReq_8001E34C(s->field_3C, &r);
+    CombatReq_8001E34C(s->actor_3C, &r);
 }
 
 // Matched
 void sub_800A0EE8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_8001E1C8((struct_obj_A*)s->field_3C);
+    sub_8001E1C8((struct_obj_A*)s->actor_3C);
 }
 
 // Matched
 void sub_800A0F1C(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_8001E1DC(s->field_3C);
+    sub_8001E1DC(s->actor_3C);
 }
 
 #if 0
@@ -537,7 +583,7 @@ CombatColorCombat sub_800A0F50(int i, int* p, int x)
     s = &dword_800A3A08[i];
     if (*p != 0x14)
     {
-        Cbt_80018A4C(&c, s->field_3C, p, 0, x);
+        Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
     }
     return c;
 }
@@ -551,7 +597,7 @@ void sub_800A0FF0(int i, int* p)
     CombatSlotCombat* s = &dword_800A3A08[i];
     if (*p != 0x14)
     {
-        sub_8001E28C(s->field_3C);
+        sub_8001E28C(s->actor_3C);
     }
 }
 
@@ -559,75 +605,75 @@ void sub_800A0FF0(int i, int* p)
 void sub_800A1034(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018E5C(s->field_3C);
+    sub_80018E5C(s->actor_3C);
 }
 
 // Matched
 void sub_800A1068(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018EBC(s->field_3C, sub_800A10C0(i));
+    sub_80018EBC(s->actor_3C, sub_800A10C0(i));
 }
 
 // Matched
 int sub_800A10A4(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_4 + 4;
+    return (int)s->minion_4 + 4;
 }
 
 // Matched
 int sub_800A10C0(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_4 + 0x84;
+    return (int)&s->minion_4->status_84;
 }
 
 // Matched
 int sub_800A10DC(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_3C + 0x38;
+    return (int)s->actor_3C->pos_38;
 }
 
 // Matched
 int sub_800A10F8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return *(int*)(s->field_3C + 0x1C4);
+    return (int)s->actor_3C->f1C4;
 }
 
 // Matched
-void sub_800A111C(int i, int* out)
+void sub_800A111C(int i, CombatActorInfo* out)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    out[0] = *(int*)(s->field_3C + 0x14C);
-    out[1] = (int)(s->field_3C + 0x38);
-    out[2] = *(int*)(s->field_3C + 0x1C4);
-    out[3] = *(int*)(s->field_3C + 0x1C8);
-    out[0xB] = *(int*)(s->field_3C + 0x144);
-    out[0xC] = (int)(s->field_3C + 0x2C);
+    out->f0 = s->actor_3C->f14C;
+    out->pos_4 = s->actor_3C->pos_38;
+    out->f8 = s->actor_3C->f1C4;
+    out->fC = s->actor_3C->f1C8;
+    out->f2C = s->actor_3C->f144;
+    out->f30 = &s->actor_3C->f2C;
 }
 
 // Matched
 int sub_800A11A0(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_4 + 0xDE;
+    return (int)s->minion_4->field_DE;
 }
 
 // Matched
 int sub_800A11BC(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_4 + 0xF4;
+    return (int)s->minion_4->field_F4;
 }
 
 // Matched
 int sub_800A11D8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->field_4;
+    return (int)s->minion_4;
 }
 
 // Matched
@@ -649,37 +695,37 @@ void sub_800A11F4(void)
 // Matched
 void sub_800A127C(void)
 {
-    char* p = (char*)cameraTask_8008D4A0;
-    sub_800376A0(p + 0x10, *(void**)(p + 0x24));
+    EventNode* p = (EventNode*)cameraTask_8008D4A0;
+    sub_800376A0(&p->entry, p->entry.buffer);
     StopAllEventEntries_80043B40((int*)cameraTask_8008D4A0);
 }
 
 // Matched
 void sub_800A12B8(void)
 {
-    char* p = (char*)cameraState_8008D4F0;
-    char* q;
-    *(short*)(p + 0x2E) = 0;
-    *(int*)(p + 0x20) = 0;
-    *(int*)(p + 0x24) = 0;
-    *(int*)(p + 0x28) = 0;
-    *(int*)(p + 0x14) = 0;
-    *(int*)(p + 0x18) = 0;
-    *(int*)(p + 0x1C) = 0;
-    *(short*)(p + 0x34) = 0;
-    *(short*)(p + 0x36) = 0;
-    *(short*)(p + 0x38) = 0;
-    *(short*)(p + 0x3C) = 0;
-    *(short*)(p + 0x3E) = 0;
-    *(short*)(p + 0x40) = 0;
+    CombatCameraState* p = &cameraState_8008D4F0;
+    CombatSaveView* q;
+    p->f2E = 0;
+    p->f20[0] = 0;
+    p->f20[1] = 0;
+    p->f20[2] = 0;
+    p->f14[0] = 0;
+    p->f14[1] = 0;
+    p->f14[2] = 0;
+    p->rot_34.vx = 0;
+    p->rot_34.vy = 0;
+    p->rot_34.vz = 0;
+    p->f3C[0] = 0;
+    p->f3C[1] = 0;
+    p->f3C[2] = 0;
     dword_8008B4F8 = 0x1000;
-    q = (char*)&saveData_8008B570;
-    *(int*)(q + 0x7A8) = 0;
-    *(int*)(q + 0x7AC) = 0;
-    *(int*)(q + 0x7B0) = 0;
-    *(short*)(q + 0x7B4) = 0;
-    *(short*)(q + 0x7B6) = 0;
-    *(short*)(q + 0x7B8) = 0;
+    q = (CombatSaveView*)&saveData_8008B570;
+    q->levantPos_7A8[0] = 0;
+    q->levantPos_7A8[1] = 0;
+    q->levantPos_7A8[2] = 0;
+    q->levantRot_7B4[0] = 0;
+    q->levantRot_7B4[1] = 0;
+    q->levantRot_7B4[2] = 0;
 }
 
 // Matched
@@ -711,7 +757,7 @@ void sub_800A13A0(CombatTaskCombat* t)
         char* q = (char*)dword_800A3AA0;
         for (j = 0; j < 3; j++)
         {
-            sub_800A197C((short*)((char*)off + (int)q));
+            sub_800A197C((Minion*)((char*)off + (int)q));
             q += 0xF8;
         }
         off += 0x2E8;
@@ -886,11 +932,11 @@ void sub_800A16FC(CombatTaskCombat* t)
 }
 
 // Matched
-void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
+void sub_800A1844(Minion* a, unsigned short* pt, unsigned int flags)
 {
     char* q;
     unsigned short v[2];
-    if (sub_800A1934((short*)a) != 1)
+    if (sub_800A1934(a) != 1)
     {
         if (flags & 2)
         {
@@ -900,10 +946,10 @@ void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
         {
             SetFontClutOffset_8003F900(1, 0);
         }
-        q = a + 0x84;
+        q = a->status_84;
         v[0] = pt[0] + 5;
         v[1] = pt[1] + 6;
-        Cbt_8002FAA0(0, v, a + 0x94, 0);
+        Cbt_8002FAA0(0, v, a->name_94, 0);
         v[0] = pt[0] + 0x50;
         v[1] = pt[1] + 6;
         Cbt_8002C290(v, *(unsigned char*)(q + 0x44), 0);
@@ -914,25 +960,25 @@ void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
 }
 
 // Matched
-int sub_800A1934(short* p)
+int sub_800A1934(Minion* p)
 {
     if (p == 0)
     {
         return 1;
     }
-    return *p == 4;
+    return p->id == 4;
 }
 
 // Matched
-void sub_800A1958(char* p)
+void sub_800A1958(Minion* p)
 {
-    sub_80033548((int*)(p + 0x84), 0x400);
+    sub_80033548((int*)p->status_84, 0x400);
 }
 
 // Matched
-void sub_800A197C(short* p)
+void sub_800A197C(Minion* p)
 {
-    *p = 4;
+    p->id = 4;
 }
 
 #if 0
@@ -944,7 +990,7 @@ void sub_800A1988(void)
     byte_800A38DA = 0;
     for (i = 0; i < 15; i++)
     {
-        MemCopy_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&((CombatBlkA_combat*)dword_800A1BC8)[byte_800A38DA]), (unsigned int*)src, 0xF8);
+        MemCopy_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&dword_800A1BC8[0][byte_800A38DA]), (unsigned int*)src, 0xF8);
         src += 0xF8;
         byte_800A38DA++;
     }
@@ -954,13 +1000,13 @@ void sub_800A1988(void)
 INCLUDE_OVERLAY_ASM(combat, sub_800A1988);
 
 // Matched
-int sub_800A1A3C(CombatBlkC_combat* p, int n)
+int sub_800A1A3C(Minion* p, int n)
 {
     int i;
     int count = 0;
     for (i = 0; i < n; i++)
     {
-        if (!sub_800A1934((short*)&p[i]))
+        if (!sub_800A1934(&p[i]))
         {
             count++;
         }
@@ -971,13 +1017,13 @@ int sub_800A1A3C(CombatBlkC_combat* p, int n)
 // Matched
 void sub_800A1AAC(int i)
 {
-    sub_800A1A3C((CombatBlkC_combat*)&dword_800A3AA0[i], 3);
+    sub_800A1A3C(dword_800A3AA0[i], 3);
 }
 
 // Matched
 int sub_800A1AEC(int i)
 {
-    return sub_800A1A3C((CombatBlkC_combat*)&dword_800A1BC8[i], 0xF);
+    return sub_800A1A3C(dword_800A1BC8[i], 0xF);
 }
 
 // Matched
