@@ -71,8 +71,109 @@ void sub_8003EF74(int a0, int a1, int a2)
     IntToText_8003F610(buf, a1);
     DrawText_8003E91C(2, (int*)buf, a0, a2);
 }
-INCLUDE_ASM(sub_8003EFBC);
-INCLUDE_ASM(sub_8003F264);
+// Matched
+void sub_8003EFBC(short* pos, int val, int ot)
+{
+    unsigned short buf[12];
+    Font* p;
+    short x = pos[0];
+    short y = pos[1];
+    unsigned short* s;
+    int c;
+    unsigned short u;
+    int v;
+    int col;
+
+    IntToSjisReversed_8003F58C((unsigned char*)buf, val);
+    s = EncodeText_8003F684(2, buf);
+    p = &fonts_80095FB0[2];
+    c = *s;
+    while (c != 0)
+    {
+        s++;
+        x -= p->w_10;
+        if (c <= charTables_8008685C[2].field_4)
+        {
+            u = c - 1;
+            v = (short)(u % (unsigned short)p->field_28);
+            u = u / (unsigned short)p->field_28;
+            col = v % (unsigned short)p->field_1C;
+            v = v / (unsigned short)p->field_1C;
+            p->x0_8 = x;
+            p->y0_A = y;
+            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + u));
+            p->u_C = p->field_18 + p->w_10 * col;
+            p->v_D = p->field_1A + p->h_12 * v;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+        }
+        c = *s;
+    }
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+}
+extern int dword_80086898[][12];
+// Matched
+void sub_8003F264(short* pos, int val, int ot)
+{
+    unsigned short buf[12];
+    Font* p;
+    short x = pos[0];
+    short y = pos[1];
+    unsigned short* s;
+    unsigned short c;
+    short k;
+    int v;
+    int col;
+
+    IntToSjisReversed_8003F58C((unsigned char*)buf, val);
+    s = EncodeText_8003F684(1, buf);
+    p = &fonts_80095FB0[1];
+    while (*s != 0)
+    {
+        c = *s++;
+        x -= p->w_10;
+        for (k = 12; k != 0; k--)
+        {
+            if (c - 1 < dword_80086898[0][k - 1])
+            {
+                x += k;
+                break;
+            }
+        }
+        if (c <= charTables_8008685C[1].field_4)
+        {
+            c = c - 1;
+            v = (short)(c % (unsigned short)p->field_28);
+            c = c / (unsigned short)p->field_28;
+            col = v % (unsigned short)p->field_1C;
+            v = v / (unsigned short)p->field_1C;
+            p->x0_8 = x;
+            p->y0_A = y;
+            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + c));
+            p->u_C = p->field_18 + p->w_10 * col;
+            p->v_D = p->field_1A + p->h_12 * v;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+        }
+    }
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+}
 // Matched
 void DrawNumber_8003F544(int a0, int a1, int a2)
 {

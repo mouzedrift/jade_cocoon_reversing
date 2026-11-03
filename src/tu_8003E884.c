@@ -41,5 +41,64 @@ int sub_8003E884(int idx, short n)
     }
     return r;
 }
-INCLUDE_ASM(DrawText_8003E91C);
+typedef struct
+{
+    unsigned short* tbl;
+    int field_4;
+    int count;
+} CharTable_8003E91C;
+extern CharTable_8003E91C charTables_8008685C[];
+// Matched
+void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot)
+{
+    Font* p = &fonts_80095FB0[idx];
+    short x = pos[0];
+    short y = pos[1];
+    unsigned short* s;
+    unsigned short c;
+    short k;
+    int v;
+    int col;
+
+    s = EncodeText_8003F684(idx, str);
+    c = *s;
+    while (c != 0)
+    {
+        s++;
+        if (c <= charTables_8008685C[idx].field_4)
+        {
+            for (k = 12; k > 0; k--)
+            {
+                if (c - 1 < dword_80086898[idx - 1][k - 1])
+                {
+                    break;
+                }
+            }
+            c = c - 1;
+            v = (short)(c % (unsigned short)p->field_28);
+            c = c / (unsigned short)p->field_28;
+            col = v % (unsigned short)p->field_1C;
+            v = v / (unsigned short)p->field_1C;
+            p->x0_8 = x;
+            p->y0_A = y;
+            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + c));
+            p->u_C = p->field_18 + p->w_10 * col;
+            p->v_D = p->field_1A + p->h_12 * v;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+            x -= k;
+        }
+        x += p->w_10;
+        c = *s;
+    }
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+}
 INCLUDE_ASM(sub_8003EC2C);

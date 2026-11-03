@@ -210,7 +210,7 @@ extern char lib_bss[];
 #define StCdIntrFlag (*(int*)(lib_bss + (0x8009AE6C - 0x8009AE60)))
 extern void StCdInterrupt(void);
 #if 0
-// Not matched: slice-size product / rectid toggle scheduling differs (~60 lines)
+// Not matched: field_14 is loaded straight into $s0 and hoisted above the slice copy (orig: lw $v0; move $s0,$v0 after the copy), 1 instruction short
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
@@ -223,8 +223,7 @@ void MovieDctOutCallback_80041424(void)
         StCdIntrFlag = 0;
     }
     r = movieCtx_800960C0.slice;
-    id = movieCtx_800960C0.field_14;
-    movieCtx_800960C0.field_14 = movieCtx_800960C0.field_14 ? 0 : 1;
+    movieCtx_800960C0.field_14 = (id = movieCtx_800960C0.field_14) == 0;
     if (dword_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
     {
         dword_80096100 = 0;
@@ -236,7 +235,7 @@ void MovieDctOutCallback_80041424(void)
     }
     if (movieCtx_800960C0.slice.x < movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x + movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w)
     {
-        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], (movieCtx_800960C0.slice.w * 16 * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
     }
     else
     {
