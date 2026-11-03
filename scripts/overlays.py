@@ -239,7 +239,8 @@ def main(argv):
             if not (base <= a < base + len(data)):
                 f.write("%s\tequ\t$%08x\n" % (n, a))
         # buffers behind the overlay that are only named in the C source (name_XXXXXXXX)
-        known = {n for _, n in main_syms} | {n for _, n in syms}
+        # (main-exe symbols inside the overlay range are not written above, so they count as unknown here)
+        known = {n for a, n in main_syms if not (base <= a < base + len(data))} | {n for _, n in syms}
         for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", open(src).read()))):
             if n not in known:
                 f.write("%s\tequ\t$%s\n" % (n, addr))

@@ -36,12 +36,18 @@ def main(argv):
     results = {"exe-image": (sha(orig[:len(built)]), sha(built))}
     for sym in sorted(glob.glob(os.path.join(REPO, "overlays", "*.sym"))):
         name = os.path.basename(sym)[:-4].upper()
+        out_bin = os.path.join(REPO, "build_psyq", name + ".BIN")
+        if os.path.exists(out_bin):
+            os.remove(out_bin)  # a failed build must not leave the previous image behind
         if subprocess.call([sys.executable, os.path.join(REPO, "scripts", "overlays.py"), name, iso, exe_path],
                            cwd=REPO, stdout=subprocess.DEVNULL) not in (0, 1):
             results["overlay-" + name] = ("", "BUILD FAILED")
             continue
+        if not os.path.exists(out_bin):
+            results["overlay-" + name] = ("", "BUILD FAILED")
+            continue
         data = open(os.path.join(REPO, "build_psyq", name + ".orig"), "rb").read()
-        results["overlay-" + name] = (sha(data), sha(open(os.path.join(REPO, "build_psyq", name + ".BIN"), "rb").read()))
+        results["overlay-" + name] = (sha(data), sha(open(out_bin, "rb").read()))
     path = os.path.join(REPO, "config", "hashes.txt")
     if update:
         with open(path, "w") as f:

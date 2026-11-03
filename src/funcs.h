@@ -470,7 +470,6 @@ extern int sub_80020B70(int* p);
 extern void sub_8001E574(int* p, int a1);
 
 extern void sub_800127B8(struct_obj_B* p);
-extern int sub_800A10C0(unsigned char a0);
 extern int sub_800A2B60(int a0);
 extern void sub_8006EC08(void);
 extern void sub_8004EDB8(void);

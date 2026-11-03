@@ -188,7 +188,6 @@ typedef struct GameQ_1
     int f3c;
 } GameQ_1;
 extern int sub_8001DD44(struct_obj_A* a, int b, int c, int d);
-extern int sub_8001DDFC(struct_obj_A* a, GameVec3_1* b, int c);
 extern void sub_800A47B8(GameVec3_1* a, GameVec3_1* b, GameVec3_1* out);
 extern void sub_800A7654();
 extern void sub_800A1314();
@@ -3032,7 +3031,6 @@ typedef struct G2Ent16
 } G2Ent16;
 extern G2Ent16** name_800B0608[];
 extern void sub_80014588(void*, void*, int);
-extern void sub_80025C38(void*, int);
 extern char dword_800A07E0[];
 extern char dword_800A0808[];
 extern int sub_8001AC8C(int);
@@ -3067,7 +3065,7 @@ extern G2V12 dword_8007A14C;
 extern G2V12 dword_8007A164;
 extern char dword_8007DC80;
 extern char dword_8007DC88;
-extern unsigned int levantStatus_8008BD38;
+extern unsigned int dword_8008BD38;
 extern void sub_800292D0();
 typedef struct G2L2
 {
@@ -3114,7 +3112,6 @@ typedef struct G2Save
     int f24;
 } G2Save;
 extern void sub_80025884(int);
-extern void sub_80024DC4(int);
 extern short word_8008D668[2];
 extern int sub_800AB304();
 extern int sub_800AB354();
@@ -3514,8 +3511,8 @@ void sub_800A94CC(void)
     sub_800A9414(p, 0, 3);
     sub_800AB150((G2Obj*)p);
     sub_800B80C8(p);
-    p->f3C = levantStatus_8008BD38;
-    sub_800ABECC(levantStatus_8008BD38);
+    p->f3C = dword_8008BD38;
+    sub_800ABECC(dword_8008BD38);
 }
 
 void sub_800A955C()
@@ -4070,7 +4067,7 @@ void sub_800ABDF0(G2Act* a)
 void sub_800ABECC()
 {
     G2V12* r = &dword_8007A164;
-    unsigned int f = levantStatus_8008BD38;
+    unsigned int f = dword_8008BD38;
     if (f & 0x200)
     {
         if (f & 1)

@@ -76,7 +76,6 @@ extern int sub_800AD184(int a, int b, int c);
 extern void sub_800AD1E0(int a, int b, int c);
 extern void sub_800AD058(int a);
 extern int sub_800AD0A4(int a);
-extern int sub_8001D1F8(int a, int b);
 extern void sub_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
 extern void sub_8003D794(void* p, int a1);
