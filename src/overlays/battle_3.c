@@ -384,15 +384,15 @@ void sub_800BF3DC(int a, int b, int c, int d, int e)
     EventEntry* p = AllocEventEntry_80043AF8(dword_8008D778);
     if (p)
     {
-        int* q = p->buffer;
+        BatHitNum_a* q = p->buffer;
         p->flags = (p->flags | 1) & 0xFFFF7FFF;
-        q[0] = b;
-        q[2] = 0;
-        q[3] = 0;
-        q[1] = c;
-        q[4] = d;
-        q[5] = e;
-        q[6] = a;
+        q->kind_0 = b;
+        q->frame_8 = 0;
+        q->alpha_C = 0;
+        q->amount_4 = c;
+        q->pos_10 = (unsigned short*)d;
+        q->f14 = e;
+        q->unit_18 = a;
         p->cb_8 = (EventEntryFn)sub_800BF4D0;
     }
 }
@@ -414,48 +414,48 @@ int sub_800BF47C()
     return 0;
 }
 
-void sub_800BF4D0(EventEntry* t, int* u)
+void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
 {
     DVECTOR sxy;
     SVECTOR v;
     long p;
     long flag;
     int x;
-    v.vx = ((unsigned short*)u[4])[0];
-    v.vy = ((unsigned short*)u[4])[2];
-    v.vz = ((unsigned short*)u[4])[4];
+    v.vx = u->pos_10[0];
+    v.vy = u->pos_10[2];
+    v.vz = u->pos_10[4];
     v.vx -= dword_8008D600[0].field_0;
     v.vy -= dword_8008D600[1].field_0;
     v.vz -= dword_8008D600[2].field_0;
     RotTransPers(&v, (long*)&sxy, &p, &flag);
-    u[2]++;
-    if (u[2] > 0x10)
+    u->frame_8++;
+    if (u->frame_8 > 0x10)
     {
         t->flags = (t->flags & ~1) | 0x8000;
         return;
     }
-    if (u[2] > 8)
+    if (u->frame_8 > 8)
     {
-        u[3] -= 4;
+        u->alpha_C -= 4;
     }
     else
     {
-        u[3] += 4;
+        u->alpha_C += 4;
     }
-    x = u[1] / (0x11 - u[2]);
+    x = u->amount_4 / (0x11 - u->frame_8);
     x = -x;
-    u[1] += x;
-    if (u[0] == 0)
+    u->amount_4 += x;
+    if (u->kind_0 == 0)
     {
-        sub_800127D0(u[6], 0, x, 0);
-        if (*(short*)(sub_80014390((unsigned char)u[6]) + 8) <= 0)
+        sub_800127D0(u->unit_18, 0, x, 0);
+        if (((BatUnit_a*)sub_80014390((unsigned char)u->unit_18))->hp_8 <= 0)
         {
-            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)u[6]));
+            sub_800127B8((struct_obj_B*)sub_80014390((unsigned char)u->unit_18));
         }
     }
-    if (u[0] == 1)
+    if (u->kind_0 == 1)
     {
-        sub_800127D0(u[6], 2, x, 0);
+        sub_800127D0(u->unit_18, 2, x, 0);
     }
 }
 
@@ -756,8 +756,8 @@ void sub_800BFB80()
 
 void sub_800BFBB8()
 {
-    StopAllEventEntries_80043B40(dword_8008B568);
-    StopAllEventEntries_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40((int*)dword_8008B568);
+    StopAllEventEntries_80043B40((int*)dword_8008B564);
     StopAllEventEntries_80043B40((int*)dword_8008D4B0);
     StopAllEventEntries_80043B40((int*)dword_8008D63C);
 }
@@ -774,7 +774,7 @@ void sub_800BFC10()
 
 void sub_800BFC40()
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008B568);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B568);
     int m;
     int n;
     int i;
@@ -796,21 +796,21 @@ void sub_800BFC40()
             b = m & (1 << (i + 4));
             if (b != 0)
             {
-                e = AllocEventEntry_80043AF8((EventNode*)dword_8008B564);
+                e = AllocEventEntry_80043AF8(dword_8008B564);
                 if (e)
                 {
                     BatXY_a* pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + i * 4));
-                    short* q;
+                    BatUnitWin_a* q;
                     e->flags = (e->flags | 1) & 0xFFFF7FFF;
                     q = e->buffer;
-                    *(int*)q = i;
-                    *(int*)(q + 2) = 0;
-                    q[4] = pp->x;
-                    q[5] = pp->y;
-                    q[6] = 0x64;
-                    q[7] = 0x29;
+                    q->slot_0 = i;
+                    q->frame_4 = 0;
+                    q->from_8[0] = pp->x;
+                    q->from_8[1] = pp->y;
+                    q->from_8[2] = 0x64;
+                    q->from_8[3] = 0x29;
                     e->cb_8 = (EventEntryFn)sub_800C0074;
-                    dword_800C9E28[i] = (char*)q;
+                    dword_800C9E28[i] = q;
                     dword_800C9E18[i].x = pp->x;
                     dword_800C9E18[i].x = pp->x;
                     dword_800C9E18[i].y = pp->y;
@@ -860,8 +860,8 @@ void sub_800BFDEC()
             }
             if (m & (one << (i + 4)))
             {
-                dword_800C9E18[i].x = ((short*)dword_800C9E28[i])[4];
-                dword_800C9E18[i].y = ((short*)dword_800C9E28[i])[5];
+                dword_800C9E18[i].x = dword_800C9E28[i]->from_8[0];
+                dword_800C9E18[i].y = dword_800C9E28[i]->from_8[1];
             }
         }
     }
@@ -876,8 +876,8 @@ void sub_800BFDEC()
                 if (m & (bit << (i + 4)))
                 {
                     pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + k * 4));
-                    ((short*)dword_800C9E28[i])[4] += (pp->x - ((short*)dword_800C9E28[i])[4]) * dword_800C9E00 >> 2;
-                    ((short*)dword_800C9E28[i])[5] += (pp->y - ((short*)dword_800C9E28[i])[5]) * dword_800C9E00 >> 2;
+                    dword_800C9E28[i]->from_8[0] += (pp->x - dword_800C9E28[i]->from_8[0]) * dword_800C9E00 >> 2;
+                    dword_800C9E28[i]->from_8[1] += (pp->y - dword_800C9E28[i]->from_8[1]) * dword_800C9E00 >> 2;
                     k++;
                 }
             }
@@ -890,13 +890,6 @@ void sub_800BFDEC()
 }
 
 #if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
-typedef struct BatWin_a
-{
-    int slot_0;
-    int frame_4;
-    short from_8[4];
-    short rect_10[4];
-} BatWin_a;
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -904,7 +897,7 @@ void sub_800C0074(EventEntry* t, void* arg)
     int k;
     int m;
     int r;
-    BatWin_a* u;
+    BatUnitWin_a* u;
     if (dword_800B1228 & 0x10000)
     {
         return;
@@ -921,7 +914,7 @@ void sub_800C0074(EventEntry* t, void* arg)
         }
     }
     m = sub_80014390((k + 4) & 0xFF);
-    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x28);
+    AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
     InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
     if (sub_800BF980(sub_800A2BE4(k)))
@@ -933,7 +926,7 @@ void sub_800C0074(EventEntry* t, void* arg)
         sub_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 0);
     }
     u->frame_4++;
-    AddDrawAreaPrim_8003326C(u->rect_10, (char*)pOT_8008D454 + 0x28);
+    AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
 }
 #endif
 
@@ -941,26 +934,20 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
 void sub_800C01D8()
 {
-    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D4B0);
+    EventEntry* r = AllocEventEntry_80043AF8(dword_8008D4B0);
     if (r != 0)
     {
-        unsigned char* p = (unsigned char*)r->field_14;
-        r->flags_0 = (r->flags_0 | 1) & ~0x8000;
-        *(int*)p = 0;
-        *(short*)(p + 4) = 0x6E;
-        *(short*)(p + 6) = 0xAC;
-        *(short*)(p + 8) = 0x64;
-        *(short*)(p + 10) = 0x29;
-        r->fn_8 = (void (*)(struct_cb*, int*))sub_800C0254;
+        BatWin_b* p = r->buffer;
+        r->flags = (r->flags | 1) & ~0x8000;
+        p->frame_0 = 0;
+        p->from_4[0] = 0x6E;
+        p->from_4[1] = 0xAC;
+        p->from_4[2] = 0x64;
+        p->from_4[3] = 0x29;
+        r->cb_8 = (EventEntryFn)sub_800C0254;
     }
 }
 
-typedef struct BatWin_b
-{
-    unsigned int frame_0;
-    short from_4[4];
-    short rect_C[4];
-} BatWin_b;
 typedef struct BatBox_b
 {
     short col_0;
@@ -990,7 +977,7 @@ void sub_800C0254(EventEntry* t, void* arg)
     }
     u = arg;
     m = sub_80014390(dword_800C9C99);
-    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x28);
+    AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
     if (dword_800C9C99 == 0)
     {
@@ -1012,7 +999,7 @@ void sub_800C0254(EventEntry* t, void* arg)
         box.c_2 = 0;
         rect[0] = 0xD2;
         rect[1] = 0xC0;
-        DrawWindow_80042460(rect, &box, (char*)pOT_8008D454 + 0x3C, 0);
+        DrawWindow_80042460(rect, &box, pOT_8008D454 + 15, 0);
     }
     u->frame_0++;
     if (u->frame_0 >= 5)
@@ -1020,7 +1007,7 @@ void sub_800C0254(EventEntry* t, void* arg)
         u->frame_0 = 4;
     }
     sub_8002F480(m, 0, 0xF, 0);
-    AddDrawAreaPrim_8003326C(u->rect_C, (char*)pOT_8008D454 + 0x28);
+    AddDrawAreaPrim_8003326C(u->rect_C, pOT_8008D454 + 10);
 }
 
 void sub_800C0440()
@@ -1030,23 +1017,17 @@ void sub_800C0440()
     {
         dword_800C9D74 = 0;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        *(int*)e->buffer = 0;
+        ((BatWin_b*)e->buffer)->frame_0 = 0;
         e->cb_8 = (EventEntryFn)sub_800C04A4;
     }
 }
 
 #if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
-typedef struct BatHelp_a
-{
-    unsigned int frame_0;
-    short from_4[4];
-    short rect_C[4];
-} BatHelp_a;
 extern unsigned char dword_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void sub_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
-void sub_800C04A4(EventEntry* t, BatHelp_a* u)
+void sub_800C04A4(EventEntry* t, BatWin_b* u)
 {
     int w;
     short pos[2];
@@ -1496,12 +1477,12 @@ int sub_800C103C(int a)
     return 0;
 }
 
-void sub_800C106C(unsigned int* a, int* b)
+void sub_800C106C(unsigned int* a, BatSeqStop_a* b)
 {
-    if (--b[1] < 0)
+    if (--b->timer_4 < 0)
     {
         *a = (*a & ~1) | 0x8000;
-        StopSeqSlot_80031334(b[0]);
+        StopSeqSlot_80031334(b->slot_0);
     }
 }
 
@@ -1510,22 +1491,22 @@ void sub_800C10B8(int a, int b)
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
     if (a > 0 && e)
     {
-        int* q;
+        BatSeqStop_a* q;
         PlaySeqSlot_80031160(b, 1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q = e->buffer;
-        q[0] = b;
-        q[1] = a;
+        q->slot_0 = b;
+        q->timer_4 = a;
         e->cb_8 = (EventEntryFn)sub_800C106C;
     }
 }
 
-void sub_800C1140(unsigned int* a, short* b)
+void sub_800C1140(unsigned int* a, BatSfxStop_a* b)
 {
-    if (--*(int*)(b + 2) < 0)
+    if (--b->timer_4 < 0)
     {
         *a = (*a & ~1) | 0x8000;
-        SfxKeyOff_80031574(b[4], b[0]);
+        SfxKeyOff_80031574(b->voice_8, b->sfx_0.id16);
     }
 }
 
@@ -1534,12 +1515,12 @@ void sub_800C1190(int a, int b)
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
     if (a > 0 && e)
     {
-        int* q;
+        BatSfxStop_a* q;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q = e->buffer;
-        q[1] = a;
-        *(short*)(q + 2) = SfxKeyOn_800314F4(b);
-        q[0] = b;
+        q->timer_4 = a;
+        q->voice_8 = SfxKeyOn_800314F4(b);
+        q->sfx_0.id = b;
         e->cb_8 = (EventEntryFn)sub_800C1140;
     }
 }
@@ -2402,10 +2383,10 @@ void sub_800C4118(BatCmd_a* a, char* b, int c, unsigned int d)
     int r;
     k = *(unsigned int*)(b + 0x5C);
     t.f0 = (int)(b + 0x80);
-    t.f4 = (int)(b + 0x6C);
+    t.f4 = (unsigned char*)(b + 0x6C);
     t.f8 = a;
     t.fC = c;
-    t.f10 = (int)b;
+    t.f10 = (Minion*)b;
     t.f1C = 4;
     r = sub_800C0D50();
     if (r >= 0)
@@ -2718,7 +2699,7 @@ int sub_800C4A40(BatTask* t)
 int sub_800C4B34(BatTask* t)
 {
     int r;
-    Minion* s = (Minion*)t->f10;
+    Minion* s = t->f10;
     short x = sub_800334D8(s);
     short y = sub_800334CC(s);
     if (x < (short)(y / 3))
@@ -2743,7 +2724,7 @@ int sub_800C4B34(BatTask* t)
 int sub_800C4BE4(BatTask* t)
 {
     int r;
-    Minion* s = (Minion*)t->f10;
+    Minion* s = t->f10;
     r = sub_800C6DF8(t, 0xD);
     if (r)
     {
@@ -2799,7 +2780,7 @@ int sub_800C4CBC(BatTask* t)
 int sub_800C4D38(BatTask* t)
 {
     int r;
-    Minion* s = (Minion*)t->f10;
+    Minion* s = t->f10;
     short x = sub_800334D8(s);
     short y = sub_800334CC(s);
     if (x < y / 4)
@@ -2926,7 +2907,7 @@ int sub_800C507C(BatTask* t)
 int sub_800C50B0(BatTask* t)
 {
     int r;
-    Minion* s = (Minion*)t->f10;
+    Minion* s = t->f10;
     short x;
     short y;
     if (sub_800BC868() == 3 || sub_800BC868() == -1)
@@ -3044,7 +3025,7 @@ int sub_800C53B0(BatTask* t)
 int sub_800C5424(BatTask* t)
 {
     int r;
-    Minion* s = (Minion*)t->f10;
+    Minion* s = t->f10;
     short x = sub_800334D8(s);
     short y = sub_800334CC(s);
     if (x <= y / 2)
@@ -3560,52 +3541,52 @@ void sub_800C61FC(BatTask* t)
         }
         else
         {
-            *(short*)(t->f10 + 0x42) = 0;
+            t->f10->field_42 = 0;
             sub_800C66B4((unsigned char*)t->f10, 0xC);
             t->f8->kind_0 = 6;
             t->f8->arg_4 = 1;
             t->f8->targets_C = t->f18;
         }
     }
-    else if ((sub_800BC868() == 0 && !(*(unsigned short*)(t->f10 + 0x42) & 1)) || (dword_800C8B30 >= 3 && sub_800BC868() == 0))
+    else if ((sub_800BC868() == 0 && !((unsigned short)t->f10->field_42 & 1)) || (dword_800C8B30 >= 3 && sub_800BC868() == 0))
     {
         sub_800C6AFC(t, 6, 2);
-        ((unsigned char*)t->f4)[9] = 0x25;
-        *(short*)(t->f10 + 0x42) = 8;
+        t->f4[9] = 0x25;
+        t->f10->field_42 = 8;
         sub_80018430(3);
         sub_800C66B4((unsigned char*)t->f10, 2);
         dword_800C8B30 = 0;
     }
-    else if ((sub_800BC868() == 1 && !(*(unsigned short*)(t->f10 + 0x42) & 2)) || (dword_800C8B30 >= 3 && sub_800BC868() == 1))
+    else if ((sub_800BC868() == 1 && !((unsigned short)t->f10->field_42 & 2)) || (dword_800C8B30 >= 3 && sub_800BC868() == 1))
     {
         sub_800C6AFC(t, 6, 2);
-        ((unsigned char*)t->f4)[9] = 0x22;
-        *(short*)(t->f10 + 0x42) = 1;
+        t->f4[9] = 0x22;
+        t->f10->field_42 = 1;
         sub_80018430(0);
         sub_800C66B4((unsigned char*)t->f10, 3);
         dword_800C8B30 = 0;
     }
-    else if ((sub_800BC868() == 2 && !(*(unsigned short*)(t->f10 + 0x42) & 4)) || (dword_800C8B30 >= 3 && sub_800BC868() == 2))
+    else if ((sub_800BC868() == 2 && !((unsigned short)t->f10->field_42 & 4)) || (dword_800C8B30 >= 3 && sub_800BC868() == 2))
     {
         sub_800C6AFC(t, 6, 2);
-        ((unsigned char*)t->f4)[9] = 0x23;
-        *(short*)(t->f10 + 0x42) = 2;
+        t->f4[9] = 0x23;
+        t->f10->field_42 = 2;
         sub_80018430(1);
         sub_800C66B4((unsigned char*)t->f10, 0);
         dword_800C8B30 = 0;
     }
-    else if ((sub_800BC868() == 3 && !(*(unsigned short*)(t->f10 + 0x42) & 8)) || (dword_800C8B30 >= 4 && sub_800BC868() == 3) || sub_800BC868() == -1)
+    else if ((sub_800BC868() == 3 && !((unsigned short)t->f10->field_42 & 8)) || (dword_800C8B30 >= 4 && sub_800BC868() == 3) || sub_800BC868() == -1)
     {
         sub_800C6AFC(t, 6, 2);
-        ((unsigned char*)t->f4)[9] = 0x24;
-        *(short*)(t->f10 + 0x42) = 4;
+        t->f4[9] = 0x24;
+        t->f10->field_42 = 4;
         sub_80018430(2);
         sub_800C66B4((unsigned char*)t->f10, 1);
         dword_800C8B30 = 0;
     }
     else
     {
-        f = *(unsigned short*)(t->f10 + 0x42);
+        f = (unsigned short)t->f10->field_42;
         if (f & 8)
         {
             if (dword_800C8B30 == 1)
@@ -3622,7 +3603,7 @@ void sub_800C61FC(BatTask* t)
             if (rand() & 1)
             {
                 sub_800C6AFC(t, 6, 1);
-                ((unsigned char*)t->f4)[5] = 4;
+                t->f4[5] = 4;
             }
             else
             {
@@ -3640,7 +3621,7 @@ void sub_800C61FC(BatTask* t)
             else
             {
                 sub_800C6AFC(t, 6, 1);
-                ((unsigned char*)t->f4)[5] = 5;
+                t->f4[5] = 5;
             }
         }
         else if (f & 4)
@@ -3648,7 +3629,7 @@ void sub_800C61FC(BatTask* t)
             if (rand() % 3 != 0)
             {
                 sub_800C6AFC(t, 6, 1);
-                ((unsigned char*)t->f4)[5] = 2;
+                t->f4[5] = 2;
             }
             else
             {
@@ -3701,8 +3682,8 @@ void sub_800C66F4(BatTask* t)
         }
         else
         {
-            short x = sub_800334D8((Minion*)t->f10);
-            short y = sub_800334CC((Minion*)t->f10);
+            short x = sub_800334D8(t->f10);
+            short y = sub_800334CC(t->f10);
             if (x < (short)(y / 3))
             {
             act:
@@ -3737,8 +3718,8 @@ void sub_800C6824(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        short x = sub_800334D8((Minion*)t->f10);
-        short y = sub_800334CC((Minion*)t->f10);
+        short x = sub_800334D8(t->f10);
+        short y = sub_800334CC(t->f10);
         if (x < y / 4)
         {
             if (sub_800C6A8C(t))
@@ -3775,8 +3756,8 @@ void sub_800C6928(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        short x = sub_800334D8((Minion*)t->f10);
-        short y = sub_800334CC((Minion*)t->f10);
+        short x = sub_800334D8(t->f10);
+        short y = sub_800334CC(t->f10);
         if (x < y / 2)
         {
             if (sub_800C6A8C(t))

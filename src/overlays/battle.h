@@ -88,10 +88,10 @@ typedef struct BatCmd_a
 typedef struct BatTask
 {
     int f0;
-    int f4;
+    unsigned char* f4;
     BatCmd_a* f8;
     int fC;
-    int f10;
+    Minion* f10;
     unsigned char* f14;
     int f18;
     int f1C;
@@ -415,9 +415,9 @@ typedef struct BatPair_a
 
 extern BatPair_a dword_800C9DA0[];
 
-extern int* dword_8008B568;
+extern EventNode* dword_8008B568;
 
-extern int* dword_8008B564;
+extern EventNode* dword_8008B564;
 
 extern EventNode* dword_8008D4B0;
 
@@ -491,6 +491,14 @@ typedef struct BatCtx_a
 } BatCtx_a;
 
 extern BatCtx_a dword_800C9190;
+
+// an animated window rect (sub_800C0254, sub_800C04A4)
+typedef struct BatWin_b
+{
+    unsigned int frame_0;
+    short from_4[4];
+    short rect_C[4];
+} BatWin_b;
 
 extern int dword_800C918C;
 
@@ -682,6 +690,18 @@ extern void sub_800BF3DC(int a, int b, int c, int d, int e);
 
 extern void sub_800BF3AC();
 
+// sub_800BF3DC: the hp/mp change shown over a unit
+typedef struct BatHitNum_a
+{
+    int kind_0; // 0 hp, 1 mp
+    int amount_4;
+    int frame_8;
+    int alpha_C;
+    unsigned short* pos_10; // int[3]; the low halves are read
+    int f14;
+    int unit_18;
+} BatHitNum_a;
+
 extern void sub_80037BFC(int a);
 
 extern void StartPadVibration_80036528(int a, int b);
@@ -735,9 +755,18 @@ extern int dword_800C9DF8;
 
 extern int dword_800C9E24;
 
-extern BatXY_a dword_800C9140[];
+extern BatXY_a dword_800C9140[]; // 3 per captured count; indexed by byte offset to match
 
-extern char* dword_800C9E28[];
+// sub_800BFC40: one unit's window (sub_800C0074)
+typedef struct BatUnitWin_a
+{
+    int slot_0;
+    int frame_4;
+    short from_8[4];
+    short rect_10[4];
+} BatUnitWin_a;
+
+extern BatUnitWin_a* dword_800C9E28[];
 
 extern BatXY_a dword_800C9E18[];
 
@@ -760,6 +789,25 @@ extern void sub_80019B14(int a, int b, int c);
 extern int dword_80079140;
 
 extern EventNode* dword_8008D60C;
+
+// sub_800C10B8: stops a seq slot after a delay
+typedef struct BatSeqStop_a
+{
+    int slot_0;
+    int timer_4;
+} BatSeqStop_a;
+
+// sub_800C1190: keys an sfx voice off after a delay
+typedef struct BatSfxStop_a
+{
+    union
+    {
+        int id;
+        short id16; // read back as a short
+    } sfx_0;
+    int timer_4;
+    short voice_8;
+} BatSfxStop_a;
 
 extern void sub_800C17EC();
 
