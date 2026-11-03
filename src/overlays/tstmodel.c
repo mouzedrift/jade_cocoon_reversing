@@ -106,7 +106,51 @@ INCLUDE_OVERLAY_ASM(tstmodel, sub_800A1614);
 
 INCLUDE_OVERLAY_ASM(tstmodel, sub_800A17B8);
 
-INCLUDE_OVERLAY_ASM(tstmodel, sub_800A18F4);
+extern unsigned short padRepeat_800918CC;
+extern unsigned short padPressed_8009194C;
+typedef struct TstModelC
+{
+    char pad_0[0x172];
+    short s172;
+    char pad_174[0x30];
+    int i1A4;
+    char pad_1A8[0x10];
+    int i1B8;
+    int i1BC;
+    char pad_1C0[0x14];
+    unsigned int* p1D4;
+} TstModelC;
+void sub_800A18F4(TstModelC* c)
+{
+    if (c->i1B8)
+    {
+        if (padRepeat_800918CC & 0x80)
+        {
+            c->i1A4++;
+        }
+        else if (padRepeat_800918CC & 0x10)
+        {
+            if (--c->i1A4 < 0)
+            {
+                c->i1A4 = *c->p1D4 - 1;
+            }
+        }
+        c->i1A4 = c->i1A4 % *c->p1D4;
+    }
+    else
+    {
+        c->i1A4++;
+    }
+    if (padPressed_8009194C & 0x40)
+    {
+        c->s172 = 0;
+        c->i1B8 = !c->i1B8;
+    }
+    if (padPressed_8009194C & 0x100)
+    {
+        c->i1BC = (c->i1BC + 1) & 3;
+    }
+}
 
 void sub_800A19E4(int* a)
 {

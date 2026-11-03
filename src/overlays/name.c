@@ -134,7 +134,39 @@ void sub_800B7DC4(NameEntry* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(name, sub_800B7E30);
+extern void sub_800B7FA0(NameEntry* p);
+extern int sub_800B7FD8(unsigned char* p);
+void sub_800B7E30(NameEntry* p)
+{
+    if (IsConfirmPressedP1_8003D380(0))
+    {
+        switch (p->field_C)
+        {
+        case 0:
+            sub_800B7FA0(p);
+            PlaySfx_80031494(0x7E);
+            break;
+        case 1:
+            sub_800B7F08(p);
+            PlaySfx_80031494(0x7E);
+            break;
+        case 2:
+            if (!sub_800B7FD8((unsigned char*)p->name_10))
+            {
+                PlaySfx_80031494(0x7E);
+                p->flags_0 |= 1;
+            }
+            break;
+        default:
+            return;
+        }
+    }
+    if (IsCancelPressedP1_8003D41C(0))
+    {
+        p->field_8 = 0;
+        p->field_C = p->pad_E;
+    }
+}
 
 // Matched
 void sub_800B7F08(NameEntry* p)

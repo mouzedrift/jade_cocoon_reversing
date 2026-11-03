@@ -112,7 +112,7 @@ void sub_800A1320(int* a)
 
 extern int name_80010A10(int);
 extern int name_80010A44(int);
-extern void sub_800A1AFC(int* a);
+extern void sub_800A1AFC();
 void sub_800A1354(int* a)
 {
     if (name_80010A10(0))
@@ -268,7 +268,36 @@ void sub_800A1AD0(int* a)
     *a = 0;
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A1AFC);
+typedef struct TstCompoBone
+{
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+} TstCompoBone;
+extern TstCompoBone dword_80079140[];
+extern void sub_80019B14(void* p, char* a1, char* a2);
+extern char* sub_80024F00(void* p, int n);
+extern char* sub_80024F38(void* p, int n);
+typedef struct TstCompoSkel
+{
+    int f0;
+    int f4;
+    int f8;
+    TstCompoBone bones[1];
+} TstCompoSkel;
+void sub_800A1AFC(TstCompoSkel* a)
+{
+    int i;
+    char* r;
+    for (i = 0; dword_80079140[i].s0 >= 0; i++)
+    {
+        a->bones[i] = dword_80079140[i];
+    }
+    a->bones[i] = dword_80079140[i];
+    r = sub_80024F00((void*)a->f4, name_800A2768[7]);
+    sub_80019B14(a->bones, r, sub_80024F38((void*)a->f4, name_800A2768[7]));
+}
 
 typedef struct TstCompoA
 {
