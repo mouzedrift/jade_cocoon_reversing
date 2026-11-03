@@ -1550,7 +1550,64 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     sub_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
+// Matched
+void sub_800C1450(EventEntry* t, BatDropSrc_a* u)
+{
+    int v[3];
+    EffectSpriteFrame* f;
+    int i;
+    EventEntry* e;
+    BatDrop_a* q;
+    EffectSprite* s = u->path_88;
+    if (u->time_4 / 4096 < s->count_0)
+    {
+        f = s->frames_8[u->time_4 / 4096];
+        v[0] = f->pos_10[0] + u->pos_44[0];
+        v[1] = f->pos_10[1] + u->pos_44[1];
+        v[2] = f->pos_10[2] + u->pos_44[2];
+        if (((u->time_4 / 4096) & 3) == 0)
+        {
+            u->count_0++;
+            for (i = 0; i < 3; i++)
+            {
+                e = AllocEventEntry_80043AF8(dword_8008D60C);
+                if (e)
+                {
+                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                    q = e->buffer;
+                    q->pos_10[0] = v[0];
+                    q->pos_10[1] = v[1];
+                    q->pos_10[2] = v[2];
+                    q->pos_10[0] <<= 10;
+                    q->pos_10[1] <<= 10;
+                    q->pos_10[2] <<= 10;
+                    if (u->count_0 & 1)
+                    {
+                        q->anim_40 = u->animA_8C;
+                    }
+                    else
+                    {
+                        q->anim_40 = u->animB_90;
+                    }
+                    q->vel_28[0] = 0;
+                    q->vel_28[1] = 0;
+                    q->vel_28[2] = 0;
+                    q->rot_34[0] = 0;
+                    q->rot_34[1] = i * 0x555;
+                    q->rot_34[2] = 0;
+                    q->f0 = 0;
+                    q->size_8 = (rand() & 0xFFF) + 0x800;
+                    e->cb_8 = (EventEntryFn)sub_800C1220;
+                }
+            }
+        }
+        u->time_4 += u->step_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
 {

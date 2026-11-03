@@ -360,7 +360,7 @@ int sub_800BAAD8()
     return 0;
 }
 
-#if 0 // Not matched: goto loop gets the body right but i++ is scheduled ahead of the stores (original: after them, li -1 in the branch delay slot)
+// Matched
 void sub_800BABC4()
 {
     int i;
@@ -372,23 +372,23 @@ loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the origina
     m = sub_800A248C() & (1 << (i + 4));
     if (m != 0)
     {
-        sub_800A2BE4(i);
+        p->b = sub_800A2BE4(i);
     }
-    p->b = -1;
+    else
+    {
+        p->b = -1;
+    }
     p->a = 0;
     p->d = 0;
     p->c = 0;
     p->e = 7;
-    i++;
     p++;
+    i++;
     if (i < 3)
     {
         goto loop;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800BABC4);
 
 void sub_800BAC4C(BatTask_a* t)
 {
