@@ -1,4 +1,5 @@
 # asm data symbols whose tail is emitted by C instead (switch jump tables of decompiled functions): name, bytes kept
+aCdC 0xc     # "CD.C" and a zero word; the jump table of ProcessFileRequests_8003C184 follows
 dword_80074B10 0x64     # strings; the jump table of sub_8004196C follows
 word_800749AC 0x8     # head; the jump tables of GameLoop_8004047C and SetDisplayMode_80040658 follow
 dword_8007493C 0x28     # tail of sub_8003CD5C's local int[14], jump table of sub_8003CE18, a zero word; the jump table of sub_8003D090 follows

@@ -575,7 +575,8 @@ int sub_8003C0A4(int a0)
     }
     return 0;
 }
-extern void ProcessFileRequests_8003C184(void);
+typedef struct FileTask FileTask;
+void ProcessFileRequests_8003C184(int* a0, FileTask* t);
 // Matched
 void InitFileRequestTask_8003C128(int* a0, int* a1)
 {
@@ -587,7 +588,212 @@ void InitFileRequestTask_8003C128(int* a0, int* a1)
     a1[10] = 0;
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
-INCLUDE_ASM(ProcessFileRequests_8003C184);
+struct FileTask
+{
+    FileRequest* cur;
+    Data001File file;
+    char pad_10[0xC];
+    int state;
+    int buf;
+    int sectors;
+    int retry;
+};
+extern FileRequest* dword_80086548;
+extern int CdSeekStart_8003C8A0(DslLOC* loc);
+extern int CdReadStart_8003C944(DslLOC* loc, int buf, int sectors);
+// Matched
+void ProcessFileRequests_8003C184(int* a0, FileTask* t)
+{
+    int loop;
+    FileRequest* r;
+
+    if (fileBufferInUse_80086564 != 0 || dword_80086568 != 0)
+    {
+        return;
+    }
+    loop = 1;
+    if (t->cur == 0)
+    {
+        t->state = 0;
+        t->cur = dword_80086548;
+    }
+    while (loop)
+    {
+        if (t->cur == 0)
+        {
+            break;
+        }
+        switch (t->state)
+        {
+        case 0:
+            t->cur->flags_C |= 0x100;
+            if (t->cur->flags_C & 4)
+            {
+                if (t->retry < 2)
+                {
+                    t->retry++;
+                    dword_8008B550 = 0x3D000;
+                    unknownFlags_8008D678 |= 0x200;
+                    loop = 0;
+                    break;
+                }
+            }
+            t->state = 1;
+        case 1:
+            DATA_GetFile_8003C7CC(&t->file, t->cur->fileId_10);
+            if (t->cur->flags_C & 0x40)
+            {
+                DsIntToPos(DsPosToInt(&t->file.field_0_position) + ((unsigned int)((int*)t->cur)[0x14 / 4] >> 11), &t->file.field_0_position);
+                t->sectors = (unsigned int)((int*)t->cur)[0x18 / 4] >> 11;
+            }
+            else
+            {
+                t->sectors = t->file.field_4_sectors;
+            }
+            if (t->cur->flags_C & 2)
+            {
+                t->cur->flags_C |= 1;
+            }
+            if (t->cur->flags_C & 1)
+            {
+                if (fileBuffer_8008656C != 0 && !((unsigned int)(t->sectors << 11) > 0x1ADB0))
+                {
+                    t->cur->flags_C |= 0x200;
+                    t->buf = fileBuffer_8008656C;
+                }
+                else
+                {
+                    t->buf = (int)malloc3_8003FC4C(t->sectors << 11);
+                }
+            }
+            else
+            {
+                t->buf = 0x801B9250;
+            }
+            if (t->cur->flags_C & 0x10)
+            {
+                t->state = 2;
+            }
+            else if (t->cur->flags_C & 8)
+            {
+                t->state = 5;
+            }
+            else
+            {
+                t->state = 7;
+            }
+            break;
+        case 2:
+            if (CdSeekStart_8003C8A0(&t->file.field_0_position))
+            {
+                t->state = 3;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 3:
+            if (CdSeekIsComplete_8003C900())
+            {
+                t->state = 10;
+            }
+            else
+            {
+                goto wait;
+            }
+            break;
+        case 5:
+            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            {
+                t->state = 6;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 6:
+            if (CdReadIsIdle_8003C9EC())
+            {
+                if (t->cur->flags_C & 2)
+                {
+                    MemCopy_800403E8((unsigned int*)t->cur->dest_1C, (unsigned int*)t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
+                }
+                t->state = 8;
+            }
+            else
+            {
+            wait:
+                loop = 0;
+                if (!(t->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
+                {
+                    sub_8003CD5C();
+                }
+            }
+            break;
+        case 7:
+            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            {
+                while (!CdReadIsIdle_8003C9EC())
+                {
+                }
+                t->state = 8;
+            }
+            else
+            {
+                loop = 0;
+            }
+            break;
+        case 8:
+            if (t->cur->flags_C & 0x800)
+            {
+                t->cur->flags_C |= 0x1000;
+                t->cur->dest_1C = t->buf;
+                if (!(t->cur->flags_C & 0x2000))
+                {
+                    loop = 0;
+                    break;
+                }
+            }
+            t->cur->flags_C &= ~0x1000;
+            t->state = 9;
+            break;
+        case 9:
+            if (t->cur->callback_24)
+            {
+                ((void (*)(int, int))t->cur->callback_24)(t->cur->field_20, t->buf);
+            }
+            if (t->cur->flags_C & 1)
+            {
+                if (t->buf)
+                {
+                    if (!(t->cur->flags_C & 0x200))
+                    {
+                        free3_8003FC6C((void*)t->buf);
+                    }
+                    t->buf = 0;
+                }
+            }
+            t->state = 10;
+        case 10:
+            r = (FileRequest*)t->cur->field_4;
+            if ((r == 0 || !(r->flags_C & 4)) && t->retry != 0)
+            {
+                loop = 0;
+                t->retry--;
+                dword_8008B550 = 0;
+                unknownFlags_8008D678 &= ~0x200;
+                break;
+            }
+            r = t->cur;
+            t->cur = (FileRequest*)r->field_4;
+            RemoveFileRequest_8003BF18(r);
+            t->state = 0;
+            break;
+        }
+    }
+}
 // Matched
 void AssertFileRequestQueueEmpty_8003C684(void)
 {
