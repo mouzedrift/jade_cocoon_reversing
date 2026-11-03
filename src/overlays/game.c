@@ -1968,6 +1968,69 @@ void sub_800A4940(int a, int b)
 
 INCLUDE_OVERLAY_ASM(game, sub_800A49CC);
 
+#if 0
+// Not matched: logic and bitfield layout right; callee-saved registers differ and b*5 / the table address get hoisted out of the loop, the original computes b*5 in the found path
+typedef struct GameSpawnEnt_1
+{
+    unsigned int chance : 8;
+    unsigned int k0 : 3;
+    unsigned int v0 : 5;
+    unsigned int k1 : 3;
+    unsigned int v1 : 5;
+    unsigned int k2 : 3;
+    unsigned int v2 : 5;
+} GameSpawnEnt_1;
+typedef struct GameSpawnOut_1
+{
+    int f0;
+    int f4;
+    int f8;
+} GameSpawnOut_1;
+extern GameSpawnOut_1 name_800AEB00[][3];
+extern int sub_800B330C(void);
+void sub_800A4DD0(int a, int b, int* c, GameSpawnEnt_1* p, int* e, unsigned short* f)
+{
+    int r = rand() % 16;
+    int i;
+    int fl;
+    int k;
+    GameSpawnOut_1* d;
+    GameSpawnEnt_1* q;
+    int* o;
+    fl = unknownFlags_8008D678;
+    d = name_800AEB00[b];
+    o = e + a;
+    q = p;
+    for (i = 0; i < 3; i++, q++)
+    {
+        if (r < q->chance)
+        {
+            d[0].f0 = dword_800AEB6C[q->k0];
+            d[1].f0 = dword_800AEB6C[q->k1];
+            d[2].f0 = dword_800AEB6C[q->k2];
+            d[0].f4 = q->v0 << 26;
+            d[1].f4 = q->v1 << 26;
+            d[2].f4 = q->v2 << 26;
+            if (unknownFlags_8008D678 & 0x20000)
+            {
+                k = (sub_800B330C() - 1) / 4 + 1;
+                if (k >= 8)
+                {
+                    k = 7;
+                }
+                d[0].f4 = (q->v0 + k) << 26;
+                d[1].f4 = (q->v1 + k) << 26;
+                d[2].f4 = (q->v2 + k) << 26;
+            }
+            o[0] = (int)d;
+            o[3] = c[1] + b * 16;
+            *f |= (unsigned short)(i | 0x10) << (b * 5);
+            return;
+        }
+        r -= q->chance;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A4DD0);
 
 extern int* sub_800B3198(void);
@@ -4576,7 +4639,81 @@ INCLUDE_OVERLAY_ASM(game, sub_800AA430);
 
 INCLUDE_OVERLAY_ASM(game, sub_800AA51C);
 
-INCLUDE_OVERLAY_ASM(game, sub_800AACF8);
+void sub_800AACF8(G2Act* p)
+{
+    switch (p->f8)
+    {
+    case 0x17:
+        if (p->f0 & 0x20)
+        {
+            if (p->f0 & 0x100000)
+            {
+                sub_800AB010(p, 0x18, p->s20, (unsigned short)sub_800AC834(p->s20, sub_800AC474(p->s20)));
+            }
+            else
+            {
+                sub_800AB010(p, 0x18, p->s20, 0);
+            }
+            p->f0 &= ~0x8000;
+            if (p->s24 >= 0)
+            {
+                p->f0 &= ~0x800;
+            }
+        }
+        break;
+    case 0x18:
+        if (p->f0 & 0x800000)
+        {
+            if (p->f0 & 0x800)
+            {
+                p->f0 &= ~0x800000;
+                p->f10 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+                p->f0 &= ~0x8000;
+            }
+            else
+            {
+                p->f0 &= ~0x800000;
+                p->f10 = (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c));
+            }
+        }
+        if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)))
+        {
+            if (p->s24 < 0)
+            {
+                sub_800AB010(p, 0, 3, 0);
+                p->fC = 0;
+            }
+            else
+            {
+                if (p->f0 & 0x100000)
+                {
+                    sub_800AB010(p, -1, p->s24, (unsigned short)sub_800AC834(p->s24, sub_800AC474(p->s24)));
+                }
+                else
+                {
+                    sub_800AB010(p, -1, p->s24, 0);
+                }
+                p->s24 = -1;
+                p->s20 = p->u22;
+                p->f0 |= 0x800;
+            }
+        }
+        if (p->s20 != (short)p->u22)
+        {
+            if (sub_800AC604((short)p->u22, 0) == 0)
+            {
+                p->f8 = 0x17;
+                p->s20 = p->u22;
+            }
+            else
+            {
+                printf(dword_800A07E0, dword_800A0808, 0x44e);
+                exit(1);
+            }
+        }
+        break;
+    }
+}
 
 void sub_800AAF58(G2Act* a)
 {
