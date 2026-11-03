@@ -27,33 +27,33 @@ extern void sub_80027778(char* p, int* q);
 extern void sub_800278BC(char* p, int* q);
 extern int dword_80082668;
 #if 0
-// Not matched: original copies a1 to $v0 before p = a1 + 0x108 (p/n regs swapped here)
-void sub_80028C60(int a0, int a1)
+// Not matched (7 words): original combines the size read into lw 0x104 off a $v0 copy of a1 and a single addiu 0x108
+void sub_80028C60(int a0, char* a1)
 {
     int n;
-    char* p;
     MemCopy_800403E8((unsigned int*)dword_8008D4F0, (unsigned int*)a1, 0x104);
-    p = (char*)a1 + 0x108;
-    n = *(int*)(a1 + 0x104);
-    LoadTiy_80028E74(0, 0, 0, (int)p, (int)&dword_80091C20);
-    p += n;
-    n = *(int*)p;
-    p += 4;
+    a1 += 0x104;
+    n = *(int*)a1;
+    a1 += 4;
+    LoadTiy_80028E74(0, 0, 0, (int)a1, (int)&dword_80091C20);
+    a1 += n;
+    n = *(int*)a1;
+    a1 += 4;
     if (dword_80082670 == 0)
     {
-        sub_80027778(p, &dword_80091C20);
+        sub_80027778(a1, &dword_80091C20);
     }
-    p += n;
-    n = *(int*)p;
-    p += 4;
+    a1 += n;
+    n = *(int*)a1;
+    a1 += 4;
     if (dword_80082670 == 0)
     {
-        sub_800278BC(p, &dword_80091C20);
+        sub_800278BC(a1, &dword_80091C20);
     }
-    p += n;
+    a1 += n;
     if (dword_80082670 == 1)
     {
-        LoadTiy_80028E74(0, 0, 0, (int)(p + 4), (int)dword_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int)(a1 + 4), (int)dword_80091C68);
     }
     sub_800272BC(dword_8008B500[0], word_8008B860);
     if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
@@ -207,7 +207,46 @@ void sub_800290FC(RECT* r, short* dst, short* d)
     DrawSync(0);
     free3_8003FC6C(buf);
 }
-INCLUDE_ASM(sub_800292D0);
+// Matched
+void sub_800292D0(void* a0, void* a1, int a2)
+{
+    short c[4];
+    short o[4];
+    RECT r2;
+    unsigned short* buf;
+    unsigned short* p;
+    int x;
+    int y;
+    int gray;
+    buf = malloc3_8003FC4C(((RECT*)a0)->h * (((RECT*)a0)->w << 1));
+    StoreImage((RECT*)a0, (u_long*)buf);
+    DrawSync(0);
+    p = buf;
+    for (y = 0; y < ((RECT*)a0)->h; y++)
+    {
+        for (x = 0; x < ((RECT*)a0)->w; x++)
+        {
+            UnpackColor555_80029C68((unsigned short*)c, p);
+            if (c[0] || c[1] || c[2])
+            {
+                gray = (c[0] + c[1] + c[2]) / 3;
+                o[0] = ((c[0] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[0] * ((short*)a2)[4] / 4096;
+                o[1] = ((c[1] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[1] * ((short*)a2)[4] / 4096;
+                o[2] = ((c[2] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[2] * ((short*)a2)[4] / 4096;
+                o[3] = c[3];
+                sub_80029CB4(p, (unsigned short*)o);
+            }
+            p++;
+        }
+    }
+    r2.x = ((short*)a1)[0];
+    r2.y = ((short*)a1)[1];
+    r2.w = ((RECT*)a0)->w;
+    r2.h = ((RECT*)a0)->h;
+    LoadImage(&r2, (u_long*)buf);
+    DrawSync(0);
+    free3_8003FC6C(buf);
+}
 // Matched
 void AllocTiyPrims_800295D8(int* a, int b, int* c, int n, int heap)
 {
