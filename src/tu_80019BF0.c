@@ -2788,9 +2788,71 @@ int sub_8001FC90(char* a0)
     RotTransPers(&v, &sxy, &p, &flag);
     return flag >= 0;
 }
+extern int sub_80019CC4();
+extern void sub_8001C440();
+extern void sub_80047E28();
+extern void sub_80046A58();
+extern void sub_800459E4();
 #if 0
+// Not matched: only the store to 0x184 is not moved into the delay slot of the 0x10000 flag test
 void sub_8001FD08(void* a0)
 {
+    char* o = (char*)a0;
+    int v;
+    char* t;
+    unsigned long* ot;
+    unsigned long* ot2;
+    if (!(*(int*)(o + 4) & 0x2000) && sub_8001FC90(o))
+    {
+        v = sub_80019CC4((VECTOR*)(o + 0x38));
+        *(char**)(o + 0x178) = *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0x9C) * 28;
+        *(int*)(o + 0x164) = *(int*)(*(char**)(o + 0x15C) + 0x50);
+        *(char**)(o + 0x168) = o + 0x38;
+        *(char**)(o + 0x16C) = o + 0x5C;
+        *(int*)(o + 0x170) = *(int*)(o + 0x134);
+        *(int*)(o + 0x174) = *(int*)(o + 0x144);
+        *(unsigned int*)(o + 0x17C) = *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178);
+        *(int*)(o + 0x180) = *(int*)(o + 8);
+        *(char**)(o + 0x188) = o + 0x2C;
+        *(int*)(o + 0x184) = *(int*)(o + 0x1C4);
+        if (unknownFlags_8008D678 & 0x10000)
+        {
+            ot = pOT_8008B4C8;
+        }
+        else
+        {
+            ot = pOT_8008D690;
+        }
+        *(unsigned long**)(o + 0x18C) = ot;
+        if (*(int*)(o + 4) & 0x1000)
+        {
+            t = *(char**)(*(char**)(o + 0x15C) + 0x54);
+        }
+        else
+        {
+            t = 0;
+        }
+        if (*(int*)(o + 4) & 0x10)
+        {
+            sub_80047E28(o + 0x164, *(int*)(o + 0x174), *(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28,
+                         *(unsigned int*)(o + 0x94) % *(unsigned int*)(*(char**)(*(char**)(o + 0x15C) + 0x54) + *(int*)(o + 0xA0) * 28),
+                         0x1000 - *(int*)(o + 0xAC), (char*)stru_8008D534 + v * 24, t);
+        }
+        else
+        {
+            sub_80046A58(o + 0x164, (char*)stru_8008D534 + v * 24, t);
+        }
+        if (unknownFlags_8008D678 & 0x10000)
+        {
+            ot2 = pOT_8008B4C8;
+        }
+        else
+        {
+            ot2 = pOT_8008D690;
+        }
+        sub_800459E4(*(int*)(o + 0x134), *(char**)(o + 0x15C) + 0x5C, ot2, *(int*)(o + 8));
+        sub_8001C440(*(int*)(o + 0x15C), *(int*)(o + 0x9C), *(unsigned int*)(o + 0x90) % **(unsigned int**)(o + 0x178));
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001FD08);
