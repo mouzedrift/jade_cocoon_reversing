@@ -13,7 +13,8 @@ typedef struct
     short name_10[10]; // SJIS characters, the first byte of a full-width character is >= 0x81
     short buffer_24[2];
     short field_28[10];
-    short pad_3C[4];
+    short pad_3C[2];
+    int field_40;
     short length_44; // length of name_10 in bytes
 } NameEntry;
 extern int dword_800B83F8;
@@ -35,7 +36,44 @@ int sub_800B6FC8(void)
     return dword_800B83F8;
 }
 
-INCLUDE_OVERLAY_ASM(name, sub_800B6FD8);
+extern void DrawMenuBackground_8002BE10();
+extern void EncodeName_8003F7C8(void* name, int a);
+extern void DecodeText_8003F748(int a, void* name);
+extern void SetFadeMode_8001C19C(int a, int b);
+extern void name_800B6CA0();
+extern void sub_800B78EC(NameEntry* p);
+extern void sub_800B70F4(NameEntry* p);
+extern void sub_800B8018();
+void sub_800B6FD8(EventEntry* e, NameEntry* p)
+{
+    NameEntry* q = p;
+    if (p->flags_0 & 0x10)
+    {
+        DrawMenuBackground_8002BE10();
+    }
+    sub_800B78EC(p);
+    sub_800B70F4(p);
+    if (p->flags_0 & 1)
+    {
+        sub_800B8018(p->name_10);
+        EncodeName_8003F7C8(p->name_10, p->field_40);
+        dword_800B83F8 = 0;
+        DecodeText_8003F748(2, p->name_10);
+        e->flags = (e->flags & ~1) | 0x8000;
+        if (p->flags_0 & 0x10)
+        {
+            SetFadeMode_8001C19C(0, 0x20);
+            name_800B6CA0();
+        }
+    }
+    else if (IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
+    {
+        if (q->flags_0 & 2)
+        {
+            q->flags_0 &= ~2;
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(name, sub_800B70F4);
 
