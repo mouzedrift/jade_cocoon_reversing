@@ -29,6 +29,7 @@ void sub_800A09D8(GameTask_1* t, short* q)
     sub_800A0A04(t, q);
 }
 
+// Not C: calls sub_800A0A5C with $sp moved to the scratchpad (0x1F8003FC), an inline-asm stack switch
 INCLUDE_OVERLAY_ASM(game, sub_800A0A04);
 
 INCLUDE_OVERLAY_ASM(game, sub_800A0A5C);

@@ -955,7 +955,73 @@ void sub_800C01D8()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C0254);
+typedef struct BatWin_b
+{
+    unsigned int frame_0;
+    short from_4[4];
+    short rect_C[4];
+} BatWin_b;
+typedef struct BatBox_b
+{
+    short col_0;
+    char c_2;
+    char c_3;
+} BatBox_b;
+extern void sub_8002F120(int a0, short* pos, int a2, int a3);
+extern void sub_8002F480(int a0, void* pos, int ot, int reverse);
+extern void DrawWindow_80042460(void* rect, BatBox_b* box, void* ot, int a3);
+extern unsigned short uiColor_8008B590;
+
+// Matched
+void sub_800C0254(EventEntry* t, void* arg)
+{
+    BatWin_b* u;
+    short pos[4];
+    BatBox_b box;
+    short rect[4];
+    int m;
+    if (dword_800ADE78 == 1 && dword_800C9C7C == 10)
+    {
+        return;
+    }
+    if (dword_800B1228 & 0x8000)
+    {
+        return;
+    }
+    u = arg;
+    m = sub_80014390(dword_800C9C99);
+    AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + 0x28);
+    InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
+    if (dword_800C9C99 == 0)
+    {
+        sub_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 2);
+    }
+    else
+    {
+        sub_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 0);
+    }
+    if (dword_800C9C99 != 0)
+    {
+        pos[0] = 0xD2;
+        pos[1] = 0xC0;
+        sub_8002F120(m, pos, dword_800C9182, 0xF);
+        box.c_3 = 1;
+        rect[2] = 0x64;
+        rect[3] = 0x15;
+        box.col_0 = uiColor_8008B590;
+        box.c_2 = 0;
+        rect[0] = 0xD2;
+        rect[1] = 0xC0;
+        DrawWindow_80042460(rect, &box, (char*)pOT_8008D454 + 0x3C, 0);
+    }
+    u->frame_0++;
+    if (u->frame_0 >= 5)
+    {
+        u->frame_0 = 4;
+    }
+    sub_8002F480(m, 0, 0xF, 0);
+    AddDrawAreaPrim_8003326C(u->rect_C, (char*)pOT_8008D454 + 0x28);
+}
 
 void sub_800C0440()
 {
