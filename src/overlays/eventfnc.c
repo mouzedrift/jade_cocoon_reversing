@@ -528,7 +528,6 @@ int sub_800B9020(EvCtxEventfnc* c)
     return 1;
 }
 
-#if 0
 extern int sub_800AD154(int a);
 int sub_800B9110(EvCtxEventfnc* c)
 {
@@ -543,22 +542,18 @@ int sub_800B9110(EvCtxEventfnc* c)
     sub_800AD16C(hi, v + 1);
     if (sub_800AD154(hi) >= hi2)
     {
-        int arg;
-        if (lo2 != 0)
+        if (lo2)
         {
-            arg = lo;
+            sub_800AD16C(hi, lo);
         }
         else
         {
-            arg = hi2 - 1;
+            sub_800AD16C(hi, hi2 - 1);
         }
-        sub_800AD16C(hi, arg);
     }
     c->pc_8++;
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9110);
 
 extern void (*dword_800B1D98)(int);
 int sub_800B91CC(EvCtxEventfnc* c)
@@ -1211,29 +1206,25 @@ int sub_800BA930(EvCtxEventfnc* c)
     return 1;
 }
 
-#if 0
 extern void sub_800ADCEC(unsigned short* v, int a);
 extern int dword_80091C9C;
 extern int dword_80091C54;
-extern int dword_80091C94;
 int sub_800BA9E4(EvCtxEventfnc* c)
 {
     unsigned short v[3];
-    char* s;
+    EvSaveEventfnc* s;
     sub_800ADCEC(v, c->pc_8->b_8);
     dword_80091C9C = 1;
     dword_80091C54 = 0;
     dword_80091C94 = 1;
-    s = (char*)&saveData_8008B570;
-    *(unsigned short*)(s + 0x2E4) = v[0];
-    *(unsigned short*)(s + 0x2E8) = v[1];
-    *(unsigned short*)(s + 0x2EC) = v[2];
+    s = (EvSaveEventfnc*)&saveData_8008B570;
+    s->f2E4_2E4 = v[0];
+    s->f2E8_2E8 = v[1];
+    s->f2EC_2EC = v[2];
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA9E4);
 
 int sub_800BAA6C(EvCtxEventfnc* c)
 {
