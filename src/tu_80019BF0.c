@@ -217,6 +217,7 @@ typedef struct
 extern VECTOR levantPos_8008BD18;
 extern short dword_8008D474[2];
 extern int off_8007DC70;
+extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 typedef struct
 {
     int fileIdx;
@@ -806,7 +807,55 @@ void sub_8001BCD8(int a0)
 {
     dword_800918C4 = a0;
 }
-INCLUDE_ASM(sub_8001BCE4);
+// Matched
+void sub_8001BCE4(int buffer)
+{
+    SPRT sprt;
+    DR_TPAGE tpage;
+    DR_STP stp;
+    int x;
+    int y;
+    int top;
+    int tp;
+    if (unknownFlags_8008D678 & 0x20)
+    {
+        return;
+    }
+    SetDrawStp(&stp, 1);
+    sub_80040298(pOT_8008D4AC + 3, &stp, 3);
+    SetDrawStp(&stp, 0);
+    sub_80040298(pOT_8008D4AC, &stp, 3);
+    SetSprt(&sprt);
+    sprt.r0 = 0x80;
+    sprt.g0 = 0x80;
+    sprt.b0 = 0x80;
+    sprt.w = 0x40;
+    sprt.h = 0x40;
+    SetShadeTex(&sprt, 1);
+    SetSemiTrans(&sprt, 1);
+    if (buffer)
+    {
+        top = stru_8008B4D8.field_A_y;
+    }
+    else
+    {
+        top = 0x100;
+    }
+    for (y = 0; y < stru_8008B4D8.field_E_h; y += 0x40)
+    {
+        for (x = 0; x < stru_8008B4D8.field_C_w; x += 0x40)
+        {
+            sprt.x0 = x;
+            sprt.y0 = y;
+            sprt.u0 = (stru_8008B4D8.field_8_x + x) % 64;
+            sprt.v0 = y + top;
+            sub_80040298(pOT_8008D4AC + 1, &sprt, 5);
+            tp = GetTPage(2, 0, (stru_8008B4D8.field_8_x + x) / 64 * 64, top);
+            setDrawTPage(&tpage, 0, 0, tp);
+            sub_80040298(pOT_8008D4AC + 1, &tpage, 2);
+        }
+    }
+}
 // Matched
 void sub_8001BEC8(void)
 {
@@ -2304,8 +2353,68 @@ void sub_8001F9F0(char* o)
     *(int*)(o + 0x34) = *(int*)(o + 0x140) * *(short*)(o + 0x26) / 4096;
 }
 #if 0
-void sub_8001FB00(void* a0)
+// Not matched: the clamp of 0x20 keeps the sum and the clamped value in two registers in the original (move v1,v0); here they are coalesced
+void sub_8001FB00(char* o)
 {
+    unsigned int f = *(unsigned int*)(o + 4);
+    int r = 0;
+    int v;
+    int w;
+    *(int*)(o + 8) = 0;
+    if (f & 0x780)
+    {
+        if (f & 0x80)
+        {
+            r = 0x10;
+        }
+        else if (f & 0x100)
+        {
+            r = 0x30;
+        }
+        else if (f & 0x200)
+        {
+            r = 0x50;
+        }
+        else if (f & 0x400)
+        {
+            r = 0x70;
+        }
+    }
+    if (*(unsigned int*)(o + 4) & 0x40000000)
+    {
+        v = (asc_80084350 + 0xF8)[(*(short*)(o + 0xBC) * *(short*)(o + 0xBE) + 0x400) & 0xFFF];
+        (*(short*)(o + 0xBC))++;
+        *(int*)(o + 8) = r | 0x80 | (-((v + 0x1000) / 2) << 16);
+    }
+    if (*(unsigned int*)(o + 4) & 0x60)
+    {
+        v = *(short*)(o + 0x20) + 0x1000 / *(short*)(o + 0x22);
+        w = v;
+        if (v >= 0)
+        {
+            if (w > 0x1000)
+            {
+                w = 0x1000;
+            }
+        }
+        else
+        {
+            w = 0;
+        }
+        *(short*)(o + 0x20) = w;
+        if (*(unsigned int*)(o + 4) & 0x20)
+        {
+            *(int*)(o + 8) = r | 0x80 | ((0x1000 - *(short*)(o + 0x20)) << 16);
+        }
+        else
+        {
+            *(int*)(o + 8) = r | 0x80 | (*(short*)(o + 0x20) << 16);
+        }
+    }
+    if (*(unsigned int*)(o + 4) & 0x800)
+    {
+        *(int*)(o + 8) |= (*(short*)(o + 0x15A) - *(short*)(o + 0x152)) << 8;
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001FB00);
@@ -2332,8 +2441,63 @@ void sub_8001FD08(void* a0)
 #endif
 INCLUDE_ASM(sub_8001FD08);
 #if 0
-void sub_8001FF48(void* a0)
+// Not matched: instruction scheduling/regs differ in places; the original clears 0x10 and bit 31 with two separate ands
+void sub_8001FF48(char* o)
 {
+    int f = *(int*)(o + 4);
+    *(int*)(o + 4) = f & ~0x4000;
+    if (!(f & 4))
+    {
+        *(short*)(o + 0x1C) += *(short*)(o + 0x1E);
+        if (*(short*)(o + 0x1C) >= 0x1000)
+        {
+            *(short*)(o + 0x1C) -= 0x1000;
+            (*(int*)(o + 0x90))++;
+        }
+        if (*(int*)(o + 0x90) == *(short*)(o + 0x1A))
+        {
+            *(int*)(o + 4) |= 0x4000;
+        }
+        else if (*(short*)(o + 0x1A) < *(int*)(o + 0x90))
+        {
+            *(int*)(o + 4) |= 8;
+            *(int*)(o + 0x90) = *(short*)(o + 0x18);
+        }
+    }
+    f = *(int*)(o + 4);
+    if (f & 0x10)
+    {
+        if (f < 0)
+        {
+            *(int*)(o + 0xAC) += 0x111;
+        }
+        else
+        {
+            *(int*)(o + 0xAC) += 0x1000 / *(short*)(o + 0x24);
+        }
+        if (*(int*)(o + 0xAC) >= 0x1000)
+        {
+            *(int*)(o + 4) = *(int*)(o + 4) & ~0x10 & ~0x80000000;
+        }
+        f = *(int*)(o + 4);
+    }
+    if (f & 0x2000000)
+    {
+        *(int*)(o + 4) = f & ~0x4000;
+        if (++*(int*)(o + 0x98) >= **(int**)(o + 0x160))
+        {
+            *(int*)(o + 0x90) = *(short*)(o + 0x1A);
+            *(int*)(o + 4) = (*(int*)(o + 4) & ~0x2000000) | 0x4008;
+            *(int*)(o + 0x54) = *(int*)(o + 0x3C);
+            *(int*)(o + 0x58) = *(int*)(o + 0x40);
+            *(int*)(o + 0x50) = *(int*)(o + 0x38);
+            if (*(int*)(o + 0xD4) & 4)
+            {
+                *(int*)(o + 4) |= 0x80000000;
+                *(int*)(o + 0xD4) &= ~1;
+            }
+        }
+    }
 }
 #endif
 INCLUDE_ASM(sub_8001FF48);
