@@ -138,7 +138,7 @@ extern unsigned short name_800BFD5C[];
 extern char name_800C08E8[];
 extern ShopSixShop name_800B9608;
 extern char name_800C07D4[];
-extern void sub_800B9FC8(void* a, void* b, void* c, int d);
+extern int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d);
 extern int sub_800AD288(int a, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void sub_800BB148();
@@ -563,7 +563,143 @@ int sub_800B9E94(char* src, char* dst, short c)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800B9FC8);
+typedef struct ShopIdxShop
+{
+    int v[4];
+} ShopIdxShop;
+extern ShopIdxShop name_800B6D38;
+extern void InitMinionData_8001900C(void* out, void* in);
+extern void FillHpMp_80011C0C(void* a, void* b);
+extern void sub_80011D98(void* a, int b);
+extern void sub_800BAB38(char* a, char* b);
+extern void sub_800BA368(unsigned char* d, unsigned char* s);
+extern void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
+extern void sub_800BA4CC(signed char* d, signed char* a, signed char* b);
+extern void sub_800BA650(unsigned char* d);
+extern void sub_800BA6D0(ShopUnitShop* d, ShopUnitShop* s, ShopUnitShop* t);
+extern void sub_800BA72C(unsigned char* a, unsigned char* b);
+extern void sub_800BAA0C(char* a, char* b);
+extern int sub_800BACD0(unsigned char* d);
+int MergeMinions_800B9FC8(unsigned char* a, unsigned char* b, unsigned char* c, int d)
+{
+    ShopIdxShop idx;
+    unsigned char tmp[0x88];
+    unsigned char* p;
+    int i;
+    int n;
+    int t;
+    int r;
+    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, 0xF8);
+    c[3] = b[3];
+    p = (unsigned char*)sub_8001CD58(d);
+    if (p[0] != 0xFF)
+    {
+        c[3] = p[0];
+    }
+    sub_800BAB38((char*)c, (char*)b);
+    for (i = 0; i < 4; i++)
+    {
+        (c + i)[0xC2] = ((c + i)[0xC2] + (b + i)[0xC2]) >> 1;
+    }
+    n = 0;
+    idx = name_800B6D38;
+    for (i = 0; i < 4; i++)
+    {
+        if ((c + i)[0xC2] & 1)
+        {
+            n++;
+        }
+    }
+restart:
+    for (i = 0; i < 3; i++)
+    {
+        if ((c + idx.v[i])[0xC2] < (c + idx.v[i + 1])[0xC2])
+        {
+            t = idx.v[i];
+            idx.v[i] = idx.v[i + 1];
+            idx.v[i + 1] = t;
+            goto restart;
+        }
+    }
+    if (n == 2)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            p = c + idx.v[i];
+            t = p[0xC2];
+            if (t & 1)
+            {
+                if (n >= 2)
+                {
+                    p[0xC2] = t + 1;
+                }
+                else
+                {
+                    p[0xC2] = t - 1;
+                }
+                n--;
+            }
+        }
+    }
+    if (n == 4)
+    {
+        for (i = 0; i < 4; i++)
+        {
+            p = c + idx.v[i];
+            t = p[0xC2];
+            if (t & 1)
+            {
+                if (n >= 3)
+                {
+                    p[0xC2] = t + 1;
+                }
+                else
+                {
+                    p[0xC2] = t - 1;
+                }
+                n--;
+            }
+        }
+    }
+    for (i = 3; i >= 0; i--)
+    {
+    }
+    *(unsigned short*)(c + 0xC6) = 0;
+    if (c[0xC2] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) = 1;
+    }
+    if (c[0xC5] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 8;
+    }
+    if (c[0xC4] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 4;
+    }
+    if (c[0xC3] >= 8)
+    {
+        *(unsigned short*)(c + 0xC6) |= 2;
+    }
+    sub_800BA368(c, a);
+    sub_800BA3C8(c + 0xB0, a + 0xB0, b + 0xB0);
+    sub_800BA4CC((signed char*)c, (signed char*)a, (signed char*)b);
+    sub_800BA650(c);
+    sub_800BA6D0((ShopUnitShop*)c, (ShopUnitShop*)a, (ShopUnitShop*)b);
+    sub_80011D98(c + 0x84, 2);
+    sub_800BA72C(c, b);
+    sub_800BAA0C((char*)c, (char*)b);
+    FillHpMp_80011C0C(c + 0x84, c + 0x84);
+    r = sub_800BACD0(c);
+    if (r > 0)
+    {
+        idx.v[0] = r;
+        idx.v[1] = (c[0xC8] << 26) + *(int*)(c + 0x88);
+        InitMinionData_8001900C(tmp, &idx);
+        sub_800B9E94((char*)tmp, (char*)c, *(short*)c);
+    }
+    return 1;
+}
 
 void sub_800BA340(unsigned int* a)
 {
@@ -1091,7 +1227,7 @@ int sub_800BB3E8(ShopUnitShop* p)
     return 0;
 }
 
-extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern int UpdateMenuCursor_8003D794(void* p, int a);
 extern void sub_800BEBC8();
 extern void sub_800BECC8();
 extern void sub_800BBAAC();
@@ -1476,6 +1612,159 @@ void SetShopHelpText_800BBB54(ShopUnit4Shop* u, int mode)
     }
 }
 
+#if 0
+// Not matched (34 words): only the f24 & 8 block differs. The original passes snd (in s1) to
+// UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
+// s28/s7E through a copy; with int snd the copies and the r register still differ.
+extern int sub_800BD6C4();
+void sub_800BBE24(ShopUnit4Shop* u)
+{
+    short snd;
+    int r;
+    int k;
+    unsigned int bit;
+    if (u->f24 & 8)
+    {
+        sub_800BEBC8(u);
+        snd = 0;
+        r = (short)UpdateMenuCursor_8003D794(&u->s28, snd);
+        if (r == 4)
+        {
+            snd = 1;
+            u->s2C = 0x18;
+            u->s2E = 0x50;
+            u->s28 = snd;
+            u->s7E = snd;
+            u->s2A = r;
+            u->s30 = 0;
+            u->f24 &= ~0x10;
+            sub_800BB798(u);
+        }
+        else if (r == 3)
+        {
+            snd = 1;
+            u->s28 = snd;
+            u->s2E = 0x20;
+            u->s2A = r;
+            u->s2C = r;
+            u->s30 = 2;
+            u->s7E = 0;
+            u->f24 |= 0x10;
+            sub_800BB798(u);
+        }
+        if (snd)
+        {
+            PlaySfx_80031494(0x7F);
+        }
+    }
+    else
+    {
+        UpdateMenuCursor_8003D794(&u->s28, 0);
+    }
+    if (u->s0 == 15)
+    {
+        UpdateMenuCursor_8003D794(&u->s40, 0);
+    }
+    if (IsConfirmPressedP1_8003D380(0))
+    {
+        if (u->s0 != 5)
+        {
+            if (sub_800BD6C4(u))
+            {
+                u->f14 = 1;
+            }
+            else if (u->s0 == 2 || u->s0 == 10)
+            {
+                if (u->f4C == u->f50)
+                {
+                    u->f14 = 1;
+                }
+                else
+                {
+                    u->f10 = 1;
+                }
+            }
+            else
+            {
+                u->f10 = 1;
+            }
+        }
+        else
+        {
+            if (*(short*)u->f4C != 4)
+            {
+                if (u->f24 & 0x10)
+                {
+                    bit = 1 << (short)(u->s30 + u->s32);
+                    if (!(u->f88 & bit))
+                    {
+                        u->f88 |= bit;
+                        u->f84 |= bit;
+                        u->s80++;
+                    }
+                    else
+                    {
+                        u->f88 &= ~bit;
+                        u->f84 &= ~bit;
+                        u->s80--;
+                    }
+                }
+                else
+                {
+                    k = (short)(u->s30 + u->s32);
+                    bit = 1 << k;
+                    if (!(u->f8C & bit))
+                    {
+                        u->f8C |= bit;
+                        u->f84 |= 1 << (k + 3);
+                        u->s80++;
+                    }
+                    else
+                    {
+                        u->f8C &= ~bit;
+                        u->f84 &= ~(1 << (k + 3));
+                        u->s80--;
+                    }
+                }
+                PlaySfx_80031494(0x7E);
+            }
+        }
+    }
+    else if (IsCancelPressedP1_8003D41C(0))
+    {
+        u->f14 = 1;
+    }
+    else if (padPressed_8009194C & 0x80)
+    {
+        if (u->s0 == 8)
+        {
+            u->s40 = 1;
+            u->s42 = 1;
+            u->s44 = 1;
+            u->s46 = 0;
+            u->s4A = 0;
+            u->s48 = 0;
+            u->f10 = 1;
+            u->f24 |= 0x400;
+        }
+        else if (u->s0 == 15)
+        {
+            sub_800BC1A8(u);
+        }
+        else if (sub_800BB3E8((ShopUnitShop*)u) && sub_800B97B0())
+        {
+            PlaySfx_80031494(0x7E);
+        }
+    }
+    else if (padPressed_8009194C & 0x20)
+    {
+        if (u->s80 > 0 && u->s0 == 5)
+        {
+            u->f10 = 1;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BBE24);
 
 void sub_800BC1A8(ShopUnit3Shop* u)
@@ -1756,7 +2045,7 @@ void sub_800BD720(ShopUnit3Shop* u)
         {
             d = 10;
         }
-        sub_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
+        MergeMinions_800B9FC8(u->field_4C, u->field_50, name_800C08E8, d);
     }
 }
 
@@ -2198,7 +2487,120 @@ void sub_800BE53C(ShopUnit4Shop* u)
     SetFontClutOffset_8003F900(1, 0);
 }
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BE7F0);
+typedef struct ShopPairShop
+{
+    short a;
+    short b;
+} ShopPairShop;
+extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
+extern char name_800BFF14[];
+void sub_800BE7F0(ShopUnit4Shop* u)
+{
+    short r[4];
+    short out[4];
+    ShopPairShop p;
+    ShopSixShop q;
+    ShopPairShop pos1;
+    ShopPairShop pos2;
+    int base;
+    short sel;
+    short h;
+    int clut;
+    short i;
+    char* s;
+    ShopItemShop* e;
+    int k;
+    base = sub_800BEB60(u);
+    clut = 0;
+    if (sub_800BD678(u))
+    {
+        sel = u->s30;
+    }
+    else
+    {
+        sel = -1;
+    }
+    h = 8;
+    if (!(u->f20 & 2))
+    {
+        h = u->sC;
+    }
+    r[2] = 0x40;
+    r[3] = 0xE;
+    for (i = 0; i < 4; i++)
+    {
+        k = i + (short)base + 3;
+        if (sub_800B9C10(k) == 2)
+        {
+            e = sub_800B9C5C(k);
+            s = (e->state_0 == 4) ? 0 : (char*)e + 0x94;
+        }
+        else
+        {
+            s = 0;
+        }
+        r[0] = 0xD;
+        r[1] = i * 15 + 0x9A;
+        if (((unsigned int)u->f84 & (1 << (i + (short)base + 3))) && ((unsigned int)u->f8C & (1 << (i + (short)base))))
+        {
+            SetFontClutOffset_8003F900(1, 3);
+            clut = 1;
+        }
+        InterpolateWindowRect_8004196C(out, r, h, 8, 0);
+        p.a = r[0] + r[2] / 2;
+        p.b = r[1] + 3;
+        if (s)
+        {
+            sub_8002FAA0(2, (unsigned short*)&p, s, 0xE);
+        }
+        if (clut)
+        {
+            SetFontClutOffset_8003F900(1, 0);
+            clut = 0;
+        }
+    }
+    q = name_800B971C;
+    q.w1 = GetTime30Hz_8002C64C();
+    q.w4 = (int)name_800BFF14;
+    if (u->f24 & 0x10)
+    {
+        q.w3 = -1;
+    }
+    else
+    {
+        q.w3 = sel;
+    }
+    if (u->s0 == 6 || u->s0 == 9 || u->s0 == 3 || u->s0 == 15)
+    {
+        q.w0 |= 4;
+    }
+    else
+    {
+        q.w0 |= 2;
+    }
+    q.w2 = 8;
+    DrawMenuWindows_8002A5A4(&q);
+    SetFontClutOffset_8003F900(1, 0);
+    if (!(u->f24 & 0x10))
+    {
+        if ((short)base < 20)
+        {
+            p.a = 2;
+            p.b = 1;
+            pos1.a = 0x52;
+            pos1.b = 0xCB;
+            sub_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
+        }
+        if ((short)base != 0)
+        {
+            p.a = 2;
+            p.b = 3;
+            pos2.a = 0x52;
+            pos2.b = 0xA2;
+            sub_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
+        }
+    }
+}
 
 int sub_800BEB60(ShopUnit3Shop* u)
 {
@@ -2309,7 +2711,6 @@ extern ShopWgtShop* name_800C0258[];
 extern char name_800B6D7C[];
 extern char name_8008D434[];
 extern char name_8008D440[];
-extern int name_8008D3FC;
 extern char name_800C0090[];
 extern char name_800C0094[];
 extern void sub_8002C6DC(void* p, int a, int b);
@@ -2367,7 +2768,7 @@ void DrawPersonList_800BED48(short* s)
         }
     }
     q.w0 = s[2];
-    q.w1 = name_8008D3FC;
+    q.w1 = frameCount_8008D3FC;
     q.w2 = h;
     q.w3 = prev;
     q.w4 = (int)name_800C0258;
