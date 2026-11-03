@@ -4497,7 +4497,7 @@ void sub_800A9564(int a, G2ActB* p)
     sub_800AAF58(p);
     sub_800A9A9C(p);
     sub_800A99DC(p);
-    sub_800A9708(p);
+    DrawLevantModel_800A9708(p);
     sub_800AA220(p);
     for (i = 0; i < 40; i++)
     {
@@ -4505,7 +4505,125 @@ void sub_800A9564(int a, G2ActB* p)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A9708);
+typedef struct G2Skel_1
+{
+    int f0;
+    void* f4;
+    void* f8;
+    void* bones;
+    void* base;
+    char* pose;
+    unsigned int frame;
+    int flags;
+    char* pos;
+    int f24;
+    unsigned long* ot;
+} G2Skel_1;
+typedef struct G2ActD
+{
+    unsigned int f0;
+    char pad_4[0xc];
+    unsigned int f10;
+    unsigned int f14;
+    char pad_18[4];
+    short s1c;
+    short s1e;
+    char pad_20[6];
+    short s26;
+    char pad_28[8];
+    int f30;
+    char pad_34[8];
+    int f3c;
+    char* f40;
+} G2ActD;
+extern int sub_80019CC4(void* p);
+extern char stru_8008D534[];
+extern short word_8007DC82;
+extern short word_8007DC8A;
+extern char dword_800B0EF8;
+extern void sub_80046A58(void* sk, void* buf, char* pose);
+extern void sub_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
+extern void sub_800459E4(void* bones, void* m, unsigned long* ot, int flags);
+void DrawLevantModel_800A9708(G2ActD* p)
+{
+    G2Skel_1 sk;
+    int v;
+    char* anim;
+    int flags;
+    int st;
+    char* sd;
+    v = sub_80019CC4((char*)&saveData_8008B570 + 0x7a8);
+    sd = (char*)&saveData_8008B570;
+    if (p->f3c != *(int*)(sd + 0x7c8))
+    {
+        p->f3c = *(int*)(sd + 0x7c8);
+        sub_800ABECC(*(int*)(sd + 0x7c8));
+    }
+    anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1c) * 28;
+    if (*(int*)(sd + 0x7c8) & 0x3fd)
+    {
+        flags = (word_8007DC8A - word_8007DC82) << 8;
+    }
+    else
+    {
+        flags = 0;
+    }
+    if (p->f0 & 6)
+    {
+        int t = flags | 0xb0;
+        flags = t | (p->f30 << 16);
+    }
+    if (p->f0 & 2)
+    {
+        p->f30 += 0x80;
+        if (p->f30 >= 0x1000)
+        {
+            p->f30 = 0x1000;
+        }
+    }
+    else if (p->f0 & 4)
+    {
+        p->f30 -= 0x80;
+        if (p->f30 < 0)
+        {
+            p->f30 = 0;
+            sub_800AB150(p);
+        }
+    }
+    if (p->f30 == 0x1000)
+    {
+        return;
+    }
+    if (p->f0 & 0x20000)
+    {
+        return;
+    }
+    sk.f0 = *(int*)(p->f40 + 0x50);
+    sk.f4 = &levantPos_8008BD18;
+    sk.f8 = (char*)&levantPos_8008BD18 + 0xc;
+    sk.bones = &dword_800B0EF8;
+    sk.base = &dword_800B0FB0;
+    sk.f24 = 0;
+    sk.pose = anim;
+    sk.frame = p->f10 % *(unsigned int*)anim;
+    sk.flags = flags;
+    sk.pos = (char*)p + 0x590;
+    sk.ot = pOT_8008D690;
+    if (sub_800AC518(p->s1e) == 0)
+    {
+        p->f0 &= ~0x10;
+    }
+    if (!(p->f0 & 0x10))
+    {
+        sub_80046A58(&sk, stru_8008D534 + v * 24, 0);
+    }
+    else
+    {
+        anim = *(char**)(p->f40 + 0x54) + sub_800AC4A8(p->s1e) * 28;
+        sub_80047E28(&sk, &dword_800B0FB0, anim, p->f14 % *(unsigned int*)anim, 0x1000 - p->s26, stru_8008D534 + v * 24, 0);
+    }
+    sub_800459E4(&dword_800B0EF8, p->f40 + 0x5c, pOT_8008D690, sk.flags);
+}
 
 void sub_800A99DC(G2Q* p)
 {
