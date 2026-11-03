@@ -1,39 +1,12 @@
 #ifndef EFFECT_OBJ_H
 #define EFFECT_OBJ_H
 
+#include "tu_8001EA48.h"
+
 /* battle/spell effects: the effect task (effectTask_8008D3F8), the effect objects
    (buffers of effectObjects_8008B4A8 entries) and the effect file (effectFile_80091BD0).
    Used by tu_80014954.c, tu_80016BF4.c, tu_800174F8.c and tu_80018430.c. */
 
-/* 28-byte entry of effectFile_80091BD0's model table */
-typedef struct
-{
-    int field_0;
-    int data_4; // struct_54 array (model data)
-    int pad_8[5];
-} EffectModel;
-
-/* 52-byte entry of effectFile_80091BD0's sprite table */
-typedef struct
-{
-    int field_0;
-    int field_4;
-    int field_8; // EffSprite** (tu_80014954.c)
-    int field_C[10];
-} EffectSpriteDef;
-
-/* effectFile_80091BD0 (declared as int[4] in globals.h) */
-typedef struct
-{
-    char pad_0[0x20];
-    EffectSpriteDef* sprites_20;
-    int field_24;
-    EffectModel* models_28;
-    int pad_2C[2];
-    int vlc_34; // MDEC VLC table
-    int img_38; // decoded image buffer
-} EffectFile;
-#define EFFECT_FILE ((EffectFile*)effectFile_80091BD0)
 
 /* the buffer of the effect task (effectTask_8008D3F8->entry.buffer) */
 typedef struct
@@ -75,7 +48,7 @@ typedef struct
     int field_88; // EffectModel*
     int field_8C;
     int field_90;
-    int field_94; // malloc'd model work buffer
+    FtgObject* work_94; // malloc'd copy of the model's first FtgObject
     int field_98;
     int field_9C;
     int field_A0; // int* scale (or 0)

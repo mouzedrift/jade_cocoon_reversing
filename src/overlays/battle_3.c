@@ -1537,7 +1537,7 @@ typedef struct BatDrop_a
     int vel_28[3];
     short rot_34[4];
     int pad3C;
-    BatFxAnim_a* anim_40;
+    EffectSprite* anim_40;
 } BatDrop_a;
 
 // Matched
@@ -1546,8 +1546,8 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     int v[3];
     short s[4];
     short w[4];
-    BatFxAnim_a* d;
-    BatFxElem_a* e;
+    EffectSprite* d;
+    EffectSpriteFrame* e;
     u->vel_28[0] = u->vel_28[0] * 15 / 16;
     u->vel_28[1] = u->vel_28[1] * 15 / 16 + u->size_8 / 8;
     u->vel_28[2] = u->vel_28[2] * 15 / 16;
@@ -1573,7 +1573,7 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     w[1] = 0;
     w[2] = 0;
     u->rot_34[1] += 0x80;
-    sub_80044010(d->state_C, v, u->rot_34, &e->f0, &e->f4, &e->f8, s, w, &e->f18, 0, 0x30, pOT_8008D690);
+    sub_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
@@ -1597,7 +1597,7 @@ void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
             b->rot_34[0] = q[0];
             b->rot_34[1] = q[1];
             b->rot_34[2] = q[2];
-            b->anim_3C = (BatFxAnim_a*)c;
+            b->anim_3C = (EffectSprite*)c;
             b->vel_28[0] = ((rand() & 0x7F) - 0x3F) << 10;
             b->vel_28[1] = -(rand() & 0x3F) << 10;
             b->vel_28[2] = ((rand() & 0x7F) - 0x3F) << 10;
@@ -1616,9 +1616,9 @@ void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
 void sub_800C17EC(EventEntry* t, BatSpark_a* u)
 {
     int s[3];
-    BatFxAnim_a* d;
+    EffectSprite* d;
     int i;
-    BatFxElem_a* e;
+    EffectSpriteFrame* e;
     int* a = u->target_40;
     int* b = u->offset_44;
     u->vel_28[0] = u->vel_28[0] * 31 / 32 + ((a[0] + b[0] - u->pos_10[0]) << 5);
@@ -1633,10 +1633,10 @@ void sub_800C17EC(EventEntry* t, BatSpark_a* u)
     d = u->anim_3C;
     if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, (int*)dword_800795D4, &e->f18, 0, 0x30, pOT_8008D690);
+            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)dword_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1660,7 +1660,7 @@ void sub_800C1A5C(int* p, short* q, int c, int d)
         b->rot_34[0] = q[0];
         b->rot_34[1] = q[1];
         b->rot_34[2] = q[2];
-        b->anim_3C = (BatFxAnim_a*)c;
+        b->anim_3C = (EffectSprite*)c;
         b->frame_0 = 0;
         b->speed_8 = d;
         e->cb_8 = (EventEntryFn)sub_800C1B2C;
@@ -1670,15 +1670,15 @@ void sub_800C1A5C(int* p, short* q, int c, int d)
 #if 0 // Not matched: register permutation only (u/d/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
 void sub_800C1B2C(EventEntry* t, BatSpark_a* u)
 {
-    BatFxAnim_a* d = u->anim_3C;
+    EffectSprite* d = u->anim_3C;
     int i;
-    BatFxElem_a* e;
+    EffectSpriteFrame* e;
     if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
+            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1707,7 +1707,7 @@ void sub_800C1C5C(int* p, short* q, int c)
             b->rot_34[0] = q[0];
             b->rot_34[1] = q[1];
             b->rot_34[2] = q[2];
-            b->anim_3C = (BatFxAnim_a*)c;
+            b->anim_3C = (EffectSprite*)c;
             b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
             b->vel_28[1] = ((rand() & 0x3F) - 0x1F) << 10;
             b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
@@ -1721,9 +1721,9 @@ void sub_800C1C5C(int* p, short* q, int c)
 void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
 {
     int s[3];
-    BatFxAnim_a* d;
+    EffectSprite* d;
     int i;
-    BatFxElem_a* e;
+    EffectSpriteFrame* e;
     int* sd;
     u->vel_28[0] = u->vel_28[0] * 15 / 16;
     u->vel_28[1] = u->vel_28[1] * 15 / 16 + 0x200;
@@ -1743,10 +1743,10 @@ void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
     d = u->anim_3C;
     if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(d->state_C, u->pos_10, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
+            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1772,7 +1772,7 @@ void sub_800C1FFC(int* p, short* q, int c, int d, int n)
             b->rot_34[0] = q[0];
             b->rot_34[1] = q[1];
             b->rot_34[2] = q[2];
-            b->anim_3C = (BatFxAnim_a*)c;
+            b->anim_3C = (EffectSprite*)c;
             b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
             b->vel_28[1] = -(rand() & 0x1F) << 10;
             b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
@@ -1788,9 +1788,9 @@ void sub_800C1FFC(int* p, short* q, int c, int d, int n)
 
 void sub_800C2170(EventEntry* t, BatSpark_a* u)
 {
-    BatFxAnim_a* d;
+    EffectSprite* d;
     int i;
-    BatFxElem_a* e;
+    EffectSpriteFrame* e;
     u->rot_34[1] += 0x40;
     u->vel_28[0] = u->vel_28[0] * 12 / 13;
     u->vel_28[1] = u->vel_28[1] * 12 / 13 - 0x400;
@@ -1807,14 +1807,14 @@ void sub_800C2170(EventEntry* t, BatSpark_a* u)
     d = u->anim_3C;
     if (u->frame_0 / 4096 < d->count_0)
     {
-        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             short c[3];
             e = d->frames_8[u->frame_0 / 4096] + i;
             c[0] = u->pos_10[0];
             c[1] = u->pos_10[1];
             c[2] = u->pos_10[2];
-            sub_80044010(d->state_C, u->base_1C, u->rot_34, &e->f0, &e->f4, &e->f8, e->size_C, c, &e->f18, 0, 0x30, pOT_8008D690);
+            sub_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1836,7 +1836,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
     if (++u->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        sub_800C1A5C(u->pos_10, (short*)dword_800795D4, effectFile_80091BD0[0x20 / 4] + sub_80020F00(effectFile_80091BD0, 0, 0x21) * 52, 0x1000);
+        sub_800C1A5C(u->pos_10, (short*)dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             e = AllocEventEntry_80043AF8(dword_8008D60C);
@@ -1866,11 +1866,11 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
                 b->rot_34[1] = rand() & 0x1000;
                 b->rot_34[2] = rand() & 0x1000;
                 b->rot_34[3] = (rand() & 0x1FF) + 0x100;
-                n = sub_80020F00(effectFile_80091BD0, 1, 0x19);
+                n = sub_80020F00(&effectFile_80091BD0, 1, 0x19);
                 e->flags = (e->flags | 1) & 0xFFFF7FFF;
                 {
-                    BatClip_a* ent = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
-                    b->obj_3C = ent->models_4 + (i % 8) * 84;
+                    EffectModel* ent = &effectFile_80091BD0.models_28[n];
+                    b->obj_3C = ent->ftg_4 + i % 8;
                 }
                 e->cb_8 = (EventEntryFn)sub_800C273C;
             }
@@ -1907,7 +1907,7 @@ void sub_800C273C(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC((int)u->obj_3C, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    sub_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -1927,9 +1927,9 @@ void sub_800C2914(BatSrc_a* p, int id)
         b->pos_10[1] = p->pos_1C[1];
         b->pos_10[2] = p->pos_1C[2];
         b->frame_0 = 0;
-        n = sub_80020F00(effectFile_80091BD0, 1, id);
+        n = sub_80020F00(&effectFile_80091BD0, 1, id);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        b->obj_3C = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+        b->obj_3C = &effectFile_80091BD0.models_28[n];
         e->cb_8 = (EventEntryFn)sub_800C23D0;
     }
     for (i = 0; i < 8; i++)
@@ -1961,9 +1961,9 @@ void sub_800C2914(BatSrc_a* p, int id)
             s[2] = b->vel_28[2] / 1024;
             VectorToAngles_8003B5D4(s, b->rot_34);
             b->rot_34[2] = rand() & 0x1000;
-            n = sub_80020F00(effectFile_80091BD0, 1, id);
+            n = sub_80020F00(&effectFile_80091BD0, 1, id);
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            b->obj_3C = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + n * 28);
+            b->obj_3C = &effectFile_80091BD0.models_28[n];
             e->cb_8 = (EventEntryFn)sub_800C2CD8;
         }
     }
@@ -1971,7 +1971,7 @@ void sub_800C2914(BatSrc_a* p, int id)
 
 void sub_800C2CD8(EventEntry* t, BatShard_a* u)
 {
-    BatClip_a* d = u->obj_3C;
+    EffectModel* d = u->obj_3C;
     int v[4];
     int s[3];
     if (u->frame_0 >= 0x1A)
@@ -1992,7 +1992,7 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC((int)d->models_4, (int)pOT_8008D690, (int)v, (int)u->rot_34, (int)stru_8008D534, 0x30, (int)s);
+    sub_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2022,8 +2022,8 @@ void sub_800C2E28(int* p, short* q, int c, int d, int e, int n)
             b->rot_80[0] = q[0];
             b->rot_80[1] = q[1];
             b->rot_80[2] = q[2];
-            b->anim_88 = (BatFxAnim_a*)c;
-            b->clip_8C = (BatClip_a*)d;
+            b->anim_88 = (EffectSprite*)c;
+            b->clip_8C = (EffectModel*)d;
             b->rot_80[0] = 0;
             b->rot_80[2] = 0;
             b->frame_0 = 0;
@@ -2037,17 +2037,17 @@ void sub_800C2E28(int* p, short* q, int c, int d, int e, int n)
 
 void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
 {
-    BatFxAnim_a* d = u->anim_88;
+    EffectSprite* d = u->anim_88;
     int i;
     int* r;
-    BatFxElem_a* e;
+    EffectSpriteFrame* e;
     if (u->frame_0 / 4096 < d->count_0)
     {
         r = 0;
-        for (i = 0; i < d->counts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            r = sub_80044010(d->state_C, u->pos_44, u->rot_80, &e->f0, &e->f4, &e->f8, e->size_C, e->f10, &e->f18, 0, 0x30, pOT_8008D690);
+            r = sub_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->trail_50[0].x = u->pos_44[0] + r[0];
         u->trail_50[0].y = u->pos_44[1] + r[1];
@@ -2065,11 +2065,11 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
             u->trail_50[1].z = u->trail_50[0].z;
         }
         u->frame_0 += u->speed_8;
-        sub_80044D0C(u->clip_8C->models_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
-        sub_80044D0C(u->clip_8C->models_4 + 0x54, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
-        sub_80044D0C(u->clip_8C->models_4 + 0xA8, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
-        sub_80044D0C(u->clip_8C->models_4 + 0xFC, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
-        sub_800459E4(dword_800C91A4, &u->clip_8C->f8, pOT_8008D690, 0x30);
+        sub_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
+        sub_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
+        sub_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
+        sub_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
+        sub_800459E4(dword_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
     {
@@ -2095,7 +2095,7 @@ int sub_800C32DC(int a0, int a1, int a2, int a3)
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatAnim_a* b;
     int idx;
-    BatClip_a* t;
+    EffectModel* t;
     if (e != 0)
     {
     b = e->buffer;
@@ -2105,12 +2105,12 @@ int sub_800C32DC(int a0, int a1, int a2, int a3)
     b->frame_0 = 0;
     b->speed_8 = 0;
     b->rot_82 = a3;
-    idx = sub_80020F00(effectFile_80091BD0, 1, a1);
+    idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    t = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
+    t = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = t + a2;
     e->cb_8 = (EventEntryFn)sub_800C33E4;
-    return t->frames_14;
+    return t->frameCount_14;
     }
     return -1;
 }
@@ -2118,18 +2118,18 @@ int sub_800C32DC(int a0, int a1, int a2, int a3)
 #if 0 // Not matched: only u and c swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
 void sub_800C33E4(EventEntry* t, BatAnim_a* u)
 {
-    BatClip_a* c = u->clip_88;
+    EffectModel* c = u->clip_88;
     int any;
     int i;
-    BatKey_a* k;
+    EffectKey* k;
     int v[3];
     short r[3];
     any = 0;
-    if (u->frame_0 < c->frames_14)
+    if (u->frame_0 < c->frameCount_14)
     {
-        for (i = 0; i < c->count_10; i++)
+        for (i = 0; i < c->keyCount_10; i++)
         {
-            k = &c->keys_18[i + u->frame_0 * c->count_10];
+            k = &c->keys_18[i + u->frame_0 * c->keyCount_10];
             if (k->model_0 >= 0)
             {
                 r[0] = k->rot_10[0];
@@ -2139,8 +2139,8 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
                 v[0] = u->pos_44[0] + k->x_4 * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096 + k->z_C * sinTable_80084540[u->rot_82 & 0xFFF] / 4096;
                 v[1] = u->pos_44[1] + k->y_8;
                 v[2] = u->pos_44[2] - k->x_4 * sinTable_80084540[u->rot_82 & 0xFFF] / 4096 + k->z_C * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096;
-                sub_80044D0C(c->models_4 + k->model_0 * 84, pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
-                if (*(int*)(c->models_4 + k->model_0 * 84 + 0x48))
+                sub_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
+                if (c->ftg_4[k->model_0].texSpriteCount_48)
                 {
                     any = 1;
                 }
@@ -2172,7 +2172,7 @@ void sub_800C371C(EventEntry* t, void* arg)
 {
     unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
     BatGlow_a* u = arg;
-    int* m = u->f88;
+    EffectModel* m = u->model_88;
     if (u->frame_0 < u->end_4 && effectOutcomeFlag_8008D780 == 0)
     {
         int s[4];
@@ -2190,8 +2190,8 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        sub_8003A6C4(a, m[1], m[1] + 0x54, u->f94);
-        sub_8004D1EC(m[1], (int)pOT_8008D690, (int)v, (int)dword_800795D4, (int)stru_8008D534, ((0x1000 - a) << 16) | 0xB0, (int)s);
+        sub_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2207,8 +2207,8 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        sub_8003A6C4(a, m[1], m[1] + 0x54, u->f94);
-        sub_8004D1EC(m[1], (int)pOT_8008D690, (int)v, (int)dword_800795D4, (int)stru_8008D534, ((0x1000 - a) << 16) | 0xB0, (int)s);
+        sub_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2217,8 +2217,8 @@ void sub_800C371C(EventEntry* t, void* arg)
         if (u->f30 <= 0)
         {
             sub_800C410C();
-            sub_80021804(u->f94, 1);
-            free3_8003FC6C(u->f94);
+            sub_80021804(u->work_94, 1);
+            free3_8003FC6C(u->work_94);
             t->flags = (t->flags & ~1) | 0x8000;
         }
         u->f30 -= 0x100;
@@ -2234,7 +2234,7 @@ void sub_800C3B50(int* p, int id)
 {
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatOrb_a* b;
-    BatClip_a* ent;
+    EffectModel* ent;
     BatHero_a* q;
     int f;
     int idx;
@@ -2247,7 +2247,7 @@ void sub_800C3B50(int* p, int id)
     b->pos_44[1] = p[1];
     b->pos_44[2] = p[2];
     b->frame_0 = 0;
-    b->fx_E = sub_80020F00(effectFile_80091BD0, 0, id);
+    b->fx_E = sub_80020F00(&effectFile_80091BD0, 0, id);
     b->alpha_30 = 0x1000;
     b->f34 = 0;
     b->rot_80[2] = 0;
@@ -2260,13 +2260,13 @@ void sub_800C3B50(int* p, int id)
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     if (f == 0)
     {
-    idx = sub_80020F00(effectFile_80091BD0, 1, 0x1F);
+    idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1F);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    ent = (BatClip_a*)(effectFile_80091BD0[0x28 / 4] + idx * 28);
+    ent = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = ent;
     b->model_94 = malloc3_8003FC4C(0x54);
-    sub_800218A8((int)ent->models_4, b->model_94, 1);
-    sub_80039FE4((int)ent->models_4, (int)(ent->models_4 + 0x54), (int)b->model_94);
+    sub_800218A8(ent->ftg_4, b->model_94, 1);
+    sub_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
     q = dword_8008B4A4->hero_24;
     b->pos_44[0] = q->pos_5E4[0];
     b->pos_44[1] = q->pos_5E4[1];
@@ -2289,12 +2289,12 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C3B50);
 
 void sub_800C3D34(EventEntry* t, BatOrb_a* u)
 {
-    BatClip_a* m = u->clip_88;
+    EffectModel* m = u->clip_88;
     int v = u->alpha_30 - 0x100;
     u->alpha_30 = v;
     if (v > 0)
     {
-        sub_8003A6C4(v, (int)m->models_4, (int)(m->models_4 + 0x54), (int)u->model_94);
+        sub_8003A6C4(v, m->ftg_4, m->ftg_4 + 1, u->model_94);
     }
     else
     {
@@ -2302,7 +2302,7 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
         sub_80021804(u->model_94, 1);
         free3_8003FC6C(u->model_94);
     }
-    sub_8004D1EC((int)m->models_4, (int)pOT_8008D690, (int)u->pos_44, (int)u->rot_80, (int)stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
+    sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
 }
 
 void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
@@ -2311,7 +2311,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     BatHero_a* q;
     BatOrb_a* w;
     w = u;
-    sub_800C1A5C(u->pos_44, (short*)dword_800795D4, effectFile_80091BD0[0x20 / 4] + u->fx_E * 52, 0x1000);
+    sub_800C1A5C(u->pos_44, (short*)dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
     q = dword_8008B4A4->hero_24;
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
@@ -2333,7 +2333,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     }
     else
     {
-        ((void (*)())sub_800C1C5C)(v, dword_800795D4, effectFile_80091BD0[0x20 / 4] + w->fx_E * 52, 0x1000);
+        ((void (*)())sub_800C1C5C)(v, dword_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
         t->flags = (t->flags & ~1) | 0x8000;
     }
 }

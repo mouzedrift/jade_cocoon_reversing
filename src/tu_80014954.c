@@ -556,21 +556,8 @@ typedef struct
     short field_2C;
     short field_2E;
 } CamView;
-typedef struct
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    short w_C;
-    short h_E;
-    short c_10;
-    short c_12;
-    short c_14;
-    short pad_16;
-    unsigned char rgb_18[4];
-} EffSprite;
 extern CamView cameraState_8008D4F0;
-extern void sub_80044010(void* a0, int* pos, void* a2, EffSprite* s, int* a4, int* a5, short* sz, short* col,
+extern void sub_80044010(POLY_FT4* a0, int* pos, void* a2, short* uv, short* wh, short* a5, short* sz, short* col,
                          unsigned char* rgb, int a9, int a10, unsigned long* ot);
 // Matched
 void sub_80014CCC(int* a0, void* buf)
@@ -585,9 +572,9 @@ void sub_80014CCC(int* a0, void* buf)
     unsigned char rgb[4];
     short sz2[2];
     int idx;
-    EffectSpriteDef* e1;
-    EffectSpriteDef* e2;
-    EffSprite* sp;
+    EffectSprite* e1;
+    EffectSprite* e2;
+    EffectSpriteFrame* sp;
     int dot;
     int* c;
     int* t;
@@ -602,17 +589,17 @@ void sub_80014CCC(int* a0, void* buf)
     a1->pos_44[0] = ((int*)a1->field_1C)[0] + a1->pos_44[0];
     a1->pos_44[1] = ((int*)a1->field_1C)[1] + a1->pos_44[1];
     a1->pos_44[2] = ((int*)a1->field_1C)[2] + a1->pos_44[2];
-    e1 = &EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0x25)];
-    idx = sub_80020F00(effectFile_80091BD0, 0, 0x26);
-    e2 = &EFFECT_FILE->sprites_20[idx];
-    sp = *(EffSprite**)e1->field_8;
-    sz[0] = sp->w_C * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
-    sz[1] = sp->h_E * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
-    col[0] = sp->c_10;
-    col[1] = sp->c_12;
-    col[2] = sp->c_14;
+    e1 = &effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x25)];
+    idx = sub_80020F00(&effectFile_80091BD0, 0, 0x26);
+    e2 = &effectFile_80091BD0.sprites_20[idx];
+    sp = *e1->frames_8;
+    sz[0] = sp->size_C[0] * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    sz[1] = sp->size_C[1] * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    col[0] = sp->pos_10[0];
+    col[1] = sp->pos_10[1];
+    col[2] = sp->pos_10[2];
     col[3] = a1->field_4 * 32;
-    sub_80044010(e1->field_C, a1->pos_44, &a1->rot_80, sp, &sp->field_4, &sp->field_8, sz, col, sp->rgb_18, 2, 0x30,
+    sub_80044010(&e1->poly_C, a1->pos_44, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
     c = cameraState_8008D4F0.pos_14;
     rgb[0] = sp->rgb_18[0] >> 3;
@@ -634,7 +621,7 @@ void sub_80014CCC(int* a0, void* buf)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
-        sub_80044010(e2->field_C, pos, &a1->rot_80, sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+        sub_80044010(&e2->poly_C, pos, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     d[0] = a1->pos_44[0] - pos[0];
@@ -647,7 +634,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] + d[2] / 2;
         sz2[0] = sz[0];
         sz2[1] = sz[1];
-        sub_80044010(e2->field_C, pos2, &a1->rot_80, sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 2 < dot)
@@ -657,7 +644,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 2;
         sz2[0] = sz[0] / 2;
         sz2[1] = sz[1] / 2;
-        sub_80044010(e2->field_C, pos2, &a1->rot_80, sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
@@ -667,7 +654,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 4;
         sz2[0] = sz[0] * 2;
         sz2[1] = sz[1] * 2;
-        sub_80044010(e2->field_C, pos2, &a1->rot_80, sp, &sp->field_4, &sp->field_8, sz2, col, rgb, 0, 0x30,
+        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (effectOutcomeFlag_8008D780 == 1)
@@ -682,7 +669,6 @@ extern int dword_800795E4;
 extern int dword_800795E8;
 extern int dword_800795EC;
 extern int dword_8008D784;
-extern int sub_80020F00(void* p, int a, int b);
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 extern void sub_800C1A5C(void* a0, void* a1, int a2, int a3);
 extern void sub_800C1C5C(void* a0, void* a1, int a2, int a3);
@@ -704,7 +690,7 @@ extern void sub_80016E20(int* a0, void* buf);
 extern void sub_80016FC8(int* a0, int* a1);
 extern void sub_800C371C(EventEntry* e, void* buf);
 extern void sub_800C1450(EventEntry* e, void* buf);
-#define EFF(i) ((int)&EFFECT_FILE->sprites_20[i])
+#define EFF(i) ((int)&effectFile_80091BD0.sprites_20[i])
 // Matched
 void sub_80015478(EventEntry* e, void* buf)
 {
@@ -751,7 +737,7 @@ void sub_80015478(EventEntry* e, void* buf)
                         v[1] = b->pos_50[1] + d[1] * k / m;
                         v[2] = b->pos_50[2] + d[2] * k / m;
                         b->field_4 -= 0x80;
-                        sub_800C1A5C(v, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0)), 0x1000);
+                        sub_800C1A5C(v, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0)), 0x1000);
                     }
                 }
             }
@@ -809,7 +795,7 @@ void sub_80015478(EventEntry* e, void* buf)
             }
             break;
         case 21:
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x27)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x27)), 0x1000);
             break;
         case 52:
             if (b->field_0 == 0 && dword_8008D784 == 0)
@@ -817,7 +803,7 @@ void sub_80015478(EventEntry* e, void* buf)
                 dword_8008D784 = 1;
                 sub_800C1190(b->field_A - b->field_C, 0x45);
             }
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1AC)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1AC)), 0x1000);
             break;
         case 23:
             n = -1;
@@ -858,7 +844,7 @@ void sub_80015478(EventEntry* e, void* buf)
             }
             if (n >= 0)
             {
-                sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, n)), 0x2000);
+                sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x2000);
             }
             break;
         case 26:
@@ -940,11 +926,11 @@ void sub_80015478(EventEntry* e, void* buf)
             PlaySeqSlot_80031160(0x13, 1);
             if (f)
             {
-                sub_800C1654(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, n)), 0x800, b->field_14, b->field_18 + 0x18);
+                sub_800C1654(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, b->field_14, b->field_18 + 0x18);
             }
             else
             {
-                sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, n)), 0, 0x1E);
+                sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0, 0x1E);
             }
             sub_80017158(b->pos_44, p);
             break;
@@ -953,8 +939,8 @@ void sub_80015478(EventEntry* e, void* buf)
             {
                 break;
             }
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 2)), 0x1000);
-            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 1)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 2)), 0x1000);
+            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 1)), 0x1000);
             break;
         case 3:
         {
@@ -965,7 +951,7 @@ void sub_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 3; i++)
             {
                 s[1] = (i << 12) / 3;
-                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x24)), 0x1000);
+                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
                 sub_800C32DC((int)b->pos_44, 0xBF, 0, s[1]);
             }
             break;
@@ -990,36 +976,36 @@ void sub_80015478(EventEntry* e, void* buf)
             q->field_A0 = b->field_A0;
             q->field_20 = b->field_20;
             q->field_98 = b->field_98;
-            idx = sub_80020F00(effectFile_80091BD0, 1, 0x1E);
+            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1E);
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
-            t = &EFFECT_FILE->models_28[idx];
+            t = &effectFile_80091BD0.models_28[idx];
             q->field_88 = (int)t;
-            sub_800218A8(t->data_4, (void*)(q->field_94 = (int)malloc3_8003FC4C(0x54)), 1);
-            sub_80039FE4(t->data_4, t->data_4 + 0x54, q->field_94);
+            sub_800218A8(t->ftg_4, q->work_94 = malloc3_8003FC4C(0x54), 1);
+            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, q->work_94);
             PlaySeqSlot_80031160(9, 1);
             e2->cb_8 = sub_800C371C;
             break;
         }
         case 48:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0x1B)].field_0);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1B)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
             if (b->field_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
             break;
         case 50:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0x1E)].field_0);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1E)), 0x1000);
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
+            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
             if (b->field_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
             break;
         case 49:
             PlaySeqSlot_80031160(0x13, 1);
@@ -1028,18 +1014,18 @@ void sub_80015478(EventEntry* e, void* buf)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
             break;
         case 30:
             sub_800174F8(b, 5);
             SpawnMdecEffect_80017A6C((int)b, 100);
             PlaySeqSlot_80031160(0x13, 1);
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0xD)), 0, 0xC);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
             if (b->field_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
             break;
         case 6:
             PlaySeqSlot_80031160(0xE, 1);
@@ -1056,30 +1042,30 @@ void sub_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 5; i++)
             {
                 s[1] = (i << 12) / 5;
-                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x12)), 0x1000);
+                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
                 sub_800C32DC(b->field_1C, 0xB, 0, s[1]);
             }
-            SpawnMdecEffect_80017A6C((int)b, EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0x12)].field_0);
+            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
             break;
         }
         case 8:
             PlaySeqSlot_80031160(0x10, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0xA)), 0x1000);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 9)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)b, EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0xA)].field_0);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
             break;
         case 20:
         {
             int t;
             PlaySeqSlot_80031160(0x14, 1);
-            t = EFF(sub_80020F00(effectFile_80091BD0, 0, 0x18));
-            idx = sub_80020F00(effectFile_80091BD0, 1, 0x13);
-            sub_800C2E28(b->field_1C, &dword_800795D4, t, (int)&EFFECT_FILE->models_28[idx], 0x1000, 6);
+            t = EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x18));
+            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x13);
+            sub_800C2E28(b->field_1C, &dword_800795D4, t, (int)&effectFile_80091BD0.models_28[idx], 0x1000, 6);
             sub_800C32DC(b->field_1C, 0x12, 0, 0);
             break;
         }
         case 13:
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
+            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
             break;
         case 12:
         {
@@ -1100,11 +1086,11 @@ void sub_80015478(EventEntry* e, void* buf)
         case 27:
         {
             EffectModel* t;
-            idx = sub_80020F00(effectFile_80091BD0, 1, 0x15);
-            t = &EFFECT_FILE->models_28[idx];
+            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x15);
+            t = &effectFile_80091BD0.models_28[idx];
             b->field_88 = (int)t;
-            sub_800218A8(t->data_4, (void*)(b->field_94 = (int)malloc3_8003FC4C(0x54)), 1);
-            sub_80039FE4(t->data_4, t->data_4 + 0x54, b->field_94);
+            sub_800218A8(t->ftg_4, b->work_94 = malloc3_8003FC4C(0x54), 1);
+            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, b->work_94);
             b->field_30 = 0x1000;
             e->cb_8 = sub_80017E30;
             PlaySfx_80031494(0x4A);
@@ -1120,9 +1106,9 @@ void sub_80015478(EventEntry* e, void* buf)
             break;
         case 29:
             PlaySeqSlot_80031160(0x12, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0xC)), 0x1000);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0xB)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)b, EFFECT_FILE->sprites_20[sub_80020F00(effectFile_80091BD0, 0, 0xC)].field_0);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
             sub_800C32DC(b->field_1C, 4, 0, 0);
             break;
         case 7:
@@ -1135,12 +1121,12 @@ void sub_80015478(EventEntry* e, void* buf)
         }
         case 32:
             sub_80017290(b, 0x11);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x17)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x17)), 0x1000);
             sub_800C10B8(0x35, 0xD);
             break;
         case 33:
             PlaySeqSlot_80031160(0x17, 1);
-            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x13)), 0x1000);
+            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x13)), 0x1000);
             sub_800C32DC(b->field_1C, 0xC, 0, 0);
             sub_800C32DC(b->field_1C, 0xD, 0, 0);
             break;
@@ -1152,43 +1138,43 @@ void sub_80015478(EventEntry* e, void* buf)
             PlaySfx_80031494(0x20);
             PlaySfx_80031494(0x21);
             PlaySfx_80031494(0x22);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 7)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 7)), 0x1000);
             sub_800C32DC(b->field_1C, 1, 0, 0);
             sub_800C32DC(b->field_1C, 2, 0, 0);
             break;
         case 39:
             sub_800C1190(0x14, 0x23);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 0x19)), 0x1000);
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
             sub_800C32DC(b->field_1C, 0x14, 0, ratan2Difference_8003B9E0((int*)b->field_1C, (int*)b->field_14));
             b->field_4 = 3;
             e->cb_8 = (EventEntryFn)sub_80016BF4;
             return;
         case 42:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 6)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(effectFile_80091BD0, 0, 6));
-            b->field_8C = EFF(sub_80020F00(effectFile_80091BD0, 0, 5));
-            b->field_90 = EFF(sub_80020F00(effectFile_80091BD0, 0, 5));
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 6)), 0x1000);
+            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 6));
+            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
             b->field_8 = 0x1000;
             b->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 41:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 4)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(effectFile_80091BD0, 0, 4));
-            b->field_8C = EFF(sub_80020F00(effectFile_80091BD0, 0, 3));
-            b->field_90 = EFF(sub_80020F00(effectFile_80091BD0, 0, 3));
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
+            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
             b->field_8 = 0x1000;
             b->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 43:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(effectFile_80091BD0, 0, 4)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(effectFile_80091BD0, 0, 4));
-            b->field_8C = EFF(sub_80020F00(effectFile_80091BD0, 0, 3));
-            b->field_90 = EFF(sub_80020F00(effectFile_80091BD0, 0, 5));
+            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
+            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
             b->field_8 = 0x1000;
             b->field_4 = 0;
             e->cb_8 = sub_800C1450;

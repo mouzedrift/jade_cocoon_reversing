@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -37,7 +38,7 @@ int sub_80039FB0(void)
 // Matched
 void sub_80039FC0(void)
 {
-    FreeEffectFile_80020EE0(dword_80095468);
+    FreeEffectFile_80020EE0(&dword_80095468);
 }
 typedef struct
 {
@@ -80,7 +81,7 @@ typedef struct
     }
 
 // Matched
-void sub_80039FE4(int a0, int a1, int a2)
+void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* a2)
 {
     PolyGroups* pa = (PolyGroups*)a0;
     PolyGroups* pb = (PolyGroups*)a1;

@@ -29,7 +29,6 @@ void sub_80016BF4(int* p, int* q)
     }
 }
 extern void PlayMusic_800300E0(int a, int b);
-extern int sub_80020F00(void* p, int a, int b);
 extern int dword_800795D4;
 // Matched
 void sub_80016C3C(int* a0, void* buf)
@@ -40,8 +39,8 @@ void sub_80016C3C(int* a0, void* buf)
     int pos[3];
     int v[3];
     int* vp;
-    idx = sub_80020F00(effectFile_80091BD0, 1, 6);
-    t = &EFFECT_FILE->models_28[idx];
+    idx = sub_80020F00(&effectFile_80091BD0, 1, 6);
+    t = &effectFile_80091BD0.models_28[idx];
     if (--a1->field_4 > 0)
     {
         if (a1->field_A0)
@@ -58,7 +57,7 @@ void sub_80016C3C(int* a0, void* buf)
         pos[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + ((int*)a1->field_1C)[0];
         pos[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + ((int*)a1->field_1C)[1];
         pos[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + ((int*)a1->field_1C)[2];
-        sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)pos, (int)&dword_800795D4, (int)stru_8008D534, (a1->field_4 << 24) | 0xB0, (int)vp);
+        sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_4 << 24) | 0xB0, vp);
     }
     else
     {
@@ -88,8 +87,8 @@ void sub_80016E20(int* a0, void* buf)
         for (i = 0; i < 5; i++)
         {
             v[1] = r + (i << 12) / 5;
-            idx = sub_80020F00(effectFile_80091BD0, 0, 0x176);
-            sub_800C1A5C(a1->pos_44, v, (int)&EFFECT_FILE->sprites_20[idx], 0x1000);
+            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x176);
+            sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             sub_800C32DC((int)a1->pos_44, 0xB2, 0, v[1]);
         }
     }
@@ -120,16 +119,16 @@ void sub_80016FC8(int* a0, EffectObj* a1)
         sub_800C1190(0x50, 0x1D);
         for (i = 0; i < 4; i++)
         {
-            idx = sub_80020F00(effectFile_80091BD0, 0, 0x16);
-            sub_800C1A5C(a1->pos_44, v, (int)&EFFECT_FILE->sprites_20[idx], 0x1000);
+            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x16);
+            sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             v[1] += 0x400;
             sub_800C32DC(a1->field_1C, 0xF, 0, v[1]);
         }
     }
     if (a1->field_4 == 0x30)
     {
-        idx = sub_80020F00(effectFile_80091BD0, 0, 0x15);
-        sub_800C1A5C(a1->pos_44, v, (int)&EFFECT_FILE->sprites_20[idx], 0x1000);
+        idx = sub_80020F00(&effectFile_80091BD0, 0, 0x15);
+        sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
     }
     if (a1->field_4 == 0x33)
     {
@@ -174,7 +173,6 @@ void sub_80017208(int* a0, EffectObj* a1)
     }
 }
 void sub_800173A8(int* a0, void* buf);
-extern int sub_80020F00(void* p, int a, int b);
 // Matched
 void sub_80017290(EffectObj* a0, int a1)
 {
@@ -196,9 +194,9 @@ void sub_80017290(EffectObj* a0, int a1)
         b->rot_80.vy = 0;
         b->rot_80.vx = 0;
         b->rot_80.pad = 0;
-        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
+        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        b->field_88 = (int)&EFFECT_FILE->models_28[idx];
+        b->field_88 = (int)&effectFile_80091BD0.models_28[idx];
         e->cb_8 = (EventEntryFn)sub_800173A8;
     }
 }
@@ -216,7 +214,7 @@ void sub_800173A8(int* a0, void* buf)
         a1->field_30 += a1->field_34;
         v[0] = v[1] = v[2] = a1->field_30 / 4096;
         a1->rot_80.vy += a1->rot_80.pad;
-        sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)a1->pos_44, (int)&a1->rot_80, (int)stru_8008D534, 0x30, (int)v);
+        sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, 0x30, v);
         sub_800C4090((int)a1->pos_44, (int)&col, 0x5DC, ((a1->field_4 - a1->field_0) << 12) / a1->field_4);
         a1->field_0++;
     }

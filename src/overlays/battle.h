@@ -8,6 +8,8 @@
 
 #include "actor.h"
 
+#include "tu_8001EA48.h"
+
 extern unsigned char dword_800C8B30;
 
 extern int sub_800A2AB4();
@@ -42,7 +44,6 @@ extern int dword_800C9E4C;
 
 extern int dword_800C9E78;
 
-extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
 extern char stru_8008D534[];
 
@@ -353,7 +354,6 @@ extern void RecoverQuarterHpMp_80011C44();
 
 extern void memset();
 
-extern void LoadEffectFile_80020DDC();
 
 extern void SetFadeMode_8001C19C();
 
@@ -835,26 +835,6 @@ typedef struct BatSfxStop_a
 
 extern void sub_800C17EC();
 
-// one sprite of an effect frame (0x1C bytes)
-typedef struct BatFxElem_a
-{
-    int f0;
-    int f4;
-    int f8;
-    short size_C[2];
-    short f10[4];
-    int f18;
-} BatFxElem_a;
-
-// sprite effect animation (0x34 bytes, the table at effectFile_80091BD0[0x20 / 4])
-typedef struct BatFxAnim_a
-{
-    int count_0; // frames
-    unsigned char* counts_4; // sprites per frame
-    BatFxElem_a** frames_8;
-    int state_C[10];
-} BatFxAnim_a;
-
 typedef struct BatSpark_a
 {
     int frame_0;
@@ -866,7 +846,7 @@ typedef struct BatSpark_a
     int base_1C[3];
     int vel_28[3];
     short rot_34[4];
-    BatFxAnim_a* anim_3C;
+    EffectSprite* anim_3C;
     int* target_40;
     int* offset_44;
 } BatSpark_a;
@@ -892,12 +872,11 @@ typedef struct BatShard_a
     int base_1C[3];
     int vel_28[3];
     short rot_34[4];
-    void* obj_3C; // BatClip_a or a model
+    void* obj_3C; // EffectModel or a model
 } BatShard_a;
 
 extern void PlaySfx_80031494(int id);
 
-extern int sub_80020F00(void* p, int a, int b);
 
 extern void sub_800C273C();
 
@@ -931,8 +910,8 @@ typedef struct BatTrail_a
     int pos_44[3];
     BatVec_a trail_50[4];
     short rot_80[4];
-    BatFxAnim_a* anim_88;
-    struct BatClip_a* clip_8C;
+    EffectSprite* anim_88;
+    EffectModel* clip_8C;
 } BatTrail_a;
 
 extern void sub_80044D0C();
@@ -941,33 +920,8 @@ extern void sub_800459E4();
 
 extern char dword_800C91A4[];
 
-extern int sub_80020F00(void* p, int a, int b);
 
 extern void sub_800C33E4();
-
-typedef struct BatKey_a
-{
-    short model_0;
-    short alpha_2;
-    int x_4;
-    int y_8;
-    int z_C;
-    short rot_10[3];
-    short pad16;
-    int f18[3];
-    int mode_24;
-} BatKey_a;
-
-typedef struct BatClip_a
-{
-    int f0;
-    char* models_4;
-    int f8;
-    int fC;
-    int count_10;
-    int frames_14;
-    BatKey_a* keys_18;
-} BatClip_a;
 
 typedef struct BatAnim_a
 {
@@ -979,7 +933,7 @@ typedef struct BatAnim_a
     char pad50[0x32];
     short rot_82;
     char pad84[4];
-    BatClip_a* clip_88;
+    EffectModel* clip_88;
 } BatAnim_a;
 
 extern void sub_80045E48();
@@ -995,9 +949,9 @@ typedef struct BatGlow_a
     int f30;
     char pad34[0x10];
     char f44[0x44];
-    int* f88;
+    EffectModel* model_88;
     char pad8C[8];
-    int* f94;
+    FtgObject* work_94; // malloc'd copy of the model's first FtgObject
     int idx_98;
     char pad9C[4];
     int* scale_A0;
@@ -1007,18 +961,14 @@ extern char dword_800795D4[];
 
 extern void sub_800C3B50(int* p, int id);
 
-extern void sub_8003A6C4();
 
-extern void sub_80021804(int* p, int heap);
 
 extern void free3_8003FC6C(void* p);
 
 extern void sub_800C4090(int a0, int a1, int c, int a3);
 
 
-extern void sub_8003A6C4();
 
-extern void sub_80021804(int* p, int heap);
 
 extern void free3_8003FC6C(void* p);
 
@@ -1034,9 +984,9 @@ typedef struct BatOrb_a
     int pos_44[3];
     char pad50[0x30];
     short rot_80[4];
-    BatClip_a* clip_88;
+    EffectModel* clip_88;
     char pad8C[8];
-    int* model_94; // malloc'd copy of the clip's first model
+    FtgObject* model_94; // malloc'd copy of the clip's first model
 } BatOrb_a;
 
 typedef struct BatHero_a

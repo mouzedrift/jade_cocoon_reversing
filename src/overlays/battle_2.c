@@ -6,41 +6,6 @@ INCLUDE_OVERLAY_ASM(battle, dword_800B6700);
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
       // Its .rdata (initializer at 0x800B6700, switch table at 0x800B6710) comes out right since this file was split off.
-typedef struct BatFxEnt_a
-{
-    short u_0;
-    short v_2;
-    short w_4;
-    short h_6;
-    short f8;
-    short fA;
-    short fC;
-    short fE;
-    short x_10;
-    short y_12;
-    short z_14;
-    short f16;
-    unsigned char r_18;
-    unsigned char g_19;
-    unsigned char b_1A;
-    unsigned char f1B;
-} BatFxEnt_a;
-
-typedef struct BatFxGrp_a
-{
-    int n_0;
-    unsigned char* counts_4;
-    BatFxEnt_a** ents_8;
-    POLY_FT4 poly_C;
-} BatFxGrp_a;
-
-typedef struct BatFxMdl_a
-{
-    int n_0;
-    char* parts_4;
-    char pad8[0x14];
-} BatFxMdl_a;
-
 typedef struct BatLight_a
 {
     char pad0[0x30];
@@ -58,9 +23,7 @@ extern char cameraState_8008D4F0[];
 extern short word_8008D4C8;
 extern short word_8008D51E;
 extern unsigned char dword_800C911C[];
-extern void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern void sub_80043DE0(void* a0, void* a1, void* a2, void* a3);
-extern int sub_80020F00(void* p, int a, int b);
 typedef struct BatStageObj_a
 {
     char pad0[0x38];
@@ -76,49 +39,49 @@ void sub_800BC90C(BatStageObj_a* p)
     int i;
 
     unknownFlags_8008D678 &= ~0x10000;
-    idx = sub_80020F00(dword_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
-    sub_8004D1EC((int)((BatFxMdl_a*)dword_80095468[10])[idx].parts_4, (int)pOT_8008B4C8, (int)&p->x_38, (int)dword_800C9124, (int)stru_8008D534, 1, (int)scale);
+    idx = sub_80020F00(&dword_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
+    sub_8004D1EC(dword_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, stru_8008D534, 1, scale);
     {
         unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
         char* sd = (char*)&saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
-            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, *list)];
+            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, *list)];
             int j;
             for (j = 0; j < g->n_0; j++)
             {
                 int k;
-                for (k = 0; k < g->counts_4[j]; k++)
+                for (k = 0; k < g->frameCounts_4[j]; k++)
                 {
                     VECTOR pos;
                     CVECTOR col;
                     short sz[2];
-                    BatFxEnt_a* e = &g->ents_8[j][k];
+                    EffectSpriteFrame* e = &g->frames_8[j][k];
                     BatLight_a* l = (BatLight_a*)cameraState_8008D4F0;
                     pos.vx = p->x_38;
                     pos.vy = p->y_3C;
                     pos.vz = p->z_40;
-                    pos.vx += e->x_10;
-                    pos.vz += e->z_14;
-                    pos.vy = *(int*)(sd + 0x7AC) + e->y_12;
-                    if (e->fE != 0)
+                    pos.vx += e->pos_10[0];
+                    pos.vz += e->pos_10[2];
+                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
+                    if (e->size_C[1] != 0)
                     {
-                        col.r = l->r_30 + e->r_18 * l->r_50 / 4096;
-                        col.g = l->g_31 + e->g_19 * l->g_52 / 4096;
-                        col.b = l->b_32 + e->b_1A * l->b_54 / 4096;
+                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
+                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
+                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
                         if (dword_80083BD0 == 0x10)
                         {
                             SetSemiTrans(&g->poly_C, 1);
                         }
                         if (dword_80083BD0 == 0x13)
                         {
-                            sz[0] = e->fC * 5;
-                            sz[1] = e->fE * 5;
-                            sub_80044010(&g->poly_C, &pos, dword_800C9124, e, &e->w_4, &e->f8, sz, &e->x_10, &col, 0, 0, pOT_8008B4C8);
+                            sz[0] = e->size_C[0] * 5;
+                            sz[1] = e->size_C[1] * 5;
+                            sub_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {
-                            sub_80043DE0(&g->poly_C, &pos, &e->fC, &col);
+                            sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                         }
                     }
                 }
@@ -153,7 +116,7 @@ void sub_800BC90C(BatStageObj_a* p)
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
-            poly = ((BatFxGrp_a*)dword_80095468[8])[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
+            poly = dword_80095468.sprites_20[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
             x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * word_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
@@ -198,7 +161,7 @@ void sub_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j;
             for (j = 0; j < g->n_0; j++)
             {
@@ -217,11 +180,11 @@ void sub_800BC90C(BatStageObj_a* p)
                     }
                     t = t / 2;
                 }
-                for (k = 0; k < g->counts_4[j]; k++)
+                for (k = 0; k < g->frameCounts_4[j]; k++)
                 {
                     VECTOR pos;
                     CVECTOR col;
-                    BatFxEnt_a* e = &g->ents_8[j][k];
+                    EffectSpriteFrame* e = &g->frames_8[j][k];
                     int du;
                     int dv;
                     int uu;
@@ -239,9 +202,9 @@ void sub_800BC90C(BatStageObj_a* p)
                     pos.vx = p->x_38;
                     pos.vy = p->y_3C;
                     pos.vz = p->z_40;
-                    pos.vx += e->x_10;
-                    pos.vz += e->z_14;
-                    pos.vy = *(int*)(sd + 0x7AC) + e->y_12;
+                    pos.vx += e->pos_10[0];
+                    pos.vz += e->pos_10[2];
+                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
                     du = du * (e->w_4 + 1);
                     dv = dv * (e->h_6 + 1);
                     uu = e->u_0 + du;
@@ -258,14 +221,14 @@ void sub_800BC90C(BatStageObj_a* p)
                     g->poly_C.v2 = dword_800C9D8C[1] + vv + e->h_6;
                     g->poly_C.u3 = dword_800C9D8C[0] + uu + e->w_4;
                     g->poly_C.v3 = dword_800C9D8C[1] + vv + e->h_6;
-                    if (e->fE != 0)
+                    if (e->size_C[1] != 0)
                     {
                         l = (BatLight_a*)cameraState_8008D4F0;
-                        col.r = l->r_30 + e->r_18 * l->r_50 / 4096;
-                        col.g = l->g_31 + e->g_19 * l->g_52 / 4096;
-                        col.b = l->b_32 + e->b_1A * l->b_54 / 4096;
+                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
+                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
+                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
                         SetSemiTrans(&g->poly_C, 1);
-                        sub_80043DE0(&g->poly_C, &pos, &e->fC, &col);
+                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }
@@ -273,10 +236,10 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            BatFxGrp_a* g = &((BatFxGrp_a*)dword_80095468[8])[sub_80020F00(dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j = ((unsigned int)frameCount_8008D3FC % (g->n_0 * 2)) / 2;
             int k;
-            for (k = 0; k < g->counts_4[j]; k++)
+            for (k = 0; k < g->frameCounts_4[j]; k++)
             {
                 int m;
                 for (m = 0; m < 8; m++)
@@ -285,17 +248,17 @@ void sub_800BC90C(BatStageObj_a* p)
                     CVECTOR col;
                     int d;
                     int ang;
-                    BatFxEnt_a* e = &g->ents_8[j][k];
+                    EffectSpriteFrame* e = &g->frames_8[j][k];
                     char* sd = (char*)&saveData_8008B570;
                     BatLight_a* l = (BatLight_a*)cameraState_8008D4F0;
                     pos.vx = p->x_38;
                     pos.vy = p->y_3C;
                     pos.vz = p->z_40;
-                    d = ISqrt_8003B918(e->x_10 * e->x_10 + e->z_14 * e->z_14);
-                    ang = ratan2_8003B548(e->x_10, e->z_14) + m * 512;
+                    d = ISqrt_8003B918(e->pos_10[0] * e->pos_10[0] + e->pos_10[2] * e->pos_10[2]);
+                    ang = ratan2_8003B548(e->pos_10[0], e->pos_10[2]) + m * 512;
                     pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * d / 4096;
                     pos.vz += sinTable_80084540[ang & 0xFFF] * d / 4096;
-                    pos.vy = *(int*)(sd + 0x7AC) + e->y_12;
+                    pos.vy = *(int*)(sd + 0x7AC) + e->pos_10[1];
                     g->poly_C.u0 = e->u_0;
                     g->poly_C.v0 = e->v_2;
                     g->poly_C.u1 = e->u_0 + e->w_4;
@@ -304,12 +267,12 @@ void sub_800BC90C(BatStageObj_a* p)
                     g->poly_C.v2 = e->v_2 + e->h_6;
                     g->poly_C.u3 = e->u_0 + e->w_4;
                     g->poly_C.v3 = e->v_2 + e->h_6;
-                    if (e->fE != 0)
+                    if (e->size_C[1] != 0)
                     {
-                        col.r = l->r_30 + e->r_18 * l->r_50 / 4096;
-                        col.g = l->g_31 + e->g_19 * l->g_52 / 4096;
-                        col.b = l->b_32 + e->b_1A * l->b_54 / 4096;
-                        sub_80043DE0(&g->poly_C, &pos, &e->fC, &col);
+                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
+                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
+                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
+                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }
@@ -330,7 +293,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 int sc[3] = { 0x1000, 0x1000, 0x1000 };
                 VECTOR pos;
                 SVECTOR rot;
-                BatFxMdl_a* mdl = &((BatFxMdl_a*)dword_80095468[10])[sub_80020F00(dword_80095468, 1, id)];
+                EffectModel* mdl = &dword_80095468.models_28[sub_80020F00(&dword_80095468, 1, id)];
                 int k;
                 memset(&rot, 0, 8);
                 if (dword_80083BD0 == 0x10)
@@ -353,7 +316,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 }
                 for (k = 0; k < mdl->n_0; k++)
                 {
-                    sub_8004D1EC((int)(mdl->parts_4 + k * 0x54), (int)ot, (int)&pos, (int)&rot, 0, fl, (int)sc);
+                    sub_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
                 }
             }
         }

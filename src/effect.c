@@ -324,15 +324,14 @@ void InitEffectTask_80014618(EventEntry* p, EffectTaskState* q)
 }
 extern short dword_800795D0[];
 extern short dword_800795F0[];
-extern void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5);
 int CountActiveEffectObjects_800147FC(void);
 // Matched
 void UpdateEffectTask_80014638(EventEntry* p, void* buf)
 {
     EffectTaskState* q = (EffectTaskState*)buf;
     int r;
-    int vlc;
-    int img;
+    void* vlc;
+    void* img;
     if (q->timer_3C > 0)
     {
         q->timer_3C--;
@@ -348,19 +347,19 @@ void UpdateEffectTask_80014638(EventEntry* p, void* buf)
             {
                 q->idx_38 = 0x12;
             }
-            LoadEffectFile_80020DDC(dword_800795F0[q->idx_38 * 2], effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            LoadEffectFile_80020DDC(dword_800795F0[q->idx_38 * 2], &effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
             q->state_2C = 1;
         }
         break;
     case 1:
-        r = IsEffectFileLoaded_80020EBC(effectFile_80091BD0);
+        r = IsEffectFileLoaded_80020EBC(&effectFile_80091BD0);
         if (r == 1 && IsFileRequestQueueIdle_8003BF88() == r)
         {
-            vlc = EFFECT_FILE->vlc_34;
-            img = EFFECT_FILE->img_38;
+            vlc = effectFile_80091BD0.mdec_34.dct_0;
+            img = effectFile_80091BD0.mdec_34.work_4;
             q->state_2C = 2;
-            mdecEffectVlcBuffer_8008D42C = (unsigned long*)vlc;
-            decodedImageData_8008B4A0 = (unsigned long*)img;
+            mdecEffectVlcBuffer_8008D42C = vlc;
+            decodedImageData_8008B4A0 = img;
         }
         break;
     case 2:
@@ -373,7 +372,7 @@ void UpdateEffectTask_80014638(EventEntry* p, void* buf)
     case 3:
         if (CountActiveEffectObjects_800147FC() == 0 && q->timer_3C == 0 && !(q->flags_28 & 2))
         {
-            FreeEffectFile_80020EE0(effectFile_80091BD0);
+            FreeEffectFile_80020EE0(&effectFile_80091BD0);
             unknownFlags_8008D678 &= ~0x800;
             q->state_2C = 0;
             q->flags_28 |= 2;
@@ -420,7 +419,7 @@ int CountActiveEffectObjects_800147FC(void)
 // Matched
 void FreeEffectTask_800148A0(void)
 {
-    FreeEffectFile_80020EE0(effectFile_80091BD0);
+    FreeEffectFile_80020EE0(&effectFile_80091BD0);
     unknownFlags_8008D678 &= ~0x800;
 }
 // Matched

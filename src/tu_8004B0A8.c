@@ -136,10 +136,10 @@ INCLUDE_ASM(sub_8004C21C);
 INCLUDE_ASM(sub_8004C4F0);
 INCLUDE_ASM(sub_8004C7BC);
 INCLUDE_ASM(sub_8004D0E8);
-extern void sub_80044D0C(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7);
+extern void sub_80044D0C(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale, int a7);
 
 // Matched
-void sub_8004D1EC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+void sub_8004D1EC(struct FtgObject* a0, unsigned long* a1, void* a2, void* a3, void* a4, int a5, void* a6)
 {
     sub_80044D0C(a0, a1, a2, a3, a4, a5, a6, 0);
 }

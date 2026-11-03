@@ -39,13 +39,13 @@ void sub_800174F8(EffectObj* a0, int a1)
         b->rot_80.vy = 0;
         b->rot_80.vx = 0;
         b->rot_80.pad = 0;
-        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
+        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        p = &EFFECT_FILE->models_28[idx];
+        p = &effectFile_80091BD0.models_28[idx];
         b->field_88 = (int)p;
-        b->field_94 = (int)malloc3_8003FC4C(0x54);
-        sub_800218A8(p->data_4, (void*)b->field_94, 1);
-        sub_80039FE4(p->data_4, p->data_4 + 0x54, b->field_94);
+        b->work_94 = malloc3_8003FC4C(0x54);
+        sub_800218A8(p->ftg_4, b->work_94, 1);
+        sub_80039FE4(p->ftg_4, p->ftg_4 + 1, b->work_94);
         e->cb_8 = (EventEntryFn)sub_8001761C;
     }
 }
@@ -60,13 +60,13 @@ void sub_8001761C(int* a0, EffectObj* a1)
     v[0] = v[1] = v[2] = a1->field_30 / 4096;
     a1->rot_80.vy += 0x80;
     f = (a1->field_0 < 45) ? 0 : (((a1->field_0 - 44) << 24) | 0x80);
-    sub_8003A6C4(word_80084540[(a1->field_0 * 512) & 0xE00] / 2 + 0x800, t->data_4, t->data_4 + 0x54, a1->field_94);
-    sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)a1->pos_44, (int)&a1->rot_80, (int)stru_8008D534, f | 0x31, (int)v);
+    sub_8003A6C4(word_80084540[(a1->field_0 * 512) & 0xE00] / 2 + 0x800, t->ftg_4, t->ftg_4 + 1, a1->work_94);
+    sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, f | 0x31, v);
     if (a1->field_0++ > 60)
     {
         *a0 = (*a0 & ~1) | 0x8000;
-        sub_80021804((int*)a1->field_94, 1);
-        free3_8003FC6C((void*)a1->field_94);
+        sub_80021804(a1->work_94, 1);
+        free3_8003FC6C(a1->work_94);
     }
 }
 void sub_800178C0(int* a0, EffectObj* a1);
@@ -89,13 +89,13 @@ void sub_80017784(EffectObj* a0, int a1, short* a2)
         b->rot_80.vx = a2[0];
         b->rot_80.vy = a2[1];
         b->rot_80.vz = a2[2];
-        idx = sub_80020F00((struct_list_14*)effectFile_80091BD0, 1, a1);
+        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
-        p = &EFFECT_FILE->models_28[idx];
+        p = &effectFile_80091BD0.models_28[idx];
         b->field_88 = (int)p;
-        b->field_94 = (int)malloc3_8003FC4C(0x54);
-        sub_800218A8(p->data_4, (void*)b->field_94, 1);
-        sub_80039FE4(p->data_4, p->data_4 + 0x54, b->field_94);
+        b->work_94 = malloc3_8003FC4C(0x54);
+        sub_800218A8(p->ftg_4, b->work_94, 1);
+        sub_80039FE4(p->ftg_4, p->ftg_4 + 1, b->work_94);
         e->cb_8 = (EventEntryFn)sub_800178C0;
     }
 }
@@ -109,14 +109,14 @@ void sub_800178C0(int* a0, EffectObj* a1)
     v[0] = v[1] = v[2] = a1->field_30 / 4096;
     if (a1->field_8 < 3)
     {
-        sub_8003A6C4(0x1000 - (a1->field_0 << 10), t->data_4, (int)&((struct_54*)t->data_4)[a1->field_8 + 1], a1->field_94);
+        sub_8003A6C4(0x1000 - (a1->field_0 << 10), t->ftg_4, &t->ftg_4[a1->field_8 + 1], a1->work_94);
         if (++a1->field_0 >= 5)
         {
             a1->field_8++;
             a1->field_0 = 0;
             if (a1->field_8 < 3)
             {
-                sub_80039FE4((int)&((struct_54*)t->data_4)[a1->field_8], (int)&((struct_54*)t->data_4)[a1->field_8 + 1], a1->field_94);
+                sub_80039FE4(&t->ftg_4[a1->field_8], &t->ftg_4[a1->field_8 + 1], a1->work_94);
             }
         }
     }
@@ -126,11 +126,11 @@ void sub_800178C0(int* a0, EffectObj* a1)
         {
             a1->field_0 = 0;
             *a0 = (*a0 & ~1) | 0x8000;
-            sub_80021804((int*)a1->field_94, 1);
-            free3_8003FC6C((void*)a1->field_94);
+            sub_80021804(a1->work_94, 1);
+            free3_8003FC6C(a1->work_94);
         }
     }
-    sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)a1->pos_44, (int)&a1->rot_80, (int)stru_8008D534, 0x10, (int)v);
+    sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, 0x10, v);
 }
 extern EventNode* effectObjects_8008B4A8;
 extern void MdecEffectTask_80017B10(unsigned int* a0, EffectObj* a1);
@@ -178,7 +178,6 @@ void MdecEffectTask_80017B10(unsigned int* a0, EffectObj* a1)
     }
 }
 extern void sub_80017CE4(EventEntry* e, void* buf);
-extern int sub_80020F00(void* p, int a, int b);
 // Matched
 void sub_80017BF0(EventEntry* a0, int a1)
 {
@@ -197,9 +196,9 @@ void sub_80017BF0(EventEntry* a0, int a1)
         q->rot_80.vz = 0;
         q->rot_80.vy = 0;
         q->rot_80.vx = 0;
-        r = sub_80020F00(effectFile_80091BD0, 1, a1);
+        r = sub_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        q->field_88 = (int)&EFFECT_FILE->models_28[r];
+        q->field_88 = (int)&effectFile_80091BD0.models_28[r];
         e->cb_8 = sub_80017CE4;
     }
 }
@@ -219,7 +218,7 @@ void sub_80017CE4(EventEntry* e, void* buf)
             v[0] = v[2] = 0x1000 + i * 0x80;
             y = word_80084540[(a1->field_0 * 16) & 0xFF0] * (word_80084540[((i - a1->field_0) * 256) & 0xF00] + 0x1000) / 4096;
             v[1] = y;
-            sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)a1->pos_44, (int)&a1->rot_80, (int)stru_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, (int)v);
+            sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, v);
         }
         a1->field_0++;
     }
@@ -244,7 +243,7 @@ void sub_80017E30(EventEntry* e, void* buf)
         a1->field_30 = 0;
         e->cb_8 = sub_80017FF8;
     }
-    sub_8003A6C4(0x1000 - a1->field_30, t->data_4, t->data_4 + 0x54, a1->field_94);
+    sub_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
     if (a1->field_A0)
     {
         vp = v;
@@ -259,7 +258,7 @@ void sub_80017E30(EventEntry* e, void* buf)
     pos[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + ((int*)a1->field_1C)[0];
     pos[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + ((int*)a1->field_1C)[1];
     pos[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + ((int*)a1->field_1C)[2];
-    sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)pos, (int)&dword_800795D4, (int)stru_8008D534, (a1->field_30 << 16) | 0xB0, (int)vp);
+    sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_30 << 16) | 0xB0, vp);
 }
 // Matched
 void sub_80017FF8(EventEntry* e, void* buf)
@@ -271,7 +270,7 @@ void sub_80017FF8(EventEntry* e, void* buf)
     int* vp;
     if ((a1->field_0 -= 0x80) > 0)
     {
-        sub_8003A6C4(0x1000 - a1->field_30, t->data_4, t->data_4 + 0x54, a1->field_94);
+        sub_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
         if (a1->field_A0)
         {
             vp = v;
@@ -286,13 +285,13 @@ void sub_80017FF8(EventEntry* e, void* buf)
         pos[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + ((int*)a1->field_1C)[0];
         pos[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + ((int*)a1->field_1C)[1];
         pos[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + ((int*)a1->field_1C)[2];
-        sub_8004D1EC(t->data_4, (int)pOT_8008D690, (int)pos, (int)&dword_800795D4, (int)stru_8008D534, (a1->field_30 << 16) | 0xB0, (int)vp);
+        sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_30 << 16) | 0xB0, vp);
     }
     else
     {
         e->flags = (e->flags & ~1) | 0x8000;
-        sub_80021804((int*)a1->field_94, 1);
-        free3_8003FC6C((void*)a1->field_94);
+        sub_80021804(a1->work_94, 1);
+        free3_8003FC6C(a1->work_94);
     }
 }
 // Matched

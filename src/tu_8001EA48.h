@@ -420,22 +420,53 @@ typedef struct
     struct_b4 f18;
 } struct_1c;
 
-typedef struct
+// one sprite of an effect frame (0x1C bytes; sub_80021298 copies it with the struct_1c byte-group view)
+typedef struct EffectSpriteFrame
 {
-    int count_0;
-    unsigned char* frameCounts_4;
-    struct_1c** frames_8;
+    short u_0; // texture position; u_0, w_4 and f8 are passed to sub_80044010 as three pointers
+    short v_2;
+    short w_4; // texture size
+    short h_6;
+    short f8;
+    short fA;
+    short size_C[2]; // w, h
+    short pos_10[3]; // offset in BATTLE; tu_80014954 passes it as the colour argument
+    short pad_16;
+    unsigned char rgb_18[4];
+} EffectSpriteFrame;
+
+// 0x34-byte sprite animation of an effect file (EffectFile.sprites_20)
+typedef struct EffectSprite
+{
+    int count_0;                  // frames
+    unsigned char* frameCounts_4; // sprites per frame
+    EffectSpriteFrame** frames_8;
     POLY_FT4 poly_C; // built by InitPolyFT4_80029A10 from the file
 } EffectSprite;
 
-typedef struct
+// one key of an effect model animation (40 bytes)
+typedef struct EffectKey
+{
+    short model_0; // index into EffectModel.ftg_4
+    short alpha_2;
+    int x_4;
+    int y_8;
+    int z_C;
+    short rot_10[3];
+    short pad16;
+    int f18[3];
+    int mode_24;
+} EffectKey;
+
+// 28-byte model of an effect file (EffectFile.models_28)
+typedef struct EffectModel
 {
     int ftgCount_0;
     FtgObject* ftg_4;
     FtgMatList mats_8;
-    int imageW_10;
-    int imageH_14;
-    void* images_18; // imageW_10 * imageH_14 records of 40 bytes
+    int keyCount_10;   // keys per frame
+    int frameCount_14;
+    EffectKey* keys_18; // frameCount_14 * keyCount_10 keys
 } EffectModel;
 
 typedef struct
@@ -465,6 +496,8 @@ typedef struct EffectFile
     MdecImageSet* imageSets_30;
     EffectMdecBuffers mdec_34;
 } EffectFile;
+extern EffectFile effectFile_80091BD0; // effects shared by the field and battle (effect.c)
+extern EffectFile dword_80095468;      // the battle stage effect file (BATTLE.BIN)
 
 // OnEffectFileLoaded_80020F5C parameters
 typedef struct

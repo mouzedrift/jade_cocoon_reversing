@@ -438,7 +438,6 @@ extern int dword_8008B4F8;
 extern int dword_800918C4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
-extern int dword_80095468[0x10];
 extern int dword_80091990[4];
 extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
@@ -552,7 +551,6 @@ void OnModelFileLoaded_80025D7C(int* a0, int b);
 extern int dword_8007BD30[];
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
-extern int effectFile_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];
 typedef struct
@@ -570,12 +568,6 @@ typedef struct
 
 extern int dword_8007A6AC[];
 extern int dword_8008D40C;
-typedef struct
-{
-    char pad_0[0x14];
-    int count;
-    struct_12* items;
-} struct_list_14;
 
 typedef struct
 {

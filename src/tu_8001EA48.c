@@ -1248,24 +1248,24 @@ void LoadEffectFile_80020DDC(int a0, EffectFile* out, short* a2, short* a3, int 
     out->request_0 = StartFileRequestTask_8003C6C8(&req);
 }
 // Matched
-int IsEffectFileLoaded_80020EBC(int* p)
+int IsEffectFileLoaded_80020EBC(EffectFile* p)
 {
-    return GetFileRequestStatus_8003BE30(*p) == 0;
+    return GetFileRequestStatus_8003BE30(p->request_0) == 0;
 }
 // Matched
-void FreeEffectFile_80020EE0(int* p)
+void FreeEffectFile_80020EE0(EffectFile* p)
 {
-    ListFreeAll_8003FEC8(p + 1);
+    ListFreeAll_8003FEC8(p->list_4);
 }
 // Matched
-int sub_80020F00(struct_list_14* p, int a, int b)
+int sub_80020F00(EffectFile* p, int a, int b)
 {
     int i;
-    for (i = 0; i < p->count; i++)
+    for (i = 0; i < p->pointCount_14; i++)
     {
-        if (p->items[i].field_0 == a && p->items[i].field_4 == b)
+        if (p->points_18[i].a == a && p->points_18[i].b == b)
         {
-            return p->items[i].field_8;
+            return p->points_18[i].c;
         }
     }
     return -1;
@@ -1373,7 +1373,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
         s = (struct_1c*)src;
         d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
         out->frameCounts_4[i] = n;
-        out->frames_8[i] = d;
+        out->frames_8[i] = (EffectSpriteFrame*)d;
         for (j = 0; j < out->frameCounts_4[i]; j++)
         {
             d->f0 = s->f0;
@@ -1410,15 +1410,15 @@ void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
     {
         out->mats_8.count_0 = 0;
     }
-    out->imageW_10 = 0;
-    out->imageH_14 = 0;
-    out->images_18 = 0;
+    out->keyCount_10 = 0;
+    out->frameCount_14 = 0;
+    out->keys_18 = 0;
     if (images[0] && images[1])
     {
-        out->imageW_10 = images[0];
-        out->imageH_14 = images[1];
-        out->images_18 = ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
-        MemCopy_800403E8((unsigned int*)out->images_18, (unsigned int*)(images + 2), images[0] * 40 * images[1]);
+        out->keyCount_10 = images[0];
+        out->frameCount_14 = images[1];
+        out->keys_18 = ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
+        MemCopy_800403E8((unsigned int*)out->keys_18, (unsigned int*)(images + 2), images[0] * 40 * images[1]);
     }
 }
 // Matched
@@ -1478,9 +1478,9 @@ void FreeFtgObjects_80021784(FtgObject** a0, unsigned int n, int heap)
     *a0 = 0;
 }
 // Matched
-void sub_80021804(int* p, int heap)
+void sub_80021804(FtgObject* p, int heap)
 {
-    FreeFtgObject_800229B0((FtgObject*)p, heap);
+    FreeFtgObject_800229B0(p, heap);
 }
 // Matched
 void LoadFtgObjects_80021824(int* a0, FtgObject* a1, int a2, int a3, int a4)
