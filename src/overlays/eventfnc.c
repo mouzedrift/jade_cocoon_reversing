@@ -700,7 +700,33 @@ int sub_800B93A8(EvCtxEventfnc* c)
     return sub_800BB840(c, &m, 1, 1);
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B942C);
+extern short name_80084540[];
+int sub_800B942C(EvCtxEventfnc* c)
+{
+    EvMsgEventfnc m;
+    EvVecEventfnc d;
+    EvVecEventfnc* a = sub_800BBBA0(c->pc_8->a_4);
+    EvVecEventfnc* b;
+    int ang;
+    if (c->pc_8->a_4 == c->pc_8->b_8)
+    {
+        b = sub_800BBC00(c, c->pc_8->a_4, 0);
+    }
+    else
+    {
+        b = sub_800BBBA0(c->pc_8->b_8);
+    }
+    d.x_0 = a->x_0 - b->x_0;
+    d.z_8 = a->z_8 - b->z_8;
+    ang = ratan2_8003B548(d.x_0, d.z_8);
+    m.m0_0 = c->pc_8->a_4;
+    m.m4_4 = c->pc_8->op_0 != 0x15;
+    m.m18_18 = b->x_0 + name_80084540[ang & 0xFFF] * 200 / 4096;
+    m.m1C_1C = b->y_4;
+    m.m20_20 = b->z_8 + name_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
+    m.m14_14 = c->pc_8->c_C;
+    return sub_800BB840(c, &m, 1, 1);
+}
 
 int sub_800B95BC(EvCtxEventfnc* c)
 {
@@ -1407,7 +1433,6 @@ int sub_800BAC60(EvCtxEventfnc* c)
     return 1;
 }
 
-extern void sub_800379DC(EvVecEventfnc* v, int b);
 int sub_800BACE0(EvCtxEventfnc* c)
 {
     sub_800379DC(sub_800BBBA0(c->pc_8->a_4), c->pc_8->b_8);
@@ -1785,7 +1810,6 @@ EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int idx, int mode)
     return &c->vec3C_3C[idx];
 }
 
-extern short name_80084540[];
 EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
 {
     if (mode == 1)
