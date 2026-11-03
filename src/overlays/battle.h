@@ -85,6 +85,7 @@ typedef struct BatTask
     int f10;
     unsigned char* f14;
     int f18;
+    int f1C;
 } BatTask;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);

@@ -2208,7 +2208,6 @@ void sub_800C371C(EventEntry* t, void* arg)
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B684C);
 
 #if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
 extern char* dword_8008B4A4;
@@ -2342,7 +2341,114 @@ void sub_800C410C()
     dword_8008D3F0 = 0;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C4118);
+typedef void (*BatFxFn)(BatTask* t);
+extern BatFxFn dword_800C91DC[];
+extern BatFxFn dword_800C9204[];
+extern int sub_800C4A40(BatTask* t);
+extern void sub_800C5BC0(BatTask* t);
+extern void sub_800C59A0(BatTask* t);
+extern void sub_800C58BC(BatTask* t);
+extern void sub_800C5EB8(BatTask* t);
+extern void sub_800C6038(BatTask* t);
+extern void sub_800C5D04(BatTask* t);
+extern void sub_800C61FC(BatTask* t);
+extern void sub_800C66F4(BatTask* t);
+extern void sub_800C6824(BatTask* t);
+extern void sub_800C6928(BatTask* t);
+extern void sub_800C6A40(BatTask* t);
+void sub_800C5A7C(BatTask* t);
+void sub_800C58AC(BatTask* t);
+
+// Matched
+void sub_800C4118(int* a, char* b, int c, unsigned int d)
+{
+    BatTask t;
+    unsigned int k;
+    int r;
+    k = *(unsigned int*)(b + 0x5C);
+    t.f0 = (int)(b + 0x80);
+    t.f4 = (int)(b + 0x6C);
+    t.f8 = a;
+    t.fC = c;
+    t.f10 = (int)b;
+    t.f1C = 4;
+    r = sub_800C0D50();
+    if (r >= 0)
+    {
+        t.f18 = 1 << (r + 1);
+        t.f14 = (unsigned char*)GetMinionStatus_800107A0(3, r);
+    }
+    else
+    {
+        t.f18 = 1;
+        t.f14 = (unsigned char*)levantStatus_8008BD38;
+    }
+    t.f8[2] = 1 << (c + 4);
+    switch (d)
+    {
+    case 0:
+        if (k < 0x39)
+        {
+            dword_800C9204[k](&t);
+        }
+        else if (k < 0xC9)
+        {
+            if (k - 0xBD < 4)
+            {
+                sub_800C4A40(&t);
+            }
+            sub_800C473C(&t);
+            break;
+        }
+        else
+        {
+            k -= 0xC9;
+            dword_800C91DC[k](&t);
+        }
+        break;
+    case 2:
+        sub_800C5A7C(&t);
+        break;
+    case 15:
+        sub_800C66F4(&t);
+        break;
+    case 16:
+        sub_800C6824(&t);
+        break;
+    case 17:
+        sub_800C6928(&t);
+        break;
+    case 3:
+        sub_800C5BC0(&t);
+        break;
+    case 4:
+        sub_800C59A0(&t);
+        break;
+    case 10:
+        sub_800C58BC(&t);
+        break;
+    case 11:
+        sub_800C5EB8(&t);
+        break;
+    case 12:
+        sub_800C6038(&t);
+        break;
+    case 13:
+        sub_800C5D04(&t);
+        break;
+    case 14:
+        sub_800C61FC(&t);
+        break;
+    case 7:
+    case 8:
+    case 9:
+        sub_800C6A40(&t);
+        break;
+    default:
+        sub_800C58AC(&t);
+        break;
+    }
+}
 
 void sub_800C4328(BatTask* t)
 {
