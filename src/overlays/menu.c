@@ -479,7 +479,7 @@ int sub_800BD358(MenuCtx* out, int idx)
 
 extern int CountMinions_80010548();
 extern int CountItems_800106B8();
-extern void sub_8003F900();
+extern void SetFontClutOffset_8003F900();
 extern int name_800C29B8;
 extern int name_8008D678;
 extern void LoadUiTiy_8002BF74();
@@ -507,8 +507,8 @@ void sub_800BD40C(MenuTask* t, MenuCtx* c)
         c->arr_2A[i] = 0;
     for (i = 0; i < 4; i++)
         c->arr_46[i] = 0;
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
     name_800C29BC = 0;
     SetFadeMode_8001C19C(0, 0x20);
     name_800C29B8 = 0;

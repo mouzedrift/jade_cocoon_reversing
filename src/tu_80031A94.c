@@ -465,12 +465,12 @@ void AddPolyFT4Copy_8003301C(void* a, void* b)
     AddPrimCopy_80040298(b, a, 10);
 }
 // Matched
-void sub_80033048(unsigned short* p, int v)
+void SetDrTPageAbr_80033048(unsigned short* p, int v)
 {
     p[2] = (p[2] & 0xFF9F) | ((v & 3) << 5);
 }
 // Matched
-void sub_80033064(unsigned short* p, int v)
+void SetPolyFT4Abr_80033064(unsigned short* p, int v)
 {
     p[0xB] = (p[0xB] & 0xFF9F) | ((v & 3) << 5);
 }
@@ -780,7 +780,7 @@ unsigned char sub_80033848(unsigned char* arr, int idx)
     return p[0x7C];
 }
 // Matched
-short sub_80033858(Minion* p)
+short GetMinionId_80033858(Minion* p)
 {
     return p->id;
 }
@@ -893,12 +893,12 @@ int HasMagic_80033A90(Minion* p, unsigned int idx)
     return TestMagicBit_8001AE2C((unsigned int*)((char*)p + 0x80), idx);
 }
 // Matched
-int sub_80033AB0(Item* p)
+int GetItemId_80033AB0(Item* p)
 {
     return p->id;
 }
 // Matched
-char* sub_80033ABC(char* p)
+char* GetLevantStatus_80033ABC(char* p)
 {
     return p + 0x7C8;
 }
@@ -908,12 +908,12 @@ char* sub_80033AC4(char* p)
     return p + 0x7BC;
 }
 // Matched
-Minion* sub_80033ACC(SaveData* s, int idx)
+Minion* GetSaveMinion_80033ACC(SaveData* s, int idx)
 {
     return &s->minions[idx];
 }
 // Matched
-Item* sub_80033AE4(SaveData* s, int idx)
+Item* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }

@@ -109,7 +109,7 @@ void sub_800A450C(int* p, unsigned short* q)
     short rect[4];
     int item;
     unsigned short y;
-    sub_8003F900(2, 0);
+    SetFontClutOffset_8003F900(2, 0);
     item = *p;
     y = q[1];
     while (item)

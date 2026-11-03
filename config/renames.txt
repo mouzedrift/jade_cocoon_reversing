@@ -360,3 +360,50 @@ AddClipTexWindowPrim_80033308 AddClipDrawAreaPrim_80033308
 # --- PSY-Q library symbols: the real names from the 4.4 objects (config/lib_objs.txt) ---
 sub_80071818 _mcxStartFastDsr
 sub_800718E0 _mcxStopFastDsr
+
+# --- effect task (state 0 idle -> 1 loading the effect file -> 2 ready -> 3 playing) and effect files ---
+sub_800148D4 IsEffectTaskIdle_800148D4
+sub_800148F4 RequestEffect_800148F4
+sub_80014954 IsEffectReady_80014954
+sub_8001497C StartEffect_8001497C
+sub_800147FC CountActiveEffectObjects_800147FC
+sub_80020DDC LoadEffectFile_80020DDC
+sub_80020F5C OnEffectFileLoaded_80020F5C
+sub_80020EBC IsEffectFileLoaded_80020EBC
+sub_80020EE0 FreeEffectFile_80020EE0
+dword_80091BD0 effectFile_80091BD0
+
+# --- FTG objects (DATA.001 file 10, also inside model files): 0x54-byte objects of 10 primitive types ---
+sub_80021738 GetFtgObjectCount_80021738
+sub_80021744 AllocFtgObjects_80021744
+sub_80021824 LoadFtgObjects_80021824
+sub_80022458 LoadFtgObject_80022458
+sub_80021784 FreeFtgObjects_80021784
+sub_800229B0 FreeFtgObject_800229B0
+sub_80022AE8 RelocateTPageClut_80022AE8
+off_8007DAE0 ftgPrimLoaders_8007DAE0
+dword_8007DB08 ftgPrimRelocators_8007DB08
+dword_8008D4D0 publicFtg_8008D4D0
+
+# --- fonts / semi-transparency mode (tpage bits 5-6) ---
+sub_8003F900 SetFontClutOffset_8003F900
+sub_8003F9E8 SetFontAbr_8003F9E8
+sub_80033048 SetDrTPageAbr_80033048
+sub_80033064 SetPolyFT4Abr_80033064
+
+# --- memory card / file requests / event lists ---
+sub_8003BADC GetMemCardInfoSync_8003BADC
+sub_8003BB1C CheckMemCards_8003BB1C
+dword_8008D4D8 memCardInfo_8008D4D8
+sub_8003BFD0 ConsumeFileRequest_8003BFD0
+off_80086570 data001Path_80086570
+sub_800438F8 RunEventListFreeCallbacks_800438F8
+dword_8008D61C screenFlashTasks_8008D61C
+
+# --- save data accessors ---
+sub_80033ACC GetSaveMinion_80033ACC
+sub_80033AE4 GetSaveItem_80033AE4
+sub_80033ABC GetLevantStatus_80033ABC
+sub_80033AB0 GetItemId_80033AB0
+sub_80033858 GetMinionId_80033858
+sub_800378F8 GetCameraMode_800378F8

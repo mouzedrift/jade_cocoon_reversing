@@ -52,8 +52,8 @@ INCLUDE_DATA(dword_80086560);
 INCLUDE_DATA(fileBufferInUse_80086564);
 INCLUDE_DATA(dword_80086568);
 INCLUDE_DATA(fileBuffer_8008656C);
-/* char* off_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
-INCLUDE_DATA(off_80086570);
+/* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
+INCLUDE_DATA(data001Path_80086570);
 INCLUDE_DATA(fontDefs_80086574);
 INCLUDE_DATA(dword_800865B8);
 INCLUDE_DATA(charTables_8008685C);
@@ -154,7 +154,7 @@ typedef struct
 extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(int* p);
 extern int StartFileRequestTask_8003C6C8(int* req);
-void sub_80020F5C();
+void OnEffectFileLoaded_80020F5C();
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];
@@ -877,7 +877,7 @@ void InitPrimBuffers_8001BF90(void)
 // Matched
 void StartScreenFlash_8001C02C(unsigned char* a0)
 {
-    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D61C);
+    struct_cb* r = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
     if (r != 0)
     {
         unsigned char* p = (unsigned char*)r->field_14;
@@ -2260,7 +2260,7 @@ int sub_8001E1DC(struct_obj_F* p)
 {
     if (p->field_130 >= 0)
     {
-        if (sub_80014954() == 0)
+        if (IsEffectReady_80014954() == 0)
         {
             return 0;
         }
@@ -2341,7 +2341,7 @@ int sub_8001E34C(char* o, char* d)
     if (f >= 0)
     {
         *(int*)(o + 0x130) = f;
-        sub_800148F4(f);
+        RequestEffect_800148F4(f);
     }
     if (*(int**)(d + 8))
     {
@@ -3638,7 +3638,7 @@ int sub_80020D84(void)
     return r;
 }
 // Matched
-void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
+void LoadEffectFile_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
 {
     int req[8];
     struct
@@ -3673,16 +3673,16 @@ void sub_80020DDC(int a0, int* out, short* a2, short* a3, int a4, int a5)
     req[4] = 0;
     req[5] = (int)&arg;
     req[6] = 0x14;
-    req[7] = (int)sub_80020F5C;
+    req[7] = (int)OnEffectFileLoaded_80020F5C;
     *out = StartFileRequestTask_8003C6C8(req);
 }
 // Matched
-int sub_80020EBC(int* p)
+int IsEffectFileLoaded_80020EBC(int* p)
 {
     return GetFileRequestStatus_8003BE30(*p) == 0;
 }
 // Matched
-void sub_80020EE0(int* p)
+void FreeEffectFile_80020EE0(int* p)
 {
     ListFreeAll_8003FEC8(p + 1);
 }
@@ -3711,7 +3711,7 @@ typedef struct
 } struct_3i;
 #if 0
 // Not matched: only register allocation differs (arg gets s6 instead of s4, the call loops swap their two induction registers)
-void sub_80020F5C(int* arg, int* hdr)
+void OnEffectFileLoaded_80020F5C(int* arg, int* hdr)
 {
     int* out = (int*)arg[0];
     int* p1 = (int*)((char*)hdr + hdr[1]);
@@ -3788,7 +3788,7 @@ void sub_80020F5C(int* arg, int* hdr)
     }
 }
 #endif
-INCLUDE_ASM(sub_80020F5C);
+INCLUDE_ASM(OnEffectFileLoaded_80020F5C);
 typedef struct
 {
     unsigned char b[4];
@@ -3846,11 +3846,11 @@ void sub_80021464(int* hdr, int* out, int a2, int a3, int heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
     int* images = (int*)((char*)hdr + hdr[2]);
-    if (sub_80021738(models))
+    if (GetFtgObjectCount_80021738(models))
     {
-        out[0] = sub_80021738(models);
-        sub_80021744(&out[1], out[0], heap);
-        sub_80021824(models, (char*)out[1], out[0], heap, a2);
+        out[0] = GetFtgObjectCount_80021738(models);
+        AllocFtgObjects_80021744(&out[1], out[0], heap);
+        LoadFtgObjects_80021824(models, (char*)out[1], out[0], heap, a2);
     }
     if (sub_80021DE4(models))
     {
@@ -3906,23 +3906,23 @@ void sub_800216E8(int* a0, int a1, int a2)
     a0[1] = ListAlloc_8003FDC0(a2, 0x2000);
 }
 // Matched
-int sub_80021738(int* p)
+int GetFtgObjectCount_80021738(int* p)
 {
     return p[1];
 }
 // Matched
-void sub_80021744(int* p, int idx, int a2)
+void AllocFtgObjects_80021744(int* p, int idx, int a2)
 {
     *p = HeapAlloc_8003FC8C(idx * 0x54, a2);
 }
 // Matched
-void sub_80021784(int** a0, unsigned int n, int heap)
+void FreeFtgObjects_80021784(int** a0, unsigned int n, int heap)
 {
     char* p = (char*)*a0;
     unsigned int i;
     for (i = 0; i < n; i++)
     {
-        sub_800229B0((int*)p, heap);
+        FreeFtgObject_800229B0((int*)p, heap);
         p += 0x54;
     }
     HeapFree_8003FD18(*a0, heap);
@@ -3931,17 +3931,17 @@ void sub_80021784(int** a0, unsigned int n, int heap)
 // Matched
 void sub_80021804(int* p, int heap)
 {
-    sub_800229B0(p, heap);
+    FreeFtgObject_800229B0(p, heap);
 }
 // Matched
-void sub_80021824(int* a0, char* a1, int a2, int a3, int a4)
+void LoadFtgObjects_80021824(int* a0, char* a1, int a2, int a3, int a4)
 {
-    unsigned int n = sub_80021738(a0);
+    unsigned int n = GetFtgObjectCount_80021738(a0);
     int r = (int)(a0 + 4);
     unsigned int i;
     for (i = 0; i < n; i++)
     {
-        r = sub_80022458(a1, r, a3, a4);
+        r = LoadFtgObject_80022458(a1, r, a3, a4);
         a1 += 0x54;
     }
 }
@@ -4252,8 +4252,8 @@ void sub_800221DC(unsigned char* p, unsigned char* d, DR_TPAGE* tp)
 }
 typedef void (*fn_80022458_a)(unsigned char* p, int a3);
 typedef int (*fn_80022458_b)(unsigned char* hdr, unsigned char* p, int a0, int k, int h);
-extern fn_80022458_a dword_8007DB08[];
-extern fn_80022458_b off_8007DAE0[];
+extern fn_80022458_a ftgPrimRelocators_8007DB08[];
+extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
 typedef struct
 {
     short n;
@@ -4267,7 +4267,7 @@ int sub_8002320C(unsigned char* hdr, unsigned char* p, int* b, int k, int h);
 typedef struct struct_22CC4 struct_22CC4;
 void sub_80022CC4(struct_22CC4* a0, struct_22634* a, struct_22634* b, int h);
 // Matched
-int sub_80022458(int a0, unsigned char* a1, int h, int a3)
+int LoadFtgObject_80022458(int a0, unsigned char* a1, int h, int a3)
 {
     int cnt[10];
     int A[2];
@@ -4294,9 +4294,9 @@ int sub_80022458(int a0, unsigned char* a1, int h, int a3)
         type = *p;
         k = cnt[type];
         cnt[type] = k + 1;
-        if (a3 != 0 && dword_8007DB08[type] != 0)
+        if (a3 != 0 && ftgPrimRelocators_8007DB08[type] != 0)
         {
-            dword_8007DB08[type](a1, a3);
+            ftgPrimRelocators_8007DB08[type](a1, a3);
         }
         switch (type)
         {
@@ -4308,7 +4308,7 @@ int sub_80022458(int a0, unsigned char* a1, int h, int a3)
         case 5:
         case 6:
         case 7:
-            a1 += off_8007DAE0[type](p, a1, a0, k, h);
+            a1 += ftgPrimLoaders_8007DAE0[type](p, a1, a0, k, h);
             break;
         case 8:
             a1 += sub_8002300C(p, a1, A, k, h);
@@ -4419,7 +4419,7 @@ int sub_800228F8(struct_cnt_ptr* a0, struct_cnt_ptr* a1, int* a2, int heap)
     return n;
 }
 // Matched
-void sub_800229B0(int* p, int heap)
+void FreeFtgObject_800229B0(int* p, int heap)
 {
     int a = p[1];
     if (a)
@@ -4455,7 +4455,7 @@ void sub_800229E0(int* a0, int* a1, int h)
     }
 }
 // Matched
-void sub_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
+void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a2)
 {
     int u = a2[0] / 64;
     int v = a2[1] / 256;
@@ -4714,7 +4714,7 @@ INCLUDE_ASM(sub_8002320C);
 // Matched
 void sub_80023460(char* p, int arg1)
 {
-    sub_80022AE8(p + 4, p + 6, arg1);
+    RelocateTPageClut_80022AE8(p + 4, p + 6, arg1);
 }
 // Matched
 int sub_8002348C(unsigned char* a0, int a1, int* a2, int a3)
@@ -4841,7 +4841,7 @@ void sub_80023934(int* a0, int a1, int a2, int a3)
 // Matched
 void sub_80023B24(unsigned short* p, int arg1)
 {
-    sub_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(p, p + 1, arg1);
 }
 // Matched
 int sub_80023B48(unsigned char* a0, int a1, int* a2, int a3)
@@ -4901,7 +4901,7 @@ void sub_80023BD0(int* a0, int a1, int a2, int a3)
 // Matched
 void sub_80023E80(unsigned short* p, int arg1)
 {
-    sub_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(p, p + 1, arg1);
 }
 // Matched
 int sub_80023EA4(unsigned char* a0, int a1, int* a2, int a3)
@@ -5046,7 +5046,7 @@ void sub_8002441C(int* a0, int a1, int a2, int a3)
 // Matched
 void sub_8002467C(unsigned short* p, int arg1)
 {
-    sub_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(p, p + 1, arg1);
 }
 // Matched
 int sub_800246A0(unsigned char* a0, int a1, int* a2, int a3)
@@ -5118,7 +5118,7 @@ void sub_80024730(int* a0, int a1, int a2, int a3)
 // Matched
 void sub_80024AB8(unsigned short* p, int arg1)
 {
-    sub_80022AE8(p, p + 1, arg1);
+    RelocateTPageClut_80022AE8(p, p + 1, arg1);
 }
 // Matched
 void InitModelList_80024ADC(struct_112_list** a0, void* a1, int heap)
@@ -5167,7 +5167,7 @@ void FreeModel_80024C48(struct_112* p)
     }
     if (p->field_50 != 0)
     {
-        sub_80021784((int**)&p->field_50, p->field_3C, h);
+        FreeFtgObjects_80021784((int**)&p->field_50, p->field_3C, h);
     }
     if (p->field_54 != 0)
     {
@@ -5187,7 +5187,7 @@ void FreeModel_80024C48(struct_112* p)
     }
     if (p->field_68 != 0)
     {
-        sub_80021784((int**)&p->field_68, p->field_42, h);
+        FreeFtgObjects_80021784((int**)&p->field_68, p->field_42, h);
     }
     if (p->field_6C != 0)
     {
@@ -5703,7 +5703,7 @@ void sub_80025AB0(struct_112* p)
     struct Pool* h = (struct Pool*)((int*)p->field_0)[1];
     if (p->field_68)
     {
-        sub_80021784((int**)&p->field_68, p->field_42, h);
+        FreeFtgObjects_80021784((int**)&p->field_68, p->field_42, h);
         p->field_42 = 0;
         p->field_68 = 0;
     }
@@ -5905,9 +5905,9 @@ void sub_800260FC(int* a0)
     struct_112* p = (struct_112*)a0[5];
     int h = ((int*)p->field_0)[1];
     q += 4;
-    p->field_3C = sub_80021738((int*)a0[9]);
-    sub_80021744(&p->field_50, p->field_3C, h);
-    sub_80021824((int*)a0[9], (char*)p->field_50, p->field_3C, h, q);
+    p->field_3C = GetFtgObjectCount_80021738((int*)a0[9]);
+    AllocFtgObjects_80021744(&p->field_50, p->field_3C, h);
+    LoadFtgObjects_80021824((int*)a0[9], (char*)p->field_50, p->field_3C, h, q);
     if (sub_80021DE4((int*)a0[9]) != 0)
     {
         sub_80021DF0(&p->field_5C, sub_80021DE4((int*)a0[9]), h);
@@ -6040,9 +6040,9 @@ void sub_8002651C(struct_loader* a0)
     int* list = a0->list_34;
     int heap = ((int*)p->field_0)[1];
     int* q = a0->data_18 + 1;
-    p->field_42 = sub_80021738(list);
-    sub_80021744(&p->field_68, p->field_42, heap);
-    sub_80021824(a0->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
+    p->field_42 = GetFtgObjectCount_80021738(list);
+    AllocFtgObjects_80021744(&p->field_68, p->field_42, heap);
+    LoadFtgObjects_80021824(a0->list_34, (char*)p->field_68, p->field_42, heap, (int)q);
 }
 #endif
 INCLUDE_ASM(sub_8002651C);
@@ -6507,7 +6507,7 @@ int sub_80027358(int id)
             return 0;
         }
         sub_8002728C();
-        sub_8003BFD0(p[1], 0);
+        ConsumeFileRequest_8003BFD0(p[1], 0);
         sub_80028DC0();
         s = (short*)&saveData_8008B570;
         s[0x2F0 / 2] = id;
@@ -6638,12 +6638,12 @@ int* sub_80027650(int* a0, int a1, int h)
 // Matched
 void sub_80027708(int* a0, int a1)
 {
-    int r = sub_80021738(a0);
+    int r = GetFtgObjectCount_80021738(a0);
     dword_8008B500[0x38 / 4] = r;
     if (r != 0)
     {
-        sub_80021744(&dword_8008B500[0x3C / 4], r, a1);
-        sub_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
+        AllocFtgObjects_80021744(&dword_8008B500[0x3C / 4], r, a1);
+        LoadFtgObjects_80021824(a0, dword_8008B500[0x3C / 4], dword_8008B500[0x38 / 4], a1, 0);
     }
 }
 typedef struct
@@ -6906,7 +6906,7 @@ void sub_800283C0(void* a0, int* a1)
                 {
                     load = 0;
                 }
-                wait = sub_8003BFD0(a1[1], 1);
+                wait = ConsumeFileRequest_8003BFD0(a1[1], 1);
                 dword_80082678 = 0;
             }
             if (load)

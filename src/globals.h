@@ -476,7 +476,7 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern int** dword_8008D628;
 extern int actorTasks_8008D43C;
-extern int dword_8008D61C;
+extern int screenFlashTasks_8008D61C;
 extern struct_12 dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 typedef struct
@@ -529,7 +529,7 @@ void sub_80025D7C(int* a0, int b);
 extern int dword_8007BD30[];
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
-extern int dword_80091BD0[4];
+extern int effectFile_80091BD0[4];
 extern int dword_8008D4DC;
 extern int dword_80079708[];
 typedef struct
@@ -621,7 +621,7 @@ typedef struct
     int z;
 } Vec3i;
 
-extern int dword_8008D4D8;
+extern int memCardInfo_8008D4D8;
 extern short effectOutcomeFlag_8008D780;
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 

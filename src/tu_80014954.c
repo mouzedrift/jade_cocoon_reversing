@@ -97,8 +97,8 @@ INCLUDE_DATA(dword_8007D980);
 INCLUDE_DATA(dword_8007D9A4);
 INCLUDE_DATA(dword_8007D9C0);
 INCLUDE_DATA(overlays_8007D9E8);
-INCLUDE_DATA(off_8007DAE0);
-INCLUDE_DATA(dword_8007DB08);
+INCLUDE_DATA(ftgPrimLoaders_8007DAE0);
+INCLUDE_DATA(ftgPrimRelocators_8007DB08);
 INCLUDE_DATA(dword_8007DB30);
 INCLUDE_DATA(dword_8007DB50);
 INCLUDE_DATA(dword_8007DB84);
@@ -473,12 +473,12 @@ INCLUDE_DATA(asc_80084350);
 INCLUDE_DATA(word_80084540);
 
 // Matched
-int sub_80014954(void)
+int IsEffectReady_80014954(void)
 {
     return ((int*)effectTask_8008D3F8[9])[0x2C / 4] == 2;
 }
 // Matched
-void sub_8001497C(void)
+void StartEffect_8001497C(void)
 {
     int* p = effectTask_8008D3F8[9];
     p[0x28 / 4] |= 1;
@@ -600,9 +600,9 @@ void sub_80014CCC(int* a0, void* buf)
     a1[0x44 / 4] = ((int*)a1[0x1C / 4])[0] + a1[0x44 / 4];
     a1[0x48 / 4] = ((int*)a1[0x1C / 4])[1] + a1[0x48 / 4];
     a1[0x4C / 4] = ((int*)a1[0x1C / 4])[2] + a1[0x4C / 4];
-    e1 = (char*)(dword_80091BD0[0x20 / 4] + sub_80020F00(dword_80091BD0, 0, 0x25) * 52);
-    idx = sub_80020F00(dword_80091BD0, 0, 0x26);
-    e2 = (char*)(dword_80091BD0[0x20 / 4] + idx * 52);
+    e1 = (char*)(effectFile_80091BD0[0x20 / 4] + sub_80020F00(effectFile_80091BD0, 0, 0x25) * 52);
+    idx = sub_80020F00(effectFile_80091BD0, 0, 0x26);
+    e2 = (char*)(effectFile_80091BD0[0x20 / 4] + idx * 52);
     sp = *(EffSprite**)*(int*)(e1 + 8);
     sz[0] = sp->w_C * (word_80084540[(a1[1] << 6) & 0xFC0] / 4 + 0x1000) / 4096;
     sz[1] = sp->h_E * (word_80084540[(a1[1] << 6) & 0xFC0] / 4 + 0x1000) / 4096;

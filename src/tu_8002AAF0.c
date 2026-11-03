@@ -166,11 +166,11 @@ void sub_8002AD08(int flags)
 {
     if (flags & 2)
     {
-        sub_8003F900(1, 1);
+        SetFontClutOffset_8003F900(1, 1);
     }
     else
     {
-        sub_8003F900(1, 0);
+        SetFontClutOffset_8003F900(1, 0);
     }
 }
 // Matched
@@ -178,11 +178,11 @@ void sub_8002AD44(int flags)
 {
     if (flags & 2)
     {
-        sub_8003F900(2, 1);
+        SetFontClutOffset_8003F900(2, 1);
     }
     else
     {
-        sub_8003F900(2, 0);
+        SetFontClutOffset_8003F900(2, 0);
     }
 }
 // Matched
@@ -203,8 +203,8 @@ extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 void sub_8002ADB4(char* a0, int a1, int a2, int a3)
 {
     DrawMenuWindowContents_8002A710(a0, a2);
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
 }
 typedef struct

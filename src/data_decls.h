@@ -6,7 +6,7 @@
 extern char heapStart_800CD858[2*1024];
 extern unsigned char pads_800918E8[2][9];
 extern char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
-extern char* off_80086570;
+extern char* data001Path_80086570;
 extern Data001File Data001Files_80075AA0[1108];
 extern SoundInfo soundFiles_80082F0C[155];
 extern enum GameStates currentGameState_8008D4B4;

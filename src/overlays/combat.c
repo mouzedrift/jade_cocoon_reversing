@@ -905,11 +905,11 @@ void sub_800A1844(char* a, unsigned short* pt, unsigned int flags)
     {
         if (flags & 2)
         {
-            sub_8003F900(1, 1);
+            SetFontClutOffset_8003F900(1, 1);
         }
         else
         {
-            sub_8003F900(1, 0);
+            SetFontClutOffset_8003F900(1, 0);
         }
         q = a + 0x84;
         v[0] = pt[0] + 5;

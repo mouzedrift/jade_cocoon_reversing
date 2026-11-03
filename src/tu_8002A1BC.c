@@ -206,8 +206,8 @@ void DrawMenuWindows_8002A5A4(struct_A5A4* p)
             sub_8002AAF0(p, i, j, &r);
         }
     }
-    sub_8003F900(2, 0);
-    sub_8003F900(1, 0);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
 }
 typedef struct
 {
