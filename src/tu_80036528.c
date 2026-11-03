@@ -247,7 +247,7 @@ void sub_800369E0(struct_obj_D* p, int* q)
 }
 extern void sub_80038230(int* p);
 extern void InitCameraTask_800368F8(struct_obj_D* p, int* q);
-extern void sub_80036BB0(void);
+void sub_80036BB0(struct_obj_D* p, int* q);
 
 // Matched
 void sub_80036AB4(struct_obj_D* p, int* q)
@@ -281,11 +281,83 @@ run:
     {
         *(short*)(r + 2) = 5;
         r[0x71] = 0;
-        p->field_8 = sub_80036BB0;
+        p->field_8 = (void (*)(void))sub_80036BB0;
         r[3] = 0;
     }
 }
-INCLUDE_ASM(sub_80036BB0);
+typedef struct
+{
+    char pad[0x1C8];
+    int keys[8];
+} CamKeys;
+typedef struct
+{
+    float c[11][4];
+} CamSpline;
+#define SPLINE(c) ((int)((c)[0] * t3 + (c)[1] * t2 + (c)[2] * t + (c)[3]))
+// Matched
+void sub_80036BB0(struct_obj_D* p, int* r)
+{
+    int* q = r;
+    int i;
+    int k;
+    int n;
+    float t;
+    float t2;
+    float t3;
+    int ang;
+    CamSpline* sp;
+    VECTOR v;
+    int ex;
+    int ey;
+    int ez;
+    int x;
+    int y;
+    int z;
+
+    if (!sub_800395D0(&q[0x71], ++q[3], &q[0x72]) || !(q[1] & 8))
+    {
+        sub_800390F4(q, 1);
+        *(short*)(q + 2) = 4;
+        p->field_8 = (void (*)(void))sub_80036AB4;
+    }
+    else
+    {
+        i = q[0x71];
+        k = ((CamKeys*)q)->keys[i];
+        n = i + 1;
+        t = (float)(q[3] - k) / (float)(((CamKeys*)q)->keys[n] - k);
+        t2 = t * t;
+        t3 = t2 * t;
+        sp = (CamSpline*)q[0x86];
+        ang = SPLINE(sp[i].c[3]);
+        v.vx = SPLINE(sp[i].c[0]);
+        v.vy = SPLINE(sp[i].c[1]);
+        v.vz = SPLINE(sp[i].c[2]);
+        ex = SPLINE(sp[i].c[4]);
+        ey = SPLINE(sp[i].c[5]);
+        ez = SPLINE(sp[i].c[6]);
+        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        y = v.vy + ey;
+        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.x = ((VECTOR*)q[0x6F])->vx + x * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.y = ((VECTOR*)q[0x6F])->vy + y;
+        cameraState_8008D4F0.field_14.z = ((VECTOR*)q[0x6F])->vz - x * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096 + z * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096;
+        ex = SPLINE(sp[i].c[8]);
+        ey = SPLINE(sp[i].c[9]);
+        ez = SPLINE(sp[i].c[10]);
+        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        y = v.vy + ey;
+        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.x = ((VECTOR*)q[0x6F])->vx + x * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.y = ((VECTOR*)q[0x6F])->vy + y;
+        cameraState_8008D4F0.field_20.z = ((VECTOR*)q[0x6F])->vz - x * word_80084540[((SVECTOR*)q[0x70])->vy & 0xFFF] / 4096 + z * word_80084540[(((SVECTOR*)q[0x70])->vy + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
+    }
+    sub_8003891C(q, levantPos_8008BD18);
+    sub_800BC90C(q);
+}
+#undef SPLINE
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 void sub_80038D64(char* o, int* a);
 extern void sub_80038230(int* p);
