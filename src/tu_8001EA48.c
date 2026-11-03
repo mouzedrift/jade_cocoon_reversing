@@ -1178,8 +1178,7 @@ void UpdateOverlayLoaderTask_80020CD8(int a0, OverlayLoader* p)
         p->request_8 = LoadOverlay_80020BF8(2, p->wanted_0);
     }
 }
-#if 0
-// Not matched
+// Matched
 int LoadOverlayIfChanged_80020D1C(int a0, int a1)
 {
     OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
@@ -1189,10 +1188,8 @@ int LoadOverlayIfChanged_80020D1C(int a0, int a1)
     }
     p->wanted_0 = a1;
     p->loaded_4 = a1;
-    return LoadOverlay_80020BF8(a0, a1);
+    return LoadOverlay_80020BF8(a0, p->wanted_0);
 }
-#endif
-INCLUDE_ASM(LoadOverlayIfChanged_80020D1C);
 // Matched
 void ResetOverlayLoaderTask_80020D68(void)
 {
