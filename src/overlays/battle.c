@@ -514,25 +514,30 @@ int sub_800BAAD8()
     return 0;
 }
 
-#if 0
+#if 0 // Not matched: goto loop gets the body right but i++ is scheduled ahead of the stores (original: after them, li -1 in the branch delay slot)
 void sub_800BABC4()
 {
     int i;
-    int mask;
-    BatEnt_a* p = dword_800B1238;
-    for (i = 0; i < 3; i++)
+    int m;
+    BatEnt_a* p;
+    i = 0;
+    p = dword_800B1238;
+loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the original keeps them inside
+    m = sub_800A248C() & (1 << (i + 4));
+    if (m != 0)
     {
-        mask = 1 << (i + 4);
-        if (sub_800A248C() & mask)
-        {
-            sub_800A2BE4(i);
-        }
-        p->b = -1;
-        p->a = 0;
-        p->d = 0;
-        p->c = 0;
-        p->e = 7;
-        p++;
+        sub_800A2BE4(i);
+    }
+    p->b = -1;
+    p->a = 0;
+    p->d = 0;
+    p->c = 0;
+    p->e = 7;
+    i++;
+    p++;
+    if (i < 3)
+    {
+        goto loop;
     }
 }
 #endif
@@ -748,21 +753,21 @@ void sub_800BBBA8(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
-#if 0
+#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88[3] (original keeps source order); tried early return, pointer local, swapped branches
 void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
 {
     dword_800C9C88[0] = 3;
     dword_800C9C88[3] = 0;
-    if (!dword_800C9C98)
-    {
-        sub_800BBDB4(t, u);
-    }
-    else
+    if (dword_800C9C98)
     {
         PlaySeqSlot_80031160(0x11, 1);
         u->fc = sub_800BC28C();
         u->next_8 = sub_800BBC84;
         t->next_8 = sub_800BC144;
+    }
+    else
+    {
+        sub_800BBDB4(t, u);
     }
 }
 #endif
@@ -991,13 +996,12 @@ void sub_800BC468(int a, int b)
     }
 }
 
-#if 0
 void sub_800BC4D4(int a, int b)
 {
     int r = sub_800BC570(a);
     if (r == 1)
     {
-        switch (sub_800BC7DC(a))
+        switch ((unsigned int)sub_800BC7DC(a))
         {
         case 0:
             sub_800A8D48(b);
@@ -1013,8 +1017,6 @@ void sub_800BC4D4(int a, int b)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BC4D4);
 
 int sub_800BC570(int x)
 {
@@ -1060,7 +1062,6 @@ BatV12_a* sub_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n)
     return dst;
 }
 
-#if 0
 int sub_800BC6CC(int a)
 {
     int r = 0;
@@ -1068,32 +1069,28 @@ int sub_800BC6CC(int a)
     if (sub_800BC784(a))
     {
         int k = sub_800BC7DC(a);
-        if (k == 1)
+        switch ((unsigned int)k)
         {
+        case 1:
             m = sub_800BC7DC(dword_800C9C82);
             if (m == 0)
             {
-                goto zero;
+            case 0:
+                r = (int)levantPos_8008BD18;
+                break;
             }
             if (m == k)
             {
                 r = (int)sub_800C0F9C();
             }
-        }
-        else if (k == 0)
-        {
-        zero:
-            r = (int)levantPos_8008BD18;
-        }
-        else if (k == 2)
-        {
+            break;
+        case 2:
             r = sub_800A2C28(a - 4);
+            break;
         }
     }
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BC6CC);
 
 int sub_800BC784(int x)
 {
@@ -1227,7 +1224,6 @@ void sub_800BDC3C(BatTask_a* t)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BDC3C);
 
-#if 0
 int sub_800BDD3C()
 {
     unsigned char i;
@@ -1251,8 +1247,8 @@ int sub_800BDD3C()
     }
     for (i = 4; i < 7; i++)
     {
-        m = 1 << i;
-        if (sub_800A248C() & m)
+        m = sub_800A248C() & (1 << i);
+        if (m != 0)
         {
             if (sub_800A2550(i - 4) == 0)
             {
@@ -1262,8 +1258,6 @@ int sub_800BDD3C()
     }
     return IsEffectTaskIdle_800148D4() != 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BDD3C);
 
 int sub_800BDE04()
 {
@@ -1368,23 +1362,18 @@ INCLUDE_OVERLAY_ASM(battle, sub_800BE058);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BE14C);
 
-#if 0
 void sub_800BE2C8()
 {
     int m = sub_800BE364();
     unsigned char i;
-    short d = m - dword_800C9D98[0];
-    dword_800C9DBC = d;
-    dword_800C9D98[1] += d;
+    dword_800C9DBC = m - dword_800C9D98[0];
+    dword_800C9D98[1] += dword_800C9DBC;
     for (i = 0; i < 7; i++)
     {
-        short e = m - dword_800C9DA0[i].a;
-        dword_800C9DC0[i] = e;
-        dword_800C9DA0[i].b += e;
+        dword_800C9DC0[i] = m - dword_800C9DA0[i].a;
+        dword_800C9DA0[i].b += dword_800C9DC0[i];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BE2C8);
 
 int sub_800BE364()
 {
@@ -1404,30 +1393,36 @@ INCLUDE_OVERLAY_ASM(battle, sub_800BE3C0);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BE834);
 
-#if 0
+#if 0 // Not matched: the shared 'return 1' block sits after the sub_800BEB68 test in the original (here it lands at the end and the last test flips); tried goto/early-return layouts
 int sub_800BEA94()
 {
-    if (*(int*)&saveData_8008B570 & 0x20)
+    if (!(*(int*)&saveData_8008B570 & 0x20))
     {
-        return 1;
-    }
-    if (sub_800BF47C() == 1)
-    {
-        return 0;
-    }
-    if (sub_800BC820(4) == 1)
-    {
-        if (sub_800BEB50() && sub_800BEB68())
+        if (sub_800BF47C() == 1)
         {
-            return 1;
+            return 0;
         }
-        return 0;
+        if (sub_800BC820(4) == 1)
+        {
+            if (sub_800BEB50() == 0)
+            {
+                return 0;
+            }
+            if (sub_800BEB68() == 0)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if (dword_800C912C[(unsigned char)dword_800C8B38[dword_800C9C88[0]]] == 0)
+            {
+                return sub_800BEB50();
+            }
+            return sub_800BEB68();
+        }
     }
-    if (dword_800C912C[(unsigned char)dword_800C8B38[dword_800C9C88[0]]] == 0)
-    {
-        return sub_800BEB50();
-    }
-    return sub_800BEB68();
+    return 1;
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BEA94);
@@ -1478,7 +1473,6 @@ void sub_800BF3AC()
     StartScreenFlash_8001C02C(buf);
 }
 
-#if 0
 void sub_800BF3DC(int a, int b, int c, int d, int e)
 {
     EventEntry* p = AllocEventEntry_80043AF8(dword_8008D778);
@@ -1491,13 +1485,11 @@ void sub_800BF3DC(int a, int b, int c, int d, int e)
         q[3] = 0;
         q[1] = c;
         q[4] = d;
-        q[6] = a;
         q[5] = e;
+        q[6] = a;
         p->cb_8 = (EventEntryFn)sub_800BF4D0;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BF3DC);
 
 int sub_800BF47C()
 {
@@ -1546,25 +1538,30 @@ void sub_800BF648(short* p, int mode)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BF648);
 
-#if 0
+#if 0 // Not matched: body matches with a goto inner loop (a for loop gets strength-reduced); prologue saves are not interleaved and a/b take s3/s2 in the original (s2/s3 here)
 int sub_800BF6BC(unsigned short* a, int b)
 {
-    int r = -1;
+    int r;
     unsigned int i;
+    r = -1;
     do
     {
-        for (i = 0; i < 7; i++)
+        i = 0;
+    loop:
+        if (i >= 4 || b == i)
         {
-            if (i >= 4 || i == b)
+            a[i] += sub_800BF784(i);
+            if ((short)a[i] >= 1000)
             {
-                a[i] += sub_800BF784(i);
-                if ((short)a[i] >= 1000)
-                {
-                    a[i] = 0;
-                    r = i;
-                    break;
-                }
+                a[i] = 0;
+                r = i;
+                continue;
             }
+        }
+        i++;
+        if (i < 7)
+        {
+            goto loop;
         }
     } while (r < 0);
     return r;
@@ -1652,10 +1649,9 @@ int sub_800BFA34(int x)
     return (x & ~0x3F8) | (y << 1);
 }
 
-#if 0
+#if 0 // Not matched: only the last test: andi goes to v1 instead of v0 (and branch sense/layout); tried ternary, if/else, r variable, int params
 int sub_800BFA4C(unsigned int a, unsigned int b)
 {
-    int r;
     if (a & 0x200)
     {
         return 0x13;
@@ -1692,7 +1688,11 @@ int sub_800BFA4C(unsigned int a, unsigned int b)
             return 0x11;
         }
     }
-    return (a & 0x4000) ? 0x19 : 0x14;
+    if (!(a & 0x4000))
+    {
+        return 0x14;
+    }
+    return 0x19;
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BFA4C);
@@ -1929,8 +1929,8 @@ void sub_800C0DB0(int a)
     sub_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
-#if 0
-BatCol_a sub_800C0DDC(int* p, int c)
+#if 0 // Not matched: struct-return copy: 'move v0,s1' is scheduled before the lwl/lwr copy (original: after); tried explicit out-pointer form
+BatCol_a* sub_800C0DDC(BatCol_a* out, int* p, int c)
 {
     BatCol_a buf;
     int mask;
@@ -1939,7 +1939,8 @@ BatCol_a sub_800C0DDC(int* p, int c)
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
-    return buf;
+    *out = buf;
+    return out;
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C0DDC);
@@ -2952,15 +2953,16 @@ int sub_800C72B8()
     }
     return 1;
 }
-#if 0
 int sub_800C7334()
 {
     int i;
+    int m;
     for (i = 0; i < 3; i++)
     {
-        if (dword_800C9E4C & (1 << (i + 4)))
+        m = dword_800C9E4C & (1 << (i + 4));
+        if (m != 0)
         {
-            if (sub_800BF980(sub_800A2BE4(i)) != 1)
+            if (sub_800BF980(sub_800A2BE4(i)) == 1)
             {
                 return 0;
             }
@@ -2968,8 +2970,6 @@ int sub_800C7334()
     }
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C7334);
 extern char dword_800C932C[];
 extern char dword_800C9314[];
 extern char dword_800C9320[];
@@ -3004,7 +3004,7 @@ unsigned char sub_800C78D0()
 
 extern int dword_800C9E78;
 extern unsigned char dword_800C9E72[];
-#if 0
+#if 0 // Not matched: b and r swap registers (v1/a0); tried declaration order, int b, re-reading the global, early returns
 int sub_800C791C()
 {
     unsigned char b = dword_800C9E68;
@@ -3164,11 +3164,14 @@ void sub_800C8768()
     }
 }
 
-#if 0
+#if 0 // Not matched: arg setup order only (original computes &s first and &pos last); tried prototypes, separate arrays, &a, statement order
+extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
+extern int MeasureTextWidth_8003E4C8();
 void sub_800C8828(int a)
 {
     short rect[4];
-    short p[8];
+    short p[4];
+    short pos[2];
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
@@ -3177,9 +3180,9 @@ void sub_800C8828(int a)
     s[0] = a;
     p[0] = rect[0];
     p[1] = rect[1];
-    p[4] = rect[0] + 2;
-    p[5] = rect[1] + 4;
-    DrawTextLinesWindow_8002AE38(s, &p[4], 0xF, rect, 1);
+    pos[0] = rect[0] + 2;
+    pos[1] = rect[1] + 4;
+    DrawTextLinesWindow_8002AE38(s, pos, 0xF, rect, 1);
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
