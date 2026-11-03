@@ -111,7 +111,7 @@ void sub_8002FEB8(void)
         q -= 8;
     }
 }
-extern void sub_8002FF64(void);
+extern void sub_8002FF64();
 typedef struct
 {
     short field_0;
@@ -141,17 +141,32 @@ void sub_8002FF10(char* a, struct_FF10* p)
     }
     *(void (**)(void))(a + 8) = sub_8002FF64;
 }
-#if 0
-// Not matched (case 2 loop: the +0x18 offset is folded into the loop pointer)
-void sub_8002FF64(int a0, char* p)
+typedef struct
+{
+    short active;
+    short timer;
+    short access_num;
+    short seq;
+} SeqFade_FF64;
+typedef struct
+{
+    short field_0;
+    unsigned short state_2;
+    char pad_4[0xC];
+    int request_10;
+    int request_14;
+    SeqFade_FF64 fades[5];
+} SoundTask_FF64;
+// Matched
+void sub_8002FF64(int a0, SoundTask_FF64* p)
 {
     int i;
-    switch (*(unsigned short*)(p + 2))
+    switch (p->state_2)
     {
     case 0:
-        if (!GetFileRequestStatus_8003BE30(*(int*)(p + 0x10)) && !GetFileRequestStatus_8003BE30(*(int*)(p + 0x14)))
+        if (!GetFileRequestStatus_8003BE30(p->request_10) && !GetFileRequestStatus_8003BE30(p->request_14))
         {
-            (*(unsigned short*)(p + 2))++;
+            p->state_2++;
         }
         else
         {
@@ -159,26 +174,23 @@ void sub_8002FF64(int a0, char* p)
         }
         break;
     case 1:
-        *(unsigned short*)(p + 2) = 2;
+        p->state_2 = 2;
         break;
     case 2:
         for (i = 0; i < 5; i++)
         {
-            if (((short*)p)[12])
+            if (p->fades[i].active)
             {
-                if (--((short*)p)[13] <= 0)
+                if (--p->fades[i].timer <= 0)
                 {
-                    SsSepStop(((short*)p)[14], ((short*)p)[15]);
-                    ((short*)p)[12] = 0;
+                    SsSepStop(p->fades[i].access_num, p->fades[i].seq);
+                    p->fades[i].active = 0;
                 }
             }
-            p += 8;
         }
         break;
     }
 }
-#endif
-INCLUDE_ASM(sub_8002FF64);
 extern void StopSoundSeqs_80030D68(SoundStruct* p);
 #if 0
 // Not matched: register allocation of the sequence number
