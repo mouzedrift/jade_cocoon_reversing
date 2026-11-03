@@ -331,6 +331,321 @@ EventEntry* OpenItemMessageWindow_80035AC8(int* init)
     }
     return 0;
 }
+typedef struct
+{
+    int type;
+    int id;
+    int count;
+    int pad[2];
+} ItemMsgEntry;
+typedef struct
+{
+    int field_0;
+    unsigned int flags_4;
+    int pad_8;
+    int field_C;
+    char pad_10[0x20C];
+    int field_21C;
+    ItemMsgEntry entries[3];
+    int mode;
+    int* text;
+} ItemMsgWindow;
+typedef struct
+{
+    short x;
+    short y;
+} Pos2_35BD8;
+typedef struct
+{
+    int a;
+    int b;
+} TPage_35BD8;
+extern int dword_80074850[];
+extern int dword_8007485C[];
+extern int dword_80074864[];
+extern char* (*nameGetters_8007CB08[])(int id);
+extern char* itemMessageSuffixes_80083818[];
+extern char* off_80083820;
+extern Pos2_35BD8 MeasureTextLines_8003E3B4(int* list);
+extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawNumber_8003EF74(void* pos, int val, int ot);
+extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
+extern void sub_800AD1E0(int a, int b, int c);
+extern void sub_800AD058(int a);
+extern void sub_800AD8F4(int a);
+extern void sub_800AD68C(int a);
+extern void sub_800AD184(int a, int b, int c);
+#if 0
+// Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
+// Needs dword_80074864 cut to 0x8 in config/c_rodata.txt, and tu_800353A0 merged into tu_80034068: the jump table sits at
+// 0x8007486C, which is 8-aligned only relative to that TU's .rdata start 0x8007474C (psylink packs objects on 4 bytes).
+void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
+{
+    ItemMsgWindow* o;
+    SPRT spr[3];
+    TPage_35BD8 tp[3];
+    RECT r;
+    Pos2_35BD8 p70;
+    Pos2_35BD8 p78;
+    Pos2_35BD8 p80;
+    Pos2_35BD8 p88;
+    Pos2_35BD8 p90;
+    Pos2_35BD8 p98;
+    Pos2_35BD8 pA0;
+    int flag;
+    int n;
+    int i;
+    int line;
+    int y;
+    int* text;
+    int sfx;
+
+    flag = 0;
+    n = 0;
+    o = buf;
+    for (i = 0; i < 3; i++)
+    {
+        if (o->entries[i].type != -1)
+        {
+            n++;
+        }
+    }
+    if (n >= 2 || (o->mode < 0 && n != 0))
+    {
+        flag = 1;
+    }
+    if (o->text)
+    {
+        int* q = o->text;
+        while (*q++)
+        {
+            n++;
+        }
+        EncodeText_8003F684(2, (unsigned short*)o->text[0]);
+        if (*(short*)o->text[0] == 0x91)
+        {
+            n--;
+            o->text++;
+        }
+    }
+    r.h = n * 16 | 8;
+    r.w = 0xE3;
+    r.x = 0x2F;
+    r.y = (3 - n) * 9 + 0x5A;
+    if (o->text)
+    {
+        p70 = MeasureTextLines_8003E3B4(o->text);
+        p70.x += 8;
+        if (r.w < p70.x)
+        {
+            r.w = p70.x;
+        }
+    }
+    line = 0;
+    y = 7;
+    for (i = 0; i < 3; i++)
+    {
+        if (o->entries[i].type == 7)
+        {
+            p70.x = r.x + 6;
+            p70.y = r.y + (line * 16 + y) + 2;
+            AddClipDrawAreaPrim_80033308(pOT_8008D454);
+            DrawText_8003E91C(2, dword_80074850, &p70, 0);
+            AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            p78.x = r.x + r.w - 4;
+            p78.y = r.y + (line * 16 + y) + 2;
+            AddClipDrawAreaPrim_80033308(pOT_8008D454);
+            sub_8003F264(&p78, o->entries[i].count, 0);
+            AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            line++;
+            continue;
+        }
+        else if (o->entries[i].type == 6)
+        {
+            p80.x = r.x + 6;
+            p80.y = r.y + (line * 16 + y) + 2;
+            AddClipDrawAreaPrim_80033308(pOT_8008D454);
+            DrawText_8003E91C(2, dword_8007485C, &p80, 0);
+            AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            if (flag)
+            {
+                p88.x = r.x + 0x84;
+                p88.y = r.y + (line * 16 + y) + 2;
+                AddClipDrawAreaPrim_80033308(pOT_8008D454);
+                DrawText_8003E91C(1, dword_80074864, &p88, 0);
+                AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+                p90.x = r.x + 0x8D;
+                p90.y = r.y + (line * 16 + y) + 2;
+                AddClipDrawAreaPrim_80033308(pOT_8008D454);
+                DrawNumber_8003EF74(&p90, o->entries[i].count, 0);
+                AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            }
+        }
+        else if ((unsigned int)o->entries[i].type < 6)
+        {
+            spr[i].x0 = 0;
+            spr[i].y0 = 0;
+            spr[i].w = 0;
+            spr[i].h = 0;
+            if (o->entries[i].type != -1)
+            {
+                switch (o->entries[i].type)
+                {
+                case 0:
+                    GetPublicTiySprt_80032470(GetItemIcon_8001D2AC(o->entries[i].id), &spr[i], &tp[i]);
+                    break;
+                case 5:
+                    GetPublicTiySprt_80032470(GetKeyItemIcon_8001D344(o->entries[i].id), &spr[i], &tp[i]);
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    GetPublicTiySprt_80032470(((int (*)(int, int))GetEquipmentIcon_8001D2D4)(o->entries[i].id, o->entries[i].type - 1), &spr[i], &tp[i]);
+                    break;
+                case 4:
+                    GetPublicTiySprt_80032470(((int (*)(int))GetPersonIcon_8001CD6C)(o->entries[i].id), &spr[i], &tp[i]);
+                    break;
+                }
+                spr[i].r0 = 0x80;
+                spr[i].g0 = 0x80;
+                spr[i].b0 = 0x80;
+                spr[i].x0 = r.x + 6;
+                spr[i].y0 = r.y + (line * 16 + y) - 2;
+                AddPrimCopy_80040298(pOT_8008D454, &spr[i], 5);
+                AddPrimCopy_80040298(pOT_8008D454, &tp[i], 2);
+            }
+            p88.x = spr[i].w + r.x + 9;
+            p88.y = r.y + (line * 16 + y) + 2;
+            AddClipDrawAreaPrim_80033308(pOT_8008D454);
+            DrawText_8003E91C(2, nameGetters_8007CB08[o->entries[i].type](o->entries[i].id), &p88, 0);
+            AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            if (flag)
+            {
+                p98.x = r.x + 0x84;
+                p98.y = r.y + (line * 16 + y) + 2;
+                AddClipDrawAreaPrim_80033308(pOT_8008D454);
+                DrawText_8003E91C(1, dword_80074864, &p98, 0);
+                AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+                pA0.x = r.x + 0x8D;
+                pA0.y = r.y + (line * 16 + y) + 2;
+                AddClipDrawAreaPrim_80033308(pOT_8008D454);
+                DrawNumber_8003EF74(&pA0, o->entries[i].count, 0);
+                AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            }
+        }
+        else
+        {
+            continue;
+        }
+        line++;
+    }
+    if ((unsigned int)o->mode < 11 && !flag)
+    {
+        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
+        int h = r.y + 9;
+        p70.x = r.x + w;
+        p70.y = h;
+        AddClipDrawAreaPrim_80033308(pOT_8008D454);
+        DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->mode], &p70, 0);
+        AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+    }
+    if (o->entries[0].type != -1 && line == 1 && o->mode < 0 && !flag)
+    {
+        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
+        int h = r.y + 9;
+        p70.x = r.x + w;
+        p70.y = h;
+        AddClipDrawAreaPrim_80033308(pOT_8008D454);
+        DrawText_8003E91C(2, off_80083820, &p70, 0);
+        AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+    }
+    if (o->text)
+    {
+        text = o->text;
+        while (*text)
+        {
+            p70.x = r.x + 6;
+            p70.y = r.y + (line * 16 + y) + 2;
+            AddClipDrawAreaPrim_80033308(pOT_8008D454);
+            DrawText_8003E91C(2, (void*)*text, &p70, 0);
+            text++;
+            AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
+            line++;
+        }
+    }
+    sub_800429F8((int)&r, 0);
+    sub_80042B38((int)&r, 0);
+    o->field_C = 3;
+    if (IsConfirmPressedP1_8003D380(0))
+    {
+        if ((o->flags_4 & 0x800) || o->field_21C == 1)
+        {
+            o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
+        }
+    }
+    if (o->flags_4 & 0x4000)
+    {
+        if (o->mode >= 4 && o->mode < 8)
+        {
+            for (i = 0; i < 3; i++)
+            {
+                if (o->entries[i].type == 0)
+                {
+                    sfx = 0x1E;
+                    if (o->entries[i].id == 0x28)
+                    {
+                        sfx = 0x33;
+                    }
+                }
+                else if (o->entries[i].type == 5)
+                {
+                    if (o->entries[i].id == 2 || o->entries[i].id == 9 || o->entries[i].id == 0x18 || o->entries[i].id == 0x11 || o->entries[i].id == 0x10 || o->entries[i].id == 0x12)
+                    {
+                        sfx = 0x1E;
+                    }
+                    else
+                    {
+                        sfx = 0x33;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+                PlaySfx_80031494(sfx);
+                sub_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
+            }
+        }
+        if (o->mode >= -1 && o->mode < 4)
+        {
+            for (i = 0; i < 3; i++)
+            {
+                if (o->entries[i].type == 7)
+                {
+                    sub_800AD058(o->entries[i].count);
+                }
+                else if (o->entries[i].type == 6)
+                {
+                    sub_800AD8F4(o->entries[i].count);
+                }
+                else if ((unsigned int)o->entries[i].type < 6)
+                {
+                    if (o->entries[i].type == 5)
+                    {
+                        sub_800AD68C(o->entries[i].id);
+                    }
+                    else
+                    {
+                        sub_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
+                    }
+                }
+            }
+        }
+        o->flags_4 &= ~0x4000;
+        e->flags = (e->flags & ~1) | 0x8000;
+    }
+}
+#endif
 INCLUDE_ASM(UpdateItemMessageWindow_80035BD8);
 // Matched
 void InitPadVibration_800364E4(int* p)
