@@ -54,19 +54,16 @@ INCLUDE_OVERLAY_ASM(chapter, dword_800B66C0);
 
 INCLUDE_OVERLAY_ASM(chapter, sub_800B66F4);
 
-// Near miss (register allocation / scheduling)
-#if 0
 void sub_800B68A8()
 {
-    int* p;
-    int a;
-    for (p = dword_800B70A4; (a = *p) != 0x14; p++)
+    int i = 0;
+    int a = dword_800B70A4[0];
+    while (a != 0x14)
     {
         sub_800AD16C(a, 0);
+        a = dword_800B70A4[++i];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(chapter, sub_800B68A8);
 
 #define CHAPTER_SAVE ((ChapterSave*)&saveData_8008B570)
 
