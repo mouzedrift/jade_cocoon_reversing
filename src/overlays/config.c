@@ -107,7 +107,7 @@ extern unsigned int sub_8002C64C(void);
 extern char dword_800C5298[];
 extern char dword_800C52BC[];
 extern char dword_800C52E0[];
-extern void sub_800309D8(void* p);
+extern void ApplyBgmVolume_800309D8(void* p);
 extern char dword_800C58A8[];
 extern char dword_800C5920[];
 typedef struct CfgTailConfig
@@ -553,7 +553,7 @@ void sub_800C39C4(CfgCtxConfig* c)
     e.f4 = sub_8002C64C();
     e.fC = c->fc;
     e.f10 = (int)dword_800C52E0;
-    sub_800309D8(&stru_80091CE0);
+    ApplyBgmVolume_800309D8(&stru_80091CE0);
     if (c->f38)
     {
         a.f0 = 4;

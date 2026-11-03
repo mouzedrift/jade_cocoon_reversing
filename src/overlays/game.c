@@ -289,7 +289,7 @@ extern void sub_800A1E98();
 extern void sub_800AC73C();
 extern void sub_80020814(void);
 extern void sub_80037720(void);
-extern void sub_80030D68(char* s);
+extern void StopSoundSeqs_80030D68(char* s);
 extern void sub_800300E0(int a, int b);
 extern void sub_800A1474();
 extern char dword_80091CE0[];
@@ -442,7 +442,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     sub_80037720();
     *q = sub_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
-    sub_80030D68(dword_80091CE0);
+    StopSoundSeqs_80030D68(dword_80091CE0);
     sub_800300E0(0, 1);
 }
 

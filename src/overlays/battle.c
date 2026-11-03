@@ -430,7 +430,7 @@ void sub_800BA788(BatTask_a* t)
     sub_800A1B78();
     sub_8002C014();
     sub_80039FC0();
-    sub_80030D68(dword_80091D40);
+    StopSoundSeqs_80030D68(dword_80091D40);
     sub_80031334(0);
     sub_80030664();
     sub_80066E38(0);
@@ -2059,7 +2059,7 @@ void sub_800C1140(unsigned int* a, short* b)
     if (--*(int*)(b + 2) < 0)
     {
         *a = (*a & ~1) | 0x8000;
-        sub_80031574(b[4], b[0]);
+        SfxKeyOff_80031574(b[4], b[0]);
     }
 }
 
@@ -2072,7 +2072,7 @@ void sub_800C1190(int a, int b)
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q = e->buffer;
         q[1] = a;
-        *(short*)(q + 2) = sub_800314F4(b);
+        *(short*)(q + 2) = SfxKeyOn_800314F4(b);
         q[0] = b;
         e->cb_8 = (EventEntryFn)sub_800C1140;
     }

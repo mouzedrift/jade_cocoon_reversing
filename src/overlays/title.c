@@ -168,7 +168,7 @@ void sub_800A0BCC(TitleTask* t, TitleCtxA* c)
 {
     if (--c->field_68 <= 0)
     {
-        sub_80030D00((int)&stru_80091CE0);
+        FreeSound_80030D00((int)&stru_80091CE0);
         sub_800A1AFC(t, 0xC);
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
@@ -291,10 +291,10 @@ int sub_800A0EF0(void)
     drawEnvRed_8008D448[0] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
-    sub_80030A84(0x1B, &stru_80091CE0);
+    LoadSound_80030A84(0x1B, &stru_80091CE0);
     sub_80031260(&stru_80091CE0, 0x1B, 1);
     DrawIntroMovie_8001AF64(&dword_800A27C0);
-    sub_80030D00((int)&stru_80091CE0);
+    FreeSound_80030D00((int)&stru_80091CE0);
     return dword_800A2818;
 }
 

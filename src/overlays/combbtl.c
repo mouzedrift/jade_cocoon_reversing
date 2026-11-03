@@ -140,7 +140,7 @@ extern int dword_800A85F0[2];
 extern int sub_800CB7AC(void*, int);
 extern int sub_800A0B3C(int);
 extern void sub_80031334(int);
-extern void sub_80030D68(int);
+extern void StopSoundSeqs_80030D68(int);
 extern void sub_80030664();
 extern void sub_8006281C(int, int, int, int);
 extern void sub_8001AA50(int);
@@ -154,7 +154,7 @@ void sub_800A4B8C(CombBtlTask* t, int a)
     dword_800A84C0 = (unsigned int)gnFrame_8008D610 % 39;
     t->next_8 = sub_800A4C40;
     t->next_8(t, a);
-    sub_80030D68((int)word_80091CE0);
+    StopSoundSeqs_80030D68((int)word_80091CE0);
     sub_800300E0(0, 1);
 }
 
@@ -320,7 +320,7 @@ void sub_800A5080(CombBtlTask* t)
     {
         sub_800313C8(0);
         sub_80031334(0);
-        sub_80030D68(dword_80091D40);
+        StopSoundSeqs_80030D68(dword_80091D40);
         sub_80030664();
         t->next_8 = sub_800A50E4;
     }

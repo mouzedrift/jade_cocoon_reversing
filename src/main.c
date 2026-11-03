@@ -376,7 +376,7 @@ void InitGame_80010110(void)
     ChangeClearPAD(0);
     SetGraphDebug(0);
     DsSetDebug(0);
-    sub_8002FE7C();
+    InitSounds_8002FE7C();
     SsInit();
     SsSetTableSize(SEQDataAttributeTable_80091D60, 5, 16);
     SsSetTickMode(1);

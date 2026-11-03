@@ -31,13 +31,13 @@ INCLUDE_DATA(dword_80074600);
 INCLUDE_DATA(dword_80074610);
 
 // Matched
-void sub_80030D00(int a0)
+void FreeSound_80030D00(int a0)
 {
     short* p = (short*)a0;
     if (p && p[3] >= 0)
     {
-        sub_80030EEC(p);
-        sub_80030EA4(p);
+        FreeSoundSeqs_80030EEC(p);
+        FreeSoundVab_80030EA4(p);
         p[3] = -1;
     }
 }
@@ -47,7 +47,7 @@ int GetSoundFileId_80030D4C(int idx)
   return soundFiles_80082F0C[idx].field_0_file_id;
 }
 // Matched
-void sub_80030D68(SoundStruct* s)
+void StopSoundSeqs_80030D68(SoundStruct* s)
 {
     int i;
     s->field_4_seq_num = -1;
@@ -69,7 +69,7 @@ void sub_80030D68(SoundStruct* s)
     }
 }
 // Matched
-void sub_80030EA4(short* p)
+void FreeSoundVab_80030EA4(short* p)
 {
     sub_8006AF08(p[0]);
     if (*(int*)(p + 0xC))
@@ -79,11 +79,11 @@ void sub_80030EA4(short* p)
     }
 }
 #if 0
-void sub_80030EEC(void* arg0)
+void FreeSoundSeqs_80030EEC(void* arg0)
 {
 }
 #endif
-INCLUDE_ASM(sub_80030EEC);
+INCLUDE_ASM(FreeSoundSeqs_80030EEC);
 typedef struct
 {
     short field_0_file_id;
@@ -91,7 +91,7 @@ typedef struct
     int field_4;
 } SoundSeqInfo;
 // Matched
-void sub_8003105C(SoundStruct* s, int idx, short loops)
+void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops)
 {
     int v = ((SoundSeqInfo*)soundFiles_80082F0C)[idx].field_2_seq;
     int a;
@@ -189,7 +189,7 @@ void sub_800313C8(int idx)
     SsSepSetDecrescendo(word_80091D0C, dword_800833E4[idx].field_4, 0x7F, 0x78);
 }
 // Matched
-void sub_80031408(SoundStruct* s, int idx)
+void StopSoundSeq_80031408(SoundStruct* s, int idx)
 {
     SoundInfo* t = soundFiles_80082F0C;
     SoundInfo* si = &t[idx];
@@ -228,7 +228,7 @@ void PlaySfx_80031494(int a1)
     }
 }
 // Matched
-short sub_800314F4(int a)
+short SfxKeyOn_800314F4(int a)
 {
     SoundStruct* s;
     if (a < 0x3f)
@@ -242,7 +242,7 @@ short sub_800314F4(int a)
     return SsUtKeyOn(*(short*)s, a, 0, 0x3c, 0, (saveData_8008B570.field_1C_settings >> 14) & 0x7F, (saveData_8008B570.field_1C_settings >> 14) & 0x7F);
 }
 // Matched
-void sub_80031574(short a, short b)
+void SfxKeyOff_80031574(short a, short b)
 {
     SoundStruct* s;
     if (b < 0x3f)
@@ -269,8 +269,8 @@ int sub_800315E4(void)
 void sub_800315F4(void)
 {
     int* s0 = ((int**)dword_8008D4A4)[0x24 / 4];
-    sub_80030D00(s0[1]);
-    sub_80030D00(s0[2]);
+    FreeSound_80030D00(s0[1]);
+    FreeSound_80030D00(s0[2]);
 }
 #if 0
 // Not matched (loop pointer gets strength-reduced with folded offsets)

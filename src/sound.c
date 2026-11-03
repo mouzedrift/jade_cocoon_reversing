@@ -88,7 +88,7 @@ void InitSound_8002FE54(SoundStruct* arg1)
     arg1->field_18_vab_header_ptr = 0;
 }
 // Matched
-void sub_8002FE7C(void)
+void InitSounds_8002FE7C(void)
 {
     InitSound_8002FE54(&stru_80091CE0);
     InitSound_8002FE54(&stru_80091D20);
@@ -179,7 +179,7 @@ void sub_8002FF64(int a0, char* p)
 }
 #endif
 INCLUDE_ASM(sub_8002FF64);
-extern void sub_80030D68(SoundStruct* p);
+extern void StopSoundSeqs_80030D68(SoundStruct* p);
 #if 0
 // Not matched: register allocation of the sequence number
 void sub_8003006C(int a0, int* a1)
@@ -191,16 +191,16 @@ void sub_8003006C(int a0, int* a1)
         SsSepStop(s->field_C_sep_access_num, seq);
         s->field_4_seq_num = -1;
     }
-    sub_80030D00(a1[1]);
-    sub_80030D68(&stru_80091D40);
-    sub_80030D00(a1[2]);
+    FreeSound_80030D00(a1[1]);
+    StopSoundSeqs_80030D68(&stru_80091D40);
+    FreeSound_80030D00(a1[2]);
 }
 #endif
 INCLUDE_ASM(sub_8003006C);
 
 INCLUDE_ASM(sub_800300E0);
 extern int QueueFileRequest_8003BC84(int* a);
-extern void sub_800304D0(void);
+extern void LoadSoundSeqFromBuffer_800304D0(void);
 // Matched
 int sub_800303E8(void)
 {
@@ -221,15 +221,15 @@ int sub_800303E8(void)
     s[2] = 0;
     s[3] = 0;
     s[4] = 0;
-    s[7] = (int)sub_800304D0;
+    s[7] = (int)LoadSoundSeqFromBuffer_800304D0;
     *(int*)(p + 8) = QueueFileRequest_8003BC84(s);
     return 1;
 }
-INCLUDE_ASM(sub_800304D0);
+INCLUDE_ASM(LoadSoundSeqFromBuffer_800304D0);
 // Matched
 void sub_80030664(void)
 {
-    sub_80030EEC(&stru_80091D00);
+    FreeSoundSeqs_80030EEC(&stru_80091D00);
 }
 // Matched
 int sub_80030688(void)
@@ -244,28 +244,28 @@ int sub_800306B0(void)
 // Matched
 void sub_800306D8(void)
 {
-    sub_80030EEC(&stru_80091CE0);
+    FreeSoundSeqs_80030EEC(&stru_80091CE0);
 }
-extern void sub_80031408(SoundStruct* s, int idx);
+extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
 void sub_800306FC(int idx)
 {
     SoundStruct** p = (SoundStruct**)dword_8008D4A4[0x24 / 4];
     if (idx < 10)
     {
-        sub_80031408(&stru_80091D40, idx);
+        StopSoundSeq_80031408(&stru_80091D40, idx);
         return;
     }
     if (GetSoundFileId_80030D4C(p[1]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
     {
-        sub_80031408(p[1], idx);
+        StopSoundSeq_80031408(p[1], idx);
     }
     if (GetSoundFileId_80030D4C(p[2]->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
     {
-        sub_80031408(p[2], idx);
+        StopSoundSeq_80031408(p[2], idx);
     }
 }
-INCLUDE_ASM(sub_800307B4);
+INCLUDE_ASM(LoadSoundFromBuffer_800307B4);
 // Matched
 void ApplyAudioOutputFormat_80030988(void)
 {
@@ -280,7 +280,7 @@ void ApplyAudioOutputFormat_80030988(void)
     SsSetMVol(0x7F, 0x7F);
 }
 // Matched
-void sub_800309D8(SoundStruct* s)
+void ApplyBgmVolume_800309D8(SoundStruct* s)
 {
     int i;
     for (i = 0; i < soundFiles_80082F0C[s->field_6_sound_idx].field_4_seq_count; i++)
@@ -290,7 +290,7 @@ void sub_800309D8(SoundStruct* s)
     }
 }
 // Matched
-void sub_80030A84(short soundId, SoundStruct* sound)
+void LoadSound_80030A84(short soundId, SoundStruct* sound)
 {
     char* pSndFileBuffer;
     GenkiSoundHeader* pSndFileHeader;

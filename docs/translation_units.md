@@ -13,7 +13,7 @@ The `assert()` macro embeds `__FILE__`, and those strings sit in `.rdata` in TU 
 | `MAIN.C` | 0x80071B58 | `InitGame_80010110` (0x80010110) | already `main.c` |
 | `COMMON.C` | 0x80071F8C | `sub_80012BB0`, `sub_80013228` | |
 | `EFFECT.C` | 0x80072128 | `sub_800148F4` | |
-| `SOUND.C` | 0x80074474 | `sub_800304D0`, `sub_800307B4`, `sub_80030A84` | already `sound.c` |
+| `SOUND.C` | 0x80074474 | `LoadSoundSeqFromBuffer_800304D0`, `LoadSoundFromBuffer_800307B4`, `LoadSound_80030A84` | already `sound.c` |
 | `CD.C` | 0x800748D4 | `cdRomEventErrorHandler_8003BBAC`, `AssertFileRequestQueueEmpty_8003C684` | |
 | `D:/WORK/PSUS/EVENT.C` | 0x80074BA4 | `sub_800435B4` .. `sub_80043A5C` | full path, built outside the usual setup |
 

@@ -65,7 +65,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     sub_80021744(&dword_8008D4D0, sub_80021738(pFile), 1);
     sub_80021824(pFile, dword_8008D4D0, sub_80021738(pFile), 1, 0);
-    sub_80030A84(0, &stru_80091D40);
+    LoadSound_80030A84(0, &stru_80091D40);
     sub_8003DA70();
 }
 // Matched
