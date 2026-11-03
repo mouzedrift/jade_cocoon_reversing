@@ -208,7 +208,6 @@ typedef struct BatPair_a
 } BatPair_a;
 
 extern BatPair_a dword_800C9DA0[];
-extern unsigned char dword_800C9C8C;
 extern int* dword_8008B568;
 extern int* dword_8008B564;
 extern EventNode* dword_8008D4B0;
@@ -814,24 +813,21 @@ void sub_800BBE7C(BatTask_a* t)
     }
 }
 
-#if 0
 void sub_800BBEFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = sub_800BC28C(t);
     u->next_8 = sub_800BBF64;
     dword_800C9C88[3] = 0;
-    dword_800C9C98 = dword_800C9C8C + 4;
+    dword_800C9C98 = dword_800C9C88[1] + 4;
     t->next_8 = sub_800BC144;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BBEFC);
 
-#if 0
+#if 0 // Not matched: instruction scheduling only (s0/s1 save order, C68 address placement); tried assignment-expression, pointer local, byte temp
 void sub_800BBF64(BatTask_a* t, BatObj_a* u)
 {
     dword_800C9C88[0] = 0x15;
     dword_800C9C7C = dword_800C9C98;
-    dword_800C9C88[2] = 1 << dword_800C9C98;
+    dword_800C9C88[2] = 1 << dword_800C9C7C;
     sub_800A2AE8(dword_800C9C88);
     u->fc = sub_800BC28C();
     u->next_8 = (void (*)())u->f4;
@@ -841,16 +837,13 @@ void sub_800BBF64(BatTask_a* t, BatObj_a* u)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BBF64);
 
-#if 0
 void sub_800BBFFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = sub_800BC28C(t);
     u->next_8 = sub_800BC05C;
-    dword_800C9C98 = dword_800C9C8C + 4;
+    dword_800C9C98 = dword_800C9C88[1] + 4;
     t->next_8 = sub_800BC144;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BBFFC);
 
 #if 0
 void sub_800BC05C(BatTask_a* t, BatObj_a* u)
@@ -1115,22 +1108,27 @@ int sub_800BC784(int x)
     return 1;
 }
 
-#if 0
+#if 0 // Not matched: original has a dead 'li v0,7' before the last return and uses v0 for x-4; tried switch/case ranges, else-if chains, x==7 tails
 int sub_800BC7DC(int x)
 {
+    int r;
     if (x == 0)
     {
-        return 0;
+        r = 0;
     }
-    if ((unsigned int)(x - 1) < 3)
+    else if ((unsigned int)(x - 1) < 3)
     {
-        return 1;
+        r = 1;
     }
-    if ((unsigned int)(x - 4) < 3)
+    else if ((unsigned int)(x - 4) < 3)
     {
-        return 2;
+        r = 2;
     }
-    return 3;
+    else
+    {
+        r = 3;
+    }
+    return r;
 }
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800BC7DC);
@@ -1520,7 +1518,7 @@ int sub_800BF47C()
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BF4D0);
 
-#if 0
+#if 0 // Not matched: cse keeps 500 in a register for case 2 (original reloads it), which reorders the init stores; tried if-chains, struct, returns, default
 void sub_800BF648(short* p, int mode)
 {
     p[0] = 500;
@@ -1534,15 +1532,15 @@ void sub_800BF648(short* p, int mode)
     {
     case 1:
         p[0] = 1000;
-        break;
+        return;
     case 0:
-        break;
+        return;
     case 2:
         p[0] = 0;
         p[4] = 1000;
         p[5] = 500;
         p[6] = 0x14D;
-        break;
+        return;
     }
 }
 #endif
@@ -1593,7 +1591,6 @@ int sub_800BF784(int a)
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BF7C4);
 
-#if 0
 int sub_800BF980(int x)
 {
     int r = 0;
@@ -1603,15 +1600,16 @@ int sub_800BF980(int x)
         {
             r = 1;
         }
-        else if (x < 0xD3 && x > 0xC8)
+        else if (x < 0xD3)
         {
-            r = 1;
+            if (x > 0xC8)
+            {
+                r = 1;
+            }
         }
     }
     return r;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800BF980);
 
 int sub_800BF9B4(int x)
 {
@@ -1633,14 +1631,16 @@ int sub_800BF9B4(int x)
 }
 INCLUDE_OVERLAY_ASM(battle, dword_800B67F0);
 
-#if 0
+#if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void sub_800BF9F0(int a)
 {
     unsigned int x = a;
     unsigned int* p = allMinionsBitfields_8008BD84;
     if (x < 0xE0)
     {
-        p[x >> 5] |= 1 << (x & 0x1F);
+        unsigned int* q = &p[x >> 5];
+        int m = 1 << (x & 0x1F);
+        *q = m | *q;
     }
 }
 #endif
@@ -1767,25 +1767,21 @@ INCLUDE_OVERLAY_ASM(battle, sub_800BFDEC);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
-#if 0
 void sub_800C01D8()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D4B0);
-    if (e)
+    struct_cb* r = AllocEventEntry_80043AF8(dword_8008D4B0);
+    if (r != 0)
     {
-        short* q;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        q = e->buffer;
-        q[2] = 0x6E;
-        q[3] = 0xAC;
-        q[4] = 0x64;
-        q[5] = 0x29;
-        *(int*)q = 0;
-        e->cb_8 = (EventEntryFn)sub_800C0254;
+        unsigned char* p = (unsigned char*)r->field_14;
+        r->flags_0 = (r->flags_0 | 1) & ~0x8000;
+        *(int*)p = 0;
+        *(short*)(p + 4) = 0x6E;
+        *(short*)(p + 6) = 0xAC;
+        *(short*)(p + 8) = 0x64;
+        *(short*)(p + 10) = 0x29;
+        r->fn_8 = (void (*)(struct_cb*, int*))sub_800C0254;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C01D8);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C0254);
 
@@ -2739,24 +2735,25 @@ INCLUDE_OVERLAY_ASM(battle, sub_800C6038);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C61FC);
 
-#if 0
-void sub_800C66B4(char* buf, unsigned int b)
+void sub_800C66B4(unsigned char* buf, unsigned int b)
 {
     int i;
-    if (b == 0xC)
+    unsigned int c = 0xC;
+    unsigned char* p;
+    if (b == c)
     {
-        for (i = 3; i >= 0; i--)
-        {
-            buf[0x20 + i] = 0x30;
-        }
+        c = 0x30;
     }
-    else if (b < 0xC)
+    for (i = 3, p = buf + 3; i >= 0; i--, p--)
     {
-        buf[0x20 + b] = 0x18;
+        p[0x20] = c;
+    }
+    if (b < 0xC)
+    {
+        (buf + b)[0x20] = 0x18;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C66B4);INCLUDE_OVERLAY_ASM(battle, sub_800C66F4);
+INCLUDE_OVERLAY_ASM(battle, sub_800C66F4);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C6824);
 
@@ -2938,13 +2935,14 @@ void sub_800C71A0()
 INCLUDE_OVERLAY_ASM(battle, sub_800C71C8);
 
 extern int dword_800C9E4C;
-#if 0
 int sub_800C72B8()
 {
     int i;
+    int m;
     for (i = 0; i < 3; i++)
     {
-        if (dword_800C9E4C & (1 << (i + 4)))
+        m = dword_800C9E4C & (1 << (i + 4));
+        if (m != 0)
         {
             if (sub_800A28FC(i) == 0)
             {
@@ -2954,8 +2952,6 @@ int sub_800C72B8()
     }
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C72B8);
 #if 0
 int sub_800C7334()
 {
@@ -3070,7 +3066,6 @@ struct BatState
 };
 extern struct BatState dword_800C9630;
 extern short dword_800C92E0;
-#if 0
 void sub_800C7CE8(unsigned char a)
 {
     unsigned int n;
@@ -3087,36 +3082,27 @@ void sub_800C7CE8(unsigned char a)
     if (n < 8)
     {
         dword_800C9630.f8 = n + 1;
-        dword_800C9630.fC = dword_800C92E0;
     }
+    dword_800C9630.fC = dword_800C92E0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C7CE8);
 extern unsigned char dword_800C9E54;
 extern unsigned char dword_800C9C99;
-#if 0
 void sub_800C7D54(unsigned char a)
 {
-    unsigned char v;
-    if (a == 4)
+    if (a != 4)
     {
-        if (dword_800C9E68 & 5)
-        {
-            v = dword_800C9C7C;
-        }
-        else
-        {
-            v = dword_800C9E54;
-        }
+        dword_800C9C99 = dword_800C9C7C;
+    }
+    else if (dword_800C9E68 & 5)
+    {
+        dword_800C9C99 = dword_800C9C7C;
     }
     else
     {
-        v = dword_800C9C7C;
+        dword_800C9C99 = dword_800C9E54;
     }
-    dword_800C9C99 = v;
 }
-#endif
-INCLUDE_OVERLAY_ASM(battle, sub_800C7D54);INCLUDE_OVERLAY_ASM(battle, sub_800C7DA8);
+INCLUDE_OVERLAY_ASM(battle, sub_800C7DA8);
 
 INCLUDE_OVERLAY_ASM(battle, sub_800C83B0);
 
