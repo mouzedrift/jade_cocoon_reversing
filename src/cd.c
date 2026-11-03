@@ -216,35 +216,31 @@ void sub_8003B684(int* v)
         v[2] >>= sh;
     }
 }
-#if 0
-// Not matched: the four mflo temporaries get v0/a3/v1/a0 instead of a0/v0/v1/a3 (5 words)
+// Matched
 int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
 {
     unsigned int sum = -1;
     unsigned int r = *c;
     short ok = 0;
-    unsigned int dx;
-    unsigned int dy;
-    unsigned int dz;
-    dx = abs(a[0] - b[0]);
+    unsigned int dx = abs(a[0] - b[0]);
     if (dx <= r)
     {
-        dy = abs(a[1] - b[1]);
+        unsigned int dy = abs(a[1] - b[1]);
         if (dy <= r)
         {
-            dz = abs(a[2] - b[2]);
+            unsigned int dz = abs(a[2] - b[2]);
             if (dz <= r)
             {
+                unsigned int rr;
                 sum = dx * dx + dy * dy + dz * dz;
-                ok = !(r * r < sum);
+                rr = r * r;
+                ok = !(rr < sum);
             }
         }
     }
     *c = sum;
     return ok;
 }
-#endif
-INCLUDE_ASM(IsWithinDistance_8003B740);
 // Matched
 int DistanceSquared3D_8003B80C(int* a, int* b)
 {

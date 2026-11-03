@@ -217,8 +217,7 @@ void sub_8001852C(EffectSet* p, int a1)
         }
     }
 }
-#if 0
-// Not matched: registers of i and the row pointer are swapped
+// Matched
 int sub_80018908(int id, short (*tbl)[6])
 {
     int i;
@@ -231,16 +230,14 @@ int sub_80018908(int id, short (*tbl)[6])
             {
                 if (tbl[i][2] == -1 && tbl[i][3] == -1 && tbl[i][4] == -1 && tbl[i][5] == -1)
                 {
-                    int link = tbl[i][1];
-                    short* p = tbl[0];
-                    for (i = 0; *p != -1; i++)
+                    id = tbl[i][1];
+                    for (i = 0; tbl[i][0] != -1; i++)
                     {
-                        if (link == *p)
+                        if (id == tbl[i][0])
                         {
                             r = i;
                             break;
                         }
-                        p += 6;
                     }
                 }
                 else
@@ -253,8 +250,6 @@ int sub_80018908(int id, short (*tbl)[6])
     }
     return r;
 }
-#endif
-INCLUDE_ASM(sub_80018908);
 // Matched
 int sub_800189F8(void)
 {

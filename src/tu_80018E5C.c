@@ -201,8 +201,7 @@ extern void EncodeName_8003F7C8(void* a0, unsigned char* a1);
 extern void sub_8001980C(unsigned char* p, MinionBaseStats* s);
 extern void sub_800199A0(char* p);
 extern void sub_80019A20(char* a0);
-#if 0
-// Not matched: register allocation only - the two 4-byte resistance loops swap counter/pointer registers ($v0/$v1) and the constant 8 is not hoisted; two m+index adds have operands swapped (permuter: nothing)
+// Matched
 void InitMinionData_8001900C(char* m, int* a1)
 {
     MinionBaseStats st;
@@ -214,6 +213,7 @@ void InitMinionData_8001900C(char* m, int* a1)
     int i;
     int j;
     int k;
+    int l;
     int n;
     int v;
 
@@ -292,9 +292,9 @@ void InitMinionData_8001900C(char* m, int* a1)
     else
     {
         *(short*)(m + 0x42) = 0;
-        for (j = 0; j < 4; j++)
+        for (l = 0; l < 4; l++)
         {
-            (m + 0x3E)[j] = 8;
+            (m + 0x3E)[l] = 8;
         }
     }
     *(int*)(m + 4) = 0x4000000;
@@ -341,10 +341,10 @@ void InitMinionData_8001900C(char* m, int* a1)
     sub_800199A0(m);
     if (*(unsigned int*)(m + 0x5C) - 0x25 < 4)
     {
-        m[0x6F + (r % 4) * 4] = 1;
-        m[0x6E + (r % 4) * 4] = r % 3 + 2;
+        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[r % 4][3] = 1;
+        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[r % 4][2] = r % 3 + 2;
         k = r % 3 + 1;
-        m[0x6D + k * 4] = r % 10 + 6;
+        ((struct { char pad[0x6C]; char e[4][4]; }*)m)->e[k][1] = r % 10 + 6;
         m[0x7D] = 12;
     }
     sub_80019A20(m);
@@ -365,8 +365,6 @@ void InitMinionData_8001900C(char* m, int* a1)
     }
     sub_80019A80(m[0x44]);
 }
-#endif
-INCLUDE_ASM(InitMinionData_8001900C);
 // Matched
 void sub_8001980C(unsigned char* p, MinionBaseStats* s)
 {
