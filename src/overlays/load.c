@@ -28,6 +28,7 @@ extern int _bu_init(void);
 extern int MemCardSync(int a, int* b, int* c);
 extern void MemCardAccept();
 extern void MemCardExist();
+extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
 extern void sub_800B7674(int a, int b);
 typedef struct
 {
@@ -53,6 +54,11 @@ extern int dword_8008B570[];
 extern unsigned char byte_800BDF58;
 extern int dword_800BE208;
 extern char* dword_800BDECC[];
+extern char* dword_800BDEDC[];
+extern char* dword_800BDEEC[];
+extern long MemCardCreateFile(long chan, char* file, long blocks);
+extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long bytes);
+extern int sub_800BA3EC();
 extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
 extern void sub_800BACBC(char** lines);
@@ -66,6 +72,57 @@ extern void sub_800BAAE0();
 extern void sub_800BA9AC(int* t);
 extern void sub_800BA9F0();
 extern void sub_8004F5E8(int a);
+extern char byte_800B6A2C[];
+extern char byte_800B6A54[];
+extern char byte_800B6A58[];
+extern char byte_800B6AA4[];
+extern char byte_800B6ADC[];
+extern char byte_800B6B0C[];
+extern char* dword_800BDA08[];
+extern int UpdateMenuCursor_8003D794(short* cursor, int b);
+extern void sub_800BADE0(unsigned char* p);
+typedef struct
+{
+    char c_LOAD[5];
+} Bytes5_LOAD;
+// memory card file header (the PSY-Q _CARD layout; the game's own data in the reserved part and behind the icons)
+typedef struct
+{
+    char magic_LOAD[2];
+    char type_LOAD;
+    char blocks_LOAD;
+    char title_LOAD[64];
+    char f44_LOAD[12];
+    short f50_LOAD;
+    Bytes5_LOAD f52_LOAD;
+    char f57_LOAD;
+    char pad58_LOAD[4];
+    int f5C_LOAD;
+    char clut_LOAD[32];
+    char icon_LOAD[3][128];
+    char f200_LOAD[0x80];
+} CardHeader_LOAD;
+typedef struct
+{
+    int poly_LOAD;
+    short clutX_LOAD;
+    short clutY_LOAD;
+} IconSrc_LOAD;
+typedef struct
+{
+    char pad0_LOAD[0xC];
+    unsigned char u0_LOAD;
+    unsigned char v0_LOAD;
+    char padE_LOAD[8];
+    unsigned short tpage_LOAD;
+    char pad18_LOAD[0x10];
+} PolyFT4_LOAD;
+extern PolyFT4_LOAD* publicTiyPolyFT4s_8008D430;
+extern IconSrc_LOAD dword_800BE0A0[];
+extern Bytes5_LOAD dword_800B7300;
+extern char* dword_800BDFB0[];
+extern char dword_800BE0B8[];
+extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 typedef struct
 {
     unsigned short flags_LOAD;
@@ -164,6 +221,7 @@ typedef struct
 extern Row8_LOAD dword_800BD998[];
 extern Bytes8_LOAD dword_800B6B8C;
 extern Bytes8_LOAD dword_800B6A24;
+extern Bytes8_LOAD dword_800B6B3C;
 extern Bytes8_LOAD dword_800B69F4;
 extern int dword_800BDB64;
 extern int dword_800BDBBC;
@@ -176,9 +234,10 @@ extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 typedef struct
 {
-    void* f0_LOAD;
-    void* f4_LOAD;
-    char pad8_LOAD[0x18];
+    char* f0_LOAD;
+    char* f4_LOAD;
+    int f8_LOAD;
+    char padC_LOAD[0x14];
     int f20_LOAD;
     int f24_LOAD;
     int f28_LOAD;
@@ -336,9 +395,99 @@ INCLUDE_OVERLAY_ASM(load, dword_800B68E0);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B79F8);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B80F8);
+void sub_800B80F8(LoadTask_LOAD* t)
+{
+    short c[6];
+    int r;
+    if (t->f24_LOAD != -1)
+    {
+        switch (t->f24_LOAD)
+        {
+        case 0:
+            break;
+        case 1:
+            sub_800BADE0((unsigned char*)&stru_800BDF4C[3]);
+            break;
+        case 2:
+            sub_800BADE0((unsigned char*)&stru_800BDF4C[2]);
+            break;
+        case 3:
+            break;
+        case 4:
+            sub_800BADE0((unsigned char*)&stru_800BDF4C[4]);
+            if (stru_800BDF4C[0].fC_LOAD == 0)
+            {
+                stru_800BDF4C[4].fC_LOAD = 1;
+            }
+            break;
+        case 5:
+            sub_800BADE0((unsigned char*)&stru_800BDF4C[5]);
+            break;
+        }
+        t->s30_LOAD = t->f24_LOAD;
+        t->f24_LOAD = -1;
+    }
+    if (t->s30_LOAD >= 6)
+    {
+        return;
+    }
+    if (t->s30_LOAD >= 0)
+    {
+        c[4] = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        c[5] = stru_800BDF4C[t->s30_LOAD].fD_LOAD;
+        c[0] = stru_800BDF4C[t->s30_LOAD].f6_LOAD;
+        c[1] = stru_800BDF4C[t->s30_LOAD].f7_LOAD;
+        c[2] = stru_800BDF4C[t->s30_LOAD].f8_LOAD;
+        c[3] = stru_800BDF4C[t->s30_LOAD].fB_LOAD;
+        r = UpdateMenuCursor_8003D794(c, (t->f54_LOAD >> 6) & 1);
+        if (stru_800BDF4C[t->s30_LOAD].fC_LOAD != c[4] || r == 8 || r == 7)
+        {
+            PlaySfx_80031494(0x7F);
+        }
+        stru_800BDF4C[t->s30_LOAD].fC_LOAD = c[4];
+        stru_800BDF4C[t->s30_LOAD].fD_LOAD = c[5];
+    }
+}
+INCLUDE_OVERLAY_ASM(load, dword_800B69F4);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B82FC);
+void sub_800B82FC(LoadTask_LOAD* t)
+{
+    int i;
+    Row8_LOAD* p;
+    Bytes8_LOAD a;
+    Tail4_LOAD b;
+    if (t->s30_LOAD == 1)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            dword_800BDBD4[i][0] = 2;
+            if (i == stru_800BDF4C[1].fC_LOAD)
+            {
+                dword_800BDBD4[i][1] = GetTime30Hz_8002C64C();
+            }
+            else
+            {
+                dword_800BDBD4[i][1] = 0;
+            }
+        }
+    }
+    else
+    {
+        dword_800BDBD4[0][0] = 1;
+        dword_800BDBD4[1][0] = 1;
+    }
+    DrawMenuWindows_8002A5A4(&dword_800BDB64);
+    DrawMenuWindows_8002A5A4(&dword_800BDBBC);
+    for (p = &dword_800BD998[2]; p->f4_LOAD >= 0; p++)
+    {
+        DrawUiTiySprt_8002C06C(p, p->f4_LOAD, p->f6_LOAD);
+    }
+    a = dword_800B69F4;
+    b.c1_LOAD = 1;
+    b.c0_LOAD = 0;
+    b.s_LOAD = uiColor_8008B590;
+    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+}
 
 void sub_800B847C(void)
 {
@@ -411,7 +560,86 @@ void sub_800B867C(LoadTask_LOAD* t)
     sub_8002B8DC(q, r1, r0, 1);
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B877C);
+void sub_800B877C(LoadTask_LOAD* t)
+{
+    switch (t->s30_LOAD)
+    {
+    case 1:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6A2C, &p, 5);
+        break;
+    }
+    case 2:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6A54, &p, 5);
+        break;
+    }
+    case 3:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, dword_800BDA08[byte_800BDF58], &p, 5);
+        break;
+    }
+    case 9:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6A58, &p, 5);
+        break;
+    }
+    case 10:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6AA4, &p, 5);
+        break;
+    }
+    case 6:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6ADC, &p, 5);
+        break;
+    }
+    case 18:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B6B0C, &p, 5);
+        break;
+    }
+    case 11:
+    {
+        Pos_LOAD p;
+        p.x_LOAD = 0xE;
+        p.y_LOAD = 0xC7;
+        DrawText_8003E91C(2, byte_800B682C, &p, 5);
+        break;
+    }
+    }
+    {
+        Bytes8_LOAD a;
+        Tail4_LOAD b;
+        a = dword_800B6B3C;
+        b.c1_LOAD = 1;
+        b.c0_LOAD = 0;
+        b.s_LOAD = uiColor_8008B590;
+        DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    }
+}
+INCLUDE_OVERLAY_ASM(load, dword_800B6B8C);
 
 void sub_800B8984(void)
 {
@@ -675,12 +903,188 @@ void sub_800B9654(LoadTask_LOAD* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9724);
+int sub_800B9724(LoadTask_LOAD* t)
+{
+    int ret = 1;
+    int cmd = 0;
+    int res = 0;
+    int chan = stru_800BDF4C[1].fC_LOAD << 4;
+    char* name;
+    switch (MemCardSync(1, &cmd, &res))
+    {
+    case 0:
+        break;
+    case -1:
+        if (t->f20_LOAD < 15)
+        {
+            name = sub_800BAE4C(t->f20_LOAD);
+            if (name)
+            {
+                MemCardReadFile(chan, name, t->f0_LOAD + t->f20_LOAD * 128, 0x280, 0x80);
+            }
+            else if (t->f20_LOAD == 14)
+            {
+                t->f20_LOAD = 15;
+            }
+            t->f20_LOAD++;
+        }
+        else
+        {
+            MemCardExist(chan);
+        }
+        break;
+    case 1:
+        switch (cmd)
+        {
+        case 3:
+            switch (res)
+            {
+            case 0:
+                if (t->f20_LOAD == 15)
+                {
+                    t->f20_LOAD = 16;
+                }
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+                ret = 0;
+                break;
+            }
+            break;
+        case 1:
+            if (res != 0)
+            {
+                ret = 0;
+            }
+            break;
+        }
+        break;
+    }
+    return ret;
+}
 
+#if 0
+// Not matched: same prologue scheduling as sub_800BA234 ($a0 = 1 before the $s1 save / second-argument copy)
+void sub_800B98C4(int* t, LoadTask_LOAD* s)
+{
+    int cmd = 0;
+    int res = 0;
+    int chan = stru_800BDF4C[1].fC_LOAD << 4;
+    int n = stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD;
+    char* name;
+    switch (MemCardSync(1, &cmd, &res))
+    {
+    case 0:
+        break;
+    case -1:
+        name = sub_800BAE4C(n);
+        if (!name)
+        {
+            MemCardCreateFile(chan, dword_800BE028[0][n], 1);
+            name = dword_800BE028[0][n];
+        }
+        MemCardWriteFile(chan, name, s->f4_LOAD, 0, 0x2180);
+        break;
+    case 1:
+        if (cmd == 4)
+        {
+            switch (res)
+            {
+            case 0:
+                t[2] = (int)sub_800B794C;
+                s->f28_LOAD = 0;
+                s->f24_LOAD = 3;
+                PlaySfx_80031494(0x7E);
+                MemCopy_800403E8((unsigned int*)(s->f0_LOAD + n * 128), (unsigned int*)(s->f4_LOAD + 0x280), 0x80);
+                sub_800BAFB0(stru_800BDF4C[1].fC_LOAD);
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+                t[2] = (int)sub_800B794C;
+                s->f28_LOAD = 0;
+                s->f24_LOAD = 0xE;
+                break;
+            }
+        }
+        break;
+    }
+    DrawLoadingIcon_8003CD5C();
+    sub_800BACBC(dword_800BDEEC);
+    DrawMenuBackground_8002BE10();
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800B98C4);
 
 INCLUDE_OVERLAY_ASM(load, sub_800B9A8C);
 
+#if 0
+// Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
+void sub_800BA234(int* t, LoadTask_LOAD* s)
+{
+    int cmd = 0;
+    int res = 0;
+    int chan = stru_800BDF4C[1].fC_LOAD << 4;
+    int n = stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD;
+    char* name;
+    switch (MemCardSync(1, &cmd, &res))
+    {
+    case 0:
+        break;
+    case -1:
+        name = sub_800BAE4C(n);
+        if (name)
+        {
+            MemCardReadFile(chan, name, s->f4_LOAD, 0, 0x2180);
+        }
+        else
+        {
+            t[2] = (int)sub_800B794C;
+            s->f28_LOAD = 0;
+            s->f24_LOAD = 0xF;
+        }
+        break;
+    case 1:
+        if (cmd == 3)
+        {
+            switch (res)
+            {
+            case 0:
+                if (sub_800BA3EC(s))
+                {
+                    s->f8_LOAD = 1;
+                    t[2] = (int)sub_800B794C;
+                    s->f28_LOAD = 6;
+                    s->f54_LOAD |= 1;
+                }
+                else
+                {
+                    t[2] = (int)sub_800B794C;
+                    s->f28_LOAD = 0;
+                    s->f24_LOAD = 0xA;
+                }
+                PlaySfx_80031494(0x7E);
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+                t[2] = (int)sub_800B794C;
+                s->f28_LOAD = 0;
+                s->f24_LOAD = 0xF;
+                break;
+            }
+        }
+        break;
+    }
+    DrawLoadingIcon_8003CD5C();
+    sub_800BACBC(dword_800BDEDC);
+    DrawMenuBackground_8002BE10();
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BA234);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
@@ -1022,6 +1426,61 @@ int sub_800BB23C(int n, unsigned char* a, unsigned char* b)
     return res;
 }
 
+#if 0
+// Not matched: register allocation (h/i/table pointer in $s0/$s1/$s2 in the original) and the clearing loops are not strength-reduced to a decrementing pointer here
+void sub_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
+{
+    int i;
+    int j;
+    RECT r;
+    for (i = 0; i < 3; i++)
+    {
+        PolyFT4_LOAD* p = &publicTiyPolyFT4s_8008D430[dword_800BE0A0[i].poly_LOAD];
+        int tp = p->tpage_LOAD & 0x1F;
+        r.x = (p->u0_LOAD >> 2) + ((tp << 6) & 0x3FF);
+        r.y = p->v0_LOAD + ((tp / 16) << 8);
+        r.w = 4;
+        r.h = 0x10;
+        StoreImage(&r, (u_long*)h->icon_LOAD[i]);
+        DrawSync(0);
+        r.x = dword_800BE0A0[i].clutX_LOAD;
+        r.y = dword_800BE0A0[i].clutY_LOAD;
+        r.w = 0x10;
+        r.h = 1;
+        StoreImage(&r, (u_long*)h->clut_LOAD);
+        DrawSync(0);
+    }
+    h->magic_LOAD[0] = 'S';
+    h->magic_LOAD[1] = 'C';
+    h->type_LOAD = 0x13;
+    h->blocks_LOAD = 1;
+    {
+        char* t = h->title_LOAD;
+        for (j = 63; j >= 0; j--)
+        {
+            t[j] = 0;
+        }
+    }
+    if (title)
+    {
+        strcpy_8004E2D8(h->title_LOAD, title);
+    }
+    else
+    {
+        strcpy_8004E2D8(h->title_LOAD, dword_800BDFB0[idx]);
+    }
+    for (i = 11; i >= 0; i--)
+    {
+        h->f44_LOAD[i] = 0;
+    }
+    h->f50_LOAD = 1;
+    h->f52_LOAD = dword_800B7300;
+    h->f52_LOAD.c_LOAD[4] = 0;
+    h->f57_LOAD = 0;
+    h->f5C_LOAD = 0;
+    MemCopy_800403E8((unsigned int*)h->f200_LOAD, (unsigned int*)dword_800BE0B8, 0x80);
+}
+#endif
 INCLUDE_OVERLAY_ASM(load, sub_800BB2AC);
 
 void sub_800BB4A8(short sel)
