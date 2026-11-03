@@ -1290,7 +1290,6 @@ int sub_800BA020(EvCtxEventfnc* c)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D4C);
 
 int sub_800BA1DC(EvCtxEventfnc* c)
 {
@@ -1922,7 +1921,139 @@ int sub_800BB45C(EvCtxEventfnc* c)
     return 1;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB4A4);
+extern void sub_8001AA04(int a);
+extern void sub_8001AA50(int a);
+extern void sub_8001AAF4();
+extern void sub_8001AB1C(int a);
+extern void sub_800A094C();
+extern void sub_800A096C();
+extern short dword_80091CE0[];
+extern void SsSepSetDecrescendo(int, int, int, int);
+extern void SsSepStop(int, int);
+extern void FadeOutSfxSeq_80031638();
+extern void PlayMusic_800300E0(int a, int b);
+extern short SfxKeyOn_800314F4(int a);
+extern void SfxKeyOff_80031574(int a, int b);
+extern void sub_80027478(int a, int b);
+extern void sub_8001BCD8(int a);
+
+// Matched
+int sub_800BB4A4(EvCtxEventfnc* c)
+{
+    int r = 1;
+    int op;
+    int k;
+    short* p;
+    short* q;
+    int* d;
+    switch (c->pc_8->a_4)
+    {
+    case 0:
+        sub_8001A9A4();
+        break;
+    case 1:
+        sub_8001A9E4();
+        break;
+    case 2:
+        sub_8001A9E4();
+        sub_8001AA04(*(unsigned short*)&c->pc_8->b_8);
+        break;
+    case 3:
+        sub_8001AA50(*(unsigned short*)&c->pc_8->b_8);
+        break;
+    case 4:
+        sub_8001AAF4();
+        sub_8001AB1C(*(unsigned short*)&c->pc_8->b_8);
+        break;
+    case 5:
+        sub_8001AAA8(*(unsigned short*)&c->pc_8->b_8);
+        break;
+    case 6:
+        r = sub_8001AB94();
+        break;
+    case 7:
+        StartFadeToBlack_8001C2CC();
+        break;
+    case 8:
+        StartFadeToWhite_8001C2E4();
+        break;
+    case 9:
+        r = IsFadeDone_8001C2FC();
+        break;
+    case 10:
+        sub_800A094C();
+        break;
+    case 11:
+        sub_800A096C();
+        break;
+    case 12:
+        op = c->pc_8->b_8;
+        if (op == 0xFF00)
+        {
+            p = dword_80091CE0;
+            if (p[2] >= 0)
+            {
+                SsSepSetDecrescendo(p[6], p[2], 0x7F, 0x78);
+                p[2] = -1;
+            }
+        }
+        else if (op == 0xFF01)
+        {
+            p = dword_80091CE0;
+            if (p[2] >= 0)
+            {
+                SsSepStop(p[6], p[2]);
+                p[2] = -1;
+            }
+        }
+        else if (op == 0xFF02)
+        {
+            FadeOutSfxSeq_80031638();
+        }
+        else if (op == 0xFF03)
+        {
+            StopSoundSeqById_800306FC(c->pc_8->c_C);
+        }
+        else if (op == 0xFF04)
+        {
+            k = c->pc_8->c_C;
+            PlayMusic_800300E0(k, 1);
+            sub_800315D8(k);
+        }
+        else
+        {
+            PlayMusic_800300E0(op, 1);
+        }
+        break;
+    case 13:
+        PlaySfx_80031494(c->pc_8->b_8);
+        break;
+    case 14:
+        op = c->pc_8->b_8;
+        d = (int*)c->pc_8->c_C;
+        *d = SfxKeyOn_800314F4(op);
+        break;
+    case 15:
+        SfxKeyOff_80031574(*(short*)c->pc_8->c_C, *(short*)&c->pc_8->b_8);
+        break;
+    case 16:
+        q = (short*)c->pc_8->c_C;
+        XaRequestPlay_80043564(q[0], q[1], q[2]);
+        break;
+    case 17:
+        sub_80027478(0x40, c->pc_8->b_8);
+        break;
+    case 18:
+        sub_8001BCD8(c->pc_8->b_8);
+        break;
+    }
+    if (r != 0)
+    {
+        c->pc_8++;
+        return 1;
+    }
+    return 0;
+}
 
 int sub_800BB7D8(EvCtxEventfnc* c)
 {
