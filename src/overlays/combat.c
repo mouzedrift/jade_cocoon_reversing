@@ -200,7 +200,7 @@ extern unsigned char byte_800A38D9;
 extern unsigned char byte_800A38DA;
 extern unsigned char byte_800A38DB;
 extern short word_800A1BC4;
-extern char data_8008EEF8[];
+extern Minion dword_8008BEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
 extern void sub_800A197C(Minion* p);
@@ -974,23 +974,17 @@ void sub_800A197C(Minion* p)
     p->id = 4;
 }
 
-#if 0
-// Not matched: address arithmetic of the destination is reassociated by the compiler
+// Matched
 void sub_800A1988(void)
 {
     int i;
-    char* src = data_8008EEF8;
     byte_800A38DA = 0;
     for (i = 0; i < 15; i++)
     {
-        MemCopy_800403E8((unsigned int*)((char*)(byte_800A38D9 * 3720) + (int)&dword_800A1BC8[0][byte_800A38DA]), (unsigned int*)src, 0xF8);
-        src += 0xF8;
+        MemCopy_800403E8((unsigned int*)&dword_800A1BC8[byte_800A38D9][byte_800A38DA], (unsigned int*)&dword_8008BEF8[i], 0xF8);
         byte_800A38DA++;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A1988);
 
 // Matched
 int sub_800A1A3C(Minion* p, int n)

@@ -889,7 +889,7 @@ void sub_800BFDEC()
     }
 }
 
-#if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
+// Matched
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -904,15 +904,12 @@ void sub_800C0074(EventEntry* t, void* arg)
     }
     u = arg;
     r = sub_800A2AB4();
-    k = 0;
-    if (r != 1)
-    {
+    if (r == 1)
+        k = 0;
+    else if (sub_800A2AB4() == 2)
         k = 1;
-        if (sub_800A2AB4() != 2)
-        {
-            k = u->slot_0;
-        }
-    }
+    else
+        k = u->slot_0;
     m = sub_80014390((k + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
@@ -928,9 +925,6 @@ void sub_800C0074(EventEntry* t, void* arg)
     u->frame_4++;
     AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
 void sub_800C01D8()
 {

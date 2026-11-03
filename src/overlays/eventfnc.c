@@ -2249,10 +2249,9 @@ int sub_800BBAE4(int i)
     return r;
 }
 
-#if 0
-// Not matched: p is copied to $a1 in the original, $v0 here (if/else, ternary, early return all tried)
+// Matched
 extern int sub_800A8EC4(int* p);
-extern int sub_800A7D40(int a);
+extern int sub_800A7D40(int a, int* p);
 int sub_800BBB18(int* p)
 {
     int r;
@@ -2263,18 +2262,14 @@ int sub_800BBB18(int* p)
     }
     else
     {
-        r = sub_800A7D40(v - 1);
+        r = sub_800A7D40(v - 1, p);
     }
     return r;
 }
-#endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB18);
-
-#if 0
-// Not matched: same $a1/$v0 copy register as sub_800BBB18
+// Matched
 extern int sub_800A9008(int* p);
-extern int sub_800A80C4(int a);
+extern int sub_800A80C4(int a, int* p);
 int sub_800BBB5C(int* p)
 {
     int r;
@@ -2285,13 +2280,10 @@ int sub_800BBB5C(int* p)
     }
     else
     {
-        r = sub_800A80C4(v - 1);
+        r = sub_800A80C4(v - 1, p);
     }
     return r;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB5C);
 
 EvVecEventfnc* sub_800BBBA0(int i)
 {
