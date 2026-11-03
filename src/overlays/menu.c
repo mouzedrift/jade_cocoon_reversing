@@ -80,6 +80,19 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 
+typedef struct MenuStatQ
+{
+    short b;
+    short s;
+    int z4;
+    int z8;
+} MenuStatQ;
+typedef struct MenuEquipQ
+{
+    short w[6];
+    int z;
+} MenuEquipQ;
+
 typedef struct MenuLoc
 {
     short a;
@@ -1259,6 +1272,73 @@ void sub_800BEC8C(int unused, int a, short b)
     DrawWindow_80042460(a, &t, &pOT_8008D454[b], frameCount_8008D3FC);
 }
 
+extern void sub_8002E334();
+extern void InterpolateWindowRect_8004196C();
+extern void AddDrawAreaPrim_8003326C();
+extern void sub_8002FD0C();
+extern void DrawAnimatedWindow_8002BEC8();
+extern void DrawLargeNumber_8002C100();
+extern void AddClipDrawAreaPrim_80033308();
+extern int sub_800B330C();
+extern int name_8008D678;
+extern char name_800C2994[];
+extern char name_800C298C[];
+extern char name_800C18CC[];
+extern char name_800C18D4[];
+extern char name_800C2984[];
+// Not matched: register allocation - the original keeps c/s in s6/s7 swapped vs. this, computes
+// flag in a3 and copies it to s5, and spills the short b to the stack (sh 0x38); tried a ternary,
+// a separate f = ... ; flag = f copy
+#if 0
+void sub_800BECE4(MenuCtx* c, short b)
+{
+    short pos[2];
+    int tmp[2];
+    MenuStatQ q;
+    int s = sub_800C0990(c, 2);
+    int flag = 0;
+    int t = 0;
+    pos[0] = 0xA;
+    pos[1] = 0x2C;
+    if (c->sel_2 == 0)
+        flag = c->flags_0 & 1;
+    if (flag)
+        t = frameCount_8008D3FC;
+    q.b = b;
+    q.s = s;
+    q.z4 = 1;
+    q.z8 = t;
+    sub_8002E334(levantStatus_8008BD38, &q);
+    InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
+    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
+    InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
+    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
+    sub_8002FD0C(b, (short)s, 1, flag, tmp);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
+    if (c->sel_2 == 0)
+    {
+        pos[0] = 0x93;
+        pos[1] = 0x15;
+        DrawUiTiySprt_8002C06C(pos, 0xBB, b);
+        DrawAnimatedWindow_8002BEC8(tmp, name_800C18CC, (short)s, b, 0, 0);
+        pos[0] = 0x84;
+        pos[1] = 0xC4;
+        DrawUiTiySprt_8002C06C(pos, 0x4F, b);
+        DrawAnimatedWindow_8002BEC8(tmp, name_800C18D4, (short)s, b, 1, (c->flags_0 & 4) ? frameCount_8008D3FC : 0);
+        if (name_8008D678 & 0x20000)
+        {
+            int v = sub_800B330C();
+            pos[0] = 0xF;
+            pos[1] = 0x13;
+            DrawUiTiySprt_8002C06C(pos, 0x3A, b);
+            pos[0] = 0x54;
+            pos[1] = 0x19;
+            DrawLargeNumber_8002C100(pos, v, b);
+            DrawAnimatedWindow_8002BEC8(tmp, name_800C2984, (short)s, b, 0, 0);
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
 extern void sub_8002F8E4();
@@ -1315,18 +1395,6 @@ extern char name_800C298C[];
 extern char name_800C1BE0[];
 extern char name_800C18DC[];
 extern char name_800C18E4[];
-typedef struct MenuStatQ
-{
-    short b;
-    short s;
-    int z4;
-    int z8;
-} MenuStatQ;
-typedef struct MenuEquipQ
-{
-    short w[6];
-    int z;
-} MenuEquipQ;
 void sub_800BF0F4(MenuCtx* a, short b)
 {
     short pos[2];
