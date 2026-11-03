@@ -329,7 +329,7 @@ extern void DrawMenuWindows_8002A5A4(void* p);
 extern void* memset(void* p, int c, unsigned int n);
 extern void UpdateMenuCursor_8003D794(void* p, int a);
 extern void sub_800B8338(MapPos* p);
-extern void name_8005AC98(DR_MOVE* p, RECT* r, int x, int y); // SetDrawMove (PSY-Q)
+extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 void sub_800B7A90(MapTask* t, int a)
 {
     MapPos q;
@@ -360,7 +360,7 @@ void sub_800B7A90(MapTask* t, int a)
     r0.w = 0x140;
     r0.y = 0;
     r0.h = 0xF0;
-    name_8005AC98(&mv, &r0, 0, y);
+    SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
     wd = MeasureTextWidth_8003E4C8(dword_800B92FC[(short)word_800AEBF8[0]][(short)word_800AEBF8[1]]);
     box.x = 0x9E - (short)wd / 2;

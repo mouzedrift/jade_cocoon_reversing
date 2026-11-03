@@ -288,14 +288,14 @@ def main(argv):
         for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", open(src).read()))):
             if n not in known:
                 f.write("%s\tequ\t$%s\n" % (n, addr))
-        if libs:
-            # the library modules also call library code of the executable that only its linked objects name
-            # (open, lseek, _card_load, ...): take those from the executable's link map (build.py first)
-            known |= set(re.findall(r"\b(\w+_[0-9A-F]{8})\b", open(src).read()))
-            for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(b, "jade_cocoon.map")).read(), re.M):
-                if m.group(2) not in known:
-                    known.add(m.group(2))
-                    f.write("%s\tequ\t$%s\n" % (m.group(2), m.group(1)))
+        # library code of the executable is named by its linked objects (SetDrawMove, MulMatrix0, and for the
+        # linked library modules open, lseek, _card_load, ...): take those from the executable's link map
+        # (build.py first)
+        known |= set(re.findall(r"\b(\w+_[0-9A-F]{8})\b", open(src).read()))
+        for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(b, "jade_cocoon.map")).read(), re.M):
+            if m.group(2) not in known:
+                known.add(m.group(2))
+                f.write("%s\tequ\t$%s\n" % (m.group(2), m.group(1)))
     cpe = os.path.join(b, tag + ".cpe")
     # the SN tools crash on long paths: run them from the build folder with relative names
     cwd = os.getcwd()

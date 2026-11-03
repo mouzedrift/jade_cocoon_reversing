@@ -309,7 +309,7 @@ extern TstModelMat name_800A1EA4;
 extern MATRIX dword_80087114;
 extern TstModelMat dword_80087134;
 extern void SetCameraLookAt_800A1A24();
-extern MATRIX* name_8005B558(MATRIX* m0, MATRIX* m1, MATRIX* m2); // MulMatrix0 (PSY-Q)
+extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
 extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 void TstModelCameraInput_800A104C(TstModelD* c)
 {
@@ -333,7 +333,7 @@ void TstModelCameraInput_800A104C(TstModelD* c)
     c->rot_1F0.vz = 0;
     PushMatrix();
     RotMatrixZYX_8004D5CC(&c->rot_1F0, &m);
-    name_8005B558(&name_800A1E84, &m, &dword_80087114);
+    MulMatrix0(&name_800A1E84, &m, &dword_80087114);
     PopMatrix();
     dword_80087134 = name_800A1EA4;
     if (padHeld_800918D0[0] & 0x8000)

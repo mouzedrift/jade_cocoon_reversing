@@ -103,7 +103,7 @@ void sub_800A0A1C(TitleTask* t)
 
 
 extern int dword_800A2718;
-extern void sub_800B6E4C(void* a0, int a1);
+extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern void EncodeName_8003F7C8(void* a0, void* a1);
 extern void sub_800A0AE8();
 // Matched
@@ -115,14 +115,14 @@ void sub_800A0A70(TitleTask* t)
         {
             EncodeName_8003F7C8(&dword_800A2718, (char*)&saveData_8008B570 + 0x7D8);
         }
-        sub_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
+        StartNameEntry_800B6E4C((char*)&saveData_8008B570 + 0x7D8, 0);
         t->next_8 = sub_800A0AE8;
     }
 }
 
 
 extern void sub_800A0D18();
-extern int sub_800B6FC8(void);
+extern int IsNameEntryActive_800B6FC8(void);
 extern void sub_800A0C28();
 // Matched
 void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
@@ -154,7 +154,7 @@ void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
         }
     }
     sub_800A0D18(c->field_70, c->field_74, 0, c);
-    if (sub_800B6FC8() == 0)
+    if (IsNameEntryActive_800B6FC8() == 0)
     {
         FreeActiveOverlay_8002C014();
         t->next_8 = sub_800A0C28;
