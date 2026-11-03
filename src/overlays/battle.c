@@ -1741,7 +1741,133 @@ int sub_800BE364()
     return m;
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BE3C0);
+extern void sub_80037BFC(int a);
+extern void PlaySfx_80031494(int id);
+extern void StartPadVibration_80036528(int pad, int kind);
+extern void sub_800AD944(int a);
+extern void sub_800AD1E0(int a, int b, int c);
+extern void sub_800A2898(int a);
+extern void sub_800A284C(int a);
+extern void sub_80039ED8(int a);
+extern void sub_800127D0(int a0, int a1, int a2, int a3);
+extern void sub_800BF3DC(int a, int b, int c, int d, int e);
+extern void sub_800BE834(int a, int b);
+extern void sub_800C0F1C();
+typedef struct BatSettingsBits
+{
+    unsigned int pad0 : 21;
+    unsigned int b21 : 1;
+} BatSettingsBits;
+void sub_800BE3C0()
+{
+    unsigned char i;
+    int v;
+    if (dword_800C9DBC == dword_800C9D94 && dword_800C9C7C < 7)
+    {
+        sub_800BE14C(dword_800C9C88, 0, dword_800C9C7C);
+        sub_800BF3DC(dword_800C9C7C, 0, dword_800C9C7E, sub_800BC6CC(dword_800C9C7C), 0);
+        if (dword_800C9C7E > 0)
+        {
+            sub_80037BFC(0x1E);
+            PlaySfx_80031494(0x72);
+        }
+        sub_800BF3DC(dword_800C9C7C, 1, dword_800C9C80, sub_800BC6CC(dword_800C9C7C), 0);
+        v = dword_800C9C88[0];
+        if (v == 5 || v == 0x1A)
+        {
+            sub_800AD944(1);
+        }
+        else if (v == 4)
+        {
+            sub_800AD1E0(dword_800C9C88[1], 1, 0);
+        }
+        else if (v == 0x13)
+        {
+            sub_800127B8((struct_obj_B*)sub_80014390(dword_800C9C7C));
+        }
+        if (dword_800C9C88[0] == 7 && dword_800C9C7C != 0)
+        {
+            PlaySeqSlot_80031160(0x1C, 1);
+        }
+        if (sub_800BC7DC(dword_800C9C7C) == 0 || sub_800BC7DC(dword_800C9C7C) == 1)
+        {
+            v = dword_800C9C88[0];
+            if (v == 5)
+            {
+                if (((BatSettingsBits*)&settingsFlags_8008B58C)->b21 == 1)
+                {
+                    StartPadVibration_80036528(0, 3);
+                }
+                else
+                {
+                    StartPadVibration_80036528(0, 4);
+                }
+            }
+            else if (v - 2 < 2U)
+            {
+                StartPadVibration_80036528(0, 9);
+            }
+        }
+    }
+    if (dword_800C9D98[0] + dword_800C9DBC == dword_800C9D94)
+    {
+        if (dword_800C9D78 >= 0)
+        {
+            if ((unsigned short)(dword_800C9D78 - 0x70) < 3)
+            {
+                PlaySfx_80031494(dword_800C9D78);
+            }
+        }
+        if (dword_800C9D80 >= 0)
+        {
+            if (sub_800BC820(4) == 1 || (sub_800BC820(8) != 1 && sub_800BC820(0x100000) == 1))
+            {
+                PlaySeqSlot_80031160(0x1C, 1);
+            }
+            else
+            {
+                PlaySfx_80031494(0x6F);
+            }
+        }
+        if (dword_800C9D84 != *(signed char*)&dword_800C9D82)
+        {
+            sub_80039ED8(dword_800C9D84);
+            dword_800C9D82 = dword_800C9D84;
+        }
+    }
+    for (i = 0; i < 7; i++)
+    {
+        if (dword_800C9DC0[i] == dword_800C9D94)
+        {
+            if (dword_800C9C7C != i)
+            {
+                BatSlot_a* s = &((BatSlot_a*)dword_800C9CC8)[i];
+                if ((s->a == 5 && sub_80013358(s->b) == 1) || (s->a == 0x1A && sub_80013358(s->b) == 1))
+                {
+                    sub_800A2898(i - 4);
+                }
+                sub_800BE14C(&dword_800C9CC8[i * 4], 1, i);
+            }
+            if (dword_800C9DC0[i] == dword_800C9D94)
+            {
+                sub_800127D0(i, 0x11, 0, dword_800C9D58[i]);
+                sub_800127D0(i, 0x10, 0, dword_800C9CA0[i]);
+                sub_800BE834(i, sub_800BC6CC(i));
+                if (sub_800BC784(i) == 1)
+                {
+                    if (i >= 4)
+                    {
+                        sub_800A284C(i - 4);
+                    }
+                    else if (i != 0 && dword_800C9C82 != 0)
+                    {
+                        sub_800C0F1C();
+                    }
+                }
+            }
+        }
+    }
+}
 
 INCLUDE_OVERLAY_ASM(battle, sub_800BE834);
 
