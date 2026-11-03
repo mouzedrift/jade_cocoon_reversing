@@ -4405,7 +4405,122 @@ void sub_800C6038(BatTask* t)
 #endif
 INCLUDE_OVERLAY_ASM(battle, sub_800C6038);
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C61FC);
+extern void sub_800C66B4(unsigned char* buf, unsigned int b);
+extern void sub_800C6B24(BatTask* t, int a, int b);
+void sub_800C61FC(BatTask* t)
+{
+    unsigned short f;
+    if (t->fC == 0)
+    {
+        if (dword_800C8B34 == 0)
+        {
+            t->f8[2] = 0x10;
+            t->f8[0] = 0x15;
+            dword_800C8B34 = 1;
+            t->f8[1] = 1;
+            t->f8[3] = 2;
+        }
+        else
+        {
+            *(short*)(t->f10 + 0x42) = 0;
+            sub_800C66B4((unsigned char*)t->f10, 0xC);
+            t->f8[0] = 6;
+            t->f8[1] = 1;
+            t->f8[3] = t->f18;
+        }
+    }
+    else if ((sub_800BC868() == 0 && !(*(unsigned short*)(t->f10 + 0x42) & 1)) || (dword_800C8B30 >= 3 && sub_800BC868() == 0))
+    {
+        sub_800C6AFC(t, 6, 2);
+        ((unsigned char*)t->f4)[9] = 0x25;
+        *(short*)(t->f10 + 0x42) = 8;
+        sub_80018430(3);
+        sub_800C66B4((unsigned char*)t->f10, 2);
+        dword_800C8B30 = 0;
+    }
+    else if ((sub_800BC868() == 1 && !(*(unsigned short*)(t->f10 + 0x42) & 2)) || (dword_800C8B30 >= 3 && sub_800BC868() == 1))
+    {
+        sub_800C6AFC(t, 6, 2);
+        ((unsigned char*)t->f4)[9] = 0x22;
+        *(short*)(t->f10 + 0x42) = 1;
+        sub_80018430(0);
+        sub_800C66B4((unsigned char*)t->f10, 3);
+        dword_800C8B30 = 0;
+    }
+    else if ((sub_800BC868() == 2 && !(*(unsigned short*)(t->f10 + 0x42) & 4)) || (dword_800C8B30 >= 3 && sub_800BC868() == 2))
+    {
+        sub_800C6AFC(t, 6, 2);
+        ((unsigned char*)t->f4)[9] = 0x23;
+        *(short*)(t->f10 + 0x42) = 2;
+        sub_80018430(1);
+        sub_800C66B4((unsigned char*)t->f10, 0);
+        dword_800C8B30 = 0;
+    }
+    else if ((sub_800BC868() == 3 && !(*(unsigned short*)(t->f10 + 0x42) & 8)) || (dword_800C8B30 >= 4 && sub_800BC868() == 3) || sub_800BC868() == -1)
+    {
+        sub_800C6AFC(t, 6, 2);
+        ((unsigned char*)t->f4)[9] = 0x24;
+        *(short*)(t->f10 + 0x42) = 4;
+        sub_80018430(2);
+        sub_800C66B4((unsigned char*)t->f10, 1);
+        dword_800C8B30 = 0;
+    }
+    else
+    {
+        f = *(unsigned short*)(t->f10 + 0x42);
+        if (f & 8)
+        {
+            if (dword_800C8B30 == 1)
+            {
+                sub_800C6B24(t, 1, 0x1D);
+            }
+            else
+            {
+                sub_800C6AFC(t, 6, 0);
+            }
+        }
+        else if (f & 1)
+        {
+            if (rand() & 1)
+            {
+                sub_800C6AFC(t, 6, 1);
+                ((unsigned char*)t->f4)[5] = 4;
+            }
+            else
+            {
+                sub_800C6AFC(t, 1, 0x19);
+                sub_80018430(0);
+            }
+        }
+        else if (f & 2)
+        {
+            if (rand() % 3 != 0)
+            {
+                sub_800C6AFC(t, 1, 0x1C);
+                sub_80018430(1);
+            }
+            else
+            {
+                sub_800C6AFC(t, 6, 1);
+                ((unsigned char*)t->f4)[5] = 5;
+            }
+        }
+        else if (f & 4)
+        {
+            if (rand() % 3 != 0)
+            {
+                sub_800C6AFC(t, 6, 1);
+                ((unsigned char*)t->f4)[5] = 2;
+            }
+            else
+            {
+                sub_800C6AFC(t, 1, 0x1B);
+                sub_80018430(2);
+            }
+        }
+    }
+    dword_800C8B30 += ((rand() & 3) >> 1) + 1;
+}
 
 void sub_800C66B4(unsigned char* buf, unsigned int b)
 {
