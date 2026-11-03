@@ -732,13 +732,13 @@ void sub_8004028C(void)
 }
 extern unsigned long* primAllocPtrs_800960A8[];
 // Matched
-short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
+void* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
 {
     int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
     addPrim(arg0, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += arg2 * 4;
-    return (short*)cur;
+    return (void*)cur;
 }
 // Matched
 void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)

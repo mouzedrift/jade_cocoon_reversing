@@ -401,31 +401,31 @@ void AddPolyFT4FlipXY_80032D34(unsigned short* a, void* b)
     r[0x11] = a[5];
 }
 // Matched
-void AddPolyFT4FlipX_80032DFC(short* p, int a1)
+void AddPolyFT4FlipX_80032DFC(short* p, void* a1)
 {
     int d = p[8] - p[4];
-    short* q = AddPrimCopy_80040298((void*)a1, p, 10);
+    short* q = AddPrimCopy_80040298(a1, p, 10);
     q[4] = p[4] + d;
     q[8] = p[4];
     q[12] = p[4] + d;
     q[16] = p[4];
 }
 // Matched
-void AddPolyFT4FlipY_80032E78(unsigned short* p, int a1)
+void AddPolyFT4FlipY_80032E78(unsigned short* p, void* a1)
 {
     int d = ((short*)p)[13] - ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     q[5] = p[5] + d;
     q[9] = p[5] + d;
     q[13] = p[5];
     q[17] = p[5];
 }
 // Matched
-void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
+void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, void* a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     unsigned short t;
     q[4] = p[12];
     q[5] = p[13];
@@ -438,11 +438,11 @@ void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, int a1)
+void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, void* a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     unsigned short t;
     q[4] = p[8];
     q[5] = p[9];

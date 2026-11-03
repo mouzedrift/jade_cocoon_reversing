@@ -222,7 +222,7 @@ extern void StopPadVibration_80036658(int arg0);
 extern void sub_8001DB98(void* arg0, void* s);
 extern int ParseTim_80029708(void* arg0, void* arg1);
 extern void LoadTimToVram_800296A0(void* arg0);
-extern short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2);
+extern void* AddPrimCopy_80040298(void* ot, void* prim, int words); // returns the copy
 extern int sub_800338DC(unsigned char* src, unsigned char* ids, int* counts);
 extern void sub_800390F4(struct CameraCtrl* p, int arg1);
 extern unsigned short sub_8001C818(unsigned short* p);
