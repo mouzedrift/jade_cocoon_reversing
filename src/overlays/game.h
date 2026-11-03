@@ -66,7 +66,7 @@ typedef struct GameEnemy
     UnitStats minion_1C;
     Actor* actors_A4[3];
     GameEnemyMember members_B0[3];
-    int fC8[3];
+    int* anims_C8[3]; // [0]: when it is the group being fought, [1]: otherwise (default name_8007A024)
     int fD4[3];
 } GameEnemy;
 
@@ -80,6 +80,8 @@ typedef struct GameSlot_1
 extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short dword_80079140[]; // default bone table
 extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
+extern GameEnemy* sub_800A5F6C(void);
+extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
 
 
 
@@ -246,7 +248,7 @@ extern int dword_800B0698;
 
 extern int dword_800AEBE0;
 
-extern char dword_800B1CB8[];
+extern GameEnemy dword_800B1CB8; // the group that is being fought (sub_800A5F6C)
 
 extern char* dword_8008B518;
 

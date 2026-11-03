@@ -319,11 +319,11 @@ int sub_800A5E80(int a)
 }
 
 // Matched
-char* sub_800A5F6C(void)
+GameEnemy* sub_800A5F6C(void)
 {
     if (dword_800AEBE0)
     {
-        return dword_800B1CB8;
+        return &dword_800B1CB8;
     }
     return 0;
 }
@@ -1326,8 +1326,6 @@ int sub_800A7CFC(int a)
     return 0;
 }
 
-#if 0
-// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
 typedef struct GameCmdA_1
 {
     int f0;
@@ -1362,6 +1360,8 @@ typedef struct GameAnimReq_1
     int f30;
     char pad_34[0x2c];
 } GameAnimReq_1;
+#if 0
+// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
 void sub_800A7D40(int a, GameCmdA_1* c)
 {
     GameAnimReq_1 s;
@@ -1455,7 +1455,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             s.flags = (c->f14 >> 2) & 1;
             if (c->f14 & 0x10)
             {
-                s.flags = s.flags | 2;
+                s.flags |= 2;
             }
             break;
         case 11:
@@ -1463,7 +1463,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             if (c->f10 >= 0)
                 s.h2A = c->f10;
             else
-                s.h2A = *(short*)((char*)obj + 0xc2);
+                s.h2A = obj->animIdx_C2;
             s.hC = (c->f14 & 1) ? -1 : -2;
             s.f2C = (c->f14 >> 3) & 1;
             s.flags = (c->f14 >> 2) & 1;
@@ -1492,7 +1492,6 @@ void sub_800A7D40(int a, GameCmdA_1* c)
     }
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
 
 INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
@@ -3145,8 +3144,6 @@ void sub_800ACAA4(int* a, int* b)
     a[2] = (int)sub_800ACB64;
 }
 
-#if 0
-// Not matched: control flow follows the original, but loop.c also hoists the 0x800B0000 high half of &dword_800B1DD0 into an eighth saved register, so the frame and everything after shift
 typedef struct G2Ld_1
 {
     int state;
@@ -3163,23 +3160,24 @@ extern int name_800B1164[];
 extern int dword_800B11CC[]; // model FTG ids for sub_80024FFC, -1 ends
 extern void sub_800ACF3C();
 extern void sub_800ACFB8();
-void sub_800ACB64(int* a, G2Ld_1* q)
+// Matched
+void sub_800ACB64(int* a, void* buf)
 {
     int more = 1;
-    SaveData* sd = &saveData_8008B570;
+    G2Ld_1* q = buf;
     Model* m;
     do
     {
         switch (q->state)
         {
         case 0:
-            if (q->f8 != sd->field_830)
+            if (q->f8 != saveData_8008B570.field_830)
             {
                 q->f10 = -1;
                 q->flags |= 0xd;
-                sub_800AC3A4(sd->field_834);
+                sub_800AC3A4(saveData_8008B570.field_834);
             }
-            if (q->f10 != sd->field_834 || q->f18 != sd->field_836)
+            if (q->f10 != saveData_8008B570.field_834 || q->f18 != saveData_8008B570.field_836)
             {
                 q->flags |= 0x16;
                 sub_800ACF3C(q);
@@ -3202,19 +3200,19 @@ void sub_800ACB64(int* a, G2Ld_1* q)
                     FreeModelList_80024BB0(&dword_8007DC60);
                 }
                 InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
-                LoadModel_80025200(dword_8007DC60, name_800B1164[sd->field_830], 0, 2, 1);
+                LoadModel_80025200(dword_8007DC60, name_800B1164[saveData_8008B570.field_830], 0, 2, 1);
                 q->fC = q->f8;
+                q->f8 = saveData_8008B570.field_830;
                 q->flags &= ~1;
-                q->f8 = sd->field_830;
             }
             else if (q->flags & 2)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80025974(m, sub_800AC3F4(), 1);
                 q->f14 = sub_800AC3E4();
-                q->f10 = sd->field_834;
+                q->f10 = saveData_8008B570.field_834;
                 q->f1C = sub_800AC464();
-                q->f18 = sd->field_836;
+                q->f18 = saveData_8008B570.field_836;
                 q->flags &= ~2;
             }
             else if (q->flags & 4)
@@ -3241,13 +3239,13 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         case 3:
             if ((q->flags & 9) == 8)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80024FFC(m, dword_800B11CC);
                 q->flags &= ~8;
             }
             if ((q->flags & 0x12) == 0x10)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 q->flags &= ~0x10;
             }
@@ -3264,9 +3262,6 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         }
     } while (more);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
 void sub_800ACF0C()
 {
