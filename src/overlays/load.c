@@ -9,7 +9,17 @@ extern int cardSaveCount_800BE150;
 extern int dword_800BE174;
 extern int (*dword_800BE294[])();
 extern char* cardSaveNames_800BE188[];
-extern int** dword_8008D480;
+// a task (EventEntry of the event lists) as its callbacks see it
+typedef struct
+{
+    unsigned int flags_0;
+    int f4;
+    void (*next_8)();
+    void (*fC)();
+    int size_10;
+    void* work_14;
+} Task_LOAD;
+extern EventNode* dword_8008D480; // the load menu's task list
 extern int MemCardSync(int a, int* b, int* c);
 extern void MemCardAccept();
 extern void MemCardExist();
@@ -18,7 +28,6 @@ extern void LoadMenuInit_800B7674(int mode, int b);
 extern void sub_800B7894();
 extern int uiTiyLoaded_8008B4E8;
 extern int dword_8008B570[];
-extern unsigned char byte_800BDF58;
 extern char* dword_800BDECC[];
 extern char* dword_800BDEDC[];
 extern char* dword_800BDEEC[];
@@ -28,14 +37,14 @@ extern int sub_800BA3EC();
 extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawMessageBox_800BACBC(char** lines);
-extern void LoadMenuTask_800B794C(int* t, int* s);
+extern void LoadMenuTask_800B794C();
 extern void sub_800B79F8();
 extern void sub_800B9A8C();
 extern void WriteSaveTask_800B98C4();
 extern void LoadSaveTask_800BA234();
 extern void sub_800BA968();
 extern void LoadMenuExit_800BAAE0();
-extern void sub_800BA9AC(int* t);
+extern void sub_800BA9AC();
 extern void FormatCardTask_800BA9F0();
 extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
@@ -47,7 +56,7 @@ extern char byte_800B6ADC[];
 extern char byte_800B6B0C[];
 extern char* dword_800BDA08[];
 extern int UpdateMenuCursor_8003D794(short* cursor, int b);
-extern void ResetMenuRow_800BADE0(unsigned char* p);
+
 typedef struct
 {
     char c_LOAD[5];
@@ -237,28 +246,15 @@ typedef struct
     unsigned char f6_LOAD;
     unsigned char f7_LOAD;
     unsigned char f8_LOAD;
-    unsigned char pad9_LOAD[2];
+    unsigned char f9_LOAD;
+    unsigned char fA_LOAD;
     unsigned char fB_LOAD;
     unsigned char fC_LOAD;
     unsigned char fD_LOAD;
     unsigned char padE_LOAD[2];
 } Row16_LOAD;
-typedef struct
-{
-    unsigned char pad0_LOAD[0xC];
-    unsigned char fC_LOAD;
-    unsigned char padD_LOAD[0xF];
-    unsigned char f1C_LOAD;
-    unsigned char pad1D_LOAD[0xF];
-    unsigned char f2C_LOAD;
-    unsigned char pad2D_LOAD[0xF];
-    unsigned char f3C_LOAD;
-    unsigned char f3D_LOAD;
-    unsigned char pad3E_LOAD[0xE];
-    unsigned char f4C_LOAD;
-} Opts_LOAD;
-extern Opts_LOAD dword_800BDF4C;
 extern Row16_LOAD stru_800BDF4C[];
+extern void ResetMenuRow_800BADE0(Row16_LOAD* p);
 extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 extern void sub_800B8BD4(void* t);
 extern void PlaySfx_80031494(int a);
@@ -285,15 +281,15 @@ void sub_800B7650(void)
 void LoadMenuInit_800B7674(int mode, int b)
 {
     int i;
-    int* t;
+    Task_LOAD* t;
     LoadTask_LOAD* s;
     MemCardStart();
-    t = (int*)dword_8008D480 + 4;
-    s = (LoadTask_LOAD*)t[5];
-    t[0] = (t[0] | 1) & ~0x8000;
+    t = (Task_LOAD*)&dword_8008D480->entry;
+    s = (LoadTask_LOAD*)t->work_14;
+    t->flags_0 = (t->flags_0 | 1) & ~0x8000;
     for (i = 0; i < 6; i++)
     {
-        ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[i]);
+        ResetMenuRow_800BADE0(&stru_800BDF4C[i]);
     }
     s->f8_LOAD = 0;
     s->f24_LOAD = -1;
@@ -302,39 +298,39 @@ void LoadMenuInit_800B7674(int mode, int b)
     {
     case 0:
         s->s30_LOAD = 1;
-        byte_800BDF58 = 0;
+        stru_800BDF4C[0].fC_LOAD = 0;
         s->f54_LOAD = 4;
         break;
     case 1:
         s->s30_LOAD = 1;
-        byte_800BDF58 = 1;
+        stru_800BDF4C[0].fC_LOAD = 1;
         s->f54_LOAD = 4;
         break;
     case 2:
         s->s30_LOAD = 1;
-        byte_800BDF58 = 1;
+        stru_800BDF4C[0].fC_LOAD = 1;
         s->f54_LOAD = 0xC;
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
         goto done;
     case 3:
         s->s30_LOAD = 1;
-        byte_800BDF58 = 1;
+        stru_800BDF4C[0].fC_LOAD = 1;
         s->f54_LOAD = 0x4C;
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
         goto done;
     default:
         s->s30_LOAD = 0;
-        byte_800BDF58 = 0;
+        stru_800BDF4C[0].fC_LOAD = 0;
         s->f54_LOAD = 0;
         break;
     }
     LoadUiTiy_8002BF74();
-    t[2] = (int)sub_800B7894;
+    t->next_8 = sub_800B7894;
 done:
     if (dword_8008BD80 == -1 && !(s->f54_LOAD & 8))
     {
         s->s30_LOAD = 1;
-        byte_800BDF58 = 0;
+        stru_800BDF4C[0].fC_LOAD = 0;
         s->f54_LOAD = 0x20;
     }
     s->f5C_LOAD = 0;
@@ -357,33 +353,33 @@ done:
 #endif
 INCLUDE_OVERLAY_ASM(load, LoadMenuInit_800B7674);
 
-void sub_800B7894(int* t)
+void sub_800B7894(Task_LOAD* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
     }
 }
 
 void sub_800B78B8(int v)
 {
-    dword_8008D480[9][22] = v;
+    ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f58_LOAD = v;
 }
 
 void sub_800B78D0(void)
 {
-    int* t;
+    LoadTask_LOAD* t;
     dword_8008B570[516] = -1;
     dword_8008B570[0] |= 0x180;
-    t = dword_8008D480[9];
-    *(short*)((char*)t + 0x30) = 1;
-    byte_800BDF58 = 0;
-    t[21] = 0x20;
+    t = dword_8008D480->entry.buffer;
+    t->s30_LOAD = 1;
+    stru_800BDF4C[0].fC_LOAD = 0;
+    t->f54_LOAD = 0x20;
 }
 
 int sub_800B7914(void)
 {
-    return dword_8008D480[9][2];
+    return ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f8_LOAD;
 }
 
 void sub_800B7934(void)
@@ -395,27 +391,27 @@ int IsLoadMenuActive_800B793C(void)
     return loadMenuActive_800BE184;
 }
 
-void LoadMenuTask_800B794C(int* t, int* s)
+void LoadMenuTask_800B794C(Task_LOAD* t, LoadTask_LOAD* s)
 {
-    switch (s[10])
+    switch (s->f28_LOAD)
     {
     case 0:
         sub_800B79F8(s);
         break;
     case 2:
         sub_800B9A8C(s);
-        t[2] = (int)WriteSaveTask_800B98C4;
-        s[11] = 0;
+        t->next_8 = WriteSaveTask_800B98C4;
+        s->f2C_LOAD = 0;
         break;
     case 3:
-        t[2] = (int)LoadSaveTask_800BA234;
+        t->next_8 = LoadSaveTask_800BA234;
         break;
     case 4:
-        t[2] = (int)sub_800BA968;
+        t->next_8 = sub_800BA968;
         break;
     case 5:
     case 6:
-        t[2] = (int)LoadMenuExit_800BAAE0;
+        t->next_8 = LoadMenuExit_800BAAE0;
         break;
     }
 }
@@ -434,22 +430,22 @@ void sub_800B80F8(LoadTask_LOAD* t)
         case 0:
             break;
         case 1:
-            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[3]);
+            ResetMenuRow_800BADE0(&stru_800BDF4C[3]);
             break;
         case 2:
-            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[2]);
+            ResetMenuRow_800BADE0(&stru_800BDF4C[2]);
             break;
         case 3:
             break;
         case 4:
-            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[4]);
+            ResetMenuRow_800BADE0(&stru_800BDF4C[4]);
             if (stru_800BDF4C[0].fC_LOAD == 0)
             {
                 stru_800BDF4C[4].fC_LOAD = 1;
             }
             break;
         case 5:
-            ResetMenuRow_800BADE0((unsigned char*)&stru_800BDF4C[5]);
+            ResetMenuRow_800BADE0(&stru_800BDF4C[5]);
             break;
         }
         t->s30_LOAD = t->f24_LOAD;
@@ -613,7 +609,7 @@ void sub_800B877C(LoadTask_LOAD* t)
         Pos_LOAD p;
         p.x_LOAD = 0xE;
         p.y_LOAD = 0xC7;
-        DrawText_8003E91C(2, dword_800BDA08[byte_800BDF58], &p, 5);
+        DrawText_8003E91C(2, dword_800BDA08[stru_800BDF4C[0].fC_LOAD], &p, 5);
         break;
     }
     case 9:
@@ -673,7 +669,7 @@ void sub_800B8984(void)
 {
     Bytes8_LOAD a;
     Tail4_LOAD b;
-    DrawUiTiySprt_8002C06C(&dword_800BD998[byte_800BDF58], dword_800BD998[byte_800BDF58].f4_LOAD, dword_800BD998[byte_800BDF58].f6_LOAD);
+    DrawUiTiySprt_8002C06C(&dword_800BD998[stru_800BDF4C[0].fC_LOAD], dword_800BD998[stru_800BDF4C[0].fC_LOAD].f4_LOAD, dword_800BD998[stru_800BDF4C[0].fC_LOAD].f6_LOAD);
     a = dword_800B6B8C;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
@@ -713,7 +709,7 @@ void sub_800B8AE4(void)
     Tail4_LOAD b;
     p0.x_LOAD = 0x1C;
     p0.y_LOAD = 0x24;
-    sub_8003F264(&p0, dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD + 1, 5);
+    sub_8003F264(&p0, stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD + 1, 5);
     p1.x_LOAD = 0x1C;
     p1.y_LOAD = 0x24;
     DrawText_8003E91C(1, byte_800B6B9C, &p1, 5);
@@ -733,7 +729,7 @@ void sub_800B9220(LoadTask_LOAD* t)
 {
     if (IsConfirmPressed_8003D288(1, (t->f54_LOAD >> 6) & 1))
     {
-        switch (byte_800BDF58)
+        switch (stru_800BDF4C[0].fC_LOAD)
         {
         case 0:
         case 1:
@@ -780,13 +776,13 @@ INCLUDE_OVERLAY_ASM(load, sub_800B92C0);
 
 void sub_800B9360(LoadTask_LOAD* t)
 {
-    switch (PollCardAccept_800BAE68(dword_800BDF4C.f1C_LOAD))
+    switch (PollCardAccept_800BAE68(stru_800BDF4C[1].fC_LOAD))
     {
     case 0:
     case 3:
-        ScanCardSaves_800BAFB0(dword_800BDF4C.f1C_LOAD);
+        ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
         PlaySfx_80031494(0x7E);
-        if (dword_800BDF4C.fC_LOAD == 0)
+        if (stru_800BDF4C[0].fC_LOAD == 0)
         {
             if (GetCardFreeBlocks_800BAE2C() || GetCardSaveCount_800BAE3C())
             {
@@ -809,7 +805,7 @@ void sub_800B9360(LoadTask_LOAD* t)
         }
         break;
     case 4:
-        if (dword_800BDF4C.fC_LOAD == 0)
+        if (stru_800BDF4C[0].fC_LOAD == 0)
         {
             t->f24_LOAD = 2;
         }
@@ -828,7 +824,7 @@ void sub_800B9360(LoadTask_LOAD* t)
 
 void sub_800B9470(LoadTask_LOAD* t)
 {
-    int r = PollCardAccept_800BAE68(dword_800BDF4C.f1C_LOAD);
+    int r = PollCardAccept_800BAE68(stru_800BDF4C[1].fC_LOAD);
     if (r < -1 || (r > 0 && r != 4))
     {
         t->f24_LOAD = 1;
@@ -839,11 +835,11 @@ void sub_800B9470(LoadTask_LOAD* t)
     }
     if (IsConfirmPressed_8003D288(1, (t->f54_LOAD >> 6) & 1))
     {
-        if (dword_800BDF4C.f2C_LOAD == 0)
+        if (stru_800BDF4C[2].fC_LOAD == 0)
         {
             t->f28_LOAD = 4;
         }
-        if (dword_800BDF4C.f2C_LOAD == 1)
+        if (stru_800BDF4C[2].fC_LOAD == 1)
         {
             t->f24_LOAD = 1;
         }
@@ -852,14 +848,14 @@ void sub_800B9470(LoadTask_LOAD* t)
 
 void sub_800B952C(LoadTask_LOAD* t)
 {
-    int n = dword_800BDF4C.f3D_LOAD + dword_800BDF4C.f3C_LOAD;
+    int n = stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD;
     if (IsCancelPressed_8003D3C0(1, (t->f54_LOAD >> 6) & 1))
     {
         t->f24_LOAD = 1;
     }
     if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
-        if (dword_800BDF4C.fC_LOAD == 1)
+        if (stru_800BDF4C[0].fC_LOAD == 1)
         {
             if (n < t->f20_LOAD - 1)
             {
@@ -878,7 +874,7 @@ void sub_800B952C(LoadTask_LOAD* t)
                 PlaySfx_80031494(0x7C);
             }
         }
-        else if (dword_800BDF4C.fC_LOAD == 0)
+        else if (stru_800BDF4C[0].fC_LOAD == 0)
         {
             if (n < t->f20_LOAD - 1)
             {
@@ -909,15 +905,15 @@ void sub_800B9654(LoadTask_LOAD* t)
     }
     if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
     {
-        if (dword_800BDF4C.f4C_LOAD == 0)
+        if (stru_800BDF4C[4].fC_LOAD == 0)
         {
             PlaySfx_80031494(0x7E);
-            if (dword_800BDF4C.fC_LOAD == 1)
+            if (stru_800BDF4C[0].fC_LOAD == 1)
             {
                 WaitCardSync_800BADF4();
                 t->f28_LOAD = 3;
             }
-            else if (dword_800BDF4C.fC_LOAD == 0)
+            else if (stru_800BDF4C[0].fC_LOAD == 0)
             {
                 WaitCardSync_800BADF4();
                 t->f28_LOAD = 2;
@@ -995,7 +991,7 @@ int ReadSaveSummaries_800B9724(LoadTask_LOAD* t)
 
 #if 0
 // Not matched: same prologue scheduling as LoadSaveTask_800BA234 ($a0 = 1 before the $s1 save / second-argument copy)
-void WriteSaveTask_800B98C4(int* t, LoadTask_LOAD* s)
+void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
 {
     int cmd = 0;
     int res = 0;
@@ -1021,7 +1017,7 @@ void WriteSaveTask_800B98C4(int* t, LoadTask_LOAD* s)
             switch (res)
             {
             case 0:
-                t[2] = (int)LoadMenuTask_800B794C;
+                t->next_8 = LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 3;
                 PlaySfx_80031494(0x7E);
@@ -1032,7 +1028,7 @@ void WriteSaveTask_800B98C4(int* t, LoadTask_LOAD* s)
             case 2:
             case 3:
             case 5:
-                t[2] = (int)LoadMenuTask_800B794C;
+                t->next_8 = LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 0xE;
                 break;
@@ -1051,7 +1047,7 @@ INCLUDE_OVERLAY_ASM(load, sub_800B9A8C);
 
 #if 0
 // Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
-void LoadSaveTask_800BA234(int* t, LoadTask_LOAD* s)
+void LoadSaveTask_800BA234(Task_LOAD* t, LoadTask_LOAD* s)
 {
     int cmd = 0;
     int res = 0;
@@ -1070,7 +1066,7 @@ void LoadSaveTask_800BA234(int* t, LoadTask_LOAD* s)
         }
         else
         {
-            t[2] = (int)LoadMenuTask_800B794C;
+            t->next_8 = LoadMenuTask_800B794C;
             s->f28_LOAD = 0;
             s->f24_LOAD = 0xF;
         }
@@ -1084,13 +1080,13 @@ void LoadSaveTask_800BA234(int* t, LoadTask_LOAD* s)
                 if (sub_800BA3EC(s))
                 {
                     s->f8_LOAD = 1;
-                    t[2] = (int)LoadMenuTask_800B794C;
+                    t->next_8 = LoadMenuTask_800B794C;
                     s->f28_LOAD = 6;
                     s->f54_LOAD |= 1;
                 }
                 else
                 {
-                    t[2] = (int)LoadMenuTask_800B794C;
+                    t->next_8 = LoadMenuTask_800B794C;
                     s->f28_LOAD = 0;
                     s->f24_LOAD = 0xA;
                 }
@@ -1100,7 +1096,7 @@ void LoadSaveTask_800BA234(int* t, LoadTask_LOAD* s)
             case 2:
             case 3:
             case 5:
-                t[2] = (int)LoadMenuTask_800B794C;
+                t->next_8 = LoadMenuTask_800B794C;
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 0xF;
                 break;
@@ -1117,28 +1113,28 @@ INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
 INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
 
-void sub_800BA968(int* t)
+void sub_800BA968(Task_LOAD* t)
 {
     DrawLoadingIcon_8003CD5C();
     DrawMessageBox_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
-    t[2] = (int)sub_800BA9AC;
+    t->next_8 = sub_800BA9AC;
 }
 
-void sub_800BA9AC(int* t)
+void sub_800BA9AC(Task_LOAD* t)
 {
     DrawLoadingIcon_8003CD5C();
     DrawMessageBox_800BACBC(dword_800BDECC);
     DrawMenuBackground_8002BE10();
-    t[2] = (int)FormatCardTask_800BA9F0;
+    t->next_8 = FormatCardTask_800BA9F0;
 }
 
-void FormatCardTask_800BA9F0(int* t, LoadTask_LOAD* s)
+void FormatCardTask_800BA9F0(Task_LOAD* t, LoadTask_LOAD* s)
 {
     switch (MemCardFormat(stru_800BDF4C[1].fC_LOAD << 4))
     {
     case 0:
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 3;
         s->f20_LOAD = 0;
@@ -1146,12 +1142,12 @@ void FormatCardTask_800BA9F0(int* t, LoadTask_LOAD* s)
         s->f5C_LOAD = 0;
         break;
     case 1:
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 1;
         break;
     case 2:
-        t[2] = (int)LoadMenuTask_800B794C;
+        t->next_8 = LoadMenuTask_800B794C;
         s->f28_LOAD = 0;
         s->f24_LOAD = 0xD;
         break;
@@ -1164,14 +1160,14 @@ void FormatCardTask_800BA9F0(int* t, LoadTask_LOAD* s)
     DrawMenuBackground_8002BE10();
 }
 
-void LoadMenuExit_800BAAE0(int* t, LoadTask_LOAD* s)
+void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
 {
     free3_8003FC6C(s->summaries_LOAD);
     free3_8003FC6C(s->fileBuf_LOAD);
     loadMenuActive_800BE184 = 0;
-    t[0] = (t[0] & ~1) | 0x8000;
+    t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     MemCardStop();
-    t[2] = (int)sub_800B7650;
+    t->next_8 = sub_800B7650;
     if (!(s->f54_LOAD & 8))
     {
         FreeActiveOverlay_8002C014();
@@ -1249,10 +1245,10 @@ void DrawMessageBox_800BACBC(char** lines)
     }
 }
 
-void ResetMenuRow_800BADE0(unsigned char* p)
+void ResetMenuRow_800BADE0(Row16_LOAD* p)
 {
-    p[12] = p[9];
-    p[13] = p[10];
+    p->fC_LOAD = p->f9_LOAD;
+    p->fD_LOAD = p->fA_LOAD;
 }
 
 void WaitCardSync_800BADF4(void)
