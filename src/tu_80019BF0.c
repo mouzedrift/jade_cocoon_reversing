@@ -5292,22 +5292,23 @@ char* sub_80024F70(void* p, int n)
     return r;
 }
 #if 0
-// Not matched
+// Not matched: the original keeps the 0 result in v0 and copies it into the loop counter; ours keeps the result in a2
 char* sub_80024FA8(void* a0, int n)
 {
+    char* hdr = *(char**)((char*)a0 + 0x4C);
     char* r = 0;
     int i = 0;
-    char* hdr = *(char**)((char*)a0 + 0x4C);
     if (hdr)
     {
         int off = *(int*)(hdr + 8);
         if (off)
         {
-            r = hdr + off + 8;
+            hdr = hdr + off + 8;
             for (; i < n; i++)
             {
-                r += *(int*)(r + 0x14);
+                hdr += *(int*)(hdr + 0x14);
             }
+            return hdr;
         }
     }
     return r;
@@ -6909,7 +6910,7 @@ extern void sub_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void sub_80028808(void* a0, int* a1);
 #if 0
-// Not matched: only the end-of-state a1[0]++ and eventDispatchHalt = 1 pairs swap registers (loaded state vs the constant 1)
+// Not matched: 5 instructions: in case 1 the a1[0] load, the constant 1 and the eventDispatchHalt address get rotated registers (a0/v0/v1)
 void sub_80027CF8(void* a0, int* a)
 {
     int* a1 = a;
@@ -6919,6 +6920,7 @@ void sub_80027CF8(void* a0, int* a)
     int t;
     int m;
     int n;
+    int k;
     switch (a1[0])
     {
     case 0:
@@ -7002,8 +7004,9 @@ void sub_80027CF8(void* a0, int* a)
                 if (dword_80091C90 == 0 && dword_80091C58 != 0)
                 {
                     sub_800B88A4(t);
-                    n = a1[0];
+                    k = a1[0];
                     eventDispatchHalt_8008B540 = 1;
+                    n = k;
                     a1[0] = n + 1;
                     sub_80027478(0x10, 1);
                     break;
