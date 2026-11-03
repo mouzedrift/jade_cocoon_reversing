@@ -209,8 +209,8 @@ typedef struct
     unsigned short flags;
     unsigned short type;
     int text;
-    char** f8;
-    char** fC;
+    SPRT** sprts_8;      // a TIY sprite table (e.g. &uiTiySprts_8008D620), indexed by text for type 1
+    DR_TPAGE** tpages_C;
     unsigned short x;
     unsigned short y;
     unsigned short w;
@@ -220,21 +220,11 @@ typedef struct
 } MenuItemD;
 typedef struct
 {
-    char pad_0[0x10];
-    short f10;
-    char pad_12[2];
-} Elem20;
-typedef struct
-{
-    char pad_0[8];
-} Elem8;
-typedef struct
-{
     unsigned short x;
     unsigned short y;
 } Pt;
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-extern void AddSprtWithTPage_800331C4(unsigned short* a, char* o, char* b, unsigned long* c, unsigned char* col);
+extern void AddSprtWithTPage_800331C4(unsigned short* a, SPRT* o, DR_TPAGE* b, unsigned long* c, unsigned char* col);
 extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern int MeasureTextWidth_8003E4C8(int text);
 extern void sub_8002FAA0(int a0, unsigned short* pos, int name, int a3);
@@ -268,11 +258,11 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         if ((unsigned int)p->text < 0xFFFFFFFF)
         {
             GetMenuItemColor_8002ACE8(p->flags, col);
-            AlignMenuItem_8002AC88(p->flags, r, ((Elem20*)*p->f8)[p->text].f10, loc);
+            AlignMenuItem_8002AC88(p->flags, r, (*p->sprts_8)[p->text].w, loc);
             {
-                char** fc = p->fC;
+                DR_TPAGE** fc = p->tpages_C;
                 mode = p->text;
-                AddSprtWithTPage_800331C4(loc, (char*)((Elem20*)*p->f8 + mode), (char*)((Elem8*)*fc + mode), pOT_8008D454 + ot, col);
+                AddSprtWithTPage_800331C4(loc, *p->sprts_8 + mode, *fc + mode, pOT_8008D454 + ot, col);
             }
         }
         break;

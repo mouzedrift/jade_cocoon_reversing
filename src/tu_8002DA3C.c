@@ -508,12 +508,12 @@ void sub_8002EACC(UnitStats* a0, unsigned short* pos, int a2, short ot)
     loc[0] += pos[0];
     loc[1] += pos[1];
     DrawUiTiySprt_8002C06C(loc, 10, ot);
-    prim = (SPRT*)uiTiySprts_8008D620;
+    prim = uiTiySprts_8008D620;
     prim[12].x0 = pos[0] + 2;
     prim[12].y0 = pos[1] + 2;
     SetSemiTrans(&prim[12], 1);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((SPRT*)uiTiySprts_8008D620)[12], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((DR_TPAGE*)uiTiyTPages_8008D3F4)[12], 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[12], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[12], 2);
     r.x = pos[0];
     r.y = pos[1];
     r.w = 0x32;

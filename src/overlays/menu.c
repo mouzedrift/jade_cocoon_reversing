@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "tiy.h"
 
 typedef struct MenuTask
 {
@@ -2595,15 +2596,13 @@ typedef struct MenuWinItem
     unsigned short flags_0;
     short pad_2;
     void* data_4;
-    void* spr_8;
-    void* tp_C;
+    SPRT** spr_8;
+    DR_TPAGE** tp_C;
     short x_10;
     short y_12;
     char pad_14[8];
 } MenuWinItem;
 extern MenuWinItem* name_800C28C4[];
-extern int publicTiySprts_8008D434;
-extern int publicTiyTPages_8008D440;
 extern int GetKeyItemIcon_8001D344();
 extern void sub_8002C6DC();
 extern char name_800C276C[];
@@ -2754,8 +2753,8 @@ typedef struct MenuEquipLine
 {
     char pad_0[4];
     int f4;
-    void* f8;
-    void* fC;
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
     short x_10;
     short y_12;
     char pad_14[0xC];
@@ -2794,8 +2793,8 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
         name_800C18B0[i]->f4 = name_800C1754[i];
         name_800C18B0[i]->icon_20 = icon;
         name_800C18B0[i]->name_3C = nm;
-        name_800C18B0[i]->f8 = &uiTiySprts_8008D620;
-        name_800C18B0[i]->fC = &uiTiyTPages_8008D3F4;
+        name_800C18B0[i]->sprts_8 = &uiTiySprts_8008D620;
+        name_800C18B0[i]->tpages_C = &uiTiyTPages_8008D3F4;
         name_800C18B0[i]->x_10 = pos[0];
         name_800C18B0[i]->y_12 = pos[1] + i * 22;
         name_800C18B0[i]->x_2C = pos[0] + 0x32;

@@ -2929,19 +2929,19 @@ void LoadRelocBlob_800BC854(int* src)
 
 INCLUDE_OVERLAY_ASM(eventfnc, LoadRelocBlob_800BC854);
 
-void sub_800BC98C(int a)
+void sub_800BC98C(int* a)
 {
-    if (dword_800AEBC0[0])
+    if (dword_800AEBC0.sprts_0)
     {
-        ListFree_8003FE38(dword_80091C10, dword_800AEBC0[0]);
-        dword_800AEBC0[0] = 0;
+        ListFree_8003FE38(dword_80091C10, dword_800AEBC0.sprts_0);
+        dword_800AEBC0.sprts_0 = 0;
     }
-    if (dword_800AEBC0[1])
+    if (dword_800AEBC0.tpages_4)
     {
-        ListFree_8003FE38(dword_80091C10, dword_800AEBC0[1]);
-        dword_800AEBC0[1] = 0;
+        ListFree_8003FE38(dword_80091C10, dword_800AEBC0.tpages_4);
+        dword_800AEBC0.tpages_4 = 0;
     }
-    LoadTiy_80028E74(&dword_800AEBC0[0], 0, &dword_800AEBC0[1], a, (int)dword_80091C10);
+    LoadTiy_80028E74(&dword_800AEBC0.sprts_0, 0, &dword_800AEBC0.tpages_4, a, (int)dword_80091C10);
 }
 
 #if 0

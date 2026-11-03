@@ -23,8 +23,8 @@ typedef struct
     unsigned short flags;
     short pad_2;
     int f4;
-    int f8;
-    int fC;
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
     short x;
     short y;
     char pad_14[8];
@@ -114,8 +114,8 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;
         (*e2)[2].f4 = v19;
-        (*e2)[0].f8 = (int)&uiTiySprts_8008D620;
-        (*e2)[0].fC = (int)&uiTiyTPages_8008D3F4;
+        (*e2)[0].sprts_8 = &uiTiySprts_8008D620;
+        (*e2)[0].tpages_C = &uiTiyTPages_8008D3F4;
         (*e2)[0].x = pos[0];
         y = i * 22;
         (*e2)[0].y = pos[1] + y;
@@ -168,8 +168,8 @@ typedef struct
     unsigned short flags;
     unsigned short type;
     int text;
-    int f8;
-    int fC;
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
     short x;
     short y;
     short w;

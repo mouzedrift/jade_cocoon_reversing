@@ -453,26 +453,26 @@ void free3_8003FC6C(void* block)
     free3(block);
 }
 // Matched
-int HeapAlloc_8003FC8C(int size, Pool* h)
+void* HeapAlloc_8003FC8C(int size, Pool* h)
 {
     switch ((int)h)
     {
     case 0:
-        return (int)ListAlloc_8003FDC0((List*)defaultAllocList_80096090, size);
+        return ListAlloc_8003FDC0((List*)defaultAllocList_80096090, size);
     case 1:
-        return (int)malloc3_8003FC4C(size);
+        return malloc3_8003FC4C(size);
     default:
         if (h->magic == (int)0x8FFFFFFF)
         {
             if (h->inited != 0)
             {
-                return (int)PoolAlloc_8003FFD0(h, size);
+                return PoolAlloc_8003FFD0(h, size);
             }
-            return (int)malloc3_8003FC4C(size);
+            return malloc3_8003FC4C(size);
         }
         break;
     }
-    return (int)ListAlloc_8003FDC0((List*)h, size);
+    return ListAlloc_8003FDC0((List*)h, size);
 }
 // Matched
 void HeapFree_8003FD18(int ptr, Pool* h)

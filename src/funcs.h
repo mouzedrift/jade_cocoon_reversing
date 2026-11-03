@@ -26,6 +26,7 @@ struct ModelAnim;
 struct OverlayLoader;
 struct Fade_8001A41C;
 struct XaTask;
+struct TimInfo;
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
@@ -285,7 +286,7 @@ extern void sub_80013EB4(void* p, int a1, int a2);
 extern int GetMagicMpCost_8001AC58(int idx);
 extern struct_112* AcquireModel_80024D70(struct_112_list* a0, unsigned int a1);
 struct Pool;
-extern int HeapAlloc_8003FC8C(int a0, struct Pool* a1);
+extern void* HeapAlloc_8003FC8C(int a0, struct Pool* a1);
 extern void InitPolyFT4_80029A10(void* a0, void* a1);
 extern void SetLargeDigitColor_8002C5D0(int a0);
 extern void sub_800429F8(int a0, int a1);
@@ -397,10 +398,10 @@ extern void LoadModelAnimData_80026A8C(struct ModelAnim* a0, int a1, int a2);
 extern void FreeSound_80030D00(int a0);
 extern void RestoreCameraState_80039698(int* a0);
 extern unsigned short* EncodeText_8003F684(int a0, unsigned short* a1);
-extern void InitSprtFromTim_800298AC(int a0, int a1, void* a2);
+extern void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, struct TimInfo* t);
 extern struct_20* sub_800B3274(int a0);
 extern void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4);
-extern void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4);
+extern void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap);
 extern void XaWaitFilterTask_800431C4(EventEntry* p, struct XaTask* q);
 extern int GetEquipmentIcon_8001D2D4(void);
 extern void UpdateOverlayLoaderTask_80020CD8(int a0, struct OverlayLoader* p);
@@ -427,7 +428,7 @@ extern void ClearModelAnimRefs_800201A4(void);
 extern void SetReverbDepth_8002A2A0(struct_obj_B* p, short a1, short a2);
 extern void DrawLargeTextBox_8002AF10(int a0, int a1, int a2);
 extern void DrawSmallTextBox_8002AF58(int a0, int a1, int a2);
-extern void OnUiTiyLoaded_8002BFCC(int a0, int a1);
+extern void OnUiTiyLoaded_8002BFCC(void* params, int* data);
 extern int sub_8002D738(int a0, int a1, int a2);
 extern void FreeSoundVab_80030EA4(short* p);
 extern int CountMaskedUntilZero_80034B40(int* p, unsigned int mask);

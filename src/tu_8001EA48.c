@@ -4697,7 +4697,7 @@ void sub_80028808(void* a0, int* a1)
     sub_80027708(p, (int)&dword_80091C68);
     p = (int*)((char*)p + cnt);
     cnt = *p++;
-    LoadTiy_80028E74(0, 0, 0, (int)p, (int)&dword_80091C68);
+    LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
     p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
     dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500[1] * 12);
     MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500[1] * 12);

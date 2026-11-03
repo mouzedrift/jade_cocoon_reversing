@@ -106,10 +106,10 @@ extern void PlayMusic_800300E0(int, int);
 extern void sub_800B6E5C();
 extern int sub_800B81D0(MapPos*);
 extern int dword_800B9430;
-extern int dword_800B9314;
-extern int dword_800B9318;
-extern int dword_800B931C;
-extern int dword_800B9320;
+extern SPRT* dword_800B9314; // map TIY sprites / tpages (sub_800B6DE0)
+extern DR_TPAGE* dword_800B9318;
+extern SPRT* dword_800B931C;
+extern DR_TPAGE* dword_800B9320;
 extern int dword_800B9434;
 extern int dword_800B9438;
 // state of the map select (sub_800B860C)
@@ -132,7 +132,7 @@ extern void ResetPadHoldFrames_8001CD04(int);
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void sub_800B6CB4();
 extern void sub_800B6C7C();
-extern void sub_800B6DE0(MapTask*, int);
+extern void sub_800B6DE0(MapTask*, int*);
 extern void sub_800B6E80();
 extern void sub_800B6EE8();
 extern void sub_800B6FAC(MapTask*);
@@ -205,7 +205,7 @@ void sub_800B6D90(FileRequestDesc* p, int a1)
 }
 
 // Matched
-void sub_800B6DE0(MapTask* t, int a1)
+void sub_800B6DE0(MapTask* t, int* a1)
 {
     sub_800B6FAC(t);
     if (dword_800B9434 == 1)
@@ -261,22 +261,22 @@ void sub_800B6FAC(MapTask* t)
 {
     if (dword_800B9314)
     {
-        free3_8003FC6C((void*)dword_800B9314);
+        free3_8003FC6C(dword_800B9314);
         dword_800B9314 = 0;
     }
     if (dword_800B9318)
     {
-        free3_8003FC6C((void*)dword_800B9318);
+        free3_8003FC6C(dword_800B9318);
         dword_800B9318 = 0;
     }
     if (dword_800B931C)
     {
-        free3_8003FC6C((void*)dword_800B931C);
+        free3_8003FC6C(dword_800B931C);
         dword_800B931C = 0;
     }
     if (dword_800B9320)
     {
-        free3_8003FC6C((void*)dword_800B9320);
+        free3_8003FC6C(dword_800B9320);
         dword_800B9320 = 0;
     }
 }

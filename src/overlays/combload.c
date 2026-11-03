@@ -152,11 +152,11 @@ void sub_800A4364()
 {
     RECT r;
     CombLoadBox b;
-    short* p = (short*)(uiTiySprts_8008D620 + 0x12C);
-    p[4] = 0x78;
-    p[5] = 0x14;
+    SPRT* p = &uiTiySprts_8008D620[15];
+    p->x0 = 0x78;
+    p->y0 = 0x14;
     AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x78, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
     r.x = 0x78;
     r.w = 0x7E;
     r.h = 0x12;
@@ -171,32 +171,32 @@ INCLUDE_OVERLAY_ASM(combload, sub_800A4364);
 
 INCLUDE_OVERLAY_ASM(combload, sub_800A4420);
 
-// Near miss: pointer register allocation for the 0xC1C buffer
+// Near miss: pointer register allocation for UI sprite 155
 #if 0
 void sub_800A44DC()
 {
     short rect[4];
     CombLoadBox b;
-    short* p;
-    int base;
+    SPRT* p;
+    SPRT* base;
     base = uiTiySprts_8008D620;
-    p = (short*)(base + 0xC1C);
-    p[4] = 0x66;
-    p[5] = 0x2A;
+    p = &base[155];
+    p->x0 = 0x66;
+    p->y0 = 0x2A;
     AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     base = uiTiySprts_8008D620;
-    p = (short*)(base + 0xC1C);
-    p[4] = 0x8E;
-    p[5] = 0x2A;
+    p = &base[155];
+    p->x0 = 0x8E;
+    p->y0 = 0x2A;
     AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     base = uiTiySprts_8008D620;
-    p = (short*)(base + 0xC1C);
-    p[4] = 0xD4;
-    p[5] = 0x2A;
+    p = &base[155];
+    p->x0 = 0xD4;
+    p->y0 = 0x2A;
     AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, (char*)uiTiyTPages_8008D3F4 + 0x4D8, 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     b.c_3 = 1;
     rect[0] = 0x64;
     b.col_0 = uiColor_8008B590;

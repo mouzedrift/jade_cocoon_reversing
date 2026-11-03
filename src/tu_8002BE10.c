@@ -89,9 +89,9 @@ void LoadUiTiy_8002BF74(void)
     QueueFileRequest_8003BC84(&s);
 }
 // Matched
-void OnUiTiyLoaded_8002BFCC(int a0, int a1)
+void OnUiTiyLoaded_8002BFCC(void* params, int* data)
 {
-    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, a1, 1);
+    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, data, 1);
     uiTiyLoaded_8008B4E8 = 1;
 }
 // Matched
@@ -99,22 +99,22 @@ void FreeActiveOverlay_8002C014(void)
 {
     if (uiTiySprts_8008D620)
     {
-        free3_8003FC6C((void*)uiTiySprts_8008D620);
+        free3_8003FC6C(uiTiySprts_8008D620);
         uiTiySprts_8008D620 = 0;
     }
     if (uiTiyTPages_8008D3F4)
     {
-        free3_8003FC6C((void*)uiTiyTPages_8008D3F4);
+        free3_8003FC6C(uiTiyTPages_8008D3F4);
         uiTiyTPages_8008D3F4 = 0;
     }
 }
 // Matched
 void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
-    ((SPRT*)uiTiySprts_8008D620)[idx].x0 = pos[0];
-    ((SPRT*)uiTiySprts_8008D620)[idx].y0 = pos[1];
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((SPRT*)uiTiySprts_8008D620)[idx], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &((DR_TPAGE*)uiTiyTPages_8008D3F4)[idx], 2);
+    uiTiySprts_8008D620[idx].x0 = pos[0];
+    uiTiySprts_8008D620[idx].y0 = pos[1];
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[idx], 5);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[idx], 2);
 }
 // Matched
 void DrawLargeNumber_8002C100(unsigned short* p, int n, int ot)
@@ -143,7 +143,7 @@ void DrawLargeNumber_8002C100(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            pos[0] = p[0] - (j + 1) * (uiTiySprts_8008D620[digits[j]].w - 1);
             DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
@@ -175,7 +175,7 @@ void DrawSmallNumber3_8002C290(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            pos[0] = p[0] - (j + 1) * (uiTiySprts_8008D620[digits[j]].w - 1);
             DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
@@ -207,7 +207,7 @@ void DrawSmallNumber9_8002C414(unsigned short* p, int n, int ot)
     {
         if (digits[j] != -1)
         {
-            pos[0] = p[0] - (j + 1) * (((SPRT*)uiTiySprts_8008D620)[digits[j]].w - 1);
+            pos[0] = p[0] - (j + 1) * (uiTiySprts_8008D620[digits[j]].w - 1);
             DrawUiTiySprt_8002C06C(pos, digits[j], ot);
         }
     }
@@ -228,9 +228,9 @@ void SetLargeDigitColor_8002C5D0(int a0)
     short i = 0x84;
     do
     {
-        ((SPRT*)uiTiySprts_8008D620)[i].r0 = largeDigitColors_800826F8[a0][0];
-        ((SPRT*)uiTiySprts_8008D620)[i].g0 = largeDigitColors_800826F8[a0][1];
-        ((SPRT*)uiTiySprts_8008D620)[i].b0 = largeDigitColors_800826F8[a0][2];
+        uiTiySprts_8008D620[i].r0 = largeDigitColors_800826F8[a0][0];
+        uiTiySprts_8008D620[i].g0 = largeDigitColors_800826F8[a0][1];
+        uiTiySprts_8008D620[i].b0 = largeDigitColors_800826F8[a0][2];
         i++;
     } while (i < 0x8e);
 }
@@ -274,8 +274,8 @@ typedef struct
     unsigned short flags;
     short pad_2;
     int f4;
-    int f8;
-    int fC;
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
     short x;
     short y;
     char pad_14[8];
@@ -329,8 +329,8 @@ void sub_8002C728(struct_minion_ref* a0)
         }
         e = &off_800829E8[i];
         (*e)[0].f4 = v18;
-        (*e)[0].f8 = (int)&publicTiySprts_8008D434;
-        (*e)[0].fC = (int)&publicTiyTPages_8008D440;
+        (*e)[0].sprts_8 = &publicTiySprts_8008D434;
+        (*e)[0].tpages_C = &publicTiyTPages_8008D440;
         (*e)[1].f4 = v19;
         (*e)[2].f4 = v17;
         (*e)[0].x = 0x53;

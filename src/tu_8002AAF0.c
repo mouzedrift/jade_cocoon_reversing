@@ -311,9 +311,9 @@ void DrawButtonHelpBar_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
     cur.x = base.x + 2;
     for (; e[i].icon >= 0; i++)
     {
-        cur.y = base.y + (14 - ((SPRT*)uiTiySprts_8008D620)[e[i].icon].h) / 2;
+        cur.y = base.y + (14 - uiTiySprts_8008D620[e[i].icon].h) / 2;
         DrawUiTiySprt_8002C06C(&cur, e[i].icon, ot);
-        cur.x = (unsigned short)(cur.x + 1) + ((SPRT*)uiTiySprts_8008D620)[e[i].icon].w;
+        cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[e[i].icon].w;
         cur.y = base.y + 2;
         DrawText_8003E91C(2, e[i].text, &cur, ot);
         cur.x = MeasureTextWidth_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);

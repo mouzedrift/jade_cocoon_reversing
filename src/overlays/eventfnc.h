@@ -554,7 +554,13 @@ extern void sub_800A5804(int a);
 
 extern void OnEffectFileLoaded_80020F5C(EvGfxArgEventfnc* p, int a);
 
-extern int dword_800AEBC0[2];
+// sprites / tpages of the TIY loaded by sub_800BC98C
+typedef struct
+{
+    SPRT* sprts_0;
+    DR_TPAGE* tpages_4;
+} EvTiyEventfnc;
+extern EvTiyEventfnc dword_800AEBC0;
 
 extern int dword_800AEBCC[2];
 

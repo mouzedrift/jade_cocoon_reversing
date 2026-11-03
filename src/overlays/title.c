@@ -58,7 +58,7 @@ void sub_800A093C(TitleTask* t, TitleCtxA* c)
         c->sprts_70 = 0;
         c->tpages_74 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x39);
-        LoadTiy_80028E74((int*)&c->sprts_70, 0, (int*)&c->tpages_74, (int)buf, 1);
+        LoadTiy_80028E74(&c->sprts_70, 0, &c->tpages_74, buf, 1);
         free3_8003FC6C(buf);
         t->next_8 = sub_800A09C0;
     }
@@ -332,7 +332,7 @@ void sub_800A0F6C(TitleTask* t, TitleCtxB* c)
         c->sprts_C = 0;
         c->tpages_14 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x36);
-        LoadTiy_80028E74((int*)&c->sprts_C, 0, (int*)&c->tpages_14, (int)buf, 1);
+        LoadTiy_80028E74(&c->sprts_C, 0, &c->tpages_14, buf, 1);
         free3_8003FC6C(buf);
         (t->next_8 = sub_800A1070)(t, c);
     }

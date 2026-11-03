@@ -3,6 +3,8 @@
 
 #include "SYS/TYPES.H"
 #include "LIBDS.H"
+#include "LIBGTE.H"
+#include "LIBGPU.H"
 #include "enums.h"
 #include "common.h"
 
@@ -427,8 +429,8 @@ extern short word_80091C40[];
 extern FileRequest* dword_8008654C;
 extern struct_20 dword_8007A9F8[];
 extern struct_obj_C modelAnimRefs_800919A0[7];
-extern int uiTiySprts_8008D620;
-extern int uiTiyTPages_8008D3F4;
+extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
+extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;
 extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;

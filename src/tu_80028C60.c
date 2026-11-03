@@ -40,7 +40,7 @@ void sub_80028C60(int a0, char* a1)
     p = a1;
     a1 += 0x108;
     n = *(int*)(p + 0x104);
-    LoadTiy_80028E74(0, 0, 0, (int)a1, (int)&dword_80091C20);
+    LoadTiy_80028E74(0, 0, 0, (int*)a1, (int)&dword_80091C20);
     a1 += n;
     n = *(int*)a1;
     a1 += 4;
@@ -58,7 +58,7 @@ void sub_80028C60(int a0, char* a1)
     a1 += n;
     if (dword_80082670 == 1)
     {
-        LoadTiy_80028E74(0, 0, 0, (int)(a1 + 4), (int)dword_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int*)(a1 + 4), (int)dword_80091C68);
     }
     sub_800272BC(dword_8008B500[0], word_8008B860);
     if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
@@ -91,31 +91,31 @@ int GetTiyFileCount_80028E68(int* p)
 {
     return p[0];
 }
-extern void AllocTiyPrims_800295D8(int* a0, int a1, int* a2, int a3, int a4);
-extern void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4);
+extern void AllocTiyPrims_800295D8(SPRT** a, POLY_FT4** b, DR_TPAGE** c, int n, int heap);
+extern void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count);
 // Matched
-void LoadTiy_80028E74(int* a0, int a1, int* a2, int a3, int a4)
+void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap)
 {
-    int v = *(int*)a3;
-    AllocTiyPrims_800295D8(a0, a1, a2, v, a4);
-    LoadTiyTims_80028EEC(a0, a1, a2, a3, v);
+    int v = *file;
+    AllocTiyPrims_800295D8(sprts, polys, tpages, v, heap);
+    LoadTiyTims_80028EEC(sprts, polys, tpages, file, v);
 }
 // Matched
-void LoadTiyTims_80028EEC(int* a0, int a1, int* a2, int a3, int a4)
+void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count)
 {
     TimInfo buf;
     unsigned int i;
-    for (i = 0; i < (unsigned int)a4; i++)
+    for (i = 0; i < (unsigned int)count; i++)
     {
-        ParseTim_80029708(&buf, (char*)a3 + ((int*)a3)[i + 1]);
+        ParseTim_80029708(&buf, (char*)file + file[i + 1]);
         LoadTimToVram_800296A0(&buf);
-        if (a0 && a2)
+        if (sprts && tpages)
         {
-            InitSprtFromTim_800298AC(*a0 + i * 20, *a2 + i * 8, &buf);
+            InitSprtFromTim_800298AC(&(*sprts)[i], &(*tpages)[i], &buf);
         }
-        if (a1)
+        if (polys)
         {
-            InitPolyFT4_80029A10((char*)*(int*)a1 + i * 40, &buf);
+            InitPolyFT4_80029A10(&(*polys)[i], &buf);
         }
     }
 }
@@ -240,19 +240,19 @@ void TintVramImage_800292D0(void* a0, void* a1, int a2)
     free3_8003FC6C(buf);
 }
 // Matched
-void AllocTiyPrims_800295D8(int* a, int b, int* c, int n, int heap)
+void AllocTiyPrims_800295D8(SPRT** a, POLY_FT4** b, DR_TPAGE** c, int n, int heap)
 {
     if (a)
     {
-        *a = HeapAlloc_8003FC8C(n * 20, (struct Pool*)heap);
+        *a = HeapAlloc_8003FC8C(n * sizeof(SPRT), (struct Pool*)heap);
     }
     if (b)
     {
-        *(int*)b = HeapAlloc_8003FC8C(n * 40, (struct Pool*)heap);
+        *b = HeapAlloc_8003FC8C(n * sizeof(POLY_FT4), (struct Pool*)heap);
     }
     if (c)
     {
-        *c = HeapAlloc_8003FC8C(n * 8, (struct Pool*)heap);
+        *c = HeapAlloc_8003FC8C(n * sizeof(DR_TPAGE), (struct Pool*)heap);
     }
 }
 // Matched
@@ -328,15 +328,13 @@ void InitSprtFromTimData_80029868(int a0, int a1, int a2)
     InitSprtFromTim_800298AC(a0, a2, &buf);
 }
 // Matched
-void InitSprtFromTim_800298AC(int a0, int a1, void* a2)
+void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, TimInfo* t)
 {
-    SPRT* s = (SPRT*)a0;
-    TimInfo* t = (TimInfo*)a2;
     SetSprt(s);
     s->r0 = 0x80;
     s->g0 = 0x80;
     s->b0 = 0x80;
-    SetDrawTPage((DR_TPAGE*)a1, 0, 1, GetTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256));
+    SetDrawTPage(tp, 0, 1, GetTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256));
     s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
     s->v0 = t->prect.y % 256;
     s->w = (t->prect.w * 4) >> t->mode;

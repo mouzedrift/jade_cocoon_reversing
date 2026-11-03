@@ -58,7 +58,7 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74((int*)&publicTiySprts_8008D434, (int)&publicTiyPolyFT4s_8008D430, (int*)&publicTiyTPages_8008D440, (int)pFile, 1);
+    LoadTiy_80028E74(&publicTiySprts_8008D434, &publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, pFile, 1);
     pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
     AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
     LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);
@@ -70,7 +70,7 @@ void ReloadPublicTiy_80040898(void)
 {
     void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68((int*)pFile);
-    LoadTiy_80028E74(0, 0, 0, (int)pFile, 1);
+    LoadTiy_80028E74(0, 0, 0, pFile, 1);
     InitFonts_8003DA70();
 }
 extern SPRT* copyrightSprts_8008D47C;
@@ -117,7 +117,7 @@ void InitCopyrightScreen_80040A10(int* a0)
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     copyrightSprts_8008D47C = 0;
     copyrightTPages_8008B4EC = 0;
-    LoadTiy_80028E74((int*)&copyrightSprts_8008D47C, 0, (int*)&copyrightTPages_8008B4EC, (int)pFile, 1);
+    LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, pFile, 1);
     free3_8003FC6C(pFile);
     a0[2] = (int)DrawCopyrightScreen_800408F4;
 }

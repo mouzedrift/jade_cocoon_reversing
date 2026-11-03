@@ -52,7 +52,7 @@ void DrawElementIcons_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
         {
             v = elementIconsUnlit_800827D0[i];
         }
-        SetShadeTex((SPRT*)uiTiySprts_8008D620 + v, 1);
+        SetShadeTex(uiTiySprts_8008D620 + v, 1);
         DrawUiTiySprt_8002C06C(pos, v, c);
     }
 }
