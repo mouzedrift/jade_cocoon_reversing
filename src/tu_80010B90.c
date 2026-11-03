@@ -1888,12 +1888,11 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
 
     return totalMinions;
 }
-#if 0
-// Not matched: the clamped value lives in $a2 instead of $v1 (needs "dword_80071B78 0x390" in config/c_rodata.txt so the jump table comes from C)
+// Matched
 void sub_80012614(int a0, int sel, int delta, int mask)
 {
-    int r;
     int v;
+    int r;
     char* p = (char*)a0;
     unsigned short* sp = 0;
     unsigned char* bp = 0;
@@ -1953,16 +1952,16 @@ void sub_80012614(int a0, int sel, int delta, int mask)
     }
     if (sp)
     {
-        v = *sp + delta;
+        v = *sp;
+        v += delta;
         r = (v < 0) ? 0 : ((max < v) ? max : v);
         *sp = r;
     }
     else if (bp)
     {
-        v = *bp + delta;
+        v = *bp;
+        v += delta;
         r = (v < 0) ? 0 : ((max < v) ? max : v);
         *bp = r;
     }
 }
-#endif
-INCLUDE_ASM(sub_80012614);
