@@ -151,7 +151,7 @@ extern char byte_800B682C[];
 extern char byte_800B6B9C[];
 extern void sub_8003F264(void* p, int a, int b);
 extern char byte_800B69FC[];
-extern int dword_800BDD64;
+extern MenuWin_LOAD dword_800BDD64;
 extern void DrawMenuWindows_8002A5A4(void* p);
 typedef struct
 {
@@ -416,7 +416,278 @@ void LoadMenuTask_800B794C(Task_LOAD* t, LoadTask_LOAD* s)
 }
 INCLUDE_OVERLAY_ASM(load, dword_800B68E0);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B79F8);
+extern unsigned short padPressed_8009194C[];
+extern MenuWin_LOAD dword_800BDB0C;
+extern MenuWin_LOAD dword_800BDCD0;
+extern MenuWin_LOAD dword_800BDDF8;
+extern MenuWin_LOAD dword_800BDE8C;
+extern char* dword_800BDEBC[];
+extern char* dword_800BDEFC[];
+extern char* dword_800BDF1C[];
+extern char* dword_800BDF2C[];
+extern char* dword_800BDF3C[];
+extern char dword_800BDEA4[];
+extern char byte_800B68E0[];
+extern char byte_800B68F8[];
+extern char byte_800B6918[];
+extern char byte_800B6938[];
+extern Bytes8_LOAD dword_800B6930;
+extern Bytes8_LOAD dword_800B6968;
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern int PollCardExist_800BAF0C(int a);
+extern int PollCardAccept_800BAE68(int a);
+void sub_800B80F8(LoadTask_LOAD* t);
+void sub_800B82FC(LoadTask_LOAD* t);
+void sub_800B847C(LoadTask_LOAD* t);
+void sub_800B85AC(LoadTask_LOAD* t);
+void sub_800B867C(LoadTask_LOAD* t);
+void sub_800B877C(LoadTask_LOAD* t);
+void sub_800B8984(LoadTask_LOAD* t);
+void sub_800B8A20(LoadTask_LOAD* t);
+void sub_800B8AE4(LoadTask_LOAD* t);
+void sub_800B9220(LoadTask_LOAD* t);
+void sub_800B92C0(LoadTask_LOAD* t);
+void sub_800B9360(LoadTask_LOAD* t);
+void sub_800B9470(LoadTask_LOAD* t);
+void sub_800B952C(LoadTask_LOAD* t);
+void sub_800B9654(LoadTask_LOAD* t);
+int ReadSaveSummaries_800B9724(LoadTask_LOAD* t);
+// Matched
+void sub_800B79F8(LoadTask_LOAD* t)
+{
+    union // the text position and the window colour share one slot (case 4)
+    {
+        Pos_LOAD pos;
+        Tail4_LOAD tail;
+    } u;
+    int r;
+    sub_800B80F8(t);
+    switch (t->s30_LOAD)
+    {
+    case 9:
+    case 10:
+        dword_800BDB0C.f4_LOAD = 0;
+        dword_800BDB0C.f0_LOAD = 1;
+        DrawMenuWindows_8002A5A4(&dword_800BDB0C);
+        sub_800B867C(t);
+        sub_800B8984(t);
+        sub_800B8A20(t);
+        sub_800B8AE4(t);
+        sub_800B877C(t);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 3;
+        }
+        if (!ReadSaveSummaries_800B9724(t))
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 7:
+        DrawMessageBox_800BACBC(dword_800BDEBC);
+        if (!ReadSaveSummaries_800B9724(t) || padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 11:
+        switch (PollCardExist_800BAF0C(byte_800BDF68))
+        {
+        case -1:
+        case 0:
+        case 2:
+        case 3:
+            break;
+        case 1:
+            t->f24_LOAD = 1;
+            break;
+        }
+        sub_800B847C(t);
+        sub_800B877C(t);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 8:
+        DrawMessageBox_800BACBC(dword_800BDEFC);
+        switch (PollCardAccept_800BAE68(byte_800BDF68))
+        {
+        case -1:
+        case 0:
+        case 4:
+            break;
+        default:
+            t->f24_LOAD = 1;
+            break;
+        }
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 0:
+        dword_800BDCD0.f4_LOAD = GetTime30Hz_8002C64C();
+        dword_800BDCD0.fC_LOAD = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        DrawMenuWindows_8002A5A4(&dword_800BDCD0);
+        sub_800B877C(t);
+        sub_800B9220(t);
+        break;
+    case 1:
+        sub_800B82FC(t);
+        sub_800B877C(t);
+        sub_800B92C0(t);
+        break;
+    case 6:
+        switch (PollCardExist_800BAF0C(byte_800BDF68))
+        {
+        case 0:
+        case 3:
+        case 4:
+            WaitCardSync_800BADF4();
+            t->f24_LOAD = 0x12;
+            break;
+        }
+        sub_800B847C(t);
+        sub_800B877C(t);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 18:
+        sub_800B847C(t);
+        sub_800B877C(t);
+        sub_800B9360(t);
+        break;
+    case 2:
+        dword_800BDD64.f4_LOAD = GetTime30Hz_8002C64C();
+        dword_800BDD64.fC_LOAD = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        sub_800B85AC(t);
+        sub_800B9470(t);
+        break;
+    case 3:
+        dword_800BDB0C.f4_LOAD = GetTime30Hz_8002C64C();
+        dword_800BDB0C.fC_LOAD = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        dword_800BDB0C.f0_LOAD = 2;
+        if (!ReadSaveSummaries_800B9724(t))
+        {
+            t->f24_LOAD = 1;
+        }
+        DrawMenuWindows_8002A5A4(&dword_800BDB0C);
+        sub_800B867C(t);
+        sub_800B8984(t);
+        sub_800B8A20(t);
+        sub_800B8AE4(t);
+        sub_800B877C(t);
+        sub_800B952C(t);
+        break;
+    case 4:
+        dword_800BDB0C.f4_LOAD = 0;
+        dword_800BDB0C.fC_LOAD = stru_800BDF4C[3].fC_LOAD;
+        dword_800BDB0C.f0_LOAD = 4;
+        dword_800BDDF8.f4_LOAD = GetTime30Hz_8002C64C();
+        dword_800BDDF8.fC_LOAD = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        if (!ReadSaveSummaries_800B9724(t))
+        {
+            t->f24_LOAD = 1;
+        }
+        DrawMenuWindows_8002A5A4(&dword_800BDB0C);
+        sub_800B867C(t);
+        sub_800B8984(t);
+        sub_800B8A20(t);
+        sub_800B8AE4(t);
+        DrawMenuWindows_8002A5A4(&dword_800BDDF8);
+        if (stru_800BDF4C[0].fC_LOAD == 1)
+        {
+            u.pos.x_LOAD = 0xD;
+            u.pos.y_LOAD = 0xC4;
+            DrawText_8003E91C(2, byte_800B68E0, &u.pos, 5);
+        }
+        else if (stru_800BDF4C[0].fC_LOAD == 0)
+        {
+            if (GetCardSaveName_800BAE4C(stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD))
+            {
+                u.pos.x_LOAD = 0xD;
+                u.pos.y_LOAD = 0xC4;
+                DrawText_8003E91C(2, byte_800B68F8, &u.pos, 5);
+            }
+            else
+            {
+                u.pos.x_LOAD = 0xD;
+                u.pos.y_LOAD = 0xC4;
+                DrawText_8003E91C(2, byte_800B6918, &u.pos, 5);
+            }
+        }
+        {
+            Bytes8_LOAD a;
+            a = dword_800B6930;
+            u.tail.c1_LOAD = 1;
+            u.tail.c0_LOAD = 0;
+            u.tail.s_LOAD = uiColor_8008B590;
+            DrawWindow_80042460(&a, &u.tail, dword_8008D454 + 0x38, 0);
+        }
+        sub_800B9654(t);
+        break;
+    case 5:
+        dword_800BDE8C.f4_LOAD = GetTime30Hz_8002C64C();
+        dword_800BDE8C.fC_LOAD = stru_800BDF4C[t->s30_LOAD].fC_LOAD;
+        u.pos.x_LOAD = 0x66;
+        u.pos.y_LOAD = 0x69;
+        DrawText_8003E91C(2, byte_800B6938, &u.pos, 5);
+        {
+        Bytes8_LOAD a;
+        Tail4_LOAD b;
+        a = dword_800B6968;
+        b.c1_LOAD = 1;
+        b.c0_LOAD = 0;
+        b.s_LOAD = uiColor_8008B590;
+        DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+        }
+        DrawMenuWindows_8002A5A4(&dword_800BDE8C);
+        if (IsConfirmPressed_8003D288(0, (t->f54_LOAD >> 6) & 1))
+        {
+            if (stru_800BDF4C[t->s30_LOAD].fC_LOAD == 0)
+            {
+                t->f54_LOAD = 0x10;
+                t->f28_LOAD = 5;
+                PlaySfx_80031494(0x7E);
+                break;
+            }
+            t->f24_LOAD = 0;
+            PlaySfx_80031494(0x7D);
+        }
+        else if (IsCancelPressed_8003D3C0(0, (t->f54_LOAD >> 6) & 1))
+        {
+            t->f24_LOAD = 0;
+            PlaySfx_80031494(0x7D);
+        }
+        break;
+    case 13:
+        DrawMessageBox_800BACBC(dword_800BDF1C);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 14:
+        DrawMessageBox_800BACBC(dword_800BDF2C);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    case 15:
+        DrawMessageBox_800BACBC(dword_800BDF3C);
+        if (padPressed_8009194C[(t->f54_LOAD >> 6) & 1])
+        {
+            t->f24_LOAD = 1;
+        }
+        break;
+    }
+    DrawButtonHelpBar_8002B004(dword_800BDEA4, 0, 1);
+    DrawMenuBackground_8002BE10();
+}
 
 void sub_800B80F8(LoadTask_LOAD* t)
 {
@@ -512,7 +783,7 @@ void sub_800B82FC(LoadTask_LOAD* t)
     DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
-void sub_800B847C(void)
+void sub_800B847C(LoadTask_LOAD* t)
 {
     int i;
     Row8_LOAD* p;
@@ -542,7 +813,7 @@ void sub_800B847C(void)
     DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
-void sub_800B85AC(void)
+void sub_800B85AC(LoadTask_LOAD* t)
 {
     Pos_LOAD p0;
     Pos_LOAD p1;
@@ -664,7 +935,7 @@ void sub_800B877C(LoadTask_LOAD* t)
 }
 INCLUDE_OVERLAY_ASM(load, dword_800B6B8C);
 
-void sub_800B8984(void)
+void sub_800B8984(LoadTask_LOAD* t)
 {
     Bytes8_LOAD a;
     Tail4_LOAD b;
@@ -678,7 +949,7 @@ void sub_800B8984(void)
 
 #if 0
 // Not matched: only the order of the prologue stores differs ($ra/$s0 vs argument set-up)
-void sub_800B8A20(void)
+void sub_800B8A20(LoadTask_LOAD* t)
 {
     Pos_LOAD p0;
     Pos_LOAD p1;
@@ -699,7 +970,7 @@ void sub_800B8A20(void)
 #endif
 INCLUDE_OVERLAY_ASM(load, sub_800B8A20);
 
-void sub_800B8AE4(void)
+void sub_800B8AE4(LoadTask_LOAD* t)
 {
     Pos_LOAD p0;
     Pos_LOAD p1;
