@@ -453,7 +453,7 @@ int EnemyAi0A_800C4EA8(EnemyAi* ai)
 {
     int chosen;
     int roll = rand() % 100;
-    if (aiCounter_800C8B30 < 2)
+    if (aiCounter_800C8B30[0] < 2)
     {
         if (TargetHasStatus_800C6EC8(ai, 2) == 0 && roll < 40)
         {
@@ -462,7 +462,7 @@ int EnemyAi0A_800C4EA8(EnemyAi* ai)
             {
                 return chosen;
             }
-            aiCounter_800C8B30++;
+            aiCounter_800C8B30[0]++;
         }
         if (TargetHasStatus_800C6EC8(ai, 2) == 0 && roll < 40)
         {
@@ -471,7 +471,7 @@ int EnemyAi0A_800C4EA8(EnemyAi* ai)
             {
                 return chosen;
             }
-            aiCounter_800C8B30++;
+            aiCounter_800C8B30[0]++;
         }
     }
     return AiAttack_800C6A68(ai);
@@ -859,7 +859,7 @@ void EnemyAiDefend_800C58AC(EnemyAi* ai)
 
 void BossAi0A_800C58BC(EnemyAi* ai)
 {
-    unsigned char phase = aiCounter_800C8B30 % 6;
+    unsigned char phase = aiCounter_800C8B30[0] % 6;
     switch (phase)
     {
     case 0:
@@ -884,7 +884,7 @@ void BossAi0A_800C58BC(EnemyAi* ai)
         ai->cmd_8->targets_C = ai->targetMask_18;
         break;
     }
-    aiCounter_800C8B30++;
+    aiCounter_800C8B30[0]++;
 }
 
 const char aAttackWithReadi_800B68AC[] = "\202`\202\224\202\224\202\201\202\203\202\213\201@\202\227\202\211\202\224\202\210\201@\202\222\202\205\202\201\202\204\202\211\202\205\202\204\201@\202\227\202\205\202\201\202\220\202\217\202\216"; // Attack with readied weapon
@@ -1109,7 +1109,7 @@ const int dword_800BA174[2] = { 0 };
 
 void BossAi04_800C59A0(EnemyAi* ai)
 {
-    unsigned char phase = aiCounter_800C8B30 % 3;
+    unsigned char phase = aiCounter_800C8B30[0] % 3;
     switch (phase)
     {
     case 0:
@@ -1128,7 +1128,7 @@ void BossAi04_800C59A0(EnemyAi* ai)
         ai->cmd_8->targets_C = ai->targetMask_18;
         break;
     }
-    aiCounter_800C8B30++;
+    aiCounter_800C8B30[0]++;
 }
 
 void BossAi02_800C5A7C(EnemyAi* ai)
@@ -1151,7 +1151,7 @@ void BossAi02_800C5A7C(EnemyAi* ai)
     }
     else if (ai->slot_C == 1)
     {
-        unsigned char phase = aiCounter_800C8B30 % 3;
+        unsigned char phase = aiCounter_800C8B30[0] % 3;
         switch (phase)
         {
         case 0:
@@ -1169,7 +1169,7 @@ void BossAi02_800C5A7C(EnemyAi* ai)
             ai->cmd_8->targets_C = ai->targetMask_18;
             break;
         }
-        aiCounter_800C8B30++;
+        aiCounter_800C8B30[0]++;
     }
 }
 
@@ -1193,7 +1193,7 @@ void BossAi03_800C5BC0(EnemyAi* ai)
     }
     else if (ai->slot_C == 1)
     {
-        unsigned char phase = aiCounter_800C8B30 % 3;
+        unsigned char phase = aiCounter_800C8B30[0] % 3;
         switch (phase)
         {
         case 0:
@@ -1211,7 +1211,7 @@ void BossAi03_800C5BC0(EnemyAi* ai)
             ai->cmd_8->targets_C = ai->targetMask_18;
             break;
         }
-        aiCounter_800C8B30++;
+        aiCounter_800C8B30[0]++;
     }
 }
 
@@ -1235,7 +1235,7 @@ void BossAi0D_800C5D04(EnemyAi* ai)
     }
     else
     {
-        unsigned char* counters = &aiCounter_800C8B30;
+        unsigned char* counters = aiCounter_800C8B30;
         if (counters[1])
         {
             ai->cmd_8->kind_0 = 6;
@@ -1262,12 +1262,12 @@ void BossAi0D_800C5D04(EnemyAi* ai)
                 ai->cmd_8->kind_0 = 6;
                 ai->cmd_8->arg_4 = 0;
                 ai->cmd_8->targets_C = ai->cmd_8->mask_8;
-                (&aiCounter_800C8B30)[1] = 1;
+                aiCounter_800C8B30[1] = 1;
                 break;
             }
         }
     }
-    aiCounter_800C8B30++;
+    aiCounter_800C8B30[0]++;
 }
 
 void BossAi0B_800C5EB8(EnemyAi* ai)
@@ -1313,10 +1313,10 @@ void BossAi0B_800C5EB8(EnemyAi* ai)
             break;
         }
     }
-    aiCounter_800C8B30++;
+    aiCounter_800C8B30[0]++;
 }
 
-#if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; aiCounter_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
+// Matched
 void BossAi0C_800C6038(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
@@ -1335,16 +1335,16 @@ void BossAi0C_800C6038(EnemyAi* ai)
             ai->cmd_8->targets_C = ai->targetMask_18;
         }
     }
-    else if (aiCounter_800C8B30 != 0 && TargetHasStatus_800C6EC8(ai, 2))
+    else if (aiCounter_800C8B30[0] != 0 && TargetHasStatus_800C6EC8(ai, 2))
     {
         ai->cmd_8->kind_0 = 6;
         ai->cmd_8->arg_4 = 0;
         ai->cmd_8->targets_C = ai->cmd_8->mask_8;
-        aiCounter_800C8B30 = 0;
+        aiCounter_800C8B30[0] = 0;
     }
     else
     {
-        aiCounter_800C8B30++;
+        aiCounter_800C8B30[0]++;
         switch (rand() % 3)
         {
         case 0:
@@ -1366,9 +1366,6 @@ void BossAi0C_800C6038(EnemyAi* ai)
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, BossAi0C_800C6038);
 
 void BossAi0E_800C61FC(EnemyAi* ai)
 {
@@ -1392,48 +1389,48 @@ void BossAi0E_800C61FC(EnemyAi* ai)
             ai->cmd_8->targets_C = ai->targetMask_18;
         }
     }
-    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 1)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 0))
+    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 1)) || (aiCounter_800C8B30[0] >= 3 && GetAreaElement_800BC868() == 0))
     {
         AiSetCommand_800C6AFC(ai, 6, 2);
         ai->skills_4->slot[2].id_1 = 0x25;
         ai->self_10->st_0.elementMask_42 = 8;
         SetHitVariant_80018430(3);
         SetElementAffinity_800C66B4((unsigned char*)ai->self_10, 2);
-        aiCounter_800C8B30 = 0;
+        aiCounter_800C8B30[0] = 0;
     }
-    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 2)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 1))
+    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 2)) || (aiCounter_800C8B30[0] >= 3 && GetAreaElement_800BC868() == 1))
     {
         AiSetCommand_800C6AFC(ai, 6, 2);
         ai->skills_4->slot[2].id_1 = 0x22;
         ai->self_10->st_0.elementMask_42 = 1;
         SetHitVariant_80018430(0);
         SetElementAffinity_800C66B4((unsigned char*)ai->self_10, 3);
-        aiCounter_800C8B30 = 0;
+        aiCounter_800C8B30[0] = 0;
     }
-    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 4)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 2))
+    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 4)) || (aiCounter_800C8B30[0] >= 3 && GetAreaElement_800BC868() == 2))
     {
         AiSetCommand_800C6AFC(ai, 6, 2);
         ai->skills_4->slot[2].id_1 = 0x23;
         ai->self_10->st_0.elementMask_42 = 2;
         SetHitVariant_80018430(1);
         SetElementAffinity_800C66B4((unsigned char*)ai->self_10, 0);
-        aiCounter_800C8B30 = 0;
+        aiCounter_800C8B30[0] = 0;
     }
-    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 8)) || (aiCounter_800C8B30 >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
+    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)ai->self_10->st_0.elementMask_42 & 8)) || (aiCounter_800C8B30[0] >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
     {
         AiSetCommand_800C6AFC(ai, 6, 2);
         ai->skills_4->slot[2].id_1 = 0x24;
         ai->self_10->st_0.elementMask_42 = 4;
         SetHitVariant_80018430(2);
         SetElementAffinity_800C66B4((unsigned char*)ai->self_10, 1);
-        aiCounter_800C8B30 = 0;
+        aiCounter_800C8B30[0] = 0;
     }
     else
     {
         element = (unsigned short)ai->self_10->st_0.elementMask_42;
         if (element & 8)
         {
-            if (aiCounter_800C8B30 == 1)
+            if (aiCounter_800C8B30[0] == 1)
             {
                 AiSetCommandOnSelf_800C6B24(ai, 1, 0x1D);
             }
@@ -1482,7 +1479,7 @@ void BossAi0E_800C61FC(EnemyAi* ai)
             }
         }
     }
-    aiCounter_800C8B30 += ((rand() & 3) >> 1) + 1;
+    aiCounter_800C8B30[0] += ((rand() & 3) >> 1) + 1;
 }
 
 void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int element)
@@ -2157,11 +2154,11 @@ unsigned char GetSelectedCommand_800C78D0()
     return commandByCursor_800C9648[menuForMinion_800C9E49 + (short)GetMenuCursorIndex_8003DA54(commandMenu_800C92D8) * 2];
 }
 
-#if 0 // Not matched: flags and targets swap registers (v1/a0); tried declaration order, int flags, re-reading the global, early returns
+// Matched
 int GetSelectedTargets_800C791C()
 {
-    unsigned char flags = targetFlags_800C9E68;
     int targets = 0;
+    unsigned char flags = targetFlags_800C9E68;
     if (flags & 1)
     {
         if (flags & 4)
@@ -2170,14 +2167,16 @@ int GetSelectedTargets_800C791C()
         }
         if (flags & 2)
         {
-            targets |= 1;
-            targets |= partyMinionMask_800C9E78;
+            targets |= partyMinionMask_800C9E78 | 1;
         }
     }
     else if (flags & 4)
     {
-        short i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
-        targets = *(enemyTargets_800C9E70.bits_2 + i);
+        short i;
+        unsigned char* bits;
+        i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
+        bits = enemyTargets_800C9E70.bits_2;
+        targets = bits[i];
     }
     else
     {
@@ -2185,9 +2184,6 @@ int GetSelectedTargets_800C791C()
     }
     return targets;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, GetSelectedTargets_800C791C);
 
 int GetSelectedItem_800C79B8()
 {
@@ -2689,7 +2685,7 @@ void BattleMenuTask_800C8A08(EventEntry* task, int buffer)
 }
 
 int dword_800C8B2C = 0xFFFF;
-unsigned char aiCounter_800C8B30 = 0;
+unsigned char aiCounter_800C8B30[4] = { 0 };
 int aiAllyCalled_800C8B34 = 0;
 char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
 int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)CmdEnemySwap_800BBFFC };
@@ -2834,7 +2830,7 @@ int stageAnimPhases_800C911C[2] = { 0x2090501, 0x4070306 };
 int stageRot_800C9124[2] = { 0 };
 char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
 unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
-int statusCureChances_800C9138[2] = { 2, 77 };
+BatCureChance statusCureChances_800C9138[1] = { { 2, 77 } };
 BatXY enemyWindowLayouts_800C9140[9] = {
     { 110, 20 },
     { -1, -1 },

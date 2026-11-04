@@ -1369,7 +1369,7 @@ extern const char aVeryEffectiveAg_800BA0F0[];
 extern const char aSpecialEarthAtt_800BA148[];
 extern const int dword_800BA174[2];
 extern int dword_800C8B2C;
-extern unsigned char aiCounter_800C8B30;
+extern unsigned char aiCounter_800C8B30[4];
 extern int aiAllyCalled_800C8B34;
 extern char commandHandlerIdx_800C8B38[28];
 extern int commandHandlers_800C8B54[7];
@@ -1426,7 +1426,14 @@ extern int stageAnimPhases_800C911C[2];
 extern int stageRot_800C9124[2];
 extern char handlerWaitsReactions_800C912C[8];
 extern unsigned char captureVibrations_800C9134[4];
-extern int statusCureChances_800C9138[2];
+typedef struct BatCureChance
+{
+    unsigned int mask;   // status bit
+    unsigned int chance; // % per turn
+} BatCureChance;
+extern BatCureChance statusCureChances_800C9138[1];
+extern int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx);
+extern unsigned int Rand100_80013E30();
 extern BatXY enemyWindowLayouts_800C9140[9];
 extern int enemyGaugePreview_800C9164[3];
 extern int actorHighlightTime_800C9170;
