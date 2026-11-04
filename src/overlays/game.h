@@ -11,6 +11,7 @@
 #include "tu_8001EA48.h"
 #include "effect_obj.h"
 #include "tu_80036528.h"
+#include "tu_80019BF0.h"
 
 extern void sub_800A6D30(int a);
 
@@ -40,12 +41,41 @@ typedef struct GameV3_1
     int a, b, c;
 } GameV3_1;
 
+// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
+typedef struct GameEnemyMember
+{
+    int species_0; // sub_80019C70 / InitMinionData_8001900C
+    int f4;
+} GameEnemyMember;
+
+typedef struct GameEnemy
+{
+    int kind_0; // 0: actors already exist, 1: hide them when reused
+    int maxCount_4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int useMinion_18; // 1: the first member is minion_1C
+    UnitStats minion_1C;
+    Actor* actors_A4[3];
+    GameEnemyMember members_B0[3];
+    int* anims_C8[3]; // [0]: when it is the group being fought, [1]: otherwise (default name_8007A024)
+    int fD4[3];
+} GameEnemy;
+
 typedef struct GameSlot_1
 {
     int f0;
     GameAi* f4;
-    char data_8[0xe0];
+    GameEnemy data_8;
 } GameSlot_1;
+
+extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
+extern short dword_80079140[]; // default bone table
+extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
+extern GameEnemy* sub_800A5F6C(void);
+extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
 
 
 
@@ -212,7 +242,7 @@ extern int dword_800B0698;
 
 extern int dword_800AEBE0;
 
-extern char dword_800B1CB8[];
+extern GameEnemy dword_800B1CB8; // the group that is being fought (sub_800A5F6C)
 
 extern char* dword_8008B518;
 
@@ -554,6 +584,7 @@ typedef struct GameO_1
 extern int sub_800A48F4(int a);
 
 extern void sub_800A46FC(GameAi* p);
+extern void sub_800A45F8(GameAi* p);
 
 typedef struct GameLst_1
 {
@@ -764,6 +795,21 @@ typedef struct G2V12
     int c;
 } G2V12;
 
+typedef struct G2PathStep
+{
+    short x;
+    short y;
+    short z;
+    short rotY;
+} G2PathStep;
+
+typedef struct G2Path
+{
+    int count_0;
+    int div_4;
+    G2PathStep* steps_8;
+} G2Path;
+
 // Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
@@ -794,10 +840,12 @@ typedef struct G2Act
     G2V12 v48;
     G2V12 v54;
     G2V12 v60;
-    char pad_6C[0xC];
-    int f78;
-    int f7c;
-    char pad_80[0x10];
+    G2V12 v6c; // root motion of the current animation frame (sub_800AA140)
+    struct G2Path* path_78; // scripted walk (flag 0x400000, sub_800ABAA4)
+    int f7c;    // step of path_78
+    int tri_80; // floor triangle under Levant (dword_8008B500.meshes_C[mesh_84].tris_4)
+    int mesh_84;
+    char pad_88[8];
     MATRIX mats_90[40];
     int bonePos_590[40][3];
     FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing

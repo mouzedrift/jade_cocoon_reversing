@@ -319,11 +319,11 @@ int sub_800A5E80(int a)
 }
 
 // Matched
-char* sub_800A5F6C(void)
+GameEnemy* sub_800A5F6C(void)
 {
     if (dword_800AEBE0)
     {
-        return dword_800B1CB8;
+        return &dword_800B1CB8;
     }
     return 0;
 }
@@ -1326,8 +1326,6 @@ int sub_800A7CFC(int a)
     return 0;
 }
 
-#if 0
-// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
 typedef struct GameCmdA_1
 {
     int f0;
@@ -1362,6 +1360,8 @@ typedef struct GameAnimReq_1
     int f30;
     char pad_34[0x2c];
 } GameAnimReq_1;
+#if 0
+// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
 void sub_800A7D40(int a, GameCmdA_1* c)
 {
     GameAnimReq_1 s;
@@ -1455,7 +1455,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             s.flags = (c->f14 >> 2) & 1;
             if (c->f14 & 0x10)
             {
-                s.flags = s.flags | 2;
+                s.flags |= 2;
             }
             break;
         case 11:
@@ -1463,7 +1463,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             if (c->f10 >= 0)
                 s.h2A = c->f10;
             else
-                s.h2A = *(short*)((char*)obj + 0xc2);
+                s.h2A = obj->animIdx_C2;
             s.hC = (c->f14 & 1) ? -1 : -2;
             s.f2C = (c->f14 >> 3) & 1;
             s.flags = (c->f14 >> 2) & 1;
@@ -1492,7 +1492,6 @@ void sub_800A7D40(int a, GameCmdA_1* c)
     }
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
 
 INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
@@ -2105,6 +2104,111 @@ void sub_800A99DC(G2Act* p)
     saveData_8008B570.levant_7A8.rot.vy += p->turn_770.output_C.low;
 }
 
+#if 0
+// Not matched: 24 words: dx/dz get $s2/$s3 swapped (the original keeps the 0x6c delta in $s3), the tri address adds base + index the other way round, and the path_78 reads become register copies (move $v1,$a0) in the original instead of reloads; the rest matches
+void sub_800A9A9C(G2Act* p)
+{
+    G2V12 prev;
+    int dz;
+    int dx;
+    int div;
+    MapTri* t;
+    int k;
+    int f;
+    int rot;
+    G2Path* path;
+    int sn;
+    int cs;
+    short ang;
+    prev.a = p->v6c.a;
+    prev.b = p->v6c.b;
+    prev.c = p->v6c.c;
+    sub_800AA140(p);
+    dz = 0;
+    if (p->f0 & 8)
+    {
+        p->f0 &= ~8;
+        dx = dz;
+    }
+    else
+    {
+        dx = p->v6c.a - prev.a;
+        sub_800AC4A8(p->s1c);
+        p->v6c.c -= (dx & 0x1f) * Sign_8003B664(dx);
+        dz = p->v6c.c - prev.c;
+        sub_800AC4A8(p->s1c);
+        p->v6c.c -= (dz & 0x1f) * Sign_8003B664(dz);
+    }
+    if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) ||
+        ((p->f0 & 0x800) && p->f10 == (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c))))
+    {
+        p->f0 |= 0x8000;
+        p->f10 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+        sub_800AA140(p);
+    }
+    if (p->f8 == 2 && (p->f0 & 0x200000))
+    {
+        dx = 0;
+        dz = dx;
+    }
+    if (!(p->f0 & 0x84000))
+    {
+        div = p->model_40->anims_54[sub_800AC4A8(p->s1c)].divisor_8;
+        sub_800B80C8(p);
+        t = &dword_8008B500.meshes_C[p->mesh_84].tris_4[p->tri_80];
+        f = t->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
+            t->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
+        f = 0x1000 - f * f / 4096;
+        saveData_8008B570.levant_7A8.pos.x += dx * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += -(dx * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096) * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x += dz * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += dz * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
+        if (!(p->f0 & 0x40000))
+        {
+            f = sub_800B6DD4(p);
+            if (f < 0)
+            {
+                p->f778 = -0x40;
+            }
+            else if (f > 0)
+            {
+                p->f778 = 0x40;
+            }
+        }
+    }
+    else if (p->f0 & 0x400000)
+    {
+        p->v6c.a = p->path_78->steps_8[p->f7c].x;
+        p->v6c.b = p->path_78->steps_8[p->f7c].y;
+        p->v6c.c = p->path_78->steps_8[p->f7c].z;
+        rot = p->path_78->steps_8[p->f7c].rotY;
+        div = p->path_78->div_4;
+        p->f7c++;
+        if (p->f7c >= p->path_78->count_0)
+        {
+            p->f0 &= ~0x400000;
+            sub_800ABC78(0);
+            p->f0 = (p->f0 & ~0x800) | 8;
+            sub_800AB010(p, 0, 3, 0);
+            p->fC = 0;
+        }
+        saveData_8008B570.levant_7A8.pos.x = p->v60.a + p->v6c.a / div;
+        saveData_8008B570.levant_7A8.pos.y = p->v60.b + p->v6c.b / div;
+        saveData_8008B570.levant_7A8.pos.z = p->v60.c + p->v6c.c / div;
+        saveData_8008B570.levant_7A8.rot.vy = rot;
+    }
+    else
+    {
+        div = p->model_40->anims_54[sub_800AC4A8(p->s1c)].divisor_8;
+        sub_800AA140(p);
+        sn = sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff];
+        cs = sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff];
+        saveData_8008B570.levant_7A8.pos.z = p->v60.c + (p->v6c.c * cs - p->v6c.a * sn) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x = p->v60.a + (p->v6c.c * sn + p->v6c.a * cs) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.y = p->v60.b + p->v6c.b / 32;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 
 void sub_800AA140(G2Act* p)
@@ -2645,10 +2749,10 @@ void sub_800AB9A8(int a, int b, int c)
     p->f0 &= ~1;
 }
 
-void sub_800ABAA4(int a)
+void sub_800ABAA4(G2Path* a)
 {
     G2Act* p = dword_8008B4A4->f24;
-    p->f78 = a;
+    p->path_78 = a;
     p->f7c = 0;
     p->f0 |= 0x400000;
 }
@@ -3163,8 +3267,6 @@ void sub_800ACAA4(int* a, int* b)
     a[2] = (int)sub_800ACB64;
 }
 
-#if 0
-// Not matched: control flow follows the original, but loop.c also hoists the 0x800B0000 high half of &dword_800B1DD0 into an eighth saved register, so the frame and everything after shift
 typedef struct G2Ld_1
 {
     int state;
@@ -3181,23 +3283,24 @@ extern int name_800B1164[];
 extern int dword_800B11CC[]; // model FTG ids for sub_80024FFC, -1 ends
 extern void sub_800ACF3C();
 extern void sub_800ACFB8();
-void sub_800ACB64(int* a, G2Ld_1* q)
+// Matched
+void sub_800ACB64(int* a, void* buf)
 {
     int more = 1;
-    SaveData* sd = &saveData_8008B570;
+    G2Ld_1* q = buf;
     Model* m;
     do
     {
         switch (q->state)
         {
         case 0:
-            if (q->f8 != sd->field_830)
+            if (q->f8 != saveData_8008B570.field_830)
             {
                 q->f10 = -1;
                 q->flags |= 0xd;
-                sub_800AC3A4(sd->field_834);
+                sub_800AC3A4(saveData_8008B570.field_834);
             }
-            if (q->f10 != sd->field_834 || q->f18 != sd->field_836)
+            if (q->f10 != saveData_8008B570.field_834 || q->f18 != saveData_8008B570.field_836)
             {
                 q->flags |= 0x16;
                 sub_800ACF3C(q);
@@ -3220,19 +3323,19 @@ void sub_800ACB64(int* a, G2Ld_1* q)
                     FreeModelList_80024BB0(&dword_8007DC60);
                 }
                 InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
-                LoadModel_80025200(dword_8007DC60, name_800B1164[sd->field_830], 0, 2, 1);
+                LoadModel_80025200(dword_8007DC60, name_800B1164[saveData_8008B570.field_830], 0, 2, 1);
                 q->fC = q->f8;
+                q->f8 = saveData_8008B570.field_830;
                 q->flags &= ~1;
-                q->f8 = sd->field_830;
             }
             else if (q->flags & 2)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80025974(m, sub_800AC3F4(), 1);
                 q->f14 = sub_800AC3E4();
-                q->f10 = sd->field_834;
+                q->f10 = saveData_8008B570.field_834;
                 q->f1C = sub_800AC464();
-                q->f18 = sd->field_836;
+                q->f18 = saveData_8008B570.field_836;
                 q->flags &= ~2;
             }
             else if (q->flags & 4)
@@ -3259,13 +3362,13 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         case 3:
             if ((q->flags & 9) == 8)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80024FFC(m, dword_800B11CC);
                 q->flags &= ~8;
             }
             if ((q->flags & 0x12) == 0x10)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[sd->field_830]);
+                m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
                 sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 q->flags &= ~0x10;
             }
@@ -3282,9 +3385,6 @@ void sub_800ACB64(int* a, G2Ld_1* q)
         }
     } while (more);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, sub_800ACB64);
 
 void sub_800ACF0C()
 {

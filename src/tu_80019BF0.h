@@ -28,6 +28,7 @@ typedef struct
 } MinionModelDesc;
 extern MinionModelDesc dword_8007BD30[];
 extern MinionModelDesc* sub_80019C70(int idx);
+extern Actor* sub_8001D4DC(Actor* o, int a1, int a2, int a3);
 
 
 

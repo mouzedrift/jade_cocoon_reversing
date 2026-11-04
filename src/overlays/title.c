@@ -983,29 +983,24 @@ void sub_800A223C(void)
     sub_800A2424();
 }
 
-#if 0
-// Not matched: gcc computes the base registers before the first store (original: store, then addiu of the base, saveData base = base - 0x24)
+// Matched
 void sub_800A22FC(void)
 {
-    SaveInventory* b;
-    SaveData* s;
-    playerYan_8008B594.yan_0 = 0x64;
-    b = &playerYan_8008B594;
-    s = &saveData_8008B570;
+    SaveInventory* b = &saveData_8008B570.inv_24;
+    b->yan_0 = 0x64;
     b->inventory_4[0][0].count = 3;
     b->inventory_4[0][1].id = 0xE;
     b->inventory_4[0][0].id = 0;
     b->inventory_4[0][1].count = 1;
-    s->levantStatus_7C8.field_1C[0] = 1;
-    s->levantStatus_7C8.field_1C[1] = 0;
-    s->levantStatus_7C8.field_1C[2] = 0xFF;
+    saveData_8008B570.levantStatus_7C8.field_1C[0] = 1;
+    saveData_8008B570.levantStatus_7C8.field_1C[1] = 0;
+    saveData_8008B570.levantStatus_7C8.field_1C[2] = 0xFF;
     if ((unsigned int)b->emptyCocoons_284 < 10)
     {
-        s->inv_24.emptyCocoons_284 = 10;
+        saveData_8008B570.inv_24.emptyCocoons_284 = 10;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, sub_800A22FC);
+
 
 void sub_800A2358(void)
 {
