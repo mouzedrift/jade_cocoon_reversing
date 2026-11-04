@@ -559,10 +559,10 @@ UnitStatus* sub_800A10C0(int i)
 }
 
 // Matched
-int sub_800A10DC(int i)
+int* sub_800A10DC(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->actor_3C->pos_38;
+    return s->actor_3C->pos_38;
 }
 
 // Matched
