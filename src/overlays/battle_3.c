@@ -561,16 +561,16 @@ void sub_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     if (f0 & 1)
     {
-        *a = p->hpLoss_A / 10;
+        *a = p->maxHp_A / 10;
         f &= ~2;
     }
     else if (f & 0x4000)
     {
-        *a = -(short)(p->hpLoss_A / 20);
+        *a = -(short)(p->maxHp_A / 20);
     }
     if (f0 & 0x8000)
     {
-        *b = -((p->f44 >> 2) + 3);
+        *b = -((p->level_44 >> 2) + 3);
         f &= ~0x8000;
     }
     if (f & 0x200)
@@ -592,7 +592,7 @@ loop:
     {
         goto loop;
     }
-    p->flags_0 = f;
+    p->status_0 = f;
 }
 #endif
 
@@ -2180,14 +2180,14 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
         u->frame_0++;
         if (any)
         {
-            if (c->f8)
+            if (c->mats_8.count_0)
             {
-                sub_800459E4(dword_800C91A4, &c->f8, pOT_8008D690, 0x30);
+                sub_800459E4(dword_800C91A4, &c->mats_8, pOT_8008D690, 0x30);
             }
         }
-        else if (c->f8)
+        else if (c->mats_8.count_0)
         {
-            sub_80045E48(&c->f8, pOT_8008D690, 0x30);
+            sub_80045E48(&c->mats_8, pOT_8008D690, 0x30);
         }
     }
     else

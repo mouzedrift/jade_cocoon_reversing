@@ -700,7 +700,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     {
         dword_800C9CBC[dword_800C9C7C] = 2;
     }
-    f = m->flags_0;
+    f = m->status_0;
     r = sub_800BFA4C(f, flags);
     dword_800C9C88.kind_0 = r;
     dword_800C9C88.arg_4 = 0;

@@ -1209,11 +1209,12 @@ void sub_800BB0F8(ShopTaskShop* t, int a)
     t->next_8 = ShopMenuTask_800BB444;
 }
 
-#if 0 // near miss: constant 3 / store scheduling (17 words)
+// Matched
 void sub_800BB148(ShopUnit3Shop* u)
 {
     short i;
     void* r;
+    Minion* mn;
     u->field_0 = 0;
     u->field_2 = -2;
     for (i = 0; i < 10; i++)
@@ -1228,14 +1229,14 @@ void sub_800BB148(ShopUnit3Shop* u)
     {
         u->a7A[i] = 0;
     }
+    u->field_34 = 3;
     u->field_36 = 1;
+    u->field_38 = 3;
     u->field_3A = 1;
     u->field_40 = 1;
     u->field_42 = 1;
     u->field_44 = 1;
     u->field_46 = 0x40;
-    u->field_34 = 3;
-    u->field_38 = 3;
     u->field_84 = 0;
     u->field_88 = 0;
     u->field_8C = 0;
@@ -1263,8 +1264,8 @@ void sub_800BB148(ShopUnit3Shop* u)
     u->field_7E = 0;
     u->field_24 = 1;
     u->field_1C = 0;
-    u->field_20 = 0;
     u->field_1C = name_800BF8B4[u->field_0];
+    u->field_20 = 0;
     SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
     fn_80011CD0(&levantStatus_8008BD38);
@@ -1278,17 +1279,15 @@ void sub_800BB148(ShopUnit3Shop* u)
     }
     for (i = 0; i < 3; i++)
     {
-        r = GetMinion_80010598(3, i);
-        if (r)
+        mn = GetMinion_80010598(3, i);
+        if (mn)
         {
-            fn_80011CD0(&r->status_84);
+            fn_80011CD0(&mn->status_84);
         }
     }
     sub_800B9920();
     fn_800AD8F4(fn_800AD888());
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB148);
 
 int sub_800BB38C(ShopUnit3Shop* p)
 {
