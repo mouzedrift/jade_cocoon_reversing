@@ -389,8 +389,22 @@ def chunk_info(name):
     return sec, size
 
 
+# overlay mode (scripts/ovlgen.py) adds the overlay's ranges: [(lo, hi)]
+EXTRA_CODE = []
+EXTRA_RODATA = []
+EXTRA_IMAGE = []
+
+
 def in_image(v):
-    return BASE <= v < BSS_END
+    return BASE <= v < BSS_END or any(lo <= v < hi for lo, hi in EXTRA_IMAGE)
+
+
+def is_code_addr(a):
+    return BASE <= a < LIB_TEXT_END or any(lo <= a < hi for lo, hi in EXTRA_CODE)
+
+
+def is_rodata(a):
+    return RDATA_START <= a < RDATA_GAME_END or any(lo <= a < hi for lo, hi in EXTRA_RODATA)
 
 
 # ---------------------------------------------------------------- initialisers
@@ -451,15 +465,22 @@ class Gen:
         self.arrays = set(defined)   # names that are arrays (no & needed)
         self.local = {}              # name -> T of the objects being defined here
 
+    @staticmethod
+    def chunk_of(name):
+        """(section, size) of a data symbol that is still assembly, None if there is none"""
+        if os.path.exists(os.path.join(REPO, "asm", "d", name + ".s")):
+            return chunk_info(name)
+        return None
+
     def type_of(self, name):
         if name in self.local:
             return self.local[name]
         d = self.types.decls.get(name)
         if d is None:
             # not declared here: a string (in another TU) is a char array
-            p = os.path.join(REPO, "asm", "d", name + ".s")
-            if name in self.syms.addr and os.path.exists(p):
-                sec, size = chunk_info(name)
+            info = self.chunk_of(name) if name in self.syms.addr else None
+            if info is not None:
+                sec, size = info
                 if sec != ".bss":
                     parts = split_strings(self.syms.rd(self.syms.addr[name], size))
                     if parts and parts[0][1] is not None:
@@ -491,7 +512,7 @@ class Gen:
                 name = n
                 break
         self.refs.add(name)
-        is_code = BASE <= a < GAME_TEXT_END or GAME_TEXT_END <= a < LIB_TEXT_END
+        is_code = is_code_addr(a)
         target = t.to if t is not None and t.kind == "ptr" else None
         if is_code:
             if a == v:
@@ -787,7 +808,7 @@ def guess(syms, name, addr, size, sec, gen):
         ws = struct.unpack("<%dI" % (size // 4), b)
         nz = [w for w in ws if w]
         if nz and all(in_image(w) and syms.at(w) for w in nz):
-            code = [w for w in nz if BASE <= w < LIB_TEXT_END]
+            code = [w for w in nz if is_code_addr(w)]
             if len(code) == len(nz) and all(syms.at(w)[0] == w for w in nz):
                 return [(name, addr, "void (*%s[%d])()" % (name, len(ws)),
                          T("array", of=T("ptr", to=T("func")), n=len(ws)), None)]
@@ -797,7 +818,7 @@ def guess(syms, name, addr, size, sec, gen):
                     t = gen.type_of(ns[0]) if a == w else None
                     return t is not None and t.kind == "array" and t.of.kind == "int" and t.of.nbytes == 1
                 if all(is_str(w) for w in nz):
-                    ro = all(RDATA_START <= w < RDATA_GAME_END for w in nz)
+                    ro = all(is_rodata(w) for w in nz)
                     return [(name, addr, "%schar *%s[%d]" % ("const " if ro else "", name, len(ws)),
                              T("array", of=T("ptr", to=U8), n=len(ws)), None)]
                 return [(name, addr, "void *%s[%d]" % (name, len(ws)),
@@ -939,6 +960,11 @@ def generate(exe, tu, only=None, secs=None):
             adopted = {}
     types.adopted = adopted
     types.others = others
+    return generate_chunks(syms, types, Gen(syms, types), names, info, only, secs)
+
+
+def generate_chunks(syms, types, gen, names, info, only=None, secs=None):
+    """definitions for the data chunks names (in address order, info: name -> (section, size))"""
     if only:
         sel = set(only)
         todo = [n for n in names if n in sel]
@@ -946,7 +972,6 @@ def generate(exe, tu, only=None, secs=None):
         todo = list(names)
     if secs:
         todo = [n for n in todo if info[n][0] in secs]
-    gen = Gen(syms, types)
     errors = {}
     defs = []
     absorbed = {}       # name -> head that covers it
