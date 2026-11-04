@@ -116,7 +116,7 @@ INCLUDE_OVERLAY_ASM(battle, IsActionDone_800BEA94);
 
 int IsActorActionDone_800BEB50()
 {
-    return actionFrame_800C9D94 > actorActionEnd_800C9D9A;
+    return actionFrame_800C9D94 > actorTiming_800C9D98[1];
 }
 
 int AreReactionsDone_800BEB68()
@@ -124,7 +124,7 @@ int AreReactionsDone_800BEB68()
     int i;
     for (i = 0; i < 7; i++)
     {
-        if (actionFrame_800C9D94 < reactionTimings_800C9DA0[i].b)
+        if (actionFrame_800C9D94 < reactionTimings_800C9DA0[i].end_2)
         {
             return 0;
         }
@@ -165,7 +165,7 @@ void ApplyBattleCommand_800BEBB8()
         if (curCommand_800C9C88.targets_C & bit)
         {
             m = GetUnitStatus_80014390(i & 0xFF);
-            res.f24 = shownAreaElement_800C9D82;
+            res.areaElement_24 = shownAreaElement_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
@@ -173,13 +173,13 @@ void ApplyBattleCommand_800BEBB8()
             {
                 sub_800B4390(actor, m, &curCommand_800C9C88, &res, &dword_800ADE78);
             }
-            areaElement_800C9D84 = res.f24;
-            unitHpDamage_800C9D38[i] = res.f1C;
-            unitMpDamage_800C9D48[i] = res.f20;
+            areaElement_800C9D84 = res.areaElement_24;
+            unitHpDamage_800C9D38[i] = res.hpDamage_1C;
+            unitMpDamage_800C9D48[i] = res.mpDamage_20;
             if (actingUnit_800C9C7C < 7 && i != actingUnit_800C9C7C)
             {
-                unitHpDamage_800C9D38[actingUnit_800C9C7C] += res.f14;
-                unitMpDamage_800C9D48[actingUnit_800C9C7C] += res.f18;
+                unitHpDamage_800C9D38[actingUnit_800C9C7C] += res.actorHpDamage_14;
+                unitMpDamage_800C9D48[actingUnit_800C9C7C] += res.actorMpDamage_18;
                 if (unitHpDamage_800C9D38[actingUnit_800C9C7C] != 0)
                 {
                     if (unitMpDamage_800C9D48[actingUnit_800C9C7C] != 0)
@@ -218,19 +218,19 @@ void ApplyBattleCommand_800BEBB8()
             {
                 unitMpDamage_800C9D48[i] = m->mp_C.cur_0 - m->mp_C.max_2;
             }
-            if (res.fC != 0)
+            if (res.actorHpCost_C != 0)
             {
-                actorHpChange_800C9C7E = res.fC;
+                actorHpChange_800C9C7E = res.actorHpCost_C;
             }
-            if (res.f10 != 0)
+            if (res.actorMpCost_10 != 0)
             {
-                actorMpChange_800C9C80 = res.f10;
+                actorMpChange_800C9C80 = res.actorMpCost_10;
             }
             if (IsUnitInBattle_800BC784(i) == 1)
             {
                 unitHitKinds_800C9CBC[i] = res.kind_0;
                 dword_800C9D58[i] = res.f4;
-                unitStatusInflicted_800C9CA0[i] = res.f8;
+                unitStatusInflicted_800C9CA0[i] = res.status_8;
                 switch (res.kind_0)
                 {
                 case 0:
@@ -273,10 +273,10 @@ void ApplyBattleCommand_800BEBB8()
                         if (r == 2)
                         {
                             
-                            dword_800B1238[i - 4].c = actingUnit_800C9C7C;
-                            dword_800B1238[i - 4].e = curCommand_800C9C88.kind_0;
-                            dword_800B1238[i - 4].a = m->exp_4;
-                            dword_800B1238[i - 4].d = m->level_44;
+                            dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
+                            dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
+                            dword_800B1238[i - 4].exp_0 = m->exp_4;
+                            dword_800B1238[i - 4].level_8 = m->level_44;
                         }
                     }
                     break;
@@ -301,11 +301,11 @@ void ApplyBattleCommand_800BEBB8()
                             SetBattleFlag_800BC838(2);
                         }
                         
-                        dword_800B1238[i - 4].b = sub_800A2BE4(i - 4);
-                        dword_800B1238[i - 4].c = actingUnit_800C9C7C;
-                        dword_800B1238[i - 4].e = curCommand_800C9C88.kind_0;
-                        dword_800B1238[i - 4].a = m->exp_4;
-                        dword_800B1238[i - 4].d = m->level_44;
+                        dword_800B1238[i - 4].species_4 = sub_800A2BE4(i - 4);
+                        dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
+                        dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
+                        dword_800B1238[i - 4].exp_0 = m->exp_4;
+                        dword_800B1238[i - 4].level_8 = m->level_44;
                         if (TestBattleFlag_800BC820(0x100000) == 1)
                         {
                             deathSfx_800C9D80 = 0x1C;
@@ -1269,11 +1269,11 @@ int LoadSummonedMinion_800C0AEC(int a, int* b, int c)
     summonedMinion_800C9188 = h;
     BuildMinionModelReq_800C064C(h, &buf, dword_8007DC74);
     StartModelTask_80010850(&buf);
-    summonedActor_800C9190.f4 = b[0];
-    summonedActor_800C9190.f8 = b[1];
-    summonedActor_800C9190.fc = b[2];
+    summonedActor_800C9190.x_4 = b[0];
+    summonedActor_800C9190.y_8 = b[1];
+    summonedActor_800C9190.z_C = b[2];
     summonedMinionSlot_800C918C = a;
-    summonedActor_800C9190.f10 = c;
+    summonedActor_800C9190.rotY_10 = c;
     return 1;
 }
 
@@ -1282,7 +1282,7 @@ int FreeSummonedMinion_800C0BA0()
     if (GetSummonedMinionSlot_800C0D50() >= 0)
     {
         FreeModelTask_8001098C(0);
-        DestroyActor_8001D600(summonedActor_800C9190.obj);
+        DestroyActor_8001D600(summonedActor_800C9190.actor_0);
         summonedMinionSlot_800C918C = -1;
         return 1;
     }
@@ -1302,11 +1302,11 @@ int CreateSummonedMinionActor_800C0BF0()
     k = GetRankForLevel_80019A80(summonedMinion_800C9188->status_84.level_44);
     s.modelId_0 = -1;
     s.kind_4 = 2;
-    s.pos_8[0] = summonedActor_800C9190.f4;
-    s.pos_8[1] = summonedActor_800C9190.f8;
-    s.pos_8[2] = summonedActor_800C9190.fc;
+    s.pos_8[0] = summonedActor_800C9190.x_4;
+    s.pos_8[1] = summonedActor_800C9190.y_8;
+    s.pos_8[2] = summonedActor_800C9190.z_C;
     s.rot_14[0] = 0;
-    s.rot_14[1] = summonedActor_800C9190.f10;
+    s.rot_14[1] = summonedActor_800C9190.rotY_10;
     s.rot_14[2] = 0;
     s.clutRow_1C = 3;
     s.animIdx_20 = 4;
@@ -1321,10 +1321,10 @@ int CreateSummonedMinionActor_800C0BF0()
     s.anims_40 = GetModelActorAnims_80024E38(m);
     s.effectTbl_44 = GetModelEffectTable_80024E64(m);
     s.hasMatrices_4C = 1;
-    summonedActor_800C9190.obj = CreateActor_8001D45C(&s);
-    SetActorGroundMove_8001D68C(summonedActor_800C9190.obj, 0);
+    summonedActor_800C9190.actor_0 = CreateActor_8001D45C(&s);
+    SetActorGroundMove_8001D68C(summonedActor_800C9190.actor_0, 0);
     x = sub_80024F00(m, k);
-    SetBoneGroupFlags_80019B14(summonedActor_800C9190.obj->bones_134, x, sub_80024F38(m, k));
+    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1337,17 +1337,17 @@ int GetSummonedMinionSlot_800C0D50()
 
 int sub_800C0D60()
 {
-    return sub_8001E1C8((void*)summonedActor_800C9190.obj);
+    return sub_8001E1C8((void*)summonedActor_800C9190.actor_0);
 }
 
 int sub_800C0D88()
 {
-    return sub_8001E1DC(summonedActor_800C9190.obj);
+    return sub_8001E1DC(summonedActor_800C9190.actor_0);
 }
 
 void TurnSummonedMinionToward_800C0DB0(int a)
 {
-    SetActorTurnTarget_8001DB00(summonedActor_800C9190.obj, a, 0x55);
+    SetActorTurnTarget_8001DB00(summonedActor_800C9190.actor_0, a, 0x55);
 }
 
 // Matched
@@ -1363,7 +1363,7 @@ BatCol_a* StartMinionAction_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
     }
     if (p->mask_8 & (mask = 1 << (summonedMinionSlot_800C918C + 1)))
     {
-        StartCommandAction_80018A4C(&buf, summonedActor_800C9190.obj, p, 0, c);
+        StartCommandAction_80018A4C(&buf, summonedActor_800C9190.actor_0, p, 0, c);
     }
     *out = buf;
     return out;
@@ -1379,14 +1379,14 @@ int TriggerMinionAction_800C0E84(BatCmd_a* p)
     mask = 1 << (summonedMinionSlot_800C918C + 1);
     if (p->mask_8 & mask)
     {
-        TriggerActorEffect_8001E28C(summonedActor_800C9190.obj);
+        TriggerActorEffect_8001E28C(summonedActor_800C9190.actor_0);
     }
     return 1;
 }
 
 void GetMinionHitFrame_800C0EE8(int a)
 {
-    GetActorHitFrame_80018E5C(summonedActor_800C9190.obj, a);
+    GetActorHitFrame_80018E5C(summonedActor_800C9190.actor_0, a);
 }
 
 int sub_800C0F14()
@@ -1396,7 +1396,7 @@ int sub_800C0F14()
 
 void UpdateMinionStatusTint_800C0F1C()
 {
-    SetActorStatusTint_80018EBC(summonedActor_800C9190.obj, GetPartyMinionStatus_800C0F78(summonedMinionSlot_800C918C));
+    SetActorStatusTint_80018EBC(summonedActor_800C9190.actor_0, GetPartyMinionStatus_800C0F78(summonedMinionSlot_800C918C));
 }
 
 void GetPartyMinionName_800C0F54(int a)
@@ -1411,17 +1411,17 @@ UnitStatus* GetPartyMinionStatus_800C0F78(int a)
 
 int* GetSummonedMinionPos_800C0F9C()
 {
-    return summonedActor_800C9190.obj->pos_38;
+    return summonedActor_800C9190.actor_0->pos_38;
 }
 
 int* GetSummonedMinionBonePos_800C0FAC()
 {
-    return summonedActor_800C9190.obj->bonePos_1C4;
+    return summonedActor_800C9190.actor_0->bonePos_1C4;
 }
 
 void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* p)
 {
-    Actor* q = summonedActor_800C9190.obj;
+    Actor* q = summonedActor_800C9190.actor_0;
     p->tbl_0 = q->effectTbl_14C;
     p->pos_4 = q->pos_38;
     p->bonePos_8 = q->bonePos_1C4;
@@ -2408,24 +2408,24 @@ void ChooseEnemyCommand_800C4118(BatCmd_a* a, UnitStats* b, int c, unsigned int 
     unsigned int k;
     int r;
     k = b->species_5C;
-    t.f0 = &b->magicBits_80;
-    t.f4 = &b->skills_6C;
-    t.f8 = a;
-    t.fC = c;
-    t.f10 = b;
+    t.magicBits_0 = &b->magicBits_80;
+    t.skills_4 = &b->skills_6C;
+    t.cmd_8 = a;
+    t.slot_C = c;
+    t.self_10 = b;
     t.f1C = 4;
     r = GetSummonedMinionSlot_800C0D50();
     if (r >= 0)
     {
-        t.f18 = 1 << (r + 1);
-        t.f14 = GetMinionStatus_800107A0(3, r);
+        t.targetMask_18 = 1 << (r + 1);
+        t.target_14 = GetMinionStatus_800107A0(3, r);
     }
     else
     {
-        t.f18 = 1;
-        t.f14 = &levantStatus_8008BD38;
+        t.targetMask_18 = 1;
+        t.target_14 = &levantStatus_8008BD38;
     }
-    t.f8->mask_8 = 1 << (c + 4);
+    t.cmd_8->mask_8 = 1 << (c + 4);
     switch (d)
     {
     case 0:
@@ -2494,7 +2494,7 @@ void ChooseEnemyCommand_800C4118(BatCmd_a* a, UnitStats* b, int c, unsigned int 
 
 void EnemyAiC9_800C4328(BatTask* t)
 {
-    UnitStatus* s = t->f14;
+    UnitStatus* s = t->target_14;
     short x = GetHp_800334D8(s);
     short y = GetMaxHp_800334CC(s);
     if (x < (short)(y / 10))
@@ -2612,7 +2612,7 @@ void EnemyAiD2_800C471C()
 
 int EnemyAiDefault_800C473C(BatTask* t)
 {
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     int r;
     int i;
     if ((GetAreaElement_800BC868() == 0 || GetAreaElement_800BC868() == -1) && (r = AiCastMagic_800C6BD0(t, 0x16)))
@@ -2725,7 +2725,7 @@ int EnemyAiBD_800C4A40(BatTask* t)
 int EnemyAi0F_800C4B34(BatTask* t)
 {
     int r;
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     short x = GetHp_800334D8(s);
     short y = GetMaxHp_800334CC(s);
     if (x < (short)(y / 3))
@@ -2750,7 +2750,7 @@ int EnemyAi0F_800C4B34(BatTask* t)
 int EnemyAi06_800C4BE4(BatTask* t)
 {
     int r;
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     r = AiHealWeakAlly_800C6DF8(t, 0xD);
     if (r)
     {
@@ -2806,7 +2806,7 @@ int EnemyAi0C_800C4CBC(BatTask* t)
 int EnemyAi00_800C4D38(BatTask* t)
 {
     int r;
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     short x = GetHp_800334D8(s);
     short y = GetMaxHp_800334CC(s);
     if (x < y / 4)
@@ -2933,7 +2933,7 @@ int EnemyAi13_800C507C(BatTask* t)
 int EnemyAi17_800C50B0(BatTask* t)
 {
     int r;
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     short x;
     short y;
     if (GetAreaElement_800BC868() == 3 || GetAreaElement_800BC868() == -1)
@@ -2981,7 +2981,7 @@ int EnemyAi1B_800C51D8(BatTask* t)
 
 int EnemyAiUnused_800C5220(BatTask* t)
 {
-    UnitStatus* s = t->f14;
+    UnitStatus* s = t->target_14;
     int r = AiHealWeakAlly_800C6DF8(t, 0xD);
     if (r)
     {
@@ -3051,7 +3051,7 @@ int EnemyAi1C_800C53B0(BatTask* t)
 int EnemyAi0D_800C5424(BatTask* t)
 {
     int r;
-    UnitStatus* s = &t->f10->st_0;
+    UnitStatus* s = &t->self_10->st_0;
     short x = GetHp_800334D8(s);
     short y = GetMaxHp_800334CC(s);
     if (x <= y / 2)
@@ -3096,7 +3096,7 @@ int EnemyAi0B_800C5510(BatTask* t)
     {
         return r;
     }
-    if (GetMp_800334F0(t->f14) != 0)
+    if (GetMp_800334F0(t->target_14) != 0)
     {
         r = AiUseSkill_800C6A8C(t);
         if (r)
@@ -3254,7 +3254,7 @@ int EnemyAi1E_800C5874(BatTask* t)
 
 void EnemyAiDefend_800C58AC(BatTask* t)
 {
-    t->f8->kind_0 = 0x12;
+    t->cmd_8->kind_0 = 0x12;
 }
 
 void BossAi0A_800C58BC(BatTask* t)
@@ -3263,25 +3263,25 @@ void BossAi0A_800C58BC(BatTask* t)
     switch (k)
     {
     case 0:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 2;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 2;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     case 2:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 3;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 3;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     case 4:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 1;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 1;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     case 1:
     case 3:
     case 5:
-        t->f8->kind_0 = 0;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 0;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     }
     aiCounter_800C8B30++;
@@ -3513,19 +3513,19 @@ void BossAi04_800C59A0(BatTask* t)
     switch (k)
     {
     case 0:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 3;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 3;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     case 1:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 2;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 2;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     case 2:
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 1;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 1;
+        t->cmd_8->targets_C = t->targetMask_18;
         break;
     }
     aiCounter_800C8B30++;
@@ -3533,40 +3533,40 @@ void BossAi04_800C59A0(BatTask* t)
 
 void BossAi02_800C5A7C(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
-    else if (t->fC == 1)
+    else if (t->slot_C == 1)
     {
         unsigned char k = aiCounter_800C8B30 % 3;
         switch (k)
         {
         case 0:
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         case 1:
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         case 2:
-            t->f8->kind_0 = 1;
-            t->f8->arg_4 = 2;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 1;
+            t->cmd_8->arg_4 = 2;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         }
         aiCounter_800C8B30++;
@@ -3575,40 +3575,40 @@ void BossAi02_800C5A7C(BatTask* t)
 
 void BossAi03_800C5BC0(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
-    else if (t->fC == 1)
+    else if (t->slot_C == 1)
     {
         unsigned char k = aiCounter_800C8B30 % 3;
         switch (k)
         {
         case 0:
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         case 1:
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         case 2:
-            t->f8->kind_0 = 1;
-            t->f8->arg_4 = 2;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 1;
+            t->cmd_8->arg_4 = 2;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         }
         aiCounter_800C8B30++;
@@ -3617,20 +3617,20 @@ void BossAi03_800C5BC0(BatTask* t)
 
 void BossAi0D_800C5D04(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
     else
@@ -3638,9 +3638,9 @@ void BossAi0D_800C5D04(BatTask* t)
         unsigned char* p = &aiCounter_800C8B30;
         if (p[1])
         {
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 2;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 2;
+            t->cmd_8->targets_C = t->targetMask_18;
             p[1] = 0;
         }
         else
@@ -3648,20 +3648,20 @@ void BossAi0D_800C5D04(BatTask* t)
             switch (rand() % 3)
             {
             case 0:
-                t->f8->kind_0 = 1;
-                t->f8->arg_4 = 0x1B;
-                t->f8->targets_C = t->f18;
+                t->cmd_8->kind_0 = 1;
+                t->cmd_8->arg_4 = 0x1B;
+                t->cmd_8->targets_C = t->targetMask_18;
                 SetHitVariant_80018430(2);
                 break;
             case 1:
-                t->f8->kind_0 = 6;
-                t->f8->arg_4 = 1;
-                t->f8->targets_C = t->f18;
+                t->cmd_8->kind_0 = 6;
+                t->cmd_8->arg_4 = 1;
+                t->cmd_8->targets_C = t->targetMask_18;
                 break;
             default:
-                t->f8->kind_0 = 6;
-                t->f8->arg_4 = 0;
-                t->f8->targets_C = t->f8->mask_8;
+                t->cmd_8->kind_0 = 6;
+                t->cmd_8->arg_4 = 0;
+                t->cmd_8->targets_C = t->cmd_8->mask_8;
                 (&aiCounter_800C8B30)[1] = 1;
                 break;
             }
@@ -3672,20 +3672,20 @@ void BossAi0D_800C5D04(BatTask* t)
 
 void BossAi0B_800C5EB8(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
     else
@@ -3693,23 +3693,23 @@ void BossAi0B_800C5EB8(BatTask* t)
         switch (rand() % 3)
         {
         case 0:
-            if (GetMp_800334F0(t->f14))
+            if (GetMp_800334F0(t->target_14))
             {
-                t->f8->kind_0 = 6;
-                t->f8->arg_4 = 1;
-                t->f8->targets_C = t->f18;
+                t->cmd_8->kind_0 = 6;
+                t->cmd_8->arg_4 = 1;
+                t->cmd_8->targets_C = t->targetMask_18;
                 break;
             }
         case 1:
-            t->f8->kind_0 = 1;
-            t->f8->arg_4 = 0x19;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 1;
+            t->cmd_8->arg_4 = 0x19;
+            t->cmd_8->targets_C = t->targetMask_18;
             SetHitVariant_80018430(0);
             break;
         case 2:
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 3;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 3;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         }
     }
@@ -3719,27 +3719,27 @@ void BossAi0B_800C5EB8(BatTask* t)
 #if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; aiCounter_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
 void BossAi0C_800C6038(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f8->kind_0 = 0;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 0;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
     else if (aiCounter_800C8B30 != 0 && TargetHasStatus_800C6EC8(t, 2))
     {
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = 0;
-        t->f8->targets_C = t->f8->mask_8;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = 0;
+        t->cmd_8->targets_C = t->cmd_8->mask_8;
         aiCounter_800C8B30 = 0;
     }
     else
@@ -3748,20 +3748,20 @@ void BossAi0C_800C6038(BatTask* t)
         switch (rand() % 3)
         {
         case 0:
-            t->f8->kind_0 = 1;
-            t->f8->arg_4 = 0x1C;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 1;
+            t->cmd_8->arg_4 = 0x1C;
+            t->cmd_8->targets_C = t->targetMask_18;
             SetHitVariant_80018430(1);
             break;
         case 1:
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         case 2:
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 3;
-            t->f8->targets_C = t->f18;
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 3;
+            t->cmd_8->targets_C = t->targetMask_18;
             break;
         }
     }
@@ -3773,64 +3773,64 @@ INCLUDE_OVERLAY_ASM(battle, BossAi0C_800C6038);
 void BossAi0E_800C61FC(BatTask* t)
 {
     unsigned short f;
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
         }
         else
         {
-            t->f10->st_0.elementMask_42 = 0;
-            sub_800C66B4((unsigned char*)t->f10, 0xC);
-            t->f8->kind_0 = 6;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = t->f18;
+            t->self_10->st_0.elementMask_42 = 0;
+            sub_800C66B4((unsigned char*)t->self_10, 0xC);
+            t->cmd_8->kind_0 = 6;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = t->targetMask_18;
         }
     }
-    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)t->f10->st_0.elementMask_42 & 1)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 0))
+    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)t->self_10->st_0.elementMask_42 & 1)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 0))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
-        t->f4->slot[2].id_1 = 0x25;
-        t->f10->st_0.elementMask_42 = 8;
+        t->skills_4->slot[2].id_1 = 0x25;
+        t->self_10->st_0.elementMask_42 = 8;
         SetHitVariant_80018430(3);
-        sub_800C66B4((unsigned char*)t->f10, 2);
+        sub_800C66B4((unsigned char*)t->self_10, 2);
         aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)t->f10->st_0.elementMask_42 & 2)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 1))
+    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)t->self_10->st_0.elementMask_42 & 2)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 1))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
-        t->f4->slot[2].id_1 = 0x22;
-        t->f10->st_0.elementMask_42 = 1;
+        t->skills_4->slot[2].id_1 = 0x22;
+        t->self_10->st_0.elementMask_42 = 1;
         SetHitVariant_80018430(0);
-        sub_800C66B4((unsigned char*)t->f10, 3);
+        sub_800C66B4((unsigned char*)t->self_10, 3);
         aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)t->f10->st_0.elementMask_42 & 4)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 2))
+    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)t->self_10->st_0.elementMask_42 & 4)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 2))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
-        t->f4->slot[2].id_1 = 0x23;
-        t->f10->st_0.elementMask_42 = 2;
+        t->skills_4->slot[2].id_1 = 0x23;
+        t->self_10->st_0.elementMask_42 = 2;
         SetHitVariant_80018430(1);
-        sub_800C66B4((unsigned char*)t->f10, 0);
+        sub_800C66B4((unsigned char*)t->self_10, 0);
         aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)t->f10->st_0.elementMask_42 & 8)) || (aiCounter_800C8B30 >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
+    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)t->self_10->st_0.elementMask_42 & 8)) || (aiCounter_800C8B30 >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
     {
         AiSetCommand_800C6AFC(t, 6, 2);
-        t->f4->slot[2].id_1 = 0x24;
-        t->f10->st_0.elementMask_42 = 4;
+        t->skills_4->slot[2].id_1 = 0x24;
+        t->self_10->st_0.elementMask_42 = 4;
         SetHitVariant_80018430(2);
-        sub_800C66B4((unsigned char*)t->f10, 1);
+        sub_800C66B4((unsigned char*)t->self_10, 1);
         aiCounter_800C8B30 = 0;
     }
     else
     {
-        f = (unsigned short)t->f10->st_0.elementMask_42;
+        f = (unsigned short)t->self_10->st_0.elementMask_42;
         if (f & 8)
         {
             if (aiCounter_800C8B30 == 1)
@@ -3847,7 +3847,7 @@ void BossAi0E_800C61FC(BatTask* t)
             if (rand() & 1)
             {
                 AiSetCommand_800C6AFC(t, 6, 1);
-                t->f4->slot[1].id_1 = 4;
+                t->skills_4->slot[1].id_1 = 4;
             }
             else
             {
@@ -3865,7 +3865,7 @@ void BossAi0E_800C61FC(BatTask* t)
             else
             {
                 AiSetCommand_800C6AFC(t, 6, 1);
-                t->f4->slot[1].id_1 = 5;
+                t->skills_4->slot[1].id_1 = 5;
             }
         }
         else if (f & 4)
@@ -3873,7 +3873,7 @@ void BossAi0E_800C61FC(BatTask* t)
             if (rand() % 3 != 0)
             {
                 AiSetCommand_800C6AFC(t, 6, 1);
-                t->f4->slot[1].id_1 = 2;
+                t->skills_4->slot[1].id_1 = 2;
             }
             else
             {
@@ -3906,28 +3906,28 @@ void sub_800C66B4(unsigned char* buf, unsigned int b)
 
 void BossAi0F_800C66F4(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
             return;
         }
     }
-    else if (t->fC == 1)
+    else if (t->slot_C == 1)
     {
-        if ((rand() & 1) || ((unsigned short)t->f14->elementMask_42 & 2))
+        if ((rand() & 1) || ((unsigned short)t->target_14->elementMask_42 & 2))
         {
             goto act;
         }
         else
         {
-            short x = GetHp_800334D8(&t->f10->st_0);
-            short y = GetMaxHp_800334CC(&t->f10->st_0);
+            short x = GetHp_800334D8(&t->self_10->st_0);
+            short y = GetMaxHp_800334CC(&t->self_10->st_0);
             if (x < (short)(y / 3))
             {
             act:
@@ -3942,28 +3942,28 @@ void BossAi0F_800C66F4(BatTask* t)
     {
         return;
     }
-    t->f8->kind_0 = 0;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 0;
+    t->cmd_8->targets_C = t->targetMask_18;
 }
 
 void BossAi10_800C6824(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
             return;
         }
     }
-    else if (t->fC == 1)
+    else if (t->slot_C == 1)
     {
-        short x = GetHp_800334D8(&t->f10->st_0);
-        short y = GetMaxHp_800334CC(&t->f10->st_0);
+        short x = GetHp_800334D8(&t->self_10->st_0);
+        short y = GetMaxHp_800334CC(&t->self_10->st_0);
         if (x < y / 4)
         {
             if (AiUseSkill_800C6A8C(t))
@@ -3980,28 +3980,28 @@ void BossAi10_800C6824(BatTask* t)
     {
         return;
     }
-    t->f8->kind_0 = 0;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 0;
+    t->cmd_8->targets_C = t->targetMask_18;
 }
 
 void BossAi11_800C6928(BatTask* t)
 {
-    if (t->fC == 0)
+    if (t->slot_C == 0)
     {
         if (aiAllyCalled_800C8B34 == 0)
         {
-            t->f8->mask_8 = 0x10;
-            t->f8->kind_0 = 0x15;
+            t->cmd_8->mask_8 = 0x10;
+            t->cmd_8->kind_0 = 0x15;
             aiAllyCalled_800C8B34 = 1;
-            t->f8->arg_4 = 1;
-            t->f8->targets_C = 2;
+            t->cmd_8->arg_4 = 1;
+            t->cmd_8->targets_C = 2;
             return;
         }
     }
-    else if (t->fC == 1)
+    else if (t->slot_C == 1)
     {
-        short x = GetHp_800334D8(&t->f10->st_0);
-        short y = GetMaxHp_800334CC(&t->f10->st_0);
+        short x = GetHp_800334D8(&t->self_10->st_0);
+        short y = GetMaxHp_800334CC(&t->self_10->st_0);
         if (x < y / 2)
         {
             if (AiUseSkill_800C6A8C(t))
@@ -4021,60 +4021,60 @@ void BossAi11_800C6928(BatTask* t)
     {
         return;
     }
-    t->f8->kind_0 = 0;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 0;
+    t->cmd_8->targets_C = t->targetMask_18;
 }
 
 void EnemyAiFirstSkill_800C6A40(BatTask* t)
 {
-    t->f8->kind_0 = 6;
-    t->f8->arg_4 = 0;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 6;
+    t->cmd_8->arg_4 = 0;
+    t->cmd_8->targets_C = t->targetMask_18;
 }
 
 int AiAttack_800C6A68(BatTask* t)
 {
-    t->f8->kind_0 = 0;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 0;
+    t->cmd_8->targets_C = t->targetMask_18;
     return 1;
 }
 
 int AiUseSkill_800C6A8C(BatTask* t)
 {
-    int r = FindUsableSkill_800C6D6C(t->f4, t->f10);
+    int r = FindUsableSkill_800C6D6C(t->skills_4, t->self_10);
     if (r != 5)
     {
-        t->f8->kind_0 = 6;
-        t->f8->arg_4 = r;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 6;
+        t->cmd_8->arg_4 = r;
+        t->cmd_8->targets_C = t->targetMask_18;
         return 1;
     }
     return 0;
 }
 
-void AiSetCommand_800C6AFC(BatTask* t, int a, int b)
+void AiSetCommand_800C6AFC(BatTask* t, int kind, int arg)
 {
-    t->f8->kind_0 = a;
-    t->f8->arg_4 = b;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = kind;
+    t->cmd_8->arg_4 = arg;
+    t->cmd_8->targets_C = t->targetMask_18;
 }
 
-void AiSetCommandOnSelf_800C6B24(BatTask* t, int a, int b)
+void AiSetCommandOnSelf_800C6B24(BatTask* t, int kind, int arg)
 {
-    int* p;
-    t->f8->kind_0 = a;
-    t->f8->arg_4 = b;
-    p = t->f8;
-    p[3] = p[2];
+    BatCmd_a* p;
+    t->cmd_8->kind_0 = kind;
+    t->cmd_8->arg_4 = arg;
+    p = t->cmd_8;
+    p->targets_C = p->mask_8;
 }
 
 int AiCastMagicOnAlly_800C6B50(BatTask* t, int a, int b)
 {
-    if (CanCastMagic_800C6CFC(a, t->f0, t->f10) != 0)
+    if (CanCastMagic_800C6CFC(a, t->magicBits_0, t->self_10) != 0)
     {
-        t->f8->kind_0 = 1;
-        t->f8->arg_4 = a;
-        t->f8->targets_C = 1 << (b + 4);
+        t->cmd_8->kind_0 = 1;
+        t->cmd_8->arg_4 = a;
+        t->cmd_8->targets_C = 1 << (b + 4);
         return 1;
     }
     return 0;
@@ -4082,11 +4082,11 @@ int AiCastMagicOnAlly_800C6B50(BatTask* t, int a, int b)
 
 int AiCastMagic_800C6BD0(BatTask* t, int a)
 {
-    if (CanCastMagic_800C6CFC(a, t->f0, t->f10) != 0)
+    if (CanCastMagic_800C6CFC(a, t->magicBits_0, t->self_10) != 0)
     {
-        t->f8->kind_0 = 1;
-        t->f8->arg_4 = a;
-        t->f8->targets_C = t->f18;
+        t->cmd_8->kind_0 = 1;
+        t->cmd_8->arg_4 = a;
+        t->cmd_8->targets_C = t->targetMask_18;
         return 1;
     }
     return 0;
@@ -4094,14 +4094,14 @@ int AiCastMagic_800C6BD0(BatTask* t, int a)
 
 int AiDefend_800C6C44(BatTask* t)
 {
-    t->f8->kind_0 = 0x12;
+    t->cmd_8->kind_0 = 0x12;
     return 1;
 }
 
 int AiFlee_800C6C58(BatTask* t)
 {
-    t->f8->kind_0 = 7;
-    t->f8->targets_C = t->f18;
+    t->cmd_8->kind_0 = 7;
+    t->cmd_8->targets_C = t->targetMask_18;
     return 1;
 }
 
@@ -4177,12 +4177,12 @@ int AiHealWeakAlly_800C6DF8(BatTask* t, int a)
 
 int TargetHasStatus_800C6EC8(BatTask* t, int m)
 {
-    return (t->f14->status_0 & m) != 0;
+    return (t->target_14->status_0 & m) != 0;
 }
 
 int sub_800C6EE4(BatTask* t)
 {
-    return t->f14->stats_2C.cur_0[1] > t->f14->stats_2C.cur_0[3];
+    return t->target_14->stats_2C.cur_0[1] > t->target_14->stats_2C.cur_0[3];
 }
 
 int StartBattleMenu_800C6EFC()
@@ -4268,7 +4268,7 @@ void InitMenuCursors_800C7088()
 
 void SelectMenuWindows_800C71A0()
 {
-    dword_800C9640 = menuWindowSets_800C9628[menuForMinion_800C9E49];
+    menuWindows_800C9630.windows_10 = menuWindowSets_800C9628[menuForMinion_800C9E49];
 }
 
 void DisableMenuCommands_800C71C8()
@@ -4277,23 +4277,23 @@ void DisableMenuCommands_800C71C8()
     {
         if (GetPartyMinionMask_800C0A9C() == 0)
         {
-            dword_800C93B8[0] = msgNoDivineMinions_800C9378;
-            dword_800C946C |= 2;
+            levantMenuItems_800C93A4[2].data_4 = msgNoDivineMinions_800C9378;
+            winSummon_800C946C[0].flags_0 |= 2;
         }
         if (CanCapture_800C7334() == 0)
         {
-            dword_800C93B8[2] = msgCannotCapture_800C9384;
-            dword_800C94A4 |= 2;
+            levantMenuItems_800C93A4[3].data_4 = msgCannotCapture_800C9384;
+            winCapture_800C94A4[0].flags_0 |= 2;
         }
         else if (sub_800AD8E4() == 0)
         {
-            dword_800C93B8[2] = msgNoEmptyCocoons_800C9388;
-            dword_800C94A4 |= 2;
+            levantMenuItems_800C93A4[3].data_4 = msgNoEmptyCocoons_800C9388;
+            winCapture_800C94A4[0].flags_0 |= 2;
         }
         if (CanFlee_800C72B8() == 0)
         {
-            dword_800C93B8[6] = msgCannotEscape_800C938C;
-            dword_800C9514 |= 2;
+            levantMenuItems_800C93A4[5].data_4 = msgCannotEscape_800C938C;
+            winFlee_800C9514[0].flags_0 |= 2;
         }
         menuItems_800C9E6C = levantMenuItems_800C93A4;
     }
@@ -4467,7 +4467,7 @@ int IsMenuSelectionValid_800C7530()
             return 0;
         }
     case 4:
-        b.f0 = menuCommandArg_800C9E5C;
+        b.f0 = menuCommand_800C9E58.arg_4;
         b.f2 = actingUnit_800C9C7C;
         b.f4 = menuTarget_800C9E54;
         b.f6 = 0;
@@ -4621,23 +4621,23 @@ void AdvanceMenuPage_800C7A6C()
     case 1:
         targetFlags_800C9E68 = GetItemTargetFlags_8001CE8C(GetSelectedItem_800C79B8());
         menuPage_800C9E50 = 4;
-        menuCommandArg_800C9E5C = GetSelectedItem_800C79B8();
+        menuCommand_800C9E58.arg_4 = GetSelectedItem_800C79B8();
         break;
     case 2:
         h = GetUnitSkills_80031B30(actingUnit_800C9C7C);
         targetFlags_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
         menuPage_800C9E50 = 4;
-        menuCommandArg_800C9E5C = GetSelectedSkill_800C79EC();
+        menuCommand_800C9E58.arg_4 = GetSelectedSkill_800C79EC();
         break;
     case 3:
         m = GetMinionMagicBits_80010824(3, actingUnit_800C9C7C - 1);
         targetFlags_800C9E68 = GetMagicTargetFlags_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0)));
         menuPage_800C9E50 = 4;
-        menuCommandArg_800C9E5C = GetSelectedMagic_800C7A1C();
+        menuCommand_800C9E58.arg_4 = GetSelectedMagic_800C7A1C();
         break;
     case 4:
         menuPage_800C9E50 = 5;
-        menuCommandTargets_800C9E64 = GetSelectedTargets_800C791C();
+        menuCommand_800C9E58.targets_C = GetSelectedTargets_800C791C();
         break;
     case 5:
         break;
@@ -4674,19 +4674,19 @@ void UpdateMenuWindows_800C7CE8(unsigned char a)
     unsigned int n;
     if (a == 0)
     {
-        menuWindows_800C9630.f0 = 2;
+        menuWindows_800C9630.mode_0 = 2;
     }
     else
     {
-        menuWindows_800C9630.f0 = 4;
+        menuWindows_800C9630.mode_0 = 4;
     }
-    menuWindows_800C9630.f4 = GetTime30Hz_8002C64C();
-    n = menuWindows_800C9630.f8;
+    menuWindows_800C9630.time_4 = GetTime30Hz_8002C64C();
+    n = menuWindows_800C9630.frame_8;
     if (n < 8)
     {
-        menuWindows_800C9630.f8 = n + 1;
+        menuWindows_800C9630.frame_8 = n + 1;
     }
-    menuWindows_800C9630.fC = commandMenuCursor_800C92E0;
+    menuWindows_800C9630.cursor_C = commandMenu_800C92D8[0].cursor_8;
 }
 
 void UpdateShownUnit_800C7D54(unsigned char a)
@@ -4751,7 +4751,7 @@ void BattleMenuDraw_800C7DA8()
     {
         k = menuState_800C9E48;
     }
-    sel[0] = menuCommandArg_800C9E5C;
+    sel[0] = menuCommand_800C9E58.arg_4;
     sel[1] = actingUnit_800C9C7C;
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x10))
     {
@@ -4879,19 +4879,19 @@ void PreviewCommandResult_800C83B0()
             {
                 m = GetUnitStatus_80014390(i & 0xFF);
 
-                d.f24 = shownAreaElement_800C9D82;
+                d.areaElement_24 = shownAreaElement_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
                 if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
                 {
-                    previewHpChange_800C9180 -= d.fC;
-                    previewMpChange_800C9182 -= d.f10;
-                    previewHpChange_800C9180 -= d.f14;
-                    previewMpChange_800C9182 -= d.f18;
+                    previewHpChange_800C9180 -= d.actorHpCost_C;
+                    previewMpChange_800C9182 -= d.actorMpCost_10;
+                    previewHpChange_800C9180 -= d.actorHpDamage_14;
+                    previewMpChange_800C9182 -= d.actorMpDamage_18;
                 }
-                previewHpChange_800C9180 -= d.f1C;
-                previewMpChange_800C9182 -= d.f20;
+                previewHpChange_800C9180 -= d.hpDamage_1C;
+                previewMpChange_800C9182 -= d.mpDamage_20;
                 if (previewHpChange_800C9180 > m->hp_8.max_2 - m->hp_8.cur_0)
                 {
                     previewHpChange_800C9180 = m->hp_8.max_2 - m->hp_8.cur_0;
@@ -4902,7 +4902,7 @@ void PreviewCommandResult_800C83B0()
                 }
             }
         }
-        b.f0 = menuCommandArg_800C9E5C;
+        b.f0 = menuCommand_800C9E58.arg_4;
         b.f2 = actingUnit_800C9C7C;
         b.f4 = menuTarget_800C9E54;
         b.f6 = 0;
@@ -5061,7 +5061,7 @@ void CommitMenuCommand_800C8970()
     {
         curCommand_800C9C88.targets_C = menuCommand_800C9E58.targets_C;
     }
-    commandUnit_800C9C98 = LowestSetBit_80014358(menuCommandTargets_800C9E64);
+    commandUnit_800C9C98 = LowestSetBit_80014358(menuCommand_800C9E58.targets_C);
 }
 
 void BattleMenuTask_800C8A08(EventEntry* t, int a)
@@ -5071,7 +5071,7 @@ void BattleMenuTask_800C8A08(EventEntry* t, int a)
     UpdateMenuCursor_8003D794(pageCursor_800C9E44, 0);
     UpdateMenuWindows_800C7CE8(menuPage_800C9E50);
     BattleMenuDraw_800C7DA8();
-    menuCommandTargets_800C9E64 = GetSelectedTargets_800C791C();
+    menuCommand_800C9E58.targets_C = GetSelectedTargets_800C791C();
     UpdateShownUnit_800C7D54(menuPage_800C9E50);
     PreviewCommandResult_800C83B0();
     SetCameraFocusTargets_800C8694(menuPage_800C9E50);
@@ -5254,7 +5254,7 @@ short previewMpChange_800C9182 = 0;
 int dword_800C9184 = 0x24639300;
 Minion *summonedMinion_800C9188 = 0;
 int summonedMinionSlot_800C918C = -1;
-BatCtx_a summonedActor_800C9190 = { 0 };
+BatSummon_a summonedActor_800C9190 = { 0 };
 char dword_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
 BatFxFn enemyAiHigh_800C91DC[10] = {
     EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (BatFxFn)EnemyAiCC_800C4470,
@@ -5288,33 +5288,33 @@ BatMenu_a allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
 BatMenu_a *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
 int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
 int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
-const char *helpSummon_800C9358[1] = { aSummonDivineMin_800B6914 };
-char helpCapture_800C935C[4] = { 64, 105, 11, 128 };
-const char *helpItem_800C9360[1] = { aUseItem_800B6984 };
-const char *helpFlee_800C9364[1] = { aFleeFromCombat_800B6998 };
+int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
+int helpCapture_800C935C[1] = { (int)aCaptureMinionIn_800B6940 };
+int helpItem_800C9360[1] = { (int)aUseItem_800B6984 };
+int helpFlee_800C9364[1] = { (int)aFleeFromCombat_800B6998 };
 int helpMinionAttack_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
 int helpSpecialAttack_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
 int helpMagic_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
 int helpChangeFighter_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
-char msgNoDivineMinions_800C9378[4] = { 88, 106, 11, 128 };
+int msgNoDivineMinions_800C9378[1] = { (int)aNoDivineMinions_800B6A58 };
 int msgCannotSummon_800C937C = (int)aCannotSummonInt_800B6A88;
 int msgNotEnoughMana_800C9380 = (int)aNotEnoughMana_800B6ABC;
-char msgCannotCapture_800C9384[4] = { 220, 106, 11, 128 };
-char msgNoEmptyCocoons_800C9388[4] = { 252, 106, 11, 128 };
-char msgCannotEscape_800C938C[4] = { 32, 107, 11, 128 };
+int msgCannotCapture_800C9384[1] = { (int)aCannotCapture_800B6ADC };
+int msgNoEmptyCocoons_800C9388[1] = { (int)aNoEmptyCocoons_800B6AFC };
+int msgCannotEscape_800C938C[1] = { (int)aCannotEscape_800B6B20 };
 int msgNoNeedToUseItem_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
-const char *msgCannotSelect_800C9394[1] = { aCannotSelect_800B6B64 };
+int msgCannotSelect_800C9394[1] = { (int)aCannotSelect_800B6B64 };
 int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
 int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
 int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
-BatMenuItem_a levantMenuItems_800C93A4[2] = {
+BatMenuItem_a levantMenuItems_800C93A4[6] = {
     { helpAttack_800C9350 },
     { helpDefend_800C9354 },
+    { helpSummon_800C9358 },
+    { helpCapture_800C935C },
+    { helpItem_800C9360 },
+    { helpFlee_800C9364 },
 };
-void *dword_800C93B4[1] = { (void *)helpSummon_800C9358 };
-char *dword_800C93B8[2] = { 0, helpCapture_800C935C };
-void *dword_800C93C0[4] = { 0, (void *)helpItem_800C9360, 0, (void *)helpFlee_800C9364 };
-int dword_800C93D0 = 0;
 BatMenuItem_a minionMenuItems_800C93D4[5] = {
     { helpMinionAttack_800C9368 },
     { helpDefend_800C9354 },
@@ -5322,120 +5322,46 @@ BatMenuItem_a minionMenuItems_800C93D4[5] = {
     { helpMagic_800C9370 },
     { helpChangeFighter_800C9374 },
 };
-int dword_800C93FC[14] = {
-    0x10008, 13, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9D0016, 0x120026, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winAttack_800C93FC[2] = {
+    { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int dword_800C9434[14] = {
-    0x10008, 48, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9D003C, 0x120026, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winDefend_800C9434[2] = {
+    { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-unsigned short dword_800C946C = 8;
-short word_800C946E = 1;
-short word_800C9470 = 180;
-short word_800C9472 = 0;
-short word_800C9474 = 0xD620;
-short word_800C9476 = 0x8008;
-short word_800C9478 = 0xD3F4;
-short word_800C947A = 0x8008;
-short word_800C947C = 22;
-short word_800C947E = 176;
-short word_800C9480 = 38;
-short word_800C9482 = 18;
-short word_800C9484 = 2;
-short word_800C9486 = 2;
-short word_800C9488 = 1;
-short word_800C948A = 0;
-short word_800C948C = 0;
-short word_800C948E = 0;
-short word_800C9490 = 0;
-short word_800C9492 = 0;
-short word_800C9494 = 0;
-short word_800C9496 = 0;
-short word_800C9498 = -1;
-short word_800C949A = -1;
-short word_800C949C = -1;
-short word_800C949E = -1;
-short word_800C94A0 = -1;
-short word_800C94A2 = -1;
-unsigned short dword_800C94A4 = 8;
-short word_800C94A6 = 1;
-short word_800C94A8 = 224;
-short word_800C94AA = 0;
-short word_800C94AC = 0xD620;
-short word_800C94AE = 0x8008;
-short word_800C94B0 = 0xD3F4;
-short word_800C94B2 = 0x8008;
-short word_800C94B4 = 60;
-short word_800C94B6 = 176;
-short word_800C94B8 = 38;
-short word_800C94BA = 18;
-short word_800C94BC = 2;
-short word_800C94BE = 2;
-short word_800C94C0 = 1;
-short word_800C94C2 = 0;
-short word_800C94C4 = 0;
-short word_800C94C6 = 0;
-short word_800C94C8 = 0;
-short word_800C94CA = 0;
-short word_800C94CC = 0;
-short word_800C94CE = 0;
-short word_800C94D0 = -1;
-short word_800C94D2 = -1;
-short word_800C94D4 = -1;
-short word_800C94D6 = -1;
-short word_800C94D8 = -1;
-short word_800C94DA = -1;
-int dword_800C94DC[14] = {
-    0x10008, 88, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xC30016, 0x120026, 0x30002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winSummon_800C946C[2] = {
+    { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-unsigned short dword_800C9514 = 8;
-short word_800C9516 = 1;
-short word_800C9518 = 57;
-short word_800C951A = 0;
-short word_800C951C = 0xD620;
-short word_800C951E = 0x8008;
-short word_800C9520 = 0xD3F4;
-short word_800C9522 = 0x8008;
-short word_800C9524 = 60;
-short word_800C9526 = 195;
-short word_800C9528 = 38;
-short word_800C952A = 18;
-short word_800C952C = 2;
-short word_800C952E = 2;
-short word_800C9530 = 1;
-short word_800C9532 = 0;
-short word_800C9534 = 0;
-short word_800C9536 = 0;
-short word_800C9538 = 0;
-short word_800C953A = 0;
-short word_800C953C = 0;
-short word_800C953E = 0;
-short word_800C9540 = -1;
-short word_800C9542 = -1;
-short word_800C9544 = -1;
-short word_800C9546 = -1;
-short word_800C9548 = -1;
-short word_800C954A = -1;
-int dword_800C954C[14] = {
-    0x10008, 183, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xB00016, 0x120026, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winCapture_800C94A4[2] = {
+    { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int dword_800C9584[14] = {
-    0x10008, 108, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xB0003C, 0x120026, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winItem_800C94DC[2] = {
+    { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int dword_800C95BC[14] = {
-    0x10008, 40, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xC30016, 0x12004C, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+BatMenuWin_a winFlee_800C9514[2] = {
+    { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-void *levantMenuWindows_800C95F4[7] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)&dword_800C946C, (void *)&dword_800C94A4, (void *)dword_800C94DC, (void *)&dword_800C9514 };
-void *minionMenuWindows_800C9610[6] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)dword_800C954C, (void *)dword_800C9584, (void *)dword_800C95BC };
-int menuWindowSets_800C9628[2] = { (int)levantMenuWindows_800C95F4, (int)minionMenuWindows_800C9610 };
-struct BatState menuWindows_800C9630 = { 2 };
-int dword_800C9640 = 0;
-int dword_800C9644 = 0;
+BatMenuWin_a winSpecialAttack_800C954C[2] = {
+    { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWin_a winMagic_800C9584[2] = {
+    { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWin_a winChangeFighter_800C95BC[2] = {
+    { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWin_a *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
+BatMenuWin_a *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
+BatMenuWin_a **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
+BatMenuWins_a menuWindows_800C9630 = { 2 };
 unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
 unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
 unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };

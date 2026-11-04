@@ -73,15 +73,16 @@ typedef struct BatCmd_a
     int targets_C; // target unit bits
 } BatCmd_a;
 
+// the enemy AI's context (ChooseEnemyCommand_800C4118)
 typedef struct BatTask
 {
-    unsigned int* f0;  // &f10->magicBits_80
-    UnitSkills* f4;    // &f10->skills_6C
-    BatCmd_a* f8;
-    int fC;
-    UnitStats* f10;    // the acting encounter minion
-    UnitStatus* f14;   // its target: Levant or one of his minions
-    int f18;
+    unsigned int* magicBits_0; // &self_10->magicBits_80
+    UnitSkills* skills_4;      // &self_10->skills_6C
+    BatCmd_a* cmd_8;           // the command to fill in
+    int slot_C;                // the enemy's slot (unit slot_C + 4)
+    UnitStats* self_10;        // the acting encounter minion
+    UnitStatus* target_14;     // its target: Levant or the summoned minion
+    int targetMask_18;         // the target's unit bit
     int f1C;
 } BatTask;
 
@@ -233,13 +234,14 @@ extern int GetUnitTurnSpeed_800BF784();
 
 extern void TurnUnitsToward_800BC468();
 
+// GAME's record of one enemy for the battle result (dword_800B1238)
 typedef struct BatEnt_a
 {
-    int a;
-    short b;
-    short c;
-    short d;
-    short e;
+    int exp_0;
+    short species_4; // -1: no enemy in the slot
+    short killer_6;  // the unit that defeated or captured it
+    short level_8;
+    short kind_A;    // the command that ended it (7: none)
 } BatEnt_a;
 
 typedef struct BatCol_a
@@ -384,10 +386,11 @@ typedef struct BatObj_a
     int fc;
 } BatObj_a;
 
+// when a unit's action hits and when it ends (frames of the action timeline)
 typedef struct BatPair_a
 {
-    short a;
-    short b;
+    short hit_0;
+    short end_2;
 } BatPair_a;
 
 
@@ -447,14 +450,15 @@ typedef struct BatTask_a
 
 extern unsigned int dword_800B1228;
 
-typedef struct BatCtx_a
+// the summoned minion's actor and where it appears (LoadSummonedMinion_800C0AEC)
+typedef struct BatSummon_a
 {
-    Actor* obj;
-    int f4;
-    int f8;
-    int fc;
-    int f10;
-} BatCtx_a;
+    Actor* actor_0;
+    int x_4;
+    int y_8;
+    int z_C;
+    int rotY_10;
+} BatSummon_a;
 
 
 // an animated window rect (ActorWindowTask_800C0254, HelpWindowTask_800C04A4)
@@ -468,7 +472,6 @@ typedef struct BatWin_b
 
 
 
-extern short actorActionEnd_800C9D9A;
 
 
 
@@ -664,16 +667,16 @@ typedef struct BatResult_a
     unsigned short kind_0;
     unsigned short arg_2;
     int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    int f20;
-    short f24;
+    int status_8;         // status bits inflicted on the target
+    int actorHpCost_C;
+    int actorMpCost_10;
+    int actorHpDamage_14; // hp/mp the actor takes from the target (counter, drain)
+    int actorMpDamage_18;
+    int hpDamage_1C;      // the target's hp/mp damage
+    int mpDamage_20;
+    short areaElement_24; // in: the area element, out: the new one
     short f26;
-} BatResult_a;
+} BatResult_a; // the exe's ActionResult (common.c)
 
 extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
@@ -1000,7 +1003,6 @@ typedef struct BatTgtQ_a
 
 
 
-extern int menuCommandArg_800C9E5C;
 
 
 
@@ -1029,7 +1031,6 @@ extern int GetMenuCursorIndex_8003DA54(void*);
 
 
 
-extern unsigned int menuCommandTargets_800C9E64;
 
 extern int GetItemTargetFlags_8001CE8C(int a);
 
@@ -1041,16 +1042,34 @@ extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
 extern int GetMagicTargetFlags_8001ACE4(int a);
 
-struct BatState
+// one window of a menu's window list (the exe's DrawMenuWindowContents_8002A710 view); a list ends with flags_0 bit 0
+typedef struct BatMenuWin_a
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-};
+    unsigned short flags_0; // bit 1: greyed out
+    unsigned short type_2;  // 1: a uiTiy sprite
+    int text_4;             // sprite index for type 1
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
+    short x_10;
+    short y_12;
+    short w_14;
+    short h_16;
+    short mx_18;
+    short my_1A;
+} BatMenuWin_a;
+
+// what DrawMenuWindows_8002A5A4 draws: the command menu's windows
+typedef struct BatMenuWins_a
+{
+    int mode_0;                // 2: the command page, 4: a sub page
+    int time_4;
+    unsigned int frame_8;      // open animation frame (0..8)
+    int cursor_C;              // the command menu's cursor
+    BatMenuWin_a** windows_10; // NULL-terminated list of window lists
+    int ot_14;
+} BatMenuWins_a;
 
 
-extern short commandMenuCursor_800C92E0;
 
 
 
@@ -1060,7 +1079,6 @@ extern short commandMenuCursor_800C92E0;
 
 
 
-extern int menuCommandArg_800C9E5C;
 
 
 
@@ -1103,7 +1121,6 @@ extern unsigned char enemyBits_800C9E72[];
 
 extern int menuErrorText_800C9E7C;
 
-extern unsigned int menuCommandTargets_800C9E64;
 
 
 extern void (*menuStateFns_800C966C[])(EventEntry* t, int a);
@@ -1412,7 +1429,7 @@ extern short previewMpChange_800C9182;
 extern int dword_800C9184;
 extern Minion *summonedMinion_800C9188;
 extern int summonedMinionSlot_800C918C;
-extern BatCtx_a summonedActor_800C9190;
+extern BatSummon_a summonedActor_800C9190;
 extern char dword_800C91A4[56];
 extern BatFxFn enemyAiHigh_800C91DC[10];
 extern BatFxFn enemyAi_800C9204[53];
@@ -1427,127 +1444,40 @@ extern BatMenu_a allTargetsMenu_800C932C[1];
 extern BatMenu_a *pageMenus_800C9338[6];
 extern int helpAttack_800C9350[1];
 extern int helpDefend_800C9354[1];
-extern const char *helpSummon_800C9358[1];
-extern char helpCapture_800C935C[4];
-extern const char *helpItem_800C9360[1];
-extern const char *helpFlee_800C9364[1];
+extern int helpSummon_800C9358[1];
+extern int helpCapture_800C935C[1];
+extern int helpItem_800C9360[1];
+extern int helpFlee_800C9364[1];
 extern int helpMinionAttack_800C9368[1];
 extern int helpSpecialAttack_800C936C[1];
 extern int helpMagic_800C9370[1];
 extern int helpChangeFighter_800C9374[1];
-extern char msgNoDivineMinions_800C9378[4];
+extern int msgNoDivineMinions_800C9378[1];
 extern int msgCannotSummon_800C937C;
 extern int msgNotEnoughMana_800C9380;
-extern char msgCannotCapture_800C9384[4];
-extern char msgNoEmptyCocoons_800C9388[4];
-extern char msgCannotEscape_800C938C[4];
+extern int msgCannotCapture_800C9384[1];
+extern int msgNoEmptyCocoons_800C9388[1];
+extern int msgCannotEscape_800C938C[1];
 extern int msgNoNeedToUseItem_800C9390;
-extern const char *msgCannotSelect_800C9394[1];
+extern int msgCannotSelect_800C9394[1];
 extern int msgItemForDivineMinions_800C9398;
 extern int msgDivineMinionsCannot_800C939C;
 extern int msgCannotUseHere_800C93A0;
-extern BatMenuItem_a levantMenuItems_800C93A4[2];
-extern void *dword_800C93B4[1];
-extern char *dword_800C93B8[2];
-extern void *dword_800C93C0[4];
-extern int dword_800C93D0;
+extern BatMenuItem_a levantMenuItems_800C93A4[6];
 extern BatMenuItem_a minionMenuItems_800C93D4[5];
-extern int dword_800C93FC[14];
-extern int dword_800C9434[14];
-extern unsigned short dword_800C946C;
-extern short word_800C946E;
-extern short word_800C9470;
-extern short word_800C9472;
-extern short word_800C9474;
-extern short word_800C9476;
-extern short word_800C9478;
-extern short word_800C947A;
-extern short word_800C947C;
-extern short word_800C947E;
-extern short word_800C9480;
-extern short word_800C9482;
-extern short word_800C9484;
-extern short word_800C9486;
-extern short word_800C9488;
-extern short word_800C948A;
-extern short word_800C948C;
-extern short word_800C948E;
-extern short word_800C9490;
-extern short word_800C9492;
-extern short word_800C9494;
-extern short word_800C9496;
-extern short word_800C9498;
-extern short word_800C949A;
-extern short word_800C949C;
-extern short word_800C949E;
-extern short word_800C94A0;
-extern short word_800C94A2;
-extern unsigned short dword_800C94A4;
-extern short word_800C94A6;
-extern short word_800C94A8;
-extern short word_800C94AA;
-extern short word_800C94AC;
-extern short word_800C94AE;
-extern short word_800C94B0;
-extern short word_800C94B2;
-extern short word_800C94B4;
-extern short word_800C94B6;
-extern short word_800C94B8;
-extern short word_800C94BA;
-extern short word_800C94BC;
-extern short word_800C94BE;
-extern short word_800C94C0;
-extern short word_800C94C2;
-extern short word_800C94C4;
-extern short word_800C94C6;
-extern short word_800C94C8;
-extern short word_800C94CA;
-extern short word_800C94CC;
-extern short word_800C94CE;
-extern short word_800C94D0;
-extern short word_800C94D2;
-extern short word_800C94D4;
-extern short word_800C94D6;
-extern short word_800C94D8;
-extern short word_800C94DA;
-extern int dword_800C94DC[14];
-extern unsigned short dword_800C9514;
-extern short word_800C9516;
-extern short word_800C9518;
-extern short word_800C951A;
-extern short word_800C951C;
-extern short word_800C951E;
-extern short word_800C9520;
-extern short word_800C9522;
-extern short word_800C9524;
-extern short word_800C9526;
-extern short word_800C9528;
-extern short word_800C952A;
-extern short word_800C952C;
-extern short word_800C952E;
-extern short word_800C9530;
-extern short word_800C9532;
-extern short word_800C9534;
-extern short word_800C9536;
-extern short word_800C9538;
-extern short word_800C953A;
-extern short word_800C953C;
-extern short word_800C953E;
-extern short word_800C9540;
-extern short word_800C9542;
-extern short word_800C9544;
-extern short word_800C9546;
-extern short word_800C9548;
-extern short word_800C954A;
-extern int dword_800C954C[14];
-extern int dword_800C9584[14];
-extern int dword_800C95BC[14];
-extern void *levantMenuWindows_800C95F4[7];
-extern void *minionMenuWindows_800C9610[6];
-extern int menuWindowSets_800C9628[2];
-extern struct BatState menuWindows_800C9630;
-extern int dword_800C9640;
-extern int dword_800C9644;
+extern BatMenuWin_a winAttack_800C93FC[2];
+extern BatMenuWin_a winDefend_800C9434[2];
+extern BatMenuWin_a winSummon_800C946C[2];
+extern BatMenuWin_a winCapture_800C94A4[2];
+extern BatMenuWin_a winItem_800C94DC[2];
+extern BatMenuWin_a winFlee_800C9514[2];
+extern BatMenuWin_a winSpecialAttack_800C954C[2];
+extern BatMenuWin_a winMagic_800C9584[2];
+extern BatMenuWin_a winChangeFighter_800C95BC[2];
+extern BatMenuWin_a *levantMenuWindows_800C95F4[7];
+extern BatMenuWin_a *minionMenuWindows_800C9610[6];
+extern BatMenuWin_a **menuWindowSets_800C9628[2];
+extern BatMenuWins_a menuWindows_800C9630;
 extern unsigned char commandByCursor_800C9648[12];
 extern unsigned char commandNextPage_800C9654[12];
 extern unsigned char commandTargetFlags_800C9660[12];

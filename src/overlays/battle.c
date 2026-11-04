@@ -367,16 +367,16 @@ loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the origina
     m = sub_800A248C() & (1 << (i + 4));
     if (m != 0)
     {
-        p->b = sub_800A2BE4(i);
+        p->species_4 = sub_800A2BE4(i);
     }
     else
     {
-        p->b = -1;
+        p->species_4 = -1;
     }
-    p->a = 0;
-    p->d = 0;
-    p->c = 0;
-    p->e = 7;
+    p->exp_0 = 0;
+    p->level_8 = 0;
+    p->killer_6 = 0;
+    p->kind_A = 7;
     p++;
     i++;
     if (i < 3)
