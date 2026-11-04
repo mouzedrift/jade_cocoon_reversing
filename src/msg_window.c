@@ -18,6 +18,7 @@
 #include "msgwin.h"
 #include "msg_window.h"
 #include "effect_data.h"
+#include "pad_text.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -113,7 +114,6 @@ typedef struct
 } TextSize;
 extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
-extern int MeasureTextWidth_8003E4C8(int str);
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
 extern short** FindTextResumePage_80034900(short** list);
@@ -265,7 +265,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
             w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
             w->x_38 = w->field_40 + 0x45;
             w->y_3A = w->field_42 + 0xE;
-            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
             w->titleY_70 = w->y_3A - 0xC;
         }
         else
@@ -276,7 +276,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
                 w->field_42 = w->field_40 = 0x10;
                 w->x_38 = w->field_40 + 0x44;
                 w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
                 w->titleY_70 = w->y_3A + w->h_3E - 2;
                 break;
             case 1:
@@ -284,7 +284,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
                 w->field_42 = 0x74;
                 w->x_38 = w->field_40 + 0x44;
                 w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
                 w->titleY_70 = w->y_3A - 0x10;
                 break;
             case 2:
@@ -292,7 +292,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
                 w->field_42 = 0xA1;
                 w->x_38 = w->field_40 + 0x44;
                 w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
                 w->titleY_70 = w->y_3A - 0x10;
                 break;
             }
@@ -308,7 +308,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
             w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
             w->x_38 = w->field_40 + 0x45;
             w->y_3A = w->field_42 + 0xD;
-            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
             w->titleY_70 = w->y_3A - 0xC;
         }
         else
@@ -319,7 +319,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
                 w->field_42 = w->x_38 = 0x10;
                 w->field_40 = w->x_38 + 0xDA;
                 w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->field_40 + w->field_44 - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleX_6E = w->field_40 + w->field_44 - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
                 w->titleY_70 = w->field_42 + w->field_46 - 2;
                 break;
             case 1:
@@ -986,7 +986,7 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
             DrawText_8003E91C(2, win->title_74, pos, 0);
             rect[0] = win->titleX_6E;
             rect[1] = win->titleY_70;
-            rect[2] = MeasureTextWidth_8003E4C8((int)win->title_74) + 0x11;
+            rect[2] = MeasureTextWidth_8003E4C8(win->title_74) + 0x11;
             rect[3] = 0x12;
             DrawMsgWindowBackground_80035898(win, (int)rect, 2);
             DrawMsgWindowBorder_800358CC(win, (int)rect, 0);

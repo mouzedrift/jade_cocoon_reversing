@@ -259,7 +259,6 @@ extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned 
                                 int half);
 extern void SetSemiTrans(void* p, int abe);
 extern void DrawScrollArrows_8002B8DC(MapXY arrow, MenuCursor* sel, MapXY* pos, int ot);
-extern int MeasureTextWidth_8003E4C8(void* p);
 extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void* memset(void* p, int c, unsigned int n);
 extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);

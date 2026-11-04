@@ -28,4 +28,5 @@ int UpdateMenuCursor_8003D794(MenuCursor* menu, int pad);
 int MenuCursorInput_8003D830(MenuCursor* menu, int pad);
 int GetMenuCursorIndex_8003DA54(MenuCursor* menu);
 
+int MeasureTextWidth_8003E4C8(const char* str);
 #endif

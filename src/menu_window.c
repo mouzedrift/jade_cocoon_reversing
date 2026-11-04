@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "menu_window.h"
 #include "effect_data.h"
+#include "pad_text.h"
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
@@ -280,7 +281,6 @@ typedef struct
     int text;
 } ButtonHelpEntry;
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
-extern int MeasureTextWidth_8003E4C8(int text);
 // Matched
 void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
 {

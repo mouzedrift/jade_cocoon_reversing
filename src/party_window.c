@@ -142,7 +142,7 @@ short GetLevantLevel_8002FA70(void)
     return GetLevel_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
 extern void DecodeText_8003F748(int a, NameBuf* b);
-extern short MeasureTextWidth_8003E4C8(NameBuf* b);
+extern short MeasureTextWidth_8003E4C8(NameBuf* b); // this TU was built against a short-returning prototype (pad_text.h: int)
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
 extern void UppercaseSjisName_8003F89C(NameBuf* b);
 extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);

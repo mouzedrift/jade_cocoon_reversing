@@ -611,7 +611,6 @@ typedef struct
     short w;
     short h;
 } TextSize;
-extern int MeasureTextWidth_8003E4C8(int str);
 // Matched
 TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {
@@ -640,7 +639,6 @@ typedef struct
     short w;
     short h;
 } Size2;
-extern int MeasureTextWidth_8003E4C8(int str);
 
 // Matched
 TextSize MeasureTextLines_8003E3B4(int* list)
@@ -680,7 +678,7 @@ int IsTextMarkerLine_8003E484(int text)
 }
 extern int GetCharWidth_8003E884(int idx, short n);
 // Matched
-int MeasureTextWidth_8003E4C8(int str)
+int MeasureTextWidth_8003E4C8(const char* str)
 {
     unsigned short num[12];
     TextBuf22 name;

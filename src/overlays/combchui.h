@@ -38,7 +38,6 @@ extern unsigned char byte_800918F1;  // pad 2 state, 0xFF: no controller
 extern CombChuiWin dword_80082784;   // -> menu data (the yes/no window list)
 extern CombChuiPos dword_80082708;   // -> menu data (its "yes" item)
 extern CombChuiPos dword_80082740;   // -> menu data (its "no" item)
-extern int MeasureTextWidth_8003E4C8(const char* str);  // -> pad_text.h
 extern void AlignMenuItem_8002AC88(int flags, void* rect, int width, void* out); // -> menu_window.h
 extern void DrawText_8003E91C(int idx, const char* str, void* pos, int ot);       // -> font.h
 extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h

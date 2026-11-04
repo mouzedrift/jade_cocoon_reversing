@@ -19,6 +19,7 @@
 #include "menu_draw.h"
 #include "effect_data.h"
 #include "main.h"
+#include "pad_text.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -230,7 +231,6 @@ typedef struct
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
 extern void AddSprtWithTPage_800331C4(unsigned short* a, SPRT* o, DR_TPAGE* b, unsigned long* c, unsigned char* col);
 extern int MeasureTextWidthFont1_8003E6B0(int text);
-extern int MeasureTextWidth_8003E4C8(int text);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
 extern void DrawNumberRightAlignedFont1_8003F264(unsigned short* pos, int v, int ot);

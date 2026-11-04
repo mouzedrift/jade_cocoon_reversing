@@ -34,7 +34,6 @@ extern void AddDrawAreaPrim_8003326C();
 extern void AddClipDrawAreaPrim_80033308();
 
 
-extern int MeasureTextWidth_8003E4C8();
 
 
 
