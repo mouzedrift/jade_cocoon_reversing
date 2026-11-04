@@ -101,13 +101,13 @@ void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* actio
     int b;
     if (mode == 1)
     {
-        out[0] = status->stats_2C[0];
-        out[2] = status->stats_2C[2];
+        out[0] = status->stats_2C.cur_0[0];
+        out[2] = status->stats_2C.cur_0[2];
         out[4] = CalcHitBonus_80014114(10) + action[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(status->base_32[5] / 10));
+        out[6] = CriticalRateTransform_80014164((unsigned char)(status->stats_2C.base_6[5] / 10));
         out[8] = 0;
-        a = status->stats_2C[1] * (status->stats_2C[1] - 20) / 7;
-        b = status->stats_2C[3] * (status->stats_2C[3] - 20) / 7;
+        a = status->stats_2C.cur_0[1] * (status->stats_2C.cur_0[1] - 20) / 7;
+        b = status->stats_2C.cur_0[3] * (status->stats_2C.cur_0[3] - 20) / 7;
         out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
         out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
         out[5] = CalcEvadeBonus_8001413C(10);
@@ -116,16 +116,16 @@ void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* actio
     }
     else
     {
-        out[0] = status->stats_2C[0];
-        out[2] = status->stats_2C[2];
-        out[4] = CalcHitBonus_80014114(BaseSpeedRatio_80014200(status->stats_2C) / 10) + action[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(status->base_32[5] / 10));
+        out[0] = status->stats_2C.cur_0[0];
+        out[2] = status->stats_2C.cur_0[2];
+        out[4] = CalcHitBonus_80014114(BaseSpeedRatio_80014200(status->stats_2C.cur_0) / 10) + action[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(status->stats_2C.base_6[5] / 10));
         out[8] = 0;
-        out[1] = status->stats_2C[1];
-        out[3] = status->stats_2C[3];
-        out[5] = CalcEvadeBonus_8001413C(BaseSpeedRatio_80014200(status->stats_2C) / 10);
+        out[1] = status->stats_2C.cur_0[1];
+        out[3] = status->stats_2C.cur_0[3];
+        out[5] = CalcEvadeBonus_8001413C(BaseSpeedRatio_80014200(status->stats_2C.cur_0) / 10);
         out[7] = 0;
-        out[9] = BaseSpeedRatio_80014200(status->stats_2C);
+        out[9] = BaseSpeedRatio_80014200(status->stats_2C.cur_0);
 
     }
 }

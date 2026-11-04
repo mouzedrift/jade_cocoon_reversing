@@ -40,7 +40,7 @@ int CheckMagicUsable_80034068(short* req)
         switch (magicData_8007C438[req[0]].field_7)
         {
         case 0:
-            if (target->hp_8 == target->maxHp_A)
+            if (target->hp_8.cur_0 == target->hp_8.max_2)
             {
                 return 3;
             }

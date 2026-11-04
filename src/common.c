@@ -174,7 +174,7 @@ void AddStatus_80012794(UnitStatus* status, int bits)
 void KillUnit_800127B8(UnitStatus* status)
 {
     status->exp_4 = 0;
-    status->hp_8 = 0;
+    status->hp_8.cur_0 = 0;
     status->status_0 |= 0x400;
 }
 // Matched

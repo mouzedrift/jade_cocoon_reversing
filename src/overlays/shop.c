@@ -610,7 +610,7 @@ restart:
         *(unsigned short*)&c->status_84.elementMask_42 |= 2;
     }
     sub_800BA368(c, a);
-    sub_800BA3C8(c->status_84.stats_2C, a->status_84.stats_2C, b->status_84.stats_2C);
+    sub_800BA3C8(c->status_84.stats_2C.cur_0, a->status_84.stats_2C.cur_0, b->status_84.stats_2C.cur_0);
     sub_800BA4CC(c, a, b);
     sub_800BA650(c);
     sub_800BA6D0(c, a, b);
@@ -639,10 +639,10 @@ void sub_800BA368(Minion* d, Minion* s)
     int i;
     for (i = 0; i < 6; i++)
     {
-        d->status_84.stats_2C[i] = s->status_84.stats_2C[i] - s->status_84.base_32[i] / 20;
+        d->status_84.stats_2C.cur_0[i] = s->status_84.stats_2C.cur_0[i] - s->status_84.stats_2C.base_6[i] / 20;
     }
-    d->status_84.maxHp_A = s->status_84.maxHp_A;
-    d->status_84.maxMp_E = s->status_84.maxMp_E;
+    d->status_84.hp_8.max_2 = s->status_84.hp_8.max_2;
+    d->status_84.mp_C.max_2 = s->status_84.mp_C.max_2;
 }
 
 void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b)
@@ -751,7 +751,7 @@ void sub_800BA650(Minion* d)
     unsigned char* p;
     for (i = 0; i < 6; i++)
     {
-        // p[0xB0] / p[0xB6] == status_84.stats_2C[i] / base_32[i]; indexing the fields lets the compiler strength-reduce the loop
+        // p[0xB0] / p[0xB6] == status_84.stats_2C.cur_0[i] / stats_2C.base_6[i]; indexing the fields lets the compiler strength-reduce the loop
         p = (unsigned char*)d + i;
         v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
         if (v >= 0) { t = v; if (t > 100) t = 100; r = t; } else r = 0; p[0xB0] = r;

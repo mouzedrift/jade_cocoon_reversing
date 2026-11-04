@@ -194,7 +194,7 @@ void DrawUnitStatus_8002F23C(UnitStatus* unit, int gaugeArg, int time, unsigned 
     DrawSmallText_8002FAA0(0, loc, unit->name_10, ot);
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0xB;
-    DrawValueGauge_8002EFC4((char*)&unit->hp_8, gaugeArg, time, loc, ot, (flags ^ 1) & 1);
+    DrawValueGauge_8002EFC4((char*)&unit->hp_8.cur_0, gaugeArg, time, loc, ot, (flags ^ 1) & 1);
     loc[0] = pos[0] + 0x45;
     loc[1] = pos[1] + 4;
     DrawElementIconsGrid_8002B228(GetUnitElementMask_8003412C(unit), loc, ot, flags);

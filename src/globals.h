@@ -121,6 +121,10 @@ typedef struct
         int i;            // uiColor_8008B590
         unsigned char b;  // read as a byte by CONFIG
         unsigned short h; // read as a halfword by WPNSHOP
+        struct UiColorBytes
+        {
+            unsigned char b_0[4];
+        } w; // kept whole by LOAD over a loaded save
     } uiColor_20;
     SaveInventory inv_24; // == playerYan_8008B594
     short chapter_2DC; // 0x8008B84C (Meos4: currentChapter)

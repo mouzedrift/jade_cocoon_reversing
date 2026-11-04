@@ -594,13 +594,13 @@ void sub_800CC40C()
                     word_800A82D2 -= out[6];
                     word_800A82D0 -= out[7];
                     word_800A82D2 -= out[8];
-                    if (t->maxHp_A - t->hp_8 < word_800A82D0)
+                    if (t->hp_8.max_2 - t->hp_8.cur_0 < word_800A82D0)
                     {
-                        word_800A82D0 = t->maxHp_A - t->hp_8;
+                        word_800A82D0 = t->hp_8.max_2 - t->hp_8.cur_0;
                     }
-                    if (t->maxMp_E - t->mp_C < word_800A82D2)
+                    if (t->mp_C.max_2 - t->mp_C.cur_0 < word_800A82D2)
                     {
-                        word_800A82D2 = t->maxMp_E - t->mp_C;
+                        word_800A82D2 = t->mp_C.max_2 - t->mp_C.cur_0;
 
                     }
                     }

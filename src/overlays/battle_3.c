@@ -198,25 +198,25 @@ void ApplyBattleCommand_800BEBB8()
             }
             if (dword_800C9D38[i] > 0)
             {
-                if (m->hp_8 < dword_800C9D38[i])
+                if (m->hp_8.cur_0 < dword_800C9D38[i])
                 {
-                    dword_800C9D38[i] = m->hp_8;
+                    dword_800C9D38[i] = m->hp_8.cur_0;
                 }
             }
-            else if (dword_800C9D38[i] < m->hp_8 - m->maxHp_A)
+            else if (dword_800C9D38[i] < m->hp_8.cur_0 - m->hp_8.max_2)
             {
-                dword_800C9D38[i] = m->hp_8 - m->maxHp_A;
+                dword_800C9D38[i] = m->hp_8.cur_0 - m->hp_8.max_2;
             }
             if (dword_800C9D48[i] > 0)
             {
-                if (m->mp_C < dword_800C9D48[i])
+                if (m->mp_C.cur_0 < dword_800C9D48[i])
                 {
-                    dword_800C9D48[i] = m->mp_C;
+                    dword_800C9D48[i] = m->mp_C.cur_0;
                 }
             }
-            else if (dword_800C9D48[i] < m->mp_C - m->maxMp_E)
+            else if (dword_800C9D48[i] < m->mp_C.cur_0 - m->mp_C.max_2)
             {
-                dword_800C9D48[i] = m->mp_C - m->maxMp_E;
+                dword_800C9D48[i] = m->mp_C.cur_0 - m->mp_C.max_2;
             }
             if (res.fC != 0)
             {
@@ -281,9 +281,9 @@ void ApplyBattleCommand_800BEBB8()
                     }
                     break;
                 }
-                if (m->hp_8 <= dword_800C9D38[i] || (dword_800C9CA0[i] & 0x600))
+                if (m->hp_8.cur_0 <= dword_800C9D38[i] || (dword_800C9CA0[i] & 0x600))
                 {
-                    dword_800C9D38[i] = m->hp_8;
+                    dword_800C9D38[i] = m->hp_8.cur_0;
                     dword_800C9CC8[i].kind_0 = 0xB;
                     if (r == 2)
                     {
@@ -448,7 +448,7 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     if (u->kind_0 == 0)
     {
         AdjustUnitStatById_800127D0(u->unit_18, 0, x, 0);
-        if (GetUnitStatus_80014390((unsigned char)u->unit_18)->hp_8 <= 0)
+        if (GetUnitStatus_80014390((unsigned char)u->unit_18)->hp_8.cur_0 <= 0)
         {
             KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)u->unit_18));
         }
@@ -561,12 +561,12 @@ void sub_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     if (f0 & 1)
     {
-        *a = p->maxHp_A / 10;
+        *a = p->hp_8.max_2 / 10;
         f &= ~2;
     }
     else if (f & 0x4000)
     {
-        *a = -(short)(p->maxHp_A / 20);
+        *a = -(short)(p->hp_8.max_2 / 20);
     }
     if (f0 & 0x8000)
     {
@@ -575,7 +575,7 @@ void sub_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     if (f & 0x200)
     {
-        *a = p->hp_8;
+        *a = p->hp_8.cur_0;
     }
     i = 0;
 loop:
@@ -2655,7 +2655,7 @@ int sub_800C473C(BatTask* t)
     {
         return r;
     }
-    if (s->stats_2C[1] > s->stats_2C[3])
+    if (s->stats_2C.cur_0[1] > s->stats_2C.cur_0[3])
     {
         if (rand() % 10 < 8 && (r = sub_800C6A8C(t)))
         {
@@ -3913,7 +3913,7 @@ int sub_800C6CFC(unsigned int a, unsigned int* b, UnitStats* c)
 {
     if (TestMagicBit_8001AE2C(b, a) != 0)
     {
-        if (magicData_8007C438[a].field_4 <= c->st_0.mp_C)
+        if (magicData_8007C438[a].field_4 <= c->st_0.mp_C.cur_0)
         {
             return 1;
         }
@@ -3928,7 +3928,7 @@ int sub_800C6D6C(UnitSkills* a, UnitStats* b)
     {
         if (a->slot[i].flags_0 & 1)
         {
-            short h = b->st_0.mp_C;
+            short h = b->st_0.mp_C.cur_0;
             if (!(h < GetSkillMpCost_80031A04(a, i)))
             {
                 return i;
@@ -3968,7 +3968,7 @@ int sub_800C6EC8(BatTask* t, int m)
 
 int sub_800C6EE4(BatTask* t)
 {
-    return t->f14->stats_2C[1] > t->f14->stats_2C[3];
+    return t->f14->stats_2C.cur_0[1] > t->f14->stats_2C.cur_0[3];
 }
 
 int StartBattleMenu_800C6EFC()
@@ -4678,13 +4678,13 @@ void sub_800C83B0()
                 }
                 dword_800C9180 -= d.f1C;
                 dword_800C9182 -= d.f20;
-                if (dword_800C9180 > m->maxHp_A - m->hp_8)
+                if (dword_800C9180 > m->hp_8.max_2 - m->hp_8.cur_0)
                 {
-                    dword_800C9180 = m->maxHp_A - m->hp_8;
+                    dword_800C9180 = m->hp_8.max_2 - m->hp_8.cur_0;
                 }
-                if (dword_800C9182 > m->maxMp_E - m->mp_C)
+                if (dword_800C9182 > m->mp_C.max_2 - m->mp_C.cur_0)
                 {
-                    dword_800C9182 = m->maxMp_E - m->mp_C;
+                    dword_800C9182 = m->mp_C.max_2 - m->mp_C.cur_0;
                 }
             }
         }

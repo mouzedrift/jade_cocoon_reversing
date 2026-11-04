@@ -376,7 +376,7 @@ int InitMinionData_8001900C(UnitStats* m, int* params)
     {
         st = *sub_800B32A4(id - 0xC9);
     }
-    InitStatsFromBase_8001980C(m->st_0.stats_2C, &st);
+    InitStatsFromBase_8001980C(m->st_0.stats_2C.cur_0, &st);
     m->st_0.status_0 = 0;
     if (st.element != -1)
     {

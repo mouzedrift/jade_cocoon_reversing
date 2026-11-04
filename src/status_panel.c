@@ -115,7 +115,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     }
     if (cmp)
     {
-        delta = cmp->maxHp_A - unit->maxHp_A;
+        delta = cmp->hp_8.max_2 - unit->hp_8.max_2;
         if (delta)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -125,10 +125,10 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x45;
-    DrawValueGauge_8002EFC4((char*)&unit->hp_8, 0, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4((char*)&unit->hp_8.cur_0, 0, 0, loc, ot, 1);
     if (cmp)
     {
-        delta = cmp->maxMp_E - unit->maxMp_E;
+        delta = cmp->mp_C.max_2 - unit->mp_C.max_2;
         if (delta)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -138,7 +138,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x63;
-    DrawValueGauge_8002EFC4((char*)&unit->mp_C, 0, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4((char*)&unit->mp_C.cur_0, 0, 0, loc, ot, 1);
     expGauge[0] = 2;
     expGauge[1] = 0;
     u = unit->exp_4;
@@ -157,7 +157,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     DrawElementChart_8002E730(loc, elements, ot);
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 0x3D;
-    DrawStatGrid_8002EACC(unit, loc, (int)minion->field_CC, ot);
+    DrawStatGrid_8002EACC(unit, loc, (int)minion->field_CC.cur_0, ot);
     CalcEquippedStats_80033624(stats, unit);
     if (cmp)
     {
@@ -353,12 +353,12 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     hpGauge[1] = 0;
     loc2[0] = base[0] + 0x22;
     loc2[1] = base[1] + 0x14;
-    hpGauge[2] = st->hp_8;
-    hpGauge[3] = st->maxHp_A;
+    hpGauge[2] = st->hp_8.cur_0;
+    hpGauge[3] = st->hp_8.max_2;
     DrawGauge_8002BA54(hpGauge, 0, loc2, args->ot_0);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
-    DrawCurMaxValue_8002EE28((short*)&st->hp_8, loc2, args->ot_0, 1);
+    DrawCurMaxValue_8002EE28((short*)&st->hp_8.cur_0, loc2, args->ot_0, 1);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 0x24;
     DrawUiTiySprt_8002C06C(loc2, 0x70, args->ot_0);
@@ -493,7 +493,7 @@ void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, shor
     RECT r;
     Color_EACC lineColor = statGridLineColor_800743D0;
     SPRT* prim;
-    BaseStatRatios_8001419C(st->stats_2C, loc);
+    BaseStatRatios_8001419C(st->stats_2C.cur_0, loc);
     loc[0] += pos[0];
     loc[1] += pos[1];
     DrawUiTiySprt_8002C06C(loc, 10, ot);

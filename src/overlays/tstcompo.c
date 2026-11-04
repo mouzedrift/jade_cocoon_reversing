@@ -10,6 +10,48 @@ extern unsigned short padRepeat_800918CC;
 INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
 
 typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
+// a menu layout of the TSTCOMPO pages: the cursor head (copied into the work cursor), then the grid geometry
+typedef struct TstCompoMenu
+{
+    union
+    {
+        TstCompoBlk8 blk;
+        struct
+        {
+            short cols_0;
+            short count_2;
+            short f4;
+            short f6;
+        } f;
+    } head_0;
+    short dx_8;
+    short dy_A;
+    short x_C;
+    short y_E;
+} TstCompoMenu;
+typedef struct TstCompoEnt
+{
+    unsigned short a;
+    unsigned short b;
+    int p;
+} TstCompoEnt;
+// a TSTCOMPO page (name_800A250C[3])
+typedef struct TstCompoPage
+{
+    TstCompoMenu* menu_0;
+    TstCompoEnt* texts_4;
+    short rect_8[4];
+    int f10;
+} TstCompoPage;
+// a selectable part / colour of the compound test (dword_800A20EC[])
+typedef struct TstCompoPart
+{
+    int text_0;
+    int id_4;
+    int angle_8;
+    int fC;
+    int f10;
+} TstCompoPart;
 typedef struct TstCompoBone
 {
     short s0;
@@ -69,24 +111,20 @@ typedef struct TstCompoWork
     int f1E8;
     int f1EC;
     int f1F0;
-    int f1F4;
-    int f1F8;
+    unsigned int f1F4;
+    int* f1F8;
     int f1FC;
     int f200;
     int f204;
     int f208;
     int f20C;
-    int f210;
-    int f214;
-    int f218;
-    int f21C;
-    int f220;
-    int f224;
+    int part_210[3];
+    int ratio_21C[3];
     int f228;
     int f22C;
 } TstCompoWork;
 extern void TstCompoTask_800A097C();
-extern TstCompoBlk8* name_800A250C[];
+extern TstCompoPage name_800A250C[];
 void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 {
     c->anim_184 = 3;
@@ -105,15 +143,15 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
     c->f1EC = -1;
     c->f1E0 = 0;
     c->f1E2 = 0;
-    c->f1D8 = *name_800A250C[c->f1E8 * 5];
+    c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
     c->f1F4 = 0;
     c->f1F0 = 0;
-    c->f210 = 0;
-    c->f214 = 0;
-    c->f218 = 0;
-    c->f21C = 0;
-    c->f220 = 0;
-    c->f224 = 0;
+    c->part_210[0] = 0;
+    c->part_210[1] = 0;
+    c->part_210[2] = 0;
+    c->ratio_21C[0] = 0;
+    c->ratio_21C[1] = 0;
+    c->ratio_21C[2] = 0;
     c->f228 = 0;
     c->f22C = 0;
     c->f208 = 0;
@@ -128,12 +166,8 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 typedef struct TstCompoModelParams
 {
     int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
+    int part_4[3];  // the compounded minions' part ids (TstCompoPart.id_4)
+    int ratio_10[3]; // their shares, 0x1000 in all
     int modelId_1C;
     int f20;
     int f24;
@@ -147,12 +181,12 @@ void sub_800A0918()
 {
     TstCompoModelParams* p = &name_800A2768;
     p->f0 = 3;
-    p->f4 = 1;
-    p->f8 = 0xC;
-    p->fC = 0x29;
-    p->f10 = 0x555;
-    p->f14 = 0x555;
-    p->f18 = 0x555;
+    p->part_4[0] = 1;
+    p->part_4[1] = 0xC;
+    p->part_4[2] = 0x29;
+    p->ratio_10[0] = 0x555;
+    p->ratio_10[1] = 0x555;
+    p->ratio_10[2] = 0x555;
     p->modelId_1C = 4;
     p->f20 = 0;
     p->f24 = 0;
@@ -212,7 +246,196 @@ void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
     }
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, sub_800A0AB8);
+extern TstCompoPart dword_800A20EC[];
+extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
+extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
+extern int UpdateMenuCursor_8003D794(void* p, int idx);
+extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
+extern void DrawText_8003E91C(int a, int b, void* c, int d);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
+extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* e, int idx);
+// Matched
+void sub_800A0AB8(TstCompoWork* c)
+{
+    short p0[4];
+    short p1[4];
+    short p2[4];
+    short p3[4];
+    short p4[4];
+    short p5[4];
+    TstCompoMenu* m;
+    int i;
+    int j;
+    int a;
+    int b;
+    int d;
+    unsigned int total;
+
+    if (c->f1E4 != -1)
+    {
+        c->f1E8 = c->f1E4;
+        c->f1E4 = -1;
+        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
+        c->f1E0 = 0;
+        c->f1E2 = 0;
+        switch (c->f1E8)
+        {
+        case 0:
+            c->f1E0 = c->f1F4;
+            break;
+        case 1:
+            break;
+        case 2:
+            c->f1E0 = c->f20C;
+            c->f1E2 = c->f208;
+            break;
+        }
+    }
+    switch (c->f1E8)
+    {
+    case 0:
+        if (IsConfirmPressedP1_8003D380(1))
+        {
+            c->f1E4 = 2;
+            c->f1EC = 0;
+            c->f1F8 = &c->part_210[c->f1E0];
+            c->f1F4 = c->f1E0;
+        }
+        c->ratio_21C[c->f1E0] = AdjustByLeftRight_8003D210(10, c->ratio_21C[c->f1E0], 1, 0);
+        break;
+    case 1:
+        if (IsConfirmPressedP1_8003D380(1))
+        {
+            c->f1F8 = &c->f22C;
+            c->f1E4 = 2;
+            c->f1EC = 1;
+            c->f1F4 = c->f1E0;
+        }
+        name_800A2768.f24 = AdjustByLeftRight_8003D210(0x167, name_800A2768.f24, 1, 0);
+        name_800A2768.f24 = AdjustByShoulderButtons_8003D198(0x168, name_800A2768.f24, 10, 0);
+        break;
+    case 2:
+        if (IsConfirmPressedP1_8003D380(1))
+        {
+            *c->f1F8 = c->f1E0 + c->f1E2;
+            c->f1E4 = c->f1EC;
+        }
+        else if (IsCancelPressedP1_8003D41C(1))
+        {
+            c->f1E4 = c->f1EC;
+        }
+        m = name_800A250C[c->f1EC].menu_0;
+        DrawBobbingCursorHand_8003D090(m->x_C + (c->f1F4 % m->head_0.f.cols_0) * m->dx_8,
+                     m->y_E + (c->f1F4 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+        c->f20C = c->f1E0;
+        c->f208 = c->f1E2;
+        break;
+    }
+    switch (UpdateMenuCursor_8003D794(&c->f1D8, 0))
+    {
+    case 4:
+        c->f1E8++;
+        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
+        c->f1E0 = 0;
+        c->f1E2 = 0;
+        break;
+    case 3:
+        c->f1E8--;
+        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
+        c->f1E0 = name_800A250C[c->f1E8].menu_0->head_0.f.count_2 - 1;
+        c->f1E2 = 0;
+        break;
+    }
+    m = name_800A250C[c->f1E8].menu_0;
+    DrawBobbingCursorHand_8003D090(m->x_C + (c->f1E0 % m->head_0.f.cols_0) * m->dx_8,
+                 m->y_E + (c->f1E0 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+    if (c->f1E8 < 3)
+    {
+        if (c->f1E8 >= 0)
+        {
+            p0[0] = 0x22;
+            p0[1] = 0x1C;
+            DrawText_8003E91C(1, dword_800A20EC[c->part_210[0]].text_0, p0, 0);
+            p1[0] = 0x22;
+            p1[1] = 0x26;
+            DrawText_8003E91C(1, dword_800A20EC[c->part_210[1]].text_0, p1, 0);
+            p2[0] = 0x22;
+            p2[1] = 0x30;
+            DrawText_8003E91C(1, dword_800A20EC[c->part_210[2]].text_0, p2, 0);
+            p3[0] = 0x92;
+            p3[1] = 0x1C;
+            DrawNumberRightAlignedFont1_8003F264(p3, c->ratio_21C[0], 0);
+            p4[0] = 0x92;
+            p4[1] = 0x26;
+            DrawNumberRightAlignedFont1_8003F264(p4, c->ratio_21C[1], 0);
+            p5[0] = 0x92;
+            p5[1] = 0x30;
+            DrawNumberRightAlignedFont1_8003F264(p5, c->ratio_21C[2], 0);
+            p0[0] = 0x22;
+            p0[1] = 0x46;
+            DrawText_8003E91C(1, dword_800A20EC[c->f22C].text_0, p0, 0);
+            p1[0] = 0x92;
+            p1[1] = 0x46;
+            DrawNumberRightAlignedFont1_8003F264(p1, name_800A2768.f24, 0);
+            for (i = 0; i < 20; i++)
+            {
+                p0[0] = 0xCA;
+                p0[1] = (i + 1) * 10 + 0x12;
+                DrawText_8003E91C(1, dword_800A20EC[c->f208 + i].text_0, p0, 0);
+            }
+            for (j = 0; j < 3; j++)
+            {
+                DrawTextListWindow_800A2030(name_800A250C[j].rect_8, name_800A250C[j].texts_4, 0);
+            }
+        }
+    }
+    if (padPressed_8009194C & 0x800)
+    {
+        name_800A2768.f0 = 3;
+        name_800A2768.modelId_1C = 4;
+        name_800A2768.f20 = 0;
+        name_800A2768.f28 = dword_800A20EC[c->f22C].id_4;
+        name_800A2768.f2C = 0;
+        name_800A2768.part_4[0] = a = dword_800A20EC[c->part_210[0]].id_4;
+        name_800A2768.part_4[1] = b = dword_800A20EC[c->part_210[1]].id_4;
+        name_800A2768.part_4[2] = d = dword_800A20EC[c->part_210[2]].id_4;
+        if (a == b)
+        {
+            if (b == d)
+            {
+                c->ratio_21C[0] += c->ratio_21C[1];
+                c->ratio_21C[0] += c->ratio_21C[2];
+                c->ratio_21C[1] = 0;
+                c->ratio_21C[2] = 0;
+            }
+            else
+            {
+                c->ratio_21C[0] += c->ratio_21C[1];
+                c->ratio_21C[1] = 0;
+            }
+        }
+        else if (a == d)
+        {
+            c->ratio_21C[0] += c->ratio_21C[2];
+            c->ratio_21C[2] = 0;
+        }
+        else if (b == d)
+        {
+            c->ratio_21C[1] += c->ratio_21C[2];
+            c->ratio_21C[2] = 0;
+        }
+        total = c->ratio_21C[0] + c->ratio_21C[1] + c->ratio_21C[2];
+        name_800A2768.ratio_10[0] = (c->ratio_21C[0] << 12) / total;
+        name_800A2768.ratio_10[1] = (c->ratio_21C[1] << 12) / total;
+        name_800A2768.ratio_10[2] = (c->ratio_21C[2] << 12) / total;
+        name_800A2768.f24 += dword_800A20EC[c->f22C].angle_8;
+        if (name_800A2768.f24 >= 0x168)
+        {
+            name_800A2768.f24 -= 0x168;
+        }
+        c->state_0 = 1;
+    }
+}
 
 extern void name_80010850();
 void sub_800A1320(TstCompoWork* a)
@@ -595,15 +818,8 @@ int sub_800A200C()
     return 6;
 }
 
-typedef struct TstCompoEnt
-{
-    unsigned short a;
-    unsigned short b;
-    int p;
-} TstCompoEnt;
 extern unsigned short uiColor_8008B590;
-extern void DrawText_8003E91C(int a, int b, void* c, int d);
-extern void DrawWindow_80042460(int a, void* b, void* c, int d);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 // window style for DrawWindow_80042460
 typedef struct TstCompoWinStyle
 {
@@ -611,7 +827,7 @@ typedef struct TstCompoWinStyle
     unsigned char colors_2; // GetWindowColors_8004226C
     unsigned char frame_3;  // DrawWindowFrame_80041ED0
 } TstCompoWinStyle;
-void DrawTextListWindow_800A2030(int p, TstCompoEnt* e, int idx)
+void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
 {
     union
     {

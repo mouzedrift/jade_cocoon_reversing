@@ -599,22 +599,22 @@ unsigned char GetByteAt_800334BC(unsigned char* arr, int idx)
 // Matched
 short GetMaxHp_800334CC(UnitStatus* p)
 {
-    return p->maxHp_A;
+    return p->hp_8.max_2;
 }
 // Matched
 short GetHp_800334D8(UnitStatus* p)
 {
-    return p->hp_8;
+    return p->hp_8.cur_0;
 }
 // Matched
 short GetMaxMp_800334E4(UnitStatus* p)
 {
-    return p->maxMp_E;
+    return p->mp_C.max_2;
 }
 // Matched
 short GetMp_800334F0(UnitStatus* p)
 {
-    return p->mp_C;
+    return p->mp_C.cur_0;
 }
 // Matched
 int GetExp_800334FC(int* p)
@@ -634,12 +634,12 @@ short GetLevel_80033514(UnitStatus* p)
 // Matched
 unsigned char* GetStats_80033520(UnitStatus* p)
 {
-    return p->stats_2C;
+    return p->stats_2C.cur_0;
 }
 // Matched
 unsigned char GetStat_80033528(UnitStatus* p, int idx)
 {
-    return GetByteAt_800334BC(p->stats_2C, idx);
+    return GetByteAt_800334BC(p->stats_2C.cur_0, idx);
 }
 // Matched
 int HasStatusFlag_80033548(UnitStatus* p, int mask)
@@ -679,7 +679,7 @@ void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
 {
     int level;
     MemCopy_800403E8(dst, src, sizeof(UnitStatus));
-    level = CalcEquippedStats_80033624(dst->stats_2C, dst);
+    level = CalcEquippedStats_80033624(dst->stats_2C.cur_0, dst);
     if (level)
     {
         dst->level_44 = level;
@@ -689,7 +689,7 @@ void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
 // Matched
 int CalcEquippedStats_80033624(unsigned char* arg0, UnitStatus* arg1)
 {
-    unsigned char* stats = arg1->stats_2C;
+    unsigned char* stats = arg1->stats_2C.cur_0;
     unsigned char* ids = arg1->field_1C;
     int* tbl[4];
     int i;
@@ -758,7 +758,7 @@ UnitStatus* GetMinionStatusOf_80033818(Minion* p)
 // Matched
 unsigned char* sub_80033820(Minion* p)
 {
-    return p->field_CC;
+    return p->field_CC.cur_0;
 }
 // Matched
 unsigned char* GetMinionNameOf_80033828(Minion* p)
@@ -964,7 +964,7 @@ int CheckMagicCastable_80033C08(struct_minion_ref* p)
     {
         return 6;
     }
-    if (status->mp_C >= cost)
+    if (status->mp_C.cur_0 >= cost)
     {
         return 0;
     }
@@ -984,7 +984,7 @@ int CheckSkillUsable_80033C98(struct_minion_ref* p)
     {
         return 7;
     }
-    if (p->minion_C->status_84.mp_C < cost)
+    if (p->minion_C->status_84.mp_C.cur_0 < cost)
     {
         if (p->field_A == 0)
         {
@@ -1004,7 +1004,7 @@ int CheckMagicHasEffect_80033D20(struct_minion_ref* p)
         switch (magicData_8007C438[magic].field_7)
         {
         case 0:
-            if (status->hp_8 == status->maxHp_A)
+            if (status->hp_8.cur_0 == status->hp_8.max_2)
             {
                 return 3;
             }
@@ -1061,43 +1061,43 @@ int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
     case 0:
     case 1:
     case 2:
-        if (target->hp_8 == target->maxHp_A)
+        if (target->hp_8.cur_0 == target->hp_8.max_2)
         {
             noEffect = 1;
         }
         break;
     case 3:
-        if (target->maxHp_A == 999)
+        if (target->hp_8.max_2 == 999)
         {
             noEffect = 1;
         }
         break;
     case 4:
-        if (target->stats_2C[0] >= 99)
+        if (target->stats_2C.cur_0[0] >= 99)
         {
             noEffect = 1;
         }
         break;
     case 5:
-        if (target->stats_2C[4] >= 99)
+        if (target->stats_2C.cur_0[4] >= 99)
         {
             noEffect = 1;
         }
         break;
     case 6:
-        if (target->stats_2C[1] >= 99)
+        if (target->stats_2C.cur_0[1] >= 99)
         {
             noEffect = 1;
         }
         break;
     case 7:
-        if (target->stats_2C[2] >= 99)
+        if (target->stats_2C.cur_0[2] >= 99)
         {
             noEffect = 1;
         }
         break;
     case 8:
-        if (target->stats_2C[3] >= 99)
+        if (target->stats_2C.cur_0[3] >= 99)
         {
             noEffect = 1;
         }
@@ -1106,13 +1106,13 @@ int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
     case 10:
     case 11:
     case 12:
-        if (target->hp_8 == target->maxHp_A && target->mp_C == target->maxMp_E)
+        if (target->hp_8.cur_0 == target->hp_8.max_2 && target->mp_C.cur_0 == target->mp_C.max_2)
         {
             noEffect = 1;
         }
         break;
     case 13:
-        if (!(target->status_0 & 0x7FB) && target->hp_8 == target->maxHp_A && target->mp_C == target->maxMp_E)
+        if (!(target->status_0 & 0x7FB) && target->hp_8.cur_0 == target->hp_8.max_2 && target->mp_C.cur_0 == target->mp_C.max_2)
         {
             noEffect = 1;
         }
