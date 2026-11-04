@@ -466,10 +466,6 @@ extern BattleDrop battleDrops_800C29A0[3];
 extern int menuFromResults_800C29B8;
 extern int leaveForest_800C29BC;
 
-/* the jump table of DrawFieldMenu_800BE4A0 (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BE564[], jtgt_800BE574[], jtgt_800BE588[], jtgt_800BE59C[], jtgt_800BE5CC[], jtgt_800BE648[], jtgt_800BE6BC[], jtgt_800BE6CC[], jtgt_800BE7BC[], jtgt_800BE7E8[], jtgt_800BE7F8[], jtgt_800BE85C[], jtgt_800BE8AC[], jtgt_800BE91C[], jtgt_800BE9F8[], jtgt_800BEA74[];
-extern void* const jpt_800BBA80[17];
-
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 
 #endif

@@ -1776,10 +1776,6 @@ void RestoreMenuCursor_800BE38C(MenuCtx* menu)
 const char aLeaveTheForest_800BBA44[] = "\202k\202\205\202\201\202\226\202\205\201@\202\224\202\210\202\205\201@\202\206\202\217\202\222\202\205\202\223\202\224\201H"; // Leave the forest?
 const char aYesNo_800BBA68[] = "\201@\201@\202x\202\205\202\223\201@\201@\202m\202\217"; //   Yes  No
 const int dword_800BBA7C = 0;
-// the jump table of DrawFieldMenu_800BE4A0 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in menu.h when the function is C, the switch emits it then
-// (the zero word behind it in the original is the next jump table's .align 3, which the compiler adds)
-void* const jpt_800BBA80[17] = { jtgt_800BE564, jtgt_800BE574, jtgt_800BE588, jtgt_800BEA74, jtgt_800BE5CC, jtgt_800BE59C, jtgt_800BE648, jtgt_800BE6BC, jtgt_800BE6CC, jtgt_800BE7BC, jtgt_800BE7E8, jtgt_800BE7F8, jtgt_800BE85C, jtgt_800BE8AC, jtgt_800BEA74, jtgt_800BE91C, jtgt_800BE9F8 };
 
 void DrawLevantWindow_800BECE4(MenuCtx* c, short b);
 void DrawPartyMinionWindows_800BEFAC(MenuCtx* a, short b);
@@ -1803,26 +1799,20 @@ extern void DrawFamilyTree_8002D7D0();
 extern int DrawTargetSelectMenu_8002D250();
 extern void DrawMpGauge_8002F120();
 extern int DrawAbilityDescription_8002C670();
-#if 0
-// Not matched: stack layout and code match; register allocation differs (the original gets the window table base into $fp, here it is rematerialised)
+// Matched
 void DrawFieldMenu_800BE4A0(MenuCtx* menu)
 {
     short i;
-    int s;
-    Minion* m;
     if (!(menu->flags_0 & 0x20))
-    {
         DrawMenuHelpBar_800BEAE0(menu);
-    }
     for (i = 0; i < 17; i++)
     {
-        s = 1 << i;
-        if (!(s & menu->windows_10))
-        {
+        int bit = 1 << i;
+        int s;
+        if (!(bit & menu->windows_10))
             continue;
-        }
         AddClipDrawAreaPrim_80033308(&pOT_8008D454[14]);
-        s = GetWindowOpenStep_800C0990(menu, s);
+        s = GetWindowOpenStep_800C0990(menu, bit);
         switch (i)
         {
         case 0:
@@ -1836,35 +1826,35 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             break;
         case 5:
             if (menu->state_2 == 6 && menu->cursor_60 == 2)
-            {
                 DrawLevantStatusScreen_800BF0F4(menu, 14);
-            }
             break;
         case 4:
         {
             ListMenuState r;
+            Minion* m;
+            int flags;
             DrawMagicInfo_800C06E8(menu);
-            if (menu->state_2 == 4)
+            switch (menu->state_2)
             {
-                s = 2;
-            }
-            else if (menu->state_2 == 7)
-            {
-                s = 1;
-            }
-            else
-            {
-                s = 4;
+            case 7:
+                flags = 1;
+                break;
+            case 4:
+                flags = 2;
+                break;
+            default:
+                flags = 4;
+                break;
             }
             m = GetMinion_80010598(3, menu->cursors_2A[1]);
             if (m)
             {
                 r.cursor_0 = menu->cursors_2A[7];
                 r.scroll_2 = menu->scrolls_46[2];
-                r.field_4 = s;
+                r.windowFlags_4 = flags;
                 r.ot_6 = 14;
                 r.field_8 = 0;
-                r.field_A = 1;
+                r.fieldMenu_A = 1;
                 r.minion_C = m;
                 DrawMagicList_8002CAC8(&r, 0);
             }
@@ -1884,38 +1874,32 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             break;
         case 8:
         {
+            ListMenuState r;
+            Minion* m;
+            int flags;
             if (menu->state_2 == 11)
-            {
-                s = 2;
-            }
+                flags = 2;
             else
-            {
-                s = 1;
-            }
+                flags = 1;
             m = GetMinion_80010598(3, menu->cursors_2A[1]);
             if (m)
             {
-                ListMenuState r;
                 r.cursor_0 = menu->cursors_2A[10];
                 r.scroll_2 = 0;
-                r.field_4 = s;
+                r.windowFlags_4 = flags;
                 r.ot_6 = 14;
                 r.field_8 = 0;
-                r.field_A = 1;
+                r.fieldMenu_A = 1;
                 r.minion_C = m;
                 DrawAbilityList_8002CE28(&r, 0);
             }
             {
                 int found = 0;
-                int is = menu->state_2 == 11;
-                if (IsCircleHeldP1_8003D480() && is && menu->showMessage_24 == 0)
-                {
+                int abilities = menu->state_2 == 11;
+                if (IsCircleHeldP1_8003D480() && abilities && !menu->showMessage_24)
                     found = DrawAbilityDescription_8002C670(GetMinion_80010598(3, menu->cursors_2A[1]), 0, abilityDescs_800C22D8, menu->cursors_2A[10], 14) != 0;
-                }
                 if (!found)
-                {
                     DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, statusWindowRect_800C18F4, 14, 0);
-                }
             }
             break;
         }
@@ -1933,25 +1917,26 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
         case 11:
         {
             ListMenuState r;
+            int flags;
             DrawItemInfo_800C0428(menu);
-            if (menu->state_2 == 1)
+            switch (menu->state_2)
             {
-                s = 2;
-            }
-            else if (menu->state_2 == 6)
-            {
-                s = 1;
-            }
-            else
-            {
-                s = 4;
+            case 6:
+                flags = 1;
+                break;
+            case 1:
+                flags = 2;
+                break;
+            default:
+                flags = 4;
+                break;
             }
             r.cursor_0 = menu->cursors_2A[3];
             r.scroll_2 = menu->scrolls_46[0];
-            r.field_4 = s;
+            r.windowFlags_4 = flags;
             r.ot_6 = 14;
             r.field_8 = 0;
-            r.field_A = 1;
+            r.fieldMenu_A = 1;
             r.minion_C = 0;
             DrawItemList_8002C728(&r);
             break;
@@ -1970,28 +1955,30 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             eq.f8 = 0;
             eq.fA = 1;
             eq.z = 0;
-            DrawEquipmentWindow_800C0E04(&eq, (short*)&p, 8);
+            DrawEquipmentWindow_800C0E04(&eq, &p.a, 8);
             break;
         }
         case 13:
         {
             MenuEquipQ eq;
+            int flags;
             DrawKeyItemInfo_800C05E0(menu);
-            if (menu->state_2 == 6)
+            flags = 0;
+            switch (menu->state_2)
             {
-                s = 1;
-            }
-            else if (menu->state_2 == 14)
-            {
-                s = 2;
-            }
-            else
-            {
-                s = 4;
+            case 6:
+                flags = 1;
+                break;
+            case 14:
+                flags = 2;
+                break;
+            default:
+                flags |= 4;
+                break;
             }
             eq.sel_0 = menu->cursors_2A[4];
             eq.scroll_2 = menu->scrolls_46[1];
-            eq.winFlags_4 = s;
+            eq.winFlags_4 = flags;
             eq.ot_6 = 14;
             eq.f8 = 0;
             eq.fA = 1;
@@ -2001,9 +1988,9 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
         }
         case 15:
         {
-            if (menu->showMessage_24 == 0)
+            short pr[4];
+            if (!menu->showMessage_24)
             {
-                short pr[4];
                 pr[0] = GetInventorySlotId_800AD288(menu->cursors_2A[3] + menu->scrolls_46[0], 0);
                 pr[1] = 0;
                 pr[2] = menu->cursors_2A[5];
@@ -2015,15 +2002,18 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
                     UiWinArgs win;
                     RECT r;
                     int buf[2];
+                    int mp;
+                    UnitStatus* unit;
                     PreviewItemRecovery_800C0CA4(menu, buf);
-                    s = buf[1];
+                    mp = buf[1];
+                    unit = GetUnitStatus_80014390((unsigned char)menu->cursors_2A[5]);
                     p.a = 0xD2;
                     p.b = 0xBB;
-                    DrawMpGauge_8002F120(GetUnitStatus_80014390(menu->cursors_2A[5] & 0xFF), &p, s, 14);
-                    r.w = 0x64;
-                    r.h = 0x15;
+                    DrawMpGauge_8002F120(unit, &p, mp, 14);
                     r.x = 0xD2;
                     r.y = 0xBB;
+                    r.w = 0x64;
+                    r.h = 0x15;
                     win.rect = &r;
                     win.f4 = 0;
                     win.f8 = 0;
@@ -2036,28 +2026,24 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
         case 16:
         {
             RECT r;
-            char* tb[4];
+            const char* tb[4];
             tb[0] = aLeaveTheForest_800BBA44;
             tb[1] = emptyText_800B6838;
             tb[2] = aYesNo_800BBA68;
             tb[3] = emptyText_800B6838;
+            r.x = menu->cursor_60 * 28 + 0x12;
             r.y = 0xB3;
             r.w = 0x1C;
             r.h = 0x10;
-            r.x = menu->cursor_60 * 28 + 0x12;
             DrawLargeTextBox_8002AF10(tb, 0, 14);
             DrawCursorWindow_800BEC8C(menu, &r, 14, 0);
             break;
         }
         }
         if (menu->openTimer_28 == 8)
-        {
             menu->openedWindows_14 |= 1 << i;
-        }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, DrawFieldMenu_800BE4A0);
 
 void DrawMenuHelpBar_800BEAE0(MenuCtx* menu)
 {
@@ -2148,22 +2134,21 @@ extern void DrawLargeNumber_8002C100();
 extern void AddClipDrawAreaPrim_80033308();
 extern int sub_800B330C();
 extern int name_8008D678;
-// Not matched: register allocation - the original keeps c/s in s6/s7 swapped vs. this, computes
-// flag in a3 and copies it to s5, and spills the short b to the stack (sh 0x38); tried a ternary,
-// a separate f = ... ; flag = f copy
-#if 0
+// Matched
 void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
 {
     short pos[2];
     int tmp[2];
     LevantSummaryArgs summary;
     int openStep = GetWindowOpenStep_800C0990(menu, 2);
-    int flag = 0;
+    int flag;
+    short f = 0;
     int time = 0;
     pos[0] = 0xA;
     pos[1] = 0x2C;
     if (menu->state_2 == 0)
-        flag = menu->flags_0 & 1;
+        f = menu->flags_0 & 1;
+    flag = f;
     if (flag)
         time = frameCount_8008D3FC;
     summary.ot_0 = b;
@@ -2186,7 +2171,10 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
         pos[0] = 0x84;
         pos[1] = 0xC4;
         DrawUiTiySprt_8002C06C(pos, 0x4F, b);
-        DrawAnimatedWindow_8002BEC8(tmp, configLabelRect_800C18D4, (short)openStep, b, 1, (menu->flags_0 & 4) ? frameCount_8008D3FC : 0);
+        if (menu->flags_0 & 4)
+            DrawAnimatedWindow_8002BEC8(tmp, configLabelRect_800C18D4, (short)openStep, b, 1, frameCount_8008D3FC);
+        else
+            DrawAnimatedWindow_8002BEC8(tmp, configLabelRect_800C18D4, (short)openStep, b, 1, 0);
         if (name_8008D678 & 0x20000)
         {
             int v = sub_800B330C();
@@ -2200,8 +2188,6 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, DrawLevantWindow_800BECE4);
 
 extern void DrawPartySlotWindow_8002F8E4();
 void DrawPartyMinionWindows_800BEFAC(MenuCtx* menu, short b)

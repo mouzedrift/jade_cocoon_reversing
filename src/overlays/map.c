@@ -321,12 +321,9 @@ void FreeMapTiys_800B6FAC(MapTask* task)
     }
 }
 
-#if 0
-// Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when mapSelect_800AEBF8.area >= 2
-// (between the marker's two AddPrimCopy calls), which plain C drops; the tail's pad test / register
-// allocation also differ.
 // the destination list of a map area: the area picture, the blinking marker of the selected destination
 // and the scrolling list of names
+// Matched
 void DestinationSelect_800B7044(MapTask* task, int work)
 {
     MapDest sel;
@@ -342,16 +339,20 @@ void DestinationSelect_800B7044(MapTask* task, int work)
     MapMenu menu;
     MapXY arrow;
     MapXY pos[2];
-    int i;
     MapElem* elem;
     int y;
     int wd;
     int id;
-    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area, &sel);
-    elem = mapAreas_800B9220[mapSelect_800AEBF8.area].dests_14 + sel.dest;
+    int id2;
+    int i;
+    int destIdx;
+    MapDest* p;
+    short* area = &mapSelect_800AEBF8.area;
+    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[*area]), *area, &sel);
+    elem = mapAreas_800B9220[*area].dests_14 + sel.dest;
     if (openDestCount_800B8CA4 > 0)
     {
-        UpdateMenuCursor_8003D794(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], 0);
+        UpdateMenuCursor_8003D794(&mapSelectCursors_800AEBFC[*area], 0);
     }
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -386,20 +387,25 @@ void DestinationSelect_800B7044(MapTask* task, int work)
         AddPrimCopy_80040298(&pOT_8008D454[10], &areaTPages_800B9320[id], 2);
         if (openDestCount_800B8CA4 > 0)
         {
-            id = elem->marker_8;
-            areaSprts_800B931C[id].x0 = elem->x_C;
-            areaSprts_800B931C[id].y0 = elem->y_E;
-            PulseColor_80033394(&areaSprts_800B931C[id].r0, elem->c0_10, elem->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
+            id2 = elem->marker_8;
+            areaSprts_800B931C[id2].x0 = elem->x_C;
+            areaSprts_800B931C[id2].y0 = elem->y_E;
+            PulseColor_80033394(&areaSprts_800B931C[id2].r0, elem->c0_10, elem->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
             if ((unsigned short)mapSelect_800AEBF8.area < 2)
             {
-                SetSemiTrans(&areaSprts_800B931C[id], 0);
+                SetSemiTrans(&areaSprts_800B931C[id2], 0);
             }
             else
             {
-                SetSemiTrans(&areaSprts_800B931C[id], 1);
+                SetSemiTrans(&areaSprts_800B931C[id2], 1);
             }
-            AddPrimCopy_80040298(&pOT_8008D454[9], &areaSprts_800B931C[id], 5);
-            AddPrimCopy_80040298(&pOT_8008D454[9], &areaTPages_800B9320[id], 2);
+            AddPrimCopy_80040298(&pOT_8008D454[9], &areaSprts_800B931C[id2], 5);
+            if ((unsigned short)mapSelect_800AEBF8.area >= 2)
+            {
+                // the original reads this word here without using it
+                areaTPages_800B9320[id2].code[0] = areaTPages_800B9320[id2].code[0];
+            }
+            AddPrimCopy_80040298(&pOT_8008D454[9], &areaTPages_800B9320[id2], 2);
             if (openDestCount_800B8CA4 > 0)
             {
                 w0 = destListRow0_800B68B8;
@@ -427,75 +433,84 @@ void DestinationSelect_800B7044(MapTask* task, int work)
             }
         }
     }
-    {
-        arrow.x = 2;
-        arrow.y = 1;
-        pos[0].x = 0x4A;
-        pos[0].y = 0x93;
-        pos[1].x = 0x4A;
-        pos[1].y = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2 * 18 + 0x9D;
-        DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], pos, 0);
-    }
+    arrow.x = 2;
+    arrow.y = 1;
+    pos[0].x = 0x4A;
+    pos[0].y = 0x93;
+    pos[1].x = 0x4A;
+    pos[1].y = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2 * 18 + 0x9D;
+    DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], pos, 0);
+    p = &mapSelect_800AEBF8;
     if (openDestCount_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C[0] & 0x80)))
     {
-        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area,
-                     &mapSelect_800AEBF8);
+        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area, p);
         lastDest_800B8C94.area = mapSelect_800AEBF8.area;
-        lastDest_800B8C94.dest = mapSelect_800AEBF8.dest;
+        lastDest_800B8C94.dest = p->dest;
         if ((unsigned short)mapSelect_800AEBF8.area < 2)
         {
-            int destIdx = mapSelect_800AEBF8.dest;
+            destIdx = p->dest;
             if (destIdx == 0xC)
             {
                 mapSelect_800AEBF8.area = 5;
-                mapSelect_800AEBF8.dest = 5;
-                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
+                p->dest = 5;
+                if (IsDestOpen_800B8290(p))
                 {
-                    mapSelect_800AEBF8.dest = 0;
+                    p->dest = 0;
                     task->next_8 = StartAreaFadeOut_800B6C7C;
                     task->next_8(task, work);
                     return;
                 }
                 mapSelect_800AEBF8.area = 4;
-                mapSelect_800AEBF8.dest = 4;
-                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
+                p->dest = 4;
+                if (IsDestOpen_800B8290(p))
                 {
-                    mapSelect_800AEBF8.dest = 0;
+                    p->dest = 0;
                     task->next_8 = StartAreaFadeOut_800B6C7C;
                     task->next_8(task, work);
                     return;
                 }
                 mapSelect_800AEBF8.area = 3;
-                mapSelect_800AEBF8.dest = 3;
-                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
+                p->dest = 3;
+                if (IsDestOpen_800B8290(p))
                 {
-                    mapSelect_800AEBF8.dest = 0;
+                    p->dest = 0;
                     task->next_8 = StartAreaFadeOut_800B6C7C;
                     task->next_8(task, work);
                     return;
                 }
                 mapSelect_800AEBF8.area = 2;
-                mapSelect_800AEBF8.dest = 2;
-                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
+                p->dest = 2;
+                if (IsDestOpen_800B8290(p))
                 {
-                    mapSelect_800AEBF8.dest = 0;
+                    p->dest = 0;
                     task->next_8 = StartAreaFadeOut_800B6C7C;
                     task->next_8(task, work);
                     return;
                 }
                 mapSelect_800AEBF8.area = 0;
-                mapSelect_800AEBF8.dest = destIdx;
+                p->dest = destIdx;
+                if (padPressed_8009194C[0] & 0x80)
+                {
+                    GoToDest_800B8338(p);
+                    MapSelectEnd_800B6F60(task, work);
+                    task->next_8 = StartMapOverlay_800A75F8;
+                }
+                else
+                {
+                    task->next_8 = StartDestFadeOut_800B7948;
+                    task->next_8(task, work);
+                }
             }
-            if (!(padPressed_8009194C[0] & 0x80))
+            else if (padPressed_8009194C[0] & 0x80)
             {
-                task->next_8 = StartDestFadeOut_800B7948;
-                task->next_8(task, work);
+                GoToDest_800B8338(p);
+                MapSelectEnd_800B6F60(task, work);
+                task->next_8 = StartMapOverlay_800A75F8;
             }
             else
             {
-                GoToDest_800B8338(&mapSelect_800AEBF8);
-                MapSelectEnd_800B6F60(task, work);
-                task->next_8 = StartMapOverlay_800A75F8;
+                task->next_8 = StartDestFadeOut_800B7948;
+                task->next_8(task, work);
             }
         }
         else if (mapSelect_800AEBF8.dest == 0)
@@ -515,24 +530,19 @@ void DestinationSelect_800B7044(MapTask* task, int work)
             task->next_8 = StartAreaFadeOut_800B6C7C;
             task->next_8(task, work);
         }
+        else if (padPressed_8009194C[0] & 0x80)
+        {
+            GoToDest_800B8338(p);
+            MapSelectEnd_800B6F60(task, work);
+            task->next_8 = StartMapOverlay_800A75F8;
+        }
         else
         {
-            if (padPressed_8009194C[0] & 0x80)
-            {
-                GoToDest_800B8338(&mapSelect_800AEBF8);
-                MapSelectEnd_800B6F60(task, work);
-                task->next_8 = StartMapOverlay_800A75F8;
-            }
-            else
-            {
-                task->next_8 = StartDestFadeOut_800B7948;
-                task->next_8(task, work);
-            }
+            task->next_8 = StartDestFadeOut_800B7948;
+            task->next_8(task, work);
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(map, DestinationSelect_800B7044);
 
 // Matched
 void StartDestFadeOut_800B7948(MapTask* task)
