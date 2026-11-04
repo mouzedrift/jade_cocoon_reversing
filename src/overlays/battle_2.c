@@ -704,7 +704,7 @@ void sub_800BE3C0()
                 PlaySfx_80031494(0x6F);
             }
         }
-        if (dword_800C9D84 != *(signed char*)&dword_800C9D82)
+        if (dword_800C9D84 != dword_800C9D82)
         {
             sub_80039ED8(dword_800C9D84);
             dword_800C9D82 = dword_800C9D84;

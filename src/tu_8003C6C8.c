@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "tu_8003C6C8.h"
 
 INCLUDE_DATA(dword_8007490C);
 INCLUDE_DATA(dword_8007493C);
@@ -87,13 +88,13 @@ int DATA_GetFileSize_8003C87C(int idx)
     return Data001Files_80075AA0[idx].field_8_size;
 }
 // Matched
-int CdSeekStart_8003C8A0(int a0)
+int CdSeekStart_8003C8A0(DslLOC* a0)
 {
-    if (cdReadState_80086550[0] != 0)
+    if (cdReadState_80086550.idle_0 != 0)
     {
-        cdReadState_80086550[0] = 0;
-        cdReadState_80086550[2] = a0;
-        cdReadState_80086550[4] = DsPacket(0xA0, (DslLOC*)a0, 0x15, 0, -1);
+        cdReadState_80086550.idle_0 = 0;
+        cdReadState_80086550.loc_8 = a0;
+        cdReadState_80086550.packet_10 = DsPacket(0xA0, a0, 0x15, 0, -1);
         return 1;
     }
     return 0;
@@ -102,9 +103,9 @@ int CdSeekStart_8003C8A0(int a0)
 // Matched
 int CdSeekIsComplete_8003C900(void)
 {
-    if (DsSync(cdReadState_80086550[4], 0) == 2)
+    if (DsSync(cdReadState_80086550.packet_10, 0) == 2)
     {
-        cdReadState_80086550[0] = 1;
+        cdReadState_80086550.idle_0 = 1;
         return 1;
     }
     return 0;
@@ -112,17 +113,17 @@ int CdSeekIsComplete_8003C900(void)
 extern int DsSystemStatus(void);
 
 // Matched
-int CdReadStart_8003C944(int a, int b, int c)
+int CdReadStart_8003C944(DslLOC* a, void* b, int c)
 {
-    if (cdReadState_80086550[0] != 0)
+    if (cdReadState_80086550.idle_0 != 0)
     {
         if (DsSystemStatus() == 1)
         {
-            cdReadState_80086550[0] = 0;
-            cdReadState_80086550[1] = b;
-            cdReadState_80086550[2] = a;
-            cdReadState_80086550[3] = c;
-            cdReadState_80086550[4] = DsPacket(0xA0, (DslLOC*)a, 6, (DslCB)CdReadSyncCallback_8003C9FC, -1);
+            cdReadState_80086550.idle_0 = 0;
+            cdReadState_80086550.buf_4 = b;
+            cdReadState_80086550.loc_8 = a;
+            cdReadState_80086550.sectors_C = c;
+            cdReadState_80086550.packet_10 = DsPacket(0xA0, a, 6, (DslCB)CdReadSyncCallback_8003C9FC, -1);
             return 1;
         }
     }
@@ -131,7 +132,7 @@ int CdReadStart_8003C944(int a, int b, int c)
 // Matched
 int CdReadIsIdle_8003C9EC(void)
 {
-    return cdReadState_80086550[0];
+    return cdReadState_80086550.idle_0;
 }
 // Matched
 void CdReadSyncCallback_8003C9FC(unsigned char mode)
@@ -146,12 +147,12 @@ void CdReadReadyCallback_8003CA30(unsigned char mode)
 {
     if (mode == 1)
     {
-        DsGetSector((void*)cdReadState_80086550[1], 0x200);
-        cdReadState_80086550[1] += 0x800;
-        cdReadState_80086550[3]--;
-        if (cdReadState_80086550[3] == 0)
+        DsGetSector(cdReadState_80086550.buf_4, 0x200);
+        cdReadState_80086550.buf_4 += 0x800;
+        cdReadState_80086550.sectors_C--;
+        if (cdReadState_80086550.sectors_C == 0)
         {
-            cdReadState_80086550[0] = mode;
+            cdReadState_80086550.idle_0 = mode;
             DsEndReadySystem();
         }
     }

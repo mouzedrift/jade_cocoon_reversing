@@ -56,7 +56,7 @@ extern EventNode* dword_8008D778;
 extern void sub_8001A38C();
 extern void sub_8001A41C();
 extern int sub_800A1958(void*);
-extern int sub_800A10DC(int);
+extern int* sub_800A10DC(int); // COMBAT: the slot actor pos_38
 extern void sub_800A7EFC();
 typedef struct CombBtlObj
 {
@@ -857,10 +857,10 @@ void sub_800A601C()
     int i;
     for (i = 10; i > 0; i--)
     {
-        MemCopy_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
+        MemCopy_800403E8(&dword_800A84D8[i], &dword_800A84D8[i - 1], 0x14);
     }
     dword_800A84D8[0].unit_0 = dword_800A85B8;
-    MemCopy_800403E8((unsigned int*)&dword_800A84D8[0].cmd_4, (unsigned int*)&dword_800A8600, 0x10);
+    MemCopy_800403E8(&dword_800A84D8[0].cmd_4, &dword_800A8600, 0x10);
 }
 
 void sub_800A60A4()
@@ -1157,7 +1157,7 @@ void sub_800A7E34(int a, int b, int c)
         p->frame_8 = 0;
         p->amount_4 = c;
         p->side_18 = a;
-        p->pos_10 = (int*)sub_800A10DC(a);
+        p->pos_10 = sub_800A10DC(a);
         e->cb_8 = (EventEntryFn)sub_800A7EFC;
     }
 }

@@ -628,7 +628,7 @@ int GetMagicElement_8001AD30(int idx)
     return 0xB;
 }
 // Matched
-struct_12* sub_8001AD64(unsigned int idx)
+ActionData* sub_8001AD64(unsigned int idx)
 {
     if (idx < 0x1E)
     {
@@ -1788,9 +1788,9 @@ int GetPersonName_8001CD3C(int idx)
     return personNames_8007CB20[idx];
 }
 // Matched
-int* sub_8001CD58(int idx)
+unsigned char* sub_8001CD58(int idx)
 {
-    return &dword_8007CB4C[idx];
+    return dword_8007CB4C[idx];
 }
 // Matched
 int GetPersonIcon_8001CD6C(void)
@@ -1798,22 +1798,22 @@ int GetPersonIcon_8001CD6C(void)
     return 0x36;
 }
 // Matched
-struct_12* GetAccessoryModifiers_8001CD74(unsigned int idx)
+unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &accessoryModifiers_8007D848[idx];
+    return accessoryModifiers_8007D848[idx];
 }
 // Matched
-struct_12* GetArmorModifiers_8001CDA0(unsigned int idx)
+unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &armorModifiers_8007D598[idx];
+    return armorModifiers_8007D598[idx];
 }
 // Matched
 unsigned char sub_8001CDCC(unsigned int idx)
@@ -1825,7 +1825,7 @@ unsigned char sub_8001CDCC(unsigned int idx)
     return 0x22;
 }
 // Matched
-struct_12* GetItemData_8001CDF4(unsigned int idx)
+ActionData* GetItemData_8001CDF4(unsigned int idx)
 {
     if (idx < 0x2B)
     {
@@ -2014,21 +2014,21 @@ int GetEquipmentName_8001D128(int a0, unsigned int a1)
     return r;
 }
 // Matched
-short* GetEquipmentData_8001D190(a0, a1)
+EquipmentData* GetEquipmentData_8001D190(a0, a1)
 unsigned int a0;
 unsigned int a1;
 {
-    short* r = 0;
+    EquipmentData* r = 0;
     switch (a1)
     {
     case 0:
-        r = (short*)GetWeaponData_8001CF84(a0);
+        r = GetWeaponData_8001CF84(a0);
         break;
     case 1:
-        r = (short*)GetArmorData_8001D034(a0);
+        r = GetArmorData_8001D034(a0);
         break;
     case 2:
-        r = (short*)GetAccessoryData_8001D0FC(a0);
+        r = GetAccessoryData_8001D0FC(a0);
         break;
     }
     return r;
@@ -2052,7 +2052,7 @@ int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
     return r;
 }
 // Matched
-struct_12* sub_8001D260(void)
+ActionData* sub_8001D260(void)
 {
     unsigned int i = sub_800AD990(0);
     if (i < 0x17)
@@ -2073,15 +2073,15 @@ int GetItemIcon_8001D2AC(int idx)
 // Matched
 int GetEquipmentIcon_8001D2D4(void)
 {
-    short* p = GetEquipmentData_8001D190();
+    EquipmentData* p = GetEquipmentData_8001D190();
     if (p != 0)
     {
-        return equipmentIcons_8007D938[*p];
+        return equipmentIcons_8007D938[p->icon_0];
     }
     return 0x24;
 }
 // Matched
-int GetKeyItemName_8001D318(unsigned int idx)
+char* GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
     {
@@ -2511,7 +2511,7 @@ int sub_8001DD44(Actor* o, int mode, int a, int b)
     }
     sub_8001D71C(o);
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     r = a - b;
     return r < 0 ? 0 : (a < r ? a : r);
 }
@@ -2538,7 +2538,7 @@ int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
         o->turn_194.input_8 = -step;
     }
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     return 0;
 }
 // Matched
@@ -2869,7 +2869,7 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
     o->path_160 = 0;
     sub_8001E7F0(o, d);
-    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, (int)dword_800795A0, 8);
+    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, dword_800795A0, 8);
     sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
@@ -2902,7 +2902,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     mem = ListAlloc_8003FDC0(dword_80091990, size);
     o->bones_134 = (short*)mem;
-    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d->bones_34, sz0);
+    MemCopy_800403E8(mem, d->bones_34, sz0);
     o->baseScale_138[0] = d->baseScale_38[0];
     o->baseScale_138[1] = d->baseScale_38[1];
     o->baseScale_138[2] = d->baseScale_38[2];
@@ -2930,7 +2930,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     o->anims_148 = d->anims_40;
     o->effectTbl_14C = d->effectTbl_44;
-    o->bonePos_1C4 = mem;
+    o->bonePos_1C4 = (int*)mem;
     mem += n * 12;
     if (d->hasMatrices_4C)
     {

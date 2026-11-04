@@ -76,7 +76,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800B6DD4);
 
-int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
+int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
 {
     EvQuadEventfnc v[4];
     int n[4];
@@ -135,7 +135,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, EvRotEventfnc* rot)
     {
         return 0;
     }
-    d = ((unsigned short)rot->ang_2 - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
+    d = ((unsigned short)rot->vy - ((int (*)(long, long))ratan2_8003B548)(n[0], n[2])) & 0xFFF;
     if (d > 0xC00 || (d > 0x400 && d < 0x800))
     {
         return 1;
@@ -410,7 +410,6 @@ typedef struct EvEnemySlotEventfnc
     int aiEvent_4;
     EvEnemyEventfnc data_8;
 } EvEnemySlotEventfnc;
-extern void sub_80019B14(int p, char* a1, char* a2);
 extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
 extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern short dword_80079140[]; // default bone table
@@ -432,7 +431,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     int* p1;
     int f;
     Actor* actor;
-    char* x;
+    unsigned short* x;
     EvEnemySlotEventfnc* slot;
     id = &sub_80019C70(a->xy.a)->modelId_0;
     found = 0;
@@ -466,12 +465,12 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         s.bones_34 = dword_80079140;
         if (k >= 4)
         {
-            s.baseScale_38 = (int*)sub_80024E90(model, k);
+            s.baseScale_38 = sub_80024E90(model, k);
         }
         else
         {
-            p0 = (int*)sub_80024E90(model, k);
-            p1 = (int*)sub_80024E90(model, k + 1);
+            p0 = sub_80024E90(model, k);
+            p1 = sub_80024E90(model, k + 1);
             f = sub_80019AD0(&mi);
             f = ((p1[0] - p0[0]) * f) / 4096;
             v[0] = p0[0] + f;
@@ -479,13 +478,13 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
             v[2] = p0[2] + f;
             s.baseScale_38 = v;
         }
-        s.boneScale_3C = (SVECTOR*)sub_80024EC8(model, k);
-        s.anims_40 = (ActorAnim*)sub_80024E38(model);
-        s.effectTbl_44 = (short (*)[6])sub_80024E64(model);
+        s.boneScale_3C = sub_80024EC8(model, k);
+        s.anims_40 = sub_80024E38(model);
+        s.effectTbl_44 = sub_80024E64(model);
         s.hasMatrices_4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
-        sub_80019B14((int)actor->bones_134, x, sub_80024F38(model, k));
+        sub_80019B14(actor->bones_134, x, sub_80024F38(model, k));
         e.f0 = 2;
         e.f4 = 3;
         e.f8 = 1;
@@ -905,7 +904,7 @@ int sub_800B9260(EvCtxEventfnc* c)
 {
     int* q = (int*)c->pc_8->c_C;
     EvVecEventfnc* pos = sub_800BBBA0(c->pc_8->a_4);
-    EvRotEventfnc* rot = (EvRotEventfnc*)sub_800BBBD0(c->pc_8->a_4);
+    SVECTOR* rot = sub_800BBBD0(c->pc_8->a_4);
     int ang;
     if (q)
     {
@@ -919,7 +918,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->x_0 = q[0];
     pos->y_4 = q[1];
     pos->z_8 = q[2];
-    rot->ang_2 = ang;
+    rot->vy = ang;
     sub_80037918(cameraTask_8008D4A0->entry.buffer);
     SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     c->pc_8++;
@@ -1791,7 +1790,7 @@ int sub_800BAF68(EvCtxEventfnc* c)
 int sub_800BAFAC(EvCtxEventfnc* c)
 {
     EvVecEventfnc* lev;
-    EvRotEventfnc* rot;
+    SVECTOR* rot;
     EvVecEventfnc* p;
     int i;
     int hit;
@@ -1808,7 +1807,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
     }
     c->flags_0 &= ~0xC;
     lev = sub_800BBBA0(0);
-    rot = (EvRotEventfnc*)sub_800BBBD0(0);
+    rot = sub_800BBBD0(0);
     for (i = 1; i < sub_800A7790() + 1; i++)
     {
         int bit = 1 << i;
@@ -1831,7 +1830,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
             }
             if (hit)
             {
-                if ((unsigned int)(WrapAngle_8003BA18((short)(rot->ang_2 - ratan2Difference_8003B9E0((int*)lev, (int*)p))) + 0x198) < 0x331)
+                if ((unsigned int)(WrapAngle_8003BA18((short)(rot->vy - ratan2Difference_8003B9E0((int*)lev, (int*)p))) + 0x198) < 0x331)
                 {
                     c->flags_0 |= 8;
                     break;
@@ -2307,12 +2306,12 @@ EvVecEventfnc* sub_800BBBA0(int i)
     return r;
 }
 
-EvVecEventfnc* sub_800BBBD0(int i)
+SVECTOR* sub_800BBBD0(int i)
 {
-    EvVecEventfnc* r;
+    SVECTOR* r;
     if (i == 0)
     {
-        r = (EvVecEventfnc*)&levantRot_8008BD24;
+        r = &levantRot_8008BD24;
     }
     else
     {
@@ -2338,10 +2337,10 @@ EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
     if (mode == 1)
     {
         EvVecEventfnc* v = sub_800BBBA0(idx);
-        EvRotEventfnc* r = (EvRotEventfnc*)sub_800BBBD0(idx);
-        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->ang_2 & 0xFFF] * 100 / 4096;
-        c->vec78_78[idx].y_4 = r->ang_2;
-        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->ang_2 + 0x400) & 0xFFF] * 100 / 4096;
+        SVECTOR* r = sub_800BBBD0(idx);
+        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->vy & 0xFFF] * 100 / 4096;
+        c->vec78_78[idx].y_4 = r->vy;
+        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
     }
     return &c->vec78_78[idx];
 }
@@ -2869,8 +2868,8 @@ void LoadRelocBlob_800BC854(int* src)
         ListFree_8003FE38(dword_80091C10, dword_800AEBBC.p_0);
         dword_800AEBBC.p_0 = 0;
     }
-    dword_800AEBBC.p_0 = (int*)ListAlloc_8003FDC0(dword_80091C10, size);
-    MemCopy_800403E8((unsigned int*)dword_800AEBBC.p_0, (unsigned int*)src, size);
+    dword_800AEBBC.p_0 = ListAlloc_8003FDC0(dword_80091C10, size);
+    MemCopy_800403E8(dword_800AEBBC.p_0, src, size);
     n = dword_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {
@@ -2919,7 +2918,7 @@ void sub_800BC98C(int* a)
 extern int dword_800AEBC8;
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
-    unsigned int* r = (unsigned int*)ListAlloc_8003FDC0(dword_80091C10);
+    unsigned int* r = ListAlloc_8003FDC0(dword_80091C10);
     dword_800AEBC8 = (int)r;
     MemCopy_800403E8(r, a, (unsigned int)b);
 }

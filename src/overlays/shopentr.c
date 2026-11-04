@@ -34,15 +34,6 @@ typedef struct
     short counter_16;
 } CtxShopentr;
 
-typedef struct
-{
-    unsigned int flags_0;
-    int pad_4;
-    int pad_8;
-    int pad_C;
-    int pad_10;
-    CtxShopentr* ctx_14;
-} TaskShopentr;
 
 extern EntryShopentr entries_800B7D08[];
 extern unsigned int masks_800B7E34[];
@@ -106,13 +97,13 @@ INCLUDE_OVERLAY_ASM(shopentr, dword_800B6D00);
 // Matched
 void sub_800B6F1C(void)
 {
-    TaskShopentr* t;
+    EventEntry* t;
     CtxShopentr* c;
-    t = (TaskShopentr*)AllocEventEntry_80043AF8(dword_8008D4A8);
+    t = AllocEventEntry_80043AF8(dword_8008D4A8);
     if (t)
     {
-        t->flags_0 = (t->flags_0 | 1) & 0xFFFF7FFF;
-        c = t->ctx_14;
+        t->flags = (t->flags | 1) & 0xFFFF7FFF;
+        c = t->buffer;
         c->state_14 = 4;
         c->flags_C = 0;
         c->mask_10 = 0;
@@ -132,7 +123,7 @@ void sub_800B6F1C(void)
 }
 
 // Matched
-void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
+void sub_800B7000(EventEntry* t, CtxShopentr* c)
 {
     int r;
     DrawMenuBackground_8002BE10();
@@ -180,7 +171,7 @@ void sub_800B7000(TaskShopentr* t, CtxShopentr* c)
     if (c->state_14 == 15)
     {
         dword_800B7EAC = 0;
-        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        t->flags = (t->flags & ~1) | 0x8000;
         sub_800B6CA0();
     }
 }

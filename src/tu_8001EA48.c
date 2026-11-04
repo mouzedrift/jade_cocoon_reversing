@@ -646,7 +646,7 @@ void sub_8001FD08(void* a0)
         o->draw_164.frame_18 = o->frame_90 % o->draw_164.anim_14->frameCount_0;
         o->draw_164.drawMode_1C = o->drawMode_8;
         o->draw_164.scale_24 = o->scale_2C;
-        o->draw_164.bonePos_20 = (int)o->bonePos_1C4;
+        o->draw_164.bonePos_20 = o->bonePos_1C4;
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -1292,7 +1292,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     out->modelCount_24 = 0;
     out->imageSetCount_2C = 0;
     out->data_10 = ListAlloc_8003FDC0(out->list_4, p1[0]);
-    MemCopy_800403E8((unsigned int*)out->data_10, (unsigned int*)(p1 + 1), p1[0]);
+    MemCopy_800403E8(out->data_10, p1 + 1, p1[0]);
     n = p2[0];
     if (n)
     {
@@ -1367,7 +1367,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
     {
         n = *src++;
         s = (struct_1c*)src;
-        d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
+        d = ListAlloc_8003FDC0(heap, n * 28);
         out->frameCounts_4[i] = n;
         out->frames_8[i] = (EffectSpriteFrame*)d;
         for (j = 0; j < out->frameCounts_4[i]; j++)
@@ -1383,7 +1383,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
         }
         src = (int*)s;
     }
-    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)src, 0x28);
+    MemCopy_800403E8(&buf, src, 0x28);
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 // Matched
@@ -1414,7 +1414,7 @@ void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
         out->keyCount_10 = images[0];
         out->frameCount_14 = images[1];
         out->keys_18 = ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
-        MemCopy_800403E8((unsigned int*)out->keys_18, (unsigned int*)(images + 2), images[0] * 40 * images[1]);
+        MemCopy_800403E8(out->keys_18, images + 2, images[0] * 40 * images[1]);
     }
 }
 // Matched
@@ -1435,7 +1435,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
         size = hdr[i * 2 + 2];
         src = (unsigned long*)((char*)hdr + hdr[i * 2 + 1]);
         out->images_4[i] = ListAlloc_8003FDC0(heap, size);
-        MemCopy_800403E8((unsigned int*)out->images_4[i], (unsigned int*)src, size);
+        MemCopy_800403E8(out->images_4[i], src, size);
         n = DecDCTBufSize(src);
         if (max < n)
         {
@@ -1507,7 +1507,7 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     size += s->texSpriteCount_48 * 0x14;
     if (size)
     {
-        buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
+        buf = HeapAlloc_8003FC8C(size, (struct Pool*)a2);
     }
     else
     {
@@ -1544,43 +1544,43 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     d->texSprites_50 = (FtgSprite*)buf;
     for (i = 0; i < d->f3_0.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->f3_0.items[i], (unsigned int*)&s->f3_0.items[i], 0x24);
+        MemCopy_800403E8(&d->f3_0.items[i], &s->f3_0.items[i], 0x24);
     }
     for (i = 0; i < d->g3_8.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->g3_8.items[i], (unsigned int*)&s->g3_8.items[i], 0x3C);
+        MemCopy_800403E8(&d->g3_8.items[i], &s->g3_8.items[i], 0x3C);
     }
     for (i = 0; i < d->ft3_10.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->ft3_10.items[i], (unsigned int*)&s->ft3_10.items[i], 0x30);
+        MemCopy_800403E8(&d->ft3_10.items[i], &s->ft3_10.items[i], 0x30);
     }
     for (i = 0; i < d->gt3_18.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->gt3_18.items[i], (unsigned int*)&s->gt3_18.items[i], 0x48);
+        MemCopy_800403E8(&d->gt3_18.items[i], &s->gt3_18.items[i], 0x48);
     }
     for (i = 0; i < d->f4_20.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->f4_20.items[i], (unsigned int*)&s->f4_20.items[i], 0x2C);
+        MemCopy_800403E8(&d->f4_20.items[i], &s->f4_20.items[i], 0x2C);
     }
     for (i = 0; i < d->g4_28.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->g4_28.items[i], (unsigned int*)&s->g4_28.items[i], 0x50);
+        MemCopy_800403E8(&d->g4_28.items[i], &s->g4_28.items[i], 0x50);
     }
     for (i = 0; i < d->ft4_30.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->ft4_30.items[i], (unsigned int*)&s->ft4_30.items[i], 0x38);
+        MemCopy_800403E8(&d->ft4_30.items[i], &s->ft4_30.items[i], 0x38);
     }
     for (i = 0; i < d->gt4_38.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->gt4_38.items[i], (unsigned int*)&s->gt4_38.items[i], 0x5C);
+        MemCopy_800403E8(&d->gt4_38.items[i], &s->gt4_38.items[i], 0x5C);
     }
     for (i = 0; i < d->spriteCount_40; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->sprites_44[i], (unsigned int*)&s->sprites_44[i], 0x14);
+        MemCopy_800403E8(&d->sprites_44[i], &s->sprites_44[i], 0x14);
     }
     for (i = 0; i < d->texSpriteCount_48; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->texSprites_50[i], (unsigned int*)&s->texSprites_50[i], 0x14);
+        MemCopy_800403E8(&d->texSprites_50[i], &s->texSprites_50[i], 0x14);
     }
     d->tpage_4C = s->tpage_4C;
     d->clut_4E = s->clut_4E;
@@ -1871,7 +1871,7 @@ int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     total += c[9];
     if (size != 0)
     {
-        p = (char*)HeapAlloc_8003FC8C(size, h);
+        p = HeapAlloc_8003FC8C(size, h);
     }
     out->f3_0.count = c[0];
     out->f3_0.items = (FtgPolyF3*)p;
@@ -1913,7 +1913,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n = a2->counts_0[8];
     if (n)
     {
-        a0->groups = (FtgSpriteGroup8*)HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
+        a0->groups = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
     }
     else
     {
@@ -1924,7 +1924,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n += m;
     if (m)
     {
-        a1->groups = (FtgSpriteGroup9*)HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
+        a1->groups = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
     }
     else
     {
@@ -2134,7 +2134,7 @@ int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, 
     int i;
     FtgSrcSprite8* q;
     a->groups[k].count = p->count_0;
-    a->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    a->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     q = (FtgSrcSprite8*)((unsigned char*)p + r); // r: bytes read so far
     for (i = 0; i < p->count_0; i++)
     {
@@ -2162,7 +2162,7 @@ int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, 
     int i;
     FtgSrcSprite9* q;
     b->groups[k].count = p->count_0;
-    b->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    b->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     r = 8;
     b->groups[k].tpage = p->tpage_4;
     b->groups[k].clut = p->clut_6;
@@ -2683,7 +2683,7 @@ int AreFileRequestsDone_80024DC4(Model* p)
     return 1;
 }
 // Matched
-char* sub_80024E38(Model* p)
+void* sub_80024E38(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2694,7 +2694,7 @@ char* sub_80024E38(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E64(Model* p)
+void* sub_80024E64(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2705,7 +2705,7 @@ char* sub_80024E64(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E90(Model* p, int n)
+void* sub_80024E90(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2715,7 +2715,7 @@ char* sub_80024E90(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024EC8(Model* p, int n)
+void* sub_80024EC8(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2725,7 +2725,7 @@ char* sub_80024EC8(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F00(Model* p, int n)
+void* sub_80024F00(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2735,7 +2735,7 @@ char* sub_80024F00(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F38(Model* p, int n)
+void* sub_80024F38(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2745,7 +2745,7 @@ char* sub_80024F38(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F70(Model* p, int n)
+void* sub_80024F70(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2805,7 +2805,7 @@ void sub_8002512C(unsigned int* a0, Model* a1, int a2)
         ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)a1->saved_64); // integer sum: the original adds the base second
         if (a2 == e->id_0)
         {
-            MemCopy_800403E8(a0, (unsigned int*)&e->ftg_4, 0x54);
+            MemCopy_800403E8(a0, &e->ftg_4, 0x54);
             break;
         }
     }
@@ -2813,7 +2813,7 @@ void sub_8002512C(unsigned int* a0, Model* a1, int a2)
 // Matched
 void sub_800251A0(void* dst, Model* src, int a2, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg_50[idx], sizeof(FtgObject));
+    MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
 // Matched
 void nullsub_4(void)
@@ -3172,7 +3172,7 @@ void sub_80025AB0(Model* p)
 // Matched
 void sub_80025B20(void* dst, Model* src, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg2_68[idx], sizeof(FtgObject));
+    MemCopy_800403E8(dst, &src->ftg2_68[idx], sizeof(FtgObject));
 }
 // Matched
 void sub_80025B5C(Model* p, int idx, int sel)
@@ -3331,7 +3331,7 @@ void sub_80026014(ModelLoadParams* a0)
     p->headerSize_48 = n;
     r = HeapAlloc_8003FC8C(n, (struct Pool*)h);
     p->header_4C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)a0->header_1C->data_4, n);
+    MemCopy_800403E8(r, a0->header_1C->data_4, n);
 }
 // Matched
 void LoadModelTextures_8002607C(ModelLoadParams* a0)
@@ -3497,7 +3497,7 @@ void sub_8002659C(ModelLoadParams* a0)
     q += 4;
     r = HeapAlloc_8003FC8C(p->swapCount_43 << 2, (struct Pool*)h);
     p->swaps_6C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)q, p->swapCount_43 << 2);
+    MemCopy_800403E8(r, q, p->swapCount_43 << 2);
 }
 // Matched
 int sub_80026600(ModelVramSlot* p)
@@ -3689,8 +3689,8 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
     {
         a0->cueCount_C = 0;
     }
-    a0->basePose_14 = (unsigned short*)HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
-    a0->frames_18 = (unsigned short*)HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    a0->basePose_14 = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    a0->frames_18 = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
     d = a0->basePose_14;
     for (i = 0; i < m; i++)
     {
@@ -3730,7 +3730,7 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
         }
         a0->cueCount_C = *(int*)s;
         s += 2;
-        a0->cues_10 = (ModelAnimCue*)HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
+        a0->cues_10 = HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
         k = 0;
         while (k < a0->cueCount_C)
         {
@@ -3751,7 +3751,7 @@ int sub_80026D6C(int* p)
 // Matched
 void sub_80026D78(struct_12** a0, int a1, int a2)
 {
-    struct_12* p = (struct_12*)HeapAlloc_8003FC8C(a1 * 12, a2);
+    struct_12* p = HeapAlloc_8003FC8C(a1 * 12, a2);
     int i;
     for (i = 0; i < a1; i++)
     {
@@ -3802,7 +3802,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = (unsigned short*)HeapAlloc_8003FC8C(p->field_0 * 8, a2);
+    d = HeapAlloc_8003FC8C(p->field_0 * 8, a2);
     p->field_8 = (int)d;
     for (i = 0; i < p->field_0; i++)
     {
@@ -4172,7 +4172,7 @@ void sub_80027778(int* a0, int h)
     dword_8008D648.field_8 = a0[1];
     n = a0[2];
     dword_8008D648.count_0 = n;
-    arr = (struct_27778*)ListAlloc_8003FDC0(h, n * 16);
+    arr = ListAlloc_8003FDC0(h, n * 16);
     for (i = 0; i < dword_8008D648.count_0; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
@@ -4181,7 +4181,7 @@ void sub_80027778(int* a0, int h)
         q = (unsigned short*)src;
         arr[i].field_8 = *q++;
         arr[i].field_A = *q++;
-        arr[i].items = (unsigned short*)ListAlloc_8003FDC0(h, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(h, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *q++;
@@ -4206,7 +4206,7 @@ void sub_800278BC(int* a, int h)
     {
         q = (int*)((char*)a0 + a0[i + 1]);
         dword_8008D648.lists_14[i].count = *q;
-        dword_8008D648.lists_14[i].items = (struct_4b*)ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
+        dword_8008D648.lists_14[i].items = ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
         for (j = 0; j < dword_8008D648.lists_14[i].count; j++)
         {
@@ -4256,7 +4256,7 @@ int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
     int* hh;
     p = (unsigned char*)hdr + 0x10;
     hh = hdr;
-    arr = (struct_8_20v*)ListAlloc_8003FDC0(heap, hdr[1] * 8);
+    arr = ListAlloc_8003FDC0(heap, hdr[1] * 8);
     *count = hdr[1];
     if (hdr[1] == 0)
     {
@@ -4268,7 +4268,7 @@ int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
         rec = p;
         arr[i].n = *(unsigned short*)rec;
         p = rec + 0x28;
-        arr[i].items = (struct_20v*)ListAlloc_8003FDC0(heap, *(int*)rec * 32);
+        arr[i].items = ListAlloc_8003FDC0(heap, *(int*)rec * 32);
         for (j = 0; j < *(unsigned int*)rec; j++)
         {
             arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
@@ -4641,7 +4641,7 @@ void sub_80028808(void* a0, int* a1)
     n = *p++;
     if (n != 0 && dword_80091C8C == 0)
     {
-        MemCopy_800403E8(dword_80073210, (unsigned int*)p, n);
+        MemCopy_800403E8(dword_80073210, p, n);
         dword_80091CB4 = ((MapEntry16b*)dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
     }
     p = (int*)((char*)p + n);
@@ -4659,7 +4659,7 @@ void sub_80028808(void* a0, int* a1)
     dword_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
     dword_8008B500.nMeshes_4 = *p++;
     dword_8008B500.f8_8 = *p++;
-    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)p, sizeof(buf));
+    MemCopy_800403E8(&buf, p, sizeof(buf));
     p = sub_80027A88(&dword_8008B500.meshes_C, &dword_8008B500.nMeshes_4, &dword_80091C68, (char*)p + 0x104);
     sub_800B73C0(dword_8008B500.meshes_C, dword_8008B500.nMeshes_4);
     p = sub_80027A88(&dword_8008B500.ents_14, &dword_8008B500.nEnts_10, &dword_80091C68, p);
@@ -4678,8 +4678,8 @@ void sub_80028808(void* a0, int* a1)
     cnt = *p++;
     LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
     p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
-    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
-    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500.nMeshes_4 * 12);
+    dword_80082674 = ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
+    MemCopy_800403E8(dword_80082674, p, dword_8008B500.nMeshes_4 * 12);
     if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
     {
         ((void (*)(int))dword_80091CB4)(0);
@@ -4704,6 +4704,7 @@ void sub_80028808(void* a0, int* a1)
         saveData_8008B570.levant_7A8.rot.vz = buf.start_0.rot.vz;
     }
     dword_80091C94 = 0;
+    // stays an int* view: stru_80091C78.mapIdx addresses the field as sym+12 and changes the code
     if (((int*)&stru_80091C78)[3] >= 0)
     {
         saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];

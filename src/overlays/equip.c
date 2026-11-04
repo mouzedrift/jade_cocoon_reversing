@@ -135,7 +135,6 @@ extern char name_800C5834[];
 extern char name_800C5838[];
 extern char name_8008D434[];
 extern char name_8008D440[];
-extern int fn_8001D2D4(int a0, int a1);
 extern int GetEquipmentName_8001D128(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -604,7 +603,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
         v = sub_800AD288(i + q->b, sel + 1);
         if (v != 0xff)
         {
-            a = fn_8001D2D4(v, sel);
+            a = GetEquipmentIcon_8001D2D4(v, sel);
             v = GetEquipmentName_8001D128(v, sel);
             flag = sub_800AD2C8(i + q->b, sel + 1);
         }

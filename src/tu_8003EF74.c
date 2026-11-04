@@ -514,7 +514,7 @@ void ListInit_8003FDB0(int* p)
 // Matched
 void* ListAlloc_8003FDC0(List* l, int size)
 {
-    ListNode* n = (ListNode*)malloc3_8003FC4C(size + 8);
+    ListNode* n = malloc3_8003FC4C(size + 8);
     n->prev = 0;
     n->next = 0;
     if (l->count == 0)
@@ -732,13 +732,13 @@ void sub_8004028C(void)
 }
 extern unsigned long* primAllocPtrs_800960A8[];
 // Matched
-short* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
+void* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
 {
     int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
     addPrim(arg0, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += arg2 * 4;
-    return (short*)cur;
+    return (void*)cur;
 }
 // Matched
 void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
@@ -790,7 +790,7 @@ void CopyBytes_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
   while ( fileSize );
 }
 // Matched
-void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize)
+void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize)
 {
   unsigned int *overlayAddr_copy; // $s2
   unsigned char *pFileBuffer; // $s3
@@ -798,7 +798,7 @@ void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsig
   unsigned int alignedFileSize; // $s0
 
   overlayAddr_copy = overlayAddr;
-  pFileBuffer = (unsigned char *)fileBuffer;
+  pFileBuffer = fileBuffer;
   fileSize_copy = fileSize;
   if ( fileSize )
   {
@@ -810,7 +810,7 @@ void MemCopy_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsig
         fileSize_copy = fileSize & 7;
         if ( alignedFileSize )
         {
-          CopyDoubleWords_80040360(overlayAddr, (int *)fileBuffer, alignedFileSize);
+          CopyDoubleWords_80040360(overlayAddr, fileBuffer, alignedFileSize);
           overlayAddr_copy += 2 * alignedFileSize;
           pFileBuffer += 8 * alignedFileSize;
         }

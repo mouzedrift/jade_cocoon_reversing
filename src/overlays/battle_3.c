@@ -165,7 +165,7 @@ void ApplyBattleCommand_800BEBB8()
         if (dword_800C9C88.targets_C & bit)
         {
             m = sub_80014390(i & 0xFF);
-            res.f24 = (signed char)dword_800C9D82;
+            res.f24 = dword_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             sub_80012BB0(actor, m, &cmd, &res);
@@ -1325,15 +1325,15 @@ int sub_800C0BF0()
     s.visible_30 = 0;
     s.model_48 = m;
     s.bones_34 = dword_80079140;
-    s.baseScale_38 = (int*)sub_80024E90(m, k);
-    s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
-    s.anims_40 = (ActorAnim*)sub_80024E38(m);
-    s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+    s.baseScale_38 = sub_80024E90(m, k);
+    s.boneScale_3C = sub_80024EC8(m, k);
+    s.anims_40 = sub_80024E38(m);
+    s.effectTbl_44 = sub_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
-    x = (int)sub_80024F00(m, k);
-    sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));
+    x = sub_80024F00(m, k);
+    sub_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1421,20 +1421,20 @@ int* sub_800C0F9C()
     return dword_800C9190.obj->pos_38;
 }
 
-int sub_800C0FAC()
+int* sub_800C0FAC()
 {
-    return (int)dword_800C9190.obj->bonePos_1C4;
+    return dword_800C9190.obj->bonePos_1C4;
 }
 
-void sub_800C0FC4(BatModelInfo_a* p)
+void sub_800C0FC4(EffectTarget* p)
 {
     Actor* q = dword_800C9190.obj;
-    p->f0 = (int)q->effectTbl_14C;
+    p->tbl_0 = q->effectTbl_14C;
     p->pos_4 = q->pos_38;
-    p->f8 = q->bonePos_1C4;
-    p->fC = (char*)q->boneMatrices_1C8;
-    p->f2C = (char*)q->boneScale_144;
-    p->f30 = q->scale_2C;
+    p->bonePos_8 = q->bonePos_1C4;
+    p->boneMatrices_C = q->boneMatrices_1C8;
+    p->boneScale_2C = q->boneScale_144;
+    p->scale_30 = q->scale_2C;
 }
 
 UnitSkills* sub_800C100C(int a)
@@ -2069,9 +2069,8 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
     }
 }
 
-int sub_800C32DC(int a0, int a1, int a2, int a3)
+int sub_800C32DC(int* pos, int a1, int a2, int a3)
 {
-    int* pos = (int*)a0;
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatAnim_a* b;
     int idx;
@@ -4205,7 +4204,7 @@ int sub_800C7530()
     case 4:
         b.f0 = dword_800C9E5C;
         b.f2 = dword_800C9C7C;
-        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f4 = dword_800C9E54;
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {
@@ -4270,7 +4269,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 2 || sub_800C78D0() == 8)
         {
-            if (sub_80033548(sub_80014390(dword_800C9E54), 0x400) == 0)
+            if (sub_80033548(sub_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
             {
                 return 1;
             }
@@ -4318,7 +4317,7 @@ int sub_800C791C()
     }
     else
     {
-        r = 1 << *(int*)&dword_800C9E54;
+        r = 1 << dword_800C9E54;
     }
     return r;
 }
@@ -4331,9 +4330,9 @@ int sub_800C79B8()
     return sub_800AD288((short)GetMenuCursorIndex_8003DA54(dword_800C9308), 0);
 }
 
-void sub_800C79EC()
+int sub_800C79EC()
 {
-    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
+    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
 }
 
 int sub_800C7A1C()
@@ -4355,21 +4354,21 @@ void sub_800C7A6C()
         dword_800C9E58.kind_0 = dword_800C96A4[sub_800C78D0()];
         break;
     case 1:
-        dword_800C9E68 = sub_8001CE8C(((int (*)())sub_800C79B8)());
+        dword_800C9E68 = sub_8001CE8C(sub_800C79B8());
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C79B8)();
+        dword_800C9E5C = sub_800C79B8();
         break;
     case 2:
         h = sub_80031B30(dword_800C9C7C);
         dword_800C9E68 = sub_80031B0C(h, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C79EC)();
+        dword_800C9E5C = sub_800C79EC();
         break;
     case 3:
         m = sub_80010824(3, dword_800C9C7C - 1);
         dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C7A1C)();
+        dword_800C9E5C = sub_800C7A1C();
         break;
     case 4:
         dword_800C9E50 = 5;
@@ -4503,7 +4502,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                *(int*)&dword_800C9E54 = sub_8002D250(sel, 0, c, 0xF);
+                dword_800C9E54 = sub_8002D250(sel, 0, c, 0xF);
                 flags |= 1;
             }
         }
@@ -4514,18 +4513,18 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                *(int*)&dword_800C9E54 = sub_8002D250(sel, 1, c, 0xF);
+                dword_800C9E54 = sub_8002D250(sel, 1, c, 0xF);
                 flags |= 1;
             }
         }
         else if (sub_800C78D0() == 2)
         {
-            *(int*)&dword_800C9E54 = sub_8002D250(sel, 2, c, 0xF);
+            dword_800C9E54 = sub_8002D250(sel, 2, c, 0xF);
             flags |= 1;
         }
         else if (sub_800C78D0() == 8)
         {
-            *(int*)&dword_800C9E54 = sub_8002D250(sel, 3, c, 0xF);
+            dword_800C9E54 = sub_8002D250(sel, 3, c, 0xF);
             flags |= 1;
         }
     }
@@ -4615,7 +4614,7 @@ void sub_800C83B0()
             {
                 m = sub_80014390(i & 0xFF);
 
-                d.f24 = (signed char)dword_800C9D82;
+                d.f24 = dword_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
                 sub_80012BB0(self, m, &a, &d);
@@ -4640,7 +4639,7 @@ void sub_800C83B0()
         }
         b.f0 = dword_800C9E5C;
         b.f2 = dword_800C9C7C;
-        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f4 = dword_800C9E54;
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {

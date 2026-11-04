@@ -401,31 +401,31 @@ void AddPolyFT4FlipXY_80032D34(unsigned short* a, void* b)
     r[0x11] = a[5];
 }
 // Matched
-void AddPolyFT4FlipX_80032DFC(short* p, int a1)
+void AddPolyFT4FlipX_80032DFC(short* p, void* a1)
 {
     int d = p[8] - p[4];
-    short* q = AddPrimCopy_80040298((void*)a1, p, 10);
+    short* q = AddPrimCopy_80040298(a1, p, 10);
     q[4] = p[4] + d;
     q[8] = p[4];
     q[12] = p[4] + d;
     q[16] = p[4];
 }
 // Matched
-void AddPolyFT4FlipY_80032E78(unsigned short* p, int a1)
+void AddPolyFT4FlipY_80032E78(unsigned short* p, void* a1)
 {
     int d = ((short*)p)[13] - ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     q[5] = p[5] + d;
     q[9] = p[5] + d;
     q[13] = p[5];
     q[17] = p[5];
 }
 // Matched
-void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
+void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, void* a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     unsigned short t;
     q[4] = p[12];
     q[5] = p[13];
@@ -438,11 +438,11 @@ void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* p, int a1)
     q[17] = t;
 }
 // Matched
-void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, int a1)
+void AddPolyFT4Rot90Cw_80032F88(unsigned short* p, void* a1)
 {
     int a = ((short*)p)[4];
     int b = ((short*)p)[5];
-    unsigned short* q = (unsigned short*)AddPrimCopy_80040298((void*)a1, p, 10);
+    unsigned short* q = AddPrimCopy_80040298(a1, p, 10);
     unsigned short t;
     q[4] = p[8];
     q[5] = p[9];
@@ -678,7 +678,7 @@ extern void ApplyEquipmentModifiers_80033754(unsigned char* a, UnitStatus* b);
 void sub_800335D0(UnitStatus* pSrc, UnitStatus* m)
 {
     int r;
-    MemCopy_800403E8((unsigned int*)m, (unsigned int*)pSrc, sizeof(UnitStatus));
+    MemCopy_800403E8(m, pSrc, sizeof(UnitStatus));
     r = CalcEquippedStats_80033624(m->stats_2C, m);
     if (r)
     {
@@ -732,10 +732,10 @@ void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src)
     int i;
     int j;
     unsigned char* ids;
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)src->field_20, 12);
+    MemCopy_800403E8(dst, src->field_20, 12);
     ids = src->field_1C;
-    tbl[0] = (unsigned char*)GetArmorModifiers_8001CDA0(ids[1]);
-    tbl[1] = (unsigned char*)GetAccessoryModifiers_8001CD74(ids[2]);
+    tbl[0] = GetArmorModifiers_8001CDA0(ids[1]);
+    tbl[1] = GetAccessoryModifiers_8001CD74(ids[2]);
     for (j = 0; j < 2; j++)
     {
         if (tbl[j])
@@ -889,9 +889,9 @@ int HasMagic_80033A90(UnitStats* p, unsigned int idx)
     return TestMagicBit_8001AE2C(&p->magicBits_80, idx);
 }
 // Matched
-int GetItemId_80033AB0(Item* p)
+int GetItemId_80033AB0(UnitStats* p)
 {
-    return p->id;
+    return p->species_5C;
 }
 // Matched
 UnitStatus* GetLevantStatus_80033ABC(SaveData* s)
@@ -909,7 +909,7 @@ Minion* GetSaveMinion_80033ACC(SaveData* s, int idx)
     return &s->minions[idx];
 }
 // Matched
-Item* GetSaveItem_80033AE4(SaveData* s, int idx)
+UnitStats* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }

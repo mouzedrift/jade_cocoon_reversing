@@ -1,0 +1,22 @@
+#ifndef EFFECT_H
+#define EFFECT_H
+
+/* FIR smoothing filter (FirFilterInit_8001450C / FirFilterSetup_80014574 / FirFilterStep_80014588); the history
+   buffer (taps_4 ints) is kept by the owner. The sum is formed as an int; the actors read its low half. */
+typedef struct FirFilter
+{
+    int* coefs_0;
+    unsigned int taps_4;
+    int input_8;
+    union
+    {
+        int sum;
+        short low;
+    } output_C;
+} FirFilter;
+
+extern void FirFilterInit_8001450C(int* buf, FirFilter* f, int* coefs, int taps);
+extern void FirFilterSetup_80014574(FirFilter* p, int* coefs, int taps);
+extern void FirFilterStep_80014588(int* buf, FirFilter* f, unsigned int t);
+
+#endif

@@ -1073,7 +1073,7 @@ void sub_800A2450(void)
     }
     for (i = 0; i < 12; i++)
     {
-        saveData_8008B570.items[i].id = 0xD3;
+        saveData_8008B570.items[i].species_5C = 0xD3;
     }
 }
 

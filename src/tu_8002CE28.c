@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "minion_menu.h"
+#include "tu_800318C8.h"
 
 
 typedef struct
@@ -108,7 +109,7 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
             off_80082D98[i][1].flags |= 2;
             off_80082D98[i][2].flags |= 2;
         }
-        y = sub_8002D1A4(((unsigned char*)sub_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1))[8], i);
+        y = sub_8002D1A4(sub_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1)->c8, i);
         e2 = &off_80082D98[i];
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;

@@ -46,12 +46,6 @@ typedef struct EventNode
 
 #include "unit.h" // UnitStatus, UnitStats, Minion
 
-typedef struct
-{
-    char pad_0[0x5C];
-    int id; // 0xD3 = empty slot
-    char pad_60[0x28];
-} Item;
 
 // the settings word (SaveData.settings_1C == settingsFlags_8008B58C.word); most code tests it with masks
 typedef union Settings
@@ -160,7 +154,7 @@ typedef struct
     int pad_980;
     int field_984;
     Minion minions[15];
-    Item items[12];
+    UnitStats items[12]; // stored minion records, species_5C 0xD3 = empty slot
 } SaveData;
 
 
@@ -240,13 +234,6 @@ typedef struct
     int field_8;
 } struct_12;
 
-typedef struct
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-} struct_16;
 
 typedef struct
 {
@@ -297,11 +284,12 @@ typedef struct
 } struct_elem_70;
 
 
-extern struct_12 accessoryModifiers_8007D848[17];
-extern struct_12 armorModifiers_8007D598[15];
+// per-element/status minimums applied by ApplyEquipmentModifiers_80033754
+extern unsigned char accessoryModifiers_8007D848[17][12];
+extern unsigned char armorModifiers_8007D598[15][12];
 extern unsigned char byte_8007CC24[0x2b];
 extern unsigned short itemFlags_8007CC50[];
-extern struct_12 itemData_8007CCA8[0x2b];
+extern ActionData itemData_8007CCA8[0x2b];
 extern int itemNames_8007CB78[0x2b];
 extern EquipmentData weaponData_8007D04C[0x17];
 extern int weaponNames_8007CFF0[0x17];
@@ -316,14 +304,13 @@ extern unsigned int xaRequestPending_80096118;
 extern int dword_80091CFC;
 extern int dword_80083BD0;
 extern int fileRequestQueue_80086540;
-extern int fileBuffer_8008656C;
-extern int cdReadState_80086550[5];
+extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern struct_12 stru_80083594[];
+extern ActionData stru_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
-extern int dword_8007CB4C[];
+extern unsigned char dword_8007CB4C[][4]; // per person (sub_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
 extern int dword_80091CA0;
@@ -331,7 +318,7 @@ extern int dword_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
-extern struct_12 dword_8007C5A0[];
+extern ActionData dword_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
@@ -357,10 +344,6 @@ typedef struct
 {
     unsigned char c[4];
 } struct_u8x4;
-typedef struct
-{
-    unsigned char c[12];
-} struct_u8x12;
 // 0x14 bytes copied without alignment
 typedef struct
 {
@@ -377,9 +360,9 @@ typedef struct FileRequest
     int fileId_10;        // DATA.001 file id
     int offset_14;        // from FileRequestDesc.offset_8
     int size_18;          // from FileRequestDesc.size_C
-    int dest_1C;          // destination buffer
-    int field_20;         // copy of the request parameters (fileRequestParams_800954C0)
-    int callback_24;      // void (*)(int params, int dest)
+    void* dest_1C;        // destination buffer
+    void* params_20;      // copy of the request parameters (fileRequestParams_800954C0)
+    void (*callback_24)(void* params, void* data);
 } FileRequest;
 
 // what QueueFileRequest_8003BC84 takes; copied into a FileRequest (params_14 into fileRequestParams_800954C0)
@@ -417,7 +400,7 @@ extern int dword_80091990[4];
 extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
-extern int keyItemNames_8007CF30[0x26];
+extern char* keyItemNames_8007CF30[0x26];
 extern int magicNames_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int fadeFlags_800918B0;
@@ -477,7 +460,7 @@ extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
-extern struct_12 dword_8007D274[0x17];
+extern ActionData dword_8007D274[0x17];
 extern unsigned short word_80079374[];
 int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);

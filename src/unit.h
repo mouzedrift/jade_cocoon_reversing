@@ -70,6 +70,21 @@ typedef struct
     unsigned int magicBits_F4; // CountMagicBits_8001AE54
 } Minion;
 
+/* 12-byte parameter block of an action: the basic attack (sub_8001D260), a magic (sub_8001AD64), an item
+   (GetItemData_8001CDF4) or an ability (sub_800318C8); sub_80012BB0 / sub_800129B0 work on a copy */
+typedef struct ActionData
+{
+    unsigned char c0;
+    unsigned char c1;
+    short s2;
+    unsigned char c4;
+    unsigned char c5;
+    unsigned char c6;
+    unsigned char c7;
+    unsigned char c8; // sub_80013228 tests it for 8
+    char pad_9[3];
+} ActionData;
+
 extern UnitStatus levantStatus_8008BD38; // == saveData_8008B570.levantStatus_7C8
 
 #endif

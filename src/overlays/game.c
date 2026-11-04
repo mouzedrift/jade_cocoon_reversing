@@ -208,12 +208,12 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b)
     GameSlot_1* r = sub_800A17BC();
     r->f0 = 1;
     r->f4 = b;
-    MemCopy_800403E8((unsigned int*)r->data_8, src, 0xe0);
+    MemCopy_800403E8(r->data_8, src, 0xe0);
     return r;
 }
 
 // Matched
-void sub_800A1850(GameHolder_1* p)
+void sub_800A1850(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -223,7 +223,7 @@ void sub_800A1850(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A188C(GameHolder_1* p)
+void sub_800A188C(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -232,7 +232,7 @@ void sub_800A188C(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A18C8(GameHolder_1* p)
+void sub_800A18C8(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -386,19 +386,19 @@ void sub_800A1BD0(void)
             t = *(int**)((char*)s + 0xd0);
             obj = s->f4;
             t = t ? t : name_8007A024;
-            if (!found && gCtx_800B1260.f4 == (int)s)
+            if (!found && gCtx_800B1260.f4 == s)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[0]);
                 found = 1;
                 done = found;
-                gCtx_800B1260.f4 = (int)s;
+                gCtx_800B1260.f4 = s;
             }
             if (!done)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[1]);
-                gCtx_800B1260.fc[gCtx_800B1260.f8] = (int)cur;
+                gCtx_800B1260.fc[gCtx_800B1260.f8] = cur;
                 gCtx_800B1260.f8++;
             }
         }
@@ -447,15 +447,15 @@ char* sub_800A1E3C(void)
 }
 
 // Matched
-int sub_800A1E48(void)
+int* sub_800A1E48(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x38;
+    return gCtx_800B1260.f4->f4->actor_8->pos_38;
 }
 
 // Matched
-int sub_800A1E68(void)
+short* sub_800A1E68(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x5c;
+    return gCtx_800B1260.f4->f4->actor_8->rot_5C;
 }
 
 // Matched
@@ -475,7 +475,7 @@ void sub_800A1E98(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A188C((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A188C(gCtx_800B1260.fc[i]);
     }
     sub_800A7B00(-1);
 }
@@ -486,7 +486,7 @@ void sub_800A1F0C(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A18C8((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A18C8(gCtx_800B1260.fc[i]);
     }
     sub_800A7BF0(-1);
 }
@@ -634,7 +634,7 @@ void sub_800A284C(int a)
 int sub_800A2898(int a)
 {
     sub_800A2CA8(a, 0);
-    return AddItem_80010650((Item*)&gCtx_800B1260.ents_ac[a]);
+    return AddItem_80010650(&gCtx_800B1260.ents_ac[a]);
 }
 
 // Matched
@@ -668,17 +668,17 @@ void sub_800A2924(int a)
 }
 
 // Matched
-void sub_800A29CC(int a, GameActorInfo* out)
+void sub_800A29CC(int a, EffectTarget* out)
 {
     sub_800A2CA8(a, 0);
     {
         Actor* e = gCtx_800B1260.actors_7c[a];
-        out->f0 = (int)e->effectTbl_14C;
+        out->tbl_0 = e->effectTbl_14C;
         out->pos_4 = e->pos_38;
-        out->f8 = e->bonePos_1C4;
-        out->fC = (char*)e->boneMatrices_1C8;
-        out->f2C = (char*)e->boneScale_144;
-        out->f30 = e->scale_2C;
+        out->bonePos_8 = e->bonePos_1C4;
+        out->boneMatrices_C = e->boneMatrices_1C8;
+        out->boneScale_2C = e->boneScale_144;
+        out->scale_30 = e->scale_2C;
     }
 }
 
@@ -771,17 +771,17 @@ int sub_800A2BE4(int a)
 }
 
 // Matched
-int sub_800A2C28(int a)
+int* sub_800A2C28(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->pos_38;
+    return gCtx_800B1260.actors_7c[a]->pos_38;
 }
 
 // Matched
-int sub_800A2C68(int a)
+int* sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->bonePos_1C4;
+    return gCtx_800B1260.actors_7c[a]->bonePos_1C4;
 }
 
 int sub_800A2CA8(int a, int b)
@@ -817,16 +817,16 @@ void sub_800A2D48(GameAi* p)
 
 GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
 {
-    GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D49C);
     GameAi* q;
     int v;
     int k;
     int j;
     if (e != 0)
     {
-        q = e->obj_14;
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
-        q->flags_0 = &e->flags_0;
+        q = e->buffer;
+        e->flags = (e->flags | 1) & ~0x8000;
+        q->flags_0 = &e->flags;
         q->minion_4 = b;
         q->actor_8 = a;
         q->f28 = 0;
@@ -837,7 +837,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
         q->f10 = -1;
         if (c == 0)
         {
-            e->fn_8 = sub_800A2EE4;
+            e->cb_8 = sub_800A2EE4;
         }
         else
         {
@@ -846,7 +846,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
             {
                 j = !(levantCaptureLevel_8008BD7C - b->st_0.level_44 < 5);
 
-                e->fn_8 = name_800ADEB8[v][j];
+                e->cb_8 = name_800ADEB8[v][j];
             }
             else
             {
@@ -855,7 +855,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
                 {
                     k = (k - 0x39) / 4;
                 }
-                e->fn_8 = name_800ADEB8[k][0];
+                e->cb_8 = name_800ADEB8[k][0];
             }
         }
         return q;
@@ -870,7 +870,7 @@ void sub_800A2EC8(GameAi* p)
 }
 
 // Matched
-void sub_800A2EE4(void)
+void sub_800A2EE4(EventEntry* e, void* ai)
 {
 }
 
@@ -1514,11 +1514,11 @@ void sub_800A4940(int a, int b)
     unsigned short* p;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        p = (unsigned short*)sub_800B322C();
+        p = sub_800B322C();
     }
     else
     {
-        p = (unsigned short*)sub_800A53CC();
+        p = sub_800A53CC();
         if (p)
         {
             p += b;
@@ -1575,7 +1575,7 @@ int sub_800A49CC(int a, int b, MapList16* c, int* e)
     f = 0;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        f = (unsigned short*)sub_800B322C();
+        f = sub_800B322C();
     }
     else
     {
