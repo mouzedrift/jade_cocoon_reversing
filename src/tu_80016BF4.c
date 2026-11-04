@@ -41,7 +41,7 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
     int pos[3];
     int scale[3];
     int* scalePtr;
-    idx = sub_80020F00(&effectFile_80091BD0, 1, 6);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 6);
     model = &effectFile_80091BD0.models_28[idx];
     if (--obj->field_4 > 0)
     {
@@ -89,7 +89,7 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
         for (i = 0; i < 5; i++)
         {
             rot[1] = angle + (i << 12) / 5;
-            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x176);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x176);
             sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             sub_800C32DC(obj->pos_44, 0xB2, 0, rot[1]);
         }
@@ -121,7 +121,7 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
         sub_800C1190(0x50, 0x1D);
         for (i = 0; i < 4; i++)
         {
-            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x16);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x16);
             sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             rot[1] += 0x400;
             sub_800C32DC(obj->targetPos_1C, 0xF, 0, rot[1]);
@@ -129,7 +129,7 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     }
     if (obj->field_4 == 0x30)
     {
-        idx = sub_80020F00(&effectFile_80091BD0, 0, 0x15);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x15);
         sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
     }
     if (obj->field_4 == 0x33)
@@ -196,7 +196,7 @@ void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
         obj->rot_80.vy = 0;
         obj->rot_80.vx = 0;
         obj->rot_80.pad = 0;
-        idx = sub_80020F00(&effectFile_80091BD0, 1, modelId);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & ~0x8000;
         obj->field_88 = (int)&effectFile_80091BD0.models_28[idx];
         e->cb_8 = (EventEntryFn)GlowModelTask_800173A8;

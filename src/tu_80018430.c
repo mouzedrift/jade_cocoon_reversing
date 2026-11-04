@@ -265,7 +265,7 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
         desc.field_1C = 1;
     }
     r.a = StartActorAction_8001E254(obj, &desc);
-    r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
+    r.b = GetActorScriptTime_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
     if (cmd[0] != 0x12 && c)
     {
         r.a = 0;

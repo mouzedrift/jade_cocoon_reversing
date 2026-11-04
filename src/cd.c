@@ -42,7 +42,7 @@ int sub_80039FB0(void)
 // Matched
 void sub_80039FC0(void)
 {
-    FreeEffectFile_80020EE0(&dword_80095468);
+    FreeEffectFile_80020EE0(&battleEffectFile_80095468);
 }
 typedef struct
 {

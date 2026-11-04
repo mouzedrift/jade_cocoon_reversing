@@ -1179,9 +1179,9 @@ void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     v.vx = buf->pos_10[0];
     v.vy = buf->pos_10[1];
     v.vz = buf->pos_10[2];
-    v.vx -= dword_8008D600.vx;
-    v.vy -= dword_8008D600.vy;
-    v.vz -= dword_8008D600.vz;
+    v.vx -= cameraEye_8008D600.vx;
+    v.vy -= cameraEye_8008D600.vy;
+    v.vz -= cameraEye_8008D600.vz;
     RotTransPers(&v, (long*)&sxy, &z, &flag);
     if (++p->frame_8 > 16)
     {

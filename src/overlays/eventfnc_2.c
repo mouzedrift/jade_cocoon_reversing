@@ -55,10 +55,10 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
             sub_800AC6A8(st[1]);
             sub_800A8E38();
             s = &saveData_8008B570;
-            if (s->mapId_2E4[0].field_0 == 4 && s->mapId_2E4[1].field_0 == 0 && dword_800B0608[4][0][s->mapId_2E4[2].field_0].f4_4 == 0)
+            if (s->mapId_2E4[0].field_0 == 4 && s->mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][s->mapId_2E4[2].field_0].f4_4 == 0)
             {
                 int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
-                k = tbl2[word_8008B860];
+                k = tbl2[pendingArea_8008B860];
             }
             else
             {
@@ -66,8 +66,8 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
             }
             sub_800AD16C(4, k);
             sub_800ADCEC(v, sub_800A683C(-1));
-            dword_80091C9C = 1;
-            dword_80091C94 = 1;
+            forceMapReload_80091C9C = 1;
+            useMapStartPos_80091C94 = 1;
             dword_80091C54 = 0;
             dword_80091C8C = 0;
             dword_800B0EC0 = 1;

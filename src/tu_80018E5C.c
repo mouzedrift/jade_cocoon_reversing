@@ -248,7 +248,7 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
         v = t[idx].field_0;
         break;
     case 10:
-        v = sub_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);
+        v = GetActorScriptTime_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);
         break;
     }
     return v;

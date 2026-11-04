@@ -319,8 +319,8 @@ extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
 extern ActionData magicActions_8007C5A0[];
-extern int dword_80091C20;
-extern int dword_80091C30[];
+extern int areaHeap_80091C20;
+extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
 extern short seqSlotSepAccessNum_80091D0C;
@@ -379,13 +379,13 @@ typedef struct FileRequestDesc
 } FileRequestDesc;
 extern FileRequest fileRequests_80095C90[0x14];
 
-extern int** dword_800B1DC4;
-extern int** dword_800B1DB8;
+extern int** mapLoaderTask_800B1DC4;
+extern int** areaLoaderTask_800B1DB8;
 extern short equipmentIcons_8007D938[];
-extern int dword_80082670;
+extern int areaReload_80082670;
 extern short word_8008B862;
-extern int dword_80082678;
-extern short word_80091C40[];
+extern int areaPreloading_80082678;
+extern short areaPreload_80091C40[];
 extern FileRequest* dword_8008654C;
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
@@ -405,8 +405,8 @@ extern int magicNames_8007C348[0x1E * 2];
 extern unsigned short statGrowthTable_80079348[0x15];
 extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
-extern int dword_80091C88;
-extern int dword_80091C44;
+extern int currentAreaMap_80091C88;
+extern int currentArea_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char armorOutfits_8007D588[16];
@@ -466,7 +466,7 @@ int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);
 int FindFreeModelIndex_8002667C(ModelList* p);
 void FreeModel_80024C48(Model* p);
-void sub_80025C38(Model* p, int flag);
+void ApplyModelFtgSwaps_80025C38(Model* p, int flag);
 int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
@@ -536,10 +536,10 @@ extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 extern int dword_80091CA0;
 
-extern int dword_80091C30[];
+extern int loadFade_80091C30[];
 
 
-extern short word_8008B860;
+extern short pendingArea_8008B860;
 extern MATRIX boneMatrices_80098188[];
 
 #endif

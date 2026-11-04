@@ -10,9 +10,9 @@ typedef struct ModelTaskState
     int count_4;    // models blended (1..3)
     int ids_8[3];   // model ids
     int weights_14[3];
-    int record_20;  // model header record index (sub_80024E90 ...)
+    int record_20;  // model header record index (GetModelBaseScale_80024E90 ...)
     int texPart_24; // ids_8 index of the model the textures come from
-    int texSel_28;  // texture slot (sub_800255F0)
+    int texSel_28;  // texture slot (LoadModelListTextures_800255F0)
     int texId_2C;   // >= 0: model id to take the textures from instead
     int main_30;    // ids_8 index of the model whose animations are kept
     struct ModelVramSlot* vram_34;

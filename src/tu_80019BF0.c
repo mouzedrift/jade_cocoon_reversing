@@ -1375,7 +1375,7 @@ void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
             }
             break;
         case 1:
-            sub_80025B5C(model, cue->arg_4, cue->arg_6);
+            SetModelFtg_80025B5C(model, cue->arg_4, cue->arg_6);
             break;
         }
     }
@@ -2151,9 +2151,9 @@ void FreeActors_8001D3C4(int freeModels)
 void UpdateActorCb_8001D41C(EventEntry* e, void* actor)
 {
     UpdateActorScript_8001EA28(actor);
-    sub_8001F354(actor);
-    sub_8001F918(actor);
-    sub_8001F9AC(actor);
+    UpdateActorMotion_8001F354(actor);
+    UpdateActorAnimLoad_8001F918(actor);
+    UpdateActor_8001F9AC(actor);
 }
 // Matched
 Actor* CreateActor_8001D45C(ActorDesc* desc)
@@ -2476,7 +2476,7 @@ INCLUDE_ASM(SetActorScript_8001DB98);
 void StartActorScript_8001DC34(void* actor, void* script)
 {
     SetActorScript_8001DB98(actor, script);
-    sub_8001EA48(actor);
+    RunActorScript_8001EA48(actor);
 }
 // Matched
 int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int range)
@@ -2716,7 +2716,7 @@ void TriggerActorEffect_8001E28C(Actor* o)
     o->flags_4 |= 0x20000;
     if (o->f100 != 0)
     {
-        sub_8001EFC4(o);
+        StopActorScript_8001EFC4(o);
     }
 }
 // Matched
@@ -2742,7 +2742,7 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* d)
     }
     if (d->hitAnim_E >= 0)
     {
-        r = sub_8001F268(actor, actor->hitTimes_108, (int)actor->script_D0, d->hitAnim_E);
+        r = GetActorHitTimes_8001F268(actor, actor->hitTimes_108, (int)actor->script_D0, d->hitAnim_E);
     }
     f = d->effect_10;
     if (f >= 0)
@@ -2966,7 +2966,7 @@ void FreeActorBones_8001EA00(Actor* actor)
 // Matched
 void UpdateActorScript_8001EA28(void* actor)
 {
-    sub_8001EA48(actor);
+    RunActorScript_8001EA48(actor);
 }
 
 int primBufferStart_800960A0[2] BSS = { 0 };

@@ -2149,11 +2149,11 @@ OverlayEntry overlays_8007D9E8[31] = {
     { 53, (void *)&overlayAddr6_8007320C },
     { 38, (void *)&overlayAdrr1_800731F8 },
 };
-fn_80022458_b ftgPrimLoaders_8007DAE0[10] = { (fn_80022458_b)sub_8002348C, (fn_80022458_b)sub_80023624, (fn_80022458_b)sub_800238AC, (fn_80022458_b)sub_80023B48, (fn_80022458_b)sub_80023EA4, (fn_80022458_b)sub_8002407C, (fn_80022458_b)sub_80024394, (fn_80022458_b)sub_800246A0 };
-fn_80022458_a ftgPrimRelocators_8007DB08[10] = {
-    0, 0, (fn_80022458_a)sub_80023B24, (fn_80022458_a)sub_80023E80,
-    0, 0, (fn_80022458_a)sub_8002467C, (fn_80022458_a)sub_80024AB8,
-    0, (fn_80022458_a)sub_80023460,
+FtgPrimLoadFn ftgPrimLoaders_8007DAE0[10] = { (FtgPrimLoadFn)LoadFtgPolyF3_8002348C, (FtgPrimLoadFn)LoadFtgPolyG3_80023624, (FtgPrimLoadFn)LoadFtgPolyFT3_800238AC, (FtgPrimLoadFn)LoadFtgPolyGT3_80023B48, (FtgPrimLoadFn)LoadFtgPolyF4_80023EA4, (FtgPrimLoadFn)LoadFtgPolyG4_8002407C, (FtgPrimLoadFn)LoadFtgPolyFT4_80024394, (FtgPrimLoadFn)LoadFtgPolyGT4_800246A0 };
+FtgPrimRelocFn ftgPrimRelocators_8007DB08[10] = {
+    0, 0, (FtgPrimRelocFn)RelocFtgPolyFT3_80023B24, (FtgPrimRelocFn)RelocFtgPolyGT3_80023E80,
+    0, 0, (FtgPrimRelocFn)RelocFtgPolyFT4_8002467C, (FtgPrimRelocFn)RelocFtgPolyGT4_80024AB8,
+    0, (FtgPrimRelocFn)RelocFtgTexSprites_80023460,
 };
 int dword_8007DB30[8] = { 0, 0, 0, 0, 0xFFFF0000 };
 int dword_8007DB50[13] = {
@@ -2170,7 +2170,7 @@ int dword_8007DC10[24] = {
     0, 64, 16, 0x20000, 0, 64, 16, 0x20000,
     0xFFFF0000, 0, 0, 0, 0, 0, 0, 0x8007DB30,
 };
-ModelVramSlot *off_8007DC70 = (void *)dword_8007DB50;
+ModelVramSlot *modelLoaderVram_8007DC70 = (void *)dword_8007DB50;
 int dword_8007DC74[6] = { 0x8007DBA0, 0x8007DBE0, 0x8007DC20, 0x1000300, 0x10100, 0x1890300 };
 unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
 short word_8007DC90 = 0x100;
@@ -2892,11 +2892,11 @@ ModelDesc *modelDescs_800824CC[103] = {
     (void *)&dword_800821A4[5], (void *)&dword_800821E0[6], (void *)byte_8008229C, (void *)byte_80082334,
     (void *)byte_800823A0, (void *)dword_800823E8, (void *)byte_80082480,
 };
-int dword_80082668 = 0;
-int dword_8008266C = 0;
-int dword_80082670 = 0;
-int *dword_80082674 = 0;
-int dword_80082678 = 0;
+int mapJustLoaded_80082668 = 0;
+int mapHasCode_8008266C = 0;
+int areaReload_80082670 = 0;
+int *mapAreas_80082674 = 0;
+int areaPreloading_80082678 = 0;
 int dword_8008267C[31] = {
     0, 16, 0x80074168, 167, 0x8007415C, -1, 0, 16,
     0x80074168, 110, 0x80074178, -1, 0, 16, 0x80074168, 167,
@@ -4107,8 +4107,8 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     obj->pos_44[0] = obj->targetPos_1C[0] + obj->pos_44[0];
     obj->pos_44[1] = obj->targetPos_1C[1] + obj->pos_44[1];
     obj->pos_44[2] = obj->targetPos_1C[2] + obj->pos_44[2];
-    e1 = &effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x25)];
-    idx = sub_80020F00(&effectFile_80091BD0, 0, 0x26);
+    e1 = &effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x25)];
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x26);
     e2 = &effectFile_80091BD0.sprites_20[idx];
     sp = *e1->frames_8;
     sz[0] = sp->size_C[0] * (sinTable_80084540[(obj->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
@@ -4248,7 +4248,7 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
                         v[1] = obj->pos_50[1] + d[1] * k / m;
                         v[2] = obj->pos_50[2] + d[2] * k / m;
                         obj->field_4 -= 0x80;
-                        sub_800C1A5C(v, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0)), 0x1000);
+                        sub_800C1A5C(v, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0)), 0x1000);
                     }
                 }
             }
@@ -4306,7 +4306,7 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             }
             break;
         case 21:
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x27)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x27)), 0x1000);
             break;
         case 52:
             if (obj->field_0 == 0 && effectSfxStarted_8008D784 == 0)
@@ -4314,7 +4314,7 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
                 effectSfxStarted_8008D784 = 1;
                 sub_800C1190(obj->hitEnd_A - obj->hitStart_C, 0x45);
             }
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1AC)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1AC)), 0x1000);
             break;
         case 23:
             n = -1;
@@ -4355,7 +4355,7 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             }
             if (n >= 0)
             {
-                sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x2000);
+                sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, n)), 0x2000);
             }
             break;
         case 26:
@@ -4437,11 +4437,11 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             PlaySeqSlot_80031160(0x13, 1);
             if (f)
             {
-                sub_800C1654(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, obj->srcPos_14, obj->srcBonePos_18 + 2 * 3); // the target's third bone
+                sub_800C1654(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, n)), 0x800, obj->srcPos_14, obj->srcBonePos_18 + 2 * 3); // the target's third bone
             }
             else
             {
-                sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0, 0x1E);
+                sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, n)), 0, 0x1E);
             }
             SpawnLightFlash_80017158(obj->pos_44, p);
             break;
@@ -4450,8 +4450,8 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             {
                 break;
             }
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 2)), 0x1000);
-            sub_800C1C5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 1)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 2)), 0x1000);
+            sub_800C1C5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 1)), 0x1000);
             break;
         case 3:
         {
@@ -4462,7 +4462,7 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 3; i++)
             {
                 s[1] = (i << 12) / 3;
-                sub_800C1A5C(obj->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
+                sub_800C1A5C(obj->pos_44, s, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
                 sub_800C32DC(obj->pos_44, 0xBF, 0, s[1]);
             }
             break;
@@ -4487,11 +4487,11 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             q->scale_A0 = obj->scale_A0;
             q->targetBonePos_20 = obj->targetBonePos_20;
             q->bone_98 = obj->bone_98;
-            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1E);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1E);
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
             t = &effectFile_80091BD0.models_28[idx];
             q->field_88 = (int)t;
-            sub_800218A8(t->ftg_4, q->work_94 = malloc3_8003FC4C(0x54), 1);
+            CopyFtgObject_800218A8(t->ftg_4, q->work_94 = malloc3_8003FC4C(0x54), 1);
             sub_80039FE4(t->ftg_4, t->ftg_4 + 1, q->work_94);
             PlaySeqSlot_80031160(9, 1);
             e2->cb_8 = sub_800C371C;
@@ -4499,24 +4499,24 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
         }
         case 48:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
             if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
             break;
         case 50:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
             if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
             break;
         case 49:
             PlaySeqSlot_80031160(0x13, 1);
@@ -4525,18 +4525,18 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             {
                 break;
             }
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
             break;
         case 30:
             SpawnPulseModel_800174F8(obj, 5);
             SpawnMdecEffect_80017A6C((int)obj, 100);
             PlaySeqSlot_80031160(0x13, 1);
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
             if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
             break;
         case 6:
             PlaySeqSlot_80031160(0xE, 1);
@@ -4553,30 +4553,30 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 5; i++)
             {
                 s[1] = (i << 12) / 5;
-                sub_800C1A5C(obj->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
+                sub_800C1A5C(obj->pos_44, s, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
                 sub_800C32DC(obj->targetPos_1C, 0xB, 0, s[1]);
             }
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
             break;
         }
         case 8:
             PlaySeqSlot_80031160(0x10, 1);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
             break;
         case 20:
         {
             int t;
             PlaySeqSlot_80031160(0x14, 1);
-            t = EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x18));
-            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x13);
+            t = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x18));
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x13);
             sub_800C2E28(obj->targetPos_1C, &zeroSvector_800795D4, t, (int)&effectFile_80091BD0.models_28[idx], 0x1000, 6);
             sub_800C32DC(obj->targetPos_1C, 0x12, 0, 0);
             break;
         }
         case 13:
-            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
             break;
         case 12:
         {
@@ -4597,10 +4597,10 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
         case 27:
         {
             EffectModel* t;
-            idx = sub_80020F00(&effectFile_80091BD0, 1, 0x15);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x15);
             t = &effectFile_80091BD0.models_28[idx];
             obj->field_88 = (int)t;
-            sub_800218A8(t->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), 1);
+            CopyFtgObject_800218A8(t->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), 1);
             sub_80039FE4(t->ftg_4, t->ftg_4 + 1, obj->work_94);
             obj->field_30 = 0x1000;
             e->cb_8 = MorphInModelTask_80017E30;
@@ -4617,9 +4617,9 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             break;
         case 29:
             PlaySeqSlot_80031160(0x12, 1);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
             sub_800C32DC(obj->targetPos_1C, 4, 0, 0);
             break;
         case 7:
@@ -4632,12 +4632,12 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
         }
         case 32:
             SpawnGlowModel_80017290(obj, 0x11);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x17)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x17)), 0x1000);
             sub_800C10B8(0x35, 0xD);
             break;
         case 33:
             PlaySeqSlot_80031160(0x17, 1);
-            sub_800C1C5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x13)), 0x1000);
+            sub_800C1C5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x13)), 0x1000);
             sub_800C32DC(obj->targetPos_1C, 0xC, 0, 0);
             sub_800C32DC(obj->targetPos_1C, 0xD, 0, 0);
             break;
@@ -4649,43 +4649,43 @@ void EffectObjectTask_80015478(EventEntry* e, void* buf)
             PlaySfx_80031494(0x20);
             PlaySfx_80031494(0x21);
             PlaySfx_80031494(0x22);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 7)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 7)), 0x1000);
             sub_800C32DC(obj->targetPos_1C, 1, 0, 0);
             sub_800C32DC(obj->targetPos_1C, 2, 0, 0);
             break;
         case 39:
             sub_800C1190(0x14, 0x23);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
             sub_800C32DC(obj->targetPos_1C, 0x14, 0, ratan2Difference_8003B9E0(obj->targetPos_1C, obj->srcPos_14));
             obj->field_4 = 3;
             e->cb_8 = (EventEntryFn)CountdownTask_80016BF4;
             return;
         case 42:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 6)), 0x1000);
-            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 6));
-            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
-            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 6)), 0x1000);
+            obj->field_88 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 6));
+            obj->field_8C = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 5));
+            obj->field_90 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 5));
             obj->field_8 = 0x1000;
             obj->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 41:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
-            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
-            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
-            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            obj->field_88 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 4));
+            obj->field_8C = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 3));
+            obj->field_90 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 3));
             obj->field_8 = 0x1000;
             obj->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 43:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
-            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
-            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
-            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            sub_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            obj->field_88 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 4));
+            obj->field_8C = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 3));
+            obj->field_90 = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 5));
             obj->field_8 = 0x1000;
             obj->field_4 = 0;
             e->cb_8 = sub_800C1450;

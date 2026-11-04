@@ -12,7 +12,7 @@ typedef struct
     short start_2;
     short loop_4;
     short end_6;
-    short hitFrames_8[10][2]; // converted to frame times by sub_8001F268
+    short hitFrames_8[10][2]; // converted to frame times by GetActorHitTimes_8001F268
     char pad_30[0xC];
 } ActorAnim;
 
@@ -20,7 +20,7 @@ typedef struct
 typedef struct
 {
     short frame_0;
-    short kind_2; // 0: sound cue (SoundCue_8007C750 index), 1: sub_80025B5C
+    short kind_2; // 0: sound cue (SoundCue_8007C750 index), 1: SetModelFtg_80025B5C
     short arg_4;
     short arg_6;
 } ModelAnimCue;
@@ -69,7 +69,7 @@ typedef struct
     unsigned long* ot_28;   // 0x18C
 } ActorDrawArgs;
 
-// one command of an actor animation script (Actor.script_D0, run by sub_8001EA48); len_1 counts words
+// one command of an actor animation script (Actor.script_D0, run by RunActorScript_8001EA48); len_1 counts words
 typedef struct
 {
     unsigned char op_0;

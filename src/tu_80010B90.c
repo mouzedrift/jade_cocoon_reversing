@@ -1276,9 +1276,9 @@ int ModelTaskApplyTextures_80010CDC(ModelTaskState* p)
     {
         p->models_0->items_8->id_38 = p->ids_8[p->texPart_24];
     }
-    sub_800255F0(p->models_0, p->models_0->items_8->id_38, p->texSel_28);
+    LoadModelListTextures_800255F0(p->models_0, p->models_0->items_8->id_38, p->texSel_28);
     p->models_0->items_8->id_38 = p->ids_8[p->main_30];
-    sub_800256B8(p->models_0, p->models_0->items_8->id_38);
+    LoadAllModelAnims_800256B8(p->models_0, p->models_0->items_8->id_38);
     p->state_38 = 4;
     p->next_3C = 5;
     return 1;
@@ -1403,12 +1403,12 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
         memset(v, 0, 12);
         for (i = 0; i < 3; i++)
         {
-            e = sub_80024E90(m[i], k);
+            e = GetModelBaseScale_80024E90(m[i], k);
             v[0] += ((int*)e)[0] * p->weights_14[i] / 4096;
             v[1] += ((int*)e)[1] * p->weights_14[i] / 4096;
             v[2] += ((int*)e)[2] * p->weights_14[i] / 4096;
         }
-        e = sub_80024E90(m[0], k);
+        e = GetModelBaseScale_80024E90(m[0], k);
         ((int*)e)[0] = v[0];
         ((int*)e)[1] = v[1];
         ((int*)e)[2] = v[2];
@@ -1426,14 +1426,14 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.f4 = &levantPos_8008BD18.pos;
     sk.f8 = &levantPos_8008BD18.rot;
     sk.bones = defaultBones_80079140;
-    sk.base = sub_80024EC8(m[0], p->record_20);
+    sk.base = GetModelBoneScale_80024EC8(m[0], p->record_20);
     sk.pose = (char*)o->anims_54;
     sk.f18 = 0;
     sk.pos = 0;
     sk.f24 = 0;
     sk.ot = pOT_8008D690;
-    b1 = sub_80024EC8(m[1], p->record_20);
-    sub_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], sub_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
+    b1 = GetModelBoneScale_80024EC8(m[1], p->record_20);
+    sub_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], GetModelBoneScale_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
                  p->weights_14[2], (char*)m[0]->anims_54, (char*)m[0]->anims_54, (char*)o->anims_54, 0);
     for (i = 1; i < 3; i++)
     {
@@ -1450,9 +1450,9 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     }
     for (i = 0; i < 3; i++)
     {
-        vb.pos[i] = sub_80024E90(m[i], p->record_20);
-        vb.rot[i] = sub_80024EC8(m[i], p->record_20);
-        vb.src[i] = sub_80024E64(m[i]);
+        vb.pos[i] = GetModelBaseScale_80024E90(m[i], p->record_20);
+        vb.rot[i] = GetModelBoneScale_80024EC8(m[i], p->record_20);
+        vb.src[i] = GetModelEffectTable_80024E64(m[i]);
         vb.w[i] = p->weights_14[i];
     }
     BlendVertices_80011904(&vb, vb.src[0]);
@@ -1468,7 +1468,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.ot = pOT_8008D690;
     sub_80046A58(&sk, buf, (char*)o->anims_54);
     {
-        short (*tbl)[6] = sub_80024E64(o);
+        short (*tbl)[6] = GetModelEffectTable_80024E64(o);
         ent = &tbl[FindEffectTblRow_80018908(0x26, tbl)];
     }
     mat = &boneMatrices_80098188[ent[0][1]];

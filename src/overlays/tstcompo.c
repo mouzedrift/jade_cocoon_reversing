@@ -278,11 +278,11 @@ void sub_800A1468(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
@@ -310,11 +310,11 @@ void sub_800A15F4(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;

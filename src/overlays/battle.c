@@ -275,15 +275,15 @@ void sub_800BA848(BatTask_a* t, BatObj_a* u)
         {
             sub_800A9364();
             sub_800A5FAC();
-            if (dword_80091C9C == 0)
+            if (forceMapReload_80091C9C == 0)
             {
-                sub_80027314();
+                RequestAreaReload_80027314();
             }
             t->next_8 = sub_800A15FC;
         }
         else
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
             t->next_8 = sub_800A15FC;
         }
     }
@@ -1392,12 +1392,12 @@ void sub_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].effect_4, &dword_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
 }
 
 int sub_800BC8E8()
 {
-    return IsEffectFileLoaded_80020EBC(&dword_80095468);
+    return IsEffectFileLoaded_80020EBC(&battleEffectFile_80095468);
 }

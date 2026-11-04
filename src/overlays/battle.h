@@ -614,7 +614,7 @@ extern void sub_800A14E0();
 
 extern void sub_800A15FC();
 
-extern int dword_80091C9C;
+extern int forceMapReload_80091C9C;
 
 extern short sinTable_80084540[];
 
@@ -989,7 +989,7 @@ typedef struct BatScene_a
     BatHero_a* hero_24;
 } BatScene_a;
 
-extern BatScene_a* dword_8008B4A4;
+extern BatScene_a* gameTask_8008B4A4;
 
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 

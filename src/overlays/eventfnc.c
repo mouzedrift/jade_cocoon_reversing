@@ -20,8 +20,8 @@ int sub_800B6DD4(EvEntEventfnc* o)
     int d;
     ret = 0;
     i = 0;
-    sub_800B82C8(&levantPos_8008BD18.pos.x, (int*)&o->pos_48, dword_8008B500.ents_14,
-                 dword_8008B500.entFlags_18, dword_8008B500.nEnts_10);
+    sub_800B82C8(&levantPos_8008BD18.pos.x, (int*)&o->pos_48, mapState_8008B500.ents_14,
+                 mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10);
     o->f8C_8C = -1;
     o->f88_88 = -1;
     for (;;)
@@ -40,8 +40,8 @@ int sub_800B6DD4(EvEntEventfnc* o)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        sub_800B8220(&levantPos_8008BD18.pos.x, (int)&o->pos_48, (int)&dword_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
-        vt = dword_8008B500.meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
+        sub_800B8220(&levantPos_8008BD18.pos.x, (int)&o->pos_48, (int)&mapState_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
+        vt = mapState_8008B500.meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[o->f8C_8C % 3].x_0;
         q->y_2 = vt[o->f8C_8C % 3].y_2;
@@ -52,7 +52,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
         q2->z_4 = vt[(o->f8C_8C + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &dword_8008B500.meshes_C[o->f84_84], o->f80_80);
+    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[o->f84_84], o->f80_80);
     if (o->f88_88 == -1)
     {
         return ret;
@@ -88,7 +88,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
     MapVtx* vt;
     EvQuadEventfnc* q;
     EvQuadEventfnc* q2;
-    if (!sub_800B82C8((int*)pos, a1, dword_8008B500.ents_30, dword_8008B500.entFlags_34, dword_8008B500.nEnts_2C))
+    if (!sub_800B82C8((int*)pos, a1, mapState_8008B500.ents_30, mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C))
     {
         return 3;
     }
@@ -97,7 +97,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
     i = 0;
     for (;;)
     {
-        if (EvFindTri(&tri, &dword_8008B500, pos))
+        if (EvFindTri(&tri, &mapState_8008B500, pos))
         {
             break;
         }
@@ -110,8 +110,8 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
             exit(1);
         }
-        sub_800B8220((int*)pos, (int)a1, (int)dword_8008B500.mesh_28, &t0, &t1, n);
-        vt = dword_8008B500.mesh_28->tris_4[t0].v_0;
+        sub_800B8220((int*)pos, (int)a1, (int)mapState_8008B500.mesh_28, &t0, &t1, n);
+        vt = mapState_8008B500.mesh_28->tris_4[t0].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[t1 % 3].x_0;
         q->y_2 = vt[t1 % 3].y_2;
@@ -122,7 +122,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
         q2->z_4 = vt[(t1 + 1) % 3].z_4;
         i++;
     }
-    GetTriHeight_800B83E4((int*)pos, dword_8008B500.mesh_28, tri);
+    GetTriHeight_800B83E4((int*)pos, mapState_8008B500.mesh_28, tri);
     if (i == 2)
     {
         return 3;
@@ -439,10 +439,10 @@ int FindLevantMesh_800B80C8(EvEntEventfnc* e)
     unsigned int i;
     unsigned int k = e->f84_84;
     int r;
-    for (i = 0; i < dword_8008B500.nMeshes_4; i++, k++)
+    for (i = 0; i < mapState_8008B500.nMeshes_4; i++, k++)
     {
-        k %= dword_8008B500.nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
+        k %= mapState_8008B500.nMeshes_4;
+        r = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -459,10 +459,10 @@ int FindLevantMesh_800B80C8(EvEntEventfnc* e)
 int FindMeshAtPos_800B8184(EvVecEventfnc* pos, unsigned int k)
 {
     unsigned int i;
-    for (i = 0; i < dword_8008B500.nMeshes_4; i++)
+    for (i = 0; i < mapState_8008B500.nMeshes_4; i++)
     {
-        k %= dword_8008B500.nMeshes_4;
-        if (FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], pos) >= 0)
+        k %= mapState_8008B500.nMeshes_4;
+        if (FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[k], pos) >= 0)
         {
             return k;
         }
@@ -518,11 +518,11 @@ void sub_800B844C(TaskEventfnc* t)
     int n;
     if (IsModelLoaderDone_800205D0())
     {
-        EvMapEntEventfnc*** tbl = dword_800B0608;
+        EvMapEntEventfnc*** tbl = mapTable_800B0608;
         s = &saveData_8008B570;
         sp.f1A_1A = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f6_6;
         sp.f18_18 = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_0].f6_6;
-        n = sub_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &dword_80091C60, &sp);
+        n = sub_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &mapSpawns_80091C60, &sp);
         for (i = 0; i < n; i++)
         {
             sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
@@ -626,12 +626,12 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         s.bones_34 = defaultBones_80079140;
         if (k >= 4)
         {
-            s.baseScale_38 = sub_80024E90(model, k);
+            s.baseScale_38 = GetModelBaseScale_80024E90(model, k);
         }
         else
         {
-            p0 = sub_80024E90(model, k);
-            p1 = sub_80024E90(model, k + 1);
+            p0 = GetModelBaseScale_80024E90(model, k);
+            p1 = GetModelBaseScale_80024E90(model, k + 1);
             f = GetUnitRank_80019AD0(&mi);
             f = ((p1[0] - p0[0]) * f) / 4096;
             v[0] = p0[0] + f;
@@ -639,9 +639,9 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
             v[2] = p0[2] + f;
             s.baseScale_38 = v;
         }
-        s.boneScale_3C = sub_80024EC8(model, k);
-        s.anims_40 = sub_80024E38(model);
-        s.effectTbl_44 = sub_80024E64(model);
+        s.boneScale_3C = GetModelBoneScale_80024EC8(model, k);
+        s.anims_40 = GetModelActorAnims_80024E38(model);
+        s.effectTbl_44 = GetModelEffectTable_80024E64(model);
         s.hasMatrices_4C = 0;
         actor = CreateActor_8001D45C(&s);
         x = sub_80024F00(model, k);
@@ -671,7 +671,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     }
 }
 
-// work area of the encounter task (dword_8008D674, sub_800B844C)
+// work area of the encounter task (encounterTask_8008D674, sub_800B844C)
 typedef struct EvEncWorkEventfnc
 {
     int f0;
@@ -690,7 +690,7 @@ void sub_800B88A4(int a)
         sub_800B8940((int*)a);
         eventDispatchHalt_8008B540 = 1;
     }
-    p = &dword_8008D674->entry;
+    p = &encounterTask_8008D674->entry;
     p->flags = (p->flags | 1) & 0xFFFF7FFF;
     q = (EvEncWorkEventfnc*)p->buffer;
     q->f8 = 0;
@@ -1758,7 +1758,7 @@ int sub_800BA930(EvCtxEventfnc* c)
     }
     else
     {
-        dword_80091C94 = 1;
+        useMapStartPos_80091C94 = 1;
     }
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
@@ -1770,9 +1770,9 @@ int sub_800BA9E4(EvCtxEventfnc* c)
     unsigned short v[3];
     SaveData* s;
     sub_800ADCEC(v, c->pc_8->b_8);
-    dword_80091C9C = 1;
+    forceMapReload_80091C9C = 1;
     dword_80091C54 = 0;
-    dword_80091C94 = 1;
+    useMapStartPos_80091C94 = 1;
     s = &saveData_8008B570;
     s->mapId_2E4[0].field_0 = v[0];
     s->mapId_2E4[1].field_0 = v[1];
@@ -1784,7 +1784,7 @@ int sub_800BA9E4(EvCtxEventfnc* c)
 
 int sub_800BAA6C(EvCtxEventfnc* c)
 {
-    if (((int (*)(int))sub_80027330)(c->pc_8->b_8))
+    if (((int (*)(int))RequestAreaPreload_80027330)(c->pc_8->b_8))
     {
         c->pc_8++;
         return 1;
@@ -1794,7 +1794,7 @@ int sub_800BAA6C(EvCtxEventfnc* c)
 
 int sub_800BAAC0(EvCtxEventfnc* c)
 {
-    if (sub_80027358(c->pc_8->b_8))
+    if (UsePreloadedArea_80027358(c->pc_8->b_8))
     {
         c->pc_8++;
         return 1;
@@ -1975,7 +1975,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
             hit = 0;
             if (c->pc_8->a_4 >= 0)
             {
-                hit = FindTriAtXZ_800B76B8(&dword_8008B500.meshes20_20[c->pc_8->a_4], lev) >= 0;
+                hit = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes20_20[c->pc_8->a_4], lev) >= 0;
             }
             else
             {
@@ -2152,7 +2152,7 @@ extern void FadeOutSfxSeq_80031638();
 extern void PlayMusic_800300E0(int a, int b);
 extern short SfxKeyOn_800314F4(int a);
 extern void SfxKeyOff_80031574(int a, int b);
-extern void sub_80027478(int a, int b);
+extern void SetLoadFadeFlag_80027478(int a, int b);
 extern void SetMotionBlur_8001BCD8(int a);
 
 // Matched
@@ -2259,7 +2259,7 @@ int sub_800BB4A4(EvCtxEventfnc* c)
         XaRequestPlay_80043564(q[0], q[1], q[2]);
         break;
     case 17:
-        sub_80027478(0x40, c->pc_8->b_8);
+        SetLoadFadeFlag_80027478(0x40, c->pc_8->b_8);
         break;
     case 18:
         SetMotionBlur_8001BCD8(c->pc_8->b_8);
@@ -3015,10 +3015,10 @@ void LoadRelocBlob_800BC854(int* src)
     size = *src++;
     if (dword_800AEBBC.p_0)
     {
-        ListFree_8003FE38(dword_80091C10, dword_800AEBBC.p_0);
+        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBBC.p_0);
         dword_800AEBBC.p_0 = 0;
     }
-    dword_800AEBBC.p_0 = ListAlloc_8003FDC0(dword_80091C10, size);
+    dword_800AEBBC.p_0 = ListAlloc_8003FDC0(eventHeap_80091C10, size);
     MemCopy_800403E8(dword_800AEBBC.p_0, src, size);
     n = dword_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
@@ -3052,15 +3052,15 @@ void sub_800BC98C(int* a)
 {
     if (dword_800AEBC0.sprts_0)
     {
-        ListFree_8003FE38(dword_80091C10, dword_800AEBC0.sprts_0);
+        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBC0.sprts_0);
         dword_800AEBC0.sprts_0 = 0;
     }
     if (dword_800AEBC0.tpages_4)
     {
-        ListFree_8003FE38(dword_80091C10, dword_800AEBC0.tpages_4);
+        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBC0.tpages_4);
         dword_800AEBC0.tpages_4 = 0;
     }
-    LoadTiy_80028E74(&dword_800AEBC0.sprts_0, 0, &dword_800AEBC0.tpages_4, a, (int)dword_80091C10);
+    LoadTiy_80028E74(&dword_800AEBC0.sprts_0, 0, &dword_800AEBC0.tpages_4, a, (int)eventHeap_80091C10);
 }
 
 #if 0
@@ -3068,7 +3068,7 @@ void sub_800BC98C(int* a)
 extern int dword_800AEBC8;
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
-    unsigned int* r = ListAlloc_8003FDC0(dword_80091C10);
+    unsigned int* r = ListAlloc_8003FDC0(eventHeap_80091C10);
     dword_800AEBC8 = (int)r;
     MemCopy_800403E8(r, a, (unsigned int)b);
 }
@@ -3080,12 +3080,12 @@ void sub_800BCA68(int a)
 {
     if (dword_800AEBCC[1] != 0)
     {
-        sub_80026DE8(&dword_800AEBCC[1], dword_800AEBCC[0], dword_80091C10);
+        FreeRecordTables_80026DE8(&dword_800AEBCC[1], dword_800AEBCC[0], eventHeap_80091C10);
         dword_800AEBCC[0] = 0;
     }
-    dword_800AEBCC[0] = sub_80026D6C((int*)a);
-    sub_80026D78(&dword_800AEBCC[1], dword_800AEBCC[0], dword_80091C10);
-    sub_80026E74(dword_800AEBCC[1], a, dword_80091C10);
+    dword_800AEBCC[0] = GetRecordTableCount_80026D6C((int*)a);
+    AllocRecordTables_80026D78(&dword_800AEBCC[1], dword_800AEBCC[0], eventHeap_80091C10);
+    LoadRecordTables_80026E74(dword_800AEBCC[1], a, eventHeap_80091C10);
 }
 
 void sub_800BCB00(TaskEventfnc* t, int* x)

@@ -108,7 +108,7 @@ void sub_800A1578(GameTask_1* t, int** q)
         sd = &saveData_8008B570;
         if (sd->mapId_2E4[3].field_2 == sd->mapId_2E4[3].field_0)
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
         }
         ResetOverlayLoaderTask_80020D68();
         t->next_8 = sub_800A15FC;
@@ -118,7 +118,7 @@ void sub_800A1578(GameTask_1* t, int** q)
 // Matched
 void sub_800A15FC(GameTask_1* t, GameQ_1* q)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
@@ -285,7 +285,7 @@ int CheckEnemyContact_800A19E4(void)
     {
         return 0;
     }
-    if (dword_80091C9C)
+    if (forceMapReload_80091C9C)
     {
         return 0;
     }
@@ -557,12 +557,12 @@ void sub_800A1F80(void)
             s.bones_34 = defaultBones_80079140;
             if (k >= 4)
             {
-                s.baseScale_38 = (int*)sub_80024E90(m, k);
+                s.baseScale_38 = (int*)GetModelBaseScale_80024E90(m, k);
             }
             else
             {
-                p0 = (int*)sub_80024E90(m, k);
-                p1 = (int*)sub_80024E90(m, k + 1);
+                p0 = (int*)GetModelBaseScale_80024E90(m, k);
+                p1 = (int*)GetModelBaseScale_80024E90(m, k + 1);
                 f = GetUnitRank_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
                 f = ((p1[0] - p0[0]) * f) / 4096;
                 v[0] = p0[0] + f;
@@ -570,9 +570,9 @@ void sub_800A1F80(void)
                 v[2] = p0[2] + f;
                 s.baseScale_38 = v;
             }
-            s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
-            s.anims_40 = (ActorAnim*)sub_80024E38(m);
-            s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+            s.boneScale_3C = (SVECTOR*)GetModelBoneScale_80024EC8(m, k);
+            s.anims_40 = (ActorAnim*)GetModelActorAnims_80024E38(m);
+            s.effectTbl_44 = (short (*)[6])GetModelEffectTable_80024E64(m);
             s.hasMatrices_4C = 1;
             a = CreateActor_8001D45C(&s);
             SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
@@ -770,7 +770,7 @@ void sub_800A2924(int a)
         if (x >= 0)
         {
             SaveData* sd = &saveData_8008B570;
-            sub_800A4940(x, dword_800B0608[sd->mapId_2E4[0].field_0][sd->mapId_2E4[1].field_0][sd->mapId_2E4[2].field_0].f4);
+            sub_800A4940(x, mapTable_800B0608[sd->mapId_2E4[0].field_0][sd->mapId_2E4[1].field_0][sd->mapId_2E4[2].field_0].f4);
         }
     }
 }
@@ -920,7 +920,7 @@ void sub_800A2D48(GameAi* p)
 
 GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D49C);
+    EventEntry* e = AllocEventEntry_80043AF8(enemyAiTasks_8008D49C);
     GameAi* q;
     int v;
     int k;
@@ -2041,7 +2041,7 @@ void sub_800A54A0(void)
     }
     if (name_800AEBCC[1])
     {
-        sub_80026DE8(&name_800AEBCC[1], name_800AEBCC[0], name_80091C10);
+        FreeRecordTables_80026DE8(&name_800AEBCC[1], name_800AEBCC[0], name_80091C10);
         name_800AEBCC[0] = 0;
     }
 }

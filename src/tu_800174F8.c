@@ -41,12 +41,12 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         obj->rot_80.vy = 0;
         obj->rot_80.vx = 0;
         obj->rot_80.pad = 0;
-        idx = sub_80020F00(&effectFile_80091BD0, 1, modelId);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
         obj->field_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
-        sub_800218A8(model->ftg_4, obj->work_94, 1);
+        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
         sub_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         e->cb_8 = (EventEntryFn)PulseModelTask_8001761C;
     }
@@ -67,7 +67,7 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
     if (obj->field_0++ > 60)
     {
         *flags = (*flags & ~1) | 0x8000;
-        sub_80021804(obj->work_94, 1);
+        FreeFtgObjectData_80021804(obj->work_94, 1);
         free3_8003FC6C(obj->work_94);
     }
 }
@@ -91,12 +91,12 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         obj->rot_80.vx = rot[0];
         obj->rot_80.vy = rot[1];
         obj->rot_80.vz = rot[2];
-        idx = sub_80020F00(&effectFile_80091BD0, 1, modelId);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
         obj->field_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
-        sub_800218A8(model->ftg_4, obj->work_94, 1);
+        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
         sub_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         e->cb_8 = (EventEntryFn)MorphModelTask_800178C0;
     }
@@ -128,7 +128,7 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
         {
             obj->field_0 = 0;
             *flags = (*flags & ~1) | 0x8000;
-            sub_80021804(obj->work_94, 1);
+            FreeFtgObjectData_80021804(obj->work_94, 1);
             free3_8003FC6C(obj->work_94);
         }
     }
@@ -198,7 +198,7 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         obj->rot_80.vz = 0;
         obj->rot_80.vy = 0;
         obj->rot_80.vx = 0;
-        r = sub_80020F00(&effectFile_80091BD0, 1, modelId);
+        r = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         obj->field_88 = (int)&effectFile_80091BD0.models_28[r];
         e->cb_8 = WaveModelTask_80017CE4;
@@ -291,7 +291,7 @@ void FadeOutModelTask_80017FF8(EventEntry* e, void* buf)
     else
     {
         e->flags = (e->flags & ~1) | 0x8000;
-        sub_80021804(obj->work_94, 1);
+        FreeFtgObjectData_80021804(obj->work_94, 1);
         free3_8003FC6C(obj->work_94);
     }
 }

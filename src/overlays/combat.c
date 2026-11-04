@@ -409,10 +409,10 @@ void sub_800A0BA8(int i, int* src, short* sh)
     r.visible_30 = 0;
     r.model_48 = h;
     r.bones_34 = defaultBones_80079140;
-    r.baseScale_38 = sub_80024E90(h, v);
-    r.boneScale_3C = sub_80024EC8(h, v);
-    r.anims_40 = sub_80024E38(h);
-    r.effectTbl_44 = sub_80024E64(h);
+    r.baseScale_38 = GetModelBaseScale_80024E90(h, v);
+    r.boneScale_3C = GetModelBoneScale_80024EC8(h, v);
+    r.anims_40 = GetModelActorAnims_80024E38(h);
+    r.effectTbl_44 = GetModelEffectTable_80024E64(h);
     r.hasMatrices_4C = 1;
     s->actor_3C = CreateActor_8001D45C(&r);
     x = sub_80024F00(h, v);
@@ -443,7 +443,7 @@ void sub_800A0D64(int i, int id)
     o.model_14 = 0;
     o.desc_4 = q;
     o.sel_8 = 0;
-    o.vram_18 = &off_8007DC70[i];
+    o.vram_18 = &modelLoaderVram_8007DC70[i];
     m.flags_0 = 0x69;
     m.fileId_4 = q->fileId_0;
     m.offset_8 = q->tex_6.offset << 11;

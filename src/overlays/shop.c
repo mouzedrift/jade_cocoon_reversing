@@ -2807,7 +2807,7 @@ void sub_800BD854(ShopUnit3Shop* u)
 // (When writing this in C, delete the jpt_800B96F4 line behind the function.)
 extern void sub_800BDD74();
 extern void sub_800BDE44();
-extern void sub_80027314();
+extern void RequestAreaReload_80027314();
 extern void StartSceneDarken_8001AAA8(int a);
 extern void fn_800AD184(int a, int b, int c);
 extern int sub_800BAF54(short* a, short* b, short c, short d);
@@ -2855,7 +2855,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
                 tk = (ShopTaskShop*)&name_8008D670->entry;
                 fn_80027478(0x40, 1);
                 fn_8002C014();
-                sub_80027314();
+                RequestAreaReload_80027314();
                 tk->next_8 = sub_800BDD74;
                 break;
             }
@@ -2895,7 +2895,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_80027478(0x40, 1);
             fn_8002C014();
-            sub_80027314();
+            RequestAreaReload_80027314();
             tk->next_8 = sub_800BDD74;
         }
         else
