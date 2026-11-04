@@ -755,7 +755,7 @@ void sub_800200F8(void* a0)
             i = 0;
             do
             {
-                o->boneMatrices_1C8[i] = dword_80098188[i];
+                o->boneMatrices_1C8[i] = boneMatrices_80098188[i];
                 i++;
             } while (o->bones_134[i * 4] != -1);
         }

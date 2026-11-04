@@ -4,7 +4,7 @@
 #include "tu_8001EA48.h"
 
 extern int dword_8008B484;
-extern int dword_8008B488[2];
+extern int startSavedRa_8008B488[2];
 extern int dword_8008B498[2];
 extern EventNode* dword_8008B4A4;
 extern int dword_8008B4AC[2];
@@ -22,16 +22,16 @@ extern int dword_8008D3E4[2];
 extern int dword_8008D3F0;
 extern EventNode* dword_8008D400;
 extern int dword_8008D408;
-extern int dword_8008D410[2];
+extern int eventScripts_8008D410[2];
 extern SVECTOR word_8008D418; // colour of the global point light
 extern int dword_8008D438;
 extern int dword_8008D444;
 extern int dword_8008D44C;
 extern int dword_8008D458;
 extern unsigned char byte_8008D460[3];
-extern int dword_8008D468[3];
+extern int battleMenuTask_8008D468[3];
 extern SPRT* copyrightSprts_8008D47C;
-extern int dword_8008D480[2];
+extern int loadMenuTask_8008D480[2];
 extern EventNode* fileRequestTasks_8008D488;
 extern int dword_8008D48C[4];
 extern EventNode* dword_8008D49C;
@@ -75,7 +75,7 @@ extern int dword_8008D68C;
 extern int dword_8008D694;
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
-extern int dword_8008D778[2];
+extern int hitNumberTasks_8008D778[2];
 extern int dword_8008D784;
 extern int dword_8008D790[2];
 extern int dword_80091860[2];

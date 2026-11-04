@@ -59,7 +59,7 @@ void sub_80016C3C(int* a0, void* buf)
         pos[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->field_1C[0];
         pos[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->field_1C[1];
         pos[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->field_1C[2];
-        sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_4 << 24) | 0xB0, vp);
+        sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, stru_8008D534, (a1->field_4 << 24) | 0xB0, vp);
     }
     else
     {

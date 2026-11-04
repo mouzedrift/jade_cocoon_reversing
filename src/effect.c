@@ -27,13 +27,13 @@ int dword_800795A0[12] = {
     0x400, 0x400, 0x400, 0x400,
 };
 short dword_800795D0[2] = { 0 };
-SVECTOR dword_800795D4 = { 0 };
-int dword_800795DC = 0xFFD6D6;
-int dword_800795E0 = 0x6B00FF;
-int dword_800795E4 = 0xFF0015;
-int dword_800795E8 = 0x94FF00;
-int dword_800795EC = 0xFFEB;
-short dword_800795F0[140] = {
+SVECTOR zeroSvector_800795D4 = { 0 };
+int effectColorWhite_800795DC = 0xFFD6D6;
+int effectColorRed_800795E0 = 0x6B00FF;
+int effectColorBlue_800795E4 = 0xFF0015;
+int effectColorGreen_800795E8 = 0x94FF00;
+int effectColorYellow_800795EC = 0xFFEB;
+short effectFileTable_800795F0[140] = {
     0x404, 0, 0x405, 0, 0x402, 0, 0x40A, 0,
     0x40B, 0, 0x401, 0, 0x400, 0, 0x407, 0,
     0x403, 0, 0x408, 0, 0x406, 0, 0x3FD, 0,
@@ -55,7 +55,7 @@ short dword_800795F0[140] = {
 };
 
 // Matched
-int sub_80013DB0(void)
+int RollOilBonus_80013DB0(void)
 {
     int v = rand() % 6;
     if (v)
@@ -69,12 +69,12 @@ int sub_80013DB0(void)
     return v;
 }
 // Matched
-int sub_80013E00(unsigned int idx, int add)
+int GetStatGrowth_80013E00(unsigned int idx, int add)
 {
     int result = 0;
     if (idx < 0x15)
     {
-        result = dword_80079348[idx] + add;
+        result = statGrowthTable_80079348[idx] + add;
     }
     return result;
 }
@@ -84,58 +84,58 @@ int Rand100_80013E30(void)
     return rand() % 100;
 }
 // Matched
-void sub_80013E80(unsigned char* p, int arg)
+void CalcUnitEquippedStats_80013E80(unsigned char* p, int unit)
 {
-    CalcEquippedStats_80033624(p, sub_80014390(arg & 0xFF));
+    CalcEquippedStats_80033624(p, GetUnitStatus_80014390(unit & 0xFF));
 }
 // Matched
-void sub_80013EB4(unsigned char* p, int a1, int a2)
+void CalcMinionEquippedStats_80013EB4(unsigned char* p, int a1, int a2)
 {
     CalcEquippedStats_80033624(p, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
 }
-int sub_80014200(unsigned char* p);
+int BaseSpeedRatio_80014200(unsigned char* p);
 // Matched
-void sub_80013EE8(int* out, UnitStatus* m, unsigned char* x, int mode)
+void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* action, int mode)
 {
     int a;
     int b;
     if (mode == 1)
     {
-        out[0] = m->stats_2C[0];
-        out[2] = m->stats_2C[2];
-        out[4] = sub_80014114(10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
+        out[0] = status->stats_2C[0];
+        out[2] = status->stats_2C[2];
+        out[4] = CalcHitBonus_80014114(10) + action[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(status->base_32[5] / 10));
         out[8] = 0;
-        a = m->stats_2C[1] * (m->stats_2C[1] - 20) / 7;
-        b = m->stats_2C[3] * (m->stats_2C[3] - 20) / 7;
+        a = status->stats_2C[1] * (status->stats_2C[1] - 20) / 7;
+        b = status->stats_2C[3] * (status->stats_2C[3] - 20) / 7;
         out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
         out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
-        out[5] = sub_8001413C(10);
+        out[5] = CalcEvadeBonus_8001413C(10);
         out[7] = 0;
         out[9] = 100;
     }
     else
     {
-        out[0] = m->stats_2C[0];
-        out[2] = m->stats_2C[2];
-        out[4] = sub_80014114(sub_80014200(m->stats_2C) / 10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
+        out[0] = status->stats_2C[0];
+        out[2] = status->stats_2C[2];
+        out[4] = CalcHitBonus_80014114(BaseSpeedRatio_80014200(status->stats_2C) / 10) + action[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(status->base_32[5] / 10));
         out[8] = 0;
-        out[1] = m->stats_2C[1];
-        out[3] = m->stats_2C[3];
-        out[5] = sub_8001413C(sub_80014200(m->stats_2C) / 10);
+        out[1] = status->stats_2C[1];
+        out[3] = status->stats_2C[3];
+        out[5] = CalcEvadeBonus_8001413C(BaseSpeedRatio_80014200(status->stats_2C) / 10);
         out[7] = 0;
-        out[9] = sub_80014200(m->stats_2C);
+        out[9] = BaseSpeedRatio_80014200(status->stats_2C);
 
     }
 }
 // Matched
-int sub_80014114(int x)
+int CalcHitBonus_80014114(int x)
 {
     return (x * x) / 10;
 }
 // Matched
-int sub_8001413C(int x)
+int CalcEvadeBonus_8001413C(int x)
 {
     return (x * x) / 5;
 }
@@ -145,7 +145,7 @@ int CriticalRateTransform_80014164(int x)
     return (x * x * x) / 400;
 }
 // Matched
-void sub_8001419C(unsigned char* p, short* out)
+void BaseStatRatios_8001419C(unsigned char* p, short* out)
 {
     int a = (p[7] + p[9]) >> 1;
     int x = p[10] * 47 / (p[10] + a);
@@ -154,7 +154,7 @@ void sub_8001419C(unsigned char* p, short* out)
     out[1] = y;
 }
 // Matched
-int sub_80014200(unsigned char* p)
+int BaseSpeedRatio_80014200(unsigned char* p)
 {
     int a = (p[7] + p[9]) >> 1;
     int v = p[10] * 200 / (p[10] + a);
@@ -172,7 +172,7 @@ int sub_80014200(unsigned char* p)
     return v;
 }
 // Matched
-int sub_8001425C(unsigned char* p)
+int BaseDefenseRatio_8001425C(unsigned char* p)
 {
     int a = (p[7] + p[9]) >> 1;
     int v = a * 200 / (a + p[10]);
@@ -190,7 +190,7 @@ int sub_8001425C(unsigned char* p)
     return v;
 }
 // Matched
-int sub_800142B8(unsigned char* p)
+int BaseMagicRatio_800142B8(unsigned char* p)
 {
     int v = p[8] * 200 / (p[8] + p[6]);
     if (v > 0)
@@ -207,7 +207,7 @@ int sub_800142B8(unsigned char* p)
     return v;
 }
 // Matched
-int sub_80014308(unsigned char* p)
+int BaseAttackRatio_80014308(unsigned char* p)
 {
     int v = p[6] * 200 / (p[6] + p[8]);
     if (v > 0)
@@ -237,8 +237,8 @@ int LowestSetBit_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C / sub_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
-UnitStatus* sub_80014390(int a0)
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as GetUnitStats_8001449C / sub_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
+UnitStatus* GetUnitStatus_80014390(int a0)
 {
     UnitStatus* r = 0;
     unsigned int v = a0 & 0xFF;
@@ -270,27 +270,27 @@ UnitStatus* sub_80014390(int a0)
     return r;
 }
 #endif
-INCLUDE_ASM(sub_80014390);
+INCLUDE_ASM(GetUnitStatus_80014390);
 // Matched
-Minion* sub_80014444(int a0)
+Minion* GetUnitMinion_80014444(int unit)
 {
-    unsigned int v = a0 & 0xFF;
+    unsigned int v = unit & 0xFF;
     Minion* r = 0;
     if (v >= 8)
     {
-        v = a0 - 8;
+        v = unit - 8;
         r = sub_800A11D8(v & 0xFF);
     }
     else if (v != 0)
     {
-        v = a0 - 1;
+        v = unit - 1;
         r = GetMinion_80010598(3, v & 0xFF);
     }
     return r;
 }
 #if 0
 // Not matched (2 words): with an int a0 the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1, 11 words); u_char a0 (here) gets them right but masks a0 on entry (andi instead of move, a0 - 4 taken from the masked copy). a0 = 1 << a0 / a0 = flags & m also fix the registers but write $s0; tried K&R int/u_char, a0 copies, range test a0 >= 4 && a0 < 7, early returns, if/else r = 0; permuter 1500: best is this
-UnitStats* sub_8001449C(unsigned char a0)
+UnitStats* GetUnitStats_8001449C(unsigned char a0)
 {
     UnitStats* r = 0;
     int v = a0 - 4;
@@ -306,7 +306,7 @@ UnitStats* sub_8001449C(unsigned char a0)
     return r;
 }
 #endif
-INCLUDE_ASM(sub_8001449C);
+INCLUDE_ASM(GetUnitStats_8001449C);
 // Matched
 void FirFilterInit_8001450C(int* a0, FirFilter* a1, int* a2, int a3)
 {
@@ -347,7 +347,7 @@ void InitEffectTask_80014618(EventEntry* p, EffectTaskState* q)
     p->cb_8 = (EventEntryFn)UpdateEffectTask_80014638;
 }
 extern short dword_800795D0[];
-extern short dword_800795F0[];
+extern short effectFileTable_800795F0[];
 int CountActiveEffectObjects_800147FC(void);
 // Matched
 void UpdateEffectTask_80014638(EventEntry* p, void* buf)
@@ -371,7 +371,7 @@ void UpdateEffectTask_80014638(EventEntry* p, void* buf)
             {
                 q->idx_38 = 0x12;
             }
-            LoadEffectFile_80020DDC(dword_800795F0[q->idx_38 * 2], &effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            LoadEffectFile_80020DDC(effectFileTable_800795F0[q->idx_38 * 2], &effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
             q->state_2C = 1;
         }
         break;

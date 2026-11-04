@@ -554,7 +554,7 @@ void sub_800A1F80(void)
             s.frameSpeed_28 = 0x1000;
             s.blendDiv_2C = 4;
             s.visible_30 = 1;
-            s.bones_34 = dword_80079140;
+            s.bones_34 = defaultBones_80079140;
             if (k >= 4)
             {
                 s.baseScale_38 = (int*)sub_80024E90(m, k);
@@ -1381,7 +1381,7 @@ int sub_800A4278(GameAi* p)
 {
     int r;
     int s;
-    if (sub_80011B6C() == 0)
+    if (GetSporeMode_80011B6C() == 0)
     {
         s = 0xd;
         if (p->state_c != s)
@@ -1390,7 +1390,7 @@ int sub_800A4278(GameAi* p)
         }
         return 1;
     }
-    r = sub_80011B6C();
+    r = GetSporeMode_80011B6C();
     if (r != 1)
         return 0;
     if (p->state_c != 8)

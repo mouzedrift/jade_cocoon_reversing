@@ -3,7 +3,7 @@
 
 // 0x40-byte state of a model task (StartModelTask_80010850 copies its 0x34-byte parameters to
 // +4; StepModelTask_80010AD8 runs state_38: 1 ModelTaskLoad_80010B90, 2 ModelTaskDraw_80010DB0,
-// 3 sub_80010CDC, 4 ModelTaskWaitLoad_80010C30, 5 done)
+// 3 ModelTaskApplyTextures_80010CDC, 4 ModelTaskWaitLoad_80010C30, 5 done)
 typedef struct ModelTaskState
 {
     ModelList* models_0;

@@ -96,7 +96,7 @@ typedef struct EffectTarget
    played by sub_800184DC / sub_8001852C */
 typedef struct ActorEffectReq
 {
-    int effect_0;            // effect index (dword_800795F0)
+    int effect_0;            // effect index (effectFileTable_800795F0)
     struct_4s* hitTimes_4;   // Actor.hitTimes_108
     short (*tbl_8)[6];       // Actor.effectTbl_14C
     int* pos_C;              // Actor.pos_38

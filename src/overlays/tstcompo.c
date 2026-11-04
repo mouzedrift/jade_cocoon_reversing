@@ -459,17 +459,17 @@ void sub_800A1AD0(TstCompoWork* a)
     a->state_0 = 0;
 }
 
-extern TstCompoBone dword_80079140[];
+extern TstCompoBone defaultBones_80079140[];
 extern void sub_80019B14(void* p, char* a1, char* a2);
 void sub_800A1AFC(TstCompoWork* a)
 {
     int i;
     char* r;
-    for (i = 0; dword_80079140[i].s0 >= 0; i++)
+    for (i = 0; defaultBones_80079140[i].s0 >= 0; i++)
     {
-        a->bones_C[i] = dword_80079140[i];
+        a->bones_C[i] = defaultBones_80079140[i];
     }
-    a->bones_C[i] = dword_80079140[i];
+    a->bones_C[i] = defaultBones_80079140[i];
     r = sub_80024F00(a->model_4, name_800A2768.modelId_1C);
     sub_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
 }

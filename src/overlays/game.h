@@ -72,7 +72,7 @@ typedef struct GameSlot_1
 } GameSlot_1;
 
 extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
 extern GameEnemy* sub_800A5F6C(void);
 extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
@@ -91,7 +91,7 @@ extern GameRec_1 dword_800ADE78;
 
 extern int dword_800AEB6C[];
 
-// context of an event script (list dword_8008D410); same layout as EvCtxEventfnc in eventfnc.h
+// context of an event script (list eventScripts_8008D410); same layout as EvCtxEventfnc in eventfnc.h
 typedef struct GameEvCtx
 {
     unsigned int flags_0;
@@ -435,7 +435,7 @@ typedef struct GameTable_1
     GameTabEnt_1 e[1];
 } GameTable_1;
 
-extern EventNode* dword_8008D410;
+extern EventNode* eventScripts_8008D410;
 
 extern void sub_800A8EA4();
 
@@ -724,7 +724,7 @@ extern short word_80091CB8[];
 
 extern EventNode* dword_8008D498;
 
-extern EventNode* dword_8008D480;
+extern EventNode* loadMenuTask_8008D480;
 
 extern EventNode* dword_800B1DAC;
 

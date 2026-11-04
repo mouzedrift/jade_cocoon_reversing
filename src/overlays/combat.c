@@ -104,7 +104,7 @@ typedef struct CombatColorCombat
 } CombatColorCombat;
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void OnModelFileLoaded_80025D7C();
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 extern int ratan2Degrees_8003B56C(int a, int b);
 extern void InitPolyFT4_80029A10(void* a, void* b);
 extern int sub_800A0968(unsigned char* a);
@@ -389,7 +389,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
     ActorDesc r;
-    Model* h = sub_80010A44(s->task_0);
+    Model* h = GetModelTaskModel_80010A44(s->task_0);
     int v = sub_80019A80(s->minion_4->status_84.level_44);
     unsigned short* x;
     unsigned short* y;
@@ -408,7 +408,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
     r.blendDiv_2C = 4;
     r.visible_30 = 0;
     r.model_48 = h;
-    r.bones_34 = dword_80079140;
+    r.bones_34 = defaultBones_80079140;
     r.baseScale_38 = sub_80024E90(h, v);
     r.boneScale_3C = sub_80024EC8(h, v);
     r.anims_40 = sub_80024E38(h);

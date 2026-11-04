@@ -207,7 +207,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
     subs[2] = list3;
     if (mode == 0 || mode == 3)
     {
-        q = sub_80014390(0);
+        q = GetUnitStatus_80014390(0);
         lists[k] = list0;
         lists[k][0].text = (int)q->name_10;
         p[2] = 0;
@@ -240,7 +240,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
         if (r == 1)
         {
             p[2] = i + 1;
-            q = sub_80014390(((unsigned char*)p)[4]);
+            q = GetUnitStatus_80014390(((unsigned char*)p)[4]);
             v = 0;
             m = subs[i];
             lists[k] = m;

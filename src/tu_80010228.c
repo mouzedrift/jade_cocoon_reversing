@@ -71,7 +71,7 @@ long vsyncEventHandler_800103AC(void)
     --xaTimer_8008D450;
     if (!(unknownFlags_8008D678 & 8))
     {
-        dword_8008D404++;
+        unpausedFrames_8008D404++;
         saveData_8008B570.playTime_4++;
     }
 
@@ -216,7 +216,7 @@ unsigned char* GetMinionName_800106F8(int id, int nth)
     return 0;
 }
 // Matched
-unsigned char* sub_80010724(int id, int nth, int idx)
+unsigned char* GetMinionAncestorName_80010724(int id, int nth, int idx)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
@@ -226,7 +226,7 @@ unsigned char* sub_80010724(int id, int nth, int idx)
     return 0;
 }
 // Matched
-unsigned char sub_80010768(int id, int nth, int idx)
+unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
@@ -256,7 +256,7 @@ unsigned char* sub_800107CC(int id, int nth)
     return 0;
 }
 // Matched
-UnitSkills* sub_800107F8(int id, int nth)
+UnitSkills* GetMinionSkills_800107F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
@@ -266,7 +266,7 @@ UnitSkills* sub_800107F8(int id, int nth)
     return 0;
 }
 // Matched
-unsigned int* sub_80010824(int id, int nth)
+unsigned int* GetMinionMagicBits_80010824(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
@@ -278,7 +278,7 @@ unsigned int* sub_80010824(int id, int nth)
 }
 extern EventNode* modelTasks_8008D618;
 // Matched
-int StartModelTask_80010850(void* a0)
+int StartModelTask_80010850(void* params)
 {
     EventEntry* e = AllocEventEntry_80043AF8(modelTasks_8008D618);
     ModelTaskBuf* buf;
@@ -293,7 +293,7 @@ int StartModelTask_80010850(void* a0)
         buf->key_0 = e->field_4;
         m = malloc3_8003FC4C(0x40);
         buf->state_4 = m;
-        MemCopy_800403E8(&m->count_4, a0, 0x34);
+        MemCopy_800403E8(&m->count_4, params, 0x34);
         m->models_0 = 0;
         m->state_38 = 1;
         m->next_3C = 1;
@@ -347,7 +347,7 @@ void RunModelTask_80010A10(int arg0)
     StepModelTask_80010AD8(((ModelTaskBuf*)p->buffer)->state_4);
 }
 // Matched
-Model* sub_80010A44(int key)
+Model* GetModelTaskModel_80010A44(int key)
 {
     ModelTaskBuf* p = FindModelTask_8001091C()->buffer;
     ModelTaskState* q = p->state_4;
@@ -385,7 +385,7 @@ int StepModelTask_80010AD8(ModelTaskState* p)
             cont = ModelTaskDraw_80010DB0(p);
             break;
         case 3:
-            cont = sub_80010CDC(p);
+            cont = ModelTaskApplyTextures_80010CDC(p);
             break;
         case 4:
             cont = ModelTaskWaitLoad_80010C30(p);

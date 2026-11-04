@@ -481,7 +481,7 @@ void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir)
         break;
     }
 }
-extern void sub_8001419C(unsigned char* p, short* out);
+extern void BaseStatRatios_8001419C(unsigned char* p, short* out);
 extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
@@ -493,7 +493,7 @@ void sub_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot)
     RECT r;
     Color_EACC col = dword_800743D0;
     SPRT* prim;
-    sub_8001419C(a0->stats_2C, loc);
+    BaseStatRatios_8001419C(a0->stats_2C, loc);
     loc[0] += pos[0];
     loc[1] += pos[1];
     DrawUiTiySprt_8002C06C(loc, 10, ot);

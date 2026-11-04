@@ -66,7 +66,7 @@ typedef struct
 } PointLight;
 extern void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m);
 
-// screen fade task state (the dword_8008D628 task buffer, run by sub_8001A41C)
+// screen fade task state (the fadeTask_8008D628 task buffer, run by sub_8001A41C)
 typedef struct Fade_8001A41C
 {
     unsigned short flags; // 0x10: flash, 1: fade in, 2: fade out, 4: darken, 8: brighten, 0x20: front OT

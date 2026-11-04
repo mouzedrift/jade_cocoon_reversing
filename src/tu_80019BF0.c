@@ -247,7 +247,7 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
 // Matched
 void sub_8001A38C(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     CameraState* g;
     p->flags = 0;
     p->count = 0;
@@ -425,7 +425,7 @@ void sub_8001A9A4(void)
     Fade_8001A41C* p;
     unsigned short v;
     dword_8008D40C = 0x1000;
-    p = dword_8008D628->entry.buffer;
+    p = fadeTask_8008D628->entry.buffer;
     v = p->flags;
     unknownFlags_8008D678 &= ~0x400;
     p->count = 0;
@@ -440,7 +440,7 @@ void sub_8001A9E4(void)
 // Matched
 void sub_8001AA04(short a0)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     EventEntry* q;
     p->duration = a0;
     q = &cameraTask_8008D4A0->entry;
@@ -451,7 +451,7 @@ void sub_8001AA04(short a0)
 // Matched
 void sub_8001AA50(short a0)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     EventEntry* q;
     unknownFlags_8008D678 |= 0x400;
     p->duration = a0;
@@ -463,7 +463,7 @@ void sub_8001AA50(short a0)
 // Matched
 void sub_8001AAA8(short a0)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     EventEntry* q;
     p->duration = a0;
     q = &cameraTask_8008D4A0->entry;
@@ -474,13 +474,13 @@ void sub_8001AAA8(short a0)
 // Matched
 void sub_8001AAF4(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     p->flags &= ~4;
 }
 // Matched
 void sub_8001AB1C(short a0)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     EventEntry* q;
     p->duration = a0;
     q = &cameraTask_8008D4A0->entry;
@@ -491,14 +491,14 @@ void sub_8001AB1C(short a0)
 // Matched
 void sub_8001AB68(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     p->count = 8;
     p->flags |= 0x10;
 }
 // Matched
 int sub_8001AB94(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     unsigned short v = p->flags;
     if (v & 0x1B)
     {
@@ -513,7 +513,7 @@ int sub_8001AB94(void)
 // Matched
 void sub_8001ABEC(int on)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* p = fadeTask_8008D628->entry.buffer;
     if (on)
     {
         p->flags |= 0x20;

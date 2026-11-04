@@ -28,7 +28,7 @@ typedef struct
     int field_4;
     short ids_8[6];
 } EffectRow;
-extern struct_4s dword_800795F0[];
+extern struct_4s effectFileTable_800795F0[];
 extern EffectRow* dword_80091BE0;
 extern int dword_8008D784;
 extern int sub_80018908(int id, short (*tbl)[6]);
@@ -100,11 +100,11 @@ void sub_8001852C(ActorEffectReq* p, int a1)
     {
         if (p->hitTimes_4[n].field_0 >= 0)
         {
-            p->hitTimes_4[n].field_0 += dword_800795F0[p->effect_0].field_2;
+            p->hitTimes_4[n].field_0 += effectFileTable_800795F0[p->effect_0].field_2;
         }
         if (p->hitTimes_4[n].field_2 >= 0)
         {
-            p->hitTimes_4[n].field_2 += dword_800795F0[p->effect_0].field_2;
+            p->hitTimes_4[n].field_2 += effectFileTable_800795F0[p->effect_0].field_2;
         }
     }
     for (k = 0; k < 10; k++)

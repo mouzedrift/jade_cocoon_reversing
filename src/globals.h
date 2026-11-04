@@ -402,7 +402,7 @@ extern unsigned char dword_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
 extern char* keyItemNames_8007CF30[0x26];
 extern int magicNames_8007C348[0x1E * 2];
-extern unsigned short dword_80079348[0x15];
+extern unsigned short statGrowthTable_80079348[0x15];
 extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
 extern int dword_80091C88;
@@ -430,7 +430,7 @@ extern int dword_8008B574;
 extern volatile int vsyncCounter_8008B4B4;
 extern volatile int gnFrame_8008D610;
 extern volatile int xaTimer_8008D450;
-extern volatile int dword_8008D404;
+extern volatile int unpausedFrames_8008D404;
 extern SaveData saveData_8008B570;
 extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
@@ -461,7 +461,7 @@ extern int numFilesInsideTiy_8008B4BC;
 
 
 extern ActionData dword_8007D274[0x17];
-extern unsigned short word_80079374[];
+extern unsigned short growthKindThresholds_80079374[];
 int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);
 int FindFreeModelIndex_8002667C(ModelList* p);
@@ -514,11 +514,11 @@ extern EventNode* dword_8008D60C;
 extern EventNode* cameraTask_8008D4A0;
 extern EventNode* effectTask_8008D3F8;
 extern EventNode* xaTask_8008B560;
-extern EventNode* dword_8008D464;
+extern EventNode* sporeTask_8008D464;
 extern EventNode* soundTask_8008D4A4;
 extern EventNode* modelLoaderTask_8008B54C;
 extern EventNode* overlayLoaderTask_8008D4C0;
-extern EventNode* dword_8008D628;
+extern EventNode* fadeTask_8008D628;
 extern EventNode* actorTasks_8008D43C;
 extern EventNode* screenFlashTasks_8008D61C;
 
@@ -540,6 +540,6 @@ extern int dword_80091C30[];
 
 
 extern short word_8008B860;
-extern MATRIX dword_80098188[];
+extern MATRIX boneMatrices_80098188[];
 
 #endif

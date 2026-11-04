@@ -147,11 +147,11 @@ void ApplyBattleCommand_800BEBB8()
 
     sub_800BC7DC(dword_800C9C7C);
     flag = 1;
-    actor = sub_80014390(dword_800C9C7C);
+    actor = GetUnitStatus_80014390(dword_800C9C7C);
     cmd = dword_800C9C88;
     if (dword_800C9C88.kind_0 == 0x12)
     {
-        actor = sub_80014390(dword_800C9C7C);
+        actor = GetUnitStatus_80014390(dword_800C9C7C);
         actor->status_0 |= 0x8000;
     }
     for (i = 0; i < 7; i++)
@@ -164,11 +164,11 @@ void ApplyBattleCommand_800BEBB8()
         dword_800C9CC8[i].targets_C = 0;
         if (dword_800C9C88.targets_C & bit)
         {
-            m = sub_80014390(i & 0xFF);
+            m = GetUnitStatus_80014390(i & 0xFF);
             res.f24 = dword_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
-            sub_80012BB0(actor, m, &cmd, &res);
+            ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (dword_800ADE78.f0 == 1)
             {
                 sub_800B4390(actor, m, &dword_800C9C88, &res, &dword_800ADE78);
@@ -381,7 +381,7 @@ void sub_800BF3AC()
 
 void sub_800BF3DC(int a, int b, int c, int d, int e)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D778);
+    EventEntry* p = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
     if (p)
     {
         BatHitNum_a* q = p->buffer;
@@ -399,7 +399,7 @@ void sub_800BF3DC(int a, int b, int c, int d, int e)
 
 int sub_800BF47C()
 {
-    EventNode* h = dword_8008D778;
+    EventNode* h = hitNumberTasks_8008D778;
     EventNode* n;
     int i = 0;
     int cnt = h->count;
@@ -447,15 +447,15 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     u->amount_4 += x;
     if (u->kind_0 == 0)
     {
-        sub_800127D0(u->unit_18, 0, x, 0);
-        if (sub_80014390((unsigned char)u->unit_18)->hp_8 <= 0)
+        AdjustUnitStatById_800127D0(u->unit_18, 0, x, 0);
+        if (GetUnitStatus_80014390((unsigned char)u->unit_18)->hp_8 <= 0)
         {
-            sub_800127B8(sub_80014390((unsigned char)u->unit_18));
+            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)u->unit_18));
         }
     }
     if (u->kind_0 == 1)
     {
-        sub_800127D0(u->unit_18, 2, x, 0);
+        AdjustUnitStatById_800127D0(u->unit_18, 2, x, 0);
     }
 }
 
@@ -528,7 +528,7 @@ void sub_800BF770(short* p, int i)
 int sub_800BF784(int a)
 {
     unsigned char buf[0x18];
-    UnitStatus* p = sub_80014390(a & 0xFF);
+    UnitStatus* p = GetUnitStatus_80014390(a & 0xFF);
     if (p == 0)
     {
         return 0;
@@ -910,7 +910,7 @@ void sub_800C0074(EventEntry* t, void* arg)
         k = 1;
     else
         k = u->slot_0;
-    m = sub_80014390((k + 4) & 0xFF);
+    m = GetUnitStatus_80014390((k + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
     InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
@@ -970,7 +970,7 @@ void sub_800C0254(EventEntry* t, void* arg)
         return;
     }
     u = arg;
-    m = sub_80014390(dword_800C9C99);
+    m = GetUnitStatus_80014390(dword_800C9C99);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
     if (dword_800C9C99 == 0)
@@ -1017,7 +1017,7 @@ void sub_800C0440()
 }
 
 #if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
-extern unsigned char dword_800793C8[];
+extern unsigned char sealOutcomeTable_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void sub_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
@@ -1040,7 +1040,7 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
     w = MeasureTextWidth_8003E4C8(dword_800C9D74);
-    g = dword_800793C8 + 0x14;
+    g = sealOutcomeTable_800793C8 + 0x14;
     if (*(int*)(g + 0x24) == dword_800C9D74)
     {
         w += 0x10;
@@ -1299,7 +1299,7 @@ int sub_800C0BF0()
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
-    m = sub_80010A44(0);
+    m = GetModelTaskModel_80010A44(0);
     k = sub_80019A80(dword_800C9188->status_84.level_44);
     s.modelId_0 = -1;
     s.kind_4 = 2;
@@ -1316,7 +1316,7 @@ int sub_800C0BF0()
     s.blendDiv_2C = 4;
     s.visible_30 = 0;
     s.model_48 = m;
-    s.bones_34 = dword_80079140;
+    s.bones_34 = defaultBones_80079140;
     s.baseScale_38 = sub_80024E90(m, k);
     s.boneScale_3C = sub_80024EC8(m, k);
     s.anims_40 = sub_80024E38(m);
@@ -1667,7 +1667,7 @@ void sub_800C17EC(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&dword_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&zeroSvector_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1867,7 +1867,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
     if (++u->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        sub_800C1A5C(u->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             e = AllocEventEntry_80043AF8(dword_8008D60C);
@@ -2221,7 +2221,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2238,7 +2238,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2341,7 +2341,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     BatHero_a* q;
     BatOrb_a* w;
     w = u;
-    sub_800C1A5C(u->pos_44, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
+    sub_800C1A5C(u->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
     q = dword_8008B4A4->hero_24;
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
@@ -2363,7 +2363,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     }
     else
     {
-        ((void (*)())sub_800C1C5C)(v, &dword_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
+        ((void (*)())sub_800C1C5C)(v, &zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
         t->flags = (t->flags & ~1) | 0x8000;
     }
 }
@@ -3976,7 +3976,7 @@ int StartBattleMenu_800C6EFC()
     int i;
     int m;
     int n = 0;
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D468);
+    EventEntry* e = AllocEventEntry_80043AF8(battleMenuTask_8008D468);
     if (e)
     {
         e->cb_8 = (EventEntryFn)BattleMenuTask_800C8A08;
@@ -4034,9 +4034,9 @@ void sub_800C7088()
     }
     else
     {
-        if (CountMagicBits_8001AE54(sub_80010824(3, dword_800C9C7C - 1)) >= 5)
+        if (CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1)) >= 5)
         {
-            dword_800C92F0->count_4 = CountMagicBits_8001AE54(sub_80010824(3, dword_800C9C7C - 1));
+            dword_800C92F0->count_4 = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1));
         }
         dword_800C92F0->cursor_8 = 0;
         dword_800C92E4->cursor_8 = 0;
@@ -4320,7 +4320,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 2 || sub_800C78D0() == 8)
         {
-            if (sub_80033548(sub_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
+            if (sub_80033548(GetUnitStatus_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
             {
                 return 1;
             }
@@ -4388,7 +4388,7 @@ int sub_800C79EC()
 
 int sub_800C7A1C()
 {
-    unsigned int* h = sub_80010824(3, dword_800C9C7C - 1);
+    unsigned int* h = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
     return FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0));
 }
 
@@ -4416,7 +4416,7 @@ void sub_800C7A6C()
         dword_800C9E5C = sub_800C79EC();
         break;
     case 3:
-        m = sub_80010824(3, dword_800C9C7C - 1);
+        m = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
         dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C7A1C();
@@ -4657,18 +4657,18 @@ void sub_800C83B0()
     {
         dword_800C9180 = 0;
         dword_800C9182 = 0;
-        self = sub_80014390(dword_800C9C7C);
+        self = GetUnitStatus_80014390(dword_800C9C7C);
         for (i = 0; i < 4; i++)
         {
             bit = 1 << i;
             if ((dword_800C9E58.targets_C & bit) && i == dword_800C9C99)
             {
-                m = sub_80014390(i & 0xFF);
+                m = GetUnitStatus_80014390(i & 0xFF);
 
                 d.f24 = dword_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
-                sub_80012BB0(self, m, &a, &d);
+                ResolveBattleAction_80012BB0(self, m, &a, &d);
                 if (sub_80013228(self, m, &a, &d) == 0 && (dword_800C9E58.mask_8 & bit))
                 {
                     dword_800C9180 -= d.fC;

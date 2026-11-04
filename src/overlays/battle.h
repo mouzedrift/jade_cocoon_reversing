@@ -444,7 +444,7 @@ extern EventNode* dword_8008D4B0;
 
 extern EventNode* dword_8008D63C;
 
-extern EventNode* dword_8008D778;
+extern EventNode* hitNumberTasks_8008D778;
 
 extern int dword_800C9D74;
 
@@ -684,7 +684,7 @@ extern void sub_800A284C(int a);
 
 extern void sub_80039ED8(int a);
 
-extern void sub_800127D0(int a0, int a1, int a2, int a3);
+extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 extern void sub_800BF3DC(int a, int b, int c, int d, int e);
 
@@ -739,13 +739,13 @@ typedef struct BatResult_a
     short f26;
 } BatResult_a;
 
-extern void sub_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, BatChain_a* e);
 
 extern void sub_800BF9F0(int a);
 
-extern void sub_800127D0(int a0, int a1, int a2, int a3);
+extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 typedef struct BatXY_a
 {
@@ -785,7 +785,7 @@ extern int sub_800C0904(unsigned char* p);
 
 
 
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 
 extern EventNode* dword_8008D60C;
 
@@ -1027,7 +1027,7 @@ extern int sub_800C6D6C();
 
 extern int sub_800C6CFC();
 
-extern EventNode* dword_8008D468;
+extern EventNode* battleMenuTask_8008D468;
 
 extern unsigned char dword_800C9E4B;
 
