@@ -965,6 +965,235 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 }
 #endif
 INCLUDE_ASM(sub_80046A58);
+#if 0
+// Not matched: full C, about half the words differ (register allocation from the first loop on; the stack layout and block order follow the original)
+// sub_80046A58 blending two poses: the bone rotations are interpolated by t through the axis / angle of the
+// relative rotation (sub_8004AD44 / sub_8004B0A8), the bone offsets and per-bone scales linearly
+void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, int t, PointLight* light, AnimPose* alt)
+{
+    VECTOR root;
+    MATRIX axis[40];
+    MATRIX axisT[40];
+    MATRIX rel[40];
+    int angle[40];
+    union
+    {
+        MATRIX m;
+        VECTOR l;
+        SVECTOR v[4];
+        int s[8];
+    } tmp;
+    MATRIX d;
+    MATRIX ma;
+    MATRIX mb;
+    SVECTOR r1;
+    SVECTOR r2;
+    SVECTOR r3;
+    union
+    {
+        VECTOR l;
+        SVECTOR v;
+    } acc;
+    MATRIX* m;
+    MATRIX* mr;
+    SVECTOR* o;
+    int n;
+    int i;
+    int k;
+    int a;
+    int flags;
+
+    PushMatrix();
+    m = SKEL_MATS;
+    gte_ReadRotMatrix(m);
+    mr = &SKEL_MATS[1];
+    RotZYX(sk->rot_8, mr);
+    root.vx = sk->pos_4->vx;
+    root.vy = sk->pos_4->vy;
+    root.vz = sk->pos_4->vz;
+    root.vx -= dword_8008D600.vx;
+    root.vy -= dword_8008D600.vy;
+    root.vz -= dword_8008D600.vz;
+    ApplyMatrixLV(SKEL_MATS, &root, &root);
+    for (i = 0; sk->bones[i].parent >= 0; i++)
+    {
+        n = sk->bones[i].parent + 2;
+        GetFrameRot(&r1, sk->pose_14, sk->frame_18, sk->bones[i].idx);
+        GetFrameRot(&r2, pose2, frame2, sk->bones[i].idx);
+        if (alt)
+        {
+            GetRot(&r3, alt, sk->bones[i].idx);
+            RotZYXThenX(&r1, &r3, &ma);
+            RotZYXThenX(&r2, &r3, &mb);
+        }
+        else
+        {
+            RotZYX(&r1, &ma);
+            RotZYX(&r2, &mb);
+        }
+        TransposeMatrix(&ma, &d);
+        gte_MulMatrix0(&d, &mb, &d);
+        if (IsIdMatrix(&d) == 1)
+        {
+            m[n] = ma;
+        }
+        else
+        {
+            sub_8004AD44(&d, &acc.l);
+            sub_8004B0A8(&acc.l, &axis[i]);
+            TransposeMatrix(&axis[i], &axisT[i]);
+            gte_MulMatrix0(&axisT[i], &d, &tmp.m);
+            gte_MulMatrix0(&tmp.m, &axis[i], &rel[i]);
+            angle[i] = ratan2(rel[i].m[1][2], rel[i].m[1][1]);
+            a = angle[i] * t / 4096;
+            if (ABS_80043AF8(a) > 0)
+            {
+                rel[i].m[1][1] = SIN_TABLE[(a + 0x400) & 0xFFF];
+                rel[i].m[1][2] = SIN_TABLE[a & 0xFFF];
+                rel[i].m[2][1] = -rel[i].m[1][2];
+                rel[i].m[2][2] = rel[i].m[1][1];
+                gte_MulMatrix0(&axis[i], &rel[i], &tmp.m);
+                gte_MulMatrix0(&tmp.m, &axisT[i], &d);
+                gte_MulMatrix0(&ma, &d, &m[n]);
+            }
+            else
+            {
+                m[n] = ma;
+            }
+        }
+        gte_MulMatrix0(&m[n - 1], &m[n], &m[n]);
+        o = &dword_80098690[n];
+        if (alt)
+        {
+            if (i == 1)
+            {
+                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
+                o->vx = sk->pose_14->rot[k];
+                o->vy = sk->pose_14->rot[k + 1];
+                o->vz = sk->pose_14->rot[k + 2];
+                GetBonePos(&acc.v, alt, sk->bones[1].idx);
+                o->vy += acc.v.vy;
+            }
+            else
+            {
+                GetBonePos(o, alt, sk->bones[i].idx);
+            }
+        }
+        else
+        {
+            if (i == 1)
+            {
+                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
+                acc.v.vx = sk->pose_14->rot[k];
+                acc.v.vy = sk->pose_14->rot[k + 1];
+                acc.v.vz = sk->pose_14->rot[k + 2];
+                k = (frame2 * (pose2->n_4 + 2) + 1) * 3;
+                tmp.v[0].vx = pose2->rot[k];
+                tmp.v[0].vy = pose2->rot[k + 1];
+                tmp.v[0].vz = pose2->rot[k + 2];
+                LerpSVector_8004D7A8(&acc.v, &tmp.v[0], o, t);
+            }
+            else
+            {
+                GetBonePos(&tmp.v[1], sk->pose_14, sk->bones[i].idx);
+                GetBonePos(&tmp.v[2], pose2, sk->bones[i].idx);
+                LerpSVector_8004D7A8(&tmp.v[1], &tmp.v[2], o, t);
+            }
+            if (sk->bones[i].parent > 0)
+            {
+                k = sk->bones[i].scale_3;
+                o->vx = o->vx * (sk->base[k].vx + (scale2[k].vx - sk->base[k].vx) * t / 4096) / 4096;
+                o->vy = o->vy * (sk->base[k].vy + (scale2[k].vy - sk->base[k].vy) * t / 4096) / 4096;
+                o->vz = o->vz * (sk->base[k].vz + (scale2[k].vz - sk->base[k].vz) * t / 4096) / 4096;
+            }
+        }
+        if (sk->scale_24)
+        {
+            o->vx = o->vx * sk->scale_24->vx / 4096;
+            o->vy = o->vy * sk->scale_24->vy / 4096;
+            o->vz = o->vz * sk->scale_24->vz / 4096;
+        }
+        n++;
+        dword_80098188[i] = m[n - 1];
+        if (sk->bones[i].flags_6 & 2)
+        {
+            acc.l.vx = acc.l.vy = acc.l.vz = 0;
+            for (k = 0; k < n - 2; k++)
+            {
+                gte_SetRotMatrix(&m[k + 1]);
+                gte_ldv0(&dword_80098690[k + 2]);
+                gte_rtv0();
+                gte_stlvnl(&tmp.l);
+                acc.l.vx += tmp.l.vx;
+                acc.l.vy += tmp.l.vy;
+                acc.l.vz += tmp.l.vz;
+            }
+            sk->bonePos_20[i].vx = acc.l.vx;
+            sk->bonePos_20[i].vy = acc.l.vy;
+            sk->bonePos_20[i].vz = acc.l.vz;
+            ApplyMatrixLV(m, &acc.l, &acc.l);
+            acc.l.vx += root.vx;
+            acc.l.vy += root.vy;
+            acc.l.vz += root.vz;
+            gte_MulMatrix0(m, &m[n - 1], &m[n]);
+            tmp.s[4] = sk->base[sk->bones[i].idx].vx + (scale2[sk->bones[i].idx].vx - sk->base[sk->bones[i].idx].vx) * t / 4096;
+            tmp.s[5] = sk->base[sk->bones[i].idx].vy + (scale2[sk->bones[i].idx].vy - sk->base[sk->bones[i].idx].vy) * t / 4096;
+            tmp.s[6] = sk->base[sk->bones[i].idx].vz + (scale2[sk->bones[i].idx].vz - sk->base[sk->bones[i].idx].vz) * t / 4096;
+            m[n].m[0][0] = m[n].m[0][0] * tmp.s[4] / 4096;
+            m[n].m[0][1] = m[n].m[0][1] * tmp.s[5] / 4096;
+            m[n].m[0][2] = m[n].m[0][2] * tmp.s[6] / 4096;
+            m[n].m[1][0] = m[n].m[1][0] * tmp.s[4] / 4096;
+            m[n].m[1][1] = m[n].m[1][1] * tmp.s[5] / 4096;
+            m[n].m[1][2] = m[n].m[1][2] * tmp.s[6] / 4096;
+            m[n].m[2][0] = m[n].m[2][0] * tmp.s[4] / 4096;
+            m[n].m[2][1] = m[n].m[2][1] * tmp.s[5] / 4096;
+            m[n].m[2][2] = m[n].m[2][2] * tmp.s[6] / 4096;
+            if (sk->scale_24)
+            {
+                m[n].m[0][0] = m[n].m[0][0] * sk->scale_24->vx / 4096;
+                m[n].m[0][1] = m[n].m[0][1] * sk->scale_24->vy / 4096;
+                m[n].m[0][2] = m[n].m[0][2] * sk->scale_24->vz / 4096;
+                m[n].m[1][0] = m[n].m[1][0] * sk->scale_24->vx / 4096;
+                m[n].m[1][1] = m[n].m[1][1] * sk->scale_24->vy / 4096;
+                m[n].m[1][2] = m[n].m[1][2] * sk->scale_24->vz / 4096;
+                m[n].m[2][0] = m[n].m[2][0] * sk->scale_24->vx / 4096;
+                m[n].m[2][1] = m[n].m[2][1] * sk->scale_24->vy / 4096;
+                m[n].m[2][2] = m[n].m[2][2] * sk->scale_24->vz / 4096;
+            }
+            m[n].t[0] = acc.l.vx;
+            m[n].t[1] = acc.l.vy;
+            m[n].t[2] = acc.l.vz;
+            dword_80096120[i] = m[n];
+        }
+    }
+    for (i = 0; sk->bones[i].parent >= 0; i++)
+    {
+        if (sk->bones[i].flags_6 & 2)
+        {
+            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], light, &dword_80098188[i]);
+            gte_SetRotMatrix(&dword_80096120[i]);
+            gte_SetTransMatrix(&dword_80096120[i]);
+            flags = sk->drawMode_1C;
+            if ((flags & 0x10) && !(sk->bones[i].flags_6 & 4))
+            {
+                flags |= (short)(sk->bones[i].flags_6 & ~0x60);
+            }
+            else
+            {
+                flags = (sk->drawMode_1C & ~0x60) | sk->bones[i].flags_6;
+            }
+            if (!(sk->bones[i].flags_6 & 8))
+            {
+                flags &= 0xFFFF00FF;
+            }
+            DrawFtgObject_8004C7BC(&sk->ftg_0[sk->bones[i].ftg_4], sk->ot_28, flags, sk->bones[i].ftg_4);
+        }
+    }
+    gte_SetLightMatrix(&dword_80087114);
+    gte_SetRotMatrix(m);
+    PopMatrix();
+}
+#endif
 INCLUDE_ASM(sub_80047E28);
 
 

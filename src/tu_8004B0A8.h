@@ -44,6 +44,8 @@ extern FtgTPageClut dword_8009AAD8; // tpage / clut of the textured sprites
 extern void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
 
 extern void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
+extern void sub_8004B0A8(VECTOR* v, MATRIX* m);
+extern void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t);
 
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
 #define FTG_PRIM_SCRATCH getScratchAddr(0x78)
