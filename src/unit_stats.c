@@ -1312,7 +1312,7 @@ typedef struct
     int scale_24;
     unsigned long* ot;
 } FuseSkel;
-extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
+extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* scale1, char* pose1, int t1, char* scale2, char* pose2, int t2, char* rotBase, char* posBase,
                          char* out, void* vout);
 extern void DrawAnimSkel_80046A58(FuseSkel* sk, void* buf, char* pose);
 void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
