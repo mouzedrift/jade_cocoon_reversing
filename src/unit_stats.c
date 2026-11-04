@@ -1229,58 +1229,58 @@ unsigned char defaultBones_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0
 unsigned char mergeBones_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
 
 // Matched
-int ModelTaskLoad_80010B90(ModelTaskState* p)
+int ModelTaskLoad_80010B90(ModelTaskState* task)
 {
     int i;
-    InitModelList_80024ADC(&p->models_0, p->vram_34, 1);
+    InitModelList_80024ADC(&task->models_0, task->vram_34, 1);
     for (i = 0; i < 3; i++)
     {
-        if (i == p->main_30)
+        if (i == task->main_30)
         {
-            LoadModel_80025200(p->models_0, p->ids_8[i], -1, 1, 0);
+            LoadModel_80025200(task->models_0, task->ids_8[i], -1, 1, 0);
         }
         else
         {
-            LoadModel_80025200(p->models_0, p->ids_8[i], -1, 0, 0);
+            LoadModel_80025200(task->models_0, task->ids_8[i], -1, 0, 0);
         }
     }
-    p->state_38 = 4;
-    p->next_3C = 2;
+    task->state_38 = 4;
+    task->next_3C = 2;
     return 1;
 }
 // Matched
-int ModelTaskWaitLoad_80010C30(ModelTaskState* p)
+int ModelTaskWaitLoad_80010C30(ModelTaskState* task)
 {
     int i;
-    for (i = 0; i < p->models_0->count_0; i++)
+    for (i = 0; i < task->models_0->count_0; i++)
     {
-        if (p->models_0->items_8[i].id_38 != 0xFFFF)
+        if (task->models_0->items_8[i].id_38 != 0xFFFF)
         {
-            if (!AreFileRequestsDone_80024DC4(&p->models_0->items_8[i]))
+            if (!AreFileRequestsDone_80024DC4(&task->models_0->items_8[i]))
             {
                 return 0;
             }
         }
     }
-    p->state_38 = p->next_3C;
+    task->state_38 = task->next_3C;
     return 1;
 }
 // Matched
-int ModelTaskApplyTextures_80010CDC(ModelTaskState* p)
+int ModelTaskApplyTextures_80010CDC(ModelTaskState* task)
 {
-    if (p->texId_2C >= 0)
+    if (task->texId_2C >= 0)
     {
-        p->models_0->items_8->id_38 = p->texId_2C;
+        task->models_0->items_8->id_38 = task->texId_2C;
     }
     else
     {
-        p->models_0->items_8->id_38 = p->ids_8[p->texPart_24];
+        task->models_0->items_8->id_38 = task->ids_8[task->texPart_24];
     }
-    LoadModelListTextures_800255F0(p->models_0, p->models_0->items_8->id_38, p->texSel_28);
-    p->models_0->items_8->id_38 = p->ids_8[p->main_30];
-    LoadAllModelAnims_800256B8(p->models_0, p->models_0->items_8->id_38);
-    p->state_38 = 4;
-    p->next_3C = 5;
+    LoadModelListTextures_800255F0(task->models_0, task->models_0->items_8->id_38, task->texSel_28);
+    task->models_0->items_8->id_38 = task->ids_8[task->main_30];
+    LoadAllModelAnims_800256B8(task->models_0, task->models_0->items_8->id_38);
+    task->state_38 = 4;
+    task->next_3C = 5;
     return 1;
 }
 typedef struct
@@ -1300,16 +1300,16 @@ typedef struct
 } VtxBlend;
 typedef struct
 {
-    int f0;
-    void* f4;
-    void* f8;
+    int ftg_0;     // the ActorDrawArgs layout
+    void* pos_4;
+    void* rot_8;
     unsigned char* bones;
     short* base;
     char* pose;
-    int f18;
-    int f1C;
+    int frame_18;
+    int drawMode_1C;
     int* pos;
-    int f24;
+    int scale_24;
     unsigned long* ot;
 } FuseSkel;
 extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
@@ -1319,156 +1319,156 @@ void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char defaultBones_80079140[];
 extern unsigned char mergeBones_80079210[];
 // Matched
-int ModelTaskDraw_80010DB0(ModelTaskState* p)
+int ModelTaskDraw_80010DB0(ModelTaskState* task)
 {
     ModelList* list;
-    Model* m[3];
+    Model* src[3];
     FuseSkel sk;
-    int v[3];
+    int vec[3];
     VtxBlend vb;
     char buf[0xC0];
     int pos[0x78];
-    Model* o;
-    FtgObject* t;
-    FtgObject* a6;
-    FtgObject* a4;
+    Model* fused;
+    FtgObject* ftg0;
+    FtgObject* ftg1;
+    FtgObject* ftg2;
     int i;
     int k;
     int w0;
     int w1;
     int w2;
-    char* e;
-    char* b1;
+    char* scale;
+    char* boneScale1;
     short (*ent)[6];
     MATRIX* mat;
     SVECTOR* sv;
 
-    list = p->models_0;
+    list = task->models_0;
     for (i = 0; i < 3; i++)
     {
-        m[i] = AcquireModel_80024D70(list, p->ids_8[i]);
+        src[i] = AcquireModel_80024D70(list, task->ids_8[i]);
     }
-    InitModelList_80024ADC(&p->models_0, p->vram_34 + 2, 1);
-    o = p->models_0->items_8;
-    o->id_38 = m[0]->id_38;
-    o->ftgCount_3C = m[0]->ftgCount_3C;
-    t = m[0]->ftg_50;
-    o->ftg_50 = t;
-    a6 = m[1]->ftg_50;
-    a4 = m[2]->ftg_50;
-    for (i = 0; i < o->ftgCount_3C; i++)
+    InitModelList_80024ADC(&task->models_0, task->vram_34 + 2, 1);
+    fused = task->models_0->items_8;
+    fused->id_38 = src[0]->id_38;
+    fused->ftgCount_3C = src[0]->ftgCount_3C;
+    ftg0 = src[0]->ftg_50;
+    fused->ftg_50 = ftg0;
+    ftg1 = src[1]->ftg_50;
+    ftg2 = src[2]->ftg_50;
+    for (i = 0; i < fused->ftgCount_3C; i++)
     {
-        int* q0 = GetModelFtgWeights_80024F70(m[0], p->record_20);
-        int* q1 = GetModelFtgWeights_80024F70(m[1], p->record_20);
-        int* q2 = GetModelFtgWeights_80024F70(m[2], p->record_20);
-        w0 = q0[i];
-        w1 = q1[i];
-        w2 = q2[i];
+        int* ftgWeights0 = GetModelFtgWeights_80024F70(src[0], task->record_20);
+        int* ftgWeights1 = GetModelFtgWeights_80024F70(src[1], task->record_20);
+        int* ftgWeights2 = GetModelFtgWeights_80024F70(src[2], task->record_20);
+        w0 = ftgWeights0[i];
+        w1 = ftgWeights1[i];
+        w2 = ftgWeights2[i];
         if (w0 == w1 && w1 == w2)
         {
-            w0 = p->weights_14[0];
-            w1 = p->weights_14[1];
-            w2 = p->weights_14[2];
+            w0 = task->weights_14[0];
+            w1 = task->weights_14[1];
+            w2 = task->weights_14[2];
         }
         else
         {
             w0 = (w0 << 12) / (w0 + w1 + w2);
             w1 = (w1 << 12) / (w0 + w1 + w2);
             w2 = (w2 << 12) / (w0 + w1 + w2);
-            w0 *= p->weights_14[0];
-            w1 *= p->weights_14[1];
-            w2 *= p->weights_14[2];
+            w0 *= task->weights_14[0];
+            w1 *= task->weights_14[1];
+            w2 *= task->weights_14[2];
         }
         w0 = (w0 << 12) / (w0 + w1 + w2);
         w1 = (w1 << 12) / (w0 + w1 + w2);
         w2 = (w2 << 12) / (w0 + w1 + w2);
-        if (p->count_4 >= 2 && w1 != 0)
+        if (task->count_4 >= 2 && w1 != 0)
         {
-            DiffFtgObjects_80039FE4(&a6[i], &t[i], &a6[i]);
-            LerpFtgObject_8003A6C4(w1, &t[i], &t[i], &a6[i]);
+            DiffFtgObjects_80039FE4(&ftg1[i], &ftg0[i], &ftg1[i]);
+            LerpFtgObject_8003A6C4(w1, &ftg0[i], &ftg0[i], &ftg1[i]);
         }
-        if (p->count_4 >= 3 && w2 != 0)
+        if (task->count_4 >= 3 && w2 != 0)
         {
-            DiffFtgObjects_80039FE4(&a4[i], &t[i], &a4[i]);
-            LerpFtgObject_8003A6C4(w2, &t[i], &t[i], &a4[i]);
+            DiffFtgObjects_80039FE4(&ftg2[i], &ftg0[i], &ftg2[i]);
+            LerpFtgObject_8003A6C4(w2, &ftg0[i], &ftg0[i], &ftg2[i]);
         }
     }
-    m[0]->ftg_50 = 0;
-    o->mats_5C.count_0 = m[0]->mats_5C.count_0;
-    o->mats_5C.items_4 = m[0]->mats_5C.items_4;
-    m[0]->mats_5C.count_0 = 0;
-    m[0]->mats_5C.items_4 = 0;
+    src[0]->ftg_50 = 0;
+    fused->mats_5C.count_0 = src[0]->mats_5C.count_0;
+    fused->mats_5C.items_4 = src[0]->mats_5C.items_4;
+    src[0]->mats_5C.count_0 = 0;
+    src[0]->mats_5C.items_4 = 0;
     for (k = 0; k < 5; k++)
     {
-        memset(v, 0, 12);
+        memset(vec, 0, 12);
         for (i = 0; i < 3; i++)
         {
-            e = GetModelBaseScale_80024E90(m[i], k);
-            v[0] += ((int*)e)[0] * p->weights_14[i] / 4096;
-            v[1] += ((int*)e)[1] * p->weights_14[i] / 4096;
-            v[2] += ((int*)e)[2] * p->weights_14[i] / 4096;
+            scale = GetModelBaseScale_80024E90(src[i], k);
+            vec[0] += ((int*)scale)[0] * task->weights_14[i] / 4096;
+            vec[1] += ((int*)scale)[1] * task->weights_14[i] / 4096;
+            vec[2] += ((int*)scale)[2] * task->weights_14[i] / 4096;
         }
-        e = GetModelBaseScale_80024E90(m[0], k);
-        ((int*)e)[0] = v[0];
-        ((int*)e)[1] = v[1];
-        ((int*)e)[2] = v[2];
+        scale = GetModelBaseScale_80024E90(src[0], k);
+        ((int*)scale)[0] = vec[0];
+        ((int*)scale)[1] = vec[1];
+        ((int*)scale)[2] = vec[2];
     }
-    o->animCount_3E = m[p->main_30]->animCount_3E;
-    AllocModelAnims_80026730(&o->anims_54, o->animCount_3E, 1);
-    o->anims_54->frameCount_0 = 1;
-    o->anims_54->divisor_8 = 0x20;
-    o->anims_54->cueCount_C = 0;
-    o->anims_54->boneCount_4 = o->ftgCount_3C;
-    o->anims_54->basePose_14 = HeapAlloc_8003FC8C(o->ftgCount_3C * 6, (struct Pool*)1);
-    o->anims_54->frames_18 = HeapAlloc_8003FC8C((o->ftgCount_3C + 2) * 6, (struct Pool*)1);
-    o->anims_54->cues_10 = 0;
-    sk.f0 = (int)t;
-    sk.f4 = &levantPos_8008BD18.pos;
-    sk.f8 = &levantPos_8008BD18.rot;
+    fused->animCount_3E = src[task->main_30]->animCount_3E;
+    AllocModelAnims_80026730(&fused->anims_54, fused->animCount_3E, 1);
+    fused->anims_54->frameCount_0 = 1;
+    fused->anims_54->divisor_8 = 0x20;
+    fused->anims_54->cueCount_C = 0;
+    fused->anims_54->boneCount_4 = fused->ftgCount_3C;
+    fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, (struct Pool*)1);
+    fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, (struct Pool*)1);
+    fused->anims_54->cues_10 = 0;
+    sk.ftg_0 = (int)ftg0;
+    sk.pos_4 = &levantPos_8008BD18.pos;
+    sk.rot_8 = &levantPos_8008BD18.rot;
     sk.bones = defaultBones_80079140;
-    sk.base = GetModelBoneScale_80024EC8(m[0], p->record_20);
-    sk.pose = (char*)o->anims_54;
-    sk.f18 = 0;
+    sk.base = GetModelBoneScale_80024EC8(src[0], task->record_20);
+    sk.pose = (char*)fused->anims_54;
+    sk.frame_18 = 0;
     sk.pos = 0;
-    sk.f24 = 0;
+    sk.scale_24 = 0;
     sk.ot = pOT_8008D690;
-    b1 = GetModelBoneScale_80024EC8(m[1], p->record_20);
-    BlendSkelPoses_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], GetModelBoneScale_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
-                 p->weights_14[2], (char*)m[0]->anims_54, (char*)m[0]->anims_54, (char*)o->anims_54, 0);
+    boneScale1 = GetModelBoneScale_80024EC8(src[1], task->record_20);
+    BlendSkelPoses_8004A4FC(&sk, boneScale1, (char*)src[1]->anims_54, task->weights_14[1], GetModelBoneScale_80024EC8(src[2], task->record_20), (char*)src[2]->anims_54,
+                 task->weights_14[2], (char*)src[0]->anims_54, (char*)src[0]->anims_54, (char*)fused->anims_54, 0);
     for (i = 1; i < 3; i++)
     {
-        unsigned short* d = GetModelBoneGroupLevels_80024F00(m[0], p->record_20);
-        unsigned short* q = GetModelBoneGroupLevels_80024F00(m[i], p->record_20);
+        unsigned short* dstLevels = GetModelBoneGroupLevels_80024F00(src[0], task->record_20);
+        unsigned short* srcLevels = GetModelBoneGroupLevels_80024F00(src[i], task->record_20);
         int j;
         for (j = 0; j < 3; j++)
         {
-            if (q[j] >= 2 && d[j] == 1)
+            if (srcLevels[j] >= 2 && dstLevels[j] == 1)
             {
-                d[j] = 2;
+                dstLevels[j] = 2;
             }
         }
     }
     for (i = 0; i < 3; i++)
     {
-        vb.pos[i] = GetModelBaseScale_80024E90(m[i], p->record_20);
-        vb.rot[i] = GetModelBoneScale_80024EC8(m[i], p->record_20);
-        vb.src[i] = GetModelEffectTable_80024E64(m[i]);
-        vb.w[i] = p->weights_14[i];
+        vb.pos[i] = GetModelBaseScale_80024E90(src[i], task->record_20);
+        vb.rot[i] = GetModelBoneScale_80024EC8(src[i], task->record_20);
+        vb.src[i] = GetModelEffectTable_80024E64(src[i]);
+        vb.w[i] = task->weights_14[i];
     }
     BlendVertices_80011904(&vb, vb.src[0]);
-    o->headerSize_48 = m[p->main_30]->headerSize_48;
-    o->header_4C = m[p->main_30]->header_4C;
-    m[p->main_30]->headerSize_48 = 0;
-    m[p->main_30]->header_4C = 0;
-    sk.pose = (char*)&m[p->main_30]->anims_54[1];
+    fused->headerSize_48 = src[task->main_30]->headerSize_48;
+    fused->header_4C = src[task->main_30]->header_4C;
+    src[task->main_30]->headerSize_48 = 0;
+    src[task->main_30]->header_4C = 0;
+    sk.pose = (char*)&src[task->main_30]->anims_54[1];
     sk.bones = mergeBones_80079210;
-    sk.f1C = 0x10;
-    sk.f18 = 0;
+    sk.drawMode_1C = 0x10;
+    sk.frame_18 = 0;
     sk.pos = pos;
     sk.ot = pOT_8008D690;
-    DrawAnimSkel_80046A58(&sk, buf, (char*)o->anims_54);
+    DrawAnimSkel_80046A58(&sk, buf, (char*)fused->anims_54);
     {
-        short (*tbl)[6] = GetModelEffectTable_80024E64(o);
+        short (*tbl)[6] = GetModelEffectTable_80024E64(fused);
         ent = &tbl[FindEffectTblRow_80018908(0x26, tbl)];
     }
     mat = &boneMatrices_80098188[ent[0][1]];
@@ -1483,82 +1483,82 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     mat->m[2][0] = mat->m[2][0] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 0] / 4096;
     mat->m[2][1] = mat->m[2][1] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 1] / 4096;
     mat->m[2][2] = mat->m[2][2] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 2] / 4096;
-    ApplyMatrix(mat, sv, (VECTOR*)v);
+    ApplyMatrix(mat, sv, (VECTOR*)vec);
     PopMatrix();
-    v[0] = sk.pos[ent[0][1] * 3 + 0] + v[0];
-    v[1] = sk.pos[ent[0][1] * 3 + 1] + v[1];
-    v[2] = sk.pos[ent[0][1] * 3 + 2] + v[2];
-    ((short*)o->anims_54->basePose_14)[sk.bones[10] * 3 + 1] -= v[1];
+    vec[0] = sk.pos[ent[0][1] * 3 + 0] + vec[0];
+    vec[1] = sk.pos[ent[0][1] * 3 + 1] + vec[1];
+    vec[2] = sk.pos[ent[0][1] * 3 + 2] + vec[2];
+    ((short*)fused->anims_54->basePose_14)[sk.bones[10] * 3 + 1] -= vec[1];
     FreeModelList_80024BB0(&list);
-    p->state_38 = 3;
+    task->state_38 = 3;
     return 1;
 }
 // Matched
-void BlendVertices_80011904(VtxBlend* p, Vtx12* out)
+void BlendVertices_80011904(VtxBlend* blend, Vtx12* out)
 {
-    int n;
+    int vtx;
     int k;
     float sum;
     float f;
-    for (n = 0; n < 43; n++)
+    for (vtx = 0; vtx < 43; vtx++)
     {
         for (k = 0, sum = 0; k < 3; k++)
         {
-            f = (float)p->w[k] * (1.0f / 4096.0f);
-            sum += f * (float)p->src[k][n].x;
+            f = (float)blend->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)blend->src[k][vtx].x;
         }
-        out[n].x = sum;
+        out[vtx].x = sum;
         sum = 0;
         for (k = 0; k < 3; k++)
         {
-            f = (float)p->w[k] * (1.0f / 4096.0f);
-            sum += f * (float)p->src[k][n].y;
+            f = (float)blend->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)blend->src[k][vtx].y;
         }
-        out[n].y = sum;
+        out[vtx].y = sum;
         sum = 0;
         for (k = 0; k < 3; k++)
         {
-            f = (float)p->w[k] * (1.0f / 4096.0f);
-            sum += f * (float)p->src[k][n].z;
+            f = (float)blend->w[k] * (1.0f / 4096.0f);
+            sum += f * (float)blend->src[k][vtx].z;
         }
-        out[n].z = sum;
+        out[vtx].z = sum;
     }
 }
 void UpdateSporeTask_80011AF8(EventEntry* p, int* q);
 // Matched
-void InitSporeTask_80011ADC(EventEntry* p, int* q)
+void InitSporeTask_80011ADC(EventEntry* entry, int* spore)
 {
-    q[0] = -1;
-    q[1] = -1;
-    p->cb_8 = (EventEntryFn)UpdateSporeTask_80011AF8;
+    spore[0] = -1;
+    spore[1] = -1;
+    entry->cb_8 = (EventEntryFn)UpdateSporeTask_80011AF8;
 }
 // Matched
-void UpdateSporeTask_80011AF8(EventEntry* p, int* q)
+void UpdateSporeTask_80011AF8(EventEntry* entry, int* spore)
 {
-    int* r = q;
-    if (q[1] > 0)
+    int* buf = spore;
+    if (spore[1] > 0)
     {
-        q[1]--;
+        spore[1]--;
     }
     else
     {
-        r[1] = 0;
-        r[0] = -1;
+        buf[1] = 0;
+        buf[0] = -1;
     }
 }
 // Matched
 void UseSporeItem_80011B24(int item)
 {
-    SporeTaskBuf* p = sporeTask_8008D464->entry.buffer;
+    SporeTaskBuf* spore = sporeTask_8008D464->entry.buffer;
     switch (item)
     {
     case 0x29:
-        p->timer_4 = 1000;
-        p->mode_0 = 0;
+        spore->timer_4 = 1000;
+        spore->mode_0 = 0;
         break;
     case 0x2A:
-        p->timer_4 = 1000;
-        p->mode_0 = 1;
+        spore->timer_4 = 1000;
+        spore->mode_0 = 1;
         break;
     }
 }
@@ -1577,64 +1577,64 @@ void HaltEventsAndFade_80011B8C(void)
 // Matched
 void HaltEventsFadeStopMovie_80011BCC(void)
 {
-    int f;
+    int flags;
     HaltEventsAndFade_80011B8C();
-    f = unknownFlags_8008D678;
+    flags = unknownFlags_8008D678;
     bStopDrawingMovie_8008D45C = 1;
-    unknownFlags_8008D678 = f | 4;
+    unknownFlags_8008D678 = flags | 4;
 }
 // Matched
 void EmptyCallback_80011C04(void)
 {
 }
 // Matched
-void FillHpMp_80011C0C(UnitStatus* a, UnitStatus* b)
+void FillHpMp_80011C0C(UnitStatus* dst, UnitStatus* src)
 {
-    a->hp_8.cur_0 = a->hp_8.max_2 = b->hp_8.max_2;
-    a->mp_C.cur_0 = a->mp_C.max_2 = b->mp_C.max_2;
+    dst->hp_8.cur_0 = dst->hp_8.max_2 = src->hp_8.max_2;
+    dst->mp_C.cur_0 = dst->mp_C.max_2 = src->mp_C.max_2;
 }
 // Matched
-void ClearStatus_80011C30(UnitStatus* p)
+void ClearStatus_80011C30(UnitStatus* status)
 {
-    p->status_0 &= 0x400;
+    status->status_0 &= 0x400;
 }
-void RecoverQuarterHpMp_80011C44(UnitStatus* p)
+void RecoverQuarterHpMp_80011C44(UnitStatus* status)
 {
-    int v = p->status_0 & 0x400;
-    p->status_0 = v;
-    if (v == 0)
+    int kept = status->status_0 & 0x400;
+    status->status_0 = kept;
+    if (kept == 0)
     {
-        p->hp_8.cur_0 = (p->hp_8.cur_0 + p->hp_8.max_2 / 4 > p->hp_8.max_2) ? p->hp_8.max_2 : p->hp_8.cur_0 + p->hp_8.max_2 / 4;
-        p->mp_C.cur_0 = (p->mp_C.cur_0 + p->mp_C.max_2 / 4 > p->mp_C.max_2) ? p->mp_C.max_2 : p->mp_C.cur_0 + p->mp_C.max_2 / 4;
+        status->hp_8.cur_0 = (status->hp_8.cur_0 + status->hp_8.max_2 / 4 > status->hp_8.max_2) ? status->hp_8.max_2 : status->hp_8.cur_0 + status->hp_8.max_2 / 4;
+        status->mp_C.cur_0 = (status->mp_C.cur_0 + status->mp_C.max_2 / 4 > status->mp_C.max_2) ? status->mp_C.max_2 : status->mp_C.cur_0 + status->mp_C.max_2 / 4;
     }
 }
 // Matched
-void Heal_80011CD0(UnitStatus* p)
+void Heal_80011CD0(UnitStatus* status)
 {
-    p->status_0 = 0;
-    FillHpMp_80011C0C(p, p);
+    status->status_0 = 0;
+    FillHpMp_80011C0C(status, status);
 }
 // Matched
-void ReviveOneHp_80011CF4(UnitStatus* p)
+void ReviveOneHp_80011CF4(UnitStatus* status)
 {
-    p->exp_4 = 0;
-    p->status_0 = 0;
-    p->hp_8.cur_0 = (p->hp_8.cur_0 + 1 > p->hp_8.max_2) ? p->hp_8.max_2 : p->hp_8.cur_0 + 1;
+    status->exp_4 = 0;
+    status->status_0 = 0;
+    status->hp_8.cur_0 = (status->hp_8.cur_0 + 1 > status->hp_8.max_2) ? status->hp_8.max_2 : status->hp_8.cur_0 + 1;
 }
 typedef struct
 {
     unsigned short limit;
     unsigned short value;
-} struct_D28;
+} GrowthThreshold;
 // Matched
 int GetGrowthKind_80011D28(int base)
 {
     int i;
-    for (i = 0; ((struct_D28*)growthKindThresholds_80079374)[i].limit != 0; i++)
+    for (i = 0; ((GrowthThreshold*)growthKindThresholds_80079374)[i].limit != 0; i++)
     {
-        if (base >= ((struct_D28*)growthKindThresholds_80079374)[i].limit)
+        if (base >= ((GrowthThreshold*)growthKindThresholds_80079374)[i].limit)
         {
-            return ((struct_D28*)growthKindThresholds_80079374)[i].value;
+            return ((GrowthThreshold*)growthKindThresholds_80079374)[i].value;
         }
     }
     return 9;
@@ -1649,42 +1649,42 @@ extern int GetGrowthKind_80011D28(int a0);
 extern int BaseMagicRatio_800142B8(unsigned char* p);
 extern int BaseAttackRatio_80014308(unsigned char* p);
 // Matched
-int ApplyLevelUps_80011D98(UnitStatus* m, int mode)
+int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
 {
     unsigned int acc[6];
     unsigned char kind[6];
     int i;
     int j;
     int k;
-    int t;
-    int n;
+    int clamped;
+    int gained;
     int levels;
     int add;
-    int v;
-    int r;
-    int a;
-    int b;
-    int oldA;
-    int oldE;
+    int stat;
+    int frac;
+    int maxHp;
+    int maxMp;
+    int oldMaxHp;
+    int oldMaxMp;
 
-    n = 0;
+    gained = 0;
     for (i = 0; i < 6; i++)
     {
-        kind[i] = GetGrowthKind_80011D28(m->stats_2C.base_6[i]);
+        kind[i] = GetGrowthKind_80011D28(status->stats_2C.base_6[i]);
     }
-    levels = m->exp_4 >> 26;
+    levels = status->exp_4 >> 26;
     for (j = 0; j < 6; j++)
     {
-        acc[j] = m->stats_2C.frac_C[j] * 10;
+        acc[j] = status->stats_2C.frac_C[j] * 10;
     }
-    while (m->exp_4 >> 26)
+    while (status->exp_4 >> 26)
     {
         add = 0;
         if (mode == 1)
         {
             add = 500;
         }
-        m->exp_4 += 0xFC000000;
+        status->exp_4 += 0xFC000000;
         for (i = 0; i < 6; i++)
         {
             if (kind[i] != 21)
@@ -1693,81 +1693,81 @@ int ApplyLevelUps_80011D98(UnitStatus* m, int mode)
                 add /= 2;
             }
         }
-        n++;
+        gained++;
     }
-    m->level_44 += n;
-    if (m->field_45 == 0)
+    status->level_44 += gained;
+    if (status->fixedStats_45 == 0)
     {
         for (k = 0; k < 6; k++)
         {
-            v = m->stats_2C.cur_0[k] + acc[k] / 1000;
-            r = (acc[k] % 1000) / 10;
-            if (v >= 0)
+            stat = status->stats_2C.cur_0[k] + acc[k] / 1000;
+            frac = (acc[k] % 1000) / 10;
+            if (stat >= 0)
             {
-                t = v;
-                if (t > 100)
+                clamped = stat;
+                if (clamped > 100)
                 {
-                    t = 100;
+                    clamped = 100;
                 }
-                m->stats_2C.cur_0[k] = t;
+                status->stats_2C.cur_0[k] = clamped;
             }
             else
             {
-                m->stats_2C.cur_0[k] = 0;
+                status->stats_2C.cur_0[k] = 0;
             }
-            if (r >= 0)
+            if (frac >= 0)
             {
-                t = r;
-                if (t > 100)
+                clamped = frac;
+                if (clamped > 100)
                 {
-                    t = 100;
+                    clamped = 100;
                 }
-                m->stats_2C.frac_C[k] = t;
+                status->stats_2C.frac_C[k] = clamped;
             }
             else
             {
-                m->stats_2C.frac_C[k] = 0;
+                status->stats_2C.frac_C[k] = 0;
             }
         }
-        a = BaseMaxHpForLevel_80012140(m->level_44, m);
-        b = BaseMaxMpForLevel_80012178(m->level_44, m);
-        oldA = m->hp_8.max_2;
-        oldE = m->mp_C.max_2;
-        a = a * (BaseAttackRatio_80014308(m->stats_2C.cur_0) * 40 + 6000) / 10000;
-        b = b * (BaseMagicRatio_800142B8(m->stats_2C.cur_0) * 40 + 6000) / 10000;
-        if (a >= 0)
+        maxHp = BaseMaxHpForLevel_80012140(status->level_44, status);
+        maxMp = BaseMaxMpForLevel_80012178(status->level_44, status);
+        oldMaxHp = status->hp_8.max_2;
+        oldMaxMp = status->mp_C.max_2;
+        maxHp = maxHp * (BaseAttackRatio_80014308(status->stats_2C.cur_0) * 40 + 6000) / 10000;
+        maxMp = maxMp * (BaseMagicRatio_800142B8(status->stats_2C.cur_0) * 40 + 6000) / 10000;
+        if (maxHp >= 0)
         {
-            t = a;
-            if (t > 999)
+            clamped = maxHp;
+            if (clamped > 999)
             {
-                t = 999;
+                clamped = 999;
             }
-            m->hp_8.max_2 = t;
+            status->hp_8.max_2 = clamped;
         }
         else
         {
-            m->hp_8.max_2 = 0;
+            status->hp_8.max_2 = 0;
         }
-        if (b >= 0)
+        if (maxMp >= 0)
         {
-            t = b;
-            if (t > 999)
+            clamped = maxMp;
+            if (clamped > 999)
             {
-                t = 999;
+                clamped = 999;
             }
-            m->mp_C.max_2 = t;
+            status->mp_C.max_2 = clamped;
         }
         else
         {
-            m->mp_C.max_2 = 0;
+            status->mp_C.max_2 = 0;
         }
-        if (HasStatusFlag_80033548(m, 0x400) == 0)
+        if (HasStatusFlag_80033548(status, 0x400) == 0)
         {
-            m->hp_8.cur_0 += a - oldA;
-            m->mp_C.cur_0 += b - oldE;
+            status->hp_8.cur_0 += maxHp - oldMaxHp;
+            status->mp_C.cur_0 += maxMp - oldMaxMp;
         }
-        m->hp_8.cur_0 = (m->hp_8.cur_0 < 0) ? 0 : (m->hp_8.cur_0 > 999) ? 999 : m->hp_8.cur_0;
-        m->mp_C.cur_0 = (m->mp_C.cur_0 < 0) ? 0 : (m->mp_C.cur_0 > 999) ? 999 : m->mp_C.cur_0;
+        status->hp_8.cur_0 = (status->hp_8.cur_0 < 0) ? 0 : (status->hp_8.cur_0 > 999) ? 999 : status->hp_8.cur_0;
+        status->mp_C.cur_0 = (status->mp_C.cur_0 < 0) ? 0 : (status->mp_C.cur_0 > 999) ? 999 : status->mp_C.cur_0;
     }
     return levels;
 }
@@ -1775,16 +1775,16 @@ int ApplyLevelUps_80011D98(UnitStatus* m, int mode)
 int BaseMaxHpForLevel_80012140(int level, void* unused)
 {
     int result;
-    int var_v0;
+    int step;
     int i;
 
     result = 20;
 
     for (i = 0; i < level; i++)
     {
-        var_v0 = result + 9;
-        result = var_v0 + (level / 2);
-        var_v0 = 29;
+        step = result + 9;
+        result = step + (level / 2);
+        step = 29;
     }
     return result;
 }
@@ -1794,80 +1794,80 @@ int BaseMaxMpForLevel_80012178(int level, void* unused)
     return (level * 3) + 20;
 }
 // Matched
-void ApplyLevelUpsPlain_80012188(UnitStatus* p)
+void ApplyLevelUpsPlain_80012188(UnitStatus* status)
 {
-    ApplyLevelUps_80011D98(p, 0);
+    ApplyLevelUps_80011D98(status, 0);
 }
 int GetLevelRank_800121A8(int level)
 {
-    int v;
+    int rank;
     if (level < 20)
     {
-        v = level / 4;
+        rank = level / 4;
     }
     else if (level < 31)
     {
-        v = 5;
+        rank = 5;
     }
     else if (level < 35)
     {
-        v = 6;
+        rank = 6;
     }
     else
     {
-        v = 7;
+        rank = 7;
         if (level >= 40)
         {
-            v = 8;
+            rank = 8;
         }
     }
-    if (v > 8)
+    if (rank > 8)
     {
-        v = 8;
+        rank = 8;
     }
-    return v;
+    return rank;
 }
 // Matched
-int CombinedExpDelta_80012204(int a, int b, int c, int d)
+int CombinedExpDelta_80012204(int levelA, int expA, int levelB, int expB)
 {
-    double s = 0.0;
-    s += PackedExpToTotal_80012358(a, b);
-    s += PackedExpToTotal_80012358(c, d);
-    return TotalExpToPacked_8001247C(s) - ((a << 26) + b);
+    double total = 0.0;
+    total += PackedExpToTotal_80012358(levelA, expA);
+    total += PackedExpToTotal_80012358(levelB, expB);
+    return TotalExpToPacked_8001247C(total) - ((levelA << 26) + expA);
 }
 // Matched
 void AccumulateExpGain_800122A0(int unit, int exp, int* acc)
 {
-    UnitStatus* p = GetUnitStatus_80014390(unit & 0xFF);
-    int v = *acc;
-    if (v != 0)
+    UnitStatus* status = GetUnitStatus_80014390(unit & 0xFF);
+    int prev = *acc;
+    if (prev != 0)
     {
-        int lo = p->exp_4 + (v & 0x3FFFFFF);
-        int hi = p->level_44 + ((unsigned int)v >> 26);
-        int q = lo / 0x4000000;
-        *acc += CombinedExpDelta_80012204(hi + q, lo - (q << 26), exp, 0);
+        int lo = status->exp_4 + (prev & 0x3FFFFFF);
+        int hi = status->level_44 + ((unsigned int)prev >> 26);
+        int carry = lo / 0x4000000;
+        *acc += CombinedExpDelta_80012204(hi + carry, lo - (carry << 26), exp, 0);
     }
     else
     {
-        *acc = CombinedExpDelta_80012204(p->level_44, p->exp_4, exp, 0);
+        *acc = CombinedExpDelta_80012204(status->level_44, status->exp_4, exp, 0);
     }
 }
 // Matched
 double PackedExpToTotal_80012358(int level, int exp)
 {
-    double r = 67108864.0;
-    double s = 1.0;
+    double total = 67108864.0;
+    double scale = 1.0;
     int i;
     for (i = 0; i < level; i++)
     {
-        r += s * 67108864.0;
-        s += s;
+        total += scale * 67108864.0;
+        scale += scale;
     }
-    if (s != 1.0)
+    if (scale != 1.0)
     {
-        r += (double)exp * s;
+        total += (double)exp * scale;
     }
-    return r;
+    return total;
 }
 #if 0
 // Not matched: the original keeps 67108864.0 in $s0/$s1 (the variable t) for the first subtraction, here CSE folds it to an immediate (loop shapes, short i, permuter 500: no)
@@ -1909,79 +1909,79 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     return totalMinions;
 }
 // Matched
-void AdjustUnitStat_80012614(UnitStatus* p, int sel, int delta, int mask)
+void AdjustUnitStat_80012614(UnitStatus* status, int sel, int delta, int mask)
 {
-    int v;
-    int r;
-    unsigned short* sp = 0;
-    unsigned char* bp = 0;
+    int value;
+    int clamped;
+    unsigned short* gaugePtr = 0;
+    unsigned char* statPtr = 0;
     int max = 0;
     switch (sel)
     {
     case 0:
-        max = p->hp_8.max_2;
-        sp = (unsigned short*)&p->hp_8.cur_0;
+        max = status->hp_8.max_2;
+        gaugePtr = (unsigned short*)&status->hp_8.cur_0;
         break;
     case 1:
-        sp = (unsigned short*)&p->hp_8.max_2;
+        gaugePtr = (unsigned short*)&status->hp_8.max_2;
         max = 999;
         break;
     case 2:
-        max = p->mp_C.max_2;
-        sp = (unsigned short*)&p->mp_C.cur_0;
+        max = status->mp_C.max_2;
+        gaugePtr = (unsigned short*)&status->mp_C.cur_0;
         break;
     case 3:
-        sp = (unsigned short*)&p->mp_C.max_2;
+        gaugePtr = (unsigned short*)&status->mp_C.max_2;
         max = 999;
         break;
     case 4:
     case 5:
-        bp = &p->stats_2C.cur_0[0];
+        statPtr = &status->stats_2C.cur_0[0];
         max = 99;
         break;
     case 6:
     case 7:
-        bp = &p->stats_2C.cur_0[4];
+        statPtr = &status->stats_2C.cur_0[4];
         max = 99;
         break;
     case 8:
     case 9:
-        bp = &p->stats_2C.cur_0[1];
+        statPtr = &status->stats_2C.cur_0[1];
         max = 99;
         break;
     case 10:
     case 11:
-        bp = &p->stats_2C.cur_0[2];
+        statPtr = &status->stats_2C.cur_0[2];
         max = 99;
         break;
     case 12:
     case 13:
-        bp = &p->stats_2C.cur_0[3];
+        statPtr = &status->stats_2C.cur_0[3];
         max = 99;
         break;
     case 16:
-        AddStatus_80012794(p, mask);
+        AddStatus_80012794(status, mask);
 
         break;
     case 17:
-        p->status_0 &= ~mask;
+        status->status_0 &= ~mask;
         break;
     case 19:
-        *(char*)&p->level_44 += delta;
+        *(char*)&status->level_44 += delta;
         break;
     }
-    if (sp)
+    if (gaugePtr)
     {
-        v = *sp;
-        v += delta;
-        r = (v < 0) ? 0 : ((max < v) ? max : v);
-        *sp = r;
+        value = *gaugePtr;
+        value += delta;
+        clamped = (value < 0) ? 0 : ((max < value) ? max : value);
+        *gaugePtr = clamped;
     }
-    else if (bp)
+    else if (statPtr)
     {
-        v = *bp;
-        v += delta;
-        r = (v < 0) ? 0 : ((max < v) ? max : v);
-        *bp = r;
+        value = *statPtr;
+        value += delta;
+        clamped = (value < 0) ? 0 : ((max < value) ? max : value);
+        *statPtr = clamped;
     }
 }

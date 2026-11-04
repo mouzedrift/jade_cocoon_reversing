@@ -401,7 +401,7 @@ int InitMinionData_8001900C(UnitStats* unit, int* params)
     unit->st_0.equipment_1C[1] = 0xFF;
     unit->st_0.equipment_1C[2] = 0xFF;
     unit->st_0.equipment_1C[3] = 0xFF;
-    unit->st_0.field_45 = 0;
+    unit->st_0.fixedStats_45 = 0;
     id2 = unit->species_5C;
     if (id2 < 0x39)
     {

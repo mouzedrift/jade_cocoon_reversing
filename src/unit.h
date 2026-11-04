@@ -32,7 +32,7 @@ typedef struct UnitStatus
     unsigned char element_3E[4];
     short elementMask_42;
     unsigned char level_44;
-    unsigned char field_45;
+    unsigned char fixedStats_45; // != 0: level-ups leave stats and max hp/mp alone (ApplyLevelUps_80011D98)
     char pad_46[2];
 } UnitStatus;
 

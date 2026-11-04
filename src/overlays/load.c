@@ -1627,7 +1627,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         }
         pm->status_3C.elementMask_32 = m->status_84.elementMask_42;
         pm->status_3C.level_34 = m->status_84.level_44;
-        pm->status_3C.field_35 = m->status_84.field_45;
+        pm->status_3C.field_35 = m->status_84.fixedStats_45;
         for (j = 0; j < 6; j++)
         {
             for (k = 0; k < 10; k++)
@@ -1660,7 +1660,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         }
         pu->status_0.elementMask_32 = u->st_0.elementMask_42;
         pu->status_0.level_34 = u->st_0.level_44;
-        pu->status_0.field_35 = u->st_0.field_45;
+        pu->status_0.field_35 = u->st_0.fixedStats_45;
         for (k = 0; k < 10; k++)
         {
             body->itemNames_1C30[l][k] = u->st_0.name_10[k];
@@ -1828,7 +1828,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             }
             m->status_84.elementMask_42 = pm->status_3C.elementMask_32;
             m->status_84.level_44 = pm->status_3C.level_34;
-            m->status_84.field_45 = pm->status_3C.field_35;
+            m->status_84.fixedStats_45 = pm->status_3C.field_35;
             m->status_84.equipment_1C[0] = 0xFF;
             m->status_84.equipment_1C[1] = 0xFF;
             m->status_84.equipment_1C[2] = 0xFF;
@@ -1879,7 +1879,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             }
             u->st_0.elementMask_42 = pu->status_0.elementMask_32;
             u->st_0.level_44 = pu->status_0.level_34;
-            u->st_0.field_45 = pu->status_0.field_35;
+            u->st_0.fixedStats_45 = pu->status_0.field_35;
             u->st_0.equipment_1C[0] = 0xFF;
             u->st_0.equipment_1C[1] = 0xFF;
             u->st_0.equipment_1C[2] = 0xFF;
