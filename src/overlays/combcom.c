@@ -425,8 +425,8 @@ void DrawPauseMenu_800CBCA0()
 
 extern unsigned char exchangeFlags_800A84A8;
 extern int DrawAbilityDescription_8002C670();
-extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, void* a1);
-extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, void* a1);
+extern void DrawAbilityList_8002CE28(ListMenuState* a0, void* a1);
+extern void DrawMagicList_8002CAC8(ListMenuState* a0, void* a1);
 extern int GetSkillMpCost_80031A04(void* skills, int a);
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void PreviewCmdEffect_800CC40C();
@@ -528,31 +528,31 @@ void DrawCmdMenu_800CBEA4()
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x40))
     {
-        struct_minion_ref r;
+        ListMenuState r;
         CombComPos2 p;
         p = skillListPos_800CB680;
-        r.field_4 = 2;
+        r.windowFlags_4 = 2;
         r.ot_6 = 0xF;
         r.field_8 = -1;
         r.cursor_0 = skillCursor_800CD298[4];
         r.scroll_2 = skillCursor_800CD298[5];
         r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        r.field_A = 0;
+        r.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&r, p.xy[side_800CD839]);
         previewMp_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x80))
     {
-        struct_minion_ref r;
+        ListMenuState r;
         CombComPos2 p;
         p = magicListPos_800CB688;
-        r.field_4 = 2;
+        r.windowFlags_4 = 2;
         r.ot_6 = 0xF;
         r.field_8 = -1;
         r.cursor_0 = magicCursor_800CD2A4[4];
         r.scroll_2 = magicCursor_800CD2A4[5];
         r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        r.field_A = 0;
+        r.fieldMenu_A = 0;
         DrawMagicList_8002CAC8(&r, p.xy[side_800CD839]);
         previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
     }
@@ -759,19 +759,19 @@ void FinishCmd_800CC9FC()
 
 extern Minion teams_800A3AA0[][3];
 extern int IsMinionFainted_800A1958(Minion* p);
-extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
-extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
+extern int CheckSkillUsable_80033C98(ListMenuState* p);
+extern int CheckMagicCastable_80033C08(ListMenuState* p);
 // 1 when the highlighted entry can be chosen, else 0 with errorMsg_800CD84C set to the reason (or 0)
 int CheckCmdSelectable_800CCA94()
 {
-    struct_minion_ref a;
+    ListMenuState a;
     short b[4];
     int idx = GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
     int* p;
     a.cursor_0 = activeCursor_800CD854[4];
     errorMsg_800CD84C = 0;
     a.scroll_2 = activeCursor_800CD854[5];
-    a.field_A = 0;
+    a.fieldMenu_A = 0;
     b[3] = 0;
     b[0] = cmd_800CD840->arg_4;
     b[1] = side_800CD839 + 8;

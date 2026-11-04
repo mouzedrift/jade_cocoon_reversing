@@ -102,7 +102,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
         hit = 100;
         break;
     }
-    if ((signed char)f1->field_20[q->element_8] < 0)
+    if ((signed char)f1->modifiers_20[q->element_8] < 0)
     {
         def = 1;
         eva = def;
@@ -133,7 +133,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
                     d = sqrt(sqrt(f0->element_3E[q->element_8] * 1250));
                     dmg = dmg * (d / 10.0);
                 }
-                dmg = dmg * (signed char)f1->field_20[q->element_8];
+                dmg = dmg * (signed char)f1->modifiers_20[q->element_8];
                 dmg = dmg / 32.0;
                 v = dmg;
                 v = dmg;
@@ -178,7 +178,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             }
             else if (q->c_B == 3)
             {
-                c = (signed char)f1->field_20[q->element_8];
+                c = (signed char)f1->modifiers_20[q->element_8];
                 if (rand() % 32 < c)
                 {
                     out->hpDamage_1C = GetHp_800334D8(f1) - 1;
@@ -219,7 +219,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             }
             else
             {
-                n = (v * (signed char)f1->field_20[q->element_8]) ? v * (signed char)f1->field_20[q->element_8] / 32 : 0;
+                n = (v * (signed char)f1->modifiers_20[q->element_8]) ? v * (signed char)f1->modifiers_20[q->element_8] / 32 : 0;
             }
             if (n > ra)
             {

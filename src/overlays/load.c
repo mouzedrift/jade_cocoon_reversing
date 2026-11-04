@@ -118,7 +118,7 @@ typedef struct
     unsigned int exp_4;
     UnitGauge hp_8;
     UnitGauge mp_C;
-    unsigned char field_10[0xC]; // UnitStatus.field_20
+    unsigned char field_10[0xC]; // UnitStatus.modifiers_20
     UnitStatBlock stats_1C;
     unsigned char element_2E[4];
     short elementMask_32;
@@ -1618,7 +1618,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         pm->status_3C.mp_C = m->status_84.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            pm->status_3C.field_10[j] = m->status_84.field_20[j];
+            pm->status_3C.field_10[j] = m->status_84.modifiers_20[j];
         }
         pm->status_3C.stats_1C = m->status_84.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1651,7 +1651,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         pu->status_0.mp_C = u->st_0.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            pu->status_0.field_10[j] = u->st_0.field_20[j];
+            pu->status_0.field_10[j] = u->st_0.modifiers_20[j];
         }
         pu->status_0.stats_1C = u->st_0.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1819,7 +1819,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             m->status_84.mp_C = pm->status_3C.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                m->status_84.field_20[j] = pm->status_3C.field_10[j];
+                m->status_84.modifiers_20[j] = pm->status_3C.field_10[j];
             }
             m->status_84.stats_2C = pm->status_3C.stats_1C;
             for (j = 0; j < 4; j++)
@@ -1829,10 +1829,10 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             m->status_84.elementMask_42 = pm->status_3C.elementMask_32;
             m->status_84.level_44 = pm->status_3C.level_34;
             m->status_84.field_45 = pm->status_3C.field_35;
-            m->status_84.field_1C[0] = 0xFF;
-            m->status_84.field_1C[1] = 0xFF;
-            m->status_84.field_1C[2] = 0xFF;
-            m->status_84.field_1C[3] = 0xFF;
+            m->status_84.equipment_1C[0] = 0xFF;
+            m->status_84.equipment_1C[1] = 0xFF;
+            m->status_84.equipment_1C[2] = 0xFF;
+            m->status_84.equipment_1C[3] = 0xFF;
             for (j = 0; j < 6; j++)
             {
                 for (k = 0; k < sizeof(m->ancestors_4[j]); k++)
@@ -1870,7 +1870,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             u->st_0.mp_C = pu->status_0.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                u->st_0.field_20[j] = pu->status_0.field_10[j];
+                u->st_0.modifiers_20[j] = pu->status_0.field_10[j];
             }
             u->st_0.stats_2C = pu->status_0.stats_1C;
             for (j = 0; j < 4; j++)
@@ -1880,10 +1880,10 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             u->st_0.elementMask_42 = pu->status_0.elementMask_32;
             u->st_0.level_44 = pu->status_0.level_34;
             u->st_0.field_45 = pu->status_0.field_35;
-            u->st_0.field_1C[0] = 0xFF;
-            u->st_0.field_1C[1] = 0xFF;
-            u->st_0.field_1C[2] = 0xFF;
-            u->st_0.field_1C[3] = 0xFF;
+            u->st_0.equipment_1C[0] = 0xFF;
+            u->st_0.equipment_1C[1] = 0xFF;
+            u->st_0.equipment_1C[2] = 0xFF;
+            u->st_0.equipment_1C[3] = 0xFF;
             for (k = 0; k < sizeof(u->st_0.name_10); k++)
             {
                 if (k < 10)

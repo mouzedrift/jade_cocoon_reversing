@@ -943,9 +943,9 @@ void DrawTitleBackground_800A1F98(SPRT* p, DR_TPAGE* q)
 void InitLevantEquipment_800A20F4(void)
 {
     SDECL;
-    s->levantStatus_7C8.field_1C[0] = 0;
-    s->levantStatus_7C8.field_1C[1] = 0xFF;
-    s->levantStatus_7C8.field_1C[2] = 0xFF;
+    s->levantStatus_7C8.equipment_1C[0] = 0;
+    s->levantStatus_7C8.equipment_1C[1] = 0xFF;
+    s->levantStatus_7C8.equipment_1C[2] = 0xFF;
 }
 
 // Matched
@@ -1013,9 +1013,9 @@ void GiveDebugStartItems_800A22FC(void)
     b->inventory_4[0][1].id = 0xE;
     b->inventory_4[0][0].id = 0;
     b->inventory_4[0][1].count = 1;
-    saveData_8008B570.levantStatus_7C8.field_1C[0] = 1;
-    saveData_8008B570.levantStatus_7C8.field_1C[1] = 0;
-    saveData_8008B570.levantStatus_7C8.field_1C[2] = 0xFF;
+    saveData_8008B570.levantStatus_7C8.equipment_1C[0] = 1;
+    saveData_8008B570.levantStatus_7C8.equipment_1C[1] = 0;
+    saveData_8008B570.levantStatus_7C8.equipment_1C[2] = 0xFF;
     if ((unsigned int)b->emptyCocoons_284 < 10)
     {
         saveData_8008B570.inv_24.emptyCocoons_284 = 10;

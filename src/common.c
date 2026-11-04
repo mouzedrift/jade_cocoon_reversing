@@ -370,13 +370,13 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
     if (out->field_26 == -1)
     {
-        e = (signed char)q->c4;
+        e = (signed char)q->areaElement_4;
         if (e != -1)
         {
             if ((e == 0 && out->areaElement_24 == 1) || (e == 3 && out->areaElement_24 == 0) || (e == 2 && out->areaElement_24 == 3) ||
                 (e == 1 && out->areaElement_24 == 2) || out->areaElement_24 == -1)
             {
-                out->areaElement_24 = (signed char)q->c4;
+                out->areaElement_24 = (signed char)q->areaElement_4;
             }
         }
     }

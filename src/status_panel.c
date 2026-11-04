@@ -275,13 +275,13 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     switch (slot)
     {
     case 0:
-        p->field_1C[0] = itemId;
+        p->equipment_1C[0] = itemId;
         break;
     case 1:
-        p->field_1C[1] = itemId;
+        p->equipment_1C[1] = itemId;
         break;
     case 2:
-        p->field_1C[2] = itemId;
+        p->equipment_1C[2] = itemId;
         break;
     }
     CalcEquippedStats_80033624(outStats, p);

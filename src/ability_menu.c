@@ -29,10 +29,10 @@ typedef struct
     int field_14;
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
-extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
+extern int CheckSkillUsable_80033C98(ListMenuState* p);
 int GetAbilityIcon_8002D1A4(int a, short b);
 // Matched
-void DrawAbilityList_8002CE28(struct_minion_ref* menu, unsigned short* origin)
+void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
 {
     struct_A5A4 s;
     unsigned short pos[2];
@@ -110,7 +110,7 @@ void DrawAbilityList_8002CE28(struct_minion_ref* menu, unsigned short* origin)
         (*row2)[2].x = pos[0] + 0x83;
         (*row2)[2].y = pos[1] + y;
     }
-    s.field_0 = menu->field_4;
+    s.field_0 = menu->windowFlags_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = cursor;

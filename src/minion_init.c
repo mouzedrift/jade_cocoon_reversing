@@ -397,31 +397,31 @@ int InitMinionData_8001900C(UnitStats* m, int* params)
     }
     m->st_0.exp_4 = 0x4000000;
     m->st_0.level_44 = 0;
-    m->st_0.field_1C[0] = 0xFF;
-    m->st_0.field_1C[1] = 0xFF;
-    m->st_0.field_1C[2] = 0xFF;
-    m->st_0.field_1C[3] = 0xFF;
+    m->st_0.equipment_1C[0] = 0xFF;
+    m->st_0.equipment_1C[1] = 0xFF;
+    m->st_0.equipment_1C[2] = 0xFF;
+    m->st_0.equipment_1C[3] = 0xFF;
     m->st_0.field_45 = 0;
     id2 = m->species_5C;
     if (id2 < 0x39)
     {
-        MemCopy_800403E8(m->st_0.field_20, speciesModifiers_8007BA84 + id2 * 12, 12);
+        MemCopy_800403E8(m->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
     }
     else if (id2 < 0xC9)
     {
         id2 = (id2 - 0x39) / 4;
-        MemCopy_800403E8(m->st_0.field_20, speciesModifiers_8007BA84 + id2 * 12, 12);
+        MemCopy_800403E8(m->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
     }
     else
     {
-        MemCopy_800403E8(m->st_0.field_20, sub_800B32F0(id2 - 0xC9), 12);
+        MemCopy_800403E8(m->st_0.modifiers_20, sub_800B32F0(id2 - 0xC9), 12);
     }
     if (m->species_5C - 0x25 < 4)
     {
         v = seed;
         for (i = 4; i < 9; i++)
         {
-            m->st_0.field_20[i] = (v % 9) * 4 + 8;
+            m->st_0.modifiers_20[i] = (v % 9) * 4 + 8;
             v /= 10;
         }
     }
@@ -430,7 +430,7 @@ int InitMinionData_8001900C(UnitStats* m, int* params)
         id2 = m->species_5C;
         if (!(id2 - 0x2B < 0xE) && !(id2 - 0xC9 < 0xA))
         {
-            MemCopy_800403E8(m->st_0.field_20, elementModifiers_8007BA74 + st.element * 4, 4);
+            MemCopy_800403E8(m->st_0.modifiers_20, elementModifiers_8007BA74 + st.element * 4, 4);
         }
     }
     m->st_0.exp_4 += params[1];

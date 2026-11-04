@@ -4392,14 +4392,14 @@ void HighlightTargetWindows_800C7424(unsigned char page)
 
 int IsMenuSelectionValid_800C7530()
 {
-    struct_minion_ref q;
+    ListMenuState q;
     BatTgtQ_a b;
     short idx;
     int* p;
     idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
     q.cursor_0 = pageCursor_800C9E44->cursor_8;
     q.scroll_2 = pageCursor_800C9E44->scroll_A;
-    q.field_A = 0;
+    q.fieldMenu_A = 0;
     menuErrorText_800C9E7C = 0;
     switch (menuPage_800C9E50)
     {
@@ -4813,41 +4813,41 @@ void BattleMenuDraw_800C7DA8()
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x20) && !(flags & 2))
     {
-        struct_minion_ref w;
-        w.field_4 = 2;
+        ListMenuState w;
+        w.windowFlags_4 = 2;
         w.ot_6 = 0xF;
         w.field_8 = -1;
         w.minion_C = 0;
-        w.field_A = 0;
+        w.fieldMenu_A = 0;
         w.cursor_0 = itemMenu_800C9308->cursor_8;
         w.scroll_2 = itemMenu_800C9308->scroll_A;
         DrawItemList_8002C728(&w);
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x40) && !(flags & 4))
     {
-        struct_minion_ref w;
-        w.field_4 = 2;
+        ListMenuState w;
+        w.windowFlags_4 = 2;
         w.ot_6 = 0xF;
         w.field_8 = -1;
         w.cursor_0 = skillMenu_800C92E4->cursor_8;
         w.scroll_2 = skillMenu_800C92E4->scroll_A;
         w.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
-        w.field_A = 0;
+        w.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&w, 0);
         previewMpChange_800C9182 = -GetSkillMpCost_80031A04(&w.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x80) && !(flags & 8))
     {
-        struct_minion_ref w;
+        ListMenuState w;
         short sz[2];
-        w.field_4 = 2;
+        w.windowFlags_4 = 2;
         w.ot_6 = 0xF;
         w.field_8 = -1;
         w.cursor_0 = magicMenu_800C92F0->cursor_8;
         w.scroll_2 = magicMenu_800C92F0->scroll_A;
         w.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         sz[0] = 0x60;
-        w.field_A = 0;
+        w.fieldMenu_A = 0;
         sz[1] = 0x45;
         DrawMagicList_8002CAC8(&w, sz);
         previewMpChange_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0)));

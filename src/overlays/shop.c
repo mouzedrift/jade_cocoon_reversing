@@ -639,8 +639,8 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
     int k;
     for (k = 0; k < 12; k++)
     {
-        x = (signed char)a->status_84.field_20[k];
-        y = (signed char)b->status_84.field_20[k];
+        x = (signed char)a->status_84.modifiers_20[k];
+        y = (signed char)b->status_84.modifiers_20[k];
         if (x < y)
         {
             x = x * 2;
@@ -663,7 +663,7 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
         {
             r = -128;
         }
-        d->status_84.field_20[k] = r;
+        d->status_84.modifiers_20[k] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
@@ -675,7 +675,7 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
     }
     for (i = 0; i < 4; i++)
     {
-        d->status_84.field_20[i] = tmp[i] / 32;
+        d->status_84.modifiers_20[i] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -2101,8 +2101,8 @@ extern void DrawTextList_8002A310(void* p, int a);
 extern void DrawAbilityDescription_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* rect, ShopWinShop* w, void* ot, int t);
-extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
-extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
+extern void DrawAbilityList_8002CE28(ListMenuState* a0, ShopPosShop* a1);
+extern void DrawMagicList_8002CAC8(ListMenuState* a0, ShopPosShop* a1);
 extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPosShop* base);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
@@ -2211,9 +2211,9 @@ void DrawShopMenu_800BC380(ShopMenu* u)
             if (u->shown_54->id != 4 && !(u->flags_24 & 0x20))
             {
                 ShopPosShop p28;
-                struct_minion_ref r30;
+                ListMenuState r30;
                 ShopPosShop p40;
-                struct_minion_ref r48;
+                ListMenuState r48;
                 ShopPosShop p58;
                 ShopPosShop p60;
                 ShopRect r68;
@@ -2369,7 +2369,7 @@ void DrawShopMenu_800BC380(ShopMenu* u)
             }
         if (i == 6)
         {
-            struct_minion_ref r40;
+            ListMenuState r40;
             r40.cursor_0 = u->savedIndex_5E[8];
             r40.scroll_2 = u->savedScroll_72[2];
             r40.field_4 = 2;

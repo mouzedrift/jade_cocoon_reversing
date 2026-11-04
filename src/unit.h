@@ -26,8 +26,8 @@ typedef struct UnitStatus
     UnitGauge hp_8;
     UnitGauge mp_C;
     unsigned char name_10[0xC]; // charTables_8008685C encoding, see DecodeNames_8003FBD4
-    unsigned char field_1C[4];  // equipped weapon/armor/accessory ids (GetEquipmentId_8003356C)
-    unsigned char field_20[0xC]; // ApplyEquipmentModifiers_80033754
+    unsigned char equipment_1C[4];  // equipped weapon/armor/accessory ids (GetEquipmentId_8003356C)
+    unsigned char modifiers_20[0xC]; // ApplyEquipmentModifiers_80033754
     UnitStatBlock stats_2C;
     unsigned char element_3E[4];
     short elementMask_42;
@@ -87,7 +87,7 @@ typedef struct ActionData
     unsigned char c0;
     unsigned char c1;
     short power_2;  // +60 when element_8 is the area element
-    unsigned char c4;
+    unsigned char areaElement_4; // replaces the battle's area element (ResolveBattleAction_80012BB0)
     unsigned char c5;
     unsigned char c6;
     unsigned char hit_7;

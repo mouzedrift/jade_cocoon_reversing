@@ -6,11 +6,11 @@ typedef struct
 {
     short cursor_0; // cursor row
     short scroll_2; // first shown row
-    short field_4;  // window
+    short windowFlags_4; // MenuWindowList.flags_0
     short ot_6;     // ot index
     short field_8;
-    short field_A;
+    short fieldMenu_A; // 0: battle menu, 1: field menu (CheckItemUsable_80033AFC)
     Minion* minion_C;
-} struct_minion_ref;
+} ListMenuState;
 
 #endif

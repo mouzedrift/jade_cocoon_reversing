@@ -19,7 +19,7 @@ typedef struct ShopFormModel
     Actor* actor_3C;   // SpawnFormActor_800BF574
 } ShopFormModel;
 
-// DrawMenuWindows_8002A5A4's parameter block (struct_A5A4 in menu_draw.c)
+// DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
 typedef struct ShopMenuWindows
 {
     int flags_0;
@@ -50,7 +50,7 @@ typedef struct ShopRect
     short h;
 } ShopRect;
 
-// a menu item of DrawMenuWindows_8002A5A4 (struct_A5A4_item)
+// a menu item of DrawMenuWindows_8002A5A4 (MenuWindowItem in menu_draw.c)
 typedef struct ShopMenuItem
 {
     unsigned short flags_0; // 0x40: greyed out

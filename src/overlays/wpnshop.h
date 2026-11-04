@@ -7,7 +7,7 @@
 #include "globals.h"
 #include "tiy.h"
 
-// DrawMenuWindows_8002A5A4's parameter block (struct_A5A4 in menu_draw.c)
+// DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
 typedef struct StoreMenuWindows
 {
     int flags_0;
