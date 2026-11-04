@@ -1370,7 +1370,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
     {
         n = *src++;
         s = (struct_1c*)src;
-        d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
+        d = ListAlloc_8003FDC0(heap, n * 28);
         out->frameCounts_4[i] = n;
         out->frames_8[i] = (EffectSpriteFrame*)d;
         for (j = 0; j < out->frameCounts_4[i]; j++)
@@ -1510,7 +1510,7 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     size += s->texSpriteCount_48 * 0x14;
     if (size)
     {
-        buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
+        buf = HeapAlloc_8003FC8C(size, (struct Pool*)a2);
     }
     else
     {
@@ -1874,7 +1874,7 @@ int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     total += c[9];
     if (size != 0)
     {
-        p = (char*)HeapAlloc_8003FC8C(size, h);
+        p = HeapAlloc_8003FC8C(size, h);
     }
     out->f3_0.count = c[0];
     out->f3_0.items = (FtgPolyF3*)p;
@@ -1916,7 +1916,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n = a2->counts_0[8];
     if (n)
     {
-        a0->groups = (FtgSpriteGroup8*)HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
+        a0->groups = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
     }
     else
     {
@@ -1927,7 +1927,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n += m;
     if (m)
     {
-        a1->groups = (FtgSpriteGroup9*)HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
+        a1->groups = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
     }
     else
     {
@@ -2134,7 +2134,7 @@ int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, 
     int i;
     FtgSrcSprite8* q;
     a->groups[k].count = p->count_0;
-    a->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    a->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     q = (FtgSrcSprite8*)((unsigned char*)p + r); // r: bytes read so far
     for (i = 0; i < p->count_0; i++)
     {
@@ -2162,7 +2162,7 @@ int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, 
     int i;
     FtgSrcSprite9* q;
     b->groups[k].count = p->count_0;
-    b->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    b->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     r = 8;
     b->groups[k].tpage = p->tpage_4;
     b->groups[k].clut = p->clut_6;
@@ -3695,8 +3695,8 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
     {
         a0->cueCount_C = 0;
     }
-    a0->basePose_14 = (unsigned short*)HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
-    a0->frames_18 = (unsigned short*)HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    a0->basePose_14 = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    a0->frames_18 = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
     d = a0->basePose_14;
     for (i = 0; i < m; i++)
     {
@@ -3736,7 +3736,7 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
         }
         a0->cueCount_C = *(int*)s;
         s += 2;
-        a0->cues_10 = (ModelAnimCue*)HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
+        a0->cues_10 = HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
         k = 0;
         while (k < a0->cueCount_C)
         {
@@ -3757,7 +3757,7 @@ int sub_80026D6C(int* p)
 // Matched
 void sub_80026D78(struct_12** a0, int a1, int a2)
 {
-    struct_12* p = (struct_12*)HeapAlloc_8003FC8C(a1 * 12, a2);
+    struct_12* p = HeapAlloc_8003FC8C(a1 * 12, a2);
     int i;
     for (i = 0; i < a1; i++)
     {
@@ -3808,7 +3808,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = (unsigned short*)HeapAlloc_8003FC8C(p->field_0 * 8, a2);
+    d = HeapAlloc_8003FC8C(p->field_0 * 8, a2);
     p->field_8 = (int)d;
     for (i = 0; i < p->field_0; i++)
     {
@@ -4178,7 +4178,7 @@ void sub_80027778(int* a0, int h)
     dword_8008D648.field_8 = a0[1];
     n = a0[2];
     dword_8008D648.count_0 = n;
-    arr = (struct_27778*)ListAlloc_8003FDC0(h, n * 16);
+    arr = ListAlloc_8003FDC0(h, n * 16);
     for (i = 0; i < dword_8008D648.count_0; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
@@ -4187,7 +4187,7 @@ void sub_80027778(int* a0, int h)
         q = (unsigned short*)src;
         arr[i].field_8 = *q++;
         arr[i].field_A = *q++;
-        arr[i].items = (unsigned short*)ListAlloc_8003FDC0(h, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(h, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *q++;
@@ -4212,7 +4212,7 @@ void sub_800278BC(int* a, int h)
     {
         q = (int*)((char*)a0 + a0[i + 1]);
         dword_8008D648.lists_14[i].count = *q;
-        dword_8008D648.lists_14[i].items = (struct_4b*)ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
+        dword_8008D648.lists_14[i].items = ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
         for (j = 0; j < dword_8008D648.lists_14[i].count; j++)
         {
@@ -4262,7 +4262,7 @@ int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
     int* hh;
     p = (unsigned char*)hdr + 0x10;
     hh = hdr;
-    arr = (struct_8_20v*)ListAlloc_8003FDC0(heap, hdr[1] * 8);
+    arr = ListAlloc_8003FDC0(heap, hdr[1] * 8);
     *count = hdr[1];
     if (hdr[1] == 0)
     {
@@ -4274,7 +4274,7 @@ int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
         rec = p;
         arr[i].n = *(unsigned short*)rec;
         p = rec + 0x28;
-        arr[i].items = (struct_20v*)ListAlloc_8003FDC0(heap, *(int*)rec * 32);
+        arr[i].items = ListAlloc_8003FDC0(heap, *(int*)rec * 32);
         for (j = 0; j < *(unsigned int*)rec; j++)
         {
             arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
@@ -4684,7 +4684,7 @@ void sub_80028808(void* a0, int* a1)
     cnt = *p++;
     LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
     p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
-    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
+    dword_80082674 = ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
     MemCopy_800403E8(dword_80082674, p, dword_8008B500.nMeshes_4 * 12);
     if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
     {

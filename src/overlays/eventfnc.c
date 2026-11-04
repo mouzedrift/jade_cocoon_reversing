@@ -2868,7 +2868,7 @@ void LoadRelocBlob_800BC854(int* src)
         ListFree_8003FE38(dword_80091C10, dword_800AEBBC.p_0);
         dword_800AEBBC.p_0 = 0;
     }
-    dword_800AEBBC.p_0 = (int*)ListAlloc_8003FDC0(dword_80091C10, size);
+    dword_800AEBBC.p_0 = ListAlloc_8003FDC0(dword_80091C10, size);
     MemCopy_800403E8(dword_800AEBBC.p_0, src, size);
     n = dword_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
@@ -2918,7 +2918,7 @@ void sub_800BC98C(int* a)
 extern int dword_800AEBC8;
 void sub_800BCA18(unsigned int* a, unsigned int* b)
 {
-    unsigned int* r = (unsigned int*)ListAlloc_8003FDC0(dword_80091C10);
+    unsigned int* r = ListAlloc_8003FDC0(dword_80091C10);
     dword_800AEBC8 = (int)r;
     MemCopy_800403E8(r, a, (unsigned int)b);
 }

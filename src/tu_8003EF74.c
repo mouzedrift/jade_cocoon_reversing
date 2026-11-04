@@ -514,7 +514,7 @@ void ListInit_8003FDB0(int* p)
 // Matched
 void* ListAlloc_8003FDC0(List* l, int size)
 {
-    ListNode* n = (ListNode*)malloc3_8003FC4C(size + 8);
+    ListNode* n = malloc3_8003FC4C(size + 8);
     n->prev = 0;
     n->next = 0;
     if (l->count == 0)
