@@ -1984,13 +1984,14 @@ void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, sho
     *clut = v * 64 + (u >> 4);
 }
 #if 0
-// Not matched (20 lines; its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles). Needs the
+// Not matched (18 lines; its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles). Needs the
 // prototype above changed to take unsigned char*: using the parameter itself as the cursor gives the header exactly
 // (c copied to $a3, r a separate copy because q changes before the loads). Left: the type 8/9 cases, where the original
 // keeps a copy P = q (lw 0(P), P + 4 into a fresh register, then q = (P + 4) + k * 20) and a second copy of k for
 // a += k. Copies only survived here when q is written between the copy and its uses (t = q; q += 4; k = *t), but then
 // q + 4 goes to q's own register. Tried: block-local pointers / struct casts, inline helpers (by value: cse removes the
-// param copies; by pointer: memory), (r + 1) + k * 20 vs q += 4 + k * 20, -O1 / single -fno-* flags (no copies either)
+// param copies; by pointer: memory), (r + 1) + k * 20 vs q += 4 + k * 20, -O1 / single -fno-* flags (no copies either).
+// k = *p++ (below) already puts q + 4 in its own register; only the P and k copies are missing.
 void CountFtgSprites_80022B84(unsigned char* q, int* x, int* y)
 {
     int n;
@@ -2017,8 +2018,8 @@ void CountFtgSprites_80022B84(unsigned char* q, int* x, int* y)
         case 5: q += 0x50; break;
         case 4: case 6: q += 0x2C; break;
         case 7: q += 0x54; break;
-        case 8: r = (int*)q; k = r[0]; q = (unsigned char*)(r + 1); q += k * 20; a += k; break;
-        case 9: r = (int*)q; k = r[0]; q = (unsigned char*)(r + 2); q += k * 20; b += k; break;
+        case 8: { int* p = (int*)q; k = *p++; q = (unsigned char*)p + k * 20; a += k; break; }
+        case 9: { int* p = (int*)q; k = *p; p += 2; q = (unsigned char*)p + k * 20; b += k; break; }
         }
     }
     *x = a;

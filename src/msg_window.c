@@ -530,7 +530,11 @@ extern void DrawMsgWindowPortrait_80035900();
 extern void DrawMsgWindowChoices_800355EC();
 #define PI(off) (*(int*)((char*)p + (off)))
 #if 0
-// Not matched: control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed), register allocation of the flag temporaries and the reset block differ
+// Not matched (30 lines, same length): control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed).
+// Left: the flags temporaries get $v1 where the original has $a0 (first block) / $v0 (case 4), the DrawMsgWindowText
+// result v is in $a0 instead of $a1, and the reset block reloads field_78 (the original keeps it in $v1, with the fill
+// loop counter in another register; i = field_78 plus a separate counter fixes that but loses an instruction elsewhere).
+// Got closer with: unsigned switch on field_10, c = -1 after the flag clears, f1 = p[1] & ~0x40000 in the first block
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
     int* p = (int*)w;
@@ -547,10 +551,9 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
     int f6;
     int f7;
 
-    f1 = p[1];
-    if (f1 & 0x80000)
+    if (p[1] & 0x80000)
     {
-        f1 &= ~0x40000;
+        f1 = p[1] & ~0x40000;
         f1 &= ~0x80000;
         p[1] = f1;
     }
@@ -576,12 +579,12 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             {
                 PlaySfx_80031494(0x7F);
             }
-            c = -1;
             f2 = p[1];
             f2 &= ~0x20000;
             f2 &= ~0x8000;
             f2 &= ~0x200;
             p[1] = f2;
+            c = -1;
             PI(0x1C4) = (int)((Win_8003422C*)p)->list_B4[PI(0x78)];
             PI(0x1C8) = 0;
             PI(0x1D4) = 0;
@@ -718,8 +721,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                 p[2] = v;
                 if (p[1] & 0x40000)
                 {
-                    i = PI(0x78);
-                    if (((Win_8003422C*)p)->list_B4[i + 1] == 0 && PI(0x1B4))
+                    if (((Win_8003422C*)p)->list_B4[PI(0x78) + 1] == 0 && PI(0x1B4))
                     {
                         c = -1;
                         PI(0x1C8) = 0;
@@ -727,7 +729,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                         PI(0x1D8) = 0;
                         PI(0x1DC) = 0;
                         PI(0x1E0) = v;
-                        PI(0x1C4) = (int)((Win_8003422C*)p)->list_B4[i];
+                        PI(0x1C4) = (int)((Win_8003422C*)p)->list_B4[PI(0x78)];
                         for (i = 0x2F, q = (signed char*)p + i; i >= 0; i--, q--)
                         {
                             q[0x1E4] = c;
@@ -784,7 +786,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         break;
     }
-    switch (p[4])
+    switch ((unsigned int)p[4])
     {
     case 0:
         break;
