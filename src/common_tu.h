@@ -32,6 +32,14 @@ typedef struct BattleCmd
     int targets_C; // target unit bits
 } BattleCmd;
 
+extern unsigned char sealRatioThresholds_800793C4[4];
+extern unsigned char sealOutcomeTable_800793C8[5][4];
+extern const char* battleHelpTexts_800793DC[41];
+extern int dword_80079480[16];
+extern int dword_800794C0[16];
+extern int dword_80079500[8];
+extern int dword_80079520[32];
+
 void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out);
 int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out); // out is unused

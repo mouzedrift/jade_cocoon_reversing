@@ -1445,7 +1445,7 @@ extern BattleCmd unitReactions_800C9CC8[7];
 extern short unitHpDamage_800C9D38[8];
 extern short unitMpDamage_800C9D48[8];
 extern int unitResultFlags_800C9D58[7];
-extern int helpWindowText_800C9D74;
+extern const char* helpWindowText_800C9D74;
 extern short hitSfx_800C9D78;
 extern int btlExecLoad_800C9D7C;
 extern short deathSfx_800C9D80;
@@ -1560,7 +1560,6 @@ extern void DrawTextLinesWindow_8002AE38(int* lines, short* pos, int ot, short* 
 /* exe-side, to move to globals.h / data_decls.h */
 /* exe-side: main.h declares it (main.h itself conflicts with battle.h types) */
 extern unsigned short uiColor_8008B590;
-extern int battleHelpTexts_800793DC[];
 
 /* battle_6.c: the enemy AI scripts and battle menu steps its tables (enemyAi_800C9204, menuStateFns_800C966C) point to */
 int EnemyAi00_800C4D38(EnemyAi* ai);

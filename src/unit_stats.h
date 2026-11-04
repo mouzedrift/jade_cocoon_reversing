@@ -50,7 +50,7 @@ extern const char helpEscape_80071EAC[];
 extern const char helpUseItem_80071EC0[];
 extern const char helpDefend_80071ED0[];
 extern const char helpAttackMenu_80071EF0[];
-extern const int dword_80071F00;
+extern const char helpEmpty_80071F00[];
 extern const int dword_80071F04;
 
 // the event lists of the game's tasks (CreateEventList_800435B4)

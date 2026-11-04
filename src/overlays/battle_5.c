@@ -282,7 +282,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
     win->from_4[1] = 0x88;
     pos[0] = win->from_4[0] + 2;
     pos[1] = win->from_4[1] + 3;
-    DrawText_8003E91C(2, (void*)helpWindowText_800C9D74, pos, 0);
+    DrawText_8003E91C(2, helpWindowText_800C9D74, pos, 0);
     if (battleHelpTexts_800793DC[9] == helpWindowText_800C9D74)
     {
         pos[0] += width;
