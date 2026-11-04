@@ -1,7 +1,7 @@
 #ifndef DATA_DECLS_H
 #define DATA_DECLS_H
 
-/* data that is still defined by the original asm (asm/d); see scripts/split.py */
+/* declarations of game data that is defined in the TU files */
 
 extern char heapStart_800CD858[2*1024];
 extern unsigned char pads_800918E8[2][9];

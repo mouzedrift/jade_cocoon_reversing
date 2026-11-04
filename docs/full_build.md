@@ -66,6 +66,25 @@ addresses the objects don't export (statics, data inside a module) become `equ`s
   `symbol_addrs.txt` (`sub_8001C314`, `CopyHalfwords_800403A8` were found like this).
 * `sym_diff.py` shows the first symbol that drifts: the one before it has the wrong size.
 
+## Data in C
+
+The executable's data is C: each TU file defines its `.rdata` (`const`), `.data` and `.bss` in address order, with
+the externs in the TU's header. Only the jump tables of functions that are still asm stay `INCLUDE_DATA`.
+
+* `python scripts/gendata.py SLUS_008.54 TU [--sec=.rdata|.data|.bss] [--write]` turns a TU's `INCLUDE_DATA` lines
+  into definitions with initialisers from the executable. The type is the one the code declares (the TU's
+  preprocessed source, or an extern in another file, which then moves to the TU's header), else it is guessed from
+  the bytes (strings, pointer tables, `byte_`/`word_`/`dword_`); pointers become references to their symbols.
+* `.bss` variables are `T name BSS = 0;` (`= { 0 }` for aggregates, `BSS` is in `common.h`): without the zero
+  initialiser a variable that the file also declares `extern` becomes a common symbol, and psylink aligns all
+  `.bss` to 8 bytes once there are commons. With it the compiler puts the variable in place, into `.bss`.
+* An `INCLUDE_DATA` must not stay between C definitions of the same section: the included assembly switches
+  sections without the compiler knowing, so the next C definition lands in `.text`.
+* Names the code has for a place inside a C object (`playerYan_8008B594` is `saveData_8008B570.inv_24`) are link
+  time equates of their address: `config/aliases.txt` (build.py).
+* Which TU a `.data`/`.bss` symbol belongs to: `scripts/data_owners.py` (the first TU whose code uses it, in link
+  order) moves `INCLUDE_DATA` lines; main.c keeps the big `.bss` run that code all over the game uses.
+
 ## Overlays
 
 `python scripts/overlays.py NAME <iso>.bin SLUS_008.54 [--discover] [--init-src]` extracts the overlay
