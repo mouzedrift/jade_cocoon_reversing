@@ -62,8 +62,6 @@ extern void PoolFree_800400B4(Pool* h, void* p);
 extern void* ListAlloc_8003FDC0(List* l, int size);
 extern void ListFree_8003FE38(void* arg0, void* arg1);
 
-INCLUDE_DATA(dword_80098198);
-INCLUDE_DATA(dword_80098688);
 
 // Matched
 void DrawNumber_8003EF74(int a0, int a1, int a2)

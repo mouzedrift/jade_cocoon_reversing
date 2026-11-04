@@ -2865,3 +2865,8 @@ void sub_8001EA28(void* arg0)
 {
     sub_8001EA48(arg0);
 }
+
+INCLUDE_DATA(primBufferStart_800960A0);
+INCLUDE_DATA(dword_800960A4);
+INCLUDE_DATA(primAllocPtr_800960A8);
+INCLUDE_DATA(dword_800960AC);

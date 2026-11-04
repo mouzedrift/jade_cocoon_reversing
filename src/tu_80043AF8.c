@@ -16,10 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_80098690);
-INCLUDE_DATA(dword_800986A0);
-INCLUDE_DATA(dword_800987D8);
-INCLUDE_DATA(dword_8009AAD8);
 
 // Matched
 EventEntry* AllocEventEntry_80043AF8(EventNode* n)
@@ -351,3 +347,7 @@ void sub_8004AD44(MATRIX* in, VECTOR* out)
     OuterProduct12((VECTOR*)&v[0], (VECTOR*)&v[3], &r);
     VectorNormal(&r, out);
 }
+
+INCLUDE_DATA(dword_80096120);
+INCLUDE_DATA(dword_80096130);
+INCLUDE_DATA(dword_80096628);

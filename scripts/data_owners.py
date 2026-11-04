@@ -2,7 +2,7 @@
 """
 Which TU a data symbol that is still INCLUDE_DATA belongs to, by the code that uses it.
 
-  python scripts/data_owners.py SLUS_008.54 [--sec=.data|.bss] [--write]
+  python scripts/data_owners.py SLUS_008.54 [--sec=.data|.bss] [--keep=TU,...] [--write]
 
 split.py gives a data symbol to the smallest TU that references anything at or after it, which puts whole runs
 of .data/.bss into the first TU that uses something late in the run (main.c had all of the .bss). Here a symbol
@@ -93,15 +93,18 @@ def main(argv):
         return bisect.bisect_right(starts, a) - 1
     refs = references(exe, funcs)
     # the INCLUDE_DATA symbols, where they are now
+    # --keep=TU,...: the symbols of these TUs stay where they are
+    keep = set(",".join(x.split("=", 1)[1] for x in argv if x.startswith("--keep=")).split(",")) - {""}
     where = {}
     for tu, _ in tus:
         for n in gendata.tu_data(tu):
-            where[n] = tu
+            if tu not in keep:
+                where[n] = tu
     s = gendata.Syms(exe)
     # data that is C already stays where it is: (address, TU index) per section
     fixed = {".rdata": [], ".data": [], ".bss": []}
     for tu, _ in tus:
-        for n in c_definitions(tu):
+        for n in c_definitions(tu) + (gendata.tu_data(tu) if tu in keep else []):
             a = s.addr.get(n)
             for sec, lo, hi in ((".rdata", RDATA_START, RDATA_GAME_END), (".data", DATA_START, DATA_GAME_END),
                                 (".bss", BSS_START, BSS_GAME_END)):
