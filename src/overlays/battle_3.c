@@ -262,7 +262,7 @@ void ApplyBattleCommand_800BEBB8()
                     unitReactions_800C9CC8[i].kind_0 = 5;
                     unitReactions_800C9CC8[i].arg_4 = res.arg_2;
                     curCommand_800C9C88.arg_4 = res.arg_2;
-                    if (sub_80013358(res.arg_2) == 1)
+                    if (GetSealResultFlags_80013358(res.arg_2) == 1)
                     {
                         MarkSpeciesCaptured_800BF9F0(GetEnemySpecies_800A2BE4(i - 4));
                         if (GetCapturedMinionsFromBitfield_8003BA58(GetEnemyAliveMask_800A248C()) == 1)
@@ -1323,8 +1323,8 @@ int CreateSummonedMinionActor_800C0BF0()
     s.hasMatrices_4C = 1;
     summonedActor_800C9190.actor_0 = CreateActor_8001D45C(&s);
     SetActorGroundMove_8001D68C(summonedActor_800C9190.actor_0, 0);
-    x = sub_80024F00(m, k);
-    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, sub_80024F38(m, k));
+    x = GetModelBoneGroupLevels_80024F00(m, k);
+    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, GetModelBoneGroupFlags_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1337,12 +1337,12 @@ int GetSummonedMinionSlot_800C0D50()
 
 int IsSummonedMinionIdle_800C0D60()
 {
-    return sub_8001E1C8((void*)summonedActor_800C9190.actor_0);
+    return IsActorIdle_8001E1C8((void*)summonedActor_800C9190.actor_0);
 }
 
 int IsSummonedMinionReady_800C0D88()
 {
-    return sub_8001E1DC(summonedActor_800C9190.actor_0);
+    return IsActorActionReady_8001E1DC(summonedActor_800C9190.actor_0);
 }
 
 void TurnSummonedMinionToward_800C0DB0(int pos)
@@ -1461,7 +1461,7 @@ void SeqStopTask_800C106C(unsigned int* flags, BatSeqStop_a* u)
 
 void PlayTimedSeq_800C10B8(int frames, int slot)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && e)
     {
         BatSeqStop_a* q;
@@ -1485,7 +1485,7 @@ void SfxStopTask_800C1140(unsigned int* flags, BatSfxStop_a* u)
 
 void PlayTimedSfx_800C1190(int frames, int sfx)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && e)
     {
         BatSfxStop_a* q;
@@ -1569,7 +1569,7 @@ void DropTrailTask_800C1450(EventEntry* t, BatDropSrc_a* u)
             u->count_0++;
             for (i = 0; i < 3; i++)
             {
-                e = AllocEventEntry_80043AF8(dword_8008D60C);
+                e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
                 if (e)
                 {
                     e->flags = (e->flags | 1) & 0xFFFF7FFF;
@@ -1613,7 +1613,7 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
     int i;
     for (i = 0; i < 30; i++)
     {
-        EventEntry* ev = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* ev = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (ev)
         {
             BatSpark_a* b = ev->buffer;
@@ -1678,7 +1678,7 @@ void HomingSparkTask_800C17EC(EventEntry* t, BatSpark_a* u)
 
 void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (e)
     {
         BatSpark_a* b;
@@ -1726,7 +1726,7 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
     int i;
     for (i = 0; i < 16; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             BatSpark_a* b = e->buffer;
@@ -1791,7 +1791,7 @@ void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int
     int i;
     for (i = 0; i < n; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             BatSpark_a* b = e->buffer;
@@ -1869,7 +1869,7 @@ void ShatterTask_800C23D0(EventEntry* t, BatSpark_a* u)
         SpawnSpriteAnim_800C1A5C(u->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
-            e = AllocEventEntry_80043AF8(dword_8008D60C);
+            e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
             if (e)
             {
                 b = e->buffer;
@@ -1949,7 +1949,7 @@ void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
     int a;
     int n;
     int s[3];
-    e = AllocEventEntry_80043AF8(dword_8008D60C);
+    e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (e)
     {
         b = e->buffer;
@@ -1964,7 +1964,7 @@ void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
     }
     for (i = 0; i < 8; i++)
     {
-        e = AllocEventEntry_80043AF8(dword_8008D60C);
+        e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             b = e->buffer;
@@ -4625,7 +4625,7 @@ void AdvanceMenuPage_800C7A6C()
         break;
     case 2:
         h = GetUnitSkills_80031B30(actingUnit_800C9C7C);
-        targetFlags_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
+        targetFlags_800C9E68 = GetSkillTargetFlags_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
         menuPage_800C9E50 = 4;
         menuCommand_800C9E58.arg_4 = GetSelectedSkill_800C79EC();
         break;
@@ -4883,7 +4883,7 @@ void PreviewCommandResult_800C83B0()
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
-                if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
+                if (IsDrainAction_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
                 {
                     previewHpChange_800C9180 -= d.actorHpCost_C;
                     previewMpChange_800C9182 -= d.actorMpCost_10;

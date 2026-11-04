@@ -21,7 +21,7 @@ extern void FirFilterStep_80014588(int* buf, FirFilter* f, unsigned int t);
 
 extern const int dword_80072134;
 
-extern int dword_800795A0[];
+extern int turnFilterCoeffs_800795A0[];
 extern SVECTOR zeroSvector_800795D4;
 extern int effectColorWhite_800795DC;
 extern int effectColorRed_800795E0;

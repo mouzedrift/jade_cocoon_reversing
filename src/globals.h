@@ -309,7 +309,7 @@ extern int battleMusic_80091CFC;
 extern int battleStageId_80083BD0;
 extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
-extern int dword_80079320[];
+extern int sealResultFlags_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern ActionData abilityActions_80083594[];
 extern PadVibration padVibration_80095460[];
@@ -317,7 +317,7 @@ extern int personNames_8007CB20[];
 extern unsigned char personMergeInfo_8007CB4C[][4]; // per person (GetPersonMergeInfo_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
-extern int dword_80091CA0;
+extern int freeActorModels_80091CA0;
 extern int frozenFrames_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
@@ -414,7 +414,7 @@ extern int currentArea_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char armorOutfits_8007D588[16];
-extern int dword_8008B550;
+extern int primBufferOffset_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
 extern unsigned long* decodedImageData_8008B4A0;
@@ -514,7 +514,7 @@ typedef struct
 extern unsigned short buttonConfig_8008B578[];
 extern EventNode* modelTasks_8008D618;
 extern EventNode* effectObjects_8008B4A8;
-extern EventNode* dword_8008D60C;
+extern EventNode* miscTasks_8008D60C;
 extern EventNode* cameraTask_8008D4A0;
 extern EventNode* effectTask_8008D3F8;
 extern EventNode* xaTask_8008B560;
@@ -538,7 +538,7 @@ extern short effectOutcomeFlag_8008D780;
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 
-extern int dword_80091CA0;
+extern int freeActorModels_80091CA0;
 
 extern int loadFade_80091C30[];
 

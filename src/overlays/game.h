@@ -252,7 +252,7 @@ extern void FindMapEntrance_800ADCEC();
 
 extern void SetEventFlag_800AD0F8(unsigned a);
 
-extern int dword_80091C54;
+extern int mapStartMode_80091C54;
 
 extern int forceMapReload_80091C9C;
 
@@ -480,7 +480,7 @@ typedef struct GameRect_1
 // the animated map tile layers' work area (DrawTileAnimLayers_800A0A5C), in the scratchpad at 0x1F800214
 typedef struct TileAnimScratch
 {
-    unsigned int i_0; // the layer (dword_8008D648.lists_14 index)
+    unsigned int i_0; // the layer (tileAnim_8008D648.lists_14 index)
     POLY_FT4 ft4_4;   // a cell, zoomed
     SPRT sprt_2C;     // a cell at zoom 0x1000
     DR_TPAGE tpage_40;
@@ -488,7 +488,7 @@ typedef struct TileAnimScratch
     short y0_4A;
     short x1_4C;
     short y1_4E;
-    short cx_50; // the view centre (stru_8008D420)
+    short cx_50; // the view centre (viewport_8008D420)
     short cy_52;
     int zoom_54; // cameraZoom_8008B4F8
     int ox_58;   // screen offset of the view centre
@@ -500,7 +500,7 @@ typedef struct TileAnimScratch
 } TileAnimScratch;
 #define TILE_ANIM_SCRATCH ((TileAnimScratch*)getScratchAddr(0x85))
 extern ShortPair screenOffset_8008D474;
-extern struct_8008D648 dword_8008D648;
+extern struct_8008D648 tileAnim_8008D648;
 extern void DrawTileAnimLayers_800A0A5C(short* q);
 
 extern int GameFn_8003B9E0(int* a, int* b);
@@ -535,7 +535,7 @@ extern void InitLevantActor_800A94CC(void);
 
 extern EventNode* eventEntities_8008D400;
 
-extern GameRect_1 stru_8008D420;
+extern GameRect_1 viewport_8008D420;
 
 extern int useMapStartPos_80091C94;
 

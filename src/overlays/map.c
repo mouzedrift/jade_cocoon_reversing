@@ -12,7 +12,7 @@ extern int IsDestOpen_800B8290(MapPos*);
 
 extern MapEntry** mapTable_800B0608[];
 extern int dword_800B0624[];
-extern int dword_80091C54;
+extern int mapStartMode_80091C54;
 extern void DrawCursorHand_8003D034(void*, int);
 #define SEL dword_800AEBFC[word_800AEBF8.a]
 extern int GetMenuCursorIndex_8003DA54(void*);
@@ -955,7 +955,7 @@ void SceneSelect_800B860C()
             saveData_8008B570.mapId_2E4[1].field_2 = -1;
             saveData_8008B570.mapId_2E4[2].field_2 = -1;
             useMapStartPos_80091C94 = 1;
-            dword_80091C54 = 0;
+            mapStartMode_80091C54 = 0;
             sub_800A8DEC();
             RequestGameMode_800A6D30(1);
             SetFadeMode_8001C19C(0, 0x20);

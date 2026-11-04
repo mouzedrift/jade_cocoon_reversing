@@ -84,7 +84,7 @@ int IsCurrentMapListed_80034140(void)
         if (list)
         {
             i = 0;
-            if (list == off_800837D8)
+            if (list == mapLists4_800837D8)
             {
                 target = sd->mapId_2E4[3].field_0;
             }

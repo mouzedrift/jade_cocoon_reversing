@@ -53,7 +53,7 @@ extern int IsMinionSlotEmpty_800A1934(Minion* p);
 extern void ResetCameraToLevant_800376A8(void);
 extern void StartBattleCamera_80037748(void);
 extern void InitCameraTask_800368F8(void);
-extern void nullsub_5(void);
+extern void FreeCameraTask_800376A0(void);
 extern void ResetCombatCamera_800A12B8(void);
 typedef struct CombatLocalCombat
 {
@@ -104,7 +104,7 @@ typedef struct CombatReq2Combat
 extern CombatShortPair_combat dword_8007DCAC[];
 extern CombatShortPair_combat dword_8007DCBC[];
 extern short dword_80084540[];
-extern Minion dword_8008BEF8[];
+extern Minion saveMinions_8008BEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
 extern void ClearMinionSlot_800A197C(Minion* p);
@@ -382,8 +382,8 @@ void CreateSlotActor_800A0BA8(int i, int* src, short* sh)
     r.effectTbl_44 = GetModelEffectTable_80024E64(h);
     r.hasMatrices_4C = 1;
     s->actor_3C = CreateActor_8001D45C(&r);
-    x = sub_80024F00(h, v);
-    y = sub_80024F38(h, v);
+    x = GetModelBoneGroupLevels_80024F00(h, v);
+    y = GetModelBoneGroupFlags_80024F38(h, v);
     SetBoneGroupFlags_80019B14(s->actor_3C->bones_134, x, y);
     SetActorGroundMove_8001D68C(s->actor_3C, 0);
 }
@@ -456,14 +456,14 @@ void MoveSlotActorTo_800A0E1C(int i, int* src)
 void sub_800A0EE8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    sub_8001E1C8(s->actor_3C);
+    IsActorIdle_8001E1C8(s->actor_3C);
 }
 
 // Matched
 void sub_800A0F1C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    sub_8001E1DC(s->actor_3C);
+    IsActorActionReady_8001E1DC(s->actor_3C);
 }
 
 // Matched
@@ -577,7 +577,7 @@ void StartCombatCamera_800A11F4(void)
         ResetCameraToLevant_800376A8();
         StartBattleCamera_80037748();
         e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
-        e->cb_C = (EventEntryFn)nullsub_5;
+        e->cb_C = (EventEntryFn)FreeCameraTask_800376A0;
         e->flags = (e->flags | 4) & ~0x8000;
         ResetCombatCamera_800A12B8();
     }
@@ -871,7 +871,7 @@ void CopySaveMinionsToRoster_800A1988(void)
     rosterFill_800A38DA = 0;
     for (i = 0; i < 15; i++)
     {
-        MemCopy_800403E8(&rosters_800A1BC8[curPlayer_800A38D9][rosterFill_800A38DA], &dword_8008BEF8[i], 0xF8);
+        MemCopy_800403E8(&rosters_800A1BC8[curPlayer_800A38D9][rosterFill_800A38DA], &saveMinions_8008BEF8[i], 0xF8);
         rosterFill_800A38DA++;
     }
 }

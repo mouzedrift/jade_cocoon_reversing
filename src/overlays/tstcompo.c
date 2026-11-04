@@ -684,8 +684,8 @@ void TstCompoInitBones_800A1AFC(TstCompoWork* a)
         a->bones_C[i] = defaultBones_80079140[i];
     }
     a->bones_C[i] = defaultBones_80079140[i];
-    r = sub_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
-    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
+    r = GetModelBoneGroupLevels_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
+    SetBoneGroupFlags_80019B14(a->bones_C, r, GetModelBoneGroupFlags_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
 // Matched

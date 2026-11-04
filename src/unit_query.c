@@ -25,7 +25,7 @@
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
 
 // Matched
-int sub_80031A94(int* p)
+int GetSkillCommandTargetFlags_80031A94(int* p)
 {
     int r = 2;
     UnitSkill* base;
@@ -42,7 +42,7 @@ int sub_80031A94(int* p)
     return r;
 }
 // Matched
-int sub_80031B0C(UnitSkill* base, int idx)
+int GetSkillTargetFlags_80031B0C(UnitSkill* base, int idx)
 {
     int r = 4;
     base += idx;
@@ -756,7 +756,7 @@ UnitStatus* GetMinionStatusOf_80033818(Minion* p)
     return &p->status_84;
 }
 // Matched
-unsigned char* sub_80033820(Minion* p)
+unsigned char* GetMinionStatBlockOf_80033820(Minion* p)
 {
     return p->field_CC.cur_0;
 }

@@ -594,7 +594,7 @@ void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
         break;
     case 2:
         TriggerEnemyEffects_800A2760(cmd, isReaction);
-        if (cmd->kind_0 == 0x13 || cmd->kind_0 == 0xB || cmd->kind_0 == 7 || (cmd->kind_0 == 5 && sub_80013358(cmd->arg_4) == 1) || (cmd->kind_0 == 0x1A && sub_80013358(cmd->arg_4) == 1))
+        if (cmd->kind_0 == 0x13 || cmd->kind_0 == 0xB || cmd->kind_0 == 7 || (cmd->kind_0 == 5 && GetSealResultFlags_80013358(cmd->arg_4) == 1) || (cmd->kind_0 == 0x1A && GetSealResultFlags_80013358(cmd->arg_4) == 1))
         {
             removedEnemies_800C9DD0[removedEnemyCount_800C9D90] = unit - 4;
             removedEnemyCount_800C9D90++;
@@ -707,7 +707,7 @@ void UpdateAction_800BE3C0()
         }
         if (areaElement_800C9D84 != shownAreaElement_800C9D82)
         {
-            sub_80039ED8(areaElement_800C9D84);
+            SetAreaElementLight_80039ED8(areaElement_800C9D84);
             shownAreaElement_800C9D82 = areaElement_800C9D84;
         }
     }
@@ -718,7 +718,7 @@ void UpdateAction_800BE3C0()
             if (actingUnit_800C9C7C != i)
             {
                 BatCmd_a* s = &unitReactions_800C9CC8[i];
-                if ((s->kind_0 == 5 && sub_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && sub_80013358(s->arg_4) == 1))
+                if ((s->kind_0 == 5 && GetSealResultFlags_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && GetSealResultFlags_80013358(s->arg_4) == 1))
                 {
                     AddEnemyItem_800A2898(i - 4);
                 }

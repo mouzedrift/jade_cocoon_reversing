@@ -2432,7 +2432,7 @@ int CheckMenuAction_800BF540(MenuCtx* c)
         s = GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         if (TestValuableFlag_800AD73C(s) == 0)
             return 3;
-        if (sub_8001D36C(s))
+        if (IsKnowledgeKeyItem_8001D36C(s))
             return 0xE;
         if (s)
             v = IsTriggerWaited_800A5E80(s);
@@ -3127,7 +3127,7 @@ int IsKeyItemUsable_800C0C3C(void* a)
     int r;
     if (a)
     {
-        if (sub_8001D36C((int)a))
+        if (IsKnowledgeKeyItem_8001D36C((int)a))
             return 1;
         r = IsTriggerWaited_800A5E80(a);
     }

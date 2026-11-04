@@ -22,11 +22,11 @@
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";
 const int dword_80072134 = 0x80E8E8;
-int dword_800795A0[12] = {
+int turnFilterCoeffs_800795A0[12] = {
     0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200,
     0x400, 0x400, 0x400, 0x400,
 };
-short dword_800795D0[2] = { 0 };
+short effectVramOrigin_800795D0[2] = { 0 };
 SVECTOR zeroSvector_800795D4 = { 0 };
 int effectColorWhite_800795DC = 0xFFD6D6;
 int effectColorRed_800795E0 = 0x6B00FF;
@@ -346,7 +346,7 @@ void InitEffectTask_80014618(EventEntry* p, EffectTaskState* q)
     q->state_2C = 0;
     p->cb_8 = (EventEntryFn)UpdateEffectTask_80014638;
 }
-extern short dword_800795D0[];
+extern short effectVramOrigin_800795D0[];
 extern short effectFileTable_800795F0[];
 int CountActiveEffectObjects_800147FC(void);
 // Matched
@@ -371,7 +371,7 @@ void UpdateEffectTask_80014638(EventEntry* p, void* buf)
             {
                 q->idx_38 = 0x12;
             }
-            LoadEffectFile_80020DDC(effectFileTable_800795F0[q->idx_38 * 2], &effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            LoadEffectFile_80020DDC(effectFileTable_800795F0[q->idx_38 * 2], &effectFile_80091BD0, effectVramOrigin_800795D0, effectVramOrigin_800795D0, 0, 0);
             q->state_2C = 1;
         }
         break;
@@ -427,7 +427,7 @@ int CountActiveEffectObjects_800147FC(void)
         }
         n = n->next;
     }
-    head2 = dword_8008D60C;
+    head2 = miscTasks_8008D60C;
     j = 0;
     count = head2->count;
     for (n2 = head2; j < count; j++)

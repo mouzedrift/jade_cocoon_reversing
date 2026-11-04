@@ -1019,7 +1019,7 @@ extern int sub_800A0EE8(int i);
 extern int sub_800A0F1C(int i);
 extern CombBtlPair sub_800A0F50(int i, CombBtlCmd* cmd, int x);
 extern void TriggerSlotEffect_800A0FF0(int i, CombBtlCmd* cmd, int x);
-extern void sub_80039ED8(int mode);
+extern void SetAreaElementLight_80039ED8(int mode);
 extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 extern int rand();
 extern void PlaySfx_80031494(int id);
@@ -1088,7 +1088,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
                 }
                 if (newStageElement_800A84A0 != stageElement_800A8498)
                 {
-                    sub_80039ED8((short)newStageElement_800A84A0);
+                    SetAreaElementLight_80039ED8((short)newStageElement_800A84A0);
                     stageElement_800A8498 = newStageElement_800A84A0;
                 }
             }
@@ -1304,7 +1304,7 @@ void StartArenaCamera_800A7290()
         StartBattleCamera_80037748();
         e[2] = (int)InitCameraTask_800368F8;
         cameraZoom_8008B4F8 = 0x1000;
-        e[3] = (int)nullsub_5;
+        e[3] = (int)FreeCameraTask_800376A0;
         e[0] = (e[0] | 4) & ~0x8000;
         p = (char*)cameraState_8008D4F0;
         *(short*)(p + 0x2E) = 0;

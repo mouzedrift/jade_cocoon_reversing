@@ -328,7 +328,7 @@ extern void FindMapEntrance_800ADCEC(unsigned short* v, int a);
 
 extern int forceMapReload_80091C9C;
 
-extern int dword_80091C54;
+extern int mapStartMode_80091C54;
 
 extern int UsePreloadedArea_80027358(int a);
 

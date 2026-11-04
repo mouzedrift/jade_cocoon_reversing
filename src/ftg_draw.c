@@ -842,7 +842,7 @@ void GetAnimRootMotion_8004D288(int* out, struct_tbl18* s, int k)
     out[2] = s->field_18[i * 3 + 2];
 }
 // Matched
-void sub_8004D2EC(short* out, struct_tbl18* s, int k)
+void GetAnimRootRot_8004D2EC(short* out, struct_tbl18* s, int k)
 {
     int i = k * (s->n + 2) + 1;
     out[0] = s->field_18[i * 3];
@@ -867,9 +867,9 @@ void GetAnimBoneRot_8004D354(short* out, struct_tbl18* s, int j, int k)
     out[1] = s->field_18[i * 3 + 1];
     out[2] = s->field_18[i * 3 + 2];
 }
-/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
-extern short asc_80084350[];
-#define SIN_TABLE (asc_80084350 + 0xF8)
+/* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
+extern short battleCamSpline1Tail_80084350[];
+#define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
 // Matched
 void RotMatrixXYZ_8004D3D8(SVECTOR* r, MATRIX* m)
 {

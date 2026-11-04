@@ -14,7 +14,7 @@ typedef struct ChapterVec
 } ChapterVec;
 
 extern int dword_800B0624[6];
-extern int dword_80091C54;
+extern int mapStartMode_80091C54;
 extern int useMapStartPos_80091C94;
 extern int eventDispatchHalt_8008B540;
 extern void sub_800AD16C(int, int);
@@ -169,7 +169,7 @@ void EnterChapterMap_800B6B18()
     ChapterEntry* e = &chapterTable_800B6FE0[s->chapter_2DC];
     ChapterVec v;
     sub_800ADCEC(&v, e->startPoint_4);
-    dword_80091C54 = 0;
+    mapStartMode_80091C54 = 0;
     s->chapterNext_2DE = s->chapter_2DC + 1;
     s->field_2E0 = e->field_0;
     useMapStartPos_80091C94 = 1;

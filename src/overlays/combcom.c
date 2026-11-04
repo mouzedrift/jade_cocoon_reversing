@@ -567,7 +567,7 @@ void DrawCmdMenu_800CBEA4()
 // Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
 
 extern int ResolveBattleAction_80012BB0(void* a, void* b, void* c, int* d);
-extern int sub_80013228(void* a, void* b, void* c, int* d);
+extern int IsDrainAction_80013228(void* a, void* b, void* c, int* d);
 extern int CheckMagicUsable_80034068(short* p);
 void PreviewCmdEffect_800CC40C()
 {
@@ -588,7 +588,7 @@ void PreviewCmdEffect_800CC40C()
             {
                 t = GetUnitStatus_80014390((unsigned char)(i + 8));
                 ResolveBattleAction_80012BB0(src, t, cmd_800CD840, out);
-                if (!sub_80013228(src, t, cmd_800CD840, out))
+                if (!IsDrainAction_80013228(src, t, cmd_800CD840, out))
                 {
                     bit = 1 << i;
                     if (cmd_800CD840->mask_8 & bit)
@@ -880,7 +880,7 @@ int GetDefaultTargets_800CCD84()
 }
 
 extern int GetSlotSkills_800A11A0(int);
-extern int sub_80031B0C(int, int);
+extern int GetSkillTargetFlags_80031B0C(int, int);
 extern int GetMagicTargetFlags_8001ACE4(int);
 // Confirm: takes the highlighted entry and moves to the next menu state
 void AdvanceCmdMenu_800CCDD0()
@@ -896,7 +896,7 @@ void AdvanceCmdMenu_800CCDD0()
         break;
     case 1:
         v = GetSlotSkills_800A11A0(side_800CD839);
-        targetFlags_800CD844 = sub_80031B0C(v, GetSelectedSkill_800CBC28());
+        targetFlags_800CD844 = GetSkillTargetFlags_80031B0C(v, GetSelectedSkill_800CBC28());
         menuState_800CD83A = 4;
         cmd_800CD840->arg_4 = GetSelectedSkill_800CBC28();
         break;

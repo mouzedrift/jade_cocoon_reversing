@@ -646,8 +646,8 @@ void SpawnEncounterEnemy_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, i
         s.effectTbl_44 = GetModelEffectTable_80024E64(model);
         s.hasMatrices_4C = 0;
         actor = CreateActor_8001D45C(&s);
-        x = sub_80024F00(model, k);
-        SetBoneGroupFlags_80019B14(actor->bones_134, x, sub_80024F38(model, k));
+        x = GetModelBoneGroupLevels_80024F00(model, k);
+        SetBoneGroupFlags_80019B14(actor->bones_134, x, GetModelBoneGroupFlags_80024F38(model, k));
         e.f0 = 2;
         e.f4 = 3;
         e.f8 = 1;
@@ -1777,7 +1777,7 @@ int EvCmdChangeMapToPoint_800BA9E4(EvCtxEventfnc* c)
     SaveData* s;
     FindMapEntrance_800ADCEC(v, c->pc_8->b_8);
     forceMapReload_80091C9C = 1;
-    dword_80091C54 = 0;
+    mapStartMode_80091C54 = 0;
     useMapStartPos_80091C94 = 1;
     s = &saveData_8008B570;
     s->mapId_2E4[0].field_0 = v[0];

@@ -55,7 +55,7 @@ void StopAllEventScripts_800A58B4(void)
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
-        r = &stru_8008D420;
+        r = &viewport_8008D420;
         r->x = 0;
         r->w = 0x140;
         r->y = 0;
@@ -355,7 +355,7 @@ void WarpAfterLostBattle_800A5FAC(void)
         FindMapEntrance_800ADCEC(&v, GetSetReturnEntrance_800A683C(-1));
         SetEventFlag_800AD0F8(0);
         useMapStartPos_80091C94 = 1;
-        dword_80091C54 = 0;
+        mapStartMode_80091C54 = 0;
         sd->mapId_2E4[3].field_0 = 0;
         forceMapReload_80091C9C = 1;
         dword_80091C8C = 0;
@@ -988,7 +988,7 @@ GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out)
 
 void ResetFieldState_800A73A8(void)
 {
-    GameRect_1* r = &stru_8008D420;
+    GameRect_1* r = &viewport_8008D420;
     sceneBrightness_8008D40C = 0x1000;
     unpausedFrames_8008D404 = 0;
     r->x = 0;
@@ -1317,14 +1317,14 @@ void ResumeFieldMinions_800A7BF0(int a)
 int sub_800A7CB8(int a)
 {
     if (a < GetFieldMinionCount_800A7790())
-        return sub_8001E1C8(GetFieldMinion_800A77F4(a)->cb_14.actor_4);
+        return IsActorIdle_8001E1C8(GetFieldMinion_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
 int sub_800A7CFC(int a)
 {
     if (a < GetFieldMinionCount_800A7790())
-        return sub_8001E1DC(GetFieldMinion_800A77F4(a)->cb_14.actor_4);
+        return IsActorActionReady_8001E1DC(GetFieldMinion_800A77F4(a)->cb_14.actor_4);
     return 0;
 }
 
@@ -3426,8 +3426,8 @@ void sub_800ABCF4(G2Act* p)
     {
         p->f2C = 0x25;
         RequestEffect_800148F4(0x25);
-        sub_80013358(p->f34);
-        word_8008D782 = sub_80013358(p->f34);
+        GetSealResultFlags_80013358(p->f34);
+        word_8008D782 = GetSealResultFlags_80013358(p->f34);
     }
     else if (p->s20 == 0x1A)
     {
@@ -5269,7 +5269,7 @@ GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
     { &effectTask_8008D3F8 },
     { (void *)&dword_8008D5F8 },
     { &effectObjects_8008B4A8 },
-    { &dword_8008D60C },
+    { &miscTasks_8008D60C },
     { (void *)((char *)&dword_8008D48C + 4) },
 };
 GameLst_1 gameModeBattleEndTasks_800B0C14[4] = {

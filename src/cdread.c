@@ -275,7 +275,7 @@ void DrawLoadingIcon_8003CD5C(void)
     DrawPublicTiySprt_80033080(pos, n, 0);
 }
 // Matched
-void sub_8003CE18(short x, short y)
+void DrawBlinkSprite_8003CE18(short x, short y)
 {
     SPRT* s;
     unsigned int f = (unsigned int)frameCount_8008D3FC % 150;

@@ -91,7 +91,7 @@ typedef struct ActionData
     unsigned char c5;
     unsigned char c6;
     unsigned char c7;
-    unsigned char c8; // sub_80013228 tests it for 8
+    unsigned char c8; // IsDrainAction_80013228 tests it for 8
     char pad_9[3];
 } ActionData;
 

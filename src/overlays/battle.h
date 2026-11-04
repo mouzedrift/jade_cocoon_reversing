@@ -177,7 +177,7 @@ typedef struct BatChain_a
 } BatChain_a;
 extern BatChain_a encounterRecord_800ADE78;
 
-extern int dword_80091C74;
+extern int levantAnimSet_80091C74;
 
 extern int dword_8007DC74;
 
@@ -624,7 +624,7 @@ extern void AddEnemyItem_800A2898(int a);
 
 extern void SetEnemyStatusTint_800A284C(int a);
 
-extern void sub_80039ED8(int a);
+extern void SetAreaElementLight_80039ED8(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
@@ -721,7 +721,7 @@ extern int GetElementModelAngle_800C0904(unsigned char* p);
 
 extern short defaultBones_80079140[]; // default bone table
 
-extern EventNode* dword_8008D60C;
+extern EventNode* miscTasks_8008D60C;
 
 // PlayTimedSeq_800C10B8: stops a seq slot after a delay
 typedef struct BatSeqStop_a
@@ -1038,7 +1038,7 @@ extern int GetItemTargetFlags_8001CE8C(int a);
 
 extern int GetUnitSkills_80031B30(int a);
 
-extern int sub_80031B0C(int a, int b);
+extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
 extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
@@ -1113,7 +1113,7 @@ extern void DrawMenuHelpText_800C8828(int a);
 
 
 
-extern int sub_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern int IsDrainAction_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern unsigned char enemyBits_800C9E72[];
 

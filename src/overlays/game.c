@@ -41,7 +41,7 @@ INCLUDE_OVERLAY_ASM(game, TileAnimTask_800A0A04);
 
 #if 0
 // Not matched: register pressure / spills differ (the original spills the cell pointer and u0 + 31, keeps 0xFFFFFF hoisted; here the tpage value spills); logic complete.
-// Draws the map's animated tile layers (dword_8008D648.lists_14): steps each layer's frame timer, then builds a
+// Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
 // Runs on the scratchpad stack (TileAnimTask_800A0A04); *q & 1 freezes the timers.
 void DrawTileAnimLayers_800A0A5C(short* q)
@@ -62,10 +62,10 @@ void DrawTileAnimLayers_800A0A5C(short* q)
     setSprt(&s->sprt_2C);
     setDrawTPage(&s->tpage_40, 0, 1, 0);
     s->zoom_54 = cameraZoom_8008B4F8;
-    s->cx_50 = stru_8008D420.x + stru_8008D420.w / 2;
-    s->cy_52 = stru_8008D420.y + stru_8008D420.h / 2;
-    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
-    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
+    s->cx_50 = viewport_8008D420.x + viewport_8008D420.w / 2;
+    s->cy_52 = viewport_8008D420.y + viewport_8008D420.h / 2;
+    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
     b = (sceneBrightness_8008D40C << 7) >> 12;
     s->ft4_4.r0 = b;
     s->ft4_4.g0 = b;
@@ -83,10 +83,10 @@ void DrawTileAnimLayers_800A0A5C(short* q)
         s->sprt_2C.code = 0x64;
         s->ft4_4.code = 0x2C;
     }
-    for (s->i_0 = 0; s->i_0 < dword_8008D648.listCount_10; s->i_0++)
+    for (s->i_0 = 0; s->i_0 < tileAnim_8008D648.listCount_10; s->i_0++)
     {
-        list = &dword_8008D648.lists_14[s->i_0];
-        st = &dword_8008D648.pairs_18[s->i_0];
+        list = &tileAnim_8008D648.lists_14[s->i_0];
+        st = &tileAnim_8008D648.pairs_18[s->i_0];
         if (list->count >= 2)
         {
             if (!(*q & 1))
@@ -106,7 +106,7 @@ void DrawTileAnimLayers_800A0A5C(short* q)
         s->set_70 = list->items[(unsigned short)st->b].a;
         s->clut_74 = list->items[(unsigned short)st->b].b;
         s->time_78 = list->items[(unsigned short)st->b].c & 0x7F;
-        s->tiles_60 = dword_8008D648.items_C[s->set_70];
+        s->tiles_60 = tileAnim_8008D648.items_C[s->set_70];
         cells = s->tiles_60.items;
         if (list->items[(unsigned short)st->b].c & 0x80)
         {
@@ -118,8 +118,8 @@ void DrawTileAnimLayers_800A0A5C(short* q)
             setSemiTrans(&s->ft4_4, 0);
             setSemiTrans(&s->sprt_2C, 0);
         }
-        z = ((dword_8008D648.field_4 +
-              (unsigned int)((dword_8008D648.field_8 - dword_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
+        z = ((tileAnim_8008D648.field_4 +
+              (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
              4) &
             0x3FF;
         s->ft4_4.clut = (s->clut_74 + 0x1F0) << 6;
@@ -733,7 +733,7 @@ void SpawnEncounterEnemies_800A1F80(void)
             s.effectTbl_44 = (short (*)[6])GetModelEffectTable_80024E64(m);
             s.hasMatrices_4C = 1;
             a = CreateActor_8001D45C(&s);
-            SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
+            SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)GetModelBoneGroupLevels_80024F00(m, k), (unsigned short*)GetModelBoneGroupFlags_80024F38(m, k));
         }
         a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.activeCount_76C]) & 0xfff] * 1000 / 4096;
         a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
@@ -792,14 +792,14 @@ int IsEnemyAlive_800A24F4(int a)
 int sub_800A2550(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1C8(gCtx_800B1260.actors_7c[a]);
+    return IsActorIdle_8001E1C8(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
 int sub_800A2594(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1DC(gCtx_800B1260.actors_7c[a]);
+    return IsActorActionReady_8001E1DC(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched

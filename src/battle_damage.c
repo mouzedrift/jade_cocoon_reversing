@@ -20,9 +20,9 @@
 
 
 // Matched
-int sub_80013358(int idx)
+int GetSealResultFlags_80013358(int idx)
 {
-    return dword_80079320[idx];
+    return sealResultFlags_80079320[idx];
 }
 typedef struct
 {

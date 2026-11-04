@@ -214,7 +214,7 @@ void DrawSmallNumber9_8002C414(unsigned short* origin, int value, int ot)
     }
 }
 // Matched
-int sub_8002C5A4(int n)
+int CountDigits_8002C5A4(int n)
 {
     do
     {

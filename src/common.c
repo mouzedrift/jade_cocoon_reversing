@@ -23,7 +23,7 @@
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCommonC[] = "COMMON.C";
-int dword_80079320[10] = {
+int sealResultFlags_80079320[10] = {
     1, 0, 1, 0, 5, 7, 11, 13,
     9, 15,
 };
@@ -487,7 +487,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
 }
 // Matched
-int sub_80013228(int a0, int a1, int* p)
+int IsDrainAction_80013228(int a0, int a1, int* p)
 {
     ActionData local = defaultActionData_80071F58;
     ActionData* q = &local;

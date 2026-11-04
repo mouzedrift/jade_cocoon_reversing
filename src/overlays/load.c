@@ -76,7 +76,7 @@ extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* 
 extern void FreeActiveOverlay_8002C014(void);
 extern int sub_800A6D50(int a);
 extern void sub_800A6D30(int a);
-extern int dword_80091C54;
+extern int mapStartMode_80091C54;
 extern int MemCardFormat(long chan);
 extern void ScanCardSaves_800BAFB0(int a);
 extern void _card_stop(void);
@@ -1983,7 +1983,7 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadMenuWork* s)
             m->mapId_2E4[1].field_2 = -1;
             m->mapId_2E4[2].field_2 = -1;
             m->mapId_2E4[3].field_2 = -1;
-            dword_80091C54 = 0;
+            mapStartMode_80091C54 = 0;
             if (!(s->flags_54 & 4))
             {
                 unknownFlags_8008D678 |= 0x18000000;

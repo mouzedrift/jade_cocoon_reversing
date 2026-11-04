@@ -245,9 +245,9 @@ void BattleEndUnload_800BA788(BatTask_a* t)
     SsUtAllKeyOff(0);
     PlayMusic_800300E0(GetBattleMusic_800315E4(), 1);
     LoadLoaderModelAnimSets_80020898();
-    if (dword_80091C74 >= 0)
+    if (levantAnimSet_80091C74 >= 0)
     {
-        LoadLevantAnimSet_800AC708(dword_80091C74, 1);
+        LoadLevantAnimSet_800AC708(levantAnimSet_80091C74, 1);
     }
     eventDispatchHalt_8008B540 = 1;
     t->next_8 = BattleEndReturnToField_800BA848;

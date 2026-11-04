@@ -72,7 +72,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
             FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
             forceMapReload_80091C9C = 1;
             useMapStartPos_80091C94 = 1;
-            dword_80091C54 = 0;
+            mapStartMode_80091C54 = 0;
             dword_80091C8C = 0;
             fieldMode_800B0EC0 = 1;
             s = &saveData_8008B570;

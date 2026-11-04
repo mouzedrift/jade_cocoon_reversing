@@ -771,7 +771,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 if (t->retry < 2)
                 {
                     t->retry++;
-                    dword_8008B550 = 0x3D000;
+                    primBufferOffset_8008B550 = 0x3D000;
                     unknownFlags_8008D678 |= 0x200;
                     loop = 0;
                     break;
@@ -921,7 +921,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             {
                 loop = 0;
                 t->retry--;
-                dword_8008B550 = 0;
+                primBufferOffset_8008B550 = 0;
                 unknownFlags_8008D678 &= ~0x200;
                 break;
             }
