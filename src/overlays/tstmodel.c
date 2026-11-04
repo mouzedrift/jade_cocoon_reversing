@@ -14,7 +14,7 @@ typedef struct TstModelBone
     short s4;
     unsigned short flags;
 } TstModelBone;
-// parameter block of sub_80046A58
+// parameter block of DrawAnimSkel_80046A58
 typedef struct TstModelDraw
 {
     FtgObject* ftg_0;
@@ -404,9 +404,9 @@ void TstModelCameraInput_800A104C(TstModelD* c)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8004D288(VECTOR* out, ModelAnim* anim, int frame);
+extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
-extern void sub_80046A58(void* a, void* b, int c);
+extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A3268[];
 extern char name_800A3804[];
@@ -422,7 +422,7 @@ void sub_800A1428(TstModelD* c)
     m = AcquireModel_80024D70(c->models_14, c->modelId_24);
     c->model_18 = m;
     anim = &m->anims_54[c->f1A8];
-    sub_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frameCount_0);
+    GetAnimRootMotion_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frameCount_0);
     pos.vx /= anim->divisor_8;
     pos.vy /= anim->divisor_8;
     pos.vz /= anim->divisor_8;
@@ -442,7 +442,7 @@ void sub_800A1428(TstModelD* c)
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->f1A8, c->draw_1C0.frame_18);
-    sub_80046A58(&c->draw_1C0, name_800A1EE8, 0);
+    DrawAnimSkel_80046A58(&c->draw_1C0, name_800A1EE8, 0);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones, &m->mats_5C, pOT_8008D690, 0);
 }
 

@@ -1209,7 +1209,7 @@ int IsMinionCaptured_800BDBB8(int a)
 
 extern char name_800BB9C0[];
 extern void DrawText_8003E91C();
-extern void sub_8003F89C();
+extern void UppercaseSjisName_8003F89C();
 void DrawMinionListPage_800BDBFC(char* a, int page)
 {
     short pos[2];
@@ -1235,7 +1235,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
             pos[0] += 8;
             if (buf)
             {
-                sub_8003F89C(buf);
+                UppercaseSjisName_8003F89C(buf);
                 DrawText_8003E91C(1, buf, pos, 0xE);
             }
         }

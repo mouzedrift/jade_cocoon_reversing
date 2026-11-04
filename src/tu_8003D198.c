@@ -24,8 +24,8 @@ extern unsigned short padReleased_800918D4[];
 extern unsigned short padRepeat_800918CC[];
 extern void PlaySfx_80031494(int a1);
 
-const unsigned short word_80074994[2] = { 0 };
-const TextBuf22 dword_80074998 = { { 0xFFFF } };
+const unsigned short emptyText_80074994[2] = { 0 };
+const TextBuf22 emptyNameBuf_80074998 = { { 0xFFFF } };
 const int dword_800749B0 = 0;
 
 // Matched
@@ -405,9 +405,9 @@ void InitFonts_8003DA70(void)
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void AddDrawAreaPrim_8003326C(void* p, unsigned long* ot);
 typedef struct TextWindow TextWindow;
-void sub_8003DCA4(int draw, TextWindow* w);
+void DrawTextWindow_8003DCA4(int draw, TextWindow* w);
 // Matched
-int sub_8003DB74(unsigned int* w, int a)
+int UpdateTextWindow_8003DB74(unsigned int* w, int a)
 {
     if (w[9] >= 3 - (settingsFlags_8008B58C.word & 7))
     {
@@ -420,7 +420,7 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     w[8] = w[7];
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
-    sub_8003DCA4(a, (TextWindow*)w);
+    DrawTextWindow_8003DCA4(a, (TextWindow*)w);
     AddDrawAreaPrim_8003326C(w + 1, pOT_8008D454);
     switch (w[10])
     {
@@ -439,7 +439,7 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     return 0;
 }
-extern int dword_80086898[][12];
+extern int charWidthThresholds_80086898[][12];
 extern void IntToText_8003F610(unsigned short* buf, int val);
 extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
 struct TextWindow
@@ -456,7 +456,7 @@ struct TextWindow
     signed char flags[1];
 };
 // Matched
-void sub_8003DCA4(int draw, TextWindow* w)
+void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
 {
     unsigned short num[12];
     TextBuf22 name;
@@ -476,9 +476,9 @@ void sub_8003DCA4(int draw, TextWindow* w)
     int n;
     int col;
 
-    sub = word_80074994;
+    sub = emptyText_80074994;
     count = 0;
-    name = dword_80074998;
+    name = emptyNameBuf_80074998;
     x = w->x;
     y = w->y;
     f = &fonts_80095FB0[2];
@@ -525,7 +525,7 @@ void sub_8003DCA4(int draw, TextWindow* w)
                     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
                     for (k = 12; k != 0; k--)
                     {
-                        if (ci - 1 < dword_80086898[1][k - 1])
+                        if (ci - 1 < charWidthThresholds_80086898[1][k - 1])
                         {
                             x -= k;
                             break;
@@ -611,11 +611,11 @@ done:
     }
 }
 // Matched
-void sub_8003E268(unsigned short* p)
+void DrawMsgWindowNextPrompt_8003E268(unsigned short* p)
 {
     short x = p[0] + 0xC3;
     short y = p[1] + 0x23;
-    sub_8003CF88(x, y, 0);
+    DrawNextPrompt_8003CF88(x, y, 0);
 }
 typedef struct
 {
@@ -663,7 +663,7 @@ struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
     sz.h = 0;
     for (i = 0; list[i]; i++)
     {
-        if (!sub_8003E484(list[i]))
+        if (!IsTextMarkerLine_8003E484(list[i]))
         {
             w = MeasureTextWidth_8003E4C8(list[i]);
             if (sz.w < w)
@@ -677,7 +677,7 @@ struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
     return sz;
 }
 // Matched
-int sub_8003E484(int a0)
+int IsTextMarkerLine_8003E484(int a0)
 {
     int v = *EncodeText_8003F684(2, (unsigned short*)a0);
     if (v < 0xC3)
@@ -701,9 +701,9 @@ int MeasureTextWidth_8003E4C8(int str)
     int k;
     unsigned short c;
 
-    sub = word_80074994;
+    sub = emptyText_80074994;
     w = 0;
-    name = dword_80074998;
+    name = emptyNameBuf_80074998;
     k = -1;
     s = EncodeText_8003F684(2, (unsigned short*)str);
     while (*s != 0 || *sub != 0)
@@ -759,9 +759,9 @@ int MeasureTextWidthFont1_8003E6B0(int str)
     int k;
     unsigned short c;
 
-    sub = word_80074994;
+    sub = emptyText_80074994;
     w = 0;
-    name = dword_80074998;
+    name = emptyNameBuf_80074998;
     k = -1;
     s = EncodeText_8003F684(1, (unsigned short*)str);
     while (*s != 0 || *sub != 0)
@@ -810,8 +810,8 @@ FontDef fontDefs_80086574[2] = {
     { 0, 16, 0, 6, 6, 0x380, 0x133 },
     { 19, 16, 0, 8, 8, 0x300, 0x106, 0, 0, 112 },
 };
-int dword_800865A4[5] = { 0x120012, 0xE0000, 0x300000E, 0x102 };
-int dword_800865B8[169] = {
+int fontDef2_800865A4[5] = { 0x120012, 0xE0000, 0x300000E, 0x102 };
+int font2CharCodes_800865B8[169] = {
     126, 0x45814981, 0x50824481, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
     0x40814081, 0x66814381, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
     0x40814081, 0x69816882, 0x40816A81, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,

@@ -60,7 +60,7 @@ extern char* dword_800B9370[];
 extern char** dword_800B93E0[];
 extern unsigned char dword_800B93F8[];
 extern int dword_80091C54;
-extern void sub_8003D034(void*, int);
+extern void DrawCursorHand_8003D034(void*, int);
 #define SEL dword_800AEBFC[word_800AEBF8.a]
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
@@ -694,7 +694,7 @@ void sub_800B860C()
         {
             r2.x = 0x1E;
             r2.y = m->area_4 * 14 + 0x32;
-            sub_8003D034(&r2, 0);
+            DrawCursorHand_8003D034(&r2, 0);
         }
         break;
     case 1:
@@ -731,7 +731,7 @@ void sub_800B860C()
         {
             r3.x = 0x1E;
             r3.y = m->map_8 * 14 + 0x32;
-            sub_8003D034(&r3, 0);
+            DrawCursorHand_8003D034(&r3, 0);
         }
         break;
     case 2:

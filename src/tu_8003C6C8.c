@@ -19,7 +19,7 @@
 #include "tu_8003C6C8.h"
 #include "cd.h"
 
-const Ints14_8003CD5C dword_8007490C = { {
+const Ints14_8003CD5C loadingIconFrames_8007490C = { {
         7, 8, 9, 10, 11, 12, 13, 14,
         13, 12, 11, 10, 9, 8,
     } };
@@ -268,7 +268,7 @@ void DrawLoadingIcon_8003CD5C(void)
     Ints14_8003CD5C t;
     int n;
 
-    t = dword_8007490C;
+    t = loadingIconFrames_8007490C;
     n = t.v[(unsigned int)frameCount_8008D3FC % 14];
     pos[0] = 0xF8;
     pos[1] = 0xBA;
@@ -318,6 +318,6 @@ const int dword_80074960 = 0;
 
 CdReadState cdReadState_80086550 = { 1 };
 int fileBufferInUse_80086564 = 0;
-int dword_80086568 = 0;
+int cdXaLock_80086568 = 0;
 void *fileBuffer_8008656C = 0;
 char *data001Path_80086570 = aDataData0011;

@@ -160,13 +160,13 @@ void sub_8002A4E4(short a0)
 {
     unsigned short buf1[10];
     char buf2[8];
-    sub_80042B38((int)aFb, a0);
+    DrawWindowBorder_80042B38((int)aFb, a0);
     sub_800A61CC(1, buf1, buf2);
     buf1[4] = dword_800827EC[0];
     buf1[5] = dword_800827EC[1];
     AddPrimCopy_80040298(pOT_8008D454 + a0, buf1, 5);
     AddPrimCopy_80040298(pOT_8008D454 + a0, buf2, 2);
-    sub_800429F8((int)aFb, a0);
+    DrawWindowBackground_800429F8((int)aFb, a0);
 }
 
 typedef struct
@@ -233,8 +233,8 @@ extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern int MeasureTextWidth_8003E4C8(int text);
 extern void sub_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
-extern void sub_8003F264(unsigned short* pos, int v, int ot);
-extern void sub_8003EFBC(unsigned short* pos, int v, int ot);
+extern void DrawNumberRightAlignedFont1_8003F264(unsigned short* pos, int v, int ot);
+extern void DrawNumberRightAligned_8003EFBC(unsigned short* pos, int v, int ot);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void DrawMenuWindowContents_8002A710(void* a, int ot)
@@ -324,13 +324,13 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         SetMenuItemFont1Clut_8002AD08(p->flags);
         loc[0] = r[0] + r[2];
         loc[1] = r[1];
-        sub_8003F264(loc, p->text, ot);
+        DrawNumberRightAlignedFont1_8003F264(loc, p->text, ot);
         break;
     case 7:
         SetMenuItemFont2Clut_8002AD44(p->flags);
         loc[0] = r[0] + r[2];
         loc[1] = r[1];
-        sub_8003EFBC(loc, p->text, ot);
+        DrawNumberRightAligned_8003EFBC(loc, p->text, ot);
         break;
     case 8:
         SetMenuItemDigitColor_8002AD80(p->flags);

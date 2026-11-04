@@ -1205,10 +1205,10 @@ extern short word_8007DC8A;
 
 extern char dword_800B0EF8;
 
-extern void sub_80046A58(void* sk, void* buf, char* pose);
+extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 
-extern void sub_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
+extern void DrawAnimSkelBlend_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
 
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* ot, int flags);
 
-extern void sub_8004D288(void* out, void* s, int k);
+extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);

@@ -17,32 +17,32 @@
 #include "data_decls.h"
 #include "event.h"
 
-const CVECTOR dword_80074BA0 = { 128, 128, 128 };
+const CVECTOR windowFrameGrey_80074BA0 = { 128, 128, 128 };
 
 // Matched
-int sub_80041E68(int mode, int a, int b, int c)
+int FrameEdgeCoord_80041E68(int mode, int pos, int size, int inset)
 {
     switch (mode)
     {
     case 0:
-        return a;
+        return pos;
     case 1:
-        return a + c;
+        return pos + inset;
     case 2:
-        return a - c + b;
+        return pos - inset + size;
     case 3:
-        return a + b;
+        return pos + size;
     }
     return -1;
 }
-extern const CVECTOR dword_80074BA0;
-extern int byte_80086F9C[];
+extern const CVECTOR windowFrameGrey_80074BA0;
+extern int windowFrameShades_80086F9C[];
 // Matched
 void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
 {
     POLY_F4 p[5];
     DR_TPAGE dm;
-    CVECTOR col = dword_80074BA0;
+    CVECTOR col = windowFrameGrey_80074BA0;
     int abe;
     int i;
     int cr;
@@ -65,9 +65,9 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
         setSemiTrans(&p[i], abe);
         if (rgb)
         {
-            cr = rgb[0] * byte_80086F9C[i] / 100;
-            cg = rgb[1] * byte_80086F9C[i] / 100;
-            cb = rgb[2] * byte_80086F9C[i] / 100;
+            cr = rgb[0] * windowFrameShades_80086F9C[i] / 100;
+            cg = rgb[1] * windowFrameShades_80086F9C[i] / 100;
+            cb = rgb[2] * windowFrameShades_80086F9C[i] / 100;
             if (cr > 255)
             {
                 cr = 255;
@@ -97,14 +97,14 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
             col.b = cb;
         }
         setRGB0(&p[i], col.r, col.g, col.b);
-        p[i].x0 = sub_80041E68(dword_80087070[i][0], r->x, r->w, 2);
-        p[i].y0 = sub_80041E68(dword_80087070[i][1], r->y, r->h, 2);
-        p[i].x1 = sub_80041E68(dword_80087070[i][2], r->x, r->w, 2);
-        p[i].y1 = sub_80041E68(dword_80087070[i][3], r->y, r->h, 2);
-        p[i].x2 = sub_80041E68(dword_80087070[i][4], r->x, r->w, 2);
-        p[i].y2 = sub_80041E68(dword_80087070[i][5], r->y, r->h, 2);
-        p[i].x3 = sub_80041E68(dword_80087070[i][6], r->x, r->w, 2);
-        p[i].y3 = sub_80041E68(dword_80087070[i][7], r->y, r->h, 2);
+        p[i].x0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][0], r->x, r->w, 2);
+        p[i].y0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][1], r->y, r->h, 2);
+        p[i].x1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][2], r->x, r->w, 2);
+        p[i].y1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][3], r->y, r->h, 2);
+        p[i].x2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][4], r->x, r->w, 2);
+        p[i].y2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][5], r->y, r->h, 2);
+        p[i].x3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][6], r->x, r->w, 2);
+        p[i].y3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][7], r->y, r->h, 2);
         AddPrimCopy_80040298(ot, &p[i], 6);
     }
     setDrawTPage(&dm, 0, 0, GetTPage(0, semi, 0, 0));
@@ -114,4 +114,4 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 
-int byte_80086F9C[5] = { 160, 210, 70, 40, 100 };
+int windowFrameShades_80086F9C[5] = { 160, 210, 70, 40, 100 };

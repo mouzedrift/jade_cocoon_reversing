@@ -1354,7 +1354,7 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     if ((u->field_24 & 2) || u->field_0 == 11 || u->field_0 == 12)
     {
-        sub_8003CF88(0x11E, 0x3C, 0xE);
+        DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
     }
     if (u->field_18 == 0)
     {
@@ -2045,8 +2045,8 @@ void sub_800BC380(ShopUnit3Shop* u)
     {
         sub_8002A4E4(0xE);
         DrawTextList_8002A310(name_800BF7C8, 0xE);
-        sub_800429F8((int)&name_800BF798, 0xE);
-        sub_80042B38((int)&name_800BF798, 0xE);
+        DrawWindowBackground_800429F8((int)&name_800BF798, 0xE);
+        DrawWindowBorder_80042B38((int)&name_800BF798, 0xE);
     }
     else
     {

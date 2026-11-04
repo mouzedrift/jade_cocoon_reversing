@@ -26,8 +26,8 @@ typedef struct FtgSpriteVtx
     unsigned long rgbc_C;
     long pad_10;
 } FtgSpriteVtx;
-extern FtgSpriteVtx* dword_80098180;        // next free sprite vertex
-extern FtgSpriteVtx* dword_800987D8[][56];  // per slot: the projected vertices, three per triple
+extern FtgSpriteVtx* ftgSpriteVtxNext_80098180;        // next free sprite vertex
+extern FtgSpriteVtx* ftgSpriteVtxSlots_800987D8[][56];  // per slot: the projected vertices, three per triple
 typedef union
 {
     unsigned long word;
@@ -37,14 +37,14 @@ typedef union
         unsigned short clut;
     } tc;
 } FtgTPageClut;
-extern FtgTPageClut dword_8009AAD8; // tpage / clut of the textured sprites
+extern FtgTPageClut ftgSpriteTPageClut_8009AAD8; // tpage / clut of the textured sprites
 
 // draws an FTG object with the current GTE matrices (flags: see FtgDrawCtx.flags_20, bits 8-15 CLUT
-// row offset, bit 7 + bits 16-31 depth cue); slot indexes dword_800987D8
+// row offset, bit 7 + bits 16-31 depth cue); slot indexes ftgSpriteVtxSlots_800987D8
 extern void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
 
 extern void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
-extern void sub_8004B0A8(VECTOR* v, MATRIX* m);
+extern void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m);
 extern void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t);
 
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18
@@ -52,7 +52,7 @@ extern void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t);
 #define FTG_DRAW_CTX ((FtgDrawCtx*)getScratchAddr(0x85))
 
 extern int dword_8009868C;
-extern SVECTOR dword_80098690[];
+extern SVECTOR boneOffsets_80098690[];
 extern int dword_800986A0[78];
 
 extern int dword_80098184;

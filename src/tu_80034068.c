@@ -238,7 +238,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     p = (int*)cfg[0x1C / 4];
     if (p)
     {
-        if (sub_8003E484(*p) == 1)
+        if (IsTextMarkerLine_8003E484(*p) == 1)
         {
             WI(0x1B4) = (int)(p + 1);
         }
@@ -522,7 +522,7 @@ void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
 }
 extern void PlaySfx_80031494(int id);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern int sub_800429A8(void* r);
+extern int IsWindowFrameFit_800429A8(void* r);
 /* defined below (their parameter types are declared there) */
 extern int DrawMsgWindowText_8003580C();
 extern void DrawMsgWindowTitle_800359F8();
@@ -566,7 +566,7 @@ void UpdateMsgWindowState_80034C18(int* p)
             }
             if (!(p[1] & 0x40000))
             {
-                sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
             }
         }
         if (p[1] & 0x200)
@@ -604,7 +604,7 @@ void UpdateMsgWindowState_80034C18(int* p)
             }
             if (!(p[1] & 0x40000))
             {
-                sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
             }
         }
         if (p[1] & 0x200)
@@ -674,7 +674,7 @@ void UpdateMsgWindowState_80034C18(int* p)
         }
         if (!(p[1] & 0x40000))
         {
-            sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+            DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
         }
         break;
     case 5:
@@ -772,7 +772,7 @@ void UpdateMsgWindowState_80034C18(int* p)
             p[2] = 7;
         }
         InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
             DrawMsgWindowText_8003580C(p, (int*)r);
             DrawMsgWindowBackground_80035898(p, (int)r, 2);
@@ -797,7 +797,7 @@ void UpdateMsgWindowState_80034C18(int* p)
             p[9] = 1;
         }
         InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
             DrawMsgWindowChoices_800355EC(p, (int*)r);
             DrawMsgWindowBackground_80035898(p, (int)r, 2);
@@ -818,7 +818,7 @@ void UpdateMsgWindowState_80034C18(int* p)
             p[2] = 6;
         }
         InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
             DrawMsgWindowChoices_800355EC(p, (int*)r);
             DrawMsgWindowBackground_80035898(p, (int)r, 2);
@@ -894,7 +894,7 @@ void HandleMsgWindowInput_800353A0(MsgWindow* o)
 }
 extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
-extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
+extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void sub_8002F6F8(void* a0, void* st, int a2);
 // Matched
@@ -932,7 +932,7 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* o, unsigned short* r)
                 y += 12;
                 u.loc[0] = x;
                 AddClipDrawAreaPrim_80033308(&pOT_8008D454[o->ot_54]);
-                sub_8003EC2C(*p, u.loc, o->ot_54);
+                DrawColorText_8003EC2C(*p, u.loc, o->ot_54);
                 AddDrawAreaPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
             }
             p++;
@@ -964,7 +964,7 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* o, unsigned short* r)
     sub_8002F6F8(&r2, u.st, 0);
     o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2, o->mask_14);
 }
-extern int sub_8003DB74(struct_rect_1B8* p, int a);
+extern int UpdateTextWindow_8003DB74(struct_rect_1B8* p, int a);
 // Matched
 int DrawMsgWindowText_8003580C(MsgWindow* o, unsigned short* r)
 {
@@ -974,7 +974,7 @@ int DrawMsgWindowText_8003580C(MsgWindow* o, unsigned short* r)
     o->clip_1B8.h = r[3] - 7;
     if ((short)o->clip_1B8.h > 0 && (short)o->clip_1B8.w > 0)
     {
-        return sub_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
+        return UpdateTextWindow_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
     }
     return 1;
 }
@@ -983,7 +983,7 @@ void DrawMsgWindowBackground_80035898(MsgWindow* p, int rect, int ot)
 {
     if (!(p->flags_4 & 0x40000))
     {
-        sub_800429F8(rect, 2);
+        DrawWindowBackground_800429F8(rect, 2);
     }
 }
 // Matched
@@ -991,7 +991,7 @@ void DrawMsgWindowBorder_800358CC(MsgWindow* p, int rect, int ot)
 {
     if (!(p->flags_4 & 0x40000))
     {
-        sub_80042B38(rect, 2);
+        DrawWindowBorder_80042B38(rect, 2);
     }
 }
 // Matched
@@ -1114,7 +1114,7 @@ typedef struct
 extern const int aMoney_80074850[];
 extern const int aEmptyCocoon_8007485C[];
 extern const int aTimesSign_80074864[];
-extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
 extern void sub_800AD1E0(int a, int b, int c);
@@ -1204,7 +1204,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p78.x = r.x + r.w - 4;
             p78.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            sub_8003F264(&p78, o->entries[i].count, 0);
+            DrawNumberRightAlignedFont1_8003F264(&p78, o->entries[i].count, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;
             continue;
@@ -1322,8 +1322,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             line++;
         }
     }
-    sub_800429F8((int)&r, 0);
-    sub_80042B38((int)&r, 0);
+    DrawWindowBackground_800429F8((int)&r, 0);
+    DrawWindowBorder_80042B38((int)&r, 0);
     o->field_C = 3;
     if (IsConfirmPressedP1_8003D380(0))
     {

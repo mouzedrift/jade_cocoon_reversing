@@ -3365,7 +3365,7 @@ PadVibEntry *vibrationPatterns_80083B30[40] = {
     (void *)&dword_8008384C[165], (void *)&dword_8008384C[168], (void *)&dword_8008384C[171], (void *)&dword_8008384C[174],
     (void *)&dword_8008384C[177], (void *)&dword_8008384C[180], (void *)&dword_8008384C[102], (void *)&dword_8008384C[183],
 };
-int dword_80083BD0 = 0;
+int battleStageId_80083BD0 = 0;
 signed char cameraShakeOffsets_80083BD4[16] = { 10, -8, 6, -5, 4, -3, 3, -2, 2, -1, 1, -1, 1, -1 };
 CamOffset battleCamIntroPresets_80083BE4[2] = {
     { 0x11B, -235, 20, 0, 0x12C, 5, -218, -0x1CB },
@@ -4492,7 +4492,7 @@ void sub_80015478(EventEntry* e, void* buf)
             t = &effectFile_80091BD0.models_28[idx];
             q->field_88 = (int)t;
             sub_800218A8(t->ftg_4, q->work_94 = malloc3_8003FC4C(0x54), 1);
-            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, q->work_94);
+            DiffFtgObjects_80039FE4(t->ftg_4, t->ftg_4 + 1, q->work_94);
             PlaySeqSlot_80031160(9, 1);
             e2->cb_8 = sub_800C371C;
             break;
@@ -4601,7 +4601,7 @@ void sub_80015478(EventEntry* e, void* buf)
             t = &effectFile_80091BD0.models_28[idx];
             b->field_88 = (int)t;
             sub_800218A8(t->ftg_4, b->work_94 = malloc3_8003FC4C(0x54), 1);
-            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, b->work_94);
+            DiffFtgObjects_80039FE4(t->ftg_4, t->ftg_4 + 1, b->work_94);
             b->field_30 = 0x1000;
             e->cb_8 = sub_80017E30;
             PlaySfx_80031494(0x4A);

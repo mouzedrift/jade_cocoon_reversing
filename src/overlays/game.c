@@ -69,7 +69,7 @@ void sub_800A1444(void)
 {
     FreeActiveOverlay_8002C014();
     FreeSeqSlotSound_80030664();
-    sub_80039FC0();
+    FreeStageEffects_80039FC0();
 }
 
 // Matched
@@ -1916,7 +1916,7 @@ void sub_800A52AC(int a)
     {
         r = 0;
     }
-    sub_80039FA4(r);
+    SetBattleStageId_80039FA4(r);
 }
 
 // Matched
@@ -1945,7 +1945,7 @@ done:
 int sub_800A5354(void)
 {
     int v = -1;
-    switch (sub_80039FB0())
+    switch (GetBattleStageId_80039FB0())
     {
     case 0xf:
         v = 0;

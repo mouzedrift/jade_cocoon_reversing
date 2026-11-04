@@ -125,7 +125,7 @@ extern void sub_800A4D48();
 extern void sub_800A68E0();
 extern void sub_800A616C();
 extern void sub_800A5000();
-extern void sub_80039FA4(int);
+extern void SetBattleStageId_80039FA4(int);
 extern void sub_800A0A28();
 extern int PlayMusic_800300E0(int, int);
 extern void sub_800A5EF8();
@@ -178,7 +178,7 @@ void sub_800A4C40(CombBtlTask* t, int a)
         byte_800A38DC = 2;
         dword_800A85B8 = -1;
         dword_800A8620 = -1;
-        sub_80039FA4(dword_800A84C0);
+        SetBattleStageId_80039FA4(dword_800A84C0);
         sub_800A0A28();
         dword_800A84B8 = 0;
         dword_800A85F8 = -1;
@@ -525,7 +525,7 @@ void sub_800A5544(CombBtlTask* t)
         FreeSeqSlotSound_80030664();
         SsUtAllKeyOff(0);
         PlayMusic_800300E0(0x8E, 1);
-        sub_80039FC0();
+        FreeStageEffects_80039FC0();
         t->next_8 = sub_800A16FC;
     }
 }

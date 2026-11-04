@@ -319,9 +319,9 @@ extern int dword_800ADE88;
 
 extern int eventDispatchHalt_8008B540;
 
-extern int dword_80083BD0;
+extern int battleStageId_80083BD0;
 
-// per battle stage (indexed by dword_80083BD0)
+// per battle stage (indexed by battleStageId_80083BD0)
 typedef struct BatStage_a
 {
     unsigned short* list_0;

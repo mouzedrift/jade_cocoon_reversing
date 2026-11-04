@@ -149,7 +149,7 @@ extern void sub_800BD06C(void);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern char byte_800B682C[];
 extern char byte_800B6B9C[];
-extern void sub_8003F264(void* p, int a, int b);
+extern void DrawNumberRightAlignedFont1_8003F264(void* p, int a, int b);
 extern char byte_800B69FC[];
 extern MenuWin_LOAD dword_800BDD64;
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -989,13 +989,13 @@ void sub_800B8AE4(LoadTask_LOAD* t)
     Tail4_LOAD b;
     p0.x_LOAD = 0x1C;
     p0.y_LOAD = 0x24;
-    sub_8003F264(&p0, stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD + 1, 5);
+    DrawNumberRightAlignedFont1_8003F264(&p0, stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD + 1, 5);
     p1.x_LOAD = 0x1C;
     p1.y_LOAD = 0x24;
     DrawText_8003E91C(1, byte_800B6B9C, &p1, 5);
     p2.x_LOAD = 0x32;
     p2.y_LOAD = 0x24;
-    sub_8003F264(&p2, 0xF, 5);
+    DrawNumberRightAlignedFont1_8003F264(&p2, 0xF, 5);
     a = dword_800B6BA0;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
@@ -1107,7 +1107,7 @@ void sub_800B8BD4(LoadTask_LOAD* t)
                         p3.x_LOAD = dword_800BD93C[j].x_LOAD + 0x38;
                         p3.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
                         AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                        sub_8003F264(&p3, t->summaries_LOAD[n].f26, 1);
+                        DrawNumberRightAlignedFont1_8003F264(&p3, t->summaries_LOAD[n].f26, 1);
                         AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
                     }
                 }

@@ -76,12 +76,12 @@ extern int sub_800AD184(int a, int b, int c);
 extern void sub_800AD1E0(int a, int b, int c);
 extern void sub_800AD058(int a);
 extern int sub_800AD0A4(int a);
-extern void sub_8003CF88(short a0, short a1, int a2);
+extern void DrawNextPrompt_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
 extern void UpdateMenuCursor_8003D794(void* p, int a1);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void sub_800429F8(int a0, int a1);
-extern void sub_80042B38(int a0, int a1);
+extern void DrawWindowBackground_800429F8(int a0, int a1);
+extern void DrawWindowBorder_80042B38(int a0, int a1);
 extern unsigned short name_800BE870[];
 extern int name_800BE134[];
 extern int* name_800BE3D8[];
@@ -589,8 +589,8 @@ void sub_800BB8CC(WpnObj_wpnshop* o)
 {
     sub_8002A4E4(0xE);
     DrawTextList_8002A310(name_800BE134, 0xE);
-    sub_800429F8((int)name_800BE7C4, 0xE);
-    sub_80042B38((int)name_800BE7C4, 0xE);
+    DrawWindowBackground_800429F8((int)name_800BE7C4, 0xE);
+    DrawWindowBorder_80042B38((int)name_800BE7C4, 0xE);
     if (o->f_0 < 0x11)
     {
         if (o->f_0 >= 0xC)
@@ -1373,7 +1373,7 @@ void sub_800BD61C(WpnObj_wpnshop* o)
 // Matched
 void sub_800BD6A4(WpnObj_wpnshop* o)
 {
-    sub_8003CF88(0x11E, 0x3C, 0xE);
+    DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
     if (o->f_40 || o->f_44)
     {
         PlaySfx_80031494(0x7D);

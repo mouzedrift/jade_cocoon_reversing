@@ -59,7 +59,7 @@ void sub_80016C3C(int* a0, void* buf)
         pos[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->field_1C[0];
         pos[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->field_1C[1];
         pos[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->field_1C[2];
-        sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_4 << 24) | 0xB0, vp);
+        DrawFtgObjectAtSlot0_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_4 << 24) | 0xB0, vp);
     }
     else
     {
@@ -216,7 +216,7 @@ void sub_800173A8(int* a0, void* buf)
         a1->field_30 += a1->field_34;
         v[0] = v[1] = v[2] = a1->field_30 / 4096;
         a1->rot_80.vy += a1->rot_80.pad;
-        sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, 0x30, v);
+        DrawFtgObjectAtSlot0_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, 0x30, v);
         sub_800C4090((int)a1->pos_44, (int)&col, 0x5DC, ((a1->field_4 - a1->field_0) << 12) / a1->field_4);
         a1->field_0++;
     }

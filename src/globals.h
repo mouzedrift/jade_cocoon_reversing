@@ -302,7 +302,7 @@ extern int accessoryNames_8007D66C[0x11];
 extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;
 extern int dword_80091CFC;
-extern int dword_80083BD0;
+extern int battleStageId_80083BD0;
 extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
@@ -386,7 +386,7 @@ extern int dword_80082670;
 extern short word_8008B862;
 extern int dword_80082678;
 extern short word_80091C40[];
-extern FileRequest* dword_8008654C;
+extern FileRequest* fileRequestTail_8008654C;
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;

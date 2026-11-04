@@ -2082,12 +2082,12 @@ void DrawLevantModel_800A9708(G2Act* p)
     }
     if (!(p->f0 & 0x10))
     {
-        sub_80046A58(&sk, &stru_8008D534[v], 0);
+        DrawAnimSkel_80046A58(&sk, &stru_8008D534[v], 0);
     }
     else
     {
         anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
-        sub_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
+        DrawAnimSkelBlend_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
     }
     DrawSpriteVtxQuadsGT4_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
@@ -2215,7 +2215,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 void sub_800AA140(G2Act* p)
 {
     ModelAnim* t = &p->model_40->anims_54[sub_800AC4A8(p->s1c)];
-    sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
+    GetAnimRootMotion_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
 }
 
 int sub_800AA1C0(G2Act* p)
@@ -3579,7 +3579,7 @@ void sub_800ACB64(int* a, void* buf)
             }
             else
             {
-                sub_80040148((int*)&dword_800B1DD0, 1);
+                PoolSetInited_80040148((int*)&dword_800B1DD0, 1);
                 q->state = 1;
             }
             break;
@@ -3647,7 +3647,7 @@ void sub_800ACB64(int* a, void* buf)
                 ClearOTagRAll_8001B260();
                 EndFade_8001C290();
             }
-            sub_80040148((int*)&dword_800B1DD0, 0);
+            PoolSetInited_80040148((int*)&dword_800B1DD0, 0);
             q->state = 0;
             break;
         }

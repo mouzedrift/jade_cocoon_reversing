@@ -53,7 +53,7 @@ extern void DrawMenuBackground_8002BE10(void);
 extern void DrawGauge_8002BA54(void* a0, int a1, void* a2, int a3);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern void DrawNumber_8003EF74(void* a0, int a1, short a2);
-extern void sub_8003F264(void* a0, int a1, short a2);
+extern void DrawNumberRightAlignedFont1_8003F264(void* a0, int a1, short a2);
 extern void UpdateMenuCursor_8003D794(CtxShopentr* c, int a1);
 extern int IsConfirmPressedP1_8003D380(int a0);
 extern int IsCancelPressedP1_8003D41C(int a0);
@@ -467,7 +467,7 @@ void sub_800B7858(CtxShopentr* c)
         {
             q[0] = 0xa2;
             q[1] = p[1];
-            sub_8003F264(q, s16, col);
+            DrawNumberRightAlignedFont1_8003F264(q, s16, col);
         }
         p[0] = 0xb2;
         p[1] = a.y + 2;
@@ -502,13 +502,13 @@ void sub_800B7A90(RectShopentr* p, short a1, short a2)
     unsigned short l28[2];
     l18[0] = p->x + 0x12;
     l18[1] = p->y + 2;
-    sub_8003F264(l18, a1, 14);
+    DrawNumberRightAlignedFont1_8003F264(l18, a1, 14);
     l20[0] = p->x + 0x12;
     l20[1] = p->y + 2;
     DrawText_8003E91C(1, str_800B6F04, l20, 14);
     l28[0] = p->x + 0x2a;
     l28[1] = p->y + 2;
-    sub_8003F264(l28, a2, 14);
+    DrawNumberRightAlignedFont1_8003F264(l28, a2, 14);
     r.x = p->x;
     r.y = p->y;
     r.w = 0x2c;
@@ -541,16 +541,16 @@ void sub_800B7C08(RectShopentr* p)
     unsigned short l28[2];
     l10[0] = p->x + 0x10;
     l10[1] = p->y;
-    sub_8003F264(l10, 0, 14);
+    DrawNumberRightAlignedFont1_8003F264(l10, 0, 14);
     l18[0] = p->x + 0x10;
     l18[1] = p->y;
     DrawText_8003E91C(1, str_800B6F08, l18, 14);
     l20[0] = p->x + 0x20;
     l20[1] = p->y;
-    sub_8003F264(l20, 0, 14);
+    DrawNumberRightAlignedFont1_8003F264(l20, 0, 14);
     l28[0] = p->x + 0x28;
     l28[1] = p->y;
-    sub_8003F264(l28, 0, 14);
+    DrawNumberRightAlignedFont1_8003F264(l28, 0, 14);
 }
 
 INCLUDE_OVERLAY_ASM(shopentr, dword_800B7CC0);

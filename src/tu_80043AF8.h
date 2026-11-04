@@ -62,7 +62,7 @@ typedef struct
 } RotSpriteScratch;
 #define ROT_SPRITE_SCRATCH ((RotSpriteScratch*)getScratchAddr(0x85))
 
-// polygons strung between projected sprite vertices (dword_800987D8[slot][idx], DrawSpriteVtxQuadsGT4_800459E4 / DrawSpriteVtxQuadsG4_80045E48)
+// polygons strung between projected sprite vertices (ftgSpriteVtxSlots_800987D8[slot][idx], DrawSpriteVtxQuadsGT4_800459E4 / DrawSpriteVtxQuadsG4_80045E48)
 typedef struct
 {
     unsigned short slot;
@@ -161,10 +161,10 @@ typedef struct
 // the bone matrices in the scratchpad (0x1F800040): [0] the camera, [1] the model root, [depth + 2] a bone
 #define SKEL_MATS ((MATRIX*)getScratchAddr(0x10))
 
-// axis of a rotation matrix (for sub_8004B0A8)
-void sub_8004AD44(MATRIX* in, VECTOR* out);
+// axis of a rotation matrix (for BasisFromAxis_8004B0A8)
+void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out);
 
-extern MATRIX dword_80096120[]; // per-bone draw matrices
+extern MATRIX boneMatrices_80096120[]; // per-bone draw matrices
 
 // draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
 extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);

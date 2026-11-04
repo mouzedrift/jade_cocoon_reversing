@@ -1019,7 +1019,7 @@ void sub_800C0440()
 #if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
 extern unsigned char dword_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
-extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
 void sub_800C04A4(EventEntry* t, BatWin_b* u)
 {
@@ -1056,7 +1056,7 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
     {
         pos[0] += w;
         pos[1] += 3;
-        sub_8003F264(pos, sub_800AD8E4(), 0);
+        DrawNumberRightAlignedFont1_8003F264(pos, sub_800AD8E4(), 0);
     }
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 7);
     DrawUiColorWindow_800424C0(u->rect_C, 0, pOT_8008D454, 0);
@@ -1938,7 +1938,7 @@ void sub_800C273C(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    DrawFtgObjectAtSlot0_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2023,7 +2023,7 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    DrawFtgObjectAtSlot0_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2221,7 +2221,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2238,7 +2238,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2296,7 +2296,7 @@ void sub_800C3B50(int* p, int id)
     b->clip_88 = ent;
     b->model_94 = malloc3_8003FC4C(0x54);
     sub_800218A8(ent->ftg_4, b->model_94, 1);
-    sub_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
+    DiffFtgObjects_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
     q = dword_8008B4A4->hero_24;
     b->pos_44[0] = q->pos_5E4[0];
     b->pos_44[1] = q->pos_5E4[1];
@@ -2332,7 +2332,7 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
         sub_80021804(u->model_94, 1);
         free3_8003FC6C(u->model_94);
     }
-    sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
+    DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
 }
 
 void sub_800C3DF8(EventEntry* t, BatOrb_a* u)

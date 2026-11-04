@@ -238,7 +238,7 @@ void sub_800BA788(BatTask_a* t)
     sub_800C0BA0();
     sub_800A1B78();
     FreeActiveOverlay_8002C014();
-    sub_80039FC0();
+    FreeStageEffects_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
     StopSeqSlot_80031334(0);
     FreeSeqSlotSound_80030664();
@@ -1392,7 +1392,7 @@ void sub_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].effect_4, &dword_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(dword_800C8EAC[battleStageId_80083BD0].effect_4, &dword_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
 }
