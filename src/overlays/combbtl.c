@@ -39,25 +39,7 @@ typedef struct CombBtlObj
     RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
 } CombBtlObj;
 
-typedef struct CombBtlPair
-{
-    short lo;
-    short hi;
-} CombBtlPair;
-
 extern void sub_800A7694();
-typedef struct CombBtlA24
-{
-    int pos_0[2][3]; // per side
-} CombBtlA24;
-
-typedef struct CombBtlB16
-{
-    unsigned char f0[2][8]; // per side
-} CombBtlB16;
-
-extern CombBtlA24 dword_800A4AD4;
-extern CombBtlB16 dword_800A4AEC;
 extern void sub_800A0BA8(int, void*, void*);
 // a command's result (same layout as BATTLE.BIN's BatResult_a)
 extern int xarr_800A85B8[];
@@ -258,21 +240,36 @@ void sub_800A4D48(CombBtlTask* t, int a)
         break;
     }
 }
-const CombBtlA28 dword_800A4A54 = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 135, 86, 50, 20, 0x40002 };
-const CombBtlA28 dword_800A4A70 = { 0x10008, 230, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 135, 107, 50, 20, 0x40002 };
-const int dword_800A4A8C[2] = { 0x81827182 };
-const int dword_800A4A94[2] = { 0x95826C82 };
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A54);
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A70);
+INCLUDE_OVERLAY_ASM(combbtl, aRa_800A4A8C);
+INCLUDE_OVERLAY_ASM(combbtl, aMu_800A4A94);
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A9C);
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AB4);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AD4);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AEC);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AFC);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B18);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B34);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B3C);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B58);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B60);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4B6C);
+const CombBtlA24 dword_800A4AD4 = { {
+        { 0 },
+        { 0, 0, 0x3E8 },
+    } };
+const CombBtlB16 dword_800A4AEC = { {
+        { 0 },
+        { 0, 0, 0, 8 },
+    } };
+const CombBtlA28 dword_800A4AFC = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 110, 20, 50, 20, 0x40002 };
+const CombBtlA28 dword_800A4B18 = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 160, 20, 50, 20, 0x40002 };
+const CombBtlPos2 dword_800A4B34 = { {
+        { 10, 79 },
+        { 0x136, 79 },
+    } };
+const CombBtlA28 dword_800A4B3C = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 50, 20, 0x40002 };
+const CombBtlPos2 dword_800A4B58 = { {
+        { 110, 40 },
+        { 160, 40 },
+    } };
+const CombBtlInt3 dword_800A4B60 = { { 219, 115, 102 } };
+const CombBtlPos2 dword_800A4B6C = { {
+        { 10, 59 },
+        { 210, 59 },
+    } };
 
 extern void sub_800A5638();
 
@@ -406,6 +403,8 @@ typedef struct CombBtlBox
     char c_3;
 } CombBtlBox;
 
+extern CombBtlA28 dword_800A4A54;
+extern CombBtlA28 dword_800A4A70;
 typedef struct CombBtlUi
 {
     char pad_0[0x20];
@@ -440,6 +439,8 @@ void sub_800A5290(CombBtlTask* t)
     }
 }
 
+extern int dword_800A4A8C[];
+extern int dword_800A4A94[];
 // Matched
 int sub_800A5408(int which, int text, int c)
 {
@@ -1042,21 +1043,6 @@ void sub_800A75F8(int a)
     }
 }
 
-typedef struct CombBtlPos2
-{
-    CombBtlPair p[2]; // per side
-} CombBtlPos2;
-typedef struct CombBtlInt3
-{
-    int v[3];
-} CombBtlInt3;
-extern CombBtlA28 dword_800A4AFC;
-extern CombBtlA28 dword_800A4B18;
-extern CombBtlPos2 dword_800A4B34;
-extern CombBtlA28 dword_800A4B3C;
-extern CombBtlPos2 dword_800A4B58;
-extern CombBtlInt3 dword_800A4B60;
-extern CombBtlPos2 dword_800A4B6C;
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot);
 extern void InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode);

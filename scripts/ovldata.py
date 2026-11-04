@@ -23,7 +23,6 @@ bytes; pointers become references to their symbols (overlay or executable). The 
 externs go to the overlay's header (src/overlays/<name>.h, created if needed), the extern lines of the .c files for
 them are removed. A name_XXXXXXXX the C code uses for a symbol becomes the symbol's name in the .sym file.
 """
-import bisect
 import os
 import re
 import struct

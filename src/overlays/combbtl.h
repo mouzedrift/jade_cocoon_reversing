@@ -26,6 +26,22 @@ typedef struct CombBtlHist
     CombBtlCmd cmd_4;
 } CombBtlHist;
 
+typedef struct CombBtlPair
+{
+    short lo;
+    short hi;
+} CombBtlPair;
+
+typedef struct CombBtlA24
+{
+    int pos_0[2][3]; // per side
+} CombBtlA24;
+
+typedef struct CombBtlB16
+{
+    unsigned char f0[2][8]; // per side
+} CombBtlB16;
+
 typedef struct CombBtlResult
 {
     unsigned short kind_0;
@@ -54,6 +70,16 @@ typedef struct CombBtlA28
     short h_16;
     int f18;
 } CombBtlA28;
+
+typedef struct CombBtlPos2
+{
+    CombBtlPair p[2]; // per side
+} CombBtlPos2;
+
+typedef struct CombBtlInt3
+{
+    int v[3];
+} CombBtlInt3;
 
 extern int dword_800A4088;
 extern const char aAreVictorious_800A408C[];
@@ -109,10 +135,15 @@ extern const char aWellDone_800A49A0[];
 extern const char aReached_800A49B8[];
 extern const char aFinallyADecisio_800A49CC[];
 extern const char aWhatACloseFight_800A4A04[];
-extern const CombBtlA28 dword_800A4A54;
-extern const CombBtlA28 dword_800A4A70;
-extern const int dword_800A4A8C[2];
-extern const int dword_800A4A94[2];
+extern const CombBtlA24 dword_800A4AD4;
+extern const CombBtlB16 dword_800A4AEC;
+extern const CombBtlA28 dword_800A4AFC;
+extern const CombBtlA28 dword_800A4B18;
+extern const CombBtlPos2 dword_800A4B34;
+extern const CombBtlA28 dword_800A4B3C;
+extern const CombBtlPos2 dword_800A4B58;
+extern const CombBtlInt3 dword_800A4B60;
+extern const CombBtlPos2 dword_800A4B6C;
 extern short word_800A82D0;
 extern short word_800A82D2;
 extern short word_800A82D4[2][2];

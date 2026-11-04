@@ -55,11 +55,6 @@ def ovldata_is_data(n):
     return ovldata.is_data(n)
 
 
-def gendata_prefixes():
-    import gen_asm
-    return gen_asm.DATA_PREFIXES
-
-
 def includes(text, oname):
     """[(name, match)] of the INCLUDE_OVERLAY_ASM lines of a source text that are data (not jump tables)"""
     out = []
@@ -270,16 +265,20 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
             units.append((m.start(), "func", None))
         units.sort()
         dropped = set()
+
+        def is_c(n):
+            return n in heads and n not in dropped
+
         while True:
             state, asm_since = None, False
             bad = None
-            for _, kind, n in units:
+            for i, (_, kind, n) in enumerate(units):
                 if kind == "func":
                     state, asm_since = ".text", False
-                elif n in heads and n not in dropped:
+                elif is_c(n):
                     sec = heads[n][0].sec
                     if state == sec and asm_since:
-                        bad = n
+                        bad = i
                         break
                     state, asm_since = sec, False
                 elif absorbed.get(n) in heads and absorbed[n] not in dropped:
@@ -288,8 +287,24 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                     asm_since = True
             if bad is None:
                 break
-            dropped.add(bad)
-            report.append("// %s stays assembly: behind assembly that follows a C definition of its section" % bad)
+            # either the definitions in front of the assembly (since the last function) or the ones behind it (up
+            # to the next function) stay assembly: the fewer
+            sec = heads[units[bad][2]][0].sec
+            before, after = [], []
+            for _, kind, n in reversed(units[:bad]):
+                if kind == "func":
+                    break
+                if is_c(n):
+                    before.append(n)
+            for _, kind, n in units[bad:]:
+                if kind == "func":
+                    break
+                if is_c(n) and heads[n][0].sec == sec:
+                    after.append(n)
+            drop = before if len(before) < len(after) else after[:1]
+            for n in drop:
+                dropped.add(n)
+                report.append("// %s stays assembly: next to assembly between C definitions of its section" % n)
         for h in dropped:
             del heads[h]
         for h, ds in heads.items():
@@ -483,9 +498,6 @@ TYPEDEF = re.compile(r"^(typedef\b|struct\s+\w+\s*\{|union\s+\w+\s*\{|enum\s+\w+
 def mask_if0(text):
     """text with the #if 0 ... #endif blocks blanked (same length)"""
     out = list(text)
-    i = 0
-    for m in re.finditer(r"^[ \t]*#\s*(if|ifdef|ifndef|else|elif|endif)\b([^\n]*)", text, re.M):
-        pass
     lines = text.split("\n")
     pos, depth, off = 0, 0, []
     for ln in lines:
