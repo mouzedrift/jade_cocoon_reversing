@@ -46,8 +46,8 @@ extern int partyMinionMask_800C9E78;
 
 typedef struct BatMenu_a
 {
-    short f0;
-    short f2;
+    short cols_0;
+    short rows_2;
     unsigned short count_4;
     unsigned short flags_6;
     short cursor_8;
@@ -79,7 +79,7 @@ typedef struct BatCmd_a
 typedef struct BatEnemyTargets_a
 {
     unsigned char flag_0; // cleared when the menu opens
-    unsigned char unk_1;
+    unsigned char pad_1;
     unsigned char bits_2[3]; // unit bit of each living enemy, in menu order
 } BatEnemyTargets_a;
 extern BatEnemyTargets_a enemyTargets_800C9E70;
@@ -98,7 +98,7 @@ typedef struct BatTask
 } BatTask;
 
 
-extern void AiSetCommand_800C6AFC(BatTask* t, int a, int b);
+extern void AiSetCommand_800C6AFC(BatTask* ai, int kind, int arg);
 
 
 
@@ -230,7 +230,7 @@ typedef struct BatModelReq_a
     int count_0; // distinct parts
     int ids_4[3];
     int nums_10[3];
-    int f1C;
+    int rank_1C; // GetRankForLevel_80019A80 of the minion's level
     int f20;
     int angle_24;
     int f28;
@@ -591,11 +591,11 @@ extern void LoadUiTiy_8002BF74();
 
 extern void StartBattleWindows_800BFB80();
 
-extern int sub_800B4200(BatChain_a* p);
+extern int sub_800B4200(BatChain_a* chain);
 
-extern int sub_800B41D0(BatChain_a* p);
+extern int sub_800B41D0(BatChain_a* chain);
 
-extern int* sub_800B41A8(BatChain_a* p);
+extern int* sub_800B41A8(BatChain_a* chain);
 
 
 extern void WaitChainMessage_800BB100();
@@ -644,7 +644,7 @@ extern void SetAreaElementLight_80039ED8(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
-extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
 
 extern void ShowUnitHitResult_800BE834(int unit, int pos);
 
@@ -656,7 +656,7 @@ typedef struct BatSettingsBits
     unsigned int b21 : 1;
 } BatSettingsBits;
 
-extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
 
 extern void FlashScreenWhite_800BF3AC();
 
@@ -668,7 +668,7 @@ typedef struct BatHitNum_a
     int frame_8;
     int alpha_C;
     unsigned short* pos_10; // int[3]; the low halves are read
-    int f14;
+    int lineOffset_14; // 0, or 0xC for a unit's second number
     int unit_18;
 } BatHitNum_a;
 
@@ -696,11 +696,11 @@ typedef struct BatResult_a
     short fixedElement_26; // the stage's fixed element (-1: magic can change the area element)
 } BatResult_a; // the exe's ActionResult (common.c)
 
-extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BatCmd_a* cmd, BatResult_a* out);
 
-extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, BatChain_a* e);
+extern void sub_800B4390(UnitStatus* actor, UnitStatus* target, BatCmd_a* cmd, BatResult_a* res, BatChain_a* chain);
 
-extern void MarkSpeciesCaptured_800BF9F0(int a);
+extern void MarkSpeciesCaptured_800BF9F0(int species);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
@@ -730,7 +730,7 @@ extern void EnemyWindowsLayoutTask_800BFDEC();
 extern void EnemyWindowTask_800C0074();
 
 
-extern int GetElementModelAngle_800C0904(unsigned char* p);
+extern int GetElementModelAngle_800C0904(unsigned char* elements);
 
 
 
@@ -884,9 +884,9 @@ typedef struct BatGlow_a
     int* base_1C;
     int* path_20;
     char pad24[0xC];
-    int f30;
+    int alpha_30; // steps by 0x100 a frame: the model blend and the point light's intensity
     char pad34[0x10];
-    char f44[0x44];
+    char pos_44[0x44]; // the point light's position
     EffectModel* model_88;
     char pad8C[8];
     FtgObject* work_94; // malloc'd copy of the model's first FtgObject
@@ -896,7 +896,7 @@ typedef struct BatGlow_a
 } BatGlow_a;
 
 
-extern void SpawnOrb_800C3B50(int* p, int id);
+extern void SpawnOrb_800C3B50(int* pos, int id);
 
 
 
@@ -968,9 +968,9 @@ extern int AiCastMagic_800C6BD0();
 
 extern int rand();
 
-extern void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int b);
+extern void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int element);
 
-extern void AiSetCommandOnSelf_800C6B24(BatTask* t, int a, int b);
+extern void AiSetCommandOnSelf_800C6B24(BatTask* ai, int kind, int arg);
 
 extern int FindUsableSkill_800C6D6C();
 
@@ -1012,9 +1012,9 @@ typedef struct BatMenuItem_a
 
 typedef struct BatTgtQ_a
 {
-    short f0;
-    short f2;
-    short f4;
+    short id_0;     // item / magic id (the command's arg_4)
+    short actor_2;
+    short target_4; // target unit
     short f6;
 } BatTgtQ_a;
 
@@ -1121,14 +1121,14 @@ extern int FindNthMagicBit_8001AEC0();
 
 extern void DrawButtonHelpBar_8002B004(int a0, int a1, int a2);
 
-extern void DrawMenuHelpText_800C8828(int a);
+extern void DrawMenuHelpText_800C8828(int text);
 
 
 
 
 
 
-extern int IsDrainAction_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BatCmd_a* cmd, BatResult_a* res);
 
 
 
@@ -1139,7 +1139,7 @@ extern int menuErrorText_800C9E7C;
 
 
 
-extern void (*menuStateFns_800C966C[])(EventEntry* t, int a);
+extern void (*menuStateFns_800C966C[])(EventEntry* task, int buffer);
 
 
 
@@ -1147,7 +1147,7 @@ extern void UpdateMenuCursor_8003D794();
 
 extern void PreviewCommandResult_800C83B0();
 
-typedef void (*BatFxFn)(BatTask* t);
+typedef void (*BatFxFn)(BatTask* ai);
 
 extern void CmdSwapMinion_800BBBF4();
 extern void CmdAction_800BBA24();
@@ -1497,7 +1497,7 @@ extern BatMenuWins_a menuWindows_800C9630;
 extern unsigned char commandByCursor_800C9648[12];
 extern unsigned char commandNextPage_800C9654[12];
 extern unsigned char commandTargetFlags_800C9660[12];
-extern void (*menuStateFns_800C966C[2])(EventEntry *t, int a);
+extern void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer);
 extern int pageButtonHelp_800C9674[6];
 extern unsigned short pageHideFlags_800C968C[6][2];
 extern int commandKinds_800C96A4[9];

@@ -20,7 +20,7 @@ extern BatSel_a* GetBattleSelection_800A1E3C();
 extern void BattleEndDefeat_800BA444();
 extern void BattleEndWaitLevant_800BA52C();
 extern void BattleEndVictory_800BA564();
-extern int TestBattleFlag_800BC820(unsigned int m);
+extern int TestBattleFlag_800BC820(unsigned int mask);
 extern void ExitLevantBattleMode_800A8984(int a);
 extern void StartSceneDarken_8001AAA8(int a);
 extern void StopSoundSeqs_80030D68(void* a);
