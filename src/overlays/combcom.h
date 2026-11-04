@@ -8,12 +8,13 @@
 #include "minion_menu.h"
 #include "effect_data.h"
 
+// up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
+    int line0_0;
+    int line1_4;
+    int line2_8;
+    int line3_C;
 } CombComDlg;
 
 typedef struct CombComCmd
@@ -27,10 +28,10 @@ typedef struct CombComCmd
 typedef struct CombComItem
 {
     unsigned short flags;
-    short pad_2;
-    void* text_4;
-    int f8;
-    int fC;
+    short type_2;
+    void* text_4; // string, or sprite index for type 1
+    int sprts_8;
+    int tpages_C;
     short x_10;
     short y_12;
     int rest[9];
@@ -40,16 +41,17 @@ typedef struct CombComMenu
 {
     int f0;
     int time_4;
-    int f8;
+    int anim_8;
     int sel_C;
     void* items_10;
-    int f14;
+    int ot_14;
 } CombComMenu;
 
+// a top command's description and the message shown when it cannot be chosen (0: it can)
 typedef struct CombComMsg
 {
-    int* f0;
-    int* text;
+    int* desc_0;
+    int* error_4;
 } CombComMsg;
 
 typedef struct CombComMsgs3
@@ -70,7 +72,7 @@ extern const char aUseMagicSpell_800C9F08[];
 extern const char aChangeCurrentFi_800C9F28[];
 extern const char aCannotSummonInt_800C9F58[];
 extern const char aNotEnoughMana_800C9F8C[];
-extern const int dword_800C9FAC;
+extern const int aBlank_800C9FAC;
 extern const char aNoNeedToUseItem_800C9FB0[];
 extern const char aCannotSelect_800C9FD8[];
 extern const char aNoDivineMinions_800C9FF4[];
@@ -163,79 +165,80 @@ extern const char aVeryEffectiveAg_800CB3E8[];
 extern const char aSpecialWaterAtt_800CB440[];
 extern const char aVeryEffectiveAg_800CB46C[];
 extern const char aSpecialEarthAtt_800CB4C4[];
-extern const CombComItem name_800CB4F0;
-extern const CombComItem name_800CB528;
-extern const CombComItem name_800CB560;
-extern const CombComItem name_800CB598;
-extern const CombComMenu name_800CB5D0;
+extern const CombComItem pauseTitleItem_800CB4F0;
+extern const CombComItem pauseItemStart_800CB528;
+extern const CombComItem pauseItemGiveUp_800CB560;
+extern const CombComItem pauseItemReturn_800CB598;
+extern const CombComMenu menuWinTmpl_800CB5D0;
 extern const char aStartFight_800CB5E8[];
 extern const char aGiveUpResultsIn_800CB600[];
 extern const char aReturnToStartOf_800CB638[];
-extern const CombComMsgs3 name_800CB674;
-extern const CombComPos2 name_800CB680;
-extern const CombComPos2 name_800CB688;
-extern const int dword_800CB690[14];
-extern const int dword_800CB6C8[14];
-extern const int dword_800CB700[15];
-extern short dword_800CD28C[4];
-extern short word_800CD294;
-extern short dword_800CD298[6];
-extern short dword_800CD2A4[2];
-extern short word_800CD2A8;
-extern short word_800CD2AA;
-extern short word_800CD2AC;
-extern short word_800CD2AE;
-extern short dword_800CD2B0[6];
-extern short dword_800CD2BC[6];
-extern char dword_800CD2C8[8];
-extern short word_800CD2D0;
-extern short *dword_800CD2D4[6];
-extern CombComItem dword_800CD2EC[1];
-extern CombComItem dword_800CD324[1];
-extern CombComItem dword_800CD35C[1];
-extern CombComItem dword_800CD394[1];
-extern char dword_800CD3CC[56];
-extern CombComItem *dword_800CD404[4];
-extern void *dword_800CD414;
-extern int dword_800CD418;
-extern unsigned int dword_800CD41C[6];
-extern short word_800CD434[6];
-extern const char *dword_800CD440[1];
-extern const char *dword_800CD444[1];
-extern const char *dword_800CD448[1];
-extern const char *dword_800CD44C[1];
-extern const char *dword_800CD450[1];
-extern int dword_800CD454;
-extern int dword_800CD458;
-extern void *dword_800CD45C[1];
-extern int dword_800CD460;
-extern const char *dword_800CD464[1];
-extern char dword_800CD468[4];
-extern CombComMsg name_800CD46C[4];
-extern void *dword_800CD48C[1];
-extern void *dword_800CD490;
-extern unsigned char byte_800CD494[8];
-extern unsigned char byte_800CD49C[8];
-extern int dword_800CD4A4[8];
-extern int dword_800CD4C4[10];
-extern int dword_800CD4EC[8];
-extern char *name_800CD50C[6];
-extern int dword_800CD524[5];
-extern CombComDlg name_800CD538[30];
-extern char name_800CD718[256];
-extern void (*dword_800CD818[2])(EventEntry *, void *);
-extern unsigned short name_800CD820[6][2];
-extern unsigned char byte_800CD838;
-extern unsigned char byte_800CD839;
-extern unsigned char byte_800CD83A;
-extern unsigned char byte_800CD83B;
-extern int dword_800CD83C;
-extern CombComCmd *dword_800CD840;
-extern unsigned char byte_800CD844;
+extern const CombComMsgs3 pauseOptionDescs_800CB674;
+extern const CombComPos2 skillListPos_800CB680;
+extern const CombComPos2 magicListPos_800CB688;
+extern const int targetItem0_800CB690[14];
+extern const int targetItem1_800CB6C8[14];
+extern const int targetItem2_800CB700[15];
+extern short cmdCursor_800CD28C[4];
+extern short cmdCursorSel_800CD294;
+extern short skillCursor_800CD298[6];
+extern short magicCursor_800CD2A4[2];
+extern short magicCursorCount_800CD2A8;
+extern short magicCursorFlags_800CD2AA;
+extern short magicCursorSel_800CD2AC;
+extern short magicCursorScroll_800CD2AE;
+extern short targetCursor_800CD2B0[6];
+extern short changeCursor_800CD2BC[6];
+extern char pauseCursor_800CD2C8[8];
+extern short pauseCursorSel_800CD2D0;
+extern short *stateCursors_800CD2D4[6];
+extern CombComItem cmdItemAttack_800CD2EC[1];
+extern CombComItem cmdItemDefend_800CD324[1];
+extern CombComItem cmdItemSpecial_800CD35C[1];
+extern CombComItem cmdItemMagic_800CD394[1];
+extern CombComItem *cmdItems_800CD404[4];
+extern void *cmdItemSlot4_800CD414;
+extern int cmdItemsEnd_800CD418;
+extern unsigned int cmdMenuWin_800CD41C[6];
+extern short cmdItemX_800CD434[6];
+extern const char *descAttack_800CD440[1];
+extern const char *descDefend_800CD444[1];
+extern const char *descSpecial_800CD448[1];
+extern const char *descMagic_800CD44C[1];
+extern const char *descChange_800CD450[1];
+extern int errCannotSummon_800CD454;
+extern int errNotEnoughMana_800CD458;
+extern void *errBlank_800CD45C[1];
+extern int errNoNeedToUse_800CD460;
+extern const char *errCannotSelect_800CD464[1];
+extern char errNoDivineMinions_800CD468[4];
+extern CombComMsg cmdInfo_800CD46C[4];
+extern void *cmdInfoChangeDesc_800CD48C[1];
+extern void *cmdInfoChangeError_800CD490;
+extern unsigned char cmdTargetFlags_800CD494[8];
+extern unsigned char cmdNextState_800CD49C[8];
+extern int helpBarCmd_800CD4A4[8];
+extern int helpBarList_800CD4C4[10];
+extern int helpBarTarget_800CD4EC[8];
+extern char *stateHelpBars_800CD50C[6];
+extern int cmdKinds_800CD524[5];
+extern CombComDlg magicDescs_800CD538[30];
+extern char skillDescs_800CD718[256];
+extern void (*inputHandlers_800CD818[2])(EventEntry *, void *);
+extern unsigned short stateDrawFlags_800CD820[6][2];
+extern unsigned char msgShown_800CD838;
+extern unsigned char side_800CD839;
+extern unsigned char menuState_800CD83A;
+extern unsigned char msgTimer_800CD83B;
+extern int targetSlot_800CD83C;
+extern CombComCmd *cmd_800CD840;
+extern unsigned char targetFlags_800CD844;
 extern unsigned char byte_800CD845;
-extern int dword_800CD848;
-extern int dword_800CD84C;
-extern unsigned char byte_800CD850;
-extern short *dword_800CD854;
+extern int padIndex_800CD848;
+extern int errorMsg_800CD84C;
+extern unsigned char prevState_800CD850;
+extern short *activeCursor_800CD854;
+
+extern CombComItem cmdItemChange_800CD3CC;
 
 #endif
