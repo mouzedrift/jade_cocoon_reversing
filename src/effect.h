@@ -15,9 +15,9 @@ typedef struct FirFilter
     } output_C;
 } FirFilter;
 
-extern void FirFilterInit_8001450C(int* buf, FirFilter* f, int* coefs, int taps);
-extern void FirFilterSetup_80014574(FirFilter* p, int* coefs, int taps);
-extern void FirFilterStep_80014588(int* buf, FirFilter* f, unsigned int t);
+extern void FirFilterInit_8001450C(int* history, FirFilter* filter, int* coefs, int taps);
+extern void FirFilterSetup_80014574(FirFilter* filter, int* coefs, int taps);
+extern void FirFilterStep_80014588(int* history, FirFilter* filter, unsigned int t);
 
 extern const int dword_80072134;
 
