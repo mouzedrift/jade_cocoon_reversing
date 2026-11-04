@@ -19,8 +19,8 @@ extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C
 extern unsigned char byte_800A85BD;
 extern unsigned char dword_800A4078[];
 extern int dword_800A3A88;
-extern int sub_800A11BC(int);
-extern int sub_800A1AAC(int);
+extern int GetSlotMagicBits_800A11BC(int);
+extern int CountTeamMinions_800A1AAC(int);
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern int CountMagicBits_8001AE54(int);
 extern int FindNthMagicBit_8001AEC0(int, int);
@@ -206,7 +206,7 @@ const int targetItem2_800CB700[15] = {
 
 extern EventNode* dword_8008D614;
 extern unsigned char byte_800A38D8;
-extern unsigned char byte_800A38DC;
+extern unsigned char battleResult_800A38DC;
 extern unsigned short padPressed_8009194C[];
 extern void CmdMenuTask_800CD16C();
 extern unsigned char byte_800A85BC;
@@ -235,7 +235,7 @@ EventEntry* CombComStart_800CB7AC(int cmd, int side)
         {
             padIndex_800CD848 = byte_800A38D8;
         }
-        byte_800A38DC = 0;
+        battleResult_800A38DC = 0;
         menuState_800CD83A = 0;
         prevState_800CD850 = 0;
         msgShown_800CD838 = 0;
@@ -249,9 +249,9 @@ EventEntry* CombComStart_800CB7AC(int cmd, int side)
 
 void SetupCmdMenu_800CB88C()
 {
-    if (CountMagicBits_8001AE54(sub_800A11BC(side_800CD839)) >= 5)
+    if (CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839)) >= 5)
     {
-        magicCursorCount_800CD2A8 = CountMagicBits_8001AE54(sub_800A11BC(side_800CD839));
+        magicCursorCount_800CD2A8 = CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839));
     }
     if (dword_800A3A88 & 2)
     {
@@ -263,7 +263,7 @@ void SetupCmdMenu_800CB88C()
 
 void DisableChangeIfAlone_800CB924()
 {
-    if (sub_800A1AAC(side_800CD839) == 1)
+    if (CountTeamMinions_800A1AAC(side_800CD839) == 1)
     {
         cmdInfoChangeError_800CD490 = errNoDivineMinions_800CD468;
         cmdItemChange_800CD3CC.flags |= 2;
@@ -283,7 +283,7 @@ short* GetStateCursor_800CB974(int state)
             {
                 if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 4)
                 {
-                    changeCursor_800CD2BC[2] = sub_800A1AAC(side_800CD839) - 1;
+                    changeCursor_800CD2BC[2] = CountTeamMinions_800A1AAC(side_800CD839) - 1;
                     return changeCursor_800CD2BC;
                 }
             }
@@ -381,7 +381,7 @@ int GetSelectedSkill_800CBC28()
 
 int GetSelectedMagic_800CBC58()
 {
-    int r = sub_800A11BC(side_800CD839);
+    int r = GetSlotMagicBits_800A11BC(side_800CD839);
     return FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4));
 }
 
@@ -453,7 +453,7 @@ void DrawCmdMenu_800CBEA4()
             short p[2];
             Minion* m;
             shown = 1;
-            m = sub_800A11D8(side_800CD839);
+            m = GetSlotMinion_800A11D8(side_800CD839);
             p[0] = 10;
             p[1] = 0x14;
             DrawAbilityDescription_8002C670(m, p, skillDescs_800CD718, (short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298), 0xF);
@@ -536,7 +536,7 @@ void DrawCmdMenu_800CBEA4()
         r.field_8 = -1;
         r.cursor_0 = skillCursor_800CD298[4];
         r.scroll_2 = skillCursor_800CD298[5];
-        r.minion_C = sub_800A11D8(side_800CD839);
+        r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         r.field_A = 0;
         DrawAbilityList_8002CE28(&r, p.xy[side_800CD839]);
         word_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
@@ -551,7 +551,7 @@ void DrawCmdMenu_800CBEA4()
         r.field_8 = -1;
         r.cursor_0 = magicCursor_800CD2A4[4];
         r.scroll_2 = magicCursor_800CD2A4[5];
-        r.minion_C = sub_800A11D8(side_800CD839);
+        r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         r.field_A = 0;
         DrawMagicList_8002CAC8(&r, p.xy[side_800CD839]);
         word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
@@ -635,8 +635,8 @@ INCLUDE_OVERLAY_ASM(combcom, PreviewCmdEffect_800CC40C);
 extern CombComItem targetItem0_800CB690;
 extern CombComItem targetItem1_800CB6C8;
 extern CombComItem targetItem2_800CB700;
-extern Minion dword_800A3AA0[][3];
-extern int sub_800A1934(Minion* p);
+extern Minion teams_800A3AA0[][3];
+extern int IsMinionSlotEmpty_800A1934(Minion* p);
 extern int sub_800A1958(Minion* p);
 extern int CheckMagicUsable_80034068(short* p);
 int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
@@ -699,8 +699,8 @@ int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
         pi = pk;
         for (k = i = 0; i < 3; i++)
         {
-            u = &dword_800A3AA0[arg[1]][i];
-            if (i != ((int*)dword_800A4078)[side_800CD839] && sub_800A1934(u) == 0)
+            u = &teams_800A3AA0[arg[1]][i];
+            if (i != ((int*)dword_800A4078)[side_800CD839] && IsMinionSlotEmpty_800A1934(u) == 0)
             {
                 it = items[k];
                 *pk = it;
@@ -757,7 +757,7 @@ void FinishCmd_800CC9FC()
 }
 
 
-extern Minion dword_800A3AA0[][3];
+extern Minion teams_800A3AA0[][3];
 extern int sub_800A1958(Minion* p);
 extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
@@ -787,7 +787,7 @@ int CheckCmdSelectable_800CCA94()
         errorMsg_800CD84C = *p;
         return 0;
     case 1:
-        a.minion_C = sub_800A11D8(side_800CD839);
+        a.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         switch (CheckSkillUsable_80033C98(&a))
         {
         case 0:
@@ -805,7 +805,7 @@ int CheckCmdSelectable_800CCA94()
         }
         break;
     case 2:
-        a.minion_C = sub_800A11D8(side_800CD839);
+        a.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         switch (CheckMagicCastable_80033C08(&a))
         {
         case 0:
@@ -855,7 +855,7 @@ int CheckCmdSelectable_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 4)
         {
-            if (sub_800A1958(&dword_800A3AA0[side_800CD839][targetSlot_800CD83C]))
+            if (sub_800A1958(&teams_800A3AA0[side_800CD839][targetSlot_800CD83C]))
             {
                 errorMsg_800CD84C = errCannotSummon_800CD454;
                 return 0;
@@ -879,7 +879,7 @@ int GetDefaultTargets_800CCD84()
     return 1 << ((side_800CD839 ^ 1) + 8);
 }
 
-extern int sub_800A11A0(int);
+extern int GetSlotSkills_800A11A0(int);
 extern int sub_80031B0C(int, int);
 extern int GetMagicTargetFlags_8001ACE4(int);
 // Confirm: takes the highlighted entry and moves to the next menu state
@@ -895,7 +895,7 @@ void AdvanceCmdMenu_800CCDD0()
         cmd_800CD840->kind_0 = cmdKinds_800CD524[(short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C)];
         break;
     case 1:
-        v = sub_800A11A0(side_800CD839);
+        v = GetSlotSkills_800A11A0(side_800CD839);
         targetFlags_800CD844 = sub_80031B0C(v, GetSelectedSkill_800CBC28());
         menuState_800CD83A = 4;
         cmd_800CD840->arg_4 = GetSelectedSkill_800CBC28();
@@ -923,10 +923,10 @@ void AdvanceCmdMenu_800CCDD0()
             menuState_800CD83A = 0;
             break;
         case 1:
-            byte_800A38DC = 1;
+            battleResult_800A38DC = 1;
             break;
         case 2:
-            byte_800A38DC = 2;
+            battleResult_800A38DC = 2;
             break;
         }
         break;
@@ -944,7 +944,7 @@ void CmdMenuInput_800CCFCC(EventEntry* e)
         {
             PlaySfx_80031494(0x7E);
             AdvanceCmdMenu_800CCDD0();
-            if (byte_800A38DC)
+            if (battleResult_800A38DC)
             {
                 e->flags = (e->flags & ~1) | 0x8000;
             }

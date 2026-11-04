@@ -35,10 +35,10 @@ extern int dword_800A3A88;
 extern unsigned int dword_8008D3FC;
 extern unsigned short word_8008D3FC;
 extern unsigned short uiColor_8008B590;
-extern Minion dword_800A3AA0[2][3];
-extern void sub_800A16FC();
-extern int sub_800A1AAC(int);
-extern int sub_800A1934(Minion*);
+extern Minion teams_800A3AA0[2][3];
+extern void CombatNextStage_800A16FC();
+extern int CountTeamMinions_800A1AAC(int);
+extern int IsMinionSlotEmpty_800A1934(Minion*);
 extern void PlaySfx_80031494(int);
 extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 extern void ShuffleTeam_800A473C(int);
@@ -104,7 +104,7 @@ void VersusSetupTask_800A4170(CombStrtTask* t, int a)
     col.col_0 = uiColor_8008B590;
     DrawMenuItemWithWindow_8002ADB4(&w, &col, 0xF, 0);
     HealTeams_800A48C0();
-    if (sub_800A1AAC(0) < 2u && sub_800A1AAC(1) < 2u)
+    if (CountTeamMinions_800A1AAC(0) < 2u && CountTeamMinions_800A1AAC(1) < 2u)
     {
         if (setupState_800A4C14 == 0xFF)
         {
@@ -167,7 +167,7 @@ void SetupAllowChangeInput_800A43FC()
         {
             dword_800A3A88 &= ~2;
         }
-        if (sub_800A1AAC(0) >= 2u || sub_800A1AAC(1) >= 2u)
+        if (CountTeamMinions_800A1AAC(0) >= 2u || CountTeamMinions_800A1AAC(1) >= 2u)
         {
             setupState_800A4C14 = setupState_800A4C14 + 1;
         }
@@ -199,14 +199,14 @@ void SetupStartFightInput_800A4524(CombStrtTask* task)
 {
     if (IsConfirmPressedP1_8003D380(1) && yesNoSel_800A4BF8 == 1)
     {
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
         dword_800A3A88 &= ~1;
     }
     else if (IsConfirmPressedP1_8003D380(1))
     {
         setupState_800A4C14 = 1;
         dword_800A3A88 |= 1;
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
     }
 }
 
@@ -261,8 +261,8 @@ void ShuffleTeam_800A473C(int side)
     int used[10];
     int order[10];
     Minion tmp[10];
-    int n = sub_800A1AAC(side);
-    Minion* units = dword_800A3AA0[side];
+    int n = CountTeamMinions_800A1AAC(side);
+    Minion* units = teams_800A3AA0[side];
     int i;
     if (n < 2)
     {
@@ -313,8 +313,8 @@ void HealTeams_800A48C0()
     {
         for (j = 0; j < 3; j++)
         {
-            Minion* p = &dword_800A3AA0[i][j];
-            if (sub_800A1934(p) == 0)
+            Minion* p = &teams_800A3AA0[i][j];
+            if (IsMinionSlotEmpty_800A1934(p) == 0)
             {
                 Heal_80011CD0(&p->status_84);
             }
@@ -342,7 +342,7 @@ extern CombStrtWin minionLabelItem_800A4154;
 extern void* slotLabelSprites_800A4C58[];
 extern short minionSlotPos_800A4C64[][3][2];
 extern void DrawHpGauge_8002F078(void* a, void* b, int c, int d);
-extern void sub_800A1844(void* a, void* b, int c);
+extern void DrawMinionNameLevel_800A1844(void* a, void* b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 void DrawTeamMinion_800A49DC(int side, int slot)
 {
@@ -354,9 +354,9 @@ void DrawTeamMinion_800A49DC(int side, int slot)
     short pos2[4];
     CombStrtBox c3;
     RECT r2;
-    Minion* u = &dword_800A3AA0[side][slot];
+    Minion* u = &teams_800A3AA0[side][slot];
     short* xy;
-    if (sub_800A1934(u) != 1)
+    if (IsMinionSlotEmpty_800A1934(u) != 1)
     {
         w = minionLabelItem_800A4154;
         w.text_4 = slotLabelSprites_800A4C58[slot];
@@ -380,7 +380,7 @@ void DrawTeamMinion_800A49DC(int side, int slot)
         DrawWindow_80042460(&r1, &c2, pOT_8008D454 + 15, 0);
         pos2[0] = xy[0];
         pos2[1] = xy[1] + 0x14;
-        sub_800A1844(u, pos2, 0);
+        DrawMinionNameLevel_800A1844(u, pos2, 0);
         c3.c_2 = 0;
         c3.c_3 = 1;
         c3.col_0 = saveData_8008B570.uiColor_20.i;

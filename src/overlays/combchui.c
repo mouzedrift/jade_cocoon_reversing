@@ -56,7 +56,7 @@ extern int IsCancelPressedP1_8003D41C(int);
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void DrawMenuWindows_8002A5A4(void*);
 extern void DrawMenuBackground_8002BE10();
-extern void sub_800A16FC();
+extern void CombatNextStage_800A16FC();
 extern void DrawTextLines_800A450C();
 
 // Arena intro text; asks whether player 2 uses controller 2 (forced "no" when pad 2 is absent)
@@ -79,13 +79,13 @@ void VersusIntroTask_800A4394(CombChuiTask* task, int arg)
         {
             byte_800A38D8 = 0;
         }
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
         task->next_8(task, arg);
     }
     else if (IsCancelPressedP1_8003D41C(1))
     {
         byte_800A38D8 = 0;
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
         task->next_8(task, arg);
     }
     else

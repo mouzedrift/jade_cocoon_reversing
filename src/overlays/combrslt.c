@@ -26,7 +26,7 @@ extern void DrawButtonHelpBar_8002B004(void*, int, int);
 extern void VersusResultFadeOut_800A41E4();
 extern void DrawSmallNumber3_8002C290(void*, int, int);
 extern void DrawUiTiySprt_8002C06C(void*, int, int);
-extern void sub_800A16FC();
+extern void CombatNextStage_800A16FC();
 extern void SetFadeMode_8001C19C(int, int);
 extern void DrawPlayerResult_800A4240(int);
 extern void DrawMenuBackground_8002BE10();
@@ -64,7 +64,7 @@ void VersusResultFadeOut_800A41E4(CombRsltTask* task, int arg)
     if (IsFadeDone_8001C2FC() == 1)
     {
         SetFadeMode_8001C19C(3, 0x20);
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
         task->next_8(task, arg);
     }
 }
@@ -165,8 +165,8 @@ void DrawScorePair_800A444C(unsigned short* p, int ot, int b, int c)
 extern char byte_800A3AA0[];
 
 extern int sub_800A1958();
-extern int sub_800A1934();
-extern void sub_800A1844();
+extern int IsMinionSlotEmpty_800A1934();
+extern void DrawMinionNameLevel_800A1844();
 extern void DrawHpGauge_8002F078();
 extern void DrawWindow_80042460();
 
@@ -193,7 +193,7 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
         a.flags_0 &= ~2;
     }
     e = byte_800A3AA0 + player * 744 + slot * 248;
-    if (sub_800A1934(e) != 1)
+    if (IsMinionSlotEmpty_800A1934(e) != 1)
     {
         a.text_4 = slotLabelSprites_800A48B8[slot];
         q = minionSlotPos_800A48C4 + slot + player * 3;
@@ -213,7 +213,7 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
         DrawMenuItemWithWindow_8002ADB4(&b, box, 0xF, GetTime30Hz_8002C64C());
         r2.x = q->x;
         r2.y = q->y + 0x14;
-        sub_800A1844(e, &r2, a.flags_0);
+        DrawMinionNameLevel_800A1844(e, &r2, a.flags_0);
         r3[0].x = q->x;
         r3[0].y = q->y + 0x14;
         r3[1].x = 0x90;

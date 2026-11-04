@@ -30,8 +30,8 @@ extern int dword_800A3A94;
 extern unsigned short uiColor_8008B590;
 extern void CombLoadWaitOverlay_800A4140();
 extern void CombLoadWaitMenu_800A41A8();
-extern void sub_800A16FC();
-extern void sub_800A1988();
+extern void CombatNextStage_800A16FC();
+extern void CopySaveMinionsToRoster_800A1988();
 extern void LoadMenuInit_800B7674(int, int);
 extern int IsLoadMenuActive_800B793C();
 extern int sub_800B7914();
@@ -67,9 +67,9 @@ void CombLoadWaitMenu_800A41A8(CombLoadTask* task)
     {
         if (sub_800B7914() == 1)
         {
-            sub_800A1988();
+            CopySaveMinionsToRoster_800A1988();
         }
-        task->next_8 = sub_800A16FC;
+        task->next_8 = CombatNextStage_800A16FC;
     }
 }
 
