@@ -10,12 +10,12 @@ typedef struct XaTask
     short vol_A;   // fade-out volume
 } XaTask;
 
-extern unsigned char byte_80086FEC;
+extern unsigned char windowBgColor0_80086FEC;
 extern unsigned char byte_80086FED;
 extern unsigned char byte_80086FEE;
 extern unsigned char byte_80086FEF;
-extern int dword_80086FF0[9];
-extern int dword_80087014[5];
+extern int windowBgColorData_80086FF0[9];
+extern int windowPulseColorData_80087014[5];
 extern void *windowColorsAlt_8008703C[5];
 extern int windowFrameQuadEdges_80087070[][8];
 extern int dword_80087110;

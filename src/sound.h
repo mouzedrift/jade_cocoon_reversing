@@ -43,7 +43,7 @@ typedef struct
 
 extern int GetSoundFileId_80030D4C(int idx);
 extern void InitSound_8002FE54(SoundStruct* arg1);
-extern void PlaySfx_80031494(int a1);
+extern void PlaySfx_80031494(int id);
 extern void LoadSound_80030A84(short soundId, SoundStruct* sound);
 
 extern SoundStruct bgmSound_80091CE0;

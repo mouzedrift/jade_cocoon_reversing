@@ -22,11 +22,11 @@
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";
 const int dword_80072134 = 0x80E8E8;
-int dword_800795A0[12] = {
+int turnFilterCoeffs_800795A0[12] = {
     0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200,
     0x400, 0x400, 0x400, 0x400,
 };
-short dword_800795D0[2] = { 0 };
+short effectVramOrigin_800795D0[2] = { 0 };
 SVECTOR zeroSvector_800795D4 = { 0 };
 int effectColorWhite_800795DC = 0xFFD6D6;
 int effectColorRed_800795E0 = 0x6B00FF;
@@ -238,29 +238,29 @@ int LowestSetBit_80014358(unsigned int mask)
 }
 #if 0
 // Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as GetUnitStats_8001449C / GetUnitSkills_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
-UnitStatus* GetUnitStatus_80014390(int a0)
+UnitStatus* GetUnitStatus_80014390(int unit)
 {
     UnitStatus* r = 0;
-    unsigned int v = a0 & 0xFF;
+    unsigned int v = unit & 0xFF;
     unsigned int w;
     if (v >= 8)
     {
-        w = a0 - 8;
+        w = unit - 8;
         r = GetSlotStatus_800A10C0(w & 0xFF);
     }
     else if (v >= 4)
     {
-        int flags = sub_800A248C();
+        int flags = GetEnemyAliveMask_800A248C();
         int m = 1 << v;
         if (flags & m)
         {
-            w = a0 - 4;
-            r = sub_800A2B60(w & 0xFF);
+            w = unit - 4;
+            r = GetEnemyStatus_800A2B60(w & 0xFF);
         }
     }
     else if (v != 0)
     {
-        w = a0 - 1;
+        w = unit - 1;
         r = GetMinionStatus_800107A0(3, w & 0xFF);
     }
     else
@@ -279,7 +279,7 @@ Minion* GetUnitMinion_80014444(int unit)
     if (v >= 8)
     {
         v = unit - 8;
-        r = sub_800A11D8(v & 0xFF);
+        r = GetSlotMinion_800A11D8(v & 0xFF);
     }
     else if (v != 0)
     {
@@ -290,14 +290,14 @@ Minion* GetUnitMinion_80014444(int unit)
 }
 #if 0
 // Not matched (2 words): with an int a0 the saved registers of a0 / r / a0 - 4 are permuted (original $s0/$s2/$s1, 11 words); u_char a0 (here) gets them right but masks a0 on entry (andi instead of move, a0 - 4 taken from the masked copy). a0 = 1 << a0 / a0 = flags & m also fix the registers but write $s0; tried K&R int/u_char, a0 copies, range test a0 >= 4 && a0 < 7, early returns, if/else r = 0; permuter 1500: best is this
-UnitStats* GetUnitStats_8001449C(unsigned char a0)
+UnitStats* GetUnitStats_8001449C(unsigned char unit)
 {
     UnitStats* r = 0;
-    int v = a0 - 4;
+    int v = unit - 4;
     if ((unsigned char)v < 3)
     {
-        int flags = sub_800A248C();
-        int m = 1 << a0;
+        int flags = GetEnemyAliveMask_800A248C();
+        int m = 1 << unit;
         if (flags & m)
         {
             r = GetEnemyStats_800A2B20(v & 0xFF);
@@ -346,7 +346,7 @@ void InitEffectTask_80014618(EventEntry* p, EffectTaskState* q)
     q->state_2C = 0;
     p->cb_8 = (EventEntryFn)UpdateEffectTask_80014638;
 }
-extern short dword_800795D0[];
+extern short effectVramOrigin_800795D0[];
 extern short effectFileTable_800795F0[];
 int CountActiveEffectObjects_800147FC(void);
 // Matched
@@ -371,7 +371,7 @@ void UpdateEffectTask_80014638(EventEntry* p, void* buf)
             {
                 q->idx_38 = 0x12;
             }
-            LoadEffectFile_80020DDC(effectFileTable_800795F0[q->idx_38 * 2], &effectFile_80091BD0, dword_800795D0, dword_800795D0, 0, 0);
+            LoadEffectFile_80020DDC(effectFileTable_800795F0[q->idx_38 * 2], &effectFile_80091BD0, effectVramOrigin_800795D0, effectVramOrigin_800795D0, 0, 0);
             q->state_2C = 1;
         }
         break;
@@ -427,7 +427,7 @@ int CountActiveEffectObjects_800147FC(void)
         }
         n = n->next;
     }
-    head2 = dword_8008D60C;
+    head2 = miscTasks_8008D60C;
     j = 0;
     count = head2->count;
     for (n2 = head2; j < count; j++)
@@ -452,11 +452,11 @@ int IsEffectTaskIdle_800148D4(void)
     return ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->state_2C == 0;
 }
 // Matched
-void RequestEffect_800148F4(int a0)
+void RequestEffect_800148F4(int id)
 {
     EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
     p->flags_28 |= 4;
-    p->idx_38 = a0;
+    p->idx_38 = id;
     if (p->state_2C != 0)
     {
         printf(aAssertionFaile_3, aEffectC, 0x124);

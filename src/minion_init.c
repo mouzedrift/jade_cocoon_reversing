@@ -295,7 +295,7 @@ void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
 
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
-extern void EncodeName_8003F7C8(void* a0, unsigned char* a1);
+extern void EncodeName_8003F7C8(void* text, unsigned char* out);
 extern void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base);
 extern void InitSpeciesSkills_800199A0(UnitStats* unit);
 extern void InitSpeciesMagic_80019A20(UnitStats* a0);
@@ -549,7 +549,7 @@ void CopyName_80019AF4(unsigned int* dst, unsigned int* src)
     MemCopy_800403E8(dst, src, 12);
 }
 // Matched
-void SetBoneGroupFlags_80019B14(short* bones, unsigned short* a1, unsigned short* a2)
+void SetBoneGroupFlags_80019B14(short* bones, unsigned short* levels, unsigned short* flags)
 {
     struct_int3 masks;
     int k;
@@ -559,11 +559,11 @@ void SetBoneGroupFlags_80019B14(short* bones, unsigned short* a1, unsigned short
     {
         int set = 0;
         int clr = 0;
-        if (a1[k] < 2)
+        if (levels[k] < 2)
         {
             clr = masks.m[k];
         }
-        if (a2[k] == 0)
+        if (flags[k] == 0)
         {
             set = masks.m[k];
         }

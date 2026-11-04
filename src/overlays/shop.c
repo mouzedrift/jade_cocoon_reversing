@@ -90,10 +90,10 @@ typedef struct ShopMenu
 extern char name_80082680[];
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern int MergeMinions_800B9FC8(Minion* base, Minion* partner, Minion* out, int person);
-extern int sub_800AD288(int a, int b);
+extern int GetInventorySlotId_800AD288(int a, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void InitShopMenu_800BB148();
-extern void sub_800A7B00(int a);
+extern void SuspendFieldMinions_800A7B00(int a);
 extern void LoadUiTiy_8002BF74();
 extern int IsMinionListState_800BD678();
 extern void SetupShopCursor_800BD854();
@@ -107,7 +107,7 @@ extern Minion name_8008EF18[];
 extern void ClearMagicBit_8001AE00(unsigned int* b, int i);
 extern int GetMagicElement_8001AD30(int i);
 extern int CountMagicBits_8001AE54(unsigned int* b);
-extern int sub_800AD308(int a);
+extern int GetLastInventorySlot_800AD308(int a);
 extern void EndFormView_800BF750();
 typedef struct ShopBigShop
 {
@@ -150,29 +150,29 @@ extern int fn_80024F00(int a, int b);
 extern int fn_80024F38(int a, int b);
 extern void fn_80019B14(int a, int b, int c);
 extern void fn_8001D68C(void* p, int on);
-extern char name_80079140[];
+extern char defaultBones_80079140[];
 extern signed char name_8007BA74[];
 extern int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short c);
 
 extern int fn_800272D0();
-extern void fn_800A7BF0(int a);
-extern void fn_800A5F9C(int a);
+extern void ResumeFieldMinions_800A7BF0(int a);
+extern void ExchangeEventResult_800A5F9C(int a);
 extern void ShopCtrlRequestNameEntry_800B6C6C(void* p, int a);
 extern void ShopCtrlRequestResume_800B6CC8();
 extern void fn_80027478(int a, int b);
-extern void fn_800A6D30(int a);
+extern void RequestGameMode_800A6D30(int a);
 extern int eventDispatchHalt_8008B540;
 extern void fn_8002C014();
 extern void fn_8001ABEC(int a);
-extern int fn_800AD288(int a, int b);
-extern void fn_800AD1E0(int a, int b, int c);
-extern void fn_800AD3F0(int a);
+extern int GetInventorySlotId_800AD288(int a, int b);
+extern void RemoveInventory_800AD1E0(int a, int b, int c);
+extern void CompactInventory_800AD3F0(int a);
 extern void SetMinionEmpty_800B9B44(short* p);
 extern void ShopResumeAfterNameEntry_800BE128();
 extern void ShopResumeAfterSpin_800BE07C();
 extern void fn_80011CD0(UnitStatus* p);
-extern int fn_800AD888();
-extern void fn_800AD8F4(int a);
+extern int GetFreeCocoonSlots_800AD888();
+extern void AddEmptyCocoons_800AD8F4(int a);
 
 extern int shopMinionCount_800B6CE4; // SHOPCTRL data: the shop's minion list (BuildShopMinionList_800B9920)
 extern Minion* shopMinions_800B6CF0;
@@ -1424,7 +1424,7 @@ void InitShopMenu_800BB148(ShopMenu* u)
         }
     }
     BuildShopMinionList_800B9920();
-    fn_800AD8F4(fn_800AD888());
+    AddEmptyCocoons_800AD8F4(GetFreeCocoonSlots_800AD888());
 }
 
 int CanViewForm_800BB38C(ShopMenu* p)
@@ -2523,7 +2523,7 @@ int CheckShopSelection_800BCF74(ShopMenu* u)
         }
         return 0;
     case 14:
-        if (sub_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4) == 0xFF)
+        if (GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4) == 0xFF)
         {
             return 4;
         }
@@ -2820,7 +2820,7 @@ void PreviewMerge_800BD720(ShopMenu* u)
     {
         if (u->flags_24 & 0x200)
         {
-            d = sub_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4);
+            d = GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4);
         }
         else
         {
@@ -2905,7 +2905,7 @@ void SetupShopCursor_800BD854(ShopMenu* u)
     }
     if (u->state_0 == 14)
     {
-        r = sub_800AD308(4);
+        r = GetLastInventorySlot_800AD308(4);
         if (r < 3)
         {
             r = 3;
@@ -2922,7 +2922,7 @@ extern void ShopWaitAreaReload_800BDD74();
 extern void ShopWaitDarken_800BDE44();
 extern void RequestAreaReload_80027314();
 extern void StartSceneDarken_8001AAA8(int a);
-extern void fn_800AD184(int a, int b, int c);
+extern void AddInventory_800AD184(int a, int b, int c);
 extern int ExchangeMinions_800BAF54(short* a, short* b, short c, short d);
 void ShopMenuExecute_800BD9DC(ShopMenu* u)
 {
@@ -2955,8 +2955,8 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
             }
             if (u->flags_24 & 0x200)
             {
-                fn_800AD1E0(fn_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
-                fn_800AD3F0(4);
+                RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
+                CompactInventory_800AD3F0(4);
                 u->flags_24 &= ~0x200;
             }
             u->marks_84 = 0;
@@ -2990,7 +2990,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         {
             if ((unsigned int)u->marks_84 & (1 << i))
             {
-                fn_800AD184(GetSilkItemForLevel_800BAE80(GetShopMinion_800B9C5C(i)), 1, 0);
+                AddInventory_800AD184(GetSilkItemForLevel_800BAE80(GetShopMinion_800B9C5C(i)), 1, 0);
                 ClearShopMinion_800B9B20(i);
                 any = 1;
             }
@@ -3062,23 +3062,23 @@ void ShopWaitAreaReload_800BDD74(EventEntry* t, void* arg)
     extern void ShopResumeAfterSpin_800BE07C();
     if (fn_800272D0() == 0)
     {
-        fn_800A7BF0(-1);
+        ResumeFieldMinions_800A7BF0(-1);
         if (u->state_0 == 3)
         {
-            fn_800A5F9C(1);
+            ExchangeEventResult_800A5F9C(1);
             t->cb_8 = ShopResumeAfterNameEntry_800BE128;
             ShopCtrlRequestNameEntry_800B6C6C(u->base_4C->status_84.name_10
 , 1);
         }
         else if (u->state_0 == 6)
         {
-            fn_800A5F9C(2);
+            ExchangeEventResult_800A5F9C(2);
             t->cb_8 = ShopResumeAfterSpin_800BE07C;
             ShopCtrlRequestResume_800B6CC8();
         }
         t->flags = (t->flags & ~1) | 0x8000;
         fn_80027478(0x40, 0);
-        fn_800A6D30(1);
+        RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
 }
@@ -3135,8 +3135,8 @@ void ShopWaitBrighten_800BDEA8(int dummy, ShopMenu* u)
                 }
                 if (u->flags_24 & 0x200)
                 {
-                    fn_800AD1E0(fn_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
-                    fn_800AD3F0(4);
+                    RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
+                    CompactInventory_800AD3F0(4);
                     u->flags_24 &= ~0x200;
                 }
                 u->marks_84 = 0;
@@ -3177,7 +3177,7 @@ void ShopResumeAfterSpin_800BE07C(EventEntry* t, ShopMenu* u)
     SetupShopCursor_800BD854(u);
     u->listIndex_30 = u->savedIndex_5E[1];
     u->listScroll_32 = u->savedScroll_72[0];
-    sub_800A7B00(-1);
+    SuspendFieldMinions_800A7B00(-1);
     LoadUiTiy_8002BF74();
     t->cb_8 = ShopWaitUiTiy_800BE210;
 }
@@ -3213,7 +3213,7 @@ void ShopResumeAfterNameEntry_800BE128(EventEntry* t, ShopMenu* u)
     DrawMenuBackground_8002BE10();
     DrawShopMenu_800BC380(u);
     SetFadeMode_8001C19C(3, 0x20);
-    sub_800A7B00(-1);
+    SuspendFieldMinions_800A7B00(-1);
     t->cb_8 = ShopMenuTask_800BB444;
 }
 
@@ -3540,7 +3540,6 @@ int GetStoredListScroll_800BEB60(ShopMenu* u)
     }
     return -1;
 }
-INCLUDE_OVERLAY_ASM(shop, dword_800B9770);
 
 void UpdateSelectedMinions_800BEBC8(ShopMenu* u)
 {
@@ -3610,8 +3609,6 @@ def:
     u->shown_54 = u->base_4C;
 }
 
-extern char name_8008D434[];
-extern char name_8008D440[];
 extern void DrawScrollArrow_8002C6DC(void* p, int a, int b);
 void DrawSkinList_800BED48(short* s)
 {
@@ -3627,12 +3624,12 @@ void DrawSkinList_800BED48(short* s)
     int n;
     for (i = 0; i < 4; i++)
     {
-        id = sub_800AD288(i + s[1], 4);
+        id = GetInventorySlotId_800AD288(i + s[1], 4);
         if (id < 11)
         {
             icon = GetPersonIcon_8001CD6C(id);
             name = GetPersonName_8001CD3C(id);
-            cnt = sub_800AD2C8(i + s[1], 4);
+            cnt = GetInventorySlotCount_800AD2C8(i + s[1], 4);
         }
         else
         {
@@ -3641,8 +3638,8 @@ void DrawSkinList_800BED48(short* s)
             cnt = 0;
         }
         skinListRows_800C0258[i][0].val_4 = icon;
-        skinListRows_800C0258[i][0].sprts_8 = name_8008D434;
-        skinListRows_800C0258[i][0].tpages_C = name_8008D440;
+        skinListRows_800C0258[i][0].sprts_8 = &publicTiySprts_8008D434;
+        skinListRows_800C0258[i][0].tpages_C = &publicTiyTPages_8008D440;
         skinListRows_800C0258[i][1].val_4 = name;
         skinListRows_800C0258[i][2].val_4 = cnt;
         skinListRows_800C0258[i][0].x_10 = 0x7B;
@@ -3674,7 +3671,7 @@ void DrawSkinList_800BED48(short* s)
     q.ot_14 = s[3];
     DrawMenuWindows_8002A5A4(&q);
     SetFontClutOffset_8003F900(2, 0);
-    n = sub_800AD308(4) + 1;
+    n = GetLastInventorySlot_800AD308(4) + 1;
     if (n < 4)
     {
         n = 4;
@@ -3925,7 +3922,7 @@ void SpawnFormActor_800BF574(int* a, unsigned short* b)
     q.w24 = -1;
     q.w2C = 4;
     q.w48 = r;
-    q.w34 = (int)name_80079140;
+    q.w34 = (int)defaultBones_80079140;
     q.w38 = fn_80024E90(r, v);
     q.w3C = fn_80024EC8(r, v);
     q.w40 = fn_80024E38(r);

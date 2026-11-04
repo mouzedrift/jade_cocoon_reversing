@@ -1,5 +1,6 @@
 // GAME.BIN, source file 1 of 3
 #include "game.h"
+#include "spadstack.h"
 
 const int dword_800A05A0 = 12;
 const char aAssertionFaile_800A05A4[] = "Assertion failed: file \"%s\", line %d\n";
@@ -36,12 +37,25 @@ void TileAnimTaskInit_800A09D8(GameTask_1* t, short* q)
     TileAnimTask_800A0A04(t, q);
 }
 
-// Not C: calls DrawTileAnimLayers_800A0A5C with $sp moved to the scratchpad (0x1F8003FC), an inline-asm stack switch
+#if 0
+// Matches byte for byte when enabled, but the stack switch is inline asm (src/spadstack.h), an undecided exception:
+// kept disabled, the assembly stays included.
+// Draws the animated tile layers on the scratchpad stack, unless the camera points are disabled.
+void TileAnimTask_800A0A04(GameTask_1* t, short* q)
+{
+    if (!(unknownFlags_8008D678 & 0x8000))
+    {
+        SetSpadStack(SPAD_STACK_ADDR);
+        DrawTileAnimLayers_800A0A5C(q);
+        ResetSpadStack();
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, TileAnimTask_800A0A04);
 
 #if 0
 // Not matched: register pressure / spills differ (the original spills the cell pointer and u0 + 31, keeps 0xFFFFFF hoisted; here the tpage value spills); logic complete.
-// Draws the map's animated tile layers (dword_8008D648.lists_14): steps each layer's frame timer, then builds a
+// Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
 // Runs on the scratchpad stack (TileAnimTask_800A0A04); *q & 1 freezes the timers.
 void DrawTileAnimLayers_800A0A5C(short* q)
@@ -62,10 +76,10 @@ void DrawTileAnimLayers_800A0A5C(short* q)
     setSprt(&s->sprt_2C);
     setDrawTPage(&s->tpage_40, 0, 1, 0);
     s->zoom_54 = cameraZoom_8008B4F8;
-    s->cx_50 = stru_8008D420.x + stru_8008D420.w / 2;
-    s->cy_52 = stru_8008D420.y + stru_8008D420.h / 2;
-    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
-    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
+    s->cx_50 = viewport_8008D420.x + viewport_8008D420.w / 2;
+    s->cy_52 = viewport_8008D420.y + viewport_8008D420.h / 2;
+    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
     b = (sceneBrightness_8008D40C << 7) >> 12;
     s->ft4_4.r0 = b;
     s->ft4_4.g0 = b;
@@ -83,10 +97,10 @@ void DrawTileAnimLayers_800A0A5C(short* q)
         s->sprt_2C.code = 0x64;
         s->ft4_4.code = 0x2C;
     }
-    for (s->i_0 = 0; s->i_0 < dword_8008D648.listCount_10; s->i_0++)
+    for (s->i_0 = 0; s->i_0 < tileAnim_8008D648.listCount_10; s->i_0++)
     {
-        list = &dword_8008D648.lists_14[s->i_0];
-        st = &dword_8008D648.pairs_18[s->i_0];
+        list = &tileAnim_8008D648.lists_14[s->i_0];
+        st = &tileAnim_8008D648.pairs_18[s->i_0];
         if (list->count >= 2)
         {
             if (!(*q & 1))
@@ -106,7 +120,7 @@ void DrawTileAnimLayers_800A0A5C(short* q)
         s->set_70 = list->items[(unsigned short)st->b].a;
         s->clut_74 = list->items[(unsigned short)st->b].b;
         s->time_78 = list->items[(unsigned short)st->b].c & 0x7F;
-        s->tiles_60 = dword_8008D648.items_C[s->set_70];
+        s->tiles_60 = tileAnim_8008D648.items_C[s->set_70];
         cells = s->tiles_60.items;
         if (list->items[(unsigned short)st->b].c & 0x80)
         {
@@ -118,8 +132,8 @@ void DrawTileAnimLayers_800A0A5C(short* q)
             setSemiTrans(&s->ft4_4, 0);
             setSemiTrans(&s->sprt_2C, 0);
         }
-        z = ((dword_8008D648.field_4 +
-              (unsigned int)((dword_8008D648.field_8 - dword_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
+        z = ((tileAnim_8008D648.field_4 +
+              (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
              4) &
             0x3FF;
         s->ft4_4.clut = (s->clut_74 + 0x1F0) << 6;
@@ -210,7 +224,7 @@ void EncounterWatchTask_800A1314(GameTask_1* t)
 // Matched
 void StartEncounterBattle_800A13B8(GameTask_1* t, void** q)
 {
-    sub_800A895C();
+    EnterLevantBattleMode_800A895C();
     SetupEncounter_800A1BD0();
     SuspendOtherEnemies_800A1E98();
     FreeLevantAnimSet_800AC73C();
@@ -333,7 +347,7 @@ void ResetEncounter_800A170C(void)
     gCtx_800B1260.f77c = 0;
     gCtx_800B1260.f780 = 1;
     gCtx_800B1260.f784 = 1;
-    gCtx_800B1260.f3c = 0;
+    gCtx_800B1260.swapped_3C = 0;
 }
 
 // Matched
@@ -733,7 +747,7 @@ void SpawnEncounterEnemies_800A1F80(void)
             s.effectTbl_44 = (short (*)[6])GetModelEffectTable_80024E64(m);
             s.hasMatrices_4C = 1;
             a = CreateActor_8001D45C(&s);
-            SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
+            SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)GetModelBoneGroupLevels_80024F00(m, k), (unsigned short*)GetModelBoneGroupFlags_80024F38(m, k));
         }
         a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.activeCount_76C]) & 0xfff] * 1000 / 4096;
         a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
@@ -775,12 +789,12 @@ int GetEnemyAliveMask_800A248C(void)
 }
 
 // Matched
-int IsEnemyAlive_800A24F4(int a)
+int IsEnemyAlive_800A24F4(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    if (gCtx_800B1260.actors_7c[a] != 0)
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    if (gCtx_800B1260.actors_7c[idx] != 0)
     {
-        if (gCtx_800B1260.gone_4C[a] == 0)
+        if (gCtx_800B1260.gone_4C[idx] == 0)
         {
             return 1;
         }
@@ -789,30 +803,30 @@ int IsEnemyAlive_800A24F4(int a)
 }
 
 // Matched
-int sub_800A2550(int a)
+int IsEnemyIdle_800A2550(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1C8(gCtx_800B1260.actors_7c[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return IsActorIdle_8001E1C8(gCtx_800B1260.actors_7c[idx]);
 }
 
 // Matched
-int sub_800A2594(int a)
+int IsEnemyReady_800A2594(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1DC(gCtx_800B1260.actors_7c[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return IsActorActionReady_8001E1DC(gCtx_800B1260.actors_7c[idx]);
 }
 
 // Matched
-int sub_800A25D8(int a)
+int TurnEnemyToward_800A25D8(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int sub_800A25F8(int a)
+int sub_800A25F8(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
@@ -880,48 +894,48 @@ int TriggerEnemyEffects_800A2760(unsigned int* p)
 }
 
 // Matched
-void GetEnemyHitFrame_800A27FC(int a, int b)
+void GetEnemyHitFrame_800A27FC(int idx, int b)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    GetActorHitFrame_80018E5C(gCtx_800B1260.actors_7c[a], b);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    GetActorHitFrame_80018E5C(gCtx_800B1260.actors_7c[idx], b);
 }
 
 // Matched
-void SetEnemyStatusTint_800A284C(int a)
+void SetEnemyStatusTint_800A284C(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStatus* v = GetEnemyStatus_800A2B60(a);
-        SetActorStatusTint_80018EBC(gCtx_800B1260.actors_7c[a], v);
+        UnitStatus* v = GetEnemyStatus_800A2B60(idx);
+        SetActorStatusTint_80018EBC(gCtx_800B1260.actors_7c[idx], v);
     }
 }
 
 // Matched
-int AddEnemyItem_800A2898(int a)
+int AddEnemyItem_800A2898(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return AddItem_80010650(&gCtx_800B1260.ents_ac[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return AddItem_80010650(&gCtx_800B1260.ents_ac[idx]);
 }
 
 // Matched
-int sub_800A28DC(int a)
+int sub_800A28DC(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int sub_800A28FC(int a)
+int CanFleeFromEnemy_800A28FC(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return dword_800B19E0;
 }
 
 // Matched
-void RemoveEnemy_800A2924(int a)
+void RemoveEnemy_800A2924(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    gCtx_800B1260.gone_4C[a] = 1;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    gCtx_800B1260.gone_4C[idx] = 1;
     if (--gCtx_800B1260.remaining_44 == 0)
     {
         int x = gCtx_800B1260.groupIndex_48;
@@ -934,11 +948,11 @@ void RemoveEnemy_800A2924(int a)
 }
 
 // Matched
-void GetEnemyEffectTarget_800A29CC(int a, EffectTarget* out)
+void GetEnemyEffectTarget_800A29CC(int idx, EffectTarget* out)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        Actor* e = gCtx_800B1260.actors_7c[a];
+        Actor* e = gCtx_800B1260.actors_7c[idx];
         out->tbl_0 = e->effectTbl_14C;
         out->pos_4 = e->pos_38;
         out->bonePos_8 = e->bonePos_1C4;
@@ -949,29 +963,29 @@ void GetEnemyEffectTarget_800A29CC(int a, EffectTarget* out)
 }
 
 // Matched
-int sub_800A2A50(int a)
+int sub_800A2A50(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int GetEnemyMagicBits_800A2A70(int a)
+int GetEnemyMagicBits_800A2A70(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return (int)&e->magicBits_80;
     }
 }
 
 // Matched
-int sub_800A2AB4(void)
+int GetActiveSwapEnemy_800A2AB4(void)
 {
     GameEncounter* c = &gCtx_800B1260;
     if (c->fixed_774 != 0)
     {
-        if (c->f3c == 0)
+        if (c->swapped_3C == 0)
         {
             return 1;
         }
@@ -981,80 +995,80 @@ int sub_800A2AB4(void)
 }
 
 // Matched
-void sub_800A2AE8(void)
+void SwapEncounterEnemy_800A2AE8(void)
 {
-    if (gCtx_800B1260.f3c == 0)
+    if (gCtx_800B1260.swapped_3C == 0)
     {
         gCtx_800B1260.gone_4C[0] = 1;
         gCtx_800B1260.gone_4C[1] = 0;
-        gCtx_800B1260.f3c = 1;
+        gCtx_800B1260.swapped_3C = 1;
     }
     else
     {
         gCtx_800B1260.gone_4C[0] = 0;
         gCtx_800B1260.gone_4C[1] = 1;
-        gCtx_800B1260.f3c = 0;
+        gCtx_800B1260.swapped_3C = 0;
     }
 }
 
 // Matched
-UnitStats* GetEnemyStats_800A2B20(int a)
+UnitStats* GetEnemyStats_800A2B20(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return &gCtx_800B1260.ents_ac[a];
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return &gCtx_800B1260.ents_ac[idx];
 }
 
 // Matched
-UnitStatus* GetEnemyStatus_800A2B60(int a)
+UnitStatus* GetEnemyStatus_800A2B60(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return &gCtx_800B1260.ents_ac[a].st_0;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return &gCtx_800B1260.ents_ac[idx].st_0;
 }
 
 // Matched
-int GetEnemySkills_800A2BA0(int a)
+int GetEnemySkills_800A2BA0(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return (int)&e->skills_6C;
     }
 }
 
 // Matched
-int GetEnemySpecies_800A2BE4(int a)
+int GetEnemySpecies_800A2BE4(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return e->species_5C;
     }
 }
 
 // Matched
-int* GetEnemyPos_800A2C28(int a)
+int* GetEnemyPos_800A2C28(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return gCtx_800B1260.actors_7c[a]->pos_38;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return gCtx_800B1260.actors_7c[idx]->pos_38;
 }
 
 // Matched
-int* GetEnemyBonePos_800A2C68(int a)
+int* GetEnemyBonePos_800A2C68(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return gCtx_800B1260.actors_7c[a]->bonePos_1C4;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return gCtx_800B1260.actors_7c[idx]->bonePos_1C4;
 }
 
-int AssertEnemyIndex_800A2CA8(int a, int b)
+int AssertEnemyIndex_800A2CA8(int idx, int noExit)
 {
     int ok = 0;
-    if (a < 0 || a >= gCtx_800B1260.count_40 || gCtx_800B1260.gone_4C[a] != 0)
+    if (idx < 0 || idx >= gCtx_800B1260.count_40 || gCtx_800B1260.gone_4C[idx] != 0)
     {
         ok = 1;
     }
     if (ok)
     {
-        if (!b)
+        if (!noExit)
         {
             printf(aAssertionFaile_800A05A4, aFile_800A05CC, 0x512);
             exit(1);

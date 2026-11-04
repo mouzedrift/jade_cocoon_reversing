@@ -35,9 +35,9 @@ INCLUDE_DATA(jpt_8007481C); // the jump table of UpdateMsgWindowState_80034C18 (
 int CheckMagicUsable_80034068(short* req)
 {
     UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)req)[2]);
-    if (magicData_8007C438[req[0]].field_0 & 0x40)
+    if (magicData_8007C438[req[0]].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[req[0]].field_7)
+        switch (magicData_8007C438[req[0]].kind_7)
         {
         case 0:
             if (target->hp_8.cur_0 == target->hp_8.max_2)
@@ -84,7 +84,7 @@ int IsCurrentMapListed_80034140(void)
         if (list)
         {
             i = 0;
-            if (list == off_800837D8)
+            if (list == mapLists4_800837D8)
             {
                 target = sd->mapId_2E4[3].field_0;
             }
@@ -117,7 +117,7 @@ extern Size_8003422C MeasureTextLines_8003E3B4(int* list);
 extern Size_8003422C MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern int MeasureTextWidth_8003E4C8(int str);
 extern void GetPortraitPoly_800A6308(int a, void* b);
-extern void sub_800A1B2C(int a, void* b);
+extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
 extern short** FindTextResumePage_80034900(short** list);
 extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 typedef struct
@@ -209,7 +209,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     }
     else if (cfg[0x20 / 4] == 7)
     {
-        sub_800A1B2C(cfg[0x24 / 4], (char*)w + 0x88);
+        GetCombatPortraitPoly_800A1B2C(cfg[0x24 / 4], (char*)w + 0x88);
         WI(0x84) = 1;
     }
     list = (int**)cfg[0x8 / 4];
@@ -1118,11 +1118,11 @@ extern const int aTimesSign_80074864[];
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
-extern void sub_800AD1E0(int a, int b, int c);
-extern void sub_800AD058(int a);
-extern void sub_800AD8F4(int a);
-extern void sub_800AD68C(int a);
-extern void sub_800AD184(int a, int b, int c);
+extern void RemoveInventory_800AD1E0(int a, int b, int c);
+extern void AddMoney_800AD058(int a);
+extern void AddEmptyCocoons_800AD8F4(int a);
+extern void SetValuableFlag_800AD68C(int a);
+extern void AddInventory_800AD184(int a, int b, int c);
 #if 0
 // Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
 // Needs INCLUDE_DATA(jpt_8007486C) (and its config/c_rodata.txt line) removed (tu_800353A0 is merged into this TU for it: the jump table sits at
@@ -1361,7 +1361,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                     continue;
                 }
                 PlaySfx_80031494(sfx);
-                sub_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
+                RemoveInventory_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
             }
         }
         if (o->mode >= -1 && o->mode < 4)
@@ -1370,21 +1370,21 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             {
                 if (o->entries[i].type == 7)
                 {
-                    sub_800AD058(o->entries[i].count);
+                    AddMoney_800AD058(o->entries[i].count);
                 }
                 else if (o->entries[i].type == 6)
                 {
-                    sub_800AD8F4(o->entries[i].count);
+                    AddEmptyCocoons_800AD8F4(o->entries[i].count);
                 }
                 else if ((unsigned int)o->entries[i].type < 6)
                 {
                     if (o->entries[i].type == 5)
                     {
-                        sub_800AD68C(o->entries[i].id);
+                        SetValuableFlag_800AD68C(o->entries[i].id);
                     }
                     else
                     {
-                        sub_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
+                        AddInventory_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
                     }
                 }
             }

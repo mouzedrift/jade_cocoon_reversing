@@ -59,7 +59,7 @@ const int overlayAddr3_80073200 = 0x800A05A0;
 const int overlayAddr4_80073204 = 0x800B66C0;
 const int overlayAddr5_80073208 = 0x800C29D0;
 const int overlayAddr6_8007320C = 0x800B6D00;
-unsigned int *const dword_80073210 = (unsigned int *)0x800B22C0;
+unsigned int *const mapCodeAddr_80073210 = (unsigned int *)0x800B22C0;
 /* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
 
 // Matched
@@ -546,7 +546,7 @@ int GetMagicEffect_8001AC8C(int idx)
 {
     if (idx < 0x1E)
     {
-        return magicData_8007C438[idx].field_6;
+        return magicData_8007C438[idx].effect_6;
     }
     return 0x1A;
 }
@@ -558,7 +558,7 @@ int sub_8001ACC0(int idx)
 // Matched
 int GetMagicTargetFlags_8001ACE4(int idx)
 {
-    unsigned int flags = magicData_8007C438[idx].field_0;
+    unsigned int flags = magicData_8007C438[idx].flags_0;
     int r = (flags >> 5) & 2;
     if (flags & 0x80)
     {
@@ -575,7 +575,7 @@ int GetMagicElement_8001AD30(int idx)
 {
     if (idx < 0x1E)
     {
-        return magicData_8007C438[idx].field_8;
+        return magicData_8007C438[idx].element_8;
     }
     return 0xB;
 }
@@ -1142,10 +1142,10 @@ void InitPrimBuffers_8001BF90(void)
 {
     if (unknownFlags_8008D678 & 0x200)
     {
-        primAllocPtr_800960A8[0] = dword_8008B550 + 0x801B9250;
-        primBufferStart_800960A0[0] = dword_8008B550 + 0x801B9250;
-        primAllocPtr_800960A8[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
-        primBufferStart_800960A0[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - dword_8008B550) >> 1);
+        primAllocPtr_800960A8[0] = primBufferOffset_8008B550 + 0x801B9250;
+        primBufferStart_800960A0[0] = primBufferOffset_8008B550 + 0x801B9250;
+        primAllocPtr_800960A8[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1);
+        primBufferStart_800960A0[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1);
     }
     else
     {
@@ -1890,7 +1890,7 @@ int GetItemTargetFlags_8001CE8C(int idx)
     return r;
 }
 // Matched
-unsigned char sub_8001CED0(int idx)
+unsigned char GetItemFlagsLow_8001CED0(int idx)
 {
     return *(unsigned char*)&itemFlags_8007CC50[idx];
 }
@@ -2071,7 +2071,7 @@ int GetEquipmentPrice_8001D1F8(int idx, unsigned int kind)
 // Matched
 ActionData* GetLevantWeaponAction_8001D260(void)
 {
-    unsigned int i = sub_800AD990(0);
+    unsigned int i = GetEquippedId_800AD990(0);
     if (i < 0x17)
     {
         return &weaponActions_8007D274[i];
@@ -2116,7 +2116,7 @@ int GetKeyItemIcon_8001D344(int idx)
     return 0x24;
 }
 // Matched
-int sub_8001D36C(int v)
+int IsKnowledgeKeyItem_8001D36C(int v)
 {
     return (unsigned int)(v - 0x19) < 0xD;
 }
@@ -2354,7 +2354,7 @@ void SkipActorAnimToEnd_8001D9B0(Actor* p)
     }
 }
 // Matched
-void sub_8001D9E4(Actor* p, int div, int flags)
+void StartActorFadeIn_8001D9E4(Actor* p, int div, int flags)
 {
     p->fade_20 = 0;
     p->fadeDiv_22 = div;
@@ -2363,7 +2363,7 @@ void sub_8001D9E4(Actor* p, int div, int flags)
     p->flags_4 &= ~0x40;
 }
 // Matched
-void sub_8001DA08(Actor* p, int div, int flags)
+void StartActorFadeOut_8001DA08(Actor* p, int div, int flags)
 {
     p->fade_20 = 0;
     p->fadeDiv_22 = div;
@@ -2648,12 +2648,12 @@ int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned 
     return 0;
 }
 // Matched
-int sub_8001E1C8(Actor* p)
+int IsActorIdle_8001E1C8(Actor* p)
 {
     return (p->flags_4 & 0x280000) == 0;
 }
 // Matched
-int sub_8001E1DC(Actor* p)
+int IsActorActionReady_8001E1DC(Actor* p)
 {
     if (p->effect_130 >= 0)
     {
@@ -2870,7 +2870,7 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     actor->clut_158[1] = actorClutPos_8007DC94[1] + *(short*)&desc->clutRow_1C;
     actor->path_160 = 0;
     AllocActorBones_8001E7F0(actor, desc);
-    FirFilterInit_8001450C(actor->turnFilterBuf_1A4, &actor->turn_194, dword_800795A0, 8);
+    FirFilterInit_8001450C(actor->turnFilterBuf_1A4, &actor->turn_194, turnFilterCoeffs_800795A0, 8);
     SetActorAnim_8001D760(actor, desc->animIdx_20, desc->frame_24, 0);
 }
 #endif

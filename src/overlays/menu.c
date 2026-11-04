@@ -122,7 +122,7 @@ typedef struct MenuQuad
 extern void DrawLargeTextBox_8002AF10();
 extern void DrawUnitStatusWindow_8002F1C8();
 
-extern int name_800AD288();
+extern int GetInventorySlotId_800AD288();
 extern UnitStatus* name_80014390();
 
 extern int IsCurrentMapListed_80034140();
@@ -818,7 +818,7 @@ void DrawResultParty_800BC2A8(MenuMain* c)
     }
 }
 
-extern void sub_800BCF74(short a);
+extern void OnMinionLevelUp_800BCF74(short a);
 extern void PlayMusic_800300E0();
 void UpdateExpCountUp_800BC56C(MenuMain* c)
 {
@@ -835,7 +835,7 @@ void UpdateExpCountUp_800BC56C(MenuMain* c)
             if (c->levelUps_5C[i])
                 c->leveledUp_7C[i] = 1;
             if (i > 0 && c->levelUps_5C[i])
-                sub_800BCF74(i - 1);
+                OnMinionLevelUp_800BCF74(i - 1);
         }
         c->flags_0 |= 0x80;
         PlaySfx_80031494(0x7E);
@@ -875,7 +875,7 @@ void UpdateExpCountUp_800BC56C(MenuMain* c)
                         c->st_8C[i].exp_4 = 0x4000000;
                         c->levelUps_5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&c->st_8C[i]);
                         if (i > 0)
-                            sub_800BCF74(i - 1);
+                            OnMinionLevelUp_800BCF74(i - 1);
                         c->st_8C[i].exp_4 = rest;
                         c->expShown_2CC[i] = rest;
                         c->leveledUp_7C[i] = 1;
@@ -1103,7 +1103,7 @@ void DrawMinionLevelUpStatus_800BCEA0(MenuMain* a, int b, void* c, short d)
 
 extern void sub_8001AEB8();
 extern int name_800338B0();
-void sub_800BCF74(short a)
+void OnMinionLevelUp_800BCF74(short a)
 {
     int x = a - 1;
     int r17 = (int)GetMinionMagicBits_80010824(3, x);
@@ -1607,7 +1607,7 @@ void EnterNextMenuState_800BE048(MenuCtx* c)
         if (t == 2)
         {
             int s = c->cursors_2A[3] + c->scrolls_46[0];
-            int r = name_800AD288(s, moved);
+            int r = GetInventorySlotId_800AD288(s, moved);
             if (name_8001CE70(r) & 0x20)
             {
                 UseSpore_800BF3AC(r, s);
@@ -1643,7 +1643,7 @@ void EnterNextMenuState_800BE048(MenuCtx* c)
     }
     else if (t == -3)
     {
-        short r = name_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        short r = GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         if (c->state_2 == 0xE && r == 0)
         {
             PlaySfx_80031494(0x7E);
@@ -1714,7 +1714,6 @@ void SaveMenuCursor_800BE294(MenuCtx* c)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(menu, dword_800BBA04);
 
 void RestoreMenuCursor_800BE38C(MenuCtx* c)
 {
@@ -2299,7 +2298,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* a, short b)
     pos[0] = 0x104;
     pos[1] = 0x76;
     DrawUiTiySprt_8002C06C(pos, 0xE9, b);
-    DrawAnimatedWindow_8002BEC8(t50, name_800C18E4, (short)s, b, 0, 0);
+    DrawAnimatedWindow_8002BEC8(t50, moneyWindowRect_800C18E4, (short)s, b, 0, 0);
 }
 
 extern void RemoveInventory_800AD1E0();
@@ -2309,7 +2308,7 @@ void UseSpore_800BF3AC(int item)
     RemoveInventory_800AD1E0(item, 1, 0);
 }
 
-extern void sub_800A911C();
+extern void FireEventTriggerById_800A911C();
 // Not matched: original tests s == 0 via sltiu + bnez (one word more); also tried
 // (unsigned)s < 1 and short s (both fold to beqz)
 #if 0
@@ -2322,7 +2321,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* c)
     switch (c->state_2)
     {
     case 2:
-        r17 = name_800AD288((short)((unsigned short)c->cursors_2A[3] + (unsigned short)c->scrolls_46[0]), 0);
+        r17 = GetInventorySlotId_800AD288((short)((unsigned short)c->cursors_2A[3] + (unsigned short)c->scrolls_46[0]), 0);
         tmp.f8 = 1;
         InitItemUse_800C00D4(&tmp, r17, c->cursors_2A[5]);
         tmp.f0 = 4;
@@ -2339,7 +2338,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* c)
         if (s == 0)
             leaveForest_800C29BC = 1;
         else
-            sub_800A911C(s);
+            FireEventTriggerById_800A911C(s);
         break;
     case 0x10:
         c->flags_0 |= 8;
@@ -2365,7 +2364,7 @@ extern int CheckItemUsable_80033AFC();
 extern int CheckItemOnTarget_80033DF4();
 extern int TestValuableFlag_800AD73C();
 extern int IsTriggerWaited_800A5E80();
-extern int sub_800C1000();
+extern int IsKeyItemUseAllowed_800C1000();
 // Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
 // slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
 // tried a single ret variable (goes to a saved reg), && in the 14 tail, case order 6/7/4 fall-through
@@ -2432,13 +2431,13 @@ int CheckMenuAction_800BF540(MenuCtx* c)
         s = GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         if (TestValuableFlag_800AD73C(s) == 0)
             return 3;
-        if (sub_8001D36C(s))
+        if (IsKnowledgeKeyItem_8001D36C(s))
             return 0xE;
         if (s)
             v = IsTriggerWaited_800A5E80(s);
         else
             v = IsCurrentMapListed_80034140();
-        if (v != 0 && sub_800C1000() != 0)
+        if (v != 0 && IsKeyItemUseAllowed_800C1000() != 0)
             return 0;
         return 2;
     }
@@ -2469,7 +2468,7 @@ void DrawMenuMessage_800BF794(MenuCtx* c)
     }
     else
     {
-        int r = (short)name_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        int r = (short)GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         DrawLargeTextBox_8002AF10(&keyItemDescs_800C1E98[r], 0, 0xE);
         if (!IsConfirmPressedP1_8003D380(0) && !IsCancelPressedP1_8003D41C(0))
             return;
@@ -2929,7 +2928,7 @@ void DrawItemInfo_800C0428(MenuCtx* c)
     int is = c->state_2 == 1;
     if (IsCircleHeldP1_8003D480() && is && c->showMessage_24 == 0)
     {
-        int r = name_800AD288((short)sum, found);
+        int r = GetInventorySlotId_800AD288((short)sum, found);
         if (r < 0x2B)
         {
             DrawLargeTextBox_8002AF10(&itemDescs_800C1BE8[r], found, 0xE);
@@ -3118,16 +3117,16 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
 
 
 extern int IsTriggerWaited_800A5E80();
-extern int sub_800C1000();
+extern int IsKeyItemUseAllowed_800C1000();
 // Not matched: compiler turns the tail into a boolean (sltu); also tried r = 1 / r = 0 tail,
-// == 0 inverted tests, nested if (r), return r && sub_800C1000()
+// == 0 inverted tests, nested if (r), return r && IsKeyItemUseAllowed_800C1000()
 #if 0
 int IsKeyItemUsable_800C0C3C(void* a)
 {
     int r;
     if (a)
     {
-        if (sub_8001D36C((int)a))
+        if (IsKnowledgeKeyItem_8001D36C((int)a))
             return 1;
         r = IsTriggerWaited_800A5E80(a);
     }
@@ -3137,7 +3136,7 @@ int IsKeyItemUsable_800C0C3C(void* a)
     }
     if (r == 0)
         return 0;
-    if (sub_800C1000())
+    if (IsKeyItemUseAllowed_800C1000())
         return 1;
     return 0;
 }
@@ -3155,7 +3154,7 @@ void PreviewItemRecovery_800C0CA4(MenuCtx* c, int* out)
     int r17;
     UnitStatus* r16;
     unsigned short u = c->cursors_2A[5];
-    r17 = name_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
+    r17 = GetInventorySlotId_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
     r16 = name_80014390(u & 0xFF);
     q.a = r17;
     q.b = 0;
@@ -3241,14 +3240,14 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
     SetFontClutOffset_8003F900(2, 0);
 }
 
-extern int name_800B0EC0;
+extern int fieldMode_800B0EC0;
 extern int IsSceneHeld_800A5E68();
-int sub_800C1000(void)
+int IsKeyItemUseAllowed_800C1000(void)
 {
     int v = menuFromResults_800C29B8;
     if (v != 1)
         return 1;
-    if (IsSceneHeld_800A5E68() == 0 && name_800B0EC0 == v)
+    if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == v)
         return 1;
     return 0;
 }
@@ -3500,7 +3499,7 @@ char levantStatsRect_800C18C4[8] = { 194, 0, 49, 0, 75, 0, 77 };
 char menuTitleRect_800C18CC[8] = { 139, 0, 18, 0, 43, 0, 19 };
 char configLabelRect_800C18D4[8] = { 125, 0, 193, 0, 70, 0, 19 };
 char rankRect_800C18DC[8] = { 10, 0, 113, 0, 137, 0, 21 };
-char name_800C18E4[8] = { 149, 0, 113, 0, 141, 0, 21 };
+char moneyWindowRect_800C18E4[8] = { 149, 0, 113, 0, 141, 0, 21 };
 MenuCell itemGridCell_800C18EC = { 10, 59, 100, 41 };
 char statusWindowRect_800C18F4[8] = { 110, 0, 167, 0, 100, 0, 41 };
 int menuMessages_800C18FC[16] = {

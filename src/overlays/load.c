@@ -74,9 +74,9 @@ typedef struct DirEntry_LOAD
 } DirEntry_LOAD;
 extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
 extern void FreeActiveOverlay_8002C014(void);
-extern int sub_800A6D50(int a);
-extern void sub_800A6D30(int a);
-extern int dword_80091C54;
+extern int GetGameMode_800A6D50(int a);
+extern void RequestGameMode_800A6D30(int a);
+extern int mapStartMode_80091C54;
 extern int MemCardFormat(long chan);
 extern void ScanCardSaves_800BAFB0(int a);
 extern void _card_stop(void);
@@ -1532,7 +1532,6 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadMenuWork* s)
 INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
 // the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", saveTitle_800BDFAC)
-extern unsigned short name_800B6C48[]; // "Corridor"
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 extern void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title);
 extern void IntToText_8003F610(unsigned short* buf, int val);
@@ -1696,7 +1695,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         break;
     case 2:
     default:
-        memcpy(saveTitle_800BDFAC->f.place_2A, name_800B6C48, 17);
+        memcpy(saveTitle_800BDFAC->f.place_2A, aCorridor_800B6C48, 17);
         break;
     }
     BuildCardHeader_800BB2AC(&s->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
@@ -1968,12 +1967,12 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadMenuWork* s)
         if (s->flags_54 & 0x20)
         {
             RequestAreaReload_80027314();
-            sub_800A6D30(sub_800A6D50(1));
+            RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
         else if (!(s->flags_54 & 4))
         {
             RequestAreaReload_80027314();
-            sub_800A6D30(sub_800A6D50(1));
+            RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
         if (s->flags_54 & 1)
         {
@@ -1983,7 +1982,7 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadMenuWork* s)
             m->mapId_2E4[1].field_2 = -1;
             m->mapId_2E4[2].field_2 = -1;
             m->mapId_2E4[3].field_2 = -1;
-            dword_80091C54 = 0;
+            mapStartMode_80091C54 = 0;
             if (!(s->flags_54 & 4))
             {
                 unknownFlags_8008D678 |= 0x18000000;
@@ -2052,7 +2051,7 @@ void WaitCardSync_800BADF4(void)
     MemCardSync(0, &b, &a);
 }
 
-int sub_800BAE24(void)
+int IsCardReady_800BAE24(void)
 {
     return 1;
 }

@@ -382,7 +382,7 @@ typedef struct
 } ModelHeaderData;
 typedef struct
 {
-    int offsets_0[5]; // from the record start (GetModelBaseScale_80024E90..sub_80024F70)
+    int offsets_0[5]; // from the record start (GetModelBaseScale_80024E90..GetModelFtgWeights_80024F70)
     int size_14;      // to the next record
 } ModelHeaderRecord;
 
@@ -391,9 +391,9 @@ extern void* GetModelActorAnims_80024E38(Model* p);
 extern void* GetModelEffectTable_80024E64(Model* p);
 extern void* GetModelBaseScale_80024E90(Model* p, int n);
 extern void* GetModelBoneScale_80024EC8(Model* p, int n);
-extern void* sub_80024F00(Model* p, int n);
-extern void* sub_80024F38(Model* p, int n);
-extern void* sub_80024F70(Model* p, int n);
+extern void* GetModelBoneGroupLevels_80024F00(Model* p, int n);
+extern void* GetModelBoneGroupFlags_80024F38(Model* p, int n);
+extern void* GetModelFtgWeights_80024F70(Model* p, int n);
 
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
@@ -589,7 +589,8 @@ typedef struct OverlayLoader
     int request_8; // LoadOverlay_80020BF8 file request
 } OverlayLoader;
 
-// map data block dword_8008D648 (sub_80027778 / sub_800278BC); fields named by offset
+// the map's animated tile layers (tileAnim_8008D648, loaded by LoadTileSets_80027778 / LoadTileAnimLayers_800278BC, drawn by
+// GAME's DrawTileAnimLayers_800A0A5C); items_C are the tile sets (struct_27778: field_8 x field_A cells of 32x32)
 typedef struct
 {
     int field_0;

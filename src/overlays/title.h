@@ -35,7 +35,7 @@ typedef struct
 typedef struct { char c[4]; } Blk4_;
 
 extern int dword_800A05A0;
-extern const char asc_800A05A4[];
+extern const char nameCursorPulseColor_800A05A4[];
 extern const char aCaution_800A05A8[];
 extern const char str_800A05BC[];
 extern const char str_800A0604[];

@@ -15,7 +15,7 @@
 #include "camera.h"
 
 
-extern int sub_800A2AB4();
+extern int GetActiveSwapEnemy_800A2AB4();
 
 extern void SetHitVariant_80018430(int a);
 
@@ -34,9 +34,8 @@ extern int MeasureTextWidth_8003E4C8();
 
 
 
-extern unsigned char enemyBits_800C9E72[];
 
-extern unsigned char enemyUnits_800C9E80[];
+extern unsigned char enemyUnits_800C9E80[4];
 
 
 
@@ -74,6 +73,16 @@ typedef struct BatCmd_a
     int mask_8; // acting unit bits
     int targets_C; // target unit bits
 } BatCmd_a;
+
+// the battle menu's enemy target list. bits_2 is a member (a global array would be word aligned, it is at 0x800C9E72);
+// the code indexes it through its decayed address (`*(t.bits_2 + n)`, a bits pointer), which keeps the base at +2
+typedef struct BatEnemyTargets_a
+{
+    unsigned char flag_0; // cleared when the menu opens
+    unsigned char unk_1;
+    unsigned char bits_2[3]; // unit bit of each living enemy, in menu order
+} BatEnemyTargets_a;
+extern BatEnemyTargets_a enemyTargets_800C9E70;
 
 // the enemy AI's context (ChooseEnemyCommand_800C4118)
 typedef struct BatTask
@@ -122,7 +131,7 @@ extern int GetEncounterAdvantage_800BAAD8();
 
 extern void SpawnEncounterEnemies_800A1F80();
 
-extern void sub_800A8D0C();
+extern void StartLevantBattle_800A8D0C();
 
 extern void DisableCameraPoints_800A096C();
 
@@ -152,9 +161,9 @@ extern int dword_800ADE88;
 
 extern int IsSummonedMinionIdle_800C0D60();
 
-extern int sub_800A89F0();
+extern int IsLevantIdle_800A89F0();
 
-extern int sub_800A2550();
+extern int IsEnemyIdle_800A2550();
 
 extern int IsEffectTaskIdle_800148D4();
 
@@ -177,7 +186,7 @@ typedef struct BatChain_a
 } BatChain_a;
 extern BatChain_a encounterRecord_800ADE78;
 
-extern int dword_80091C74;
+extern int levantAnimSet_80091C74;
 
 extern int dword_8007DC74;
 
@@ -198,9 +207,9 @@ extern void FreeActiveOverlay_8002C014();
 
 extern void LoadLevantAnimSet_800AC708();
 
-extern void sub_800A9364();
+extern void StopLevantAnimLoop_800A9364();
 
-extern int sub_800A8DAC();
+extern int IsLevantActionFinished_800A8DAC();
 
 extern int AreAllEncounterEnemiesGone_800A1B2C();
 
@@ -314,7 +323,7 @@ extern void memset();
 
 extern void SetFadeMode_8001C19C();
 
-extern void sub_800A2AE8();
+extern void SwapEncounterEnemy_800A2AE8();
 
 extern void PlaySeqSlot_80031160();
 
@@ -324,9 +333,9 @@ extern int LoadOverlay_80020BF8();
 
 extern void StopSceneDarken_8001AAF4();
 
-extern void sub_800A8D48();
+extern void TurnLevantToward_800A8D48();
 
-extern void sub_800A25D8();
+extern void TurnEnemyToward_800A25D8();
 
 extern int GetEnemySpecies_800A2BE4();
 
@@ -414,7 +423,7 @@ extern void CmdActionReactions_800BBA70();
 
 extern void CmdRecallDone_800BBE00();
 
-extern void sub_800BC05C();
+extern void CmdEnemySwapJoin_800BC05C();
 
 extern void CmdEnemyCallJoin_800BBF64();
 
@@ -488,7 +497,7 @@ typedef struct BatWin_b
 
 extern int IsSceneFadeDone_8001AB94(void*);
 
-extern int sub_800A89F0();
+extern int IsLevantIdle_800A89F0();
 
 extern void BattleEndFadeOut_800BA624();
 
@@ -533,23 +542,23 @@ extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 extern int IsSummonedMinionReady_800C0D88();
 
-extern int sub_800A8BE4();
+extern int IsLevantReady_800A8BE4();
 
-extern int sub_800A2594();
+extern int IsEnemyReady_800A2594();
 
 extern int AreLevantFilesLoaded_800AC768();
 
 extern void ResumeOtherEnemies_800A1F0C();
 
-extern void sub_800A9384(int a);
+extern void SetLevantVisible_800A9384(int a);
 
-extern void sub_800A8DCC();
+extern void ClearLevantBattleStance_800A8DCC();
 
-extern void sub_800A89C8();
+extern void UnlockLevantMovement_800A89C8();
 
 extern void EndEncounter_800A1E1C();
 
-extern void sub_800A094C();
+extern void EnableCameraPoints_800A094C();
 
 extern void WarpAfterLostBattle_800A5FAC();
 
@@ -600,11 +609,11 @@ extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
 extern void ActionWaitIdle_800BDB4C();
 
-extern void sub_800A8A30();
+extern void StartLevantAction_800A8A30();
 
 extern void StartEnemyCommandAction_800A2684();
 
-extern void sub_800A8C0C(int b);
+extern void TriggerLevantAction_800A8C0C(int b);
 
 extern void TriggerEnemyEffects_800A2760(BatCmd_a* p, int b);
 
@@ -624,7 +633,7 @@ extern void AddEnemyItem_800A2898(int a);
 
 extern void SetEnemyStatusTint_800A284C(int a);
 
-extern void sub_80039ED8(int a);
+extern void SetAreaElementLight_80039ED8(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
@@ -677,7 +686,7 @@ typedef struct BatResult_a
     int hpDamage_1C;      // the target's hp/mp damage
     int mpDamage_20;
     short areaElement_24; // in: the area element, out: the new one
-    short f26;
+    short fixedElement_26; // the stage's fixed element (-1: magic can change the area element)
 } BatResult_a; // the exe's ActionResult (common.c)
 
 extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
@@ -721,7 +730,7 @@ extern int GetElementModelAngle_800C0904(unsigned char* p);
 
 extern short defaultBones_80079140[]; // default bone table
 
-extern EventNode* dword_8008D60C;
+extern EventNode* miscTasks_8008D60C;
 
 // PlayTimedSeq_800C10B8: stops a seq slot after a delay
 typedef struct BatSeqStop_a
@@ -963,7 +972,6 @@ extern int CanCastMagic_800C6CFC();
 extern EventNode* battleMenuTask_8008D468;
 
 
-extern unsigned char dword_800C9E70;
 
 extern void SelectMenuWindows_800C71A0();
 
@@ -1038,7 +1046,7 @@ extern int GetItemTargetFlags_8001CE8C(int a);
 
 extern int GetUnitSkills_80031B30(int a);
 
-extern int sub_80031B0C(int a, int b);
+extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
 extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
@@ -1113,9 +1121,8 @@ extern void DrawMenuHelpText_800C8828(int a);
 
 
 
-extern int sub_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern int IsDrainAction_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
-extern unsigned char enemyBits_800C9E72[];
 
 
 
@@ -1139,7 +1146,7 @@ extern void CmdSwapMinion_800BBBF4();
 extern void CmdAction_800BBA24();
 extern void CmdSummon_800BBBA8();
 extern void CmdEnemyCall_800BBEFC();
-extern void sub_800BBFFC();
+extern void CmdEnemySwap_800BBFFC();
 extern void CmdSimple_800BC0FC();
 
 extern int dword_800B66C0;
@@ -1514,7 +1521,7 @@ extern short hitSfx_800C9D78;
 extern int btlExecLoad_800C9D7C;
 extern short deathSfx_800C9D80;
 extern signed char shownAreaElement_800C9D82;
-extern char dword_800C9D83;
+extern char fixedStageElement_800C9D83;
 extern signed char areaElement_800C9D84;
 extern int dword_800C9D88;
 extern short stageAnimUv_800C9D8C[2];

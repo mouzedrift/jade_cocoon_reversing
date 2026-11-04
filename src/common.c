@@ -23,7 +23,7 @@
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCommonC[] = "COMMON.C";
-int dword_80079320[10] = {
+int sealResultFlags_80079320[10] = {
     1, 0, 1, 0, 5, 7, 11, 13,
     9, 15,
 };
@@ -238,35 +238,35 @@ ActionData* GetAbilityActionData_800129B0(ActionData* out, unsigned char* in, in
         {
             if (GetMinionEnhancementBody_80019C0C(id) & 2)
             {
-                out->c7 = ((signed char)out->c7 + 60 < 126) ? out->c7 + 60 : 125;
+                out->hit_7 = ((signed char)out->hit_7 + 60 < 126) ? out->hit_7 + 60 : 125;
             }
         }
         else if (kind == 0xE)
         {
             if (GetMinionEnhancementBody_80019C0C(id) & 1)
             {
-                out->c7 = ((signed char)out->c7 + 60 < 126) ? out->c7 + 60 : 125;
+                out->hit_7 = ((signed char)out->hit_7 + 60 < 126) ? out->hit_7 + 60 : 125;
             }
         }
         else if (kind == 0xC)
         {
             if (GetMinionEnhancementBody_80019C0C(id) & 2)
             {
-                out->s2 = 0;
+                out->power_2 = 0;
             }
         }
     }
     switch (in[2])
     {
     case 2:
-        out->s2 = ((short)out->s2 + 30 < 256) ? (unsigned short)out->s2 + 30 : 255;
+        out->power_2 = ((short)out->power_2 + 30 < 256) ? (unsigned short)out->power_2 + 30 : 255;
         break;
     case 3:
         out->c5 = (out->c5 + 30 > 255) ? 255 : out->c5 + 30;
         out->c6 = (out->c6 + 20 > 255) ? 255 : out->c6 + 20;
         break;
     case 4:
-        out->c7 = ((signed char)out->c7 + 50 < 126) ? out->c7 + 50 : 125;
+        out->hit_7 = ((signed char)out->hit_7 + 50 < 126) ? out->hit_7 + 50 : 125;
         break;
     }
     return out;
@@ -274,16 +274,16 @@ ActionData* GetAbilityActionData_800129B0(ActionData* out, unsigned char* in, in
 typedef struct
 {
     unsigned short kind_0;
-    short field_2;
+    short arg_2;
     int flags_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    short field_24;
+    int status_8;
+    int actorHpCost_C;
+    int actorMpCost_10;
+    int actorHpDamage_14;
+    int actorMpDamage_18;
+    int hpDamage_1C;
+    int mpDamage_20;
+    short areaElement_24;
     short field_26;
 } ActionResult;
 extern const char aAssertionFaile_2[];
@@ -326,13 +326,13 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     targetUnit = LowestSetBit_80014358(cmd[3]);
     out->kind_0 = 0;
     out->flags_4 = 0;
-    out->field_8 = 0;
-    out->field_C = 0;
-    out->field_10 = 0;
-    out->field_14 = 0;
-    out->field_18 = 0;
-    out->field_1C = 0;
-    out->field_20 = 0;
+    out->status_8 = 0;
+    out->actorHpCost_C = 0;
+    out->actorMpCost_10 = 0;
+    out->actorHpDamage_14 = 0;
+    out->actorMpDamage_18 = 0;
+    out->hpDamage_1C = 0;
+    out->mpDamage_20 = 0;
     SetTargetHitFlag_800184A0(targetUnit, 0);
     q = &local;
     switch (cmd[0])
@@ -346,11 +346,11 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     case 6:
         t = GetUnitSkills_80031B30(actorUnit & 0xFF);
         q = GetAbilityActionData_800129B0(&local, (unsigned char*)(t + cmd[1] * 4), targetUnit);
-        out->field_10 = GetSkillMpCost_80031A04(t, cmd[1]);
+        out->actorMpCost_10 = GetSkillMpCost_80031A04(t, cmd[1]);
         break;
     case 1:
         MemCopy_800403E8(&local, GetMagicAction_8001AD64(cmd[1]), 12);
-        out->field_10 = GetMagicMpCost_8001AC58(cmd[1]);
+        out->actorMpCost_10 = GetMagicMpCost_8001AC58(cmd[1]);
         break;
     case 4:
         MemCopy_800403E8(&local, GetItemData_8001CDF4(cmd[1]), 12);
@@ -364,19 +364,19 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     CalcBattleStats_80013EE8(targetStats, &targetStatus, q, cmd[3]);
     ApplyStatusPenalties_80012828(actorStats, &actorStatus);
     ApplyStatusPenalties_80012828(targetStats, &targetStatus);
-    if (out->field_24 == q->c8 && q->s2 != 0)
+    if (out->areaElement_24 == q->element_8 && q->power_2 != 0)
     {
-        q->s2 = (0xFFFF < q->s2 + 60) ? -1 : (unsigned short)q->s2 + 60;
+        q->power_2 = (0xFFFF < q->power_2 + 60) ? -1 : (unsigned short)q->power_2 + 60;
     }
     if (out->field_26 == -1)
     {
         e = (signed char)q->c4;
         if (e != -1)
         {
-            if ((e == 0 && out->field_24 == 1) || (e == 3 && out->field_24 == 0) || (e == 2 && out->field_24 == 3) ||
-                (e == 1 && out->field_24 == 2) || out->field_24 == -1)
+            if ((e == 0 && out->areaElement_24 == 1) || (e == 3 && out->areaElement_24 == 0) || (e == 2 && out->areaElement_24 == 3) ||
+                (e == 1 && out->areaElement_24 == 2) || out->areaElement_24 == -1)
             {
-                out->field_24 = (signed char)q->c4;
+                out->areaElement_24 = (signed char)q->c4;
             }
         }
     }
@@ -393,13 +393,13 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
     if (id != 0xD3)
     {
-        if ((GetMinionEnhancementBody_80019C0C(id) & 2) && cmd[0] == 1 && q->s2 > 0)
+        if ((GetMinionEnhancementBody_80019C0C(id) & 2) && cmd[0] == 1 && q->power_2 > 0)
         {
-            q->s2 = (0xFFFF < q->s2 + 10) ? -1 : (unsigned short)q->s2 + 10;
+            q->power_2 = (0xFFFF < q->power_2 + 10) ? -1 : (unsigned short)q->power_2 + 10;
         }
-        if ((GetMinionEnhancementBody_80019C0C(id) & 1) && cmd[0] == 6 && q->s2 > 0)
+        if ((GetMinionEnhancementBody_80019C0C(id) & 1) && cmd[0] == 6 && q->power_2 > 0)
         {
-            q->s2 = (0xFFFF < q->s2 + 10) ? -1 : (unsigned short)q->s2 + 10;
+            q->power_2 = (0xFFFF < q->power_2 + 10) ? -1 : (unsigned short)q->power_2 + 10;
         }
     }
     switch (cmd[0])
@@ -459,7 +459,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
                 exit(1);
             }
         }
-        out->field_2 = j;
+        out->arg_2 = j;
         out->flags_4 |= 2;
         break;
     case 7:
@@ -467,15 +467,15 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
         out->kind_0 = 0;
         if (v < 81)
         {
-            out->field_2 = 0;
+            out->arg_2 = 0;
         }
         else
         {
-            out->field_2 = 1;
+            out->arg_2 = 1;
         }
         if (HasStatusFlag_80033548(target, 2))
         {
-            out->field_2 = 0;
+            out->arg_2 = 0;
 
         }
         break;
@@ -487,33 +487,33 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
 }
 // Matched
-int sub_80013228(int a0, int a1, int* p)
+int IsDrainAction_80013228(int actor, int target, int* cmd)
 {
     ActionData local = defaultActionData_80071F58;
     ActionData* q = &local;
-    int b1 = LowestSetBit_80014358(p[2]);
-    int b2 = LowestSetBit_80014358(p[3]);
-    switch (p[0])
+    int actorUnit = LowestSetBit_80014358(cmd[2]);
+    int targetUnit = LowestSetBit_80014358(cmd[3]);
+    switch (cmd[0])
     {
     case 0:
-        if (p[2] == 1)
+        if (cmd[2] == 1)
         {
             q = GetLevantWeaponAction_8001D260();
         }
         break;
     case 6:
-        q = GetAbilityActionData_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(b1 & 0xFF) + p[1] * 4), b2);
+        q = GetAbilityActionData_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(actorUnit & 0xFF) + cmd[1] * 4), targetUnit);
         break;
     case 1:
-        q = GetMagicAction_8001AD64(p[1]);
+        q = GetMagicAction_8001AD64(cmd[1]);
         break;
     case 4:
-        q = GetItemData_8001CDF4(p[1]);
+        q = GetItemData_8001CDF4(cmd[1]);
         break;
     case 26:
         break;
     }
-    return q->c8 == 8;
+    return q->element_8 == 8;
 }
 
 // zero word at the end of this TU's .rdata, in front of the jump table of UseItemOnUnit_80013C28 (battle_damage)

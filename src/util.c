@@ -264,13 +264,13 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
     return s;
 }
 // Matched
-void EncodeName_8003F7C8(void* a0, unsigned char* a1)
+void EncodeName_8003F7C8(void* text, unsigned char* out)
 {
     unsigned short tmp[11];
     unsigned short* p;
     int flag = 0;
     int i;
-    MemCopy_800403E8(tmp, a0, 0x16);
+    MemCopy_800403E8(tmp, text, 0x16);
     p = EncodeText_8003F684(1, DecodeText_8003F748(2, tmp));
     for (i = 0; i < 10; i++)
     {
@@ -283,9 +283,9 @@ void EncodeName_8003F7C8(void* a0, unsigned char* a1)
                 flag = 1;
             }
         }
-        a1[i] = c;
+        out[i] = c;
     }
-    a1[10] = 0;
+    out[10] = 0;
 }
 // Matched
 int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut)
@@ -430,15 +430,15 @@ void StrCopy_8003FB8C(char* d, char* s)
     d[i] = s[i];
 }
 // Matched
-void DecodeNames_8003FBD4(int a0)
+void DecodeNames_8003FBD4(int mode)
 {
     int n;
     int i;
-    DecodeText_8003F748(a0, playerName_8008BD48);
+    DecodeText_8003F748(mode, playerName_8008BD48);
     n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
-        DecodeText_8003F748(a0, GetMinionName_800106F8(3, i));
+        DecodeText_8003F748(mode, GetMinionName_800106F8(3, i));
     }
 }
 // Matched
@@ -530,10 +530,10 @@ void* ListAlloc_8003FDC0(List* l, int size)
     return n + 1;
 }
 // Matched
-void ListFree_8003FE38(void* a0, void* a1)
+void ListFree_8003FE38(void* list, void* ptr)
 {
-    List* l = (List*)a0;
-    ListNode* n = a1;
+    List* l = (List*)list;
+    ListNode* n = ptr;
     n--;
     if (l->count)
     {
@@ -558,9 +558,9 @@ void ListFree_8003FE38(void* a0, void* a1)
     }
 }
 // Matched
-void ListFreeAll_8003FEC8(void* arg0)
+void ListFreeAll_8003FEC8(void* list)
 {
-    List* l = (List*)arg0;
+    List* l = (List*)list;
     ListNode* n = l->tail;
     while (n)
     {
@@ -720,9 +720,9 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
     return (PoolBlock*)best;
 }
 // Matched
-int IsPoolBlock_80040274(int a0, int* a1)
+int IsPoolBlock_80040274(int pool, int* ptr)
 {
-    return a1[-4] == 0x8FFFFFFF;
+    return ptr[-4] == 0x8FFFFFFF;
 }
 // Matched
 void sub_8004028C(void)
@@ -731,12 +731,12 @@ void sub_8004028C(void)
 }
 extern unsigned long* primAllocPtrs_800960A8[];
 // Matched
-void* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
+void* AddPrimCopy_80040298(void* ot, void* prim, int words)
 {
     int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
-    ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
-    addPrim(arg0, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += arg2 * 4;
+    ReadBytesInto_80040388((int*)cur, (int*)prim, words);
+    addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += words * 4;
     return (void*)cur;
 }
 // Matched

@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-"""Apply config/renames.txt (one `OldName NewName` per line, # comments) to the sources.
+"""Apply config/renames.txt to the sources (the file format is documented at its top).
 
 Every rename is a whole-word replacement in the files that hold symbol names: src/ (all .c/.h, overlays
-included), include/, symbol_addrs.txt, config/*.txt and overlays/*.sym (docs/ is left alone: it uses address names as examples). The overlays pick up
-main-executable names from symbol_addrs.txt (scripts/overlays.py writes them as equates), so a rename has
-to reach both the symbol list and every C source that uses the name.
+included), include/, symbol_addrs.txt, config/*.txt and overlays/*.sym (docs/ is left alone: it uses
+address names as examples). The overlays pick up main-executable names from symbol_addrs.txt
+(scripts/overlays.py writes them as equates), so a rename has to reach both the symbol list and every C
+source that uses the name.
 
-Renames are applied in file order, so chains (A B, then B C) work. Running the script again is a no-op:
-once OldName is gone nothing matches. Usage: python3 scripts/apply_renames.py [--check]
+Files belong to a unit: an overlay's files are src/overlays/<name>.c, <name>_<n>.c, <name>.h and
+overlays/<name>.sym; everything else is EXE. A pair applies to the files of the units its section names
+(`[GAME BATTLE EXE]`), or to every file in an `[ALL]` section (the default at the top of the file).
+Overlays loaded at the same address reuse addresses for different things, so a pair whose address is in
+the overlay area (0x800A05A0 and up) must be in a section that names its units.
+
+Chains (A B, then B C) are resolved per file among the pairs that apply to it, so the result does not
+depend on match order. Running the script again is a no-op: once OldName is gone nothing matches.
+Usage: python3 scripts/apply_renames.py [--check]
 (--check only lists the files that would change and exits 1 if there are any).
 """
 import glob
@@ -17,14 +25,46 @@ import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+ADDR = re.compile(r"_([0-9A-F]{8})$")
+OVERLAY_AREA = 0x800A05A0  # lowest overlay load address (TITLE, GAME, ...); the executable's .bss ends below
+
+
+def overlay_units():
+    return {os.path.basename(p)[:-4].upper() for p in glob.glob(os.path.join(REPO, "overlays", "*.sym"))}
+
+
+def unit_of(rel):
+    rel = rel.replace(os.sep, "/")
+    m = re.match(r"src/overlays/([a-z0-9]+?)(?:_\d+)?\.[ch]$", rel) or re.match(r"overlays/([a-z0-9]+)\.sym$", rel)
+    return m.group(1).upper() if m else "EXE"
+
+
+def addr_of(name):
+    m = ADDR.search(name)
+    return int(m.group(1), 16) if m else None
 
 
 def load_renames(path):
+    """-> list of (old, new, scope) in file order; scope is None ([ALL]) or a frozenset of unit names."""
+    units = overlay_units() | {"EXE"}
     renames = []
     seen = {}
+    scope = None
     for n, line in enumerate(open(path), 1):
         line = line.split("#", 1)[0].strip()
         if not line:
+            continue
+        if line.startswith("["):
+            if not line.endswith("]"):
+                sys.exit("%s:%d: expected `[UNIT ...]`: %r" % (path, n, line))
+            names = line[1:-1].split()
+            if names == ["ALL"]:
+                scope = None
+                continue
+            bad = [u for u in names if u not in units]
+            if not names or bad:
+                sys.exit("%s:%d: unknown unit(s) %s (overlays/*.sym names, EXE or ALL)" % (path, n, " ".join(bad)))
+            scope = frozenset(names)
             continue
         parts = line.split()
         if len(parts) != 2 or not all(IDENT.match(p) for p in parts):
@@ -32,10 +72,16 @@ def load_renames(path):
         old, new = parts
         if old == new:
             sys.exit("%s:%d: %s renamed to itself" % (path, n, old))
-        if old in seen:
-            sys.exit("%s:%d: %s renamed twice (line %d)" % (path, n, old, seen[old]))
-        seen[old] = n
-        renames.append((old, new))
+        if scope is None:
+            for x in (old, new):
+                a = addr_of(x)
+                if a is not None and OVERLAY_AREA <= a < 0x80200000:
+                    sys.exit("%s:%d: %s is an overlay address: put the pair in a [UNIT ...] section" % (path, n, x))
+        for m, s in seen.get(old, []):
+            if s is None or scope is None or s & scope:
+                sys.exit("%s:%d: %s renamed twice for the same files (line %d)" % (path, n, old, m))
+        seen.setdefault(old, []).append((n, scope))
+        renames.append((old, new, scope))
     return renames
 
 
@@ -49,15 +95,11 @@ def target_files():
     return sorted(files)
 
 
-def main():
-    check = "--check" in sys.argv
-    renames = load_renames(os.path.join(REPO, "config", "renames.txt"))
-    if not renames:
-        return 0
-    # one pass per file: chains are resolved first so the result does not depend on match order
+def build_pattern(renames, unit):
     final = {}
-    for old, new in renames:
-        final[old] = new
+    for old, new, scope in renames:
+        if scope is None or unit in scope:
+            final[old] = new
     for old in list(final):
         n, hops = final[old], 0
         while n in final and hops < len(final):
@@ -65,9 +107,26 @@ def main():
         if n in final:
             sys.exit("rename cycle through %s" % old)
         final[old] = n
+    if not final:
+        return None, final
     pat = re.compile(r"\b(" + "|".join(sorted(map(re.escape, final), key=len, reverse=True)) + r")\b")
+    return pat, final
+
+
+def main():
+    check = "--check" in sys.argv
+    renames = load_renames(os.path.join(REPO, "config", "renames.txt"))
+    if not renames:
+        return 0
+    cache = {}
     changed = []
     for path in target_files():
+        unit = unit_of(os.path.relpath(path, REPO))
+        if unit not in cache:
+            cache[unit] = build_pattern(renames, unit)
+        pat, final = cache[unit]
+        if pat is None:
+            continue
         try:
             text = open(path, encoding="latin-1", newline="").read()
         except OSError:

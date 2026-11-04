@@ -20,9 +20,9 @@
 
 
 // Matched
-int sub_80013358(int idx)
+int GetSealResultFlags_80013358(int idx)
 {
-    return dword_80079320[idx];
+    return sealResultFlags_80079320[idx];
 }
 typedef struct
 {
@@ -40,15 +40,15 @@ typedef struct
 typedef struct
 {
     unsigned short kind_0;
-    short field_2;
+    short arg_2;
     int flags_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
+    int status_8;
+    int actorHpCost_C;
+    int actorMpCost_10;
+    int actorHpDamage_14;
+    int actorMpDamage_18;
+    int hpDamage_1C;
+    int mpDamage_20;
 } AttackResult;
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
@@ -152,20 +152,20 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             }
             if (q->c_B == 0)
             {
-                out->field_1C = v;
+                out->hpDamage_1C = v;
                 if (q->element_8 == 8 && v > 0)
                 {
                     if (GetHp_800334D8(f1) < v)
                     {
                         v = GetHp_800334D8(f1);
                     }
-                    out->field_14 = -v;
+                    out->actorHpDamage_14 = -v;
                 }
             }
             else if (q->c_B == 1)
             {
                 v /= 2;
-                out->field_20 = v;
+                out->mpDamage_20 = v;
                 out->kind_0 = 2;
                 if (q->element_8 == 8 && v > 0)
                 {
@@ -173,7 +173,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
                     {
                         v = GetMp_800334F0(f1);
                     }
-                    out->field_18 = -v;
+                    out->actorMpDamage_18 = -v;
                 }
             }
             else if (q->c_B == 3)
@@ -181,7 +181,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
                 c = (signed char)f1->field_20[q->element_8];
                 if (rand() % 32 < c)
                 {
-                    out->field_1C = GetHp_800334D8(f1) - 1;
+                    out->hpDamage_1C = GetHp_800334D8(f1) - 1;
                     out->kind_0 = 4;
                     out->flags_4 |= 2;
                 }
@@ -192,9 +192,9 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             }
             else if (q->c_B == 2)
             {
-                out->field_1C = v;
+                out->hpDamage_1C = v;
                 out->kind_0 = 3;
-                out->field_20 = v / 5 * 2;
+                out->mpDamage_20 = v / 5 * 2;
             }
         }
         else
@@ -203,7 +203,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             out->kind_0 = 5;
         }
     }
-    if (out->field_1C > 0 || out->field_20 > 0)
+    if (out->hpDamage_1C > 0 || out->mpDamage_20 > 0)
     {
         out->flags_4 |= 2;
     }
@@ -235,7 +235,7 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             if (q->flags_0 & 0x3800)
             {
             status:
-                out->field_8 |= q->flags_0;
+                out->status_8 |= q->flags_0;
             }
             else
             {
@@ -268,21 +268,21 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
             out->flags_4 |= 0x3800;
             SetTargetHitFlag_800184A0(b2, 5);
         }
-        out->field_8 &= ~0x7FB;
+        out->status_8 &= ~0x7FB;
         SetTargetHitFlag_800184A0(b2, 2);
     }
-    if (out->field_1C == 0 && out->field_20 == 0 && out->field_8 != 0 && out->flags_4 != 0)
+    if (out->hpDamage_1C == 0 && out->mpDamage_20 == 0 && out->status_8 != 0 && out->flags_4 != 0)
     {
         out->kind_0 = 5;
     }
-    if (out->field_8 & 0x400)
+    if (out->status_8 & 0x400)
     {
-        out->field_1C = GetHp_800334D8(f1);
+        out->hpDamage_1C = GetHp_800334D8(f1);
         out->kind_0 = 1;
     }
     if (HasStatusFlag_80033548(f1, 2))
     {
-        out->field_8 &= ~2;
+        out->status_8 &= ~2;
     }
 }
 #endif

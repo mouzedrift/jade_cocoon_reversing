@@ -166,7 +166,7 @@ void ApplyBattleCommand_800BEBB8()
         {
             m = GetUnitStatus_80014390(i & 0xFF);
             res.areaElement_24 = shownAreaElement_800C9D82;
-            res.f26 = (signed char)dword_800C9D83;
+            res.fixedElement_26 = (signed char)fixedStageElement_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (encounterRecord_800ADE78.f0 == 1)
@@ -262,7 +262,7 @@ void ApplyBattleCommand_800BEBB8()
                     unitReactions_800C9CC8[i].kind_0 = 5;
                     unitReactions_800C9CC8[i].arg_4 = res.arg_2;
                     curCommand_800C9C88.arg_4 = res.arg_2;
-                    if (sub_80013358(res.arg_2) == 1)
+                    if (GetSealResultFlags_80013358(res.arg_2) == 1)
                     {
                         MarkSpeciesCaptured_800BF9F0(GetEnemySpecies_800A2BE4(i - 4));
                         if (GetCapturedMinionsFromBitfield_8003BA58(GetEnemyAliveMask_800A248C()) == 1)
@@ -288,7 +288,7 @@ void ApplyBattleCommand_800BEBB8()
                     if (r == 2)
                     {
                         SetBattleFlag_800BC838(0x40);
-                        if (sub_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
+                        if (IsBossSpecies_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
                         {
                             SetBattleFlag_800BC838(0x100000);
                         }
@@ -296,7 +296,7 @@ void ApplyBattleCommand_800BEBB8()
                         {
                             ClearBattleFlag_800BC850(0x100000);
                         }
-                        if (sub_800A2AB4() == 2)
+                        if (GetActiveSwapEnemy_800A2AB4() == 2)
                         {
                             SetBattleFlag_800BC838(2);
                         }
@@ -618,7 +618,7 @@ int IsUncapturableSpecies_800BF980(int species)
     return r;
 }
 
-int sub_800BF9B4(int species)
+int IsBossSpecies_800BF9B4(int species)
 {
     int r = 0;
     switch (species)
@@ -637,7 +637,6 @@ int sub_800BF9B4(int species)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B67F0);
 
 #if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void MarkSpeciesCaptured_800BF9F0(int species)
@@ -783,7 +782,7 @@ void StartEnemyWindows_800BFC40()
     {
         m = GetEnemyAliveMask_800A248C();
         n = GetCapturedMinionsFromBitfield_8003BA58(m);
-        if (sub_800A2AB4())
+        if (GetActiveSwapEnemy_800A2AB4())
         {
             m = 0x10;
         }
@@ -832,7 +831,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
     int bit;
     BatXY_a* pp;
     m = GetEnemyAliveMask_800A248C();
-    if (m != 0 && sub_800A2AB4() != 0)
+    if (m != 0 && GetActiveSwapEnemy_800A2AB4() != 0)
     {
         m = 0x10;
     }
@@ -848,7 +847,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
         {
             if (diff & (one << (i + 4)))
             {
-                if (sub_800A2AB4() != 2)
+                if (GetActiveSwapEnemy_800A2AB4() != 2)
                 {
                     enemyWindowTasks_800C9E08[i]->flags &= ~1;
                     enemyWindowTasks_800C9E08[i]->flags |= 0x8000;
@@ -902,10 +901,10 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
         return;
     }
     u = arg;
-    r = sub_800A2AB4();
+    r = GetActiveSwapEnemy_800A2AB4();
     if (r == 1)
         k = 0;
-    else if (sub_800A2AB4() == 2)
+    else if (GetActiveSwapEnemy_800A2AB4() == 2)
         k = 1;
     else
         k = u->slot_0;
@@ -1323,8 +1322,8 @@ int CreateSummonedMinionActor_800C0BF0()
     s.hasMatrices_4C = 1;
     summonedActor_800C9190.actor_0 = CreateActor_8001D45C(&s);
     SetActorGroundMove_8001D68C(summonedActor_800C9190.actor_0, 0);
-    x = sub_80024F00(m, k);
-    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, sub_80024F38(m, k));
+    x = GetModelBoneGroupLevels_80024F00(m, k);
+    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, GetModelBoneGroupFlags_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1337,12 +1336,12 @@ int GetSummonedMinionSlot_800C0D50()
 
 int IsSummonedMinionIdle_800C0D60()
 {
-    return sub_8001E1C8((void*)summonedActor_800C9190.actor_0);
+    return IsActorIdle_8001E1C8((void*)summonedActor_800C9190.actor_0);
 }
 
 int IsSummonedMinionReady_800C0D88()
 {
-    return sub_8001E1DC(summonedActor_800C9190.actor_0);
+    return IsActorActionReady_8001E1DC(summonedActor_800C9190.actor_0);
 }
 
 void TurnSummonedMinionToward_800C0DB0(int pos)
@@ -1461,7 +1460,7 @@ void SeqStopTask_800C106C(unsigned int* flags, BatSeqStop_a* u)
 
 void PlayTimedSeq_800C10B8(int frames, int slot)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && e)
     {
         BatSeqStop_a* q;
@@ -1485,7 +1484,7 @@ void SfxStopTask_800C1140(unsigned int* flags, BatSfxStop_a* u)
 
 void PlayTimedSfx_800C1190(int frames, int sfx)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && e)
     {
         BatSfxStop_a* q;
@@ -1569,7 +1568,7 @@ void DropTrailTask_800C1450(EventEntry* t, BatDropSrc_a* u)
             u->count_0++;
             for (i = 0; i < 3; i++)
             {
-                e = AllocEventEntry_80043AF8(dword_8008D60C);
+                e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
                 if (e)
                 {
                     e->flags = (e->flags | 1) & 0xFFFF7FFF;
@@ -1613,7 +1612,7 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
     int i;
     for (i = 0; i < 30; i++)
     {
-        EventEntry* ev = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* ev = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (ev)
         {
             BatSpark_a* b = ev->buffer;
@@ -1678,7 +1677,7 @@ void HomingSparkTask_800C17EC(EventEntry* t, BatSpark_a* u)
 
 void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (e)
     {
         BatSpark_a* b;
@@ -1726,7 +1725,7 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
     int i;
     for (i = 0; i < 16; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             BatSpark_a* b = e->buffer;
@@ -1791,7 +1790,7 @@ void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int
     int i;
     for (i = 0; i < n; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(dword_8008D60C);
+        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             BatSpark_a* b = e->buffer;
@@ -1869,7 +1868,7 @@ void ShatterTask_800C23D0(EventEntry* t, BatSpark_a* u)
         SpawnSpriteAnim_800C1A5C(u->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
-            e = AllocEventEntry_80043AF8(dword_8008D60C);
+            e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
             if (e)
             {
                 b = e->buffer;
@@ -1949,7 +1948,7 @@ void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
     int a;
     int n;
     int s[3];
-    e = AllocEventEntry_80043AF8(dword_8008D60C);
+    e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (e)
     {
         b = e->buffer;
@@ -1964,7 +1963,7 @@ void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
     }
     for (i = 0; i < 8; i++)
     {
-        e = AllocEventEntry_80043AF8(dword_8008D60C);
+        e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (e)
         {
             b = e->buffer;
@@ -4217,7 +4216,7 @@ int StartBattleMenu_800C6EFC()
             if (enemyMask_800C9E4C & m)
             {
                 enemyUnits_800C9E80[n] = i + 4;
-                enemyBits_800C9E72[n] = m;
+                *(enemyTargets_800C9E70.bits_2 + n) = m;
                 n++;
             }
         }
@@ -4225,7 +4224,7 @@ int StartBattleMenu_800C6EFC()
         prevMenuPage_800C9E40 = 0;
         menuState_800C9E48 = 0;
         targetFlags_800C9E68 = 4;
-        dword_800C9E70 = 0;
+        enemyTargets_800C9E70.flag_0 = 0;
         InitMenuCursors_800C7088();
         SelectMenuWindows_800C71A0();
         DisableMenuCommands_800C71C8();
@@ -4312,7 +4311,7 @@ int CanFlee_800C72B8()
         m = enemyMask_800C9E4C & (1 << (i + 4));
         if (m != 0)
         {
-            if (sub_800A28FC(i) == 0)
+            if (CanFleeFromEnemy_800A28FC(i) == 0)
             {
                 return 0;
             }
@@ -4551,7 +4550,6 @@ int IsMenuSelectionValid_800C7530()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800BA238);
 
 unsigned char GetSelectedCommand_800C78D0()
 {
@@ -4578,7 +4576,7 @@ int GetSelectedTargets_800C791C()
     else if (b & 4)
     {
         short i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
-        r = enemyBits_800C9E72[i];
+        r = *(enemyTargets_800C9E70.bits_2 + i);
     }
     else
     {
@@ -4625,7 +4623,7 @@ void AdvanceMenuPage_800C7A6C()
         break;
     case 2:
         h = GetUnitSkills_80031B30(actingUnit_800C9C7C);
-        targetFlags_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
+        targetFlags_800C9E68 = GetSkillTargetFlags_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
         menuPage_800C9E50 = 4;
         menuCommand_800C9E58.arg_4 = GetSelectedSkill_800C79EC();
         break;
@@ -4880,10 +4878,10 @@ void PreviewCommandResult_800C83B0()
                 m = GetUnitStatus_80014390(i & 0xFF);
 
                 d.areaElement_24 = shownAreaElement_800C9D82;
-                d.f26 = (signed char)dword_800C9D83;
+                d.fixedElement_26 = (signed char)fixedStageElement_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
-                if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
+                if (IsDrainAction_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
                 {
                     previewHpChange_800C9180 -= d.actorHpCost_C;
                     previewMpChange_800C9182 -= d.actorMpCost_10;
@@ -4935,7 +4933,8 @@ void SetCameraFocusTargets_800C8694(unsigned char page)
 {
     if (page == 4 && (targetFlags_800C9E68 & 5) == 4)
     {
-        newCameraFocus_800C9E3C = enemyBits_800C9E72[(short)GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314)];
+        unsigned char* bits = enemyTargets_800C9E70.bits_2;
+        newCameraFocus_800C9E3C = bits[(short)GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314)];
     }
     else
     {
@@ -5092,7 +5091,7 @@ int dword_800C8B2C = 0xFFFF;
 unsigned char aiCounter_800C8B30 = 0;
 int aiAllyCalled_800C8B34 = 0;
 char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
-int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)sub_800BBFFC };
+int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)CmdEnemySwap_800BBFFC };
 unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
 unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
 unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
@@ -5475,7 +5474,7 @@ short hitSfx_800C9D78 = 0;
 int btlExecLoad_800C9D7C = 0;
 short deathSfx_800C9D80 = 0;
 signed char shownAreaElement_800C9D82 = 0;
-char dword_800C9D83 = 0;
+char fixedStageElement_800C9D83 = 0;
 signed char areaElement_800C9D84 = 0;
 int dword_800C9D88 = 0;
 short stageAnimUv_800C9D8C[2] = { 0 };
@@ -5510,7 +5509,7 @@ int menuTarget_800C9E54 = 0;
 BatCmd_a menuCommand_800C9E58 = { 0 };
 unsigned char targetFlags_800C9E68 = 0;
 BatMenuItem_a *menuItems_800C9E6C = 0;
-INCLUDE_OVERLAY_ASM(battle, dword_800C9E70);
-INCLUDE_OVERLAY_ASM(battle, partyMinionMask_800C9E78);
-INCLUDE_OVERLAY_ASM(battle, menuErrorText_800C9E7C);
-INCLUDE_OVERLAY_ASM(battle, enemyUnits_800C9E80);
+BatEnemyTargets_a enemyTargets_800C9E70 = { 0 };
+int partyMinionMask_800C9E78 = 0;
+int menuErrorText_800C9E7C = 0;
+unsigned char enemyUnits_800C9E80[4] = { 0 };

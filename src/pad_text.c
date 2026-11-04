@@ -22,7 +22,7 @@
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
 extern unsigned short padRepeat_800918CC[];
-extern void PlaySfx_80031494(int a1);
+extern void PlaySfx_80031494(int id);
 
 const unsigned short emptyText_80074994[2] = { 0 };
 const TextBuf22 emptyNameBuf_80074998 = { { 0xFFFF } };
@@ -77,20 +77,20 @@ int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
     return pos;
 }
 // Matched
-int IsConfirmPressed_8003D288(int flag, int idx)
+int IsConfirmPressed_8003D288(int playSfx, int pad)
 {
     int r = 0;
     unsigned int x;
-    if ((padPressed_8009194C[idx] & 0x40) && !(padHeld_800918D0[idx] & 4) && !(padReleased_800918D4[idx] & 4))
+    if ((padPressed_8009194C[pad] & 0x40) && !(padHeld_800918D0[pad] & 4) && !(padReleased_800918D4[pad] & 4))
     {
         goto done;
     }
-    x = padPressed_8009194C[idx];
+    x = padPressed_8009194C[pad];
     if (!(x & 4))
     {
         goto end;
     }
-    if ((padHeld_800918D0[idx] & 0x40) || (padReleased_800918D4[idx] & 0x40))
+    if ((padHeld_800918D0[pad] & 0x40) || (padReleased_800918D4[pad] & 0x40))
     {
         if (!(x & 0x40))
         {
@@ -98,7 +98,7 @@ int IsConfirmPressed_8003D288(int flag, int idx)
         }
     }
 done:
-    if (flag)
+    if (playSfx)
     {
         PlaySfx_80031494(0x7E);
     }
@@ -107,23 +107,23 @@ end:
     return r;
 }
 // Matched
-int IsConfirmPressedP1_8003D380(int a0)
+int IsConfirmPressedP1_8003D380(int playSfx)
 {
-    return IsConfirmPressed_8003D288(a0, 0);
+    return IsConfirmPressed_8003D288(playSfx, 0);
 }
 // Matched
-int IsConfirmPressedP2_8003D3A0(int a0)
+int IsConfirmPressedP2_8003D3A0(int playSfx)
 {
-    return IsConfirmPressed_8003D288(a0, 1);
+    return IsConfirmPressed_8003D288(playSfx, 1);
 }
 // Matched
-int IsCancelPressed_8003D3C0(int arg0, int arg1)
+int IsCancelPressed_8003D3C0(int playSfx, int pad)
 {
     int r = 0;
-    unsigned short x = padPressed_8009194C[arg1];
+    unsigned short x = padPressed_8009194C[pad];
     if ((x & 0x10) || (x & 1))
     {
-        if (arg0)
+        if (playSfx)
         {
             PlaySfx_80031494(0x7D);
         }
@@ -132,14 +132,14 @@ int IsCancelPressed_8003D3C0(int arg0, int arg1)
     return r;
 }
 // Matched
-int IsCancelPressedP1_8003D41C(int a0)
+int IsCancelPressedP1_8003D41C(int playSfx)
 {
-    return IsCancelPressed_8003D3C0(a0, 0);
+    return IsCancelPressed_8003D3C0(playSfx, 0);
 }
 // Matched
-int IsCancelPressedP2_8003D43C(int a0)
+int IsCancelPressedP2_8003D43C(int playSfx)
 {
-    return IsCancelPressed_8003D3C0(a0, 1);
+    return IsCancelPressed_8003D3C0(playSfx, 1);
 }
 // Matched
 int IsCircleHeld_8003D45C(int idx)
@@ -677,9 +677,9 @@ struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
     return sz;
 }
 // Matched
-int IsTextMarkerLine_8003E484(int a0)
+int IsTextMarkerLine_8003E484(int text)
 {
-    int v = *EncodeText_8003F684(2, (unsigned short*)a0);
+    int v = *EncodeText_8003F684(2, (unsigned short*)text);
     if (v < 0xC3)
     {
         if (v >= 0x91)

@@ -92,7 +92,7 @@ typedef struct
     int field_7C;
 } BattleObj_800C0FAC;
 
-/* dword_800B1084: 8-byte table in the overlay area */
+/* levantBattleActions_800B1084: 8-byte table in the overlay area */
 typedef struct
 {
     int a;

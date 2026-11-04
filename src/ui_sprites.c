@@ -214,7 +214,7 @@ void DrawSmallNumber9_8002C414(unsigned short* origin, int value, int ot)
     }
 }
 // Matched
-int sub_8002C5A4(int n)
+int CountDigits_8002C5A4(int n)
 {
     do
     {
@@ -280,7 +280,7 @@ typedef struct
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
-extern int sub_800AD308(int a0);
+extern int GetLastInventorySlot_800AD308(int a0);
 extern const int emptyString_800741EC;
 // Matched
 void DrawItemList_8002C728(struct_minion_ref* menu)
@@ -300,12 +300,12 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
     w = 8;
     for (i = 0; i < 4; i++)
     {
-        idx = sub_800AD288(i + menu->scroll_2, 0);
+        idx = GetInventorySlotId_800AD288(i + menu->scroll_2, 0);
         if (idx < 0x2B)
         {
             icon = GetItemIcon_8001D2AC(idx);
             name = GetItemName_8001CE20(idx);
-            count = sub_800AD2C8(i + menu->scroll_2, 0);
+            count = GetInventorySlotCount_800AD2C8(i + menu->scroll_2, 0);
         }
         else
         {
@@ -360,7 +360,7 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
     s.field_14 = menu->ot_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
-    total = sub_800AD308(0) + 1;
+    total = GetLastInventorySlot_800AD308(0) + 1;
     if (total < 4)
     {
         total = 4;

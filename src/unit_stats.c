@@ -1197,7 +1197,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 1, 16, &overlayLoaderTask_8008D4C0, (EventEntryFn)InitOverlayLoaderTask_80020CB8 },
     { 1, 5, 12, &xaTask_8008B560, (EventEntryFn)XaInitTask_80043054, (EventEntryFn)XaStop_800430B0 },
     { 1, 1, 8, &fadeTask_8008D628, (EventEntryFn)SceneFadeTask_8001A41C },
-    { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, (EventEntryFn)nullsub_5 },
+    { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, (EventEntryFn)FreeCameraTask_800376A0 },
     { 1, 0x8000, 124, (void *)&dword_8008D62C },
     { 1, 0x8000, 0x2A8, (void *)&messageWindowTask_8008D640 },
     { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },
@@ -1221,12 +1221,12 @@ EventDesc eventDescs_80078EB8[27] = {
     },
     { 1, 0x8000, 80, (void *)&dword_8008D5F8 },
     { 20, 0x8000, 176, &effectObjects_8008B4A8 },
-    { 150, 0x8000, 72, &dword_8008D60C },
+    { 150, 0x8000, 72, &miscTasks_8008D60C },
     { 1, 0x8000, 20, (void *)&dword_8008D614 },
     { 1, 0x8000, 4, (void *)&dword_8008B4C0 },
 };
 unsigned char defaultBones_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 11, 0, 3, 0, 3, 2, 3, 0, 11, 0, 4, 0, 4, 3, 4, 0, 11, 0, 5, 0, 5, 4, 5, 0, 11, 0, 3, 0, 6, 2, 6, 0, 11, 0, 4, 0, 7, 6, 7, 0, 11, 0, 5, 0, 8, 7, 8, 0, 11, 0, 3, 0, 9, 2, 9, 0, 11, 0, 4, 0, 10, 9, 10, 0, 11, 0, 5, 0, 11, 10, 11, 0, 11, 0, 3, 0, 12, 2, 12, 0, 11, 0, 4, 0, 13, 12, 13, 0, 11, 0, 3, 0, 14, 2, 14, 0, 11, 0, 4, 0, 15, 14, 15, 0, 11, 0, 2, 0, 16, 0, 16, 0, 11, 0, 3, 0, 17, 16, 17, 0, 11, 0, 4, 0, 18, 17, 18, 0, 11, 0, 5, 0, 19, 18, 19, 0, 11, 0, 3, 0, 20, 16, 20, 0, 11, 0, 4, 0, 21, 20, 21, 0, 11, 0, 5, 0, 22, 21, 22, 0, 11, 0, 3, 0, 23, 16, 23, 0, 11, 0, 4, 0, 24, 23, 24, 0, 11, 0, 255, 255, 255, 255, 255, 255, 255, 255 };
-unsigned char dword_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
+unsigned char mergeBones_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
 
 // Matched
 int ModelTaskLoad_80010B90(ModelTaskState* p)
@@ -1317,7 +1317,7 @@ extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, ch
 extern void DrawAnimSkel_80046A58(FuseSkel* sk, void* buf, char* pose);
 void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char defaultBones_80079140[];
-extern unsigned char dword_80079210[];
+extern unsigned char mergeBones_80079210[];
 // Matched
 int ModelTaskDraw_80010DB0(ModelTaskState* p)
 {
@@ -1358,9 +1358,9 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     a4 = m[2]->ftg_50;
     for (i = 0; i < o->ftgCount_3C; i++)
     {
-        int* q0 = sub_80024F70(m[0], p->record_20);
-        int* q1 = sub_80024F70(m[1], p->record_20);
-        int* q2 = sub_80024F70(m[2], p->record_20);
+        int* q0 = GetModelFtgWeights_80024F70(m[0], p->record_20);
+        int* q1 = GetModelFtgWeights_80024F70(m[1], p->record_20);
+        int* q2 = GetModelFtgWeights_80024F70(m[2], p->record_20);
         w0 = q0[i];
         w1 = q1[i];
         w2 = q2[i];
@@ -1437,8 +1437,8 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
                  p->weights_14[2], (char*)m[0]->anims_54, (char*)m[0]->anims_54, (char*)o->anims_54, 0);
     for (i = 1; i < 3; i++)
     {
-        unsigned short* d = sub_80024F00(m[0], p->record_20);
-        unsigned short* q = sub_80024F00(m[i], p->record_20);
+        unsigned short* d = GetModelBoneGroupLevels_80024F00(m[0], p->record_20);
+        unsigned short* q = GetModelBoneGroupLevels_80024F00(m[i], p->record_20);
         int j;
         for (j = 0; j < 3; j++)
         {
@@ -1461,7 +1461,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     m[p->main_30]->headerSize_48 = 0;
     m[p->main_30]->header_4C = 0;
     sk.pose = (char*)&m[p->main_30]->anims_54[1];
-    sk.bones = dword_80079210;
+    sk.bones = mergeBones_80079210;
     sk.f1C = 0x10;
     sk.f18 = 0;
     sk.pos = pos;
@@ -1641,15 +1641,15 @@ int GetGrowthKind_80011D28(int base)
 }
 int ApplyLevelUps_80011D98(UnitStatus* m, int mode);
 // Matched
-void ApplyLevelUpsBonus_80011D78(UnitStatus* arg0)
+void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
 {
-    ApplyLevelUps_80011D98(arg0, 1);
+    ApplyLevelUps_80011D98(status, 1);
 }
 extern int GetGrowthKind_80011D28(int a0);
 extern int BaseMagicRatio_800142B8(unsigned char* p);
 extern int BaseAttackRatio_80014308(unsigned char* p);
 // Matched
-int ApplyLevelUps_80011D98(UnitStatus* m, int arg1)
+int ApplyLevelUps_80011D98(UnitStatus* m, int mode)
 {
     unsigned int acc[6];
     unsigned char kind[6];
@@ -1680,7 +1680,7 @@ int ApplyLevelUps_80011D98(UnitStatus* m, int arg1)
     while (m->exp_4 >> 26)
     {
         add = 0;
-        if (arg1 == 1)
+        if (mode == 1)
         {
             add = 500;
         }

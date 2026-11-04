@@ -124,7 +124,7 @@ extern void SaveCameraState_80039620(CameraCtrl* o);
 extern void SetupCameraOrbit_80038CA8(CameraCtrl* p);
 extern void SetupBattleIntroCamera_80037F44(CameraCtrl* p);
 extern void CameraOrbitTask_800374E0();
-extern int sub_800B8184(int a, int b);
+extern int FindMeshAtPos_800B8184(int a, int b);
 extern void CameraBattleIntroTask_800369E0(EventEntry* p, CameraCtrl* q);
 
 // Matched
@@ -142,7 +142,7 @@ void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
     }
     else if (!(q->flags_4 & 0x2000))
     {
-        int r = sub_800B8184(q->target_0, saveData_8008B570.mapId_2E4[3].field_0);
+        int r = FindMeshAtPos_800B8184(q->target_0, saveData_8008B570.mapId_2E4[3].field_0);
         if (r >= 0)
         {
             saveData_8008B570.mapId_2E4[3].field_0 = r;
@@ -354,7 +354,7 @@ void CameraOrbitReturnTask_800375F8(EventEntry* o, CameraCtrl* p)
     }
 }
 // Matched
-void nullsub_5(void)
+void FreeCameraTask_800376A0(void)
 {
 }
 extern void UpdateCameraRotation_80039E14(void);
@@ -413,8 +413,8 @@ void StartBattleCameraSpline_800377B4(int a0, short a1)
     }
 }
 // Table in the overlay area (outside the linked image), 8 bytes per entry
-extern struct_pair8 dword_800B1084[];
-__asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
+extern struct_pair8 levantBattleActions_800B1084[];
+__asm__(".globl levantBattleActions_800B1084\n.equ levantBattleActions_800B1084,0x800b1084");
 // Matched
 void MoveBattleCameraForAction_80037828(int a, short b, int c)
 {
@@ -425,7 +425,7 @@ void MoveBattleCameraForAction_80037828(int a, short b, int c)
     }
     else if (a == 0)
     {
-        if (dword_800B1084[b].a != 0x10 && b != 0x11 && b != 0x12)
+        if (levantBattleActions_800B1084[b].a != 0x10 && b != 0x11 && b != 0x12)
         {
             MoveBattleCamera_800390F4(p, 1);
         }
@@ -508,13 +508,13 @@ void SetCameraZoom_80037A6C(int a, int b)
     }
 }
 // Matched
-void SetCameraTarget_80037AC8(int a0)
+void SetCameraTarget_80037AC8(int target)
 {
-    ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
+    ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
 }
-extern int* sub_800A1E3C(void);
+extern int* GetBattleSelection_800A1E3C(void);
 extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
-extern unsigned char byte_800C9C7C;
+extern unsigned char actingUnit_800C9C7C;
 extern void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b);
 extern void CameraBattleTask_80036AB4();
 // Matched
@@ -540,8 +540,8 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
     }
     if (*(unsigned short*)&p->mode_8 == 4 || *(unsigned short*)&p->mode_8 == 5)
     {
-        r = sub_800A1E3C();
-        if (byte_800C9C7C == 0)
+        r = GetBattleSelection_800A1E3C();
+        if (actingUnit_800C9C7C == 0)
         {
             v = 0;
         }
@@ -713,9 +713,9 @@ void UpdateCameraZoom_8003856C(CameraCtrl* p)
         cameraZoom_8008B4F8 = 0x10000;
         p->flags_4 &= ~0x20;
     }
-    if (dword_8008D66C * 4 < geomScreenBase_8008D51E * cameraZoom_8008B4F8 / 4096)
+    if (zoomLimit_8008D66C * 4 < geomScreenBase_8008D51E * cameraZoom_8008B4F8 / 4096)
     {
-        cameraZoom_8008B4F8 = (dword_8008D66C << 14) / geomScreenBase_8008D51E;
+        cameraZoom_8008B4F8 = (zoomLimit_8008D66C << 14) / geomScreenBase_8008D51E;
         if (cameraZoom_8008B4F8 < 0x1000)
         {
             cameraZoom_8008B4F8 = 0x1000;
@@ -954,18 +954,18 @@ void RestoreCameraState_80039698(CameraCtrl* o)
     cameraZoom_8008B4F8 = o->savedZoom_184;
     screenOffset_8008D474 = o->savedShake_14C;
 }
-extern int sub_800AB4D8(int a);
+extern int GetLevantActionEndFrame_800AB4D8(int a);
 // Matched
 void StartCameraSplineLong_8003970C(int idx_, int* a5)
 {
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
-    struct_pair8* t = dword_800B1084;
+    struct_pair8* t = levantBattleActions_800B1084;
     int* q;
     int r;
     p->field_1C = t[(short)idx_].b;
     p->spline_218 = (CamSpline*)a5;
     p->flags_4 |= 8;
-    r = (short)sub_800AB4D8(0xE);
+    r = (short)GetLevantActionEndFrame_800AB4D8(0xE);
     if (((settingsFlags_8008B58C.word & 0x200000) >> 21) == 1)
     {
         q = p->keys_1C8;
@@ -1001,7 +1001,7 @@ void StartCameraSplineLong_8003970C(int idx_, int* a5)
 void StartCameraSplineShort_8003983C(int idx_, int* a5)
 {
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
-    struct_pair8* t = dword_800B1084;
+    struct_pair8* t = levantBattleActions_800B1084;
     int* q;
     p->field_1C = t[(short)idx_].b;
     q = p->keys_1C8;
@@ -1019,8 +1019,8 @@ typedef struct
 {
     short x, y, w, h;
 } ShortRect;
-extern ShortRect stru_8008D420;
-extern short* dword_8008D654;
+extern ShortRect viewport_8008D420;
+extern short* tileSets_8008D654;
 extern DRAWENV drawEnv_8008D698[2];
 #define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
 // Matched
@@ -1036,20 +1036,20 @@ void UpdateScreenScroll_800398B4(CameraCtrl* p, void* q_)
 
     if (!(p->flags_4 & 4))
     {
-        screenOffset_8008D474.a = screenOffset_8008D474.a - (q->xy.vx - (stru_8008D420.x + stru_8008D420.w / 2));
-        screenOffset_8008D474.b = screenOffset_8008D474.b - (q->xy.vy - (stru_8008D420.y + stru_8008D420.h / 2));
-        sp = dword_8008D654;
+        screenOffset_8008D474.a = screenOffset_8008D474.a - (q->xy.vx - (viewport_8008D420.x + viewport_8008D420.w / 2));
+        screenOffset_8008D474.b = screenOffset_8008D474.b - (q->xy.vy - (viewport_8008D420.y + viewport_8008D420.h / 2));
+        sp = tileSets_8008D654;
         s = cameraZoom_8008B4F8 << 5;
-        lx = sp[4] * s / 4096 - stru_8008D420.w;
-        ly = sp[5] * s / 4096 - stru_8008D420.h;
+        lx = sp[4] * s / 4096 - viewport_8008D420.w;
+        ly = sp[5] * s / 4096 - viewport_8008D420.h;
         screenOffset_8008D474.a = CLAMP_HALF(screenOffset_8008D474.a, lx);
         screenOffset_8008D474.b = CLAMP_HALF(screenOffset_8008D474.b, ly);
-        screenOffset_8008D474.a = screenOffset_8008D474.a - (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
-        screenOffset_8008D474.b = screenOffset_8008D474.b - (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
-        r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x + stru_8008D420.x;
-        r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + stru_8008D420.y;
-        r.w = stru_8008D420.w;
-        r.h = stru_8008D420.h;
+        screenOffset_8008D474.a = screenOffset_8008D474.a - (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+        screenOffset_8008D474.b = screenOffset_8008D474.b - (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
+        r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x + viewport_8008D420.x;
+        r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + viewport_8008D420.y;
+        r.w = viewport_8008D420.w;
+        r.h = viewport_8008D420.h;
         SetDrawArea(&tw, &r);
         *(DR_AREA*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = tw;
         addPrim(pOT_8008D3EC, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
@@ -1117,7 +1117,7 @@ void UpdateCameraRotation_80039E14(void)
 }
 // pointLights_8008D534[0].color_C.vx/vy/vz through the PointLight type changes the scheduling, so the short view stays
 // Matched
-void sub_80039ED8(int mode)
+void SetAreaElementLight_80039ED8(int mode)
 {
     switch ((short)(mode + 1))
     {

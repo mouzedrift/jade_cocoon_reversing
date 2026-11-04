@@ -118,7 +118,7 @@ extern MATRIX lightDirs_800A1E84;
 extern TstModelMat lightColors_800A1EA4;
 extern int tstModelTaskDesc_800A1EC4[6];
 extern char tstModelTaskList_800A1EDC[12];
-extern char name_800A1EE8[24];
+extern char modelLight_800A1EE8[24];
 extern int minionBones_800A1F00[52];
 extern int humanBones_800A1FD0[46];
 extern int roubBones_800A2088[34];
@@ -149,6 +149,6 @@ extern TstModelTbl tstModels_800A33B0[90];
 extern int levantFtgs_800A37E8[3];
 extern short gridWrapMask_800A37F4[4];
 extern short gridWrapSign_800A37FC[4];
-extern char name_800A3804[480];
+extern char modelBonePos_800A3804[480];
 
 #endif

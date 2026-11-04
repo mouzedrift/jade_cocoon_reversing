@@ -22,7 +22,7 @@
 #include "main.h"
 
 extern short screenOffset_8008D474[2];
-extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
+extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
@@ -128,10 +128,10 @@ void RunActorScript_8001EA48(void* actor)
             o->waitLen_CA = o->loopCount_F4;
             break;
         case 6:
-            sub_8001D9E4(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            StartActorFadeIn_8001D9E4(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 7:
-            sub_8001DA08(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            StartActorFadeOut_8001DA08(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
             StopActorFade_8001DA2C(o);
@@ -375,7 +375,7 @@ short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script
     return out[0].field_0;
 }
 extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
-extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
+extern int CollideWithMap_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
 void UpdateActorMotion_8001F354(void* actor)
 {
@@ -457,26 +457,26 @@ void UpdateActorMotion_8001F354(void* actor)
     else if (o->flags_4 & 0x1000000)
     {
         a = o->rot_5C[1];
-        sin = (asc_80084350 + 0xF8)[a & 0xFFF];
-        c = (asc_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
+        sin = (battleCamSpline1Tail_80084350 + 0xF8)[a & 0xFFF];
+        c = (battleCamSpline1Tail_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
         o->pos_38[2] = o->basePos_50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sin) / 4096 / e->divisor_8;
         o->pos_38[0] = o->basePos_50[0] + (o->animDelta_64[2] * sin + o->animDelta_64[0] * c) / 4096 / e->divisor_8;
         o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / e->divisor_8;
     }
     else if (o->flags_4 & 0x40000)
     {
-        o->pos_38[0] += dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
-        o->pos_38[2] += dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
+        o->pos_38[0] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
+        o->pos_38[2] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
     }
     else
     {
-        o->pos_38[0] = o->basePos_50[0] + dz * (asc_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e->divisor_8;
-        o->pos_38[2] = o->basePos_50[2] + dz * (asc_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e->divisor_8;
+        o->pos_38[0] = o->basePos_50[0] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e->divisor_8;
+        o->pos_38[2] = o->basePos_50[2] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e->divisor_8;
     }
     if (o->flags_4 & 0x40000)
     {
         o->prevGround_84 = o->ground_80;
-        o->ground_80 = sub_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
+        o->ground_80 = CollideWithMap_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
     }
 }
 // Matched
@@ -568,7 +568,7 @@ void UpdateActorDrawMode_8001FB00(Actor* o)
     }
     if (o->flags_4 & 0x40000000)
     {
-        v = (asc_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
+        v = (battleCamSpline1Tail_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
         (o->pulse_BC)++;
         o->drawMode_8 = r | 0x80 | (-((v + 0x1000) / 2) << 16);
     }
@@ -2698,7 +2698,7 @@ void* GetModelBoneScale_80024EC8(Model* p, int n)
     return r;
 }
 // Matched
-void* sub_80024F00(Model* p, int n)
+void* GetModelBoneGroupLevels_80024F00(Model* p, int n)
 {
     char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
@@ -2708,7 +2708,7 @@ void* sub_80024F00(Model* p, int n)
     return r;
 }
 // Matched
-void* sub_80024F38(Model* p, int n)
+void* GetModelBoneGroupFlags_80024F38(Model* p, int n)
 {
     char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
@@ -2718,7 +2718,7 @@ void* sub_80024F38(Model* p, int n)
     return r;
 }
 // Matched
-void* sub_80024F70(Model* p, int n)
+void* GetModelFtgWeights_80024F70(Model* p, int n)
 {
     char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
@@ -3812,15 +3812,15 @@ void InitMapState_80026FAC(void)
     mapState_8008B500.mesh_28 = 0;
     mapState_8008B500.ftgCount_38 = 0;
     mapState_8008B500.ftg_3C = 0;
-    dword_8008D648.count_0 = 0;
-    dword_8008D648.field_4 = 0;
-    dword_8008D648.field_8 = 0;
-    dword_8008D648.items_C = 0;
-    dword_8008D648.field_4 = 0;
-    dword_8008D648.field_8 = 0;
-    dword_8008D648.listCount_10 = 0;
-    dword_8008D648.lists_14 = 0;
-    dword_8008D648.pairs_18 = 0;
+    tileAnim_8008D648.count_0 = 0;
+    tileAnim_8008D648.field_4 = 0;
+    tileAnim_8008D648.field_8 = 0;
+    tileAnim_8008D648.items_C = 0;
+    tileAnim_8008D648.field_4 = 0;
+    tileAnim_8008D648.field_8 = 0;
+    tileAnim_8008D648.listCount_10 = 0;
+    tileAnim_8008D648.lists_14 = 0;
+    tileAnim_8008D648.pairs_18 = 0;
     currentAreaMap_80091C88 = -1;
     currentArea_80091C44 = -1;
     mapAreas_80082674 = 0;
@@ -3829,11 +3829,11 @@ void InitMapState_80026FAC(void)
     dword_80091C5C = 1;
     dword_80091C58 = 1;
     dword_80091C90 = 0;
-    dword_80091CA0 = 0;
+    freeActorModels_80091CA0 = 0;
     forceMapReload_80091C9C = 0;
     dword_80091C8C = 0;
     savedLevantPos_80091C78.mapIdx = -1;
-    dword_80091C54 = gameStartMode_800B1DC8;
+    mapStartMode_80091C54 = gameStartMode_800B1DC8;
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
     word_80091CB8[5] = -1;
@@ -3871,7 +3871,7 @@ void UnloadMap_80027118(void)
     areaPreload_80091C40[1] = -1;
     CancelAreaPreload_8002741C();
     areaPreloading_80082678 = 0;
-    dword_80091C74 = -1;
+    levantAnimSet_80091C74 = -1;
     mapCallback_80091CB4 = 0;
     currentAreaMap_80091C88 = -1;
     mapJustLoaded_80082668 = 0;
@@ -3888,7 +3888,7 @@ void UnloadMap_80027118(void)
     StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
     FreeAllEventData_800A54A0();
     StopAllEventScripts_800A58B4();
-    FreeActors_8001D3C4(dword_80091CA0);
+    FreeActors_8001D3C4(freeActorModels_80091CA0);
     ClearFieldMinions_800A7784();
     ResetEncounter_800A170C();
     ClearEnemySlots_800A1794();
@@ -4112,7 +4112,7 @@ void LoadMapFtg_80027708(int* file, int heap)
     }
 }
 // Matched
-void sub_80027778(int* a0, int h)
+void LoadTileSets_80027778(int* data, int heap)
 {
     struct_27778* arr;
     unsigned int i;
@@ -4120,57 +4120,57 @@ void sub_80027778(int* a0, int h)
     int* src;
     unsigned short* q;
     int n;
-    dword_8008D648.field_4 = a0[0];
-    dword_8008D648.field_8 = a0[1];
-    n = a0[2];
-    dword_8008D648.count_0 = n;
-    arr = ListAlloc_8003FDC0(h, n * 16);
-    for (i = 0; i < dword_8008D648.count_0; i++)
+    tileAnim_8008D648.field_4 = data[0];
+    tileAnim_8008D648.field_8 = data[1];
+    n = data[2];
+    tileAnim_8008D648.count_0 = n;
+    arr = ListAlloc_8003FDC0(heap, n * 16);
+    for (i = 0; i < tileAnim_8008D648.count_0; i++)
     {
-        src = (int*)((char*)a0 + a0[i + 3]);
+        src = (int*)((char*)data + data[i + 3]);
         arr[i].field_0 = *src++;
         arr[i].count = *src++;
         q = (unsigned short*)src;
         arr[i].field_8 = *q++;
         arr[i].field_A = *q++;
-        arr[i].items = ListAlloc_8003FDC0(h, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(heap, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *q++;
         }
     }
-    dword_8008D648.items_C = arr;
+    tileAnim_8008D648.items_C = arr;
 }
 // Matched
-void sub_800278BC(int* a, int h)
+void LoadTileAnimLayers_800278BC(int* data, int heap)
 {
-    int* a0 = a;
+    int* p = data;
     unsigned int i;
     unsigned int j;
     int n;
     int* q;
     struct_4b* r;
     struct_2s* e;
-    n = a0[0];
-    dword_8008D648.listCount_10 = n;
-    dword_8008D648.lists_14 = ListAlloc_8003FDC0(h, n * 8);
-    for (i = 0; i < dword_8008D648.listCount_10; i++)
+    n = p[0];
+    tileAnim_8008D648.listCount_10 = n;
+    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, n * 8);
+    for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        q = (int*)((char*)a0 + a0[i + 1]);
-        dword_8008D648.lists_14[i].count = *q;
-        dword_8008D648.lists_14[i].items = ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
+        q = (int*)((char*)p + p[i + 1]);
+        tileAnim_8008D648.lists_14[i].count = *q;
+        tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(heap, tileAnim_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
-        for (j = 0; j < dword_8008D648.lists_14[i].count; j++)
+        for (j = 0; j < tileAnim_8008D648.lists_14[i].count; j++)
         {
-            dword_8008D648.lists_14[i].items[j].a = r[j].a;
-            dword_8008D648.lists_14[i].items[j].b = r[j].b;
-            dword_8008D648.lists_14[i].items[j].c = r[j].c;
+            tileAnim_8008D648.lists_14[i].items[j].a = r[j].a;
+            tileAnim_8008D648.lists_14[i].items[j].b = r[j].b;
+            tileAnim_8008D648.lists_14[i].items[j].c = r[j].c;
         }
     }
-    dword_8008D648.pairs_18 = ListAlloc_8003FDC0(h, dword_8008D648.listCount_10 * 4);
-    for (i = 0; i < dword_8008D648.listCount_10; i++)
+    tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * 4);
+    for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        e = (struct_2s*)(i * 4 + (int)dword_8008D648.pairs_18); // integer sum, as the original
+        e = (struct_2s*)(i * 4 + (int)tileAnim_8008D648.pairs_18); // integer sum, as the original
         e->b = 0;
         e->a = 0;
     }
@@ -4288,7 +4288,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
             }
             else
             {
-                if (dword_80091C54)
+                if (mapStartMode_80091C54)
                 {
                     SelectMapEntrance_800ADDAC();
                 }
@@ -4304,7 +4304,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 v[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6;
                 t = SelectEncounterSpecies_800A5030(v[0], v[1], dword_80091C90);
                 SetBattleStageForMap_800A52AC(v[0]);
-                dword_80091C54 = 1;
+                mapStartMode_80091C54 = 1;
                 areaReload_80082670 = 0;
                 forceMapReload_80091C9C = 0;
                 saveData_8008B570.mapId_2E4[0].field_2 = saveData_8008B570.mapId_2E4[0].field_0;
@@ -4319,10 +4319,10 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                     unknownFlags_8008D678 &= ~0x1000000;
                 }
                 ApplyModelFtgSwaps_80025C38(GetLevantModel_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-                dword_80091CA0 = 0;
+                freeActorModels_80091CA0 = 0;
                 if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
                 {
-                    dword_80091CA0 = 1;
+                    freeActorModels_80091CA0 = 1;
                 }
                 dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA;
                 UnloadMap_80027118();
@@ -4406,7 +4406,7 @@ void ResetMapLoaderTask_8002830C(EventEntry* p)
     saveData_8008B570.mapId_2E4[2].field_2 = -1;
     saveData_8008B570.mapId_2E4[3].field_2 = -1;
     unknownFlags_8008D678 &= ~0x20000;
-    dword_80091CA0 = 1;
+    freeActorModels_80091CA0 = 1;
     UnloadMap_80027118();
     FreeMapArea_8002728C();
     p->cb_8 = (EventEntryFn)InitMapLoaderTask_80027CC0;
@@ -4551,8 +4551,8 @@ typedef struct
     int fC;
 } MapEntry16b;
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
-extern void sub_800B73C0(MapMesh* a0, int a1);
-extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
+extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
+extern int FindTriAtXZ_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task
@@ -4572,7 +4572,7 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
     n = *p++;
     if (n != 0 && dword_80091C8C == 0)
     {
-        MemCopy_800403E8(dword_80073210, p, n);
+        MemCopy_800403E8(mapCodeAddr_80073210, p, n);
         mapCallback_80091CB4 = ((MapEntry16b*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
     }
     p = (int*)((char*)p + n);
@@ -4592,17 +4592,17 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
     mapState_8008B500.f8_8 = *p++;
     MemCopy_800403E8(&hdr, p, sizeof(hdr));
     p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)p + 0x104);
-    sub_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
+    MarkSharedEdges_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
+    MarkSharedEdges_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, (int)&mapHeap_80091C68);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
+    MarkSharedEdges_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
+    MarkSharedEdges_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, (int)&mapHeap_80091C68);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
+    MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = p[0];
     LoadMapFtg_80027708(p, (int)&mapHeap_80091C68);
     p = (int*)((char*)p + cnt);
@@ -4646,7 +4646,7 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
     {
         for (i = 0; i < (int)mapState_8008B500.nMeshes_4; i++)
         {
-            if (sub_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
+            if (FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
             {
                 saveData_8008B570.mapId_2E4[3].field_0 = i;
                 saveData_8008B570.mapId_2E4[3].field_2 = -1;

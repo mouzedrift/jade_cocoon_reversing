@@ -25,7 +25,7 @@
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
 
 // Matched
-int sub_80031A94(int* p)
+int GetSkillCommandTargetFlags_80031A94(int* p)
 {
     int r = 2;
     UnitSkill* base;
@@ -42,7 +42,7 @@ int sub_80031A94(int* p)
     return r;
 }
 // Matched
-int sub_80031B0C(UnitSkill* base, int idx)
+int GetSkillTargetFlags_80031B0C(UnitSkill* base, int idx)
 {
     int r = 4;
     base += idx;
@@ -52,7 +52,7 @@ int sub_80031B0C(UnitSkill* base, int idx)
     }
     return r;
 }
-extern UnitSkill* sub_800A11A0(int a0);
+extern UnitSkill* GetSlotSkills_800A11A0(int a0);
 extern UnitSkill* GetEnemySkills_800A2BA0(int a0);
 
 
@@ -67,11 +67,11 @@ UnitSkill* GetUnitSkills_80031B30(int unit)
     if (v >= 8)
     {
         t = unit - 8;
-        r = sub_800A11A0(t & 0xFF);
+        r = GetSlotSkills_800A11A0(t & 0xFF);
     }
     else if (v >= 4)
     {
-        int flags = sub_800A248C();
+        int flags = GetEnemyAliveMask_800A248C();
         int bit = 1 << v;
         if (flags & bit)
         {
@@ -756,7 +756,7 @@ UnitStatus* GetMinionStatusOf_80033818(Minion* p)
     return &p->status_84;
 }
 // Matched
-unsigned char* sub_80033820(Minion* p)
+unsigned char* GetMinionStatBlockOf_80033820(Minion* p)
 {
     return p->field_CC.cur_0;
 }
@@ -918,8 +918,8 @@ extern int GetItemFlags_8001CE70(int a);
 // Matched
 int CheckItemUsable_80033AFC(struct_minion_ref* p)
 {
-    int item = sub_800AD288(p->cursor_0 + p->scroll_2, 0);
-    if (sub_800AD2C8(p->cursor_0 + p->scroll_2, 0) <= 0)
+    int item = GetInventorySlotId_800AD288(p->cursor_0 + p->scroll_2, 0);
+    if (GetInventorySlotCount_800AD2C8(p->cursor_0 + p->scroll_2, 0) <= 0)
     {
         return 1;
     }
@@ -999,9 +999,9 @@ int CheckMagicHasEffect_80033D20(struct_minion_ref* p)
     Minion* minion = p->minion_C;
     UnitStatus* status = &minion->status_84;
     int magic = FindNthMagicBit_8001AEC0(&minion->magicBits_F4, p->cursor_0 + p->scroll_2);
-    if (magicData_8007C438[magic].field_0 & 0x40)
+    if (magicData_8007C438[magic].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[magic].field_7)
+        switch (magicData_8007C438[magic].kind_7)
         {
         case 0:
             if (status->hp_8.cur_0 == status->hp_8.max_2)

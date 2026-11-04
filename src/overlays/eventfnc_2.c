@@ -1,6 +1,7 @@
 // EVENTFNC.BIN, source file 2 of 2 from 0x800BCB3C (.rdata from 0x800B6D98)
 #include "eventfnc.h"
 
+// the initializer of ReturnWarpTask_800BCB3C's tbl2 and its jump table (while it is assembly)
 const int returnWarpAreaVars_800B6D98[10] = {
     0, 0, 0, 0, 0, 5, 7, 6,
     8,
@@ -8,22 +9,22 @@ const int returnWarpAreaVars_800B6D98[10] = {
 INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6DC0);
 
 #if 0
-// Not matched: with this file's own .rdata the initializer and jump table land where the original's are;
-// the code is 1 word short: case 4 keeps the saveData address in a0 (dead across the calls, recomputed
-// for the stores) and shares the constant 4 of SetEventVar_800AD16C's first argument with word_8008B858 + 4
+// Not matched: with this file's own .rdata (drop returnWarpAreaVars_800B6D98 and the table include) the initializer
+// and jump table land where the original's are; the code is 1 word short: the copy loop of tbl2's initializer gets
+// dst/src/end in a0/v1/v0 instead of v1/v0/a0, so the load delay of its tail word is filled with the pendingArea load.
+// Everything else matches (two SetEventVar calls for the shared constant 4, saveData stores before the globals).
 extern int fieldMode_800B0EC0;
 void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
 {
     EvActorCmdEventfnc m;
     unsigned short v[3];
     SaveData* s;
-    int k;
     switch (st[0])
     {
     case 0:
         SuspendAllEnemySlots_800A1904();
         HoldLevantControl_800A8E0C();
-        sub_800A8DEC();
+        ResetLevantActorToIdle_800A8DEC();
         LoadLevantAnimById_800AC604(st[1], 0);
         st[0] = 1;
         break;
@@ -40,7 +41,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
         }
         break;
     case 3:
-        if (sub_800A8FE0())
+        if (IsLevantCmdDone_800A8FE0())
         {
             m.actor_0 = 0;
             m.kind_4 = 9;
@@ -58,28 +59,26 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
         {
             FreeLevantAnimById_800AC6A8(st[1]);
             ReleaseLevantControl_800A8E38();
-            s = &saveData_8008B570;
-            if (s->mapId_2E4[0].field_0 == 4 && s->mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][s->mapId_2E4[2].field_0].f4_4 == 0)
+            if (saveData_8008B570.mapId_2E4[0].field_0 == 4 && saveData_8008B570.mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][saveData_8008B570.mapId_2E4[2].field_0].f4_4 == 0)
             {
                 int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
-                k = tbl2[pendingArea_8008B860];
+                SetEventVar_800AD16C(4, tbl2[pendingArea_8008B860]);
             }
             else
             {
-                k = word_8008B858 + 4;
+                SetEventVar_800AD16C(4, word_8008B858 + 4);
             }
-            SetEventVar_800AD16C(4, k);
             FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
-            forceMapReload_80091C9C = 1;
-            useMapStartPos_80091C94 = 1;
-            dword_80091C54 = 0;
-            dword_80091C8C = 0;
-            fieldMode_800B0EC0 = 1;
             s = &saveData_8008B570;
             s->mapId_2E4[3].field_0 = 0;
             s->mapId_2E4[0].field_0 = v[0];
             s->mapId_2E4[1].field_0 = v[1];
             s->mapId_2E4[2].field_0 = v[2];
+            forceMapReload_80091C9C = 1;
+            useMapStartPos_80091C94 = 1;
+            mapStartMode_80091C54 = 0;
+            dword_80091C8C = 0;
+            fieldMode_800B0EC0 = 1;
             unknownFlags_8008D678 &= ~0x20000;
             t->next_8 = FieldModeTask_800A7720;
         }
@@ -87,9 +86,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
     }
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(eventfnc, ReturnWarpTask_800BCB3C);
-
 
 int (*eventFuncs_800BCDBC[157])() = {
     EvCmdNop_800B89A8, EvCmdWaitButton_800B89C0, EvCmdNop_800B89A8, EvCmdEnd_800B89F4,
@@ -114,9 +111,9 @@ int (*eventFuncs_800BCDBC[157])() = {
     EvCmdSetCallArgs_800BA6D0, EvCmdCallUntilDone_800BA714, EvCmdCallSelect_800BA7A4, (int (*)())EvCmdSetChapter_800BA82C,
     sub_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
     EvCmdNop_800B89A8, EvCmdPreloadArea_800BAA6C, EvCmdUsePreloadedArea_800BAAC0, EvCmdSetReturnPoint_800BAB14,
-    (int (*)())sub_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
+    (int (*)())EvCmdOpenMapSelect_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
     EvCmdCameraClearLookAt_800BAD3C, EvCmdWaitCameraBlend_800BAD88, EvCmdSetViewRect_800BADF8, EvCmdSetCameraZoom_800BAEBC,
-    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, sub_800BB180,
-    EvCmdWaitActorInRegion_800BB214, (int (*)())EvCmdBattle_800BB27C, sub_800BB45C, EvCmdFadeSound_800BB4A4,
+    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, EvCmdSetIdleAnim_800BB180,
+    EvCmdWaitActorInRegion_800BB214, (int (*)())EvCmdBattle_800BB27C, EvCmdIfBattleResult_800BB45C, EvCmdFadeSound_800BB4A4,
     EvCmdPadVibration_800BB7D8,
 };

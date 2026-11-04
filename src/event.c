@@ -423,12 +423,12 @@ int XaRequestStop_80043524(void)
     return 1;
 }
 // Matched
-void XaRequestPlay_80043564(short a0, short a1, short a2)
+void XaRequestPlay_80043564(short channel, short startSector, short length)
 {
     xaRequestPending_80096118 = 0;
-    xaRequest_80096110.channel_2 = a0;
-    xaRequest_80096110.startSector_4 = a1;
-    xaRequest_80096110.length_6 = a2;
+    xaRequest_80096110.channel_2 = channel;
+    xaRequest_80096110.startSector_4 = startSector;
+    xaRequest_80096110.length_6 = length;
 }
 // Matched
 int XaIsIdle_80043584(void)
@@ -639,18 +639,18 @@ int windowPulseScale_80086FB0[5][3] = {
     { 150, 140, 100 },
     { 100, 100, 100 },
 };
-unsigned char byte_80086FEC = 42;
+unsigned char windowBgColor0_80086FEC = 42;
 unsigned char byte_80086FED = 38;
 unsigned char byte_80086FEE = 110;
 unsigned char byte_80086FEF = 0;
-int dword_80086FF0[9] = {
+int windowBgColorData_80086FF0[9] = {
     0x5A266E, 0x666E26, 0x254470, 0x293A55, 0xD81FF, 0xFFFF0A, 0xD81FF, 0x73FF0A,
     0x254470,
 };
-int dword_80087014[5] = { 0xFFFF0A, 0x5161FF, 0xA5FF4B, 0x25E1FF, 0x427595 };
-unsigned char *windowBgColors_80087028[5] = { &byte_80086FEC, (void *)dword_80086FF0, (void *)&dword_80086FF0[1], (void *)&dword_80086FF0[2], (void *)&dword_80086FF0[3] };
-void *windowColorsAlt_8008703C[5] = { (void *)&dword_80086FF0[4], (void *)&dword_80086FF0[5], (void *)&dword_80086FF0[6], (void *)&dword_80086FF0[7], (void *)&dword_80086FF0[8] };
-unsigned char *windowPulseColors_80087050[5] = { (void *)dword_80087014, (void *)&dword_80087014[1], (void *)&dword_80087014[2], (void *)&dword_80087014[3], (void *)&dword_80087014[4] };
+int windowPulseColorData_80087014[5] = { 0xFFFF0A, 0x5161FF, 0xA5FF4B, 0x25E1FF, 0x427595 };
+unsigned char *windowBgColors_80087028[5] = { &windowBgColor0_80086FEC, (void *)windowBgColorData_80086FF0, (void *)&windowBgColorData_80086FF0[1], (void *)&windowBgColorData_80086FF0[2], (void *)&windowBgColorData_80086FF0[3] };
+void *windowColorsAlt_8008703C[5] = { (void *)&windowBgColorData_80086FF0[4], (void *)&windowBgColorData_80086FF0[5], (void *)&windowBgColorData_80086FF0[6], (void *)&windowBgColorData_80086FF0[7], (void *)&windowBgColorData_80086FF0[8] };
+unsigned char *windowPulseColors_80087050[5] = { (void *)windowPulseColorData_80087014, (void *)&windowPulseColorData_80087014[1], (void *)&windowPulseColorData_80087014[2], (void *)&windowPulseColorData_80087014[3], (void *)&windowPulseColorData_80087014[4] };
 unsigned char **windowColorSets_80087064[3] = { windowBgColors_80087028, windowBgColors_80087028, (void *)windowColorsAlt_8008703C };
 int windowFrameQuadEdges_80087070[5][8] = {
     { 0, 0, 3, 0, 1, 1, 2, 1 },

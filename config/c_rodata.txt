@@ -1,3 +1,3 @@
 dword_8007411C 0x28     # the jump table of CountFtgSprites_80022B84 (asm); the jump table of HsvToRgb555_8002A040 (tim) follows, aQuit_8007415C starts after it
-jpt_8007486C 0x18       # the jump table of UpdateItemMessageWindow_80035BD8 (asm, msg_window); the jump table of sub_80039ED8 (camera) follows
+jpt_8007486C 0x18       # the jump table of UpdateItemMessageWindow_80035BD8 (asm, msg_window); the jump table of SetAreaElementLight_80039ED8 (camera) follows
 # asm data symbols whose tail is emitted by C instead (switch jump tables of decompiled functions): name, bytes kept

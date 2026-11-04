@@ -118,9 +118,9 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned ch
     }
     return 0;
 }
-/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
-extern short asc_80084350[];
-#define SIN_TABLE (asc_80084350 + 0xF8)
+/* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
+extern short battleCamSpline1Tail_80084350[];
+#define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
 #if 0
 // Not matched: code layout right; register allocation differs throughout (the original never uses $t0 in the screen-aligned branch, keeps &geomScreenDistance in $t0 for the last extent), 1 instruction short
 #define ROT_SPRITE_UV(s, src, uv, size)                       \

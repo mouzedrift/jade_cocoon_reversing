@@ -19,44 +19,44 @@ const char a3_800A05BC[] = "\202R"; // 3
 const char a2_800A05C0[] = "\202Q"; // 2
 const char a1_800A05C4[] = "\202P"; // 1
 const char a0_800A05C8[] = "\202O"; // 0
-const char asc_800A05CC[] = "\203p\203h\203\213\203J"; // パドルカ
-const char asc_800A05D8[] = "\203A\203\213\203p\203^\203\215\203\223"; // アルパタロン
-const char asc_800A05E8[] = "\203V\203F\203\212\203N"; // シェリク
-const char asc_800A05F4[] = "\203\211\203V\203\203\203o\203o"; // ラシャババ
-const char asc_800A0600[] = "\203g\203D\203C\203\223\203S"; // トゥインゴ
-const char asc_800A060C[] = "\203G\203X\203v"; // エスプ
-const char asc_800A0614[] = "\203W\203\211\203\213"; // ジラル
-const char asc_800A061C[] = "\203\210\203\213\203N"; // ヨルク
-const char asc_800A0624[] = "\203E\203O\203\211\203\200"; // ウグラム
-const char asc_800A0630[] = "\203X\203\212\203J\201[\203^"; // スリカータ
-const char asc_800A063C[] = "\203\212\203O"; // リグ
-const char asc_800A0644[] = "\203I\203W\203F"; // オジェ
-const char asc_800A064C[] = "\203l\201[\203u\203C"; // ネーブイ
-const char asc_800A0658[] = "\203\200\203O\201["; // ムグー
-const char asc_800A0660[] = "\203}\201[\203C\203F\203\223"; // マーイェン
-const char asc_800A066C[] = "\203M\203k\203C"; // ギヌイ
-const char asc_800A0674[] = "\203A\203V\203\203"; // アシャ
-const char asc_800A067C[] = "\203\200\203c\203L\203V\203\203\203u"; // ムツキシャブ
-const char asc_800A068C[] = "\203\211\203V\203\203\203u"; // ラシャブ
-const char asc_800A0698[] = "\203k\203V\203\203\203u"; // ヌシャブ
-const char asc_800A06A4[] = "\203h\203O\203\213\203`\203\205\201["; // ドグルチュー
-const char asc_800A06B4[] = "\203\211\203h\203\213\203`\203\205"; // ラドルチュ
-const char asc_800A06C0[] = "\203p\203^\203\213\203`\203\205\203E"; // パタルチュウ
-const char asc_800A06D0[] = "\203\211\203h\203C\203\201\203\213"; // ラドイメル
-const char asc_800A06DC[] = "\203X\203N\203C\203\201\203\213"; // スクイメル
-const char asc_800A06E8[] = "\203p\203^\203C\203\201\203\213"; // パタイメル
-const char asc_800A06F4[] = "\203q\203\211\203T\203O"; // ヒラサグ
-const char asc_800A0700[] = "\203}\203X\203R\203q\203\211"; // マスコヒラ
-const char asc_800A070C[] = "\203q\203\211\203\213\203R"; // ヒラルコ
-const char asc_800A0718[] = "\203e\203\211\203n\203\223\203u\201["; // テラハンブー
-const char asc_800A0728[] = "\203h\203O\203n\203\223\203u\201["; // ドグハンブー
-const char asc_800A0738[] = "\203\200\203J\203n\203\223\203u\201["; // ムカハンブー
-const char asc_800A0748[] = "\203x\203\211\203o\203\223\203T"; // ベラバンサ
-const char asc_800A0754[] = "\203h\203\223\203O\203\213"; // ドングル
-const char asc_800A0760[] = "\203\211\203M\203h\203O\203\213"; // ラギドグル
-const char asc_800A076C[] = "\203p\203^\203h\203\214\203b\203N"; // パタドレック
-const char asc_800A077C[] = "\203\211\203h\203\214\203b\203O"; // ラドレッグ
-const char asc_800A0788[] = "\203}\203A\203h\203\214\203b\203O"; // マアドレッグ
+const char aPadoruka_800A05CC[] = "\203p\203h\203\213\203J"; // パドルカ
+const char aArupataron_800A05D8[] = "\203A\203\213\203p\203^\203\215\203\223"; // アルパタロン
+const char aSheriku_800A05E8[] = "\203V\203F\203\212\203N"; // シェリク
+const char aRashababa_800A05F4[] = "\203\211\203V\203\203\203o\203o"; // ラシャババ
+const char aTuingo_800A0600[] = "\203g\203D\203C\203\223\203S"; // トゥインゴ
+const char aEsupu_800A060C[] = "\203G\203X\203v"; // エスプ
+const char aJiraru_800A0614[] = "\203W\203\211\203\213"; // ジラル
+const char aYoruku_800A061C[] = "\203\210\203\213\203N"; // ヨルク
+const char aUguramu_800A0624[] = "\203E\203O\203\211\203\200"; // ウグラム
+const char aSurikaata_800A0630[] = "\203X\203\212\203J\201[\203^"; // スリカータ
+const char aRigu_800A063C[] = "\203\212\203O"; // リグ
+const char aOje_800A0644[] = "\203I\203W\203F"; // オジェ
+const char aNeebui_800A064C[] = "\203l\201[\203u\203C"; // ネーブイ
+const char aMuguu_800A0658[] = "\203\200\203O\201["; // ムグー
+const char aMaayen_800A0660[] = "\203}\201[\203C\203F\203\223"; // マーイェン
+const char aGinui_800A066C[] = "\203M\203k\203C"; // ギヌイ
+const char aAsha_800A0674[] = "\203A\203V\203\203"; // アシャ
+const char aMutsukishabu_800A067C[] = "\203\200\203c\203L\203V\203\203\203u"; // ムツキシャブ
+const char aRashabu_800A068C[] = "\203\211\203V\203\203\203u"; // ラシャブ
+const char aNushabu_800A0698[] = "\203k\203V\203\203\203u"; // ヌシャブ
+const char aDoguruchuu_800A06A4[] = "\203h\203O\203\213\203`\203\205\201["; // ドグルチュー
+const char aRadoruchu_800A06B4[] = "\203\211\203h\203\213\203`\203\205"; // ラドルチュ
+const char aPataruchuu_800A06C0[] = "\203p\203^\203\213\203`\203\205\203E"; // パタルチュウ
+const char aRadoimeru_800A06D0[] = "\203\211\203h\203C\203\201\203\213"; // ラドイメル
+const char aSukuimeru_800A06DC[] = "\203X\203N\203C\203\201\203\213"; // スクイメル
+const char aPataimeru_800A06E8[] = "\203p\203^\203C\203\201\203\213"; // パタイメル
+const char aHirasagu_800A06F4[] = "\203q\203\211\203T\203O"; // ヒラサグ
+const char aMasukohira_800A0700[] = "\203}\203X\203R\203q\203\211"; // マスコヒラ
+const char aHiraruko_800A070C[] = "\203q\203\211\203\213\203R"; // ヒラルコ
+const char aTerahanbuu_800A0718[] = "\203e\203\211\203n\203\223\203u\201["; // テラハンブー
+const char aDoguhanbuu_800A0728[] = "\203h\203O\203n\203\223\203u\201["; // ドグハンブー
+const char aMukahanbuu_800A0738[] = "\203\200\203J\203n\203\223\203u\201["; // ムカハンブー
+const char aBerabansa_800A0748[] = "\203x\203\211\203o\203\223\203T"; // ベラバンサ
+const char aDonguru_800A0754[] = "\203h\203\223\203O\203\213"; // ドングル
+const char aRagidoguru_800A0760[] = "\203\211\203M\203h\203O\203\213"; // ラギドグル
+const char aPatadorekku_800A076C[] = "\203p\203^\203h\203\214\203b\203N"; // パタドレック
+const char aRadoreggu_800A077C[] = "\203\211\203h\203\214\203b\203O"; // ラドレッグ
+const char aMaadoreggu_800A0788[] = "\203}\203A\203h\203\214\203b\203O"; // マアドレッグ
 const char aNAMERATE_800A0798[] = "\202m\202`\202l\202d\201@\201@\201@\201@\201@\201@\202q\202`\202s\202d"; // NAME      RATE
 const char aTEXHANGL_800A07B8[] = "\202s\202d\202w\201@\201@\201@\201@\201@\201@\202g\202`\202m\202f\202k"; // TEX      HANGL
 const char aENEMY_800A07D8[] = "\202d\202m\202d\202l\202x"; // ENEMY
@@ -76,13 +76,13 @@ typedef struct TstCompoDraw
 {
     FtgObject* ftg_0;
     VECTOR* pos_4;
-    char* f8;
+    char* rot_8;
     TstCompoBone* bones_C;
-    char* f10;
+    char* base_10;
     ModelAnim* anim_14;
     int frame_18;
-    int f1C;
-    char* f20;
+    int drawMode_1C;
+    char* bonePos_20;
     VECTOR* scale_24;
     unsigned long* ot_28;
 } TstCompoDraw;
@@ -113,7 +113,7 @@ typedef struct TstCompoWork
     int scaleStep_198;
     int scaleId_19C;
     int* scale_1A0;
-    char* f1A4;
+    char* boneScale_1A4;
     TstCompoDraw draw_1A8;
     int pad_1D4;
     TstCompoBlk8 cursor_1D8;
@@ -498,19 +498,19 @@ void TstCompoDrawModel_800A1468(TstCompoWork* c)
     scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
     scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
     scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
+    c->boneScale_1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
-    c->draw_1A8.f8 = z;
+    c->draw_1A8.rot_8 = z;
     c->draw_1A8.bones_C = c->bones_C;
-    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.base_10 = c->boneScale_1A4;
     c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
-    c->draw_1A8.f1C = 0;
-    c->draw_1A8.f20 = name_800A2588;
+    c->draw_1A8.drawMode_1C = 0;
+    c->draw_1A8.bonePos_20 = compoBonePos_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
-    DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+    DrawAnimSkel_80046A58(&c->draw_1A8, compoLight_800A2570, c->model_4->anims_54);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
@@ -530,30 +530,30 @@ void TstCompoDrawBlend_800A15F4(TstCompoWork* c)
     scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
     scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
     scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
+    c->boneScale_1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
-    c->draw_1A8.f8 = z;
+    c->draw_1A8.rot_8 = z;
     c->draw_1A8.bones_C = c->bones_C;
-    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.base_10 = c->boneScale_1A4;
     c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
-    c->draw_1A8.f1C = 0;
-    c->draw_1A8.f20 = name_800A2588;
+    c->draw_1A8.drawMode_1C = 0;
+    c->draw_1A8.bonePos_20 = compoBonePos_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
     c->blend_1FC += 0x88;
     c->frame_180++;
     if ((unsigned)c->blend_1FC >= 0x1000)
     {
-        DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+        DrawAnimSkel_80046A58(&c->draw_1A8, compoLight_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
         anim = &c->model_4->anims_54[c->blendAnim_204];
-        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->blendFrame_200 % anim->frameCount_0, 0x1000 - c->blend_1FC,
-                     name_800A2570, c->model_4->anims_54);
+        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.base_10, anim, (unsigned)c->blendFrame_200 % anim->frameCount_0, 0x1000 - c->blend_1FC,
+                     compoLight_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
 }
@@ -684,8 +684,8 @@ void TstCompoInitBones_800A1AFC(TstCompoWork* a)
         a->bones_C[i] = defaultBones_80079140[i];
     }
     a->bones_C[i] = defaultBones_80079140[i];
-    r = sub_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
-    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
+    r = GetModelBoneGroupLevels_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
+    SetBoneGroupFlags_80019B14(a->bones_C, r, GetModelBoneGroupFlags_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
 // Matched
@@ -844,44 +844,44 @@ void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
 }
 
 TstCompoPart compoParts_800A20EC[48] = {
-    { (int)asc_800A0788, 12, 0, 29 },
-    { (int)asc_800A077C, 13, 0, 192, 1 },
-    { (int)asc_800A076C, 14, 0, 0x162, 2 },
-    { (int)asc_800A0760, 18, 0, 118, 3 },
-    { (int)asc_800A0754, 19, 0, 14, 4 },
-    { (int)asc_800A0748, 20, 0, 200, 5 },
-    { (int)asc_800A0738, 24, 0, 0x121, 6 },
-    { (int)asc_800A0728, 25, 0, 31, 7 },
-    { (int)asc_800A0718, 26, 0, 136, 8 },
-    { (int)asc_800A070C, 27, 0, 72, 9 },
-    { (int)asc_800A0700, 28, 0, 0x11E, 10 },
-    { (int)asc_800A06F4, 29, 0, 230, 11 },
-    { (int)asc_800A06E8, 31, 0, 56, 12 },
-    { (int)asc_800A06DC, 32, 0, 56, 13 },
-    { (int)asc_800A06D0, 33, 0, 56, 14 },
-    { (int)asc_800A06C0, 41, 0, 15, 15 },
-    { (int)asc_800A06B4, 42, 0, 100, 16 },
-    { (int)asc_800A06A4, 43, 0, 218, 17 },
-    { (int)asc_800A0698, 76, 0, 234, 18 },
-    { (int)asc_800A068C, 77, 0, 53, 19 },
-    { (int)asc_800A067C, 78, 0, 184, 20 },
-    { (int)asc_800A0674, 1, 0, 36, 21 },
-    { (int)asc_800A066C, 23, 0, 0x105, 22 },
-    { (int)asc_800A0660, 52, 0, 72, 23 },
-    { (int)asc_800A0658, 61, 0, 144, 24 },
-    { (int)asc_800A064C, 64, 0, 111, 25 },
-    { (int)asc_800A0644, 67, 0, 211, 26 },
-    { (int)asc_800A063C, 70, 0, 43, 27 },
-    { (int)asc_800A0630, 81, 0, 186, 28 },
-    { (int)asc_800A0624, 93, 0, 0x103, 29 },
-    { (int)asc_800A061C, 98, 0, 61, 30 },
-    { (int)asc_800A0614, 101, 0, 183, 31 },
-    { (int)asc_800A060C, 34, 0, 206, 32 },
-    { (int)asc_800A0600, 35, 0, 227, 34 },
-    { (int)asc_800A05F4, 68, 0, 28, 33 },
-    { (int)asc_800A05E8, 82, 0, 80, 35 },
-    { (int)asc_800A05D8, 0, 0, 0, 36 },
-    { (int)asc_800A05CC, 69, 0, 0, 37 },
+    { (int)aMaadoreggu_800A0788, 12, 0, 29 },
+    { (int)aRadoreggu_800A077C, 13, 0, 192, 1 },
+    { (int)aPatadorekku_800A076C, 14, 0, 0x162, 2 },
+    { (int)aRagidoguru_800A0760, 18, 0, 118, 3 },
+    { (int)aDonguru_800A0754, 19, 0, 14, 4 },
+    { (int)aBerabansa_800A0748, 20, 0, 200, 5 },
+    { (int)aMukahanbuu_800A0738, 24, 0, 0x121, 6 },
+    { (int)aDoguhanbuu_800A0728, 25, 0, 31, 7 },
+    { (int)aTerahanbuu_800A0718, 26, 0, 136, 8 },
+    { (int)aHiraruko_800A070C, 27, 0, 72, 9 },
+    { (int)aMasukohira_800A0700, 28, 0, 0x11E, 10 },
+    { (int)aHirasagu_800A06F4, 29, 0, 230, 11 },
+    { (int)aPataimeru_800A06E8, 31, 0, 56, 12 },
+    { (int)aSukuimeru_800A06DC, 32, 0, 56, 13 },
+    { (int)aRadoimeru_800A06D0, 33, 0, 56, 14 },
+    { (int)aPataruchuu_800A06C0, 41, 0, 15, 15 },
+    { (int)aRadoruchu_800A06B4, 42, 0, 100, 16 },
+    { (int)aDoguruchuu_800A06A4, 43, 0, 218, 17 },
+    { (int)aNushabu_800A0698, 76, 0, 234, 18 },
+    { (int)aRashabu_800A068C, 77, 0, 53, 19 },
+    { (int)aMutsukishabu_800A067C, 78, 0, 184, 20 },
+    { (int)aAsha_800A0674, 1, 0, 36, 21 },
+    { (int)aGinui_800A066C, 23, 0, 0x105, 22 },
+    { (int)aMaayen_800A0660, 52, 0, 72, 23 },
+    { (int)aMuguu_800A0658, 61, 0, 144, 24 },
+    { (int)aNeebui_800A064C, 64, 0, 111, 25 },
+    { (int)aOje_800A0644, 67, 0, 211, 26 },
+    { (int)aRigu_800A063C, 70, 0, 43, 27 },
+    { (int)aSurikaata_800A0630, 81, 0, 186, 28 },
+    { (int)aUguramu_800A0624, 93, 0, 0x103, 29 },
+    { (int)aYoruku_800A061C, 98, 0, 61, 30 },
+    { (int)aJiraru_800A0614, 101, 0, 183, 31 },
+    { (int)aEsupu_800A060C, 34, 0, 206, 32 },
+    { (int)aTuingo_800A0600, 35, 0, 227, 34 },
+    { (int)aRashababa_800A05F4, 68, 0, 28, 33 },
+    { (int)aSheriku_800A05E8, 82, 0, 80, 35 },
+    { (int)aArupataron_800A05D8, 0, 0, 0, 36 },
+    { (int)aPadoruka_800A05CC, 69, 0, 0, 37 },
     { (int)a0_800A05C8, 83, 0, 0, 201 },
     { (int)a1_800A05C4, 84, 0, 0, 202 },
     { (int)a2_800A05C0, 85, 0, 0, 203 },
@@ -906,6 +906,6 @@ TstCompoPage compoPages_800A250C[3] = {
 };
 int tstCompoTaskDesc_800A2548[6] = { 1, 1, 0x230, 0, (int)TstCompoInit_800A0800 };
 char tstCompoTaskList_800A2560[16] = { 184, 142, 7, 128, 128, 144, 7, 128, 72, 37, 10, 128 };
-char name_800A2570[24] = { 0 };
-char name_800A2588[480] = { 0 };
+char compoLight_800A2570[24] = { 0 };
+char compoBonePos_800A2588[480] = { 0 };
 TstCompoModelParams compoModelParams_800A2768 = { 0 };

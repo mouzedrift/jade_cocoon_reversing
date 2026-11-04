@@ -208,6 +208,6 @@ extern const char aPatdreg_80073008[];
 extern const char aRaddreg_80073018[];
 extern const char aMarrdreg_80073028[];
 // bones: 4 shorts per bone (Actor.bones_134); a1/a2: three flags each from model header sections
-extern void SetBoneGroupFlags_80019B14(short* bones, unsigned short* a1, unsigned short* a2);
+extern void SetBoneGroupFlags_80019B14(short* bones, unsigned short* levels, unsigned short* flags);
 
 #endif

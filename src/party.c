@@ -246,7 +246,7 @@ UnitStatus* GetMinionStatus_800107A0(int id, int nth)
     return 0;
 }
 // Matched
-unsigned char* sub_800107CC(int id, int nth)
+unsigned char* GetMinionStatBlock_800107CC(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
     if (m)

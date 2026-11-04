@@ -96,12 +96,12 @@ typedef struct
     int yan_0; // money
     InvSlot inventory_4[5][0x40];
     int emptyCocoons_284; // levantEmptyCocoons_8008B818
-    unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's sub_800AD68C
-    unsigned char bits_290[0x13]; // bit flags (GAME's sub_800AD0D4 / sub_800AD0F8)
-    unsigned char vars_2A3[0x14]; // GAME's sub_800AD154 / sub_800AD16C
+    unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's SetValuableFlag_800AD68C
+    unsigned char bits_290[0x13]; // bit flags (GAME's TestEventFlag_800AD0D4 / SetEventFlag_800AD0F8)
+    unsigned char vars_2A3[0x14]; // GAME's GetEventVar_800AD154 / SetEventVar_800AD16C
 } SaveInventory;
 
-// a value saved per map (SaveData.mapVars_2F8, GAME's FindMapVar_800ADBA0 / sub_800ADC5C), keyed by the map ids
+// a value saved per map (SaveData.mapVars_2F8, GAME's FindMapVar_800ADBA0 / SetMapVar_800ADC5C), keyed by the map ids
 typedef struct
 {
     short area_0;
@@ -165,12 +165,12 @@ typedef struct
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;           // flags (0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4)
+    int flags_0;           // 0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4
     unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
-    unsigned char field_6;
-    unsigned char field_7;
-    short field_8;         // enum Element (GetMagicElement_8001AD30)
+    unsigned char effect_6; // GetMagicEffect_8001AC8C
+    unsigned char kind_7;   // with flags_0 & 0x40: 0 restores hp, 1 cures status (CheckMagicUsable_80034068)
+    short element_8;        // enum Element (GetMagicElement_8001AD30)
     short pad_A;
 } MagicData;
 
@@ -309,7 +309,7 @@ extern int battleMusic_80091CFC;
 extern int battleStageId_80083BD0;
 extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
-extern int dword_80079320[];
+extern int sealResultFlags_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern ActionData abilityActions_80083594[];
 extern PadVibration padVibration_80095460[];
@@ -317,7 +317,7 @@ extern int personNames_8007CB20[];
 extern unsigned char personMergeInfo_8007CB4C[][4]; // per person (GetPersonMergeInfo_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
-extern int dword_80091CA0;
+extern int freeActorModels_80091CA0;
 extern int frozenFrames_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
@@ -414,7 +414,7 @@ extern int currentArea_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char armorOutfits_8007D588[16];
-extern int dword_8008B550;
+extern int primBufferOffset_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
 extern unsigned long* decodedImageData_8008B4A0;
@@ -514,7 +514,7 @@ typedef struct
 extern unsigned short buttonConfig_8008B578[];
 extern EventNode* modelTasks_8008D618;
 extern EventNode* effectObjects_8008B4A8;
-extern EventNode* dword_8008D60C;
+extern EventNode* miscTasks_8008D60C;
 extern EventNode* cameraTask_8008D4A0;
 extern EventNode* effectTask_8008D3F8;
 extern EventNode* xaTask_8008B560;
@@ -538,7 +538,7 @@ extern short effectOutcomeFlag_8008D780;
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 
-extern int dword_80091CA0;
+extern int freeActorModels_80091CA0;
 
 extern int loadFade_80091C30[];
 

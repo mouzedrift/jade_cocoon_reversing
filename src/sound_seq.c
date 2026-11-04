@@ -87,9 +87,9 @@ void FreeSoundVab_80030EA4(SoundStruct* p)
     }
 }
 // Matched
-void FreeSoundSeqs_80030EEC(void* arg0)
+void FreeSoundSeqs_80030EEC(void* sound)
 {
-    SoundStruct* s = arg0;
+    SoundStruct* s = sound;
     int i;
     if (s->field_8_sep_data_ptr)
     {
@@ -234,18 +234,18 @@ void StopSoundSeq_80031408(SoundStruct* s, int idx)
     SsSepSetVol(a, b, 0, 0);
 }
 // Matched
-void PlaySfx_80031494(int a1)
+void PlaySfx_80031494(int id)
 {
-    if (a1 < 63)
+    if (id < 63)
     {
-        SsVoKeyOn((sfxSound_80091D20.field_0_vab_id << 8) + a1,
+        SsVoKeyOn((sfxSound_80091D20.field_0_vab_id << 8) + id,
                   0x3C00u,
                   (settingsFlags_8008B58C.word >> 14) & 0x7F,
                   (settingsFlags_8008B58C.word >> 14) & 0x7F);
     }
     else
     {
-        SsVoKeyOn((systemSound_80091D40.field_0_vab_id << 8) + a1,
+        SsVoKeyOn((systemSound_80091D40.field_0_vab_id << 8) + id,
                   0x3C00u,
                   (settingsFlags_8008B58C.word >> 14) & 0x7F,
                   (settingsFlags_8008B58C.word >> 14) & 0x7F);
