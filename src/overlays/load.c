@@ -200,12 +200,67 @@ typedef struct
     short icon_24;
     short f26;
     int vals_28[6];
-    char pad40[0x40];
+    int sum_40; // byte sum of the save body (SaveFile_LOAD.body_300)
+    char pad44[0x3C];
 } SaveSummary_LOAD;
+// a unit's status as packed in a save file (0x38 bytes): UnitStatus without the name and the equipment
+typedef struct
+{
+    int status_0;
+    unsigned int exp_4;
+    UnitGauge hp_8;
+    UnitGauge mp_C;
+    unsigned char field_10[0xC]; // UnitStatus.field_20
+    UnitStatBlock stats_1C;
+    unsigned char element_2E[4];
+    short elementMask_32;
+    unsigned char level_34;
+    unsigned char field_35;
+} SaveStatus_LOAD;
+// a Minion as packed in a save file (0xA0 bytes); the names are kept apart (SaveBody_LOAD)
+typedef struct
+{
+    short id_0;
+    unsigned char species_2;
+    unsigned char field_3;
+    unsigned char species_4[0x30];
+    unsigned char field_34[8];
+    SaveStatus_LOAD status_3C;
+    UnitStatBlock field_74;
+    UnitSkills skills_86;
+    unsigned int magicBits_9C;
+} SaveMinion_LOAD;
+// a stored minion (SaveData.items, UnitStats) as packed in a save file (0x6C bytes)
+typedef struct
+{
+    SaveStatus_LOAD status_0;
+    char pad_38[0x14];
+    unsigned int species_4C;
+    char pad_50[0x1C];
+} SaveStats_LOAD;
+// the checksummed part of a save file (file offset 0x300)
+typedef struct
+{
+    unsigned char data_0[0x984]; // the head of saveData_8008B570 (0x988 bytes, up to the minions)
+    int version_984;             // SaveData.field_984: 5
+    SaveMinion_LOAD minions_988[15];
+    SaveStats_LOAD items_12E8[12];
+    unsigned char ancestorNames_17F8[15][6][10];
+    unsigned char minionNames_1B7C[15][12]; // 10 used
+    unsigned char itemNames_1C30[12][12];   // 10 used
+} SaveBody_LOAD;
+// a save file (0x2180 bytes)
+typedef struct
+{
+    CardHeader_LOAD header_0;
+    SaveSummary_LOAD summary_280;
+    SaveBody_LOAD body_300;
+    char pad_1FC0[0x1C0];
+} SaveFile_LOAD;
 typedef struct
 {
     SaveSummary_LOAD* summaries_LOAD; // one per save (15)
-    char* fileBuf_LOAD;   // one save file (0x2180 bytes)
+    SaveFile_LOAD* fileBuf_LOAD; // one save file
     int f8_LOAD;
     char padC_LOAD[8];
     int f14_LOAD;
@@ -356,7 +411,7 @@ done:
     s->rows_LOAD[4] = &stru_800BDF4C[4];
     s->rows_LOAD[5] = &stru_800BDF4C[5];
     s->summaries_LOAD = malloc3_8003FC4C(0x780);
-    s->fileBuf_LOAD = malloc3_8003FC4C(0x2180);
+    s->fileBuf_LOAD = malloc3_8003FC4C(sizeof(SaveFile_LOAD));
     loadMenuActive_800BE184 = 1;
 }
 #endif
@@ -1432,7 +1487,7 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
             MemCardCreateFile(chan, saveFileNames_800BE028[0][n], 1);
             name = saveFileNames_800BE028[0][n];
         }
-        MemCardWriteFile(chan, name, s->fileBuf_LOAD, 0, 0x2180);
+        MemCardWriteFile(chan, name, s->fileBuf_LOAD, 0, sizeof(SaveFile_LOAD));
         break;
     case 1:
         if (cmd == 4)
@@ -1444,7 +1499,7 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 3;
                 PlaySfx_80031494(0x7E);
-                MemCopy_800403E8(&s->summaries_LOAD[n], s->fileBuf_LOAD + 0x280, 0x80);
+                MemCopy_800403E8(&s->summaries_LOAD[n], &s->fileBuf_LOAD->summary_280, 0x80);
                 ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
                 break;
             case 1:
@@ -1485,7 +1540,7 @@ void LoadSaveTask_800BA234(Task_LOAD* t, LoadTask_LOAD* s)
         name = GetCardSaveName_800BAE4C(n);
         if (name)
         {
-            MemCardReadFile(chan, name, s->fileBuf_LOAD, 0, 0x2180);
+            MemCardReadFile(chan, name, s->fileBuf_LOAD, 0, sizeof(SaveFile_LOAD));
         }
         else
         {
@@ -1534,7 +1589,144 @@ void LoadSaveTask_800BA234(Task_LOAD* t, LoadTask_LOAD* s)
 #endif
 INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
-INCLUDE_OVERLAY_ASM(load, sub_800BA3EC);
+// unpacks the loaded save file into saveData_8008B570; 0 when the checksum or the version is wrong
+// Matched
+int sub_800BA3EC(LoadTask_LOAD* s)
+{
+    int ret = 0;
+    int sum = ret;
+    unsigned int n;
+    int i;
+    int j;
+    int k;
+    int l;
+    struct UiColorBytes col = saveData_8008B570.uiColor_20.w;
+    SaveSummary_LOAD* sm = &s->fileBuf_LOAD->summary_280;
+    Settings set = saveData_8008B570.settings_1C;
+    SaveBody_LOAD* body;
+    Minion* m;
+    SaveMinion_LOAD* pm;
+    UnitStats* u;
+    SaveStats_LOAD* pu;
+
+    for (n = 0x300; n < 0x1FC0; n++)
+    {
+        sum += ((unsigned char*)s->fileBuf_LOAD)[n];
+    }
+    if (sum == sm->sum_40 && s->fileBuf_LOAD->body_300.version_984 == 5)
+    {
+        body = &s->fileBuf_LOAD->body_300;
+        MemCopy_800403E8(&saveData_8008B570, body, 0x988);
+        for (i = 0; i < 15; i++)
+        {
+            m = &saveData_8008B570.minions[i];
+            pm = &body->minions_988[i];
+            m->id = pm->id_0;
+            m->species_2 = pm->species_2;
+            m->field_3 = pm->field_3;
+            for (j = 0; j < 0x30; j++)
+            {
+                m->species_4C[j] = pm->species_4[j];
+            }
+            for (j = 0; j < 8; j++)
+            {
+                m->field_7C[j] = pm->field_34[j];
+            }
+            m->field_CC = pm->field_74;
+            m->skills_DE = pm->skills_86;
+            m->magicBits_F4 = pm->magicBits_9C;
+            m->status_84.status_0 = pm->status_3C.status_0;
+            m->status_84.exp_4 = pm->status_3C.exp_4;
+            m->status_84.hp_8 = pm->status_3C.hp_8;
+            m->status_84.mp_C = pm->status_3C.mp_C;
+            for (j = 0; j < 0xC; j++)
+            {
+                m->status_84.field_20[j] = pm->status_3C.field_10[j];
+            }
+            m->status_84.stats_2C = pm->status_3C.stats_1C;
+            for (j = 0; j < 4; j++)
+            {
+                m->status_84.element_3E[j] = pm->status_3C.element_2E[j];
+            }
+            m->status_84.elementMask_42 = pm->status_3C.elementMask_32;
+            m->status_84.level_44 = pm->status_3C.level_34;
+            m->status_84.field_45 = pm->status_3C.field_35;
+            m->status_84.field_1C[0] = 0xFF;
+            m->status_84.field_1C[1] = 0xFF;
+            m->status_84.field_1C[2] = 0xFF;
+            m->status_84.field_1C[3] = 0xFF;
+            for (j = 0; j < 6; j++)
+            {
+                for (k = 0; k < sizeof(m->ancestors_4[j]); k++)
+                {
+                    if (k < 10)
+                    {
+                        m->ancestors_4[j][k] = body->ancestorNames_17F8[i][j][k];
+                    }
+                    else
+                    {
+                        m->ancestors_4[j][k] = 0;
+                    }
+                }
+            }
+            for (k = 0; k < sizeof(m->status_84.name_10); k++)
+            {
+                if (k < 10)
+                {
+                    m->status_84.name_10[k] = body->minionNames_1B7C[i][k];
+                }
+                else
+                {
+                    m->status_84.name_10[k] = 0;
+                }
+            }
+        }
+        for (l = 0; l < 12; l++)
+        {
+            u = &saveData_8008B570.items[l];
+            pu = &body->items_12E8[l];
+            u->species_5C = pu->species_4C;
+            u->st_0.status_0 = pu->status_0.status_0;
+            u->st_0.exp_4 = pu->status_0.exp_4;
+            u->st_0.hp_8 = pu->status_0.hp_8;
+            u->st_0.mp_C = pu->status_0.mp_C;
+            for (j = 0; j < 0xC; j++)
+            {
+                u->st_0.field_20[j] = pu->status_0.field_10[j];
+            }
+            u->st_0.stats_2C = pu->status_0.stats_1C;
+            for (j = 0; j < 4; j++)
+            {
+                u->st_0.element_3E[j] = pu->status_0.element_2E[j];
+            }
+            u->st_0.elementMask_42 = pu->status_0.elementMask_32;
+            u->st_0.level_44 = pu->status_0.level_34;
+            u->st_0.field_45 = pu->status_0.field_35;
+            u->st_0.field_1C[0] = 0xFF;
+            u->st_0.field_1C[1] = 0xFF;
+            u->st_0.field_1C[2] = 0xFF;
+            u->st_0.field_1C[3] = 0xFF;
+            for (k = 0; k < sizeof(u->st_0.name_10); k++)
+            {
+                if (k < 10)
+                {
+                    u->st_0.name_10[k] = body->itemNames_1C30[l][k];
+                }
+                else
+                {
+                    u->st_0.name_10[k] = 0;
+                }
+            }
+        }
+        if (s->f54_LOAD & 8)
+        {
+            saveData_8008B570.settings_1C = set;
+            saveData_8008B570.uiColor_20.w = col;
+        }
+        ret = 1;
+    }
+    return ret;
+}
 
 void sub_800BA968(Task_LOAD* t)
 {
