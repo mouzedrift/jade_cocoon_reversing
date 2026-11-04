@@ -334,7 +334,7 @@ extern int sub_800C0D50(void);
 extern void sub_800C0FC4(EffectTarget* a0);
 extern void sub_800A93A4(EffectTarget* a0);
 extern void sub_800A29CC(int a0, EffectTarget* a1);
-extern void sub_800A111C(int a0, EffectTarget* a1);
+extern void GetSlotEffectTarget_800A111C(int a0, EffectTarget* a1);
 // Matched
 void CollectEffectTargets_800182B8(ActorEffectReq* req, int mask)
 {
@@ -367,7 +367,7 @@ void CollectEffectTargets_800182B8(ActorEffectReq* req, int mask)
                 break;
             case 8:
             case 9:
-                sub_800A111C(i - 8, &req->targets_44[req->count_40]);
+                GetSlotEffectTarget_800A111C(i - 8, &req->targets_44[req->count_40]);
                 break;
             }
             req->targets_44[req->count_40].hitFlags_34 = state->hitFlags_44[i];
