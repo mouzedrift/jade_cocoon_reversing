@@ -296,22 +296,21 @@ extern MovieCtx movieCtx_800960C0;
 extern int movieSliceFirst_80096100;
 extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
-#if 0
-// Not matched: field_14/movieSliceFirst_80096100 loads are hoisted above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
+// Matched
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
-    MovieRect r2;
-    int id;
+    MovieRect r2; // unused, but needed for the original stack frame
+    unsigned int id;
     int rem;
     if (movieCtx_800960C0.field_38 && StCdIntrFlag)
     {
         StCdInterrupt();
         StCdIntrFlag = 0;
     }
-    r = movieCtx_800960C0.slice;
     id = movieCtx_800960C0.field_14;
-    movieCtx_800960C0.field_14 = (movieCtx_800960C0.field_14 + 1) & 1;
+    r = movieCtx_800960C0.slice;
+    movieCtx_800960C0.field_14 = movieCtx_800960C0.field_14 == 0;
     if (movieSliceFirst_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
     {
         movieSliceFirst_80096100 = 0;
@@ -335,8 +334,6 @@ void MovieDctOutCallback_80041424(void)
     }
     LoadImage((RECT*)&r, movieCtx_800960C0.imgbuf[id]);
 }
-#endif
-INCLUDE_ASM(MovieDctOutCallback_80041424);
 extern short movieWidth_80086F98;
 extern short movieHeight_80086F9A;
 // Matched
