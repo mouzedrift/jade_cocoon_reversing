@@ -34,12 +34,12 @@ const int dword_80074818 = 0;
 void* const jpt_8007481C[13] = { jtgt_80034F88, jtgt_80034C88, jtgt_80034D84, jtgt_80034E50, jtgt_80034F00, jtgt_80034F74, jtgt_80034F80, jtgt_80034F88, jtgt_80035280, jtgt_80034FB8, jtgt_80035000, jtgt_8003516C, jtgt_800351CC };
 
 // Matched
-int CheckMagicUsable_80034068(short* req)
+int CheckMagicUsable_80034068(short* cmd)
 {
-    UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)req)[2]);
-    if (magicData_8007C438[req[0]].flags_0 & 0x40)
+    UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)cmd)[2]);
+    if (magicData_8007C438[cmd[0]].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[req[0]].kind_7)
+        switch (magicData_8007C438[cmd[0]].kind_7)
         {
         case 0:
             if (target->hp_8.cur_0 == target->hp_8.max_2)
@@ -48,7 +48,7 @@ int CheckMagicUsable_80034068(short* req)
             }
             break;
         case 1:
-            if (req[0] != 0x10 && !(target->status_0 & 0x7FB))
+            if (cmd[0] != 0x10 && !(target->status_0 & 0x7FB))
             {
                 return 3;
             }
@@ -74,25 +74,25 @@ int GetUnitElementMask_8003412C(UnitStatus* unit)
 // Matched
 int IsCurrentMapListed_80034140(void)
 {
-    unsigned char*** t = mapListTable_80083800;
-    SaveData* sd = &saveData_8008B570;
-    unsigned char** tbl = t[sd->mapId_2E4[0].field_0];
+    unsigned char*** table = mapListTable_80083800;
+    SaveData* save = &saveData_8008B570;
+    unsigned char** tbl = table[save->mapId_2E4[0].field_0];
     unsigned char* list;
     short target;
     short i;
     if (tbl)
     {
-        list = tbl[sd->mapId_2E4[1].field_0];
+        list = tbl[save->mapId_2E4[1].field_0];
         if (list)
         {
             i = 0;
             if (list == mapLists4_800837D8)
             {
-                target = sd->mapId_2E4[3].field_0;
+                target = save->mapId_2E4[3].field_0;
             }
             else
             {
-                target = sd->mapId_2E4[2].field_0;
+                target = save->mapId_2E4[2].field_0;
             }
             while (list[i] != 0xFF)
             {
@@ -114,9 +114,9 @@ typedef struct
 {
     short w;
     short h;
-} Size_8003422C;
-extern Size_8003422C MeasureTextLines_8003E3B4(int* list);
-extern Size_8003422C MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
+} TextSize;
+extern TextSize MeasureTextLines_8003E3B4(int* list);
+extern TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern int MeasureTextWidth_8003E4C8(int str);
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
@@ -126,13 +126,13 @@ typedef struct
 {
     char pad_0[0xB4];
     int* list_B4[1];
-} Win_8003422C;
+} MsgWindowLists;
 typedef struct
 {
     char pad_0[0x1E4];
     signed char marks_1E4[0x30];
-} WinMarks_8003422C;
-#define WL(n) (((Win_8003422C*)w)->list_B4[n])
+} MsgWindowMarks;
+#define WL(n) (((MsgWindowLists*)w)->list_B4[n])
 #define WS(off) (*(short*)((char*)w + (off)))
 #define WI(off) (*(int*)((char*)w + (off)))
 #if 0
@@ -146,7 +146,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     int* p;
     int n;
     int i;
-    Size_8003422C sz;
+    TextSize sz;
     int c;
     signed char* q;
 
@@ -379,119 +379,119 @@ extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** FindTextResumePage_80034900(short** list)
 {
-    short** p = list;
-    short* t;
-    while (*p)
+    short** cur = list;
+    short* text;
+    while (*cur)
     {
-        t = (short*)EncodeText_8003F684(2, (unsigned short*)*p);
-        if (*t == 0xC1)
+        text = (short*)EncodeText_8003F684(2, (unsigned short*)*cur);
+        if (*text == 0xC1)
         {
-            *t = 0xC2;
+            *text = 0xC2;
             return list;
         }
-        if (*t == 0xC2)
+        if (*text == 0xC2)
         {
-            return p;
+            return cur;
         }
-        p++;
-        if (!*p)
+        cur++;
+        if (!*cur)
         {
-            p++;
+            cur++;
         }
     }
     return list;
 }
 // Matched
-int GetMsgWindowResultIfDone_800349B4(MsgWindowEntry* win, MsgResult* out)
+int GetMsgWindowResultIfDone_800349B4(MsgWindowEntry* entry, MsgResult* out)
 {
-    MsgWindow* u = win->win_14;
-    if (u->flags_4 & 0x200)
+    MsgWindow* win = entry->win_14;
+    if (win->flags_4 & 0x200)
     {
-        *out = u->res_18;
+        *out = win->res_18;
         return 1;
     }
     return 0;
 }
 // Matched
-void GetMsgWindowResult_80034A00(MsgWindowEntry* win, MsgResult* out)
+void GetMsgWindowResult_80034A00(MsgWindowEntry* entry, MsgResult* out)
 {
-    *out = win->win_14->res_18;
+    *out = entry->win_14->res_18;
 }
 // Matched
-int IsMsgWindowWaiting_80034A30(MsgWindowEntry* win)
+int IsMsgWindowWaiting_80034A30(MsgWindowEntry* entry)
 {
-    MsgWindow* u = win->win_14;
-    if (u->field_C == 3 || u->field_10 == 2)
+    MsgWindow* win = entry->win_14;
+    if (win->field_C == 3 || win->field_10 == 2)
     {
         return 1;
     }
     return 0;
 }
 // Matched
-void EnableMsgWindowAdvance_80034A68(MsgWindowEntry* win)
+void EnableMsgWindowAdvance_80034A68(MsgWindowEntry* entry)
 {
-    win->win_14->flags_4 |= 0x800;
+    entry->win_14->flags_4 |= 0x800;
 }
 // Matched
-void CloseMsgWindow_80034A84(MsgWindowEntry* win)
+void CloseMsgWindow_80034A84(MsgWindowEntry* entry)
 {
-    win->win_14->flags_4 |= 0x4000;
+    entry->win_14->flags_4 |= 0x4000;
 }
 // Matched
-void KillMsgWindow_80034AA0(MsgWindowEntry* win)
+void KillMsgWindow_80034AA0(MsgWindowEntry* entry)
 {
-    win->flags_0 = (win->flags_0 & ~1) | 0x8000;
+    entry->flags_0 = (entry->flags_0 & ~1) | 0x8000;
 }
 // Matched
-int IsMsgWindowAlive_80034AB8(MsgWindowEntry* win)
+int IsMsgWindowAlive_80034AB8(MsgWindowEntry* entry)
 {
-    return (win->flags_0 & 0x8001) == 1;
+    return (entry->flags_0 & 0x8001) == 1;
 }
 // Matched
-void SetMsgWindowChoiceMask_80034AD0(MsgWindowEntry* win, int v)
+void SetMsgWindowChoiceMask_80034AD0(MsgWindowEntry* entry, int mask)
 {
-    win->win_14->mask_14 = v;
+    entry->win_14->mask_14 = mask;
 }
 // Matched
-int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* win, int idx)
+int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* entry, int idx)
 {
-    MsgWindow* u = win->win_14;
-    if (u->marks_1E4[idx] == -2 || u->marks_1E4[idx] >= 0)
+    MsgWindow* win = entry->win_14;
+    if (win->marks_1E4[idx] == -2 || win->marks_1E4[idx] >= 0)
     {
-        u->marks_1E4[idx] = -2;
+        win->marks_1E4[idx] = -2;
         return 1;
     }
     return 0;
 }
 // Matched
-int CountUntilZero_80034B14(int* p)
+int CountUntilZero_80034B14(int* list)
 {
-    int n = 0;
-    while (*p)
+    int count = 0;
+    while (*list)
     {
-        p++;
-        n++;
+        list++;
+        count++;
     }
-    return n;
+    return count;
 }
 // Matched
-int CountMaskedUntilZero_80034B40(int* p, unsigned int mask)
+int CountMaskedUntilZero_80034B40(int* list, unsigned int mask)
 {
-    int n = 0;
+    int count = 0;
     int i = 0;
-    if (*p)
+    if (*list)
     {
         do
         {
             if (mask & (1 << i))
             {
-                n++;
+                count++;
             }
-            p++;
+            list++;
             i++;
-        } while (*p);
+        } while (*list);
     }
-    return n;
+    return count;
 }
 // Matched
 int NthMaskedIndex_80034B88(int n, unsigned int mask)
@@ -534,8 +534,8 @@ extern void DrawMsgWindowChoices_800355EC();
 #if 0
 // Not matched (30 lines, same length): control flow and jump tables right (needs the C table jpt_8007481C and dword_80074818 removed).
 // Left: the flags temporaries get $v1 where the original has $a0 (first block) / $v0 (case 4), the DrawMsgWindowText
-// result v is in $a0 instead of $a1, and the reset block reloads field_78 (the original keeps it in $v1, with the fill
-// loop counter in another register; i = field_78 plus a separate counter fixes that but loses an instruction elsewhere).
+// result v is in $a0 instead of $a1, and the reset block reloads page_78 (the original keeps it in $v1, with the fill
+// loop counter in another register; i = page_78 plus a separate counter fixes that but loses an instruction elsewhere).
 // Got closer with: unsigned switch on field_10, c = -1 after the flag clears, f1 = p[1] & ~0x40000 in the first block
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
@@ -587,7 +587,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             f2 &= ~0x200;
             p[1] = f2;
             c = -1;
-            PI(0x1C4) = (int)((Win_8003422C*)p)->list_B4[PI(0x78)];
+            PI(0x1C4) = (int)((MsgWindowLists*)p)->list_B4[PI(0x78)];
             PI(0x1C8) = 0;
             PI(0x1D4) = 0;
             PI(0x1D8) = 0;
@@ -718,12 +718,12 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         {
             p[3] = 3;
             PI(0x78)++;
-            if ((int)((Win_8003422C*)p)->list_B4[PI(0x78)])
+            if ((int)((MsgWindowLists*)p)->list_B4[PI(0x78)])
             {
                 p[2] = v;
                 if (p[1] & 0x40000)
                 {
-                    if (((Win_8003422C*)p)->list_B4[PI(0x78) + 1] == 0 && PI(0x1B4))
+                    if (((MsgWindowLists*)p)->list_B4[PI(0x78) + 1] == 0 && PI(0x1B4))
                     {
                         c = -1;
                         PI(0x1C8) = 0;
@@ -731,7 +731,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                         PI(0x1D8) = 0;
                         PI(0x1DC) = 0;
                         PI(0x1E0) = v;
-                        PI(0x1C4) = (int)((Win_8003422C*)p)->list_B4[PI(0x78)];
+                        PI(0x1C4) = (int)((MsgWindowLists*)p)->list_B4[PI(0x78)];
                         for (i = 0x2F, q = (signed char*)p + i; i >= 0; i--, q--)
                         {
                             q[0x1E4] = c;
@@ -844,57 +844,57 @@ void* const jpt_8007486C[6] = { jtgt_80035F2C, jtgt_80035F54, jtgt_80035F54, jtg
 
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
-void HandleMsgWindowInput_800353A0(MsgWindow* o)
+void HandleMsgWindowInput_800353A0(MsgWindow* win)
 {
-    switch (o->mode_8)
+    switch (win->mode_8)
     {
     case 1:
     case 2:
         if (IsConfirmPressedP1_8003D380(0))
         {
-            if (o->flags_4 & 0x800)
+            if (win->flags_4 & 0x800)
             {
-                o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-                o->res_18.field_1E++;
+                win->flags_4 = (win->flags_4 | 0x200) & ~0x800;
+                win->res_18.advances_1E++;
             }
-            if (o->field_2C == 1)
+            if (win->field_2C == 1)
             {
-                o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-                o->res_18.field_1E++;
+                win->flags_4 = (win->flags_4 | 0x200) & ~0x800;
+                win->res_18.advances_1E++;
             }
         }
-        else if ((settingsFlags_8008B58C.word & 0xC00000) == 0xC00000 && o->field_2A4 == 1 &&
+        else if ((settingsFlags_8008B58C.word & 0xC00000) == 0xC00000 && win->voiced_2A4 == 1 &&
                  XaNoRequestPending_800435A4() == 1 && XaIsIdle_80043584() == 1)
         {
-            if (o->flags_4 & 0x800)
+            if (win->flags_4 & 0x800)
             {
-                o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
-                o->res_18.field_1E++;
+                win->flags_4 = (win->flags_4 | 0x20200) & ~0x800;
+                win->res_18.advances_1E++;
             }
-            if (o->field_2C == 1)
+            if (win->field_2C == 1)
             {
-                o->flags_4 = (o->flags_4 | 0x20200) & ~0x800;
-                o->res_18.field_1E++;
+                win->flags_4 = (win->flags_4 | 0x20200) & ~0x800;
+                win->res_18.advances_1E++;
             }
         }
         break;
     case 4:
         if (IsConfirmPressedP1_8003D380(0))
         {
-            o->flags_4 |= 0x200;
+            win->flags_4 |= 0x200;
         }
         break;
     case 3:
-        if (IsConfirmPressedP1_8003D380(0) && (o->flags_4 & 0x800))
+        if (IsConfirmPressedP1_8003D380(0) && (win->flags_4 & 0x800))
         {
-            o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
-            o->res_18.result_20 = 1;
-            o->res_18.field_1E++;
+            win->flags_4 = (win->flags_4 | 0x200) & ~0x800;
+            win->res_18.result_20 = 1;
+            win->res_18.advances_1E++;
         }
-        else if (o->field_28 == 1 && IsCancelPressedP1_8003D41C(0) && (o->flags_4 & 0x800))
+        else if (win->cancelable_28 == 1 && IsCancelPressedP1_8003D41C(0) && (win->flags_4 & 0x800))
         {
-            o->flags_4 |= 0x10000;
-            o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2 = o->field_B0 - 1, o->mask_14);
+            win->flags_4 |= 0x10000;
+            win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2 = win->choiceCount_B0 - 1, win->mask_14);
         }
         break;
     }
@@ -905,7 +905,7 @@ extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, in
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
-void DrawMsgWindowChoices_800355EC(MsgWindow* o, unsigned short* r)
+void DrawMsgWindowChoices_800355EC(MsgWindow* win, unsigned short* rect)
 {
     RECT clip;
     union
@@ -919,131 +919,131 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* o, unsigned short* r)
             short m[4];
         } menu;
     } u;
-    RECT r2;
+    RECT cursorRect;
     int sel;
-    clip.x = r[0] + 6;
-    clip.y = r[1] + 4;
-    clip.w = r[2] - 6;
-    clip.h = r[3] - 7;
+    clip.x = rect[0] + 6;
+    clip.y = rect[1] + 4;
+    clip.w = rect[2] - 6;
+    clip.h = rect[3] - 7;
     if (clip.h > 0 && clip.w > 0)
     {
         int i = 0;
-        unsigned short x = o->x_4C + 8;
-        unsigned short y = o->y_4E + 4;
-        unsigned short** p = o->lines_1B4;
-        while (*p)
+        unsigned short x = win->x_4C + 8;
+        unsigned short y = win->y_4E + 4;
+        unsigned short** line = win->lines_1B4;
+        while (*line)
         {
-            if (o->mask_14 & (1 << i))
+            if (win->mask_14 & (1 << i))
             {
                 u.loc[1] = y;
                 y += 12;
                 u.loc[0] = x;
-                AddClipDrawAreaPrim_80033308(&pOT_8008D454[o->ot_54]);
-                DrawColorText_8003EC2C(*p, u.loc, o->ot_54);
-                AddDrawAreaPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
+                AddClipDrawAreaPrim_80033308(&pOT_8008D454[win->ot_54]);
+                DrawColorText_8003EC2C(*line, u.loc, win->ot_54);
+                AddDrawAreaPrim_8003326C(&clip, &pOT_8008D454[win->ot_54]);
             }
-            p++;
+            line++;
             i++;
         }
     }
-    if (o->mode_8 == 3)
+    if (win->mode_8 == 3)
     {
         u.menu.f0 = 0;
         u.menu.m[0] = 0;
         u.menu.m[2] = 1;
-        u.menu.m[3] = o->field_B0;
-        u.menu.m[1] = o->field_B2;
+        u.menu.m[3] = win->choiceCount_B0;
+        u.menu.m[1] = win->choice_B2;
         MoveGridCursorP1_8003D630((short*)&u.menu.f0);
-        if (o->field_B2 != u.menu.m[1])
+        if (win->choice_B2 != u.menu.m[1])
         {
             PlaySfx_80031494(0x7F);
         }
-        o->field_B2 = u.menu.m[1];
+        win->choice_B2 = u.menu.m[1];
     }
-    sel = o->field_B2;
-    u.st[0] = (int)&o->field_6C;
+    sel = win->choice_B2;
+    u.st[0] = (int)&win->pulse_6C;
     u.st[1] = 1;
     u.st[2] = 1;
-    r2.x = o->x_4C + 4;
-    r2.y = o->y_4E + sel * 12 + 3;
-    r2.w = r[2] - 8;
-    r2.h = 13;
-    DrawPulsingWindow_8002F6F8(&r2, u.st, 0);
-    o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2, o->mask_14);
+    cursorRect.x = win->x_4C + 4;
+    cursorRect.y = win->y_4E + sel * 12 + 3;
+    cursorRect.w = rect[2] - 8;
+    cursorRect.h = 13;
+    DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
+    win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
 extern int UpdateTextWindow_8003DB74(struct_rect_1B8* p, int a);
 // Matched
-int DrawMsgWindowText_8003580C(MsgWindow* o, unsigned short* r)
+int DrawMsgWindowText_8003580C(MsgWindow* win, unsigned short* rect)
 {
-    o->clip_1B8.x = r[0] + 6;
-    o->clip_1B8.y = r[1] + 4;
-    o->clip_1B8.w = r[2] - 6;
-    o->clip_1B8.h = r[3] - 7;
-    if ((short)o->clip_1B8.h > 0 && (short)o->clip_1B8.w > 0)
+    win->clip_1B8.x = rect[0] + 6;
+    win->clip_1B8.y = rect[1] + 4;
+    win->clip_1B8.w = rect[2] - 6;
+    win->clip_1B8.h = rect[3] - 7;
+    if ((short)win->clip_1B8.h > 0 && (short)win->clip_1B8.w > 0)
     {
-        return UpdateTextWindow_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
+        return UpdateTextWindow_8003DB74(&win->clip_1B8, ((win->flags_4 >> 18) ^ 1) & 1);
     }
     return 1;
 }
 // Matched
-void DrawMsgWindowBackground_80035898(MsgWindow* p, int rect, int ot)
+void DrawMsgWindowBackground_80035898(MsgWindow* win, int rect, int ot)
 {
-    if (!(p->flags_4 & 0x40000))
+    if (!(win->flags_4 & 0x40000))
     {
         DrawWindowBackground_800429F8(rect, 2);
     }
 }
 // Matched
-void DrawMsgWindowBorder_800358CC(MsgWindow* p, int rect, int ot)
+void DrawMsgWindowBorder_800358CC(MsgWindow* win, int rect, int ot)
 {
-    if (!(p->flags_4 & 0x40000))
+    if (!(win->flags_4 & 0x40000))
     {
         DrawWindowBorder_80042B38(rect, 2);
     }
 }
 // Matched
-void DrawMsgWindowPortrait_80035900(MsgWindow* o)
+void DrawMsgWindowPortrait_80035900(MsgWindow* win)
 {
-    if (!(o->flags_4 & 0x40000) && o->field_84 == 1)
+    if (!(win->flags_4 & 0x40000) && win->portraitKind_84 == 1)
     {
-        if (o->field_68)
+        if (win->portraitFlip_68)
         {
-            o->prim_88.x1 = o->x_64;
-            o->prim_88.y0 = o->y_66;
-            o->prim_88.x0 = o->x_64 + 0x3F;
-            o->prim_88.y1 = o->y_66;
-            o->prim_88.x3 = o->x_64;
-            o->prim_88.y2 = o->y_66 + 0x3F;
-            o->prim_88.x2 = o->x_64 + 0x3F;
-            o->prim_88.y3 = o->y_66 + 0x3F;
+            win->prim_88.x1 = win->x_64;
+            win->prim_88.y0 = win->y_66;
+            win->prim_88.x0 = win->x_64 + 0x3F;
+            win->prim_88.y1 = win->y_66;
+            win->prim_88.x3 = win->x_64;
+            win->prim_88.y2 = win->y_66 + 0x3F;
+            win->prim_88.x2 = win->x_64 + 0x3F;
+            win->prim_88.y3 = win->y_66 + 0x3F;
         }
         else
         {
-            setXY4(&o->prim_88, o->x_64, o->y_66, o->x_64 + 0x3F, o->y_66, o->x_64, o->y_66 + 0x3F, o->x_64 + 0x3F, o->y_66 + 0x3F);
+            setXY4(&win->prim_88, win->x_64, win->y_66, win->x_64 + 0x3F, win->y_66, win->x_64, win->y_66 + 0x3F, win->x_64 + 0x3F, win->y_66 + 0x3F);
         }
-        AddPrimCopy_80040298(pOT_8008D454 + 1, &o->prim_88, 10);
+        AddPrimCopy_80040298(pOT_8008D454 + 1, &win->prim_88, 10);
     }
 }
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 
 // Matched
-void DrawMsgWindowTitle_800359F8(MsgWindow* p)
+void DrawMsgWindowTitle_800359F8(MsgWindow* win)
 {
     short pos[2];
-    short r[4];
-    if (!(p->flags_4 & 0x40000))
+    short rect[4];
+    if (!(win->flags_4 & 0x40000))
     {
-        if (p->title_74 != 0)
+        if (win->title_74 != 0)
         {
-            pos[0] = p->titleX_6E + 7;
-            pos[1] = p->titleY_70 + 4;
-            DrawText_8003E91C(2, p->title_74, pos, 0);
-            r[0] = p->titleX_6E;
-            r[1] = p->titleY_70;
-            r[2] = MeasureTextWidth_8003E4C8((int)p->title_74) + 0x11;
-            r[3] = 0x12;
-            DrawMsgWindowBackground_80035898(p, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+            pos[0] = win->titleX_6E + 7;
+            pos[1] = win->titleY_70 + 4;
+            DrawText_8003E91C(2, win->title_74, pos, 0);
+            rect[0] = win->titleX_6E;
+            rect[1] = win->titleY_70;
+            rect[2] = MeasureTextWidth_8003E4C8((int)win->title_74) + 0x11;
+            rect[3] = 0x12;
+            DrawMsgWindowBackground_80035898(win, (int)rect, 2);
+            DrawMsgWindowBorder_800358CC(win, (int)rect, 0);
         }
     }
 }
@@ -1053,46 +1053,46 @@ extern void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf);
 // Matched
 EventEntry* OpenItemMessageWindow_80035AC8(int* init)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
-    MsgWindow* o;
-    if (e)
+    EventEntry* entry = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
+    MsgWindow* win;
+    if (entry)
     {
-        o = e->buffer;
-        o->self_0 = (int)e;
-        o->flags_4 = 0;
-        o->mask_14 = 0;
-        o->res_18.count_18 = 0;
-        o->res_18.sel_1A = 0;
-        o->res_18.field_1C = 0;
-        o->res_18.field_1E = 0;
-        o->res_18.result_20 = 0;
-        o->res_18.field_24 = 0;
-        o->field_34 = 0;
-        o->x_38 = 0;
-        o->y_3A = 0;
-        o->w_3C = 0;
-        o->h_3E = 0;
-        o->field_48 = 0;
-        o->x_4C = 0;
-        o->y_4E = 0;
-        o->w_50 = 0;
-        o->h_52 = 0;
-        o->ot_54 = 0;
-        o->field_78 = 0;
-        o->count_7C = 0;
-        o->field_B0 = 0;
-        o->field_B2 = 0;
-        o->lines_1B4 = 0;
-        MemCopy_800403E8(&o->item_214, init, 0x50);
-        o->res_18.result_20 = 0;
-        o->res_18.field_24 = 1;
-        if ((unsigned int)o->item_214.mode_48 < 4)
+        win = entry->buffer;
+        win->self_0 = (int)entry;
+        win->flags_4 = 0;
+        win->mask_14 = 0;
+        win->res_18.count_18 = 0;
+        win->res_18.sel_1A = 0;
+        win->res_18.pageCount_1C = 0;
+        win->res_18.advances_1E = 0;
+        win->res_18.result_20 = 0;
+        win->res_18.field_24 = 0;
+        win->field_34 = 0;
+        win->x_38 = 0;
+        win->y_3A = 0;
+        win->w_3C = 0;
+        win->h_3E = 0;
+        win->field_48 = 0;
+        win->x_4C = 0;
+        win->y_4E = 0;
+        win->w_50 = 0;
+        win->h_52 = 0;
+        win->ot_54 = 0;
+        win->page_78 = 0;
+        win->count_7C = 0;
+        win->choiceCount_B0 = 0;
+        win->choice_B2 = 0;
+        win->lines_1B4 = 0;
+        MemCopy_800403E8(&win->item_214, init, 0x50);
+        win->res_18.result_20 = 0;
+        win->res_18.field_24 = 1;
+        if ((unsigned int)win->item_214.mode_48 < 4)
         {
             PlayMusic_800300E0(1, 1);
         }
-        e->cb_8 = UpdateItemMessageWindow_80035BD8;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        return e;
+        entry->cb_8 = UpdateItemMessageWindow_80035BD8;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        return entry;
     }
     return 0;
 }
@@ -1112,18 +1112,18 @@ typedef struct
 {
     short x;
     short y;
-} Pos2_35BD8;
+} ShortPos;
 typedef struct
 {
     int a;
     int b;
-} TPage_35BD8;
+} TPageWords;
 extern const int aMoney_80074850[];
 extern const int aEmptyCocoon_8007485C[];
 extern const int aTimesSign_80074864[];
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
-extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
+extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPageWords* tp);
 extern void RemoveInventory_800AD1E0(int a, int b, int c);
 extern void AddMoney_800AD058(int a);
 extern void AddEmptyCocoons_800AD8F4(int a);
@@ -1137,15 +1137,15 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {
     ItemMsgWindow* o;
     SPRT spr[3];
-    TPage_35BD8 tp[3];
+    TPageWords tp[3];
     RECT r;
-    Size_8003422C p70;
-    Pos2_35BD8 p78;
-    Pos2_35BD8 p80;
-    Pos2_35BD8 p88;
-    Pos2_35BD8 p90;
-    Pos2_35BD8 p98;
-    Pos2_35BD8 pA0;
+    TextSize p70;
+    ShortPos p78;
+    ShortPos p80;
+    ShortPos p88;
+    ShortPos p90;
+    ShortPos p98;
+    ShortPos pA0;
     int flag;
     int n;
     int i;
@@ -1402,9 +1402,9 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 #endif
 INCLUDE_ASM(UpdateItemMessageWindow_80035BD8);
 // Matched
-void InitPadVibration_800364E4(int* p)
+void InitPadVibration_800364E4(int* entry)
 {
-    padVibration_80095460[p[1]].flags_0 = 0;
-    padVibration_80095460[p[1]].motor_2[0] = 0;
-    padVibration_80095460[p[1]].motor_2[1] = 0;
+    padVibration_80095460[entry[1]].flags_0 = 0;
+    padVibration_80095460[entry[1]].motor_2[0] = 0;
+    padVibration_80095460[entry[1]].motor_2[1] = 0;
 }

@@ -17,8 +17,8 @@ typedef struct
 {
     short count_18;
     short sel_1A;
-    short field_1C;
-    unsigned short field_1E;
+    short pageCount_1C;
+    unsigned short advances_1E; // confirmations
     int result_20;
     int field_24;
 } MsgResult;
@@ -50,7 +50,7 @@ typedef struct MsgWindow
     int field_10;
     unsigned int mask_14; // which lines of lines_1B4 are shown
     MsgResult res_18;
-    int field_28;
+    int cancelable_28; // cancel picks the last choice
     int field_2C;
     int field_30;
     int field_34;
@@ -71,19 +71,19 @@ typedef struct MsgWindow
     char pad_58[0xC];
     unsigned short x_64;
     unsigned short y_66;
-    int field_68;
-    short field_6C; // 0x6C..: passed to DrawPulsingWindow_8002F6F8 as the cursor state
+    int portraitFlip_68; // portrait drawn mirrored
+    short pulse_6C; // 0x6C..: passed to DrawPulsingWindow_8002F6F8 as the cursor state
     unsigned short titleX_6E;
     unsigned short titleY_70;
     short pad_72;
     char* title_74;
-    int field_78;
+    int page_78; // current page of list_B4
     int count_7C;
     int field_80;
-    int field_84;
+    int portraitKind_84; // 1: portrait poly prim_88 is drawn
     POLY_FT4 prim_88;
-    unsigned short field_B0;
-    short field_B2;
+    unsigned short choiceCount_B0; // shown lines of lines_1B4
+    short choice_B2;
     int* list_B4[0x40];
     unsigned short** lines_1B4;
     struct_rect_1B8 clip_1B8;
@@ -98,7 +98,7 @@ typedef struct MsgWindow
     signed char marks_1E4[0x30];
     ItemMsgInit item_214;
     int pad_264[0x10];
-    int field_2A4;
+    int voiced_2A4; // 1: advances by itself when the XA voice ends
 } MsgWindow;
 
 /* an EventEntry of messageWindowTask_8008D640, with its buffer typed */
