@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "model.h"
 #include "main.h"
+#include "engine.h"
 
 typedef struct TstModelBone
 {
@@ -254,7 +255,6 @@ extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 extern void SetGteLightAndCamera_8004D0E8();
 /* exe-side, to move to engine.h */
-extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
 /* exe-side, to move to skel_draw.h */
 extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);

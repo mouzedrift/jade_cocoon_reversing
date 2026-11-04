@@ -252,10 +252,7 @@ int GetStatusCommand_800BFA4C(int flags, int prevFlags);
    uses it as a task list head like the other two (BATTLE.BIN's battle_3.c too) -> main.h: EventNode* hitNumberTasks_8008D778 */
 extern MATRIX dword_8007C2EC; // -> globals.h: default light matrix
 extern MATRIX dword_8007C30C; // -> globals.h: default light colour matrix
-extern void StartScreenFlash_8001C02C(void* rgb);  // -> engine.h
-extern void InitSceneFade_8001A38C(void);          // -> engine.h
 extern void StartSceneFadeOut_8001AA50(short duration); // -> engine.h
-extern int IsSceneFadeDone_8001AB94(void);         // -> engine.h
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
 extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot); // -> unit_gauges.h
 extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,

@@ -912,7 +912,6 @@ UnitStats* GetSaveItem_80033AE4(SaveData* save, int idx)
     return &save->items[idx];
 }
 extern int IsCurrentMapListed_80034140(void);
-extern int GetItemFlags_8001CE70(int a);
 // Matched
 int CheckItemUsable_80033AFC(ListMenuState* menu)
 {

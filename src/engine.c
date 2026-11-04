@@ -674,13 +674,6 @@ extern void* CreateEventList_800435B4(void* list);
 extern void RunEventList_80043898(void* node);
 extern void RunEventListFreeCallbacks_800438F8(void* node);
 extern int FreeEventList_80043A5C(void* head);
-extern void InitMovie_8001B1B0(void);
-extern void StartDisplay_8001B714(void);
-extern void DrawFrozenFrame_8001B540(void);
-extern void DrawMotionBlur_8001BCE4(int buffer);
-extern void Draw_8001B5EC(void);
-extern void LoadDecodedImage_8001BEC8(void);
-extern void InitPrimBuffers_8001BF90(void);
 // Matched
 void DrawIntroMovie_8001AF64(void* descs)
 {

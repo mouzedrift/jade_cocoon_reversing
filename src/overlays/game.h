@@ -167,7 +167,6 @@ extern void ResumeEnemyAi_800A2D48(GameAi* ai);
 
 extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
-extern void DestroyActor_8001D600(Actor* p);
 
 extern char* dword_8008B520;
 
@@ -290,7 +289,6 @@ extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
 
 extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
-extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
 extern int FindInLists_800A52EC(short** tab, int count, int key);
 
@@ -350,7 +348,6 @@ typedef struct GameBattleWork
     int battleTask_8; // StartBattle_800BA9E4 / sub_800BBB94
 } GameBattleWork;
 
-extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
 extern void ReflectPoint_800A47B8(Vec3i* center, Vec3i* point, Vec3i* out);
 
@@ -471,7 +468,6 @@ extern void PlayMusic_800300E0(int a, int b);
 extern void WaitBattleOverlay_800A1474();
 
 
-extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
 extern unsigned short* sub_800B322C();
 
@@ -527,7 +523,6 @@ extern void GameMainStart_800A6968();
 extern int CreateEventList_800435B4(EventDesc** p);
 
 
-extern void TriggerActorEffect_8001E28C(Actor* a);
 
 extern void InitMapState_80026FAC(void);
 
@@ -535,7 +530,6 @@ extern void EnableCameraPoints_800A094C(void);
 
 extern void ResetSoundTask_8002FEB8(void);
 
-extern void InitSceneFade_8001A38C(void);
 
 extern void ResetCameraToLevant_800376A8(void);
 
@@ -736,15 +730,11 @@ extern void StartSaveMenuRequest_800A7280();
 
 extern int GetFileRequestStatus_8003BE30();
 
-extern void FreezeScreen_8001C224();
 
-extern void EndFade_8001C290();
 
-extern void BeginFade_8001C260();
 
 extern void CheckSubOverlayRequests_800A6DAC();
 
-extern void DrawIntroMovie_8001AF64(void* p);
 
 extern void SsUtAllKeyOff(int a);
 
@@ -1006,7 +996,6 @@ typedef struct GameMapEntrance
 
 
 
-extern int GetMagicEffect_8001AC8C(int);
 
 extern void RequestEffect_800148F4(int);
 
@@ -1201,7 +1190,6 @@ typedef struct GameSkelDraw
 } GameSkelDraw;
 
 
-extern int FindNearestCameraPoint_80019CC4(void* p);
 
 
 extern short word_8007DC82;
@@ -1725,7 +1713,6 @@ extern void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8);
 /* exe-side, to move to effect_data.h */
 extern int IsEffectReady_80014954(void);
 /* exe-side, to move to engine.h */
-extern void RunAnimFrameCues_8001C440(Model* model, int idx, int frame);
 /* libc (PSY-Q) */
 extern int printf(const char* fmt, ...);
 extern int rand(void);

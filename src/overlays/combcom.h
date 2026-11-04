@@ -184,7 +184,6 @@ extern void* memset(void* p, int c, unsigned int n);
 extern int GetMenuCursorIndex_8003DA54(void* cursor);        // -> pad_text.h (MenuCursor*)
 extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // -> pad_text.h: defined (MenuCursor*) but a1 (pad) passes through to MenuCursorInput_8003D830
 extern int MeasureTextWidth_8003E4C8(const char* str);       // -> pad_text.h
-extern int GetMagicTargetFlags_8001ACE4(int idx);            // -> engine.h
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* col, int ot, int time); // -> menu_window.h
 extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
 extern int DrawAbilityDescription_8002C670();                // -> tiy.h (ui_sprites.c): (char* minion, int pos, int texts, short slot, short ot)

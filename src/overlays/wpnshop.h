@@ -205,7 +205,6 @@ void SetEquipment_800AD9EC(int itemId, int category);
 /* exe-side, to move to <exe header> (named in the comment) */
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
-int GetEquipmentName_8001D128(int idx, unsigned int kind); // engine.h
 void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawTextList_8002A310(void* p, int a); // menu_draw.h
 void DrawUiWindow_8002A384(void* p);        // menu_draw.h

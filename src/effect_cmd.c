@@ -22,6 +22,7 @@
 #include "actor.h"
 #include "effect_data.h"
 #include "skill_anim.h"
+#include "engine.h"
 
 typedef struct
 {
@@ -280,7 +281,6 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     return result;
 }
 extern int dword_800B129C[];
-extern int GetMagicEffect_8001AC8C(int idx);
 extern int GetSkillEffect_800316EC(int slot, int actorMask);
 // Matched
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)

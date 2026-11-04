@@ -308,14 +308,9 @@ void fn_80011CD0(UnitStatus* p);          // unit_stats.h
 int ApplyLevelUps_80011D98(UnitStatus* a, int b); // unit_stats.h
 void fn_80019B14(int a, int b, int c);    // minion_init.h
 void StartSceneDarken_8001AAA8(int a);    // engine.h
-void StopSceneDarken_8001AAF4();          // engine.h
 void StartSceneBrighten_8001AB1C(int a);  // engine.h
-int IsSceneFadeDone_8001AB94();           // engine.h
 void fn_8001ABEC(int a);                  // engine.h
-int GetMagicElement_8001AD30(int i);      // engine.h
-void ClearMagicBit_8001AE00(unsigned int* b, int i); // engine.h
 void* fn_8001D45C(void* p);               // engine.h (CreateActor)
-void DestroyActor_8001D600(void* p);      // engine.h
 void fn_8001D68C(void* p, int on);        // engine.h
 int fn_80024E38(int a);                   // model_ftg
 int fn_80024E64(int a);                   // model_ftg

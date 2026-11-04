@@ -85,7 +85,6 @@ extern void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx);
 extern int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFileBuffer);
 extern void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors);
 extern void* DATA_GetFileBuffer_8003CAA0(int idx);
-extern void EndFade_8001C290(void);
 extern void RestartDisplay_8001B230(void);
 extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
@@ -175,11 +174,9 @@ extern int GetStatGrowth_80013E00(unsigned int idx, int add);
 extern int CalcHitBonus_80014114(int value);
 extern int CalcEvadeBonus_8001413C(int value);
 extern int GetMagicName_8001AC2C(int idx);
-extern int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx);
 extern int GetMagicIcon_8001AF3C(int idx);
 extern int WaitVSync_8001B6E8();
 extern void InitEnvironments_8001B7B4(void);
-extern void BeginFade_8001C260(void);
 extern int GetItemIcon_8001D2AC(int idx);
 extern char* GetKeyItemName_8001D318(unsigned int idx);
 extern int GetUnitRank_80019AD0(UnitStats* unit);
@@ -352,7 +349,6 @@ extern UnitStats* GetSaveItem_80033AE4(SaveData* s, int idx);
 extern void XaStop_800430B0(void);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
 extern void SetTargetHitFlag_800184A0(int arg, int bit);
-extern void FreezeScreen_8001C224(void);
 extern void CancelFade_8001C244(void);
 extern void GetModelFtg_800251A0(void* dst, Model* src, int a2, int idx);
 extern void GetModelAltFtg_80025B20(void* dst, Model* src, int idx);
@@ -368,7 +364,6 @@ extern void UpdateActorCb_8001D41C(EventEntry* entry, void* actor);
 extern void UpdateActor_8001F9AC(void* p);
 extern void ProcessPad_8001C8E8(int port);
 extern void UpdatePadVibration_80036820(int port);
-extern void DrawIntroMovie_8001AF64(void* descs);
 extern void FreeModelList_80024BB0(ModelList** list);
 extern void InitModelList_80024ADC(ModelList** out, struct ModelVramSlot* vram, int heap);
 extern int LoadModel_80025200(ModelList* list, int id, int sel, int animMode, int flag);
@@ -542,6 +537,11 @@ extern void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
 
 extern int RollOilBonus_80013DB0(void);
 
+void EndFade_8001C290(void);
+int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx);
+void BeginFade_8001C260(void);
+void FreezeScreen_8001C224(void);
+void DrawIntroMovie_8001AF64(void* descs);
 #endif
 
 extern void UnloadMap_80027118(void);

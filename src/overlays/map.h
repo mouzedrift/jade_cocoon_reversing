@@ -253,7 +253,6 @@ extern void DrawCursorHand_8003D034(void*, int);
 extern void DrawNumber_8003EF74(void*, int, int);
 extern void PlayMusic_800300E0(int, int);
 // state of the map select (SceneSelect_800B860C)
-extern void ResetPadHoldFrames_8001CD04(int);
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
                                 int half);

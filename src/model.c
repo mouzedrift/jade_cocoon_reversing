@@ -617,8 +617,6 @@ int IsActorOnScreen_8001FC90(Actor* actor)
     RotTransPers(&rel, &sxy, &z, &flag);
     return flag >= 0;
 }
-extern int FindNearestCameraPoint_80019CC4();
-extern void RunAnimFrameCues_8001C440();
 extern void DrawAnimSkelBlend_80047E28();
 extern void DrawAnimSkel_80046A58();
 extern void DrawSpriteVtxQuadsGT4_800459E4();

@@ -806,7 +806,6 @@ extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 extern void UppercaseSjisName_8003F89C();
-extern int GetItemFlags_8001CE70();
 extern void DrawMagicList_8002CAC8();
 extern void DrawAbilityList_8002CE28();
 extern void DrawItemList_8002C728();
@@ -824,7 +823,6 @@ extern int CheckItemUsable_80033AFC();
 extern int CheckItemOnTarget_80033DF4();
 extern int UpdateMenuCursor_8003D794();
 extern void DrawScrollArrow_8002C6DC();
-extern int GetEquipmentName_8001D128();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 

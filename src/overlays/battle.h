@@ -293,7 +293,6 @@ extern int GetMsgWindowResultIfDone_800349B4();
 
 extern void CloseMsgWindow_80034A84();
 
-extern void TriggerActorEffect_8001E28C();
 
 extern void RemoveEnemy_800A2924();
 
@@ -313,7 +312,6 @@ extern void StartCommandAction_80018A4C();
 
 extern int LoadOverlay_80020BF8();
 
-extern void StopSceneDarken_8001AAF4();
 
 extern void TurnLevantToward_800A8D48();
 
@@ -477,7 +475,6 @@ typedef struct BatAnimWindow
 
 
 
-extern int IsSceneFadeDone_8001AB94(void);
 
 
 
@@ -510,9 +507,7 @@ extern void ResetUnitReactions_800BB794();
 
 extern UnitStatus* GetPartyMinionStatus_800C0F78(int);
 
-extern void StartScreenFlash_8001C02C(void*);
 
-extern void SetActorTurnTarget_8001DB00(Actor*, int, int);
 
 extern void GetActorHitFrame_80018E5C(Actor*, int);
 
@@ -966,14 +961,12 @@ extern unsigned char GetSelectedCommand_800C78D0();
 
 
 
-extern int GetItemTargetFlags_8001CE8C(int a);
 
 extern int GetUnitSkills_80031B30(int a);
 
 extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
 
-extern int GetMagicTargetFlags_8001ACE4(int a);
 
 // one window of a menu's window list (the exe's DrawMenuWindowContents_8002A710 view); a list ends with flags_0 bit 0
 typedef struct BatMenuWindow
@@ -1629,7 +1622,6 @@ extern int AreLoaderModelsLoaded_80020924(void);
 extern void LoadLoaderModelAnimSets_80020898(void);
 extern int LoadOverlayIfChanged_80020D1C(int mode, int overlay);
 /* exe-side, to move to engine.h */
-extern void DestroyActor_8001D600(Actor* actor);
 /* exe-side, to move to camera.h */
 extern void FocusBattleCamera_80037AE0(unsigned short mask);
 /* exe-side, to move to sound.h */

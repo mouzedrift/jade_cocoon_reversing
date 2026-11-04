@@ -2437,7 +2437,6 @@ void InitMapState_80026FAC(void)
 }
 extern int mapCallback_80091CB4;
 extern EventNode* dword_800B1DA8;
-extern void FreeActors_8001D3C4(int a0);
 extern void FreeLevantAnimSet_800AC73C(void);
 extern void FreeAllEventData_800A54A0(void);
 extern void StopAllEventScripts_800A58B4(void);

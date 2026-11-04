@@ -9,6 +9,7 @@
 #include "tiy.h"
 #include "main.h"
 #include "menu_window.h"
+#include "engine.h"
 
 // one row of the item list: three DrawMenuWindows_8002A5A4 items (icon, name, count)
 typedef struct EquipListRow
@@ -279,7 +280,6 @@ extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int catego
 extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
 extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
-extern int GetEquipmentName_8001D128(int id, int category);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
 extern void AddClipDrawAreaPrim_80033308(void* p);
