@@ -5,228 +5,183 @@
 #include "load.h"
 #include "tiy.h"
 
-extern int dword_800BE174;
-extern int (*dword_800BE294[])();
-// a task (EventEntry of the event lists) as its callbacks see it
-typedef struct
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-    void (*cb_C)();
-    int size_10;
-    void* work_14;
-} LoadMenuTaskEntry;
-extern EventNode* loadMenuTask_8008D480; // the load menu's task list
-extern int MemCardSync(int mode, int* cmd, int* result);
-extern void MemCardAccept();
-extern void MemCardExist();
-extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
-extern void LoadMenuInit_800B7674(int mode, int b);
-extern void LoadMenuWaitUiTiy_800B7894();
-extern int uiTiyLoaded_8008B4E8;
-extern long MemCardCreateFile(long chan, char* file, long blocks);
-extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long bytes);
-extern int UnpackSaveFile_800BA3EC();
-extern void DrawLoadingIcon_8003CD5C(void);
-extern void DrawMenuBackground_8002BE10(void);
-extern void DrawMessageBox_800BACBC(char** lines);
-extern void LoadMenuTask_800B794C();
-extern void LoadMenuScreen_800B79F8();
-extern void PackSaveFile_800B9A8C();
-extern void WriteSaveTask_800B98C4();
-extern void LoadSaveTask_800BA234();
-extern void FormatCardWait1_800BA968();
-extern void LoadMenuExit_800BAAE0();
-extern void FormatCardWait2_800BA9AC();
-extern void FormatCardTask_800BA9F0();
-extern void LoadUiTiy_8002BF74(void);
-extern int dword_8008BD80;
-extern int UpdateMenuCursor_8003D794(short* cursor, int b);
+LoadTextPos saveSlotFieldPos_800BD93C[9] = {
+    { 170, 54 },
+    { 144, 68 },
+    { 172, 68 },
+    { 222, 68 },
+    { 244, 68 },
+    { 225, 54 },
+    { 39, 55 },
+    { 39, 68 },
+    { 0x122, 52 },
+};
+LoadUiSprite saveSlotSprites_800BD960[7] = {
+    { 13, 52, 119, 1 },
+    { 104, 52, 227, 1 },
+    { 100, 66, 118, 1 },
+    { 180, 65, 203, 1 },
+    { 180, 52, 122, 1 },
+    { 13, 66, 150, 1 },
+    { -1, -1, -1, -1 },
+};
+LoadUiSprite modeTitleSprites_800BD998[2] = {
+    { 80, 21, 190, 1 },
+    { 69, 21, 197, 1 },
+};
+LoadUiSprite cardSlotSprites_800BD9A8[8] = {
+    { 108, 21, 39, 1 },
+    { 39, 95, 39, 1 },
+    { 59, 109, 178, 1 },
+    { 106, 109, 0, 1 },
+    { 188, 95, 39, 1 },
+    { 208, 109, 178, 1 },
+    { 255, 109, 2, 1 },
+    { -1, -1, -1, -1 },
+};
+LoadUiSprite saveIconSprites_800BD9E8[4] = {
+    { 0x110, 52, 78, 1 },
+    { 0x110, 52, 52, 1 },
+    { 0x110, 52, 58, 1 },
+    { -1, -1, -1, -1 },
+};
+char *saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
+RECT saveListClip_800BDA10 = { 10, 49, 0x12C, 129 };
+LoadMenuItem saveListRow0_800BDA18[2] = {
+    { 64, 0, 0, 0, 0, 10, 49, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem saveListRow1_800BDA50[2] = {
+    { 64, 0, 0, 0, 0, 10, 82, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem saveListRow2_800BDA88[2] = {
+    { 64, 0, 0, 0, 0, 10, 115, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem saveListRow3_800BDAC0[2] = {
+    { 64, 0, 0, 0, 0, 10, 148, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
+LoadMenuWin saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
+LoadMenuItem cardSlot1Item_800BDB24[2] = {
+    { 64, 0, 0, 0, 0, 33, 90, { 105, 0, 36 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *cardSlot1Items_800BDB5C[2] = { cardSlot1Item_800BDB24 };
+LoadMenuWin cardSlot1Win_800BDB64 = { 2, 0, 8, 0, cardSlot1Items_800BDB5C, 5 };
+LoadMenuItem cardSlot2Item_800BDB7C[2] = {
+    { 64, 0, 0, 0, 0, 182, 90, { 105, 0, 36 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *cardSlot2Items_800BDBB4[2] = { cardSlot2Item_800BDB7C };
+LoadMenuWin cardSlot2Win_800BDBBC = { 2, 0, 8, 0, cardSlot2Items_800BDBB4, 5 };
+LoadMenuWin *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
+LoadMenuItem topMenuSave_800BDBDC[2] = {
+    { 8, 1, 190, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 69, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem topMenuLoad_800BDC14[2] = {
+    { 8, 1, 197, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 90, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem topMenuExit_800BDC4C[2] = {
+    { 8, 1, 198, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 111, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem topMenuTitle_800BDC84[2] = {
+    { 8, 1, 196, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 132, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
+LoadMenuWin topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
+LoadMenuItem formatYes_800BDCE8[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 126, 106, { 56, 0, 18, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem formatNo_800BDD20[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 126, 126, { 56, 0, 18, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
+LoadMenuWin formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
+LoadMenuItem confirmYes_800BDD7C[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 215, 193, { 46, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem confirmNo_800BDDB4[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 0x105, 193, { 48, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
+LoadMenuWin confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
+LoadMenuItem titleYes_800BDE10[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 106, 121, { 52, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem titleNo_800BDE48[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 163, 121, { 52, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+LoadMenuItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
+LoadMenuWin titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
+LoadHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
+char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
+char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
+char *msgLoading_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };
+char *msgSaving_800BDEEC[4] = { aSaving_800B67F0, aDoNotRemoveMEMO_800B676C };
+char *msgNoSaveData_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, aMEMORYCARDNotFo_800B682C };
+char *msgFormatFailed_800BDF1C[4] = { aFormattingFaile_800B6864 };
+char *msgSaveFailed_800BDF2C[4] = { aSaveFailed_800B688C };
+char *msgLoadFailed_800BDF3C[4] = { aLoadFailed_800B68A8 };
+LoadMenuRow loadMenuRows_800BDF4C[6] = {
+    { { 68, 0, 116, 0, 0, 14 }, 1, 4, 4 },
+    { { 68, 0, 116, 0, 0, 14 }, 2, 1, 2 },
+    { { 18, 0, 72, 0, 0, 14 }, 1, 2, 2, 1 },
+    { { 10, 0, 64, 0, 0, 33 }, 1, 4, 15, 0, 0, 0x40 },
+    { { 10, 0, 64, 0, 0, 33 }, 2, 1, 2, 0, 0, 1 },
+    { { 10, 0, 64, 0, 0, 33 }, 2, 1, 2, 1 },
+};
+SaveTitle *saveTitle_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
+char *cardTitles_800BDFB0[30] = {
+    aJadeCocoon01_800B6F88, aJadeCocoon02_800B6F6C, aJadeCocoon03_800B6F50, aJadeCocoon04_800B6F34,
+    aJadeCocoon05_800B6F18, aJadeCocoon06_800B6EFC, aJadeCocoon07_800B6EE0, aJadeCocoon08_800B6EC4,
+    aJadeCocoon09_800B6EA8, aJadeCocoon10_800B6E8C, aJadeCocoon11_800B6E70, aJadeCocoon12_800B6E54,
+    aJadeCocoon13_800B6E38, aJadeCocoon14_800B6E1C, aJadeCocoon15_800B6E00, aCombDataTitle01_800B6DE4,
+    aCombDataTitle02_800B6DC8, aCombDataTitle03_800B6DAC, aCombDataTitle04_800B6D90, aCombDataTitle05_800B6D74,
+    aCombDataTitle06_800B6D58, aCombDataTitle07_800B6D3C, aCombDataTitle08_800B6D20, aCombDataTitle09_800B6D04,
+    aCombDataTitle10_800B6CE8, aCombDataTitle11_800B6CCC, aCombDataTitle12_800B6CB0, aCombDataTitle13_800B6C94,
+    aCombDataTitle14_800B6C78, aCombDataTitle15_800B6C5C,
+};
+char *saveFileNames_800BE028[2][15] = {
+    {
+        aBASLUS00854GAME_800B725C, aBASLUS00854GAME_800B7244, aBASLUS00854GAME_800B722C, aBASLUS00854GAME_800B7214,
+        aBASLUS00854GAME_800B71FC, aBASLUS00854GAME_800B71E4, aBASLUS00854GAME_800B71CC, aBASLUS00854GAME_800B71B4,
+        aBASLUS00854GAME_800B719C, aBASLUS00854GAME_800B7184, aBASLUS00854GAME_800B716C, aBASLUS00854GAME_800B7154,
+        aBASLUS00854GAME_800B713C, aBASLUS00854GAME_800B7124, aBASLUS00854GAME_800B710C,
+    },
+    {
+        aBASLUS00854COMB_800B70F4, aBASLUS00854COMB_800B70DC, aBASLUS00854COMB_800B70C4, aBASLUS00854COMB_800B70AC,
+        aBASLUS00854COMB_800B7094, aBASLUS00854COMB_800B707C, aBASLUS00854COMB_800B7064, aBASLUS00854COMB_800B704C,
+        aBASLUS00854COMB_800B7034, aBASLUS00854COMB_800B701C, aBASLUS00854COMB_800B7004, aBASLUS00854COMB_800B6FEC,
+        aBASLUS00854COMB_800B6FD4, aBASLUS00854COMB_800B6FBC, aBASLUS00854COMB_800B6FA4,
+    },
+};
+SaveIconSrc saveIconSrc_800BE0A0[3] = {
+    { 75, 0x380, 254 },
+    { 76, 0x3F0, 0x143 },
+    { 77, 0x380, 252 },
+};
+CardHeaderTail cardHeaderTail_800BE0B8 = {
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 28, 0, 0, 62, 126, 0, 0, 119, 227, 0, 0, 227, 193, 0, 0, 192, 1, 0, 0, 255, 255, 0, 192, 243, 239, 3, 224, 224, 3, 7, 48, 195, 1, 14, 152, 199, 113, 28, 220, 207, 252, 24, 204, 204, 252, 25, 206, 204, 254, 57, 206, 207, 182, 59, 142, 199, 54, 59, 142, 199, 182, 59, 206, 207, 252, 57, 206, 204, 248, 16, 206, 204, 48, 0, 196, 15, 56, 63, 128, 7, 156, 63, 0, 3, 206, 1, 192, 15, 230, 0, 224, 31, 126, 0, 112, 59, 60, 0, 48, 51, 24, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { aNoMemoryCardJp_800B7274, aCardSlotJp_800B7290, aCardSlot1Jp_800B72A8, aCardSlot2Jp_800B72C0, aInsertMemoryCardJp_800B72D8 },
+};
+int cardFreeBlocks_800BE14C = 0;
+int cardSaveCount_800BE150 = 0;
 
-// memory card file header (the PSY-Q _CARD layout; the game's own data in the reserved part and behind the icons)
-typedef struct
-{
-    char magic_0[2];
-    char type_2;
-    char blocks_3;
-    char title_4[64];
-    char field_44[12];
-    short field_50;
-    CardTag tag_52; // "CRD0"
-    char field_57;
-    char pad_58[4];
-    int field_5C;
-    char clut_60[32];
-    char icon_80[3][128];
-    char field_200[0x80];
-} CardHeader;
-extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
-// a memory card directory entry (the PSY-Q struct DIRENTRY layout)
-typedef struct CardDirEntry
-{
-    char name_0[20];
-    long attr_14;
-    long size_18;
-    struct CardDirEntry* next_1C;
-    long head_20;
-    char system_24[4];
-} CardDirEntry;
-extern long MemCardGetDirentry(long chan, char* name, CardDirEntry* dir, long* files, long ofs, long max);
-extern void FreeActiveOverlay_8002C014(void);
-extern int GetGameMode_800A6D50(int a);
-extern void RequestGameMode_800A6D30(int a);
-extern int mapStartMode_80091C54;
-extern int MemCardFormat(long chan);
-extern void ScanCardSaves_800BAFB0(int slot);
-extern void _card_stop(void);
-extern void UserFuncInit(void);
-extern void _card_start(void);
-extern void sub_800BD06C(void);
-extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);
-extern char byte_800B682C[];
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawMenuWindows_8002A5A4(void* p);
-extern unsigned char cardSlotCursor_800BDF68;
-extern void _clr_card_event(void);
-extern int _get_card_event_x(void);
-typedef struct
-{
-    short color_0; // uiColor_8008B590
-    char colorSet_2; // window colour set (1 pulses, GetWindowColors_8004226C)
-    char semiTrans_3;
-} LoadWinColor;
-extern unsigned short uiColor_8008B590;
-extern char* dword_8008D454;
-extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
-extern void DrawWindow_80042460(void* rect, void* color, void* ot, int d);
-// the summary block (file offset 0x280) of a save file
-typedef struct
-{
-    unsigned char name_0[0xC];
-    char text_C[0x18];
-    short icon_24;
-    short corridor_26; // SaveData.field_810: the corridor floor (-1 end of game, -2 an ordinary save)
-    int vals_28[6];
-    int sum_40; // byte sum of the save body (SaveFile.body_300)
-    char pad44[0x3C];
-} SaveSummary;
-// a unit's status as packed in a save file (0x38 bytes): UnitStatus without the name and the equipment
-typedef struct
-{
-    int status_0;
-    unsigned int exp_4;
-    UnitGauge hp_8;
-    UnitGauge mp_C;
-    unsigned char field_10[0xC]; // UnitStatus.modifiers_20
-    UnitStatBlock stats_1C;
-    unsigned char element_2E[4];
-    short elementMask_32;
-    unsigned char level_34;
-    unsigned char field_35;
-} SaveStatus;
-// a Minion as packed in a save file (0xA0 bytes); the names are kept apart (SaveBody)
-typedef struct
-{
-    short id_0;
-    unsigned char species_2;
-    unsigned char field_3;
-    unsigned char species_4[0x30];
-    unsigned char field_34[8];
-    SaveStatus status_3C;
-    UnitStatBlock field_74;
-    UnitSkills skills_86;
-    unsigned int magicBits_9C;
-} SaveMinion;
-// a stored minion (SaveData.items, UnitStats) as packed in a save file (0x6C bytes)
-typedef struct
-{
-    SaveStatus status_0;
-    char pad_38[0x14];
-    unsigned int species_4C;
-    char pad_50[0x1C];
-} SaveStats;
-// the checksummed part of a save file (file offset 0x300)
-typedef struct
-{
-    unsigned char data_0[0x984]; // the head of saveData_8008B570 (0x988 bytes, up to the minions)
-    int version_984;             // SaveData.field_984: 5
-    SaveMinion minions_988[15];
-    SaveStats items_12E8[12];
-    unsigned char ancestorNames_17F8[15][6][10];
-    unsigned char minionNames_1B7C[15][12]; // 10 used
-    unsigned char itemNames_1C30[12][12];   // 10 used
-} SaveBody;
-// a save file (0x2180 bytes)
-typedef struct
-{
-    CardHeader header_0;
-    SaveSummary summary_280;
-    SaveBody body_300;
-    char pad_1FC0[0x1C0];
-} SaveFile;
-typedef struct
-{
-    SaveSummary* summaries_0; // one per save (15)
-    SaveFile* fileBuf_4; // one save file
-    int loaded_8;     // 1 once a save was loaded (GetLoadMenuLoaded_800B7914)
-    char pad_C[8];
-    int field_14;
-    char pad_18[8];
-    int nRead_20;     // ReadSaveSummaries_800B9724 progress: summaries read (15 = all, 16 = card checked)
-    int nextScreen_24; // the screen to switch to (-1: none), UpdateLoadMenuCursor_800B80F8
-    int phase_28;     // 0 menu, 2 save, 3 load, 4 format, 5/6 exit (LoadMenuTask_800B794C)
-    int field_2C;
-    short screen_30;  // the current screen (LoadMenuScreen_800B79F8); <6 also the loadMenuRows_800BDF4C row
-    short field_32;
-    char pad_34[8];
-    int field_3C;
-    int field_40;
-    char pad_44[0x10];
-    unsigned flags_54; // 1 loaded, 4, 8 keep settings / from the title, 0x10 back to the title,
-                       // 0x20 end of game save, bit 6 the pad
-    char* place_58;   // the save place text of the summary (SetLoadMenuSavePlace_800B78B8)
-    int field_5C;
-    int field_60;
-    LoadMenuRow* rows_64[6];
-} LoadMenuWork;
-typedef struct
-{
-    short w_0;
-    short h_2;
-} TextSize;
-typedef struct
-{
-    short x_0;
-    short y_2;
-    short w_4;
-    short h_6;
-} MsgBoxRect;
-extern TextSize MeasureTextLines_8003E3B4(int* list);
-extern int IsConfirmPressed_8003D288(int playSfx, int pad);
-extern int IsCancelPressed_8003D3C0(int playSfx, int pad);
-extern void UserFuncOpen(void* fn, int a);
-extern void sub_800BB6F4(void);
-extern void sub_800BBA5C(void);
-typedef struct
-{
-    short field_0;
-    short dir_2; // DrawScrollArrow_8002B3DC direction
-} ScrollArrowArg;
-extern void ResetMenuRow_800BADE0(LoadMenuRow* row);
-extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
-void DrawSaveSlots_800B8BD4(LoadMenuWork* work);
-extern void PlaySfx_80031494(int id);
-extern void WaitCardSync_800BADF4(void);
-extern char* GetCardSaveName_800BAE4C(int i);
-extern int GetCardFreeBlocks_800BAE2C(void);
-extern int GetCardSaveCount_800BAE3C(void);
-typedef struct
-{
-    char c[6];
-} Bytes6_LOAD;
-extern void sub_800BBF88(void);
-extern void sub_800BC17C(void);
+int loadMenuActive_800BE184 BSS = 0;
+char *cardSaveNames_800BE188[15] BSS = { 0 };
 
 int dword_800B66C0 SDATA = 24;
 const char aSelectGameToLoa_800B66C4[44] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\207\202\201\202\215\202\205\201@\202\224\202\217\201@\202\214\202\217\202\201\202\204\201D";
@@ -398,26 +353,6 @@ const char aReturnToTitle_800B6938[] = "\202q\202\205\202\224\202\225\202\222\20
 const LoadWinRect titlePromptWin_800B6968 = { { 92, 0, 100, 0, 140, 0, 19 } };
 const int dword_800B6970 = 0;
 
-extern unsigned short padPressed_8009194C[];
-extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
-extern int PollCardExist_800BAF0C(int slot);
-extern int PollCardAccept_800BAE68(int slot);
-void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work);
-void DrawCardSlotSelect_800B82FC(LoadMenuWork* work);
-void DrawCardSlotChosen_800B847C(LoadMenuWork* work);
-void DrawFormatPrompt_800B85AC(LoadMenuWork* work);
-void DrawSaveList_800B867C(LoadMenuWork* work);
-void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work);
-void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work);
-void DrawCardSlotLabel_800B8A20(LoadMenuWork* work);
-void DrawSaveListPosition_800B8AE4(LoadMenuWork* work);
-void TopMenuInput_800B9220(LoadMenuWork* work);
-void CardSlotInput_800B92C0(LoadMenuWork* work);
-void CheckCardTask_800B9360(LoadMenuWork* work);
-void FormatPromptInput_800B9470(LoadMenuWork* work);
-void SaveListInput_800B952C(LoadMenuWork* work);
-void ConfirmPromptInput_800B9654(LoadMenuWork* work);
-int ReadSaveSummaries_800B9724(LoadMenuWork* work);
 // draws the current screen (LoadMenuWork.screen_30) and handles its input:
 //  0 top menu (Save / Load / Exit / Title), 1 card slot select, 2 format the card?, 3 the save list,
 //  4 load / save / overwrite?, 5 return to the title?, 6 no card in the slot, 7 card full, 8 no save data,
@@ -462,7 +397,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         }
         break;
     case 11:
-        switch (PollCardExist_800BAF0C(cardSlotCursor_800BDF68))
+        switch (PollCardExist_800BAF0C(loadMenuRows_800BDF4C[1].cursor_C))
         {
         case -1:
         case 0:
@@ -482,7 +417,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         break;
     case 8:
         DrawMessageBox_800BACBC(msgNoSaveData_800BDEFC);
-        switch (PollCardAccept_800BAE68(cardSlotCursor_800BDF68))
+        switch (PollCardAccept_800BAE68(loadMenuRows_800BDF4C[1].cursor_C))
         {
         case -1:
         case 0:
@@ -510,7 +445,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         CardSlotInput_800B92C0(work);
         break;
     case 6:
-        switch (PollCardExist_800BAF0C(cardSlotCursor_800BDF68))
+        switch (PollCardExist_800BAF0C(loadMenuRows_800BDF4C[1].cursor_C))
         {
         case 0:
         case 3:
@@ -801,7 +736,7 @@ void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
     LoadWinColor color;
     p0.x_0 = 0x13;
     p0.y_2 = 0x49;
-    DrawText_8003E91C(2, byte_800B682C, &p0, 5);
+    DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, &p0, 5);
     p1.x_0 = 0x13;
     p1.y_2 = 0x57;
     DrawText_8003E91C(2, aFormatMemoryCard_800B69FC, &p1, 5);
@@ -899,7 +834,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, byte_800B682C, &pos, 5);
+        DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, &pos, 5);
         break;
     }
     }
@@ -1037,7 +972,7 @@ void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
     DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
     p1.x_0 = 0x124;
     p1.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&p1, (cardSlotCursor_800BDF68 == 1) << 1, 1);
+    DrawUiTiySprt_8002C06C(&p1, (loadMenuRows_800BDF4C[1].cursor_C == 1) << 1, 1);
     rect = cardSlotLabelWin_800B6B94;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
@@ -1068,11 +1003,6 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
     DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
-extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
-extern void AddClipDrawAreaPrim_80033308(char* ot);
-extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
-extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
-extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 // Matched
 void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
 {
@@ -1527,13 +1457,6 @@ void WriteSaveTask_800B98C4(void* t, void* buf)
     DrawMenuBackground_8002BE10();
 }
 
-// the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", saveTitle_800BDFAC)
-extern void* memcpy(void* dst, const void* src, unsigned int n);
-extern void BuildCardHeader_800BB2AC(CardHeader* header,int idx, char* title);
-extern void IntToText_8003F610(unsigned short* buf, int val);
-extern int PlayTimeHours_800BAC14(int frames);
-extern int PlayTimeMinutes_800BAC68(int frames);
-
 // packs saveData_8008B570 into the save file to write, with its summary and title
 // Matched
 void PackSaveFile_800B9A8C(LoadMenuWork* work)
@@ -1614,7 +1537,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         packedMinion->status_3C.mp_C = minion->status_84.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            packedMinion->status_3C.field_10[j] = minion->status_84.modifiers_20[j];
+            packedMinion->status_3C.modifiers_10[j] = minion->status_84.modifiers_20[j];
         }
         packedMinion->status_3C.stats_1C = minion->status_84.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1647,7 +1570,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         packedUnit->status_0.mp_C = unit->st_0.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            packedUnit->status_0.field_10[j] = unit->st_0.modifiers_20[j];
+            packedUnit->status_0.modifiers_10[j] = unit->st_0.modifiers_20[j];
         }
         packedUnit->status_0.stats_1C = unit->st_0.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1815,7 +1738,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             minion->status_84.mp_C = packedMinion->status_3C.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                minion->status_84.modifiers_20[j] = packedMinion->status_3C.field_10[j];
+                minion->status_84.modifiers_20[j] = packedMinion->status_3C.modifiers_10[j];
             }
             minion->status_84.stats_2C = packedMinion->status_3C.stats_1C;
             for (j = 0; j < 4; j++)
@@ -1866,7 +1789,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             unit->st_0.mp_C = packedUnit->status_0.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                unit->st_0.modifiers_20[j] = packedUnit->status_0.field_10[j];
+                unit->st_0.modifiers_20[j] = packedUnit->status_0.modifiers_10[j];
             }
             unit->st_0.stats_2C = packedUnit->status_0.stats_1C;
             for (j = 0; j < 4; j++)
@@ -2318,181 +2241,3 @@ void DrawCardSlotMenu_800BB4A8(short sel)
 
 // 0x800BB5DC..0x800BD93C: PSY-Q 4.4 LIBMCRD.LIB modules LIBMCRD, USERFUNC and BIOS, linked from the library
 // (config/ovl_lib_objs.txt), as are their .rdata, .data and .bss.
-
-LoadTextPos saveSlotFieldPos_800BD93C[9] = {
-    { 170, 54 },
-    { 144, 68 },
-    { 172, 68 },
-    { 222, 68 },
-    { 244, 68 },
-    { 225, 54 },
-    { 39, 55 },
-    { 39, 68 },
-    { 0x122, 52 },
-};
-LoadUiSprite saveSlotSprites_800BD960[7] = {
-    { 13, 52, 119, 1 },
-    { 104, 52, 227, 1 },
-    { 100, 66, 118, 1 },
-    { 180, 65, 203, 1 },
-    { 180, 52, 122, 1 },
-    { 13, 66, 150, 1 },
-    { -1, -1, -1, -1 },
-};
-LoadUiSprite modeTitleSprites_800BD998[2] = {
-    { 80, 21, 190, 1 },
-    { 69, 21, 197, 1 },
-};
-LoadUiSprite cardSlotSprites_800BD9A8[8] = {
-    { 108, 21, 39, 1 },
-    { 39, 95, 39, 1 },
-    { 59, 109, 178, 1 },
-    { 106, 109, 0, 1 },
-    { 188, 95, 39, 1 },
-    { 208, 109, 178, 1 },
-    { 255, 109, 2, 1 },
-    { -1, -1, -1, -1 },
-};
-LoadUiSprite saveIconSprites_800BD9E8[4] = {
-    { 0x110, 52, 78, 1 },
-    { 0x110, 52, 52, 1 },
-    { 0x110, 52, 58, 1 },
-    { -1, -1, -1, -1 },
-};
-char *saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
-RECT saveListClip_800BDA10 = { 10, 49, 0x12C, 129 };
-LoadMenuItem saveListRow0_800BDA18[2] = {
-    { 64, 0, 0, 0, 0, 10, 49, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem saveListRow1_800BDA50[2] = {
-    { 64, 0, 0, 0, 0, 10, 82, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem saveListRow2_800BDA88[2] = {
-    { 64, 0, 0, 0, 0, 10, 115, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem saveListRow3_800BDAC0[2] = {
-    { 64, 0, 0, 0, 0, 10, 148, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
-LoadMenuWin saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
-LoadMenuItem cardSlot1Item_800BDB24[2] = {
-    { 64, 0, 0, 0, 0, 33, 90, { 105, 0, 36 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *cardSlot1Items_800BDB5C[2] = { cardSlot1Item_800BDB24 };
-LoadMenuWin cardSlot1Win_800BDB64 = { 2, 0, 8, 0, cardSlot1Items_800BDB5C, 5 };
-LoadMenuItem cardSlot2Item_800BDB7C[2] = {
-    { 64, 0, 0, 0, 0, 182, 90, { 105, 0, 36 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *cardSlot2Items_800BDBB4[2] = { cardSlot2Item_800BDB7C };
-LoadMenuWin cardSlot2Win_800BDBBC = { 2, 0, 8, 0, cardSlot2Items_800BDBB4, 5 };
-LoadMenuWin *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
-LoadMenuItem topMenuSave_800BDBDC[2] = {
-    { 8, 1, 190, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 69, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem topMenuLoad_800BDC14[2] = {
-    { 8, 1, 197, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 90, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem topMenuExit_800BDC4C[2] = {
-    { 8, 1, 198, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 111, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem topMenuTitle_800BDC84[2] = {
-    { 8, 1, 196, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 132, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
-LoadMenuWin topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
-LoadMenuItem formatYes_800BDCE8[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 126, 106, { 56, 0, 18, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem formatNo_800BDD20[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 126, 126, { 56, 0, 18, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
-LoadMenuWin formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
-LoadMenuItem confirmYes_800BDD7C[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 215, 193, { 46, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem confirmNo_800BDDB4[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 0x105, 193, { 48, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
-LoadMenuWin confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
-LoadMenuItem titleYes_800BDE10[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 106, 121, { 52, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem titleNo_800BDE48[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 163, 121, { 52, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
-};
-LoadMenuItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
-LoadMenuWin titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
-LoadHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
-char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
-char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
-char *msgLoading_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };
-char *msgSaving_800BDEEC[4] = { aSaving_800B67F0, aDoNotRemoveMEMO_800B676C };
-char *msgNoSaveData_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, byte_800B682C };
-char *msgFormatFailed_800BDF1C[4] = { aFormattingFaile_800B6864 };
-char *msgSaveFailed_800BDF2C[4] = { aSaveFailed_800B688C };
-char *msgLoadFailed_800BDF3C[4] = { aLoadFailed_800B68A8 };
-LoadMenuRow loadMenuRows_800BDF4C[6] = {
-    { { 68, 0, 116, 0, 0, 14 }, 1, 4, 4 },
-    { { 68, 0, 116, 0, 0, 14 }, 2, 1, 2 },
-    { { 18, 0, 72, 0, 0, 14 }, 1, 2, 2, 1 },
-    { { 10, 0, 64, 0, 0, 33 }, 1, 4, 15, 0, 0, 0x40 },
-    { { 10, 0, 64, 0, 0, 33 }, 2, 1, 2, 0, 0, 1 },
-    { { 10, 0, 64, 0, 0, 33 }, 2, 1, 2, 1 },
-};
-SaveTitle *saveTitle_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
-char *cardTitles_800BDFB0[30] = {
-    aJadeCocoon01_800B6F88, aJadeCocoon02_800B6F6C, aJadeCocoon03_800B6F50, aJadeCocoon04_800B6F34,
-    aJadeCocoon05_800B6F18, aJadeCocoon06_800B6EFC, aJadeCocoon07_800B6EE0, aJadeCocoon08_800B6EC4,
-    aJadeCocoon09_800B6EA8, aJadeCocoon10_800B6E8C, aJadeCocoon11_800B6E70, aJadeCocoon12_800B6E54,
-    aJadeCocoon13_800B6E38, aJadeCocoon14_800B6E1C, aJadeCocoon15_800B6E00, aCombDataTitle01_800B6DE4,
-    aCombDataTitle02_800B6DC8, aCombDataTitle03_800B6DAC, aCombDataTitle04_800B6D90, aCombDataTitle05_800B6D74,
-    aCombDataTitle06_800B6D58, aCombDataTitle07_800B6D3C, aCombDataTitle08_800B6D20, aCombDataTitle09_800B6D04,
-    aCombDataTitle10_800B6CE8, aCombDataTitle11_800B6CCC, aCombDataTitle12_800B6CB0, aCombDataTitle13_800B6C94,
-    aCombDataTitle14_800B6C78, aCombDataTitle15_800B6C5C,
-};
-char *saveFileNames_800BE028[2][15] = {
-    {
-        aBASLUS00854GAME_800B725C, aBASLUS00854GAME_800B7244, aBASLUS00854GAME_800B722C, aBASLUS00854GAME_800B7214,
-        aBASLUS00854GAME_800B71FC, aBASLUS00854GAME_800B71E4, aBASLUS00854GAME_800B71CC, aBASLUS00854GAME_800B71B4,
-        aBASLUS00854GAME_800B719C, aBASLUS00854GAME_800B7184, aBASLUS00854GAME_800B716C, aBASLUS00854GAME_800B7154,
-        aBASLUS00854GAME_800B713C, aBASLUS00854GAME_800B7124, aBASLUS00854GAME_800B710C,
-    },
-    {
-        aBASLUS00854COMB_800B70F4, aBASLUS00854COMB_800B70DC, aBASLUS00854COMB_800B70C4, aBASLUS00854COMB_800B70AC,
-        aBASLUS00854COMB_800B7094, aBASLUS00854COMB_800B707C, aBASLUS00854COMB_800B7064, aBASLUS00854COMB_800B704C,
-        aBASLUS00854COMB_800B7034, aBASLUS00854COMB_800B701C, aBASLUS00854COMB_800B7004, aBASLUS00854COMB_800B6FEC,
-        aBASLUS00854COMB_800B6FD4, aBASLUS00854COMB_800B6FBC, aBASLUS00854COMB_800B6FA4,
-    },
-};
-SaveIconSrc saveIconSrc_800BE0A0[3] = {
-    { 75, 0x380, 254 },
-    { 76, 0x3F0, 0x143 },
-    { 77, 0x380, 252 },
-};
-CardHeaderTail cardHeaderTail_800BE0B8 = {
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 28, 0, 0, 62, 126, 0, 0, 119, 227, 0, 0, 227, 193, 0, 0, 192, 1, 0, 0, 255, 255, 0, 192, 243, 239, 3, 224, 224, 3, 7, 48, 195, 1, 14, 152, 199, 113, 28, 220, 207, 252, 24, 204, 204, 252, 25, 206, 204, 254, 57, 206, 207, 182, 59, 142, 199, 54, 59, 142, 199, 182, 59, 206, 207, 252, 57, 206, 204, 248, 16, 206, 204, 48, 0, 196, 15, 56, 63, 128, 7, 156, 63, 0, 3, 206, 1, 192, 15, 230, 0, 224, 31, 126, 0, 112, 59, 60, 0, 48, 51, 24, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { aNoMemoryCardJp_800B7274, aCardSlotJp_800B7290, aCardSlot1Jp_800B72A8, aCardSlot2Jp_800B72C0, aInsertMemoryCardJp_800B72D8 },
-};
-int cardFreeBlocks_800BE14C = 0;
-int cardSaveCount_800BE150 = 0;
-
-int loadMenuActive_800BE184 BSS = 0;
-char *cardSaveNames_800BE188[15] BSS = { 0 };

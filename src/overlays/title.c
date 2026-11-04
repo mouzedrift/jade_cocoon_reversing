@@ -5,7 +5,6 @@
 #include "sound.h"
 #include "title.h"
 
-
 int dword_800A05A0 SDATA = 13;
 const TitleColor nameCursorPulseColor_800A05A4 = { "$$$" };
 const char aCaution_800A05A8[] = "\202b\202\201\202\225\202\224\202\211\202\217\202\216\201I"; // Caution!
@@ -67,26 +66,6 @@ const TitleColor logoPulseColor_800A08B0 = { "ZZZ" };
 const char debugLevantName_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
 const int dword_800A08C0[2] = { 0, 0x8940000 };
 
-typedef struct TitleTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-} TitleTask;
-
-typedef struct NameEntryWork
-{
-    char pad_0[0x5C];
-    int pulseTime_5C;
-    int pulsePeak_60;
-    int pulseStep_64;
-    int timer_68;
-    int holding_6C;
-    SPRT* sprts_70;      // from LoadTiy_80028E74
-    DR_TPAGE* tpages_74; // one per sprite
-} NameEntryWork;
-
-extern void NewGameLoadSprites_800A093C();
 // Matched
 void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
 {
@@ -105,8 +84,6 @@ void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
     t->next_8 = NewGameLoadSprites_800A093C;
 }
 
-
-extern void NewGameOpeningMovie_800A09C0();
 // Matched
 void NewGameLoadSprites_800A093C(TitleTask* t, NameEntryWork* c)
 {
@@ -122,8 +99,6 @@ void NewGameLoadSprites_800A093C(TitleTask* t, NameEntryWork* c)
     }
 }
 
-
-extern void NewGameLoadNameOvl_800A0A1C();
 // Matched
 void NewGameOpeningMovie_800A09C0(TitleTask* t)
 {
@@ -143,24 +118,17 @@ void NewGameOpeningMovie_800A09C0(TitleTask* t)
     }
 }
 
-
-extern unsigned short padPressed_8009194C;
-extern void NewGameStartNameEntry_800A0A70();
 // Matched
 void NewGameLoadNameOvl_800A0A1C(TitleTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        padPressed_8009194C = 0;
+        padPressed_8009194C[0] = 0;
         nameOvlRequest_800A2808 = LoadOverlay_80020BF8(1, 0x11);
         t->next_8 = NewGameStartNameEntry_800A0A70;
     }
 }
 
-
-extern void StartNameEntry_800B6E4C(void* a0, int a1);
-extern void EncodeName_8003F7C8(void* text, void* out);
-extern void NewGameNameEntry_800A0AE8();
 // Matched
 void NewGameStartNameEntry_800A0A70(TitleTask* t)
 {
@@ -175,10 +143,6 @@ void NewGameStartNameEntry_800A0A70(TitleTask* t)
     }
 }
 
-
-extern void DrawNameEntrySprites_800A0D18();
-extern int IsNameEntryActive_800B6FC8(void);
-extern void NewGameAfterNameMovie_800A0C28();
 // Matched
 void NewGameNameEntry_800A0AE8(TitleTask* t, NameEntryWork* c)
 {
@@ -216,22 +180,17 @@ void NewGameNameEntry_800A0AE8(TitleTask* t, NameEntryWork* c)
     }
 }
 
-
-extern void TitleExit_800A1AFC();
 // Matched
 void NewGameFadeOut_800A0BCC(TitleTask* t, NameEntryWork* c)
 {
     if (--c->timer_68 <= 0)
     {
-        FreeSound_80030D00((int)&bgmSound_80091CE0);
+        FreeSound_80030D00(&bgmSound_80091CE0);
         TitleExit_800A1AFC(t, 0xC);
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
 }
 
-
-extern void NewGameFadeOut_800A0BCC();
-extern void SsSepSetDecrescendo(short, short, short, long);
 // Matched
 void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
@@ -261,9 +220,6 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
     }
 }
 
-
-extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
-extern unsigned long* pOT_8008D3EC;
 #if 0
 // Not matched: register allocation / scheduling differs
 void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, NameEntryWork* c)
@@ -310,8 +266,6 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
 #endif
 INCLUDE_OVERLAY_ASM(title, DrawNameEntrySprites_800A0D18);
 
-extern void SetFadeMode_8001C19C(int a0, int a1);
-extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 // TITLE overlay entry: runs the title tasks, returns the next GameStates value (titleResult_800A2818)
 // Matched
 int TitleMain_800A0EF0(void)
@@ -322,29 +276,11 @@ int TitleMain_800A0EF0(void)
     drawEnvRed_8008D448[2] = 0;
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
     PlayMusicSeq_80031260(&bgmSound_80091CE0, 0x1B, 1);
-    DrawIntroMovie_8001AF64(&titleTaskList_800A27C0);
-    FreeSound_80030D00((int)&bgmSound_80091CE0);
+    DrawIntroMovie_8001AF64(titleTaskList_800A27C0);
+    FreeSound_80030D00(&bgmSound_80091CE0);
     return titleResult_800A2818;
 }
 
-
-typedef struct TitleMenuWork
-{
-    int frames_0; // menu frame counter, reused as the idle fade-out counter
-    int field_4;
-    int field_8;
-    SPRT* sprts_C;       // from LoadTiy_80028E74
-    int field_10;
-    DR_TPAGE* tpages_14; // one per sprite
-    char pad_18[4];
-    short cursor_1C[4]; // UpdateMenuCursor_8003D794 state
-    short selected_24;
-    short field_26;
-} TitleMenuWork;
-
-extern void SetNewGameStartMap_800A2650();
-extern void StartNewGameTask_800A1B74();
-extern void TitleEnterScreen_800A1070();
 // Matched
 void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
 {
@@ -376,9 +312,6 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
     }
 }
 
-
-extern void TitlePressStart_800A1174();
-extern void TitleMenu_800A1310();
 // Matched
 void TitleEnterScreen_800A1070(TitleTask* t, TitleMenuWork* c)
 {
@@ -394,7 +327,6 @@ void TitleEnterScreen_800A1070(TitleTask* t, TitleMenuWork* c)
     }
     t->next_8(t, c);
 }
-
 
 // Matched
 void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
@@ -418,19 +350,6 @@ void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
     }
 }
 
-
-// window style for DrawWindow_80042460 (CombSelBox)
-typedef struct TitleWinStyle
-{
-    short color_0;
-    char colors_2;
-    char frame_3;
-} TitleWinStyle;
-
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
-extern void DrawTitleBackground_800A1F98();
-extern void TitleIdleFadeOut_800A1AC0();
-extern void sub_8004E2C8(int a0);
 #define TITLE_TIMEOUT(t, c) \
     if (++titleIdleTimer_800A2814 >= 0x1771) \
     { \
@@ -462,7 +381,7 @@ void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
     AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], 2);
     DrawWindow_80042460(&rect, &style, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
-    if (padPressed_8009194C & 0x800)
+    if (padPressed_8009194C[0] & 0x800)
     {
         PlaySfx_80031494(0x7E);
         srand(gnFrame_8008D610);
@@ -473,18 +392,12 @@ void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
     TITLE_TIMEOUT(t, d)
 }
 
-extern void DrawTitleMenu_800A1760();
-extern unsigned short padRepeat_800918CC;
-extern void NewGameCheckMemCards_800A14A8();
-extern void UpdateMenuCursor_8003D794(void* a0, int a1);
-extern void CheckMemCards_8003BB1C(void);
-extern void sub_800BB5DC(void);
 // Matched
 void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
 {
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
     UpdateMenuCursor_8003D794(c->cursor_1C, 0);
-    if (padRepeat_800918CC & 0x5000)
+    if (padRepeat_800918CC[0] & 0x5000)
     {
         c->frames_0 = 0;
         titleIdleTimer_800A2814 = 0;
@@ -514,15 +427,6 @@ void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
     TITLE_TIMEOUT(t, c)
 }
 
-
-extern void NoMemCardWarning_800A158C();
-extern void NoFreeBlocksWarning_800A166C();
-extern void NewGameMemCardOk_800A1728();
-extern void sub_800BB9F4(int a0);
-extern void sub_800BC9DC(int a0, int* a1, int* a2);
-extern void sub_800BAFB0(int a0);
-extern int GetCardFreeBlocks_800BAE2C(void);
-extern int GetCardSaveCount_800BAE3C(void);
 // Matched
 void NewGameCheckMemCards_800A14A8(TitleTask* t)
 {
@@ -552,7 +456,7 @@ void NewGameCheckMemCards_800A14A8(TitleTask* t)
             }
         }
         {
-            sub_800BAFB0(i);
+            ScanCardSaves_800BAFB0(i);
             if (GetCardFreeBlocks_800BAE2C() || GetCardSaveCount_800BAE3C())
             {
                 t->next_8 = NewGameMemCardOk_800A1728;
@@ -566,10 +470,6 @@ void NewGameCheckMemCards_800A14A8(TitleTask* t)
     }
 }
 
-
-extern void sub_800BB64C(void);
-
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int c);
 // Matched
 void NoMemCardWarning_800A158C(TitleTask* t)
 {
@@ -596,15 +496,6 @@ void NoMemCardWarning_800A158C(TitleTask* t)
         StartNewGameTask_800A1B74(t);
     }
 }
-
-
-typedef struct
-{
-    short x, y, w, h;
-} TitleRect;
-// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem in ability_menu.c)
-extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
-extern void StartNewGameTask_800A1B74(TitleTask* t);
 
 // Matched
 void NoFreeBlocksWarning_800A166C(TitleTask* t)
@@ -635,16 +526,11 @@ void NewGameMemCardOk_800A1728(TitleTask* t)
     StartNewGameTask_800A1B74(t);
 }
 
-extern void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel);
-
 // Matched
 void DrawTitleMenu_800A1760(TitleMenuWork* work, int sel, int frames)
 {
     DrawTitleMenuWindows_800A1780(work, sel);
 }
-
-// struct_A5A4 in ability_menu.c
-extern void DrawMenuWindows_8002A5A4(TitleMenuCfg* cfg);
 
 // Matched
 void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel)
@@ -680,7 +566,6 @@ void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel)
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
-
 // Matched
 void TitleIdleFadeOut_800A1AC0(TitleTask* t, int* cnt)
 {
@@ -704,8 +589,6 @@ void TitleExit_800A1AFC(TitleTask* t, int result)
     t->flags_0 &= ~1;
 }
 
-extern EventNode* newGameTask_8008D638;
-
 // stops the title menu task and enables newGameTaskDesc_800A2790 (name entry + opening movies)
 // Matched
 void StartNewGameTask_800A1B74(TitleTask* t)
@@ -719,12 +602,6 @@ void StartNewGameTask_800A1B74(TitleTask* t)
     }
 }
 
-extern void InitSaveData_800A211C(void);
-extern void ClearCapturedMinions_800A2214(void);
-extern void ClearMinionSlots_800A2450(void);
-extern void ResetMapIds_800A242C(void);
-extern unsigned short word_8008B55A;
-
 // Matched
 void InitNewGameData_800A1BCC(void)
 {
@@ -737,10 +614,6 @@ void InitNewGameData_800A1BCC(void)
     }
 }
 
-extern int dword_8008BD80;
-extern void LoadMenuInit_800B7674(int a, int b);
-extern void LoadGameWait_800A1CC0(TitleTask* t);
-
 // Matched
 void MenuLoadGame_800A1C18(TitleTask* t)
 {
@@ -752,8 +625,6 @@ void MenuLoadGame_800A1C18(TitleTask* t)
     t->next_8 = LoadGameWait_800A1CC0;
 }
 
-extern void SetNewGameStartMap_800A2650(void);
-
 // menu entry 4: fresh save data, straight into the game (no name entry)
 // Matched
 void MenuQuickStart_800A1C7C(TitleTask* t)
@@ -763,9 +634,6 @@ void MenuQuickStart_800A1C7C(TitleTask* t)
     SetNewGameStartMap_800A2650();
     TitleExit_800A1AFC(t, 0xC);
 }
-
-extern int IsLoadMenuActive_800B793C(void);
-extern int GetLoadMenuLoaded_800B7914(void);
 
 // Matched
 void LoadGameWait_800A1CC0(TitleTask* t)
@@ -800,9 +668,6 @@ void MenuNewGame_800A1D6C(void)
     InitNewGameData_800A1BCC();
 }
 
-extern void SetFadeMode_8001C19C(int a, int b);
-extern void ConfigWaitUiTiy_800A1DD8(TitleTask* t);
-
 // Matched
 void MenuConfig_800A1D8C(TitleTask* t)
 {
@@ -811,9 +676,6 @@ void MenuConfig_800A1D8C(TitleTask* t)
     LoadUiTiy_8002BF74();
     t->next_8 = ConfigWaitUiTiy_800A1DD8;
 }
-
-extern void StartConfigMenu_800C2EB4(void);
-extern void ConfigWait_800A1E24();
 
 // Matched
 void ConfigWaitUiTiy_800A1DD8(TitleTask* t)
@@ -825,9 +687,6 @@ void ConfigWaitUiTiy_800A1DD8(TitleTask* t)
         t->next_8 = ConfigWait_800A1E24;
     }
 }
-
-extern int IsConfigMenuActive_800C45D8(void);
-extern void ConfigReturn_800A1E9C();
 
 // Matched
 void ConfigWait_800A1E24(TitleTask* t, TitleMenuWork* u)
@@ -860,20 +719,6 @@ void MenuBattleArena_800A1F00(TitleTask* t)
     TitleExit_800A1AFC(t, 0xC);
 }
 
-extern void ClearInventory_800A2358(void);
-extern void GiveDebugStartItems_800A22FC(void);
-extern void InitStub_800A2424(void);
-extern void InitLevantEquipment_800A20F4(void);
-extern void ClearMapVars_800A2110(void);
-extern void InitFlagTables_800A2540(void);
-extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
-extern void EncodeName_8003F7C8(void* text, void* out);
-
-extern Vec3i dword_800B069C; // Levant's start position
-extern int useMapStartPos_80091C94;
-extern SVECTOR dword_800B06A8; // Levant's start rotation
-
-extern int encounterVariantToggle_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
 
 // Matched
@@ -894,7 +739,7 @@ void MenuTstCompo_800A1F78(void* task)
     TitleExit_800A1AFC(task, 11);
 }
 
-void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages)
+void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages, TitleMenuWork* work)
 {
     char zero[4];
     TitleColor color;
@@ -1006,7 +851,6 @@ void GiveDebugStartItems_800A22FC(void)
         saveData_8008B570.inv_24.emptyCocoons_284 = 10;
     }
 }
-
 
 void ClearInventory_800A2358(void)
 {
@@ -1145,11 +989,21 @@ UnitStatus levantInitStatus_800A2730 = {
     1,
     1,
 };
-int titleMenuTaskDesc_800A2778[6] = { 1, 5, 52, 0, (int)TitleInit_800A0F6C, (int)TitleFree_800A10D0 };
-int newGameTaskDesc_800A2790[6] = { 1, 0x8000, 120, (int)&newGameTask_8008D638, (int)NewGameInit_800A08C8 };
-int titleSoundTaskDesc_800A27A8[6] = { 1, 5, 64, (int)&soundTask_8008D4A4, (int)InitSoundTask_8002FF10, (int)FreeSoundTask_8003006C };
-int titleTaskList_800A27C0 = (int)&eventDescs_80078EB8;
-void *dword_800A27C4[9] = { (void *)titleMenuTaskDesc_800A2778, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312), (void *)((char *)&eventDescs_80078EB8 + 288), (void *)titleSoundTaskDesc_800A27A8, (void *)newGameTaskDesc_800A2790, (void *)((char *)&eventDescs_80078EB8 + 360), (void *)((char *)&eventDescs_80078EB8 + 264) };
+EventDesc titleMenuTaskDesc_800A2778 = { 1, 5, 52, 0, (EventEntryFn)TitleInit_800A0F6C, (EventEntryFn)TitleFree_800A10D0 };
+EventDesc newGameTaskDesc_800A2790 = { 1, 0x8000, 120, &newGameTask_8008D638, (EventEntryFn)NewGameInit_800A08C8 };
+EventDesc titleSoundTaskDesc_800A27A8 = { 1, 5, 64, &soundTask_8008D4A4, (EventEntryFn)InitSoundTask_8002FF10, (EventEntryFn)FreeSoundTask_8003006C };
+// the title's event lists (DrawIntroMovie_8001AF64), 0-terminated
+EventDesc* titleTaskList_800A27C0[10] = {
+    &eventDescs_80078EB8[0],
+    &titleMenuTaskDesc_800A2778,
+    &eventDescs_80078EB8[8],
+    &eventDescs_80078EB8[13],
+    &eventDescs_80078EB8[12],
+    &titleSoundTaskDesc_800A27A8,
+    &newGameTaskDesc_800A2790,
+    &eventDescs_80078EB8[15],
+    &eventDescs_80078EB8[11],
+};
 void (*titleMenuHandlers_800A27E8[8])() = { (void (*)())MenuNewGame_800A1D6C, (void (*)())MenuLoadGame_800A1C18, (void (*)())MenuBattleArena_800A1F00, (void (*)())MenuConfig_800A1D8C, (void (*)())MenuQuickStart_800A1C7C, (void (*)())MenuSoundTest_800A1F38, (void (*)())MenuTstModel_800A1F58, (void (*)())MenuTstCompo_800A1F78 };
 int nameOvlRequest_800A2808 = 0;
 int pulseMax_800A280C = 0;

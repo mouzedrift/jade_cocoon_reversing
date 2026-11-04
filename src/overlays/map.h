@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "main.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -215,5 +216,63 @@ typedef struct MapEntry
     short id;
     char pad_2[14];
 } MapEntry;
+
+extern int IsDestOpen_800B8290(MapDest*);
+extern void WaitAreaPicture_800B6E5C(MapTask* task);
+extern int GetOpenDestRank_800B81D0(MapDest*);
+extern void GetCurrentDest_800B8448(MapDest* out);
+extern short word_800B932C;
+extern void LoadAreaPicture_800B6CB4(MapTask* task);
+extern void StartAreaFadeOut_800B6C7C(MapTask* task);
+extern void OnMapFileLoaded_800B6DE0(MapTask*, int*);
+extern void LoadAreaSprites_800B6E80(MapTask* task);
+extern void WaitAreaFadeIn_800B6EE8(MapTask* task, int work);
+extern void FreeMapTiys_800B6FAC(MapTask*);
+extern void DestinationSelect_800B7044(MapTask* task, int work);
+extern void LoadDestPicture_800B7980(MapTask* task);
+extern void ConfirmDestination_800B7A90(MapTask* task, int work);
+extern void WaitDestPicture_800B7A38(MapTask* task);
+extern void SceneSelect_800B860C();
+extern void ChapterSelect_800B8B5C();
+extern void StartDestFadeOut_800B7948(MapTask* task);
+extern void GoToDest_800B8338(MapDest* p);
+
+void RequestMapFile_800B6D90(FileRequestDesc* req, int fileId);
+int CountOpenDests_800B7E54(short area);
+void InitDestCursor_800B7EE0(void);
+void GetNthOpenDest_800B8128(short nth, short area, MapDest* out);
+
+/* GAME overlay (resident below this one), to move to game.h */
+extern int TestEventFlag_800AD0D4(int);
+extern int GetMapVar_800ADC1C(MapQuery*);
+extern MapEntry** mapTable_800B0608[];
+extern int dword_800B0624[];
+extern void ResetLevantActorToIdle_800A8DEC();
+extern void RequestGameMode_800A6D30(int);
+extern int SetEventVar_800AD16C(int var, int value);
+extern MapSel mapSelectCursors_800AEBFC[];
+extern int GetEventVar_800AD154(int);
+extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
+extern void StartMapOverlay_800A75F8();
+
+/* exe-side, to move to an exe header */
+extern void DrawCursorHand_8003D034(void*, int);
+extern int GetMenuCursorIndex_8003DA54(void*);
+extern void DrawText_8003E91C(int, void*, void*, int);
+extern void DrawNumber_8003EF74(void*, int, int);
+extern void PlayMusic_800300E0(int, int);
+// state of the map select (SceneSelect_800B860C)
+extern void SetFadeMode_8001C19C(int, int);
+extern void ResetPadHoldFrames_8001CD04(int);
+extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
+                                int half);
+extern void SetSemiTrans(void* p, int abe);
+extern void DrawScrollArrows_8002B8DC(MapXY arrow, MapSel* sel, MapXY* pos, int ot);
+extern int MeasureTextWidth_8003E4C8(void* p);
+extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
+extern void* memset(void* p, int c, unsigned int n);
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 
 #endif

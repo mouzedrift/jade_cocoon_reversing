@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "main.h"
 #include "sound.h"
 
 extern int dword_800A05A0;
@@ -1629,5 +1630,30 @@ extern char soundTestTaskList_800AA340[16];
 extern char *soundTestLabels_800AA350[8];
 
 extern const char strSoundNumber_800A519C[16];
+
+// the sound test's state (SoundTestInit_800A51D8 sets it up); v[row_0 + 1] is the value the cursor row edits
+typedef union SndTest
+{
+    struct
+    {
+        short row_0;    // cursor row (0..4)
+        short seq_2;    // sound file to play (0..0x9A, 10 = none)
+        short seFile_4; // row 1, does nothing
+        short se_6;     // SE (VAB program) number, 0..0x7F
+        short reverb_8; // 0..0x7F
+        short xa_A;     // XA track (0..0x647), xaTracks_800A70F0 index
+        short voice_C;  // SsUtKeyOn voice, -1 = none
+        short prog_E;   // program voice_C was keyed on
+    } f;
+    short v[8];
+} SndTest;
+
+extern void SoundTestUpdate_800A5238(int* task, SndTest* st);
+
+/* exe-side, to move to an exe header */
+extern void PlayMusicSeq_80031260(void* sound, int idx, int loops);
+extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
+extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 
 #endif

@@ -5,43 +5,13 @@
 #include "sound.h"
 #include "chapter.h"
 
-// a map var key / map point: (area, map, sub)
-typedef struct ChapterMapKey
-{
-    short area;
-    short map;
-    short sub;
-} ChapterMapKey;
 
-extern int dword_800B0624[6];
-extern int mapStartMode_80091C54;
-extern int useMapStartPos_80091C94;
-extern int eventDispatchHalt_8008B540;
-extern void SetEventVar_800AD16C(int, int);
-extern void SetMapVar_800ADC5C(ChapterMapKey*, int);
-extern void FindMapEntrance_800ADCEC(ChapterMapKey*, int);
-extern void RequestGameMode_800A6D30(int);
-extern void SetAreaMapVars_800B69BC(int**);
-extern void SetMapVarList_800B6A94(short*);
 
 int dword_800B66C0 SDATA = 28;
 
 
-extern int PlayMusic_800300E0(int idx, int a1);
 
-typedef struct ChapterTask
-{
-    int flags_0;
-    int f4_4;
-    void (*next_8)();
-} ChapterTask;
 
-extern void ClearChapterYanVars_800B68A8();
-extern void ApplyChapterMapVars_800B6900();
-extern void EnterChapterMap_800B6B18();
-extern void StartChapterOverlay_800A7690();
-extern void SsSepSetDecrescendo(short, short, short, long);
-void ChapterIntroTask_800B66F4(ChapterTask* task, int* st);
 
 void ChapterStartTask_800B66DC(ChapterTask* task, int* st)
 {

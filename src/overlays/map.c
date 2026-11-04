@@ -4,49 +4,108 @@
 #include "globals.h"
 #include "map.h"
 
-
-
-extern int TestEventFlag_800AD0D4(int);
-extern int GetMapVar_800ADC1C(MapQuery*);
-extern int IsDestOpen_800B8290(MapDest*);
-
-extern MapEntry** mapTable_800B0608[];
-extern int dword_800B0624[];
-extern int mapStartMode_80091C54;
-extern void DrawCursorHand_8003D034(void*, int);
 #define SEL mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]
-extern int GetMenuCursorIndex_8003DA54(void*);
-extern void ResetLevantActorToIdle_800A8DEC();
-extern void RequestGameMode_800A6D30(int);
-extern void SetEventVar_800AD16C(int, int);
-extern int useMapStartPos_80091C94;
-extern MapSel mapSelectCursors_800AEBFC[];
-extern unsigned short padRepeat_800918CC;
-extern void DrawText_8003E91C(int, void*, void*, int);
-extern void DrawNumber_8003EF74(void*, int, int);
-extern int GetEventVar_800AD154(int);
-extern void PlayMusic_800300E0(int, int);
-extern void WaitAreaPicture_800B6E5C();
-extern int GetOpenDestRank_800B81D0(MapDest*);
-// state of the map select (SceneSelect_800B860C)
-extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
-extern void GetCurrentDest_800B8448();
-extern short word_800B932C;
-extern void SetFadeMode_8001C19C(int, int);
-extern void ResetPadHoldFrames_8001CD04(int);
-extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
-extern void LoadAreaPicture_800B6CB4();
-extern void StartAreaFadeOut_800B6C7C();
-extern void OnMapFileLoaded_800B6DE0(MapTask*, int*);
-extern void LoadAreaSprites_800B6E80();
-extern void WaitAreaFadeIn_800B6EE8();
-extern void FreeMapTiys_800B6FAC(MapTask*);
-extern void DestinationSelect_800B7044();
-extern void LoadDestPicture_800B7980();
-extern void ConfirmDestination_800B7A90();
-extern void WaitDestPicture_800B7A38();
-extern void SceneSelect_800B860C();
-extern void ChapterSelect_800B8B5C();
+
+MapDest lastDest_800B8C94 = { -1, -1 };
+short destCounts_800B8C98[6] = { 13, 13, 3, 4, 5, 6 };
+int openDestCount_800B8CA4 = 0;
+MapElem villageDests0_800B8CA8[13] = {
+    { 8, 12, 18, 1, 246, 166, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 62 },
+    { 6, 12, 18, 1, 182, 201, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 63 },
+    { 0, 216, 18, 1, 140, 109, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 64 },
+    { 3, 216, 18, 1, 101, 130, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 65 },
+    { 4, 216, 18, 1, 64, 90, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 68 },
+    { 7, 12, 18, 1, 204, 133, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 66 },
+    { 12, 216, 18, 1, 295, 186, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 67 },
+    { 9, 12, 18, 1, 184, 116, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 71 },
+    { 10, 12, 18, 1, 184, 80, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 72 },
+    { 11, 216, 18, 1, 98, 73, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 73 },
+    { 13, 12, 18, 1, 243, 87, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 69 },
+    { 2, 216, 18, 1, 120, 98, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 70 },
+    { 5, 216, 18, 1, 266, 226, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 74 },
+};
+MapElem villageDests1_800B8E14[13] = {
+    { 3, 12, 18, 12, 246, 166, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 77 },
+    { 2, 12, 18, 12, 182, 201, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 78 },
+    { 8, 216, 18, 12, 140, 109, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 79 },
+    { 10, 216, 18, 12, 101, 130, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 80 },
+    { 11, 216, 18, 12, 64, 90, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 83 },
+    { 1, 12, 18, 12, 204, 133, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 81 },
+    { 4, 216, 18, 12, 295, 186, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 82 },
+    { 5, 12, 18, 12, 184, 116, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 86 },
+    { 6, 12, 18, 12, 184, 80, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 87 },
+    { 7, 216, 18, 12, 98, 73, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 88 },
+    { 13, 12, 18, 12, 243, 87, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 84 },
+    { 9, 216, 18, 12, 120, 98, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 85 },
+    { 0, 216, 18, 12, 266, 226, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 89 },
+};
+MapElem forestDests0_800B8F80[6] = {
+    { 5, 216, 18, 0, 115, 63, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
+    { 4, 216, 18, 1, 156, 103, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
+    { 3, 216, 18, 2, 202, 149, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
+};
+MapElem forestDests1_800B9028[6] = {
+    { 4, 216, 18, 2, 170, 72, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
+    { 5, 216, 18, 3, 196, 96, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
+    { 1, 216, 18, 6, 228, 132, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
+    { 0, 216, 18, 7, 67, 92, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
+};
+MapElem forestDests2_800B90D0[6] = {
+    { 3, 216, 18, 5, 135, 52, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
+    { 4, 216, 18, 6, 157, 74, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
+    { 2, 216, 18, 7, 184, 103, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
+    { 0, 216, 18, 8, 53, 72, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
+    { 1, 216, 18, 9, 244, 155, { 24, 0, 24, 0 }, { 96, 0, 96, 0 }, 100 },
+};
+MapElem forestDests3_800B9178[6] = {
+    { 0, 216, 18, 6, 142, 86, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
+    { 1, 216, 18, 7, 164, 108, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
+    { 5, 216, 18, 8, 188, 135, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
+    { 2, 216, 18, 9, 66, 109, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
+    { 3, 216, 18, 10, 239, 179, { 24, 0, 24, 0 }, { 96, 0, 96, 0 }, 100 },
+    { 4, 216, 18, 11, 160, 22, { 32, 16, 16, 0 }, { 96, 32, 32, 0 }, 102 },
+};
+MapRow mapAreas_800B9220[6] = {
+    { 60, 61, aSyrus_800B66E0, 0xA0, 0x14, 14, villageDests0_800B8CA8 },
+    { 75, 76, aSyrus_800B66E0, 0xA0, 0x14, 13, villageDests1_800B8E14 },
+    { 90, 91, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests0_800B8F80 },
+    { 92, 93, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests1_800B9028 },
+    { 94, 95, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests2_800B90D0 },
+    { 96, 97, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests3_800B9178 },
+};
+char *villageDestNames_800B92B0[13] = {
+    aMyHome_800B6818, aGaraiSHome_800B67FC, aBlacksmith_800B67E4, aTownShop_800B67D0,
+    aChiefSEstate_800B67B0, aSilkMill_800B679C, aWatchtower_800B6784, aNamSHome_800B676C,
+    aMusaSHome_800B6754, aWenSHome_800B673C, aCemetery_800B6728, aVillageSquare_800B6708,
+    aForestGates_800B66EC,
+};
+char *forestDestNames_800B92E4[6] = { aSyrus_800B66E0, aBarrierGate_800B689C, aBeetleForest_800B6880, aDragonflyForest_800B685C, aSpiderForest_800B6840, aMothForest_800B6828 };
+char **destNames_800B92FC[6] = { villageDestNames_800B92B0, villageDestNames_800B92B0, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4 };
+SPRT *areaBgSprts_800B9314 = 0;
+DR_TPAGE *areaBgTPages_800B9318 = 0;
+SPRT *areaSprts_800B931C = 0;
+DR_TPAGE *areaTPages_800B9320 = 0;
+MapSel confirmCursor_800B9324 = { 2, 1, 2, 1 };
+unsigned char villageDestMaps_800B9330[16] = { 0, 1, 2, 3, 6, 4, 5, 9, 10, 11, 7, 8, 255 };
+unsigned char forestDestMaps_800B9340[8] = { 254, 0, 240, 241, 242, 243 };
+unsigned char *destMaps_800B9348[6] = { villageDestMaps_800B9330, villageDestMaps_800B9330, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340 };
+unsigned char areaMapGroups_800B9360[8] = { 1, 2, 4, 4, 4, 4 };
+unsigned char destMapCounts_800B9368[8] = { 13, 13, 6, 6, 6, 6 };
+char *debugGroupNames_800B9370[6] = { aOthers_800B6A5C, aSyrus1_800B6A4C, aSyrus2_800B6A3C, aSyrus3_800B6A2C, aField1_800B6A1C, aField2_800B6A0C };
+char *debugSceneNames0_800B9388[5] = { aOpening_800B6AA0, aDummy_800B6A94, aDream_800B6A88, aHunting_800B6A78, aClear_800B6A6C };
+char *debugSceneNames1_800B939C[12] = {
+    aLebant_800B6B44, aGarai_800B6B38, aKaji_800B6B2C, aDougu_800B6B20,
+    aMayu_800B6B14, aMihari_800B6B04, aZokuchou_800B6AF0, aHakaba_800B6AE0,
+    aHiroba_800B6AD0, aNam_800B6AC8, aMussa_800B6ABC, aGuen_800B6AB0,
+};
+char *debugSceneNames2_800B93CC[5] = { aKekkai_800B6B88, aTamamusi_800B6B74, aTombo_800B6B68, aKumo_800B6B5C, aGa_800B6B54 };
+char **debugSceneNames_800B93E0[6] = { debugSceneNames0_800B9388, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames2_800B93CC, debugSceneNames2_800B93CC };
+unsigned char debugGroupVariants_800B93F8[8] = { 0, 0, 1, 2, 0, 2 };
+FileRequestDesc mapFileRequest_800B9400[1] = { { 0 } };
+MapSelState sceneSelect_800B9420 = { 0 };
+int mapFileLoaded_800B9430 = 0;
+int mapFileStage_800B9434 = 0;
+int chapterSel_800B9438 = 0;
 
 int dword_800B66C0 SDATA = 25;
 const char aParelForest_800B66C4[] = "\202o\202\201\202\222\202\205\202\214\201@\202e\202\217\202\222\202\205\202\223\202\224"; // Parel Forest
@@ -262,12 +321,6 @@ void FreeMapTiys_800B6FAC(MapTask* task)
     }
 }
 
-extern void StartDestFadeOut_800B7948();
-extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
-                                int half);
-extern void SetSemiTrans(void* p, int abe);
-extern void DrawScrollArrows_8002B8DC(MapXY arrow, MapSel* sel, MapXY* pos, int ot);
-extern unsigned short padPressed_8009194C;
 #if 0
 // Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when mapSelect_800AEBF8.area >= 2
 // (between the marker's two AddPrimCopy calls), which plain C drops; the tail's pad test / register
@@ -383,7 +436,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
         pos[1].y = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2 * 18 + 0x9D;
         DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], pos, 0);
     }
-    if (openDestCount_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C & 0x80)))
+    if (openDestCount_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C[0] & 0x80)))
     {
         GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area,
                      &mapSelect_800AEBF8);
@@ -433,7 +486,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
                 mapSelect_800AEBF8.area = 0;
                 mapSelect_800AEBF8.dest = destIdx;
             }
-            if (!(padPressed_8009194C & 0x80))
+            if (!(padPressed_8009194C[0] & 0x80))
             {
                 task->next_8 = StartDestFadeOut_800B7948;
                 task->next_8(task, work);
@@ -464,7 +517,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
         }
         else
         {
-            if (padPressed_8009194C & 0x80)
+            if (padPressed_8009194C[0] & 0x80)
             {
                 GoToDest_800B8338(&mapSelect_800AEBF8);
                 MapSelectEnd_800B6F60(task, work);
@@ -513,16 +566,6 @@ void WaitDestPicture_800B7A38(MapTask* task)
     }
 }
 
-// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
-extern DISPENV dispEnv_8008D750[2];
-extern void StartMapOverlay_800A75F8();
-extern int MeasureTextWidth_8003E4C8(void* p);
-extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
-extern void DrawMenuWindows_8002A5A4(void* p);
-extern void* memset(void* p, int c, unsigned int n);
-extern void UpdateMenuCursor_8003D794(void* p, int a);
-extern void GoToDest_800B8338(MapDest* p);
-extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 void ConfirmDestination_800B7A90(MapTask* task, int work)
 {
     MapDest sel;
@@ -622,7 +665,7 @@ int CountOpenDests_800B7E54(short area)
 }
 
 // Matched
-void InitDestCursor_800B7EE0()
+void InitDestCursor_800B7EE0(void)
 {
     MapDest sel;
     int idx;
@@ -861,11 +904,11 @@ void SceneSelect_800B860C()
     switch (st->step_0)
     {
     case 0:
-        if (padRepeat_800918CC & 0x1000)
+        if (padRepeat_800918CC[0] & 0x1000)
         {
             st->area_4 = area - 1;
         }
-        else if (padRepeat_800918CC & 0x4000)
+        else if (padRepeat_800918CC[0] & 0x4000)
         {
             st->area_4 = area + 1;
         }
@@ -893,11 +936,11 @@ void SceneSelect_800B860C()
         }
         break;
     case 1:
-        if (padRepeat_800918CC & 0x1000)
+        if (padRepeat_800918CC[0] & 0x1000)
         {
             st->map_8 = map - 1;
         }
-        else if (padRepeat_800918CC & 0x4000)
+        else if (padRepeat_800918CC[0] & 0x4000)
         {
             st->map_8 = map + 1;
         }
@@ -930,11 +973,11 @@ void SceneSelect_800B860C()
         }
         break;
     case 2:
-        if (padRepeat_800918CC & 0x1000)
+        if (padRepeat_800918CC[0] & 0x1000)
         {
             st->entry_C--;
         }
-        else if (padRepeat_800918CC & 0x4000)
+        else if (padRepeat_800918CC[0] & 0x4000)
         {
             st->entry_C++;
         }
@@ -973,7 +1016,6 @@ void SceneSelect_800B860C()
     }
 }
 
-
 // Matched
 void ChapterSelectStart_800B8B2C(MapTask* task)
 {
@@ -986,7 +1028,7 @@ void ChapterSelectStart_800B8B2C(MapTask* task)
 void ChapterSelect_800B8B5C()
 {
     int* sel = &chapterSel_800B9438;
-    unsigned short pad = padRepeat_800918CC;
+    unsigned short pad = padRepeat_800918CC[0];
     RECT base;
     RECT textPos;
     RECT numPos;
@@ -1019,104 +1061,3 @@ void ChapterSelect_800B8B5C()
     numPos.y = base.y + 0xA;
     DrawNumber_8003EF74(&numPos, *sel + 1, 0);
 }
-
-MapDest lastDest_800B8C94 = { -1, -1 };
-short destCounts_800B8C98[6] = { 13, 13, 3, 4, 5, 6 };
-int openDestCount_800B8CA4 = 0;
-MapElem villageDests0_800B8CA8[13] = {
-    { 8, 12, 18, 1, 246, 166, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 62 },
-    { 6, 12, 18, 1, 182, 201, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 63 },
-    { 0, 216, 18, 1, 140, 109, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 64 },
-    { 3, 216, 18, 1, 101, 130, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 65 },
-    { 4, 216, 18, 1, 64, 90, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 68 },
-    { 7, 12, 18, 1, 204, 133, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 66 },
-    { 12, 216, 18, 1, 295, 186, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 67 },
-    { 9, 12, 18, 1, 184, 116, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 71 },
-    { 10, 12, 18, 1, 184, 80, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 72 },
-    { 11, 216, 18, 1, 98, 73, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 73 },
-    { 13, 12, 18, 1, 243, 87, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 69 },
-    { 2, 216, 18, 1, 120, 98, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 70 },
-    { 5, 216, 18, 1, 266, 226, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 74 },
-};
-MapElem villageDests1_800B8E14[13] = {
-    { 3, 12, 18, 12, 246, 166, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 77 },
-    { 2, 12, 18, 12, 182, 201, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 78 },
-    { 8, 216, 18, 12, 140, 109, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 79 },
-    { 10, 216, 18, 12, 101, 130, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 80 },
-    { 11, 216, 18, 12, 64, 90, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 83 },
-    { 1, 12, 18, 12, 204, 133, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 81 },
-    { 4, 216, 18, 12, 295, 186, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 82 },
-    { 5, 12, 18, 12, 184, 116, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 86 },
-    { 6, 12, 18, 12, 184, 80, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 87 },
-    { 7, 216, 18, 12, 98, 73, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 88 },
-    { 13, 12, 18, 12, 243, 87, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 84 },
-    { 9, 216, 18, 12, 120, 98, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 85 },
-    { 0, 216, 18, 12, 266, 226, { 32, 64, 64, 0 }, { 64, 128, 128, 0 }, 89 },
-};
-MapElem forestDests0_800B8F80[6] = {
-    { 5, 216, 18, 0, 115, 63, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
-    { 4, 216, 18, 1, 156, 103, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
-    { 3, 216, 18, 2, 202, 149, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
-};
-MapElem forestDests1_800B9028[6] = {
-    { 4, 216, 18, 2, 170, 72, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
-    { 5, 216, 18, 3, 196, 96, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
-    { 1, 216, 18, 6, 228, 132, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
-    { 0, 216, 18, 7, 67, 92, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
-};
-MapElem forestDests2_800B90D0[6] = {
-    { 3, 216, 18, 5, 135, 52, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
-    { 4, 216, 18, 6, 157, 74, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
-    { 2, 216, 18, 7, 184, 103, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
-    { 0, 216, 18, 8, 53, 72, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
-    { 1, 216, 18, 9, 244, 155, { 24, 0, 24, 0 }, { 96, 0, 96, 0 }, 100 },
-};
-MapElem forestDests3_800B9178[6] = {
-    { 0, 216, 18, 6, 142, 86, { 32, 16, 0, 0 }, { 128, 32, 0, 0 }, 60 },
-    { 1, 216, 18, 7, 164, 108, { 16, 24, 24, 0 }, { 16, 96, 96, 0 }, 98 },
-    { 5, 216, 18, 8, 188, 135, { 24, 24, 0, 0 }, { 64, 64, 0, 0 }, 99 },
-    { 2, 216, 18, 9, 66, 109, { 0, 16, 16, 0 }, { 0, 80, 80, 0 }, 101 },
-    { 3, 216, 18, 10, 239, 179, { 24, 0, 24, 0 }, { 96, 0, 96, 0 }, 100 },
-    { 4, 216, 18, 11, 160, 22, { 32, 16, 16, 0 }, { 96, 32, 32, 0 }, 102 },
-};
-MapRow mapAreas_800B9220[6] = {
-    { 60, 61, aSyrus_800B66E0, 0xA0, 0x14, 14, villageDests0_800B8CA8 },
-    { 75, 76, aSyrus_800B66E0, 0xA0, 0x14, 13, villageDests1_800B8E14 },
-    { 90, 91, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests0_800B8F80 },
-    { 92, 93, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests1_800B9028 },
-    { 94, 95, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests2_800B90D0 },
-    { 96, 97, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests3_800B9178 },
-};
-char *villageDestNames_800B92B0[13] = {
-    aMyHome_800B6818, aGaraiSHome_800B67FC, aBlacksmith_800B67E4, aTownShop_800B67D0,
-    aChiefSEstate_800B67B0, aSilkMill_800B679C, aWatchtower_800B6784, aNamSHome_800B676C,
-    aMusaSHome_800B6754, aWenSHome_800B673C, aCemetery_800B6728, aVillageSquare_800B6708,
-    aForestGates_800B66EC,
-};
-char *forestDestNames_800B92E4[6] = { aSyrus_800B66E0, aBarrierGate_800B689C, aBeetleForest_800B6880, aDragonflyForest_800B685C, aSpiderForest_800B6840, aMothForest_800B6828 };
-char **destNames_800B92FC[6] = { villageDestNames_800B92B0, villageDestNames_800B92B0, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4 };
-SPRT *areaBgSprts_800B9314 = 0;
-DR_TPAGE *areaBgTPages_800B9318 = 0;
-SPRT *areaSprts_800B931C = 0;
-DR_TPAGE *areaTPages_800B9320 = 0;
-MapSel confirmCursor_800B9324 = { 2, 1, 2, 1 };
-unsigned char villageDestMaps_800B9330[16] = { 0, 1, 2, 3, 6, 4, 5, 9, 10, 11, 7, 8, 255 };
-unsigned char forestDestMaps_800B9340[8] = { 254, 0, 240, 241, 242, 243 };
-unsigned char *destMaps_800B9348[6] = { villageDestMaps_800B9330, villageDestMaps_800B9330, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340 };
-unsigned char areaMapGroups_800B9360[8] = { 1, 2, 4, 4, 4, 4 };
-unsigned char destMapCounts_800B9368[8] = { 13, 13, 6, 6, 6, 6 };
-char *debugGroupNames_800B9370[6] = { aOthers_800B6A5C, aSyrus1_800B6A4C, aSyrus2_800B6A3C, aSyrus3_800B6A2C, aField1_800B6A1C, aField2_800B6A0C };
-char *debugSceneNames0_800B9388[5] = { aOpening_800B6AA0, aDummy_800B6A94, aDream_800B6A88, aHunting_800B6A78, aClear_800B6A6C };
-char *debugSceneNames1_800B939C[12] = {
-    aLebant_800B6B44, aGarai_800B6B38, aKaji_800B6B2C, aDougu_800B6B20,
-    aMayu_800B6B14, aMihari_800B6B04, aZokuchou_800B6AF0, aHakaba_800B6AE0,
-    aHiroba_800B6AD0, aNam_800B6AC8, aMussa_800B6ABC, aGuen_800B6AB0,
-};
-char *debugSceneNames2_800B93CC[5] = { aKekkai_800B6B88, aTamamusi_800B6B74, aTombo_800B6B68, aKumo_800B6B5C, aGa_800B6B54 };
-char **debugSceneNames_800B93E0[6] = { debugSceneNames0_800B9388, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames2_800B93CC, debugSceneNames2_800B93CC };
-unsigned char debugGroupVariants_800B93F8[8] = { 0, 0, 1, 2, 0, 2 };
-FileRequestDesc mapFileRequest_800B9400[1] = { { 0 } };
-MapSelState sceneSelect_800B9420 = { 0 };
-int mapFileLoaded_800B9430 = 0;
-int mapFileStage_800B9434 = 0;
-int chapterSel_800B9438 = 0;

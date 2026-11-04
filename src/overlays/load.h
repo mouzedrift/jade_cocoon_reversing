@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "sound.h"
 
 typedef struct
 {
@@ -279,5 +280,255 @@ extern int cardFreeBlocks_800BE14C;
 extern int cardSaveCount_800BE150;
 extern int loadMenuActive_800BE184;
 extern char *cardSaveNames_800BE188[15];
+
+// a task (EventEntry of the event lists) as its callbacks see it
+typedef struct
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+    void (*cb_C)();
+    int size_10;
+    void* work_14;
+} LoadMenuTaskEntry;
+// memory card file header (the PSY-Q _CARD layout; the game's own data in the reserved part and behind the icons)
+typedef struct
+{
+    char magic_0[2];
+    char type_2;
+    char blocks_3;
+    char title_4[64];
+    char field_44[12];
+    short field_50;
+    CardTag tag_52; // "CRD0"
+    char field_57;
+    char pad_58[4];
+    int field_5C;
+    char clut_60[32];
+    char icon_80[3][128];
+    char field_200[0x80];
+} CardHeader;
+// a memory card directory entry (the PSY-Q struct DIRENTRY layout)
+typedef struct CardDirEntry
+{
+    char name_0[20];
+    long attr_14;
+    long size_18;
+    struct CardDirEntry* next_1C;
+    long head_20;
+    char system_24[4];
+} CardDirEntry;
+typedef struct
+{
+    short color_0; // uiColor_8008B590
+    char colorSet_2; // window colour set (1 pulses, GetWindowColors_8004226C)
+    char semiTrans_3;
+} LoadWinColor;
+// the summary block (file offset 0x280) of a save file
+typedef struct
+{
+    unsigned char name_0[0xC];
+    char text_C[0x18];
+    short icon_24;
+    short corridor_26; // SaveData.field_810: the corridor floor (-1 end of game, -2 an ordinary save)
+    int vals_28[6];
+    int sum_40; // byte sum of the save body (SaveFile.body_300)
+    char pad44[0x3C];
+} SaveSummary;
+// a unit's status as packed in a save file (0x38 bytes): UnitStatus without the name and the equipment
+typedef struct
+{
+    int status_0;
+    unsigned int exp_4;
+    UnitGauge hp_8;
+    UnitGauge mp_C;
+    unsigned char modifiers_10[0xC]; // UnitStatus.modifiers_20
+    UnitStatBlock stats_1C;
+    unsigned char element_2E[4];
+    short elementMask_32;
+    unsigned char level_34;
+    unsigned char field_35;
+} SaveStatus;
+// a Minion as packed in a save file (0xA0 bytes); the names are kept apart (SaveBody)
+typedef struct
+{
+    short id_0;
+    unsigned char species_2;
+    unsigned char field_3;
+    unsigned char species_4[0x30];
+    unsigned char field_34[8];
+    SaveStatus status_3C;
+    UnitStatBlock field_74;
+    UnitSkills skills_86;
+    unsigned int magicBits_9C;
+} SaveMinion;
+// a stored minion (SaveData.items, UnitStats) as packed in a save file (0x6C bytes)
+typedef struct
+{
+    SaveStatus status_0;
+    char pad_38[0x14];
+    unsigned int species_4C;
+    char pad_50[0x1C];
+} SaveStats;
+// the checksummed part of a save file (file offset 0x300)
+typedef struct
+{
+    unsigned char data_0[0x984]; // the head of saveData_8008B570 (0x988 bytes, up to the minions)
+    int version_984;             // SaveData.field_984: 5
+    SaveMinion minions_988[15];
+    SaveStats items_12E8[12];
+    unsigned char ancestorNames_17F8[15][6][10];
+    unsigned char minionNames_1B7C[15][12]; // 10 used
+    unsigned char itemNames_1C30[12][12];   // 10 used
+} SaveBody;
+// a save file (0x2180 bytes)
+typedef struct
+{
+    CardHeader header_0;
+    SaveSummary summary_280;
+    SaveBody body_300;
+    char pad_1FC0[0x1C0];
+} SaveFile;
+typedef struct
+{
+    SaveSummary* summaries_0; // one per save (15)
+    SaveFile* fileBuf_4; // one save file
+    int loaded_8;     // 1 once a save was loaded (GetLoadMenuLoaded_800B7914)
+    char pad_C[8];
+    int field_14;
+    char pad_18[8];
+    int nRead_20;     // ReadSaveSummaries_800B9724 progress: summaries read (15 = all, 16 = card checked)
+    int nextScreen_24; // the screen to switch to (-1: none), UpdateLoadMenuCursor_800B80F8
+    int phase_28;     // 0 menu, 2 save, 3 load, 4 format, 5/6 exit (LoadMenuTask_800B794C)
+    int field_2C;
+    short screen_30;  // the current screen (LoadMenuScreen_800B79F8); <6 also the loadMenuRows_800BDF4C row
+    short field_32;
+    char pad_34[8];
+    int field_3C;
+    int field_40;
+    char pad_44[0x10];
+    unsigned flags_54; // 1 loaded, 4, 8 keep settings / from the title, 0x10 back to the title,
+                       // 0x20 end of game save, bit 6 the pad
+    char* place_58;   // the save place text of the summary (SetLoadMenuSavePlace_800B78B8)
+    int field_5C;
+    int field_60;
+    LoadMenuRow* rows_64[6];
+} LoadMenuWork;
+typedef struct
+{
+    short w_0;
+    short h_2;
+} TextSize;
+typedef struct
+{
+    short x_0;
+    short y_2;
+    short w_4;
+    short h_6;
+} MsgBoxRect;
+typedef struct
+{
+    short field_0;
+    short dir_2; // DrawScrollArrow_8002B3DC direction
+} ScrollArrowArg;
+typedef struct
+{
+    char c[6];
+} Bytes6_LOAD;
+
+extern int MemCardSync(int mode, int* cmd, int* result);
+extern void MemCardAccept();
+extern void MemCardExist();
+extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
+extern void LoadMenuInit_800B7674(int mode, int b);
+extern void LoadMenuWaitUiTiy_800B7894(LoadMenuTaskEntry* task);
+extern long MemCardCreateFile(long chan, char* file, long blocks);
+extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long bytes);
+extern int UnpackSaveFile_800BA3EC(LoadMenuWork* work);
+extern void DrawMessageBox_800BACBC(char** lines);
+extern void LoadMenuTask_800B794C(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern void LoadMenuScreen_800B79F8(LoadMenuWork* work);
+extern void PackSaveFile_800B9A8C(LoadMenuWork* work);
+extern void WriteSaveTask_800B98C4(void* t, void* buf);
+extern void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern void FormatCardWait1_800BA968(LoadMenuTaskEntry* task);
+extern void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task);
+extern void FormatCardTask_800BA9F0(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern long MemCardGetDirentry(long chan, char* name, CardDirEntry* dir, long* files, long ofs, long max);
+extern int MemCardFormat(long chan);
+extern void ScanCardSaves_800BAFB0(int slot);
+extern void _card_stop(void);
+extern void UserFuncInit(void);
+extern void _card_start(void);
+extern void sub_800BD06C(void);
+extern void _clr_card_event(void);
+extern int _get_card_event_x(void);
+extern void UserFuncOpen(void* fn, int a);
+extern void sub_800BB6F4(void);
+extern void sub_800BBA5C(void);
+extern void ResetMenuRow_800BADE0(LoadMenuRow* row);
+void DrawSaveSlots_800B8BD4(LoadMenuWork* work);
+extern void WaitCardSync_800BADF4(void);
+extern char* GetCardSaveName_800BAE4C(int i);
+extern int GetCardFreeBlocks_800BAE2C(void);
+extern int GetCardSaveCount_800BAE3C(void);
+extern void sub_800BBF88(void);
+extern void sub_800BC17C(void);
+extern int PollCardExist_800BAF0C(int slot);
+extern int PollCardAccept_800BAE68(int slot);
+void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work);
+void DrawCardSlotSelect_800B82FC(LoadMenuWork* work);
+void DrawCardSlotChosen_800B847C(LoadMenuWork* work);
+void DrawFormatPrompt_800B85AC(LoadMenuWork* work);
+void DrawSaveList_800B867C(LoadMenuWork* work);
+void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work);
+void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work);
+void DrawCardSlotLabel_800B8A20(LoadMenuWork* work);
+void DrawSaveListPosition_800B8AE4(LoadMenuWork* work);
+void TopMenuInput_800B9220(LoadMenuWork* work);
+void CardSlotInput_800B92C0(LoadMenuWork* work);
+void CheckCardTask_800B9360(LoadMenuWork* work);
+void FormatPromptInput_800B9470(LoadMenuWork* work);
+void SaveListInput_800B952C(LoadMenuWork* work);
+void ConfirmPromptInput_800B9654(LoadMenuWork* work);
+int ReadSaveSummaries_800B9724(LoadMenuWork* work);
+extern void BuildCardHeader_800BB2AC(CardHeader* header,int idx, char* title);
+extern int PlayTimeHours_800BAC14(int frames);
+extern int PlayTimeMinutes_800BAC68(int frames);
+
+/* GAME overlay (resident below this one), to move to game.h */
+extern int GetGameMode_800A6D50(int a);
+extern void RequestGameMode_800A6D30(int a);
+
+/* exe-side, to move to an exe header */
+// main.h has these too, but declares loadMenuTask_8008D480 as int[2]: not included until that is fixed
+extern EventNode* loadMenuTask_8008D480; // the load menu's task list
+extern int mapStartMode_80091C54;
+extern unsigned short padPressed_8009194C[];
+extern void DrawLoadingIcon_8003CD5C(void);
+extern void DrawMenuBackground_8002BE10(void);
+extern void LoadUiTiy_8002BF74(void);
+extern int dword_8008BD80;
+extern int UpdateMenuCursor_8003D794(short* cursor, int b);
+extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
+extern void FreeActiveOverlay_8002C014(void);
+extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern unsigned short uiColor_8008B590;
+extern char* dword_8008D454;
+extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
+extern void DrawWindow_80042460(void* rect, void* color, void* ot, int d);
+extern TextSize MeasureTextLines_8003E3B4(int* list);
+extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
+extern void AddClipDrawAreaPrim_80033308(char* ot);
+extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
+extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
+extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
+extern void* memcpy(void* dst, const void* src, unsigned int n);
+extern void IntToText_8003F610(unsigned short* buf, int val);
 
 #endif

@@ -1631,24 +1631,7 @@ int SoundTestMain_800A51AC()
     return 6;
 }
 
-// the sound test's state (SoundTestInit_800A51D8 sets it up); v[row_0 + 1] is the value the cursor row edits
-typedef union SndTest
-{
-    struct
-    {
-        short row_0;    // cursor row (0..4)
-        short seq_2;    // sound file to play (0..0x9A, 10 = none)
-        short seFile_4; // row 1, does nothing
-        short se_6;     // SE (VAB program) number, 0..0x7F
-        short reverb_8; // 0..0x7F
-        short xa_A;     // XA track (0..0x647), xaTracks_800A70F0 index
-        short voice_C;  // SsUtKeyOn voice, -1 = none
-        short prog_E;   // program voice_C was keyed on
-    } f;
-    short v[8];
-} SndTest;
 
-extern void SoundTestUpdate_800A5238();
 void SoundTestInit_800A51D8(int* task, SndTest* st)
 {
     st->f.se_6 = 0x7F;
@@ -1658,23 +1641,17 @@ void SoundTestInit_800A51D8(int* task, SndTest* st)
     st->f.seFile_4 = 0;
     st->f.xa_A = 0;
     task[2] = (int)SoundTestUpdate_800A5238;
-    FreeSound_80030D00((int)&systemSound_80091D40);
+    FreeSound_80030D00(&systemSound_80091D40);
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
 
-extern unsigned short padPressed_8009194C;
-extern unsigned short word_800918CC; // pad, with key repeat
-extern void PlayMusicSeq_80031260(void* sound, int idx, int loops);
-extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
-extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 // Matched
 void SoundTestUpdate_800A5238(int* task, SndTest* st)
 {
     SVECTOR pos[12];
     SoundStruct* bgm;
     int id;
-    if (padPressed_8009194C & 0x40)
+    if (padPressed_8009194C[0] & 0x40)
     {
         bgm = &bgmSound_80091CE0;
         if (bgm->field_4_seq_num >= 0)
@@ -1686,7 +1663,7 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
         BeginFade_8001C260();
         bStopDrawingMovie_8008D45C = 1;
     }
-    else if (padPressed_8009194C & 0x20)
+    else if (padPressed_8009194C[0] & 0x20)
     {
         if (st->f.row_0 == 0)
         {
@@ -1722,7 +1699,7 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
             XaRequestPlay_80043564(xaTracks_800A70F0[st->f.xa_A][1], xaTracks_800A70F0[st->f.xa_A][2], xaTracks_800A70F0[st->f.xa_A][3]);
         }
     }
-    else if (padPressed_8009194C & 0x10)
+    else if (padPressed_8009194C[0] & 0x10)
     {
         bgm = &bgmSound_80091CE0;
         if (bgm->field_4_seq_num >= 0)
@@ -1736,27 +1713,27 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
         }
         st->f.voice_C = -1;
     }
-    else if (word_800918CC & 0x1000)
+    else if (padRepeat_800918CC[0] & 0x1000)
     {
         st->f.row_0--;
     }
-    else if (word_800918CC & 0x4000)
+    else if (padRepeat_800918CC[0] & 0x4000)
     {
         st->f.row_0++;
     }
-    else if (word_800918CC & 0x8000)
+    else if (padRepeat_800918CC[0] & 0x8000)
     {
         st->v[st->f.row_0 + 1]--;
     }
-    else if (word_800918CC & 0x2000)
+    else if (padRepeat_800918CC[0] & 0x2000)
     {
         st->v[st->f.row_0 + 1]++;
     }
-    else if (word_800918CC & 4)
+    else if (padRepeat_800918CC[0] & 4)
     {
         st->v[st->f.row_0 + 1] -= 10;
     }
-    else if (word_800918CC & 8)
+    else if (padRepeat_800918CC[0] & 8)
     {
         st->v[st->f.row_0 + 1] += 10;
     }

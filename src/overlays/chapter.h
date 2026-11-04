@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "main.h"
 #include "sound.h"
 
 typedef struct ChapterEntry
@@ -47,5 +48,38 @@ extern int *chapter6AreaVars_800B6F98[6];
 extern short chapter6MapVars_800B6FB0[24];
 extern ChapterEntry chapterTable_800B6FE0[7];
 extern int chapterClearYanVars_800B70A4[4];
+
+// a map var key / map point: (area, map, sub)
+typedef struct ChapterMapKey
+{
+    short area;
+    short map;
+    short sub;
+} ChapterMapKey;
+typedef struct ChapterTask
+{
+    int flags_0;
+    int f4_4;
+    void (*next_8)();
+} ChapterTask;
+
+extern void SetAreaMapVars_800B69BC(int**);
+extern void SetMapVarList_800B6A94(short*);
+extern void ClearChapterYanVars_800B68A8();
+extern void ApplyChapterMapVars_800B6900();
+extern void EnterChapterMap_800B6B18();
+void ChapterIntroTask_800B66F4(ChapterTask* task, int* st);
+
+/* GAME overlay (resident below this one), to move to game.h */
+extern int dword_800B0624[6];
+extern void SetEventVar_800AD16C(int, int);
+extern void SetMapVar_800ADC5C(ChapterMapKey*, int);
+extern void FindMapEntrance_800ADCEC(ChapterMapKey*, int);
+extern void RequestGameMode_800A6D30(int);
+extern void StartChapterOverlay_800A7690();
+
+/* exe-side, to move to an exe header */
+extern int PlayMusic_800300E0(int idx, int a1);
+extern void SsSepSetDecrescendo(short, short, short, long);
 
 #endif
