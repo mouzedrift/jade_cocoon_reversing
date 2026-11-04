@@ -6,103 +6,82 @@
 #include "actor.h"
 #include "engine.h"
 #include "minion_init.h"
+#include "main.h"
 #include "combat.h"
 #include "tim.h"
 
-// parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
-
-// the part of cameraState_8008D4F0 that ResetCombatCamera_800A12B8 resets
-typedef struct CombatCameraState
-{
-    char pad_0[0x14];
-    int eye_14[3];
-    int lookAt_20[3];
-    short pad_2C;
-    short geomScreen_2E;
-    char pad_30[4];
-    SVECTOR lightDir_34;
-    short lightColor_3C[3];
-} CombatCameraState;
-
-extern void GetActorHitFrame_80018E5C(void* p);
-extern void SetActorStatusTint_80018EBC(void* p, UnitStatus* v);
-extern void sub_800376A0(void* a, void* b);
-
-extern int CountMinions_800A1A3C(Minion* minions, int len);
-
-typedef struct CombatTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-} CombatTask;
-
-extern void InitActors_8001D378(void);
-extern void DestroyActor_8001D600(void* p);
-extern void TriggerActorEffect_8001E28C(void* p);
-extern void SetFadeMode_8001C19C(int a, int b);
-extern void DestroySlotActor_800A0D1C(int i);
-extern void FreeSlotModel_800A0B70(int i);
-extern void CombatLoadStageOvl_800A14F0();
-extern void CombatWaitStageOvl_800A1554();
-extern void CombatEnterStage_800A15B4();
-extern char* dword_8007DC78;
-extern int StartModelTask_80010850(void* p);
-extern CombatCameraState cameraState_8008D4F0;
-extern int cameraZoom_8008B4F8;
-extern int IsMinionSlotEmpty_800A1934(Minion* minion);
-extern void ResetCameraToLevant_800376A8(void);
-extern void StartBattleCamera_80037748(void);
-extern void InitCameraTask_800368F8(void);
-extern void FreeCameraTask_800376A0(void);
-extern void ResetCombatCamera_800A12B8(void);
-// GetTopSpecies_800338DC output: the three main ancestor species and their weights
-typedef struct CombatTopSpecies
-{
-    unsigned char species[4];
-    int pad_4;
-    int weights[3];
-} CombatTopSpecies;
-extern void Cbt_8002FAA0(int a, void* b, unsigned char* c, int d);
-
-extern void Cbt_8002C290(void* a, int b, int c);
-extern void Cbt_8002B1B0(int a, void* b, int c);
-extern void* memset(void* p, int c, unsigned int n);
-extern void Cbt_80018A4C(void* a, char* b, int* c, int d, int e);
-typedef struct CombatColor
-{
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char cd;
-} CombatColor;
-extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
-extern void OnModelFileLoaded_80025D7C();
-extern short defaultBones_80079140[]; // default bone table
-extern int ratan2Degrees_8003B56C(int a, int b);
-extern void InitPolyFT4_80029A10(void* a, void* b);
-extern int ElementMixAngle_800A0968(unsigned char* elements);
-typedef struct CombatVramPos
-{
-    unsigned short x;
-    unsigned short y;
-} CombatVramPos;
-extern CombatVramPos dword_8007DCAC[];
-extern CombatVramPos dword_8007DCBC[];
-extern short dword_80084540[];
-extern Minion saveMinions_8008BEF8[];
-extern void PlayMusic_800300E0(int a, int b);
-extern void LoadUiTiy_8002BF74(void);
-extern void ClearMinionSlot_800A197C(Minion* minion);
-extern void LoadModelTexToVram_800A0D64(int a, int b);
-extern void CombatWaitUiTiy_800A14AC();
-extern void CombatReq_8001E34C(void* p, void* q);
-
-extern void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram);
-extern int GetElementHueAngle_800A0898(unsigned char* elements);
-
-
 int dword_800A05A0 SDATA = 14;
+short combatCursor_800A1BBC[4] = { 1, 5, 5 };
+short combatMenuChoice_800A1BC4 = 0;
+Minion rosters_800A1BC8[2][15] = {
+    {
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+    },
+    {
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+    },
+};
+unsigned char player2Pad_800A38D8 = 0;
+unsigned char curPlayer_800A38D9 = 0;
+unsigned char rosterFill_800A38DA = 0;
+unsigned char selMode_800A38DB = 0;
+unsigned char battleResult_800A38DC = 0;
+int dword_800A38E0 = 0xDF0033;
+int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
+int combatModelLoaderDesc_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
+int combatActorTaskDesc_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
+int enemyWindowTaskDef_800A392C[6] = { 2, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
+int announcerTaskDef_800A3944[6] = { 1, 0x8000, 0, (int)&announcerTasks_8008D458 };
+int combatCameraTaskDesc_800A395C[6] = { 1, 0x8000, 0x21C, (int)&cameraTask_8008D4A0 };
+int combatFadeTaskDesc_800A3974[6] = { 1, 0x8000, 8, (int)&fadeTask_8008D628 };
+void *combatTaskList_800A398C[25] = {
+    (void *)&eventDescs_80078EB8, (void *)((char *)&eventDescs_80078EB8 + 24), (void *)((char *)&eventDescs_80078EB8 + 120), (void *)((char *)&eventDescs_80078EB8 + 72),
+    (void *)combatCameraTaskDesc_800A395C, (void *)((char *)&eventDescs_80078EB8 + 384), (void *)combatFadeTaskDesc_800A3974, (void *)((char *)&eventDescs_80078EB8 + 504),
+    (void *)((char *)&eventDescs_80078EB8 + 528), (void *)((char *)&eventDescs_80078EB8 + 552), (void *)((char *)&eventDescs_80078EB8 + 576), (void *)((char *)&eventDescs_80078EB8 + 432),
+    (void *)((char *)&eventDescs_80078EB8 + 624), (void *)combatModelLoaderDesc_800A38FC, (void *)((char *)&eventDescs_80078EB8 + 456), (void *)combatTaskDesc_800A38E4,
+    (void *)combatActorTaskDesc_800A3914, (void *)((char *)&eventDescs_80078EB8 + 240), (void *)((char *)&eventDescs_80078EB8 + 216), (void *)((char *)&eventDescs_80078EB8 + 600),
+    (void *)enemyWindowTaskDef_800A392C, (void *)announcerTaskDef_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
+};
+int stageOverlays_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
+CombatSlot combatSlots_800A3A08[2] = { { 0 } };
+int combatFlags_800A3A88 = 0;
+int stage_800A3A8C = 0;
+unsigned char sideWins_800A3A90[4] = { 0 }; // per side
+int curPad_800A3A94 = 0; // the pad of the player whose turn it is (COMBSEL)
+unsigned char sideResult_800A3A98[8] = { 0 }; // per side
+Minion teams_800A3AA0[2][3] = { { { 0 } } };
+int prevStage_800A4070 = 0;
+int dword_800A4074 = 0;
+int sideSlot_800A4078[2] = { 0 }; // per side: the teams_800A3AA0 slot of the minion in the arena, -1 none
+int stageOvlRequest_800A4080 = 0;
 
 // Matched
 void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram)
@@ -247,7 +226,7 @@ int GetElementHueAngle_800A0898(unsigned char* elements)
 // Matched
 int ElementMixAngle_800A0968(unsigned char* elements)
 {
-    short* sinTbl = dword_80084540;
+    short* sinTbl = sinTable_80084540;
     int p1, p0, p3, p2, p4, p5, p6, p7;
     p0 = sinTbl[0x5C6 / 2] * elements[0];
     p1 = sinTbl[0x1DC6 / 2] * elements[0];
@@ -297,7 +276,8 @@ void StartSlotModel_800A0ACC(int i, Minion* minion)
 }
 
 // Matched
-void RunSlotModelTask_800A0B3C(int i)
+// returns RunModelTask_80010A10's result: funcs.h still declares that one void (TODO: int, then `return` it here)
+int RunSlotModelTask_800A0B3C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     RunModelTask_80010A10(s->task_0);
@@ -410,40 +390,40 @@ void MoveSlotActorTo_800A0E1C(int i, int* pos)
     action.target_8 = (int*)&slot->actor_3C->target_70;
     action.turnStep_C = 0x100;
     action.nextAnim_26 = 2;
-    CombatReq_8001E34C(slot->actor_3C, &action);
+    SetActorAction_8001E34C(slot->actor_3C, &action);
 }
 
 // Matched
-void IsSlotActorIdle_800A0EE8(int i)
+int IsSlotActorIdle_800A0EE8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    IsActorIdle_8001E1C8(s->actor_3C);
+    return IsActorIdle_8001E1C8(s->actor_3C);
 }
 
 // Matched
-void IsSlotActorReady_800A0F1C(int i)
+int IsSlotActorReady_800A0F1C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    IsActorActionReady_8001E1DC(s->actor_3C);
+    return IsActorActionReady_8001E1DC(s->actor_3C);
 }
 
 // Matched
-CombatColor StartSlotAction_800A0F50(int i, int* p, int x)
+ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x)
 {
-    CombatColor color;
+    ShortPair hit;
     CombatSlot* slot;
-    memset(&color, 0, 4);
+    memset(&hit, 0, 4);
     slot = &combatSlots_800A3A08[i];
-    if (*p == 0x14)
+    if (*cmd == 0x14)
     {
-        return color;
+        return hit;
     }
-    Cbt_80018A4C(&color, slot->actor_3C, p, 0, x);
-    return color;
+    hit = StartCommandAction_80018A4C(slot->actor_3C, cmd, 0, x);
+    return hit;
 }
 
 // Matched
-void TriggerSlotEffect_800A0FF0(int i, int* p)
+void TriggerSlotEffect_800A0FF0(int i, int* p, int x)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     if (*p != 0x14)
@@ -453,10 +433,10 @@ void TriggerSlotEffect_800A0FF0(int i, int* p)
 }
 
 // Matched
-void GetSlotHitFrame_800A1034(int i)
+int GetSlotHitFrame_800A1034(int i, unsigned int idx)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    GetActorHitFrame_80018E5C(s->actor_3C);
+    return GetActorHitFrame_80018E5C(s->actor_3C, idx);
 }
 
 // Matched
@@ -527,7 +507,6 @@ Minion* GetSlotMinion_800A11D8(int i)
     return s->minion_4;
 }
 
-
 // Matched
 void StartCombatCamera_800A11F4(void)
 {
@@ -555,21 +534,21 @@ void StopCombatCamera_800A127C(void)
 // Matched
 void ResetCombatCamera_800A12B8(void)
 {
-    CombatCameraState* cam = &cameraState_8008D4F0;
+    CameraView* cam = &cameraState_8008D4F0;
     SaveData* save;
     cam->geomScreen_2E = 0;
-    cam->lookAt_20[0] = 0;
-    cam->lookAt_20[1] = 0;
-    cam->lookAt_20[2] = 0;
-    cam->eye_14[0] = 0;
-    cam->eye_14[1] = 0;
-    cam->eye_14[2] = 0;
+    cam->lookAt_20.x = 0;
+    cam->lookAt_20.y = 0;
+    cam->lookAt_20.z = 0;
+    cam->eye_14.x = 0;
+    cam->eye_14.y = 0;
+    cam->eye_14.z = 0;
     cam->lightDir_34.vx = 0;
     cam->lightDir_34.vy = 0;
     cam->lightDir_34.vz = 0;
-    cam->lightColor_3C[0] = 0;
-    cam->lightColor_3C[1] = 0;
-    cam->lightColor_3C[2] = 0;
+    cam->lightColor_3C.vx = 0;
+    cam->lightColor_3C.vy = 0;
+    cam->lightColor_3C.vz = 0;
     cameraZoom_8008B4F8 = 0x1000;
     save = &saveData_8008B570;
     save->levant_7A8.pos.x = 0;
@@ -654,14 +633,6 @@ void CombatWaitStageOvl_800A1554(CombatTask* t, int x)
     }
 }
 
-extern void VersusIntroTask_800A4394();
-extern void CombSelMain_800A4360();
-extern void CombLoadStart_800A40FC();
-extern void VersusSetupTask_800A4170();
-extern void CombBtlStart_800A4B8C();
-extern void VersusResultTask_800A40E0();
-extern int CountRosterMinions_800A1AEC(int i);
-
 void CombatEnterStage_800A15B4(CombatTask* t, int x)
 {
     unsigned int prev;
@@ -711,7 +682,6 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
     }
     t->next_8(t, x);
 }
-
 
 // called by the stage overlays when they are done: picks the next stage and loads its overlay
 void CombatNextStage_800A16FC(CombatTask* t)
@@ -792,13 +762,13 @@ void DrawMinionNameLevel_800A1844(Minion* minion, unsigned short* pt, unsigned i
         status = &minion->status_84;
         pos[0] = pt[0] + 5;
         pos[1] = pt[1] + 6;
-        Cbt_8002FAA0(0, pos, minion->status_84.name_10, 0);
+        DrawSmallText_8002FAA0(0, pos, minion->status_84.name_10, 0);
         pos[0] = pt[0] + 0x50;
         pos[1] = pt[1] + 6;
-        Cbt_8002C290(pos, status->level_44, 0);
+        DrawSmallNumber3_8002C290(pos, status->level_44, 0);
         pos[0] = pt[0] + 0x54;
         pos[1] = pt[1] + 3;
-        Cbt_8002B1B0(status->elementMask_42, pos, 0);
+        DrawElementIconsRow_8002B1B0(status->elementMask_42, pos, 0);
     }
 }
 
@@ -813,9 +783,9 @@ int IsMinionSlotEmpty_800A1934(Minion* minion)
 }
 
 // Matched
-void IsMinionFainted_800A1958(Minion* minion)
+int IsMinionFainted_800A1958(Minion* minion)
 {
-    HasStatusFlag_80033548(&minion->status_84, 0x400);
+    return HasStatusFlag_80033548(&minion->status_84, 0x400);
 }
 
 // Matched
@@ -852,9 +822,9 @@ int CountMinions_800A1A3C(Minion* minions, int len)
 }
 
 // Matched
-void CountTeamMinions_800A1AAC(int side)
+int CountTeamMinions_800A1AAC(int side)
 {
-    CountMinions_800A1A3C(teams_800A3AA0[side], 3);
+    return CountMinions_800A1A3C(teams_800A3AA0[side], 3);
 }
 
 // Matched
@@ -879,72 +849,3 @@ void GetCombatPortraitPoly_800A1B2C(int i, void* poly)
     tim.crect.h = 1;
     InitPolyFT4_80029A10(poly, &tim);
 }
-
-short combatCursor_800A1BBC[4] = { 1, 5, 5 };
-short combatMenuChoice_800A1BC4 = 0;
-Minion rosters_800A1BC8[2][15] = {
-    {
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-    },
-    {
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-        { 4 },
-    },
-};
-unsigned char player2Pad_800A38D8 = 0;
-unsigned char curPlayer_800A38D9 = 0;
-unsigned char rosterFill_800A38DA = 0;
-unsigned char selMode_800A38DB = 0;
-unsigned char battleResult_800A38DC = 0;
-int dword_800A38E0 = 0xDF0033;
-int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
-int combatModelLoaderDesc_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
-int combatActorTaskDesc_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
-int enemyWindowTaskDef_800A392C[6] = { 2, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
-int announcerTaskDef_800A3944[6] = { 1, 0x8000, 0, (int)&announcerTasks_8008D458 };
-int combatCameraTaskDesc_800A395C[6] = { 1, 0x8000, 0x21C, (int)&cameraTask_8008D4A0 };
-int combatFadeTaskDesc_800A3974[6] = { 1, 0x8000, 8, (int)&fadeTask_8008D628 };
-void *combatTaskList_800A398C[25] = {
-    (void *)&eventDescs_80078EB8, (void *)((char *)&eventDescs_80078EB8 + 24), (void *)((char *)&eventDescs_80078EB8 + 120), (void *)((char *)&eventDescs_80078EB8 + 72),
-    (void *)combatCameraTaskDesc_800A395C, (void *)((char *)&eventDescs_80078EB8 + 384), (void *)combatFadeTaskDesc_800A3974, (void *)((char *)&eventDescs_80078EB8 + 504),
-    (void *)((char *)&eventDescs_80078EB8 + 528), (void *)((char *)&eventDescs_80078EB8 + 552), (void *)((char *)&eventDescs_80078EB8 + 576), (void *)((char *)&eventDescs_80078EB8 + 432),
-    (void *)((char *)&eventDescs_80078EB8 + 624), (void *)combatModelLoaderDesc_800A38FC, (void *)((char *)&eventDescs_80078EB8 + 456), (void *)combatTaskDesc_800A38E4,
-    (void *)combatActorTaskDesc_800A3914, (void *)((char *)&eventDescs_80078EB8 + 240), (void *)((char *)&eventDescs_80078EB8 + 216), (void *)((char *)&eventDescs_80078EB8 + 600),
-    (void *)enemyWindowTaskDef_800A392C, (void *)announcerTaskDef_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
-};
-int stageOverlays_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
-CombatSlot combatSlots_800A3A08[2] = { { 0 } };
-int combatFlags_800A3A88 = 0;
-int stage_800A3A8C = 0;
-int sideWins_800A3A90[4] = { 0 };
-Minion teams_800A3AA0[2][3] = { { { 0 } } };
-int prevStage_800A4070 = 0;
-int dword_800A4074[3] = { 0 };
-int stageOvlRequest_800A4080 = 0;

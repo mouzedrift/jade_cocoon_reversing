@@ -7,12 +7,16 @@
 #include "globals.h"
 #include "camera.h"
 #include "event.h"
+#include "STDLIB.H"
+#include "unit_gauges.h"
+#include "combat.h"
 
 typedef struct CombBtlNode
 {
     unsigned int flags;
 } CombBtlNode;
 
+// a battle command (same layout as BATTLE.BIN's BatCommand)
 typedef struct CombBtlCmd
 {
     int kind_0; // 0x14: none
@@ -43,6 +47,7 @@ typedef struct CombBtlSideRot
     unsigned char rot_0[2][8]; // per side: the actor rotation (3 shorts + pad)
 } CombBtlSideRot;
 
+// a command's result (same layout as BATTLE.BIN's BatActionResult)
 typedef struct CombBtlResult
 {
     unsigned short kind_0;
@@ -93,59 +98,6 @@ typedef struct CombBtlInt3
 } CombBtlInt3;
 
 extern int dword_800A4088;
-extern const char aAreVictorious_800A408C[];
-extern const char aTheMinionsOfThe_800A40AC[];
-extern const char aCongratulations_800A40DC[];
-extern const char aTheMinionsOfThe_800A4100[];
-extern const char aEachOtherSMoves_800A4134[];
-extern const char aItSeemsYouAreGa_800A415C[];
-extern const char aThisThrillingBa_800A4190[];
-extern const char aICannotTakeMyEy_800A41C0[];
-extern const char aNoDamageTaken_800A41F4[];
-extern const char aOhMyItDodgedThe_800A4218[];
-extern const char aOhThatHadToHurt_800A4250[];
-extern const char aADirectHit_800A427C[];
-extern const char aTheMinionLooksD_800A4298[];
-extern const char aPoison_800A42C8[];
-extern const char aOnAChoppingBloc_800A42D8[];
-extern const char aItIsLikeAHelple_800A4304[];
-extern const char aThisCouldBeDang_800A433C[];
-extern const char aOhNoItIsFalling_800A4370[];
-extern const char aNotHealed_800A43AC[];
-extern const char aThisCouldBeFata_800A43C4[];
-extern const char aStoneItIsSpread_800A4400[];
-extern const char aTheMinionIsBein_800A443C[];
-extern const char aTheMinionIsGrav_800A447C[];
-extern const char aCouldKeelOverAt_800A44BC[];
-extern const char aItIsBreathingHe_800A44F4[];
-extern const char aItHasFallenAndC_800A452C[];
-extern const char aForThisMinion_800A4570[];
-extern const char aItLooksLikeThat_800A4594[];
-extern const char aIsTheFightOver_800A45C8[];
-extern const char aEmptyLine_800A45F0[4];
-extern const char aVeryEffective_800A45F4[];
-extern const char aRightAtTheEleme_800A4614[];
-extern const char aWhatAWellChosen_800A4658[];
-extern const char aEnteredTheArena_800A4690[];
-extern const char aANewMinionHas_800A46B8[];
-extern const char aThePlayerHasSwi_800A46DC[];
-extern const char aWhatWillHappenN_800A4720[];
-extern const char aWhatAnExcitingM_800A4750[];
-extern const char aAChangeOfElemen_800A4780[];
-extern const char aWithOneFatalBlo_800A47C4[];
-extern const char aTheMinionHasFal_800A47F0[];
-extern const char aSuchOverwhelmin_800A481C[];
-extern const char aItCouldBeVictor_800A4850[];
-extern const char aAgainstAllOdds_800A487C[];
-extern const char aWhatAmazingWill_800A48A0[];
-extern const char aIWasEvenRooting_800A48D0[];
-extern const char aTooBad_800A4908[];
-extern const char aDecidedBeforeTh_800A491C[];
-extern const char aAnotherLossTheF_800A495C[];
-extern const char aWellDone_800A49A0[];
-extern const char aReached_800A49B8[];
-extern const char aFinallyADecisio_800A49CC[];
-extern const char aWhatACloseFight_800A4A04[];
 extern const CombBtlSidePos sideActorPos_800A4AD4;
 extern const CombBtlSideRot sideActorArgs_800A4AEC;
 extern const CombBtlItem sideLabel0_800A4AFC;
@@ -172,7 +124,9 @@ extern const char *statusLines_800A8364[6];
 extern const char *stoneLines_800A837C[6];
 extern const char *halfHpLines_800A8394[3];
 extern const char *tenthHpLines_800A83A0[4];
-extern const char *koLines_800A83B0[15];
+extern const char *koLines_800A83B0[5];
+extern const char *emptyLines_800A83C4[5];
+extern const char *weakSpotLines_800A83D8[5];
 extern const char *swapLines_800A83EC[5];
 extern const char *elementChangeLines_800A8400[5];
 extern const char *oneBlowLines_800A8414[5];
@@ -187,7 +141,7 @@ extern int statusCured_800A8480[2];
 extern short exchangeStep_800A8488;
 extern EventEntry *commandMenuTask_800A848C;
 extern int koSide_800A8490;
-extern CombBtlPair hitWindow_800A8494;
+extern ShortPair hitWindow_800A8494; // a: the current hit frame, b: the last one
 extern int stageElement_800A8498;
 extern int fixedStageElement_800A849C;
 extern int newStageElement_800A84A0;
@@ -200,7 +154,7 @@ extern int setupStep_800A84B8;
 extern short actorHpLoss_800A84BC;
 extern int stageId_800A84C0;
 extern short actorMpLoss_800A84C4;
-extern CombBtlPair sideHitWindows_800A84C8[2];
+extern ShortPair sideHitWindows_800A84C8[2]; // per side: the first and last hit frame of its action (StartSlotAction_800A0F50)
 extern short sideGauges_800A84D0[2];
 extern int waitTimer_800A84D4;
 extern CombBtlHist commandHistory_800A84D8[10];
@@ -259,14 +213,99 @@ typedef struct CombBtlHitNum
 extern char jtgt_800A64C0[], jtgt_800A65BC[], jtgt_800A65F0[], jtgt_800A6624[];
 extern void* const dword_800A4A9C[6];
 
-extern const char aRa_800A4A8C[];
-extern const char aMu_800A4A94[];
 extern int dword_8008D610;
+void CombBtlStart_800A4B8C(CombBtlTask* t, int a);
+void CombBtlWaitFile_800A4C40(CombBtlTask* t, int a);
+void ResetSides_800A4CFC(void);
+void CombBtlSetup_800A4D48(CombBtlTask* t, int a);
+void CheckBattleOver_800A4EC8(CombBtlTask* t, int a);
+void PlayVictoryJingle_800A5000(CombBtlTask* t);
+void WaitVictoryJingle_800A5080(CombBtlTask* t);
+void RecordBattleResult_800A50E4(CombBtlTask* t);
+void AnnounceWinner_800A51EC(CombBtlTask* t);
+void DrawWinnerBanner_800A5290(CombBtlTask* t);
+int OpenAnnouncerWindow_800A5408(int which, int lines, int side);
+void CombBtlEnd_800A54CC(CombBtlTask* t);
+void CombBtlExit_800A5544(CombBtlTask* t);
+void SendInMinions_800A5638(CombBtlTask* t, int a);
+void NextLivingMinion_800A58E8(int side);
+void ChooseNextActor_800A599C(CombBtlTask* t, int side);
 int GetGaugeRate_800A5B70(int side);
+void ResetCommands_800A5BB4(void);
 void StartTurn_800A5C64(CombBtlTask* t);
+void LoadCommandMenu_800A5EB8(CombBtlTask* t);
+void OpenCommandMenu_800A5EF8(CombBtlTask* t);
+void WaitCommandMenu_800A5F60(CombBtlTask* t, int a);
+void PushCommandHistory_800A601C(void);
+void TakeChosenCommand_800A60A4(void);
+void ClearHitResults_800A60F0(void);
+void ResolveCommand_800A616C(void);
+void RunExchange_800A68E0(CombBtlTask* t);
+unsigned int CountLivingMinions_800A7164(int side);
+ShortPair MergeHitWindows_800A71E4(int count, ShortPair* windows);
+void StartArenaCamera_800A7290(void);
+void StopArenaCamera_800A73E4(void);
+void StartFadeTask_800A7420(void);
+void StopFadeTask_800A7478(void);
+void CreateSideActor_800A74A0(int side);
+void RemoveSideMinion_800A7560(int side);
+int AreSideModelsReady_800A758C(void);
+void OpenSideWindow_800A75F8(int side);
+void SideWindowTask_800A7694(EventEntry* e, void* buf);
+void CloseSideWindows_800A7BE4(void);
+void PlayHitFeedback_800A7C0C(int side);
+void StartHitNumber_800A7E34(int side, int kind, int amount);
+void FlashScreenWhite_800A7ECC(void);
+void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf);
+void SetAnnouncerXa_800A8078(short channel, short startSector, short length);
+int StartAnnouncer_800A8098(int which, int lines, int side);
+void AnnouncerTask_800A816C(EventEntry* e);
 
-extern CameraView cameraState_8008D4F0;
-extern MATRIX dword_8007C2EC; // default light matrix
-extern MATRIX dword_8007C30C; // default light colour matrix
+/* COMBCOM.BIN */
+EventEntry* CombComStart_800CB7AC(int cmd, int side);
+
+/* BATTLE.BIN (loaded alongside) */
+void LoadStageEffects_800BC878(void);
+int AreStageEffectsLoaded_800BC8E8(void);
+void TickUnitStatus_800BF7C4(UnitStatus* unit, short* hpLoss, short* mpLoss);
+int GetStatusCommand_800BFA4C(int flags, int prevFlags);
+
+/* exe-side, to move to <exe header> */
+/* main.h declares these too, but can't be included here: it has hitNumberTasks_8008D778 as int[2] (main.c), the code
+   uses it as a task list head like the other two (BATTLE.BIN's battle_3.c too) -> main.h: EventNode* hitNumberTasks_8008D778 */
+extern EventNode* enemyWindowTasks_8008B564;
+extern EventNode* announcerTasks_8008D458; // main.h: int
+extern EventNode* hitNumberTasks_8008D778;
+extern MATRIX dword_8007C2EC; // -> globals.h: default light matrix
+extern MATRIX dword_8007C30C; // -> globals.h: default light colour matrix
+extern void StartScreenFlash_8001C02C(void* rgb);  // -> engine.h
+extern void InitSceneFade_8001A38C(void);          // -> engine.h
+extern void StartSceneFadeOut_8001AA50(short duration); // -> engine.h
+extern int IsSceneFadeDone_8001AB94(void);         // -> engine.h
+extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask); // -> common_tu.h
+extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombBtlCmd* cmd, CombBtlResult* out); // -> common_tu.h
+extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
+extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot); // -> unit_gauges.h
+extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,
+                                          int flags); // -> unit_gauges.h
+extern int LoadSeqSlotSound_800303E8(void);        // -> sound.h (sound.c)
+extern void FreeSeqSlotSound_80030664(void);       // -> sound.h (sound.c)
+extern int IsSoundTaskReady_80030688(void);        // -> sound.h (sound.c)
+extern void StopSoundSeqs_80030D68(SoundStruct* sound); // -> sound.h (sound_seq.c)
+extern void PlaySeqSlot_80031160(unsigned int idx, short loops); // -> sound.h (sound_seq.c)
+extern void StopSeqSlot_80031334(int idx);         // -> sound.h (sound_seq.c)
+extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot); // -> unit_query.h
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot); // -> unit_query.h
+extern int GetMsgWindowResultIfDone_800349B4();    // -> msg_window.h
+extern void CloseMsgWindow_80034A84();             // -> msg_window.h
+extern void StartPadVibration_80036528(int pad, int kind); // -> camera.h
+extern void SetCameraBattleMode_80037720(void);    // -> camera.h
+extern void StartBattleCamera_80037748(void);      // -> camera.h
+extern void StartCameraShake_80037BFC();           // -> camera.h (camera.c defines it (void); COMBBTL passes the strength in a0)
+extern void SetAreaElementLight_80039ED8(int mode); // -> camera.h
+extern int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode); // -> movie.h
+extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time); // -> event.h
+extern int XaRequestStop_80043524(void);           // -> event.h
+extern void LoadUiTiy_8002BF74(void);              // -> tiy.h (ui_sprites.c)
 
 #endif

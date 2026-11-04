@@ -5,108 +5,159 @@
 #include "camera.h"
 #include "combbtl.h"
 
-
-
-// a battle command (same layout as BATTLE.BIN's BatCommand)
-extern EventNode* enemyWindowTasks_8008B564;
-extern int sideSlot_800A4078[2];
-extern unsigned char sideResult_800A3A98[2];
-extern void DestroySlotActor_800A0D1C(int);
-extern void FreeSlotModel_800A0B70(int);
-extern void StartScreenFlash_8001C02C(void*);
-extern void sub_800376A0(void* a, void* b);
-
-extern Minion teams_800A3AA0[2][3];
-extern EventNode* hitNumberTasks_8008D778;
-extern void InitSceneFade_8001A38C();
-extern void SceneFadeTask_8001A41C();
-extern int IsMinionFainted_800A1958(void*);
-extern int* GetSlotPos_800A10DC(int); // COMBAT: the slot actor pos_38
-extern void HitNumberTask_800A7EFC();
-
-extern void SideWindowTask_800A7694();
-extern void CreateSlotActor_800A0BA8(int, void*, void*);
-// a command's result (same layout as BATTLE.BIN's BatActionResult)
-extern unsigned char battleResult_800A38DC;
-extern void CombBtlWaitFile_800A4C40();
-extern void CombBtlSetup_800A4D48();
-extern void RunExchange_800A68E0();
-extern void ResolveCommand_800A616C();
-extern void PlayVictoryJingle_800A5000();
-extern void SetBattleStageId_80039FA4(int);
-extern void InitCombatSlots_800A0A28();
-extern int PlayMusic_800300E0(int, int);
-extern void OpenCommandMenu_800A5EF8();
-extern void WaitCommandMenu_800A5F60();
-extern void RecordBattleResult_800A50E4();
-extern void CombBtlExit_800A5544();
-extern void ResetCommands_800A5BB4();
-extern void WaitVictoryJingle_800A5080();
-extern short word_80091CE0[];
-extern char dword_80091D40[];
-extern EventEntry* CombComStart_800CB7AC(void*, int);
-extern int RunSlotModelTask_800A0B3C(int);
-extern void StopSeqSlot_80031334(int);
-extern void StopSoundSeqs_80030D68(int);
-extern void FreeSeqSlotSound_80030664();
-extern void SsSepSetDecrescendo(int, int, int, int);
-extern void StartSceneFadeOut_8001AA50(int);
-extern void PlaySeqSlot_80031160(int, int);
-
 int dword_800A4088 SDATA = 22;
-const char aAreVictorious_800A408C[] = "\202\201\202\222\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\211\202\217\202\225\202\223\201I"; // are victorious!
-const char aTheMinionsOfThe_800A40AC[] = "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202c\202\201\202\227\202\216"; // The Minions of the Dawn
-const char aCongratulations_800A40DC[] = "\202b\202\217\202\216\202\207\202\222\202\201\202\224\202\225\202\214\202\201\202\224\202\211\202\217\202\216\202\223\201I"; // Congratulations!
-const char aTheMinionsOfThe_800A4100[] = "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202r\202\225\202\216\202\223\202\205\202\224"; // The Minions of the Sunset
-const char aEachOtherSMoves_800A4134[] = "\202\205\202\201\202\203\202\210\201@\202\217\202\224\202\210\202\205\202\222\201f\202\223\201@\202\215\202\217\202\226\202\205\202\223\201D"; // each other's moves.
-const char aItSeemsYouAreGa_800A415C[] = "\202h\202\224\201@\202\223\202\205\202\205\202\215\202\223\201@\202\231\202\217\202\225\201@\202\201\202\222\202\205\201@\202\207\202\201\202\225\202\207\202\211\202\216\202\207"; // It seems you are gauging
-const char aThisThrillingBa_800A4190[] = "\202\224\202\210\202\211\202\223\201@\202\224\202\210\202\222\202\211\202\214\202\214\202\211\202\216\202\207\201@\202\202\202\201\202\224\202\224\202\214\202\205\201I"; // this thrilling battle!
-const char aICannotTakeMyEy_800A41C0[] = "\202h\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\224\202\201\202\213\202\205\201@\202\215\202\231\201@\202\205\202\231\202\205\202\223\201@\202\217\202\206\202\206"; // I cannot take my eyes off
-const char aNoDamageTaken_800A41F4[] = "\202m\202\217\201@\202\204\202\201\202\215\202\201\202\207\202\205\201@\202\224\202\201\202\213\202\205\202\216\201D"; // No damage taken.
-const char aOhMyItDodgedThe_800A4218[] = "\202n\202\210\201@\202\215\202\231\201C\201@\202\211\202\224\201@\202\204\202\217\202\204\202\207\202\205\202\204\201@\202\224\202\210\202\205\201@\202\202\202\214\202\217\202\227\201I"; // Oh my, it dodged the blow!
-const char aOhThatHadToHurt_800A4250[] = "\202n\202\210\201C\201@\202\224\202\210\202\201\202\224\201@\202\210\202\201\202\204\201@\202\224\202\217\201@\202\210\202\225\202\222\202\224\201I"; // Oh, that had to hurt!
-const char aADirectHit_800A427C[] = "\202`\201@\202\204\202\211\202\222\202\205\202\203\202\224\201@\202\210\202\211\202\224\201I"; // A direct hit!
-const char aTheMinionLooksD_800A4298[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\214\202\217\202\217\202\213\202\223\201@\202\204\202\211\202\232\202\232\202\231\201D"; // The minion looks dizzy.
-const char aPoison_800A42C8[] = "\202o\202\217\202\211\202\223\202\217\202\216\201I"; // Poison!
-const char aOnAChoppingBloc_800A42D8[] = "\202\217\202\216\201@\202\201\201@\202\203\202\210\202\217\202\220\202\220\202\211\202\216\202\207\201@\202\202\202\214\202\217\202\203\202\213\201I"; // on a chopping block!
-const char aItIsLikeAHelple_800A4304[] = "\202h\202\224\201@\202\211\202\223\201@\202\214\202\211\202\213\202\205\201@\202\201\201@\202\210\202\205\202\214\202\220\202\214\202\205\202\223\202\223\201@\202\206\202\211\202\223\202\210"; // It is like a helpless fish
-const char aThisCouldBeDang_800A433C[] = "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\204\202\201\202\216\202\207\202\205\202\222\202\217\202\225\202\223\201D"; // This could be dangerous.
-const char aOhNoItIsFalling_800A4370[] = "\202n\202\210\201@\202\216\202\217\201C\201@\202\211\202\224\201@\202\211\202\223\201@\202\206\202\201\202\214\202\214\202\211\202\216\202\207\201@\202\201\202\223\202\214\202\205\202\205\202\220\201I"; // Oh no, it is falling asleep!
-const char aNotHealed_800A43AC[] = "\202\216\202\217\202\224\201@\202\210\202\205\202\201\202\214\202\205\202\204\201I"; // not healed!
-const char aThisCouldBeFata_800A43C4[] = "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\211\202\206\201@\202\211\202\224\201@\202\211\202\223"; // This could be fatal if it is
-const char aStoneItIsSpread_800A4400[] = "\202\223\202\224\202\217\202\216\202\205\201I\201@\202h\202\224\201@\202\211\202\223\201@\202\223\202\220\202\222\202\205\202\201\202\204\202\211\202\216\202\207\201@\202\206\202\201\202\223\202\224\201D"; // stone! It is spreading fast.
-const char aTheMinionIsBein_800A443C[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\202\202\205\202\211\202\216\202\207\201@\202\224\202\225\202\222\202\216\202\205\202\204\201@\202\211\202\216\202\224\202\217"; // The minion is being turned into
-const char aTheMinionIsGrav_800A447C[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\207\202\222\202\201\202\226\202\205\202\214\202\231\201@\202\227\202\217\202\225\202\216\202\204\202\205\202\204\201D"; // The minion is gravely wounded.
-const char aCouldKeelOverAt_800A44BC[] = "\202\203\202\217\202\225\202\214\202\204\201@\202\213\202\205\202\205\202\214\201@\202\217\202\226\202\205\202\222\201@\202\201\202\224\201@\202\201\202\216\202\231\202\224\202\211\202\215\202\205\201D"; // could keel over at anytime.
-const char aItIsBreathingHe_800A44F4[] = "\202h\202\224\201@\202\211\202\223\201@\202\202\202\222\202\205\202\201\202\224\202\210\202\211\202\216\202\207\201@\202\210\202\205\202\201\202\226\202\211\202\214\202\231\201@\202\201\202\216\202\204"; // It is breathing heavily and
-const char aItHasFallenAndC_800A452C[] = "\202h\202\224\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216\201@\202\201\202\216\202\204\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\207\202\205\202\224\201@\202\225\202\220\201I"; // It has fallen and cannot get up!
-const char aForThisMinion_800A4570[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\211\202\223\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for this minion.
-const char aItLooksLikeThat_800A4594[] = "\202h\202\224\201@\202\214\202\217\202\217\202\213\202\223\201@\202\214\202\211\202\213\202\205\201@\202\224\202\210\202\201\202\224\201@\202\211\202\223\201@\202\211\202\224"; // It looks like that is it
-const char aIsTheFightOver_800A45C8[] = "\202h\202\223\201@\202\224\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\217\202\226\202\205\202\222\201H"; // Is the fight over?
-const char aEmptyLine_800A45F0[4] = "";
-const char aVeryEffective_800A45F4[] = "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201D"; // Very effective.
-const char aRightAtTheEleme_800A4614[] = "\202q\202\211\202\207\202\210\202\224\201@\202\201\202\224\201@\202\224\202\210\202\205\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\227\202\205\202\201\202\213\201@\202\223\202\220\202\217\202\224\201D"; // Right at the elemental weak spot.
-const char aWhatAWellChosen_800A4658[] = "\202v\202\210\202\201\202\224\201@\202\201\201@\202\227\202\205\202\214\202\214\201|\202\203\202\210\202\217\202\223\202\205\202\216\201@\202\201\202\224\202\224\202\201\202\203\202\213\201I"; // What a well-chosen attack!
-const char aEnteredTheArena_800A4690[] = "\202\205\202\216\202\224\202\205\202\222\202\205\202\204\201@\202\224\202\210\202\205\201@\202\201\202\222\202\205\202\216\202\201\201I"; // entered the arena!
-const char aANewMinionHas_800A46B8[] = "\202`\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223"; // A new minion has
-const char aThePlayerHasSwi_800A46DC[] = "\202s\202\210\202\205\201@\202\220\202\214\202\201\202\231\202\205\202\222\201@\202\210\202\201\202\223\201@\202\223\202\227\202\211\202\224\202\203\202\210\202\205\202\204\201@\202\215\202\211\202\216\202\211\202\217\202\216\202\223\201I"; // The player has switched minions!
-const char aWhatWillHappenN_800A4720[] = "\202v\202\210\202\201\202\224\201@\202\227\202\211\202\214\202\214\201@\202\210\202\201\202\220\202\220\202\205\202\216\201@\202\216\202\217\202\227\201I\201H"; // What will happen now!?
-const char aWhatAnExcitingM_800A4750[] = "\202v\202\210\202\201\202\224\201@\202\201\202\216\201@\202\205\202\230\202\203\202\211\202\224\202\211\202\216\202\207\201@\202\215\202\217\202\226\202\205\201D"; // What an exciting move.
-const char aAChangeOfElemen_800A4780[] = "\202`\201@\202\203\202\210\202\201\202\216\202\207\202\205\201@\202\217\202\206\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\220\202\222\202\217\202\220\202\205\202\222\202\224\202\211\202\205\202\223\201I"; // A change of elemental properties!
-const char aWithOneFatalBlo_800A47C4[] = "\202\227\202\211\202\224\202\210\201@\202\217\202\216\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\202\202\214\202\217\202\227\201I"; // with one fatal blow!
-const char aTheMinionHasFal_800A47F0[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216"; // The minion has fallen
-const char aSuchOverwhelmin_800A481C[] = "\202r\202\225\202\203\202\210\201@\202\217\202\226\202\205\202\222\202\227\202\210\202\205\202\214\202\215\202\211\202\216\202\207\201@\202\220\202\217\202\227\202\205\202\222\201I"; // Such overwhelming power!
-const char aItCouldBeVictor_800A4850[] = "\202\211\202\224\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\231\201I"; // it could be victory!
-const char aAgainstAllOdds_800A487C[] = "\202`\202\207\202\201\202\211\202\216\202\223\202\224\201@\202\201\202\214\202\214\201@\202\217\202\204\202\204\202\223\201C"; // Against all odds,
-const char aWhatAmazingWill_800A48A0[] = "\202v\202\210\202\201\202\224\201@\202\201\202\215\202\201\202\232\202\211\202\216\202\207\201@\202\227\202\211\202\214\202\214\202\220\202\217\202\227\202\205\202\222\201I"; // What amazing willpower!
-const char aIWasEvenRooting_800A48D0[] = "\202h\201@\202\227\202\201\202\223\201@\202\205\202\226\202\205\202\216\201@\202\222\202\217\202\217\202\224\202\211\202\216\202\207\201@\202\206\202\217\202\222\201@\202\231\202\217\202\225\201I"; // I was even rooting for you!
-const char aTooBad_800A4908[] = "\202s\202\217\202\217\201@\202\202\202\201\202\204\201I"; // Too bad!
-const char aDecidedBeforeTh_800A491C[] = "\202\204\202\205\202\203\202\211\202\204\202\205\202\204\201@\202\202\202\205\202\206\202\217\202\222\202\205\201@\202\224\202\210\202\205\201@\202\224\202\210\202\211\202\222\202\204\201@\202\222\202\217\202\225\202\216\202\204\201D"; // decided before the third round.
-const char aAnotherLossTheF_800A495C[] = "\202`\202\216\202\217\202\224\202\210\202\205\202\222\201@\202\214\202\217\202\223\202\223\201I\201@\202s\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216"; // Another loss! The fight has been
-const char aWellDone_800A49A0[] = "\202v\202\205\202\214\202\214\201@\202\204\202\217\202\216\202\205\201I"; // Well done!
-const char aReached_800A49B8[] = "\202\222\202\205\202\201\202\203\202\210\202\205\202\204\201D"; // reached.
-const char aFinallyADecisio_800A49CC[] = "\202e\202\211\202\216\202\201\202\214\202\214\202\231\201@\202\201\201@\202\204\202\205\202\203\202\211\202\223\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216"; // Finally a decision has been
-const char aWhatACloseFight_800A4A04[] = "\202v\202\210\202\201\202\224\201@\202\201\201@\202\203\202\214\202\217\202\223\202\205\201@\202\206\202\211\202\207\202\210\202\224\201I"; // What a close fight!
+short previewHp_800A82D0 = 0;
+short previewMp_800A82D2 = 0;
+short sideWindowPos_800A82D4[2][2] = {
+    { 10, 20 },
+    { 210, 20 },
+};
+CombBtlNode *announcerTask_800A82DC = 0;
+short pendingXa_800A82E0[4] = { 0 };
+int turnCount_800A82E8 = 0;
+// the announcer's message lists (NULL terminated), picked by ResolveCommand_800A616C / RunExchange_800A68E0
+const char *winLinesP1_800A82EC[5] = {
+    "\202b\202\217\202\216\202\207\202\222\202\201\202\224\202\225\202\214\202\201\202\224\202\211\202\217\202\216\202\223\201I", // Congratulations!
+    "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202c\202\201\202\227\202\216", // The Minions of the Dawn
+    "\202\201\202\222\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\211\202\217\202\225\202\223\201I", // are victorious!
+};
+const char *winLinesP2_800A8300[5] = {
+    "\202b\202\217\202\216\202\207\202\222\202\201\202\224\202\225\202\214\202\201\202\224\202\211\202\217\202\216\202\223\201I", // Congratulations!
+    "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202r\202\225\202\216\202\223\202\205\202\224", // The Minions of the Sunset
+    "\202\201\202\222\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\211\202\217\202\225\202\223\201I", // are victorious!
+};
+const char *doubleSwapLines_800A8314[4] = {
+    "\202h\202\224\201@\202\223\202\205\202\205\202\215\202\223\201@\202\231\202\217\202\225\201@\202\201\202\222\202\205\201@\202\207\202\201\202\225\202\207\202\211\202\216\202\207", // It seems you are gauging
+    "\202\205\202\201\202\203\202\210\201@\202\217\202\224\202\210\202\205\202\222\201f\202\223\201@\202\215\202\217\202\226\202\205\202\223\201D", // each other's moves.
+};
+const char *everyNthTurnLines_800A8324[4] = {
+    "\202h\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\224\202\201\202\213\202\205\201@\202\215\202\231\201@\202\205\202\231\202\205\202\223\201@\202\217\202\206\202\206", // I cannot take my eyes off
+    "\202\224\202\210\202\211\202\223\201@\202\224\202\210\202\222\202\211\202\214\202\214\202\211\202\216\202\207\201@\202\202\202\201\202\224\202\224\202\214\202\205\201I", // this thrilling battle!
+};
+const char *dodgeLines_800A8334[4] = {
+    "\202n\202\210\201@\202\215\202\231\201C\201@\202\211\202\224\201@\202\204\202\217\202\204\202\207\202\205\202\204\201@\202\224\202\210\202\205\201@\202\202\202\214\202\217\202\227\201I", // Oh my, it dodged the blow!
+    "\202m\202\217\201@\202\204\202\201\202\215\202\201\202\207\202\205\201@\202\224\202\201\202\213\202\205\202\216\201D", // No damage taken.
+};
+const char *directHitLines_800A8344[4] = {
+    "\202`\201@\202\204\202\211\202\222\202\205\202\203\202\224\201@\202\210\202\211\202\224\201I", // A direct hit!
+    "\202n\202\210\201C\201@\202\224\202\210\202\201\202\224\201@\202\210\202\201\202\204\201@\202\224\202\217\201@\202\210\202\225\202\222\202\224\201I", // Oh, that had to hurt!
+};
+const char *poisonLines_800A8354[4] = {
+    "\202o\202\217\202\211\202\223\202\217\202\216\201I", // Poison!
+    "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\214\202\217\202\217\202\213\202\223\201@\202\204\202\211\202\232\202\232\202\231\201D", // The minion looks dizzy.
+};
+const char *statusLines_800A8364[6] = {
+    "\202n\202\210\201@\202\216\202\217\201C\201@\202\211\202\224\201@\202\211\202\223\201@\202\206\202\201\202\214\202\214\202\211\202\216\202\207\201@\202\201\202\223\202\214\202\205\202\205\202\220\201I", // Oh no, it is falling asleep!
+    "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\204\202\201\202\216\202\207\202\205\202\222\202\217\202\225\202\223\201D", // This could be dangerous.
+    "\202h\202\224\201@\202\211\202\223\201@\202\214\202\211\202\213\202\205\201@\202\201\201@\202\210\202\205\202\214\202\220\202\214\202\205\202\223\202\223\201@\202\206\202\211\202\223\202\210", // It is like a helpless fish
+    "\202\217\202\216\201@\202\201\201@\202\203\202\210\202\217\202\220\202\220\202\211\202\216\202\207\201@\202\202\202\214\202\217\202\203\202\213\201I", // on a chopping block!
+};
+const char *stoneLines_800A837C[6] = {
+    "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\202\202\205\202\211\202\216\202\207\201@\202\224\202\225\202\222\202\216\202\205\202\204\201@\202\211\202\216\202\224\202\217", // The minion is being turned into
+    "\202\223\202\224\202\217\202\216\202\205\201I\201@\202h\202\224\201@\202\211\202\223\201@\202\223\202\220\202\222\202\205\202\201\202\204\202\211\202\216\202\207\201@\202\206\202\201\202\223\202\224\201D", // stone! It is spreading fast.
+    "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\211\202\206\201@\202\211\202\224\201@\202\211\202\223", // This could be fatal if it is
+    "\202\216\202\217\202\224\201@\202\210\202\205\202\201\202\214\202\205\202\204\201I", // not healed!
+};
+const char *halfHpLines_800A8394[3] = {
+    "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\207\202\222\202\201\202\226\202\205\202\214\202\231\201@\202\227\202\217\202\225\202\216\202\204\202\205\202\204\201D", // The minion is gravely wounded.
+};
+const char *tenthHpLines_800A83A0[4] = {
+    "\202h\202\224\201@\202\211\202\223\201@\202\202\202\222\202\205\202\201\202\224\202\210\202\211\202\216\202\207\201@\202\210\202\205\202\201\202\226\202\211\202\214\202\231\201@\202\201\202\216\202\204", // It is breathing heavily and
+    "\202\203\202\217\202\225\202\214\202\204\201@\202\213\202\205\202\205\202\214\201@\202\217\202\226\202\205\202\222\201@\202\201\202\224\201@\202\201\202\216\202\231\202\224\202\211\202\215\202\205\201D", // could keel over at anytime.
+};
+const char *koLines_800A83B0[5] = {
+    "\202h\202\223\201@\202\224\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\217\202\226\202\205\202\222\201H", // Is the fight over?
+    "\202h\202\224\201@\202\214\202\217\202\217\202\213\202\223\201@\202\214\202\211\202\213\202\205\201@\202\224\202\210\202\201\202\224\201@\202\211\202\223\201@\202\211\202\224", // It looks like that is it
+    "\202\206\202\217\202\222\201@\202\224\202\210\202\211\202\223\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D", // for this minion.
+    "\202h\202\224\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216\201@\202\201\202\216\202\204\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\207\202\205\202\224\201@\202\225\202\220\201I", // It has fallen and cannot get up!
+};
+// unused: an empty list
+const char *emptyLines_800A83C4[5] = {
+    0,
+    "",
+    "",
+};
+// unused
+const char *weakSpotLines_800A83D8[5] = {
+    "\202v\202\210\202\201\202\224\201@\202\201\201@\202\227\202\205\202\214\202\214\201|\202\203\202\210\202\217\202\223\202\205\202\216\201@\202\201\202\224\202\224\202\201\202\203\202\213\201I", // What a well-chosen attack!
+    "\202q\202\211\202\207\202\210\202\224\201@\202\201\202\224\201@\202\224\202\210\202\205\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\227\202\205\202\201\202\213\201@\202\223\202\220\202\217\202\224\201D", // Right at the elemental weak spot.
+    "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201D", // Very effective.
+};
+const char *swapLines_800A83EC[5] = {
+    "\202s\202\210\202\205\201@\202\220\202\214\202\201\202\231\202\205\202\222\201@\202\210\202\201\202\223\201@\202\223\202\227\202\211\202\224\202\203\202\210\202\205\202\204\201@\202\215\202\211\202\216\202\211\202\217\202\216\202\223\201I", // The player has switched minions!
+    "\202`\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223", // A new minion has
+    "\202\205\202\216\202\224\202\205\202\222\202\205\202\204\201@\202\224\202\210\202\205\201@\202\201\202\222\202\205\202\216\202\201\201I", // entered the arena!
+};
+const char *elementChangeLines_800A8400[5] = {
+    "\202`\201@\202\203\202\210\202\201\202\216\202\207\202\205\201@\202\217\202\206\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\220\202\222\202\217\202\220\202\205\202\222\202\224\202\211\202\205\202\223\201I", // A change of elemental properties!
+    "\202v\202\210\202\201\202\224\201@\202\201\202\216\201@\202\205\202\230\202\203\202\211\202\224\202\211\202\216\202\207\201@\202\215\202\217\202\226\202\205\201D", // What an exciting move.
+    "\202v\202\210\202\201\202\224\201@\202\227\202\211\202\214\202\214\201@\202\210\202\201\202\220\202\220\202\205\202\216\201@\202\216\202\217\202\227\201I\201H", // What will happen now!?
+};
+const char *oneBlowLines_800A8414[5] = {
+    "\202r\202\225\202\203\202\210\201@\202\217\202\226\202\205\202\222\202\227\202\210\202\205\202\214\202\215\202\211\202\216\202\207\201@\202\220\202\217\202\227\202\205\202\222\201I", // Such overwhelming power!
+    "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216", // The minion has fallen
+    "\202\227\202\211\202\224\202\210\201@\202\217\202\216\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\202\202\214\202\217\202\227\201I", // with one fatal blow!
+};
+const char *oneHpLeftLines_800A8428[5] = {
+    "\202v\202\210\202\201\202\224\201@\202\201\202\215\202\201\202\232\202\211\202\216\202\207\201@\202\227\202\211\202\214\202\214\202\220\202\217\202\227\202\205\202\222\201I", // What amazing willpower!
+    "\202`\202\207\202\201\202\211\202\216\202\223\202\224\201@\202\201\202\214\202\214\201@\202\217\202\204\202\204\202\223\201C", // Against all odds,
+    "\202\211\202\224\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\231\201I", // it could be victory!
+};
+const char *lossLines_800A843C[6] = {
+    "\202`\202\216\202\217\202\224\202\210\202\205\202\222\201@\202\214\202\217\202\223\202\223\201I\201@\202s\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216", // Another loss! The fight has been
+    "\202\204\202\205\202\203\202\211\202\204\202\205\202\204\201@\202\202\202\205\202\206\202\217\202\222\202\205\201@\202\224\202\210\202\205\201@\202\224\202\210\202\211\202\222\202\204\201@\202\222\202\217\202\225\202\216\202\204\201D", // decided before the third round.
+    "\202s\202\217\202\217\201@\202\202\202\201\202\204\201I", // Too bad!
+    "\202h\201@\202\227\202\201\202\223\201@\202\205\202\226\202\205\202\216\201@\202\222\202\217\202\217\202\224\202\211\202\216\202\207\201@\202\206\202\217\202\222\201@\202\231\202\217\202\225\201I", // I was even rooting for you!
+};
+CombBtlLineList6 finalLines_800A8454 = {
+    {
+        "\202v\202\210\202\201\202\224\201@\202\201\201@\202\203\202\214\202\217\202\223\202\205\201@\202\206\202\211\202\207\202\210\202\224\201I", // What a close fight!
+        "\202e\202\211\202\216\202\201\202\214\202\214\202\231\201@\202\201\201@\202\204\202\205\202\203\202\211\202\223\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216", // Finally a decision has been
+        "\202\222\202\205\202\201\202\203\202\210\202\205\202\204\201D", // reached.
+        "\202v\202\205\202\214\202\214\201@\202\204\202\217\202\216\202\205\201I", // Well done!
+    },
+    0x63750B00,
+};
+short hpDamage_800A8470[2] = { 0 };
+short mpDamage_800A8474[2] = { 0 };
+int announcerWindow_800A8478 = 0;
+int dword_800A847C = 0;
+int statusCured_800A8480[2] = { 0 };
+short exchangeStep_800A8488 = 0;
+EventEntry *commandMenuTask_800A848C = 0;
+int koSide_800A8490 = 0;
+ShortPair hitWindow_800A8494 = { 0 };
+int stageElement_800A8498 = 0;
+int fixedStageElement_800A849C = 0;
+int newStageElement_800A84A0 = 0;
+short targetSfx_800A84A4 = 0;
+short koSfx_800A84A6 = 0;
+unsigned char exchangeFlags_800A84A8 = 0;
+int dword_800A84AC = 0;
+int sideEntering_800A84B0[2] = { 0 };
+int setupStep_800A84B8 = 0;
+short actorHpLoss_800A84BC = 0;
+int stageId_800A84C0 = 0;
+short actorMpLoss_800A84C4 = 0;
+ShortPair sideHitWindows_800A84C8[2] = { { 0 } };
+short sideGauges_800A84D0[2] = { 0 };
+int waitTimer_800A84D4 = 0;
+CombBtlHist commandHistory_800A84D8[10] = { { 0 } };
+int fileRequest_800A85A0 = 0;
+int dword_800A85A4 = 0;
+CombBtlCmd actorCmd_800A85A8 = { 0 };
+int actorSide_800A85B8 = 0;
+unsigned char swapSlot_800A85BC = 0;
+unsigned char actorSlot_800A85BD = 0;
+const char** announcerLines_800A85C0 = 0;
+int dword_800A85C4 = 0;
+CombBtlResult result_800A85C8 = { 0 };
+int statusInflicted_800A85F0[2] = { 0 };
+int loserSide_800A85F8 = 0;
+unsigned char sideHitKind_800A85FC[4] = { 0 };
+CombBtlCmd chosenCmd_800A8600 = { 0 };
+CombBtlCmd targetCmd_800A8610 = { 0 };
+int targetSide_800A8620 = 0;
 
 void CombBtlStart_800A4B8C(CombBtlTask* t, int a)
 {
@@ -114,7 +165,7 @@ void CombBtlStart_800A4B8C(CombBtlTask* t, int a)
     stageId_800A84C0 = (unsigned int)gnFrame_8008D610 % 39;
     t->next_8 = CombBtlWaitFile_800A4C40;
     t->next_8(t, a);
-    StopSoundSeqs_80030D68((int)word_80091CE0);
+    StopSoundSeqs_80030D68(&bgmSound_80091CE0);
     PlayMusic_800300E0(0, 1);
 }
 
@@ -148,20 +199,6 @@ void ResetSides_800A4CFC()
         sideGauges_800A84D0[i] = 0;
     }
 }
-
-extern int LoadSeqSlotSound_800303E8();
-extern int IsSoundTaskReady_80030688();
-extern int AreStageEffectsLoaded_800BC8E8();
-extern void LoadStageEffects_800BC878();
-extern void SetCameraBattleMode_80037720();
-extern void StartBattleCamera_80037748();
-extern void SetFadeMode_8001C19C();
-extern void LoadUiTiy_8002BF74();
-extern int uiTiyLoaded_8008B4E8;
-extern int subInt_800378F8();
-extern void StartArenaCamera_800A7290();
-extern void StartFadeTask_800A7420();
-extern void CheckBattleOver_800A4EC8();
 
 void CombBtlSetup_800A4D48(CombBtlTask* t, int a)
 {
@@ -215,7 +252,7 @@ void CombBtlSetup_800A4D48(CombBtlTask* t, int a)
         }
         setupStep_800A84B8 = 9;
     case 9:
-        if (subInt_800378F8() != 4)
+        if (GetCameraMode_800378F8() != 4)
         {
             t->next_8 = CheckBattleOver_800A4EC8;
             t->next_8(t, a);
@@ -223,7 +260,6 @@ void CombBtlSetup_800A4D48(CombBtlTask* t, int a)
         break;
     }
 }
-extern void SendInMinions_800A5638();
 
 void CheckBattleOver_800A4EC8(CombBtlTask* t, int a)
 {
@@ -261,10 +297,10 @@ void CheckBattleOver_800A4EC8(CombBtlTask* t, int a)
 
 void PlayVictoryJingle_800A5000(CombBtlTask* t)
 {
-    if (word_80091CE0[2] >= 0)
+    if (bgmSound_80091CE0.field_4_seq_num >= 0)
     {
-        SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
-        word_80091CE0[2] = -1;
+        SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
+        bgmSound_80091CE0.field_4_seq_num = -1;
     }
     StopSeqSlot_80031334(0);
     PlaySeqSlot_80031160(1, 1);
@@ -278,15 +314,12 @@ void WaitVictoryJingle_800A5080(CombBtlTask* t)
     {
         FadeOutSeqSlot_800313C8(0);
         StopSeqSlot_80031334(0);
-        StopSoundSeqs_80030D68(dword_80091D40);
+        StopSoundSeqs_80030D68(&systemSound_80091D40);
         FreeSeqSlotSound_80030664();
         t->next_8 = RecordBattleResult_800A50E4;
     }
 }
 
-extern unsigned char sideWins_800A3A90[];
-extern void CombBtlEnd_800A54CC();
-extern void AnnounceWinner_800A51EC();
 void RecordBattleResult_800A50E4(CombBtlTask* t)
 {
     int idle = IsEffectTaskIdle_800148D4();
@@ -324,11 +357,6 @@ void RecordBattleResult_800A50E4(CombBtlTask* t)
     }
 }
 
-extern void SetAnnouncerXa_800A8078(short, short, short);
-extern int StartAnnouncer_800A8098();
-extern void DrawWinnerBanner_800A5290();
-extern void CombBtlEnd_800A54CC();
-
 void AnnounceWinner_800A51EC(CombBtlTask* t)
 {
     if (--waitTimer_800A84D4 <= 0)
@@ -347,10 +375,8 @@ void AnnounceWinner_800A51EC(CombBtlTask* t)
     }
 }
 
-
 const CombBtlItem winnerBanner_800A4A54 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x56, 0x32, 0x14, 2, 4 };
 const CombBtlItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
-extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
 {
@@ -377,18 +403,12 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
-// the announcer names "Ra", "Mu" (full width)
-const char aRa_800A4A8C[] = "\202q\202\201"; // Ra
-const char aMu_800A4A94[] = "\202l\202\225"; // Mu
-// the jump table of ResolveCommand_800A616C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in combbtl.h when the function is C, the switch emits it then
-void* const dword_800A4A9C[6] = { jtgt_800A6624, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A65BC, jtgt_800A65F0 };
 // Matched
 int OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 {
     int cfg[18];
     int kinds[2] = {2, 3};
-    const char* tbl[2] = {aRa_800A4A8C, aMu_800A4A94};
+    const char* tbl[2] = {"\202q\202\201" /* Ra */, "\202l\202\225" /* Mu */};
     cfg[0] = 2;
     cfg[1] = 0;
     cfg[2] = lines;
@@ -409,26 +429,22 @@ int OpenAnnouncerWindow_800A5408(int which, int lines, int side)
     return (int)OpenMessageWindow_8003422C(cfg);
 }
 
+// the jump table of ResolveCommand_800A616C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in combbtl.h when the function is C, the switch emits it then
+void* const dword_800A4A9C[6] = { jtgt_800A6624, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A65BC, jtgt_800A65F0 };
+
 void CombBtlEnd_800A54CC(CombBtlTask* t)
 {
     FadeOutSeqSlot_800313C8(0);
-    if (word_80091CE0[2] >= 0)
+    if (bgmSound_80091CE0.field_4_seq_num >= 0)
     {
-        SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
-        word_80091CE0[2] = -1;
+        SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
+        bgmSound_80091CE0.field_4_seq_num = -1;
     }
     StartSceneFadeOut_8001AA50(0x1E);
     CloseSideWindows_800A7BE4();
     t->next_8 = CombBtlExit_800A5544;
 }
-
-extern int IsSceneFadeDone_8001AB94();
-extern void StopArenaCamera_800A73E4();
-extern void StopFadeTask_800A7478();
-extern void RemoveSideMinion_800A7560();
-extern void FreeCombatSlots_800A0A6C();
-extern void SsUtAllKeyOff();
-extern void CombatNextStage_800A16FC();
 
 void CombBtlExit_800A5544(CombBtlTask* t)
 {
@@ -456,15 +472,6 @@ void CombBtlExit_800A5544(CombBtlTask* t)
     }
 }
 
-extern void NextLivingMinion_800A58E8(int i);
-extern void StartSlotModel_800A0ACC(int i, void* u);
-extern int AreSideModelsReady_800A758C();
-extern void CreateSideActor_800A74A0(int i);
-extern void OpenSideWindow_800A75F8(int i);
-extern void MoveSlotActorTo_800A0E1C(int i, int v);
-extern void SetSlotStatusTint_800A1068(int i);
-extern void ChooseNextActor_800A599C();
-extern void ClearHitResults_800A60F0();
 void SendInMinions_800A5638(CombBtlTask* t, int a)
 {
     int i;
@@ -656,12 +663,6 @@ void ResetCommands_800A5BB4()
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, ResetCommands_800A5BB4);
 
-extern void ResetCommands_800A5BB4();
-extern void ClearHitResults_800A60F0();
-extern void LoadCommandMenu_800A5EB8();
-extern void name_800BF7C4(UnitStatus* unit, short* hpLoss, short* mpLoss);
-extern int name_800BFA4C(int flags, int prevFlags);
-
 void StartTurn_800A5C64(CombBtlTask* t)
 {
     UnitStatus* status;
@@ -674,7 +675,7 @@ void StartTurn_800A5C64(CombBtlTask* t)
     ClearHitResults_800A60F0();
     status = GetUnitStatus_80014390((unsigned char)(actorSide_800A85B8 + 8));
     prevFlags = status->status_0;
-    name_800BF7C4(status, &actorHpLoss_800A84BC, &actorMpLoss_800A84C4);
+    TickUnitStatus_800BF7C4(status, &actorHpLoss_800A84BC, &actorMpLoss_800A84C4);
     if (actorHpLoss_800A84BC != 0)
     {
         if (actorMpLoss_800A84C4 != 0)
@@ -694,7 +695,7 @@ void StartTurn_800A5C64(CombBtlTask* t)
         result_800A85C8.kind_0 = 2;
     }
     flags = status->status_0;
-    cmdKind = name_800BFA4C(flags, prevFlags);
+    cmdKind = GetStatusCommand_800BFA4C(flags, prevFlags);
     actorCmd_800A85A8.kind_0 = cmdKind;
     actorCmd_800A85A8.targets_C = 0;
     if (flags & 0x200)
@@ -807,31 +808,6 @@ void ClearHitResults_800A60F0()
     }
 }
 
-
-extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombBtlCmd* cmd, CombBtlResult* out);
-extern int CountTeamMinions_800A1AAC(int i);
-extern unsigned int CountLivingMinions_800A7164(int i);
-extern int turnCount_800A82E8;
-extern unsigned int combatFlags_800A3A88;
-extern unsigned char exchangeFlags_800A84A8;
-extern unsigned char sideHitKind_800A85FC[];
-extern int koSide_800A8490;
-// announcerLines_800A85C0: the announcer line list RunExchange_800A68E0 shows once the hits land
-// the announcer's message lists (NULL terminated), picked by ResolveCommand_800A616C
-extern const char* doubleSwapLines_800A8314[];
-extern const char* everyNthTurnLines_800A8324[];
-extern const char* dodgeLines_800A8334[];
-extern const char* directHitLines_800A8344[];
-extern const char* poisonLines_800A8354[];
-extern const char* statusLines_800A8364[];
-extern const char* stoneLines_800A837C[];
-extern const char* halfHpLines_800A8394[];
-extern const char* tenthHpLines_800A83A0[];
-extern const char* swapLines_800A83EC[];
-extern const char* elementChangeLines_800A8400[];
-extern const char* oneBlowLines_800A8414[];
-extern const char* oneHpLeftLines_800A8428[];
-extern const char* lossLines_800A843C[];
 #if 0
 // Not matched: loop strength reduction differs - the original keeps mpDamage_800A8474[i] as (i*2 spilled) + base
 // and only hpDamage_800A8470[i] as a pointer; here both become pointers and i spills. Logic is complete.
@@ -1003,22 +979,7 @@ void ResolveCommand_800A616C()
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, ResolveCommand_800A616C);
 
-extern unsigned char player2Pad_800A38D8;
-extern void StartCameraShake_80037BFC(int a);
-extern void StartPadVibration_80036528(int pad, int kind);
-extern void StartHitNumber_800A7E34(int side, int kind, int amount);
-extern void PlayHitFeedback_800A7C0C(int side);
-extern int IsSlotActorIdle_800A0EE8(int i);
-extern int IsSlotActorReady_800A0F1C(int i);
-extern CombBtlPair StartSlotAction_800A0F50(int i, CombBtlCmd* cmd, int x);
-extern void TriggerSlotEffect_800A0FF0(int i, CombBtlCmd* cmd, int x);
-extern void SetAreaElementLight_80039ED8(int mode);
-extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
-extern int rand();
-extern void PlaySfx_80031494(int id);
 // hitWindow_800A8494: the merged window; lo counts the frames up to hi
-extern CombBtlPair MergeHitWindows_800A71E4(int count, CombBtlPair* windows);
-extern unsigned char swapSlot_800A85BC; // the minion slot side swap command (kind 3) brings in
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles side KO / swap / counter. Steps fall through in one call while the step keeps changing.
 // Matched
@@ -1053,7 +1014,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             break;
         case 3:
-            if (sideHitWindows_800A84C8[actorSide_800A85B8].lo == hitWindow_800A8494.lo)
+            if (sideHitWindows_800A84C8[actorSide_800A85B8].a == hitWindow_800A8494.a)
             {
                 TriggerSlotEffect_800A0FF0(actorSide_800A85B8, &actorCmd_800A85A8, 0);
                 StartHitNumber_800A7E34(actorSide_800A85B8, 1, actorHpLoss_800A84BC);
@@ -1068,7 +1029,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
                     StartPadVibration_80036528(actorSide_800A85B8 ? player2Pad_800A38D8 : 0, 9);
                 }
             }
-            if (sideHitWindows_800A84C8[targetSide_800A8620].lo == hitWindow_800A8494.lo)
+            if (sideHitWindows_800A84C8[targetSide_800A8620].a == hitWindow_800A8494.a)
             {
                 TriggerSlotEffect_800A0FF0(targetSide_800A8620, &targetCmd_800A8610, 1);
                 if (targetSfx_800A84A4 >= 0)
@@ -1085,12 +1046,12 @@ void RunExchange_800A68E0(CombBtlTask* t)
                     stageElement_800A8498 = newStageElement_800A84A0;
                 }
             }
-            hitWindow_800A8494.lo++;
-            if (hitWindow_800A8494.hi < hitWindow_800A8494.lo)
+            hitWindow_800A8494.a++;
+            if (hitWindow_800A8494.b < hitWindow_800A8494.a)
             {
                 exchangeStep_800A8488 = 4;
             }
-            else if (hitWindow_800A8494.lo == 0)
+            else if (hitWindow_800A8494.a == 0)
             {
                 AdjustUnitStatById_800127D0(actorSide_800A85B8 + 8, 0x11, 0, statusCured_800A8480[actorSide_800A85B8]);
                 AdjustUnitStatById_800127D0(targetSide_800A8620 + 8, 0x11, 0, statusCured_800A8480[targetSide_800A8620]);
@@ -1235,7 +1196,6 @@ const CombBtlPos2 mpGaugePos_800A4B6C = { {
         { 210, 59 },
     } };
 
-
 unsigned int CountLivingMinions_800A7164(int side)
 {
     int cnt = 0;
@@ -1250,28 +1210,28 @@ unsigned int CountLivingMinions_800A7164(int side)
     return cnt;
 }
 
-CombBtlPair MergeHitWindows_800A71E4(int count, CombBtlPair* windows)
+ShortPair MergeHitWindows_800A71E4(int count, ShortPair* windows)
 {
-    CombBtlPair merged;
+    ShortPair merged;
     short hi = 0;
     short lo = hi;
     int i;
     for (i = 0; i < count; i++)
     {
-        windows->hi = windows->hi - windows->lo;
-        windows->lo = -windows->lo;
-        if (windows->lo < lo)
+        windows->b = windows->b - windows->a;
+        windows->a = -windows->a;
+        if (windows->a < lo)
         {
-            lo = windows->lo;
+            lo = windows->a;
         }
-        if (hi < windows->hi)
+        if (hi < windows->b)
         {
-            hi = windows->hi;
+            hi = windows->b;
         }
         windows++;
     }
-    merged.lo = lo;
-    merged.hi = hi;
+    merged.a = lo;
+    merged.b = hi;
     return merged;
 }
 
@@ -1394,15 +1354,6 @@ void OpenSideWindow_800A75F8(int side)
         e->cb_8 = (EventEntryFn)SideWindowTask_800A7694;
     }
 }
-
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
-extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot);
-extern void InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode);
-extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,
-                                          int flags);
-extern void DrawStatusIcons_8002F480(UnitStatus* status, CombBtlPair* pos, int ot, int reverse);
-extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot);
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 
 // Matched
 void SideWindowTask_800A7694(EventEntry* e, void* buf)
@@ -1530,11 +1481,6 @@ void CloseSideWindows_800A7BE4()
     StopAllEventEntries_80043B40(enemyWindowTasks_8008B564);
 }
 
-extern unsigned char player2Pad_800A38D8;
-extern void StartCameraShake_80037BFC(int a);
-extern void StartPadVibration_80036528(int pad, int kind);
-extern void StartHitNumber_800A7E34(int side, int kind, int amount);
-extern void FlashScreenWhite_800A7ECC();
 void PlayHitFeedback_800A7C0C(int side)
 {
     int me;
@@ -1617,7 +1563,6 @@ void FlashScreenWhite_800A7ECC()
     StartScreenFlash_8001C02C(rgb);
 }
 
-extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
 {
     CombBtlHitNum* num = buf;
@@ -1664,11 +1609,6 @@ void SetAnnouncerXa_800A8078(short channel, short startSector, short length)
     pendingXa_800A82E0[3] = length;
 }
 
-extern EventNode* announcerTasks_8008D458;
-extern unsigned int combatFlags_800A3A88;
-extern int OpenAnnouncerWindow_800A5408();
-extern void AnnouncerTask_800A816C();
-
 int StartAnnouncer_800A8098(int which, int lines, int side)
 {
     EventEntry* e = AllocEventEntry_80043AF8(announcerTasks_8008D458);
@@ -1684,10 +1624,6 @@ int StartAnnouncer_800A8098(int which, int lines, int side)
     }
     return (int)e;
 }
-
-extern int GetMsgWindowResultIfDone_800349B4();
-extern int XaRequestStop_80043524();
-extern void CloseMsgWindow_80034A84();
 
 void AnnouncerTask_800A816C(EventEntry* e)
 {
@@ -1728,76 +1664,3 @@ void AnnouncerTask_800A816C(EventEntry* e)
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }
-
-short previewHp_800A82D0 = 0;
-short previewMp_800A82D2 = 0;
-short sideWindowPos_800A82D4[2][2] = {
-    { 10, 20 },
-    { 210, 20 },
-};
-CombBtlNode *announcerTask_800A82DC = 0;
-short pendingXa_800A82E0[4] = { 0 };
-int turnCount_800A82E8 = 0;
-const char *winLinesP1_800A82EC[5] = { aCongratulations_800A40DC, aTheMinionsOfThe_800A40AC, aAreVictorious_800A408C };
-const char *winLinesP2_800A8300[5] = { aCongratulations_800A40DC, aTheMinionsOfThe_800A4100, aAreVictorious_800A408C };
-const char *doubleSwapLines_800A8314[4] = { aItSeemsYouAreGa_800A415C, aEachOtherSMoves_800A4134 };
-const char *everyNthTurnLines_800A8324[4] = { aICannotTakeMyEy_800A41C0, aThisThrillingBa_800A4190 };
-const char *dodgeLines_800A8334[4] = { aOhMyItDodgedThe_800A4218, aNoDamageTaken_800A41F4 };
-const char *directHitLines_800A8344[4] = { aADirectHit_800A427C, aOhThatHadToHurt_800A4250 };
-const char *poisonLines_800A8354[4] = { aPoison_800A42C8, aTheMinionLooksD_800A4298 };
-const char *statusLines_800A8364[6] = { aOhNoItIsFalling_800A4370, aThisCouldBeDang_800A433C, aItIsLikeAHelple_800A4304, aOnAChoppingBloc_800A42D8 };
-const char *stoneLines_800A837C[6] = { aTheMinionIsBein_800A443C, aStoneItIsSpread_800A4400, aThisCouldBeFata_800A43C4, aNotHealed_800A43AC };
-const char *halfHpLines_800A8394[3] = { aTheMinionIsGrav_800A447C };
-const char *tenthHpLines_800A83A0[4] = { aItIsBreathingHe_800A44F4, aCouldKeelOverAt_800A44BC };
-const char *koLines_800A83B0[15] = {
-    aIsTheFightOver_800A45C8, aItLooksLikeThat_800A4594, aForThisMinion_800A4570, aItHasFallenAndC_800A452C,
-    0, 0, aEmptyLine_800A45F0, aEmptyLine_800A45F0,
-    0, 0, aWhatAWellChosen_800A4658, aRightAtTheEleme_800A4614,
-    aVeryEffective_800A45F4,
-};
-const char *swapLines_800A83EC[5] = { aThePlayerHasSwi_800A46DC, aANewMinionHas_800A46B8, aEnteredTheArena_800A4690 };
-const char *elementChangeLines_800A8400[5] = { aAChangeOfElemen_800A4780, aWhatAnExcitingM_800A4750, aWhatWillHappenN_800A4720 };
-const char *oneBlowLines_800A8414[5] = { aSuchOverwhelmin_800A481C, aTheMinionHasFal_800A47F0, aWithOneFatalBlo_800A47C4 };
-const char *oneHpLeftLines_800A8428[5] = { aWhatAmazingWill_800A48A0, aAgainstAllOdds_800A487C, aItCouldBeVictor_800A4850 };
-const char *lossLines_800A843C[6] = { aAnotherLossTheF_800A495C, aDecidedBeforeTh_800A491C, aTooBad_800A4908, aIWasEvenRooting_800A48D0 };
-CombBtlLineList6 finalLines_800A8454 = { { aWhatACloseFight_800A4A04, aFinallyADecisio_800A49CC, aReached_800A49B8, aWellDone_800A49A0 }, 0x63750B00 };
-short hpDamage_800A8470[2] = { 0 };
-short mpDamage_800A8474[2] = { 0 };
-int announcerWindow_800A8478 = 0;
-int dword_800A847C = 0;
-int statusCured_800A8480[2] = { 0 };
-short exchangeStep_800A8488 = 0;
-EventEntry *commandMenuTask_800A848C = 0;
-int koSide_800A8490 = 0;
-CombBtlPair hitWindow_800A8494 = { 0 };
-int stageElement_800A8498 = 0;
-int fixedStageElement_800A849C = 0;
-int newStageElement_800A84A0 = 0;
-short targetSfx_800A84A4 = 0;
-short koSfx_800A84A6 = 0;
-unsigned char exchangeFlags_800A84A8 = 0;
-int dword_800A84AC = 0;
-int sideEntering_800A84B0[2] = { 0 };
-int setupStep_800A84B8 = 0;
-short actorHpLoss_800A84BC = 0;
-int stageId_800A84C0 = 0;
-short actorMpLoss_800A84C4 = 0;
-CombBtlPair sideHitWindows_800A84C8[2] = { { 0 } };
-short sideGauges_800A84D0[2] = { 0 };
-int waitTimer_800A84D4 = 0;
-CombBtlHist commandHistory_800A84D8[10] = { { 0 } };
-int fileRequest_800A85A0 = 0;
-int dword_800A85A4 = 0;
-CombBtlCmd actorCmd_800A85A8 = { 0 };
-int actorSide_800A85B8 = 0;
-unsigned char swapSlot_800A85BC = 0;
-unsigned char actorSlot_800A85BD = 0;
-const char** announcerLines_800A85C0 = 0;
-int dword_800A85C4 = 0;
-CombBtlResult result_800A85C8 = { 0 };
-int statusInflicted_800A85F0[2] = { 0 };
-int loserSide_800A85F8 = 0;
-unsigned char sideHitKind_800A85FC[4] = { 0 };
-CombBtlCmd chosenCmd_800A8600 = { 0 };
-CombBtlCmd targetCmd_800A8610 = { 0 };
-int targetSide_800A8620 = 0;
