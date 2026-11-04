@@ -60,7 +60,7 @@ extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void DrawMenuBackground_8002BE10();
-extern void sub_8002A4E4(int a);
+extern void DrawPortraitWindow_8002A4E4(int a);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern void DrawMenuWindows_8002A5A4(WpnDlg_wpnshop* p);
@@ -106,7 +106,7 @@ typedef struct WpnSmall_wpnshop
 extern void sub_8002F7D0(void* p, int a1);
 extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void sub_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
+extern void DrawScrollArrow_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
 #define f_26 f_20[3]
 extern int IsCircleHeldP1_8003D480(void);
 extern char name_800BEBC4[];
@@ -320,7 +320,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
     if (uiTiyLoaded_8008B4E8 != 0)
     {
         DrawMenuBackground_8002BE10();
-        sub_8002A4E4(0xE);
+        DrawPortraitWindow_8002A4E4(0xE);
         sub_800BCF80(p);
         sub_800BB950(p);
         t->next_8 = sub_800BB194;
@@ -331,7 +331,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
 void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
 {
     DrawMenuBackground_8002BE10();
-    sub_8002A4E4(0xE);
+    DrawPortraitWindow_8002A4E4(0xE);
     sub_800BCF80(p);
     sub_800BB950(p);
     SetFadeMode_8001C19C(3, 0x20);
@@ -587,7 +587,7 @@ void sub_800BB868(WpnObj_wpnshop* o, WpnRect_wpnshop* r, int a2, int a3, short i
 // Matched
 void sub_800BB8CC(WpnObj_wpnshop* o)
 {
-    sub_8002A4E4(0xE);
+    DrawPortraitWindow_8002A4E4(0xE);
     DrawTextList_8002A310(name_800BE134, 0xE);
     sub_800429F8((int)name_800BE7C4, 0xE);
     sub_80042B38((int)name_800BE7C4, 0xE);
@@ -1068,7 +1068,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
         u.p.b = 0;
         r48.x = 0x112;
         r48.y = 0x95;
-        sub_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
+        DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
         if (o->f_0 != 0x11)
         {
             r60.x = 0x119;

@@ -18,7 +18,7 @@
 #include "tu_8002AAF0.h"
 #include "tu_80014954.h"
 
-const Block16 dword_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
+const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
 typedef struct
 {
@@ -43,7 +43,7 @@ typedef struct
 extern short uiColor_8008B590;
 extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
-void sub_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
+void DrawMenuItemWindow_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
 {
     struct_AAF0_param t;
     int k;
@@ -200,12 +200,12 @@ void SetMenuItemDigitColor_8002AD80(int flags)
 extern void DrawMenuWindowContents_8002A710(void* a, int b);
 extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
-void sub_8002ADB4(char* a0, int a1, int a2, int a3)
+void DrawMenuItemWithWindow_8002ADB4(char* item, int window, int ot, int time)
 {
-    DrawMenuWindowContents_8002A710(a0, a2);
+    DrawMenuWindowContents_8002A710(item, ot);
     SetFontClutOffset_8003F900(2, 0);
     SetFontClutOffset_8003F900(1, 0);
-    DrawWindow_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
+    DrawWindow_80042460(item + 0x10, window, &pOT_8008D454[ot], time);
 }
 typedef struct
 {
@@ -216,49 +216,49 @@ typedef struct
 extern short uiColor_8008B590;
 extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
-void DrawTextLinesWindow_8002AE38(int a0, Pos16* a1, int a2, RECT* a3, int a4)
+void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int count)
 {
-    int* lines = (int*)a0;
+    int* lines = (int*)text;
     Pos16 p;
     struct_text_param t;
     unsigned int i;
-    p.x = a1->x;
-    p.y = a1->y;
-    for (i = 0; i < a4; i++)
+    p.x = pos->x;
+    p.y = pos->y;
+    for (i = 0; i < count; i++)
     {
         if (lines[i])
         {
-            DrawText_8003E91C(2, lines[i], &p, a2);
+            DrawText_8003E91C(2, lines[i], &p, ot);
         }
         p.y += 12;
     }
-    if (a3)
+    if (rect)
     {
         t.c = 1;
         t.b = 0;
         t.color = uiColor_8008B590;
-        DrawWindow_80042460(a3, (int)&t, &pOT_8008D454[a2], 0);
+        DrawWindow_80042460(rect, (int)&t, &pOT_8008D454[ot], 0);
     }
 }
 // Matched
-void DrawLargeTextBox_8002AF10(int a0, int a1, int a2)
+void DrawLargeTextBox_8002AF10(int text, int pos, int ot)
 {
     RECT r;
     r.x = 10;
     r.y = 0x99;
     r.w = 0x12C;
     r.h = 0x3C;
-    DrawTextBox_8002AFA0(a0, a1, a2, &r, 4);
+    DrawTextBox_8002AFA0(text, pos, ot, &r, 4);
 }
 // Matched
-void DrawSmallTextBox_8002AF58(int a0, int a1, int a2)
+void DrawSmallTextBox_8002AF58(int text, int pos, int ot)
 {
     RECT r;
     r.x = 10;
     r.y = 0xC3;
     r.w = 0x12C;
     r.h = 0x12;
-    DrawTextBox_8002AFA0(a0, a1, a2, &r, 1);
+    DrawTextBox_8002AFA0(text, pos, ot, &r, 1);
 }
 #if 0
 void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
@@ -266,18 +266,18 @@ void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
 }
 #endif
 // Matched
-void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
+void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
 {
     Pos16 p;
-    Pos16* src = (Pos16*)a1;
+    Pos16* src = (Pos16*)pos;
     if (src)
     {
-        ((Pos16*)a3)->x = src->x;
-        ((Pos16*)a3)->y = src->y;
+        ((Pos16*)rect)->x = src->x;
+        ((Pos16*)rect)->y = src->y;
     }
-    p.x = ((Pos16*)a3)->x + 4;
-    p.y = ((Pos16*)a3)->y + 5;
-    DrawTextLinesWindow_8002AE38(a0, &p, a2, a3, a4);
+    p.x = ((Pos16*)rect)->x + 4;
+    p.y = ((Pos16*)rect)->y + 5;
+    DrawTextLinesWindow_8002AE38(text, &p, ot, rect, count);
 }
 typedef struct
 {
@@ -326,8 +326,8 @@ void DrawButtonHelpBar_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched
-void sub_8002B1B0(short a, int b, int c)
+void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot)
 {
-    Block16 local = dword_800741C4;
-    DrawElementIcons_8002B2A4(a, b, c, &local, 0);
+    Block16 local = elementIconRowOffsets_800741C4;
+    DrawElementIcons_8002B2A4(mask, pos, ot, &local, 0);
 }

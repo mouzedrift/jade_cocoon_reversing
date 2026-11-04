@@ -33,33 +33,33 @@ extern int dword_80082668;
 // Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0. Tried: int* param,
 // separate cursor variable (swaps s0/s1), header struct with data[] member, int casts, copy before the MemCopy call,
 // reading n before/after the advance, inline helper (n goes to the stack); permuter 1500 iters
-void sub_80028C60(int a0, char* a1)
+void OnRoomDataLoaded_80028C60(int req, char* data)
 {
     int n;
     char* p;
-    MemCopy_800403E8(cameraState_8008D4F0, a1, 0x104);
-    p = a1;
-    a1 += 0x108;
+    MemCopy_800403E8(cameraState_8008D4F0, data, 0x104);
+    p = data;
+    data += 0x108;
     n = *(int*)(p + 0x104);
-    LoadTiy_80028E74(0, 0, 0, (int*)a1, (int)&dword_80091C20);
-    a1 += n;
-    n = *(int*)a1;
-    a1 += 4;
+    LoadTiy_80028E74(0, 0, 0, (int*)data, (int)&dword_80091C20);
+    data += n;
+    n = *(int*)data;
+    data += 4;
     if (dword_80082670 == 0)
     {
-        sub_80027778(a1, &dword_80091C20);
+        sub_80027778(data, &dword_80091C20);
     }
-    a1 += n;
-    n = *(int*)a1;
-    a1 += 4;
+    data += n;
+    n = *(int*)data;
+    data += 4;
     if (dword_80082670 == 0)
     {
-        sub_800278BC(a1, &dword_80091C20);
+        sub_800278BC(data, &dword_80091C20);
     }
-    a1 += n;
+    data += n;
     if (dword_80082670 == 1)
     {
-        LoadTiy_80028E74(0, 0, 0, (int*)(a1 + 4), (int)dword_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int*)(data + 4), (int)dword_80091C68);
     }
     sub_800272BC(dword_8008B500.id_0, word_8008B860);
     if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
@@ -68,21 +68,21 @@ void sub_80028C60(int a0, char* a1)
     }
 }
 #endif
-INCLUDE_ASM(sub_80028C60);
+INCLUDE_ASM(OnRoomDataLoaded_80028C60);
 extern short dword_8008D474[2];
 extern void sub_80037918(CameraCtrl* p);
 // Matched
-void sub_80028DC0(void)
+void InitRoomCamera_80028DC0(void)
 {
-    CameraCtrl* p;
+    CameraCtrl* cam;
     if (dword_80082670 == 0)
     {
-        p = cameraTask_8008D4A0->entry.buffer;
+        cam = cameraTask_8008D4A0->entry.buffer;
         if (dword_80082668)
         {
             SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
         }
-        sub_80037918(p);
+        sub_80037918(cam);
         SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
     }
 }
@@ -122,38 +122,38 @@ void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int
 extern void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1);
 typedef struct
 {
-    unsigned short field_0;
-    unsigned short field_2;
-    unsigned short field_4;
-    unsigned short field_6;
-    unsigned short field_8;
-    unsigned short field_A;
-} struct_97C0_b;
-void RelocateTimInfo_800297C0(TimInfo* a, struct_97C0_b* b);
+    unsigned short pixelDx_0;
+    unsigned short pixelDy_2;
+    unsigned short clut4Dx_4;
+    unsigned short clut4Dy_6;
+    unsigned short clut8Dx_8;
+    unsigned short clut8Dy_A;
+} TimReloc;
+void RelocateTimInfo_800297C0(TimInfo* a, TimReloc* b);
 // Matched
-void LoadTiyTimsRelocated_80028FDC(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
+void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue)
 {
     TimInfo buf;
     unsigned int i;
-    for (i = 0; i < a4; i++)
+    for (i = 0; i < count; i++)
     {
-        ParseTim_80029708(&buf, (char*)a3 + ((int*)a3)[i + 1]);
-        if (a6)
+        ParseTim_80029708(&buf, (char*)file + ((int*)file)[i + 1]);
+        if (hue)
         {
-            ShiftClutHue_80029D00(&buf, a6);
+            ShiftClutHue_80029D00(&buf, hue);
         }
-        if (a5)
+        if (reloc)
         {
-            RelocateTimInfo_800297C0(&buf, (struct_97C0_b*)a5);
+            RelocateTimInfo_800297C0(&buf, (TimReloc*)reloc);
         }
         LoadTimToVram_800296A0(&buf);
-        if (a0 && a2)
+        if (sprts && tpages)
         {
-            InitSprtFromTim_800298AC(*(int*)a0 + i * 20, *(int*)a2 + i * 8, &buf);
+            InitSprtFromTim_800298AC(*(int*)sprts + i * 20, *(int*)tpages + i * 8, &buf);
         }
-        if (a1)
+        if (polys)
         {
-            InitPolyFT4_80029A10((void*)(*(int*)a1 + i * 40), &buf);
+            InitPolyFT4_80029A10((void*)(*(int*)polys + i * 40), &buf);
         }
     }
 }
@@ -200,7 +200,7 @@ void ShiftVramImageHsv_800290FC(RECT* r, short* dst, short* d)
     free3_8003FC6C(buf);
 }
 // Matched
-void TintVramImage_800292D0(void* a0, void* a1, int a2)
+void TintVramImage_800292D0(void* rect, void* dst, int tint)
 {
     short c[4];
     short o[4];
@@ -210,31 +210,31 @@ void TintVramImage_800292D0(void* a0, void* a1, int a2)
     int x;
     int y;
     int gray;
-    buf = malloc3_8003FC4C(((RECT*)a0)->h * (((RECT*)a0)->w << 1));
-    StoreImage((RECT*)a0, (u_long*)buf);
+    buf = malloc3_8003FC4C(((RECT*)rect)->h * (((RECT*)rect)->w << 1));
+    StoreImage((RECT*)rect, (u_long*)buf);
     DrawSync(0);
     p = buf;
-    for (y = 0; y < ((RECT*)a0)->h; y++)
+    for (y = 0; y < ((RECT*)rect)->h; y++)
     {
-        for (x = 0; x < ((RECT*)a0)->w; x++)
+        for (x = 0; x < ((RECT*)rect)->w; x++)
         {
             UnpackColor555_80029C68((unsigned short*)c, p);
             if (c[0] || c[1] || c[2])
             {
                 gray = (c[0] + c[1] + c[2]) / 3;
-                o[0] = ((c[0] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[0] * ((short*)a2)[4] / 4096;
-                o[1] = ((c[1] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[1] * ((short*)a2)[4] / 4096;
-                o[2] = ((c[2] * (0x1000 - ((short*)a2)[3]) + gray * ((short*)a2)[3]) / 4096) * (0x1000 - ((short*)a2)[4]) / 4096 + ((short*)a2)[2] * ((short*)a2)[4] / 4096;
+                o[0] = ((c[0] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[0] * ((short*)tint)[4] / 4096;
+                o[1] = ((c[1] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[1] * ((short*)tint)[4] / 4096;
+                o[2] = ((c[2] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[2] * ((short*)tint)[4] / 4096;
                 o[3] = c[3];
                 PackColor555_80029CB4(p, (unsigned short*)o);
             }
             p++;
         }
     }
-    r2.x = ((short*)a1)[0];
-    r2.y = ((short*)a1)[1];
-    r2.w = ((RECT*)a0)->w;
-    r2.h = ((RECT*)a0)->h;
+    r2.x = ((short*)dst)[0];
+    r2.y = ((short*)dst)[1];
+    r2.w = ((RECT*)rect)->w;
+    r2.h = ((RECT*)rect)->h;
     LoadImage(&r2, (u_long*)buf);
     DrawSync(0);
     free3_8003FC6C(buf);
@@ -301,31 +301,31 @@ int ParseTim_80029708(void* arg0, void* arg1)
     return 1;
 }
 // Matched
-void RelocateTimInfo_800297C0(TimInfo* a, struct_97C0_b* b)
+void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc)
 {
-    if (a->mode_valid)
+    if (tim->mode_valid)
     {
-        switch (a->mode)
+        switch (tim->mode)
         {
         case 0:
-            *(unsigned short*)&a->crect.x += b->field_4;
-            *(unsigned short*)&a->crect.y += b->field_6;
+            *(unsigned short*)&tim->crect.x += reloc->clut4Dx_4;
+            *(unsigned short*)&tim->crect.y += reloc->clut4Dy_6;
             break;
         case 1:
-            *(unsigned short*)&a->crect.x += b->field_8;
-            *(unsigned short*)&a->crect.y += b->field_A;
+            *(unsigned short*)&tim->crect.x += reloc->clut8Dx_8;
+            *(unsigned short*)&tim->crect.y += reloc->clut8Dy_A;
             break;
         }
     }
-    *(unsigned short*)&a->prect.x += b->field_0;
-    *(unsigned short*)&a->prect.y += b->field_2;
+    *(unsigned short*)&tim->prect.x += reloc->pixelDx_0;
+    *(unsigned short*)&tim->prect.y += reloc->pixelDy_2;
 }
 // Matched
-void InitSprtFromTimData_80029868(int a0, int a1, int a2)
+void InitSprtFromTimData_80029868(int sprt, int tim, int tpage)
 {
     TimInfo buf;
-    ParseTim_80029708(&buf, (void*)a1);
-    InitSprtFromTim_800298AC(a0, a2, &buf);
+    ParseTim_80029708(&buf, (void*)tim);
+    InitSprtFromTim_800298AC(sprt, tpage, &buf);
 }
 // Matched
 void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, TimInfo* t)
@@ -388,7 +388,7 @@ void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
 // Matched
-void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
+void ShiftClutHue_80029D00(TimInfo* t, unsigned int hue)
 {
     short rgb[4];
     short hsv[4];
@@ -403,14 +403,14 @@ void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1)
             UnpackColor555_80029C68((unsigned short*)rgb, &p[i]);
             if (Rgb555ToHsv_80029EA8(rgb, hsv))
             {
-                if (a1 & 0x10000)
+                if (hue & 0x10000)
                 {
-                    v = a1 >> 16;
-                    hsv[0] = hsv[0] + (a1 - hsv[0] * 360 / 192) + (v & 0xFFFE) * 192 / 360;
+                    v = hue >> 16;
+                    hsv[0] = hsv[0] + (hue - hsv[0] * 360 / 192) + (v & 0xFFFE) * 192 / 360;
                 }
                 else
                 {
-                    v = a1 * 192 / 360;
+                    v = hue * 192 / 360;
                     hsv[0] = (short)(hsv[0] + v) % 192;
                 }
                 HsvToRgb555_8002A040(hsv, rgb);

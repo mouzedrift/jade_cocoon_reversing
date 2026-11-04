@@ -2920,7 +2920,7 @@ int dword_8008276C[12] = {
     -1, -1, -1, 0x80082708, 0x80082740, 0, 2, 0,
     8, 0, 0x80082778,
 };
-short dword_8008279C[16] = {
+short scrollArrowIcons_8008279C[16] = {
     4, 3, 5, 69, 68, 70, 22, 21,
     23, 16, 15, 17, 16, 15, 17,
 };
@@ -2928,7 +2928,7 @@ int elementIcons_800827BC[5] = { 61, 231, 101, 222, 129 };
 int elementIconsUnlit_800827D0[4] = { 80, 95, 204, 121 };
 int dword_800827E0 = 129;
 char aFb[8] = { 10, 0, 9, 0, 70, 0, 66 };
-unsigned short dword_800827EC[2] = { 13, 9 };
+unsigned short portraitWindowPos_800827EC[2] = { 13, 9 };
 unsigned char dword_800827F0[8] = { 81, 62, 41, 199, 63 };
 int dword_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF426A6, 0x47F01FA3 };
 unsigned char *off_8008280C[5] = { (void *)dword_800827F8, (void *)&dword_800827F8[1], (void *)&dword_800827F8[2], (void *)&dword_800827F8[3], (void *)&dword_800827F8[4] };

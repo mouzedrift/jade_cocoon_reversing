@@ -89,7 +89,7 @@ typedef struct
 } EntShopentr;
 extern EntShopentr* sub_800B9C5C(int a0);
 extern void sub_8002FAA0(int a0, void* a1, void* a2, short a3);
-extern void sub_8002B1B0(short a0, void* a1, short a2);
+extern void DrawElementIconsRow_8002B1B0(short a0, void* a1, short a2);
 extern char str_800B6F08[];
 
 INCLUDE_OVERLAY_ASM(shopentr, dword_800B6D00);
@@ -419,7 +419,7 @@ void sub_800B7684(CtxShopentr* c)
 
 #if 0
 // Not matched: i/s18 register allocation and delay slot filling differ (19 words).
-// Copying s18 into a short k (k = s18; if (k) sub_8002B1B0(k, p, col);) fixes the registers and the
+// Copying s18 into a short k (k = s18; if (k) DrawElementIconsRow_8002B1B0(k, p, col);) fixes the registers and the
 // sign extension, but then the beqz delay slot is filled from the taken path (one extra word).
 void sub_800B7858(CtxShopentr* c)
 {
@@ -472,7 +472,7 @@ void sub_800B7858(CtxShopentr* c)
         p[0] = 0xb2;
         p[1] = a.y + 2;
         if ((short)s18)
-            sub_8002B1B0(s18, p, col);
+            DrawElementIconsRow_8002B1B0(s18, p, col);
     }
     l28[0] = 0x8c;
     l28[1] = 0x20;

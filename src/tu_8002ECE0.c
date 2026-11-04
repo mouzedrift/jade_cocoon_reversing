@@ -184,7 +184,7 @@ void sub_8002F1C8(UnitStatus* a0, int a1, int a2, int a3, int a4, int a5, int a6
 }
 
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
-extern void sub_8002B228(short a, unsigned short* pos, int ot, int flags);
+extern void DrawElementIconsGrid_8002B228(short a, unsigned short* pos, int ot, int flags);
 // Matched
 void sub_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* pos, int a4, int a5)
 {
@@ -197,7 +197,7 @@ void sub_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* pos, int a4, i
     sub_8002EFC4((char*)&a0->hp_8, a1, a2, loc, a4, (a5 ^ 1) & 1);
     loc[0] = pos[0] + 0x45;
     loc[1] = pos[1] + 4;
-    sub_8002B228(sub_8003412C(a0), loc, a4, a5);
+    DrawElementIconsGrid_8002B228(sub_8003412C(a0), loc, a4, a5);
     if (a5 & 2)
     {
         loc[0] = pos[0] + 4;
@@ -250,7 +250,7 @@ typedef struct
     unsigned char c;
 } TextParam_F480;
 extern short uiColor_8008B590;
-extern void sub_8002ADB4(char* a0, int a1, int a2, int a3);
+extern void DrawMenuItemWithWindow_8002ADB4(char* a0, int a1, int a2, int a3);
 // Matched
 void sub_8002F480(int* flags, unsigned short* pos, int ot, int reverse)
 {
@@ -292,7 +292,7 @@ void sub_8002F480(int* flags, unsigned short* pos, int ot, int reverse)
             {
                 icons[j]->r.x = loc[0];
                 icons[j]->r.y = loc[1];
-                sub_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&t, ot, 0);
                 loc[0] += icons[j]->r.w;
             }
             else
@@ -300,7 +300,7 @@ void sub_8002F480(int* flags, unsigned short* pos, int ot, int reverse)
                 loc[0] -= icons[j]->r.w;
                 icons[j]->r.x = loc[0];
                 icons[j]->r.y = loc[1];
-                sub_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&t, ot, 0);
             }
         }
     }

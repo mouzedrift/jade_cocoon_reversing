@@ -28,7 +28,7 @@ typedef struct
     short field_A;
 } struct_FD0C;
 extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
-extern void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3);
+extern void DrawPortrait_8002A42C(unsigned short* pos, short a1, int a2, short a3);
 extern void DrawUiWindow_8002A384(struct_FD0C* p);
 // Matched
 void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
@@ -54,7 +54,7 @@ void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
     InterpolateWindowRect_8004196C(buf, &r, a1, 8, 0);
     loc[0] = 12;
     loc[1] = 0x2E;
-    sub_8002A42C(loc, 0, a4, a0);
+    DrawPortrait_8002A42C(loc, 0, a4, a0);
     s1.field_8 = a2;
     s1.field_0 = buf;
     s1.field_4 = v;

@@ -92,7 +92,7 @@ extern char name_800C59A0[];
 extern void sub_8002F7D0(void* p, int a1);
 extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
 extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
+extern void DrawScrollArrow_8002B3DC(ShortPair_equip p, int b, void* c, int d);
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800C5440(short a0, short a1, int a2);
 typedef struct Widget_equip
@@ -543,7 +543,7 @@ void sub_800C5314(EquipCtx_equip* c)
         u.p.b = 0;
         r50.x = 0x112;
         r50.y = 0x57;
-        sub_8002B3DC(u.p, frameCount_8008D3FC, &r50, 0xe);
+        DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &r50, 0xe);
         u.s.a = uiColor_8008B590;
         u.s.b = 0;
         u.s.c = mode;

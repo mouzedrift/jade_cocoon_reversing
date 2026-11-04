@@ -18,30 +18,30 @@
 #include "tiy.h"
 #include "tu_80014954.h"
 
-const CVECTOR dword_800741E4 = { 128, 128, 128 };
-const CVECTOR dword_800741E8 = { 255, 255, 255 };
+const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
+const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };
 
 extern int elementIcons_800827BC[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
-void DrawElementIcons_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
+void DrawElementIcons_8002B2A4(short mask, short* base, int ot, short (*offsets)[2], int showUnlit)
 {
     short pos[2];
     int i;
     int v;
     for (i = 0; i < 4; i++)
     {
-        pos[0] = b[0] + d[i][0];
-        pos[1] = b[1] + d[i][1];
-        if (a == 0)
+        pos[0] = base[0] + offsets[i][0];
+        pos[1] = base[1] + offsets[i][1];
+        if (mask == 0)
         {
             v = elementIconsUnlit_800827D0[4];
         }
-        else if ((a >> i) & 1)
+        else if ((mask >> i) & 1)
         {
             v = elementIcons_800827BC[i];
         }
-        else if (e == 0)
+        else if (showUnlit == 0)
         {
             v = elementIconsUnlit_800827D0[4];
         }
@@ -50,7 +50,7 @@ void DrawElementIcons_8002B2A4(short a, short* b, int c, short (*d)[2], int e)
             v = elementIconsUnlit_800827D0[i];
         }
         SetShadeTex(uiTiySprts_8008D620 + v, 1);
-        DrawUiTiySprt_8002C06C(pos, v, c);
+        DrawUiTiySprt_8002C06C(pos, v, ot);
     }
 }
 typedef struct
@@ -58,12 +58,12 @@ typedef struct
     unsigned short a;
     unsigned short b;
 } UShortPair;
-extern const CVECTOR dword_800741E4;
-extern const CVECTOR dword_800741E8;
+extern const CVECTOR colorGrey_800741E4;
+extern const CVECTOR colorWhite_800741E8;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 #if 0
 // Not matched: same shape; the original reloads publicTiyPolyFT4s_8008D430 one division earlier in the third vertex (CSE path length) and allocates registers differently
-void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
+void DrawScrollArrow_8002B3DC(UShortPair p, int t, int pos, int ot)
 {
     CVECTOR c0;
     CVECTOR c1;
@@ -74,9 +74,9 @@ void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
     int nx;
     int ny;
     short* c = (short*)pos;
-    c0 = dword_800741E4;
-    c1 = dword_800741E8;
-    idx = dword_8008279C[(short)saveData_8008B570.uiColor_20.i * 3 + p.a];
+    c0 = colorGrey_800741E4;
+    c1 = colorWhite_800741E8;
+    idx = scrollArrowIcons_8008279C[(short)saveData_8008B570.uiColor_20.i * 3 + p.a];
     publicTiyPolyFT4s_8008D430[idx].x0 = 1 - publicTiySprts_8008D434[idx].w / 2;
     publicTiyPolyFT4s_8008D430[idx].y0 = 1 - publicTiySprts_8008D434[idx].h / 2;
     publicTiyPolyFT4s_8008D430[idx].x1 = publicTiySprts_8008D434[idx].w / 2;
@@ -116,37 +116,37 @@ void sub_8002B3DC(UShortPair p, int t, int pos, int ot)
     AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], 2);
 }
 #endif
-INCLUDE_ASM(sub_8002B3DC);
-extern void sub_8002B3DC(UShortPair p, int b, int c, int d);
+INCLUDE_ASM(DrawScrollArrow_8002B3DC);
+extern void DrawScrollArrow_8002B3DC(UShortPair p, int b, int c, int d);
 // Matched
-void sub_8002B8DC(UShortPair a, short* p, int c, int d)
+void DrawScrollArrows_8002B8DC(UShortPair arrow, short* p, int pos, int ot)
 {
-    switch (a.b)
+    switch (arrow.b)
     {
     case 0:
     case 2:
         if (p[5] > 0)
         {
-            a.b = 0;
-            sub_8002B3DC(a, GetTime30Hz_8002C64C(), c, d);
+            arrow.b = 0;
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos, ot);
         }
         if (p[0] * p[1] + p[5] < (unsigned short)p[2])
         {
-            a.b = 2;
-            sub_8002B3DC(a, GetTime30Hz_8002C64C(), c + 4, d);
+            arrow.b = 2;
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 4, ot);
         }
         break;
     case 1:
     case 3:
         if (p[5] > 0)
         {
-            a.b = 3;
-            sub_8002B3DC(a, GetTime30Hz_8002C64C(), c, d);
+            arrow.b = 3;
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos, ot);
         }
         if (p[0] * p[1] + p[5] < (unsigned short)p[2])
         {
-            a.b = 1;
-            sub_8002B3DC(a, GetTime30Hz_8002C64C(), c + 4, d);
+            arrow.b = 1;
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 4, ot);
         }
         break;
     }
@@ -259,7 +259,7 @@ unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned 
     }
     return 0;
 }
-extern const CVECTOR dword_800741E8;
+extern const CVECTOR colorWhite_800741E8;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 extern void sub_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
@@ -270,8 +270,8 @@ void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int o
     CVECTOR c1;
     if (scale)
     {
-        c0 = dword_800741E8;
-        c1 = dword_800741E8;
+        c0 = colorWhite_800741E8;
+        c1 = colorWhite_800741E8;
         setPolyFT4(&poly);
         poly.code = publicTiyPolyFT4s_8008D430[idx].code;
         poly.clut = publicTiyPolyFT4s_8008D430[idx].clut;

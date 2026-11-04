@@ -633,7 +633,7 @@ typedef struct
 
 
 // ---------------------------------------------------------------------------------------------
-// collision meshes of the current map (dword_8008B500, filled by sub_80028C60's loader)
+// collision meshes of the current map (dword_8008B500, filled by OnRoomDataLoaded_80028C60's loader)
 
 typedef struct MapVtx
 {
