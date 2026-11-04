@@ -58,6 +58,6 @@ extern EventDesc eventDescs_80078EB8[];
 
 extern int dword_80078E90[10];
 
-void sub_800B7650();
+void LoadMenuStart_800B7650();
 
 #endif

@@ -3613,5 +3613,5 @@ sub_800A51AC=0x800a51ac; // overlay entry point (SOUNDTST), overlayCallbacks_800
 sub_800A1B24=0x800a1b24; // overlay entry point (TSTMODEL), overlayCallbacks_800869D0
 sub_800A200C=0x800a200c; // overlay entry point (TSTCOMPO), overlayCallbacks_800869D0
 sub_800A7574=0x800a7574; // overlay entry point (GAME), overlayCallbacks_800869D0
-sub_800B7650=0x800b7650; // overlay function (LOAD), in eventDescs_80078EB8
+LoadMenuStart_800B7650=0x800b7650; // overlay function (LOAD), in eventDescs_80078EB8
 GetHeapStart_80010538=0x80010538; // function behind dword_8001052C (was hidden in its span), returns heapStart_800CD858
