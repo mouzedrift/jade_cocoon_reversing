@@ -19,15 +19,6 @@ typedef struct CombComDlg
     const char* line3_C;
 } CombComDlg;
 
-// the battle command being chosen (COMBBTL's CombBtlCmd)
-typedef struct CombComCmd
-{
-    int kind_0;
-    int arg_4;
-    int mask_8; // acting unit bits
-    int targets_C; // target unit bits
-} CombComCmd;
-
 // a menu entry / window (0x38 bytes)
 typedef struct CombComItem
 {
@@ -137,7 +128,7 @@ extern unsigned char menuState_800CD83A;
 extern unsigned char msgTimer_800CD83B;
 extern int targetSlot_800CD83C;
 extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C (SetFocusedMinion_800CBAD4 reads it with lbu)
-extern CombComCmd* cmd_800CD840;
+extern BattleCmd* cmd_800CD840;
 extern unsigned char targetFlags_800CD844;
 extern unsigned char byte_800CD845;
 extern int padIndex_800CD848;
@@ -212,7 +203,5 @@ extern int GetSkillTargetFlags_80031B0C(int skills, int idx); // -> unit_query.h
 extern int CheckSkillUsable_80033C98(ListMenuState* menu);   // -> unit_query.h
 extern int CheckMagicCastable_80033C08(ListMenuState* menu); // -> unit_query.h
 extern int CheckMagicUsable_80034068(short* cmd);            // -> msg_window.h
-extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombComCmd* cmd, ActionResult* out); // -> common_tu.h
-extern int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, CombComCmd* cmd, ActionResult* out); // -> common_tu.h: common.c defines it with 3 params, but the callers pass the result in a3 (unused 4th param)
 
 #endif

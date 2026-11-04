@@ -175,7 +175,7 @@ unsigned char side_800CD839 = 0;
 unsigned char menuState_800CD83A = 0;
 unsigned char msgTimer_800CD83B = 0;
 int targetSlot_800CD83C = 0;
-CombComCmd *cmd_800CD840 = 0;
+BattleCmd *cmd_800CD840 = 0;
 unsigned char targetFlags_800CD844 = 0;
 unsigned char byte_800CD845 = 0;
 int padIndex_800CD848 = 0;
@@ -297,7 +297,7 @@ EventEntry* CombComStart_800CB7AC(int cmd, int side)
     if (e)
     {
         e->cb_8 = (EventEntryFn)CmdMenuTask_800CD16C;
-        cmd_800CD840 = (CombComCmd*)cmd;
+        cmd_800CD840 = (BattleCmd*)cmd;
         side_800CD839 = side;
         e->flags = (e->flags | 1) & ~0x8000;
         if (!side)

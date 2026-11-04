@@ -545,7 +545,7 @@ void StartReactions_800BDFAC()
     }
 }
 
-BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BatCommand* cmd, int isReaction, int unit)
+BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BattleCmd* cmd, int isReaction, int unit)
 {
     BatActionTiming timing;
     if ((saveData_8008B570.flags_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
@@ -572,7 +572,7 @@ BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BatCommand* cmd,
     return out;
 }
 
-void TriggerUnitAction_800BE14C(BatCommand* cmd, int isReaction, int unit)
+void TriggerUnitAction_800BE14C(BattleCmd* cmd, int isReaction, int unit)
 {
     int side;
     if (saveData_8008B570.flags_0 & 0x20)
@@ -717,7 +717,7 @@ void UpdateAction_800BE3C0()
         {
             if (actingUnit_800C9C7C != i)
             {
-                BatCommand* reaction = &unitReactions_800C9CC8[i];
+                BattleCmd* reaction = &unitReactions_800C9CC8[i];
                 if ((reaction->kind_0 == 5 && GetSealResultFlags_80013358(reaction->arg_4) == 1) || (reaction->kind_0 == 0x1A && GetSealResultFlags_80013358(reaction->arg_4) == 1))
                 {
                     AddEnemyItem_800A2898(i - 4);

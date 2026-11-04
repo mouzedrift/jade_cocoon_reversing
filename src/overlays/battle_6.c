@@ -373,13 +373,13 @@ short actorHpChange_800C9C7E = 0;
 short actorMpChange_800C9C80 = 0;
 unsigned char summonedUnit_800C9C82 = 0;
 int dword_800C9C84 = 0;
-BatCommand curCommand_800C9C88 = { 0 };
+BattleCmd curCommand_800C9C88 = { 0 };
 unsigned char commandUnit_800C9C98 = 0;
 unsigned char shownUnit_800C9C99 = 0;
 int dword_800C9C9C = 0;
 int unitStatusInflicted_800C9CA0[7] = { 0 };
 char unitHitKinds_800C9CBC[12] = { 0 };
-BatCommand unitReactions_800C9CC8[7] = { { 0 } };
+BattleCmd unitReactions_800C9CC8[7] = { { 0 } };
 short unitHpDamage_800C9D38[8] = { 0 };
 short unitMpDamage_800C9D48[8] = { 0 };
 int unitResultFlags_800C9D58[7] = { 0 };
@@ -420,7 +420,7 @@ int enemyMask_800C9E4C = 0;
 unsigned char menuPage_800C9E50 = 0;
 unsigned char menuErrorTimer_800C9E51 = 0;
 int menuTarget_800C9E54 = 0;
-BatCommand menuCommand_800C9E58 = { 0 };
+BattleCmd menuCommand_800C9E58 = { 0 };
 unsigned char targetFlags_800C9E68 = 0;
 BatMenuItem *menuItems_800C9E6C = 0;
 BatEnemyTargets enemyTargets_800C9E70 = { 0 };
@@ -429,7 +429,7 @@ int menuErrorText_800C9E7C = 0;
 unsigned char enemyUnits_800C9E80[4] = { 0 };
 
 // Matched
-void ChooseEnemyCommand_800C4118(BatCommand* cmd, UnitStats* self, int slot, unsigned int script)
+void ChooseEnemyCommand_800C4118(BattleCmd* cmd, UnitStats* self, int slot, unsigned int script)
 {
     EnemyAi ai;
     unsigned int species;
@@ -2085,7 +2085,7 @@ void AiSetCommand_800C6AFC(EnemyAi* ai, int kind, int arg)
 
 void AiSetCommandOnSelf_800C6B24(EnemyAi* ai, int kind, int arg)
 {
-    BatCommand* cmd;
+    BattleCmd* cmd;
     ai->cmd_8->kind_0 = kind;
     ai->cmd_8->arg_4 = arg;
     cmd = ai->cmd_8;
@@ -2882,8 +2882,8 @@ void BattleMenuDraw_800C7DA8()
 void PreviewCommandResult_800C83B0()
 {
     BatTargetQuery query;
-    BatCommand cmd;
-    BatActionResult res;
+    BattleCmd cmd;
+    ActionResult res;
     unsigned int i;
     int bit;
     UnitStatus* self;

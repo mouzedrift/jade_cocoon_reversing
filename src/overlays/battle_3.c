@@ -133,8 +133,8 @@ int AreReactionsDone_800BEB68()
 
 void ApplyBattleCommand_800BEBB8()
 {
-    BatCommand cmd;
-    BatActionResult res;
+    BattleCmd cmd;
+    ActionResult res;
     UnitStatus* actor;
     UnitStatus* target;
     int escaped;

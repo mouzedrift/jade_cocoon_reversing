@@ -280,10 +280,10 @@ extern int GetUnitSkills_80031B30(int unit);
 extern int GetSkillMpCost_80031A04(int skills, int slot);
 extern void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* out);
 extern void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode);
-extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, int* cmd, ActionResult* out);
+extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out);
 extern int Rand100_80013E30(void);
 // Matched
-void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cmd, ActionResult* out)
+void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {
     int actorStats[12];
     int targetStats[12];
@@ -307,8 +307,8 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     int j;
     int roll;
 
-    actorUnit = LowestSetBit_80014358(cmd[2]);
-    targetUnit = LowestSetBit_80014358(cmd[3]);
+    actorUnit = LowestSetBit_80014358(cmd->mask_8);
+    targetUnit = LowestSetBit_80014358(cmd->targets_C);
     out->kind_0 = 0;
     out->flags_4 = 0;
     out->status_8 = 0;
@@ -320,33 +320,33 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     out->mpDamage_20 = 0;
     SetTargetHitFlag_800184A0(targetUnit, 0);
     action = &local;
-    switch (cmd[0])
+    switch (cmd->kind_0)
     {
     case 0:
-        if (cmd[2] == 1)
+        if (cmd->mask_8 == 1)
         {
             MemCopy_800403E8(&local, GetLevantWeaponAction_8001D260(), 12);
         }
         break;
     case 6:
         skills = GetUnitSkills_80031B30(actorUnit & 0xFF);
-        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(skills + cmd[1] * 4), targetUnit);
-        out->actorMpCost_10 = GetSkillMpCost_80031A04(skills, cmd[1]);
+        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(skills + cmd->arg_4 * 4), targetUnit);
+        out->actorMpCost_10 = GetSkillMpCost_80031A04(skills, cmd->arg_4);
         break;
     case 1:
-        MemCopy_800403E8(&local, GetMagicAction_8001AD64(cmd[1]), 12);
-        out->actorMpCost_10 = GetMagicMpCost_8001AC58(cmd[1]);
+        MemCopy_800403E8(&local, GetMagicAction_8001AD64(cmd->arg_4), 12);
+        out->actorMpCost_10 = GetMagicMpCost_8001AC58(cmd->arg_4);
         break;
     case 4:
-        MemCopy_800403E8(&local, GetItemData_8001CDF4(cmd[1]), 12);
+        MemCopy_800403E8(&local, GetItemData_8001CDF4(cmd->arg_4), 12);
         break;
     case 26:
         break;
     }
     CalcEffectiveStatus_800335D0(actor, &actorStatus);
     CalcEffectiveStatus_800335D0(target, &targetStatus);
-    CalcBattleStats_80013EE8(actorStats, &actorStatus, action, cmd[2]);
-    CalcBattleStats_80013EE8(targetStats, &targetStatus, action, cmd[3]);
+    CalcBattleStats_80013EE8(actorStats, &actorStatus, action, cmd->mask_8);
+    CalcBattleStats_80013EE8(targetStats, &targetStatus, action, cmd->targets_C);
     ApplyStatusPenalties_80012828(actorStats, &actorStatus);
     ApplyStatusPenalties_80012828(targetStats, &targetStatus);
     if (out->areaElement_24 == action->element_8 && action->power_2 != 0)
@@ -378,16 +378,16 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
     if (id != 0xD3)
     {
-        if ((GetMinionEnhancementBody_80019C0C(id) & 2) && cmd[0] == 1 && action->power_2 > 0)
+        if ((GetMinionEnhancementBody_80019C0C(id) & 2) && cmd->kind_0 == 1 && action->power_2 > 0)
         {
             action->power_2 = (0xFFFF < action->power_2 + 10) ? -1 : (unsigned short)action->power_2 + 10;
         }
-        if ((GetMinionEnhancementBody_80019C0C(id) & 1) && cmd[0] == 6 && action->power_2 > 0)
+        if ((GetMinionEnhancementBody_80019C0C(id) & 1) && cmd->kind_0 == 6 && action->power_2 > 0)
         {
             action->power_2 = (0xFFFF < action->power_2 + 10) ? -1 : (unsigned short)action->power_2 + 10;
         }
     }
-    switch (cmd[0])
+    switch (cmd->kind_0)
     {
     case 0:
     case 1:
@@ -472,28 +472,28 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     }
 }
 // Matched
-int IsDrainAction_80013228(int actor, int target, int* cmd)
+int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {
     ActionData local = defaultActionData_80071F58;
     ActionData* action = &local;
-    int actorUnit = LowestSetBit_80014358(cmd[2]);
-    int targetUnit = LowestSetBit_80014358(cmd[3]);
-    switch (cmd[0])
+    int actorUnit = LowestSetBit_80014358(cmd->mask_8);
+    int targetUnit = LowestSetBit_80014358(cmd->targets_C);
+    switch (cmd->kind_0)
     {
     case 0:
-        if (cmd[2] == 1)
+        if (cmd->mask_8 == 1)
         {
             action = GetLevantWeaponAction_8001D260();
         }
         break;
     case 6:
-        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(actorUnit & 0xFF) + cmd[1] * 4), targetUnit);
+        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(actorUnit & 0xFF) + cmd->arg_4 * 4), targetUnit);
         break;
     case 1:
-        action = GetMagicAction_8001AD64(cmd[1]);
+        action = GetMagicAction_8001AD64(cmd->arg_4);
         break;
     case 4:
-        action = GetItemData_8001CDF4(cmd[1]);
+        action = GetItemData_8001CDF4(cmd->arg_4);
         break;
     case 26:
         break;

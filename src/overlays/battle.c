@@ -878,7 +878,7 @@ void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
     BatTurnWork* w = work;
     unsigned int mask;
     int i;
-    BatCommand* reactions;
+    BattleCmd* reactions;
     if (NeedsStatusReaction_800BC1A8(curCommand_800C9C88.targets_C) == 1)
     {
         mask = curCommand_800C9C88.targets_C;

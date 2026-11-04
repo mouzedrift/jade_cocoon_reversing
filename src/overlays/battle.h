@@ -1,6 +1,7 @@
 // BATTLE.BIN: declarations shared by its source files
 // BATTLE.BIN
 #include "common.h"
+#include "common_tu.h"
 
 #include "funcs.h"
 
@@ -59,14 +60,6 @@ extern int partyMinionMask_800C9E78;
 
 // a battle command (curCommand_800C9C88 is the current one, unitReactions_800C9CC8 holds each unit's reaction).
 // Units: 0 Levant, 1..3 his minions (one is summoned at a time), 4..6 the enemies.
-typedef struct BatCommand
-{
-    int kind_0; // 0 attack, 1 magic, 2 summon, 3 recall, 4 item, 5 capture, 6 special attack, 7 flee,
-                // 8 change fighter, 0xB killed, 0x12 defend, 0x14 none, 0x15 an enemy calls an ally, 0x1A capture of the last enemy
-    int arg_4;
-    int mask_8; // acting unit bits
-    int targets_C; // target unit bits
-} BatCommand;
 
 // the battle menu's enemy target list. bits_2 is a member (a global array would be word aligned, it is at 0x800C9E72);
 // the code indexes it through its decayed address (`*(t.bits_2 + n)`, a bits pointer), which keeps the base at +2
@@ -83,7 +76,7 @@ typedef struct EnemyAi
 {
     unsigned int* magicBits_0; // &self_10->magicBits_80
     UnitSkills* skills_4;      // &self_10->skills_6C
-    BatCommand* cmd_8;           // the command to fill in
+    BattleCmd* cmd_8;           // the command to fill in
     int slot_C;                // the enemy's slot (unit slot_C + 4)
     UnitStats* self_10;        // the acting encounter minion
     UnitStatus* target_14;     // its target: Levant or the summoned minion
@@ -610,7 +603,7 @@ extern void StartEnemyCommandAction_800A2684();
 
 extern void TriggerLevantAction_800A8C0C(int b);
 
-extern void TriggerEnemyEffects_800A2760(BatCommand* p, int b);
+extern void TriggerEnemyEffects_800A2760(BattleCmd* p, int b);
 
 extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
@@ -630,7 +623,6 @@ extern void SetEnemyStatusTint_800A284C(int a);
 
 extern void SetAreaElementLight_80039ED8(int a);
 
-extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
 
@@ -668,25 +660,7 @@ extern void StartPadVibration_80036528(int a, int b);
 
 
 
-typedef struct BatActionResult
-{
-    unsigned short kind_0;
-    unsigned short arg_2;
-    int flags_4;
-    int status_8;         // status bits inflicted on the target
-    int actorHpCost_C;
-    int actorMpCost_10;
-    int actorHpDamage_14; // hp/mp the actor takes from the target (counter, drain)
-    int actorMpDamage_18;
-    int hpDamage_1C;      // the target's hp/mp damage
-    int mpDamage_20;
-    short areaElement_24; // in: the area element, out: the new one
-    short fixedElement_26; // the stage's fixed element (-1: magic can change the area element)
-} BatActionResult; // the exe's ActionResult (common.c)
-
-extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BatCommand* cmd, BatActionResult* out);
-
-extern void sub_800B4390(UnitStatus* actor, UnitStatus* target, BatCommand* cmd, BatActionResult* res, BatChainRecord* chain);
+extern void sub_800B4390(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* res, BatChainRecord* chain);
 
 extern void MarkSpeciesCaptured_800BF9F0(int species);
 
@@ -1100,7 +1074,6 @@ extern void DrawMenuHelpText_800C8828(int text);
 
 
 
-extern int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BatCommand* cmd, BatActionResult* res);
 
 
 
@@ -1490,13 +1463,13 @@ extern short actorHpChange_800C9C7E;
 extern short actorMpChange_800C9C80;
 extern unsigned char summonedUnit_800C9C82;
 extern int dword_800C9C84;
-extern BatCommand curCommand_800C9C88;
+extern BattleCmd curCommand_800C9C88;
 extern unsigned char commandUnit_800C9C98;
 extern unsigned char shownUnit_800C9C99;
 extern int dword_800C9C9C;
 extern int unitStatusInflicted_800C9CA0[7];
 extern char unitHitKinds_800C9CBC[12];
-extern BatCommand unitReactions_800C9CC8[7];
+extern BattleCmd unitReactions_800C9CC8[7];
 extern short unitHpDamage_800C9D38[8];
 extern short unitMpDamage_800C9D48[8];
 extern int unitResultFlags_800C9D58[7];
@@ -1537,7 +1510,7 @@ extern int enemyMask_800C9E4C;
 extern unsigned char menuPage_800C9E50;
 extern unsigned char menuErrorTimer_800C9E51;
 extern int menuTarget_800C9E54;
-extern BatCommand menuCommand_800C9E58;
+extern BattleCmd menuCommand_800C9E58;
 extern unsigned char targetFlags_800C9E68;
 extern BatMenuItem *menuItems_800C9E6C;
 
@@ -1681,9 +1654,9 @@ int IsTargetWeakToMagic_800C6EE4(EnemyAi* ai);
 int IsUncapturableSpecies_800BF980(int species);
 void LoadStageEffects_800BC878();
 void RecoverPartyAfterBattle_800BA97C();
-BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int isReaction);
+BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BattleCmd* cmd, int isReaction);
 void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpChange);
-int TriggerMinionAction_800C0E84(BatCommand* cmd, int isReaction); // isReaction unused (TriggerUnitAction_800BE14C passes it to all three Trigger*Action)
+int TriggerMinionAction_800C0E84(BattleCmd* cmd, int isReaction); // isReaction unused (TriggerUnitAction_800BE14C passes it to all three Trigger*Action)
 
 /* GAME-side (game.h) */
 extern int CanFleeFromEnemy_800A28FC(int idx);

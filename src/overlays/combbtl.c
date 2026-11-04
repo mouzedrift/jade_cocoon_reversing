@@ -145,18 +145,18 @@ int waitTimer_800A84D4 = 0;
 CombBtlHist commandHistory_800A84D8[10] = { { 0 } };
 int fileRequest_800A85A0 = 0;
 int dword_800A85A4 = 0;
-CombBtlCmd actorCmd_800A85A8 = { 0 };
+BattleCmd actorCmd_800A85A8 = { 0 };
 int actorSide_800A85B8 = 0;
 unsigned char swapSlot_800A85BC = 0;
 unsigned char actorSlot_800A85BD = 0;
 const char** announcerLines_800A85C0 = 0;
 int dword_800A85C4 = 0;
-CombBtlResult result_800A85C8 = { 0 };
+ActionResult result_800A85C8 = { 0 };
 int statusInflicted_800A85F0[2] = { 0 };
 int loserSide_800A85F8 = 0;
 unsigned char sideHitKind_800A85FC[4] = { 0 };
-CombBtlCmd chosenCmd_800A8600 = { 0 };
-CombBtlCmd targetCmd_800A8610 = { 0 };
+BattleCmd chosenCmd_800A8600 = { 0 };
+BattleCmd targetCmd_800A8610 = { 0 };
 int targetSide_800A8620 = 0;
 
 void CombBtlStart_800A4B8C(CombBtlTask* t, int a)
@@ -642,13 +642,13 @@ void ResetCommands_800A5BB4()
     targetCmd_800A8610.kind_0 = 0x14;
     targetCmd_800A8610.arg_4 = 0;
     result_800A85C8.kind_0 = 0;
-    result_800A85C8.element_24 = -1;
+    result_800A85C8.areaElement_24 = -1;
     result_800A85C8.fixedElement_26 = -1;
     result_800A85C8.arg_2 = 0;
-    result_800A85C8.cured_4 = 0;
-    result_800A85C8.inflicted_8 = 0;
-    result_800A85C8.actorHpLoss_C = 0;
-    result_800A85C8.actorMpLoss_10 = 0;
+    result_800A85C8.flags_4 = 0;
+    result_800A85C8.status_8 = 0;
+    result_800A85C8.actorHpCost_C = 0;
+    result_800A85C8.actorMpCost_10 = 0;
     result_800A85C8.actorHpDamage_14 = 0;
     result_800A85C8.actorMpDamage_18 = 0;
     result_800A85C8.hpDamage_1C = 0;
@@ -843,15 +843,15 @@ void ResolveCommand_800A616C()
             continue;
         }
         u = GetUnitStatus_80014390((unsigned char)(i + 8));
-        result_800A85C8.element_24 = stageElement_800A8498;
+        result_800A85C8.areaElement_24 = stageElement_800A8498;
         result_800A85C8.fixedElement_26 = fixedStageElement_800A849C;
         ResolveBattleAction_80012BB0(actor, u, &actorCmd_800A85A8, &result_800A85C8);
         hpDamage_800A8470[i] = result_800A85C8.hpDamage_1C;
         mpDamage_800A8474[i] = result_800A85C8.mpDamage_20;
-        newStageElement_800A84A0 = result_800A85C8.element_24;
-        actorHpLoss_800A84BC = result_800A85C8.actorHpLoss_C;
+        newStageElement_800A84A0 = result_800A85C8.areaElement_24;
+        actorHpLoss_800A84BC = result_800A85C8.actorHpCost_C;
         hpDamage_800A8470[actorSide_800A85B8] += result_800A85C8.actorHpDamage_14;
-        actorMpLoss_800A84C4 = result_800A85C8.actorMpLoss_10;
+        actorMpLoss_800A84C4 = result_800A85C8.actorMpCost_10;
         mpDamage_800A8474[actorSide_800A85B8] += result_800A85C8.actorMpDamage_18;
         if (u->hp_8.cur_0 <= hpDamage_800A8470[i])
         {
@@ -862,8 +862,8 @@ void ResolveCommand_800A616C()
             mpDamage_800A8474[i] = u->mp_C.cur_0;
         }
         sideHitKind_800A85FC[i] = result_800A85C8.kind_0;
-        statusCured_800A8480[i] = result_800A85C8.cured_4;
-        statusInflicted_800A85F0[i] = result_800A85C8.inflicted_8;
+        statusCured_800A8480[i] = result_800A85C8.flags_4;
+        statusInflicted_800A85F0[i] = result_800A85C8.status_8;
         if (statusInflicted_800A85F0[i] & 8)
         {
             SetAnnouncerXa_800A8078(0x1F, 0x4DC, 0x29);
@@ -1130,7 +1130,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
             break;
         case 7:
             target = GetUnitStatus_80014390((unsigned char)((unsigned char)targetSide_800A8620 + 8));
-            if (target->hp_8.cur_0 > 0 && ((result_800A85C8.inflicted_8 & 0x18202) || (target->status_0 & 0x8000)))
+            if (target->hp_8.cur_0 > 0 && ((result_800A85C8.status_8 & 0x18202) || (target->status_0 & 0x8000)))
             {
                 ResetCommands_800A5BB4();
                 result_800A85C8.kind_0 = 0;

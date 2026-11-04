@@ -579,7 +579,7 @@ void TurnSummonedMinionToward_800C0DB0(int pos)
 }
 
 // Matched
-BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int isReaction)
+BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BattleCmd* cmd, int isReaction)
 {
     BatRawTiming timing;
     int mask;
@@ -597,7 +597,7 @@ BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int
     return out;
 }
 
-int TriggerMinionAction_800C0E84(BatCommand* cmd, int isReaction)
+int TriggerMinionAction_800C0E84(BattleCmd* cmd, int isReaction)
 {
     int mask;
     if (cmd->kind_0 == 0x14)

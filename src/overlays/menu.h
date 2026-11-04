@@ -3,6 +3,7 @@
 #define _MENU_H_
 
 #include "common.h"
+#include "common_tu.h"
 #include "funcs.h"
 #include "globals.h"
 #include "tiy.h"
@@ -827,7 +828,6 @@ extern int CheckItemUsable_80033AFC();
 extern int CheckItemOnTarget_80033DF4();
 extern int CountMagicBits_8001AE54();
 extern int UpdateMenuCursor_8003D794();
-extern void AdjustUnitStatById_800127D0();
 extern int FindNthMagicBit_8001AEC0();
 extern void DrawScrollArrow_8002C6DC();
 extern int GetEquipmentName_8001D128();

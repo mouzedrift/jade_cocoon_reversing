@@ -3,6 +3,7 @@
 #define _COMBBTL_H_
 
 #include "common.h"
+#include "common_tu.h"
 #include "funcs.h"
 #include "globals.h"
 #include "camera.h"
@@ -16,19 +17,10 @@ typedef struct CombBtlNode
     unsigned int flags;
 } CombBtlNode;
 
-// a battle command (same layout as BATTLE.BIN's BatCommand)
-typedef struct CombBtlCmd
-{
-    int kind_0; // 0x14: none
-    int arg_4;
-    int mask_8; // acting unit bits
-    int targets_C; // target unit bits
-} CombBtlCmd;
-
 typedef struct CombBtlHist
 {
     int unit_0;
-    CombBtlCmd cmd_4;
+    BattleCmd cmd_4;
 } CombBtlHist;
 
 typedef struct CombBtlPair
@@ -46,23 +38,6 @@ typedef struct CombBtlSideRot
 {
     unsigned char rot_0[2][8]; // per side: the actor rotation (3 shorts + pad)
 } CombBtlSideRot;
-
-// a command's result (same layout as BATTLE.BIN's BatActionResult)
-typedef struct CombBtlResult
-{
-    unsigned short kind_0;
-    short arg_2;
-    int cured_4;
-    int inflicted_8;
-    int actorHpLoss_C;
-    int actorMpLoss_10;
-    int actorHpDamage_14;
-    int actorMpDamage_18;
-    int hpDamage_1C;
-    int mpDamage_20;
-    short element_24;
-    short fixedElement_26; // fixedStageElement_800A849C
-} CombBtlResult;
 
 // a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (DrawMenuWindowContents_8002A710)
 typedef struct CombBtlItem
@@ -160,18 +135,18 @@ extern int waitTimer_800A84D4;
 extern CombBtlHist commandHistory_800A84D8[10];
 extern int fileRequest_800A85A0;
 extern int dword_800A85A4;
-extern CombBtlCmd actorCmd_800A85A8;
+extern BattleCmd actorCmd_800A85A8;
 extern int actorSide_800A85B8;
 extern unsigned char swapSlot_800A85BC;
 extern unsigned char actorSlot_800A85BD;
 extern const char** announcerLines_800A85C0; // the announcer line list RunExchange_800A68E0 shows once the hits land
 extern int dword_800A85C4;
-extern CombBtlResult result_800A85C8;
+extern ActionResult result_800A85C8;
 extern int statusInflicted_800A85F0[2];
 extern int loserSide_800A85F8;
 extern unsigned char sideHitKind_800A85FC[4];
-extern CombBtlCmd chosenCmd_800A8600;
-extern CombBtlCmd targetCmd_800A8610;
+extern BattleCmd chosenCmd_800A8600;
+extern BattleCmd targetCmd_800A8610;
 extern int targetSide_800A8620;
 
 typedef struct CombBtlTask
@@ -282,8 +257,6 @@ extern void StartScreenFlash_8001C02C(void* rgb);  // -> engine.h
 extern void InitSceneFade_8001A38C(void);          // -> engine.h
 extern void StartSceneFadeOut_8001AA50(short duration); // -> engine.h
 extern int IsSceneFadeDone_8001AB94(void);         // -> engine.h
-extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask); // -> common_tu.h
-extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombBtlCmd* cmd, CombBtlResult* out); // -> common_tu.h
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
 extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot); // -> unit_gauges.h
 extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,

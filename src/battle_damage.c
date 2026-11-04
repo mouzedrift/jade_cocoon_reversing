@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "common_tu.h"
 
 
 
@@ -37,23 +38,10 @@ typedef struct
     unsigned char statusMode_A; // 0: the status flags always apply, 3: they apply on a chance roll
     unsigned char damageType_B; // 0 hp, 1 mp (halved), 2 hp + 2/5 as mp, 3 instant death chance
 } AttackDesc;
-typedef struct
-{
-    unsigned short kind_0;
-    short arg_2;
-    int flags_4;
-    int status_8;
-    int actorHpCost_C;
-    int actorMpCost_10;
-    int actorHpDamage_14;
-    int actorMpDamage_18;
-    int hpDamage_1C;
-    int mpDamage_20;
-} AttackResult;
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
 // Matched
-void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, int* cmd, AttackResult* out)
+void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out)
 {
     int crit0;
     int crit1;
@@ -80,7 +68,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
     eva = 0;
     atk = 0;
     def = 0;
-    targetUnit = LowestSetBit_80014358(cmd[3]);
+    targetUnit = LowestSetBit_80014358(cmd->targets_C);
     switch (action->kind_9)
     {
     case 0:
@@ -285,14 +273,13 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         out->status_8 &= ~2;
     }
 }
-extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cmd, int result);
 // Matched
-void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int result)
+void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* result)
 {
     int bonus;
-    if (cmd[0] == 4)
+    if (cmd->kind_0 == 4)
     {
-        switch (cmd[1])
+        switch (cmd->arg_4)
         {
         case 3:
             bonus = rand() % 6;
@@ -327,7 +314,7 @@ void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int
             AdjustUnitStat_80012614(target, 0xD, RollOilBonus_80013DB0(), 0);
             break;
         }
-        UseSporeItem_80011B24(cmd[1]);
+        UseSporeItem_80011B24(cmd->arg_4);
         ResolveBattleAction_80012BB0(actor, target, cmd, result);
     }
 }
