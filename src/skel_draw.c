@@ -823,10 +823,80 @@ static inline void AddTrans(long* a, long* b)
     a[1] += b[1];
     a[2] += b[2];
 }
-#if 0
-// Not matched: same shape and length (1274 vs 1268 words); register allocation / scheduling differ in the alt matrix, the 5-word matrix copies and the translation adds
+/* stores the bone's world position (the translation of the matrix before cur) and returns it */
+static inline long* SetBonePos(AnimSkel* sk, int i, MATRIX* cur)
+{
+    long* t = cur[-1].t;
+    sk->bonePos_20[i].vx = t[0];
+    sk->bonePos_20[i].vy = t[1];
+    sk->bonePos_20[i].vz = t[2];
+    return t;
+}
+/* the bone's rotation at frame f (zero for bone 0); same as BlendFrameRot */
+static inline void SkelFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bone)
+{
+    int k;
+    if (bone == 0)
+    {
+        out->vx = 0;
+        out->vy = 0;
+        out->vz = 0;
+    }
+    else
+    {
+        bone += 2;
+        k = frame * (pose->n_4 + 2) + bone;
+        out->vx = pose->rot[k * 3];
+        out->vy = pose->rot[k * 3 + 1];
+        out->vz = pose->rot[k * 3 + 2];
+    }
+}
+/* RotZYX followed by a rotation about x by rx->vx, rows 1 and 2 computed row by row; same as BlendRotZYXThenX */
+static inline void SkelRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
+{
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int c;
+    int s;
+    int a;
+    int b;
+    int m00;
+    int m01;
+    int m02;
+    int m10;
+    int m11;
+    int m12;
+    int m21;
+    int m22;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
+    m21 = (sx * cy) >> 12;
+    m22 = (cx * cy) >> 12;
+    m10 = (cy * sz) >> 12;
+    m11 = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m12 = -((cz * sx) >> 12) + ((b * cx) >> 12);
+    m00 = (cz * cy) >> 12;
+    m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
+    s = SIN_TABLE[rx->vx & 0xFFF];
+    m->m[0][0] = m00;
+    m->m[0][1] = m01;
+    m->m[0][2] = m02;
+    m->m[1][0] = ((m10 * c) >> 12) + ((sy * s) >> 12);
+    m->m[1][1] = ((m11 * c) >> 12) - ((m21 * s) >> 12);
+    m->m[1][2] = ((m12 * c) >> 12) - ((m22 * s) >> 12);
+    m->m[2][0] = ((m10 * s) >> 12) - ((sy * c) >> 12);
+    m->m[2][1] = ((m11 * s) >> 12) + ((m21 * c) >> 12);
+    m->m[2][2] = ((m12 * s) >> 12) + ((m22 * c) >> 12);
+}
 // draws a skeleton: bone matrices from the pose (alt: bone rotations about x added from another pose), then
 // each drawn bone's FTG object
+// Matched
 void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 {
     SVECTOR rot;
@@ -836,6 +906,8 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     int level;
     int i;
     int flags;
+    long* t;
+    long* u;
 
     m = SKEL_MATS;
     sk->light_2C = light;
@@ -853,11 +925,11 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     GetBoneOffsets_80046248(sk, boneOffsets_80098690, alt);
     for (i = 0; (level = sk->bones[i].parent + 2) >= 2; i++)
     {
-        GetFrameRot(&rot, sk->pose_14, sk->frame_18, sk->bones[i].idx);
+        SkelFrameRot(&rot, sk->pose_14, sk->frame_18, sk->bones[i].idx);
         if (alt)
         {
             GetRot(&altRot, alt, sk->bones[i].idx);
-            RotZYXThenX(&rot, &altRot, &m[level]);
+            SkelRotZYXThenX(&rot, &altRot, &m[level]);
         }
         else
         {
@@ -868,28 +940,29 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         gte_rtv0();
         gte_stlvnl(m[level].t);
         AddTrans(m[level].t, m[level - 1].t);
+        ((long*)boneMatrices_80098188[i].m)[0] = ((long*)m[level].m)[0];
+        ((long*)boneMatrices_80098188[i].m)[1] = ((long*)m[level].m)[1];
+        ((long*)boneMatrices_80098188[i].m)[2] = ((long*)m[level].m)[2];
+        ((long*)boneMatrices_80098188[i].m)[3] = ((long*)m[level].m)[3];
+        ((long*)boneMatrices_80098188[i].m)[4] = ((long*)m[level].m)[4];
         level++;
-        ((long*)boneMatrices_80098188[i].m)[0] = ((long*)m[level - 1].m)[0];
-        ((long*)boneMatrices_80098188[i].m)[1] = ((long*)m[level - 1].m)[1];
-        ((long*)boneMatrices_80098188[i].m)[2] = ((long*)m[level - 1].m)[2];
-        ((long*)boneMatrices_80098188[i].m)[3] = ((long*)m[level - 1].m)[3];
-        ((long*)boneMatrices_80098188[i].m)[4] = ((long*)m[level - 1].m)[4];
-        sk->bonePos_20[i].vx = m[level - 1].t[0];
-        sk->bonePos_20[i].vy = m[level - 1].t[1];
-        sk->bonePos_20[i].vz = m[level - 1].t[2];
+        t = SetBonePos(sk, i, &m[level]);
         if (sk->bones[i].flags_6 & 2)
         {
-            rot.vx = m[level - 1].t[0];
-            rot.vy = m[level - 1].t[1];
-            rot.vz = m[level - 1].t[2];
+            rot.vx = t[0];
+            rot.vy = t[1];
+            rot.vz = t[2];
             gte_SetRotMatrix(&m[0]);
             gte_ldv0(&rot);
             gte_rtv0();
-            gte_stlvnl(m[level].t);
-            AddTrans(m[level].t, m[0].t);
-            boneMatrices_80096120[i].t[0] = m[level].t[0];
-            boneMatrices_80096120[i].t[1] = m[level].t[1];
-            boneMatrices_80096120[i].t[2] = m[level].t[2];
+            u = m[level].t;
+            gte_stlvnl(u);
+            u[0] += m[0].t[0];
+            u[1] += m[0].t[1];
+            u[2] += m[0].t[2];
+            boneMatrices_80096120[i].t[0] = u[0];
+            boneMatrices_80096120[i].t[1] = u[1];
+            boneMatrices_80096120[i].t[2] = u[2];
             gte_ldclmv(&m[level - 1]);
             gte_rtir();
             gte_stclmv(&m[level]);
@@ -949,13 +1022,11 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             ResetSpadStack();
         }
     }
-    m[0].t[2] = m[0].t[1] = m[0].t[0] = 0;
+    m[0].t[0] = m[0].t[1] = m[0].t[2] = 0;
     gte_SetLightMatrix(&lightMatrix_80087114);
-    gte_SetRotMatrix(SKEL_MATS);
-    gte_SetTransMatrix(SKEL_MATS);
+    gte_SetRotMatrix(m);
+    gte_SetTransMatrix(m);
 }
-#endif
-INCLUDE_ASM(DrawAnimSkel_80046A58);
 /* RotZYXThenX with the last two rows computed row by row (the blend's inline copy) */
 static inline void BlendRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 {
