@@ -291,12 +291,12 @@ extern void CombBtlEnd_800A54CC();
 extern void AnnounceWinner_800A51EC();
 void RecordBattleResult_800A50E4(CombBtlTask* t)
 {
-    int r = IsEffectTaskIdle_800148D4();
-    if (r == 1)
+    int idle = IsEffectTaskIdle_800148D4();
+    if (idle == 1)
     {
         if (loserSide_800A85F8 < 0)
         {
-            if (battleResult_800A38DC == r)
+            if (battleResult_800A38DC == idle)
             {
                 loserSide_800A85F8 = actorSide_800A85B8;
                 sideWins_800A3A90[actorSide_800A85B8]++;
@@ -314,7 +314,7 @@ void RecordBattleResult_800A50E4(CombBtlTask* t)
         else
         {
             battleResult_800A38DC = 0;
-            sideResult_800A3A98[loserSide_800A85F8] = r;
+            sideResult_800A3A98[loserSide_800A85F8] = idle;
             sideWins_800A3A90[loserSide_800A85F8]++;
             if (sideWins_800A3A90[loserSide_800A85F8] >= 100)
             {
@@ -357,21 +357,21 @@ extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
 {
     CombBtlBox box;
-    CombBtlItem a = winnerBanner_800A4A54;
-    int pair[2];
-    CombBtlItem b;
-    pair[0] = 0x33;
-    pair[1] = 0xDF;
-    a.icon_4 = pair[loserSide_800A85F8 ^ 1];
+    CombBtlItem winner = winnerBanner_800A4A54;
+    int icons[2];
+    CombBtlItem result;
+    icons[0] = 0x33;
+    icons[1] = 0xDF;
+    winner.icon_4 = icons[loserSide_800A85F8 ^ 1];
     box.state_2 = 1;
     box.frame_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawMenuItemWithWindow_8002ADB4(&a, &box, 0xF, GetTime30Hz_8002C64C());
-    b = resultBanner_800A4A70;
+    DrawMenuItemWithWindow_8002ADB4(&winner, &box, 0xF, GetTime30Hz_8002C64C());
+    result = resultBanner_800A4A70;
     box.state_2 = 1;
     box.frame_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawMenuItemWithWindow_8002ADB4(&b, &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(&result, &box, 0xF, GetTime30Hz_8002C64C());
     if (announcerTask_800A82DC == 0 || (announcerTask_800A82DC->flags & 0x8001) != 1)
     {
         announcerTask_800A82DC = 0;
@@ -543,18 +543,18 @@ void SendInMinions_800A5638(CombBtlTask* t, int a)
     }
 }
 
-void NextLivingMinion_800A58E8(int i)
+void NextLivingMinion_800A58E8(int side)
 {
-    Minion* u;
+    Minion* minion;
     do
     {
-        sideSlot_800A4078[i]++;
-        if (sideSlot_800A4078[i] >= 3)
+        sideSlot_800A4078[side]++;
+        if (sideSlot_800A4078[side] >= 3)
         {
-            sideSlot_800A4078[i] = 0;
+            sideSlot_800A4078[side] = 0;
         }
-        u = &teams_800A3AA0[i][sideSlot_800A4078[i]];
-    } while (IsMinionSlotEmpty_800A1934(u) || IsMinionFainted_800A1958(u));
+        minion = &teams_800A3AA0[side][sideSlot_800A4078[side]];
+    } while (IsMinionSlotEmpty_800A1934(minion) || IsMinionFainted_800A1958(minion));
 }
 
 #if 0
@@ -610,23 +610,23 @@ void ChooseNextActor_800A599C(CombBtlTask* t, int side)
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, ChooseNextActor_800A599C);
 
-int GetGaugeRate_800A5B70(int a)
+int GetGaugeRate_800A5B70(int side)
 {
-    UnitStatus* r;
-    int v;
-    unsigned char buf[0x18];
-    r = GetUnitStatus_80014390((a + 8) & 0xFF);
+    UnitStatus* status;
+    int rate;
+    unsigned char stats[0x18];
+    status = GetUnitStatus_80014390((side + 8) & 0xFF);
 
-    if (r)
+    if (status)
     {
-        CalcEquippedStats_80033624(buf, r);
-        v = buf[4] + 0xA;
+        CalcEquippedStats_80033624(stats, status);
+        rate = stats[4] + 0xA;
     }
     else
     {
-        v = 0;
+        rate = 0;
     }
-    return v;
+    return rate;
 }
 
 // Near miss: the original loads the two shift counts only after all the stores
@@ -642,7 +642,7 @@ void ResetCommands_800A5BB4()
     targetCmd_800A8610.arg_4 = 0;
     result_800A85C8.kind_0 = 0;
     result_800A85C8.element_24 = -1;
-    result_800A85C8.f26 = -1;
+    result_800A85C8.fixedElement_26 = -1;
     result_800A85C8.arg_2 = 0;
     result_800A85C8.cured_4 = 0;
     result_800A85C8.inflicted_8 = 0;
@@ -665,22 +665,22 @@ INCLUDE_OVERLAY_ASM(combbtl, ResetCommands_800A5BB4);
 extern void ResetCommands_800A5BB4();
 extern void ClearHitResults_800A60F0();
 extern void LoadCommandMenu_800A5EB8();
-extern void name_800BF7C4(UnitStatus* u, short* a, short* b);
-extern int name_800BFA4C(int a, int b);
+extern void name_800BF7C4(UnitStatus* unit, short* hpLoss, short* mpLoss);
+extern int name_800BFA4C(int flags, int prevFlags);
 
 void StartTurn_800A5C64(CombBtlTask* t)
 {
-    UnitStatus* u;
-    int flags0;
-    int fl;
-    int r;
+    UnitStatus* status;
+    int prevFlags;
+    int flags;
+    int cmdKind;
     ResetCommands_800A5BB4();
     exchangeStep_800A8488 = 0;
     exchangeFlags_800A84A8 &= 0xFC;
     ClearHitResults_800A60F0();
-    u = GetUnitStatus_80014390((unsigned char)(actorSide_800A85B8 + 8));
-    flags0 = u->status_0;
-    name_800BF7C4(u, &actorHpLoss_800A84BC, &actorMpLoss_800A84C4);
+    status = GetUnitStatus_80014390((unsigned char)(actorSide_800A85B8 + 8));
+    prevFlags = status->status_0;
+    name_800BF7C4(status, &actorHpLoss_800A84BC, &actorMpLoss_800A84C4);
     if (actorHpLoss_800A84BC != 0)
     {
         if (actorMpLoss_800A84C4 != 0)
@@ -699,11 +699,11 @@ void StartTurn_800A5C64(CombBtlTask* t)
         sideHitKind_800A85FC[actorSide_800A85B8] = 2;
         result_800A85C8.kind_0 = 2;
     }
-    fl = u->status_0;
-    r = name_800BFA4C(fl, flags0);
-    actorCmd_800A85A8.kind_0 = r;
+    flags = status->status_0;
+    cmdKind = name_800BFA4C(flags, prevFlags);
+    actorCmd_800A85A8.kind_0 = cmdKind;
     actorCmd_800A85A8.targets_C = 0;
-    if (fl & 0x200)
+    if (flags & 0x200)
     {
         t->next_8 = RunExchange_800A68E0;
         koSfx_800A84A6 = 0x6F;
@@ -711,20 +711,20 @@ void StartTurn_800A5C64(CombBtlTask* t)
         koSide_800A8490 = actorSide_800A85B8;
         exchangeFlags_800A84A8 |= 2;
     }
-    else if (u->hp_8.cur_0 - actorHpLoss_800A84BC <= 0)
+    else if (status->hp_8.cur_0 - actorHpLoss_800A84BC <= 0)
     {
         actorCmd_800A85A8.kind_0 = 0xB;
-        actorHpLoss_800A84BC = u->hp_8.cur_0;
+        actorHpLoss_800A84BC = status->hp_8.cur_0;
         t->next_8 = RunExchange_800A68E0;
         koSfx_800A84A6 = 0x6F;
         exchangeFlags_800A84A8 |= 1;
         koSide_800A8490 = actorSide_800A85B8;
     }
-    else if (fl & 2)
+    else if (flags & 2)
     {
         t->next_8 = CheckBattleOver_800A4EC8;
     }
-    else if (r == 0x14)
+    else if (cmdKind == 0x14)
     {
         t->next_8 = LoadCommandMenu_800A5EB8;
     }
@@ -785,12 +785,12 @@ void PushCommandHistory_800A601C()
 
 void TakeChosenCommand_800A60A4()
 {
-    int a = chosenCmd_800A8600.kind_0;
-    actorCmd_800A85A8.kind_0 = a;
+    int kind = chosenCmd_800A8600.kind_0;
+    actorCmd_800A85A8.kind_0 = kind;
     actorCmd_800A85A8.arg_4 = chosenCmd_800A8600.arg_4;
     actorCmd_800A85A8.mask_8 = chosenCmd_800A8600.mask_8;
     actorCmd_800A85A8.targets_C = chosenCmd_800A8600.targets_C;
-    if (a == 8)
+    if (kind == 8)
     {
         actorCmd_800A85A8.kind_0 = 3;
         actorCmd_800A85A8.arg_4 = 0;
@@ -874,7 +874,7 @@ void ResolveCommand_800A616C()
         }
         u = GetUnitStatus_80014390((unsigned char)(i + 8));
         result_800A85C8.element_24 = stageElement_800A8498;
-        result_800A85C8.f26 = fixedStageElement_800A849C;
+        result_800A85C8.fixedElement_26 = fixedStageElement_800A849C;
         ResolveBattleAction_80012BB0(actor, u, &actorCmd_800A85A8, &result_800A85C8);
         hpDamage_800A8470[i] = result_800A85C8.hpDamage_1C;
         mpDamage_800A8474[i] = result_800A85C8.mpDamage_20;
@@ -1023,7 +1023,7 @@ extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 extern int rand();
 extern void PlaySfx_80031494(int id);
 // hitWindow_800A8494: the merged window; lo counts the frames up to hi
-extern CombBtlPair MergeHitWindows_800A71E4(int n, CombBtlPair* p);
+extern CombBtlPair MergeHitWindows_800A71E4(int count, CombBtlPair* windows);
 extern unsigned char swapSlot_800A85BC; // the minion slot side swap command (kind 3) brings in
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles side KO / swap / counter. Steps fall through in one call while the step keeps changing.
@@ -1031,8 +1031,8 @@ extern unsigned char swapSlot_800A85BC; // the minion slot side swap command (ki
 void RunExchange_800A68E0(CombBtlTask* t)
 {
     int prev = -1;
-    UnitStatus* u;
-    int fl;
+    UnitStatus* target;
+    int flags;
     while (prev != exchangeStep_800A8488)
     {
         prev = exchangeStep_800A8488;
@@ -1174,28 +1174,28 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             break;
         case 7:
-            u = GetUnitStatus_80014390((unsigned char)((unsigned char)targetSide_800A8620 + 8));
-            if (u->hp_8.cur_0 > 0 && ((result_800A85C8.inflicted_8 & 0x18202) || (u->status_0 & 0x8000)))
+            target = GetUnitStatus_80014390((unsigned char)((unsigned char)targetSide_800A8620 + 8));
+            if (target->hp_8.cur_0 > 0 && ((result_800A85C8.inflicted_8 & 0x18202) || (target->status_0 & 0x8000)))
             {
                 ResetCommands_800A5BB4();
                 result_800A85C8.kind_0 = 0;
                 actorSide_800A85B8 ^= 1;
                 targetSide_800A8620 ^= 1;
                 exchangeFlags_800A84A8 |= 0x10;
-                fl = u->status_0;
-                if (fl & 0x200)
+                flags = target->status_0;
+                if (flags & 0x200)
                 {
                     actorCmd_800A85A8.kind_0 = 0x13;
                 }
-                else if (fl & 0x10000)
+                else if (flags & 0x10000)
                 {
                     actorCmd_800A85A8.kind_0 = 0xE;
                 }
-                else if (fl & 2)
+                else if (flags & 2)
                 {
                     actorCmd_800A85A8.kind_0 = 0x10;
                 }
-                else if (fl & 0x8000)
+                else if (flags & 0x8000)
                 {
                     actorCmd_800A85A8.kind_0 = 0x12;
                 }
@@ -1216,11 +1216,11 @@ void RunExchange_800A68E0(CombBtlTask* t)
     }
 }
 
-const CombBtlA24 sideActorPos_800A4AD4 = { {
+const CombBtlSidePos sideActorPos_800A4AD4 = { {
         { 0 },
         { 0, 0, 0x3E8 },
     } };
-const CombBtlB16 sideActorArgs_800A4AEC = { {
+const CombBtlSideRot sideActorArgs_800A4AEC = { {
         { 0 },
         { 0, 0, 0, 8 },
     } };
@@ -1242,13 +1242,13 @@ const CombBtlPos2 mpGaugePos_800A4B6C = { {
     } };
 
 
-unsigned int CountLivingMinions_800A7164(int i)
+unsigned int CountLivingMinions_800A7164(int side)
 {
     int cnt = 0;
     int j;
     for (j = 0; j < 3; j++)
     {
-        if (IsMinionFainted_800A1958(&teams_800A3AA0[i][j]) == 0)
+        if (IsMinionFainted_800A1958(&teams_800A3AA0[side][j]) == 0)
         {
             cnt++;
         }
@@ -1256,29 +1256,29 @@ unsigned int CountLivingMinions_800A7164(int i)
     return cnt;
 }
 
-CombBtlPair MergeHitWindows_800A71E4(int n, CombBtlPair* p)
+CombBtlPair MergeHitWindows_800A71E4(int count, CombBtlPair* windows)
 {
-    CombBtlPair r;
+    CombBtlPair merged;
     short hi = 0;
     short lo = hi;
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        p->hi = p->hi - p->lo;
-        p->lo = -p->lo;
-        if (p->lo < lo)
+        windows->hi = windows->hi - windows->lo;
+        windows->lo = -windows->lo;
+        if (windows->lo < lo)
         {
-            lo = p->lo;
+            lo = windows->lo;
         }
-        if (hi < p->hi)
+        if (hi < windows->hi)
         {
-            hi = p->hi;
+            hi = windows->hi;
         }
-        p++;
+        windows++;
     }
-    r.lo = lo;
-    r.hi = hi;
-    return r;
+    merged.lo = lo;
+    merged.hi = hi;
+    return merged;
 }
 
 #if 0
@@ -1294,8 +1294,8 @@ extern short colorMatrix_80087134[];
 void StartArenaCamera_800A7290()
 {
     int* e = (int*)AllocEventEntry_80043AF8(cameraTask_8008D4A0);
-    char* p;
-    SaveData* q;
+    char* cam;
+    SaveData* save;
     if (e)
     {
         e[0] = (e[0] | 1) & ~0x8000;
@@ -1305,33 +1305,33 @@ void StartArenaCamera_800A7290()
         cameraZoom_8008B4F8 = 0x1000;
         e[3] = (int)FreeCameraTask_800376A0;
         e[0] = (e[0] | 4) & ~0x8000;
-        p = (char*)cameraState_8008D4F0;
-        *(short*)(p + 0x2E) = 0;
-        *(int*)(p + 0x20) = 0;
-        *(int*)(p + 0x24) = 0;
-        *(int*)(p + 0x28) = 0;
-        *(int*)(p + 0x14) = 0;
-        *(int*)(p + 0x18) = 0;
-        *(int*)(p + 0x1C) = 0;
-        *(short*)(p + 0x34) = 0;
-        *(short*)(p + 0x36) = 0;
-        *(short*)(p + 0x38) = 0;
-        *(short*)(p + 0x3C) = 0;
-        *(short*)(p + 0x3E) = 0;
-        *(short*)(p + 0x40) = 0;
-        q = &saveData_8008B570;
-        q->levant_7A8.pos.x = 0;
-        q->levant_7A8.pos.y = 0;
-        q->levant_7A8.pos.z = 0;
-        q->levant_7A8.rot.vx = 0;
-        q->levant_7A8.rot.vy = 0;
-        q->levant_7A8.rot.vz = 0;
-        *(short*)(p + 0x34) = dword_8007C2EC[0];
-        *(short*)(p + 0x36) = dword_8007C2EC[1];
-        *(short*)(p + 0x38) = dword_8007C2EC[2];
-        *(short*)(p + 0x3C) = dword_8007C30C[0];
-        *(short*)(p + 0x3E) = dword_8007C30C[3];
-        *(short*)(p + 0x40) = dword_8007C30C[6];
+        cam = (char*)cameraState_8008D4F0;
+        *(short*)(cam + 0x2E) = 0;
+        *(int*)(cam + 0x20) = 0;
+        *(int*)(cam + 0x24) = 0;
+        *(int*)(cam + 0x28) = 0;
+        *(int*)(cam + 0x14) = 0;
+        *(int*)(cam + 0x18) = 0;
+        *(int*)(cam + 0x1C) = 0;
+        *(short*)(cam + 0x34) = 0;
+        *(short*)(cam + 0x36) = 0;
+        *(short*)(cam + 0x38) = 0;
+        *(short*)(cam + 0x3C) = 0;
+        *(short*)(cam + 0x3E) = 0;
+        *(short*)(cam + 0x40) = 0;
+        save = &saveData_8008B570;
+        save->levant_7A8.pos.x = 0;
+        save->levant_7A8.pos.y = 0;
+        save->levant_7A8.pos.z = 0;
+        save->levant_7A8.rot.vx = 0;
+        save->levant_7A8.rot.vy = 0;
+        save->levant_7A8.rot.vz = 0;
+        *(short*)(cam + 0x34) = dword_8007C2EC[0];
+        *(short*)(cam + 0x36) = dword_8007C2EC[1];
+        *(short*)(cam + 0x38) = dword_8007C2EC[2];
+        *(short*)(cam + 0x3C) = dword_8007C30C[0];
+        *(short*)(cam + 0x3E) = dword_8007C30C[3];
+        *(short*)(cam + 0x40) = dword_8007C30C[6];
         lightMatrix_80087114[0] = dword_8007C2EC[0];
         lightMatrix_80087114[1] = dword_8007C2EC[1];
         lightMatrix_80087114[2] = dword_8007C2EC[2];
@@ -1365,11 +1365,11 @@ void StopFadeTask_800A7478()
     StopAllEventEntries_80043B40(fadeTask_8008D628);
 }
 
-void CreateSideActor_800A74A0(int i)
+void CreateSideActor_800A74A0(int side)
 {
-    CombBtlA24 a = sideActorPos_800A4AD4;
-    CombBtlB16 b = sideActorArgs_800A4AEC;
-    CreateSlotActor_800A0BA8(i, a.pos_0[i], b.f0[i]);
+    CombBtlSidePos pos = sideActorPos_800A4AD4;
+    CombBtlSideRot rot = sideActorArgs_800A4AEC;
+    CreateSlotActor_800A0BA8(side, pos.pos_0[side], rot.rot_0[side]);
 }
 
 void RemoveSideMinion_800A7560(int side)
@@ -1397,17 +1397,17 @@ int AreSideModelsReady_800A758C()
 void OpenSideWindow_800A75F8(int side)
 {
     EventEntry* e = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
-    CombBtlObj* p;
+    CombBtlSideWindow* win;
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        p = (CombBtlObj*)e->buffer;
-        p->side_0 = side;
-        p->frame_4 = 0;
-        p->dst_8.x = sideWindowPos_800A82D4[side][0];
-        p->dst_8.y = sideWindowPos_800A82D4[side][1];
-        p->dst_8.w = 0x64;
-        p->dst_8.h = 0x29;
+        win = (CombBtlSideWindow*)e->buffer;
+        win->side_0 = side;
+        win->frame_4 = 0;
+        win->dst_8.x = sideWindowPos_800A82D4[side][0];
+        win->dst_8.y = sideWindowPos_800A82D4[side][1];
+        win->dst_8.w = 0x64;
+        win->dst_8.h = 0x29;
         e->cb_8 = (EventEntryFn)SideWindowTask_800A7694;
     }
 }
@@ -1443,54 +1443,54 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     } uA8;
     CombBtlPos2 posB8;
     int sel = 0;
-    UnitStatus* st;
-    CombBtlItem* w;
-    CombBtlObj* o;
+    UnitStatus* status;
+    CombBtlItem* label;
+    CombBtlSideWindow* win;
 
     if (exchangeFlags_800A84A8 & 0xC)
     {
         return;
     }
-    o = buf;
-    if (o->side_0 == actorSide_800A85B8)
+    win = buf;
+    if (win->side_0 == actorSide_800A85B8)
     {
-        st = GetMinionStatusOf_80033818(&teams_800A3AA0[o->side_0][actorSlot_800A85BD]);
+        status = GetMinionStatusOf_80033818(&teams_800A3AA0[win->side_0][actorSlot_800A85BD]);
     }
     else
     {
-        st = GetMinionStatusOf_80033818(&teams_800A3AA0[o->side_0][sideSlot_800A4078[o->side_0]]);
+        status = GetMinionStatusOf_80033818(&teams_800A3AA0[win->side_0][sideSlot_800A4078[win->side_0]]);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
     SetFontClutOffset_8003F900(1, 0);
-    InterpolateWindowRect_8004196C(&o->cur_10, &o->dst_8, o->frame_4, 4, 9);
-    if (loserSide_800A85F8 >= 0 && loserSide_800A85F8 != o->side_0)
+    InterpolateWindowRect_8004196C(&win->cur_10, &win->dst_8, win->frame_4, 4, 9);
+    if (loserSide_800A85F8 >= 0 && loserSide_800A85F8 != win->side_0)
     {
         sel = 1;
     }
-    if (o->side_0 == actorSide_800A85B8)
+    if (win->side_0 == actorSide_800A85B8)
     {
-        DrawUnitStatusWindow_8002F1C8(st, previewHp_800A82D0, sel, GetTime30Hz_8002C64C(), &o->cur_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, previewHp_800A82D0, sel, GetTime30Hz_8002C64C(), &win->cur_10, 10, 0);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(st, 0, sel, GetTime30Hz_8002C64C(), &o->cur_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, 0, sel, GetTime30Hz_8002C64C(), &win->cur_10, 10, 0);
     }
-    o->frame_4++;
-    AddDrawAreaPrim_8003326C(&o->cur_10, pOT_8008D454);
-    pt.lo = pos70.p[o->side_0].lo;
-    pt.hi = pos70.p[o->side_0].hi;
-    DrawStatusIcons_8002F480(st, &pt, 0xF, o->side_0);
-    if (o->side_0)
+    win->frame_4++;
+    AddDrawAreaPrim_8003326C(&win->cur_10, pOT_8008D454);
+    pt.lo = pos70.p[win->side_0].lo;
+    pt.hi = pos70.p[win->side_0].hi;
+    DrawStatusIcons_8002F480(status, &pt, 0xF, win->side_0);
+    if (win->side_0)
     {
-        w = &w1;
+        label = &w1;
     }
     else
     {
-        w = &w0;
+        label = &w0;
     }
     if (loserSide_800A85F8 < 0)
     {
-        if (o->side_0 == actorSide_800A85B8)
+        if (win->side_0 == actorSide_800A85B8)
         {
             box60.state_2 = 1;
         }
@@ -1499,7 +1499,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
             box60.state_2 = 0;
         }
     }
-    else if (o->side_0 == loserSide_800A85F8)
+    else if (win->side_0 == loserSide_800A85F8)
     {
         box60.state_2 = 0;
     }
@@ -1509,31 +1509,31 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     }
     box60.frame_3 = 1;
     box60.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawMenuItemWithWindow_8002ADB4(w, &box60, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(label, &box60, 0xF, GetTime30Hz_8002C64C());
     w2 = slotItem_800A4B3C;
     uA0.pos = slotItemPos_800A4B58;
     uA8.v = slotIcons_800A4B60;
-    w2.icon_4 = uA8.v.v[sideSlot_800A4078[o->side_0]];
-    w2.x_10 = uA0.pos.p[o->side_0].lo;
-    w2.y_12 = uA0.pos.p[o->side_0].hi;
+    w2.icon_4 = uA8.v.v[sideSlot_800A4078[win->side_0]];
+    w2.x_10 = uA0.pos.p[win->side_0].lo;
+    w2.y_12 = uA0.pos.p[win->side_0].hi;
     box78.state_2 = 0;
     box78.frame_3 = 1;
     box78.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&w2, &box78, 0xF, 0);
     posB8 = mpGaugePos_800A4B6C;
-    pt.lo = posB8.p[o->side_0].lo;
-    pt.hi = posB8.p[o->side_0].hi;
+    pt.lo = posB8.p[win->side_0].lo;
+    pt.hi = posB8.p[win->side_0].hi;
     uA8.r.w = 0x64;
     uA8.r.h = 0x14;
     uA8.r.x = pt.lo;
     uA8.r.y = pt.hi;
-    if (o->side_0 == actorSide_800A85B8)
+    if (win->side_0 == actorSide_800A85B8)
     {
-        DrawMpGauge_8002F120(st, &pt, previewMp_800A82D2, 0xF);
+        DrawMpGauge_8002F120(status, &pt, previewMp_800A82D2, 0xF);
     }
     else
     {
-        DrawMpGauge_8002F120(st, &pt, 0, 0xF);
+        DrawMpGauge_8002F120(status, &pt, 0, 0xF);
     }
     uA0.box.frame_3 = 1;
     uA0.box.color_0 = saveData_8008B570.uiColor_20.h;
@@ -1550,7 +1550,7 @@ void CloseSideWindows_800A7BE4()
 extern unsigned char player2Pad_800A38D8;
 extern void StartCameraShake_80037BFC(int a);
 extern void StartPadVibration_80036528(int pad, int kind);
-extern void StartHitNumber_800A7E34(int a, int b, int c);
+extern void StartHitNumber_800A7E34(int side, int kind, int amount);
 extern void FlashScreenWhite_800A7ECC();
 void PlayHitFeedback_800A7C0C(int side)
 {
@@ -1608,77 +1608,77 @@ void PlayHitFeedback_800A7C0C(int side)
     }
 }
 
-void StartHitNumber_800A7E34(int a, int b, int c)
+void StartHitNumber_800A7E34(int side, int kind, int amount)
 {
     EventEntry* e = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
-    CombBtlHitNum* p;
+    CombBtlHitNum* num;
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        p = e->buffer;
-        p->kind_0 = b;
-        p->frame_8 = 0;
-        p->amount_4 = c;
-        p->side_18 = a;
-        p->pos_10 = GetSlotPos_800A10DC(a);
+        num = e->buffer;
+        num->kind_0 = kind;
+        num->frame_8 = 0;
+        num->amount_4 = amount;
+        num->side_18 = side;
+        num->pos_10 = GetSlotPos_800A10DC(side);
         e->cb_8 = (EventEntryFn)HitNumberTask_800A7EFC;
     }
 }
 
 void FlashScreenWhite_800A7ECC()
 {
-    unsigned char c[3];
-    c[0] = 0xFF;
-    c[1] = 0xFF;
-    c[2] = 0xFF;
-    StartScreenFlash_8001C02C(c);
+    unsigned char rgb[3];
+    rgb[0] = 0xFF;
+    rgb[1] = 0xFF;
+    rgb[2] = 0xFF;
+    StartScreenFlash_8001C02C(rgb);
 }
 
-extern void AdjustUnitStatById_800127D0(int a, int b, int c, int d);
+extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
 {
-    CombBtlHitNum* p = buf;
+    CombBtlHitNum* num = buf;
     DVECTOR sxy;
-    SVECTOR v;
+    SVECTOR pos;
     long z;
     long flag;
-    int d;
-    v.vx = buf->pos_10[0];
-    v.vy = buf->pos_10[1];
-    v.vz = buf->pos_10[2];
-    v.vx -= cameraEye_8008D600.vx;
-    v.vy -= cameraEye_8008D600.vy;
-    v.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&v, (long*)&sxy, &z, &flag);
-    if (++p->frame_8 > 16)
+    int step;
+    pos.vx = buf->pos_10[0];
+    pos.vy = buf->pos_10[1];
+    pos.vz = buf->pos_10[2];
+    pos.vx -= cameraEye_8008D600.vx;
+    pos.vy -= cameraEye_8008D600.vy;
+    pos.vz -= cameraEye_8008D600.vz;
+    RotTransPers(&pos, (long*)&sxy, &z, &flag);
+    if (++num->frame_8 > 16)
     {
         e->flags = (e->flags & ~1) | 0x8000;
         return;
     }
-    d = p->amount_4 / (17 - p->frame_8);
-    d = -d;
-    p->amount_4 += d;
-    if (p->kind_0 == 1)
+    step = num->amount_4 / (17 - num->frame_8);
+    step = -step;
+    num->amount_4 += step;
+    if (num->kind_0 == 1)
     {
-        UnitStatus* r = GetUnitStatus_80014390((unsigned char)(p->side_18 + 8));
-        AdjustUnitStatById_800127D0(p->side_18 + 8, 0, d, 0);
-        if (r->hp_8.cur_0 <= 0)
+        UnitStatus* status = GetUnitStatus_80014390((unsigned char)(num->side_18 + 8));
+        AdjustUnitStatById_800127D0(num->side_18 + 8, 0, step, 0);
+        if (status->hp_8.cur_0 <= 0)
         {
-            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)(p->side_18 + 8)));
+            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)(num->side_18 + 8)));
         }
     }
-    else if (p->kind_0 == 2)
+    else if (num->kind_0 == 2)
     {
-        AdjustUnitStatById_800127D0(p->side_18 + 8, 2, d, 0);
+        AdjustUnitStatById_800127D0(num->side_18 + 8, 2, step, 0);
     }
 }
 
-void SetAnnouncerXa_800A8078(short a0, short a1, short a2)
+void SetAnnouncerXa_800A8078(short channel, short startSector, short length)
 {
     pendingXa_800A82E0[0] = 1;
-    pendingXa_800A82E0[1] = a0;
-    pendingXa_800A82E0[2] = a1;
-    pendingXa_800A82E0[3] = a2;
+    pendingXa_800A82E0[1] = channel;
+    pendingXa_800A82E0[2] = startSector;
+    pendingXa_800A82E0[3] = length;
 }
 
 extern EventNode* announcerTasks_8008D458;
