@@ -888,8 +888,203 @@ void sub_800A60F0()
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, jpt_800A4A9C);
 
+extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombBtlCmd* cmd, CombBtlResult* out);
+extern int sub_800A1AAC(int i);
+extern unsigned int sub_800A7164(int i);
+extern int dword_800A82E8;
+extern unsigned int dword_800A3A88;
+extern unsigned char byte_800A84A8;
+extern unsigned char byte_800A85FC[];
+extern int dword_800A8490;
+extern char** dword_800A85C0; // the announcer line list sub_800A68E0 shows once the hits land
+// the announcer's message lists (NULL terminated), picked by sub_800A616C
+extern char* dword_800A8314[];
+extern char* dword_800A8324[];
+extern char* dword_800A8334[];
+extern char* dword_800A8344[];
+extern char* dword_800A8354[];
+extern char* dword_800A8364[];
+extern char* dword_800A837C[];
+extern char* dword_800A8394[];
+extern char* dword_800A83A0[];
+extern char* dword_800A83B0[];
+extern char* dword_800A83EC[];
+extern char* dword_800A8400[];
+extern char* dword_800A8414[];
+extern char* dword_800A8428[];
+extern char* dword_800A843C[];
+extern char* dword_800A8454[];
+#if 0
+// Not matched: loop strength reduction differs - the original keeps word_800A8474[i] as (i*2 spilled) + base
+// and only word_800A8470[i] as a pointer; here both become pointers and i spills. Logic is complete.
+void sub_800A616C()
+{
+    UnitStatus* actor = GetUnitStatus_80014390((unsigned char)(dword_800A85B8 + 8));
+    UnitStatus* u;
+    unsigned int i;
+    short tenth;
+    int bit;
+    if (dword_800A84D8[0].cmd_4.kind_0 == 0x12 && dword_800A84D8[1].cmd_4.kind_0 == dword_800A84D8[0].cmd_4.kind_0 &&
+        dword_800A84D8[0].unit_0 != dword_800A84D8[1].unit_0)
+    {
+        sub_800A8078(0x15, 0x4D9, 0x13);
+        dword_800A85C0 = dword_800A8314;
+    }
+    else if ((dword_800A82E8 & 0xF) == 0)
+    {
+        sub_800A8078(7, 0x4DA, 0x15);
+        dword_800A85C0 = dword_800A8324;
+    }
+    if (dword_800A8600.kind_0 == 8)
+    {
+        sub_800A8078(0xE, 0x4E0, 0x1F);
+        dword_800A85C0 = dword_800A83EC;
+    }
+    sub_800A60F0();
+    for (i = 0; i < 2; i++)
+    {
+        bit = 1 << (i + 8);
+        if (!(dword_800A85A8.targets_C & bit))
+        {
+            continue;
+        }
+        u = GetUnitStatus_80014390((unsigned char)(i + 8));
+        dword_800A85C8.f24 = dword_800A8498;
+        dword_800A85C8.f26 = dword_800A849C;
+        ResolveBattleAction_80012BB0(actor, u, &dword_800A85A8, &dword_800A85C8);
+        word_800A8470[i] = dword_800A85C8.f1C;
+        word_800A8474[i] = dword_800A85C8.f20;
+        dword_800A84A0 = dword_800A85C8.f24;
+        word_800A84BC = dword_800A85C8.fC;
+        word_800A8470[dword_800A85B8] += dword_800A85C8.f14;
+        word_800A84C4 = dword_800A85C8.f10;
+        word_800A8474[dword_800A85B8] += dword_800A85C8.f18;
+        if (u->hp_8.cur_0 <= word_800A8470[i])
+        {
+            word_800A8470[i] = u->hp_8.cur_0;
+        }
+        if (u->mp_C.cur_0 <= word_800A8474[i])
+        {
+            word_800A8474[i] = u->mp_C.cur_0;
+        }
+        byte_800A85FC[i] = dword_800A85C8.kind_0;
+        dword_800A8480[i] = dword_800A85C8.f4;
+        dword_800A85F0[i] = dword_800A85C8.f8;
+        if (dword_800A85F0[i] & 8)
+        {
+            sub_800A8078(0x1F, 0x4DC, 0x29);
+            dword_800A85C0 = dword_800A837C;
+        }
+        else if (dword_800A85F0[i] & 2)
+        {
+            sub_800A8078(0x11, 0x4DC, 0x2D);
+            dword_800A85C0 = dword_800A8364;
+        }
+        else if (dword_800A85F0[i] & 1)
+        {
+            sub_800A8078(6, 0x4DC, 0x15);
+            dword_800A85C0 = dword_800A8354;
+        }
+        if (dword_800A84A0 != dword_800A8498)
+        {
+            sub_800A8078(0x1C, 0x4E1, 0x26);
+            dword_800A85C0 = dword_800A8400;
+        }
+        switch (dword_800A85C8.kind_0)
+        {
+        case 0:
+            break;
+        case 1:
+        case 2:
+        case 3:
+            if (dword_800A85C8.f1C > 0 || dword_800A85C8.f20 > 0)
+            {
+                dword_800A8610.kind_0 = 9;
+                word_800A84A4 = 0x72;
+            }
+            tenth = u->hp_8.max_2 / 10;
+            if (tenth < u->hp_8.cur_0 && u->hp_8.cur_0 - word_800A8470[i] <= tenth)
+            {
+                sub_800A8078(0x1D, 0x4DE, 0x1B);
+                dword_800A85C0 = dword_800A83A0;
+            }
+            else if (u->hp_8.max_2 / 2 < u->hp_8.cur_0 && u->hp_8.cur_0 - word_800A8470[i] <= u->hp_8.max_2 / 2)
+            {
+                sub_800A8078(0x13, 0x4DE, 0x10);
+                dword_800A85C0 = dword_800A8394;
+            }
+            break;
+        case 4:
+            dword_800A8610.kind_0 = 10;
+            word_800A84A4 = 0x71;
+            sub_800A8078(0x16, 0x4DB, 0x18);
+            dword_800A85C0 = dword_800A8344;
+            break;
+        case 5:
+            dword_800A8610.kind_0 = 0xC;
+            word_800A84A4 = 0x70;
+            sub_800A8078(0x1A, 0x4DA, 0x1E);
+            dword_800A85C0 = dword_800A8334;
+            break;
+        }
+        if (u->hp_8.cur_0 <= word_800A8470[i] || (dword_800A85F0[i] & 0x400))
+        {
+            if (sub_800A1AAC(dword_800A85B8) == 3 && sub_800A1AAC(dword_800A8620) == 3 &&
+                sub_800A7164(dword_800A85B8) == 1 && sub_800A7164(dword_800A8620) == 1)
+            {
+                sub_800A8078(0x17, 0x4E4, 0x23);
+                dword_800A85C0 = dword_800A8454;
+            }
+            else if (!(dword_800A3A88 & 2) && sub_800A1AAC(dword_800A85B8) == 3 && sub_800A7164(dword_800A85B8) >= 2 &&
+                     sub_800A7164(dword_800A8620) == 1)
+            {
+                sub_800A8078(9, 0x4E4, 0x34);
+                dword_800A85C0 = dword_800A843C;
+            }
+            else if (u->hp_8.cur_0 == u->hp_8.max_2)
+            {
+                sub_800A8078(2, 0x4E2, 0x21);
+                dword_800A85C0 = dword_800A8414;
+            }
+            else
+            {
+                sub_800A8078(0x1E, 0x4DF, 0x28);
+                dword_800A85C0 = dword_800A83B0;
+            }
+            dword_800A8610.kind_0 = 0xB;
+            word_800A84A6 = 0x6F;
+            byte_800A84A8 |= 1;
+            dword_800A8490 = dword_800A8620;
+        }
+        else if (word_800A8470[i] == u->hp_8.cur_0 - 1)
+        {
+            sub_800A8078(1, 0x4E3, 0x21);
+            dword_800A85C0 = dword_800A8428;
+        }
+    }
+    if (word_800A8470[dword_800A85B8] != 0)
+    {
+        if (word_800A8474[dword_800A85B8] != 0)
+        {
+            byte_800A85FC[dword_800A85B8] = 3;
+        }
+        else
+        {
+            byte_800A85FC[dword_800A85B8] = 1;
+        }
+    }
+    else if (word_800A8474[dword_800A85B8] != 0)
+    {
+        byte_800A85FC[dword_800A85B8] = 2;
+    }
+    else
+    {
+        byte_800A85FC[dword_800A85B8] = 0;
+    }
+}
+#endif
+INCLUDE_OVERLAY_ASM(combbtl, jpt_800A4A9C);
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A616C);
 
 extern unsigned char byte_800A38D8;
@@ -909,7 +1104,6 @@ extern CombBtlPair word_800A84C8[2]; // per side: the hit frame window of its co
 extern CombBtlPair word_800A8494;    // the merged window; lo counts the frames up to hi
 extern CombBtlPair sub_800A71E4(int n, CombBtlPair* p);
 extern unsigned char byte_800A85BC; // the minion slot a swap command (kind 3) brings in
-extern char* dword_800A85C0;
 // Matched
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles a KO / swap / counter. Steps fall through in one call while the step keeps changing.
@@ -1103,7 +1297,7 @@ void sub_800A68E0(CombBtlTask* t)
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AD4);
 
-int sub_800A7164(int i)
+unsigned int sub_800A7164(int i)
 {
     int cnt = 0;
     int j;

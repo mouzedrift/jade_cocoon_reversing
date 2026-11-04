@@ -1494,7 +1494,6 @@ void sub_800A7D40(int a, GameCmdA_1* c)
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800A7D40);
 
-INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
 
 void sub_800A80C4(int a)
 {
@@ -1521,7 +1520,319 @@ void sub_800A8140()
     p->fC6 = 0;
 }
 
+#if 0
+// Not matched (6 words): in case 0 the first pad block's turn-on-the-spot branch fills its delay slot from the
+// branch target (lui 0x5000) where the original steals the fall-through lui 0x6000; tried the polarity / |= / ?:
+// forms. The |= forms keep jump.c from if-converting the turn arms.
+// Levant's movement command for this frame (sub_800AB37C): 1 / 4 / 2 move, 0x10000000 / 0x20000000 turn
+// (or-ed onto a move), 0x50000000 / 0x60000000 turn on the spot
+void sub_800A818C(EventEntry* e, G2Inner* p)
+{
+    int cmd;
+    short angle;
+    p->pos_10.x = levantPos_8008BD18.pos.x;
+    p->pos_10.y = levantPos_8008BD18.pos.y;
+    p->pos_10.z = levantPos_8008BD18.pos.z;
+    switch (p->fC6)
+    {
+    case 0:
+        if (p->f0 & 0x20)
+        {
+            p->fC6 = 9;
+            break;
+        }
+        if ((padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[0]) &&
+                (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[5]) ||
+            (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[8]) || pads_800918E8[0][8] == 4)
+        {
+            int dir;
+            if (sub_800A9164(&dir) == 1)
+            {
+                cmd = 0x40000000;
+                if (dir >= 0)
+                {
+                    cmd |= 0x20000000;
+                }
+                else
+                {
+                    cmd |= 0x10000000;
+                }
+            }
+            else
+            {
+                cmd = 1;
+            }
+        }
+        else if ((padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[0]) &&
+                 !(padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[5]))
+        {
+            int dir;
+            if (sub_800A9164(&dir) == 1)
+            {
+                cmd = 0x40000000;
+                if (dir < 0)
+                {
+                    cmd |= 0x10000000;
+                }
+                else
+                {
+                    cmd |= 0x20000000;
+                }
+            }
+            else
+            {
+                cmd = 4;
+            }
+        }
+        else if (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[1])
+        {
+            cmd = sub_800A926C() == 1 ? 0 : 2;
+        }
+        else
+        {
+            cmd = 0;
+        }
+        if (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[2])
+        {
+            cmd |= 0x10000000;
+        }
+        else if (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[3])
+        {
+            cmd |= 0x20000000;
+        }
+        if (IsConfirmPressedP1_8003D380(0) && sub_800A5C40(-1) == 1)
+        {
+            cmd = 0;
+        }
+        if (p->f0 & 0x40)
+        {
+            cmd = 0;
+        }
+        sub_800AB37C(cmd);
+        break;
+    case 1:
+        if (!(p->f0 & 1))
+        {
+            p->fC6 = 0;
+        }
+        break;
+    case 2:
+        if (sub_800AB1EC(p->fCC, (p->f0 >> 3) & 1, p->f34, p->f38) == 1)
+        {
+            p->fC6 = 3;
+        }
+        break;
+    case 3:
+        cmd = 0;
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->fA4)));
+        if ((unsigned short)(angle + 0x60) <= 0xC0)
+        {
+            if (sub_800AB32C() == 1 && (p->f0 & 2))
+            {
+                p->f0 &= ~2;
+                p->fC6 = 4;
+            }
+        }
+        else if (angle < 0)
+        {
+            cmd |= 0x20000000;
+        }
+        else
+        {
+            cmd |= 0x10000000;
+        }
+        sub_800AB37C(cmd);
+        break;
+    case 5:
+        cmd = 0;
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->fA4)));
+        if ((unsigned short)(angle + 0x60) <= 0xC0)
+        {
+            p->fC6 = 4;
+        }
+        else if (angle < 0)
+        {
+            cmd |= 0x20000000;
+        }
+        else
+        {
+            cmd |= 0x10000000;
+        }
+        sub_800AB37C(cmd);
+        break;
+    case 4:
+        if (p->f0 & 4)
+        {
+            sub_800AB1A4(0);
+            p->fC6 = 6;
+            p->f0 &= ~4;
+        }
+        break;
+    case 6:
+        if (!(p->f0 & 8))
+        {
+            p->fC6 = 1;
+        }
+        else if (sub_800AB304() == 1)
+        {
+            p->fC6 = 1;
+            p->f0 &= ~8;
+        }
+        break;
+    case 7:
+        p->f0 &= ~0x10;
+        p->fC6 = 1;
+        p->f0 |= 0x10;
+        sub_800AB3D4();
+        sub_800AB37C(0);
+    case 8:
+        cmd = 0;
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->fA4)));
+        if ((unsigned short)(angle + 0x40) <= 0x80)
+        {
+            p->fC6 = 1;
+        }
+        else if (angle < 0)
+        {
+            cmd |= 0x20000000;
+        }
+        else
+        {
+            cmd |= 0x10000000;
+        }
+        sub_800AB37C(cmd);
+        break;
+    case 9:
+        if (!(p->f0 & 0x20) && sub_800AB958() == 1)
+        {
+            sub_800ABC34(1);
+            p->fC6 = 0;
+        }
+        sub_800AB37C(0);
+        sub_800AB3BC();
+        break;
+    case 10:
+    {
+        int* target = &p->fA4;
+        int dist = 30000;
+        int walk;
+        IsWithinDistance_8003B740(&levantPos_8008BD18.pos.x, target, &dist);
+        if (dist < 400 || (p->f0 & 0x80))
+        {
+            if (sub_800AB958() == 1)
+            {
+                p->fC6 = 9;
+                sub_800A5BCC(0);
+            }
+            walk = 0;
+        }
+        else
+        {
+            walk = 4;
+        }
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, target)));
+        if ((unsigned short)(angle + 0x40) > 0x80)
+        {
+            if (angle < 0)
+            {
+                walk |= 0x20000000;
+            }
+            else
+            {
+                walk |= 0x10000000;
+            }
+        }
+        sub_800AB37C(walk);
+        break;
+    }
+    case 11:
+    {
+        int* target = &p->fA4;
+        int dist = 30000;
+        int walk;
+        IsWithinDistance_8003B740(&levantPos_8008BD18.pos.x, target, &dist);
+        if (dist < 400 || (p->f0 & 0x80))
+        {
+            if (sub_800AB958() == 1)
+            {
+                p->fC6 = 9;
+                sub_800A5BCC(0);
+            }
+            walk = 0;
+        }
+        else
+        {
+            walk = 1;
+        }
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, target)));
+        if ((unsigned short)(angle + 0x40) > 0x80)
+        {
+            if (angle < 0)
+            {
+                walk |= 0x20000000;
+            }
+            else
+            {
+                walk |= 0x10000000;
+            }
+        }
+        sub_800AB37C(walk);
+        break;
+    }
+    case 12:
+        cmd = 0;
+        angle = WrapAngle_8003BA18(
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->fA4)));
+        if ((unsigned short)(angle + 0x40) <= 0x80 || (p->f0 & 0x80))
+        {
+            p->fC6 = 9;
+            sub_800A5BCC(0);
+        }
+        else if (angle < 0)
+        {
+            cmd |= 0x20000000;
+        }
+        else
+        {
+            cmd |= 0x10000000;
+        }
+        sub_800AB37C(cmd);
+        break;
+    case 13:
+        if (sub_800AB938() == 1)
+        {
+            p->fC6 = 9;
+            sub_800A5BCC(0);
+        }
+        break;
+    case 14:
+        if (sub_800AB958() == 1)
+        {
+            p->fC6 = 9;
+            sub_800A5BCC(0);
+            sub_800AB37C(0);
+        }
+        break;
+    case 15:
+        if (sub_800ABB70() == 1)
+        {
+            p->fC6 = 9;
+        }
+        break;
+    case 16:
+        break;
+    }
+}
+#endif
+INCLUDE_OVERLAY_ASM(game, jpt_800A06F0);
 INCLUDE_OVERLAY_ASM(game, sub_800A818C);
+
+INCLUDE_OVERLAY_ASM(game, dword_800A0734);
 
 void sub_800A88A0(int a, int b)
 {
@@ -1582,7 +1893,7 @@ G2Pair_1 sub_800A8A30(int* c, int mode)
 {
     G2Pair_1 r;
     unsigned int u;
-    G2InnerC* p = (G2InnerC*)dword_8008B4CC->f24;
+    G2Inner* p = dword_8008B4CC->f24;
     if (name_800B1084[c[0]].a == 0x10)
     {
         p->fC6 = 5;

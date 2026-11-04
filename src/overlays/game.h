@@ -761,19 +761,41 @@ extern char name_80096090[];
 typedef struct G2Inner
 {
     unsigned int f0;
-    char pad_4[0x48];
+    char pad_4[0xC];
+    struct_v3 pos_10; // Levant's position, copied each frame by sub_800A818C
+    char pad_1C[0x18];
+    int f34;
+    int f38;
+    char pad_3C[0x10];
     FirFilter turn_4C;
     int turnBuf_5C[4];
     char pad_6C[0x30];
     int f9C;
     int fA0;
-    int fA4;
+    int fA4; // fA4..fAC: the point Levant walks to / turns toward
     int fA8;
     int fAC;
     int fB0;
     char pad_B4[0x12];
-    short fC6;
+    short fC6; // the state of Levant's input state machine (sub_800A818C)
+    char pad_C8[4];
+    int fCC;
 } G2Inner;
+
+extern unsigned char pads_800918E8[2][9];
+extern int sub_800A9164(int* out);
+extern int sub_800A926C();
+extern void sub_800A5BCC(int a);
+extern void sub_800AB1A4(int a);
+extern int sub_800AB1EC(int a, int b, int c, int d);
+extern int sub_800AB32C();
+extern int sub_800AB37C(int v);
+extern void sub_800AB3BC();
+extern void sub_800AB3D4();
+extern int sub_800AB938();
+extern int sub_800AB958();
+extern int sub_800ABB70();
+extern void sub_800ABC34(int a);
 
 typedef struct G2Ctx
 {
@@ -1129,17 +1151,6 @@ typedef struct G2Mode_1
     int b;
 } G2Mode_1;
 
-typedef struct G2InnerC
-{
-    unsigned int f0;
-    char pad_4[0x30];
-    int f34;
-    int f38;
-    char pad_3C[0x8a];
-    short fC6;
-    char pad_C8[4];
-    int fCC;
-} G2InnerC;
 
 extern G2Mode_1 name_800B1084[];
 
