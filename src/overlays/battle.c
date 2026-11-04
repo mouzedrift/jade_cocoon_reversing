@@ -26,9 +26,7 @@ extern void StopSoundSeqs_80030D68(void* a);
 extern void StopSeqSlot_80031334(int a);
 extern void SsSepSetDecrescendo(int, int, int, int);
 
-#if 0
-// Not matched (5 words): the original stores u->c_C before dword_800ADE78 = 0 and puts that store in the
-// delay slot of the sub_80037828 call; this C gets the two stores the other way round
+// Matched
 void sub_800BA254(BatTask_a* t, BatStart_a* u)
 {
     short* p;
@@ -43,7 +41,7 @@ void sub_800BA254(BatTask_a* t, BatStart_a* u)
     }
     r = sub_800A1E3C();
     u->c_C = r->c_18;
-    dword_800ADE78 = 0;
+    dword_800ADE78.f0 = 0;
     sub_80037828(2, 0, 0);
     switch (dword_800B1230)
     {
@@ -116,10 +114,7 @@ void sub_800BA254(BatTask_a* t, BatStart_a* u)
         break;
     }
 }
-#endif
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BA254);
-INCLUDE_OVERLAY_ASM(battle, jpt_800B66C4);
 
 void sub_800BA444(BatTask_a* t)
 {
@@ -498,9 +493,9 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
     int f;
     sub_800BC850(0x8000);
     sub_800BC850(0x10000);
-    if (dword_800ADE78 == 1)
+    if (dword_800ADE78.f0 == 1)
     {
-        if ((&dword_800ADE78)[4] >= 0)
+        if (dword_800ADE78.f10 >= 0)
         {
             dword_800C9C7C = 10;
             u->fc = sub_800B4200(&dword_800ADE78);
@@ -514,7 +509,7 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
             t->next_8 = sub_800BB1B0;
             return;
         }
-        (&dword_800ADE78)[3]++;
+        dword_800ADE78.fc++;
         if (sub_800B41D0(&dword_800ADE78) == 1)
         {
             sub_800BC838(0x100);
@@ -535,8 +530,8 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
         }
         if (dword_800C9C7C == 10)
         {
-            int* p = &dword_800ADE78;
-            p[4] = dword_800C9C78[5];
+            BatChain_a* p = &dword_800ADE78;
+            p->f10 = dword_800C9C78[5];
             v->fc = sub_800B4200(p);
             t->next_8 = sub_800BB100;
             return;
@@ -854,7 +849,7 @@ void sub_800BB894(BatTask_a* t, BatObj_a* u)
 {
     if (dword_800C9C7C >= 4)
     {
-        if (dword_800ADE78 == 1)
+        if (dword_800ADE78.f0 == 1)
         {
             sub_800B42A8(&dword_800C9C88, &dword_800ADE78);
         }
@@ -877,9 +872,9 @@ void sub_800BB940(BatTask_a* t, BatObj_a* u)
     if ((*(int*)u->fc & 0x8001) != 1)
     {
         sub_800BC850(0x2000);
-        if (dword_800ADE78 == 1)
+        if (dword_800ADE78.f0 == 1)
         {
-            if (((&dword_800ADE78)[4] = sub_800B4318(&dword_800C9C88, &dword_800ADE78)) >= 0)
+            if ((dword_800ADE78.f10 = sub_800B4318(&dword_800C9C88, &dword_800ADE78)) >= 0)
             {
                 sub_800BC838(0x2000);
                 t->next_8 = sub_800BAE74;
@@ -1007,7 +1002,7 @@ void sub_800BBCC8(BatTask_a* t, BatObj_a* u)
         dword_800C9C82 = dword_800C9C98;
         dword_800C9C88.mask_8 = 1 << dword_800C9C98;
         u->fc = sub_800BC28C();
-        if (dword_800ADE78 == 1)
+        if (dword_800ADE78.f0 == 1)
         {
             u->next_8 = sub_800BAE74;
         }

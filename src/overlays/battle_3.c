@@ -169,7 +169,7 @@ void ApplyBattleCommand_800BEBB8()
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             sub_80012BB0(actor, m, &cmd, &res);
-            if (dword_800ADE78 == 1)
+            if (dword_800ADE78.f0 == 1)
             {
                 sub_800B4390(actor, m, &dword_800C9C88, &res, &dword_800ADE78);
             }
@@ -961,7 +961,7 @@ void sub_800C0254(EventEntry* t, void* arg)
     BatBox_b box;
     short rect[4];
     UnitStatus* m;
-    if (dword_800ADE78 == 1 && dword_800C9C7C == 10)
+    if (dword_800ADE78.f0 == 1 && dword_800C9C7C == 10)
     {
         return;
     }
