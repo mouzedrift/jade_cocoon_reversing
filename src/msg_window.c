@@ -136,12 +136,14 @@ typedef struct
 #define WS(off) (*(short*)((char*)w + (off)))
 #define WI(off) (*(int*)((char*)w + (off)))
 #if 0
-// Not matched: 41 lines; scheduling of the 0x14 store vs the 0x8/0xC/0x10 stores, and the shared tail (x+0xA) lands in a0 instead of v0
-EventEntry* OpenMessageWindow_8003422C(int* cfg)
+// Not matched (2 words): matches when the marks fill walks a byte pointer over w itself, i.e.
+// q = (signed char*)w + i; ... q[0x1E4] = c; (orig: addu q,w,i / sb 0x1e4(q)), a raw offset. With the field the
+// start folds to w + 0x213 and the store is 0(q); plain w->marks_1E4[i] is not strength-reduced at all (loop.c:
+// "giv not worth while, 0 vs 5": byte giv benefit 2 - add cost 2), so the original had two explicit induction vars.
+EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
 {
-    unsigned short x;
     EventEntry* e;
-    int* w;
+    MsgWindow* w;
     int** list;
     int* p;
     int n;
@@ -155,220 +157,220 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     {
         return 0;
     }
-    w = (int*)e->buffer;
-    WI(0x0) = (int)e;
-    WI(0x4) = 0;
-    WI(0x14) = 0;
-    WS(0x18) = 0;
-    WS(0x1A) = 0;
-    WS(0x1C) = 0;
-    WS(0x1E) = 0;
-    WI(0x20) = 0;
-    WI(0x24) = 0;
-    WI(0x34) = 0;
-    WS(0x38) = 0;
-    WS(0x3A) = 0;
-    WS(0x3C) = 0;
-    WS(0x3E) = 0;
-    WI(0x48) = 0;
-    WS(0x4C) = 0;
-    WS(0x4E) = 0;
-    WS(0x50) = 0;
-    WS(0x52) = 0;
-    WI(0x54) = 0;
-    WI(0x78) = 0;
-    WI(0x7C) = 0;
-    WS(0xB0) = 0;
-    WS(0xB2) = 0;
-    WI(0x1B4) = 0;
-    if (cfg[0x28 / 4] == 0 && cfg[0x2C / 4] != 0)
+    w = (MsgWindow*)e->buffer;
+    w->self_0 = (int)e;
+    w->flags_4 = 0;
+    w->mask_14 = 0;
+    w->res_18.count_18 = 0;
+    w->res_18.sel_1A = 0;
+    w->res_18.pageCount_1C = 0;
+    w->res_18.advances_1E = 0;
+    w->res_18.result_20 = 0;
+    w->res_18.field_24 = 0;
+    w->field_34 = 0;
+    w->x_38 = 0;
+    w->y_3A = 0;
+    w->w_3C = 0;
+    w->h_3E = 0;
+    w->field_48 = 0;
+    w->x_4C = 0;
+    w->y_4E = 0;
+    w->w_50 = 0;
+    w->h_52 = 0;
+    w->ot_54 = 0;
+    w->page_78 = 0;
+    w->count_7C = 0;
+    w->choiceCount_B0 = 0;
+    w->choice_B2 = 0;
+    w->lines_1B4 = 0;
+    if (cfg->style_28 == 0 && cfg->field_2C != 0)
     {
-        WI(0x68) = 1;
+        w->portraitFlip_68 = 1;
     }
     else
     {
-        WI(0x68) = 0;
+        w->portraitFlip_68 = 0;
     }
-    WS(0x6C) = 0;
-    WI(0x2C) = cfg[0x3C / 4];
-    WI(0x30) = cfg[0x38 / 4];
-    n = cfg[0x44 / 4];
-    WI(0x2A4) = n;
+    w->pulse_6C = 0;
+    w->field_2C = cfg->field_3C;
+    w->field_30 = cfg->field_38;
+    n = cfg->voiced_44;
+    w->voiced_2A4 = n;
     if (!(saveData_8008B570.settings_1C.bytes[3] & 1) && n == 1)
     {
-        WI(0x4) |= 0x40000;
+        w->flags_4 |= 0x40000;
     }
-    WI(0x14) = cfg[0x18 / 4];
-    WI(0x8) = 0;
-    WI(0xC) = 1;
-    WI(0x10) = 0;
-    WI(0x28) = cfg[0x14 / 4];
-    WI(0x74) = cfg[0xC / 4];
-    WI(0x84) = cfg[0x20 / 4];
-    if (cfg[0x20 / 4] == 1)
+    w->mask_14 = cfg->mask_18;
+    w->cancelable_28 = cfg->cancelable_14;
+    w->mode_8 = 0;
+    w->field_C = 1;
+    w->field_10 = 0;
+    w->title_74 = cfg->title_C;
+    w->portraitKind_84 = cfg->portraitKind_20;
+    if (cfg->portraitKind_20 == 1)
     {
-        GetPortraitPoly_800A6308(cfg[0x24 / 4], (char*)w + 0x88);
+        GetPortraitPoly_800A6308(cfg->portraitId_24, &w->prim_88);
     }
-    else if (cfg[0x20 / 4] == 7)
+    else if (cfg->portraitKind_20 == 7)
     {
-        GetCombatPortraitPoly_800A1B2C(cfg[0x24 / 4], (char*)w + 0x88);
-        WI(0x84) = 1;
+        GetCombatPortraitPoly_800A1B2C(cfg->portraitId_24, &w->prim_88);
+        w->portraitKind_84 = 1;
     }
-    list = (int**)cfg[0x8 / 4];
+    list = (int**)cfg->text_8;
     if (list)
     {
         list = (int**)FindTextResumePage_80034900((short**)list);
         while (*list)
         {
-            WS(0x1C)++;
-            WL(WI(0x7C)++) = (int*)list;
+            w->res_18.pageCount_1C++;
+            w->list_B4[w->count_7C++] = (int*)list;
             sz = MeasureTextLines_8003E3B4((int*)list);
-            if (WS(0x3C) < sz.w)
+            if (w->w_3C < sz.w)
             {
-                WS(0x3C) = sz.w;
+                w->w_3C = sz.w;
             }
-            if (WS(0x3E) < sz.h)
+            if (w->h_3E < sz.h)
             {
-                WS(0x3E) = sz.h;
+                w->h_3E = sz.h;
             }
             while (*list++)
             {
             }
         }
-        WL(WI(0x7C)) = 0;
+        w->list_B4[w->count_7C] = 0;
     }
-    p = (int*)cfg[0x1C / 4];
+    p = cfg->lines_1C;
     if (p)
     {
         if (IsTextMarkerLine_8003E484(*p) == 1)
         {
-            WI(0x1B4) = (int)(p + 1);
+            w->lines_1B4 = (unsigned short**)(p + 1);
         }
         else
         {
-            WI(0x1B4) = (int)p;
+            w->lines_1B4 = (unsigned short**)p;
         }
-        sz = MeasureTextLinesMasked_8003E2A8((int*)WI(0x1B4), WI(0x14));
-        WS(0x18) = CountUntilZero_80034B14((int*)WI(0x1B4));
-        WS(0x50) = sz.w;
-        WS(0x52) = sz.h;
-        WS(0xB0) = CountMaskedUntilZero_80034B40((int*)WI(0x1B4), WI(0x14));
+        sz = MeasureTextLinesMasked_8003E2A8((int*)w->lines_1B4, w->mask_14);
+        w->res_18.count_18 = CountUntilZero_80034B14((int*)w->lines_1B4);
+        w->w_50 = sz.w;
+        w->h_52 = sz.h;
+        w->choiceCount_B0 = CountMaskedUntilZero_80034B40((int*)w->lines_1B4, w->mask_14);
     }
     c = -1;
-    WS(0x1BC) = 0;
-    WS(0x1BE) = 0;
-    WS(0x1C0) = 0;
-    WS(0x1C2) = 0;
-    WI(0x1C8) = 0;
-    WI(0x1D4) = 0;
-    WI(0x1D8) = 0;
-    WI(0x1DC) = 0;
-    WI(0x1E0) = 1;
-    for (i = 0x2F, q = (signed char*)w + i; i >= 0; i--, q--)
+    w->clip_1B8.x = 0;
+    w->clip_1B8.y = 0;
+    w->clip_1B8.w = 0;
+    w->clip_1B8.h = 0;
+    w->field_1C8 = 0;
+    w->field_1D4 = 0;
+    w->field_1D8 = 0;
+    w->field_1DC = 0;
+    w->field_1E0 = 1;
+    for (i = 0x2F, q = &w->marks_1E4[i]; i >= 0; i--, q--)
     {
-        q[0x1E4] = c;
+        *q = c;
     }
-    WI(0x1CC) = cfg[0x10 / 4];
-    WI(0x1C4) = (int)WL(WI(0x78));
-    WI(0x1D0) = cfg[0x38 / 4];
-    WS(0x3E) = 0x38;
-    WS(0x3C) = 0xDB;
-    WS(0x46) = 0x43;
-    WS(0x44) = 0x46;
-    WS(0x50) += 0x11;
-    WS(0x52) += 7;
-    if (cfg[0x28 / 4] == 1)
+    w->field_1CC = cfg->field_10;
+    w->field_1C4 = (int)w->list_B4[w->page_78];
+    w->field_1D0 = cfg->field_38;
+    w->h_3E = 0x38;
+    w->w_3C = 0xDB;
+    w->field_46 = 0x43;
+    w->field_44 = 0x46;
+    w->w_50 += 0x11;
+    w->h_52 += 7;
+    if (cfg->style_28 == 1)
     {
-        if (cfg[0x4 / 4])
+        if (cfg->pos_4)
         {
-            WS(0x40) = ((short*)cfg[0x4 / 4])[0];
-            WS(0x42) = ((short*)cfg[0x4 / 4])[0] + ((short*)cfg[0x4 / 4])[1];
-            WS(0x38) = WS(0x40) + 0x45;
-            WS(0x3A) = WS(0x42) + 0xE;
-            WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-            WS(0x70) = WS(0x3A) - 0xC;
+            w->field_40 = cfg->pos_4[0];
+            w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
+            w->x_38 = w->field_40 + 0x45;
+            w->y_3A = w->field_42 + 0xE;
+            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+            w->titleY_70 = w->y_3A - 0xC;
         }
         else
         {
-            switch ((unsigned int)cfg[0])
+            switch ((unsigned int)cfg->posMode_0)
             {
             case 0:
-                WS(0x42) = WS(0x40) = 0x10;
-                WS(0x38) = WS(0x40) + 0x44;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-                WS(0x70) = WS(0x3A) + WS(0x3E) - 2;
+                w->field_42 = w->field_40 = 0x10;
+                w->x_38 = w->field_40 + 0x44;
+                w->y_3A = w->field_42 + 0xD;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleY_70 = w->y_3A + w->h_3E - 2;
                 break;
             case 1:
-                WS(0x40) = 0x10;
-                WS(0x42) = 0x74;
-                WS(0x38) = WS(0x40) + 0x44;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-                WS(0x70) = WS(0x3A) - 0x10;
+                w->field_40 = 0x10;
+                w->field_42 = 0x74;
+                w->x_38 = w->field_40 + 0x44;
+                w->y_3A = w->field_42 + 0xD;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleY_70 = w->y_3A - 0x10;
                 break;
             case 2:
-                WS(0x40) = 0x10;
-                WS(0x42) = 0xA1;
-                WS(0x38) = WS(0x40) + 0x44;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-                WS(0x70) = WS(0x3A) - 0x10;
+                w->field_40 = 0x10;
+                w->field_42 = 0xA1;
+                w->x_38 = w->field_40 + 0x44;
+                w->y_3A = w->field_42 + 0xD;
+                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleY_70 = w->y_3A - 0x10;
                 break;
             }
         }
-        x = WS(0x40);
+        w->x_4C = w->field_40 + 0xA;
+        w->y_4E = w->y_3A + w->h_3E + 3;
     }
     else
     {
-        if (cfg[0x4 / 4])
+        if (cfg->pos_4)
         {
-            WS(0x40) = ((short*)cfg[0x4 / 4])[0];
-            WS(0x42) = ((short*)cfg[0x4 / 4])[0] + ((short*)cfg[0x4 / 4])[1];
-            WS(0x38) = WS(0x40) + 0x45;
-            WS(0x3A) = WS(0x42) + 0xD;
-            WS(0x6E) = WS(0x38) + WS(0x3C) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-            WS(0x70) = WS(0x3A) - 0xC;
+            w->field_40 = cfg->pos_4[0];
+            w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
+            w->x_38 = w->field_40 + 0x45;
+            w->y_3A = w->field_42 + 0xD;
+            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+            w->titleY_70 = w->y_3A - 0xC;
         }
         else
         {
-            switch ((unsigned int)cfg[0])
+            switch ((unsigned int)cfg->posMode_0)
             {
             case 0:
-                WS(0x42) = WS(0x38) = 0x10;
-                WS(0x40) = WS(0x38) + 0xDA;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x6E) = WS(0x40) + WS(0x44) - MeasureTextWidth_8003E4C8(WI(0x74)) - 0x10;
-                WS(0x70) = WS(0x42) + WS(0x46) - 2;
+                w->field_42 = w->x_38 = 0x10;
+                w->field_40 = w->x_38 + 0xDA;
+                w->y_3A = w->field_42 + 0xD;
+                w->titleX_6E = w->field_40 + w->field_44 - MeasureTextWidth_8003E4C8((int)w->title_74) - 0x10;
+                w->titleY_70 = w->field_42 + w->field_46 - 2;
                 break;
             case 1:
-                WS(0x42) = 0x60;
-                WS(0x38) = 0x10;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x40) = WS(0x38) + 0xDA;
-                WS(0x6E) = WS(0x38);
-                WS(0x70) = WS(0x3A) - 0x10;
+                w->field_42 = 0x60;
+                w->x_38 = 0x10;
+                w->y_3A = w->field_42 + 0xD;
+                w->field_40 = w->x_38 + 0xDA;
+                w->titleX_6E = w->x_38;
+                w->titleY_70 = w->y_3A - 0x10;
                 break;
             case 2:
-                WS(0x42) = 0xA1;
-                WS(0x38) = 0x10;
-                WS(0x3A) = WS(0x42) + 0xD;
-                WS(0x40) = WS(0x38) + 0xDA;
-                WS(0x6E) = WS(0x38);
-                WS(0x70) = WS(0x3A) - 0x10;
+                w->field_42 = 0xA1;
+                w->x_38 = 0x10;
+                w->y_3A = w->field_42 + 0xD;
+                w->field_40 = w->x_38 + 0xDA;
+                w->titleX_6E = w->x_38;
+                w->titleY_70 = w->y_3A - 0x10;
                 break;
             }
         }
-        x = WS(0x38);
+        w->x_4C = w->x_38 + 0xA;
+        w->y_4E = w->y_3A + w->h_3E + 3;
     }
-    WS(0x4C) = x + 0xA;
-    WS(0x4E) = WS(0x3A) + WS(0x3E) + 3;
-    WS(0x70) -= 2;
-    WS(0x3A) -= 2;
-    WS(0x64) = WS(0x40) + 3;
-    WS(0x66) = WS(0x42) + 2;
-    WS(0x1B8) = WS(0x38) + 7;
-    WS(0x1BA) = WS(0x3A) + 4;
+    w->titleY_70 -= 2;
+    w->y_3A -= 2;
+    w->x_64 = w->field_40 + 3;
+    w->y_66 = w->field_42 + 2;
+    w->clip_1B8.promptX_0 = w->x_38 + 7;
+    w->clip_1B8.promptY_2 = w->y_3A + 4;
     e->cb_8 = (EventEntryFn)UpdateMessageWindow_80034BB8;
     e->flags = (e->flags | 1) & ~0x8000;
     return e;
@@ -530,304 +532,283 @@ extern int DrawMsgWindowText_8003580C();
 extern void DrawMsgWindowTitle_800359F8();
 extern void DrawMsgWindowPortrait_80035900();
 extern void DrawMsgWindowChoices_800355EC();
-#define PI(off) (*(int*)((char*)p + (off)))
 #if 0
-// Not matched (30 lines, same length): control flow and jump tables right (needs the C table jpt_8007481C and dword_80074818 removed).
-// Left: the flags temporaries get $v1 where the original has $a0 (first block) / $v0 (case 4), the DrawMsgWindowText
-// result v is in $a0 instead of $a1, and the reset block reloads page_78 (the original keeps it in $v1, with the fill
-// loop counter in another register; i = page_78 plus a separate counter fixes that but loses an instruction elsewhere).
-// Got closer with: unsigned switch on field_10, c = -1 after the flag clears, f1 = p[1] & ~0x40000 in the first block
+// Not matched (2 words, the same in both marks fills): matches when the marks fill walks a byte pointer over w itself, i.e.
+// q = (signed char*)w + i; ... q[0x1E4] = c; (orig: addu q,w,i / sb 0x1e4(q)), a raw offset. With the field the
+// start folds to w + 0x213 and the store is 0(q); plain w->marks_1E4[i] is not strength-reduced at all (loop.c:
+// "giv not worth while, 0 vs 5": byte giv benefit 2 - add cost 2), so the original had two explicit induction vars.
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
-    int* p = (int*)w;
     short r[4];
-    int c;
     int i;
+    int j;
     signed char* q;
+    signed char* q2;
+    int c;
     int v;
-    int f1;
-    int f2;
-    int f3;
-    int f4;
-    int f5;
-    int f6;
-    int f7;
 
-    if (p[1] & 0x80000)
+    if (w->flags_4 & 0x80000)
     {
-        f1 = p[1] & ~0x40000;
-        f1 &= ~0x80000;
-        p[1] = f1;
+        w->flags_4 &= ~0x40000;
+        w->flags_4 &= ~0x80000;
     }
-    switch (p[2])
+    switch (w->mode_8)
     {
     case 0:
         break;
     case 1:
-        if (p[0x2C / 4] == 1 || (p[1] & 0x800))
+        if (w->field_2C == 1 || (w->flags_4 & 0x800))
         {
-            if (!(p[1] & 0x8000))
+            if (!(w->flags_4 & 0x8000))
             {
-                p[1] |= 0x8000;
+                w->flags_4 |= 0x8000;
             }
-            if (!(p[1] & 0x40000))
+            if (!(w->flags_4 & 0x40000))
             {
-                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
             }
         }
-        if (p[1] & 0x200)
+        if (w->flags_4 & 0x200)
         {
-            if (!(p[1] & 0x20000))
+            if (!(w->flags_4 & 0x20000))
             {
                 PlaySfx_80031494(0x7F);
             }
-            f2 = p[1];
-            f2 &= ~0x20000;
-            f2 &= ~0x8000;
-            f2 &= ~0x200;
-            p[1] = f2;
+            w->flags_4 &= ~0x20000;
+            w->flags_4 &= ~0x8000;
+            w->flags_4 &= ~0x200;
             c = -1;
-            PI(0x1C4) = (int)((MsgWindowLists*)p)->list_B4[PI(0x78)];
-            PI(0x1C8) = 0;
-            PI(0x1D4) = 0;
-            PI(0x1D8) = 0;
-            PI(0x1DC) = 0;
-            PI(0x1E0) = 1;
-            for (i = 0x2F, q = (signed char*)p + i; i >= 0; i--, q--)
+            w->field_1C4 = (int)w->list_B4[w->page_78];
+            w->field_1C8 = 0;
+            w->field_1D4 = 0;
+            w->field_1D8 = 0;
+            w->field_1DC = 0;
+            w->field_1E0 = 1;
+            for (i = 0x2F, q = &w->marks_1E4[i]; i >= 0; i--, q--)
             {
-                q[0x1E4] = c;
+                *q = c;
             }
-            p[2] = 0;
-            p[3] = 2;
+            w->mode_8 = 0;
+            w->field_C = 2;
         }
         break;
     case 2:
-        if (p[0x2C / 4] == 1 || (p[1] & 0x800))
+        if (w->field_2C == 1 || (w->flags_4 & 0x800))
         {
-            if (!(p[1] & 0x8000))
+            if (!(w->flags_4 & 0x8000))
             {
-                p[1] |= 0x8000;
+                w->flags_4 |= 0x8000;
             }
-            if (!(p[1] & 0x40000))
+            if (!(w->flags_4 & 0x40000))
             {
-                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
             }
         }
-        if (p[1] & 0x200)
+        if (w->flags_4 & 0x200)
         {
-            if (!(p[1] & 0x20000))
+            if (!(w->flags_4 & 0x20000))
             {
                 PlaySfx_80031494(0x7F);
             }
-            f3 = p[1];
-            f3 &= ~0x20000;
-            f3 &= ~0x8000;
-            f3 &= ~0x200;
-            p[1] = f3;
+            w->flags_4 &= ~0x20000;
+            w->flags_4 &= ~0x8000;
+            w->flags_4 &= ~0x200;
         }
-        if (p[1] & 0x4000)
+        if (w->flags_4 & 0x4000)
         {
-            f4 = p[1];
-            f4 &= ~0x8000;
-            f4 &= ~0x4000;
-            p[1] = f4;
-            p[2] = 6;
+            w->flags_4 &= ~0x8000;
+            w->flags_4 &= ~0x4000;
+            w->mode_8 = 6;
         }
         break;
     case 3:
-        if (p[1] & 0x200)
+        if (w->flags_4 & 0x200)
         {
-            if (!(p[1] & 0x20000))
+            if (!(w->flags_4 & 0x20000))
             {
                 PlaySfx_80031494(0x7F);
             }
-            p[2] = 5;
-            f5 = p[1];
-            f5 &= ~0x20000;
-            f5 &= ~0x200;
-            p[1] = f5;
+            w->mode_8 = 5;
+            w->flags_4 &= ~0x20000;
+            w->flags_4 &= ~0x200;
         }
-        else if (p[1] & 0x10000)
+        else if (w->flags_4 & 0x10000)
         {
-            if (!(p[1] & 0x20000))
+            if (!(w->flags_4 & 0x20000))
             {
                 PlaySfx_80031494(0x7D);
             }
-            f6 = p[1];
-            f6 &= ~0x20000;
-            f6 &= ~0x10000;
-            p[1] = f6;
+            w->flags_4 &= ~0x20000;
+            w->flags_4 &= ~0x10000;
         }
-        if (p[1] & 0x4000)
+        if (w->flags_4 & 0x4000)
         {
-            p[1] &= ~0x4000;
-            p[2] = 6;
+            w->flags_4 &= ~0x4000;
+            w->mode_8 = 6;
         }
         break;
     case 4:
-        if (p[1] & 0x200)
+        if (w->flags_4 & 0x200)
         {
-            if (!(p[1] & 0x20000))
+            if (!(w->flags_4 & 0x20000))
             {
                 PlaySfx_80031494(0x7F);
             }
-            f7 = p[1];
-            p[4] = 1;
-            p[2] = 0;
-            f7 &= ~0x20000;
-            f7 &= ~0x200;
-            p[1] = f7;
+            w->mode_8 = 0;
+            w->field_10 = 1;
+            w->flags_4 &= ~0x20000;
+            w->flags_4 &= ~0x200;
         }
-        if (!(p[1] & 0x40000))
+        if (!(w->flags_4 & 0x40000))
         {
-            DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
+            DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
         }
         break;
     case 5:
-        p[4] = 3;
+        w->field_10 = 3;
         break;
     case 6:
-        p[3] = 4;
+        w->field_C = 4;
         break;
     case 7:
         break;
     }
-    switch (p[3])
+    switch (w->field_C)
     {
     case 0:
         break;
     case 1:
-        p[0x34 / 4]++;
-        if (p[0x34 / 4] >= 8)
+        w->field_34++;
+        if (w->field_34 >= 8)
         {
-            p[0x34 / 4] = 8;
-            p[3] = 2;
+            w->field_34 = 8;
+            w->field_C = 2;
         }
-        InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
-        DrawMsgWindowBackground_80035898(p, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
-        InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        DrawMsgWindowBackground_80035898(p, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+        InterpolateWindowRect_8004196C(r, &w->x_38, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+        InterpolateWindowRect_8004196C(r, &w->field_40, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
         break;
     case 2:
-        DrawMsgWindowTitle_800359F8(p);
-        DrawMsgWindowPortrait_80035900(p);
-        v = DrawMsgWindowText_8003580C(p, p + 0x38 / 4);
+        DrawMsgWindowTitle_800359F8(w);
+        DrawMsgWindowPortrait_80035900(w);
+        v = DrawMsgWindowText_8003580C(w, &w->x_38);
         if (v == 1)
         {
-            p[3] = 3;
-            PI(0x78)++;
-            if ((int)((MsgWindowLists*)p)->list_B4[PI(0x78)])
+            w->field_C = 3;
+            w->page_78++;
+            if (w->list_B4[w->page_78])
             {
-                p[2] = v;
-                if (p[1] & 0x40000)
+                w->mode_8 = v;
+                if (w->flags_4 & 0x40000)
                 {
-                    if (((MsgWindowLists*)p)->list_B4[PI(0x78) + 1] == 0 && PI(0x1B4))
+                    if (w->list_B4[w->page_78 + 1] == 0 && w->lines_1B4)
                     {
                         c = -1;
-                        PI(0x1C8) = 0;
-                        PI(0x1D4) = 0;
-                        PI(0x1D8) = 0;
-                        PI(0x1DC) = 0;
-                        PI(0x1E0) = v;
-                        PI(0x1C4) = (int)((MsgWindowLists*)p)->list_B4[PI(0x78)];
-                        for (i = 0x2F, q = (signed char*)p + i; i >= 0; i--, q--)
+                        w->field_1C4 = (int)w->list_B4[w->page_78];
+                        w->field_1C8 = 0;
+                        w->field_1D4 = 0;
+                        w->field_1D8 = 0;
+                        w->field_1DC = 0;
+                        w->field_1E0 = v;
+                        for (j = 0x2F, q2 = &w->marks_1E4[j]; j >= 0; j--, q2--)
                         {
-                            q[0x1E4] = c;
+                            *q2 = c;
                         }
-                        p[3] = 1;
-                        p[0x34 / 4] = 0;
-                        p[2] = 0;
-                        p[4] = 0;
-                        p[1] |= 0x80000;
+                        w->field_C = 1;
+                        w->field_34 = 0;
+                        w->mode_8 = 0;
+                        w->field_10 = 0;
+                        w->flags_4 |= 0x80000;
                     }
                 }
             }
-            else if (PI(0x1B4))
+            else if (w->lines_1B4)
             {
-                p[2] = 4;
+                w->mode_8 = 4;
             }
             else
             {
-                p[2] = 2;
-                p[9] = v;
+                w->mode_8 = 2;
+                w->res_18.field_24 = v;
             }
         }
-        DrawMsgWindowBackground_80035898(p, (int)(p + 0x38 / 4), 2);
-        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x38 / 4), 0);
-        DrawMsgWindowBackground_80035898(p, (int)(p + 0x40 / 4), 2);
-        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x40 / 4), 0);
+        DrawMsgWindowBackground_80035898(w, (int)&w->x_38, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)&w->x_38, 0);
+        DrawMsgWindowBackground_80035898(w, (int)&w->field_40, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)&w->field_40, 0);
         break;
     case 3:
-        DrawMsgWindowTitle_800359F8(p);
-        DrawMsgWindowPortrait_80035900(p);
-        DrawMsgWindowText_8003580C(p, p + 0x38 / 4);
-        DrawMsgWindowBackground_80035898(p, (int)(p + 0x38 / 4), 2);
-        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x38 / 4), 0);
-        DrawMsgWindowBackground_80035898(p, (int)(p + 0x40 / 4), 2);
-        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x40 / 4), 0);
+        DrawMsgWindowTitle_800359F8(w);
+        DrawMsgWindowPortrait_80035900(w);
+        DrawMsgWindowText_8003580C(w, &w->x_38);
+        DrawMsgWindowBackground_80035898(w, (int)&w->x_38, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)&w->x_38, 0);
+        DrawMsgWindowBackground_80035898(w, (int)&w->field_40, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)&w->field_40, 0);
         break;
     case 4:
-        p[0x34 / 4]--;
-        if (p[0x34 / 4] <= 0)
+        w->field_34--;
+        if (w->field_34 <= 0)
         {
-            p[0x34 / 4] = 0;
-            p[3] = 0;
-            p[2] = 7;
+            w->field_34 = 0;
+            w->field_C = 0;
+            w->mode_8 = 7;
         }
-        InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
+        InterpolateWindowRect_8004196C(r, &w->x_38, w->field_34, 8, 0);
         if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            DrawMsgWindowText_8003580C(p, (int*)r);
-            DrawMsgWindowBackground_80035898(p, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+            DrawMsgWindowText_8003580C(w, r);
+            DrawMsgWindowBackground_80035898(w, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
         }
-        InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        DrawMsgWindowBackground_80035898(p, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+        InterpolateWindowRect_8004196C(r, &w->field_40, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
         break;
     }
-    switch ((unsigned int)p[4])
+    switch ((unsigned int)w->field_10)
     {
     case 0:
         break;
     case 1:
-        p[0x48 / 4]++;
-        if (p[0x48 / 4] >= 8)
+        w->field_48++;
+        if (w->field_48 >= 8)
         {
-            p[0x48 / 4] = 8;
-            p[4] = 2;
-            p[2] = 3;
-            p[9] = 1;
+            w->field_48 = 8;
+            w->field_10 = 2;
+            w->mode_8 = 3;
+            w->res_18.field_24 = 1;
         }
-        InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
+        InterpolateWindowRect_8004196C(r, &w->x_4C, w->field_48, 8, 5);
         if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            DrawMsgWindowChoices_800355EC(p, (int*)r);
-            DrawMsgWindowBackground_80035898(p, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(w, r);
+            DrawMsgWindowBackground_80035898(w, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
         }
         break;
     case 2:
-        DrawMsgWindowChoices_800355EC(p, p + 0x4C / 4);
-        DrawMsgWindowBackground_80035898(p, (int)(p + 0x4C / 4), 2);
-        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x4C / 4), 0);
+        DrawMsgWindowChoices_800355EC(w, &w->x_4C);
+        DrawMsgWindowBackground_80035898(w, (int)&w->x_4C, 2);
+        DrawMsgWindowBorder_800358CC(w, (int)&w->x_4C, 0);
         break;
     case 3:
-        p[0x48 / 4]--;
-        if (p[0x48 / 4] <= 0)
+        w->field_48--;
+        if (w->field_48 <= 0)
         {
-            p[0x48 / 4] = 0;
-            p[4] = 0;
-            p[2] = 6;
+            w->field_48 = 0;
+            w->field_10 = 0;
+            w->mode_8 = 6;
         }
-        InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
+        InterpolateWindowRect_8004196C(r, &w->x_4C, w->field_48, 8, 5);
         if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            DrawMsgWindowChoices_800355EC(p, (int*)r);
-            DrawMsgWindowBackground_80035898(p, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(w, r);
+            DrawMsgWindowBackground_80035898(w, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
         }
         break;
     }
@@ -838,9 +819,6 @@ INCLUDE_ASM(UpdateMsgWindowState_80034C18);
 const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
 const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
 const int aTimesSign_80074864[2] = { 0x7782 };
-// the jump table of UpdateItemMessageWindow_80035BD8 (asm; its targets are labels of the generated asm): delete it and
-// its externs in msg_window.h when the function is C
-void* const jpt_8007486C[6] = { jtgt_80035F2C, jtgt_80035F54, jtgt_80035F54, jtgt_80035F54, jtgt_80035F6C, jtgt_80035F40 };
 
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
@@ -1129,10 +1107,7 @@ extern void AddMoney_800AD058(int a);
 extern void AddEmptyCocoons_800AD8F4(int a);
 extern void SetValuableFlag_800AD68C(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
-#if 0
-// Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
-// Needs the C table jpt_8007486C removed (tu_800353A0 is merged into this TU for it: the jump table sits at
-// 0x8007486C, which is 8-aligned only relative to this TU's .rdata start 0x8007474C; psylink packs objects on 4 bytes).
+// Matched
 void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {
     ItemMsgWindow* o;
@@ -1212,7 +1187,6 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             DrawNumberRightAlignedFont1_8003F264(&p78, o->entries[i].count, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;
-            continue;
         }
         else if (o->entries[i].type == 6)
         {
@@ -1234,6 +1208,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 DrawNumber_8003EF74(&p90, o->entries[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
+            line++;
         }
         else if ((unsigned int)o->entries[i].type < 6)
         {
@@ -1286,12 +1261,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 DrawNumber_8003EF74(&pA0, o->entries[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
+            line++;
         }
-        else
-        {
-            continue;
-        }
-        line++;
     }
     if ((unsigned int)o->mode < 11 && !flag)
     {
@@ -1399,8 +1370,6 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }
-#endif
-INCLUDE_ASM(UpdateItemMessageWindow_80035BD8);
 // Matched
 void InitPadVibration_800364E4(int* entry)
 {

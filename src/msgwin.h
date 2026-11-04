@@ -5,7 +5,8 @@
 
 typedef struct
 {
-    int field_0;
+    unsigned short promptX_0; // DrawMsgWindowNextPrompt_8003E268 position
+    unsigned short promptY_2;
     unsigned short x;
     unsigned short y;
     unsigned short w;
@@ -40,6 +41,29 @@ typedef struct
     int mode_48;
     int* text_4C;
 } ItemMsgInit;
+
+/* OpenMessageWindow_8003422C's argument */
+typedef struct
+{
+    int posMode_0; // window position preset when pos_4 is 0
+    short* pos_4; // speaker position (x, height)
+    int* text_8; // pages, see FindTextResumePage_80034900
+    char* title_C;
+    int field_10;
+    int cancelable_14;
+    unsigned int mask_18;
+    int* lines_1C; // choice lines
+    int portraitKind_20; // 1: portrait, 7: combat portrait
+    int portraitId_24;
+    int style_28;
+    int field_2C;
+    int field_30;
+    int field_34;
+    int field_38;
+    int field_3C;
+    int field_40;
+    int voiced_44;
+} MsgWindowCfg;
 
 typedef struct MsgWindow
 {

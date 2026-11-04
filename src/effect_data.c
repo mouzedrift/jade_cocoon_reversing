@@ -2932,8 +2932,8 @@ unsigned short portraitWindowPos_800827EC[2] = { 13, 9 };
 unsigned char abilityIconsNoType_800827F0[8] = { 81, 62, 41, 199, 63 };
 int abilityTypeIcons_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF426A6, 0x47F01FA3 };
 unsigned char *abilityIconsByType_8008280C[5] = { (void *)abilityTypeIcons_800827F8, (void *)&abilityTypeIcons_800827F8[1], (void *)&abilityTypeIcons_800827F8[2], (void *)&abilityTypeIcons_800827F8[3], (void *)&abilityTypeIcons_800827F8[4] };
-int itemScrollUpPos_80082820 = 0x2F00A0;
-int itemScrollDownPos_80082824 = 0x9400A0;
+short itemScrollUpPos_80082820[2] = { 0xA0, 0x2F }; // arrow x, y
+short itemScrollDownPos_80082824[2] = { 0xA0, 0x94 };
 int itemListRowData_80082828[11] = { 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053, 0x150015, 0x50003, 0x30010 };
 int aH6p[14] = {
     0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,

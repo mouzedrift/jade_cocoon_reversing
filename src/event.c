@@ -191,12 +191,13 @@ void DrawWindowBackground_800429F8(int rect, int ot)
     }
 }
 #define EVT_SPRT publicTiySprts_8008D434
-#if 0
-// Not matched: register allocation (g/the sprite base gets $t7 instead of $s2, shifting the temporaries of the rect setup)
+// Matched
 void DrawWindowBorder_80042B38(int rect, int ot)
 {
     short* box = (short*)rect;
     RECT parts[8];
+    short w;
+    short h;
 
     if (box[2] >= EVT_SPRT[79].w + EVT_SPRT[82].w && box[3] >= EVT_SPRT[79].h + EVT_SPRT[82].h)
     {
@@ -217,17 +218,19 @@ void DrawWindowBorder_80042B38(int rect, int ot)
         parts[7].w = EVT_SPRT[85].w;
         parts[7].h = EVT_SPRT[85].h;
 
+        w = box[2] - (parts[0].w + parts[1].w);
+        h = box[3] - (parts[0].h + parts[2].h);
         parts[0].x = box[0];
         parts[0].y = box[1];
         parts[4].x = parts[0].x + parts[0].w;
         parts[4].y = box[1];
-        parts[4].w = box[2] - (parts[0].w + parts[1].w);
+        parts[4].w = w;
         parts[1].x = parts[4].x + parts[4].w;
         parts[1].y = box[1];
         parts[6].x = box[0];
         parts[6].y = parts[0].y + parts[0].h;
         parts[6].w = parts[6].w - 1;
-        parts[6].h = box[3] - (parts[0].h + parts[2].h);
+        parts[6].h = h;
         parts[7].x = box[0] + box[2] - parts[7].w;
         parts[7].y = parts[1].y + parts[1].h;
         parts[7].w = parts[7].w - 1;
@@ -266,8 +269,6 @@ void DrawWindowBorder_80042B38(int rect, int ot)
         AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[85], 10);
     }
 }
-#endif
-INCLUDE_ASM(DrawWindowBorder_80042B38);
 extern int SetCdXaLock_8003C0A4(int lock);
 extern int XaStartRead_800434C4(int pos);
 extern int xaStartPos_80096108;

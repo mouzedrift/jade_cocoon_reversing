@@ -241,13 +241,14 @@ int ratan2Degrees_8003B56C(int x, int y)
     }
     return degrees;
 }
-#if 0
-// Not matched: s1/s2 register assignment of out/len swapped (8 words). Also tried: declaration order, unsigned len, direct out[] stores, short pitch (loses the sext), copy pointer o = out, passing out as the 3D call's 2nd arg, yaw/pitch reuse; permuter 1500: nothing
+// Matched
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
-    int len = ISqrt_8003B918(LengthSquared3D_8003B8DC(v));
+    int len;
     short yaw;
     int pitch;
+    len = LengthSquared3D_8003B8DC(v);
+    len = ISqrt_8003B918(len);
     yaw = ratan2(v[0], v[2]);
     out[1] = yaw;
     pitch = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
@@ -255,8 +256,6 @@ int VectorToAngles_8003B5D4(int* v, short* out)
     out[2] = 0;
     return len;
 }
-#endif
-INCLUDE_ASM(VectorToAngles_8003B5D4);
 // Matched
 int Sign_8003B664(int x)
 {

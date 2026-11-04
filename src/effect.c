@@ -236,35 +236,31 @@ int LowestSetBit_80014358(unsigned int mask)
     }
     return 0;
 }
-#if 0
-// Not matched (1 word): the local copy unit = a0 fixes the a0 / status saved registers ($s1/$s2, 13 words without it), but
-// the last branch computes unit - 1 from the still-live incoming $a0 instead of $s1 (same as GetUnitSkills_80031B30).
-// Tried: a0 in the last branch, the copy after slot, minion branch as the final else
-UnitStatus* GetUnitStatus_80014390(int a0)
+// Matched
+UnitStatus* GetUnitStatus_80014390(unit)
+    unsigned char unit;
 {
-    int unit = a0;
     UnitStatus* status = 0;
-    unsigned int slot = unit & 0xFF;
-    unsigned int idx;
-    if (slot >= 8)
+    unsigned char idx;
+    if (unit >= 8)
     {
         idx = unit - 8;
-        status = GetSlotStatus_800A10C0(idx & 0xFF);
+        status = GetSlotStatus_800A10C0(idx);
     }
-    else if (slot >= 4)
+    else if (unit >= 4)
     {
         int flags = GetEnemyAliveMask_800A248C();
-        int m = 1 << slot;
+        int m = 1 << unit;
         if (flags & m)
         {
             idx = unit - 4;
-            status = GetEnemyStatus_800A2B60(idx & 0xFF);
+            status = GetEnemyStatus_800A2B60(idx);
         }
     }
-    else if (slot != 0)
+    else if (unit != 0)
     {
         idx = unit - 1;
-        status = GetMinionStatus_800107A0(3, idx & 0xFF);
+        status = GetMinionStatus_800107A0(3, idx);
     }
     else
     {
@@ -272,8 +268,6 @@ UnitStatus* GetUnitStatus_80014390(int a0)
     }
     return status;
 }
-#endif
-INCLUDE_ASM(GetUnitStatus_80014390);
 // Matched
 Minion* GetUnitMinion_80014444(int unit)
 {
@@ -291,25 +285,24 @@ Minion* GetUnitMinion_80014444(int unit)
     }
     return minion;
 }
-#if 0
-// Not matched (2 words): with an int a0 the saved registers of a0 / stats / a0 - 4 are permuted (original $s0/$s2/$s1, 11 words); u_char a0 (here) gets them right but masks a0 on entry (andi instead of move, a0 - 4 taken from the masked copy). a0 = 1 << a0 / a0 = flags & m also fix the registers but write $s0; tried K&R int/u_char, a0 copies, range test a0 >= 4 && a0 < 7, early returns, if/else stats = 0; permuter 1500: best is this
-UnitStats* GetUnitStats_8001449C(unsigned char unit)
+// Matched
+UnitStats* GetUnitStats_8001449C(unit)
+    unsigned char unit;
 {
     UnitStats* stats = 0;
-    int enemy = unit - 4;
-    if ((unsigned char)enemy < 3)
+    if (unit >= 4 && unit < 7)
     {
         int flags = GetEnemyAliveMask_800A248C();
         int m = 1 << unit;
         if (flags & m)
         {
-            stats = GetEnemyStats_800A2B20(enemy & 0xFF);
+            unit -= 4;
+            stats = GetEnemyStats_800A2B20(unit);
         }
     }
     return stats;
 }
-#endif
-INCLUDE_ASM(GetUnitStats_8001449C);
+
 // Matched
 void FirFilterInit_8001450C(int* history, FirFilter* filter, int* coefs, int taps)
 {

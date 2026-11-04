@@ -61,21 +61,18 @@ typedef struct
 extern const CVECTOR colorGrey_800741E4;
 extern const CVECTOR colorWhite_800741E8;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
-#if 0
-// Not matched: same shape; the original reloads publicTiyPolyFT4s_8008D430 one division earlier in the third vertex (CSE path length) and allocates registers differently
-void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, int pos, int ot)
+// Matched
+void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot)
 {
     CVECTOR c0;
     CVECTOR c1;
     short idx;
     int ang;
-    int x;
-    int y;
     int nx;
     int ny;
-    short* center = (short*)pos;
     c0 = colorGrey_800741E4;
     c1 = colorWhite_800741E8;
+    ang = arrow.dir << 10;
     idx = scrollArrowIcons_8008279C[(short)saveData_8008B570.uiColor_20.i * 3 + arrow.kind];
     publicTiyPolyFT4s_8008D430[idx].x0 = 1 - publicTiySprts_8008D434[idx].w / 2;
     publicTiyPolyFT4s_8008D430[idx].y0 = 1 - publicTiySprts_8008D434[idx].h / 2;
@@ -85,41 +82,29 @@ void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, int pos, int ot)
     publicTiyPolyFT4s_8008D430[idx].y2 = publicTiySprts_8008D434[idx].h / 2;
     publicTiyPolyFT4s_8008D430[idx].x3 = publicTiySprts_8008D434[idx].w / 2;
     publicTiyPolyFT4s_8008D430[idx].y3 = publicTiySprts_8008D434[idx].h / 2;
-    ang = arrow.dir << 10;
-    x = publicTiyPolyFT4s_8008D430[idx].x0;
-    y = publicTiyPolyFT4s_8008D430[idx].y0;
-    nx = x * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * sinTable_80084540[ang & 0xFFF] / 4096;
-    ny = x * sinTable_80084540[ang & 0xFFF] / 4096 + y * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    publicTiyPolyFT4s_8008D430[idx].x0 = center[0] + nx;
-    publicTiyPolyFT4s_8008D430[idx].y0 = center[1] + ny;
-    x = publicTiyPolyFT4s_8008D430[idx].x1;
-    y = publicTiyPolyFT4s_8008D430[idx].y1;
-    nx = x * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * sinTable_80084540[ang & 0xFFF] / 4096;
-    ny = x * sinTable_80084540[ang & 0xFFF] / 4096 + y * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    publicTiyPolyFT4s_8008D430[idx].x1 = center[0] + nx;
-    publicTiyPolyFT4s_8008D430[idx].y1 = center[1] + ny;
-    x = publicTiyPolyFT4s_8008D430[idx].x2;
-    y = publicTiyPolyFT4s_8008D430[idx].y2;
-    nx = x * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * sinTable_80084540[ang & 0xFFF] / 4096;
-    ny = x * sinTable_80084540[ang & 0xFFF] / 4096 + y * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    publicTiyPolyFT4s_8008D430[idx].x2 = center[0] + nx;
-    publicTiyPolyFT4s_8008D430[idx].y2 = center[1] + ny;
-    x = publicTiyPolyFT4s_8008D430[idx].x3;
-    y = publicTiyPolyFT4s_8008D430[idx].y3;
-    nx = x * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - y * sinTable_80084540[ang & 0xFFF] / 4096;
-    ny = x * sinTable_80084540[ang & 0xFFF] / 4096 + y * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    publicTiyPolyFT4s_8008D430[idx].x3 = center[0] + nx;
-    publicTiyPolyFT4s_8008D430[idx].y3 = center[1] + ny;
-    setSemiTrans(&publicTiyPolyFT4s_8008D430[idx], 0);
+    nx = publicTiyPolyFT4s_8008D430[idx].x0 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - publicTiyPolyFT4s_8008D430[idx].y0 * sinTable_80084540[ang & 0xFFF] / 4096;
+    ny = publicTiyPolyFT4s_8008D430[idx].x0 * sinTable_80084540[ang & 0xFFF] / 4096 + publicTiyPolyFT4s_8008D430[idx].y0 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    publicTiyPolyFT4s_8008D430[idx].x0 = pos[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y0 = pos[1] + ny;
+    nx = publicTiyPolyFT4s_8008D430[idx].x1 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - publicTiyPolyFT4s_8008D430[idx].y1 * sinTable_80084540[ang & 0xFFF] / 4096;
+    ny = publicTiyPolyFT4s_8008D430[idx].x1 * sinTable_80084540[ang & 0xFFF] / 4096 + publicTiyPolyFT4s_8008D430[idx].y1 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    publicTiyPolyFT4s_8008D430[idx].x1 = pos[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y1 = pos[1] + ny;
+    nx = publicTiyPolyFT4s_8008D430[idx].x2 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - publicTiyPolyFT4s_8008D430[idx].y2 * sinTable_80084540[ang & 0xFFF] / 4096;
+    ny = publicTiyPolyFT4s_8008D430[idx].x2 * sinTable_80084540[ang & 0xFFF] / 4096 + publicTiyPolyFT4s_8008D430[idx].y2 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    publicTiyPolyFT4s_8008D430[idx].x2 = pos[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y2 = pos[1] + ny;
+    nx = publicTiyPolyFT4s_8008D430[idx].x3 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 - publicTiyPolyFT4s_8008D430[idx].y3 * sinTable_80084540[ang & 0xFFF] / 4096;
+    ny = publicTiyPolyFT4s_8008D430[idx].x3 * sinTable_80084540[ang & 0xFFF] / 4096 + publicTiyPolyFT4s_8008D430[idx].y3 * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    publicTiyPolyFT4s_8008D430[idx].x3 = pos[0] + nx;
+    publicTiyPolyFT4s_8008D430[idx].y3 = pos[1] + ny;
+    setShadeTex(&publicTiyPolyFT4s_8008D430[idx], 0);
     PulseColor_80033394((unsigned char*)&publicTiyPolyFT4s_8008D430[idx].r0, (unsigned char*)&c0, (unsigned char*)&c1, time, 0x28, 0xA);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyPolyFT4s_8008D430[idx], 10);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], 2);
 }
-#endif
-INCLUDE_ASM(DrawScrollArrow_8002B3DC);
-extern void DrawScrollArrow_8002B3DC(ScrollArrow p, int b, int c, int d);
 // Matched
-void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, int pos, int ot)
+void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, short* pos, int ot)
 {
     switch (arrow.dir)
     {
@@ -133,7 +118,7 @@ void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, int pos, int ot)
         if (list[0] * list[1] + list[5] < (unsigned short)list[2])
         {
             arrow.dir = 2;
-            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 4, ot);
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 2, ot);
         }
         break;
     case 1:
@@ -146,7 +131,7 @@ void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, int pos, int ot)
         if (list[0] * list[1] + list[5] < (unsigned short)list[2])
         {
             arrow.dir = 1;
-            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 4, ot);
+            DrawScrollArrow_8002B3DC(arrow, GetTime30Hz_8002C64C(), pos + 2, ot);
         }
         break;
     }

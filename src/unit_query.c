@@ -57,40 +57,34 @@ extern UnitSkill* GetEnemySkills_800A2BA0(int a0);
 
 
 
-#if 0
-// Not matched (2 lines): a local copy of the parameter (unit = a0) fixes the a0 / r saved registers ($s1/$s2), but the
-// last branch then reads the still-live incoming $a0 for unit - 1 (orig: $s1) and the beqz delay slot differs. Without the
-// copy: $s1/$s2 swapped (13 words). Tried: a0 vs unit in every use, (unit - 1) & 0xFF inline, v - 1, unsigned copy
-UnitSkill* GetUnitSkills_80031B30(int a0)
+// Matched
+UnitSkill* GetUnitSkills_80031B30(unit)
+    unsigned char unit;
 {
-    int unit = a0;
     UnitSkill* r = 0;
-    unsigned int v = unit & 0xFF;
-    unsigned int t;
-    if (v >= 8)
+    unsigned char idx;
+    if (unit >= 8)
     {
-        t = unit - 8;
-        r = GetSlotSkills_800A11A0(t & 0xFF);
+        idx = unit - 8;
+        r = GetSlotSkills_800A11A0(idx);
     }
-    else if (v >= 4)
+    else if (unit >= 4)
     {
         int flags = GetEnemyAliveMask_800A248C();
-        int bit = 1 << v;
+        int bit = 1 << unit;
         if (flags & bit)
         {
-            t = unit - 4;
-            r = GetEnemySkills_800A2BA0(t & 0xFF);
+            idx = unit - 4;
+            r = GetEnemySkills_800A2BA0(idx);
         }
     }
-    else if (v != 0)
+    else if (unit != 0)
     {
-        t = unit - 1;
-        r = GetMinionSkills_800107F8(3, t & 0xFF)->slot;
+        idx = unit - 1;
+        r = GetMinionSkills_800107F8(3, idx)->slot;
     }
     return r;
 }
-#endif
-INCLUDE_ASM(GetUnitSkills_80031B30);
 // Matched
 int MenuIndexToSkillSlot_80031BDC(int index)
 {

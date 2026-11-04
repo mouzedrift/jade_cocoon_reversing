@@ -121,8 +121,6 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned
 /* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
 extern short battleCamSpline1Tail_80084350[];
 #define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
-#if 0
-// Not matched: code layout right; register allocation differs throughout (the original never uses $t0 in the screen-aligned branch, keeps &geomScreenDistance in $t0 for the last extent), 1 instruction short
 #define ROT_SPRITE_UV(s, src, uv, size)                       \
     {                                                         \
         (s)->prim_0.u0 = (src)->u0 + (uv)[0];                 \
@@ -135,6 +133,7 @@ extern short battleCamSpline1Tail_80084350[];
         (s)->prim_0.v3 = (src)->v0 + (uv)[1] + (size)[1];     \
     }
 #define ROT_SPRITE_EXTENT(v, piv, sc) (((v) * (sc) * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4)
+// Matched
 VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
                      SVECTOR* ofs, unsigned char* rgb, short flags, int abr, unsigned long* ot)
 {
@@ -188,9 +187,9 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
             return (VECTOR*)&s->wofs_40;
         }
         s->x0_5C = (-pivot[0] * scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
-        s->x1_64 = ((ABS_80043AF8(size[0]) - pivot[0]) * scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        s->x1_64 = ((abs(size[0]) - pivot[0]) * scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
         s->y0_60 = (-pivot[1] * scale[1] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
-        s->y1_68 = ((ABS_80043AF8(size[1]) - pivot[1]) * scale[1] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        s->y1_68 = ((abs(size[1]) - pivot[1]) * scale[1] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
         if (ofs->pad == 0)
         {
             s->prim_0.x0 = s->x_28 + s->x0_5C;
@@ -204,8 +203,8 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
         }
         else
         {
-            s->sin_70 = SIN_TABLE[ofs->pad & 0xFFF];
-            s->cos_6C = SIN_TABLE[(ofs->pad + 0x400) & 0xFFF];
+            s->sin_70 = sinTable_80084540[ofs->pad & 0xFFF];
+            s->cos_6C = sinTable_80084540[(ofs->pad + 0x400) & 0xFFF];
             s->prim_0.x0 = s->x_28 + (s->x0_5C * s->cos_6C + s->y0_60 * s->sin_70) / 4096;
             s->prim_0.y0 = s->y_2A + (-s->x0_5C * s->sin_70 + s->y0_60 * s->cos_6C) / 4096;
             s->prim_0.x1 = s->x_28 + (s->x1_64 * s->cos_6C + s->y0_60 * s->sin_70) / 4096;
@@ -241,7 +240,7 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
         {
             min = s->prim_0.x3;
         }
-        if (min >= 320 || max < 0)
+        if (min > 320 || max < 0)
         {
             return (VECTOR*)&s->wofs_40;
         }
@@ -271,7 +270,7 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
         {
             min = s->prim_0.y3;
         }
-        if (min >= 240 || max < 0)
+        if (min > 240 || max < 0)
         {
             return (VECTOR*)&s->wofs_40;
         }
@@ -287,11 +286,10 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
         *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->prim_0;
         addPrim(ot + ((s->otz_4C >> 2) & 0x3FF), primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(POLY_FT4);
+        return (VECTOR*)&s->wofs_40;
     }
     return (VECTOR*)&s->wofs_40;
 }
-#endif
-INCLUDE_ASM(DrawRotSprite_80044010);
 extern MATRIX lightMatrix_80087114; // light matrix
 // Matched
 void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot)

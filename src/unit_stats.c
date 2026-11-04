@@ -1869,29 +1869,24 @@ double PackedExpToTotal_80012358(int level, int exp)
     }
     return total;
 }
-#if 0
-// Not matched: the original keeps 67108864.0 in $s0/$s1 (the variable t) for the first subtraction, here CSE folds it to an immediate (loop shapes, short i, permuter 500: no)
+// Matched
 int TotalExpToPacked_8001247C(double x)
 {
-    double t = 67108864.0;
+    double t;
     double s = 1.0;
-    int i = 0;
+    double base = 67108864.0;
+    int i;
+    t = 67108864.0;
     x -= t;
-    do
+    for (i = 0; i < 99; i++)
     {
-        t = s * 67108864.0;
-        if (t > x)
-        {
-            break;
-        }
+        t = s * base;
+        if (t > x) break;
         x -= t;
         s += s;
-        i++;
-    } while (i < 99);
+    }
     return (double)(i << 26) + x / s;
 }
-#endif
-INCLUDE_ASM(TotalExpToPacked_8001247C);
 // Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
 {

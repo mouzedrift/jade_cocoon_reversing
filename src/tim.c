@@ -29,10 +29,7 @@ extern void (*mapCallback_80091CB4)(int);
 extern void LoadTileSets_80027778(char* p, int* q);
 extern void LoadTileAnimLayers_800278BC(char* p, int* q);
 extern int mapJustLoaded_80082668;
-#if 0
-// Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0. Tried: int* param,
-// separate cursor variable (swaps s0/s1), header struct with data[] member, int casts, copy before the MemCopy call,
-// reading n before/after the advance, inline helper (n goes to the stack); permuter 1500 iters
+// Matched
 void OnRoomDataLoaded_80028C60(int req, char* data)
 {
     int n;
@@ -59,7 +56,8 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     data += n;
     if (areaReload_80082670 == 1)
     {
-        LoadTiy_80028E74(0, 0, 0, (int*)(data + 4), (int)mapHeap_80091C68);
+        p = data + 4;
+        LoadTiy_80028E74(0, 0, 0, (int*)p, (int)mapHeap_80091C68);
     }
     SetCurrentArea_800272BC(mapState_8008B500.id_0, pendingArea_8008B860);
     if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
@@ -67,8 +65,6 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
         mapCallback_80091CB4(1);
     }
 }
-#endif
-INCLUDE_ASM(OnRoomDataLoaded_80028C60);
 extern short screenOffset_8008D474[2];
 extern void UpdateCameraFollow_80037918(CameraCtrl* p);
 // Matched

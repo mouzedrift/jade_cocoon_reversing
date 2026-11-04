@@ -260,9 +260,9 @@ typedef struct
     short kind;
     short dir;
 } ScrollArrow;
-extern void DrawScrollArrow_8002B3DC(ScrollArrow p, int b, int c, int d);
+extern void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot);
 // Matched
-void DrawScrollArrow_8002C6DC(int pos, short dir, short ot)
+void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
 {
     ScrollArrow arrow;
     arrow.kind = 2;
@@ -367,11 +367,11 @@ void DrawItemList_8002C728(ListMenuState* menu)
     }
     if (menu->scroll_2)
     {
-        DrawScrollArrow_8002C6DC((int)&itemScrollUpPos_80082820, 3, menu->ot_6);
+        DrawScrollArrow_8002C6DC(itemScrollUpPos_80082820, 3, menu->ot_6);
     }
     if (menu->scroll_2 < total - 4 && total >= 5)
     {
-        DrawScrollArrow_8002C6DC((int)&itemScrollDownPos_80082824, 1, menu->ot_6);
+        DrawScrollArrow_8002C6DC(itemScrollDownPos_80082824, 1, menu->ot_6);
     }
 }
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
@@ -466,7 +466,7 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
             arrowPos[0] = magicScrollUpPos_800829FC[0];
             arrowPos[1] = magicScrollUpPos_800829FC[1];
         }
-        DrawScrollArrow_8002C6DC((int)arrowPos, 3, menu->ot_6);
+        DrawScrollArrow_8002C6DC((short*)arrowPos, 3, menu->ot_6);
     }
     if (menu->scroll_2 < total - 4 && total >= 5)
     {
@@ -480,7 +480,7 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
             arrowPos[0] = magicScrollDownPos_80082A00[0];
             arrowPos[1] = magicScrollDownPos_80082A00[1];
         }
-        DrawScrollArrow_8002C6DC((int)arrowPos, 1, menu->ot_6);
+        DrawScrollArrow_8002C6DC((short*)arrowPos, 1, menu->ot_6);
     }
 }
 
