@@ -88,7 +88,7 @@ extern const int overlayAddr3_80073200;
 extern const int overlayAddr4_80073204;
 extern const int overlayAddr5_80073208;
 extern const int overlayAddr6_8007320C;
-extern const int dword_80073210;
+extern unsigned int *const dword_80073210;
 extern const int dword_80073234;
 extern const char dword_80073238[];
 extern const char dword_8007324C[];

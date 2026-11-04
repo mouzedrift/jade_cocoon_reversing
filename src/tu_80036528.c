@@ -18,27 +18,10 @@
 
 
 #include "tu_80036528.h"
+#include "tu_80014954.h"
 
-typedef struct
-{
-    short x0;
-    short y0;
-    short z0;
-    short pad_6;
-    int field_8;
-    short x1;
-    short y1;
-    short z1;
-    short pad_12;
-} CamOffset;
 extern Block104 cameraState_8008D4F0;
 extern ShortPair dword_8008D474;
-typedef struct
-{
-    unsigned short field_0;
-    unsigned char field_2;
-    unsigned char field_3;
-} PadVibEntry;
 extern PadVibEntry* vibrationPatterns_80083B30[];
 typedef struct
 {

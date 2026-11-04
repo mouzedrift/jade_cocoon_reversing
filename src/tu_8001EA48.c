@@ -17,15 +17,11 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80014954.h"
+#include "tu_80019BF0.h"
 
 extern short dword_8008D474[2];
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
-typedef struct
-{
-    int fileIdx;
-    unsigned int** ppDest;
-} OverlayEntry;
-extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
@@ -1778,10 +1774,6 @@ void sub_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
     d->clut = p->clut;
     SetDrawTPage(tp, 0, 1, p->tpage);
 }
-typedef void (*fn_80022458_a)(unsigned char* body, int a3);
-typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
-extern fn_80022458_a ftgPrimRelocators_8007DB08[];
-extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
 void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
 int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
 int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
@@ -4628,7 +4620,6 @@ extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* sub_80027A88();
-extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
 extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched

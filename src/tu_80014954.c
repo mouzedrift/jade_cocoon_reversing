@@ -16,6 +16,8 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_obj.h"
+#include "tu_80014954.h"
+#include "tu_8001EA48.h"
 
 INCLUDE_DATA(dword_80079708);
 INCLUDE_DATA(dword_80079754);

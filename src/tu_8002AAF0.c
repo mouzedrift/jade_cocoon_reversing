@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tu_8002AAF0.h"
+#include "tu_80014954.h"
 
 const Block16 dword_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
@@ -206,11 +207,6 @@ void sub_8002ADB4(char* a0, int a1, int a2, int a3)
     SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(a0 + 0x10, a1, &pOT_8008D454[a2], a3);
 }
-typedef struct
-{
-    unsigned short x;
-    unsigned short y;
-} Pos16;
 typedef struct
 {
     unsigned short color;

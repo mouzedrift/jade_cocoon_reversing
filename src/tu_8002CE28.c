@@ -16,19 +16,9 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "minion_menu.h"
+#include "tu_80014954.h"
 
 
-typedef struct
-{
-    unsigned short flags;
-    short pad_2;
-    int f4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x;
-    short y;
-    char pad_14[8];
-} MenuItem_1C;
 typedef struct
 {
     int field_0;

@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tu_8002D738.h"
+#include "tu_80014954.h"
 
 const char dword_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
 const char aConqueror_80074334[] = "\202b\202\217\202\216\202\221\202\225\202\205\202\222\202\217\202\222"; // Conqueror
@@ -57,11 +58,6 @@ int sub_8002D780(void)
     }
     return mask;
 }
-typedef struct
-{
-    unsigned short x;
-    unsigned short y;
-} Pos16;
 typedef struct
 {
     int rect;

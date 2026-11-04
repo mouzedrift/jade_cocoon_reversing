@@ -17,6 +17,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80014954.h"
 
 // the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
@@ -54,7 +55,7 @@ const int overlayAddr3_80073200 = 0x800A05A0;
 const int overlayAddr4_80073204 = 0x800B66C0;
 const int overlayAddr5_80073208 = 0x800C29D0;
 const int overlayAddr6_8007320C = 0x800B6D00;
-const int dword_80073210 = 0x800B22C0;
+unsigned int *const dword_80073210 = (unsigned int *)0x800B22C0;
 INCLUDE_DATA(fileRequestQueue_80086540);
 INCLUDE_DATA(dword_80086544);
 INCLUDE_DATA(dword_80086548);
@@ -151,12 +152,6 @@ extern MATRIX dword_80087114; // light matrix
 extern MATRIX dword_80087134; // light colour matrix
 extern short dword_8008D474[2];
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
-typedef struct
-{
-    int fileIdx;
-    unsigned int** ppDest;
-} OverlayEntry;
-extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();

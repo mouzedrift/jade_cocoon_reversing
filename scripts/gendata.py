@@ -105,8 +105,8 @@ def strip_attributes(t):
         i = k + 1
 
 
-def parse_preproc(path):
-    text = open(path, encoding="latin1").read()
+def parse_preproc(path, extra=""):
+    text = open(path, encoding="latin1").read() + "\n" + extra
     text = "\n".join(l for l in text.split("\n") if not l.startswith("#"))
     text = strip_bodies(text)
     text = re.sub(r"__asm__\s*\((?:[^;])*?\)\s*;", ";", text)
@@ -159,12 +159,29 @@ INTS = {"char": (1, False), "signed char": (1, True), "unsigned char": (1, False
         "long long": (8, True), "unsigned long long": (8, False), "float": (4, None), "double": (8, None)}
 
 
+def type_str(node):
+    """C text of a type node as an abstract declarator (no names): 'int (*)(Foo *, int)'"""
+    import copy
+    from pycparser import c_generator
+    n = copy.deepcopy(node)
+
+    def strip(x):
+        if isinstance(x, c_ast.TypeDecl):
+            x.declname = None
+        for _, c in x.children():
+            strip(c)
+    strip(n)
+    return c_generator.CGenerator().visit(c_ast.Typename(None, [], None, n))
+
+
 class PtrT(T):
     """a pointer; the type it points at is resolved when needed (structs that point at themselves)"""
 
-    def __init__(self, types, node):
+    def __init__(self, types, node, pnode=None):
         T.__init__(self, "ptr")
         self._types, self._node, self._to = types, node, None
+        self.pnode = pnode      # the PtrDecl
+        self.cast = type_str(pnode) if pnode is not None else None   # the type as a cast would name it
 
     @property
     def to(self):
@@ -180,6 +197,7 @@ class Types:
         self.enums = {}     # enumerator -> value
         self.decls = {}     # name -> c_ast.Decl (externs / definitions of variables)
         self.funcs = set()  # declared functions
+        self.funcnodes = {}  # name -> FuncDecl
         self.cache = {}
         for ext in ast.ext:
             self._collect(ext)
@@ -188,10 +206,12 @@ class Types:
             elif isinstance(ext, c_ast.Decl) and ext.name:
                 if isinstance(ext.type, c_ast.FuncDecl):
                     self.funcs.add(ext.name)
+                    self.funcnodes.setdefault(ext.name, ext.type)
                 else:
                     self.decls[ext.name] = ext
             elif isinstance(ext, c_ast.FuncDef):
                 self.funcs.add(ext.decl.name)
+                self.funcnodes[ext.decl.name] = ext.decl.type
 
     def _collect(self, node):
         if isinstance(node, (c_ast.Struct, c_ast.Union)) and node.decls is not None and node.name:
@@ -240,12 +260,15 @@ class Types:
                     raise GenError("floating point")
                 return T("int", nbytes=n, signed=s)
             if len(node.names) == 1 and node.names[0] in self.typedefs:
-                return self.resolve(self.typedefs[node.names[0]])
+                r = self.resolve(self.typedefs[node.names[0]])
+                if r.kind == "ptr":
+                    r.cast = node.names[0]
+                return r
             if names == "void":
                 return T("void")
             raise GenError("type " + names)
         if isinstance(node, c_ast.PtrDecl):
-            return PtrT(self, node.type)
+            return PtrT(self, node.type, node)
         if isinstance(node, c_ast.ArrayDecl):
             return T("array", of=self.resolve(node.type), n=self.const(node.dim) if node.dim is not None else None)
         if isinstance(node, c_ast.FuncDecl):
@@ -413,7 +436,7 @@ def is_text(b):
 def intstr(v, t=None):
     if -256 < v < 256:
         return str(v)
-    if v < 0 and t is not None and v < -0x10000:
+    if v < 0 and t is not None and v < -0x1000:
         return "0x%X" % (v & ((1 << (8 * t.nbytes)) - 1))
     return ("-0x%X" % -v) if v < 0 else ("0x%X" % v)
 
@@ -423,6 +446,7 @@ class Gen:
         self.syms = syms
         self.types = types
         self.refs = set()
+        self.protos = {}             # functions the initialisers use that nobody declares: FuncDecl or None
         self.arrays = set(defined)   # names that are arrays (no & needed)
         self.local = {}              # name -> T of the objects being defined here
 
@@ -464,6 +488,14 @@ class Gen:
         if is_code:
             if a == v:
                 if target is not None and target.kind == "func":
+                    fn = self.types.funcnodes.get(name)
+                    if getattr(t, "pnode", None) is not None and t.cast and (
+                            fn is None or type_str(c_ast.PtrDecl([], fn)) != type_str(t.pnode)):
+                        if fn is None:
+                            self.protos[name] = t.pnode.type
+                        return "(%s)%s" % (t.cast, name)
+                    if fn is None:
+                        self.protos[name] = None
                     return name
                 return "(void *)%s" % name
             return "(void *)((char *)%s + %d)" % (name, v - a)
@@ -517,8 +549,13 @@ class Gen:
             if t.of.kind == "int" and t.of.nbytes == 1:
                 b = self.syms.rd(addr, t.n)
                 z = b.rstrip(b"\0")
-                if b"\0" not in z and is_text(z):
+                if getattr(t, "is_str", False):
                     return literal(z)
+                if b"\0" not in z and is_text(z) and (any(c >= 0x80 for c in z) or
+                                                       sum(chr(c).isalnum() for c in z) * 2 >= len(z) >= 2):
+                    return literal(z)
+                while len(b) > 1 and b[-1] == 0:
+                    b = b[:-1]
                 return "{ " + ", ".join(str(int.from_bytes(bytes([c]), "little", signed=t.of.signed)) for c in b) + " }"
             es = t.of.size()
             items = [self.value(addr + i * es, t.of, indent + "    ") for i in range(t.n)]
@@ -577,6 +614,17 @@ def node_is_const(t):
     while isinstance(t, c_ast.ArrayDecl):
         t = t.type
     return "const" in (getattr(t, "quals", None) or [])
+
+
+def named(node, name):
+    """a copy of a function type node with name as the declared name"""
+    import copy
+    n = copy.deepcopy(node)
+    x = n
+    while not isinstance(x, c_ast.TypeDecl):
+        x = x.type
+    x.declname = name
+    return n
 
 
 def const_decl(decl, name):
@@ -677,7 +725,7 @@ def split_strings(b, rest=False):
         if e < 0:
             return stop()
         s = b[pos:e]
-        if not is_text(s) or len(s) < 2 and not out:
+        if not is_text(s) or len(s) < 2:
             return stop()
         nxt = min((e + 4) & ~3, n)
         if any(b[e:nxt]):
@@ -695,7 +743,7 @@ U8 = T("int", nbytes=1, signed=False)
 S16 = T("int", nbytes=2, signed=True)
 
 
-def guess(syms, name, addr, size, sec, local_types):
+def guess(syms, name, addr, size, sec, gen):
     """[(name, addr, declarator, T, comment)] for a symbol nobody declared"""
     b = syms.rd(addr, size)
     if sec != ".bss" and addr % 4 == 0:
@@ -705,7 +753,7 @@ def guess(syms, name, addr, size, sec, local_types):
             for off, s in parts:
                 a = addr + off
                 if s is False:
-                    out += guess(syms, "dword_%08X" % a, a, size - off, sec, local_types)
+                    out += guess(syms, "dword_%08X" % a, a, size - off, sec, gen)
                     continue
                 if off == 0:
                     n = name
@@ -720,7 +768,7 @@ def guess(syms, name, addr, size, sec, local_types):
                 if s is None:
                     out.append((n, a, "int %s" % n, I32, None))
                 else:
-                    out.append((n, a, "char %s[]" % n, T("array", of=U8, n=len(s) + 1), string_comment(s)))
+                    out.append((n, a, "char %s[]" % n, T("array", of=U8, n=len(s) + 1, is_str=True), string_comment(s)))
             return out
     if sec != ".bss" and addr % 4 == 0 and size % 4 == 0 and not name.startswith(("word_", "byte_")):
         ws = struct.unpack("<%dI" % (size // 4), b)
@@ -733,7 +781,7 @@ def guess(syms, name, addr, size, sec, local_types):
             if not code:
                 def is_str(w):
                     a, ns = syms.at(w)
-                    t = local_types.get(ns[0])
+                    t = gen.type_of(ns[0]) if a == w else None
                     return t is not None and t.kind == "array" and t.of.kind == "int" and t.of.nbytes == 1
                 if all(is_str(w) for w in nz):
                     ro = all(RDATA_START <= w < RDATA_GAME_END for w in nz)
@@ -770,11 +818,97 @@ class Def:
         self.refs = set()
 
 
+C_WORDS = {"extern", "const", "volatile", "unsigned", "signed", "char", "short", "int", "long", "void", "struct",
+           "union", "enum", "float", "double"}
+
+
+def foreign_externs(tu, names, types):
+    """{name: (path, line)}: externs of names that this TU doesn't see (in another TU's .c, or a header it doesn't
+    include) and whose type this TU knows"""
+    out = {}
+    own = os.path.join(REPO, "src", tu + ".c")
+    for n in names:
+        if n in types.decls:
+            continue
+        for path, line in find_extern(n):
+            if path == own:
+                continue
+            decl = line.split("//")[0].strip()
+            words = re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(n), decl)[0])
+            ok = True
+            for i, w in enumerate(words):
+                if w in C_WORDS or w in types.typedefs:
+                    continue
+                if i and words[i - 1] in ("struct", "union") and (words[i - 1], w) in types.tags:
+                    continue
+                ok = False
+            if ok:
+                out[n] = (path, line)
+                break
+            print("// %s: the extern in %s has a type this TU doesn't know: %s" % (n, os.path.basename(path),
+                                                                                  line.strip()))
+    return out
+
+
+def header_defining(tname):
+    """the header (name relative to src/) that defines typedef tname, None if it is not a project header's"""
+    r1 = re.compile(r"^\s*}\s*%s\s*;" % re.escape(tname))
+    r2 = re.compile(r"^\s*typedef\b[^;]*\b%s\s*(\)|;)" % re.escape(tname))
+    for p, l in src_lines():
+        if p.endswith(".h") and tname in l and (r1.match(l) or r2.match(l)):
+            return os.path.relpath(p, os.path.join(REPO, "src"))
+    return None
+
+
+def add_includes(path, headers):
+    """#include the headers in path (behind its last #include) unless it has them; True if it changed"""
+    text = open(path).read()
+    add = "".join('#include "%s"\n' % h for h in headers if '#include "%s"' % h not in text
+                  and os.path.basename(path) != h)
+    if not add:
+        return False
+    incs = list(re.finditer(r'^#include .*\n', text, re.M))
+    k = incs[-1].end() if incs else text.index("\n", text.index("#define")) + 1
+    open(path, "w").write(text[:k] + add + text[k:])
+    return True
+
+
+def include_declaring_headers(tu, secs=None):
+    """#include the headers that declare this TU's INCLUDE_DATA symbols (their types are what the definitions use);
+    rebuilds the preprocessed source if that changed anything"""
+    names = tu_data(tu)
+    hs = []
+    for n in names:
+        if secs and chunk_info(n)[0] not in secs:
+            continue
+        for p, _ in find_extern(n):
+            h = os.path.relpath(p, os.path.join(REPO, "src"))
+            if p.endswith(".h") and h != os.path.basename(header_for(tu)) and h not in hs:
+                hs.append(h)
+            break
+    c = os.path.join(REPO, "src", tu + ".c")
+    if add_includes(c, hs):
+        print("// included", " ".join(hs))
+        import subprocess
+        subprocess.check_call(["ninja", os.path.join(REPO, "build_psyq", tu + ".preproc")], cwd=REPO,
+                              stdout=subprocess.DEVNULL)
+
+
 def generate(exe, tu, only=None, secs=None):
     syms = Syms(exe)
-    types = Types(parse_preproc(os.path.join(REPO, "build_psyq", tu + ".preproc")))
+    pre = os.path.join(REPO, "build_psyq", tu + ".preproc")
+    types = Types(parse_preproc(pre))
     names = tu_data(tu)
     info = {n: chunk_info(n) for n in names}
+    # externs other files have for this TU's data: their types, and they move to this TU's header (see main)
+    adopted = foreign_externs(tu, names, types)
+    if adopted:
+        try:
+            types = Types(parse_preproc(pre, "".join(l.split("//")[0].strip() + "\n" for _, l in adopted.values())))
+        except Exception as e:  # noqa: BLE001
+            print("// foreign externs don't parse here (%s): %s" % (e, " ".join(adopted)))
+            adopted = {}
+    types.adopted = adopted
     if only:
         sel = set(only)
         if any(info[n][0] == ".bss" for n in sel if n in info):
@@ -801,7 +935,7 @@ def generate(exe, tu, only=None, secs=None):
             t = types.resolve(d.type) if d is not None else None
             char_decl = t is not None and t.kind == "array" and t.n is None and t.of.kind == "int" and t.of.nbytes == 1
             if d is None or char_decl:
-                g = guess(syms, n, addr, size, sec, gen.local)
+                g = guess(syms, n, addr, size, sec, gen)
                 if char_decl and not g[0][2].startswith("char"):
                     g = None
                 if g is not None:
@@ -814,8 +948,6 @@ def generate(exe, tu, only=None, secs=None):
             decl = decl_text(d.type, n)
             if t.kind == "array" and t.n is None:
                 es = t.of.size()
-                if size % es and size % es > 3:
-                    raise GenError("%d bytes are no whole number of %d byte elements" % (size, es))
                 t = T("array", of=t.of, n=size // es)
                 decl = sized(decl, n, t.n)
             # a type larger than the symbol takes the following symbols (if they are INCLUDE_DATA here too)
@@ -837,7 +969,7 @@ def generate(exe, tu, only=None, secs=None):
             if end - ra >= 4:
                 if sec != ".bss" and any(syms.rd(addr + t.size(), ra - addr - t.size())):
                     raise GenError("non-zero bytes behind the %d byte object" % t.size())
-                for gn, ga, gd, gt, gc in guess(syms, "dword_%08X" % ra, ra, end - ra, sec, gen.local):
+                for gn, ga, gd, gt, gc in guess(syms, "dword_%08X" % ra, ra, end - ra, sec, gen):
                     defs.append(Def(n, gn, ga, sec, gt, gd, False, gc))
                     gen.local[gn] = gt
                     syms.add(gn, ga)
@@ -875,33 +1007,36 @@ def generate(exe, tu, only=None, secs=None):
         tail = end - (last.addr + last.t.size())
         if tail < 0 or tail >= 4 or (sec != ".bss" and any(syms.rd(last.addr + last.t.size(), tail))):
             errors[h] = "objects end at %08X, the symbol at %08X" % (last.addr + last.t.size(), end)
-    return todo, defs, absorbed, errors, types, syms
+    return todo, defs, absorbed, errors, types, syms, gen
+
+
+_SRC_LINES = None
+
+
+def src_lines():
+    """(path, line) of every line of src/ (headers first), read once"""
+    global _SRC_LINES
+    if _SRC_LINES is None:
+        _SRC_LINES = []
+        files = []
+        for root, _, fs in os.walk(os.path.join(REPO, "src")):
+            files += [os.path.join(root, f) for f in fs if f.endswith((".h", ".c"))]
+        files.sort(key=lambda p: (not p.endswith(".h"), p))
+        for p in files:
+            for line in open(p, encoding="latin1"):
+                _SRC_LINES.append((p, line))
+    return _SRC_LINES
 
 
 def find_extern(name):
-    """(path, line text) of the extern declaration of name in src/ (headers first)"""
-    hits = []
-    for root, _, files in os.walk(os.path.join(REPO, "src")):
-        for f in files:
-            if f.endswith((".h", ".c")):
-                p = os.path.join(root, f)
-                for line in open(p, encoding="latin1"):
-                    if re.match(r"\s*extern\b[^;(]*\b%s\b\s*(\[[^;]*)?;" % re.escape(name), line):
-                        hits.append((p, line))
-    hits.sort(key=lambda h: not h[0].endswith(".h"))
-    return hits
+    """(path, line text) of the extern declarations of name in src/ (headers first)"""
+    r = re.compile(r"\s*extern\b[^;]*?[\s*(]%s\s*[\[);]" % re.escape(name))
+    return [(p, l) for p, l in src_lines() if name in l and r.match(l)]
 
 
 def find_proto(name):
-    hits = []
-    for root, _, files in os.walk(os.path.join(REPO, "src")):
-        for f in files:
-            if f.endswith(".h"):
-                p = os.path.join(root, f)
-                for line in open(p, encoding="latin1"):
-                    if re.search(r"\b%s\s*\(" % re.escape(name), line) and line.rstrip().endswith(";"):
-                        hits.append((p, line))
-    return hits
+    r = re.compile(r"\b%s\s*\(" % re.escape(name))
+    return [(p, l) for p, l in src_lines() if p.endswith(".h") and name in l and r.search(l) and l.rstrip().endswith(";")]
 
 
 def header_for(tu):
@@ -931,7 +1066,11 @@ def main(argv):
     secs = [a.split("=", 1)[1] for a in argv if a.startswith("--sec=")]
     exe = open(args[0], "rb").read()[0x800:]
     tu = args[1]
-    todo, defs, absorbed, errors, types, syms = generate(exe, tu, args[2:] or None, secs)
+    if "--write" in argv:
+        include_declaring_headers(tu, secs)
+        global _SRC_LINES
+        _SRC_LINES = None
+    todo, defs, absorbed, errors, types, syms, gen = generate(exe, tu, args[2:] or None, secs)
     ok = [d for d in defs if d.head not in errors]
     for n in todo:
         if n in errors:
@@ -940,7 +1079,26 @@ def main(argv):
         print(d.text)
     new_ext = []
     const_fix = []
+    moves = []      # (path, line): externs in other files that move to this TU's header
+    hdr_incs = []   # headers this TU's header needs for them
+    inc_here = set()
     for d in ok:
+        if d.name in types.adopted:
+            path, line = types.adopted[d.name]
+            if path.endswith(".c"):
+                decl = line.split("//")[0].strip().rstrip(";")[len("extern"):].strip()
+                if d.sec == ".rdata":
+                    decl = const_decl(decl, d.name)
+                new_ext.append("extern %s;" % decl)
+                moves.append((path, line))
+                for w in re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(d.name), decl)[0]):
+                    if w in types.typedefs:
+                        h = header_defining(w)
+                        if h and h not in hdr_incs:
+                            hdr_incs.append(h)
+            else:
+                inc_here.add(os.path.relpath(path, os.path.join(REPO, "src")))
+            continue
         if not d.declared:
             ext = "extern %s;" % (const_decl(d.decl, d.name) if d.sec == ".rdata" else d.decl)
             new_ext.append(ext)
@@ -965,8 +1123,29 @@ def main(argv):
                 includes.add(os.path.relpath(hs[0], os.path.join(REPO, "src")))
             else:
                 print("// %s uses %s, which nothing declares" % (d.name, r))
+    # functions nobody declares: a prototype in the header of the TU that has them (from its definition if it is C)
+    protos = {}
+    tus = split.load_tus()
+    parsed = {}
+    for name, fnode in sorted(gen.protos.items()):
+        if find_proto(name):
+            continue
+        a = syms.addr[name]
+        owner = [n for n, start in tus if start <= a][-1]
+        if owner not in parsed:
+            parsed[owner] = Types(parse_preproc(os.path.join(REPO, "build_psyq", owner + ".preproc"))) if owner != tu else types
+        node = parsed[owner].funcnodes.get(name, fnode)
+        text = ("%s;" % decl_text(named(node, name), name)) if node is not None else "void %s();" % name
+        protos.setdefault(owner, []).append(text)
+        if owner != tu:
+            includes.add(os.path.basename(header_for(owner)))
+    for owner, lines in protos.items():
+        print("// prototypes for %s:" % os.path.basename(header_for(owner)), " ".join(lines))
+    includes |= inc_here
     for h in sorted(includes):
         print('// #include "%s"' % h)
+    for path, line in moves:
+        print("// moves here from %s: %s" % (os.path.basename(path), line.strip()))
     if "--write" in argv:
         path = os.path.join(REPO, "src", tu + ".c")
         text = open(path).read()
@@ -988,6 +1167,17 @@ def main(argv):
                 open(p, "w").write(src)
         if new_ext:
             add_externs(tu, new_ext)
+            add_includes(header_for(tu), hdr_incs)
+        for mpath, line in moves:
+            src = open(mpath).read().replace(line, "", 1)
+            inc = '#include "%s"' % os.path.basename(header_for(tu))
+            if inc not in src:
+                incs = list(re.finditer(r'^#include .*\n', src, re.M))
+                k = incs[-1].end()
+                src = src[:k] + inc + "\n" + src[k:]
+            open(mpath, "w").write(src)
+        for owner, lines in protos.items():
+            add_externs(owner, lines)
         if includes:
             c = os.path.join(REPO, "src", tu + ".c")
             text = open(c).read()

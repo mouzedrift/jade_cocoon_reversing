@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "minion_menu.h"
+#include "tu_80014954.h"
 
 const int dword_800741EC = 0;
 
@@ -269,17 +270,6 @@ void sub_8002C6DC(int a0, short a1, short a2)
     p.b = a1;
     sub_8002B3DC(p, frameCount_8008D3FC, a0, a2);
 }
-typedef struct
-{
-    unsigned short flags;
-    short pad_2;
-    int f4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x;
-    short y;
-    char pad_14[8];
-} MenuItem_1C;
 typedef struct
 {
     int field_0;
