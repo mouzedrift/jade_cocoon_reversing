@@ -533,13 +533,13 @@ void sub_800A6564(GameJ_1* p, int b)
 }
 
 // Matched
-int sub_800A65BC(int a, int b)
+int IsAngleWithin36_800A65BC(int a, int b)
 {
     return (unsigned int)(WrapAngle_8003BA18((short)(a - b)) + 0x198) < 0x331;
 }
 
 // Matched
-int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
+int IsPointInViewCone_800A65F0(int* a, int* b, unsigned short* q, int r)
 {
     unsigned int u = 0xfff;
     IsWithinDistance_8003B740(b, a, &u);
@@ -556,7 +556,7 @@ int sub_800A65F0(int* a, int* b, unsigned short* q, int r)
 
 #if 0
 // Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
-int sub_800A66A4(int* p, int* x, unsigned short* q)
+int IsEventPointInView_800A66A4(int* p, int* x, unsigned short* q)
 {
     if (p[0] >= 0 && IsEventPointValid_800A6504(p[0]))
     {
@@ -570,7 +570,7 @@ int sub_800A66A4(int* p, int* x, unsigned short* q)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(game, sub_800A66A4);
+INCLUDE_OVERLAY_ASM(game, IsEventPointInView_800A66A4);
 
 int GetEventString_800A6738(unsigned int a)
 {
@@ -641,7 +641,7 @@ int GetSetReturnEntrance_800A683C(int x)
 void GameMainInit_800A68CC(GameTask_1* t, int* q)
 {
     int i;
-    int* d = dword_800B1DC8;
+    int* d = gameStartMode_800B1DC8;
     GetGameStartMode_800A72C8((GameMode2_1*)d);
     q[0] = d[1];
     q[1] = q[0];
@@ -1003,7 +1003,7 @@ void ResetFieldState_800A73A8(void)
     ResetCameraToLevant_800376A8();
     InitLevantControl_800A8140();
     InitLevantActor_800A94CC();
-    useMapStartPos_80091C94 = dword_800B1DC8[0];
+    useMapStartPos_80091C94 = gameStartMode_800B1DC8[0];
 }
 
 // Matched
@@ -1044,7 +1044,7 @@ void RunEventListExit_800A74F0(EventNode* n)
 
 int GameShutdown_800A7574(void)
 {
-    DrawIntroMovie_8001AF64(name_800B0EA4);
+    DrawIntroMovie_8001AF64(endMovie_800B0EA4);
     ListFreeAll_8003FEC8(name_80096090);
     SsUtAllKeyOff(0);
     if (unknownFlags_8008D678 & 0x40000000)
@@ -1070,7 +1070,7 @@ void WaitMapOverlay_800A7654(GameTask_1* t, int* q)
 {
     if (GetFileRequestStatus_8003BE30(q[0]) == 0)
     {
-        t->next_8 = sub_800B6BFC;
+        t->next_8 = MapSelectStart_800B6BFC;
     }
 }
 
@@ -1840,12 +1840,12 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
 INCLUDE_OVERLAY_ASM(game, LevantControlTask_800A818C);
 
 
-void sub_800A88A0(int a, int b)
+void PlaceWindowAwayFromTarget_800A88A0(int a, int b)
 {
-    sub_800A88E0(a, b, sub_800A8930());
+    PlaceWindowAwayFromQuadrant_800A88E0(a, b, GetCameraTargetQuadrant_800A8930());
 }
 
-int sub_800A88E0(G2P* p, int a, int b)
+int PlaceWindowAwayFromQuadrant_800A88E0(G2P* p, int a, int b)
 {
     int x = b ^ a;
     if (x & 1)
@@ -1859,7 +1859,7 @@ int sub_800A88E0(G2P* p, int a, int b)
     return x;
 }
 
-int sub_800A8930()
+int GetCameraTargetQuadrant_800A8930()
 {
     int r = cameraTargetScreenPos_8008D668[0] > 0xA0;
     if (cameraTargetScreenPos_8008D668[1] >= 0x79)
@@ -1994,7 +1994,7 @@ void DamageLevantMp_800A8CA0(int a)
         s->levantStatus_7C8.mp_C.cur_0 = s->levantStatus_7C8.mp_C.max_2;
 }
 
-void sub_800A8CF4()
+void ResetLevantControlState_800A8CF4()
 {
     dword_8008B4CC->f24->fC6 = 0;
 }
@@ -2037,14 +2037,14 @@ void sub_800A8DEC()
     sub_800AB8AC();
 }
 
-void sub_800A8E0C()
+void HoldLevantControl_800A8E0C()
 {
     G2Inner* p = dword_8008B4CC->f24;
     p->fC6 = 9;
     p->f0 |= 0x20;
 }
 
-void sub_800A8E38()
+void ReleaseLevantControl_800A8E38()
 {
     G2Inner* p = dword_8008B4CC->f24;
     p->f0 &= ~0x20;
@@ -2052,7 +2052,7 @@ void sub_800A8E38()
     sub_800ABAD4();
 }
 
-int sub_800A8E7C()
+int IsLevantControlHeld_800A8E7C()
 {
     return dword_8008B4CC->f24->fC6 == 9;
 }
@@ -2101,7 +2101,7 @@ void LevantCommand_800A8EC4(G2Cmd_1* c)
         goto set;
     case 11:
         sub_800ABC78(1);
-        sub_800ABAA4(c->f24);
+        SetLevantPath_800ABAA4(c->f24);
         sub_800ABB98(1);
         sub_800AB9A8(c->fC, -1, 1);
     set:
@@ -2246,7 +2246,7 @@ void GetLevantEffectTarget_800A93A4(EffectTarget* a)
     a->pos_4 = &levantPos_8008BD18.pos.x;
     a->bonePos_8 = p->bonePos_590[0];
     a->boneMatrices_C = p->mats_90;
-    a->boneScale_2C = dword_800B0FB0;
+    a->boneScale_2C = levantBoneScale_800B0FB0;
     a->scale_30 = 0;
 }
 
@@ -2260,7 +2260,7 @@ void sub_800A9414(void* pv, int b, int c)
     if (sub_800AAFD8(p->s1e) != 1)
         p->f0 &= ~0x10;
     sub_800ABAD4();
-    sub_800AA140(p);
+    SetLevantRootMotion_800AA140(p);
 }
 
 void InitLevantActor_800A94CC(void)
@@ -2282,10 +2282,10 @@ void InitLevantActor_800A94CC(void)
     sub_800AB150((G2Obj*)p);
     sub_800B80C8(p);
     p->f3C = dword_8008BD38;
-    sub_800ABECC(dword_8008BD38);
+    SetLevantStatusTint_800ABECC(dword_8008BD38);
 }
 
-void sub_800A955C()
+void LevantActorTaskExit_800A955C()
 {
 }
 
@@ -2316,10 +2316,10 @@ void LevantActorTask_800A9564(int a, G2Act* p)
         {
             p->f0 |= 0x8000;
             p->f10 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->s1c, GetLevantAnimSet_800AC474(p->s1c));
-            sub_800AA140(p);
+            SetLevantRootMotion_800AA140(p);
         }
     }
-    sub_800AAF58(p);
+    UpdateLevantActionState_800AAF58(p);
     UpdateLevantMove_800A9A9C(p);
     UpdateLevantTurn_800A99DC(p);
     DrawLevantModel_800A9708(p);
@@ -2343,7 +2343,7 @@ void DrawLevantModel_800A9708(G2Act* p)
     if (p->f3c != *(int*)(sd + 0x7c8))
     {
         p->f3c = *(int*)(sd + 0x7c8);
-        sub_800ABECC(*(int*)(sd + 0x7c8));
+        SetLevantStatusTint_800ABECC(*(int*)(sd + 0x7c8));
     }
     anim = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->s1c)];
     if (*(int*)(sd + 0x7c8) & 0x3fd)
@@ -2387,15 +2387,15 @@ void DrawLevantModel_800A9708(G2Act* p)
     sk.ftg_0 = p->model_40->ftg_50;
     sk.f4 = &levantPos_8008BD18.pos;
     sk.f8 = &levantPos_8008BD18.rot;
-    sk.bones = &dword_800B0EF8;
-    sk.base = dword_800B0FB0;
+    sk.bones = &levantBones_800B0EF8;
+    sk.base = levantBoneScale_800B0FB0;
     sk.f24 = 0;
     sk.pose = (char*)anim;
     sk.frame = p->f10 % anim->frameCount_0;
     sk.flags = flags;
     sk.pos = (char*)p + 0x590;
     sk.ot = pOT_8008D690;
-    if (sub_800AC518(p->s1e) == 0)
+    if (IsLevantAnimLoaded_800AC518(p->s1e) == 0)
     {
         p->f0 &= ~0x10;
     }
@@ -2406,9 +2406,9 @@ void DrawLevantModel_800A9708(G2Act* p)
     else
     {
         anim = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->s1e)];
-        DrawAnimSkelBlend_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &pointLights_8008D534[v], 0);
+        DrawAnimSkelBlend_80047E28(&sk, levantBoneScale_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &pointLights_8008D534[v], 0);
     }
-    DrawSpriteVtxQuadsGT4_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
+    DrawSpriteVtxQuadsGT4_800459E4(&levantBones_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
 
 void UpdateLevantTurn_800A99DC(G2Act* p)
@@ -2443,7 +2443,7 @@ void UpdateLevantMove_800A9A9C(G2Act* p)
     prev.a = p->v6c.a;
     prev.b = p->v6c.b;
     prev.c = p->v6c.c;
-    sub_800AA140(p);
+    SetLevantRootMotion_800AA140(p);
     dz = 0;
     if (p->f0 & 8)
     {
@@ -2464,7 +2464,7 @@ void UpdateLevantMove_800A9A9C(G2Act* p)
     {
         p->f0 |= 0x8000;
         p->f10 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->s1c, GetLevantAnimSet_800AC474(p->s1c));
-        sub_800AA140(p);
+        SetLevantRootMotion_800AA140(p);
     }
     if (p->f8 == 2 && (p->f0 & 0x200000))
     {
@@ -2520,7 +2520,7 @@ void UpdateLevantMove_800A9A9C(G2Act* p)
     else
     {
         div = p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->s1c)].divisor_8;
-        sub_800AA140(p);
+        SetLevantRootMotion_800AA140(p);
         sn = sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff];
         cs = sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff];
         saveData_8008B570.levant_7A8.pos.z = p->v60.c + (p->v6c.c * cs - p->v6c.a * sn) / 4096 / div;
@@ -2531,7 +2531,7 @@ void UpdateLevantMove_800A9A9C(G2Act* p)
 #endif
 INCLUDE_OVERLAY_ASM(game, UpdateLevantMove_800A9A9C);
 
-void sub_800AA140(G2Act* p)
+void SetLevantRootMotion_800AA140(G2Act* p)
 {
     ModelAnim* t = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->s1c)];
     GetAnimRootMotion_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((GetLevantAnimLastFrame_800AC8BC(p->s1c, GetLevantAnimSet_800AC474(p->s1c)) & 0xffff) + 1));
@@ -2652,7 +2652,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800AA430);
 // here (the original tests its result as a short): settle both before enabling this.
 extern short effectOutcomeFlag_8008D780;
 void sub_800AA430(G2Act* p);
-unsigned short sub_800AB170(int a);
+unsigned short GetLevantAnimEventFrameCur_800AB170(int a);
 void sub_800ABCF4(G2Act* p);
 void sub_800ABDF0(G2Act* a);
 int LoadLevantAnimById_800AC604(int a, int b);
@@ -2680,7 +2680,7 @@ void sub_800AA51C(G2Act* o)
             sub_800AA3F0(o);
             break;
         }
-        if (o->f10 == sub_800AB170(o->s1c))
+        if (o->f10 == GetLevantAnimEventFrameCur_800AB170(o->s1c))
         {
             SetModelFtg_80025B5C(o->model_40, 2, 0x18);
             SetModelFtg_80025B5C(o->model_40, 7, 0x1A);
@@ -2728,7 +2728,7 @@ void sub_800AA51C(G2Act* o)
         {
             LoadLevantAnimById_800AC604(10, 0);
         }
-        sub_800AC518(o->s20);
+        IsLevantAnimLoaded_800AC518(o->s20);
         LoadLevantAnimById_800AC604(o->s20, 0);
         o->f8 = 12;
         o->f2C = 0x46;
@@ -2781,7 +2781,7 @@ void sub_800AA51C(G2Act* o)
         }
         break;
     case 14:
-        if (o->f10 == sub_800AB170(o->s1c))
+        if (o->f10 == GetLevantAnimEventFrameCur_800AB170(o->s1c))
         {
             SetModelFtg_80025B5C(o->model_40, 2, 0x17);
             SetModelFtg_80025B5C(o->model_40, 7, 0x19);
@@ -2879,7 +2879,7 @@ void sub_800AA51C(G2Act* o)
         }
         break;
     case 18:
-        if (o->f10 == sub_800AB170(o->s1c))
+        if (o->f10 == GetLevantAnimEventFrameCur_800AB170(o->s1c))
         {
             SetModelFtg_80025B5C(o->model_40, 2, 0x17);
             SetModelFtg_80025B5C(o->model_40, 7, 0x19);
@@ -2991,7 +2991,7 @@ void sub_800AACF8(G2Act* p)
     }
 }
 
-void sub_800AAF58(G2Act* a)
+void UpdateLevantActionState_800AAF58(G2Act* a)
 {
     switch ((unsigned)a->fC)
     {
@@ -3014,7 +3014,7 @@ void sub_800AAF58(G2Act* a)
 
 int sub_800AAFD8(int a)
 {
-    if (sub_800AC518(a))
+    if (IsLevantAnimLoaded_800AC518(a))
         return 1;
     FreeLevantAnimById_800AC6A8(a);
     return 0;
@@ -3079,9 +3079,9 @@ void sub_800AB150(G2Obj* p)
     p->f0 &= ~2;
 }
 
-unsigned short sub_800AB170(int a)
+unsigned short GetLevantAnimEventFrameCur_800AB170(int a)
 {
-    return sub_800AC944(a, GetLevantAnimSet_800AC474(a));
+    return GetLevantAnimEventFrame_800AC944(a, GetLevantAnimSet_800AC474(a));
 }
 
 void sub_800AB1A4(int a)
@@ -3254,17 +3254,17 @@ short sub_800AB750(int a)
     case 25:
     case 26:
     case 28:
-        return sub_800AB170(a) + (e - s) * 2;
+        return GetLevantAnimEventFrameCur_800AB170(a) + (e - s) * 2;
     case 7:
         t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        t = t + sub_800AB170(a) + 0x4c;
+        t = t + GetLevantAnimEventFrameCur_800AB170(a) + 0x4c;
         return t;
     case 8:
         t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        t = t + sub_800AB170(a);
+        t = t + GetLevantAnimEventFrameCur_800AB170(a);
         return t;
     }
-    return sub_800AB170(a);
+    return GetLevantAnimEventFrameCur_800AB170(a);
 }
 
 int sub_800AB85C()
@@ -3336,7 +3336,7 @@ void sub_800AB9A8(int a, int b, int c)
     p->f0 &= ~1;
 }
 
-void sub_800ABAA4(G2Path* a)
+void SetLevantPath_800ABAA4(G2Path* a)
 {
     G2Act* p = gameTask_8008B4A4->f24;
     p->path_78 = a;
@@ -3460,16 +3460,16 @@ void sub_800ABDF0(G2Act* a)
     }
     if (a->s1c == 0x1D)
     {
-        if (a->f10 == (unsigned short)sub_800AB170(0x1D))
+        if (a->f10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(0x1D))
             PlaySfx_80031494(0x44);
-        if (a->f10 == (unsigned short)sub_800AB170(a->s1c) - 10)
+        if (a->f10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(a->s1c) - 10)
             PlaySeqSlot_80031160(0x1D, 1);
     }
     if (a->s1c == 0x1C && a->f10 == 2)
         sub_800AB114((G2Obj*)a);
 }
 
-void sub_800ABECC()
+void SetLevantStatusTint_800ABECC()
 {
     G2V12* r = &dword_8007A164;
     unsigned int f = dword_8008BD38;
@@ -3673,17 +3673,17 @@ int GetLevantWeaponKind_800AC3E4()
     return word_8008BDA4;
 }
 
-int sub_800AC3F4()
+int GetLevantModelId_800AC3F4()
 {
     SaveData* s = &saveData_8008B570;
     int r;
     if (s->field_830)
     {
-        r = ((int (*)(int))GetArmorOutfit_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
+        r = ((int (*)(int))GetArmorOutfit_8001D060)(s->levantStatus_7C8.field_1C[1]) + levantOutfitModelOffsets_800B11B8[s->field_834];
     }
     else
     {
-        r = dword_800B116C[s->field_834];
+        r = levantBaseModels_800B116C[s->field_834];
     }
     return r;
 }
@@ -3695,22 +3695,22 @@ int GetLevantOutfit_800AC464()
 
 int GetLevantAnimSet_800AC474(int a)
 {
-    return dword_800B11DC[GetLevantWeaponKind_800AC3E4()];
+    return levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
 }
 
 int GetLevantAnimFile_800AC4A8(int a)
 {
     G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[GetLevantAnimIndex_800AC794(a, dword_800B11DC[GetLevantWeaponKind_800AC3E4()])].f0;
+    return p[GetLevantAnimIndex_800AC794(a, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()])].f0;
 }
 
-int sub_800AC518(int a)
+int IsLevantAnimLoaded_800AC518(int a)
 {
     G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    int r = GetLevantAnimIndex_800AC794(a, dword_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    int r = GetLevantAnimIndex_800AC794(a, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     if (p[r].f1)
         return 1;
-    return IsAnimInModelAnimSet_80025924(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(a, dword_800B11DC[GetLevantWeaponKind_800AC3E4()]));
+    return IsAnimInModelAnimSet_80025924(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(a, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
 }
 
 int LoadLevantAnim_800AC5D0(int a, int b)
@@ -3720,7 +3720,7 @@ int LoadLevantAnim_800AC5D0(int a, int b)
 
 int LoadLevantAnimById_800AC604(int a, int b)
 {
-    int t = dword_800B11DC[GetLevantWeaponKind_800AC3E4()];
+    int t = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
     return LoadModelAnim_80025440(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(a, t), b) != 0;
 }
 
@@ -3731,7 +3731,7 @@ void FreeLevantAnim_800AC678(int a)
 
 void FreeLevantAnimById_800AC6A8(int a)
 {
-    int t = dword_800B11DC[GetLevantWeaponKind_800AC3E4()];
+    int t = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
     FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(a, t));
 }
 
@@ -3757,7 +3757,7 @@ int GetLevantAnimIndex_800AC794(int a, int b)
     return a + b * 16;
 }
 
-unsigned char* sub_800AC7B4(int a)
+unsigned char* GetLevantAnimSetTable_800AC7B4(int a)
 {
     return (unsigned char*)GetModelActorAnims_80024E38(dword_8007DC60->items_8) + ((a << 10) + 0x380);
 }
@@ -3802,7 +3802,7 @@ unsigned char sub_800AC900(int a, int b)
     return p[r].f3;
 }
 
-short sub_800AC944(int a, int b)
+short GetLevantAnimEventFrame_800AC944(int a, int b)
 {
     G2Rec* p;
     int r = GetLevantAnimIndex_800AC794(a, b);
@@ -3821,7 +3821,7 @@ unsigned char GetLevantAnimFileId_800AC988(int a, int b)
 short* sub_800AC9CC(int a)
 {
     G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(a, dword_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    int r = GetLevantAnimIndex_800AC794(a, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return &p[r].sC;
 }
@@ -3829,7 +3829,7 @@ short* sub_800AC9CC(int a)
 int* sub_800ACA38(int a)
 {
     G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(a, dword_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    int r = GetLevantAnimIndex_800AC794(a, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return &p[r].f34;
 }
@@ -3849,7 +3849,7 @@ void LevantModelTaskInit_800ACAA4(int* a, int* b)
     b[9] = 0;
     SetLevantHasArmor_800AC380(s->levantStatus_7C8.field_1C[1] != 0xFF);
     SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
-    PoolInit_8003FF1C(&dword_800B1DD0, 0x2BF20);
+    PoolInit_8003FF1C(&levantPool_800B1DD0, 0x2BF20);
     LevantModelTask_800ACB64(a, b);
     a[2] = (int)LevantModelTask_800ACB64;
 }
@@ -3867,8 +3867,8 @@ typedef struct G2Ld_1
 } G2Ld_1;
 extern ModelVramSlot* dword_8007DC6C;
 extern int name_800B1164[];
-extern void sub_800ACF3C();
-extern void sub_800ACFB8();
+extern void FreeLevantAnimSetAnims_800ACF3C();
+extern void LoadLevantAnimSetAnims_800ACFB8();
 // Matched
 void LevantModelTask_800ACB64(int* a, void* buf)
 {
@@ -3889,7 +3889,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
             if (q->f10 != saveData_8008B570.field_834 || q->f18 != saveData_8008B570.field_836)
             {
                 q->flags |= 0x16;
-                sub_800ACF3C(q);
+                FreeLevantAnimSetAnims_800ACF3C(q);
             }
             if (q->flags == 0)
             {
@@ -3897,7 +3897,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
             }
             else
             {
-                PoolSetInited_80040148((int*)&dword_800B1DD0, 1);
+                PoolSetInited_80040148((int*)&levantPool_800B1DD0, 1);
                 q->state = 1;
             }
             break;
@@ -3908,7 +3908,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
                 {
                     FreeModelList_80024BB0(&dword_8007DC60);
                 }
-                InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&dword_800B1DD0);
+                InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&levantPool_800B1DD0);
                 LoadModel_80025200(dword_8007DC60, name_800B1164[saveData_8008B570.field_830], 0, 2, 1);
                 q->fC = q->f8;
                 q->f8 = saveData_8008B570.field_830;
@@ -3917,7 +3917,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
             else if (q->flags & 2)
             {
                 m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
-                LoadModelAltFtgs_80025974(m, sub_800AC3F4(), 1);
+                LoadModelAltFtgs_80025974(m, GetLevantModelId_800AC3F4(), 1);
                 q->f14 = GetLevantWeaponKind_800AC3E4();
                 q->f10 = saveData_8008B570.field_834;
                 q->f1C = GetLevantOutfit_800AC464();
@@ -3926,7 +3926,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
             }
             else if (q->flags & 4)
             {
-                sub_800ACFB8(q);
+                LoadLevantAnimSetAnims_800ACFB8(q);
                 q->flags &= ~4;
             }
             BeginFade_8001C260();
@@ -3965,7 +3965,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
                 ClearOTagRAll_8001B260();
                 EndFade_8001C290();
             }
-            PoolSetInited_80040148((int*)&dword_800B1DD0, 0);
+            PoolSetInited_80040148((int*)&levantPool_800B1DD0, 0);
             q->state = 0;
             break;
         }
@@ -3975,16 +3975,16 @@ void LevantModelTask_800ACB64(int* a, void* buf)
 void LevantModelTaskExit_800ACF0C()
 {
     FreeModelList_80024BB0(&dword_8007DC60);
-    PoolDestroy_8003FF7C(&dword_800B1DD0);
+    PoolDestroy_8003FF7C(&levantPool_800B1DD0);
 }
 
-void sub_800ACF3C(G2Act* p)
+void FreeLevantAnimSetAnims_800ACF3C(G2Act* p)
 {
     unsigned char* q;
     int i;
     if (p->f14 >= 0)
     {
-        q = sub_800AC7B4(dword_800B11DC[p->f14]);
+        q = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[p->f14]);
         for (i = 0; i < 16; i++, q += 0x40)
         {
             if (q[1])
@@ -3993,9 +3993,9 @@ void sub_800ACF3C(G2Act* p)
     }
 }
 
-void sub_800ACFB8()
+void LoadLevantAnimSetAnims_800ACFB8()
 {
-    unsigned char* p = sub_800AC7B4(dword_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    unsigned char* p = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     int i;
     for (i = 0; i < 16; i++, p += 0x40)
     {
@@ -4458,22 +4458,22 @@ void SetMapVar_800ADC5C(unsigned short* p, int b)
 void FindMapEntrance_800ADCEC(short* out, int key)
 {
     int i, j, k;
-    G2Ent16** row;
-    G2Ent16* e;
-    for (i = 0; name_800B0608[i]; i++)
+    GameMapEntrance** row;
+    GameMapEntrance* e;
+    for (i = 0; mapTable_800B0608[i]; i++)
     {
-        row = name_800B0608[i];
+        row = mapTable_800B0608[i];
         for (j = 0; row[j]; j++)
         {
             e = row[j];
-            for (k = 0; e[k].id != -1; k++)
+            for (k = 0; e[k].id_0 != -1; k++)
             {
-                if (key == e[k].s6)
+                if (key == e[k].entrance_6)
                 {
                     out[0] = i;
                     out[1] = j;
                     out[2] = k;
-                    out[3] = e[k].u4;
+                    out[3] = e[k].encIndex_4;
                     return;
                 }
             }
@@ -4489,25 +4489,25 @@ void SelectMapEntrance_800ADDAC(void)
     int r;
     int i;
     int key;
-    G2Ent16* e;
+    GameMapEntrance* e;
     v.a = saveData_8008B570.mapId_2E4[0].field_0;
     v.b = saveData_8008B570.mapId_2E4[1].field_0;
     v.c = saveData_8008B570.mapId_2E4[2].field_0;
     r = GetMapVar_800ADC1C(&v);
-    e = name_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+    e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
     key = saveData_8008B570.mapId_2E4[2].field_0;
     i = 0;
-    if (e->id >= 0)
+    if (e->id_0 >= 0)
     {
         do
         {
-            if (key == (short)e[i].u4 && (r == -1 || r == e[i].s6))
+            if (key == e[i].encIndex_4 && (r == -1 || r == e[i].entrance_6))
             {
                 saveData_8008B570.mapId_2E4[2].field_0 = i;
                 return;
             }
             i++;
-        } while (e[i].id >= 0);
+        } while (e[i].id_0 >= 0);
     }
 }
 #endif
@@ -4515,10 +4515,10 @@ void SelectMapEntrance_800ADDAC(void)
 INCLUDE_OVERLAY_ASM(game, SelectMapEntrance_800ADDAC);
 
 GameRec_1 encounterRecord_800ADE78 = { 0 };
-short dword_800ADE8C[2] = { 0 };
-short dword_800ADE90[2] = { -0x11C, 0x11C };
-short dword_800ADE94[4] = { -0x200, 0, 0x200 };
-short *encounterFormations_800ADE9C[7] = { dword_800ADE8C, dword_800ADE90, dword_800ADE94, (short *)0x61A80, (short *)0xDBBA0, (short *)0x155CC0, (short *)0x1CFDE0 };
+short formation1_800ADE8C[2] = { 0 };
+short formation2_800ADE90[2] = { -0x11C, 0x11C };
+short formation3_800ADE94[4] = { -0x200, 0, 0x200 };
+short *encounterFormations_800ADE9C[7] = { formation1_800ADE8C, formation2_800ADE90, formation3_800ADE94, (short *)0x61A80, (short *)0xDBBA0, (short *)0x155CC0, (short *)0x1CFDE0 };
 void (*enemyAiBySpecies_800ADEB8[53][2])() = {
     { EnemyAiSleepChase_800A333C, EnemyAiHideFlee_800A3E88 },
     { EnemyAiSleepChase_800A333C, EnemyAiHideFlee_800A3E88 },
@@ -4574,138 +4574,138 @@ void (*enemyAiBySpecies_800ADEB8[53][2])() = {
     { EnemyAiWanderChase_800A2FB8, EnemyAiHideFlee_800A3E88 },
     { EnemyAiWanderChase_800A2FB8, EnemyAiHideFlee_800A3E88 },
 };
-short dword_800AE060[8] = { 106, 107, 109, 111, 112, 114, -1 };
-short dword_800AE070[10] = {
+short battleStage00Maps_800AE060[8] = { 106, 107, 109, 111, 112, 114, -1 };
+short battleStage01Maps_800AE070[10] = {
     118, 119, 120, 121, 122, 124, 132, 133,
     -1,
 };
-short dword_800AE084[4] = { 125, 126, -1 };
-short dword_800AE08C[4] = { 123, 128, 131, -1 };
-short dword_800AE094[2] = { 129, -1 };
-short dword_800AE098[2] = { 110, -1 };
-short dword_800AE09C[2] = { 108, -1 };
-short dword_800AE0A0[14] = {
+short battleStage02Maps_800AE084[4] = { 125, 126, -1 };
+short battleStage03Maps_800AE08C[4] = { 123, 128, 131, -1 };
+short battleStage04Maps_800AE094[2] = { 129, -1 };
+short battleStage05Maps_800AE098[2] = { 110, -1 };
+short battleStage06Maps_800AE09C[2] = { 108, -1 };
+short battleStage07Maps_800AE0A0[14] = {
     143, 144, 145, 146, 147, 148, 149, 151,
     153, 155, 157, 160, 162, -1,
 };
-short dword_800AE0BC[8] = { 137, 138, 139, 140, 141, 142, -1 };
-short dword_800AE0CC[4] = { 158, 159, -1 };
-short dword_800AE0D4[2] = { 161, -1 };
-short dword_800AE0D8[14] = {
+short battleStage08Maps_800AE0BC[8] = { 137, 138, 139, 140, 141, 142, -1 };
+short battleStage09Maps_800AE0CC[4] = { 158, 159, -1 };
+short battleStage10Maps_800AE0D4[2] = { 161, -1 };
+short battleStage11Maps_800AE0D8[14] = {
     168, 169, 170, 171, 172, 173, 174, 175,
     176, 177, 178, 181, 183, -1,
 };
-short dword_800AE0F4[6] = { 163, 164, 165, 166, 167, -1 };
-short dword_800AE100[4] = { 179, 180, -1 };
-short dword_800AE108[2] = { 182, -1 };
-short dword_800AE10C[2] = { 217, -1 };
-short dword_800AE110[2] = { 228, -1 };
-short dword_800AE114[2] = { 0x104, -1 };
-short dword_800AE118[2] = { 0x105, -1 };
-short dword_800AE11C[2] = { 0x107, -1 };
-short dword_800AE120[6] = { 186, 187, 188, 189, 190, -1 };
-short dword_800AE12C[4] = { 195, 196, -1 };
-short dword_800AE134[6] = { 191, 192, 193, 194, -1 };
-short dword_800AE140[8] = { 210, 211, 213, 215, 216, 217, -1 };
-short dword_800AE150[8] = { 221, 222, 223, 224, 225, 227, 234, -1 };
-short dword_800AE160[2] = { 228, -1 };
-short dword_800AE164[4] = { 226, 230, 233, -1 };
-short dword_800AE16C[2] = { 231, -1 };
-short dword_800AE170[2] = { 214, -1 };
-short dword_800AE174[2] = { 212, -1 };
-short dword_800AE178[18] = {
+short battleStage12Maps_800AE0F4[6] = { 163, 164, 165, 166, 167, -1 };
+short battleStage13Maps_800AE100[4] = { 179, 180, -1 };
+short battleStage14Maps_800AE108[2] = { 182, -1 };
+short battleStage15Maps_800AE10C[2] = { 217, -1 };
+short battleStage16Maps_800AE110[2] = { 228, -1 };
+short battleStage17Maps_800AE114[2] = { 0x104, -1 };
+short battleStage18Maps_800AE118[2] = { 0x105, -1 };
+short battleStage19Maps_800AE11C[2] = { 0x107, -1 };
+short battleStage20Maps_800AE120[6] = { 186, 187, 188, 189, 190, -1 };
+short battleStage21Maps_800AE12C[4] = { 195, 196, -1 };
+short battleStage22Maps_800AE134[6] = { 191, 192, 193, 194, -1 };
+short battleStage23Maps_800AE140[8] = { 210, 211, 213, 215, 216, 217, -1 };
+short battleStage24Maps_800AE150[8] = { 221, 222, 223, 224, 225, 227, 234, -1 };
+short battleStage25Maps_800AE160[2] = { 228, -1 };
+short battleStage26Maps_800AE164[4] = { 226, 230, 233, -1 };
+short battleStage27Maps_800AE16C[2] = { 231, -1 };
+short battleStage28Maps_800AE170[2] = { 214, -1 };
+short battleStage29Maps_800AE174[2] = { 212, -1 };
+short battleStage30Maps_800AE178[18] = {
     242, 243, 244, 245, 246, 247, 248, 249,
     250, 251, 252, 253, 254, 255, 0x102, 0x104,
     -1,
 };
-short dword_800AE19C[6] = { 237, 238, 239, 240, 241, -1 };
-short dword_800AE1A8[4] = { 0x100, 0x101, -1 };
-short dword_800AE1B0[2] = { 0x103, -1 };
-short dword_800AE1B4[16] = {
+short battleStage31Maps_800AE19C[6] = { 237, 238, 239, 240, 241, -1 };
+short battleStage32Maps_800AE1A8[4] = { 0x100, 0x101, -1 };
+short battleStage33Maps_800AE1B0[2] = { 0x103, -1 };
+short battleStage34Maps_800AE1B4[16] = {
     0x117, 0x118, 0x119, 0x11A, 0x11B, 0x11C, 0x11D, 0x11E,
     0x11F, 0x120, 0x121, 0x122, 0x123, 0x124, 0x125, -1,
 };
-short dword_800AE1D4[16] = {
+short battleStage35Maps_800AE1D4[16] = {
     0x126, 0x127, 0x128, 0x129, 0x12A, 0x12B, 0x12C, 0x12D,
     0x12E, 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, -1,
 };
-short dword_800AE1F4[16] = {
+short battleStage36Maps_800AE1F4[16] = {
     0x135, 0x136, 0x137, 0x138, 0x139, 0x13A, 0x13B, 0x13C,
     0x13D, 0x13E, 0x13F, 0x140, 0x141, 0x142, 0x143, -1,
 };
-short dword_800AE214[16] = {
+short battleStage37Maps_800AE214[16] = {
     0x144, 0x145, 0x146, 0x147, 0x148, 0x149, 0x14A, 0x14B,
     0x14C, 0x14D, 0x14E, 0x14F, 0x150, 0x151, 0x152, -1,
 };
-short dword_800AE234[16] = {
+short battleStage38Maps_800AE234[16] = {
     0x108, 0x109, 0x10A, 0x10B, 0x10C, 0x10D, 0x10E, 0x10F,
     0x110, 0x111, 0x112, 0x113, 0x114, 0x115, 0x116, -1,
 };
 short *battleStageMaps_800AE254[39] = {
-    dword_800AE060, dword_800AE070, dword_800AE084, dword_800AE08C,
-    dword_800AE094, dword_800AE098, dword_800AE09C, dword_800AE0A0,
-    dword_800AE0BC, dword_800AE0CC, dword_800AE0D4, dword_800AE0D8,
-    dword_800AE0F4, dword_800AE100, dword_800AE108, dword_800AE10C,
-    dword_800AE110, dword_800AE114, dword_800AE118, dword_800AE11C,
-    dword_800AE120, dword_800AE12C, dword_800AE134, dword_800AE140,
-    dword_800AE150, dword_800AE160, dword_800AE164, dword_800AE16C,
-    dword_800AE170, dword_800AE174, dword_800AE178, dword_800AE19C,
-    dword_800AE1A8, dword_800AE1B0, dword_800AE1B4, dword_800AE1D4,
-    dword_800AE1F4, dword_800AE214, dword_800AE234,
+    battleStage00Maps_800AE060, battleStage01Maps_800AE070, battleStage02Maps_800AE084, battleStage03Maps_800AE08C,
+    battleStage04Maps_800AE094, battleStage05Maps_800AE098, battleStage06Maps_800AE09C, battleStage07Maps_800AE0A0,
+    battleStage08Maps_800AE0BC, battleStage09Maps_800AE0CC, battleStage10Maps_800AE0D4, battleStage11Maps_800AE0D8,
+    battleStage12Maps_800AE0F4, battleStage13Maps_800AE100, battleStage14Maps_800AE108, battleStage15Maps_800AE10C,
+    battleStage16Maps_800AE110, battleStage17Maps_800AE114, battleStage18Maps_800AE118, battleStage19Maps_800AE11C,
+    battleStage20Maps_800AE120, battleStage21Maps_800AE12C, battleStage22Maps_800AE134, battleStage23Maps_800AE140,
+    battleStage24Maps_800AE150, battleStage25Maps_800AE160, battleStage26Maps_800AE164, battleStage27Maps_800AE16C,
+    battleStage28Maps_800AE170, battleStage29Maps_800AE174, battleStage30Maps_800AE178, battleStage31Maps_800AE19C,
+    battleStage32Maps_800AE1A8, battleStage33Maps_800AE1B0, battleStage34Maps_800AE1B4, battleStage35Maps_800AE1D4,
+    battleStage36Maps_800AE1F4, battleStage37Maps_800AE214, battleStage38Maps_800AE234,
 };
-short dword_800AE2F0[6] = { 106, 107, 108, 109, 112, -1 };
-short dword_800AE2FC[4] = { 110, 111, 114, -1 };
-short dword_800AE304[2] = { -1 };
-short dword_800AE308[8] = { 118, 119, 120, 121, 122, 124, 132, -1 };
-short dword_800AE318[6] = { 123, 128, 129, 131, -1 };
-short dword_800AE324[6] = { 137, 138, 139, 143, 144, -1 };
-short dword_800AE330[6] = { 140, 142, 145, 146, 147, -1 };
-short dword_800AE33C[6] = { 158, 159, 160, 161, -1 };
-short dword_800AE348[16] = {
+short encounterArea00Maps_800AE2F0[6] = { 106, 107, 108, 109, 112, -1 };
+short encounterArea01Maps_800AE2FC[4] = { 110, 111, 114, -1 };
+short encounterArea02Maps_800AE304[2] = { -1 };
+short encounterArea03Maps_800AE308[8] = { 118, 119, 120, 121, 122, 124, 132, -1 };
+short encounterArea04Maps_800AE318[6] = { 123, 128, 129, 131, -1 };
+short encounterArea05Maps_800AE324[6] = { 137, 138, 139, 143, 144, -1 };
+short encounterArea06Maps_800AE330[6] = { 140, 142, 145, 146, 147, -1 };
+short encounterArea07Maps_800AE33C[6] = { 158, 159, 160, 161, -1 };
+short encounterArea08Maps_800AE348[16] = {
     163, 164, 165, 166, 167, 168, 169, 170,
     171, 172, 179, 180, 181, 182, -1,
 };
-short dword_800AE368[10] = {
+short encounterArea09Maps_800AE368[10] = {
     186, 187, 188, 189, 191, 192, 193, 194,
     195, -1,
 };
-short dword_800AE37C[4] = { 210, 211, 212, -1 };
-short dword_800AE384[6] = { 213, 214, 215, 216, 217, -1 };
-short dword_800AE390[8] = { 221, 222, 223, 224, 225, 227, 234, -1 };
-short dword_800AE3A0[6] = { 226, 230, 231, 233, -1 };
-short dword_800AE3AC[6] = { 237, 238, 239, 242, 243, -1 };
-short dword_800AE3B8[6] = { 240, 241, 244, 245, 246, -1 };
-short dword_800AE3C4[6] = { 0x100, 0x101, 0x102, 0x103, -1 };
+short encounterArea10Maps_800AE37C[4] = { 210, 211, 212, -1 };
+short encounterArea11Maps_800AE384[6] = { 213, 214, 215, 216, 217, -1 };
+short encounterArea12Maps_800AE390[8] = { 221, 222, 223, 224, 225, 227, 234, -1 };
+short encounterArea13Maps_800AE3A0[6] = { 226, 230, 231, 233, -1 };
+short encounterArea14Maps_800AE3AC[6] = { 237, 238, 239, 242, 243, -1 };
+short encounterArea15Maps_800AE3B8[6] = { 240, 241, 244, 245, 246, -1 };
+short encounterArea16Maps_800AE3C4[6] = { 0x100, 0x101, 0x102, 0x103, -1 };
 short *encounterAreaMaps_800AE3D0[17] = {
-    dword_800AE2F0, dword_800AE2FC, dword_800AE304, dword_800AE308,
-    dword_800AE318, dword_800AE324, dword_800AE330, dword_800AE33C,
-    dword_800AE348, dword_800AE368, dword_800AE37C, dword_800AE384,
-    dword_800AE390, dword_800AE3A0, dword_800AE3AC, dword_800AE3B8,
-    dword_800AE3C4,
+    encounterArea00Maps_800AE2F0, encounterArea01Maps_800AE2FC, encounterArea02Maps_800AE304, encounterArea03Maps_800AE308,
+    encounterArea04Maps_800AE318, encounterArea05Maps_800AE324, encounterArea06Maps_800AE330, encounterArea07Maps_800AE33C,
+    encounterArea08Maps_800AE348, encounterArea09Maps_800AE368, encounterArea10Maps_800AE37C, encounterArea11Maps_800AE384,
+    encounterArea12Maps_800AE390, encounterArea13Maps_800AE3A0, encounterArea14Maps_800AE3AC, encounterArea15Maps_800AE3B8,
+    encounterArea16Maps_800AE3C4,
 };
-int dword_800AE414[3] = { 15, 12, 6 };
-int dword_800AE420[3] = { 18, 0, 6 };
-int dword_800AE42C[3] = { 12, 15, 6 };
-int dword_800AE438[3] = { 0, 9, 27 };
-int dword_800AE444[3] = { 27, 10, 26 };
-int dword_800AE450[3] = { 3, 14, 17 };
-int dword_800AE45C[3] = { 17, 7, 14 };
-int dword_800AE468[3] = { 19, 23, 17 };
-int dword_800AE474[3] = { 30, 30, 30 };
-int dword_800AE480[3] = { 1, 21, 16 };
-int dword_800AE48C[3] = { 13, 2, 28 };
-int dword_800AE498[3] = { 13, 2, 28 };
-int dword_800AE4A4[3] = { 11, 4, 24 };
-int dword_800AE4B0[3] = { 24, 22, 4 };
-int dword_800AE4BC[3] = { 5, 29, 31 };
-int dword_800AE4C8[3] = { 25, 8, 20 };
-int dword_800AE4D4[3] = { 31, 5, 8 };
+int encounterArea00Species_800AE414[3] = { 15, 12, 6 };
+int encounterArea01Species_800AE420[3] = { 18, 0, 6 };
+int encounterArea02Species_800AE42C[3] = { 12, 15, 6 };
+int encounterArea03Species_800AE438[3] = { 0, 9, 27 };
+int encounterArea04Species_800AE444[3] = { 27, 10, 26 };
+int encounterArea05Species_800AE450[3] = { 3, 14, 17 };
+int encounterArea06Species_800AE45C[3] = { 17, 7, 14 };
+int encounterArea07Species_800AE468[3] = { 19, 23, 17 };
+int encounterArea08Species_800AE474[3] = { 30, 30, 30 };
+int encounterArea09Species_800AE480[3] = { 1, 21, 16 };
+int encounterArea10Species_800AE48C[3] = { 13, 2, 28 };
+int encounterArea11Species_800AE498[3] = { 13, 2, 28 };
+int encounterArea12Species_800AE4A4[3] = { 11, 4, 24 };
+int encounterArea13Species_800AE4B0[3] = { 24, 22, 4 };
+int encounterArea14Species_800AE4BC[3] = { 5, 29, 31 };
+int encounterArea15Species_800AE4C8[3] = { 25, 8, 20 };
+int encounterArea16Species_800AE4D4[3] = { 31, 5, 8 };
 int *encounterAreaSpecies_800AE4E0[17] = {
-    dword_800AE414, dword_800AE420, dword_800AE42C, dword_800AE438,
-    dword_800AE444, dword_800AE450, dword_800AE45C, dword_800AE468,
-    dword_800AE474, dword_800AE480, dword_800AE48C, dword_800AE498,
-    dword_800AE4A4, dword_800AE4B0, dword_800AE4BC, dword_800AE4C8,
-    dword_800AE4D4,
+    encounterArea00Species_800AE414, encounterArea01Species_800AE420, encounterArea02Species_800AE42C, encounterArea03Species_800AE438,
+    encounterArea04Species_800AE444, encounterArea05Species_800AE450, encounterArea06Species_800AE45C, encounterArea07Species_800AE468,
+    encounterArea08Species_800AE474, encounterArea09Species_800AE480, encounterArea10Species_800AE48C, encounterArea11Species_800AE498,
+    encounterArea12Species_800AE4A4, encounterArea13Species_800AE4B0, encounterArea14Species_800AE4BC, encounterArea15Species_800AE4C8,
+    encounterArea16Species_800AE4D4,
 };
 int encounterTables_800AE524[219] = {
     0x3030110, 0x3030300, 0x3030300, 0x3030010, 0x3030300, 0x3030300, 0x3030210, 0x3030300,
@@ -4737,99 +4737,99 @@ int encounterTables_800AE524[219] = {
     0x3030300, 0x3030300, 0x3898A10, 0x38A8900, 0x3030300, 0x3888810, 0x3030300, 0x3030300,
     0x88798A01, 0x38A7907, 0x3798808,
 };
-int dword_800AE890 = 0xFFFF006A;
-int dword_800AE894 = 0xFFFF006B;
-int dword_800AE898 = 0xFFFF006C;
-int dword_800AE89C = 0xFFFF006D;
-int dword_800AE8A0 = 0xFFFF006E;
-int dword_800AE8A4 = 0xFFFF006F;
-int dword_800AE8A8 = 0xFFFF0070;
-int dword_800AE8AC = 0xFFFF0072;
-int dword_800AE8B0 = 0xFFFF0076;
-int dword_800AE8B4 = 0xFFFF0077;
-int dword_800AE8B8 = 0xFFFF0078;
-int dword_800AE8BC = 0xFFFF0079;
-int dword_800AE8C0 = 0xFFFF007A;
-int dword_800AE8C4 = 0xFFFF007B;
-int dword_800AE8C8 = 0xFFFF007C;
-int dword_800AE8CC = 0xFFFF0080;
-int dword_800AE8D0 = 0xFFFF0081;
-int dword_800AE8D4 = 0xFFFF0083;
-int dword_800AE8D8 = 0xFFFF0084;
-int dword_800AE8DC = 0xFFFF0089;
-int dword_800AE8E0 = 0xFFFF008A;
-int dword_800AE8E4 = 0xFFFF008B;
-int dword_800AE8E8 = 0xFFFF008C;
-int dword_800AE8EC = 0xFFFF008E;
-int dword_800AE8F0 = 0xFFFF008F;
-int dword_800AE8F4 = 0xFFFF0090;
-int dword_800AE8F8 = 0xFFFF0091;
-int dword_800AE8FC = 0xFFFF0092;
-int dword_800AE900 = 0xFFFF0093;
-int dword_800AE904 = 0xFFFF009E;
-int dword_800AE908 = 0xFFFF009F;
-int dword_800AE90C = 0xFFFF00A0;
-int dword_800AE910 = 0xFFFF00A1;
-int dword_800AE914[8] = { 0xA400A3, 0xA600A5, 0xA800A7, 0xAA00A9, 0xAC00AB, 0xB400B3, 0xB600B5, 0xFFFF };
-int dword_800AE934 = 0xFFFF00BB;
-int dword_800AE938[2] = { 0xBA00BC, 0xFFFF };
-int dword_800AE940 = 0xFFFF00BD;
-int dword_800AE944 = 0xFFFF;
-int dword_800AE948 = 0xFFFF00BF;
-int dword_800AE94C = 0xFFFF00C0;
-int dword_800AE950 = 0xFFFF00C1;
-int dword_800AE954 = 0xFFFF00C2;
-int dword_800AE958 = 0xFFFF00C3;
-int dword_800AE95C = 0xFFFF00D2;
-int dword_800AE960 = 0xFFFF00D3;
-int dword_800AE964 = 0xFFFF00D4;
-int dword_800AE968 = 0xFFFF00D5;
-int dword_800AE96C = 0xFFFF00D6;
-int dword_800AE970 = 0xFFFF00D7;
-int dword_800AE974 = 0xFFFF00D8;
-int dword_800AE978 = 0xFFFF00D9;
-int dword_800AE97C = 0xFFFF00DD;
-int dword_800AE980 = 0xFFFF00DE;
-int dword_800AE984 = 0xFFFF00DF;
-int dword_800AE988 = 0xFFFF00E0;
-int dword_800AE98C = 0xFFFF00E1;
-int dword_800AE990 = 0xFFFF00E2;
-int dword_800AE994 = 0xFFFF00E3;
-int dword_800AE998 = 0xFFFF00E4;
-int dword_800AE99C = 0xFFFF00E7;
-int dword_800AE9A0 = 0xFFFF00E9;
-int dword_800AE9A4 = 0xFFFF00EA;
-int dword_800AE9A8 = 0xFFFF00ED;
-int dword_800AE9AC = 0xFFFF00EE;
-int dword_800AE9B0 = 0xFFFF00EF;
-int dword_800AE9B4 = 0xFFFF00F0;
-int dword_800AE9B8 = 0xFFFF00F1;
-int dword_800AE9BC = 0xFFFF00F2;
-int dword_800AE9C0 = 0xFFFF00F3;
-int dword_800AE9C4 = 0xFFFF00F4;
-int dword_800AE9C8 = 0xFFFF00F5;
-int dword_800AE9CC = 0xFFFF00F6;
-int dword_800AE9D0[3] = { 0x1010100, 0x1030102, 0xFFFF };
+int encounterTable00Maps_800AE890 = 0xFFFF006A;
+int encounterTable01Maps_800AE894 = 0xFFFF006B;
+int encounterTable02Maps_800AE898 = 0xFFFF006C;
+int encounterTable03Maps_800AE89C = 0xFFFF006D;
+int encounterTable04Maps_800AE8A0 = 0xFFFF006E;
+int encounterTable05Maps_800AE8A4 = 0xFFFF006F;
+int encounterTable06Maps_800AE8A8 = 0xFFFF0070;
+int encounterTable07Maps_800AE8AC = 0xFFFF0072;
+int encounterTable08Maps_800AE8B0 = 0xFFFF0076;
+int encounterTable09Maps_800AE8B4 = 0xFFFF0077;
+int encounterTable10Maps_800AE8B8 = 0xFFFF0078;
+int encounterTable11Maps_800AE8BC = 0xFFFF0079;
+int encounterTable12Maps_800AE8C0 = 0xFFFF007A;
+int encounterTable13Maps_800AE8C4 = 0xFFFF007B;
+int encounterTable14Maps_800AE8C8 = 0xFFFF007C;
+int encounterTable15Maps_800AE8CC = 0xFFFF0080;
+int encounterTable16Maps_800AE8D0 = 0xFFFF0081;
+int encounterTable17Maps_800AE8D4 = 0xFFFF0083;
+int encounterTable18Maps_800AE8D8 = 0xFFFF0084;
+int encounterTable19Maps_800AE8DC = 0xFFFF0089;
+int encounterTable20Maps_800AE8E0 = 0xFFFF008A;
+int encounterTable21Maps_800AE8E4 = 0xFFFF008B;
+int encounterTable22Maps_800AE8E8 = 0xFFFF008C;
+int encounterTable23Maps_800AE8EC = 0xFFFF008E;
+int encounterTable24Maps_800AE8F0 = 0xFFFF008F;
+int encounterTable25Maps_800AE8F4 = 0xFFFF0090;
+int encounterTable26Maps_800AE8F8 = 0xFFFF0091;
+int encounterTable27Maps_800AE8FC = 0xFFFF0092;
+int encounterTable28Maps_800AE900 = 0xFFFF0093;
+int encounterTable29Maps_800AE904 = 0xFFFF009E;
+int encounterTable30Maps_800AE908 = 0xFFFF009F;
+int encounterTable31Maps_800AE90C = 0xFFFF00A0;
+int encounterTable32Maps_800AE910 = 0xFFFF00A1;
+int encounterTable33Maps_800AE914[8] = { 0xA400A3, 0xA600A5, 0xA800A7, 0xAA00A9, 0xAC00AB, 0xB400B3, 0xB600B5, 0xFFFF };
+int encounterTable34Maps_800AE934 = 0xFFFF00BB;
+int encounterTable35Maps_800AE938[2] = { 0xBA00BC, 0xFFFF };
+int encounterTable36Maps_800AE940 = 0xFFFF00BD;
+int encounterTable37Maps_800AE944 = 0xFFFF;
+int encounterTable38Maps_800AE948 = 0xFFFF00BF;
+int encounterTable39Maps_800AE94C = 0xFFFF00C0;
+int encounterTable40Maps_800AE950 = 0xFFFF00C1;
+int encounterTable41Maps_800AE954 = 0xFFFF00C2;
+int encounterTable42Maps_800AE958 = 0xFFFF00C3;
+int encounterTable43Maps_800AE95C = 0xFFFF00D2;
+int encounterTable44Maps_800AE960 = 0xFFFF00D3;
+int encounterTable45Maps_800AE964 = 0xFFFF00D4;
+int encounterTable46Maps_800AE968 = 0xFFFF00D5;
+int encounterTable47Maps_800AE96C = 0xFFFF00D6;
+int encounterTable48Maps_800AE970 = 0xFFFF00D7;
+int encounterTable49Maps_800AE974 = 0xFFFF00D8;
+int encounterTable50Maps_800AE978 = 0xFFFF00D9;
+int encounterTable51Maps_800AE97C = 0xFFFF00DD;
+int encounterTable52Maps_800AE980 = 0xFFFF00DE;
+int encounterTable53Maps_800AE984 = 0xFFFF00DF;
+int encounterTable54Maps_800AE988 = 0xFFFF00E0;
+int encounterTable55Maps_800AE98C = 0xFFFF00E1;
+int encounterTable56Maps_800AE990 = 0xFFFF00E2;
+int encounterTable57Maps_800AE994 = 0xFFFF00E3;
+int encounterTable58Maps_800AE998 = 0xFFFF00E4;
+int encounterTable59Maps_800AE99C = 0xFFFF00E7;
+int encounterTable60Maps_800AE9A0 = 0xFFFF00E9;
+int encounterTable61Maps_800AE9A4 = 0xFFFF00EA;
+int encounterTable62Maps_800AE9A8 = 0xFFFF00ED;
+int encounterTable63Maps_800AE9AC = 0xFFFF00EE;
+int encounterTable64Maps_800AE9B0 = 0xFFFF00EF;
+int encounterTable65Maps_800AE9B4 = 0xFFFF00F0;
+int encounterTable66Maps_800AE9B8 = 0xFFFF00F1;
+int encounterTable67Maps_800AE9BC = 0xFFFF00F2;
+int encounterTable68Maps_800AE9C0 = 0xFFFF00F3;
+int encounterTable69Maps_800AE9C4 = 0xFFFF00F4;
+int encounterTable70Maps_800AE9C8 = 0xFFFF00F5;
+int encounterTable71Maps_800AE9CC = 0xFFFF00F6;
+int encounterTable72Maps_800AE9D0[3] = { 0x1010100, 0x1030102, 0xFFFF };
 void *encounterMapLists_800AE9DC[73] = {
-    (void *)&dword_800AE890, (void *)&dword_800AE894, (void *)&dword_800AE898, (void *)&dword_800AE89C,
-    (void *)&dword_800AE8A0, (void *)&dword_800AE8A4, (void *)&dword_800AE8A8, (void *)&dword_800AE8AC,
-    (void *)&dword_800AE8B0, (void *)&dword_800AE8B4, (void *)&dword_800AE8B8, (void *)&dword_800AE8BC,
-    (void *)&dword_800AE8C0, (void *)&dword_800AE8C4, (void *)&dword_800AE8C8, (void *)&dword_800AE8CC,
-    (void *)&dword_800AE8D0, (void *)&dword_800AE8D4, (void *)&dword_800AE8D8, (void *)&dword_800AE8DC,
-    (void *)&dword_800AE8E0, (void *)&dword_800AE8E4, (void *)&dword_800AE8E8, (void *)&dword_800AE8EC,
-    (void *)&dword_800AE8F0, (void *)&dword_800AE8F4, (void *)&dword_800AE8F8, (void *)&dword_800AE8FC,
-    (void *)&dword_800AE900, (void *)&dword_800AE904, (void *)&dword_800AE908, (void *)&dword_800AE90C,
-    (void *)&dword_800AE910, (void *)dword_800AE914, (void *)&dword_800AE934, (void *)dword_800AE938,
-    (void *)&dword_800AE940, (void *)&dword_800AE944, (void *)&dword_800AE948, (void *)&dword_800AE94C,
-    (void *)&dword_800AE950, (void *)&dword_800AE954, (void *)&dword_800AE958, (void *)&dword_800AE95C,
-    (void *)&dword_800AE960, (void *)&dword_800AE964, (void *)&dword_800AE968, (void *)&dword_800AE96C,
-    (void *)&dword_800AE970, (void *)&dword_800AE974, (void *)&dword_800AE978, (void *)&dword_800AE97C,
-    (void *)&dword_800AE980, (void *)&dword_800AE984, (void *)&dword_800AE988, (void *)&dword_800AE98C,
-    (void *)&dword_800AE990, (void *)&dword_800AE994, (void *)&dword_800AE998, (void *)&dword_800AE99C,
-    (void *)&dword_800AE9A0, (void *)&dword_800AE9A4, (void *)&dword_800AE9A8, (void *)&dword_800AE9AC,
-    (void *)&dword_800AE9B0, (void *)&dword_800AE9B4, (void *)&dword_800AE9B8, (void *)&dword_800AE9BC,
-    (void *)&dword_800AE9C0, (void *)&dword_800AE9C4, (void *)&dword_800AE9C8, (void *)&dword_800AE9CC,
-    (void *)dword_800AE9D0,
+    (void *)&encounterTable00Maps_800AE890, (void *)&encounterTable01Maps_800AE894, (void *)&encounterTable02Maps_800AE898, (void *)&encounterTable03Maps_800AE89C,
+    (void *)&encounterTable04Maps_800AE8A0, (void *)&encounterTable05Maps_800AE8A4, (void *)&encounterTable06Maps_800AE8A8, (void *)&encounterTable07Maps_800AE8AC,
+    (void *)&encounterTable08Maps_800AE8B0, (void *)&encounterTable09Maps_800AE8B4, (void *)&encounterTable10Maps_800AE8B8, (void *)&encounterTable11Maps_800AE8BC,
+    (void *)&encounterTable12Maps_800AE8C0, (void *)&encounterTable13Maps_800AE8C4, (void *)&encounterTable14Maps_800AE8C8, (void *)&encounterTable15Maps_800AE8CC,
+    (void *)&encounterTable16Maps_800AE8D0, (void *)&encounterTable17Maps_800AE8D4, (void *)&encounterTable18Maps_800AE8D8, (void *)&encounterTable19Maps_800AE8DC,
+    (void *)&encounterTable20Maps_800AE8E0, (void *)&encounterTable21Maps_800AE8E4, (void *)&encounterTable22Maps_800AE8E8, (void *)&encounterTable23Maps_800AE8EC,
+    (void *)&encounterTable24Maps_800AE8F0, (void *)&encounterTable25Maps_800AE8F4, (void *)&encounterTable26Maps_800AE8F8, (void *)&encounterTable27Maps_800AE8FC,
+    (void *)&encounterTable28Maps_800AE900, (void *)&encounterTable29Maps_800AE904, (void *)&encounterTable30Maps_800AE908, (void *)&encounterTable31Maps_800AE90C,
+    (void *)&encounterTable32Maps_800AE910, (void *)encounterTable33Maps_800AE914, (void *)&encounterTable34Maps_800AE934, (void *)encounterTable35Maps_800AE938,
+    (void *)&encounterTable36Maps_800AE940, (void *)&encounterTable37Maps_800AE944, (void *)&encounterTable38Maps_800AE948, (void *)&encounterTable39Maps_800AE94C,
+    (void *)&encounterTable40Maps_800AE950, (void *)&encounterTable41Maps_800AE954, (void *)&encounterTable42Maps_800AE958, (void *)&encounterTable43Maps_800AE95C,
+    (void *)&encounterTable44Maps_800AE960, (void *)&encounterTable45Maps_800AE964, (void *)&encounterTable46Maps_800AE968, (void *)&encounterTable47Maps_800AE96C,
+    (void *)&encounterTable48Maps_800AE970, (void *)&encounterTable49Maps_800AE974, (void *)&encounterTable50Maps_800AE978, (void *)&encounterTable51Maps_800AE97C,
+    (void *)&encounterTable52Maps_800AE980, (void *)&encounterTable53Maps_800AE984, (void *)&encounterTable54Maps_800AE988, (void *)&encounterTable55Maps_800AE98C,
+    (void *)&encounterTable56Maps_800AE990, (void *)&encounterTable57Maps_800AE994, (void *)&encounterTable58Maps_800AE998, (void *)&encounterTable59Maps_800AE99C,
+    (void *)&encounterTable60Maps_800AE9A0, (void *)&encounterTable61Maps_800AE9A4, (void *)&encounterTable62Maps_800AE9A8, (void *)&encounterTable63Maps_800AE9AC,
+    (void *)&encounterTable64Maps_800AE9B0, (void *)&encounterTable65Maps_800AE9B4, (void *)&encounterTable66Maps_800AE9B8, (void *)&encounterTable67Maps_800AE9BC,
+    (void *)&encounterTable68Maps_800AE9C0, (void *)&encounterTable69Maps_800AE9C4, (void *)&encounterTable70Maps_800AE9C8, (void *)&encounterTable71Maps_800AE9CC,
+    (void *)encounterTable72Maps_800AE9D0,
 };
 int encounterGroups_800AEB00[27] = {
     0, 0, 0, 3, 0, 0, 3, 0,
@@ -4859,21 +4859,21 @@ int dword_800AEBF8[19] = {
     0x400000, 0, 0x30001, 0x400000, 0, 0x30001, 0x400000, 0,
     0x30001, 0x400000,
 };
-int dword_800AEC44[20] = {
+int mapArea0Map00Entrances_800AEC44[20] = {
     0x1D70067, 0xFFFF0000, 0x10019, 0, 0x1D80068, 0xFFFF0001, 0x10019, 0,
     0x1D90069, 0xFFFF0002, 0x10019, 0, 0x1DA006A, 0xFFFF0003, 0x10019, 0,
     -1,
 };
-int dword_800AEC94[20] = {
+int mapArea0Map01Entrances_800AEC94[20] = {
     0x1DB006B, 0xFFFF0000, 0x10019, 0, 0x1DC006C, 0xFFFF0001, 0x10019, 0,
     0x1DD006D, 0xFFFF0002, 0x10019, 0, 0x1DE006E, 0xFFFF0003, 0x10019, 0,
     -1,
 };
-int dword_800AECE4[16] = {
+int mapArea0Map02Entrances_800AECE4[16] = {
     0x1DF006F, 0, 0x10022, 0x800B276C, 0x1DF0071, 0x10000, 0x10022, 0x800B2768,
     0x1E00070, 0xFFFF0001, 0x10019, 0x800B2618, -1,
 };
-int dword_800AED24[304] = {
+int mapArea0Map03Entrances_800AED24[304] = {
     0x1E10072, 0x1080000, 143, 0x800B3128, 0x1E20073, 0x1090001, 143, 0,
     0x1E30074, 0x10A0002, 143, 0, 0x1E40075, 0x10B0003, 143, 0,
     0x1E50076, 0x10C0004, 143, 0, 0x1E60077, 0x10D0005, 143, 0,
@@ -4913,48 +4913,48 @@ int dword_800AED24[304] = {
     0x22900BA, 0x1500048, 143, 0, 0x22A00BB, 0x1510049, 143, 0,
     0x22B00BC, 0x152004A, 143, 0, -1,
 };
-int dword_800AF1E4[32] = {
+int mapArea0Map04Entrances_800AF1E4[32] = {
     0x22C00BD, 0x1530000, 0x10021, 0x800B260C, 0x22D00BE, 0x1540001, 0x10021, 0x800B2DB0,
     0x22E00BF, 0x1550002, 0x10021, 0x800B23E8, 0x22F00C0, 0x1560003, 0x10021, 0x800B2728,
     0x23000C1, 0x1570004, 0x10021, 0x800B2ADC, 0x23100C2, 0x1580005, 0x10021, 0,
     0x22C00BD, 0x1590000, 0x10021, 0x800B260C, -1,
 };
-int dword_800AF264[36] = {
+int mapArea1Map00Entrances_800AF264[36] = {
     0x23200C3, 0x20000, 0x1000E, 0x800B2920, 0x23200C7, 0x30000, 0x1000E, 0x800B2D98,
     0x23200C8, 0x40000, 0x1000E, 0x800B2A54, 0x23200C9, 0x50000, 0x1000E, 0x800B2D98,
     0x23200CA, 0x60000, 0x1000E, 0x800B2D98, 0x23300C4, 0x70001, 0x10010, 0x800B22C4,
     0x23400C5, 0x80002, 0x10010, 0x800B2DC8, 0x23500C6, 0x90003, 0x1000E, 0x800B22C4,
     -1,
 };
-int dword_800AF2F4[32] = {
+int mapArea1Map01Entrances_800AF2F4[32] = {
     0x23600CB, 0xA0000, 0x1000E, 0x800B2BCC, 0x23700CC, 0xB0000, 0x1000E, 0x800B2E5C,
     0x23700D0, 0xC0000, 0x1000E, 0x800B2E5C, 0x23700D1, 0xD0000, 0x1000E, 0x800B2E5C,
     0x23700D2, 0xE0000, 0x1000E, 0x800B2E5C, 0x23800CD, 0xFFFF0000, 0x1000E, 0,
     0x23900CE, 0xF0003, 0x1000E, 0x800B2910, -1,
 };
-int dword_800AF374[20] = {
+int mapArea1Map02Entrances_800AF374[20] = {
     0x23B00D3, 0x100000, 0x1000E, 0x800B2A34, 0x23B00D4, 0x110000, 0x1000E, 0x800B2A2C,
     0x23B00D5, 0x120000, 0x1000E, 0x800B2A34, 0x23B00D6, 0x130000, 0x1000E, 0x800B2A3C,
     -1,
 };
-int dword_800AF3C4[20] = {
+int mapArea1Map03Entrances_800AF3C4[20] = {
     0x23C00D7, 0x140000, 0x1000E, 0x800B2688, 0x23C00D8, 0x150000, 0x1000E, 0x800B2684,
     0x23C00D9, 0x160000, 0x1000E, 0x800B2690, 0x23C00DA, 0x170000, 0x1000E, 0x800B2688,
     -1,
 };
-int dword_800AF414[36] = {
+int mapArea1Map04Entrances_800AF414[36] = {
     0x23D00DB, 0x180000, 0x1000E, 0x800B2A58, 0x23D00DD, 0x190000, 0x1000E, 0x800B2A58,
     0x23D00DE, 0x1A0000, 0x1000E, 0x800B2A58, 0x23D00DF, 0x1B0000, 0x1000E, 0x800B2A58,
     0x23E00DC, 0x1C0001, 0x1000E, 0x800B2BCC, 0x23E00E0, 0x1D0001, 0x1000E, 0x800B2BCC,
     0x23E00E1, 0x1E0001, 0x1000E, 0x800B2BCC, 0x23E00E2, 0x1F0001, 0x1000E, 0x800B2BCC,
     -1,
 };
-int dword_800AF4A4[24] = {
+int mapArea1Map05Entrances_800AF4A4[24] = {
     0x23F00E3, 0x200000, 0x1000E, 0x800B2614, 0x23F00E5, 0x210000, 0x1000E, 0x800B2690,
     0x23F00E6, 0x220000, 0x1000E, 0x800B2690, 0x23F00E7, 0x230000, 0x1000E, 0x800B2680,
     0x24000E4, 0x240001, 0x1001E, 0x800B2608, -1,
 };
-int dword_800AF504[56] = {
+int mapArea1Map06Entrances_800AF504[56] = {
     0x24100E8, 0x250000, 0x1000E, 0x800B23E8, 0x24200E9, 0x260001, 0x1000C, 0x800B29F0,
     0x24200EE, 0x270001, 0x1000C, 0x800B29E4, 0x24300EA, 0x280000, 0x1000E, 0x800B22C4,
     0x24400EB, 0x290003, 0x1000E, 0x800B272C, 0x24400EF, 0x2A0003, 0x1000E, 0x800B272C,
@@ -4963,81 +4963,81 @@ int dword_800AF504[56] = {
     0x24500F3, 0x2F0004, 0x1000E, 0x800B2728, 0x24500F4, 0x300004, 0x1000E, 0x800B2728,
     0x24600ED, 0x310005, 0x10017, 0x800B29EC, -1,
 };
-int dword_800AF5E4[20] = {
+int mapArea1Map07Entrances_800AF5E4[20] = {
     0x24700F5, 0x320000, 0x1000E, 0x800B291C, 0x24700F6, 0x330000, 0x1000E, 0x800B291C,
     0x24700F7, 0x340000, 0x1000E, 0x800B2924, 0x24700F8, 0x350000, 0x1000E, 0x800B291C,
     -1,
 };
-int dword_800AF634[20] = {
+int mapArea1Map08Entrances_800AF634[20] = {
     0x24800F9, 0x360000, 0x1000E, 0x800B268C, 0x24800FA, 0x370000, 0x1000E, 0x800B268C,
     0x24800FB, 0x380000, 0x1000E, 0x800B268C, 0x24800FC, 0x390000, 0x1000E, 0x800B268C,
     -1,
 };
-int dword_800AF684[20] = {
+int mapArea1Map09Entrances_800AF684[20] = {
     0x24900FD, 0x3A0000, 0x1000E, 0x800B2604, 0x24900FE, 0x3B0000, 0x1000E, 0x800B2604,
     0x24900FF, 0x3C0000, 0x1000E, 0x800B2604, 0x2490100, 0x3D0000, 0x1000E, 0x800B2604,
     -1,
 };
-int dword_800AF6D4[20] = {
+int mapArea1Map10Entrances_800AF6D4[20] = {
     0x24A0101, 0x3E0000, 0x1000E, 0x800B2608, 0x24A0102, 0x3F0000, 0x1000E, 0x800B2608,
     0x24A0103, 0x400000, 0x1000E, 0x800B2608, 0x24A0104, 0x410000, 0x1000E, 0x800B2608,
     -1,
 };
-int dword_800AF724[8] = { 0x24B0105, 0x420000, 0x1000E, 0x800B22C4, -1 };
-int dword_800AF744[16] = {
+int mapArea1Map11Entrances_800AF724[8] = { 0x24B0105, 0x420000, 0x1000E, 0x800B22C4, -1 };
+int mapArea2Map00Entrances_800AF744[16] = {
     0x24C0106, 0x430000, 0x1000D, 0x800B2D98, 0x24C0107, 0x440000, 0x1000F, 0x800B2D98,
     0x24D0108, 0x450002, 0x1009A, 0x800B25CC, -1,
 };
-int dword_800AF784[24] = {
+int mapArea2Map01Entrances_800AF784[24] = {
     0x24E0109, 0x460000, 0x10091, 0x800B2E50, 0x24E010A, 0x470001, 0x1000F, 0x800B22C4,
     0x24F010B, 0xFFFF0001, 0x1000D, 0, 0x250010C, 0x480000, 0x1000F, 0x800B2A38,
     0x251010D, 0x490001, 0x1007C, 0x800B2928, -1,
 };
-int dword_800AF7E4[12] = {
+int mapArea2Map02Entrances_800AF7E4[12] = {
     0x252010E, 0x4A0000, 0x10091, 0x800B2A3C, 0x252010F, 0x4B0000, 0x1000F, 0x800B2AC0,
     -1,
 };
-int dword_800AF814[12] = {
+int mapArea2Map03Entrances_800AF814[12] = {
     0x2530110, 0x4C0000, 0x10091, 0x800B2688, 0x2530111, 0x4D0000, 0x1000F, 0x800B2728,
     -1,
 };
-int dword_800AF844[20] = {
+int mapArea2Map04Entrances_800AF844[20] = {
     0x2540112, 0x4E0000, 0x1000D, 0x800B2A3C, 0x2540113, 0x4F0000, 0x1000F, 0x800B2A34,
     0x2550114, 0x500001, 0x1000D, 0x800B2BC0, 0x2550115, 0x510001, 0x1000F, 0x800B2BC0,
     -1,
 };
-int dword_800AF894[20] = {
+int mapArea2Map05Entrances_800AF894[20] = {
     0x2560116, 0x520000, 0x1000F, 0x800B2714, 0x2560117, 0x530000, 0x1000D, 0x800B2680,
     0x2570118, 0x540001, 0x1007E, 0x800B3008, 0x2570119, 0x550001, 0x1001E, 0x800B2910,
     -1,
 };
-int dword_800AF8E4[28] = {
+int mapArea2Map06Entrances_800AF8E4[28] = {
     0x258011A, 0x560000, 0x1000D, 0x800B23E8, 0x259011B, 0x570001, 0x10091, 0x800B272C,
     0x259011C, 0x580001, 0x1000F, 0x800B272C, 0x25A011D, 0x590002, 0x1000D, 0x800B23E8,
     0x25B011E, 0x5A0003, 0x10015, 0x800B29D8, 0x25C011F, 0x5B0002, 0x10091, 0x800B23E8,
     -1,
 };
-int dword_800AF954[8] = { 0x25D0120, 0x5C0000, 0x1000F, 0x800B2758, -1 };
-int dword_800AF974[8] = { 0x25E0121, 0x5D0000, 0x1000F, 0x800B2338, -1 };
-int dword_800AF994[16] = {
+int mapArea2Map07Entrances_800AF954[8] = { 0x25D0120, 0x5C0000, 0x1000F, 0x800B2758, -1 };
+int mapArea2Map08Entrances_800AF974[8] = { 0x25E0121, 0x5D0000, 0x1000F, 0x800B2338, -1 };
+int mapArea2Map09Entrances_800AF994[16] = {
     0x25F0122, 0x5E0000, 0x1000D, 0x800B260C, 0x2600123, 0xFFFF0001, 0x1000D, 0,
     0x2610124, 0x5F0000, 0x1000F, 0x800B260C, -1,
 };
-int dword_800AF9D4[16] = {
+int mapArea2Map10Entrances_800AF9D4[16] = {
     0x2620125, 0x600000, 0x1000D, 0x800B2620, 0x2630126, 0xFFFF0001, 0x1000D, 0,
     0x2640127, 0x610000, 0x1000F, 0x800B2608, -1,
 };
-int dword_800AFA14[16] = {
+int mapArea2Map11Entrances_800AFA14[16] = {
     0x2650128, 0x620000, 0x1000D, 0x800B2618, 0x2660129, 0xFFFF0001, 0x1000D, 0,
     0x267012A, 0x630000, 0x1000F, 0x800B2610, -1,
 };
-int dword_800AFA54[28] = {
+int mapArea4Map00Entrances_800AFA54[28] = {
     0x268012B, 0x640000, 0x1FFFF, 0x800B2EE0, 0x2680131, 0x650000, 0x1FFFF, 0x800B3244,
     0x2680132, 0x660000, 0x1FFFF, 0x800B3054, 0x2680133, 0x670000, 0x1FFFF, 0x800B39D0,
     0x26D0130, 0x680000, 0x1FFFF, 0x800B39D0, 0x269012C, 0x690000, 0x10019, 0x800B2604,
     -1,
 };
-int dword_800AFAC4[56] = {
+int mapArea4Map01Entrances_800AFAC4[56] = {
     0x26E0134, 0x6A0000, 17, 0x800B298C, 0x26F0135, 0x6B0001, 17, 0x800B2B10,
     0x2700136, 0x6C0002, 17, 0x800B2924, 0x2710137, 0x6D0003, 17, 0x800B2994,
     0x2720138, 0x6E0004, 17, 0x800B29D4, 0x2730139, 0x6F0005, 17, 0x800B296C,
@@ -5046,7 +5046,7 @@ int dword_800AFAC4[56] = {
     0x277013E, 0x740009, 0x10019, 0x800B272C, 0x277013F, 0x750009, 0x10019, 0x800B23E8,
     0x2780140, 0xFFFF000A, 0x10011, 0x800B30CC, -1,
 };
-int dword_800AFBA4[80] = {
+int mapArea4Map02Entrances_800AFBA4[80] = {
     0x2790141, 0x760000, 32, 0x800B29AC, 0x27A0142, 0x770001, 32, 0x800B2984,
     0x27B0143, 0x780002, 32, 0x800B23E8, 0x27C0144, 0x790003, 32, 0x800B29AC,
     0x27D0145, 0x7A0004, 32, 0x800B2984, 0x27E0146, 0x7B0005, 32, 0x800B2924,
@@ -5058,7 +5058,7 @@ int dword_800AFBA4[80] = {
     0x2870151, 0x86000E, 32, 0x800B2878, 0x2870152, 0x87000E, 0x10020, 0x800B314C,
     0x28A0155, 0x880011, 32, 0x800B23E8, -1,
 };
-int dword_800AFCE4[200] = {
+int mapArea4Map03Entrances_800AFCE4[200] = {
     0x28B0156, 0x890000, 26, 0x800B23E8, 0x28C0157, 0x8A0001, 26, 0x800B29CC,
     0x28D0158, 0x8B0002, 26, 0x800B23E8, 0x28E0159, 0x8C0003, 26, 0x800B296C,
     0x28E015A, 0x8D0003, 0x1001A, 0x800B2CBC, 0x28F015B, 0x8E0004, 26, 0x800B23E8,
@@ -5085,7 +5085,7 @@ int dword_800AFCE4[200] = {
     0x2B40184, 0xB70014, 26, 0x800B23E8, 0x2B50185, 0xB80015, 26, 0x800B30CC,
     0x2B60186, 0xB90015, 26, 0x800B30CC, -1,
 };
-int dword_800B0004[100] = {
+int mapArea4Map04Entrances_800B0004[100] = {
     0x2B70187, 0xBA0000, 31, 0x800B29B4, 0x2B80188, 0xBB0001, 31, 0x800B2924,
     0x2B90189, 0xBC0002, 31, 0x800B23E8, 0x2BA018A, 0xBD0003, 31, 0x800B2924,
     0x2BB018B, 0xBE0004, 31, 0x800B2E1C, 0x2BC018C, 0xBF0005, 31, 0x800B298C,
@@ -5100,7 +5100,7 @@ int dword_800B0004[100] = {
     0x2CA019D, 0xD00013, 0x1007A, 0x800B2B50, 0x2CB019E, 0xD10014, 0x10097, 0x800B2678,
     -1,
 };
-int dword_800B0194[48] = {
+int mapArea5Map01Entrances_800B0194[48] = {
     0x2CC019F, 0xD20000, 41, 0x800B23E8, 0x2CD01A0, 0xD30001, 41, 0x800B23E8,
     0x2CE01A1, 0xD40002, 41, 0x800B2924, 0x2CF01A2, 0xD50003, 41, 0x800B23E8,
     0x2D001A3, 0xD60004, 41, 0x800B23E8, 0x2D101A4, 0xD70005, 41, 0x800B23E8,
@@ -5108,7 +5108,7 @@ int dword_800B0194[48] = {
     0x2D401A7, 0xDA0008, 0x10029, 0x800B30D4, 0x2D501A8, 0xDB0009, 0x10029, 0x800B23E8,
     0x2D601A9, 0xDC000A, 0x10029, 0x800B30D4, -1,
 };
-int dword_800B0254[68] = {
+int mapArea5Map02Entrances_800B0254[68] = {
     0x2D701AA, 0xDD0000, 42, 0x800B23E8, 0x2D801AB, 0xDE0001, 42, 0x800B23E8,
     0x2D901AC, 0xDF0002, 42, 0x800B23E8, 0x2DA01AD, 0xE00003, 42, 0x800B23E8,
     0x2DB01AE, 0xE10004, 42, 0x800B23E8, 0x2DC01AF, 0xE20005, 42, 0x800B23E8,
@@ -5119,7 +5119,7 @@ int dword_800B0254[68] = {
     0x2E501B8, 0xEB000E, 42, 0x800B2E34, 0x2E801BB, 0xEC0011, 42, 0x800B23E8,
     -1,
 };
-int dword_800B0364[112] = {
+int mapArea5Map03Entrances_800B0364[112] = {
     0x2E901BC, 0xED0000, 39, 0x800B23E8, 0x2EA01BD, 0xEE0001, 39, 0x800B23E8,
     0x2EB01BE, 0xEF0002, 39, 0x800B23E8, 0x2EC01BF, 0xF00003, 39, 0x800B23E8,
     0x2ED01C0, 0xF10004, 39, 0x800B23E8, 0x2EE01C1, 0xF20005, 39, 0x800B23E8,
@@ -5135,81 +5135,81 @@ int dword_800B0364[112] = {
     0x2FE01D4, 0x1050015, 39, 0x800B30D4, 0x2FF01D5, 0x1060014, 0x10028, 0x800B2800,
     0x2FF01D6, 0x1070014, 0x10028, 0x800B2CA4, -1,
 };
-void *dword_800B0524[6] = { (void *)dword_800AEC44, (void *)dword_800AEC94, (void *)dword_800AECE4, (void *)dword_800AED24, (void *)dword_800AF1E4 };
-void *dword_800B053C[13] = {
-    (void *)dword_800AF264, (void *)dword_800AF2F4, (void *)dword_800AF374, (void *)dword_800AF3C4,
-    (void *)dword_800AF414, (void *)dword_800AF4A4, (void *)dword_800AF504, (void *)dword_800AF5E4,
-    (void *)dword_800AF634, (void *)dword_800AF684, (void *)dword_800AF6D4, (void *)dword_800AF724,
+void *mapArea0Maps_800B0524[6] = { (void *)mapArea0Map00Entrances_800AEC44, (void *)mapArea0Map01Entrances_800AEC94, (void *)mapArea0Map02Entrances_800AECE4, (void *)mapArea0Map03Entrances_800AED24, (void *)mapArea0Map04Entrances_800AF1E4 };
+void *mapArea1Maps_800B053C[13] = {
+    (void *)mapArea1Map00Entrances_800AF264, (void *)mapArea1Map01Entrances_800AF2F4, (void *)mapArea1Map02Entrances_800AF374, (void *)mapArea1Map03Entrances_800AF3C4,
+    (void *)mapArea1Map04Entrances_800AF414, (void *)mapArea1Map05Entrances_800AF4A4, (void *)mapArea1Map06Entrances_800AF504, (void *)mapArea1Map07Entrances_800AF5E4,
+    (void *)mapArea1Map08Entrances_800AF634, (void *)mapArea1Map09Entrances_800AF684, (void *)mapArea1Map10Entrances_800AF6D4, (void *)mapArea1Map11Entrances_800AF724,
 };
-void *dword_800B0570[13] = {
-    (void *)dword_800AF744, (void *)dword_800AF784, (void *)dword_800AF7E4, (void *)dword_800AF814,
-    (void *)dword_800AF844, (void *)dword_800AF894, (void *)dword_800AF8E4, (void *)dword_800AF954,
-    (void *)dword_800AF974, (void *)dword_800AF994, (void *)dword_800AF9D4, (void *)dword_800AFA14,
+void *mapArea2Maps_800B0570[13] = {
+    (void *)mapArea2Map00Entrances_800AF744, (void *)mapArea2Map01Entrances_800AF784, (void *)mapArea2Map02Entrances_800AF7E4, (void *)mapArea2Map03Entrances_800AF814,
+    (void *)mapArea2Map04Entrances_800AF844, (void *)mapArea2Map05Entrances_800AF894, (void *)mapArea2Map06Entrances_800AF8E4, (void *)mapArea2Map07Entrances_800AF954,
+    (void *)mapArea2Map08Entrances_800AF974, (void *)mapArea2Map09Entrances_800AF994, (void *)mapArea2Map10Entrances_800AF9D4, (void *)mapArea2Map11Entrances_800AFA14,
 };
-void *dword_800B05A4[13] = {
-    (void *)dword_800AF264, (void *)dword_800AF2F4, (void *)dword_800AF374, (void *)dword_800AF3C4,
-    (void *)dword_800AF414, (void *)dword_800AF4A4, (void *)dword_800AF504, (void *)dword_800AF5E4,
-    (void *)dword_800AF634,
+void *mapArea3Maps_800B05A4[13] = {
+    (void *)mapArea1Map00Entrances_800AF264, (void *)mapArea1Map01Entrances_800AF2F4, (void *)mapArea1Map02Entrances_800AF374, (void *)mapArea1Map03Entrances_800AF3C4,
+    (void *)mapArea1Map04Entrances_800AF414, (void *)mapArea1Map05Entrances_800AF4A4, (void *)mapArea1Map06Entrances_800AF504, (void *)mapArea1Map07Entrances_800AF5E4,
+    (void *)mapArea1Map08Entrances_800AF634,
 };
-void *dword_800B05D8[6] = { (void *)dword_800AFA54, (void *)dword_800AFAC4, (void *)dword_800AFBA4, (void *)dword_800AFCE4, (void *)dword_800B0004 };
-void *dword_800B05F0[6] = { (void *)dword_800AFA54, (void *)dword_800B0194, (void *)dword_800B0254, (void *)dword_800B0364, (void *)dword_800B0004 };
-G2Ent16 **name_800B0608[36] = {
-    (void *)dword_800B0524, (void *)dword_800B053C, (void *)dword_800B0570, (void *)dword_800B05A4,
-    (void *)dword_800B05D8, (void *)dword_800B05F0, 0, (G2Ent16 **)5,
-    (G2Ent16 **)12, (G2Ent16 **)12, (G2Ent16 **)12, (G2Ent16 **)5,
-    (G2Ent16 **)5, (G2Ent16 **)1, (G2Ent16 **)2, (G2Ent16 **)3,
-    (G2Ent16 **)4, (G2Ent16 **)5, 0, (G2Ent16 **)1,
-    (G2Ent16 **)1, (G2Ent16 **)1, (G2Ent16 **)4, (G2Ent16 **)4,
-    0, (G2Ent16 **)2, (G2Ent16 **)2, (G2Ent16 **)2,
-    (G2Ent16 **)4, (G2Ent16 **)4, 0, (G2Ent16 **)3,
-    (G2Ent16 **)3, (G2Ent16 **)3, (G2Ent16 **)5, (G2Ent16 **)5,
+void *mapArea4Maps_800B05D8[6] = { (void *)mapArea4Map00Entrances_800AFA54, (void *)mapArea4Map01Entrances_800AFAC4, (void *)mapArea4Map02Entrances_800AFBA4, (void *)mapArea4Map03Entrances_800AFCE4, (void *)mapArea4Map04Entrances_800B0004 };
+void *mapArea5Maps_800B05F0[6] = { (void *)mapArea4Map00Entrances_800AFA54, (void *)mapArea5Map01Entrances_800B0194, (void *)mapArea5Map02Entrances_800B0254, (void *)mapArea5Map03Entrances_800B0364, (void *)mapArea4Map04Entrances_800B0004 };
+GameMapEntrance **mapTable_800B0608[36] = {
+    (void *)mapArea0Maps_800B0524, (void *)mapArea1Maps_800B053C, (void *)mapArea2Maps_800B0570, (void *)mapArea3Maps_800B05A4,
+    (void *)mapArea4Maps_800B05D8, (void *)mapArea5Maps_800B05F0, 0, (GameMapEntrance **)5,
+    (GameMapEntrance **)12, (GameMapEntrance **)12, (GameMapEntrance **)12, (GameMapEntrance **)5,
+    (GameMapEntrance **)5, (GameMapEntrance **)1, (GameMapEntrance **)2, (GameMapEntrance **)3,
+    (GameMapEntrance **)4, (GameMapEntrance **)5, 0, (GameMapEntrance **)1,
+    (GameMapEntrance **)1, (GameMapEntrance **)1, (GameMapEntrance **)4, (GameMapEntrance **)4,
+    0, (GameMapEntrance **)2, (GameMapEntrance **)2, (GameMapEntrance **)2,
+    (GameMapEntrance **)4, (GameMapEntrance **)4, 0, (GameMapEntrance **)3,
+    (GameMapEntrance **)3, (GameMapEntrance **)3, (GameMapEntrance **)5, (GameMapEntrance **)5,
 };
 int gameModeChanged_800B0698 = 0;
-int dword_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };
+int levantStartPos_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };
 int shopRequest_800B06B0[3] = { 0 };
 int saveRequest_800B06BC = 0;
 int dword_800B06C0[3] = { 0 };
-int dword_800B06CC[6] = { 1, 5, 8, (int)&mapLoaderTask_800B1DC4, (int)InitMapLoaderTask_80027CC0, (int)ResetMapLoaderTask_8002830C };
-int dword_800B06E4[6] = { 1, 1, 8, (int)&areaLoaderTask_800B1DB8, (int)InitAreaLoaderTask_80028388 };
-int dword_800B06FC[6] = { 1, 5, 40, (int)levantModelTask_800B1DA0, (int)LevantModelTaskInit_800ACAA4, (int)LevantModelTaskExit_800ACF0C };
-int dword_800B0714[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
-int dword_800B072C[6] = { 7, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
-int dword_800B0744[6] = { 1, 1, 4, (int)&tileAnimTask_800B1DBC, (int)TileAnimTaskInit_800A09D8 };
-int dword_800B075C[6] = { 10, 0x8000, 0x124, (int)&eventScripts_8008D410 };
-int dword_800B0774[6] = { 1, 5, 16, 0x8008B4D0, (int)EncounterWatchTask_800A1314, (int)FreeBattleResources_800A1444 };
+int mapLoaderTaskDef_800B06CC[6] = { 1, 5, 8, (int)&mapLoaderTask_800B1DC4, (int)InitMapLoaderTask_80027CC0, (int)ResetMapLoaderTask_8002830C };
+int areaLoaderTaskDef_800B06E4[6] = { 1, 1, 8, (int)&areaLoaderTask_800B1DB8, (int)InitAreaLoaderTask_80028388 };
+int levantModelTaskDef_800B06FC[6] = { 1, 5, 40, (int)levantModelTask_800B1DA0, (int)LevantModelTaskInit_800ACAA4, (int)LevantModelTaskExit_800ACF0C };
+int modelLoaderTaskDef_800B0714[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
+int actorTasksDef_800B072C[6] = { 7, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
+int tileAnimTaskDef_800B0744[6] = { 1, 1, 4, (int)&tileAnimTask_800B1DBC, (int)TileAnimTaskInit_800A09D8 };
+int eventScriptsDef_800B075C[6] = { 10, 0x8000, 0x124, (int)&eventScripts_8008D410 };
+int encounterWatchTaskDef_800B0774[6] = { 1, 5, 16, 0x8008B4D0, (int)EncounterWatchTask_800A1314, (int)FreeBattleResources_800A1444 };
 int dword_800B078C[6] = { 1, 0x8000, 16, (int)&dword_8008D624 };
-int dword_800B07A4[6] = { 1, 0x8000, 12, (int)&battleMenuTask_8008D468 };
+int battleMenuTaskDef_800B07A4[6] = { 1, 0x8000, 12, (int)&battleMenuTask_8008D468 };
 int dword_800B07BC[6] = { 1, 0x8000, 0, (int)&dword_8008D444 };
 int dword_800B07D4[6] = { 1, 0x8000, 48, 0x8008B568 };
 int dword_800B07EC[6] = { 3, 0x8000, 24, (int)&dword_8008B564 };
 int dword_800B0804[6] = { 1, 0x8000, 20, (int)&dword_8008D4B0 };
 int dword_800B081C[6] = { 1, 0x8000, 20, 0x8008D63C };
-int dword_800B0834[6] = { 1, 1, 0x9D0, (int)&dword_8008B4CC, (int)LevantControlTask_800A818C };
+int levantControlTaskDef_800B0834[6] = { 1, 1, 0x9D0, (int)&dword_8008B4CC, (int)LevantControlTask_800A818C };
 int dword_800B084C[6] = { 1, 0x8000, 0x2E0, 0x8008D490 };
-int dword_800B0864[6] = { 1, 5, 0x7C0, (int)&gameTask_8008B4A4, (int)LevantActorTask_800A9564, (int)sub_800A955C };
-int dword_800B087C[6] = { 1, 0x8000, 24, (int)&encounterTask_8008D674 };
-int dword_800B0894[6] = { 3, 0x8000, 48, (int)&enemyAiTasks_8008D49C };
+int levantActorTaskDef_800B0864[6] = { 1, 5, 0x7C0, (int)&gameTask_8008B4A4, (int)LevantActorTask_800A9564, (int)LevantActorTaskExit_800A955C };
+int encounterTaskDef_800B087C[6] = { 1, 0x8000, 24, (int)&encounterTask_8008D674 };
+int enemyAiTasksDef_800B0894[6] = { 3, 0x8000, 48, (int)&enemyAiTasks_8008D49C };
 int dword_800B08AC[6] = { 1, 0x8000, 12, (int)dword_800B1DA8 };
-int dword_800B08C4[6] = { 25, 0x8000, 148, (int)&eventEntities_8008D400 };
-int dword_800B08DC[6] = { 1, 1, 4, (int)prevModeTask_800B1DC0, (int)ReturnToPrevGameMode_800A8108 };
-int dword_800B08F4[6] = { 1, 1, 0x100, (int)mapOverlayTask_800B1DA4, (int)StartMapOverlay_800A75F8, 0x800B6F60 };
+int eventEntitiesDef_800B08C4[6] = { 25, 0x8000, 148, (int)&eventEntities_8008D400 };
+int prevModeTaskDef_800B08DC[6] = { 1, 1, 4, (int)prevModeTask_800B1DC0, (int)ReturnToPrevGameMode_800A8108 };
+int mapOverlayTaskDef_800B08F4[6] = { 1, 1, 0x100, (int)mapOverlayTask_800B1DA4, (int)StartMapOverlay_800A75F8, 0x800B6F60 };
 int dword_800B090C[6] = { 1, 0x8000, 124, 0x8008D498, 0x800BD40C };
 int dword_800B0924[6] = { 1, 0x8000, 0, (int)&dword_8008D438, 0x800B67C0 };
 int dword_800B093C[6] = { 1, 0x8000, 156, (int)&dword_8008D670, 0x800BB444 };
 int dword_800B0954[6] = { 1, 0x8000, 24, (int)&dword_8008D4A8, 0x800B7000 };
 int dword_800B096C[6] = { 1, 0x8000, 84, (int)&dword_8008D3E0, 0x800BB1F4 };
 int dword_800B0984[6] = { 1, 0x8000, 0, 0x8008D478 };
-int dword_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1DB0, (int)StartChapterOverlay_800A7690 };
-int dword_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
-int dword_800B09CC[6] = { 1, 0x8000, 80, (int)&fieldModeTask_800B1DAC, (int)FieldModeTask_800A7720 };
-int dword_800B09E4[6] = { 1, 1, 32, (int)subOverlayTask_800B1DB4, (int)CheckSubOverlayRequests_800A6DAC };
+int chapterOverlayTaskDef_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1DB0, (int)StartChapterOverlay_800A7690 };
+int sporeTaskDef_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
+int fieldModeTaskDef_800B09CC[6] = { 1, 0x8000, 80, (int)&fieldModeTask_800B1DAC, (int)FieldModeTask_800A7720 };
+int subOverlayTaskDef_800B09E4[6] = { 1, 1, 32, (int)subOverlayTask_800B1DB4, (int)CheckSubOverlayRequests_800A6DAC };
 GameLst_1 globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
-GameLst_1 dword_800B0A0C[4] = {
+GameLst_1 gameModeChapterTasks_800B0A0C[4] = {
     { &overlayLoaderTask_8008D4C0 },
     { &soundTask_8008D4A4, 0x1000 },
     { chapterOverlayTask_800B1DB0 },
 };
-GameLst_1 dword_800B0A2C[26] = {
+GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
     { &overlayLoaderTask_8008D4C0 },
     { levantModelTask_800B1DA0 },
     { &modelLoaderTask_8008B54C },
@@ -5236,7 +5236,7 @@ GameLst_1 dword_800B0A2C[26] = {
     { (void *)&vibrationTasks_8008D4B8 },
     { &sporeTask_8008D464 },
 };
-GameLst_1 dword_800B0AFC[35] = {
+GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &soundTask_8008D4A4 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5272,7 +5272,7 @@ GameLst_1 dword_800B0AFC[35] = {
     { &dword_8008D60C },
     { (void *)((char *)&dword_8008D48C + 4) },
 };
-GameLst_1 dword_800B0C14[4] = {
+GameLst_1 gameModeBattleEndTasks_800B0C14[4] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&dword_8008D48C + 4) },
@@ -5282,7 +5282,7 @@ GameLst_1 dword_800B0C34[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&dword_8008D4C4 },
 };
-GameLst_1 dword_800B0C4C[7] = {
+GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&dword_8008D48C + 12) },
@@ -5290,7 +5290,7 @@ GameLst_1 dword_800B0C4C[7] = {
     { (void *)&dword_8008B4B8 },
     { (void *)&messageWindowTask_8008D640 },
 };
-GameLst_1 dword_800B0C84[12] = {
+GameLst_1 gameModeShopTasks_800B0C84[12] = {
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5303,13 +5303,13 @@ GameLst_1 dword_800B0C84[12] = {
     { (void *)&dword_8008D4A8 },
     { &fadeTask_8008D628 },
 };
-GameLst_1 dword_800B0CE4[4] = {
+GameLst_1 gameModeSaveTasks_800B0CE4[4] = {
     { (void *)&dword_8008D62C },
     { &overlayLoaderTask_8008D4C0 },
     { &loadMenuTask_8008D480 },
 };
-GameLst_1 dword_800B0D04[2] = { { prevModeTask_800B1DC0 } };
-GameLst_1 dword_800B0D14[6] = {
+GameLst_1 gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
+GameLst_1 gameModeMapTasks_800B0D14[6] = {
     { &soundTask_8008D4A4 },
     { levantModelTask_800B1DA0 },
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
@@ -5320,22 +5320,22 @@ GameLst_1 dword_800B0D44[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&screenOffset_8008D474 + 4) },
 };
-GameLst_1 dword_800B0D5C[3] = {
+GameLst_1 gameModeLoadingTasks_800B0D5C[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { subOverlayTask_800B1DB4 },
 };
 GameLst_1 *gameModeTaskLists_800B0D74[12] = {
-    dword_800B0A0C, dword_800B0A2C, dword_800B0AFC, dword_800B0C34,
-    dword_800B0C4C, dword_800B0C84, dword_800B0CE4, dword_800B0D04,
-    dword_800B0D14, dword_800B0D44, dword_800B0C14, dword_800B0D5C,
+    gameModeChapterTasks_800B0A0C, gameModeFieldTasks_800B0A2C, gameModeBattleTasks_800B0AFC, dword_800B0C34,
+    gameModeMenuTasks_800B0C4C, gameModeShopTasks_800B0C84, gameModeSaveTasks_800B0CE4, gameModeReturnTasks_800B0D04,
+    gameModeMapTasks_800B0D14, dword_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
 };
 char gameEventListDefs_800B0DA4[232] = { 204, 6, 11, 128, 0, 143, 7, 128, 24, 143, 7, 128, 228, 6, 11, 128, 252, 6, 11, 128, 20, 7, 11, 128, 44, 7, 11, 128, 152, 144, 7, 128, 72, 143, 7, 128, 68, 7, 11, 128, 96, 143, 7, 128, 116, 7, 11, 128, 140, 7, 11, 128, 40, 145, 7, 128, 164, 7, 11, 128, 188, 7, 11, 128, 16, 145, 7, 128, 80, 144, 7, 128, 104, 144, 7, 128, 212, 7, 11, 128, 236, 7, 11, 128, 4, 8, 11, 128, 28, 8, 11, 128, 76, 8, 11, 128, 32, 144, 7, 128, 56, 144, 7, 128, 168, 143, 7, 128, 52, 8, 11, 128, 100, 8, 11, 128, 176, 144, 7, 128, 200, 144, 7, 128, 224, 144, 7, 128, 248, 144, 7, 128, 128, 144, 7, 128, 172, 8, 11, 128, 196, 8, 11, 128, 8, 144, 7, 128, 120, 143, 7, 128, 12, 9, 11, 128, 192, 143, 7, 128, 216, 143, 7, 128, 240, 143, 7, 128, 220, 8, 11, 128, 244, 8, 11, 128, 92, 7, 11, 128, 144, 143, 7, 128, 36, 9, 11, 128, 60, 9, 11, 128, 84, 9, 11, 128, 108, 9, 11, 128, 132, 9, 11, 128, 156, 9, 11, 128, 180, 9, 11, 128, 124, 8, 11, 128, 148, 8, 11, 128, 204, 9, 11, 128, 228, 9, 11, 128 };
 int gameMainTaskDef_800B0E8C[6] = { 1, 1, 64, 0x8008D46C, (int)GameMainInit_800A68CC };
-char name_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
+char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
 GameTab_1 fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
 GameList_1 fieldMinions_800B0EC4 = { 0 };
-char dword_800B0EF8 = 0;
+char levantBones_800B0EF8 = 0;
 int dword_800B0EFC[45] = {
     0x460000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003, 0x3040004,
     0xB0004, 0x4050005, 0xB0005, 0x5060005, 0xB0006, 0x6070006, 0xB0007, 0x2080003,
@@ -5344,7 +5344,7 @@ int dword_800B0EFC[45] = {
     0xB0010, 0x10110004, 0xB0011, 0x11120005, 0xB0012, 0xF130003, 0xB0013, 0x13140004,
     0xB0014, 0x14150005, 0xB0015, -1, -1,
 };
-SVECTOR dword_800B0FB0[55] = {
+SVECTOR levantBoneScale_800B0FB0[55] = {
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
@@ -5402,20 +5402,20 @@ SVECTOR dword_800B0FB0[55] = {
     { 0, 0, 40 },
 };
 int dword_800B1168 = 39;
-int dword_800B116C[19] = {
+int levantBaseModels_800B116C[19] = {
     5, 6, 4, 1, 3, 2, 0, 12,
     10, 13, 11, 9, 7, 8, 18, 17,
     15, 16, 14,
 };
-unsigned char dword_800B11B8[20] = { 45, 54, 36, 9, 27, 18, 0, 108, 90, 117, 99, 81, 63, 72, 162, 153, 135, 144, 126 };
+unsigned char levantOutfitModelOffsets_800B11B8[20] = { 45, 54, 36, 9, 27, 18, 0, 108, 90, 117, 99, 81, 63, 72, 162, 153, 135, 144, 126 };
 int dword_800B11CC[4] = { 12, 2, 7, -1 };
-int dword_800B11DC[19] = {
+int levantAnimSets_800B11DC[19] = {
     0, 0, 0, 1, 1, 1, 1, 2,
     2, 2, 2, 2, 3, 2, 4, 4,
     4, 4, 2,
 };
 int battleFlags_800B1228 = 0;
-int dword_800B122C[13] = {
+int battleHitEnemies_800B122C[13] = {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0xB00,
 };
@@ -5434,8 +5434,8 @@ int** areaLoaderTask_800B1DB8 = 0;
 EventNode *tileAnimTask_800B1DBC = 0;
 EventNode *prevModeTask_800B1DC0[1] = { 0 };
 int** mapLoaderTask_800B1DC4 = 0;
-int dword_800B1DC8[2] = { 0 };
-char dword_800B1DD0 = 0;
+int gameStartMode_800B1DC8[2] = { 0 };
+char levantPool_800B1DD0 = 0;
 int dword_800B1DD4[9] = { 0 };
 char dword_800B1DF8 = 0;
 int dword_800B1DFC[304] = { 0 };

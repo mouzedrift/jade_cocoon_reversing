@@ -3813,7 +3813,7 @@ typedef struct
     int mapIdx;
 } struct_80091C78;
 extern struct_80091C78 savedLevantPos_80091C78;
-extern int dword_800B1DC8;
+extern int gameStartMode_800B1DC8;
 extern int mapHeap_80091C68;
 // Matched
 void InitMapState_80026FAC(void)
@@ -3853,7 +3853,7 @@ void InitMapState_80026FAC(void)
     forceMapReload_80091C9C = 0;
     dword_80091C8C = 0;
     savedLevantPos_80091C78.mapIdx = -1;
-    dword_80091C54 = dword_800B1DC8;
+    dword_80091C54 = gameStartMode_800B1DC8;
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
     word_80091CB8[5] = -1;

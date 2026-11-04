@@ -614,7 +614,7 @@ short* GetEncounterLeaderRot_800A1E68(void)
 }
 
 // Matched
-void sub_800A1E88(void)
+void EncounterNop_800A1E88(void)
 {
 }
 
@@ -928,7 +928,7 @@ void RemoveEnemy_800A2924(int a)
         if (x >= 0)
         {
             SaveData* sd = &saveData_8008B570;
-            ClearEncounterGroupFlags_800A4940(x, mapTable_800B0608[sd->mapId_2E4[0].field_0][sd->mapId_2E4[1].field_0][sd->mapId_2E4[2].field_0].f4);
+            ClearEncounterGroupFlags_800A4940(x, mapTable_800B0608[sd->mapId_2E4[0].field_0][sd->mapId_2E4[1].field_0][sd->mapId_2E4[2].field_0].encIndex_4);
         }
     }
 }
