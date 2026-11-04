@@ -313,7 +313,7 @@ extern int useMapStartPos_80091C94;
 
 extern int eventDispatchHalt_8008B540;
 
-extern int RequestGameMode_800A6D30(int a);
+extern void RequestGameMode_800A6D30(int mode);
 
 extern void SetMapVar_800ADC5C(unsigned short* v, int a);
 
@@ -519,11 +519,11 @@ extern short pendingArea_8008B860;
 
 extern int dword_80091C8C;
 
-extern void EvCmdBeginScene_800B8BE8();
-extern void EvCmdWaitTrigger_800B9B98();
-extern void EvCmdSetChapter_800BA82C();
-extern void EvCmdOpenMapSelect_800BAB5C();
-extern void EvCmdBattle_800BB27C();
+extern int EvCmdBeginScene_800B8BE8();
+extern int EvCmdWaitTrigger_800B9B98();
+extern int EvCmdSetChapter_800BA82C();
+extern int EvCmdOpenMapSelect_800BAB5C();
+extern int EvCmdBattle_800BB27C();
 extern int EvCmdNop_800B89A8();
 extern int EvCmdWaitButton_800B89C0();
 extern int EvCmdEnd_800B89F4();

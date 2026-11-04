@@ -809,11 +809,11 @@ int EvCmdEndScene_800B8A34(EvScriptCtx* ctx)
     return 0;
 }
 
-#if 0
 extern int fieldMode_800B0EC0;
 extern int gCtx_800B1260;
 extern int GetGameMode_800A6D50(int a);
 extern void SuspendAllEnemySlots_800A1904(void);
+// Matched
 int EvCmdBeginScene_800B8BE8(EvScriptCtx* ctx)
 {
     int r;
@@ -825,27 +825,21 @@ int EvCmdBeginScene_800B8BE8(EvScriptCtx* ctx)
     {
         return 0;
     }
-    if (sceneScriptId_800AEBD8 >= 0)
+    if (sceneScriptId_800AEBD8 < 0 || ctx->id_10 == sceneScriptId_800AEBD8)
     {
-        if (ctx->id_10 != sceneScriptId_800AEBD8)
+        r = GetGameMode_800A6D50(0);
+        if (r != GetGameMode_800A6D50(2))
         {
             return 0;
         }
+        ctx->flags_0 |= 0x20;
+        SuspendAllEnemySlots_800A1904();
+        sceneScriptId_800AEBD8 = ctx->id_10;
+        ctx->pc_8++;
+        return 1;
     }
-    r = GetGameMode_800A6D50(0);
-    if (r != GetGameMode_800A6D50(2))
-    {
-        return 0;
-    }
-    ctx->flags_0 |= 0x20;
-    SuspendAllEnemySlots_800A1904();
-    sceneScriptId_800AEBD8 = ctx->id_10;
-    ctx->pc_8++;
-    return 1;
+    return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, EvCmdBeginScene_800B8BE8);
 
 int EvCmdSetLoopPoint_800B8CB0(EvScriptCtx* ctx)
 {
@@ -1285,41 +1279,34 @@ int EvCmdRemoveItemCat1_800B9B4C(EvScriptCtx* ctx)
     return 1;
 }
 
-#if 0
-// Not matched: the original places a shared 'return 0' block in front of the body and tests the condition differently
 // a == 0: wait for trigger b (GAME's FireEventTrigger_800A5C40 sets flags 4); else branch_EC = !valuable flag b
+// Matched
 int EvCmdWaitTrigger_800B9B98(EvScriptCtx* ctx)
 {
     unsigned int f;
     if (ctx->pc_8->a_4 == 0)
     {
-        if (sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == ctx->id_10)
+        if (sceneScriptId_800AEBD8 >= 0 && sceneScriptId_800AEBD8 != ctx->id_10)
         {
-            f = ctx->flags_0 | 8;
-            ctx->flags_0 = f;
-            ctx->trigger_C8 = ctx->pc_8->b_8;
-            if (!(f & 4))
-            {
-                return 0;
-            }
-            ctx->flags_0 = f & ~0xC;
-            ctx->trigger_C8 = -1;
-        }
-        else
-        {
+        wait:
             return 0;
         }
+        ctx->trigger_C8 = ctx->pc_8->b_8;
+        f = ctx->flags_0 | 8;
+        ctx->flags_0 = f;
+        if (!(f & 4))
+        {
+            goto wait;
+        }
+        ctx->flags_0 = f & ~0xC;
+        ctx->trigger_C8 = -1;
+        ctx->pc_8++;
+        return 1;
     }
-    else
-    {
-        ctx->branch_EC = TestValuableFlag_800AD73C(ctx->pc_8->b_8) == 0;
-    }
+    ctx->branch_EC = TestValuableFlag_800AD73C(ctx->pc_8->b_8) == 0;
     ctx->pc_8++;
     return 1;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, EvCmdWaitTrigger_800B9B98);
 
 int EvCmdSetValuable_800B9C5C(EvScriptCtx* ctx)
 {
@@ -1712,8 +1699,7 @@ int EvCmdCallSelect_800BA7A4(EvScriptCtx* ctx)
     return 0;
 }
 
-#if 0
-// Not matched: the tail is scheduled differently (the constant 1 lands in $v0 and the halt store sinks below the pc store; original: $v1, halt store first)
+// Matched
 int EvCmdSetChapter_800BA82C(EvScriptCtx* ctx)
 {
     SaveData* s = &saveData_8008B570;
@@ -1723,9 +1709,6 @@ int EvCmdSetChapter_800BA82C(EvScriptCtx* ctx)
     ctx->pc_8++;
     return 1;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, EvCmdSetChapter_800BA82C);
 
 int EvCmdSetMapVariant_800BA880(EvScriptCtx* ctx)
 {
@@ -2039,8 +2022,6 @@ int EvCmdWaitActorInRegion_800BB214(EvScriptCtx* ctx)
     return 0;
 }
 
-#if 0
-// Not matched: 4 words short - the compiler eliminates the loop counter (compares the src pointer instead); the original keeps i in $s5
 typedef struct EvBattleArgs
 {
     int f0_0[5];
@@ -2075,6 +2056,9 @@ extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern int gCtx_800B1260;
 extern int GetFieldMinionAnims_800A7A9C(int i);
+// fD4 is stored in both branches (cross-jumping merges the tails); that keeps the loop big enough that a giv is
+// "not worth while", so the counter i is not eliminated, as in the original
+// Matched
 int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
 {
     EvBattleArgs* args;
@@ -2101,6 +2085,7 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
                 eventEnemy_800B1CB8.members_B0[i].species_0 = args->e_24[i].a_0;
                 eventEnemy_800B1CB8.members_B0[i].b_4 = args->e_24[i].b_4;
                 eventEnemy_800B1CB8.anims_C8[i] = GetFieldMinionAnims_800A7A9C(k - 1);
+                eventEnemy_800B1CB8.fD4_D4[i] = args->e_24[i].c_8;
             }
             else
             {
@@ -2108,14 +2093,14 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
                 eventEnemy_800B1CB8.members_B0[i].species_0 = args->e_24[i].a_0;
                 eventEnemy_800B1CB8.members_B0[i].b_4 = args->e_24[i].b_4;
                 eventEnemy_800B1CB8.anims_C8[i] = 0;
+                eventEnemy_800B1CB8.fD4_D4[i] = args->e_24[i].c_8;
             }
-            eventEnemy_800B1CB8.fD4_D4[i] = args->e_24[i].c_8;
         }
         eventBattlePending_800AEBE0 = 1;
         ctx->step_B8++;
     case 1:
         ctx->step_B8++;
-        return 0;
+        break;
     case 2:
         if (gCtx_800B1260)
         {
@@ -2129,9 +2114,6 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
     }
     return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, EvCmdBattle_800BB27C);
 
 int EvCmdIfBattleResult_800BB45C(EvScriptCtx* ctx)
 {
@@ -2297,21 +2279,26 @@ int EvCmdPadVibration_800BB7D8(EvScriptCtx* ctx)
     return 1;
 }
 
-#if 0
-// Not matched: the original keeps fC0 in $s0 for the whole loop (default case spins on the stale value); register allocation differs
+// Matched
 int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
 {
+    int step;
+    int actor;
+    int mask;
     while (1)
     {
-        switch (ctx->cmdStep_C0)
+        step = ctx->cmdStep_C0;
+        switch (step)
         {
         case 0:
+            actor = cmd->actor_0;
+            mask = 1 << actor;
             cmd->field_8 = a;
-            if (ctx->busyActors_18 & (1 << cmd->actor_0))
+            if (ctx->busyActors_18 & mask)
             {
                 return 0;
             }
-            if (!IsActorCmdReady_800BBAB0(cmd->actor_0))
+            if (!IsActorCmdReady_800BBAB0(actor))
             {
                 return 0;
             }
@@ -2334,20 +2321,17 @@ int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
             }
             if (cmd->kind_4 == 3)
             {
-                ctx->animActors_1C |= ctx->cmdStep_C0 << cmd->actor_0;
+                ctx->animActors_1C |= step << cmd->actor_0;
             }
             else if (cmd->kind_4 == 4)
             {
-                ctx->animActors_1C &= ~(ctx->cmdStep_C0 << cmd->actor_0);
+                ctx->animActors_1C &= ~(step << cmd->actor_0);
             }
             ctx->cmdStep_C0 = 0;
             return 1;
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, SendActorCmd_800BB840);
 
 int SendActorCmdMask_800BB990(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
 {
@@ -2569,7 +2553,7 @@ typedef struct EvItemMsgCfg
     int posMode_0;
     unsigned short* pos_4;
     int f8;
-    char pad_C[0x3C];
+    EvItemMsgSlot slots_C[3];
     int f48;
     int f4C;
 } EvItemMsgCfg;
@@ -2592,7 +2576,7 @@ extern int OpenItemMessageWindow_80035AC8(EvItemMsgCfg* cfg);
 int* FindMsgChoiceList_800BC560(int* p);
 int GetChoiceMask_800BC58C(int* p);
 int IsActorLeftOf_800BC5C8(int a, int b);
-void SetupItemMsgSlots_800BC6C4(char* base, EvItemMsgSrc* src, int n);
+void SetupItemMsgSlots_800BC6C4(EvItemMsgCfg* cfg, EvItemMsgSrc* src, int n);
 
 #if 0
 // Not matched (register allocation): list/bc/c0/c4/c8/cc are spilled scalars as in the original, but here list keeps
@@ -2759,7 +2743,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         {
             srcArg = GetOwnEntityParam_800BBDF4(ctx);
         }
-        SetupItemMsgSlots_800BC6C4((char*)&it, (EvItemMsgSrc*)srcArg, pc->a_4);
+        SetupItemMsgSlots_800BC6C4(&it, (EvItemMsgSrc*)srcArg, pc->a_4);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     else if (mode == 2)
@@ -2777,7 +2761,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         src.a_0 = pc->c_C;
         src.b_2 = srcArg;
         src.c_4 = 1;
-        SetupItemMsgSlots_800BC6C4((char*)&it, &src, 1);
+        SetupItemMsgSlots_800BC6C4(&it, &src, 1);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     else if (mode == 3)
@@ -2787,7 +2771,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         it.f8 = 0;
         it.f48 = 0xB;
         it.f4C = str;
-        SetupItemMsgSlots_800BC6C4((char*)&it, 0, 0);
+        SetupItemMsgSlots_800BC6C4(&it, 0, 0);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     if (ret == 0)
@@ -2936,25 +2920,23 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
     return scr1[0] < scr2[0];
 }
 
-#if 0
-// Not matched: loop induction variables are allocated differently (the original strength-reduces only the slot offset)
-void SetupItemMsgSlots_800BC6C4(char* base, EvItemMsgSrc* src, int n)
+// Matched
+void SetupItemMsgSlots_800BC6C4(EvItemMsgCfg* cfg, EvItemMsgSrc* src, int n)
 {
     int local[8];
     int i;
-    int off = 0xC;
     EvItemMsgSlot* slot;
     memset(local, 0, 0x20);
     local[0] = 2;
     local[5] = 3;
-    for (i = 0; i < 3; i++, off += 0x14)
+    for (i = 0; i < 3; i++)
     {
-        slot = (EvItemMsgSlot*)(base + off);
+        slot = &cfg->slots_C[i];
         if (i < n)
         {
-            slot->f0_0 = src->a_0;
-            slot->f4_4 = src->b_2;
-            slot->f8_8 = src->c_4;
+            slot->f0_0 = src[i].a_0;
+            slot->f4_4 = src[i].b_2;
+            slot->f8_8 = src[i].c_4;
         }
         else
         {
@@ -2967,12 +2949,8 @@ void SetupItemMsgSlots_800BC6C4(char* base, EvItemMsgSrc* src, int n)
             slot->fC_C = local[slot->f0_0];
             slot->f10_10 = slot->f4_4;
         }
-        src++;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, SetupItemMsgSlots_800BC6C4);
 
 void EvMessageNop_800BC7A0(EvScriptCtx* ctx)
 {
@@ -3005,30 +2983,31 @@ void LoadEventEffectFile_800BC7A8(int file)
     }
 }
 
-#if 0
-// Not matched: src/size are allocated to $s1/$s0 (original $s0/$s1); the rest is identical. The global is wrapped in a struct so the stores through it reload it (as the original does)
 typedef struct EvRelocBlob
 {
     int* p_0;
 } EvRelocBlob;
 extern EvRelocBlob eventReloc_800AEBBC;
+// Matched
 void LoadRelocBlob_800BC854(int* src)
 {
     int size;
+    int* data;
     int n;
     int i;
     int j;
     int m;
     int* ptr;
     int* entry;
-    size = *src++;
     if (eventReloc_800AEBBC.p_0)
     {
         ListFree_8003FE38(eventHeap_80091C10, eventReloc_800AEBBC.p_0);
         eventReloc_800AEBBC.p_0 = 0;
     }
+    size = *src;
+    data = src + 1;
     eventReloc_800AEBBC.p_0 = ListAlloc_8003FDC0(eventHeap_80091C10, size);
-    MemCopy_800403E8(eventReloc_800AEBBC.p_0, src, size);
+    MemCopy_800403E8(eventReloc_800AEBBC.p_0, data, size);
     n = eventReloc_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {
@@ -3053,9 +3032,6 @@ void LoadRelocBlob_800BC854(int* src)
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, LoadRelocBlob_800BC854);
 
 void LoadEventTiy_800BC98C(int* tiy)
 {
@@ -3072,18 +3048,14 @@ void LoadEventTiy_800BC98C(int* tiy)
     LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)eventHeap_80091C10);
 }
 
-#if 0
-// Not matched: a/b land in $s1/$s0 in the original, swapped here (param types, temporaries, call-embedded assignment tried)
 extern int eventDataBuf_800AEBC8;
-void CopyEventData_800BCA18(unsigned int* src, unsigned int* size)
+// Matched
+void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
 {
-    unsigned int* buf = ListAlloc_8003FDC0(eventHeap_80091C10);
+    unsigned int* buf = ListAlloc_8003FDC0(eventHeap_80091C10, size);
     eventDataBuf_800AEBC8 = (int)buf;
-    MemCopy_800403E8(buf, src, (unsigned int)size);
+    MemCopy_800403E8(buf, src, size);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, CopyEventData_800BCA18);
 
 void LoadEventRecordTables_800BCA68(int data)
 {
