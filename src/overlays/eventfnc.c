@@ -6,30 +6,25 @@ int dword_800B6D00 SDATA = 41;
 const char aAssertionFaile_800B6D04[] = "Assertion failed: file \"%s\", line %d\n";
 const char aColiC_800B6D2C[8] = "COLI.C\000$";
 
-#if 0
-// Not matched: FindLevantMesh_800B80C8 is inlined here; the original keeps its result in $s3 and sets it to 1 before
-// the mesh loop (0 on exhaustion), this C returns it in $v0, one saved register and one word short
+// FindLevantMesh_800B80C8 is inlined; the edge points are written through `(edgePts + i * 2)->` so the address is
+// expanded as an address sum (index term first), as in the original.
+// Matched
 int CollideLevantWithMap_800B6DD4(EvEntity* ent)
 {
     EvSVec edgePts[4];
     int normal[4];
     int ret;
     int i;
-    int found;
     MapVtx* verts;
-    EvSVec* pt;
-    EvSVec* pt2;
     int angle;
     ret = 0;
-    i = 0;
     CollideWithMapEnts_800B82C8(&levantPos_8008BD18.pos.x, (int*)&ent->pos_48, mapState_8008B500.ents_14,
                  mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10);
     ent->f8C_8C = -1;
     ent->f88_88 = -1;
-    for (;;)
+    for (i = 0;; i++)
     {
-        found = EvFindLevantMesh(ent);
-        if (found)
+        if (EvFindLevantMesh(ent))
         {
             break;
         }
@@ -44,15 +39,12 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
         }
         SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->f84_84], &ent->f88_88, &ent->f8C_8C, normal);
         verts = mapState_8008B500.meshes_C[ent->f84_84].tris_4[ent->f88_88].v_0;
-        pt = (EvSVec*)(i * 16 + (int)edgePts); // &edgePts[i * 2]; that form allocates registers differently
-        pt->x_0 = verts[ent->f8C_8C % 3].x_0;
-        pt->y_2 = verts[ent->f8C_8C % 3].y_2;
-        pt->z_4 = verts[ent->f8C_8C % 3].z_4;
-        pt2 = pt + 1;
-        pt2->x_0 = verts[(ent->f8C_8C + 1) % 3].x_0;
-        pt2->y_2 = verts[(ent->f8C_8C + 1) % 3].y_2;
-        pt2->z_4 = verts[(ent->f8C_8C + 1) % 3].z_4;
-        i++;
+        (edgePts + i * 2)->x_0 = verts[ent->f8C_8C % 3].x_0;
+        (edgePts + i * 2)->y_2 = verts[ent->f8C_8C % 3].y_2;
+        (edgePts + i * 2)->z_4 = verts[ent->f8C_8C % 3].z_4;
+        (edgePts + i * 2 + 1)->x_0 = verts[(ent->f8C_8C + 1) % 3].x_0;
+        (edgePts + i * 2 + 1)->y_2 = verts[(ent->f8C_8C + 1) % 3].y_2;
+        (edgePts + i * 2 + 1)->z_4 = verts[(ent->f8C_8C + 1) % 3].z_4;
     }
     GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[ent->f84_84], ent->f80_80);
     if (ent->f88_88 == -1)
@@ -74,9 +66,6 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
     }
     return ret;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, CollideLevantWithMap_800B6DD4);
 
 int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
 {

@@ -160,7 +160,7 @@ static inline int EvFindLevantMesh(EvEntity* ent)
     unsigned int i;
     unsigned int mesh = ent->f84_84;
     int tri;
-    for (i = 0; i < mapState_8008B500.nMeshes_4; i++, mesh++)
+    for (i = 0; i < mapState_8008B500.nMeshes_4; mesh++, i++)
     {
         mesh %= mapState_8008B500.nMeshes_4;
         tri = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[mesh], (EvVec*)&levantPos_8008BD18.pos);
