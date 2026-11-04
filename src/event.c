@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "event.h"
+#include "winframe.h"
 
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";
@@ -26,7 +27,6 @@ extern const char aDWorkPsusEvent[];
 
 extern short uiColor_8008B590;
 extern void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int colorIdx);
-extern void DrawWindowFrame_80041ED0(int rect, RECT* rgb, int ot, int semiTrans);
 
 extern unsigned char** windowColorSets_80087064[];
 extern unsigned char* windowPulseColors_80087050[];
