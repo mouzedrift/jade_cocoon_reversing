@@ -1974,7 +1974,7 @@ int GetEquipmentIcon_8001D2D4(void)
     return 0x24;
 }
 // Matched
-int GetKeyItemName_8001D318(unsigned int idx)
+char* GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
     {

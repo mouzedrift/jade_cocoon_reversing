@@ -400,7 +400,7 @@ extern int dword_80091990[4];
 extern Font fonts_80095FB0[];
 extern unsigned char dword_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
-extern int keyItemNames_8007CF30[0x26];
+extern char* keyItemNames_8007CF30[0x26];
 extern int magicNames_8007C348[0x1E * 2];
 extern unsigned short dword_80079348[0x15];
 extern int fadeFlags_800918B0;

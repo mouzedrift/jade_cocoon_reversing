@@ -2599,7 +2599,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
         if (id < 0x26)
         {
             icon = GetKeyItemIcon_8001D344(id);
-            nm = (void*)GetKeyItemName_8001D318(id);
+            nm = GetKeyItemName_8001D318(id);
         }
         else
         {

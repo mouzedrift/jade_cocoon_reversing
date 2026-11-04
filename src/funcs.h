@@ -181,7 +181,7 @@ extern int WaitVSync_8001B6E8();
 extern void InitEnvironments_8001B7B4(void);
 extern void BeginFade_8001C260(void);
 extern int GetItemIcon_8001D2AC(int idx);
-extern int GetKeyItemName_8001D318(unsigned int idx);
+extern char* GetKeyItemName_8001D318(unsigned int idx);
 extern int sub_80019AD0(UnitStats* p);
 extern int IsEffectFileLoaded_80020EBC(struct EffectFile* p);
 extern int sub_80020F00(struct EffectFile* p, int a, int b);
