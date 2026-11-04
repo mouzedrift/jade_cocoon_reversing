@@ -357,8 +357,8 @@ typedef struct
 // file load request (cd.c queue); fileId_10 == 0x10000 marks a free pool entry
 typedef struct FileRequest
 {
-    struct FileRequest* next;
-    int field_4;
+    struct FileRequest* next; // the older neighbour (toward the queue head that is processed first)
+    int newer_4;              // FileRequest*: the newer neighbour, processed after this one
     int key;
     unsigned int flags_C; // 0x100 / 0x1000: GetFileRequestStatus returns 2 / 3
     int fileId_10;        // DATA.001 file id
