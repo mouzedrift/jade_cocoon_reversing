@@ -1,11 +1,41 @@
 // EVENTFNC.BIN, source file 2 of 2 from 0x800BCB3C (.rdata from 0x800B6D98)
 #include "eventfnc.h"
 
+// the event script command handlers (EvScriptCtx opcodes)
+int (*eventFuncs_800BCDBC[157])() = {
+    EvCmdNop_800B89A8, EvCmdWaitButton_800B89C0, EvCmdNop_800B89A8, EvCmdEnd_800B89F4,
+    (int (*)())EvCmdEndScene_800B8A34, EvCmdBeginScene_800B8BE8, EvCmdSetLoopPoint_800B8CB0, EvCmdTakeActors_800B8D08,
+    EvCmdReleaseActors_800B8DDC, EvCmdNop_800B89A8, EvCmdGotoLabel_800B8E9C, EvCmdJumpScript_800B8F14,
+    EvCmdWait_800B8F44, EvCmdWaitActors_800B8F88, EvCmdSetVar_800B8FB8, EvCmdPickBranch_800B9020,
+    EvCmdCountYanVar_800B9110, EvCmdCallHook_800B91CC, EvCmdStartScript_800B9218, EvCmdWarpActor_800B9260,
+    EvCmdMoveToPoint_800B93A8, EvCmdMoveToActor_800B942C, EvCmdMoveToPoint_800B93A8, EvCmdMoveToActor_800B942C,
+    EvCmdTurnToPoint_800B95BC, EvCmdTurnToActor_800B962C, EvCmdSetActorVisible_800B96D8, EvCmdSetActorGroundMove_800B9720,
+    EvCmdSetActorRootMotion_800B9768, EvCmdSaveActorPos_800B97B0, EvCmdSaveActorFront_800B97F8, EvCmdTestFlag_800B9840,
+    EvCmdSetFlag_800B98C4, EvCmdClearFlag_800B990C, EvCmdTestTempFlags_800B9954, EvCmdSetTempFlags_800B99D8,
+    EvCmdClearTempFlags_800B9A20, EvCmdAddItem_800B9A68, EvCmdRemoveItem_800B9AB4, EvCmdAddItemCat1_800B9B00,
+    EvCmdRemoveItemCat1_800B9B4C, EvCmdWaitTrigger_800B9B98, EvCmdAddMoney_800B9CC0, EvCmdAddEmptyCocoons_800B9D08,
+    EvCmdHealParty_800B9D50, EvCmdSetValuable_800B9C5C, EvCmdSetEntityState_800B9DE0, EvCmdWaitEntityState_800B9E48,
+    EvCmdSetOwnEntityState_800B9EB0, EvCmdWaitOwnEntityState_800B9EDC, EvCmdWaitEntityGone_800B9F0C, EvCmdSetMsgOptions_800B9F5C,
+    EvCmdSetMsgPos_800B9F84, EvCmdSetMsgPosMode_800B9FB4, EvCmdSetVoiceTable_800B9FD8, EvCmdMessage_800BA020,
+    EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020,
+    EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020,
+    EvCmdNop_800B89A8, EvCmdSwapMsgAfterCount_800BA1DC, EvCmdWaitMsgMark_800BA238, EvCmdSetChoiceMask_800BA28C,
+    EvCmdPlayAnim_800BA2E8, EvCmdStopAnim_800BA338, EvCmdPlayAnimData_800BA40C, EvCmdPauseActorAnim_800BA45C,
+    EvCmdPlayMotion_800BA4F0, EvCmdPlayMotionRange_800BA554, EvCmdPlayMotionData_800BA5CC, EvCmdSetCallArg_800BA678,
+    EvCmdSetCallArgs_800BA6D0, EvCmdCallUntilDone_800BA714, EvCmdCallSelect_800BA7A4, EvCmdSetChapter_800BA82C,
+    EvCmdSetMapVariant_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
+    EvCmdNop_800B89A8, EvCmdPreloadArea_800BAA6C, EvCmdUsePreloadedArea_800BAAC0, EvCmdSetReturnPoint_800BAB14,
+    EvCmdOpenMapSelect_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
+    EvCmdCameraClearLookAt_800BAD3C, EvCmdWaitCameraBlend_800BAD88, EvCmdSetViewRect_800BADF8, EvCmdSetCameraZoom_800BAEBC,
+    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, EvCmdSetIdleAnim_800BB180,
+    EvCmdWaitActorInRegion_800BB214, EvCmdBattle_800BB27C, EvCmdIfBattleResult_800BB45C, EvCmdFadeSound_800BB4A4,
+    EvCmdPadVibration_800BB7D8,
+};
+
 // the initializer of ReturnWarpTask_800BCB3C's tbl2 and its jump table (while it is assembly)
 // the jump table of ReturnWarpTask_800BCB3C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
 // its externs in eventfnc.h when the function is C, the switch emits it then
 
-extern int fieldMode_800B0EC0;
 // Returns from a warp: plays the warp animation, fades out, picks the return area var and reloads the map
 // Matched
 void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
@@ -79,33 +109,3 @@ void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
         break;
     }
 }
-
-int (*eventFuncs_800BCDBC[157])() = {
-    EvCmdNop_800B89A8, EvCmdWaitButton_800B89C0, EvCmdNop_800B89A8, EvCmdEnd_800B89F4,
-    (int (*)())EvCmdEndScene_800B8A34, EvCmdBeginScene_800B8BE8, EvCmdSetLoopPoint_800B8CB0, EvCmdTakeActors_800B8D08,
-    EvCmdReleaseActors_800B8DDC, EvCmdNop_800B89A8, EvCmdGotoLabel_800B8E9C, EvCmdJumpScript_800B8F14,
-    EvCmdWait_800B8F44, EvCmdWaitActors_800B8F88, EvCmdSetVar_800B8FB8, EvCmdPickBranch_800B9020,
-    EvCmdCountYanVar_800B9110, EvCmdCallHook_800B91CC, EvCmdStartScript_800B9218, EvCmdWarpActor_800B9260,
-    EvCmdMoveToPoint_800B93A8, EvCmdMoveToActor_800B942C, EvCmdMoveToPoint_800B93A8, EvCmdMoveToActor_800B942C,
-    EvCmdTurnToPoint_800B95BC, EvCmdTurnToActor_800B962C, EvCmdSetActorVisible_800B96D8, EvCmdSetActorGroundMove_800B9720,
-    EvCmdSetActorRootMotion_800B9768, EvCmdSaveActorPos_800B97B0, EvCmdSaveActorFront_800B97F8, EvCmdTestFlag_800B9840,
-    EvCmdSetFlag_800B98C4, EvCmdClearFlag_800B990C, EvCmdTestTempFlags_800B9954, EvCmdSetTempFlags_800B99D8,
-    EvCmdClearTempFlags_800B9A20, EvCmdAddItem_800B9A68, EvCmdRemoveItem_800B9AB4, EvCmdAddItemCat1_800B9B00,
-    EvCmdRemoveItemCat1_800B9B4C, EvCmdWaitTrigger_800B9B98, EvCmdAddMoney_800B9CC0, EvCmdAddEmptyCocoons_800B9D08,
-    EvCmdHealParty_800B9D50, EvCmdSetValuable_800B9C5C, EvCmdSetEntityState_800B9DE0, EvCmdWaitEntityState_800B9E48,
-    EvCmdSetOwnEntityState_800B9EB0, EvCmdWaitOwnEntityState_800B9EDC, EvCmdWaitEntityGone_800B9F0C, EvCmdSetMsgOptions_800B9F5C,
-    EvCmdSetMsgPos_800B9F84, EvCmdSetMsgPosMode_800B9FB4, EvCmdSetVoiceTable_800B9FD8, EvCmdMessage_800BA020,
-    EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020,
-    EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020, EvCmdMessage_800BA020,
-    EvCmdNop_800B89A8, EvCmdSwapMsgAfterCount_800BA1DC, EvCmdWaitMsgMark_800BA238, EvCmdSetChoiceMask_800BA28C,
-    EvCmdPlayAnim_800BA2E8, EvCmdStopAnim_800BA338, EvCmdPlayAnimData_800BA40C, EvCmdPauseActorAnim_800BA45C,
-    EvCmdPlayMotion_800BA4F0, EvCmdPlayMotionRange_800BA554, EvCmdPlayMotionData_800BA5CC, EvCmdSetCallArg_800BA678,
-    EvCmdSetCallArgs_800BA6D0, EvCmdCallUntilDone_800BA714, EvCmdCallSelect_800BA7A4, EvCmdSetChapter_800BA82C,
-    EvCmdSetMapVariant_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
-    EvCmdNop_800B89A8, EvCmdPreloadArea_800BAA6C, EvCmdUsePreloadedArea_800BAAC0, EvCmdSetReturnPoint_800BAB14,
-    EvCmdOpenMapSelect_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
-    EvCmdCameraClearLookAt_800BAD3C, EvCmdWaitCameraBlend_800BAD88, EvCmdSetViewRect_800BADF8, EvCmdSetCameraZoom_800BAEBC,
-    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, EvCmdSetIdleAnim_800BB180,
-    EvCmdWaitActorInRegion_800BB214, EvCmdBattle_800BB27C, EvCmdIfBattleResult_800BB45C, EvCmdFadeSound_800BB4A4,
-    EvCmdPadVibration_800BB7D8,
-};

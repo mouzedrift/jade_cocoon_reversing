@@ -137,7 +137,6 @@ void EnemyWindowsLayoutTask_800BFDEC()
 }
 
 // Matched
-extern void DrawUnitStatusWindow_8002F1C8();
 void EnemyWindowTask_800C0074(EventEntry* task, void* arg)
 {
     int slot;
@@ -188,16 +187,6 @@ void StartActorWindow_800C01D8()
     }
 }
 
-typedef struct BatWindowBox
-{
-    short col_0;
-    char c_2;
-    char c_3;
-} BatWindowBox;
-extern void DrawMpGauge_8002F120(int a0, short* pos, int a2, int a3);
-extern void DrawStatusIcons_8002F480(int a0, void* pos, int ot, int reverse);
-extern void DrawWindow_80042460(void* rect, BatWindowBox* box, void* ot, int a3);
-extern unsigned short uiColor_8008B590;
 
 // Matched
 void ActorWindowTask_800C0254(EventEntry* task, void* arg)
@@ -262,10 +251,6 @@ void StartHelpWindow_800C0440()
     }
 }
 
-extern int battleHelpTexts_800793DC[];
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawUiColorWindow_800424C0();
 // Draws the battle help window text (with the empty-cocoon count for help text 9); the void* task buffer is copied into a typed local
 // Matched
 void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
@@ -465,7 +450,6 @@ int GetElementModelAngle_800C0904(unsigned char* elements)
     return angle;
 }
 
-extern short sinTable_80084540[];
 // Matched
 int CalcElementAngle_800C09D4(unsigned char* elements)
 {
@@ -613,7 +597,7 @@ BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int
     return out;
 }
 
-int TriggerMinionAction_800C0E84(BatCommand* cmd)
+int TriggerMinionAction_800C0E84(BatCommand* cmd, int isReaction)
 {
     int mask;
     if (cmd->kind_0 == 0x14)
@@ -1619,27 +1603,12 @@ void SetPointLight_800C4090(int posArg, int rgbArg, int range, int intensity)
     pointLightPos_8008D680[1] = pos[1];
     pointLightPos_8008D680[2] = pos[2];
     pointLightRange_8008D3F0 = range;
-    dword_8008D418[0] = rgb[0] * scale >> 7;
-    dword_8008D418[1] = rgb[1] * scale >> 7;
-    dword_8008D418[2] = rgb[2] * scale >> 7;
+    pointLightColor_8008D418.vx = rgb[0] * scale >> 7;
+    pointLightColor_8008D418.vy = rgb[1] * scale >> 7;
+    pointLightColor_8008D418.vz = rgb[2] * scale >> 7;
 }
 
 void ClearPointLight_800C410C()
 {
     pointLightRange_8008D3F0 = 0;
 }
-
-extern int EnemyAiBD_800C4A40(EnemyAi* ai);
-extern void BossAi03_800C5BC0(EnemyAi* ai);
-extern void BossAi04_800C59A0(EnemyAi* ai);
-extern void BossAi0A_800C58BC(EnemyAi* ai);
-extern void BossAi0B_800C5EB8(EnemyAi* ai);
-extern void BossAi0C_800C6038(EnemyAi* ai);
-extern void BossAi0D_800C5D04(EnemyAi* ai);
-extern void BossAi0E_800C61FC(EnemyAi* ai);
-extern void BossAi0F_800C66F4(EnemyAi* ai);
-extern void BossAi10_800C6824(EnemyAi* ai);
-extern void BossAi11_800C6928(EnemyAi* ai);
-extern void EnemyAiFirstSkill_800C6A40(EnemyAi* ai);
-void BossAi02_800C5A7C(EnemyAi* ai);
-void EnemyAiDefend_800C58AC(EnemyAi* ai);

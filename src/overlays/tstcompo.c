@@ -5,8 +5,6 @@
 #include "model.h"
 #include "tstcompo.h"
 
-extern unsigned short padPressed_8009194C;
-extern unsigned short padRepeat_800918CC;
 
 int dword_800A05A0 SDATA = 17;
 const char a9_800A05A4[] = "\202X"; // 9
@@ -61,81 +59,6 @@ const char aNAMERATE_800A0798[] = "\202m\202`\202l\202d\201@\201@\201@\201@\201@
 const char aTEXHANGL_800A07B8[] = "\202s\202d\202w\201@\201@\201@\201@\201@\201@\202g\202`\202m\202f\202k"; // TEX      HANGL
 const char aENEMY_800A07D8[] = "\202d\202m\202d\202l\202x"; // ENEMY
 
-// a menu layout of the TSTCOMPO pages: the cursor head (copied into the work cursor), then the grid geometry
-// a TSTCOMPO page (compoPages_800A250C[3])
-// a selectable part / colour of the compound test (compoParts_800A20EC[])
-typedef struct TstCompoBone
-{
-    short s0;
-    short s2;
-    short s4;
-    short s6;
-} TstCompoBone;
-// parameter block of DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28
-typedef struct TstCompoDraw
-{
-    FtgObject* ftg_0;
-    VECTOR* pos_4;
-    char* rot_8;
-    TstCompoBone* bones_C;
-    char* base_10;
-    ModelAnim* anim_14;
-    int frame_18;
-    int drawMode_1C;
-    char* bonePos_20;
-    VECTOR* scale_24;
-    unsigned long* ot_28;
-} TstCompoDraw;
-// work area of the TSTCOMPO task (TstCompoInit_800A0800)
-typedef struct TstCompoWork
-{
-    int state_0;
-    Model* model_4;
-    int f8;
-    TstCompoBone bones_C[40];
-    short yaw_14C;
-    short s14E;
-    short dist_150;
-    short pad_152;
-    int eye_154[3];
-    int at_160[3];
-    int pos_16C[3];
-    short s178;
-    short s17A;
-    short s17C;
-    short pad_17E;
-    int frame_180;
-    int anim_184;
-    int animCount_188;
-    int nextAnim_18C;
-    int animLoaded_190;
-    int paused_194;
-    int scaleStep_198;
-    int scaleId_19C;
-    int* scale_1A0;
-    char* boneScale_1A4;
-    TstCompoDraw draw_1A8;
-    int pad_1D4;
-    TstCompoCursorHead cursor_1D8;
-    short sel_1E0;
-    short scroll_1E2;
-    int nextPage_1E4;
-    int page_1E8;
-    int returnPage_1EC;
-    int f1F0;
-    unsigned int savedSel_1F4;
-    int* pickTarget_1F8;
-    int blend_1FC;
-    int blendFrame_200;
-    int blendAnim_204;
-    int listScroll_208;
-    int listSel_20C;
-    int part_210[3];
-    int ratio_21C[3];
-    int f228;
-    int enemy_22C;
-} TstCompoWork;
-extern void TstCompoTask_800A097C();
 void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 {
     c->anim_184 = 3;
@@ -174,7 +97,6 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 }
 
 // parameters of StartModelTask_80010850 (0x34 bytes)
-extern int dword_8007DC74;
 void SetDefaultCompoParams_800A0918()
 {
     TstCompoModelParams* params = &compoModelParams_800A2768;
@@ -193,18 +115,6 @@ void SetDefaultCompoParams_800A0918()
     params->vram_30 = dword_8007DC74;
 }
 
-extern unsigned short padHeld_800918D0[];
-extern void TstCompoMenu_800A0AB8();
-extern void TstCompoStartModel_800A1320();
-extern void TstCompoWaitModel_800A1354();
-extern void TstCompoWaitFiles_800A13B8();
-extern void TstCompoDrawModel_800A1468();
-extern void TstCompoDrawBlend_800A15F4();
-extern void TstCompoFrameInput_800A1804();
-extern void TstCompoViewInput_800A194C();
-extern void TstCompoAnimSelect_800A19A4();
-extern void TstCompoFreeModel_800A1AD0();
-extern void TstCompoCameraInput_800A1C14();
 void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
 {
     if (c->state_0 != 1 && c->state_0 != 3 && c->state_0 != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
@@ -244,13 +154,6 @@ void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
     }
 }
 
-extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
-extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
-extern int UpdateMenuCursor_8003D794(void* p, int idx);
-extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
-extern void DrawText_8003E91C(int a, int b, void* c, int d);
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot);
 // Matched
 void TstCompoMenu_800A0AB8(TstCompoWork* c)
 {
@@ -434,15 +337,12 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
     }
 }
 
-extern void StartModelTask_80010850();
 void TstCompoStartModel_800A1320(TstCompoWork* work)
 {
     StartModelTask_80010850(&compoModelParams_800A2768);
     work->state_0 = 2;
 }
 
-extern int name_80010A10(int); // RunModelTask_80010A10 (declared void), its v0 is tested
-extern void TstCompoInitBones_800A1AFC();
 void TstCompoWaitModel_800A1354(TstCompoWork* work)
 {
     if (name_80010A10(0))
@@ -481,9 +381,6 @@ void TstCompoWaitFiles_800A13B8(TstCompoWork* work)
     }
 }
 
-extern void* memset(void* p, int c, unsigned int n);
-extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
-extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 void TstCompoDrawModel_800A1468(TstCompoWork* c)
 {
     VECTOR pos;
@@ -514,7 +411,6 @@ void TstCompoDrawModel_800A1468(TstCompoWork* c)
     DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
-extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
 void TstCompoDrawBlend_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
@@ -673,8 +569,6 @@ void TstCompoFreeModel_800A1AD0(TstCompoWork* work)
     work->state_0 = 0;
 }
 
-extern TstCompoBone defaultBones_80079140[];
-extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
 void TstCompoInitBones_800A1AFC(TstCompoWork* work)
 {
     int i;
@@ -703,9 +597,6 @@ void TstCompoResetCamera_800A1BE0(TstCompoWork* work)
     work->eye_154[1] = -0xFA;
 }
 
-extern unsigned short padHeld_800918D0[];
-extern short sinTable_80084540[];
-extern void SetCameraLookAt_800A1E68();
 void TstCompoCameraInput_800A1C14(TstCompoWork* work)
 {
     if (padHeld_800918D0[0] & 0x8000)
@@ -761,20 +652,6 @@ void TstCompoCameraInput_800A1C14(TstCompoWork* work)
     SetCameraLookAt_800A1E68(work);
 }
 
-typedef struct TstCompoMat
-{
-    int w[8];
-} TstCompoMat;
-extern int cameraEye_8008D600[];
-extern short cameraRot_8008D4C8[];
-extern unsigned char backColor_8008D460[];
-extern short screenOffset_8008D474[];
-extern int geomScreenDistance_8008B548;
-extern void SetGteLightAndCamera_8004D0E8();
-extern TstCompoMat dword_8007C2EC;
-extern TstCompoMat dword_8007C30C;
-extern TstCompoMat lightMatrix_80087114;
-extern TstCompoMat colorMatrix_80087134;
 void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int dir[3];
@@ -807,15 +684,6 @@ int TstCompoMain_800A200C()
     return 6;
 }
 
-extern unsigned short uiColor_8008B590;
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
-// window style for DrawWindow_80042460
-typedef struct TstCompoWinStyle
-{
-    unsigned short color_0;
-    unsigned char colors_2; // GetWindowColors_8004226C
-    unsigned char frame_3;  // DrawWindowFrame_80041ED0
-} TstCompoWinStyle;
 void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
 {
     union

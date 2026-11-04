@@ -228,7 +228,7 @@ void StartEncounterBattle_800A13B8(GameTask* task, void** work)
     SetCameraBattleMode_80037720();
     *work = LoadOverlayIfChanged_80020D1C(1, 6);
     task->next_8 = WaitBattleOverlay_800A1474;
-    StopSoundSeqs_80030D68(dword_80091CE0);
+    StopSoundSeqs_80030D68(&bgmSound_80091CE0);
     PlayMusic_800300E0(0, 1);
 }
 
@@ -512,8 +512,6 @@ void DestroyEncounterActors_800A1B78(void)
     }
 }
 
-extern int name_8007A024[];
-extern int dword_800B1CA8[];
 // Matched
 void SetupEncounter_800A1BD0(void)
 {
@@ -1778,14 +1776,6 @@ void ClearEncounterGroupFlags_800A4940(int group, int encIndex)
     }
 }
 
-extern int sub_800B330C(void);
-extern GameSpawnEntry* sub_800B2B40();
-// the rolled encounter groups (EvSpawnTable on the EVENTFNC side)
-typedef struct GameSpawnOut
-{
-    GameSpawnMember* members_0[3];
-    int (*places_C[3])[4]; // MapList16.items_4 entries
-} GameSpawnOut;
 void RollEncounterGroup_800A4DD0(int a, int b, MapList16* c, GameSpawnEntry* p, GameSpawnOut* e, unsigned short* f);
 
 #if 0

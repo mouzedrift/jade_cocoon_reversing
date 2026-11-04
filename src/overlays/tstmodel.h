@@ -151,4 +151,122 @@ extern short gridWrapMask_800A37F4[4];
 extern short gridWrapSign_800A37FC[4];
 extern char modelBonePos_800A3804[480];
 
+
+/* ---- moved from the .c files: types ---- */
+// parameter block of DrawAnimSkel_80046A58
+typedef struct TstModelDraw
+{
+    FtgObject* ftg_0;
+    VECTOR* pos_4;
+    char* rot_8;
+    TstModelBone* bones_C;
+    char* base_10;
+    ModelAnim* anim_14;
+    int frame_18;
+    int drawMode_1C;
+    char* bonePos_20;
+    VECTOR* scale_24;
+    unsigned long* ot_28;
+} TstModelDraw;
+
+// work area of the TSTMODEL task (TstModelInit_800A09C0)
+typedef struct TstModelWork
+{
+    int state_0;
+    int sel_4;       // model list cursor
+    int scroll_8;
+    int boneSel_C;   // bone list cursor
+    int boneScroll_10;
+    ModelList* models_14;
+    Model* model_18;
+    int count_1C;
+    int loadSel_20;   // LoadModel_80025200 sel, 0..0xBF
+    int modelId_24;
+    TstModelBone bones_28[41];
+    short yaw_170;
+    short holdTimer_172; // frames the bone-edit button is held
+    short dist_174;
+    short pad_176;
+    int eyeX_178;
+    int eyeY_17C;
+    int eyeZ_180;
+    int atX_184;
+    int atY_188;
+    int atZ_18C;
+    int posX_190; // reset with the camera (TstCompoWork.pos_16C)
+    int posY_194;
+    int posZ_198;
+    short s19C;
+    short s19E;
+    short s1A0;
+    short pad_1A2;
+    int frame_1A4;
+    int anim_1A8;
+    int animCount_1AC;
+    int nextAnim_1B0;
+    int animLoaded_1B4; // nextAnim was loaded here, free it on the next pick
+    int paused_1B8;
+    int scaleStep_1BC;
+    TstModelDraw draw_1C0;
+    int pad_1EC;
+    SVECTOR rot_1F0;
+} TstModelWork;
+
+typedef struct GridCursor
+{
+    int flags_0; // 1: wrap left/right, 2: wrap up/down
+    unsigned short unused_4;
+    short sel_6;
+    short cols_8;
+    short rows_A;
+    short count_C;
+    unsigned short scroll_E;
+} GridCursor;
+
+/* TSTMODEL's own functions/data used before their definition or from another of its files */
+void TstModelResetCamera_800A0BC0(TstModelWork* work);
+extern int UpdateGridCursor_800A1D70();
+extern void TstModelTask_800A0A8C();
+extern void TstModelSelectModel_800A0C00();
+extern void TstModelLoadModel_800A0EC8();
+extern void TstModelWaitModel_800A0F20();
+extern void TstModelCameraInput_800A104C();
+extern void TstModelDrawModel_800A1428();
+extern void TstModelAnimSelect_800A17B8();
+extern void TstModelBoneEdit_800A1614();
+extern void TstModelFrameInput_800A18F4();
+extern void TstModelFreeModel_800A19E4();
+extern void SetCameraLookAt_800A1A24();
+extern int MoveGridCursor_800A1B48();
+/* exe-side: declared in main.h (which conflicts with this overlay's types; main.h has scalars for the pad words) */
+extern unsigned short padRepeat_800918CC[];
+extern unsigned short padPressed_8009194C[];
+extern short cameraRot_8008D4C8[];
+extern unsigned char backColor_8008D460[];
+/* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
+extern int cameraEye_8008D600[];
+/* exe-side, to move to main.h / globals.h */
+extern short screenOffset_8008D474[];
+/* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
+extern short sinTable_80084540[];
+/* exe-side: event.h declares them (as MATRIX) */
+extern MATRIX lightMatrix_80087114;
+extern TstModelMat colorMatrix_80087134;
+/* exe-side, to move to ftg_draw.h */
+extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
+extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
+extern void SetGteLightAndCamera_8004D0E8();
+/* exe-side, to move to engine.h */
+extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
+/* exe-side, to move to skel_draw.h */
+extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
+/* exe-side, to move to pad_text.h */
+extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
+/* exe-side, to move to sound_seq.h */
+extern void PlaySfx_80031494(int id); // sound.h declares it too
+/* PSY-Q library */
+extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
+extern void* memset(void* p, int c, unsigned int n);
+
 #endif

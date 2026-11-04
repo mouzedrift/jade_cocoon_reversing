@@ -522,49 +522,6 @@ void EncounterSpawnTask_800B844C(EvTaskEntry* task)
     }
 }
 
-typedef struct EvEnemyGroup
-{
-    int kind_0; // 0: actors already exist, 1: hide them when reused (GAME's GameEnemy)
-    int maxCount_4;
-    int f8;
-    int fC;
-    int f10;
-    int idx_14;
-    int useMinion_18; // 1: the first member is minion_1C
-    UnitStats minion_1C;
-    Actor* actor_A4;
-    int fA8;
-    int fAC;
-    EvEnemyMember members_B0[3];
-    int fC8;
-    int fCC;
-    int fD0;
-    int z_D4[3];
-} EvEnemyGroup;
-typedef struct EvLoaderModel
-{
-    int f0;
-    int id_4;
-    int pad_8[3];
-} EvLoaderModel;
-// work area of the model loader task (modelLoaderTask_8008B54C)
-typedef struct EvModelLoader
-{
-    int f0;
-    int f4;
-    int f8;
-    EvLoaderModel ents_C[4];
-} EvModelLoader;
-// an enemy slot of the GAME overlay (GameEnemySlot): AddEnemySlot_800A17F4 copies the EvEnemyGroup into data_8
-typedef struct EvEnemySlot
-{
-    int f0;
-    int aiEvent_4;
-    EvEnemyGroup data_8;
-} EvEnemySlot;
-extern EvEnemySlot* AddEnemySlot_800A17F4(EvEnemyGroup* src, int b);
-extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
-extern short defaultBones_80079140[]; // default bone table
 
 // Matched
 void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* place, int aiArg, int index)
@@ -662,16 +619,6 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
     }
 }
 
-// work area of the encounter task (encounterTask_8008D674, EncounterSpawnTask_800B844C)
-typedef struct EvEncounterWork
-{
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-} EvEncounterWork;
 void StartEncounter_800B88A4(int ids)
 {
     EventEntry* entry;
@@ -798,10 +745,6 @@ int EvCmdEndScene_800B8A34(EvScriptCtx* ctx)
     return 0;
 }
 
-extern int fieldMode_800B0EC0;
-extern int gCtx_800B1260;
-extern int GetGameMode_800A6D50(int a);
-extern void SuspendAllEnemySlots_800A1904(void);
 // Matched
 int EvCmdBeginScene_800B8BE8(EvScriptCtx* ctx)
 {
@@ -1868,23 +1811,23 @@ int EvCmdSetViewRect_800BADF8(EvScriptCtx* ctx)
 {
     if (ctx->pc_8->c_C)
     {
-        dword_8008D420 = *(EvViewRect*)ctx->pc_8->c_C;
+        viewport_8008D420 = *(EvViewRect*)ctx->pc_8->c_C;
     }
     else
     {
         switch (ctx->pc_8->b_8)
         {
         case 0:
-            dword_8008D420.x_0 = 0;
-            dword_8008D420.y_2 = 0;
-            dword_8008D420.w_4 = 0x140;
-            dword_8008D420.h_6 = 0xF0;
+            viewport_8008D420.x_0 = 0;
+            viewport_8008D420.y_2 = 0;
+            viewport_8008D420.w_4 = 0x140;
+            viewport_8008D420.h_6 = 0xF0;
             break;
         case 1:
-            dword_8008D420.x_0 = 0;
-            dword_8008D420.y_2 = 0x20;
-            dword_8008D420.w_4 = 0x140;
-            dword_8008D420.h_6 = 0xA0;
+            viewport_8008D420.x_0 = 0;
+            viewport_8008D420.y_2 = 0x20;
+            viewport_8008D420.w_4 = 0x140;
+            viewport_8008D420.h_6 = 0xA0;
             break;
         }
     }
@@ -2011,40 +1954,8 @@ int EvCmdWaitActorInRegion_800BB214(EvScriptCtx* ctx)
     return 0;
 }
 
-typedef struct EvBattleArgs
-{
-    int f0_0[5];
-    int f14_14;
-    int ids_18[3];
-    struct
-    {
-        int a_0;
-        int b_4;
-        int c_8;
-    } e_24[3];
-} EvBattleArgs;
 
-typedef struct EvBattleEnemy
-{
-    int f0_0[5];
-    int f14_14;
-    int useMinion_18;
-    char pad_1C[0xA4 - 0x1C];
-    int actors_A4[3];
-    struct
-    {
-        int species_0;
-        int b_4;
-    } members_B0[3];
-    int anims_C8[3];
-    int fD4_D4[3];
-} EvBattleEnemy;
 
-extern EvBattleEnemy eventEnemy_800B1CB8;
-extern int eventBattlePending_800AEBE0;
-extern int eventBattleLoseWarp_800AEBE4;
-extern int gCtx_800B1260;
-extern int GetFieldMinionAnims_800A7A9C(int i);
 // fD4 is stored in both branches (cross-jumping merges the tails); that keeps the loop big enough that a giv is
 // "not worth while", so the counter i is not eliminated, as in the original
 // Matched
@@ -2118,21 +2029,6 @@ int EvCmdIfBattleResult_800BB45C(EvScriptCtx* ctx)
     return 1;
 }
 
-extern void StartSceneFadeIn_8001AA04(int a);
-extern void StartSceneFadeOut_8001AA50(int a);
-extern void StopSceneDarken_8001AAF4();
-extern void StartSceneBrighten_8001AB1C(int a);
-extern void EnableCameraPoints_800A094C();
-extern void DisableCameraPoints_800A096C();
-extern short dword_80091CE0[];
-extern void SsSepSetDecrescendo(int, int, int, int);
-extern void SsSepStop(int, int);
-extern void FadeOutSfxSeq_80031638();
-extern void PlayMusic_800300E0(int a, int b);
-extern short SfxKeyOn_800314F4(int a);
-extern void SfxKeyOff_80031574(int a, int b);
-extern void SetLoadFadeFlag_80027478(int a, int b);
-extern void SetMotionBlur_8001BCD8(int a);
 
 // a selects: 0..9 scene fades / darken, 10/11 GAME hooks, 12 music, 13..15 sfx, 16 XA, 17 load fade, 18 motion blur
 // Matched
@@ -2141,7 +2037,7 @@ int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx)
     int done = 1;
     int op;
     int k;
-    short* seq;
+    SoundStruct* seq;
     short* xa;
     int* keyOut;
     switch (ctx->pc_8->a_4)
@@ -2188,20 +2084,20 @@ int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx)
         op = ctx->pc_8->b_8;
         if (op == 0xFF00)
         {
-            seq = dword_80091CE0;
-            if (seq[2] >= 0)
+            seq = &bgmSound_80091CE0;
+            if (seq->field_4_seq_num >= 0)
             {
-                SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-                seq[2] = -1;
+                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+                seq->field_4_seq_num = -1;
             }
         }
         else if (op == 0xFF01)
         {
-            seq = dword_80091CE0;
-            if (seq[2] >= 0)
+            seq = &bgmSound_80091CE0;
+            if (seq->field_4_seq_num >= 0)
             {
-                SsSepStop(seq[6], seq[2]);
-                seq[2] = -1;
+                SsSepStop(seq->field_C_sep_access_num, seq->field_4_seq_num);
+                seq->field_4_seq_num = -1;
             }
         }
         else if (op == 0xFF02)
@@ -2389,8 +2285,6 @@ int IsActorCmdDone_800BBAE4(int actor)
 }
 
 // Matched
-extern int LevantCommand_800A8EC4(int* p);
-extern int FieldMinionCommand_800A7D40(int a, int* p);
 int StartActorCmd_800BBB18(int* cmd)
 {
     int ret;
@@ -2407,8 +2301,6 @@ int StartActorCmd_800BBB18(int* cmd)
 }
 
 // Matched
-extern int FinishLevantCommand_800A9008(int* p);
-extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
 int FinishActorCmd_800BBB5C(int* cmd)
 {
     int ret;
@@ -2512,56 +2404,6 @@ int sub_800BBE18(EvScriptCtx* ctx)
     return -1;
 }
 
-typedef struct EvSpeaker
-{
-    int a_0;
-    int b_4;
-} EvSpeaker;
-typedef struct EvMsgWindowCfg
-{
-    int posMode_0;
-    short* pos_4;
-    int str_8;
-    int fC;
-    int f10;
-    int f14;
-    int mask_18;
-    int* list_1C;
-    EvSpeaker pair_20;
-    int f28;
-    int f2C;
-    int f30;
-    int f34;
-    int f38;
-    int f3C;
-    int f40;
-    int voice_44;
-} EvMsgWindowCfg;
-typedef struct EvItemMsgCfg
-{
-    int posMode_0;
-    short* pos_4;
-    int f8;
-    EvItemMsgSlot slots_C[3];
-    int f48;
-    int f4C;
-} EvItemMsgCfg;
-typedef struct EvMsgOptions
-{
-    EvSpeaker pair_A8;
-    EvItemMsgSrc src_B0;
-    int* list_B8;
-    int fBC;
-    int fC0;
-    int fC4;
-    int fC8;
-    int fCC;
-} EvMsgOptions;
-extern int GetEventString_800A6738(int a);
-extern int GetFieldMinionModelId_800A78A8(int a);
-extern int sub_800A78F4(int a);
-extern int OpenMessageWindow_8003422C(EvMsgWindowCfg* cfg);
-extern int OpenItemMessageWindow_80035AC8(EvItemMsgCfg* cfg);
 int* FindMsgChoiceList_800BC560(int* p);
 int GetChoiceMask_800BC58C(int* p);
 int IsActorLeftOf_800BC5C8(int a, int b);
@@ -2972,11 +2814,6 @@ void LoadEventEffectFile_800BC7A8(int file)
     }
 }
 
-typedef struct EvRelocBlob
-{
-    int* p_0;
-} EvRelocBlob;
-extern EvRelocBlob eventReloc_800AEBBC;
 // Matched
 void LoadRelocBlob_800BC854(int* src)
 {
@@ -3037,7 +2874,6 @@ void LoadEventTiy_800BC98C(int* tiy)
     LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)eventHeap_80091C10);
 }
 
-extern int eventDataBuf_800AEBC8;
 // Matched
 void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
 {

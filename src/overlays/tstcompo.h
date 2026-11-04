@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "model.h"
 
+
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
 typedef struct TstCompoCursorHead { char b[8]; } TstCompoCursorHead;
 
@@ -131,5 +132,162 @@ extern char tstCompoTaskList_800A2560[16];
 extern char compoLight_800A2570[24];
 extern char compoBonePos_800A2588[480];
 extern TstCompoModelParams compoModelParams_800A2768;
+
+
+/* ---- moved from the .c files: types ---- */
+// a menu layout of the TSTCOMPO pages: the cursor head (copied into the work cursor), then the grid geometry
+// a TSTCOMPO page (compoPages_800A250C[3])
+// a selectable part / colour of the compound test (compoParts_800A20EC[])
+typedef struct TstCompoBone
+{
+    short s0;
+    short s2;
+    short s4;
+    short s6;
+} TstCompoBone;
+
+// parameter block of DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28
+typedef struct TstCompoDraw
+{
+    FtgObject* ftg_0;
+    VECTOR* pos_4;
+    char* rot_8;
+    TstCompoBone* bones_C;
+    char* base_10;
+    ModelAnim* anim_14;
+    int frame_18;
+    int drawMode_1C;
+    char* bonePos_20;
+    VECTOR* scale_24;
+    unsigned long* ot_28;
+} TstCompoDraw;
+
+// work area of the TSTCOMPO task (TstCompoInit_800A0800)
+typedef struct TstCompoWork
+{
+    int state_0;
+    Model* model_4;
+    int f8;
+    TstCompoBone bones_C[40];
+    short yaw_14C;
+    short s14E;
+    short dist_150;
+    short pad_152;
+    int eye_154[3];
+    int at_160[3];
+    int pos_16C[3];
+    short s178;
+    short s17A;
+    short s17C;
+    short pad_17E;
+    int frame_180;
+    int anim_184;
+    int animCount_188;
+    int nextAnim_18C;
+    int animLoaded_190;
+    int paused_194;
+    int scaleStep_198;
+    int scaleId_19C;
+    int* scale_1A0;
+    char* boneScale_1A4;
+    TstCompoDraw draw_1A8;
+    int pad_1D4;
+    TstCompoCursorHead cursor_1D8;
+    short sel_1E0;
+    short scroll_1E2;
+    int nextPage_1E4;
+    int page_1E8;
+    int returnPage_1EC;
+    int f1F0;
+    unsigned int savedSel_1F4;
+    int* pickTarget_1F8;
+    int blend_1FC;
+    int blendFrame_200;
+    int blendAnim_204;
+    int listScroll_208;
+    int listSel_20C;
+    int part_210[3];
+    int ratio_21C[3];
+    int f228;
+    int enemy_22C;
+} TstCompoWork;
+
+typedef struct TstCompoMat
+{
+    int w[8];
+} TstCompoMat;
+
+// window style for DrawWindow_80042460
+typedef struct TstCompoWinStyle
+{
+    unsigned short color_0;
+    unsigned char colors_2; // GetWindowColors_8004226C
+    unsigned char frame_3;  // DrawWindowFrame_80041ED0
+} TstCompoWinStyle;
+
+/* TSTCOMPO's own functions/data used before their definition or from another of its files */
+void SetDefaultCompoParams_800A0918();
+void TstCompoResetCamera_800A1BE0(TstCompoWork* work);
+extern void TstCompoTask_800A097C();
+extern void TstCompoMenu_800A0AB8();
+extern void TstCompoStartModel_800A1320();
+extern void TstCompoWaitModel_800A1354();
+extern void TstCompoWaitFiles_800A13B8();
+extern void TstCompoDrawModel_800A1468();
+extern void TstCompoDrawBlend_800A15F4();
+extern void TstCompoFrameInput_800A1804();
+extern void TstCompoViewInput_800A194C();
+extern void TstCompoAnimSelect_800A19A4();
+extern void TstCompoFreeModel_800A1AD0();
+extern void TstCompoCameraInput_800A1C14();
+extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot);
+extern void TstCompoInitBones_800A1AFC();
+extern void SetCameraLookAt_800A1E68();
+/* exe-side: declared in main.h (which conflicts with this overlay's types) */
+extern unsigned short padPressed_8009194C;
+extern unsigned short padRepeat_800918CC;
+extern short cameraRot_8008D4C8[];
+extern unsigned char backColor_8008D460[];
+/* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
+extern int cameraEye_8008D600[];
+/* exe-side: funcs.h declares it void RunModelTask_80010A10(int) */
+extern int name_80010A10(int); // RunModelTask_80010A10 (declared void), its v0 is tested
+/* exe-side, to move to main.h / globals.h */
+extern short screenOffset_8008D474[];
+extern TstCompoMat dword_8007C2EC;
+extern TstCompoMat dword_8007C30C;
+extern unsigned short uiColor_8008B590;
+/* exe-side: effect_data.h declares it as int dword_8007DC74[6] */
+extern int dword_8007DC74;
+/* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
+extern short sinTable_80084540[];
+/* exe-side, to move to pad_text.h */
+extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
+extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
+extern int UpdateMenuCursor_8003D794(void* p, int idx); // the exe def takes one arg, but this caller sets a1 = 0
+/* exe-side, to move to cursor.h */
+extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
+/* exe-side, to move to font.h */
+extern void DrawText_8003E91C(int a, int b, void* c, int d);
+/* exe-side, to move to util.h */
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
+/* exe-side, to move to party.h */
+extern void StartModelTask_80010850();
+/* exe-side, to move to skel_draw.h */
+extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
+extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
+/* exe-side, to move to unit_stats.h */
+extern TstCompoBone defaultBones_80079140[];
+/* exe-side, to move to minion_init.h */
+extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
+/* exe-side, to move to ftg_draw.h */
+extern void SetGteLightAndCamera_8004D0E8();
+/* exe-side, to move to event.h */
+extern TstCompoMat lightMatrix_80087114;
+extern TstCompoMat colorMatrix_80087134;
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+/* PSY-Q library */
+extern void* memset(void* p, int c, unsigned int n);
 
 #endif

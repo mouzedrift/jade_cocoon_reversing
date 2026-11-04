@@ -26,30 +26,25 @@ void* GetEventDataSlot_800A55B0(int kind)
 }
 
 
-extern void LoadEventEffectFile_800BC7A8(int a, int b);
-extern void LoadRelocBlob_800BC854(int a, int b);
-extern void LoadEventTiy_800BC98C(int a, int b);
-extern void CopyEventData_800BCA18(int a, int b);
-extern void LoadEventRecordTables_800BCA68(int a, int b);
 
 void LoadEventData_800A5628(int kind, int data, int arg)
 {
     switch (kind)
     {
     case 0:
-        LoadEventEffectFile_800BC7A8(data, arg);
+        LoadEventEffectFile_800BC7A8(data);
         break;
     case 1:
-        LoadRelocBlob_800BC854(data, arg);
+        LoadRelocBlob_800BC854(data);
         break;
     case 2:
-        LoadEventTiy_800BC98C(data, arg);
+        LoadEventTiy_800BC98C(data);
         break;
     case 3:
         CopyEventData_800BCA18(data, arg);
         break;
     case 4:
-        LoadEventRecordTables_800BCA68(data, arg);
+        LoadEventRecordTables_800BCA68(data);
         break;
     }
 }

@@ -5,77 +5,7 @@
 #include "model.h"
 #include "tstmodel.h"
 
-extern unsigned short padRepeat_800918CC[];
-extern unsigned short padPressed_8009194C[];
 
-// parameter block of DrawAnimSkel_80046A58
-typedef struct TstModelDraw
-{
-    FtgObject* ftg_0;
-    VECTOR* pos_4;
-    char* rot_8;
-    TstModelBone* bones_C;
-    char* base_10;
-    ModelAnim* anim_14;
-    int frame_18;
-    int drawMode_1C;
-    char* bonePos_20;
-    VECTOR* scale_24;
-    unsigned long* ot_28;
-} TstModelDraw;
-// work area of the TSTMODEL task (TstModelInit_800A09C0)
-typedef struct TstModelWork
-{
-    int state_0;
-    int sel_4;       // model list cursor
-    int scroll_8;
-    int boneSel_C;   // bone list cursor
-    int boneScroll_10;
-    ModelList* models_14;
-    Model* model_18;
-    int count_1C;
-    int loadSel_20;   // LoadModel_80025200 sel, 0..0xBF
-    int modelId_24;
-    TstModelBone bones_28[41];
-    short yaw_170;
-    short holdTimer_172; // frames the bone-edit button is held
-    short dist_174;
-    short pad_176;
-    int eyeX_178;
-    int eyeY_17C;
-    int eyeZ_180;
-    int atX_184;
-    int atY_188;
-    int atZ_18C;
-    int posX_190; // reset with the camera (TstCompoWork.pos_16C)
-    int posY_194;
-    int posZ_198;
-    short s19C;
-    short s19E;
-    short s1A0;
-    short pad_1A2;
-    int frame_1A4;
-    int anim_1A8;
-    int animCount_1AC;
-    int nextAnim_1B0;
-    int animLoaded_1B4; // nextAnim was loaded here, free it on the next pick
-    int paused_1B8;
-    int scaleStep_1BC;
-    TstModelDraw draw_1C0;
-    int pad_1EC;
-    SVECTOR rot_1F0;
-} TstModelWork;
-typedef struct GridCursor
-{
-    int flags_0; // 1: wrap left/right, 2: wrap up/down
-    unsigned short unused_4;
-    short sel_6;
-    short cols_8;
-    short rows_A;
-    short count_C;
-    unsigned short scroll_E;
-} GridCursor;
-extern int UpdateGridCursor_800A1D70();
 
 int dword_800A05A0 SDATA = 16;
 const char aMDLOUMG_800A05A4[] = "MDL_OUMG";
@@ -169,7 +99,6 @@ const char aMDLLEB2_800A0980[] = "MDL_LEB2";
 const char aMDLLEBANT_800A098C[] = "MDL_LEBANT";
 const int dword_800A0998 = 0;
 
-extern void TstModelTask_800A0A8C();
 void TstModelInit_800A09C0(EventEntry* task, TstModelWork* c)
 {
     int i;
@@ -202,15 +131,6 @@ void TstModelInit_800A09C0(EventEntry* task, TstModelWork* c)
     task->cb_8 = (EventEntryFn)TstModelTask_800A0A8C;
 }
 
-extern void TstModelSelectModel_800A0C00();
-extern void TstModelLoadModel_800A0EC8();
-extern void TstModelWaitModel_800A0F20();
-extern void TstModelCameraInput_800A104C();
-extern void TstModelDrawModel_800A1428();
-extern void TstModelAnimSelect_800A17B8();
-extern void TstModelBoneEdit_800A1614();
-extern void TstModelFrameInput_800A18F4();
-extern void TstModelFreeModel_800A19E4();
 void TstModelTask_800A0A8C(EventEntry* task, TstModelWork* c)
 {
     switch (c->state_0)
@@ -373,13 +293,6 @@ void TstModelWaitModel_800A0F20(TstModelWork* work)
     }
 }
 
-extern unsigned short padHeld_800918D0[];
-extern short sinTable_80084540[];
-extern MATRIX lightMatrix_80087114;
-extern TstModelMat colorMatrix_80087134;
-extern void SetCameraLookAt_800A1A24();
-extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
-extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 void TstModelCameraInput_800A104C(TstModelWork* c)
 {
     MATRIX rot;
@@ -477,11 +390,6 @@ void TstModelCameraInput_800A104C(TstModelWork* c)
     }
 }
 
-extern void* memset(void* p, int c, unsigned int n);
-extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
-extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
-extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
-extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 void TstModelDrawModel_800A1428(TstModelWork* c)
 {
     VECTOR pos;
@@ -665,12 +573,6 @@ void TstModelFreeModel_800A19E4(TstModelWork* work)
     work->state_0 = 0;
 }
 
-extern int cameraEye_8008D600[];
-extern short cameraRot_8008D4C8[];
-extern unsigned char backColor_8008D460[];
-extern short screenOffset_8008D474[];
-extern int geomScreenDistance_8008B548;
-extern void SetGteLightAndCamera_8004D0E8();
 void SetCameraLookAt_800A1A24(TstModelWork* c)
 {
     int dir[3];
@@ -758,9 +660,6 @@ void WrapGridCursor_800A1CAC(GridCursor* cursor, int dir)
     }
 }
 
-extern int MoveGridCursor_800A1B48();
-extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
-extern void PlaySfx_80031494();
 int UpdateGridCursor_800A1D70(GridCursor* cursor)
 {
     int prevSel = cursor->sel_6;

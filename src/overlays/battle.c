@@ -4,33 +4,11 @@
 int dword_800B66C0 SDATA = 31;
 
 // GAME's encounter task buffer while a battle runs (GAME's GameQ_1; WaitBattleOverlay_800A1474 starts the battle)
-typedef struct BatEndWork
-{
-    int fileReq_0;     // file request of the overlay reloaded after the battle
-    int timer_4;
-    int* battleTask_8; // the battle task's EventEntry (its flags)
-    int c_C;
-} BatEndWork;
-typedef struct BatSelection
-{
-    char pad_0[0x18];
-    int c_18;
-} BatSelection;
-extern BatSelection* GetBattleSelection_800A1E3C();
-extern void BattleEndDefeat_800BA444();
-extern void BattleEndWaitLevant_800BA52C();
-extern void BattleEndVictory_800BA564();
-extern int TestBattleFlag_800BC820(unsigned int mask);
-extern void ExitLevantBattleMode_800A8984(int a);
-extern void StartSceneDarken_8001AAA8(int a);
-extern void StopSoundSeqs_80030D68(void* a);
-extern void StopSeqSlot_80031334(int a);
-extern void SsSepSetDecrescendo(int, int, int, int);
 
 // Matched
 void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
 {
-    short* seq;
+    SoundStruct* seq;
     BatSelection* sel;
     if ((*work->battleTask_8 & 0x8001) == 1)
     {
@@ -47,12 +25,12 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
     switch (dword_800B1230)
     {
     case 0:
-        StopSoundSeqs_80030D68(dword_80091D40);
-        seq = dword_80091CE0;
-        if (seq[2] >= 0)
+        StopSoundSeqs_80030D68(&systemSound_80091D40);
+        seq = &bgmSound_80091CE0;
+        if (seq->field_4_seq_num >= 0)
         {
-            SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-            seq[2] = -1;
+            SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+            seq->field_4_seq_num = -1;
         }
         StopSeqSlot_80031334(0);
         PlaySeqSlot_80031160(1, 1);
@@ -80,11 +58,11 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
         }
         else
         {
-            seq = dword_80091CE0;
-            if (seq[2] >= 0)
+            seq = &bgmSound_80091CE0;
+            if (seq->field_4_seq_num >= 0)
             {
-                SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-                seq[2] = -1;
+                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+                seq->field_4_seq_num = -1;
             }
         }
         task->next_8 = BattleEndWaitLevant_800BA52C;
@@ -104,11 +82,11 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
         }
         else
         {
-            seq = dword_80091CE0;
-            if (seq[2] >= 0)
+            seq = &bgmSound_80091CE0;
+            if (seq->field_4_seq_num >= 0)
             {
-                SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-                seq[2] = -1;
+                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+                seq->field_4_seq_num = -1;
             }
         }
         task->next_8 = BattleEndWaitLevant_800BA52C;
@@ -119,7 +97,7 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
 
 void BattleEndDefeat_800BA444(BatTaskEntry* task)
 {
-    int done = IsSceneFadeDone_8001AB94(task);
+    int done = IsSceneFadeDone_8001AB94();
     if (done == 1)
     {
         StopLevantAnimLoop_800A9364();
@@ -133,11 +111,11 @@ void BattleEndDefeat_800BA444(BatTaskEntry* task)
             }
             else
             {
-                short* seq = dword_80091CE0;
-                if (seq[2] >= 0)
+                SoundStruct* seq = &bgmSound_80091CE0;
+                if (seq->field_4_seq_num >= 0)
                 {
-                    SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-                    seq[2] = -1;
+                    SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+                    seq->field_4_seq_num = -1;
                 }
             }
         }
@@ -146,7 +124,7 @@ void BattleEndDefeat_800BA444(BatTaskEntry* task)
 
 void BattleEndWaitFade_800BA4F4(BatTaskEntry* task)
 {
-    if (IsSceneFadeDone_8001AB94(task) == 1)
+    if (IsSceneFadeDone_8001AB94() == 1)
     {
         task->next_8 = BattleEndFadeOut_800BA624;
     }
@@ -154,7 +132,7 @@ void BattleEndWaitFade_800BA4F4(BatTaskEntry* task)
 
 void BattleEndWaitLevant_800BA52C(BatTaskEntry* task)
 {
-    if (IsLevantIdle_800A89F0(task) == 1)
+    if (IsLevantIdle_800A89F0() == 1)
     {
         task->next_8 = BattleEndFadeOut_800BA624;
     }
@@ -175,11 +153,11 @@ void BattleEndVictory_800BA564(BatTaskEntry* task, BatEndWork* work)
                 }
                 else
                 {
-                    short* seq = dword_80091CE0;
-                    if (seq[2] >= 0)
+                    SoundStruct* seq = &bgmSound_80091CE0;
+                    if (seq->field_4_seq_num >= 0)
                     {
-                        SsSepSetDecrescendo(seq[6], seq[2], 0x7F, 0x78);
-                        seq[2] = -1;
+                        SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
+                        seq->field_4_seq_num = -1;
                     }
                 }
                 task->next_8 = BattleEndFadeOut_800BA624;
@@ -240,7 +218,7 @@ void BattleEndUnload_800BA788(BatTaskEntry* task)
     DestroyEncounterActors_800A1B78();
     FreeActiveOverlay_8002C014();
     FreeStageEffects_80039FC0();
-    StopSoundSeqs_80030D68(dword_80091D40);
+    StopSoundSeqs_80030D68(&systemSound_80091D40);
     StopSeqSlot_80031334(0);
     FreeSeqSlotSound_80030664();
     SsUtAllKeyOff(0);
@@ -597,7 +575,6 @@ void WaitChainMessageClosed_800BB168(BatTaskEntry* task, BatTurnWork* work)
     }
 }
 
-extern void StopBattleWindows_800BFBB8();
 // Matched
 void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
 {
@@ -890,7 +867,7 @@ void WaitBattleMenu_800BB940(BatTaskEntry* task, BatTurnWork* work)
 
 void CmdAction_800BBA24(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = StartActionTask_800BC28C(task);
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = CmdActionReactions_800BBA70;
     task->next_8 = WaitActionTask_800BC144;
 }
@@ -948,7 +925,7 @@ void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
 
 void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = StartActionTask_800BC28C(task);
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = CmdSummonWait_800BBCC8;
     task->next_8 = WaitActionTask_800BC144;
 }
@@ -1010,7 +987,7 @@ void CmdSummonWait_800BBCC8(BatTaskEntry* task, BatTurnWork* work)
 
 void CmdRecall_800BBDB4(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = StartActionTask_800BC28C(task);
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = CmdRecallDone_800BBE00;
     task->next_8 = WaitActionTask_800BC144;
 }
@@ -1046,7 +1023,7 @@ void CmdRecallEnd_800BBE7C(BatTaskEntry* task)
 
 void CmdEnemyCall_800BBEFC(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = StartActionTask_800BC28C(task);
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = CmdEnemyCallJoin_800BBF64;
     curCommand_800C9C88.targets_C = 0;
     commandUnit_800C9C98 = curCommand_800C9C88.arg_4 + 4;
@@ -1069,7 +1046,7 @@ void CmdEnemyCallJoin_800BBF64(BatTaskEntry* task, BatTurnWork* work)
 
 void CmdEnemySwap_800BBFFC(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = StartActionTask_800BC28C(task);
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = CmdEnemySwapJoin_800BC05C;
     commandUnit_800C9C98 = curCommand_800C9C88.arg_4 + 4;
     task->next_8 = WaitActionTask_800BC144;
@@ -1092,7 +1069,7 @@ void CmdEnemySwapJoin_800BC05C(BatTaskEntry* task, BatTurnWork* work)
 
 void CmdSimple_800BC0FC(BatTaskEntry* task, BatTaskEntry* work)
 {
-    work->handle_C = (int*)StartActionTask_800BC28C(task);
+    work->handle_C = (int*)StartActionTask_800BC28C();
     work->next_8 = work->resume_4;
     task->next_8 = WaitActionTask_800BC144;
 }

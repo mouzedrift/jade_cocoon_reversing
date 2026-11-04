@@ -13,6 +13,8 @@
 
 #include "model.h"
 #include "camera.h"
+#include "sound.h"
+
 
 
 extern int GetActiveSwapEnemy_800A2AB4();
@@ -161,7 +163,7 @@ extern int dword_800ADE88;
 
 extern int IsSummonedMinionIdle_800C0D60();
 
-extern int IsLevantIdle_800A89F0();
+extern int IsLevantIdle_800A89F0(void);
 
 extern int IsEnemyIdle_800A2550();
 
@@ -177,7 +179,6 @@ extern void BattleNextTurn_800BAE74();
 
 extern void ClearBattleFlag_800BC850(unsigned int);
 
-extern char dword_80091D40[];
 
 // GAME's battle chain record (game.h GameBattleChain)
 typedef struct BatChainRecord
@@ -194,7 +195,6 @@ extern int levantAnimSet_80091C74;
 extern int dword_8007DC74;
 
 
-extern short dword_80091CE0[];
 
 extern void sub_800B42A8();
 
@@ -218,7 +218,7 @@ extern int AreAllEncounterEnemiesGone_800A1B2C();
 
 
 
-extern void SsSepSetDecrescendo();
+extern void SsSepSetDecrescendo(short, short, short, long); // PSY-Q libsnd
 
 extern void BattleEndReturnToField_800BA848();
 
@@ -286,7 +286,6 @@ extern BatEnemyResult dword_800B1238[];
 
 extern EventNode* actionTask_8008B4C0;
 
-extern int dword_800ADE88;
 
 extern int eventDispatchHalt_8008B540;
 
@@ -319,7 +318,7 @@ extern void RemoveEnemy_800A2924();
 
 
 
-extern void memset();
+extern void* memset(void* dst, int c, unsigned int n); // the exe's libc memset
 
 
 extern void SetFadeMode_8001C19C();
@@ -364,7 +363,6 @@ extern void BattleEndUnload_800BA788();
 
 extern void RemoveAliveEnemies_800BA720();
 
-extern void BattleNextTurn_800BAE74();
 
 extern void BattleFinish_800BB1B0();
 
@@ -503,11 +501,9 @@ typedef struct BatAnimWindow
 
 
 
-extern int IsSceneFadeDone_8001AB94(void*);
+extern int IsSceneFadeDone_8001AB94(void);
 
-extern int IsLevantIdle_800A89F0();
 
-extern void BattleEndFadeOut_800BA624();
 
 extern void InputCommand_800BB894();
 
@@ -515,9 +511,8 @@ extern void CmdSummonWait_800BBCC8();
 
 extern void WaitActionTask_800BC144();
 
-extern void ClearBattleFlag_800BC850(unsigned int);
 
-extern int StartActionTask_800BC28C();
+extern int StartActionTask_800BC28C(void);
 
 extern int NeedsStatusReaction_800BC1A8();
 
@@ -629,7 +624,7 @@ extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
 extern void StartCameraShake_80037BFC(int a);
 
-extern void PlaySfx_80031494(int id);
+
 
 extern void StartPadVibration_80036528(int pad, int kind);
 
@@ -659,7 +654,6 @@ typedef struct BatSettingsBits
     unsigned int b21 : 1;
 } BatSettingsBits;
 
-extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
 
 extern void FlashScreenWhite_800BF3AC();
 
@@ -675,7 +669,6 @@ typedef struct BatHitNumber
     int unit_18;
 } BatHitNumber;
 
-extern void StartCameraShake_80037BFC(int a);
 
 extern void StartPadVibration_80036528(int a, int b);
 
@@ -705,7 +698,6 @@ extern void sub_800B4390(UnitStatus* actor, UnitStatus* target, BatCommand* cmd,
 
 extern void MarkSpeciesCaptured_800BF9F0(int species);
 
-extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 typedef struct BatXY
 {
@@ -817,7 +809,6 @@ typedef struct BatShard
     void* obj_3C; // EffectModel or a model
 } BatShard;
 
-extern void PlaySfx_80031494(int id);
 
 
 extern void ShardTask_800C273C();
@@ -903,7 +894,6 @@ extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 
 
 
-extern void free3_8003FC6C(void* p);
 
 typedef struct BatOrb
 {
@@ -940,11 +930,9 @@ extern int DistanceSquared3D_8003B80C(int* a, int* b);
 
 extern int pointLightPos_8008D680[3];
 
-extern short dword_8008D418[3];
 
 extern int pointLightRange_8008D3F0;
 
-extern int pointLightRange_8008D3F0;
 
 extern void AiSetCommand_800C6AFC();
 
@@ -960,7 +948,6 @@ extern int AiUseSkill_800C6A8C();
 
 extern int AiAttack_800C6A68();
 
-extern int AiCastMagic_800C6BD0();
 
 extern int rand();
 
@@ -1038,7 +1025,6 @@ extern int CheckMagicUsable_80034068(BatTargetQuery* q);
 extern unsigned char GetSelectedCommand_800C78D0();
 
 
-extern int GetMenuCursorIndex_8003DA54(void*);
 
 
 
@@ -1131,7 +1117,6 @@ extern int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BatComm
 
 
 
-extern int menuErrorText_800C9E7C;
 
 
 
@@ -1570,3 +1555,164 @@ extern BatMenuItem *menuItems_800C9E6C;
 /* the jump table of DrawBattleStage_800BC90C (asm) and its targets, labels in the generated asm */
 extern char jtgt_800BD0F4[], jtgt_800BD4F0[];
 extern void* const dword_800B6710[25];
+
+/* battle.c: the battle end task (BattleEnd_800BA254 and its next steps) */
+typedef struct BatEndWork
+{
+    int fileReq_0;     // file request of the overlay reloaded after the battle
+    int timer_4;
+    int* battleTask_8; // the battle task's EventEntry (its flags)
+    int c_C;
+} BatEndWork;
+// GAME's battle selection (GetBattleSelection_800A1E3C)
+typedef struct BatSelection
+{
+    char pad_0[0x18];
+    int c_18;
+} BatSelection;
+void BattleEndDefeat_800BA444(BatTaskEntry* task);
+void BattleEndWaitLevant_800BA52C(BatTaskEntry* task);
+void BattleEndVictory_800BA564(BatTaskEntry* task, BatEndWork* work);
+int TestBattleFlag_800BC820(unsigned int mask);
+void StopBattleWindows_800BFBB8();
+
+/* GAME-side (game.h; GAME stays loaded under BATTLE) */
+extern BatSelection* GetBattleSelection_800A1E3C();
+extern void ExitLevantBattleMode_800A8984(int victoryPose);
+
+/* exe-side, to move to engine.h */
+extern void StartSceneDarken_8001AAA8(short duration);
+/* exe-side, to move to sound_seq.h */
+extern void StopSoundSeqs_80030D68(SoundStruct* sound);
+extern void StopSeqSlot_80031334(int idx);
+
+/* battle_5.c: the actor window's box (DrawWindow_80042460's style) */
+typedef struct BatWindowBox
+{
+    short col_0;
+    char c_2;
+    char c_3;
+} BatWindowBox;
+
+/* battle_6.c: the enemy AI (ChooseEnemyCommand_800C4118 calls these before their definitions) */
+int EnemyAiBD_800C4A40(EnemyAi* ai);
+void BossAi03_800C5BC0(EnemyAi* ai);
+void BossAi04_800C59A0(EnemyAi* ai);
+void BossAi0A_800C58BC(EnemyAi* ai);
+void BossAi0B_800C5EB8(EnemyAi* ai);
+void BossAi0C_800C6038(EnemyAi* ai);
+void BossAi0D_800C5D04(EnemyAi* ai);
+void BossAi0E_800C61FC(EnemyAi* ai);
+void BossAi0F_800C66F4(EnemyAi* ai);
+void BossAi10_800C6824(EnemyAi* ai);
+void BossAi11_800C6928(EnemyAi* ai);
+void EnemyAiFirstSkill_800C6A40(EnemyAi* ai);
+void BossAi02_800C5A7C(EnemyAi* ai);
+void EnemyAiDefend_800C58AC(EnemyAi* ai);
+
+/* exe-side, to move to unit_gauges.h */
+extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, void* rect, int ot, int flags);
+extern void DrawMpGauge_8002F120(UnitStatus* unit, short* pos, int gaugeArg, short ot);
+extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
+/* exe-side, to move to event.h */
+extern void DrawWindow_80042460(short* rect, BatWindowBox* style, void* ot, int time);
+extern void DrawUiColorWindow_800424C0(void* rect, short colorSet, void* ot, int time);
+/* exe-side, to move to font.h */
+extern void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot);
+/* exe-side, to move to util.h */
+extern void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot);
+/* exe-side, to move to menu_window.h */
+extern void DrawTextLinesWindow_8002AE38(int* lines, short* pos, int ot, short* rect, int count);
+/* exe-side, to move to globals.h / data_decls.h */
+/* exe-side: main.h declares it (main.h itself conflicts with battle.h types) */
+extern SVECTOR pointLightColor_8008D418;
+extern unsigned short uiColor_8008B590;
+extern int battleHelpTexts_800793DC[];
+
+/* battle_6.c: the enemy AI scripts and battle menu steps its tables (enemyAi_800C9204, menuStateFns_800C966C) point to */
+int EnemyAi00_800C4D38(EnemyAi* ai);
+int EnemyAi02_800C54A4(EnemyAi* ai);
+int EnemyAi03_800C4FE0(EnemyAi* ai);
+int EnemyAi04_800C57D8(EnemyAi* ai);
+int EnemyAi05_800C56B8(EnemyAi* ai);
+int EnemyAi06_800C4BE4(EnemyAi* ai);
+int EnemyAi07_800C4E34(EnemyAi* ai);
+int EnemyAi08_800C580C(EnemyAi* ai);
+int EnemyAi09_800C4DB8(EnemyAi* ai);
+int EnemyAi0A_800C4EA8(EnemyAi* ai);
+int EnemyAi0B_800C5510(EnemyAi* ai);
+int EnemyAi0C_800C4CBC(EnemyAi* ai);
+int EnemyAi0D_800C5424(EnemyAi* ai);
+int EnemyAi0E_800C5034(EnemyAi* ai);
+int EnemyAi0F_800C4B34(EnemyAi* ai);
+int EnemyAi10_800C5304(EnemyAi* ai);
+int EnemyAi12_800C4C74(EnemyAi* ai);
+int EnemyAi13_800C507C(EnemyAi* ai);
+int EnemyAi14_800C5594(EnemyAi* ai);
+int EnemyAi15_800C5290(EnemyAi* ai);
+int EnemyAi16_800C5608(EnemyAi* ai);
+int EnemyAi17_800C50B0(EnemyAi* ai);
+int EnemyAi18_800C5670(EnemyAi* ai);
+int EnemyAi19_800C576C(EnemyAi* ai);
+int EnemyAi1A_800C4FA8(EnemyAi* ai);
+int EnemyAi1B_800C51D8(EnemyAi* ai);
+int EnemyAi1C_800C53B0(EnemyAi* ai);
+int EnemyAi1D_800C5700(EnemyAi* ai);
+int EnemyAi1E_800C5874(EnemyAi* ai);
+int EnemyAi1F_800C5840(EnemyAi* ai);
+void EnemyAiC9_800C4328(EnemyAi* ai);
+void EnemyAiCA_800C43D8(EnemyAi* ai);
+void EnemyAiCB_800C4424(EnemyAi* ai);
+void EnemyAiCC_800C4470(int ai);
+void EnemyAiCD_800C4494(EnemyAi* ai);
+void EnemyAiCE_800C44FC(EnemyAi* ai);
+void EnemyAiCF_800C4548(EnemyAi* ai);
+void EnemyAiD0_800C45A8(EnemyAi* ai);
+void EnemyAiD1_800C46FC();
+void EnemyAiD2_800C471C();
+void MenuInput_800C8768();
+void MenuShowError_800C88E4();
+
+/* battle: functions called before their definition (or from another of its files) */
+int AdvancePetrification_800BFA34(int status);
+int AiDefend_800C6C44(EnemyAi* ai);
+int AiFlee_800C6C58(EnemyAi* ai);
+int AreStageEffectsLoaded_800BC8E8();
+int CanCapture_800C7334();
+int CanFlee_800C72B8();
+void DisableMenuCommands_800C71C8();
+int GetAreaElement_800BC868();
+int GetStatusCommand_800BFA4C(unsigned int status, unsigned int prevStatus);
+int* GetSummonedMinionPos_800C0F9C();
+void InitEnemyRecords_800BABC4();
+void InitMenuCursors_800C7088();
+void InitTurnGauges_800BF648(short* gauges, unsigned int mode);
+int IsBossSpecies_800BF9B4(int species);
+int IsTargetWeakToMagic_800C6EE4(EnemyAi* ai);
+int IsUncapturableSpecies_800BF980(int species);
+void LoadStageEffects_800BC878();
+void RecoverPartyAfterBattle_800BA97C();
+BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int isReaction);
+void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpChange);
+int TriggerMinionAction_800C0E84(BatCommand* cmd, int isReaction); // isReaction unused (TriggerUnitAction_800BE14C passes it to all three Trigger*Action)
+
+/* GAME-side (game.h) */
+extern int CanFleeFromEnemy_800A28FC(int idx);
+/* exe-side, to move to model.h */
+extern int AreLoaderModelsLoaded_80020924(void);
+extern void LoadLoaderModelAnimSets_80020898(void);
+extern int LoadOverlayIfChanged_80020D1C(int mode, int overlay);
+/* exe-side, to move to engine.h */
+extern void DestroyActor_8001D600(Actor* actor);
+/* exe-side, to move to camera.h */
+extern void FocusBattleCamera_80037AE0(unsigned short mask);
+/* exe-side, to move to sound.h */
+extern void FreeSeqSlotSound_80030664(void);
+extern int PlayMusic_800300E0(int idx, int unused);
+/* exe-side, to move to cd.h */
+extern int ratan2Degrees_8003B56C(int x, int y);
+/* exe-side, to move to sound_seq.h */
+extern void SfxKeyOff_80031574(short voice, short sfx);
+extern short SfxKeyOn_800314F4(int sfx);
+/* PSY-Q libsnd */
+extern void SsUtAllKeyOff(short mode);

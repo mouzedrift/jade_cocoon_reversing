@@ -1,6 +1,433 @@
 // BATTLE.BIN, source file 6 of 6 from 0x800C4118 (enemy AI; .rdata from 0x800B684C)
 #include "battle.h"
 
+int dword_800C8B2C = 0xFFFF;
+unsigned char aiCounter_800C8B30[4] = { 0 };
+int aiAllyCalled_800C8B34 = 0;
+unsigned char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
+void (*commandHandlers_800C8B54[7])() = { CmdAction_800BBA24, CmdSummon_800BBBA8, CmdRecall_800BBDB4, CmdSimple_800BC0FC, CmdSwapMinion_800BBBF4, CmdEnemyCall_800BBEFC, CmdEnemySwap_800BBFFC };
+unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
+unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
+unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
+unsigned short stage03Sprites_800C8BA0[8] = { 72, 73, 74, 75, 76, 77, 78, 0xFFFF };
+unsigned short stage04Sprites_800C8BB0[8] = { 84, 85, 86, 87, 88, 89, 90, 0xFFFF };
+unsigned short stage05Sprites_800C8BC0[10] = {
+    91, 92, 93, 94, 95, 96, 97, 98,
+    0xFFFF,
+};
+unsigned short stage06Sprites_800C8BD4[10] = {
+    99, 100, 101, 102, 103, 104, 105, 106,
+    0xFFFF,
+};
+unsigned short stage07Sprites_800C8BE8[8] = { 108, 109, 110, 111, 112, 113, 0xFFFF };
+unsigned short stage08Sprites_800C8BF8[10] = {
+    118, 119, 120, 121, 122, 123, 124, 125,
+    0xFFFF,
+};
+unsigned short stage09Sprites_800C8C0C[8] = { 126, 127, 128, 129, 130, 131, 0xFFFF };
+unsigned short stage0ASprites_800C8C1C[8] = { 136, 137, 138, 139, 140, 141, 0xFFFF };
+unsigned short stage0BSprites_800C8C2C[8] = { 0x11D, 0x11E, 0x11F, 0x120, 0x121, 0x122, 0xFFFF };
+unsigned short stage0CSprites_800C8C3C[10] = {
+    0x127, 0x128, 0x129, 0x12A, 0x12B, 0x12C, 0x12D, 0x12E,
+    0xFFFF,
+};
+unsigned short stage0DSprites_800C8C50[8] = { 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, 0xFFFF };
+unsigned short stage0ESprites_800C8C60[8] = { 0x139, 0x13A, 0x13B, 0x13C, 0x13D, 0x13E, 0xFFFF };
+unsigned short stage0FSprites_800C8C70[6] = { 146, 147, 148, 149, 150, 0xFFFF };
+unsigned short stage10Sprites_800C8C7C[6] = { 152, 153, 154, 155, 0xFFFF };
+unsigned short stage11Sprites_800C8C88[8] = { 156, 157, 158, 159, 160, 161, 0xFFFF };
+unsigned short stage12Sprites_800C8C98[2] = { 0xFFFF };
+unsigned short stage13Sprites_800C8C9C[6] = { 166, 167, 168, 169, 0xFFFF };
+unsigned short stage14Sprites_800C8CA8[6] = { 171, 172, 173, 174, 175, 0xFFFF };
+unsigned short stage15Sprites_800C8CB4[6] = { 176, 177, 178, 179, 180, 0xFFFF };
+unsigned short stage16Sprites_800C8CC0[6] = { 182, 183, 184, 185, 186, 0xFFFF };
+unsigned short stage17Sprites_800C8CCC[8] = { 187, 188, 189, 190, 191, 192, 193, 0xFFFF };
+unsigned short stage18Sprites_800C8CDC[8] = { 198, 199, 200, 201, 202, 203, 0xFFFF };
+unsigned short stage19Sprites_800C8CEC[8] = { 208, 209, 210, 211, 212, 213, 214, 0xFFFF };
+unsigned short stage1ASprites_800C8CFC[8] = { 219, 220, 221, 222, 223, 224, 225, 0xFFFF };
+unsigned short stage1BSprites_800C8D0C[8] = { 0x16F, 0x170, 0x171, 0x172, 0x173, 0x174, 0x175, 0xFFFF };
+unsigned short stage1CSprites_800C8D1C[10] = {
+    0x10C, 0x10D, 0x10E, 0x10F, 0x110, 0x111, 0x112, 0x113,
+    0xFFFF,
+};
+unsigned short stage1DSprites_800C8D30[10] = {
+    0x114, 0x115, 0x116, 0x117, 0x118, 0x119, 0x11A, 0x11B,
+    0xFFFF,
+};
+unsigned short stage1ESprites_800C8D44[8] = { 230, 231, 232, 233, 234, 235, 0xFFFF };
+unsigned short stage1FSprites_800C8D54[10] = {
+    240, 241, 242, 243, 244, 245, 246, 247,
+    0xFFFF,
+};
+unsigned short stage20Sprites_800C8D68[8] = { 248, 249, 250, 251, 252, 253, 0xFFFF };
+unsigned short stage21Sprites_800C8D78[8] = { 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0xFFFF };
+unsigned short stage22Sprites_800C8D88[8] = { 0x183, 0x184, 0x185, 0x186, 0x187, 0x188, 0xFFFF };
+unsigned short stage23Sprites_800C8D98[6] = { 0x197, 0x198, 0x199, 0x19A, 0x19B, 0xFFFF };
+unsigned short stage24Sprites_800C8DA4[8] = { 0x18D, 0x18E, 0x18F, 0x190, 0x191, 0x192, 0xFFFF };
+unsigned short stage25Sprites_800C8DB4[8] = { 0x1A0, 0x1A1, 0x1A2, 0x1A3, 0x1A4, 0x1A5, 0xFFFF };
+unsigned short stage26Sprites_800C8DC4[8] = { 0x179, 0x17A, 0x17B, 0x17C, 0x17D, 0x17E, 0xFFFF };
+unsigned short stage10Models_800C8DD4[12] = {
+    49, 48, 0, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage12Models_800C8DEC[12] = {
+    52, 0, 0, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage13Models_800C8E04[12] = {
+    54, 0, 1, 0, 55, 48, 0, 0,
+    56, 48,
+};
+unsigned short stage0AModels_800C8E1C[12] = {
+    193, 48, 0, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage0EModels_800C8E34[12] = {
+    194, 48, 0, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage21Models_800C8E4C[12] = {
+    195, 48, 0, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage14Models_800C8E64[12] = {
+    58, 0, 1, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage15Models_800C8E7C[12] = {
+    60, 0, 1, 0, 255, 0, 0, 0,
+    255,
+};
+unsigned short stage16Models_800C8E94[12] = {
+    62, 0, 1, 0, 255, 0, 0, 0,
+    255,
+};
+BatStage battleStages_800C8EAC[39] = {
+    { stage00Sprites_800C8B70, 0x3A6, 37, 0, 7, -1 },
+    { stage01Sprites_800C8B80, 0x3A8, 38, 0, 6, -1 },
+    { stage02Sprites_800C8B90, 0x3A9, 39, 0, 7, -1 },
+    { stage03Sprites_800C8BA0, 0x3AA, 40, 0, 7, -1 },
+    { stage04Sprites_800C8BB0, 0x3AB, 41, 0, -1, 83 },
+    { stage05Sprites_800C8BC0, 0x3C5, 42, 0, -1, 0x1AA },
+    { stage06Sprites_800C8BD4, 0x3C7, 43, 0, -1, 107 },
+    { stage07Sprites_800C8BE8, 0x3AC, 44, 0, 6, -1 },
+    { stage08Sprites_800C8BF8, 0x3AD, 45, 0, -1, -1 },
+    { stage09Sprites_800C8C0C, 0x3B7, 46, 0, -1, -1 },
+    { stage0ASprites_800C8C1C, 0x3BA, 47, 0, -1, -1, stage0AModels_800C8E1C },
+    { stage0BSprites_800C8C2C, 0x3B3, 74, 0, 6, -1 },
+    { stage0CSprites_800C8C3C, 0x3B5, 75, 0, -1, -1 },
+    { stage0DSprites_800C8C50, 0x3B8, 76, 0, 6, -1 },
+    { stage0ESprites_800C8C60, 0x3BB, 77, 0, 6, -1, stage0EModels_800C8E34 },
+    { stage0FSprites_800C8C70, 0x3BD, 48, 0, -1, 151 },
+    { stage10Sprites_800C8C7C, 0x3BE, 50, 0, -1, -1, stage10Models_800C8DD4 },
+    { stage11Sprites_800C8C88, 0x3BF, 51, 0, -1, -1 },
+    { stage12Sprites_800C8C98, 0x3C0, 53, 0, 0, -1, stage12Models_800C8DEC },
+    { stage13Sprites_800C8C9C, 0x3C1, 57, 0, -1, 170, stage13Models_800C8E04 },
+    { stage14Sprites_800C8CA8, 0x3C2, 59, 0, -1, -1, stage14Models_800C8E64 },
+    { stage15Sprites_800C8CB4, 0x3C3, 61, 0, -1, 181, stage15Models_800C8E7C },
+    { stage16Sprites_800C8CC0, 0x3C4, 63, 0, -1, -1, stage16Models_800C8E94 },
+    { stage17Sprites_800C8CCC, 0x3AE, 64, 0, 7, -1 },
+    { stage18Sprites_800C8CDC, 0x3AF, 65, 0, 6, -1 },
+    { stage19Sprites_800C8CEC, 0x3B0, 66, 0, 7, -1 },
+    { stage1ASprites_800C8CFC, 0x3B1, 67, 0, 7, -1 },
+    { stage1BSprites_800C8D0C, 0x3B2, 175, 0, -1, 0x16E },
+    { stage1CSprites_800C8D1C, 0x3C6, 72, 0, -1, 0x1AB },
+    { stage1DSprites_800C8D30, 0x3C8, 73, 0, -1, 0x11C },
+    { stage1ESprites_800C8D44, 0x3B4, 68, 0, 6, -1 },
+    { stage1FSprites_800C8D54, 0x3B6, 69, 0, -1, -1 },
+    { stage20Sprites_800C8D68, 0x3B9, 70, 0, 6, -1 },
+    { stage21Sprites_800C8D78, 0x3BC, 71, 0, 6, -1, stage21Models_800C8E4C },
+    { stage22Sprites_800C8D88, 0x434, 187, 0, 6, -1 },
+    { stage23Sprites_800C8D98, 0x435, 189, 0, 5, -1 },
+    { stage24Sprites_800C8DA4, 0x436, 188, 0, 6, -1 },
+    { stage25Sprites_800C8DB4, 0x437, 190, 0, 6, -1 },
+    { stage26Sprites_800C8DC4, 0x438, 186, 0, 6, -1 },
+};
+unsigned char stageAnimPhases_800C911C[8] = { 1, 5, 9, 2, 6, 3, 7, 4 };
+SVECTOR stageRot_800C9124 = { 0 };
+char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
+unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
+BatCureChance statusCureChances_800C9138[1] = { { 2, 77 } };
+BatXY enemyWindowLayouts_800C9140[9] = {
+    { 110, 20 },
+    { -1, -1 },
+    { -1, -1 },
+    { 60, 20 },
+    { 160, 20 },
+    { -1, -1 },
+    { 10, 20 },
+    { 110, 20 },
+    { 210, 20 },
+};
+int enemyGaugePreview_800C9164[3] = { 0 };
+int actorHighlightTime_800C9170 = 0;
+int enemyHighlightTimes_800C9174[3] = { 0 };
+short previewHpChange_800C9180 = 0;
+short previewMpChange_800C9182 = 0;
+int dword_800C9184 = 0x24639300;
+Minion *summonedMinion_800C9188 = 0;
+int summonedMinionSlot_800C918C = -1;
+BatSummonedActor summonedActor_800C9190 = { 0 };
+char defaultBoneSlots_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
+EnemyAiFn enemyAiHigh_800C91DC[10] = {
+    EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (EnemyAiFn)EnemyAiCC_800C4470,
+    EnemyAiCD_800C4494, EnemyAiCE_800C44FC, EnemyAiCF_800C4548, EnemyAiD0_800C45A8,
+    (EnemyAiFn)EnemyAiD1_800C46FC, (EnemyAiFn)EnemyAiD2_800C471C,
+};
+EnemyAiFn enemyAi_800C9204[53] = {
+    (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi02_800C54A4, (EnemyAiFn)EnemyAi03_800C4FE0,
+    (EnemyAiFn)EnemyAi04_800C57D8, (EnemyAiFn)EnemyAi05_800C56B8, (EnemyAiFn)EnemyAi06_800C4BE4, (EnemyAiFn)EnemyAi07_800C4E34,
+    (EnemyAiFn)EnemyAi08_800C580C, (EnemyAiFn)EnemyAi09_800C4DB8, (EnemyAiFn)EnemyAi0A_800C4EA8, (EnemyAiFn)EnemyAi0B_800C5510,
+    (EnemyAiFn)EnemyAi0C_800C4CBC, (EnemyAiFn)EnemyAi0D_800C5424, (EnemyAiFn)EnemyAi0E_800C5034, (EnemyAiFn)EnemyAi0F_800C4B34,
+    (EnemyAiFn)EnemyAi10_800C5304, (EnemyAiFn)EnemyAi0F_800C4B34, (EnemyAiFn)EnemyAi12_800C4C74, (EnemyAiFn)EnemyAi13_800C507C,
+    (EnemyAiFn)EnemyAi14_800C5594, (EnemyAiFn)EnemyAi15_800C5290, (EnemyAiFn)EnemyAi16_800C5608, (EnemyAiFn)EnemyAi17_800C50B0,
+    (EnemyAiFn)EnemyAi18_800C5670, (EnemyAiFn)EnemyAi19_800C576C, (EnemyAiFn)EnemyAi1A_800C4FA8, (EnemyAiFn)EnemyAi1B_800C51D8,
+    (EnemyAiFn)EnemyAi1C_800C53B0, (EnemyAiFn)EnemyAi1D_800C5700, (EnemyAiFn)EnemyAi1E_800C5874, (EnemyAiFn)EnemyAi1F_800C5840,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C,
+};
+BatMenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
+BatMenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
+BatMenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
+int dword_800C92FC[3] = { 0x10001, 1 };
+BatMenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
+BatMenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
+BatMenuCursor targetMenu_800C9320[1] = { { 1 } };
+BatMenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
+BatMenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
+int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
+int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
+int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
+int helpCapture_800C935C[1] = { (int)aCaptureMinionIn_800B6940 };
+int helpItem_800C9360[1] = { (int)aUseItem_800B6984 };
+int helpFlee_800C9364[1] = { (int)aFleeFromCombat_800B6998 };
+int helpMinionAttack_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
+int helpSpecialAttack_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
+int helpMagic_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
+int helpChangeFighter_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
+int msgNoDivineMinions_800C9378[1] = { (int)aNoDivineMinions_800B6A58 };
+int msgCannotSummon_800C937C = (int)aCannotSummonInt_800B6A88;
+int msgNotEnoughMana_800C9380 = (int)aNotEnoughMana_800B6ABC;
+int msgCannotCapture_800C9384[1] = { (int)aCannotCapture_800B6ADC };
+int msgNoEmptyCocoons_800C9388[1] = { (int)aNoEmptyCocoons_800B6AFC };
+int msgCannotEscape_800C938C[1] = { (int)aCannotEscape_800B6B20 };
+int msgNoNeedToUseItem_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
+int msgCannotSelect_800C9394[1] = { (int)aCannotSelect_800B6B64 };
+int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
+int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
+int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
+BatMenuItem levantMenuItems_800C93A4[6] = {
+    { helpAttack_800C9350 },
+    { helpDefend_800C9354 },
+    { helpSummon_800C9358 },
+    { helpCapture_800C935C },
+    { helpItem_800C9360 },
+    { helpFlee_800C9364 },
+};
+BatMenuItem minionMenuItems_800C93D4[5] = {
+    { helpMinionAttack_800C9368 },
+    { helpDefend_800C9354 },
+    { helpSpecialAttack_800C936C },
+    { helpMagic_800C9370 },
+    { helpChangeFighter_800C9374 },
+};
+BatMenuWindow winAttack_800C93FC[2] = {
+    { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winDefend_800C9434[2] = {
+    { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winSummon_800C946C[2] = {
+    { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winCapture_800C94A4[2] = {
+    { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winItem_800C94DC[2] = {
+    { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winFlee_800C9514[2] = {
+    { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winSpecialAttack_800C954C[2] = {
+    { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winMagic_800C9584[2] = {
+    { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow winChangeFighter_800C95BC[2] = {
+    { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
+    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+BatMenuWindow *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
+BatMenuWindow *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
+BatMenuWindow **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
+BatMenuWindows menuWindows_800C9630 = { 2 };
+unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
+unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
+unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
+void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer) = { (void (*)(EventEntry *, int))MenuInput_800C8768, (void (*)(EventEntry *, int))MenuShowError_800C88E4 };
+int pageButtonHelp_800C9674[6] = { 0x80082698, 0x800826B0, 0x800826B0, 0x800826B0, 0x80082680 };
+unsigned short pageHideFlags_800C968C[6][2] = {
+    { 0x1F0, 240 },
+    { 0x1D1, 0x1D7 },
+    { 0x1B1, 0x1B7 },
+    { 0x170, 0x176 },
+    { 0x1E0, 246 },
+};
+int commandKinds_800C96A4[9] = {
+    0, 18, 2, 5, 4, 7, 6, 1,
+    8,
+};
+int itemDescriptions_800C96C8[43][4] = {
+    { (int)aRestoreHealth_800B8CFC, (int)aGrowsInOpenArea_800B8CB4, (int)aIncreasesHealth_800B8C68, (int)aGrindLeavesInto_800B8C0C },
+    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortB_800B8BCC, (int)aSweeterSmelling_800B8B74, (int)aCuresBleedingAn_800B8B30 },
+    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortW_800B8ACC, (int)aBitterTasteThat_800B8A60 },
+    { (int)aIncreaseMaxHeal_800B8A38, (int)aANutPackingEner_800B89D8, (int)aStrengthensTheB_800B8974 },
+    { (int)aIncreaseMinionA_800B8938, (int)aOilFromATreeWit_800B88F0, (int)aSharpensMinionS_800B88BC },
+    { (int)aIncreasesMinion_800B888C, (int)aOilFromAVeryPot_800B8850, (int)aStrengthensMini_800B8818 },
+    { (int)aIncreaseMinionD_800B87D8, (int)aOilFromAPlantWi_800B878C, (int)aHardensMinionSS_800B875C },
+    { (int)aIncreaseMinionM_800B8720, (int)aOilFromTreeWith_800B86D8, (int)aStrengthensMini_800B86A0 },
+    { (int)aIncreaseMinionM_800B8664, (int)aOilFromAPlantWi_800B861C, (int)aStrengthensMini_800B85E0 },
+    { (int)aRestoreMinionHP_800B85A8, (int)aLiquorMadeFromP_800B855C, (int)aRestoresSomeMin_800B8518 },
+    { (int)aRestoreMinionHP_800B85A8, (int)aFineLiquorMadeF_800B84C0, (int)aRestoresMinionH_800B845C },
+    { (int)aRestoreMinionHP_800B85A8, (int)aExcellentLiquor_800B83FC, (int)aRestoresAGreatD_800B83A0 },
+    { (int)aRestoreMinionHP_800B85A8, (int)aSpecialLiquorMa_800B8344, (int)aRestoresAllMini_800B8300 },
+    { (int)aTotalRestoratio_800B82DC, (int)aDriedRootOfAGre_800B8274, (int)aAlsoCalledTheIm_800B8230, (int)aAdjustsTheVisce_800B8204 },
+    { (int)aPoisonAntidote_800B81E4, (int)aPowderedFormOfD_800B8198, (int)aSoothesTheSpiri_800B8144 },
+    { (int)aStoneToFlesh_800B8124, (int)aPowderMadeFromS_800B80C0, (int)aInnerStrengthTo_800B8064 },
+    { (int)aSprayPoison_800B8048, (int)aReleasesPoisonM_800B8004, (int)aInstantlyCauses_800B7FBC },
+    { (int)aInduceSleep_800B7FA0, (int)aReleasesASleepM_800B7F58, (int)aCausesADeepSlum_800B7EEC },
+    { (int)aFleshToStone_800B7ECC, (int)aReleasesAFleshT_800B7E74, (int)aCausesBodyHarde_800B7E18 },
+    { (int)aCauseDeath_800B7E00, (int)aReleasesADeathM_800B7DB8, (int)aInstantlyCauses_800B7D5C },
+    { (int)aProtectionFromA_800B7D34, (int)aReflectsAllUncl_800B7CD4, (int)aAllAbnormalStat_800B7C6C },
+    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7BDC, (int)aChangesAreaProp_800B7B74 },
+    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7B14, (int)aChangesAreaProp_800B7AAC },
+    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7A4C, (int)aChangesAreaProp_800B79E8 },
+    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7988, (int)aChangesAreaProp_800B7924 },
+    { (int)aAttackSingleEne_800B78E4, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B7818 },
+    { (int)aAttackAllEnemie_800B77DC, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B777C },
+    { (int)aAttackSingleEne_800B773C, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B7670 },
+    { (int)aAttackAllEnemie_800B7634, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B75D8 },
+    { (int)aAttackSingleEne_800B759C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B74D8 },
+    { (int)aAttackAllEnemie_800B749C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B7440 },
+    { (int)aAttackSingleEne_800B7404, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B733C },
+    { (int)aAttackMultipleE_800B72F8, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B7294 },
+    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAShineT_800B71EC, (int)aSeventhHighestG_800B71AC },
+    { (int)aSilkThreadSpunF_800B7248, (int)aEmitsVagueInsta_800B7150, (int)aSixthHighestGra_800B7114 },
+    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffADazzli_800B70DC, (int)aFifthHighestGra_800B70A0 },
+    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAModera_800B7058, (int)aFourthHighestGr_800B701C },
+    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAPhosph_800B6FCC, (int)aThirdHighestGra_800B6F90 },
+    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAnUnear_800B6F40, (int)aSecondHighestGr_800B6F04 },
+    { (int)aSilkThreadSpunF_800B7248, (int)aSoftThreadThatG_800B6EB0, (int)aHighestGradeBes_800B6E6C },
+    { (int)aKeyToTreasureCh_800B6E3C, (int)aMultipurposeKey_800B6DD8, (int)aBendsAndBecomes_800B6D80 },
+    { (int)aTreeSpores_800B6D68, (int)aSweetSmellingSl_800B6D00, (int)aCausesSurroundi_800B6CA8 },
+    { (int)aTreeSpores_800B6D68, (int)aTreeSporesWithA_800B6C5C, (int)aAttractsNearbyM_800B6C28 },
+};
+int magicDescriptions_800C9978[30][4] = {
+    { (int)aFireAttackOneEn_800B97B8, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
+    { (int)aFireAttackAllEn_800B96FC, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
+    { (int)aAdvancedFireAtt_800B96D0, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
+    { (int)aWaterAttackOneE_800B969C, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
+    { (int)aWaterAttackAllE_800B95D8, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
+    { (int)aAdvancedWaterAt_800B95AC, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
+    { (int)aEarthAttackOneE_800B9578, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
+    { (int)aEarthAttackAllE_800B94B0, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
+    { (int)aAdvancedEarthAt_800B9484, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
+    { (int)aWindAttackOneEn_800B9454, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
+    { (int)aWindAttackAllEn_800B9394, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
+    { (int)aAdvancedWindAtt_800B9368, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
+    { (int)aCurePoison_800B9350, (int)aCuresPoison_800B9334 },
+    { (int)aRestoreHP_800B931C, (int)aRestoresSomeHP_800B92F8 },
+    { (int)aRestoreAllHP_800B92D8, (int)aRestoresAllHP_800B92B4 },
+    { (int)aReturnToNormal_800B9290, (int)aCuresPoisonAndT_800B9238 },
+    { (int)aProtection_800B9220, (int)aProtectsAgainst_800B91B8, (int)aEndsOnceItProte_800B9164 },
+    { (int)aPoison_800B9154, (int)aPoisonsAnEnemy_800B9130 },
+    { (int)aSleep_800B9124, (int)aPutsAnEnemyToSl_800B90F4 },
+    { (int)aFleshToStone_800B7ECC, (int)aTurnsAnEnemyInt_800B90BC },
+    { (int)aDeath_800B90B0, (int)aCausesAnEnemyTo_800B905C },
+    { (int)aEnhanceFire_800B9040, (int)aIncreasesFireAt_800B8FEC, (int)aEffectivenessOf_800B8F90 },
+    { (int)aEnhanceWater_800B8F74, (int)aIncreasesWaterA_800B8F1C, (int)aEffectivenessOf_800B8EC0 },
+    { (int)aEnhanceEarth_800B8EA4, (int)aIncreasesEarthA_800B8E4C, (int)aEffectivenessOf_800B8DEC },
+    { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
+};
+char skillDescriptions_800C9B58[256] = { 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 72, 161, 11, 128, 240, 160, 11, 128, 232, 148, 11, 128, 0, 0, 0, 0, 196, 160, 11, 128, 108, 160, 11, 128, 16, 150, 11, 128, 0, 0, 0, 0, 68, 160, 11, 128, 236, 159, 11, 128, 48, 151, 11, 128, 0, 0, 0, 0, 196, 159, 11, 128, 108, 159, 11, 128, 200, 147, 11, 128, 0, 0, 0, 0, 64, 159, 11, 128, 236, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 192, 158, 11, 128, 88, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 28, 158, 11, 128, 176, 157, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 116, 157, 11, 128, 12, 157, 11, 128, 188, 156, 11, 128, 0, 0, 0, 0, 132, 156, 11, 128, 56, 156, 11, 128, 232, 155, 11, 128, 0, 0, 0, 0, 172, 155, 11, 128, 100, 155, 11, 128, 28, 155, 11, 128, 0, 0, 0, 0, 224, 154, 11, 128, 164, 154, 11, 128, 88, 154, 11, 128, 0, 0, 0, 0, 28, 154, 11, 128, 208, 153, 11, 128, 120, 153, 11, 128, 0, 0, 0, 0, 64, 153, 11, 128, 224, 152, 11, 128, 124, 152, 11, 128, 0, 0, 0, 0, 64, 152, 11, 128, 232, 151, 11, 128, 124, 152, 11, 128 };
+int battleLoadState_800C9C58 = 0;
+int dword_800C9C5C[3] = { 0 };
+short turnGauges_800C9C68[8] = { 0 };
+int *chainEntry_800C9C78 = 0;
+unsigned char actingUnit_800C9C7C = 0;
+short actorHpChange_800C9C7E = 0;
+short actorMpChange_800C9C80 = 0;
+unsigned char summonedUnit_800C9C82 = 0;
+int dword_800C9C84 = 0;
+BatCommand curCommand_800C9C88 = { 0 };
+unsigned char commandUnit_800C9C98 = 0;
+unsigned char shownUnit_800C9C99 = 0;
+int dword_800C9C9C = 0;
+int unitStatusInflicted_800C9CA0[7] = { 0 };
+char unitHitKinds_800C9CBC[12] = { 0 };
+BatCommand unitReactions_800C9CC8[7] = { { 0 } };
+short unitHpDamage_800C9D38[8] = { 0 };
+short unitMpDamage_800C9D48[8] = { 0 };
+int unitResultFlags_800C9D58[7] = { 0 };
+int helpWindowText_800C9D74 = 0;
+short hitSfx_800C9D78 = 0;
+int btlExecLoad_800C9D7C = 0;
+short deathSfx_800C9D80 = 0;
+signed char shownAreaElement_800C9D82 = 0;
+char fixedStageElement_800C9D83 = 0;
+signed char areaElement_800C9D84 = 0;
+int dword_800C9D88 = 0;
+short stageAnimUv_800C9D8C[2] = { 0 };
+int removedEnemyCount_800C9D90 = 0;
+short actionFrame_800C9D94 = 0;
+short actorTiming_800C9D98[4] = { 0 };
+BatActionTiming reactionTimings_800C9DA0[7] = { { 0 } };
+short actorHitShift_800C9DBC = 0;
+short reactionHitFrames_800C9DC0[8] = { 0 };
+int removedEnemies_800C9DD0[10] = { 0 };
+int enemyWindowFlags_800C9DF8 = 0;
+char enemyWindowsHighlight_800C9DFC = 0;
+char actorWindowHighlight_800C9DFD = 0;
+unsigned int enemyWindowSlide_800C9E00 = 0;
+int dword_800C9E04 = 0;
+EventEntry *enemyWindowTasks_800C9E08[4] = { 0 };
+BatXY enemyWindowPos_800C9E18[3] = { { 0 } };
+int enemyWindowMask_800C9E24 = 0;
+BatEnemyWindow *enemyWindows_800C9E28[4] = { 0 };
+int cameraFocus_800C9E38 = 0;
+int newCameraFocus_800C9E3C = 0;
+unsigned char prevMenuPage_800C9E40 = 0;
+BatMenuCursor *pageCursor_800C9E44 = 0;
+unsigned char menuState_800C9E48 = 0;
+unsigned char menuForMinion_800C9E49 = 0;
+unsigned char enemyCount_800C9E4A = 0;
+unsigned char partyMinionCount_800C9E4B = 0;
+int enemyMask_800C9E4C = 0;
+unsigned char menuPage_800C9E50 = 0;
+unsigned char menuErrorTimer_800C9E51 = 0;
+int menuTarget_800C9E54 = 0;
+BatCommand menuCommand_800C9E58 = { 0 };
+unsigned char targetFlags_800C9E68 = 0;
+BatMenuItem *menuItems_800C9E6C = 0;
+BatEnemyTargets enemyTargets_800C9E70 = { 0 };
+int partyMinionMask_800C9E78 = 0;
+int menuErrorText_800C9E7C = 0;
+unsigned char enemyUnits_800C9E80[4] = { 0 };
+
 // Matched
 void ChooseEnemyCommand_800C4118(BatCommand* cmd, UnitStats* self, int slot, unsigned int script)
 {
@@ -2582,7 +3009,6 @@ void MenuInput_800C8768()
 }
 
 // Matched
-extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 void DrawMenuHelpText_800C8828(int text)
 {
     short rect[4];
@@ -2683,430 +3109,3 @@ void BattleMenuTask_800C8A08(EventEntry* task, int buffer)
         task->flags = (task->flags & ~1) | 0x8000;
     }
 }
-
-int dword_800C8B2C = 0xFFFF;
-unsigned char aiCounter_800C8B30[4] = { 0 };
-int aiAllyCalled_800C8B34 = 0;
-unsigned char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
-void (*commandHandlers_800C8B54[7])() = { CmdAction_800BBA24, CmdSummon_800BBBA8, CmdRecall_800BBDB4, CmdSimple_800BC0FC, CmdSwapMinion_800BBBF4, CmdEnemyCall_800BBEFC, CmdEnemySwap_800BBFFC };
-unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
-unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
-unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
-unsigned short stage03Sprites_800C8BA0[8] = { 72, 73, 74, 75, 76, 77, 78, 0xFFFF };
-unsigned short stage04Sprites_800C8BB0[8] = { 84, 85, 86, 87, 88, 89, 90, 0xFFFF };
-unsigned short stage05Sprites_800C8BC0[10] = {
-    91, 92, 93, 94, 95, 96, 97, 98,
-    0xFFFF,
-};
-unsigned short stage06Sprites_800C8BD4[10] = {
-    99, 100, 101, 102, 103, 104, 105, 106,
-    0xFFFF,
-};
-unsigned short stage07Sprites_800C8BE8[8] = { 108, 109, 110, 111, 112, 113, 0xFFFF };
-unsigned short stage08Sprites_800C8BF8[10] = {
-    118, 119, 120, 121, 122, 123, 124, 125,
-    0xFFFF,
-};
-unsigned short stage09Sprites_800C8C0C[8] = { 126, 127, 128, 129, 130, 131, 0xFFFF };
-unsigned short stage0ASprites_800C8C1C[8] = { 136, 137, 138, 139, 140, 141, 0xFFFF };
-unsigned short stage0BSprites_800C8C2C[8] = { 0x11D, 0x11E, 0x11F, 0x120, 0x121, 0x122, 0xFFFF };
-unsigned short stage0CSprites_800C8C3C[10] = {
-    0x127, 0x128, 0x129, 0x12A, 0x12B, 0x12C, 0x12D, 0x12E,
-    0xFFFF,
-};
-unsigned short stage0DSprites_800C8C50[8] = { 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, 0xFFFF };
-unsigned short stage0ESprites_800C8C60[8] = { 0x139, 0x13A, 0x13B, 0x13C, 0x13D, 0x13E, 0xFFFF };
-unsigned short stage0FSprites_800C8C70[6] = { 146, 147, 148, 149, 150, 0xFFFF };
-unsigned short stage10Sprites_800C8C7C[6] = { 152, 153, 154, 155, 0xFFFF };
-unsigned short stage11Sprites_800C8C88[8] = { 156, 157, 158, 159, 160, 161, 0xFFFF };
-unsigned short stage12Sprites_800C8C98[2] = { 0xFFFF };
-unsigned short stage13Sprites_800C8C9C[6] = { 166, 167, 168, 169, 0xFFFF };
-unsigned short stage14Sprites_800C8CA8[6] = { 171, 172, 173, 174, 175, 0xFFFF };
-unsigned short stage15Sprites_800C8CB4[6] = { 176, 177, 178, 179, 180, 0xFFFF };
-unsigned short stage16Sprites_800C8CC0[6] = { 182, 183, 184, 185, 186, 0xFFFF };
-unsigned short stage17Sprites_800C8CCC[8] = { 187, 188, 189, 190, 191, 192, 193, 0xFFFF };
-unsigned short stage18Sprites_800C8CDC[8] = { 198, 199, 200, 201, 202, 203, 0xFFFF };
-unsigned short stage19Sprites_800C8CEC[8] = { 208, 209, 210, 211, 212, 213, 214, 0xFFFF };
-unsigned short stage1ASprites_800C8CFC[8] = { 219, 220, 221, 222, 223, 224, 225, 0xFFFF };
-unsigned short stage1BSprites_800C8D0C[8] = { 0x16F, 0x170, 0x171, 0x172, 0x173, 0x174, 0x175, 0xFFFF };
-unsigned short stage1CSprites_800C8D1C[10] = {
-    0x10C, 0x10D, 0x10E, 0x10F, 0x110, 0x111, 0x112, 0x113,
-    0xFFFF,
-};
-unsigned short stage1DSprites_800C8D30[10] = {
-    0x114, 0x115, 0x116, 0x117, 0x118, 0x119, 0x11A, 0x11B,
-    0xFFFF,
-};
-unsigned short stage1ESprites_800C8D44[8] = { 230, 231, 232, 233, 234, 235, 0xFFFF };
-unsigned short stage1FSprites_800C8D54[10] = {
-    240, 241, 242, 243, 244, 245, 246, 247,
-    0xFFFF,
-};
-unsigned short stage20Sprites_800C8D68[8] = { 248, 249, 250, 251, 252, 253, 0xFFFF };
-unsigned short stage21Sprites_800C8D78[8] = { 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0xFFFF };
-unsigned short stage22Sprites_800C8D88[8] = { 0x183, 0x184, 0x185, 0x186, 0x187, 0x188, 0xFFFF };
-unsigned short stage23Sprites_800C8D98[6] = { 0x197, 0x198, 0x199, 0x19A, 0x19B, 0xFFFF };
-unsigned short stage24Sprites_800C8DA4[8] = { 0x18D, 0x18E, 0x18F, 0x190, 0x191, 0x192, 0xFFFF };
-unsigned short stage25Sprites_800C8DB4[8] = { 0x1A0, 0x1A1, 0x1A2, 0x1A3, 0x1A4, 0x1A5, 0xFFFF };
-unsigned short stage26Sprites_800C8DC4[8] = { 0x179, 0x17A, 0x17B, 0x17C, 0x17D, 0x17E, 0xFFFF };
-unsigned short stage10Models_800C8DD4[12] = {
-    49, 48, 0, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage12Models_800C8DEC[12] = {
-    52, 0, 0, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage13Models_800C8E04[12] = {
-    54, 0, 1, 0, 55, 48, 0, 0,
-    56, 48,
-};
-unsigned short stage0AModels_800C8E1C[12] = {
-    193, 48, 0, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage0EModels_800C8E34[12] = {
-    194, 48, 0, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage21Models_800C8E4C[12] = {
-    195, 48, 0, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage14Models_800C8E64[12] = {
-    58, 0, 1, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage15Models_800C8E7C[12] = {
-    60, 0, 1, 0, 255, 0, 0, 0,
-    255,
-};
-unsigned short stage16Models_800C8E94[12] = {
-    62, 0, 1, 0, 255, 0, 0, 0,
-    255,
-};
-BatStage battleStages_800C8EAC[39] = {
-    { stage00Sprites_800C8B70, 0x3A6, 37, 0, 7, -1 },
-    { stage01Sprites_800C8B80, 0x3A8, 38, 0, 6, -1 },
-    { stage02Sprites_800C8B90, 0x3A9, 39, 0, 7, -1 },
-    { stage03Sprites_800C8BA0, 0x3AA, 40, 0, 7, -1 },
-    { stage04Sprites_800C8BB0, 0x3AB, 41, 0, -1, 83 },
-    { stage05Sprites_800C8BC0, 0x3C5, 42, 0, -1, 0x1AA },
-    { stage06Sprites_800C8BD4, 0x3C7, 43, 0, -1, 107 },
-    { stage07Sprites_800C8BE8, 0x3AC, 44, 0, 6, -1 },
-    { stage08Sprites_800C8BF8, 0x3AD, 45, 0, -1, -1 },
-    { stage09Sprites_800C8C0C, 0x3B7, 46, 0, -1, -1 },
-    { stage0ASprites_800C8C1C, 0x3BA, 47, 0, -1, -1, stage0AModels_800C8E1C },
-    { stage0BSprites_800C8C2C, 0x3B3, 74, 0, 6, -1 },
-    { stage0CSprites_800C8C3C, 0x3B5, 75, 0, -1, -1 },
-    { stage0DSprites_800C8C50, 0x3B8, 76, 0, 6, -1 },
-    { stage0ESprites_800C8C60, 0x3BB, 77, 0, 6, -1, stage0EModels_800C8E34 },
-    { stage0FSprites_800C8C70, 0x3BD, 48, 0, -1, 151 },
-    { stage10Sprites_800C8C7C, 0x3BE, 50, 0, -1, -1, stage10Models_800C8DD4 },
-    { stage11Sprites_800C8C88, 0x3BF, 51, 0, -1, -1 },
-    { stage12Sprites_800C8C98, 0x3C0, 53, 0, 0, -1, stage12Models_800C8DEC },
-    { stage13Sprites_800C8C9C, 0x3C1, 57, 0, -1, 170, stage13Models_800C8E04 },
-    { stage14Sprites_800C8CA8, 0x3C2, 59, 0, -1, -1, stage14Models_800C8E64 },
-    { stage15Sprites_800C8CB4, 0x3C3, 61, 0, -1, 181, stage15Models_800C8E7C },
-    { stage16Sprites_800C8CC0, 0x3C4, 63, 0, -1, -1, stage16Models_800C8E94 },
-    { stage17Sprites_800C8CCC, 0x3AE, 64, 0, 7, -1 },
-    { stage18Sprites_800C8CDC, 0x3AF, 65, 0, 6, -1 },
-    { stage19Sprites_800C8CEC, 0x3B0, 66, 0, 7, -1 },
-    { stage1ASprites_800C8CFC, 0x3B1, 67, 0, 7, -1 },
-    { stage1BSprites_800C8D0C, 0x3B2, 175, 0, -1, 0x16E },
-    { stage1CSprites_800C8D1C, 0x3C6, 72, 0, -1, 0x1AB },
-    { stage1DSprites_800C8D30, 0x3C8, 73, 0, -1, 0x11C },
-    { stage1ESprites_800C8D44, 0x3B4, 68, 0, 6, -1 },
-    { stage1FSprites_800C8D54, 0x3B6, 69, 0, -1, -1 },
-    { stage20Sprites_800C8D68, 0x3B9, 70, 0, 6, -1 },
-    { stage21Sprites_800C8D78, 0x3BC, 71, 0, 6, -1, stage21Models_800C8E4C },
-    { stage22Sprites_800C8D88, 0x434, 187, 0, 6, -1 },
-    { stage23Sprites_800C8D98, 0x435, 189, 0, 5, -1 },
-    { stage24Sprites_800C8DA4, 0x436, 188, 0, 6, -1 },
-    { stage25Sprites_800C8DB4, 0x437, 190, 0, 6, -1 },
-    { stage26Sprites_800C8DC4, 0x438, 186, 0, 6, -1 },
-};
-unsigned char stageAnimPhases_800C911C[8] = { 1, 5, 9, 2, 6, 3, 7, 4 };
-SVECTOR stageRot_800C9124 = { 0 };
-char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
-unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
-BatCureChance statusCureChances_800C9138[1] = { { 2, 77 } };
-BatXY enemyWindowLayouts_800C9140[9] = {
-    { 110, 20 },
-    { -1, -1 },
-    { -1, -1 },
-    { 60, 20 },
-    { 160, 20 },
-    { -1, -1 },
-    { 10, 20 },
-    { 110, 20 },
-    { 210, 20 },
-};
-int enemyGaugePreview_800C9164[3] = { 0 };
-int actorHighlightTime_800C9170 = 0;
-int enemyHighlightTimes_800C9174[3] = { 0 };
-short previewHpChange_800C9180 = 0;
-short previewMpChange_800C9182 = 0;
-int dword_800C9184 = 0x24639300;
-Minion *summonedMinion_800C9188 = 0;
-int summonedMinionSlot_800C918C = -1;
-BatSummonedActor summonedActor_800C9190 = { 0 };
-char defaultBoneSlots_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
-EnemyAiFn enemyAiHigh_800C91DC[10] = {
-    EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (EnemyAiFn)EnemyAiCC_800C4470,
-    EnemyAiCD_800C4494, EnemyAiCE_800C44FC, EnemyAiCF_800C4548, EnemyAiD0_800C45A8,
-    (EnemyAiFn)EnemyAiD1_800C46FC, (EnemyAiFn)EnemyAiD2_800C471C,
-};
-EnemyAiFn enemyAi_800C9204[53] = {
-    (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi02_800C54A4, (EnemyAiFn)EnemyAi03_800C4FE0,
-    (EnemyAiFn)EnemyAi04_800C57D8, (EnemyAiFn)EnemyAi05_800C56B8, (EnemyAiFn)EnemyAi06_800C4BE4, (EnemyAiFn)EnemyAi07_800C4E34,
-    (EnemyAiFn)EnemyAi08_800C580C, (EnemyAiFn)EnemyAi09_800C4DB8, (EnemyAiFn)EnemyAi0A_800C4EA8, (EnemyAiFn)EnemyAi0B_800C5510,
-    (EnemyAiFn)EnemyAi0C_800C4CBC, (EnemyAiFn)EnemyAi0D_800C5424, (EnemyAiFn)EnemyAi0E_800C5034, (EnemyAiFn)EnemyAi0F_800C4B34,
-    (EnemyAiFn)EnemyAi10_800C5304, (EnemyAiFn)EnemyAi0F_800C4B34, (EnemyAiFn)EnemyAi12_800C4C74, (EnemyAiFn)EnemyAi13_800C507C,
-    (EnemyAiFn)EnemyAi14_800C5594, (EnemyAiFn)EnemyAi15_800C5290, (EnemyAiFn)EnemyAi16_800C5608, (EnemyAiFn)EnemyAi17_800C50B0,
-    (EnemyAiFn)EnemyAi18_800C5670, (EnemyAiFn)EnemyAi19_800C576C, (EnemyAiFn)EnemyAi1A_800C4FA8, (EnemyAiFn)EnemyAi1B_800C51D8,
-    (EnemyAiFn)EnemyAi1C_800C53B0, (EnemyAiFn)EnemyAi1D_800C5700, (EnemyAiFn)EnemyAi1E_800C5874, (EnemyAiFn)EnemyAi1F_800C5840,
-    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
-    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
-    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
-    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
-    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
-    (EnemyAiFn)EnemyAiDefault_800C473C,
-};
-BatMenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
-BatMenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
-BatMenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
-int dword_800C92FC[3] = { 0x10001, 1 };
-BatMenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
-BatMenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
-BatMenuCursor targetMenu_800C9320[1] = { { 1 } };
-BatMenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
-BatMenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
-int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
-int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
-int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
-int helpCapture_800C935C[1] = { (int)aCaptureMinionIn_800B6940 };
-int helpItem_800C9360[1] = { (int)aUseItem_800B6984 };
-int helpFlee_800C9364[1] = { (int)aFleeFromCombat_800B6998 };
-int helpMinionAttack_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
-int helpSpecialAttack_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
-int helpMagic_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
-int helpChangeFighter_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
-int msgNoDivineMinions_800C9378[1] = { (int)aNoDivineMinions_800B6A58 };
-int msgCannotSummon_800C937C = (int)aCannotSummonInt_800B6A88;
-int msgNotEnoughMana_800C9380 = (int)aNotEnoughMana_800B6ABC;
-int msgCannotCapture_800C9384[1] = { (int)aCannotCapture_800B6ADC };
-int msgNoEmptyCocoons_800C9388[1] = { (int)aNoEmptyCocoons_800B6AFC };
-int msgCannotEscape_800C938C[1] = { (int)aCannotEscape_800B6B20 };
-int msgNoNeedToUseItem_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
-int msgCannotSelect_800C9394[1] = { (int)aCannotSelect_800B6B64 };
-int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
-int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
-int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
-BatMenuItem levantMenuItems_800C93A4[6] = {
-    { helpAttack_800C9350 },
-    { helpDefend_800C9354 },
-    { helpSummon_800C9358 },
-    { helpCapture_800C935C },
-    { helpItem_800C9360 },
-    { helpFlee_800C9364 },
-};
-BatMenuItem minionMenuItems_800C93D4[5] = {
-    { helpMinionAttack_800C9368 },
-    { helpDefend_800C9354 },
-    { helpSpecialAttack_800C936C },
-    { helpMagic_800C9370 },
-    { helpChangeFighter_800C9374 },
-};
-BatMenuWindow winAttack_800C93FC[2] = {
-    { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winDefend_800C9434[2] = {
-    { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winSummon_800C946C[2] = {
-    { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winCapture_800C94A4[2] = {
-    { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winItem_800C94DC[2] = {
-    { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winFlee_800C9514[2] = {
-    { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winSpecialAttack_800C954C[2] = {
-    { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winMagic_800C9584[2] = {
-    { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow winChangeFighter_800C95BC[2] = {
-    { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
-    { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
-};
-BatMenuWindow *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
-BatMenuWindow *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
-BatMenuWindow **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
-BatMenuWindows menuWindows_800C9630 = { 2 };
-unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
-unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
-unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
-void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer) = { (void (*)(EventEntry *, int))MenuInput_800C8768, (void (*)(EventEntry *, int))MenuShowError_800C88E4 };
-int pageButtonHelp_800C9674[6] = { 0x80082698, 0x800826B0, 0x800826B0, 0x800826B0, 0x80082680 };
-unsigned short pageHideFlags_800C968C[6][2] = {
-    { 0x1F0, 240 },
-    { 0x1D1, 0x1D7 },
-    { 0x1B1, 0x1B7 },
-    { 0x170, 0x176 },
-    { 0x1E0, 246 },
-};
-int commandKinds_800C96A4[9] = {
-    0, 18, 2, 5, 4, 7, 6, 1,
-    8,
-};
-int itemDescriptions_800C96C8[43][4] = {
-    { (int)aRestoreHealth_800B8CFC, (int)aGrowsInOpenArea_800B8CB4, (int)aIncreasesHealth_800B8C68, (int)aGrindLeavesInto_800B8C0C },
-    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortB_800B8BCC, (int)aSweeterSmelling_800B8B74, (int)aCuresBleedingAn_800B8B30 },
-    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortW_800B8ACC, (int)aBitterTasteThat_800B8A60 },
-    { (int)aIncreaseMaxHeal_800B8A38, (int)aANutPackingEner_800B89D8, (int)aStrengthensTheB_800B8974 },
-    { (int)aIncreaseMinionA_800B8938, (int)aOilFromATreeWit_800B88F0, (int)aSharpensMinionS_800B88BC },
-    { (int)aIncreasesMinion_800B888C, (int)aOilFromAVeryPot_800B8850, (int)aStrengthensMini_800B8818 },
-    { (int)aIncreaseMinionD_800B87D8, (int)aOilFromAPlantWi_800B878C, (int)aHardensMinionSS_800B875C },
-    { (int)aIncreaseMinionM_800B8720, (int)aOilFromTreeWith_800B86D8, (int)aStrengthensMini_800B86A0 },
-    { (int)aIncreaseMinionM_800B8664, (int)aOilFromAPlantWi_800B861C, (int)aStrengthensMini_800B85E0 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aLiquorMadeFromP_800B855C, (int)aRestoresSomeMin_800B8518 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aFineLiquorMadeF_800B84C0, (int)aRestoresMinionH_800B845C },
-    { (int)aRestoreMinionHP_800B85A8, (int)aExcellentLiquor_800B83FC, (int)aRestoresAGreatD_800B83A0 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aSpecialLiquorMa_800B8344, (int)aRestoresAllMini_800B8300 },
-    { (int)aTotalRestoratio_800B82DC, (int)aDriedRootOfAGre_800B8274, (int)aAlsoCalledTheIm_800B8230, (int)aAdjustsTheVisce_800B8204 },
-    { (int)aPoisonAntidote_800B81E4, (int)aPowderedFormOfD_800B8198, (int)aSoothesTheSpiri_800B8144 },
-    { (int)aStoneToFlesh_800B8124, (int)aPowderMadeFromS_800B80C0, (int)aInnerStrengthTo_800B8064 },
-    { (int)aSprayPoison_800B8048, (int)aReleasesPoisonM_800B8004, (int)aInstantlyCauses_800B7FBC },
-    { (int)aInduceSleep_800B7FA0, (int)aReleasesASleepM_800B7F58, (int)aCausesADeepSlum_800B7EEC },
-    { (int)aFleshToStone_800B7ECC, (int)aReleasesAFleshT_800B7E74, (int)aCausesBodyHarde_800B7E18 },
-    { (int)aCauseDeath_800B7E00, (int)aReleasesADeathM_800B7DB8, (int)aInstantlyCauses_800B7D5C },
-    { (int)aProtectionFromA_800B7D34, (int)aReflectsAllUncl_800B7CD4, (int)aAllAbnormalStat_800B7C6C },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7BDC, (int)aChangesAreaProp_800B7B74 },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7B14, (int)aChangesAreaProp_800B7AAC },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7A4C, (int)aChangesAreaProp_800B79E8 },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7988, (int)aChangesAreaProp_800B7924 },
-    { (int)aAttackSingleEne_800B78E4, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B7818 },
-    { (int)aAttackAllEnemie_800B77DC, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B777C },
-    { (int)aAttackSingleEne_800B773C, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B7670 },
-    { (int)aAttackAllEnemie_800B7634, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B75D8 },
-    { (int)aAttackSingleEne_800B759C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B74D8 },
-    { (int)aAttackAllEnemie_800B749C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B7440 },
-    { (int)aAttackSingleEne_800B7404, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B733C },
-    { (int)aAttackMultipleE_800B72F8, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B7294 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAShineT_800B71EC, (int)aSeventhHighestG_800B71AC },
-    { (int)aSilkThreadSpunF_800B7248, (int)aEmitsVagueInsta_800B7150, (int)aSixthHighestGra_800B7114 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffADazzli_800B70DC, (int)aFifthHighestGra_800B70A0 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAModera_800B7058, (int)aFourthHighestGr_800B701C },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAPhosph_800B6FCC, (int)aThirdHighestGra_800B6F90 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAnUnear_800B6F40, (int)aSecondHighestGr_800B6F04 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aSoftThreadThatG_800B6EB0, (int)aHighestGradeBes_800B6E6C },
-    { (int)aKeyToTreasureCh_800B6E3C, (int)aMultipurposeKey_800B6DD8, (int)aBendsAndBecomes_800B6D80 },
-    { (int)aTreeSpores_800B6D68, (int)aSweetSmellingSl_800B6D00, (int)aCausesSurroundi_800B6CA8 },
-    { (int)aTreeSpores_800B6D68, (int)aTreeSporesWithA_800B6C5C, (int)aAttractsNearbyM_800B6C28 },
-};
-int magicDescriptions_800C9978[30][4] = {
-    { (int)aFireAttackOneEn_800B97B8, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aFireAttackAllEn_800B96FC, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aAdvancedFireAtt_800B96D0, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aWaterAttackOneE_800B969C, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aWaterAttackAllE_800B95D8, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aAdvancedWaterAt_800B95AC, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aEarthAttackOneE_800B9578, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aEarthAttackAllE_800B94B0, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aAdvancedEarthAt_800B9484, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aWindAttackOneEn_800B9454, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aWindAttackAllEn_800B9394, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aAdvancedWindAtt_800B9368, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aCurePoison_800B9350, (int)aCuresPoison_800B9334 },
-    { (int)aRestoreHP_800B931C, (int)aRestoresSomeHP_800B92F8 },
-    { (int)aRestoreAllHP_800B92D8, (int)aRestoresAllHP_800B92B4 },
-    { (int)aReturnToNormal_800B9290, (int)aCuresPoisonAndT_800B9238 },
-    { (int)aProtection_800B9220, (int)aProtectsAgainst_800B91B8, (int)aEndsOnceItProte_800B9164 },
-    { (int)aPoison_800B9154, (int)aPoisonsAnEnemy_800B9130 },
-    { (int)aSleep_800B9124, (int)aPutsAnEnemyToSl_800B90F4 },
-    { (int)aFleshToStone_800B7ECC, (int)aTurnsAnEnemyInt_800B90BC },
-    { (int)aDeath_800B90B0, (int)aCausesAnEnemyTo_800B905C },
-    { (int)aEnhanceFire_800B9040, (int)aIncreasesFireAt_800B8FEC, (int)aEffectivenessOf_800B8F90 },
-    { (int)aEnhanceWater_800B8F74, (int)aIncreasesWaterA_800B8F1C, (int)aEffectivenessOf_800B8EC0 },
-    { (int)aEnhanceEarth_800B8EA4, (int)aIncreasesEarthA_800B8E4C, (int)aEffectivenessOf_800B8DEC },
-    { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
-};
-char skillDescriptions_800C9B58[256] = { 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 72, 161, 11, 128, 240, 160, 11, 128, 232, 148, 11, 128, 0, 0, 0, 0, 196, 160, 11, 128, 108, 160, 11, 128, 16, 150, 11, 128, 0, 0, 0, 0, 68, 160, 11, 128, 236, 159, 11, 128, 48, 151, 11, 128, 0, 0, 0, 0, 196, 159, 11, 128, 108, 159, 11, 128, 200, 147, 11, 128, 0, 0, 0, 0, 64, 159, 11, 128, 236, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 192, 158, 11, 128, 88, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 28, 158, 11, 128, 176, 157, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 116, 157, 11, 128, 12, 157, 11, 128, 188, 156, 11, 128, 0, 0, 0, 0, 132, 156, 11, 128, 56, 156, 11, 128, 232, 155, 11, 128, 0, 0, 0, 0, 172, 155, 11, 128, 100, 155, 11, 128, 28, 155, 11, 128, 0, 0, 0, 0, 224, 154, 11, 128, 164, 154, 11, 128, 88, 154, 11, 128, 0, 0, 0, 0, 28, 154, 11, 128, 208, 153, 11, 128, 120, 153, 11, 128, 0, 0, 0, 0, 64, 153, 11, 128, 224, 152, 11, 128, 124, 152, 11, 128, 0, 0, 0, 0, 64, 152, 11, 128, 232, 151, 11, 128, 124, 152, 11, 128 };
-int battleLoadState_800C9C58 = 0;
-int dword_800C9C5C[3] = { 0 };
-short turnGauges_800C9C68[8] = { 0 };
-int *chainEntry_800C9C78 = 0;
-unsigned char actingUnit_800C9C7C = 0;
-short actorHpChange_800C9C7E = 0;
-short actorMpChange_800C9C80 = 0;
-unsigned char summonedUnit_800C9C82 = 0;
-int dword_800C9C84 = 0;
-BatCommand curCommand_800C9C88 = { 0 };
-unsigned char commandUnit_800C9C98 = 0;
-unsigned char shownUnit_800C9C99 = 0;
-int dword_800C9C9C = 0;
-int unitStatusInflicted_800C9CA0[7] = { 0 };
-char unitHitKinds_800C9CBC[12] = { 0 };
-BatCommand unitReactions_800C9CC8[7] = { { 0 } };
-short unitHpDamage_800C9D38[8] = { 0 };
-short unitMpDamage_800C9D48[8] = { 0 };
-int unitResultFlags_800C9D58[7] = { 0 };
-int helpWindowText_800C9D74 = 0;
-short hitSfx_800C9D78 = 0;
-int btlExecLoad_800C9D7C = 0;
-short deathSfx_800C9D80 = 0;
-signed char shownAreaElement_800C9D82 = 0;
-char fixedStageElement_800C9D83 = 0;
-signed char areaElement_800C9D84 = 0;
-int dword_800C9D88 = 0;
-short stageAnimUv_800C9D8C[2] = { 0 };
-int removedEnemyCount_800C9D90 = 0;
-short actionFrame_800C9D94 = 0;
-short actorTiming_800C9D98[4] = { 0 };
-BatActionTiming reactionTimings_800C9DA0[7] = { { 0 } };
-short actorHitShift_800C9DBC = 0;
-short reactionHitFrames_800C9DC0[8] = { 0 };
-int removedEnemies_800C9DD0[10] = { 0 };
-int enemyWindowFlags_800C9DF8 = 0;
-char enemyWindowsHighlight_800C9DFC = 0;
-char actorWindowHighlight_800C9DFD = 0;
-unsigned int enemyWindowSlide_800C9E00 = 0;
-int dword_800C9E04 = 0;
-EventEntry *enemyWindowTasks_800C9E08[4] = { 0 };
-BatXY enemyWindowPos_800C9E18[3] = { { 0 } };
-int enemyWindowMask_800C9E24 = 0;
-BatEnemyWindow *enemyWindows_800C9E28[4] = { 0 };
-int cameraFocus_800C9E38 = 0;
-int newCameraFocus_800C9E3C = 0;
-unsigned char prevMenuPage_800C9E40 = 0;
-BatMenuCursor *pageCursor_800C9E44 = 0;
-unsigned char menuState_800C9E48 = 0;
-unsigned char menuForMinion_800C9E49 = 0;
-unsigned char enemyCount_800C9E4A = 0;
-unsigned char partyMinionCount_800C9E4B = 0;
-int enemyMask_800C9E4C = 0;
-unsigned char menuPage_800C9E50 = 0;
-unsigned char menuErrorTimer_800C9E51 = 0;
-int menuTarget_800C9E54 = 0;
-BatCommand menuCommand_800C9E58 = { 0 };
-unsigned char targetFlags_800C9E68 = 0;
-BatMenuItem *menuItems_800C9E6C = 0;
-BatEnemyTargets enemyTargets_800C9E70 = { 0 };
-int partyMinionMask_800C9E78 = 0;
-int menuErrorText_800C9E7C = 0;
-unsigned char enemyUnits_800C9E80[4] = { 0 };

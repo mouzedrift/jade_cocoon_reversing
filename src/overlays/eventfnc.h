@@ -8,6 +8,7 @@
 #include "model.h"
 #include "engine.h"
 #include "minion_init.h"
+#include "sound.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -140,6 +141,8 @@ extern void SlideOffEdge_800B8220(int* pos, int prevPos, int mesh, int* tri, int
 extern int FindDuplicatePoint_800B8028(int* out, EvSVec* pts);
 
 extern void GetTriHeight_800B83E4(int* pos, MapMesh* mesh, int triIdx);
+
+int FindTriAtXZ_800B76B8(MapMesh* mesh, EvVec* pos);
 
 static inline int EvFindTri(int* out, MapState* map, EvVec* pos)
 {
@@ -350,7 +353,7 @@ typedef struct EvViewRect
     short h_6;
 } EvViewRect;
 
-extern EvViewRect dword_8008D420;
+extern EvViewRect viewport_8008D420;
 
 extern void SetCameraZoom_80037A6C(int a, int b);
 
@@ -616,3 +619,192 @@ extern const char aColiC_800B6D2C[8];
 extern int (*eventFuncs_800BCDBC[157])();
 
 /* the jump table of ReturnWarpTask_800BCB3C (asm) and its targets, labels in the generated asm */
+
+/* ---- moved from the .c files: types ---- */
+typedef struct EvEnemyGroup
+{
+    int kind_0; // 0: actors already exist, 1: hide them when reused (GAME's GameEnemy)
+    int maxCount_4;
+    int f8;
+    int fC;
+    int f10;
+    int idx_14;
+    int useMinion_18; // 1: the first member is minion_1C
+    UnitStats minion_1C;
+    Actor* actor_A4;
+    int fA8;
+    int fAC;
+    EvEnemyMember members_B0[3];
+    int fC8;
+    int fCC;
+    int fD0;
+    int z_D4[3];
+} EvEnemyGroup;
+
+typedef struct EvLoaderModel
+{
+    int f0;
+    int id_4;
+    int pad_8[3];
+} EvLoaderModel;
+
+// work area of the model loader task (modelLoaderTask_8008B54C)
+typedef struct EvModelLoader
+{
+    int f0;
+    int f4;
+    int f8;
+    EvLoaderModel ents_C[4];
+} EvModelLoader;
+
+// an enemy slot of the GAME overlay (GameEnemySlot): AddEnemySlot_800A17F4 copies the EvEnemyGroup into data_8
+typedef struct EvEnemySlot
+{
+    int f0;
+    int aiEvent_4;
+    EvEnemyGroup data_8;
+} EvEnemySlot;
+
+// work area of the encounter task (encounterTask_8008D674, EncounterSpawnTask_800B844C)
+typedef struct EvEncounterWork
+{
+    int f0;
+    int f4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+} EvEncounterWork;
+
+typedef struct EvBattleArgs
+{
+    int f0_0[5];
+    int f14_14;
+    int ids_18[3];
+    struct
+    {
+        int a_0;
+        int b_4;
+        int c_8;
+    } e_24[3];
+} EvBattleArgs;
+
+typedef struct EvBattleEnemy
+{
+    int f0_0[5];
+    int f14_14;
+    int useMinion_18;
+    char pad_1C[0xA4 - 0x1C];
+    int actors_A4[3];
+    struct
+    {
+        int species_0;
+        int b_4;
+    } members_B0[3];
+    int anims_C8[3];
+    int fD4_D4[3];
+} EvBattleEnemy;
+
+typedef struct EvSpeaker
+{
+    int a_0;
+    int b_4;
+} EvSpeaker;
+
+typedef struct EvMsgWindowCfg
+{
+    int posMode_0;
+    short* pos_4;
+    int str_8;
+    int fC;
+    int f10;
+    int f14;
+    int mask_18;
+    int* list_1C;
+    EvSpeaker pair_20;
+    int f28;
+    int f2C;
+    int f30;
+    int f34;
+    int f38;
+    int f3C;
+    int f40;
+    int voice_44;
+} EvMsgWindowCfg;
+
+typedef struct EvItemMsgCfg
+{
+    int posMode_0;
+    short* pos_4;
+    int f8;
+    EvItemMsgSlot slots_C[3];
+    int f48;
+    int f4C;
+} EvItemMsgCfg;
+
+typedef struct EvMsgOptions
+{
+    EvSpeaker pair_A8;
+    EvItemMsgSrc src_B0;
+    int* list_B8;
+    int fBC;
+    int fC0;
+    int fC4;
+    int fC8;
+    int fCC;
+} EvMsgOptions;
+
+typedef struct EvRelocBlob
+{
+    int* p_0;
+} EvRelocBlob;
+
+int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx);
+
+/* GAME-side (game.h; GAME stays loaded under EVENTFNC) */
+extern EvEnemySlot* AddEnemySlot_800A17F4(EvEnemyGroup* src, int b);
+extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
+extern int fieldMode_800B0EC0;
+extern int gCtx_800B1260;
+extern int GetGameMode_800A6D50(int a);
+extern void SuspendAllEnemySlots_800A1904(void);
+extern EvBattleEnemy eventEnemy_800B1CB8;
+extern int eventBattlePending_800AEBE0;
+extern int eventBattleLoseWarp_800AEBE4;
+extern int GetFieldMinionAnims_800A7A9C(int i);
+extern void EnableCameraPoints_800A094C();
+extern void DisableCameraPoints_800A096C();
+extern int FieldMinionCommand_800A7D40(int a, int* p);
+extern int FinishLevantCommand_800A9008(int* p);
+extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
+extern int GetEventString_800A6738(int a);
+extern int GetFieldMinionModelId_800A78A8(int a);
+extern int sub_800A78F4(int a);
+extern EvRelocBlob eventReloc_800AEBBC;
+extern int eventDataBuf_800AEBC8;
+/* exe-side, to move to unit_stats.h */
+extern short defaultBones_80079140[]; // default bone table
+/* exe-side, to move to engine.h */
+extern void StartSceneFadeIn_8001AA04(int duration); // not short: EvCmdFadeSound_800BB4A4 passes an lhu value
+extern void StartSceneFadeOut_8001AA50(int duration);
+extern void StopSceneDarken_8001AAF4(void);
+extern void StartSceneBrighten_8001AB1C(int duration);
+extern void SetMotionBlur_8001BCD8(int on);
+/* exe-side, to move to sound_seq.h */
+extern void FadeOutSfxSeq_80031638(void);
+extern short SfxKeyOn_800314F4(int sfx);
+extern void SfxKeyOff_80031574(short voice, short sfx);
+/* exe-side, to move to sound.h */
+extern int PlayMusic_800300E0(int idx, int unused);
+/* exe-side, to move to model_ftg.h */
+extern void SetLoadFadeFlag_80027478(int mask, int set);
+/* exe-side, to move to msg_window.h */
+extern int OpenMessageWindow_8003422C(EvMsgWindowCfg* cfg);
+extern int OpenItemMessageWindow_80035AC8(EvItemMsgCfg* cfg);
+/* PSY-Q library */
+extern int printf(const char* fmt, ...);
+extern int rand(void);
+extern void exit(int status);
+extern void SsSepSetDecrescendo(short, short, short, long);
+extern void SsSepStop(short, short);
+

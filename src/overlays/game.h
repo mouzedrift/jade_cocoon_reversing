@@ -14,6 +14,7 @@
 #include "camera.h"
 #include "engine.h"
 #include "event.h" // EventDesc
+#include "sound.h"
 #include "unit_stats.h" // eventDescs_80078EB8
 
 extern void RequestGameMode_800A6D30(int mode);
@@ -171,7 +172,6 @@ extern char* dword_8008B520;
 
 extern void ResetEncounter_800A170C(void);
 
-extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
 extern int GetFieldMinionActor_800A7A60(int idx);
 
@@ -303,8 +303,6 @@ extern void LoadMenuSetEndOfGame_800B78D0();
 
 extern int GetFieldMinionCount_800A7790(void);
 
-extern GameMember* GetFieldMinion_800A77F4(int idx);
-extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
 
 
 
@@ -466,13 +464,12 @@ extern void FreeLoaderModelAnimSets_80020814(void);
 
 extern void SetCameraBattleMode_80037720(void);
 
-extern void StopSoundSeqs_80030D68(char* s);
+extern void StopSoundSeqs_80030D68(SoundStruct* sound); // exe-side, to move to sound_seq.h
 
 extern void PlayMusic_800300E0(int a, int b);
 
 extern void WaitBattleOverlay_800A1474();
 
-extern char dword_80091CE0[];
 
 extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
@@ -1058,11 +1055,11 @@ extern char dword_8007DC80;
 extern char dword_8007DC88;
 
 extern unsigned int dword_8008BD38;
+extern int dword_8001D060(int); // GetArmorOutfit_8001D060: funcs.h declares it u_char, but SetEquipment_800AD9EC uses the result unmasked
 
 extern void TintVramImage_800292D0();
 
 
-extern int dword_8001D060(int);
 
 extern int IsFieldMinionVisible_800A79C8(int idx);
 
@@ -1073,7 +1070,6 @@ extern int IsWithinDistance_8003B740();
 
 extern int GetGameMode_800A6D50(int which);
 
-extern void RequestGameMode_800A6D30(int mode);
 
 extern int eventDispatchHalt_8008B540;
 
@@ -1092,7 +1088,7 @@ extern int GetLevantWeaponKind_800AC3E4();
 
 extern Model* GetLevantModel_800AC38C();
 
-extern InvSlot* FindInventorySlot_800AD58C();
+extern InvSlot* FindInventorySlot_800AD58C(int id, int table);
 
 extern InvSlot* GetInventoryTable_800AD604(int table);
 
@@ -1265,7 +1261,6 @@ extern int hitNumberTasks_8008D778[2];
 extern int equipTask_8008D4C4;
 extern int configTask_8008B4B8;
 extern int dword_8008D62C;
-extern ShortPair screenOffset_8008D474;
 extern char name_800BCB00[];
 extern const int dword_800A05A0;
 extern const char aAssertionFaile_800A05A4[];
@@ -1627,3 +1622,111 @@ extern void* const dword_800A06B8[14];
 
 /* the jump table of UpdateLevantBattleAction_800AA51C (asm) and its targets, labels in the generated asm */
 extern GameActionFrames StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c);
+
+/* ---- moved from the .c files: types ---- */
+// the rolled encounter groups (EvSpawnTable on the EVENTFNC side)
+typedef struct GameSpawnOut
+{
+    GameSpawnMember* members_0[3];
+    int (*places_C[3])[4]; // MapList16.items_4 entries
+} GameSpawnOut;
+
+// the work area of LevantModelTask_800ACB64
+typedef struct GameLevantModelWork
+{
+    int state;
+    int flags; // 1: reload the model, 2: reload the outfit, 4: load the weapon's animations, 8 / 0x10: FTG save / swaps
+    int model_8; // saveData_8008B570.field_830 (levantModelIds_800B1164 index)
+    int prevModel_C;
+    int f10; // saveData_8008B570.field_834
+    int weaponKind_14;
+    int f18; // saveData_8008B570.field_836
+    int outfit_1C;
+} GameLevantModelWork;
+
+/* GAME's own functions/data used before their definition or from another of its files */
+void FreeLevantAnimSetAnims_800ACF3C(GameLevantModelWork* work);
+void LoadLevantAnimSetAnims_800ACFB8();
+extern int dword_800B1CA8[];
+
+/* code loaded behind GAME (0x800B1E00..0x800B66C0, not an overlay of overlays.py); MENU calls sub_800B330C too */
+extern int sub_800B330C(void);
+extern GameSpawnEntry* sub_800B2B40();
+
+/* EVENTFNC-side (eventfnc.h; EVENTFNC is loaded under GAME) */
+extern void LoadEventEffectFile_800BC7A8(int file);
+extern void LoadRelocBlob_800BC854(int src);
+extern void LoadEventTiy_800BC98C(int tiy);
+extern void CopyEventData_800BCA18(int src, unsigned int size);
+extern void LoadEventRecordTables_800BCA68(int data);
+
+/* exe-side, to move to effect_data.h (declared there as ActorScriptCmd* commandScripts_8007A024[]) */
+extern int name_8007A024[];
+/* exe-side, to move to effect_data.h */
+extern ModelVramSlot* dword_8007DC6C;
+
+/* GAME: functions called before their definition (or from another of its files) */
+/* (the task definitions at the top of game_3.c point to these) */
+void FieldModeTask_800A7720(GameTask* task);
+void GameMainInit_800A68CC(GameTask* task, GameMainWork* work);
+void LevantActorTask_800A9564(int entry, GameLevantActor* lev);
+void LevantActorTaskExit_800A955C();
+void LevantModelTaskExit_800ACF0C();
+void LevantModelTaskInit_800ACAA4(int* task, int* work);
+void ReturnToPrevGameMode_800A8108();
+void StartChapterOverlay_800A7690(GameTask* task, void** work);
+void StartMapOverlay_800A75F8(GameTask* task, void** work);
+int AreLevantFilesLoaded_800AC768();
+void ClearLevantDefending_800AB28C();
+void ClearLevantFade_800AB150(GameLevantFade* lev);
+GameAi* CreateEnemyAiEvent_800A2D90(Actor* actor, UnitStats* minion, int active);
+void DrawLevantModel_800A9708(GameLevantActor* lev);
+int EnemyAiCheckBlocked_800A4804(GameAi* ai);
+void EnemyAiFleeStep_800A459C(GameAi* ai);
+int EnemyAiTurnStep_800A4470(GameAi* ai);
+int FreeMdecBuffer_800A5854(void);
+int GetCameraTargetQuadrant_800A8930();
+int GetLevantAnimFlags_800AC900(int anim, int set);
+short* GetLevantAnimHitFrames_800AC9CC(int anim);
+int GetSetReturnEntrance_800A683C(int entrance);
+int IsInFrontHalf_800A4884(Vec3i* from, short* rot, Vec3i* to);
+int IsLevantAnimLoadedOrFree_800AAFD8(int anim);
+int IsOtherEncounterArea_800A5240(int entrance, int prevEntrance);
+int IsSceneHeld_800A5E68(void);
+int LoadLevantAnimById_800AC604(int anim, int resident);
+void PlayLevantScriptAnim_800AB9A8(int anim, int nextAnim, int blend);
+void RequestLevantActionEffect_800ABCF4(GameLevantActor* lev);
+void RunEventListExit_800A74F0(EventNode* node);
+void RunLevantActionCues_800ABDF0(GameLevantActor* lev);
+void RunLevantAnimCues_800AA220(GameLevantActor* lev);
+void SetLevantDefending_800AB264();
+void SetLevantLastCapture_800AC340(int on);
+void SetLevantPath_800ABAA4(G2Path* path);
+void SetLevantRootMotion_800AA140(GameLevantActor* lev);
+void SetLevantStatusTint_800ABECC();
+void sub_800AB2B4();
+void sub_800AB2DC();
+void sub_800ABB98(int fromLoop);
+void UpdateLevantActionState_800AAF58(GameLevantActor* lev);
+void UpdateLevantActorModel_800AB8DC();
+void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
+
+/* left undeclared on purpose: these return short/u_char, but their callers in game_3.c see them as int (implicit
+   declarations, no sign extension of the result; a prototype changes the code):
+   short GetLevantActionEndFrame_800AB4D8(int anim)
+   short GetLevantActionHitFrame_800AB750(int anim)
+   short GetLevantAnimEventFrame_800AC944(int anim, int set)
+   unsigned char GetLevantAnimFileId_800AC988(int anim, int set)
+   unsigned short GetLevantAnimLastFrame_800AC8BC(int anim, int set)
+   short GetLevantAnimLoopEnd_800AC878(int anim, int set)
+   short GetLevantAnimLoopStart_800AC834(int anim, int set)
+   short GetLevantAnimStartFrame_800AC7F0(int anim, int set) */
+/* exe-side, to move to unit_query.h */
+extern void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8);
+/* exe-side, to move to effect_data.h */
+extern int IsEffectReady_80014954(void);
+/* exe-side, to move to engine.h */
+extern void RunAnimFrameCues_8001C440(Model* model, int idx, int frame);
+/* libc (PSY-Q) */
+extern int printf(const char* fmt, ...);
+extern int rand(void);
