@@ -949,7 +949,7 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 
 FtgSpriteVtx *dword_80098180 BSS = 0;
 int dword_80098184 BSS = 0;
-MATRIX dword_80098188[40] BSS = { 0 };
+MATRIX boneMatrices_80098188[40] BSS = { 0 };
 int dword_80098688 BSS = 0;
 int dword_8009868C BSS = 0;
 SVECTOR dword_80098690[2] BSS = { 0 };

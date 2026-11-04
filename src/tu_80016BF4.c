@@ -59,7 +59,7 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
         pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
         pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
         pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-        sub_8004D1EC(model->ftg_4, pOT_8008D690, pos, &dword_800795D4, pointLights_8008D534, (obj->field_4 << 24) | 0xB0, scalePtr);
+        sub_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_4 << 24) | 0xB0, scalePtr);
     }
     else
     {

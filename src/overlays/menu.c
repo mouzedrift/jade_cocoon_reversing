@@ -171,7 +171,7 @@ extern int sub_800BFB10();
 extern int sub_800BFBE0();
 extern void PlaySfx_80031494();
 
-// stat changes worked out by sub_80013C28
+// stat changes worked out by UseItemOnUnit_80013C28
 typedef struct MenuStatDelta
 {
     int f0;
@@ -191,7 +191,7 @@ typedef struct MenuTmp
     int fC;
     MenuStatDelta d_10;
 } MenuTmp;
-extern void sub_80013C28();
+extern void UseItemOnUnit_80013C28();
 extern void sub_800C00F8();
 extern void sub_800C00D4();
 extern void sub_800AD1E0();
@@ -257,7 +257,7 @@ typedef struct MenuMain
 } MenuMain;
 extern void sub_800BBE50();
 extern void LoadUiTiy_8002BF74();
-extern void sub_800122A0();
+extern void AccumulateExpGain_800122A0();
 EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
 {
     EventEntry* t = AllocEventEntry_80043AF8(n);
@@ -292,7 +292,7 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
             if (name_800B1238[i].idx_6 || name_800B1238[i].a == 5 || name_800B1238[i].a == 0x1A)
                 ok = 1;
             if (ok && !(p->status_0 & 0x400))
-                sub_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
+                AccumulateExpGain_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
         }
         c->s58 = 0;
         c->count_44 = CountMinions_80010548(3) + 1;
@@ -347,11 +347,11 @@ void sub_800BBE90(MenuTask* t, MenuMain* a)
     }
 }
 
-extern int sub_800121A8();
+extern int GetLevelRank_800121A8();
 int sub_800BBF10(unsigned char a, unsigned char b)
 {
-    int x = sub_800121A8(a);
-    return x < sub_800121A8(b);
+    int x = GetLevelRank_800121A8(a);
+    return x < GetLevelRank_800121A8(b);
 }
 
 extern void sub_800BC56C();
@@ -561,7 +561,7 @@ void sub_800BC56C(MenuMain* c)
         {
             c->st_8C[i].exp_4 += c->a6C[i] - c->a34[i];
             if (c->st_8C[i].exp_4 > 0x3FFFFFF)
-                c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+                c->a5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&c->st_8C[i]);
             if (c->a5C[i])
                 c->a7C[i] = 1;
             if (i > 0 && c->a5C[i])
@@ -603,7 +603,7 @@ void sub_800BC56C(MenuMain* c)
                     {
                         unsigned int rest = c->st_8C[i].exp_4 - 0x4000000;
                         c->st_8C[i].exp_4 = 0x4000000;
-                        c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+                        c->a5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&c->st_8C[i]);
                         if (i > 0)
                             sub_800BCF74(i - 1);
                         c->st_8C[i].exp_4 = rest;
@@ -766,8 +766,8 @@ void sub_800BCB98(MenuMain* c, int b)
     col2.c_3 = 1;
     col2.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
-    ra = sub_800121A8(c->st_1AC[0].level_44);
-    rb = sub_800121A8(levantStatus_8008BD38.level_44);
+    ra = GetLevelRank_800121A8(c->st_1AC[0].level_44);
+    rb = GetLevelRank_800121A8(levantStatus_8008BD38.level_44);
     if (ra < rb)
     {
         if (c->i48)
@@ -837,7 +837,7 @@ extern int name_800338B0();
 void sub_800BCF74(short a)
 {
     int x = a - 1;
-    int r17 = (int)sub_80010824(3, x);
+    int r17 = (int)GetMinionMagicBits_80010824(3, x);
     Minion* r16 = GetMinion_80010598(3, x);
     sub_8001AEB8(name_800338B0(r16), &r16->status_84, r17);
 }
@@ -1765,7 +1765,7 @@ void sub_800BE4A0(MenuCtx* c)
                     s = buf[1];
                     p.a = 0xD2;
                     p.b = 0xBB;
-                    DrawMpGauge_8002F120(sub_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
+                    DrawMpGauge_8002F120(GetUnitStatus_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
                     r.w = 0x64;
                     r.h = 0x15;
                     r.x = 0xD2;
@@ -2055,7 +2055,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
     DrawUiTiySprt_8002C06C(pos, 0xC2, b);
     pos2[0] = 0x2F;
     pos2[1] = 0x77;
-    DrawText_8003E91C(2, GetRankName_8002FCD8(sub_800121A8(lv->level_44)), pos2, b);
+    DrawText_8003E91C(2, GetRankName_8002FCD8(GetLevelRank_800121A8(lv->level_44)), pos2, b);
     DrawAnimatedWindow_8002BEC8(t50, name_800C18DC, (short)s, b, 0, 0);
     pos[0] = 0x9A;
     pos[1] = 0x75;
@@ -2072,7 +2072,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
 extern void sub_800AD1E0();
 void sub_800BF3AC(MenuObj* o)
 {
-    sub_80011B24((int)o);
+    UseSporeItem_80011B24((int)o);
     sub_800AD1E0(o, 1, 0);
 }
 
@@ -2095,7 +2095,7 @@ void sub_800BF3E0(MenuCtx* c)
         tmp.f0 = 4;
         p = name_80014390(*(unsigned char*)&c->arr_2A[5]);
         if (p)
-            sub_80013C28(&levantStatus_8008BD38, p, &tmp, &tmp.d_10);
+            UseItemOnUnit_80013C28(&levantStatus_8008BD38, p, &tmp, &tmp.d_10);
         sub_800C00F8(&tmp, &tmp.d_10);
         sub_800AD1E0(r17, 1, 0);
         break;
@@ -2324,7 +2324,7 @@ void sub_800BF8B4(MenuCtx* c)
     case 4:
         c->f60 = c->arr_2A[7];
         c->f62 = c->arr_46[2];
-        v = CountMagicBits_8001AE54(sub_80010824(3, c->arr_2A[1]));
+        v = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, c->arr_2A[1]));
         if (v < 4)
             v = 4;
         c->f5C = v;
@@ -2604,7 +2604,7 @@ void sub_800C00D4(MenuObj* o, int a, int s)
     o->fC |= 1 << s;
 }
 
-extern void sub_800127D0();
+extern void AdjustUnitStatById_800127D0();
 void sub_800C00F8(MenuObj* a, MenuStatDelta* b)
 {
     int i;
@@ -2613,10 +2613,10 @@ void sub_800C00F8(MenuObj* a, MenuStatDelta* b)
         int bit = 1 << i;
         if (a->fC & bit)
         {
-            sub_800127D0(i, 0, -b->x_1C, 0);
-            sub_800127D0(i, 2, -b->y_20, 0);
-            sub_800127D0(i, 0x11, 0, b->f4);
-            sub_800127D0(i, 0x10, 0, b->f8);
+            AdjustUnitStatById_800127D0(i, 0, -b->x_1C, 0);
+            AdjustUnitStatById_800127D0(i, 2, -b->y_20, 0);
+            AdjustUnitStatById_800127D0(i, 0x11, 0, b->f4);
+            AdjustUnitStatById_800127D0(i, 0x10, 0, b->f8);
         }
     }
 }
@@ -2975,7 +2975,7 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     if (CheckItemOnTarget_80033DF4(&q) == 0 && sub_800C0DD4(r17))
     {
         int v;
-        sub_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
+        UseItemOnUnit_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
         out[0] = -tmp.d_10.x_1C;
         out[1] = -tmp.d_10.y_20;
         v = r16->maxHp_A - r16->hp_8;

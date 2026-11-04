@@ -247,7 +247,7 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
 // Matched
 void InitSceneFade_8001A38C(void)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     CameraState* g;
     f->flags = 0;
     f->count = 0;
@@ -425,7 +425,7 @@ void ResetSceneFade_8001A9A4(void)
     Fade_8001A41C* f;
     unsigned short flags;
     sceneBrightness_8008D40C = 0x1000;
-    f = dword_8008D628->entry.buffer;
+    f = fadeTask_8008D628->entry.buffer;
     flags = f->flags;
     unknownFlags_8008D678 &= ~0x400;
     f->count = 0;
@@ -440,7 +440,7 @@ void SetSceneDark_8001A9E4(void)
 // Matched
 void StartSceneFadeIn_8001AA04(short duration)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
     f->duration = duration;
     task = &cameraTask_8008D4A0->entry;
@@ -451,7 +451,7 @@ void StartSceneFadeIn_8001AA04(short duration)
 // Matched
 void StartSceneFadeOut_8001AA50(short duration)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
     unknownFlags_8008D678 |= 0x400;
     f->duration = duration;
@@ -463,7 +463,7 @@ void StartSceneFadeOut_8001AA50(short duration)
 // Matched
 void StartSceneDarken_8001AAA8(short duration)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
     f->duration = duration;
     task = &cameraTask_8008D4A0->entry;
@@ -474,13 +474,13 @@ void StartSceneDarken_8001AAA8(short duration)
 // Matched
 void StopSceneDarken_8001AAF4(void)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     f->flags &= ~4;
 }
 // Matched
 void StartSceneBrighten_8001AB1C(short duration)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
     f->duration = duration;
     task = &cameraTask_8008D4A0->entry;
@@ -491,14 +491,14 @@ void StartSceneBrighten_8001AB1C(short duration)
 // Matched
 void StartSceneFlash_8001AB68(void)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     f->count = 8;
     f->flags |= 0x10;
 }
 // Matched
 int IsSceneFadeDone_8001AB94(void)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     unsigned short flags = f->flags;
     if (flags & 0x1B)
     {
@@ -513,7 +513,7 @@ int IsSceneFadeDone_8001AB94(void)
 // Matched
 void SetSceneFadeFrontOT_8001ABEC(int on)
 {
-    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = fadeTask_8008D628->entry.buffer;
     if (on)
     {
         f->flags |= 0x20;

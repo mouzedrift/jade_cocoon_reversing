@@ -207,7 +207,7 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int cursor, int ot)
     subs[2] = list3;
     if (mode == 0 || mode == 3)
     {
-        status = sub_80014390(0);
+        status = GetUnitStatus_80014390(0);
         lists[k] = list0;
         lists[k][0].text = (int)status->name_10;
         p[2] = 0;
@@ -240,7 +240,7 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int cursor, int ot)
         if (r == 1)
         {
             p[2] = i + 1;
-            status = sub_80014390(((unsigned char*)p)[4]);
+            status = GetUnitStatus_80014390(((unsigned char*)p)[4]);
             state = 0;
             m = subs[i];
             lists[k] = m;

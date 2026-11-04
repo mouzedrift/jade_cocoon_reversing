@@ -58,7 +58,7 @@ extern UnitSkill* sub_800A2BA0(int a0);
 
 
 #if 0
-// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_80014390 / sub_8001449C. Tried: two-arg calls (t, t & 0xFF), int/unsigned t, t used in all three branches; permuter 1500: nothing
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as GetUnitStatus_80014390 / GetUnitStats_8001449C. Tried: two-arg calls (t, t & 0xFF), int/unsigned t, t used in all three branches; permuter 1500: nothing
 UnitSkill* GetUnitSkills_80031B30(int unit)
 {
     UnitSkill* r = 0;
@@ -82,7 +82,7 @@ UnitSkill* GetUnitSkills_80031B30(int unit)
     else if (v != 0)
     {
         t = unit - 1;
-        r = sub_800107F8(3, t & 0xFF)->slot;
+        r = GetMinionSkills_800107F8(3, t & 0xFF)->slot;
     }
     return r;
 }
@@ -1051,7 +1051,7 @@ int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
     {
         return 1;
     }
-    target = sub_80014390(p->target & 0xFF);
+    target = GetUnitStatus_80014390(p->target & 0xFF);
     if (p->item != 13 && (target->status_0 & 0x400))
     {
         return 4;

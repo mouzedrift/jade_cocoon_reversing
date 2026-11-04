@@ -54,7 +54,7 @@ extern double sqrt(double);
 extern int Rand100_80013E30(void);
 #if 0
 // Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and n (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (c/n: call deleted), (int)dmg in the test, n = 100 hoisted, if/else and nested ternary for n, ra < n, n renamed to other locals
-void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, AttackResult* out)
+void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, AttackResult* out)
 {
     int crit0;
     int crit1;
@@ -286,15 +286,15 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
     }
 }
 #endif
-INCLUDE_ASM(sub_80013374);
-extern void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, int a3);
+INCLUDE_ASM(CalcActionDamage_80013374);
+extern void ResolveBattleAction_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, int a3);
 // Matched
-void sub_80013C28(UnitStatus* a0, UnitStatus* a1, int* p, int a3)
+void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int a3)
 {
     int r;
-    if (p[0] == 4)
+    if (cmd[0] == 4)
     {
-        switch (p[1])
+        switch (cmd[1])
         {
         case 3:
             r = rand() % 6;
@@ -310,26 +310,26 @@ void sub_80013C28(UnitStatus* a0, UnitStatus* a1, int* p, int a3)
             {
                 r = 2;
             }
-            sub_80012614(a1, 1, r, 0);
-            sub_80012614(a1, 0, r, 0);
+            AdjustUnitStat_80012614(target, 1, r, 0);
+            AdjustUnitStat_80012614(target, 0, r, 0);
             break;
         case 4:
-            sub_80012614(a1, 5, sub_80013DB0(), 0);
+            AdjustUnitStat_80012614(target, 5, RollOilBonus_80013DB0(), 0);
             break;
         case 5:
-            sub_80012614(a1, 7, sub_80013DB0(), 0);
+            AdjustUnitStat_80012614(target, 7, RollOilBonus_80013DB0(), 0);
             break;
         case 6:
-            sub_80012614(a1, 9, sub_80013DB0(), 0);
+            AdjustUnitStat_80012614(target, 9, RollOilBonus_80013DB0(), 0);
             break;
         case 7:
-            sub_80012614(a1, 0xB, sub_80013DB0(), 0);
+            AdjustUnitStat_80012614(target, 0xB, RollOilBonus_80013DB0(), 0);
             break;
         case 8:
-            sub_80012614(a1, 0xD, sub_80013DB0(), 0);
+            AdjustUnitStat_80012614(target, 0xD, RollOilBonus_80013DB0(), 0);
             break;
         }
-        sub_80011B24(p[1]);
-        sub_80012BB0(a0, a1, p, a3);
+        UseSporeItem_80011B24(cmd[1]);
+        ResolveBattleAction_80012BB0(actor, target, cmd, a3);
     }
 }

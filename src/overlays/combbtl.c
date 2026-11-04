@@ -52,7 +52,7 @@ typedef struct CombBtlHist
 
 extern CombBtlUnit dword_800A3AA0[2][3];
 extern CombBtlHist dword_800A84D8[];
-extern EventNode* dword_8008D778;
+extern EventNode* hitNumberTasks_8008D778;
 extern void InitSceneFade_8001A38C();
 extern void SceneFadeTask_8001A41C();
 extern int sub_800A1958(void*);
@@ -688,7 +688,7 @@ int sub_800A5B70(int a)
     UnitStatus* r;
     int v;
     unsigned char buf[0x18];
-    r = sub_80014390((a + 8) & 0xFF);
+    r = GetUnitStatus_80014390((a + 8) & 0xFF);
 
     if (r)
     {
@@ -754,7 +754,7 @@ void sub_800A5C64(CombBtlTask* t)
     word_800A8488 = 0;
     byte_800A84A8 &= 0xFC;
     sub_800A60F0();
-    u = sub_80014390((unsigned char)(dword_800A85B8 + 8));
+    u = GetUnitStatus_80014390((unsigned char)(dword_800A85B8 + 8));
     flags0 = u->status_0;
     name_800BF7C4(u, &word_800A84BC, &word_800A84C4);
     if (word_800A84BC != 0)
@@ -1002,7 +1002,7 @@ void sub_800A73E4()
 
 void sub_800A7420()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D628);
+    EventEntry* e = AllocEventEntry_80043AF8(fadeTask_8008D628);
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
@@ -1013,7 +1013,7 @@ void sub_800A7420()
 
 void sub_800A7478()
 {
-    StopAllEventEntries_80043B40(dword_8008D628);
+    StopAllEventEntries_80043B40(fadeTask_8008D628);
 }
 
 void sub_800A74A0(int i)
@@ -1143,7 +1143,7 @@ void PlayHitFeedback_800A7C0C(int side)
 
 void sub_800A7E34(int a, int b, int c)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D778);
+    EventEntry* e = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
     CombBtlHitNum* p;
     if (e)
     {
@@ -1167,7 +1167,7 @@ void sub_800A7ECC()
     StartScreenFlash_8001C02C(c);
 }
 
-extern void sub_800127D0(int a, int b, int c, int d);
+extern void AdjustUnitStatById_800127D0(int a, int b, int c, int d);
 void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
 {
     CombBtlHitNum* p = buf;
@@ -1193,16 +1193,16 @@ void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     p->amount_4 += d;
     if (p->kind_0 == 1)
     {
-        UnitStatus* r = sub_80014390((unsigned char)(p->side_18 + 8));
-        sub_800127D0(p->side_18 + 8, 0, d, 0);
+        UnitStatus* r = GetUnitStatus_80014390((unsigned char)(p->side_18 + 8));
+        AdjustUnitStatById_800127D0(p->side_18 + 8, 0, d, 0);
         if (r->hp_8 <= 0)
         {
-            sub_800127B8(sub_80014390((unsigned char)(p->side_18 + 8)));
+            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)(p->side_18 + 8)));
         }
     }
     else if (p->kind_0 == 2)
     {
-        sub_800127D0(p->side_18 + 8, 2, d, 0);
+        AdjustUnitStatById_800127D0(p->side_18 + 8, 2, d, 0);
     }
 }
 

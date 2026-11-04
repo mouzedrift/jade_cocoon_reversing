@@ -16,7 +16,7 @@ typedef struct UnitStatus
     unsigned char field_1C[4];  // equipped weapon/armor/accessory ids (GetEquipmentId_8003356C)
     unsigned char field_20[0xC]; // ApplyEquipmentModifiers_80033754
     unsigned char stats_2C[6]; // attack, defense, magic attack, magic defense, speed, critical (InitStatsFromBase_8001980C)
-    unsigned char base_32[6];  // the species' base stats; pick the growth kind (sub_80011D98)
+    unsigned char base_32[6];  // the species' base stats; pick the growth kind (ApplyLevelUps_80011D98)
     unsigned char frac_38[6];  // fractional growth (0..99)
     unsigned char element_3E[4];
     short elementMask_42;
@@ -59,9 +59,9 @@ typedef struct
     short id; // 2/3 = owned, 4 = empty slot
     unsigned char species_2;
     unsigned char field_3;
-    unsigned char ancestors_4[6][0xC]; // names (sub_80010724, GetAncestorName_80033830)
+    unsigned char ancestors_4[6][0xC]; // names (GetMinionAncestorName_80010724, GetAncestorName_80033830)
     unsigned char species_4C[0x30];    // species history (GetDominantSpecies_800338B0)
-    unsigned char field_7C[6];         // element masks of the ancestors (sub_80010768, GetAncestorElementMask_80033848)
+    unsigned char field_7C[6];         // element masks of the ancestors (GetMinionAncestorElement_80010768, GetAncestorElementMask_80033848)
     char pad_82[2];
     UnitStatus status_84;
     unsigned char field_CC[0x12];
@@ -71,7 +71,7 @@ typedef struct
 } Minion;
 
 /* 12-byte parameter block of an action: the basic attack (GetLevantWeaponAction_8001D260), a magic (GetMagicAction_8001AD64), an item
-   (GetItemData_8001CDF4) or an ability (GetAbilityAction_800318C8); sub_80012BB0 / sub_800129B0 work on a copy */
+   (GetItemData_8001CDF4) or an ability (GetAbilityAction_800318C8); ResolveBattleAction_80012BB0 / GetAbilityActionData_800129B0 work on a copy */
 typedef struct ActionData
 {
     unsigned char c0;

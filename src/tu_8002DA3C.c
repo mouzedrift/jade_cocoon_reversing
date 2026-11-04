@@ -481,7 +481,7 @@ void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level,
         break;
     }
 }
-extern void sub_8001419C(unsigned char* p, short* out);
+extern void BaseStatRatios_8001419C(unsigned char* p, short* out);
 extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
@@ -493,7 +493,7 @@ void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, shor
     RECT r;
     Color_EACC lineColor = statGridLineColor_800743D0;
     SPRT* prim;
-    sub_8001419C(st->stats_2C, loc);
+    BaseStatRatios_8001419C(st->stats_2C, loc);
     loc[0] += pos[0];
     loc[1] += pos[1];
     DrawUiTiySprt_8002C06C(loc, 10, ot);

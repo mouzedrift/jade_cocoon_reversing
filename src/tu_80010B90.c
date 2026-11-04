@@ -27,46 +27,46 @@
 #include "tu_80034068.h"
 #include "tu_80036528.h"
 
-const char dword_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
-const char asc_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている
-const char asc_80071B98[] = "\223\305\202\314\203_\203\201\201[\203W"; // 毒のダメージ
-const char asc_80071BA8[] = "\202\273\202\314\203R\203}\203\223\203h\202\315\221I\202\327\202\334\202\271\202\361"; // そのコマンドは選べません
-const char asc_80071BC4[] = "\223\246\202\260\202\347\202\352\202\310\202\251\202\301\202\275"; // 逃げられなかった
-const char asc_80071BD8[] = "\220\355\223\254\202\251\202\347\223\246\202\260\217o\202\265\202\275"; // 戦闘から逃げ出した
-const char asc_80071BEC[] = "\202\273\202\314\203A\203C\203e\203\200\202\315\215\241\216g\202\246\202\334\202\271\202\361"; // そのアイテムは今使えません
-const char asc_80071C08[] = "\225\225\210\363\216\270\224s\202\265\202\334\202\265\202\275"; // 封印失敗しました
-const char asc_80071C1C[] = "\225\225\210\363\220\254\202\261\202\244\202\265\202\334\202\265\202\275"; // 封印成こうしました
-const char asc_80071C30[] = "\202\261\202\352\210\310\217\343\225\225\210\363\202\305\202\253\202\334\202\271\202\361"; // これ以上封印できません
-const char asc_80071C48[] = "\213\363\202\314\226\232\202\252\202\240\202\350\202\334\202\271\202\361"; // 空の繭がありません
-const char asc_80071C5C[] = "\202\273\202\314\226\202\225\250\202\315\216\200\202\361\202\305\202\242\202\334\202\267"; // その魔物は死んでいます
-const char asc_80071C74[] = "\226\202\225\250\202\360\221\225\224\365\202\265\202\304\202\242\202\334\202\271\202\361"; // 魔物を装備していません
-const char asc_80071C8C[] = "\220\355\223\254\222\206\202\315\216g\202\246\202\334\202\271\202\361"; // 戦闘中は使えません
-const char asc_80071CA0[] = "\221\256\220\253\202\314\226\202\225\250\202\360\221\225\224\365\202\265\202\304\202\242\202\334\202\271\202\361"; // 属性の魔物を装備していません
-const char asc_80071CC0[] = "\202l\202o\202\252\221\253\202\350\202\334\202\271\202\361"; // ＭＰが足りません
-const char asc_80071CD4[] = "\226\202\226@\202\315\225\225\210\363\202\263\202\352\202\304\202\242\202\334\202\267"; // 魔法は封印されています
-const char asc_80071CEC[] = "\202\307\202\314\226\202\225\250\202\311\223\374\202\352\212\267\202\246\202\334\202\267\202\251\201H"; // どの魔物に入れ換えますか？
-const char asc_80071D08[] = "\202\307\202\314\223\301\216\352\215U\214\202\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どの特殊攻撃を使いますか？
-const char asc_80071D24[] = "\202\307\202\314\226\202\225\250\202\360\225\225\210\363\202\265\202\334\202\267\202\251\201H"; // どの魔物を封印しますか？
-const char asc_80071D40[] = "\202\307\202\314\203A\203C\203e\203\200\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どのアイテムを使いますか？
-const char asc_80071D5C[] = "\202\307\202\314\226\202\225\250\202\360\217\242\212\253\202\265\202\334\202\267\202\251\201H"; // どの魔物を召喚しますか？
-const char asc_80071D78[] = "\202\307\202\314\226\202\226@\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どの魔法を使いますか？
-const char asc_80071D90[] = "\222N\202\311\223\301\216\352\215U\214\202\202\360\202\251\202\257\202\334\202\267\202\251\201H"; // 誰に特殊攻撃をかけますか？
-const char asc_80071DAC[] = "\222N\202\311\203A\203C\203e\203\200\202\360\216g\202\242\202\334\202\267\202\251\201H"; // 誰にアイテムを使いますか？
-const char asc_80071DC8[] = "\222N\202\311\226\202\226@\202\360\202\251\202\257\202\334\202\267\202\251\201H"; // 誰に魔法をかけますか？
-const char asc_80071DE0[] = "\222N\202\360\215U\214\202\202\265\202\334\202\267\202\251\201H"; // 誰を攻撃しますか？
-const char asc_80071DF4[] = "\226\202\225\250\202\360\223\374\202\352\212\267\202\246\202\334\202\267"; // 魔物を入れ換えます
-const char asc_80071E08[] = "\223\301\216\352\215U\214\202\202\305\215U\214\202\202\267\202\351"; // 特殊攻撃で攻撃する
-const char asc_80071E1C[] = "\226\232\216g\202\242\202\311\226\337\202\351"; // 繭使いに戻る
-const char asc_80071E2C[] = "\222\312\217\355\202\314\221\305\214\202\215U\214\202\202\360\202\267\202\351"; // 通常の打撃攻撃をする
-const char asc_80071E44[] = "\226\232\202\311\225\225\210\363\202\267\202\351\201F\213\363\226\232"; // 繭に封印する：空繭
-const char asc_80071E58[] = "\226\202\225\250\202\360\217\242\212\253\202\267\202\351"; // 魔物を召喚する
-const char asc_80071E68[] = "\217C\223\276\202\265\202\304\202\242\202\351\226\202\226@\202\360\216g\202\244"; // 修得している魔法を使う
-const char asc_80071E80[] = "\221\225\224\365\202\265\202\304\202\242\202\351\225\220\212\355\202\305\215U\214\202\202\267\202\351"; // 装備している武器で攻撃する
-const char asc_80071E9C[] = "\221\225\224\365\202\360\225\317\215X\202\267\202\351"; // 装備を変更する
-const char asc_80071EAC[] = "\220\355\223\254\202\251\202\347\223\246\202\260\217o\202\267"; // 戦闘から逃げ出す
-const char asc_80071EC0[] = "\203A\203C\203e\203\200\202\360\216g\202\244"; // アイテムを使う
-const char asc_80071ED0[] = "\226h\214\344\202\360\214\230\202\337\203_\203\201\201[\203W\202\360\224\274\225\252\202\311\202\267\202\351"; // 防御を堅めダメージを半分にする
-const char asc_80071EF0[] = "\215U\214\202\203\201\203j\203\205\201[\202\326"; // 攻撃メニューへ
+const char msgAsleep_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
+const char msgParalyzed_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている
+const char msgPoisonDamage_80071B98[] = "\223\305\202\314\203_\203\201\201[\203W"; // 毒のダメージ
+const char msgCannotChooseCommand_80071BA8[] = "\202\273\202\314\203R\203}\203\223\203h\202\315\221I\202\327\202\334\202\271\202\361"; // そのコマンドは選べません
+const char msgCouldNotEscape_80071BC4[] = "\223\246\202\260\202\347\202\352\202\310\202\251\202\301\202\275"; // 逃げられなかった
+const char msgEscapedBattle_80071BD8[] = "\220\355\223\254\202\251\202\347\223\246\202\260\217o\202\265\202\275"; // 戦闘から逃げ出した
+const char msgCannotUseItemNow_80071BEC[] = "\202\273\202\314\203A\203C\203e\203\200\202\315\215\241\216g\202\246\202\334\202\271\202\361"; // そのアイテムは今使えません
+const char msgSealFailed_80071C08[] = "\225\225\210\363\216\270\224s\202\265\202\334\202\265\202\275"; // 封印失敗しました
+const char msgSealSucceeded_80071C1C[] = "\225\225\210\363\220\254\202\261\202\244\202\265\202\334\202\265\202\275"; // 封印成こうしました
+const char msgCannotSealMore_80071C30[] = "\202\261\202\352\210\310\217\343\225\225\210\363\202\305\202\253\202\334\202\271\202\361"; // これ以上封印できません
+const char msgNoEmptyCocoon_80071C48[] = "\213\363\202\314\226\232\202\252\202\240\202\350\202\334\202\271\202\361"; // 空の繭がありません
+const char msgMinionIsDead_80071C5C[] = "\202\273\202\314\226\202\225\250\202\315\216\200\202\361\202\305\202\242\202\334\202\267"; // その魔物は死んでいます
+const char msgNoMinionEquipped_80071C74[] = "\226\202\225\250\202\360\221\225\224\365\202\265\202\304\202\242\202\334\202\271\202\361"; // 魔物を装備していません
+const char msgCannotUseInBattle_80071C8C[] = "\220\355\223\254\222\206\202\315\216g\202\246\202\334\202\271\202\361"; // 戦闘中は使えません
+const char msgNoElementMinion_80071CA0[] = "\221\256\220\253\202\314\226\202\225\250\202\360\221\225\224\365\202\265\202\304\202\242\202\334\202\271\202\361"; // 属性の魔物を装備していません
+const char msgNotEnoughMp_80071CC0[] = "\202l\202o\202\252\221\253\202\350\202\334\202\271\202\361"; // ＭＰが足りません
+const char msgMagicSealed_80071CD4[] = "\226\202\226@\202\315\225\225\210\363\202\263\202\352\202\304\202\242\202\334\202\267"; // 魔法は封印されています
+const char msgSwapWhichMinion_80071CEC[] = "\202\307\202\314\226\202\225\250\202\311\223\374\202\352\212\267\202\246\202\334\202\267\202\251\201H"; // どの魔物に入れ換えますか？
+const char msgWhichSpecialAttack_80071D08[] = "\202\307\202\314\223\301\216\352\215U\214\202\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どの特殊攻撃を使いますか？
+const char msgSealWhichMinion_80071D24[] = "\202\307\202\314\226\202\225\250\202\360\225\225\210\363\202\265\202\334\202\267\202\251\201H"; // どの魔物を封印しますか？
+const char msgWhichItem_80071D40[] = "\202\307\202\314\203A\203C\203e\203\200\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どのアイテムを使いますか？
+const char msgSummonWhichMinion_80071D5C[] = "\202\307\202\314\226\202\225\250\202\360\217\242\212\253\202\265\202\334\202\267\202\251\201H"; // どの魔物を召喚しますか？
+const char msgWhichMagic_80071D78[] = "\202\307\202\314\226\202\226@\202\360\216g\202\242\202\334\202\267\202\251\201H"; // どの魔法を使いますか？
+const char msgSpecialAttackWhom_80071D90[] = "\222N\202\311\223\301\216\352\215U\214\202\202\360\202\251\202\257\202\334\202\267\202\251\201H"; // 誰に特殊攻撃をかけますか？
+const char msgUseItemOnWhom_80071DAC[] = "\222N\202\311\203A\203C\203e\203\200\202\360\216g\202\242\202\334\202\267\202\251\201H"; // 誰にアイテムを使いますか？
+const char msgCastMagicOnWhom_80071DC8[] = "\222N\202\311\226\202\226@\202\360\202\251\202\257\202\334\202\267\202\251\201H"; // 誰に魔法をかけますか？
+const char msgAttackWhom_80071DE0[] = "\222N\202\360\215U\214\202\202\265\202\334\202\267\202\251\201H"; // 誰を攻撃しますか？
+const char helpSwapMinion_80071DF4[] = "\226\202\225\250\202\360\223\374\202\352\212\267\202\246\202\334\202\267"; // 魔物を入れ換えます
+const char helpSpecialAttack_80071E08[] = "\223\301\216\352\215U\214\202\202\305\215U\214\202\202\267\202\351"; // 特殊攻撃で攻撃する
+const char helpBackToCocoonMaster_80071E1C[] = "\226\232\216g\202\242\202\311\226\337\202\351"; // 繭使いに戻る
+const char helpNormalAttack_80071E2C[] = "\222\312\217\355\202\314\221\305\214\202\215U\214\202\202\360\202\267\202\351"; // 通常の打撃攻撃をする
+const char helpSealInCocoon_80071E44[] = "\226\232\202\311\225\225\210\363\202\267\202\351\201F\213\363\226\232"; // 繭に封印する：空繭
+const char helpSummonMinion_80071E58[] = "\226\202\225\250\202\360\217\242\212\253\202\267\202\351"; // 魔物を召喚する
+const char helpUseMagic_80071E68[] = "\217C\223\276\202\265\202\304\202\242\202\351\226\202\226@\202\360\216g\202\244"; // 修得している魔法を使う
+const char helpWeaponAttack_80071E80[] = "\221\225\224\365\202\265\202\304\202\242\202\351\225\220\212\355\202\305\215U\214\202\202\267\202\351"; // 装備している武器で攻撃する
+const char helpChangeEquipment_80071E9C[] = "\221\225\224\365\202\360\225\317\215X\202\267\202\351"; // 装備を変更する
+const char helpEscape_80071EAC[] = "\220\355\223\254\202\251\202\347\223\246\202\260\217o\202\267"; // 戦闘から逃げ出す
+const char helpUseItem_80071EC0[] = "\203A\203C\203e\203\200\202\360\216g\202\244"; // アイテムを使う
+const char helpDefend_80071ED0[] = "\226h\214\344\202\360\214\230\202\337\203_\203\201\201[\203W\202\360\224\274\225\252\202\311\202\267\202\351"; // 防御を堅めダメージを半分にする
+const char helpAttackMenu_80071EF0[] = "\215U\214\202\203\201\203j\203\205\201[\202\326"; // 攻撃メニューへ
 const int dword_80071F00 = 0;
 const int dword_80071F04 = 0;
 
@@ -1196,21 +1196,21 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 5, 64, &soundTask_8008D4A4, (EventEntryFn)InitSoundTask_8002FF10, (EventEntryFn)FreeSoundTask_8003006C },
     { 1, 1, 16, &overlayLoaderTask_8008D4C0, (EventEntryFn)InitOverlayLoaderTask_80020CB8 },
     { 1, 5, 12, &xaTask_8008B560, (EventEntryFn)XaInitTask_80043054, (EventEntryFn)XaStop_800430B0 },
-    { 1, 1, 8, &dword_8008D628, (EventEntryFn)SceneFadeTask_8001A41C },
+    { 1, 1, 8, &fadeTask_8008D628, (EventEntryFn)SceneFadeTask_8001A41C },
     { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, (EventEntryFn)nullsub_5 },
     { 1, 0x8000, 124, (void *)&dword_8008D62C },
     { 1, 0x8000, 0x2A8, (void *)&messageWindowTask_8008D640 },
     { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },
-    { 1, 0x8000, 72, (void *)((char *)&dword_8008D480 + 4) },
+    { 1, 0x8000, 72, (void *)((char *)&loadMenuTask_8008D480 + 4) },
     { 1, 0x8000, 72, (void *)&dword_8008B4B8 },
-    { 1, 0x8000, 124, (void *)&dword_8008D480, sub_800B7650 },
+    { 1, 0x8000, 124, (void *)&loadMenuTask_8008D480, sub_800B7650 },
     { 1, 0x8000, 72, (void *)&dword_8008D4C4 },
     { 3, 0x8000, 196, (void *)&dword_8008B4AC },
-    { 8, 0x8000, 80, (void *)&dword_8008D778 },
+    { 8, 0x8000, 80, (void *)&hitNumberTasks_8008D778 },
     { 1, 0x8000, 8, (void *)((char *)&dword_8008B4AC + 4) },
     { 1, 0x8000, 8, &screenFlashTasks_8008D61C },
     { 2, 0x8000, 8, &modelTasks_8008D618 },
-    { 1, 1, 8, (void *)((char *)&dword_8008D468 + 8), (EventEntryFn)nullsub_2 },
+    { 1, 1, 8, (void *)((char *)&battleMenuTask_8008D468 + 8), (EventEntryFn)nullsub_2 },
     {
         1,
         5,
@@ -1225,7 +1225,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 0x8000, 20, (void *)&dword_8008D614 },
     { 1, 0x8000, 4, (void *)&dword_8008B4C0 },
 };
-unsigned char dword_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 11, 0, 3, 0, 3, 2, 3, 0, 11, 0, 4, 0, 4, 3, 4, 0, 11, 0, 5, 0, 5, 4, 5, 0, 11, 0, 3, 0, 6, 2, 6, 0, 11, 0, 4, 0, 7, 6, 7, 0, 11, 0, 5, 0, 8, 7, 8, 0, 11, 0, 3, 0, 9, 2, 9, 0, 11, 0, 4, 0, 10, 9, 10, 0, 11, 0, 5, 0, 11, 10, 11, 0, 11, 0, 3, 0, 12, 2, 12, 0, 11, 0, 4, 0, 13, 12, 13, 0, 11, 0, 3, 0, 14, 2, 14, 0, 11, 0, 4, 0, 15, 14, 15, 0, 11, 0, 2, 0, 16, 0, 16, 0, 11, 0, 3, 0, 17, 16, 17, 0, 11, 0, 4, 0, 18, 17, 18, 0, 11, 0, 5, 0, 19, 18, 19, 0, 11, 0, 3, 0, 20, 16, 20, 0, 11, 0, 4, 0, 21, 20, 21, 0, 11, 0, 5, 0, 22, 21, 22, 0, 11, 0, 3, 0, 23, 16, 23, 0, 11, 0, 4, 0, 24, 23, 24, 0, 11, 0, 255, 255, 255, 255, 255, 255, 255, 255 };
+unsigned char defaultBones_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 11, 0, 3, 0, 3, 2, 3, 0, 11, 0, 4, 0, 4, 3, 4, 0, 11, 0, 5, 0, 5, 4, 5, 0, 11, 0, 3, 0, 6, 2, 6, 0, 11, 0, 4, 0, 7, 6, 7, 0, 11, 0, 5, 0, 8, 7, 8, 0, 11, 0, 3, 0, 9, 2, 9, 0, 11, 0, 4, 0, 10, 9, 10, 0, 11, 0, 5, 0, 11, 10, 11, 0, 11, 0, 3, 0, 12, 2, 12, 0, 11, 0, 4, 0, 13, 12, 13, 0, 11, 0, 3, 0, 14, 2, 14, 0, 11, 0, 4, 0, 15, 14, 15, 0, 11, 0, 2, 0, 16, 0, 16, 0, 11, 0, 3, 0, 17, 16, 17, 0, 11, 0, 4, 0, 18, 17, 18, 0, 11, 0, 5, 0, 19, 18, 19, 0, 11, 0, 3, 0, 20, 16, 20, 0, 11, 0, 4, 0, 21, 20, 21, 0, 11, 0, 5, 0, 22, 21, 22, 0, 11, 0, 3, 0, 23, 16, 23, 0, 11, 0, 4, 0, 24, 23, 24, 0, 11, 0, 255, 255, 255, 255, 255, 255, 255, 255 };
 unsigned char dword_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
 
 // Matched
@@ -1266,7 +1266,7 @@ int ModelTaskWaitLoad_80010C30(ModelTaskState* p)
     return 1;
 }
 // Matched
-int sub_80010CDC(ModelTaskState* p)
+int ModelTaskApplyTextures_80010CDC(ModelTaskState* p)
 {
     if (p->texId_2C >= 0)
     {
@@ -1315,8 +1315,8 @@ typedef struct
 extern void sub_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
                          char* out, void* vout);
 extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
-void sub_80011904(VtxBlend* p, Vtx12* out);
-extern unsigned char dword_80079140[];
+void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
+extern unsigned char defaultBones_80079140[];
 extern unsigned char dword_80079210[];
 // Matched
 int ModelTaskDraw_80010DB0(ModelTaskState* p)
@@ -1425,7 +1425,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.f0 = (int)t;
     sk.f4 = &levantPos_8008BD18.pos;
     sk.f8 = &levantPos_8008BD18.rot;
-    sk.bones = dword_80079140;
+    sk.bones = defaultBones_80079140;
     sk.base = sub_80024EC8(m[0], p->record_20);
     sk.pose = (char*)o->anims_54;
     sk.f18 = 0;
@@ -1455,7 +1455,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
         vb.src[i] = sub_80024E64(m[i]);
         vb.w[i] = p->weights_14[i];
     }
-    sub_80011904(&vb, vb.src[0]);
+    BlendVertices_80011904(&vb, vb.src[0]);
     o->headerSize_48 = m[p->main_30]->headerSize_48;
     o->header_4C = m[p->main_30]->header_4C;
     m[p->main_30]->headerSize_48 = 0;
@@ -1471,7 +1471,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
         short (*tbl)[6] = sub_80024E64(o);
         ent = &tbl[FindEffectTblRow_80018908(0x26, tbl)];
     }
-    mat = &dword_80098188[ent[0][1]];
+    mat = &boneMatrices_80098188[ent[0][1]];
     sv = (SVECTOR*)&ent[0][2];
     PushMatrix();
     mat->m[0][0] = mat->m[0][0] * sk.base[sk.bones[ent[0][1] * 8 + 2] * 4 + 0] / 4096;
@@ -1494,7 +1494,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     return 1;
 }
 // Matched
-void sub_80011904(VtxBlend* p, Vtx12* out)
+void BlendVertices_80011904(VtxBlend* p, Vtx12* out)
 {
     int n;
     int k;
@@ -1524,16 +1524,16 @@ void sub_80011904(VtxBlend* p, Vtx12* out)
         out[n].z = sum;
     }
 }
-void sub_80011AF8(EventEntry* p, int* q);
+void UpdateSporeTask_80011AF8(EventEntry* p, int* q);
 // Matched
-void sub_80011ADC(EventEntry* p, int* q)
+void InitSporeTask_80011ADC(EventEntry* p, int* q)
 {
     q[0] = -1;
     q[1] = -1;
-    p->cb_8 = (EventEntryFn)sub_80011AF8;
+    p->cb_8 = (EventEntryFn)UpdateSporeTask_80011AF8;
 }
 // Matched
-void sub_80011AF8(EventEntry* p, int* q)
+void UpdateSporeTask_80011AF8(EventEntry* p, int* q)
 {
     int* r = q;
     if (q[1] > 0)
@@ -1547,10 +1547,10 @@ void sub_80011AF8(EventEntry* p, int* q)
     }
 }
 // Matched
-void sub_80011B24(int a0)
+void UseSporeItem_80011B24(int item)
 {
-    Task8008D464Buf* p = dword_8008D464->entry.buffer;
-    switch (a0)
+    SporeTaskBuf* p = sporeTask_8008D464->entry.buffer;
+    switch (item)
     {
     case 0x29:
         p->timer_4 = 1000;
@@ -1563,22 +1563,22 @@ void sub_80011B24(int a0)
     }
 }
 // Matched
-int sub_80011B6C(void)
+int GetSporeMode_80011B6C(void)
 {
-    return ((Task8008D464Buf*)dword_8008D464->entry.buffer)->mode_0;
+    return ((SporeTaskBuf*)sporeTask_8008D464->entry.buffer)->mode_0;
 }
 // Matched
-void sub_80011B8C(void)
+void HaltEventsAndFade_80011B8C(void)
 {
     eventDispatchHalt_8008B540 = 1;
     unknownFlags_8008D678 |= 0x8000000;
     BeginFade_8001C260();
 }
 // Matched
-void sub_80011BCC(void)
+void HaltEventsFadeStopMovie_80011BCC(void)
 {
     int f;
-    sub_80011B8C();
+    HaltEventsAndFade_80011B8C();
     f = unknownFlags_8008D678;
     bStopDrawingMovie_8008D45C = 1;
     unknownFlags_8008D678 = f | 4;
@@ -1627,29 +1627,29 @@ typedef struct
     unsigned short value;
 } struct_D28;
 // Matched
-int sub_80011D28(int a0)
+int GetGrowthKind_80011D28(int base)
 {
     int i;
-    for (i = 0; ((struct_D28*)word_80079374)[i].limit != 0; i++)
+    for (i = 0; ((struct_D28*)growthKindThresholds_80079374)[i].limit != 0; i++)
     {
-        if (a0 >= ((struct_D28*)word_80079374)[i].limit)
+        if (base >= ((struct_D28*)growthKindThresholds_80079374)[i].limit)
         {
-            return ((struct_D28*)word_80079374)[i].value;
+            return ((struct_D28*)growthKindThresholds_80079374)[i].value;
         }
     }
     return 9;
 }
-int sub_80011D98(UnitStatus* m, int arg1);
+int ApplyLevelUps_80011D98(UnitStatus* m, int mode);
 // Matched
-void sub_80011D78(UnitStatus* arg0)
+void ApplyLevelUpsBonus_80011D78(UnitStatus* arg0)
 {
-    sub_80011D98(arg0, 1);
+    ApplyLevelUps_80011D98(arg0, 1);
 }
-extern int sub_80011D28(int a0);
-extern int sub_800142B8(unsigned char* p);
-extern int sub_80014308(unsigned char* p);
+extern int GetGrowthKind_80011D28(int a0);
+extern int BaseMagicRatio_800142B8(unsigned char* p);
+extern int BaseAttackRatio_80014308(unsigned char* p);
 // Matched
-int sub_80011D98(UnitStatus* m, int arg1)
+int ApplyLevelUps_80011D98(UnitStatus* m, int arg1)
 {
     unsigned int acc[6];
     unsigned char kind[6];
@@ -1670,7 +1670,7 @@ int sub_80011D98(UnitStatus* m, int arg1)
     n = 0;
     for (i = 0; i < 6; i++)
     {
-        kind[i] = sub_80011D28(m->base_32[i]);
+        kind[i] = GetGrowthKind_80011D28(m->base_32[i]);
     }
     levels = m->exp_4 >> 26;
     for (j = 0; j < 6; j++)
@@ -1689,7 +1689,7 @@ int sub_80011D98(UnitStatus* m, int arg1)
         {
             if (kind[i] != 21)
             {
-                acc[i] += sub_80013E00(kind[i], add);
+                acc[i] += GetStatGrowth_80013E00(kind[i], add);
                 add /= 2;
             }
         }
@@ -1729,12 +1729,12 @@ int sub_80011D98(UnitStatus* m, int arg1)
                 m->frac_38[k] = 0;
             }
         }
-        a = sub_80012140(m->level_44, m);
-        b = sub_80012178(m->level_44, m);
+        a = BaseMaxHpForLevel_80012140(m->level_44, m);
+        b = BaseMaxMpForLevel_80012178(m->level_44, m);
         oldA = m->maxHp_A;
         oldE = m->maxMp_E;
-        a = a * (sub_80014308(m->stats_2C) * 40 + 6000) / 10000;
-        b = b * (sub_800142B8(m->stats_2C) * 40 + 6000) / 10000;
+        a = a * (BaseAttackRatio_80014308(m->stats_2C) * 40 + 6000) / 10000;
+        b = b * (BaseMagicRatio_800142B8(m->stats_2C) * 40 + 6000) / 10000;
         if (a >= 0)
         {
             t = a;
@@ -1772,7 +1772,7 @@ int sub_80011D98(UnitStatus* m, int arg1)
     return levels;
 }
 // Matched
-int sub_80012140(int arg0, void* unused)
+int BaseMaxHpForLevel_80012140(int level, void* unused)
 {
     int result;
     int var_v0;
@@ -1780,43 +1780,43 @@ int sub_80012140(int arg0, void* unused)
 
     result = 20;
 
-    for (i = 0; i < arg0; i++)
+    for (i = 0; i < level; i++)
     {
         var_v0 = result + 9;
-        result = var_v0 + (arg0 / 2);
+        result = var_v0 + (level / 2);
         var_v0 = 29;
     }
     return result;
 }
 // Matched
-int sub_80012178(int arg0, void* unused)
+int BaseMaxMpForLevel_80012178(int level, void* unused)
 {
-    return (arg0 * 3) + 20;
+    return (level * 3) + 20;
 }
 // Matched
-void sub_80012188(UnitStatus* p)
+void ApplyLevelUpsPlain_80012188(UnitStatus* p)
 {
-    sub_80011D98(p, 0);
+    ApplyLevelUps_80011D98(p, 0);
 }
-int sub_800121A8(int a)
+int GetLevelRank_800121A8(int level)
 {
     int v;
-    if (a < 20)
+    if (level < 20)
     {
-        v = a / 4;
+        v = level / 4;
     }
-    else if (a < 31)
+    else if (level < 31)
     {
         v = 5;
     }
-    else if (a < 35)
+    else if (level < 35)
     {
         v = 6;
     }
     else
     {
         v = 7;
-        if (a >= 40)
+        if (level >= 40)
         {
             v = 8;
         }
@@ -1828,50 +1828,50 @@ int sub_800121A8(int a)
     return v;
 }
 // Matched
-int sub_80012204(int a, int b, int c, int d)
+int CombinedExpDelta_80012204(int a, int b, int c, int d)
 {
     double s = 0.0;
-    s += sub_80012358(a, b);
-    s += sub_80012358(c, d);
-    return sub_8001247C(s) - ((a << 26) + b);
+    s += PackedExpToTotal_80012358(a, b);
+    s += PackedExpToTotal_80012358(c, d);
+    return TotalExpToPacked_8001247C(s) - ((a << 26) + b);
 }
 // Matched
-void sub_800122A0(int a0, int a1, int* a2)
+void AccumulateExpGain_800122A0(int unit, int exp, int* acc)
 {
-    UnitStatus* p = sub_80014390(a0 & 0xFF);
-    int v = *a2;
+    UnitStatus* p = GetUnitStatus_80014390(unit & 0xFF);
+    int v = *acc;
     if (v != 0)
     {
         int lo = p->exp_4 + (v & 0x3FFFFFF);
         int hi = p->level_44 + ((unsigned int)v >> 26);
         int q = lo / 0x4000000;
-        *a2 += sub_80012204(hi + q, lo - (q << 26), a1, 0);
+        *acc += CombinedExpDelta_80012204(hi + q, lo - (q << 26), exp, 0);
     }
     else
     {
-        *a2 = sub_80012204(p->level_44, p->exp_4, a1, 0);
+        *acc = CombinedExpDelta_80012204(p->level_44, p->exp_4, exp, 0);
     }
 }
 // Matched
-double sub_80012358(int n, int x)
+double PackedExpToTotal_80012358(int level, int exp)
 {
     double r = 67108864.0;
     double s = 1.0;
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < level; i++)
     {
         r += s * 67108864.0;
         s += s;
     }
     if (s != 1.0)
     {
-        r += (double)x * s;
+        r += (double)exp * s;
     }
     return r;
 }
 #if 0
 // Not matched: the original keeps 67108864.0 in $s0/$s1 (the variable t) for the first subtraction, here CSE folds it to an immediate (loop shapes, short i, permuter 500: no)
-int sub_8001247C(double x)
+int TotalExpToPacked_8001247C(double x)
 {
     double t = 67108864.0;
     double s = 1.0;
@@ -1891,7 +1891,7 @@ int sub_8001247C(double x)
     return (double)(i << 26) + x / s;
 }
 #endif
-INCLUDE_ASM(sub_8001247C);
+INCLUDE_ASM(TotalExpToPacked_8001247C);
 // Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
 {
@@ -1909,7 +1909,7 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     return totalMinions;
 }
 // Matched
-void sub_80012614(UnitStatus* p, int sel, int delta, int mask)
+void AdjustUnitStat_80012614(UnitStatus* p, int sel, int delta, int mask)
 {
     int v;
     int r;
@@ -1960,7 +1960,7 @@ void sub_80012614(UnitStatus* p, int sel, int delta, int mask)
         max = 99;
         break;
     case 16:
-        sub_80012794(p, mask);
+        AddStatus_80012794(p, mask);
 
         break;
     case 17:

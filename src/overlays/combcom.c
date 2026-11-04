@@ -476,7 +476,7 @@ void sub_800CBEA4()
 #if 0
 // Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
 
-extern int sub_80012BB0(void* a, void* b, void* c, int* d);
+extern int ResolveBattleAction_80012BB0(void* a, void* b, void* c, int* d);
 extern int sub_80013228(void* a, void* b, void* c, int* d);
 extern int sub_80034068(short* p);
 void sub_800CC40C()
@@ -490,14 +490,14 @@ void sub_800CC40C()
     {
         word_800A82D0 = 0;
         word_800A82D2 = 0;
-        src = sub_80014390((unsigned char)(byte_800CD839 + 8));
+        src = GetUnitStatus_80014390((unsigned char)(byte_800CD839 + 8));
         for (i = 0; i < 2; i++)
         {
             int bit = 1 << (i + 8);
             if (dword_800CD840->targets_C & bit)
             {
-                t = sub_80014390((unsigned char)(i + 8));
-                sub_80012BB0(src, t, dword_800CD840, out);
+                t = GetUnitStatus_80014390((unsigned char)(i + 8));
+                ResolveBattleAction_80012BB0(src, t, dword_800CD840, out);
                 if (!sub_80013228(src, t, dword_800CD840, out))
                 {
                     bit = 1 << i;
@@ -588,7 +588,7 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
     if (mode == 1)
     {
         {
-            UnitStatus* s = sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            UnitStatus* s = GetUnitStatus_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
             list[0] = p0;
             p0->text_4 = s->name_10;
         }
@@ -648,7 +648,7 @@ void sub_800CC9FC()
     if (dword_800CD840->kind_0 == 0x12)
     {
         dword_800CD840->targets_C = 0;
-        sub_80014390((unsigned char)(byte_800CD839 + 8))->status_0 |= 0x8000;
+        GetUnitStatus_80014390((unsigned char)(byte_800CD839 + 8))->status_0 |= 0x8000;
     }
     else
     {

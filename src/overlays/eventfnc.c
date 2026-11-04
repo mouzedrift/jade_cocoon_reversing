@@ -573,7 +573,7 @@ typedef struct EvEnemySlotEventfnc
 } EvEnemySlotEventfnc;
 extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
 extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 
 // Matched
 void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
@@ -623,7 +623,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
         s.frameSpeed_28 = 0x1000;
         s.blendDiv_2C = 4;
         s.visible_30 = 1;
-        s.bones_34 = dword_80079140;
+        s.bones_34 = defaultBones_80079140;
         if (k >= 4)
         {
             s.baseScale_38 = sub_80024E90(model, k);

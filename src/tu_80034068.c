@@ -34,7 +34,7 @@ INCLUDE_DATA(jpt_8007481C); // the jump table of sub_80034C18 (asm)
 // Matched
 int sub_80034068(short* p)
 {
-    UnitStatus* q = sub_80014390(((unsigned char*)p)[2]);
+    UnitStatus* q = GetUnitStatus_80014390(((unsigned char*)p)[2]);
     if (magicData_8007C438[p[0]].field_0 & 0x40)
     {
         switch (magicData_8007C438[p[0]].field_7)

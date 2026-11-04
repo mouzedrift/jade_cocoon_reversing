@@ -28,7 +28,7 @@ typedef struct
     int mode_4;     // 0: on the source actor, 1: on each target
     short ids_8[6]; // effect table ids (FindEffectTblRow_80018908), -1: unused
 } EffectRow;
-extern struct_4s dword_800795F0[];
+extern struct_4s effectFileTable_800795F0[];
 extern EffectRow* effectRows_80091BE0;
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
@@ -100,11 +100,11 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
     {
         if (req->hitTimes_4[n].field_0 >= 0)
         {
-            req->hitTimes_4[n].field_0 += dword_800795F0[req->effect_0].field_2;
+            req->hitTimes_4[n].field_0 += effectFileTable_800795F0[req->effect_0].field_2;
         }
         if (req->hitTimes_4[n].field_2 >= 0)
         {
-            req->hitTimes_4[n].field_2 += dword_800795F0[req->effect_0].field_2;
+            req->hitTimes_4[n].field_2 += effectFileTable_800795F0[req->effect_0].field_2;
         }
     }
     for (k = 0; k < 10; k++)

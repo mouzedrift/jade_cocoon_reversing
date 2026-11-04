@@ -23,7 +23,7 @@ typedef struct ShopTaskShop
 
 extern int name_8007DC74;
 extern int StartModelTask_80010850(void* p);
-extern int sub_80012204(int a, int b, int c, int d);
+extern int CombinedExpDelta_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
 extern void SetShopHelpText_800BBB54();
 extern void sub_800BF704();
@@ -494,7 +494,7 @@ typedef struct ShopIdxShop
     int v[4];
 } ShopIdxShop;
 extern ShopIdxShop name_800B6D38;
-extern int sub_80011D98(UnitStatus* a, int b);
+extern int ApplyLevelUps_80011D98(UnitStatus* a, int b);
 extern void sub_800BAB38(Minion* a, Minion* b);
 extern void sub_800BA368(Minion* d, Minion* s);
 extern void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
@@ -614,7 +614,7 @@ restart:
     sub_800BA4CC(c, a, b);
     sub_800BA650(c);
     sub_800BA6D0(c, a, b);
-    sub_80011D98(&c->status_84, 2);
+    ApplyLevelUps_80011D98(&c->status_84, 2);
     sub_800BA72C(c, b);
     sub_800BAA0C(c, b);
     FillHpMp_80011C0C(&c->status_84, &c->status_84);
@@ -767,7 +767,7 @@ void sub_800BA6D0(Minion* d, Minion* s, Minion* t)
 {
     d->status_84.level_44 = s->status_84.level_44;
     d->status_84.exp_4 = s->status_84.exp_4;
-    d->status_84.exp_4 += sub_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
+    d->status_84.exp_4 += CombinedExpDelta_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
 }
 
 #if 0

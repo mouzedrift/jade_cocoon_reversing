@@ -19,7 +19,7 @@ typedef struct
     int size_10;
     void* work_14;
 } Task_LOAD;
-extern EventNode* dword_8008D480; // the load menu's task list
+extern EventNode* loadMenuTask_8008D480; // the load menu's task list
 extern int MemCardSync(int a, int* b, int* c);
 extern void MemCardAccept();
 extern void MemCardExist();
@@ -293,7 +293,7 @@ void LoadMenuInit_800B7674(int mode, int b)
     Task_LOAD* t;
     LoadTask_LOAD* s;
     MemCardStart();
-    t = (Task_LOAD*)&dword_8008D480->entry;
+    t = (Task_LOAD*)&loadMenuTask_8008D480->entry;
     s = (LoadTask_LOAD*)t->work_14;
     t->flags_0 = (t->flags_0 | 1) & ~0x8000;
     for (i = 0; i < 6; i++)
@@ -372,7 +372,7 @@ void sub_800B7894(Task_LOAD* t)
 
 void sub_800B78B8(int v)
 {
-    ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f58_LOAD = v;
+    ((LoadTask_LOAD*)loadMenuTask_8008D480->entry.buffer)->f58_LOAD = v;
 }
 
 void sub_800B78D0(void)
@@ -380,7 +380,7 @@ void sub_800B78D0(void)
     LoadTask_LOAD* t;
     saveData_8008B570.field_810 = -1;
     saveData_8008B570.field_0 |= 0x180;
-    t = dword_8008D480->entry.buffer;
+    t = loadMenuTask_8008D480->entry.buffer;
     t->s30_LOAD = 1;
     stru_800BDF4C[0].fC_LOAD = 0;
     t->f54_LOAD = 0x20;
@@ -388,7 +388,7 @@ void sub_800B78D0(void)
 
 int sub_800B7914(void)
 {
-    return ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f8_LOAD;
+    return ((LoadTask_LOAD*)loadMenuTask_8008D480->entry.buffer)->f8_LOAD;
 }
 
 void sub_800B7934(void)
@@ -1620,7 +1620,7 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
         }
         if (s->f54_LOAD & 0x10)
         {
-            sub_80011BCC();
+            HaltEventsFadeStopMovie_80011BCC();
         }
     }
 }

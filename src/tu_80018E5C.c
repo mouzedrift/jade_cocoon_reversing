@@ -434,7 +434,7 @@ int InitMinionData_8001900C(UnitStats* m, int* params)
         }
     }
     m->st_0.exp_4 += params[1];
-    sub_80012188(&m->st_0);
+    ApplyLevelUpsPlain_80012188(&m->st_0);
     FillHpMp_80011C0C(&m->st_0, &m->st_0);
     InitSpeciesSkills_800199A0(m);
     if (m->species_5C - 0x25 < 4)

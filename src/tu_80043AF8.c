@@ -871,11 +871,11 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         gte_stlvnl(m[n].t);
         AddTrans(m[n].t, m[n - 1].t);
         n++;
-        ((long*)dword_80098188[i].m)[0] = ((long*)m[n - 1].m)[0];
-        ((long*)dword_80098188[i].m)[1] = ((long*)m[n - 1].m)[1];
-        ((long*)dword_80098188[i].m)[2] = ((long*)m[n - 1].m)[2];
-        ((long*)dword_80098188[i].m)[3] = ((long*)m[n - 1].m)[3];
-        ((long*)dword_80098188[i].m)[4] = ((long*)m[n - 1].m)[4];
+        ((long*)boneMatrices_80098188[i].m)[0] = ((long*)m[n - 1].m)[0];
+        ((long*)boneMatrices_80098188[i].m)[1] = ((long*)m[n - 1].m)[1];
+        ((long*)boneMatrices_80098188[i].m)[2] = ((long*)m[n - 1].m)[2];
+        ((long*)boneMatrices_80098188[i].m)[3] = ((long*)m[n - 1].m)[3];
+        ((long*)boneMatrices_80098188[i].m)[4] = ((long*)m[n - 1].m)[4];
         sk->bonePos_20[i].vx = m[n - 1].t[0];
         sk->bonePos_20[i].vy = m[n - 1].t[1];
         sk->bonePos_20[i].vz = m[n - 1].t[2];
@@ -929,7 +929,7 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         if (sk->bones[i].flags_6 & 2)
         {
             SetSpadStack(SPAD_STACK_ADDR);
-            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], sk->light_2C, &dword_80098188[i]);
+            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], sk->light_2C, &boneMatrices_80098188[i]);
             ResetSpadStack();
             gte_SetRotMatrix(&dword_80096120[i]);
             gte_SetTransMatrix(&dword_80096120[i]);
@@ -1107,7 +1107,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
             o->vz = o->vz * sk->scale_24->vz / 4096;
         }
         n++;
-        dword_80098188[i] = m[n - 1];
+        boneMatrices_80098188[i] = m[n - 1];
         if (sk->bones[i].flags_6 & 2)
         {
             acc.l.vx = acc.l.vy = acc.l.vz = 0;
@@ -1163,7 +1163,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
     {
         if (sk->bones[i].flags_6 & 2)
         {
-            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], light, &dword_80098188[i]);
+            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], light, &boneMatrices_80098188[i]);
             gte_SetRotMatrix(&dword_80096120[i]);
             gte_SetTransMatrix(&dword_80096120[i]);
             flags = sk->drawMode_1C;

@@ -658,7 +658,7 @@ void sub_800BE3C0()
         }
         else if (v == 0x13)
         {
-            sub_800127B8(sub_80014390(dword_800C9C7C));
+            KillUnit_800127B8(GetUnitStatus_80014390(dword_800C9C7C));
         }
         if (dword_800C9C88.kind_0 == 7 && dword_800C9C7C != 0)
         {
@@ -725,8 +725,8 @@ void sub_800BE3C0()
             }
             if (dword_800C9DC0[i] == dword_800C9D94)
             {
-                sub_800127D0(i, 0x11, 0, dword_800C9D58[i]);
-                sub_800127D0(i, 0x10, 0, dword_800C9CA0[i]);
+                AdjustUnitStatById_800127D0(i, 0x11, 0, dword_800C9D58[i]);
+                AdjustUnitStatById_800127D0(i, 0x10, 0, dword_800C9CA0[i]);
                 sub_800BE834(i, sub_800BC6CC(i));
                 if (sub_800BC784(i) == 1)
                 {

@@ -35,7 +35,7 @@ int sub_800A5854(void)
 
 void sub_800A58B4(void)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int i;
     int cnt = n->count;
     GameRect_1* r;
@@ -49,7 +49,7 @@ void sub_800A58B4(void)
     dword_800AEBD8 = -1;
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
-    StopAllEventEntries_80043B40(dword_8008D410);
+    StopAllEventEntries_80043B40(eventScripts_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
@@ -70,7 +70,7 @@ void sub_800A58B4(void)
 // Matched
 EventEntry* sub_800A59D0(int v)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D410);
+    EventEntry* p = AllocEventEntry_80043AF8(eventScripts_8008D410);
     if (p)
     {
         GameEvCtx* q = p->buffer;
@@ -112,7 +112,7 @@ int sub_800A5AD0(EventEntry* p)
 // Matched
 int sub_800A5AE4(int a)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     EventEntry* o;
     int i;
     int cnt = n->count;
@@ -165,7 +165,7 @@ void sub_800A5B54(GameEvCtx* p)
 // Matched
 void sub_800A5BCC(int a)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int i;
     int cnt = n->count;
     for (i = 0; i < cnt; i++)
@@ -185,7 +185,7 @@ void sub_800A5BCC(int a)
 int sub_800A5C40(int a)
 {
     int r = sub_800A5E68();
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int cnt = n->count;
     int i;
     GameEvCtx* o;
@@ -302,7 +302,7 @@ int sub_800A5E80(int a)
         }
         n = n->next;
     }
-    n = dword_8008D410;
+    n = eventScripts_8008D410;
     cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
@@ -871,7 +871,7 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
-        e = AllocEventEntry_80043AF8(dword_8008D480);
+        e = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
         e->flags = (e->flags | 1) & ~0x8000;
         p->f0 = 6;
         p->f18 = (int)&dword_800B06BC;
@@ -988,7 +988,7 @@ void sub_800A73A8(void)
 {
     GameRect_1* r = &stru_8008D420;
     sceneBrightness_8008D40C = 0x1000;
-    dword_8008D404 = 0;
+    unpausedFrames_8008D404 = 0;
     r->x = 0;
     r->w = 0x140;
     r->y = 0;
@@ -2007,7 +2007,7 @@ void sub_800A9564(int a, G2Act* p)
     sub_800AA220(p);
     for (i = 0; i < 40; i++)
     {
-        p->mats_90[i] = dword_80098188[i];
+        p->mats_90[i] = boneMatrices_80098188[i];
     }
 }
 

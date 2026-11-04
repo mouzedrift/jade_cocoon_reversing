@@ -521,7 +521,7 @@ void sub_800C5314(EquipCtx_equip* c)
     Rect8_equip r40;
     UnitStatus* h;
     int mode;
-    h = sub_80014390(0);
+    h = GetUnitStatus_80014390(0);
     CalcEquippedStats_80033624(buf10, h);
     r40.x = 0xc2;
     r40.y = 0x31;

@@ -676,7 +676,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     unsigned int f;
     sub_800BB74C();
     sub_800BB7D4();
-    m = sub_80014390(dword_800C9C7C);
+    m = GetUnitStatus_80014390(dword_800C9C7C);
     flags = m->status_0;
     kind = sub_800BC7DC(dword_800C9C7C);
     sub_800BF7C4(m, &dword_800C9C7E, &dword_800C9C80);
@@ -914,7 +914,7 @@ void sub_800BBA70(BatTask_a* t, BatObj_a* u)
         {
             if (mask & (1 << i))
             {
-                int f = sub_80014390(i & 0xFF)->status_0;
+                int f = GetUnitStatus_80014390(i & 0xFF)->status_0;
                 if (f & 0x200)
                 {
                     s[i].kind_0 = 0x13;
@@ -1136,7 +1136,7 @@ int sub_800BC1A8(unsigned int mask)
         m = 1 << i;
         if (mask & m)
         {
-            mn = sub_80014390(i & 0xFF);
+            mn = GetUnitStatus_80014390(i & 0xFF);
             c = (unsigned char)dword_800C9CBC[i];
             if (c != 0 && c != 5 && c != 6 && mn->hp_8 > 0)
             {
