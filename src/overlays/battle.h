@@ -19,6 +19,7 @@
 #include "pad_text.h"
 #include "main.h"
 #include "font.h"
+#include "menu_window.h"
 
 
 
@@ -176,7 +177,6 @@ typedef struct BatChainRecord
 extern BatChainRecord encounterRecord_800ADE78;
 
 
-extern int dword_8007DC74;
 
 
 
@@ -1037,7 +1037,6 @@ extern void DrawMagicList_8002CAC8(void* a0, void* a1);
 
 extern int FindNthMagicBit_8001AEC0();
 
-extern void DrawButtonHelpBar_8002B004(int a0, int a1, int a2);
 
 extern void DrawMenuHelpText_800C8828(int text);
 
@@ -1420,7 +1419,7 @@ extern unsigned char commandByCursor_800C9648[12];
 extern unsigned char commandNextPage_800C9654[12];
 extern unsigned char commandTargetFlags_800C9660[12];
 extern void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer);
-extern int pageButtonHelp_800C9674[6];
+extern ButtonHelpEntry* pageButtonHelp_800C9674[6];
 extern unsigned short pageHideFlags_800C968C[6][2];
 extern int commandKinds_800C96A4[9];
 extern int itemDescriptions_800C96C8[43][4];

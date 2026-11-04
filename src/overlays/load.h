@@ -9,6 +9,7 @@
 #include "pad_text.h"
 #include "main.h"
 #include "font.h"
+#include "menu_window.h"
 
 typedef struct
 {
@@ -81,13 +82,6 @@ typedef struct
     unsigned char scroll_D;
     unsigned char pad_E[2];
 } LoadMenuRow;
-
-// a DrawButtonHelpBar_8002B004 entry, icon -1 ends the list
-typedef struct
-{
-    int icon_0;
-    const char* text_4;
-} LoadHelpEntry;
 
 typedef struct
 {
@@ -264,7 +258,7 @@ extern LoadMenuItem titleYes_800BDE10[2];
 extern LoadMenuItem titleNo_800BDE48[2];
 extern LoadMenuItem *titleItems_800BDE80[3];
 extern LoadMenuWin titleWin_800BDE8C;
-extern LoadHelpEntry loadMenuButtonHelp_800BDEA4[3];
+extern ButtonHelpEntry loadMenuButtonHelp_800BDEA4[3];
 extern char *msgCardFull_800BDEBC[4];
 extern char *msgFormatting_800BDECC[4];
 extern char *msgLoading_800BDEDC[4];
@@ -520,7 +514,6 @@ extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
 extern void DrawWindow_80042460(void* rect, void* color, void* ot, int d);
 extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
-extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);

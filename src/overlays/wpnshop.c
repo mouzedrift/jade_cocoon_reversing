@@ -1384,11 +1384,11 @@ void DrawStoreButtonHelp_800BCF80(unsigned short* state)
 {
     if ((unsigned int)(*state - 2) < 4)
     {
-        DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xE);
+        DrawButtonHelpBar_8002B004(helpBarSelectQuitDesc_800826B0, 0, 0xE);
     }
     else
     {
-        DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
+        DrawButtonHelpBar_8002B004(helpBarSelectQuit_80082680, 0, 0xE);
     }
 }
 

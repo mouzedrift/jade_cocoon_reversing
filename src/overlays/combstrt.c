@@ -83,7 +83,7 @@ void VersusSetupTask_800A4170(CombatTask* t, int a)
         windowAnimStep_800A4C8C = 8;
     }
     DrawSmallTextBox_8002AF58((int)&stateQuestions_800A4C04[setupState_800A4C14], 0, 0xF);
-    DrawButtonHelpBar_8002B004(dword_800826E8, 0, 0xF);
+    DrawButtonHelpBar_8002B004(helpBarSelect_800826E8, 0, 0xF);
     DrawMenuBackground_8002BE10();
     UpdateMenuCursor_8003D794(&yesNoCursor_800A4BF0, 0);
     prevState = setupState_800A4C14;

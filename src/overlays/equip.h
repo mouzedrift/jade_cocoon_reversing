@@ -8,6 +8,7 @@
 #include "sound.h"
 #include "tiy.h"
 #include "main.h"
+#include "menu_window.h"
 
 // one row of the item list: three DrawMenuWindows_8002A5A4 items (icon, name, count)
 typedef struct EquipListRow
@@ -281,8 +282,6 @@ extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3
 extern int GetEquipmentName_8001D128(int id, int category);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
-extern char helpBarSelectQuitDesc_800826B0[]; // exe .data: button help Select / Quit / Description
-extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
 extern void AddClipDrawAreaPrim_80033308(void* p);
 
 #endif

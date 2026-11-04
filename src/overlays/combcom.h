@@ -11,6 +11,7 @@
 #include "msg_window.h"
 #include "combat.h"
 #include "main.h"
+#include "menu_window.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -51,13 +52,6 @@ typedef struct CombComMsg
     const char** desc_0;
     const char** error_4;
 } CombComMsg;
-
-// a button help bar entry (DrawButtonHelpBar_8002B004), icon -1 ends the list
-typedef struct CombComHelp
-{
-    int icon_0;
-    const char* text_4;
-} CombComHelp;
 
 typedef struct CombComMsgs3
 {
@@ -115,10 +109,10 @@ extern const char* errNoDivineMinions_800CD468[1];
 extern CombComMsg cmdInfo_800CD46C[5];
 extern unsigned char cmdTargetFlags_800CD494[8];
 extern unsigned char cmdNextState_800CD49C[8];
-extern CombComHelp helpBarCmd_800CD4A4[4];
-extern CombComHelp helpBarList_800CD4C4[5];
-extern CombComHelp helpBarTarget_800CD4EC[4];
-extern CombComHelp* stateHelpBars_800CD50C[6];
+extern ButtonHelpEntry helpBarCmd_800CD4A4[4];
+extern ButtonHelpEntry helpBarList_800CD4C4[5];
+extern ButtonHelpEntry helpBarTarget_800CD4EC[4];
+extern ButtonHelpEntry* stateHelpBars_800CD50C[6];
 extern int cmdKinds_800CD524[5];
 extern CombComDlg magicDescs_800CD538[30];
 extern CombComDlg skillDescs_800CD718[16];
@@ -194,7 +188,6 @@ extern int FindNthMagicBit_8001AEC0(int bits, int n);        // -> engine.h (uns
 extern int GetMagicTargetFlags_8001ACE4(int idx);            // -> engine.h
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* col, int ot, int time); // -> menu_window.h
 extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
-extern void DrawButtonHelpBar_8002B004(void* entries, void* origin, int ot); // -> menu_window.h
 extern int DrawAbilityDescription_8002C670();                // -> tiy.h (ui_sprites.c): (char* minion, int pos, int texts, short slot, short ot)
 extern void DrawAbilityList_8002CE28(ListMenuState* menu, void* origin); // -> ability_menu
 extern void DrawMagicList_8002CAC8(ListMenuState* menu, void* origin);   // -> tiy.h (ui_sprites.c)

@@ -495,7 +495,7 @@ int LoadSummonedMinion_800C0AEC(int slot, int* pos, int rotY)
         return 0;
     }
     summonedMinion_800C9188 = minion;
-    BuildMinionModelReq_800C064C(minion, &req, dword_8007DC74);
+    BuildMinionModelReq_800C064C(minion, &req, dword_8007DC74[0]);
     StartModelTask_80010850(&req);
     summonedActor_800C9190.x_4 = pos[0];
     summonedActor_800C9190.y_8 = pos[1];

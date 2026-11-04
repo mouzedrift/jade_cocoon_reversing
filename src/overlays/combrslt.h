@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "pad_text.h"
 #include "combat.h"
+#include "menu_window.h"
 
 // a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (0x1C bytes, CombSelItem)
 typedef struct CombRsltText
@@ -62,9 +63,7 @@ void DrawResultMinion_800A4554(int player, int slot, CombRsltBox* box);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h
-extern char dword_80082680[];           // -> menu data (a button help bar)
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
-extern void DrawButtonHelpBar_8002B004(void* entries, void* origin, int ot); // -> menu_window.h
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot); // -> tiy.h (ui_sprites.c)
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h

@@ -9,6 +9,7 @@
 #include "main.h"
 #include "pad_text.h"
 #include "font.h"
+#include "menu_window.h"
 
 // a cursor area of the screen: the character grid, the page selector, the commands
 typedef struct
@@ -168,7 +169,6 @@ extern void ShopCtrlRequestShop_800B6CA0();
 
 /* exe-side, to move to <exe header> */
 extern void DrawMenuWindows_8002A5A4(void* p);
-extern void DrawButtonHelpBar_8002B004(void* entries, void* pos, int ot);
 extern unsigned short uiColor_8008B590;
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
 extern void DrawMenuBackground_8002BE10();

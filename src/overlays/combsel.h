@@ -8,6 +8,7 @@
 #include "effect_data.h"
 #include "main.h"
 #include "pad_text.h"
+#include "menu_window.h"
 
 // a menu item drawn by DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4
 typedef struct CombSelItem
@@ -52,13 +53,6 @@ typedef struct CombSelMenu
     CombSelItem** rows_10; // NULL-terminated; each row ends with an item with flags_0 & 1
     int ot_14;
 } CombSelMenu;
-
-// a button help bar entry (DrawButtonHelpBar_8002B004), icon -1 ends the list
-typedef struct CombSelHelp
-{
-    int icon_0;
-    const char* text_4;
-} CombSelHelp;
 
 typedef struct CombSelTask
 {
@@ -107,7 +101,6 @@ extern void DrawWindow_80042460(void* r, void* col, void* ot, int time);
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* col, int ot, int time);
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);
 extern void DrawMenuWindows_8002A5A4(void* menu);
-extern void DrawButtonHelpBar_8002B004(void* e, void* pos, int ot);
 extern void DrawMenuBackground_8002BE10(void);
 
 extern int dword_800A4088;
@@ -147,7 +140,7 @@ extern const char *mainMenuHelp_800A59C4[5];
 extern const char *quitPrompt_800A59D8[1];
 extern const char *nextTextP1_800A59DC[1];
 extern const char *nextTextP2_800A59E0[1];
-extern CombSelHelp buttonHelpP1_800A59E4[4];
-extern CombSelHelp buttonHelpP2_800A5A04[4];
+extern ButtonHelpEntry buttonHelpP1_800A59E4[4];
+extern ButtonHelpEntry buttonHelpP2_800A5A04[4];
 
 #endif

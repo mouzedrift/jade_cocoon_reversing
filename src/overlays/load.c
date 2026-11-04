@@ -126,7 +126,7 @@ LoadMenuItem titleNo_800BDE48[2] = {
 };
 LoadMenuItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
 LoadMenuWin titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
-LoadHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
+ButtonHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
 char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
 char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
 char *msgLoading_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };

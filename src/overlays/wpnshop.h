@@ -8,6 +8,7 @@
 #include "tiy.h"
 #include "sound.h"
 #include "main.h"
+#include "menu_window.h"
 
 // DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
 typedef struct StoreMenuWindows
@@ -201,8 +202,6 @@ int TestValuableFlag_800AD73C(int a);
 void SetEquipment_800AD9EC(int itemId, int category);
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern char name_80082680[];
-extern char name_800826B0[];
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 int GetEquipmentName_8001D128(int idx, unsigned int kind); // engine.h
@@ -212,7 +211,6 @@ void DrawTextList_8002A310(void* p, int a); // menu_draw.h
 void DrawUiWindow_8002A384(void* p);        // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
 void DrawMenuWindows_8002A5A4(StoreMenuWindows* p); // menu_draw.h
-void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot); // menu_window.h
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
 void DrawMenuBackground_8002BE10();         // ui_sprites
 void FreeActiveOverlay_8002C014(void);      // ui_sprites

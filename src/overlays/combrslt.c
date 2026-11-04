@@ -44,7 +44,7 @@ void VersusResultTask_800A40E0(CombatTask* task)
         DrawPlayerResult_800A4240(i);
     }
     DrawMenuBackground_8002BE10();
-    DrawButtonHelpBar_8002B004(dword_80082680, 0, 0xF);
+    DrawButtonHelpBar_8002B004(helpBarSelectQuit_80082680, 0, 0xF);
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
     {
         SetFadeMode_8001C19C(1, 0x20);

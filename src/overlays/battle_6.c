@@ -279,7 +279,7 @@ unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 
 unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
 unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
 void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer) = { (void (*)(EventEntry *, int))MenuInput_800C8768, (void (*)(EventEntry *, int))MenuShowError_800C88E4 };
-int pageButtonHelp_800C9674[6] = { 0x80082698, 0x800826B0, 0x800826B0, 0x800826B0, 0x80082680 };
+ButtonHelpEntry* pageButtonHelp_800C9674[6] = { helpBarSelectDesc_80082698, helpBarSelectQuitDesc_800826B0, helpBarSelectQuitDesc_800826B0, helpBarSelectQuitDesc_800826B0, helpBarSelectQuit_80082680 };
 unsigned short pageHideFlags_800C968C[6][2] = {
     { 0x1F0, 240 },
     { 0x1D1, 0x1D7 },

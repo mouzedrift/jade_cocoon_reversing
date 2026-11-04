@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "STDLIB.H"
 #include "font.h"
+#include "menu_window.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -779,9 +780,6 @@ extern void SetFadeMode_8001C19C(); // K&R definition (one argument), MENU passe
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern void DrawUnitStatusWindow_8002F1C8();
 extern int IsCurrentMapListed_80034140();
-extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
-extern char helpBarSelectQuit_80082680[];
-extern char helpBarSelectQuitDesc_800826B0[];
 extern void UseItemOnUnit_80013C28();
 extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;

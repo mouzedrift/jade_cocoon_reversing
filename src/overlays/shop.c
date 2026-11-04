@@ -2170,7 +2170,7 @@ void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
         else if (menu->flags_24 & 2)
             DrawButtonHelpBar_8002B004(btnHelpMergePreview_800BFFB8, 0, 0xE);
         else
-            DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
+            DrawButtonHelpBar_8002B004(helpBarSelectQuit_80082680, 0, 0xE);
         break;
     case 5:
         if (menu->flags_24 & 0x20)
@@ -2208,7 +2208,7 @@ void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
         if (menu->flags_24 & 2)
             DrawButtonHelpBar_8002B004(btnHelpPrompt_800C0038, 0, 0xE);
         else
-            DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
+            DrawButtonHelpBar_8002B004(helpBarSelectQuit_80082680, 0, 0xE);
         break;
     }
 }
@@ -3607,7 +3607,7 @@ void FreeFormModel_800BF484()
 void LoadFormModel_800BF4B8(Minion* minion)
 {
     ShopFormModel* form = &formModel_800C09E0;
-    BuildFormModelDesc_800BF02C(minion, form->desc_8, dword_8007DC74);
+    BuildFormModelDesc_800BF02C(minion, form->desc_8, dword_8007DC74[0]);
     form->minion_4 = minion;
     form->task_0 = StartModelTask_80010850(form->desc_8);
     form->actor_3C = 0;
@@ -3870,17 +3870,17 @@ ShopMenuItem storedListItem3_800BFEDC[2] = {
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 ShopMenuItem *storedListItems_800BFF14[5] = { storedListItem0_800BFE34, storedListItem1_800BFE6C, storedListItem2_800BFEA4, storedListItem3_800BFEDC, 0 };
-ShopHelp btnHelpSpinMarked_800BFF28[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aSpin_800B806C }, { -1 } };
-ShopHelp btnHelpSpin_800BFF48[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
-ShopHelp btnHelpPartner_800BFF70[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
-ShopHelp btnHelpView_800BFF90[5] = { { 16, aRename_800B80E8 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
-ShopHelp btnHelpMergePreview_800BFFB8[5] = { { 16, aEmpty_800B6D7C }, { 167, aCombine_800B80F8 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
-ShopHelp btnHelpFormView_800BFFE0[4] = { { 167, aQuit_800B8078 }, { 153, aEmpty_800B6D7C }, { 154, aZoom_800B8108 }, { -1 } };
-ShopHelp btnHelpStats_800C0000[3] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { -1 } };
-ShopHelp btnHelpStatsPage_800C0018[4] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { 110, aDescription_800B8114 }, { -1 } };
-ShopHelp btnHelpPrompt_800C0038[2] = { { 16, aSelect_800B8084 }, { -1 } };
-ShopHelp btnHelpSelect_800C0048[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
-ShopHelp btnHelpExchange_800C0070[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
+ButtonHelpEntry btnHelpSpinMarked_800BFF28[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aSpin_800B806C }, { -1 } };
+ButtonHelpEntry btnHelpSpin_800BFF48[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
+ButtonHelpEntry btnHelpPartner_800BFF70[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
+ButtonHelpEntry btnHelpView_800BFF90[5] = { { 16, aRename_800B80E8 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
+ButtonHelpEntry btnHelpMergePreview_800BFFB8[5] = { { 16, aEmpty_800B6D7C }, { 167, aCombine_800B80F8 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
+ButtonHelpEntry btnHelpFormView_800BFFE0[4] = { { 167, aQuit_800B8078 }, { 153, aEmpty_800B6D7C }, { 154, aZoom_800B8108 }, { -1 } };
+ButtonHelpEntry btnHelpStats_800C0000[3] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { -1 } };
+ButtonHelpEntry btnHelpStatsPage_800C0018[4] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { 110, aDescription_800B8114 }, { -1 } };
+ButtonHelpEntry btnHelpPrompt_800C0038[2] = { { 16, aSelect_800B8084 }, { -1 } };
+ButtonHelpEntry btnHelpSelect_800C0048[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
+ButtonHelpEntry btnHelpExchange_800C0070[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
 char skinListUpArrowPos_800C0090[4] = { 200, 0, 97 };
 char skinListDownArrowPos_800C0094[4] = { 200, 0, 198 };
 ShopMenuItem skinListRow0_800C0098[4] = {

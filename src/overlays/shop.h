@@ -12,6 +12,7 @@
 #include "sound.h"
 #include "shopctrl.h"
 #include "main.h"
+#include "menu_window.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -68,13 +69,6 @@ typedef struct ShopMenuItem
     short mx_18;
     short my_1A;
 } ShopMenuItem;
-
-// a button help bar entry (DrawButtonHelpBar_8002B004), icon -1 ends the list
-typedef struct ShopHelp
-{
-    int icon_0;
-    const char* text_4;
-} ShopHelp;
 
 // work area of the shop menu task (EventEntry.buffer)
 typedef struct ShopMenu
@@ -305,10 +299,7 @@ int GetFreeCocoonSlots_800AD888();
 void AddEmptyCocoons_800AD8F4(int a);
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern int dword_8007DC74;                 // effect_data.h (dword_8007DC74[6])
 extern char defaultBones_80079140[];
-extern signed char elementModifiers_8007BA74[];       // effect_data.h elementModifiers_8007BA74 (declared unsigned there)
-extern char name_80082680[];
 extern short sinTable_80084540[];        // data_decls.h
 extern Minion name_8008EF18[];
 int StartModelTask_80010850(void* p);     // party.h
@@ -339,7 +330,6 @@ void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
 void DrawUiWindow_8002A384(ShopUiWin* p);            // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
 void DrawMenuWindows_8002A5A4(void* p);              // menu_draw.h
-void DrawButtonHelpBar_8002B004(void* p, int a, int b); // menu_window.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot); // ui_sprites
 void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot); // ui_sprites
@@ -645,17 +635,17 @@ extern ShopMenuItem storedListItem1_800BFE6C[2];
 extern ShopMenuItem storedListItem2_800BFEA4[2];
 extern ShopMenuItem storedListItem3_800BFEDC[2];
 extern ShopMenuItem *storedListItems_800BFF14[5];
-extern ShopHelp btnHelpSpinMarked_800BFF28[4];
-extern ShopHelp btnHelpSpin_800BFF48[5];
-extern ShopHelp btnHelpPartner_800BFF70[4];
-extern ShopHelp btnHelpView_800BFF90[5];
-extern ShopHelp btnHelpMergePreview_800BFFB8[5];
-extern ShopHelp btnHelpFormView_800BFFE0[4];
-extern ShopHelp btnHelpStats_800C0000[3];
-extern ShopHelp btnHelpStatsPage_800C0018[4];
-extern ShopHelp btnHelpPrompt_800C0038[2];
-extern ShopHelp btnHelpSelect_800C0048[5];
-extern ShopHelp btnHelpExchange_800C0070[4];
+extern ButtonHelpEntry btnHelpSpinMarked_800BFF28[4];
+extern ButtonHelpEntry btnHelpSpin_800BFF48[5];
+extern ButtonHelpEntry btnHelpPartner_800BFF70[4];
+extern ButtonHelpEntry btnHelpView_800BFF90[5];
+extern ButtonHelpEntry btnHelpMergePreview_800BFFB8[5];
+extern ButtonHelpEntry btnHelpFormView_800BFFE0[4];
+extern ButtonHelpEntry btnHelpStats_800C0000[3];
+extern ButtonHelpEntry btnHelpStatsPage_800C0018[4];
+extern ButtonHelpEntry btnHelpPrompt_800C0038[2];
+extern ButtonHelpEntry btnHelpSelect_800C0048[5];
+extern ButtonHelpEntry btnHelpExchange_800C0070[4];
 extern char skinListUpArrowPos_800C0090[4];
 extern char skinListDownArrowPos_800C0094[4];
 extern ShopMenuItem skinListRow0_800C0098[4];

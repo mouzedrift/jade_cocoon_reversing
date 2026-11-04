@@ -275,11 +275,6 @@ void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
     cur.y = ((Pos16*)rect)->y + 5;
     DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
-typedef struct
-{
-    int icon;
-    int text;
-} ButtonHelpEntry;
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
@@ -301,14 +296,14 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
         base.y = 0xD6;
     }
     cur.x = base.x + 2;
-    for (; entries[i].icon >= 0; i++)
+    for (; entries[i].icon_0 >= 0; i++)
     {
-        cur.y = base.y + (14 - uiTiySprts_8008D620[entries[i].icon].h) / 2;
-        DrawUiTiySprt_8002C06C(&cur, entries[i].icon, ot);
-        cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[entries[i].icon].w;
+        cur.y = base.y + (14 - uiTiySprts_8008D620[entries[i].icon_0].h) / 2;
+        DrawUiTiySprt_8002C06C(&cur, entries[i].icon_0, ot);
+        cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[entries[i].icon_0].w;
         cur.y = base.y + 2;
-        DrawText_8003E91C(2, entries[i].text, &cur, ot);
-        cur.x = MeasureTextWidth_8003E4C8(entries[i].text) + (unsigned short)(cur.x + 4);
+        DrawText_8003E91C(2, entries[i].text_4, &cur, ot);
+        cur.x = MeasureTextWidth_8003E4C8(entries[i].text_4) + (unsigned short)(cur.x + 4);
     }
     rect.x = base.x;
     rect.y = base.y;
