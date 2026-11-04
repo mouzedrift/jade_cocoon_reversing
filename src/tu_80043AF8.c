@@ -264,18 +264,17 @@ void sub_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* ro
     }
     PopMatrix();
 }
-#if 0
-// Not matched: register allocation / scheduling (the flags stay in $a3 in the original, -0x61 and the masked flags in $t8/$t9)
+// Matched
 void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
 {
     FtgQuadCtx* s = FTG_QUAD_CTX;
-    POLY_GT4* t;
+    FtgPrimGT4* t;
     unsigned int i;
     s->next_14 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
-    t = (POLY_GT4*)FTG_PRIM_SCRATCH;
+    t = (FtgPrimGT4*)FTG_PRIM_SCRATCH;
+    s->ref_28 = list->items;
     t->tpage = dword_8009AAD8.tc.tpage;
     t->clut = dword_8009AAD8.tc.clut;
-    s->ref_28 = list->items;
     for (i = 0; i < list->count; i++)
     {
         s->slot_10 = s->ref_28->v[0].slot;
@@ -288,7 +287,7 @@ void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int f
             }
             else
             {
-                s->attr_0 |= flags & ~0x60;
+                s->attr_0 = (flags & ~0x60) | s->attr_0;
             }
             s->v_18[0] = dword_800987D8[s->slot_10][s->ref_28->v[0].idx];
             s->v_18[1] = dword_800987D8[s->ref_28->v[1].slot][s->ref_28->v[1].idx];
@@ -309,14 +308,20 @@ void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int f
             {
                 if (s->otz_4 - 1 < 0xFFFU)
                 {
-                    *(unsigned long*)&t->r0 = s->v_18[0]->rgbc_C;
-                    *(unsigned long*)&t->r1 = s->v_18[1]->rgbc_C;
-                    *(unsigned long*)&t->r2 = s->v_18[2]->rgbc_C;
-                    *(unsigned long*)&t->r3 = s->v_18[3]->rgbc_C;
-                    *(unsigned short*)&t->u0 = s->v_18[0]->uv_8;
-                    *(unsigned short*)&t->u1 = s->v_18[1]->uv_8;
-                    *(unsigned long*)&t->u2 = *(unsigned long*)&s->v_18[2]->uv_8;
-                    *(unsigned long*)&t->u3 = *(unsigned long*)&s->v_18[3]->uv_8;
+                    {
+                        unsigned long c0 = s->v_18[0]->rgbc_C;
+                        unsigned long c1 = s->v_18[1]->rgbc_C;
+                        unsigned long c2 = s->v_18[2]->rgbc_C;
+                        unsigned long c3 = s->v_18[3]->rgbc_C;
+                        t->rgbc0 = c0;
+                        t->rgbc1 = c1;
+                        t->rgbc2 = c2;
+                        t->rgbc3 = c3;
+                    }
+                    t->uv0 = s->v_18[0]->uv_8;
+                    t->uv1 = s->v_18[1]->uv_8;
+                    t->uv2 = *(unsigned long*)&s->v_18[2]->uv_8;
+                    t->uv3 = *(unsigned long*)&s->v_18[3]->uv_8;
                     setPolyGT4(t);
                     if (s->attr_0 & 0x10)
                     {
@@ -324,9 +329,9 @@ void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int f
                         t->tpage &= ~0x60;
                         t->tpage |= s->attr_0 & 0x60;
                     }
-                    *(POLY_GT4*)s->next_14 = *t;
+                    *(FtgPrimGT4*)s->next_14 = *t;
                     addPrim(ot + ((s->otz_4 >> 2) & 0x3FF), s->next_14);
-                    s->next_14 += sizeof(POLY_GT4);
+                    s->next_14 += sizeof(FtgPrimGT4);
                 }
             }
         }
@@ -335,8 +340,6 @@ void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int f
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)s->next_14;
     sub_8004D924();
 }
-#endif
-INCLUDE_ASM(sub_800459E4);
 // Matched
 void sub_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
 {

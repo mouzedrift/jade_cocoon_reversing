@@ -46,6 +46,25 @@ typedef struct
     unsigned int count;
     FtgQuadRef* items;
 } FtgQuadRefList;
+// POLY_GT4 as the sprite-vertex quads build it (colours and uv as words / halves)
+typedef struct
+{
+    unsigned long tag;
+    unsigned long rgbc0;
+    short x0, y0;
+    unsigned short uv0;
+    unsigned short clut;
+    unsigned long rgbc1;
+    short x1, y1;
+    unsigned short uv1;
+    unsigned short tpage;
+    unsigned long rgbc2;
+    short x2, y2;
+    unsigned long uv2;
+    unsigned long rgbc3;
+    short x3, y3;
+    unsigned long uv3;
+} FtgPrimGT4;
 // their state, in the scratchpad at 0x1F800214
 typedef struct
 {
