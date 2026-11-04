@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "tiy.h"
 #include "tu_80019BF0.h"
+#include "minion_menu.h"
 
 typedef struct MenuTask
 {
@@ -35,7 +36,7 @@ typedef struct MenuCtx
     short f6;
     int f8;
     int fC;
-    int f10;
+    unsigned int f10;
     int f14;
     int f18;
     int f1C;
@@ -1518,7 +1519,290 @@ void sub_800BE38C(MenuCtx* c)
     }
 }
 INCLUDE_OVERLAY_ASM(menu, dword_800BBA44);
+// (When writing sub_800BE4A0 in C, delete the jpt_800BBA80 line.)
+INCLUDE_OVERLAY_ASM(menu, jpt_800BBA80);
 
+void sub_800BECE4(MenuCtx* c, short b);
+void sub_800BEFAC(MenuCtx* a, short b);
+void sub_800BF0F4(MenuCtx* a, short b);
+extern void sub_800C06E8();
+extern void sub_800C08C0();
+extern void DrawItemGrid_800C01F4();
+extern void sub_800C0428();
+extern void sub_800C0578();
+extern void sub_800C05E0();
+extern void DrawKeyItemsWindow_800C09B0();
+void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c);
+extern void sub_800C0CA4();
+extern void sub_800BEAE0();
+extern void sub_800BEBFC();
+void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2);
+extern void sub_8002CAC8();
+extern void sub_8002CE28();
+extern void sub_8002C728();
+extern void sub_8002D7D0();
+extern int sub_8002D250();
+extern void sub_8002F120();
+extern int sub_8002C670();
+extern RECT name_800C1AEC[]; // the menu windows' rects
+extern char name_800C22D8[];
+extern char name_800BBA44[];
+extern char name_800BBA68[];
+extern char name_800B6838[];
+#if 0
+// Not matched: stack layout and code match; register allocation differs (the original gets the window table base into $fp, here it is rematerialised)
+void sub_800BE4A0(MenuCtx* c)
+{
+    short i;
+    int s;
+    Minion* m;
+    if (!(c->flags_0 & 0x20))
+    {
+        sub_800BEAE0(c);
+    }
+    for (i = 0; i < 17; i++)
+    {
+        s = 1 << i;
+        if (!(s & c->f10))
+        {
+            continue;
+        }
+        AddClipDrawAreaPrim_80033308(&pOT_8008D454[14]);
+        s = sub_800C0990(c, s);
+        switch (i)
+        {
+        case 0:
+            sub_800C07F0(c);
+            break;
+        case 1:
+            sub_800BECE4(c, 14);
+            break;
+        case 2:
+            sub_800BEFAC(c, 14);
+            break;
+        case 5:
+            if (c->sel_2 == 6 && c->f60 == 2)
+            {
+                sub_800BF0F4(c, 14);
+            }
+            break;
+        case 4:
+        {
+            struct_minion_ref r;
+            sub_800C06E8(c);
+            if (c->sel_2 == 4)
+            {
+                s = 2;
+            }
+            else if (c->sel_2 == 7)
+            {
+                s = 1;
+            }
+            else
+            {
+                s = 4;
+            }
+            m = GetMinion_80010598(3, c->arr_2A[1]);
+            if (m)
+            {
+                r.field_0 = c->arr_2A[7];
+                r.field_2 = c->arr_46[2];
+                r.field_4 = s;
+                r.field_6 = 14;
+                r.field_8 = 0;
+                r.field_A = 1;
+                r.field_C_minion = m;
+                sub_8002CAC8(&r, 0);
+            }
+            break;
+        }
+        case 6:
+            if (c->sel_2 == 7 && c->f60 == 2)
+            {
+                RECT r;
+                InterpolateWindowRect_8004196C(&r, &name_800C1AEC[6], (short)s, 8, 0);
+                sub_800BEBFC(c, &r);
+                DrawAnimatedWindow_8002BEC8(&r, &name_800C1AEC[i], (short)s, 14, 0, 0);
+            }
+            break;
+        case 7:
+            sub_800C08C0(c);
+            break;
+        case 8:
+        {
+            if (c->sel_2 == 11)
+            {
+                s = 2;
+            }
+            else
+            {
+                s = 1;
+            }
+            m = GetMinion_80010598(3, c->arr_2A[1]);
+            if (m)
+            {
+                struct_minion_ref r;
+                r.field_0 = c->arr_2A[10];
+                r.field_2 = 0;
+                r.field_4 = s;
+                r.field_6 = 14;
+                r.field_8 = 0;
+                r.field_A = 1;
+                r.field_C_minion = m;
+                sub_8002CE28(&r, 0);
+            }
+            {
+                int found = 0;
+                int is = c->sel_2 == 11;
+                if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
+                {
+                    found = sub_8002C670(GetMinion_80010598(3, c->arr_2A[1]), 0, name_800C22D8, c->arr_2A[10], 14) != 0;
+                }
+                if (!found)
+                {
+                    sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 14, 0);
+                }
+            }
+            break;
+        }
+        case 9:
+        {
+            MenuPair p;
+            p.a = 0;
+            p.b = 0;
+            sub_8002D7D0(GetMinion_80010598(3, c->arr_2A[1]), 14, &p);
+            break;
+        }
+        case 10:
+            DrawItemGrid_800C01F4(c);
+            break;
+        case 11:
+        {
+            struct_minion_ref r;
+            sub_800C0428(c);
+            if (c->sel_2 == 1)
+            {
+                s = 2;
+            }
+            else if (c->sel_2 == 6)
+            {
+                s = 1;
+            }
+            else
+            {
+                s = 4;
+            }
+            r.field_0 = c->arr_2A[3];
+            r.field_2 = c->arr_46[0];
+            r.field_4 = s;
+            r.field_6 = 14;
+            r.field_8 = 0;
+            r.field_A = 1;
+            r.field_C_minion = 0;
+            sub_8002C728(&r);
+            break;
+        }
+        case 12:
+        {
+            MenuPair p;
+            MenuEquipQ q;
+            sub_800C0578(c);
+            p.a = 10;
+            p.b = 0x3D;
+            q.sel_0 = -1;
+            q.scroll_2 = 0;
+            q.f4 = 1;
+            q.ot_6 = 14;
+            q.f8 = 0;
+            q.fA = 1;
+            q.z = 0;
+            DrawEquipmentWindow_800C0E04(&q, (short*)&p, 8);
+            break;
+        }
+        case 13:
+        {
+            MenuEquipQ q;
+            sub_800C05E0(c);
+            if (c->sel_2 == 6)
+            {
+                s = 1;
+            }
+            else if (c->sel_2 == 14)
+            {
+                s = 2;
+            }
+            else
+            {
+                s = 4;
+            }
+            q.sel_0 = c->arr_2A[4];
+            q.scroll_2 = c->arr_46[1];
+            q.f4 = s;
+            q.ot_6 = 14;
+            q.f8 = 0;
+            q.fA = 1;
+            q.z = 0;
+            DrawKeyItemsWindow_800C09B0(&q);
+            break;
+        }
+        case 15:
+        {
+            if (c->f24 == 0)
+            {
+                short pr[4];
+                pr[0] = sub_800AD288(c->arr_2A[3] + c->arr_46[0], 0);
+                pr[1] = 0;
+                pr[2] = c->arr_2A[5];
+                pr[3] = 1;
+                sub_8002D250(pr, 0, c->arr_2A[5], 14);
+                if (c->sel_2 == 2 && c->arr_2A[5] != 0)
+                {
+                    MenuPair p;
+                    MenuUiWin w;
+                    RECT r;
+                    int buf[2];
+                    sub_800C0CA4(c, buf);
+                    s = buf[1];
+                    p.a = 0xD2;
+                    p.b = 0xBB;
+                    sub_8002F120(sub_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
+                    r.w = 0x64;
+                    r.h = 0x15;
+                    r.x = 0xD2;
+                    r.y = 0xBB;
+                    w.rect = &r;
+                    w.f4 = 0;
+                    w.f8 = 0;
+                    w.fA = 14;
+                    DrawUiWindow_8002A384(&w);
+                }
+            }
+            break;
+        }
+        case 16:
+        {
+            RECT r;
+            char* tb[4];
+            tb[0] = name_800BBA44;
+            tb[1] = name_800B6838;
+            tb[2] = name_800BBA68;
+            tb[3] = name_800B6838;
+            r.y = 0xB3;
+            r.w = 0x1C;
+            r.h = 0x10;
+            r.x = c->f60 * 28 + 0x12;
+            DrawLargeTextBox_8002AF10(tb, 0, 14);
+            sub_800BEC8C(c, &r, 14, 0);
+            break;
+        }
+        }
+        if (c->f28 == 8)
+        {
+            c->f14 |= 1 << i;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BE4A0);
 
 void sub_800BEAE0(MenuCtx* c)
@@ -1593,7 +1877,7 @@ void sub_800BEBFC(MenuCtx* o, int a)
         sub_8002DB48(m2, 0xE, a, s, m, 0);
 }
 
-void sub_800BEC8C(int unused, int a, short b)
+void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
 {
     MenuCol t;
     t.col = uiColor_8008B590;

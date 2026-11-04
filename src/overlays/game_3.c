@@ -1847,8 +1847,9 @@ void sub_800A9008(G2Cmd_1* c)
         break;
     }
 }
-
-INCLUDE_OVERLAY_ASM(game, dword_800A07A8);
+// (When writing sub_800AA51C in C, delete the jpt_800A07A8 line.)
+INCLUDE_OVERLAY_ASM(game, jpt_800A07A8);
+INCLUDE_OVERLAY_ASM(game, dword_800A07E0);
 
 void sub_800A911C(int a)
 {
@@ -2326,6 +2327,273 @@ void sub_800AA430(G2Act* p)
 
 INCLUDE_OVERLAY_ASM(game, sub_800AA430);
 
+#if 0
+// Not matched: one block differs: case 16 passes the matched constant (in $v0) as sub_800AB010's third argument where this C reloads s1c.
+// The prototypes below change the code of matched callers further down, and sub_800AC900 must return int
+// here (the original tests its result as a short): settle both before enabling this.
+extern short effectOutcomeFlag_8008D780;
+void sub_800AA430(G2Act* p);
+unsigned short sub_800AB170(int a);
+void sub_800ABCF4(G2Act* p);
+void sub_800ABDF0(G2Act* a);
+int sub_800AC604(int a, int b);
+int sub_800AC768();
+short sub_800AC834(int a, int b);
+short sub_800AC878(int a, int b);
+unsigned short sub_800AC8BC(int a, int b);
+int sub_800AC900(int a, int b);
+void sub_800AA51C(G2Act* o)
+{
+    short r;
+    switch (o->f8)
+    {
+    case 7:
+        if (GetCameraMode_800378F8() == 3)
+        {
+            sub_800AB010(o, 9, 0xE, 0);
+        }
+        break;
+    case 9:
+        if (sub_800AA1D4(o) == 0 && !(o->f0 & 0x1000))
+        {
+            sub_80025B5C(o->model_40, 2, 0x17);
+            sub_80025B5C(o->model_40, 7, 0x19);
+            sub_800AA3F0(o);
+            break;
+        }
+        if (o->f10 == sub_800AB170(o->s1c))
+        {
+            sub_80025B5C(o->model_40, 2, 0x18);
+            sub_80025B5C(o->model_40, 7, 0x1A);
+        }
+    case 8:
+        if ((unsigned int)o->f10 >= (unsigned short)sub_800AC834(o->s1c, sub_800AC474(o->s1c)))
+        {
+            o->f8 = 10;
+        }
+        break;
+    case 10:
+        o->f0 = (o->f0 | 0x800) & ~0x8000;
+        if (sub_800AA1D4(o) == 1)
+        {
+            if (o->f0 & 1)
+            {
+                o->f8 = 11;
+            }
+            break;
+        }
+        if (o->f0 & 2)
+        {
+            sub_80025B5C(o->model_40, 2, 0x17);
+            sub_80025B5C(o->model_40, 7, 0x19);
+            sub_80025B5C(o->model_40, 0xC, 0xC);
+        }
+        if (o->f0 & 0x1000)
+        {
+            sub_800AC604(10, 0);
+            sub_800AB010(o, 0x11, -1, -1);
+            break;
+        }
+        if (o->f0 & 2)
+        {
+            sub_800AB010(o, 0x12, 3, 0);
+        }
+        else
+        {
+            sub_800AB010(o, 0x12, 0xF, 0);
+        }
+        o->f0 &= ~0x800;
+        break;
+    case 11:
+        if (o->f0 & 0x1000000)
+        {
+            sub_800AC604(10, 0);
+        }
+        sub_800AC518(o->s20);
+        sub_800AC604(o->s20, 0);
+        o->f8 = 12;
+        o->f2C = 0x46;
+        if (o->f0 & 0x200)
+        {
+            sub_800ABCF4(o);
+        }
+        break;
+    case 12:
+        if (o->f2C == 0x46 || IsEffectReady_80014954() == 1 || o->f2C == 0x46)
+        {
+            if (sub_800AC768() == 1)
+            {
+                o->f8 = 13;
+            }
+        }
+        break;
+    case 13:
+        if (o->f0 & 0x20)
+        {
+            if (!(sub_800AC900(o->s20, sub_800AC474(o->s20)) & 1))
+            {
+                if (o->s20 == o->s1c)
+                {
+                    sub_800AB010(o, 0x10, -1, -1);
+                }
+                else
+                {
+                    sub_800AB010(o, 0x10, o->s20, 0);
+                }
+            }
+            else
+            {
+                sub_800AB010(o, 0xE, 0xF, 0);
+                o->f0 &= ~0x800;
+            }
+            o->f0 &= ~0x20;
+        }
+        if ((unsigned short)(o->s20 - 0x19) < 2 || o->s20 == 0x1C)
+        {
+            o->s2A = 2;
+        }
+        else if ((unsigned short)(o->s20 - 7) < 2)
+        {
+            o->s2A = 0x1E;
+        }
+        else
+        {
+            o->s2A = 0;
+        }
+        break;
+    case 14:
+        if (o->f10 == sub_800AB170(o->s1c))
+        {
+            sub_80025B5C(o->model_40, 2, 0x17);
+            sub_80025B5C(o->model_40, 7, 0x19);
+        }
+        if (o->f10 == sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
+        {
+            sub_800AB010(o, 0x10, o->s20, 0);
+        }
+        break;
+    case 16:
+        sub_800ABDF0(o);
+        if (o->s1c == 0x13 || o->s1c == 0x18)
+        {
+            o->f0 = (o->f0 & ~1) | 0x800;
+            sub_800AB010(o, 0x14, o->s1c, 0);
+        }
+        else
+        {
+            o->f8 = 0xF;
+        }
+        sub_800AA430(o);
+        break;
+    case 15:
+        o->f0 &= ~0x800;
+        sub_800ABDF0(o);
+        if (o->s1c == 0x19 || o->s1c == 7 || o->s1c == 0x1A || o->s1c == 0x1C || o->s1c == 8)
+        {
+            if ((unsigned int)o->f10 >= (unsigned short)sub_800AC878(o->s1c, sub_800AC474(o->s1c)))
+            {
+                if (effectOutcomeFlag_8008D780 == 1)
+                {
+                    o->s2A = -1;
+                }
+                else if (--o->s2A >= 0)
+                {
+                    o->f10 = (unsigned short)sub_800AC834(o->s1c, sub_800AC474(o->s1c));
+                }
+            }
+        }
+        if (o->f10 == sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
+        {
+            r = sub_800AC900(o->s20, sub_800AC474(o->s20) & 1);
+            if (r == 0)
+            {
+                if (o->f0 & 0x400)
+                {
+                    if (o->s1c == 0x14)
+                    {
+                        sub_800AB010(o, 10, -1, -1);
+                    }
+                    else
+                    {
+                        sub_800AB010(o, 8, 0x14, 0);
+                    }
+                }
+                else if (o->f0 & 0x10000)
+                {
+                    if (o->s1c == 0x16)
+                    {
+                        sub_800AB010(o, 10, -1, -1);
+                    }
+                    else
+                    {
+                        sub_800AB010(o, 8, 0x16, 0);
+                    }
+                }
+                else
+                {
+                    sub_800AB010(o, 10, 0xE, (unsigned short)sub_800AC878(0xE, sub_800AC474(0xE)));
+                }
+            }
+            else if (o->f0 & 0x1000000)
+            {
+                sub_800AB010(o, 0x13, 10, 0);
+            }
+            else
+            {
+                sub_800AB010(o, 9, 0xE, 0);
+            }
+            o->f0 &= ~1;
+        }
+        break;
+    case 17:
+        if (sub_800AC768() == 1)
+        {
+            if (o->f0 & 2)
+            {
+                sub_800AB010(o, 0x12, 3, 0);
+            }
+            else
+            {
+                sub_800AB010(o, 0x12, 0xF, 0);
+            }
+            o->f0 &= ~0x800;
+        }
+        break;
+    case 18:
+        if (o->f10 == sub_800AB170(o->s1c))
+        {
+            sub_80025B5C(o->model_40, 2, 0x17);
+            sub_80025B5C(o->model_40, 7, 0x19);
+            sub_80025B5C(o->model_40, 0xC, 0xC);
+        }
+        if ((unsigned int)o->f10 >= sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
+        {
+            o->f0 &= ~0x800;
+            if (o->f0 & 0x1000)
+            {
+                sub_800AB010(o, 0x13, 10, 0);
+            }
+            else
+            {
+                sub_800AA3F0(o);
+            }
+        }
+        break;
+    case 19:
+        if ((unsigned int)o->f10 >= sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
+        {
+            sub_800AA3F0(o);
+        }
+        break;
+    case 20:
+        if (!(o->f0 & 0x800))
+        {
+            sub_800AA3F0(o);
+        }
+        break;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800AA51C);
 
 void sub_800AACF8(G2Act* p)

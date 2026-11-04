@@ -193,7 +193,12 @@ extern void sub_800BC850(unsigned int);
 
 extern char dword_80091D40[];
 
-extern int dword_800ADE78;
+// GAME's battle chain record (game.h GameRec_1): f0 1 while a chain of battles runs, fc the battle count, f10 the next entry
+typedef struct BatChain_a
+{
+    int f0, f4, f8, fc, f10;
+} BatChain_a;
+extern BatChain_a dword_800ADE78;
 
 extern int dword_80091C74;
 
@@ -627,11 +632,11 @@ extern void LoadUiTiy_8002BF74();
 
 extern void sub_800BFB80();
 
-extern int sub_800B4200(int* p);
+extern int sub_800B4200(BatChain_a* p);
 
-extern int sub_800B41D0(int* p);
+extern int sub_800B41D0(BatChain_a* p);
 
-extern int* sub_800B41A8(int* p);
+extern int* sub_800B41A8(BatChain_a* p);
 
 extern int* dword_800C9C78;
 
@@ -736,7 +741,7 @@ typedef struct BatResult_a
 
 extern void sub_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
-extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, int* e);
+extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, BatChain_a* e);
 
 extern void sub_800BF9F0(int a);
 

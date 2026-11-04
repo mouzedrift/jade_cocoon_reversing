@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "actor.h"
 #include "tu_80019BF0.h"
+#include "minion_menu.h"
 
 typedef struct ShopCtxShop
 {
@@ -48,8 +49,8 @@ typedef struct ShopUnit3Shop
     int field_10;
     int field_14;
     int field_18;
-    int field_1C;
-    int field_20;
+    unsigned int field_1C;
+    unsigned int field_20;
     int field_24;
     short field_28;
     short field_2A;
@@ -1937,6 +1938,342 @@ void sub_800BC2DC(ShopUnit3Shop* u)
     }
 }
 
+typedef struct ShopPosShop
+{
+    short x;
+    short y;
+} ShopPosShop;
+typedef struct ShopRectShop
+{
+    short x;
+    short y;
+    short w;
+    short h;
+} ShopRectShop;
+// window style for DrawWindow_80042460
+typedef struct ShopWinShop
+{
+    short color;
+    unsigned char field_2;
+    unsigned char field_3;
+} ShopWinShop;
+// DrawUiWindow_8002A384's parameter block
+typedef struct ShopUiWinShop
+{
+    ShopRectShop* rect_0;
+    int time_4;
+    short field_8;
+    short ot_A;
+} ShopUiWinShop;
+typedef struct ShopPairShop
+{
+    short a;
+    short b;
+} ShopPairShop;
+extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
+extern int IsCircleHeldP1_8003D480(void);
+extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
+extern void sub_8002A4E4(int a);
+extern void DrawTextList_8002A310(void* p, int a);
+extern void sub_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
+extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
+extern void DrawWindow_80042460(void* rect, ShopWinShop* w, void* ot, int t);
+extern void sub_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
+extern void sub_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
+extern void sub_8002D7D0(Minion* m, int ot, ShopPosShop* base);
+extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void sub_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
+extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawUiWindow_8002A384(ShopUiWinShop* p);
+extern void sub_800BCEDC(ShopUnit3Shop* u);
+extern void sub_800BCCD8(ShopUnit3Shop* u);
+extern void sub_800BE53C(ShopUnit3Shop* u);
+extern void sub_800BE7F0(ShopUnit3Shop* u);
+extern void DrawPersonList_800BED48();
+extern ShopRectShop name_800BF790;
+extern ShopRectShop name_800BF798;
+extern ShopRectShop name_800BF7A0;
+extern ShopRectShop name_800BF7A8;
+extern ShopRectShop name_800BF7B0[];
+extern char name_800C044C[];
+extern char name_800C026C[][16];
+#if 0
+// Not matched: stack layout matches; loop-invariant constant 2 is not hoisted (the original keeps it in a spilled pseudo, rematerialised in $t1), so a few registers differ
+void sub_800BC380(ShopUnit3Shop* u)
+{
+    ShopPosShop pos;
+    ShopWinShop win;
+    short i;
+    short j;
+    short n;
+    int c;
+    int t;
+    if (u->field_24 & 0x40)
+    {
+        c = 0;
+        if (u->field_54->skills_DE.slot[u->field_48].flags_0 & 1)
+        {
+            c = 0 < u->field_54->skills_DE.slot[u->field_48].id_1;
+        }
+        if (IsCircleHeldP1_8003D480() && c)
+        {
+            u->field_24 |= 0x1000;
+        }
+        else
+        {
+            u->field_24 &= ~0x1000;
+        }
+    }
+    else if (u->field_24 & 0x80)
+    {
+        j = u->field_48 + u->field_4A;
+        c = FindNthMagicBit_8001AEC0(&u->field_54->magicBits_F4, j) < 0x1E;
+        if (IsCircleHeldP1_8003D480() && c)
+        {
+            u->field_24 |= 0x1000;
+        }
+        else
+        {
+            u->field_24 &= ~0x1000;
+        }
+    }
+    if (u->field_0 == 3 && (u->field_24 & 2))
+    {
+        u->field_24 &= ~0x1000;
+    }
+    if (!(u->field_24 & 0x1000))
+    {
+        sub_8002A4E4(0xE);
+        DrawTextList_8002A310(name_800BF7C8, 0xE);
+        sub_800429F8((int)&name_800BF798, 0xE);
+        sub_80042B38((int)&name_800BF798, 0xE);
+    }
+    else
+    {
+        pos.x = 10;
+        pos.y = 0x12;
+        if (u->field_24 & 0x40)
+        {
+            sub_8002C670(u->field_54, &pos, name_800C044C, u->field_48, 0xE);
+        }
+        else if (u->field_24 & 0x80)
+        {
+            DrawLargeTextBox_8002AF10((int)name_800C026C[FindNthMagicBit_8001AEC0(&u->field_54->magicBits_F4, u->field_48 + u->field_4A)], (int)&pos, 0xE);
+        }
+    }
+    if (u->field_1C & 2)
+    {
+        pos.x = name_800BF7A0.x + 5;
+        pos.y = name_800BF7A0.y + 3;
+        pos.x = name_800BF7A0.x + 3;
+        DrawUiTiySprt_8002C06C(&pos, 0xB5, 0xE);
+        win.field_3 = 1;
+        win.field_2 = 0;
+        win.color = saveData_8008B570.uiColor_20.h;
+        DrawWindow_80042460(&name_800BF7A0, &win, pOT_8008D454 + 0xE, 0);
+        pos.x = name_800BF7A8.x + 5;
+        pos.y = name_800BF7A8.y + 3;
+        pos.x = name_800BF7A8.x + 4;
+        DrawUiTiySprt_8002C06C(&pos, 0xE, 0xE);
+        DrawWindow_80042460(&name_800BF7A8, &win, pOT_8008D454 + 0xE, 0);
+        sub_800BE53C(u);
+        sub_800BE7F0(u);
+    }
+    for (i = 0; i < 7; i++)
+    {
+        if (!((1 << i) & u->field_1C))
+        {
+            continue;
+        }
+        n = 8;
+        if (!((1 << i) & u->field_20))
+        {
+            n = u->field_C;
+        }
+        if (i == 2)
+        {
+            if (u->field_54->id != 4 && !(u->field_24 & 0x20))
+            {
+                ShopPosShop p28;
+                struct_minion_ref r30;
+                ShopPosShop p40;
+                struct_minion_ref r48;
+                ShopPosShop p58;
+                ShopPosShop p60;
+                ShopRectShop r68;
+                if (u->field_24 & 0x1C0)
+                {
+                    if (u->field_24 & 0x40)
+                    {
+                        p28.x = 0x5C;
+                        p28.y = 0x5E;
+                        r30.field_0 = u->field_48;
+                        r30.field_2 = u->field_4A;
+                        r30.field_4 = 2;
+                        r30.field_6 = 0xE;
+                        r30.field_8 = 0;
+                        r30.field_A = 1;
+                        r30.field_C_minion = u->field_54;
+                        sub_8002CE28(&r30, &p28);
+                    }
+                    else if (u->field_24 & 0x80)
+                    {
+                        p40.x = 0x7E;
+                        p40.y = 0x6D;
+                        r48.field_0 = u->field_48;
+                        r48.field_2 = u->field_4A;
+                        r48.field_4 = 2;
+                        r48.field_6 = 0xE;
+                        r48.field_8 = 0;
+                        r48.field_A = 1;
+                        r48.field_C_minion = u->field_54;
+                        sub_8002CAC8(&r48, &p40);
+                    }
+                    else if (u->field_24 & 0x100)
+                    {
+                        p58.x = 0x28;
+                        p58.y = 0x1E;
+                        sub_8002D7D0(u->field_54, 0xE, &p58);
+                    }
+                }
+                if (!(u->field_24 & 0x1C0))
+                {
+                    p60.x = 0x5C;
+                    p60.y = 0x5E;
+                    InterpolateWindowRect_8004196C(&r68, &name_800BF790, n, 8, 0);
+                    if (u->field_0 == 3 && u->field_3C == 2)
+                    {
+                        sub_8002DB48(&name_800C08E8.status_84, 0xE, &r68, &p60, u->field_54, &u->field_4C->status_84);
+                    }
+                    else
+                    {
+                        sub_8002DB48(&u->field_54->status_84, 0xE, &r68, &p60, u->field_54, 0);
+                    }
+                }
+            }
+            if (!(u->field_24 & 0x1C0))
+            {
+                ShopWinShop w28;
+                w28.field_2 = 0;
+                w28.field_3 = 1;
+                w28.color = saveData_8008B570.uiColor_20.h;
+                DrawWindow_80042460(&name_800BF790, &w28, pOT_8008D454 + 0xE, 0);
+            }
+        }
+        if (!(u->field_24 & 0x800) && i == 3)
+        {
+            if (!(u->field_24 & 2) && u->field_18 == 0)
+            {
+                ShopRectShop r28;
+                ShopUiWinShop w30;
+                r28.x = 0x56;
+                r28.y = u->field_30 * 16 + 0x25;
+                r28.w = 0x1E;
+                r28.h = 0x10;
+                w30.rect_0 = &r28;
+                w30.ot_A = 0xE;
+                w30.time_4 = frameCount_8008D3FC;
+                w30.field_8 = 1;
+                DrawUiWindow_8002A384(&w30);
+            }
+        }
+        if (i == 0)
+        {
+            sub_800BCEDC(u);
+        }
+        if (i == 4)
+        {
+            ShopRectShop r28;
+            ShopPosShop p30;
+            p30.x = name_800BF7B0[0].x + name_800BF7B0[0].w / 2;
+            p30.y = name_800BF7B0[0].y + 2;
+            InterpolateWindowRect_8004196C(&r28, &name_800BF7B0[0], 8, 8, 0);
+            sub_8002FAA0(2, (unsigned short*)&p30, u->field_4C->status_84.name_10, 0xE);
+            t = 0;
+            if (u->field_3C == 0 && u->field_0 == 3 && (u->field_24 & 2))
+            {
+                t = frameCount_8008D3FC;
+            }
+            {
+                ShopWinShop w38;
+                w38.field_2 = 1;
+                w38.field_3 = 1;
+                w38.color = saveData_8008B570.uiColor_20.h;
+                DrawWindow_80042460(&r28, &w38, pOT_8008D454 + 0xE, t);
+            }
+        }
+        if (i == 5)
+            for (j = 1; j < 3; j++)
+            {
+                ShopRectShop r38;
+                InterpolateWindowRect_8004196C(&r38, &name_800BF7B0[j], 8, 8, 0);
+                switch (j)
+                {
+                case 1:
+                {
+                    ShopPosShop p40;
+                    p40.x = name_800BF7B0[j].x + name_800BF7B0[j].w / 2;
+                    p40.y = name_800BF7B0[j].y + 2;
+                    sub_8002FAA0(2, (unsigned short*)&p40, u->field_50->status_84.name_10, 0xE);
+                    break;
+                }
+                case 2:
+                {
+                    ShopPosShop p48;
+                    p48.x = name_800BF7B0[j].x + 7;
+                    p48.y = name_800BF7B0[j].y + 1;
+                    DrawUiTiySprt_8002C06C(&p48, 0x42, 0xE);
+                    break;
+                }
+                }
+                t = 0;
+                if (j == u->field_3C && u->field_0 == 3 && (u->field_24 & 2))
+                {
+                    t = frameCount_8008D3FC;
+                }
+                {
+                    ShopWinShop w40;
+                    w40.field_2 = 1;
+                    w40.field_3 = 1;
+                    w40.color = saveData_8008B570.uiColor_20.h;
+                    DrawWindow_80042460(&r38, &w40, pOT_8008D454 + 0xE, t);
+                }
+                if (u->field_0 == 3 && (u->field_24 & 2))
+                {
+                    ShopPairShop p48;
+                    ShopPosShop p50;
+                    p50.x = 0xA5;
+                    p48.a = 0;
+                    p48.b = 0;
+                    p50.y = 0x55;
+                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    p50.x = 0xFA;
+                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                }
+            }
+        if (i == 6)
+        {
+            struct_minion_ref r40;
+            r40.field_0 = u->a5E[8];
+            r40.field_2 = u->a72[2];
+            r40.field_4 = 2;
+            r40.field_6 = 0xE;
+            r40.field_8 = 0;
+            r40.field_A = 1;
+            r40.field_C_minion = 0;
+            DrawPersonList_800BED48(&r40);
+        }
+        if (u->field_C == 8)
+        {
+            u->field_20 |= 1 << i;
+        }
+    }
+    if (u->field_0 != 11)
+    {
+        sub_800BCCD8(u);
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BC380);
 
 void sub_800BCCD8(ShopUnit3Shop* u)
@@ -2083,9 +2420,243 @@ int sub_800BCF74(ShopUnit3Shop* u)
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BCF74);
 INCLUDE_OVERLAY_ASM(shop, jpt_800B9624);
-INCLUDE_OVERLAY_ASM(shop, dword_800B965C);
 
-INCLUDE_OVERLAY_ASM(shop, sub_800BD0D4);
+extern short name_800BF868[]; // next state per state (-1: decided per cursor, -3: sub_800BD9DC)
+extern short name_800BF8A8[]; // next state per cursor row of state 0
+extern int sub_800AD398();
+extern void sub_800BD9DC(ShopUnit3Shop* u);
+int sub_800BCF74(ShopUnit3Shop* u);
+int sub_800BD650(short* p);
+int sub_800BD678(ShopUnit3Shop* p);
+void sub_800BD720(ShopUnit3Shop* u);
+// Matched
+void sub_800BD0D4(ShopUnit3Shop* u)
+{
+    short s;
+    int changed;
+    int f;
+    short k;
+    s = 0;
+    changed = 0;
+    if (u->field_10)
+    {
+        s = sub_800BCF74(u);
+        if (s == 0)
+        {
+            f = u->field_24;
+            if (f & 8)
+            {
+                if (u->field_7E == 0)
+                {
+                    u->field_24 = f | 0x10;
+                    u->field_58 = u->field_30;
+                    if (u->field_0 != 5)
+                    {
+                        u->field_84 |= 1 << u->field_30;
+                        u->field_88 |= 1 << u->field_30;
+                    }
+                }
+                else
+                {
+                    u->field_24 = f & ~0x10;
+                    u->field_5A = u->field_30;
+                    u->field_5C = u->field_32;
+                    if (u->field_0 != 5)
+                    {
+                        u->field_84 |= 1 << (u->field_30 + u->field_32 + 3);
+                        u->field_8C |= 1 << (u->field_30 + u->field_32);
+                    }
+                }
+            }
+            if (name_800BF868[u->field_0] >= 0)
+            {
+                if (u->field_0 == 1)
+                {
+                    MemCopy_800403E8(&name_800C08E8, u->field_4C, sizeof(Minion));
+                }
+                PlaySfx_80031494(0x7E);
+                u->field_2 = u->field_0;
+                u->field_0 = name_800BF868[u->field_0];
+                changed = 1;
+                u->field_32 = 0;
+                u->field_30 = 0;
+                u->field_C = 0;
+            }
+            else if (name_800BF868[u->field_0] == -1)
+            {
+                u->field_2 = u->field_0;
+                switch (u->field_0)
+                {
+                case 0:
+                    if (u->field_30 == 4)
+                    {
+                        PlaySfx_80031494(0x7E);
+                        if (u->field_4 < 13)
+                        {
+                            u->field_0 = 11;
+                        }
+                        else
+                        {
+                            u->field_0 = 12;
+                        }
+                    }
+                    else
+                    {
+                        PlaySfx_80031494(0x7E);
+                        u->field_0 = name_800BF8A8[u->field_30];
+                    }
+                    break;
+                case 4:
+                    if (u->field_30 == 0)
+                    {
+                        PlaySfx_80031494(0x7E);
+                        u->field_0 = 1;
+                        u->field_2 = 0;
+                    }
+                    else if (u->field_30 == 1)
+                    {
+                        PlaySfx_80031494(0x7D);
+                        u->field_0 = 0;
+                    }
+                    break;
+                case 2:
+                    PlaySfx_80031494(0x7E);
+                    if (sub_800AD398())
+                    {
+                        u->field_0 = 13;
+                    }
+                    else
+                    {
+                        sub_800BD720(u);
+                        u->field_0 = 3;
+                    }
+                    u->field_2 = 2;
+                    break;
+                case 13:
+                    if (u->field_30 == 0)
+                    {
+                        PlaySfx_80031494(0x7E);
+                        u->field_0 = 14;
+                    }
+                    else
+                    {
+                        sub_800BD720(u);
+                        u->field_0 = 3;
+                    }
+                    u->field_2 = 2;
+                    break;
+                case 14:
+                    PlaySfx_80031494(0x7E);
+                    sub_800BD720(u);
+                    u->field_0 = 3;
+                    u->field_2 = 1;
+                    break;
+                case 8:
+                    PlaySfx_80031494(0x7E);
+                    u->field_2 = u->field_0;
+                    if (u->field_24 & 0x400)
+                    {
+                        u->field_0 = 15;
+                        u->field_24 &= ~0x400;
+                    }
+                    else
+                    {
+                        u->field_0 = 9;
+                    }
+                    break;
+                }
+                changed = 1;
+                u->field_32 = 0;
+                u->field_30 = 0;
+                u->field_C = 0;
+            }
+            else if (name_800BF868[u->field_0] == -3)
+            {
+                PlaySfx_80031494(0x7E);
+                sub_800BD9DC(u);
+            }
+        }
+        else
+        {
+            PlaySfx_80031494(0x7C);
+            f = u->field_24;
+            if (f & 8)
+            {
+                if (u->field_7E == 0)
+                {
+                    u->field_24 = f | 0x10;
+                    u->field_58 = u->field_30;
+                }
+                else
+                {
+                    u->field_24 = f & ~0x10;
+                    u->field_5A = u->field_30;
+                    u->field_5C = u->field_32;
+                }
+            }
+            u->field_8 = s;
+            SetShopHelpText_800BBB54(u, 1);
+            u->field_18 = 1;
+        }
+    }
+    else if (u->field_14)
+    {
+        if (u->field_0 != 0 || u->field_30 != 4)
+        {
+            PlaySfx_80031494(0x7D);
+            if (u->field_0 != 13 && u->field_0 != 14)
+            {
+                u->field_84 = 0;
+                u->field_88 = 0;
+                u->field_8C = 0;
+            }
+            if (u->field_0 == 3)
+            {
+                if (u->a7A[0] == 0)
+                {
+                    k = u->a5E[1];
+                    u->field_84 |= 1 << k;
+                    u->field_88 |= 1 << k;
+                }
+                else if (u->a7A[0] == 1)
+                {
+                    k = u->a5E[1] + u->a72[0];
+                    u->field_84 |= 1 << (k + 3);
+                    u->field_8C |= 1 << k;
+                }
+            }
+            sub_800BB8C4(u);
+            changed = 1;
+        }
+    }
+    u->field_14 = 0;
+    u->field_10 = 0;
+    if (!(u->field_24 & 4))
+    {
+        if (s == 0 && changed)
+        {
+            if (sub_800BD650(&u->field_0))
+            {
+                u->field_24 |= 2;
+                SetShopHelpText_800BBB54(u, 3);
+            }
+            else
+            {
+                SetShopHelpText_800BBB54(u, 0);
+            }
+        }
+        sub_800BD7A8(u);
+        if (sub_800BD678(u))
+        {
+            u->field_24 |= 8;
+        }
+        else
+        {
+            u->field_24 &= ~8;
+        }
+        sub_800BD854(u);
+    }
+}
 
 int sub_800BD650(short* p)
 {
@@ -2726,12 +3297,6 @@ void sub_800BE53C(ShopUnit3Shop* u)
     SetFontClutOffset_8003F900(1, 0);
 }
 
-typedef struct ShopPairShop
-{
-    short a;
-    short b;
-} ShopPairShop;
-extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
 extern char name_800BFF14[];
 void sub_800BE7F0(ShopUnit3Shop* u)
 {
