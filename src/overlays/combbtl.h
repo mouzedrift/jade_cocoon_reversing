@@ -75,6 +75,13 @@ typedef struct CombBtlItem
     short my_1A;
 } CombBtlItem;
 
+// an announcer line list with a trailing word (finalLines_800A8454)
+typedef struct CombBtlLineList6
+{
+    const char* lines_0[6]; // 0 ends the list
+    int tail_18;
+} CombBtlLineList6;
+
 typedef struct CombBtlPos2
 {
     CombBtlPair p[2]; // per side
@@ -115,7 +122,7 @@ extern const char aItHasFallenAndC_800A452C[];
 extern const char aForThisMinion_800A4570[];
 extern const char aItLooksLikeThat_800A4594[];
 extern const char aIsTheFightOver_800A45C8[];
-extern const int aEmptyLine_800A45F0;
+extern const char aEmptyLine_800A45F0[4];
 extern const char aVeryEffective_800A45F4[];
 extern const char aRightAtTheEleme_800A4614[];
 extern const char aWhatAWellChosen_800A4658[];
@@ -165,13 +172,13 @@ extern const char *statusLines_800A8364[6];
 extern const char *stoneLines_800A837C[6];
 extern const char *halfHpLines_800A8394[3];
 extern const char *tenthHpLines_800A83A0[4];
-extern void *koLines_800A83B0[15];
+extern const char *koLines_800A83B0[15];
 extern const char *swapLines_800A83EC[5];
 extern const char *elementChangeLines_800A8400[5];
 extern const char *oneBlowLines_800A8414[5];
 extern const char *oneHpLeftLines_800A8428[5];
 extern const char *lossLines_800A843C[6];
-extern int finalLines_800A8454[7];
+extern CombBtlLineList6 finalLines_800A8454;
 extern short hpDamage_800A8470[2];
 extern short mpDamage_800A8474[2];
 extern int announcerWindow_800A8478;

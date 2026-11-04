@@ -56,6 +56,13 @@ typedef struct CombComMsg
     int* error_4;
 } CombComMsg;
 
+// a button help bar entry (DrawButtonHelpBar_8002B004), icon -1 ends the list
+typedef struct CombComHelp
+{
+    int icon_0;
+    const char* text_4;
+} CombComHelp;
+
 typedef struct CombComMsgs3
 {
     int m[3];
@@ -178,9 +185,9 @@ extern const char aReturnToStartOf_800CB638[];
 extern const CombComMsgs3 pauseOptionDescs_800CB674;
 extern const CombComPos2 skillListPos_800CB680;
 extern const CombComPos2 magicListPos_800CB688;
-extern const int targetItem0_800CB690[14];
-extern const int targetItem1_800CB6C8[14];
-extern const int targetItem2_800CB700[15];
+extern const CombComItem targetItem0_800CB690;
+extern const CombComItem targetItem1_800CB6C8;
+extern const CombComItem targetItem2_800CB700;
 extern short cmdCursor_800CD28C[4];
 extern short cmdCursorSel_800CD294;
 extern short skillCursor_800CD298[6];
@@ -219,10 +226,10 @@ extern void *cmdInfoChangeDesc_800CD48C[1];
 extern void *cmdInfoChangeError_800CD490;
 extern unsigned char cmdTargetFlags_800CD494[8];
 extern unsigned char cmdNextState_800CD49C[8];
-extern int helpBarCmd_800CD4A4[8];
-extern int helpBarList_800CD4C4[10];
-extern int helpBarTarget_800CD4EC[8];
-extern char *stateHelpBars_800CD50C[6];
+extern CombComHelp helpBarCmd_800CD4A4[4];
+extern CombComHelp helpBarList_800CD4C4[5];
+extern CombComHelp helpBarTarget_800CD4EC[4];
+extern CombComHelp *stateHelpBars_800CD50C[6];
 extern int cmdKinds_800CD524[5];
 extern CombComDlg magicDescs_800CD538[30];
 extern char skillDescs_800CD718[256];

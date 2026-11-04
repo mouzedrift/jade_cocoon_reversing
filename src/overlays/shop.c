@@ -4017,7 +4017,7 @@ const char *textStatsA_800BF988[3] = { aYouCanViewOther_800B72C8, aTheSqButton_8
 const char *textMergePreviewA_800BF994[3] = { aThisIsWhatItLlL_800B7320, aOViewForm_800B7304, aSqViewOtherAbilities_800B7034 };
 const char *textSpunA_800BF9A0[3] = { aOkayIHaveSpunSo_800B73AC, aYouCanSellThisA_800B735C, aEmpty_800B6D7C };
 const char *textSkinIntroA_800BF9AC[3] = { aISeeYouHaveSome_800B7460, aSomethingExciti_800B7420, aIfWeUseThem_800B7400 };
-int textStatsReturnA_800BF9B8[3] = { (int)aYouCanReturnToS_800B74C0, (int)aTheTriButton_800B74A4, (int)aEmpty_800B6D7C };
+const char *textStatsReturnA_800BF9B8[3] = { aYouCanReturnToS_800B74C0, aTheTriButton_800B74A4, aEmpty_800B6D7C };
 const char *textMainB_800BF9C4[3] = { aWhatDoYouWishTo_800B750C, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *textMergeBaseB_800BF9D0[3] = { aPleasePickTheCo_800B753C, aForTheNewMinion_800B6DB0, aEmpty_800B6D7C };
 const char *textSpinSelectB_800BF9DC[3] = { aPleasePickTheCo_800B7588, aToSpinWithX_800B6E5C, aIllSpinThemO_800B6E18 };
@@ -4037,49 +4037,49 @@ const char *textStatsB_800BFA78[3] = { aUseTheSqButton_800B78DC, aToViewOtherSta
 const char *textMergePreviewB_800BFA84[3] = { aThisIsWhatItLlL_800B7320, aOViewForm_800B7304, aSqViewOtherAbilities_800B7034 };
 const char *textSpunB_800BFA90[3] = { aIHaveSpunSomeSh_800B7970, aYouCanGetMoneyB_800B7934, aItAtTheVillageS_800B7900 };
 const char *textSkinIntroB_800BFA9C[3] = { aISeeYouHaveSome_800B7460, aSomethingExtrao_800B79D8, aIfWeUseThem_800B79B8 };
-int textStatsReturnB_800BFAA8[3] = { (int)aUseTheTriButtonTo_800B7A60, (int)aReturnToTheStat_800B7A24, (int)aEmpty_800B6D7C };
-int *stateTextsA_800BFAB4[16] = {
-    (void *)textMainA_800BF8D4, (void *)textMergeBaseA_800BF8E0, (void *)textMergePartnerA_800BF8F8, (void *)textMergeConfirmA_800BF91C,
-    (void *)textMergeAgainA_800BF928, (void *)textSpinSelectA_800BF8EC, (void *)textSpinConfirmA_800BF904, (void *)textPartyA_800BF910,
-    (void *)textViewA_800BF934, (void *)textRenameA_800BF940, (void *)textExchangeA_800BF94C, (void *)textQuitA_800BF958,
-    (void *)textFullA_800BF964, (void *)textSkinAskA_800BF970, (void *)textSkinPickA_800BF97C, (void *)textStatsA_800BF988,
+const char *textStatsReturnB_800BFAA8[3] = { aUseTheTriButtonTo_800B7A60, aReturnToTheStat_800B7A24, aEmpty_800B6D7C };
+const char **stateTextsA_800BFAB4[16] = {
+    textMainA_800BF8D4, textMergeBaseA_800BF8E0, textMergePartnerA_800BF8F8, textMergeConfirmA_800BF91C,
+    textMergeAgainA_800BF928, textSpinSelectA_800BF8EC, textSpinConfirmA_800BF904, textPartyA_800BF910,
+    textViewA_800BF934, textRenameA_800BF940, textExchangeA_800BF94C, textQuitA_800BF958,
+    textFullA_800BF964, textSkinAskA_800BF970, textSkinPickA_800BF97C, textStatsA_800BF988,
 };
-int *stateTextsB_800BFAF4[16] = {
-    (void *)textMainB_800BF9C4, (void *)textMergeBaseB_800BF9D0, (void *)textMergePartnerB_800BF9E8, (void *)textMergeConfirmB_800BFA0C,
-    (void *)textMergeAgainB_800BFA18, (void *)textSpinSelectB_800BF9DC, (void *)textSpinConfirmB_800BF9F4, (void *)textPartyB_800BFA00,
-    (void *)textViewB_800BFA24, (void *)textRenameB_800BFA30, (void *)textExchangeB_800BFA3C, (void *)textQuitB_800BFA48,
-    (void *)textFullB_800BFA54, (void *)textSkinAskB_800BFA60, (void *)textSkinPickB_800BFA6C, (void *)textStatsB_800BFA78,
+const char **stateTextsB_800BFAF4[16] = {
+    textMainB_800BF9C4, textMergeBaseB_800BF9D0, textMergePartnerB_800BF9E8, textMergeConfirmB_800BFA0C,
+    textMergeAgainB_800BFA18, textSpinSelectB_800BF9DC, textSpinConfirmB_800BF9F4, textPartyB_800BFA00,
+    textViewB_800BFA24, textRenameB_800BFA30, textExchangeB_800BFA3C, textQuitB_800BFA48,
+    textFullB_800BFA54, textSkinAskB_800BFA60, textSkinPickB_800BFA6C, textStatsB_800BFA78,
 };
-int *resultTextsA_800BFB34[16] = {
-    0, 0, 0, (void *)textMergePreviewA_800BF994,
-    0, (void *)textSpunA_800BF9A0, 0, 0,
+const char **resultTextsA_800BFB34[16] = {
+    0, 0, 0, textMergePreviewA_800BF994,
+    0, textSpunA_800BF9A0, 0, 0,
     0, 0, 0, 0,
-    0, (void *)textSkinIntroA_800BF9AC,
+    0, textSkinIntroA_800BF9AC,
 };
-int *resultTextsB_800BFB74[21] = {
-    0, 0, 0, (void *)textMergePreviewB_800BFA84,
-    0, (void *)textSpunB_800BFA90, 0, 0,
+const char **resultTextsB_800BFB74[21] = {
+    0, 0, 0, textMergePreviewB_800BFA84,
+    0, textSpunB_800BFA90, 0, 0,
     0, 0, 0, 0,
-    0, (void *)textSkinIntroB_800BFA9C, 0, 0,
-    (void *)aEmpty_800B6D7C, (void *)aNeedTwoJp_800B7AC8, (void *)aNoMinionsJp_800B7AB4, (void *)aCantChooseJp_800B7A9C,
-    (void *)aNoSkinsJp_800B7A88,
+    0, textSkinIntroB_800BFA9C, 0, 0,
+    (const char **)aEmpty_800B6D7C, (const char **)aNeedTwoJp_800B7AC8, (const char **)aNoMinionsJp_800B7AB4, (const char **)aCantChooseJp_800B7A9C,
+    (const char **)aNoSkinsJp_800B7A88,
 };
 const char *errNoneA_800BFBC8[3] = { aEmpty_800B6D7C, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errNeedTwoA_800BFBD4[3] = { aICanTMergeUnles_800B7AF8, aMinions_800B7AE4, aEmpty_800B6D7C };
 const char *errNoMinionsA_800BFBE0[3] = { aWeDonTHaveAnyMi_800B7B3C, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errCantUseA_800BFBEC[3] = { aWeCanTUseThatMi_800B7B74, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errNoSkinsA_800BFBF8[3] = { aWeDonTHaveAnyMi_800B7BA8, aEmpty_800B6D7C, aEmpty_800B6D7C };
-int *errorTextsA_800BFC04[10] = {
-    (void *)errNoneA_800BFBC8, (void *)errNeedTwoA_800BFBD4, (void *)errNoMinionsA_800BFBE0, (void *)errCantUseA_800BFBEC,
-    (void *)errNoSkinsA_800BFBF8, (void *)aEmpty_800B6D7C, (void *)aNeedTwoJp2_800B7C30, (void *)aNoMinionsJp2_800B7C18,
-    (void *)aCantChooseJp2_800B7C00, (void *)aNoSkinsJp2_800B7BE8,
+const char **errorTextsA_800BFC04[10] = {
+    errNoneA_800BFBC8, errNeedTwoA_800BFBD4, errNoMinionsA_800BFBE0, errCantUseA_800BFBEC,
+    errNoSkinsA_800BFBF8, (const char **)aEmpty_800B6D7C, (const char **)aNeedTwoJp2_800B7C30, (const char **)aNoMinionsJp2_800B7C18,
+    (const char **)aCantChooseJp2_800B7C00, (const char **)aNoSkinsJp2_800B7BE8,
 };
 const char *errNoneB_800BFC2C[3] = { aEmpty_800B6D7C, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errNeedTwoB_800BFC38[3] = { aICanTMergeUnles_800B7AF8, aMinions_800B7AE4, aEmpty_800B6D7C };
 const char *errNoMinionsB_800BFC44[3] = { aThereArenTAnyMi_800B7C50, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errCantUseB_800BFC50[3] = { aWeCanTUseThatMi_800B7B74, aEmpty_800B6D7C, aEmpty_800B6D7C };
 const char *errNoSkinsB_800BFC5C[3] = { aThereArenTAnyMi_800B7C84, aEmpty_800B6D7C, aEmpty_800B6D7C };
-int *errorTextsB_800BFC68[5] = { (void *)errNoneB_800BFC2C, (void *)errNeedTwoB_800BFC38, (void *)errNoMinionsB_800BFC44, (void *)errCantUseB_800BFC50, (void *)errNoSkinsB_800BFC5C };
+const char **errorTextsB_800BFC68[5] = { errNoneB_800BFC2C, errNeedTwoB_800BFC38, errNoMinionsB_800BFC44, errCantUseB_800BFC50, errNoSkinsB_800BFC5C };
 const char *helpMergeA_800BFC7C[3] = { aIfYouSelectTwoM_800B7D1C, aCombineThemAndC_800B7CD8, aForYou_800B7CC4 };
 const char *helpSpinA_800BFC88[3] = { aIfYouSpinTheCoc_800B7DAC, aYouCanSellItInT_800B7D60, aEmpty_800B6D7C };
 const char *helpPartyA_800BFC94[3] = { aYouCanEquipYour_800B7E24, aWithUpToThreeCo_800B7DF0, aEmpty_800B6D7C };
@@ -4090,8 +4090,8 @@ const char *helpSpinB_800BFCC4[3] = { aYouCanGetMoneyB_800B7FA0, aCocoonsIntoSil
 const char *helpPartyB_800BFCD0[3] = { aYouCanEquipYour_800B7E24, aWithUpToThreeCo_800B7DF0, aEmpty_800B6D7C };
 const char *helpRenameB_800BFCDC[3] = { aYouCanChangeThe_800B7FDC, aCreaturesYouHav_800B7E54, aEmpty_800B6D7C };
 const char *helpQuitB_800BFCE8[3] = { aStopPerformingD_800B8030, aForNow_800B801C, aEmpty_800B6D7C };
-int *mainHelpTextsA_800BFCF4[5] = { (void *)helpMergeA_800BFC7C, (void *)helpSpinA_800BFC88, (void *)helpPartyA_800BFC94, (void *)helpRenameA_800BFCA0, (void *)helpQuitA_800BFCAC };
-int *mainHelpTextsB_800BFD08[5] = { (void *)helpMergeB_800BFCB8, (void *)helpSpinB_800BFCC4, (void *)helpPartyB_800BFCD0, (void *)helpRenameB_800BFCDC, (void *)helpQuitB_800BFCE8 };
+const char **mainHelpTextsA_800BFCF4[5] = { helpMergeA_800BFC7C, helpSpinA_800BFC88, helpPartyA_800BFC94, helpRenameA_800BFCA0, helpQuitA_800BFCAC };
+const char **mainHelpTextsB_800BFD08[5] = { helpMergeB_800BFCB8, helpSpinB_800BFCC4, helpPartyB_800BFCD0, helpRenameB_800BFCDC, helpQuitB_800BFCE8 };
 short stateIndexSlots_800BFD1C[16] = {
     0, 1, 2, 3, 4, 1, 5, 1,
     1, 6, 2, 1, 1, 7, 8, 9,
@@ -4104,121 +4104,138 @@ unsigned short stateListSlots_800BFD5C[16] = {
     0xFFFF, 0, 1, 0xFFFF, 0xFFFF, 0, 0xFFFF, 0,
     0, 0xFFFF, 1, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
 };
-int partyListItem0_800BFD7C[14] = {
-    8, 0, 0, 0, 0x5D000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem partyListItem0_800BFD7C[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 93, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int partyListItem1_800BFDB4[14] = {
-    8, 0, 0, 0, 0x6C000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem partyListItem1_800BFDB4[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 108, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int partyListItem2_800BFDEC[14] = {
-    8, 0, 0, 0, 0x7B000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem partyListItem2_800BFDEC[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 123, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-char partyListItems_800BFE24[16] = { 124, 253, 11, 128, 180, 253, 11, 128, 236, 253, 11, 128 };
-int storedListItem0_800BFE34[14] = {
-    8, 0, 0, 0, 0x9A000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem *partyListItems_800BFE24[4] = { partyListItem0_800BFD7C, partyListItem1_800BFDB4, partyListItem2_800BFDEC, 0 };
+ShopMenuItem storedListItem0_800BFE34[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 154, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int storedListItem1_800BFE6C[14] = {
-    8, 0, 0, 0, 0xA9000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem storedListItem1_800BFE6C[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 169, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int storedListItem2_800BFEA4[14] = {
-    8, 0, 0, 0, 0xB8000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem storedListItem2_800BFEA4[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 184, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int storedListItem3_800BFEDC[14] = {
-    8, 0, 0, 0, 0xC7000D, 0xE0040, 0, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem storedListItem3_800BFEDC[2] = {
+    { 0x8, 0, 0, 0, 0, 13, 199, 64, 14, 0, 0 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-char storedListItems_800BFF14[20] = { 52, 254, 11, 128, 108, 254, 11, 128, 164, 254, 11, 128, 220, 254, 11, 128 };
-char btnHelpSpinMarked_800BFF28[32] = { 16, 0, 0, 0, 132, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 110, 0, 0, 0, 108, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpSpin_800BFF48[40] = { 16, 0, 0, 0, 132, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 94, 0, 0, 0, 168, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpPartner_800BFF70[32] = { 16, 0, 0, 0, 132, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpView_800BFF90[40] = { 16, 0, 0, 0, 232, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 94, 0, 0, 0, 188, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpMergePreview_800BFFB8[40] = { 16, 0, 0, 0, 124, 109, 11, 128, 167, 0, 0, 0, 248, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 94, 0, 0, 0, 188, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpFormView_800BFFE0[32] = { 167, 0, 0, 0, 120, 128, 11, 128, 153, 0, 0, 0, 124, 109, 11, 128, 154, 0, 0, 0, 8, 129, 11, 128, 255, 255, 255, 255 };
-char btnHelpStats_800C0000[24] = { 94, 0, 0, 0, 188, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpStatsPage_800C0018[32] = { 94, 0, 0, 0, 188, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 110, 0, 0, 0, 20, 129, 11, 128, 255, 255, 255, 255 };
-char btnHelpPrompt_800C0038[16] = { 16, 0, 0, 0, 132, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpSelect_800C0048[40] = { 16, 0, 0, 0, 132, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 94, 0, 0, 0, 168, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 255, 255, 255, 255 };
-char btnHelpExchange_800C0070[32] = { 16, 0, 0, 0, 132, 128, 11, 128, 167, 0, 0, 0, 120, 128, 11, 128, 110, 0, 0, 0, 148, 128, 11, 128, 255, 255, 255, 255 };
+ShopMenuItem *storedListItems_800BFF14[5] = { storedListItem0_800BFE34, storedListItem1_800BFE6C, storedListItem2_800BFEA4, storedListItem3_800BFEDC, 0 };
+ShopHelp btnHelpSpinMarked_800BFF28[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aSpin_800B806C }, { -1 } };
+ShopHelp btnHelpSpin_800BFF48[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
+ShopHelp btnHelpPartner_800BFF70[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
+ShopHelp btnHelpView_800BFF90[5] = { { 16, aRename_800B80E8 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
+ShopHelp btnHelpMergePreview_800BFFB8[5] = { { 16, aEmpty_800B6D7C }, { 167, aCombine_800B80F8 }, { 110, aViewForm_800B8094 }, { 94, aViewOtherAbilit_800B80BC }, { -1 } };
+ShopHelp btnHelpFormView_800BFFE0[4] = { { 167, aQuit_800B8078 }, { 153, aEmpty_800B6D7C }, { 154, aZoom_800B8108 }, { -1 } };
+ShopHelp btnHelpStats_800C0000[3] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { -1 } };
+ShopHelp btnHelpStatsPage_800C0018[4] = { { 94, aViewOtherAbilit_800B80BC }, { 167, aQuit_800B8078 }, { 110, aDescription_800B8114 }, { -1 } };
+ShopHelp btnHelpPrompt_800C0038[2] = { { 16, aSelect_800B8084 }, { -1 } };
+ShopHelp btnHelpSelect_800C0048[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
+ShopHelp btnHelpExchange_800C0070[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
 char skinListUpArrowPos_800C0090[4] = { 200, 0, 97 };
 char skinListDownArrowPos_800C0094[4] = { 200, 0, 198 };
-int skinListRow0_800C0098[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x680053, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x680068, 0x15006B, 0x40004, 0x80004, 0,
-    0, 0, 0x6800D3, 0x15001C, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+ShopMenuItem skinListRow0_800C0098[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
+    { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
+    { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int skinListRow1_800C0108[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x680053, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x680068, 0x15006B, 0x40004, 0x80004, 0,
-    0, 0, 0x6800D3, 0x15001C, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+ShopMenuItem skinListRow1_800C0108[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
+    { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
+    { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int skinListRow2_800C0178[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x680053, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x680068, 0x15006B, 0x40004, 0x80004, 0,
-    0, 0, 0x6800D3, 0x15001C, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+ShopMenuItem skinListRow2_800C0178[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
+    { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
+    { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int skinListRow3_800C01E8[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x680053, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x680068, 0x15006B, 0x40004, 0x80004, 0,
-    0, 0, 0x6800D3, 0x15001C, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+ShopMenuItem skinListRow3_800C01E8[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
+    { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
+    { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem *skinListRows_800C0258[5] = { (void *)skinListRow0_800C0098, (void *)skinListRow1_800C0108, (void *)skinListRow2_800C0178, (void *)skinListRow3_800C01E8 };
-char magicDescLines_800C026C[30][16] = {
-    { 232, 139, 11, 128, 188, 139, 11, 128, 96, 139, 11, 128 },
-    { 44, 139, 11, 128, 188, 139, 11, 128, 96, 139, 11, 128 },
-    { 0, 139, 11, 128, 188, 139, 11, 128, 96, 139, 11, 128 },
-    { 204, 138, 11, 128, 160, 138, 11, 128, 64, 138, 11, 128 },
-    { 8, 138, 11, 128, 160, 138, 11, 128, 64, 138, 11, 128 },
-    { 220, 137, 11, 128, 160, 138, 11, 128, 64, 138, 11, 128 },
-    { 168, 137, 11, 128, 120, 137, 11, 128, 24, 137, 11, 128 },
-    { 224, 136, 11, 128, 120, 137, 11, 128, 24, 137, 11, 128 },
-    { 180, 136, 11, 128, 120, 137, 11, 128, 24, 137, 11, 128 },
-    { 132, 136, 11, 128, 84, 136, 11, 128, 248, 135, 11, 128 },
-    { 196, 135, 11, 128, 84, 136, 11, 128, 248, 135, 11, 128 },
-    { 152, 135, 11, 128, 84, 136, 11, 128, 248, 135, 11, 128 },
-    { 128, 135, 11, 128, 100, 135, 11, 128 },
-    { 76, 135, 11, 128, 40, 135, 11, 128 },
-    { 8, 135, 11, 128, 228, 134, 11, 128 },
-    { 192, 134, 11, 128, 104, 134, 11, 128 },
-    { 80, 134, 11, 128, 232, 133, 11, 128, 148, 133, 11, 128 },
-    { 132, 133, 11, 128, 96, 133, 11, 128 },
-    { 84, 133, 11, 128, 36, 133, 11, 128 },
-    { 4, 133, 11, 128, 204, 132, 11, 128 },
-    { 192, 132, 11, 128, 108, 132, 11, 128 },
-    { 80, 132, 11, 128, 252, 131, 11, 128, 160, 131, 11, 128 },
-    { 132, 131, 11, 128, 44, 131, 11, 128, 208, 130, 11, 128 },
-    { 180, 130, 11, 128, 92, 130, 11, 128, 252, 129, 11, 128 },
-    { 224, 129, 11, 128, 140, 129, 11, 128, 44, 129, 11, 128 },
+ShopMenuItem *skinListRows_800C0258[5] = { skinListRow0_800C0098, skinListRow1_800C0108, skinListRow2_800C0178, skinListRow3_800C01E8 };
+const char *magicDescLines_800C026C[30][4] = {
+    { aFireAttackOneEn_800B8BE8, aExtraDamageVsAi_800B8BBC, aHigherFireEleme_800B8B60 },
+    { aFireAttackAllEn_800B8B2C, aExtraDamageVsAi_800B8BBC, aHigherFireEleme_800B8B60 },
+    { aAdvancedFireAtt_800B8B00, aExtraDamageVsAi_800B8BBC, aHigherFireEleme_800B8B60 },
+    { aWaterAttackOneE_800B8ACC, aExtraDamageVsFi_800B8AA0, aHigherWaterElem_800B8A40 },
+    { aWaterAttackAllE_800B8A08, aExtraDamageVsFi_800B8AA0, aHigherWaterElem_800B8A40 },
+    { aAdvancedWaterAt_800B89DC, aExtraDamageVsFi_800B8AA0, aHigherWaterElem_800B8A40 },
+    { aEarthAttackOneE_800B89A8, aExtraDamageVsWa_800B8978, aHigherEarthElem_800B8918 },
+    { aEarthAttackAllE_800B88E0, aExtraDamageVsWa_800B8978, aHigherEarthElem_800B8918 },
+    { aAdvancedEarthAt_800B88B4, aExtraDamageVsWa_800B8978, aHigherEarthElem_800B8918 },
+    { aWindAttackOneEn_800B8884, aExtraDamageVsEa_800B8854, aHigherWindEleme_800B87F8 },
+    { aWindAttackAllEn_800B87C4, aExtraDamageVsEa_800B8854, aHigherWindEleme_800B87F8 },
+    { aAdvancedWindAtt_800B8798, aExtraDamageVsEa_800B8854, aHigherWindEleme_800B87F8 },
+    { aCurePoison_800B8780, aCuresPoison_800B8764 },
+    { aRestoreHP_800B874C, aRestoresSomeHP_800B8728 },
+    { aRestoreAllHP_800B8708, aRestoresAllHP_800B86E4 },
+    { aReturnToNormal_800B86C0, aCuresPoisonAndT_800B8668 },
+    { aProtection_800B8650, aProtectsAgainst_800B85E8, aEndsOnceItProte_800B8594 },
+    { aPoison_800B8584, aPoisonsAnEnemy_800B8560 },
+    { aSleep_800B8554, aPutsAnEnemyToSl_800B8524 },
+    { aFleshToStone_800B8504, aTurnsAnEnemyInt_800B84CC },
+    { aDeath_800B84C0, aCausesAnEnemyTo_800B846C },
+    { aEnhanceFire_800B8450, aIncreasesFireAt_800B83FC, aEffectivenessOf_800B83A0 },
+    { aEnhanceWater_800B8384, aIncreasesWaterA_800B832C, aEffectivenessOf_800B82D0 },
+    { aEnhanceEarth_800B82B4, aIncreasesEarthA_800B825C, aEffectivenessOf_800B81FC },
+    { aEnhanceWind_800B81E0, aIncreasesWindAt_800B818C, aEffectivenessOf_800B812C },
 };
-char abilityDescLines_800C044C[624] = { 124, 109, 11, 128, 124, 109, 11, 128, 124, 109, 11, 128, 0, 0, 0, 0, 124, 109, 11, 128, 124, 109, 11, 128, 124, 109, 11, 128, 0, 0, 0, 0, 120, 149, 11, 128, 32, 149, 11, 128, 24, 137, 11, 128, 0, 0, 0, 0, 244, 148, 11, 128, 156, 148, 11, 128, 64, 138, 11, 128, 0, 0, 0, 0, 116, 148, 11, 128, 28, 148, 11, 128, 96, 139, 11, 128, 0, 0, 0, 0, 244, 147, 11, 128, 156, 147, 11, 128, 248, 135, 11, 128, 0, 0, 0, 0, 112, 147, 11, 128, 28, 147, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 240, 146, 11, 128, 136, 146, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 76, 146, 11, 128, 224, 145, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 164, 145, 11, 128, 60, 145, 11, 128, 236, 144, 11, 128, 0, 0, 0, 0, 180, 144, 11, 128, 104, 144, 11, 128, 24, 144, 11, 128, 0, 0, 0, 0, 220, 143, 11, 128, 148, 143, 11, 128, 76, 143, 11, 128, 0, 0, 0, 0, 16, 143, 11, 128, 212, 142, 11, 128, 136, 142, 11, 128, 0, 0, 0, 0, 76, 142, 11, 128, 0, 142, 11, 128, 168, 141, 11, 128, 0, 0, 0, 0, 112, 141, 11, 128, 16, 141, 11, 128, 172, 140, 11, 128, 0, 0, 0, 0, 112, 140, 11, 128, 24, 140, 11, 128, 172, 140, 11, 128 };
-int mainMenuItem0_800C06BC[14] = {
-    0x10008, 43, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x4D000F, 0x140038, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+const char *abilityDescLines_800C044C[39][4] = {
+    { aEmpty_800B6D7C, aEmpty_800B6D7C, aEmpty_800B6D7C },
+    { aEmpty_800B6D7C, aEmpty_800B6D7C, aEmpty_800B6D7C },
+    { aSpecialEarthAtt_800B9578, aVeryEffectiveAg_800B9520, aHigherEarthElem_800B8918 },
+    { aSpecialWaterAtt_800B94F4, aVeryEffectiveAg_800B949C, aHigherWaterElem_800B8A40 },
+    { aSpecialFireAtta_800B9474, aVeryEffectiveAg_800B941C, aHigherFireEleme_800B8B60 },
+    { aSpecialWindAtta_800B93F4, aVeryEffectiveAg_800B939C, aHigherWindEleme_800B87F8 },
+    { aSpecialPoisonAt_800B9370, aPhysicallyDamag_800B931C },
+    { aSpecialSleepAtt_800B92F0, aPhysicallyDamag_800B9288 },
+    { aSpecialFleshToS_800B924C, aPhysicallyDamag_800B91E0 },
+    { aSpecialAttackDe_800B91A4, aCausesAnEnemyTo_800B913C, aMoreDifficultFo_800B90EC },
+    { aSpecialAttackAb_800B90B4, aTakesSomeOfTheD_800B9068, aAnEnemyToRestor_800B9018 },
+    { aSpecialAttackAb_800B8FDC, aStealsSomeManaF_800B8F94, aUsesItToRestore_800B8F4C },
+    { aSpecialAttackAl_800B8F10, aAttacksAllEnemi_800B8ED4, aBringsEnemiesTo_800B8E88 },
+    { aSpecialAttackCr_800B8E4C, aReducesAnEnemie_800B8E00, aItMoreDifficult_800B8DA8 },
+    { aSpecialAttackBr_800B8D70, aMakesItEasierTo_800B8D10, aSlightlyMoreDif_800B8CAC },
+    { aSpecialAttackBr_800B8C70, aMakesItEasierTo_800B8C18, aSlightlyMoreDif_800B8CAC },
 };
-int mainMenuItem1_800C06F4[14] = {
-    0x10008, 185, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x64000F, 0x140038, 0x50000, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem mainMenuItem0_800C06BC[2] = {
+    { 0x8, 1, 43, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 77, 56, 20, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int mainMenuItem2_800C072C[14] = {
-    0x10008, 145, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B000F, 0x140038, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem mainMenuItem1_800C06F4[2] = {
+    { 0x8, 1, 185, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 100, 56, 20, 0, 5 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int mainMenuItem3_800C0764[14] = {
-    0x10010, 103, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x92000F, 0x140038, 0x5000E, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem mainMenuItem2_800C072C[2] = {
+    { 0x8, 1, 145, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 123, 56, 20, 0, 3 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-int mainMenuItem4_800C079C[14] = {
-    0x10008, 53, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xA9000F, 0x140038, 0x50000, 1,
-    0, 0, 0, -1, -1, -1,
+ShopMenuItem mainMenuItem3_800C0764[2] = {
+    { 0x10, 1, 103, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 146, 56, 20, 14, 5 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
+};
+ShopMenuItem mainMenuItem4_800C079C[2] = {
+    { 0x8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 169, 56, 20, 0, 5 },
+    { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 char mainMenuItems_800C07D4[28] = { 188, 6, 12, 128, 244, 6, 12, 128, 44, 7, 12, 128, 100, 7, 12, 128, 156, 7, 12, 128, 0, 0, 0, 0, 11, 128, 2, 60 };
 unsigned int emptyMinion_800C07F0[62] = { 0 };

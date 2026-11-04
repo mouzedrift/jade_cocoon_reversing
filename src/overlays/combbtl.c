@@ -27,8 +27,6 @@ extern void HitNumberTask_800A7EFC();
 extern void SideWindowTask_800A7694();
 extern void CreateSlotActor_800A0BA8(int, void*, void*);
 // a command's result (same layout as BATTLE.BIN's BatActionResult)
-extern int actorSideArr_800A85B8[];
-extern int targetSideArr_800A8620[];
 extern unsigned char battleResult_800A38DC;
 extern void CombBtlWaitFile_800A4C40();
 extern void CombBtlSetup_800A4D48();
@@ -85,7 +83,7 @@ const char aItHasFallenAndC_800A452C[] = "\202h\202\224\201@\202\210\202\201\202
 const char aForThisMinion_800A4570[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\211\202\223\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for this minion.
 const char aItLooksLikeThat_800A4594[] = "\202h\202\224\201@\202\214\202\217\202\217\202\213\202\223\201@\202\214\202\211\202\213\202\205\201@\202\224\202\210\202\201\202\224\201@\202\211\202\223\201@\202\211\202\224"; // It looks like that is it
 const char aIsTheFightOver_800A45C8[] = "\202h\202\223\201@\202\224\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\217\202\226\202\205\202\222\201H"; // Is the fight over?
-const int aEmptyLine_800A45F0 = 0;
+const char aEmptyLine_800A45F0[4] = "";
 const char aVeryEffective_800A45F4[] = "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201D"; // Very effective.
 const char aRightAtTheEleme_800A4614[] = "\202q\202\211\202\207\202\210\202\224\201@\202\201\202\224\201@\202\224\202\210\202\205\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\227\202\205\202\201\202\213\201@\202\223\202\220\202\217\202\224\201D"; // Right at the elemental weak spot.
 const char aWhatAWellChosen_800A4658[] = "\202v\202\210\202\201\202\224\201@\202\201\201@\202\227\202\205\202\214\202\214\201|\202\203\202\210\202\217\202\223\202\205\202\216\201@\202\201\202\224\202\224\202\201\202\203\202\213\201I"; // What a well-chosen attack!
@@ -621,11 +619,15 @@ int GetGaugeRate_800A5B70(int side)
     return rate;
 }
 
-// Near miss: the original loads the two shift counts only after all the stores
+// Near miss (15 words): the sides read into locals first gives the original's late loads and registers; left: the original
+// issues the actorSide %hi (lui v1) and the constant 1 before the result stores (sched1 keeps them next to their users here)
 #if 0
-// Not matched: the original loads the two shift counts after all the stores (alias/scheduling), tried array/struct/pointer forms
 void ResetCommands_800A5BB4()
 {
+    int a;
+    int t;
+    t = targetSide_800A8620;
+    a = actorSide_800A85B8;
     chosenCmd_800A8600.kind_0 = 0x14;
     chosenCmd_800A8600.arg_4 = 0;
     actorCmd_800A85A8.kind_0 = 0x14;
@@ -644,12 +646,12 @@ void ResetCommands_800A5BB4()
     result_800A85C8.actorMpDamage_18 = 0;
     result_800A85C8.hpDamage_1C = 0;
     result_800A85C8.mpDamage_20 = 0;
-    chosenCmd_800A8600.mask_8 = 1 << (actorSideArr_800A85B8[0] + 8);
-    chosenCmd_800A8600.targets_C = 1 << (targetSideArr_800A8620[0] + 8);
-    actorCmd_800A85A8.mask_8 = 1 << (actorSideArr_800A85B8[0] + 8);
-    actorCmd_800A85A8.targets_C = 1 << (targetSideArr_800A8620[0] + 8);
-    targetCmd_800A8610.mask_8 = 1 << (targetSideArr_800A8620[0] + 8);
-    targetCmd_800A8610.targets_C = 1 << (actorSideArr_800A85B8[0] + 8);
+    chosenCmd_800A8600.mask_8 = 1 << (a + 8);
+    chosenCmd_800A8600.targets_C = 1 << (t + 8);
+    actorCmd_800A85A8.mask_8 = 1 << (a + 8);
+    actorCmd_800A85A8.targets_C = 1 << (t + 8);
+    targetCmd_800A8610.mask_8 = 1 << (t + 8);
+    targetCmd_800A8610.targets_C = 1 << (a + 8);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, ResetCommands_800A5BB4);
@@ -949,7 +951,7 @@ void ResolveCommand_800A616C()
                 CountLivingMinions_800A7164(actorSide_800A85B8) == 1 && CountLivingMinions_800A7164(targetSide_800A8620) == 1)
             {
                 SetAnnouncerXa_800A8078(0x17, 0x4E4, 0x23);
-                announcerLines_800A85C0 = (const char**)finalLines_800A8454;
+                announcerLines_800A85C0 = finalLines_800A8454.lines_0;
             }
             else if (!(combatFlags_800A3A88 & 2) && CountTeamMinions_800A1AAC(actorSide_800A85B8) == 3 && CountLivingMinions_800A7164(actorSide_800A85B8) >= 2 &&
                      CountLivingMinions_800A7164(targetSide_800A8620) == 1)
@@ -965,7 +967,7 @@ void ResolveCommand_800A616C()
             else
             {
                 SetAnnouncerXa_800A8078(0x1E, 0x4DF, 0x28);
-                announcerLines_800A85C0 = (const char**)koLines_800A83B0;
+                announcerLines_800A85C0 = koLines_800A83B0;
             }
             targetCmd_800A8610.kind_0 = 0xB;
             koSfx_800A84A6 = 0x6F;
@@ -1747,18 +1749,18 @@ const char *statusLines_800A8364[6] = { aOhNoItIsFalling_800A4370, aThisCouldBeD
 const char *stoneLines_800A837C[6] = { aTheMinionIsBein_800A443C, aStoneItIsSpread_800A4400, aThisCouldBeFata_800A43C4, aNotHealed_800A43AC };
 const char *halfHpLines_800A8394[3] = { aTheMinionIsGrav_800A447C };
 const char *tenthHpLines_800A83A0[4] = { aItIsBreathingHe_800A44F4, aCouldKeelOverAt_800A44BC };
-void *koLines_800A83B0[15] = {
-    (void *)aIsTheFightOver_800A45C8, (void *)aItLooksLikeThat_800A4594, (void *)aForThisMinion_800A4570, (void *)aItHasFallenAndC_800A452C,
-    0, 0, (void *)&aEmptyLine_800A45F0, (void *)&aEmptyLine_800A45F0,
-    0, 0, (void *)aWhatAWellChosen_800A4658, (void *)aRightAtTheEleme_800A4614,
-    (void *)aVeryEffective_800A45F4,
+const char *koLines_800A83B0[15] = {
+    aIsTheFightOver_800A45C8, aItLooksLikeThat_800A4594, aForThisMinion_800A4570, aItHasFallenAndC_800A452C,
+    0, 0, aEmptyLine_800A45F0, aEmptyLine_800A45F0,
+    0, 0, aWhatAWellChosen_800A4658, aRightAtTheEleme_800A4614,
+    aVeryEffective_800A45F4,
 };
 const char *swapLines_800A83EC[5] = { aThePlayerHasSwi_800A46DC, aANewMinionHas_800A46B8, aEnteredTheArena_800A4690 };
 const char *elementChangeLines_800A8400[5] = { aAChangeOfElemen_800A4780, aWhatAnExcitingM_800A4750, aWhatWillHappenN_800A4720 };
 const char *oneBlowLines_800A8414[5] = { aSuchOverwhelmin_800A481C, aTheMinionHasFal_800A47F0, aWithOneFatalBlo_800A47C4 };
 const char *oneHpLeftLines_800A8428[5] = { aWhatAmazingWill_800A48A0, aAgainstAllOdds_800A487C, aItCouldBeVictor_800A4850 };
 const char *lossLines_800A843C[6] = { aAnotherLossTheF_800A495C, aDecidedBeforeTh_800A491C, aTooBad_800A4908, aIWasEvenRooting_800A48D0 };
-int finalLines_800A8454[7] = { (int)aWhatACloseFight_800A4A04, (int)aFinallyADecisio_800A49CC, (int)aReached_800A49B8, (int)aWellDone_800A49A0, 0, 0, 0x63750B00 };
+CombBtlLineList6 finalLines_800A8454 = { { aWhatACloseFight_800A4A04, aFinallyADecisio_800A49CC, aReached_800A49B8, aWellDone_800A49A0 }, 0x63750B00 };
 short hpDamage_800A8470[2] = { 0 };
 short mpDamage_800A8474[2] = { 0 };
 int announcerWindow_800A8478 = 0;

@@ -34,7 +34,7 @@ typedef struct ShopMenuWindows
 typedef struct ShopTextLine
 {
     int pos_0; // x | y << 16
-    int text_4;
+    const char* text_4;
 } ShopTextLine;
 
 typedef struct ShopElementOrder
@@ -54,15 +54,24 @@ typedef struct ShopRect
 typedef struct ShopMenuItem
 {
     unsigned short flags_0; // 0x40: greyed out
-    short pad_2;
+    short type_2; // 1: TIY sprite
     int val_4;   // sprite / text / number, by kind
     void* sprts_8;
     void* tpages_C;
     short x_10;
     short y_12;
-    int pad_14;
-    int pad_18;
+    short w_14;
+    short h_16;
+    short mx_18;
+    short my_1A;
 } ShopMenuItem;
+
+// a button help bar entry (DrawButtonHelpBar_8002B004), icon -1 ends the list
+typedef struct ShopHelp
+{
+    int icon_0;
+    const char* text_4;
+} ShopHelp;
 
 extern int dword_800B6D00;
 extern const char aAssertFmt_800B6D04[];
@@ -293,7 +302,7 @@ extern const char *textStatsA_800BF988[3];
 extern const char *textMergePreviewA_800BF994[3];
 extern const char *textSpunA_800BF9A0[3];
 extern const char *textSkinIntroA_800BF9AC[3];
-extern int textStatsReturnA_800BF9B8[3];
+extern const char *textStatsReturnA_800BF9B8[3];
 extern const char *textMainB_800BF9C4[3];
 extern const char *textMergeBaseB_800BF9D0[3];
 extern const char *textSpinSelectB_800BF9DC[3];
@@ -313,23 +322,23 @@ extern const char *textStatsB_800BFA78[3];
 extern const char *textMergePreviewB_800BFA84[3];
 extern const char *textSpunB_800BFA90[3];
 extern const char *textSkinIntroB_800BFA9C[3];
-extern int textStatsReturnB_800BFAA8[3];
-extern int *stateTextsA_800BFAB4[16];
-extern int *stateTextsB_800BFAF4[16];
-extern int *resultTextsA_800BFB34[16];
-extern int *resultTextsB_800BFB74[21];
+extern const char *textStatsReturnB_800BFAA8[3];
+extern const char **stateTextsA_800BFAB4[16];
+extern const char **stateTextsB_800BFAF4[16];
+extern const char **resultTextsA_800BFB34[16];
+extern const char **resultTextsB_800BFB74[21];
 extern const char *errNoneA_800BFBC8[3];
 extern const char *errNeedTwoA_800BFBD4[3];
 extern const char *errNoMinionsA_800BFBE0[3];
 extern const char *errCantUseA_800BFBEC[3];
 extern const char *errNoSkinsA_800BFBF8[3];
-extern int *errorTextsA_800BFC04[10];
+extern const char **errorTextsA_800BFC04[10];
 extern const char *errNoneB_800BFC2C[3];
 extern const char *errNeedTwoB_800BFC38[3];
 extern const char *errNoMinionsB_800BFC44[3];
 extern const char *errCantUseB_800BFC50[3];
 extern const char *errNoSkinsB_800BFC5C[3];
-extern int *errorTextsB_800BFC68[5];
+extern const char **errorTextsB_800BFC68[5];
 extern const char *helpMergeA_800BFC7C[3];
 extern const char *helpSpinA_800BFC88[3];
 extern const char *helpPartyA_800BFC94[3];
@@ -340,45 +349,45 @@ extern const char *helpSpinB_800BFCC4[3];
 extern const char *helpPartyB_800BFCD0[3];
 extern const char *helpRenameB_800BFCDC[3];
 extern const char *helpQuitB_800BFCE8[3];
-extern int *mainHelpTextsA_800BFCF4[5];
-extern int *mainHelpTextsB_800BFD08[5];
+extern const char **mainHelpTextsA_800BFCF4[5];
+extern const char **mainHelpTextsB_800BFD08[5];
 extern short stateIndexSlots_800BFD1C[16];
 extern unsigned short stateScrollSlots_800BFD3C[16];
 extern unsigned short stateListSlots_800BFD5C[16];
-extern int partyListItem0_800BFD7C[14];
-extern int partyListItem1_800BFDB4[14];
-extern int partyListItem2_800BFDEC[14];
-extern char partyListItems_800BFE24[16];
-extern int storedListItem0_800BFE34[14];
-extern int storedListItem1_800BFE6C[14];
-extern int storedListItem2_800BFEA4[14];
-extern int storedListItem3_800BFEDC[14];
-extern char storedListItems_800BFF14[20];
-extern char btnHelpSpinMarked_800BFF28[32];
-extern char btnHelpSpin_800BFF48[40];
-extern char btnHelpPartner_800BFF70[32];
-extern char btnHelpView_800BFF90[40];
-extern char btnHelpMergePreview_800BFFB8[40];
-extern char btnHelpFormView_800BFFE0[32];
-extern char btnHelpStats_800C0000[24];
-extern char btnHelpStatsPage_800C0018[32];
-extern char btnHelpPrompt_800C0038[16];
-extern char btnHelpSelect_800C0048[40];
-extern char btnHelpExchange_800C0070[32];
+extern ShopMenuItem partyListItem0_800BFD7C[2];
+extern ShopMenuItem partyListItem1_800BFDB4[2];
+extern ShopMenuItem partyListItem2_800BFDEC[2];
+extern ShopMenuItem *partyListItems_800BFE24[4];
+extern ShopMenuItem storedListItem0_800BFE34[2];
+extern ShopMenuItem storedListItem1_800BFE6C[2];
+extern ShopMenuItem storedListItem2_800BFEA4[2];
+extern ShopMenuItem storedListItem3_800BFEDC[2];
+extern ShopMenuItem *storedListItems_800BFF14[5];
+extern ShopHelp btnHelpSpinMarked_800BFF28[4];
+extern ShopHelp btnHelpSpin_800BFF48[5];
+extern ShopHelp btnHelpPartner_800BFF70[4];
+extern ShopHelp btnHelpView_800BFF90[5];
+extern ShopHelp btnHelpMergePreview_800BFFB8[5];
+extern ShopHelp btnHelpFormView_800BFFE0[4];
+extern ShopHelp btnHelpStats_800C0000[3];
+extern ShopHelp btnHelpStatsPage_800C0018[4];
+extern ShopHelp btnHelpPrompt_800C0038[2];
+extern ShopHelp btnHelpSelect_800C0048[5];
+extern ShopHelp btnHelpExchange_800C0070[4];
 extern char skinListUpArrowPos_800C0090[4];
 extern char skinListDownArrowPos_800C0094[4];
-extern int skinListRow0_800C0098[28];
-extern int skinListRow1_800C0108[28];
-extern int skinListRow2_800C0178[28];
-extern int skinListRow3_800C01E8[28];
+extern ShopMenuItem skinListRow0_800C0098[4];
+extern ShopMenuItem skinListRow1_800C0108[4];
+extern ShopMenuItem skinListRow2_800C0178[4];
+extern ShopMenuItem skinListRow3_800C01E8[4];
 extern ShopMenuItem *skinListRows_800C0258[5];
-extern char magicDescLines_800C026C[30][16];
-extern char abilityDescLines_800C044C[624];
-extern int mainMenuItem0_800C06BC[14];
-extern int mainMenuItem1_800C06F4[14];
-extern int mainMenuItem2_800C072C[14];
-extern int mainMenuItem3_800C0764[14];
-extern int mainMenuItem4_800C079C[14];
+extern const char *magicDescLines_800C026C[30][4];
+extern const char *abilityDescLines_800C044C[39][4];
+extern ShopMenuItem mainMenuItem0_800C06BC[2];
+extern ShopMenuItem mainMenuItem1_800C06F4[2];
+extern ShopMenuItem mainMenuItem2_800C072C[2];
+extern ShopMenuItem mainMenuItem3_800C0764[2];
+extern ShopMenuItem mainMenuItem4_800C079C[2];
 extern char mainMenuItems_800C07D4[28];
 extern unsigned int emptyMinion_800C07F0[62];
 extern Minion mergePreview_800C08E8;

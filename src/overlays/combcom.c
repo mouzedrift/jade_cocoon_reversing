@@ -17,7 +17,7 @@ typedef struct CombComTask
 // DrawMenuWindows_8002A5A4's argument
 extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C
 extern unsigned char actorSlot_800A85BD;
-extern unsigned char sideSlot_800A4078[];
+extern int sideSlot_800A4078[2];
 extern int combatFlags_800A3A88;
 extern int GetSlotMagicBits_800A11BC(int);
 extern int CountTeamMinions_800A1AAC(int);
@@ -191,18 +191,46 @@ const CombComPos2 magicListPos_800CB688 = { {
         { 110, 100 },
         { 90, 100 },
     } };
-const int targetItem0_800CB690[14] = {
-    0x40010, 0, 0, 0, 0xA30000, 0xC003C, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+const CombComItem targetItem0_800CB690 = {
+    0x10,
+    4,
+    0,
+    0,
+    0,
+    0,
+    163,
+    {
+        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
+        -1,
+    },
 };
-const int targetItem1_800CB6C8[14] = {
-    0x40010, 0, 0, 0, 0xB00000, 0xC003C, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+const CombComItem targetItem1_800CB6C8 = {
+    0x10,
+    4,
+    0,
+    0,
+    0,
+    0,
+    176,
+    {
+        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
+        -1,
+    },
 };
-const int targetItem2_800CB700[15] = {
-    0x40010, 0, 0, 0, 0xBD0000, 0xC003C, 0x20002, 1,
-    0, 0, 0, -1, -1, -1,
+const CombComItem targetItem2_800CB700 = {
+    0x10,
+    4,
+    0,
+    0,
+    0,
+    0,
+    189,
+    {
+        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
+        -1,
+    },
 };
+const int targetItemPad = 0;
 
 extern EventNode* cmdMenuTask_8008D614;
 extern unsigned char player2Pad_800A38D8;
@@ -325,11 +353,11 @@ void SetFocusedMinion_800CBAD4(int state)
 {
     if ((state & 0xFF) != 3)
     {
-        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839];
     }
     else if (targetFlags_800CD844 & 5)
     {
-        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839];
     }
     else
     {
@@ -1128,13 +1156,10 @@ void *cmdInfoChangeDesc_800CD48C[1] = { (void *)descChange_800CD450 };
 void *cmdInfoChangeError_800CD490 = 0;
 unsigned char cmdTargetFlags_800CD494[8] = { 4, 0, 4, 4, 2 };
 unsigned char cmdNextState_800CD49C[8] = { 4, 4, 1, 2, 3 };
-int helpBarCmd_800CD4A4[8] = { 16, (int)aSelect_800CA05C, 110, (int)aDescription_800CA044, 186, (int)aPause_800CA038, -1 };
-int helpBarList_800CD4C4[10] = {
-    16, (int)aSelect_800CA05C, 167, (int)aQuit_800CA06C, 110, (int)aDescription_800CA044, 186, (int)aPause_800CA038,
-    -1,
-};
-int helpBarTarget_800CD4EC[8] = { 16, (int)aSelect_800CA05C, 167, (int)aQuit_800CA06C, 186, (int)aPause_800CA038, -1 };
-char *stateHelpBars_800CD50C[6] = { (void *)helpBarCmd_800CD4A4, (void *)helpBarList_800CD4C4, (void *)helpBarList_800CD4C4, (void *)helpBarTarget_800CD4EC, 0, (void *)((char *)&dword_8008267C + 52) };
+CombComHelp helpBarCmd_800CD4A4[4] = { { 16, aSelect_800CA05C }, { 110, aDescription_800CA044 }, { 186, aPause_800CA038 }, { -1 } };
+CombComHelp helpBarList_800CD4C4[5] = { { 16, aSelect_800CA05C }, { 167, aQuit_800CA06C }, { 110, aDescription_800CA044 }, { 186, aPause_800CA038 }, { -1 } };
+CombComHelp helpBarTarget_800CD4EC[4] = { { 16, aSelect_800CA05C }, { 167, aQuit_800CA06C }, { 186, aPause_800CA038 }, { -1 } };
+CombComHelp *stateHelpBars_800CD50C[6] = { helpBarCmd_800CD4A4, helpBarList_800CD4C4, helpBarList_800CD4C4, helpBarTarget_800CD4EC, 0, (CombComHelp *)&dword_8008267C[13] };
 int cmdKinds_800CD524[5] = { 0, 18, 6, 1, 8 };
 CombComDlg magicDescs_800CD538[30] = {
     { (int)aFireAttackOneEn_800CAB34, (int)aExtraDamageVsAi_800CAB08, (int)aHigherFireEleme_800CAAAC },
