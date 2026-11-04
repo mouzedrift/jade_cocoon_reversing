@@ -726,13 +726,11 @@ int sub_800A1324(void)
     return 6;
 }
 
-#if 0
-// Not matched: the original keeps the full address of the table in a register across the loops
+// Matched
 void sub_800A13A0(CombatTaskCombat* t)
 {
     int i;
     int j;
-    int off = 0;
     dword_800A1BBC[0] = 1;
     dword_800A1BBC[1] = 5;
     dword_800A1BBC[2] = 5;
@@ -741,13 +739,10 @@ void sub_800A13A0(CombatTaskCombat* t)
     dword_800A1BBC[5] = 0;
     for (i = 0; i < 2; i++)
     {
-        char* q = (char*)dword_800A3AA0;
         for (j = 0; j < 3; j++)
         {
-            sub_800A197C((Minion*)((char*)off + (int)q));
-            q += 0xF8;
+            sub_800A197C(&dword_800A3AA0[i][j]);
         }
-        off += 0x2E8;
     }
     PlayMusic_800300E0(0x8E, 1);
     LoadUiTiy_8002BF74();
@@ -755,9 +750,6 @@ void sub_800A13A0(CombatTaskCombat* t)
     sub_800A0D64(3, 0x41);
     t->next_8 = sub_800A14AC;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A13A0);
 
 // Matched
 void sub_800A148C(void)

@@ -1330,8 +1330,7 @@ int PollCardExist_800BAF0C(int a)
     return ret;
 }
 
-#if 0
-// Not matched: the original tests the first loop's entry as found < files (slt/beqz on the register copy of 0); this folds it to blez files and swaps which of i/found is copied before the call
+// Matched
 void ScanCardSaves_800BAFB0(int slot)
 {
     DirEntry_LOAD dir[15];
@@ -1342,7 +1341,7 @@ void ScanCardSaves_800BAFB0(int slot)
     i = found = blocks = 0;
     files = 0;
     MemCardGetDirentry(slot << 4, byte_800B72FC, dir, &files, 0, 15);
-    for (; i < files; i++)
+    for (i = found; i < files; i++)
     {
         int q = dir[i].size_LOAD / 0x2000;
         if (dir[i].size_LOAD & 0x1FFF)
@@ -1369,11 +1368,8 @@ void ScanCardSaves_800BAFB0(int slot)
     cardFreeBlocks_800BE14C = 15 - blocks;
     cardSaveCount_800BE150 = found;
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, ScanCardSaves_800BAFB0);
 
-#if 0
-// Not matched: same as ScanCardSaves_800BAFB0 (first loop entry test found < files is folded to blez files here)
+// Matched
 void ScanCardSavesComb_800BB0E4(int slot)
 {
     DirEntry_LOAD dir[15];
@@ -1384,7 +1380,7 @@ void ScanCardSavesComb_800BB0E4(int slot)
     i = found = blocks = 0;
     files = 0;
     MemCardGetDirentry(slot << 4, byte_800B72FC, dir, &files, 0, 15);
-    for (; i < files; i++)
+    for (i = found; i < files; i++)
     {
         int q = dir[i].size_LOAD / 0x2000;
         if (dir[i].size_LOAD & 0x1FFF)
@@ -1416,8 +1412,6 @@ void ScanCardSavesComb_800BB0E4(int slot)
     cardFreeBlocks_800BE14C = 15 - blocks;
     cardSaveCount_800BE150 = found;
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, ScanCardSavesComb_800BB0E4);
 
 int FindDirEntry_800BB23C(int n, unsigned char* a, unsigned char* b)
 {
