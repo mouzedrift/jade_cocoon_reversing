@@ -680,10 +680,7 @@ extern void DrawMotionBlur_8001BCE4(int buffer);
 extern void Draw_8001B5EC(void);
 extern void LoadDecodedImage_8001BEC8(void);
 extern void InitPrimBuffers_8001BF90(void);
-#if 0
-// Not matched (4 lines): only the flags address (lui s0) is scheduled after the drawEnv pointers instead of before.
-// The int-arithmetic PutDrawEnv argument fixed the add order. Tried: e0/e1 set inside the loop or before
-// CreateEventList, e1 = &drawEnv_8008D698[1], globals instead of e0/e1 (merges both into one base); permuter 1500 iters
+// Matched
 void DrawIntroMovie_8001AF64(void* a0)
 {
     void* list;
@@ -696,7 +693,6 @@ void DrawIntroMovie_8001AF64(void* a0)
     InitMovie_8001B1B0();
     list = CreateEventList_800435B4(a0);
     e0 = drawEnv_8008D698;
-    e1 = e0 + 1;
     do
     {
         if (unknownFlags_8008D678 & 0x40)
@@ -710,6 +706,7 @@ void DrawIntroMovie_8001AF64(void* a0)
         frameCount_8008D3FC++;
         ProcessPads_8001BF50();
         RunEventList_80043898(list);
+        e1 = e0 + 1;
         r = drawEnvRed_8008D448[0];
         g = drawEnvRed_8008D448[1];
         b = drawEnvRed_8008D448[2];
@@ -755,8 +752,6 @@ void DrawIntroMovie_8001AF64(void* a0)
     DrawSync(0);
     FreeEventList_80043A5C(list);
 }
-#endif
-INCLUDE_ASM(DrawIntroMovie_8001AF64);
 // Matched
 void InitMovie_8001B1B0(void)
 {
@@ -2449,11 +2444,9 @@ void SetActorSpeedScale_8001DB58(Actor* p, int scale, int on)
     }
 }
 #if 0
-// Not matched (5 words): the original stores 0xC0 after the flags and copies s to $a3 after the mask; with a saved
-// "old" local stored at the end instead, old and the 0xFFFF7FFF mask swap $a1/$a2 (6 words)
 void SetActorScript_8001DB98(Actor* o, unsigned char* s)
 {
-    o->prevAnimIdx_C0 = o->animIdx_C2;
+    unsigned short old = o->animIdx_C2;
     o->animIdx_C2 = -1;
     o->scriptPos_C4 = 0;
     o->scriptLen_C6 = 1;
@@ -2464,6 +2457,7 @@ void SetActorScript_8001DB98(Actor* o, unsigned char* s)
     o->script_D0 = (ActorScriptCmd*)s;
     o->flags_4 &= ~0x8000;
     o->flags_4 |= 0x4000;
+    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
         o->scriptLen_C6 += s[1];
@@ -2630,37 +2624,29 @@ int IsActorNear_8001DFC8(Actor* o, VECTOR* target, int range, int checkLevant)
     }
     return 0;
 }
-#if 0
-// Not matched: the final range test becomes a set-on-less-than here, the original branches to return 1 / 0
+// Matched
 int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
 {
     VECTOR d;
     unsigned int dist;
     int a;
     dist = 0xFFF;
-    if (IsWithinDistance_8003B740(from, to, &dist) != 1)
+    if (IsWithinDistance_8003B740(from, to, &dist) == 1 && dist < range)
     {
-        return 0;
-    }
-    if (dist >= range)
-    {
-        return 0;
-    }
-    d.vx = to->vx - from->vx;
-    d.vz = to->vz - from->vz;
-    a = (ratan2_8003B548(d.vx, d.vz) - angle) & 0xFFF;
-    if (a < 0x400)
-    {
-        return 2;
-    }
-    if (a > 0xC00 && a < 0x1000)
-    {
-        return 1;
+        d.vx = to->vx - from->vx;
+        d.vz = to->vz - from->vz;
+        a = (ratan2_8003B548(d.vx, d.vz) - angle) & 0xFFF;
+        if (a < 0x400)
+        {
+            return 2;
+        }
+        if (a > 0xC00 && a < 0x1000)
+        {
+            return 1;
+        }
     }
     return 0;
 }
-#endif
-INCLUDE_ASM(IsInFrontWithinRange_8001E0F4);
 // Matched
 int sub_8001E1C8(Actor* p)
 {

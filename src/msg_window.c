@@ -531,8 +531,9 @@ extern void DrawMsgWindowChoices_800355EC();
 #define PI(off) (*(int*)((char*)p + (off)))
 #if 0
 // Not matched: control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed), register allocation of the flag temporaries and the reset block differ
-void UpdateMsgWindowState_80034C18(int* p)
+void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
+    int* p = (int*)w;
     short r[4];
     int c;
     int i;
@@ -549,9 +550,9 @@ void UpdateMsgWindowState_80034C18(int* p)
     f1 = p[1];
     if (f1 & 0x80000)
     {
-        f2 = f1 & ~0x40000;
-        f2 &= ~0x80000;
-        p[1] = f2;
+        f1 &= ~0x40000;
+        f1 &= ~0x80000;
+        p[1] = f1;
     }
     switch (p[2])
     {
