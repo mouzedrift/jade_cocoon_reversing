@@ -401,7 +401,6 @@ extern const int dword_800BB9C4;
 extern const char aLeaveTheForest_800BBA44[];
 extern const char aYesNo_800BBA68[];
 extern const int dword_800BBA7C;
-extern const int dword_800BBB04;
 extern const MenuWin menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
 extern int dword_800C1050[4];
@@ -473,7 +472,5 @@ extern char jtgt_800BE564[], jtgt_800BE574[], jtgt_800BE588[], jtgt_800BE59C[], 
 extern void* const jpt_800BBA80[17];
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BF590[], jtgt_800BF5E8[], jtgt_800BF6A8[], jtgt_800BF6D8[], jtgt_800BF6F0[], jtgt_800BF6F8[], jtgt_800BF77C[];
-extern void* const jpt_800BBB08[14];
 
 #endif

@@ -2105,7 +2105,6 @@ void DrawMenuHelpBar_800BEAE0(MenuCtx* menu)
     }
     DrawButtonHelpBar_8002B004(s, 0, 0xE);
 }
-const int dword_800BBB04 = 0; // the alignment of jpt_800BBB08 (delete it with that table)
 
 extern void DrawUnitStatusPanel_8002DB48();
 void DrawSelectedMinionPanel_800BEBFC(MenuCtx* menu, int a)
@@ -2374,7 +2373,7 @@ extern int IsKeyItemUseAllowed_800C1000();
 // Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
 // slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
 // tried a single ret variable (goes to a saved reg), && in the 14 tail, case order 6/7/4 fall-through
-#if 0
+// Matched
 int CheckMenuAction_800BF540(MenuCtx* menu)
 {
     MenuUseQ q;
@@ -2421,14 +2420,15 @@ int CheckMenuAction_800BF540(MenuCtx* menu)
     case 6:
         if (menu->cursor_60 == 2)
             return 0xF;
-        if (menu->cursor_60 != 0)
-            return 0;
-        if (menu->storedCount_C != 0)
-            return 0;
-        return 9;
+        if (menu->cursor_60 == 0)
+        {
+            if (menu->storedCount_C == 0)
+                return 9;
+        }
+        break;
     case 7:
-        if ((unsigned short)menu->cursor_60 - 2 >= 2u)
-            return 0;
+        if (menu->cursor_60 != 2 && menu->cursor_60 != 3)
+            break;
     case 4:
         return 0xF;
     case 14:
@@ -2443,18 +2443,13 @@ int CheckMenuAction_800BF540(MenuCtx* menu)
             v = IsTriggerWaited_800A5E80(s);
         else
             v = IsCurrentMapListed_80034140();
-        if (v != 0 && IsKeyItemUseAllowed_800C1000() != 0)
-            return 0;
+        if (v != 0 && IsKeyItemUseAllowed_800C1000())
+            break;
         return 2;
     }
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, CheckMenuAction_800BF540);
-// the jump table of CheckMenuAction_800BF540 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in menu.h when the function is C, the switch emits it then
-void* const jpt_800BBB08[14] = { jtgt_800BF590, jtgt_800BF5E8, jtgt_800BF77C, jtgt_800BF6F0, jtgt_800BF77C, jtgt_800BF6A8, jtgt_800BF6D8, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF6F8 };
 
 void DrawMenuMessage_800BF794(MenuCtx* menu)
 {

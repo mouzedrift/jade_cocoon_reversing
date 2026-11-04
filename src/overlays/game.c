@@ -834,37 +834,25 @@ int EnemyChooseCommand_800A2618(void* cmd, int idx)
     return 1;
 }
 
-#if 0
-// Not matched: hidden return pointer gets $s6 instead of $s3 (and 'move $v0' is placed before the final struct copy); tried explicit out pointer, void, do-while, goto
-typedef struct GameEncounterIntView // GameEncounter with int actors / anims
-{
-    char pad_0[0x7c];
-    int obj_7c[3];
-    char pad_88[0x70c - 0x88];
-    int anims_70C[3];
-} GameEncounterIntView;
-extern void* memset(void* p, int c, unsigned int n);
-extern GameActionFrames StartCommandAction_80018A4C(int obj, int* p, int a2, int c);
+// Matched
 GameActionFrames StartEnemyCommandAction_800A2684(int* cmd, int arg)
 {
     GameActionFrames frames;
     int i;
+    Actor* actor;
     memset(&frames, 0, 4);
-    if (cmd[0] != 0x14)
+    if (cmd[0] == 0x14)
+        return frames;
+    for (i = 4; i < 7; i++)
     {
-        for (i = 4; i < 7; i++)
+        if (((unsigned)cmd[2] & (1 << i)) != 0)
         {
-            if (((unsigned)cmd[2] & (1 << i)) != 0)
-            {
-                frames = StartCommandAction_80018A4C(((GameEncounterIntView*)&gCtx_800B1260)->obj_7c[i - 4], cmd, ((GameEncounterIntView*)&gCtx_800B1260)->anims_70C[i - 4], arg);
-            }
+            actor = gCtx_800B1260.actors_7c[i - 4];
+            frames = StartCommandAction_80018A4C(actor, cmd, (ActorScriptCmd**)gCtx_800B1260.anims_70C[i - 4], arg);
         }
     }
     return frames;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, StartEnemyCommandAction_800A2684);
 
 // Matched
 int TriggerEnemyEffects_800A2760(unsigned int* cmd)

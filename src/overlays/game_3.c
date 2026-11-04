@@ -504,9 +504,9 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
 void* const dword_800A06B8[14] = { jtgt_800A7E18, jtgt_800A7E48, jtgt_800A7E78, jtgt_800A7EC8, jtgt_800A7EC8, jtgt_800A7EE4, jtgt_800A7EF4, jtgt_800A7F08, jtgt_800A7F1C, jtgt_800A7F30, jtgt_800A7F30, jtgt_800A7FBC, jtgt_800A8078, jtgt_800A8078 };
 
 // Matched
-int IsEventPointValid_800A6504(int point)
+int IsEventPointValid_800A6504(int point, int* pos)
 {
-    return sub_800B76B8(dword_8008B520 + (point << 3)) >= 0;
+    return sub_800B76B8(dword_8008B520 + (point << 3), pos) >= 0;
 }
 
 // Matched
@@ -556,11 +556,10 @@ int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int ra
     return 0;
 }
 
-#if 0
-// Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
+// Matched
 int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
 {
-    if (point[0] >= 0 && IsEventPointValid_800A6504(point[0]))
+    if (point[0] >= 0 && IsEventPointValid_800A6504(point[0], eye))
     {
         int angle = GameFn_8003B9E0(eye, point + 1);
         if ((unsigned int)((short)WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
@@ -570,9 +569,6 @@ int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
     }
     return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, IsEventPointInView_800A66A4);
 
 int GetEventString_800A6738(unsigned int id)
 {
