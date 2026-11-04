@@ -254,7 +254,7 @@ typedef struct
 typedef struct
 {
     short icon_0;               // index into equipmentIcons_8007D938
-    short field_2;
+    short kind_2;               // weapons: the weapon kind (GAME SetLevantWeaponKind_800AC3A4; weaponEffectIds_80079708 index)
     signed char statBonus_4[6]; // added to the six base stats by CalcEquippedStats_80033624
     char pad_A[0xA];
     int field_14;               // CalcEquippedStats_80033624 returns the largest one of the equipped items

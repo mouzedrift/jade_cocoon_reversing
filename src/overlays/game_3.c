@@ -3859,7 +3859,7 @@ void LevantModelTaskInit_800ACAA4(int* a, int* b)
     b[8] = -1;
     b[9] = 0;
     SetLevantHasArmor_800AC380(s->levantStatus_7C8.field_1C[1] != 0xFF);
-    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
+    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->kind_2);
     PoolInit_8003FF1C(&levantPool_800B1DD0, 0x2BF20);
     LevantModelTask_800ACB64(a, b);
     a[2] = (int)LevantModelTask_800ACB64;
@@ -4395,7 +4395,7 @@ int SetEquipment_800AD9EC(int a, int b)
         RemoveInventory_800AD1E0(a, 1, 1);
         if (old < 0x17)
             AddInventory_800AD184(old, 1, 1);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(a)->field_2);
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(a)->kind_2);
         GetArmorData_8001D034(s->levantStatus_7C8.field_1C[1]);
         SetLevantOutfit_800AC3B0(dword_8001D060(s->levantStatus_7C8.field_1C[1]));
         break;
@@ -4414,7 +4414,7 @@ int SetEquipment_800AD9EC(int a, int b)
         RemoveInventory_800AD1E0(a, 1, 2);
         if (old < 0xF)
             AddInventory_800AD184(old, 1, 2);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->kind_2);
         GetArmorData_8001D034(a);
         SetLevantOutfit_800AC3B0(dword_8001D060(a));
         break;
