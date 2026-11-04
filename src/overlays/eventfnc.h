@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "minion_init.h"
 
+// one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's sub_800A6060 runs them until one returns 0)
 typedef struct EvInsEventfnc
 {
     int op_0;
@@ -38,57 +39,61 @@ typedef struct EvEntEventfnc
 
 
 
+// an event script (GAME's GameEvCtx, list eventScripts_8008D410)
 typedef struct EvCtxEventfnc
 {
-    unsigned int flags_0;
+    unsigned int flags_0; // 1 ended, 2 message advancing, 4 triggered, 8 waiting for a trigger, 0x10 loop point set,
+                          // 0x20 holds the scene, 0x40 message kept open, 0x100 XA voice playing
     EvInsEventfnc* start_4;
     EvInsEventfnc* pc_8;
     EvInsEventfnc* ret_C;
-    int f10_10;
-    int f14_14;
-    int f18_18;
-    int f1C_1C;
+    int id_10;
+    int heldActors_14; // actors (bit 0 Levant, 1..4 party) taken by EvCmdTakeActors_800B8D08
+    int busyActors_18; // actors still running an actor command
+    int animActors_1C; // actors playing a held animation (EvCmdPlayAnim_800BA2E8)
     char pad_20[4];
-    int f24_24[6];
-    EvVecEventfnc vec3C_3C[5];
-    EvVecEventfnc vec78_78[5];
-    int fB4_B4;
-    int fB8_B8;
-    int fBC_BC;
-    int fC0_C0;
-    unsigned int fC4_C4;
-    int fC8_C8;
-    int fCC_CC[8];
-    int fEC_EC;
-    int fF0_F0;
-    int fF4_F4;
-    int fF8_F8;
-    int fFC_FC;
-    unsigned short f100_100;
-    unsigned short f102_102;
-    int f104_104;
-    int f108_108;
+    int idleAnims_24[6]; // per actor animation restored at the end; [5]: SendActorCmdMask_800BB990's pending mask
+    EvVecEventfnc savedPos_3C[5];
+    EvVecEventfnc savedFront_78[5];
+    int msgStep_B4;
+    int step_B8;
+    int maskStep_BC;
+    int cmdStep_C0;
+    unsigned int waitCount_C4;
+    int trigger_C8; // the trigger id waited for (EvCmdWaitTrigger_800B9B98, GAME's sub_800A5C40)
+    int vars_CC[8]; // script local variables (EvCmdSetVar_800B8FB8)
+    int branch_EC; // the selected branch: choice / test / random result, indexes the goto / jump instructions
+    int callArg_F0;
+    int callArg0_F4;
+    int callArg1_F8;
+    int callArg2_FC;
+    unsigned short msgX_100;
+    unsigned short msgY_102;
+    int msgPosMode_104;
+    int msgOptions_108;
     char pad_10C[4];
-    int* f110_110;
-    int f114_114;
-    int f118_118;
-    int f11C_11C;
+    int* lastMsg_110;
+    int choiceMask_114;
+    int msgOpen_118;
+    int msgWindow_11C; // the message window (OpenMessageWindow_8003422C)
     EvEntEventfnc* ent_120;
 } EvCtxEventfnc;
 
-typedef struct EvMsgEventfnc
+// an actor command (GAME's G2Cmd_1): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation,
+// 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
+typedef struct EvActorCmdEventfnc
 {
-    int m0_0;
-    int m4_4;
-    int m8_8;
-    int mC_C;
-    int m10_10;
-    int m14_14;
-    int m18_18;
-    int m1C_1C;
-    int m20_20;
-    int m24_24;
-} EvMsgEventfnc;
+    int actor_0;
+    int kind_4;
+    int field_8;
+    int arg_C;
+    int arg2_10;
+    int field_14;
+    int x_18;
+    int y_1C;
+    int z_20;
+    int data_24;
+} EvActorCmdEventfnc;
 
 typedef struct EvObjEventfnc
 {
@@ -106,28 +111,28 @@ typedef struct EvQuadEventfnc
     short pad_6;
 } EvQuadEventfnc;
 
-extern EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int a, int b);
+extern EvVecEventfnc* GetSavedActorPos_800BBC00(EvCtxEventfnc* c, int a, int b);
 
-extern EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int a, int b);
+extern EvVecEventfnc* GetSavedActorFront_800BBC80(EvCtxEventfnc* c, int a, int b);
 
-extern EvVecEventfnc* sub_800BBBA0(int a);
+extern EvVecEventfnc* GetActorPos_800BBBA0(int a);
 
-extern int sub_800BB840(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
+extern int SendActorCmd_800BB840(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b);
 
-extern int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b);
+extern int SendActorCmdMask_800BB990(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b);
 
-extern void sub_800BBDA0(int a, int b);
+extern void SetTempFlags_800BBDA0(int a, int b);
 
-extern int sub_800BBDD8(int a);
+extern int TestTempFlags_800BBDD8(int a);
 
 extern char eventHeap_80091C10[];
 
-// the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by sub_800BC5C8
+// the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by IsActorLeftOf_800BC5C8
 extern unsigned short word_8008D600[];
 
 extern int dword_800AEBD8;
 
-extern void sub_800B8940(int* ids);
+extern void LoadEncounterModels_800B8940(int* ids);
 
 extern void RequestLoaderModel_800206A0(int a, int b, int c, int d);
 
@@ -136,9 +141,9 @@ extern void StartModelLoader_8002056C(void);
 
 
 
-extern int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n);
+extern int CollideWithMapEnts_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n);
 
-extern void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5);
+extern void SlideOffEdge_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5);
 
 extern int FindDuplicatePoint_800B8028(int* out, EvQuadEventfnc* v);
 
@@ -157,7 +162,7 @@ static inline int EvFindTri(int* out, MapState* map, EvVecEventfnc* pos)
 
 extern int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* pos);
 
-// FindLevantMesh_800B80C8, inlined into sub_800B6DD4
+// FindLevantMesh_800B80C8, inlined into CollideLevantWithMap_800B6DD4
 static inline int EvFindLevantMesh(EvEntEventfnc* e)
 {
     unsigned int i;
@@ -180,7 +185,7 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
     return 0;
 }
 
-extern void sub_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
+extern void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
 
 extern void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* d);
 
@@ -221,7 +226,7 @@ extern EvMapEntEventfnc** mapTable_800B0608[];
 
 extern int sub_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
 
-extern void sub_800B8568();
+extern void SpawnEncounterEnemy_800B8568();
 
 extern EventNode* encounterTask_8008D674;
 
@@ -229,11 +234,11 @@ extern void sub_800A170C();
 
 extern void sub_800A1794();
 
-extern void sub_800B844C();
+extern void EncounterSpawnTask_800B844C();
 
 extern unsigned short padPressed_8009194C;
 
-extern int sub_800B8A34(EvCtxEventfnc* c);
+extern int EvCmdEndScene_800B8A34(EvCtxEventfnc* c);
 
 extern void sub_800A1974(void);
 
@@ -257,7 +262,7 @@ extern void (*dword_800B1D98)(int);
 
 extern int sub_800A59D0(int a);
 
-extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
+extern SVECTOR* GetActorRot_800BBBD0(int i); // rotation of Levant (0) or a party member
 
 extern short screenOffset_8008D474[2];
 
@@ -297,11 +302,11 @@ extern EvEntEventfnc* sub_800A5DDC(int a, int b, int c);
 
 extern void sub_800A6830(int a);
 
-extern void sub_800BC7A0(EvCtxEventfnc* c);
+extern void EvMessageNop_800BC7A0(EvCtxEventfnc* c);
 
-extern int sub_800BBE3C(EvCtxEventfnc* c);
+extern int OpenEventMessage_800BBE3C(EvCtxEventfnc* c);
 
-extern int sub_800BC2B4(EvCtxEventfnc* c);
+extern int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c);
 
 extern int XaRequestStop_80043524(void);
 
@@ -368,13 +373,13 @@ extern void StartPadVibration_80036528(int a, int b);
 
 extern void StopPadVibration_80036658(int a);
 
-extern int sub_800BBAB0(int i);
+extern int IsActorCmdReady_800BBAB0(int i);
 
-extern int sub_800BBAE4(int i);
+extern int IsActorCmdDone_800BBAE4(int i);
 
-extern int sub_800BBB18(int* p);
+extern int StartActorCmd_800BBB18(int* p);
 
-extern int sub_800BBB5C(int* p);
+extern int FinishActorCmd_800BBB5C(int* p);
 
 extern int sub_800A8E7C();
 
@@ -476,7 +481,7 @@ extern void sub_800A5804(int a);
 
 extern void OnEffectFileLoaded_80020F5C(EvGfxArgEventfnc* p, int a);
 
-// sprites / tpages of the TIY loaded by sub_800BC98C
+// sprites / tpages of the TIY loaded by LoadEventTiy_800BC98C
 typedef struct
 {
     SPRT* sprts_0;
@@ -499,7 +504,7 @@ typedef struct TaskEventfnc
     void (*next_8)();
 } TaskEventfnc;
 
-extern void sub_800BCB3C();
+extern void ReturnWarpTask_800BCB3C();
 
 extern void sub_800AC604(int a, int b);
 
@@ -521,99 +526,99 @@ extern short pendingArea_8008B860;
 
 extern int dword_80091C8C;
 
-extern void sub_800B8BE8();
-extern void sub_800B9B98();
-extern void sub_800BA82C();
+extern void EvCmdBeginScene_800B8BE8();
+extern void EvCmdWaitTrigger_800B9B98();
+extern void EvCmdSetChapter_800BA82C();
 extern void sub_800BAB5C();
-extern void sub_800BB27C();
-extern int sub_800B89A8();
-extern int sub_800B89C0();
-extern int sub_800B89F4();
-extern int sub_800B8CB0();
-extern int sub_800B8D08();
-extern int sub_800B8DDC();
-extern int sub_800B8E9C();
-extern int sub_800B8F14();
-extern int sub_800B8F44();
-extern int sub_800B8F88();
-extern int sub_800B8FB8();
-extern int sub_800B9020();
-extern int sub_800B9110();
-extern int sub_800B91CC();
-extern int sub_800B9218();
-extern int sub_800B9260();
-extern int sub_800B93A8();
-extern int sub_800B942C();
-extern int sub_800B95BC();
-extern int sub_800B962C();
-extern int sub_800B96D8();
-extern int sub_800B9720();
-extern int sub_800B9768();
-extern int sub_800B97B0();
-extern int sub_800B97F8();
-extern int sub_800B9840();
-extern int sub_800B98C4();
-extern int sub_800B990C();
-extern int sub_800B9954();
-extern int sub_800B99D8();
-extern int sub_800B9A20();
-extern int sub_800B9A68();
-extern int sub_800B9AB4();
-extern int sub_800B9B00();
-extern int sub_800B9B4C();
-extern int sub_800B9C5C();
-extern int sub_800B9CC0();
-extern int sub_800B9D08();
-extern int sub_800B9D50();
-extern int sub_800B9DE0();
-extern int sub_800B9E48();
-extern int sub_800B9EB0();
-extern int sub_800B9EDC();
-extern int sub_800B9F0C();
-extern int sub_800B9F5C();
-extern int sub_800B9F84();
-extern int sub_800B9FB4();
-extern int sub_800B9FD8();
-extern int sub_800BA020();
-extern int sub_800BA1DC();
-extern int sub_800BA238();
-extern int sub_800BA28C();
-extern int sub_800BA2E8();
-extern int sub_800BA338();
-extern int sub_800BA40C();
-extern int sub_800BA45C();
-extern int sub_800BA4F0();
-extern int sub_800BA554();
-extern int sub_800BA5CC();
-extern int sub_800BA678();
-extern int sub_800BA6D0();
-extern int sub_800BA714();
-extern int sub_800BA7A4();
+extern void EvCmdBattle_800BB27C();
+extern int EvCmdNop_800B89A8();
+extern int EvCmdWaitButton_800B89C0();
+extern int EvCmdEnd_800B89F4();
+extern int EvCmdSetLoopPoint_800B8CB0();
+extern int EvCmdTakeActors_800B8D08();
+extern int EvCmdReleaseActors_800B8DDC();
+extern int EvCmdGotoLabel_800B8E9C();
+extern int EvCmdJumpScript_800B8F14();
+extern int EvCmdWait_800B8F44();
+extern int EvCmdWaitActors_800B8F88();
+extern int EvCmdSetVar_800B8FB8();
+extern int EvCmdPickBranch_800B9020();
+extern int EvCmdCountYanVar_800B9110();
+extern int EvCmdCallHook_800B91CC();
+extern int EvCmdStartScript_800B9218();
+extern int EvCmdWarpActor_800B9260();
+extern int EvCmdMoveToPoint_800B93A8();
+extern int EvCmdMoveToActor_800B942C();
+extern int EvCmdTurnToPoint_800B95BC();
+extern int EvCmdTurnToActor_800B962C();
+extern int EvCmdSetActorVisible_800B96D8();
+extern int EvCmdSetActorGroundMove_800B9720();
+extern int EvCmdSetActorRootMotion_800B9768();
+extern int EvCmdSaveActorPos_800B97B0();
+extern int EvCmdSaveActorFront_800B97F8();
+extern int EvCmdTestFlag_800B9840();
+extern int EvCmdSetFlag_800B98C4();
+extern int EvCmdClearFlag_800B990C();
+extern int EvCmdTestTempFlags_800B9954();
+extern int EvCmdSetTempFlags_800B99D8();
+extern int EvCmdClearTempFlags_800B9A20();
+extern int EvCmdAddItem_800B9A68();
+extern int EvCmdRemoveItem_800B9AB4();
+extern int EvCmdAddItemCat1_800B9B00();
+extern int EvCmdRemoveItemCat1_800B9B4C();
+extern int EvCmdSetValuable_800B9C5C();
+extern int EvCmdAddMoney_800B9CC0();
+extern int EvCmdAddEmptyCocoons_800B9D08();
+extern int EvCmdHealParty_800B9D50();
+extern int EvCmdSetEntityState_800B9DE0();
+extern int EvCmdWaitEntityState_800B9E48();
+extern int EvCmdSetOwnEntityState_800B9EB0();
+extern int EvCmdWaitOwnEntityState_800B9EDC();
+extern int EvCmdWaitEntityGone_800B9F0C();
+extern int EvCmdSetMsgOptions_800B9F5C();
+extern int EvCmdSetMsgPos_800B9F84();
+extern int EvCmdSetMsgPosMode_800B9FB4();
+extern int EvCmdSetVoiceTable_800B9FD8();
+extern int EvCmdMessage_800BA020();
+extern int EvCmdSwapMsgAfterCount_800BA1DC();
+extern int EvCmdWaitMsgMark_800BA238();
+extern int EvCmdSetChoiceMask_800BA28C();
+extern int EvCmdPlayAnim_800BA2E8();
+extern int EvCmdStopAnim_800BA338();
+extern int EvCmdPlayAnimData_800BA40C();
+extern int EvCmdPauseActorAnim_800BA45C();
+extern int EvCmdPlayMotion_800BA4F0();
+extern int EvCmdPlayMotionRange_800BA554();
+extern int EvCmdPlayMotionData_800BA5CC();
+extern int EvCmdSetCallArg_800BA678();
+extern int EvCmdSetCallArgs_800BA6D0();
+extern int EvCmdCallUntilDone_800BA714();
+extern int EvCmdCallSelect_800BA7A4();
 extern int sub_800BA880();
-extern int sub_800BA8AC();
-extern int sub_800BA930();
-extern int sub_800BA9E4();
-extern int sub_800BAA6C();
-extern int sub_800BAAC0();
-extern int sub_800BAB14();
-extern int sub_800BABB0();
-extern int sub_800BAC60();
-extern int sub_800BACE0();
-extern int sub_800BAD3C();
-extern int sub_800BAD88();
-extern int sub_800BADF8();
-extern int sub_800BAEBC();
-extern int sub_800BAF08();
-extern int sub_800BAF68();
-extern int sub_800BAFAC();
+extern int EvCmdSetMapVar_800BA8AC();
+extern int EvCmdChangeMap_800BA930();
+extern int EvCmdChangeMapToPoint_800BA9E4();
+extern int EvCmdPreloadArea_800BAA6C();
+extern int EvCmdUsePreloadedArea_800BAAC0();
+extern int EvCmdSetReturnPoint_800BAB14();
+extern int EvCmdOpenShop_800BABB0();
+extern int EvCmdCameraLookAtPoint_800BAC60();
+extern int EvCmdCameraLookAtActor_800BACE0();
+extern int EvCmdCameraClearLookAt_800BAD3C();
+extern int EvCmdWaitCameraBlend_800BAD88();
+extern int EvCmdSetViewRect_800BADF8();
+extern int EvCmdSetCameraZoom_800BAEBC();
+extern int EvCmdSetCameraTarget_800BAF08();
+extern int EvCmdSetMapMesh_800BAF68();
+extern int EvCmdWaitTalk_800BAFAC();
 extern int sub_800BB180();
-extern int sub_800BB214();
+extern int EvCmdWaitActorInRegion_800BB214();
 extern int sub_800BB45C();
-extern int sub_800BB4A4();
-extern int sub_800BB7D8();
+extern int EvCmdFadeSound_800BB4A4();
+extern int EvCmdPadVibration_800BB7D8();
 
 extern int dword_800B6D00;
 extern const char aAssertionFaile_800B6D04[];
 extern const char aColiC_800B6D2C[8];
-extern const int dword_800B6D98[10];
+extern const int returnWarpAreaVars_800B6D98[10];
 extern int (*eventFuncs_800BCDBC[157])();
