@@ -39,10 +39,7 @@ extern void sub_800A0D1C(int);
 extern void sub_800A0B70(int);
 extern void StartScreenFlash_8001C02C(void*);
 extern void sub_800376A0(void* a, void* b);
-typedef struct CombBtlUnit
-{
-    char pad_0[0xF8];
-} CombBtlUnit;
+typedef Minion CombBtlUnit;
 
 typedef struct CombBtlHist
 {
@@ -58,14 +55,13 @@ extern void SceneFadeTask_8001A41C();
 extern int sub_800A1958(void*);
 extern int* sub_800A10DC(int); // COMBAT: the slot actor pos_38
 extern void sub_800A7EFC();
+// a side's unit window task (sub_800A75F8, sub_800A7694)
 typedef struct CombBtlObj
 {
-    int a;
-    int b;
-    short x;
-    short y;
-    short w;
-    short h;
+    int a;      // side
+    int b;      // frame of the open animation
+    RECT dst_8;  // the final window rect
+    RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
 } CombBtlObj;
 
 typedef struct CombBtlPair
@@ -401,14 +397,17 @@ void sub_800A51EC(CombBtlTask* t)
     }
 }
 
+// a menu item (DrawMenuItemWithWindow_8002ADB4)
 typedef struct CombBtlA28
 {
     int f0;
     int x_4;
     int f8;
     int fC;
-    int f10;
-    int f14;
+    short x_10; // the window rect
+    short y_12;
+    short w_14;
+    short h_16;
     int f18;
 } CombBtlA28;
 
@@ -1055,15 +1054,160 @@ void sub_800A75F8(int a)
         p = (CombBtlObj*)e->buffer;
         p->a = a;
         p->b = 0;
-        p->x = word_800A82D4[a][0];
-        p->y = word_800A82D4[a][1];
-        p->w = 0x64;
-        p->h = 0x29;
+        p->dst_8.x = word_800A82D4[a][0];
+        p->dst_8.y = word_800A82D4[a][1];
+        p->dst_8.w = 0x64;
+        p->dst_8.h = 0x29;
         e->cb_8 = (EventEntryFn)sub_800A7694;
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A7694);
+typedef struct CombBtlPos2
+{
+    CombBtlPair p[2]; // per side
+} CombBtlPos2;
+typedef struct CombBtlInt3
+{
+    int v[3];
+} CombBtlInt3;
+extern CombBtlA28 dword_800A4AFC;
+extern CombBtlA28 dword_800A4B18;
+extern CombBtlPos2 dword_800A4B34;
+extern CombBtlA28 dword_800A4B3C;
+extern CombBtlPos2 dword_800A4B58;
+extern CombBtlInt3 dword_800A4B60;
+extern CombBtlPos2 dword_800A4B6C;
+extern short word_800A82D0;
+extern short word_800A82D2;
+extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
+extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot);
+extern void InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode);
+extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,
+                                          int flags);
+extern void DrawStatusIcons_8002F480(UnitStatus* status, CombBtlPair* pos, int ot, int reverse);
+extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot);
+extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+
+// Matched
+void sub_800A7694(EventEntry* e, void* buf)
+{
+    CombBtlA28 w0 = dword_800A4AFC;
+    CombBtlA28 w1 = dword_800A4B18;
+    CombBtlBox box60;
+    CombBtlPair pt;
+    CombBtlPos2 pos70 = dword_800A4B34;
+    CombBtlBox box78;
+    CombBtlA28 w2;
+    union
+    {
+        CombBtlPos2 pos;
+        CombBtlBox box;
+    } uA0;
+    union
+    {
+        CombBtlInt3 v;
+        RECT r;
+    } uA8;
+    CombBtlPos2 posB8;
+    int sel = 0;
+    UnitStatus* st;
+    CombBtlA28* w;
+    CombBtlObj* o;
+
+    if (byte_800A84A8 & 0xC)
+    {
+        return;
+    }
+    o = buf;
+    if (o->a == dword_800A85B8)
+    {
+        st = GetMinionStatusOf_80033818(&dword_800A3AA0[o->a][byte_800A85BD]);
+    }
+    else
+    {
+        st = GetMinionStatusOf_80033818(&dword_800A3AA0[o->a][dword_800A4078[o->a]]);
+    }
+    AddClipDrawAreaPrim_80033308(pOT_8008D454);
+    SetFontClutOffset_8003F900(1, 0);
+    InterpolateWindowRect_8004196C(&o->cur_10, &o->dst_8, o->b, 4, 9);
+    if (dword_800A85F8 >= 0 && dword_800A85F8 != o->a)
+    {
+        sel = 1;
+    }
+    if (o->a == dword_800A85B8)
+    {
+        DrawUnitStatusWindow_8002F1C8(st, word_800A82D0, sel, GetTime30Hz_8002C64C(), &o->cur_10, 10, 0);
+    }
+    else
+    {
+        DrawUnitStatusWindow_8002F1C8(st, 0, sel, GetTime30Hz_8002C64C(), &o->cur_10, 10, 0);
+    }
+    o->b++;
+    AddDrawAreaPrim_8003326C(&o->cur_10, pOT_8008D454);
+    pt.lo = pos70.p[o->a].lo;
+    pt.hi = pos70.p[o->a].hi;
+    DrawStatusIcons_8002F480(st, &pt, 0xF, o->a);
+    if (o->a)
+    {
+        w = &w1;
+    }
+    else
+    {
+        w = &w0;
+    }
+    if (dword_800A85F8 < 0)
+    {
+        if (o->a == dword_800A85B8)
+        {
+            box60.c_2 = 1;
+        }
+        else
+        {
+            box60.c_2 = 0;
+        }
+    }
+    else if (o->a == dword_800A85F8)
+    {
+        box60.c_2 = 0;
+    }
+    else
+    {
+        box60.c_2 = 1;
+    }
+    box60.c_3 = 1;
+    box60.col_0 = saveData_8008B570.uiColor_20.h;
+    DrawMenuItemWithWindow_8002ADB4(w, &box60, 0xF, GetTime30Hz_8002C64C());
+    w2 = dword_800A4B3C;
+    uA0.pos = dword_800A4B58;
+    uA8.v = dword_800A4B60;
+    w2.x_4 = uA8.v.v[dword_800A4078[o->a]];
+    w2.x_10 = uA0.pos.p[o->a].lo;
+    w2.y_12 = uA0.pos.p[o->a].hi;
+    box78.c_2 = 0;
+    box78.c_3 = 1;
+    box78.col_0 = saveData_8008B570.uiColor_20.h;
+    DrawMenuItemWithWindow_8002ADB4(&w2, &box78, 0xF, 0);
+    posB8 = dword_800A4B6C;
+    pt.lo = posB8.p[o->a].lo;
+    pt.hi = posB8.p[o->a].hi;
+    uA8.r.w = 0x64;
+    uA8.r.h = 0x14;
+    uA8.r.x = pt.lo;
+    uA8.r.y = pt.hi;
+    if (o->a == dword_800A85B8)
+    {
+        DrawMpGauge_8002F120(st, &pt, word_800A82D2, 0xF);
+    }
+    else
+    {
+        DrawMpGauge_8002F120(st, &pt, 0, 0xF);
+    }
+    uA0.box.c_3 = 1;
+    uA0.box.col_0 = saveData_8008B570.uiColor_20.h;
+    uA0.box.c_2 = 0;
+    DrawWindow_80042460(&uA8.r, &uA0.box, &pOT_8008D454[0xF], 0);
+    AddClipDrawAreaPrim_80033308(pOT_8008D454);
+}
 
 void sub_800A7BE4()
 {
