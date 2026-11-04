@@ -58,9 +58,10 @@ typedef struct
 } CameraState;
 
 // a point light passed to SetModelLighting_80019D84
+// (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)
 typedef struct
 {
-    int pos_0[3];
+    struct_v3 pos_0;
     SVECTOR color_C;   // only vx/vy/vz used
     int range_14;
 } PointLight;

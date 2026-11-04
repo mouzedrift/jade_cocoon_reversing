@@ -3,12 +3,8 @@
 
 /* camera controller (camera.c) */
 
-typedef struct
-{
-    struct_v3 pos;
-    SVECTOR rot;
-    int field_14;
-} CamEntry;
+#include "engine.h"
+
 
 /* cameraState_8008D4F0 */
 typedef struct
@@ -24,11 +20,11 @@ typedef struct
     unsigned char pad_33;
     SVECTOR rot_34;
     SVECTOR rot_3C;
-    CamEntry ent_44[8]; // 0x8008D534 == ent_44[0]
+    PointLight ent_44[8]; // 0x8008D534 == ent_44[0]
 } Block104;
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
-extern CamEntry pointLights_8008D534[8];
+extern PointLight pointLights_8008D534[8];
 extern VECTOR cameraEye_8008D600; // camera eye (cameraState_8008D4F0.eye_14)
 
 typedef struct
