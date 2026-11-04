@@ -1452,3 +1452,28 @@ tu_80040C8C movie
 tu_80041E68 winframe
 tu_80043AF8 skel_draw
 tu_8004B0A8 ftg_draw
+
+# --- overlay COMBCHUI ---
+sub_800A450C DrawTextLines_800A450C
+dword_800A45B0 p2PadYesNoMenu_800A45B0
+dword_800A45BC introTextLines_800A45BC
+dword_800A40D0 aBlankLine_800A40D0
+
+# --- overlay COMBLOAD ---
+sub_800A4140 CombLoadWaitOverlay_800A4140
+sub_800A41A8 CombLoadWaitMenu_800A41A8
+sub_800A41FC CardSelectScreen_800A41FC
+sub_800A4364 DrawTitleWindow_800A4364
+sub_800A4420 DrawTitleWindow2_800A4420
+sub_800A44DC DrawDataHeaderWindows_800A44DC
+dword_800A468C cardSlotCursor_800A468C
+dword_800A4698 dataCursor_800A4698
+dword_800A46A4 dataRow0_800A46A4
+dword_800A46DC dataRow1_800A46DC
+dword_800A4714 dataRow2_800A4714
+dword_800A474C dataRow3_800A474C
+dword_800A4784 dataRow4_800A4784
+dword_800A47BC dataRows_800A47BC
+dword_800A47D4 dataMenuWin_800A47D4
+dword_800A47E4 dataMenuWinItems_800A47E4
+dword_800A47F0 cardSelectState_800A47F0
