@@ -94,15 +94,15 @@ void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
         if (c <= charTables_8008685C[2].field_4)
         {
             u = c - 1;
-            v = (short)(u % (unsigned short)p->field_28);
-            u = u / (unsigned short)p->field_28;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
+            v = (short)(u % (unsigned short)p->charsPerClut_28);
+            u = u / (unsigned short)p->charsPerClut_28;
+            col = v % (unsigned short)p->columns_1C;
+            v = v / (unsigned short)p->columns_1C;
             p->x0_8 = x;
             p->y0_A = y;
-            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + u));
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
+            p->clut_E = getClut(p->clutX_20, p->clutOffset_2A + (p->clutY_22 + u));
+            p->u_C = p->u0_18 + p->w_10 * col;
+            p->v_D = p->v0_1A + p->h_12 * v;
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
@@ -150,15 +150,15 @@ void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
         if (c <= charTables_8008685C[1].field_4)
         {
             c = c - 1;
-            v = (short)(c % (unsigned short)p->field_28);
-            c = c / (unsigned short)p->field_28;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
+            v = (short)(c % (unsigned short)p->charsPerClut_28);
+            c = c / (unsigned short)p->charsPerClut_28;
+            col = v % (unsigned short)p->columns_1C;
+            v = v / (unsigned short)p->columns_1C;
             p->x0_8 = x;
             p->y0_A = y;
-            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + c));
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
+            p->clut_E = getClut(p->clutX_20, p->clutOffset_2A + (p->clutY_22 + c));
+            p->u_C = p->u0_18 + p->w_10 * col;
+            p->v_D = p->v0_1A + p->h_12 * v;
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
@@ -323,7 +323,7 @@ void UppercaseSjisName_8003F89C(unsigned short* p)
 void SetFontClutOffset_8003F900(int idx, int val)
 {
     Font* p = &fonts_80095FB0[idx];
-    p->field_2A = val;
+    p->clutOffset_2A = val;
 }
 // Matched
 void SetFontClutRow_8003F928(int idx, int dy)

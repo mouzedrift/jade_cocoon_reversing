@@ -324,10 +324,10 @@ void DrawCharRow_800B75EC(NameCharRow row)
             q = v / 126;
             p->clut_E = GetClut(p->clutX_20, p->clutY_22 + q);
             v = v % 126;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
+            col = v % (unsigned short)p->columns_1C;
+            v = v / (unsigned short)p->columns_1C;
+            p->u_C = p->u0_18 + p->w_10 * col;
+            p->v_D = p->v0_1A + p->h_12 * v;
             p->x0_8 = row.pos.vx + off;
             p->y0_A = row.pos.vy;
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];

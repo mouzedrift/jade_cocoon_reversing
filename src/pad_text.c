@@ -391,15 +391,15 @@ void InitFonts_8003DA70(void)
         f->w_10 = e->field_6;
         f->h_12 = e->field_8;
         f->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[e->field_0];
-        f->field_18 = f->u_C;
-        f->field_1A = f->v_D;
+        f->u0_18 = f->u_C;
+        f->v0_1A = f->v_D;
         f->firstChar_1E = e->field_4;
         f->clutX_20 = e->field_A;
         f->clutY_22 = e->field_C;
         f->widths_24 = e->field_10;
-        f->field_1C = e->field_2;
-        f->field_28 = e->field_14;
-        f->field_2A = 0;
+        f->columns_1C = e->field_2;
+        f->charsPerClut_28 = e->field_14;
+        f->clutOffset_2A = 0;
     }
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
@@ -507,14 +507,14 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
             {
                 if (draw)
                 {
-                    f->clut_E = GetClut(f->clutX_20, f->clutY_22 + (ci - 1) / (unsigned short)f->field_28 + (unsigned short)f->field_2A);
-                    n = (ci - 1) % (unsigned short)f->field_28;
-                    col = n % (unsigned short)f->field_1C;
-                    n = n / (unsigned short)f->field_1C;
+                    f->clut_E = GetClut(f->clutX_20, f->clutY_22 + (ci - 1) / (unsigned short)f->charsPerClut_28 + (unsigned short)f->clutOffset_2A);
+                    n = (ci - 1) % (unsigned short)f->charsPerClut_28;
+                    col = n % (unsigned short)f->columns_1C;
+                    n = n / (unsigned short)f->columns_1C;
                     f->x0_8 = x;
                     f->y0_A = y;
-                    f->u_C = f->field_18 + f->w_10 * col;
-                    f->v_D = f->field_1A + f->h_12 * n;
+                    f->u_C = f->u0_18 + f->w_10 * col;
+                    f->v_D = f->v0_1A + f->h_12 * n;
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f)[0];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f)[1];
                     count++;

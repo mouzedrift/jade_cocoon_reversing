@@ -219,15 +219,15 @@ typedef struct
     short w_10;
     short h_12;
     unsigned short* tpage_14;
-    short field_18;
-    short field_1A;
-    short field_1C;
+    short u0_18;      // the glyph sheet's top-left texel (the TIY sprite's u / v)
+    short v0_1A;
+    short columns_1C; // glyphs per sheet row
     unsigned short firstChar_1E;
     short clutX_20;
     short clutY_22;
     unsigned char* widths_24;
-    short field_28;
-    short field_2A;
+    short charsPerClut_28; // glyphs per CLUT row (the glyph index / this picks the CLUT row)
+    short clutOffset_2A;   // added CLUT row (text colour, SetFontClutOffset_8003F900)
 } Font;
 
 
