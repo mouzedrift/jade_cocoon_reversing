@@ -6,8 +6,8 @@
 
 
 
-extern int sub_800AD0D4(int);
-extern int sub_800ADC1C(MapQuery*);
+extern int TestEventFlag_800AD0D4(int);
+extern int GetMapVar_800ADC1C(MapQuery*);
 extern int IsDestOpen_800B8290(MapPos*);
 
 extern MapEntry** mapTable_800B0608[];
@@ -17,14 +17,14 @@ extern void DrawCursorHand_8003D034(void*, int);
 #define SEL dword_800AEBFC[word_800AEBF8.a]
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
-extern void sub_800A6D30(int);
-extern void sub_800AD16C(int, int);
+extern void RequestGameMode_800A6D30(int);
+extern void SetEventVar_800AD16C(int, int);
 extern int useMapStartPos_80091C94;
 extern MapSel dword_800AEBFC[];
 extern unsigned short padRepeat_800918CC;
 extern void DrawText_8003E91C(int, void*, void*, int);
 extern void DrawNumber_8003EF74(void*, int, int);
-extern int sub_800AD154(int);
+extern int GetEventVar_800AD154(int);
 extern void PlayMusic_800300E0(int, int);
 extern void WaitAreaPicture_800B6E5C();
 extern int GetOpenDestRank_800B81D0(MapPos*);
@@ -152,11 +152,11 @@ void LoadAreaPicture_800B6CB4(MapTask* t)
     int a;
     openDestCount_800B8CA4 = CountOpenDests_800B7E54(word_800AEBF8.a);
     InitDestCursor_800B7EE0();
-    if (sub_800AD154(0xC) == 1)
+    if (GetEventVar_800AD154(0xC) == 1)
     {
         a = 0xF;
     }
-    else if (sub_800AD154(0xC) == 2)
+    else if (GetEventVar_800AD154(0xC) == 2)
     {
         a = 0x91;
     }
@@ -723,7 +723,7 @@ int IsDestOpen_800B8290(MapPos* p)
     int r;
     if (c == 0xFF)
     {
-        return sub_800AD0D4(1) != 0;
+        return TestEventFlag_800AD0D4(1) != 0;
     }
     if (c == 0xFE)
     {
@@ -736,7 +736,7 @@ int IsDestOpen_800B8290(MapPos* p)
     q.group_0 = areaMapGroups_800B9360[idx];
     q.map_2 = c;
     q.entry_4 = 0;
-    r = sub_800ADC1C(&q);
+    r = GetMapVar_800ADC1C(&q);
     return r != -1;
 }
 
@@ -752,7 +752,7 @@ void GoToDest_800B8338(MapPos* p)
     }
     else if (c >= 0xF0)
     {
-        sub_800AD16C(4, c - 0xEF);
+        SetEventVar_800AD16C(4, c - 0xEF);
         saveData_8008B570.mapId_2E4[0].field_0 = 4;
         saveData_8008B570.mapId_2E4[1].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_0 = 0;
@@ -767,7 +767,7 @@ void GoToDest_800B8338(MapPos* p)
     }
     sub_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
-    sub_800A6D30(1);
+    RequestGameMode_800A6D30(1);
     useMapStartPos_80091C94 = 1;
     eventDispatchHalt_8008B540 = 1;
 }
@@ -793,7 +793,7 @@ void GetCurrentDest_800B8448(MapPos* out)
         q.map_2 = 1;
         do
         {
-            if (sub_800ADC1C(&q) == -1)
+            if (GetMapVar_800ADC1C(&q) == -1)
             {
                 break;
             }
@@ -957,7 +957,7 @@ void SceneSelect_800B860C()
             useMapStartPos_80091C94 = 1;
             dword_80091C54 = 0;
             sub_800A8DEC();
-            sub_800A6D30(1);
+            RequestGameMode_800A6D30(1);
             SetFadeMode_8001C19C(0, 0x20);
             eventDispatchHalt_8008B540 = 1;
         }
@@ -1006,7 +1006,7 @@ void ChapterSelect_800B8B5C()
         SaveData* sv = &saveData_8008B570;
         sv->chapterNext_2DE = -5;
         sv->chapter_2DC = *sel;
-        sub_800A6D30(0);
+        RequestGameMode_800A6D30(0);
         eventDispatchHalt_8008B540 = r;
     }
     IsCancelPressedP1_8003D41C(1);

@@ -194,7 +194,7 @@ typedef struct MapTask
     void (*next_8)();
 } MapTask;
 
-// a map id (area group, map, entry) as GAME's map table lookup sub_800ADC1C takes it
+// a map id (area group, map, entry) as GAME's map table lookup GetMapVar_800ADC1C takes it
 typedef struct MapQuery
 {
     short group_0;
