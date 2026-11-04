@@ -82,6 +82,8 @@ the externs in the TU's header. Only the jump tables of functions that are still
   sections without the compiler knowing, so the next C definition lands in `.text`.
 * Names the code has for a place inside a C object (`playerYan_8008B594` is `saveData_8008B570.inv_24`) are link
   time equates of their address: `config/aliases.txt` (build.py).
+* `scripts/regendata.py SLUS_008.54 TU NAME... --gen` turns definitions back into `INCLUDE_DATA` and generates
+  them again (after their declared type changed).
 * Which TU a `.data`/`.bss` symbol belongs to: `scripts/data_owners.py` (the first TU whose code uses it, in link
   order) moves `INCLUDE_DATA` lines; main.c keeps the big `.bss` run that code all over the game uses.
 
