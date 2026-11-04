@@ -8,31 +8,32 @@
 #include "sound.h"
 #include "tiy.h"
 
-typedef struct Widget_equip
+// one row of the item list: three DrawMenuWindows_8002A5A4 items (icon, name, count)
+typedef struct EquipListRow
 {
     unsigned short flags_0;
-    int field_4;
-    void* field_8;
-    void* field_C;
-    short field_10;
-    short field_12;
+    int icon_4; // sprite index (type 1 item)
+    void* sprts_8;
+    void* tpages_C;
+    short x_10;
+    short y_12;
     char pad_14[8];
-    unsigned short flags_1C;
+    unsigned short nameFlags_1C;
     short pad_1E;
-    int field_20;
+    int name_20;
     char pad_24[8];
-    short field_2C;
-    short field_2E;
+    short nameX_2C;
+    short nameY_2E;
     char pad_30[8];
-    unsigned short flags_38;
+    unsigned short countFlags_38;
     char pad_3A[2];
-    int field_3C;
+    int count_3C;
     char pad_40[8];
-    short field_48;
-    short field_4A;
-} Widget_equip;
+    short countX_48;
+    short countY_4A;
+} EquipListRow;
 
-extern int dword_800C29D0;
+extern int overlayId_800C29D0;
 extern const char aCriticallyWound_800C29D4[];
 extern const char aColdBladeWithAP_800C2A2C[];
 extern const char aClearNightDeliv_800C2A80[];
@@ -154,23 +155,23 @@ extern const char aBandWithIronWov_800C46A4[];
 extern const char aProtectsHeadFro_800C46D8[];
 extern const char aBandWithLeather_800C472C[];
 extern const char aOrnamentalItem_800C4764[];
-extern const char name_800C4784[4];
-extern const char dword_800C4788[32];
-extern char name_800C5834[4];
-extern char name_800C5838[4];
-extern int dword_800C583C[28];
-extern int dword_800C58AC[28];
-extern int dword_800C591C[28];
-extern Widget_equip *tab_800C598C[4];
-extern char name_800C599C[4];
-extern char name_800C59A0[8];
-extern char name_800C59A8[8];
-extern short tab_800C59B0[4];
-extern short tab_800C59B8[4];
-extern short tab_800C59C0[16];
-extern char tab_800C59E0[23][16];
-extern char tab_800C5B50[15][16];
-extern char tab_800C5C40[17][16];
-extern char name_800C5D50[16];
+extern const char emptyText_800C4784[4];
+extern const char aCannotUnequip_800C4788[32];
+extern char scrollUpArrowPos_800C5834[4];
+extern char scrollDownArrowPos_800C5838[4];
+extern int equipListRow0_800C583C[28];
+extern int equipListRow1_800C58AC[28];
+extern int equipListRow2_800C591C[28];
+extern EquipListRow *equipListRows_800C598C[4];
+extern char descBoxPos_800C599C[4];
+extern char statCompareWindowRect_800C59A0[8];
+extern char statsWindowRect_800C59A8[8];
+extern short equipMenuStepModes_800C59B0[4];
+extern short modeCursorAreaMasks_800C59B8[4];
+extern short cursorAreas_800C59C0[16];
+extern char weaponDescs_800C59E0[23][16];
+extern char armorDescs_800C5B50[15][16];
+extern char accessoryDescs_800C5C40[17][16];
+extern char cannotUnequipBox_800C5D50[16];
 
 #endif
