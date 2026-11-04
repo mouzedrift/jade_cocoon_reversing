@@ -6,17 +6,17 @@ const char aEventcomC_800A0688[] = "EVENTCOM.C";
 const int dword_800A0694 = 0;
 
 // Matched
-void AllocMdecBuffer_800A5804(int a)
+void AllocMdecBuffer_800A5804(int mode)
 {
-    if (a == 0)
+    if (mode == 0)
     {
         AllocMdecVLCBuffer_80041848();
     }
-    else if (a == 1)
+    else if (mode == 1)
     {
         AllocMdecVLCBufferInFileBuffer_8004188C();
     }
-    mdecBufferMode_800AEB7C = a;
+    mdecBufferMode_800AEB7C = mode;
 }
 
 // Matched
@@ -37,16 +37,16 @@ int FreeMdecBuffer_800A5854(void)
 
 void StopAllEventScripts_800A58B4(void)
 {
-    EventNode* n = eventScripts_8008D410;
+    EventNode* node = eventScripts_8008D410;
     int i;
-    int cnt = n->count;
-    GameRect_1* r;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    GameRect_1* view;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
-            EndEventScript_800A6168(o, o->buffer);
-        n = n->next;
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
+            EndEventScript_800A6168(entry, entry->buffer);
+        node = node->next;
     }
     sceneScriptId_800AEBD8 = -1;
     nextScriptId_800AEBDC = 0;
@@ -55,11 +55,11 @@ void StopAllEventScripts_800A58B4(void)
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
-        r = &viewport_8008D420;
-        r->x = 0;
-        r->w = 0x140;
-        r->y = 0;
-        r->h = 0xf0;
+        view = &viewport_8008D420;
+        view->x = 0;
+        view->w = 0x140;
+        view->y = 0;
+        view->h = 0xf0;
     }
     ResetSceneFade_8001A9A4();
     voiceTable_800AEBF0 = 0;
@@ -70,214 +70,214 @@ void StopAllEventScripts_800A58B4(void)
 }
 
 // Matched
-EventEntry* StartEventScript_800A59D0(int v)
+EventEntry* StartEventScript_800A59D0(int script)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(eventScripts_8008D410);
-    if (p)
+    EventEntry* entry = AllocEventEntry_80043AF8(eventScripts_8008D410);
+    if (entry)
     {
-        GameEvCtx* q = p->buffer;
+        GameEvCtx* ctx = entry->buffer;
         int i;
-        p->flags = ((((p->flags | 1) & ~0x8000) | 4) & ~0x8000);
-        q->start_4 = v;
-        q->pc_8 = v;
-        q->ret_C = v;
-        q->id_10 = nextScriptId_800AEBDC;
-        q->choiceMask_114 = 0;
+        entry->flags = ((((entry->flags | 1) & ~0x8000) | 4) & ~0x8000);
+        ctx->start_4 = script;
+        ctx->pc_8 = script;
+        ctx->ret_C = script;
+        ctx->id_10 = nextScriptId_800AEBDC;
+        ctx->choiceMask_114 = 0;
         for (i = 7; i >= 0; i--)
         {
-            q->vars_CC[i] = 0;
+            ctx->vars_CC[i] = 0;
         }
-        ResetEventCtx_800A5B54(q);
-        p->cb_8 = RunEventScript_800A6060;
-        p->cb_C = EndEventScript_800A6168;
+        ResetEventCtx_800A5B54(ctx);
+        entry->cb_8 = RunEventScript_800A6060;
+        entry->cb_C = EndEventScript_800A6168;
         nextScriptId_800AEBDC++;
-        return p;
+        return entry;
     }
     return 0;
 }
 
 // Matched
-EventEntry* StartEventScriptForEntity_800A5AA0(int a, int b)
+EventEntry* StartEventScriptForEntity_800A5AA0(int script, int ent)
 {
-    EventEntry* r = StartEventScript_800A59D0(a);
-    GameEvCtx* t = r->buffer;
-    t->ent_120 = b;
-    return r;
+    EventEntry* entry = StartEventScript_800A59D0(script);
+    GameEvCtx* ctx = entry->buffer;
+    ctx->ent_120 = ent;
+    return entry;
 }
 
 // Matched
-int GetEventScriptId_800A5AD0(EventEntry* p)
+int GetEventScriptId_800A5AD0(EventEntry* entry)
 {
-    return ((GameEvCtx*)p->buffer)->id_10;
+    return ((GameEvCtx*)entry->buffer)->id_10;
 }
 
 // Matched
-int FindEventScript_800A5AE4(int a)
+int FindEventScript_800A5AE4(int id)
 {
-    EventNode* n = eventScripts_8008D410;
-    EventEntry* o;
+    EventNode* node = eventScripts_8008D410;
+    EventEntry* entry;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            if (a == ((GameEvCtx*)o->buffer)->id_10)
+            if (id == ((GameEvCtx*)entry->buffer)->id_10)
             {
-                return (int)o;
+                return (int)entry;
             }
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
 
 // Matched
-void ResetEventCtx_800A5B54(GameEvCtx* p)
+void ResetEventCtx_800A5B54(GameEvCtx* ctx)
 {
     int i;
-    p->heldActors_14 = 0;
-    p->busyActors_18 = 0;
-    p->animActors_1C = 0;
-    p->f20 = 0;
-    p->flags_0 = 0;
-    p->msgStep_B4 = 0;
-    p->step_B8 = 0;
-    p->maskStep_BC = 0;
-    p->cmdStep_C0 = 0;
-    p->waitCount_C4 = 0;
-    p->trigger_C8 = -1;
-    p->branch_EC = 0;
-    p->lastMsg_110 = 0;
-    p->msgOpen_118 = 0;
-    p->msgX_100 = -1;
-    p->msgY_102 = -1;
-    p->msgPosMode_104 = -1;
-    p->msgOptions_108 = 0;
-    p->msgWindow_11C = 0;
-    p->ent_120 = 0;
-    p->callArg_F0 = 0;
+    ctx->heldActors_14 = 0;
+    ctx->busyActors_18 = 0;
+    ctx->animActors_1C = 0;
+    ctx->f20 = 0;
+    ctx->flags_0 = 0;
+    ctx->msgStep_B4 = 0;
+    ctx->step_B8 = 0;
+    ctx->maskStep_BC = 0;
+    ctx->cmdStep_C0 = 0;
+    ctx->waitCount_C4 = 0;
+    ctx->trigger_C8 = -1;
+    ctx->branch_EC = 0;
+    ctx->lastMsg_110 = 0;
+    ctx->msgOpen_118 = 0;
+    ctx->msgX_100 = -1;
+    ctx->msgY_102 = -1;
+    ctx->msgPosMode_104 = -1;
+    ctx->msgOptions_108 = 0;
+    ctx->msgWindow_11C = 0;
+    ctx->ent_120 = 0;
+    ctx->callArg_F0 = 0;
     for (i = 4; i >= 0; i--)
     {
-        p->idleAnims_24[i] = 0;
+        ctx->idleAnims_24[i] = 0;
     }
 }
 
 // Matched
-void ClearScriptActorBusy_800A5BCC(int a)
+void ClearScriptActorBusy_800A5BCC(int actor)
 {
-    EventNode* n = eventScripts_8008D410;
+    EventNode* node = eventScripts_8008D410;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->buffer;
-            int m = 1 << a;
-            q->busyActors_18 &= ~m;
-            q->f20 &= ~m;
+            GameEvCtx* ctx = entry->buffer;
+            int mask = 1 << actor;
+            ctx->busyActors_18 &= ~mask;
+            ctx->f20 &= ~mask;
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
-int FireEventTrigger_800A5C40(int a)
+int FireEventTrigger_800A5C40(int trigger)
 {
-    int r = IsSceneHeld_800A5E68();
-    EventNode* n = eventScripts_8008D410;
-    int cnt = n->count;
+    int fired = IsSceneHeld_800A5E68();
+    EventNode* node = eventScripts_8008D410;
+    int count = node->count;
     int i;
-    GameEvCtx* o;
-    GameEvEnt* q;
-    int v;
-    int k;
-    EventEntry* e;
-    for (i = 0; i < cnt; i++)
+    GameEvCtx* ctx;
+    GameEvEnt* ent;
+    int want;
+    int match;
+    EventEntry* entry;
+    for (i = 0; i < count; i++)
     {
-        e = &n->entry;
-        if ((e->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            o = e->buffer;
-            if (r == 0 && (o->flags_0 & 8) && o->trigger_C8 == a)
+            ctx = entry->buffer;
+            if (fired == 0 && (ctx->flags_0 & 8) && ctx->trigger_C8 == trigger)
             {
-                o->flags_0 |= 4;
-                r = 1;
+                ctx->flags_0 |= 4;
+                fired = 1;
                 break;
             }
         }
-        n = n->next;
+        node = node->next;
     }
-    n = eventEntities_8008D400;
-    cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    node = eventEntities_8008D400;
+    count = node->count;
+    for (i = 0; i < count; i++)
     {
-        e = &n->entry;
-        if ((e->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            q = e->buffer;
-            if (r)
+            ent = entry->buffer;
+            if (fired)
             {
-                q->f78 = 0;
+                ent->armed_78 = 0;
             }
-            else if (q->f78)
+            else if (ent->armed_78)
             {
-                k = 1;
-                v = q->f84;
-                if (v != -1 && (v & 0x40000000))
+                match = 1;
+                want = ent->trigger_84;
+                if (want != -1 && (want & 0x40000000))
                 {
-                    k = (unsigned)((v & ~0x40000000) ^ a) < k;
+                    match = (unsigned)((want & ~0x40000000) ^ trigger) < match;
                 }
-                if (k)
+                if (match)
                 {
-                    q->f7C = 0;
-                    if (q->f88)
+                    ent->f7C = 0;
+                    if (ent->script_88)
                     {
-                        StartEventScript_800A59D0(q->f88);
+                        StartEventScript_800A59D0(ent->script_88);
                         sceneScriptId_800AEBD8 = nextScriptId_800AEBDC - 1;
-                        r = 1;
+                        fired = 1;
                     }
                 }
             }
         }
-        n = n->next;
+        node = node->next;
     }
-    return r;
+    return fired;
 }
 
 // Matched
-GameEvEnt* FindEventEntity_800A5DDC(int a, int b, GameEvEnt* c)
+GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip)
 {
-    EventNode* n = eventEntities_8008D400;
+    EventNode* node = eventEntities_8008D400;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->buffer;
-            if (c != q)
+            GameEvEnt* ent = entry->buffer;
+            if (skip != ent)
             {
-                if (b == 0)
+                if (byId == 0)
                 {
-                    if (a == q->f4)
+                    if (key == ent->f4)
                     {
-                        return q;
+                        return ent;
                     }
                 }
                 else
                 {
-                    if (a == q->id_10)
+                    if (key == ent->id_10)
                     {
-                        return q;
+                        return ent;
                     }
                 }
             }
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
@@ -288,34 +288,34 @@ int IsSceneHeld_800A5E68(void)
     return sceneScriptId_800AEBD8 >= 0;
 }
 
-int IsTriggerWaited_800A5E80(int a)
+int IsTriggerWaited_800A5E80(int trigger)
 {
-    EventNode* n = eventEntities_8008D400;
+    EventNode* node = eventEntities_8008D400;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->buffer;
-            if (q->f78 != 0 && (q->f84 & 0xBFFFFFFF) == a)
+            GameEvEnt* obj = entry->buffer;
+            if (obj->armed_78 != 0 && (obj->trigger_84 & 0xBFFFFFFF) == trigger)
                 return 1;
         }
-        n = n->next;
+        node = node->next;
     }
-    n = eventScripts_8008D410;
-    cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    node = eventScripts_8008D410;
+    count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->buffer;
-            if (q->trigger_C8 == a)
+            GameEvCtx* obj = entry->buffer;
+            if (obj->trigger_C8 == trigger)
                 return 1;
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
@@ -331,16 +331,16 @@ GameEnemy* GetEventEnemy_800A5F6C(void)
 }
 
 // Matched
-void SetEventHook_800A5F90(int a)
+void SetEventHook_800A5F90(int hook)
 {
-    eventHook_800B1D98 = a;
+    eventHook_800B1D98 = hook;
 }
 
 // Matched
-int ExchangeEventResult_800A5F9C(int a)
+int ExchangeEventResult_800A5F9C(int result)
 {
     int old = eventResult_800AEBF4;
-    eventResult_800AEBF4 = a;
+    eventResult_800AEBF4 = result;
     return old;
 }
 
@@ -1126,21 +1126,21 @@ int GetFieldMinionCount_800A7790(void)
     return fieldMinions_800B0EC4.count;
 }
 
-int AddFieldMinion_800A77A0(GameMember* a)
+int AddFieldMinion_800A77A0(GameMember* member)
 {
-    GameList_1* l = &fieldMinions_800B0EC4;
-    int i = l->count;
-    l->a[i] = a;
-    l->b[l->count] = 0;
-    l->c[l->count] = 0;
-    l->count++;
+    GameFieldMinions* list = &fieldMinions_800B0EC4;
+    int i = list->count;
+    list->members[i] = member;
+    list->suspended[list->count] = 0;
+    list->hidden[list->count] = 0;
+    list->count++;
     return i;
 }
 
 // Matched
-GameMember* GetFieldMinion_800A77F4(int a)
+GameMember* GetFieldMinion_800A77F4(int idx)
 {
-    return fieldMinions_800B0EC4.a[a];
+    return fieldMinions_800B0EC4.members[idx];
 }
 
 // Matched
@@ -1148,8 +1148,8 @@ int HoldFieldMinion_800A7810(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        GameCb_1* p = &GetFieldMinion_800A77F4(idx)->cb_14;
-        return p->hold_C(p);
+        GameMemberCb* cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        return cb->hold_C(cb);
     }
     return 0;
 }
@@ -1159,8 +1159,8 @@ void ReleaseFieldMinion_800A785C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        GameCb_1* p = &GetFieldMinion_800A77F4(idx)->cb_14;
-        p->release_10(p);
+        GameMemberCb* cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        cb->release_10(cb);
     }
 }
 
@@ -1250,68 +1250,68 @@ void SkipFieldMinionAnim_800A7AD8(int idx)
     SkipActorAnimToEnd_8001D9B0(GetFieldMinionActor_800A7A60(idx));
 }
 
-void SuspendFieldMinions_800A7B00(int a)
+void SuspendFieldMinions_800A7B00(int idx)
 {
     int i;
     int end;
-    Actor* o;
-    if (a < 0)
+    Actor* actor;
+    if (idx < 0)
     {
         i = 0;
         end = GetFieldMinionCount_800A7790();
     }
     else
     {
-        i = a;
-        end = a + 1;
+        i = idx;
+        end = idx + 1;
     }
     for (; i < end; i++)
     {
-        o = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
-        if (fieldMinions_800B0EC4.b[i] == 0)
+        actor = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
+        if (fieldMinions_800B0EC4.suspended[i] == 0)
         {
-            if (!(o->flags_4 & 0x2000))
+            if (!(actor->flags_4 & 0x2000))
             {
-                SetActorAnimPaused_8001D6EC(o, 1);
-                SetActorVisible_8001D730(o, 0);
-                fieldMinions_800B0EC4.c[i] = 1;
+                SetActorAnimPaused_8001D6EC(actor, 1);
+                SetActorVisible_8001D730(actor, 0);
+                fieldMinions_800B0EC4.hidden[i] = 1;
             }
-            if (!(o->task_0->flags & 0x8000))
+            if (!(actor->task_0->flags & 0x8000))
             {
-                SetActorActive_8001D658(o, 0);
-                fieldMinions_800B0EC4.b[i] = 1;
+                SetActorActive_8001D658(actor, 0);
+                fieldMinions_800B0EC4.suspended[i] = 1;
             }
         }
     }
 }
 
-void ResumeFieldMinions_800A7BF0(int a)
+void ResumeFieldMinions_800A7BF0(int idx)
 {
     int i, end;
-    Actor* o;
-    if (a < 0)
+    Actor* actor;
+    if (idx < 0)
     {
         i = 0;
         end = GetFieldMinionCount_800A7790();
     }
     else
     {
-        i = a;
-        end = a + 1;
+        i = idx;
+        end = idx + 1;
     }
     for (; i < end; i++)
     {
-        o = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
-        if (fieldMinions_800B0EC4.b[i])
+        actor = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
+        if (fieldMinions_800B0EC4.suspended[i])
         {
-            if (fieldMinions_800B0EC4.c[i])
+            if (fieldMinions_800B0EC4.hidden[i])
             {
-                SetActorAnimPaused_8001D6EC(o, 0);
-                SetActorVisible_8001D730(o, 1);
-                fieldMinions_800B0EC4.c[i] = 0;
+                SetActorAnimPaused_8001D6EC(actor, 0);
+                SetActorVisible_8001D730(actor, 1);
+                fieldMinions_800B0EC4.hidden[i] = 0;
             }
-            SetActorActive_8001D658(o, 1);
-            fieldMinions_800B0EC4.b[i] = 0;
+            SetActorActive_8001D658(actor, 1);
+            fieldMinions_800B0EC4.suspended[i] = 0;
         }
     }
 }
@@ -1330,168 +1330,134 @@ int IsFieldMinionReady_800A7CFC(int idx)
     return 0;
 }
 
-typedef struct GameCmdA_1
-{
-    int f0;
-    int kind_4;
-    int f8;
-    int fC;
-    int f10;
-    unsigned int f14;
-    int f18;
-    int f1C;
-    int f20;
-    int f24;
-} GameCmdA_1;
-typedef struct GameAnimReq_1
-{
-    int flags;
-    int f4;
-    int f8;
-    short hC;
-    short hE;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    short h20;
-    short h22;
-    short h24;
-    short h26;
-    short h28;
-    short h2A;
-    int f2C;
-    int f30;
-    char pad_34[0x2c];
-} GameAnimReq_1;
 #if 0
 // Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the C table dword_800A06B8 when enabling
-void FieldMinionCommand_800A7D40(int a, GameCmdA_1* c)
+void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
 {
-    GameAnimReq_1 s;
+    ActorActionDesc desc;
     GameModelHdr** hdr;
-    GameCb_1* ent;
-    Actor* obj;
-    int k;
-    int t;
-    int u;
+    GameMemberCb* cb;
+    Actor* actor;
+    int start;
+    int flags;
+    int flags2;
     int w;
-    if (a < GetFieldMinionCount_800A7790())
+    if (idx < GetFieldMinionCount_800A7790())
     {
-        hdr = GetFieldMinion_800A77F4(a)->hdr_10;
-        ent = &GetFieldMinion_800A77F4(a)->cb_14;
-        obj = ent->actor_4;
-        s.flags = 0;
-        s.f4 = 0;
-        s.f8 = 0;
-        s.hC = 0;
-        s.hE = -1;
-        s.f10 = -1;
-        s.f18 = 0;
-        s.h20 = 0;
-        s.h22 = 0;
-        s.f1C = 1;
-        s.h24 = -1;
-        s.h26 = -1;
-        s.h28 = -1;
-        s.h2A = -1;
-        s.f2C = 0;
-        s.f30 = 0;
-        s.f1C = c->f8;
-        k = 0;
-        switch (c->kind_4)
+        hdr = GetFieldMinion_800A77F4(idx)->hdr_10;
+        cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        actor = cb->actor_4;
+        desc.flags_0 = 0;
+        desc.script_4 = 0;
+        desc.target_8 = 0;
+        desc.turnStep_C = 0;
+        desc.hitAnim_E = -1;
+        desc.effect_10 = -1;
+        desc.effectKinds_18 = 0;
+        desc.loopCount_20 = 0;
+        desc.scaleTarget_22 = 0;
+        desc.field_1C = 1;
+        desc.nextAnim_24 = -1;
+        desc.nextAnim_26 = -1;
+        desc.field_28 = -1;
+        desc.queuedAnim_2A = -1;
+        desc.field_2C = 0;
+        desc.path_30 = 0;
+        desc.field_1C = cmd->wait_8;
+        start = 0;
+        switch (cmd->kind_4)
         {
         case 0:
-            if (c->f14 != -1)
-                s.h24 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_24 = cmd->opts_14;
             else
-                s.h24 = (*hdr)->f20;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_24 = (*hdr)->walkAnim_20;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 1:
-            if (c->f14 != -1)
-                s.h24 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_24 = cmd->opts_14;
             else
-                s.h24 = (*hdr)->f22;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_24 = (*hdr)->runAnim_22;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 2:
-            if (c->f14 != -1)
-                s.h26 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_26 = cmd->opts_14;
             else
-                s.h26 = (*hdr)->f24;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_26 = (*hdr)->turnAnim_24;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 3:
         case 4:
-            s.f4 = ent->anims_8[c->fC];
-            k = 1;
+            desc.script_4 = (ActorScriptCmd*)cb->anims_8[cmd->arg_C];
+            start = 1;
             break;
         case 5:
-            s.f4 = c->f24;
-            k = 1;
+            desc.script_4 = (ActorScriptCmd*)cmd->data_24;
+            start = 1;
             break;
         case 6:
-            SetActorVisible_8001D730(obj, c->fC);
-            k = 0;
+            SetActorVisible_8001D730(actor, cmd->arg_C);
+            start = 0;
             break;
         case 7:
-            SetActorGroundMove_8001D68C(obj, c->fC);
-            k = 0;
+            SetActorGroundMove_8001D68C(actor, cmd->arg_C);
+            start = 0;
             break;
         case 8:
-            SetActorRootMotion_8001D6BC(obj, c->fC);
-            k = 0;
+            SetActorRootMotion_8001D6BC(actor, cmd->arg_C);
+            start = 0;
             break;
         case 9:
         case 10:
-            s.h28 = c->fC;
-            s.h2A = (c->kind_4 == 10) ? c->f10 : -1;
-            s.hC = (c->f14 & 1) ? -1 : -2;
-            s.f2C = (c->f14 >> 3) & 1;
-            k = 1;
-            s.flags = (c->f14 >> 2) & 1;
-            if (c->f14 & 0x10)
+            desc.field_28 = cmd->arg_C;
+            desc.queuedAnim_2A = (cmd->kind_4 == 10) ? cmd->arg2_10 : -1;
+            desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
+            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            start = 1;
+            desc.flags_0 = (cmd->opts_14 >> 2) & 1;
+            if (cmd->opts_14 & 0x10)
             {
-                s.flags |= 2;
+                desc.flags_0 |= 2;
             }
             break;
         case 11:
-            s.h28 = c->fC;
-            if (c->f10 >= 0)
-                s.h2A = c->f10;
+            desc.field_28 = cmd->arg_C;
+            if (cmd->arg2_10 >= 0)
+                desc.queuedAnim_2A = cmd->arg2_10;
             else
-                s.h2A = obj->animIdx_C2;
-            s.hC = (c->f14 & 1) ? -1 : -2;
-            s.f2C = (c->f14 >> 3) & 1;
-            s.flags = (c->f14 >> 2) & 1;
-            t = s.flags;
-            if (c->f14 & 0x10)
-                t |= 2;
-            s.flags = t;
-            u = t;
-            if (c->f14 & 0x20)
-                u |= 4;
-            s.flags = u;
-            s.f30 = c->f24;
-            k = 1;
+                desc.queuedAnim_2A = actor->animIdx_C2;
+            desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
+            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            desc.flags_0 = (cmd->opts_14 >> 2) & 1;
+            flags = desc.flags_0;
+            if (cmd->opts_14 & 0x10)
+                flags |= 2;
+            desc.flags_0 = flags;
+            flags2 = flags;
+            if (cmd->opts_14 & 0x20)
+                flags2 |= 4;
+            desc.flags_0 = flags2;
+            desc.path_30 = (ActorPath*)cmd->data_24;
+            start = 1;
             break;
         case 13:
             break;
         }
-        if (k)
+        if (start)
         {
-            StartActorAction_8001E254(obj, &s);
+            StartActorAction_8001E254(actor, &desc);
         }
-        else if (c->f8)
+        else if (cmd->wait_8)
         {
-            ClearScriptActorBusy_800A5BCC(a + 3);
+            ClearScriptActorBusy_800A5BCC(idx + 3);
         }
     }
 }
@@ -2067,22 +2033,22 @@ void SkipLevantAnim_800A8EA4()
     SkipLevantAnim_800AC318();
 }
 
-void LevantCommand_800A8EC4(G2Cmd_1* c)
+void LevantCommand_800A8EC4(GameActorCmd* cmd)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    int b;
-    switch (c->kind_4)
+    G2Inner* ctl = levantControlTask_8008B4CC->f24;
+    int nextAnim;
+    switch (cmd->kind_4)
     {
     case 0:
     case 1:
     case 2:
-        p->targetX_A4 = c->f18;
-        p->targetY_A8 = c->f1C;
-        p->targetZ_AC = c->f20;
+        ctl->targetX_A4 = cmd->x_18;
+        ctl->targetY_A8 = cmd->y_1C;
+        ctl->targetZ_AC = cmd->z_20;
         break;
     case 9:
     case 10:
-        if (c->f14 & 1)
+        if (cmd->opts_14 & 1)
         {
             sub_800ABB98(0);
         }
@@ -2090,28 +2056,28 @@ void LevantCommand_800A8EC4(G2Cmd_1* c)
         {
             sub_800ABB98(1);
         }
-        b = -1;
-        if (c->kind_4 == 10)
+        nextAnim = -1;
+        if (cmd->kind_4 == 10)
         {
-            b = c->f10;
+            nextAnim = cmd->arg2_10;
         }
-        if (c->f14 & 4)
+        if (cmd->opts_14 & 4)
         {
-            PlayLevantScriptAnim_800AB9A8(c->fC, b, 0);
+            PlayLevantScriptAnim_800AB9A8(cmd->arg_C, nextAnim, 0);
         }
         else
         {
-            PlayLevantScriptAnim_800AB9A8(c->fC, b, 1);
+            PlayLevantScriptAnim_800AB9A8(cmd->arg_C, nextAnim, 1);
         }
         goto set;
     case 11:
         SetLevantRootMotionMode_800ABC78(1);
-        SetLevantPath_800ABAA4(c->f24);
+        SetLevantPath_800ABAA4(cmd->data_24);
         sub_800ABB98(1);
-        PlayLevantScriptAnim_800AB9A8(c->fC, -1, 1);
+        PlayLevantScriptAnim_800AB9A8(cmd->arg_C, -1, 1);
     set:
-        p->state_C6 = 9;
-        p->cmdKind_B0 = c->kind_4;
+        ctl->state_C6 = 9;
+        ctl->cmdKind_B0 = cmd->kind_4;
         break;
     case 13:
         break;
@@ -2123,45 +2089,45 @@ int IsLevantCmdDone_800A8FE0()
     return levantControlTask_8008B4CC->f24->state_C6 == 9;
 }
 
-void FinishLevantCommand_800A9008(G2Cmd_1* c)
+void FinishLevantCommand_800A9008(GameActorCmd* cmd)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->flags_0 &= ~0x80;
-    switch (c->kind_4)
+    G2Inner* ctl = levantControlTask_8008B4CC->f24;
+    ctl->flags_0 &= ~0x80;
+    switch (cmd->kind_4)
     {
     case 0:
-        p->state_C6 = 10;
+        ctl->state_C6 = 10;
         break;
     case 1:
-        p->state_C6 = 11;
+        ctl->state_C6 = 11;
         break;
     case 2:
-        p->state_C6 = 12;
+        ctl->state_C6 = 12;
         break;
     case 4:
-        p->state_C6 = 14;
+        ctl->state_C6 = 14;
         StopLevantAnimLoop_800AB910();
         break;
     case 6:
-        SetLevantVisible_800ABBD8(c->fC);
+        SetLevantVisible_800ABBD8(cmd->arg_C);
         break;
     case 7:
-        SetLevantMapCollision_800ABC34(c->fC);
+        SetLevantMapCollision_800ABC34(cmd->arg_C);
         break;
     case 8:
-        SetLevantRootMotionMode_800ABC78(c->fC);
+        SetLevantRootMotionMode_800ABC78(cmd->arg_C);
         break;
     case 9:
     case 10:
     case 11:
-        if (c->f14 & 8)
+        if (cmd->opts_14 & 8)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             ClearScriptActorBusy_800A5BCC(0);
         }
         else
         {
-            p->state_C6 = 13;
+            ctl->state_C6 = 13;
         }
         ContinueLevantAnim_800AB1A4(1);
         break;
@@ -5350,7 +5316,7 @@ int gameMainTaskDef_800B0E8C[6] = { 1, 1, 64, 0x8008D46C, (int)GameMainInit_800A
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
 GameTab_1 fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
-GameList_1 fieldMinions_800B0EC4 = { 0 };
+GameFieldMinions fieldMinions_800B0EC4 = { 0 };
 char levantBones_800B0EF8 = 0;
 int dword_800B0EFC[45] = {
     0x460000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003, 0x3040004,

@@ -143,11 +143,11 @@ typedef struct GameEvEnt
     char pad_14[0x34];
     int pos_48[3];
     char pad_54[0x24];
-    int f78;
+    int armed_78; // waits for a trigger (FireEventTrigger_800A5C40)
     int f7C;
     int f80;
-    int f84;
-    int f88;
+    int trigger_84; // the trigger it waits for (-1: any; 0x40000000: compare with the fired one)
+    int script_88;  // the event script it starts when triggered
     int f8C;
 } GameEvEnt;
 
@@ -183,23 +183,23 @@ typedef struct GameModelHdr
 {
     int id_0;
     char pad_4[0x1C];
-    short f20;
-    short f22;
-    short f24;
-    short f26;
+    short walkAnim_20; // the actor command animations (FieldMinionCommand_800A7D40)
+    short runAnim_22;
+    short turnAnim_24;
+    short turnStep_26;
     short pad_28;
     short f2A;
 } GameModelHdr;
 
 // the part of a party member its callbacks get (GameMember.cb_14)
-typedef struct GameCb_1
+typedef struct GameMemberCb
 {
     int f0;
     Actor* actor_4;
     int* anims_8; // animation table (indexed by the script commands)
     int (*hold_C)();     // HoldFieldMinion_800A7810 (0: busy)
     void (*release_10)(); // ReleaseFieldMinion_800A785C
-} GameCb_1;
+} GameMemberCb;
 
 // what Actor.desc_15C of a party member points to
 typedef struct GameActorDesc
@@ -213,16 +213,17 @@ typedef struct GameMember
 {
     char pad_0[0x10];
     GameModelHdr** hdr_10;
-    GameCb_1 cb_14;
+    GameMemberCb cb_14;
 } GameMember;
 
-typedef struct GameList_1
+// the party members following Levant (fieldMinions_800B0EC4)
+typedef struct GameFieldMinions
 {
     int count;
-    GameMember* a[4];
-    int b[4];
-    int c[4];
-} GameList_1;
+    GameMember* members[4];
+    int suspended[4]; // SuspendFieldMinions_800A7B00 made it inactive
+    int hidden[4];    // SuspendFieldMinions_800A7B00 paused and hid it
+} GameFieldMinions;
 
 
 
@@ -1146,19 +1147,21 @@ extern G2Mode_1 levantBattleActions_800B1084[28];
 extern int levantModelIds_800B1164[2];
 
 
-typedef struct G2Cmd_1
+// an actor command (eventfnc.h EvActorCmdEventfnc): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held
+// animation, 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
+typedef struct GameActorCmd
 {
-    int f0;
+    int actor_0;
     int kind_4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    int f20;
-    int f24;
-} G2Cmd_1;
+    int wait_8; // the sender waits: the actor's busy bit is cleared when it is done
+    int arg_C;
+    int arg2_10;
+    unsigned int opts_14; // kind 0..2: the animation (-1: default); 9..11: 1 no turn, 4 / 0x10 / 0x20 action flags, 8
+    int x_18;
+    int y_1C;
+    int z_20;
+    int data_24;
+} GameActorCmd;
 
 typedef struct G2Init_1
 {
@@ -1566,7 +1569,7 @@ extern int gameMainTaskDef_800B0E8C[6];
 extern char endMovie_800B0EA4[20];
 extern GameTab_1 fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
-extern GameList_1 fieldMinions_800B0EC4;
+extern GameFieldMinions fieldMinions_800B0EC4;
 extern char levantBones_800B0EF8;
 extern int dword_800B0EFC[45];
 extern SVECTOR levantBoneScale_800B0FB0[22];
