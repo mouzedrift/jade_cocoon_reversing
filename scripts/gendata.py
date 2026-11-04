@@ -842,31 +842,40 @@ C_WORDS = {"extern", "const", "volatile", "unsigned", "signed", "char", "short",
 
 
 def foreign_externs(tu, names, types):
-    """{name: (path, line)}: externs of names that this TU doesn't see (in another TU's .c, or a header it doesn't
-    include) and whose type this TU knows"""
+    """({name: (path, line)}, {names}): externs of names that this TU doesn't see (in another TU's .c, or a header it
+    doesn't include) and whose type this TU knows; and the names other files declare with a type this TU doesn't know
+    or with types that disagree (they keep their own externs)"""
     out = {}
+    others = set()
     own = os.path.join(REPO, "src", tu + ".c")
     for n in names:
         if n in types.decls:
             continue
-        for path, line in find_extern(n):
-            if path == own or os.sep + "overlays" + os.sep in path:
+        hits = [(p, l) for p, l in find_extern(n) if p != own and os.sep + "overlays" + os.sep not in p]
+        if not hits:
+            continue
+        kinds = {re.sub(r"\[[^\]]*\]", "[]", re.sub(r"\s+", "", l.split("//")[0])) for _, l in hits}
+        if len(kinds) > 1:
+            print("// %s: other files declare it with different types: %s" % (n, " | ".join(sorted(kinds))))
+            others.add(n)
+            continue
+        path, line = hits[0]
+        decl = line.split("//")[0].strip()
+        words = re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(n), decl)[0])
+        ok = True
+        for i, w in enumerate(words):
+            if w in C_WORDS or w in types.typedefs:
                 continue
-            decl = line.split("//")[0].strip()
-            words = re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(n), decl)[0])
-            ok = True
-            for i, w in enumerate(words):
-                if w in C_WORDS or w in types.typedefs:
-                    continue
-                if i and words[i - 1] in ("struct", "union") and (words[i - 1], w) in types.tags:
-                    continue
-                ok = False
-            if ok:
-                out[n] = (path, line)
-                break
+            if i and words[i - 1] in ("struct", "union") and (words[i - 1], w) in types.tags:
+                continue
+            ok = False
+        if ok:
+            out[n] = (path, line)
+        else:
             print("// %s: the extern in %s has a type this TU doesn't know: %s" % (n, os.path.basename(path),
                                                                                   line.strip()))
-    return out
+            others.add(n)
+    return out, others
 
 
 def header_defining(tname):
@@ -921,7 +930,7 @@ def generate(exe, tu, only=None, secs=None):
     names = tu_data(tu)
     info = {n: chunk_info(n) for n in names}
     # externs other files have for this TU's data: their types, and they move to this TU's header (see main)
-    adopted = foreign_externs(tu, names, types)
+    adopted, others = foreign_externs(tu, names, types)
     if adopted:
         try:
             types = Types(parse_preproc(pre, "".join(l.split("//")[0].strip() + "\n" for _, l in adopted.values())))
@@ -929,6 +938,7 @@ def generate(exe, tu, only=None, secs=None):
             print("// foreign externs don't parse here (%s): %s" % (e, " ".join(adopted)))
             adopted = {}
     types.adopted = adopted
+    types.others = others
     if only:
         sel = set(only)
         todo = [n for n in names if n in sel]
@@ -940,6 +950,7 @@ def generate(exe, tu, only=None, secs=None):
     errors = {}
     defs = []
     absorbed = {}       # name -> head that covers it
+    aliases = {}        # declared names inside an object -> the member they are
     i = 0
     while i < len(todo):
         n = todo[i]
@@ -986,8 +997,10 @@ def generate(exe, tu, only=None, secs=None):
             while t.size() > end - addr:
                 if i >= len(todo) or syms.addr.get(todo[i]) != end or info[todo[i]][0] != sec:
                     raise GenError("type is %d bytes, the symbol %d" % (t.size(), size))
-                if todo[i] in types.decls:
-                    raise GenError("type is %d bytes and covers %s, which is declared too" % (t.size(), todo[i]))
+                # a name the code declared for a place inside the object: an alias (config/aliases.txt)
+                for x in syms.by_addr.get(end, []):
+                    if x in types.decls or find_extern(x):
+                        aliases[x] = "%s%s" % (dn, member_path(t, end - addr))
                 absorbed[todo[i]] = n
                 end += info[todo[i]][1]
                 i += 1
@@ -1040,6 +1053,7 @@ def generate(exe, tu, only=None, secs=None):
         tail = end - (last.addr + last.t.size())
         if tail < 0 or tail >= 4 or (sec != ".bss" and any(syms.rd(last.addr + last.t.size(), tail))):
             errors[h] = "objects end at %08X, the symbol at %08X" % (last.addr + last.t.size(), end)
+    gen.aliases = {x: m for x, m in aliases.items() if absorbed_head(x, absorbed, syms) not in errors}
     return todo, defs, absorbed, errors, types, syms, gen
 
 
@@ -1065,6 +1079,40 @@ def find_extern(name):
     """(path, line text) of the extern declarations of name in src/ (headers first)"""
     r = re.compile(r"\s*extern\b[^;]*?[\s*(]%s\s*[\[);]" % re.escape(name))
     return [(p, l) for p, l in src_lines() if name in l and r.match(l)]
+
+
+def absorbed_head(x, absorbed, syms):
+    for n in syms.by_addr.get(syms.addr[x], []):
+        if n in absorbed:
+            return absorbed[n]
+    return None
+
+
+def member_path(t, off):
+    """'.inv_24.yan_0' / '[3].field_2': the member of type t at byte offset off (as far as it goes)"""
+    out = ""
+    while off or t.kind in ("struct", "union"):
+        if t.kind == "array":
+            es = t.of.size()
+            out += "[%d]" % (off // es)
+            t, off = t.of, off % es
+        elif t.kind in ("struct", "union"):
+            hit = None
+            for mn, mt, mo, bp, bs in t.members:
+                if bp is None and mo <= off < mo + mt.size():
+                    hit = (mn, mt, mo)
+                    break
+            if hit is None:
+                return out + " + %d" % off
+            out += "." + hit[0]
+            t, off = hit[1], off - hit[2]
+            if not off and t.kind not in ("struct", "union"):
+                break
+            if not off:
+                break
+        else:
+            return out + " + %d" % off
+    return out
 
 
 def find_proto(name):
@@ -1143,7 +1191,7 @@ def main(argv):
             else:
                 inc_here.add(os.path.relpath(path, os.path.join(REPO, "src")))
             continue
-        if not d.declared:
+        if not d.declared and d.name not in types.others:
             ext = "extern %s;" % (const_decl(d.decl, d.name) if d.sec == ".rdata" else d.decl)
             new_ext.append(ext)
         elif d.sec == ".rdata" and not node_is_const(types.decls[d.name].type):
@@ -1190,6 +1238,8 @@ def main(argv):
         print('// #include "%s"' % h)
     for path, line in moves:
         print("// moves here from %s: %s" % (os.path.basename(path), line.strip()))
+    for x, m in sorted(gen.aliases.items()):
+        print("// alias %s == %s" % (x, m))
     if "--write" in argv:
         path = os.path.join(REPO, "src", tu + ".c")
         text = open(path).read()
@@ -1209,6 +1259,10 @@ def main(argv):
                 fixed = const_decl(decl[len("extern"):].strip(), n)
                 src = src.replace(line, line.replace(decl, "extern " + fixed), 1)
                 open(p, "w").write(src)
+        if gen.aliases:
+            with open(os.path.join(REPO, "config", "aliases.txt"), "a") as f:
+                for x, m in sorted(gen.aliases.items(), key=lambda a: syms.addr[a[0]]):
+                    f.write("%-32s # == %s\n" % (x, m))
         if new_ext:
             add_externs(tu, new_ext)
             add_includes(header_for(tu), hdr_incs)

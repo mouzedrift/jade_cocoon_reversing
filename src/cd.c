@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "cd.h"
 #include "tu_8003C6C8.h"
+#include "main.h"
 
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
@@ -431,7 +432,6 @@ int FindFreeFileRequest_8003BC44(void)
     }
     return -1;
 }
-extern unsigned char fileRequestParams_800954C0[][0x64];
 typedef struct
 {
     int count;
@@ -629,7 +629,6 @@ struct FileTask
     int sectors;
     int retry;
 };
-extern EventNode* fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {

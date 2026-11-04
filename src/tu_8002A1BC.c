@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "tu_8002A1BC.h"
 #include "tu_80014954.h"
+#include "main.h"
 
 const char dword_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -27,7 +28,6 @@ const char aNo_80074198[] = "\202m\202\217"; // No
 const int dword_800741A0 = 0;
 
 
-extern SpuReverbAttr reverbAttr_80091CC8;
 extern void UpdateReverb_8002A218(void);
 // Matched
 void InitReverbTask_8002A1BC(int* p)

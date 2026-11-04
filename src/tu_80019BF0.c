@@ -20,6 +20,7 @@
 #include "tu_80014954.h"
 #include "effect.h"
 #include "event.h"
+#include "main.h"
 
 // the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
@@ -101,13 +102,6 @@ extern short dword_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
-extern unsigned short padPrevHeld_800918C8[];
-extern unsigned short padRepeat_800918CC[];
-extern unsigned short padReleased_800918D4[];
-extern unsigned short padPressed_8009194C[];
-extern unsigned short padHoldFrames_80091950[][16];
-extern signed char padAnalog_800918D8[][4];
-extern unsigned char padAnalogMax_800918E0[][4];
 #if 0
 // Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
@@ -153,7 +147,6 @@ void sub_8001A38C(void)
     dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
     dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
-extern unsigned char byte_8008D460[3];
 // Matched
 void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
 {
@@ -568,8 +561,6 @@ extern void* CreateEventList_800435B4(void* list);
 extern void RunEventList_80043898(void* n);
 extern void RunEventListFreeCallbacks_800438F8(void* n);
 extern int FreeEventList_80043A5C(void* head);
-extern DRAWENV drawEnv_8008D698[2];
-extern DISPENV dispEnv_8008D750[2];
 extern void InitMovie_8001B1B0(void);
 extern void sub_8001B714(void);
 extern void sub_8001B540(void);

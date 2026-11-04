@@ -19,6 +19,7 @@
 
 #include "tu_80036528.h"
 #include "tu_80014954.h"
+#include "main.h"
 
 extern Block104 cameraState_8008D4F0;
 extern ShortPair dword_8008D474;
@@ -30,7 +31,6 @@ typedef struct
     unsigned char pad;
     short field_4;
 } struct_buf_80036528;
-extern EventNode* vibrationTasks_8008D4B8;
 extern void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o);
 // Matched
 void StartPadVibration_80036528(int idx, int b)
@@ -363,7 +363,6 @@ void nullsub_5(void)
 }
 extern void sub_80039E14(void);
 extern int geomScreenDistance_8008B548;
-extern short word_8008D51E;
 // Matched
 void ResetCameraToLevant_800376A8(void)
 {
@@ -676,8 +675,6 @@ void sub_80038230(CameraCtrl* p)
     sub_8003891C(p, &levantPos_8008BD18.pos);
 }
 extern double pow(double, double);
-extern int dword_8008D4BC;
-extern int dword_8008D66C;
 // Matched
 void sub_8003856C(CameraCtrl* p)
 {
@@ -829,7 +826,6 @@ void sub_80038CA8(CameraCtrl* p)
     p->field2EDst_180 = cameraState_8008D4F0.field_2E;
     sub_80038D64(o, &saveData_8008B570.levant_7A8.pos.x);
 }
-extern int stru_8008D504[];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 
 // Matched
@@ -1104,7 +1100,6 @@ void sub_800398B4(CameraCtrl* p, void* q_)
         }
     }
 }
-extern SVECTOR word_8008D4C8;
 extern void sub_8004D0E8(void);
 // Matched
 void sub_80039E14(void)

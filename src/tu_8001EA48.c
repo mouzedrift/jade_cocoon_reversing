@@ -19,6 +19,7 @@
 #include "data_decls.h"
 #include "tu_80014954.h"
 #include "tu_80019BF0.h"
+#include "main.h"
 
 extern short dword_8008D474[2];
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -3812,14 +3813,6 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
         s += 4;
     }
 }
-extern struct_8008D648 dword_8008D648;
-extern int dword_80091C98;
-extern int dword_80091C94;
-extern int dword_80091C5C;
-extern int dword_80091C58;
-extern int dword_80091C90;
-extern int dword_80091C9C;
-extern int dword_80091C8C;
 typedef struct
 {
     int pos[3];
@@ -3827,11 +3820,7 @@ typedef struct
 } struct_80091C78;
 extern struct_80091C78 stru_80091C78;
 extern int dword_800B1DC8;
-extern int dword_80091C54;
-extern short word_80091CB8[];
-extern int dword_80091C10;
 extern int dword_80091C68;
-extern int dword_80091C48;
 // Matched
 void sub_80026FAC(void)
 {
@@ -3884,14 +3873,8 @@ void sub_80026FAC(void)
     dword_80082678 = 0;
     InitActors_8001D378();
 }
-extern int dword_80091C74;
 extern int dword_80091CB4;
 extern EventNode* dword_800B1DA8;
-extern EventNode* dword_8008D400;
-extern EventNode* messageWindowTask_8008D640;
-extern EventNode* dword_8008D49C;
-extern EventNode* dword_8008D674;
-extern EventNode* fileRequestTasks_8008D488;
 extern void FreeActors_8001D3C4(int a0);
 extern void sub_800AC73C(void);
 extern void sub_800A54A0(void);
@@ -4311,7 +4294,6 @@ typedef struct
 extern MapEntry16** dword_800B0608[];
 #define MAP_ENTRY_CF8(i) dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
 extern int dword_800B0EC0;
-extern int dword_80091CB0;
 extern void sub_800ADDAC(void);
 extern int sub_800A683C(int a0);
 extern void sub_800AD124(int a0);
@@ -4617,8 +4599,6 @@ extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* sub_80027A88();
-extern short dword_80091CA8[];
-extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched
 void sub_80028808(void* a0, int* a1)
 {

@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "tu_8001EA48.h"
 #include "tu_80040718.h"
+#include "main.h"
 
 const char dword_80074A24[] = "\202v\202\201\202\222\202\216\202\211\202\216\202\207"; // Warning
 const char dword_80074A34[] = "\202s\202\210\202\211\202\223\201@\202\204\202\205\202\215\202\217\201@\202\226\202\205\202\222\202\223\202\211\202\217\202\216\201@\202\217\202\206\201@\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201@\202\211\202\223\201@\202\223\202\224\202\211\202\214\202\214"; // This demo version of Jade Cocoon is still
@@ -73,8 +74,6 @@ void ReloadPublicTiy_80040898(void)
     LoadTiy_80028E74(0, 0, 0, pFile, 1);
     InitFonts_8003DA70();
 }
-extern SPRT* copyrightSprts_8008D47C;
-extern DR_TPAGE* copyrightTPages_8008B4EC;
 
 
 // Matched

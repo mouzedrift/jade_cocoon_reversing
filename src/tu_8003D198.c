@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "tu_8003D198.h"
+#include "main.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
@@ -438,7 +439,6 @@ int sub_8003DB74(unsigned int* w, int a)
     }
     return 0;
 }
-extern int textNumberArgs_80096038[];
 extern int dword_80086898[][12];
 extern void IntToText_8003F610(unsigned short* buf, int val);
 extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
