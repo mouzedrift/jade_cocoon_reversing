@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "unit_stats.h"
 #include "font.h"
+#include "engine.h"
 
 typedef struct TitleMenuItem
 {
@@ -178,7 +179,6 @@ extern int IsConfigMenuActive_800C45D8(void);
 extern void EncodeName_8003F7C8(void* text, void* out);
 extern void SsSepSetDecrescendo(short, short, short, long);
 extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
-extern void SetFadeMode_8001C19C(int a0, int a1);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void srand(unsigned int seed); // PSY-Q LIBC

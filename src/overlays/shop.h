@@ -314,8 +314,6 @@ int IsSceneFadeDone_8001AB94();           // engine.h
 void fn_8001ABEC(int a);                  // engine.h
 int GetMagicElement_8001AD30(int i);      // engine.h
 void ClearMagicBit_8001AE00(unsigned int* b, int i); // engine.h
-int CountMagicBits_8001AE54(unsigned int* b);        // engine.h
-int FindNthMagicBit_8001AEC0(unsigned int* bits, int n); // engine.h
 void* fn_8001D45C(void* p);               // engine.h (CreateActor)
 void DestroyActor_8001D600(void* p);      // engine.h
 void fn_8001D68C(void* p, int on);        // engine.h

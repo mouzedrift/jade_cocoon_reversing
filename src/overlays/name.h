@@ -10,6 +10,7 @@
 #include "pad_text.h"
 #include "font.h"
 #include "menu_window.h"
+#include "engine.h"
 
 // a cursor area of the screen: the character grid, the page selector, the commands
 typedef struct
@@ -174,7 +175,6 @@ extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
 extern void DrawMenuBackground_8002BE10();
 extern void EncodeName_8003F7C8(void* name, int dest);
 extern void DecodeText_8003F748(int a, void* name);
-extern void SetFadeMode_8001C19C(int a, int b); // engine.c: K&R, one argument
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern int charWidthThresholds_80086898[][12];
 extern int MoveGridCursorP1_8003D630();

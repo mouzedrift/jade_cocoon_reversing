@@ -18,6 +18,7 @@
 #include "unit.h"
 #include "tiy.h"
 #include "minion_menu.h"
+#include "engine.h"
 
 
 
@@ -948,7 +949,6 @@ int CheckItemUsable_80033AFC(ListMenuState* menu)
     }
     return 0;
 }
-extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int GetSkillMpCost_80031A04(void* p, int idx);
 // Matched
 int CheckMagicCastable_80033C08(ListMenuState* menu)

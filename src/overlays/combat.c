@@ -494,10 +494,10 @@ int GetSlotSkills_800A11A0(int i)
 }
 
 // Matched
-int GetSlotMagicBits_800A11BC(int i)
+unsigned int* GetSlotMagicBits_800A11BC(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    return (int)&s->minion_4->magicBits_F4;
+    return &s->minion_4->magicBits_F4;
 }
 
 // Matched

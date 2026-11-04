@@ -358,7 +358,6 @@ extern void WaitMapOverlay_800A7654();
 
 extern void EncounterWatchTask_800A1314();
 
-extern void SetFadeMode_8001C19C(int a, int b);
 
 extern void RunEventListFreeCallbacks_800438F8(int a);
 

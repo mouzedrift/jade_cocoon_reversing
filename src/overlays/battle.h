@@ -304,7 +304,6 @@ extern void RemoveEnemy_800A2924();
 extern void* memset(void* dst, int c, unsigned int n); // the exe's libc memset
 
 
-extern void SetFadeMode_8001C19C();
 
 extern void SwapEncounterEnemy_800A2AE8(void);
 
@@ -915,7 +914,6 @@ extern void BattleMenuTask_800C8A08();
 
 extern int GetLastInventorySlot_800AD308(int a);
 
-extern int CountMagicBits_8001AE54(unsigned int* h);
 
 
 
@@ -974,7 +972,6 @@ extern int GetUnitSkills_80031B30(int a);
 
 extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
-extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
 extern int GetMagicTargetFlags_8001ACE4(int a);
 
@@ -1035,7 +1032,6 @@ extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 
 extern void DrawMagicList_8002CAC8(void* a0, void* a1);
 
-extern int FindNthMagicBit_8001AEC0();
 
 
 extern void DrawMenuHelpText_800C8828(int text);

@@ -455,7 +455,7 @@ int GetSelectedSkill_800CBC28()
 
 int GetSelectedMagic_800CBC58()
 {
-    int bits = GetSlotMagicBits_800A11BC(side_800CD839);
+    unsigned int* bits = GetSlotMagicBits_800A11BC(side_800CD839);
     return FindNthMagicBit_8001AEC0(bits, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4));
 }
 
@@ -611,7 +611,7 @@ void DrawCmdMenu_800CBEA4()
         ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         ref.fieldMenu_A = 0;
         DrawMagicList_8002CAC8(&ref, pos.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
+        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
     }
     if (menuState_800CD83A == 5)
     {

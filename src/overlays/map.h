@@ -8,6 +8,7 @@
 #include "main.h"
 #include "pad_text.h"
 #include "font.h"
+#include "engine.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -252,7 +253,6 @@ extern void DrawCursorHand_8003D034(void*, int);
 extern void DrawNumber_8003EF74(void*, int, int);
 extern void PlayMusic_800300E0(int, int);
 // state of the map select (SceneSelect_800B860C)
-extern void SetFadeMode_8001C19C(int, int);
 extern void ResetPadHoldFrames_8001CD04(int);
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,

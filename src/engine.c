@@ -1208,8 +1208,7 @@ void ScreenFlashTask_8001C0B4(EventEntry* entry, int* state)
     AddPrimCopy_80040298(pOT_8008D5F4, &dr, 2);
 }
 // Matched
-void SetFadeMode_8001C19C(mode)
-unsigned int mode;
+void SetFadeMode_8001C19C(unsigned int mode, int frames) // frames is unused
 {
     switch (mode)
     {

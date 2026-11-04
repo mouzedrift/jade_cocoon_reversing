@@ -775,7 +775,6 @@ extern int fieldMode_800B0EC0;
 extern int IsSceneHeld_800A5E68(void);
 
 /* exe-side, to move to <exe header> */
-extern void SetFadeMode_8001C19C(); // K&R definition (one argument), MENU passes two
 // = GetDominantSpecies_800338B0: rename once funcs.h declares it returning int (with its unsigned char return
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern void DrawUnitStatusWindow_8002F1C8();
@@ -823,9 +822,7 @@ extern void DrawLargeNumber_8002C100();
 extern void DrawLevantStats_8002F7D0();
 extern int CheckItemUsable_80033AFC();
 extern int CheckItemOnTarget_80033DF4();
-extern int CountMagicBits_8001AE54();
 extern int UpdateMenuCursor_8003D794();
-extern int FindNthMagicBit_8001AEC0();
 extern void DrawScrollArrow_8002C6DC();
 extern int GetEquipmentName_8001D128();
 

@@ -12,6 +12,7 @@
 #include "unit_gauges.h"
 #include "combat.h"
 #include "main.h"
+#include "engine.h"
 
 typedef struct CombBtlNode
 {

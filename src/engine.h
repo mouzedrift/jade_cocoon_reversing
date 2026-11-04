@@ -256,4 +256,7 @@ extern const char aSilverHeadband_80074050[];
 extern const char aIronHeadband_80074070[];
 extern const char aLeatherHeadband_8007408C[];
 
+void SetFadeMode_8001C19C(unsigned int mode, int frames);
+int CountMagicBits_8001AE54(unsigned int* bits);
+int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
 #endif

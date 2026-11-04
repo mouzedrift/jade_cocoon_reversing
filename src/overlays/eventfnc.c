@@ -1731,7 +1731,6 @@ int EvCmdSetReturnPoint_800BAB14(EvScriptCtx* ctx)
 }
 
 #if 0
-extern int SetFadeMode_8001C19C(int a, int b);
 int EvCmdOpenMapSelect_800BAB5C(EvScriptCtx* ctx)
 {
     SetFadeMode_8001C19C(1, 0x20);

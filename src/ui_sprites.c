@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "minion_menu.h"
 #include "effect_data.h"
+#include "engine.h"
 
 const int emptyString_800741EC = 0;
 
@@ -374,8 +375,6 @@ void DrawItemList_8002C728(ListMenuState* menu)
         DrawScrollArrow_8002C6DC(itemScrollDownPos_80082824, 1, menu->ot_6);
     }
 }
-extern int FindNthMagicBit_8001AEC0(void* p, int v);
-extern int CountMagicBits_8001AE54(void* p);
 extern int CheckMagicCastable_80033C08(ListMenuState* p);
 // Matched
 void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)

@@ -8,6 +8,7 @@
 #include "pad_text.h"
 #include "combat.h"
 #include "menu_window.h"
+#include "engine.h"
 
 // a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (0x1C bytes, CombSelItem)
 typedef struct CombRsltText

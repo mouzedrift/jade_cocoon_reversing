@@ -115,7 +115,7 @@ int* GetSlotPos_800A10DC(int i);
 int* GetSlotBonePos_800A10F8(int i);
 void GetSlotEffectTarget_800A111C(int i, EffectTarget* out);
 int GetSlotSkills_800A11A0(int i);
-int GetSlotMagicBits_800A11BC(int i);
+unsigned int* GetSlotMagicBits_800A11BC(int i);
 Minion* GetSlotMinion_800A11D8(int i);
 void StartCombatCamera_800A11F4(void);
 void StopCombatCamera_800A127C(void);
@@ -156,7 +156,6 @@ extern CameraView cameraState_8008D4F0;        // -> camera.h
 extern int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx);  // -> minion_init.h
 extern void SetActorStatusTint_80018EBC(void* actor, UnitStatus* status); // -> minion_init.h
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h
-extern void SetFadeMode_8001C19C(int a, int b); // -> engine.h
 extern void InitActors_8001D378(void);          // -> engine.h
 extern void DestroyActor_8001D600(Actor* actor); // -> engine.h
 extern void TriggerActorEffect_8001E28C(Actor* actor); // -> engine.h

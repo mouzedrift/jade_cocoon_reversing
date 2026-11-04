@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "main.h"
 #include "menu_window.h"
+#include "engine.h"
 
 // DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
 typedef struct StoreMenuWindows
@@ -205,7 +206,6 @@ void SetEquipment_800AD9EC(int itemId, int category);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 int GetEquipmentName_8001D128(int idx, unsigned int kind); // engine.h
-void SetFadeMode_8001C19C(int a, int b);    // engine.h
 void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawTextList_8002A310(void* p, int a); // menu_draw.h
 void DrawUiWindow_8002A384(void* p);        // menu_draw.h
