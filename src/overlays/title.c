@@ -617,7 +617,7 @@ typedef struct
 {
     short x, y, w, h;
 } TitleRectM;
-// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
+// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem in ability_menu.c)
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
 extern void StartNewGameTask_800A1B74(TitleTaskM* t);
 
