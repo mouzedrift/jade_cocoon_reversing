@@ -384,14 +384,14 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
-extern int dword_800A4A8C[];
-extern int dword_800A4A94[];
+extern int aRa_800A4A8C[];
+extern int aMu_800A4A94[];
 // Matched
 int OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 {
     int cfg[18];
     int kinds[2] = {2, 3};
-    int* tbl[2] = {dword_800A4A8C, dword_800A4A94};
+    int* tbl[2] = {aRa_800A4A8C, aMu_800A4A94};
     cfg[0] = 2;
     cfg[1] = 0;
     cfg[2] = lines;
