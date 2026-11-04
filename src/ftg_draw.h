@@ -43,8 +43,8 @@ extern FtgTPageClut ftgSpriteTPageClut_8009AAD8; // tpage / clut of the textured
 // row offset, bit 7 + bits 16-31 depth cue); slot indexes ftgSpriteVtxSlots_800987D8
 extern void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
 
-extern void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
-extern void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m);
+extern void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m);
+extern void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m);
 extern void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t);
 
 // polygon templates built in the scratchpad at 0x1F8001E0 before being copied to next_18

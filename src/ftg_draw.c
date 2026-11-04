@@ -21,18 +21,18 @@
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
 // Matched
-void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m)
+void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m)
 {
-    VECTOR t;
-    VECTOR u;
+    VECTOR tangent;
+    VECTOR cross;
     VECTOR n0;
     VECTOR n1;
     VECTOR n2;
     int ax;
     int ay;
     int az;
-    ScaleVectorToFit_8003B684((int*)v);
-    VectorNormal(v, &n0);
+    ScaleVectorToFit_8003B684((int*)axis);
+    VectorNormal(axis, &n0);
     m->m[0][0] = n0.vx;
     m->m[1][0] = n0.vy;
     m->m[2][0] = n0.vz;
@@ -43,36 +43,36 @@ void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m)
         az = ABS_8004B0A8(n0.vz);
         if (az < ax)
         {
-            t.vx = n0.vy;
-            t.vy = -n0.vx;
+            tangent.vx = n0.vy;
+            tangent.vy = -n0.vx;
             if (n0.vz)
             {
-                t.vz = -(n0.vx * t.vx + n0.vy * t.vy) / n0.vz;
+                tangent.vz = -(n0.vx * tangent.vx + n0.vy * tangent.vy) / n0.vz;
             }
             else
             {
-                t.vz = 0;
+                tangent.vz = 0;
             }
         }
         else
         {
             if (n0.vy)
             {
-                t.vz = n0.vy;
-                t.vy = -n0.vz;
+                tangent.vz = n0.vy;
+                tangent.vy = -n0.vz;
             }
             else
             {
-                t.vz = 0;
-                t.vy = n0.vz;
+                tangent.vz = 0;
+                tangent.vy = n0.vz;
             }
             if (n0.vx)
             {
-                t.vx = -(n0.vz * t.vz + n0.vy * t.vy) / n0.vx;
+                tangent.vx = -(n0.vz * tangent.vz + n0.vy * tangent.vy) / n0.vx;
             }
             else
             {
-                t.vx = 0;
+                tangent.vx = 0;
             }
         }
     }
@@ -81,47 +81,47 @@ void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m)
         az = ABS_8004B0A8(n0.vz);
         if (az < ay)
         {
-            t.vx = n0.vy;
-            t.vy = -n0.vx;
+            tangent.vx = n0.vy;
+            tangent.vy = -n0.vx;
             if (n0.vz)
             {
-                t.vz = -(n0.vx * t.vx + n0.vy * t.vy) / n0.vz;
+                tangent.vz = -(n0.vx * tangent.vx + n0.vy * tangent.vy) / n0.vz;
             }
             else
             {
-                t.vz = 0;
+                tangent.vz = 0;
             }
         }
         else
         {
             if (n0.vz)
             {
-                t.vx = n0.vz;
-                t.vz = -n0.vx;
+                tangent.vx = n0.vz;
+                tangent.vz = -n0.vx;
             }
             else
             {
-                t.vx = 0;
-                t.vz = n0.vx;
+                tangent.vx = 0;
+                tangent.vz = n0.vx;
             }
             if (n0.vy)
             {
-                t.vy = -(n0.vx * t.vx + n0.vz * t.vz) / n0.vy;
+                tangent.vy = -(n0.vx * tangent.vx + n0.vz * tangent.vz) / n0.vy;
             }
             else
             {
-                t.vy = 0;
+                tangent.vy = 0;
             }
         }
     }
-    ScaleVectorToFit_8003B684((int*)&t);
-    VectorNormal(&t, &n1);
+    ScaleVectorToFit_8003B684((int*)&tangent);
+    VectorNormal(&tangent, &n1);
     m->m[0][1] = n1.vx;
     m->m[1][1] = n1.vy;
     m->m[2][1] = n1.vz;
-    OuterProduct12(&n0, &n1, &u);
-    ScaleVectorToFit_8003B684((int*)&u);
-    VectorNormal(&u, &n2);
+    OuterProduct12(&n0, &n1, &cross);
+    ScaleVectorToFit_8003B684((int*)&cross);
+    VectorNormal(&cross, &n2);
     m->m[0][2] = n2.vx;
     m->m[1][2] = n2.vy;
     m->m[2][2] = n2.vz;
@@ -129,16 +129,16 @@ void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m)
 // Matched
 void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_F3* t = (POLY_F3*)FTG_PRIM_SCRATCH;
-    FtgPolyF3* e = obj->f3_0.items;
+    POLY_F3* prim = (POLY_F3*)FTG_PRIM_SCRATCH;
+    FtgPolyF3* poly = obj->f3_0.items;
     int i;
-    setPolyF3(t);
-    for (i = 0; i < obj->f3_0.count; i++, e++)
+    setPolyF3(prim);
+    for (i = 0; i < obj->f3_0.count; i++, poly++)
     {
-        FtgVert* n = &e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = &poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
-        gte_stsxy3_f3(t);
+        gte_stsxy3_f3(prim);
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         if (ctx->opz_10 > 0)
@@ -149,24 +149,24 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 else
                 {
-                    gte_ldrgb(&e->c);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
+                    setSemiTrans(prim, 1);
                 }
-                *(POLY_F3*)ctx->next_18 = *t;
+                *(POLY_F3*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_F3);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
@@ -180,19 +180,19 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 // Matched
 void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_F4* t = (POLY_F4*)FTG_PRIM_SCRATCH;
-    FtgPolyF4* e = obj->f4_20.items;
+    POLY_F4* prim = (POLY_F4*)FTG_PRIM_SCRATCH;
+    FtgPolyF4* poly = obj->f4_20.items;
     int i;
-    setPolyF4(t);
-    for (i = 0; i < obj->f4_20.count; i++, e++)
+    setPolyF4(prim);
+    for (i = 0; i < obj->f4_20.count; i++, poly++)
     {
-        FtgVert* n = &e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = &poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
         gte_nclip();
         gte_stopz(&ctx->opz_10);
-        gte_stsxy3_f4(t);
-        gte_ldv0(&e->v[3]);
+        gte_stsxy3_f4(prim);
+        gte_ldv0(&poly->v[3]);
         gte_rtps();
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
@@ -202,27 +202,27 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             gte_stotz(&ctx->otz_8);
             if (ctx->otz_8 - 1 < 0xFFFU)
             {
-                gte_stsxy(&t->x3);
+                gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 else
                 {
-                    gte_ldrgb(&e->c);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
+                    setSemiTrans(prim, 1);
                 }
-                *(POLY_F4*)ctx->next_18 = *t;
+                *(POLY_F4*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_F4);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
@@ -236,16 +236,16 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 // Matched
 void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_G3* t = (POLY_G3*)FTG_PRIM_SCRATCH;
-    FtgPolyG3* e = obj->g3_8.items;
+    POLY_G3* prim = (POLY_G3*)FTG_PRIM_SCRATCH;
+    FtgPolyG3* poly = obj->g3_8.items;
     int i;
-    setPolyG3(t);
-    for (i = 0; i < obj->g3_8.count; i++, e++)
+    setPolyG3(prim);
+    for (i = 0; i < obj->g3_8.count; i++, poly++)
     {
-        FtgVert* n = e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
-        gte_stsxy3_g3(t);
+        gte_stsxy3_g3(prim);
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         if (ctx->opz_10 > 0)
@@ -256,42 +256,42 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c[0]);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r0);
-                    gte_ldv0(&e->n[1]);
-                    gte_ldrgb(&e->c[1]);
+                    gte_strgb(&prim->r0);
+                    gte_ldv0(&poly->n[1]);
+                    gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r1);
-                    gte_ldv0(&e->n[2]);
-                    gte_ldrgb(&e->c[2]);
+                    gte_strgb(&prim->r1);
+                    gte_ldv0(&poly->n[2]);
+                    gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r2);
+                    gte_strgb(&prim->r2);
                 }
                 else
                 {
-                    gte_ldrgb(&e->c[0]);
+                    gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
-                    gte_ldrgb(&e->c[1]);
+                    gte_strgb(&prim->r0);
+                    gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r1);
-                    gte_ldrgb(&e->c[2]);
+                    gte_strgb(&prim->r1);
+                    gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r2);
+                    gte_strgb(&prim->r2);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
+                    setSemiTrans(prim, 1);
                 }
-                *(POLY_G3*)ctx->next_18 = *t;
+                *(POLY_G3*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_G3);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
@@ -305,19 +305,19 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 // Matched
 void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_G4* t = (POLY_G4*)FTG_PRIM_SCRATCH;
-    FtgPolyG4* e = obj->g4_28.items;
+    POLY_G4* prim = (POLY_G4*)FTG_PRIM_SCRATCH;
+    FtgPolyG4* poly = obj->g4_28.items;
     int i;
-    setPolyG4(t);
-    for (i = 0; i < obj->g4_28.count; i++, e++)
+    setPolyG4(prim);
+    for (i = 0; i < obj->g4_28.count; i++, poly++)
     {
-        FtgVert* n = e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
         gte_nclip();
         gte_stopz(&ctx->opz_10);
-        gte_stsxy3_g4(t);
-        gte_ldv0(&e->v[3]);
+        gte_stsxy3_g4(prim);
+        gte_ldv0(&poly->v[3]);
         gte_rtps();
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
@@ -327,54 +327,54 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             gte_stotz(&ctx->otz_8);
             if (ctx->otz_8 - 1 < 0xFFFU)
             {
-                gte_stsxy(&t->x3);
+                gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c[0]);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r0);
-                    gte_ldv0(&e->n[1]);
-                    gte_ldrgb(&e->c[1]);
+                    gte_strgb(&prim->r0);
+                    gte_ldv0(&poly->n[1]);
+                    gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r1);
-                    gte_ldv0(&e->n[2]);
-                    gte_ldrgb(&e->c[2]);
+                    gte_strgb(&prim->r1);
+                    gte_ldv0(&poly->n[2]);
+                    gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r2);
-                    gte_ldv0(&e->n[3]);
-                    gte_ldrgb(&e->c[3]);
+                    gte_strgb(&prim->r2);
+                    gte_ldv0(&poly->n[3]);
+                    gte_ldrgb(&poly->c[3]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r3);
+                    gte_strgb(&prim->r3);
                 }
                 else
                 {
-                    gte_ldrgb(&e->c[0]);
+                    gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
-                    gte_ldrgb(&e->c[1]);
+                    gte_strgb(&prim->r0);
+                    gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r1);
-                    gte_ldrgb(&e->c[2]);
+                    gte_strgb(&prim->r1);
+                    gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r2);
-                    gte_ldrgb(&e->c[3]);
+                    gte_strgb(&prim->r2);
+                    gte_ldrgb(&poly->c[3]);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r3);
+                    gte_strgb(&prim->r3);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
+                    setSemiTrans(prim, 1);
                 }
-                *(POLY_G4*)ctx->next_18 = *t;
+                *(POLY_G4*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_G4);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
@@ -388,26 +388,26 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 // Matched
 void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_FT3* t;
-    FtgPolyFT3* e;
+    POLY_FT3* prim;
+    FtgPolyFT3* poly;
     int i;
     if (obj->ft3_10.count == 0)
     {
         return;
     }
-    t = (POLY_FT3*)FTG_PRIM_SCRATCH;
-    e = obj->ft3_10.items;
-    setPolyFT3(t);
-    for (i = 0; i < obj->ft3_10.count; i++, e++)
+    prim = (POLY_FT3*)FTG_PRIM_SCRATCH;
+    poly = obj->ft3_10.items;
+    setPolyFT3(prim);
+    for (i = 0; i < obj->ft3_10.count; i++, poly++)
     {
-        FtgVert* n = &e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = &poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
-        *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
-        gte_stsxy3_ft3(t);
+        *(unsigned long*)&prim->u0 = *(unsigned long*)&poly->u0 + ctx->clutAdd_1C;
+        gte_stsxy3_ft3(prim);
         gte_nclip();
-        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
-        *(unsigned short*)&t->u2 = e->v[2].uv;
+        *(unsigned long*)&prim->u1 = *(unsigned long*)&poly->u1;
+        *(unsigned short*)&prim->u2 = poly->v[2].uv;
         gte_stopz(&ctx->opz_10);
         if (ctx->opz_10 > 0)
         {
@@ -417,26 +417,26 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 else
                 {
-                    gte_ldrgb(&e->c);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
-                    t->tpage &= ~0x60;
-                    t->tpage |= ctx->flags_20 & 0x60;
+                    setSemiTrans(prim, 1);
+                    prim->tpage &= ~0x60;
+                    prim->tpage |= ctx->flags_20 & 0x60;
                 }
-                *(POLY_FT3*)ctx->next_18 = *t;
+                *(POLY_FT3*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_FT3);
             }
@@ -446,28 +446,28 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 // Matched
 void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
-    POLY_FT4* t;
-    FtgPolyFT4* e;
+    POLY_FT4* prim;
+    FtgPolyFT4* poly;
     int i;
     if (obj->ft4_30.count == 0)
     {
         return;
     }
-    t = (POLY_FT4*)FTG_PRIM_SCRATCH;
-    e = obj->ft4_30.items;
-    setPolyFT4(t);
-    for (i = 0; i < obj->ft4_30.count; i++, e++)
+    prim = (POLY_FT4*)FTG_PRIM_SCRATCH;
+    poly = obj->ft4_30.items;
+    setPolyFT4(prim);
+    for (i = 0; i < obj->ft4_30.count; i++, poly++)
     {
-        FtgVert* n = &e->n;
-        gte_ldv3c(e->v);
+        FtgVert* normal = &poly->n;
+        gte_ldv3c(poly->v);
         gte_rtpt();
-        *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
+        *(unsigned long*)&prim->u0 = *(unsigned long*)&poly->u0 + ctx->clutAdd_1C;
         gte_nclip();
         gte_stopz(&ctx->opz_10);
-        gte_stsxy3_ft4(t);
-        gte_ldv0(&e->v[3]);
+        gte_stsxy3_ft4(prim);
+        gte_ldv0(&poly->v[3]);
         gte_rtps();
-        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+        *(unsigned long*)&prim->u1 = *(unsigned long*)&poly->u1;
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
         if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
@@ -476,33 +476,33 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
             gte_stotz(&ctx->otz_8);
             if (ctx->otz_8 - 1 < 0xFFFU)
             {
-                gte_stsxy(&t->x3);
+                gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(n);
-                    gte_ldrgb(&e->c);
+                    gte_ldv0(normal);
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
-                    *(unsigned short*)&t->u2 = e->v[2].uv;
-                    *(unsigned short*)&t->u3 = e->v[3].uv;
-                    gte_strgb(&t->r0);
+                    *(unsigned short*)&prim->u2 = poly->v[2].uv;
+                    *(unsigned short*)&prim->u3 = poly->v[3].uv;
+                    gte_strgb(&prim->r0);
                 }
                 else
                 {
-                    *(unsigned short*)&t->u2 = e->v[2].uv;
-                    *(unsigned short*)&t->u3 = e->v[3].uv;
-                    gte_ldrgb(&e->c);
+                    *(unsigned short*)&prim->u2 = poly->v[2].uv;
+                    *(unsigned short*)&prim->u3 = poly->v[3].uv;
+                    gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_dpcs();
-                    gte_strgb(&t->r0);
+                    gte_strgb(&prim->r0);
                 }
                 if (ctx->flags_20 & 0x10)
                 {
-                    setSemiTrans(t, 1);
-                    t->tpage &= ~0x60;
-                    t->tpage |= ctx->flags_20 & 0x60;
+                    setSemiTrans(prim, 1);
+                    prim->tpage &= ~0x60;
+                    prim->tpage |= ctx->flags_20 & 0x60;
                 }
-                *(POLY_FT4*)ctx->next_18 = *t;
+                *(POLY_FT4*)ctx->next_18 = *prim;
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_FT4);
             }
@@ -513,82 +513,82 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
-    FtgSpriteVtx* o;
-    FtgSprite* s;
+    FtgSpriteVtx* vtx;
+    FtgSprite* sprite;
     int i;
     if (obj->texSpriteCount_48 == 0)
     {
         return;
     }
-    o = ftgSpriteVtxNext_80098180;
-    o->rgbc_C = 0x3C808080;
-    gte_ldrgb(&o->rgbc_C);
-    s = obj->texSprites_50;
-    for (i = 0; i < (obj->texSpriteCount_48 + 2) / 3; i++, s += 3)
+    vtx = ftgSpriteVtxNext_80098180;
+    vtx->rgbc_C = 0x3C808080;
+    gte_ldrgb(&vtx->rgbc_C);
+    sprite = obj->texSprites_50;
+    for (i = 0; i < (obj->texSpriteCount_48 + 2) / 3; i++, sprite += 3)
     {
-        gte_ldv3(&s[0].p1, &s[1].p1, &s[2].p1);
+        gte_ldv3(&sprite[0].p1, &sprite[1].p1, &sprite[2].p1);
         gte_rtpt();
         ftgSpriteTPageClut_8009AAD8.word = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
-        gte_stsxy3(&o[0].sxy_0, &o[1].sxy_0, &o[2].sxy_0);
-        gte_stsz3(&o[0].sz_4, &o[1].sz_4, &o[2].sz_4);
+        gte_stsxy3(&vtx[0].sxy_0, &vtx[1].sxy_0, &vtx[2].sxy_0);
+        gte_stsz3(&vtx[0].sz_4, &vtx[1].sz_4, &vtx[2].sz_4);
         if (ctx->flags_20 & 1)
         {
-            gte_ldv3(&s[0].p0, &s[1].p0, &s[2].p0);
+            gte_ldv3(&sprite[0].p0, &sprite[1].p0, &sprite[2].p0);
             gte_lddp(ctx->dq_C);
             gte_ncdt();
-            o[0].uv_8 = s[0].p1.uv;
-            o[1].uv_8 = s[1].p1.uv;
-            o[2].uv_8 = s[2].p1.uv;
-            gte_strgb3(&o[0].rgbc_C, &o[1].rgbc_C, &o[2].rgbc_C);
+            vtx[0].uv_8 = sprite[0].p1.uv;
+            vtx[1].uv_8 = sprite[1].p1.uv;
+            vtx[2].uv_8 = sprite[2].p1.uv;
+            gte_strgb3(&vtx[0].rgbc_C, &vtx[1].rgbc_C, &vtx[2].rgbc_C);
         }
         else
         {
-            gte_ldv3(&s[0].p0, &s[1].p0, &s[2].p0);
-            gte_ldrgb3(&s[0].c, &s[1].c, &s[2].c);
+            gte_ldv3(&sprite[0].p0, &sprite[1].p0, &sprite[2].p0);
+            gte_ldrgb3(&sprite[0].c, &sprite[1].c, &sprite[2].c);
             gte_dpct();
-            o[0].uv_8 = s[0].p1.uv;
-            o[1].uv_8 = s[1].p1.uv;
-            o[2].uv_8 = s[2].p1.uv;
-            gte_strgb3(&o[0].rgbc_C, &o[1].rgbc_C, &o[2].rgbc_C);
+            vtx[0].uv_8 = sprite[0].p1.uv;
+            vtx[1].uv_8 = sprite[1].p1.uv;
+            vtx[2].uv_8 = sprite[2].p1.uv;
+            gte_strgb3(&vtx[0].rgbc_C, &vtx[1].rgbc_C, &vtx[2].rgbc_C);
         }
-        ftgSpriteVtxSlots_800987D8[slot][i * 3] = &o[0];
-        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 1] = &o[1];
-        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 2] = &o[2];
-        o += 3;
+        ftgSpriteVtxSlots_800987D8[slot][i * 3] = &vtx[0];
+        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 1] = &vtx[1];
+        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 2] = &vtx[2];
+        vtx += 3;
     }
-    ftgSpriteVtxNext_80098180 = o;
+    ftgSpriteVtxNext_80098180 = vtx;
 }
 static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
-    FtgSpriteVtx* o = ftgSpriteVtxNext_80098180;
+    FtgSpriteVtx* vtx = ftgSpriteVtxNext_80098180;
     FtgSprite* sp = obj->sprites_44;
     int i;
     for (i = 0; i < obj->spriteCount_40; i++, sp++)
     {
         gte_ldv0(&sp->p1);
         gte_rtps();
-        gte_stsxy(&o->sxy_0);
-        gte_stszotz(&o->sz_4);
+        gte_stsxy(&vtx->sxy_0);
+        gte_stszotz(&vtx->sz_4);
         if (ctx->flags_20 & 1)
         {
             gte_ldv0(&sp->p0);
             gte_ldrgb(&sp->c);
             gte_lddp(ctx->dq_C);
             gte_ncds();
-            gte_strgb(&o->rgbc_C);
+            gte_strgb(&vtx->rgbc_C);
         }
         else
         {
             gte_ldrgb(&sp->c);
             gte_lddp(ctx->dq_C);
             gte_dpcs();
-            gte_strgb(&o->rgbc_C);
+            gte_strgb(&vtx->rgbc_C);
         }
-        ftgSpriteVtxSlots_800987D8[slot][i] = o;
-        o++;
+        ftgSpriteVtxSlots_800987D8[slot][i] = vtx;
+        vtx++;
     }
-    ftgSpriteVtxNext_80098180 = o;
+    ftgSpriteVtxNext_80098180 = vtx;
 }
 // Matched
 void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
@@ -806,14 +806,15 @@ void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, voi
 {
     DrawFtgObjectAt_80044D0C(obj, ot, pos, rot, light, flags, scale, 0);
 }
+// the part of a skeleton GetBonePos_8004D224 reads
 typedef struct
 {
     char pad_0[0x14];
-    unsigned short* field_14;
-} struct_tbl14;
+    unsigned short* offsets_14; // per bone (x, y, z) offset from its parent
+} SkelBoneOffsets;
 
 // Matched
-void GetBonePos_8004D224(unsigned short* out, struct_tbl14* s, int idx)
+void GetBonePos_8004D224(unsigned short* out, SkelBoneOffsets* skel, int idx)
 {
     if (idx == 0)
     {
@@ -822,63 +823,64 @@ void GetBonePos_8004D224(unsigned short* out, struct_tbl14* s, int idx)
         out[2] = 0;
         return;
     }
-    out[0] = s->field_14[idx * 3];
-    out[1] = s->field_14[idx * 3 + 1];
-    out[2] = s->field_14[idx * 3 + 2];
+    out[0] = skel->offsets_14[idx * 3];
+    out[1] = skel->offsets_14[idx * 3 + 1];
+    out[2] = skel->offsets_14[idx * 3 + 2];
 }
+// the part of an animation GetAnimRoot* / GetAnimBoneRot_8004D354 read
 typedef struct
 {
     int pad_0;
-    int n;
+    int boneCount_4;
     char pad_8[0x10];
-    short* field_18;
-} struct_tbl18;
+    short* frames_18; // per frame: root motion, root rotation, then one rotation per bone (x, y, z)
+} AnimFrames;
 // Matched
-void GetAnimRootMotion_8004D288(int* out, struct_tbl18* s, int k)
+void GetAnimRootMotion_8004D288(int* out, AnimFrames* anim, int frame)
 {
-    int i = k * (s->n + 2);
-    out[0] = s->field_18[i * 3];
-    out[1] = s->field_18[i * 3 + 1];
-    out[2] = s->field_18[i * 3 + 2];
+    int i = frame * (anim->boneCount_4 + 2);
+    out[0] = anim->frames_18[i * 3];
+    out[1] = anim->frames_18[i * 3 + 1];
+    out[2] = anim->frames_18[i * 3 + 2];
 }
 // Matched
-void GetAnimRootRot_8004D2EC(short* out, struct_tbl18* s, int k)
+void GetAnimRootRot_8004D2EC(short* out, AnimFrames* anim, int frame)
 {
-    int i = k * (s->n + 2) + 1;
-    out[0] = s->field_18[i * 3];
-    out[1] = s->field_18[i * 3 + 1];
-    out[2] = s->field_18[i * 3 + 2];
+    int i = frame * (anim->boneCount_4 + 2) + 1;
+    out[0] = anim->frames_18[i * 3];
+    out[1] = anim->frames_18[i * 3 + 1];
+    out[2] = anim->frames_18[i * 3 + 2];
 }
 // Matched
-void GetAnimBoneRot_8004D354(short* out, struct_tbl18* s, int j, int k)
+void GetAnimBoneRot_8004D354(short* out, AnimFrames* anim, int bone, int frame)
 {
     int i;
-    int t;
-    if (j == 0)
+    int row;
+    if (bone == 0)
     {
         out[0] = 0;
         out[1] = 0;
         out[2] = 0;
         return;
     }
-    t = j + 2;
-    i = k * (s->n + 2) + t;
-    out[0] = s->field_18[i * 3];
-    out[1] = s->field_18[i * 3 + 1];
-    out[2] = s->field_18[i * 3 + 2];
+    row = bone + 2;
+    i = frame * (anim->boneCount_4 + 2) + row;
+    out[0] = anim->frames_18[i * 3];
+    out[1] = anim->frames_18[i * 3 + 1];
+    out[2] = anim->frames_18[i * 3 + 2];
 }
 /* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
 extern short battleCamSpline1Tail_80084350[];
 #define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
 // Matched
-void RotMatrixXYZ_8004D3D8(SVECTOR* r, MATRIX* m)
+void RotMatrixXYZ_8004D3D8(SVECTOR* rot, MATRIX* m)
 {
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[0][2] = sy;
@@ -894,14 +896,14 @@ void RotMatrixXYZ_8004D3D8(SVECTOR* r, MATRIX* m)
     m->m[2][1] = ((cz * sx) >> 12) - ((b * cx) >> 12);
 }
 // Matched
-void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m)
+void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[2][0] = -sy;
@@ -926,25 +928,25 @@ void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 // Matched
 void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
-    int d;
-    d = (b->vx - a->vx) & 0xFFF;
-    if (d >= 0x800)
+    int diff;
+    diff = (b->vx - a->vx) & 0xFFF;
+    if (diff >= 0x800)
     {
-        d -= 0x1000;
+        diff -= 0x1000;
     }
-    out->vx = (a->vx + d * t / 4096) & 0xFFF;
-    d = (b->vy - a->vy) & 0xFFF;
-    if (d >= 0x800)
+    out->vx = (a->vx + diff * t / 4096) & 0xFFF;
+    diff = (b->vy - a->vy) & 0xFFF;
+    if (diff >= 0x800)
     {
-        d -= 0x1000;
+        diff -= 0x1000;
     }
-    out->vy = (a->vy + d * t / 4096) & 0xFFF;
-    d = (b->vz - a->vz) & 0xFFF;
-    if (d >= 0x800)
+    out->vy = (a->vy + diff * t / 4096) & 0xFFF;
+    diff = (b->vz - a->vz) & 0xFFF;
+    if (diff >= 0x800)
     {
-        d -= 0x1000;
+        diff -= 0x1000;
     }
-    out->vz = (a->vz + d * t / 4096) & 0xFFF;
+    out->vz = (a->vz + diff * t / 4096) & 0xFFF;
 }
 
 FtgSpriteVtx *ftgSpriteVtxNext_80098180 BSS = 0;
