@@ -102,7 +102,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         hit = 100;
         break;
     }
-    if ((signed char)targetStatus->field_20[action->element_8] < 0)
+    if ((signed char)targetStatus->modifiers_20[action->element_8] < 0)
     {
         def = 1;
         eva = def;
@@ -133,7 +133,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
                     root = sqrt(sqrt(actorStatus->element_3E[action->element_8] * 1250));
                     dmg = dmg * (root / 10.0);
                 }
-                dmg = dmg * (signed char)targetStatus->field_20[action->element_8];
+                dmg = dmg * (signed char)targetStatus->modifiers_20[action->element_8];
                 dmg = dmg / 32.0;
                 damage = dmg;
                 damage = dmg;
@@ -178,7 +178,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
             }
             else if (action->damageType_B == 3)
             {
-                deathChance = (signed char)targetStatus->field_20[action->element_8];
+                deathChance = (signed char)targetStatus->modifiers_20[action->element_8];
                 if (rand() % 32 < deathChance)
                 {
                     out->hpDamage_1C = GetHp_800334D8(targetStatus) - 1;
@@ -219,7 +219,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
             }
             else
             {
-                statusChance = (damage * (signed char)targetStatus->field_20[action->element_8]) ? damage * (signed char)targetStatus->field_20[action->element_8] / 32 : 0;
+                statusChance = (damage * (signed char)targetStatus->modifiers_20[action->element_8]) ? damage * (signed char)targetStatus->modifiers_20[action->element_8] / 32 : 0;
             }
             if (statusChance > statusRoll)
             {

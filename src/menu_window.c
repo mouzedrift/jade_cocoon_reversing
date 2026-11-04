@@ -24,126 +24,127 @@ typedef struct
 {
     unsigned short flags;
     char pad_2[0x1A];
-} struct_AAF0_item;
+} MenuWindowItem;
 typedef struct
 {
     int flags;
-    int field_4;
-    int field_8;
-    int field_C;
-    struct_AAF0_item** items;
+    int time_4;
+    int open_8;   // open animation step, 8: open
+    int cursor_C; // highlighted row
+    MenuWindowItem** items;
     int ot;
-} struct_AAF0;
+} MenuWindowList;
+/* DrawWindow_80042460's style */
 typedef struct
 {
     unsigned short color;
-    unsigned char b;
-    unsigned char c;
-} struct_AAF0_param;
+    unsigned char colorSet_2; // GetWindowColors_8004226C
+    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
+} WindowStyle;
 extern short uiColor_8008B590;
 extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
-void DrawMenuItemWindow_8002AAF0(struct_AAF0* p, int i, int j, RECT* r)
+void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
 {
-    struct_AAF0_param t;
-    int k;
-    int f;
-    struct_AAF0_item* it = &p->items[i][j];
-    k = 0;
-    if (it->flags & 0x20)
+    WindowStyle style;
+    int time;
+    int flags;
+    MenuWindowItem* item = &list->items[i][j];
+    time = 0;
+    if (item->flags & 0x20)
     {
         return;
     }
-    f = p->flags;
-    if (f & 8)
+    flags = list->flags;
+    if (flags & 8)
     {
-        t.c = 0;
+        style.semiTrans_3 = 0;
     }
-    else if (f & 0x10)
+    else if (flags & 0x10)
     {
-        t.c = 1;
+        style.semiTrans_3 = 1;
     }
-    else if (f & 0x20)
+    else if (flags & 0x20)
     {
-        t.c = 2;
+        style.semiTrans_3 = 2;
     }
-    else if (f & 0x40)
+    else if (flags & 0x40)
     {
-        t.c = 3;
+        style.semiTrans_3 = 3;
     }
-    else if (f & 0x80)
+    else if (flags & 0x80)
     {
-        t.c = 4;
+        style.semiTrans_3 = 4;
     }
     else
     {
-        t.c = 1;
+        style.semiTrans_3 = 1;
     }
-    f = p->flags;
-    if (f & 1)
+    flags = list->flags;
+    if (flags & 1)
     {
-        t.b = 0;
+        style.colorSet_2 = 0;
     }
-    else if (f & 2)
+    else if (flags & 2)
     {
-        t.b = 1;
-        if (p->field_C == i)
+        style.colorSet_2 = 1;
+        if (list->cursor_C == i)
         {
-            k = p->field_4;
+            time = list->time_4;
         }
     }
-    else if ((f & 4) && p->field_C == i)
+    else if ((flags & 4) && list->cursor_C == i)
     {
-        t.b = 2;
+        style.colorSet_2 = 2;
     }
     else
     {
-        t.b = 0;
+        style.colorSet_2 = 0;
     }
-    f = p->flags;
-    if (!(f & 0x100))
+    flags = list->flags;
+    if (!(flags & 0x100))
     {
-        t.color = uiColor_8008B590;
+        style.color = uiColor_8008B590;
     }
-    else if (f & 0x2000)
+    else if (flags & 0x2000)
     {
-        t.color = 4;
+        style.color = 4;
     }
-    else if (f & 0x1000)
+    else if (flags & 0x1000)
     {
-        t.color = 3;
+        style.color = 3;
     }
-    else if (f & 0x800)
+    else if (flags & 0x800)
     {
-        t.color = 2;
+        style.color = 2;
     }
-    else if (f & 0x400)
+    else if (flags & 0x400)
     {
-        t.color = 1;
+        style.color = 1;
     }
     else
     {
-        t.color = 0;
+        style.color = 0;
     }
-    DrawWindow_80042460(r, (int)&t, &pOT_8008D454[p->ot], k);
+    DrawWindow_80042460(rect, (int)&style, &pOT_8008D454[list->ot], time);
 }
 // Matched
-void AlignMenuItem_8002AC88(int flags, short* a, int b, short* out)
+void AlignMenuItem_8002AC88(int flags, short* rect, int width, short* out)
 {
     if (flags & 4)
     {
-        out[0] = a[0] + (a[2] - b);
-        out[1] = a[1];
+        out[0] = rect[0] + (rect[2] - width);
+        out[1] = rect[1];
         return;
     }
     if (flags & 8)
     {
-        out[0] = a[0] + ((unsigned int)(a[2] - b) >> 1);
-        out[1] = a[1];
+        out[0] = rect[0] + ((unsigned int)(rect[2] - width) >> 1);
+        out[1] = rect[1];
         return;
     }
-    out[0] = a[0];
-    out[1] = a[1];
+    out[0] = rect[0];
+    out[1] = rect[1];
 }
 // Matched
 void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
@@ -207,98 +208,92 @@ void DrawMenuItemWithWindow_8002ADB4(char* item, int window, int ot, int time)
     SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(item + 0x10, window, &pOT_8008D454[ot], time);
 }
-typedef struct
-{
-    unsigned short color;
-    unsigned char b;
-    unsigned char c;
-} struct_text_param;
 extern short uiColor_8008B590;
 extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
 void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int count)
 {
     int* lines = (int*)text;
-    Pos16 p;
-    struct_text_param t;
+    Pos16 cur;
+    WindowStyle style;
     unsigned int i;
-    p.x = pos->x;
-    p.y = pos->y;
+    cur.x = pos->x;
+    cur.y = pos->y;
     for (i = 0; i < count; i++)
     {
         if (lines[i])
         {
-            DrawText_8003E91C(2, lines[i], &p, ot);
+            DrawText_8003E91C(2, lines[i], &cur, ot);
         }
-        p.y += 12;
+        cur.y += 12;
     }
     if (rect)
     {
-        t.c = 1;
-        t.b = 0;
-        t.color = uiColor_8008B590;
-        DrawWindow_80042460(rect, (int)&t, &pOT_8008D454[ot], 0);
+        style.semiTrans_3 = 1;
+        style.colorSet_2 = 0;
+        style.color = uiColor_8008B590;
+        DrawWindow_80042460(rect, (int)&style, &pOT_8008D454[ot], 0);
     }
 }
 // Matched
 void DrawLargeTextBox_8002AF10(int text, int pos, int ot)
 {
-    RECT r;
-    r.x = 10;
-    r.y = 0x99;
-    r.w = 0x12C;
-    r.h = 0x3C;
-    DrawTextBox_8002AFA0(text, pos, ot, &r, 4);
+    RECT rect;
+    rect.x = 10;
+    rect.y = 0x99;
+    rect.w = 0x12C;
+    rect.h = 0x3C;
+    DrawTextBox_8002AFA0(text, pos, ot, &rect, 4);
 }
 // Matched
 void DrawSmallTextBox_8002AF58(int text, int pos, int ot)
 {
-    RECT r;
-    r.x = 10;
-    r.y = 0xC3;
-    r.w = 0x12C;
-    r.h = 0x12;
-    DrawTextBox_8002AFA0(text, pos, ot, &r, 1);
+    RECT rect;
+    rect.x = 10;
+    rect.y = 0xC3;
+    rect.w = 0x12C;
+    rect.h = 0x12;
+    DrawTextBox_8002AFA0(text, pos, ot, &rect, 1);
 }
 #if 0
-void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
+void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
 {
 }
 #endif
 // Matched
 void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
 {
-    Pos16 p;
+    Pos16 cur;
     Pos16* src = (Pos16*)pos;
     if (src)
     {
         ((Pos16*)rect)->x = src->x;
         ((Pos16*)rect)->y = src->y;
     }
-    p.x = ((Pos16*)rect)->x + 4;
-    p.y = ((Pos16*)rect)->y + 5;
-    DrawTextLinesWindow_8002AE38(text, &p, ot, rect, count);
+    cur.x = ((Pos16*)rect)->x + 4;
+    cur.y = ((Pos16*)rect)->y + 5;
+    DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
 typedef struct
 {
     int icon;
     int text;
-} struct_B004_entry;
+} ButtonHelpEntry;
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 extern int MeasureTextWidth_8003E4C8(int text);
 // Matched
-void DrawButtonHelpBar_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
+void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
 {
     Pos16 cur;
     Pos16 base;
-    RECT r;
-    struct_text_param t;
+    RECT rect;
+    WindowStyle style;
     int i;
     i = 0;
-    if (a1)
+    if (origin)
     {
-        base.x = a1->x;
-        base.y = a1->y;
+        base.x = origin->x;
+        base.y = origin->y;
     }
     else
     {
@@ -306,23 +301,23 @@ void DrawButtonHelpBar_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
         base.y = 0xD6;
     }
     cur.x = base.x + 2;
-    for (; e[i].icon >= 0; i++)
+    for (; entries[i].icon >= 0; i++)
     {
-        cur.y = base.y + (14 - uiTiySprts_8008D620[e[i].icon].h) / 2;
-        DrawUiTiySprt_8002C06C(&cur, e[i].icon, ot);
-        cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[e[i].icon].w;
+        cur.y = base.y + (14 - uiTiySprts_8008D620[entries[i].icon].h) / 2;
+        DrawUiTiySprt_8002C06C(&cur, entries[i].icon, ot);
+        cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[entries[i].icon].w;
         cur.y = base.y + 2;
-        DrawText_8003E91C(2, e[i].text, &cur, ot);
-        cur.x = MeasureTextWidth_8003E4C8(e[i].text) + (unsigned short)(cur.x + 4);
+        DrawText_8003E91C(2, entries[i].text, &cur, ot);
+        cur.x = MeasureTextWidth_8003E4C8(entries[i].text) + (unsigned short)(cur.x + 4);
     }
-    r.x = base.x;
-    r.y = base.y;
-    r.w = 0x12C;
-    r.h = 0xE;
-    t.c = 1;
-    t.b = 0;
-    t.color = uiColor_8008B590;
-    DrawWindow_80042460(&r, (int)&t, &pOT_8008D454[ot], 0);
+    rect.x = base.x;
+    rect.y = base.y;
+    rect.w = 0x12C;
+    rect.h = 0xE;
+    style.semiTrans_3 = 1;
+    style.colorSet_2 = 0;
+    style.color = uiColor_8008B590;
+    DrawWindow_80042460(&rect, (int)&style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched

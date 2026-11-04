@@ -30,12 +30,12 @@ const int dword_800741A0 = 0;
 
 extern void UpdateReverb_8002A218(void);
 // Matched
-void InitReverbTask_8002A1BC(int* p)
+void InitReverbTask_8002A1BC(int* task)
 {
     reverbAttr_80091CC8.mask = 0;
     SetReverbMode_8002A280(&reverbAttr_80091CC8, 0);
     SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
-    p[2] = (int)UpdateReverb_8002A218;
+    task[2] = (int)UpdateReverb_8002A218;
 }
 // Matched
 void UpdateReverb_8002A218(void)
@@ -52,89 +52,89 @@ void UpdateReverb_8002A218(void)
     }
 }
 // Matched
-void SetReverbMode_8002A280(SpuReverbAttr* p, short mode)
+void SetReverbMode_8002A280(SpuReverbAttr* attr, short mode)
 {
-    p->mask |= 1;
-    p->mode = (short)(mode | 0x100);
+    attr->mask |= 1;
+    attr->mode = (short)(mode | 0x100);
 }
 // Matched
-void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short left, short right)
+void SetReverbDepth_8002A2A0(SpuReverbAttr* attr, short left, short right)
 {
-    SetReverbDepthLeft_8002A2E8(p, left);
-    SetReverbDepthRight_8002A2FC(p, right);
+    SetReverbDepthLeft_8002A2E8(attr, left);
+    SetReverbDepthRight_8002A2FC(attr, right);
 }
 // Matched
-void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short depth)
+void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* attr, short depth)
 {
-    p->mask |= 2;
-    p->depth.left = depth;
+    attr->mask |= 2;
+    attr->depth.left = depth;
 }
 // Matched
-void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short depth)
+void SetReverbDepthRight_8002A2FC(SpuReverbAttr* attr, short depth)
 {
-    p->mask |= 4;
-    p->depth.right = depth;
+    attr->mask |= 4;
+    attr->depth.right = depth;
 }
 typedef struct
 {
     unsigned short x;
     unsigned short y;
-    int field_4;
-} struct_entry8;
+    int text_4;
+} TextListEntry;
 extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
-void DrawTextList_8002A310(struct_entry8* e, int a1)
+void DrawTextList_8002A310(TextListEntry* entries, int ot)
 {
     unsigned short loc[2];
     int i;
-    if (e)
+    if (entries)
     {
-        for (i = 0; e[i].field_4; i++)
+        for (i = 0; entries[i].text_4; i++)
         {
-            loc[0] = e[i].x;
-            loc[1] = e[i].y;
-            DrawText_8003E91C(2, e[i].field_4, loc, a1);
+            loc[0] = entries[i].x;
+            loc[1] = entries[i].y;
+            DrawText_8003E91C(2, entries[i].text_4, loc, ot);
         }
     }
 }
 typedef struct
 {
-    int field_0;
-    int field_4;
-    short field_8;
-    short field_A;
-} struct_F1C8;
+    int rect_0;
+    int time_4;
+    short colorSet_8;
+    short ot_A;
+} UiWindowDesc;
 extern short uiColor_8008B590;
 typedef struct
 {
     short color;
-    unsigned char field_2;
-    unsigned char field_3;
-} struct_A384_buf;
-extern void DrawWindow_80042460(int a, struct_A384_buf* b, void* c, int d);
+    unsigned char colorSet_2; // GetWindowColors_8004226C
+    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
+} WindowStyle;
+extern void DrawWindow_80042460(int rect, WindowStyle* style, void* ot, int time);
 // Matched
-void DrawUiWindow_8002A384(struct_F1C8* p)
+void DrawUiWindow_8002A384(UiWindowDesc* desc)
 {
-    struct_A384_buf buf;
-    unsigned char c = p->field_8;
+    WindowStyle style;
+    unsigned char colorSet = desc->colorSet_8;
     short col = uiColor_8008B590;
-    buf.field_3 = 1;
-    buf.field_2 = c;
-    buf.color = col;
-    DrawWindow_80042460(p->field_0, &buf, &pOT_8008D454[p->field_A], p->field_4);
+    style.semiTrans_3 = 1;
+    style.colorSet_2 = colorSet;
+    style.color = col;
+    DrawWindow_80042460(desc->rect_0, &style, &pOT_8008D454[desc->ot_A], desc->time_4);
 }
 typedef struct
 {
     int field_0;
     int field_4;
-    int field_8;
-} struct_12_c;
+    int element_8;
+} MagicDataInt;
 // Matched
-short GetMagicElementIcon_8002A3E0(int a)
+short GetMagicElementIcon_8002A3E0(int magic)
 {
-    if (a < 30)
+    if (magic < 30)
     {
-        return (short)elementIcons_800827BC[((struct_12_c*)magicData_8007C438)[a].field_8];
+        return (short)elementIcons_800827BC[((MagicDataInt*)magicData_8007C438)[magic].element_8];
     }
     return 36;
 }
@@ -173,36 +173,36 @@ typedef struct
 {
     unsigned short flags;
     char pad_2[0xE];
-    char field_10[0xC];
-} struct_A5A4_item;
+    char rect_10[0xC];
+} MenuWindowItem;
 typedef struct
 {
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    struct_A5A4_item** field_10;
-    int field_14;
-} struct_A5A4;
+    int flags_0;
+    int time_4;
+    int open_8;   // open animation step, 8: open
+    int cursor_C; // highlighted row
+    MenuWindowItem** items_10;
+    int ot_14;
+} MenuWindowList;
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddClipDrawAreaPrim_80033308(void* a);
 extern void DrawMenuWindowContents_8002A710(void* a, int b);
-extern void DrawMenuItemWindow_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
+extern void DrawMenuItemWindow_8002AAF0(MenuWindowList* p, int i, int j, RECT* r);
 // Matched
-void DrawMenuWindows_8002A5A4(struct_A5A4* p)
+void DrawMenuWindows_8002A5A4(MenuWindowList* list)
 {
-    RECT r;
+    RECT rect;
     int i;
     int j;
-    for (i = 0; p->field_10[i]; i++)
+    for (i = 0; list->items_10[i]; i++)
     {
-        for (j = 0; !(p->field_10[i][j].flags & 1); j++)
+        for (j = 0; !(list->items_10[i][j].flags & 1); j++)
         {
-            InterpolateWindowRect_8004196C(&r, p->field_10[i][j].field_10, p->field_8, 8, 0);
-            AddClipDrawAreaPrim_80033308(pOT_8008D454 + p->field_14);
-            DrawMenuWindowContents_8002A710(&p->field_10[i][j], p->field_14);
-            AddDrawAreaPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
-            DrawMenuItemWindow_8002AAF0(p, i, j, &r);
+            InterpolateWindowRect_8004196C(&rect, list->items_10[i][j].rect_10, list->open_8, 8, 0);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + list->ot_14);
+            DrawMenuWindowContents_8002A710(&list->items_10[i][j], list->ot_14);
+            AddDrawAreaPrim_8003326C((int)&rect, pOT_8008D454 + list->ot_14);
+            DrawMenuItemWindow_8002AAF0(list, i, j, &rect);
         }
     }
     SetFontClutOffset_8003F900(2, 0);
@@ -237,106 +237,106 @@ extern void DrawNumberRightAlignedFont1_8003F264(unsigned short* pos, int v, int
 extern void DrawNumberRightAligned_8003EFBC(unsigned short* pos, int v, int ot);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
-void DrawMenuWindowContents_8002A710(void* a, int ot)
+void DrawMenuWindowContents_8002A710(void* item, int ot)
 {
-    MenuItemD* p = a;
+    MenuItemD* desc = item;
     unsigned char col[8];
-    unsigned short r[4];
+    unsigned short rect[4];
     unsigned short loc[2];
     int mode;
-    if (p->flags & 0x40)
+    if (desc->flags & 0x40)
     {
         return;
     }
-    if (p->type == 0)
+    if (desc->type == 0)
     {
         return;
     }
-    r[0] = p->x + p->mx;
-    r[1] = p->y + p->my;
-    r[2] = p->w - p->mx * 2;
-    r[3] = p->h - p->my * 2;
-    switch (p->type)
+    rect[0] = desc->x + desc->mx;
+    rect[1] = desc->y + desc->my;
+    rect[2] = desc->w - desc->mx * 2;
+    rect[3] = desc->h - desc->my * 2;
+    switch (desc->type)
     {
     case 1:
-        if ((unsigned int)p->text < 0xFFFFFFFF)
+        if ((unsigned int)desc->text < 0xFFFFFFFF)
         {
-            GetMenuItemColor_8002ACE8(p->flags, col);
-            AlignMenuItem_8002AC88(p->flags, r, (*p->sprts_8)[p->text].w, loc);
+            GetMenuItemColor_8002ACE8(desc->flags, col);
+            AlignMenuItem_8002AC88(desc->flags, rect, (*desc->sprts_8)[desc->text].w, loc);
             {
-                DR_TPAGE** fc = p->tpages_C;
-                mode = p->text;
-                AddSprtWithTPage_800331C4(loc, *p->sprts_8 + mode, *fc + mode, pOT_8008D454 + ot, col);
+                DR_TPAGE** fc = desc->tpages_C;
+                mode = desc->text;
+                AddSprtWithTPage_800331C4(loc, *desc->sprts_8 + mode, *fc + mode, pOT_8008D454 + ot, col);
             }
         }
         break;
     case 2:
-        SetMenuItemFont1Clut_8002AD08(p->flags);
-        AlignMenuItem_8002AC88(p->flags, r, MeasureTextWidthFont1_8003E6B0(p->text), loc);
+        SetMenuItemFont1Clut_8002AD08(desc->flags);
+        AlignMenuItem_8002AC88(desc->flags, rect, MeasureTextWidthFont1_8003E6B0(desc->text), loc);
         mode = 1;
         loc[1] += 2;
-        DrawText_8003E91C(mode, p->text, loc, ot);
+        DrawText_8003E91C(mode, desc->text, loc, ot);
         break;
     case 3:
-        SetMenuItemFont2Clut_8002AD44(p->flags);
-        AlignMenuItem_8002AC88(p->flags, r, MeasureTextWidth_8003E4C8(p->text), loc);
+        SetMenuItemFont2Clut_8002AD44(desc->flags);
+        AlignMenuItem_8002AC88(desc->flags, rect, MeasureTextWidth_8003E4C8(desc->text), loc);
         mode = 2;
         loc[1] += 2;
-        DrawText_8003E91C(mode, p->text, loc, ot);
+        DrawText_8003E91C(mode, desc->text, loc, ot);
         break;
     case 4:
-        SetMenuItemFont1Clut_8002AD08(p->flags);
-        loc[0] = r[0];
-        loc[1] = r[1];
-        if (p->flags & 4)
+        SetMenuItemFont1Clut_8002AD08(desc->flags);
+        loc[0] = rect[0];
+        loc[1] = rect[1];
+        if (desc->flags & 4)
         {
-            DrawSmallText_8002FAA0(1, loc, p->text, ot);
+            DrawSmallText_8002FAA0(1, loc, desc->text, ot);
         }
-        else if (p->flags & 8)
+        else if (desc->flags & 8)
         {
-            loc[0] += (short)r[2] / 2;
-            DrawSmallText_8002FAA0(2, loc, p->text, ot);
+            loc[0] += (short)rect[2] / 2;
+            DrawSmallText_8002FAA0(2, loc, desc->text, ot);
         }
         else
         {
-            DrawSmallText_8002FAA0(0, loc, p->text, ot);
+            DrawSmallText_8002FAA0(0, loc, desc->text, ot);
         }
         break;
     case 5:
-        SetMenuItemFont2Clut_8002AD44(p->flags);
-        loc[0] = r[0];
-        loc[1] = r[1];
-        if (p->flags & 4)
+        SetMenuItemFont2Clut_8002AD44(desc->flags);
+        loc[0] = rect[0];
+        loc[1] = rect[1];
+        if (desc->flags & 4)
         {
-            DrawLargeText_8002FBD8(1, loc, p->text, ot);
+            DrawLargeText_8002FBD8(1, loc, desc->text, ot);
         }
-        else if (p->flags & 8)
+        else if (desc->flags & 8)
         {
-            loc[0] += (short)r[2] / 2;
-            DrawLargeText_8002FBD8(2, loc, p->text, ot);
+            loc[0] += (short)rect[2] / 2;
+            DrawLargeText_8002FBD8(2, loc, desc->text, ot);
         }
         else
         {
-            DrawLargeText_8002FBD8(0, loc, p->text, ot);
+            DrawLargeText_8002FBD8(0, loc, desc->text, ot);
         }
         break;
     case 6:
-        SetMenuItemFont1Clut_8002AD08(p->flags);
-        loc[0] = r[0] + r[2];
-        loc[1] = r[1];
-        DrawNumberRightAlignedFont1_8003F264(loc, p->text, ot);
+        SetMenuItemFont1Clut_8002AD08(desc->flags);
+        loc[0] = rect[0] + rect[2];
+        loc[1] = rect[1];
+        DrawNumberRightAlignedFont1_8003F264(loc, desc->text, ot);
         break;
     case 7:
-        SetMenuItemFont2Clut_8002AD44(p->flags);
-        loc[0] = r[0] + r[2];
-        loc[1] = r[1];
-        DrawNumberRightAligned_8003EFBC(loc, p->text, ot);
+        SetMenuItemFont2Clut_8002AD44(desc->flags);
+        loc[0] = rect[0] + rect[2];
+        loc[1] = rect[1];
+        DrawNumberRightAligned_8003EFBC(loc, desc->text, ot);
         break;
     case 8:
-        SetMenuItemDigitColor_8002AD80(p->flags);
-        loc[0] = r[0] + r[2] - 3;
-        loc[1] = r[1] + 2;
-        DrawLargeNumber_8002C100(loc, p->text, ot);
+        SetMenuItemDigitColor_8002AD80(desc->flags);
+        loc[0] = rect[0] + rect[2] - 3;
+        loc[1] = rect[1] + 2;
+        DrawLargeNumber_8002C100(loc, desc->text, ot);
         SetLargeDigitColor_8002C5D0(0);
         break;
     }

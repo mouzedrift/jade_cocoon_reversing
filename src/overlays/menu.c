@@ -1836,7 +1836,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             break;
         case 4:
         {
-            struct_minion_ref r;
+            ListMenuState r;
             DrawMagicInfo_800C06E8(menu);
             if (menu->state_2 == 4)
             {
@@ -1889,7 +1889,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             m = GetMinion_80010598(3, menu->cursors_2A[1]);
             if (m)
             {
-                struct_minion_ref r;
+                ListMenuState r;
                 r.cursor_0 = menu->cursors_2A[10];
                 r.scroll_2 = 0;
                 r.field_4 = s;
@@ -1926,7 +1926,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             break;
         case 11:
         {
-            struct_minion_ref r;
+            ListMenuState r;
             DrawItemInfo_800C0428(menu);
             if (menu->state_2 == 1)
             {

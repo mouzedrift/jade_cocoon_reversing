@@ -479,30 +479,31 @@ typedef struct
 typedef struct
 {
     unsigned char b[4];
-} struct_b4;
+} Bytes4;
 typedef struct
 {
     unsigned char b[8];
-} struct_b8;
+} Bytes8;
+// EffectSpriteFrame as byte groups
 typedef struct
 {
-    struct_b4 f0;
-    struct_b4 f4;
-    struct_b4 f8;
-    struct_b4 fC;
-    struct_b8 f10;
-    struct_b4 f18;
-} struct_1c;
+    Bytes4 texPos_0;
+    Bytes4 texSize_4;
+    Bytes4 pivot_8;
+    Bytes4 size_C;
+    Bytes8 pos_10;
+    Bytes4 rgb_18;
+} EffectSpriteFrameBytes;
 
-// one sprite of an effect frame (0x1C bytes; LoadEffectSprite_80021298 copies it with the struct_1c byte-group view)
+// one sprite of an effect frame (0x1C bytes; LoadEffectSprite_80021298 copies it with the EffectSpriteFrameBytes view)
 typedef struct EffectSpriteFrame
 {
-    short u_0; // texture position; u_0, w_4 and f8 are passed to DrawRotSprite_80044010 as three pointers
+    short u_0; // texture position; u_0, w_4 and pivotX_8 are passed to DrawRotSprite_80044010 as three pointers
     short v_2;
     short w_4; // texture size
     short h_6;
-    short f8;
-    short fA;
+    short pivotX_8; // DrawRotSprite_80044010's pivot
+    short pivotY_A;
     short size_C[2]; // w, h
     short pos_10[3]; // offset in BATTLE; effect_data passes it as the colour argument
     short pad_16;
@@ -590,41 +591,43 @@ typedef struct OverlayLoader
 } OverlayLoader;
 
 // the map's animated tile layers (tileAnim_8008D648, loaded by LoadTileSets_80027778 / LoadTileAnimLayers_800278BC, drawn by
-// GAME's DrawTileAnimLayers_800A0A5C); items_C are the tile sets (struct_27778: field_8 x field_A cells of 32x32)
+// GAME's DrawTileAnimLayers_800A0A5C); items_C are the tile sets (TileSet: columns_8 x rows_A cells of 32x32)
 typedef struct
 {
-    int field_0;
+    int depth_0; // 0..0xFF: places the set's ot z between TileAnimLayers.field_8 (0) and field_4 (0xFF)
     int count;
-    unsigned short field_8;
-    unsigned short field_A;
-    unsigned short* items;
-} struct_27778;
+    unsigned short columns_8;
+    unsigned short rows_A;
+    unsigned short* items; // cells; 0x8000 | n skips n cells
+} TileSet;
+// one frame of an animated tile layer
 typedef struct
 {
-    unsigned char a;
-    unsigned char b;
-    unsigned short c;
-} struct_4b;
+    unsigned char set_0;  // TileAnimLayers.items_C index
+    unsigned char clut_1; // clut row (+ 0x1F0)
+    unsigned short time_2; // low 7 bits: frames shown; 0x80: semi-transparent
+} TileAnimFrame;
 typedef struct
 {
     unsigned int count;
-    struct_4b* items;
-} struct_8_4b;
+    TileAnimFrame* items;
+} TileAnimLayer;
+// per-layer animation state
 typedef struct
 {
-    short a;
-    short b;
-} struct_2s;
+    short timer_0;
+    short frame_2;
+} TileAnimTimer;
 typedef struct
 {
     int count_0;
     int field_4;
     int field_8;
-    struct_27778* items_C;
+    TileSet* items_C;
     int listCount_10;
-    struct_8_4b* lists_14;
-    struct_2s* pairs_18;
-} struct_8008D648;
+    TileAnimLayer* lists_14;
+    TileAnimTimer* pairs_18;
+} TileAnimLayers;
 
 // buffer of the GAME overlay task gameTask_8008B4A4 (overlays/game.h has the full view)
 typedef struct

@@ -61,16 +61,16 @@ int IsSkillLearned_80031954(void* skills, int slot)
 // Matched
 int CountLearnedSkills_80031968(void* skills)
 {
-    int n;
+    int count;
     int i = 0;
-    for (n = i; i < 0xff; i++)
+    for (count = i; i < 0xff; i++)
     {
         if (IsSkillLearned_80031954(skills, i))
         {
-            n++;
+            count++;
         }
     }
-    return n;
+    return count;
 }
 extern int abilityNames_800834E4[];
 extern int abilityBonusNames_80083580[];

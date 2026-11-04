@@ -140,7 +140,7 @@ typedef struct Actor
     unsigned int flags_D4;      // 0xD4
     int fD8;                    // 0xD8
     int* pathTarget_DC;         // 0xDC
-    short fE0;                  // 0xE0
+    short turnStep_E0;          // 0xE0: ActorActionDesc.turnStep_C
     short fE2;                  // 0xE2
     int fE4;                    // 0xE4
     int effectMask_E8;          // 0xE8
@@ -211,7 +211,7 @@ typedef struct
     short scaleTarget_22;
     short nextAnim_24;
     short nextAnim_26;
-    short field_28;
+    short anim_28;          // >= 0: played next (playAnimScript_8007D9A4)
     short queuedAnim_2A;
     int field_2C;
     ActorPath* path_30;

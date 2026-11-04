@@ -19,7 +19,7 @@
 #include "status_panel.h"
 #include "effect_data.h"
 
-const Color_EACC statGridLineColor_800743D0 = { "```" };
+const StatGridColor statGridLineColor_800743D0 = { "```" };
 
 
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
@@ -27,24 +27,24 @@ void DrawStatIcons_8002E0D8(unsigned short* p, short a1);
 // Matched
 void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
 {
-    unsigned short p[2];
-    p[0] = pos[0] + 3;
-    p[1] = pos[1] + 4;
-    DrawUiTiySprt_8002C06C(p, 0x11, ot);
-    p[0] = pos[0] + 4;
-    p[1] = pos[1] + 0x11;
-    DrawUiTiySprt_8002C06C(p, 0x5C, ot);
-    p[0] = pos[0] + 4;
-    p[1] = pos[1] + 0x1E;
-    DrawUiTiySprt_8002C06C(p, 0x3C, ot);
-    p[0] = pos[0] + 1;
-    p[1] = pos[1] + 0x37;
-    DrawUiTiySprt_8002C06C(p, 0x54, ot);
-    p[1] = pos[1] + 0x56;
-    DrawUiTiySprt_8002C06C(p, 0x72, ot);
-    p[0] = pos[0] + 0x4E;
-    p[1] = pos[1];
-    DrawStatIcons_8002E0D8(p, ot);
+    unsigned short loc[2];
+    loc[0] = pos[0] + 3;
+    loc[1] = pos[1] + 4;
+    DrawUiTiySprt_8002C06C(loc, 0x11, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x11;
+    DrawUiTiySprt_8002C06C(loc, 0x5C, ot);
+    loc[0] = pos[0] + 4;
+    loc[1] = pos[1] + 0x1E;
+    DrawUiTiySprt_8002C06C(loc, 0x3C, ot);
+    loc[0] = pos[0] + 1;
+    loc[1] = pos[1] + 0x37;
+    DrawUiTiySprt_8002C06C(loc, 0x54, ot);
+    loc[1] = pos[1] + 0x56;
+    DrawUiTiySprt_8002C06C(loc, 0x72, ot);
+    loc[0] = pos[0] + 0x4E;
+    loc[1] = pos[1];
+    DrawStatIcons_8002E0D8(loc, ot);
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
@@ -71,7 +71,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     int delta;
     unsigned short x;
     unsigned short y;
-    unsigned int u;
+    unsigned int exp;
 
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
     DrawStatusPanelLabels_8002DA3C(pos, ot);
@@ -141,12 +141,12 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     DrawValueGauge_8002EFC4((char*)&unit->mp_C.cur_0, 0, 0, loc, ot, 1);
     expGauge[0] = 2;
     expGauge[1] = 0;
-    u = unit->exp_4;
-    while (u > 0x4000000)
+    exp = unit->exp_4;
+    while (exp > 0x4000000)
     {
-        u -= 0x4000000;
+        exp -= 0x4000000;
     }
-    expGauge[2] = u;
+    expGauge[2] = exp;
     expGauge[3] = 0x4000000;
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x2B;
@@ -202,12 +202,12 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
 extern void DrawRotatedPublicSprite_80031FF4(int a, void* b, void* c, int d);
 extern void DrawSmallNumber3_8002C290(void* p, int a1, int a2);
 // Matched
-void DrawStatDelta_8002E004(unsigned short* p, int delta, int ot)
+void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
 {
     unsigned short pos[2];
-    unsigned short x = p[0];
+    unsigned short x = origin[0];
     pos[0] = x + 3;
-    pos[1] = p[1] + 3;
+    pos[1] = origin[1] + 3;
     if (delta > 0)
     {
         if (delta >= 100)
@@ -225,22 +225,22 @@ void DrawStatDelta_8002E004(unsigned short* p, int delta, int ot)
         }
         DrawRotatedPublicSprite_80031FF4(0x58, &pOT_8008D454[ot], pos, 0xC00);
     }
-    pos[0] = p[0] + 0x14;
-    pos[1] = p[1];
+    pos[0] = origin[0] + 0x14;
+    pos[1] = origin[1];
     DrawSmallNumber3_8002C290(pos, delta, ot);
 }
 extern unsigned char statIcons_80082EBC[];
 extern unsigned char statRowY_80082EE8[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
-void DrawStatIcons_8002E0D8(unsigned short* p, short ot)
+void DrawStatIcons_8002E0D8(unsigned short* origin, short ot)
 {
     unsigned short pos[2];
     short i;
-    pos[0] = p[0];
+    pos[0] = origin[0];
     for (i = 0; i < 5; i++)
     {
-        pos[1] = p[1] + statRowY_80082EE8[i];
+        pos[1] = origin[1] + statRowY_80082EE8[i];
         DrawUiTiySprt_8002C06C(pos, statIcons_80082EBC[i], ot);
     }
 }
@@ -269,22 +269,22 @@ void DrawStatCompare_8002E188(unsigned char* oldStats, unsigned char* newStats, 
 // Matched
 void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned char* outStats)
 {
-    UnitStatus* p = 0; // works on a copy at address 0 (the scratch area)
+    UnitStatus* copy = 0; // works on a copy at address 0 (the scratch area)
     MemCopy_800403E8(0, src, sizeof(UnitStatus));
 
     switch (slot)
     {
     case 0:
-        p->field_1C[0] = itemId;
+        copy->equipment_1C[0] = itemId;
         break;
     case 1:
-        p->field_1C[1] = itemId;
+        copy->equipment_1C[1] = itemId;
         break;
     case 2:
-        p->field_1C[2] = itemId;
+        copy->equipment_1C[2] = itemId;
         break;
     }
-    CalcEquippedStats_80033624(outStats, p);
+    CalcEquippedStats_80033624(outStats, copy);
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern int GetEmptyCocoons_800AD8E4(void);
@@ -295,7 +295,7 @@ extern void DrawCurMaxValue_8002EE28(short* a, unsigned short* pos, short c, int
 // Matched
 void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
 {
-    short r[4];
+    short rect[4];
     unsigned short loc2[2];
     unsigned short base[2];
     unsigned short loc[2];
@@ -312,33 +312,33 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     loc[0] = 0x132;
     loc[1] = 0x32;
     DrawLargeNumber_8002C100(loc, GetEmptyCocoons_800AD8E4(), args->ot_0);
-    r[0] = 0xDB;
-    r[1] = 0x2C;
-    r[2] = 0x5B;
-    r[3] = 0x17;
-    DrawAnimatedWindow_8002BEC8((int)buf, (int)r, args->field_2, args->ot_0, args->field_4, args->field_8);
+    rect[0] = 0xDB;
+    rect[1] = 0x2C;
+    rect[2] = 0x5B;
+    rect[3] = 0x17;
+    DrawAnimatedWindow_8002BEC8((int)buf, (int)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     loc[0] = 0xE0;
     loc[1] = 0x48;
     DrawUiTiySprt_8002C06C(loc, 0x52, args->ot_0);
     loc[0] = 0x132;
     loc[1] = 0x49;
     DrawLargeNumber_8002C100(loc, CountItems_800106B8(), args->ot_0);
-    r[1] = 0x43;
-    r[0] = 0xDB;
-    r[2] = 0x5B;
-    r[3] = 0x16;
-    DrawAnimatedWindow_8002BEC8((int)buf, (int)r, args->field_2, args->ot_0, args->field_4, args->field_8);
+    rect[1] = 0x43;
+    rect[0] = 0xDB;
+    rect[2] = 0x5B;
+    rect[3] = 0x16;
+    DrawAnimatedWindow_8002BEC8((int)buf, (int)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     loc[0] = 0xE0;
     loc[1] = 0x5E;
     DrawUiTiySprt_8002C06C(loc, 0x6F, args->ot_0);
     loc[0] = 0x132;
     loc[1] = 0x5F;
     DrawLargeNumber_8002C100(loc, GetCapturedMinionsCount_800125B8(), args->ot_0);
-    r[0] = 0xDB;
-    r[1] = 0x59;
-    r[2] = 0x5B;
-    r[3] = 0x17;
-    DrawAnimatedWindow_8002BEC8((int)buf, (int)r, args->field_2, args->ot_0, args->field_4, args->field_8);
+    rect[0] = 0xDB;
+    rect[1] = 0x59;
+    rect[2] = 0x5B;
+    rect[3] = 0x17;
+    DrawAnimatedWindow_8002BEC8((int)buf, (int)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[args->ot_0]);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 5;
@@ -386,9 +386,9 @@ void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short
 {
     unsigned short p1[2];
     unsigned short p2[2];
-    unsigned short v[2];
+    unsigned short triPos[2];
     POLY_F3 tri;
-    unsigned short q[2];
+    unsigned short iconPos[2];
     short i;
     short fy;
     short fx;
@@ -418,23 +418,23 @@ void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short
         tri.r0 = elementChartColors_80082EA8[i][0];
         tri.g0 = elementChartColors_80082EA8[i][1];
         tri.b0 = elementChartColors_80082EA8[i][2];
-        v[0] = p1[0];
-        v[1] = p1[1];
-        q[0] = pos[0] + 2;
-        q[1] = pos[1] + 2;
+        triPos[0] = p1[0];
+        triPos[1] = p1[1];
+        iconPos[0] = pos[0] + 2;
+        iconPos[1] = pos[1] + 2;
         if (fx)
         {
-            q[0] = pos[0] + 0x25;
+            iconPos[0] = pos[0] + 0x25;
         }
         if (fy)
         {
-            q[1] = pos[1] + 0x25;
+            iconPos[1] = pos[1] + 0x25;
         }
-        DrawUiTiySprt_8002C06C(q, elementChartIcons_80082EA4[i], ot);
+        DrawUiTiySprt_8002C06C(iconPos, elementChartIcons_80082EA4[i], ot);
         level = levels[elementChartOrder_80082EB8[i]];
         if (level)
         {
-            SetElementChartTri_8002E944(&tri, v, level, i);
+            SetElementChartTri_8002E944(&tri, triPos, level, i);
             AddPrimCopy_80040298(&pOT_8008D454[ot], &tri, 5);
         }
     }
@@ -444,22 +444,22 @@ void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short
 void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level, short quadrant)
 {
     int size = elementChartSizes_80082EF0[level];
-    int w = 26;
+    int half = 26;
     switch (quadrant)
     {
     case 0:
-        tri->x0 = pos[0] + w;
-        tri->y0 = pos[1] + w;
+        tri->x0 = pos[0] + half;
+        tri->y0 = pos[1] + half;
         tri->x1 = tri->x0;
-        tri->y1 = pos[1] - (size - w) - 1;
-        tri->x2 = pos[0] - (size - w) - 1;
+        tri->y1 = pos[1] - (size - half) - 1;
+        tri->x2 = pos[0] - (size - half) - 1;
         tri->y2 = tri->y0;
         break;
     case 1:
         tri->x0 = pos[0];
-        tri->y0 = pos[1] + w;
+        tri->y0 = pos[1] + half;
         tri->x1 = tri->x0;
-        tri->y1 = pos[1] - (size - w) - 1;
+        tri->y1 = pos[1] - (size - half) - 1;
         tri->x2 = pos[0] + size;
         tri->y2 = tri->y0;
         break;
@@ -472,11 +472,11 @@ void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level,
         tri->y2 = tri->y0;
         break;
     case 3:
-        tri->x0 = pos[0] + w;
+        tri->x0 = pos[0] + half;
         tri->y0 = pos[1];
         tri->x1 = tri->x0;
         tri->y1 = pos[1] + size;
-        tri->x2 = pos[0] - (size - w);
+        tri->x2 = pos[0] - (size - half);
         tri->y2 = tri->y0;
         break;
     }
@@ -488,10 +488,10 @@ extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* 
 void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, short ot)
 {
     short loc[2];
-    DVECTOR a;
-    DVECTOR b;
-    RECT r;
-    Color_EACC lineColor = statGridLineColor_800743D0;
+    DVECTOR from;
+    DVECTOR to;
+    RECT rect;
+    StatGridColor lineColor = statGridLineColor_800743D0;
     SPRT* prim;
     BaseStatRatios_8001419C(st->stats_2C.cur_0, loc);
     loc[0] += pos[0];
@@ -503,24 +503,24 @@ void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, shor
     SetSemiTrans(&prim[12], 1);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[12], 5);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[12], 2);
-    r.x = pos[0];
-    r.y = pos[1];
-    r.w = 0x32;
-    r.h = 0x32;
-    DrawRectOutline_80042750(&r, statGridOuterColor_80082E9C, &pOT_8008D454[ot]);
-    r.x = pos[0] + 1;
-    r.y = pos[1] + 1;
-    r.w = 0x30;
-    r.h = 0x30;
-    DrawRectOutline_80042750(&r, statGridInnerColor_80082EA0, &pOT_8008D454[ot]);
-    a.vx = pos[0] + 2;
-    a.vy = pos[1] + 0x1A;
-    b.vx = pos[0] + 0x32;
-    b.vy = a.vy;
-    DrawLine_80042870(&a, &b, lineColor.c, &pOT_8008D454[ot]);
-    a.vx = pos[0] + 0x19;
-    a.vy = pos[1] + 2;
-    b.vx = a.vx;
-    b.vy = pos[1] + 0x32;
-    DrawLine_80042870(&a, &b, lineColor.c, &pOT_8008D454[ot]);
+    rect.x = pos[0];
+    rect.y = pos[1];
+    rect.w = 0x32;
+    rect.h = 0x32;
+    DrawRectOutline_80042750(&rect, statGridOuterColor_80082E9C, &pOT_8008D454[ot]);
+    rect.x = pos[0] + 1;
+    rect.y = pos[1] + 1;
+    rect.w = 0x30;
+    rect.h = 0x30;
+    DrawRectOutline_80042750(&rect, statGridInnerColor_80082EA0, &pOT_8008D454[ot]);
+    from.vx = pos[0] + 2;
+    from.vy = pos[1] + 0x1A;
+    to.vx = pos[0] + 0x32;
+    to.vy = from.vy;
+    DrawLine_80042870(&from, &to, lineColor.c, &pOT_8008D454[ot]);
+    from.vx = pos[0] + 0x19;
+    from.vy = pos[1] + 2;
+    to.vx = from.vx;
+    to.vy = pos[1] + 0x32;
+    DrawLine_80042870(&from, &to, lineColor.c, &pOT_8008D454[ot]);
 }

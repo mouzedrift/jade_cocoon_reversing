@@ -79,20 +79,20 @@ int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
 // Matched
 int IsConfirmPressed_8003D288(int playSfx, int pad)
 {
-    int r = 0;
-    unsigned int x;
+    int pressed = 0;
+    unsigned int buttons;
     if ((padPressed_8009194C[pad] & 0x40) && !(padHeld_800918D0[pad] & 4) && !(padReleased_800918D4[pad] & 4))
     {
         goto done;
     }
-    x = padPressed_8009194C[pad];
-    if (!(x & 4))
+    buttons = padPressed_8009194C[pad];
+    if (!(buttons & 4))
     {
         goto end;
     }
     if ((padHeld_800918D0[pad] & 0x40) || (padReleased_800918D4[pad] & 0x40))
     {
-        if (!(x & 0x40))
+        if (!(buttons & 0x40))
         {
             goto end;
         }
@@ -102,9 +102,9 @@ done:
     {
         PlaySfx_80031494(0x7E);
     }
-    r = 1;
+    pressed = 1;
 end:
-    return r;
+    return pressed;
 }
 // Matched
 int IsConfirmPressedP1_8003D380(int playSfx)
@@ -119,17 +119,17 @@ int IsConfirmPressedP2_8003D3A0(int playSfx)
 // Matched
 int IsCancelPressed_8003D3C0(int playSfx, int pad)
 {
-    int r = 0;
-    unsigned short x = padPressed_8009194C[pad];
-    if ((x & 0x10) || (x & 1))
+    int pressed = 0;
+    unsigned short buttons = padPressed_8009194C[pad];
+    if ((buttons & 0x10) || (buttons & 1))
     {
         if (playSfx)
         {
             PlaySfx_80031494(0x7D);
         }
-        r = 1;
+        pressed = 1;
     }
-    return r;
+    return pressed;
 }
 // Matched
 int IsCancelPressedP1_8003D41C(int playSfx)
@@ -144,8 +144,8 @@ int IsCancelPressedP2_8003D43C(int playSfx)
 // Matched
 int IsCircleHeld_8003D45C(int idx)
 {
-    unsigned int f = padHeld_800918D0[idx] & 0x20;
-    return f != 0;
+    unsigned int held = padHeld_800918D0[idx] & 0x20;
+    return held != 0;
 }
 // Matched
 int IsCircleHeldP1_8003D480(void)
@@ -158,222 +158,222 @@ int IsCircleHeldP2_8003D4A0(void)
     return IsCircleHeld_8003D45C(1);
 }
 // Matched
-int MoveGridCursor_8003D4C0(short* m, int idx)
+int MoveGridCursor_8003D4C0(short* grid, int idx)
 {
-    int r = 1;
-    if (m[4] < 0)
+    int result = 1;
+    if (grid[4] < 0)
     {
-        m[4] = 0;
+        grid[4] = 0;
     }
     if (padRepeat_800918CC[idx] & 0x2000)
     {
-        if (m[4] % m[0] == m[0] - 1)
+        if (grid[4] % grid[0] == grid[0] - 1)
         {
-            r |= 2;
+            result |= 2;
         }
         else
         {
-            m[4]++;
+            grid[4]++;
         }
     }
     if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (m[4] % m[0] == 0)
+        if (grid[4] % grid[0] == 0)
         {
-            r |= 4;
+            result |= 4;
         }
         else
         {
-            m[4]--;
+            grid[4]--;
         }
     }
     if (padRepeat_800918CC[idx] & 0x1000)
     {
-        if (m[4] < m[0])
+        if (grid[4] < grid[0])
         {
-            r |= 8;
+            result |= 8;
         }
         else
         {
-            m[4] -= m[0];
+            grid[4] -= grid[0];
         }
     }
     if (padRepeat_800918CC[idx] & 0x4000)
     {
-        if (m[4] > m[0] * (m[1] - 1) - 1)
+        if (grid[4] > grid[0] * (grid[1] - 1) - 1)
         {
-            r |= 0x10;
+            result |= 0x10;
         }
         else
         {
-            m[4] += m[0];
+            grid[4] += grid[0];
         }
     }
-    return r;
+    return result;
 }
 // Matched
-int MoveGridCursorP1_8003D630(short* m)
+int MoveGridCursorP1_8003D630(short* grid)
 {
     int idx = 0;
-    if (m[3] < 0)
+    if (grid[3] < 0)
     {
-        m[3] = 0;
+        grid[3] = 0;
     }
     if (padRepeat_800918CC[idx] & 0x2000)
     {
-        if (m[3] % m[4] == m[4] - 1)
+        if (grid[3] % grid[4] == grid[4] - 1)
         {
             return 1;
         }
-        m[3]++;
+        grid[3]++;
     }
     if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (m[3] % m[4] == 0)
+        if (grid[3] % grid[4] == 0)
         {
             return 2;
         }
-        m[3]--;
+        grid[3]--;
     }
     if (padRepeat_800918CC[idx] & 0x1000)
     {
-        if (m[3] < m[4])
+        if (grid[3] < grid[4])
         {
             return 3;
         }
-        m[3] -= m[4];
+        grid[3] -= grid[4];
     }
     if (padRepeat_800918CC[idx] & 0x4000)
     {
-        if (m[3] > m[4] * (m[5] - 1) - 1)
+        if (grid[3] > grid[4] * (grid[5] - 1) - 1)
         {
             return 4;
         }
-        m[3] = m[3] + m[4];
+        grid[3] = grid[3] + grid[4];
     }
     return 0;
 }
 typedef struct
 {
-    short field_0;
-    short field_2;
-    unsigned short field_4;
-    unsigned short field_6;
-    short field_8;
-    short field_A;
+    short columns_0;
+    short rows_2;           // visible rows
+    unsigned short count_4; // items
+    unsigned short flags_6; // 1/2: wrap columns/rows, 4..0x20: leave on right/left/up/down, 0x40: scroll
+    short cursor_8;         // index on the page (MoveGridCursor_8003D4C0's m[4])
+    short scroll_A;         // first shown item
 } MenuCursor;
 
 extern int MenuCursorInput_8003D830();
 
 // Matched
-int UpdateMenuCursor_8003D794(MenuCursor* p)
+int UpdateMenuCursor_8003D794(MenuCursor* menu)
 {
-    unsigned short a = p->field_8;
-    unsigned short b = p->field_A;
-    int r = MenuCursorInput_8003D830(p);
-    if (r == 0)
+    unsigned short prevCursor = menu->cursor_8;
+    unsigned short prevScroll = menu->scroll_A;
+    int result = MenuCursorInput_8003D830(menu);
+    if (result == 0)
     {
-        int t = p->field_4 - 1;
-        if (t < p->field_8)
+        int last = menu->count_4 - 1;
+        if (last < menu->cursor_8)
         {
-            p->field_8 = t;
+            menu->cursor_8 = last;
         }
     }
-    if ((short)a != p->field_8 || (short)b != p->field_A)
+    if ((short)prevCursor != menu->cursor_8 || (short)prevScroll != menu->scroll_A)
     {
         PlaySfx_80031494(0x7F);
     }
-    return r;
+    return result;
 }
 // Matched
-int MenuCursorInput_8003D830(MenuCursor* p, int idx)
+int MenuCursorInput_8003D830(MenuCursor* menu, int idx)
 {
-    int r = MoveGridCursor_8003D4C0((short*)p, idx);
-    int t;
-    int t2;
+    int moved = MoveGridCursor_8003D4C0((short*)menu, idx);
+    int wrapX;
+    int wrapY;
 
-    if (p->field_6 & 0x40)
+    if (menu->flags_6 & 0x40)
     {
-        if (r & 8)
+        if (moved & 8)
         {
-            if (p->field_A >= p->field_0)
+            if (menu->scroll_A >= menu->columns_0)
             {
-                p->field_A -= p->field_0;
+                menu->scroll_A -= menu->columns_0;
                 return 8;
             }
         }
-        else if (r & 0x10)
+        else if (moved & 0x10)
         {
-            if (p->field_A < p->field_4 - p->field_0 * p->field_2)
+            if (menu->scroll_A < menu->count_4 - menu->columns_0 * menu->rows_2)
             {
-                p->field_A += p->field_0;
+                menu->scroll_A += menu->columns_0;
                 return 7;
             }
         }
     }
-    if (p->field_6 & 1)
+    if (menu->flags_6 & 1)
     {
-        if (r & 2)
+        if (moved & 2)
         {
-            t = p->field_0 - 1;
-            p->field_8 -= t;
+            wrapX = menu->columns_0 - 1;
+            menu->cursor_8 -= wrapX;
         }
-        if (r & 4)
+        if (moved & 4)
         {
-            p->field_8 += p->field_0 - 1;
+            menu->cursor_8 += menu->columns_0 - 1;
         }
     }
-    if (p->field_6 & 2)
+    if (menu->flags_6 & 2)
     {
-        if (r & 8)
+        if (moved & 8)
         {
-            p->field_8 += p->field_0 * (p->field_2 - 1);
+            menu->cursor_8 += menu->columns_0 * (menu->rows_2 - 1);
         }
-        if (r & 0x10)
+        if (moved & 0x10)
         {
-            t2 = p->field_0 - p->field_2 * p->field_0;
-            p->field_8 += t2;
+            wrapY = menu->columns_0 - menu->rows_2 * menu->columns_0;
+            menu->cursor_8 += wrapY;
         }
     }
-    if ((p->field_6 & 4) && (r & 2))
+    if ((menu->flags_6 & 4) && (moved & 2))
     {
         return 1;
     }
-    if ((p->field_6 & 8) && (r & 4))
+    if ((menu->flags_6 & 8) && (moved & 4))
     {
         return 2;
     }
-    if ((p->field_6 & 0x10) && (r & 8))
+    if ((menu->flags_6 & 0x10) && (moved & 8))
     {
         return 3;
     }
-    if ((p->field_6 & 0x20) && (r & 0x10))
+    if ((menu->flags_6 & 0x20) && (moved & 0x10))
     {
         return 4;
     }
-    if (p->field_6 & 0x40)
+    if (menu->flags_6 & 0x40)
     {
-        p->field_A = AdjustByShoulderButtons_8003D198(p->field_4 - p->field_0 * p->field_2 + 1, p->field_A, p->field_0 * p->field_2, 0);
+        menu->scroll_A = AdjustByShoulderButtons_8003D198(menu->count_4 - menu->columns_0 * menu->rows_2 + 1, menu->scroll_A, menu->columns_0 * menu->rows_2, 0);
     }
     return 0;
 }
 // Matched
-int GetMenuCursorIndex_8003DA54(MenuCursor* p)
+int GetMenuCursorIndex_8003DA54(MenuCursor* menu)
 {
-    return (short)(p->field_8 + p->field_A);
+    return (short)(menu->cursor_8 + menu->scroll_A);
 }
 typedef struct
 {
-    unsigned short field_0;
-    unsigned short field_2;
-    unsigned short field_4;
-    unsigned short field_6;
-    unsigned short field_8;
-    unsigned short field_A;
-    unsigned short field_C;
+    unsigned short sprite_0; // publicTiySprts_8008D434 index
+    unsigned short columns_2;
+    unsigned short firstChar_4;
+    unsigned short w_6;
+    unsigned short h_8;
+    unsigned short clutX_A;
+    unsigned short clutY_C;
     unsigned short pad_E;
-    unsigned char* field_10;
-    unsigned short field_14;
+    unsigned char* widths_10;
+    unsigned short pageGlyphs_14; // glyphs per clut row
     unsigned short pad_16;
 } FontDef;
 extern FontDef fontDefs_80086574[];
@@ -381,25 +381,25 @@ extern FontDef fontDefs_80086574[];
 void InitFonts_8003DA70(void)
 {
     int i;
-    FontDef* e;
-    Font* f;
+    FontDef* def;
+    Font* font;
     for (i = 0; i < 3; i++)
     {
-        e = &fontDefs_80086574[i];
-        f = &fonts_80095FB0[i];
-        MemCopy_800403E8(f, &publicTiySprts_8008D434[e->field_0], 0x14);
-        f->w_10 = e->field_6;
-        f->h_12 = e->field_8;
-        f->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[e->field_0];
-        f->u0_18 = f->u_C;
-        f->v0_1A = f->v_D;
-        f->firstChar_1E = e->field_4;
-        f->clutX_20 = e->field_A;
-        f->clutY_22 = e->field_C;
-        f->widths_24 = e->field_10;
-        f->columns_1C = e->field_2;
-        f->charsPerClut_28 = e->field_14;
-        f->clutOffset_2A = 0;
+        def = &fontDefs_80086574[i];
+        font = &fonts_80095FB0[i];
+        MemCopy_800403E8(font, &publicTiySprts_8008D434[def->sprite_0], 0x14);
+        font->w_10 = def->w_6;
+        font->h_12 = def->h_8;
+        font->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[def->sprite_0];
+        font->u0_18 = font->u_C;
+        font->v0_1A = font->v_D;
+        font->firstChar_1E = def->firstChar_4;
+        font->clutX_20 = def->clutX_A;
+        font->clutY_22 = def->clutY_C;
+        font->widths_24 = def->widths_10;
+        font->columns_1C = def->columns_2;
+        font->charsPerClut_28 = def->pageGlyphs_14;
+        font->clutOffset_2A = 0;
     }
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
@@ -407,7 +407,7 @@ extern void AddDrawAreaPrim_8003326C(void* p, unsigned long* ot);
 typedef struct TextWindow TextWindow;
 void DrawTextWindow_8003DCA4(int draw, TextWindow* w);
 // Matched
-int UpdateTextWindow_8003DB74(unsigned int* w, int a)
+int UpdateTextWindow_8003DB74(unsigned int* w, int draw)
 {
     if (w[9] >= 3 - (settingsFlags_8008B58C.word & 7))
     {
@@ -420,7 +420,7 @@ int UpdateTextWindow_8003DB74(unsigned int* w, int a)
     }
     w[8] = w[7];
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
-    DrawTextWindow_8003DCA4(a, (TextWindow*)w);
+    DrawTextWindow_8003DCA4(draw, (TextWindow*)w);
     AddDrawAreaPrim_8003326C(w + 1, pOT_8008D454);
     switch (w[10])
     {
@@ -463,17 +463,17 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     int limit;
     int count;
     int y;
-    Font* f;
-    unsigned short* s;
+    Font* font;
+    unsigned short* text;
     unsigned short* sub;
     int* lines;
     int nl;
     int x;
     int ci;
-    unsigned short c;
+    unsigned short ch;
     short k;
     int i;
-    int n;
+    int cell;
     int col;
 
     sub = emptyText_80074994;
@@ -481,14 +481,14 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     name = emptyNameBuf_80074998;
     x = w->x;
     y = w->y;
-    f = &fonts_80095FB0[2];
+    font = &fonts_80095FB0[2];
     lines = w->lines;
     limit = w->limit;
     nl = 0;
     while (*lines != 0)
     {
-        s = EncodeText_8003F684(2, (unsigned short*)*lines++);
-        while (*s != 0 || *sub != 0)
+        text = EncodeText_8003F684(2, (unsigned short*)*lines++);
+        while (*text != 0 || *sub != 0)
         {
             if (count >= limit)
             {
@@ -496,31 +496,31 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
             }
             if (*sub != 0)
             {
-                c = *sub++;
+                ch = *sub++;
             }
             else
             {
-                c = *s++;
+                ch = *text++;
             }
-            ci = c;
-            if (c < 0x7F)
+            ci = ch;
+            if (ch < 0x7F)
             {
                 if (draw)
                 {
-                    f->clut_E = GetClut(f->clutX_20, f->clutY_22 + (ci - 1) / (unsigned short)f->charsPerClut_28 + (unsigned short)f->clutOffset_2A);
-                    n = (ci - 1) % (unsigned short)f->charsPerClut_28;
-                    col = n % (unsigned short)f->columns_1C;
-                    n = n / (unsigned short)f->columns_1C;
-                    f->x0_8 = x;
-                    f->y0_A = y;
-                    f->u_C = f->u0_18 + f->w_10 * col;
-                    f->v_D = f->v0_1A + f->h_12 * n;
-                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f)[0];
-                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f)[1];
+                    font->clut_E = GetClut(font->clutX_20, font->clutY_22 + (ci - 1) / (unsigned short)font->charsPerClut_28 + (unsigned short)font->clutOffset_2A);
+                    cell = (ci - 1) % (unsigned short)font->charsPerClut_28;
+                    col = cell % (unsigned short)font->columns_1C;
+                    cell = cell / (unsigned short)font->columns_1C;
+                    font->x0_8 = x;
+                    font->y0_A = y;
+                    font->u_C = font->u0_18 + font->w_10 * col;
+                    font->v_D = font->v0_1A + font->h_12 * cell;
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
                     count++;
-                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)f)[2];
-                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)f)[3];
-                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)f)[4];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
+                    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
                     addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
                     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
                     for (k = 12; k != 0; k--)
@@ -531,7 +531,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                             break;
                         }
                     }
-                    x += f->w_10;
+                    x += font->w_10;
                 }
             }
             else
@@ -551,7 +551,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                 case 0x83:
                 case 0x84:
                 case 0x85:
-                    SetFontClutOffset_8003F900(2, c - 0x7F);
+                    SetFontClutOffset_8003F900(2, ch - 0x7F);
                     break;
                 case 0x86:
                 case 0x87:
@@ -566,7 +566,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                 case 0x8A:
                 case 0x8B:
                 case 0x8C:
-                    IntToText_8003F610(num, textNumberArgs_80096038[c - 0x88]);
+                    IntToText_8003F610(num, textNumberArgs_80096038[ch - 0x88]);
                     sub = EncodeText_8003F684(2, num);
                     break;
                 case 0xC1:
@@ -575,13 +575,13 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                     break;
                 case 0x91 ... 0xC0:
                     {
-                        for (i = 0; i < (int)(c - 0x91); i++)
+                        for (i = 0; i < (int)(ch - 0x91); i++)
                         {
                             w->flags[i] = -2;
                         }
-                        if (w->flags[c - 0x91] == -1)
+                        if (w->flags[ch - 0x91] == -1)
                         {
-                            w->flags[c - 0x91] = c - 0x91;
+                            w->flags[ch - 0x91] = ch - 0x91;
                         }
                         nl = 1;
                     }
@@ -604,47 +604,47 @@ done:
     if (draw)
     {
         SetFontClutOffset_8003F900(2, 0);
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)f->tpage_14)[0];
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)f->tpage_14)[1];
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
+        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
         addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
 // Matched
-void DrawMsgWindowNextPrompt_8003E268(unsigned short* p)
+void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos)
 {
-    short x = p[0] + 0xC3;
-    short y = p[1] + 0x23;
+    short x = pos[0] + 0xC3;
+    short y = pos[1] + 0x23;
     DrawNextPrompt_8003CF88(x, y, 0);
 }
 typedef struct
 {
     short w;
     short h;
-} struct_size_8003E3B4;
+} TextSize;
 extern int MeasureTextWidth_8003E4C8(int str);
 // Matched
-struct_size_8003E3B4 MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
+TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {
-    struct_size_8003E3B4 sz;
-    short w;
+    TextSize size;
+    short width;
     int i;
-    sz.w = 0;
-    sz.h = 0;
+    size.w = 0;
+    size.h = 0;
     for (i = 0; list[i]; i++)
     {
         if (mask & (1 << i))
         {
-            w = MeasureTextWidth_8003E4C8(list[sz.h]);
-            if (sz.w < w)
+            width = MeasureTextWidth_8003E4C8(list[size.h]);
+            if (size.w < width)
             {
-                sz.w = w;
+                size.w = width;
             }
-            sz.h++;
+            size.h++;
         }
     }
-    sz.h *= 12;
-    return sz;
+    size.h *= 12;
+    return size;
 }
 typedef struct
 {
@@ -654,35 +654,35 @@ typedef struct
 extern int MeasureTextWidth_8003E4C8(int str);
 
 // Matched
-struct_size_8003E3B4 MeasureTextLines_8003E3B4(int* list)
+TextSize MeasureTextLines_8003E3B4(int* list)
 {
-    struct_size_8003E3B4 sz;
-    short w;
+    TextSize size;
+    short width;
     int i;
-    sz.w = 0;
-    sz.h = 0;
+    size.w = 0;
+    size.h = 0;
     for (i = 0; list[i]; i++)
     {
         if (!IsTextMarkerLine_8003E484(list[i]))
         {
-            w = MeasureTextWidth_8003E4C8(list[i]);
-            if (sz.w < w)
+            width = MeasureTextWidth_8003E4C8(list[i]);
+            if (size.w < width)
             {
-                sz.w = w;
+                size.w = width;
             }
-            sz.h++;
+            size.h++;
         }
     }
-    sz.h *= 12;
-    return sz;
+    size.h *= 12;
+    return size;
 }
 // Matched
 int IsTextMarkerLine_8003E484(int text)
 {
-    int v = *EncodeText_8003F684(2, (unsigned short*)text);
-    if (v < 0xC3)
+    int ch = *EncodeText_8003F684(2, (unsigned short*)text);
+    if (ch < 0xC3)
     {
-        if (v >= 0x91)
+        if (ch >= 0x91)
         {
             return 1;
         }
@@ -695,34 +695,34 @@ int MeasureTextWidth_8003E4C8(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
-    unsigned short* s;
+    unsigned short* text;
     unsigned short* sub;
-    short w;
+    short width;
     int k;
-    unsigned short c;
+    unsigned short ch;
 
     sub = emptyText_80074994;
-    w = 0;
+    width = 0;
     name = emptyNameBuf_80074998;
     k = -1;
-    s = EncodeText_8003F684(2, (unsigned short*)str);
-    while (*s != 0 || *sub != 0)
+    text = EncodeText_8003F684(2, (unsigned short*)str);
+    while (*text != 0 || *sub != 0)
     {
         if (*sub != 0 && sub != NULL)
         {
-            c = *sub++;
+            ch = *sub++;
         }
         else
         {
-            c = *s++;
+            ch = *text++;
         }
-        if (c < 0x7F)
+        if (ch < 0x7F)
         {
-            w += GetCharWidth_8003E884(2, (short)c);
+            width += GetCharWidth_8003E884(2, (short)ch);
         }
         else
         {
-            switch (c)
+            switch (ch)
             {
             case 0x86:
             case 0x87:
@@ -741,46 +741,46 @@ int MeasureTextWidth_8003E4C8(int str)
                 sub = EncodeText_8003F684(2, num);
                 break;
             case -1:
-                w += 14;
+                width += 14;
                 break;
             }
         }
     }
-    return w;
+    return width;
 }
 // Matched
 int MeasureTextWidthFont1_8003E6B0(int str)
 {
     unsigned short num[12];
     TextBuf22 name;
-    unsigned short* s;
+    unsigned short* text;
     unsigned short* sub;
-    short w;
+    short width;
     int k;
-    unsigned short c;
+    unsigned short ch;
 
     sub = emptyText_80074994;
-    w = 0;
+    width = 0;
     name = emptyNameBuf_80074998;
     k = -1;
-    s = EncodeText_8003F684(1, (unsigned short*)str);
-    while (*s != 0 || *sub != 0)
+    text = EncodeText_8003F684(1, (unsigned short*)str);
+    while (*text != 0 || *sub != 0)
     {
         if (*sub != 0 && sub != NULL)
         {
-            c = *sub++;
+            ch = *sub++;
         }
         else
         {
-            c = *s++;
+            ch = *text++;
         }
-        if (c < 0x71)
+        if (ch < 0x71)
         {
-            w += GetCharWidth_8003E884(1, (short)c);
+            width += GetCharWidth_8003E884(1, (short)ch);
         }
         else
         {
-            switch (c)
+            switch (ch)
             {
             case 0x86:
             case 0x87:
@@ -803,7 +803,7 @@ int MeasureTextWidthFont1_8003E6B0(int str)
             }
         }
     }
-    return w;
+    return width;
 }
 
 FontDef fontDefs_80086574[2] = {

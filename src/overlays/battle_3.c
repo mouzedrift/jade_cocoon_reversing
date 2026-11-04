@@ -1545,7 +1545,7 @@ void DropSpriteTask_800C1220(EventEntry* task, BatDrop* drop)
     offset[1] = 0;
     offset[2] = 0;
     drop->rot_34[1] += 0x80;
-    DrawRotSprite_80044010(&sprite->poly_C, pos, drop->rot_34, &frame->u_0, &frame->w_4, &frame->f8, size, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
+    DrawRotSprite_80044010(&sprite->poly_C, pos, drop->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, size, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
 // Matched
@@ -1665,7 +1665,7 @@ void HomingSparkTask_800C17EC(EventEntry* task, BatSpark* spark)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, (int*)&zeroSvector_800795D4, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (int*)&zeroSvector_800795D4, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -1707,7 +1707,7 @@ void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark* spark)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -1775,7 +1775,7 @@ void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark* spark)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -1843,7 +1843,7 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
             offset[0] = spark->pos_10[0];
             offset[1] = spark->pos_10[1];
             offset[2] = spark->pos_10[2];
-            DrawRotSprite_80044010(&sprite->poly_C, spark->base_1C, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, spark->base_1C, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -2076,7 +2076,7 @@ void SpriteTrailTask_800C2FC8(EventEntry* task, BatSpriteTrail* trail)
         for (i = 0; i < sprite->frameCounts_4[trail->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[trail->frame_0 / 4096] + i;
-            offset = DrawRotSprite_80044010(&sprite->poly_C, trail->pos_44, trail->rot_80, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            offset = DrawRotSprite_80044010(&sprite->poly_C, trail->pos_44, trail->rot_80, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         trail->trail_50[0].x = trail->pos_44[0] + offset[0];
         trail->trail_50[0].y = trail->pos_44[1] + offset[1];
@@ -4392,14 +4392,14 @@ void HighlightTargetWindows_800C7424(unsigned char page)
 
 int IsMenuSelectionValid_800C7530()
 {
-    struct_minion_ref ref;
+    ListMenuState ref;
     BatTargetQuery query;
     short idx;
     int* error;
     idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
     ref.cursor_0 = pageCursor_800C9E44->cursor_8;
     ref.scroll_2 = pageCursor_800C9E44->scroll_A;
-    ref.field_A = 0;
+    ref.fieldMenu_A = 0;
     menuErrorText_800C9E7C = 0;
     switch (menuPage_800C9E50)
     {
@@ -4813,41 +4813,41 @@ void BattleMenuDraw_800C7DA8()
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][mode] & 0x20) && !(flags & 2))
     {
-        struct_minion_ref ref;
-        ref.field_4 = 2;
+        ListMenuState ref;
+        ref.windowFlags_4 = 2;
         ref.ot_6 = 0xF;
         ref.field_8 = -1;
         ref.minion_C = 0;
-        ref.field_A = 0;
+        ref.fieldMenu_A = 0;
         ref.cursor_0 = itemMenu_800C9308->cursor_8;
         ref.scroll_2 = itemMenu_800C9308->scroll_A;
         DrawItemList_8002C728(&ref);
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][mode] & 0x40) && !(flags & 4))
     {
-        struct_minion_ref ref;
-        ref.field_4 = 2;
+        ListMenuState ref;
+        ref.windowFlags_4 = 2;
         ref.ot_6 = 0xF;
         ref.field_8 = -1;
         ref.cursor_0 = skillMenu_800C92E4->cursor_8;
         ref.scroll_2 = skillMenu_800C92E4->scroll_A;
         ref.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
-        ref.field_A = 0;
+        ref.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&ref, 0);
         previewMpChange_800C9182 = -GetSkillMpCost_80031A04(&ref.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][mode] & 0x80) && !(flags & 8))
     {
-        struct_minion_ref ref;
+        ListMenuState ref;
         short sz[2];
-        ref.field_4 = 2;
+        ref.windowFlags_4 = 2;
         ref.ot_6 = 0xF;
         ref.field_8 = -1;
         ref.cursor_0 = magicMenu_800C92F0->cursor_8;
         ref.scroll_2 = magicMenu_800C92F0->scroll_A;
         ref.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         sz[0] = 0x60;
-        ref.field_A = 0;
+        ref.fieldMenu_A = 0;
         sz[1] = 0x45;
         DrawMagicList_8002CAC8(&ref, sz);
         previewMpChange_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0)));

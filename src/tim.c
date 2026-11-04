@@ -87,18 +87,18 @@ void InitRoomCamera_80028DC0(void)
     }
 }
 // Matched
-int GetTiyFileCount_80028E68(int* p)
+int GetTiyFileCount_80028E68(int* file)
 {
-    return p[0];
+    return file[0];
 }
-extern void AllocTiyPrims_800295D8(SPRT** a, POLY_FT4** b, DR_TPAGE** c, int n, int heap);
+extern void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, int heap);
 extern void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count);
 // Matched
 void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap)
 {
-    int v = *file;
-    AllocTiyPrims_800295D8(sprts, polys, tpages, v, heap);
-    LoadTiyTims_80028EEC(sprts, polys, tpages, file, v);
+    int count = *file;
+    AllocTiyPrims_800295D8(sprts, polys, tpages, count, heap);
+    LoadTiyTims_80028EEC(sprts, polys, tpages, file, count);
 }
 // Matched
 void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count)
@@ -129,7 +129,7 @@ typedef struct
     unsigned short clut8Dx_8;
     unsigned short clut8Dy_A;
 } TimReloc;
-void RelocateTimInfo_800297C0(TimInfo* a, TimReloc* b);
+void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc);
 // Matched
 void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue)
 {
@@ -159,119 +159,119 @@ void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, i
 }
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
-void UnpackColor555_80029C68(unsigned short* d, unsigned short* s);
-void PackColor555_80029CB4(unsigned short* d, unsigned short* s);
+void UnpackColor555_80029C68(unsigned short* dst, unsigned short* src);
+void PackColor555_80029CB4(unsigned short* dst, unsigned short* src);
 // Matched
-void ShiftVramImageHsv_800290FC(RECT* r, short* dst, short* d)
+void ShiftVramImageHsv_800290FC(RECT* rect, short* dst, short* delta)
 {
     short rgb[4];
     short hsv[4];
-    RECT r2;
+    RECT dstRect;
     unsigned short* buf;
-    unsigned short* p;
+    unsigned short* pixel;
     int x;
     int y;
-    buf = malloc3_8003FC4C(r->h * (r->w << 1));
-    StoreImage(r, (u_long*)buf);
+    buf = malloc3_8003FC4C(rect->h * (rect->w << 1));
+    StoreImage(rect, (u_long*)buf);
     DrawSync(0);
-    p = buf;
-    for (y = 0; y < r->h; y++)
+    pixel = buf;
+    for (y = 0; y < rect->h; y++)
     {
-        for (x = 0; x < r->w; x++)
+        for (x = 0; x < rect->w; x++)
         {
-            UnpackColor555_80029C68((unsigned short*)rgb, p);
+            UnpackColor555_80029C68((unsigned short*)rgb, pixel);
             Rgb555ToHsv_80029EA8(rgb, hsv);
-            hsv[0] += d[0];
-            hsv[1] += d[1];
+            hsv[0] += delta[0];
+            hsv[1] += delta[1];
             hsv[1] = (hsv[1] < 0) ? 0 : ((hsv[1] > 31) ? 31 : hsv[1]);
-            hsv[2] += d[2];
+            hsv[2] += delta[2];
             hsv[2] = (hsv[2] < 0) ? 0 : ((hsv[2] > 31) ? 31 : hsv[2]);
             HsvToRgb555_8002A040(hsv, rgb);
-            PackColor555_80029CB4(p, (unsigned short*)rgb);
-            p++;
+            PackColor555_80029CB4(pixel, (unsigned short*)rgb);
+            pixel++;
         }
     }
-    r2.x = dst[0];
-    r2.y = dst[1];
-    r2.w = r->w;
-    r2.h = r->h;
-    LoadImage(&r2, (u_long*)buf);
+    dstRect.x = dst[0];
+    dstRect.y = dst[1];
+    dstRect.w = rect->w;
+    dstRect.h = rect->h;
+    LoadImage(&dstRect, (u_long*)buf);
     DrawSync(0);
     free3_8003FC6C(buf);
 }
 // Matched
 void TintVramImage_800292D0(void* rect, void* dst, int tint)
 {
-    short c[4];
-    short o[4];
-    RECT r2;
+    short rgb[4];
+    short out[4];
+    RECT dstRect;
     unsigned short* buf;
-    unsigned short* p;
+    unsigned short* pixel;
     int x;
     int y;
     int gray;
     buf = malloc3_8003FC4C(((RECT*)rect)->h * (((RECT*)rect)->w << 1));
     StoreImage((RECT*)rect, (u_long*)buf);
     DrawSync(0);
-    p = buf;
+    pixel = buf;
     for (y = 0; y < ((RECT*)rect)->h; y++)
     {
         for (x = 0; x < ((RECT*)rect)->w; x++)
         {
-            UnpackColor555_80029C68((unsigned short*)c, p);
-            if (c[0] || c[1] || c[2])
+            UnpackColor555_80029C68((unsigned short*)rgb, pixel);
+            if (rgb[0] || rgb[1] || rgb[2])
             {
-                gray = (c[0] + c[1] + c[2]) / 3;
-                o[0] = ((c[0] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[0] * ((short*)tint)[4] / 4096;
-                o[1] = ((c[1] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[1] * ((short*)tint)[4] / 4096;
-                o[2] = ((c[2] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[2] * ((short*)tint)[4] / 4096;
-                o[3] = c[3];
-                PackColor555_80029CB4(p, (unsigned short*)o);
+                gray = (rgb[0] + rgb[1] + rgb[2]) / 3;
+                out[0] = ((rgb[0] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[0] * ((short*)tint)[4] / 4096;
+                out[1] = ((rgb[1] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[1] * ((short*)tint)[4] / 4096;
+                out[2] = ((rgb[2] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[2] * ((short*)tint)[4] / 4096;
+                out[3] = rgb[3];
+                PackColor555_80029CB4(pixel, (unsigned short*)out);
             }
-            p++;
+            pixel++;
         }
     }
-    r2.x = ((short*)dst)[0];
-    r2.y = ((short*)dst)[1];
-    r2.w = ((RECT*)rect)->w;
-    r2.h = ((RECT*)rect)->h;
-    LoadImage(&r2, (u_long*)buf);
+    dstRect.x = ((short*)dst)[0];
+    dstRect.y = ((short*)dst)[1];
+    dstRect.w = ((RECT*)rect)->w;
+    dstRect.h = ((RECT*)rect)->h;
+    LoadImage(&dstRect, (u_long*)buf);
     DrawSync(0);
     free3_8003FC6C(buf);
 }
 // Matched
-void AllocTiyPrims_800295D8(SPRT** a, POLY_FT4** b, DR_TPAGE** c, int n, int heap)
+void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, int heap)
 {
-    if (a)
+    if (sprts)
     {
-        *a = HeapAlloc_8003FC8C(n * sizeof(SPRT), (struct Pool*)heap);
+        *sprts = HeapAlloc_8003FC8C(count * sizeof(SPRT), (struct Pool*)heap);
     }
-    if (b)
+    if (polys)
     {
-        *b = HeapAlloc_8003FC8C(n * sizeof(POLY_FT4), (struct Pool*)heap);
+        *polys = HeapAlloc_8003FC8C(count * sizeof(POLY_FT4), (struct Pool*)heap);
     }
-    if (c)
+    if (tpages)
     {
-        *c = HeapAlloc_8003FC8C(n * sizeof(DR_TPAGE), (struct Pool*)heap);
+        *tpages = HeapAlloc_8003FC8C(count * sizeof(DR_TPAGE), (struct Pool*)heap);
     }
 }
 // Matched
-void LoadTim_80029674(void* p)
+void LoadTim_80029674(void* tim)
 {
     TimInfo buf;
-    ParseTim_80029708(&buf, p);
+    ParseTim_80029708(&buf, tim);
     LoadTimToVram_800296A0(&buf);
 }
 // Matched
 void LoadTimToVram_800296A0(void* tim)
 {
-    int* p = (int*)tim;
-    if (p[0] == 1 && p[2] != 0)
+    int* info = (int*)tim;
+    if (info[0] == 1 && info[2] != 0)
     {
-        LoadImage((RECT*)&p[3], (u_long*)p[5]);
+        LoadImage((RECT*)&info[3], (u_long*)info[5]);
         DrawSync(0);
     }
-    LoadImage((RECT*)&p[7], (u_long*)p[9]);
+    LoadImage((RECT*)&info[7], (u_long*)info[9]);
     DrawSync(0);
 }
 // Matched
@@ -279,25 +279,25 @@ int ParseTim_80029708(void* outTim, void* inTim)
 {
     int* out = (int*)outTim;
     int* in = (int*)inTim;
-    int* q;
+    int* pixelBlock;
     out[1] = in[1] & 7;
-    q = in + 2;
+    pixelBlock = in + 2;
     if (in[1] & 8)
     {
         out[0] = 1;
         out[2] = in[2] - 12;
         *(RECT*)&out[3] = *(RECT*)&in[3];
         out[5] = (int)&in[5];
-        q = (int*)((char*)q + in[2]);
+        pixelBlock = (int*)((char*)pixelBlock + in[2]);
     }
     else
     {
         out[0] = 0;
         out[2] = 0;
     }
-    out[6] = q[0] - 12;
-    *(RECT*)&out[7] = *(RECT*)&q[1];
-    out[9] = (int)&q[3];
+    out[6] = pixelBlock[0] - 12;
+    *(RECT*)&out[7] = *(RECT*)&pixelBlock[1];
+    out[9] = (int)&pixelBlock[3];
     return 1;
 }
 // Matched
@@ -328,93 +328,93 @@ void InitSprtFromTimData_80029868(int sprt, int tim, int tpage)
     InitSprtFromTim_800298AC(sprt, tpage, &buf);
 }
 // Matched
-void InitSprtFromTim_800298AC(SPRT* s, DR_TPAGE* tp, TimInfo* t)
+void InitSprtFromTim_800298AC(SPRT* sprt, DR_TPAGE* tpage, TimInfo* tim)
 {
-    SetSprt(s);
-    s->r0 = 0x80;
-    s->g0 = 0x80;
-    s->b0 = 0x80;
-    SetDrawTPage(tp, 0, 1, GetTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256));
-    s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
-    s->v0 = t->prect.y % 256;
-    s->w = (t->prect.w * 4) >> t->mode;
-    s->h = t->prect.h;
-    s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
+    SetSprt(sprt);
+    sprt->r0 = 0x80;
+    sprt->g0 = 0x80;
+    sprt->b0 = 0x80;
+    SetDrawTPage(tpage, 0, 1, GetTPage(tim->mode, 1, (tim->prect.x / 64) * 64, (tim->prect.y / 256) * 256));
+    sprt->u0 = ((short)(tim->prect.x % 64) * 4) >> tim->mode;
+    sprt->v0 = tim->prect.y % 256;
+    sprt->w = (tim->prect.w * 4) >> tim->mode;
+    sprt->h = tim->prect.h;
+    sprt->clut = ((unsigned short)tim->crect.y << 6) | (((unsigned short)tim->crect.x >> 4) & 0x3F);
 }
 // Matched
-void InitPolyFT4FromTimData_800299DC(void* p, void* q)
+void InitPolyFT4FromTimData_800299DC(void* poly, void* tim)
 {
     TimInfo buf;
-    ParseTim_80029708(&buf, q);
-    InitPolyFT4_80029A10(p, &buf);
+    ParseTim_80029708(&buf, tim);
+    InitPolyFT4_80029A10(poly, &buf);
 }
 // Matched
-void InitPolyFT4_80029A10(void* a0, void* a1)
+void InitPolyFT4_80029A10(void* polyArg, void* timArg)
 {
-    POLY_FT4* s = (POLY_FT4*)a0;
-    TimInfo* t = (TimInfo*)a1;
-    SetPolyFT4(s);
-    s->r0 = 0x80;
-    s->g0 = 0x80;
-    s->b0 = 0x80;
-    s->tpage = getTPage(t->mode, 1, (t->prect.x / 64) * 64, (t->prect.y / 256) * 256);
-    s->u0 = ((short)(t->prect.x % 64) * 4) >> t->mode;
-    s->v0 = t->prect.y % 256;
-    s->u1 = (((short)(t->prect.x % 64) * 4) >> t->mode) + (((t->prect.w * 4) >> t->mode) - 1);
-    s->v1 = t->prect.y % 256;
-    s->u2 = ((short)(t->prect.x % 64) * 4) >> t->mode;
-    s->v2 = t->prect.y % 256 + (t->prect.h - 1);
-    s->u3 = (((short)(t->prect.x % 64) * 4) >> t->mode) + (((t->prect.w * 4) >> t->mode) - 1);
-    s->v3 = t->prect.y % 256 + (t->prect.h - 1);
-    s->clut = ((unsigned short)t->crect.y << 6) | (((unsigned short)t->crect.x >> 4) & 0x3F);
+    POLY_FT4* poly = (POLY_FT4*)polyArg;
+    TimInfo* tim = (TimInfo*)timArg;
+    SetPolyFT4(poly);
+    poly->r0 = 0x80;
+    poly->g0 = 0x80;
+    poly->b0 = 0x80;
+    poly->tpage = getTPage(tim->mode, 1, (tim->prect.x / 64) * 64, (tim->prect.y / 256) * 256);
+    poly->u0 = ((short)(tim->prect.x % 64) * 4) >> tim->mode;
+    poly->v0 = tim->prect.y % 256;
+    poly->u1 = (((short)(tim->prect.x % 64) * 4) >> tim->mode) + (((tim->prect.w * 4) >> tim->mode) - 1);
+    poly->v1 = tim->prect.y % 256;
+    poly->u2 = ((short)(tim->prect.x % 64) * 4) >> tim->mode;
+    poly->v2 = tim->prect.y % 256 + (tim->prect.h - 1);
+    poly->u3 = (((short)(tim->prect.x % 64) * 4) >> tim->mode) + (((tim->prect.w * 4) >> tim->mode) - 1);
+    poly->v3 = tim->prect.y % 256 + (tim->prect.h - 1);
+    poly->clut = ((unsigned short)tim->crect.y << 6) | (((unsigned short)tim->crect.x >> 4) & 0x3F);
 }
 // Matched
-void UnpackColor555_80029C68(unsigned short* d, unsigned short* s)
+void UnpackColor555_80029C68(unsigned short* dst, unsigned short* src)
 {
-    d[3] = *s & 0x8000;
-    d[0] = *s & 0x1f;
-    d[1] = (*s >> 5) & 0x1f;
-    d[2] = (*s >> 10) & 0x1f;
+    dst[3] = *src & 0x8000;
+    dst[0] = *src & 0x1f;
+    dst[1] = (*src >> 5) & 0x1f;
+    dst[2] = (*src >> 10) & 0x1f;
 }
 // Matched
-void PackColor555_80029CB4(unsigned short* d, unsigned short* s)
+void PackColor555_80029CB4(unsigned short* dst, unsigned short* src)
 {
-    *d = 0;
-    *d = s[3];
-    *d |= s[0];
-    *d |= s[1] << 5;
-    *d |= s[2] << 10;
+    *dst = 0;
+    *dst = src[3];
+    *dst |= src[0];
+    *dst |= src[1] << 5;
+    *dst |= src[2] << 10;
 }
 int Rgb555ToHsv_80029EA8(short* in, short* out);
 int HsvToRgb555_8002A040(short* in, short* out);
 // Matched
-void ShiftClutHue_80029D00(TimInfo* t, unsigned int hue)
+void ShiftClutHue_80029D00(TimInfo* tim, unsigned int hue)
 {
     short rgb[4];
     short hsv[4];
-    unsigned short* p;
+    unsigned short* clut;
     int i;
-    unsigned int v;
-    if (t->mode_valid && t->clut_len)
+    unsigned int shift;
+    if (tim->mode_valid && tim->clut_len)
     {
-        p = (unsigned short*)t->caddr;
-        for (i = 0; i < t->crect.w; i++)
+        clut = (unsigned short*)tim->caddr;
+        for (i = 0; i < tim->crect.w; i++)
         {
-            UnpackColor555_80029C68((unsigned short*)rgb, &p[i]);
+            UnpackColor555_80029C68((unsigned short*)rgb, &clut[i]);
             if (Rgb555ToHsv_80029EA8(rgb, hsv))
             {
                 if (hue & 0x10000)
                 {
-                    v = hue >> 16;
-                    hsv[0] = hsv[0] + (hue - hsv[0] * 360 / 192) + (v & 0xFFFE) * 192 / 360;
+                    shift = hue >> 16;
+                    hsv[0] = hsv[0] + (hue - hsv[0] * 360 / 192) + (shift & 0xFFFE) * 192 / 360;
                 }
                 else
                 {
-                    v = hue * 192 / 360;
-                    hsv[0] = (short)(hsv[0] + v) % 192;
+                    shift = hue * 192 / 360;
+                    hsv[0] = (short)(hsv[0] + shift) % 192;
                 }
                 HsvToRgb555_8002A040(hsv, rgb);
-                PackColor555_80029CB4(&p[i], (unsigned short*)rgb);
+                PackColor555_80029CB4(&clut[i], (unsigned short*)rgb);
             }
         }
     }

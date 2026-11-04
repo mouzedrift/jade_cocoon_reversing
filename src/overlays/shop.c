@@ -414,7 +414,7 @@ int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short state)
     for (i = 0; i < 6; i++)
     {
         CopyName_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
-        dst->field_7C[i] = src->st_0.elementMask_42;
+        dst->ancestorElements_7C[i] = src->st_0.elementMask_42;
     }
     r = LowestSetBit_80014358(src->st_0.elementMask_42);
     for (j = 0; j < 4; j++)
@@ -639,8 +639,8 @@ void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner)
     int k;
     for (k = 0; k < 12; k++)
     {
-        x = (signed char)base->status_84.field_20[k];
-        y = (signed char)partner->status_84.field_20[k];
+        x = (signed char)base->status_84.modifiers_20[k];
+        y = (signed char)partner->status_84.modifiers_20[k];
         if (x < y)
         {
             x = x * 2;
@@ -663,7 +663,7 @@ void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner)
         {
             r = -128;
         }
-        out->status_84.field_20[k] = r;
+        out->status_84.modifiers_20[k] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
@@ -675,7 +675,7 @@ void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner)
     }
     for (i = 0; i < 4; i++)
     {
-        out->status_84.field_20[i] = tmp[i] / 32;
+        out->status_84.modifiers_20[i] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -1158,13 +1158,13 @@ void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
     }
     elements[0] = out->status_84.elementMask_42;
     elements[1] = partner->status_84.elementMask_42;
-    elements[2] = out->field_7C[0];
-    elements[3] = out->field_7C[1];
-    elements[4] = partner->field_7C[0];
-    elements[5] = partner->field_7C[1];
+    elements[2] = out->ancestorElements_7C[0];
+    elements[3] = out->ancestorElements_7C[1];
+    elements[4] = partner->ancestorElements_7C[0];
+    elements[5] = partner->ancestorElements_7C[1];
     for (j = 0; j < 6; j++)
     {
-        out->field_7C[j] = elements[j];
+        out->ancestorElements_7C[j] = elements[j];
     }
 }
 #endif
@@ -2101,8 +2101,8 @@ extern void DrawTextList_8002A310(void* p, int a);
 extern void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* rect, ShopWinColor* w, void* ot, int t);
-extern void DrawAbilityList_8002CE28(struct_minion_ref* ref, ShopPos* pos);
-extern void DrawMagicList_8002CAC8(struct_minion_ref* ref, ShopPos* pos);
+extern void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos);
+extern void DrawMagicList_8002CAC8(ListMenuState* ref, ShopPos* pos);
 extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base);
 extern void InterpolateWindowRect_8004196C(void* out, void* rect, int step, int steps, int a4);
 extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp);
@@ -2211,9 +2211,9 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
             if (menu->shown_54->id != 4 && !(menu->flags_24 & 0x20))
             {
                 ShopPos abilityPos;
-                struct_minion_ref abilityRef;
+                ListMenuState abilityRef;
                 ShopPos p40;
-                struct_minion_ref magicRef;
+                ListMenuState magicRef;
                 ShopPos treePos;
                 ShopPos statusPos;
                 ShopRect statusRect;
@@ -2369,7 +2369,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
             }
         if (i == 6)
         {
-            struct_minion_ref skinRef;
+            ListMenuState skinRef;
             skinRef.cursor_0 = menu->savedIndex_5E[8];
             skinRef.scroll_2 = menu->savedScroll_72[2];
             skinRef.field_4 = 2;

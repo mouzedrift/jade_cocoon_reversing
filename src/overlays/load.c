@@ -118,7 +118,7 @@ typedef struct
     unsigned int exp_4;
     UnitGauge hp_8;
     UnitGauge mp_C;
-    unsigned char field_10[0xC]; // UnitStatus.field_20
+    unsigned char field_10[0xC]; // UnitStatus.modifiers_20
     UnitStatBlock stats_1C;
     unsigned char element_2E[4];
     short elementMask_32;
@@ -1607,7 +1607,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         }
         for (j = 0; j < 8; j++)
         {
-            packedMinion->field_34[j] = minion->field_7C[j];
+            packedMinion->field_34[j] = minion->ancestorElements_7C[j];
         }
         packedMinion->field_74 = minion->field_CC;
         packedMinion->skills_86 = minion->skills_DE;
@@ -1618,7 +1618,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         packedMinion->status_3C.mp_C = minion->status_84.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            packedMinion->status_3C.field_10[j] = minion->status_84.field_20[j];
+            packedMinion->status_3C.field_10[j] = minion->status_84.modifiers_20[j];
         }
         packedMinion->status_3C.stats_1C = minion->status_84.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1627,7 +1627,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         }
         packedMinion->status_3C.elementMask_32 = minion->status_84.elementMask_42;
         packedMinion->status_3C.level_34 = minion->status_84.level_44;
-        packedMinion->status_3C.field_35 = minion->status_84.field_45;
+        packedMinion->status_3C.field_35 = minion->status_84.fixedStats_45;
         for (j = 0; j < 6; j++)
         {
             for (k = 0; k < 10; k++)
@@ -1651,7 +1651,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         packedUnit->status_0.mp_C = unit->st_0.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            packedUnit->status_0.field_10[j] = unit->st_0.field_20[j];
+            packedUnit->status_0.field_10[j] = unit->st_0.modifiers_20[j];
         }
         packedUnit->status_0.stats_1C = unit->st_0.stats_2C;
         for (j = 0; j < 4; j++)
@@ -1660,7 +1660,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
         }
         packedUnit->status_0.elementMask_32 = unit->st_0.elementMask_42;
         packedUnit->status_0.level_34 = unit->st_0.level_44;
-        packedUnit->status_0.field_35 = unit->st_0.field_45;
+        packedUnit->status_0.field_35 = unit->st_0.fixedStats_45;
         for (k = 0; k < 10; k++)
         {
             body->itemNames_1C30[l][k] = unit->st_0.name_10[k];
@@ -1808,7 +1808,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             }
             for (j = 0; j < 8; j++)
             {
-                minion->field_7C[j] = packedMinion->field_34[j];
+                minion->ancestorElements_7C[j] = packedMinion->field_34[j];
             }
             minion->field_CC = packedMinion->field_74;
             minion->skills_DE = packedMinion->skills_86;
@@ -1819,7 +1819,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             minion->status_84.mp_C = packedMinion->status_3C.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                minion->status_84.field_20[j] = packedMinion->status_3C.field_10[j];
+                minion->status_84.modifiers_20[j] = packedMinion->status_3C.field_10[j];
             }
             minion->status_84.stats_2C = packedMinion->status_3C.stats_1C;
             for (j = 0; j < 4; j++)
@@ -1828,11 +1828,11 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             }
             minion->status_84.elementMask_42 = packedMinion->status_3C.elementMask_32;
             minion->status_84.level_44 = packedMinion->status_3C.level_34;
-            minion->status_84.field_45 = packedMinion->status_3C.field_35;
-            minion->status_84.field_1C[0] = 0xFF;
-            minion->status_84.field_1C[1] = 0xFF;
-            minion->status_84.field_1C[2] = 0xFF;
-            minion->status_84.field_1C[3] = 0xFF;
+            minion->status_84.fixedStats_45 = packedMinion->status_3C.field_35;
+            minion->status_84.equipment_1C[0] = 0xFF;
+            minion->status_84.equipment_1C[1] = 0xFF;
+            minion->status_84.equipment_1C[2] = 0xFF;
+            minion->status_84.equipment_1C[3] = 0xFF;
             for (j = 0; j < 6; j++)
             {
                 for (k = 0; k < sizeof(minion->ancestors_4[j]); k++)
@@ -1870,7 +1870,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             unit->st_0.mp_C = packedUnit->status_0.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                unit->st_0.field_20[j] = packedUnit->status_0.field_10[j];
+                unit->st_0.modifiers_20[j] = packedUnit->status_0.field_10[j];
             }
             unit->st_0.stats_2C = packedUnit->status_0.stats_1C;
             for (j = 0; j < 4; j++)
@@ -1879,11 +1879,11 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
             }
             unit->st_0.elementMask_42 = packedUnit->status_0.elementMask_32;
             unit->st_0.level_44 = packedUnit->status_0.level_34;
-            unit->st_0.field_45 = packedUnit->status_0.field_35;
-            unit->st_0.field_1C[0] = 0xFF;
-            unit->st_0.field_1C[1] = 0xFF;
-            unit->st_0.field_1C[2] = 0xFF;
-            unit->st_0.field_1C[3] = 0xFF;
+            unit->st_0.fixedStats_45 = packedUnit->status_0.field_35;
+            unit->st_0.equipment_1C[0] = 0xFF;
+            unit->st_0.equipment_1C[1] = 0xFF;
+            unit->st_0.equipment_1C[2] = 0xFF;
+            unit->st_0.equipment_1C[3] = 0xFF;
             for (k = 0; k < sizeof(unit->st_0.name_10); k++)
             {
                 if (k < 10)

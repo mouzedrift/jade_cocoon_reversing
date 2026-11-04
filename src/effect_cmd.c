@@ -252,7 +252,7 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     desc.effect_10 = -1;
     desc.nextAnim_24 = -1;
     desc.nextAnim_26 = -1;
-    desc.field_28 = -1;
+    desc.anim_28 = -1;
     desc.queuedAnim_2A = -1;
     desc.flags_0 = 0;
     desc.script_4 = 0;

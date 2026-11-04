@@ -2713,14 +2713,14 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     int effect;
     int flags;
     actor->flags_D4 = desc->flags_0;
-    actor->fE0 = desc->turnStep_C;
+    actor->turnStep_E0 = desc->turnStep_C;
     actor->effectMask_E8 = desc->effectMask_14;
     actor->effectKinds_EC = desc->effectKinds_18;
     actor->loopCount_F4 = desc->loopCount_20;
     actor->scaleTarget_F6 = desc->scaleTarget_22;
-    actor->fFC = desc->field_28;
+    actor->fFC = desc->anim_28;
     actor->queuedAnim_FE = desc->queuedAnim_2A;
-    actor->fE0 = desc->turnStep_C;
+    actor->turnStep_E0 = desc->turnStep_C;
     actor->f100 = desc->field_2C;
     hitStart = 0;
     if (desc->script_4)
@@ -2765,13 +2765,13 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     }
     if (desc->queuedAnim_2A >= 0)
     {
-        actor->nextAnim_A4 = desc->field_28;
+        actor->nextAnim_A4 = desc->anim_28;
         actor->startMode_A8 = desc->turnStep_C;
         StartActorScript_8001DC34(actor, playQueuedAnimScript_8007D9C0);
     }
-    else if (desc->field_28 >= 0)
+    else if (desc->anim_28 >= 0)
     {
-        actor->nextAnim_A4 = desc->field_28;
+        actor->nextAnim_A4 = desc->anim_28;
         actor->startMode_A8 = desc->turnStep_C;
         StartActorScript_8001DC34(actor, playAnimScript_8007D9A4);
     }

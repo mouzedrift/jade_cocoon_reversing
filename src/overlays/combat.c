@@ -404,7 +404,7 @@ void MoveSlotActorTo_800A0E1C(int i, int* pos)
     action.scaleTarget_22 = 0;
     action.nextAnim_24 = -1;
     action.nextAnim_26 = -1;
-    action.field_28 = -1;
+    action.anim_28 = -1;
     action.queuedAnim_2A = -1;
     action.field_2C = 0;
     action.path_30 = 0;

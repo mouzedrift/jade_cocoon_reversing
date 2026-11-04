@@ -1020,11 +1020,11 @@ typedef struct BatTargetQuery
 
 extern int GetMenuCursorIndex_8003DA54(void*);
 
-extern int CheckItemUsable_80033AFC(struct_minion_ref* q);
+extern int CheckItemUsable_80033AFC(ListMenuState* q);
 
-extern int CheckMagicCastable_80033C08(struct_minion_ref* q);
+extern int CheckMagicCastable_80033C08(ListMenuState* q);
 
-extern int CheckSkillUsable_80033C98(struct_minion_ref* q);
+extern int CheckSkillUsable_80033C98(ListMenuState* q);
 
 extern int CheckItemOnTarget_80033DF4(BatTargetQuery* q);
 

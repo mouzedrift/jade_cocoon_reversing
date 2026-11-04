@@ -17,9 +17,9 @@ typedef struct
 {
     int field_0_header_start;
     unsigned int field_4_vab_header_size;
-    int field_8;
+    int field_8_vab_body_start;
     int field_C;
-    int field_10;
+    int field_10_sep_data_start;
     unsigned int field_14_sep_size;
     int field_18_sep_data2_ptr;
     unsigned int field_1C_sep_size;
@@ -42,7 +42,7 @@ typedef struct
 } SoundInfo;
 
 extern int GetSoundFileId_80030D4C(int idx);
-extern void InitSound_8002FE54(SoundStruct* arg1);
+extern void InitSound_8002FE54(SoundStruct* sound);
 extern void PlaySfx_80031494(int id);
 extern void LoadSound_80030A84(short soundId, SoundStruct* sound);
 

@@ -44,50 +44,50 @@ void DrawMenuBackground_8002BE10(void)
 }
 typedef struct
 {
-    int field_0;
-    int field_4;
-    short field_8;
-    short field_A;
-} struct_BEC8;
+    int rect_0;
+    int time_4;
+    short colorSet_8;
+    short ot_A;
+} UiWindowDesc;
 extern void InterpolateWindowRect_8004196C(int a, int b, int c, int d, int e);
 extern void AddDrawAreaPrim_8003326C(int a, void* b);
 extern void AddClipDrawAreaPrim_80033308(void* a);
-extern void DrawUiWindow_8002A384(struct_BEC8* p);
+extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawAnimatedWindow_8002BEC8(int outRect, int rect, short step, short ot, int highlight, int time)
 {
-    struct_BEC8 s;
+    UiWindowDesc desc;
     InterpolateWindowRect_8004196C(outRect, rect, step, 8, 0);
     AddDrawAreaPrim_8003326C(outRect, &pOT_8008D454[ot]);
     if (highlight)
     {
-        s.field_8 = 1;
+        desc.colorSet_8 = 1;
     }
     else
     {
-        s.field_8 = 0;
+        desc.colorSet_8 = 0;
     }
-    s.field_0 = outRect;
-    s.field_4 = time;
-    s.field_A = ot;
-    DrawUiWindow_8002A384(&s);
+    desc.rect_0 = outRect;
+    desc.time_4 = time;
+    desc.ot_A = ot;
+    DrawUiWindow_8002A384(&desc);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
 }
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 // Matched
 void LoadUiTiy_8002BF74(void)
 {
-    FileRequestDesc s;
+    FileRequestDesc req;
     uiTiyLoaded_8008B4E8 = 0;
-    s.flags_0 = 0x29;
-    s.fileId_4 = 0x3B;
-    s.offset_8 = 0;
-    s.size_C = 0;
-    s.dest_10 = 0;
-    s.params_14 = 0;
-    s.paramsSize_18 = 0;
-    s.callback_1C = OnUiTiyLoaded_8002BFCC;
-    QueueFileRequest_8003BC84(&s);
+    req.flags_0 = 0x29;
+    req.fileId_4 = 0x3B;
+    req.offset_8 = 0;
+    req.size_C = 0;
+    req.dest_10 = 0;
+    req.params_14 = 0;
+    req.paramsSize_18 = 0;
+    req.callback_1C = OnUiTiyLoaded_8002BFCC;
+    QueueFileRequest_8003BC84(&req);
 }
 // Matched
 void OnUiTiyLoaded_8002BFCC(void* params, int* data)
@@ -214,12 +214,12 @@ void DrawSmallNumber9_8002C414(unsigned short* origin, int value, int ot)
     }
 }
 // Matched
-int CountDigits_8002C5A4(int n)
+int CountDigits_8002C5A4(int value)
 {
     do
     {
-        n /= 10;
-    } while (n);
+        value /= 10;
+    } while (value);
     return 0;
 }
 // Matched
@@ -257,37 +257,37 @@ int DrawAbilityDescription_8002C670(char* minion, int pos, int texts, short slot
 }
 typedef struct
 {
-    short a;
-    short b;
-} ShortPair2;
-extern void DrawScrollArrow_8002B3DC(ShortPair2 p, int b, int c, int d);
+    short kind;
+    short dir;
+} ScrollArrow;
+extern void DrawScrollArrow_8002B3DC(ScrollArrow p, int b, int c, int d);
 // Matched
 void DrawScrollArrow_8002C6DC(int pos, short dir, short ot)
 {
-    ShortPair2 p;
-    p.a = 2;
-    p.b = dir;
-    DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, pos, ot);
+    ScrollArrow arrow;
+    arrow.kind = 2;
+    arrow.dir = dir;
+    DrawScrollArrow_8002B3DC(arrow, frameCount_8008D3FC, pos, ot);
 }
 typedef struct
 {
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    MenuItem** field_10;
-    int field_14;
-} struct_A5A4;
-extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
-extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
+    int flags_0;
+    int time_4;
+    int open_8;   // open animation step, 8: open
+    int cursor_C; // highlighted row
+    MenuItem** items_10;
+    int ot_14;
+} MenuWindowList;
+extern void DrawMenuWindows_8002A5A4(MenuWindowList* p);
+extern int CheckItemUsable_80033AFC(ListMenuState* p);
 extern int GetLastInventorySlot_800AD308(int a0);
 extern const int emptyString_800741EC;
 // Matched
-void DrawItemList_8002C728(struct_minion_ref* menu)
+void DrawItemList_8002C728(ListMenuState* menu)
 {
-    struct_A5A4 s;
+    MenuWindowList list;
     short cursor;
-    short w;
+    short openStep;
     short i;
     int idx;
     int count;
@@ -297,7 +297,7 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
     int y;
     int total;
     cursor = menu->cursor_0;
-    w = 8;
+    openStep = 8;
     for (i = 0; i < 4; i++)
     {
         idx = GetInventorySlotId_800AD288(i + menu->scroll_2, 0);
@@ -352,13 +352,13 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
             itemListRows_800829E8[i][2].flags &= ~0x40;
         }
     }
-    s.field_0 = menu->field_4;
-    s.field_4 = frameCount_8008D3FC;
-    s.field_8 = w;
-    s.field_C = cursor;
-    s.field_10 = itemListRows_800829E8;
-    s.field_14 = menu->ot_6;
-    DrawMenuWindows_8002A5A4(&s);
+    list.flags_0 = menu->windowFlags_4;
+    list.time_4 = frameCount_8008D3FC;
+    list.open_8 = openStep;
+    list.cursor_C = cursor;
+    list.items_10 = itemListRows_800829E8;
+    list.ot_14 = menu->ot_6;
+    DrawMenuWindows_8002A5A4(&list);
     SetFontClutOffset_8003F900(2, 0);
     total = GetLastInventorySlot_800AD308(0) + 1;
     if (total < 4)
@@ -376,15 +376,15 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
 }
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int CountMagicBits_8001AE54(void* p);
-extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
+extern int CheckMagicCastable_80033C08(ListMenuState* p);
 // Matched
-void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
+void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
 {
     unsigned short pos[2];
-    struct_A5A4 s;
-    unsigned short r[2];
+    MenuWindowList list;
+    unsigned short arrowPos[2];
     short cursor;
-    short w;
+    short openStep;
     short i;
     int idx;
     int icon;
@@ -393,7 +393,7 @@ void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
     int y;
     int total;
     cursor = menu->cursor_0;
-    w = 8;
+    openStep = 8;
     if (origin)
     {
         pos[0] = origin[0];
@@ -441,13 +441,13 @@ void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
             (*row)[1].flags &= ~2;
         }
     }
-    s.field_0 = menu->field_4;
-    s.field_4 = frameCount_8008D3FC;
-    s.field_8 = w;
-    s.field_C = cursor;
-    s.field_10 = magicListRows_80082B54;
-    s.field_14 = menu->ot_6;
-    DrawMenuWindows_8002A5A4(&s);
+    list.flags_0 = menu->windowFlags_4;
+    list.time_4 = frameCount_8008D3FC;
+    list.open_8 = openStep;
+    list.cursor_C = cursor;
+    list.items_10 = magicListRows_80082B54;
+    list.ot_14 = menu->ot_6;
+    DrawMenuWindows_8002A5A4(&list);
     SetFontClutOffset_8003F900(2, 0);
     total = CountMagicBits_8001AE54(&menu->minion_C->magicBits_F4);
     if (total < 4)
@@ -458,29 +458,29 @@ void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
     {
         if (origin)
         {
-            r[0] = magicScrollUpPos_800829FC[0] + origin[0] - 0x60;
-            r[1] = magicScrollUpPos_800829FC[1] + origin[1] - 0x36;
+            arrowPos[0] = magicScrollUpPos_800829FC[0] + origin[0] - 0x60;
+            arrowPos[1] = magicScrollUpPos_800829FC[1] + origin[1] - 0x36;
         }
         else
         {
-            r[0] = magicScrollUpPos_800829FC[0];
-            r[1] = magicScrollUpPos_800829FC[1];
+            arrowPos[0] = magicScrollUpPos_800829FC[0];
+            arrowPos[1] = magicScrollUpPos_800829FC[1];
         }
-        DrawScrollArrow_8002C6DC((int)r, 3, menu->ot_6);
+        DrawScrollArrow_8002C6DC((int)arrowPos, 3, menu->ot_6);
     }
     if (menu->scroll_2 < total - 4 && total >= 5)
     {
         if (origin)
         {
-            r[0] = magicScrollDownPos_80082A00[0] + origin[0] - 0x60;
-            r[1] = magicScrollDownPos_80082A00[1] + origin[1] - 0x36;
+            arrowPos[0] = magicScrollDownPos_80082A00[0] + origin[0] - 0x60;
+            arrowPos[1] = magicScrollDownPos_80082A00[1] + origin[1] - 0x36;
         }
         else
         {
-            r[0] = magicScrollDownPos_80082A00[0];
-            r[1] = magicScrollDownPos_80082A00[1];
+            arrowPos[0] = magicScrollDownPos_80082A00[0];
+            arrowPos[1] = magicScrollDownPos_80082A00[1];
         }
-        DrawScrollArrow_8002C6DC((int)r, 1, menu->ot_6);
+        DrawScrollArrow_8002C6DC((int)arrowPos, 1, menu->ot_6);
     }
 }
 
