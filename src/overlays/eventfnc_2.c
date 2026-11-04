@@ -16,11 +16,11 @@ void* const dword_800B6DC0[5] = { jtgt_800BCB84, jtgt_800BCBB4, jtgt_800BCBCC, j
 // dst/src/end in a0/v1/v0 instead of v1/v0/a0, so the load delay of its tail word is filled with the pendingArea load.
 // Everything else matches (two SetEventVar calls for the shared constant 4, saveData stores before the globals).
 extern int fieldMode_800B0EC0;
-void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
+void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
 {
-    EvActorCmdEventfnc m;
+    EvActorCmd cmd;
     unsigned short v[3];
-    SaveData* s;
+    SaveData* save;
     switch (st[0])
     {
     case 0:
@@ -45,13 +45,13 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
     case 3:
         if (IsLevantCmdDone_800A8FE0())
         {
-            m.actor_0 = 0;
-            m.kind_4 = 9;
-            m.field_8 = 0;
-            m.arg_C = st[1];
-            m.arg2_10 = 0;
-            m.field_14 = 1;
-            LevantCommand_800A8EC4((int*)&m);
+            cmd.actor_0 = 0;
+            cmd.kind_4 = 9;
+            cmd.field_8 = 0;
+            cmd.arg_C = st[1];
+            cmd.arg2_10 = 0;
+            cmd.field_14 = 1;
+            LevantCommand_800A8EC4((int*)&cmd);
             StartSceneDarken_8001AAA8(0x3C);
             st[0] = 4;
         }
@@ -71,18 +71,18 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
                 SetEventVar_800AD16C(4, word_8008B858 + 4);
             }
             FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
-            s = &saveData_8008B570;
-            s->mapId_2E4[3].field_0 = 0;
-            s->mapId_2E4[0].field_0 = v[0];
-            s->mapId_2E4[1].field_0 = v[1];
-            s->mapId_2E4[2].field_0 = v[2];
+            save = &saveData_8008B570;
+            save->mapId_2E4[3].field_0 = 0;
+            save->mapId_2E4[0].field_0 = v[0];
+            save->mapId_2E4[1].field_0 = v[1];
+            save->mapId_2E4[2].field_0 = v[2];
             forceMapReload_80091C9C = 1;
             useMapStartPos_80091C94 = 1;
             mapStartMode_80091C54 = 0;
             dword_80091C8C = 0;
             fieldMode_800B0EC0 = 1;
             unknownFlags_8008D678 &= ~0x20000;
-            t->next_8 = FieldModeTask_800A7720;
+            task->next_8 = FieldModeTask_800A7720;
         }
         break;
     }

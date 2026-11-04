@@ -42,7 +42,7 @@ typedef struct GameV3_1
     int a, b, c;
 } GameV3_1;
 
-// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by AddEnemySlot_800A17F4)
+// an enemy group of the map (EVENTFNC's EvEnemyGroup, copied into GameSlot_1.data_8 by AddEnemySlot_800A17F4)
 typedef struct GameEnemyMember
 {
     int species_0; // GetSpeciesModelDesc_80019C70 / InitMinionData_8001900C
@@ -89,7 +89,7 @@ extern void FreeSeqSlotSound_80030664(void);
 
 
 
-// context of an event script (list eventScripts_8008D410); same layout as EvCtxEventfnc in eventfnc.h
+// context of an event script (list eventScripts_8008D410); same layout as EvScriptCtx in eventfnc.h
 typedef struct GameEvCtx
 {
     unsigned int flags_0;
@@ -128,7 +128,7 @@ typedef struct GameEvCtx
     int ent_120;
 } GameEvCtx;
 
-// an event entity (list eventEntities_8008D400); same layout as EvEntEventfnc in eventfnc.h
+// an event entity (list eventEntities_8008D400); same layout as EvEntity in eventfnc.h
 typedef struct GameEvEnt
 {
     int f0;
