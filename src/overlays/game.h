@@ -14,7 +14,7 @@
 #include "camera.h"
 #include "engine.h"
 
-extern void RequestGameMode_800A6D30(int a);
+extern void RequestGameMode_800A6D30(int mode);
 
 
 // AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the enemyAiBySpecies_800ADEB8 state handlers)
@@ -79,13 +79,13 @@ typedef struct GameEnemySlot
 extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
-extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b);
+extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai);
 
 
 
-extern void FreeEnemyAi_800A2D28(GameAi* p);
+extern void FreeEnemyAi_800A2D28(GameAi* ai);
 
-extern void SuspendEnemyAi_800A2EC8(GameAi* p);
+extern void SuspendEnemyAi_800A2EC8(GameAi* ai);
 
 extern void FreeActiveOverlay_8002C014(void);
 
@@ -151,7 +151,7 @@ typedef struct GameEvEnt
     int f8C;
 } GameEvEnt;
 
-extern EventEntry* StartEventScript_800A59D0(int a);
+extern EventEntry* StartEventScript_800A59D0(int script);
 
 extern int sub_800B76B8(char* p);
 
@@ -159,9 +159,9 @@ extern int sub_800B76B8(char* p);
 
 extern GameEnemySlot enemySlots_800B19F0[];
 
-extern void ResumeEnemyAi_800A2D48(GameAi* p);
+extern void ResumeEnemyAi_800A2D48(GameAi* ai);
 
-extern int AssertEnemyIndex_800A2CA8(int, int);
+extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
 extern void DestroyActor_8001D600(Actor* p);
 
@@ -169,9 +169,9 @@ extern char* dword_8008B520;
 
 extern void ResetEncounter_800A170C(void);
 
-extern int AssertEnemyIndex_800A2CA8(int, int);
+extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
-extern int GetFieldMinionActor_800A7A60(int a);
+extern int GetFieldMinionActor_800A7A60(int idx);
 
 extern char battleSelection_800B19CC[];
 
@@ -227,8 +227,8 @@ typedef struct GameFieldMinions
 
 
 
-extern GameMember* GetFieldMinion_800A77F4(int a);
-extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
+extern GameMember* GetFieldMinion_800A77F4(int idx);
+extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
 
 
 extern int dword_800B19E0;
@@ -256,7 +256,7 @@ extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 
 extern void FindMapEntrance_800ADCEC();
 
-extern void SetEventFlag_800AD0F8(unsigned a);
+extern void SetEventFlag_800AD0F8(unsigned flag);
 
 extern int mapStartMode_80091C54;
 
@@ -289,7 +289,7 @@ extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
-extern int FindInLists_800A52EC(short** a, int b, int c);
+extern int FindInLists_800A52EC(short** tab, int n, int key);
 
 extern void* LoadOverlayIfChanged_80020D1C(int a, int b);
 
@@ -301,8 +301,8 @@ extern void LoadMenuSetEndOfGame_800B78D0();
 
 extern int GetFieldMinionCount_800A7790(void);
 
-extern GameMember* GetFieldMinion_800A77F4(int a);
-extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
+extern GameMember* GetFieldMinion_800A77F4(int idx);
+extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
 
 
 
@@ -351,7 +351,7 @@ typedef struct GameBattleWork
 
 extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
-extern void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out);
+extern void ReflectPoint_800A47B8(struct_v3* center, struct_v3* point, struct_v3* out);
 
 extern void WaitMapOverlay_800A7654();
 
@@ -363,9 +363,9 @@ extern void RunEventListFreeCallbacks_800438F8(int a);
 
 extern void FreeEventList_80043A5C(int a);
 
-extern void SetLevantWallEnabled_800A6534(int a, int b);
+extern void SetLevantWallEnabled_800A6534(int wall, int on);
 
-extern void SetActorWallEnabled_800A654C(int a, int b);
+extern void SetActorWallEnabled_800A654C(int wall, int on);
 
 
 
@@ -391,13 +391,13 @@ extern int StartBattle_800BA9E4(void);
 extern void BattleEnd_800BA254();
 
 
-extern void SuspendFieldMinions_800A7B00(int a);
+extern void SuspendFieldMinions_800A7B00(int idx);
 
-extern void ResumeFieldMinions_800A7BF0(int a);
+extern void ResumeFieldMinions_800A7BF0(int idx);
 
-extern void SuspendEnemySlot_800A188C(GameEnemySlot* p);
+extern void SuspendEnemySlot_800A188C(GameEnemySlot* slot);
 
-extern void ResumeEnemySlot_800A18C8(GameEnemySlot* p);
+extern void ResumeEnemySlot_800A18C8(GameEnemySlot* slot);
 
 
 
@@ -442,7 +442,7 @@ extern void WaitMapReloadAfterBattle_800A15FC();
 
 extern void EncounterFadeInWait_800A167C();
 
-extern void SkipFieldMinionAnim_800A7AD8(int a);
+extern void SkipFieldMinionAnim_800A7AD8(int idx);
 
 typedef struct GameV6_1
 {
@@ -478,9 +478,9 @@ extern unsigned short* sub_800B322C();
 
 extern unsigned short* GetMapEncounterFlags_800A53CC();
 
-extern int GetEventVar_800AD154(int a);
+extern int GetEventVar_800AD154(int var);
 
-extern int SetEventVar_800AD16C(int a, int b);
+extern int SetEventVar_800AD16C(int var, int value);
 
 // the field view rectangle (viewport_8008D420)
 typedef struct GameViewRect
@@ -512,7 +512,7 @@ typedef struct TileAnimScratch
 #define TILE_ANIM_SCRATCH ((TileAnimScratch*)getScratchAddr(0x85))
 extern ShortPair screenOffset_8008D474;
 extern struct_8008D648 tileAnim_8008D648;
-extern void DrawTileAnimLayers_800A0A5C(short* q);
+extern void DrawTileAnimLayers_800A0A5C(short* work);
 
 extern int GameFn_8003B9E0(int* a, int* b);
 
@@ -561,9 +561,9 @@ extern GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out);
 
 
 
-extern void ClearEncounterGroupFlags_800A4940(int a, int b);
+extern void ClearEncounterGroupFlags_800A4940(int group, int encIndex);
 
-extern void ResetEventCtx_800A5B54(GameEvCtx* p);
+extern void ResetEventCtx_800A5B54(GameEvCtx* ctx);
 
 extern void RunEventScript_800A6060();
 
@@ -587,10 +587,10 @@ typedef struct GameO_1
     short f5e;
 } GameO_1;
 
-extern int TurnStepForAngle_800A48F4(int a);
+extern int TurnStepForAngle_800A48F4(int angle);
 
-extern void EnemyAiWanderStep_800A46FC(GameAi* p);
-extern void EnemyAiChaseStep_800A45F8(GameAi* p);
+extern void EnemyAiWanderStep_800A46FC(GameAi* ai);
+extern void EnemyAiChaseStep_800A45F8(GameAi* ai);
 
 // an entry of a game mode's task list (gameModeTaskLists_800B0D74)
 typedef struct GameTaskListDef
@@ -613,7 +613,7 @@ extern void GameMainUpdate_800A6B00();
 
 extern void ResetFieldState_800A73A8(void);
 
-extern void RunEventListUpdate_800A7450(EventNode* n);
+extern void RunEventListUpdate_800A7450(EventNode* node);
 
 extern void StartEncounterBattle_800A13B8();
 
@@ -783,17 +783,17 @@ typedef struct GameLevantCtl
 extern unsigned char pads_800918E8[2][9];
 extern int FindFacingFieldMinion_800A9164(int* out);
 extern int IsFieldMinionBehind_800A926C();
-extern void ClearScriptActorBusy_800A5BCC(int a);
-extern void ContinueLevantAnim_800AB1A4(int a);
-extern int StartLevantActorAction_800AB1EC(int a, int b, int c, int d);
+extern void ClearScriptActorBusy_800A5BCC(int actor);
+extern void ContinueLevantAnim_800AB1A4(int loop);
+extern int StartLevantActorAction_800AB1EC(int anim, int playEffect, int targets, int arg);
 extern int IsLevantActionReady_800AB32C();
-extern int SetLevantMoveCmd_800AB37C(int v);
+extern int SetLevantMoveCmd_800AB37C(int cmd);
 extern void ResetLevantIdleTimer_800AB3BC();
 extern void EnterLevantActorBattle_800AB3D4();
 extern int IsLevantAnimLooped_800AB938();
 extern int IsLevantIdleAnim_800AB958();
 extern int IsLevantScriptAnimWaiting_800ABB70();
-extern void SetLevantMapCollision_800ABC34(int a);
+extern void SetLevantMapCollision_800ABC34(int collide);
 
 typedef struct GameLevantCtlNode
 {
@@ -900,7 +900,7 @@ extern short word_8008BDA6;
 
 
 
-extern void SetLevantHasArmor_800AC380(int);
+extern void SetLevantHasArmor_800AC380(int has);
 
 extern int levantEmptyCocoons_8008B818;
 
@@ -916,7 +916,7 @@ extern void FreeLevantAnimById_800AC6A8();
 
 extern int GetLevantAnimFile_800AC4A8();
 
-extern int FindMapVar_800ADBA0(short*);
+extern int FindMapVar_800ADBA0(short* key);
 
 typedef struct GameLevantAnim
 {
@@ -934,7 +934,7 @@ typedef struct GameLevantAnim
     char pad_38[8];
 } GameLevantAnim;
 
-extern int GetLevantAnimIndex_800AC794(int, int);
+extern int GetLevantAnimIndex_800AC794(int anim, int set);
 
 extern void StopLevantScriptMove_800A913C();
 
@@ -982,7 +982,7 @@ extern void UpdateLevantScriptAnim_800AACF8();
 
 extern void UpdateLevantQueuedAnim_800AC02C();
 
-extern int CanAddInventoryCount_800AD670(int, int);
+extern int CanAddInventoryCount_800AD670(int have, int count);
 
 
 extern void PoolInit_8003FF1C(void*, unsigned);
@@ -1062,20 +1062,20 @@ extern void TintVramImage_800292D0();
 
 extern int dword_8001D060(int);
 
-extern int IsFieldMinionVisible_800A79C8(int);
+extern int IsFieldMinionVisible_800A79C8(int idx);
 
-extern int* GetFieldMinionPos_800A7940(int);
+extern int* GetFieldMinionPos_800A7940(int idx);
 
 extern int IsWithinDistance_8003B740();
 
 
-extern int GetGameMode_800A6D50(int);
+extern int GetGameMode_800A6D50(int which);
 
-extern void RequestGameMode_800A6D30(int);
+extern void RequestGameMode_800A6D30(int mode);
 
 extern int eventDispatchHalt_8008B540;
 
-extern void ResetLevantActor_800A9414(void*, int, int);
+extern void ResetLevantActor_800A9414(void* buf, int action, int anim);
 
 
 extern void PoolDestroy_8003FF7C(void*);
@@ -1084,7 +1084,7 @@ extern void PoolDestroy_8003FF7C(void*);
 
 
 
-extern int GetLevantAnimSet_800AC474(int);
+extern int GetLevantAnimSet_800AC474(int anim);
 
 extern int GetLevantWeaponKind_800AC3E4();
 
@@ -1092,21 +1092,21 @@ extern Model* GetLevantModel_800AC38C();
 
 extern InvSlot* FindInventorySlot_800AD58C();
 
-extern InvSlot* GetInventoryTable_800AD604(int);
+extern InvSlot* GetInventoryTable_800AD604(int table);
 
-extern int GetInventorySize_800AD374(int);
+extern int GetInventorySize_800AD374(int table);
 
-extern int GetLastInventorySlot_800AD308(int);
+extern int GetLastInventorySlot_800AD308(int table);
 
-extern int GetInventorySlotId_800AD288(int, int);
+extern int GetInventorySlotId_800AD288(int slot, int table);
 
-extern int GetInventorySlotCount_800AD2C8(int, int);
+extern int GetInventorySlotCount_800AD2C8(int slot, int table);
 
-extern int CanRemoveInventoryCount_800AD67C(int, int);
+extern int CanRemoveInventoryCount_800AD67C(int have, int count);
 
-extern unsigned char* GetLevantAnimSetTable_800AC7B4(int);
+extern unsigned char* GetLevantAnimSetTable_800AC7B4(int set);
 
-extern int TestValuableFlag_800AD73C(int);
+extern int TestValuableFlag_800AD73C(int valuable);
 
 extern int CountCocoonsAndMinions_800AD8BC();
 
