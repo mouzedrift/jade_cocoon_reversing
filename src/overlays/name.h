@@ -47,7 +47,7 @@ typedef struct
     int result;
 } NameCursorTbl;
 
-extern int overlayId_800B6D00;
+extern int nameOverlayId_800B6D00;
 extern const char charRowBlank_800B6D04[28];
 extern const char charRowDigits2_800B6D20[28];
 extern const char charRowDigits1_800B6D3C[28];

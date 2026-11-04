@@ -33,7 +33,7 @@ typedef struct EquipListRow
     short countY_4A;
 } EquipListRow;
 
-extern int overlayId_800C29D0;
+extern int equipOverlayId_800C29D0;
 extern const char aCriticallyWound_800C29D4[];
 extern const char aColdBladeWithAP_800C2A2C[];
 extern const char aClearNightDeliv_800C2A80[];

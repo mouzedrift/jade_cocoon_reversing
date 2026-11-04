@@ -56,7 +56,7 @@ extern void RestoreSavedName_800B7F08(NameEntry* p);
 extern int SavedNameLength_800B7F70(NameEntry* p);
 extern void ClampNameLength_800B7CA4(NameEntry* p);
 
-int overlayId_800B6D00 SDATA = 39;
+int nameOverlayId_800B6D00 SDATA = 39;
 const char charRowBlank_800B6D04[28] = "\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
 const char charRowDigits2_800B6D20[28] = "\202U\202V\202W\202X\202O\201@\201@\201`\201\227\201[\201@\201@";
 const char charRowDigits1_800B6D3C[28] = "\202P\202Q\202R\202S\202T\201@\201@\201C\201E\201H\201I\201@";

@@ -1,4 +1,4 @@
-overlayId_800B6D00=0x800b6d00; // overlay header / data
+nameOverlayId_800B6D00=0x800b6d00; // overlay header / data
 charRowBlank_800B6D04=0x800b6d04; // data
 charRowDigits2_800B6D20=0x800b6d20; // data
 charRowDigits1_800B6D3C=0x800b6d3c; // data

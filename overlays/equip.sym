@@ -1,4 +1,4 @@
-overlayId_800C29D0=0x800c29d0; // overlay header / data
+equipOverlayId_800C29D0=0x800c29d0; // overlay header / data
 aCriticallyWound_800C29D4=0x800c29d4; // data
 aColdBladeWithAP_800C2A2C=0x800c2a2c; // data
 aClearNightDeliv_800C2A80=0x800c2a80; // data
