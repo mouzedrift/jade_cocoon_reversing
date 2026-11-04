@@ -85,7 +85,7 @@ typedef struct CameraCtrl
 } CameraCtrl;
 
 
-/* the object returned by the battle overlay's sub_800C0FAC */
+/* the object returned by the battle overlay's GetSummonedMinionBonePos_800C0FAC */
 typedef struct
 {
     char pad_0[0x7C];
