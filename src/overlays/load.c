@@ -251,8 +251,7 @@ void LoadMenuStart_800B7650(void)
     LoadMenuInit_800B7674(4, 0);
 }
 
-#if 0
-// Not matched: mode and task swap $s3/$s4, and the case 0/1 stores are scheduled differently
+// Matched
 void LoadMenuInit_800B7674(int mode, int b)
 {
     int i;
@@ -275,33 +274,36 @@ void LoadMenuInit_800B7674(int mode, int b)
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
         work->flags_54 = 4;
+        LoadUiTiy_8002BF74();
+        task->next_8 = LoadMenuWaitUiTiy_800B7894;
         break;
     case 1:
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
         work->flags_54 = 4;
+        LoadUiTiy_8002BF74();
+        task->next_8 = LoadMenuWaitUiTiy_800B7894;
         break;
     case 2:
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
         work->flags_54 = 0xC;
         task->next_8 = LoadMenuTask_800B794C;
-        goto done;
+        break;
     case 3:
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
         work->flags_54 = 0x4C;
         task->next_8 = LoadMenuTask_800B794C;
-        goto done;
+        break;
     default:
         work->screen_30 = 0;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
         work->flags_54 = 0;
+        LoadUiTiy_8002BF74();
+        task->next_8 = LoadMenuWaitUiTiy_800B7894;
         break;
     }
-    LoadUiTiy_8002BF74();
-    task->next_8 = LoadMenuWaitUiTiy_800B7894;
-done:
     if (dword_8008BD80 == -1 && !(work->flags_54 & 8))
     {
         work->screen_30 = 1;
@@ -325,8 +327,6 @@ done:
     work->fileBuf_4 = malloc3_8003FC4C(sizeof(SaveFile));
     loadMenuActive_800BE184 = 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, LoadMenuInit_800B7674);
 
 void LoadMenuWaitUiTiy_800B7894(LoadMenuTaskEntry* task)
 {

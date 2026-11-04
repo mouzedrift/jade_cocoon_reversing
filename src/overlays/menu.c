@@ -2630,7 +2630,7 @@ int TopMenuCursorDown_800BFB10(MenuCtx* menu)
 
 // Not matched: first block: original ORs the flags with a register holding 1 (or v1,v1,v0)
 // and copies fl first; tried n = 1 / r = 1 temporaries, | n, return n (all give ori)
-#if 0
+// Matched
 int TopMenuCursorUp_800BFBE0(MenuCtx* menu)
 {
     int n = *(unsigned short*)&menu->partyCount_8 - 1;
@@ -2642,7 +2642,8 @@ int TopMenuCursorUp_800BFBE0(MenuCtx* menu)
         menu->count_5C = 1;
         menu->cursorFlags_5E = 0x20;
         menu->cursor_60 = 0;
-        menu->flags_0 = (fl & ~2) | 1;
+        menu->flags_0 &= ~2;
+        menu->flags_0 |= 1;
         return 1;
     }
     if (fl & 4)
@@ -2669,8 +2670,6 @@ int TopMenuCursorUp_800BFBE0(MenuCtx* menu)
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, TopMenuCursorUp_800BFBE0);
 
 extern int name_8003D794();
 extern void CompactInventory_800AD3F0();
@@ -3128,14 +3127,14 @@ extern int IsTriggerWaited_800A5E80();
 extern int IsKeyItemUseAllowed_800C1000();
 // Not matched: compiler turns the tail into a boolean (sltu); also tried r = 1 / r = 0 tail,
 // == 0 inverted tests, nested if (r), return r && IsKeyItemUseAllowed_800C1000()
-#if 0
+// Matched
 int IsKeyItemUsable_800C0C3C(void* a)
 {
     int r;
     if (a)
     {
         if (IsKnowledgeKeyItem_8001D36C((int)a))
-            return 1;
+            goto yes;
         r = IsTriggerWaited_800A5E80(a);
     }
     else
@@ -3143,13 +3142,14 @@ int IsKeyItemUsable_800C0C3C(void* a)
         r = IsCurrentMapListed_80034140();
     }
     if (r == 0)
-        return 0;
+        goto no;
     if (IsKeyItemUseAllowed_800C1000())
-        return 1;
+        goto yes;
+no:
     return 0;
+yes:
+    return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, IsKeyItemUsable_800C0C3C);
 
 
 

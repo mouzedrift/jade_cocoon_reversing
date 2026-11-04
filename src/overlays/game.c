@@ -1538,31 +1538,24 @@ void EnemyAiAmbush_800A4124(int unused, GameAi* ai)
     }
 }
 
-#if 0
-// Not matched: first SetEnemyAiState_800A433C call: 'move $a0,$s0' / 'move $a1,$v0' swapped (which one fills the beq delay slot)
+// Matched
 int ApplySporeToEnemyAi_800A4278(GameAi* ai)
 {
-    int mode;
-    int state;
     if (GetSporeMode_80011B6C() == 0)
     {
-        state = 0xd;
-        if (ai->state_c != state)
-        {
-            SetEnemyAiState_800A433C(ai, state, 0x17, 0, -1, 1, 2);
-        }
+        if (ai->state_c != 0xd)
+            SetEnemyAiState_800A433C(ai, 0xd, 0x17, 0, -1, 1, 2);
         return 1;
     }
-    mode = GetSporeMode_80011B6C();
-    if (mode != 1)
-        return 0;
-    if (ai->state_c != 8)
-        SetEnemyAiState_800A433C(ai, 8, 2, 0, -1, mode, 2);
-    EnemyAiChaseStep_800A45F8(ai);
-    return 1;
+    else if (GetSporeMode_80011B6C() == 1)
+    {
+        if (ai->state_c != 8)
+            SetEnemyAiState_800A433C(ai, 8, 2, 0, -1, 1, 2);
+        EnemyAiChaseStep_800A45F8(ai);
+        return 1;
+    }
+    return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, ApplySporeToEnemyAi_800A4278);
 
 void SetEnemyAiState_800A433C(GameAi* ai, int state, int anim, int timer, int animMode, int animFlag, int div)
 {

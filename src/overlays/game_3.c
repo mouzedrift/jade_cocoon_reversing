@@ -2586,8 +2586,7 @@ void ReturnLevantToIdle_800AA3F0(GameLevantActor* lev)
     lev->flags_0 |= 0x2000;
 }
 
-#if 0
-// Not matched: the original reloads p->effect_2C after the v19 select (lw 0x2c before 'sw 0x18'); here the compare's value is reused, so everything after is 2 words short
+// Matched
 void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 {
     ActorEffectReq req;
@@ -2596,8 +2595,9 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
     int loopStart;
     if (lev->effect_2C != 0x46)
     {
-        repeat = 4;
-        if (!((unsigned short)(lev->anim_1C - 7) < 2))
+        if ((unsigned short)(lev->anim_1C - 7) < 2)
+            repeat = 4;
+        else
             repeat = lev->hitRepeat_2A;
         req.effect_0 = lev->effect_2C;
         hitFrames = GetLevantAnimHitFrames_800AC9CC(lev->actionAnim_20);
@@ -2608,9 +2608,6 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
         PlayActorEffect_800184DC(&req, 0);
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, PlayLevantActionEffect_800AA430);
 
 
 #if 0
@@ -4458,8 +4455,7 @@ void FindMapEntrance_800ADCEC(short* out, int key)
     }
 }
 
-#if 0
-// Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
+// Matched
 void SelectMapEntrance_800ADDAC(void)
 {
     GameMapLoc loc;
@@ -4478,18 +4474,23 @@ void SelectMapEntrance_800ADDAC(void)
     {
         do
         {
-            if (key == ents[i].encIndex_4 && (savedEntrance == -1 || savedEntrance == ents[i].entrance_6))
+            if (key == ents[i].encIndex_4)
             {
-                saveData_8008B570.mapId_2E4[2].field_0 = i;
-                return;
+                if (savedEntrance == -1)
+                {
+                    saveData_8008B570.mapId_2E4[2].field_0 = i;
+                    return;
+                }
+                if (savedEntrance == ents[i].entrance_6)
+                {
+                    saveData_8008B570.mapId_2E4[2].field_0 = i;
+                    return;
+                }
             }
             i++;
         } while (ents[i].id_0 >= 0);
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, SelectMapEntrance_800ADDAC);
 
 GameBattleChain encounterRecord_800ADE78 = { 0 };
 short formation1_800ADE8C[2] = { 0 };
