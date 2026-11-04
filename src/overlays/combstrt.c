@@ -5,62 +5,37 @@
 #include "pad_text.h"
 #include "combstrt.h"
 
-typedef struct CombStrtTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-} CombStrtTask;
+int dword_800A4088 SDATA = 21; // first word of the overlay
 
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct CombStrtBox
-{
-    short col_0;
-    char state_2;
-    char frame_3;
-} CombStrtBox;
+MenuCursor yesNoCursor_800A4BF0 = { 2, 1, 2, 0, 1, 0 };
+unsigned short stateDefaultSel_800A4BFC[4] = { 1, 0, 0, 0 };
+// the question of each setup state (state 3: the shuffle animation)
+const char* stateQuestions_800A4C04[4] = {
+    "\202`\202\214\202\214\202\217\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\203\202\210\202\201\202\216\202\207\202\211\202\216\202\207\201H", // Allow minion changing?
+    "\202r\202\210\202\225\202\206\202\206\202\214\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201H", // Shuffle minion order?
+    "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224\201H", // Start fight?
+    "\202r\202\210\202\225\202\206\202\206\202\214\202\211\202\216\202\207\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201D\201D\201D", // Shuffling minion order...
+};
+unsigned char setupState_800A4C14 = 255;
+CombStrtWin playerLabelItemP1_800A4C18 = { 0x10008, (void*)51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 10, 20, 0x140032, 0x40002 };
+CombStrtWin playerLabelItemP2_800A4C34 = { 0x10008, (void*)223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 260, 20, 0x140032, 0x40002 };
+CombStrtWin* playerLabelItems_800A4C50[2] = { &playerLabelItemP1_800A4C18, &playerLabelItemP2_800A4C34 };
+int slotLabelSprites_800A4C58[3] = { 219, 115, 102 };
+short minionSlotPos_800A4C64[2][3][2] = { { { 10, 64 }, { 10, 109 }, { 10, 154 } }, { { 166, 64 }, { 166, 109 }, { 166, 154 } } };
+void (*setupStateHandlers_800A4C7C[4])() = { SetupAllowChangeInput_800A43FC, SetupShuffleInput_800A4498, SetupStartFightInput_800A4524, SetupShuffleAnim_800A45B8 };
+short windowAnimStep_800A4C8C = 0;
+static short windowAnimPad = 0; // unused (0x800A4C8E)
+short shuffleLimit_800A4C90 = 0;
+short shufflePhase_800A4C92 = 0;
+short shuffleTimer_800A4C94 = 0;
+short shuffleDelay_800A4C96 = 0;
 
-
-// a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (CombSelItem)
-typedef struct CombStrtWin
-{
-    int flagsType_0; // flags_0 | type_2 << 16
-    void* icon_4;
-    int sprts_8;
-    int tpages_C;
-    short x_10;
-    short y_12;
-    int size_14;
-    int margin_18;
-} CombStrtWin;
-extern const CombStrtWin titleItem_800A4138;
-extern MenuCursor yesNoCursor_800A4BF0;
-extern const CombStrtWin minionLabelItem_800A4154;
-
-extern int dword_800A3A88;
-extern unsigned int dword_8008D3FC;
-extern unsigned short word_8008D3FC;
-extern unsigned short uiColor_8008B590;
-extern Minion teams_800A3AA0[2][3];
-extern void CombatNextStage_800A16FC();
-extern int CountTeamMinions_800A1AAC(int);
-extern int IsMinionSlotEmpty_800A1934(Minion*);
-extern void PlaySfx_80031494(int);
-extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
-extern void ShuffleTeam_800A473C(int);
-extern void DrawTeamMinion_800A49DC(int, int);
-
-int dword_800A4088 SDATA = 21;
-const char aShufflingMinion_800A408C[] = "\202r\202\210\202\225\202\206\202\206\202\214\202\211\202\216\202\207\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201D\201D\201D"; // Shuffling minion order...
-const char aStartFight_800A40C0[] = "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224\201H"; // Start fight?
-const char aShuffleMinionOr_800A40DC[] = "\202r\202\210\202\225\202\206\202\206\202\214\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201H"; // Shuffle minion order?
-const char aAllowMinionChan_800A4108[] = "\202`\202\214\202\214\202\217\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\203\202\210\202\201\202\216\202\207\202\211\202\216\202\207\201H"; // Allow minion changing?
 const CombStrtWin titleItem_800A4138 = { 0x10008, (void*)36, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7A, 0x14, 0x14004C, 0x40002 };
 const CombStrtWin minionLabelItem_800A4154 = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 0x140032, 0x40002 };
 
 // Versus fight setup: yes/no questions (allow minion changing, shuffle order, start fight) and the shuffle animation
 // Matched
-void VersusSetupTask_800A4170(CombStrtTask* t, int a)
+void VersusSetupTask_800A4170(CombatTask* t, int a)
 {
     CombStrtBox box;
     CombStrtWin title;
@@ -126,11 +101,11 @@ void SetupAllowChangeInput_800A43FC()
     {
         if (yesNoCursor_800A4BF0.cursor_8 == 0)
         {
-            dword_800A3A88 |= 2;
+            combatFlags_800A3A88 |= 2;
         }
         else
         {
-            dword_800A3A88 &= ~2;
+            combatFlags_800A3A88 &= ~2;
         }
         if (CountTeamMinions_800A1AAC(0) >= 2u || CountTeamMinions_800A1AAC(1) >= 2u)
         {
@@ -160,17 +135,17 @@ void SetupShuffleInput_800A4498()
 }
 
 // state 2: "Start fight?" returns to the versus task, combat flag 1 set when confirmed
-void SetupStartFightInput_800A4524(CombStrtTask* task)
+void SetupStartFightInput_800A4524(CombatTask* task)
 {
     if (IsConfirmPressedP1_8003D380(1) && yesNoCursor_800A4BF0.cursor_8 == 1)
     {
         task->next_8 = CombatNextStage_800A16FC;
-        dword_800A3A88 &= ~1;
+        combatFlags_800A3A88 &= ~1;
     }
     else if (IsConfirmPressedP1_8003D380(1))
     {
         setupState_800A4C14 = 1;
-        dword_800A3A88 |= 1;
+        combatFlags_800A3A88 |= 1;
         task->next_8 = CombatNextStage_800A16FC;
     }
 }
@@ -188,7 +163,7 @@ void SetupShuffleAnim_800A45B8()
             shufflePhase_800A4C92 = 1;
             shuffleTimer_800A4C94 = 0;
             shuffleDelay_800A4C96 = 0;
-            shuffleLimit_800A4C90 = ((dword_8008D3FC & 0x70) >> 4) + 5;
+            shuffleLimit_800A4C90 = (((unsigned int)frameCount_8008D3FC & 0x70) >> 4) + 5;
         }
         break;
     case 1:
@@ -219,8 +194,6 @@ void ShuffleTeams_800A46FC()
     PlaySfx_80031494(0x7F);
 }
 
-extern int rand(void);
-extern int PickNthFreeSlot_800A4878(int nth, int* slots, int count);
 void ShuffleTeam_800A473C(int side)
 {
     int used[10];
@@ -347,20 +320,3 @@ void DrawTeamMinion_800A49DC(int side, int slot)
         DrawWindow_80042460(&r2, &c3, pOT_8008D454 + 15, 0);
     }
 }
-
-MenuCursor yesNoCursor_800A4BF0 = { 2, 1, 2, 0, 1, 0 };
-unsigned short stateDefaultSel_800A4BFC[4] = { 1, 0, 0, 0 };
-const char *stateQuestions_800A4C04[4] = { aAllowMinionChan_800A4108, aShuffleMinionOr_800A40DC, aStartFight_800A40C0, aShufflingMinion_800A408C };
-unsigned char setupState_800A4C14 = 255;
-int playerLabelItemP1_800A4C18[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
-int playerLabelItemP2_800A4C34[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };
-void *playerLabelItems_800A4C50[2] = { (void *)playerLabelItemP1_800A4C18, (void *)playerLabelItemP2_800A4C34 };
-int slotLabelSprites_800A4C58[3] = { 219, 115, 102 };
-short minionSlotPos_800A4C64[2][3][2] = { { { 10, 64 }, { 10, 109 }, { 10, 154 } }, { { 166, 64 }, { 166, 109 }, { 166, 154 } } };
-void (*setupStateHandlers_800A4C7C[4])() = { SetupAllowChangeInput_800A43FC, SetupShuffleInput_800A4498, SetupStartFightInput_800A4524, SetupShuffleAnim_800A45B8 };
-short windowAnimStep_800A4C8C = 0;
-static short windowAnimPad = 0; // unused (0x800A4C8E)
-short shuffleLimit_800A4C90 = 0;
-short shufflePhase_800A4C92 = 0;
-short shuffleTimer_800A4C94 = 0;
-short shuffleDelay_800A4C96 = 0;

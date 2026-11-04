@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "effect_data.h"
 #include "main.h"
+#include "pad_text.h"
 
 // a menu item drawn by DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4
 typedef struct CombSelItem
@@ -39,16 +40,6 @@ typedef struct CombSelArrow
     unsigned short dir_2;
 } CombSelArrow;
 
-// a menu cursor (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
-typedef struct CombSelCursor
-{
-    short cols_0;
-    short rows_2;
-    short count_4;
-    short flags_6; // 0x40: scrolls
-    short index_8; // on screen
-    short scroll_A;
-} CombSelCursor;
 
 
 // a window list drawn by DrawMenuWindows_8002A5A4
@@ -82,8 +73,8 @@ extern CombSelItem dword_80082740[2];
 extern CombSelMenu dword_80082784;
 
 // COMBAT (the overlay below this one)
-extern CombSelCursor combatCursor_800A1BBC; // the main menu cursor
-extern short combatMenuChoice_800A1BC4;          // == combatCursor_800A1BBC.index_8
+extern MenuCursor combatCursor_800A1BBC; // the main menu cursor
+extern short combatMenuChoice_800A1BC4;          // == combatCursor_800A1BBC.cursor_8
 extern Minion rosters_800A1BC8[2][15];
 extern unsigned char player2Pad_800A38D8;
 extern unsigned char curPlayer_800A38D9;
@@ -107,6 +98,8 @@ extern void ListInput_800A53B0(void);
 extern void QuitConfirmInput_800A54A0(CombSelTask* t);
 extern void QuitToTitle_800A5538(CombSelTask* t);
 extern int AllSlotsEmpty_800A5560(Minion* team, int count);
+
+/* exe-side, to move to <exe header> */
 extern int GetMenuCursorIndex_8003DA54(void* cursor);
 extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
@@ -117,25 +110,12 @@ extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* po
 extern void DrawMenuWindows_8002A5A4(void* menu);
 extern void DrawButtonHelpBar_8002B004(void* e, void* pos, int ot);
 extern void DrawMenuBackground_8002BE10(void);
-extern int UpdateMenuCursor_8003D794(void* cursor, int pad);
+extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.h defines it (MenuCursor*): a1 passes through to MenuCursorInput_8003D830
 
 extern int dword_800A4088;
-extern const char aReturnToTitleSc_800A408C[];
-extern const char aDeleteEnteredMi_800A40BC[];
-extern const char aEnterMinionFrom_800A40EC[];
-extern const char aReadMinionDataF_800A411C[];
-extern const char aReturnToTitleSc_800A4164[];
-extern const char aEnterPlayer2SMi_800A4194[];
-extern const char aStartFighting_800A41C8[];
-extern const char aEnterPlayer2SMi_800A41E8[];
-extern const char aQuit_800A421C[];
-extern const char aSelect_800A4228[];
 extern const CombSelItem titleItem_800A4238;
 extern const CombSelItem playerItems_800A4254[2];
 extern const CombSelItem listHeaderItem_800A428C;
-extern const char aSelectSpaceToEn_800A42A8[];
-extern const char aSelectMinionToD_800A42E4[];
-extern const char aSelectMinionToE_800A4318[];
 extern const int dword_800A4348;
 extern CombSelItem teamRow0_800A55C4[2];
 extern CombSelItem teamRow1_800A55FC[2];
@@ -157,10 +137,10 @@ extern CombSelItem nextRow_800A58C0[2];
 extern CombSelItem quitRow_800A58F8[2];
 extern CombSelItem *mainRows_800A5930[6];
 extern CombSelMenu mainWindow_800A5948;
-extern CombSelCursor teamCursor_800A5960;
-extern CombSelCursor listCursor_800A596C;
-extern CombSelCursor quitCursor_800A5978;
-extern CombSelCursor *modeCursors_800A5984[4];
+extern MenuCursor teamCursor_800A5960;
+extern MenuCursor listCursor_800A596C;
+extern MenuCursor quitCursor_800A5978;
+extern MenuCursor *modeCursors_800A5984[4];
 extern CombSelMenu *modeWindows_800A5994[4];
 extern int playerIcons_800A59A4[2];
 extern int nextIcons_800A59AC[2];
