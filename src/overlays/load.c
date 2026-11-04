@@ -16,9 +16,9 @@ typedef struct
     void (*cb_C)();
     int size_10;
     void* work_14;
-} Task_LOAD;
+} LoadMenuTaskEntry;
 extern EventNode* loadMenuTask_8008D480; // the load menu's task list
-extern int MemCardSync(int a, int* b, int* c);
+extern int MemCardSync(int mode, int* cmd, int* result);
 extern void MemCardAccept();
 extern void MemCardExist();
 extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
@@ -53,39 +53,39 @@ typedef struct
     char title_4[64];
     char field_44[12];
     short field_50;
-    Bytes5_LOAD tag_52; // "CRD0"
+    CardTag tag_52; // "CRD0"
     char field_57;
     char pad_58[4];
     int field_5C;
     char clut_60[32];
     char icon_80[3][128];
     char field_200[0x80];
-} CardHeader_LOAD;
+} CardHeader;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 // a memory card directory entry (the PSY-Q struct DIRENTRY layout)
-typedef struct DirEntry_LOAD
+typedef struct CardDirEntry
 {
     char name_0[20];
     long attr_14;
     long size_18;
-    struct DirEntry_LOAD* next_1C;
+    struct CardDirEntry* next_1C;
     long head_20;
     char system_24[4];
-} DirEntry_LOAD;
-extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
+} CardDirEntry;
+extern long MemCardGetDirentry(long chan, char* name, CardDirEntry* dir, long* files, long ofs, long max);
 extern void FreeActiveOverlay_8002C014(void);
 extern int GetGameMode_800A6D50(int a);
 extern void RequestGameMode_800A6D30(int a);
 extern int mapStartMode_80091C54;
 extern int MemCardFormat(long chan);
-extern void ScanCardSaves_800BAFB0(int a);
+extern void ScanCardSaves_800BAFB0(int slot);
 extern void _card_stop(void);
 extern void UserFuncInit(void);
 extern void _card_start(void);
 extern void sub_800BD06C(void);
-extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
+extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);
 extern char byte_800B682C[];
-extern void DrawNumberRightAlignedFont1_8003F264(void* p, int a, int b);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern unsigned char cardSlotCursor_800BDF68;
 extern void _clr_card_event(void);
@@ -93,24 +93,24 @@ extern int _get_card_event_x(void);
 typedef struct
 {
     short color_0; // uiColor_8008B590
-    char field_2;
-    char field_3;
-} WinColor_LOAD;
+    char colorSet_2; // window colour set (1 pulses, GetWindowColors_8004226C)
+    char semiTrans_3;
+} LoadWinColor;
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
-extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
+extern void DrawWindow_80042460(void* rect, void* color, void* ot, int d);
 // the summary block (file offset 0x280) of a save file
 typedef struct
 {
     unsigned char name_0[0xC];
     char text_C[0x18];
     short icon_24;
-    short f26;
+    short corridor_26; // SaveData.field_810: the corridor floor (-1 end of game, -2 an ordinary save)
     int vals_28[6];
-    int sum_40; // byte sum of the save body (SaveFile_LOAD.body_300)
+    int sum_40; // byte sum of the save body (SaveFile.body_300)
     char pad44[0x3C];
-} SaveSummary_LOAD;
+} SaveSummary;
 // a unit's status as packed in a save file (0x38 bytes): UnitStatus without the name and the equipment
 typedef struct
 {
@@ -124,8 +124,8 @@ typedef struct
     short elementMask_32;
     unsigned char level_34;
     unsigned char field_35;
-} SaveStatus_LOAD;
-// a Minion as packed in a save file (0xA0 bytes); the names are kept apart (SaveBody_LOAD)
+} SaveStatus;
+// a Minion as packed in a save file (0xA0 bytes); the names are kept apart (SaveBody)
 typedef struct
 {
     short id_0;
@@ -133,42 +133,42 @@ typedef struct
     unsigned char field_3;
     unsigned char species_4[0x30];
     unsigned char field_34[8];
-    SaveStatus_LOAD status_3C;
+    SaveStatus status_3C;
     UnitStatBlock field_74;
     UnitSkills skills_86;
     unsigned int magicBits_9C;
-} SaveMinion_LOAD;
+} SaveMinion;
 // a stored minion (SaveData.items, UnitStats) as packed in a save file (0x6C bytes)
 typedef struct
 {
-    SaveStatus_LOAD status_0;
+    SaveStatus status_0;
     char pad_38[0x14];
     unsigned int species_4C;
     char pad_50[0x1C];
-} SaveStats_LOAD;
+} SaveStats;
 // the checksummed part of a save file (file offset 0x300)
 typedef struct
 {
     unsigned char data_0[0x984]; // the head of saveData_8008B570 (0x988 bytes, up to the minions)
     int version_984;             // SaveData.field_984: 5
-    SaveMinion_LOAD minions_988[15];
-    SaveStats_LOAD items_12E8[12];
+    SaveMinion minions_988[15];
+    SaveStats items_12E8[12];
     unsigned char ancestorNames_17F8[15][6][10];
     unsigned char minionNames_1B7C[15][12]; // 10 used
     unsigned char itemNames_1C30[12][12];   // 10 used
-} SaveBody_LOAD;
+} SaveBody;
 // a save file (0x2180 bytes)
 typedef struct
 {
-    CardHeader_LOAD header_0;
-    SaveSummary_LOAD summary_280;
-    SaveBody_LOAD body_300;
+    CardHeader header_0;
+    SaveSummary summary_280;
+    SaveBody body_300;
     char pad_1FC0[0x1C0];
-} SaveFile_LOAD;
+} SaveFile;
 typedef struct
 {
-    SaveSummary_LOAD* summaries_0; // one per save (15)
-    SaveFile_LOAD* fileBuf_4; // one save file
+    SaveSummary* summaries_0; // one per save (15)
+    SaveFile* fileBuf_4; // one save file
     int loaded_8;     // 1 once a save was loaded (GetLoadMenuLoaded_800B7914)
     char pad_C[8];
     int field_14;
@@ -194,31 +194,31 @@ typedef struct
 {
     short w_0;
     short h_2;
-} Size_LOAD;
+} TextSize;
 typedef struct
 {
     short x_0;
     short y_2;
     short w_4;
     short h_6;
-} Rect_LOAD;
-extern Size_LOAD MeasureTextLines_8003E3B4(int* list);
-extern int IsConfirmPressed_8003D288(int a, int b);
-extern int IsCancelPressed_8003D3C0(int a, int b);
+} MsgBoxRect;
+extern TextSize MeasureTextLines_8003E3B4(int* list);
+extern int IsConfirmPressed_8003D288(int playSfx, int pad);
+extern int IsCancelPressed_8003D3C0(int playSfx, int pad);
 extern void UserFuncOpen(void* fn, int a);
 extern void sub_800BB6F4(void);
 extern void sub_800BBA5C(void);
 typedef struct
 {
     short field_0;
-    short field_2;
-} Pair_LOAD;
-extern void ResetMenuRow_800BADE0(MenuRow_LOAD* p);
-extern void DrawScrollArrows_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
-void DrawSaveSlots_800B8BD4(LoadMenuWork* t);
-extern void PlaySfx_80031494(int a);
+    short dir_2; // DrawScrollArrow_8002B3DC direction
+} ScrollArrowArg;
+extern void ResetMenuRow_800BADE0(LoadMenuRow* row);
+extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
+void DrawSaveSlots_800B8BD4(LoadMenuWork* work);
+extern void PlaySfx_80031494(int id);
 extern void WaitCardSync_800BADF4(void);
-extern char* GetCardSaveName_800BAE4C(int n);
+extern char* GetCardSaveName_800BAE4C(int i);
 extern int GetCardFreeBlocks_800BAE2C(void);
 extern int GetCardSaveCount_800BAE3C(void);
 typedef struct
@@ -252,87 +252,87 @@ void LoadMenuStart_800B7650(void)
 }
 
 #if 0
-// Not matched: mode and t swap $s3/$s4, and the case 0/1 stores are scheduled differently
+// Not matched: mode and task swap $s3/$s4, and the case 0/1 stores are scheduled differently
 void LoadMenuInit_800B7674(int mode, int b)
 {
     int i;
-    Task_LOAD* t;
-    LoadMenuWork* s;
+    LoadMenuTaskEntry* task;
+    LoadMenuWork* work;
     MemCardStart();
-    t = (Task_LOAD*)&loadMenuTask_8008D480->entry;
-    s = (LoadMenuWork*)t->work_14;
-    t->flags_0 = (t->flags_0 | 1) & ~0x8000;
+    task = (LoadMenuTaskEntry*)&loadMenuTask_8008D480->entry;
+    work = (LoadMenuWork*)task->work_14;
+    task->flags_0 = (task->flags_0 | 1) & ~0x8000;
     for (i = 0; i < 6; i++)
     {
         ResetMenuRow_800BADE0(&loadMenuRows_800BDF4C[i]);
     }
-    s->loaded_8 = 0;
-    s->nextScreen_24 = -1;
-    s->phase_28 = 0;
+    work->loaded_8 = 0;
+    work->nextScreen_24 = -1;
+    work->phase_28 = 0;
     switch (mode)
     {
     case 0:
-        s->screen_30 = 1;
+        work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
-        s->flags_54 = 4;
+        work->flags_54 = 4;
         break;
     case 1:
-        s->screen_30 = 1;
+        work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
-        s->flags_54 = 4;
+        work->flags_54 = 4;
         break;
     case 2:
-        s->screen_30 = 1;
+        work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
-        s->flags_54 = 0xC;
-        t->next_8 = LoadMenuTask_800B794C;
+        work->flags_54 = 0xC;
+        task->next_8 = LoadMenuTask_800B794C;
         goto done;
     case 3:
-        s->screen_30 = 1;
+        work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 1;
-        s->flags_54 = 0x4C;
-        t->next_8 = LoadMenuTask_800B794C;
+        work->flags_54 = 0x4C;
+        task->next_8 = LoadMenuTask_800B794C;
         goto done;
     default:
-        s->screen_30 = 0;
+        work->screen_30 = 0;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
-        s->flags_54 = 0;
+        work->flags_54 = 0;
         break;
     }
     LoadUiTiy_8002BF74();
-    t->next_8 = LoadMenuWaitUiTiy_800B7894;
+    task->next_8 = LoadMenuWaitUiTiy_800B7894;
 done:
-    if (dword_8008BD80 == -1 && !(s->flags_54 & 8))
+    if (dword_8008BD80 == -1 && !(work->flags_54 & 8))
     {
-        s->screen_30 = 1;
+        work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
-        s->flags_54 = 0x20;
+        work->flags_54 = 0x20;
     }
-    s->field_5C = 0;
-    s->nRead_20 = 0;
-    s->field_14 = 0;
-    s->field_32 = 0;
-    s->field_2C = 0;
-    s->field_3C = 0;
-    s->field_40 = 0;
-    s->rows_64[0] = &loadMenuRows_800BDF4C[0];
-    s->rows_64[1] = &loadMenuRows_800BDF4C[1];
-    s->rows_64[2] = &loadMenuRows_800BDF4C[2];
-    s->rows_64[3] = &loadMenuRows_800BDF4C[3];
-    s->rows_64[4] = &loadMenuRows_800BDF4C[4];
-    s->rows_64[5] = &loadMenuRows_800BDF4C[5];
-    s->summaries_0 = malloc3_8003FC4C(0x780);
-    s->fileBuf_4 = malloc3_8003FC4C(sizeof(SaveFile_LOAD));
+    work->field_5C = 0;
+    work->nRead_20 = 0;
+    work->field_14 = 0;
+    work->field_32 = 0;
+    work->field_2C = 0;
+    work->field_3C = 0;
+    work->field_40 = 0;
+    work->rows_64[0] = &loadMenuRows_800BDF4C[0];
+    work->rows_64[1] = &loadMenuRows_800BDF4C[1];
+    work->rows_64[2] = &loadMenuRows_800BDF4C[2];
+    work->rows_64[3] = &loadMenuRows_800BDF4C[3];
+    work->rows_64[4] = &loadMenuRows_800BDF4C[4];
+    work->rows_64[5] = &loadMenuRows_800BDF4C[5];
+    work->summaries_0 = malloc3_8003FC4C(0x780);
+    work->fileBuf_4 = malloc3_8003FC4C(sizeof(SaveFile));
     loadMenuActive_800BE184 = 1;
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, LoadMenuInit_800B7674);
 
-void LoadMenuWaitUiTiy_800B7894(Task_LOAD* t)
+void LoadMenuWaitUiTiy_800B7894(LoadMenuTaskEntry* task)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        t->next_8 = LoadMenuTask_800B794C;
+        task->next_8 = LoadMenuTask_800B794C;
     }
 }
 
@@ -343,13 +343,13 @@ void SetLoadMenuSavePlace_800B78B8(char* place)
 
 void LoadMenuSetEndOfGame_800B78D0(void)
 {
-    LoadMenuWork* t;
+    LoadMenuWork* work;
     saveData_8008B570.field_810 = -1;
     saveData_8008B570.field_0 |= 0x180;
-    t = loadMenuTask_8008D480->entry.buffer;
-    t->screen_30 = 1;
+    work = loadMenuTask_8008D480->entry.buffer;
+    work->screen_30 = 1;
     loadMenuRows_800BDF4C[0].cursor_C = 0;
-    t->flags_54 = 0x20;
+    work->flags_54 = 0x20;
 }
 
 int GetLoadMenuLoaded_800B7914(void)
@@ -366,99 +366,99 @@ int IsLoadMenuActive_800B793C(void)
     return loadMenuActive_800BE184;
 }
 
-void LoadMenuTask_800B794C(Task_LOAD* t, LoadMenuWork* s)
+void LoadMenuTask_800B794C(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
-    switch (s->phase_28)
+    switch (work->phase_28)
     {
     case 0:
-        LoadMenuScreen_800B79F8(s);
+        LoadMenuScreen_800B79F8(work);
         break;
     case 2:
-        PackSaveFile_800B9A8C(s);
-        t->next_8 = WriteSaveTask_800B98C4;
-        s->field_2C = 0;
+        PackSaveFile_800B9A8C(work);
+        task->next_8 = WriteSaveTask_800B98C4;
+        work->field_2C = 0;
         break;
     case 3:
-        t->next_8 = LoadSaveTask_800BA234;
+        task->next_8 = LoadSaveTask_800BA234;
         break;
     case 4:
-        t->next_8 = FormatCardWait1_800BA968;
+        task->next_8 = FormatCardWait1_800BA968;
         break;
     case 5:
     case 6:
-        t->next_8 = LoadMenuExit_800BAAE0;
+        task->next_8 = LoadMenuExit_800BAAE0;
         break;
     }
 }
 const char aLoadGame_800B68E0[] = "\202k\202\217\202\201\202\204\201@\202\207\202\201\202\215\202\205\201H"; // Load game?
 const char aOverwriteGame_800B68F8[] = "\202n\202\226\202\205\202\222\202\227\202\222\202\211\202\224\202\205\201@\202\207\202\201\202\215\202\205\201H"; // Overwrite game?
 const char aSaveGame_800B6918[] = "\202r\202\201\202\226\202\205\201@\202\207\202\201\202\215\202\205\201H"; // Save game?
-const WinRect_LOAD confirmTextWin_800B6930 = { { 10, 0, 193, 0, 204, 0, 20 } };
+const LoadWinRect confirmTextWin_800B6930 = { { 10, 0, 193, 0, 204, 0, 20 } };
 const char aReturnToTitle_800B6938[] = "\202q\202\205\202\224\202\225\202\222\202\216\201@\202\224\202\217\201@\202\224\202\211\202\224\202\214\202\205\201@\202\223\202\203\202\222\202\205\202\205\202\216\201H"; // Return to title screen?
-const WinRect_LOAD titlePromptWin_800B6968 = { { 92, 0, 100, 0, 140, 0, 19 } };
+const LoadWinRect titlePromptWin_800B6968 = { { 92, 0, 100, 0, 140, 0, 19 } };
 const int dword_800B6970 = 0;
 
 extern unsigned short padPressed_8009194C[];
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
-extern int PollCardExist_800BAF0C(int a);
-extern int PollCardAccept_800BAE68(int a);
-void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* t);
-void DrawCardSlotSelect_800B82FC(LoadMenuWork* t);
-void DrawCardSlotChosen_800B847C(LoadMenuWork* t);
-void DrawFormatPrompt_800B85AC(LoadMenuWork* t);
-void DrawSaveList_800B867C(LoadMenuWork* t);
-void DrawLoadMenuHelpText_800B877C(LoadMenuWork* t);
-void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* t);
-void DrawCardSlotLabel_800B8A20(LoadMenuWork* t);
-void DrawSaveListPosition_800B8AE4(LoadMenuWork* t);
-void TopMenuInput_800B9220(LoadMenuWork* t);
-void CardSlotInput_800B92C0(LoadMenuWork* t);
-void CheckCardTask_800B9360(LoadMenuWork* t);
-void FormatPromptInput_800B9470(LoadMenuWork* t);
-void SaveListInput_800B952C(LoadMenuWork* t);
-void ConfirmPromptInput_800B9654(LoadMenuWork* t);
-int ReadSaveSummaries_800B9724(LoadMenuWork* t);
+extern int PollCardExist_800BAF0C(int slot);
+extern int PollCardAccept_800BAE68(int slot);
+void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work);
+void DrawCardSlotSelect_800B82FC(LoadMenuWork* work);
+void DrawCardSlotChosen_800B847C(LoadMenuWork* work);
+void DrawFormatPrompt_800B85AC(LoadMenuWork* work);
+void DrawSaveList_800B867C(LoadMenuWork* work);
+void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work);
+void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work);
+void DrawCardSlotLabel_800B8A20(LoadMenuWork* work);
+void DrawSaveListPosition_800B8AE4(LoadMenuWork* work);
+void TopMenuInput_800B9220(LoadMenuWork* work);
+void CardSlotInput_800B92C0(LoadMenuWork* work);
+void CheckCardTask_800B9360(LoadMenuWork* work);
+void FormatPromptInput_800B9470(LoadMenuWork* work);
+void SaveListInput_800B952C(LoadMenuWork* work);
+void ConfirmPromptInput_800B9654(LoadMenuWork* work);
+int ReadSaveSummaries_800B9724(LoadMenuWork* work);
 // draws the current screen (LoadMenuWork.screen_30) and handles its input:
 //  0 top menu (Save / Load / Exit / Title), 1 card slot select, 2 format the card?, 3 the save list,
 //  4 load / save / overwrite?, 5 return to the title?, 6 no card in the slot, 7 card full, 8 no save data,
 //  9 no empty blocks, 10 damaged data, 11 card not formatted, 13..15 format / save / load failed,
 //  18 checking the card
 // Matched
-void LoadMenuScreen_800B79F8(LoadMenuWork* t)
+void LoadMenuScreen_800B79F8(LoadMenuWork* work)
 {
     union // the text position and the window colour share one slot (case 4)
     {
-        Pos_LOAD pos;
-        WinColor_LOAD tail;
-    } u;
+        LoadTextPos pos;
+        LoadWinColor tail;
+    } shared;
     int r;
-    UpdateLoadMenuCursor_800B80F8(t);
-    switch (t->screen_30)
+    UpdateLoadMenuCursor_800B80F8(work);
+    switch (work->screen_30)
     {
     case 9:
     case 10:
         saveListWin_800BDB0C.time_4 = 0;
-        saveListWin_800BDB0C.field_0 = 1;
+        saveListWin_800BDB0C.flags_0 = 1;
         DrawMenuWindows_8002A5A4(&saveListWin_800BDB0C);
-        DrawSaveList_800B867C(t);
-        DrawLoadMenuModeTitle_800B8984(t);
-        DrawCardSlotLabel_800B8A20(t);
-        DrawSaveListPosition_800B8AE4(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        DrawSaveList_800B867C(work);
+        DrawLoadMenuModeTitle_800B8984(work);
+        DrawCardSlotLabel_800B8A20(work);
+        DrawSaveListPosition_800B8AE4(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 3;
+            work->nextScreen_24 = 3;
         }
-        if (!ReadSaveSummaries_800B9724(t))
+        if (!ReadSaveSummaries_800B9724(work))
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 7:
         DrawMessageBox_800BACBC(msgCardFull_800BDEBC);
-        if (!ReadSaveSummaries_800B9724(t) || padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        if (!ReadSaveSummaries_800B9724(work) || padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 11:
@@ -470,14 +470,14 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* t)
         case 3:
             break;
         case 1:
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
             break;
         }
-        DrawCardSlotChosen_800B847C(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        DrawCardSlotChosen_800B847C(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 8:
@@ -489,25 +489,25 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* t)
         case 4:
             break;
         default:
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
             break;
         }
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 0:
         topMenuWin_800BDCD0.time_4 = GetTime30Hz_8002C64C();
-        topMenuWin_800BDCD0.cursor_C = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
+        topMenuWin_800BDCD0.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
         DrawMenuWindows_8002A5A4(&topMenuWin_800BDCD0);
-        DrawLoadMenuHelpText_800B877C(t);
-        TopMenuInput_800B9220(t);
+        DrawLoadMenuHelpText_800B877C(work);
+        TopMenuInput_800B9220(work);
         break;
     case 1:
-        DrawCardSlotSelect_800B82FC(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        CardSlotInput_800B92C0(t);
+        DrawCardSlotSelect_800B82FC(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        CardSlotInput_800B92C0(work);
         break;
     case 6:
         switch (PollCardExist_800BAF0C(cardSlotCursor_800BDF68))
@@ -516,143 +516,143 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* t)
         case 3:
         case 4:
             WaitCardSync_800BADF4();
-            t->nextScreen_24 = 0x12;
+            work->nextScreen_24 = 0x12;
             break;
         }
-        DrawCardSlotChosen_800B847C(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        DrawCardSlotChosen_800B847C(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 18:
-        DrawCardSlotChosen_800B847C(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        CheckCardTask_800B9360(t);
+        DrawCardSlotChosen_800B847C(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        CheckCardTask_800B9360(work);
         break;
     case 2:
         formatWin_800BDD64.time_4 = GetTime30Hz_8002C64C();
-        formatWin_800BDD64.cursor_C = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-        DrawFormatPrompt_800B85AC(t);
-        FormatPromptInput_800B9470(t);
+        formatWin_800BDD64.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        DrawFormatPrompt_800B85AC(work);
+        FormatPromptInput_800B9470(work);
         break;
     case 3:
         saveListWin_800BDB0C.time_4 = GetTime30Hz_8002C64C();
-        saveListWin_800BDB0C.cursor_C = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-        saveListWin_800BDB0C.field_0 = 2;
-        if (!ReadSaveSummaries_800B9724(t))
+        saveListWin_800BDB0C.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        saveListWin_800BDB0C.flags_0 = 2;
+        if (!ReadSaveSummaries_800B9724(work))
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         DrawMenuWindows_8002A5A4(&saveListWin_800BDB0C);
-        DrawSaveList_800B867C(t);
-        DrawLoadMenuModeTitle_800B8984(t);
-        DrawCardSlotLabel_800B8A20(t);
-        DrawSaveListPosition_800B8AE4(t);
-        DrawLoadMenuHelpText_800B877C(t);
-        SaveListInput_800B952C(t);
+        DrawSaveList_800B867C(work);
+        DrawLoadMenuModeTitle_800B8984(work);
+        DrawCardSlotLabel_800B8A20(work);
+        DrawSaveListPosition_800B8AE4(work);
+        DrawLoadMenuHelpText_800B877C(work);
+        SaveListInput_800B952C(work);
         break;
     case 4:
         saveListWin_800BDB0C.time_4 = 0;
         saveListWin_800BDB0C.cursor_C = loadMenuRows_800BDF4C[3].cursor_C;
-        saveListWin_800BDB0C.field_0 = 4;
+        saveListWin_800BDB0C.flags_0 = 4;
         confirmWin_800BDDF8.time_4 = GetTime30Hz_8002C64C();
-        confirmWin_800BDDF8.cursor_C = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-        if (!ReadSaveSummaries_800B9724(t))
+        confirmWin_800BDDF8.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        if (!ReadSaveSummaries_800B9724(work))
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         DrawMenuWindows_8002A5A4(&saveListWin_800BDB0C);
-        DrawSaveList_800B867C(t);
-        DrawLoadMenuModeTitle_800B8984(t);
-        DrawCardSlotLabel_800B8A20(t);
-        DrawSaveListPosition_800B8AE4(t);
+        DrawSaveList_800B867C(work);
+        DrawLoadMenuModeTitle_800B8984(work);
+        DrawCardSlotLabel_800B8A20(work);
+        DrawSaveListPosition_800B8AE4(work);
         DrawMenuWindows_8002A5A4(&confirmWin_800BDDF8);
         if (loadMenuRows_800BDF4C[0].cursor_C == 1)
         {
-            u.pos.x_0 = 0xD;
-            u.pos.y_2 = 0xC4;
-            DrawText_8003E91C(2, aLoadGame_800B68E0, &u.pos, 5);
+            shared.pos.x_0 = 0xD;
+            shared.pos.y_2 = 0xC4;
+            DrawText_8003E91C(2, aLoadGame_800B68E0, &shared.pos, 5);
         }
         else if (loadMenuRows_800BDF4C[0].cursor_C == 0)
         {
             if (GetCardSaveName_800BAE4C(loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C))
             {
-                u.pos.x_0 = 0xD;
-                u.pos.y_2 = 0xC4;
-                DrawText_8003E91C(2, aOverwriteGame_800B68F8, &u.pos, 5);
+                shared.pos.x_0 = 0xD;
+                shared.pos.y_2 = 0xC4;
+                DrawText_8003E91C(2, aOverwriteGame_800B68F8, &shared.pos, 5);
             }
             else
             {
-                u.pos.x_0 = 0xD;
-                u.pos.y_2 = 0xC4;
-                DrawText_8003E91C(2, aSaveGame_800B6918, &u.pos, 5);
+                shared.pos.x_0 = 0xD;
+                shared.pos.y_2 = 0xC4;
+                DrawText_8003E91C(2, aSaveGame_800B6918, &shared.pos, 5);
             }
         }
         {
-            WinRect_LOAD a;
-            a = confirmTextWin_800B6930;
-            u.tail.field_3 = 1;
-            u.tail.field_2 = 0;
-            u.tail.color_0 = uiColor_8008B590;
-            DrawWindow_80042460(&a, &u.tail, dword_8008D454 + 0x38, 0);
+            LoadWinRect rect;
+            rect = confirmTextWin_800B6930;
+            shared.tail.semiTrans_3 = 1;
+            shared.tail.colorSet_2 = 0;
+            shared.tail.color_0 = uiColor_8008B590;
+            DrawWindow_80042460(&rect, &shared.tail, dword_8008D454 + 0x38, 0);
         }
-        ConfirmPromptInput_800B9654(t);
+        ConfirmPromptInput_800B9654(work);
         break;
     case 5:
         titleWin_800BDE8C.time_4 = GetTime30Hz_8002C64C();
-        titleWin_800BDE8C.cursor_C = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-        u.pos.x_0 = 0x66;
-        u.pos.y_2 = 0x69;
-        DrawText_8003E91C(2, aReturnToTitle_800B6938, &u.pos, 5);
+        titleWin_800BDE8C.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        shared.pos.x_0 = 0x66;
+        shared.pos.y_2 = 0x69;
+        DrawText_8003E91C(2, aReturnToTitle_800B6938, &shared.pos, 5);
         {
-        WinRect_LOAD a;
-        WinColor_LOAD b;
-        a = titlePromptWin_800B6968;
-        b.field_3 = 1;
-        b.field_2 = 0;
-        b.color_0 = uiColor_8008B590;
-        DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+        LoadWinRect rect;
+        LoadWinColor color;
+        rect = titlePromptWin_800B6968;
+        color.semiTrans_3 = 1;
+        color.colorSet_2 = 0;
+        color.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
         }
         DrawMenuWindows_8002A5A4(&titleWin_800BDE8C);
-        if (IsConfirmPressed_8003D288(0, (t->flags_54 >> 6) & 1))
+        if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
         {
-            if (loadMenuRows_800BDF4C[t->screen_30].cursor_C == 0)
+            if (loadMenuRows_800BDF4C[work->screen_30].cursor_C == 0)
             {
-                t->flags_54 = 0x10;
-                t->phase_28 = 5;
+                work->flags_54 = 0x10;
+                work->phase_28 = 5;
                 PlaySfx_80031494(0x7E);
                 break;
             }
-            t->nextScreen_24 = 0;
+            work->nextScreen_24 = 0;
             PlaySfx_80031494(0x7D);
         }
-        else if (IsCancelPressed_8003D3C0(0, (t->flags_54 >> 6) & 1))
+        else if (IsCancelPressed_8003D3C0(0, (work->flags_54 >> 6) & 1))
         {
-            t->nextScreen_24 = 0;
+            work->nextScreen_24 = 0;
             PlaySfx_80031494(0x7D);
         }
         break;
     case 13:
         DrawMessageBox_800BACBC(msgFormatFailed_800BDF1C);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 14:
         DrawMessageBox_800BACBC(msgSaveFailed_800BDF2C);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     case 15:
         DrawMessageBox_800BACBC(msgLoadFailed_800BDF3C);
-        if (padPressed_8009194C[(t->flags_54 >> 6) & 1])
+        if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
         break;
     }
@@ -660,13 +660,13 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* t)
     DrawMenuBackground_8002BE10();
 }
 
-void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* t)
+void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work)
 {
-    short c[6];
-    int r;
-    if (t->nextScreen_24 != -1)
+    short cursor[6];
+    int move;
+    if (work->nextScreen_24 != -1)
     {
-        switch (t->nextScreen_24)
+        switch (work->nextScreen_24)
         {
         case 0:
             break;
@@ -689,48 +689,48 @@ void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* t)
             ResetMenuRow_800BADE0(&loadMenuRows_800BDF4C[5]);
             break;
         }
-        t->screen_30 = t->nextScreen_24;
-        t->nextScreen_24 = -1;
+        work->screen_30 = work->nextScreen_24;
+        work->nextScreen_24 = -1;
     }
-    if (t->screen_30 >= 6)
+    if (work->screen_30 >= 6)
     {
         return;
     }
-    if (t->screen_30 >= 0)
+    if (work->screen_30 >= 0)
     {
-        c[4] = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-        c[5] = loadMenuRows_800BDF4C[t->screen_30].scroll_D;
-        c[0] = loadMenuRows_800BDF4C[t->screen_30].field_6;
-        c[1] = loadMenuRows_800BDF4C[t->screen_30].field_7;
-        c[2] = loadMenuRows_800BDF4C[t->screen_30].field_8;
-        c[3] = loadMenuRows_800BDF4C[t->screen_30].field_B;
-        r = UpdateMenuCursor_8003D794(c, (t->flags_54 >> 6) & 1);
-        if (loadMenuRows_800BDF4C[t->screen_30].cursor_C != c[4] || r == 8 || r == 7)
+        cursor[4] = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        cursor[5] = loadMenuRows_800BDF4C[work->screen_30].scroll_D;
+        cursor[0] = loadMenuRows_800BDF4C[work->screen_30].cols_6;
+        cursor[1] = loadMenuRows_800BDF4C[work->screen_30].rows_7;
+        cursor[2] = loadMenuRows_800BDF4C[work->screen_30].count_8;
+        cursor[3] = loadMenuRows_800BDF4C[work->screen_30].flags_B;
+        move = UpdateMenuCursor_8003D794(cursor, (work->flags_54 >> 6) & 1);
+        if (loadMenuRows_800BDF4C[work->screen_30].cursor_C != cursor[4] || move == 8 || move == 7)
         {
             PlaySfx_80031494(0x7F);
         }
-        loadMenuRows_800BDF4C[t->screen_30].cursor_C = c[4];
-        loadMenuRows_800BDF4C[t->screen_30].scroll_D = c[5];
+        loadMenuRows_800BDF4C[work->screen_30].cursor_C = cursor[4];
+        loadMenuRows_800BDF4C[work->screen_30].scroll_D = cursor[5];
     }
 }
-const WinRect_LOAD cardSlotWin_800B69F4 = { { 93, 0, 18, 0, 124, 0, 18 } };
+const LoadWinRect cardSlotWin_800B69F4 = { { 93, 0, 18, 0, 124, 0, 18 } };
 const char aFormatMemoryCard_800B69FC[] = "\202e\202\217\202\222\202\215\202\201\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201H"; // Format MEMORY CARD?
-const WinRect_LOAD formatPromptWin_800B6A24 = { { 16, 0, 70, 0, 32, 1, 34 } };
+const LoadWinRect formatPromptWin_800B6A24 = { { 16, 0, 70, 0, 32, 1, 34 } };
 const char aSelectMemoryCard_800B6A2C[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D"; // Select MEMORY CARD.
 const char emptyText_800B6A54[4] = { 0 };
 const char aNoEmptyBlocks_800B6A58[] = "\202m\202\217\201@\202\205\202\215\202\220\202\224\202\231\201@\202\202\202\214\202\217\202\203\202\213\202\223\201@\202\206\202\217\202\222\201@\202\223\202\201\202\226\202\211\202\216\202\207\201@\202\216\202\205\202\227\201@\202\207\202\201\202\215\202\205\202\223\201D"; // No empty blocks for saving new games.
 const char aDamagedData_800B6AA4[] = "\202e\202\201\202\211\202\214\202\205\202\204\201@\202\204\202\225\202\205\201@\202\224\202\217\201@\202\204\202\201\202\215\202\201\202\207\202\205\202\204\201@\202\204\202\201\202\224\202\201\201D"; // Failed due to damaged data.
 const char aNoMemoryCardInSlot_800B6ADC[] = "\202m\202\217\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\223\202\214\202\217\202\224\201D"; // No MEMORY CARD in slot.
 const char aCheckingMemoryCard_800B6B0C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
-const WinRect_LOAD helpTextWin_800B6B3C = { { 10, 0, 193, 0, 44, 1, 20 } };
+const LoadWinRect helpTextWin_800B6B3C = { { 10, 0, 193, 0, 44, 1, 20 } };
 
-void DrawCardSlotSelect_800B82FC(LoadMenuWork* t)
+void DrawCardSlotSelect_800B82FC(LoadMenuWork* work)
 {
     int i;
-    UiSprite_LOAD* p;
-    WinRect_LOAD a;
-    WinColor_LOAD b;
-    if (t->screen_30 == 1)
+    LoadUiSprite* spr;
+    LoadWinRect rect;
+    LoadWinColor color;
+    if (work->screen_30 == 1)
     {
         for (i = 0; i < 2; i++)
         {
@@ -752,23 +752,23 @@ void DrawCardSlotSelect_800B82FC(LoadMenuWork* t)
     }
     DrawMenuWindows_8002A5A4(&cardSlot1Win_800BDB64);
     DrawMenuWindows_8002A5A4(&cardSlot2Win_800BDBBC);
-    for (p = &modeTitleSprites_800BD998[2]; p->sprite_4 >= 0; p++)
+    for (spr = &modeTitleSprites_800BD998[2]; spr->sprite_4 >= 0; spr++)
     {
-        DrawUiTiySprt_8002C06C(p, p->sprite_4, p->ot_6);
+        DrawUiTiySprt_8002C06C(spr, spr->sprite_4, spr->ot_6);
     }
-    a = cardSlotWin_800B69F4;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = cardSlotWin_800B69F4;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
-void DrawCardSlotChosen_800B847C(LoadMenuWork* t)
+void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
 {
     int i;
-    UiSprite_LOAD* p;
-    WinRect_LOAD a;
-    WinColor_LOAD b;
+    LoadUiSprite* spr;
+    LoadWinRect rect;
+    LoadWinColor color;
     for (i = 0; i < 2; i++)
     {
         if (i == loadMenuRows_800BDF4C[1].cursor_C)
@@ -782,141 +782,141 @@ void DrawCardSlotChosen_800B847C(LoadMenuWork* t)
     }
     DrawMenuWindows_8002A5A4(&cardSlot1Win_800BDB64);
     DrawMenuWindows_8002A5A4(&cardSlot2Win_800BDBBC);
-    for (p = &modeTitleSprites_800BD998[2]; p->sprite_4 >= 0; p++)
+    for (spr = &modeTitleSprites_800BD998[2]; spr->sprite_4 >= 0; spr++)
     {
-        DrawUiTiySprt_8002C06C(p, p->sprite_4, p->ot_6);
+        DrawUiTiySprt_8002C06C(spr, spr->sprite_4, spr->ot_6);
     }
-    a = cardSlotWin_800B69F4;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = cardSlotWin_800B69F4;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
-void DrawFormatPrompt_800B85AC(LoadMenuWork* t)
+void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
 {
-    Pos_LOAD p0;
-    Pos_LOAD p1;
-    WinRect_LOAD a;
-    WinColor_LOAD b;
+    LoadTextPos p0;
+    LoadTextPos p1;
+    LoadWinRect rect;
+    LoadWinColor color;
     p0.x_0 = 0x13;
     p0.y_2 = 0x49;
     DrawText_8003E91C(2, byte_800B682C, &p0, 5);
     p1.x_0 = 0x13;
     p1.y_2 = 0x57;
     DrawText_8003E91C(2, aFormatMemoryCard_800B69FC, &p1, 5);
-    a = formatPromptWin_800B6A24;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = formatPromptWin_800B6A24;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
     DrawMenuWindows_8002A5A4(&formatWin_800BDD64);
 }
 
-void DrawSaveList_800B867C(LoadMenuWork* t)
+void DrawSaveList_800B867C(LoadMenuWork* work)
 {
-    Pair_LOAD q;
-    short r0[4];
-    short r1[6];
-    DrawSaveSlots_800B8BD4(t);
-    r1[0] = loadMenuRows_800BDF4C[t->screen_30].field_6;
-    r1[1] = loadMenuRows_800BDF4C[t->screen_30].field_7;
-    r1[2] = loadMenuRows_800BDF4C[t->screen_30].field_8;
-    r1[3] = loadMenuRows_800BDF4C[t->screen_30].field_B;
-    r1[4] = loadMenuRows_800BDF4C[t->screen_30].cursor_C;
-    r1[5] = loadMenuRows_800BDF4C[t->screen_30].scroll_D;
-    q.field_0 = 2;
-    q.field_2 = 1;
-    r0[0] = 0x9A;
-    r0[1] = 0x2C;
-    r0[2] = 0x9A;
-    r0[3] = 0xB7;
-    DrawScrollArrows_8002B8DC(q, r1, r0, 1);
+    ScrollArrowArg arrow;
+    short arrowPos[4];
+    short cursor[6];
+    DrawSaveSlots_800B8BD4(work);
+    cursor[0] = loadMenuRows_800BDF4C[work->screen_30].cols_6;
+    cursor[1] = loadMenuRows_800BDF4C[work->screen_30].rows_7;
+    cursor[2] = loadMenuRows_800BDF4C[work->screen_30].count_8;
+    cursor[3] = loadMenuRows_800BDF4C[work->screen_30].flags_B;
+    cursor[4] = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+    cursor[5] = loadMenuRows_800BDF4C[work->screen_30].scroll_D;
+    arrow.field_0 = 2;
+    arrow.dir_2 = 1;
+    arrowPos[0] = 0x9A;
+    arrowPos[1] = 0x2C;
+    arrowPos[2] = 0x9A;
+    arrowPos[3] = 0xB7;
+    DrawScrollArrows_8002B8DC(arrow, cursor, arrowPos, 1);
 }
 
-void DrawLoadMenuHelpText_800B877C(LoadMenuWork* t)
+void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
 {
-    switch (t->screen_30)
+    switch (work->screen_30)
     {
     case 1:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, aSelectMemoryCard_800B6A2C, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, aSelectMemoryCard_800B6A2C, &pos, 5);
         break;
     }
     case 2:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, emptyText_800B6A54, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, emptyText_800B6A54, &pos, 5);
         break;
     }
     case 3:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, saveListPrompts_800BDA08[loadMenuRows_800BDF4C[0].cursor_C], &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, saveListPrompts_800BDA08[loadMenuRows_800BDF4C[0].cursor_C], &pos, 5);
         break;
     }
     case 9:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, aNoEmptyBlocks_800B6A58, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, aNoEmptyBlocks_800B6A58, &pos, 5);
         break;
     }
     case 10:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, aDamagedData_800B6AA4, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, aDamagedData_800B6AA4, &pos, 5);
         break;
     }
     case 6:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, aNoMemoryCardInSlot_800B6ADC, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, aNoMemoryCardInSlot_800B6ADC, &pos, 5);
         break;
     }
     case 18:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, aCheckingMemoryCard_800B6B0C, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, aCheckingMemoryCard_800B6B0C, &pos, 5);
         break;
     }
     case 11:
     {
-        Pos_LOAD p;
-        p.x_0 = 0xE;
-        p.y_2 = 0xC7;
-        DrawText_8003E91C(2, byte_800B682C, &p, 5);
+        LoadTextPos pos;
+        pos.x_0 = 0xE;
+        pos.y_2 = 0xC7;
+        DrawText_8003E91C(2, byte_800B682C, &pos, 5);
         break;
     }
     }
     {
-        WinRect_LOAD a;
-        WinColor_LOAD b;
-        a = helpTextWin_800B6B3C;
-        b.field_3 = 1;
-        b.field_2 = 0;
-        b.color_0 = uiColor_8008B590;
-        DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+        LoadWinRect rect;
+        LoadWinColor color;
+        rect = helpTextWin_800B6B3C;
+        color.semiTrans_3 = 1;
+        color.colorSet_2 = 0;
+        color.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
     }
 }
-const WinRect_LOAD modeTitleWin_800B6B8C = { { 63, 0, 18, 0, 108, 0, 18 } };
-const WinRect_LOAD cardSlotLabelWin_800B6B94 = { { 187, 0, 18, 0, 122, 0, 18 } };
+const LoadWinRect modeTitleWin_800B6B8C = { { 63, 0, 18, 0, 108, 0, 18 } };
+const LoadWinRect cardSlotLabelWin_800B6B94 = { { 187, 0, 18, 0, 122, 0, 18 } };
 const char aSlash_800B6B9C[] = "\201^"; // /
-const WinRect_LOAD listPositionWin_800B6BA0 = { { 10, 0, 33, 0, 44, 0, 14 } };
+const LoadWinRect listPositionWin_800B6BA0 = { { 10, 0, 33, 0, 44, 0, 14 } };
 const char aMiddleDot_800B6BA8[] = "\201E"; // ・
 const char aJadeCocoonLevel_800B6BAC[] = "\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201^\202k\202\205\202\226\202\205\202\214\201@\202X\202X\201^\202k\202\201\202\224\202\205\202\223\202\224\201@\202f\202\201\202\215\202\205"; // Jade Cocoon/Level 99/Latest Game
 const char aCORRIDOR_800B6BF0[] = "\202b\202n\202q\202q\202h\202c\202n\202q"; // CORRIDOR
@@ -999,64 +999,64 @@ const char aCardSlot1Jp_800B72A8[] = "\203\201\203\202\203\212\201[\203J\201[\20
 const char aCardSlot2Jp_800B72C0[] = "\203\201\203\202\203\212\201[\203J\201[\203h\215\267\215\236\214\373\202Q"; // メモリーカード差込口２
 const char aInsertMemoryCardJp_800B72D8[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202\360\203Z\203b\203g\202\265\202\304\202\255\202\276\202\263\202\242"; // メモリーカードをセットしてください
 const char aDirWildcard_800B72FC[4] = { 42 };
-const Bytes5_LOAD aCRD0_800B7300 = { "CRD0" };
+const CardTag aCRD0_800B7300 = { "CRD0" };
 const char aMemoryCard1Jp_800B7308[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202P"; // メモリーカード１
-const MenuItems2_LOAD cardSlotMenuItem1_800B731C = {
+const LoadMenuItemPair cardSlotMenuItem1_800B731C = {
     {
         { 8, 3, (int)aMemoryCard1Jp_800B7308, 0, 0, 40, 100, { 100, 0, 34, 0, 2, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
 const char aMemoryCard2Jp_800B7354[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202Q"; // メモリーカード２
-const MenuItems2_LOAD cardSlotMenuItem2_800B7368 = {
+const LoadMenuItemPair cardSlotMenuItem2_800B7368 = {
     {
         { 8, 3, (int)aMemoryCard2Jp_800B7354, 0, 0, 180, 100, { 100, 0, 34, 0, 2, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
 
-void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* t)
+void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
 {
-    WinRect_LOAD a;
-    WinColor_LOAD b;
+    LoadWinRect rect;
+    LoadWinColor color;
     DrawUiTiySprt_8002C06C(&modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C], modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].sprite_4, modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].ot_6);
-    a = modeTitleWin_800B6B8C;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = modeTitleWin_800B6B8C;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
 #if 0
 // Not matched: only the order of the prologue stores differs ($ra/$s0 vs argument set-up)
-void DrawCardSlotLabel_800B8A20(LoadMenuWork* t)
+void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
 {
-    Pos_LOAD p0;
-    Pos_LOAD p1;
-    WinRect_LOAD a;
-    WinColor_LOAD b;
+    LoadTextPos p0;
+    LoadTextPos p1;
+    LoadWinRect rect;
+    LoadWinColor color;
     p0.x_0 = 0xBF;
     p0.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
     p1.x_0 = 0x124;
     p1.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&p1, (cardSlotCursor_800BDF68 == 1) << 1, 1);
-    a = cardSlotLabelWin_800B6B94;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = cardSlotLabelWin_800B6B94;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, DrawCardSlotLabel_800B8A20);
 
-void DrawSaveListPosition_800B8AE4(LoadMenuWork* t)
+void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
 {
-    Pos_LOAD p0;
-    Pos_LOAD p1;
-    Pos_LOAD p2;
-    WinRect_LOAD a;
-    WinColor_LOAD b;
+    LoadTextPos p0;
+    LoadTextPos p1;
+    LoadTextPos p2;
+    LoadWinRect rect;
+    LoadWinColor color;
     p0.x_0 = 0x1C;
     p0.y_2 = 0x24;
     DrawNumberRightAlignedFont1_8003F264(&p0, loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C + 1, 5);
@@ -1066,42 +1066,42 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* t)
     p2.x_0 = 0x32;
     p2.y_2 = 0x24;
     DrawNumberRightAlignedFont1_8003F264(&p2, 0xF, 5);
-    a = listPositionWin_800B6BA0;
-    b.field_3 = 1;
-    b.field_2 = 0;
-    b.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
+    rect = listPositionWin_800B6BA0;
+    color.semiTrans_3 = 1;
+    color.colorSet_2 = 0;
+    color.color_0 = uiColor_8008B590;
+    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
 extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
-extern void DrawSmallText_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
+extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 // Matched
-void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
+void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
 {
-    Pos_LOAD p0;
-    Pos_LOAD p1;
-    Pos_LOAD p2;
-    Pos_LOAD p3;
-    Pos_LOAD p4;
-    Pos_LOAD p5;
+    LoadTextPos p0;
+    LoadTextPos p1;
+    LoadTextPos p2;
+    LoadTextPos p3;
+    LoadTextPos p4;
+    LoadTextPos p5;
     int i;
     int j;
-    int n;
-    int k;
-    int v;
-    UiSprite_LOAD* r;
-    UiSprite_LOAD* icon;
+    int save;
+    int digits;
+    int yan;
+    LoadUiSprite* spr;
+    LoadUiSprite* icon;
     for (i = -1; i < 5; i++)
     {
-        n = loadMenuRows_800BDF4C[3].scroll_D + i;
-        if (!((n >= 0 && n < 15) || i == 0 || i == 1))
+        save = loadMenuRows_800BDF4C[3].scroll_D + i;
+        if (!((save >= 0 && save < 15) || i == 0 || i == 1))
         {
             continue;
         }
-        if (n >= t->nRead_20 - 1)
+        if (save >= work->nRead_20 - 1)
         {
             p0.x_0 = 0x7D;
             p0.y_2 = i * 33 + 0x39;
@@ -1109,7 +1109,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
             DrawUiTiySprt_8002C06C(&p0, 0x9C, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
         }
-        else if (!GetCardSaveName_800BAE4C(n))
+        else if (!GetCardSaveName_800BAE4C(save))
         {
             p1.x_0 = 0x8B;
             p1.y_2 = i * 33 + 0x39;
@@ -1125,26 +1125,26 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
                 {
                     if (j == 5)
                     {
-                        v = t->summaries_0[n].vals_28[5];
-                        k = 0;
+                        yan = work->summaries_0[save].vals_28[5];
+                        digits = 0;
                         do
                         {
-                            v /= 10;
-                            k++;
-                        } while (v);
-                        p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + k * 7;
+                            yan /= 10;
+                            digits++;
+                        } while (yan);
+                        p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + digits * 7;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                        DrawSmallNumber9_8002C414(&p2, t->summaries_0[n].vals_28[j], 1);
+                        DrawSmallNumber9_8002C414(&p2, work->summaries_0[save].vals_28[j], 1);
                     }
                     else
                     {
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                        DrawSmallNumber3_8002C290(&p2, t->summaries_0[n].vals_28[j], 1);
+                        DrawSmallNumber3_8002C290(&p2, work->summaries_0[save].vals_28[j], 1);
                     }
-                    if ((j == 3 || j == 4) && t->summaries_0[n].vals_28[j] < 10)
+                    if ((j == 3 || j == 4) && work->summaries_0[save].vals_28[j] < 10)
                     {
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 - 8;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
@@ -1157,7 +1157,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
                     p3.x_0 = saveSlotFieldPos_800BD93C[6].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[6].y_2 + i * 33;
-                    DrawSmallText_8002FAA0(0, &p3, t->summaries_0[n].name_0, 1);
+                    DrawSmallText_8002FAA0(0, &p3, work->summaries_0[save].name_0, 1);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
                 }
                 else if (j == 7)
@@ -1165,33 +1165,33 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
                     p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                    DrawText_8003E91C(1, t->summaries_0[n].text_C, &p3, 1);
+                    DrawText_8003E91C(1, work->summaries_0[save].text_C, &p3, 1);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
-                    if (t->summaries_0[n].f26 >= 0)
+                    if (work->summaries_0[save].corridor_26 >= 0)
                     {
                         p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + 0x38;
                         p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                        DrawNumberRightAlignedFont1_8003F264(&p3, t->summaries_0[n].f26, 1);
+                        DrawNumberRightAlignedFont1_8003F264(&p3, work->summaries_0[save].corridor_26, 1);
                         AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
                     }
                 }
                 else if (j == 8)
                 {
-                    icon = &saveIconSprites_800BD9E8[t->summaries_0[n].icon_24];
+                    icon = &saveIconSprites_800BD9E8[work->summaries_0[save].icon_24];
                     p3.x_0 = icon->x_0;
                     p3.y_2 = icon->y_2 + i * 33;
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + icon->ot_6 * 4);
                     DrawUiTiySprt_8002C06C(&p3, icon->sprite_4, icon->ot_6);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + icon->ot_6 * 4);
                 }
-                for (r = saveSlotSprites_800BD960; r->sprite_4 > 0; r++)
+                for (spr = saveSlotSprites_800BD960; spr->sprite_4 > 0; spr++)
                 {
-                    p3.x_0 = r->x_0;
-                    p3.y_2 = r->y_2 + i * 33;
-                    AddClipDrawAreaPrim_80033308(dword_8008D454 + r->ot_6 * 4);
-                    DrawUiTiySprt_8002C06C(&p3, r->sprite_4, r->ot_6);
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + r->ot_6 * 4);
+                    p3.x_0 = spr->x_0;
+                    p3.y_2 = spr->y_2 + i * 33;
+                    AddClipDrawAreaPrim_80033308(dword_8008D454 + spr->ot_6 * 4);
+                    DrawUiTiySprt_8002C06C(&p3, spr->sprite_4, spr->ot_6);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + spr->ot_6 * 4);
                 }
             }
             p2.x_0 = saveSlotFieldPos_800BD93C[1].x_0;
@@ -1213,56 +1213,56 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* t)
     }
 }
 
-void TopMenuInput_800B9220(LoadMenuWork* t)
+void TopMenuInput_800B9220(LoadMenuWork* work)
 {
-    if (IsConfirmPressed_8003D288(1, (t->flags_54 >> 6) & 1))
+    if (IsConfirmPressed_8003D288(1, (work->flags_54 >> 6) & 1))
     {
         switch (loadMenuRows_800BDF4C[0].cursor_C)
         {
         case 0:
         case 1:
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
             break;
         case 2:
-            t->phase_28 = 5;
+            work->phase_28 = 5;
             break;
         case 3:
-            t->nextScreen_24 = 5;
+            work->nextScreen_24 = 5;
             break;
         }
     }
-    else if (IsCancelPressed_8003D3C0(1, (t->flags_54 >> 6) & 1))
+    else if (IsCancelPressed_8003D3C0(1, (work->flags_54 >> 6) & 1))
     {
-        t->phase_28 = 5;
+        work->phase_28 = 5;
     }
 }
 
 #if 0
 // Not matched: only a dead byte load (lbu $v1) of the options struct in the prologue is missing
-void CardSlotInput_800B92C0(LoadMenuWork* t)
+void CardSlotInput_800B92C0(LoadMenuWork* work)
 {
-    if (IsConfirmPressed_8003D288(0, (t->flags_54 >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
     {
         PlaySfx_80031494(0x7E);
         WaitCardSync_800BADF4();
-        t->nextScreen_24 = 0x12;
+        work->nextScreen_24 = 0x12;
     }
-    else if (IsCancelPressed_8003D3C0(1, (t->flags_54 >> 6) & 1))
+    else if (IsCancelPressed_8003D3C0(1, (work->flags_54 >> 6) & 1))
     {
-        if (t->flags_54 & 0x24)
+        if (work->flags_54 & 0x24)
         {
-            t->phase_28 = 5;
+            work->phase_28 = 5;
         }
         else
         {
-            t->nextScreen_24 = 0;
+            work->nextScreen_24 = 0;
         }
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, CardSlotInput_800B92C0);
 
-void CheckCardTask_800B9360(LoadMenuWork* t)
+void CheckCardTask_800B9360(LoadMenuWork* work)
 {
     switch (PollCardAccept_800BAE68(loadMenuRows_800BDF4C[1].cursor_C))
     {
@@ -1274,82 +1274,82 @@ void CheckCardTask_800B9360(LoadMenuWork* t)
         {
             if (GetCardFreeBlocks_800BAE2C() || GetCardSaveCount_800BAE3C())
             {
-                t->nRead_20 = 0;
-                t->nextScreen_24 = 3;
+                work->nRead_20 = 0;
+                work->nextScreen_24 = 3;
             }
             else
             {
-                t->nextScreen_24 = 7;
+                work->nextScreen_24 = 7;
             }
         }
         else if (GetCardSaveCount_800BAE3C())
         {
-            t->nRead_20 = 0;
-            t->nextScreen_24 = 3;
+            work->nRead_20 = 0;
+            work->nextScreen_24 = 3;
         }
         else
         {
-            t->nextScreen_24 = 8;
+            work->nextScreen_24 = 8;
         }
         break;
     case 4:
         if (loadMenuRows_800BDF4C[0].cursor_C == 0)
         {
-            t->nextScreen_24 = 2;
+            work->nextScreen_24 = 2;
         }
         else
         {
-            t->nextScreen_24 = 0xB;
+            work->nextScreen_24 = 0xB;
         }
         break;
     case -1:
         break;
     default:
-        t->nextScreen_24 = 6;
+        work->nextScreen_24 = 6;
         break;
     }
 }
 
-void FormatPromptInput_800B9470(LoadMenuWork* t)
+void FormatPromptInput_800B9470(LoadMenuWork* work)
 {
-    int r = PollCardAccept_800BAE68(loadMenuRows_800BDF4C[1].cursor_C);
-    if (r < -1 || (r > 0 && r != 4))
+    int status = PollCardAccept_800BAE68(loadMenuRows_800BDF4C[1].cursor_C);
+    if (status < -1 || (status > 0 && status != 4))
     {
-        t->nextScreen_24 = 1;
+        work->nextScreen_24 = 1;
     }
-    if (IsCancelPressed_8003D3C0(1, (t->flags_54 >> 6) & 1))
+    if (IsCancelPressed_8003D3C0(1, (work->flags_54 >> 6) & 1))
     {
-        t->nextScreen_24 = 1;
+        work->nextScreen_24 = 1;
     }
-    if (IsConfirmPressed_8003D288(1, (t->flags_54 >> 6) & 1))
+    if (IsConfirmPressed_8003D288(1, (work->flags_54 >> 6) & 1))
     {
         if (loadMenuRows_800BDF4C[2].cursor_C == 0)
         {
-            t->phase_28 = 4;
+            work->phase_28 = 4;
         }
         if (loadMenuRows_800BDF4C[2].cursor_C == 1)
         {
-            t->nextScreen_24 = 1;
+            work->nextScreen_24 = 1;
         }
     }
 }
 
-void SaveListInput_800B952C(LoadMenuWork* t)
+void SaveListInput_800B952C(LoadMenuWork* work)
 {
-    int n = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
-    if (IsCancelPressed_8003D3C0(1, (t->flags_54 >> 6) & 1))
+    int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
+    if (IsCancelPressed_8003D3C0(1, (work->flags_54 >> 6) & 1))
     {
-        t->nextScreen_24 = 1;
+        work->nextScreen_24 = 1;
     }
-    if (IsConfirmPressed_8003D288(0, (t->flags_54 >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
     {
         if (loadMenuRows_800BDF4C[0].cursor_C == 1)
         {
-            if (n < t->nRead_20 - 1)
+            if (save < work->nRead_20 - 1)
             {
-                if (GetCardSaveName_800BAE4C(n))
+                if (GetCardSaveName_800BAE4C(save))
                 {
-                    t->nextScreen_24 = 4;
+                    work->nextScreen_24 = 4;
                     PlaySfx_80031494(0x7E);
                 }
                 else
@@ -1364,16 +1364,16 @@ void SaveListInput_800B952C(LoadMenuWork* t)
         }
         else if (loadMenuRows_800BDF4C[0].cursor_C == 0)
         {
-            if (n < t->nRead_20 - 1)
+            if (save < work->nRead_20 - 1)
             {
-                if (!GetCardSaveName_800BAE4C(n) && GetCardFreeBlocks_800BAE2C() <= 0)
+                if (!GetCardSaveName_800BAE4C(save) && GetCardFreeBlocks_800BAE2C() <= 0)
                 {
-                    t->nextScreen_24 = 9;
+                    work->nextScreen_24 = 9;
                     PlaySfx_80031494(0x7C);
                 }
                 else
                 {
-                    t->nextScreen_24 = 4;
+                    work->nextScreen_24 = 4;
                     PlaySfx_80031494(0x7E);
                 }
             }
@@ -1385,13 +1385,13 @@ void SaveListInput_800B952C(LoadMenuWork* t)
     }
 }
 
-void ConfirmPromptInput_800B9654(LoadMenuWork* t)
+void ConfirmPromptInput_800B9654(LoadMenuWork* work)
 {
-    if (IsCancelPressed_8003D3C0(1, (t->flags_54 >> 6) & 1))
+    if (IsCancelPressed_8003D3C0(1, (work->flags_54 >> 6) & 1))
     {
-        t->nextScreen_24 = 3;
+        work->nextScreen_24 = 3;
     }
-    if (IsConfirmPressed_8003D288(0, (t->flags_54 >> 6) & 1))
+    if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
     {
         if (loadMenuRows_800BDF4C[4].cursor_C == 0)
         {
@@ -1399,23 +1399,23 @@ void ConfirmPromptInput_800B9654(LoadMenuWork* t)
             if (loadMenuRows_800BDF4C[0].cursor_C == 1)
             {
                 WaitCardSync_800BADF4();
-                t->phase_28 = 3;
+                work->phase_28 = 3;
             }
             else if (loadMenuRows_800BDF4C[0].cursor_C == 0)
             {
                 WaitCardSync_800BADF4();
-                t->phase_28 = 2;
+                work->phase_28 = 2;
             }
         }
         else
         {
             PlaySfx_80031494(0x7D);
-            t->nextScreen_24 = 3;
+            work->nextScreen_24 = 3;
         }
     }
 }
 
-int ReadSaveSummaries_800B9724(LoadMenuWork* t)
+int ReadSaveSummaries_800B9724(LoadMenuWork* work)
 {
     int ret = 1;
     int cmd = 0;
@@ -1427,18 +1427,18 @@ int ReadSaveSummaries_800B9724(LoadMenuWork* t)
     case 0:
         break;
     case -1:
-        if (t->nRead_20 < 15)
+        if (work->nRead_20 < 15)
         {
-            name = GetCardSaveName_800BAE4C(t->nRead_20);
+            name = GetCardSaveName_800BAE4C(work->nRead_20);
             if (name)
             {
-                MemCardReadFile(chan, name, &t->summaries_0[t->nRead_20], 0x280, 0x80);
+                MemCardReadFile(chan, name, &work->summaries_0[work->nRead_20], 0x280, 0x80);
             }
-            else if (t->nRead_20 == 14)
+            else if (work->nRead_20 == 14)
             {
-                t->nRead_20 = 15;
+                work->nRead_20 = 15;
             }
-            t->nRead_20++;
+            work->nRead_20++;
         }
         else
         {
@@ -1452,9 +1452,9 @@ int ReadSaveSummaries_800B9724(LoadMenuWork* t)
             switch (res)
             {
             case 0:
-                if (t->nRead_20 == 15)
+                if (work->nRead_20 == 15)
                 {
-                    t->nRead_20 = 16;
+                    work->nRead_20 = 16;
                 }
                 break;
             case 1:
@@ -1479,25 +1479,25 @@ int ReadSaveSummaries_800B9724(LoadMenuWork* t)
 
 #if 0
 // Not matched: same prologue scheduling as LoadSaveTask_800BA234 ($a0 = 1 before the $s1 save / second-argument copy)
-void WriteSaveTask_800B98C4(Task_LOAD* t, LoadMenuWork* s)
+void WriteSaveTask_800B98C4(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
     int cmd = 0;
     int res = 0;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
-    int n = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
+    int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     char* name;
     switch (MemCardSync(1, &cmd, &res))
     {
     case 0:
         break;
     case -1:
-        name = GetCardSaveName_800BAE4C(n);
+        name = GetCardSaveName_800BAE4C(save);
         if (!name)
         {
-            MemCardCreateFile(chan, saveFileNames_800BE028[0][n], 1);
-            name = saveFileNames_800BE028[0][n];
+            MemCardCreateFile(chan, saveFileNames_800BE028[0][save], 1);
+            name = saveFileNames_800BE028[0][save];
         }
-        MemCardWriteFile(chan, name, s->fileBuf_4, 0, sizeof(SaveFile_LOAD));
+        MemCardWriteFile(chan, name, work->fileBuf_4, 0, sizeof(SaveFile));
         break;
     case 1:
         if (cmd == 4)
@@ -1505,20 +1505,20 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadMenuWork* s)
             switch (res)
             {
             case 0:
-                t->next_8 = LoadMenuTask_800B794C;
-                s->phase_28 = 0;
-                s->nextScreen_24 = 3;
+                task->next_8 = LoadMenuTask_800B794C;
+                work->phase_28 = 0;
+                work->nextScreen_24 = 3;
                 PlaySfx_80031494(0x7E);
-                MemCopy_800403E8(&s->summaries_0[n], &s->fileBuf_4->summary_280, 0x80);
+                MemCopy_800403E8(&work->summaries_0[save], &work->fileBuf_4->summary_280, 0x80);
                 ScanCardSaves_800BAFB0(loadMenuRows_800BDF4C[1].cursor_C);
                 break;
             case 1:
             case 2:
             case 3:
             case 5:
-                t->next_8 = LoadMenuTask_800B794C;
-                s->phase_28 = 0;
-                s->nextScreen_24 = 0xE;
+                task->next_8 = LoadMenuTask_800B794C;
+                work->phase_28 = 0;
+                work->nextScreen_24 = 0xE;
                 break;
             }
         }
@@ -1533,33 +1533,33 @@ INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
 // the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", saveTitle_800BDFAC)
 extern void* memcpy(void* dst, const void* src, unsigned int n);
-extern void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title);
+extern void BuildCardHeader_800BB2AC(CardHeader* header,int idx, char* title);
 extern void IntToText_8003F610(unsigned short* buf, int val);
-extern int PlayTimeHours_800BAC14(int n);
-extern int PlayTimeMinutes_800BAC68(int n);
+extern int PlayTimeHours_800BAC14(int frames);
+extern int PlayTimeMinutes_800BAC68(int frames);
 
 // packs saveData_8008B570 into the save file to write, with its summary and title
 // Matched
-void PackSaveFile_800B9A8C(LoadMenuWork* s)
+void PackSaveFile_800B9A8C(LoadMenuWork* work)
 {
     unsigned short buf[12];
-    SaveSummary_LOAD* sm;
-    SaveSummary_LOAD* sm2;
-    SaveBody_LOAD* body;
-    SaveTitle_LOAD* t;
-    unsigned int n;
+    SaveSummary* sm;
+    SaveSummary* sm2;
+    SaveBody* body;
+    SaveTitle* title;
+    unsigned int offset;
     int i;
     int j;
     int k;
     int l;
     int idx;
     int lv;
-    Minion* m;
-    SaveMinion_LOAD* pm;
-    UnitStats* u;
-    SaveStats_LOAD* pu;
+    Minion* minion;
+    SaveMinion* packedMinion;
+    UnitStats* unit;
+    SaveStats* packedUnit;
 
-    sm = &s->fileBuf_4->summary_280;
+    sm = &work->fileBuf_4->summary_280;
     sm->vals_28[0] = saveData_8008B570.levantStatus_7C8.level_44;
     sm->vals_28[1] = saveData_8008B570.levantStatus_7C8.hp_8.cur_0;
     sm->vals_28[2] = saveData_8008B570.levantStatus_7C8.hp_8.max_2;
@@ -1567,7 +1567,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
     sm->vals_28[4] = PlayTimeMinutes_800BAC68(saveData_8008B570.playTime_4);
     sm->vals_28[5] = saveData_8008B570.inv_24.yan_0;
     MemCopy_800403E8(sm->name_0, saveData_8008B570.levantStatus_7C8.name_10, 0xC);
-    sm->f26 = saveData_8008B570.field_810;
+    sm->corridor_26 = saveData_8008B570.field_810;
     if (saveData_8008B570.field_810 == -2)
     {
         sm->icon_24 = 0;
@@ -1590,101 +1590,101 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
     }
     else
     {
-        MemCopy_800403E8(sm->text_C, s->place_58, 0x18);
+        MemCopy_800403E8(sm->text_C, work->place_58, 0x18);
     }
-    body = &s->fileBuf_4->body_300;
+    body = &work->fileBuf_4->body_300;
     MemCopy_800403E8(body, &saveData_8008B570, 0x988);
     for (i = 0; i < 15; i++)
     {
-        m = &saveData_8008B570.minions[i];
-        pm = &body->minions_988[i];
-        pm->id_0 = m->id;
-        pm->species_2 = m->species_2;
-        pm->field_3 = m->field_3;
+        minion = &saveData_8008B570.minions[i];
+        packedMinion = &body->minions_988[i];
+        packedMinion->id_0 = minion->id;
+        packedMinion->species_2 = minion->species_2;
+        packedMinion->field_3 = minion->field_3;
         for (j = 0; j < 0x30; j++)
         {
-            pm->species_4[j] = m->species_4C[j];
+            packedMinion->species_4[j] = minion->species_4C[j];
         }
         for (j = 0; j < 8; j++)
         {
-            pm->field_34[j] = m->field_7C[j];
+            packedMinion->field_34[j] = minion->field_7C[j];
         }
-        pm->field_74 = m->field_CC;
-        pm->skills_86 = m->skills_DE;
-        pm->magicBits_9C = m->magicBits_F4;
-        pm->status_3C.status_0 = m->status_84.status_0;
-        pm->status_3C.exp_4 = m->status_84.exp_4;
-        pm->status_3C.hp_8 = m->status_84.hp_8;
-        pm->status_3C.mp_C = m->status_84.mp_C;
+        packedMinion->field_74 = minion->field_CC;
+        packedMinion->skills_86 = minion->skills_DE;
+        packedMinion->magicBits_9C = minion->magicBits_F4;
+        packedMinion->status_3C.status_0 = minion->status_84.status_0;
+        packedMinion->status_3C.exp_4 = minion->status_84.exp_4;
+        packedMinion->status_3C.hp_8 = minion->status_84.hp_8;
+        packedMinion->status_3C.mp_C = minion->status_84.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            pm->status_3C.field_10[j] = m->status_84.field_20[j];
+            packedMinion->status_3C.field_10[j] = minion->status_84.field_20[j];
         }
-        pm->status_3C.stats_1C = m->status_84.stats_2C;
+        packedMinion->status_3C.stats_1C = minion->status_84.stats_2C;
         for (j = 0; j < 4; j++)
         {
-            pm->status_3C.element_2E[j] = m->status_84.element_3E[j];
+            packedMinion->status_3C.element_2E[j] = minion->status_84.element_3E[j];
         }
-        pm->status_3C.elementMask_32 = m->status_84.elementMask_42;
-        pm->status_3C.level_34 = m->status_84.level_44;
-        pm->status_3C.field_35 = m->status_84.field_45;
+        packedMinion->status_3C.elementMask_32 = minion->status_84.elementMask_42;
+        packedMinion->status_3C.level_34 = minion->status_84.level_44;
+        packedMinion->status_3C.field_35 = minion->status_84.field_45;
         for (j = 0; j < 6; j++)
         {
             for (k = 0; k < 10; k++)
             {
-                body->ancestorNames_17F8[i][j][k] = m->ancestors_4[j][k];
+                body->ancestorNames_17F8[i][j][k] = minion->ancestors_4[j][k];
             }
         }
         for (k = 0; k < 10; k++)
         {
-            body->minionNames_1B7C[i][k] = m->status_84.name_10[k];
+            body->minionNames_1B7C[i][k] = minion->status_84.name_10[k];
         }
     }
     for (l = 0; l < 12; l++)
     {
-        u = &saveData_8008B570.items[l];
-        pu = &body->items_12E8[l];
-        pu->species_4C = u->species_5C;
-        pu->status_0.status_0 = u->st_0.status_0;
-        pu->status_0.exp_4 = u->st_0.exp_4;
-        pu->status_0.hp_8 = u->st_0.hp_8;
-        pu->status_0.mp_C = u->st_0.mp_C;
+        unit = &saveData_8008B570.items[l];
+        packedUnit = &body->items_12E8[l];
+        packedUnit->species_4C = unit->species_5C;
+        packedUnit->status_0.status_0 = unit->st_0.status_0;
+        packedUnit->status_0.exp_4 = unit->st_0.exp_4;
+        packedUnit->status_0.hp_8 = unit->st_0.hp_8;
+        packedUnit->status_0.mp_C = unit->st_0.mp_C;
         for (j = 0; j < 0xC; j++)
         {
-            pu->status_0.field_10[j] = u->st_0.field_20[j];
+            packedUnit->status_0.field_10[j] = unit->st_0.field_20[j];
         }
-        pu->status_0.stats_1C = u->st_0.stats_2C;
+        packedUnit->status_0.stats_1C = unit->st_0.stats_2C;
         for (j = 0; j < 4; j++)
         {
-            pu->status_0.element_2E[j] = u->st_0.element_3E[j];
+            packedUnit->status_0.element_2E[j] = unit->st_0.element_3E[j];
         }
-        pu->status_0.elementMask_32 = u->st_0.elementMask_42;
-        pu->status_0.level_34 = u->st_0.level_44;
-        pu->status_0.field_35 = u->st_0.field_45;
+        packedUnit->status_0.elementMask_32 = unit->st_0.elementMask_42;
+        packedUnit->status_0.level_34 = unit->st_0.level_44;
+        packedUnit->status_0.field_35 = unit->st_0.field_45;
         for (k = 0; k < 10; k++)
         {
-            body->itemNames_1C30[l][k] = u->st_0.name_10[k];
+            body->itemNames_1C30[l][k] = unit->st_0.name_10[k];
         }
     }
     sm->sum_40 = 0;
-    for (n = 0x300; n < 0x1FC0; n++)
+    for (offset = 0x300; offset < 0x1FC0; offset++)
     {
-        sm->sum_40 += ((unsigned char*)s->fileBuf_4)[n];
+        sm->sum_40 += ((unsigned char*)work->fileBuf_4)[offset];
     }
-    sm2 = &s->fileBuf_4->summary_280;
+    sm2 = &work->fileBuf_4->summary_280;
     idx = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     IntToText_8003F610(buf, sm2->vals_28[0]);
     lv = sm2->vals_28[0];
-    t = saveTitle_800BDFAC;
+    title = saveTitle_800BDFAC;
     if (lv > 100)
     {
         lv = 99;
     }
-    t->f.level_24[0] = 0x82;
-    t->f.level_24[1] = lv / 10 + 0x4F;
+    title->f.level_24[0] = 0x82;
+    title->f.level_24[1] = lv / 10 + 0x4F;
     lv %= 10;
-    t->f.level_24[2] = 0x82;
-    t->f.level_24[3] = lv % 10 + 0x4F;
+    title->f.level_24[2] = 0x82;
+    title->f.level_24[3] = lv % 10 + 0x4F;
     switch (sm2->icon_24)
     {
     case 0:
@@ -1698,33 +1698,33 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         memcpy(saveTitle_800BDFAC->f.place_2A, aCorridor_800B6C48, 17);
         break;
     }
-    BuildCardHeader_800BB2AC(&s->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
+    BuildCardHeader_800BB2AC(&work->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
 }
 
 #if 0
 // Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
-void LoadSaveTask_800BA234(Task_LOAD* t, LoadMenuWork* s)
+void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
     int cmd = 0;
     int res = 0;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
-    int n = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
+    int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     char* name;
     switch (MemCardSync(1, &cmd, &res))
     {
     case 0:
         break;
     case -1:
-        name = GetCardSaveName_800BAE4C(n);
+        name = GetCardSaveName_800BAE4C(save);
         if (name)
         {
-            MemCardReadFile(chan, name, s->fileBuf_4, 0, sizeof(SaveFile_LOAD));
+            MemCardReadFile(chan, name, work->fileBuf_4, 0, sizeof(SaveFile));
         }
         else
         {
-            t->next_8 = LoadMenuTask_800B794C;
-            s->phase_28 = 0;
-            s->nextScreen_24 = 0xF;
+            task->next_8 = LoadMenuTask_800B794C;
+            work->phase_28 = 0;
+            work->nextScreen_24 = 0xF;
         }
         break;
     case 1:
@@ -1733,18 +1733,18 @@ void LoadSaveTask_800BA234(Task_LOAD* t, LoadMenuWork* s)
             switch (res)
             {
             case 0:
-                if (UnpackSaveFile_800BA3EC(s))
+                if (UnpackSaveFile_800BA3EC(work))
                 {
-                    s->loaded_8 = 1;
-                    t->next_8 = LoadMenuTask_800B794C;
-                    s->phase_28 = 6;
-                    s->flags_54 |= 1;
+                    work->loaded_8 = 1;
+                    task->next_8 = LoadMenuTask_800B794C;
+                    work->phase_28 = 6;
+                    work->flags_54 |= 1;
                 }
                 else
                 {
-                    t->next_8 = LoadMenuTask_800B794C;
-                    s->phase_28 = 0;
-                    s->nextScreen_24 = 0xA;
+                    task->next_8 = LoadMenuTask_800B794C;
+                    work->phase_28 = 0;
+                    work->nextScreen_24 = 0xA;
                 }
                 PlaySfx_80031494(0x7E);
                 break;
@@ -1752,9 +1752,9 @@ void LoadSaveTask_800BA234(Task_LOAD* t, LoadMenuWork* s)
             case 2:
             case 3:
             case 5:
-                t->next_8 = LoadMenuTask_800B794C;
-                s->phase_28 = 0;
-                s->nextScreen_24 = 0xF;
+                task->next_8 = LoadMenuTask_800B794C;
+                work->phase_28 = 0;
+                work->nextScreen_24 = 0xF;
                 break;
             }
         }
@@ -1769,134 +1769,134 @@ INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
 // unpacks the loaded save file into saveData_8008B570; 0 when the checksum or the version is wrong
 // Matched
-int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
+int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
 {
     int ret = 0;
     int sum = ret;
-    unsigned int n;
+    unsigned int offset;
     int i;
     int j;
     int k;
     int l;
     struct UiColorBytes col = saveData_8008B570.uiColor_20.w;
-    SaveSummary_LOAD* sm = &s->fileBuf_4->summary_280;
+    SaveSummary* sm = &work->fileBuf_4->summary_280;
     Settings set = saveData_8008B570.settings_1C;
-    SaveBody_LOAD* body;
-    Minion* m;
-    SaveMinion_LOAD* pm;
-    UnitStats* u;
-    SaveStats_LOAD* pu;
+    SaveBody* body;
+    Minion* minion;
+    SaveMinion* packedMinion;
+    UnitStats* unit;
+    SaveStats* packedUnit;
 
-    for (n = 0x300; n < 0x1FC0; n++)
+    for (offset = 0x300; offset < 0x1FC0; offset++)
     {
-        sum += ((unsigned char*)s->fileBuf_4)[n];
+        sum += ((unsigned char*)work->fileBuf_4)[offset];
     }
-    if (sum == sm->sum_40 && s->fileBuf_4->body_300.version_984 == 5)
+    if (sum == sm->sum_40 && work->fileBuf_4->body_300.version_984 == 5)
     {
-        body = &s->fileBuf_4->body_300;
+        body = &work->fileBuf_4->body_300;
         MemCopy_800403E8(&saveData_8008B570, body, 0x988);
         for (i = 0; i < 15; i++)
         {
-            m = &saveData_8008B570.minions[i];
-            pm = &body->minions_988[i];
-            m->id = pm->id_0;
-            m->species_2 = pm->species_2;
-            m->field_3 = pm->field_3;
+            minion = &saveData_8008B570.minions[i];
+            packedMinion = &body->minions_988[i];
+            minion->id = packedMinion->id_0;
+            minion->species_2 = packedMinion->species_2;
+            minion->field_3 = packedMinion->field_3;
             for (j = 0; j < 0x30; j++)
             {
-                m->species_4C[j] = pm->species_4[j];
+                minion->species_4C[j] = packedMinion->species_4[j];
             }
             for (j = 0; j < 8; j++)
             {
-                m->field_7C[j] = pm->field_34[j];
+                minion->field_7C[j] = packedMinion->field_34[j];
             }
-            m->field_CC = pm->field_74;
-            m->skills_DE = pm->skills_86;
-            m->magicBits_F4 = pm->magicBits_9C;
-            m->status_84.status_0 = pm->status_3C.status_0;
-            m->status_84.exp_4 = pm->status_3C.exp_4;
-            m->status_84.hp_8 = pm->status_3C.hp_8;
-            m->status_84.mp_C = pm->status_3C.mp_C;
+            minion->field_CC = packedMinion->field_74;
+            minion->skills_DE = packedMinion->skills_86;
+            minion->magicBits_F4 = packedMinion->magicBits_9C;
+            minion->status_84.status_0 = packedMinion->status_3C.status_0;
+            minion->status_84.exp_4 = packedMinion->status_3C.exp_4;
+            minion->status_84.hp_8 = packedMinion->status_3C.hp_8;
+            minion->status_84.mp_C = packedMinion->status_3C.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                m->status_84.field_20[j] = pm->status_3C.field_10[j];
+                minion->status_84.field_20[j] = packedMinion->status_3C.field_10[j];
             }
-            m->status_84.stats_2C = pm->status_3C.stats_1C;
+            minion->status_84.stats_2C = packedMinion->status_3C.stats_1C;
             for (j = 0; j < 4; j++)
             {
-                m->status_84.element_3E[j] = pm->status_3C.element_2E[j];
+                minion->status_84.element_3E[j] = packedMinion->status_3C.element_2E[j];
             }
-            m->status_84.elementMask_42 = pm->status_3C.elementMask_32;
-            m->status_84.level_44 = pm->status_3C.level_34;
-            m->status_84.field_45 = pm->status_3C.field_35;
-            m->status_84.field_1C[0] = 0xFF;
-            m->status_84.field_1C[1] = 0xFF;
-            m->status_84.field_1C[2] = 0xFF;
-            m->status_84.field_1C[3] = 0xFF;
+            minion->status_84.elementMask_42 = packedMinion->status_3C.elementMask_32;
+            minion->status_84.level_44 = packedMinion->status_3C.level_34;
+            minion->status_84.field_45 = packedMinion->status_3C.field_35;
+            minion->status_84.field_1C[0] = 0xFF;
+            minion->status_84.field_1C[1] = 0xFF;
+            minion->status_84.field_1C[2] = 0xFF;
+            minion->status_84.field_1C[3] = 0xFF;
             for (j = 0; j < 6; j++)
             {
-                for (k = 0; k < sizeof(m->ancestors_4[j]); k++)
+                for (k = 0; k < sizeof(minion->ancestors_4[j]); k++)
                 {
                     if (k < 10)
                     {
-                        m->ancestors_4[j][k] = body->ancestorNames_17F8[i][j][k];
+                        minion->ancestors_4[j][k] = body->ancestorNames_17F8[i][j][k];
                     }
                     else
                     {
-                        m->ancestors_4[j][k] = 0;
+                        minion->ancestors_4[j][k] = 0;
                     }
                 }
             }
-            for (k = 0; k < sizeof(m->status_84.name_10); k++)
+            for (k = 0; k < sizeof(minion->status_84.name_10); k++)
             {
                 if (k < 10)
                 {
-                    m->status_84.name_10[k] = body->minionNames_1B7C[i][k];
+                    minion->status_84.name_10[k] = body->minionNames_1B7C[i][k];
                 }
                 else
                 {
-                    m->status_84.name_10[k] = 0;
+                    minion->status_84.name_10[k] = 0;
                 }
             }
         }
         for (l = 0; l < 12; l++)
         {
-            u = &saveData_8008B570.items[l];
-            pu = &body->items_12E8[l];
-            u->species_5C = pu->species_4C;
-            u->st_0.status_0 = pu->status_0.status_0;
-            u->st_0.exp_4 = pu->status_0.exp_4;
-            u->st_0.hp_8 = pu->status_0.hp_8;
-            u->st_0.mp_C = pu->status_0.mp_C;
+            unit = &saveData_8008B570.items[l];
+            packedUnit = &body->items_12E8[l];
+            unit->species_5C = packedUnit->species_4C;
+            unit->st_0.status_0 = packedUnit->status_0.status_0;
+            unit->st_0.exp_4 = packedUnit->status_0.exp_4;
+            unit->st_0.hp_8 = packedUnit->status_0.hp_8;
+            unit->st_0.mp_C = packedUnit->status_0.mp_C;
             for (j = 0; j < 0xC; j++)
             {
-                u->st_0.field_20[j] = pu->status_0.field_10[j];
+                unit->st_0.field_20[j] = packedUnit->status_0.field_10[j];
             }
-            u->st_0.stats_2C = pu->status_0.stats_1C;
+            unit->st_0.stats_2C = packedUnit->status_0.stats_1C;
             for (j = 0; j < 4; j++)
             {
-                u->st_0.element_3E[j] = pu->status_0.element_2E[j];
+                unit->st_0.element_3E[j] = packedUnit->status_0.element_2E[j];
             }
-            u->st_0.elementMask_42 = pu->status_0.elementMask_32;
-            u->st_0.level_44 = pu->status_0.level_34;
-            u->st_0.field_45 = pu->status_0.field_35;
-            u->st_0.field_1C[0] = 0xFF;
-            u->st_0.field_1C[1] = 0xFF;
-            u->st_0.field_1C[2] = 0xFF;
-            u->st_0.field_1C[3] = 0xFF;
-            for (k = 0; k < sizeof(u->st_0.name_10); k++)
+            unit->st_0.elementMask_42 = packedUnit->status_0.elementMask_32;
+            unit->st_0.level_44 = packedUnit->status_0.level_34;
+            unit->st_0.field_45 = packedUnit->status_0.field_35;
+            unit->st_0.field_1C[0] = 0xFF;
+            unit->st_0.field_1C[1] = 0xFF;
+            unit->st_0.field_1C[2] = 0xFF;
+            unit->st_0.field_1C[3] = 0xFF;
+            for (k = 0; k < sizeof(unit->st_0.name_10); k++)
             {
                 if (k < 10)
                 {
-                    u->st_0.name_10[k] = body->itemNames_1C30[l][k];
+                    unit->st_0.name_10[k] = body->itemNames_1C30[l][k];
                 }
                 else
                 {
-                    u->st_0.name_10[k] = 0;
+                    unit->st_0.name_10[k] = 0;
                 }
             }
         }
-        if (s->flags_54 & 8)
+        if (work->flags_54 & 8)
         {
             saveData_8008B570.settings_1C = set;
             saveData_8008B570.uiColor_20.w = col;
@@ -1906,43 +1906,43 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
     return ret;
 }
 
-void FormatCardWait1_800BA968(Task_LOAD* t)
+void FormatCardWait1_800BA968(LoadMenuTaskEntry* task)
 {
     DrawLoadingIcon_8003CD5C();
     DrawMessageBox_800BACBC(msgFormatting_800BDECC);
     DrawMenuBackground_8002BE10();
-    t->next_8 = FormatCardWait2_800BA9AC;
+    task->next_8 = FormatCardWait2_800BA9AC;
 }
 
-void FormatCardWait2_800BA9AC(Task_LOAD* t)
+void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task)
 {
     DrawLoadingIcon_8003CD5C();
     DrawMessageBox_800BACBC(msgFormatting_800BDECC);
     DrawMenuBackground_8002BE10();
-    t->next_8 = FormatCardTask_800BA9F0;
+    task->next_8 = FormatCardTask_800BA9F0;
 }
 
-void FormatCardTask_800BA9F0(Task_LOAD* t, LoadMenuWork* s)
+void FormatCardTask_800BA9F0(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
     switch (MemCardFormat(loadMenuRows_800BDF4C[1].cursor_C << 4))
     {
     case 0:
-        t->next_8 = LoadMenuTask_800B794C;
-        s->phase_28 = 0;
-        s->nextScreen_24 = 3;
-        s->nRead_20 = 0;
+        task->next_8 = LoadMenuTask_800B794C;
+        work->phase_28 = 0;
+        work->nextScreen_24 = 3;
+        work->nRead_20 = 0;
         ScanCardSaves_800BAFB0(loadMenuRows_800BDF4C[1].cursor_C);
-        s->field_5C = 0;
+        work->field_5C = 0;
         break;
     case 1:
-        t->next_8 = LoadMenuTask_800B794C;
-        s->phase_28 = 0;
-        s->nextScreen_24 = 1;
+        task->next_8 = LoadMenuTask_800B794C;
+        work->phase_28 = 0;
+        work->nextScreen_24 = 1;
         break;
     case 2:
-        t->next_8 = LoadMenuTask_800B794C;
-        s->phase_28 = 0;
-        s->nextScreen_24 = 0xD;
+        task->next_8 = LoadMenuTask_800B794C;
+        work->phase_28 = 0;
+        work->nextScreen_24 = 0xD;
         break;
     case -1:
         break;
@@ -1953,102 +1953,102 @@ void FormatCardTask_800BA9F0(Task_LOAD* t, LoadMenuWork* s)
     DrawMenuBackground_8002BE10();
 }
 
-void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadMenuWork* s)
+void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
-    free3_8003FC6C(s->summaries_0);
-    free3_8003FC6C(s->fileBuf_4);
+    free3_8003FC6C(work->summaries_0);
+    free3_8003FC6C(work->fileBuf_4);
     loadMenuActive_800BE184 = 0;
-    t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+    task->flags_0 = (task->flags_0 & ~1) | 0x8000;
     MemCardStop();
-    t->next_8 = LoadMenuStart_800B7650;
-    if (!(s->flags_54 & 8))
+    task->next_8 = LoadMenuStart_800B7650;
+    if (!(work->flags_54 & 8))
     {
         FreeActiveOverlay_8002C014();
-        if (s->flags_54 & 0x20)
+        if (work->flags_54 & 0x20)
         {
             RequestAreaReload_80027314();
             RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
-        else if (!(s->flags_54 & 4))
+        else if (!(work->flags_54 & 4))
         {
             RequestAreaReload_80027314();
             RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
-        if (s->flags_54 & 1)
+        if (work->flags_54 & 1)
         {
-            SaveData* m = &saveData_8008B570;
-            m->field_2E2 = -1;
-            m->mapId_2E4[0].field_2 = -1;
-            m->mapId_2E4[1].field_2 = -1;
-            m->mapId_2E4[2].field_2 = -1;
-            m->mapId_2E4[3].field_2 = -1;
+            SaveData* save = &saveData_8008B570;
+            save->field_2E2 = -1;
+            save->mapId_2E4[0].field_2 = -1;
+            save->mapId_2E4[1].field_2 = -1;
+            save->mapId_2E4[2].field_2 = -1;
+            save->mapId_2E4[3].field_2 = -1;
             mapStartMode_80091C54 = 0;
-            if (!(s->flags_54 & 4))
+            if (!(work->flags_54 & 4))
             {
                 unknownFlags_8008D678 |= 0x18000000;
             }
         }
-        if (s->flags_54 & 0x10)
+        if (work->flags_54 & 0x10)
         {
             HaltEventsFadeStopMovie_80011BCC();
         }
     }
 }
 
-int PlayTimeHours_800BAC14(int n)
+int PlayTimeHours_800BAC14(int frames)
 {
-    return n / 216000 % 60;
+    return frames / 216000 % 60;
 }
 
-int PlayTimeMinutes_800BAC68(int n)
+int PlayTimeMinutes_800BAC68(int frames)
 {
-    return n / 3600 % 60;
+    return frames / 3600 % 60;
 }
 
 void DrawMessageBox_800BACBC(char** lines)
 {
-    Size_LOAD sz;
-    Rect_LOAD r;
+    TextSize sz;
+    MsgBoxRect box;
     int i;
     sz = MeasureTextLines_8003E3B4((int*)lines);
-    r.x_0 = (0x13A - sz.w_0) / 2;
-    r.y_2 = (0xEA - sz.h_2) / 2;
-    r.w_4 = sz.w_0 + 6;
-    r.h_6 = sz.h_2 + 3;
+    box.x_0 = (0x13A - sz.w_0) / 2;
+    box.y_2 = (0xEA - sz.h_2) / 2;
+    box.w_4 = sz.w_0 + 6;
+    box.h_6 = sz.h_2 + 3;
     if (sz.h_2 >= 0x10)
     {
-        r.h_6 = sz.h_2 + 6;
+        box.h_6 = sz.h_2 + 6;
     }
     for (i = 0; i < 3; i++)
     {
         if (lines[i])
         {
-            Pos_LOAD p;
-            p.x_0 = r.x_0 + 3;
-            p.y_2 = r.y_2 + 5 + i * 13;
-            DrawText_8003E91C(2, lines[i], &p, 5);
+            LoadTextPos pos;
+            pos.x_0 = box.x_0 + 3;
+            pos.y_2 = box.y_2 + 5 + i * 13;
+            DrawText_8003E91C(2, lines[i], &pos, 5);
         }
     }
     {
-        WinColor_LOAD b;
-        b.field_3 = 1;
-        b.field_2 = 0;
-        b.color_0 = uiColor_8008B590;
-        DrawWindow_80042460(&r, &b, dword_8008D454 + 0x38, 0);
+        LoadWinColor color;
+        color.semiTrans_3 = 1;
+        color.colorSet_2 = 0;
+        color.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(&box, &color, dword_8008D454 + 0x38, 0);
     }
 }
 
-void ResetMenuRow_800BADE0(MenuRow_LOAD* p)
+void ResetMenuRow_800BADE0(LoadMenuRow* row)
 {
-    p->cursor_C = p->initCursor_9;
-    p->scroll_D = p->initScroll_A;
+    row->cursor_C = row->initCursor_9;
+    row->scroll_D = row->initScroll_A;
 }
 
 void WaitCardSync_800BADF4(void)
 {
-    int a = 0;
-    int b = 0;
-    MemCardSync(0, &b, &a);
+    int result = 0;
+    int cmd = 0;
+    MemCardSync(0, &cmd, &result);
 }
 
 int IsCardReady_800BAE24(void)
@@ -2068,20 +2068,20 @@ int GetCardSaveCount_800BAE3C(void)
 
 char* GetCardSaveName_800BAE4C(int i)
 {
-    char** p = cardSaveNames_800BE188;
-    return p[i];
+    char** names = cardSaveNames_800BE188;
+    return names[i];
 }
 
 int PollCardAccept_800BAE68(int slot)
 {
-    int x[2]; // the MemCardSync command and result
+    int sync[2]; // the MemCardSync command and result
     int ret = -1;
-    int r;
+    int state;
     int chan = slot << 4;
-    x[0] = 0;
-    x[1] = 0;
-    r = MemCardSync(1, &x[0], &x[1]);
-    switch (r)
+    sync[0] = 0;
+    sync[1] = 0;
+    state = MemCardSync(1, &sync[0], &sync[1]);
+    switch (state)
     {
     case 0:
         break;
@@ -2089,9 +2089,9 @@ int PollCardAccept_800BAE68(int slot)
         MemCardAccept(chan);
         break;
     case 1:
-        if (x[0] == 2)
+        if (sync[0] == 2)
         {
-            ret = x[1];
+            ret = sync[1];
         }
         break;
     }
@@ -2100,14 +2100,14 @@ int PollCardAccept_800BAE68(int slot)
 
 int PollCardExist_800BAF0C(int slot)
 {
-    int x[2]; // the MemCardSync command and result
+    int sync[2]; // the MemCardSync command and result
     int ret = -1;
-    int r;
+    int state;
     int chan = slot << 4;
-    x[0] = 0;
-    x[1] = 0;
-    r = MemCardSync(1, &x[0], &x[1]);
-    switch (r)
+    sync[0] = 0;
+    sync[1] = 0;
+    state = MemCardSync(1, &sync[0], &sync[1]);
+    switch (state)
     {
     case 0:
         break;
@@ -2115,9 +2115,9 @@ int PollCardExist_800BAF0C(int slot)
         MemCardExist(chan);
         break;
     case 1:
-        if (x[0] == 1)
+        if (sync[0] == 1)
         {
-            ret = x[1];
+            ret = sync[1];
         }
         break;
     }
@@ -2127,7 +2127,7 @@ int PollCardExist_800BAF0C(int slot)
 // Matched
 void ScanCardSaves_800BAFB0(int slot)
 {
-    DirEntry_LOAD dir[15];
+    CardDirEntry dir[15];
     long files;
     int blocks;
     int found;
@@ -2137,14 +2137,14 @@ void ScanCardSaves_800BAFB0(int slot)
     MemCardGetDirentry(slot << 4, aDirWildcard_800B72FC, dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
-        int q = dir[i].size_18 / 0x2000;
+        int fullBlocks = dir[i].size_18 / 0x2000;
         if (dir[i].size_18 & 0x1FFF)
         {
-            blocks += q + 1;
+            blocks += fullBlocks + 1;
         }
         else
         {
-            blocks += q;
+            blocks += fullBlocks;
         }
     }
     for (i = 0; i < 15; i++)
@@ -2166,7 +2166,7 @@ void ScanCardSaves_800BAFB0(int slot)
 // Matched
 void ScanCardSavesComb_800BB0E4(int slot)
 {
-    DirEntry_LOAD dir[15];
+    CardDirEntry dir[15];
     long files;
     int blocks;
     int found;
@@ -2176,14 +2176,14 @@ void ScanCardSavesComb_800BB0E4(int slot)
     MemCardGetDirentry(slot << 4, aDirWildcard_800B72FC, dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
-        int q = dir[i].size_18 / 0x2000;
+        int fullBlocks = dir[i].size_18 / 0x2000;
         if (dir[i].size_18 & 0x1FFF)
         {
-            blocks += q + 1;
+            blocks += fullBlocks + 1;
         }
         else
         {
-            blocks += q;
+            blocks += fullBlocks;
         }
     }
     for (i = 0; i < 15; i++)
@@ -2207,7 +2207,7 @@ void ScanCardSavesComb_800BB0E4(int slot)
     cardSaveCount_800BE150 = found;
 }
 
-// 1 when name is one of the nFiles directory entries (DirEntry_LOAD, 0x28 bytes each)
+// 1 when name is one of the nFiles directory entries (CardDirEntry, 0x28 bytes each)
 int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
 {
     int i;
@@ -2240,90 +2240,90 @@ int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
 
 #if 0
 // Not matched: register allocation (h/i/table pointer in $s0/$s1/$s2 in the original) and the clearing loops are not strength-reduced to a decrementing pointer here
-void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title)
+void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
 {
     int i;
     int j;
-    RECT r;
+    RECT rect;
     for (i = 0; i < 3; i++)
     {
-        POLY_FT4* p = &publicTiyPolyFT4s_8008D430[saveIconSrc_800BE0A0[i].poly_0];
-        int tp = p->tpage & 0x1F;
-        r.x = (p->u0 >> 2) + ((tp << 6) & 0x3FF);
-        r.y = p->v0 + ((tp / 16) << 8);
-        r.w = 4;
-        r.h = 0x10;
-        StoreImage(&r, (u_long*)h->icon_80[i]);
+        POLY_FT4* poly = &publicTiyPolyFT4s_8008D430[saveIconSrc_800BE0A0[i].poly_0];
+        int tp = poly->tpage & 0x1F;
+        rect.x = (poly->u0 >> 2) + ((tp << 6) & 0x3FF);
+        rect.y = poly->v0 + ((tp / 16) << 8);
+        rect.w = 4;
+        rect.h = 0x10;
+        StoreImage(&rect, (u_long*)header->icon_80[i]);
         DrawSync(0);
-        r.x = saveIconSrc_800BE0A0[i].clutX_4;
-        r.y = saveIconSrc_800BE0A0[i].clutY_6;
-        r.w = 0x10;
-        r.h = 1;
-        StoreImage(&r, (u_long*)h->clut_60);
+        rect.x = saveIconSrc_800BE0A0[i].clutX_4;
+        rect.y = saveIconSrc_800BE0A0[i].clutY_6;
+        rect.w = 0x10;
+        rect.h = 1;
+        StoreImage(&rect, (u_long*)header->clut_60);
         DrawSync(0);
     }
-    h->magic_0[0] = 'S';
-    h->magic_0[1] = 'C';
-    h->type_2 = 0x13;
-    h->blocks_3 = 1;
+    header->magic_0[0] = 'S';
+    header->magic_0[1] = 'C';
+    header->type_2 = 0x13;
+    header->blocks_3 = 1;
     {
-        char* t = h->title_4;
+        char* titleBuf = header->title_4;
         for (j = 63; j >= 0; j--)
         {
-            t[j] = 0;
+            titleBuf[j] = 0;
         }
     }
     if (title)
     {
-        strcpy_8004E2D8(h->title_4, title);
+        strcpy_8004E2D8(header->title_4, title);
     }
     else
     {
-        strcpy_8004E2D8(h->title_4, cardTitles_800BDFB0[idx]);
+        strcpy_8004E2D8(header->title_4, cardTitles_800BDFB0[idx]);
     }
     for (i = 11; i >= 0; i--)
     {
-        h->field_44[i] = 0;
+        header->field_44[i] = 0;
     }
-    h->field_50 = 1;
-    h->tag_52 = aCRD0_800B7300;
-    h->tag_52.c[4] = 0;
-    h->field_57 = 0;
-    h->field_5C = 0;
-    MemCopy_800403E8(h->field_200, cardHeaderTail_800BE0B8, 0x80);
+    header->field_50 = 1;
+    header->tag_52 = aCRD0_800B7300;
+    header->tag_52.c[4] = 0;
+    header->field_57 = 0;
+    header->field_5C = 0;
+    MemCopy_800403E8(header->field_200, cardHeaderTail_800BE0B8, 0x80);
 }
 #endif
 INCLUDE_OVERLAY_ASM(load, BuildCardHeader_800BB2AC);
 
 void DrawCardSlotMenu_800BB4A8(short sel)
 {
-    MenuItems2_LOAD a = cardSlotMenuItem1_800B731C;
-    MenuItems2_LOAD b = cardSlotMenuItem2_800B7368;
-    MenuItem_LOAD* list[3];
-    MenuWin_LOAD w;
+    LoadMenuItemPair slot1 = cardSlotMenuItem1_800B731C;
+    LoadMenuItemPair slot2 = cardSlotMenuItem2_800B7368;
+    LoadMenuItem* list[3];
+    LoadMenuWin win;
     int i;
-    list[0] = a.items_0;
-    list[1] = b.items_0;
+    list[0] = slot1.items_0;
+    list[1] = slot2.items_0;
     list[2] = 0;
-    w.field_0 = 2;
-    w.time_4 = 0;
-    w.field_8 = 8;
-    w.cursor_C = 0;
-    w.items_10 = list;
-    w.field_14 = 0;
+    win.flags_0 = 2;
+    win.time_4 = 0;
+    win.open_8 = 8;
+    win.cursor_C = 0;
+    win.items_10 = list;
+    win.ot_14 = 0;
     for (i = 0; i < 2; i++)
     {
         list[i]->flags_0 |= 2;
     }
-    w.time_4 = frameCount_8008D3FC;
-    w.cursor_C = sel;
-    DrawMenuWindows_8002A5A4(&w);
+    win.time_4 = frameCount_8008D3FC;
+    win.cursor_C = sel;
+    DrawMenuWindows_8002A5A4(&win);
 }
 
 // 0x800BB5DC..0x800BD93C: PSY-Q 4.4 LIBMCRD.LIB modules LIBMCRD, USERFUNC and BIOS, linked from the library
 // (config/ovl_lib_objs.txt), as are their .rdata, .data and .bss.
 
-Pos_LOAD saveSlotFieldPos_800BD93C[9] = {
+LoadTextPos saveSlotFieldPos_800BD93C[9] = {
     { 170, 54 },
     { 144, 68 },
     { 172, 68 },
@@ -2334,7 +2334,7 @@ Pos_LOAD saveSlotFieldPos_800BD93C[9] = {
     { 39, 68 },
     { 0x122, 52 },
 };
-UiSprite_LOAD saveSlotSprites_800BD960[7] = {
+LoadUiSprite saveSlotSprites_800BD960[7] = {
     { 13, 52, 119, 1 },
     { 104, 52, 227, 1 },
     { 100, 66, 118, 1 },
@@ -2343,7 +2343,7 @@ UiSprite_LOAD saveSlotSprites_800BD960[7] = {
     { 13, 66, 150, 1 },
     { -1, -1, -1, -1 },
 };
-UiSprite_LOAD modeTitleSprites_800BD998[2] = {
+LoadUiSprite modeTitleSprites_800BD998[2] = {
     { 80, 21, 190, 1 },
     { 69, 21, 197, 1 },
 };
@@ -2351,7 +2351,7 @@ int cardSlotSprites_800BD9A8[16] = {
     0x15006C, 0x10027, 0x5F0027, 0x10027, 0x6D003B, 0x100B2, 0x6D006A, 0x10000,
     0x5F00BC, 0x10027, 0x6D00D0, 0x100B2, 0x6D00FF, 0x10002, -1, -1,
 };
-UiSprite_LOAD saveIconSprites_800BD9E8[4] = {
+LoadUiSprite saveIconSprites_800BD9E8[4] = {
     { 0x110, 52, 78, 1 },
     { 0x110, 52, 52, 1 },
     { 0x110, 52, 58, 1 },
@@ -2359,24 +2359,24 @@ UiSprite_LOAD saveIconSprites_800BD9E8[4] = {
 };
 char *saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
 RECT saveListClip_800BDA10 = { 10, 49, 0x12C, 129 };
-MenuItem_LOAD saveListRow0_800BDA18[2] = {
+LoadMenuItem saveListRow0_800BDA18[2] = {
     { 64, 0, 0, 0, 0, 10, 49, { 44, 1, 31 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD saveListRow1_800BDA50[2] = {
+LoadMenuItem saveListRow1_800BDA50[2] = {
     { 64, 0, 0, 0, 0, 10, 82, { 44, 1, 31 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD saveListRow2_800BDA88[2] = {
+LoadMenuItem saveListRow2_800BDA88[2] = {
     { 64, 0, 0, 0, 0, 10, 115, { 44, 1, 31 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD saveListRow3_800BDAC0[2] = {
+LoadMenuItem saveListRow3_800BDAC0[2] = {
     { 64, 0, 0, 0, 0, 10, 148, { 44, 1, 31 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
-MenuWin_LOAD saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
+LoadMenuItem *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
+LoadMenuWin saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
 int cardSlot1Item_800BDB24[14] = {
     64, 0, 0, 0, 0x5A0021, 0x240069, 0, 1,
     0, 0, 0, -1, -1, -1,
@@ -2392,54 +2392,54 @@ void *cardSlot2Items_800BDBB4[2] = { (void *)cardSlot2Item_800BDB7C };
 int cardSlot2Win_800BDBBC = 2;
 int cardSlot2WinRest_800BDBC0[5] = { 0, 8, 0, (int)cardSlot2Items_800BDBB4, 5 };
 int *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
-MenuItem_LOAD topMenuSave_800BDBDC[2] = {
+LoadMenuItem topMenuSave_800BDBDC[2] = {
     { 8, 1, 190, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 69, { 108, 0, 19, 0, 0, 0, 4 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD topMenuLoad_800BDC14[2] = {
+LoadMenuItem topMenuLoad_800BDC14[2] = {
     { 8, 1, 197, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 90, { 108, 0, 19, 0, 0, 0, 4 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD topMenuExit_800BDC4C[2] = {
+LoadMenuItem topMenuExit_800BDC4C[2] = {
     { 8, 1, 198, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 111, { 108, 0, 19, 0, 0, 0, 4 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD topMenuTitle_800BDC84[2] = {
+LoadMenuItem topMenuTitle_800BDC84[2] = {
     { 8, 1, 196, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 132, { 108, 0, 19, 0, 0, 0, 4 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
-MenuWin_LOAD topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
-MenuItem_LOAD formatYes_800BDCE8[2] = {
+LoadMenuItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
+LoadMenuWin topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
+LoadMenuItem formatYes_800BDCE8[2] = {
     { 8, 3, (int)aYES_800B671C, 0, 0, 126, 106, { 56, 0, 18, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD formatNo_800BDD20[2] = {
+LoadMenuItem formatNo_800BDD20[2] = {
     { 8, 3, (int)aNO_800B6724, 0, 0, 126, 126, { 56, 0, 18, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
-MenuWin_LOAD formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
-MenuItem_LOAD confirmYes_800BDD7C[2] = {
+LoadMenuItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
+LoadMenuWin formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
+LoadMenuItem confirmYes_800BDD7C[2] = {
     { 8, 3, (int)aYES_800B671C, 0, 0, 215, 193, { 46, 0, 19, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD confirmNo_800BDDB4[2] = {
+LoadMenuItem confirmNo_800BDDB4[2] = {
     { 8, 3, (int)aNO_800B6724, 0, 0, 0x105, 193, { 48, 0, 19, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
-MenuWin_LOAD confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
-MenuItem_LOAD titleYes_800BDE10[2] = {
+LoadMenuItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
+LoadMenuWin confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
+LoadMenuItem titleYes_800BDE10[2] = {
     { 8, 3, (int)aYES_800B671C, 0, 0, 106, 121, { 52, 0, 19, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD titleNo_800BDE48[2] = {
+LoadMenuItem titleNo_800BDE48[2] = {
     { 8, 3, (int)aNO_800B6724, 0, 0, 163, 121, { 52, 0, 19, 0, 2, 0, 2 } },
     { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
 };
-MenuItem_LOAD *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
-MenuWin_LOAD titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
+LoadMenuItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
+LoadMenuWin titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
 char loadMenuButtonHelp_800BDEA4[24] = { 16, 0, 0, 0, 56, 103, 11, 128, 167, 0, 0, 0, 44, 103, 11, 128, 255, 255, 255, 255 };
 char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
 char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
@@ -2449,7 +2449,7 @@ char *msgNoSaveData_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, byte_800B
 char *msgFormatFailed_800BDF1C[4] = { aFormattingFaile_800B6864 };
 char *msgSaveFailed_800BDF2C[4] = { aSaveFailed_800B688C };
 char *msgLoadFailed_800BDF3C[4] = { aLoadFailed_800B68A8 };
-MenuRow_LOAD loadMenuRows_800BDF4C[2] = {
+LoadMenuRow loadMenuRows_800BDF4C[2] = {
     { { 68, 0, 116, 0, 0, 14 }, 1, 4, 4 },
     { { 68, 0, 116, 0, 0, 14 }, 2, 1, 2 },
 };
@@ -2457,7 +2457,7 @@ int loadMenuRow2_800BDF6C[4] = { 0x480012, 0x2010E00, 0x102 };
 int loadMenuRow3_800BDF7C[4] = { 0x40000A, 0x4012100, 0x4000000F };
 int loadMenuRow4_800BDF8C[4] = { 0x40000A, 0x1022100, 0x1000002 };
 int loadMenuRow5_800BDF9C[4] = { 0x40000A, 0x1022100, 0x102 };
-SaveTitle_LOAD *saveTitle_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
+SaveTitle *saveTitle_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
 char *cardTitles_800BDFB0[30] = {
     aJadeCocoon01_800B6F88, aJadeCocoon02_800B6F6C, aJadeCocoon03_800B6F50, aJadeCocoon04_800B6F34,
     aJadeCocoon05_800B6F18, aJadeCocoon06_800B6EFC, aJadeCocoon07_800B6EE0, aJadeCocoon08_800B6EC4,
@@ -2482,7 +2482,7 @@ char *saveFileNames_800BE028[2][15] = {
         aBASLUS00854COMB_800B6FD4, aBASLUS00854COMB_800B6FBC, aBASLUS00854COMB_800B6FA4,
     },
 };
-IconSrc_LOAD saveIconSrc_800BE0A0[3] = {
+SaveIconSrc saveIconSrc_800BE0A0[3] = {
     { 75, 0x380, 254 },
     { 76, 0x3F0, 0x143 },
     { 77, 0x380, 252 },

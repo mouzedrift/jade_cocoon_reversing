@@ -10,51 +10,51 @@
 #include "minion_init.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
-typedef struct EvInsEventfnc
+typedef struct EvInstr
 {
     int op_0;
     int a_4;
     int b_8;
     int c_C;
-} EvInsEventfnc;
+} EvInstr;
 
-typedef struct EvVecEventfnc
+typedef struct EvVec
 {
     int x_0;
     int y_4;
     int z_8;
-} EvVecEventfnc;
+} EvVec;
 
-typedef struct EvEntEventfnc
+typedef struct EvEntity
 {
     char pad_0[0x48];
-    EvVecEventfnc pos_48;
+    EvVec pos_48;
     char pad_54[0x28];
     int f7C_7C;
     int f80_80;
     int f84_84;
     int f88_88;
     int f8C_8C;
-} EvEntEventfnc;
+} EvEntity;
 
 
 
 // an event script (GAME's GameEvCtx, list eventScripts_8008D410)
-typedef struct EvCtxEventfnc
+typedef struct EvScriptCtx
 {
     unsigned int flags_0; // 1 ended, 2 message advancing, 4 triggered, 8 waiting for a trigger, 0x10 loop point set,
                           // 0x20 holds the scene, 0x40 message kept open, 0x100 XA voice playing
-    EvInsEventfnc* start_4;
-    EvInsEventfnc* pc_8;
-    EvInsEventfnc* ret_C;
+    EvInstr* start_4;
+    EvInstr* pc_8;
+    EvInstr* ret_C;
     int id_10;
     int heldActors_14; // actors (bit 0 Levant, 1..4 party) taken by EvCmdTakeActors_800B8D08
     int busyActors_18; // actors still running an actor command
     int animActors_1C; // actors playing a held animation (EvCmdPlayAnim_800BA2E8)
     char pad_20[4];
     int idleAnims_24[6]; // per actor animation restored at the end; [5]: SendActorCmdMask_800BB990's pending mask
-    EvVecEventfnc savedPos_3C[5];
-    EvVecEventfnc savedFront_78[5];
+    EvVec savedPos_3C[5];
+    EvVec savedFront_78[5];
     int msgStep_B4;
     int step_B8;
     int maskStep_BC;
@@ -76,12 +76,12 @@ typedef struct EvCtxEventfnc
     int choiceMask_114;
     int msgOpen_118;
     int msgWindow_11C; // the message window (OpenMessageWindow_8003422C)
-    EvEntEventfnc* ent_120;
-} EvCtxEventfnc;
+    EvEntity* ent_120;
+} EvScriptCtx;
 
 // an actor command (GAME's GameActorCmd): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation,
 // 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
-typedef struct EvActorCmdEventfnc
+typedef struct EvActorCmd
 {
     int actor_0;
     int kind_4;
@@ -93,37 +93,29 @@ typedef struct EvActorCmdEventfnc
     int y_1C;
     int z_20;
     int data_24;
-} EvActorCmdEventfnc;
+} EvActorCmd;
 
-typedef struct EvObjEventfnc
-{
-    char pad_0[0x1A];
-    short f1A_1A;
-    char pad_1C[0x90 - 0x1C];
-    int f90_90;
-} EvObjEventfnc;
-
-typedef struct EvQuadEventfnc
+typedef struct EvSVec
 {
     short x_0;
     short y_2;
     short z_4;
     short pad_6;
-} EvQuadEventfnc;
+} EvSVec;
 
-extern EvVecEventfnc* GetSavedActorPos_800BBC00(EvCtxEventfnc* c, int a, int b);
+extern EvVec* GetSavedActorPos_800BBC00(EvScriptCtx* ctx, int idx, int mode);
 
-extern EvVecEventfnc* GetSavedActorFront_800BBC80(EvCtxEventfnc* c, int a, int b);
+extern EvVec* GetSavedActorFront_800BBC80(EvScriptCtx* ctx, int idx, int mode);
 
-extern EvVecEventfnc* GetActorPos_800BBBA0(int a);
+extern EvVec* GetActorPos_800BBBA0(int actor);
 
-extern int SendActorCmd_800BB840(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b);
+extern int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b);
 
-extern int SendActorCmdMask_800BB990(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b);
+extern int SendActorCmdMask_800BB990(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b);
 
-extern void SetTempFlags_800BBDA0(int a, int b);
+extern void SetTempFlags_800BBDA0(int mask, int on);
 
-extern int TestTempFlags_800BBDD8(int a);
+extern int TestTempFlags_800BBDD8(int mask);
 
 extern char eventHeap_80091C10[];
 
@@ -141,43 +133,43 @@ extern void StartModelLoader_8002056C(void);
 
 
 
-extern int CollideWithMapEnts_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n);
+extern int CollideWithMapEnts_800B82C8(int* pos, int* prevPos, MapMesh* ents, unsigned char* flags, int n);
 
-extern void SlideOffEdge_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5);
+extern void SlideOffEdge_800B8220(int* pos, int prevPos, int mesh, int* tri, int* edge, int* dir);
 
-extern int FindDuplicatePoint_800B8028(int* out, EvQuadEventfnc* v);
+extern int FindDuplicatePoint_800B8028(int* out, EvSVec* pts);
 
-extern void GetTriHeight_800B83E4(int* v, MapMesh* m, int i);
+extern void GetTriHeight_800B83E4(int* pos, MapMesh* mesh, int triIdx);
 
-static inline int EvFindTri(int* out, MapState* map, EvVecEventfnc* pos)
+static inline int EvFindTri(int* out, MapState* map, EvVec* pos)
 {
-    int r = FindTriAtXZ_800B76B8(map->mesh_28, pos);
-    if (r >= 0)
+    int tri = FindTriAtXZ_800B76B8(map->mesh_28, pos);
+    if (tri >= 0)
     {
-        *out = r;
+        *out = tri;
         return 1;
     }
     return 0;
 }
 
-extern int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* pos);
+extern int FindTriAtXZ_800B76B8(MapMesh* mesh, EvVec* pos);
 
 // FindLevantMesh_800B80C8, inlined into CollideLevantWithMap_800B6DD4
-static inline int EvFindLevantMesh(EvEntEventfnc* e)
+static inline int EvFindLevantMesh(EvEntity* ent)
 {
     unsigned int i;
-    unsigned int k = e->f84_84;
-    int r;
-    for (i = 0; i < mapState_8008B500.nMeshes_4; i++, k++)
+    unsigned int mesh = ent->f84_84;
+    int tri;
+    for (i = 0; i < mapState_8008B500.nMeshes_4; i++, mesh++)
     {
-        k %= mapState_8008B500.nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
-        if (r >= 0)
+        mesh %= mapState_8008B500.nMeshes_4;
+        tri = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[mesh], (EvVec*)&levantPos_8008BD18.pos);
+        if (tri >= 0)
         {
-            e->f80_80 = r;
-            if (e->f84_84 != k)
+            ent->f80_80 = tri;
+            if (ent->f84_84 != mesh)
             {
-                e->f84_84 = k;
+                ent->f84_84 = mesh;
             }
             return 1;
         }
@@ -187,44 +179,45 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
 
 extern void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
 
-extern void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* d);
+extern void SlideAlongEdge_800B7E40(int* pos, int mesh, int tri, int edge, int* out);
 
-typedef struct EvMapEntEventfnc
+typedef struct EvMapEntry
 {
     short id_0;
     char pad_2[2];
     short f4_4;
     unsigned short f6_6;
     char pad_8[8];
-} EvMapEntEventfnc;
+} EvMapEntry;
 
-typedef struct EvPairEventfnc
+// an enemy group member of an encounter (GAME's GameEnemyMember)
+typedef struct EvEnemyMember
 {
-    int a;
+    int species_0;
     int b;
-} EvPairEventfnc;
-typedef struct EvPosEventfnc
+} EvEnemyMember;
+typedef struct EvEncounterMember
 {
-    EvPairEventfnc xy;
+    EvEnemyMember member_0;
     int z;
-} EvPosEventfnc;
+} EvEncounterMember;
 // where an encounter's actor is placed
-typedef struct EvPlaceEventfnc
+typedef struct EvSpawnPlace
 {
     int pos_0[3];
     short rotY_C;
-} EvPlaceEventfnc;
-typedef struct EvSpawnEventfnc
+} EvSpawnPlace;
+typedef struct EvSpawnTable
 {
-    EvPosEventfnc* a_0[3];
-    EvPlaceEventfnc* b_C[3];
+    EvEncounterMember* members_0[3];
+    EvSpawnPlace* places_C[3];
     short f18_18;
     short f1A_1A;
-} EvSpawnEventfnc;
+} EvSpawnTable;
 
-extern EvMapEntEventfnc** mapTable_800B0608[];
+extern EvMapEntry** mapTable_800B0608[];
 
-extern int RollEncounterGroups_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
+extern int RollEncounterGroups_800A49CC(int a, int b, MapList16* c, EvSpawnTable* d);
 
 extern void SpawnEncounterEnemy_800B8568();
 
@@ -238,11 +231,11 @@ extern void EncounterSpawnTask_800B844C();
 
 extern unsigned short padPressed_8009194C;
 
-extern int EvCmdEndScene_800B8A34(EvCtxEventfnc* c);
+extern int EvCmdEndScene_800B8A34(EvScriptCtx* ctx);
 
 extern void ResumeAllEnemySlots_800A1974(void);
 
-extern void ResetEventCtx_800A5B54(EvCtxEventfnc* c);
+extern void ResetEventCtx_800A5B54(EvScriptCtx* ctx);
 
 extern int HoldFieldMinion_800A7810(int a);
 
@@ -262,7 +255,7 @@ extern void (*eventHook_800B1D98)(int);
 
 extern int StartEventScript_800A59D0(int a);
 
-extern SVECTOR* GetActorRot_800BBBD0(int i); // rotation of Levant (0) or a party member
+extern SVECTOR* GetActorRot_800BBBD0(int actor); // rotation of Levant (0) or a party member
 
 extern short screenOffset_8008D474[2];
 
@@ -298,21 +291,21 @@ extern UnitStatus* GetLevantStatus_800A8C34();
 
 
 
-extern EvEntEventfnc* FindEventEntity_800A5DDC(int a, int b, int c);
+extern EvEntity* FindEventEntity_800A5DDC(int a, int b, int c);
 
 extern void SetVoiceTable_800A6830(int a);
 
-extern void EvMessageNop_800BC7A0(EvCtxEventfnc* c);
+extern void EvMessageNop_800BC7A0(EvScriptCtx* ctx);
 
-extern int OpenEventMessage_800BBE3C(EvCtxEventfnc* c);
+extern int OpenEventMessage_800BBE3C(EvScriptCtx* ctx);
 
-extern int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c);
+extern int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx);
 
 extern int XaRequestStop_80043524(void);
 
 extern int ConsumeMsgWindowMark_80034ADC(int a, int b);
 
-extern EvObjEventfnc* GetFieldMinionActor_800A7A60(int a);
+extern struct Actor* GetFieldMinionActor_800A7A60(int i);
 
 extern void* GetEventDataSlot_800A55B0(int a);
 
@@ -334,30 +327,30 @@ extern int UsePreloadedArea_80027358(int a);
 
 extern int GetSetReturnEntrance_800A683C(int a);
 
-typedef struct EvWaitEventfnc
+typedef struct EvShopRequest
 {
-    int f0_0;
-    int f4_4;
-    int f8_8;
-} EvWaitEventfnc;
+    int pending_0; // set by EvCmdOpenShop_800BABB0, cleared by GAME when the shop closes
+    int kind_4;    // 0 / 1 SHOP, 2 WPNSHOP, else SHOPCTRL (GAME's StartShopRequest_800A7204)
+    int shopId_8;
+} EvShopRequest;
 
-extern EvWaitEventfnc shopRequest_800B06B0;
+extern EvShopRequest shopRequest_800B06B0;
 
 extern int ExchangeEventResult_800A5F9C(int a);
 
-extern void SetCameraBlendTarget_800379DC(EvVecEventfnc* v, int b);
+extern void SetCameraBlendTarget_800379DC(EvVec* v, int b);
 
 extern void ClearCameraBlendTarget_80037A20(int a, int b);
 
-typedef struct EvRectEventfnc
+typedef struct EvViewRect
 {
     short x_0;
     short y_2;
     short w_4;
     short h_6;
-} EvRectEventfnc;
+} EvViewRect;
 
-extern EvRectEventfnc dword_8008D420;
+extern EvViewRect dword_8008D420;
 
 extern void SetCameraZoom_80037A6C(int a, int b);
 
@@ -365,7 +358,7 @@ extern int GetFieldMinionCount_800A7790(void);
 
 extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c);
 
-extern int IsEventPointValid_800A6504(int a, EvVecEventfnc* v);
+extern int IsEventPointValid_800A6504(int a, EvVec* v);
 
 extern int dword_800B1230;
 
@@ -389,39 +382,39 @@ extern int IsLevantCmdDone_800A8FE0();
 
 extern int IsFieldMinionReady_800A7CFC(int a);
 
-extern EvVecEventfnc* GetFieldMinionPos_800A7940(int a);
+extern EvVec* GetFieldMinionPos_800A7940(int a);
 
 
 extern SVECTOR* GetFieldMinionRot_800A7984(int a);
 
 extern int eventTempFlags_800AEBD4;
 
-typedef struct EvMsgInfoEventfnc
+typedef struct EvMsgResult
 {
     short f0_0;
-    short s2_2;
+    short choice_2;
     int f4_4;
     int f8_8;
     int fC_C;
-} EvMsgInfoEventfnc;
+} EvMsgResult;
 
-typedef struct EvXaEventfnc
+typedef struct EvXaClip
 {
     short a_0;
     short b_2;
     short c_4;
-} EvXaEventfnc;
+} EvXaClip;
 
-typedef struct EvVoiceEventfnc
+typedef struct EvVoiceCue
 {
     unsigned char id_0;
     unsigned char sub_1;
-    EvXaEventfnc xa_2;
-} EvVoiceEventfnc;
+    EvXaClip xa_2;
+} EvVoiceCue;
 
-extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgInfoEventfnc* b);
+extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgResult* b);
 
-extern void SkipActorAnims_800A67B4(EvCtxEventfnc* c);
+extern void SkipActorAnims_800A67B4(EvScriptCtx* ctx);
 
 extern void CloseMsgWindow_80034A84(int a);
 
@@ -431,63 +424,63 @@ extern void EnableMsgWindowAdvance_80034A68(int a);
 
 extern int currentMessageId_800AEBE8;
 
-extern EvXaEventfnc* currentVoice_800AEBEC;
+extern EvXaClip* currentVoice_800AEBEC;
 
-extern EvVoiceEventfnc* voiceTable_800AEBF0;
+extern EvVoiceCue* voiceTable_800AEBF0;
 
 
 extern void sub_8005BBC8();
 
-typedef struct EvSrcEventfnc
+typedef struct EvItemMsgSrc
 {
     short a_0;
     short b_2;
     int c_4;
-} EvSrcEventfnc;
+} EvItemMsgSrc;
 
-typedef struct EvSlotEventfnc
+typedef struct EvItemMsgSlot
 {
     int f0_0;
     int f4_4;
     int f8_8;
     int fC_C;
     int f10_10;
-} EvSlotEventfnc;
+} EvItemMsgSlot;
 
 extern void memset(void* p, int v, int n);
 
-typedef struct EvGfxEventfnc
+typedef struct EvEffectFile
 {
     int f0_0;
-    int f4_4;
+    int list_4; // ListInit_8003FDB0 list of the loaded effect data
     char pad_8[0x24];
-    int f2C_2C;
-} EvGfxEventfnc;
+    int usesMdec_2C; // AllocMdecBuffer_800A5804 after loading
+} EvEffectFile;
 
-typedef struct EvGfxArgEventfnc
+typedef struct EvEffectLoadArg
 {
-    EvGfxEventfnc* g_0;
+    EvEffectFile* g_0;
     short s_4[6];
     int f10_10;
-} EvGfxArgEventfnc;
+} EvEffectLoadArg;
 
 extern int mdecBufferMode_800AEB7C;
 
-extern EvGfxEventfnc eventEffects_800AEB80;
+extern EvEffectFile eventEffects_800AEB80;
 
 extern void FreeMdecBuffer_800A5854(void);
 
 extern void AllocMdecBuffer_800A5804(int a);
 
-extern void OnEffectFileLoaded_80020F5C(EvGfxArgEventfnc* p, int a);
+extern void OnEffectFileLoaded_80020F5C(EvEffectLoadArg* p, int a);
 
 // sprites / tpages of the TIY loaded by LoadEventTiy_800BC98C
 typedef struct
 {
     SPRT* sprts_0;
     DR_TPAGE* tpages_4;
-} EvTiyEventfnc;
-extern EvTiyEventfnc eventTiy_800AEBC0;
+} EvTiyData;
+extern EvTiyData eventTiy_800AEBC0;
 
 extern int eventRecords_800AEBCC[2];
 
@@ -497,12 +490,12 @@ extern void AllocRecordTables_80026D78(int* a, int b, void* c);
 
 extern void LoadRecordTables_80026E74(int a, int b, void* c);
 
-typedef struct TaskEventfnc
+typedef struct EvTaskEntry
 {
     unsigned int flags_0;
     int f4_4;
     void (*next_8)();
-} TaskEventfnc;
+} EvTaskEntry;
 
 extern void ReturnWarpTask_800BCB3C();
 

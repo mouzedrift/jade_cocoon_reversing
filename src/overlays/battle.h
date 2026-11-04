@@ -179,7 +179,7 @@ extern void ClearBattleFlag_800BC850(unsigned int);
 
 extern char dword_80091D40[];
 
-// GAME's battle chain record (game.h GameRec_1)
+// GAME's battle chain record (game.h GameBattleChain)
 typedef struct BatChainRecord
 {
     int active_0; // 1 while a chain of battles runs
