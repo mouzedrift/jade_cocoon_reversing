@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "combload.h"
 
 typedef struct CombLoadTask
 {
@@ -10,22 +11,6 @@ typedef struct CombLoadTask
     void (*next_8)();
 } CombLoadTask;
 
-typedef struct CombLoadDlg
-{
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-} CombLoadDlg;
-
-typedef struct CombLoadObj
-{
-    int f0;
-    int f4;
-    short f8;
-    short fA;
-} CombLoadObj;
-
 typedef struct CombLoadBox
 {
     short col_0;
@@ -33,14 +18,6 @@ typedef struct CombLoadBox
     char c_3;
 } CombLoadBox;
 
-extern int dword_800A47F4;
-extern int dword_800A47F0;
-extern char dword_800A408C[];
-extern char dword_800A40BC[];
-extern char dword_800A40E4[];
-extern CombLoadObj dword_800A468C[];
-extern CombLoadObj dword_800A4698;
-extern CombLoadDlg dword_800A47D4;
 extern int sub_800BAE24(int);
 extern void sub_800BB4A8(int);
 extern void UpdateMenuCursor_8003D794(void*, int);
@@ -61,7 +38,10 @@ extern int sub_800B7914();
 extern void DrawMenuBackground_8002BE10();
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
-INCLUDE_OVERLAY_ASM(combload, dword_800A4088);
+int dword_800A4088 SDATA = 20;
+const char aCheckingMEMORYC_800A408C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
+const char aSelectMEMORYCAR_800A40BC[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D"; // Select MEMORY CARD.
+const char aSelectData_800A40E4[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\204\202\201\202\224\202\201"; // Select data
 
 void sub_800A40FC(CombLoadTask* t)
 {
@@ -109,15 +89,15 @@ void sub_800A41FC(CombLoadTask* t)
     code[0] = 0xC3;
     if (found)
     {
-        str = dword_800A408C;
+        str = aCheckingMEMORYC_800A408C;
     }
     else if (dword_800A47F0 == 0)
     {
-        str = dword_800A40BC;
+        str = aSelectMEMORYCAR_800A40BC;
     }
     else if (dword_800A47F0 == 1)
     {
-        str = dword_800A40E4;
+        str = aSelectData_800A40E4;
     }
     DrawSmallTextBox_8002AF58((int)&str, (int)code, 0xF);
     switch (dword_800A47F0)
@@ -219,4 +199,30 @@ void sub_800A44DC()
 #endif
 INCLUDE_OVERLAY_ASM(combload, sub_800A44DC);
 
-INCLUDE_OVERLAY_ASM(combload, dword_800A468C);
+CombLoadObj dword_800A468C[1] = { { 0x10002, 0x10002 } };
+CombLoadObj dword_800A4698 = { 0x50001, 0x40000F };
+int dword_800A46A4[14] = {
+    8, 0, 0, 0, 0x380064, 0x100078, 0x20002, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800A46DC[14] = {
+    8, 0, 0, 0, 0x490064, 0x100078, 0x20002, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800A4714[14] = {
+    8, 0, 0, 0, 0x5A0064, 0x100078, 0x20002, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800A474C[14] = {
+    8, 0, 0, 0, 0x6B0064, 0x100078, 0x20002, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800A4784[14] = {
+    8, 0, 0, 0, 0x7C0064, 0x100078, 0x20002, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *dword_800A47BC[6] = { (void *)dword_800A46A4, (void *)dword_800A46DC, (void *)dword_800A4714, (void *)dword_800A474C, (void *)dword_800A4784 };
+CombLoadDlg dword_800A47D4 = { 2, 0, 8 };
+void *dword_800A47E4[3] = { (void *)dword_800A47BC };
+int dword_800A47F0 = 0;
+int dword_800A47F4 = 0;

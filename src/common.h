@@ -29,4 +29,7 @@ enum foo
    docs/full_build.md). With the initialiser the compiler emits it in place, in definition order. */
 #define BSS __attribute__((section(".bss")))
 
+/* the first word of an overlay is linked in front of its .rdata (scripts/overlays.py): `int x SDATA = 1;` */
+#define SDATA __attribute__((section(".sdata")))
+
 #endif

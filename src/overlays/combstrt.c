@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "combstrt.h"
 
 typedef struct CombStrtTask
 {
@@ -30,18 +31,11 @@ typedef struct CombStrtWin
     int f18;
 } CombStrtWin;
 
-extern short word_800A4BF8;
-extern unsigned char byte_800A4C14;
 extern int dword_800A3A88;
-extern short word_800A4C90;
-extern short word_800A4C92;
-extern short word_800A4C94;
-extern short word_800A4C96;
 extern unsigned int dword_8008D3FC;
 extern unsigned short word_8008D3FC;
 extern unsigned short uiColor_8008B590;
 extern Minion dword_800A3AA0[2][3];
-extern void* dword_800A4C50[];
 extern void sub_800A16FC();
 extern int sub_800A1AAC(int);
 extern int sub_800A1934(Minion*);
@@ -50,7 +44,13 @@ extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 extern void ShuffleTeam_800A473C(int);
 extern void sub_800A49DC(int, int);
 
-INCLUDE_OVERLAY_ASM(combstrt, dword_800A4088);
+int dword_800A4088 SDATA = 21;
+const char aShufflingMinion_800A408C[] = "\202r\202\210\202\225\202\206\202\206\202\214\202\211\202\216\202\207\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201D\201D\201D"; // Shuffling minion order...
+const char aStartFight_800A40C0[] = "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224\201H"; // Start fight?
+const char aShuffleMinionOr_800A40DC[] = "\202r\202\210\202\225\202\206\202\206\202\214\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201H"; // Shuffle minion order?
+const char aAllowMinionChan_800A4108[] = "\202`\202\214\202\214\202\217\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\203\202\210\202\201\202\216\202\207\202\211\202\216\202\207\201H"; // Allow minion changing?
+const int dword_800A4138[7] = { 0x10008, 36, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14007A, 0x14004C, 0x40002 };
+const int dword_800A4154[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0x140032, 0x40002 };
 
 #if 0
 // Not matched: CSE/regalloc of the %hi parts: the original keeps byte_800A4C14's high half in s2 from the != 3 test on and rematerialises word_800A4C8C's
@@ -83,8 +83,6 @@ extern char dword_800826E8[];
 extern short word_800A4C00;
 extern short word_800A4C8C;
 extern unsigned short word_800A4BFC[];
-extern void* dword_800A4C04[];
-extern void (*dword_800A4C7C[])(CombStrtTask*, int);
 extern CombStrtCursor name_800A4BF0;
 extern void sub_800A48C0();
 extern void sub_800A4958(int i);
@@ -388,4 +386,20 @@ void sub_800A49DC(int side, int slot)
 #endif
 INCLUDE_OVERLAY_ASM(combstrt, sub_800A49DC);
 
-INCLUDE_OVERLAY_ASM(combstrt, dword_800A4BF0);
+int dword_800A4BF0[2] = { 0x10002, 2 };
+short word_800A4BF8 = 1;
+int dword_800A4BFC = 1;
+int dword_800A4C00 = 0;
+const char *dword_800A4C04[4] = { aAllowMinionChan_800A4108, aShuffleMinionOr_800A40DC, aStartFight_800A40C0, aShufflingMinion_800A408C };
+unsigned char byte_800A4C14 = 255;
+int dword_800A4C18[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
+int dword_800A4C34[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };
+void *dword_800A4C50[2] = { (void *)dword_800A4C18, (void *)dword_800A4C34 };
+int dword_800A4C58[3] = { 219, 115, 102 };
+int dword_800A4C64[6] = { 0x40000A, 0x6D000A, 0x9A000A, 0x4000A6, 0x6D00A6, 0x9A00A6 };
+void (*dword_800A4C7C[4])() = { sub_800A43FC, sub_800A4498, sub_800A4524, sub_800A45B8 };
+int dword_800A4C8C = 0;
+short word_800A4C90 = 0;
+short word_800A4C92 = 0;
+short word_800A4C94 = 0;
+short word_800A4C96 = 0;

@@ -2,7 +2,9 @@
 #include "eventfnc.h"
 #include "actor.h"
 
-INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D00);
+int dword_800B6D00 SDATA = 41;
+const char aAssertionFaile_800B6D04[] = "Assertion failed: file \"%s\", line %d\n";
+const char aColiC_800B6D2C[8] = "COLI.C\000$";
 
 #if 0
 // Not matched: FindLevantMesh_800B80C8 is inlined here; the original keeps its result in $s3 and sets it to 1 before

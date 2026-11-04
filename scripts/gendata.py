@@ -389,8 +389,22 @@ def chunk_info(name):
     return sec, size
 
 
+# overlay mode (scripts/ovlgen.py) adds the overlay's ranges: [(lo, hi)]
+EXTRA_CODE = []
+EXTRA_RODATA = []
+EXTRA_IMAGE = []
+
+
 def in_image(v):
-    return BASE <= v < BSS_END
+    return BASE <= v < BSS_END or any(lo <= v < hi for lo, hi in EXTRA_IMAGE)
+
+
+def is_code_addr(a):
+    return BASE <= a < LIB_TEXT_END or any(lo <= a < hi for lo, hi in EXTRA_CODE)
+
+
+def is_rodata(a):
+    return RDATA_START <= a < RDATA_GAME_END or any(lo <= a < hi for lo, hi in EXTRA_RODATA)
 
 
 # ---------------------------------------------------------------- initialisers
@@ -450,6 +464,15 @@ class Gen:
         self.protos = {}             # functions the initialisers use that nobody declares: FuncDecl or None
         self.arrays = set(defined)   # names that are arrays (no & needed)
         self.local = {}              # name -> T of the objects being defined here
+        self.int_refs = False        # ints that hold the address of a symbol become references (overlays)
+        self.outside = set()         # address names for places outside the images (overlays)
+
+    @staticmethod
+    def chunk_of(name):
+        """(section, size) of a data symbol that is still assembly, None if there is none"""
+        if os.path.exists(os.path.join(REPO, "asm", "d", name + ".s")):
+            return chunk_info(name)
+        return None
 
     def type_of(self, name):
         if name in self.local:
@@ -457,9 +480,9 @@ class Gen:
         d = self.types.decls.get(name)
         if d is None:
             # not declared here: a string (in another TU) is a char array
-            p = os.path.join(REPO, "asm", "d", name + ".s")
-            if name in self.syms.addr and os.path.exists(p):
-                sec, size = chunk_info(name)
+            info = self.chunk_of(name) if name in self.syms.addr else None
+            if info is not None:
+                sec, size = info
                 if sec != ".bss":
                     parts = split_strings(self.syms.rd(self.syms.addr[name], size))
                     if parts and parts[0][1] is not None:
@@ -482,6 +505,16 @@ class Gen:
             if name not in self.types.funcnodes:
                 self.protos[name] = t.pnode.type if getattr(t, "pnode", None) is not None else None
             return name
+        if self.int_refs and v < 0x80000000:
+            # (overlays) a number in a pointer member: the member is used for both
+            return "(%s)%s" % (getattr(t, "cast", None) or "void *", intstr(v))
+        if self.int_refs and (hit is None or not in_image(v)):
+            # (overlays) an address outside the overlay and the executable (another overlay's, a buffer behind it):
+            # an address name, equated by the overlay's link script
+            name = "name_%08X" % v
+            self.refs.add(name)
+            self.outside.add(name)
+            return "(%s)%s" % (getattr(t, "cast", None) or "void *", name)
         if hit is None or not in_image(v):
             raise GenError("pointer %08X outside the image" % v)
         a, names = hit
@@ -491,7 +524,7 @@ class Gen:
                 name = n
                 break
         self.refs.add(name)
-        is_code = BASE <= a < GAME_TEXT_END or GAME_TEXT_END <= a < LIB_TEXT_END
+        is_code = is_code_addr(a)
         target = t.to if t is not None and t.kind == "ptr" else None
         if is_code:
             if a == v:
@@ -505,6 +538,8 @@ class Gen:
                     if fn is None:
                         self.protos[name] = None
                     return name
+                if name not in self.types.funcnodes and name not in self.types.decls:
+                    self.protos[name] = None
                 return "(void *)%s" % name
             return "(void *)((char *)%s + %d)" % (name, v - a)
         nt = self.type_of(name)
@@ -550,6 +585,15 @@ class Gen:
         k = t.kind
         if k == "int":
             v = int.from_bytes(self.syms.rd(addr, t.nbytes), "little", signed=t.signed)
+            if self.int_refs and t.nbytes == 4:
+                u = v & 0xffffffff
+                hit = self.syms.at(u) if in_image(u) else None
+                if hit is not None and hit[0] == u:
+                    # an address in an int: a reference cast to int
+                    e = self.ref(u, None)
+                    if e.startswith("(void *)"):
+                        e = e[len("(void *)"):]
+                    return "(%s)%s" % ("int" if t.signed else "unsigned int", e)
             return intstr(v, t)
         if k == "ptr":
             return self.ref(struct.unpack("<I", self.syms.rd(addr, 4))[0], t)
@@ -561,6 +605,11 @@ class Gen:
                     return literal(z)
                 if b"\0" not in z and is_text(z) and (any(c >= 0x80 for c in z) or
                                                        sum(chr(c).isalnum() for c in z) * 2 >= len(z) >= 2):
+                    return literal(z)
+                # a string with more bytes behind its terminator (left over in the padding): one literal
+                segs = z.split(b"\0")
+                if self.int_refs and len(segs[0]) >= 2 and is_text(segs[0]) and (all(is_text(x) or not x for x in segs) or
+                                                                         len(z) - len(segs[0]) <= 4):
                     return literal(z)
                 while len(b) > 1 and b[-1] == 0:
                     b = b[:-1]
@@ -598,7 +647,7 @@ class Gen:
             for i in range(len(b)):
                 if b[i] and not covered[i]:
                     raise GenError("non-zero padding at +0x%X in %s %s" % (i, k, t.tag))
-            while len(parts) > 1 and parts[-1] in ("0", "{ 0 }", '""'):
+            while len(parts) > 1 and (parts[-1] == '""' or re.fullmatch(r"[{}\s0,]*0[{}\s0,]*", parts[-1])):
                 parts.pop()
             s = "{ " + ", ".join(parts) + " }"
             if len(s) > 110:
@@ -787,7 +836,7 @@ def guess(syms, name, addr, size, sec, gen):
         ws = struct.unpack("<%dI" % (size // 4), b)
         nz = [w for w in ws if w]
         if nz and all(in_image(w) and syms.at(w) for w in nz):
-            code = [w for w in nz if BASE <= w < LIB_TEXT_END]
+            code = [w for w in nz if is_code_addr(w)]
             if len(code) == len(nz) and all(syms.at(w)[0] == w for w in nz):
                 return [(name, addr, "void (*%s[%d])()" % (name, len(ws)),
                          T("array", of=T("ptr", to=T("func")), n=len(ws)), None)]
@@ -797,7 +846,7 @@ def guess(syms, name, addr, size, sec, gen):
                     t = gen.type_of(ns[0]) if a == w else None
                     return t is not None and t.kind == "array" and t.of.kind == "int" and t.of.nbytes == 1
                 if all(is_str(w) for w in nz):
-                    ro = all(RDATA_START <= w < RDATA_GAME_END for w in nz)
+                    ro = all(is_rodata(w) for w in nz)
                     return [(name, addr, "%schar *%s[%d]" % ("const " if ro else "", name, len(ws)),
                              T("array", of=T("ptr", to=U8), n=len(ws)), None)]
                 return [(name, addr, "void *%s[%d]" % (name, len(ws)),
@@ -939,6 +988,11 @@ def generate(exe, tu, only=None, secs=None):
             adopted = {}
     types.adopted = adopted
     types.others = others
+    return generate_chunks(syms, types, Gen(syms, types), names, info, only, secs)
+
+
+def generate_chunks(syms, types, gen, names, info, only=None, secs=None):
+    """definitions for the data chunks names (in address order, info: name -> (section, size))"""
     if only:
         sel = set(only)
         todo = [n for n in names if n in sel]
@@ -946,7 +1000,6 @@ def generate(exe, tu, only=None, secs=None):
         todo = list(names)
     if secs:
         todo = [n for n in todo if info[n][0] in secs]
-    gen = Gen(syms, types)
     errors = {}
     defs = []
     absorbed = {}       # name -> head that covers it
@@ -1010,10 +1063,15 @@ def generate(exe, tu, only=None, secs=None):
             # bytes behind the declared object (up to the next symbol) that are more than alignment padding:
             # objects of their own
             ra = (addr + t.size() + 3) & ~3
-            if end - ra >= 4:
+            oe = addr + t.size()
+            if gen.int_refs and oe < end and sec != ".bss" and any(syms.rd(oe, min(ra, end) - oe)):
+                # (overlays) non-zero bytes up to the next word: more objects, from right behind this one
+                ra = oe
+            if end - ra >= 4 or (ra == oe and end > ra):
                 if sec != ".bss" and any(syms.rd(addr + t.size(), ra - addr - t.size())):
                     raise GenError("non-zero bytes behind the %d byte object" % t.size())
-                for gn, ga, gd, gt, gc in guess(syms, "dword_%08X" % ra, ra, end - ra, sec, gen):
+                pre = "dword_" if ra % 4 == 0 else "word_" if ra % 2 == 0 else "byte_"
+                for gn, ga, gd, gt, gc in guess(syms, "%s%08X" % (pre, ra), ra, end - ra, sec, gen):
                     defs.append(Def(n, gn, ga, sec, gt, gd, False, gc))
                     gen.local[gn] = gt
                     syms.add(gn, ga)
@@ -1078,7 +1136,22 @@ def src_lines():
 def find_extern(name):
     """(path, line text) of the extern declarations of name in src/ (headers first)"""
     r = re.compile(r"\s*extern\b[^;]*?[\s*(]%s\s*[\[);]" % re.escape(name))
-    return [(p, l) for p, l in src_lines() if name in l and r.match(l)]
+    return [(p, l) for p, l in _word_index().get(name, ()) if r.match(l)]
+
+
+_WORDS = None
+
+
+def _word_index():
+    """identifier -> the (path, line)s of src/ it occurs in (in src_lines order)"""
+    global _WORDS
+    if _WORDS is None or _WORDS[0] is not _SRC_LINES:
+        idx = {}
+        for pl in src_lines():
+            for w in set(re.findall(r"[A-Za-z_]\w*", pl[1])):
+                idx.setdefault(w, []).append(pl)
+        _WORDS = (_SRC_LINES, idx)
+    return _WORDS[1]
 
 
 def absorbed_head(x, absorbed, syms):
@@ -1117,7 +1190,7 @@ def member_path(t, off):
 
 def find_proto(name):
     r = re.compile(r"\b%s\s*\(" % re.escape(name))
-    return [(p, l) for p, l in src_lines() if p.endswith(".h") and name in l and r.search(l) and l.rstrip().endswith(";")]
+    return [(p, l) for p, l in _word_index().get(name, ()) if p.endswith(".h") and r.search(l) and l.rstrip().endswith(";")]
 
 
 def header_for(tu):

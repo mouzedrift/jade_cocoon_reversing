@@ -46,6 +46,16 @@ def load_symbols(repo, path="symbol_addrs.txt"):
     return syms
 
 
+def overlay_data_names(repo, path):
+    """the data symbols of an overlay's .sym file: named with a data prefix (dword_, jpt_, ...) or marked '// data'"""
+    out = set()
+    for line in open(os.path.join(repo, path)):
+        m = re.match(r"(\w+)=0x[0-9a-fA-F]+;(.*)", line)
+        if m and (m.group(1).startswith(DATA_PREFIXES) or re.search(r"//.*\b(r?data)\b", m.group(2))):
+            out.add(m.group(1))
+    return out
+
+
 def matched_names(repo):
     names = set()
     for path in glob.glob(os.path.join(repo, "src", "*.c")):

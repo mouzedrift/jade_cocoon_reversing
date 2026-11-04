@@ -106,6 +106,28 @@ into the executable's library code are resolved from `build_psyq/jade_cocoon.map
 SHA-1 of each built image with the original (and with `config/hashes.txt`; `--update` rewrites that file).
 Currently OK: exe image (the linked part, without the trailing bss) and NAME.BIN.
 
+### Data of an overlay in C
+
+The overlays' data is C like the executable's, with the externs in `src/overlays/<name>.h`:
+
+    python scripts/ovldata.py split NAME <iso>.bin SLUS_008.54 --write   # blobs -> symbols (.sym + source lines)
+    python scripts/overlays.py NAME <iso>.bin SLUS_008.54                # asm of the new symbols, preprocessed source
+    python scripts/ovldata.py gen NAME <iso>.bin SLUS_008.54 --write     # INCLUDE_OVERLAY_ASM data lines -> C
+    python scripts/ovldata.py regen NAME <iso>.bin SLUS_008.54 SYMBOL... # again, after a type changed
+
+`split` cuts the data blobs at the places the code builds with lui/addiu or lui/load/store (also through an index
+added to the high part), the pointers in the data and the address names of the C source; strings get IDA-like
+names. `gen` (scripts/ovlgen.py, on top of gendata.py) types a symbol by the overlay's declaration, by a typed pointer
+that points at it, or from its bytes; ints that hold a symbol's address and numbers in pointer members are written
+as casts. Symbols of an overlay's .sym file that are data but have no data prefix are marked `// data`
+(`gen_asm.overlay_data_names`). The first word (in front of `.rdata`) is `int x SDATA = n;` (`common.h`).
+
+What stays assembly: jump tables of functions that are still assembly (also the unnamed ones, and the zero word in
+front of a table, which is the table's alignment), and a definition that would sit behind assembly that follows a
+C definition of the same section with no function in between (the compiler would not switch back from the section
+the assembly ends in; ovlgen keeps the smaller side as assembly). Struct initialisers follow the struct: after a
+layout change, `regen` them.
+
 ### Switch statements in overlays
 
 The data in front of an overlay's code (strings, jump tables) is linked as `.rdata`, behind a one word header

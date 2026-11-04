@@ -2,13 +2,10 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "load.h"
 
-extern int loadMenuActive_800BE184;
-extern int cardFreeBlocks_800BE14C;
-extern int cardSaveCount_800BE150;
 extern int dword_800BE174;
 extern int (*dword_800BE294[])();
-extern char* cardSaveNames_800BE188[];
 // a task (EventEntry of the event lists) as its callbacks see it
 typedef struct
 {
@@ -27,9 +24,6 @@ extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long by
 extern void LoadMenuInit_800B7674(int mode, int b);
 extern void sub_800B7894();
 extern int uiTiyLoaded_8008B4E8;
-extern char* dword_800BDECC[];
-extern char* dword_800BDEDC[];
-extern char* dword_800BDEEC[];
 extern long MemCardCreateFile(long chan, char* file, long blocks);
 extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long bytes);
 extern int sub_800BA3EC();
@@ -47,19 +41,8 @@ extern void sub_800BA9AC();
 extern void FormatCardTask_800BA9F0();
 extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
-extern char byte_800B6A2C[];
-extern char byte_800B6A54[];
-extern char byte_800B6A58[];
-extern char byte_800B6AA4[];
-extern char byte_800B6ADC[];
-extern char byte_800B6B0C[];
-extern char* dword_800BDA08[];
 extern int UpdateMenuCursor_8003D794(short* cursor, int b);
 
-typedef struct
-{
-    char c_LOAD[5];
-} Bytes5_LOAD;
 // memory card file header (the PSY-Q _CARD layout; the game's own data in the reserved part and behind the icons)
 typedef struct
 {
@@ -79,12 +62,6 @@ typedef struct
 } CardHeader_LOAD;
 typedef struct
 {
-    int poly_LOAD;
-    short clutX_LOAD;
-    short clutY_LOAD;
-} IconSrc_LOAD;
-typedef struct
-{
     char pad0_LOAD[0xC];
     unsigned char u0_LOAD;
     unsigned char v0_LOAD;
@@ -93,37 +70,7 @@ typedef struct
     char pad18_LOAD[0x10];
 } PolyFT4_LOAD;
 extern PolyFT4_LOAD* publicTiyPolyFT4s_8008D430;
-extern IconSrc_LOAD dword_800BE0A0[];
-extern Bytes5_LOAD dword_800B7300;
-extern char* dword_800BDFB0[];
-extern char dword_800BE0B8[];
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
-typedef struct
-{
-    unsigned short flags_LOAD;
-    short pad2_LOAD;
-    int f4_LOAD;
-    int f8_LOAD;
-    int fC_LOAD;
-    short x_LOAD;
-    short y_LOAD;
-    char pad14_LOAD[8];
-} MenuItem_LOAD;
-typedef struct
-{
-    MenuItem_LOAD item_LOAD[2];
-} MenuItems2_LOAD;
-typedef struct
-{
-    int f0_LOAD;
-    int f4_LOAD;
-    int f8_LOAD;
-    int fC_LOAD;
-    MenuItem_LOAD** items_LOAD;
-    int f14_LOAD;
-} MenuWin_LOAD;
-extern MenuItems2_LOAD dword_800B731C;
-extern MenuItems2_LOAD dword_800B7368;
 typedef struct DirEntry_LOAD
 {
     char name_LOAD[20];
@@ -134,8 +81,6 @@ typedef struct DirEntry_LOAD
     char system_LOAD[4];
 } DirEntry_LOAD;
 extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
-extern char byte_800B72FC[];
-extern char* saveFileNames_800BE028[2][15];
 extern void FreeActiveOverlay_8002C014(void);
 extern int sub_800A6D50(int a);
 extern void sub_800A6D30(int a);
@@ -148,46 +93,17 @@ extern void _card_start(void);
 extern void sub_800BD06C(void);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern char byte_800B682C[];
-extern char byte_800B6B9C[];
 extern void DrawNumberRightAlignedFont1_8003F264(void* p, int a, int b);
-extern char byte_800B69FC[];
-extern MenuWin_LOAD dword_800BDD64;
 extern void DrawMenuWindows_8002A5A4(void* p);
-typedef struct
-{
-    short x_LOAD;
-    short y_LOAD;
-} Pos_LOAD;
 extern unsigned char byte_800BDF68;
 extern void _clr_card_event(void);
 extern int _get_card_event_x(void);
-typedef struct
-{
-    char c_LOAD[8];
-} Bytes8_LOAD;
 typedef struct
 {
     short s_LOAD;
     char c0_LOAD;
     char c1_LOAD;
 } Tail4_LOAD;
-typedef struct
-{
-    short f0_LOAD;
-    short f2_LOAD;
-    short f4_LOAD;
-    short f6_LOAD;
-} Row8_LOAD;
-extern Row8_LOAD dword_800BD998[];
-extern Bytes8_LOAD dword_800B6B8C;
-extern Bytes8_LOAD dword_800B6A24;
-extern Bytes8_LOAD dword_800B6B3C;
-extern Bytes8_LOAD dword_800B69F4;
-extern int dword_800BDB64;
-extern int dword_800BDBBC;
-extern int* dword_800BDBD4[];
-extern Bytes8_LOAD dword_800B6BA0;
-extern Bytes8_LOAD dword_800B6B94;
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
@@ -304,20 +220,6 @@ typedef struct
     short a_LOAD;
     short b_LOAD;
 } Pair_LOAD;
-typedef struct
-{
-    unsigned char pad0_LOAD[6];
-    unsigned char f6_LOAD;
-    unsigned char f7_LOAD;
-    unsigned char f8_LOAD;
-    unsigned char f9_LOAD;
-    unsigned char fA_LOAD;
-    unsigned char fB_LOAD;
-    unsigned char fC_LOAD;
-    unsigned char fD_LOAD;
-    unsigned char padE_LOAD[2];
-} Row16_LOAD;
-extern Row16_LOAD stru_800BDF4C[];
 extern void ResetMenuRow_800BADE0(Row16_LOAD* p);
 extern void DrawScrollArrows_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 void sub_800B8BD4(LoadTask_LOAD* t);
@@ -333,7 +235,23 @@ typedef struct
 extern void sub_800BBF88(void);
 extern void sub_800BC17C(void);
 
-INCLUDE_OVERLAY_ASM(load, dword_800B66C0);
+int dword_800B66C0 SDATA = 24;
+const char aSelectGameToLoa_800B66C4[44] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\207\202\201\202\215\202\205\201@\202\224\202\217\201@\202\214\202\217\202\201\202\204\201D";
+const char aSelectSaveLocat_800B66F0[44] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\223\202\201\202\226\202\205\201@\202\214\202\217\202\203\202\201\202\224\202\211\202\217\202\216\201D";
+const char aYES_800B671C[] = "\202x\202d\202r"; // YES
+const char aNO_800B6724[] = "\202m\201@\202n"; // N O
+const char aExit_800B672C[] = "\202d\202\230\202\211\202\224"; // Exit
+const char aSelect_800B6738[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+const char aMEMORYCARDFull_800B6748[36] = "\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\206\202\225\202\214\202\214\201D";
+const char aDoNotRemoveMEMO_800B676C[56] = "\202c\202\217\201@\202\216\202\217\202\224\201@\202\222\202\205\202\215\202\217\202\226\202\205\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D";
+const char aFormattingMEMOR_800B67A4[52] = "\202e\202\217\202\222\202\215\202\201\202\224\202\224\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D";
+const char aLoading_800B67D8[24] = "\202k\202\217\202\201\202\204\202\211\202\216\202\207\201D\201D\201D";
+const char aSaving_800B67F0[20] = "\202r\202\201\202\226\202\211\202\216\202\207\201D\201D\201D";
+const char aNoSaveGameData_800B6804[40] = "\202m\202\217\201@\202\223\202\201\202\226\202\205\201@\202\207\202\201\202\215\202\205\201@\202\204\202\201\202\224\202\201\201D";
+const char aMEMORYCARDNotFo_800B682C[56] = "\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\216\202\217\202\224\201@\202\206\202\217\202\222\202\215\202\201\202\224\202\224\202\205\202\204\201D";
+const char aFormattingFaile_800B6864[40] = "\202e\202\217\202\222\202\215\202\201\202\224\202\224\202\211\202\216\202\207\201@\202\206\202\201\202\211\202\214\202\205\202\204\201D";
+const char aSaveFailed_800B688C[28] = "\202r\202\201\202\226\202\205\201@\202\206\202\201\202\211\202\214\202\205\202\204\201D";
+const char aLoadFailed_800B68A8[28] = "\202k\202\217\202\201\202\204\201@\202\206\202\201\202\211\202\214\202\205\202\204\201D";
 
 void sub_800B7650(void)
 {
@@ -479,25 +397,15 @@ void LoadMenuTask_800B794C(Task_LOAD* t, LoadTask_LOAD* s)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(load, dword_800B68E0);
+const char byte_800B68E0[] = "\202k\202\217\202\201\202\204\201@\202\207\202\201\202\215\202\205\201H"; // Load game?
+const char byte_800B68F8[] = "\202n\202\226\202\205\202\222\202\227\202\222\202\211\202\224\202\205\201@\202\207\202\201\202\215\202\205\201H"; // Overwrite game?
+const char byte_800B6918[] = "\202r\202\201\202\226\202\205\201@\202\207\202\201\202\215\202\205\201H"; // Save game?
+const Bytes8_LOAD dword_800B6930 = { { 10, 0, 193, 0, 204, 0, 20 } };
+const char byte_800B6938[] = "\202q\202\205\202\224\202\225\202\222\202\216\201@\202\224\202\217\201@\202\224\202\211\202\224\202\214\202\205\201@\202\223\202\203\202\222\202\205\202\205\202\216\201H"; // Return to title screen?
+const Bytes8_LOAD dword_800B6968 = { { 92, 0, 100, 0, 140, 0, 19 } };
+const int dword_800B6970 = 0;
 
 extern unsigned short padPressed_8009194C[];
-extern MenuWin_LOAD dword_800BDB0C;
-extern MenuWin_LOAD dword_800BDCD0;
-extern MenuWin_LOAD dword_800BDDF8;
-extern MenuWin_LOAD dword_800BDE8C;
-extern char* dword_800BDEBC[];
-extern char* dword_800BDEFC[];
-extern char* dword_800BDF1C[];
-extern char* dword_800BDF2C[];
-extern char* dword_800BDF3C[];
-extern char dword_800BDEA4[];
-extern char byte_800B68E0[];
-extern char byte_800B68F8[];
-extern char byte_800B6918[];
-extern char byte_800B6938[];
-extern Bytes8_LOAD dword_800B6930;
-extern Bytes8_LOAD dword_800B6968;
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern int PollCardExist_800BAF0C(int a);
 extern int PollCardAccept_800BAE68(int a);
@@ -807,7 +715,16 @@ void sub_800B80F8(LoadTask_LOAD* t)
         stru_800BDF4C[t->s30_LOAD].fD_LOAD = c[5];
     }
 }
-INCLUDE_OVERLAY_ASM(load, dword_800B69F4);
+const Bytes8_LOAD dword_800B69F4 = { { 93, 0, 18, 0, 124, 0, 18 } };
+const char byte_800B69FC[] = "\202e\202\217\202\222\202\215\202\201\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201H"; // Format MEMORY CARD?
+const Bytes8_LOAD dword_800B6A24 = { { 16, 0, 70, 0, 32, 1, 34 } };
+const char byte_800B6A2C[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D"; // Select MEMORY CARD.
+const char byte_800B6A54[4] = { 0 };
+const char byte_800B6A58[] = "\202m\202\217\201@\202\205\202\215\202\220\202\224\202\231\201@\202\202\202\214\202\217\202\203\202\213\202\223\201@\202\206\202\217\202\222\201@\202\223\202\201\202\226\202\211\202\216\202\207\201@\202\216\202\205\202\227\201@\202\207\202\201\202\215\202\205\202\223\201D"; // No empty blocks for saving new games.
+const char byte_800B6AA4[] = "\202e\202\201\202\211\202\214\202\205\202\204\201@\202\204\202\225\202\205\201@\202\224\202\217\201@\202\204\202\201\202\215\202\201\202\207\202\205\202\204\201@\202\204\202\201\202\224\202\201\201D"; // Failed due to damaged data.
+const char byte_800B6ADC[] = "\202m\202\217\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\223\202\214\202\217\202\224\201D"; // No MEMORY CARD in slot.
+const char byte_800B6B0C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
+const Bytes8_LOAD dword_800B6B3C = { { 10, 0, 193, 0, 44, 1, 20 } };
 
 void sub_800B82FC(LoadTask_LOAD* t)
 {
@@ -998,7 +915,107 @@ void sub_800B877C(LoadTask_LOAD* t)
         DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
     }
 }
-INCLUDE_OVERLAY_ASM(load, dword_800B6B8C);
+const Bytes8_LOAD dword_800B6B8C = { { 63, 0, 18, 0, 108, 0, 18 } };
+const Bytes8_LOAD dword_800B6B94 = { { 187, 0, 18, 0, 122, 0, 18 } };
+const char byte_800B6B9C[] = "\201^"; // /
+const Bytes8_LOAD dword_800B6BA0 = { { 10, 0, 33, 0, 44, 0, 14 } };
+const char byte_800B6BA8[] = "\201E"; // ・
+const char aJadeCocoonLevel_800B6BAC[] = "\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201^\202k\202\205\202\226\202\205\202\214\201@\202X\202X\201^\202k\202\201\202\224\202\205\202\223\202\224\201@\202f\202\201\202\215\202\205"; // Jade Cocoon/Level 99/Latest Game
+const char name_800B6BF0[] = "\202b\202n\202q\202q\202h\202c\202n\202q"; // CORRIDOR
+const char name_800B6C04[] = "\202d\202m\202c"; // END
+const int dword_800B6C0C = 0;
+const int dword_800B6C10 = 0;
+const int dword_800B6C14 = 0;
+const unsigned short name_800B6C18[12] = {
+    0x6B82, 0x8182, 0x9482, 0x8582, 0x9382, 0x9482, 0x4081, 0x6682,
+    0x8182, 0x8D82, 0x8582,
+};
+const unsigned short name_800B6C30[12] = {
+    0x6482, 0x8E82, 0x8482, 0x4081, 0x8F82, 0x8682, 0x4081, 0x6682,
+    0x8182, 0x8D82, 0x8582,
+};
+const char aCorridor_800B6C48[20] = "\202b\202\217\202\222\202\222\202\211\202\204\202\217\202\222\000\000\015";
+const char asc_800B6C5C[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202T";
+const char asc_800B6C78[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202S";
+const char asc_800B6C94[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202R";
+const char asc_800B6CB0[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202Q";
+const char asc_800B6CCC[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202P";
+const char asc_800B6CE8[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202P\202O";
+const char asc_800B6D04[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202X";
+const char asc_800B6D20[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202W";
+const char asc_800B6D3C[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202V";
+const char asc_800B6D58[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202U";
+const char asc_800B6D74[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202T";
+const char asc_800B6D90[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202S";
+const char asc_800B6DAC[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202R";
+const char asc_800B6DC8[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202Q";
+const char asc_800B6DE4[28] = "\213\312\226\232\225\250\214\352\201^\223o\230^\203f\201[\203^\202O\202P";
+const char aJadeCocoon15_800B6E00[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202T";
+const char aJadeCocoon14_800B6E1C[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202S";
+const char aJadeCocoon13_800B6E38[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202R";
+const char aJadeCocoon12_800B6E54[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202Q";
+const char aJadeCocoon11_800B6E70[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202P";
+const char aJadeCocoon10_800B6E8C[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202P\202O";
+const char aJadeCocoon09_800B6EA8[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202X";
+const char aJadeCocoon08_800B6EC4[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202W";
+const char aJadeCocoon07_800B6EE0[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202V";
+const char aJadeCocoon06_800B6EFC[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202U";
+const char aJadeCocoon05_800B6F18[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202T";
+const char aJadeCocoon04_800B6F34[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202S";
+const char aJadeCocoon03_800B6F50[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202R";
+const char aJadeCocoon02_800B6F6C[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202Q";
+const char aJadeCocoon01_800B6F88[28] = "\202i\202\201\202\204\202\205\202b\202\217\202\203\202\217\202\217\202\216\201^\202O\202P";
+const char aBASLUS00854COMB_800B6FA4[] = "BASLUS-00854COMB0414";
+const char aBASLUS00854COMB_800B6FBC[] = "BASLUS-00854COMB0413";
+const char aBASLUS00854COMB_800B6FD4[] = "BASLUS-00854COMB0412";
+const char aBASLUS00854COMB_800B6FEC[] = "BASLUS-00854COMB0411";
+const char aBASLUS00854COMB_800B7004[] = "BASLUS-00854COMB0410";
+const char aBASLUS00854COMB_800B701C[] = "BASLUS-00854COMB0409";
+const char aBASLUS00854COMB_800B7034[] = "BASLUS-00854COMB0408";
+const char aBASLUS00854COMB_800B704C[] = "BASLUS-00854COMB0407";
+const char aBASLUS00854COMB_800B7064[] = "BASLUS-00854COMB0406";
+const char aBASLUS00854COMB_800B707C[] = "BASLUS-00854COMB0405";
+const char aBASLUS00854COMB_800B7094[] = "BASLUS-00854COMB0404";
+const char aBASLUS00854COMB_800B70AC[] = "BASLUS-00854COMB0403";
+const char aBASLUS00854COMB_800B70C4[] = "BASLUS-00854COMB0402";
+const char aBASLUS00854COMB_800B70DC[] = "BASLUS-00854COMB0401";
+const char aBASLUS00854COMB_800B70F4[] = "BASLUS-00854COMB0400";
+const char aBASLUS00854GAME_800B710C[] = "BASLUS-00854GAME0414";
+const char aBASLUS00854GAME_800B7124[] = "BASLUS-00854GAME0413";
+const char aBASLUS00854GAME_800B713C[] = "BASLUS-00854GAME0412";
+const char aBASLUS00854GAME_800B7154[] = "BASLUS-00854GAME0411";
+const char aBASLUS00854GAME_800B716C[] = "BASLUS-00854GAME0410";
+const char aBASLUS00854GAME_800B7184[] = "BASLUS-00854GAME0409";
+const char aBASLUS00854GAME_800B719C[] = "BASLUS-00854GAME0408";
+const char aBASLUS00854GAME_800B71B4[] = "BASLUS-00854GAME0407";
+const char aBASLUS00854GAME_800B71CC[] = "BASLUS-00854GAME0406";
+const char aBASLUS00854GAME_800B71E4[] = "BASLUS-00854GAME0405";
+const char aBASLUS00854GAME_800B71FC[] = "BASLUS-00854GAME0404";
+const char aBASLUS00854GAME_800B7214[] = "BASLUS-00854GAME0403";
+const char aBASLUS00854GAME_800B722C[] = "BASLUS-00854GAME0402";
+const char aBASLUS00854GAME_800B7244[] = "BASLUS-00854GAME0401";
+const char aBASLUS00854GAME_800B725C[] = "BASLUS-00854GAME0400";
+const char asc_800B7274[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202\252\202\240\202\350\202\334\202\271\202\361"; // メモリーカードがありません
+const char asc_800B7290[] = "\203\201\203\202\203\212\201[\203J\201[\203h\215\267\215\236\214\373"; // メモリーカード差込口
+const char asc_800B72A8[] = "\203\201\203\202\203\212\201[\203J\201[\203h\215\267\215\236\214\373\202P"; // メモリーカード差込口１
+const char asc_800B72C0[] = "\203\201\203\202\203\212\201[\203J\201[\203h\215\267\215\236\214\373\202Q"; // メモリーカード差込口２
+const char asc_800B72D8[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202\360\203Z\203b\203g\202\265\202\304\202\255\202\276\202\263\202\242"; // メモリーカードをセットしてください
+const char byte_800B72FC[4] = { 42 };
+const Bytes5_LOAD dword_800B7300 = { "CRD0" };
+const char asc_800B7308[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202P"; // メモリーカード１
+const MenuItems2_LOAD dword_800B731C = {
+    {
+        { 8, 3, (int)asc_800B7308, 0, 0, 40, 100, { 100, 0, 34, 0, 2, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const char asc_800B7354[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202Q"; // メモリーカード２
+const MenuItems2_LOAD dword_800B7368 = {
+    {
+        { 8, 3, (int)asc_800B7354, 0, 0, 180, 100, { 100, 0, 34, 0, 2, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
 
 void sub_800B8984(LoadTask_LOAD* t)
 {
@@ -1058,11 +1075,6 @@ void sub_800B8AE4(LoadTask_LOAD* t)
     DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
-extern Pos_LOAD dword_800BD93C[]; // the save list's column positions
-extern Row8_LOAD dword_800BD960[]; // sprites drawn on every save row (ends with f4 <= 0)
-extern Row8_LOAD dword_800BD9E8[]; // the save's icon sprite per SaveSummary_LOAD.icon_24
-extern RECT dword_800BDA10; // the save list's clip area
-extern char byte_800B6BA8[];
 extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
@@ -1522,23 +1534,7 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
 INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
 // the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", name_800BDFAC)
-typedef union
-{
-    char str[0x42];
-    struct
-    {
-        unsigned short text_0[0x12];
-        unsigned char level_24[4]; // the two level digits
-        unsigned short slash_28;
-        unsigned short place_2A[0xC];
-    } f;
-} SaveTitle_LOAD;
-extern SaveTitle_LOAD* name_800BDFAC;
-extern unsigned short name_800B6C18[]; // "Latest Game"
-extern unsigned short name_800B6C30[]; // "End of Game"
 extern unsigned short name_800B6C48[]; // "Corridor"
-extern char name_800B6BF0[];
-extern char name_800B6C04[];
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 extern void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title);
 extern void IntToText_8003F610(unsigned short* buf, int val);
@@ -2329,6 +2325,173 @@ void sub_800BB4A8(short sel)
 // 0x800BB5DC..0x800BD93C: PSY-Q 4.4 LIBMCRD.LIB modules LIBMCRD, USERFUNC and BIOS, linked from the library
 // (config/ovl_lib_objs.txt), as are their .rdata, .data and .bss.
 
-INCLUDE_OVERLAY_ASM(load, dword_800BD93C);
+Pos_LOAD dword_800BD93C[9] = {
+    { 170, 54 },
+    { 144, 68 },
+    { 172, 68 },
+    { 222, 68 },
+    { 244, 68 },
+    { 225, 54 },
+    { 39, 55 },
+    { 39, 68 },
+    { 0x122, 52 },
+};
+Row8_LOAD dword_800BD960[7] = {
+    { 13, 52, 119, 1 },
+    { 104, 52, 227, 1 },
+    { 100, 66, 118, 1 },
+    { 180, 65, 203, 1 },
+    { 180, 52, 122, 1 },
+    { 13, 66, 150, 1 },
+    { -1, -1, -1, -1 },
+};
+Row8_LOAD dword_800BD998[2] = {
+    { 80, 21, 190, 1 },
+    { 69, 21, 197, 1 },
+};
+int dword_800BD9A8[16] = {
+    0x15006C, 0x10027, 0x5F0027, 0x10027, 0x6D003B, 0x100B2, 0x6D006A, 0x10000,
+    0x5F00BC, 0x10027, 0x6D00D0, 0x100B2, 0x6D00FF, 0x10002, -1, -1,
+};
+Row8_LOAD dword_800BD9E8[4] = {
+    { 0x110, 52, 78, 1 },
+    { 0x110, 52, 52, 1 },
+    { 0x110, 52, 58, 1 },
+    { -1, -1, -1, -1 },
+};
+char *dword_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
+RECT dword_800BDA10 = { 10, 49, 0x12C, 129 };
+MenuItem_LOAD dword_800BDA18[2] = {
+    { 64, 0, 0, 0, 0, 10, 49, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDA50[2] = {
+    { 64, 0, 0, 0, 0, 10, 82, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDA88[2] = {
+    { 64, 0, 0, 0, 0, 10, 115, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDAC0[2] = {
+    { 64, 0, 0, 0, 0, 10, 148, { 44, 1, 31 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD *dword_800BDAF8[5] = { dword_800BDA18, dword_800BDA50, dword_800BDA88, dword_800BDAC0 };
+MenuWin_LOAD dword_800BDB0C = { 2, 0, 8, 0, dword_800BDAF8, 5 };
+int dword_800BDB24[14] = {
+    64, 0, 0, 0, 0x5A0021, 0x240069, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *dword_800BDB5C[2] = { (void *)dword_800BDB24 };
+int dword_800BDB64 = 2;
+int dword_800BDB68[5] = { 0, 8, 0, (int)dword_800BDB5C, 5 };
+int dword_800BDB7C[14] = {
+    64, 0, 0, 0, 0x5A00B6, 0x240069, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *dword_800BDBB4[2] = { (void *)dword_800BDB7C };
+int dword_800BDBBC = 2;
+int dword_800BDBC0[5] = { 0, 8, 0, (int)dword_800BDBB4, 5 };
+int *dword_800BDBD4[2] = { &dword_800BDB64, &dword_800BDBBC };
+MenuItem_LOAD dword_800BDBDC[2] = {
+    { 8, 1, 190, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 69, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDC14[2] = {
+    { 8, 1, 197, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 90, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDC4C[2] = {
+    { 8, 1, 198, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 111, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDC84[2] = {
+    { 8, 1, 196, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 132, { 108, 0, 19, 0, 0, 0, 4 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD *dword_800BDCBC[5] = { dword_800BDBDC, dword_800BDC14, dword_800BDC4C, dword_800BDC84 };
+MenuWin_LOAD dword_800BDCD0 = { 2, 0, 8, 0, dword_800BDCBC, 5 };
+MenuItem_LOAD dword_800BDCE8[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 126, 106, { 56, 0, 18, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDD20[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 126, 126, { 56, 0, 18, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD *dword_800BDD58[3] = { dword_800BDCE8, dword_800BDD20 };
+MenuWin_LOAD dword_800BDD64 = { 2, 0, 8, 1, dword_800BDD58 };
+MenuItem_LOAD dword_800BDD7C[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 215, 193, { 46, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDDB4[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 0x105, 193, { 48, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD *dword_800BDDEC[3] = { dword_800BDD7C, dword_800BDDB4 };
+MenuWin_LOAD dword_800BDDF8 = { 2, 0, 8, 1, dword_800BDDEC };
+MenuItem_LOAD dword_800BDE10[2] = {
+    { 8, 3, (int)aYES_800B671C, 0, 0, 106, 121, { 52, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD dword_800BDE48[2] = {
+    { 8, 3, (int)aNO_800B6724, 0, 0, 163, 121, { 52, 0, 19, 0, 2, 0, 2 } },
+    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+};
+MenuItem_LOAD *dword_800BDE80[3] = { dword_800BDE10, dword_800BDE48 };
+MenuWin_LOAD dword_800BDE8C = { 2, 0, 8, 1, dword_800BDE80 };
+char dword_800BDEA4[24] = { 16, 0, 0, 0, 56, 103, 11, 128, 167, 0, 0, 0, 44, 103, 11, 128, 255, 255, 255, 255 };
+char *dword_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
+char *dword_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
+char *dword_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };
+char *dword_800BDEEC[4] = { aSaving_800B67F0, aDoNotRemoveMEMO_800B676C };
+char *dword_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, byte_800B682C };
+char *dword_800BDF1C[4] = { aFormattingFaile_800B6864 };
+char *dword_800BDF2C[4] = { aSaveFailed_800B688C };
+char *dword_800BDF3C[4] = { aLoadFailed_800B68A8 };
+Row16_LOAD stru_800BDF4C[2] = {
+    { { 68, 0, 116, 0, 0, 14 }, 1, 4, 4 },
+    { { 68, 0, 116, 0, 0, 14 }, 2, 1, 2 },
+};
+int dword_800BDF6C[4] = { 0x480012, 0x2010E00, 0x102 };
+int dword_800BDF7C[4] = { 0x40000A, 0x4012100, 0x4000000F };
+int dword_800BDF8C[4] = { 0x40000A, 0x1022100, 0x1000002 };
+int dword_800BDF9C[4] = { 0x40000A, 0x1022100, 0x102 };
+SaveTitle_LOAD *name_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
+char *dword_800BDFB0[30] = {
+    aJadeCocoon01_800B6F88, aJadeCocoon02_800B6F6C, aJadeCocoon03_800B6F50, aJadeCocoon04_800B6F34,
+    aJadeCocoon05_800B6F18, aJadeCocoon06_800B6EFC, aJadeCocoon07_800B6EE0, aJadeCocoon08_800B6EC4,
+    aJadeCocoon09_800B6EA8, aJadeCocoon10_800B6E8C, aJadeCocoon11_800B6E70, aJadeCocoon12_800B6E54,
+    aJadeCocoon13_800B6E38, aJadeCocoon14_800B6E1C, aJadeCocoon15_800B6E00, asc_800B6DE4,
+    asc_800B6DC8, asc_800B6DAC, asc_800B6D90, asc_800B6D74,
+    asc_800B6D58, asc_800B6D3C, asc_800B6D20, asc_800B6D04,
+    asc_800B6CE8, asc_800B6CCC, asc_800B6CB0, asc_800B6C94,
+    asc_800B6C78, asc_800B6C5C,
+};
+char *saveFileNames_800BE028[2][15] = {
+    {
+        aBASLUS00854GAME_800B725C, aBASLUS00854GAME_800B7244, aBASLUS00854GAME_800B722C, aBASLUS00854GAME_800B7214,
+        aBASLUS00854GAME_800B71FC, aBASLUS00854GAME_800B71E4, aBASLUS00854GAME_800B71CC, aBASLUS00854GAME_800B71B4,
+        aBASLUS00854GAME_800B719C, aBASLUS00854GAME_800B7184, aBASLUS00854GAME_800B716C, aBASLUS00854GAME_800B7154,
+        aBASLUS00854GAME_800B713C, aBASLUS00854GAME_800B7124, aBASLUS00854GAME_800B710C,
+    },
+    {
+        aBASLUS00854COMB_800B70F4, aBASLUS00854COMB_800B70DC, aBASLUS00854COMB_800B70C4, aBASLUS00854COMB_800B70AC,
+        aBASLUS00854COMB_800B7094, aBASLUS00854COMB_800B707C, aBASLUS00854COMB_800B7064, aBASLUS00854COMB_800B704C,
+        aBASLUS00854COMB_800B7034, aBASLUS00854COMB_800B701C, aBASLUS00854COMB_800B7004, aBASLUS00854COMB_800B6FEC,
+        aBASLUS00854COMB_800B6FD4, aBASLUS00854COMB_800B6FBC, aBASLUS00854COMB_800B6FA4,
+    },
+};
+IconSrc_LOAD dword_800BE0A0[3] = {
+    { 75, 0x380, 254 },
+    { 76, 0x3F0, 0x143 },
+    { 77, 0x380, 252 },
+};
+char dword_800BE0B8[148] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 28, 0, 0, 62, 126, 0, 0, 119, 227, 0, 0, 227, 193, 0, 0, 192, 1, 0, 0, 255, 255, 0, 192, 243, 239, 3, 224, 224, 3, 7, 48, 195, 1, 14, 152, 199, 113, 28, 220, 207, 252, 24, 204, 204, 252, 25, 206, 204, 254, 57, 206, 207, 182, 59, 142, 199, 54, 59, 142, 199, 182, 59, 206, 207, 252, 57, 206, 204, 248, 16, 206, 204, 48, 0, 196, 15, 56, 63, 128, 7, 156, 63, 0, 3, 206, 1, 192, 15, 230, 0, 224, 31, 126, 0, 112, 59, 60, 0, 48, 51, 24, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 116, 114, 11, 128, 144, 114, 11, 128, 168, 114, 11, 128, 192, 114, 11, 128, 216, 114, 11, 128 };
+int cardFreeBlocks_800BE14C = 0;
+int cardSaveCount_800BE150 = 0;
 
-INCLUDE_OVERLAY_ASM(load, dword_800BE184);
+int loadMenuActive_800BE184 BSS = 0;
+char *cardSaveNames_800BE188[15] BSS = { 0 };

@@ -3,8 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "sound.h"
-
-typedef struct { char b[8]; } Bytes8Config;
+#include "config.h"
 
 typedef struct CfgCtxConfig
 {
@@ -39,29 +38,16 @@ typedef struct CfgHolderConfig
     CfgTaskConfig t_10;
 } CfgHolderConfig;
 extern CfgHolderConfig* dword_8008B4B8;
-extern int dword_800C5944;
-extern Bytes8Config dword_800C4CD4[];
-extern char dword_800C592C[];
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 extern int IsConfirmPressedP1_8003D380(int a);
 extern int IsCancelPressedP1_8003D41C(int a);
 extern void PlaySfx_80031494(int a);
-extern int* dword_800C4CC0[];
-extern char dword_800C2D40[];
-extern char dword_800C2DA4[];
-extern char dword_800C2DF4[];
-extern char dword_800C2E5C[];
 extern void sub_800C4BDC(int n);
 typedef struct CfgSpinConfig
 {
     int f0;
     short f4, f6, f8, fA;
 } CfgSpinConfig;
-
-typedef struct CfgDlgConfig
-{
-    int f0, f4, f8, fC, f10, f14;
-} CfgDlgConfig;
 
 typedef struct CfgBoxConfig
 {
@@ -73,22 +59,13 @@ typedef struct CfgBoxConfig
     char c_B;
 } CfgBoxConfig;
 
-extern CfgDlgConfig dword_800C2CD0;
-extern CfgDlgConfig dword_800C2CE8;
-extern char dword_800C4DDC[];
-extern char dword_800C4E98[];
 extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
 extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
 extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern unsigned int GetTime30Hz_8002C64C(void);
-extern char dword_800C5298[];
-extern char dword_800C52BC[];
-extern char dword_800C52E0[];
 extern void ApplyBgmVolume_800309D8(void* p);
-extern char dword_800C58A8[];
-extern char dword_800C5920[];
 typedef struct CfgTailConfig
 {
     short col_0;
@@ -113,7 +90,23 @@ extern void sub_800C4390(CfgCtxConfig*);
 extern void sub_800C45E8();
 extern void sub_800C4B34(CfgTaskConfig*, CfgCtxConfig*);
 
-INCLUDE_OVERLAY_ASM(config, dword_800C29D0);
+int dword_800C29D0 SDATA = 36;
+const char aVibrationSettin_800C29D4[] = "\202u\202\211\202\202\202\222\202\201\202\224\202\211\202\217\202\216\201@\202\223\202\205\202\224\202\224\202\211\202\216\202\207\202\223\201D"; // Vibration settings.
+const char aSetScreenColor_800C29FC[] = "\202r\202\205\202\224\201@\202\223\202\203\202\222\202\205\202\205\202\216\201@\202\203\202\217\202\214\202\217\202\222\201D"; // Set screen color.
+const char aChangeSubtitleS_800C2A20[] = "\202b\202\210\202\201\202\216\202\207\202\205\201@\202\223\202\225\202\202\202\224\202\211\202\224\202\214\202\205\201@\202\223\202\205\202\224\202\224\202\211\202\216\202\207\202\223\201D"; // Change subtitle settings.
+const char aChangeAudioSett_800C2A54[] = "\202b\202\210\202\201\202\216\202\207\202\205\201@\202\201\202\225\202\204\202\211\202\217\201@\202\223\202\205\202\224\202\224\202\211\202\216\202\207\202\223\201D"; // Change audio settings.
+const char aSetOutputFormat_800C2A84[] = "\202r\202\205\202\224\201@\202\217\202\225\202\224\202\220\202\225\202\224\201@\202\206\202\217\202\222\202\215\202\201\202\224\201D"; // Set output format.
+const char aSetAudioEffects_800C2AAC[] = "\202r\202\205\202\224\201@\202\201\202\225\202\204\202\211\202\217\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\223\201@\202\226\202\217\202\214\202\225\202\215\202\205\201D"; // Set audio effects volume.
+const char aSetMusicVolume_800C2AE0[] = "\202r\202\205\202\224\201@\202\215\202\225\202\223\202\211\202\203\201@\202\226\202\217\202\214\202\225\202\215\202\205\201D"; // Set music volume.
+const char aSetCaptureSpeci_800C2B04[] = "\202r\202\205\202\224\201@\202\203\202\201\202\220\202\224\202\225\202\222\202\205\201@\202\223\202\220\202\205\202\203\202\211\202\201\202\214\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\223\201D"; // Set capture special effects.
+const char aSetMagicSpecial_800C2B40[] = "\202r\202\205\202\224\201@\202\215\202\201\202\207\202\211\202\203\201@\202\223\202\220\202\205\202\203\202\211\202\201\202\214\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\223\201D"; // Set magic special effects.
+const char aMessageWindowDi_800C2B78[] = "\202l\202\205\202\223\202\223\202\201\202\207\202\205\201@\202\227\202\211\202\216\202\204\202\217\202\227\201@\202\204\202\211\202\223\202\220\202\214\202\201\202\231\201D"; // Message window display.
+const char aAutoMessage_800C2BA8[] = "\202`\202\225\202\224\202\217\201@\202\215\202\205\202\223\202\223\202\201\202\207\202\205\201D"; // Auto message.
+const char aSelectVoiceAudi_800C2BC4[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\226\202\217\202\211\202\203\202\205\201@\202\201\202\225\202\204\202\211\202\217\201@\202\217\202\225\202\224\202\220\202\225\202\224\201D"; // Select voice audio output.
+const char aAllowAnimationS_800C2BFC[] = "\202`\202\214\202\214\202\217\202\227\201@\202\201\202\216\202\211\202\215\202\201\202\224\202\211\202\217\202\216\201@\202\223\202\213\202\211\202\220\201D"; // Allow animation skip.
+const char aSetDisplaySpeed_800C2C28[] = "\202r\202\205\202\224\201@\202\204\202\211\202\223\202\220\202\214\202\201\202\231\201@\202\223\202\220\202\205\202\205\202\204\201D"; // Set display speed.
+const char aExit_800C2C50[] = "\202d\202\230\202\211\202\224"; // Exit
+const char aSelect_800C2C5C[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
 
 // Matched
 void sub_800C2EB4(void)
@@ -481,7 +474,9 @@ void sub_800C383C(CfgCtxConfig* c)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2CD0);
+const CfgDlgConfig dword_800C2CD0 = { 2, 0, 8, 0, 0, 14 };
+const CfgDlgConfig dword_800C2CE8 = { 0, 0, 8, 0, 0, 14 };
+const int dword_800C2D00 = 0;
 
 // Matched
 void sub_800C38CC(CfgCtxConfig* c)
@@ -583,14 +578,6 @@ void sub_800C39C4(CfgCtxConfig* c)
     DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
-extern unsigned short* dword_800C5474[];
-extern char dword_800C5574[];
-extern char dword_800C55F8[];
-extern char dword_800C5674[];
-extern char dword_800C56F0[];
-extern char dword_800C576C[];
-extern char dword_800C57E8[];
-extern char dword_800C5864[];
 
 void sub_800C3CA4(CfgCtxConfig* c)
 {
@@ -1080,7 +1067,10 @@ void sub_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         c->f38 = 0;
     }
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2D40);
+const char aOptionNotAvaila_800C2D40[] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Speech is set to OFF.
+const char aSetSpeechToONTo_800C2DA4[] = "\202r\202\205\202\224\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Speech to ON to enable this option.
+const char aOptionNotAvaila_800C2DF4[] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Subtitles is set to OFF.
+const char aSetSubtitlesToO_800C2E5C[] = "\202r\202\205\202\224\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Subtitles to ON to enable this option.
 
 // Matched
 void sub_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
@@ -1109,13 +1099,13 @@ void sub_800C4BDC(int n)
     char* p[2];
     if ((short)n == 2)
     {
-        p[0] = dword_800C2D40;
-        p[1] = dword_800C2DA4;
+        p[0] = aOptionNotAvaila_800C2D40;
+        p[1] = aSetSpeechToONTo_800C2DA4;
     }
     else
     {
-        p[0] = dword_800C2DF4;
-        p[1] = dword_800C2E5C;
+        p[0] = aOptionNotAvaila_800C2DF4;
+        p[1] = aSetSubtitlesToO_800C2E5C;
     }
     rect[0] = 10;
     rect[1] = 0xC2;
@@ -1126,4 +1116,251 @@ void sub_800C4BDC(int n)
     DrawTextLinesWindow_8002AE38(p, pos, 0xE, rect, 2);
 }
 
-INCLUDE_OVERLAY_ASM(config, dword_800C4C80);
+int dword_800C4C80[4] = { (int)aChangeAudioSett_800C2A54, (int)aChangeSubtitleS_800C2A20, (int)aSetScreenColor_800C29FC, (int)aVibrationSettin_800C29D4 };
+int dword_800C4C90[3] = { (int)aSetMusicVolume_800C2AE0, (int)aSetAudioEffects_800C2AAC, (int)aSetOutputFormat_800C2A84 };
+int dword_800C4C9C[7] = { (int)aSetDisplaySpeed_800C2C28, (int)aAllowAnimationS_800C2BFC, (int)aSelectVoiceAudi_800C2BC4, (int)aAutoMessage_800C2BA8, (int)aMessageWindowDi_800C2B78, (int)aSetMagicSpecial_800C2B40, (int)aSetCaptureSpeci_800C2B04 };
+int dword_800C4CB8[1] = { (int)aSetScreenColor_800C29FC };
+int dword_800C4CBC[1] = { (int)aVibrationSettin_800C29D4 };
+int *dword_800C4CC0[5] = { dword_800C4C80, dword_800C4C90, dword_800C4C9C, dword_800C4CB8, dword_800C4CBC };
+Bytes8Config dword_800C4CD4[5] = {
+    { { 1, 0, 4, 0, 4 } },
+    { { 1, 0, 3, 0, 3 } },
+    { { 1, 0, 7, 0, 7 } },
+    { { 1, 0, 4, 0, 4 } },
+    { { 1, 0, 1, 0, 1 } },
+};
+int dword_800C4CFC[14] = {
+    0x10008, 221, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x510072, 0x12005C, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4D34[14] = {
+    0x10008, 232, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x650072, 0x12005C, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4D6C[14] = {
+    0x10008, 42, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x790072, 0x12005C, 0x20000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4DA4[14] = {
+    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8D0072, 0x12005C, 0x20000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C4DDC[20] = { 252, 76, 12, 128, 52, 77, 12, 128, 108, 77, 12, 128, 164, 77, 12, 128 };
+int dword_800C4DF0[14] = {
+    0x10008, 126, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4E28[14] = {
+    0x10008, 168, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4E60[14] = {
+    0x10008, 146, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C4E98[16] = { 240, 77, 12, 128, 40, 78, 12, 128, 96, 78, 12, 128 };
+int dword_800C4EA8[14] = {
+    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530076, 0x120022, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4EE0[14] = {
+    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530099, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4F18[14] = {
+    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300AC, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4F50[14] = {
+    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300BF, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4F88[14] = {
+    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300D2, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4FC0[14] = {
+    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300E5, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C4FF8[14] = {
+    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300F8, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5030[14] = {
+    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x53010B, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5068[14] = {
+    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670076, 0x120022, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C50A0[14] = {
+    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670099, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C50D8[14] = {
+    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700AC, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5110[14] = {
+    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700BF, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5148[14] = {
+    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700D2, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5180[14] = {
+    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700E5, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C51B8[14] = {
+    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700F8, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C51F0[14] = {
+    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x67010B, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5228[14] = {
+    0x10008, 188, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0076, 0x120041, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5260[14] = {
+    0x10008, 124, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B00B9, 0x120041, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C5298[36] = { 168, 78, 12, 128, 224, 78, 12, 128, 24, 79, 12, 128, 80, 79, 12, 128, 136, 79, 12, 128, 192, 79, 12, 128, 248, 79, 12, 128, 48, 80, 12, 128 };
+char dword_800C52BC[36] = { 104, 80, 12, 128, 160, 80, 12, 128, 216, 80, 12, 128, 16, 81, 12, 128, 72, 81, 12, 128, 128, 81, 12, 128, 184, 81, 12, 128, 240, 81, 12, 128 };
+char dword_800C52E0[12] = { 40, 82, 12, 128, 96, 82, 12, 128 };
+unsigned short dword_800C52EC[28] = {
+    8, 1, 200, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 41, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C5324[28] = {
+    8, 1, 4, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 72, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C535C[28] = {
+    8, 1, 201, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 92, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C5394[28] = {
+    8, 1, 50, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 152, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C53CC[28] = {
+    8, 1, 229, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 172, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C5404[28] = {
+    8, 1, 89, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 112, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short dword_800C543C[28] = {
+    8, 1, 191, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 132, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short *dword_800C5474[8] = { dword_800C52EC, dword_800C5324, dword_800C535C, dword_800C5404, dword_800C543C, dword_800C5394, dword_800C53CC };
+int dword_800C5494[14] = {
+    0x10008, 179, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29007D, 0x120025, 0x40000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C54CC[14] = {
+    0x10008, 131, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900A3, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5504[14] = {
+    0x10008, 152, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900C9, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C553C[14] = {
+    0x10008, 195, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900EF, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C5574[20] = { 148, 84, 12, 128, 204, 84, 12, 128, 4, 85, 12, 128, 60, 85, 12, 128 };
+int dword_800C5588[14] = {
+    0x10008, 44, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x48007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C55C0[14] = {
+    0x10008, 45, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x4800C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C55F8[12] = { 136, 85, 12, 128, 192, 85, 12, 128 };
+int dword_800C5604[14] = {
+    0x10008, 175, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C563C[14] = {
+    0x10008, 176, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C5674[12] = { 4, 86, 12, 128, 60, 86, 12, 128 };
+int dword_800C5680[14] = {
+    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x98007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C56B8[14] = {
+    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9800C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C56F0[12] = { 128, 86, 12, 128, 184, 86, 12, 128 };
+int dword_800C56FC[14] = {
+    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C5734[14] = {
+    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C576C[12] = { 252, 86, 12, 128, 52, 87, 12, 128 };
+int dword_800C5778[14] = {
+    0x10008, 90, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x70007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C57B0[14] = {
+    0x10008, 91, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7000C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C57E8[12] = { 120, 87, 12, 128, 176, 87, 12, 128 };
+int dword_800C57F4[14] = {
+    0x10008, 192, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x84007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C582C[14] = {
+    0x10008, 193, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8400C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C5864[12] = { 244, 87, 12, 128, 44, 88, 12, 128 };
+int dword_800C5870[14] = {
+    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C0028, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C58A8[8] = { 112, 88, 12, 128 };
+int dword_800C58B0[14] = {
+    0x10008, 172, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800C58E8[14] = {
+    0x10008, 173, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char dword_800C5920[12] = { 176, 88, 12, 128, 232, 88, 12, 128 };
+char dword_800C592C[24] = { 16, 0, 0, 0, 92, 44, 12, 128, 167, 0, 0, 0, 80, 44, 12, 128, 255, 255, 255, 255 };
+int dword_800C5944 = 0;

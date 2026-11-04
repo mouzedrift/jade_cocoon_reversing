@@ -74,7 +74,6 @@ typedef struct GameSlot_1
 
 extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short defaultBones_80079140[]; // default bone table
-extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
 extern GameEnemy* sub_800A5F6C(void);
 extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
 
@@ -88,9 +87,7 @@ extern void FreeActiveOverlay_8002C014(void);
 
 extern void FreeSeqSlotSound_80030664(void);
 
-extern GameRec_1 dword_800ADE78;
 
-extern int dword_800AEB6C[];
 
 // context of an event script (list eventScripts_8008D410); same layout as EvCtxEventfnc in eventfnc.h
 typedef struct GameEvCtx
@@ -174,11 +171,8 @@ extern int sub_800A7A60(int a);
 
 extern char dword_800B19CC[];
 
-extern int dword_800B1D98;
 
-extern int dword_800AEBF0;
 
-extern int dword_800B0EC0;
 
 // model header of a party member (first word: model id)
 typedef struct GameModelHdr
@@ -226,24 +220,17 @@ typedef struct GameList_1
     int c[4];
 } GameList_1;
 
-extern GameList_1 dword_800B0EC4;
 
-extern int dword_800AEBF4;
 
 extern GameMember* sub_800A77F4(int a);
 extern GameActorDesc* sub_800A7A1C(int a);
 
-extern int dword_800AEBD8;
 
 extern int dword_800B19E0;
 
-extern EventNode* dword_800B1DBC;
 
-extern int dword_800B0698;
 
-extern int dword_800AEBE0;
 
-extern GameEnemy dword_800B1CB8; // the group that is being fought (sub_800A5F6C)
 
 extern char* dword_8008B518;
 
@@ -260,7 +247,6 @@ typedef struct GameS3_1
 
 extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 
-extern int dword_800AEBE4;
 
 extern void sub_800ADCEC();
 
@@ -310,7 +296,6 @@ extern int sub_800A7790(void);
 extern GameMember* sub_800A77F4(int a);
 extern GameActorDesc* sub_800A7A1C(int a);
 
-extern short* dword_800AE254[];
 
 
 typedef struct GameCtx_1
@@ -340,7 +325,6 @@ typedef struct GameCtx_1
     int fa48;
 } GameCtx_1;
 
-extern GameCtx_1 gCtx_800B1260;
 
 typedef struct GameJ_1
 {
@@ -376,7 +360,6 @@ extern void sub_800A6534(int a, int b);
 extern void sub_800A654C(int a, int b);
 
 
-extern int dword_800AEB7C;
 
 typedef struct GameTab_1
 {
@@ -398,7 +381,6 @@ extern int sub_800BA9E4(void);
 
 extern void sub_800BA254();
 
-extern short* dword_800AE3D0[];
 
 extern void sub_800A7B00(int a);
 
@@ -408,9 +390,7 @@ extern void sub_800A188C(GameSlot_1* p);
 
 extern void sub_800A18C8(GameSlot_1* p);
 
-extern GameTab_1 dword_800B0EB8[];
 
-extern int dword_800AEBD8;
 
 extern int dword_800B199C[];
 
@@ -446,9 +426,7 @@ extern void sub_800B66C4(int a);
 
 extern void* sub_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
 
-extern int dword_800AEBE8;
 
-extern int dword_800B1228;
 
 extern void sub_800A15FC();
 
@@ -461,7 +439,6 @@ typedef struct GameV6_1
     int a, b, c, d, e, f;
 } GameV6_1;
 
-extern char aAssertionFaile_800A05A4[];
 
 extern char aFile_800A05CC[];
 
@@ -534,13 +511,11 @@ extern void sub_800B66DC();
 
 extern int sub_800BBB94(void);
 
-extern int dword_800B1DC8[];
 
 extern void sub_800A6968();
 
 extern int CreateEventList_800435B4(char* p);
 
-extern char dword_800B0DA4[];
 
 extern void TriggerActorEffect_8001E28C(Actor* a);
 
@@ -589,7 +564,6 @@ extern void sub_800A6060();
 
 extern void sub_800A6168();
 
-extern int dword_800AEBDC;
 
 extern void sub_800A0A04();
 
@@ -619,9 +593,7 @@ typedef struct GameLst_1
     int f4;
 } GameLst_1;
 
-extern GameLst_1 dword_800B09FC[];
 
-extern GameLst_1* dword_800B0D74[];
 
 extern void sub_800A6CCC();
 
@@ -649,7 +621,6 @@ extern unsigned char levantCaptureLevel_8008BD7C;
 
 extern void sub_800A2EE4(EventEntry* e, void* ai);
 
-extern void (*name_800ADEB8[][2])();
 
 extern int sub_800A4278();
 
@@ -665,29 +636,21 @@ extern void sub_800A44C0();
 
 extern int* sub_800B3198(void);
 
-extern int* name_800AE4E0[];
 
 extern int dword_8008B554;
 
 #define ELEM(x) ((short)((int (*)(int))GetMinionElement_80019BF0)(x))
 
-extern int name_800AEB80[];
 
-extern int* name_800AEBBC; // the relocated script blob (EVENTFNC LoadRelocBlob_800BC854)
 
-extern void* name_800AEBC0[];
 
-extern void* name_800AEBC8;
 
-extern int name_800AEBCC[];
 
 extern char name_80091C10[];
 
 extern void FreeRecordTables_80026DE8(void* a, int b, void* c);
 
-extern int name_800AEBD4;
 
-extern int name_800AEBEC;
 
 extern unsigned int name_80091C38;
 
@@ -721,9 +684,7 @@ extern GameXY_1 name_8007DCAC[];
 
 extern GameXY_1 name_8007DCBC[];
 
-extern char aAssertionFaile_800A0660[];
 
-extern char aEventcomC_800A0688[];
 
 typedef struct GameStage_1
 {
@@ -753,11 +714,8 @@ extern EventNode* dword_8008D498;
 
 extern EventNode* loadMenuTask_8008D480;
 
-extern EventNode* dword_800B1DAC;
 
-extern int dword_800B06B0[];
 
-extern int dword_800B06BC;
 
 extern void sub_800A70F8();
 
@@ -779,7 +737,6 @@ extern void DrawIntroMovie_8001AF64(void* p);
 
 extern void SsUtAllKeyOff(int a);
 
-extern char name_800B0EA4[];
 
 extern char name_80096090[];
 
@@ -920,9 +877,7 @@ extern short word_8008BDA4;
 
 extern short word_8008BDA6;
 
-extern char dword_800B1DF8;
 
-extern SVECTOR dword_800B0FB0[]; // Levant's bone scales
 
 extern void sub_800AC380(int);
 
@@ -987,9 +942,7 @@ extern InvSlot* sub_800AD4D8();
 
 extern int sub_800AD8E4();
 
-extern int dword_800B116C[];
 
-extern unsigned char dword_800B11B8[];
 
 
 extern int sub_800A7790();
@@ -1027,12 +980,9 @@ typedef struct G2Ent16
     char pad_8[8];
 } G2Ent16;
 
-extern G2Ent16** name_800B0608[];
 
 
-extern char dword_800A07E0[];
 
-extern char dword_800A0808[];
 
 extern int GetMagicEffect_8001AC8C(int);
 
@@ -1113,9 +1063,7 @@ extern void sub_800A9414(void*, int, int);
 
 extern void PoolDestroy_8003FF7C(void*);
 
-extern char dword_800B1DD0;
 
-extern int dword_800B11DC[];
 
 
 
@@ -1241,7 +1189,6 @@ extern short word_8007DC82;
 
 extern short word_8007DC8A;
 
-extern char dword_800B0EF8;
 
 extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 
@@ -1250,3 +1197,364 @@ extern void DrawAnimSkelBlend_80047E28(void* sk, void* base, char* pose, unsigne
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* ot, int flags);
 
 extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);
+
+extern void InitSporeTask_80011ADC();
+extern void ResetMapLoaderTask_8002830C();
+extern void sub_800A818C();
+extern void sub_800A2EEC();
+extern void sub_800A2FB8();
+extern void sub_800A31DC();
+extern void sub_800A333C();
+extern void sub_800A34D8();
+extern void sub_800A366C();
+extern void sub_800A3804();
+extern void sub_800A3954();
+extern void sub_800A3A8C();
+extern void sub_800A3BEC();
+extern void sub_800A3D24();
+extern void sub_800A3E88();
+extern void sub_800A3FC0();
+extern void sub_800A09D8();
+extern void sub_800A1444();
+
+extern int dword_8008D624;
+extern int battleMenuTask_8008D468[3];
+extern int dword_8008D444;
+extern int dword_8008B564[3];
+extern int dword_8008D4B0;
+extern EventNode* encounterTask_8008D674;
+extern int dword_8008D438;
+extern int dword_8008D670;
+extern int dword_8008D4A8;
+extern int dword_8008D3E0;
+extern EventNode* messageWindowTask_8008D640;
+extern EventNode* vibrationTasks_8008D4B8;
+extern int dword_8008B4AC[2];
+extern int dword_8008B4C0[2];
+extern int dword_8008D48C[4];
+extern int dword_8008D5F8[2];
+extern int dword_8008D614;
+extern int dword_8008D634[3];
+extern int hitNumberTasks_8008D778[2];
+extern int dword_8008D4C4;
+extern int dword_8008B4B8;
+extern int dword_8008D62C;
+extern ShortPair screenOffset_8008D474;
+extern char name_800BCB00[];
+extern const int dword_800A05A0;
+extern const char aAssertionFaile_800A05A4[];
+extern const char aEnmbatleC_800A05CC[12];
+extern const char aAssertionFaile_800A0660[];
+extern const char aEventcomC_800A0688[];
+extern const int dword_800A0694;
+extern const int dword_800A06F0[18];
+extern const char aAssertionFailed_800A07E0[];
+extern const char aPLDISPC_800A0808[];
+extern const int dword_800A0814;
+extern GameRec_1 dword_800ADE78;
+extern short dword_800ADE8C[2];
+extern short dword_800ADE90[2];
+extern short dword_800ADE94[4];
+extern short *dword_800ADE9C[7];
+extern void (*name_800ADEB8[53][2])();
+extern short dword_800AE060[8];
+extern short dword_800AE070[10];
+extern short dword_800AE084[4];
+extern short dword_800AE08C[4];
+extern short dword_800AE094[2];
+extern short dword_800AE098[2];
+extern short dword_800AE09C[2];
+extern short dword_800AE0A0[14];
+extern short dword_800AE0BC[8];
+extern short dword_800AE0CC[4];
+extern short dword_800AE0D4[2];
+extern short dword_800AE0D8[14];
+extern short dword_800AE0F4[6];
+extern short dword_800AE100[4];
+extern short dword_800AE108[2];
+extern short dword_800AE10C[2];
+extern short dword_800AE110[2];
+extern short dword_800AE114[2];
+extern short dword_800AE118[2];
+extern short dword_800AE11C[2];
+extern short dword_800AE120[6];
+extern short dword_800AE12C[4];
+extern short dword_800AE134[6];
+extern short dword_800AE140[8];
+extern short dword_800AE150[8];
+extern short dword_800AE160[2];
+extern short dword_800AE164[4];
+extern short dword_800AE16C[2];
+extern short dword_800AE170[2];
+extern short dword_800AE174[2];
+extern short dword_800AE178[18];
+extern short dword_800AE19C[6];
+extern short dword_800AE1A8[4];
+extern short dword_800AE1B0[2];
+extern short dword_800AE1B4[16];
+extern short dword_800AE1D4[16];
+extern short dword_800AE1F4[16];
+extern short dword_800AE214[16];
+extern short dword_800AE234[16];
+extern short *dword_800AE254[39];
+extern short dword_800AE2F0[6];
+extern short dword_800AE2FC[4];
+extern short dword_800AE304[2];
+extern short dword_800AE308[8];
+extern short dword_800AE318[6];
+extern short dword_800AE324[6];
+extern short dword_800AE330[6];
+extern short dword_800AE33C[6];
+extern short dword_800AE348[16];
+extern short dword_800AE368[10];
+extern short dword_800AE37C[4];
+extern short dword_800AE384[6];
+extern short dword_800AE390[8];
+extern short dword_800AE3A0[6];
+extern short dword_800AE3AC[6];
+extern short dword_800AE3B8[6];
+extern short dword_800AE3C4[6];
+extern short *dword_800AE3D0[17];
+extern int dword_800AE414[3];
+extern int dword_800AE420[3];
+extern int dword_800AE42C[3];
+extern int dword_800AE438[3];
+extern int dword_800AE444[3];
+extern int dword_800AE450[3];
+extern int dword_800AE45C[3];
+extern int dword_800AE468[3];
+extern int dword_800AE474[3];
+extern int dword_800AE480[3];
+extern int dword_800AE48C[3];
+extern int dword_800AE498[3];
+extern int dword_800AE4A4[3];
+extern int dword_800AE4B0[3];
+extern int dword_800AE4BC[3];
+extern int dword_800AE4C8[3];
+extern int dword_800AE4D4[3];
+extern int *name_800AE4E0[17];
+extern int dword_800AE524[219];
+extern int dword_800AE890;
+extern int dword_800AE894;
+extern int dword_800AE898;
+extern int dword_800AE89C;
+extern int dword_800AE8A0;
+extern int dword_800AE8A4;
+extern int dword_800AE8A8;
+extern int dword_800AE8AC;
+extern int dword_800AE8B0;
+extern int dword_800AE8B4;
+extern int dword_800AE8B8;
+extern int dword_800AE8BC;
+extern int dword_800AE8C0;
+extern int dword_800AE8C4;
+extern int dword_800AE8C8;
+extern int dword_800AE8CC;
+extern int dword_800AE8D0;
+extern int dword_800AE8D4;
+extern int dword_800AE8D8;
+extern int dword_800AE8DC;
+extern int dword_800AE8E0;
+extern int dword_800AE8E4;
+extern int dword_800AE8E8;
+extern int dword_800AE8EC;
+extern int dword_800AE8F0;
+extern int dword_800AE8F4;
+extern int dword_800AE8F8;
+extern int dword_800AE8FC;
+extern int dword_800AE900;
+extern int dword_800AE904;
+extern int dword_800AE908;
+extern int dword_800AE90C;
+extern int dword_800AE910;
+extern int dword_800AE914[8];
+extern int dword_800AE934;
+extern int dword_800AE938[2];
+extern int dword_800AE940;
+extern int dword_800AE944;
+extern int dword_800AE948;
+extern int dword_800AE94C;
+extern int dword_800AE950;
+extern int dword_800AE954;
+extern int dword_800AE958;
+extern int dword_800AE95C;
+extern int dword_800AE960;
+extern int dword_800AE964;
+extern int dword_800AE968;
+extern int dword_800AE96C;
+extern int dword_800AE970;
+extern int dword_800AE974;
+extern int dword_800AE978;
+extern int dword_800AE97C;
+extern int dword_800AE980;
+extern int dword_800AE984;
+extern int dword_800AE988;
+extern int dword_800AE98C;
+extern int dword_800AE990;
+extern int dword_800AE994;
+extern int dword_800AE998;
+extern int dword_800AE99C;
+extern int dword_800AE9A0;
+extern int dword_800AE9A4;
+extern int dword_800AE9A8;
+extern int dword_800AE9AC;
+extern int dword_800AE9B0;
+extern int dword_800AE9B4;
+extern int dword_800AE9B8;
+extern int dword_800AE9BC;
+extern int dword_800AE9C0;
+extern int dword_800AE9C4;
+extern int dword_800AE9C8;
+extern int dword_800AE9CC;
+extern int dword_800AE9D0[3];
+extern void *dword_800AE9DC[73];
+extern int dword_800AEB00[27];
+extern int dword_800AEB6C[3];
+extern int dword_800AEB78;
+extern int dword_800AEB7C;
+extern int name_800AEB80[15];
+extern int *name_800AEBBC;
+extern void *name_800AEBC0[2];
+extern void *name_800AEBC8;
+extern int name_800AEBCC[2];
+extern int name_800AEBD4;
+extern int dword_800AEBD8;
+extern int dword_800AEBDC;
+extern int dword_800AEBE0;
+extern int dword_800AEBE4;
+extern int dword_800AEBE8;
+extern int name_800AEBEC;
+extern int dword_800AEBF0;
+extern int dword_800AEBF4;
+extern int dword_800AEBF8[19];
+extern int dword_800AEC44[20];
+extern int dword_800AEC94[20];
+extern int dword_800AECE4[16];
+extern int dword_800AED24[304];
+extern int dword_800AF1E4[32];
+extern int dword_800AF264[36];
+extern int dword_800AF2F4[32];
+extern int dword_800AF374[20];
+extern int dword_800AF3C4[20];
+extern int dword_800AF414[36];
+extern int dword_800AF4A4[24];
+extern int dword_800AF504[56];
+extern int dword_800AF5E4[20];
+extern int dword_800AF634[20];
+extern int dword_800AF684[20];
+extern int dword_800AF6D4[20];
+extern int dword_800AF724[8];
+extern int dword_800AF744[16];
+extern int dword_800AF784[24];
+extern int dword_800AF7E4[12];
+extern int dword_800AF814[12];
+extern int dword_800AF844[20];
+extern int dword_800AF894[20];
+extern int dword_800AF8E4[28];
+extern int dword_800AF954[8];
+extern int dword_800AF974[8];
+extern int dword_800AF994[16];
+extern int dword_800AF9D4[16];
+extern int dword_800AFA14[16];
+extern int dword_800AFA54[28];
+extern int dword_800AFAC4[56];
+extern int dword_800AFBA4[80];
+extern int dword_800AFCE4[200];
+extern int dword_800B0004[100];
+extern int dword_800B0194[48];
+extern int dword_800B0254[68];
+extern int dword_800B0364[112];
+extern void *dword_800B0524[6];
+extern void *dword_800B053C[13];
+extern void *dword_800B0570[13];
+extern void *dword_800B05A4[13];
+extern void *dword_800B05D8[6];
+extern void *dword_800B05F0[6];
+extern G2Ent16 **name_800B0608[36];
+extern int dword_800B0698;
+extern int dword_800B069C[5];
+extern int dword_800B06B0[3];
+extern int dword_800B06BC;
+extern int dword_800B06C0[3];
+extern int dword_800B06CC[6];
+extern int dword_800B06E4[6];
+extern int dword_800B06FC[6];
+extern int dword_800B0714[6];
+extern int dword_800B072C[6];
+extern int dword_800B0744[6];
+extern int dword_800B075C[6];
+extern int dword_800B0774[6];
+extern int dword_800B078C[6];
+extern int dword_800B07A4[6];
+extern int dword_800B07BC[6];
+extern int dword_800B07D4[6];
+extern int dword_800B07EC[6];
+extern int dword_800B0804[6];
+extern int dword_800B081C[6];
+extern int dword_800B0834[6];
+extern int dword_800B084C[6];
+extern int dword_800B0864[6];
+extern int dword_800B087C[6];
+extern int dword_800B0894[6];
+extern int dword_800B08AC[6];
+extern int dword_800B08C4[6];
+extern int dword_800B08DC[6];
+extern int dword_800B08F4[6];
+extern int dword_800B090C[6];
+extern int dword_800B0924[6];
+extern int dword_800B093C[6];
+extern int dword_800B0954[6];
+extern int dword_800B096C[6];
+extern int dword_800B0984[6];
+extern int dword_800B099C[6];
+extern int dword_800B09B4[6];
+extern int dword_800B09CC[6];
+extern int dword_800B09E4[6];
+extern GameLst_1 dword_800B09FC[2];
+extern GameLst_1 dword_800B0A0C[4];
+extern GameLst_1 dword_800B0A2C[26];
+extern GameLst_1 dword_800B0AFC[35];
+extern GameLst_1 dword_800B0C14[4];
+extern GameLst_1 dword_800B0C34[3];
+extern GameLst_1 dword_800B0C4C[7];
+extern GameLst_1 dword_800B0C84[12];
+extern GameLst_1 dword_800B0CE4[4];
+extern GameLst_1 dword_800B0D04[2];
+extern GameLst_1 dword_800B0D14[6];
+extern GameLst_1 dword_800B0D44[3];
+extern GameLst_1 dword_800B0D5C[3];
+extern GameLst_1 *dword_800B0D74[12];
+extern char dword_800B0DA4[232];
+extern int dword_800B0E8C[6];
+extern char name_800B0EA4[20];
+extern GameTab_1 dword_800B0EB8[1];
+extern int dword_800B0EC0;
+extern GameList_1 dword_800B0EC4;
+extern char dword_800B0EF8;
+extern int dword_800B0EFC[45];
+extern SVECTOR dword_800B0FB0[55];
+extern int dword_800B1168;
+extern int dword_800B116C[19];
+extern unsigned char dword_800B11B8[20];
+extern int dword_800B11CC[4];
+extern int dword_800B11DC[19];
+extern int dword_800B1228;
+extern int dword_800B122C[13];
+extern GameCtx_1 gCtx_800B1260;
+extern int dword_800B1CAC[3];
+extern GameEnemy dword_800B1CB8;
+extern int dword_800B1D98;
+extern int dword_800B1D9C;
+extern EventNode *dword_800B1DA0[1];
+extern EventNode *dword_800B1DA4[1];
+extern EventNode *dword_800B1DA8[1];
+extern EventNode *dword_800B1DAC;
+extern EventNode *dword_800B1DB0[1];
+extern EventNode *dword_800B1DB4[1];
+extern EventNode *dword_800B1DBC;
+extern EventNode *dword_800B1DC0[1];
+extern int dword_800B1DC8[2];
+extern char dword_800B1DD0;
+extern int dword_800B1DD4[9];
+extern char dword_800B1DF8;
+extern int dword_800B1DFC[304];

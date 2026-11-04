@@ -1,7 +1,7 @@
 // BATTLE.BIN, source file 1 of 3
 #include "battle.h"
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B66C0);
+int dword_800B66C0 SDATA = 31;
 
 typedef struct BatStart_a
 {

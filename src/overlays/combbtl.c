@@ -3,6 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "camera.h"
+#include "combbtl.h"
 
 typedef struct CombBtlTask
 {
@@ -11,44 +12,18 @@ typedef struct CombBtlTask
     void (*next_8)();
 } CombBtlTask;
 
-typedef struct CombBtlNode
-{
-    unsigned int flags;
-} CombBtlNode;
-
-extern CombBtlNode* dword_800A82DC;
 
 // a battle command (same layout as BATTLE.BIN's BatCmd_a)
-typedef struct CombBtlCmd
-{
-    int kind_0; // 0x14: none
-    int arg_4;
-    int mask_8; // acting unit bits
-    int targets_C; // target unit bits
-} CombBtlCmd;
-
-extern short word_800A82E0[4];
 extern EventNode* dword_8008B564;
-extern int dword_800A85A0;
-extern CombBtlCmd dword_800A8600;
-extern CombBtlCmd dword_800A85A8;
 extern int dword_800A4078[2];
 extern unsigned char byte_800A3A98[2];
-extern short word_800A84D0[2];
 extern void sub_800A0D1C(int);
 extern void sub_800A0B70(int);
 extern void StartScreenFlash_8001C02C(void*);
 extern void sub_800376A0(void* a, void* b);
 typedef Minion CombBtlUnit;
 
-typedef struct CombBtlHist
-{
-    int unit_0;
-    CombBtlCmd cmd_4;
-} CombBtlHist;
-
 extern CombBtlUnit dword_800A3AA0[2][3];
-extern CombBtlHist dword_800A84D8[];
 extern EventNode* hitNumberTasks_8008D778;
 extern void InitSceneFade_8001A38C();
 extern void SceneFadeTask_8001A41C();
@@ -64,58 +39,12 @@ typedef struct CombBtlObj
     RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
 } CombBtlObj;
 
-typedef struct CombBtlPair
-{
-    short lo;
-    short hi;
-} CombBtlPair;
-
-extern short word_800A82D4[][2];
 extern void sub_800A7694();
-typedef struct CombBtlA24
-{
-    int pos_0[2][3]; // per side
-} CombBtlA24;
-
-typedef struct CombBtlB16
-{
-    unsigned char f0[2][8]; // per side
-} CombBtlB16;
-
-extern CombBtlA24 dword_800A4AD4;
-extern CombBtlB16 dword_800A4AEC;
 extern void sub_800A0BA8(int, void*, void*);
 // a command's result (same layout as BATTLE.BIN's BatResult_a)
-typedef struct CombBtlResult
-{
-    unsigned short kind_0;
-    short arg_2;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    int f20;
-    short f24;
-    short f26;
-} CombBtlResult;
-
-extern CombBtlResult dword_800A85C8;
-extern int dword_800A85B8;
-extern int dword_800A8620;
 extern int xarr_800A85B8[];
 extern int xarr_800A8620[];
-extern CombBtlCmd dword_800A8610;
-extern int dword_800A84C0;
-extern int dword_800A84A0;
-extern int dword_800A8498;
-extern int dword_800A849C;
 extern unsigned char byte_800A38DC;
-extern int dword_800A84B8;
-extern int dword_800A85F8;
-extern short word_800A8488;
 extern void sub_800A4C40();
 extern void sub_800A4D48();
 extern void sub_800A68E0();
@@ -130,19 +59,8 @@ extern void sub_800A50E4();
 extern void sub_800A5544();
 extern void sub_800A5BB4();
 extern void sub_800A5080();
-extern EventEntry* dword_800A848C;
-extern int dword_800A84D4;
-extern int dword_800A84B0[2];
 extern short word_80091CE0[];
 extern char dword_80091D40[];
-extern short word_800A84A4;
-extern short word_800A84A6;
-extern short word_800A84BC;
-extern short word_800A84C4;
-extern short word_800A8470[2];
-extern short word_800A8474[2];
-extern int dword_800A8480[2];
-extern int dword_800A85F0[2];
 extern EventEntry* sub_800CB7AC(void*, int);
 extern int sub_800A0B3C(int);
 extern void StopSeqSlot_80031334(int);
@@ -152,7 +70,60 @@ extern void SsSepSetDecrescendo(int, int, int, int);
 extern void StartSceneFadeOut_8001AA50(int);
 extern void PlaySeqSlot_80031160(int, int);
 
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4088);
+int dword_800A4088 SDATA = 22;
+const char aAreVictorious_800A408C[] = "\202\201\202\222\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\211\202\217\202\225\202\223\201I"; // are victorious!
+const char aTheMinionsOfThe_800A40AC[] = "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202c\202\201\202\227\202\216"; // The Minions of the Dawn
+const char aCongratulations_800A40DC[] = "\202b\202\217\202\216\202\207\202\222\202\201\202\224\202\225\202\214\202\201\202\224\202\211\202\217\202\216\202\223\201I"; // Congratulations!
+const char aTheMinionsOfThe_800A4100[] = "\202s\202\210\202\205\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\217\202\206\201@\202\224\202\210\202\205\201@\202r\202\225\202\216\202\223\202\205\202\224"; // The Minions of the Sunset
+const char aEachOtherSMoves_800A4134[] = "\202\205\202\201\202\203\202\210\201@\202\217\202\224\202\210\202\205\202\222\201f\202\223\201@\202\215\202\217\202\226\202\205\202\223\201D"; // each other's moves.
+const char aItSeemsYouAreGa_800A415C[] = "\202h\202\224\201@\202\223\202\205\202\205\202\215\202\223\201@\202\231\202\217\202\225\201@\202\201\202\222\202\205\201@\202\207\202\201\202\225\202\207\202\211\202\216\202\207"; // It seems you are gauging
+const char aThisThrillingBa_800A4190[] = "\202\224\202\210\202\211\202\223\201@\202\224\202\210\202\222\202\211\202\214\202\214\202\211\202\216\202\207\201@\202\202\202\201\202\224\202\224\202\214\202\205\201I"; // this thrilling battle!
+const char aICannotTakeMyEy_800A41C0[] = "\202h\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\224\202\201\202\213\202\205\201@\202\215\202\231\201@\202\205\202\231\202\205\202\223\201@\202\217\202\206\202\206"; // I cannot take my eyes off
+const char aNoDamageTaken_800A41F4[] = "\202m\202\217\201@\202\204\202\201\202\215\202\201\202\207\202\205\201@\202\224\202\201\202\213\202\205\202\216\201D"; // No damage taken.
+const char aOhMyItDodgedThe_800A4218[] = "\202n\202\210\201@\202\215\202\231\201C\201@\202\211\202\224\201@\202\204\202\217\202\204\202\207\202\205\202\204\201@\202\224\202\210\202\205\201@\202\202\202\214\202\217\202\227\201I"; // Oh my, it dodged the blow!
+const char aOhThatHadToHurt_800A4250[] = "\202n\202\210\201C\201@\202\224\202\210\202\201\202\224\201@\202\210\202\201\202\204\201@\202\224\202\217\201@\202\210\202\225\202\222\202\224\201I"; // Oh, that had to hurt!
+const char aADirectHit_800A427C[] = "\202`\201@\202\204\202\211\202\222\202\205\202\203\202\224\201@\202\210\202\211\202\224\201I"; // A direct hit!
+const char aTheMinionLooksD_800A4298[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\214\202\217\202\217\202\213\202\223\201@\202\204\202\211\202\232\202\232\202\231\201D"; // The minion looks dizzy.
+const char aPoison_800A42C8[] = "\202o\202\217\202\211\202\223\202\217\202\216\201I"; // Poison!
+const char aOnAChoppingBloc_800A42D8[] = "\202\217\202\216\201@\202\201\201@\202\203\202\210\202\217\202\220\202\220\202\211\202\216\202\207\201@\202\202\202\214\202\217\202\203\202\213\201I"; // on a chopping block!
+const char aItIsLikeAHelple_800A4304[] = "\202h\202\224\201@\202\211\202\223\201@\202\214\202\211\202\213\202\205\201@\202\201\201@\202\210\202\205\202\214\202\220\202\214\202\205\202\223\202\223\201@\202\206\202\211\202\223\202\210"; // It is like a helpless fish
+const char aThisCouldBeDang_800A433C[] = "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\204\202\201\202\216\202\207\202\205\202\222\202\217\202\225\202\223\201D"; // This could be dangerous.
+const char aOhNoItIsFalling_800A4370[] = "\202n\202\210\201@\202\216\202\217\201C\201@\202\211\202\224\201@\202\211\202\223\201@\202\206\202\201\202\214\202\214\202\211\202\216\202\207\201@\202\201\202\223\202\214\202\205\202\205\202\220\201I"; // Oh no, it is falling asleep!
+const char aNotHealed_800A43AC[] = "\202\216\202\217\202\224\201@\202\210\202\205\202\201\202\214\202\205\202\204\201I"; // not healed!
+const char aThisCouldBeFata_800A43C4[] = "\202s\202\210\202\211\202\223\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\211\202\206\201@\202\211\202\224\201@\202\211\202\223"; // This could be fatal if it is
+const char aStoneItIsSpread_800A4400[] = "\202\223\202\224\202\217\202\216\202\205\201I\201@\202h\202\224\201@\202\211\202\223\201@\202\223\202\220\202\222\202\205\202\201\202\204\202\211\202\216\202\207\201@\202\206\202\201\202\223\202\224\201D"; // stone! It is spreading fast.
+const char aTheMinionIsBein_800A443C[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\202\202\205\202\211\202\216\202\207\201@\202\224\202\225\202\222\202\216\202\205\202\204\201@\202\211\202\216\202\224\202\217"; // The minion is being turned into
+const char aTheMinionIsGrav_800A447C[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\211\202\223\201@\202\207\202\222\202\201\202\226\202\205\202\214\202\231\201@\202\227\202\217\202\225\202\216\202\204\202\205\202\204\201D"; // The minion is gravely wounded.
+const char aCouldKeelOverAt_800A44BC[] = "\202\203\202\217\202\225\202\214\202\204\201@\202\213\202\205\202\205\202\214\201@\202\217\202\226\202\205\202\222\201@\202\201\202\224\201@\202\201\202\216\202\231\202\224\202\211\202\215\202\205\201D"; // could keel over at anytime.
+const char aItIsBreathingHe_800A44F4[] = "\202h\202\224\201@\202\211\202\223\201@\202\202\202\222\202\205\202\201\202\224\202\210\202\211\202\216\202\207\201@\202\210\202\205\202\201\202\226\202\211\202\214\202\231\201@\202\201\202\216\202\204"; // It is breathing heavily and
+const char aItHasFallenAndC_800A452C[] = "\202h\202\224\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216\201@\202\201\202\216\202\204\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\207\202\205\202\224\201@\202\225\202\220\201I"; // It has fallen and cannot get up!
+const char aForThisMinion_800A4570[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\211\202\223\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for this minion.
+const char aItLooksLikeThat_800A4594[] = "\202h\202\224\201@\202\214\202\217\202\217\202\213\202\223\201@\202\214\202\211\202\213\202\205\201@\202\224\202\210\202\201\202\224\201@\202\211\202\223\201@\202\211\202\224"; // It looks like that is it
+const char aIsTheFightOver_800A45C8[] = "\202h\202\223\201@\202\224\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\217\202\226\202\205\202\222\201H"; // Is the fight over?
+const int dword_800A45F0 = 0;
+const char aVeryEffective_800A45F4[] = "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201D"; // Very effective.
+const char aRightAtTheEleme_800A4614[] = "\202q\202\211\202\207\202\210\202\224\201@\202\201\202\224\201@\202\224\202\210\202\205\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\227\202\205\202\201\202\213\201@\202\223\202\220\202\217\202\224\201D"; // Right at the elemental weak spot.
+const char aWhatAWellChosen_800A4658[] = "\202v\202\210\202\201\202\224\201@\202\201\201@\202\227\202\205\202\214\202\214\201|\202\203\202\210\202\217\202\223\202\205\202\216\201@\202\201\202\224\202\224\202\201\202\203\202\213\201I"; // What a well-chosen attack!
+const char aEnteredTheArena_800A4690[] = "\202\205\202\216\202\224\202\205\202\222\202\205\202\204\201@\202\224\202\210\202\205\201@\202\201\202\222\202\205\202\216\202\201\201I"; // entered the arena!
+const char aANewMinionHas_800A46B8[] = "\202`\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223"; // A new minion has
+const char aThePlayerHasSwi_800A46DC[] = "\202s\202\210\202\205\201@\202\220\202\214\202\201\202\231\202\205\202\222\201@\202\210\202\201\202\223\201@\202\223\202\227\202\211\202\224\202\203\202\210\202\205\202\204\201@\202\215\202\211\202\216\202\211\202\217\202\216\202\223\201I"; // The player has switched minions!
+const char aWhatWillHappenN_800A4720[] = "\202v\202\210\202\201\202\224\201@\202\227\202\211\202\214\202\214\201@\202\210\202\201\202\220\202\220\202\205\202\216\201@\202\216\202\217\202\227\201I\201H"; // What will happen now!?
+const char aWhatAnExcitingM_800A4750[] = "\202v\202\210\202\201\202\224\201@\202\201\202\216\201@\202\205\202\230\202\203\202\211\202\224\202\211\202\216\202\207\201@\202\215\202\217\202\226\202\205\201D"; // What an exciting move.
+const char aAChangeOfElemen_800A4780[] = "\202`\201@\202\203\202\210\202\201\202\216\202\207\202\205\201@\202\217\202\206\201@\202\205\202\214\202\205\202\215\202\205\202\216\202\224\202\201\202\214\201@\202\220\202\222\202\217\202\220\202\205\202\222\202\224\202\211\202\205\202\223\201I"; // A change of elemental properties!
+const char aWithOneFatalBlo_800A47C4[] = "\202\227\202\211\202\224\202\210\201@\202\217\202\216\202\205\201@\202\206\202\201\202\224\202\201\202\214\201@\202\202\202\214\202\217\202\227\201I"; // with one fatal blow!
+const char aTheMinionHasFal_800A47F0[] = "\202s\202\210\202\205\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\206\202\201\202\214\202\214\202\205\202\216"; // The minion has fallen
+const char aSuchOverwhelmin_800A481C[] = "\202r\202\225\202\203\202\210\201@\202\217\202\226\202\205\202\222\202\227\202\210\202\205\202\214\202\215\202\211\202\216\202\207\201@\202\220\202\217\202\227\202\205\202\222\201I"; // Such overwhelming power!
+const char aItCouldBeVictor_800A4850[] = "\202\211\202\224\201@\202\203\202\217\202\225\202\214\202\204\201@\202\202\202\205\201@\202\226\202\211\202\203\202\224\202\217\202\222\202\231\201I"; // it could be victory!
+const char aAgainstAllOdds_800A487C[] = "\202`\202\207\202\201\202\211\202\216\202\223\202\224\201@\202\201\202\214\202\214\201@\202\217\202\204\202\204\202\223\201C"; // Against all odds,
+const char aWhatAmazingWill_800A48A0[] = "\202v\202\210\202\201\202\224\201@\202\201\202\215\202\201\202\232\202\211\202\216\202\207\201@\202\227\202\211\202\214\202\214\202\220\202\217\202\227\202\205\202\222\201I"; // What amazing willpower!
+const char aIWasEvenRooting_800A48D0[] = "\202h\201@\202\227\202\201\202\223\201@\202\205\202\226\202\205\202\216\201@\202\222\202\217\202\217\202\224\202\211\202\216\202\207\201@\202\206\202\217\202\222\201@\202\231\202\217\202\225\201I"; // I was even rooting for you!
+const char aTooBad_800A4908[] = "\202s\202\217\202\217\201@\202\202\202\201\202\204\201I"; // Too bad!
+const char aDecidedBeforeTh_800A491C[] = "\202\204\202\205\202\203\202\211\202\204\202\205\202\204\201@\202\202\202\205\202\206\202\217\202\222\202\205\201@\202\224\202\210\202\205\201@\202\224\202\210\202\211\202\222\202\204\201@\202\222\202\217\202\225\202\216\202\204\201D"; // decided before the third round.
+const char aAnotherLossTheF_800A495C[] = "\202`\202\216\202\217\202\224\202\210\202\205\202\222\201@\202\214\202\217\202\223\202\223\201I\201@\202s\202\210\202\205\201@\202\206\202\211\202\207\202\210\202\224\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216"; // Another loss! The fight has been
+const char aWellDone_800A49A0[] = "\202v\202\205\202\214\202\214\201@\202\204\202\217\202\216\202\205\201I"; // Well done!
+const char aReached_800A49B8[] = "\202\222\202\205\202\201\202\203\202\210\202\205\202\204\201D"; // reached.
+const char aFinallyADecisio_800A49CC[] = "\202e\202\211\202\216\202\201\202\214\202\214\202\231\201@\202\201\201@\202\204\202\205\202\203\202\211\202\223\202\211\202\217\202\216\201@\202\210\202\201\202\223\201@\202\202\202\205\202\205\202\216"; // Finally a decision has been
+const char aWhatACloseFight_800A4A04[] = "\202v\202\210\202\201\202\224\201@\202\201\201@\202\203\202\214\202\217\202\223\202\205\201@\202\206\202\211\202\207\202\210\202\224\201I"; // What a close fight!
 
 void sub_800A4B8C(CombBtlTask* t, int a)
 {
@@ -270,7 +241,10 @@ void sub_800A4D48(CombBtlTask* t, int a)
     }
 }
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A54);
-
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A70);
+INCLUDE_OVERLAY_ASM(combbtl, aRa_800A4A8C);
+INCLUDE_OVERLAY_ASM(combbtl, aMu_800A4A94);
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A9C);
 extern void sub_800A5638();
 
 void sub_800A4EC8(CombBtlTask* t, int a)
@@ -376,8 +350,6 @@ extern void sub_800A8078(short, short, short);
 extern int sub_800A8098();
 extern void sub_800A5290();
 extern void sub_800A54CC();
-extern char dword_800A82EC[];
-extern char dword_800A8300[];
 
 void sub_800A51EC(CombBtlTask* t)
 {
@@ -398,19 +370,6 @@ void sub_800A51EC(CombBtlTask* t)
 }
 
 // a menu item (DrawMenuItemWithWindow_8002ADB4)
-typedef struct CombBtlA28
-{
-    int f0;
-    int x_4;
-    int f8;
-    int fC;
-    short x_10; // the window rect
-    short y_12;
-    short w_14;
-    short h_16;
-    int f18;
-} CombBtlA28;
-
 typedef struct CombBtlBox
 {
     short col_0;
@@ -537,7 +496,6 @@ extern void sub_800A75F8(int i);
 extern void sub_800A0E1C(int i, int v);
 extern void sub_800A1068(int i);
 extern void sub_800A599C();
-extern unsigned char byte_800A85BD;
 extern void sub_800A60F0();
 void sub_800A5638(CombBtlTask* t, int a)
 {
@@ -734,9 +692,6 @@ void sub_800A5BB4()
 #endif
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A5BB4);
 
-extern unsigned char byte_800A84A8;
-extern unsigned char byte_800A85FC[];
-extern int dword_800A8490;
 extern void sub_800A5BB4();
 extern void sub_800A60F0();
 extern void sub_800A5EB8();
@@ -897,24 +852,22 @@ extern unsigned int dword_800A3A88;
 extern unsigned char byte_800A84A8;
 extern unsigned char byte_800A85FC[];
 extern int dword_800A8490;
-extern char** dword_800A85C0; // the announcer line list sub_800A68E0 shows once the hits land
+// dword_800A85C0: the announcer line list sub_800A68E0 shows once the hits land
 // the announcer's message lists (NULL terminated), picked by sub_800A616C
-extern char* dword_800A8314[];
-extern char* dword_800A8324[];
-extern char* dword_800A8334[];
-extern char* dword_800A8344[];
-extern char* dword_800A8354[];
-extern char* dword_800A8364[];
-extern char* dword_800A837C[];
-extern char* dword_800A8394[];
-extern char* dword_800A83A0[];
-extern char* dword_800A83B0[];
-extern char* dword_800A83EC[];
-extern char* dword_800A8400[];
-extern char* dword_800A8414[];
-extern char* dword_800A8428[];
-extern char* dword_800A843C[];
-extern char* dword_800A8454[];
+extern const char* dword_800A8314[];
+extern const char* dword_800A8324[];
+extern const char* dword_800A8334[];
+extern const char* dword_800A8344[];
+extern const char* dword_800A8354[];
+extern const char* dword_800A8364[];
+extern const char* dword_800A837C[];
+extern const char* dword_800A8394[];
+extern const char* dword_800A83A0[];
+extern const char* dword_800A83EC[];
+extern const char* dword_800A8400[];
+extern const char* dword_800A8414[];
+extern const char* dword_800A8428[];
+extern const char* dword_800A843C[];
 #if 0
 // Not matched: loop strength reduction differs - the original keeps word_800A8474[i] as (i*2 spilled) + base
 // and only word_800A8470[i] as a pointer; here both become pointers and i spills. Logic is complete.
@@ -1034,7 +987,7 @@ void sub_800A616C()
                 sub_800A7164(dword_800A85B8) == 1 && sub_800A7164(dword_800A8620) == 1)
             {
                 sub_800A8078(0x17, 0x4E4, 0x23);
-                dword_800A85C0 = dword_800A8454;
+                dword_800A85C0 = (const char**)dword_800A8454;
             }
             else if (!(dword_800A3A88 & 2) && sub_800A1AAC(dword_800A85B8) == 3 && sub_800A7164(dword_800A85B8) >= 2 &&
                      sub_800A7164(dword_800A8620) == 1)
@@ -1050,7 +1003,7 @@ void sub_800A616C()
             else
             {
                 sub_800A8078(0x1E, 0x4DF, 0x28);
-                dword_800A85C0 = dword_800A83B0;
+                dword_800A85C0 = (const char**)dword_800A83B0;
             }
             dword_800A8610.kind_0 = 0xB;
             word_800A84A6 = 0x6F;
@@ -1084,7 +1037,6 @@ void sub_800A616C()
     }
 }
 #endif
-INCLUDE_OVERLAY_ASM(combbtl, jpt_800A4A9C);
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A616C);
 
 extern unsigned char byte_800A38D8;
@@ -1103,7 +1055,7 @@ extern void PlaySfx_80031494(int id);
 extern CombBtlPair word_800A84C8[2]; // per side: the hit frame window of its command animation (sub_800A0F50)
 extern CombBtlPair word_800A8494;    // the merged window; lo counts the frames up to hi
 extern CombBtlPair sub_800A71E4(int n, CombBtlPair* p);
-extern unsigned char byte_800A85BC; // the minion slot a swap command (kind 3) brings in
+extern unsigned char dword_800A85BC; // the minion slot a swap command (kind 3) brings in
 // Matched
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles a KO / swap / counter. Steps fall through in one call while the step keeps changing.
@@ -1212,8 +1164,8 @@ void sub_800A68E0(CombBtlTask* t)
             else if (dword_800A85A8.kind_0 == 3)
             {
                 sub_800A7560(dword_800A85B8);
-                dword_800A4078[dword_800A85B8] = byte_800A85BC;
-                sub_800A0ACC(dword_800A85B8, &dword_800A3AA0[dword_800A85B8][byte_800A85BC]);
+                dword_800A4078[dword_800A85B8] = dword_800A85BC;
+                sub_800A0ACC(dword_800A85B8, &dword_800A3AA0[dword_800A85B8][dword_800A85BC]);
                 word_800A8488 = 6;
                 dword_800A84B0[dword_800A85B8] = 1;
                 word_800A84D0[dword_800A85B8] = 1000 - rand() % 200;
@@ -1295,7 +1247,31 @@ void sub_800A68E0(CombBtlTask* t)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AD4);
+const CombBtlA24 dword_800A4AD4 = { {
+        { 0 },
+        { 0, 0, 0x3E8 },
+    } };
+const CombBtlB16 dword_800A4AEC = { {
+        { 0 },
+        { 0, 0, 0, 8 },
+    } };
+const CombBtlA28 dword_800A4AFC = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 110, 20, 50, 20, 0x40002 };
+const CombBtlA28 dword_800A4B18 = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 160, 20, 50, 20, 0x40002 };
+const CombBtlPos2 dword_800A4B34 = { {
+        { 10, 79 },
+        { 0x136, 79 },
+    } };
+const CombBtlA28 dword_800A4B3C = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 50, 20, 0x40002 };
+const CombBtlPos2 dword_800A4B58 = { {
+        { 110, 40 },
+        { 160, 40 },
+    } };
+const CombBtlInt3 dword_800A4B60 = { { 219, 115, 102 } };
+const CombBtlPos2 dword_800A4B6C = { {
+        { 10, 59 },
+        { 210, 59 },
+    } };
+
 
 unsigned int sub_800A7164(int i)
 {
@@ -1467,23 +1443,6 @@ void sub_800A75F8(int a)
     }
 }
 
-typedef struct CombBtlPos2
-{
-    CombBtlPair p[2]; // per side
-} CombBtlPos2;
-typedef struct CombBtlInt3
-{
-    int v[3];
-} CombBtlInt3;
-extern CombBtlA28 dword_800A4AFC;
-extern CombBtlA28 dword_800A4B18;
-extern CombBtlPos2 dword_800A4B34;
-extern CombBtlA28 dword_800A4B3C;
-extern CombBtlPos2 dword_800A4B58;
-extern CombBtlInt3 dword_800A4B60;
-extern CombBtlPos2 dword_800A4B6C;
-extern short word_800A82D0;
-extern short word_800A82D2;
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot);
 extern void InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode);
@@ -1764,7 +1723,6 @@ void sub_800A8078(short a, short b, short c)
 }
 
 extern EventNode* dword_8008D458;
-extern int dword_800A8478;
 extern unsigned int dword_800A3A88;
 extern int sub_800A5408();
 extern void sub_800A816C();
@@ -1829,4 +1787,75 @@ void sub_800A816C(EventEntry* e)
     }
 }
 
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A82D0);
+short word_800A82D0 = 0;
+short word_800A82D2 = 0;
+short word_800A82D4[2][2] = {
+    { 10, 20 },
+    { 210, 20 },
+};
+CombBtlNode *dword_800A82DC = 0;
+short word_800A82E0[4] = { 0 };
+int dword_800A82E8 = 0;
+char dword_800A82EC[20] = { 220, 64, 10, 128, 172, 64, 10, 128, 140, 64, 10, 128 };
+char dword_800A8300[20] = { 220, 64, 10, 128, 0, 65, 10, 128, 140, 64, 10, 128 };
+const char *dword_800A8314[4] = { aItSeemsYouAreGa_800A415C, aEachOtherSMoves_800A4134 };
+const char *dword_800A8324[4] = { aICannotTakeMyEy_800A41C0, aThisThrillingBa_800A4190 };
+const char *dword_800A8334[4] = { aOhMyItDodgedThe_800A4218, aNoDamageTaken_800A41F4 };
+const char *dword_800A8344[4] = { aADirectHit_800A427C, aOhThatHadToHurt_800A4250 };
+const char *dword_800A8354[4] = { aPoison_800A42C8, aTheMinionLooksD_800A4298 };
+const char *dword_800A8364[6] = { aOhNoItIsFalling_800A4370, aThisCouldBeDang_800A433C, aItIsLikeAHelple_800A4304, aOnAChoppingBloc_800A42D8 };
+const char *dword_800A837C[6] = { aTheMinionIsBein_800A443C, aStoneItIsSpread_800A4400, aThisCouldBeFata_800A43C4, aNotHealed_800A43AC };
+const char *dword_800A8394[3] = { aTheMinionIsGrav_800A447C };
+const char *dword_800A83A0[4] = { aItIsBreathingHe_800A44F4, aCouldKeelOverAt_800A44BC };
+void *dword_800A83B0[15] = {
+    (void *)aIsTheFightOver_800A45C8, (void *)aItLooksLikeThat_800A4594, (void *)aForThisMinion_800A4570, (void *)aItHasFallenAndC_800A452C,
+    0, 0, (void *)&dword_800A45F0, (void *)&dword_800A45F0,
+    0, 0, (void *)aWhatAWellChosen_800A4658, (void *)aRightAtTheEleme_800A4614,
+    (void *)aVeryEffective_800A45F4,
+};
+const char *dword_800A83EC[5] = { aThePlayerHasSwi_800A46DC, aANewMinionHas_800A46B8, aEnteredTheArena_800A4690 };
+const char *dword_800A8400[5] = { aAChangeOfElemen_800A4780, aWhatAnExcitingM_800A4750, aWhatWillHappenN_800A4720 };
+const char *dword_800A8414[5] = { aSuchOverwhelmin_800A481C, aTheMinionHasFal_800A47F0, aWithOneFatalBlo_800A47C4 };
+const char *dword_800A8428[5] = { aWhatAmazingWill_800A48A0, aAgainstAllOdds_800A487C, aItCouldBeVictor_800A4850 };
+const char *dword_800A843C[6] = { aAnotherLossTheF_800A495C, aDecidedBeforeTh_800A491C, aTooBad_800A4908, aIWasEvenRooting_800A48D0 };
+int dword_800A8454[7] = { (int)aWhatACloseFight_800A4A04, (int)aFinallyADecisio_800A49CC, (int)aReached_800A49B8, (int)aWellDone_800A49A0, 0, 0, 0x63750B00 };
+short word_800A8470[2] = { 0 };
+short word_800A8474[2] = { 0 };
+int dword_800A8478 = 0;
+int dword_800A847C = 0;
+int dword_800A8480[2] = { 0 };
+short word_800A8488 = 0;
+EventEntry *dword_800A848C = 0;
+int dword_800A8490 = 0;
+int dword_800A8494 = 0;
+int dword_800A8498 = 0;
+int dword_800A849C = 0;
+int dword_800A84A0 = 0;
+short word_800A84A4 = 0;
+short word_800A84A6 = 0;
+unsigned char byte_800A84A8 = 0;
+int dword_800A84AC = 0;
+int dword_800A84B0[2] = { 0 };
+int dword_800A84B8 = 0;
+short word_800A84BC = 0;
+int dword_800A84C0 = 0;
+short word_800A84C4 = 0;
+int dword_800A84C8[2] = { 0 };
+short word_800A84D0[2] = { 0 };
+int dword_800A84D4 = 0;
+CombBtlHist dword_800A84D8[10] = { { 0 } };
+int dword_800A85A0 = 0;
+int dword_800A85A4 = 0;
+CombBtlCmd dword_800A85A8 = { 0 };
+int dword_800A85B8 = 0;
+unsigned char dword_800A85BC = 0;
+unsigned char byte_800A85BD = 0;
+const char** dword_800A85C0 = 0;
+int dword_800A85C4 = 0;
+CombBtlResult dword_800A85C8 = { 0 };
+int dword_800A85F0[2] = { 0 };
+int dword_800A85F8 = 0;
+unsigned char byte_800A85FC[4] = { 0 };
+CombBtlCmd dword_800A8600 = { 0 };
+CombBtlCmd dword_800A8610 = { 0 };
+int dword_800A8620 = 0;

@@ -1,4 +1,16 @@
 dword_800A4088=0x800a4088; // overlay header / data
+aWillPlayer2UseC_800A408C=0x800a408c; // data
+dword_800A40D0=0x800a40d0;
+aYouHaveAMEMORYC_800A40D4=0x800a40d4; // data
+aOpponentGivesUp_800A4124=0x800a4124; // data
+aDefeatAllEnemie_800A4174=0x800a4174; // data
+aSelectUpToThree_800A41B4=0x800a41b4; // data
+aDuringTheMainGa_800A4200=0x800a4200; // data
+aFightEachOtherU_800A424C=0x800a424c; // data
+aAndTheMinionsOf_800A42A0=0x800a42a0; // data
+aHereTheMinionsO_800A42F4=0x800a42f4; // data
+aWelcomeToTheAre_800A4344=0x800a4344; // data
 sub_800A4394=0x800a4394;
 sub_800A450C=0x800a450c;
 dword_800A45B0=0x800a45b0; // data behind the code
+dword_800A45BC=0x800a45bc;

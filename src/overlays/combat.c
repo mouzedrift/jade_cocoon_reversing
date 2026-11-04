@@ -6,29 +6,9 @@
 #include "actor.h"
 #include "engine.h"
 #include "minion_init.h"
+#include "combat.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
-typedef struct CombatModelParams
-{
-    int count_0;        // number of different parts
-    int parts_4[3];
-    int weights_10[3];
-    int modelId_1C;
-    int f20;
-    int angle_24;
-    int f28;
-    int f2C;
-    int f30;
-} CombatModelParams;
-
-typedef struct CombatSlotCombat
-{
-    int task_0;         // StartModelTask_80010850 id, -1 = free
-    Minion* minion_4;
-    CombatModelParams params_8;
-    Actor* actor_3C;
-} CombatSlotCombat;
-
 
 // the part of cameraState_8008D4F0 that sub_800A12B8 resets
 typedef struct CombatCameraState
@@ -43,9 +23,6 @@ typedef struct CombatCameraState
     short f3C[3];
 } CombatCameraState;
 
-extern CombatSlotCombat dword_800A3A08[];
-extern Minion dword_800A3AA0[][3];
-extern Minion dword_800A1BC8[][15];
 extern void GetActorHitFrame_80018E5C(void* p);
 extern void SetActorStatusTint_80018EBC(void* p, UnitStatus* v);
 extern void sub_800376A0(void* a, void* b);
@@ -59,10 +36,6 @@ typedef struct CombatTaskCombat
     void (*next_8)();
 } CombatTaskCombat;
 
-extern int dword_800A3A8C;
-extern int dword_800A4070;
-extern int dword_800A4080;
-extern int dword_800A39F0[];
 extern void InitActors_8001D378(void);
 extern void DestroyActor_8001D600(void* p);
 extern void TriggerActorEffect_8001E28C(void* p);
@@ -76,7 +49,6 @@ extern char* dword_8007DC78;
 extern int StartModelTask_80010850(void* p);
 extern CombatCameraState cameraState_8008D4F0;
 extern int cameraZoom_8008B4F8;
-extern char dword_800A398C[];
 extern int sub_800A1934(Minion* p);
 extern void ResetCameraToLevant_800376A8(void);
 extern void StartBattleCamera_80037748(void);
@@ -132,11 +104,6 @@ typedef struct CombatReq2Combat
 extern CombatShortPair_combat dword_8007DCAC[];
 extern CombatShortPair_combat dword_8007DCBC[];
 extern short dword_80084540[];
-extern short dword_800A1BBC[];
-extern unsigned char byte_800A38D9;
-extern unsigned char byte_800A38DA;
-extern unsigned char byte_800A38DB;
-extern short word_800A1BC4;
 extern Minion dword_8008BEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
@@ -170,7 +137,7 @@ extern void sub_800A05E0(Minion* a, CombatModelParams* o, int c);
 extern int sub_800A0898(unsigned char* a);
 
 
-INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
+int dword_800A05A0 SDATA = 14;
 
 #if 0
 // Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
@@ -784,8 +751,6 @@ void sub_800A15B4(CombatTaskCombat* t, int x)
 }
 INCLUDE_OVERLAY_ASM(combat, dword_800A05C0);
 
-extern int dword_800A3A88;
-extern unsigned char byte_800A38DC;
 
 void sub_800A16FC(CombatTaskCombat* t)
 {
@@ -953,4 +918,71 @@ void sub_800A1B2C(int i, void* p)
     InitPolyFT4_80029A10(p, &r);
 }
 
-INCLUDE_OVERLAY_ASM(combat, dword_800A1BBC);
+short dword_800A1BBC[4] = { 1, 5, 5 };
+short word_800A1BC4 = 0;
+Minion dword_800A1BC8[2][15] = {
+    {
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+    },
+    {
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+        { 4 },
+    },
+};
+unsigned char byte_800A38D8 = 0;
+unsigned char byte_800A38D9 = 0;
+unsigned char byte_800A38DA = 0;
+unsigned char byte_800A38DB = 0;
+unsigned char byte_800A38DC = 0;
+int dword_800A38E0 = 0xDF0033;
+int dword_800A38E4[6] = { 1, 5, 0, 0, (int)sub_800A13A0, (int)sub_800A148C };
+int dword_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
+int dword_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
+int dword_800A392C[6] = { 2, 0x8000, 24, (int)&dword_8008B564 };
+int dword_800A3944[6] = { 1, 0x8000, 0, (int)&dword_8008D458 };
+int dword_800A395C[6] = { 1, 0x8000, 0x21C, (int)&cameraTask_8008D4A0 };
+int dword_800A3974[6] = { 1, 0x8000, 8, (int)&fadeTask_8008D628 };
+void *dword_800A398C[25] = {
+    (void *)&eventDescs_80078EB8, (void *)((char *)&eventDescs_80078EB8 + 24), (void *)((char *)&eventDescs_80078EB8 + 120), (void *)((char *)&eventDescs_80078EB8 + 72),
+    (void *)dword_800A395C, (void *)((char *)&eventDescs_80078EB8 + 384), (void *)dword_800A3974, (void *)((char *)&eventDescs_80078EB8 + 504),
+    (void *)((char *)&eventDescs_80078EB8 + 528), (void *)((char *)&eventDescs_80078EB8 + 552), (void *)((char *)&eventDescs_80078EB8 + 576), (void *)((char *)&eventDescs_80078EB8 + 432),
+    (void *)((char *)&eventDescs_80078EB8 + 624), (void *)dword_800A38FC, (void *)((char *)&eventDescs_80078EB8 + 456), (void *)dword_800A38E4,
+    (void *)dword_800A3914, (void *)((char *)&eventDescs_80078EB8 + 240), (void *)((char *)&eventDescs_80078EB8 + 216), (void *)((char *)&eventDescs_80078EB8 + 600),
+    (void *)dword_800A392C, (void *)dword_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
+};
+int dword_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
+CombatSlotCombat dword_800A3A08[2] = { { 0 } };
+int dword_800A3A88 = 0;
+int dword_800A3A8C = 0;
+int dword_800A3A90[4] = { 0 };
+Minion dword_800A3AA0[2][3] = { { { 0 } } };
+int dword_800A4070 = 0;
+int dword_800A4074[3] = { 0 };
+int dword_800A4080 = 0;
