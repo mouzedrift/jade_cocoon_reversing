@@ -264,18 +264,18 @@ void ShelfMenuCancel_800B72D4(ShelfMenu* menu)
 }
 
 // what DrawGauge_8002BA54 takes (struct_BA54 in ui_gauge.c)
-typedef struct GaugeShopentr
+typedef struct ShelfGauge
 {
     int state_0;
     int f4;
     int value_8;
     int max_C;
-} GaugeShopentr;
+} ShelfGauge;
 // Matched
 int ShelfMenuProgress_800B73A8(ShelfMenu* menu)
 {
     short pos[2];
-    GaugeShopentr gauge;
+    ShelfGauge gauge;
     gauge.state_0 = 2;
     gauge.f4 = 0;
     gauge.value_8 = menu->progress_16;

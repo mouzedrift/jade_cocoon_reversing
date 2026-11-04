@@ -2098,15 +2098,15 @@ extern int IsCircleHeldP1_8003D480(void);
 extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
 extern void DrawPortraitWindow_8002A4E4(int a);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* a2, int idx, int ot);
+extern void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* rect, ShopWinColor* w, void* ot, int t);
-extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPos* a1);
-extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPos* a1);
+extern void DrawAbilityList_8002CE28(struct_minion_ref* ref, ShopPos* pos);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* ref, ShopPos* pos);
 extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base);
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
+extern void InterpolateWindowRect_8004196C(void* out, void* rect, int step, int steps, int a4);
 extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp);
-extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawSmallText_8002FAA0(int align, unsigned short* pos, char* name, int ot);
 extern void DrawUiWindow_8002A384(ShopUiWin* p);
 extern void DrawShopMainMenu_800BCEDC(ShopMenu* u);
 extern void DrawShopButtonHelp_800BCCD8(ShopMenu* u);
@@ -3326,8 +3326,8 @@ void FormViewLoadTask_800BE4D0(EventEntry* task, ShopMenu* menu)
     }
 }
 
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void InterpolateWindowRect_8004196C(void* out, void* rect, int step, int steps, int a4);
+extern void DrawSmallText_8002FAA0(int align, unsigned short* pos, char* name, int ot);
 void DrawPartyList_800BE53C(ShopMenu* menu)
 {
     short r[4];

@@ -1077,7 +1077,7 @@ extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
-extern void DrawSmallText_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
+extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 // Matched
 void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
 {
