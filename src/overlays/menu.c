@@ -2467,13 +2467,15 @@ void UseSpore_800BF3AC(int item)
 
 // Not matched: original tests s == 0 via sltiu + bnez (one word more); also tried
 // (unsigned)s < 1 and short s (both fold to beqz)
-#if 0
+// Runs the confirmed menu action: use an item, a valuable (event trigger / leave the forest) or leave the forest
+// Matched
 void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
 {
     ItemUseWork tmp;
     int item;
     UnitStatus* unit;
     int valuable;
+    int quit;
     switch (menu->state_2)
     {
     case 2:
@@ -2481,7 +2483,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         tmp.f8 = 1;
         InitItemUse_800C00D4(&tmp, item, menu->cursors_2A[5]);
         tmp.f0 = 4;
-        unit = GetUnitStatus_80014390(*(unsigned char*)&menu->cursors_2A[5]);
+        unit = name_80014390(*(unsigned char*)&menu->cursors_2A[5]);
         if (unit)
             UseItemOnUnit_80013C28(&levantStatus_8008BD38, unit, &tmp, &tmp.d_10);
         ApplyItemUseDelta_800C00F8(&tmp, &tmp.d_10);
@@ -2489,9 +2491,10 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         break;
     case 0xE:
         valuable = (short)GetNthValuable_800AD7F8((short)((unsigned short)menu->cursors_2A[4] + (unsigned short)menu->scrolls_46[1]));
+        quit = valuable == 0;
         menu->flags_0 |= 8;
         CloseMenuReloadArea_800C0084();
-        if (valuable == 0)
+        if (quit)
             leaveForest_800C29BC = 1;
         else
             FireEventTriggerById_800A911C(valuable);
@@ -2503,8 +2506,6 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, ExecuteMenuAction_800BF3E0);
 
 // Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
 // slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
