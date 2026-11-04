@@ -962,21 +962,23 @@ void sub_800BBBA8(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
-#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C (original keeps source order); tried early return, pointer local, swapped branches
+#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C; the
+      // original keeps them in order, as if dword_800C9C98 were a field of the same struct (gcc only disambiguates a
+      // fixed scalar from a struct field behind a register). sub_800BBDB4 gets no arguments (t/u are still in a0/a1)
 void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
 {
     dword_800C9C88.kind_0 = 3;
     dword_800C9C88.targets_C = 0;
-    if (dword_800C9C98)
+    if (!dword_800C9C98)
+    {
+        sub_800BBDB4();
+    }
+    else
     {
         PlaySeqSlot_80031160(0x11, 1);
         u->fc = sub_800BC28C();
         u->next_8 = sub_800BBC84;
         t->next_8 = sub_800BC144;
-    }
-    else
-    {
-        sub_800BBDB4(t, u);
     }
 }
 #endif
