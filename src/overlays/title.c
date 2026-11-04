@@ -63,7 +63,7 @@ const TitleMenuWindow titleMenuWin7_800A0860 = {
     },
 };
 const TitleMenuCfg titleMenuCfg_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
-const Blk4_ logoPulseColor_800A08B0 = { "ZZZ" };
+const TitleColor logoPulseColor_800A08B0 = { "ZZZ" };
 const char debugLevantName_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
 const int dword_800A08C0[2] = { 0, 0x8940000 };
 
@@ -127,16 +127,16 @@ extern void NewGameLoadNameOvl_800A0A1C();
 // Matched
 void NewGameOpeningMovie_800A09C0(TitleTask* t)
 {
-    int r;
+    int done;
     if (saveData_8008B570.field_0 & 0x80)
     {
-        r = PlayMovie_80040EB4(8);
+        done = PlayMovie_80040EB4(8);
     }
     else
     {
-        r = PlayMovie_80040EB4(6);
+        done = PlayMovie_80040EB4(6);
     }
-    if (r)
+    if (done)
     {
         LoadUiTiy_8002BF74();
         t->next_8 = NewGameLoadNameOvl_800A0A1C;
@@ -159,7 +159,7 @@ void NewGameLoadNameOvl_800A0A1C(TitleTask* t)
 
 
 extern void StartNameEntry_800B6E4C(void* a0, int a1);
-extern void EncodeName_8003F7C8(void* a0, void* a1);
+extern void EncodeName_8003F7C8(void* text, void* out);
 extern void NewGameNameEntry_800A0AE8();
 // Matched
 void NewGameStartNameEntry_800A0A70(TitleTask* t)
@@ -236,18 +236,18 @@ extern void SsSepSetDecrescendo(short, short, short, long);
 // Not matched: register allocation / scheduling differs
 void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
-    int r;
+    int done;
     SoundStruct* ss;
     if (saveData_8008B570.field_0 & 0x80)
     {
-        r = PlayMovie_80040EB4(9);
+        done = PlayMovie_80040EB4(9);
         saveData_8008B570.field_0 &= ~0x80;
     }
     else
     {
-        r = PlayMovie_80040EB4(7);
+        done = PlayMovie_80040EB4(7);
     }
-    if (r)
+    if (done)
     {
         if (c->sprts_70)
         {
@@ -272,22 +272,18 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 #endif
 INCLUDE_OVERLAY_ASM(title, NewGameAfterNameMovie_800A0C28);
 
-typedef struct TitleStr4
-{
-    char c[4];
-} TitleStr4;
 
-extern void PulseColor_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
+extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
 extern unsigned long* pOT_8008D3EC;
 #if 0
 // Not matched: register allocation / scheduling differs
-void DrawNameEntrySprites_800A0D18(SPRT* p, DR_TPAGE* q, int mode, NameEntryWork* c)
+void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, NameEntryWork* c)
 {
     int y = 0;
     short i = 0;
     int end;
     char zero[4];
-    TitleStr4 s4;
+    TitleColor color;
 
     if (mode == 0)
     {
@@ -302,10 +298,10 @@ void DrawNameEntrySprites_800A0D18(SPRT* p, DR_TPAGE* q, int mode, NameEntryWork
         end = i + 2;
         for (; i < end; i++)
         {
-            p[i].x0 = ((i % 2) * 5) << 5;
-            p[i].y0 = y;
-            AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, &q[i], 2);
+            sprts[i].x0 = ((i % 2) * 5) << 5;
+            sprts[i].y0 = y;
+            AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], 2);
         }
     }
     else
@@ -313,13 +309,13 @@ void DrawNameEntrySprites_800A0D18(SPRT* p, DR_TPAGE* q, int mode, NameEntryWork
         memset(zero, 0, 4);
         y = 0x17;
         i = (short)i;
-        s4 = *(TitleStr4*)nameCursorPulseColor_800A05A4;
-        p[i].x0 = 0x6F;
-        p[i].y0 = y;
-        PulseColor_80033394(&p[i].r0, zero, &s4, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
-        SetSemiTrans(&p[i], 1);
-        AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
-        AddPrimCopy_80040298(pOT_8008D3EC, &q[i], 2);
+        color = *(TitleColor*)nameCursorPulseColor_800A05A4;
+        sprts[i].x0 = 0x6F;
+        sprts[i].y0 = y;
+        PulseColor_80033394(&sprts[i].r0, zero, &color, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
+        SetSemiTrans(&sprts[i], 1);
+        AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], 5);
+        AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], 2);
     }
 }
 #endif
@@ -434,14 +430,15 @@ void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
 }
 
 
-typedef struct TitleSmall
+// window style for DrawWindow_80042460 (CombSelBox)
+typedef struct TitleWinStyle
 {
-    short a;
-    char b;
-    char c;
-} TitleSmall;
+    short color_0;
+    char colors_2;
+    char frame_3;
+} TitleWinStyle;
 
-extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void DrawTitleBackground_800A1F98();
 extern void TitleIdleFadeOut_800A1AC0();
 extern void sub_8004E2C8(int a0);
@@ -460,21 +457,21 @@ extern void sub_8004E2C8(int a0);
     }
 void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
 {
-    TitleSmall s;
-    RECT r;
+    TitleWinStyle style;
+    RECT rect;
     TitleMenuWork* d = c;
-    r.x = 0x4D;
-    r.y = 0xA3;
-    r.w = 0xA6;
-    r.h = 0x12;
-    s.b = 1;
-    s.c = 1;
-    s.a = 4;
+    rect.x = 0x4D;
+    rect.y = 0xA3;
+    rect.w = 0xA6;
+    rect.h = 0x12;
+    style.colors_2 = 1;
+    style.frame_3 = 1;
+    style.color_0 = 4;
     c->sprts_C[2].x0 = 0x54;
     c->sprts_C[2].y0 = 0xA7;
     AddPrimCopy_80040298(pOT_8008D454 + 14, &c->sprts_C[2], 5);
     AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], 2);
-    DrawWindow_80042460(&r, &s, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
+    DrawWindow_80042460(&rect, &style, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
     if (padPressed_8009194C & 0x800)
     {
@@ -612,19 +609,18 @@ void NoMemCardWarning_800A158C(TitleTask* t)
 }
 
 
-typedef TitleTask TitleTaskM;
 typedef struct
 {
     short x, y, w, h;
-} TitleRectM;
+} TitleRect;
 // a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
-extern void StartNewGameTask_800A1B74(TitleTaskM* t);
+extern void StartNewGameTask_800A1B74(TitleTask* t);
 
 // Matched
-void NoFreeBlocksWarning_800A166C(TitleTaskM* t)
+void NoFreeBlocksWarning_800A166C(TitleTask* t)
 {
-    TitleRectM r1, r2, r3;
+    TitleRect r1, r2, r3;
     sub_800BB64C();
     r1.x = 0x10;
     r1.y = 0x5A;
@@ -643,26 +639,26 @@ void NoFreeBlocksWarning_800A166C(TitleTaskM* t)
 }
 
 // Matched
-void NewGameMemCardOk_800A1728(TitleTaskM* t)
+void NewGameMemCardOk_800A1728(TitleTask* t)
 {
     sub_800BB64C();
     t->next_8 = TitleMenu_800A1310;
     StartNewGameTask_800A1B74(t);
 }
 
-extern void DrawTitleMenuWindows_800A1780(TitleMenuWork* c, int x);
+extern void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel);
 
 // Matched
-void DrawTitleMenu_800A1760(TitleMenuWork* p, int x, int y)
+void DrawTitleMenu_800A1760(TitleMenuWork* work, int sel, int frames)
 {
-    DrawTitleMenuWindows_800A1780(p, x);
+    DrawTitleMenuWindows_800A1780(work, sel);
 }
 
 // struct_A5A4 in ability_menu.c
 extern void DrawMenuWindows_8002A5A4(TitleMenuCfg* cfg);
 
 // Matched
-void DrawTitleMenuWindows_800A1780(TitleMenuWork* t, int x)
+void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel)
 {
     TitleMenuWindow b0, b1, b2, b3, b4, b5, b6, b7;
     TitleMenuWindow* ptrs[5];
@@ -677,27 +673,27 @@ void DrawTitleMenuWindows_800A1780(TitleMenuWork* t, int x)
     b7 = titleMenuWin7_800A0860;
     memset(ptrs, 0, sizeof(ptrs));
     cfg = titleMenuCfg_800A0898;
-    b0.items[0].f8 = &t->sprts_C;
-    b0.items[0].fC = &t->tpages_14;
-    b1.items[0].f8 = &t->sprts_C;
-    b1.items[0].fC = &t->tpages_14;
-    b2.items[0].f8 = &t->sprts_C;
-    b2.items[0].fC = &t->tpages_14;
-    b3.items[0].f8 = &t->sprts_C;
-    b3.items[0].fC = &t->tpages_14;
+    b0.items[0].sprts_8 = &work->sprts_C;
+    b0.items[0].tpages_C = &work->tpages_14;
+    b1.items[0].sprts_8 = &work->sprts_C;
+    b1.items[0].tpages_C = &work->tpages_14;
+    b2.items[0].sprts_8 = &work->sprts_C;
+    b2.items[0].tpages_C = &work->tpages_14;
+    b3.items[0].sprts_8 = &work->sprts_C;
+    b3.items[0].tpages_C = &work->tpages_14;
     ptrs[0] = &b0;
     ptrs[1] = &b1;
     ptrs[2] = &b2;
     ptrs[3] = &b3;
-    cfg.f4 = GetTime30Hz_8002C64C();
-    cfg.fC = x;
+    cfg.time_4 = GetTime30Hz_8002C64C();
+    cfg.cursor_C = sel;
     cfg.windows_10 = ptrs;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
 
 // Matched
-void TitleIdleFadeOut_800A1AC0(TitleTaskM* t, int* cnt)
+void TitleIdleFadeOut_800A1AC0(TitleTask* t, int* cnt)
 {
     if (++*cnt >= 0x5B)
     {
@@ -706,14 +702,14 @@ void TitleIdleFadeOut_800A1AC0(TitleTaskM* t, int* cnt)
 }
 
 // Matched
-void TitleExit_800A1AFC(TitleTaskM* t, int a)
+void TitleExit_800A1AFC(TitleTask* t, int result)
 {
-    SoundStruct* s = &bgmSound_80091CE0;
-    titleResult_800A2818 = a;
-    if (s->field_4_seq_num >= 0)
+    SoundStruct* bgm = &bgmSound_80091CE0;
+    titleResult_800A2818 = result;
+    if (bgm->field_4_seq_num >= 0)
     {
-        SsSepSetDecrescendo((short)s->field_C_sep_access_num, s->field_4_seq_num, 0x7F, 0x78);
-        s->field_4_seq_num = -1;
+        SsSepSetDecrescendo((short)bgm->field_C_sep_access_num, bgm->field_4_seq_num, 0x7F, 0x78);
+        bgm->field_4_seq_num = -1;
     }
     bStopDrawingMovie_8008D45C = 1;
     t->flags_0 &= ~1;
@@ -723,7 +719,7 @@ extern EventNode* newGameTask_8008D638;
 
 // stops the title menu task and enables newGameTaskDesc_800A2790 (name entry + opening movies)
 // Matched
-void StartNewGameTask_800A1B74(TitleTaskM* t)
+void StartNewGameTask_800A1B74(TitleTask* t)
 {
     EventEntry* e;
     t->flags_0 &= ~1;
@@ -754,10 +750,10 @@ void InitNewGameData_800A1BCC(void)
 
 extern int dword_8008BD80;
 extern void LoadMenuInit_800B7674(int a, int b);
-extern void LoadGameWait_800A1CC0(TitleTaskM* t);
+extern void LoadGameWait_800A1CC0(TitleTask* t);
 
 // Matched
-void MenuLoadGame_800A1C18(TitleTaskM* t)
+void MenuLoadGame_800A1C18(TitleTask* t)
 {
     word_8008B55A = 1;
     LoadOverlay_80020BF8(2, 0x10);
@@ -771,7 +767,7 @@ extern void SetNewGameStartMap_800A2650(void);
 
 // menu entry 4: fresh save data, straight into the game (no name entry)
 // Matched
-void MenuQuickStart_800A1C7C(TitleTaskM* t)
+void MenuQuickStart_800A1C7C(TitleTask* t)
 {
     word_8008B55A = 4;
     InitNewGameData_800A1BCC();
@@ -783,7 +779,7 @@ extern int IsLoadMenuActive_800B793C(void);
 extern int GetLoadMenuLoaded_800B7914(void);
 
 // Matched
-void LoadGameWait_800A1CC0(TitleTaskM* t)
+void LoadGameWait_800A1CC0(TitleTask* t)
 {
     if (!IsLoadMenuActive_800B793C())
     {
@@ -816,10 +812,10 @@ void MenuNewGame_800A1D6C(void)
 }
 
 extern void SetFadeMode_8001C19C(int a, int b);
-extern void ConfigWaitUiTiy_800A1DD8(TitleTaskM* t);
+extern void ConfigWaitUiTiy_800A1DD8(TitleTask* t);
 
 // Matched
-void MenuConfig_800A1D8C(TitleTaskM* t)
+void MenuConfig_800A1D8C(TitleTask* t)
 {
     LoadOverlay_80020BF8(2, 0xF);
     SetFadeMode_8001C19C(0, 0x20);
@@ -831,7 +827,7 @@ extern void StartConfigMenu_800C2EB4(void);
 extern void ConfigWait_800A1E24();
 
 // Matched
-void ConfigWaitUiTiy_800A1DD8(TitleTaskM* t)
+void ConfigWaitUiTiy_800A1DD8(TitleTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
@@ -845,7 +841,7 @@ extern int IsConfigMenuActive_800C45D8(void);
 extern void ConfigReturn_800A1E9C();
 
 // Matched
-void ConfigWait_800A1E24(TitleTaskM* t, TitleMenuWork* u)
+void ConfigWait_800A1E24(TitleTask* t, TitleMenuWork* u)
 {
     if (!IsConfigMenuActive_800C45D8())
     {
@@ -859,7 +855,7 @@ void ConfigWait_800A1E24(TitleTaskM* t, TitleMenuWork* u)
 }
 
 // Matched
-void ConfigReturn_800A1E9C(TitleTaskM* t, TitleMenuWork* u)
+void ConfigReturn_800A1E9C(TitleTask* t, TitleMenuWork* u)
 {
     SetFadeMode_8001C19C(3, 0x20);
     DrawTitleBackground_800A1F98(u->sprts_C, u->tpages_14, u);
@@ -869,7 +865,7 @@ void ConfigReturn_800A1E9C(TitleTaskM* t, TitleMenuWork* u)
 
 // menu entry 2: GAME starts on the arena map and returns eBattleArenaMenu_8 (flag 0x40000000)
 // Matched
-void MenuBattleArena_800A1F00(TitleTaskM* t)
+void MenuBattleArena_800A1F00(TitleTask* t)
 {
     unknownFlags_8008D678 |= 0x40000000;
     TitleExit_800A1AFC(t, 0xC);
@@ -881,8 +877,8 @@ extern void InitStub_800A2424(void);
 extern void InitLevantEquipment_800A20F4(void);
 extern void ClearMapVars_800A2110(void);
 extern void InitFlagTables_800A2540(void);
-extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
-extern void EncodeName_8003F7C8(void* a, void* b);
+extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
+extern void EncodeName_8003F7C8(void* text, void* out);
 
 extern struct_v3 dword_800B069C; // Levant's start position
 extern int useMapStartPos_80091C94;
@@ -892,50 +888,50 @@ extern int encounterVariantToggle_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
 
 // Matched
-void MenuSoundTest_800A1F38(void* a)
+void MenuSoundTest_800A1F38(void* task)
 {
-    TitleExit_800A1AFC(a, 9);
+    TitleExit_800A1AFC(task, 9);
 }
 
 // Matched
-void MenuTstModel_800A1F58(void* a)
+void MenuTstModel_800A1F58(void* task)
 {
-    TitleExit_800A1AFC(a, 10);
+    TitleExit_800A1AFC(task, 10);
 }
 
 // Matched
-void MenuTstCompo_800A1F78(void* a)
+void MenuTstCompo_800A1F78(void* task)
 {
-    TitleExit_800A1AFC(a, 11);
+    TitleExit_800A1AFC(task, 11);
 }
 
-void DrawTitleBackground_800A1F98(SPRT* p, DR_TPAGE* q)
+void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages)
 {
-    char tmp[4];
-    Blk4_ loc;
+    char zero[4];
+    TitleColor color;
     short i;
     short y;
-    SPRT* e;
-    SPRT* e5;
+    SPRT* sprt;
+    SPRT* logo;
 
-    memset(tmp, 0, 4);
+    memset(zero, 0, 4);
     y = 0x4A;
-    e5 = &p[5];
-    loc = logoPulseColor_800A08B0;
-    e5->y0 = y;
-    e5->x0 = 0x55;
-    PulseColor_80033394(&p[5].r0, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
-    SetSemiTrans(e5, 1);
-    AddPrimCopy_80040298((void*)pOT_8008D3EC, e5, 5);
-    AddPrimCopy_80040298((void*)pOT_8008D3EC, &q[5], 2);
+    logo = &sprts[5];
+    color = logoPulseColor_800A08B0;
+    logo->y0 = y;
+    logo->x0 = 0x55;
+    PulseColor_80033394(&sprts[5].r0, zero, &color, frameCount_8008D3FC, 0xB4, 0x5A);
+    SetSemiTrans(logo, 1);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, logo, 5);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[5], 2);
     y = 0;
     for (i = 7; i < 9; i++)
     {
-        e = (SPRT*)((int)i * sizeof(SPRT) + (int)p); // &p[i] does not match
-        e->x0 = (i - 7) * 5 << 5;
-        e->y0 = y;
-        AddPrimCopy_80040298((void*)pOT_8008D3EC, e, 5);
-        AddPrimCopy_80040298((void*)pOT_8008D3EC, &q[i], 2);
+        sprt = (SPRT*)((int)i * sizeof(SPRT) + (int)sprts); // &sprts[i] does not match
+        sprt->x0 = (i - 7) * 5 << 5;
+        sprt->y0 = y;
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, sprt, 5);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[i], 2);
     }
 }
 

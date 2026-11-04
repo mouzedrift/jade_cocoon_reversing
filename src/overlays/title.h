@@ -12,9 +12,9 @@ typedef struct TitleMenuItem
 {
     unsigned short flags_0;
     short pad_2;
-    int f4;
-    void* f8;
-    void* fC;
+    int icon_4; // sprite index (type 1 item)
+    void* sprts_8;
+    void* tpages_C;
     short x_10;
     short y_12;
     char pad_14[8];
@@ -27,12 +27,12 @@ typedef struct
 
 typedef struct
 {
-    int f0, f4, f8, fC;
+    int flags_0, time_4, anim_8, cursor_C; // a DrawMenuWindows_8002A5A4 menu (CombSelMenu)
     TitleMenuWindow** windows_10;
-    int f14;
+    int ot_14;
 } TitleMenuCfg;
 
-typedef struct { char c[4]; } Blk4_;
+typedef struct { char rgb[4]; } TitleColor;
 
 extern int dword_800A05A0;
 extern const char nameCursorPulseColor_800A05A4[];
@@ -51,7 +51,7 @@ extern const TitleMenuWindow titleMenuWin5_800A07F0;
 extern const TitleMenuWindow titleMenuWin6_800A0828;
 extern const TitleMenuWindow titleMenuWin7_800A0860;
 extern const TitleMenuCfg titleMenuCfg_800A0898;
-extern const Blk4_ logoPulseColor_800A08B0;
+extern const TitleColor logoPulseColor_800A08B0;
 extern const char debugLevantName_800A08B4[];
 extern const int dword_800A08C0[2];
 extern char levantName_800A2718[];
