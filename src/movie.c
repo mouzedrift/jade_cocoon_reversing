@@ -36,12 +36,12 @@ typedef struct
     int fileId;
     int is24bpp;
     char pad_8[2];
-    short field_A;
+    short frameCount_A; // last frame: ends the movie (MovieDecodeNextFrame_800415D8)
     char pad_C[4];
-    short field_10;
-    short field_12;
+    short decodeX_10;   // vram position of the decoded frames
+    short decodeY_12;
     char pad_14[2];
-    unsigned short field_16;
+    unsigned short height_16;
     MovieRect rect;
     RECT screen;
     int skipMask;
@@ -53,14 +53,14 @@ typedef struct
 typedef struct
 {
     void* vlcbuf[2];
-    int field_8;
+    int vlcIdx_8;
     void* imgbuf[2];
-    int field_14;
+    int imgIdx_14;
     MovieRect rect[2];
-    int field_28;
+    int rectIdx_28;     // the rect being decoded into
     MovieRect slice;
-    int field_34;
-    int field_38;
+    int frameDone_34;
+    int is24bpp_38;
 } MovieCtx;
 
 typedef struct
@@ -79,12 +79,12 @@ extern MovieCtx movieCtx_800960C0;
 extern void SsSetSerialVol();
 extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 void MovieDctOutCallback_80041424(void);
-int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m);
-void MovieWaitFrameDone_80041724(MovieCtx* c, int unused);
-void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* p);
-void InitMovieCtx_80041240(MovieCtx* c, MovieInfo* i);
-void InitMovieStream_80041358(int a0, int ring, int* stream);
-int SkipMovieButtonPressed_800413BC(MovieParams* c);
+int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie);
+void MovieWaitFrameDone_80041724(MovieCtx* ctx, int unused);
+void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* params);
+void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie);
+void InitMovieStream_80041358(int file, int ring, int* stream);
+int SkipMovieButtonPressed_800413BC(MovieParams* params);
 
 #define MOVIE_W(i, v) ((i)->is24bpp ? (v) * 3 / 2 : (v))
 
@@ -118,11 +118,11 @@ void PlayAnimeMovie_80040D0C(void)
     bStopDrawingMovie_8008D45C = 1;
 }
 // Matched
-void StartIntroAnime_80040D34(EventEntry* p)
+void StartIntroAnime_80040D34(EventEntry* entry)
 {
     if (!(unknownFlags_8008D678 & 0x20))
     {
-        p->cb_8 = (EventEntryFn)PlayAnimeMovie_80040D0C;
+        entry->cb_8 = (EventEntryFn)PlayAnimeMovie_80040D0C;
     }
 }
 // Matched
@@ -146,77 +146,77 @@ enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId)
     return overlayCallbacks_800869D0[overlayId]();
 }
 // Matched
-void ClearMovieRect_80040E28(MovieInfo* m)
+void ClearMovieRect_80040E28(MovieInfo* movie)
 {
-    RECT r;
-    r.x = m->rect.x;
-    r.y = m->rect.y;
-    r.w = MOVIE_W(m, m->rect.w);
-    r.h = m->rect.h * 2;
-    ClearImage(&r, 0, 0, 0);
+    RECT rect;
+    rect.x = movie->rect.x;
+    rect.y = movie->rect.y;
+    rect.w = MOVIE_W(movie, movie->rect.w);
+    rect.h = movie->rect.h * 2;
+    ClearImage(&rect, 0, 0, 0);
 }
 // Matched
 int PlayMovie_80040EB4(int idx)
 {
-    MovieInfo* m;
+    MovieInfo* movie;
     DISPENV env;
-    Data001File f;
+    Data001File file;
     RECT unused_40; /* unused locals: the original frame has room for them */
     DslLOC loc;
     RECT unused_50;
-    int n;
+    int backFrame;
     int top;
     int x;
     int y;
 
     SetDispMask(0);
-    m = &strMovies_80086A4C[idx];
-    ClearMovieRect_80040E28(m);
-    DATA_GetFile_8003C7CC(&f, m->fileId);
+    movie = &strMovies_80086A4C[idx];
+    ClearMovieRect_80040E28(movie);
+    DATA_GetFile_8003C7CC(&file, movie->fileId);
     SsSetSerialAttr(0, 0, 1);
-    SsSetSerialVol(0, m->volL * 0x70 / 0x1000, m->volR * 0x70 / 0x1000);
-    InitMovieCtx_80041240(&movieCtx_800960C0, m);
+    SsSetSerialVol(0, movie->volL * 0x70 / 0x1000, movie->volR * 0x70 / 0x1000);
+    InitMovieCtx_80041240(&movieCtx_800960C0, movie);
     AllocMdecVLCBuffer_80041848();
     ringBufferStart_800960B0 = (unsigned long*)0x801DB250;
-    InitMovieStream_80041358((int)&f, (int)MovieDctOutCallback_80041424, (int*)m);
+    InitMovieStream_80041358((int)&file, (int)MovieDctOutCallback_80041424, (int*)movie);
     bMovieFinished_800960FC = 0;
     do
     {
-        loc = f.field_0_position;
-        MovieStartCdStream_800417BC(&loc, (MovieParams*)m);
-    } while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, m));
-    while (!SkipMovieButtonPressed_800413BC((MovieParams*)m))
+        loc = file.field_0_position;
+        MovieStartCdStream_800417BC(&loc, (MovieParams*)movie);
+    } while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, movie));
+    while (!SkipMovieButtonPressed_800413BC((MovieParams*)movie))
     {
-        DecDCTin(movieCtx_800960C0.vlcbuf[movieCtx_800960C0.field_8], m->is24bpp ? 3 : 2);
-        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
-        while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, m))
+        DecDCTin(movieCtx_800960C0.vlcbuf[movieCtx_800960C0.vlcIdx_8], movie->is24bpp ? 3 : 2);
+        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.imgIdx_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+        while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, movie))
         {
-            n = StGetBackloc(&loc);
-            if (m->field_A < n || n <= 0)
+            backFrame = StGetBackloc(&loc);
+            if (movie->frameCount_A < backFrame || backFrame <= 0)
             {
-                loc = f.field_0_position;
+                loc = file.field_0_position;
             }
-            MovieStartCdStream_800417BC(&loc, (MovieParams*)m);
+            MovieStartCdStream_800417BC(&loc, (MovieParams*)movie);
         }
         MovieWaitFrameDone_80041724(&movieCtx_800960C0, 0);
         VSync(0);
-        top = movieCtx_800960C0.field_28 == 0;
-        x = MOVIE_W(m, m->rect.x);
-        y = m->rect.y;
+        top = movieCtx_800960C0.rectIdx_28 == 0;
+        x = MOVIE_W(movie, movie->rect.x);
+        y = movie->rect.y;
         if (top)
         {
-            y += m->rect.h;
+            y += movie->rect.h;
         }
-        SetDefDispEnv(&env, x, y, MOVIE_W(m, m->rect.w), m->rect.h);
-        if (m->is24bpp)
+        SetDefDispEnv(&env, x, y, MOVIE_W(movie, movie->rect.w), movie->rect.h);
+        if (movie->is24bpp)
         {
-            env.isrgb24 = m->is24bpp;
+            env.isrgb24 = movie->is24bpp;
             env.disp.w = env.disp.w * 2 / 3;
         }
-        env.screen.x = m->screen.x;
-        env.screen.y = m->screen.y;
-        env.screen.w = m->screen.w;
-        env.screen.h = m->screen.h;
+        env.screen.x = movie->screen.x;
+        env.screen.y = movie->screen.y;
+        env.screen.w = movie->screen.w;
+        env.screen.h = movie->screen.h;
         PutDispEnv(&env);
         SetDispMask(1);
     }
@@ -224,51 +224,51 @@ int PlayMovie_80040EB4(int idx)
     StUnSetRing();
     DsControlB(9, 0, 0);
     SsSetSerialVol(0, 0, 0);
-    ClearMovieRect_80040E28(m);
+    ClearMovieRect_80040E28(movie);
     FreeMdecBuffer_800418CC();
     mdecVLCBuffer_80086F94 = 0;
     RestartDisplay_8001B230();
     return 1;
 }
 // Matched
-void InitMovieCtx_80041240(MovieCtx* c, MovieInfo* i)
+void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie)
 {
     int x;
     int y;
     int x2;
     int y2;
-    c->vlcbuf[0] = (void*)0x801B9250;
-    c->vlcbuf[1] = (void*)0x801CA250;
-    c->field_8 = 0;
-    c->imgbuf[0] = (void*)0x801F0250;
-    c->imgbuf[1] = (void*)0x801F2F50;
-    c->field_14 = 0;
-    x = MOVIE_W(i, i->field_10);
-    y = i->field_12;
-    x2 = MOVIE_W(i, i->field_10);
-    y2 = i->field_12 + i->rect.h;
-    c->rect[0].x = x;
-    c->rect[0].y = y;
-    c->rect[1].x = x2;
-    c->field_28 = 0;
-    c->field_34 = 0;
-    c->rect[1].y = y2;
-    c->field_38 = i->is24bpp;
-    if (c->field_28 == 0)
+    ctx->vlcbuf[0] = (void*)0x801B9250;
+    ctx->vlcbuf[1] = (void*)0x801CA250;
+    ctx->vlcIdx_8 = 0;
+    ctx->imgbuf[0] = (void*)0x801F0250;
+    ctx->imgbuf[1] = (void*)0x801F2F50;
+    ctx->imgIdx_14 = 0;
+    x = MOVIE_W(movie, movie->decodeX_10);
+    y = movie->decodeY_12;
+    x2 = MOVIE_W(movie, movie->decodeX_10);
+    y2 = movie->decodeY_12 + movie->rect.h;
+    ctx->rect[0].x = x;
+    ctx->rect[0].y = y;
+    ctx->rect[1].x = x2;
+    ctx->rectIdx_28 = 0;
+    ctx->frameDone_34 = 0;
+    ctx->rect[1].y = y2;
+    ctx->is24bpp_38 = movie->is24bpp;
+    if (ctx->rectIdx_28 == 0)
     {
-        c->slice.x = x;
-        c->slice.y = y;
+        ctx->slice.x = x;
+        ctx->slice.y = y;
     }
     else
     {
-        c->slice.x = x2;
-        c->slice.y = y2;
+        ctx->slice.x = x2;
+        ctx->slice.y = y2;
     }
-    c->slice.w = i->is24bpp ? 0x18 : 0x10;
-    c->slice.h = i->field_16;
+    ctx->slice.w = movie->is24bpp ? 0x18 : 0x10;
+    ctx->slice.h = movie->height_16;
 }
 // Matched
-void InitMovieStream_80041358(int a0, int ring, int* stream)
+void InitMovieStream_80041358(int file, int ring, int* stream)
 {
     DecDCTReset(0);
     DecDCToutCallback((void (*)())ring);
@@ -276,16 +276,16 @@ void InitMovieStream_80041358(int a0, int ring, int* stream)
     StSetStream(stream[1], ((short*)stream)[4], -1, 0, 0);
 }
 // Matched
-int SkipMovieButtonPressed_800413BC(MovieParams* c)
+int SkipMovieButtonPressed_800413BC(MovieParams* params)
 {
     if (bMovieFinished_800960FC == 1)
     {
         return 1;
     }
-    if (c->skipMask != 0)
+    if (params->skipMask != 0)
     {
         ProcessPad_8001C8E8(0);
-        if (padPressed_8009194C[0] & c->skipMask)
+        if (padPressed_8009194C[0] & params->skipMask)
         {
             return 1;
         }
@@ -299,19 +299,19 @@ extern void StCdInterrupt(void);
 // Matched
 void MovieDctOutCallback_80041424(void)
 {
-    MovieRect r;
-    MovieRect r2; // unused, but needed for the original stack frame
+    MovieRect slice;
+    MovieRect unusedRect; // unused, but needed for the original stack frame
     unsigned int id;
     int rem;
-    if (movieCtx_800960C0.field_38 && StCdIntrFlag)
+    if (movieCtx_800960C0.is24bpp_38 && StCdIntrFlag)
     {
         StCdInterrupt();
         StCdIntrFlag = 0;
     }
-    id = movieCtx_800960C0.field_14;
-    r = movieCtx_800960C0.slice;
-    movieCtx_800960C0.field_14 = movieCtx_800960C0.field_14 == 0;
-    if (movieSliceFirst_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
+    id = movieCtx_800960C0.imgIdx_14;
+    slice = movieCtx_800960C0.slice;
+    movieCtx_800960C0.imgIdx_14 = movieCtx_800960C0.imgIdx_14 == 0;
+    if (movieSliceFirst_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.rectIdx_28].w % movieCtx_800960C0.slice.w) != 0)
     {
         movieSliceFirst_80096100 = 0;
         movieCtx_800960C0.slice.x += rem;
@@ -320,69 +320,69 @@ void MovieDctOutCallback_80041424(void)
     {
         movieCtx_800960C0.slice.x += movieCtx_800960C0.slice.w;
     }
-    if (movieCtx_800960C0.slice.x < movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x + movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w)
+    if (movieCtx_800960C0.slice.x < movieCtx_800960C0.rect[movieCtx_800960C0.rectIdx_28].x + movieCtx_800960C0.rect[movieCtx_800960C0.rectIdx_28].w)
     {
-        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.field_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
+        DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.imgIdx_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
     }
     else
     {
-        movieCtx_800960C0.field_34 = 1;
-        movieCtx_800960C0.field_28 = movieCtx_800960C0.field_28 ? 0 : 1;
-        movieCtx_800960C0.slice.x = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x;
+        movieCtx_800960C0.frameDone_34 = 1;
+        movieCtx_800960C0.rectIdx_28 = movieCtx_800960C0.rectIdx_28 ? 0 : 1;
+        movieCtx_800960C0.slice.x = movieCtx_800960C0.rect[movieCtx_800960C0.rectIdx_28].x;
         movieSliceFirst_80096100 = 1;
-        movieCtx_800960C0.slice.y = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].y;
+        movieCtx_800960C0.slice.y = movieCtx_800960C0.rect[movieCtx_800960C0.rectIdx_28].y;
     }
-    LoadImage((RECT*)&r, movieCtx_800960C0.imgbuf[id]);
+    LoadImage((RECT*)&slice, movieCtx_800960C0.imgbuf[id]);
 }
 extern short movieWidth_80086F98;
 extern short movieHeight_80086F9A;
 // Matched
-int MovieDecodeNextFrame_800415D8(MovieCtx* c, MovieInfo* m)
+int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie)
 {
     u_long* addr;
     u_long* hdr;
     while (StGetNext(&addr, &hdr) == 1)
     {
     }
-    if (hdr[2] >= m->field_A)
+    if (hdr[2] >= movie->frameCount_A)
     {
         bMovieFinished_800960FC = 1;
     }
     if (movieWidth_80086F98 != ((u_short*)hdr)[8] || movieHeight_80086F9A != ((u_short*)hdr)[9])
     {
-        ClearMovieRect_80040E28(m);
+        ClearMovieRect_80040E28(movie);
         movieWidth_80086F98 = ((u_short*)hdr)[8];
         movieHeight_80086F9A = ((u_short*)hdr)[9];
     }
-    c->rect[0].w = c->rect[1].w = MOVIE_W(m, movieWidth_80086F98);
-    c->rect[0].h = c->rect[1].h = movieHeight_80086F9A;
-    c->slice.h = movieHeight_80086F9A;
-    c->field_8 = c->field_8 == 0;
-    DecDCTvlc2(addr, c->vlcbuf[c->field_8], mdecVLCBuffer_80086F94);
+    ctx->rect[0].w = ctx->rect[1].w = MOVIE_W(movie, movieWidth_80086F98);
+    ctx->rect[0].h = ctx->rect[1].h = movieHeight_80086F9A;
+    ctx->slice.h = movieHeight_80086F9A;
+    ctx->vlcIdx_8 = ctx->vlcIdx_8 == 0;
+    DecDCTvlc2(addr, ctx->vlcbuf[ctx->vlcIdx_8], mdecVLCBuffer_80086F94);
     StFreeRing(addr);
     return 1;
 }
 // Matched
-void MovieWaitFrameDone_80041724(MovieCtx* c, int unused)
+void MovieWaitFrameDone_80041724(MovieCtx* ctx, int unused)
 {
     volatile int timeout = 0x13880;
-    while (!c->field_34)
+    while (!ctx->frameDone_34)
     {
         if (--timeout == 0)
         {
-            c->field_34 = 1;
-            c->field_28 = (c->field_28 == 0);
-            c->slice.x = c->rect[c->field_28].x;
-            c->slice.y = c->rect[c->field_28].y;
+            ctx->frameDone_34 = 1;
+            ctx->rectIdx_28 = (ctx->rectIdx_28 == 0);
+            ctx->slice.x = ctx->rect[ctx->rectIdx_28].x;
+            ctx->slice.y = ctx->rect[ctx->rectIdx_28].y;
         }
     }
-    c->field_34 = 0;
+    ctx->frameDone_34 = 0;
 }
 // Matched
-void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* p)
+void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* params)
 {
     unsigned char mode[8];
-    if (p->doubleSpeed)
+    if (params->doubleSpeed)
     {
         mode[0] = 0x80;
     }
@@ -439,7 +439,7 @@ void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
     DecDCTin(buf, mode);
 }
 // Matched
-int InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
+int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode)
 {
     if (cur < 0 || max < cur)
     {
@@ -448,70 +448,70 @@ int InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
     switch (mode)
     {
     case 0:
-        d->w = s->w * cur / max;
-        d->h = s->h * cur / max;
-        d->x = s->x + s->w / 2 - d->w / 2;
-        d->y = s->y + s->h / 2 - d->h / 2;
+        dst->w = src->w * cur / max;
+        dst->h = src->h * cur / max;
+        dst->x = src->x + src->w / 2 - dst->w / 2;
+        dst->y = src->y + src->h / 2 - dst->h / 2;
         break;
     case 1:
-        d->w = s->w * cur / max;
-        d->h = s->h * cur / max;
-        d->x = s->x;
-        d->y = s->y;
+        dst->w = src->w * cur / max;
+        dst->h = src->h * cur / max;
+        dst->x = src->x;
+        dst->y = src->y;
         break;
     case 2:
-        d->w = s->w * cur / max;
-        d->h = s->h * cur / max;
-        d->x = s->x;
-        d->y = s->y + s->h - d->h;
+        dst->w = src->w * cur / max;
+        dst->h = src->h * cur / max;
+        dst->x = src->x;
+        dst->y = src->y + src->h - dst->h;
         break;
     case 3:
-        d->w = s->w * cur / max;
-        d->h = s->h * cur / max;
-        d->x = s->x + s->w - d->w;
-        d->y = s->y;
+        dst->w = src->w * cur / max;
+        dst->h = src->h * cur / max;
+        dst->x = src->x + src->w - dst->w;
+        dst->y = src->y;
         break;
     case 4:
-        d->w = s->w * cur / max;
-        d->h = s->h * cur / max;
-        d->x = s->x + s->w - d->w;
-        d->y = s->y + s->h - d->h;
+        dst->w = src->w * cur / max;
+        dst->h = src->h * cur / max;
+        dst->x = src->x + src->w - dst->w;
+        dst->y = src->y + src->h - dst->h;
         break;
     case 5:
-        d->x = s->x;
-        d->y = s->y;
-        d->w = s->w;
-        d->h = s->h * cur / max;
+        dst->x = src->x;
+        dst->y = src->y;
+        dst->w = src->w;
+        dst->h = src->h * cur / max;
         break;
     case 6:
-        d->w = s->w;
-        d->h = s->h * cur / max;
-        d->x = s->x;
-        d->y = s->y + s->h - d->h;
+        dst->w = src->w;
+        dst->h = src->h * cur / max;
+        dst->x = src->x;
+        dst->y = src->y + src->h - dst->h;
         break;
     case 7:
-        d->w = s->w * cur / max;
-        d->h = s->h;
-        d->x = s->x;
-        d->y = s->y;
+        dst->w = src->w * cur / max;
+        dst->h = src->h;
+        dst->x = src->x;
+        dst->y = src->y;
         break;
     case 8:
-        d->w = s->w * cur / max;
-        d->h = s->h;
-        d->x = s->x + s->w - d->w;
-        d->y = s->y;
+        dst->w = src->w * cur / max;
+        dst->h = src->h;
+        dst->x = src->x + src->w - dst->w;
+        dst->y = src->y;
         break;
     case 9:
-        d->w = s->w;
-        d->h = s->h * cur / max;
-        d->x = s->x;
-        d->y = s->y + s->h / 2 - d->h / 2;
+        dst->w = src->w;
+        dst->h = src->h * cur / max;
+        dst->x = src->x;
+        dst->y = src->y + src->h / 2 - dst->h / 2;
         break;
     case 10:
-        d->w = s->w * cur / max;
-        d->h = s->h;
-        d->x = s->x + s->w / 2 - d->w / 2;
-        d->y = s->y;
+        dst->w = src->w * cur / max;
+        dst->h = src->h;
+        dst->x = src->x + src->w / 2 - dst->w / 2;
+        dst->y = src->y;
         break;
     }
     return max == cur;
