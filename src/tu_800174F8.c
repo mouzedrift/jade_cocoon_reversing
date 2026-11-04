@@ -61,7 +61,7 @@ void sub_8001761C(int* a0, EffectObj* a1)
     v[0] = v[1] = v[2] = a1->field_30 / 4096;
     a1->rot_80.vy += 0x80;
     f = (a1->field_0 < 45) ? 0 : (((a1->field_0 - 44) << 24) | 0x80);
-    sub_8003A6C4(word_80084540[(a1->field_0 * 512) & 0xE00] / 2 + 0x800, t->ftg_4, t->ftg_4 + 1, a1->work_94);
+    LerpFtgObject_8003A6C4(word_80084540[(a1->field_0 * 512) & 0xE00] / 2 + 0x800, t->ftg_4, t->ftg_4 + 1, a1->work_94);
     sub_8004D1EC(t->ftg_4, pOT_8008D690, a1->pos_44, &a1->rot_80, stru_8008D534, f | 0x31, v);
     if (a1->field_0++ > 60)
     {
@@ -110,7 +110,7 @@ void sub_800178C0(int* a0, EffectObj* a1)
     v[0] = v[1] = v[2] = a1->field_30 / 4096;
     if (a1->field_8 < 3)
     {
-        sub_8003A6C4(0x1000 - (a1->field_0 << 10), t->ftg_4, &t->ftg_4[a1->field_8 + 1], a1->work_94);
+        LerpFtgObject_8003A6C4(0x1000 - (a1->field_0 << 10), t->ftg_4, &t->ftg_4[a1->field_8 + 1], a1->work_94);
         if (++a1->field_0 >= 5)
         {
             a1->field_8++;
@@ -244,7 +244,7 @@ void sub_80017E30(EventEntry* e, void* buf)
         a1->field_30 = 0;
         e->cb_8 = sub_80017FF8;
     }
-    sub_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
+    LerpFtgObject_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
     if (a1->field_A0)
     {
         vp = v;
@@ -271,7 +271,7 @@ void sub_80017FF8(EventEntry* e, void* buf)
     int* vp;
     if ((a1->field_0 -= 0x80) > 0)
     {
-        sub_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
+        LerpFtgObject_8003A6C4(0x1000 - a1->field_30, t->ftg_4, t->ftg_4 + 1, a1->work_94);
         if (a1->field_A0)
         {
             vp = v;

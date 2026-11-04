@@ -175,7 +175,7 @@ void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* 
         }                                                                         \
     }
 
-void sub_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
+void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
 {
     PolyGroups* po = (PolyGroups*)out;
     PolyGroups* pa = (PolyGroups*)a;
@@ -215,7 +215,7 @@ void sub_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgO
     }
 }
 #endif
-INCLUDE_ASM(sub_8003A6C4);
+INCLUDE_ASM(LerpFtgObject_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
 {

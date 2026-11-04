@@ -834,7 +834,7 @@ typedef struct BatSpark_a
 
 extern char dword_800795D4[];
 
-extern int* sub_80044010();
+extern int* DrawRotSprite_80044010();
 
 extern void sub_800C1B2C();
 
@@ -895,9 +895,9 @@ typedef struct BatTrail_a
     EffectModel* clip_8C;
 } BatTrail_a;
 
-extern void sub_80044D0C();
+extern void DrawFtgObjectAt_80044D0C();
 
-extern void sub_800459E4();
+extern void DrawSpriteVtxQuadsGT4_800459E4();
 
 extern char dword_800C91A4[];
 
@@ -917,7 +917,7 @@ typedef struct BatAnim_a
     EffectModel* clip_88;
 } BatAnim_a;
 
-extern void sub_80045E48();
+extern void DrawSpriteVtxQuadsG4_80045E48();
 
 typedef struct BatGlow_a
 {

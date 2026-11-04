@@ -546,7 +546,7 @@ extern int sub_800C32DC(int a0, int a1, int a2, int a3);
 extern void sub_800218A8(struct FtgObject* s, struct FtgObject* d, int a2);
 extern void sub_80039FE4(struct FtgObject* a, struct FtgObject* b, struct FtgObject* out);
 extern void sub_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale);
-extern void sub_8003A6C4(int t, struct FtgObject* a, struct FtgObject* b, struct FtgObject* out);
+extern void LerpFtgObject_8003A6C4(int t, struct FtgObject* a, struct FtgObject* b, struct FtgObject* out);
 extern int ModelTaskLoad_80010B90(struct ModelTaskState* p);
 extern int ModelTaskWaitLoad_80010C30(struct ModelTaskState* p);
 extern int sub_80010CDC(struct ModelTaskState* p);

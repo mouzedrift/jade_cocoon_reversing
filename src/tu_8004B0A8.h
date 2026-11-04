@@ -3,7 +3,7 @@
 
 #include "tu_8001EA48.h"
 
-// FTG object renderer state, kept in the scratchpad at 0x1F800214 (sub_8004C7BC)
+// FTG object renderer state, kept in the scratchpad at 0x1F800214 (DrawFtgObject_8004C7BC)
 typedef struct FtgDrawCtx
 {
     DR_TPAGE tpage_0; // queued behind every polygon
@@ -16,7 +16,7 @@ typedef struct FtgDrawCtx
     int flags_20; // bit 0: lit (normal + ncds), bit 4: semi-transparent, bits 5-6: blend mode for textured kinds
 } FtgDrawCtx;
 
-// a projected FTG sprite vertex (sub_8004C4F0), three per sprite triple
+// a projected FTG sprite vertex (ProjectFtgTexSprites_8004C4F0), three per sprite triple
 typedef struct FtgSpriteVtx
 {
     long sxy_0;
@@ -41,7 +41,7 @@ extern FtgTPageClut dword_8009AAD8; // tpage / clut of the textured sprites
 
 // draws an FTG object with the current GTE matrices (flags: see FtgDrawCtx.flags_20, bits 8-15 CLUT
 // row offset, bit 7 + bits 16-31 depth cue); slot indexes dword_800987D8
-extern void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
+extern void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
 
 extern void RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 

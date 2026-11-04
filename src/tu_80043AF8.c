@@ -59,7 +59,7 @@ void StopAllEventEntries_80043B40(EventNode* p)
 extern short word_8008D51E; // projection distance
 extern int sub_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
 // Matched
-int sub_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, short fl)
+int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, short fl)
 {
     BillboardScratch* s = BILLBOARD_SCRATCH;
     int shade;
@@ -93,7 +93,7 @@ int sub_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, s
     return 0;
 }
 // Matched
-int sub_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
+int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
 {
     BillboardScratch* s = BILLBOARD_SCRATCH;
     s->rel_4.vx = pos->vx - dword_8008D600.vx;
@@ -139,7 +139,7 @@ extern short asc_80084350[];
         (s)->prim_0.v3 = (src)->v0 + (uv)[1] + (size)[1];     \
     }
 #define ROT_SPRITE_EXTENT(v, piv, sc) (((v) * (sc) * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4)
-VECTOR* sub_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
+VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
                      SVECTOR* ofs, unsigned char* rgb, short flags, int abr, unsigned long* ot)
 {
     RotSpriteScratch* s = ROT_SPRITE_SCRATCH;
@@ -295,10 +295,10 @@ VECTOR* sub_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short*
     return (VECTOR*)&s->wofs_40;
 }
 #endif
-INCLUDE_ASM(sub_80044010);
+INCLUDE_ASM(DrawRotSprite_80044010);
 extern MATRIX dword_80087114; // light matrix
 // Matched
-void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot)
+void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot)
 {
     MATRIX* m;
     VECTOR zero;
@@ -332,12 +332,12 @@ void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, 
     *(MATRIX*)getScratchAddr(8) = *(MATRIX*)getScratchAddr(0);
     sub_80019D84(pos, &zero, cam, (MATRIX*)getScratchAddr(8));
     PopMatrix();
-    sub_8004C7BC(obj, ot, flags, slot);
+    DrawFtgObject_8004C7BC(obj, ot, flags, slot);
     PopMatrix();
     gte_SetLightMatrix(&dword_80087114);
 }
 // Matched
-void sub_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, void* cam, int flags, VECTOR* scale)
+void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, void* cam, int flags, VECTOR* scale)
 {
     MATRIX* m;
     VECTOR zero;
@@ -369,12 +369,12 @@ void sub_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, void* cam, int
     zero.vz = 0;
     sub_80019D84(pos, &zero, cam, (MATRIX*)getScratchAddr(8));
     PopMatrix();
-    sub_8004C7BC(obj, ot, flags, 0);
+    DrawFtgObject_8004C7BC(obj, ot, flags, 0);
     gte_SetLightMatrix(&dword_80087114);
     PopMatrix();
 }
 // Matched
-void sub_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
+void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
 {
     MATRIX* m;
     LINE_F2 line;
@@ -439,7 +439,7 @@ void sub_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* ro
     PopMatrix();
 }
 // Matched
-void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
+void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
 {
     FtgQuadCtx* s = FTG_QUAD_CTX;
     FtgPrimGT4* t;
@@ -515,7 +515,7 @@ void sub_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int f
     sub_8004D924();
 }
 // Matched
-void sub_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
+void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
 {
     FtgQuadG4Ctx* s = FTG_QUAD_G4_CTX;
     unsigned int i;
@@ -591,7 +591,7 @@ static inline void GetBonePos(SVECTOR* o, AnimPose* p, int j)
     }
 }
 // Matched
-void sub_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
+void GetBoneOffsets_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
 {
     int n = 0;
     SVECTOR* t = (SVECTOR*)getScratchAddr(5);

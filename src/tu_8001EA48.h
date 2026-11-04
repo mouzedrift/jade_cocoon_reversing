@@ -487,7 +487,7 @@ typedef struct
 // one sprite of an effect frame (0x1C bytes; sub_80021298 copies it with the struct_1c byte-group view)
 typedef struct EffectSpriteFrame
 {
-    short u_0; // texture position; u_0, w_4 and f8 are passed to sub_80044010 as three pointers
+    short u_0; // texture position; u_0, w_4 and f8 are passed to DrawRotSprite_80044010 as three pointers
     short v_2;
     short w_4; // texture size
     short h_6;

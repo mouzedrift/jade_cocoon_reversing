@@ -131,7 +131,7 @@ void sub_8004B0A8(VECTOR* v, MATRIX* m)
     m->m[2][2] = n2.vz;
 }
 // Matched
-void sub_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_F3* t = (POLY_F3*)FTG_PRIM_SCRATCH;
     FtgPolyF3* e = obj->f3_0.items;
@@ -182,7 +182,7 @@ void sub_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_F4* t = (POLY_F4*)FTG_PRIM_SCRATCH;
     FtgPolyF4* e = obj->f4_20.items;
@@ -238,7 +238,7 @@ void sub_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_G3* t = (POLY_G3*)FTG_PRIM_SCRATCH;
     FtgPolyG3* e = obj->g3_8.items;
@@ -307,7 +307,7 @@ void sub_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_G4* t = (POLY_G4*)FTG_PRIM_SCRATCH;
     FtgPolyG4* e = obj->g4_28.items;
@@ -390,7 +390,7 @@ void sub_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_FT3* t;
     FtgPolyFT3* e;
@@ -448,7 +448,7 @@ void sub_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_FT4* t;
     FtgPolyFT4* e;
@@ -514,7 +514,7 @@ void sub_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
     }
 }
 // Matched
-void sub_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slot)
+void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
     FtgSpriteVtx* o;
@@ -595,7 +595,7 @@ static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
     dword_80098180 = o;
 }
 // Matched
-void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
+void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
 {
     FtgDrawCtx* ctx = FTG_DRAW_CTX;
     int i;
@@ -626,27 +626,27 @@ void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
     ctx->flags_20 = flags;
     if (obj->f3_0.count)
     {
-        sub_8004B320(obj, ot, ctx);
+        DrawFtgPolyF3_8004B320(obj, ot, ctx);
     }
     if (obj->f4_20.count)
     {
-        sub_8004B590(obj, ot, ctx);
+        DrawFtgPolyF4_8004B590(obj, ot, ctx);
     }
     if (obj->g3_8.count)
     {
-        sub_8004B844(obj, ot, ctx);
+        DrawFtgPolyG3_8004B844(obj, ot, ctx);
     }
     if (obj->g4_28.count)
     {
-        sub_8004BB9C(obj, ot, ctx);
+        DrawFtgPolyG4_8004BB9C(obj, ot, ctx);
     }
     if (obj->ft3_10.count)
     {
-        sub_8004BFA8(obj, ot, ctx);
+        DrawFtgPolyFT3_8004BFA8(obj, ot, ctx);
     }
     if (obj->ft4_30.count)
     {
-        sub_8004C21C(obj, ot, ctx);
+        DrawFtgPolyFT4_8004C21C(obj, ot, ctx);
     }
     if (obj->gt3_18.count)
     {
@@ -781,7 +781,7 @@ void sub_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
     }
     if (obj->texSpriteCount_48)
     {
-        sub_8004C4F0(obj, ot, ctx, slot);
+        ProjectFtgTexSprites_8004C4F0(obj, ot, ctx, slot);
     }
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_18;
 }
@@ -790,7 +790,7 @@ extern MATRIX dword_80087114;            // light matrix
 extern MATRIX dword_80087134;            // light colour matrix
 extern SVECTOR word_8008D4C8;
 // Matched
-void sub_8004D0E8(void)
+void SetGteLightAndCamera_8004D0E8(void)
 {
     MATRIX* m;
     gte_SetBackColor(byte_8008D460[0], byte_8008D460[1], byte_8008D460[2]);
@@ -808,7 +808,7 @@ void sub_8004D0E8(void)
 // Matched
 void sub_8004D1EC(struct FtgObject* a0, unsigned long* a1, void* a2, void* a3, void* a4, int a5, void* a6)
 {
-    sub_80044D0C(a0, a1, a2, a3, a4, a5, a6, 0);
+    DrawFtgObjectAt_80044D0C(a0, a1, a2, a3, a4, a5, a6, 0);
 }
 typedef struct
 {

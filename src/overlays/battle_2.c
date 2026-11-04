@@ -23,7 +23,7 @@ extern char cameraState_8008D4F0[];
 extern short word_8008D4C8;
 extern short word_8008D51E;
 extern unsigned char dword_800C911C[];
-extern void sub_80043DE0(void* a0, void* a1, void* a2, void* a3);
+extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj_a
 {
     char pad0[0x38];
@@ -77,11 +77,11 @@ void sub_800BC90C(BatStageObj_a* p)
                         {
                             sz[0] = e->size_C[0] * 5;
                             sz[1] = e->size_C[1] * 5;
-                            sub_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {
-                            sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                            DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                         }
                     }
                 }
@@ -228,7 +228,7 @@ void sub_800BC90C(BatStageObj_a* p)
                         col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
                         col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
                         SetSemiTrans(&g->poly_C, 1);
-                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }
@@ -272,7 +272,7 @@ void sub_800BC90C(BatStageObj_a* p)
                         col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
                         col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
                         col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
-                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }

@@ -5,7 +5,7 @@
 #include "tu_8001EA48.h"
 #include "tu_8004B0A8.h"
 
-// billboard sprite projection (sub_80043B8C), in the scratchpad at 0x1F800214
+// billboard sprite projection (DrawBillboard_80043B8C), in the scratchpad at 0x1F800214
 typedef struct
 {
     short x_0; // projected centre
@@ -18,7 +18,7 @@ typedef struct
 } BillboardScratch;
 #define BILLBOARD_SCRATCH ((BillboardScratch*)getScratchAddr(0x85))
 
-// wireframe triangles (sub_80045534): edges whose vertex pad is set are drawn grey
+// wireframe triangles (DrawWireTris_80045534): edges whose vertex pad is set are drawn grey
 typedef struct
 {
     SVECTOR v[3]; // pad: edge v[i] -> v[i + 1] is an inner edge
@@ -39,7 +39,7 @@ typedef struct
     long vz;
 } LVec3;
 
-// rotated / scaled sprite (sub_80044010), in the scratchpad at 0x1F800214
+// rotated / scaled sprite (DrawRotSprite_80044010), in the scratchpad at 0x1F800214
 typedef struct
 {
     POLY_FT4 prim_0;
@@ -61,7 +61,7 @@ typedef struct
 } RotSpriteScratch;
 #define ROT_SPRITE_SCRATCH ((RotSpriteScratch*)getScratchAddr(0x85))
 
-// polygons strung between projected sprite vertices (dword_800987D8[slot][idx], sub_800459E4 / sub_80045E48)
+// polygons strung between projected sprite vertices (dword_800987D8[slot][idx], DrawSpriteVtxQuadsGT4_800459E4 / DrawSpriteVtxQuadsG4_80045E48)
 typedef struct
 {
     unsigned short slot;
@@ -108,7 +108,7 @@ typedef struct
     FtgQuadRef* ref_28;
 } FtgQuadCtx;
 #define FTG_QUAD_CTX ((FtgQuadCtx*)getScratchAddr(0x85))
-// sub_80045E48 (untextured quads), same place
+// DrawSpriteVtxQuadsG4_80045E48 (untextured quads), same place
 typedef struct
 {
     long opz_0;
@@ -150,7 +150,7 @@ typedef struct
     VECTOR* scale_24; // optional per-axis scale (rotation matrix diagonal)
 } AnimSkel;
 
-// draws an FTG object at pos / rot (optional per-axis scale) through sub_8004C7BC
-extern void sub_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot);
+// draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
+extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, void* cam, int flags, VECTOR* scale, int slot);
 
 #endif

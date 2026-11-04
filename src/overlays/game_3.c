@@ -2089,7 +2089,7 @@ void DrawLevantModel_800A9708(G2Act* p)
         anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
         sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
     }
-    sub_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
+    DrawSpriteVtxQuadsGT4_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
 
 void sub_800A99DC(G2Act* p)
