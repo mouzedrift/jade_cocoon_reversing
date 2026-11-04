@@ -1855,8 +1855,8 @@ void sub_800A9008(G2Cmd_1* c)
 }
 // (When writing sub_800AA51C in C, delete the jpt_800A07A8 line.)
 INCLUDE_OVERLAY_ASM(game, jpt_800A07A8);
-const char dword_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";
-const char dword_800A0808[] = "PLDISP.C";
+const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";
+const char aPLDISPC_800A0808[] = "PLDISP.C";
 const int dword_800A0814 = 0;
 
 void sub_800A911C(int a)
@@ -2672,7 +2672,7 @@ void sub_800AACF8(G2Act* p)
             }
             else
             {
-                printf(dword_800A07E0, dword_800A0808, 0x44e);
+                printf(aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x44e);
                 exit(1);
             }
         }
@@ -3015,7 +3015,7 @@ void sub_800AB9A8(int a, int b, int c)
     }
     else
     {
-        printf(dword_800A07E0, dword_800A0808, 0x6B9);
+        printf(aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x6B9);
         exit(1);
     }
     p->u22 = a;

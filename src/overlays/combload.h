@@ -23,9 +23,9 @@ typedef struct CombLoadObj
 } CombLoadObj;
 
 extern int dword_800A4088;
-extern const char dword_800A408C[];
-extern const char dword_800A40BC[];
-extern const char dword_800A40E4[];
+extern const char aCheckingMEMORYC_800A408C[];
+extern const char aSelectMEMORYCAR_800A40BC[];
+extern const char aSelectData_800A40E4[];
 extern CombLoadObj dword_800A468C[1];
 extern CombLoadObj dword_800A4698;
 extern int dword_800A46A4[14];

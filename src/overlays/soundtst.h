@@ -1628,6 +1628,6 @@ extern int dword_800AA328[6];
 extern char name_800AA340[16];
 extern char *name_800AA350[8];
 
-extern const char dword_800A519C[16];
+extern const char asc_800A519C[16];
 
 #endif

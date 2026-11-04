@@ -39,9 +39,9 @@ extern void DrawMenuBackground_8002BE10();
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
 int dword_800A4088 SDATA = 20;
-const char dword_800A408C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
-const char dword_800A40BC[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D"; // Select MEMORY CARD.
-const char dword_800A40E4[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\204\202\201\202\224\202\201"; // Select data
+const char aCheckingMEMORYC_800A408C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
+const char aSelectMEMORYCAR_800A40BC[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D"; // Select MEMORY CARD.
+const char aSelectData_800A40E4[] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\204\202\201\202\224\202\201"; // Select data
 
 void sub_800A40FC(CombLoadTask* t)
 {
@@ -89,15 +89,15 @@ void sub_800A41FC(CombLoadTask* t)
     code[0] = 0xC3;
     if (found)
     {
-        str = dword_800A408C;
+        str = aCheckingMEMORYC_800A408C;
     }
     else if (dword_800A47F0 == 0)
     {
-        str = dword_800A40BC;
+        str = aSelectMEMORYCAR_800A40BC;
     }
     else if (dword_800A47F0 == 1)
     {
-        str = dword_800A40E4;
+        str = aSelectData_800A40E4;
     }
     DrawSmallTextBox_8002AF58((int)&str, (int)code, 0xF);
     switch (dword_800A47F0)

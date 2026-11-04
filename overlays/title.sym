@@ -1,11 +1,11 @@
 dword_800A05A0=0x800a05a0; // overlay header / data
 asc_800A05A4=0x800a05a4; // data
-dword_800A05A8=0x800a05a8; // data
+aCaution_800A05A8=0x800a05a8; // data
 str_800A05BC=0x800a05bc; // data
 str_800A0604=0x800a0604; // data
 str_800A0640=0x800a0640; // data
-dword_800A0658=0x800a0658; // data
-dword_800A069C=0x800a069c; // data
+aThereAreNoFreeB_800A0658=0x800a0658; // data
+aTheMEMORYCARDIn_800A069C=0x800a069c; // data
 dword_800A06D8=0x800a06d8;
 dword_800A0710=0x800a0710;
 dword_800A0748=0x800a0748;

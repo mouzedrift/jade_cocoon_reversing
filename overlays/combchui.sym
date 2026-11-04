@@ -1,5 +1,5 @@
 dword_800A4088=0x800a4088; // overlay header / data
-dword_800A408C=0x800a408c;
+aWillPlayer2UseC_800A408C=0x800a408c; // data
 dword_800A40D0=0x800a40d0;
 aYouHaveAMEMORYC_800A40D4=0x800a40d4; // data
 aOpponentGivesUp_800A4124=0x800a4124; // data

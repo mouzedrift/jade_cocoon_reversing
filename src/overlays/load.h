@@ -137,7 +137,7 @@ extern const int dword_800B6C10;
 extern const int dword_800B6C14;
 extern const unsigned short name_800B6C18[12];
 extern const unsigned short name_800B6C30[12];
-extern const char dword_800B6C48[20];
+extern const char aCorridor_800B6C48[20];
 extern const char asc_800B6C5C[28];
 extern const char asc_800B6C78[28];
 extern const char asc_800B6C94[28];

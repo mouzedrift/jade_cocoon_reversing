@@ -36,12 +36,12 @@ typedef struct { char c[4]; } Blk4_;
 
 extern int dword_800A05A0;
 extern const char asc_800A05A4[];
-extern const char dword_800A05A8[];
+extern const char aCaution_800A05A8[];
 extern const char str_800A05BC[];
 extern const char str_800A0604[];
 extern const char str_800A0640[];
-extern const char dword_800A0658[];
-extern const char dword_800A069C[];
+extern const char aThereAreNoFreeB_800A0658[];
+extern const char aTheMEMORYCARDIn_800A069C[];
 extern const TitleBlk38M dword_800A06D8;
 extern const TitleBlk38M dword_800A0710;
 extern const TitleBlk38M dword_800A0748;

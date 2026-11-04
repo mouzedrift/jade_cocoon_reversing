@@ -142,10 +142,10 @@ const char aKumo_800B6B5C[12] = "\202j\202\225\202\215\202\217";
 const char aTombo_800B6B68[12] = "\202s\202\217\202\215\202\202\202\217";
 const char aTamamusi_800B6B74[20] = "\202s\202\201\202\215\202\201\202\215\202\225\202\223\202\211";
 const char aKekkai_800B6B88[16] = "\202j\202\205\202\213\202\213\202\201\202\211";
-const char dword_800B6B98[] = "\202r\202\205\202\214\201@\202\213\202\211\202\216\202\204"; // Sel kind
-const char dword_800B6BAC[] = "\202r\202\205\202\214\201@\202\223\202\203\202\205\202\216\202\205\201@\202\207\202\222\202\217\202\225\202\220"; // Sel scene group
-const char dword_800B6BCC[] = "\202r\202\205\202\214\201@\202\223\202\203\202\205\202\216\202\205"; // Sel scene
-const char dword_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\210\202\201\202\220\202\224\202\205\202\222\201@\000\000im";
+const char aSelKind_800B6B98[] = "\202r\202\205\202\214\201@\202\213\202\211\202\216\202\204"; // Sel kind
+const char aSelSceneGroup_800B6BAC[] = "\202r\202\205\202\214\201@\202\223\202\203\202\205\202\216\202\205\201@\202\207\202\222\202\217\202\225\202\220"; // Sel scene group
+const char aSelScene_800B6BCC[] = "\202r\202\205\202\214\201@\202\223\202\203\202\205\202\216\202\205"; // Sel scene
+const char aSelChapter_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\210\202\201\202\220\202\224\202\205\202\222\201@\000\000im";
 
 // Matched
 void sub_800B6BFC(MapTask* t, int a1)
@@ -680,7 +680,7 @@ void sub_800B860C()
         }
         r1.x = 0x1E;
         r1.y = 0x14;
-        DrawText_8003E91C(2, dword_800B6B98, &r1, 0);
+        DrawText_8003E91C(2, aSelKind_800B6B98, &r1, 0);
         for (i = 0; i < 6; i++)
         {
             str = dword_800B9370[i];
@@ -717,7 +717,7 @@ void sub_800B860C()
         }
         r2.x = 0x1E;
         r2.y = 0x14;
-        DrawText_8003E91C(2, dword_800B6BAC, &r2, 0);
+        DrawText_8003E91C(2, aSelSceneGroup_800B6BAC, &r2, 0);
         for (i = 0; i < dword_800B0624[m->area_4]; i++)
         {
             str = dword_800B93E0[m->area_4][i];
@@ -772,7 +772,7 @@ void sub_800B860C()
         }
         r3.x = 0x1E;
         r3.y = 0x14;
-        DrawText_8003E91C(2, dword_800B6BCC, &r3, 0);
+        DrawText_8003E91C(2, aSelScene_800B6BCC, &r3, 0);
         break;
     }
 }
@@ -818,7 +818,7 @@ void sub_800B8B5C()
     a.y = 0x78;
     b.x = a.x + 10;
     b.y = a.y + 10;
-    DrawText_8003E91C(2, dword_800B6BE0, &b, 0);
+    DrawText_8003E91C(2, aSelChapter_800B6BE0, &b, 0);
     c.x = a.x + 0x50;
     c.y = a.y + 0xA;
     DrawNumber_8003EF74(&c, *sel + 1, 0);

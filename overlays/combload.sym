@@ -1,7 +1,7 @@
 dword_800A4088=0x800a4088; // overlay header / data
-dword_800A408C=0x800a408c; // data
-dword_800A40BC=0x800a40bc; // data
-dword_800A40E4=0x800a40e4; // data
+aCheckingMEMORYC_800A408C=0x800a408c; // data
+aSelectMEMORYCAR_800A40BC=0x800a40bc; // data
+aSelectData_800A40E4=0x800a40e4; // data
 sub_800A40FC=0x800a40fc;
 sub_800A4140=0x800a4140;
 sub_800A41A8=0x800a41a8;

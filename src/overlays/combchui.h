@@ -13,7 +13,7 @@ typedef struct CombChuiMenu
 } CombChuiMenu;
 
 extern int dword_800A4088;
-extern const char dword_800A408C[68];
+extern const char aWillPlayer2UseC_800A408C[68];
 extern const int dword_800A40D0;
 extern const char aYouHaveAMEMORYC_800A40D4[];
 extern const char aOpponentGivesUp_800A4124[];

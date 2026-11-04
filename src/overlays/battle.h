@@ -1125,7 +1125,7 @@ extern void sub_800BC0FC();
 
 extern int dword_800B66C0;
 extern const int dword_800B6700[4];
-extern const char dword_800B68AC[];
+extern const char aAttackWithReadi_800B68AC[];
 extern const char aDefendToReduceD_800B68E4[];
 extern const char aSummonDivineMin_800B6914[];
 extern const char aCaptureMinionIn_800B6940[];
