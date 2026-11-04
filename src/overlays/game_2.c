@@ -1,25 +1,25 @@
 // GAME.BIN, source file 2 of 3 from 0x800A55B0 (.rdata from 0x800A061C)
 #include "game.h"
 
-GameTable_1* sub_800A55B0(int a)
+void* sub_800A55B0(int a)
 {
-    GameTable_1* r = 0;
+    void* r = 0;
     switch (a)
     {
     case 0:
-        r = (GameTable_1*)name_800AEB80;
+        r = name_800AEB80;
         break;
     case 1:
-        r = (GameTable_1*)name_800AEBBC;
+        r = name_800AEBBC;
         break;
     case 2:
-        r = (GameTable_1*)name_800AEBC0;
+        r = name_800AEBC0;
         break;
     case 3:
-        r = (GameTable_1*)name_800AEBC8;
+        r = name_800AEBC8;
         break;
     case 4:
-        r = (GameTable_1*)name_800AEBCC;
+        r = name_800AEBCC;
         break;
     }
     return r;

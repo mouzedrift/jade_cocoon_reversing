@@ -387,7 +387,7 @@ void InitFonts_8003DA70(void)
     {
         e = &fontDefs_80086574[i];
         f = &fonts_80095FB0[i];
-        MemCopy_800403E8((unsigned int*)f, (unsigned int*)&publicTiySprts_8008D434[e->field_0], 0x14);
+        MemCopy_800403E8(f, &publicTiySprts_8008D434[e->field_0], 0x14);
         f->w_10 = e->field_6;
         f->h_12 = e->field_8;
         f->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[e->field_0];

@@ -96,6 +96,9 @@ void __main(void)
 INCLUDE_ASM(start);
 INCLUDE_ASM(dword_80010528);
 INCLUDE_ASM(dword_8001052C);
+// start-up code (start, its data words, GetHeapStart_80010538) is hand-written assembly:
+// GetHeapStart_80010538 leaves its jr delay slot empty, which the compiler never does
+INCLUDE_ASM(GetHeapStart_80010538);
 // Matched
 int CountMinions_80010548(int id)
 {
@@ -151,7 +154,7 @@ void ClearMinionsAndItems_80010600(void)
     }
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].id = 0xD3;
+        saveData_8008B570.items[i].species_5C = 0xD3;
     }
 }
 #endif
@@ -168,19 +171,19 @@ void ClearMinionsAndItems_80010600(void)
     v = 0xD3;
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].id = v;
+        saveData_8008B570.items[i].species_5C = v;
     }
 }
 // Matched
-int AddItem_80010650(Item* pItem)
+int AddItem_80010650(UnitStats* pItem)
 {
     int i;
 
     for (i = 0; i < 12; i++)
     {
-        if (saveData_8008B570.items[i].id == 0xD3)
+        if (saveData_8008B570.items[i].species_5C == 0xD3)
         {
-            MemCopy_800403E8((unsigned int*)&saveData_8008B570.items[i], (unsigned int*)pItem, sizeof(Item));
+            MemCopy_800403E8(&saveData_8008B570.items[i], pItem, sizeof(UnitStats));
             return 1;
         }
     }
@@ -195,7 +198,7 @@ int CountItems_800106B8(void)
     count = 0;
     for (i = 0; i < 12; i++)
     {
-        if (saveData_8008B570.items[i].id != 0xD3)
+        if (saveData_8008B570.items[i].species_5C != 0xD3)
         {
             count++;
         }
@@ -290,7 +293,7 @@ int StartModelTask_80010850(void* a0)
         buf->key_0 = e->field_4;
         m = malloc3_8003FC4C(0x40);
         buf->state_4 = m;
-        MemCopy_800403E8((unsigned int*)&m->count_4, (unsigned int*)a0, 0x34);
+        MemCopy_800403E8(&m->count_4, a0, 0x34);
         m->models_0 = 0;
         m->state_38 = 1;
         m->next_3C = 1;

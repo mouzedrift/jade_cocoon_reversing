@@ -23,7 +23,7 @@ extern char cameraState_8008D4F0[];
 extern short word_8008D4C8;
 extern short word_8008D51E;
 extern unsigned char dword_800C911C[];
-extern void sub_80043DE0(void* a0, void* a1, void* a2, void* a3);
+extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj_a
 {
     char pad0[0x38];
@@ -48,7 +48,7 @@ void sub_800BC90C(BatStageObj_a* p)
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, *list)];
             int j;
-            for (j = 0; j < g->n_0; j++)
+            for (j = 0; j < g->count_0; j++)
             {
                 int k;
                 for (k = 0; k < g->frameCounts_4[j]; k++)
@@ -77,11 +77,11 @@ void sub_800BC90C(BatStageObj_a* p)
                         {
                             sz[0] = e->size_C[0] * 5;
                             sz[1] = e->size_C[1] * 5;
-                            sub_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {
-                            sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                            DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                         }
                     }
                 }
@@ -163,7 +163,7 @@ void sub_800BC90C(BatStageObj_a* p)
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j;
-            for (j = 0; j < g->n_0; j++)
+            for (j = 0; j < g->count_0; j++)
             {
                 int half = n >> 1;
                 int t = (dword_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
@@ -228,7 +228,7 @@ void sub_800BC90C(BatStageObj_a* p)
                         col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
                         col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
                         SetSemiTrans(&g->poly_C, 1);
-                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }
@@ -237,7 +237,7 @@ void sub_800BC90C(BatStageObj_a* p)
         default:
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
-            int j = ((unsigned int)frameCount_8008D3FC % (g->n_0 * 2)) / 2;
+            int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->frameCounts_4[j]; k++)
             {
@@ -272,7 +272,7 @@ void sub_800BC90C(BatStageObj_a* p)
                         col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
                         col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
                         col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
-                        sub_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
                     }
                 }
             }
@@ -314,7 +314,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 {
                     pos.vy -= 0x2F8;
                 }
-                for (k = 0; k < mdl->n_0; k++)
+                for (k = 0; k < mdl->ftgCount_0; k++)
                 {
                     sub_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
                 }
@@ -704,7 +704,7 @@ void sub_800BE3C0()
                 PlaySfx_80031494(0x6F);
             }
         }
-        if (dword_800C9D84 != *(signed char*)&dword_800C9D82)
+        if (dword_800C9D84 != dword_800C9D82)
         {
             sub_80039ED8(dword_800C9D84);
             dword_800C9D82 = dword_800C9D84;

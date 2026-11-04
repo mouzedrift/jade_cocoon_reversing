@@ -265,7 +265,7 @@ void sub_800A13B8(TstCompoWork* a)
 
 extern void* memset(void* p, int c, unsigned int n);
 extern void sub_80046A58(void* a, void* b, void* c);
-extern void sub_800459E4(void* a, void* b, void* c, int d);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A2588[];
 extern char name_800A2570[];
 void sub_800A1468(TstCompoWork* c)
@@ -278,7 +278,7 @@ void sub_800A1468(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
@@ -295,7 +295,7 @@ void sub_800A1468(TstCompoWork* c)
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
     sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
-    sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
+    DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
 extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
@@ -310,7 +310,7 @@ void sub_800A15F4(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = (int*)sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
@@ -331,14 +331,14 @@ void sub_800A15F4(TstCompoWork* c)
     if ((unsigned)c->f1FC >= 0x1000)
     {
         sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
-        sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
+        DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
         anim = &c->model_4->anims_54[c->f204];
         sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
                      name_800A2570, c->model_4->anims_54);
-        sub_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
+        DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
 }
 

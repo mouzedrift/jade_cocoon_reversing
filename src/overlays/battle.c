@@ -360,7 +360,7 @@ int sub_800BAAD8()
     return 0;
 }
 
-#if 0 // Not matched: goto loop gets the body right but i++ is scheduled ahead of the stores (original: after them, li -1 in the branch delay slot)
+// Matched
 void sub_800BABC4()
 {
     int i;
@@ -372,23 +372,23 @@ loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the origina
     m = sub_800A248C() & (1 << (i + 4));
     if (m != 0)
     {
-        sub_800A2BE4(i);
+        p->b = sub_800A2BE4(i);
     }
-    p->b = -1;
+    else
+    {
+        p->b = -1;
+    }
     p->a = 0;
     p->d = 0;
     p->c = 0;
     p->e = 7;
-    i++;
     p++;
+    i++;
     if (i < 3)
     {
         goto loop;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800BABC4);
 
 void sub_800BAC4C(BatTask_a* t)
 {
@@ -700,7 +700,7 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
     {
         dword_800C9CBC[dword_800C9C7C] = 2;
     }
-    f = m->flags_0;
+    f = m->status_0;
     r = sub_800BFA4C(f, flags);
     dword_800C9C88.kind_0 = r;
     dword_800C9C88.arg_4 = 0;
@@ -962,21 +962,23 @@ void sub_800BBBA8(BatTask_a* t, BatObj_a* u)
     t->next_8 = sub_800BC144;
 }
 
-#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C (original keeps source order); tried early return, pointer local, swapped branches
+#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C; the
+      // original keeps them in order, as if dword_800C9C98 were a field of the same struct (gcc only disambiguates a
+      // fixed scalar from a struct field behind a register). sub_800BBDB4 gets no arguments (t/u are still in a0/a1)
 void sub_800BBBF4(BatTask_a* t, BatObj_a* u)
 {
     dword_800C9C88.kind_0 = 3;
     dword_800C9C88.targets_C = 0;
-    if (dword_800C9C98)
+    if (!dword_800C9C98)
+    {
+        sub_800BBDB4();
+    }
+    else
     {
         PlaySeqSlot_80031160(0x11, 1);
         u->fc = sub_800BC28C();
         u->next_8 = sub_800BBC84;
         t->next_8 = sub_800BC144;
-    }
-    else
-    {
-        sub_800BBDB4(t, u);
     }
 }
 #endif

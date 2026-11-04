@@ -9,11 +9,12 @@
 #include "actor.h"
 
 #include "tu_8001EA48.h"
+#include "effect_obj.h"
 #include "tu_80036528.h"
+#include "tu_80019BF0.h"
 
 extern void sub_800A6D30(int a);
 
-struct GameObj5_1;
 
 // AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the name_800ADEB8 state handlers)
 typedef struct GameAi
@@ -30,12 +31,6 @@ typedef struct GameAi
     int f2c; // turn amount
 } GameAi;
 
-typedef struct GameHolder_1
-{
-    int f0;
-    GameAi* f4;
-} GameHolder_1;
-
 typedef struct GameRec_1
 {
     int f0, f4, f8, fc, f10;
@@ -46,12 +41,41 @@ typedef struct GameV3_1
     int a, b, c;
 } GameV3_1;
 
+// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
+typedef struct GameEnemyMember
+{
+    int species_0; // sub_80019C70 / InitMinionData_8001900C
+    int f4;
+} GameEnemyMember;
+
+typedef struct GameEnemy
+{
+    int kind_0; // 0: actors already exist, 1: hide them when reused
+    int maxCount_4;
+    int f8;
+    int fC;
+    int f10;
+    int f14;
+    int useMinion_18; // 1: the first member is minion_1C
+    UnitStats minion_1C;
+    Actor* actors_A4[3];
+    GameEnemyMember members_B0[3];
+    int* anims_C8[3]; // [0]: when it is the group being fought, [1]: otherwise (default name_8007A024)
+    int fD4[3];
+} GameEnemy;
+
 typedef struct GameSlot_1
 {
     int f0;
     GameAi* f4;
-    char data_8[0xe0];
+    GameEnemy data_8;
 } GameSlot_1;
+
+extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
+extern short dword_80079140[]; // default bone table
+extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
+extern GameEnemy* sub_800A5F6C(void);
+extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
 
 
 
@@ -125,7 +149,7 @@ typedef struct GameEvEnt
     int f8C;
 } GameEvEnt;
 
-extern struct GameObj5_1* sub_800A59D0(int a);
+extern EventEntry* sub_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
@@ -218,7 +242,7 @@ extern int dword_800B0698;
 
 extern int dword_800AEBE0;
 
-extern char dword_800B1CB8[];
+extern GameEnemy dword_800B1CB8; // the group that is being fought (sub_800A5F6C)
 
 extern char* dword_8008B518;
 
@@ -287,24 +311,13 @@ extern GameActorDesc* sub_800A7A1C(int a);
 
 extern short* dword_800AE254[];
 
-// what sub_800A29CC hands out about an actor
-typedef struct GameActorInfo
-{
-    int f0;
-    int* pos_4;
-    char* f8;
-    char* fC;
-    int pad_10[7];
-    char* f2C;
-    int* f30;
-} GameActorInfo;
 
 typedef struct GameCtx_1
 {
     int f0;
-    int f4;
-    int f8;
-    int fc[12];
+    GameSlot_1* f4;     // the enemy slot that started the encounter
+    int f8;             // number of fc entries
+    GameSlot_1* fc[12]; // the other enemy slots
     int f3c;
     int f40;
     int f44;
@@ -390,9 +403,9 @@ extern void sub_800A7B00(int a);
 
 extern void sub_800A7BF0(int a);
 
-extern void sub_800A188C(GameHolder_1* p);
+extern void sub_800A188C(GameSlot_1* p);
 
-extern void sub_800A18C8(GameHolder_1* p);
+extern void sub_800A18C8(GameSlot_1* p);
 
 extern GameTab_1 dword_800B0EB8[];
 
@@ -402,24 +415,6 @@ extern int dword_800B199C[];
 
 extern short sinTable_80084540[];
 
-typedef struct GameObj5_1
-{
-    unsigned int flags_0;
-    char pad_4[4];
-    void (*fn_8)();
-    void (*fn_c)();
-    int pad_10;
-    void* obj_14; // the work area (EventEntry.buffer)
-} GameObj5_1;
-
-typedef struct GameNode_1
-{
-    char pad_0[4];
-    struct GameNode_1* next_4;
-    char pad_8[4];
-    int count_c;
-    GameObj5_1 sub_10;
-} GameNode_1;
 
 typedef struct GameObjList_1
 {
@@ -440,7 +435,7 @@ typedef struct GameTable_1
     GameTabEnt_1 e[1];
 } GameTable_1;
 
-extern GameNode_1* dword_8008D410;
+extern EventNode* dword_8008D410;
 
 extern void sub_800A8EA4();
 
@@ -448,7 +443,7 @@ extern void sub_800BAE2C(int a, int b);
 
 extern void sub_800B66C4(int a);
 
-extern GameTable_1* sub_800A55B0(int a);
+extern void* sub_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
 
 extern int dword_800AEBE8;
 
@@ -491,7 +486,7 @@ extern char dword_80091CE0[];
 
 extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
-extern short* sub_800B322C();
+extern unsigned short* sub_800B322C();
 
 extern unsigned short* sub_800A53CC();
 
@@ -536,7 +531,7 @@ extern void sub_800A8140(void);
 
 extern void sub_800A94CC(void);
 
-extern GameNode_1* dword_8008D400;
+extern EventNode* dword_8008D400;
 
 extern GameRect_1 stru_8008D420;
 
@@ -589,10 +584,11 @@ typedef struct GameO_1
 extern int sub_800A48F4(int a);
 
 extern void sub_800A46FC(GameAi* p);
+extern void sub_800A45F8(GameAi* p);
 
 typedef struct GameLst_1
 {
-    int** p0;
+    EventNode** p0; // a list head variable; 0 ends the table
     int f4;
 } GameLst_1;
 
@@ -612,7 +608,7 @@ extern void sub_800A6B00();
 
 extern void sub_800A73A8(void);
 
-extern void sub_800A7450(GameNode_1* n);
+extern void sub_800A7450(EventNode* n);
 
 extern void sub_800A13B8();
 
@@ -620,11 +616,11 @@ extern int CheckEnemyContact_800A19E4();
 
 extern void StartPadVibration_80036528();
 
-extern int dword_8008D49C;
+extern EventNode* dword_8008D49C;
 
 extern unsigned char levantCaptureLevel_8008BD7C;
 
-extern void sub_800A2EE4(void);
+extern void sub_800A2EE4(EventEntry* e, void* ai);
 
 extern void (*name_800ADEB8[][2])();
 
@@ -650,11 +646,11 @@ extern int dword_8008B554;
 
 extern int name_800AEB80[];
 
-extern int name_800AEBBC;
+extern int* name_800AEBBC; // the relocated script blob (EVENTFNC LoadRelocBlob_800BC854)
 
-extern int name_800AEBC0[];
+extern void* name_800AEBC0[];
 
-extern int name_800AEBC8;
+extern void* name_800AEBC8;
 
 extern int name_800AEBCC[];
 
@@ -726,11 +722,11 @@ extern unsigned short padPressed_8009194C;
 
 extern short word_80091CB8[];
 
-extern int dword_8008D498;
+extern EventNode* dword_8008D498;
 
-extern int dword_8008D480;
+extern EventNode* dword_8008D480;
 
-extern int dword_800B1DAC;
+extern EventNode* dword_800B1DAC;
 
 extern int dword_800B06B0[];
 
@@ -765,7 +761,10 @@ extern char name_80096090[];
 typedef struct G2Inner
 {
     unsigned int f0;
-    char pad_4[0x98];
+    char pad_4[0x48];
+    FirFilter turn_4C;
+    int turnBuf_5C[4];
+    char pad_6C[0x30];
     int f9C;
     int fA0;
     int fA4;
@@ -795,6 +794,21 @@ typedef struct G2V12
     int b;
     int c;
 } G2V12;
+
+typedef struct G2PathStep
+{
+    short x;
+    short y;
+    short z;
+    short rotY;
+} G2PathStep;
+
+typedef struct G2Path
+{
+    int count_0;
+    int div_4;
+    G2PathStep* steps_8;
+} G2Path;
 
 // Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
@@ -826,14 +840,16 @@ typedef struct G2Act
     G2V12 v48;
     G2V12 v54;
     G2V12 v60;
-    char pad_6C[0xC];
-    int f78;
-    int f7c;
-    char pad_80[0x10];
+    G2V12 v6c; // root motion of the current animation frame (sub_800AA140)
+    struct G2Path* path_78; // scripted walk (flag 0x400000, sub_800ABAA4)
+    int f7c;    // step of path_78
+    int tri_80; // floor triangle under Levant (dword_8008B500.meshes_C[mesh_84].tris_4)
+    int mesh_84;
+    char pad_88[8];
     MATRIX mats_90[40];
-    char pad_590[0x1E8];
-    int f778;
-    unsigned short u77C;
+    int bonePos_590[40][3];
+    FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing
+    int turnBuf_780[4];
 } G2Act;
 
 typedef struct G2Ctx2
@@ -857,7 +873,7 @@ extern short word_8008BDA6;
 
 extern char dword_800B1DF8;
 
-extern char dword_800B0FB0;
+extern SVECTOR dword_800B0FB0[]; // Levant's bone scales
 
 extern void sub_800AC380(int);
 
@@ -893,8 +909,6 @@ typedef struct G2Rec
     char pad_38[8];
 } G2Rec;
 
-#define G2REC(a, b) ((G2Rec*)sub_80024E38(dword_8007DC60->items_8))
-
 extern int sub_800AC794(int, int);
 
 extern void sub_800A913C();
@@ -903,9 +917,8 @@ extern void sub_800ABAD4();
 
 extern void sub_800AB444();
 
-extern void FirFilterInit_8001450C(int*, void*, int, int);
 
-extern char dword_800795C0;
+extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
 
 typedef struct G2P
 {
@@ -967,7 +980,6 @@ typedef struct G2Ent16
 
 extern G2Ent16** name_800B0608[];
 
-extern void FirFilterStep_80014588(void*, void*, int);
 
 extern char dword_800A07E0[];
 
@@ -1197,6 +1209,6 @@ extern void sub_80046A58(void* sk, void* buf, char* pose);
 
 extern void sub_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
 
-extern void sub_800459E4(void* bones, void* m, unsigned long* ot, int flags);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* ot, int flags);
 
 extern void sub_8004D288(void* out, void* s, int k);

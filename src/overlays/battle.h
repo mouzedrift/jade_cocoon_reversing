@@ -9,6 +9,7 @@
 #include "actor.h"
 #include "minion_menu.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 #include "tu_8001EA48.h"
 #include "tu_80036528.h"
@@ -104,7 +105,7 @@ extern BatCmd_a dword_800C9E58;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);
 
-extern unsigned char dword_800C9E54;
+extern int dword_800C9E54;
 
 extern int dword_800C9E3C;
 
@@ -129,7 +130,7 @@ extern void FadeOutSeqSlot_800313C8(int);
 
 extern EventNode* dword_8008D624;
 
-extern char dword_800C9D82;
+extern signed char dword_800C9D82;
 
 extern char dword_800C9D83;
 
@@ -245,17 +246,6 @@ typedef struct BatModelReq_a
     int f34;
 } BatModelReq_a;
 
-// sub_800C0FC4: filled from the battle model actor
-typedef struct BatModelInfo_a
-{
-    int f0;
-    int* pos_4;
-    char* f8;
-    char* fC;
-    int f10[7];
-    char* f2C;
-    int* f30;
-} BatModelInfo_a;
 
 extern void sub_800C064C();
 
@@ -789,7 +779,6 @@ extern int sub_800C0904(unsigned char* p);
 
 
 
-extern void sub_80019B14(int a, int b, int c);
 
 extern short dword_80079140[]; // default bone table
 
@@ -832,9 +821,23 @@ typedef struct BatSpark_a
     int* offset_44;
 } BatSpark_a;
 
-extern char dword_800795D4[];
+// buffer of the sub_800C1450 task: walks along path_88 (one frame per 4096 of time_4) and drops
+// three sub_800C1220 sprites every fourth frame
+typedef struct BatDropSrc_a
+{
+    int count_0;
+    int time_4;
+    short step_8;
+    char pad_A[0x3A];
+    int pos_44[3];
+    char pad_50[0x38];
+    EffectSprite* path_88;
+    EffectSprite* animA_8C;
+    EffectSprite* animB_90;
+} BatDropSrc_a;
 
-extern int* sub_80044010();
+
+extern int* DrawRotSprite_80044010();
 
 extern void sub_800C1B2C();
 
@@ -895,9 +898,9 @@ typedef struct BatTrail_a
     EffectModel* clip_8C;
 } BatTrail_a;
 
-extern void sub_80044D0C();
+extern void DrawFtgObjectAt_80044D0C();
 
-extern void sub_800459E4();
+extern void DrawSpriteVtxQuadsGT4_800459E4();
 
 extern char dword_800C91A4[];
 
@@ -917,7 +920,7 @@ typedef struct BatAnim_a
     EffectModel* clip_88;
 } BatAnim_a;
 
-extern void sub_80045E48();
+extern void DrawSpriteVtxQuadsG4_80045E48();
 
 typedef struct BatGlow_a
 {
@@ -938,7 +941,6 @@ typedef struct BatGlow_a
     int* scale_A0;
 } BatGlow_a;
 
-extern char dword_800795D4[];
 
 extern void sub_800C3B50(int* p, int id);
 
@@ -1082,7 +1084,7 @@ extern BatMenu_a* dword_800C9E44;
 
 extern BatMenuItem_a* dword_800C9E6C;
 
-extern unsigned short dword_800C9E5C;
+extern int dword_800C9E5C;
 
 extern int dword_800C93A0;
 
@@ -1146,7 +1148,7 @@ extern struct BatState dword_800C9630;
 
 extern short dword_800C92E0;
 
-extern unsigned char dword_800C9E54;
+extern int dword_800C9E54;
 
 extern unsigned char dword_800C9C99;
 
@@ -1159,7 +1161,7 @@ extern int dword_800C9978[][4];
 
 extern char dword_800C9B58[];
 
-extern unsigned short dword_800C9E5C;
+extern int dword_800C9E5C;
 
 extern unsigned short dword_800C968C[][2];
 

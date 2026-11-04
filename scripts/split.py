@@ -53,8 +53,10 @@ def c_data_names(known, known_addrs=()):
         a = int(addr, 16)
         if RDATA_START <= a < BSS_GAME_END and name not in known and name not in found:
             dims = r"\s*(?:\[[^\]]*\]\s*)*"
-            declared = re.search(r"\bextern\s[^;(){}]*?\b" + name + r"\b" + dims + ";", text) or \
-                re.search(r"^[\w \t*]*\b" + name + r"\b" + dims + "=", text, re.M)
+            # (also function pointers: extern void (*name[2])(int); void (*name[2])() = {...};)
+            fp = r"(\s*\)\s*\([^;=]*\))?"
+            declared = re.search(r"\bextern\s[^;{}]*?[\s*(]" + name + r"\b" + dims + fp + ";", text) or \
+                re.search(r"^[\w \t*(]*\b" + name + r"\b" + dims + fp + r"\s*(BSS\s*)?=", text, re.M)
             if declared or a in known_addrs:
                 found[name] = a
             else:

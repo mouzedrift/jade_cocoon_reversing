@@ -270,7 +270,7 @@ void sub_8002E188(unsigned char* a, unsigned char* b, unsigned short* pos, short
 void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* a3)
 {
     UnitStatus* p = 0; // works on a copy at address 0 (the scratch area)
-    MemCopy_800403E8(0, (unsigned int*)a0, sizeof(UnitStatus));
+    MemCopy_800403E8(0, a0, sizeof(UnitStatus));
 
     switch (a2)
     {

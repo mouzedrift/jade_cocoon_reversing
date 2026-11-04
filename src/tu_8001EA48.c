@@ -622,7 +622,7 @@ extern int sub_80019CC4();
 extern void sub_8001C440();
 extern void sub_80047E28();
 extern void sub_80046A58();
-extern void sub_800459E4();
+extern void DrawSpriteVtxQuadsGT4_800459E4();
 // Matched
 void sub_8001FD08(void* a0)
 {
@@ -643,7 +643,7 @@ void sub_8001FD08(void* a0)
         o->draw_164.frame_18 = o->frame_90 % o->draw_164.anim_14->frameCount_0;
         o->draw_164.drawMode_1C = o->drawMode_8;
         o->draw_164.scale_24 = o->scale_2C;
-        o->draw_164.bonePos_20 = (int)o->bonePos_1C4;
+        o->draw_164.bonePos_20 = o->bonePos_1C4;
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -679,7 +679,7 @@ void sub_8001FD08(void* a0)
         {
             ot2 = pOT_8008D690;
         }
-        sub_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
+        DrawSpriteVtxQuadsGT4_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
         sub_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }
@@ -1175,8 +1175,7 @@ void UpdateOverlayLoaderTask_80020CD8(int a0, OverlayLoader* p)
         p->request_8 = LoadOverlay_80020BF8(2, p->wanted_0);
     }
 }
-#if 0
-// Not matched
+// Matched
 int LoadOverlayIfChanged_80020D1C(int a0, int a1)
 {
     OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
@@ -1186,10 +1185,8 @@ int LoadOverlayIfChanged_80020D1C(int a0, int a1)
     }
     p->wanted_0 = a1;
     p->loaded_4 = a1;
-    return LoadOverlay_80020BF8(a0, a1);
+    return LoadOverlay_80020BF8(a0, p->wanted_0);
 }
-#endif
-INCLUDE_ASM(LoadOverlayIfChanged_80020D1C);
 // Matched
 void ResetOverlayLoaderTask_80020D68(void)
 {
@@ -1292,7 +1289,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     out->modelCount_24 = 0;
     out->imageSetCount_2C = 0;
     out->data_10 = ListAlloc_8003FDC0(out->list_4, p1[0]);
-    MemCopy_800403E8((unsigned int*)out->data_10, (unsigned int*)(p1 + 1), p1[0]);
+    MemCopy_800403E8(out->data_10, p1 + 1, p1[0]);
     n = p2[0];
     if (n)
     {
@@ -1367,7 +1364,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
     {
         n = *src++;
         s = (struct_1c*)src;
-        d = (struct_1c*)ListAlloc_8003FDC0(heap, n * 28);
+        d = ListAlloc_8003FDC0(heap, n * 28);
         out->frameCounts_4[i] = n;
         out->frames_8[i] = (EffectSpriteFrame*)d;
         for (j = 0; j < out->frameCounts_4[i]; j++)
@@ -1383,7 +1380,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
         }
         src = (int*)s;
     }
-    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)src, 0x28);
+    MemCopy_800403E8(&buf, src, 0x28);
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 // Matched
@@ -1414,7 +1411,7 @@ void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
         out->keyCount_10 = images[0];
         out->frameCount_14 = images[1];
         out->keys_18 = ListAlloc_8003FDC0(heap, images[0] * 40 * images[1]);
-        MemCopy_800403E8((unsigned int*)out->keys_18, (unsigned int*)(images + 2), images[0] * 40 * images[1]);
+        MemCopy_800403E8(out->keys_18, images + 2, images[0] * 40 * images[1]);
     }
 }
 // Matched
@@ -1435,7 +1432,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
         size = hdr[i * 2 + 2];
         src = (unsigned long*)((char*)hdr + hdr[i * 2 + 1]);
         out->images_4[i] = ListAlloc_8003FDC0(heap, size);
-        MemCopy_800403E8((unsigned int*)out->images_4[i], (unsigned int*)src, size);
+        MemCopy_800403E8(out->images_4[i], src, size);
         n = DecDCTBufSize(src);
         if (max < n)
         {
@@ -1507,7 +1504,7 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     size += s->texSpriteCount_48 * 0x14;
     if (size)
     {
-        buf = (char*)HeapAlloc_8003FC8C(size, (struct Pool*)a2);
+        buf = HeapAlloc_8003FC8C(size, (struct Pool*)a2);
     }
     else
     {
@@ -1544,43 +1541,43 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     d->texSprites_50 = (FtgSprite*)buf;
     for (i = 0; i < d->f3_0.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->f3_0.items[i], (unsigned int*)&s->f3_0.items[i], 0x24);
+        MemCopy_800403E8(&d->f3_0.items[i], &s->f3_0.items[i], 0x24);
     }
     for (i = 0; i < d->g3_8.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->g3_8.items[i], (unsigned int*)&s->g3_8.items[i], 0x3C);
+        MemCopy_800403E8(&d->g3_8.items[i], &s->g3_8.items[i], 0x3C);
     }
     for (i = 0; i < d->ft3_10.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->ft3_10.items[i], (unsigned int*)&s->ft3_10.items[i], 0x30);
+        MemCopy_800403E8(&d->ft3_10.items[i], &s->ft3_10.items[i], 0x30);
     }
     for (i = 0; i < d->gt3_18.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->gt3_18.items[i], (unsigned int*)&s->gt3_18.items[i], 0x48);
+        MemCopy_800403E8(&d->gt3_18.items[i], &s->gt3_18.items[i], 0x48);
     }
     for (i = 0; i < d->f4_20.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->f4_20.items[i], (unsigned int*)&s->f4_20.items[i], 0x2C);
+        MemCopy_800403E8(&d->f4_20.items[i], &s->f4_20.items[i], 0x2C);
     }
     for (i = 0; i < d->g4_28.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->g4_28.items[i], (unsigned int*)&s->g4_28.items[i], 0x50);
+        MemCopy_800403E8(&d->g4_28.items[i], &s->g4_28.items[i], 0x50);
     }
     for (i = 0; i < d->ft4_30.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->ft4_30.items[i], (unsigned int*)&s->ft4_30.items[i], 0x38);
+        MemCopy_800403E8(&d->ft4_30.items[i], &s->ft4_30.items[i], 0x38);
     }
     for (i = 0; i < d->gt4_38.count; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->gt4_38.items[i], (unsigned int*)&s->gt4_38.items[i], 0x5C);
+        MemCopy_800403E8(&d->gt4_38.items[i], &s->gt4_38.items[i], 0x5C);
     }
     for (i = 0; i < d->spriteCount_40; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->sprites_44[i], (unsigned int*)&s->sprites_44[i], 0x14);
+        MemCopy_800403E8(&d->sprites_44[i], &s->sprites_44[i], 0x14);
     }
     for (i = 0; i < d->texSpriteCount_48; i++)
     {
-        MemCopy_800403E8((unsigned int*)&d->texSprites_50[i], (unsigned int*)&s->texSprites_50[i], 0x14);
+        MemCopy_800403E8(&d->texSprites_50[i], &s->texSprites_50[i], 0x14);
     }
     d->tpage_4C = s->tpage_4C;
     d->clut_4E = s->clut_4E;
@@ -1867,7 +1864,7 @@ int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     total += c[9];
     if (size != 0)
     {
-        p = (char*)HeapAlloc_8003FC8C(size, h);
+        p = HeapAlloc_8003FC8C(size, h);
     }
     out->f3_0.count = c[0];
     out->f3_0.items = (FtgPolyF3*)p;
@@ -1909,7 +1906,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n = a2->counts_0[8];
     if (n)
     {
-        a0->groups = (FtgSpriteGroup8*)HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
+        a0->groups = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
     }
     else
     {
@@ -1920,7 +1917,7 @@ int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader*
     n += m;
     if (m)
     {
-        a1->groups = (FtgSpriteGroup9*)HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
+        a1->groups = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
     }
     else
     {
@@ -1987,7 +1984,7 @@ void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a
     *a1 = v * 64 + (u >> 4);
 }
 #if 0
-// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
+// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers; static inline sum / skip helpers tried, the pointer ones put q in memory) and keeps q+4/q+8 unfolded. Its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles
 void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 {
     int n;
@@ -2050,7 +2047,9 @@ void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 #endif
 INCLUDE_ASM(sub_80022B84);
 #if 0
-// Not matched: first loop swaps the j/k registers and fills the first beqz delay slot; second loop has the j++/n++ increments in the other order
+// Not matched (2 words): the second loop has the j++ / n++ increments in the other order (j++, n++ in the for header
+// or in the body fixes them but then swaps the sprite pointer increments). A j of its own for the second loop fixed the
+// first loop's j/k registers
 void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
 {
     int j;
@@ -2088,6 +2087,7 @@ void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h
     }
     if (b->count)
     {
+        int j;
         j = 0;
         a0->tpage_4C = b->groups->tpage;
         a0->clut_4E = b->groups->clut;
@@ -2127,7 +2127,7 @@ int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, 
     int i;
     FtgSrcSprite8* q;
     a->groups[k].count = p->count_0;
-    a->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    a->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     q = (FtgSrcSprite8*)((unsigned char*)p + r); // r: bytes read so far
     for (i = 0; i < p->count_0; i++)
     {
@@ -2155,7 +2155,7 @@ int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, 
     int i;
     FtgSrcSprite9* q;
     b->groups[k].count = p->count_0;
-    b->groups[k].items = (FtgSprite*)HeapAlloc_8003FC8C(p->count_0 * 20, h);
+    b->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
     r = 8;
     b->groups[k].tpage = p->tpage_4;
     b->groups[k].clut = p->clut_6;
@@ -2676,7 +2676,7 @@ int AreFileRequestsDone_80024DC4(Model* p)
     return 1;
 }
 // Matched
-char* sub_80024E38(Model* p)
+void* sub_80024E38(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2687,7 +2687,7 @@ char* sub_80024E38(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E64(Model* p)
+void* sub_80024E64(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2698,7 +2698,7 @@ char* sub_80024E64(Model* p)
     return result;
 }
 // Matched
-char* sub_80024E90(Model* p, int n)
+void* sub_80024E90(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2708,7 +2708,7 @@ char* sub_80024E90(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024EC8(Model* p, int n)
+void* sub_80024EC8(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2718,7 +2718,7 @@ char* sub_80024EC8(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F00(Model* p, int n)
+void* sub_80024F00(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2728,7 +2728,7 @@ char* sub_80024F00(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F38(Model* p, int n)
+void* sub_80024F38(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2738,7 +2738,7 @@ char* sub_80024F38(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024F70(Model* p, int n)
+void* sub_80024F70(Model* p, int n)
 {
     char* r = sub_80024FA8(p, n);
     if (r)
@@ -2798,7 +2798,7 @@ void sub_8002512C(unsigned int* a0, Model* a1, int a2)
         ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)a1->saved_64); // integer sum: the original adds the base second
         if (a2 == e->id_0)
         {
-            MemCopy_800403E8(a0, (unsigned int*)&e->ftg_4, 0x54);
+            MemCopy_800403E8(a0, &e->ftg_4, 0x54);
             break;
         }
     }
@@ -2806,7 +2806,7 @@ void sub_8002512C(unsigned int* a0, Model* a1, int a2)
 // Matched
 void sub_800251A0(void* dst, Model* src, int a2, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg_50[idx], sizeof(FtgObject));
+    MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
 // Matched
 void nullsub_4(void)
@@ -3165,7 +3165,7 @@ void sub_80025AB0(Model* p)
 // Matched
 void sub_80025B20(void* dst, Model* src, int idx)
 {
-    MemCopy_800403E8((unsigned int*)dst, (unsigned int*)&src->ftg2_68[idx], sizeof(FtgObject));
+    MemCopy_800403E8(dst, &src->ftg2_68[idx], sizeof(FtgObject));
 }
 // Matched
 void sub_80025B5C(Model* p, int idx, int sel)
@@ -3324,7 +3324,7 @@ void sub_80026014(ModelLoadParams* a0)
     p->headerSize_48 = n;
     r = HeapAlloc_8003FC8C(n, (struct Pool*)h);
     p->header_4C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)a0->header_1C->data_4, n);
+    MemCopy_800403E8(r, a0->header_1C->data_4, n);
 }
 // Matched
 void LoadModelTextures_8002607C(ModelLoadParams* a0)
@@ -3336,25 +3336,22 @@ void LoadModelTextures_8002607C(ModelLoadParams* a0)
         p->texSel_34 = a0->sel_8;
     }
 }
-#if 0
-// Not matched: the a0[9] list argument is loaded before the a0[6] load in the original, ours after; insensitive to statement order, types and temporaries
+// Matched
 void LoadModelFtg_800260FC(ModelLoadParams* a0)
 {
-    int q = (int)a0->vram_18;
     Model* p = a0->model_14;
+    int* list = a0->ftg_24;
+    ModelVramSlot* v = a0->vram_18;
     int h = p->list_0->heap_4;
-    q += 4;
-    p->ftgCount_3C = GetFtgObjectCount_80021738(a0->ftg_24);
+    p->ftgCount_3C = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->ftg_50, p->ftgCount_3C, h);
-    LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, q);
+    LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, (int)v->reloc_4);
     if (sub_80021DE4(a0->ftg_24) != 0)
     {
         sub_80021DF0(&p->mats_5C, sub_80021DE4(a0->ftg_24), h);
         sub_80021E4C(a0->ftg_24, &p->mats_5C, sub_80021DE4(a0->ftg_24));
     }
 }
-#endif
-INCLUDE_ASM(LoadModelFtg_800260FC);
 // Matched
 void LoadModelAnims_800261C8(ModelLoadParams* a0)
 {
@@ -3471,20 +3468,17 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
         }
     }
 }
-#if 0
-// Not matched: the original loads the list argument (+0x34) right after the owner pointer, ours schedules it first (same as LoadModelFtg_800260FC)
+// Matched
 void sub_8002651C(ModelLoadParams* a)
 {
     Model* p = a->model_14;
     int* list = a->ftg2_34;
+    ModelVramSlot* v = a->vram_18;
     int heap = p->list_0->heap_4;
-    short* q = a->vram_18->reloc_4;
     p->ftg2Count_42 = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->ftg2_68, p->ftg2Count_42, heap);
-    LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)q);
+    LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)v->reloc_4);
 }
-#endif
-INCLUDE_ASM(sub_8002651C);
 // Matched
 void sub_8002659C(ModelLoadParams* a0)
 {
@@ -3496,7 +3490,7 @@ void sub_8002659C(ModelLoadParams* a0)
     q += 4;
     r = HeapAlloc_8003FC8C(p->swapCount_43 << 2, (struct Pool*)h);
     p->swaps_6C = r;
-    MemCopy_800403E8((unsigned int*)r, (unsigned int*)q, p->swapCount_43 << 2);
+    MemCopy_800403E8(r, q, p->swapCount_43 << 2);
 }
 // Matched
 int sub_80026600(ModelVramSlot* p)
@@ -3688,8 +3682,8 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
     {
         a0->cueCount_C = 0;
     }
-    a0->basePose_14 = (unsigned short*)HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
-    a0->frames_18 = (unsigned short*)HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
+    a0->basePose_14 = HeapAlloc_8003FC8C(m * 6, (struct Pool*)a2);
+    a0->frames_18 = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)a2);
     d = a0->basePose_14;
     for (i = 0; i < m; i++)
     {
@@ -3729,7 +3723,7 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
         }
         a0->cueCount_C = *(int*)s;
         s += 2;
-        a0->cues_10 = (ModelAnimCue*)HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
+        a0->cues_10 = HeapAlloc_8003FC8C(a0->cueCount_C * 8, (struct Pool*)a2);
         k = 0;
         while (k < a0->cueCount_C)
         {
@@ -3750,7 +3744,7 @@ int sub_80026D6C(int* p)
 // Matched
 void sub_80026D78(struct_12** a0, int a1, int a2)
 {
-    struct_12* p = (struct_12*)HeapAlloc_8003FC8C(a1 * 12, a2);
+    struct_12* p = HeapAlloc_8003FC8C(a1 * 12, a2);
     int i;
     for (i = 0; i < a1; i++)
     {
@@ -3801,7 +3795,7 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = (unsigned short*)HeapAlloc_8003FC8C(p->field_0 * 8, a2);
+    d = HeapAlloc_8003FC8C(p->field_0 * 8, a2);
     p->field_8 = (int)d;
     for (i = 0; i < p->field_0; i++)
     {
@@ -4150,7 +4144,7 @@ void sub_80027778(int* a0, int h)
     dword_8008D648.field_8 = a0[1];
     n = a0[2];
     dword_8008D648.count_0 = n;
-    arr = (struct_27778*)ListAlloc_8003FDC0(h, n * 16);
+    arr = ListAlloc_8003FDC0(h, n * 16);
     for (i = 0; i < dword_8008D648.count_0; i++)
     {
         src = (int*)((char*)a0 + a0[i + 3]);
@@ -4159,7 +4153,7 @@ void sub_80027778(int* a0, int h)
         q = (unsigned short*)src;
         arr[i].field_8 = *q++;
         arr[i].field_A = *q++;
-        arr[i].items = (unsigned short*)ListAlloc_8003FDC0(h, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(h, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *q++;
@@ -4184,7 +4178,7 @@ void sub_800278BC(int* a, int h)
     {
         q = (int*)((char*)a0 + a0[i + 1]);
         dword_8008D648.lists_14[i].count = *q;
-        dword_8008D648.lists_14[i].items = (struct_4b*)ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
+        dword_8008D648.lists_14[i].items = ListAlloc_8003FDC0(h, dword_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
         for (j = 0; j < dword_8008D648.lists_14[i].count; j++)
         {
@@ -4201,75 +4195,56 @@ void sub_800278BC(int* a, int h)
         e->a = 0;
     }
 }
-typedef struct
-{
-    short x;
-    short y;
-    short z;
-    short pad;
-} struct_a88_sv;
-typedef struct
-{
-    int field_0;
-    struct_a88_sv v[4];
-} struct_a88_24;
-typedef struct
-{
-    struct_a88_sv v[4];
-} struct_20v;
-typedef struct
-{
-    unsigned short n;
-    struct_20v* items;
-} struct_8_20v;
 #if 0
-// Not matched: s1/s2 swapped (p vs arr+i) and the source-item address is strength-reduced differently
-int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
+// Not matched: $s1/$s2 (record pointer / arr + i) and $a1/$a2 swapped; the original source-triangle pointer is set up as rec + 0x48 and stepped +4 at the loop top, +0x24 at the bottom
+int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
 {
-    struct_8_20v* arr;
+    MapMesh* arr;
     unsigned int i;
     unsigned int j;
     unsigned char* p;
-    unsigned char* rec;
-    int* hh;
-    p = (unsigned char*)hdr + 0x10;
+    MapMeshRec* rec;
+    MapTriRec* tri;
+    MapMeshFile* hh;
+    p = (unsigned char*)(hdr + 1);
     hh = hdr;
-    arr = (struct_8_20v*)ListAlloc_8003FDC0(heap, hdr[1] * 8);
-    *count = hdr[1];
-    if (hdr[1] == 0)
+    arr = ListAlloc_8003FDC0(heap, hdr->count_4 * sizeof(MapMesh));
+    *count = hdr->count_4;
+    if (hdr->count_4 == 0)
     {
         *out = 0;
-        return (int*)((unsigned char*)hdr + hdr[0]);
+        return (int*)((unsigned char*)hdr + hdr->size_0);
     }
-    for (i = 0; i < hh[1]; i++)
+    for (i = 0; i < hh->count_4; i++)
     {
-        rec = p;
-        arr[i].n = *(unsigned short*)rec;
-        p = rec + 0x28;
-        arr[i].items = (struct_20v*)ListAlloc_8003FDC0(heap, *(int*)rec * 32);
-        for (j = 0; j < *(unsigned int*)rec; j++)
+        rec = (MapMeshRec*)p;
+        arr[i].nTris_0 = rec->nTris_0;
+        p = (unsigned char*)(rec + 1);
+        arr[i].tris_4 = ListAlloc_8003FDC0(heap, rec->nTris_0 * sizeof(MapTri));
+        for (j = 0; j < rec->nTris_0; j++)
         {
-            arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
-            arr[i].items[j].v[3].y = ((struct_a88_24*)(rec + 0x2C))[j].v[0].y;
-            arr[i].items[j].v[3].z = ((struct_a88_24*)(rec + 0x2C))[j].v[0].z;
-            arr[i].items[j].v[3].pad = 0;
-            arr[i].items[j].v[0].x = ((struct_a88_24*)(rec + 0x2C))[j].v[1].x;
-            arr[i].items[j].v[0].y = ((struct_a88_24*)(rec + 0x2C))[j].v[1].y;
-            arr[i].items[j].v[0].z = ((struct_a88_24*)(rec + 0x2C))[j].v[1].z;
-            arr[i].items[j].v[0].pad = 0;
-            arr[i].items[j].v[1].x = ((struct_a88_24*)(rec + 0x2C))[j].v[2].x;
-            arr[i].items[j].v[1].y = ((struct_a88_24*)(rec + 0x2C))[j].v[2].y;
-            arr[i].items[j].v[1].z = ((struct_a88_24*)(rec + 0x2C))[j].v[2].z;
-            arr[i].items[j].v[1].pad = 0;
-            arr[i].items[j].v[2].x = ((struct_a88_24*)(rec + 0x2C))[j].v[3].x;
-            arr[i].items[j].v[2].y = ((struct_a88_24*)(rec + 0x2C))[j].v[3].y;
-            arr[i].items[j].v[2].z = ((struct_a88_24*)(rec + 0x2C))[j].v[3].z;
-            arr[i].items[j].v[2].pad = 0;
-            p += 0x28;
+            tri = (MapTriRec*)p;
+            p += sizeof(MapTriRec);
+            arr[i].tris_4[j].nx_18 = tri->n_8.x_0;
+            arr[i].tris_4[j].ny_1A = tri->n_8.y_2;
+            arr[i].tris_4[j].nz_1C = tri->n_8.z_4;
+            arr[i].tris_4[j].pad_1E = 0;
+            arr[i].tris_4[j].v_0[0].x_0 = tri->v_10[0].x_0;
+            arr[i].tris_4[j].v_0[0].y_2 = tri->v_10[0].y_2;
+            arr[i].tris_4[j].v_0[0].z_4 = tri->v_10[0].z_4;
+            arr[i].tris_4[j].v_0[0].pad_6 = 0;
+            arr[i].tris_4[j].v_0[1].x_0 = tri->v_10[1].x_0;
+            arr[i].tris_4[j].v_0[1].y_2 = tri->v_10[1].y_2;
+            arr[i].tris_4[j].v_0[1].z_4 = tri->v_10[1].z_4;
+            arr[i].tris_4[j].v_0[1].pad_6 = 0;
+            arr[i].tris_4[j].v_0[2].x_0 = tri->v_10[2].x_0;
+            arr[i].tris_4[j].v_0[2].y_2 = tri->v_10[2].y_2;
+            arr[i].tris_4[j].v_0[2].z_4 = tri->v_10[2].z_4;
+            arr[i].tris_4[j].v_0[2].pad_6 = 0;
         }
     }
     *out = arr;
-    return (int*)((unsigned char*)hdr + hh[0]);
+    return (int*)((unsigned char*)hdr + hh->size_0);
 }
 #endif
 INCLUDE_ASM(sub_80027A88);
@@ -4599,6 +4574,8 @@ extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* sub_80027A88();
+extern short dword_80091CA8[];
+extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched
 void sub_80028808(void* a0, int* a1)
 {
@@ -4615,7 +4592,7 @@ void sub_80028808(void* a0, int* a1)
     n = *p++;
     if (n != 0 && dword_80091C8C == 0)
     {
-        MemCopy_800403E8(dword_80073210, (unsigned int*)p, n);
+        MemCopy_800403E8(dword_80073210, p, n);
         dword_80091CB4 = ((MapEntry16b*)dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
     }
     p = (int*)((char*)p + n);
@@ -4633,7 +4610,7 @@ void sub_80028808(void* a0, int* a1)
     dword_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
     dword_8008B500.nMeshes_4 = *p++;
     dword_8008B500.f8_8 = *p++;
-    MemCopy_800403E8((unsigned int*)&buf, (unsigned int*)p, sizeof(buf));
+    MemCopy_800403E8(&buf, p, sizeof(buf));
     p = sub_80027A88(&dword_8008B500.meshes_C, &dword_8008B500.nMeshes_4, &dword_80091C68, (char*)p + 0x104);
     sub_800B73C0(dword_8008B500.meshes_C, dword_8008B500.nMeshes_4);
     p = sub_80027A88(&dword_8008B500.ents_14, &dword_8008B500.nEnts_10, &dword_80091C68, p);
@@ -4652,8 +4629,8 @@ void sub_80028808(void* a0, int* a1)
     cnt = *p++;
     LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
     p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
-    dword_80082674 = (int*)ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
-    MemCopy_800403E8((unsigned int*)dword_80082674, (unsigned int*)p, dword_8008B500.nMeshes_4 * 12);
+    dword_80082674 = ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
+    MemCopy_800403E8(dword_80082674, p, dword_8008B500.nMeshes_4 * 12);
     if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
     {
         ((void (*)(int))dword_80091CB4)(0);
@@ -4678,6 +4655,7 @@ void sub_80028808(void* a0, int* a1)
         saveData_8008B570.levant_7A8.rot.vz = buf.start_0.rot.vz;
     }
     dword_80091C94 = 0;
+    // stays an int* view: stru_80091C78.mapIdx addresses the field as sym+12 and changes the code
     if (((int*)&stru_80091C78)[3] >= 0)
     {
         saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];

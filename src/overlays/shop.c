@@ -230,7 +230,8 @@ extern int name_800B6CE4;
 extern unsigned int name_800C07F0[];
 extern Minion* name_800B6CF0;
 extern ShopCtxShop name_800C09E0;
-extern int name_800C0A1C;
+extern Actor* name_800C0A1C; // the minion shown in the shop
+Actor* sub_800BF780();
 extern void SetFadeMode_8001C19C(int a, int b);
 extern void DestroyActor_8001D600(void* p);
 extern void DrawMenuBackground_8002BE10();
@@ -283,7 +284,7 @@ int sub_800B9920()
     {
         if (saveData_8008B570.minions[k].id == 3)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
+            MemCopy_800403E8(&items[n], &saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
@@ -299,15 +300,15 @@ int sub_800B9920()
     {
         if (saveData_8008B570.minions[k].id == 2)
         {
-            MemCopy_800403E8((unsigned int*)&items[n], (unsigned int*)&saveData_8008B570.minions[k], 0xF8);
+            MemCopy_800403E8(&items[n], &saveData_8008B570.minions[k], 0xF8);
             n++;
         }
     }
     for (k = 0; k < 12; k++)
     {
-        if (saveData_8008B570.items[k].id != 0xD3)
+        if (saveData_8008B570.items[k].species_5C != 0xD3)
         {
-            sub_800B9E94((UnitStats*)&saveData_8008B570.items[k], &items[n], 2); // the items are UnitStats records
+            sub_800B9E94(&saveData_8008B570.items[k], &items[n], 2);
             n++;
         }
     }
@@ -443,7 +444,7 @@ int sub_800B9DA8()
         {
             if (items[i].id != 4)
             {
-                MemCopy_800403E8((unsigned int*)&saveData_8008B570.minions[n], (unsigned int*)&items[i], 0xF8);
+                MemCopy_800403E8(&saveData_8008B570.minions[n], &items[i], 0xF8);
                 n++;
             }
         }
@@ -481,8 +482,8 @@ int sub_800B9E94(UnitStats* src, Minion* dst, short c)
     }
     dst->species_2 = src->species_5C;
     dst->field_3 = src->species_5C;
-    MemCopy_800403E8((unsigned int*)&dst->status_84, (unsigned int*)&src->st_0, sizeof(UnitStatus));
-    MemCopy_800403E8((unsigned int*)&dst->skills_DE, (unsigned int*)&src->skills_6C, sizeof(UnitSkills));
+    MemCopy_800403E8(&dst->status_84, &src->st_0, sizeof(UnitStatus));
+    MemCopy_800403E8(&dst->skills_DE, &src->skills_6C, sizeof(UnitSkills));
     MemCopy_800403E8(&dst->magicBits_F4, &src->magicBits_80, 4);
     return 1;
 }
@@ -511,9 +512,9 @@ int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
     int n;
     int t;
     int r;
-    MemCopy_800403E8((unsigned int*)c, (unsigned int*)a, sizeof(Minion));
+    MemCopy_800403E8(c, a, sizeof(Minion));
     c->field_3 = b->field_3;
-    p = (unsigned char*)sub_8001CD58(d);
+    p = sub_8001CD58(d);
     if (p[0] != 0xFF)
     {
         c->field_3 = p[0];
@@ -931,7 +932,7 @@ void sub_800BA72C(Minion* a, Minion* b)
             t.slot[i].field_3 = 0;
         }
     }
-    MemCopy_800403E8((unsigned int*)&a->skills_DE, (unsigned int*)&t, sizeof(UnitSkills));
+    MemCopy_800403E8(&a->skills_DE, &t, sizeof(UnitSkills));
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, sub_800BA72C);
@@ -1006,7 +1007,7 @@ void sub_800BAB38(Minion* a, Minion* b)
             tmp[i] = b->species_4C[i * 3 - 0x60];
         }
     }
-    MemCopy_800403E8((unsigned int*)a->species_4C, (unsigned int*)tmp, 0x30);
+    MemCopy_800403E8(a->species_4C, tmp, 0x30);
     sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
     sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
     sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
@@ -1209,11 +1210,12 @@ void sub_800BB0F8(ShopTaskShop* t, int a)
     t->next_8 = ShopMenuTask_800BB444;
 }
 
-#if 0 // near miss: constant 3 / store scheduling (17 words)
+// Matched
 void sub_800BB148(ShopUnit3Shop* u)
 {
     short i;
     void* r;
+    Minion* mn;
     u->field_0 = 0;
     u->field_2 = -2;
     for (i = 0; i < 10; i++)
@@ -1228,14 +1230,14 @@ void sub_800BB148(ShopUnit3Shop* u)
     {
         u->a7A[i] = 0;
     }
+    u->field_34 = 3;
     u->field_36 = 1;
+    u->field_38 = 3;
     u->field_3A = 1;
     u->field_40 = 1;
     u->field_42 = 1;
     u->field_44 = 1;
     u->field_46 = 0x40;
-    u->field_34 = 3;
-    u->field_38 = 3;
     u->field_84 = 0;
     u->field_88 = 0;
     u->field_8C = 0;
@@ -1263,8 +1265,8 @@ void sub_800BB148(ShopUnit3Shop* u)
     u->field_7E = 0;
     u->field_24 = 1;
     u->field_1C = 0;
-    u->field_20 = 0;
     u->field_1C = name_800BF8B4[u->field_0];
+    u->field_20 = 0;
     SetShopHelpText_800BBB54(u, 0);
     sub_800BD854(u);
     fn_80011CD0(&levantStatus_8008BD38);
@@ -1278,17 +1280,15 @@ void sub_800BB148(ShopUnit3Shop* u)
     }
     for (i = 0; i < 3; i++)
     {
-        r = GetMinion_80010598(3, i);
-        if (r)
+        mn = GetMinion_80010598(3, i);
+        if (mn)
         {
-            fn_80011CD0(&r->status_84);
+            fn_80011CD0(&mn->status_84);
         }
     }
     sub_800B9920();
     fn_800AD8F4(fn_800AD888());
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, sub_800BB148);
 
 int sub_800BB38C(ShopUnit3Shop* p)
 {
@@ -2257,7 +2257,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         sv = &saveData_8008B570;
         if (sv->settings_1C.bits.d_5 == 1)
         {
-            MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
+            MemCopy_800403E8(u->field_4C, &name_800C08E8, sizeof(Minion));
             sub_800B9B44((short*)u->field_50);
             if (u->field_4C->species_4C[0] == 0x23)
             {
@@ -2437,7 +2437,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
             sv = &saveData_8008B570;
             if (!((sv->settings_1C.word >> 5) & 1))
             {
-                MemCopy_800403E8((unsigned int*)u->field_4C, (unsigned int*)&name_800C08E8, sizeof(Minion));
+                MemCopy_800403E8(u->field_4C, &name_800C08E8, sizeof(Minion));
                 sub_800B9B44((short*)u->field_50);
                 if (u->field_4C->species_4C[0] == 0x23)
                 {
@@ -2572,7 +2572,7 @@ void sub_800BE334(ShopTaskShop* t, ShopUnit3Shop* u)
     int v;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    c = (Actor*)sub_800BF780();
+    c = sub_800BF780();
     if (padHeld_800918D0[0] & 0x8000)
     {
         *(unsigned short*)&c->rot_5C[1] += 0x88;
@@ -2971,7 +2971,7 @@ void DrawPersonList_800BED48(short* s)
         id = sub_800AD288(i + s[1], 4);
         if (id < 11)
         {
-            icon = ((int (*)(int))GetPersonIcon_8001CD6C)(id);
+            icon = GetPersonIcon_8001CD6C(id);
             name = GetPersonName_8001CD3C(id);
             cnt = sub_800AD2C8(i + s[1], 4);
         }
@@ -3305,7 +3305,7 @@ void sub_800BF750()
     sub_800BF484();
 }
 
-int sub_800BF780()
+Actor* sub_800BF780()
 {
     return name_800C0A1C;
 }

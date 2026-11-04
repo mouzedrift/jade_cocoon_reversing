@@ -62,7 +62,6 @@ extern int dword_80079CE0[65];
 extern int dword_80079DE4[91];
 extern int dword_80079F50[53];
 extern ActorScriptCmd* off_8007A024[];
-extern void* minionSpeciesNames_8007A170[];
 extern int dword_8007A67C[];
 extern int dword_8007A68C[];
 extern int dword_8007A69C[];
@@ -266,7 +265,6 @@ extern unsigned char dword_80082EF0[];
 extern unsigned char dword_80082F04[];
 extern int abilityNames_800834E4[];
 extern int abilityBonusNames_80083580[];
-extern void (*dword_80083780[1])();
 extern int dword_80083784;
 extern int dword_80083788[15];
 extern void *dword_800837C4[5];
@@ -288,5 +286,7 @@ extern unsigned short dword_80083CE8[][4];
 extern int dword_80083D00[];
 extern int dword_80084330[];
 extern short asc_80084350[];
+
+extern void (*dword_80083780[1])();
 
 #endif

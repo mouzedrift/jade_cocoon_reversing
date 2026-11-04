@@ -271,11 +271,11 @@ void ShuffleTeam_800A473C(int side)
     for (i = 0; i < n; i++)
     {
         order[i] = PickNthFreeSlot_800A4878(rand() % (n - i), used, n);
-        MemCopy_800403E8((unsigned int*)&tmp[i], (unsigned int*)&units[order[i]], 0xF8);
+        MemCopy_800403E8(&tmp[i], &units[order[i]], 0xF8);
     }
     for (i = 0; i < n; i++)
     {
-        MemCopy_800403E8((unsigned int*)&units[i], (unsigned int*)&tmp[i], 0xF8);
+        MemCopy_800403E8(&units[i], &tmp[i], 0xF8);
     }
 }
 

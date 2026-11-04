@@ -487,7 +487,7 @@ void sub_800CC9FC()
     if (dword_800CD840->kind_0 == 0x12)
     {
         dword_800CD840->targets_C = 0;
-        *(int*)sub_80014390((unsigned char)(byte_800CD839 + 8)) |= 0x8000;
+        sub_80014390((unsigned char)(byte_800CD839 + 8))->status_0 |= 0x8000;
     }
     else
     {

@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_80019BF0.h"
+#include "gte.h"
 #include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
@@ -102,9 +103,16 @@ extern short dword_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
-#if 0
-// Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
+extern unsigned short padPrevHeld_800918C8[];
+extern unsigned short padRepeat_800918CC[];
+extern unsigned short padReleased_800918D4[];
+extern unsigned short padPressed_8009194C[];
+extern unsigned short padHoldFrames_80091950[][16];
+extern signed char padAnalog_800918D8[][4];
+extern unsigned char padAnalogMax_800918E0[][4];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
+// index of the camera point nearest to pos (XZ plane)
+// Matched
 int sub_80019CC4(int* pos)
 {
     unsigned int i;
@@ -112,26 +120,130 @@ int sub_80019CC4(int* pos)
     int found;
     best = -1;
     found = 0;
-    if (!(unknownFlags_8008D678 & 0x8000))
+    if (unknownFlags_8008D678 & 0x8000)
     {
-        for (i = 0; i < 8; i++)
+        return found;
+    }
+    for (i = 0; i < 8; i++)
+    {
+        if (cameraState_8008D4F0.points_44[i].active == 0)
         {
-            if (cameraState_8008D4F0.points_44[i].active == 0)
-            {
-                break;
-            }
-            if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
-            {
-                best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
-                found = i;
-            }
+            break;
+        }
+        if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
+        {
+            best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
+            found = i;
         }
     }
     return found;
 }
-#endif
-INCLUDE_ASM(sub_80019CC4);
-INCLUDE_ASM(sub_80019D84);
+extern int dword_8008D3F0;      // range of the global point light (0: none)
+// Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
+// colour from cameraState), the global point light and the given point light; m is the model's rotation.
+// Matched
+void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m)
+{
+    MATRIX* sm;
+    int* d;
+    CameraState* g;
+    int sq[3];
+    int dist;
+    int t;
+    int x;
+    int y;
+    int z;
+
+    d = (int*)0x1F800014;
+    g = &cameraState_8008D4F0;
+    sm = (MATRIX*)0x1F800000;
+    sm->m[0][0] = dword_80087114.m[0][0];
+    sm->m[0][1] = dword_80087114.m[0][1];
+    sm->m[0][2] = dword_80087114.m[0][2];
+    sm->m[2][0] = -dword_80087114.m[0][0];
+    sm->m[2][1] = -dword_80087114.m[0][1];
+    sm->m[2][2] = -dword_80087114.m[0][2];
+    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
+    if (dword_8008D3F0 != 0)
+    {
+        d[0] = dword_8008D680[0] - (ofs->vx + pos->vx);
+        d[1] = dword_8008D680[1] - (ofs->vy + pos->vy);
+        d[2] = dword_8008D680[2] - (ofs->vz + pos->vz);
+        if (abs(d[0]) < dword_8008D3F0 && abs(d[1]) < dword_8008D3F0 && abs(d[2]) < dword_8008D3F0)
+        {
+            gte_ldlvl(d);
+            gte_sqr0();
+            gte_stlvnl(sq);
+            dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+            if (dist <= dword_8008D3F0)
+            {
+                sm->m[2][0] = (d[0] << 12) / dist;
+                sm->m[2][1] = (d[1] << 12) / dist;
+                sm->m[2][2] = (d[2] << 12) / dist;
+                if (unknownFlags_8008D678 & 0x400)
+                {
+                    t = (((dword_8008D3F0 - dist) << 12) / dword_8008D3F0) * dword_8008D40C >> 12;
+                }
+                else
+                {
+                    t = ((dword_8008D3F0 - dist) << 12) / dword_8008D3F0;
+                }
+                gte_lddp(t);
+                gte_ldsv(&word_8008D418);
+                gte_gpf12();
+                gte_stclmv(&dword_80087134.m[0][2]);
+            }
+        }
+    }
+    d[0] = light->pos_0[0] - (ofs->vx + pos->vx);
+    d[1] = light->pos_0[1] - (ofs->vy + pos->vy);
+    d[2] = light->pos_0[2] - (ofs->vz + pos->vz);
+    gte_ldlvl(d);
+    gte_sqr0();
+    gte_stlvnl(sq);
+    dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+    if (light->range_14 < dist)
+    {
+        dword_80087134.m[0][1] = 0;
+        dword_80087134.m[1][1] = 0;
+        dword_80087134.m[2][1] = 0;
+    }
+    else
+    {
+        x = (d[0] << 12) / dist;
+        y = (d[1] << 12) / dist;
+        z = (d[2] << 12) / dist;
+        ((MATRIX*)0x1F800000)->m[1][0] = x;
+        ((MATRIX*)0x1F800000)->m[1][1] = y;
+        ((MATRIX*)0x1F800000)->m[1][2] = z;
+        if (unknownFlags_8008D678 & 0x400)
+        {
+            t = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * dword_8008D40C >> 12;
+        }
+        else
+        {
+            t = ((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14;
+        }
+        gte_lddp(t);
+        gte_ldsv(&light->color_C);
+        gte_gpf12();
+        gte_stclmv(&dword_80087134.m[0][1]);
+    }
+    gte_SetRotMatrix((MATRIX*)0x1F800000);
+    gte_ldclmv(&m->m[0][0]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][0]);
+    gte_ldclmv(&m->m[0][1]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][1]);
+    gte_ldclmv(&m->m[0][2]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][2]);
+    gte_SetLightMatrix((MATRIX*)0x1F800000);
+    gte_SetColorMatrix(&dword_80087134);
+}
 // Matched
 void sub_8001A38C(void)
 {
@@ -468,7 +580,7 @@ int GetMagicElement_8001AD30(int idx)
     return 0xB;
 }
 // Matched
-struct_12* sub_8001AD64(unsigned int idx)
+ActionData* sub_8001AD64(unsigned int idx)
 {
     if (idx < 0x1E)
     {
@@ -1698,9 +1810,9 @@ int GetPersonName_8001CD3C(int idx)
     return personNames_8007CB20[idx];
 }
 // Matched
-int* sub_8001CD58(int idx)
+unsigned char* sub_8001CD58(int idx)
 {
-    return &dword_8007CB4C[idx];
+    return dword_8007CB4C[idx];
 }
 // Matched
 int GetPersonIcon_8001CD6C(void)
@@ -1708,22 +1820,22 @@ int GetPersonIcon_8001CD6C(void)
     return 0x36;
 }
 // Matched
-struct_12* GetAccessoryModifiers_8001CD74(unsigned int idx)
+unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx)
 {
     if (idx >= 0x11)
     {
         return 0;
     }
-    return &accessoryModifiers_8007D848[idx];
+    return accessoryModifiers_8007D848[idx];
 }
 // Matched
-struct_12* GetArmorModifiers_8001CDA0(unsigned int idx)
+unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
 {
     if (idx >= 0xF)
     {
         return 0;
     }
-    return &armorModifiers_8007D598[idx];
+    return armorModifiers_8007D598[idx];
 }
 // Matched
 unsigned char sub_8001CDCC(unsigned int idx)
@@ -1735,7 +1847,7 @@ unsigned char sub_8001CDCC(unsigned int idx)
     return 0x22;
 }
 // Matched
-struct_12* GetItemData_8001CDF4(unsigned int idx)
+ActionData* GetItemData_8001CDF4(unsigned int idx)
 {
     if (idx < 0x2B)
     {
@@ -1924,21 +2036,21 @@ int GetEquipmentName_8001D128(int a0, unsigned int a1)
     return r;
 }
 // Matched
-short* GetEquipmentData_8001D190(a0, a1)
+EquipmentData* GetEquipmentData_8001D190(a0, a1)
 unsigned int a0;
 unsigned int a1;
 {
-    short* r = 0;
+    EquipmentData* r = 0;
     switch (a1)
     {
     case 0:
-        r = (short*)GetWeaponData_8001CF84(a0);
+        r = GetWeaponData_8001CF84(a0);
         break;
     case 1:
-        r = (short*)GetArmorData_8001D034(a0);
+        r = GetArmorData_8001D034(a0);
         break;
     case 2:
-        r = (short*)GetAccessoryData_8001D0FC(a0);
+        r = GetAccessoryData_8001D0FC(a0);
         break;
     }
     return r;
@@ -1962,7 +2074,7 @@ int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
     return r;
 }
 // Matched
-struct_12* sub_8001D260(void)
+ActionData* sub_8001D260(void)
 {
     unsigned int i = sub_800AD990(0);
     if (i < 0x17)
@@ -1983,15 +2095,15 @@ int GetItemIcon_8001D2AC(int idx)
 // Matched
 int GetEquipmentIcon_8001D2D4(void)
 {
-    short* p = GetEquipmentData_8001D190();
+    EquipmentData* p = GetEquipmentData_8001D190();
     if (p != 0)
     {
-        return equipmentIcons_8007D938[*p];
+        return equipmentIcons_8007D938[p->icon_0];
     }
     return 0x24;
 }
 // Matched
-int GetKeyItemName_8001D318(unsigned int idx)
+char* GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
     {
@@ -2337,12 +2449,11 @@ void sub_8001DB58(Actor* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
-void sub_8001DB98(void* arg0, void* arg1)
+// Not matched (5 words): the original stores 0xC0 after the flags and copies s to $a3 after the mask; with a saved
+// "old" local stored at the end instead, old and the 0xFFFF7FFF mask swap $a1/$a2 (6 words)
+void sub_8001DB98(Actor* o, unsigned char* s)
 {
-    Actor* o = arg0;
-    unsigned char* s = arg1;
-    short old = o->animIdx_C2;
+    o->prevAnimIdx_C0 = o->animIdx_C2;
     o->animIdx_C2 = -1;
     o->scriptPos_C4 = 0;
     o->scriptLen_C6 = 1;
@@ -2353,7 +2464,6 @@ void sub_8001DB98(void* arg0, void* arg1)
     o->script_D0 = (ActorScriptCmd*)s;
     o->flags_4 &= ~0x8000;
     o->flags_4 |= 0x4000;
-    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
         o->scriptLen_C6 += s[1];
@@ -2423,7 +2533,7 @@ int sub_8001DD44(Actor* o, int mode, int a, int b)
     }
     sub_8001D71C(o);
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     r = a - b;
     return r < 0 ? 0 : (a < r ? a : r);
 }
@@ -2450,7 +2560,7 @@ int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
         o->turn_194.input_8 = -step;
     }
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     return 0;
 }
 // Matched
@@ -2687,7 +2797,9 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     return r;
 }
 #if 0
-// Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
+// Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
+// register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
+// anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
 void sub_8001E574(Actor* o, ActorDesc* d)
 {
     Model* m;
@@ -2707,8 +2819,8 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     if (d->visible_30 != 1)
     {
         f |= 0x2000;
-        o->flags_4 = f;
     }
+    o->flags_4 = f;
     if (d->kind_4 == 2)
     {
         f |= 0x1000;
@@ -2765,14 +2877,14 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->effect_130 = -1;
     o->model_15C = m;
     o->image_150.x = word_8007DC8C[0];
-    o->image_150.y = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    o->image_150.y = word_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
     o->image_150.w = word_8007DC8C[2];
     o->image_150.h = word_8007DC8C[3];
     o->clut_158[0] = word_8007DC94[0];
     o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
     o->path_160 = 0;
     sub_8001E7F0(o, d);
-    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, (int)dword_800795A0, 8);
+    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, dword_800795A0, 8);
     sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
@@ -2805,7 +2917,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     mem = ListAlloc_8003FDC0(dword_80091990, size);
     o->bones_134 = (short*)mem;
-    MemCopy_800403E8((unsigned int*)mem, (unsigned int*)d->bones_34, sz0);
+    MemCopy_800403E8(mem, d->bones_34, sz0);
     o->baseScale_138[0] = d->baseScale_38[0];
     o->baseScale_138[1] = d->baseScale_38[1];
     o->baseScale_138[2] = d->baseScale_38[2];
@@ -2833,7 +2945,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     o->anims_148 = d->anims_40;
     o->effectTbl_14C = d->effectTbl_44;
-    o->bonePos_1C4 = mem;
+    o->bonePos_1C4 = (int*)mem;
     mem += n * 12;
     if (d->hasMatrices_4C)
     {

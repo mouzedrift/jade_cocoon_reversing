@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_8001EA48.h"
+#include "tu_8003C6C8.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -19,9 +20,9 @@
 #include "cd.h"
 #include "tu_8003C6C8.h"
 #include "main.h"
+#include "gte.h"
 
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
-
 
 const char aDataData0011[] = "\\DATA\\DATA.001;1";
 const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
@@ -142,7 +143,82 @@ void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* 
         }
     }
 }
-INCLUDE_ASM(sub_8003A6C4);
+#if 0
+// Not matched: size and code right; per group the scheduler orders the three item-pointer setups differently (vo/va/vd: a1,a3,a2 vs a1,a2,a3) and swaps the j / vo-giv registers
+/* o = a + d * t / 4096 */
+#define LERP_SV(o, a, d, t)  \
+    {                        \
+        gte_lddp(0x1000);    \
+        gte_ldsv(a);         \
+        gte_gpf12();         \
+        gte_lddp(t);         \
+        gte_ldsv(d);         \
+        gte_gpl12();         \
+        gte_stsv(o);         \
+    }
+
+#define LERP_GROUP(k, size, off, nn, nv)                                          \
+    if (pa->g[k].n * (nn + nv))                                                   \
+    {                                                                             \
+        int i;                                                                    \
+        int j;                                                                    \
+        for (i = 0; i < pa->g[k].n; i++)                                          \
+        {                                                                         \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
+            SVECTOR* vd = (SVECTOR*)(pd->g[k].p + i * size + off);                \
+            for (j = 0; j < nn; j++)                                              \
+            {                                                                     \
+                LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
+            }                                                                     \
+            for (j = nn; j < nn + nv; j++)                                        \
+            {                                                                     \
+                LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
+            }                                                                     \
+        }                                                                         \
+    }
+
+void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
+{
+    PolyGroups* po = (PolyGroups*)out;
+    PolyGroups* pa = (PolyGroups*)a;
+    PolyGroups* pd = (PolyGroups*)d;
+
+    LERP_GROUP(0, 0x24, 4, 1, 3);
+    LERP_GROUP(1, 0x3C, 0xC, 3, 3);
+    LERP_GROUP(2, 0x30, 0x10, 1, 3);
+    LERP_GROUP(3, 0x48, 0x18, 3, 3);
+    LERP_GROUP(4, 0x2C, 4, 1, 4);
+    LERP_GROUP(5, 0x50, 0x10, 4, 4);
+    LERP_GROUP(6, 0x38, 0x10, 1, 4);
+    LERP_GROUP(7, 0x5C, 0x1C, 4, 4);
+    if (po->n8)
+    {
+        EdgeDelta* eo = (EdgeDelta*)po->p8;
+        EdgeDelta* ea = (EdgeDelta*)pa->p8;
+        EdgeDelta* ed = (EdgeDelta*)pd->p8;
+        int i;
+        for (i = 0; i < po->n8; i++, eo++, ea++, ed++)
+        {
+            LERP_SV(&eo->a, &ea->a, &ed->a, t);
+            LERP_SV(&eo->b, &ea->b, &ed->b, t);
+        }
+    }
+    if (po->n9)
+    {
+        EdgeDelta* eo = (EdgeDelta*)po->p9;
+        EdgeDelta* ea = (EdgeDelta*)pa->p9;
+        EdgeDelta* ed = (EdgeDelta*)pd->p9;
+        int i;
+        for (i = 0; i < po->n9; i++, eo++, ea++, ed++)
+        {
+            LERP_SV(&eo->a, &ea->a, &ed->a, t);
+            LERP_SV(&eo->b, &ea->b, &ed->b, t);
+        }
+    }
+}
+#endif
+INCLUDE_ASM(LerpFtgObject_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
 {
@@ -168,7 +244,7 @@ int ratan2Degrees_8003B56C(int x, int y)
 // Not matched: s1/s2 register assignment of out/len swapped (8 words). Also tried: declaration order, unsigned len, direct out[] stores, short a (loses the sext), copy pointer o = out, passing out as the 3D call's 2nd arg, b/a reuse; permuter 1500: nothing
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
-    int len = ISqrt_8003B918(((int (*)(int*))LengthSquared3D_8003B8DC)(v));
+    int len = ISqrt_8003B918(LengthSquared3D_8003B8DC(v));
     short b;
     int a;
     b = ratan2(v[0], v[2]);
@@ -273,7 +349,7 @@ int LengthSquared2D_8003B8BC(int x, int y)
     return x * x + y * y;
 }
 // Matched
-int LengthSquared3D_8003B8DC(int* p, int a1)
+int LengthSquared3D_8003B8DC(int* p)
 {
     return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
 }
@@ -454,16 +530,16 @@ int QueueFileRequest_8003BC84(FileRequestDesc* req)
     n->fileId_10 = req->fileId_4;
     n->offset_14 = req->offset_8;
     n->size_18 = req->size_C;
-    n->dest_1C = (int)req->dest_10;
-    n->callback_24 = (int)req->callback_1C;
+    n->dest_1C = req->dest_10;
+    n->callback_24 = req->callback_1C;
     if (req->paramsSize_18 == 0 || req->params_14 == 0)
     {
-        n->field_20 = 0;
+        n->params_20 = 0;
     }
     else
     {
-        n->field_20 = (int)fileRequestParams_800954C0[i];
-        MemCopy_800403E8((unsigned int*)n->field_20, (unsigned int*)req->params_14, req->paramsSize_18);
+        n->params_20 = fileRequestParams_800954C0[i];
+        MemCopy_800403E8(n->params_20, req->params_14, req->paramsSize_18);
     }
     if (head->count == 0)
     {
@@ -577,7 +653,7 @@ int IsFileRequestQueueIdle_8003BF88(void)
 void* SetFileBufferInUse_8003BFB8(int arg0)
 {
     fileBufferInUse_80086564 = arg0;
-    return (void*)fileBuffer_8008656C;
+    return fileBuffer_8008656C;
 }
 // Matched
 int ConsumeFileRequest_8003BFD0(int key, int flag)
@@ -588,11 +664,11 @@ int ConsumeFileRequest_8003BFD0(int key, int flag)
         unsigned int f = n->flags_C;
         if (f & 0x1000)
         {
-            void (*cb)(int, int) = (void (*)(int, int))n->callback_24;
+            void (*cb)(void*, void*) = n->callback_24;
             n->flags_C = f | 0x2000;
             if (cb)
             {
-                cb(n->field_20, n->dest_1C);
+                cb(n->params_20, n->dest_1C);
                 n->callback_24 = 0;
                 return 0;
             }
@@ -625,7 +701,7 @@ struct FileTask
     Data001File file;
     char pad_10[0xC];
     int state;
-    int buf;
+    void* buf;
     int sectors;
     int retry;
 };
@@ -656,7 +732,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t);
 void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
 {
     InitFileRequestQueue_8003BBE4();
-    fileBuffer_8008656C = 0x801B9250;
+    fileBuffer_8008656C = (void*)0x801B9250;
     a1->cur = 0;
     a1->state = 0;
     a1->buf = 0;
@@ -664,8 +740,6 @@ void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
 extern FileRequest* dword_80086548;
-extern int CdSeekStart_8003C8A0(DslLOC* loc);
-extern int CdReadStart_8003C944(DslLOC* loc, int buf, int sectors);
 // Matched
 void ProcessFileRequests_8003C184(int* a0, FileTask* t)
 {
@@ -728,12 +802,12 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 }
                 else
                 {
-                    t->buf = (int)malloc3_8003FC4C(t->sectors << 11);
+                    t->buf = malloc3_8003FC4C(t->sectors << 11);
                 }
             }
             else
             {
-                t->buf = 0x801B9250;
+                t->buf = (void*)0x801B9250;
             }
             if (t->cur->flags_C & 0x10)
             {
@@ -783,7 +857,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             {
                 if (t->cur->flags_C & 2)
                 {
-                    MemCopy_800403E8((unsigned int*)t->cur->dest_1C, (unsigned int*)t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
+                    MemCopy_800403E8(t->cur->dest_1C, t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
                 }
                 t->state = 8;
             }
@@ -827,7 +901,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
         case 9:
             if (t->cur->callback_24)
             {
-                ((void (*)(int, int))t->cur->callback_24)(t->cur->field_20, t->buf);
+                t->cur->callback_24(t->cur->params_20, t->buf);
             }
             if (t->cur->flags_C & 1)
             {
@@ -835,7 +909,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
                 {
                     if (!(t->cur->flags_C & 0x200))
                     {
-                        free3_8003FC6C((void*)t->buf);
+                        free3_8003FC6C(t->buf);
                     }
                     t->buf = 0;
                 }

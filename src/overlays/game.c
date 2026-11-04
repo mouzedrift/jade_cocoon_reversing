@@ -208,12 +208,12 @@ GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b)
     GameSlot_1* r = sub_800A17BC();
     r->f0 = 1;
     r->f4 = b;
-    MemCopy_800403E8((unsigned int*)r->data_8, src, 0xe0);
+    MemCopy_800403E8(&r->data_8, src, 0xe0);
     return r;
 }
 
 // Matched
-void sub_800A1850(GameHolder_1* p)
+void sub_800A1850(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -223,7 +223,7 @@ void sub_800A1850(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A188C(GameHolder_1* p)
+void sub_800A188C(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -232,7 +232,7 @@ void sub_800A188C(GameHolder_1* p)
 }
 
 // Matched
-void sub_800A18C8(GameHolder_1* p)
+void sub_800A18C8(GameSlot_1* p)
 {
     GameAi* q = p->f4;
     Actor* v = q->actor_8;
@@ -344,33 +344,31 @@ void sub_800A1B78(void)
     }
 }
 
-#if 0
-// Not matched: loop: $s4/$s5 swapped (cur slot copy vs &gCtx); tail: 'n' loaded straight into $a0 (no copy), &gCtx in $a2, dword_800B1CA8 store sinks to the epilogue. The control flow and the rest match
 extern int dword_800B1CA8;
-extern int sub_8001D4DC(int o, int a, int b, int c);
 extern int name_8007A024[];
+#if 0
+// Not matched: 1 word short: the original loads maxCount_4 into $v0 and copies it to n (move $a0,$v0), keeps &gCtx in $a1 (here $a2) and stores dword_800B1CA8 before the f788/f0/f48 stores (here it sinks into the epilogue); everything up to there matches
 void sub_800A1BD0(void)
 {
-    char* e = sub_800A5F6C();
+    GameEnemy* e = sub_800A5F6C();
     int found;
-    int o;
+    Actor* o;
     GameSlot_1* slot;
     GameSlot_1* s;
-    GameSlot_1* cur;
     int* t;
     GameAi* obj;
     int done;
     int i;
     int n;
-    int* q;
-    int* p;
+    GameSlot_1* p;
+    GameSlot_1* q;
     GameCtx_1* g;
     if (e)
     {
-        o = *(int*)(e + 0xa4);
-        *(int*)(e + 0xa4) = sub_8001D4DC(o, 0, 0, 0);
+        o = e->actors_A4[0];
+        e->actors_A4[0] = sub_8001D4DC(o, 0, 0, 0);
         slot = sub_800A17F4((unsigned int*)e, 0);
-        slot->f4 = (GameAi*)CreateEnemyAiEvent_800A2D90(*(int*)(e + 0xa4), (char*)slot + 0x24, 0);
+        slot->f4 = CreateEnemyAiEvent_800A2D90(e->actors_A4[0], &slot->data_8.minion_1C, 0);
         sub_8001D730(o, 0);
         sub_8001D68C(o, 0);
         dword_800B1264 = (int*)slot;
@@ -381,57 +379,56 @@ void sub_800A1BD0(void)
         if (dword_800B19F0[i].f0)
         {
             s = &dword_800B19F0[i];
-            cur = s;
+            slot = s;
             done = 0;
-            t = *(int**)((char*)s + 0xd0);
+            t = s->data_8.anims_C8[0];
             obj = s->f4;
             t = t ? t : name_8007A024;
-            if (!found && gCtx_800B1260.f4 == (int)s)
+            if (!found && gCtx_800B1260.f4 == s)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[0]);
                 found = 1;
                 done = found;
-                gCtx_800B1260.f4 = (int)s;
+                gCtx_800B1260.f4 = s;
             }
             if (!done)
             {
                 sub_800A2EC8(obj);
                 sub_8001DC34(obj->actor_8, (void*)t[1]);
-                gCtx_800B1260.fc[gCtx_800B1260.f8] = (int)cur;
+                gCtx_800B1260.fc[gCtx_800B1260.f8] = slot;
                 gCtx_800B1260.f8++;
             }
         }
     }
     g = &gCtx_800B1260;
-    p = (int*)g->f4;
+    p = (GameSlot_1*)g->f4;
     for (i = 0; i < 3; i++)
     {
-        if ((unsigned)p[0xb8 / 4 + i * 2] >= 0xd3)
+        if ((unsigned)p->data_8.members_B0[i].species_0 >= 0xd3)
         {
             break;
         }
     }
-    n = p[0xc / 4];
+    n = p->data_8.maxCount_4;
     if (n >= i)
     {
         n = i;
     }
     g->f76c = n;
     g->f770 = i;
-    q = (int*)g->f4;
-    g->f774 = q[2] == 0;
+    q = (GameSlot_1*)g->f4;
+    g->f774 = q->data_8.kind_0 == 0;
     g->f77c = 0;
-    g->f778 = q[2] == 1;
-    g->f780 = q[4];
-    g->f784 = q[5];
-    g->f788 = q[6];
+    g->f778 = q->data_8.kind_0 == 1;
+    g->f780 = q->data_8.f8;
+    g->f784 = q->data_8.fC;
+    g->f788 = q->data_8.f10;
     dword_800B1CA8 = 0;
     gCtx_800B1260.f0 = 1;
-    g->f48 = q[7];
+    g->f48 = q->data_8.f14;
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(game, sub_800A1BD0);
 
 // Matched
@@ -447,15 +444,15 @@ char* sub_800A1E3C(void)
 }
 
 // Matched
-int sub_800A1E48(void)
+int* sub_800A1E48(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x38;
+    return gCtx_800B1260.f4->f4->actor_8->pos_38;
 }
 
 // Matched
-int sub_800A1E68(void)
+short* sub_800A1E68(void)
 {
-    return *(int*)(*(int*)(gCtx_800B1260.f4 + 4) + 8) + 0x5c;
+    return gCtx_800B1260.f4->f4->actor_8->rot_5C;
 }
 
 // Matched
@@ -475,7 +472,7 @@ void sub_800A1E98(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A188C((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A188C(gCtx_800B1260.fc[i]);
     }
     sub_800A7B00(-1);
 }
@@ -486,12 +483,123 @@ void sub_800A1F0C(void)
     int i;
     for (i = 0; i < gCtx_800B1260.f8; i++)
     {
-        sub_800A18C8((GameHolder_1*)gCtx_800B1260.fc[i]);
+        sub_800A18C8(gCtx_800B1260.fc[i]);
     }
     sub_800A7BF0(-1);
 }
 
-INCLUDE_OVERLAY_ASM(game, sub_800A1F80);
+// Matched
+void sub_800A1F80(void)
+{
+    ActorDesc s;
+    int v[3];
+    GameCtx_1* g;
+    GameSlot_1* h;
+    int n;
+    short* offs;
+    int i;
+    int k;
+    Model* m;
+    Actor* a;
+    MinionModelDesc* d;
+    int* p0;
+    int* p1;
+    int f;
+    g = &gCtx_800B1260;
+    n = g->f770;
+    h = g->f4;
+    if (g->f76c < n)
+    {
+        offs = dword_800ADE9C[g->f76c - 1];
+    }
+    else
+    {
+        offs = dword_800ADE9C[n - 1];
+    }
+    i = 0;
+    do
+    {
+        k = 0;
+        if (i == 0 && h->data_8.useMinion_18 == 1)
+        {
+            MemCopy_800403E8((unsigned int*)&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], (unsigned int*)&h->data_8.minion_1C, sizeof(UnitStats));
+        }
+        else
+        {
+            k = InitMinionData_8001900C(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], &h->data_8.members_B0[i].species_0);
+        }
+        if (h->data_8.kind_0 == 0 || h->data_8.actors_A4[i] != 0)
+        {
+            a = sub_8001D4DC(h->data_8.actors_A4[i], 1, i, 1);
+            if (h->data_8.kind_0 == 1)
+            {
+                sub_8001D730(a, 1);
+            }
+        }
+        else
+        {
+            d = sub_80019C70(h->data_8.members_B0[i].species_0);
+            m = AcquireLoaderModel_80020734(d->modelId_0);
+            s.modelId_0 = d->modelId_0;
+            s.kind_4 = 1;
+            s.pos_8[0] = 0;
+            s.pos_8[1] = 0;
+            s.pos_8[2] = 0;
+            s.rot_14[0] = 0;
+            s.rot_14[1] = 0;
+            s.rot_14[2] = 0;
+            s.clutRow_1C = i;
+            s.animIdx_20 = 4;
+            s.frame_24 = -3;
+            s.frameSpeed_28 = 0x1000;
+            s.blendDiv_2C = 4;
+            s.visible_30 = 1;
+            s.bones_34 = dword_80079140;
+            if (k >= 4)
+            {
+                s.baseScale_38 = (int*)sub_80024E90(m, k);
+            }
+            else
+            {
+                p0 = (int*)sub_80024E90(m, k);
+                p1 = (int*)sub_80024E90(m, k + 1);
+                f = sub_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
+                f = ((p1[0] - p0[0]) * f) / 4096;
+                v[0] = p0[0] + f;
+                v[1] = p0[1] + f;
+                v[2] = p0[2] + f;
+                s.baseScale_38 = v;
+            }
+            s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
+            s.anims_40 = (ActorAnim*)sub_80024E38(m);
+            s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+            s.hasMatrices_4C = 1;
+            a = CreateActor_8001D45C(&s);
+            sub_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
+        }
+        a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c]) & 0xfff] * 1000 / 4096;
+        a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
+        a->pos_38[2] = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c] + 0x400) & 0xfff] * 1000 / 4096;
+        a->rot_5C[0] = 0;
+        a->prevPos_44[0] = a->pos_38[0];
+        a->prevPos_44[1] = a->pos_38[1];
+        a->prevPos_44[2] = a->pos_38[2];
+        a->basePos_50[0] = a->pos_38[0];
+        a->basePos_50[1] = a->pos_38[1];
+        a->basePos_50[2] = a->pos_38[2];
+        a->rot_5C[1] = ratan2_8003B548(saveData_8008B570.levant_7A8.pos.x - a->pos_38[0], saveData_8008B570.levant_7A8.pos.z - a->pos_38[2]);
+        a->rot_5C[2] = 0;
+        sub_8001D68C(a, 0);
+        gCtx_800B1260.actors_7c[gCtx_800B1260.f40] = a;
+        gCtx_800B1260.f4c[gCtx_800B1260.f40] = i >= gCtx_800B1260.f76c;
+        gCtx_800B1260.f70c[gCtx_800B1260.f40] = (int)h->data_8.anims_C8[i];
+        gCtx_800B1260.f73c[gCtx_800B1260.f40] = h->data_8.fD4[i];
+        i++;
+        gCtx_800B1260.f40++;
+        gCtx_800B1260.f44++;
+    } while (i < n);
+    sub_800A1850(h);
+}
 
 // Matched
 int sub_800A248C(void)
@@ -634,7 +742,7 @@ void sub_800A284C(int a)
 int sub_800A2898(int a)
 {
     sub_800A2CA8(a, 0);
-    return AddItem_80010650((Item*)&gCtx_800B1260.ents_ac[a]);
+    return AddItem_80010650(&gCtx_800B1260.ents_ac[a]);
 }
 
 // Matched
@@ -668,17 +776,17 @@ void sub_800A2924(int a)
 }
 
 // Matched
-void sub_800A29CC(int a, GameActorInfo* out)
+void sub_800A29CC(int a, EffectTarget* out)
 {
     sub_800A2CA8(a, 0);
     {
         Actor* e = gCtx_800B1260.actors_7c[a];
-        out->f0 = (int)e->effectTbl_14C;
+        out->tbl_0 = e->effectTbl_14C;
         out->pos_4 = e->pos_38;
-        out->f8 = e->bonePos_1C4;
-        out->fC = (char*)e->boneMatrices_1C8;
-        out->f2C = (char*)e->boneScale_144;
-        out->f30 = e->scale_2C;
+        out->bonePos_8 = e->bonePos_1C4;
+        out->boneMatrices_C = e->boneMatrices_1C8;
+        out->boneScale_2C = e->boneScale_144;
+        out->scale_30 = e->scale_2C;
     }
 }
 
@@ -699,25 +807,20 @@ int sub_800A2A70(int a)
     }
 }
 
-#if 0
-// Not matched: early returns give the right registers but a second `jr $ra` for
-// the last return; a result variable (if/else, nested, goto, ternary) lands in $v1.
+// Matched
 int sub_800A2AB4(void)
 {
     GameCtx_1* c = &gCtx_800B1260;
-    if (c->f774 == 0)
+    if (c->f774 != 0)
     {
-        return 0;
+        if (c->f3c == 0)
+        {
+            return 1;
+        }
+        return 2;
     }
-    if (c->f3c == 0)
-    {
-        return 1;
-    }
-    return 2;
+    return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, sub_800A2AB4);
 
 // Matched
 void sub_800A2AE8(void)
@@ -771,17 +874,17 @@ int sub_800A2BE4(int a)
 }
 
 // Matched
-int sub_800A2C28(int a)
+int* sub_800A2C28(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->pos_38;
+    return gCtx_800B1260.actors_7c[a]->pos_38;
 }
 
 // Matched
-int sub_800A2C68(int a)
+int* sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
-    return (int)gCtx_800B1260.actors_7c[a]->bonePos_1C4;
+    return gCtx_800B1260.actors_7c[a]->bonePos_1C4;
 }
 
 int sub_800A2CA8(int a, int b)
@@ -817,16 +920,16 @@ void sub_800A2D48(GameAi* p)
 
 GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
 {
-    GameObj5_1* e = (GameObj5_1*)AllocEventEntry_80043AF8((EventNode*)dword_8008D49C);
+    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D49C);
     GameAi* q;
     int v;
     int k;
     int j;
     if (e != 0)
     {
-        q = e->obj_14;
-        e->flags_0 = (e->flags_0 | 1) & ~0x8000;
-        q->flags_0 = &e->flags_0;
+        q = e->buffer;
+        e->flags = (e->flags | 1) & ~0x8000;
+        q->flags_0 = &e->flags;
         q->minion_4 = b;
         q->actor_8 = a;
         q->f28 = 0;
@@ -837,7 +940,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
         q->f10 = -1;
         if (c == 0)
         {
-            e->fn_8 = sub_800A2EE4;
+            e->cb_8 = sub_800A2EE4;
         }
         else
         {
@@ -846,7 +949,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
             {
                 j = !(levantCaptureLevel_8008BD7C - b->st_0.level_44 < 5);
 
-                e->fn_8 = name_800ADEB8[v][j];
+                e->cb_8 = name_800ADEB8[v][j];
             }
             else
             {
@@ -855,7 +958,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
                 {
                     k = (k - 0x39) / 4;
                 }
-                e->fn_8 = name_800ADEB8[k][0];
+                e->cb_8 = name_800ADEB8[k][0];
             }
         }
         return q;
@@ -870,7 +973,7 @@ void sub_800A2EC8(GameAi* p)
 }
 
 // Matched
-void sub_800A2EE4(void)
+void sub_800A2EE4(EventEntry* e, void* ai)
 {
 }
 
@@ -1296,7 +1399,6 @@ int sub_800A4278(GameAi* p)
     return 1;
 }
 #endif
-
 INCLUDE_OVERLAY_ASM(game, sub_800A4278);
 
 void SetActorState_800A433C(GameAi* p, int state, int anim, int timer, int mode, int flag, int div)
@@ -1514,11 +1616,11 @@ void sub_800A4940(int a, int b)
     unsigned short* p;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        p = (unsigned short*)sub_800B322C();
+        p = sub_800B322C();
     }
     else
     {
-        p = (unsigned short*)sub_800A53CC();
+        p = sub_800A53CC();
         if (p)
         {
             p += b;
@@ -1575,7 +1677,7 @@ int sub_800A49CC(int a, int b, MapList16* c, int* e)
     f = 0;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        f = (unsigned short*)sub_800B322C();
+        f = sub_800B322C();
     }
     else
     {

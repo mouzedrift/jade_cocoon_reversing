@@ -3,6 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "tiy.h"
+#include "tu_80019BF0.h"
 
 typedef struct MenuTask
 {
@@ -296,14 +297,14 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
         c->count_44 = CountMinions_80010548(3) + 1;
         c->f0 = 0;
         p = &levantStatus_8008BD38;
-        MemCopy_800403E8((unsigned int*)&c->st_8C[0], (unsigned int*)p, 0x48);
-        MemCopy_800403E8((unsigned int*)&c->st_1AC[0], (unsigned int*)p, 0x48);
+        MemCopy_800403E8(&c->st_8C[0], p, 0x48);
+        MemCopy_800403E8(&c->st_1AC[0], p, 0x48);
         c->a2CC[0] = p->exp_4;
         for (i = 1; i < c->count_44; i++)
         {
             p = GetMinionStatus_800107A0(3, i - 1);
-            MemCopy_800403E8((unsigned int*)&c->st_8C[i], (unsigned int*)p, 0x48);
-            MemCopy_800403E8((unsigned int*)&c->st_1AC[i], (unsigned int*)p, 0x48);
+            MemCopy_800403E8(&c->st_8C[i], p, 0x48);
+            MemCopy_800403E8(&c->st_1AC[i], p, 0x48);
             c->a2CC[i] = p->exp_4;
         }
         t->cb_8 = (EventEntryFn)sub_800BBE50;
@@ -375,7 +376,7 @@ void sub_800BBF48(MenuTask* t, MenuMain* c)
         for (i = 0; i < c->count_44; i++)
         {
             p = name_80014390(i & 0xFF);
-            MemCopy_800403E8((unsigned int*)p, (unsigned int*)&c->st_8C[i], 0x48);
+            MemCopy_800403E8(p, &c->st_8C[i], 0x48);
         }
         sub_800BC9E8(c);
     }
@@ -1191,12 +1192,10 @@ void MinionListScreen_800BD80C(MenuTask* t, char* a)
     DrawMenuBackground_8002BE10();
 }
 
-extern int sub_800B32D4();
-extern int name_8007A170[];
-int GetMinionSpeciesName_800BDB74(int a)
+char* GetMinionSpeciesName_800BDB74(int a)
 {
     if (a < 0xC9)
-        return name_8007A170[a];
+        return minionSpeciesNames_8007A170[a];
     return sub_800B32D4(a - 0xC9);
 }
 
@@ -1231,7 +1230,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
         }
         if (IsMinionCaptured_800BDBB8(i) && cnt < hi && cnt >= lo)
         {
-            MemCopy_800403E8((unsigned int*)buf, (unsigned int*)GetMinionSpeciesName_800BDB74(i), 0x16);
+            MemCopy_800403E8(buf, GetMinionSpeciesName_800BDB74(i), 0x16);
             pos[0] += 8;
             if (buf)
             {
@@ -1254,10 +1253,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
     }
 }
 
-// Not matched: 1 word, the delay slot of the last bnez holds "li v0,1" in the original (the final
-// fall-through returns no value); tried no final return, return;, uninitialised return var (gives
-// move v0,a1), merged conditions, if/else chain into a variable
-#if 0
+// Matched
 int sub_800BDD94(int a)
 {
     if ((unsigned)(a - 0x29) < 0x10 || (unsigned)(a - 0xC9) < 0xA)
@@ -1268,10 +1264,8 @@ int sub_800BDD94(int a)
         return 1;
     if ((unsigned)(a - 0x20) < 2 || (unsigned)(a - 0x39) < 0x88)
         return 1;
-    return 0;
+    return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BDD94);
 
 extern int sub_800BF540();
 extern void sub_800BE048();
@@ -2398,7 +2392,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
     {
         if ((short)(i + c->scroll_3C * 3) < 12)
         {
-            Item* it;
+            UnitStats* it;
             int k = i;
             unsigned short w = name_800C18EC.w;
             unsigned short h = name_800C18EC.h;
@@ -2409,7 +2403,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
             r.x = name_800C18EC.x + dx;
             r.y = name_800C18EC.y + dy;
             it = GetSaveItem_80033AE4(&saveData_8008B570, k + c->scroll_3C * 3);
-            if (it && it->id != 0xD3)
+            if (it && it->species_5C != 0xD3)
                 sub_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
         }
     }
@@ -2600,7 +2594,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
         if (id < 0x26)
         {
             icon = GetKeyItemIcon_8001D344(id);
-            nm = (void*)GetKeyItemName_8001D318(id);
+            nm = GetKeyItemName_8001D318(id);
         }
         else
         {
@@ -2759,7 +2753,7 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
         int id = sub_800AD990(i);
         if (id != 0xFF)
         {
-            icon = ((int (*)(int, int))GetEquipmentIcon_8001D2D4)(id, i);
+            icon = GetEquipmentIcon_8001D2D4(id, i);
             nm = (void*)GetEquipmentName_8001D128(id, i);
         }
         else

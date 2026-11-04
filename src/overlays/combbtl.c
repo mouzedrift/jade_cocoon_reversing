@@ -56,7 +56,7 @@ extern EventNode* dword_8008D778;
 extern void sub_8001A38C();
 extern void sub_8001A41C();
 extern int sub_800A1958(void*);
-extern int sub_800A10DC(int);
+extern int* sub_800A10DC(int); // COMBAT: the slot actor pos_38
 extern void sub_800A7EFC();
 typedef struct CombBtlObj
 {
@@ -455,11 +455,9 @@ void sub_800A5290(CombBtlTask* t)
     }
 }
 
-#if 0
-// Not matched: the index scaling becomes sllv by the register holding 2 (CSE with kinds[0]); the original shifts by a constant
-extern EventEntry* OpenMessageWindow_8003422C(int* cfg);
 extern int dword_800A4A8C[];
 extern int dword_800A4A94[];
+// Matched
 int sub_800A5408(int which, int text, int c)
 {
     int cfg[18];
@@ -468,7 +466,6 @@ int sub_800A5408(int which, int text, int c)
     cfg[0] = 2;
     cfg[1] = 0;
     cfg[2] = text;
-    cfg[3] = (int)tbl[which];
     cfg[4] = (settingsFlags_8008B58C.word & 7) != 3;
     cfg[5] = 0;
     cfg[6] = 0;
@@ -482,10 +479,9 @@ int sub_800A5408(int which, int text, int c)
     cfg[14] = (settingsFlags_8008B58C.word >> 3) & 1;
     cfg[15] = 1;
     cfg[16] = 0;
+    cfg[3] = (int)tbl[which];
     return (int)OpenMessageWindow_8003422C(cfg);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A5408);
 
 void sub_800A54CC(CombBtlTask* t)
 {
@@ -857,10 +853,10 @@ void sub_800A601C()
     int i;
     for (i = 10; i > 0; i--)
     {
-        MemCopy_800403E8((unsigned int*)&dword_800A84D8[i], (unsigned int*)&dword_800A84D8[i - 1], 0x14);
+        MemCopy_800403E8(&dword_800A84D8[i], &dword_800A84D8[i - 1], 0x14);
     }
     dword_800A84D8[0].unit_0 = dword_800A85B8;
-    MemCopy_800403E8((unsigned int*)&dword_800A84D8[0].cmd_4, (unsigned int*)&dword_800A8600, 0x10);
+    MemCopy_800403E8(&dword_800A84D8[0].cmd_4, &dword_800A8600, 0x10);
 }
 
 void sub_800A60A4()
@@ -1157,7 +1153,7 @@ void sub_800A7E34(int a, int b, int c)
         p->frame_8 = 0;
         p->amount_4 = c;
         p->side_18 = a;
-        p->pos_10 = (int*)sub_800A10DC(a);
+        p->pos_10 = sub_800A10DC(a);
         e->cb_8 = (EventEntryFn)sub_800A7EFC;
     }
 }

@@ -207,5 +207,7 @@ extern const char aRugdogle_80072FF4[];
 extern const char dword_80073008[];
 extern const char aRaddreg_80073018[];
 extern const char dword_80073028[];
+// bones: 4 shorts per bone (Actor.bones_134); a1/a2: three flags each from model header sections
+extern void sub_80019B14(short* bones, unsigned short* a1, unsigned short* a2);
 
 #endif

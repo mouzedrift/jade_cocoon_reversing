@@ -37,7 +37,7 @@ void sub_80028C60(int a0, char* a1)
 {
     int n;
     char* p;
-    MemCopy_800403E8((unsigned int*)cameraState_8008D4F0, (unsigned int*)a1, 0x104);
+    MemCopy_800403E8(cameraState_8008D4F0, a1, 0x104);
     p = a1;
     a1 += 0x108;
     n = *(int*)(p + 0x104);

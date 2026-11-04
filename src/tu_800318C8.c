@@ -15,10 +15,11 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_800318C8.h"
 
 
 // Matched
-struct_12* sub_800318C8(int idx)
+ActionData* sub_800318C8(int idx)
 {
     return &stru_80083594[idx];
 }

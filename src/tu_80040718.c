@@ -57,10 +57,10 @@ void InitGameDefaults_80040718(void)
 // Matched
 void LoadPublicTiyAndFtg_800407D0(void)
 {
-    int* pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(9);
+    int* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
     LoadTiy_80028E74(&publicTiySprts_8008D434, &publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, pFile, 1);
-    pFile = (int*)Data001Reader_LoadIntoGlobal_8003CB40(10);
+    pFile = Data001Reader_LoadIntoGlobal_8003CB40(10);
     AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
     LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);
     LoadSound_80030A84(0, &systemSound_80091D40);

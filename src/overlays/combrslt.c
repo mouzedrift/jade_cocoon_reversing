@@ -129,41 +129,53 @@ void sub_800A4240(int i)
 }
 
 // Near miss: scheduling of the repeated x/y stores
-#if 0
+// Matched
 void sub_800A444C(unsigned short* p, int a, int b, int c)
 {
     short v[2];
-    unsigned int x;
-    unsigned int y;
-    x = p[0];
-    v[0] = x + 0x1C;
-    y = p[1];
-    v[0] = x + 0x12;
-    v[1] = y + 4;
-    v[1] = y + 7;
-    DrawSmallNumber3_8002C290(v, b, a);
-    x = p[0];
-    v[0] = x + 0x1C;
-    y = p[1];
-    v[0] = x + 0x14;
-    v[1] = y + 5;
-    DrawUiTiySprt_8002C06C(v, 0xAE, a);
-    x = p[0];
-    v[0] = x + 0x43;
-    y = p[1];
-    v[0] = x + 0x39;
-    v[1] = y + 4;
-    v[1] = y + 7;
-    DrawSmallNumber3_8002C290(v, c, a);
-    x = p[0];
-    v[0] = x + 0x43;
-    y = p[1];
-    v[0] = x + 0x3B;
-    v[1] = y + 5;
-    DrawUiTiySprt_8002C06C(v, 0x4D, a);
+    {
+        unsigned int x;
+        unsigned int y;
+        x = p[0];
+        v[0] = x + 0x1C;
+        y = p[1];
+        v[1] = y + 4;
+        v[0] = x + 0x12;
+        v[1] = y + 7;
+        DrawSmallNumber3_8002C290(v, b, a);
+    }
+    {
+        unsigned int x;
+        unsigned int y;
+        x = p[0];
+        v[0] = x + 0x1C;
+        y = p[1];
+        v[0] = x + 0x14;
+        v[1] = y + 5;
+        DrawUiTiySprt_8002C06C(v, 0xAE, a);
+    }
+    {
+        unsigned int x;
+        unsigned int y;
+        x = p[0];
+        v[0] = x + 0x43;
+        y = p[1];
+        v[1] = y + 4;
+        v[0] = x + 0x39;
+        v[1] = y + 7;
+        DrawSmallNumber3_8002C290(v, c, a);
+    }
+    {
+        unsigned int x;
+        unsigned int y;
+        x = p[0];
+        v[0] = x + 0x43;
+        y = p[1];
+        v[0] = x + 0x3B;
+        v[1] = y + 5;
+        DrawUiTiySprt_8002C06C(v, 0x4D, a);
+    }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combrslt, sub_800A444C);
 
 typedef struct CombRsltPos
 {

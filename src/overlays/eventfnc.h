@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "tu_8001EA48.h"
 #include "tu_80019BF0.h"
+#include "tu_80018E5C.h"
 
 typedef struct EvInsEventfnc
 {
@@ -36,11 +37,6 @@ typedef struct EvEntEventfnc
 } EvEntEventfnc;
 
 
-typedef struct EvRotEventfnc
-{
-    short pad_0;
-    short ang_2;
-} EvRotEventfnc;
 
 typedef struct EvCtxEventfnc
 {
@@ -186,7 +182,7 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
     return 0;
 }
 
-extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
+extern void sub_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
 
 extern void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* d);
 
@@ -263,7 +259,7 @@ extern void (*dword_800B1D98)(int);
 
 extern int sub_800A59D0(int a);
 
-extern EvVecEventfnc* sub_800BBBD0(int i);
+extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
 
 extern short dword_8008D474[2];
 
@@ -315,7 +311,7 @@ extern int sub_80034ADC(int a, int b);
 
 extern EvObjEventfnc* sub_800A7A60(int a);
 
-extern int* sub_800A55B0(int a);
+extern void* sub_800A55B0(int a);
 
 extern int dword_80091C94;
 
@@ -393,7 +389,7 @@ extern int sub_800A7CFC(int a);
 extern EvVecEventfnc* sub_800A7940(int a);
 
 
-extern EvVecEventfnc* sub_800A7984(int a);
+extern SVECTOR* sub_800A7984(int a);
 
 extern int dword_800AEBD4;
 

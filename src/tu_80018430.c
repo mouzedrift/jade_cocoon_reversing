@@ -130,17 +130,17 @@ void sub_8001852C(ActorEffectReq* p, int a1)
                     continue;
                 }
                 args.field_0 = base[k].field_0;
-                args.field_4 = (int)p->pos_C;
-                args.field_8 = (int)p->bonePos_10;
-                args.field_C = (int)p->pos_C;
-                args.field_10 = (int)p->bonePos_10;
-                args.field_18 = (int)p->boneMatrices_14;
+                args.field_4 = p->pos_C;
+                args.field_8 = p->bonePos_10;
+                args.field_C = p->pos_C;
+                args.field_10 = p->bonePos_10;
+                args.field_18 = p->boneMatrices_14;
                 args.scale_14 = &tbl[idx][2];
                 args.field_1C = p->hitTimes_4[k].field_0;
                 args.field_1E = p->hitTimes_4[k].field_2;
                 args.field_24 = tbl[idx][1];
-                args.field_28 = (int)p->boneScale_34;
-                args.field_2C = (int)p->scale_38;
+                args.field_28 = p->boneScale_34;
+                args.field_2C = p->scale_38;
                 args.field_30 = p->targets_44[0].field_34;
                 sub_800149A4(&args);
             }
@@ -155,17 +155,17 @@ void sub_8001852C(ActorEffectReq* p, int a1)
                         continue;
                     }
                         args.field_0 = base[k].field_0;
-                    args.field_4 = (int)p->pos_C;
-                    args.field_8 = (int)p->bonePos_10;
-                    args.field_C = p->targets_44[i].field_4;
-                    args.field_10 = p->targets_44[i].field_8;
-                    args.field_18 = p->targets_44[i].field_C;
+                    args.field_4 = p->pos_C;
+                    args.field_8 = p->bonePos_10;
+                    args.field_C = p->targets_44[i].pos_4;
+                    args.field_10 = p->targets_44[i].bonePos_8;
+                    args.field_18 = p->targets_44[i].boneMatrices_C;
                     args.scale_14 = &tbl[idx][2];
                     args.field_1C = p->hitTimes_4[k].field_0;
                     args.field_1E = p->hitTimes_4[k].field_2;
                     args.field_24 = tbl[idx][1];
-                    args.field_28 = p->targets_44[i].field_2C;
-                    args.field_2C = p->targets_44[i].field_30;
+                    args.field_28 = p->targets_44[i].boneScale_2C;
+                    args.field_2C = p->targets_44[i].scale_30;
                     args.field_30 = p->targets_44[i].field_34;
                     sub_800149A4(&args);
                 }

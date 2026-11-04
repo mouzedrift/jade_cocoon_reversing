@@ -5,6 +5,7 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
+#include "effect.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -307,34 +308,34 @@ UnitStats* sub_8001449C(unsigned char a0)
 #endif
 INCLUDE_ASM(sub_8001449C);
 // Matched
-void FirFilterInit_8001450C(int* a0, struct_16* a1, int a2, int a3)
+void FirFilterInit_8001450C(int* a0, FirFilter* a1, int* a2, int a3)
 {
     unsigned int i;
     FirFilterSetup_80014574(a1, a2, a3);
-    for (i = 0; i < a1->field_4; i++)
+    for (i = 0; i < a1->taps_4; i++)
     {
         a0[i] = 0;
     }
 }
 // Matched
-void FirFilterSetup_80014574(struct_16* p, int a1, int a2)
+void FirFilterSetup_80014574(FirFilter* p, int* a1, int a2)
 {
-    p->field_0 = a1;
-    p->field_4 = a2;
-    p->field_8 = 0;
-    p->field_C = 0;
+    p->coefs_0 = a1;
+    p->taps_4 = a2;
+    p->input_8 = 0;
+    p->output_C.sum = 0;
 }
 // Matched
-void FirFilterStep_80014588(int* a0, struct_16* a1, unsigned int a2)
+void FirFilterStep_80014588(int* a0, FirFilter* a1, unsigned int a2)
 {
     unsigned int i;
-    a0[a2 % a1->field_4] = a1->field_8;
-    a1->field_C = 0;
-    for (i = 0; i < a1->field_4; i++)
+    a0[a2 % a1->taps_4] = a1->input_8;
+    a1->output_C.sum = 0;
+    for (i = 0; i < a1->taps_4; i++)
     {
-        a1->field_C += a0[(a2 - i) % a1->field_4] * ((int*)a1->field_0)[i];
+        a1->output_C.sum += a0[(a2 - i) % a1->taps_4] * a1->coefs_0[i];
     }
-    a1->field_C >>= 12;
+    a1->output_C.sum >>= 12;
 }
 void UpdateEffectTask_80014638(EventEntry* p, void* buf);
 // Matched

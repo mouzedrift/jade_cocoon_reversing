@@ -9,6 +9,15 @@
 extern UnitSkills dword_8007A9F8[];
 extern UnitSkills* sub_800B3274(int a0);
 extern UnitSkills* sub_80019C28(unsigned int idx);
+// each species' name (plain text, EncodeName_8003F7C8 converts it); species from 0xC9 on come from sub_800B32D4
+extern char* minionSpeciesNames_8007A170[];
+extern char* sub_800B32D4(int a0);
+
+extern ActionData* sub_8001AD64(unsigned int idx); // magic
+extern ActionData* GetItemData_8001CDF4(unsigned int idx);
+extern ActionData* sub_8001D260(void); // Levant's weapon attack
+extern unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx);
+extern unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx);
 
 // per-species model description (dword_8007BD30, sub_80019C70)
 typedef struct
@@ -19,6 +28,8 @@ typedef struct
 } MinionModelDesc;
 extern MinionModelDesc dword_8007BD30[];
 extern MinionModelDesc* sub_80019C70(int idx);
+extern Actor* sub_8001D4DC(Actor* o, int a1, int a2, int a3);
+
 
 
 // sound cue table dword_8007C750 (ModelAnimCue.arg_4 indexes it)
@@ -45,6 +56,15 @@ typedef struct
         int active;
     } points_44[8];
 } CameraState;
+
+// a point light passed to SetModelLighting_80019D84
+typedef struct
+{
+    int pos_0[3];
+    SVECTOR color_C;   // only vx/vy/vz used
+    int range_14;
+} PointLight;
+extern void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m);
 
 // screen fade task state (the dword_8008D628 task buffer, run by sub_8001A41C)
 typedef struct Fade_8001A41C

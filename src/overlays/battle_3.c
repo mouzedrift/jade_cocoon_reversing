@@ -165,7 +165,7 @@ void ApplyBattleCommand_800BEBB8()
         if (dword_800C9C88.targets_C & bit)
         {
             m = sub_80014390(i & 0xFF);
-            res.f24 = (signed char)dword_800C9D82;
+            res.f24 = dword_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             sub_80012BB0(actor, m, &cmd, &res);
@@ -561,16 +561,16 @@ void sub_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     if (f0 & 1)
     {
-        *a = p->hpLoss_A / 10;
+        *a = p->maxHp_A / 10;
         f &= ~2;
     }
     else if (f & 0x4000)
     {
-        *a = -(short)(p->hpLoss_A / 20);
+        *a = -(short)(p->maxHp_A / 20);
     }
     if (f0 & 0x8000)
     {
-        *b = -((p->f44 >> 2) + 3);
+        *b = -((p->level_44 >> 2) + 3);
         f &= ~0x8000;
     }
     if (f & 0x200)
@@ -592,7 +592,7 @@ loop:
     {
         goto loop;
     }
-    p->flags_0 = f;
+    p->status_0 = f;
 }
 #endif
 
@@ -889,7 +889,7 @@ void sub_800BFDEC()
     }
 }
 
-#if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
+// Matched
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -904,15 +904,12 @@ void sub_800C0074(EventEntry* t, void* arg)
     }
     u = arg;
     r = sub_800A2AB4();
-    k = 0;
-    if (r != 1)
-    {
+    if (r == 1)
+        k = 0;
+    else if (sub_800A2AB4() == 2)
         k = 1;
-        if (sub_800A2AB4() != 2)
-        {
-            k = u->slot_0;
-        }
-    }
+    else
+        k = u->slot_0;
     m = sub_80014390((k + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
@@ -928,9 +925,6 @@ void sub_800C0074(EventEntry* t, void* arg)
     u->frame_4++;
     AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
 void sub_800C01D8()
 {
@@ -1228,23 +1222,21 @@ int sub_800C0904(unsigned char* p)
     return r;
 }
 
-#if 0 // Not matched: temp register numbering of the eight products (same function as SHOP sub_800BF3B4)
+// Matched
 extern short word_80084540[];
 int sub_800C09D4(unsigned char* p)
 {
-    int t1 = word_80084540[0x2E3] * p[0];
-    int t2 = word_80084540[0xEE3] * p[0];
-    int t3 = word_80084540[0xEE3] * p[3];
-    int t4 = word_80084540[0xAE3] * p[3];
-    int t5 = word_80084540[0xAE3] * p[2];
-    int t6 = word_80084540[0x6E3] * p[2];
-    int t7 = word_80084540[0x6E3] * p[1];
-    int t8 = word_80084540[0x2E3] * p[1];
+    int t2, t1, t4, t3, t5, t6, t7, t8;
+    t1 = word_80084540[0x2E3] * p[0];
+    t2 = word_80084540[0xEE3] * p[0];
+    t3 = word_80084540[0xEE3] * p[3];
+    t4 = word_80084540[0xAE3] * p[3];
+    t5 = word_80084540[0xAE3] * p[2];
+    t6 = word_80084540[0x6E3] * p[2];
+    t7 = word_80084540[0x6E3] * p[1];
+    t8 = word_80084540[0x2E3] * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C09D4);
 
 void sub_800C0A94()
 {
@@ -1325,15 +1317,15 @@ int sub_800C0BF0()
     s.visible_30 = 0;
     s.model_48 = m;
     s.bones_34 = dword_80079140;
-    s.baseScale_38 = (int*)sub_80024E90(m, k);
-    s.boneScale_3C = (SVECTOR*)sub_80024EC8(m, k);
-    s.anims_40 = (ActorAnim*)sub_80024E38(m);
-    s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
+    s.baseScale_38 = sub_80024E90(m, k);
+    s.boneScale_3C = sub_80024EC8(m, k);
+    s.anims_40 = sub_80024E38(m);
+    s.effectTbl_44 = sub_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
-    x = (int)sub_80024F00(m, k);
-    sub_80019B14((int)dword_800C9190.obj->bones_134, x, (int)sub_80024F38(m, k));
+    x = sub_80024F00(m, k);
+    sub_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1359,22 +1351,24 @@ void sub_800C0DB0(int a)
     sub_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
-#if 0 // Not matched: struct-return copy: 'move v0,s1' is scheduled before the lwl/lwr copy (original: after); tried explicit out-pointer form
+// Matched
 BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
 {
     BatCol_a buf;
     int mask;
     memset(&buf, 0, 4);
-    if (p->kind_0 != 0x14 && (p->mask_8 & (mask = 1 << (dword_800C918C + 1))))
+    if (p->kind_0 == 0x14)
+    {
+        *out = buf;
+        return out;
+    }
+    if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0DDC);
 
 int sub_800C0E84(BatCmd_a* p)
 {
@@ -1421,20 +1415,20 @@ int* sub_800C0F9C()
     return dword_800C9190.obj->pos_38;
 }
 
-int sub_800C0FAC()
+int* sub_800C0FAC()
 {
-    return (int)dword_800C9190.obj->bonePos_1C4;
+    return dword_800C9190.obj->bonePos_1C4;
 }
 
-void sub_800C0FC4(BatModelInfo_a* p)
+void sub_800C0FC4(EffectTarget* p)
 {
     Actor* q = dword_800C9190.obj;
-    p->f0 = (int)q->effectTbl_14C;
+    p->tbl_0 = q->effectTbl_14C;
     p->pos_4 = q->pos_38;
-    p->f8 = q->bonePos_1C4;
-    p->fC = (char*)q->boneMatrices_1C8;
-    p->f2C = (char*)q->boneScale_144;
-    p->f30 = q->scale_2C;
+    p->bonePos_8 = q->bonePos_1C4;
+    p->boneMatrices_C = q->boneMatrices_1C8;
+    p->boneScale_2C = q->boneScale_144;
+    p->scale_30 = q->scale_2C;
 }
 
 UnitSkills* sub_800C100C(int a)
@@ -1553,10 +1547,67 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     w[1] = 0;
     w[2] = 0;
     u->rot_34[1] += 0x80;
-    sub_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
+    DrawRotSprite_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
+// Matched
+void sub_800C1450(EventEntry* t, BatDropSrc_a* u)
+{
+    int v[3];
+    EffectSpriteFrame* f;
+    int i;
+    EventEntry* e;
+    BatDrop_a* q;
+    EffectSprite* s = u->path_88;
+    if (u->time_4 / 4096 < s->count_0)
+    {
+        f = s->frames_8[u->time_4 / 4096];
+        v[0] = f->pos_10[0] + u->pos_44[0];
+        v[1] = f->pos_10[1] + u->pos_44[1];
+        v[2] = f->pos_10[2] + u->pos_44[2];
+        if (((u->time_4 / 4096) & 3) == 0)
+        {
+            u->count_0++;
+            for (i = 0; i < 3; i++)
+            {
+                e = AllocEventEntry_80043AF8(dword_8008D60C);
+                if (e)
+                {
+                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                    q = e->buffer;
+                    q->pos_10[0] = v[0];
+                    q->pos_10[1] = v[1];
+                    q->pos_10[2] = v[2];
+                    q->pos_10[0] <<= 10;
+                    q->pos_10[1] <<= 10;
+                    q->pos_10[2] <<= 10;
+                    if (u->count_0 & 1)
+                    {
+                        q->anim_40 = u->animA_8C;
+                    }
+                    else
+                    {
+                        q->anim_40 = u->animB_90;
+                    }
+                    q->vel_28[0] = 0;
+                    q->vel_28[1] = 0;
+                    q->vel_28[2] = 0;
+                    q->rot_34[0] = 0;
+                    q->rot_34[1] = i * 0x555;
+                    q->rot_34[2] = 0;
+                    q->f0 = 0;
+                    q->size_8 = (rand() & 0xFFF) + 0x800;
+                    e->cb_8 = (EventEntryFn)sub_800C1220;
+                }
+            }
+        }
+        u->time_4 += u->step_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
 {
@@ -1616,7 +1667,7 @@ void sub_800C17EC(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)dword_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&dword_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1658,7 +1709,7 @@ void sub_800C1B2C(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1726,7 +1777,7 @@ void sub_800C1DA4(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            sub_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1794,7 +1845,7 @@ void sub_800C2170(EventEntry* t, BatSpark_a* u)
             c[0] = u->pos_10[0];
             c[1] = u->pos_10[1];
             c[2] = u->pos_10[2];
-            sub_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1816,7 +1867,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
     if (++u->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        sub_800C1A5C(u->pos_10, (short*)dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             e = AllocEventEntry_80043AF8(dword_8008D60C);
@@ -2027,7 +2078,7 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            r = sub_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            r = DrawRotSprite_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->trail_50[0].x = u->pos_44[0] + r[0];
         u->trail_50[0].y = u->pos_44[1] + r[1];
@@ -2045,11 +2096,11 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
             u->trail_50[1].z = u->trail_50[0].z;
         }
         u->frame_0 += u->speed_8;
-        sub_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
-        sub_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
-        sub_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
-        sub_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
-        sub_800459E4(dword_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
+        DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
     {
@@ -2069,9 +2120,8 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
     }
 }
 
-int sub_800C32DC(int a0, int a1, int a2, int a3)
+int sub_800C32DC(int* pos, int a1, int a2, int a3)
 {
-    int* pos = (int*)a0;
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatAnim_a* b;
     int idx;
@@ -2119,7 +2169,7 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
                 v[0] = u->pos_44[0] + k->x_4 * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096 + k->z_C * sinTable_80084540[u->rot_82 & 0xFFF] / 4096;
                 v[1] = u->pos_44[1] + k->y_8;
                 v[2] = u->pos_44[2] - k->x_4 * sinTable_80084540[u->rot_82 & 0xFFF] / 4096 + k->z_C * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096;
-                sub_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
+                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
                 if (c->ftg_4[k->model_0].texSpriteCount_48)
                 {
                     any = 1;
@@ -2129,14 +2179,14 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
         u->frame_0++;
         if (any)
         {
-            if (c->f8)
+            if (c->mats_8.count_0)
             {
-                sub_800459E4(dword_800C91A4, &c->f8, pOT_8008D690, 0x30);
+                DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &c->mats_8, pOT_8008D690, 0x30);
             }
         }
-        else if (c->f8)
+        else if (c->mats_8.count_0)
         {
-            sub_80045E48(&c->f8, pOT_8008D690, 0x30);
+            DrawSpriteVtxQuadsG4_80045E48(&c->mats_8, pOT_8008D690, 0x30);
         }
     }
     else
@@ -2170,8 +2220,8 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        sub_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2187,8 +2237,8 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        sub_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2274,7 +2324,7 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
     u->alpha_30 = v;
     if (v > 0)
     {
-        sub_8003A6C4(v, m->ftg_4, m->ftg_4 + 1, u->model_94);
+        LerpFtgObject_8003A6C4(v, m->ftg_4, m->ftg_4 + 1, u->model_94);
     }
     else
     {
@@ -2291,7 +2341,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     BatHero_a* q;
     BatOrb_a* w;
     w = u;
-    sub_800C1A5C(u->pos_44, (short*)dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
+    sub_800C1A5C(u->pos_44, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
     q = dword_8008B4A4->hero_24;
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
@@ -2313,7 +2363,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     }
     else
     {
-        ((void (*)())sub_800C1C5C)(v, dword_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
+        ((void (*)())sub_800C1C5C)(v, &dword_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
         t->flags = (t->flags & ~1) | 0x8000;
     }
 }
@@ -4205,7 +4255,7 @@ int sub_800C7530()
     case 4:
         b.f0 = dword_800C9E5C;
         b.f2 = dword_800C9C7C;
-        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f4 = dword_800C9E54;
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {
@@ -4270,7 +4320,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 2 || sub_800C78D0() == 8)
         {
-            if (sub_80033548(sub_80014390(dword_800C9E54), 0x400) == 0)
+            if (sub_80033548(sub_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
             {
                 return 1;
             }
@@ -4318,7 +4368,7 @@ int sub_800C791C()
     }
     else
     {
-        r = 1 << *(int*)&dword_800C9E54;
+        r = 1 << dword_800C9E54;
     }
     return r;
 }
@@ -4331,9 +4381,9 @@ int sub_800C79B8()
     return sub_800AD288((short)GetMenuCursorIndex_8003DA54(dword_800C9308), 0);
 }
 
-void sub_800C79EC()
+int sub_800C79EC()
 {
-    sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
+    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
 }
 
 int sub_800C7A1C()
@@ -4355,21 +4405,21 @@ void sub_800C7A6C()
         dword_800C9E58.kind_0 = dword_800C96A4[sub_800C78D0()];
         break;
     case 1:
-        dword_800C9E68 = sub_8001CE8C(((int (*)())sub_800C79B8)());
+        dword_800C9E68 = sub_8001CE8C(sub_800C79B8());
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C79B8)();
+        dword_800C9E5C = sub_800C79B8();
         break;
     case 2:
         h = sub_80031B30(dword_800C9C7C);
         dword_800C9E68 = sub_80031B0C(h, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C79EC)();
+        dword_800C9E5C = sub_800C79EC();
         break;
     case 3:
         m = sub_80010824(3, dword_800C9C7C - 1);
         dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
         dword_800C9E50 = 4;
-        *(int*)&dword_800C9E5C = ((int (*)())sub_800C7A1C)();
+        dword_800C9E5C = sub_800C7A1C();
         break;
     case 4:
         dword_800C9E50 = 5;
@@ -4503,7 +4553,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                *(int*)&dword_800C9E54 = sub_8002D250(sel, 0, c, 0xF);
+                dword_800C9E54 = sub_8002D250(sel, 0, c, 0xF);
                 flags |= 1;
             }
         }
@@ -4514,18 +4564,18 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                *(int*)&dword_800C9E54 = sub_8002D250(sel, 1, c, 0xF);
+                dword_800C9E54 = sub_8002D250(sel, 1, c, 0xF);
                 flags |= 1;
             }
         }
         else if (sub_800C78D0() == 2)
         {
-            *(int*)&dword_800C9E54 = sub_8002D250(sel, 2, c, 0xF);
+            dword_800C9E54 = sub_8002D250(sel, 2, c, 0xF);
             flags |= 1;
         }
         else if (sub_800C78D0() == 8)
         {
-            *(int*)&dword_800C9E54 = sub_8002D250(sel, 3, c, 0xF);
+            dword_800C9E54 = sub_8002D250(sel, 3, c, 0xF);
             flags |= 1;
         }
     }
@@ -4615,7 +4665,7 @@ void sub_800C83B0()
             {
                 m = sub_80014390(i & 0xFF);
 
-                d.f24 = (signed char)dword_800C9D82;
+                d.f24 = dword_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
                 sub_80012BB0(self, m, &a, &d);
@@ -4640,7 +4690,7 @@ void sub_800C83B0()
         }
         b.f0 = dword_800C9E5C;
         b.f2 = dword_800C9C7C;
-        b.f4 = *(unsigned short*)&dword_800C9E54;
+        b.f4 = dword_800C9E54;
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {
@@ -4721,7 +4771,7 @@ void sub_800C8768()
     }
 }
 
-#if 0 // Not matched: arg setup order only (original computes &s first and &pos last); tried prototypes, separate arrays, &a, statement order
+// Matched
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 void sub_800C8828(int a)
 {
@@ -4731,7 +4781,7 @@ void sub_800C8828(int a)
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
-    rect[2] = MeasureTextWidth_8003E4C8() + 4;
+    rect[2] = MeasureTextWidth_8003E4C8(a) + 4;
     rect[3] = 0x12;
     s[0] = a;
     p[0] = rect[0];
@@ -4740,9 +4790,6 @@ void sub_800C8828(int a)
     pos[1] = rect[1] + 4;
     DrawTextLinesWindow_8002AE38(s, pos, 0xF, rect, 1);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
 
 void sub_800C88AC(int a)
 {

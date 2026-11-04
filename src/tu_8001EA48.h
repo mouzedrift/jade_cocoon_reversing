@@ -386,6 +386,15 @@ typedef struct
     int size_14;      // to the next record
 } ModelHeaderRecord;
 
+// sections of Model.header_4C; what each one holds depends on the model kind
+extern void* sub_80024E38(Model* p);
+extern void* sub_80024E64(Model* p);
+extern void* sub_80024E90(Model* p, int n);
+extern void* sub_80024EC8(Model* p, int n);
+extern void* sub_80024F00(Model* p, int n);
+extern void* sub_80024F38(Model* p, int n);
+extern void* sub_80024F70(Model* p, int n);
+
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
 
@@ -487,7 +496,7 @@ typedef struct
 // one sprite of an effect frame (0x1C bytes; sub_80021298 copies it with the struct_1c byte-group view)
 typedef struct EffectSpriteFrame
 {
-    short u_0; // texture position; u_0, w_4 and f8 are passed to sub_80044010 as three pointers
+    short u_0; // texture position; u_0, w_4 and f8 are passed to DrawRotSprite_80044010 as three pointers
     short v_2;
     short w_4; // texture size
     short h_6;
@@ -640,7 +649,7 @@ typedef struct MapTri
     short nx_18;
     short ny_1A;
     short nz_1C;
-    char pad_1E[2];
+    short pad_1E;
 } MapTri;
 
 typedef struct MapMesh
@@ -649,6 +658,30 @@ typedef struct MapMesh
     short pad_2;
     MapTri* tris_4;
 } MapMesh;
+
+// a mesh block of a map file (sub_80027A88): header, then per mesh a MapMeshRec and its MapTriRecs
+typedef struct MapMeshFile
+{
+    int size_0; // of the whole block
+    unsigned int count_4;
+    int pad_8[2];
+} MapMeshFile;
+
+typedef struct MapMeshRec
+{
+    unsigned int nTris_0;
+    char pad_4[0x24];
+} MapMeshRec;
+
+typedef struct MapTriRec
+{
+    int f0_0;
+    int f4_4;
+    MapVtx n_8;
+    MapVtx v_10[3];
+} MapTriRec;
+
+int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr);
 
 typedef struct MapState
 {

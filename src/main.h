@@ -23,9 +23,7 @@ extern int dword_8008D3F0;
 extern EventNode* dword_8008D400;
 extern int dword_8008D408;
 extern int dword_8008D410[2];
-extern short word_8008D418;
-extern short word_8008D41A;
-extern short word_8008D41C[2];
+extern SVECTOR word_8008D418; // colour of the global point light
 extern int dword_8008D438;
 extern int dword_8008D444;
 extern int dword_8008D44C;
@@ -72,9 +70,8 @@ extern int dword_8008D66C;
 extern int dword_8008D670;
 extern EventNode* dword_8008D674;
 extern int dword_8008D67C;
-extern int dword_8008D680;
-extern int dword_8008D684;
-extern int dword_8008D688[2];
+extern int dword_8008D680[3]; // position of the global point light
+extern int dword_8008D68C;
 extern int dword_8008D694;
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];

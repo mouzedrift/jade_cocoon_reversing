@@ -32,12 +32,12 @@ typedef struct EffectObj
     short field_C;
     short field_E;
     int field_10;
-    int field_14; // int* target position
-    int field_18;
-    int field_1C; // int* position
-    int field_20; // int[][3] offsets, indexed by field_98
+    int* field_14; // target position
+    int* field_18; // target bone positions
+    int* field_1C; // position
+    int* field_20; // int[][3] bone offsets, indexed by field_98
     SVECTOR field_24;
-    int field_2C; // MATRIX[], indexed by field_98
+    MATRIX* field_2C; // bone matrices, indexed by field_98
     int field_30;
     int field_34;
     int pad_38[3];
@@ -50,8 +50,8 @@ typedef struct EffectObj
     int field_90;
     FtgObject* work_94; // malloc'd copy of the model's first FtgObject
     int field_98;
-    int field_9C;
-    int field_A0; // int* scale (or 0)
+    SVECTOR* field_9C; // bone scales
+    int* field_A0;     // scale (or 0)
     char field_A4;
     signed char field_A5;
     short field_A6;
@@ -59,35 +59,36 @@ typedef struct EffectObj
     int field_AC;
 } EffectObj;
 
-/* arguments of sub_800149A4 (spawn an effect object); like EffectObj its pointer fields are still ints, so
-   sub_8001852C casts the ActorEffectReq pointers it copies in */
+/* arguments of sub_800149A4 (spawn an effect object), filled by sub_8001852C from an ActorEffectReq */
 typedef struct
 {
     int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
+    int* field_4;     // source position
+    int* field_8;     // source bone positions
+    int* field_C;     // target position
+    int* field_10;    // target bone positions
     short* scale_14;
-    int field_18;
+    MATRIX* field_18; // target bone matrices
     short field_1C;
     short field_1E;
     int pad_20;
     int field_24;
-    int field_28; // SVECTOR[], indexed by field_24
-    int field_2C; // int* scale (or 0)
+    SVECTOR* field_28; // bone scales, indexed by field_24
+    int* field_2C;     // scale (or 0)
     int field_30;
 } EffectArgs;
 
-typedef struct
+/* what an effect needs to know about an actor (ActorEffectReq.targets_44; filled by sub_800C0FC4 (BATTLE),
+   sub_800A93A4 / sub_800A29CC (GAME) and sub_800A111C (COMBAT)) */
+typedef struct EffectTarget
 {
-    short (*tbl_0)[6];
-    int field_4;
-    int field_8;
-    int field_C;
+    short (*tbl_0)[6];       // Actor.effectTbl_14C
+    int* pos_4;              // Actor.pos_38
+    int* bonePos_8;          // Actor.bonePos_1C4
+    MATRIX* boneMatrices_C;  // Actor.boneMatrices_1C8
     char pad_10[0x1C];
-    int field_2C;
-    int field_30;
+    SVECTOR* boneScale_2C;   // Actor.boneScale_144
+    int* scale_30;           // Actor.scale_2C
     int field_34;
 } EffectTarget;
 
@@ -99,7 +100,7 @@ typedef struct ActorEffectReq
     struct_4s* hitTimes_4;   // Actor.hitTimes_108
     short (*tbl_8)[6];       // Actor.effectTbl_14C
     int* pos_C;              // Actor.pos_38
-    char* bonePos_10;        // Actor.bonePos_1C4
+    int* bonePos_10;         // Actor.bonePos_1C4
     MATRIX* boneMatrices_14; // Actor.boneMatrices_1C8
     char pad_18[0x1C];
     SVECTOR* boneScale_34;   // Actor.boneScale_144

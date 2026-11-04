@@ -294,7 +294,7 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
 
     if (pSndFileHeader->field_14_sep_size)
     {
-        sound->field_8_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
+        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
         ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
                                (int*)((char*)pSndFileHeader + pSndFileHeader->field_10),
                                pSndFileHeader->field_14_sep_size / sizeof(int));
@@ -315,7 +315,7 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
 
     if (pSndFileHeader->field_1C_sep_size)
     {
-        sound->field_10_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
+        sound->field_10_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
         ReadBytesInto_80040388((int*)sound->field_10_sep_data_ptr,
                                (int*)(pSndFileBuffer + pSndFileHeader->field_18_sep_data2_ptr),
                                pSndFileHeader->field_1C_sep_size / sizeof(int));
@@ -378,7 +378,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 {
     SoundStruct* sound = req[0];
 
-    sound->field_18_vab_header_ptr = (unsigned char*)malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
+    sound->field_18_vab_header_ptr = malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
 
     ReadBytesInto_80040388((int*)sound->field_18_vab_header_ptr,
                            (int*)((char*)pSndFileHeader + pSndFileHeader->field_0_header_start),
@@ -400,7 +400,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 
     if (pSndFileHeader->field_14_sep_size)
     {
-        sound->field_8_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
+        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
         ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
                                (int*)((char*)pSndFileHeader + pSndFileHeader->field_10),
                                pSndFileHeader->field_14_sep_size / sizeof(int));
@@ -462,7 +462,7 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
     pSndFileBuffer = DATA_GetFileBuffer_8003CAA0(GetSoundFileId_80030D4C(sound->field_6_sound_idx));
     pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
 
-    sound->field_18_vab_header_ptr = (unsigned char*)malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
+    sound->field_18_vab_header_ptr = malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
 
     ReadBytesInto_80040388((int*)sound->field_18_vab_header_ptr,
                            (int*)(pSndFileBuffer + pSndFileHeader->field_0_header_start),
@@ -484,7 +484,7 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
 
     if (pSndFileHeader->field_14_sep_size)
     {
-        sound->field_8_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
+        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
         ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
                                (int*)(pSndFileBuffer + pSndFileHeader->field_10),
                                pSndFileHeader->field_14_sep_size / sizeof(int));
@@ -505,7 +505,7 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
 
     if (pSndFileHeader->field_1C_sep_size)
     {
-        sound->field_10_sep_data_ptr = (unsigned long*)malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
+        sound->field_10_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
         ReadBytesInto_80040388((int*)sound->field_10_sep_data_ptr,
                                (int*)(pSndFileBuffer + pSndFileHeader->field_18_sep_data2_ptr),
                                pSndFileHeader->field_1C_sep_size / sizeof(int));

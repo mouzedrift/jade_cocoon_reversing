@@ -62,7 +62,8 @@ def line_definition(line):
     """the name a top-level data definition line defines, or None"""
     if not line[:1].isalpha() or line.startswith(("typedef", "extern", "static ", "INCLUDE", "struct", "union", "enum")):
         return None
-    m = re.match(r"^[^=;(]*?[\s*(]+(\w+)\s*(\[[^\]]*\]\s*)*\)?\s*(\[[^\]]*\]\s*)*(=|BSS\s*;)", line)
+    m = re.match(r"^[^=;(]*?[\s*(]+(\w+)\s*(\[[^\]]*\]\s*)*\)?\s*(\([^()]*\)\s*)?(\[[^\]]*\]\s*)*(=|BSS\b)",
+                 line)
     return m.group(1) if m else None
 
 
@@ -72,9 +73,9 @@ def c_definitions(tu):
     for line in open(os.path.join(REPO, "src", tu + ".c"), encoding="latin1"):
         if not line[:1].isalpha() or line.startswith(("typedef", "extern", "static ", "INCLUDE", "struct", "union", "enum")):
             continue
-        m = re.match(r"^[^=;(]*?[\s*(]+(\w+)\s*(\[[^\]]*\]\s*)*\)?\s*(\[[^\]]*\]\s*)*(=|BSS\s*;)", line)
-        if m:
-            out.append(m.group(1))
+        n = line_definition(line)
+        if n:
+            out.append(n)
     return out
 
 
