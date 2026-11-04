@@ -166,7 +166,7 @@ typedef struct
 typedef struct
 {
     int flags_0;           // 0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4
-    unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
+    unsigned char mpCost_4; // GetMagicMpCost_8001AC58 (Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char effect_6; // GetMagicEffect_8001AC8C
     unsigned char kind_7;   // with flags_0 & 0x40: 0 restores hp, 1 cures status (CheckMagicUsable_80034068)
@@ -484,13 +484,13 @@ typedef struct
     short id;
     short field_2;
     int field_4;
-} struct_8_id;
+} IdEntry;
 typedef struct
 {
     char pad_0[0xC];
     int count;
-    struct_8_id* items;
-} struct_8_list;
+    IdEntry* items;
+} IdEntryList;
 
 extern int speciesMagicBits_8007A6AC[];
 extern int sceneBrightness_8008D40C;

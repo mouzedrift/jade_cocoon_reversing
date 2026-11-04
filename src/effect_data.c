@@ -1715,7 +1715,7 @@ short screenModes_8007C728[10][2] = {
     { 0x180, 240 },
     { 0x180, 0x1E0 },
 };
-SoundCue_8007C750 soundCues_8007C750[110] = {
+SoundCue soundCues_8007C750[110] = {
     { 0, 123 },
     { 0, 122 },
     { 0, 116 },

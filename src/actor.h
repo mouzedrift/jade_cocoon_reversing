@@ -20,7 +20,7 @@ typedef struct
 typedef struct
 {
     short frame_0;
-    short kind_2; // 0: sound cue (SoundCue_8007C750 index), 1: SetModelFtg_80025B5C
+    short kind_2; // 0: sound cue (SoundCue index), 1: SetModelFtg_80025B5C
     short arg_4;
     short arg_6;
 } ModelAnimCue;

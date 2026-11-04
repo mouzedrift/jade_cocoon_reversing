@@ -69,7 +69,7 @@ extern unsigned char elementModifiers_8007BA74[];
 extern unsigned char speciesModifiers_8007BA84[];
 extern int sub_8007C30C[15];
 extern short screenModes_8007C728[][2];
-extern SoundCue_8007C750 soundCues_8007C750[];
+extern SoundCue soundCues_8007C750[];
 extern short levelSeqsCue2_8007CAC0[];
 extern short levelSeqsCue3_8007CACC[];
 extern char* (*nameGetters_8007CB08[])(int id);

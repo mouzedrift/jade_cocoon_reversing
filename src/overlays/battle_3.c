@@ -4126,7 +4126,7 @@ int CanCastMagic_800C6CFC(unsigned int magic, unsigned int* magicBits, UnitStats
 {
     if (TestMagicBit_8001AE2C(magicBits, magic) != 0)
     {
-        if (magicData_8007C438[magic].field_4 <= self->st_0.mp_C.cur_0)
+        if (magicData_8007C438[magic].mpCost_4 <= self->st_0.mp_C.cur_0)
         {
             return 1;
         }

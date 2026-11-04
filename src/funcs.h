@@ -28,7 +28,7 @@ struct ModelVramSlot;
 struct FtgMatList;
 struct ModelTaskState;
 struct OverlayLoader;
-struct Fade_8001A41C;
+struct SceneFade;
 struct XaTask;
 struct ActorDesc;
 struct SoundStruct;
@@ -463,7 +463,7 @@ extern void FreeSoundVab_80030EA4(struct SoundStruct* p);
 extern int CountMaskedUntilZero_80034B40(int* p, unsigned int mask);
 
 extern void InitFonts_8003DA70(void);
-extern void SceneFadeTask_8001A41C(EventEntry* e, struct Fade_8001A41C* q);
+extern void SceneFadeTask_8001A41C(EventEntry* e, struct SceneFade* q);
 extern unsigned int GetEquippedId_800AD990(int a0);
 extern void ResetModelLoader_800204D0(void);
 extern void StopModelLoader_800205F0(void);
@@ -473,7 +473,7 @@ extern void* ListAlloc_8003FDC0();
 extern void AdjustUnitStat_80012614(UnitStatus* a0, int a1, int a2, int a3);
 extern unsigned int GetButtonConfig_8001C874();
 extern void SetHitVariantForCommand_800BFAF8(int a0);
-extern struct_8_id* FindItemById_8001C314(struct_8_list* p, int id);
+extern IdEntry* FindItemById_8001C314(IdEntryList* p, int id);
 extern void StartEffect_8001497C(void);
 extern int IsEffectTaskIdle_800148D4(void);
 
