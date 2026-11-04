@@ -60,7 +60,7 @@ extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void DrawMenuBackground_8002BE10();
-extern void sub_8002A4E4(int a);
+extern void DrawPortraitWindow_8002A4E4(int a);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern void DrawMenuWindows_8002A5A4(WpnDlg_wpnshop* p);
@@ -76,12 +76,12 @@ extern int sub_800AD184(int a, int b, int c);
 extern void sub_800AD1E0(int a, int b, int c);
 extern void sub_800AD058(int a);
 extern int sub_800AD0A4(int a);
-extern void sub_8003CF88(short a0, short a1, int a2);
+extern void DrawNextPrompt_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
 extern void UpdateMenuCursor_8003D794(void* p, int a1);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void sub_800429F8(int a0, int a1);
-extern void sub_80042B38(int a0, int a1);
+extern void DrawWindowBackground_800429F8(int a0, int a1);
+extern void DrawWindowBorder_80042B38(int a0, int a1);
 extern unsigned short name_800BE870[];
 extern int name_800BE134[];
 extern int* name_800BE3D8[];
@@ -103,10 +103,10 @@ typedef struct WpnSmall_wpnshop
     char b;
     char c;
 } WpnSmall_wpnshop;
-extern void sub_8002F7D0(void* p, int a1);
-extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
-extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void sub_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
+extern void DrawLevantStats_8002F7D0(void* p, int a1);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
+extern void DrawStatCompare_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void DrawScrollArrow_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
 #define f_26 f_20[3]
 extern int IsCircleHeldP1_8003D480(void);
 extern char name_800BEBC4[];
@@ -204,10 +204,10 @@ extern unsigned short name_800BE818[];
 extern unsigned short name_800BE840[];
 extern int sub_800AD308(int a);
 extern void sub_800BB298();
-extern void sub_80027478(int a, int b);
+extern void SetLoadFadeFlag_80027478(int a, int b);
 extern void sub_800A7BF0(int a);
 extern void sub_800A6D30(int a);
-extern int sub_800272D0(void);
+extern int IsMapLoading_800272D0(void);
 extern int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d);
 extern unsigned short padRepeat_800918CC;
 extern int eventDispatchHalt_8008B540;
@@ -320,7 +320,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
     if (uiTiyLoaded_8008B4E8 != 0)
     {
         DrawMenuBackground_8002BE10();
-        sub_8002A4E4(0xE);
+        DrawPortraitWindow_8002A4E4(0xE);
         sub_800BCF80(p);
         sub_800BB950(p);
         t->next_8 = sub_800BB194;
@@ -331,7 +331,7 @@ void sub_800BB130(WpnTask_wpnshop* t, unsigned short* p)
 void sub_800BB194(WpnTask_wpnshop* t, unsigned short* p)
 {
     DrawMenuBackground_8002BE10();
-    sub_8002A4E4(0xE);
+    DrawPortraitWindow_8002A4E4(0xE);
     sub_800BCF80(p);
     sub_800BB950(p);
     SetFadeMode_8001C19C(3, 0x20);
@@ -351,9 +351,9 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
     }
     if (p->f_4 & 2)
     {
-        sub_80027478(0x40, 1);
+        SetLoadFadeFlag_80027478(0x40, 1);
         FreeActiveOverlay_8002C014();
-        sub_80027314();
+        RequestAreaReload_80027314();
         t->next_8 = sub_800BB298;
     }
 }
@@ -361,12 +361,12 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
 // Matched
 void sub_800BB298(WpnTask_wpnshop* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         sub_800A7BF0(-1);
         t->next_8 = sub_800BB1F4;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
-        sub_80027478(0x40, 0);
+        SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
@@ -587,10 +587,10 @@ void sub_800BB868(WpnObj_wpnshop* o, WpnRect_wpnshop* r, int a2, int a3, short i
 // Matched
 void sub_800BB8CC(WpnObj_wpnshop* o)
 {
-    sub_8002A4E4(0xE);
+    DrawPortraitWindow_8002A4E4(0xE);
     DrawTextList_8002A310(name_800BE134, 0xE);
-    sub_800429F8((int)name_800BE7C4, 0xE);
-    sub_80042B38((int)name_800BE7C4, 0xE);
+    DrawWindowBackground_800429F8((int)name_800BE7C4, 0xE);
+    DrawWindowBorder_80042B38((int)name_800BE7C4, 0xE);
     if (o->f_0 < 0x11)
     {
         if (o->f_0 >= 0xC)
@@ -1043,17 +1043,17 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
         {
             if (o->f_2 != 0x11)
             {
-                sub_8002E288(&levantStatus_8008BD38, r, o->f_10, buf28);
+                CalcStatsWithEquip_8002E288(&levantStatus_8008BD38, r, o->f_10, buf28);
 
                 r40.x = 0x119;
                 r40.y = 0x73;
-                sub_8002E188(buf10, buf28, &r40, 0xE);
+                DrawStatCompare_8002E188(buf10, buf28, &r40, 0xE);
             }
         }
     }
     r40.x = 0xC2;
     r40.y = 0x70;
-    sub_8002F7D0(&r40, 0xE);
+    DrawLevantStats_8002F7D0(&r40, 0xE);
     r48.x = 0xC2;
     r48.y = 0x70;
     r48.w = 0x4B;
@@ -1068,7 +1068,7 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
         u.p.b = 0;
         r48.x = 0x112;
         r48.y = 0x95;
-        sub_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
+        DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
         if (o->f_0 != 0x11)
         {
             r60.x = 0x119;
@@ -1373,7 +1373,7 @@ void sub_800BD61C(WpnObj_wpnshop* o)
 // Matched
 void sub_800BD6A4(WpnObj_wpnshop* o)
 {
-    sub_8003CF88(0x11E, 0x3C, 0xE);
+    DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
     if (o->f_40 || o->f_44)
     {
         PlaySfx_80031494(0x7D);

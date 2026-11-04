@@ -8,10 +8,10 @@
 
 #include "actor.h"
 
-#include "tu_8001EA48.h"
+#include "model.h"
 #include "effect_obj.h"
-#include "tu_80036528.h"
-#include "tu_80019BF0.h"
+#include "camera.h"
+#include "engine.h"
 
 extern void sub_800A6D30(int a);
 
@@ -44,7 +44,7 @@ typedef struct GameV3_1
 // an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
 typedef struct GameEnemyMember
 {
-    int species_0; // sub_80019C70 / InitMinionData_8001900C
+    int species_0; // GetSpeciesModelDesc_80019C70 / InitMinionData_8001900C
     int f4;
 } GameEnemyMember;
 
@@ -71,8 +71,8 @@ typedef struct GameSlot_1
     GameEnemy data_8;
 } GameSlot_1;
 
-extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
-extern short dword_80079140[]; // default bone table
+extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
+extern short defaultBones_80079140[]; // default bone table
 extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
 extern GameEnemy* sub_800A5F6C(void);
 extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
@@ -91,7 +91,7 @@ extern GameRec_1 dword_800ADE78;
 
 extern int dword_800AEB6C[];
 
-// context of an event script (list dword_8008D410); same layout as EvCtxEventfnc in eventfnc.h
+// context of an event script (list eventScripts_8008D410); same layout as EvCtxEventfnc in eventfnc.h
 typedef struct GameEvCtx
 {
     unsigned int flags_0;
@@ -130,7 +130,7 @@ typedef struct GameEvCtx
     int f120;
 } GameEvCtx;
 
-// an event entity (list dword_8008D400); same layout as EvEntEventfnc in eventfnc.h
+// an event entity (list eventEntities_8008D400); same layout as EvEntEventfnc in eventfnc.h
 typedef struct GameEvEnt
 {
     int f0;
@@ -267,7 +267,7 @@ extern void sub_800AD0F8(unsigned a);
 
 extern int dword_80091C54;
 
-extern int dword_80091C9C;
+extern int forceMapReload_80091C9C;
 
 extern int dword_80091C8C;
 
@@ -288,11 +288,11 @@ typedef struct GameSub_1
 } GameSub_1;
 
 
-extern void sub_80018EBC(Actor* a, UnitStatus* b);
+extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
 
-extern void sub_80018E5C(Actor* a, int b);
+extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
-extern void sub_8001D760(Actor* a, int b, int c, int d);
+extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
 extern int sub_800A52EC(short** a, int b, int c);
 
@@ -356,7 +356,7 @@ typedef struct GameQ_1
     int f3c;
 } GameQ_1;
 
-extern int sub_8001DD44(Actor* a, int b, int c, int d);
+extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
 extern void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out);
 
@@ -391,7 +391,7 @@ extern void sub_800B8A34(GameEvCtx* q);
 
 extern void sub_800C4118(void* a, void* b, int c, int d);
 
-extern void sub_8001AA50(int a);
+extern void StartSceneFadeOut_8001AA50(int a);
 
 extern int sub_800BA9E4(void);
 
@@ -435,7 +435,7 @@ typedef struct GameTable_1
     GameTabEnt_1 e[1];
 } GameTable_1;
 
-extern EventNode* dword_8008D410;
+extern EventNode* eventScripts_8008D410;
 
 extern void sub_800A8EA4();
 
@@ -474,7 +474,7 @@ extern void sub_800AC73C();
 
 extern void FreeLoaderModelAnimSets_80020814(void);
 
-extern void sub_80037720(void);
+extern void SetCameraBattleMode_80037720(void);
 
 extern void StopSoundSeqs_80030D68(char* s);
 
@@ -515,15 +515,15 @@ extern int CreateEventList_800435B4(char* p);
 
 extern char dword_800B0DA4[];
 
-extern void sub_8001E28C(Actor* a);
+extern void TriggerActorEffect_8001E28C(Actor* a);
 
-extern void sub_80026FAC(void);
+extern void InitMapState_80026FAC(void);
 
 extern void GameFn_800A094C(void);
 
 extern void ResetSoundTask_8002FEB8(void);
 
-extern void sub_8001A38C(void);
+extern void InitSceneFade_8001A38C(void);
 
 extern void ResetCameraToLevant_800376A8(void);
 
@@ -531,11 +531,11 @@ extern void sub_800A8140(void);
 
 extern void sub_800A94CC(void);
 
-extern EventNode* dword_8008D400;
+extern EventNode* eventEntities_8008D400;
 
 extern GameRect_1 stru_8008D420;
 
-extern int dword_80091C94;
+extern int useMapStartPos_80091C94;
 
 typedef struct GameMode2_1
 {
@@ -552,7 +552,7 @@ typedef struct GameMapEnt_1
     char pad_6[10];
 } GameMapEnt_1;
 
-extern GameMapEnt_1** dword_800B0608[];
+extern GameMapEnt_1** mapTable_800B0608[];
 
 extern void sub_800A4940(int a, int b);
 
@@ -616,7 +616,7 @@ extern int CheckEnemyContact_800A19E4();
 
 extern void StartPadVibration_80036528();
 
-extern EventNode* dword_8008D49C;
+extern EventNode* enemyAiTasks_8008D49C;
 
 extern unsigned char levantCaptureLevel_8008BD7C;
 
@@ -656,7 +656,7 @@ extern int name_800AEBCC[];
 
 extern char name_80091C10[];
 
-extern void sub_80026DE8(void* a, int b, void* c);
+extern void FreeRecordTables_80026DE8(void* a, int b, void* c);
 
 extern int name_800AEBD4;
 
@@ -724,7 +724,7 @@ extern short word_80091CB8[];
 
 extern EventNode* dword_8008D498;
 
-extern EventNode* dword_8008D480;
+extern EventNode* loadMenuTask_8008D480;
 
 extern EventNode* dword_800B1DAC;
 
@@ -740,7 +740,7 @@ extern void sub_800A7280();
 
 extern int GetFileRequestStatus_8003BE30();
 
-extern void sub_8001C224();
+extern void FreezeScreen_8001C224();
 
 extern void EndFade_8001C290();
 
@@ -810,7 +810,7 @@ typedef struct G2Path
     G2PathStep* steps_8;
 } G2Path;
 
-// Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
+// Levant's controller object (gameTask_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
 {
@@ -843,7 +843,7 @@ typedef struct G2Act
     G2V12 v6c; // root motion of the current animation frame (sub_800AA140)
     struct G2Path* path_78; // scripted walk (flag 0x400000, sub_800ABAA4)
     int f7c;    // step of path_78
-    int tri_80; // floor triangle under Levant (dword_8008B500.meshes_C[mesh_84].tris_4)
+    int tri_80; // floor triangle under Levant (mapState_8008B500.meshes_C[mesh_84].tris_4)
     int mesh_84;
     char pad_88[8];
     MATRIX mats_90[40];
@@ -860,7 +860,7 @@ typedef struct G2Ctx2
 
 extern G2Ctx* dword_8008B4CC;
 
-extern G2Ctx2* dword_8008B4A4;
+extern G2Ctx2* gameTask_8008B4A4;
 
 
 
@@ -985,11 +985,11 @@ extern char dword_800A07E0[];
 
 extern char dword_800A0808[];
 
-extern int sub_8001AC8C(int);
+extern int GetMagicEffect_8001AC8C(int);
 
 extern void RequestEffect_800148F4(int);
 
-extern int sub_800189F8();
+extern int GetWeaponEffect_800189F8();
 
 extern short word_8008D782;
 
@@ -997,35 +997,35 @@ extern void sub_8004ED78(int);
 
 extern int sub_8003B9E0(int*, int*);
 
-extern G2V12 dword_8007A0A4;
+extern G2V12 statusTintLevel1_8007A0A4;
 
-extern G2V12 dword_8007A0B0;
+extern G2V12 statusTintLevel2_8007A0B0;
 
-extern G2V12 dword_8007A0BC;
+extern G2V12 statusTintLevel3_8007A0BC;
 
-extern G2V12 dword_8007A0C8;
+extern G2V12 statusTintLevel4_8007A0C8;
 
-extern G2V12 dword_8007A0D4;
+extern G2V12 statusTintLevel5_8007A0D4;
 
-extern G2V12 dword_8007A0E0;
+extern G2V12 statusTintLevel6_8007A0E0;
 
-extern G2V12 dword_8007A0EC;
+extern G2V12 statusTintLevel7_8007A0EC;
 
-extern G2V12 dword_8007A0F8;
+extern G2V12 statusTintPoison_8007A0F8;
 
 extern G2V12 dword_8007A104;
 
-extern G2V12 dword_8007A110;
+extern G2V12 statusTintPoisonLevel2_8007A110;
 
-extern G2V12 dword_8007A11C;
+extern G2V12 statusTintPoisonLevel3_8007A11C;
 
-extern G2V12 dword_8007A128;
+extern G2V12 statusTintPoisonLevel4_8007A128;
 
-extern G2V12 dword_8007A134;
+extern G2V12 statusTintPoisonLevel5_8007A134;
 
-extern G2V12 dword_8007A140;
+extern G2V12 statusTintPoisonLevel6_8007A140;
 
-extern G2V12 dword_8007A14C;
+extern G2V12 statusTintPoisonLevel7_8007A14C;
 
 extern G2V12 dword_8007A164;
 
@@ -1097,7 +1097,7 @@ extern int sub_800AD73C(int);
 extern int sub_800AD8BC();
 
 
-extern short word_8008D668[2];
+extern short cameraTargetScreenPos_8008D668[2];
 
 extern int sub_800AB304();
 
@@ -1196,7 +1196,7 @@ typedef struct G2Skel_1
 } G2Skel_1;
 
 
-extern int sub_80019CC4(void* p);
+extern int FindNearestCameraPoint_80019CC4(void* p);
 
 
 extern short word_8007DC82;
@@ -1205,10 +1205,10 @@ extern short word_8007DC8A;
 
 extern char dword_800B0EF8;
 
-extern void sub_80046A58(void* sk, void* buf, char* pose);
+extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 
-extern void sub_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
+extern void DrawAnimSkelBlend_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
 
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* ot, int flags);
 
-extern void sub_8004D288(void* out, void* s, int k);
+extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);

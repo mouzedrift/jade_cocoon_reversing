@@ -40,7 +40,7 @@ extern void sub_800A16FC();
 extern int sub_800A1AAC(int);
 extern int sub_800A1934(Minion*);
 extern void PlaySfx_80031494(int);
-extern void sub_8002ADB4(void*, void*, int, int);
+extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 extern void ShuffleTeam_800A473C(int);
 extern void sub_800A49DC(int, int);
 
@@ -100,7 +100,7 @@ void sub_800A4170(CombStrtTask* t, int a)
     col.c_2 = 0;
     col.c_3 = 1;
     col.col_0 = uiColor_8008B590;
-    sub_8002ADB4(&w, &col, 0xF, 0);
+    DrawMenuItemWithWindow_8002ADB4(&w, &col, 0xF, 0);
     sub_800A48C0();
     if (sub_800A1AAC(0) < 2u && sub_800A1AAC(1) < 2u)
     {
@@ -321,7 +321,7 @@ void sub_800A4958(int i)
     box.c_3 = 1;
     box.c_2 = 0;
     box.col_0 = uiColor_8008B590;
-    sub_8002ADB4(dword_800A4C50[i], &box, 0xF, 0);
+    DrawMenuItemWithWindow_8002ADB4(dword_800A4C50[i], &box, 0xF, 0);
     for (j = 0; j < 3; j++)
     {
         sub_800A49DC(i, j);
@@ -331,7 +331,9 @@ void sub_800A4958(int i)
 #if 0
 // Not matched: s0/s1 swapped between slot and side*3 (register allocation), the rest matches
 extern CombStrtWin name_800A4154;
-extern void sub_8002F078(void* a, void* b, int c, int d);
+extern void* dword_800A4C58[];
+extern short dword_800A4C64[][3][2];
+extern void DrawHpGauge_8002F078(void* a, void* b, int c, int d);
 extern void sub_800A1844(void* a, void* b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 void sub_800A49DC(int side, int slot)
@@ -356,10 +358,10 @@ void sub_800A49DC(int side, int slot)
         c1.c_2 = 0;
         c1.c_3 = 1;
         c1.col_0 = saveData_8008B570.uiColor_20.i;
-        sub_8002ADB4(&w, &c1, 0xF, 0);
+        DrawMenuItemWithWindow_8002ADB4(&w, &c1, 0xF, 0);
         pos[0] = xy[0] + 0x2F;
         pos[1] = xy[1];
-        sub_8002F078(&u->status_84, pos, 0, 0xF);
+        DrawHpGauge_8002F078(&u->status_84, pos, 0, 0xF);
         c2.c_2 = 0;
         c2.c_3 = 1;
         c2.col_0 = saveData_8008B570.uiColor_20.i;

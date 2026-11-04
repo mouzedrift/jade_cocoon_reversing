@@ -1,12 +1,12 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 #include "globals.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 
 extern int dword_8008B484;
-extern int dword_8008B488[2];
+extern int startSavedRa_8008B488[2];
 extern int dword_8008B498[2];
-extern EventNode* dword_8008B4A4;
+extern EventNode* gameTask_8008B4A4;
 extern int dword_8008B4AC[2];
 extern int dword_8008B4B8;
 extern int dword_8008B4C0[2];
@@ -19,35 +19,35 @@ extern int dword_8008B554;
 extern int dword_8008B564[3];
 extern int dword_8008D3E0;
 extern int dword_8008D3E4[2];
-extern int dword_8008D3F0;
-extern EventNode* dword_8008D400;
+extern int pointLightRange_8008D3F0;
+extern EventNode* eventEntities_8008D400;
 extern int dword_8008D408;
-extern int dword_8008D410[2];
-extern SVECTOR word_8008D418; // colour of the global point light
+extern int eventScripts_8008D410[2];
+extern SVECTOR pointLightColor_8008D418; // colour of the global point light
 extern int dword_8008D438;
 extern int dword_8008D444;
 extern int dword_8008D44C;
 extern int dword_8008D458;
-extern unsigned char byte_8008D460[3];
-extern int dword_8008D468[3];
+extern unsigned char backColor_8008D460[3];
+extern int battleMenuTask_8008D468[3];
 extern SPRT* copyrightSprts_8008D47C;
-extern int dword_8008D480[2];
+extern int loadMenuTask_8008D480[2];
 extern EventNode* fileRequestTasks_8008D488;
 extern int dword_8008D48C[4];
-extern EventNode* dword_8008D49C;
+extern EventNode* enemyAiTasks_8008D49C;
 extern int dword_8008D4A8;
 extern int dword_8008D4B0;
 extern EventNode* vibrationTasks_8008D4B8;
-extern int dword_8008D4BC;
+extern int prevCameraZoom_8008D4BC;
 extern int dword_8008D4C4;
-extern SVECTOR word_8008D4C8;
+extern SVECTOR cameraRot_8008D4C8;
 extern int dword_8008D4D4;
 extern int dword_8008D4E0[4];
-extern int stru_8008D504[];
+extern int cameraEye_8008D504[];
 extern int dword_8008D514;
 extern int dword_8008D518;
 extern short word_8008D51C;
-extern short word_8008D51E;
+extern short geomScreenBase_8008D51E;
 extern unsigned char byte_8008D520;
 extern unsigned char byte_8008D521;
 extern unsigned char byte_8008D522;
@@ -68,15 +68,15 @@ extern int dword_8008D664;
 extern short word_8008D66A;
 extern int dword_8008D66C;
 extern int dword_8008D670;
-extern EventNode* dword_8008D674;
+extern EventNode* encounterTask_8008D674;
 extern int dword_8008D67C;
-extern int dword_8008D680[3]; // position of the global point light
+extern int pointLightPos_8008D680[3]; // position of the global point light
 extern int dword_8008D68C;
 extern int dword_8008D694;
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
-extern int dword_8008D778[2];
-extern int dword_8008D784;
+extern int hitNumberTasks_8008D778[2];
+extern int effectSfxStarted_8008D784;
 extern int dword_8008D790[2];
 extern int dword_80091860[2];
 extern unsigned short padPrevHeld_800918C8[];
@@ -88,7 +88,7 @@ extern int dword_800918FC[20];
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern int dword_80091C0C;
-extern int dword_80091C10;
+extern int eventHeap_80091C10;
 extern int dword_80091C14[3];
 extern int dword_80091C24[3];
 extern int dword_80091C34;
@@ -102,13 +102,13 @@ extern int dword_80091C5C;
 extern int dword_80091C74;
 extern int dword_80091C8C;
 extern int dword_80091C90;
-extern int dword_80091C94;
-extern int dword_80091C98;
-extern int dword_80091C9C;
+extern int useMapStartPos_80091C94;
+extern int useSavedLevantPos_80091C98;
+extern int forceMapReload_80091C9C;
 extern int dword_80091CA4;
-extern short dword_80091CA8[];
+extern short savedLevantRot_80091CA8[];
 extern short word_80091CAC[2];
-extern int dword_80091CB0;
+extern int mapAreaCount_80091CB0;
 extern short word_80091CB8[];
 extern short word_80091CBC;
 extern short word_80091CBE;

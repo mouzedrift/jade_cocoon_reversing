@@ -313,7 +313,7 @@ void DrawNameField_800B7414(NameEntry* p)
     }
 }
 
-extern int dword_80086898[][12];
+extern int charWidthThresholds_80086898[][12];
 void DrawCharRow_800B75EC(NameCharRow row)
 {
     Font* p = &fonts_80095FB0[2];
@@ -333,7 +333,7 @@ void DrawCharRow_800B75EC(NameCharRow row)
             off = 2;
             for (k = 12; k != 0; k--)
             {
-                if (c - 1 < dword_80086898[1][k - 1])
+                if (c - 1 < charWidthThresholds_80086898[1][k - 1])
                 {
                     off -= k;
                     break;

@@ -35,7 +35,7 @@ int sub_800A5854(void)
 
 void sub_800A58B4(void)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int i;
     int cnt = n->count;
     GameRect_1* r;
@@ -49,7 +49,7 @@ void sub_800A58B4(void)
     dword_800AEBD8 = -1;
     dword_800AEBDC = 0;
     name_800AEBD4 = 0;
-    StopAllEventEntries_80043B40(dword_8008D410);
+    StopAllEventEntries_80043B40(eventScripts_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
@@ -59,7 +59,7 @@ void sub_800A58B4(void)
         r->y = 0;
         r->h = 0xf0;
     }
-    sub_8001A9A4();
+    ResetSceneFade_8001A9A4();
     dword_800AEBF0 = 0;
     dword_800AEBE8 = 0x8000;
     name_800AEBEC = 0;
@@ -70,7 +70,7 @@ void sub_800A58B4(void)
 // Matched
 EventEntry* sub_800A59D0(int v)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D410);
+    EventEntry* p = AllocEventEntry_80043AF8(eventScripts_8008D410);
     if (p)
     {
         GameEvCtx* q = p->buffer;
@@ -112,7 +112,7 @@ int sub_800A5AD0(EventEntry* p)
 // Matched
 int sub_800A5AE4(int a)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     EventEntry* o;
     int i;
     int cnt = n->count;
@@ -165,7 +165,7 @@ void sub_800A5B54(GameEvCtx* p)
 // Matched
 void sub_800A5BCC(int a)
 {
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int i;
     int cnt = n->count;
     for (i = 0; i < cnt; i++)
@@ -185,7 +185,7 @@ void sub_800A5BCC(int a)
 int sub_800A5C40(int a)
 {
     int r = sub_800A5E68();
-    EventNode* n = dword_8008D410;
+    EventNode* n = eventScripts_8008D410;
     int cnt = n->count;
     int i;
     GameEvCtx* o;
@@ -208,7 +208,7 @@ int sub_800A5C40(int a)
         }
         n = n->next;
     }
-    n = dword_8008D400;
+    n = eventEntities_8008D400;
     cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
@@ -248,7 +248,7 @@ int sub_800A5C40(int a)
 // Matched
 GameEvEnt* sub_800A5DDC(int a, int b, GameEvEnt* c)
 {
-    EventNode* n = dword_8008D400;
+    EventNode* n = eventEntities_8008D400;
     int i;
     int cnt = n->count;
     for (i = 0; i < cnt; i++)
@@ -288,7 +288,7 @@ int sub_800A5E68(void)
 
 int sub_800A5E80(int a)
 {
-    EventNode* n = dword_8008D400;
+    EventNode* n = eventEntities_8008D400;
     int i;
     int cnt = n->count;
     for (i = 0; i < cnt; i++)
@@ -302,7 +302,7 @@ int sub_800A5E80(int a)
         }
         n = n->next;
     }
-    n = dword_8008D410;
+    n = eventScripts_8008D410;
     cnt = n->count;
     for (i = 0; i < cnt; i++)
     {
@@ -352,10 +352,10 @@ void sub_800A5FAC(void)
         sub_800AD16C(4, sd->mapId_2E4[1].field_0 + 4);
         sub_800ADCEC(&v, sub_800A683C(-1));
         sub_800AD0F8(0);
-        dword_80091C94 = 1;
+        useMapStartPos_80091C94 = 1;
         dword_80091C54 = 0;
         sd->mapId_2E4[3].field_0 = 0;
-        dword_80091C9C = 1;
+        forceMapReload_80091C9C = 1;
         dword_80091C8C = 0;
         sd->mapId_2E4[0].field_0 = v.a;
         sd->mapId_2E4[1].field_0 = v.b;
@@ -810,7 +810,7 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
     q->f10 = 0;
     q->f14 = 0;
     q->f1C = 0;
-    if (dword_80091C9C == 1)
+    if (forceMapReload_80091C9C == 1)
         return;
     if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
         return;
@@ -818,13 +818,13 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
         return;
     if (saveData_8008B570.mapId_2E4[2].field_2 != saveData_8008B570.mapId_2E4[2].field_0)
         return;
-    if (word_80091C40[1] != word_80091C40[0])
+    if (areaPreload_80091C40[1] != areaPreload_80091C40[0])
         return;
     if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
         return;
     if (word_80091CB8[6] != word_80091CB8[7])
         return;
-    if (sub_800272D0())
+    if (IsMapLoading_800272D0())
         return;
     if (sub_800A5E68() == 0 && dword_800B0EC0 == 1 && gCtx_800B1260.f0 == 0 &&
         !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
@@ -871,7 +871,7 @@ void sub_800A6DAC(GameTask_1* t, GameD_1* q)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
-        e = AllocEventEntry_80043AF8(dword_8008D480);
+        e = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
         e->flags = (e->flags | 1) & ~0x8000;
         p->f0 = 6;
         p->f18 = (int)&dword_800B06BC;
@@ -896,7 +896,7 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
         sub_800A6D30(q->f0);
         t->next_8 = sub_800A6DAC;
         if (q->fC)
-            sub_8001C224();
+            FreezeScreen_8001C224();
         else
             EndFade_8001C290();
         eventDispatchHalt_8008B540 = r->f10;
@@ -960,7 +960,7 @@ GameMode2_1* sub_800A72C8(GameMode2_1* out)
         saveData_8008B570.mapId_2E4[0].field_2 = -1;
         saveData_8008B570.mapId_2E4[1].field_2 = -1;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
-        dword_80091C94 = 1;
+        useMapStartPos_80091C94 = 1;
         saveData_8008B570.mapId_2E4[0].field_0 = v.a;
         saveData_8008B570.mapId_2E4[1].field_0 = v.b;
         saveData_8008B570.mapId_2E4[2].field_0 = v.c;
@@ -987,21 +987,21 @@ GameMode2_1* sub_800A72C8(GameMode2_1* out)
 void sub_800A73A8(void)
 {
     GameRect_1* r = &stru_8008D420;
-    dword_8008D40C = 0x1000;
-    dword_8008D404 = 0;
+    sceneBrightness_8008D40C = 0x1000;
+    unpausedFrames_8008D404 = 0;
     r->x = 0;
     r->w = 0x140;
     r->y = 0;
     r->h = 0xf0;
     unknownFlags_8008D678 &= ~0x8000000;
-    sub_80026FAC();
+    InitMapState_80026FAC();
     GameFn_800A094C();
     ResetSoundTask_8002FEB8();
-    sub_8001A38C();
+    InitSceneFade_8001A38C();
     ResetCameraToLevant_800376A8();
     sub_800A8140();
     sub_800A94CC();
-    dword_80091C94 = dword_800B1DC8[0];
+    useMapStartPos_80091C94 = dword_800B1DC8[0];
 }
 
 // Matched
@@ -1243,7 +1243,7 @@ int sub_800A7A9C(int a)
 // Matched
 void sub_800A7AD8(int a)
 {
-    sub_8001D9B0(sub_800A7A60(a));
+    SkipActorAnimToEnd_8001D9B0(sub_800A7A60(a));
 }
 
 void sub_800A7B00(int a)
@@ -1268,8 +1268,8 @@ void sub_800A7B00(int a)
         {
             if (!(o->flags_4 & 0x2000))
             {
-                sub_8001D6EC(o, 1);
-                sub_8001D730(o, 0);
+                SetActorAnimPaused_8001D6EC(o, 1);
+                SetActorVisible_8001D730(o, 0);
                 dword_800B0EC4.c[i] = 1;
             }
             if (!(o->task_0->flags & 0x8000))
@@ -1302,8 +1302,8 @@ void sub_800A7BF0(int a)
         {
             if (dword_800B0EC4.c[i])
             {
-                sub_8001D6EC(o, 0);
-                sub_8001D730(o, 1);
+                SetActorAnimPaused_8001D6EC(o, 0);
+                SetActorVisible_8001D730(o, 1);
                 dword_800B0EC4.c[i] = 0;
             }
             SetActorActive_8001D658(o, 1);
@@ -1434,15 +1434,15 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             k = 1;
             break;
         case 6:
-            sub_8001D730(obj, c->fC);
+            SetActorVisible_8001D730(obj, c->fC);
             k = 0;
             break;
         case 7:
-            sub_8001D68C(obj, c->fC);
+            SetActorGroundMove_8001D68C(obj, c->fC);
             k = 0;
             break;
         case 8:
-            sub_8001D6BC(obj, c->fC);
+            SetActorRootMotion_8001D6BC(obj, c->fC);
             k = 0;
             break;
         case 9:
@@ -1483,7 +1483,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
         }
         if (k)
         {
-            sub_8001E254(obj, &s);
+            StartActorAction_8001E254(obj, &s);
         }
         else if (c->f8)
         {
@@ -1499,7 +1499,7 @@ INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
 void sub_800A80C4(int a)
 {
     if (a < sub_800A7790())
-        sub_8001E28C(sub_800A77F4(a)->cb_14.actor_4);
+        TriggerActorEffect_8001E28C(sub_800A77F4(a)->cb_14.actor_4);
 }
 
 void sub_800A8108()
@@ -1544,8 +1544,8 @@ int sub_800A88E0(G2P* p, int a, int b)
 
 int sub_800A8930()
 {
-    int r = word_8008D668[0] > 0xA0;
-    if (word_8008D668[1] >= 0x79)
+    int r = cameraTargetScreenPos_8008D668[0] > 0xA0;
+    if (cameraTargetScreenPos_8008D668[1] >= 0x79)
         r += 2;
     return r;
 }
@@ -1922,8 +1922,8 @@ void sub_800A9384()
 
 void sub_800A93A4(EffectTarget* a)
 {
-    G2Act* p = dword_8008B4A4->f24;
-    a->tbl_0 = sub_80024E64(p->model_40);
+    G2Act* p = gameTask_8008B4A4->f24;
+    a->tbl_0 = GetModelEffectTable_80024E64(p->model_40);
     a->pos_4 = &levantPos_8008BD18.pos.x;
     a->bonePos_8 = p->bonePos_590[0];
     a->boneMatrices_C = p->mats_90;
@@ -1934,7 +1934,7 @@ void sub_800A93A4(EffectTarget* a)
 void sub_800A9414(void* pv, int b, int c)
 {
     G2Act* p = (G2Act*)pv;
-    sub_80025C38(p->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+    ApplyModelFtgSwaps_80025C38(p->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
     FirFilterInit_8001450C(p->turnBuf_780, &p->turn_770, dword_800795C0, 4);
     sub_800AB010(p, b, c, 0);
     p->fC = 0;
@@ -1946,7 +1946,7 @@ void sub_800A9414(void* pv, int b, int c)
 
 void sub_800A94CC(void)
 {
-    G2Init_1* p = (G2Init_1*)dword_8008B4A4->f24;
+    G2Init_1* p = (G2Init_1*)gameTask_8008B4A4->f24;
     p->s1c = 3;
     p->s1e = 3;
     p->fC = 0;
@@ -2007,7 +2007,7 @@ void sub_800A9564(int a, G2Act* p)
     sub_800AA220(p);
     for (i = 0; i < 40; i++)
     {
-        p->mats_90[i] = dword_80098188[i];
+        p->mats_90[i] = boneMatrices_80098188[i];
     }
 }
 
@@ -2019,7 +2019,7 @@ void DrawLevantModel_800A9708(G2Act* p)
     int flags;
     int st;
     char* sd; // read as a scalar: through SaveData* gcc reloads the status after the p->f3c store
-    v = sub_80019CC4(&saveData_8008B570.levant_7A8);
+    v = FindNearestCameraPoint_80019CC4(&saveData_8008B570.levant_7A8);
     sd = (char*)&saveData_8008B570;
     if (p->f3c != *(int*)(sd + 0x7c8))
     {
@@ -2082,12 +2082,12 @@ void DrawLevantModel_800A9708(G2Act* p)
     }
     if (!(p->f0 & 0x10))
     {
-        sub_80046A58(&sk, &stru_8008D534[v], 0);
+        DrawAnimSkel_80046A58(&sk, &pointLights_8008D534[v], 0);
     }
     else
     {
         anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
-        sub_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
+        DrawAnimSkelBlend_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &pointLights_8008D534[v], 0);
     }
     DrawSpriteVtxQuadsGT4_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
@@ -2156,7 +2156,7 @@ void sub_800A9A9C(G2Act* p)
     {
         div = p->model_40->anims_54[sub_800AC4A8(p->s1c)].divisor_8;
         sub_800B80C8(p);
-        t = &dword_8008B500.meshes_C[p->mesh_84].tris_4[p->tri_80];
+        t = &mapState_8008B500.meshes_C[p->mesh_84].tris_4[p->tri_80];
         f = t->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
             t->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
         f = 0x1000 - f * f / 4096;
@@ -2215,7 +2215,7 @@ INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 void sub_800AA140(G2Act* p)
 {
     ModelAnim* t = &p->model_40->anims_54[sub_800AC4A8(p->s1c)];
-    sub_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
+    GetAnimRootMotion_8004D288((char*)p + 0x6c, t, (unsigned)p->f10 % ((sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) & 0xffff) + 1));
 }
 
 int sub_800AA1C0(G2Act* p)
@@ -2237,7 +2237,7 @@ void sub_800AA1E0(G2Act* a)
 
 void sub_800AA220(G2Act* a)
 {
-    sub_8001C440(a->model_40, sub_800AC4A8(a->s1c), a->f10);
+    RunAnimFrameCues_8001C440(a->model_40, sub_800AC4A8(a->s1c), a->f10);
 }
 
 void sub_800AA25C(G2Act* p)
@@ -2317,10 +2317,10 @@ void sub_800AA430(G2Act* p)
         L.f0 = p->f2C;
         r17 = sub_800AC9CC(p->s20);
         r16 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
-        L.f4 = sub_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
+        L.f4 = RepeatHitTimes_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
         sub_800A93A4(L.rest);
-        sub_800182B8(&L, p->f38);
-        sub_800184DC((int)&L, 0);
+        CollectEffectTargets_800182B8(&L, p->f38);
+        PlayActorEffect_800184DC((int)&L, 0);
     }
 }
 #endif
@@ -2356,15 +2356,15 @@ void sub_800AA51C(G2Act* o)
     case 9:
         if (sub_800AA1D4(o) == 0 && !(o->f0 & 0x1000))
         {
-            sub_80025B5C(o->model_40, 2, 0x17);
-            sub_80025B5C(o->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
             sub_800AA3F0(o);
             break;
         }
         if (o->f10 == sub_800AB170(o->s1c))
         {
-            sub_80025B5C(o->model_40, 2, 0x18);
-            sub_80025B5C(o->model_40, 7, 0x1A);
+            SetModelFtg_80025B5C(o->model_40, 2, 0x18);
+            SetModelFtg_80025B5C(o->model_40, 7, 0x1A);
         }
     case 8:
         if ((unsigned int)o->f10 >= (unsigned short)sub_800AC834(o->s1c, sub_800AC474(o->s1c)))
@@ -2384,9 +2384,9 @@ void sub_800AA51C(G2Act* o)
         }
         if (o->f0 & 2)
         {
-            sub_80025B5C(o->model_40, 2, 0x17);
-            sub_80025B5C(o->model_40, 7, 0x19);
-            sub_80025B5C(o->model_40, 0xC, 0xC);
+            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(o->model_40, 0xC, 0xC);
         }
         if (o->f0 & 0x1000)
         {
@@ -2464,8 +2464,8 @@ void sub_800AA51C(G2Act* o)
     case 14:
         if (o->f10 == sub_800AB170(o->s1c))
         {
-            sub_80025B5C(o->model_40, 2, 0x17);
-            sub_80025B5C(o->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
         }
         if (o->f10 == sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
         {
@@ -2562,9 +2562,9 @@ void sub_800AA51C(G2Act* o)
     case 18:
         if (o->f10 == sub_800AB170(o->s1c))
         {
-            sub_80025B5C(o->model_40, 2, 0x17);
-            sub_80025B5C(o->model_40, 7, 0x19);
-            sub_80025B5C(o->model_40, 0xC, 0xC);
+            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(o->model_40, 0xC, 0xC);
         }
         if ((unsigned int)o->f10 >= sub_800AC8BC(o->s1c, sub_800AC474(o->s1c)))
         {
@@ -2767,7 +2767,7 @@ unsigned short sub_800AB170(int a)
 
 void sub_800AB1A4(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     p->f0 |= 0x20;
     if (a == 1)
     {
@@ -2778,7 +2778,7 @@ void sub_800AB1A4(int a)
 
 int sub_800AB1EC(int a, int b, int c, int d)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (!(p->f0 & 1))
     {
         if (b == 1)
@@ -2798,59 +2798,59 @@ int sub_800AB1EC(int a, int b, int c, int d)
 
 void sub_800AB264()
 {
-    dword_8008B4A4->f24->f0 |= 0x400;
+    gameTask_8008B4A4->f24->f0 |= 0x400;
 }
 
 void sub_800AB28C()
 {
-    dword_8008B4A4->f24->f0 &= ~0x400;
+    gameTask_8008B4A4->f24->f0 &= ~0x400;
 }
 
 void sub_800AB2B4()
 {
-    dword_8008B4A4->f24->f0 |= 0x10000;
+    gameTask_8008B4A4->f24->f0 |= 0x10000;
 }
 
 void sub_800AB2DC()
 {
-    dword_8008B4A4->f24->f0 &= ~0x10000;
+    gameTask_8008B4A4->f24->f0 &= ~0x10000;
 }
 
 int sub_800AB304()
 {
-    return (dword_8008B4A4->f24->f0 & 1) ^ 1;
+    return (gameTask_8008B4A4->f24->f0 & 1) ^ 1;
 }
 
 int sub_800AB32C()
 {
-    return dword_8008B4A4->f24->f8 == 0xD;
+    return gameTask_8008B4A4->f24->f8 == 0xD;
 }
 
 int sub_800AB354()
 {
-    unsigned t = dword_8008B4A4->f24->f0 & 0x400;
+    unsigned t = gameTask_8008B4A4->f24->f0 & 0x400;
     return t != 0;
 }
 
 int sub_800AB37C(int v)
 {
-    dword_8008B4A4->f24->f4 = v;
+    gameTask_8008B4A4->f24->f4 = v;
     return 1;
 }
 
 int sub_800AB39C()
 {
-    return dword_8008B4A4->f24->f4;
+    return gameTask_8008B4A4->f24->f4;
 }
 
 void sub_800AB3BC()
 {
-    dword_8008B4A4->f24->s28 = 0;
+    gameTask_8008B4A4->f24->s28 = 0;
 }
 
 void sub_800AB3D4()
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (!(p->f0 & 0x100))
     {
         p->f0 |= 0x4100;
@@ -2865,7 +2865,7 @@ void sub_800AB3D4()
 
 void sub_800AB444(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (p->f0 & 0x100)
     {
         if (a == 1)
@@ -2950,44 +2950,44 @@ short sub_800AB750(int a)
 
 int sub_800AB85C()
 {
-    unsigned t = dword_8008B4A4->f24->f0 & 0x2000;
+    unsigned t = gameTask_8008B4A4->f24->f0 & 0x2000;
     return t != 0;
 }
 
 void sub_800AB884()
 {
-    dword_8008B4A4->f24->f0 &= ~0x4000;
+    gameTask_8008B4A4->f24->f0 &= ~0x4000;
 }
 
 void sub_800AB8AC()
 {
-    sub_800A9414(dword_8008B4A4->f24, 0, 3);
+    sub_800A9414(gameTask_8008B4A4->f24, 0, 3);
 }
 
 void sub_800AB8DC()
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     p->model_40 = sub_800AC38C();
 }
 
 void sub_800AB910()
 {
-    dword_8008B4A4->f24->f0 &= ~0x800;
+    gameTask_8008B4A4->f24->f0 &= ~0x800;
 }
 
 int sub_800AB938()
 {
-    return ((unsigned char*)dword_8008B4A4->f24)[1] >> 7;
+    return ((unsigned char*)gameTask_8008B4A4->f24)[1] >> 7;
 }
 
 int sub_800AB958()
 {
-    return (unsigned)dword_8008B4A4->f24->f8 < 2;
+    return (unsigned)gameTask_8008B4A4->f24->f8 < 2;
 }
 
 void sub_800AB978(short a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     p->s24 = -1;
     p->u22 = a;
     p->f0 &= ~0x20;
@@ -2995,7 +2995,7 @@ void sub_800AB978(short a)
 
 void sub_800AB9A8(int a, int b, int c)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (sub_800AC604(a, 0) == 0 && (b < 0 || sub_800AC604(b, 0) == 0))
     {
         sub_800AB010(p, 0x17, a, 0);
@@ -3019,7 +3019,7 @@ void sub_800AB9A8(int a, int b, int c)
 
 void sub_800ABAA4(G2Path* a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     p->path_78 = a;
     p->f7c = 0;
     p->f0 |= 0x400000;
@@ -3027,7 +3027,7 @@ void sub_800ABAA4(G2Path* a)
 
 void sub_800ABAD4()
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     p->f0 &= ~0x400000;
     sub_800ABC78(0);
     p->f0 = (p->f0 & ~0x800) | 8;
@@ -3037,17 +3037,17 @@ void sub_800ABAD4()
 
 int sub_800ABB44()
 {
-    return ((dword_8008B4A4->f24->f0 >> 22) ^ 1) & 1;
+    return ((gameTask_8008B4A4->f24->f0 >> 22) ^ 1) & 1;
 }
 
 int sub_800ABB70()
 {
-    return dword_8008B4A4->f24->f8 == 0x17;
+    return gameTask_8008B4A4->f24->f8 == 0x17;
 }
 
 void sub_800ABB98(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (a == 1)
         p->f0 |= 0x100000;
     else
@@ -3056,7 +3056,7 @@ void sub_800ABB98(int a)
 
 void sub_800ABBD8(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (a)
     {
         p->f0 &= ~0x20000;
@@ -3070,7 +3070,7 @@ void sub_800ABBD8(int a)
 
 void sub_800ABC34(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (a)
         p->f0 &= ~0x40000;
     else
@@ -3079,7 +3079,7 @@ void sub_800ABC34(int a)
 
 void sub_800ABC78(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (a)
     {
         p->f0 |= 0x80000;
@@ -3100,7 +3100,7 @@ void sub_800ABCF4(G2Act* p)
 {
     if (p->s20 == 0x19)
     {
-        p->f2C = sub_8001AC8C(p->f34);
+        p->f2C = GetMagicEffect_8001AC8C(p->f34);
         RequestEffect_800148F4(p->f2C);
     }
     else if ((unsigned short)(p->s20 - 7) < 2)
@@ -3122,12 +3122,12 @@ void sub_800ABCF4(G2Act* p)
     }
     else if (p->s20 == 0x10)
     {
-        p->f2C = sub_800189F8();
+        p->f2C = GetWeaponEffect_800189F8();
         RequestEffect_800148F4(p->f2C);
     }
     else if (p->s20 == 0x1D)
     {
-        p->f2C = ((int (*)(int))sub_8001CDCC)(p->f34);
+        p->f2C = ((int (*)(int))GetItemEffect_8001CDCC)(p->f34);
         RequestEffect_800148F4(p->f2C);
     }
 }
@@ -3157,55 +3157,55 @@ void sub_800ABECC()
     if (f & 0x200)
     {
         if (f & 1)
-            r = &dword_8007A14C;
+            r = &statusTintPoisonLevel7_8007A14C;
         else
-            r = &dword_8007A0EC;
+            r = &statusTintLevel7_8007A0EC;
     }
     else if (f & 0x100)
     {
         if (f & 1)
-            r = &dword_8007A140;
+            r = &statusTintPoisonLevel6_8007A140;
         else
-            r = &dword_8007A0E0;
+            r = &statusTintLevel6_8007A0E0;
     }
     else if (f & 0x80)
     {
         if (f & 1)
-            r = &dword_8007A134;
+            r = &statusTintPoisonLevel5_8007A134;
         else
-            r = &dword_8007A0D4;
+            r = &statusTintLevel5_8007A0D4;
     }
     else if (f & 0x40)
     {
         if (f & 1)
-            r = &dword_8007A128;
+            r = &statusTintPoisonLevel4_8007A128;
         else
-            r = &dword_8007A0C8;
+            r = &statusTintLevel4_8007A0C8;
     }
     else if (f & 0x20)
     {
         if (f & 1)
-            r = &dword_8007A11C;
+            r = &statusTintPoisonLevel3_8007A11C;
         else
-            r = &dword_8007A0BC;
+            r = &statusTintLevel3_8007A0BC;
     }
     else if (f & 0x10)
     {
         if (f & 1)
-            r = &dword_8007A110;
+            r = &statusTintPoisonLevel2_8007A110;
         else
-            r = &dword_8007A0B0;
+            r = &statusTintLevel2_8007A0B0;
     }
     else if (f & 8)
     {
         if (f & 1)
             r = &dword_8007A104;
         else
-            r = &dword_8007A0A4;
+            r = &statusTintLevel1_8007A0A4;
     }
     else if (f & 1)
     {
-        r = &dword_8007A0F8;
+        r = &statusTintPoison_8007A0F8;
     }
     TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
 }
@@ -3311,12 +3311,12 @@ void sub_800AC02C(G2Act* p)
 
 void sub_800AC318()
 {
-    dword_8008B4A4->f24->f0 |= 0x800000;
+    gameTask_8008B4A4->f24->f0 |= 0x800000;
 }
 
 void sub_800AC340(int a)
 {
-    G2Act* p = dword_8008B4A4->f24;
+    G2Act* p = gameTask_8008B4A4->f24;
     if (a)
         p->f0 |= 0x1000000;
     else
@@ -3360,7 +3360,7 @@ int sub_800AC3F4()
     int r;
     if (s->field_830)
     {
-        r = ((int (*)(int))sub_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
+        r = ((int (*)(int))GetArmorOutfit_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
     }
     else
     {
@@ -3381,13 +3381,13 @@ int sub_800AC474(int a)
 
 int sub_800AC4A8(int a)
 {
-    G2Rec* p = sub_80024E38(dword_8007DC60->items_8);
+    G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[sub_800AC794(a, dword_800B11DC[sub_800AC3E4()])].f0;
 }
 
 int sub_800AC518(int a)
 {
-    G2Rec* p = sub_80024E38(dword_8007DC60->items_8);
+    G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
     if (p[r].f1)
         return 1;
@@ -3440,14 +3440,14 @@ int sub_800AC794(int a, int b)
 
 unsigned char* sub_800AC7B4(int a)
 {
-    return (unsigned char*)sub_80024E38(dword_8007DC60->items_8) + ((a << 10) + 0x380);
+    return (unsigned char*)GetModelActorAnims_80024E38(dword_8007DC60->items_8) + ((a << 10) + 0x380);
 }
 
 short sub_800AC7F0(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].s4;
 }
 
@@ -3455,7 +3455,7 @@ short sub_800AC834(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].s6;
 }
 
@@ -3463,7 +3463,7 @@ short sub_800AC878(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].s8;
 }
 
@@ -3471,7 +3471,7 @@ unsigned short sub_800AC8BC(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].sA;
 }
 
@@ -3479,7 +3479,7 @@ unsigned char sub_800AC900(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].f3;
 }
 
@@ -3487,7 +3487,7 @@ short sub_800AC944(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].sC;
 }
 
@@ -3495,7 +3495,7 @@ unsigned char sub_800AC988(int a, int b)
 {
     G2Rec* p;
     int r = sub_800AC794(a, b);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return p[r].f0;
 }
 
@@ -3503,7 +3503,7 @@ short* sub_800AC9CC(int a)
 {
     G2Rec* p;
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return &p[r].sC;
 }
 
@@ -3511,7 +3511,7 @@ int* sub_800ACA38(int a)
 {
     G2Rec* p;
     int r = sub_800AC794(a, dword_800B11DC[sub_800AC3E4()]);
-    p = sub_80024E38(dword_8007DC60->items_8);
+    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
     return &p[r].f34;
 }
 
@@ -3548,7 +3548,7 @@ typedef struct G2Ld_1
 } G2Ld_1;
 extern ModelVramSlot* dword_8007DC6C;
 extern int name_800B1164[];
-extern int dword_800B11CC[]; // model FTG ids for sub_80024FFC, -1 ends
+extern int dword_800B11CC[]; // model FTG ids for SaveModelFtgs_80024FFC, -1 ends
 extern void sub_800ACF3C();
 extern void sub_800ACFB8();
 // Matched
@@ -3579,7 +3579,7 @@ void sub_800ACB64(int* a, void* buf)
             }
             else
             {
-                sub_80040148((int*)&dword_800B1DD0, 1);
+                PoolSetInited_80040148((int*)&dword_800B1DD0, 1);
                 q->state = 1;
             }
             break;
@@ -3599,7 +3599,7 @@ void sub_800ACB64(int* a, void* buf)
             else if (q->flags & 2)
             {
                 m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
-                sub_80025974(m, sub_800AC3F4(), 1);
+                LoadModelAltFtgs_80025974(m, sub_800AC3F4(), 1);
                 q->f14 = sub_800AC3E4();
                 q->f10 = saveData_8008B570.field_834;
                 q->f1C = sub_800AC464();
@@ -3631,13 +3631,13 @@ void sub_800ACB64(int* a, void* buf)
             if ((q->flags & 9) == 8)
             {
                 m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
-                sub_80024FFC(m, dword_800B11CC);
+                SaveModelFtgs_80024FFC(m, dword_800B11CC);
                 q->flags &= ~8;
             }
             if ((q->flags & 0x12) == 0x10)
             {
                 m = AcquireModel_80024D70(dword_8007DC60, name_800B1164[saveData_8008B570.field_830]);
-                sub_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                ApplyModelFtgSwaps_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 q->flags &= ~0x10;
             }
             if (q->flags == 0)
@@ -3647,7 +3647,7 @@ void sub_800ACB64(int* a, void* buf)
                 ClearOTagRAll_8001B260();
                 EndFade_8001C290();
             }
-            sub_80040148((int*)&dword_800B1DD0, 0);
+            PoolSetInited_80040148((int*)&dword_800B1DD0, 0);
             q->state = 0;
             break;
         }

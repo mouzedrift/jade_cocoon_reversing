@@ -1,7 +1,7 @@
 #ifndef MSGWIN_H
 #define MSGWIN_H
 
-/* message windows (tu_80034068.c): the buffer of a messageWindowTask_8008D640 entry */
+/* message windows (msg_window.c): the buffer of a messageWindowTask_8008D640 entry */
 
 typedef struct
 {
@@ -12,7 +12,7 @@ typedef struct
     unsigned short h;
 } struct_rect_1B8;
 
-/* 0x18..0x27, copied out by sub_800349B4 / sub_80034A00 */
+/* 0x18..0x27, copied out by GetMsgWindowResultIfDone_800349B4 / GetMsgWindowResult_80034A00 */
 typedef struct
 {
     short count_18;
@@ -72,7 +72,7 @@ typedef struct MsgWindow
     unsigned short x_64;
     unsigned short y_66;
     int field_68;
-    short field_6C; // 0x6C..: passed to sub_8002F6F8 as the cursor state
+    short field_6C; // 0x6C..: passed to DrawPulsingWindow_8002F6F8 as the cursor state
     unsigned short titleX_6E;
     unsigned short titleY_70;
     short pad_72;

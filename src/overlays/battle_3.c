@@ -12,7 +12,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
         if (dword_800C9D38[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -27,7 +27,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0);
         if (dword_800C9D48[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -43,7 +43,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0xC);
         if (dword_800C9D38[idx] > 0 || dword_800C9D48[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -58,7 +58,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 2, 0, b, 0);
         sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0xC);
         sub_800BF3AC();
-        sub_80037BFC(0x1E);
+        StartCameraShake_80037BFC(0x1E);
         if (idx == 0)
         {
             StartPadVibration_80036528(0, 1);
@@ -147,11 +147,11 @@ void ApplyBattleCommand_800BEBB8()
 
     sub_800BC7DC(dword_800C9C7C);
     flag = 1;
-    actor = sub_80014390(dword_800C9C7C);
+    actor = GetUnitStatus_80014390(dword_800C9C7C);
     cmd = dword_800C9C88;
     if (dword_800C9C88.kind_0 == 0x12)
     {
-        actor = sub_80014390(dword_800C9C7C);
+        actor = GetUnitStatus_80014390(dword_800C9C7C);
         actor->status_0 |= 0x8000;
     }
     for (i = 0; i < 7; i++)
@@ -164,11 +164,11 @@ void ApplyBattleCommand_800BEBB8()
         dword_800C9CC8[i].targets_C = 0;
         if (dword_800C9C88.targets_C & bit)
         {
-            m = sub_80014390(i & 0xFF);
+            m = GetUnitStatus_80014390(i & 0xFF);
             res.f24 = dword_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
-            sub_80012BB0(actor, m, &cmd, &res);
+            ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (dword_800ADE78.f0 == 1)
             {
                 sub_800B4390(actor, m, &dword_800C9C88, &res, &dword_800ADE78);
@@ -381,7 +381,7 @@ void sub_800BF3AC()
 
 void sub_800BF3DC(int a, int b, int c, int d, int e)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(dword_8008D778);
+    EventEntry* p = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
     if (p)
     {
         BatHitNum_a* q = p->buffer;
@@ -399,7 +399,7 @@ void sub_800BF3DC(int a, int b, int c, int d, int e)
 
 int sub_800BF47C()
 {
-    EventNode* h = dword_8008D778;
+    EventNode* h = hitNumberTasks_8008D778;
     EventNode* n;
     int i = 0;
     int cnt = h->count;
@@ -424,9 +424,9 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     v.vx = u->pos_10[0];
     v.vy = u->pos_10[2];
     v.vz = u->pos_10[4];
-    v.vx -= dword_8008D600.vx;
-    v.vy -= dword_8008D600.vy;
-    v.vz -= dword_8008D600.vz;
+    v.vx -= cameraEye_8008D600.vx;
+    v.vy -= cameraEye_8008D600.vy;
+    v.vz -= cameraEye_8008D600.vz;
     RotTransPers(&v, (long*)&sxy, &p, &flag);
     u->frame_8++;
     if (u->frame_8 > 0x10)
@@ -447,15 +447,15 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     u->amount_4 += x;
     if (u->kind_0 == 0)
     {
-        sub_800127D0(u->unit_18, 0, x, 0);
-        if (sub_80014390((unsigned char)u->unit_18)->hp_8 <= 0)
+        AdjustUnitStatById_800127D0(u->unit_18, 0, x, 0);
+        if (GetUnitStatus_80014390((unsigned char)u->unit_18)->hp_8 <= 0)
         {
-            sub_800127B8(sub_80014390((unsigned char)u->unit_18));
+            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)u->unit_18));
         }
     }
     if (u->kind_0 == 1)
     {
-        sub_800127D0(u->unit_18, 2, x, 0);
+        AdjustUnitStatById_800127D0(u->unit_18, 2, x, 0);
     }
 }
 
@@ -528,7 +528,7 @@ void sub_800BF770(short* p, int i)
 int sub_800BF784(int a)
 {
     unsigned char buf[0x18];
-    UnitStatus* p = sub_80014390(a & 0xFF);
+    UnitStatus* p = GetUnitStatus_80014390(a & 0xFF);
     if (p == 0)
     {
         return 0;
@@ -743,7 +743,7 @@ void sub_800BFAF8(int x)
     default:
         return;
     }
-    sub_80018430(a);
+    SetHitVariant_80018430(a);
 }
 
 void sub_800BFB80()
@@ -890,7 +890,7 @@ void sub_800BFDEC()
 }
 
 // Matched
-extern void sub_8002F1C8();
+extern void DrawUnitStatusWindow_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
 {
@@ -910,17 +910,17 @@ void sub_800C0074(EventEntry* t, void* arg)
         k = 1;
     else
         k = u->slot_0;
-    m = sub_80014390((k + 4) & 0xFF);
+    m = GetUnitStatus_80014390((k + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
     InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
     if (sub_800BF980(sub_800A2BE4(k)))
     {
-        sub_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 1);
+        DrawUnitStatusWindow_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 1);
     }
     else
     {
-        sub_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 0);
     }
     u->frame_4++;
     AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
@@ -948,8 +948,8 @@ typedef struct BatBox_b
     char c_2;
     char c_3;
 } BatBox_b;
-extern void sub_8002F120(int a0, short* pos, int a2, int a3);
-extern void sub_8002F480(int a0, void* pos, int ot, int reverse);
+extern void DrawMpGauge_8002F120(int a0, short* pos, int a2, int a3);
+extern void DrawStatusIcons_8002F480(int a0, void* pos, int ot, int reverse);
 extern void DrawWindow_80042460(void* rect, BatBox_b* box, void* ot, int a3);
 extern unsigned short uiColor_8008B590;
 
@@ -970,22 +970,22 @@ void sub_800C0254(EventEntry* t, void* arg)
         return;
     }
     u = arg;
-    m = sub_80014390(dword_800C9C99);
+    m = GetUnitStatus_80014390(dword_800C9C99);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
     if (dword_800C9C99 == 0)
     {
-        sub_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 2);
+        DrawUnitStatusWindow_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 2);
     }
     else
     {
-        sub_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 0);
     }
     if (dword_800C9C99 != 0)
     {
         pos[0] = 0xD2;
         pos[1] = 0xC0;
-        sub_8002F120(m, pos, dword_800C9182, 0xF);
+        DrawMpGauge_8002F120(m, pos, dword_800C9182, 0xF);
         box.c_3 = 1;
         rect[2] = 0x64;
         rect[3] = 0x15;
@@ -1000,7 +1000,7 @@ void sub_800C0254(EventEntry* t, void* arg)
     {
         u->frame_0 = 4;
     }
-    sub_8002F480(m, 0, 0xF, 0);
+    DrawStatusIcons_8002F480(m, 0, 0xF, 0);
     AddDrawAreaPrim_8003326C(u->rect_C, pOT_8008D454 + 10);
 }
 
@@ -1017,9 +1017,9 @@ void sub_800C0440()
 }
 
 #if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
-extern unsigned char dword_800793C8[];
+extern unsigned char sealOutcomeTable_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
-extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
 void sub_800C04A4(EventEntry* t, BatWin_b* u)
 {
@@ -1040,7 +1040,7 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
     w = MeasureTextWidth_8003E4C8(dword_800C9D74);
-    g = dword_800793C8 + 0x14;
+    g = sealOutcomeTable_800793C8 + 0x14;
     if (*(int*)(g + 0x24) == dword_800C9D74)
     {
         w += 0x10;
@@ -1056,7 +1056,7 @@ void sub_800C04A4(EventEntry* t, BatWin_b* u)
     {
         pos[0] += w;
         pos[1] += 3;
-        sub_8003F264(pos, sub_800AD8E4(), 0);
+        DrawNumberRightAlignedFont1_8003F264(pos, sub_800AD8E4(), 0);
     }
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 7);
     DrawUiColorWindow_800424C0(u->rect_C, 0, pOT_8008D454, 0);
@@ -1076,11 +1076,11 @@ void sub_800C064C(Minion* m, BatModelReq_a* o, int c)
     int counts[3];
     int self;
     int t;
-    self = sub_80019C70(m->species_2)->modelId_0;
-    o->count_0 = sub_800338DC(m->species_4C, ids, counts);
-    o->ids_4[0] = sub_80019C70(ids[0])->modelId_0;
-    o->ids_4[1] = sub_80019C70(ids[1])->modelId_0;
-    o->ids_4[2] = sub_80019C70(ids[2])->modelId_0;
+    self = GetSpeciesModelDesc_80019C70(m->species_2)->modelId_0;
+    o->count_0 = GetTopSpecies_800338DC(m->species_4C, ids, counts);
+    o->ids_4[0] = GetSpeciesModelDesc_80019C70(ids[0])->modelId_0;
+    o->ids_4[1] = GetSpeciesModelDesc_80019C70(ids[1])->modelId_0;
+    o->ids_4[2] = GetSpeciesModelDesc_80019C70(ids[2])->modelId_0;
     o->nums_10[0] = counts[0];
     o->nums_10[1] = counts[1];
     o->nums_10[2] = counts[2];
@@ -1151,18 +1151,18 @@ void sub_800C064C(Minion* m, BatModelReq_a* o, int c)
             o->count_0 = 3;
         }
     }
-    o->f1C = sub_80019A80(m->status_84.level_44);
+    o->f1C = GetRankForLevel_80019A80(m->status_84.level_44);
     o->f20 = o->count_0 - 1;
-    o->f28 = sub_80019C70(m->field_3)->modelId_0;
+    o->f28 = GetSpeciesModelDesc_80019C70(m->field_3)->modelId_0;
     o->f30 = c;
     o->angle_24 = sub_800C0904(m->status_84.element_3E);
     if (o->angle_24 == -1000)
     {
-        o->angle_24 = sub_80019C70(m->field_3)->field_2 * 2;
+        o->angle_24 = GetSpeciesModelDesc_80019C70(m->field_3)->field_2 * 2;
     }
     else
     {
-        o->angle_24 -= sub_80019C70(m->field_3)->field_3 * 2;
+        o->angle_24 -= GetSpeciesModelDesc_80019C70(m->field_3)->field_3 * 2;
         if (o->angle_24 < 0)
         {
             o->angle_24 += 360;
@@ -1223,18 +1223,18 @@ int sub_800C0904(unsigned char* p)
 }
 
 // Matched
-extern short word_80084540[];
+extern short sinTable_80084540[];
 int sub_800C09D4(unsigned char* p)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;
-    t1 = word_80084540[0x2E3] * p[0];
-    t2 = word_80084540[0xEE3] * p[0];
-    t3 = word_80084540[0xEE3] * p[3];
-    t4 = word_80084540[0xAE3] * p[3];
-    t5 = word_80084540[0xAE3] * p[2];
-    t6 = word_80084540[0x6E3] * p[2];
-    t7 = word_80084540[0x6E3] * p[1];
-    t8 = word_80084540[0x2E3] * p[1];
+    t1 = sinTable_80084540[0x2E3] * p[0];
+    t2 = sinTable_80084540[0xEE3] * p[0];
+    t3 = sinTable_80084540[0xEE3] * p[3];
+    t4 = sinTable_80084540[0xAE3] * p[3];
+    t5 = sinTable_80084540[0xAE3] * p[2];
+    t6 = sinTable_80084540[0x6E3] * p[2];
+    t7 = sinTable_80084540[0x6E3] * p[1];
+    t8 = sinTable_80084540[0x2E3] * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 
@@ -1299,8 +1299,8 @@ int sub_800C0BF0()
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
-    m = sub_80010A44(0);
-    k = sub_80019A80(dword_800C9188->status_84.level_44);
+    m = GetModelTaskModel_80010A44(0);
+    k = GetRankForLevel_80019A80(dword_800C9188->status_84.level_44);
     s.modelId_0 = -1;
     s.kind_4 = 2;
     s.pos_8[0] = dword_800C9190.f4;
@@ -1316,16 +1316,16 @@ int sub_800C0BF0()
     s.blendDiv_2C = 4;
     s.visible_30 = 0;
     s.model_48 = m;
-    s.bones_34 = dword_80079140;
-    s.baseScale_38 = sub_80024E90(m, k);
-    s.boneScale_3C = sub_80024EC8(m, k);
-    s.anims_40 = sub_80024E38(m);
-    s.effectTbl_44 = sub_80024E64(m);
+    s.bones_34 = defaultBones_80079140;
+    s.baseScale_38 = GetModelBaseScale_80024E90(m, k);
+    s.boneScale_3C = GetModelBoneScale_80024EC8(m, k);
+    s.anims_40 = GetModelActorAnims_80024E38(m);
+    s.effectTbl_44 = GetModelEffectTable_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
-    sub_8001D68C(dword_800C9190.obj, 0);
+    SetActorGroundMove_8001D68C(dword_800C9190.obj, 0);
     x = sub_80024F00(m, k);
-    sub_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
+    SetBoneGroupFlags_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1348,7 +1348,7 @@ int sub_800C0D88()
 
 void sub_800C0DB0(int a)
 {
-    sub_8001DB00(dword_800C9190.obj, a, 0x55);
+    SetActorTurnTarget_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
 // Matched
@@ -1364,7 +1364,7 @@ BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
     }
     if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
     {
-        sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
+        StartCommandAction_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
@@ -1380,14 +1380,14 @@ int sub_800C0E84(BatCmd_a* p)
     mask = 1 << (dword_800C918C + 1);
     if (p->mask_8 & mask)
     {
-        sub_8001E28C(dword_800C9190.obj);
+        TriggerActorEffect_8001E28C(dword_800C9190.obj);
     }
     return 1;
 }
 
 void sub_800C0EE8(int a)
 {
-    sub_80018E5C(dword_800C9190.obj, a);
+    GetActorHitFrame_80018E5C(dword_800C9190.obj, a);
 }
 
 int sub_800C0F14()
@@ -1397,7 +1397,7 @@ int sub_800C0F14()
 
 void sub_800C0F1C()
 {
-    sub_80018EBC(dword_800C9190.obj, sub_800C0F78(dword_800C918C));
+    SetActorStatusTint_80018EBC(dword_800C9190.obj, sub_800C0F78(dword_800C918C));
 }
 
 void sub_800C0F54(int a)
@@ -1667,7 +1667,7 @@ void sub_800C17EC(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&dword_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&zeroSvector_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1867,7 +1867,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
     if (++u->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        sub_800C1A5C(u->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             e = AllocEventEntry_80043AF8(dword_8008D60C);
@@ -1897,7 +1897,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
                 b->rot_34[1] = rand() & 0x1000;
                 b->rot_34[2] = rand() & 0x1000;
                 b->rot_34[3] = (rand() & 0x1FF) + 0x100;
-                n = sub_80020F00(&effectFile_80091BD0, 1, 0x19);
+                n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x19);
                 e->flags = (e->flags | 1) & 0xFFFF7FFF;
                 {
                     EffectModel* ent = &effectFile_80091BD0.models_28[n];
@@ -1938,7 +1938,7 @@ void sub_800C273C(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    DrawFtgObjectAtSlot0_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -1958,7 +1958,7 @@ void sub_800C2914(BatSrc_a* p, int id)
         b->pos_10[1] = p->pos_1C[1];
         b->pos_10[2] = p->pos_1C[2];
         b->frame_0 = 0;
-        n = sub_80020F00(&effectFile_80091BD0, 1, id);
+        n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         b->obj_3C = &effectFile_80091BD0.models_28[n];
         e->cb_8 = (EventEntryFn)sub_800C23D0;
@@ -1992,7 +1992,7 @@ void sub_800C2914(BatSrc_a* p, int id)
             s[2] = b->vel_28[2] / 1024;
             VectorToAngles_8003B5D4(s, b->rot_34);
             b->rot_34[2] = rand() & 0x1000;
-            n = sub_80020F00(&effectFile_80091BD0, 1, id);
+            n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
             b->obj_3C = &effectFile_80091BD0.models_28[n];
             e->cb_8 = (EventEntryFn)sub_800C2CD8;
@@ -2023,7 +2023,7 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    DrawFtgObjectAtSlot0_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2096,10 +2096,10 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
             u->trail_50[1].z = u->trail_50[0].z;
         }
         u->frame_0 += u->speed_8;
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, pointLights_8008D534, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, pointLights_8008D534, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, pointLights_8008D534, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, pointLights_8008D534, 0x30, 0, 3);
         DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
@@ -2135,7 +2135,7 @@ int sub_800C32DC(int* pos, int a1, int a2, int a3)
     b->frame_0 = 0;
     b->speed_8 = 0;
     b->rot_82 = a3;
-    idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     t = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = t + a2;
@@ -2169,7 +2169,7 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
                 v[0] = u->pos_44[0] + k->x_4 * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096 + k->z_C * sinTable_80084540[u->rot_82 & 0xFFF] / 4096;
                 v[1] = u->pos_44[1] + k->y_8;
                 v[2] = u->pos_44[2] - k->x_4 * sinTable_80084540[u->rot_82 & 0xFFF] / 4096 + k->z_C * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096;
-                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
+                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, pointLights_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
                 if (c->ftg_4[k->model_0].texSpriteCount_48)
                 {
                     any = 1;
@@ -2221,7 +2221,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2238,7 +2238,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2247,7 +2247,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         if (u->f30 <= 0)
         {
             sub_800C410C();
-            sub_80021804(u->work_94, 1);
+            FreeFtgObjectData_80021804(u->work_94, 1);
             free3_8003FC6C(u->work_94);
             t->flags = (t->flags & ~1) | 0x8000;
         }
@@ -2277,7 +2277,7 @@ void sub_800C3B50(int* p, int id)
     b->pos_44[1] = p[1];
     b->pos_44[2] = p[2];
     b->frame_0 = 0;
-    b->fx_E = sub_80020F00(&effectFile_80091BD0, 0, id);
+    b->fx_E = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, id);
     b->alpha_30 = 0x1000;
     b->f34 = 0;
     b->rot_80[2] = 0;
@@ -2290,14 +2290,14 @@ void sub_800C3B50(int* p, int id)
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     if (f == 0)
     {
-    idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1F);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1F);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     ent = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = ent;
     b->model_94 = malloc3_8003FC4C(0x54);
-    sub_800218A8(ent->ftg_4, b->model_94, 1);
-    sub_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
-    q = dword_8008B4A4->hero_24;
+    CopyFtgObject_800218A8(ent->ftg_4, b->model_94, 1);
+    DiffFtgObjects_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
+    q = gameTask_8008B4A4->hero_24;
     b->pos_44[0] = q->pos_5E4[0];
     b->pos_44[1] = q->pos_5E4[1];
     b->pos_44[2] = q->pos_5E4[2];
@@ -2329,10 +2329,10 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
     else
     {
         t->flags = (t->flags & ~1) | 0x8000;
-        sub_80021804(u->model_94, 1);
+        FreeFtgObjectData_80021804(u->model_94, 1);
         free3_8003FC6C(u->model_94);
     }
-    sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
+    DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, pointLights_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
 }
 
 void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
@@ -2341,8 +2341,8 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     BatHero_a* q;
     BatOrb_a* w;
     w = u;
-    sub_800C1A5C(u->pos_44, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
-    q = dword_8008B4A4->hero_24;
+    sub_800C1A5C(u->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
+    q = gameTask_8008B4A4->hero_24;
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
     v[2] = q->pos_5E4[2];
@@ -2363,7 +2363,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     }
     else
     {
-        ((void (*)())sub_800C1C5C)(v, &dword_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
+        ((void (*)())sub_800C1C5C)(v, &zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
         t->flags = (t->flags & ~1) | 0x8000;
     }
 }
@@ -2373,10 +2373,10 @@ void sub_800C4090(int a0, int a1, int c, int a3)
     int* a = (int*)a0;
     unsigned char* b = (unsigned char*)a1;
     unsigned int d = a3;
-    dword_8008D680[0] = a[0];
-    dword_8008D680[1] = a[1];
-    dword_8008D680[2] = a[2];
-    dword_8008D3F0 = c;
+    pointLightPos_8008D680[0] = a[0];
+    pointLightPos_8008D680[1] = a[1];
+    pointLightPos_8008D680[2] = a[2];
+    pointLightRange_8008D3F0 = c;
     dword_8008D418[0] = b[0] * d >> 7;
     dword_8008D418[1] = b[1] * d >> 7;
     dword_8008D418[2] = b[2] * d >> 7;
@@ -2384,7 +2384,7 @@ void sub_800C4090(int a0, int a1, int c, int a3)
 
 void sub_800C410C()
 {
-    dword_8008D3F0 = 0;
+    pointLightRange_8008D3F0 = 0;
 }
 
 typedef void (*BatFxFn)(BatTask* t);
@@ -2499,8 +2499,8 @@ void sub_800C4118(BatCmd_a* a, UnitStats* b, int c, unsigned int d)
 void sub_800C4328(BatTask* t)
 {
     UnitStatus* s = t->f14;
-    short x = sub_800334D8(s);
-    short y = sub_800334CC(s);
+    short x = GetHp_800334D8(s);
+    short y = GetMaxHp_800334CC(s);
     if (x < (short)(y / 10))
     {
         sub_800C6AFC(t, 6, 0);
@@ -2730,8 +2730,8 @@ int sub_800C4B34(BatTask* t)
 {
     int r;
     UnitStatus* s = &t->f10->st_0;
-    short x = sub_800334D8(s);
-    short y = sub_800334CC(s);
+    short x = GetHp_800334D8(s);
+    short y = GetMaxHp_800334CC(s);
     if (x < (short)(y / 3))
     {
         r = sub_800C6A8C(t);
@@ -2761,8 +2761,8 @@ int sub_800C4BE4(BatTask* t)
         return r;
     }
     {
-        short x = sub_800334D8(s);
-        short y = sub_800334CC(s);
+        short x = GetHp_800334D8(s);
+        short y = GetMaxHp_800334CC(s);
         if (x < y)
         {
             if (rand() & 1)
@@ -2811,8 +2811,8 @@ int sub_800C4D38(BatTask* t)
 {
     int r;
     UnitStatus* s = &t->f10->st_0;
-    short x = sub_800334D8(s);
-    short y = sub_800334CC(s);
+    short x = GetHp_800334D8(s);
+    short y = GetMaxHp_800334CC(s);
     if (x < y / 4)
     {
         r = sub_800C6A8C(t);
@@ -2956,8 +2956,8 @@ int sub_800C50B0(BatTask* t)
             return r;
         }
     }
-    x = sub_800334D8(s);
-    y = sub_800334CC(s);
+    x = GetHp_800334D8(s);
+    y = GetMaxHp_800334CC(s);
     if (x <= (short)(y / 3) && (rand() & 1))
     {
         r = sub_800C6C58(t);
@@ -2991,7 +2991,7 @@ int sub_800C5220(BatTask* t)
     {
         return r;
     }
-    if ((short)sub_800334D8(s) != 1)
+    if ((short)GetHp_800334D8(s) != 1)
     {
         r = sub_800C6A8C(t);
         if (r)
@@ -3056,8 +3056,8 @@ int sub_800C5424(BatTask* t)
 {
     int r;
     UnitStatus* s = &t->f10->st_0;
-    short x = sub_800334D8(s);
-    short y = sub_800334CC(s);
+    short x = GetHp_800334D8(s);
+    short y = GetMaxHp_800334CC(s);
     if (x <= y / 2)
     {
         r = sub_800C6A8C(t);
@@ -3100,7 +3100,7 @@ int sub_800C5510(BatTask* t)
     {
         return r;
     }
-    if (sub_800334F0(t->f14) != 0)
+    if (GetMp_800334F0(t->f14) != 0)
     {
         r = sub_800C6A8C(t);
         if (r)
@@ -3437,7 +3437,7 @@ void sub_800C5D04(BatTask* t)
                 t->f8->kind_0 = 1;
                 t->f8->arg_4 = 0x1B;
                 t->f8->targets_C = t->f18;
-                sub_80018430(2);
+                SetHitVariant_80018430(2);
                 break;
             case 1:
                 t->f8->kind_0 = 6;
@@ -3479,7 +3479,7 @@ void sub_800C5EB8(BatTask* t)
         switch (rand() % 3)
         {
         case 0:
-            if (sub_800334F0(t->f14))
+            if (GetMp_800334F0(t->f14))
             {
                 t->f8->kind_0 = 6;
                 t->f8->arg_4 = 1;
@@ -3490,7 +3490,7 @@ void sub_800C5EB8(BatTask* t)
             t->f8->kind_0 = 1;
             t->f8->arg_4 = 0x19;
             t->f8->targets_C = t->f18;
-            sub_80018430(0);
+            SetHitVariant_80018430(0);
             break;
         case 2:
             t->f8->kind_0 = 6;
@@ -3537,7 +3537,7 @@ void sub_800C6038(BatTask* t)
             t->f8->kind_0 = 1;
             t->f8->arg_4 = 0x1C;
             t->f8->targets_C = t->f18;
-            sub_80018430(1);
+            SetHitVariant_80018430(1);
             break;
         case 1:
             t->f8->kind_0 = 6;
@@ -3583,7 +3583,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x25;
         t->f10->st_0.elementMask_42 = 8;
-        sub_80018430(3);
+        SetHitVariant_80018430(3);
         sub_800C66B4((unsigned char*)t->f10, 2);
         dword_800C8B30 = 0;
     }
@@ -3592,7 +3592,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x22;
         t->f10->st_0.elementMask_42 = 1;
-        sub_80018430(0);
+        SetHitVariant_80018430(0);
         sub_800C66B4((unsigned char*)t->f10, 3);
         dword_800C8B30 = 0;
     }
@@ -3601,7 +3601,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x23;
         t->f10->st_0.elementMask_42 = 2;
-        sub_80018430(1);
+        SetHitVariant_80018430(1);
         sub_800C66B4((unsigned char*)t->f10, 0);
         dword_800C8B30 = 0;
     }
@@ -3610,7 +3610,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x24;
         t->f10->st_0.elementMask_42 = 4;
-        sub_80018430(2);
+        SetHitVariant_80018430(2);
         sub_800C66B4((unsigned char*)t->f10, 1);
         dword_800C8B30 = 0;
     }
@@ -3638,7 +3638,7 @@ void sub_800C61FC(BatTask* t)
             else
             {
                 sub_800C6AFC(t, 1, 0x19);
-                sub_80018430(0);
+                SetHitVariant_80018430(0);
             }
         }
         else if (f & 2)
@@ -3646,7 +3646,7 @@ void sub_800C61FC(BatTask* t)
             if (rand() % 3 != 0)
             {
                 sub_800C6AFC(t, 1, 0x1C);
-                sub_80018430(1);
+                SetHitVariant_80018430(1);
             }
             else
             {
@@ -3664,7 +3664,7 @@ void sub_800C61FC(BatTask* t)
             else
             {
                 sub_800C6AFC(t, 1, 0x1B);
-                sub_80018430(2);
+                SetHitVariant_80018430(2);
             }
         }
     }
@@ -3712,8 +3712,8 @@ void sub_800C66F4(BatTask* t)
         }
         else
         {
-            short x = sub_800334D8(&t->f10->st_0);
-            short y = sub_800334CC(&t->f10->st_0);
+            short x = GetHp_800334D8(&t->f10->st_0);
+            short y = GetMaxHp_800334CC(&t->f10->st_0);
             if (x < (short)(y / 3))
             {
             act:
@@ -3748,8 +3748,8 @@ void sub_800C6824(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        short x = sub_800334D8(&t->f10->st_0);
-        short y = sub_800334CC(&t->f10->st_0);
+        short x = GetHp_800334D8(&t->f10->st_0);
+        short y = GetMaxHp_800334CC(&t->f10->st_0);
         if (x < y / 4)
         {
             if (sub_800C6A8C(t))
@@ -3786,8 +3786,8 @@ void sub_800C6928(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        short x = sub_800334D8(&t->f10->st_0);
-        short y = sub_800334CC(&t->f10->st_0);
+        short x = GetHp_800334D8(&t->f10->st_0);
+        short y = GetMaxHp_800334CC(&t->f10->st_0);
         if (x < y / 2)
         {
             if (sub_800C6A8C(t))
@@ -3929,7 +3929,7 @@ int sub_800C6D6C(UnitSkills* a, UnitStats* b)
         if (a->slot[i].flags_0 & 1)
         {
             short h = b->st_0.mp_C;
-            if (!(h < sub_80031A04(a, i)))
+            if (!(h < GetSkillMpCost_80031A04(a, i)))
             {
                 return i;
             }
@@ -3947,8 +3947,8 @@ int sub_800C6DF8(BatTask* t, int a)
     {
         if (out[i])
         {
-            short x = sub_800334D8(out[i]);
-            short y = sub_800334CC(out[i]);
+            short x = GetHp_800334D8(out[i]);
+            short y = GetMaxHp_800334CC(out[i]);
             if (x <= y / 4)
             {
                 if (sub_800C6B50(t, a, i))
@@ -3976,7 +3976,7 @@ int StartBattleMenu_800C6EFC()
     int i;
     int m;
     int n = 0;
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D468);
+    EventEntry* e = AllocEventEntry_80043AF8(battleMenuTask_8008D468);
     if (e)
     {
         e->cb_8 = (EventEntryFn)BattleMenuTask_800C8A08;
@@ -4034,9 +4034,9 @@ void sub_800C7088()
     }
     else
     {
-        if (CountMagicBits_8001AE54(sub_80010824(3, dword_800C9C7C - 1)) >= 5)
+        if (CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1)) >= 5)
         {
-            dword_800C92F0->count_4 = CountMagicBits_8001AE54(sub_80010824(3, dword_800C9C7C - 1));
+            dword_800C92F0->count_4 = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1));
         }
         dword_800C92F0->cursor_8 = 0;
         dword_800C92E4->cursor_8 = 0;
@@ -4184,8 +4184,8 @@ int sub_800C7530()
     short idx;
     int* p;
     idx = GetMenuCursorIndex_8003DA54(dword_800C9E44);
-    q.field_0 = dword_800C9E44->cursor_8;
-    q.field_2 = dword_800C9E44->scroll_A;
+    q.cursor_0 = dword_800C9E44->cursor_8;
+    q.scroll_2 = dword_800C9E44->scroll_A;
     q.field_A = 0;
     dword_800C9E7C = 0;
     switch (dword_800C9E50)
@@ -4217,8 +4217,8 @@ int sub_800C7530()
             return 1;
         }
     case 2:
-        q.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
-        switch (sub_80033C98(&q))
+        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
+        switch (CheckSkillUsable_80033C98(&q))
         {
         case 0:
         case 1:
@@ -4235,7 +4235,7 @@ int sub_800C7530()
             return 0;
         }
     case 3:
-        q.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         switch (CheckMagicCastable_80033C08(&q))
         {
         case 0:
@@ -4259,7 +4259,7 @@ int sub_800C7530()
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {
-            switch (sub_80033DF4(&b))
+            switch (CheckItemOnTarget_80033DF4(&b))
             {
             case 0:
                 return 1;
@@ -4280,7 +4280,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 6)
         {
-            switch (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            switch (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&b))
             {
             case 0:
                 return 1;
@@ -4300,7 +4300,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 7)
         {
-            switch (sub_80034068(&b))
+            switch (CheckMagicUsable_80034068(&b))
             {
             case 0:
                 return 1;
@@ -4320,7 +4320,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 2 || sub_800C78D0() == 8)
         {
-            if (sub_80033548(sub_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
+            if (HasStatusFlag_80033548(GetUnitStatus_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
             {
                 return 1;
             }
@@ -4383,12 +4383,12 @@ int sub_800C79B8()
 
 int sub_800C79EC()
 {
-    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
+    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
 }
 
 int sub_800C7A1C()
 {
-    unsigned int* h = sub_80010824(3, dword_800C9C7C - 1);
+    unsigned int* h = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
     return FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0));
 }
 
@@ -4405,19 +4405,19 @@ void sub_800C7A6C()
         dword_800C9E58.kind_0 = dword_800C96A4[sub_800C78D0()];
         break;
     case 1:
-        dword_800C9E68 = sub_8001CE8C(sub_800C79B8());
+        dword_800C9E68 = GetItemTargetFlags_8001CE8C(sub_800C79B8());
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C79B8();
         break;
     case 2:
-        h = sub_80031B30(dword_800C9C7C);
-        dword_800C9E68 = sub_80031B0C(h, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
+        h = GetUnitSkills_80031B30(dword_800C9C7C);
+        dword_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C79EC();
         break;
     case 3:
-        m = sub_80010824(3, dword_800C9C7C - 1);
-        dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        m = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
+        dword_800C9E68 = GetMagicTargetFlags_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C7A1C();
         break;
@@ -4517,7 +4517,7 @@ void BattleMenuDraw_800C7DA8()
         else if (dword_800C9E50 == 2)
         {
             Minion* m = GetMinion_80010598(3, dword_800C9C7C - 1);
-            sub_8002C670(m, 0, dword_800C9B58, (short)GetMenuCursorIndex_8003DA54(dword_800C92E4), 0xF);
+            DrawAbilityDescription_8002C670(m, 0, dword_800C9B58, (short)GetMenuCursorIndex_8003DA54(dword_800C92E4), 0xF);
             k = 1;
         }
         else if (dword_800C9E50 == 3)
@@ -4553,7 +4553,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                dword_800C9E54 = sub_8002D250(sel, 0, c, 0xF);
+                dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 0, c, 0xF);
                 flags |= 1;
             }
         }
@@ -4564,18 +4564,18 @@ void BattleMenuDraw_800C7DA8()
         {
             if (dword_800C9E68 & 2)
             {
-                dword_800C9E54 = sub_8002D250(sel, 1, c, 0xF);
+                dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 1, c, 0xF);
                 flags |= 1;
             }
         }
         else if (sub_800C78D0() == 2)
         {
-            dword_800C9E54 = sub_8002D250(sel, 2, c, 0xF);
+            dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 2, c, 0xF);
             flags |= 1;
         }
         else if (sub_800C78D0() == 8)
         {
-            dword_800C9E54 = sub_8002D250(sel, 3, c, 0xF);
+            dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 3, c, 0xF);
             flags |= 1;
         }
     }
@@ -4603,42 +4603,42 @@ void BattleMenuDraw_800C7DA8()
     {
         struct_minion_ref w;
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_C_minion = 0;
+        w.minion_C = 0;
         w.field_A = 0;
-        w.field_0 = dword_800C9308->cursor_8;
-        w.field_2 = dword_800C9308->scroll_A;
-        sub_8002C728(&w);
+        w.cursor_0 = dword_800C9308->cursor_8;
+        w.scroll_2 = dword_800C9308->scroll_A;
+        DrawItemList_8002C728(&w);
     }
     if (!(dword_800C968C[dword_800C9E50][k] & 0x40) && !(flags & 4))
     {
         struct_minion_ref w;
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_0 = dword_800C92E4->cursor_8;
-        w.field_2 = dword_800C92E4->scroll_A;
-        w.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = dword_800C92E4->cursor_8;
+        w.scroll_2 = dword_800C92E4->scroll_A;
+        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         w.field_A = 0;
-        sub_8002CE28(&w, 0);
-        dword_800C9182 = -sub_80031A04(&w.field_C_minion->skills_DE, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
+        DrawAbilityList_8002CE28(&w, 0);
+        dword_800C9182 = -GetSkillMpCost_80031A04(&w.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
     }
     if (!(dword_800C968C[dword_800C9E50][k] & 0x80) && !(flags & 8))
     {
         struct_minion_ref w;
         short sz[2];
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_0 = dword_800C92F0->cursor_8;
-        w.field_2 = dword_800C92F0->scroll_A;
-        w.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = dword_800C92F0->cursor_8;
+        w.scroll_2 = dword_800C92F0->scroll_A;
+        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         sz[0] = 0x60;
         w.field_A = 0;
         sz[1] = 0x45;
-        sub_8002CAC8(&w, sz);
-        dword_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        DrawMagicList_8002CAC8(&w, sz);
+        dword_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
     }
     DrawButtonHelpBar_8002B004(dword_800C9674[dword_800C9E50], 0, 0xF);
 }
@@ -4657,18 +4657,18 @@ void sub_800C83B0()
     {
         dword_800C9180 = 0;
         dword_800C9182 = 0;
-        self = sub_80014390(dword_800C9C7C);
+        self = GetUnitStatus_80014390(dword_800C9C7C);
         for (i = 0; i < 4; i++)
         {
             bit = 1 << i;
             if ((dword_800C9E58.targets_C & bit) && i == dword_800C9C99)
             {
-                m = sub_80014390(i & 0xFF);
+                m = GetUnitStatus_80014390(i & 0xFF);
 
                 d.f24 = dword_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
-                sub_80012BB0(self, m, &a, &d);
+                ResolveBattleAction_80012BB0(self, m, &a, &d);
                 if (sub_80013228(self, m, &a, &d) == 0 && (dword_800C9E58.mask_8 & bit))
                 {
                     dword_800C9180 -= d.fC;
@@ -4694,7 +4694,7 @@ void sub_800C83B0()
         b.f6 = 0;
         if (sub_800C78D0() == 4)
         {
-            if (sub_80033DF4(&b))
+            if (CheckItemOnTarget_80033DF4(&b))
             {
                 dword_800C9180 = 0;
                 dword_800C9182 = 0;
@@ -4702,14 +4702,14 @@ void sub_800C83B0()
         }
         else if (sub_800C78D0() == 6)
         {
-            if (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            if (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&b))
             {
                 dword_800C9180 = 0;
             }
         }
         else if (sub_800C78D0() == 7)
         {
-            if (sub_80034068(&b))
+            if (CheckMagicUsable_80034068(&b))
             {
                 dword_800C9180 = 0;
             }
@@ -4734,7 +4734,7 @@ void sub_800C8710()
     if (dword_800C9E38 != dword_800C9E3C)
     {
         dword_800C9E38 = dword_800C9E3C;
-        sub_80037AE0((unsigned short)dword_800C9E3C);
+        FocusBattleCamera_80037AE0((unsigned short)dword_800C9E3C);
         sub_800BC468(dword_800C9E3C, 1 << dword_800C9C7C);
     }
 }

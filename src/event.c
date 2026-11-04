@@ -28,9 +28,9 @@ extern short uiColor_8008B590;
 extern void GetWindowColors_8004226C(int a, RECT* r, int c, int d);
 extern void DrawWindowFrame_80041ED0(int a, RECT* r, int c, int d);
 
-extern unsigned char** off_80087064[];
-extern unsigned char* off_80087050[];
-extern int dword_80086FB0[][3];
+extern unsigned char** windowColorSets_80087064[];
+extern unsigned char* windowPulseColors_80087050[];
+extern int windowPulseScale_80086FB0[][3];
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
 void GetWindowColors_8004226C(int a, RECT* r, int c, int d)
@@ -42,14 +42,14 @@ void GetWindowColors_8004226C(int a, RECT* r, int c, int d)
     int cg;
     int cb;
 
-    out[0] = off_80087064[(short)a][d][0];
-    out[1] = off_80087064[(short)a][d][1];
-    out[2] = off_80087064[(short)a][d][2];
+    out[0] = windowColorSets_80087064[(short)a][d][0];
+    out[1] = windowColorSets_80087064[(short)a][d][1];
+    out[2] = windowColorSets_80087064[(short)a][d][2];
     if ((short)a == 1)
     {
-        cr = out[0] * dword_80086FB0[d][0] / 100;
-        cg = out[1] * dword_80086FB0[d][1] / 100;
-        cb = out[2] * dword_80086FB0[d][2] / 100;
+        cr = out[0] * windowPulseScale_80086FB0[d][0] / 100;
+        cg = out[1] * windowPulseScale_80086FB0[d][1] / 100;
+        cb = out[2] * windowPulseScale_80086FB0[d][2] / 100;
         if (cr > 0xFF)
         {
             cr = 0xFF;
@@ -77,9 +77,9 @@ void GetWindowColors_8004226C(int a, RECT* r, int c, int d)
         c0[0] = cr;
         c0[1] = cg;
         c0[2] = cb;
-        c1[0] = off_80087050[d][0];
-        c1[1] = off_80087050[d][1];
-        c1[2] = off_80087050[d][2];
+        c1[0] = windowPulseColors_80087050[d][0];
+        c1[1] = windowPulseColors_80087050[d][1];
+        c1[2] = windowPulseColors_80087050[d][2];
         PulseColor_80033394(out, c0, c1, c, 40, 10);
     }
 }
@@ -156,7 +156,7 @@ void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
-int sub_800429A8(short* p)
+int IsWindowFrameFit_800429A8(short* p)
 {
     SPRT* g = publicTiySprts_8008D434;
     if (p[2] >= *(short*)&g[79].w + *(short*)&g[82].w && p[3] >= *(short*)&g[79].h + *(short*)&g[82].h)
@@ -165,11 +165,11 @@ int sub_800429A8(short* p)
     }
     return 0;
 }
-extern unsigned char* off_80087028[];
+extern unsigned char* windowBgColors_80087028[];
 // Matched
-void sub_800429F8(int a0, int a1)
+void DrawWindowBackground_800429F8(int rect, int ot)
 {
-    short* p = (short*)a0;
+    short* p = (short*)rect;
     SPRT* g = publicTiySprts_8008D434;
     unsigned char rgb[4][4];
     RECT r;
@@ -183,17 +183,17 @@ void sub_800429F8(int a0, int a1)
         r.h = p[3] - 4;
         for (i = 0; i < 4; i++)
         {
-            rgb[i][0] = off_80087028[(short)saveData_8008B570.uiColor_20.i][0];
-            rgb[i][1] = off_80087028[(short)saveData_8008B570.uiColor_20.i][1];
-            rgb[i][2] = off_80087028[(short)saveData_8008B570.uiColor_20.i][2];
+            rgb[i][0] = windowBgColors_80087028[(short)saveData_8008B570.uiColor_20.i][0];
+            rgb[i][1] = windowBgColors_80087028[(short)saveData_8008B570.uiColor_20.i][1];
+            rgb[i][2] = windowBgColors_80087028[(short)saveData_8008B570.uiColor_20.i][2];
         }
-        DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)a1);
+        DrawGouraudRect_8004251C(&r, rgb, 1, pOT_8008D454 + (short)ot);
     }
 }
 #define EVT_SPRT publicTiySprts_8008D434
 #if 0
 // Not matched: register allocation (g/the sprite base gets $t7 instead of $s2, shifting the temporaries of the rect setup)
-void sub_80042B38(int a0, int a1)
+void DrawWindowBorder_80042B38(int a0, int a1)
 {
     short* p = (short*)a0;
     RECT r[8];
@@ -267,8 +267,8 @@ void sub_80042B38(int a0, int a1)
     }
 }
 #endif
-INCLUDE_ASM(sub_80042B38);
-extern int sub_8003C0A4(int a);
+INCLUDE_ASM(DrawWindowBorder_80042B38);
+extern int SetCdXaLock_8003C0A4(int a);
 extern int XaStartRead_800434C4(int a);
 extern int xaStartPos_80096108;
 extern int xaEndPos_8009610C;
@@ -303,7 +303,7 @@ void XaIdleTask_800430E8(EventEntry* p, XaTask* q0)
         q->flags_0 &= ~1;
         xaRequestPending_80096118 = -1;
     }
-    if ((int)xaRequestPending_80096118 >= 0 && (r = DsSystemStatus()) == 1 && (s = sub_8003C0A4(r)) == r)
+    if ((int)xaRequestPending_80096118 >= 0 && (r = DsSystemStatus()) == 1 && (s = SetCdXaLock_8003C0A4(r)) == r)
     {
         XaSetup_800433FC(q);
         xaRequestPending_80096118 = -1;
@@ -342,7 +342,7 @@ void XaFadeOutTask_80043264(EventEntry* p, XaTask* q)
         p->cb_8 = (EventEntryFn)XaIdleTask_800430E8;
         SsSetSerialVol(0, 0, 0);
         DsControlB(9, 0, 0);
-        sub_8003C0A4(0);
+        SetCdXaLock_8003C0A4(0);
     }
     else
     {
@@ -593,7 +593,7 @@ void RunEventListUntilAbort_80043958(EventNode* n)
     }
 }
 // Matched
-void sub_800439E0(unsigned int** arr, unsigned int* out)
+void ResetEventListFromDescs_800439E0(unsigned int** arr, unsigned int* out)
 {
     unsigned int* p;
     unsigned int i;
@@ -632,7 +632,7 @@ int FreeEventList_80043A5C(EventNode* head)
     return 0;
 }
 
-int dword_80086FB0[5][3] = {
+int windowPulseScale_80086FB0[5][3] = {
     { 100, 100, 160 },
     { 130, 100, 130 },
     { 100, 124, 113 },
@@ -648,11 +648,11 @@ int dword_80086FF0[9] = {
     0x254470,
 };
 int dword_80087014[5] = { 0xFFFF0A, 0x5161FF, 0xA5FF4B, 0x25E1FF, 0x427595 };
-unsigned char *off_80087028[5] = { &byte_80086FEC, (void *)dword_80086FF0, (void *)&dword_80086FF0[1], (void *)&dword_80086FF0[2], (void *)&dword_80086FF0[3] };
-void *off_8008703C[5] = { (void *)&dword_80086FF0[4], (void *)&dword_80086FF0[5], (void *)&dword_80086FF0[6], (void *)&dword_80086FF0[7], (void *)&dword_80086FF0[8] };
-unsigned char *off_80087050[5] = { (void *)dword_80087014, (void *)&dword_80087014[1], (void *)&dword_80087014[2], (void *)&dword_80087014[3], (void *)&dword_80087014[4] };
-unsigned char **off_80087064[3] = { off_80087028, off_80087028, (void *)off_8008703C };
-int dword_80087070[5][8] = {
+unsigned char *windowBgColors_80087028[5] = { &byte_80086FEC, (void *)dword_80086FF0, (void *)&dword_80086FF0[1], (void *)&dword_80086FF0[2], (void *)&dword_80086FF0[3] };
+void *windowColorsAlt_8008703C[5] = { (void *)&dword_80086FF0[4], (void *)&dword_80086FF0[5], (void *)&dword_80086FF0[6], (void *)&dword_80086FF0[7], (void *)&dword_80086FF0[8] };
+unsigned char *windowPulseColors_80087050[5] = { (void *)dword_80087014, (void *)&dword_80087014[1], (void *)&dword_80087014[2], (void *)&dword_80087014[3], (void *)&dword_80087014[4] };
+unsigned char **windowColorSets_80087064[3] = { windowBgColors_80087028, windowBgColors_80087028, (void *)windowColorsAlt_8008703C };
+int windowFrameQuadEdges_80087070[5][8] = {
     { 0, 0, 3, 0, 1, 1, 2, 1 },
     { 0, 0, 1, 1, 0, 3, 1, 2 },
     { 1, 2, 2, 2, 0, 3, 3, 3 },
@@ -660,12 +660,12 @@ int dword_80087070[5][8] = {
     { 1, 1, 2, 1, 1, 2, 2, 2 },
 };
 int dword_80087110 = 0x439;
-MATRIX dword_80087114 = { {
+MATRIX lightMatrix_80087114 = { {
         { 0x50F, 0, 0xF2E },
         { 0x446, -0xCD4, 0x88D },
         { -0x446, 0xCD4, -0x88D },
     } };
-MATRIX dword_80087134 = { {
+MATRIX colorMatrix_80087134 = { {
         { 0x800, 0x400, 0x200 },
         { 0x800, 0x400, 0x200 },
         { 0x800, 0x400, 0x200 },

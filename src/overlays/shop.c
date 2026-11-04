@@ -3,7 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "actor.h"
-#include "tu_80019BF0.h"
+#include "engine.h"
 #include "minion_menu.h"
 
 typedef struct ShopCtxShop
@@ -23,14 +23,14 @@ typedef struct ShopTaskShop
 
 extern int name_8007DC74;
 extern int StartModelTask_80010850(void* p);
-extern int sub_80012204(int a, int b, int c, int d);
+extern int CombinedExpDelta_80012204(int a, int b, int c, int d);
 extern void sub_800BF02C();
 extern void SetShopHelpText_800BBB54();
 extern void sub_800BF704();
 extern int ret_800BF520();
-extern int sub_8001AB94();
-extern void sub_8001AAF4();
-extern void sub_8001AB1C(int a);
+extern int IsSceneFadeDone_8001AB94();
+extern void StopSceneDarken_8001AAF4();
+extern void StartSceneBrighten_8001AB1C(int a);
 extern void PlaySfx_80031494(int a);
 extern void sub_800BF474();
 extern void sub_800BF4B8();
@@ -463,7 +463,7 @@ int sub_800B9E94(UnitStats* src, Minion* dst, short c)
     dst->id = c;
     for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
+        CopyName_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
         dst->field_7C[i] = src->st_0.elementMask_42;
     }
     r = LowestSetBit_80014358(src->st_0.elementMask_42);
@@ -494,7 +494,7 @@ typedef struct ShopIdxShop
     int v[4];
 } ShopIdxShop;
 extern ShopIdxShop name_800B6D38;
-extern int sub_80011D98(UnitStatus* a, int b);
+extern int ApplyLevelUps_80011D98(UnitStatus* a, int b);
 extern void sub_800BAB38(Minion* a, Minion* b);
 extern void sub_800BA368(Minion* d, Minion* s);
 extern void sub_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
@@ -515,7 +515,7 @@ int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
     int r;
     MemCopy_800403E8(c, a, sizeof(Minion));
     c->field_3 = b->field_3;
-    p = sub_8001CD58(d);
+    p = GetPersonMergeInfo_8001CD58(d);
     if (p[0] != 0xFF)
     {
         c->field_3 = p[0];
@@ -614,7 +614,7 @@ restart:
     sub_800BA4CC(c, a, b);
     sub_800BA650(c);
     sub_800BA6D0(c, a, b);
-    sub_80011D98(&c->status_84, 2);
+    ApplyLevelUps_80011D98(&c->status_84, 2);
     sub_800BA72C(c, b);
     sub_800BAA0C(c, b);
     FillHpMp_80011C0C(&c->status_84, &c->status_84);
@@ -767,7 +767,7 @@ void sub_800BA6D0(Minion* d, Minion* s, Minion* t)
 {
     d->status_84.level_44 = s->status_84.level_44;
     d->status_84.exp_4 = s->status_84.exp_4;
-    d->status_84.exp_4 += sub_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
+    d->status_84.exp_4 += CombinedExpDelta_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
 }
 
 #if 0
@@ -1009,15 +1009,15 @@ void sub_800BAB38(Minion* a, Minion* b)
         }
     }
     MemCopy_800403E8(a->species_4C, tmp, 0x30);
-    sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
-    sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
-    sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
-    sub_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
-    sub_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
-    sub_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
+    CopyName_80019AF4(e, (unsigned int*)a->status_84.name_10);
+    CopyName_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
+    CopyName_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
+    CopyName_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
+    CopyName_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
+    CopyName_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
     for (j = 0; j < 6; j++)
     {
-        sub_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
+        CopyName_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
     }
     g[0] = a->status_84.elementMask_42;
     g[1] = b->status_84.elementMask_42;
@@ -1354,7 +1354,7 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
     }
     if ((u->field_24 & 2) || u->field_0 == 11 || u->field_0 == 12)
     {
-        sub_8003CF88(0x11E, 0x3C, 0xE);
+        DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
     }
     if (u->field_18 == 0)
     {
@@ -1970,20 +1970,20 @@ typedef struct ShopPairShop
     short a;
     short b;
 } ShopPairShop;
-extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
+extern void DrawScrollArrow_8002B3DC(ShopPairShop p, int b, void* c, int d);
 extern int IsCircleHeldP1_8003D480(void);
 extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
-extern void sub_8002A4E4(int a);
+extern void DrawPortraitWindow_8002A4E4(int a);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void sub_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
+extern void DrawAbilityDescription_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* rect, ShopWinShop* w, void* ot, int t);
-extern void sub_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
-extern void sub_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
-extern void sub_8002D7D0(Minion* m, int ot, ShopPosShop* base);
+extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
+extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPosShop* base);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void sub_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
-extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
 extern void DrawUiWindow_8002A384(ShopUiWinShop* p);
 extern void sub_800BCEDC(ShopUnit3Shop* u);
 extern void sub_800BCCD8(ShopUnit3Shop* u);
@@ -2043,10 +2043,10 @@ void sub_800BC380(ShopUnit3Shop* u)
     }
     if (!(u->field_24 & 0x1000))
     {
-        sub_8002A4E4(0xE);
+        DrawPortraitWindow_8002A4E4(0xE);
         DrawTextList_8002A310(name_800BF7C8, 0xE);
-        sub_800429F8((int)&name_800BF798, 0xE);
-        sub_80042B38((int)&name_800BF798, 0xE);
+        DrawWindowBackground_800429F8((int)&name_800BF798, 0xE);
+        DrawWindowBorder_80042B38((int)&name_800BF798, 0xE);
     }
     else
     {
@@ -2054,7 +2054,7 @@ void sub_800BC380(ShopUnit3Shop* u)
         pos.y = 0x12;
         if (u->field_24 & 0x40)
         {
-            sub_8002C670(u->field_54, &pos, name_800C044C, u->field_48, 0xE);
+            DrawAbilityDescription_8002C670(u->field_54, &pos, name_800C044C, u->field_48, 0xE);
         }
         else if (u->field_24 & 0x80)
         {
@@ -2107,33 +2107,33 @@ void sub_800BC380(ShopUnit3Shop* u)
                     {
                         p28.x = 0x5C;
                         p28.y = 0x5E;
-                        r30.field_0 = u->field_48;
-                        r30.field_2 = u->field_4A;
+                        r30.cursor_0 = u->field_48;
+                        r30.scroll_2 = u->field_4A;
                         r30.field_4 = 2;
-                        r30.field_6 = 0xE;
+                        r30.ot_6 = 0xE;
                         r30.field_8 = 0;
                         r30.field_A = 1;
-                        r30.field_C_minion = u->field_54;
-                        sub_8002CE28(&r30, &p28);
+                        r30.minion_C = u->field_54;
+                        DrawAbilityList_8002CE28(&r30, &p28);
                     }
                     else if (u->field_24 & 0x80)
                     {
                         p40.x = 0x7E;
                         p40.y = 0x6D;
-                        r48.field_0 = u->field_48;
-                        r48.field_2 = u->field_4A;
+                        r48.cursor_0 = u->field_48;
+                        r48.scroll_2 = u->field_4A;
                         r48.field_4 = 2;
-                        r48.field_6 = 0xE;
+                        r48.ot_6 = 0xE;
                         r48.field_8 = 0;
                         r48.field_A = 1;
-                        r48.field_C_minion = u->field_54;
-                        sub_8002CAC8(&r48, &p40);
+                        r48.minion_C = u->field_54;
+                        DrawMagicList_8002CAC8(&r48, &p40);
                     }
                     else if (u->field_24 & 0x100)
                     {
                         p58.x = 0x28;
                         p58.y = 0x1E;
-                        sub_8002D7D0(u->field_54, 0xE, &p58);
+                        DrawFamilyTree_8002D7D0(u->field_54, 0xE, &p58);
                     }
                 }
                 if (!(u->field_24 & 0x1C0))
@@ -2143,11 +2143,11 @@ void sub_800BC380(ShopUnit3Shop* u)
                     InterpolateWindowRect_8004196C(&r68, &name_800BF790, n, 8, 0);
                     if (u->field_0 == 3 && u->field_3C == 2)
                     {
-                        sub_8002DB48(&name_800C08E8.status_84, 0xE, &r68, &p60, u->field_54, &u->field_4C->status_84);
+                        DrawUnitStatusPanel_8002DB48(&name_800C08E8.status_84, 0xE, &r68, &p60, u->field_54, &u->field_4C->status_84);
                     }
                     else
                     {
-                        sub_8002DB48(&u->field_54->status_84, 0xE, &r68, &p60, u->field_54, 0);
+                        DrawUnitStatusPanel_8002DB48(&u->field_54->status_84, 0xE, &r68, &p60, u->field_54, 0);
                     }
                 }
             }
@@ -2188,7 +2188,7 @@ void sub_800BC380(ShopUnit3Shop* u)
             p30.x = name_800BF7B0[0].x + name_800BF7B0[0].w / 2;
             p30.y = name_800BF7B0[0].y + 2;
             InterpolateWindowRect_8004196C(&r28, &name_800BF7B0[0], 8, 8, 0);
-            sub_8002FAA0(2, (unsigned short*)&p30, u->field_4C->status_84.name_10, 0xE);
+            DrawSmallText_8002FAA0(2, (unsigned short*)&p30, u->field_4C->status_84.name_10, 0xE);
             t = 0;
             if (u->field_3C == 0 && u->field_0 == 3 && (u->field_24 & 2))
             {
@@ -2214,7 +2214,7 @@ void sub_800BC380(ShopUnit3Shop* u)
                     ShopPosShop p40;
                     p40.x = name_800BF7B0[j].x + name_800BF7B0[j].w / 2;
                     p40.y = name_800BF7B0[j].y + 2;
-                    sub_8002FAA0(2, (unsigned short*)&p40, u->field_50->status_84.name_10, 0xE);
+                    DrawSmallText_8002FAA0(2, (unsigned short*)&p40, u->field_50->status_84.name_10, 0xE);
                     break;
                 }
                 case 2:
@@ -2246,21 +2246,21 @@ void sub_800BC380(ShopUnit3Shop* u)
                     p48.a = 0;
                     p48.b = 0;
                     p50.y = 0x55;
-                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
                     p50.x = 0xFA;
-                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
                 }
             }
         if (i == 6)
         {
             struct_minion_ref r40;
-            r40.field_0 = u->a5E[8];
-            r40.field_2 = u->a72[2];
+            r40.cursor_0 = u->a5E[8];
+            r40.scroll_2 = u->a72[2];
             r40.field_4 = 2;
-            r40.field_6 = 0xE;
+            r40.ot_6 = 0xE;
             r40.field_8 = 0;
             r40.field_A = 1;
-            r40.field_C_minion = 0;
+            r40.minion_C = 0;
             DrawPersonList_800BED48(&r40);
         }
         if (u->field_C == 8)
@@ -2807,8 +2807,8 @@ void sub_800BD854(ShopUnit3Shop* u)
 // (When writing this in C, delete the jpt_800B96F4 line behind the function.)
 extern void sub_800BDD74();
 extern void sub_800BDE44();
-extern void sub_80027314();
-extern void sub_8001AAA8(int a);
+extern void RequestAreaReload_80027314();
+extern void StartSceneDarken_8001AAA8(int a);
 extern void fn_800AD184(int a, int b, int c);
 extern int sub_800BAF54(short* a, short* b, short c, short d);
 void sub_800BD9DC(ShopUnit3Shop* u)
@@ -2855,7 +2855,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
                 tk = (ShopTaskShop*)&name_8008D670->entry;
                 fn_80027478(0x40, 1);
                 fn_8002C014();
-                sub_80027314();
+                RequestAreaReload_80027314();
                 tk->next_8 = sub_800BDD74;
                 break;
             }
@@ -2865,7 +2865,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         tk = (ShopTaskShop*)&name_8008D670->entry;
         fn_8001ABEC(1);
         tk->next_8 = sub_800BDE44;
-        sub_8001AAA8(0x20);
+        StartSceneDarken_8001AAA8(0x20);
         break;
     case 6:
         if (u->field_30 != 0)
@@ -2895,7 +2895,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_80027478(0x40, 1);
             fn_8002C014();
-            sub_80027314();
+            RequestAreaReload_80027314();
             tk->next_8 = sub_800BDD74;
         }
         else
@@ -2905,7 +2905,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_8001ABEC(1);
             tk->next_8 = sub_800BDE44;
-            sub_8001AAA8(0x20);
+            StartSceneDarken_8001AAA8(0x20);
         }
         break;
     case 9:
@@ -2975,10 +2975,10 @@ void sub_800BDE44(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
-    if (sub_8001AB94())
+    if (IsSceneFadeDone_8001AB94())
     {
-        sub_8001AAF4();
-        sub_8001AB1C(0x20);
+        StopSceneDarken_8001AAF4();
+        StartSceneBrighten_8001AB1C(0x20);
         t->next_8 = sub_800BDEA8;
     }
 }
@@ -2990,7 +2990,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
     int* p;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    if (sub_8001AB94())
+    if (IsSceneFadeDone_8001AB94())
     {
         tk = (ShopTaskShop*)&name_8008D670->entry;
         if (u->field_94 == 1)
@@ -3208,7 +3208,7 @@ void sub_800BE4D0(ShopTaskShop* t, ShopUnit3Shop* a)
 }
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
 extern ShopSixShop name_800B971C;
 extern char name_800BFE24[];
 void sub_800BE53C(ShopUnit3Shop* u)
@@ -3263,7 +3263,7 @@ void sub_800BE53C(ShopUnit3Shop* u)
         p[1] = r[1] + 3;
         if (s)
         {
-            sub_8002FAA0(2, p, s, 0xE);
+            DrawSmallText_8002FAA0(2, p, s, 0xE);
         }
         if (clut)
         {
@@ -3356,7 +3356,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
         p.b = r[1] + 3;
         if (s)
         {
-            sub_8002FAA0(2, (unsigned short*)&p, s, 0xE);
+            DrawSmallText_8002FAA0(2, (unsigned short*)&p, s, 0xE);
         }
         if (clut)
         {
@@ -3394,7 +3394,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
             p.b = 1;
             pos1.a = 0x52;
             pos1.b = 0xCB;
-            sub_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
+            DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
         }
         if ((short)base != 0)
         {
@@ -3402,7 +3402,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
             p.b = 3;
             pos2.a = 0x52;
             pos2.b = 0xA2;
-            sub_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
+            DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
         }
     }
 }
@@ -3518,7 +3518,7 @@ extern char name_8008D434[];
 extern char name_8008D440[];
 extern char name_800C0090[];
 extern char name_800C0094[];
-extern void sub_8002C6DC(void* p, int a, int b);
+extern void DrawScrollArrow_8002C6DC(void* p, int a, int b);
 void DrawPersonList_800BED48(short* s)
 {
     ShopSixShop q;
@@ -3587,11 +3587,11 @@ void DrawPersonList_800BED48(short* s)
     }
     if (s[1] != 0)
     {
-        sub_8002C6DC(name_800C0090, 3, s[3]);
+        DrawScrollArrow_8002C6DC(name_800C0090, 3, s[3]);
     }
     if (s[1] < n - 4 && n >= 5)
     {
-        sub_8002C6DC(name_800C0094, 1, s[3]);
+        DrawScrollArrow_8002C6DC(name_800C0094, 1, s[3]);
     }
 }
 
@@ -3608,12 +3608,12 @@ extern int sub_800BF2E4(unsigned char* p);
 void sub_800BF02C(Minion* a, int* o, int c)
 {
     ShopLocalShop l;
-    unsigned int h = sub_80019C70(a->species_2)->modelId_0;
+    unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
     int t;
-    o[0] = sub_800338DC(a->species_4C, l.b, l.w);
-    o[1] = sub_80019C70(l.b[0])->modelId_0;
-    o[2] = sub_80019C70(l.b[1])->modelId_0;
-    o[3] = sub_80019C70(l.b[2])->modelId_0;
+    o[0] = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
+    o[1] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
+    o[2] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
+    o[3] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
     o[4] = l.w[0];
     o[5] = l.w[1];
     o[6] = l.w[2];
@@ -3686,18 +3686,18 @@ void sub_800BF02C(Minion* a, int* o, int c)
             o[6] = t;
         }
     }
-    o[7] = sub_80019A80(a->status_84.level_44);
+    o[7] = GetRankForLevel_80019A80(a->status_84.level_44);
     o[8] = o[0] - 1;
-    o[10] = sub_80019C70(a->field_3)->modelId_0;
+    o[10] = GetSpeciesModelDesc_80019C70(a->field_3)->modelId_0;
     o[12] = c;
     o[9] = sub_800BF2E4(a->status_84.element_3E);
     if (o[9] == -1000)
     {
-        o[9] = sub_80019C70(a->field_3)->field_2 << 1;
+        o[9] = GetSpeciesModelDesc_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o[9] = o[9] - (sub_80019C70(a->field_3)->field_3 << 1);
+        o[9] = o[9] - (GetSpeciesModelDesc_80019C70(a->field_3)->field_3 << 1);
 
         if (o[9] < 0)
         {

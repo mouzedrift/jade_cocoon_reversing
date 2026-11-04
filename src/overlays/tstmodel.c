@@ -2,7 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padPressed_8009194C[];
@@ -14,7 +14,7 @@ typedef struct TstModelBone
     short s4;
     unsigned short flags;
 } TstModelBone;
-// parameter block of sub_80046A58
+// parameter block of DrawAnimSkel_80046A58
 typedef struct TstModelDraw
 {
     FtgObject* ftg_0;
@@ -244,7 +244,7 @@ void sub_800A0C00(TstModelD* c)
 
 void sub_800A0EC8(TstModelD* a)
 {
-    InitModelList_80024ADC(&a->models_14, off_8007DC70, 1);
+    InitModelList_80024ADC(&a->models_14, modelLoaderVram_8007DC70, 1);
     LoadModel_80025200(a->models_14, a->modelId_24, a->f20, 2, 0);
     a->f20 = 0;
     a->state = 2;
@@ -259,8 +259,8 @@ void sub_800A0F20(TstModelD* a)
         if (a->modelId_24 == 0x28 && a->f1A8 == -1)
         {
             a->f1A8 = 0;
-            sub_80024FFC(m, name_800A37E8);
-            sub_80025974(m, 5, 0);
+            SaveModelFtgs_80024FFC(m, name_800A37E8);
+            LoadModelAltFtgs_80025974(m, 5, 0);
             return;
         }
         if (a->f1AC <= 0)
@@ -288,7 +288,7 @@ void sub_800A0F20(TstModelD* a)
         {
             a->f1A8 = a->f1B0;
         }
-        sub_80025C38(m, 1);
+        ApplyModelFtgSwaps_80025C38(m, 1);
         a->state = 3;
     }
 }
@@ -298,11 +298,11 @@ typedef struct TstModelMat
     int w[8];
 } TstModelMat;
 extern unsigned short padHeld_800918D0[];
-extern short word_80084540[];
+extern short sinTable_80084540[];
 extern MATRIX name_800A1E84;
 extern TstModelMat name_800A1EA4;
-extern MATRIX dword_80087114;
-extern TstModelMat dword_80087134;
+extern MATRIX lightMatrix_80087114;
+extern TstModelMat colorMatrix_80087134;
 extern void SetCameraLookAt_800A1A24();
 extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
 extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
@@ -328,9 +328,9 @@ void TstModelCameraInput_800A104C(TstModelD* c)
     c->rot_1F0.vz = 0;
     PushMatrix();
     RotMatrixZYX_8004D5CC(&c->rot_1F0, &m);
-    MulMatrix0(&name_800A1E84, &m, &dword_80087114);
+    MulMatrix0(&name_800A1E84, &m, &lightMatrix_80087114);
     PopMatrix();
-    dword_80087134 = name_800A1EA4;
+    colorMatrix_80087134 = name_800A1EA4;
     if (padHeld_800918D0[0] & 0x8000)
     {
         c->s170 -= 0x20;
@@ -361,8 +361,8 @@ void TstModelCameraInput_800A104C(TstModelD* c)
         c->s174 += 0x20;
     }
     c->s174 = c->s174 < 100 ? 100 : c->s174 < 1201 ? c->s174 : 1200;
-    c->i178 = c->s174 * word_80084540[c->s170 & 0xFFF] / 4096;
-    c->i180 = c->s174 * word_80084540[(c->s170 + 0x400) & 0xFFF] / 4096;
+    c->i178 = c->s174 * sinTable_80084540[c->s170 & 0xFFF] / 4096;
+    c->i180 = c->s174 * sinTable_80084540[(c->s170 + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)
@@ -404,9 +404,9 @@ void TstModelCameraInput_800A104C(TstModelD* c)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8004D288(VECTOR* out, ModelAnim* anim, int frame);
+extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
-extern void sub_80046A58(void* a, void* b, int c);
+extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A3268[];
 extern char name_800A3804[];
@@ -422,7 +422,7 @@ void sub_800A1428(TstModelD* c)
     m = AcquireModel_80024D70(c->models_14, c->modelId_24);
     c->model_18 = m;
     anim = &m->anims_54[c->f1A8];
-    sub_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frameCount_0);
+    GetAnimRootMotion_8004D288(&pos, anim, (unsigned)c->f1A4 % anim->frameCount_0);
     pos.vx /= anim->divisor_8;
     pos.vy /= anim->divisor_8;
     pos.vz /= anim->divisor_8;
@@ -442,7 +442,7 @@ void sub_800A1428(TstModelD* c)
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->f1A8, c->draw_1C0.frame_18);
-    sub_80046A58(&c->draw_1C0, name_800A1EE8, 0);
+    DrawAnimSkel_80046A58(&c->draw_1C0, name_800A1EE8, 0);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones, &m->mats_5C, pOT_8008D690, 0);
 }
 

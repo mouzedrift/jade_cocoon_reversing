@@ -1,5 +1,5 @@
 // PIERCE.BIN: linked for 0x800C6F40, and its calls into the executable land inside functions
-// (0x80027724 is in sub_80027708): it was built against an older executable and looks unused.
+// (0x80027724 is in LoadMapFtg_80027708): it was built against an older executable and looks unused.
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"

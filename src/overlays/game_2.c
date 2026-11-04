@@ -95,7 +95,7 @@ void sub_800A56BC(int kind)
     case 4:
         if (name_800AEBCC[1])
         {
-            sub_80026DE8(&name_800AEBCC[1], name_800AEBCC[0], name_80091C10);
+            FreeRecordTables_80026DE8(&name_800AEBCC[1], name_800AEBCC[0], name_80091C10);
             name_800AEBCC[0] = 0;
         }
         break;

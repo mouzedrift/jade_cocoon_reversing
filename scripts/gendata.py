@@ -4,7 +4,7 @@ Generate C definitions (with initialisers from the original executable) for the 
 
   python scripts/gendata.py SLUS_008.54 TU [SYMBOL ...] [--write]
 
-TU is a source file of src/ without .c (main, tu_80019BF0, ...). Without SYMBOL every INCLUDE_DATA line of the TU
+TU is a source file of src/ without .c (main, engine, ...). Without SYMBOL every INCLUDE_DATA line of the TU
 is converted (--sec=.rdata/.data/.bss: those of one section). Build first: the types come from the TU's preprocessed
 source (build_psyq/TU.preproc): a symbol that is declared there (extern in a header) is defined with that type,
 otherwise the type is guessed from the bytes and the IDA name prefix (strings, pointer tables, byte_/word_/dword_).

@@ -37,8 +37,8 @@ extern void* sub_800A55B0(int);
 extern void SetFadeMode_8001C19C(int, int);
 extern void LoadUiTiy_8002BF74();
 extern void DrawMenuBackground_8002BE10();
-extern void sub_80027478(int, int);
-extern void sub_80037918(void* p);
+extern void SetLoadFadeFlag_80027478(int, int);
+extern void UpdateCameraFollow_80037918(void* p);
 extern void FreeActiveOverlay_8002C014();
 
 int dword_800B66C0 SDATA = 30;
@@ -59,7 +59,7 @@ void sub_800B6720()
     unsigned short* s;
     unsigned int* buf = sub_800A55B0(3);
     MemCopy_800403E8(&cameraState_8008D4F0, buf, 0x104);
-    sub_80037918(cameraTask_8008D4A0->entry.buffer);
+    UpdateCameraFollow_80037918(cameraTask_8008D4A0->entry.buffer);
     s = (unsigned short*)&display_8008B4D8;
     SetGeomOffset((short)s[6] / 2 + word_8008D474[0], (short)s[7] / 2 + word_8008D474[1]);
 }
@@ -146,9 +146,9 @@ void sub_800B6964(ShopCtrlTask* t)
         else
         {
             sub_800B9DA8();
-            sub_80027478(0x40, 1);
+            SetLoadFadeFlag_80027478(0x40, 1);
             FreeActiveOverlay_8002C014();
-            sub_80027314();
+            RequestAreaReload_80027314();
             t->next_8 = sub_800B6A6C;
         }
     }
@@ -156,12 +156,12 @@ void sub_800B6964(ShopCtrlTask* t)
 
 void sub_800B6A6C(ShopCtrlTask* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         sub_800A7BF0(-1);
         t->next_8 = sub_800B67C0;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
-        sub_80027478(0x40, 0);
+        SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }

@@ -4,8 +4,8 @@
 #include "globals.h"
 
 #include "actor.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "engine.h"
+#include "minion_init.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
 typedef struct CombatModelParams
@@ -46,8 +46,8 @@ typedef struct CombatCameraState
 extern CombatSlotCombat dword_800A3A08[];
 extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
-extern void sub_80018E5C(void* p);
-extern void sub_80018EBC(void* p, UnitStatus* v);
+extern void GetActorHitFrame_80018E5C(void* p);
+extern void SetActorStatusTint_80018EBC(void* p, UnitStatus* v);
 extern void sub_800376A0(void* a, void* b);
 
 extern int sub_800A1A3C(Minion* p, int n);
@@ -65,7 +65,7 @@ extern int dword_800A4080;
 extern int dword_800A39F0[];
 extern void InitActors_8001D378(void);
 extern void DestroyActor_8001D600(void* p);
-extern void sub_8001E28C(void* p);
+extern void TriggerActorEffect_8001E28C(void* p);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern void sub_800A0D1C(int i);
 extern void sub_800A0B70(int i);
@@ -75,11 +75,11 @@ extern void sub_800A15B4();
 extern char* dword_8007DC78;
 extern int StartModelTask_80010850(void* p);
 extern CombatCameraState cameraState_8008D4F0;
-extern int dword_8008B4F8;
+extern int cameraZoom_8008B4F8;
 extern char dword_800A398C[];
 extern int sub_800A1934(Minion* p);
 extern void ResetCameraToLevant_800376A8(void);
-extern void sub_80037748(void);
+extern void StartBattleCamera_80037748(void);
 extern void InitCameraTask_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
@@ -104,7 +104,7 @@ typedef struct CombatColorCombat
 } CombatColorCombat;
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void OnModelFileLoaded_80025D7C();
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 extern int ratan2Degrees_8003B56C(int a, int b);
 extern void InitPolyFT4_80029A10(void* a, void* b);
 extern int sub_800A0968(unsigned char* a);
@@ -177,12 +177,12 @@ INCLUDE_OVERLAY_ASM(combat, dword_800A05A0);
 void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
 {
     CombatLocalCombat l;
-    unsigned int h = sub_80019C70(a->species_2)->modelId_0;
+    unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
     int t;
-    o->count_0 = sub_800338DC(a->species_4C, l.b, l.w);
-    o->parts_4[0] = sub_80019C70(l.b[0])->modelId_0;
-    o->parts_4[1] = sub_80019C70(l.b[1])->modelId_0;
-    o->parts_4[2] = sub_80019C70(l.b[2])->modelId_0;
+    o->count_0 = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
+    o->parts_4[0] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
+    o->parts_4[1] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
+    o->parts_4[2] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
     o->weights_10[0] = l.w[0];
     o->weights_10[1] = l.w[1];
     o->weights_10[2] = l.w[2];
@@ -257,16 +257,16 @@ void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
     }
     o->modelId_1C = Cbt_80019A80(a->status_84.level_44);
     o->f20 = o->count_0 - 1;
-    o->f28 = sub_80019C70(a->field_3)->modelId_0;
+    o->f28 = GetSpeciesModelDesc_80019C70(a->field_3)->modelId_0;
     o->f30 = c;
     o->angle_24 = sub_800A0898(a->status_84.element_3E);
     if (o->angle_24 == -1000)
     {
-        o->angle_24 = sub_80019C70(a->field_3)->field_2 << 1;
+        o->angle_24 = GetSpeciesModelDesc_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o->angle_24 = o->angle_24 - (sub_80019C70(a->field_3)->field_3 << 1);
+        o->angle_24 = o->angle_24 - (GetSpeciesModelDesc_80019C70(a->field_3)->field_3 << 1);
         if (o->angle_24 < 0)
         {
             o->angle_24 = o->angle_24 + 0x168;
@@ -389,8 +389,8 @@ void sub_800A0BA8(int i, int* src, short* sh)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
     ActorDesc r;
-    Model* h = sub_80010A44(s->task_0);
-    int v = sub_80019A80(s->minion_4->status_84.level_44);
+    Model* h = GetModelTaskModel_80010A44(s->task_0);
+    int v = GetRankForLevel_80019A80(s->minion_4->status_84.level_44);
     unsigned short* x;
     unsigned short* y;
     r.modelId_0 = -1;
@@ -408,17 +408,17 @@ void sub_800A0BA8(int i, int* src, short* sh)
     r.blendDiv_2C = 4;
     r.visible_30 = 0;
     r.model_48 = h;
-    r.bones_34 = dword_80079140;
-    r.baseScale_38 = sub_80024E90(h, v);
-    r.boneScale_3C = sub_80024EC8(h, v);
-    r.anims_40 = sub_80024E38(h);
-    r.effectTbl_44 = sub_80024E64(h);
+    r.bones_34 = defaultBones_80079140;
+    r.baseScale_38 = GetModelBaseScale_80024E90(h, v);
+    r.boneScale_3C = GetModelBoneScale_80024EC8(h, v);
+    r.anims_40 = GetModelActorAnims_80024E38(h);
+    r.effectTbl_44 = GetModelEffectTable_80024E64(h);
     r.hasMatrices_4C = 1;
     s->actor_3C = CreateActor_8001D45C(&r);
     x = sub_80024F00(h, v);
     y = sub_80024F38(h, v);
-    sub_80019B14(s->actor_3C->bones_134, x, y);
-    sub_8001D68C(s->actor_3C, 0);
+    SetBoneGroupFlags_80019B14(s->actor_3C->bones_134, x, y);
+    SetActorGroundMove_8001D68C(s->actor_3C, 0);
 }
 
 // Matched
@@ -443,7 +443,7 @@ void sub_800A0D64(int i, int id)
     o.model_14 = 0;
     o.desc_4 = q;
     o.sel_8 = 0;
-    o.vram_18 = &off_8007DC70[i];
+    o.vram_18 = &modelLoaderVram_8007DC70[i];
     m.flags_0 = 0x69;
     m.fileId_4 = q->fileId_0;
     m.offset_8 = q->tex_6.offset << 11;
@@ -520,7 +520,7 @@ void sub_800A0FF0(int i, int* p)
     CombatSlotCombat* s = &dword_800A3A08[i];
     if (*p != 0x14)
     {
-        sub_8001E28C(s->actor_3C);
+        TriggerActorEffect_8001E28C(s->actor_3C);
     }
 }
 
@@ -528,14 +528,14 @@ void sub_800A0FF0(int i, int* p)
 void sub_800A1034(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018E5C(s->actor_3C);
+    GetActorHitFrame_80018E5C(s->actor_3C);
 }
 
 // Matched
 void sub_800A1068(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018EBC(s->actor_3C, sub_800A10C0(i));
+    SetActorStatusTint_80018EBC(s->actor_3C, sub_800A10C0(i));
 }
 
 // Matched
@@ -608,7 +608,7 @@ void sub_800A11F4(void)
     {
         e->flags = (e->flags | 1) & ~0x8000;
         ResetCameraToLevant_800376A8();
-        sub_80037748();
+        StartBattleCamera_80037748();
         e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
         e->cb_C = (EventEntryFn)nullsub_5;
         e->flags = (e->flags | 4) & ~0x8000;
@@ -642,7 +642,7 @@ void sub_800A12B8(void)
     p->f3C[0] = 0;
     p->f3C[1] = 0;
     p->f3C[2] = 0;
-    dword_8008B4F8 = 0x1000;
+    cameraZoom_8008B4F8 = 0x1000;
     q = &saveData_8008B570;
     q->levant_7A8.pos.x = 0;
     q->levant_7A8.pos.y = 0;
@@ -888,7 +888,7 @@ int sub_800A1934(Minion* p)
 // Matched
 void sub_800A1958(Minion* p)
 {
-    sub_80033548(&p->status_84, 0x400);
+    HasStatusFlag_80033548(&p->status_84, 0x400);
 }
 
 // Matched
