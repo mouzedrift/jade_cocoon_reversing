@@ -297,7 +297,7 @@ const int dword_800BAD50 = 0;
 void StartStore_800BAE2C(int kind, short keeper)
 {
     StoreMenu* store;
-    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)storeTask_8008D3E0);
+    EventEntry* t = AllocEventEntry_80043AF8(storeTask_8008D3E0);
     if (t)
     {
         t->flags = (t->flags | 1) & ~0x8000;
@@ -565,7 +565,7 @@ void StoreInput_800BB664(StoreMenu* store)
         {
             store->messageTimer_50++;
         }
-        if (padPressed_8009194C || store->messageTimer_50 >= 150)
+        if (padPressed_8009194C[0] || store->messageTimer_50 >= 150)
         {
             store->textId_3A = stateTexts_800BE840[store->state_0];
             store->flags_4 &= ~1;
@@ -2000,11 +2000,11 @@ short GetStoreListCursor_800BE058(StoreMenu* store, short panel)
 
 int AdjustBuyQuantity_800BE084(int count, int max)
 {
-    if ((padRepeat_800918CC & 0x1000) && count + 1 <= max)
+    if ((padRepeat_800918CC[0] & 0x1000) && count + 1 <= max)
     {
         count++;
     }
-    else if ((padRepeat_800918CC & 0x4000) && count - 1 > 0)
+    else if ((padRepeat_800918CC[0] & 0x4000) && count - 1 > 0)
     {
         count--;
     }

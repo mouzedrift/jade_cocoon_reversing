@@ -532,7 +532,7 @@ extern EventNode* screenFlashTasks_8008D61C;
 
 
 extern int memCardInfo_8008D4D8;
-extern short effectOutcomeFlag_8008D780;
+extern short effectOutcomeFlag_8008D780[2];
 extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 

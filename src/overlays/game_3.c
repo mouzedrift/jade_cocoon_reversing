@@ -757,7 +757,7 @@ GameTaskListDef gameModeFieldTasks_800B0A2C[26] = {
     { (void *)&mapLoaderTask_800B1DC4, 0x100 },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &modelTasks_8008D618 },
-    { (void *)((char *)&battleMenuTask_8008D468 + 8) },
+    { (void *)&dword_8008D470 },
     { &eventScripts_8008D410 },
     { dword_800B1DA8 },
     { subOverlayTask_800B1DB4 },
@@ -780,7 +780,7 @@ GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &soundTask_8008D4A4 },
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)((char *)&battleMenuTask_8008D468 + 8) },
+    { (void *)&dword_8008D470 },
     { &fadeTask_8008D628 },
     { (void *)&encounterWatchTask_8008B4D0 },
     { subOverlayTask_800B1DB4 },
@@ -831,12 +831,12 @@ GameTaskListDef gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&messageWindowTask_8008D640 },
 };
 GameTaskListDef gameModeShopTasks_800B0C84[12] = {
-    { (void *)((char *)&battleMenuTask_8008D468 + 8) },
+    { (void *)&dword_8008D470 },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&shopCtrlTask_8008D438 },
     { (void *)&shopMenuTask_8008D670 },
-    { (void *)((char *)&loadMenuTask_8008D480 + 4) },
+    { (void *)&nameEntryTask_8008D484 },
     { &modelTasks_8008D618 },
     { (void *)&storeTask_8008D3E0 },
     { &actorTasks_8008D43C },
@@ -852,7 +852,7 @@ GameTaskListDef gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
 GameTaskListDef gameModeMapTasks_800B0D14[6] = {
     { &soundTask_8008D4A4 },
     { levantModelTask_800B1DA0 },
-    { (void *)((char *)&battleMenuTask_8008D468 + 8) },
+    { (void *)&dword_8008D470 },
     { &overlayLoaderTask_8008D4C0 },
     { mapOverlayTask_800B1DA4 },
 };
@@ -886,7 +886,7 @@ EventDesc* gameEventListDefs_800B0DA4[58] = {
     &sporeTaskDef_800B09B4, &encounterTaskDef_800B087C, &enemyAiTasksDef_800B0894, &fieldModeTaskDef_800B09CC,
     &subOverlayTaskDef_800B09E4,
 };
-EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)0x8008D46C, (EventEntryFn)GameMainInit_800A68CC };
+EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)&gameMainTask_8008D46C, (EventEntryFn)GameMainInit_800A68CC };
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
 GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
@@ -1764,14 +1764,14 @@ void GameMainExit_800A6CCC(GameTask* task, GameMainWork* work)
 // Matched
 void RequestGameMode_800A6D30(int mode)
 {
-    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
+    GameMainWork* work = gameMainTask_8008D46C->entry.buffer;
     gameModeChanged_800B0698 = 1;
     work->nextMode_8 = mode;
 }
 
 int GetGameMode_800A6D50(int which)
 {
-    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
+    GameMainWork* work = gameMainTask_8008D46C->entry.buffer;
     int mode = 0;
     switch ((unsigned)which)
     {
@@ -3745,7 +3745,7 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
         {
             if ((unsigned int)lev->frame_10 >= (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
             {
-                if (effectOutcomeFlag_8008D780 == 1)
+                if (effectOutcomeFlag_8008D780[0] == 1)
                 {
                     lev->hitRepeat_2A = -1;
                 }
@@ -4364,7 +4364,7 @@ void RequestLevantActionEffect_800ABCF4(GameLevantActor* lev)
         lev->effect_2C = 0x25;
         RequestEffect_800148F4(0x25);
         GetSealResultFlags_80013358(lev->arg_34);
-        word_8008D782 = GetSealResultFlags_80013358(lev->arg_34);
+        effectOutcomeFlag_8008D780[1] = GetSealResultFlags_80013358(lev->arg_34);
     }
     else if (lev->actionAnim_20 == 0x1A)
     {

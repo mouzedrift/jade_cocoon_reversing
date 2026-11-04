@@ -3039,7 +3039,7 @@ void DrawMenuMessage_800C88AC(int text)
 
 void MenuShowError_800C88E4()
 {
-    if (padPressed_8009194C)
+    if (padPressed_8009194C[0])
     {
         menuErrorTimer_800C9E51 = 0;
     }

@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "sound.h"
 #include "tiy.h"
+#include "main.h"
 
 // one row of the item list: three DrawMenuWindows_8002A5A4 items (icon, name, count)
 typedef struct EquipListRow
@@ -35,22 +36,6 @@ typedef struct EquipListRow
 
 /* the types of equip.c */
 struct EquipCtx;
-
-typedef struct EquipTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-    int field_C;
-    int field_10;
-    struct EquipCtx* ctx_14;
-} EquipTask;
-
-typedef struct EquipTaskHolder
-{
-    char pad_0[0x10];
-    EquipTask task_10;
-} EquipTaskHolder;
 
 typedef struct EquipCtx
 {
@@ -122,13 +107,13 @@ typedef struct
 } EquipListParams;
 
 /* EQUIP functions */
-extern void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c);
+extern void EquipMenuTask_800C48B4(EventEntry* t, EquipCtx* c);
 extern void SetEquipCursorArea_800C497C(EquipCtx* c);
 extern void DrawEquipMenu_800C4A94(EquipCtx* c);
 extern void HandleEquipCursorInput_800C4D50(EquipCtx* c);
 extern void ChangeEquipMenuStep_800C4DF4(EquipCtx* c);
 extern void TryEquipItem_800C5064(EquipCtx* c);
-extern void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c);
+extern void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c);
 extern void UpdateEquipSelection_800C51B0(EquipCtx* c);
 extern void DrawEquipStats_800C5314(EquipCtx* c);
 extern void DrawEquipDescription_800C5440(short itemId, short category, int pos);
@@ -285,8 +270,6 @@ extern int GetLastInventorySlot_800AD308(int table);
 extern int SetEquipment_800AD9EC(int id, int slot);
 
 /* exe-side, to move to <exe header> */
-extern EquipTaskHolder* equipTask_8008D4C4; // main.h declares it int
-extern unsigned short padPressed_8009194C[]; // main.h
 extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument; the callers pass two
 extern void DrawMenuBackground_8002BE10();
 extern short uiColor_8008B590;

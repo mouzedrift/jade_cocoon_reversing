@@ -258,7 +258,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
     BatAnimWindow* win = buf;
     int width;
     short pos[2];
-    if (padPressed_8009194C & 0x100)
+    if (padPressed_8009194C[0] & 0x100)
     {
         saveData_8008B570.flags_0 ^= 0x10;
     }
@@ -1429,7 +1429,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
     unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
     BatGlow* glow = arg;
     EffectModel* model = glow->model_88;
-    if (glow->frame_0 < glow->end_4 && effectOutcomeFlag_8008D780 == 0)
+    if (glow->frame_0 < glow->end_4 && effectOutcomeFlag_8008D780[0] == 0)
     {
         int scale[4];
         int pos[4];
@@ -1512,7 +1512,7 @@ void SpawnOrb_800C3B50(int* pos, int id)
     orb->vel_38[0] = 0;
     orb->vel_38[1] = -0xC8;
     orb->vel_38[2] = 0;
-    outcome = (&effectOutcomeFlag_8008D780)[1];
+    outcome = effectOutcomeFlag_8008D780[1];
     entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
     if (outcome == 0)
     {
@@ -1523,7 +1523,7 @@ void SpawnOrb_800C3B50(int* pos, int id)
     orb->model_94 = malloc3_8003FC4C(0x54);
     CopyFtgObject_800218A8(model->ftg_4, orb->model_94, 1);
     DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
-    hero = gameTask_8008B4A4->hero_24;
+    hero = gameTask_8008B4A4->entry.buffer;
     orb->pos_44[0] = hero->pos_5E4[0];
     orb->pos_44[1] = hero->pos_5E4[1];
     orb->pos_44[2] = hero->pos_5E4[2];
@@ -1568,7 +1568,7 @@ void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb)
     BatOrb* orbCopy;
     orbCopy = orb;
     SpawnSpriteAnim_800C1A5C(orb->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orb->fx_E], 0x1000);
-    hero = gameTask_8008B4A4->hero_24;
+    hero = gameTask_8008B4A4->entry.buffer;
     target[0] = hero->pos_5E4[0];
     target[1] = hero->pos_5E4[1];
     target[2] = hero->pos_5E4[2];

@@ -17,6 +17,7 @@
 #include "camera.h"
 #include "sound.h"
 #include "pad_text.h"
+#include "main.h"
 
 
 
@@ -32,7 +33,6 @@ extern void AddDrawAreaPrim_8003326C();
 
 extern void AddClipDrawAreaPrim_80033308();
 
-extern unsigned short padPressed_8009194C;
 
 extern int MeasureTextWidth_8003E4C8();
 
@@ -106,7 +106,6 @@ extern int GetUnitPos_800BC6CC();
 
 extern void FadeOutSeqSlot_800313C8(int);
 
-extern EventNode* battleTask_8008D624;
 
 
 
@@ -176,7 +175,6 @@ typedef struct BatChainRecord
 } BatChainRecord;
 extern BatChainRecord encounterRecord_800ADE78;
 
-extern int levantAnimSet_80091C74;
 
 extern int dword_8007DC74;
 
@@ -270,7 +268,6 @@ extern BatEnemyResult dword_800B1238[];
 
 
 
-extern EventNode* actionTask_8008B4C0;
 
 
 extern int eventDispatchHalt_8008B540;
@@ -395,19 +392,13 @@ typedef struct BatActionTiming
 } BatActionTiming;
 
 
-extern EventNode* enemyWindowsLayoutTask_8008B568;
-
-extern EventNode* enemyWindowTasks_8008B564;
-
-extern EventNode* actorWindowTask_8008D4B0;
-
-extern EventNode* helpWindowTask_8008D63C;
-
-extern EventNode* hitNumberTasks_8008D778;
 
 
 
-extern short effectOutcomeFlag_8008D780;
+
+
+
+
 
 extern void CmdActionReactions_800BBA70();
 
@@ -555,7 +546,6 @@ extern void WaitBattleReturnFiles_800A14E0();
 
 extern void WaitMapReloadAfterBattle_800A15FC();
 
-extern int forceMapReload_80091C9C;
 
 extern short sinTable_80084540[];
 
@@ -884,20 +874,11 @@ typedef struct BatHero
     int pos_5E4[3];
 } BatHero;
 
-typedef struct BatGameTask
-{
-    char pad0[0x24];
-    BatHero* hero_24;
-} BatGameTask;
-
-extern BatGameTask* gameTask_8008B4A4;
 
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 
-extern int pointLightPos_8008D680[3];
 
 
-extern int pointLightRange_8008D3F0;
 
 
 extern void AiSetCommand_800C6AFC();
@@ -925,7 +906,6 @@ extern int FindUsableSkill_800C6D6C();
 
 extern int CanCastMagic_800C6CFC();
 
-extern EventNode* battleMenuTask_8008D468;
 
 
 
@@ -1579,7 +1559,6 @@ extern void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot);
 extern void DrawTextLinesWindow_8002AE38(int* lines, short* pos, int ot, short* rect, int count);
 /* exe-side, to move to globals.h / data_decls.h */
 /* exe-side: main.h declares it (main.h itself conflicts with battle.h types) */
-extern SVECTOR pointLightColor_8008D418;
 extern unsigned short uiColor_8008B590;
 extern int battleHelpTexts_800793DC[];
 

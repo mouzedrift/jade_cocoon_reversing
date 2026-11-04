@@ -10,6 +10,7 @@
 #include "common_tu.h"
 #include "msg_window.h"
 #include "combat.h"
+#include "main.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -183,8 +184,6 @@ extern unsigned char swapSlot_800A85BC;
 extern unsigned char actorSlot_800A85BD;
 
 /* exe-side, to move to <exe header> */
-extern EventNode* cmdMenuTask_8008D614;          // -> main.h (declared int there)
-extern unsigned short padPressed_8009194C[];     // -> main.h
 extern unsigned short uiColor_8008B590;          // -> globals.h
 extern void* memset(void* p, int c, unsigned int n);
 extern int GetMenuCursorIndex_8003DA54(void* cursor);        // -> pad_text.h (MenuCursor*)

@@ -11,6 +11,7 @@
 #include "tiy.h"
 #include "sound.h"
 #include "shopctrl.h"
+#include "main.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -304,8 +305,6 @@ int GetFreeCocoonSlots_800AD888();
 void AddEmptyCocoons_800AD8F4(int a);
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern EventNode* shopMenuTask_8008D670;    // main.h (declared int there): the shop menu task list
-extern unsigned short padPressed_8009194C; // main.h (declared [] there)
 extern int dword_8007DC74;                 // effect_data.h (dword_8007DC74[6])
 extern char defaultBones_80079140[];
 extern signed char elementModifiers_8007BA74[];       // effect_data.h elementModifiers_8007BA74 (declared unsigned there)

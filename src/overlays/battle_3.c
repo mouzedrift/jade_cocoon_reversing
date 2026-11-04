@@ -127,7 +127,7 @@ int AreReactionsDone_800BEB68()
             return 0;
         }
     }
-    effectOutcomeFlag_8008D780 = 1;
+    effectOutcomeFlag_8008D780[0] = 1;
     return 1;
 }
 

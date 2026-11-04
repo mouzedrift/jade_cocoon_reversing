@@ -226,11 +226,11 @@ char cannotUnequipBox_800C5D50[16] = { 136, 71, 12, 128, 132, 71, 12, 128, 132, 
 // Matched
 void StartEquipMenu_800C47A8(void)
 {
-    EquipTask* task = &equipTask_8008D4C4->task_10;
+    EventEntry* task = &equipTask_8008D4C4->entry;
     EquipCtx* c;
     short i;
-    task->flags_0 = (task->flags_0 | 1) & 0xFFFF7FFF;
-    c = task->ctx_14;
+    task->flags = (task->flags | 1) & 0xFFFF7FFF;
+    c = task->buffer;
     for (i = 0; i < 6; i++)
     {
         c->stepScroll_C[i] = 0;
@@ -255,13 +255,13 @@ void StartEquipMenu_800C47A8(void)
     SetEquipCursorArea_800C497C(c);
     c->cursor_3C = 0;
     c->scroll_3E = 0;
-    task->next_8 = EquipMenuTask_800C48B4;
+    task->cb_8 = (EventEntryFn)EquipMenuTask_800C48B4;
     unknownFlags_8008D678 |= 0x80000000;
 }
 
 
 // Matched
-void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c)
+void EquipMenuTask_800C48B4(EventEntry* t, EquipCtx* c)
 {
     DrawMenuBackground_8002BE10();
     if (unknownFlags_8008D678 >= 0)
@@ -269,7 +269,7 @@ void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c)
         CompactInventory_800AD3F0(1);
         CompactInventory_800AD3F0(2);
         CompactInventory_800AD3F0(3);
-        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        t->flags = (t->flags & ~1) | 0x8000;
     }
     DrawEquipMenu_800C4A94(c);
     HandleEquipCursorInput_800C4D50(c);
@@ -495,7 +495,7 @@ void ChangeEquipMenuStep_800C4DF4(EquipCtx* c)
 // Matched
 void TryEquipItem_800C5064(EquipCtx* c)
 {
-    EquipTask* task;
+    EventEntry* task;
     if (SetEquipment_800AD9EC(c->item_40, c->category_18))
     {
         PlaySfx_80031494(0x7e);
@@ -504,16 +504,16 @@ void TryEquipItem_800C5064(EquipCtx* c)
     }
     else
     {
-        task = &equipTask_8008D4C4->task_10;
+        task = &equipTask_8008D4C4->entry;
         PlaySfx_80031494(0x7c);
         c->flags_44 |= 8;
-        task->next_8 = CannotUnequipTask_800C50F0;
+        task->cb_8 = (EventEntryFn)CannotUnequipTask_800C50F0;
     }
 }
 
 
 // Matched
-void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c)
+void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c)
 {
     char* box = cannotUnequipBox_800C5D50;
     DrawMenuBackground_8002BE10();
@@ -529,7 +529,7 @@ void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c)
         c->msgTimer_46 = 0;
         c->flags_44 &= ~8;
         ChangeEquipMenuStep_800C4DF4(c);
-        t->next_8 = EquipMenuTask_800C48B4;
+        t->cb_8 = (EventEntryFn)EquipMenuTask_800C48B4;
     }
 }
 

@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "sound.h"
+#include "main.h"
 
 // the first 8 bytes of a menu cursor (CombSelCursor: cols, rows, count, flags)
 typedef struct { char b[8]; } CfgCursorHead;
@@ -36,22 +37,6 @@ typedef struct CfgCtxConfig
     short scroll_46;
 } CfgCtxConfig;
 
-typedef struct CfgTaskConfig
-{
-    unsigned int flags_0;
-    int pad_4;
-    void (*next_8)();
-    int pad_C;
-    int pad_10;
-    CfgCtxConfig* ctx_14;
-} CfgTaskConfig;
-
-typedef struct CfgHolderConfig
-{
-    char pad_0[0x10];
-    CfgTaskConfig t_10;
-} CfgHolderConfig;
-
 typedef struct CfgSpinConfig
 {
     int flags_0;
@@ -76,7 +61,7 @@ typedef struct CfgTailConfig
 } CfgTailConfig;
 
 /* CONFIG functions */
-extern void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx);
+extern void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx);
 extern void LoadConfigSettings_800C3060(CfgCtxConfig* c);
 extern void HandleConfigPageInput_800C3540(CfgCtxConfig* c);
 extern void OpenConfigPage_800C378C(CfgCtxConfig* c);
@@ -87,8 +72,8 @@ extern void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c);
 extern void DrawScreenColorPage_800C4180(CfgCtxConfig* c);
 extern void DrawVibrationPage_800C4390(CfgCtxConfig* c);
 extern void DrawConfigHelpText_800C450C(CfgCtxConfig* c);
-extern void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c);
-extern void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c);
+extern void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c);
+extern void ConfigNoticeTask_800C4B34(EventEntry* t, CfgCtxConfig* c);
 extern void DrawOptionUnavailable_800C4BDC(int notice);
 
 /* CONFIG data */
@@ -189,7 +174,6 @@ extern char helpBar_800C592C[24];
 extern int configMenuActive_800C5944;
 
 /* exe-side, to move to <exe header> */
-extern CfgHolderConfig* configTask_8008B4B8; // main.h declares it int
 extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
 extern unsigned short uiColor_8008B590;
 extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);

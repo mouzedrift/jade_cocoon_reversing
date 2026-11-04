@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "model.h"
+#include "main.h"
 
 typedef struct TstModelBone
 {
@@ -239,10 +240,6 @@ extern void TstModelFreeModel_800A19E4();
 extern void SetCameraLookAt_800A1A24();
 extern int MoveGridCursor_800A1B48();
 /* exe-side: declared in main.h (which conflicts with this overlay's types; main.h has scalars for the pad words) */
-extern unsigned short padRepeat_800918CC[];
-extern unsigned short padPressed_8009194C[];
-extern short cameraRot_8008D4C8[];
-extern unsigned char backColor_8008D460[];
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern int cameraEye_8008D600[];
 /* exe-side, to move to main.h / globals.h */

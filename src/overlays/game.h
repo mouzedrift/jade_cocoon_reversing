@@ -244,7 +244,7 @@ extern char* dword_8008B518;
 
 extern char* dword_8008B534;
 
-extern int* dword_8008D46C;
+extern EventNode* gameMainTask_8008D46C;
 
 extern int* encounterSlot_800B1264;
 
@@ -694,7 +694,7 @@ extern GameVramXY name_8007DCBC[];
 
 
 
-// the work area of the GAME main task (GameMainInit_800A68CC); dword_8008D46C[9] points at it
+// the work area of the GAME main task (GameMainInit_800A68CC); its entry.buffer
 typedef struct GameMainWork
 {
     int mode_0;     // the current game mode (gameModeTaskLists_800B0D74 index)
@@ -724,6 +724,7 @@ extern short areaLoadIds_80091CB8[];
 extern EventNode* fieldMenuTask_8008D498;
 
 extern EventNode* loadMenuTask_8008D480;
+extern EventNode* nameEntryTask_8008D484;
 
 
 
@@ -1012,7 +1013,6 @@ extern void RequestEffect_800148F4(int);
 
 extern int GetWeaponEffect_800189F8();
 
-extern short word_8008D782;
 
 extern void sub_8004ED78(int);
 
@@ -1237,28 +1237,29 @@ extern void EnemyAiWanderMid_800A3FC0();
 extern void TileAnimTaskInit_800A09D8();
 extern void FreeBattleResources_800A1444();
 
-extern int battleTask_8008D624;
-extern int battleMenuTask_8008D468[3];
+extern EventNode* battleTask_8008D624;
+extern EventNode* battleMenuTask_8008D468;
+extern EventNode* dword_8008D470;
 extern int dword_8008D444;
 extern EventNode* enemyWindowTasks_8008B564;
 extern EventNode* enemyWindowsLayoutTask_8008B568;
-extern int actorWindowTask_8008D4B0;
+extern EventNode* actorWindowTask_8008D4B0;
 extern EventNode* encounterTask_8008D674;
-extern int shopCtrlTask_8008D438;
-extern int shopMenuTask_8008D670;
-extern int shelfMenuTask_8008D4A8;
-extern int storeTask_8008D3E0;
+extern EventNode* shopCtrlTask_8008D438;
+extern EventNode* shopMenuTask_8008D670;
+extern EventNode* shelfMenuTask_8008D4A8;
+extern EventNode* storeTask_8008D3E0;
 extern EventNode* messageWindowTask_8008D640;
 extern EventNode* vibrationTasks_8008D4B8;
 extern int dword_8008B4AC[2];
-extern int actionTask_8008B4C0[2];
+extern EventNode* actionTask_8008B4C0;
 extern int dword_8008D48C[3];
 extern int dword_8008D5F8[2];
-extern int cmdMenuTask_8008D614;
+extern EventNode* cmdMenuTask_8008D614;
 extern EventNode* helpWindowTask_8008D63C;
-extern int hitNumberTasks_8008D778[2];
-extern int equipTask_8008D4C4;
-extern int configTask_8008B4B8;
+extern EventNode* hitNumberTasks_8008D778;
+extern EventNode* equipTask_8008D4C4;
+extern EventNode* configTask_8008B4B8;
 extern int dword_8008D62C;
 extern char name_800BCB00[];
 extern const int dword_800A05A0;

@@ -584,9 +584,9 @@ void SetCameraLookAt_800A1A24(TstModelWork* c)
     dir[1] = c->atY_188 - c->eyeY_17C;
     dir[2] = c->atZ_18C - c->eyeZ_180;
     yaw = ratan2_8003B548(dir[0], dir[2]);
-    cameraRot_8008D4C8[1] = -yaw;
-    cameraRot_8008D4C8[0] = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
-    cameraRot_8008D4C8[2] = 0;
+    cameraRot_8008D4C8.vy = -yaw;
+    cameraRot_8008D4C8.vx = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
+    cameraRot_8008D4C8.vz = 0;
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
     backColor_8008D460[2] = 0x40;

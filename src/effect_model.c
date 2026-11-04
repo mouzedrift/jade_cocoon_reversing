@@ -164,7 +164,7 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
 void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
 {
     int* schedule = (int*)obj->field_8C;
-    if (++obj->frame_0 < obj->field_4 && effectOutcomeFlag_8008D780 == 0)
+    if (++obj->frame_0 < obj->field_4 && effectOutcomeFlag_8008D780[0] == 0)
     {
         if (!(unknownFlags_8008D678 & 0x800))
         {

@@ -289,7 +289,7 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
             }
         }
     }
-    if (padPressed_8009194C & 0x800)
+    if (padPressed_8009194C[0] & 0x800)
     {
         compoModelParams_800A2768.partCount_0 = 3;
         compoModelParams_800A2768.modelId_1C = 4;
@@ -458,11 +458,11 @@ void TstCompoFrameInput_800A1804(TstCompoWork* c)
 {
     if (c->paused_194)
     {
-        if (padRepeat_800918CC & 0x80)
+        if (padRepeat_800918CC[0] & 0x80)
         {
             c->frame_180++;
         }
-        else if (padRepeat_800918CC & 0x10)
+        else if (padRepeat_800918CC[0] & 0x10)
         {
             if (--c->frame_180 < 0)
             {
@@ -475,18 +475,18 @@ void TstCompoFrameInput_800A1804(TstCompoWork* c)
     {
         c->frame_180++;
     }
-    if (padPressed_8009194C & 0x40)
+    if (padPressed_8009194C[0] & 0x40)
     {
         c->s14E = 0;
         c->paused_194 = !c->paused_194;
     }
     if (c->paused_194 == 0)
     {
-        if (padPressed_8009194C & 0x100)
+        if (padPressed_8009194C[0] & 0x100)
         {
             c->scaleStep_198 = (c->scaleStep_198 + 1) & 3;
         }
-        if (padPressed_8009194C & 0x10)
+        if (padPressed_8009194C[0] & 0x10)
         {
             c->scaleId_19C = (c->scaleId_19C + 1) % 5;
         }
@@ -495,11 +495,11 @@ void TstCompoFrameInput_800A1804(TstCompoWork* c)
 
 void TstCompoViewInput_800A194C(TstCompoWork* c)
 {
-    if (padPressed_8009194C & 0x800)
+    if (padPressed_8009194C[0] & 0x800)
     {
         c->state_0 = 6;
     }
-    else if (padPressed_8009194C & 0x20)
+    else if (padPressed_8009194C[0] & 0x20)
     {
         c->state_0 = 5;
         c->blend_1FC = 0;
@@ -511,7 +511,7 @@ void TstCompoViewInput_800A194C(TstCompoWork* c)
 
 void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
 {
-    unsigned short pad = padRepeat_800918CC;
+    unsigned short pad = padRepeat_800918CC[0];
     if (pad & 0x1000)
     {
         int v = c->nextAnim_18C + 1;
@@ -531,7 +531,7 @@ void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
             c->nextAnim_18C = 1;
         }
     }
-    pad = padPressed_8009194C;
+    pad = padPressed_8009194C[0];
     if (pad & 0x20)
     {
         if (c->animLoaded_190)
@@ -663,9 +663,9 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     dir[1] = c->at_160[1] - c->eye_154[1];
     dir[2] = c->at_160[2] - c->eye_154[2];
     yaw = ratan2_8003B548(dir[0], dir[2]);
-    cameraRot_8008D4C8[1] = -yaw;
-    cameraRot_8008D4C8[0] = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
-    cameraRot_8008D4C8[2] = 0;
+    cameraRot_8008D4C8.vy = -yaw;
+    cameraRot_8008D4C8.vx = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
+    cameraRot_8008D4C8.vz = 0;
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
     backColor_8008D460[2] = 0x40;

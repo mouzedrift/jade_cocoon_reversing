@@ -275,10 +275,10 @@ int configMenuActive_800C5944 = 0;
 // Matched
 void StartConfigMenu_800C2EB4(void)
 {
-    CfgHolderConfig* holder = configTask_8008B4B8;
-    CfgTaskConfig* task = &holder->t_10;
-    CfgCtxConfig* c = task->ctx_14;
-    holder->t_10.flags_0 = (holder->t_10.flags_0 | 1) & 0xFFFF7FFF;
+    EventNode* holder = configTask_8008B4B8;
+    EventEntry* task = &holder->entry;
+    CfgCtxConfig* c = task->buffer;
+    holder->entry.flags = (holder->entry.flags | 1) & 0xFFFF7FFF;
     DrawMenuBackground_8002BE10();
     c->nextPage_4 = 0;
     c->page_2 = 0;
@@ -291,11 +291,11 @@ void StartConfigMenu_800C2EB4(void)
     LoadConfigSettings_800C3060(c);
     DrawConfigPage_800C383C(c);
     configMenuActive_800C5944 = 1;
-    task->next_8 = ConfigMenuTask_800C2F70;
+    task->cb_8 = (EventEntryFn)ConfigMenuTask_800C2F70;
 }
 
 // Matched
-void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx)
+void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx)
 {
     short prevPos;
     CfgCtxConfig* c;
@@ -324,7 +324,7 @@ void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx)
     {
     done:
         configMenuActive_800C5944 = 0;
-        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        t->flags = (t->flags & ~1) | 0x8000;
     }
 }
 
@@ -500,7 +500,7 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
         {
             if (IsConfirmPressedP1_8003D380(1))
             {
-                configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                configTask_8008B4B8->entry.cb_8 = (EventEntryFn)EditConfigSettingTask_800C45E8;
                 c->editing_38 = 1;
             }
             else if (IsCancelPressedP1_8003D41C(1))
@@ -518,19 +518,19 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
             {
                 if (c->subtitles_14 == 0 && (unsigned short)(c->cursorPos_44 - 2) < 2)
                 {
-                    configTask_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
+                    configTask_8008B4B8->entry.cb_8 = (EventEntryFn)ConfigNoticeTask_800C4B34;
                     c->notice_30 = 1;
                     PlaySfx_80031494(0x7C);
                 }
                 else if (c->speech_11 == 0 && c->cursorPos_44 == 3)
                 {
-                    configTask_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
+                    configTask_8008B4B8->entry.cb_8 = (EventEntryFn)ConfigNoticeTask_800C4B34;
                     c->notice_30 = 2;
                     PlaySfx_80031494(0x7C);
                 }
                 else
                 {
-                    configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                    configTask_8008B4B8->entry.cb_8 = (EventEntryFn)EditConfigSettingTask_800C45E8;
                     c->editing_38 = 1;
                     PlaySfx_80031494(0x7E);
                 }
@@ -564,7 +564,7 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
         {
             if (IsConfirmPressedP1_8003D380(1))
             {
-                configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                configTask_8008B4B8->entry.cb_8 = (EventEntryFn)EditConfigSettingTask_800C45E8;
                 c->editing_38 = 1;
             }
             else if (IsCancelPressedP1_8003D41C(1))
@@ -1011,7 +1011,7 @@ int IsConfigMenuActive_800C45D8(void)
     return configMenuActive_800C5944;
 }
 
-void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
+void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
 {
     CfgSpinConfig v10;
     CfgSpinConfig v20;
@@ -1203,7 +1203,7 @@ void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
     if (IsConfirmPressedP1_8003D380(1))
     {
         ApplyConfigSetting_800C31DC(c);
-        t->next_8 = ConfigMenuTask_800C2F70;
+        t->cb_8 = (EventEntryFn)ConfigMenuTask_800C2F70;
         c->editing_38 = 0;
     }
     else if (IsCancelPressedP1_8003D41C(1))
@@ -1211,13 +1211,13 @@ void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         saveData_8008B570.settings_1C.bits.bgmVol_7 = c->savedBgmVolume_15 * 16;
         saveData_8008B570.settings_1C.bits.sfxVol_14 = c->savedSfxVolume_16 * 16;
         LoadConfigSettings_800C3060(c);
-        t->next_8 = ConfigMenuTask_800C2F70;
+        t->cb_8 = (EventEntryFn)ConfigMenuTask_800C2F70;
         c->editing_38 = 0;
     }
 }
 
 // Matched
-void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
+void ConfigNoticeTask_800C4B34(EventEntry* t, CfgCtxConfig* c)
 {
     DrawMenuBackground_8002BE10();
     DrawConfigPage_800C383C(c);
@@ -1225,7 +1225,7 @@ void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
     if (c->noticeTimer_34 >= 0x96 || IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
     {
         PlaySfx_80031494(0x7D);
-        t->next_8 = ConfigMenuTask_800C2F70;
+        t->cb_8 = (EventEntryFn)ConfigMenuTask_800C2F70;
         c->notice_30 = 0;
         c->noticeTimer_34 = 0;
     }

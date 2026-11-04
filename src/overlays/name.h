@@ -165,7 +165,6 @@ extern int nameEntryActive_800B83F8;
 extern void ShopCtrlRequestShop_800B6CA0();
 
 /* exe-side, to move to <exe header> */
-extern EventNode* nameEntryTask_8008D484; // main.c: loadMenuTask_8008D480[1]
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void DrawButtonHelpBar_8002B004(void* entries, void* pos, int ot);
 extern unsigned short uiColor_8008B590;

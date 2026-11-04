@@ -11,7 +11,7 @@ int dword_800B66C0 SDATA = 30;
 // starts the shop controller task: it loads SHOP (or NAME for a rename) into the slot behind it
 void StartShopCtrl_800B66C4(int shopId)
 {
-    EventEntry* e = AllocEventEntry_80043AF8((EventNode*)shopCtrlTask_8008D438);
+    EventEntry* e = AllocEventEntry_80043AF8(shopCtrlTask_8008D438);
     if (e)
     {
         shopCtrlShopId_800B6CEA = shopId;
@@ -147,7 +147,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
         }
         else
         {
-            e = AllocEventEntry_80043AF8((EventNode*)shopMenuTask_8008D670);
+            e = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
             if (settingsFlags_8008B58C.bits.d_5 == 1)
             {
                 RestoreMapCamera_800B6720();
@@ -163,7 +163,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
         SetFadeMode_8001C19C(3, 0x20);
         break;
     case 2:
-        e = AllocEventEntry_80043AF8((EventNode*)shopMenuTask_8008D670);
+        e = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
         if (settingsFlags_8008B58C.bits.d_5 == 1)
         {
             RestoreMapCamera_800B6720();

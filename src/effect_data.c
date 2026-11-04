@@ -4014,7 +4014,7 @@ void SpawnEffectObject_800149A4(EffectArgs* args)
     int timer;
     hitEnd = args->hitEnd_1E;
     timer = state->timer_3C;
-    effectOutcomeFlag_8008D780 = 0;
+    effectOutcomeFlag_8008D780[0] = 0;
     if (timer < hitEnd)
     {
         state->timer_3C = hitEnd;
@@ -4056,7 +4056,7 @@ void SpawnEffectObject_800149A4(EffectArgs* args)
 // Matched
 void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
 {
-    if (effectOutcomeFlag_8008D780 == 1)
+    if (effectOutcomeFlag_8008D780[0] == 1)
     {
         StopSoundSeqById_800306FC(6);
         *flags = (*flags & ~1) | 0x8000;
@@ -4175,7 +4175,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, flareSize, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    if (effectOutcomeFlag_8008D780 == 1)
+    if (effectOutcomeFlag_8008D780[0] == 1)
     {
         *flags = (*flags & ~1) | 0x8000;
     }

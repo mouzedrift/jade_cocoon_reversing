@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "model.h"
+#include "main.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -244,10 +245,6 @@ extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
 extern void TstCompoInitBones_800A1AFC();
 extern void SetCameraLookAt_800A1E68();
 /* exe-side: declared in main.h (which conflicts with this overlay's types) */
-extern unsigned short padPressed_8009194C;
-extern unsigned short padRepeat_800918CC;
-extern short cameraRot_8008D4C8[];
-extern unsigned char backColor_8008D460[];
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern int cameraEye_8008D600[];
 /* exe-side, to move to main.h / globals.h */

@@ -1358,7 +1358,7 @@ void ShopMenuTask_800BB444(EventEntry* task, void* buffer)
                 ShopMenuInput_800BBE24(menu);
                 if (menu->state_0 == 8 || CanViewForm_800BB38C(menu))
                 {
-                    if (padPressed_8009194C & 0x20)
+                    if (padPressed_8009194C[0] & 0x20)
                     {
                         if (menu->base_4C->id != 4)
                         {
@@ -1374,7 +1374,7 @@ void ShopMenuTask_800BB444(EventEntry* task, void* buffer)
                 DismissShopPrompt_800BC2DC(menu);
                 if (menu->state_0 == 3)
                 {
-                    if (padPressed_8009194C & 0x20)
+                    if (padPressed_8009194C[0] & 0x20)
                     {
                         if (menu->base_4C->id != 4)
                         {
@@ -1383,7 +1383,7 @@ void ShopMenuTask_800BB444(EventEntry* task, void* buffer)
                             StartFormView_800BE2B4(menu->shown_54);
                         }
                     }
-                    else if (padPressed_8009194C & 0x80)
+                    else if (padPressed_8009194C[0] & 0x80)
                     {
                         menu->flags_24 |= 0x400;
                         CycleInfoPage_800BC1A8(menu);
@@ -1391,7 +1391,7 @@ void ShopMenuTask_800BB444(EventEntry* task, void* buffer)
                 }
                 else if (CanViewForm_800BB38C(menu))
                 {
-                    if (padPressed_8009194C & 0x20)
+                    if (padPressed_8009194C[0] & 0x20)
                     {
                         if (menu->base_4C->id != 4)
                         {
@@ -1537,7 +1537,7 @@ void ShopWaitMessage_800BBA3C(ShopMenu* menu)
     {
         menu->messageTimer_98 += 1;
     }
-    if (padPressed_8009194C != 0 || menu->messageTimer_98 >= 0x96)
+    if (padPressed_8009194C[0] != 0 || menu->messageTimer_98 >= 0x96)
     {
         SetShopHelpText_800BBB54(menu, 0);
         menu->messageShown_18 = 0;
@@ -1766,7 +1766,7 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
     {
         menu->cancel_14 = 1;
     }
-    else if (padPressed_8009194C & 0x80)
+    else if (padPressed_8009194C[0] & 0x80)
     {
         if (menu->state_0 == 8)
         {
@@ -1788,7 +1788,7 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
             PlaySfx_80031494(0x7E);
         }
     }
-    else if (padPressed_8009194C & 0x20)
+    else if (padPressed_8009194C[0] & 0x20)
     {
         if (menu->markCount_80 > 0 && menu->state_0 == 5)
         {

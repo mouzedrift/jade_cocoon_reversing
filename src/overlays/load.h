@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "sound.h"
 #include "pad_text.h"
+#include "main.h"
 
 typedef struct
 {
@@ -504,9 +505,6 @@ extern void RequestGameMode_800A6D30(int a);
 
 /* exe-side, to move to an exe header */
 // main.h has these too, but declares loadMenuTask_8008D480 as int[2]: not included until that is fixed
-extern EventNode* loadMenuTask_8008D480; // the load menu's task list
-extern int mapStartMode_80091C54;
-extern unsigned short padPressed_8009194C[];
 extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
 extern void LoadUiTiy_8002BF74(void);

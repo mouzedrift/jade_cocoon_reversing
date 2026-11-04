@@ -1210,7 +1210,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 0x8000, 8, (void *)((char *)&dword_8008B4AC + 4) },
     { 1, 0x8000, 8, &screenFlashTasks_8008D61C },
     { 2, 0x8000, 8, &modelTasks_8008D618 },
-    { 1, 1, 8, (void *)((char *)&battleMenuTask_8008D468 + 8), (EventEntryFn)EmptyCallback_80011C04 },
+    { 1, 1, 8, (void *)&dword_8008D470, (EventEntryFn)EmptyCallback_80011C04 },
     {
         1,
         5,
