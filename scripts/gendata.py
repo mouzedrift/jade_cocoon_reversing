@@ -831,7 +831,7 @@ def foreign_externs(tu, names, types):
         if n in types.decls:
             continue
         for path, line in find_extern(n):
-            if path == own:
+            if path == own or os.sep + "overlays" + os.sep in path:
                 continue
             decl = line.split("//")[0].strip()
             words = re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(n), decl)[0])
@@ -883,7 +883,8 @@ def include_declaring_headers(tu, secs=None):
             continue
         for p, _ in find_extern(n):
             h = os.path.relpath(p, os.path.join(REPO, "src"))
-            if p.endswith(".h") and h != os.path.basename(header_for(tu)) and h not in hs:
+            if p.endswith(".h") and h != os.path.basename(header_for(tu)) and h not in hs and \
+                    not h.startswith("overlays"):
                 hs.append(h)
             break
     c = os.path.join(REPO, "src", tu + ".c")

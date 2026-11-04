@@ -23,6 +23,7 @@
 #include "tu_8002D738.h"
 #include "tu_80031A94.h"
 #include "tu_80034068.h"
+#include "effect.h"
 
 int dword_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
@@ -4164,12 +4165,6 @@ void sub_80014CCC(int* a0, void* buf)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-extern SVECTOR dword_800795D4;
-extern int dword_800795DC;
-extern int dword_800795E0;
-extern int dword_800795E4;
-extern int dword_800795E8;
-extern int dword_800795EC;
 extern int dword_8008D784;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 extern void sub_800C1A5C(void* a0, void* a1, int a2, int a3);

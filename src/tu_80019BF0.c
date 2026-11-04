@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tu_80014954.h"
+#include "effect.h"
 
 // the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
@@ -2748,7 +2749,6 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     o->flags_4 = g;
     return r;
 }
-extern int dword_800795A0[];
 #if 0
 // Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
 void sub_8001E574(Actor* o, ActorDesc* d)
