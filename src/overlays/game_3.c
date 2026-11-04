@@ -2104,6 +2104,111 @@ void sub_800A99DC(G2Act* p)
     saveData_8008B570.levant_7A8.rot.vy += p->u77C;
 }
 
+#if 0
+// Not matched: 24 words: dx/dz get $s2/$s3 swapped (the original keeps the 0x6c delta in $s3), the tri address adds base + index the other way round, and the path_78 reads become register copies (move $v1,$a0) in the original instead of reloads; the rest matches
+void sub_800A9A9C(G2Act* p)
+{
+    G2V12 prev;
+    int dz;
+    int dx;
+    int div;
+    MapTri* t;
+    int k;
+    int f;
+    int rot;
+    G2Path* path;
+    int sn;
+    int cs;
+    short ang;
+    prev.a = p->v6c.a;
+    prev.b = p->v6c.b;
+    prev.c = p->v6c.c;
+    sub_800AA140(p);
+    dz = 0;
+    if (p->f0 & 8)
+    {
+        p->f0 &= ~8;
+        dx = dz;
+    }
+    else
+    {
+        dx = p->v6c.a - prev.a;
+        sub_800AC4A8(p->s1c);
+        p->v6c.c -= (dx & 0x1f) * Sign_8003B664(dx);
+        dz = p->v6c.c - prev.c;
+        sub_800AC4A8(p->s1c);
+        p->v6c.c -= (dz & 0x1f) * Sign_8003B664(dz);
+    }
+    if (p->f10 == (unsigned short)sub_800AC8BC(p->s1c, sub_800AC474(p->s1c)) ||
+        ((p->f0 & 0x800) && p->f10 == (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c))))
+    {
+        p->f0 |= 0x8000;
+        p->f10 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
+        sub_800AA140(p);
+    }
+    if (p->f8 == 2 && (p->f0 & 0x200000))
+    {
+        dx = 0;
+        dz = dx;
+    }
+    if (!(p->f0 & 0x84000))
+    {
+        div = p->model_40->anims_54[sub_800AC4A8(p->s1c)].divisor_8;
+        sub_800B80C8(p);
+        t = &dword_8008B500.meshes_C[p->mesh_84].tris_4[p->tri_80];
+        f = t->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
+            t->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
+        f = 0x1000 - f * f / 4096;
+        saveData_8008B570.levant_7A8.pos.x += dx * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += -(dx * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096) * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x += dz * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 * f / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += dz * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
+        if (!(p->f0 & 0x40000))
+        {
+            f = sub_800B6DD4(p);
+            if (f < 0)
+            {
+                p->f778 = -0x40;
+            }
+            else if (f > 0)
+            {
+                p->f778 = 0x40;
+            }
+        }
+    }
+    else if (p->f0 & 0x400000)
+    {
+        p->v6c.a = p->path_78->steps_8[p->f7c].x;
+        p->v6c.b = p->path_78->steps_8[p->f7c].y;
+        p->v6c.c = p->path_78->steps_8[p->f7c].z;
+        rot = p->path_78->steps_8[p->f7c].rotY;
+        div = p->path_78->div_4;
+        p->f7c++;
+        if (p->f7c >= p->path_78->count_0)
+        {
+            p->f0 &= ~0x400000;
+            sub_800ABC78(0);
+            p->f0 = (p->f0 & ~0x800) | 8;
+            sub_800AB010(p, 0, 3, 0);
+            p->fC = 0;
+        }
+        saveData_8008B570.levant_7A8.pos.x = p->v60.a + p->v6c.a / div;
+        saveData_8008B570.levant_7A8.pos.y = p->v60.b + p->v6c.b / div;
+        saveData_8008B570.levant_7A8.pos.z = p->v60.c + p->v6c.c / div;
+        saveData_8008B570.levant_7A8.rot.vy = rot;
+    }
+    else
+    {
+        div = p->model_40->anims_54[sub_800AC4A8(p->s1c)].divisor_8;
+        sub_800AA140(p);
+        sn = sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff];
+        cs = sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff];
+        saveData_8008B570.levant_7A8.pos.z = p->v60.c + (p->v6c.c * cs - p->v6c.a * sn) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x = p->v60.a + (p->v6c.c * sn + p->v6c.a * cs) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.y = p->v60.b + p->v6c.b / 32;
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);
 
 void sub_800AA140(G2Act* p)
@@ -2644,10 +2749,10 @@ void sub_800AB9A8(int a, int b, int c)
     p->f0 &= ~1;
 }
 
-void sub_800ABAA4(int a)
+void sub_800ABAA4(G2Path* a)
 {
     G2Act* p = dword_8008B4A4->f24;
-    p->f78 = a;
+    p->path_78 = a;
     p->f7c = 0;
     p->f0 |= 0x400000;
 }

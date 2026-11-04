@@ -827,6 +827,21 @@ typedef struct G2V12
     int c;
 } G2V12;
 
+typedef struct G2PathStep
+{
+    short x;
+    short y;
+    short z;
+    short rotY;
+} G2PathStep;
+
+typedef struct G2Path
+{
+    int count_0;
+    int div_4;
+    G2PathStep* steps_8;
+} G2Path;
+
 // Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
@@ -857,10 +872,12 @@ typedef struct G2Act
     G2V12 v48;
     G2V12 v54;
     G2V12 v60;
-    char pad_6C[0xC];
-    int f78;
-    int f7c;
-    char pad_80[0x10];
+    G2V12 v6c; // root motion of the current animation frame (sub_800AA140)
+    struct G2Path* path_78; // scripted walk (flag 0x400000, sub_800ABAA4)
+    int f7c;    // step of path_78
+    int tri_80; // floor triangle under Levant (dword_8008B500.meshes_C[mesh_84].tris_4)
+    int mesh_84;
+    char pad_88[8];
     MATRIX mats_90[40];
     char pad_590[0x1E8];
     int f778;
