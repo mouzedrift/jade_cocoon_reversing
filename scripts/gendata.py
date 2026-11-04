@@ -5,8 +5,7 @@ Generate C definitions (with initialisers from the original executable) for the 
   python scripts/gendata.py SLUS_008.54 TU [SYMBOL ...] [--write]
 
 TU is a source file of src/ without .c (main, tu_80019BF0, ...). Without SYMBOL every INCLUDE_DATA line of the TU
-is converted (the .bss ones always all together: the compiler emits uninitialised variables at the end of the
-file, behind everything that is still INCLUDE_DATA). Build first: the types come from the TU's preprocessed
+is converted (--sec=.rdata/.data/.bss: those of one section). Build first: the types come from the TU's preprocessed
 source (build_psyq/TU.preproc): a symbol that is declared there (extern in a header) is defined with that type,
 otherwise the type is guessed from the bytes and the IDA name prefix (strings, pointer tables, byte_/word_/dword_).
 Pointers become references to the symbol they point at.
@@ -14,8 +13,10 @@ Pointers become references to the symbol they point at.
 Prints the definitions, and the extern declarations that are missing for the TU's header. --write replaces the
 INCLUDE_DATA lines in src/TU.c.
 
-.rdata becomes const, .bss uses BSS (common.h): an uninitialised global would be a common symbol, and psylink
-aligns all .bss to 8 bytes when there are commons (see docs/full_build.md).
+.rdata becomes const, .bss uses BSS (common.h) and a zero initialiser: an uninitialised global would be a common
+symbol, and psylink aligns all .bss to 8 bytes when there are commons (see docs/full_build.md).
+An INCLUDE_DATA can't stay between C definitions of its section (the compiler would not switch back to the
+section after the included assembly): what lies behind a symbol that can't be converted is left out.
 """
 import bisect
 import os
@@ -930,8 +931,6 @@ def generate(exe, tu, only=None, secs=None):
     types.adopted = adopted
     if only:
         sel = set(only)
-        if any(info[n][0] == ".bss" for n in sel if n in info):
-            sel |= {n for n in names if info[n][0] == ".bss"}
         todo = [n for n in names if n in sel]
     else:
         todo = list(names)
@@ -974,8 +973,9 @@ def generate(exe, tu, only=None, secs=None):
             if t.kind == "array" and t.n is None:
                 es = t.of.size()
                 # a following symbol that can't be an object of its own (not on 4 bytes) is more of the array
+                # and so are the ones up to a whole number of elements
                 while (i < len(todo) and syms.addr.get(todo[i]) == addr + size and info[todo[i]][0] == sec and
-                       (addr + size) % 4 and todo[i] not in types.decls):
+                       ((addr + size) % 4 or size % es >= 4 or size < es) and todo[i] not in types.decls):
                     absorbed[todo[i]] = n
                     size += info[todo[i]][1]
                     i += 1
@@ -1016,7 +1016,9 @@ def generate(exe, tu, only=None, secs=None):
             gen.refs = set()
             df.refs = gen.refs
             if df.sec == ".bss":
-                df.text = "%s BSS;" % decl
+                # with the zero initialiser the compiler puts it in place (into .bss, by the attribute); without
+                # it, a variable that is declared too (extern) would become a common symbol
+                df.text = "%s BSS = %s;" % (decl, "0" if t.kind in ("int", "ptr") else "{ 0 }")
             else:
                 init = gen.value(df.addr, t, "")
                 df.text = "%s = %s;" % (decl, init)
@@ -1105,7 +1107,7 @@ def main(argv):
     ok = [d for d in defs if d.head not in errors]
     # an INCLUDE_DATA that stays between C definitions of its section would leave the compiler in the wrong
     # section (the included assembly switches sections behind its back): nothing behind it is written
-    for sec in (".rdata", ".data"):
+    for sec in (".rdata", ".data", ".bss"):
         bad = [syms.addr[n] for n in todo if n in errors and n in syms.addr and chunk_info(n)[0] == sec]
         if bad:
             cut = min(bad)

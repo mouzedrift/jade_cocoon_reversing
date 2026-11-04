@@ -15,6 +15,8 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80043AF8.h"
+#include "tu_8004B0A8.h"
 
 
 // Matched
@@ -135,7 +137,6 @@ typedef struct
     SVECTOR* base;
 } AnimSkel;
 
-extern SVECTOR dword_80098690[];
 
 /* inlined helpers: the original keeps the bone index in a copy of the argument */
 static inline void GetRot(SVECTOR* o, AnimPose* p, int j)
@@ -348,6 +349,6 @@ void sub_8004AD44(MATRIX* in, VECTOR* out)
     VectorNormal(&r, out);
 }
 
-INCLUDE_DATA(dword_80096120);
-INCLUDE_DATA(dword_80096130);
-INCLUDE_DATA(dword_80096628);
+int dword_80096120[4] BSS = { 0 };
+int dword_80096130[318] BSS = { 0 };
+int dword_80096628[1750] BSS = { 0 };

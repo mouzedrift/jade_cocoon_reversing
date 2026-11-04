@@ -293,7 +293,6 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
     return 0;
 }
 extern MovieCtx movieCtx_800960C0;
-extern int dword_800960F8;
 extern int dword_80096100;
 extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
@@ -305,7 +304,7 @@ void MovieDctOutCallback_80041424(void)
     MovieRect r2;
     int id;
     int rem;
-    if (dword_800960F8 && StCdIntrFlag)
+    if (movieCtx_800960C0.field_38 && StCdIntrFlag)
     {
         StCdInterrupt();
         StCdIntrFlag = 0;
@@ -946,17 +945,9 @@ void *mdecVLCBuffer_80086F94 = 0;
 short movieWidth_80086F98 = 0;
 short movieHeight_80086F9A = 0;
 
-INCLUDE_DATA(ringBufferStart_800960B0);
-INCLUDE_DATA(movieCtx_800960C0);
-INCLUDE_DATA(dword_800960C8);
-INCLUDE_DATA(dword_800960CC);
-INCLUDE_DATA(dword_800960D4);
-INCLUDE_DATA(word_800960D8);
-INCLUDE_DATA(word_800960DC);
-INCLUDE_DATA(dword_800960E8);
-INCLUDE_DATA(dword_800960EC);
-INCLUDE_DATA(dword_800960F0);
-INCLUDE_DATA(dword_800960F4);
-INCLUDE_DATA(dword_800960F8);
-INCLUDE_DATA(bMovieFinished_800960FC);
-INCLUDE_DATA(dword_80096100);
+unsigned long *ringBufferStart_800960B0 BSS = 0;
+int dword_800960B4[3] BSS = { 0 };
+MovieCtx movieCtx_800960C0 BSS = { 0 };
+int bMovieFinished_800960FC BSS = 0;
+int dword_80096100 BSS = 0;
+int dword_80096104 BSS = 0;

@@ -10,4 +10,8 @@ enum GameStates sub_800A200C(void);
 enum GameStates sub_800A51AC(void);
 enum GameStates sub_800A7574(void);
 
+extern int dword_800960B4[3];
+
+extern int dword_80096104;
+
 #endif

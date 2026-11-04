@@ -680,10 +680,8 @@ MATRIX dword_80087134 = { {
         { 0x800, 0x400, 0x200 },
     } };
 
-INCLUDE_DATA(xaStartPos_80096108);
-INCLUDE_DATA(xaEndPos_8009610C);
-INCLUDE_DATA(byte_80096110);
-INCLUDE_DATA(word_80096112);
-INCLUDE_DATA(word_80096114);
-INCLUDE_DATA(word_80096116);
-INCLUDE_DATA(xaRequestPending_80096118);
+int xaStartPos_80096108 BSS = 0;
+int xaEndPos_8009610C BSS = 0;
+XaRequest xaRequest_80096110 BSS = { 0 };
+unsigned int xaRequestPending_80096118 BSS = 0;
+int dword_8009611C BSS = 0;

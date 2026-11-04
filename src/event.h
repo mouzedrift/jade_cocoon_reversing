@@ -22,4 +22,6 @@ extern int dword_80087110;
 extern MATRIX dword_80087114;
 extern MATRIX dword_80087134;
 
+extern int dword_8009611C;
+
 #endif

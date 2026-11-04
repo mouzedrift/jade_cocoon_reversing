@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8004B0A8.h"
 
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
@@ -281,11 +282,11 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
     out->vz = (a->vz + d * t / 4096) & 0xFFF;
 }
 
-INCLUDE_DATA(dword_80098180);
-INCLUDE_DATA(dword_80098188);
-INCLUDE_DATA(dword_80098198);
-INCLUDE_DATA(dword_80098688);
-INCLUDE_DATA(dword_80098690);
-INCLUDE_DATA(dword_800986A0);
-INCLUDE_DATA(dword_800987D8);
-INCLUDE_DATA(dword_8009AAD8);
+int dword_80098180[2] BSS = { 0 };
+MATRIX dword_80098188[40] BSS = { 0 };
+int dword_80098688 BSS = 0;
+int dword_8009868C BSS = 0;
+SVECTOR dword_80098690[2] BSS = { 0 };
+int dword_800986A0[78] BSS = { 0 };
+int dword_800987D8[2240] BSS = { 0 };
+int dword_8009AAD8[2] BSS = { 0 };
