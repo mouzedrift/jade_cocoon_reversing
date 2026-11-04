@@ -7,13 +7,14 @@
 #include "globals.h"
 #include "model.h"
 
-typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
+// the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
+typedef struct TstCompoCursorHead { char b[8]; } TstCompoCursorHead;
 
 typedef struct TstCompoMenu
 {
     union
     {
-        TstCompoBlk8 blk;
+        TstCompoCursorHead blk;
         struct
         {
             short cols_0;
@@ -58,11 +59,11 @@ typedef struct TstCompoModelParams
     int part_4[3];  // the compounded minions' part ids (TstCompoPart.id_4)
     int ratio_10[3]; // their shares, 0x1000 in all
     int modelId_1C;
-    int f20;
+    int texPart_20;   // part_4 index of the model the textures come from (ModelTaskState.texPart_24)
     int angle_24;     // 0..359
     int enemyPart_28; // TstCompoPart.id_4 of the ENEMY pick
-    int f2C;
-    int f30;
+    int main_2C;      // part_4 index of the model whose animations are kept
+    int vram_30;      // ModelVramSlot* (ModelTaskState.vram_34)
 } TstCompoModelParams;
 
 extern int dword_800A05A0;

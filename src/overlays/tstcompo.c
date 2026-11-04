@@ -116,7 +116,7 @@ typedef struct TstCompoWork
     char* boneScale_1A4;
     TstCompoDraw draw_1A8;
     int pad_1D4;
-    TstCompoBlk8 cursor_1D8;
+    TstCompoCursorHead cursor_1D8;
     short sel_1E0;
     short scroll_1E2;
     int nextPage_1E4;
@@ -177,20 +177,20 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 extern int dword_8007DC74;
 void SetDefaultCompoParams_800A0918()
 {
-    TstCompoModelParams* p = &compoModelParams_800A2768;
-    p->partCount_0 = 3;
-    p->part_4[0] = 1;
-    p->part_4[1] = 0xC;
-    p->part_4[2] = 0x29;
-    p->ratio_10[0] = 0x555;
-    p->ratio_10[1] = 0x555;
-    p->ratio_10[2] = 0x555;
-    p->modelId_1C = 4;
-    p->f20 = 0;
-    p->angle_24 = 0;
-    p->enemyPart_28 = 0x4C;
-    p->f2C = 0;
-    p->f30 = dword_8007DC74;
+    TstCompoModelParams* params = &compoModelParams_800A2768;
+    params->partCount_0 = 3;
+    params->part_4[0] = 1;
+    params->part_4[1] = 0xC;
+    params->part_4[2] = 0x29;
+    params->ratio_10[0] = 0x555;
+    params->ratio_10[1] = 0x555;
+    params->ratio_10[2] = 0x555;
+    params->modelId_1C = 4;
+    params->texPart_20 = 0;
+    params->angle_24 = 0;
+    params->enemyPart_28 = 0x4C;
+    params->main_2C = 0;
+    params->vram_30 = dword_8007DC74;
 }
 
 extern unsigned short padHeld_800918D0[];
@@ -250,7 +250,7 @@ extern int UpdateMenuCursor_8003D794(void* p, int idx);
 extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* e, int idx);
+extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot);
 // Matched
 void TstCompoMenu_800A0AB8(TstCompoWork* c)
 {
@@ -260,12 +260,12 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
     short p3[4];
     short p4[4];
     short p5[4];
-    TstCompoMenu* m;
+    TstCompoMenu* menu;
     int i;
     int j;
-    int a;
-    int b;
-    int d;
+    int part0;
+    int part1;
+    int part2;
     unsigned int total;
 
     if (c->nextPage_1E4 != -1)
@@ -321,9 +321,9 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
         {
             c->nextPage_1E4 = c->returnPage_1EC;
         }
-        m = compoPages_800A250C[c->returnPage_1EC].menu_0;
-        DrawBobbingCursorHand_8003D090(m->x_C + (c->savedSel_1F4 % m->head_0.f.cols_0) * m->dx_8,
-                     m->y_E + (c->savedSel_1F4 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+        menu = compoPages_800A250C[c->returnPage_1EC].menu_0;
+        DrawBobbingCursorHand_8003D090(menu->x_C + (c->savedSel_1F4 % menu->head_0.f.cols_0) * menu->dx_8,
+                     menu->y_E + (c->savedSel_1F4 / menu->head_0.f.cols_0) * menu->dy_A + 6, 0, 0, 0);
         c->listSel_20C = c->sel_1E0;
         c->listScroll_208 = c->scroll_1E2;
         break;
@@ -343,9 +343,9 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
         c->scroll_1E2 = 0;
         break;
     }
-    m = compoPages_800A250C[c->page_1E8].menu_0;
-    DrawBobbingCursorHand_8003D090(m->x_C + (c->sel_1E0 % m->head_0.f.cols_0) * m->dx_8,
-                 m->y_E + (c->sel_1E0 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+    menu = compoPages_800A250C[c->page_1E8].menu_0;
+    DrawBobbingCursorHand_8003D090(menu->x_C + (c->sel_1E0 % menu->head_0.f.cols_0) * menu->dx_8,
+                 menu->y_E + (c->sel_1E0 / menu->head_0.f.cols_0) * menu->dy_A + 6, 0, 0, 0);
     if (c->page_1E8 < 3)
     {
         if (c->page_1E8 >= 0)
@@ -390,15 +390,15 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
     {
         compoModelParams_800A2768.partCount_0 = 3;
         compoModelParams_800A2768.modelId_1C = 4;
-        compoModelParams_800A2768.f20 = 0;
+        compoModelParams_800A2768.texPart_20 = 0;
         compoModelParams_800A2768.enemyPart_28 = compoParts_800A20EC[c->enemy_22C].id_4;
-        compoModelParams_800A2768.f2C = 0;
-        compoModelParams_800A2768.part_4[0] = a = compoParts_800A20EC[c->part_210[0]].id_4;
-        compoModelParams_800A2768.part_4[1] = b = compoParts_800A20EC[c->part_210[1]].id_4;
-        compoModelParams_800A2768.part_4[2] = d = compoParts_800A20EC[c->part_210[2]].id_4;
-        if (a == b)
+        compoModelParams_800A2768.main_2C = 0;
+        compoModelParams_800A2768.part_4[0] = part0 = compoParts_800A20EC[c->part_210[0]].id_4;
+        compoModelParams_800A2768.part_4[1] = part1 = compoParts_800A20EC[c->part_210[1]].id_4;
+        compoModelParams_800A2768.part_4[2] = part2 = compoParts_800A20EC[c->part_210[2]].id_4;
+        if (part0 == part1)
         {
-            if (b == d)
+            if (part1 == part2)
             {
                 c->ratio_21C[0] += c->ratio_21C[1];
                 c->ratio_21C[0] += c->ratio_21C[2];
@@ -411,12 +411,12 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
                 c->ratio_21C[1] = 0;
             }
         }
-        else if (a == d)
+        else if (part0 == part2)
         {
             c->ratio_21C[0] += c->ratio_21C[2];
             c->ratio_21C[2] = 0;
         }
-        else if (b == d)
+        else if (part1 == part2)
         {
             c->ratio_21C[1] += c->ratio_21C[2];
             c->ratio_21C[2] = 0;
@@ -435,49 +435,49 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
 }
 
 extern void StartModelTask_80010850();
-void TstCompoStartModel_800A1320(TstCompoWork* a)
+void TstCompoStartModel_800A1320(TstCompoWork* work)
 {
     StartModelTask_80010850(&compoModelParams_800A2768);
-    a->state_0 = 2;
+    work->state_0 = 2;
 }
 
 extern int name_80010A10(int); // RunModelTask_80010A10 (declared void), its v0 is tested
 extern void TstCompoInitBones_800A1AFC();
-void TstCompoWaitModel_800A1354(TstCompoWork* a)
+void TstCompoWaitModel_800A1354(TstCompoWork* work)
 {
     if (name_80010A10(0))
     {
-        a->model_4 = GetModelTaskModel_80010A44(0);
-        TstCompoInitBones_800A1AFC(a);
-        a->animCount_188 = -1;
-        a->scaleStep_198 = 0;
-        a->scaleId_19C = compoModelParams_800A2768.modelId_1C;
-        a->state_0 = 3;
+        work->model_4 = GetModelTaskModel_80010A44(0);
+        TstCompoInitBones_800A1AFC(work);
+        work->animCount_188 = -1;
+        work->scaleStep_198 = 0;
+        work->scaleId_19C = compoModelParams_800A2768.modelId_1C;
+        work->state_0 = 3;
     }
 }
 
-void TstCompoWaitFiles_800A13B8(TstCompoWork* a)
+void TstCompoWaitFiles_800A13B8(TstCompoWork* work)
 {
-    if (AreFileRequestsDone_80024DC4(a->model_4))
+    if (AreFileRequestsDone_80024DC4(work->model_4))
     {
-        if (a->animCount_188 <= 0)
+        if (work->animCount_188 <= 0)
         {
             int i;
-            a->animCount_188 = a->model_4->animCount_3E;
-            for (i = 0; i < a->animCount_188; i++)
+            work->animCount_188 = work->model_4->animCount_3E;
+            for (i = 0; i < work->animCount_188; i++)
             {
-                if (a->model_4->animLoaded_44[i] != 0)
+                if (work->model_4->animLoaded_44[i] != 0)
                 {
-                    a->anim_184 = i;
+                    work->anim_184 = i;
                     break;
                 }
             }
         }
         else
         {
-            a->anim_184 = a->nextAnim_18C;
+            work->anim_184 = work->nextAnim_18C;
         }
-        a->state_0 = 4;
+        work->state_0 = 4;
     }
 }
 
@@ -619,11 +619,11 @@ void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
     if (pad & 0x1000)
     {
         int v = c->nextAnim_18C + 1;
-        int t = c->animCount_188 - 1;
+        int last = c->animCount_188 - 1;
         c->nextAnim_18C = v;
-        if (t < v)
+        if (last < v)
         {
-            c->nextAnim_18C = t;
+            c->nextAnim_18C = last;
         }
     }
     else if (pad & 0x4000)
@@ -667,98 +667,98 @@ void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
 }
 
 // Matched
-void TstCompoFreeModel_800A1AD0(TstCompoWork* a)
+void TstCompoFreeModel_800A1AD0(TstCompoWork* work)
 {
     FreeModelTask_8001098C(0);
-    a->state_0 = 0;
+    work->state_0 = 0;
 }
 
 extern TstCompoBone defaultBones_80079140[];
 extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
-void TstCompoInitBones_800A1AFC(TstCompoWork* a)
+void TstCompoInitBones_800A1AFC(TstCompoWork* work)
 {
     int i;
-    char* r;
+    char* levels;
     for (i = 0; defaultBones_80079140[i].s0 >= 0; i++)
     {
-        a->bones_C[i] = defaultBones_80079140[i];
+        work->bones_C[i] = defaultBones_80079140[i];
     }
-    a->bones_C[i] = defaultBones_80079140[i];
-    r = GetModelBoneGroupLevels_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
-    SetBoneGroupFlags_80019B14(a->bones_C, r, GetModelBoneGroupFlags_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
+    work->bones_C[i] = defaultBones_80079140[i];
+    levels = GetModelBoneGroupLevels_80024F00(work->model_4, compoModelParams_800A2768.modelId_1C);
+    SetBoneGroupFlags_80019B14(work->bones_C, levels, GetModelBoneGroupFlags_80024F38(work->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
 // Matched
-void TstCompoResetCamera_800A1BE0(TstCompoWork* a)
+void TstCompoResetCamera_800A1BE0(TstCompoWork* work)
 {
-    a->dist_150 = 0x4B0;
-    a->yaw_14C = 0;
-    a->pos_16C[0] = 0;
-    a->pos_16C[1] = 0;
-    a->pos_16C[2] = 0;
-    a->s178 = 0;
-    a->s17A = 0;
-    a->s17C = 0;
-    a->at_160[1] = -0xFA;
-    a->eye_154[1] = -0xFA;
+    work->dist_150 = 0x4B0;
+    work->yaw_14C = 0;
+    work->pos_16C[0] = 0;
+    work->pos_16C[1] = 0;
+    work->pos_16C[2] = 0;
+    work->s178 = 0;
+    work->s17A = 0;
+    work->s17C = 0;
+    work->at_160[1] = -0xFA;
+    work->eye_154[1] = -0xFA;
 }
 
 extern unsigned short padHeld_800918D0[];
 extern short sinTable_80084540[];
 extern void SetCameraLookAt_800A1E68();
-void TstCompoCameraInput_800A1C14(TstCompoWork* a)
+void TstCompoCameraInput_800A1C14(TstCompoWork* work)
 {
     if (padHeld_800918D0[0] & 0x8000)
     {
-        a->yaw_14C -= 0x20;
+        work->yaw_14C -= 0x20;
     }
     else if (padHeld_800918D0[0] & 0x2000)
     {
-        a->yaw_14C += 0x20;
+        work->yaw_14C += 0x20;
     }
     if (padHeld_800918D0[0] & 0x1000)
     {
-        a->eye_154[1] -= 0x20;
+        work->eye_154[1] -= 0x20;
     }
     else if (padHeld_800918D0[0] & 0x4000)
     {
-        a->eye_154[1] += 0x20;
+        work->eye_154[1] += 0x20;
     }
-    a->eye_154[1] = a->eye_154[1] < -1000 ? -1000 : a->eye_154[1] < 1001 ? a->eye_154[1] : 1000;
+    work->eye_154[1] = work->eye_154[1] < -1000 ? -1000 : work->eye_154[1] < 1001 ? work->eye_154[1] : 1000;
     if ((padHeld_800918D0[0] & 0xC) == 0xC)
     {
-        TstCompoResetCamera_800A1BE0(a);
+        TstCompoResetCamera_800A1BE0(work);
     }
     else if (padHeld_800918D0[0] & 4)
     {
-        a->dist_150 -= 0x20;
+        work->dist_150 -= 0x20;
     }
     else if (padHeld_800918D0[0] & 8)
     {
-        a->dist_150 += 0x20;
+        work->dist_150 += 0x20;
     }
-    a->dist_150 = a->dist_150 < 100 ? 100 : a->dist_150 < 1201 ? a->dist_150 : 1200;
-    a->eye_154[0] = a->dist_150 * sinTable_80084540[a->yaw_14C & 0xFFF] / 4096;
-    a->eye_154[2] = a->dist_150 * sinTable_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
+    work->dist_150 = work->dist_150 < 100 ? 100 : work->dist_150 < 1201 ? work->dist_150 : 1200;
+    work->eye_154[0] = work->dist_150 * sinTable_80084540[work->yaw_14C & 0xFFF] / 4096;
+    work->eye_154[2] = work->dist_150 * sinTable_80084540[(work->yaw_14C + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)
         {
-            TstCompoResetCamera_800A1BE0(a);
+            TstCompoResetCamera_800A1BE0(work);
         }
         else
         {
-            a->at_160[1] -= 0x20;
+            work->at_160[1] -= 0x20;
         }
     }
     else if (padHeld_800918D0[0] & 2)
     {
-        a->at_160[1] += 0x20;
+        work->at_160[1] += 0x20;
     }
-    a->at_160[1] = a->at_160[1] < -1000 ? -1000 : a->at_160[1] < 1001 ? a->at_160[1] : 1000;
-    a->at_160[0] = 0;
-    a->at_160[2] = 0;
-    SetCameraLookAt_800A1E68(a);
+    work->at_160[1] = work->at_160[1] < -1000 ? -1000 : work->at_160[1] < 1001 ? work->at_160[1] : 1000;
+    work->at_160[0] = 0;
+    work->at_160[2] = 0;
+    SetCameraLookAt_800A1E68(work);
 }
 
 typedef struct TstCompoMat
@@ -777,17 +777,17 @@ extern TstCompoMat lightMatrix_80087114;
 extern TstCompoMat colorMatrix_80087134;
 void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
-    int v[3];
+    int dir[3];
     int yaw;
     cameraEye_8008D600[0] = c->eye_154[0];
     cameraEye_8008D600[1] = c->eye_154[1];
     cameraEye_8008D600[2] = c->eye_154[2];
-    v[0] = c->at_160[0] - c->eye_154[0];
-    v[1] = c->at_160[1] - c->eye_154[1];
-    v[2] = c->at_160[2] - c->eye_154[2];
-    yaw = ratan2_8003B548(v[0], v[2]);
+    dir[0] = c->at_160[0] - c->eye_154[0];
+    dir[1] = c->at_160[1] - c->eye_154[1];
+    dir[2] = c->at_160[2] - c->eye_154[2];
+    yaw = ratan2_8003B548(dir[0], dir[2]);
     cameraRot_8008D4C8[1] = -yaw;
-    cameraRot_8008D4C8[0] = ratan2_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    cameraRot_8008D4C8[0] = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
     cameraRot_8008D4C8[2] = 0;
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
@@ -816,30 +816,30 @@ typedef struct TstCompoWinStyle
     unsigned char colors_2; // GetWindowColors_8004226C
     unsigned char frame_3;  // DrawWindowFrame_80041ED0
 } TstCompoWinStyle;
-void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
+void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
 {
     union
     {
         unsigned short pos[2];
         TstCompoWinStyle style;
-    } t; // the text position, then the window style
-    if (e)
+    } scratch; // the text position, then the window style
+    if (texts)
     {
         int i = 0;
-        while (e[i].text_4)
+        while (texts[i].text_4)
         {
-            t.pos[0] = e[i].x_0;
-            t.pos[1] = e[i].y_2;
-            DrawText_8003E91C(1, e[i].text_4, t.pos, idx);
+            scratch.pos[0] = texts[i].x_0;
+            scratch.pos[1] = texts[i].y_2;
+            DrawText_8003E91C(1, texts[i].text_4, scratch.pos, ot);
             i++;
         }
     }
-    if (p)
+    if (rect)
     {
-        t.style.colors_2 = 1;
-        t.style.frame_3 = 1;
-        t.style.color_0 = uiColor_8008B590;
-        DrawWindow_80042460(p, &t.style, pOT_8008D454 + idx, 0);
+        scratch.style.colors_2 = 1;
+        scratch.style.frame_3 = 1;
+        scratch.style.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(rect, &scratch.style, pOT_8008D454 + ot, 0);
     }
 }
 
