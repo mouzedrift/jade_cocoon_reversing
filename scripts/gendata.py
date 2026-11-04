@@ -504,6 +504,9 @@ class Gen:
             if name not in self.types.funcnodes:
                 self.protos[name] = t.pnode.type if getattr(t, "pnode", None) is not None else None
             return name
+        if self.int_refs and v < 0x80000000:
+            # (overlays) a number in a pointer member: the member is used for both
+            return "(%s)%s" % (getattr(t, "cast", None) or "void *", intstr(v))
         if hit is None or not in_image(v):
             raise GenError("pointer %08X outside the image" % v)
         a, names = hit
@@ -1049,10 +1052,15 @@ def generate_chunks(syms, types, gen, names, info, only=None, secs=None):
             # bytes behind the declared object (up to the next symbol) that are more than alignment padding:
             # objects of their own
             ra = (addr + t.size() + 3) & ~3
-            if end - ra >= 4:
+            oe = addr + t.size()
+            if gen.int_refs and oe < end and sec != ".bss" and any(syms.rd(oe, min(ra, end) - oe)):
+                # (overlays) non-zero bytes up to the next word: more objects, from right behind this one
+                ra = oe
+            if end - ra >= 4 or (ra == oe and end > ra):
                 if sec != ".bss" and any(syms.rd(addr + t.size(), ra - addr - t.size())):
                     raise GenError("non-zero bytes behind the %d byte object" % t.size())
-                for gn, ga, gd, gt, gc in guess(syms, "dword_%08X" % ra, ra, end - ra, sec, gen):
+                pre = "dword_" if ra % 4 == 0 else "word_" if ra % 2 == 0 else "byte_"
+                for gn, ga, gd, gt, gc in guess(syms, "%s%08X" % (pre, ra), ra, end - ra, sec, gen):
                     defs.append(Def(n, gn, ga, sec, gt, gd, False, gc))
                     gen.local[gn] = gt
                     syms.add(gn, ga)
