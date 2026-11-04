@@ -101,4 +101,6 @@ typedef struct
 
 void InitCameraTask_800368F8();
 
+void ResetCameraToLevant_800376A8(void);
+
 #endif

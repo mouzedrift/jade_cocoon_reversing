@@ -1273,44 +1273,35 @@ CombBtlPair MergeHitWindows_800A71E4(int count, CombBtlPair* windows)
     return merged;
 }
 
-#if 0
-// Not matched: scheduling/regalloc around the 0x1000 store and the cb_C address (15 words); the flags store only stays ahead of the camera stores with e as int*
-extern void ResetCameraToLevant_800376A8(void);
-extern void InitCameraTask_800368F8(void);
-extern int cameraState_8008D4F0[];
-extern int cameraZoom_8008B4F8;
-extern short dword_8007C2EC[];
-extern short dword_8007C30C[];
-extern short lightMatrix_80087114[];
-extern short colorMatrix_80087134[];
+// Matched
 void StartArenaCamera_800A7290()
 {
-    int* e = (int*)AllocEventEntry_80043AF8(cameraTask_8008D4A0);
-    char* cam;
+    EventEntry* e = AllocEventEntry_80043AF8(cameraTask_8008D4A0);
+    CameraView* cam;
     SaveData* save;
     if (e)
     {
-        e[0] = (e[0] | 1) & ~0x8000;
+        e->flags = (e->flags | 1) & ~0x8000;
         ResetCameraToLevant_800376A8();
         StartBattleCamera_80037748();
-        e[2] = (int)InitCameraTask_800368F8;
+        e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
+        e->cb_C = (EventEntryFn)FreeCameraTask_800376A0;
+        e->flags = (e->flags | 4) & ~0x8000;
+        cam = &cameraState_8008D4F0;
+        cam->geomScreen_2E = 0;
+        cam->lookAt_20.x = 0;
+        cam->lookAt_20.y = 0;
+        cam->lookAt_20.z = 0;
+        cam->eye_14.x = 0;
+        cam->eye_14.y = 0;
+        cam->eye_14.z = 0;
+        cam->lightDir_34.vx = 0;
+        cam->lightDir_34.vy = 0;
+        cam->lightDir_34.vz = 0;
+        cam->lightColor_3C.vx = 0;
+        cam->lightColor_3C.vy = 0;
+        cam->lightColor_3C.vz = 0;
         cameraZoom_8008B4F8 = 0x1000;
-        e[3] = (int)FreeCameraTask_800376A0;
-        e[0] = (e[0] | 4) & ~0x8000;
-        cam = (char*)cameraState_8008D4F0;
-        *(short*)(cam + 0x2E) = 0;
-        *(int*)(cam + 0x20) = 0;
-        *(int*)(cam + 0x24) = 0;
-        *(int*)(cam + 0x28) = 0;
-        *(int*)(cam + 0x14) = 0;
-        *(int*)(cam + 0x18) = 0;
-        *(int*)(cam + 0x1C) = 0;
-        *(short*)(cam + 0x34) = 0;
-        *(short*)(cam + 0x36) = 0;
-        *(short*)(cam + 0x38) = 0;
-        *(short*)(cam + 0x3C) = 0;
-        *(short*)(cam + 0x3E) = 0;
-        *(short*)(cam + 0x40) = 0;
         save = &saveData_8008B570;
         save->levant_7A8.pos.x = 0;
         save->levant_7A8.pos.y = 0;
@@ -1318,22 +1309,20 @@ void StartArenaCamera_800A7290()
         save->levant_7A8.rot.vx = 0;
         save->levant_7A8.rot.vy = 0;
         save->levant_7A8.rot.vz = 0;
-        *(short*)(cam + 0x34) = dword_8007C2EC[0];
-        *(short*)(cam + 0x36) = dword_8007C2EC[1];
-        *(short*)(cam + 0x38) = dword_8007C2EC[2];
-        *(short*)(cam + 0x3C) = dword_8007C30C[0];
-        *(short*)(cam + 0x3E) = dword_8007C30C[3];
-        *(short*)(cam + 0x40) = dword_8007C30C[6];
-        lightMatrix_80087114[0] = dword_8007C2EC[0];
-        lightMatrix_80087114[1] = dword_8007C2EC[1];
-        lightMatrix_80087114[2] = dword_8007C2EC[2];
-        colorMatrix_80087134[0] = dword_8007C30C[0];
-        colorMatrix_80087134[3] = dword_8007C30C[3];
-        colorMatrix_80087134[6] = dword_8007C30C[6];
+        cam->lightDir_34.vx = dword_8007C2EC.m[0][0];
+        cam->lightDir_34.vy = dword_8007C2EC.m[0][1];
+        cam->lightDir_34.vz = dword_8007C2EC.m[0][2];
+        cam->lightColor_3C.vx = dword_8007C30C.m[0][0];
+        cam->lightColor_3C.vy = dword_8007C30C.m[1][0];
+        cam->lightColor_3C.vz = dword_8007C30C.m[2][0];
+        lightMatrix_80087114.m[0][0] = dword_8007C2EC.m[0][0];
+        lightMatrix_80087114.m[0][1] = dword_8007C2EC.m[0][1];
+        lightMatrix_80087114.m[0][2] = dword_8007C2EC.m[0][2];
+        colorMatrix_80087134.m[0][0] = dword_8007C30C.m[0][0];
+        colorMatrix_80087134.m[1][0] = dword_8007C30C.m[1][0];
+        colorMatrix_80087134.m[2][0] = dword_8007C30C.m[2][0];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, StartArenaCamera_800A7290);
 
 void StopArenaCamera_800A73E4()
 {

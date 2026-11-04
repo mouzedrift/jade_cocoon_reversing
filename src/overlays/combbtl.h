@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "camera.h"
+#include "event.h"
 
 typedef struct CombBtlNode
 {
@@ -256,5 +257,9 @@ extern const char aMu_800A4A94[];
 extern int dword_8008D610;
 int GetGaugeRate_800A5B70(int side);
 void StartTurn_800A5C64(CombBtlTask* t);
+
+extern CameraView cameraState_8008D4F0;
+extern MATRIX dword_8007C2EC; // default light matrix
+extern MATRIX dword_8007C30C; // default light colour matrix
 
 #endif
