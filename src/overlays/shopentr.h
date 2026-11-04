@@ -26,6 +26,51 @@ typedef struct
     int timed_10; // advances by itself after a progress gauge
 } ShelfMenuState;
 
+typedef struct
+{
+    unsigned short cursorRect_0[4];
+    short cursor_8; // MenuCursor row
+    short scroll_A;
+    unsigned int flags_C; // 1: a timed state is running (ShelfMenuProgress_800B73A8)
+    unsigned int pages_10;
+    short state_14;
+    short progress_16;
+} ShelfMenu;
+
+/* SHOPENTR functions */
+int IsShelfMenuActive_800B6F0C(void);
+void StartShelfMenu_800B6F1C(void);
+void ShelfMenuTask_800B7000(EventEntry* task, ShelfMenu* menu);
+void ShelfMenuConfirm_800B7144(ShelfMenu* menu);
+void ShelfMenuCancel_800B72D4(ShelfMenu* menu);
+int ShelfMenuProgress_800B73A8(ShelfMenu* menu);
+void DrawShelfMenu_800B7440(ShelfMenu* menu);
+void SetShelfMenuCursorRect_800B7520(ShelfMenu* menu);
+void DrawCardCheckPage_800B7594(ShelfMenu* menu);
+void DrawCardSelectPage_800B75DC(ShelfMenu* menu);
+void DrawShelfSelectPage_800B7684(ShelfMenu* menu);
+void DrawShelfContentsPage_800B7858(ShelfMenu* menu);
+void DrawPageCount_800B7A90(ShelfRect* pos, short num, short total);
+void DrawNumberPair_800B7B64(ShelfRect* pos, short num, short total);
+void DrawZeroTime_800B7C08(ShelfRect* pos);
+
+/* other overlays */
+void ShopCtrlRequestShop_800B6CA0(void);       // SHOPCTRL.BIN (shopctrl.h)
+Minion* GetShopMinion_800B9C5C(int i);         // SHOP.BIN (shop.h), not loaded with this overlay
+
+/* exe-side, to move to <exe header> (named in the comment) */
+extern EventNode* shelfMenuTask_8008D4A8;      // main.h (declared int there)
+void DrawGauge_8002BA54(void* gauge, int arg1, void* pos, int ot); // ui_gauge
+void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot); // menu_window.h
+void DrawMenuBackground_8002BE10(void);        // ui_sprites
+void DrawSmallText_8002FAA0(int align, void* pos, void* text, short ot); // party_window.h
+void UpdateMenuCursor_8003D794(ShelfMenu* menu, int arg1); // pad_text.h
+void DrawText_8003E91C(int mode, const char* text, void* pos, short ot); // font.h
+void DrawNumber_8003EF74(void* pos, int val, short ot); // util.h
+void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, short ot); // util.h
+
+/* SHOPENTR data */
+
 extern int dword_800B6D00;
 extern const char aSaved_800B6D04[];
 extern const char aSaving_800B6D14[];
@@ -57,7 +102,6 @@ extern const char aRank_800B6EF4[];
 extern const char aElement_800B6EFC[];
 extern const char aSlash_800B6F04[];
 extern const char aColon_800B6F08[];
-extern int IsShelfMenuActive_800B6F0C(void);
 extern int dword_800B7CC0[2];
 extern unsigned short cardCheckTextPos_800B7CC8[2];
 extern int dword_800B7CCC;

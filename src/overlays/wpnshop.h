@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "tiy.h"
+#include "sound.h"
 
 // DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
 typedef struct StoreMenuWindows
@@ -32,6 +33,201 @@ typedef struct StoreMenuItem
     int value_4; // icon, name text, price
     char pad_8[0x14];
 } StoreMenuItem;
+
+// work area of the store task (EventEntry.buffer)
+typedef struct StoreMenu
+{
+    short state_0; // 0 item main, 1 equipment main, 2/3 item buy/sell list, 4/5 equipment buy/sell list,
+                   // 6/7 equipment kind for buy/sell, 8/9 equipment buy/sell count, 10/11 item buy/sell count,
+                   // 12/13 equipment buy/sell confirm, 14/15 item buy/sell confirm, 16 ready it now?, 17 readied,
+                   // 18 ready it later
+    short nextState_2; // -1: none (StoreEnterState_800BB30C)
+    int flags_4;       // 1 message shown, 2 leaving
+    int windows_8;     // stateWindows_800BE7CC bits
+    int windowsOpen_C;
+    short equipKind_10; // 0 weapon, 1 armor, 2 accessory
+    short sell_12;      // 0 buy, 1 sell
+    int itemId_14;
+    int quantity_18;
+    short storeKind_1C; // 0 equipment, 1 items
+    unsigned short stockMask_1E; // GetStoreStockMask_800BB088
+    short stockCounts_20[4];     // weapons, armor, accessories, items in stock
+    short cursor_28[4];          // MenuCursor (UpdateMenuCursor_8003D794): columns, rows, count, flags
+    short cursorIndex_30;
+    short cursorScroll_32;
+    short panel_34; // storePanels_800BE580 index
+    short savedIndex_36;
+    short savedScroll_38;
+    short textId_3A; // storeTextsA_800BE37C index
+    short field_3C;
+    short field_3E;
+    int confirm_40;
+    int cancel_44;
+    short openTimer_48; // window open animation, 0..8
+    char pad_4A[2];
+    short keeperId_4C;  // 2 / 3: storeTextsB_800BE3D8 / storeTextsC_800BE434
+    short errorId_4E;   // 1 not enough money, 2 can't carry more
+    short messageTimer_50;
+} StoreMenu;
+
+typedef struct StoreRect
+{
+    short x, y, w, h;
+} StoreRect;
+
+// window style for DrawWindow_80042460 (CombSelBox)
+typedef struct StoreWinStyle
+{
+    unsigned short col_0;
+    char state_2;
+    char frame_3;
+} StoreWinStyle;
+
+// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
+typedef struct StoreArrow
+{
+    short kind_0;
+    short dir_2;
+} StoreArrow;
+
+// window colour for DrawWindow_80042460 (CombSelBox)
+typedef struct StoreWinColor
+{
+    short color_0;
+    char state_2;
+    char frame_3;
+} StoreWinColor;
+
+// DrawUiWindow_8002A384's parameter block
+typedef struct StoreUiWindow
+{
+    void* rect;
+    int frame;
+    short highlight;
+    short ot;
+} StoreUiWindow;
+
+typedef struct StoreXY
+{
+    short x;
+    short y;
+} StoreXY;
+
+typedef struct StorePos
+{
+    unsigned short x;
+    unsigned short y;
+} StorePos;
+
+// a UI sprite position followed by a window style (DrawUiTiySprt_8002C06C, then DrawWindow_80042460 on col_8)
+typedef struct StoreSprtBox
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    unsigned short col_8;
+    char state_A;
+    char frame_B;
+} StoreSprtBox;
+
+/* WPNSHOP functions */
+void StartStore_800BAE2C(int kind, short keeper);
+int GetStoreStockMask_800BB088(StoreMenu* store);
+void StoreWaitUiTiy_800BB130(EventEntry* task, StoreMenu* store);
+void StoreFadeIn_800BB194(EventEntry* task, StoreMenu* store);
+void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store);
+void StoreWaitMapReload_800BB298(EventEntry* task, void* buffer);
+void StoreEnterState_800BB30C(StoreMenu* store);
+void StoreInput_800BB664(StoreMenu* store);
+void DrawStoreWindowFrame_800BB868(StoreMenu* store, StoreRect* rect, int a2, int a3, short idx);
+void DrawStoreDialog_800BB8CC(StoreMenu* store);
+void DrawStore_800BB950(StoreMenu* store);
+void UpdateStoreCursor_800BBDD0(StoreMenu* store);
+void SetStoreErrorText_800BBE54(StoreMenu* store);
+void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos);
+void DrawHeldCountWindow_800BBFD4(int count);
+void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel);
+void DrawStoreMainMenu_800BC194(StoreMenu* store);
+void DrawStoreMainCursor_800BC210(StoreMenu* store);
+void DrawEquipKindMenu_800BC268(StoreMenu* store);
+void DrawItemHeldCount_800BC2E4(StoreMenu* store);
+void DrawStoreList_800BC374(StoreMenu* store, short panel);
+void DrawEquippedMark_800BCABC(StoreMenu* store, short panel);
+void DrawItemQuantity_800BCC18(StoreMenu* store);
+void DrawEquipHeldCount_800BCC4C(StoreMenu* store);
+void DrawEquipStatCompare_800BCCE8(StoreMenu* store);
+void SetStoreDialogText_800BCED4(StoreMenu* store);
+void DrawStoreButtonHelp_800BCF80(unsigned short* state);
+void DrawTotalPrice_800BCFCC(StoreMenu* store);
+void DrawEquipQuantity_800BD174(StoreMenu* store);
+void StoreMainInput_800BD1A8(StoreMenu* store);
+void ItemBuyListInput_800BD278(StoreMenu* store);
+void ItemSellListInput_800BD378(StoreMenu* store);
+void StoreConfirmInput_800BD444(StoreMenu* store);
+void ReadyEquipInput_800BD61C(StoreMenu* store);
+void StoreWaitPrompt_800BD6A4(StoreMenu* store);
+int IsEquipped_800BD71C(int id, int kind);
+void StoreQuantityInput_800BD760(StoreMenu* store);
+void EquipKindInput_800BD928(StoreMenu* store);
+void EquipBuyListInput_800BD9A8(StoreMenu* store);
+void EquipSellListInput_800BDAB4(StoreMenu* store);
+int BuyItem_800BDB80(int id, int count);
+void SellItem_800BDBDC(int id, int count);
+int BuyEquipment_800BDC40(int id, int kind, int count);
+void SellEquipment_800BDCB4(int id, int kind, int count);
+int GetStockEquipment_800BDD2C(int nth, unsigned int kind, int mask);
+int GetStockItem_800BDDB0(int nth, int mask);
+short CountStock_800BDDF8(unsigned short* stock, int count, int mask);
+int GetMaxBuyEquipCount_800BDE38(short id, short kind);
+int GetMaxBuyItemCount_800BDF68(short id);
+short GetStoreListPos_800BE00C(StoreMenu* store, short panel);
+short GetStoreListCursor_800BE058(StoreMenu* store, short panel);
+int AdjustBuyQuantity_800BE084(int count, int max);
+
+/* GAME.BIN (resident field overlay), to move to game.h */
+void RequestGameMode_800A6D30(int a);
+void SuspendFieldMinions_800A7B00(int a);
+void ResumeFieldMinions_800A7BF0(int a);
+int GetMoney_800AD02C(void);
+void AddMoney_800AD058(int a);
+int SpendMoney_800AD0A4(int a);
+int AddInventory_800AD184(int a, int b, int c);
+void RemoveInventory_800AD1E0(int a, int b, int c);
+int GetInventoryCount_800AD254(int a, int b);
+int GetLastInventorySlot_800AD308(int a);
+int FindInventorySlotForAdd_800AD4D8(int a, int b, int c);
+int TestValuableFlag_800AD73C(int a);
+void SetEquipment_800AD9EC(int itemId, int category);
+
+/* exe-side, to move to <exe header> (named in the comment) */
+extern char name_80082680[];
+extern char name_800826B0[];
+extern unsigned short uiColor_8008B590;
+extern int** storeTask_8008D3E0;            // main.h (declared differently there)
+extern char* dword_8008D454;
+extern unsigned short padRepeat_800918CC;   // main.h (declared differently there)
+extern unsigned short padPressed_8009194C;  // main.h (declared [] there)
+int GetEquipmentName_8001D128(int idx, unsigned int kind); // engine.h
+void SetFadeMode_8001C19C(int a, int b);    // engine.h
+void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
+void DrawTextList_8002A310(void* p, int a); // menu_draw.h
+void DrawUiWindow_8002A384(void* p);        // menu_draw.h
+void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
+void DrawMenuWindows_8002A5A4(StoreMenuWindows* p); // menu_draw.h
+void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot); // menu_window.h
+void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
+void DrawMenuBackground_8002BE10();         // ui_sprites
+void FreeActiveOverlay_8002C014(void);      // ui_sprites
+void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot); // ui_sprites
+void DrawSmallNumber9_8002C414(void* p, int a, short b); // ui_sprites
+void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot); // status_panel.h
+void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out); // status_panel.h
+void DrawLevantStats_8002F7D0(void* pos, int ot); // party_window.h
+void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.h
+int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d); // pad_text.h
+void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3); // event.h
+
+/* WPNSHOP data */
 
 extern int dword_800B66C0;
 extern const int aEmpty_800B66C4;
@@ -403,8 +599,8 @@ extern int equipKindItem0_800BEB0C[14];
 extern int equipKindItem1_800BEB44[14];
 extern int equipKindItem2_800BEB7C[14];
 extern char equipKindItems_800BEBB4[16];
-extern char moneyWindowPosL_800BEBC4[4];
-extern char moneyWindowPosR_800BEBC8[4];
+extern StorePos moneyWindowPosL_800BEBC4;
+extern StorePos moneyWindowPosR_800BEBC8;
 extern char itemDescLines_800BEBCC[688];
 extern char weaponDescLines_800BEE7C[368];
 extern char armorDescLines_800BEFEC[240];

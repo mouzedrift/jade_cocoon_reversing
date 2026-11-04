@@ -9,6 +9,8 @@
 #include "engine.h"
 #include "minion_menu.h"
 #include "tiy.h"
+#include "sound.h"
+#include "shopctrl.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -73,6 +75,287 @@ typedef struct ShopHelp
     const char* text_4;
 } ShopHelp;
 
+// work area of the shop menu task (EventEntry.buffer)
+typedef struct ShopMenu
+{
+    short state_0; // 0 main menu, 1 merge base, 2 merge partner, 3 merge confirm, 4 merge again, 5 spin select,
+                   // 6 spin confirm, 7 party, 8 view, 9 rename, 10 exchange, 11 quit, 12 storage full, 13 skin ask,
+                   // 14 skin pick, 15 stats
+    short prevState_2;
+    short storedCount_4; // minions/cocoons in storage (state 2)
+    short partyCount_6;  // state 3
+    short errorId_8;     // CheckShopSelection_800BCF74 result shown by SetShopHelpText_800BBB54(u, 1)
+    short pad_A;
+    short openTimer_C;   // window open animation, 0..8
+    short pad_E;
+    int confirm_10;
+    int cancel_14;
+    int messageShown_18; // ShopWaitMessage_800BBA3C
+    unsigned int windows_1C;     // stateWindows_800BF8B4 bits
+    unsigned int windowsOpen_20; // windows that finished opening
+    int flags_24; // 1 recount, 2 prompt shown, 4 quitting, 8 party + stored lists, 0x10 party list active,
+                  // 0x20 form view, 0x40/0x80/0x100 ability/magic/family tree page, 0x200 skin chosen,
+                  // 0x400 stats view, 0x800 fading, 0x1000 description shown
+    // MenuCursor (UpdateMenuCursor_8003D794) of the minion lists
+    short listCols_28;
+    short listRows_2A;
+    short listCount_2C;
+    short listFlags_2E;
+    short listIndex_30;
+    short listScroll_32;
+    // MenuCursor of the merge preview (0 base, 1 partner, 2 result)
+    short tabCols_34;
+    short tabRows_36;
+    short tabCount_38;
+    short tabFlags_3A;
+    short tabIndex_3C;
+    short tabScroll_3E;
+    // MenuCursor of the ability / magic page
+    short pageCols_40;
+    short pageRows_42;
+    short pageCount_44;
+    short pageFlags_46;
+    short pageIndex_48;
+    short pageScroll_4A;
+    Minion* base_4C;    // the chosen minion (merge base, ...)
+    Minion* partner_50; // the second minion (merge partner, exchange)
+    Minion* shown_54;   // the minion the status panel shows
+    unsigned short partyIndex_58;
+    unsigned short storedIndex_5A;
+    unsigned short storedScroll_5C;
+    short savedIndex_5E[10]; // per stateIndexSlots_800BFD1C
+    short savedScroll_72[4]; // per stateScrollSlots_800BFD3C
+    short savedList_7A[2];   // per stateListSlots_800BFD5C
+    short list_7E; // 0 party list, 1 stored list
+    short markCount_80;
+    short pad_82;
+    int marks_84;       // marked entries: party 0..2, stored from 3
+    int partyMarks_88;
+    int storedMarks_8C;
+    int field_90;
+    short fadeAction_94; // 1 merge, 2 spin
+    short shopId_96;     // 4: the first shopkeeper's texts (stateTextsA_800BFAB4), else stateTextsB_800BFAF4
+    short messageTimer_98;
+} ShopMenu;
+
+typedef struct FormActorDesc
+{
+    int modelId_0; // the CreateActor_8001D45C ActorDesc without hasMatrices_4C
+    int kind_4;
+    int posX_8;
+    int posY_C;
+    int posZ_10;
+    short rotX_14;
+    short rotY_16;
+    short rotZ_18;
+    short pad_1A;
+    int clutRow_1C;
+    int animIdx_20;
+    int frame_24;
+    int frameSpeed_28;
+    int blendDiv_2C;
+    int visible_30;
+    int bones_34;
+    int baseScale_38;
+    int boneScale_3C;
+    int anims_40;
+    int effectTbl_44;
+    int model_48;
+} FormActorDesc;
+
+typedef struct ShopPos
+{
+    short x;
+    short y;
+} ShopPos;
+
+// window style for DrawWindow_80042460
+typedef struct ShopWinColor
+{
+    short color;
+    unsigned char colorSet_2; // window colour set (GetWindowColors_8004226C)
+    unsigned char semiTrans_3;
+} ShopWinColor;
+
+// DrawUiWindow_8002A384's parameter block
+typedef struct ShopUiWin
+{
+    ShopRect* rect_0;
+    int time_4;
+    short field_8;
+    short ot_A;
+} ShopUiWin;
+
+typedef struct ShopPair
+{
+    short a;
+    short b;
+} ShopPair;
+
+// (o[4] += o[6]) and reloads o[6] in the o[2] != o[3] case; here the two tails get different registers.
+typedef struct TopSpeciesBuf
+{
+    unsigned char b[4];
+    int pad_4;
+    int w[3];
+} TopSpeciesBuf;
+
+/* SHOP functions */
+int CompactStoredMinions_800B97B0(void);
+int FindStoredMinion_800B9888(short i);
+int BuildShopMinionList_800B9920(void);
+void ClearShopMinion_800B9B20(int i);
+void SetMinionEmpty_800B9B44(short* state);
+Minion* GetNthShopMinion_800B9B50(int state, int n);
+int GetShopMinionState_800B9C10(int i);
+short* GetShopMinionAncestors_800B9C34(int i);
+char* GetMinionAncestors_800B9C54(char* minion);
+Minion* GetShopMinion_800B9C5C(int i);
+int CountShopMinionsInState_800B9C78(int state);
+int SetMinionInParty_800B9CCC(short* state);
+int MoveShopMinionToParty_800B9CDC(int i);
+int SetMinionStored_800B9D48(short* state);
+int MoveShopMinionToStorage_800B9D6C(int i);
+int CommitShopMinionList_800B9DA8(void);
+int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short state);
+int MergeMinions_800B9FC8(Minion* base, Minion* partner, Minion* out, int person);
+void ClearMinion_800BA340(unsigned int* minion);
+void InheritMergeStats_800BA368(Minion* out, Minion* src);
+void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned char* partner);
+unsigned char MergeBaseStat_800BA46C(unsigned char base, unsigned char partner);
+void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner);
+void ApplyMergeStatBonus_800BA650(Minion* out);
+void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner);
+void MergeSkills_800BA72C(Minion* out, Minion* partner);
+void MergeMagic_800BAA0C(Minion* out, Minion* partner);
+int CanInheritMagic_800BAB30(Minion* minion);
+void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner);
+int GetSpecialMergeSpecies_800BACD0(Minion* minion);
+int GetSilkItemForLevel_800BAE80(Minion* minion);
+void SwapMinions_800BAEDC(Minion* first, Minion* second);
+int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList);
+void StartShop_800BB058(int shopId);
+void ShopFadeIn_800BB0F8(EventEntry* task, void* buffer);
+void InitShopMenu_800BB148(ShopMenu* menu);
+int CanViewForm_800BB38C(ShopMenu* menu);
+int CanRearrange_800BB3E8(ShopMenu* menu);
+void ShopMenuTask_800BB444(EventEntry* task, void* buffer);
+void SaveShopCursor_800BB798(ShopMenu* menu);
+void RestoreShopCursor_800BB828(ShopMenu* menu);
+void ShopMenuBack_800BB8C4(ShopMenu* menu);
+void ShopWaitMessage_800BBA3C(ShopMenu* menu);
+void UpdateMainMenuHelp_800BBAAC(ShopMenu* menu);
+void SetShopHelpText_800BBB54(ShopMenu* menu, int mode);
+void ShopMenuInput_800BBE24(ShopMenu* menu);
+void CycleInfoPage_800BC1A8(ShopMenu* menu);
+void DismissShopPrompt_800BC2DC(ShopMenu* menu);
+void DrawShopMenu_800BC380(ShopMenu* menu);
+void DrawShopButtonHelp_800BCCD8(ShopMenu* menu);
+void DrawShopMainMenu_800BCEDC(ShopMenu* menu);
+int CheckShopSelection_800BCF74(ShopMenu* menu);
+void HandleShopConfirmCancel_800BD0D4(ShopMenu* menu);
+int IsMergePreviewState_800BD650(short* state);
+int IsMinionListState_800BD678(ShopMenu* menu);
+int IsNoChosen_800BD6C4(ShopMenu* menu);
+void PreviewMerge_800BD720(ShopMenu* menu);
+void SetShopWindows_800BD7A8(ShopMenu* menu);
+void SetupShopCursor_800BD854(ShopMenu* menu);
+void ShopMenuExecute_800BD9DC(ShopMenu* menu);
+void ShopWaitAreaReload_800BDD74(EventEntry* task, void* arg);
+void ShopWaitDarken_800BDE44(EventEntry* task, void* buffer);
+void ShopWaitBrighten_800BDEA8(EventEntry* task, void* buffer);
+void ShopResumeAfterSpin_800BE07C(EventEntry* task, void* buffer);
+void ShopResumeAfterNameEntry_800BE128(EventEntry* task, void* buffer);
+void ShopWaitUiTiy_800BE210(EventEntry* task, void* buffer);
+void ShopFadeInMenu_800BE264(EventEntry* task, void* buffer);
+void StartFormView_800BE2B4(Minion* minion);
+void FormViewTask_800BE334(EventEntry* task, void* buffer);
+void FormViewLoadTask_800BE4D0(EventEntry* task, void* buffer);
+void DrawPartyList_800BE53C(ShopMenu* menu);
+void DrawStoredList_800BE7F0(ShopMenu* menu);
+int GetStoredListScroll_800BEB60(ShopMenu* menu);
+void UpdateSelectedMinions_800BEBC8(ShopMenu* menu);
+void UpdateShownMinion_800BECC8(ShopMenu* menu);
+void DrawSkinList_800BED48(short* ref);
+void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c);
+int GetElementHue_800BF2E4(unsigned char* elements);
+int ElementMixAngle_800BF3B4(unsigned char* elements);
+void ResetFormModel_800BF474(void);
+void FreeFormModel_800BF484(void);
+void LoadFormModel_800BF4B8(Minion* minion);
+int RunFormModelTask_800BF520(void);
+void FreeFormModelTask_800BF548(void);
+void SpawnFormActor_800BF574(int* pos, unsigned short* rot);
+void DestroyFormActor_800BF6C4(void);
+void ShowFormActor_800BF704(int shopId);
+void EndFormView_800BF750(void);
+Actor* GetFormActor_800BF780(void);
+
+/* SHOPCTRL.BIN (loaded below SHOP.BIN) and the exe functions both use: see shopctrl.h */
+
+/* GAME.BIN (resident field overlay), to move to game.h */
+void ExchangeEventResult_800A5F9C(int a);
+void AddInventory_800AD184(int a, int b, int c);
+void RemoveInventory_800AD1E0(int a, int b, int c);
+int GetLastInventorySlot_800AD308(int a);
+int IsInventory4NonEmpty_800AD398();
+void CompactInventory_800AD3F0(int a);
+int GetFreeCocoonSlots_800AD888();
+void AddEmptyCocoons_800AD8F4(int a);
+
+/* exe-side, to move to <exe header> (named in the comment) */
+extern EventNode* shopMenuTask_8008D670;    // main.h (declared int there): the shop menu task list
+extern unsigned short padPressed_8009194C; // main.h (declared [] there)
+extern int dword_8007DC74;                 // effect_data.h (dword_8007DC74[6])
+extern char defaultBones_80079140[];
+extern signed char elementModifiers_8007BA74[];       // effect_data.h elementModifiers_8007BA74 (declared unsigned there)
+extern char name_80082680[];
+extern short sinTable_80084540[];        // data_decls.h
+extern Minion name_8008EF18[];
+int StartModelTask_80010850(void* p);     // party.h
+int fn_80010A44(int a);                   // party.h
+void fn_80011CD0(UnitStatus* p);          // unit_stats.h
+int ApplyLevelUps_80011D98(UnitStatus* a, int b); // unit_stats.h
+void fn_80019B14(int a, int b, int c);    // minion_init.h
+void StartSceneDarken_8001AAA8(int a);    // engine.h
+void StopSceneDarken_8001AAF4();          // engine.h
+void StartSceneBrighten_8001AB1C(int a);  // engine.h
+int IsSceneFadeDone_8001AB94();           // engine.h
+void fn_8001ABEC(int a);                  // engine.h
+int GetMagicElement_8001AD30(int i);      // engine.h
+void ClearMagicBit_8001AE00(unsigned int* b, int i); // engine.h
+int CountMagicBits_8001AE54(unsigned int* b);        // engine.h
+int FindNthMagicBit_8001AEC0(unsigned int* bits, int n); // engine.h
+void* fn_8001D45C(void* p);               // engine.h (CreateActor)
+void DestroyActor_8001D600(void* p);      // engine.h
+void fn_8001D68C(void* p, int on);        // engine.h
+int fn_80024E38(int a);                   // model_ftg
+int fn_80024E64(int a);                   // model_ftg
+int fn_80024E90(int a, int b);            // model_ftg
+int fn_80024EC8(int a, int b);            // model_ftg
+int fn_80024F00(int a, int b);            // model_ftg
+int fn_80024F38(int a, int b);            // model_ftg
+int IsMapLoading_800272D0();                        // model_ftg
+void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
+void DrawUiWindow_8002A384(ShopUiWin* p);            // menu_draw.h
+void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
+void DrawMenuWindows_8002A5A4(void* p);              // menu_draw.h
+void DrawButtonHelpBar_8002B004(void* p, int a, int b); // menu_window.h
+void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
+void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot); // ui_sprites
+void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot); // ui_sprites
+void DrawScrollArrow_8002C6DC(void* p, int a, int b); // ui_sprites
+void DrawMagicList_8002CAC8(ListMenuState* ref, ShopPos* pos); // ui_sprites
+void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos); // ability_menu
+void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h
+void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp); // status_panel.h
+void DrawSmallText_8002FAA0(int align, unsigned short* pos, char* name, int ot); // party_window.h
+int UpdateMenuCursor_8003D794(void* p, int a);       // pad_text.h
+void InterpolateWindowRect_8004196C(void* out, void* rect, int step, int steps, int a4); // movie.h
+void DrawWindow_80042460(void* rect, ShopWinColor* w, void* ot, int t); // event.h
+void* memset(void* p, int c, unsigned int n);        // libc
+
+/* SHOP data */
 extern int dword_800B6D00;
 extern const char aAssertFmt_800B6D04[];
 extern const char aCmpactC_800B6D2C[];

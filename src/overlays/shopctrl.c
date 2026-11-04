@@ -2,37 +2,9 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "main.h"
 #include "shopctrl.h"
 
-extern int shopCtrlTask_8008D438;
-extern int shopMenuTask_8008D670;
-extern int eventDispatchHalt_8008B540;
-extern short word_8008D474[2];
-extern int cameraState_8008D4F0;
-extern // restores the map camera GAME saved before the shop and recentres the geometry offset
-void RestoreMapCamera_800B6720();
-extern void ShopCtrlLoadOverlay_800B6840(EventEntry* task, void* buffer);
-extern void ShopCtrlWaitOverlay_800B6898(EventEntry* task, void* buffer);
-extern void ShopCtrlWaitUiReload_800B6900(EventEntry* task, void* buffer);
-extern void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer);
-extern // waits for a mode request: 0 shop, 1 name entry, 2 resume, 3 leave the shop (reload the area)
-void ShopCtrlIdle_800B6964(EventEntry* task, void* buffer);
-extern void ShopCtrlWaitMapReload_800B6A6C(EventEntry* task, void* buffer);
-extern void ShopCtrlInit_800B67C0(EventEntry* task, void* buffer);
-extern void ShopCtrlWaitUiTiy_800B681C(EventEntry* task, void* buffer);
-extern void StartNameEntry_800B6E4C(int, int);
-extern void CommitShopMinionList_800B9DA8();
-extern void StartShop_800BB058(int);
-extern void SuspendFieldMinions_800A7B00(int);
-extern void ResumeFieldMinions_800A7BF0(int);
-extern void RequestGameMode_800A6D30(int);
-extern void* GetEventDataSlot_800A55B0(int);
-extern void SetFadeMode_8001C19C(int, int);
-extern void LoadUiTiy_8002BF74();
-extern void DrawMenuBackground_8002BE10();
-extern void SetLoadFadeFlag_80027478(int, int);
-extern void UpdateCameraFollow_80037918(void* camera);
-extern void FreeActiveOverlay_8002C014();
 
 int dword_800B66C0 SDATA = 30;
 
@@ -56,7 +28,7 @@ void RestoreMapCamera_800B6720()
     MemCopy_800403E8(&cameraState_8008D4F0, buf, 0x104);
     UpdateCameraFollow_80037918(cameraTask_8008D4A0->entry.buffer);
     disp = (unsigned short*)&display_8008B4D8;
-    SetGeomOffset((short)disp[6] / 2 + word_8008D474[0], (short)disp[7] / 2 + word_8008D474[1]);
+    SetGeomOffset((short)disp[6] / 2 + screenOffset_8008D474[0], (short)disp[7] / 2 + screenOffset_8008D474[1]);
 }
 
 void ShopCtrlInit_800B67C0(EventEntry* task, void* buffer)
@@ -208,7 +180,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
     shopCtrlPrevMode_800B6CE8 = shopCtrlMode_800B6CEC;
 }
 
-void ShopCtrlRequestNameEntry_800B6C6C(int name, int reloadUi)
+void ShopCtrlRequestNameEntry_800B6C6C(char* name, int reloadUi)
 {
     short prevMode;
     shopCtrlNameTarget_800B6CFC = name;
@@ -247,4 +219,4 @@ short shopCtrlMode_800B6CEC = 0;
 Minion* shopMinions_800B6CF0 = 0;
 int shopCtrlOverlayReq_800B6CF4 = 0;
 int shopCtrlReloadUi_800B6CF8 = 0;
-int shopCtrlNameTarget_800B6CFC = 0;
+char* shopCtrlNameTarget_800B6CFC = 0;

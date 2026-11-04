@@ -5,45 +5,6 @@
 #include "sound.h"
 #include "shopentr.h"
 
-typedef struct
-{
-    unsigned short cursorRect_0[4];
-    short cursor_8; // MenuCursor row
-    short scroll_A;
-    unsigned int flags_C; // 1: a timed state is running (ShelfMenuProgress_800B73A8)
-    unsigned int pages_10;
-    short state_14;
-    short progress_16;
-} ShelfMenu;
-
-
-
-extern EventNode* shelfMenuTask_8008D4A8;
-extern void DrawMenuBackground_8002BE10(void);
-extern void DrawGauge_8002BA54(void* gauge, int arg1, void* pos, int ot);
-extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);
-extern void DrawNumber_8003EF74(void* pos, int val, short ot);
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, short ot);
-extern void UpdateMenuCursor_8003D794(ShelfMenu* menu, int arg1);
-extern int IsConfirmPressedP1_8003D380(int playSfx);
-extern int IsCancelPressedP1_8003D41C(int playSfx);
-extern void ShopCtrlRequestShop_800B6CA0(void);
-extern void SetShelfMenuCursorRect_800B7520(ShelfMenu* menu);
-extern void DrawShelfMenu_800B7440(ShelfMenu* menu);
-extern void ShelfMenuConfirm_800B7144(ShelfMenu* menu);
-extern void ShelfMenuCancel_800B72D4(ShelfMenu* menu);
-extern int ShelfMenuProgress_800B73A8(ShelfMenu* menu);
-extern void DrawCardCheckPage_800B7594(ShelfMenu* menu);
-extern void DrawCardSelectPage_800B75DC(ShelfMenu* menu);
-extern void DrawShelfSelectPage_800B7684(ShelfMenu* menu);
-extern void DrawShelfContentsPage_800B7858(ShelfMenu* menu);
-extern void DrawPageCount_800B7A90(ShelfRect* pos, short num, short total);
-extern void DrawNumberPair_800B7B64(ShelfRect* pos, short num, short total);
-extern void DrawZeroTime_800B7C08(ShelfRect* pos);
-extern Minion* GetShopMinion_800B9C5C(int i); // SHOP's (not loaded with this overlay)
-extern void DrawSmallText_8002FAA0(int align, void* pos, void* text, short ot);
-extern void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot);
-
 int dword_800B6D00 SDATA = 40;
 const char aSaved_800B6D04[] = "\203Z\201[\203u\202\265\202\334\202\265\202\275"; // セーブしました
 const char aSaving_800B6D14[] = "\203Z\201[\203u\202\265\202\304\202\242\202\351"; // セーブしている

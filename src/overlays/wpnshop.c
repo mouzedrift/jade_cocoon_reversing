@@ -4,193 +4,12 @@
 #include "globals.h"
 #include "wpnshop.h"
 
-// work area of the store task (EventEntry.buffer)
-typedef struct StoreMenu
-{
-    short state_0; // 0 item main, 1 equipment main, 2/3 item buy/sell list, 4/5 equipment buy/sell list,
-                   // 6/7 equipment kind for buy/sell, 8/9 equipment buy/sell count, 10/11 item buy/sell count,
-                   // 12/13 equipment buy/sell confirm, 14/15 item buy/sell confirm, 16 ready it now?, 17 readied,
-                   // 18 ready it later
-    short nextState_2; // -1: none (StoreEnterState_800BB30C)
-    int flags_4;       // 1 message shown, 2 leaving
-    int windows_8;     // stateWindows_800BE7CC bits
-    int windowsOpen_C;
-    short equipKind_10; // 0 weapon, 1 armor, 2 accessory
-    short sell_12;      // 0 buy, 1 sell
-    int itemId_14;
-    int quantity_18;
-    short storeKind_1C; // 0 equipment, 1 items
-    unsigned short stockMask_1E; // GetStoreStockMask_800BB088
-    short stockCounts_20[4];     // weapons, armor, accessories, items in stock
-    short cursor_28[4];          // MenuCursor (UpdateMenuCursor_8003D794): columns, rows, count, flags
-    short cursorIndex_30;
-    short cursorScroll_32;
-    short panel_34; // storePanels_800BE580 index
-    short savedIndex_36;
-    short savedScroll_38;
-    short textId_3A; // storeTextsA_800BE37C index
-    short field_3C;
-    short field_3E;
-    int confirm_40;
-    int cancel_44;
-    short openTimer_48; // window open animation, 0..8
-    char pad_4A[2];
-    short keeperId_4C;  // 2 / 3: storeTextsB_800BE3D8 / storeTextsC_800BE434
-    short errorId_4E;   // 1 not enough money, 2 can't carry more
-    short messageTimer_50;
-} StoreMenu;
 
-typedef struct StoreRect
-{
-    short x, y, w, h;
-} StoreRect;
 
-// window style for DrawWindow_80042460 (CombSelBox)
-typedef struct StoreWinStyle
-{
-    unsigned short col_0;
-    char state_2;
-    char frame_3;
-} StoreWinStyle;
 
-extern unsigned short uiColor_8008B590;
-extern char* dword_8008D454;
-extern int frameCount_8008D3FC;
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 /* funcs.h declares unsigned short; the callers here use the full register */
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
-extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
-extern void DrawMenuBackground_8002BE10();
-extern void DrawPortraitWindow_8002A4E4(int a);
-extern void SetFadeMode_8001C19C(int a, int b);
-extern unsigned int GetTime30Hz_8002C64C(void);
-extern void DrawMenuWindows_8002A5A4(StoreMenuWindows* p);
-extern char name_800826B0[];
-extern char name_80082680[];
-extern void DrawStoreButtonHelp_800BCF80();
-extern void DrawStore_800BB950();
-extern void DrawQuantityWindow_800BC0AC();
-extern int uiTiyLoaded_8008B4E8;
-extern int AddInventory_800AD184(int a, int b, int c);
-extern void RemoveInventory_800AD1E0(int a, int b, int c);
-extern void AddMoney_800AD058(int a);
-extern int SpendMoney_800AD0A4(int a);
-extern void DrawNextPrompt_8003CF88(short a0, short a1, int a2);
-extern void PlaySfx_80031494(int a);
-extern void UpdateMenuCursor_8003D794(void* cursor, int pad);
-extern void DrawTextList_8002A310(void* p, int a);
-extern void DrawWindowBackground_800429F8(int a0, int a1);
-extern void DrawWindowBorder_80042B38(int a0, int a1);
-extern void DrawStoreMainCursor_800BC210();
-// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
-typedef struct StoreArrow
-{
-    short kind_0;
-    short dir_2;
-} StoreArrow;
-// window colour for DrawWindow_80042460 (CombSelBox)
-typedef struct StoreWinColor
-{
-    short color_0;
-    char state_2;
-    char frame_3;
-} StoreWinColor;
-extern void DrawLevantStats_8002F7D0(void* pos, int ot);
-extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
-extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
-extern void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot);
-extern int IsCircleHeldP1_8003D480(void);
-extern void DrawStoreMainMenu_800BC194();
-extern void DrawItemHeldCount_800BC2E4();
-extern void DrawMoneyWindow_800BBED0();
-extern void DrawStoreList_800BC374(StoreMenu* store, short panel);
-extern void DrawEquipHeldCount_800BCC4C();
-extern void DrawEquipStatCompare_800BCCE8();
-extern void DrawEquipQuantity_800BD174();
-extern void DrawItemQuantity_800BCC18();
-extern void DrawEquipKindMenu_800BC268();
-extern void SetStoreDialogText_800BCED4();
-extern void DrawTotalPrice_800BCFCC();
-extern void DrawStoreDialog_800BB8CC();
-extern int** storeTask_8008D3E0;
-extern void SuspendFieldMinions_800A7B00(int a);
-extern void StoreWaitUiTiy_800BB130();
-extern short CountStock_800BDDF8();
-extern int GetStoreStockMask_800BB088();
-// DrawUiWindow_8002A384's parameter block
-typedef struct StoreUiWindow
-{
-    void* rect;
-    int frame;
-    short highlight;
-    short ot;
-} StoreUiWindow;
-typedef struct StoreXY
-{
-    short x;
-    short y;
-} StoreXY;
-extern void DrawUiWindow_8002A384(void* p);
-extern int GetMoney_800AD02C(void);
-extern int GetMaxBuyItemCount_800BDF68(short id);
-extern int GetMaxBuyEquipCount_800BDE38(short id, short kind);
-typedef struct StorePos
-{
-    unsigned short x;
-    unsigned short y;
-} StorePos;
-extern void DrawHeldCountWindow_800BBFD4();
-extern short GetStoreListPos_800BE00C(StoreMenu* store, short panel);
-extern int GetStockItem_800BDDB0();
-extern int GetStockEquipment_800BDD2C();
-extern int GetInventorySlotCount_800AD2C8(int slot, int category);
-extern int GetInventoryCount_800AD254(int a, int b);
-extern int GetInventorySlotId_800AD288(int slot, int category);
-extern int TestValuableFlag_800AD73C(int a);
-extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
-extern void DrawSmallNumber9_8002C414(void* p, int a, short b);
-// a UI sprite position followed by a window style (DrawUiTiySprt_8002C06C, then DrawWindow_80042460 on col_8)
-typedef struct StoreSprtBox
-{
-    short x_0;
-    short y_2;
-    int pad_4;
-    unsigned short col_8;
-    char state_A;
-    char frame_B;
-} StoreSprtBox;
-extern void FreeActiveOverlay_8002C014(void);
-extern void SetEquipment_800AD9EC(int itemId, int category);
-extern void UpdateStoreCursor_800BBDD0();
-extern void StoreInput_800BB664();
-extern void StoreEnterState_800BB30C();
-extern int IsConfirmPressedP1_8003D380(int a);
-extern int IsCancelPressedP1_8003D41C(int a);
-extern unsigned short padPressed_8009194C;
-extern void StoreMainInput_800BD1A8();
-extern void ItemBuyListInput_800BD278();
-extern void ItemSellListInput_800BD378();
-extern void EquipBuyListInput_800BD9A8();
-extern void EquipSellListInput_800BDAB4();
-extern void EquipKindInput_800BD928();
-extern void StoreQuantityInput_800BD760();
-extern void StoreConfirmInput_800BD444();
-extern void ReadyEquipInput_800BD61C();
-extern void StoreWaitPrompt_800BD6A4();
 
-extern int GetLastInventorySlot_800AD308(int a);
-extern void StoreWaitMapReload_800BB298();
-extern void SetLoadFadeFlag_80027478(int a, int b);
-extern void ResumeFieldMinions_800A7BF0(int a);
-extern void RequestGameMode_800A6D30(int a);
-extern int IsMapLoading_800272D0(void);
-extern int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d);
-extern unsigned short padRepeat_800918CC;
-extern int eventDispatchHalt_8008B540;
-extern void StoreFadeIn_800BB194();
-extern void StoreTask_800BB1F4();
-extern unsigned int GetEquippedId_800AD990(int a);
-extern int FindInventorySlotForAdd_800AD4D8(int a, int b, int c);
 
 int dword_800B66C0 SDATA = 26;
 const int aEmpty_800B66C4 = 0;
@@ -560,7 +379,7 @@ int GetStoreStockMask_800BB088(StoreMenu* store)
 }
 
 // Matched
-void StoreWaitUiTiy_800BB130(EventEntry* task, unsigned short* store)
+void StoreWaitUiTiy_800BB130(EventEntry* task, StoreMenu* store)
 {
     if (uiTiyLoaded_8008B4E8 != 0)
     {
@@ -573,7 +392,7 @@ void StoreWaitUiTiy_800BB130(EventEntry* task, unsigned short* store)
 }
 
 // Matched
-void StoreFadeIn_800BB194(EventEntry* task, unsigned short* store)
+void StoreFadeIn_800BB194(EventEntry* task, StoreMenu* store)
 {
     DrawMenuBackground_8002BE10();
     DrawPortraitWindow_8002A4E4(0xE);
@@ -604,7 +423,7 @@ void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store)
 }
 
 // Matched
-void StoreWaitMapReload_800BB298(EventEntry* task)
+void StoreWaitMapReload_800BB298(EventEntry* task, void* buffer)
 {
     if (IsMapLoading_800272D0() == 0)
     {
@@ -864,11 +683,11 @@ void DrawStore_800BB950(StoreMenu* store)
     }
     if (store->windows_8 & 4)
     {
-        DrawMoneyWindow_800BBED0(store, moneyWindowPosL_800BEBC4);
+        DrawMoneyWindow_800BBED0(store, &moneyWindowPosL_800BEBC4);
     }
     if (store->windows_8 & 8)
     {
-        DrawMoneyWindow_800BBED0(store, moneyWindowPosR_800BEBC8);
+        DrawMoneyWindow_800BBED0(store, &moneyWindowPosR_800BEBC8);
     }
     if (store->windows_8 & 0x10)
     {
@@ -1191,9 +1010,6 @@ void DrawItemHeldCount_800BC2E4(StoreMenu* store)
 }
 
 // a cell of the shop list rows (DrawMenuWindows_8002A5A4)
-extern int GetEquipmentName_8001D128(int idx, unsigned int kind);
-extern short GetStoreListCursor_800BE058(StoreMenu* store, short panel);
-extern void DrawEquippedMark_800BCABC(StoreMenu* store, short panel);
 
 // Matched
 void DrawStoreList_800BC374(StoreMenu* store, short panel)
@@ -2389,8 +2205,8 @@ int equipKindItem2_800BEB7C[14] = {
     0, 0, 0, -1, -1, -1,
 };
 char equipKindItems_800BEBB4[16] = { 12, 235, 11, 128, 68, 235, 11, 128, 124, 235, 11, 128 };
-char moneyWindowPosL_800BEBC4[4] = { 10, 0, 77 };
-char moneyWindowPosR_800BEBC8[4] = { 189, 0, 77 };
+StorePos moneyWindowPosL_800BEBC4 = { 10, 77 };
+StorePos moneyWindowPosR_800BEBC8 = { 189, 77 };
 char itemDescLines_800BEBCC[688] = { 128, 143, 11, 128, 56, 143, 11, 128, 236, 142, 11, 128, 144, 142, 11, 128, 128, 143, 11, 128, 80, 142, 11, 128, 248, 141, 11, 128, 180, 141, 11, 128, 128, 143, 11, 128, 80, 141, 11, 128, 228, 140, 11, 128, 0, 0, 0, 0, 188, 140, 11, 128, 92, 140, 11, 128, 248, 139, 11, 128, 0, 0, 0, 0, 188, 139, 11, 128, 116, 139, 11, 128, 64, 139, 11, 128, 0, 0, 0, 0, 16, 139, 11, 128, 212, 138, 11, 128, 156, 138, 11, 128, 0, 0, 0, 0, 92, 138, 11, 128, 16, 138, 11, 128, 224, 137, 11, 128, 0, 0, 0, 0, 164, 137, 11, 128, 92, 137, 11, 128, 36, 137, 11, 128, 0, 0, 0, 0, 232, 136, 11, 128, 160, 136, 11, 128, 100, 136, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 224, 135, 11, 128, 156, 135, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 68, 135, 11, 128, 224, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 128, 134, 11, 128, 36, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 200, 133, 11, 128, 132, 133, 11, 128, 0, 0, 0, 0, 96, 133, 11, 128, 248, 132, 11, 128, 180, 132, 11, 128, 136, 132, 11, 128, 104, 132, 11, 128, 28, 132, 11, 128, 200, 131, 11, 128, 0, 0, 0, 0, 168, 131, 11, 128, 68, 131, 11, 128, 232, 130, 11, 128, 0, 0, 0, 0, 204, 130, 11, 128, 136, 130, 11, 128, 64, 130, 11, 128, 0, 0, 0, 0, 36, 130, 11, 128, 220, 129, 11, 128, 112, 129, 11, 128, 0, 0, 0, 0, 80, 129, 11, 128, 248, 128, 11, 128, 156, 128, 11, 128, 0, 0, 0, 0, 132, 128, 11, 128, 60, 128, 11, 128, 224, 127, 11, 128, 0, 0, 0, 0, 184, 127, 11, 128, 88, 127, 11, 128, 240, 126, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 96, 126, 11, 128, 248, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 152, 125, 11, 128, 48, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 208, 124, 11, 128, 108, 124, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 12, 124, 11, 128, 168, 123, 11, 128, 0, 0, 0, 0, 104, 123, 11, 128, 0, 123, 11, 128, 156, 122, 11, 128, 0, 0, 0, 0, 96, 122, 11, 128, 0, 123, 11, 128, 0, 122, 11, 128, 0, 0, 0, 0, 192, 121, 11, 128, 88, 121, 11, 128, 244, 120, 11, 128, 0, 0, 0, 0, 184, 120, 11, 128, 88, 121, 11, 128, 92, 120, 11, 128, 0, 0, 0, 0, 32, 120, 11, 128, 188, 119, 11, 128, 92, 119, 11, 128, 0, 0, 0, 0, 32, 119, 11, 128, 188, 119, 11, 128, 196, 118, 11, 128, 0, 0, 0, 0, 136, 118, 11, 128, 32, 118, 11, 128, 192, 117, 11, 128, 0, 0, 0, 0, 124, 117, 11, 128, 32, 118, 11, 128, 24, 117, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 112, 116, 11, 128, 48, 116, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 212, 115, 11, 128, 152, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 96, 115, 11, 128, 36, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 220, 114, 11, 128, 160, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 80, 114, 11, 128, 20, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 196, 113, 11, 128, 136, 113, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 52, 113, 11, 128, 240, 112, 11, 128, 0, 0, 0, 0, 192, 112, 11, 128, 92, 112, 11, 128, 4, 112, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 132, 111, 11, 128, 44, 111, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 224, 110, 11, 128, 172, 110, 11, 128 };
 char weaponDescLines_800BEE7C[368] = { 4, 156, 11, 128, 180, 155, 11, 128, 152, 155, 11, 128, 0, 0, 0, 0, 4, 156, 11, 128, 80, 155, 11, 128, 52, 155, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 224, 154, 11, 128, 164, 154, 11, 128, 0, 0, 0, 0, 140, 154, 11, 128, 92, 154, 11, 128, 68, 154, 11, 128, 0, 0, 0, 0, 44, 154, 11, 128, 224, 153, 11, 128, 160, 153, 11, 128, 0, 0, 0, 0, 124, 153, 11, 128, 72, 153, 11, 128, 32, 153, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 208, 152, 11, 128, 132, 152, 11, 128, 0, 0, 0, 0, 112, 152, 11, 128, 36, 152, 11, 128, 220, 151, 11, 128, 0, 0, 0, 0, 204, 151, 11, 128, 128, 151, 11, 128, 56, 151, 11, 128, 0, 0, 0, 0, 44, 154, 11, 128, 244, 150, 11, 128, 176, 150, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 108, 150, 11, 128, 60, 150, 11, 128, 0, 0, 0, 0, 36, 150, 11, 128, 240, 149, 11, 128, 184, 149, 11, 128, 0, 0, 0, 0, 124, 153, 11, 128, 108, 149, 11, 128, 44, 149, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 248, 148, 11, 128, 184, 148, 11, 128, 0, 0, 0, 0, 140, 154, 11, 128, 140, 148, 11, 128, 84, 148, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 228, 147, 11, 128, 156, 147, 11, 128, 0, 0, 0, 0, 120, 147, 11, 128, 76, 147, 11, 128, 28, 147, 11, 128, 0, 0, 0, 0, 120, 147, 11, 128, 216, 146, 11, 128, 144, 146, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 60, 146, 11, 128, 232, 145, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 172, 145, 11, 128, 108, 145, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 52, 145, 11, 128, 248, 144, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 164, 144, 11, 128, 76, 144, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 248, 143, 11, 128, 160, 143, 11, 128 };
 char armorDescLines_800BEFEC[240] = { 180, 164, 11, 128, 148, 164, 11, 128, 104, 164, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 56, 164, 11, 128, 0, 164, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 184, 163, 11, 128, 104, 163, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 48, 163, 11, 128, 252, 162, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 208, 162, 11, 128, 128, 162, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 44, 162, 11, 128, 212, 161, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 136, 161, 11, 128, 52, 161, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 244, 160, 11, 128, 180, 160, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 88, 160, 11, 128, 4, 160, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 200, 159, 11, 128, 140, 159, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 60, 159, 11, 128, 224, 158, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 132, 158, 11, 128, 48, 158, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 208, 157, 11, 128, 132, 157, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 44, 157, 11, 128, 208, 156, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 108, 156, 11, 128, 28, 156, 11, 128 };
