@@ -143,7 +143,62 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
     return 2;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, MarkSharedEdges_800B73C0);
+// Matched
+// clears the pad_6 edge flag of every vertex, then sets it to -1 where the edge (v, v+1) of a triangle is shared
+// (same x/z, either direction) with another triangle of the same mesh. The vertices are re-indexed in every test
+// (a named pointer to t's vertex gets its loads hoisted out of the b loop)
+void MarkSharedEdges_800B73C0(MapMesh* m, int n)
+{
+    int i;
+    int j;
+    int k;
+    int a;
+    int b;
+    MapTri* t;
+    MapTri* u;
+    for (i = 0; i < n; i++)
+    {
+        int e;
+        int f;
+        MapTri* r;
+        for (f = 0; f < m[i].nTris_0; f++)
+        {
+            r = &m[i].tris_4[f];
+            for (e = 0; e < 3; e++)
+            {
+                (r->v_0 + e % 3)->pad_6 = 0;
+            }
+        }
+    }
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < m[i].nTris_0; j++)
+        {
+            for (k = 0; k < m[i].nTris_0; k++)
+            {
+                if (j == k)
+                {
+                    continue;
+                }
+                t = &m[i].tris_4[j];
+                u = &m[i].tris_4[k];
+                for (a = 0; a < 3; a++)
+                {
+                    for (b = 0; b < 3; b++)
+                    {
+                        if (((t->v_0 + a % 3)->x_0 == (u->v_0 + b % 3)->x_0 && (t->v_0 + a % 3)->z_4 == (u->v_0 + b % 3)->z_4 &&
+                             (t->v_0 + (a + 1) % 3)->x_0 == (u->v_0 + (b + 1) % 3)->x_0 && (t->v_0 + (a + 1) % 3)->z_4 == (u->v_0 + (b + 1) % 3)->z_4) ||
+                            ((t->v_0 + a % 3)->x_0 == (u->v_0 + (b + 1) % 3)->x_0 && (t->v_0 + a % 3)->z_4 == (u->v_0 + (b + 1) % 3)->z_4 &&
+                             (t->v_0 + (a + 1) % 3)->x_0 == (u->v_0 + b % 3)->x_0 && (t->v_0 + (a + 1) % 3)->z_4 == (u->v_0 + b % 3)->z_4))
+                        {
+                            (t->v_0 + a % 3)->pad_6 = -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* p)
 {
@@ -224,7 +279,113 @@ int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* p)
     return -1;
 }
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B79E0);
+// Matched
+// finds the first unshared edge (pad_6 == 0) of mesh m crossed by the segment p-q in x/z and returns it in
+// *tri / *edge, unless it is the one already there
+void sub_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
+{
+    VECTOR e;
+    VECTOR r;
+    VECTOR s;
+    MapTri* t;
+    int i;
+    int k;
+    int minx;
+    int maxx;
+    int emin;
+    int emax;
+    int sg;
+    for (i = 0; i < m->nTris_0; i++)
+    {
+        t = &m->tris_4[i];
+        for (k = 0; k < 3; k++)
+        {
+            if ((t->v_0 + k)->pad_6 != 0)
+            {
+                continue;
+            }
+            if (p[0] > q[0])
+            {
+                minx = q[0];
+                maxx = p[0];
+            }
+            else
+            {
+                minx = p[0];
+                maxx = q[0];
+            }
+            if ((t->v_0 + k % 3)->x_0 > (t->v_0 + (k + 1) % 3)->x_0)
+            {
+                emin = (t->v_0 + (k + 1) % 3)->x_0;
+                emax = (t->v_0 + k % 3)->x_0;
+            }
+            else
+            {
+                emin = (t->v_0 + k % 3)->x_0;
+                emax = (t->v_0 + (k + 1) % 3)->x_0;
+            }
+            if (emax < minx || maxx < emin)
+            {
+                continue;
+            }
+            if (p[2] > q[2])
+            {
+                minx = q[2];
+                maxx = p[2];
+            }
+            else
+            {
+                minx = p[2];
+                maxx = q[2];
+            }
+            if ((t->v_0 + k % 3)->z_4 > (t->v_0 + (k + 1) % 3)->z_4)
+            {
+                emin = (t->v_0 + (k + 1) % 3)->z_4;
+                emax = (t->v_0 + k % 3)->z_4;
+            }
+            else
+            {
+                emin = (t->v_0 + k % 3)->z_4;
+                emax = (t->v_0 + (k + 1) % 3)->z_4;
+            }
+            if (emax < minx || maxx < emin)
+            {
+                continue;
+            }
+            e.vx = (t->v_0 + (k + 1) % 3)->x_0 - (t->v_0 + k % 3)->x_0;
+            e.vz = (t->v_0 + (k + 1) % 3)->z_4 - (t->v_0 + k % 3)->z_4;
+            r.vx = p[0] - (t->v_0 + k % 3)->x_0;
+            r.vz = p[2] - (t->v_0 + k % 3)->z_4;
+            s.vx = q[0] - (t->v_0 + k % 3)->x_0;
+            s.vz = q[2] - (t->v_0 + k % 3)->z_4;
+            if (e.vx * r.vz - e.vz * r.vx <= 0)
+            {
+                continue;
+            }
+            if (e.vx * s.vz - e.vz * s.vx > 0)
+            {
+                continue;
+            }
+            e.vx = p[0] - q[0];
+            e.vz = p[2] - q[2];
+            r.vx = (t->v_0 + k % 3)->x_0 - q[0];
+            r.vz = (t->v_0 + k % 3)->z_4 - q[2];
+            s.vx = (t->v_0 + (k + 1) % 3)->x_0 - q[0];
+            s.vz = (t->v_0 + (k + 1) % 3)->z_4 - q[2];
+            sg = Sign_8003B664(e.vx * r.vz - e.vz * r.vx);
+            if (sg * Sign_8003B664(e.vx * s.vz - e.vz * s.vx) > 0)
+            {
+                continue;
+            }
+            if (*tri != i || *edge != k)
+            {
+                *tri = i;
+                *edge = k;
+                return;
+            }
+        }
+    }
+}
 
 void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* out)
 {
@@ -312,7 +473,7 @@ int FindMeshAtPos_800B8184(EvVecEventfnc* pos, unsigned int k)
 
 void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
 {
-    sub_800B79E0(a2, p, a1, a3, a4);
+    sub_800B79E0((MapMesh*)a2, p, (int*)a1, a3, a4);
     SlideAlongEdge_800B7E40(p, a2, *a3, *a4, a5);
     p[0] += a5[2] >> 10;
     p[2] -= a5[0] >> 10;
@@ -330,7 +491,7 @@ int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n)
         {
             t1 = -1;
             t0 = -1;
-            sub_800B79E0((int)&ents[i], a1, (int)p, &t0, &t1);
+            sub_800B79E0(&ents[i], a1, p, &t0, &t1);
             if (t0 != -1 && t1 != -1)
             {
                 SlideAlongEdge_800B7E40(p, (int)&ents[i], t0, t1, v);
@@ -767,19 +928,16 @@ int sub_800B8E9C(EvCtxEventfnc* c)
     return 0;
 }
 
-#if 0
-// Not matched: the original copies p to $v1 and stores ret_C in the return delay slot (stores 8,4,C); no source order reproduced it
+// Matched
 int sub_800B8F14(EvCtxEventfnc* c)
 {
     EvInsEventfnc* p = (EvInsEventfnc*)c->pc_8[c->fEC_EC].c_C;
     c->fEC_EC = 0;
     c->pc_8 = p;
-    c->ret_C = c->start_4 = p;
+    c->start_4 = p;
+    c->ret_C = c->pc_8;
     return 1;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8F14);
 
 int sub_800B8F44(EvCtxEventfnc* c)
 {
@@ -2248,10 +2406,9 @@ int sub_800BBAE4(int i)
     return r;
 }
 
-#if 0
-// Not matched: p is copied to $a1 in the original, $v0 here (if/else, ternary, early return all tried)
+// Matched
 extern int sub_800A8EC4(int* p);
-extern int sub_800A7D40(int a);
+extern int sub_800A7D40(int a, int* p);
 int sub_800BBB18(int* p)
 {
     int r;
@@ -2262,18 +2419,14 @@ int sub_800BBB18(int* p)
     }
     else
     {
-        r = sub_800A7D40(v - 1);
+        r = sub_800A7D40(v - 1, p);
     }
     return r;
 }
-#endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB18);
-
-#if 0
-// Not matched: same $a1/$v0 copy register as sub_800BBB18
+// Matched
 extern int sub_800A9008(int* p);
-extern int sub_800A80C4(int a);
+extern int sub_800A80C4(int a, int* p);
 int sub_800BBB5C(int* p)
 {
     int r;
@@ -2284,13 +2437,10 @@ int sub_800BBB5C(int* p)
     }
     else
     {
-        r = sub_800A80C4(v - 1);
+        r = sub_800A80C4(v - 1, p);
     }
     return r;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBB5C);
 
 EvVecEventfnc* sub_800BBBA0(int i)
 {

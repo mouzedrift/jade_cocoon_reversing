@@ -48,7 +48,7 @@ void sub_800BC90C(BatStageObj_a* p)
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, *list)];
             int j;
-            for (j = 0; j < g->n_0; j++)
+            for (j = 0; j < g->count_0; j++)
             {
                 int k;
                 for (k = 0; k < g->frameCounts_4[j]; k++)
@@ -163,7 +163,7 @@ void sub_800BC90C(BatStageObj_a* p)
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j;
-            for (j = 0; j < g->n_0; j++)
+            for (j = 0; j < g->count_0; j++)
             {
                 int half = n >> 1;
                 int t = (dword_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
@@ -237,7 +237,7 @@ void sub_800BC90C(BatStageObj_a* p)
         default:
         {
             EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
-            int j = ((unsigned int)frameCount_8008D3FC % (g->n_0 * 2)) / 2;
+            int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->frameCounts_4[j]; k++)
             {
@@ -314,7 +314,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 {
                     pos.vy -= 0x2F8;
                 }
-                for (k = 0; k < mdl->n_0; k++)
+                for (k = 0; k < mdl->ftgCount_0; k++)
                 {
                     sub_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
                 }

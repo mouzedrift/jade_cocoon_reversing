@@ -1253,10 +1253,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
     }
 }
 
-// Not matched: 1 word, the delay slot of the last bnez holds "li v0,1" in the original (the final
-// fall-through returns no value); tried no final return, return;, uninitialised return var (gives
-// move v0,a1), merged conditions, if/else chain into a variable
-#if 0
+// Matched
 int sub_800BDD94(int a)
 {
     if ((unsigned)(a - 0x29) < 0x10 || (unsigned)(a - 0xC9) < 0xA)
@@ -1267,10 +1264,8 @@ int sub_800BDD94(int a)
         return 1;
     if ((unsigned)(a - 0x20) < 2 || (unsigned)(a - 0x39) < 0x88)
         return 1;
-    return 0;
+    return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, sub_800BDD94);
 
 extern int sub_800BF540();
 extern void sub_800BE048();

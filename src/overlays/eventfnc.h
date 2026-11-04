@@ -182,7 +182,7 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
     return 0;
 }
 
-extern void sub_800B79E0(int a, int* p, int b, int* c, int* d);
+extern void sub_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
 
 extern void SlideAlongEdge_800B7E40(int* p, int a, int b, int c, int* d);
 

@@ -137,7 +137,7 @@ extern unsigned char byte_800A38D9;
 extern unsigned char byte_800A38DA;
 extern unsigned char byte_800A38DB;
 extern short word_800A1BC4;
-extern char data_8008EEF8[];
+extern Minion dword_8008BEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
 extern void sub_800A197C(Minion* p);
@@ -316,24 +316,21 @@ int sub_800A0898(unsigned char* a)
     return r;
 }
 
-#if 0
-// Not matched: register allocation of the products differs (6 words)
+// Matched
 int sub_800A0968(unsigned char* a)
 {
     short* t = dword_80084540;
-    int p0 = t[0x5C6 / 2] * a[0];
-    int p1 = t[0x1DC6 / 2] * a[0];
-    int p2 = t[0x1DC6 / 2] * a[3];
-    int p3 = t[0x15C6 / 2] * a[3];
-    int p4 = t[0x15C6 / 2] * a[2];
-    int p5 = t[0xDC6 / 2] * a[2];
-    int p6 = t[0xDC6 / 2] * a[1];
-    int p7 = t[0x5C6 / 2] * a[1];
+    int p1, p0, p3, p2, p4, p5, p6, p7;
+    p0 = t[0x5C6 / 2] * a[0];
+    p1 = t[0x1DC6 / 2] * a[0];
+    p2 = t[0x1DC6 / 2] * a[3];
+    p3 = t[0x15C6 / 2] * a[3];
+    p4 = t[0x15C6 / 2] * a[2];
+    p5 = t[0xDC6 / 2] * a[2];
+    p6 = t[0xDC6 / 2] * a[1];
+    p7 = t[0x5C6 / 2] * a[1];
     return ratan2Degrees_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A0968);
 
 // Matched
 void sub_800A0A28(void)
@@ -502,23 +499,20 @@ void sub_800A0F1C(int i)
     sub_8001E1DC(s->actor_3C);
 }
 
-#if 0
-// Not matched: register allocation differs (out/p swapped in s2/s1)
+// Matched
 CombatColorCombat sub_800A0F50(int i, int* p, int x)
 {
     CombatColorCombat c;
     CombatSlotCombat* s;
     memset(&c, 0, 4);
     s = &dword_800A3A08[i];
-    if (*p != 0x14)
+    if (*p == 0x14)
     {
-        Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
+        return c;
     }
+    Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
     return c;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A0F50);
 
 // Matched
 void sub_800A0FF0(int i, int* p)
@@ -669,13 +663,11 @@ int sub_800A1324(void)
     return 6;
 }
 
-#if 0
-// Not matched: the original keeps the full address of the table in a register across the loops
+// Matched
 void sub_800A13A0(CombatTaskCombat* t)
 {
     int i;
     int j;
-    int off = 0;
     dword_800A1BBC[0] = 1;
     dword_800A1BBC[1] = 5;
     dword_800A1BBC[2] = 5;
@@ -684,13 +676,10 @@ void sub_800A13A0(CombatTaskCombat* t)
     dword_800A1BBC[5] = 0;
     for (i = 0; i < 2; i++)
     {
-        char* q = (char*)dword_800A3AA0;
         for (j = 0; j < 3; j++)
         {
-            sub_800A197C((Minion*)((char*)off + (int)q));
-            q += 0xF8;
+            sub_800A197C(&dword_800A3AA0[i][j]);
         }
-        off += 0x2E8;
     }
     PlayMusic_800300E0(0x8E, 1);
     LoadUiTiy_8002BF74();
@@ -698,9 +687,6 @@ void sub_800A13A0(CombatTaskCombat* t)
     sub_800A0D64(3, 0x41);
     t->next_8 = sub_800A14AC;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A13A0);
 
 // Matched
 void sub_800A148C(void)
@@ -911,23 +897,17 @@ void sub_800A197C(Minion* p)
     p->id = 4;
 }
 
-#if 0
-// Not matched: address arithmetic of the destination is reassociated by the compiler
+// Matched
 void sub_800A1988(void)
 {
     int i;
-    char* src = data_8008EEF8;
     byte_800A38DA = 0;
     for (i = 0; i < 15; i++)
     {
-        MemCopy_800403E8(((char*)(byte_800A38D9 * 3720) + (int)&dword_800A1BC8[0][byte_800A38DA]), src, 0xF8);
-        src += 0xF8;
+        MemCopy_800403E8(&dword_800A1BC8[byte_800A38D9][byte_800A38DA], &dword_8008BEF8[i], 0xF8);
         byte_800A38DA++;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, sub_800A1988);
 
 // Matched
 int sub_800A1A3C(Minion* p, int n)

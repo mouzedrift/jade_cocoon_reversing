@@ -561,16 +561,16 @@ void sub_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     if (f0 & 1)
     {
-        *a = p->hpLoss_A / 10;
+        *a = p->maxHp_A / 10;
         f &= ~2;
     }
     else if (f & 0x4000)
     {
-        *a = -(short)(p->hpLoss_A / 20);
+        *a = -(short)(p->maxHp_A / 20);
     }
     if (f0 & 0x8000)
     {
-        *b = -((p->f44 >> 2) + 3);
+        *b = -((p->level_44 >> 2) + 3);
         f &= ~0x8000;
     }
     if (f & 0x200)
@@ -592,7 +592,7 @@ loop:
     {
         goto loop;
     }
-    p->flags_0 = f;
+    p->status_0 = f;
 }
 #endif
 
@@ -889,7 +889,7 @@ void sub_800BFDEC()
     }
 }
 
-#if 0 // Not matched: one word: 'k = 1' reuses the compare constant (move s2,v1) instead of li; u must be copied after the early return
+// Matched
 extern void sub_8002F1C8();
 extern int dword_800C9164[];
 void sub_800C0074(EventEntry* t, void* arg)
@@ -904,15 +904,12 @@ void sub_800C0074(EventEntry* t, void* arg)
     }
     u = arg;
     r = sub_800A2AB4();
-    k = 0;
-    if (r != 1)
-    {
+    if (r == 1)
+        k = 0;
+    else if (sub_800A2AB4() == 2)
         k = 1;
-        if (sub_800A2AB4() != 2)
-        {
-            k = u->slot_0;
-        }
-    }
+    else
+        k = u->slot_0;
     m = sub_80014390((k + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
@@ -928,9 +925,6 @@ void sub_800C0074(EventEntry* t, void* arg)
     u->frame_4++;
     AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0074);
 
 void sub_800C01D8()
 {
@@ -1228,23 +1222,21 @@ int sub_800C0904(unsigned char* p)
     return r;
 }
 
-#if 0 // Not matched: temp register numbering of the eight products (same function as SHOP sub_800BF3B4)
+// Matched
 extern short word_80084540[];
 int sub_800C09D4(unsigned char* p)
 {
-    int t1 = word_80084540[0x2E3] * p[0];
-    int t2 = word_80084540[0xEE3] * p[0];
-    int t3 = word_80084540[0xEE3] * p[3];
-    int t4 = word_80084540[0xAE3] * p[3];
-    int t5 = word_80084540[0xAE3] * p[2];
-    int t6 = word_80084540[0x6E3] * p[2];
-    int t7 = word_80084540[0x6E3] * p[1];
-    int t8 = word_80084540[0x2E3] * p[1];
+    int t2, t1, t4, t3, t5, t6, t7, t8;
+    t1 = word_80084540[0x2E3] * p[0];
+    t2 = word_80084540[0xEE3] * p[0];
+    t3 = word_80084540[0xEE3] * p[3];
+    t4 = word_80084540[0xAE3] * p[3];
+    t5 = word_80084540[0xAE3] * p[2];
+    t6 = word_80084540[0x6E3] * p[2];
+    t7 = word_80084540[0x6E3] * p[1];
+    t8 = word_80084540[0x2E3] * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C09D4);
 
 void sub_800C0A94()
 {
@@ -1359,22 +1351,24 @@ void sub_800C0DB0(int a)
     sub_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
-#if 0 // Not matched: struct-return copy: 'move v0,s1' is scheduled before the lwl/lwr copy (original: after); tried explicit out-pointer form
+// Matched
 BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
 {
     BatCol_a buf;
     int mask;
     memset(&buf, 0, 4);
-    if (p->kind_0 != 0x14 && (p->mask_8 & (mask = 1 << (dword_800C918C + 1))))
+    if (p->kind_0 == 0x14)
+    {
+        *out = buf;
+        return out;
+    }
+    if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
     {
         sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C0DDC);
 
 int sub_800C0E84(BatCmd_a* p)
 {
@@ -1556,7 +1550,64 @@ void sub_800C1220(EventEntry* t, BatDrop_a* u)
     DrawRotSprite_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
-INCLUDE_OVERLAY_ASM(battle, sub_800C1450);
+// Matched
+void sub_800C1450(EventEntry* t, BatDropSrc_a* u)
+{
+    int v[3];
+    EffectSpriteFrame* f;
+    int i;
+    EventEntry* e;
+    BatDrop_a* q;
+    EffectSprite* s = u->path_88;
+    if (u->time_4 / 4096 < s->count_0)
+    {
+        f = s->frames_8[u->time_4 / 4096];
+        v[0] = f->pos_10[0] + u->pos_44[0];
+        v[1] = f->pos_10[1] + u->pos_44[1];
+        v[2] = f->pos_10[2] + u->pos_44[2];
+        if (((u->time_4 / 4096) & 3) == 0)
+        {
+            u->count_0++;
+            for (i = 0; i < 3; i++)
+            {
+                e = AllocEventEntry_80043AF8(dword_8008D60C);
+                if (e)
+                {
+                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                    q = e->buffer;
+                    q->pos_10[0] = v[0];
+                    q->pos_10[1] = v[1];
+                    q->pos_10[2] = v[2];
+                    q->pos_10[0] <<= 10;
+                    q->pos_10[1] <<= 10;
+                    q->pos_10[2] <<= 10;
+                    if (u->count_0 & 1)
+                    {
+                        q->anim_40 = u->animA_8C;
+                    }
+                    else
+                    {
+                        q->anim_40 = u->animB_90;
+                    }
+                    q->vel_28[0] = 0;
+                    q->vel_28[1] = 0;
+                    q->vel_28[2] = 0;
+                    q->rot_34[0] = 0;
+                    q->rot_34[1] = i * 0x555;
+                    q->rot_34[2] = 0;
+                    q->f0 = 0;
+                    q->size_8 = (rand() & 0xFFF) + 0x800;
+                    e->cb_8 = (EventEntryFn)sub_800C1220;
+                }
+            }
+        }
+        u->time_4 += u->step_8;
+    }
+    else
+    {
+        t->flags = (t->flags & ~1) | 0x8000;
+    }
+}
 
 void sub_800C1654(int* p, short* q, int c, int d, int e, int f)
 {
@@ -2128,14 +2179,14 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
         u->frame_0++;
         if (any)
         {
-            if (c->f8)
+            if (c->mats_8.count_0)
             {
-                DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &c->f8, pOT_8008D690, 0x30);
+                DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &c->mats_8, pOT_8008D690, 0x30);
             }
         }
-        else if (c->f8)
+        else if (c->mats_8.count_0)
         {
-            DrawSpriteVtxQuadsG4_80045E48(&c->f8, pOT_8008D690, 0x30);
+            DrawSpriteVtxQuadsG4_80045E48(&c->mats_8, pOT_8008D690, 0x30);
         }
     }
     else
@@ -4720,7 +4771,7 @@ void sub_800C8768()
     }
 }
 
-#if 0 // Not matched: arg setup order only (original computes &s first and &pos last); tried prototypes, separate arrays, &a, statement order
+// Matched
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 void sub_800C8828(int a)
 {
@@ -4730,7 +4781,7 @@ void sub_800C8828(int a)
     int s[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
-    rect[2] = MeasureTextWidth_8003E4C8() + 4;
+    rect[2] = MeasureTextWidth_8003E4C8(a) + 4;
     rect[3] = 0x12;
     s[0] = a;
     p[0] = rect[0];
@@ -4739,9 +4790,6 @@ void sub_800C8828(int a)
     pos[1] = rect[1] + 4;
     DrawTextLinesWindow_8002AE38(s, pos, 0xF, rect, 1);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, sub_800C8828);
 
 void sub_800C88AC(int a)
 {

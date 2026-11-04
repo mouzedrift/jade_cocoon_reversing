@@ -821,6 +821,21 @@ typedef struct BatSpark_a
     int* offset_44;
 } BatSpark_a;
 
+// buffer of the sub_800C1450 task: walks along path_88 (one frame per 4096 of time_4) and drops
+// three sub_800C1220 sprites every fourth frame
+typedef struct BatDropSrc_a
+{
+    int count_0;
+    int time_4;
+    short step_8;
+    char pad_A[0x3A];
+    int pos_44[3];
+    char pad_50[0x38];
+    EffectSprite* path_88;
+    EffectSprite* animA_8C;
+    EffectSprite* animB_90;
+} BatDropSrc_a;
+
 extern char dword_800795D4[];
 
 extern int* DrawRotSprite_80044010();
