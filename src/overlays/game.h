@@ -5,6 +5,7 @@
 #include "funcs.h"
 
 #include "globals.h"
+#include "LIBETC.H"
 
 #include "actor.h"
 
@@ -498,6 +499,32 @@ typedef struct GameRect_1
 {
     short x, y, w, h;
 } GameRect_1;
+
+// the animated map tile layers' work area (sub_800A0A5C), in the scratchpad at 0x1F800214
+typedef struct TileAnimScratch
+{
+    unsigned int i_0; // the layer (dword_8008D648.lists_14 index)
+    POLY_FT4 ft4_4;   // a cell, zoomed
+    SPRT sprt_2C;     // a cell at zoom 0x1000
+    DR_TPAGE tpage_40;
+    short x0_48; // the cell's screen corners
+    short y0_4A;
+    short x1_4C;
+    short y1_4E;
+    short cx_50; // the view centre (stru_8008D420)
+    short cy_52;
+    int zoom_54; // cameraZoom_8008B4F8
+    int ox_58;   // screen offset of the view centre
+    int oy_5C;
+    struct_27778 tiles_60; // the frame's tile set
+    int set_70;  // the frame: tile set,
+    int clut_74; // clut row,
+    int time_78; // frames to show
+} TileAnimScratch;
+#define TILE_ANIM_SCRATCH ((TileAnimScratch*)getScratchAddr(0x85))
+extern ShortPair screenOffset_8008D474;
+extern struct_8008D648 dword_8008D648;
+extern void sub_800A0A5C(short* q);
 
 extern int GameFn_8003B9E0(int* a, int* b);
 

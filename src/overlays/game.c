@@ -32,6 +32,157 @@ void sub_800A09D8(GameTask_1* t, short* q)
 // Not C: calls sub_800A0A5C with $sp moved to the scratchpad (0x1F8003FC), an inline-asm stack switch
 INCLUDE_OVERLAY_ASM(game, sub_800A0A04);
 
+#if 0
+// Not matched: register pressure / spills differ (the original spills the cell pointer and u0 + 31, keeps 0xFFFFFF hoisted; here the tpage value spills); logic complete.
+// Draws the map's animated tile layers (dword_8008D648.lists_14): steps each layer's frame timer, then builds a
+// zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
+// Runs on the scratchpad stack (sub_800A0A04); *q & 1 freezes the timers.
+void sub_800A0A5C(short* q)
+{
+    TileAnimScratch* s = TILE_ANIM_SCRATCH;
+    struct_8_4b* list;
+    struct_2s* st;
+    unsigned short* cells;
+    int z;
+    int n;
+    int k;
+    int v;
+    int t;
+    int u;
+    int w;
+    int b;
+    setPolyFT4(&s->ft4_4);
+    setSprt(&s->sprt_2C);
+    setDrawTPage(&s->tpage_40, 0, 1, 0);
+    s->zoom_54 = cameraZoom_8008B4F8;
+    s->cx_50 = stru_8008D420.x + stru_8008D420.w / 2;
+    s->cy_52 = stru_8008D420.y + stru_8008D420.h / 2;
+    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
+    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
+    b = (sceneBrightness_8008D40C << 7) >> 12;
+    s->ft4_4.r0 = b;
+    s->ft4_4.g0 = b;
+    s->ft4_4.b0 = b;
+    s->sprt_2C.r0 = b;
+    s->sprt_2C.g0 = b;
+    s->sprt_2C.b0 = b;
+    if (!(unknownFlags_8008D678 & 0x400) || sceneBrightness_8008D40C == 0x1000)
+    {
+        s->ft4_4.code = 0x2D;
+        s->sprt_2C.code = 0x65;
+    }
+    else
+    {
+        s->sprt_2C.code = 0x64;
+        s->ft4_4.code = 0x2C;
+    }
+    for (s->i_0 = 0; s->i_0 < dword_8008D648.listCount_10; s->i_0++)
+    {
+        list = &dword_8008D648.lists_14[s->i_0];
+        st = &dword_8008D648.pairs_18[s->i_0];
+        if (list->count >= 2)
+        {
+            if (!(*q & 1))
+            {
+                st->a++;
+            }
+            if ((unsigned short)st->a >= (list->items[(unsigned short)st->b].c & 0x7F))
+            {
+                st->b++;
+                if ((unsigned short)st->b >= list->count)
+                {
+                    st->b = 0;
+                }
+                st->a = 0;
+            }
+        }
+        s->set_70 = list->items[(unsigned short)st->b].a;
+        s->clut_74 = list->items[(unsigned short)st->b].b;
+        s->time_78 = list->items[(unsigned short)st->b].c & 0x7F;
+        s->tiles_60 = dword_8008D648.items_C[s->set_70];
+        cells = s->tiles_60.items;
+        if (list->items[(unsigned short)st->b].c & 0x80)
+        {
+            setSemiTrans(&s->ft4_4, 1);
+            setSemiTrans(&s->sprt_2C, 1);
+        }
+        else
+        {
+            setSemiTrans(&s->ft4_4, 0);
+            setSemiTrans(&s->sprt_2C, 0);
+        }
+        z = ((dword_8008D648.field_4 +
+              (unsigned int)((dword_8008D648.field_8 - dword_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
+             4) &
+            0x3FF;
+        s->ft4_4.clut = (s->clut_74 + 0x1F0) << 6;
+        for (k = 0, n = 0; k < s->tiles_60.count; k++)
+        {
+            v = (short)cells[k];
+            if (v & 0x8000)
+            {
+                n += v & 0x7FFF;
+                continue;
+            }
+            t = v / 8;
+            s->x0_48 = (n % (short)s->tiles_60.field_8) * 32 - (short)s->tiles_60.field_8 * 16;
+            s->ft4_4.tpage = (((t + 20) / 4) & 0xF) | 0xA0;
+            s->y0_4A = (n / (short)s->tiles_60.field_8) * 32 - (short)s->tiles_60.field_A * 16;
+            s->x1_4C = s->cx_50 + (s->ox_58 + ((s->x0_48 + 32) * s->zoom_54) / 4096);
+            s->y1_4E = s->cy_52 + (s->oy_5C + ((s->y0_4A + 32) * s->zoom_54) / 4096);
+            s->x0_48 = s->cx_50 + (s->ox_58 + (s->x0_48 * s->zoom_54) / 4096);
+            s->y0_4A = s->cy_52 + (s->oy_5C + (s->y0_4A * s->zoom_54) / 4096);
+            if (s->x0_48 >= -(s->zoom_54 / 128) && s->x0_48 <= 0x140 && s->y0_4A >= -(s->zoom_54 / 128))
+            {
+                if (s->y0_4A > 0xF0)
+                {
+                    break;
+                }
+                u = ((t * 16 + 0x140) % 64) * 2;
+                w = (v % 32) * 32;
+                s->ft4_4.x0 = s->x0_48;
+                s->ft4_4.u0 = u;
+                s->ft4_4.v0 = w;
+                s->ft4_4.u2 = u;
+                s->ft4_4.v1 = w;
+                s->ft4_4.v2 = w + 31;
+                s->ft4_4.u1 = u + 31;
+                s->ft4_4.y0 = s->y0_4A;
+                s->ft4_4.x1 = s->x1_4C;
+                s->ft4_4.y1 = s->y0_4A;
+                s->ft4_4.x2 = s->x0_48;
+                s->ft4_4.y2 = s->y1_4E;
+                s->ft4_4.x3 = s->x1_4C;
+                s->ft4_4.y3 = s->y1_4E;
+                s->ft4_4.v3 = w + 31;
+                s->sprt_2C.w = 32;
+                s->sprt_2C.h = 32;
+                s->ft4_4.u3 = u + 31;
+                s->sprt_2C.x0 = s->x0_48;
+                s->sprt_2C.y0 = s->y0_4A;
+                setDrawTPage(&s->tpage_40, 0, 1, (((t + 20) / 4) & 0xF) | 0xA0);
+                *(int*)&s->sprt_2C.u0 = *(int*)&s->ft4_4.u0;
+                if (cameraZoom_8008B4F8 != 0x1000)
+                {
+                    *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->ft4_4;
+                    addPrim(&pOT_8008D690[z], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(POLY_FT4);
+                }
+                else
+                {
+                    *(SPRT*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->sprt_2C;
+                    addPrim(&pOT_8008D690[z], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(SPRT);
+                    *(DR_TPAGE*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->tpage_40;
+                    addPrim(&pOT_8008D690[z], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
+                }
+            }
+            n++;
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, sub_800A0A5C);
 
 void sub_800A1314(GameTask_1* t)
