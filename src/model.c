@@ -256,14 +256,14 @@ void StopActorScript_8001EFC4(Actor* p)
         {
             if (f & 0x200000)
             {
-                sub_800A5BCC(n - 2);
+                ClearScriptActorBusy_800A5BCC(n - 2);
             }
         }
         else if (n >= 3)
         {
             if (f & 0x200000)
             {
-                sub_800A5BCC(n - 2);
+                ClearScriptActorBusy_800A5BCC(n - 2);
             }
         }
     }
@@ -3870,10 +3870,10 @@ void InitMapState_80026FAC(void)
 extern int mapCallback_80091CB4;
 extern EventNode* dword_800B1DA8;
 extern void FreeActors_8001D3C4(int a0);
-extern void sub_800AC73C(void);
+extern void FreeLevantAnimSet_800AC73C(void);
 extern void sub_800A54A0(void);
-extern void sub_800A58B4(void);
-extern void sub_800A7784(void);
+extern void StopAllEventScripts_800A58B4(void);
+extern void ClearFieldMinions_800A7784(void);
 extern void sub_800A170C(void);
 extern void sub_800A1794(void);
 // Matched
@@ -3901,15 +3901,15 @@ void UnloadMap_80027118(void)
         StopAllEventEntries_80043B40(dword_800B1DA8);
         StopAllEventEntries_80043B40(eventEntities_8008D400);
     }
-    sub_800AC73C();
+    FreeLevantAnimSet_800AC73C();
     StopAllEventEntries_80043B40(messageWindowTask_8008D640);
     StopAllEventEntries_80043B40(enemyAiTasks_8008D49C);
     StopAllEventEntries_80043B40(encounterTask_8008D674);
     StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
     sub_800A54A0();
-    sub_800A58B4();
+    StopAllEventScripts_800A58B4();
     FreeActors_8001D3C4(dword_80091CA0);
-    sub_800A7784();
+    ClearFieldMinions_800A7784();
     sub_800A170C();
     sub_800A1794();
     ListFreeAll_8003FEC8(&eventHeap_80091C10);
@@ -4269,12 +4269,12 @@ typedef struct
 extern MapEntry16** mapTable_800B0608[];
 #define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
 extern int dword_800B0EC0;
-extern void sub_800ADDAC(void);
+extern void SelectMapEntrance_800ADDAC(void);
 extern int sub_800A683C(int a0);
 extern void sub_800AD124(int a0);
-extern int sub_800A5030(int a0, int a1, int a2);
-extern void sub_800A52AC(int a0);
-extern Model* sub_800AC38C(void);
+extern int SelectEncounterSpecies_800A5030(int a0, int a1, int a2);
+extern void SetBattleStageForMap_800A52AC(int a0);
+extern Model* GetLevantModel_800AC38C(void);
 extern int sub_800AD154(int a0);
 extern void StartEncounter_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
@@ -4310,7 +4310,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
             {
                 if (dword_80091C54)
                 {
-                    sub_800ADDAC();
+                    SelectMapEntrance_800ADDAC();
                 }
                 if (sub_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6)
                 {
@@ -4322,8 +4322,8 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 }
                 v[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).f6;
                 v[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6;
-                t = sub_800A5030(v[0], v[1], dword_80091C90);
-                sub_800A52AC(v[0]);
+                t = SelectEncounterSpecies_800A5030(v[0], v[1], dword_80091C90);
+                SetBattleStageForMap_800A52AC(v[0]);
                 dword_80091C54 = 1;
                 areaReload_80082670 = 0;
                 forceMapReload_80091C9C = 0;
@@ -4338,7 +4338,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 {
                     unknownFlags_8008D678 &= ~0x1000000;
                 }
-                ApplyModelFtgSwaps_80025C38(sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                ApplyModelFtgSwaps_80025C38(GetLevantModel_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 dword_80091CA0 = 0;
                 if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
                 {
@@ -4570,7 +4570,7 @@ typedef struct
     char pad_0[0xC];
     int fC;
 } MapEntry16b;
-extern void sub_800A5628(int a0, int* a1, int a2);
+extern void LoadEventData_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* LoadMapMeshes_80027A88();
@@ -4604,7 +4604,7 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
         a = *p++;
         c = *p++;
         c2 = *p++;
-        sub_800A5628(a, p, c);
+        LoadEventData_800A5628(a, p, c);
         p = (int*)((char*)p + c2);
     }
     mapState_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;

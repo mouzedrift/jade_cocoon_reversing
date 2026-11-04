@@ -14,10 +14,10 @@
 #include "camera.h"
 #include "engine.h"
 
-extern void sub_800A6D30(int a);
+extern void RequestGameMode_800A6D30(int a);
 
 
-// AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the name_800ADEB8 state handlers)
+// AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the enemyAiBySpecies_800ADEB8 state handlers)
 typedef struct GameAi
 {
     unsigned int* flags_0;     // the flags of its event entry (q[0] = the entry)
@@ -42,7 +42,7 @@ typedef struct GameV3_1
     int a, b, c;
 } GameV3_1;
 
-// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
+// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by AddEnemySlot_800A17F4)
 typedef struct GameEnemyMember
 {
     int species_0; // GetSpeciesModelDesc_80019C70 / InitMinionData_8001900C
@@ -74,14 +74,14 @@ typedef struct GameSlot_1
 
 extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short defaultBones_80079140[]; // default bone table
-extern GameEnemy* sub_800A5F6C(void);
-extern GameSlot_1* sub_800A17F4(unsigned int* src, GameAi* b);
+extern GameEnemy* GetEventEnemy_800A5F6C(void);
+extern GameSlot_1* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b);
 
 
 
-extern void sub_800A2D28(GameAi* p);
+extern void FreeEnemyAi_800A2D28(GameAi* p);
 
-extern void sub_800A2EC8(GameAi* p);
+extern void SuspendEnemyAi_800A2EC8(GameAi* p);
 
 extern void FreeActiveOverlay_8002C014(void);
 
@@ -147,29 +147,29 @@ typedef struct GameEvEnt
     int f8C;
 } GameEvEnt;
 
-extern EventEntry* sub_800A59D0(int a);
+extern EventEntry* StartEventScript_800A59D0(int a);
 
 extern int sub_800B76B8(char* p);
 
 
 
-extern GameSlot_1 dword_800B19F0[];
+extern GameSlot_1 enemySlots_800B19F0[];
 
-extern void sub_800A2D48(GameAi* p);
+extern void ResumeEnemyAi_800A2D48(GameAi* p);
 
-extern int sub_800A2CA8(int, int);
+extern int AssertEnemyIndex_800A2CA8(int, int);
 
 extern void DestroyActor_8001D600(Actor* p);
 
 extern char* dword_8008B520;
 
-extern void sub_800A170C(void);
+extern void ResetEncounter_800A170C(void);
 
-extern int sub_800A2CA8(int, int);
+extern int AssertEnemyIndex_800A2CA8(int, int);
 
-extern int sub_800A7A60(int a);
+extern int GetFieldMinionActor_800A7A60(int a);
 
-extern char dword_800B19CC[];
+extern char battleSelection_800B19CC[];
 
 
 
@@ -204,7 +204,7 @@ typedef struct GameActorDesc
     int clut_30; // index into name_8007DCAC / name_8007DCBC
 } GameActorDesc;
 
-// a party member (dword_800B0EC4.a)
+// a party member (fieldMinions_800B0EC4.a)
 typedef struct GameMember
 {
     char pad_0[0x10];
@@ -222,8 +222,8 @@ typedef struct GameList_1
 
 
 
-extern GameMember* sub_800A77F4(int a);
-extern GameActorDesc* sub_800A7A1C(int a);
+extern GameMember* GetFieldMinion_800A77F4(int a);
+extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
 
 
 extern int dword_800B19E0;
@@ -238,7 +238,7 @@ extern char* dword_8008B534;
 
 extern int* dword_8008D46C;
 
-extern int* dword_800B1264;
+extern int* encounterSlot_800B1264;
 
 typedef struct GameS3_1
 {
@@ -248,9 +248,9 @@ typedef struct GameS3_1
 extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 
 
-extern void sub_800ADCEC();
+extern void FindMapEntrance_800ADCEC();
 
-extern void sub_800AD0F8(unsigned a);
+extern void SetEventFlag_800AD0F8(unsigned a);
 
 extern int dword_80091C54;
 
@@ -281,20 +281,20 @@ extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
-extern int sub_800A52EC(short** a, int b, int c);
+extern int FindInLists_800A52EC(short** a, int b, int c);
 
 extern void* LoadOverlayIfChanged_80020D1C(int a, int b);
 
-extern void sub_800A76D8();
+extern void WaitChapterOverlay_800A76D8();
 
-extern void sub_800B78B8(int a);
+extern void SetLoadMenuSavePlace_800B78B8(int a);
 
-extern void sub_800B78D0();
+extern void LoadMenuSetEndOfGame_800B78D0();
 
-extern int sub_800A7790(void);
+extern int GetFieldMinionCount_800A7790(void);
 
-extern GameMember* sub_800A77F4(int a);
-extern GameActorDesc* sub_800A7A1C(int a);
+extern GameMember* GetFieldMinion_800A77F4(int a);
+extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
 
 
 
@@ -345,9 +345,9 @@ extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
 extern void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out);
 
-extern void sub_800A7654();
+extern void WaitMapOverlay_800A7654();
 
-extern void sub_800A1314();
+extern void EncounterWatchTask_800A1314();
 
 extern void SetFadeMode_8001C19C(int a, int b);
 
@@ -371,24 +371,24 @@ extern void FreeMdecBuffer_800418CC(void);
 
 extern void ReleaseMdecVLCFileBuffer_800418FC(void);
 
-extern void sub_800B8A34(GameEvCtx* q);
+extern void EvCmdEndScene_800B8A34(GameEvCtx* q);
 
-extern void sub_800C4118(void* a, void* b, int c, int d);
+extern void ChooseEnemyCommand_800C4118(void* a, void* b, int c, int d);
 
 extern void StartSceneFadeOut_8001AA50(int a);
 
-extern int sub_800BA9E4(void);
+extern int StartBattle_800BA9E4(void);
 
-extern void sub_800BA254();
+extern void BattleEnd_800BA254();
 
 
-extern void sub_800A7B00(int a);
+extern void SuspendFieldMinions_800A7B00(int a);
 
-extern void sub_800A7BF0(int a);
+extern void ResumeFieldMinions_800A7BF0(int a);
 
-extern void sub_800A188C(GameSlot_1* p);
+extern void SuspendEnemySlot_800A188C(GameSlot_1* p);
 
-extern void sub_800A18C8(GameSlot_1* p);
+extern void ResumeEnemySlot_800A18C8(GameSlot_1* p);
 
 
 
@@ -420,19 +420,19 @@ extern EventNode* eventScripts_8008D410;
 
 extern void sub_800A8EA4();
 
-extern void sub_800BAE2C(int a, int b);
+extern void StartStore_800BAE2C(int a, int b);
 
-extern void sub_800B66C4(int a);
+extern void StartShopCtrl_800B66C4(int a);
 
-extern void* sub_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
+extern void* GetEventDataSlot_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
 
 
 
-extern void sub_800A15FC();
+extern void WaitMapReloadAfterBattle_800A15FC();
 
-extern void sub_800A167C();
+extern void EncounterFadeInWait_800A167C();
 
-extern void sub_800A7AD8(int a);
+extern void SkipFieldMinionAnim_800A7AD8(int a);
 
 typedef struct GameV6_1
 {
@@ -444,11 +444,11 @@ extern char aFile_800A05CC[];
 
 extern void sub_800A895C();
 
-extern void sub_800A1BD0();
+extern void SetupEncounter_800A1BD0();
 
-extern void sub_800A1E98();
+extern void SuspendOtherEnemies_800A1E98();
 
-extern void sub_800AC73C();
+extern void FreeLevantAnimSet_800AC73C();
 
 extern void FreeLoaderModelAnimSets_80020814(void);
 
@@ -458,7 +458,7 @@ extern void StopSoundSeqs_80030D68(char* s);
 
 extern void PlayMusic_800300E0(int a, int b);
 
-extern void sub_800A1474();
+extern void WaitBattleOverlay_800A1474();
 
 extern char dword_80091CE0[];
 
@@ -466,18 +466,18 @@ extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
 extern unsigned short* sub_800B322C();
 
-extern unsigned short* sub_800A53CC();
+extern unsigned short* GetMapEncounterFlags_800A53CC();
 
-extern int sub_800AD154(int a);
+extern int GetEventVar_800AD154(int a);
 
-extern int sub_800AD16C(int a, int b);
+extern int SetEventVar_800AD16C(int a, int b);
 
 typedef struct GameRect_1
 {
     short x, y, w, h;
 } GameRect_1;
 
-// the animated map tile layers' work area (sub_800A0A5C), in the scratchpad at 0x1F800214
+// the animated map tile layers' work area (DrawTileAnimLayers_800A0A5C), in the scratchpad at 0x1F800214
 typedef struct TileAnimScratch
 {
     unsigned int i_0; // the layer (dword_8008D648.lists_14 index)
@@ -501,7 +501,7 @@ typedef struct TileAnimScratch
 #define TILE_ANIM_SCRATCH ((TileAnimScratch*)getScratchAddr(0x85))
 extern ShortPair screenOffset_8008D474;
 extern struct_8008D648 dword_8008D648;
-extern void sub_800A0A5C(short* q);
+extern void DrawTileAnimLayers_800A0A5C(short* q);
 
 extern int GameFn_8003B9E0(int* a, int* b);
 
@@ -512,7 +512,7 @@ extern void sub_800B66DC();
 extern int sub_800BBB94(void);
 
 
-extern void sub_800A6968();
+extern void GameMainStart_800A6968();
 
 extern int CreateEventList_800435B4(char* p);
 
@@ -521,7 +521,7 @@ extern void TriggerActorEffect_8001E28C(Actor* a);
 
 extern void InitMapState_80026FAC(void);
 
-extern void GameFn_800A094C(void);
+extern void EnableCameraPoints_800A094C(void);
 
 extern void ResetSoundTask_8002FEB8(void);
 
@@ -529,9 +529,9 @@ extern void InitSceneFade_8001A38C(void);
 
 extern void ResetCameraToLevant_800376A8(void);
 
-extern void sub_800A8140(void);
+extern void InitLevantControl_800A8140(void);
 
-extern void sub_800A94CC(void);
+extern void InitLevantActor_800A94CC(void);
 
 extern EventNode* eventEntities_8008D400;
 
@@ -545,7 +545,7 @@ typedef struct GameMode2_1
     int b;
 } GameMode2_1;
 
-extern GameMode2_1* sub_800A72C8(GameMode2_1* out);
+extern GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out);
 
 typedef struct GameMapEnt_1
 {
@@ -556,16 +556,16 @@ typedef struct GameMapEnt_1
 
 extern GameMapEnt_1** mapTable_800B0608[];
 
-extern void sub_800A4940(int a, int b);
+extern void ClearEncounterGroupFlags_800A4940(int a, int b);
 
-extern void sub_800A5B54(GameEvCtx* p);
+extern void ResetEventCtx_800A5B54(GameEvCtx* p);
 
-extern void sub_800A6060();
+extern void RunEventScript_800A6060();
 
-extern void sub_800A6168();
+extern void EndEventScript_800A6168();
 
 
-extern void sub_800A0A04();
+extern void TileAnimTask_800A0A04();
 
 typedef struct GameVec4_1
 {
@@ -582,10 +582,10 @@ typedef struct GameO_1
     short f5e;
 } GameO_1;
 
-extern int sub_800A48F4(int a);
+extern int TurnStepForAngle_800A48F4(int a);
 
-extern void sub_800A46FC(GameAi* p);
-extern void sub_800A45F8(GameAi* p);
+extern void EnemyAiWanderStep_800A46FC(GameAi* p);
+extern void EnemyAiChaseStep_800A45F8(GameAi* p);
 
 typedef struct GameLst_1
 {
@@ -595,21 +595,21 @@ typedef struct GameLst_1
 
 
 
-extern void sub_800A6CCC();
+extern void GameMainExit_800A6CCC();
 
 extern void ApplyAudioOutputFormat_80030988(void);
 
-extern void sub_800A6C00();
+extern void SwitchGameMode_800A6C00();
 
-extern void sub_800A6A48();
+extern void InitGameModeTasks_800A6A48();
 
-extern void sub_800A6B00();
+extern void GameMainUpdate_800A6B00();
 
-extern void sub_800A73A8(void);
+extern void ResetFieldState_800A73A8(void);
 
-extern void sub_800A7450(EventNode* n);
+extern void RunEventListUpdate_800A7450(EventNode* n);
 
-extern void sub_800A13B8();
+extern void StartEncounterBattle_800A13B8();
 
 extern int CheckEnemyContact_800A19E4();
 
@@ -619,20 +619,20 @@ extern EventNode* enemyAiTasks_8008D49C;
 
 extern unsigned char levantCaptureLevel_8008BD7C;
 
-extern void sub_800A2EE4(EventEntry* e, void* ai);
+extern void EnemyAiNone_800A2EE4(EventEntry* e, void* ai);
 
 
-extern int sub_800A4278();
+extern int ApplySporeToEnemyAi_800A4278();
 
-extern void SetActorState_800A433C();
+extern void SetEnemyAiState_800A433C();
 
 extern unsigned int DistanceSquaredXZ_8003B860(void* a, void* b);
 
-extern int sub_800AB39C();
+extern int GetLevantMoveCmd_800AB39C();
 
-extern void sub_800A43FC();
+extern void RandomizeEnemyTurn_800A43FC();
 
-extern void sub_800A44C0();
+extern void EnemyAiFleeTurnStep_800A44C0();
 
 extern int* sub_800B3198(void);
 
@@ -654,9 +654,9 @@ extern void FreeRecordTables_80026DE8(void* a, int b, void* c);
 
 extern unsigned int name_80091C38;
 
-extern int (*name_800BCDBC[])(GameEvCtx*);
+extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
-extern void sub_800BC2B4(GameEvCtx* q);
+extern void UpdateEventMessage_800BC2B4(GameEvCtx* q);
 
 typedef struct GameTim_1
 {
@@ -717,11 +717,11 @@ extern EventNode* loadMenuTask_8008D480;
 
 
 
-extern void sub_800A70F8();
+extern void WaitSubOverlayLoad_800A70F8();
 
-extern void sub_800A7204();
+extern void StartShopRequest_800A7204();
 
-extern void sub_800A7280();
+extern void StartSaveMenuRequest_800A7280();
 
 extern int GetFileRequestStatus_8003BE30();
 
@@ -731,7 +731,7 @@ extern void EndFade_8001C290();
 
 extern void BeginFade_8001C260();
 
-extern void sub_800A6DAC();
+extern void CheckSubOverlayRequests_800A6DAC();
 
 extern void DrawIntroMovie_8001AF64(void* p);
 
@@ -746,7 +746,7 @@ typedef struct G2Inner
 {
     unsigned int f0;
     char pad_4[0xC];
-    struct_v3 pos_10; // Levant's position, copied each frame by sub_800A818C
+    struct_v3 pos_10; // Levant's position, copied each frame by LevantControlTask_800A818C
     char pad_1C[0x18];
     int f34;
     int f38;
@@ -761,19 +761,19 @@ typedef struct G2Inner
     int fAC;
     int fB0;
     char pad_B4[0x12];
-    short fC6; // the state of Levant's input state machine (sub_800A818C)
+    short fC6; // the state of Levant's input state machine (LevantControlTask_800A818C)
     char pad_C8[4];
     int fCC;
 } G2Inner;
 
 extern unsigned char pads_800918E8[2][9];
-extern int sub_800A9164(int* out);
-extern int sub_800A926C();
-extern void sub_800A5BCC(int a);
+extern int FindFacingFieldMinion_800A9164(int* out);
+extern int IsFieldMinionBehind_800A926C();
+extern void ClearScriptActorBusy_800A5BCC(int a);
 extern void sub_800AB1A4(int a);
 extern int sub_800AB1EC(int a, int b, int c, int d);
 extern int sub_800AB32C();
-extern int sub_800AB37C(int v);
+extern int SetLevantMoveCmd_800AB37C(int v);
 extern void sub_800AB3BC();
 extern void sub_800AB3D4();
 extern int sub_800AB938();
@@ -879,7 +879,7 @@ extern short word_8008BDA6;
 
 
 
-extern void sub_800AC380(int);
+extern void SetLevantHasArmor_800AC380(int);
 
 extern int levantEmptyCocoons_8008B818;
 
@@ -887,15 +887,15 @@ extern ModelList* dword_8007DC60; // the GAME overlay's model list
 
 extern int sub_800A88E0();
 
-extern void sub_800AB010();
+extern void SetLevantAnim_800AB010();
 
 extern int sub_800AC518();
 
-extern void sub_800AC6A8();
+extern void FreeLevantAnimById_800AC6A8();
 
-extern int sub_800AC4A8();
+extern int GetLevantAnimFile_800AC4A8();
 
-extern int sub_800ADBA0(short*);
+extern int FindMapVar_800ADBA0(short*);
 
 typedef struct G2Rec
 {
@@ -913,7 +913,7 @@ typedef struct G2Rec
     char pad_38[8];
 } G2Rec;
 
-extern int sub_800AC794(int, int);
+extern int GetLevantAnimIndex_800AC794(int, int);
 
 extern void sub_800A913C();
 
@@ -938,14 +938,14 @@ extern unsigned char equippedArmor_8008BD55;
 
 extern unsigned char byte_8008BD56;
 
-extern InvSlot* sub_800AD4D8();
+extern InvSlot* FindInventorySlotForAdd_800AD4D8();
 
-extern int sub_800AD8E4();
-
-
+extern int GetEmptyCocoons_800AD8E4();
 
 
-extern int sub_800A7790();
+
+
+extern int GetFieldMinionCount_800A7790();
 
 
 
@@ -960,12 +960,12 @@ extern void sub_800AACF8();
 
 extern void sub_800AC02C();
 
-extern int sub_800AD670(int, int);
+extern int CanAddInventoryCount_800AD670(int, int);
 
 
 extern void PoolInit_8003FF1C(void*, unsigned);
 
-extern void sub_800ACB64();
+extern void LevantModelTask_800ACB64();
 
 extern void PlaySfx_80031494(int);
 
@@ -1045,16 +1045,16 @@ typedef struct G2L2
 
 extern int dword_8001D060(int);
 
-extern int sub_800A79C8(int);
+extern int IsFieldMinionVisible_800A79C8(int);
 
-extern int* name_800A7940(int);
+extern int* GetFieldMinionPos_800A7940(int);
 
 extern int IsWithinDistance_8003B740();
 
 
-extern int sub_800A6D50(int);
+extern int GetGameMode_800A6D50(int);
 
-extern void sub_800A6D30(int);
+extern void RequestGameMode_800A6D30(int);
 
 extern int eventDispatchHalt_8008B540;
 
@@ -1067,31 +1067,31 @@ extern void PoolDestroy_8003FF7C(void*);
 
 
 
-extern int sub_800AC474(int);
+extern int GetLevantAnimSet_800AC474(int);
 
-extern int sub_800AC3E4();
+extern int GetLevantWeaponKind_800AC3E4();
 
-extern Model* sub_800AC38C();
+extern Model* GetLevantModel_800AC38C();
 
-extern InvSlot* sub_800AD58C();
+extern InvSlot* FindInventorySlot_800AD58C();
 
-extern InvSlot* sub_800AD604(int);
+extern InvSlot* GetInventoryTable_800AD604(int);
 
-extern int sub_800AD374(int);
+extern int GetInventorySize_800AD374(int);
 
-extern int sub_800AD308(int);
+extern int GetLastInventorySlot_800AD308(int);
 
-extern int sub_800AD288(int, int);
+extern int GetInventorySlotId_800AD288(int, int);
 
-extern int sub_800AD2C8(int, int);
+extern int GetInventorySlotCount_800AD2C8(int, int);
 
-extern int sub_800AD67C(int, int);
+extern int CanRemoveInventoryCount_800AD67C(int, int);
 
 extern unsigned char* sub_800AC7B4(int);
 
-extern int sub_800AD73C(int);
+extern int TestValuableFlag_800AD73C(int);
 
-extern int sub_800AD8BC();
+extern int CountCocoonsAndMinions_800AD8BC();
 
 
 extern short cameraTargetScreenPos_8008D668[2];
@@ -1108,7 +1108,7 @@ extern void sub_800AB8AC();
 
 extern void sub_800AC318();
 
-extern int sub_800A5C40();
+extern int FireEventTrigger_800A5C40();
 
 extern void sub_800AB910();
 
@@ -1200,22 +1200,22 @@ extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);
 
 extern void InitSporeTask_80011ADC();
 extern void ResetMapLoaderTask_8002830C();
-extern void sub_800A818C();
-extern void sub_800A2EEC();
-extern void sub_800A2FB8();
-extern void sub_800A31DC();
-extern void sub_800A333C();
-extern void sub_800A34D8();
-extern void sub_800A366C();
-extern void sub_800A3804();
-extern void sub_800A3954();
-extern void sub_800A3A8C();
-extern void sub_800A3BEC();
-extern void sub_800A3D24();
-extern void sub_800A3E88();
-extern void sub_800A3FC0();
-extern void sub_800A09D8();
-extern void sub_800A1444();
+extern void LevantControlTask_800A818C();
+extern void EnemyAiFlee_800A2EEC();
+extern void EnemyAiWanderChase_800A2FB8();
+extern void EnemyAiWatchFlee_800A31DC();
+extern void EnemyAiSleepChase_800A333C();
+extern void EnemyAiWander_800A34D8();
+extern void EnemyAiWander2_800A366C();
+extern void EnemyAiAlertChase_800A3804();
+extern void EnemyAiChaseAlert_800A3954();
+extern void EnemyAiWanderBump_800A3A8C();
+extern void EnemyAiChaseBehind_800A3BEC();
+extern void EnemyAiWanderShort_800A3D24();
+extern void EnemyAiHideFlee_800A3E88();
+extern void EnemyAiWanderMid_800A3FC0();
+extern void TileAnimTaskInit_800A09D8();
+extern void FreeBattleResources_800A1444();
 
 extern int dword_8008D624;
 extern int battleMenuTask_8008D468[3];
@@ -1251,12 +1251,12 @@ extern const int dword_800A06F0[18];
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
 extern const int dword_800A0814;
-extern GameRec_1 dword_800ADE78;
+extern GameRec_1 encounterRecord_800ADE78;
 extern short dword_800ADE8C[2];
 extern short dword_800ADE90[2];
 extern short dword_800ADE94[4];
-extern short *dword_800ADE9C[7];
-extern void (*name_800ADEB8[53][2])();
+extern short *encounterFormations_800ADE9C[7];
+extern void (*enemyAiBySpecies_800ADEB8[53][2])();
 extern short dword_800AE060[8];
 extern short dword_800AE070[10];
 extern short dword_800AE084[4];
@@ -1296,7 +1296,7 @@ extern short dword_800AE1D4[16];
 extern short dword_800AE1F4[16];
 extern short dword_800AE214[16];
 extern short dword_800AE234[16];
-extern short *dword_800AE254[39];
+extern short *battleStageMaps_800AE254[39];
 extern short dword_800AE2F0[6];
 extern short dword_800AE2FC[4];
 extern short dword_800AE304[2];
@@ -1314,7 +1314,7 @@ extern short dword_800AE3A0[6];
 extern short dword_800AE3AC[6];
 extern short dword_800AE3B8[6];
 extern short dword_800AE3C4[6];
-extern short *dword_800AE3D0[17];
+extern short *encounterAreaMaps_800AE3D0[17];
 extern int dword_800AE414[3];
 extern int dword_800AE420[3];
 extern int dword_800AE42C[3];
@@ -1332,8 +1332,8 @@ extern int dword_800AE4B0[3];
 extern int dword_800AE4BC[3];
 extern int dword_800AE4C8[3];
 extern int dword_800AE4D4[3];
-extern int *name_800AE4E0[17];
-extern int dword_800AE524[219];
+extern int *encounterAreaSpecies_800AE4E0[17];
+extern int encounterTables_800AE524[219];
 extern int dword_800AE890;
 extern int dword_800AE894;
 extern int dword_800AE898;
@@ -1407,25 +1407,25 @@ extern int dword_800AE9C4;
 extern int dword_800AE9C8;
 extern int dword_800AE9CC;
 extern int dword_800AE9D0[3];
-extern void *dword_800AE9DC[73];
-extern int dword_800AEB00[27];
-extern int dword_800AEB6C[3];
+extern void *encounterMapLists_800AE9DC[73];
+extern int encounterGroups_800AEB00[27];
+extern int encounterSpecies_800AEB6C[3];
 extern int dword_800AEB78;
-extern int dword_800AEB7C;
-extern int name_800AEB80[15];
-extern int *name_800AEBBC;
-extern void *name_800AEBC0[2];
-extern void *name_800AEBC8;
-extern int name_800AEBCC[2];
+extern int mdecBufferMode_800AEB7C;
+extern int eventEffects_800AEB80[15];
+extern int *eventReloc_800AEBBC;
+extern void *eventTiy_800AEBC0[2];
+extern void *eventDataBuf_800AEBC8;
+extern int eventRecords_800AEBCC[2];
 extern int name_800AEBD4;
-extern int dword_800AEBD8;
-extern int dword_800AEBDC;
-extern int dword_800AEBE0;
-extern int dword_800AEBE4;
-extern int dword_800AEBE8;
+extern int sceneScriptId_800AEBD8;
+extern int nextScriptId_800AEBDC;
+extern int eventBattlePending_800AEBE0;
+extern int eventBattleLoseWarp_800AEBE4;
+extern int currentMessageId_800AEBE8;
 extern int name_800AEBEC;
-extern int dword_800AEBF0;
-extern int dword_800AEBF4;
+extern int voiceTable_800AEBF0;
+extern int eventResult_800AEBF4;
 extern int dword_800AEBF8[19];
 extern int dword_800AEC44[20];
 extern int dword_800AEC94[20];
@@ -1471,10 +1471,10 @@ extern void *dword_800B05A4[13];
 extern void *dword_800B05D8[6];
 extern void *dword_800B05F0[6];
 extern G2Ent16 **name_800B0608[36];
-extern int dword_800B0698;
+extern int gameModeChanged_800B0698;
 extern int dword_800B069C[5];
-extern int dword_800B06B0[3];
-extern int dword_800B06BC;
+extern int shopRequest_800B06B0[3];
+extern int saveRequest_800B06BC;
 extern int dword_800B06C0[3];
 extern int dword_800B06CC[6];
 extern int dword_800B06E4[6];
@@ -1510,7 +1510,7 @@ extern int dword_800B099C[6];
 extern int dword_800B09B4[6];
 extern int dword_800B09CC[6];
 extern int dword_800B09E4[6];
-extern GameLst_1 dword_800B09FC[2];
+extern GameLst_1 globalTaskLists_800B09FC[2];
 extern GameLst_1 dword_800B0A0C[4];
 extern GameLst_1 dword_800B0A2C[26];
 extern GameLst_1 dword_800B0AFC[35];
@@ -1523,13 +1523,13 @@ extern GameLst_1 dword_800B0D04[2];
 extern GameLst_1 dword_800B0D14[6];
 extern GameLst_1 dword_800B0D44[3];
 extern GameLst_1 dword_800B0D5C[3];
-extern GameLst_1 *dword_800B0D74[12];
-extern char dword_800B0DA4[232];
-extern int dword_800B0E8C[6];
+extern GameLst_1 *gameModeTaskLists_800B0D74[12];
+extern char gameEventListDefs_800B0DA4[232];
+extern int gameMainTaskDef_800B0E8C[6];
 extern char name_800B0EA4[20];
-extern GameTab_1 dword_800B0EB8[1];
-extern int dword_800B0EC0;
-extern GameList_1 dword_800B0EC4;
+extern GameTab_1 fieldModeHandlers_800B0EB8[1];
+extern int fieldMode_800B0EC0;
+extern GameList_1 fieldMinions_800B0EC4;
 extern char dword_800B0EF8;
 extern int dword_800B0EFC[45];
 extern SVECTOR dword_800B0FB0[55];
@@ -1538,21 +1538,21 @@ extern int dword_800B116C[19];
 extern unsigned char dword_800B11B8[20];
 extern int dword_800B11CC[4];
 extern int dword_800B11DC[19];
-extern int dword_800B1228;
+extern int battleFlags_800B1228;
 extern int dword_800B122C[13];
 extern GameCtx_1 gCtx_800B1260;
 extern int dword_800B1CAC[3];
-extern GameEnemy dword_800B1CB8;
-extern int dword_800B1D98;
+extern GameEnemy eventEnemy_800B1CB8;
+extern int eventHook_800B1D98;
 extern int dword_800B1D9C;
-extern EventNode *dword_800B1DA0[1];
-extern EventNode *dword_800B1DA4[1];
+extern EventNode *levantModelTask_800B1DA0[1];
+extern EventNode *mapOverlayTask_800B1DA4[1];
 extern EventNode *dword_800B1DA8[1];
-extern EventNode *dword_800B1DAC;
-extern EventNode *dword_800B1DB0[1];
-extern EventNode *dword_800B1DB4[1];
-extern EventNode *dword_800B1DBC;
-extern EventNode *dword_800B1DC0[1];
+extern EventNode *fieldModeTask_800B1DAC;
+extern EventNode *chapterOverlayTask_800B1DB0[1];
+extern EventNode *subOverlayTask_800B1DB4[1];
+extern EventNode *tileAnimTask_800B1DBC;
+extern EventNode *prevModeTask_800B1DC0[1];
 extern int dword_800B1DC8[2];
 extern char dword_800B1DD0;
 extern int dword_800B1DD4[9];

@@ -482,7 +482,7 @@ extern int sub_80019C84(void);
 extern Minion* sub_800A11D8(int a0);
 extern int sub_800AD288(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
-extern void sub_800A61CC(int a0, void* a1, void* a2);
+extern void GetPortraitSprt_800A61CC(int a0, void* a1, void* a2);
 
 extern int GetActorScriptTime_8001F03C(int a0, int a1, int a2, int a3);
 extern int* sub_800B3260(int a0);
@@ -495,12 +495,12 @@ extern void FadeToBlackStep_8001BB28(void);
 extern void FadeToWhiteStep_8001BC00(void);
 
 extern int sub_800A248C(void);
-extern UnitStats* sub_800A2B20(int a0);
+extern UnitStats* GetEnemyStats_800A2B20(int a0);
 
 extern int RequestModelAnim_8002032C(int a0, int a1, int a2);
 extern void LoadModelAnimsMasked_800268E8(struct ModelAnim* a0, int a1, int a2, int a3, int a4);
 
-extern void sub_800A5BCC(int a0);
+extern void ClearScriptActorBusy_800A5BCC(int a0);
 
 extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 extern void ClearPointLight_800C410C(void);

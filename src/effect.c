@@ -300,7 +300,7 @@ UnitStats* GetUnitStats_8001449C(unsigned char a0)
         int m = 1 << a0;
         if (flags & m)
         {
-            r = sub_800A2B20(v & 0xFF);
+            r = GetEnemyStats_800A2B20(v & 0xFF);
         }
     }
     return r;

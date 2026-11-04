@@ -1,25 +1,25 @@
 // GAME.BIN, source file 2 of 3 from 0x800A55B0 (.rdata from 0x800A061C)
 #include "game.h"
 
-void* sub_800A55B0(int a)
+void* GetEventDataSlot_800A55B0(int a)
 {
     void* r = 0;
     switch (a)
     {
     case 0:
-        r = name_800AEB80;
+        r = eventEffects_800AEB80;
         break;
     case 1:
-        r = name_800AEBBC;
+        r = eventReloc_800AEBBC;
         break;
     case 2:
-        r = name_800AEBC0;
+        r = eventTiy_800AEBC0;
         break;
     case 3:
-        r = name_800AEBC8;
+        r = eventDataBuf_800AEBC8;
         break;
     case 4:
-        r = name_800AEBCC;
+        r = eventRecords_800AEBCC;
         break;
     }
     return r;
@@ -27,76 +27,76 @@ void* sub_800A55B0(int a)
 
 INCLUDE_OVERLAY_ASM(game, dword_800A0630);
 
-extern void sub_800BC7A8(int a, int b);
+extern void LoadEventEffectFile_800BC7A8(int a, int b);
 extern void LoadRelocBlob_800BC854(int a, int b);
-extern void sub_800BC98C(int a, int b);
-extern void sub_800BCA18(int a, int b);
-extern void sub_800BCA68(int a, int b);
+extern void LoadEventTiy_800BC98C(int a, int b);
+extern void CopyEventData_800BCA18(int a, int b);
+extern void LoadEventRecordTables_800BCA68(int a, int b);
 
-void sub_800A5628(int kind, int a, int b)
+void LoadEventData_800A5628(int kind, int a, int b)
 {
     switch (kind)
     {
     case 0:
-        sub_800BC7A8(a, b);
+        LoadEventEffectFile_800BC7A8(a, b);
         break;
     case 1:
         LoadRelocBlob_800BC854(a, b);
         break;
     case 2:
-        sub_800BC98C(a, b);
+        LoadEventTiy_800BC98C(a, b);
         break;
     case 3:
-        sub_800BCA18(a, b);
+        CopyEventData_800BCA18(a, b);
         break;
     case 4:
-        sub_800BCA68(a, b);
+        LoadEventRecordTables_800BCA68(a, b);
         break;
     }
 }
 INCLUDE_OVERLAY_ASM(game, dword_800A0648);
 
-void sub_800A56BC(int kind)
+void FreeEventData_800A56BC(int kind)
 {
     switch (kind)
     {
     case 0:
-        if (dword_800AEB7C != 2)
-            sub_800A5854();
-        if (name_800AEB80[1])
-            ListFreeAll_8003FEC8(&name_800AEB80[1]);
+        if (mdecBufferMode_800AEB7C != 2)
+            FreeMdecBuffer_800A5854();
+        if (eventEffects_800AEB80[1])
+            ListFreeAll_8003FEC8(&eventEffects_800AEB80[1]);
         break;
     case 1:
-        if (name_800AEBBC)
+        if (eventReloc_800AEBBC)
         {
-            ListFree_8003FE38(name_80091C10, name_800AEBBC);
-            name_800AEBBC = 0;
+            ListFree_8003FE38(name_80091C10, eventReloc_800AEBBC);
+            eventReloc_800AEBBC = 0;
         }
         break;
     case 2:
-        if (name_800AEBC0[0])
+        if (eventTiy_800AEBC0[0])
         {
-            ListFree_8003FE38(name_80091C10, name_800AEBC0[0]);
-            name_800AEBC0[0] = 0;
+            ListFree_8003FE38(name_80091C10, eventTiy_800AEBC0[0]);
+            eventTiy_800AEBC0[0] = 0;
         }
-        if (name_800AEBC0[1])
+        if (eventTiy_800AEBC0[1])
         {
-            ListFree_8003FE38(name_80091C10, name_800AEBC0[1]);
-            name_800AEBC0[1] = 0;
+            ListFree_8003FE38(name_80091C10, eventTiy_800AEBC0[1]);
+            eventTiy_800AEBC0[1] = 0;
         }
         break;
     case 3:
-        if (name_800AEBC8)
+        if (eventDataBuf_800AEBC8)
         {
-            ListFree_8003FE38(name_80091C10, name_800AEBC8);
-            name_800AEBC8 = 0;
+            ListFree_8003FE38(name_80091C10, eventDataBuf_800AEBC8);
+            eventDataBuf_800AEBC8 = 0;
         }
         break;
     case 4:
-        if (name_800AEBCC[1])
+        if (eventRecords_800AEBCC[1])
         {
-            FreeRecordTables_80026DE8(&name_800AEBCC[1], name_800AEBCC[0], name_80091C10);
-            name_800AEBCC[0] = 0;
+            FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], name_80091C10);
+            eventRecords_800AEBCC[0] = 0;
         }
         break;
     }

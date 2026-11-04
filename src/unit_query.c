@@ -53,7 +53,7 @@ int sub_80031B0C(UnitSkill* base, int idx)
     return r;
 }
 extern UnitSkill* sub_800A11A0(int a0);
-extern UnitSkill* sub_800A2BA0(int a0);
+extern UnitSkill* GetEnemySkills_800A2BA0(int a0);
 
 
 
@@ -76,7 +76,7 @@ UnitSkill* GetUnitSkills_80031B30(int unit)
         if (flags & bit)
         {
             t = unit - 4;
-            r = sub_800A2BA0(t & 0xFF);
+            r = GetEnemySkills_800A2BA0(t & 0xFF);
         }
     }
     else if (v != 0)

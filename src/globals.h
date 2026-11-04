@@ -83,7 +83,7 @@ typedef struct LevantPos
     SVECTOR rot; // rot.vy: facing angle
 } LevantPos;
 
-// one inventory slot (SaveData.inv_24.inventory_4; GAME's sub_800AD604 returns a category's table)
+// one inventory slot (SaveData.inv_24.inventory_4; GAME's GetInventoryTable_800AD604 returns a category's table)
 typedef struct
 {
     unsigned char id;    // 0xFF = empty
@@ -101,7 +101,7 @@ typedef struct
     unsigned char vars_2A3[0x14]; // GAME's sub_800AD154 / sub_800AD16C
 } SaveInventory;
 
-// a value saved per map (SaveData.mapVars_2F8, GAME's sub_800ADBA0 / sub_800ADC5C), keyed by the map ids
+// a value saved per map (SaveData.mapVars_2F8, GAME's FindMapVar_800ADBA0 / sub_800ADC5C), keyed by the map ids
 typedef struct
 {
     short area_0;
@@ -145,10 +145,10 @@ typedef struct
                                  // equipped weapon / armor / accessory, level_44 the rank (levantCaptureLevel_8008BD7C)
     int field_810; // == dword_8008BD80
     unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
-    int field_830; // model index (GAME's sub_800ACB64)
+    int field_830; // model index (GAME's LevantModelTask_800ACB64)
     short field_834;
     short field_836;
-    unsigned short tbl_838[12]; // the tables GAME's sub_800A53CC picks by mapId_2E4[0]/[1] (TITLE fills them with 0x8000)
+    unsigned short tbl_838[12]; // the tables GAME's GetMapEncounterFlags_800A53CC picks by mapId_2E4[0]/[1] (TITLE fills them with 0x8000)
     unsigned short tbl_850[18];
     unsigned short tbl_874[44];
     unsigned short tbl_8CC[22];

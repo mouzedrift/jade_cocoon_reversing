@@ -8,7 +8,7 @@ enum GameStates CombatMain_800A1324(void);
 enum GameStates TstModelMain_800A1B24(void);
 enum GameStates TstCompoMain_800A200C(void);
 enum GameStates SoundTestMain_800A51AC(void);
-enum GameStates sub_800A7574(void);
+enum GameStates GameShutdown_800A7574(void);
 
 extern int dword_800960B4[3];
 

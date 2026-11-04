@@ -332,8 +332,8 @@ struct_4s* RepeatHitTimes_80018200(struct_4s* src, unsigned short loopStart, uns
 }
 extern int GetSummonedMinionSlot_800C0D50(void);
 extern void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* a0);
-extern void sub_800A93A4(EffectTarget* a0);
-extern void sub_800A29CC(int a0, EffectTarget* a1);
+extern void GetLevantEffectTarget_800A93A4(EffectTarget* a0);
+extern void GetEnemyEffectTarget_800A29CC(int a0, EffectTarget* a1);
 extern void GetSlotEffectTarget_800A111C(int a0, EffectTarget* a1);
 // Matched
 void CollectEffectTargets_800182B8(ActorEffectReq* req, int mask)
@@ -358,12 +358,12 @@ void CollectEffectTargets_800182B8(ActorEffectReq* req, int mask)
                     break;
                 }
             case 0:
-                sub_800A93A4(&req->targets_44[req->count_40]);
+                GetLevantEffectTarget_800A93A4(&req->targets_44[req->count_40]);
                 break;
             case 4:
             case 5:
             case 6:
-                sub_800A29CC(i - 4, &req->targets_44[req->count_40]);
+                GetEnemyEffectTarget_800A29CC(i - 4, &req->targets_44[req->count_40]);
                 break;
             case 8:
             case 9:

@@ -138,14 +138,14 @@ short GetMagicElementIcon_8002A3E0(int a)
     }
     return 36;
 }
-extern void sub_800A61CC(int a, void* b, void* c);
+extern void GetPortraitSprt_800A61CC(int a, void* b, void* c);
 extern void AddDrawAreaPrim_8003326C(int a, void* b);
 // Matched
 void DrawPortrait_8002A42C(unsigned short* pos, short id, int drawArea, short ot)
 {
     unsigned short buf1[10];
     char buf2[8];
-    sub_800A61CC(id, buf1, buf2);
+    GetPortraitSprt_800A61CC(id, buf1, buf2);
     buf1[4] = pos[0];
     buf1[5] = pos[1];
     AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
@@ -161,7 +161,7 @@ void DrawPortraitWindow_8002A4E4(short ot)
     unsigned short buf1[10];
     char buf2[8];
     DrawWindowBorder_80042B38((int)portraitWindowRect_800827E4, ot);
-    sub_800A61CC(1, buf1, buf2);
+    GetPortraitSprt_800A61CC(1, buf1, buf2);
     buf1[4] = portraitWindowPos_800827EC[0];
     buf1[5] = portraitWindowPos_800827EC[1];
     AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
