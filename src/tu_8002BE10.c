@@ -19,7 +19,7 @@
 #include "minion_menu.h"
 #include "tu_80014954.h"
 
-const int dword_800741EC = 0;
+const int emptyString_800741EC = 0;
 
 extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
@@ -240,7 +240,7 @@ unsigned int GetTime30Hz_8002C64C(void)
     return (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
 }
 // Matched
-int sub_8002C670(char* base, int a1, int a2, short idx, short a4)
+int DrawAbilityDescription_8002C670(char* base, int a1, int a2, short idx, short a4)
 {
     char* p = base + idx * 4;
     int b;
@@ -262,7 +262,7 @@ typedef struct
 } ShortPair2;
 extern void sub_8002B3DC(ShortPair2 p, int b, int c, int d);
 // Matched
-void sub_8002C6DC(int a0, short a1, short a2)
+void DrawScrollArrow_8002C6DC(int a0, short a1, short a2)
 {
     ShortPair2 p;
     p.a = 2;
@@ -281,9 +281,9 @@ typedef struct
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
 extern int sub_800AD308(int a0);
-extern const int dword_800741EC;
+extern const int emptyString_800741EC;
 // Matched
-void sub_8002C728(struct_minion_ref* a0)
+void DrawItemList_8002C728(struct_minion_ref* a0)
 {
     struct_A5A4 s;
     short saved;
@@ -310,10 +310,10 @@ void sub_8002C728(struct_minion_ref* a0)
         else
         {
             v18 = -1;
-            v19 = (int)&dword_800741EC;
+            v19 = (int)&emptyString_800741EC;
             v17 = 0;
         }
-        e = &off_800829E8[i];
+        e = &itemListRows_800829E8[i];
         (*e)[0].f4 = v18;
         (*e)[0].sprts_8 = &publicTiySprts_8008D434;
         (*e)[0].tpages_C = &publicTiyTPages_8008D440;
@@ -341,22 +341,22 @@ void sub_8002C728(struct_minion_ref* a0)
         }
         if (v17 == 0)
         {
-            off_800829E8[i][0].flags |= 0x40;
-            off_800829E8[i][1].flags |= 0x40;
-            off_800829E8[i][2].flags |= 0x40;
+            itemListRows_800829E8[i][0].flags |= 0x40;
+            itemListRows_800829E8[i][1].flags |= 0x40;
+            itemListRows_800829E8[i][2].flags |= 0x40;
         }
         else
         {
-            off_800829E8[i][0].flags &= ~0x40;
-            off_800829E8[i][1].flags &= ~0x40;
-            off_800829E8[i][2].flags &= ~0x40;
+            itemListRows_800829E8[i][0].flags &= ~0x40;
+            itemListRows_800829E8[i][1].flags &= ~0x40;
+            itemListRows_800829E8[i][2].flags &= ~0x40;
         }
     }
     s.field_0 = a0->field_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
-    s.field_10 = off_800829E8;
+    s.field_10 = itemListRows_800829E8;
     s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
@@ -367,18 +367,18 @@ void sub_8002C728(struct_minion_ref* a0)
     }
     if (a0->field_2)
     {
-        sub_8002C6DC((int)&dword_80082820, 3, a0->field_6);
+        DrawScrollArrow_8002C6DC((int)&itemScrollUpPos_80082820, 3, a0->field_6);
     }
     if (a0->field_2 < n - 4 && n >= 5)
     {
-        sub_8002C6DC((int)&dword_80082824, 1, a0->field_6);
+        DrawScrollArrow_8002C6DC((int)&itemScrollDownPos_80082824, 1, a0->field_6);
     }
 }
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int CountMagicBits_8001AE54(void* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 // Matched
-void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
+void DrawMagicList_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
 {
     unsigned short pos[2];
     struct_A5A4 s;
@@ -419,9 +419,9 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
         else
         {
             v17 = -1;
-            v3 = (int)&dword_800741EC;
+            v3 = (int)&emptyString_800741EC;
         }
-        e = &off_80082B54[i];
+        e = &magicListRows_80082B54[i];
         (*e)[0].f4 = v17;
         (*e)[1].f4 = v3;
         (*e)[0].x = pos[0];
@@ -445,7 +445,7 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
-    s.field_10 = off_80082B54;
+    s.field_10 = magicListRows_80082B54;
     s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
@@ -458,29 +458,29 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
     {
         if (a1)
         {
-            r[0] = word_800829FC[0] + a1[0] - 0x60;
-            r[1] = word_800829FC[1] + a1[1] - 0x36;
+            r[0] = magicScrollUpPos_800829FC[0] + a1[0] - 0x60;
+            r[1] = magicScrollUpPos_800829FC[1] + a1[1] - 0x36;
         }
         else
         {
-            r[0] = word_800829FC[0];
-            r[1] = word_800829FC[1];
+            r[0] = magicScrollUpPos_800829FC[0];
+            r[1] = magicScrollUpPos_800829FC[1];
         }
-        sub_8002C6DC((int)r, 3, a0->field_6);
+        DrawScrollArrow_8002C6DC((int)r, 3, a0->field_6);
     }
     if (a0->field_2 < n - 4 && n >= 5)
     {
         if (a1)
         {
-            r[0] = word_80082A00[0] + a1[0] - 0x60;
-            r[1] = word_80082A00[1] + a1[1] - 0x36;
+            r[0] = magicScrollDownPos_80082A00[0] + a1[0] - 0x60;
+            r[1] = magicScrollDownPos_80082A00[1] + a1[1] - 0x36;
         }
         else
         {
-            r[0] = word_80082A00[0];
-            r[1] = word_80082A00[1];
+            r[0] = magicScrollDownPos_80082A00[0];
+            r[1] = magicScrollDownPos_80082A00[1];
         }
-        sub_8002C6DC((int)r, 1, a0->field_6);
+        DrawScrollArrow_8002C6DC((int)r, 1, a0->field_6);
     }
 }
 

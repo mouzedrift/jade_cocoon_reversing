@@ -103,9 +103,9 @@ typedef struct WpnSmall_wpnshop
     char b;
     char c;
 } WpnSmall_wpnshop;
-extern void sub_8002F7D0(void* p, int a1);
-extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
-extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void DrawLevantStats_8002F7D0(void* p, int a1);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
+extern void DrawStatCompare_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
 #define f_26 f_20[3]
 extern int IsCircleHeldP1_8003D480(void);
@@ -1043,17 +1043,17 @@ void sub_800BCCE8(WpnObj_wpnshop* o)
         {
             if (o->f_2 != 0x11)
             {
-                sub_8002E288(&levantStatus_8008BD38, r, o->f_10, buf28);
+                CalcStatsWithEquip_8002E288(&levantStatus_8008BD38, r, o->f_10, buf28);
 
                 r40.x = 0x119;
                 r40.y = 0x73;
-                sub_8002E188(buf10, buf28, &r40, 0xE);
+                DrawStatCompare_8002E188(buf10, buf28, &r40, 0xE);
             }
         }
     }
     r40.x = 0xC2;
     r40.y = 0x70;
-    sub_8002F7D0(&r40, 0xE);
+    DrawLevantStats_8002F7D0(&r40, 0xE);
     r48.x = 0xC2;
     r48.y = 0x70;
     r48.w = 0x4B;

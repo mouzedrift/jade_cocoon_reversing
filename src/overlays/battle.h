@@ -1109,9 +1109,9 @@ extern int CheckItemUsable_80033AFC(struct_minion_ref* q);
 
 extern int CheckMagicCastable_80033C08(struct_minion_ref* q);
 
-extern int sub_80033C98(struct_minion_ref* q);
+extern int CheckSkillUsable_80033C98(struct_minion_ref* q);
 
-extern int sub_80033DF4(BatTgtQ_a* q);
+extern int CheckItemOnTarget_80033DF4(BatTgtQ_a* q);
 
 extern int sub_80034068(BatTgtQ_a* q);
 
@@ -1133,7 +1133,7 @@ extern unsigned int dword_800C9E64;
 
 extern int sub_8001CE8C(int a);
 
-extern int sub_80031B30(int a);
+extern int GetUnitSkills_80031B30(int a);
 
 extern int sub_80031B0C(int a, int b);
 
@@ -1176,19 +1176,19 @@ extern int IsCircleHeldP1_8003D480(void);
 
 extern int GetMenuCursorIndex_8003DA54();
 
-extern void sub_8002C670(void* a0, int a1, void* a2, int a3, int a4);
+extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, int a4);
 
-extern int sub_8002D250(void* a0, int a1, int a2, int a3);
+extern int DrawTargetSelectMenu_8002D250(void* a0, int a1, int a2, int a3);
 
 extern void DrawMenuWindows_8002A5A4(void* a0);
 
-extern void sub_8002C728(void* a0);
+extern void DrawItemList_8002C728(void* a0);
 
-extern void sub_8002CE28(void* a0, int a1);
+extern void DrawAbilityList_8002CE28(void* a0, int a1);
 
-extern int sub_80031A04(UnitSkills* a0, int a1);
+extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 
-extern void sub_8002CAC8(void* a0, void* a1);
+extern void DrawMagicList_8002CAC8(void* a0, void* a1);
 
 extern int FindNthMagicBit_8001AEC0();
 

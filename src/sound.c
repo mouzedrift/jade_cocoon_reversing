@@ -31,7 +31,7 @@ extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, i
 extern void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3);
 extern void DrawUiWindow_8002A384(struct_FD0C* p);
 // Matched
-void sub_8002FD0C(int a0, short a1, short a2, short flag, int a4)
+void DrawLevantHeaderWindows_8002FD0C(int a0, short a1, short a2, short flag, int a4)
 {
     char buf[8];
     RECT r;

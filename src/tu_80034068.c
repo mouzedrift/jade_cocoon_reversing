@@ -896,7 +896,7 @@ extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
-extern void sub_8002F6F8(void* a0, void* st, int a2);
+extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
 void sub_800355EC(MsgWindow* o, unsigned short* r)
 {
@@ -961,7 +961,7 @@ void sub_800355EC(MsgWindow* o, unsigned short* r)
     r2.y = o->y_4E + sel * 12 + 3;
     r2.w = r[2] - 8;
     r2.h = 13;
-    sub_8002F6F8(&r2, u.st, 0);
+    DrawPulsingWindow_8002F6F8(&r2, u.st, 0);
     o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2, o->mask_14);
 }
 extern int sub_8003DB74(struct_rect_1B8* p, int a);

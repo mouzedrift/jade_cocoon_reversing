@@ -335,7 +335,7 @@ void sub_800A4958(int i)
 extern CombStrtWin name_800A4154;
 extern void* dword_800A4C58[];
 extern short dword_800A4C64[][3][2];
-extern void sub_8002F078(void* a, void* b, int c, int d);
+extern void DrawHpGauge_8002F078(void* a, void* b, int c, int d);
 extern void sub_800A1844(void* a, void* b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 void sub_800A49DC(int side, int slot)
@@ -363,7 +363,7 @@ void sub_800A49DC(int side, int slot)
         sub_8002ADB4(&w, &c1, 0xF, 0);
         pos[0] = xy[0] + 0x2F;
         pos[1] = xy[1];
-        sub_8002F078(&u->status_84, pos, 0, 0xF);
+        DrawHpGauge_8002F078(&u->status_84, pos, 0, 0xF);
         c2.c_2 = 0;
         c2.c_3 = 1;
         c2.col_0 = saveData_8008B570.uiColor_20.i;

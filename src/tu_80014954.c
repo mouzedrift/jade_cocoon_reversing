@@ -2929,11 +2929,11 @@ int elementIconsUnlit_800827D0[4] = { 80, 95, 204, 121 };
 int dword_800827E0 = 129;
 char aFb[8] = { 10, 0, 9, 0, 70, 0, 66 };
 unsigned short dword_800827EC[2] = { 13, 9 };
-unsigned char dword_800827F0[8] = { 81, 62, 41, 199, 63 };
+unsigned char abilityIconsNoType_800827F0[8] = { 81, 62, 41, 199, 63 };
 int dword_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF426A6, 0x47F01FA3 };
-unsigned char *off_8008280C[5] = { (void *)dword_800827F8, (void *)&dword_800827F8[1], (void *)&dword_800827F8[2], (void *)&dword_800827F8[3], (void *)&dword_800827F8[4] };
-int dword_80082820 = 0x2F00A0;
-int dword_80082824 = 0x9400A0;
+unsigned char *abilityIconsByType_8008280C[5] = { (void *)dword_800827F8, (void *)&dword_800827F8[1], (void *)&dword_800827F8[2], (void *)&dword_800827F8[3], (void *)&dword_800827F8[4] };
+int itemScrollUpPos_80082820 = 0x2F00A0;
+int itemScrollDownPos_80082824 = 0x9400A0;
 int dword_80082828[11] = { 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053, 0x150015, 0x50003, 0x30010 };
 int aH6p[14] = {
     0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
@@ -2964,9 +2964,9 @@ int aH6p_2[17] = {
     0x150017, 0x30000, 1, 0, 0, 0, -1, -1,
     -1,
 };
-MenuItem_1C *off_800829E8[5] = { (void *)dword_80082828, (void *)&dword_8008288C[3], (void *)&dword_800828FC[3], (void *)&dword_8008296C[3] };
-unsigned short word_800829FC[2] = { 160, 47 };
-unsigned short word_80082A00[2] = { 160, 148 };
+MenuItem_1C *itemListRows_800829E8[5] = { (void *)dword_80082828, (void *)&dword_8008288C[3], (void *)&dword_800828FC[3], (void *)&dword_8008296C[3] };
+unsigned short magicScrollUpPos_800829FC[2] = { 160, 47 };
+unsigned short magicScrollDownPos_80082A00[2] = { 160, 148 };
 int dword_80082A04[11] = { 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060, 0x150015, 0x40004, 0x30010 };
 int aU6k[7] = { 0x360075, 0x15006B, 0x40003, 1 };
 int dword_80082A4C[14] = {
@@ -2987,7 +2987,7 @@ int aU6k_2[10] = {
     0x360075, 0x15006B, 0x40003, 1, 0, 0, 0, -1,
     -1, -1,
 };
-MenuItem_1C *off_80082B54[5] = { (void *)dword_80082A04, (void *)&dword_80082A4C[3], (void *)&dword_80082AA0[3], (void *)&dword_80082AF4[3] };
+MenuItem_1C *magicListRows_80082B54[5] = { (void *)dword_80082A04, (void *)&dword_80082A4C[3], (void *)&dword_80082AA0[3], (void *)&dword_80082AF4[3] };
 int dword_80082B68[4] = { 0x10008, 0, 0x8008D620, 0x8008D3F4 };
 int a8[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
@@ -3018,10 +3018,10 @@ int a8_3[24] = {
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1, 0, 0, 0, -1, -1, -1,
 };
-MenuItem_1C *off_80082D98[6] = { (void *)dword_80082B68, (void *)&dword_80082BCC[3], (void *)&dword_80082C3C[3], (void *)&dword_80082CAC[3], (void *)&dword_80082D1C[3] };
+MenuItem_1C *abilityListRows_80082D98[6] = { (void *)dword_80082B68, (void *)&dword_80082BCC[3], (void *)&dword_80082C3C[3], (void *)&dword_80082CAC[3], (void *)&dword_80082D1C[3] };
 int aKumu[3] = { 0x6B0028, 0x4D0075, 0x8A0075 };
 int dword_80082DBC[4] = { 0x3E00C2, 0x5C00C2, 0x7A00C2, 0x9800C2 };
-Pos16 *off_80082DCC[7] = { (void *)aKumu, (void *)&aKumu[1], (void *)&aKumu[2], (void *)dword_80082DBC, (void *)&dword_80082DBC[1], (void *)&dword_80082DBC[2], (void *)&dword_80082DBC[3] };
+Pos16 *familyTreeBoxPos_80082DCC[7] = { (void *)aKumu, (void *)&aKumu[1], (void *)&aKumu[2], (void *)dword_80082DBC, (void *)&dword_80082DBC[1], (void *)&dword_80082DBC[2], (void *)&dword_80082DBC[3] };
 Pos16 aHroto[12] = {
     { 104, 114 },
     { 111, 84 },
@@ -3055,23 +3055,23 @@ int dword_80082E58[14] = {
     0x7200D2, 0x4D0064, 0x72003C, 0x4D0064, 0x7200A0, 0x4D0064, 0x7200D2, 0x4D0064,
     0x72000A, 0x4D0064, 0x72006E, 0x4D0064, 0x7200D2, 0x4D0064,
 };
-RECT *off_80082E90[3] = { (void *)aNrdmnrdm, (void *)&dword_80082E58[2], (void *)&dword_80082E58[8] };
-unsigned char dword_80082E9C[] = "uuu";
-unsigned char dword_80082EA0[4] = { 189, 189, 189 };
-unsigned char dword_80082EA4[4] = { 222, 61, 231, 101 };
-unsigned char dword_80082EA8[4][4] = {
+RECT *partyWindowRects_80082E90[3] = { (void *)aNrdmnrdm, (void *)&dword_80082E58[2], (void *)&dword_80082E58[8] };
+unsigned char statGridOuterColor_80082E9C[] = "uuu";
+unsigned char statGridInnerColor_80082EA0[4] = { 189, 189, 189 };
+unsigned char elementChartIcons_80082EA4[4] = { 222, 61, 231, 101 };
+unsigned char elementChartColors_80082EA8[4][4] = {
     { 89, 82, 218 },
     { 159, 29, 29 },
     { 212, 142, 5 },
     { 59, 137, 63 },
 };
-unsigned char dword_80082EB8[4] = { 3, 0, 1, 2 };
-unsigned char dword_80082EBC[8] = { 98, 21, 109, 107, 184 };
-char *rankNames_80082EC4[8] = { dword_800743B4, aNovice_800743A4, dword_80074398, dword_80074380, dword_80074374, dword_80074360, aVindicator_80074348, aConqueror_80074334 };
-char *off_80082EE4 = dword_80074320;
+unsigned char elementChartOrder_80082EB8[4] = { 3, 0, 1, 2 };
+unsigned char statIcons_80082EBC[8] = { 98, 21, 109, 107, 184 };
+char *rankNames_80082EC4[8] = { aApprentice_800743B4, aNovice_800743A4, aAdept_80074398, aImmaculate_80074380, aHero_80074374, aChampion_80074360, aVindicator_80074348, aConqueror_80074334 };
+char *developerRankName_80082EE4 = aDeveloper_80074320;
 unsigned char a1ftf[] = "#1FTf";
-unsigned char dword_80082EF0[20] = { 0, 6, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24 };
-unsigned char dword_80082F04[8] = { 3, 17, 31, 45, 59 };
+unsigned char elementChartSizes_80082EF0[20] = { 0, 6, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24 };
+unsigned char levantStatRowY_80082F04[8] = { 3, 17, 31, 45, 59 };
 SoundInfo soundFiles_80082F0C[155] =
 {
   { SOUND_PUBLIC_SND, 0, 7u, 0u, -1 },
@@ -3269,7 +3269,7 @@ int abilityNames_800834E4[39] = {
     0x80074520, 0x80074504, 0x800744F0, 0x800744D8, 0x800744C0, 0x800744AC, 0x80074494, 0x8007447C,
 };
 int abilityBonusNames_80083580[5] = { 0x80074610, 0x80074610, 0x80074600, 0x800745E8, 0x800745D0 };
-ActionData stru_80083594[41] = {
+ActionData abilityActions_80083594[41] = {
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 120, 255, 100, 0, 0, 2, { 0, 3 } },

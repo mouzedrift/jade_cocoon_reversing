@@ -301,13 +301,13 @@ extern EquipmentData accessoryData_8007D6B0[0x11];
 extern int accessoryNames_8007D66C[0x11];
 extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;
-extern int dword_80091CFC;
+extern int battleMusic_80091CFC;
 extern int dword_80083BD0;
 extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern ActionData stru_80083594[];
+extern ActionData abilityActions_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
 extern unsigned char dword_8007CB4C[][4]; // per person (sub_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
@@ -323,7 +323,7 @@ extern int dword_80091C20;
 extern int dword_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
-extern short word_80091D0C;
+extern short seqSlotSepAccessNum_80091D0C;
 typedef struct
 {
     int field_0;

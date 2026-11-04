@@ -18,19 +18,19 @@
 #include "tu_8002D738.h"
 #include "tu_80014954.h"
 
-const char dword_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
+const char aDeveloper_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
 const char aConqueror_80074334[] = "\202b\202\217\202\216\202\221\202\225\202\205\202\222\202\217\202\222"; // Conqueror
 const char aVindicator_80074348[] = "\202u\202\211\202\216\202\204\202\211\202\203\202\201\202\224\202\217\202\222"; // Vindicator
-const char dword_80074360[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216"; // Champion
-const char dword_80074374[] = "\202g\202\205\202\222\202\217"; // Hero
-const char dword_80074380[] = "\202h\202\215\202\215\202\201\202\203\202\225\202\214\202\201\202\224\202\205"; // Immaculate
-const char dword_80074398[] = "\202`\202\204\202\205\202\220\202\224"; // Adept
+const char aChampion_80074360[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216"; // Champion
+const char aHero_80074374[] = "\202g\202\205\202\222\202\217"; // Hero
+const char aImmaculate_80074380[] = "\202h\202\215\202\215\202\201\202\203\202\225\202\214\202\201\202\224\202\205"; // Immaculate
+const char aAdept_80074398[] = "\202`\202\204\202\205\202\220\202\224"; // Adept
 const char aNovice_800743A4[] = "\202m\202\217\202\226\202\211\202\203\202\205"; // Novice
-const char dword_800743B4[] = "\202`\202\220\202\220\202\222\202\205\202\216\202\224\202\211\202\203\202\205"; // Apprentice
-const CVECTOR dword_800743CC = { 128, 128, 128 };
+const char aApprentice_800743B4[] = "\202`\202\220\202\220\202\222\202\205\202\216\202\224\202\211\202\203\202\205"; // Apprentice
+const CVECTOR familyTreeLineColor_800743CC = { 128, 128, 128 };
 
 // Matched
-int sub_8002D738(int a0, int a1, int a2)
+int IsTargetListed_8002D738(int a0, int a1, int a2)
 {
     if (a2 == 0 || a2 == 2)
     {
@@ -47,7 +47,7 @@ int sub_8002D738(int a0, int a1, int a2)
     return 0;
 }
 // Matched
-int sub_8002D780(void)
+int GetAllMinionsTargetMask_8002D780(void)
 {
     int n = CountMinions_80010548(3);
     int i;
@@ -65,10 +65,10 @@ typedef struct
     short field_8;
     short ot;
 } struct_D7D0;
-extern const CVECTOR dword_800743CC;
-extern void sub_80033864(Minion* m, unsigned char* out);
-extern short sub_8002F424(unsigned char* p);
-extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
+extern const CVECTOR familyTreeLineColor_800743CC;
+extern void GetElementLevels_80033864(Minion* m, unsigned char* out);
+extern short ElementLevelsToMask_8002F424(unsigned char* p);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void sub_8002B1B0(short a, int b, int c);
 extern void DrawUiWindow_8002A384(struct_D7D0* p);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
@@ -76,7 +76,7 @@ extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* 
 // Not matched (4 words): writing pos.y through pp once gets the m/pp/table saved registers right (19 words with pos.y),
 // but that store then goes through $s4 instead of $sp; the (short)w sll goes to a0 instead of v0 (int / u_short /
 // u_char w, ternary: no)
-void sub_8002D7D0(Minion* m, int ot, Pos16* base)
+void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;
     Pos16 pos;
@@ -90,12 +90,12 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
     short w;
     int i;
     int k;
-    color = dword_800743CC;
+    color = familyTreeLineColor_800743CC;
     pp = &pos;
     for (i = 0; i < 7; i++)
     {
-        pos.x = off_80082DCC[i]->x + base->x;
-        pos.y = off_80082DCC[i]->y + base->y;
+        pos.x = familyTreeBoxPos_80082DCC[i]->x + base->x;
+        pos.y = familyTreeBoxPos_80082DCC[i]->y + base->y;
         rect.x = pos.x;
         rect.y = pos.y;
         rect.w = 0x40;
@@ -106,21 +106,21 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
         }
         else
         {
-            name = sub_80033830(m, i - 1);
+            name = GetAncestorName_80033830(m, i - 1);
         }
-        pos.x = off_80082DCC[i]->x + base->x + 3;
-        pp->y = off_80082DCC[i]->y + base->y + 4;
-        sub_8002FAA0(0, (unsigned short*)pp, name, ot);
-        pos.x = (unsigned short)(base->x + 4) + off_80082DCC[i]->x;
-        pos.y = (unsigned short)(base->y + 0x10) + off_80082DCC[i]->y;
+        pos.x = familyTreeBoxPos_80082DCC[i]->x + base->x + 3;
+        pp->y = familyTreeBoxPos_80082DCC[i]->y + base->y + 4;
+        DrawSmallText_8002FAA0(0, (unsigned short*)pp, name, ot);
+        pos.x = (unsigned short)(base->x + 4) + familyTreeBoxPos_80082DCC[i]->x;
+        pos.y = (unsigned short)(base->y + 0x10) + familyTreeBoxPos_80082DCC[i]->y;
         if (i == 0)
         {
-            sub_80033864(m, buf);
-            w = sub_8002F424(buf);
+            GetElementLevels_80033864(m, buf);
+            w = ElementLevelsToMask_8002F424(buf);
         }
         else
         {
-            w = sub_80033848(m, i - 1);
+            w = GetAncestorElementMask_80033848(m, i - 1);
 
         }
         sub_8002B1B0(w, (int)pp, ot);
@@ -140,4 +140,4 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
     }
 }
 #endif
-INCLUDE_ASM(sub_8002D7D0);
+INCLUDE_ASM(DrawFamilyTree_8002D7D0);

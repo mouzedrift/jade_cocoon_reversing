@@ -274,8 +274,8 @@ ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
 }
 extern int dword_800B129C[];
 extern int sub_8001AC8C(int idx);
-extern int sub_80031870(int a0);
-extern int sub_800316EC(int a0, int a1);
+extern int SkillSlotToAnimIndex_80031870(int a0);
+extern int GetSkillEffect_800316EC(int a0, int a1);
 // Matched
 int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** t)
 {
@@ -312,11 +312,11 @@ int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** t)
         d->effectKinds_18 = p[2];
         break;
     case 6:
-        r = sub_80031870(p[1]);
+        r = SkillSlotToAnimIndex_80031870(p[1]);
         d->script_4 = t[3 + r];
         d->turnStep_C = r;
         d->hitAnim_E = r + 6;
-        d->effect_10 = sub_800316EC(p[1], p[2]);
+        d->effect_10 = GetSkillEffect_800316EC(p[1], p[2]);
         d->effectKinds_18 = p[3];
         break;
     case 7:

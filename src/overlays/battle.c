@@ -243,7 +243,7 @@ void sub_800BA788(BatTask_a* t)
     StopSeqSlot_80031334(0);
     FreeSeqSlotSound_80030664();
     SsUtAllKeyOff(0);
-    PlayMusic_800300E0(sub_800315E4(), 1);
+    PlayMusic_800300E0(GetBattleMusic_800315E4(), 1);
     LoadLoaderModelAnimSets_80020898();
     if (dword_80091C74 >= 0)
     {

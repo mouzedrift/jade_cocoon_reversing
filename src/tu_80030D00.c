@@ -18,25 +18,25 @@
 #include "data_decls.h"
 #include "tu_80030D00.h"
 
-const char dword_8007447C[] = "\202q\202\205\202\216\202\204\201@\202v\202\211\202\216\202\207\202\223"; // Rend Wings
-const char dword_80074494[] = "\202a\202\222\202\205\202\201\202\213\201@\202k\202\205\202\207\202\223"; // Break Legs
-const char dword_800744AC[] = "\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // Critical
-const char dword_800744C0[] = "\202`\202\214\202\214\201@\202d\202\216\202\205\202\215\202\211\202\205\202\223"; // All Enemies
+const char aRendWings_8007447C[] = "\202q\202\205\202\216\202\204\201@\202v\202\211\202\216\202\207\202\223"; // Rend Wings
+const char aBreakLegs_80074494[] = "\202a\202\222\202\205\202\201\202\213\201@\202k\202\205\202\207\202\223"; // Break Legs
+const char aCritical_800744AC[] = "\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // Critical
+const char aAllEnemies_800744C0[] = "\202`\202\214\202\214\201@\202d\202\216\202\205\202\215\202\211\202\205\202\223"; // All Enemies
 const char aAbsorbMana_800744D8[] = "\202`\202\202\202\223\202\217\202\222\202\202\201@\202l\202\201\202\216\202\201"; // Absorb Mana
 const char aAbsorbHP_800744F0[] = "\202`\202\202\202\223\202\217\202\222\202\202\201@\202g\202o"; // Absorb HP
 const char aDestroyMana_80074504[] = "\202c\202\205\202\223\202\224\202\222\202\217\202\231\201@\202l\202\201\202\216\202\201"; // Destroy Mana
-const char dword_80074520[] = "\202e\202\214\202\205\202\223\202\210\201@\202\224\202\217\201@\202r\202\224\202\217\202\216\202\205"; // Flesh to Stone
-const char dword_80074540[] = "\202r\202\214\202\205\202\205\202\220"; // Sleep
+const char aFleshToStone_80074520[] = "\202e\202\214\202\205\202\223\202\210\201@\202\224\202\217\201@\202r\202\224\202\217\202\216\202\205"; // Flesh to Stone
+const char aSleep_80074540[] = "\202r\202\214\202\205\202\205\202\220"; // Sleep
 const char aPoison_8007454C[] = "\202o\202\217\202\211\202\223\202\217\202\216"; // Poison
-const char dword_8007455C[] = "\202v\202\211\202\216\202\204\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Wind Attack
+const char aWindAttack_8007455C[] = "\202v\202\211\202\216\202\204\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Wind Attack
 const char aFireAttack_80074574[] = "\202e\202\211\202\222\202\205\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Fire Attack
 const char aWaterAttack_8007458C[] = "\202v\202\201\202\224\202\205\202\222\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Water Attack
-const char dword_800745A8[] = "\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Earth Attack
-const char dword_800745C4[] = "\201[\201[\201[\201["; // ーーーー
-const char dword_800745D0[] = "\201{\201@\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // + Critical
-const char dword_800745E8[] = "\201{\201@\202`\202\203\202\203\202\225\202\222\202\201\202\203\202\231"; // + Accuracy
-const char dword_80074600[] = "\201{\201@\202o\202\217\202\227\202\205\202\222"; // + Power
-const char dword_80074610[] = "\201[\201[\201["; // ーーー
+const char aEarthAttack_800745A8[] = "\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Earth Attack
+const char aDashes4_800745C4[] = "\201[\201[\201[\201["; // ーーーー
+const char aPlusCritical_800745D0[] = "\201{\201@\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214"; // + Critical
+const char aPlusAccuracy_800745E8[] = "\201{\201@\202`\202\203\202\203\202\225\202\222\202\201\202\203\202\231"; // + Accuracy
+const char aPlusPower_80074600[] = "\201{\201@\202o\202\217\202\227\202\205\202\222"; // + Power
+const char aDashes3_80074610[] = "\201[\201[\201["; // ーーー
 const int dword_80074618 = 0;
 
 // Matched
@@ -210,7 +210,7 @@ void StopSeqSlot_80031334(int idx)
 // Matched
 void FadeOutSeqSlot_800313C8(int idx)
 {
-    SsSepSetDecrescendo(word_80091D0C, seqSlots_800833E4[idx].field_4, 0x7F, 0x78);
+    SsSepSetDecrescendo(seqSlotSepAccessNum_80091D0C, seqSlots_800833E4[idx].field_4, 0x7F, 0x78);
 }
 // Matched
 void StopSoundSeq_80031408(SoundStruct* s, int idx)
@@ -280,14 +280,14 @@ void SfxKeyOff_80031574(short a, short b)
     SsUtKeyOff(a, *(short*)s, b, 0, 0x3c);
 }
 // Matched
-void sub_800315D8(int a0)
+void SetBattleMusic_800315D8(int a0)
 {
-    dword_80091CFC = a0;
+    battleMusic_80091CFC = a0;
 }
 // Matched
-int sub_800315E4(void)
+int GetBattleMusic_800315E4(void)
 {
-    return dword_80091CFC;
+    return battleMusic_80091CFC;
 }
 // Matched
 void FreeBgmAndSfx_800315F4(void)
@@ -328,17 +328,17 @@ int sub_800316E4(void)
 {
     return 0;
 }
-extern int sub_80031870(int a0);
-extern UnitSkill* sub_80031B30(int a0);
+extern int SkillSlotToAnimIndex_80031870(int a0);
+extern UnitSkill* GetUnitSkills_80031B30(int a0);
 extern void sub_80018430(short v);
 // Matched
-int sub_800316EC(unsigned int a0, int a1)
+int GetSkillEffect_800316EC(unsigned int a0, int a1)
 {
     int r;
     int k;
     UnitSkill* base;
-    r = sub_80031870(a0) + 0x26;
-    base = sub_80031B30(LowestSetBit_80014358(a1) & 0xFF);
+    r = SkillSlotToAnimIndex_80031870(a0) + 0x26;
+    base = GetUnitSkills_80031B30(LowestSetBit_80014358(a1) & 0xFF);
     base += a0;
     k = base->id_1;
     sub_80018430(-1);

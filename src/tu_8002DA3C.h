@@ -1,7 +1,7 @@
 #ifndef TU_8002DA3C_H
 #define TU_8002DA3C_H
 
-/* sub_8002E334's second argument */
+/* DrawLevantSummary_8002E334's second argument */
 typedef struct
 {
     short ot_0;
@@ -14,6 +14,6 @@ typedef struct
 {
     unsigned char c[4];
 } Color_EACC;
-extern const Color_EACC dword_800743D0;
+extern const Color_EACC statGridLineColor_800743D0;
 
 #endif

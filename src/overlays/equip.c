@@ -89,9 +89,9 @@ typedef struct
 extern short uiColor_8008B590;
 extern char name_800C59A0[];
 
-extern void sub_8002F7D0(void* p, int a1);
-extern void sub_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
-extern void sub_8002E188(void* a0, void* a1, void* a2, int a3);
+extern void DrawLevantStats_8002F7D0(void* p, int a1);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
+extern void DrawStatCompare_8002E188(void* a0, void* a1, void* a2, int a3);
 extern void sub_8002B3DC(ShortPair_equip p, int b, void* c, int d);
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 extern void sub_800C5440(short a0, short a1, int a2);
@@ -138,7 +138,7 @@ extern char name_8008D440[];
 extern int GetEquipmentName_8001D128(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
 extern void DrawMenuWindows_8002A5A4(void* p);
-extern void sub_8002C6DC(int a0, short a1, short a2);
+extern void DrawScrollArrow_8002C6DC(int a0, short a1, short a2);
 
 typedef struct
 {
@@ -525,7 +525,7 @@ void sub_800C5314(EquipCtx_equip* c)
     CalcEquippedStats_80033624(buf10, h);
     r40.x = 0xc2;
     r40.y = 0x31;
-    sub_8002F7D0(&r40, 0xe);
+    DrawLevantStats_8002F7D0(&r40, 0xe);
     mode = c->mode_1C;
     if (mode == 1 && c->s_40 != 0xff)
     {
@@ -535,10 +535,10 @@ void sub_800C5314(EquipCtx_equip* c)
             Small_equip s;
         } u;
         Rect8_equip r50;
-        sub_8002E288(h, c->s_40, c->sel_18, buf28);
+        CalcStatsWithEquip_8002E288(h, c->s_40, c->sel_18, buf28);
         r40.x = 0x119;
         r40.y = 0x34;
-        sub_8002E188(buf10, buf28, &r40, 0xe);
+        DrawStatCompare_8002E188(buf10, buf28, &r40, 0xe);
         u.p.a = 2;
         u.p.b = 0;
         r50.x = 0x112;
@@ -652,11 +652,11 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
     }
     if (q->b != 0)
     {
-        sub_8002C6DC((int)name_800C5834, 3, q->d);
+        DrawScrollArrow_8002C6DC((int)name_800C5834, 3, q->d);
     }
     if (q->b < v - 3 && v >= 4)
     {
-        sub_8002C6DC((int)name_800C5838, 1, q->d);
+        DrawScrollArrow_8002C6DC((int)name_800C5838, 1, q->d);
     }
 }
 

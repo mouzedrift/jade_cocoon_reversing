@@ -221,7 +221,7 @@ ActionData* sub_800129B0(ActionData* out, unsigned char* in, int a2)
     int kind = in[1];
     Minion* mn;
     UnitStats* u;
-    MemCopy_800403E8(out, sub_800318C8(kind), 12);
+    MemCopy_800403E8(out, GetAbilityAction_800318C8(kind), 12);
     mn = sub_80014444(a2 & 0xFF);
     if (mn)
     {
@@ -291,9 +291,9 @@ extern const char aCommonC[];
 extern unsigned char byte_800793C4[];
 extern unsigned char dword_800793C8[][4];
 extern const ActionData dword_80071F58; // an empty action
-extern int sub_80031B30(int a0);
-extern int sub_80031A04(int a0, int a1);
-extern void sub_800335D0(UnitStatus* src, UnitStatus* out);
+extern int GetUnitSkills_80031B30(int a0);
+extern int GetSkillMpCost_80031A04(int a0, int a1);
+extern void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* out);
 extern void sub_80013EE8(int* out, UnitStatus* f, ActionData* s, int a3);
 extern void sub_80013374(ActionData* s, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, ActionResult* out);
 extern int Rand100_80013E30(void);
@@ -344,9 +344,9 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         }
         break;
     case 6:
-        t = sub_80031B30(b1 & 0xFF);
+        t = GetUnitSkills_80031B30(b1 & 0xFF);
         q = sub_800129B0(&local, (unsigned char*)(t + p[1] * 4), b2);
-        out->field_10 = sub_80031A04(t, p[1]);
+        out->field_10 = GetSkillMpCost_80031A04(t, p[1]);
         break;
     case 1:
         MemCopy_800403E8(&local, sub_8001AD64(p[1]), 12);
@@ -358,8 +358,8 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     case 26:
         break;
     }
-    sub_800335D0(a0, &f1);
-    sub_800335D0(a1, &f2);
+    CalcEffectiveStatus_800335D0(a0, &f1);
+    CalcEffectiveStatus_800335D0(a1, &f2);
     sub_80013EE8(r1, &f1, q, p[2]);
     sub_80013EE8(r2, &f2, q, p[3]);
     sub_80012828(r1, &f1);
@@ -412,16 +412,16 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         break;
     case 5:
     case 26:
-        sa = sub_800334CC(a1);
-        sb = sub_800334D8(a1);
+        sa = GetMaxHp_800334CC(a1);
+        sb = GetHp_800334D8(a1);
         out->kind_0 = 7;
         v = sa / sb;
-        c = sub_80033514(a1);
+        c = GetLevel_80033514(a1);
         if (c > 40)
         {
             c = 40;
         }
-        d = (sub_80033514(a0) - c) * 10 / 12;
+        d = (GetLevel_80033514(a0) - c) * 10 / 12;
         if (d > 0)
         {
             if (d > 5)
@@ -439,7 +439,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
             }
             v /= 1 << d;
         }
-        if (sub_80033548(a1, 2))
+        if (HasStatusFlag_80033548(a1, 2))
         {
             v <<= 3;
         }
@@ -473,7 +473,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         {
             out->field_2 = 1;
         }
-        if (sub_80033548(a1, 2))
+        if (HasStatusFlag_80033548(a1, 2))
         {
             out->field_2 = 0;
 
@@ -502,7 +502,7 @@ int sub_80013228(int a0, int a1, int* p)
         }
         break;
     case 6:
-        q = sub_800129B0(&local, (unsigned char*)(sub_80031B30(b1 & 0xFF) + p[1] * 4), b2);
+        q = sub_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(b1 & 0xFF) + p[1] * 4), b2);
         break;
     case 1:
         q = sub_8001AD64(p[1]);

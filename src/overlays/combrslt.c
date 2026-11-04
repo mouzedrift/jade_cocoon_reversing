@@ -192,7 +192,7 @@ extern char byte_800A3AA0[];
 extern int sub_800A1958();
 extern int sub_800A1934();
 extern void sub_800A1844();
-extern void sub_8002F078();
+extern void DrawHpGauge_8002F078();
 extern void DrawWindow_80042460();
 
 // Near miss: register allocation of the q / j*4 address computation
@@ -232,7 +232,7 @@ void sub_800A4554(int i, int j, void* arg)
         {
             r1.x = q->x + 0x2F;
             r1.y = q->y;
-            sub_8002F078(e + 0x84, &r1, 0, 0xF);
+            DrawHpGauge_8002F078(e + 0x84, &r1, 0, 0xF);
             b.s_2 = 0;
         }
         sub_8002ADB4(&b, arg, 0xF, GetTime30Hz_8002C64C());

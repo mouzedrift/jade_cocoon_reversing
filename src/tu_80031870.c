@@ -21,7 +21,7 @@
 
 
 // Matched
-int sub_80031870(int a0)
+int SkillSlotToAnimIndex_80031870(int a0)
 {
     switch (a0)
     {

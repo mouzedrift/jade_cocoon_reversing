@@ -115,7 +115,7 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
     {
         a = Rand100_80013E30();
         b = Rand100_80013E30();
-        if (!(hit - eva < a) || sub_80033548(f1, 2) != 0)
+        if (!(hit - eva < a) || HasStatusFlag_80033548(f1, 2) != 0)
         {
             out->kind_0 = 1;
             if (q->element_8 != 0xFF)
@@ -146,7 +146,7 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
             {
                 v = atk;
             }
-            if (sub_80033548(f1, 0x400) && (q->c_A != 0 || !(q->flags_0 & 0x400)))
+            if (HasStatusFlag_80033548(f1, 0x400) && (q->c_A != 0 || !(q->flags_0 & 0x400)))
             {
                 v = 0;
             }
@@ -155,9 +155,9 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
                 out->field_1C = v;
                 if (q->element_8 == 8 && v > 0)
                 {
-                    if (sub_800334D8(f1) < v)
+                    if (GetHp_800334D8(f1) < v)
                     {
-                        v = sub_800334D8(f1);
+                        v = GetHp_800334D8(f1);
                     }
                     out->field_14 = -v;
                 }
@@ -169,9 +169,9 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
                 out->kind_0 = 2;
                 if (q->element_8 == 8 && v > 0)
                 {
-                    if (sub_800334F0(f1) < v)
+                    if (GetMp_800334F0(f1) < v)
                     {
-                        v = sub_800334F0(f1);
+                        v = GetMp_800334F0(f1);
                     }
                     out->field_18 = -v;
                 }
@@ -181,7 +181,7 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
                 c = (signed char)f1->field_20[q->element_8];
                 if (rand() % 32 < c)
                 {
-                    out->field_1C = sub_800334D8(f1) - 1;
+                    out->field_1C = GetHp_800334D8(f1) - 1;
                     out->kind_0 = 4;
                     out->flags_4 |= 2;
                 }
@@ -243,7 +243,7 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
             }
         }
     }
-    if (sub_80033548(f1, 0x3800) && (q->flags_0 & 0x7FB) && q->c_A == 3)
+    if (HasStatusFlag_80033548(f1, 0x3800) && (q->flags_0 & 0x7FB) && q->c_A == 3)
     {
         for (i = 0; i < 3; i++)
         {
@@ -277,10 +277,10 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
     }
     if (out->field_8 & 0x400)
     {
-        out->field_1C = sub_800334D8(f1);
+        out->field_1C = GetHp_800334D8(f1);
         out->kind_0 = 1;
     }
-    if (sub_80033548(f1, 2))
+    if (HasStatusFlag_80033548(f1, 2))
     {
         out->field_8 &= ~2;
     }

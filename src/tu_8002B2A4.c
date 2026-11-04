@@ -261,7 +261,7 @@ unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned 
 }
 extern const CVECTOR dword_800741E8;
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
-extern void sub_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
+extern void AddScaledPolyFT4_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
 void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot)
 {
@@ -287,6 +287,6 @@ void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int o
         setShadeTex(&poly, 0);
         scale *= 512;
         PulseColor_80033394(&poly.r0, (unsigned char*)&c0, (unsigned char*)&c1, t, 40, 10);
-        sub_80031BE4(&poly, pOT_8008D454 + ot, pos[0], pos[1], scale, 0x100, 0, 0x11);
+        AddScaledPolyFT4_80031BE4(&poly, pOT_8008D454 + ot, pos[0], pos[1], scale, 0x100, 0, 0x11);
     }
 }

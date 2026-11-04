@@ -4367,7 +4367,7 @@ void sub_80027CF8(void* a0, int* a)
                         m = 0x25;
                     }
                     PlayMusic_800300E0(m, 1);
-                    sub_800315D8(m);
+                    SetBattleMusic_800315D8(m);
                     sub_80027478(0x20, 1);
                 }
                 if (dword_80091C90 == 0 && dword_80091C58 != 0)

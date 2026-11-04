@@ -29,10 +29,10 @@ typedef struct
     int field_14;
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
-extern int sub_80033C98(struct_minion_ref* p);
-int sub_8002D1A4(int a, short b);
+extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
+int GetAbilityIcon_8002D1A4(int a, short b);
 // Matched
-void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
+void DrawAbilityList_8002CE28(struct_minion_ref* a0, unsigned short* a1)
 {
     struct_A5A4 s;
     unsigned short pos[2];
@@ -71,12 +71,12 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
                 v19 = abilityBonusNames_80083580[a0->field_C_minion->skills_DE.slot[i].bonus_2];
             }
 
-            e = &off_80082D98[i];
+            e = &abilityListRows_80082D98[i];
             (*e)[0].flags &= ~2;
             (*e)[1].flags &= ~2;
             (*e)[2].flags &= ~2;
             a0->field_0 = i;
-            if ((short)sub_80033C98(a0))
+            if ((short)CheckSkillUsable_80033C98(a0))
             {
                 (*e)[0].flags |= 2;
                 (*e)[1].flags |= 2;
@@ -91,12 +91,12 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
         }
         else
         {
-            off_80082D98[i][0].flags |= 2;
-            off_80082D98[i][1].flags |= 2;
-            off_80082D98[i][2].flags |= 2;
+            abilityListRows_80082D98[i][0].flags |= 2;
+            abilityListRows_80082D98[i][1].flags |= 2;
+            abilityListRows_80082D98[i][2].flags |= 2;
         }
-        y = sub_8002D1A4(sub_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1)->c8, i);
-        e2 = &off_80082D98[i];
+        y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1)->c8, i);
+        e2 = &abilityListRows_80082D98[i];
         (*e2)[0].f4 = y;
         (*e2)[1].f4 = v20;
         (*e2)[2].f4 = v19;
@@ -114,13 +114,13 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
     s.field_C = saved;
-    s.field_10 = off_80082D98;
+    s.field_10 = abilityListRows_80082D98;
     s.field_14 = a0->field_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
 }
 // Matched
-int sub_8002D1A4(int a, short b)
+int GetAbilityIcon_8002D1A4(int a, short b)
 {
     int r = 0;
     switch ((short)a)
@@ -143,9 +143,9 @@ int sub_8002D1A4(int a, short b)
     a = r;
     if (a >= 4)
     {
-        return dword_800827F0[b];
+        return abilityIconsNoType_800827F0[b];
     }
-    return off_8008280C[b][a];
+    return abilityIconsByType_8008280C[b][a];
 }
 typedef struct
 {
@@ -161,10 +161,10 @@ typedef struct
     short mx;
     short my;
 } MenuItem_D250;
-extern int sub_80033DF4(short* p);
+extern int CheckItemOnTarget_80033DF4(short* p);
 extern int sub_80034068(short* p);
 // Matched
-int sub_8002D250(short* p, int mode, int sel, int ot)
+int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
 {
     MenuItem_D250 list0[4] = {
         {8, 4, 0, 0, 0, 0x2E, 0x98, 0x3C, 0xC, 2, 2},
@@ -197,7 +197,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
     int y;
     MenuItem_D250* m;
     n = CountMinions_80010548(3);
-    cur = sub_8002D780();
+    cur = GetAllMinionsTargetMask_8002D780();
     s.field_4 = GetTime30Hz_8002C64C();
     s.field_C = sel;
     s.field_10 = (MenuItem_1C**)lists;
@@ -213,7 +213,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
         p[2] = 0;
         if (mode == 0)
         {
-            v = sub_80033DF4(p);
+            v = CheckItemOnTarget_80033DF4(p);
         }
         else
         {
@@ -236,7 +236,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
     y = 0;
     for (i = 0; i < n; i++)
     {
-        r = sub_8002D738(i, p[1], mode);
+        r = IsTargetListed_8002D738(i, p[1], mode);
         if (r == 1)
         {
             p[2] = i + 1;
@@ -249,7 +249,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
             lists[k]->y = 0xA6 + y * 13;
             if (mode == 0)
             {
-                v = sub_80033DF4(p);
+                v = CheckItemOnTarget_80033DF4(p);
             }
             else if (mode == 1)
             {
@@ -257,7 +257,7 @@ int sub_8002D250(short* p, int mode, int sel, int ot)
             }
             else if ((unsigned int)(mode - 2) < 2)
             {
-                if (sub_80033548(q, 0x400))
+                if (HasStatusFlag_80033548(q, 0x400))
                 {
                     v = 4;
                 }

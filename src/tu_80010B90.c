@@ -1761,7 +1761,7 @@ int sub_80011D98(UnitStatus* m, int arg1)
         {
             m->maxMp_E = 0;
         }
-        if (sub_80033548(m, 0x400) == 0)
+        if (HasStatusFlag_80033548(m, 0x400) == 0)
         {
             m->hp_8 += a - oldA;
             m->mp_C += b - oldE;

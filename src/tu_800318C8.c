@@ -19,15 +19,15 @@
 
 
 // Matched
-ActionData* sub_800318C8(int idx)
+ActionData* GetAbilityAction_800318C8(int idx)
 {
-    return &stru_80083594[idx];
+    return &abilityActions_80083594[idx];
 }
 // Matched
 int sub_800318E4(unsigned int idx, int nth)
 {
     Minion* m = GetMinion_80010598(3, nth - 1);
-    if (m && sub_80031954(&m->skills_DE, idx))
+    if (m && IsSkillLearned_80031954(&m->skills_DE, idx))
     {
         if (idx < 0xff)
         {
@@ -53,19 +53,19 @@ void SsUtVibrateOff(void)
 {
 }
 // Matched
-int sub_80031954(void* pv, int idx)
+int IsSkillLearned_80031954(void* pv, int idx)
 {
     unsigned char* q = (unsigned char*)pv + idx * 4;
     return *q & 1;
 }
 // Matched
-int sub_80031968(void* p)
+int CountLearnedSkills_80031968(void* p)
 {
     int n;
     int i = 0;
     for (n = i; i < 0xff; i++)
     {
-        if (sub_80031954(p, i))
+        if (IsSkillLearned_80031954(p, i))
         {
             n++;
         }
@@ -85,7 +85,7 @@ int GetAbilityBonusName_800319E8(int idx)
     return abilityBonusNames_80083580[idx];
 }
 // Matched
-int sub_80031A04(unsigned char* p, int idx)
+int GetSkillMpCost_80031A04(unsigned char* p, int idx)
 {
     int r;
     p += idx * 4;

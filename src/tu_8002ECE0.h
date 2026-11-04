@@ -11,9 +11,9 @@ typedef struct
 {
     int m[3];
 } Mask_F480;
-extern const Icon_F480 dword_800743D4;
-extern const Icon_F480 dword_800743F0;
-extern const Icon_F480 dword_8007440C;
-extern const Mask_F480 dword_80074428;
+extern const Icon_F480 statusIcon0_800743D4;
+extern const Icon_F480 statusIcon1_800743F0;
+extern const Icon_F480 statusIcon2_8007440C;
+extern const Mask_F480 statusIconMasks_80074428;
 
 #endif
