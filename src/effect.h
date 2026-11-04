@@ -19,4 +19,17 @@ extern void FirFilterInit_8001450C(int* buf, FirFilter* f, int* coefs, int taps)
 extern void FirFilterSetup_80014574(FirFilter* p, int* coefs, int taps);
 extern void FirFilterStep_80014588(int* buf, FirFilter* f, unsigned int t);
 
+extern const int dword_80072134;
+
+extern int dword_800795A0[];
+extern SVECTOR zeroSvector_800795D4;
+extern int effectColorWhite_800795DC;
+extern int effectColorRed_800795E0;
+extern int effectColorBlue_800795E4;
+extern int effectColorGreen_800795E8;
+extern int effectColorYellow_800795EC;
+
+void FreeEffectTask_800148A0();
+void InitEffectTask_80014618();
+
 #endif

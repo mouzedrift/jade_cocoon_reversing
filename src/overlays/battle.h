@@ -8,17 +8,17 @@
 
 #include "actor.h"
 #include "minion_menu.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "engine.h"
+#include "minion_init.h"
 
-#include "tu_8001EA48.h"
-#include "tu_80036528.h"
+#include "model.h"
+#include "camera.h"
 
 extern unsigned char dword_800C8B30;
 
 extern int sub_800A2AB4();
 
-extern void sub_80018430(int a);
+extern void SetHitVariant_80018430(int a);
 
 extern int sub_800AD8E4();
 
@@ -319,9 +319,9 @@ extern int dword_800ADE88;
 
 extern int eventDispatchHalt_8008B540;
 
-extern int dword_80083BD0;
+extern int battleStageId_80083BD0;
 
-// per battle stage (indexed by dword_80083BD0)
+// per battle stage (indexed by battleStageId_80083BD0)
 typedef struct BatStage_a
 {
     unsigned short* list_0;
@@ -335,13 +335,13 @@ typedef struct BatStage_a
 
 extern BatStage_a dword_800C8EAC[];
 
-extern int sub_80034AB8();
+extern int IsMsgWindowAlive_80034AB8();
 
-extern int sub_800349B4();
+extern int GetMsgWindowResultIfDone_800349B4();
 
-extern void sub_80034A84();
+extern void CloseMsgWindow_80034A84();
 
-extern void sub_8001E28C();
+extern void TriggerActorEffect_8001E28C();
 
 extern void sub_800A2924();
 
@@ -358,11 +358,11 @@ extern void sub_800A2AE8();
 
 extern void PlaySeqSlot_80031160();
 
-extern void sub_80018A4C();
+extern void StartCommandAction_80018A4C();
 
 extern int LoadOverlay_80020BF8();
 
-extern void sub_8001AAF4();
+extern void StopSceneDarken_8001AAF4();
 
 extern void sub_800A8D48();
 
@@ -444,7 +444,7 @@ extern EventNode* dword_8008D4B0;
 
 extern EventNode* dword_8008D63C;
 
-extern EventNode* dword_8008D778;
+extern EventNode* hitNumberTasks_8008D778;
 
 extern int dword_800C9D74;
 
@@ -543,7 +543,7 @@ extern char dword_800C8B38[];
 
 extern BatCmd_a dword_800C9CC8[7];
 
-extern int sub_8001AB94(void*);
+extern int IsSceneFadeDone_8001AB94(void*);
 
 extern int sub_800A89F0();
 
@@ -581,11 +581,11 @@ extern UnitStatus* sub_800C0F78(int);
 
 extern void StartScreenFlash_8001C02C(void*);
 
-extern void sub_8001DB00(Actor*, int, int);
+extern void SetActorTurnTarget_8001DB00(Actor*, int, int);
 
-extern void sub_80018E5C(Actor*, int);
+extern void GetActorHitFrame_80018E5C(Actor*, int);
 
-extern void sub_80018EBC(Actor*, UnitStatus*);
+extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 
 extern int sub_800C0D88();
@@ -614,7 +614,7 @@ extern void sub_800A14E0();
 
 extern void sub_800A15FC();
 
-extern int dword_80091C9C;
+extern int forceMapReload_80091C9C;
 
 extern short sinTable_80084540[];
 
@@ -626,7 +626,7 @@ extern int LoadSeqSlotSound_800303E8();
 
 extern int IsSoundTaskReady_80030688();
 
-extern void sub_80037748();
+extern void StartBattleCamera_80037748();
 
 extern void LoadUiTiy_8002BF74();
 
@@ -654,7 +654,7 @@ extern BatV12_a* sub_800BC5EC();
 
 extern void ApplyBattleCommand_800BEBB8();
 
-extern void sub_80037828(int a, int b, int c);
+extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
 extern void sub_800BDB4C();
 
@@ -666,9 +666,9 @@ extern void sub_800A8C0C(int b);
 
 extern void sub_800A2760(BatCmd_a* p, int b);
 
-extern void sub_800377B4(int a, int b, int c);
+extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
-extern void sub_80037BFC(int a);
+extern void StartCameraShake_80037BFC(int a);
 
 extern void PlaySfx_80031494(int id);
 
@@ -684,7 +684,7 @@ extern void sub_800A284C(int a);
 
 extern void sub_80039ED8(int a);
 
-extern void sub_800127D0(int a0, int a1, int a2, int a3);
+extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 extern void sub_800BF3DC(int a, int b, int c, int d, int e);
 
@@ -714,7 +714,7 @@ typedef struct BatHitNum_a
     int unit_18;
 } BatHitNum_a;
 
-extern void sub_80037BFC(int a);
+extern void StartCameraShake_80037BFC(int a);
 
 extern void StartPadVibration_80036528(int a, int b);
 
@@ -739,13 +739,13 @@ typedef struct BatResult_a
     short f26;
 } BatResult_a;
 
-extern void sub_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
+extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, BatChain_a* e);
 
 extern void sub_800BF9F0(int a);
 
-extern void sub_800127D0(int a0, int a1, int a2, int a3);
+extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
 typedef struct BatXY_a
 {
@@ -785,7 +785,7 @@ extern int sub_800C0904(unsigned char* p);
 
 
 
-extern short dword_80079140[]; // default bone table
+extern short defaultBones_80079140[]; // default bone table
 
 extern EventNode* dword_8008D60C;
 
@@ -841,7 +841,6 @@ typedef struct BatDropSrc_a
     EffectSprite* animB_90;
 } BatDropSrc_a;
 
-extern char dword_800795D4[];
 
 extern int* DrawRotSprite_80044010();
 
@@ -947,7 +946,6 @@ typedef struct BatGlow_a
     int* scale_A0;
 } BatGlow_a;
 
-extern char dword_800795D4[];
 
 extern void sub_800C3B50(int* p, int id);
 
@@ -991,17 +989,17 @@ typedef struct BatScene_a
     BatHero_a* hero_24;
 } BatScene_a;
 
-extern BatScene_a* dword_8008B4A4;
+extern BatScene_a* gameTask_8008B4A4;
 
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 
-extern int dword_8008D680[3];
+extern int pointLightPos_8008D680[3];
 
 extern short dword_8008D418[3];
 
-extern int dword_8008D3F0;
+extern int pointLightRange_8008D3F0;
 
-extern int dword_8008D3F0;
+extern int pointLightRange_8008D3F0;
 
 extern void sub_800C6AFC();
 
@@ -1029,7 +1027,7 @@ extern int sub_800C6D6C();
 
 extern int sub_800C6CFC();
 
-extern EventNode* dword_8008D468;
+extern EventNode* battleMenuTask_8008D468;
 
 extern unsigned char dword_800C9E4B;
 
@@ -1111,11 +1109,11 @@ extern int CheckItemUsable_80033AFC(struct_minion_ref* q);
 
 extern int CheckMagicCastable_80033C08(struct_minion_ref* q);
 
-extern int sub_80033C98(struct_minion_ref* q);
+extern int CheckSkillUsable_80033C98(struct_minion_ref* q);
 
-extern int sub_80033DF4(BatTgtQ_a* q);
+extern int CheckItemOnTarget_80033DF4(BatTgtQ_a* q);
 
-extern int sub_80034068(BatTgtQ_a* q);
+extern int CheckMagicUsable_80034068(BatTgtQ_a* q);
 
 extern unsigned char sub_800C78D0();
 
@@ -1133,15 +1131,15 @@ extern int dword_800C96A4[];
 
 extern unsigned int dword_800C9E64;
 
-extern int sub_8001CE8C(int a);
+extern int GetItemTargetFlags_8001CE8C(int a);
 
-extern int sub_80031B30(int a);
+extern int GetUnitSkills_80031B30(int a);
 
 extern int sub_80031B0C(int a, int b);
 
 extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
-extern int sub_8001ACE4(int a);
+extern int GetMagicTargetFlags_8001ACE4(int a);
 
 struct BatState
 {
@@ -1178,19 +1176,19 @@ extern int IsCircleHeldP1_8003D480(void);
 
 extern int GetMenuCursorIndex_8003DA54();
 
-extern void sub_8002C670(void* a0, int a1, void* a2, int a3, int a4);
+extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, int a4);
 
-extern int sub_8002D250(void* a0, int a1, int a2, int a3);
+extern int DrawTargetSelectMenu_8002D250(void* a0, int a1, int a2, int a3);
 
 extern void DrawMenuWindows_8002A5A4(void* a0);
 
-extern void sub_8002C728(void* a0);
+extern void DrawItemList_8002C728(void* a0);
 
-extern void sub_8002CE28(void* a0, int a1);
+extern void DrawAbilityList_8002CE28(void* a0, int a1);
 
-extern int sub_80031A04(UnitSkills* a0, int a1);
+extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 
-extern void sub_8002CAC8(void* a0, void* a1);
+extern void DrawMagicList_8002CAC8(void* a0, void* a1);
 
 extern int FindNthMagicBit_8001AEC0();
 

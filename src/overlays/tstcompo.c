@@ -2,7 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 
 extern unsigned short padPressed_8009194C;
 extern unsigned short padRepeat_800918CC;
@@ -59,7 +59,7 @@ typedef struct TstCompoBone
     short s4;
     short s6;
 } TstCompoBone;
-// parameter block of sub_80046A58 / sub_80047E28
+// parameter block of DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28
 typedef struct TstCompoDraw
 {
     FtgObject* ftg_0;
@@ -250,9 +250,9 @@ extern TstCompoPart dword_800A20EC[];
 extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
 extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
 extern int UpdateMenuCursor_8003D794(void* p, int idx);
-extern void sub_8003D090(short x, short y, int a2, int a3, int idx);
+extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 extern void DrawText_8003E91C(int a, int b, void* c, int d);
-extern void sub_8003F264(void* pos, int val, int ot);
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* e, int idx);
 // Matched
 void sub_800A0AB8(TstCompoWork* c)
@@ -325,7 +325,7 @@ void sub_800A0AB8(TstCompoWork* c)
             c->f1E4 = c->f1EC;
         }
         m = name_800A250C[c->f1EC].menu_0;
-        sub_8003D090(m->x_C + (c->f1F4 % m->head_0.f.cols_0) * m->dx_8,
+        DrawBobbingCursorHand_8003D090(m->x_C + (c->f1F4 % m->head_0.f.cols_0) * m->dx_8,
                      m->y_E + (c->f1F4 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
         c->f20C = c->f1E0;
         c->f208 = c->f1E2;
@@ -347,7 +347,7 @@ void sub_800A0AB8(TstCompoWork* c)
         break;
     }
     m = name_800A250C[c->f1E8].menu_0;
-    sub_8003D090(m->x_C + (c->f1E0 % m->head_0.f.cols_0) * m->dx_8,
+    DrawBobbingCursorHand_8003D090(m->x_C + (c->f1E0 % m->head_0.f.cols_0) * m->dx_8,
                  m->y_E + (c->f1E0 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
     if (c->f1E8 < 3)
     {
@@ -364,19 +364,19 @@ void sub_800A0AB8(TstCompoWork* c)
             DrawText_8003E91C(1, dword_800A20EC[c->part_210[2]].text_0, p2, 0);
             p3[0] = 0x92;
             p3[1] = 0x1C;
-            sub_8003F264(p3, c->ratio_21C[0], 0);
+            DrawNumberRightAlignedFont1_8003F264(p3, c->ratio_21C[0], 0);
             p4[0] = 0x92;
             p4[1] = 0x26;
-            sub_8003F264(p4, c->ratio_21C[1], 0);
+            DrawNumberRightAlignedFont1_8003F264(p4, c->ratio_21C[1], 0);
             p5[0] = 0x92;
             p5[1] = 0x30;
-            sub_8003F264(p5, c->ratio_21C[2], 0);
+            DrawNumberRightAlignedFont1_8003F264(p5, c->ratio_21C[2], 0);
             p0[0] = 0x22;
             p0[1] = 0x46;
             DrawText_8003E91C(1, dword_800A20EC[c->f22C].text_0, p0, 0);
             p1[0] = 0x92;
             p1[1] = 0x46;
-            sub_8003F264(p1, name_800A2768.f24, 0);
+            DrawNumberRightAlignedFont1_8003F264(p1, name_800A2768.f24, 0);
             for (i = 0; i < 20; i++)
             {
                 p0[0] = 0xCA;
@@ -487,7 +487,7 @@ void sub_800A13B8(TstCompoWork* a)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_80046A58(void* a, void* b, void* c);
+extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A2588[];
 extern char name_800A2570[];
@@ -501,11 +501,11 @@ void sub_800A1468(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
@@ -517,11 +517,11 @@ void sub_800A1468(TstCompoWork* c)
     c->draw_1A8.f20 = name_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
-    sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+    DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
-extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
+extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
 void sub_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
@@ -533,11 +533,11 @@ void sub_800A15F4(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = sub_80024E90(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
     scale.vx = c->scale_1A0[0] + (c->f198 << 12);
     scale.vy = c->scale_1A0[1] + (c->f198 << 12);
     scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = sub_80024EC8(c->model_4, c->f19C);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
@@ -553,13 +553,13 @@ void sub_800A15F4(TstCompoWork* c)
     c->frame_180++;
     if ((unsigned)c->f1FC >= 0x1000)
     {
-        sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+        DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
         anim = &c->model_4->anims_54[c->f204];
-        sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
+        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
                      name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
@@ -682,19 +682,19 @@ void sub_800A1AD0(TstCompoWork* a)
     a->state_0 = 0;
 }
 
-extern TstCompoBone dword_80079140[];
-extern void sub_80019B14(void* p, char* a1, char* a2);
+extern TstCompoBone defaultBones_80079140[];
+extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
 void sub_800A1AFC(TstCompoWork* a)
 {
     int i;
     char* r;
-    for (i = 0; dword_80079140[i].s0 >= 0; i++)
+    for (i = 0; defaultBones_80079140[i].s0 >= 0; i++)
     {
-        a->bones_C[i] = dword_80079140[i];
+        a->bones_C[i] = defaultBones_80079140[i];
     }
-    a->bones_C[i] = dword_80079140[i];
+    a->bones_C[i] = defaultBones_80079140[i];
     r = sub_80024F00(a->model_4, name_800A2768.modelId_1C);
-    sub_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
+    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
 }
 
 // Matched
@@ -713,7 +713,7 @@ void sub_800A1BE0(TstCompoWork* a)
 }
 
 extern unsigned short padHeld_800918D0[];
-extern short word_80084540[];
+extern short sinTable_80084540[];
 extern void SetCameraLookAt_800A1E68();
 void TstCompoCameraInput_800A1C14(TstCompoWork* a)
 {
@@ -747,8 +747,8 @@ void TstCompoCameraInput_800A1C14(TstCompoWork* a)
         a->dist_150 += 0x20;
     }
     a->dist_150 = a->dist_150 < 100 ? 100 : a->dist_150 < 1201 ? a->dist_150 : 1200;
-    a->eye_154[0] = a->dist_150 * word_80084540[a->yaw_14C & 0xFFF] / 4096;
-    a->eye_154[2] = a->dist_150 * word_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
+    a->eye_154[0] = a->dist_150 * sinTable_80084540[a->yaw_14C & 0xFFF] / 4096;
+    a->eye_154[2] = a->dist_150 * sinTable_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)
@@ -783,8 +783,8 @@ extern int name_8003B548();
 extern void name_8004D0E8();
 extern TstCompoMat dword_8007C2EC;
 extern TstCompoMat dword_8007C30C;
-extern TstCompoMat dword_80087114;
-extern TstCompoMat dword_80087134;
+extern TstCompoMat lightMatrix_80087114;
+extern TstCompoMat colorMatrix_80087134;
 void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int v[3];
@@ -805,8 +805,8 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     name_8008D474[0] = 0;
     name_8008D474[1] = 0;
     geomScreenDistance_8008B548 = 0xA0;
-    dword_80087114 = dword_8007C2EC;
-    dword_80087134 = dword_8007C30C;
+    lightMatrix_80087114 = dword_8007C2EC;
+    colorMatrix_80087134 = dword_8007C30C;
     name_8004D0E8();
 }
 

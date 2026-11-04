@@ -5,8 +5,8 @@
 #include "LIBGPU.H"
 #include "LIBAPI.H"
 #include "globals.h"
-#include "tu_8001EA48.h"
-#include "tu_8003C6C8.h"
+#include "model.h"
+#include "cdread.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -17,30 +17,32 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "cd.h"
+#include "cdread.h"
+#include "main.h"
 #include "gte.h"
 
-extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
-
-INCLUDE_DATA(aDataData0011);
-INCLUDE_DATA(aAssertionFaile_1);
-INCLUDE_DATA(aCdC);
+const char aDataData0011[] = "\\DATA\\DATA.001;1";
+const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
+const char aCdC[] = "CD.C";
+const int dword_800748DC = 0;
 
 // Matched
-void sub_80039FA4(int a0)
+void SetBattleStageId_80039FA4(int id)
 {
-    dword_80083BD0 = a0;
+    battleStageId_80083BD0 = id;
 }
 // Matched
-int sub_80039FB0(void)
+int GetBattleStageId_80039FB0(void)
 {
-    return dword_80083BD0;
+    return battleStageId_80083BD0;
 }
 // Matched
-void sub_80039FC0(void)
+void FreeStageEffects_80039FC0(void)
 {
-    FreeEffectFile_80020EE0(&dword_80095468);
+    FreeEffectFile_80020EE0(&battleEffectFile_80095468);
 }
 typedef struct
 {
@@ -83,11 +85,11 @@ typedef struct
     }
 
 // Matched
-void sub_80039FE4(struct FtgObject* a0, struct FtgObject* a1, struct FtgObject* a2)
+void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct FtgObject* out)
 {
-    PolyGroups* pa = (PolyGroups*)a0;
-    PolyGroups* pb = (PolyGroups*)a1;
-    PolyGroups* po = (PolyGroups*)a2;
+    PolyGroups* pa = (PolyGroups*)a;
+    PolyGroups* pb = (PolyGroups*)b;
+    PolyGroups* po = (PolyGroups*)out;
     int i;
 
     DIFF_GROUP(0, 0x24, 4, 4);
@@ -268,7 +270,7 @@ int Sign_8003B664(int x)
     return 0;
 }
 // Matched
-void sub_8003B684(int* v)
+void ScaleVectorToFit_8003B684(int* v)
 {
     int m = 0x20;
     int t = Lzc(v[0]);
@@ -486,7 +488,7 @@ void InitFileRequestQueue_8003BBE4(void)
         fileRequests_80095C90[i].fileId_10 = v;
     }
     fileBufferInUse_80086564 = 0;
-    dword_80086568 = 0;
+    cdXaLock_80086568 = 0;
 }
 // Matched
 int GetFileRequestCount_8003BC34(void)
@@ -506,7 +508,6 @@ int FindFreeFileRequest_8003BC44(void)
     }
     return -1;
 }
-extern unsigned char fileRequestParams_800954C0[][0x64];
 typedef struct
 {
     int count;
@@ -606,7 +607,7 @@ int CancelFileRequest_8003BE88(int key)
 FileRequest* FindFileRequest_8003BED4(int key)
 {
     FileRequest* p;
-    for (p = dword_8008654C; p; p = p->next)
+    for (p = fileRequestTail_8008654C; p; p = p->next)
     {
         if (key == p->key)
         {
@@ -704,26 +705,25 @@ struct FileTask
     int sectors;
     int retry;
 };
-extern EventNode* fileRequestTask_8008B544;
 // Matched
-int sub_8003C0A4(int a0)
+int SetCdXaLock_8003C0A4(int lock)
 {
     FileTask* p = fileRequestTask_8008B544->entry.buffer;
-    if (dword_80086568 != a0)
+    if (cdXaLock_80086568 != lock)
     {
-        if (a0 == 1)
+        if (lock == 1)
         {
             FileRequest* q = p->cur;
             if (q == 0 || (p->state == 8 && (q->flags_C & 0x1000)))
             {
-                dword_80086568 = a0;
+                cdXaLock_80086568 = lock;
             }
         }
         else
         {
-            dword_80086568 = 0;
+            cdXaLock_80086568 = 0;
         }
-        return dword_80086568 == a0;
+        return cdXaLock_80086568 == lock;
     }
     return 0;
 }
@@ -739,14 +739,14 @@ void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
     a1->retry = 0;
     a0[2] = (int)ProcessFileRequests_8003C184;
 }
-extern FileRequest* dword_80086548;
+extern FileRequest* fileRequestHead_80086548;
 // Matched
 void ProcessFileRequests_8003C184(int* a0, FileTask* t)
 {
     int loop;
     FileRequest* r;
 
-    if (fileBufferInUse_80086564 != 0 || dword_80086568 != 0)
+    if (fileBufferInUse_80086564 != 0 || cdXaLock_80086568 != 0)
     {
         return;
     }
@@ -754,7 +754,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
     if (t->cur == 0)
     {
         t->state = 0;
-        t->cur = dword_80086548;
+        t->cur = fileRequestHead_80086548;
     }
     while (loop)
     {
@@ -942,3 +942,8 @@ void AssertFileRequestQueueEmpty_8003C684(void)
         exit(1);
     }
 }
+
+int fileRequestQueue_80086540 = 0;
+int fileRequestNextKey_80086544 = 0;
+FileRequest *fileRequestHead_80086548 = 0;
+FileRequest *fileRequestTail_8008654C = 0;

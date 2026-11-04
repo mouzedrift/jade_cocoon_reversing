@@ -18,7 +18,7 @@ typedef struct
     short field_E_h; // word_8008B4E6
 } DisplayConfig;
 
-// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
+// Event list nodes (event.c / skel_draw.c). The list head has the same layout as a node.
 struct EventEntry;
 typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
 typedef struct EventEntry
@@ -31,7 +31,7 @@ typedef struct EventEntry
     void* buffer;
 } EventEntry;
 
-// model and model list (defined in tu_8001EA48.h)
+// model and model list (defined in model.h)
 typedef struct Model Model;
 typedef struct ModelList ModelList;
 
@@ -53,7 +53,7 @@ typedef union Settings
     unsigned int word;
     struct
     {
-        unsigned int a_0 : 3; // 3 = ... (compared by eventfnc / combbtl / tu_8003D198)
+        unsigned int a_0 : 3; // 3 = ... (compared by eventfnc / combbtl / pad_text)
         unsigned int b_3 : 1;
         unsigned int c_4 : 1;
         unsigned int d_5 : 1;
@@ -66,7 +66,7 @@ typedef union Settings
         unsigned int k_24 : 1;
         unsigned int l_25 : 7;
     } bits;
-    unsigned char bytes[4]; // tested bytewise (tu_80034068)
+    unsigned char bytes[4]; // tested bytewise (msg_window)
 } Settings;
 
 typedef struct
@@ -165,7 +165,7 @@ typedef struct
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
+    int field_0;           // flags (0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4)
     unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char field_6;
@@ -291,7 +291,7 @@ typedef struct
 // per-element/status minimums applied by ApplyEquipmentModifiers_80033754
 extern unsigned char accessoryModifiers_8007D848[17][12];
 extern unsigned char armorModifiers_8007D598[15][12];
-extern unsigned char byte_8007CC24[0x2b];
+extern unsigned char itemEffects_8007CC24[0x2b];
 extern unsigned short itemFlags_8007CC50[];
 extern ActionData itemData_8007CCA8[0x2b];
 extern int itemNames_8007CB78[0x2b];
@@ -305,29 +305,29 @@ extern EquipmentData accessoryData_8007D6B0[0x11];
 extern int accessoryNames_8007D66C[0x11];
 extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;
-extern int dword_80091CFC;
-extern int dword_80083BD0;
+extern int battleMusic_80091CFC;
+extern int battleStageId_80083BD0;
 extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int dword_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern ActionData stru_80083594[];
+extern ActionData abilityActions_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
-extern unsigned char dword_8007CB4C[][4]; // per person (sub_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
+extern unsigned char personMergeInfo_8007CB4C[][4]; // per person (GetPersonMergeInfo_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
 extern int dword_80091CA0;
-extern int dword_800918B8;
+extern int frozenFrames_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
-extern ActionData dword_8007C5A0[];
-extern int dword_80091C20;
-extern int dword_80091C30[];
+extern ActionData magicActions_8007C5A0[];
+extern int areaHeap_80091C20;
+extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
-extern short word_80091D0C;
+extern short seqSlotSepAccessNum_80091D0C;
 typedef struct
 {
     int field_0;
@@ -383,37 +383,37 @@ typedef struct FileRequestDesc
 } FileRequestDesc;
 extern FileRequest fileRequests_80095C90[0x14];
 
-extern int** dword_800B1DC4;
-extern int** dword_800B1DB8;
+extern int** mapLoaderTask_800B1DC4;
+extern int** areaLoaderTask_800B1DB8;
 extern short equipmentIcons_8007D938[];
-extern int dword_80082670;
+extern int areaReload_80082670;
 extern short word_8008B862;
-extern int dword_80082678;
-extern short word_80091C40[];
-extern FileRequest* dword_8008654C;
+extern int areaPreloading_80082678;
+extern short areaPreload_80091C40[];
+extern FileRequest* fileRequestTail_8008654C;
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;
 extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;
-extern int dword_8008B4F8;
-extern int dword_800918C4;
+extern int cameraZoom_8008B4F8;
+extern int motionBlurOn_800918C4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
-extern int dword_80091990[4];
+extern int actorHeap_80091990[4];
 extern Font fonts_80095FB0[];
-extern unsigned char dword_8007C708[0x1E];
+extern unsigned char magicIcons_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
 extern char* keyItemNames_8007CF30[0x26];
 extern int magicNames_8007C348[0x1E * 2];
-extern unsigned short dword_80079348[0x15];
+extern unsigned short statGrowthTable_80079348[0x15];
 extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
-extern int dword_80091C88;
-extern int dword_80091C44;
+extern int currentAreaMap_80091C88;
+extern int currentArea_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
-extern unsigned char byte_8007D588[16];
+extern unsigned char armorOutfits_8007D588[16];
 extern int dword_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
@@ -425,7 +425,7 @@ extern short word_8008B558[2];
 extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
-extern int dword_800918BC;
+extern int displayStartFrames_800918BC;
 extern int ODEIsEvenAddressDrawn_800918C0;
 extern DisplayConfig display_8008B4D8;
 extern long cdRomEventDescError_8008B490;
@@ -434,7 +434,7 @@ extern int dword_8008B574;
 extern volatile int vsyncCounter_8008B4B4;
 extern volatile int gnFrame_8008D610;
 extern volatile int xaTimer_8008D450;
-extern volatile int dword_8008D404;
+extern volatile int unpausedFrames_8008D404;
 extern SaveData saveData_8008B570;
 extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
@@ -464,21 +464,21 @@ extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
-extern ActionData dword_8007D274[0x17];
-extern unsigned short word_80079374[];
+extern ActionData weaponActions_8007D274[0x17];
+extern unsigned short growthKindThresholds_80079374[];
 int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);
 int FindFreeModelIndex_8002667C(ModelList* p);
 void FreeModel_80024C48(Model* p);
-void sub_80025C38(Model* p, int flag);
+void ApplyModelFtgSwaps_80025C38(Model* p, int flag);
 int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
 void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
-extern int dword_8008D4DC;
-extern int dword_80079708[];
+extern int minionVariantSeed_8008D4DC;
+extern int weaponEffectIds_80079708[];
 typedef struct
 {
     short id;
@@ -492,8 +492,8 @@ typedef struct
     struct_8_id* items;
 } struct_8_list;
 
-extern int dword_8007A6AC[];
-extern int dword_8008D40C;
+extern int speciesMagicBits_8007A6AC[];
+extern int sceneBrightness_8008D40C;
 
 typedef struct
 {
@@ -518,11 +518,11 @@ extern EventNode* dword_8008D60C;
 extern EventNode* cameraTask_8008D4A0;
 extern EventNode* effectTask_8008D3F8;
 extern EventNode* xaTask_8008B560;
-extern EventNode* dword_8008D464;
+extern EventNode* sporeTask_8008D464;
 extern EventNode* soundTask_8008D4A4;
 extern EventNode* modelLoaderTask_8008B54C;
 extern EventNode* overlayLoaderTask_8008D4C0;
-extern EventNode* dword_8008D628;
+extern EventNode* fadeTask_8008D628;
 extern EventNode* actorTasks_8008D43C;
 extern EventNode* screenFlashTasks_8008D61C;
 
@@ -540,10 +540,10 @@ extern unsigned long* mdecEffectVlcBuffer_8008D42C;
 
 extern int dword_80091CA0;
 
-extern int dword_80091C30[];
+extern int loadFade_80091C30[];
 
 
-extern short word_8008B860;
-extern MATRIX dword_80098188[];
+extern short pendingArea_8008B860;
+extern MATRIX boneMatrices_80098188[];
 
 #endif

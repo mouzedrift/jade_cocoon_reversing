@@ -257,7 +257,7 @@ void sub_800CBBE0(int p)
 
 int sub_800CBC28()
 {
-    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
+    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
 }
 
 int sub_800CBC58()
@@ -280,7 +280,7 @@ extern CombComMenu name_800CB5D0;
 extern short word_800CD2D0;
 extern unsigned short uiColor_8008B590;
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8002ADB4(void* a, void* b, int c, int d);
+extern void DrawMenuItemWithWindow_8002ADB4(void* a, void* b, int c, int d);
 extern void DrawMenuWindows_8002A5A4(void* p);
 void sub_800CBCA0()
 {
@@ -303,7 +303,7 @@ void sub_800CBCA0()
     col.color = uiColor_8008B590;
     col.a = 0;
     col.b = 1;
-    sub_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
     m.time_4 = GetTime30Hz_8002C64C();
     m.items_10 = list;
     m.sel_C = word_800CD2D0;
@@ -335,10 +335,10 @@ extern unsigned short name_800CD820[][2]; // per byte_800CD83A and window: which
 extern unsigned char byte_800A84A8;
 extern unsigned int dword_800CD41C[];
 extern char* name_800CD50C[];
-extern int sub_8002C670();
-extern void sub_8002CE28(struct_minion_ref* a0, void* a1);
-extern void sub_8002CAC8(struct_minion_ref* a0, void* a1);
-extern int sub_80031A04(void* skills, int a);
+extern int DrawAbilityDescription_8002C670();
+extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, void* a1);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, void* a1);
+extern int GetSkillMpCost_80031A04(void* skills, int a);
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void sub_800CC40C();
 // Matched
@@ -366,7 +366,7 @@ void sub_800CBEA4()
             m = sub_800A11D8(byte_800CD839);
             p[0] = 10;
             p[1] = 0x14;
-            sub_8002C670(m, p, name_800CD718, (short)GetMenuCursorIndex_8003DA54(dword_800CD298), 0xF);
+            DrawAbilityDescription_8002C670(m, p, name_800CD718, (short)GetMenuCursorIndex_8003DA54(dword_800CD298), 0xF);
         }
         else if (byte_800CD83A == 2)
         {
@@ -442,14 +442,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB680;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD298[4];
-        r.field_2 = dword_800CD298[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD298[4];
+        r.scroll_2 = dword_800CD298[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
-        sub_8002CE28(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -sub_80031A04(&r.field_C_minion->skills_DE, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
+        DrawAbilityList_8002CE28(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
     }
     if (!(name_800CD820[byte_800CD83A][k] & 0x80))
     {
@@ -457,14 +457,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB688;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD2A4[4];
-        r.field_2 = dword_800CD2A4[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD2A4[4];
+        r.scroll_2 = dword_800CD2A4[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
-        sub_8002CAC8(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
+        DrawMagicList_8002CAC8(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
     }
     if (byte_800CD83A == 5)
     {
@@ -476,9 +476,9 @@ void sub_800CBEA4()
 #if 0
 // Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
 
-extern int sub_80012BB0(void* a, void* b, void* c, int* d);
+extern int ResolveBattleAction_80012BB0(void* a, void* b, void* c, int* d);
 extern int sub_80013228(void* a, void* b, void* c, int* d);
-extern int sub_80034068(short* p);
+extern int CheckMagicUsable_80034068(short* p);
 void sub_800CC40C()
 {
     short arg[4];
@@ -490,14 +490,14 @@ void sub_800CC40C()
     {
         word_800A82D0 = 0;
         word_800A82D2 = 0;
-        src = sub_80014390((unsigned char)(byte_800CD839 + 8));
+        src = GetUnitStatus_80014390((unsigned char)(byte_800CD839 + 8));
         for (i = 0; i < 2; i++)
         {
             int bit = 1 << (i + 8);
             if (dword_800CD840->targets_C & bit)
             {
-                t = sub_80014390((unsigned char)(i + 8));
-                sub_80012BB0(src, t, dword_800CD840, out);
+                t = GetUnitStatus_80014390((unsigned char)(i + 8));
+                ResolveBattleAction_80012BB0(src, t, dword_800CD840, out);
                 if (!sub_80013228(src, t, dword_800CD840, out))
                 {
                     bit = 1 << i;
@@ -528,9 +528,9 @@ void sub_800CC40C()
         arg[3] = 0;
         if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 6)
         {
-            ((int (*)(short*))sub_80034124)(arg);
+            ((int (*)(short*))CheckUsableStub_80034124)(arg);
         }
-        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && sub_80034068(arg))
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && CheckMagicUsable_80034068(arg))
         {
             word_800A82D0 = 0;
         }
@@ -547,7 +547,7 @@ extern CombComItem name_800CB700;
 extern Minion dword_800A3AA0[][3];
 extern int sub_800A1934(Minion* p);
 extern int sub_800A1958(Minion* p);
-extern int sub_80034068(short* p);
+extern int CheckMagicUsable_80034068(short* p);
 int sub_800CC674(short* arg, int mode, int sel, int f)
 {
     CombComItem w[3];
@@ -588,12 +588,12 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
     if (mode == 1)
     {
         {
-            UnitStatus* s = sub_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            UnitStatus* s = GetUnitStatus_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
             list[0] = p0;
             p0->text_4 = s->name_10;
         }
         q[1] = arg[1] + 8;
-        if (sub_80034068(q) == 0)
+        if (CheckMagicUsable_80034068(q) == 0)
         {
             list[0]->flags &= ~2;
         }
@@ -648,7 +648,7 @@ void sub_800CC9FC()
     if (dword_800CD840->kind_0 == 0x12)
     {
         dword_800CD840->targets_C = 0;
-        sub_80014390((unsigned char)(byte_800CD839 + 8))->status_0 |= 0x8000;
+        GetUnitStatus_80014390((unsigned char)(byte_800CD839 + 8))->status_0 |= 0x8000;
     }
     else
     {
@@ -671,7 +671,7 @@ extern int dword_800CD458;
 extern int dword_800CD460;
 extern Minion dword_800A3AA0[][3];
 extern int sub_800A1958(Minion* p);
-extern int sub_80033C98(struct_minion_ref* p);
+extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 int sub_800CCA94()
 {
@@ -679,9 +679,9 @@ int sub_800CCA94()
     short b[4];
     int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
     int* p;
-    a.field_0 = dword_800CD854[4];
+    a.cursor_0 = dword_800CD854[4];
     dword_800CD84C = 0;
-    a.field_2 = dword_800CD854[5];
+    a.scroll_2 = dword_800CD854[5];
     a.field_A = 0;
     b[3] = 0;
     b[0] = dword_800CD840->arg_4;
@@ -698,8 +698,8 @@ int sub_800CCA94()
         dword_800CD84C = *p;
         return 0;
     case 1:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
-        switch (sub_80033C98(&a))
+        a.minion_C = sub_800A11D8(byte_800CD839);
+        switch (CheckSkillUsable_80033C98(&a))
         {
         case 0:
         case 1:
@@ -716,7 +716,7 @@ int sub_800CCA94()
         }
         break;
     case 2:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
+        a.minion_C = sub_800A11D8(byte_800CD839);
         switch (CheckMagicCastable_80033C08(&a))
         {
         case 0:
@@ -736,7 +736,7 @@ int sub_800CCA94()
     case 3:
         if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 2)
         {
-            switch ((unsigned int)((int (*)(short*))sub_80034124)(b))
+            switch ((unsigned int)((int (*)(short*))CheckUsableStub_80034124)(b))
             {
             case 0:
                 return 1;
@@ -751,7 +751,7 @@ int sub_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 3)
         {
-            switch ((unsigned int)sub_80034068(b))
+            switch ((unsigned int)CheckMagicUsable_80034068(b))
             {
             case 0:
                 return 1;
@@ -795,7 +795,7 @@ extern int dword_800CD524[];
 extern char dword_800CD2C8[];
 extern int sub_800A11A0(int);
 extern int sub_80031B0C(int, int);
-extern int sub_8001ACE4(int);
+extern int GetMagicTargetFlags_8001ACE4(int);
 void sub_800CCDD0()
 {
     int v;
@@ -814,7 +814,7 @@ void sub_800CCDD0()
         dword_800CD840->arg_4 = sub_800CBC28();
         break;
     case 2:
-        byte_800CD844 = sub_8001ACE4(sub_800CBC58());
+        byte_800CD844 = GetMagicTargetFlags_8001ACE4(sub_800CBC58());
         if (byte_800CD844 & 2)
         {
             byte_800CD83A = 3;

@@ -5,9 +5,9 @@
 #include "funcs.h"
 
 #include "globals.h"
-#include "tu_8001EA48.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "model.h"
+#include "engine.h"
+#include "minion_init.h"
 
 typedef struct EvInsEventfnc
 {
@@ -120,9 +120,9 @@ extern void sub_800BBDA0(int a, int b);
 
 extern int sub_800BBDD8(int a);
 
-extern char dword_80091C10[];
+extern char eventHeap_80091C10[];
 
-// the low halves of dword_8008D600 (VECTOR camera eye), read with lhu by sub_800BC5C8
+// the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by sub_800BC5C8
 extern unsigned short word_8008D600[];
 
 extern int dword_800AEBD8;
@@ -165,10 +165,10 @@ static inline int EvFindLevantMesh(EvEntEventfnc* e)
     unsigned int i;
     unsigned int k = e->f84_84;
     int r;
-    for (i = 0; i < dword_8008B500.nMeshes_4; i++, k++)
+    for (i = 0; i < mapState_8008B500.nMeshes_4; i++, k++)
     {
-        k %= dword_8008B500.nMeshes_4;
-        r = FindTriAtXZ_800B76B8(&dword_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
+        k %= mapState_8008B500.nMeshes_4;
+        r = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[k], (EvVecEventfnc*)&levantPos_8008BD18.pos);
         if (r >= 0)
         {
             e->f80_80 = r;
@@ -219,13 +219,13 @@ typedef struct EvSpawnEventfnc
     short f1A_1A;
 } EvSpawnEventfnc;
 
-extern EvMapEntEventfnc** dword_800B0608[];
+extern EvMapEntEventfnc** mapTable_800B0608[];
 
 extern int sub_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
 
 extern void sub_800B8568();
 
-extern EventNode* dword_8008D674;
+extern EventNode* encounterTask_8008D674;
 
 extern void sub_800A170C();
 
@@ -261,9 +261,9 @@ extern int sub_800A59D0(int a);
 
 extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
 
-extern short dword_8008D474[2];
+extern short screenOffset_8008D474[2];
 
-extern void sub_80037918(void* p);
+extern void UpdateCameraFollow_80037918(void* p);
 
 extern void SetGeomOffset(long ofx, long ofy);
 
@@ -307,13 +307,13 @@ extern int sub_800BC2B4(EvCtxEventfnc* c);
 
 extern int XaRequestStop_80043524(void);
 
-extern int sub_80034ADC(int a, int b);
+extern int ConsumeMsgWindowMark_80034ADC(int a, int b);
 
 extern EvObjEventfnc* sub_800A7A60(int a);
 
 extern void* sub_800A55B0(int a);
 
-extern int dword_80091C94;
+extern int useMapStartPos_80091C94;
 
 extern int eventDispatchHalt_8008B540;
 
@@ -323,11 +323,11 @@ extern void sub_800ADC5C(unsigned short* v, int a);
 
 extern void sub_800ADCEC(unsigned short* v, int a);
 
-extern int dword_80091C9C;
+extern int forceMapReload_80091C9C;
 
 extern int dword_80091C54;
 
-extern int sub_80027358(int a);
+extern int UsePreloadedArea_80027358(int a);
 
 extern int sub_800A683C(int a);
 
@@ -342,9 +342,9 @@ extern EvWaitEventfnc dword_800B06B0;
 
 extern int sub_800A5F9C(int a);
 
-extern void sub_800379DC(EvVecEventfnc* v, int b);
+extern void SetCameraBlendTarget_800379DC(EvVecEventfnc* v, int b);
 
-extern void sub_80037A20(int a, int b);
+extern void ClearCameraBlendTarget_80037A20(int a, int b);
 
 typedef struct EvRectEventfnc
 {
@@ -356,7 +356,7 @@ typedef struct EvRectEventfnc
 
 extern EvRectEventfnc dword_8008D420;
 
-extern void sub_80037A6C(int a, int b);
+extern void SetCameraZoom_80037A6C(int a, int b);
 
 extern int sub_800A7790(void);
 
@@ -416,15 +416,15 @@ typedef struct EvVoiceEventfnc
     EvXaEventfnc xa_2;
 } EvVoiceEventfnc;
 
-extern int sub_800349B4(int a, EvMsgInfoEventfnc* b);
+extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgInfoEventfnc* b);
 
 extern void sub_800A67B4(EvCtxEventfnc* c);
 
-extern void sub_80034A84(int a);
+extern void CloseMsgWindow_80034A84(int a);
 
-extern int sub_80034A30(int a);
+extern int IsMsgWindowWaiting_80034A30(int a);
 
-extern void sub_80034A68(int a);
+extern void EnableMsgWindowAdvance_80034A68(int a);
 
 extern int dword_800AEBE8;
 
@@ -488,11 +488,11 @@ extern EvTiyEventfnc dword_800AEBC0;
 
 extern int dword_800AEBCC[2];
 
-extern void sub_80026DE8(int* a, int b, void* c);
+extern void FreeRecordTables_80026DE8(int* a, int b, void* c);
 
-extern void sub_80026D78(int* a, int b, void* c);
+extern void AllocRecordTables_80026D78(int* a, int b, void* c);
 
-extern void sub_80026E74(int a, int b, void* c);
+extern void LoadRecordTables_80026E74(int a, int b, void* c);
 
 typedef struct TaskEventfnc
 {
@@ -509,9 +509,9 @@ extern int sub_800AC768(void);
 
 extern void sub_800AC6A8(int a);
 
-extern int sub_8001AB94(void);
+extern int IsSceneFadeDone_8001AB94(void);
 
-extern void sub_8001AAA8(int a);
+extern void StartSceneDarken_8001AAA8(int a);
 
 extern int sub_800A8EC4(int* p);
 
@@ -519,6 +519,6 @@ extern void sub_800A7720();
 
 extern short word_8008B858;
 
-extern short word_8008B860;
+extern short pendingArea_8008B860;
 
 extern int dword_80091C8C;

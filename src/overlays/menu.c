@@ -3,7 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "tiy.h"
-#include "tu_80019BF0.h"
+#include "engine.h"
 #include "minion_menu.h"
 
 typedef struct MenuTask
@@ -134,12 +134,12 @@ typedef struct MenuQuad
 } MenuQuad;
 extern char name_800C18F4[];
 extern void DrawLargeTextBox_8002AF10();
-extern void sub_8002F1C8();
+extern void DrawUnitStatusWindow_8002F1C8();
 
 extern int name_800AD288();
 extern UnitStatus* name_80014390();
 
-extern int sub_80034140();
+extern int IsCurrentMapListed_80034140();
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern char name_80082680[];
 extern char name_800826B0[];
@@ -171,7 +171,7 @@ extern int sub_800BFB10();
 extern int sub_800BFBE0();
 extern void PlaySfx_80031494();
 
-// stat changes worked out by sub_80013C28
+// stat changes worked out by UseItemOnUnit_80013C28
 typedef struct MenuStatDelta
 {
     int f0;
@@ -191,7 +191,7 @@ typedef struct MenuTmp
     int fC;
     MenuStatDelta d_10;
 } MenuTmp;
-extern void sub_80013C28();
+extern void UseItemOnUnit_80013C28();
 extern void sub_800C00F8();
 extern void sub_800C00D4();
 extern void sub_800AD1E0();
@@ -213,7 +213,7 @@ typedef struct MenuBox
 extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
 extern void sub_800BFF84();
-extern void sub_80027478();
+extern void SetLoadFadeFlag_80027478();
 extern EventNode* name_8008D498;
 extern int sub_800C0990();
 typedef struct MenuDlg
@@ -257,7 +257,7 @@ typedef struct MenuMain
 } MenuMain;
 extern void sub_800BBE50();
 extern void LoadUiTiy_8002BF74();
-extern void sub_800122A0();
+extern void AccumulateExpGain_800122A0();
 EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
 {
     EventEntry* t = AllocEventEntry_80043AF8(n);
@@ -292,7 +292,7 @@ EventEntry* CreateMenuTask_800BBB9C(EventNode* n)
             if (name_800B1238[i].idx_6 || name_800B1238[i].a == 5 || name_800B1238[i].a == 0x1A)
                 ok = 1;
             if (ok && !(p->status_0 & 0x400))
-                sub_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
+                AccumulateExpGain_800122A0(name_800B1238[i].idx_6, name_800B1238[i].u8, &c->a6C[name_800B1238[i].idx_6]);
         }
         c->s58 = 0;
         c->count_44 = CountMinions_80010548(3) + 1;
@@ -347,11 +347,11 @@ void sub_800BBE90(MenuTask* t, MenuMain* a)
     }
 }
 
-extern int sub_800121A8();
+extern int GetLevelRank_800121A8();
 int sub_800BBF10(unsigned char a, unsigned char b)
 {
-    int x = sub_800121A8(a);
-    return x < sub_800121A8(b);
+    int x = GetLevelRank_800121A8(a);
+    return x < GetLevelRank_800121A8(b);
 }
 
 extern void sub_800BC56C();
@@ -422,7 +422,7 @@ void sub_800BBF48(MenuTask* t, MenuMain* c)
         SetFadeMode_8001C19C(0, 0x20);
         FreeActiveOverlay_8002C014();
         if (saveData_8008B570.mapId_2E4[3].field_2 == saveData_8008B570.mapId_2E4[3].field_0)
-            sub_80027314();
+            RequestAreaReload_80027314();
     }
     else if (padPressed_8009194C & 0x20)
     {
@@ -440,12 +440,12 @@ void sub_800BBF48(MenuTask* t, MenuMain* c)
     }
 }
 
-extern int sub_800272D0();
+extern int IsMapLoading_800272D0();
 extern void ResetOverlayLoaderTask_80020D68();
 extern void sub_800A6D30();
 void sub_800BC24C(MenuTask* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         ResetOverlayLoaderTask_80020D68();
         sub_800A6D30(1);
@@ -454,9 +454,9 @@ void sub_800BC24C(MenuTask* t)
     }
 }
 
-extern void sub_8002E334();
-extern void sub_8002FD0C();
-extern void sub_8002F8E4();
+extern void DrawLevantSummary_8002E334();
+extern void DrawLevantHeaderWindows_8002FD0C();
+extern void DrawPartySlotWindow_8002F8E4();
 extern void AddClipDrawAreaPrim_80033308();
 extern void sub_800BC934(int a, int b);
 typedef struct MenuPartyQ
@@ -489,8 +489,8 @@ void sub_800BC2A8(MenuMain* c)
         q20.y = 8;
         q20.f4 = 1;
         q20.f8 = frameCount_8008D3FC;
-        sub_8002E334(st, &q20);
-        sub_8002FD0C(0xE, 8, 1, 1, 0);
+        DrawLevantSummary_8002E334(st, &q20);
+        DrawLevantHeaderWindows_8002FD0C(0xE, 8, 1, 1, 0);
     }
     else
     {
@@ -498,8 +498,8 @@ void sub_800BC2A8(MenuMain* c)
         q30.y = 8;
         q30.f4 = 0;
         q30.f8 = 0;
-        sub_8002E334(st, &q30);
-        sub_8002FD0C(0xE, 8, 0, 0, 0);
+        DrawLevantSummary_8002E334(st, &q30);
+        DrawLevantHeaderWindows_8002FD0C(0xE, 8, 0, 0, 0);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 14);
     for (i = 0; i < c->count_44 - 1; i++)
@@ -529,7 +529,7 @@ void sub_800BC2A8(MenuMain* c)
         loc.e = e;
         loc.f = i;
         loc.g = g;
-        sub_8002F8E4(st, &loc);
+        DrawPartySlotWindow_8002F8E4(st, &loc);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 14);
     for (i = 0; i < c->count_44; i++)
@@ -561,7 +561,7 @@ void sub_800BC56C(MenuMain* c)
         {
             c->st_8C[i].exp_4 += c->a6C[i] - c->a34[i];
             if (c->st_8C[i].exp_4 > 0x3FFFFFF)
-                c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+                c->a5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&c->st_8C[i]);
             if (c->a5C[i])
                 c->a7C[i] = 1;
             if (i > 0 && c->a5C[i])
@@ -603,7 +603,7 @@ void sub_800BC56C(MenuMain* c)
                     {
                         unsigned int rest = c->st_8C[i].exp_4 - 0x4000000;
                         c->st_8C[i].exp_4 = 0x4000000;
-                        c->a5C[i] = ((int (*)())sub_80011D78)(&c->st_8C[i]);
+                        c->a5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&c->st_8C[i]);
                         if (i > 0)
                             sub_800BCF74(i - 1);
                         c->st_8C[i].exp_4 = rest;
@@ -639,12 +639,12 @@ void sub_800BC8A8(void)
     DrawWindow_80042460(rect, &b.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
-extern int sub_8002FA0C();
+extern int GetPartyWindowX_8002FA0C();
 void sub_800BC934(int a, int b)
 {
     short rect[4];
     MenuBox bx;
-    short r = sub_8002FA0C((short)b, (short)(a - 1));
+    short r = GetPartyWindowX_8002FA0C((short)b, (short)(a - 1));
     if (r != 0)
     {
         rect[0] = r + 8;
@@ -724,7 +724,7 @@ void sub_800BC9E8(MenuMain* p)
     }
 }
 
-extern void sub_8002A42C(short* p, int a, int b, short c);
+extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
 extern void DrawLargeText_8002FBD8();
 extern int GetRankName_8002FCD8();
 // Not matched: frame/stack layout matches, but saved-register assignment differs (the 0x80
@@ -743,7 +743,7 @@ void sub_800BCB98(MenuMain* c, int b)
     int rb;
     pos[0] = 0x80;
     pos[1] = 0x36;
-    sub_8002A42C(pos, 0, 0, b);
+    DrawPortrait_8002A42C(pos, 0, 0, b);
     r.x = 0x7E;
     r.y = 0x34;
     r.w = 0x44;
@@ -766,8 +766,8 @@ void sub_800BCB98(MenuMain* c, int b)
     col2.c_3 = 1;
     col2.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
-    ra = sub_800121A8(c->st_1AC[0].level_44);
-    rb = sub_800121A8(levantStatus_8008BD38.level_44);
+    ra = GetLevelRank_800121A8(c->st_1AC[0].level_44);
+    rb = GetLevelRank_800121A8(levantStatus_8008BD38.level_44);
     if (ra < rb)
     {
         if (c->i48)
@@ -824,7 +824,7 @@ void sub_800BCEA0(MenuMain* a, int b, void* c, short d)
         Minion* m = GetMinion_80010598(3, i - 1);
         s[0] = 0x33;
         s[1] = 0x3E;
-        sub_8002DB48(c, b, 0, s, m, &a->st_1AC[i]);
+        DrawUnitStatusPanel_8002DB48(c, b, 0, s, m, &a->st_1AC[i]);
     }
     col.col = uiColor_8008B590;
     col.c_2 = 0;
@@ -837,7 +837,7 @@ extern int name_800338B0();
 void sub_800BCF74(short a)
 {
     int x = a - 1;
-    int r17 = (int)sub_80010824(3, x);
+    int r17 = (int)GetMinionMagicBits_80010824(3, x);
     Minion* r16 = GetMinion_80010598(3, x);
     sub_8001AEB8(name_800338B0(r16), &r16->status_84, r17);
 }
@@ -915,7 +915,7 @@ void sub_800BCFDC(MenuMain* c)
     OpenItemMessageWindow_80035AC8(&m);
 }
 
-extern void sub_80034A84();
+extern void CloseMsgWindow_80034A84();
 extern EventNode* name_8008D640;
 void sub_800BD1B0(MenuTask* t)
 {
@@ -926,7 +926,7 @@ void sub_800BD1B0(MenuTask* t)
     if (f != 1)
         t->next_8 = sub_800BBF48;
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
-        sub_80034A84(p);
+        CloseMsgWindow_80034A84(p);
 }
 
 
@@ -1081,7 +1081,7 @@ void sub_800BD6C8(MenuTask* t, MenuCtx* c)
     }
     if (c->f28 < 8)
         c->f28++;
-    if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
+    if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && IsCurrentMapListed_80034140())
         t->next_8 = MinionListScreen_800BD80C;
 }
 
@@ -1100,11 +1100,11 @@ extern MenuBox7 name_800BB9A4;
 extern int name_800C2980;
 extern char name_800C2958[];
 extern unsigned short padRepeat_800918CC;
-extern void sub_8002ADB4();
+extern void DrawMenuItemWithWindow_8002ADB4();
 extern void DrawMinionListPage_800BDBFC(char* a, int page);
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
-extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 void MinionListScreen_800BD80C(MenuTask* t, char* a)
 {
     MenuCol col;
@@ -1135,7 +1135,7 @@ void MinionListScreen_800BD80C(MenuTask* t, char* a)
     col.col = uiColor_8008B590;
     col.c_2 = 0;
     col.c_3 = 1;
-    sub_8002ADB4(&box, &col, 0xA, 0);
+    DrawMenuItemWithWindow_8002ADB4(&box, &col, 0xA, 0);
     r.x = 0xA;
     r.y = 0x10;
     r.w = 0x58;
@@ -1184,10 +1184,10 @@ void MinionListScreen_800BD80C(MenuTask* t, char* a)
     pr.b = 2;
     p2[0] = 8;
     p2[1] = 0x7A;
-    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
     pr.b = 0;
     p2[0] = 0x138;
-    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
     SetFontClutOffset_8003F900(1, 0);
     DrawButtonHelpBar_8002B004(name_800C2958, 0, 0xF);
     DrawMenuBackground_8002BE10();
@@ -1209,7 +1209,7 @@ int IsMinionCaptured_800BDBB8(int a)
 
 extern char name_800BB9C0[];
 extern void DrawText_8003E91C();
-extern void sub_8003F89C();
+extern void UppercaseSjisName_8003F89C();
 void DrawMinionListPage_800BDBFC(char* a, int page)
 {
     short pos[2];
@@ -1235,7 +1235,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
             pos[0] += 8;
             if (buf)
             {
-                sub_8003F89C(buf);
+                UppercaseSjisName_8003F89C(buf);
                 DrawText_8003E91C(1, buf, pos, 0xE);
             }
         }
@@ -1537,13 +1537,13 @@ extern void sub_800C0CA4();
 extern void sub_800BEAE0();
 extern void sub_800BEBFC();
 void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2);
-extern void sub_8002CAC8();
-extern void sub_8002CE28();
-extern void sub_8002C728();
-extern void sub_8002D7D0();
-extern int sub_8002D250();
-extern void sub_8002F120();
-extern int sub_8002C670();
+extern void DrawMagicList_8002CAC8();
+extern void DrawAbilityList_8002CE28();
+extern void DrawItemList_8002C728();
+extern void DrawFamilyTree_8002D7D0();
+extern int DrawTargetSelectMenu_8002D250();
+extern void DrawMpGauge_8002F120();
+extern int DrawAbilityDescription_8002C670();
 extern RECT name_800C1AEC[]; // the menu windows' rects
 extern char name_800C22D8[];
 extern char name_800BBA44[];
@@ -1605,14 +1605,14 @@ void sub_800BE4A0(MenuCtx* c)
             m = GetMinion_80010598(3, c->arr_2A[1]);
             if (m)
             {
-                r.field_0 = c->arr_2A[7];
-                r.field_2 = c->arr_46[2];
+                r.cursor_0 = c->arr_2A[7];
+                r.scroll_2 = c->arr_46[2];
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
-                sub_8002CAC8(&r, 0);
+                r.minion_C = m;
+                DrawMagicList_8002CAC8(&r, 0);
             }
             break;
         }
@@ -1642,25 +1642,25 @@ void sub_800BE4A0(MenuCtx* c)
             if (m)
             {
                 struct_minion_ref r;
-                r.field_0 = c->arr_2A[10];
-                r.field_2 = 0;
+                r.cursor_0 = c->arr_2A[10];
+                r.scroll_2 = 0;
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
-                sub_8002CE28(&r, 0);
+                r.minion_C = m;
+                DrawAbilityList_8002CE28(&r, 0);
             }
             {
                 int found = 0;
                 int is = c->sel_2 == 11;
                 if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
                 {
-                    found = sub_8002C670(GetMinion_80010598(3, c->arr_2A[1]), 0, name_800C22D8, c->arr_2A[10], 14) != 0;
+                    found = DrawAbilityDescription_8002C670(GetMinion_80010598(3, c->arr_2A[1]), 0, name_800C22D8, c->arr_2A[10], 14) != 0;
                 }
                 if (!found)
                 {
-                    sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 14, 0);
+                    DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 14, 0);
                 }
             }
             break;
@@ -1670,7 +1670,7 @@ void sub_800BE4A0(MenuCtx* c)
             MenuPair p;
             p.a = 0;
             p.b = 0;
-            sub_8002D7D0(GetMinion_80010598(3, c->arr_2A[1]), 14, &p);
+            DrawFamilyTree_8002D7D0(GetMinion_80010598(3, c->arr_2A[1]), 14, &p);
             break;
         }
         case 10:
@@ -1692,14 +1692,14 @@ void sub_800BE4A0(MenuCtx* c)
             {
                 s = 4;
             }
-            r.field_0 = c->arr_2A[3];
-            r.field_2 = c->arr_46[0];
+            r.cursor_0 = c->arr_2A[3];
+            r.scroll_2 = c->arr_46[0];
             r.field_4 = s;
-            r.field_6 = 14;
+            r.ot_6 = 14;
             r.field_8 = 0;
             r.field_A = 1;
-            r.field_C_minion = 0;
-            sub_8002C728(&r);
+            r.minion_C = 0;
+            DrawItemList_8002C728(&r);
             break;
         }
         case 12:
@@ -1754,7 +1754,7 @@ void sub_800BE4A0(MenuCtx* c)
                 pr[1] = 0;
                 pr[2] = c->arr_2A[5];
                 pr[3] = 1;
-                sub_8002D250(pr, 0, c->arr_2A[5], 14);
+                DrawTargetSelectMenu_8002D250(pr, 0, c->arr_2A[5], 14);
                 if (c->sel_2 == 2 && c->arr_2A[5] != 0)
                 {
                     MenuPair p;
@@ -1765,7 +1765,7 @@ void sub_800BE4A0(MenuCtx* c)
                     s = buf[1];
                     p.a = 0xD2;
                     p.b = 0xBB;
-                    sub_8002F120(sub_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
+                    DrawMpGauge_8002F120(GetUnitStatus_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
                     r.w = 0x64;
                     r.h = 0x15;
                     r.x = 0xD2;
@@ -1813,14 +1813,14 @@ void sub_800BEAE0(MenuCtx* c)
     case 0:
         if ((c->flags_0 & 1) || (c->flags_0 & 2))
         {
-            if (sub_80034140())
+            if (IsCurrentMapListed_80034140())
                 s = name_800C28F0;
             else
                 s = name_800C28D8;
         }
         else
         {
-            if (sub_80034140())
+            if (IsCurrentMapListed_80034140())
                 s = name_800C2910;
             else
                 s = name_80082680;
@@ -1859,7 +1859,7 @@ void sub_800BEAE0(MenuCtx* c)
 }
 INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
 
-extern void sub_8002DB48();
+extern void DrawUnitStatusPanel_8002DB48();
 void sub_800BEBFC(MenuCtx* o, int a)
 {
     Minion* m = 0;
@@ -1874,7 +1874,7 @@ void sub_800BEBFC(MenuCtx* o, int a)
     s[0] = 0x33;
     s[1] = 0x3E;
     if (m)
-        sub_8002DB48(m2, 0xE, a, s, m, 0);
+        DrawUnitStatusPanel_8002DB48(m2, 0xE, a, s, m, 0);
 }
 
 void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
@@ -1886,10 +1886,10 @@ void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
     DrawWindow_80042460(a, &t, &pOT_8008D454[b], frameCount_8008D3FC);
 }
 
-extern void sub_8002E334();
+extern void DrawLevantSummary_8002E334();
 extern void InterpolateWindowRect_8004196C();
 extern void AddDrawAreaPrim_8003326C();
-extern void sub_8002FD0C();
+extern void DrawLevantHeaderWindows_8002FD0C();
 extern void DrawAnimatedWindow_8002BEC8();
 extern void DrawLargeNumber_8002C100();
 extern void AddClipDrawAreaPrim_80033308();
@@ -1922,12 +1922,12 @@ void sub_800BECE4(MenuCtx* c, short b)
     q.s = s;
     q.z4 = 1;
     q.z8 = t;
-    sub_8002E334(&levantStatus_8008BD38, &q);
+    DrawLevantSummary_8002E334(&levantStatus_8008BD38, &q);
     InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
     InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    sub_8002FD0C(b, (short)s, 1, flag, tmp);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)s, 1, flag, tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     if (c->sel_2 == 0)
     {
@@ -1955,7 +1955,7 @@ void sub_800BECE4(MenuCtx* c, short b)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
-extern void sub_8002F8E4();
+extern void DrawPartySlotWindow_8002F8E4();
 void sub_800BEFAC(MenuCtx* a, short b)
 {
     MenuLoc loc;
@@ -1986,18 +1986,18 @@ void sub_800BEFAC(MenuCtx* a, short b)
             loc.e = r16;
             loc.f = j;
             loc.g = 1;
-            sub_8002F8E4(r18, &loc);
+            DrawPartySlotWindow_8002F8E4(r18, &loc);
             AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
             j++;
         } while (j < a->f8 - 1);
     }
 }
 
-extern void sub_8002E334();
+extern void DrawLevantSummary_8002E334();
 extern void InterpolateWindowRect_8004196C();
 extern void AddDrawAreaPrim_8003326C();
-extern void sub_8002FD0C();
-extern void sub_8002F7D0();
+extern void DrawLevantHeaderWindows_8002FD0C();
+extern void DrawLevantStats_8002F7D0();
 extern void DrawAnimatedWindow_8002BEC8();
 extern int GetRankName_8002FCD8();
 extern int sub_800AD02C();
@@ -2028,16 +2028,16 @@ void sub_800BF0F4(MenuCtx* a, short b)
     q.s = s;
     q.z4 = 0;
     q.z8 = 0;
-    sub_8002E334(lv, &q);
+    DrawLevantSummary_8002E334(lv, &q);
     InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
     InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    sub_8002FD0C(b, (short)s, 0, 0, tmp);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)s, 0, 0, tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     pos[0] = 0xD1;
     pos[1] = 0x88;
-    sub_8002F7D0(pos, 0xE);
+    DrawLevantStats_8002F7D0(pos, 0xE);
     DrawAnimatedWindow_8002BEC8(tmp, name_800C1BE0, (short)s, b, 0, 0);
     w.sel_0 = -1;
     pp[0] = 0xA;
@@ -2055,7 +2055,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
     DrawUiTiySprt_8002C06C(pos, 0xC2, b);
     pos2[0] = 0x2F;
     pos2[1] = 0x77;
-    DrawText_8003E91C(2, GetRankName_8002FCD8(sub_800121A8(lv->level_44)), pos2, b);
+    DrawText_8003E91C(2, GetRankName_8002FCD8(GetLevelRank_800121A8(lv->level_44)), pos2, b);
     DrawAnimatedWindow_8002BEC8(t50, name_800C18DC, (short)s, b, 0, 0);
     pos[0] = 0x9A;
     pos[1] = 0x75;
@@ -2072,7 +2072,7 @@ void sub_800BF0F4(MenuCtx* a, short b)
 extern void sub_800AD1E0();
 void sub_800BF3AC(MenuObj* o)
 {
-    sub_80011B24((int)o);
+    UseSporeItem_80011B24((int)o);
     sub_800AD1E0(o, 1, 0);
 }
 
@@ -2095,7 +2095,7 @@ void sub_800BF3E0(MenuCtx* c)
         tmp.f0 = 4;
         p = name_80014390(*(unsigned char*)&c->arr_2A[5]);
         if (p)
-            sub_80013C28(&levantStatus_8008BD38, p, &tmp, &tmp.d_10);
+            UseItemOnUnit_80013C28(&levantStatus_8008BD38, p, &tmp, &tmp.d_10);
         sub_800C00F8(&tmp, &tmp.d_10);
         sub_800AD1E0(r17, 1, 0);
         break;
@@ -2129,7 +2129,7 @@ typedef struct MenuUseQ
     int g;
 } MenuUseQ;
 extern int CheckItemUsable_80033AFC();
-extern int sub_80033DF4();
+extern int CheckItemOnTarget_80033DF4();
 extern int sub_800AD73C();
 extern int sub_800A5E80();
 extern int sub_800C1000();
@@ -2167,7 +2167,7 @@ int sub_800BF540(MenuCtx* c)
         q2.b = 0;
         q2.c = c->arr_2A[5];
         q2.d = 1;
-        r = sub_80033DF4(&q2);
+        r = CheckItemOnTarget_80033DF4(&q2);
         switch (r)
         {
         case 2:
@@ -2204,7 +2204,7 @@ int sub_800BF540(MenuCtx* c)
         if (s)
             v = sub_800A5E80(s);
         else
-            v = sub_80034140();
+            v = IsCurrentMapListed_80034140();
         if (v != 0 && sub_800C1000() != 0)
             return 0;
         return 2;
@@ -2324,7 +2324,7 @@ void sub_800BF8B4(MenuCtx* c)
     case 4:
         c->f60 = c->arr_2A[7];
         c->f62 = c->arr_46[2];
-        v = CountMagicBits_8001AE54(sub_80010824(3, c->arr_2A[1]));
+        v = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, c->arr_2A[1]));
         if (v < 4)
             v = 4;
         c->f5C = v;
@@ -2572,11 +2572,11 @@ extern void sub_800A7714();
 extern void sub_800BD40C();
 void sub_800BFFFC(MenuTask* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         if (name_800C29BC)
             sub_800A7714(0);
-        sub_80027478(0x40, 0);
+        SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         t->next_8 = sub_800BD40C;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
@@ -2584,15 +2584,15 @@ void sub_800BFFFC(MenuTask* t)
     eventDispatchHalt_8008B540 = 1;
 }
 
-extern void sub_80027478();
-extern void sub_80027314();
+extern void SetLoadFadeFlag_80027478();
+extern void RequestAreaReload_80027314();
 extern void sub_800BFFFC();
 void sub_800C0084(void)
 {
     MenuTask* t = (MenuTask*)&name_8008D498->entry;
-    sub_80027478(0x40, 1);
+    SetLoadFadeFlag_80027478(0x40, 1);
     FreeActiveOverlay_8002C014();
-    sub_80027314();
+    RequestAreaReload_80027314();
     t->next_8 = sub_800BFFFC;
 }
 
@@ -2604,7 +2604,7 @@ void sub_800C00D4(MenuObj* o, int a, int s)
     o->fC |= 1 << s;
 }
 
-extern void sub_800127D0();
+extern void AdjustUnitStatById_800127D0();
 void sub_800C00F8(MenuObj* a, MenuStatDelta* b)
 {
     int i;
@@ -2613,10 +2613,10 @@ void sub_800C00F8(MenuObj* a, MenuStatDelta* b)
         int bit = 1 << i;
         if (a->fC & bit)
         {
-            sub_800127D0(i, 0, -b->x_1C, 0);
-            sub_800127D0(i, 2, -b->y_20, 0);
-            sub_800127D0(i, 0x11, 0, b->f4);
-            sub_800127D0(i, 0x10, 0, b->f8);
+            AdjustUnitStatById_800127D0(i, 0, -b->x_1C, 0);
+            AdjustUnitStatById_800127D0(i, 2, -b->y_20, 0);
+            AdjustUnitStatById_800127D0(i, 0x11, 0, b->f4);
+            AdjustUnitStatById_800127D0(i, 0x10, 0, b->f8);
         }
     }
 }
@@ -2643,7 +2643,7 @@ typedef struct MenuCell
     unsigned short h;
 } MenuCell;
 extern MenuCell name_800C18EC;
-extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 typedef struct MenuItemGrid
 {
     char pad_0[0xC];
@@ -2688,7 +2688,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
             r.y = name_800C18EC.y + dy;
             it = GetSaveItem_80033AE4(&saveData_8008B570, k + c->scroll_3C * 3);
             if (it && it->species_5C != 0xD3)
-                sub_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
+                DrawUnitStatusWindow_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
         }
     }
     if (c->scroll_3C != 0)
@@ -2697,7 +2697,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
         pr.b = 3;
         pa[0] = 0xA0;
         pa[1] = 0x2D;
-        sub_8002B3DC(pr, frameCount_8008D3FC, pa, 0xE);
+        DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, pa, 0xE);
     }
     if (c->scroll_3C < max)
     {
@@ -2705,7 +2705,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
         pr.b = 1;
         pb[0] = 0xA0;
         pb[1] = 0xC4;
-        sub_8002B3DC(pr, frameCount_8008D3FC, pb, 0xE);
+        DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, pb, 0xE);
     }
 }
 
@@ -2738,14 +2738,14 @@ void sub_800C0428(MenuCtx* c)
         }
         r = name_80014390(u & 0xFF);
         if (u == 0)
-            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 2);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 2);
         else
-            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 0);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 0);
     }
 }
 
 extern int sub_800C0990();
-extern void sub_8002F7D0();
+extern void DrawLevantStats_8002F7D0();
 extern void DrawAnimatedWindow_8002BEC8();
 extern char name_800C18C4[];
 void sub_800C0578(MenuObj* o)
@@ -2755,7 +2755,7 @@ void sub_800C0578(MenuObj* o)
     short s = sub_800C0990(o, 1);
     r[0] = 0xC2;
     r[1] = 0x31;
-    sub_8002F7D0(r, 0xE);
+    DrawLevantStats_8002F7D0(r, 0xE);
     DrawAnimatedWindow_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
 }
 
@@ -2774,7 +2774,7 @@ void sub_800C05E0(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0 && c->sel_2 != 0x10)
-        sub_8002F1C8(&levantStatus_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
+        DrawUnitStatusWindow_8002F1C8(&levantStatus_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
 }
 
 extern int name_8001AEC0();
@@ -2795,7 +2795,7 @@ void sub_800C06E8(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0)
-        sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 0xE, 0);
+        DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 0xE, 0);
 
 }
 
@@ -2859,7 +2859,7 @@ typedef struct MenuWinItem
 } MenuWinItem;
 extern MenuWinItem* name_800C28C4[];
 extern int GetKeyItemIcon_8001D344();
-extern void sub_8002C6DC();
+extern void DrawScrollArrow_8002C6DC();
 extern char name_800C276C[];
 extern char name_800C2770[];
 void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
@@ -2917,9 +2917,9 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
     if (n < 4)
         n = 4;
     if (a->scroll_2 != 0)
-        sub_8002C6DC(name_800C276C, 3, a->ot_6);
+        DrawScrollArrow_8002C6DC(name_800C276C, 3, a->ot_6);
     if (a->scroll_2 < n - 4 && n >= 5)
-        sub_8002C6DC(name_800C2770, 1, a->ot_6);
+        DrawScrollArrow_8002C6DC(name_800C2770, 1, a->ot_6);
 }
 
 
@@ -2939,7 +2939,7 @@ int sub_800C0C3C(void* a)
     }
     else
     {
-        r = sub_80034140();
+        r = IsCurrentMapListed_80034140();
     }
     if (r == 0)
         return 0;
@@ -2953,7 +2953,7 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
 
 
-extern int sub_80033DF4();
+extern int CheckItemOnTarget_80033DF4();
 void sub_800C0CA4(MenuCtx* c, int* out)
 {
     MenuTmp tmp;
@@ -2972,10 +2972,10 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     tmp.f8 = 1;
     sub_800C00D4(&tmp, r17, (short)u);
     tmp.f0 = 4;
-    if (sub_80033DF4(&q) == 0 && sub_800C0DD4(r17))
+    if (CheckItemOnTarget_80033DF4(&q) == 0 && sub_800C0DD4(r17))
     {
         int v;
-        sub_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
+        UseItemOnUnit_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
         out[0] = -tmp.d_10.x_1C;
         out[1] = -tmp.d_10.y_20;
         v = r16->hp_8.max_2 - r16->hp_8.cur_0;

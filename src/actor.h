@@ -8,11 +8,11 @@
 typedef struct
 {
     signed char id_0;     // model animation id
-    unsigned char kind_1; // 0: loaded on demand (sub_8001D8B4), 1: resident
+    unsigned char kind_1; // 0: loaded on demand (RequestActorAnim_8001D8B4), 1: resident
     short start_2;
     short loop_4;
     short end_6;
-    short hitFrames_8[10][2]; // converted to frame times by sub_8001F268
+    short hitFrames_8[10][2]; // converted to frame times by GetActorHitTimes_8001F268
     char pad_30[0xC];
 } ActorAnim;
 
@@ -20,7 +20,7 @@ typedef struct
 typedef struct
 {
     short frame_0;
-    short kind_2; // 0: sound cue (SoundCue_8007C750 index), 1: sub_80025B5C
+    short kind_2; // 0: sound cue (SoundCue_8007C750 index), 1: SetModelFtg_80025B5C
     short arg_4;
     short arg_6;
 } ModelAnimCue;
@@ -53,7 +53,7 @@ typedef struct
     short (*steps_8)[4];
 } ActorPath;
 
-// draw arguments handed to sub_80046A58 / sub_80047E28 (Actor.draw_164)
+// draw arguments handed to DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28 (Actor.draw_164)
 typedef struct
 {
     struct FtgObject* ftg_0; // 0x164: Model.ftg_50
@@ -69,7 +69,7 @@ typedef struct
     unsigned long* ot_28;   // 0x18C
 } ActorDrawArgs;
 
-// one command of an actor animation script (Actor.script_D0, run by sub_8001EA48); len_1 counts words
+// one command of an actor animation script (Actor.script_D0, run by RunActorScript_8001EA48); len_1 counts words
 typedef struct
 {
     unsigned char op_0;
@@ -153,7 +153,7 @@ typedef struct Actor
     short queuedAnim_FE;        // 0xFE
     int f100;                   // 0x100
     int f104;                   // 0x104
-    struct_4s hitTimes_108[10]; // 0x108: (start, end) frames, sub_80018E5C
+    struct_4s hitTimes_108[10]; // 0x108: (start, end) frames, GetActorHitFrame_80018E5C
     int effect_130;             // 0x130
     short* bones_134;           // 0x134: 4 shorts per bone, -1 terminated; start of the actor's allocation
     int baseScale_138[3];       // 0x138
@@ -172,7 +172,7 @@ typedef struct Actor
     MATRIX* boneMatrices_1C8;   // 0x1C8
 } Actor;
 
-// actor creation parameters (CreateActor_8001D45C -> sub_8001E574 / sub_8001E7F0; sub_8001D4DC fills one from an actor)
+// actor creation parameters (CreateActor_8001D45C -> InitActor_8001E574 / AllocActorBones_8001E7F0; CloneActor_8001D4DC fills one from an actor)
 typedef struct ActorDesc
 {
     int modelId_0;          // < 0: use model_48
@@ -182,7 +182,7 @@ typedef struct ActorDesc
     short pad_1A;
     int clutRow_1C;         // read as a short
     int animIdx_20;
-    int frame_24;           // sub_8001D760 mode
+    int frame_24;           // SetActorAnim_8001D760 mode
     int frameSpeed_28;      // read as a short
     int blendDiv_2C;        // read as a short
     int visible_30;         // != 1 sets the hidden flag 0x2000
@@ -195,7 +195,7 @@ typedef struct ActorDesc
     int hasMatrices_4C;     // allocate Actor.boneMatrices_1C8
 } ActorDesc;
 
-// actor action (sub_8001E254 / sub_8001E34C)
+// actor action (StartActorAction_8001E254 / SetActorAction_8001E34C)
 typedef struct
 {
     unsigned int flags_0;
@@ -215,7 +215,7 @@ typedef struct
     short queuedAnim_2A;
     int field_2C;
     ActorPath* path_30;
-    int pad_34[11]; // sub_80018A4C's local is 0x60 bytes
+    int pad_34[11]; // StartCommandAction_80018A4C's local is 0x60 bytes
 } ActorActionDesc;
 
 #endif

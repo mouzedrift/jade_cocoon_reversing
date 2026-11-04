@@ -19,7 +19,7 @@ typedef struct
     int size_10;
     void* work_14;
 } Task_LOAD;
-extern EventNode* dword_8008D480; // the load menu's task list
+extern EventNode* loadMenuTask_8008D480; // the load menu's task list
 extern int MemCardSync(int a, int* b, int* c);
 extern void MemCardAccept();
 extern void MemCardExist();
@@ -149,7 +149,7 @@ extern void sub_800BD06C(void);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
 extern char byte_800B682C[];
 extern char byte_800B6B9C[];
-extern void sub_8003F264(void* p, int a, int b);
+extern void DrawNumberRightAlignedFont1_8003F264(void* p, int a, int b);
 extern char byte_800B69FC[];
 extern MenuWin_LOAD dword_800BDD64;
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -319,7 +319,7 @@ typedef struct
 } Row16_LOAD;
 extern Row16_LOAD stru_800BDF4C[];
 extern void ResetMenuRow_800BADE0(Row16_LOAD* p);
-extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
+extern void DrawScrollArrows_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 void sub_800B8BD4(LoadTask_LOAD* t);
 extern void PlaySfx_80031494(int a);
 extern void WaitCardSync_800BADF4(void);
@@ -348,7 +348,7 @@ void LoadMenuInit_800B7674(int mode, int b)
     Task_LOAD* t;
     LoadTask_LOAD* s;
     MemCardStart();
-    t = (Task_LOAD*)&dword_8008D480->entry;
+    t = (Task_LOAD*)&loadMenuTask_8008D480->entry;
     s = (LoadTask_LOAD*)t->work_14;
     t->flags_0 = (t->flags_0 | 1) & ~0x8000;
     for (i = 0; i < 6; i++)
@@ -427,7 +427,7 @@ void sub_800B7894(Task_LOAD* t)
 
 void sub_800B78B8(char* place)
 {
-    ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->place_58_LOAD = place;
+    ((LoadTask_LOAD*)loadMenuTask_8008D480->entry.buffer)->place_58_LOAD = place;
 }
 
 void sub_800B78D0(void)
@@ -435,7 +435,7 @@ void sub_800B78D0(void)
     LoadTask_LOAD* t;
     saveData_8008B570.field_810 = -1;
     saveData_8008B570.field_0 |= 0x180;
-    t = dword_8008D480->entry.buffer;
+    t = loadMenuTask_8008D480->entry.buffer;
     t->s30_LOAD = 1;
     stru_800BDF4C[0].fC_LOAD = 0;
     t->f54_LOAD = 0x20;
@@ -443,7 +443,7 @@ void sub_800B78D0(void)
 
 int sub_800B7914(void)
 {
-    return ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f8_LOAD;
+    return ((LoadTask_LOAD*)loadMenuTask_8008D480->entry.buffer)->f8_LOAD;
 }
 
 void sub_800B7934(void)
@@ -916,7 +916,7 @@ void sub_800B867C(LoadTask_LOAD* t)
     r0[1] = 0x2C;
     r0[2] = 0x9A;
     r0[3] = 0xB7;
-    sub_8002B8DC(q, r1, r0, 1);
+    DrawScrollArrows_8002B8DC(q, r1, r0, 1);
 }
 
 void sub_800B877C(LoadTask_LOAD* t)
@@ -1044,13 +1044,13 @@ void sub_800B8AE4(LoadTask_LOAD* t)
     Tail4_LOAD b;
     p0.x_LOAD = 0x1C;
     p0.y_LOAD = 0x24;
-    sub_8003F264(&p0, stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD + 1, 5);
+    DrawNumberRightAlignedFont1_8003F264(&p0, stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD + 1, 5);
     p1.x_LOAD = 0x1C;
     p1.y_LOAD = 0x24;
     DrawText_8003E91C(1, byte_800B6B9C, &p1, 5);
     p2.x_LOAD = 0x32;
     p2.y_LOAD = 0x24;
-    sub_8003F264(&p2, 0xF, 5);
+    DrawNumberRightAlignedFont1_8003F264(&p2, 0xF, 5);
     a = dword_800B6BA0;
     b.c1_LOAD = 1;
     b.c0_LOAD = 0;
@@ -1067,7 +1067,7 @@ extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
-extern void sub_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
+extern void DrawSmallText_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
 // Matched
 void sub_800B8BD4(LoadTask_LOAD* t)
 {
@@ -1147,7 +1147,7 @@ void sub_800B8BD4(LoadTask_LOAD* t)
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
                     p3.x_LOAD = dword_800BD93C[6].x_LOAD;
                     p3.y_LOAD = dword_800BD93C[6].y_LOAD + i * 33;
-                    sub_8002FAA0(0, &p3, t->summaries_LOAD[n].name_0, 1);
+                    DrawSmallText_8002FAA0(0, &p3, t->summaries_LOAD[n].name_0, 1);
                     AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
                 }
                 else if (j == 7)
@@ -1162,7 +1162,7 @@ void sub_800B8BD4(LoadTask_LOAD* t)
                         p3.x_LOAD = dword_800BD93C[j].x_LOAD + 0x38;
                         p3.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
                         AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
-                        sub_8003F264(&p3, t->summaries_LOAD[n].f26, 1);
+                        DrawNumberRightAlignedFont1_8003F264(&p3, t->summaries_LOAD[n].f26, 1);
                         AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
                     }
                 }
@@ -1973,12 +1973,12 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
         FreeActiveOverlay_8002C014();
         if (s->f54_LOAD & 0x20)
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
             sub_800A6D30(sub_800A6D50(1));
         }
         else if (!(s->f54_LOAD & 4))
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
             sub_800A6D30(sub_800A6D50(1));
         }
         if (s->f54_LOAD & 1)
@@ -1997,7 +1997,7 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
         }
         if (s->f54_LOAD & 0x10)
         {
-            sub_80011BCC();
+            HaltEventsFadeStopMovie_80011BCC();
         }
     }
 }

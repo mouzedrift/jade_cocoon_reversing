@@ -14,8 +14,8 @@ typedef struct UnitGauge
 /* the 18-byte stat block of a unit (UnitStatus.stats_2C, Minion.field_CC); copied as one by the save packer */
 typedef struct UnitStatBlock
 {
-    unsigned char cur_0[6];  // attack, defense, magic attack, magic defense, speed, critical (sub_8001980C)
-    unsigned char base_6[6]; // the species' base stats; pick the growth kind (sub_80011D98)
+    unsigned char cur_0[6];  // attack, defense, magic attack, magic defense, speed, critical (InitStatsFromBase_8001980C)
+    unsigned char base_6[6]; // the species' base stats; pick the growth kind (ApplyLevelUps_80011D98)
     unsigned char frac_C[6]; // fractional growth (0..99)
 } UnitStatBlock;
 
@@ -36,16 +36,16 @@ typedef struct UnitStatus
     char pad_46[2];
 } UnitStatus;
 
-/* one ability slot (sub_80031954, sub_80031A04, sub_8002CE28) */
+/* one ability slot (IsSkillLearned_80031954, GetSkillMpCost_80031A04, DrawAbilityList_8002CE28) */
 typedef struct UnitSkill
 {
     unsigned char flags_0; // bit 0: learned
-    unsigned char id_1;    // abilityNames_800834E4 / sub_800318C8 index; 2..6 cost MP (sub_80031A04)
+    unsigned char id_1;    // abilityNames_800834E4 / GetAbilityAction_800318C8 index; 2..6 cost MP (GetSkillMpCost_80031A04)
     unsigned char bonus_2; // abilityBonusNames_80083580 index
     unsigned char field_3;
 } UnitSkill;
 
-/* a unit's five ability slots; species defaults come from sub_80019C28 (copied by sub_800199A0) */
+/* a unit's five ability slots; species defaults come from GetSpeciesSkills_80019C28 (copied by InitSpeciesSkills_800199A0) */
 typedef struct
 {
     UnitSkill slot[5];
@@ -70,9 +70,9 @@ typedef struct
     short id; // 2/3 = owned, 4 = empty slot
     unsigned char species_2;
     unsigned char field_3;
-    unsigned char ancestors_4[6][0xC]; // names (sub_80010724, sub_80033830)
-    unsigned char species_4C[0x30];    // species history (sub_800338B0)
-    unsigned char field_7C[8];         // element masks of the ancestors (sub_80010768, sub_80033848); 6 used, 8 saved
+    unsigned char ancestors_4[6][0xC]; // names (GetMinionAncestorName_80010724, GetAncestorName_80033830)
+    unsigned char species_4C[0x30];    // species history (GetDominantSpecies_800338B0)
+    unsigned char field_7C[8];         // element masks of the ancestors (GetMinionAncestorElement_80010768, GetAncestorElementMask_80033848); 6 used, 8 saved
     UnitStatus status_84;
     UnitStatBlock field_CC;
     UnitSkills skills_DE;
@@ -80,8 +80,8 @@ typedef struct
     unsigned int magicBits_F4; // CountMagicBits_8001AE54
 } Minion;
 
-/* 12-byte parameter block of an action: the basic attack (sub_8001D260), a magic (sub_8001AD64), an item
-   (GetItemData_8001CDF4) or an ability (sub_800318C8); sub_80012BB0 / sub_800129B0 work on a copy */
+/* 12-byte parameter block of an action: the basic attack (GetLevantWeaponAction_8001D260), a magic (GetMagicAction_8001AD64), an item
+   (GetItemData_8001CDF4) or an ability (GetAbilityAction_800318C8); ResolveBattleAction_80012BB0 / GetAbilityActionData_800129B0 work on a copy */
 typedef struct ActionData
 {
     unsigned char c0;

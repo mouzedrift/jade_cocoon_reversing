@@ -52,7 +52,7 @@ extern unsigned short word_800918CC; // pad, with key repeat
 extern short dword_800A70F0[][4]; // XA tracks: file, channel, start sector
 extern char* name_800AA350[];
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
-extern void sub_8003D090(short x, short y, int a2, int a3, int idx);
+extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 // Matched
@@ -188,7 +188,7 @@ void sub_800A5238(int* a, SndTest* b)
         b->f.xa_A = 0x647;
     }
     SsUtSetReverbDepth(b->f.reverb_8, b->f.reverb_8);
-    sub_8003D090(0x12, b->f.row_0 * 16 + 0x46, 0, 0, 0);
+    DrawBobbingCursorHand_8003D090(0x12, b->f.row_0 * 16 + 0x46, 0, 0, 0);
     pos[0].vx = 0x14;
     pos[0].vy = 0x3c;
     DrawText_8003E91C(2, name_800AA350[0], &pos[0], 0);
