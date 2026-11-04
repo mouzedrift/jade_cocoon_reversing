@@ -2164,11 +2164,6 @@ void sub_800A9008(G2Cmd_1* c)
         break;
     }
 }
-// (When writing sub_800AA51C in C, delete the jpt_800A07A8 line.)
-INCLUDE_OVERLAY_ASM(game, jpt_800A07A8);
-const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";
-const char aPLDISPC_800A0808[] = "PLDISP.C";
-const int dword_800A0814 = 0;
 
 void sub_800A911C(int a)
 {
@@ -2646,10 +2641,13 @@ void sub_800AA430(G2Act* p)
 
 INCLUDE_OVERLAY_ASM(game, sub_800AA430);
 
+
 #if 0
-// Not matched: one block differs: case 16 passes the matched constant (in $v0) as SetLevantAnim_800AB010's third argument where this C reloads s1c.
-// The prototypes below change the code of matched callers further down, and sub_800AC900 must return int
-// here (the original tests its result as a short): settle both before enabling this.
+// Not matched (3 words short), one block differs: case 16 passes the matched constant (in $v0) as
+// SetLevantAnim_800AB010's third argument where this C reloads s1c (so the compare delay slots get filled); tried a
+// switch, a local for s1c, the inverted test and other f0 forms. The prototypes below change the code of matched
+// callers further down (settle them before enabling this); sub_800AC900 returns int (its result is tested as a short).
+// Enabling: drop the jpt_800A07A8 include below.
 extern short effectOutcomeFlag_8008D780;
 void sub_800AA430(G2Act* p);
 unsigned short GetLevantAnimEventFrameCur_800AB170(int a);
@@ -2914,6 +2912,12 @@ void sub_800AA51C(G2Act* o)
 }
 #endif
 INCLUDE_OVERLAY_ASM(game, sub_800AA51C);
+INCLUDE_OVERLAY_ASM(game, jpt_800A07A8);
+
+// PLDISP.C's assertion strings (after the jump table of sub_800AA51C)
+const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";
+const char aPLDISPC_800A0808[] = "PLDISP.C";
+
 
 void sub_800AACF8(G2Act* p)
 {
@@ -3794,7 +3798,7 @@ unsigned short GetLevantAnimLastFrame_800AC8BC(int a, int b)
     return p[r].sA;
 }
 
-unsigned char sub_800AC900(int a, int b)
+int sub_800AC900(int a, int b)
 {
     G2Rec* p;
     int r = GetLevantAnimIndex_800AC794(a, b);
