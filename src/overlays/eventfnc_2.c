@@ -109,7 +109,7 @@ int (*eventFuncs_800BCDBC[157])() = {
     EvCmdPlayAnim_800BA2E8, EvCmdStopAnim_800BA338, EvCmdPlayAnimData_800BA40C, EvCmdPauseActorAnim_800BA45C,
     EvCmdPlayMotion_800BA4F0, EvCmdPlayMotionRange_800BA554, EvCmdPlayMotionData_800BA5CC, EvCmdSetCallArg_800BA678,
     EvCmdSetCallArgs_800BA6D0, EvCmdCallUntilDone_800BA714, EvCmdCallSelect_800BA7A4, (int (*)())EvCmdSetChapter_800BA82C,
-    sub_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
+    EvCmdSetMapVariant_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
     EvCmdNop_800B89A8, EvCmdPreloadArea_800BAA6C, EvCmdUsePreloadedArea_800BAAC0, EvCmdSetReturnPoint_800BAB14,
     (int (*)())EvCmdOpenMapSelect_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
     EvCmdCameraClearLookAt_800BAD3C, EvCmdWaitCameraBlend_800BAD88, EvCmdSetViewRect_800BADF8, EvCmdSetCameraZoom_800BAEBC,

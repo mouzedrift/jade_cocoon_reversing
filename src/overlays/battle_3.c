@@ -1236,7 +1236,7 @@ int CalcElementAngle_800C09D4(unsigned char* p)
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 
-void sub_800C0A94()
+void EmptyCallback_800C0A94()
 {
 }
 
@@ -1388,7 +1388,7 @@ void GetMinionHitFrame_800C0EE8(int a)
     GetActorHitFrame_80018E5C(summonedActor_800C9190.actor_0, a);
 }
 
-int sub_800C0F14()
+int MinionReturnZero_800C0F14()
 {
     return 0;
 }

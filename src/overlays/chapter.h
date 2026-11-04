@@ -9,7 +9,7 @@
 
 typedef struct ChapterEntry
 {
-    short field_0;
+    short mapVariant_0; // SaveData.mapVariant_2E0 while the chapter plays
     short pad_2;
     int startPoint_4;   // map point key (GAME's FindMapEntrance_800ADCEC) the chapter starts at
     int music_8;

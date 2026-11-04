@@ -129,7 +129,7 @@ typedef struct
     SaveInventory inv_24; // == playerYan_8008B594
     short chapter_2DC; // 0x8008B84C (Meos4: currentChapter)
     short chapterNext_2DE; // next chapter to play the intro of (CHAPTER)
-    short field_2E0;
+    short mapVariant_2E0; // picks the destination-map set of MAP (destMaps_800B9348); set per chapter (CHAPTER) and by EvCmdSetMapVariant_800BA880
     short field_2E2;
     struct
     {

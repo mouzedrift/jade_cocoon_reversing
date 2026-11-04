@@ -704,7 +704,7 @@ void StartEncounter_800B88A4(int a)
     ClearEnemySlots_800A1794();
 }
 
-void sub_800B8928()
+void EmptyLoop_800B8928()
 {
     int i;
     for (i = 0x2a; i >= 0; i--)
@@ -1727,10 +1727,10 @@ int EvCmdSetChapter_800BA82C(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, EvCmdSetChapter_800BA82C);
 
-int sub_800BA880(EvCtxEventfnc* c)
+int EvCmdSetMapVariant_800BA880(EvCtxEventfnc* c)
 {
     SaveData* s = &saveData_8008B570;
-    s->field_2E0 = *(unsigned short*)&c->pc_8->b_8;
+    s->mapVariant_2E0 = *(unsigned short*)&c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }

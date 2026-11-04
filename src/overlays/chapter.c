@@ -171,7 +171,7 @@ void EnterChapterMap_800B6B18()
     FindMapEntrance_800ADCEC(&v, e->startPoint_4);
     mapStartMode_80091C54 = 0;
     s->chapterNext_2DE = s->chapter_2DC + 1;
-    s->field_2E0 = e->field_0;
+    s->mapVariant_2E0 = e->mapVariant_0;
     useMapStartPos_80091C94 = 1;
     s->mapId_2E4[0].field_0 = v.x;
     s->mapId_2E4[1].field_0 = v.y;

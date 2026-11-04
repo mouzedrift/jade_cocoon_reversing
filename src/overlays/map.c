@@ -447,7 +447,7 @@ void DestinationSelect_800B7044(MapTask* t, int a)
         }
         else if (mapSelect_800AEBF8.b == 0)
         {
-            if (!saveData_8008B570.field_2E0)
+            if (!saveData_8008B570.mapVariant_2E0)
             {
                 mapSelect_800AEBF8.a = 0;
                 lastDest_800B8C94.a = 0;
@@ -783,7 +783,7 @@ void GetCurrentDest_800B8448(MapPos* out)
     {
         if (saveData_8008B570.mapId_2E4[1].field_0 == 0)
         {
-            int f = saveData_8008B570.field_2E0;
+            int f = saveData_8008B570.mapVariant_2E0;
             out->b = 12;
             out->a = f == 1;
             return;
@@ -807,14 +807,14 @@ void GetCurrentDest_800B8448(MapPos* out)
     }
     else if ((unsigned short)(t - 1) >= 3)
     {
-        int f = saveData_8008B570.field_2E0;
+        int f = saveData_8008B570.mapVariant_2E0;
         out->b = 0;
         out->a = f == 1;
         return;
     }
     else
     {
-        out->a = saveData_8008B570.field_2E0 == 1;
+        out->a = saveData_8008B570.mapVariant_2E0 == 1;
     }
     tbl = destMaps_800B9348[out->a];
     cnt = destMapCounts_800B9368[out->a];
@@ -946,7 +946,7 @@ void SceneSelect_800B860C()
         m->entry_C = m->entry_C < 0 ? 0 : (n - 1 < m->entry_C ? n - 1 : m->entry_C);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            saveData_8008B570.field_2E0 = debugGroupVariants_800B93F8[m->area_4];
+            saveData_8008B570.mapVariant_2E0 = debugGroupVariants_800B93F8[m->area_4];
             saveData_8008B570.mapId_2E4[0].field_0 = m->area_4;
             saveData_8008B570.mapId_2E4[1].field_0 = m->map_8;
             saveData_8008B570.mapId_2E4[2].field_0 = m->entry_C;

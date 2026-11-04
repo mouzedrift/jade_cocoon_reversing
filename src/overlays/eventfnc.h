@@ -594,7 +594,7 @@ extern int EvCmdSetCallArg_800BA678();
 extern int EvCmdSetCallArgs_800BA6D0();
 extern int EvCmdCallUntilDone_800BA714();
 extern int EvCmdCallSelect_800BA7A4();
-extern int sub_800BA880();
+extern int EvCmdSetMapVariant_800BA880();
 extern int EvCmdSetMapVar_800BA8AC();
 extern int EvCmdChangeMap_800BA930();
 extern int EvCmdChangeMapToPoint_800BA9E4();

@@ -1123,7 +1123,7 @@ void SetNewGameStartMap_800A2650(void)
 {
     SDECL;
     s->chapterNext_2DE = -1;
-    s->field_2E0 = 1;
+    s->mapVariant_2E0 = 1;
     s->field_2E2 = -1;
     s->mapId_2E4[0].field_2 = -1;
     s->mapId_2E4[1].field_2 = -1;
