@@ -263,7 +263,7 @@ extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
 
 extern short dword_8008D474[2];
 
-extern void sub_80037918(void* p);
+extern void UpdateCameraFollow_80037918(void* p);
 
 extern void SetGeomOffset(long ofx, long ofy);
 
@@ -307,7 +307,7 @@ extern int sub_800BC2B4(EvCtxEventfnc* c);
 
 extern int XaRequestStop_80043524(void);
 
-extern int sub_80034ADC(int a, int b);
+extern int ConsumeMsgWindowMark_80034ADC(int a, int b);
 
 extern EvObjEventfnc* sub_800A7A60(int a);
 
@@ -342,9 +342,9 @@ extern EvWaitEventfnc dword_800B06B0;
 
 extern int sub_800A5F9C(int a);
 
-extern void sub_800379DC(EvVecEventfnc* v, int b);
+extern void SetCameraBlendTarget_800379DC(EvVecEventfnc* v, int b);
 
-extern void sub_80037A20(int a, int b);
+extern void ClearCameraBlendTarget_80037A20(int a, int b);
 
 typedef struct EvRectEventfnc
 {
@@ -356,7 +356,7 @@ typedef struct EvRectEventfnc
 
 extern EvRectEventfnc dword_8008D420;
 
-extern void sub_80037A6C(int a, int b);
+extern void SetCameraZoom_80037A6C(int a, int b);
 
 extern int sub_800A7790(void);
 
@@ -416,15 +416,15 @@ typedef struct EvVoiceEventfnc
     EvXaEventfnc xa_2;
 } EvVoiceEventfnc;
 
-extern int sub_800349B4(int a, EvMsgInfoEventfnc* b);
+extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgInfoEventfnc* b);
 
 extern void sub_800A67B4(EvCtxEventfnc* c);
 
-extern void sub_80034A84(int a);
+extern void CloseMsgWindow_80034A84(int a);
 
-extern int sub_80034A30(int a);
+extern int IsMsgWindowWaiting_80034A30(int a);
 
-extern void sub_80034A68(int a);
+extern void EnableMsgWindowAdvance_80034A68(int a);
 
 extern int dword_800AEBE8;
 

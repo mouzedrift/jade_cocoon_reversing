@@ -784,7 +784,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
 extern unsigned char byte_8008D460[3]; // back colour
 extern MATRIX dword_80087114;            // light matrix
 extern MATRIX dword_80087134;            // light colour matrix
-extern SVECTOR word_8008D4C8;
+extern SVECTOR cameraRot_8008D4C8;
 // Matched
 void SetGteLightAndCamera_8004D0E8(void)
 {
@@ -792,7 +792,7 @@ void SetGteLightAndCamera_8004D0E8(void)
     gte_SetBackColor(byte_8008D460[0], byte_8008D460[1], byte_8008D460[2]);
     gte_SetColorMatrix(&dword_80087134);
     gte_SetLightMatrix(&dword_80087114);
-    RotMatrixZXY_8004668C(&word_8008D4C8, (MATRIX*)getScratchAddr(0));
+    RotMatrixZXY_8004668C(&cameraRot_8008D4C8, (MATRIX*)getScratchAddr(0));
     m = (MATRIX*)getScratchAddr(0);
     m->t[2] = 0;
     m->t[1] = 0;

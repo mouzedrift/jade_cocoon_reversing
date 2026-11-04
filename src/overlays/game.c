@@ -57,7 +57,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     sub_800A1E98();
     sub_800AC73C();
     FreeLoaderModelAnimSets_80020814();
-    sub_80037720();
+    SetCameraBattleMode_80037720();
     *q = LoadOverlayIfChanged_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
     StopSoundSeqs_80030D68(dword_80091CE0);

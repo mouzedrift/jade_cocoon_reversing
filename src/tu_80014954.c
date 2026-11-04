@@ -3322,11 +3322,11 @@ void *dword_800837C4[5] = { 0, 0, 0, (void *)&dword_80083784 };
 unsigned char *off_800837D8 = (void *)dword_80083788;
 void *dword_800837DC[4] = { (void *)&dword_80083788[2], (void *)&dword_80083788[6], (void *)&dword_80083788[7], (void *)&dword_80083788[8] };
 void *dword_800837EC[5] = { 0, (void *)&dword_80083788[12], (void *)&dword_80083788[13], (void *)&dword_80083788[14] };
-unsigned char **off_80083800[6] = { (void *)dword_800837C4, 0, 0, 0, &off_800837D8, (void *)dword_800837EC };
-char *itemMessageSuffixes_80083818[2] = { dword_80074800, dword_800747E8 };
-char *off_80083820 = dword_80074800;
-const char *dword_80083824[8] = { dword_800747D0, aUsed_800747C0, dword_800747D0, aHandedOver_800747A4, dword_80074794, dword_80074780, aItSLocked_80074764, dword_8007474C };
-unsigned char dword_80083844[8] = { 0, 1, 255, 255, 255, 255 };
+unsigned char **mapListTable_80083800[6] = { (void *)dword_800837C4, 0, 0, 0, &off_800837D8, (void *)dword_800837EC };
+char *itemMessageSuffixes_80083818[2] = { aPickedUp_80074800, aReceived_800747E8 };
+char *itemMessageDefaultSuffix_80083820 = aPickedUp_80074800;
+const char *dword_80083824[8] = { aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
+unsigned char padActAlign_80083844[8] = { 0, 1, 255, 255, 255, 255 };
 int dword_8008384C[185] = {
     0x1E010002, 0x6400000A, 0x5A000009, 0x50000006, 0xFFFF, 0x8C010003, 0xC800000F, 0xB400000C,
     0x8C000009, 0x5A000006, 0x3C000003, 0xFFFF, 0x28010003, 0x78000005, 0x50000002, 0xFFFF,
@@ -3366,19 +3366,19 @@ PadVibEntry *vibrationPatterns_80083B30[40] = {
     (void *)&dword_8008384C[177], (void *)&dword_8008384C[180], (void *)&dword_8008384C[102], (void *)&dword_8008384C[183],
 };
 int dword_80083BD0 = 0;
-signed char dword_80083BD4[16] = { 10, -8, 6, -5, 4, -3, 3, -2, 2, -1, 1, -1, 1, -1 };
-CamOffset dword_80083BE4[2] = {
+signed char cameraShakeOffsets_80083BD4[16] = { 10, -8, 6, -5, 4, -3, 3, -2, 2, -1, 1, -1, 1, -1 };
+CamOffset battleCamIntroPresets_80083BE4[2] = {
     { 0x11B, -235, 20, 0, 0x12C, 5, -218, -0x1CB },
     { 0x565, -0x100, 0, 0, 0x12C, 137, -0x100 },
 };
-CamOffset dword_80083C0C[5] = {
+CamOffset battleCamPresets_80083C0C[5] = {
     { 0x565, -0x31B, -0x1FB, 0, 0x12C, 137, -102, 11 },
     { 0x565, -0x100, -0x1FB, 0, 0x12C, 137, -0x100, 11 },
     { 0x565, -0x100, 0x1FB, 0, 0x12C, 137, -0x100, -11 },
     { 0x565, -0x11B, -0x1FB, 0, 0x12C, 137, -0x166, 11 },
     { 0x565, -0x100, 0, 0, 0x12C, 137, -0x100 },
 };
-CamOffset dword_80083C70[6] = {
+CamOffset battleCamFocusPresets_80083C70[6] = {
     { -73, -0x171, -0x2FB, 0, 0x190, 52, -107, 0x20C },
     { 135, -0x175, -0x2FF, 0, 0x190, -0x1FC, -105, 95 },
     { -0x10E, -0x184, -0x27C, 0, 0x190, 0x2E9, -66, 75 },
@@ -3386,12 +3386,12 @@ CamOffset dword_80083C70[6] = {
     { -230, -0x174, -0x2E7, 0, 0x190, 0x1C4, -112, 0x118 },
     { -73, -0x171, -0x2FB, 0, 160, 52, -107, 0x20C },
 };
-unsigned short dword_80083CE8[3][4] = {
+unsigned short battleCamFocusIndex_80083CE8[3][4] = {
     { 0, 0, 0, 5 },
     { 3, 4, 0, 5 },
     { 1, 0, 2, 5 },
 };
-int dword_80083D00[396] = {
+int battleCamSpline0_80083D00[396] = {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0x44F7FF4D, 0xC539FFA6, 0, 0xC4E28000,
     0, 0, 0, 0, 0xC3AF37A5, 0x4403773B, 0xBEDB4635, 0xC3B20000,
@@ -3443,7 +3443,7 @@ int dword_80083D00[396] = {
     0x42200000, 0xC2700000, 0, 0, 0, 0, 0, 0xC3230000,
     0x42380000, 0xC28A0000,
 };
-int dword_80084330[8] = { 0 };
+int battleCamSpline1_80084330[8] = { 0 };
 short asc_80084350[248] = {
     0x26F3, 0x4400, 0x5FFE, 0xC440, 0x18A, 0x3EE2, 0x8000, 0x439A,
     -0x6A5, 0x44B9, 0x7232, 0xC50B, 0x23B8, 0x3FAC, 0x2000, 0xC487,

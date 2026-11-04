@@ -20,8 +20,8 @@ typedef struct BatLight_a
 
 extern char dword_800C9124[];
 extern char cameraState_8008D4F0[];
-extern short word_8008D4C8;
-extern short word_8008D51E;
+extern short cameraRot_8008D4C8;
+extern short geomScreenBase_8008D51E;
 extern unsigned char dword_800C911C[];
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj_a
@@ -101,7 +101,7 @@ void sub_800BC90C(BatStageObj_a* p)
             int a;
             int x;
             int w;
-            short* cam = &word_8008D4C8;
+            short* cam = &cameraRot_8008D4C8;
             v.vx = p->x_38;
             v.vy = p->y_3C;
             v.vz = p->z_40;
@@ -117,10 +117,10 @@ void sub_800BC90C(BatStageObj_a* p)
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
             poly = dword_80095468.sprites_20[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
-            x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * word_8008D51E / 240;
+            x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
-                w = word_8008D51E * 96 / 240;
+                w = geomScreenBase_8008D51E * 96 / 240;
                 poly.r0 = poly.r0 * dword_8008D40C >> 12;
                 poly.g0 = poly.g0 * dword_8008D40C >> 12;
                 poly.b0 = poly.b0 * dword_8008D40C >> 12;
@@ -353,11 +353,11 @@ void sub_800BDA28(BatTask_a* t)
             }
             if (f)
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
+                MoveBattleCameraForAction_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
             }
             else
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
+                MoveBattleCameraForAction_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
             }
         }
     }
@@ -602,7 +602,7 @@ void sub_800BE14C(BatCmd_a* p, int b, int k)
     }
     if (!(saveData_8008B570.field_0 & 2) && b == 0)
     {
-        sub_800377B4(r, (short)p->kind_0, k - 4);
+        StartBattleCameraSpline_800377B4(r, (short)p->kind_0, k - 4);
     }
 }
 
@@ -643,7 +643,7 @@ void sub_800BE3C0()
         sub_800BF3DC(dword_800C9C7C, 0, dword_800C9C7E, sub_800BC6CC(dword_800C9C7C), 0);
         if (dword_800C9C7E > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             PlaySfx_80031494(0x72);
         }
         sub_800BF3DC(dword_800C9C7C, 1, dword_800C9C80, sub_800BC6CC(dword_800C9C7C), 0);

@@ -478,7 +478,7 @@ void sub_800CBEA4()
 
 extern int sub_80012BB0(void* a, void* b, void* c, int* d);
 extern int sub_80013228(void* a, void* b, void* c, int* d);
-extern int sub_80034068(short* p);
+extern int CheckMagicUsable_80034068(short* p);
 void sub_800CC40C()
 {
     short arg[4];
@@ -528,9 +528,9 @@ void sub_800CC40C()
         arg[3] = 0;
         if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 6)
         {
-            ((int (*)(short*))sub_80034124)(arg);
+            ((int (*)(short*))CheckUsableStub_80034124)(arg);
         }
-        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && sub_80034068(arg))
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 7 && CheckMagicUsable_80034068(arg))
         {
             word_800A82D0 = 0;
         }
@@ -547,7 +547,7 @@ extern CombComItem name_800CB700;
 extern Minion dword_800A3AA0[][3];
 extern int sub_800A1934(Minion* p);
 extern int sub_800A1958(Minion* p);
-extern int sub_80034068(short* p);
+extern int CheckMagicUsable_80034068(short* p);
 int sub_800CC674(short* arg, int mode, int sel, int f)
 {
     CombComItem w[3];
@@ -593,7 +593,7 @@ int sub_800CC674(short* arg, int mode, int sel, int f)
             p0->text_4 = s->name_10;
         }
         q[1] = arg[1] + 8;
-        if (sub_80034068(q) == 0)
+        if (CheckMagicUsable_80034068(q) == 0)
         {
             list[0]->flags &= ~2;
         }
@@ -736,7 +736,7 @@ int sub_800CCA94()
     case 3:
         if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 2)
         {
-            switch ((unsigned int)((int (*)(short*))sub_80034124)(b))
+            switch ((unsigned int)((int (*)(short*))CheckUsableStub_80034124)(b))
             {
             case 0:
                 return 1;
@@ -751,7 +751,7 @@ int sub_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 3)
         {
-            switch ((unsigned int)sub_80034068(b))
+            switch ((unsigned int)CheckMagicUsable_80034068(b))
             {
             case 0:
                 return 1;

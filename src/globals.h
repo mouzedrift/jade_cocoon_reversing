@@ -161,7 +161,7 @@ typedef struct
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
+    int field_0;           // flags (0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
     unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char field_6;

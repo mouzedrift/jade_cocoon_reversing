@@ -12,7 +12,7 @@ typedef struct
     unsigned short h;
 } struct_rect_1B8;
 
-/* 0x18..0x27, copied out by sub_800349B4 / sub_80034A00 */
+/* 0x18..0x27, copied out by GetMsgWindowResultIfDone_800349B4 / GetMsgWindowResult_80034A00 */
 typedef struct
 {
     short count_18;

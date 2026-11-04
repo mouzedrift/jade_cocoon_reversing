@@ -12,7 +12,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
         if (dword_800C9D38[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -27,7 +27,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0);
         if (dword_800C9D48[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -43,7 +43,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0xC);
         if (dword_800C9D38[idx] > 0 || dword_800C9D48[idx] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
             {
                 StartPadVibration_80036528(0, 0);
@@ -58,7 +58,7 @@ void sub_800BE834(int idx, int b)
         sub_800BF3DC(idx, 2, 0, b, 0);
         sub_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0xC);
         sub_800BF3AC();
-        sub_80037BFC(0x1E);
+        StartCameraShake_80037BFC(0x1E);
         if (idx == 0)
         {
             StartPadVibration_80036528(0, 1);
@@ -4280,7 +4280,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 6)
         {
-            switch (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            switch (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&b))
             {
             case 0:
                 return 1;
@@ -4300,7 +4300,7 @@ int sub_800C7530()
         }
         else if (sub_800C78D0() == 7)
         {
-            switch (sub_80034068(&b))
+            switch (CheckMagicUsable_80034068(&b))
             {
             case 0:
                 return 1;
@@ -4702,14 +4702,14 @@ void sub_800C83B0()
         }
         else if (sub_800C78D0() == 6)
         {
-            if (((int (*)(BatTgtQ_a*))sub_80034124)(&b))
+            if (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&b))
             {
                 dword_800C9180 = 0;
             }
         }
         else if (sub_800C78D0() == 7)
         {
-            if (sub_80034068(&b))
+            if (CheckMagicUsable_80034068(&b))
             {
                 dword_800C9180 = 0;
             }
@@ -4734,7 +4734,7 @@ void sub_800C8710()
     if (dword_800C9E38 != dword_800C9E3C)
     {
         dword_800C9E38 = dword_800C9E3C;
-        sub_80037AE0((unsigned short)dword_800C9E3C);
+        FocusBattleCamera_80037AE0((unsigned short)dword_800C9E3C);
         sub_800BC468(dword_800C9E3C, 1 << dword_800C9C7C);
     }
 }

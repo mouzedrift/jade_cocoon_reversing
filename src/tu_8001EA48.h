@@ -713,7 +713,7 @@ typedef struct
 extern MapList16 dword_80091C60;
 
 
-// the loaders / relocators of the primitive kinds of an FTG model (sub_80022458)
+// the loaders / relocators of the primitive kinds of an FTG model (LoadFtgObject_80022458)
 typedef void (*fn_80022458_a)(unsigned char* body, int a3);
 typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
 extern fn_80022458_a ftgPrimRelocators_8007DB08[];

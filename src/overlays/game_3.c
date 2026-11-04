@@ -1544,8 +1544,8 @@ int sub_800A88E0(G2P* p, int a, int b)
 
 int sub_800A8930()
 {
-    int r = word_8008D668[0] > 0xA0;
-    if (word_8008D668[1] >= 0x79)
+    int r = cameraTargetScreenPos_8008D668[0] > 0xA0;
+    if (cameraTargetScreenPos_8008D668[1] >= 0x79)
         r += 2;
     return r;
 }
