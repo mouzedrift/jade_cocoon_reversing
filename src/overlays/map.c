@@ -8,13 +8,13 @@
 
 extern int TestEventFlag_800AD0D4(int);
 extern int GetMapVar_800ADC1C(MapQuery*);
-extern int IsDestOpen_800B8290(MapPos*);
+extern int IsDestOpen_800B8290(MapDest*);
 
 extern MapEntry** mapTable_800B0608[];
 extern int dword_800B0624[];
 extern int mapStartMode_80091C54;
 extern void DrawCursorHand_8003D034(void*, int);
-#define SEL mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]
+#define SEL mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]
 extern int GetMenuCursorIndex_8003DA54(void*);
 extern void ResetLevantActorToIdle_800A8DEC();
 extern void RequestGameMode_800A6D30(int);
@@ -27,9 +27,9 @@ extern void DrawNumber_8003EF74(void*, int, int);
 extern int GetEventVar_800AD154(int);
 extern void PlayMusic_800300E0(int, int);
 extern void WaitAreaPicture_800B6E5C();
-extern int GetOpenDestRank_800B81D0(MapPos*);
+extern int GetOpenDestRank_800B81D0(MapDest*);
 // state of the map select (SceneSelect_800B860C)
-extern MapPos mapSelect_800AEBF8;  // the selected destination (GAME data)
+extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
 extern void GetCurrentDest_800B8448();
 extern short word_800B932C;
 extern void SetFadeMode_8001C19C(int, int);
@@ -127,118 +127,118 @@ const char aSelScene_800B6BCC[] = "\202r\202\205\202\214\201@\202\223\202\203\20
 const char aSelChapter_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\210\202\201\202\220\202\224\202\205\202\222\201@\000\000im";
 
 // Matched
-void MapSelectStart_800B6BFC(MapTask* t, int a1)
+void MapSelectStart_800B6BFC(MapTask* task, int work)
 {
-    void (*f)();
-    lastDest_800B8C94.a = mapSelect_800AEBF8.a;
-    lastDest_800B8C94.b = mapSelect_800AEBF8.b;
+    void (*next)();
+    lastDest_800B8C94.area = mapSelect_800AEBF8.area;
+    lastDest_800B8C94.dest = mapSelect_800AEBF8.dest;
     GetCurrentDest_800B8448(&mapSelect_800AEBF8);
-    f = StartAreaFadeOut_800B6C7C;
-    t->next_8 = f;
-    f(t, a1);
-    t->flags_0 = (t->flags_0 | 4) & 0xFFFF7FFF;
+    next = StartAreaFadeOut_800B6C7C;
+    task->next_8 = next;
+    next(task, work);
+    task->flags_0 = (task->flags_0 | 4) & 0xFFFF7FFF;
 }
 
 // Matched
-void StartAreaFadeOut_800B6C7C(MapTask* t)
+void StartAreaFadeOut_800B6C7C(MapTask* task)
 {
     SetFadeMode_8001C19C(0, 0x20);
-    t->next_8 = LoadAreaPicture_800B6CB4;
+    task->next_8 = LoadAreaPicture_800B6CB4;
 }
 
 // Matched
-void LoadAreaPicture_800B6CB4(MapTask* t)
+void LoadAreaPicture_800B6CB4(MapTask* task)
 {
-    int a;
-    openDestCount_800B8CA4 = CountOpenDests_800B7E54(mapSelect_800AEBF8.a);
+    int music;
+    openDestCount_800B8CA4 = CountOpenDests_800B7E54(mapSelect_800AEBF8.area);
     InitDestCursor_800B7EE0();
     if (GetEventVar_800AD154(0xC) == 1)
     {
-        a = 0xF;
+        music = 0xF;
     }
     else if (GetEventVar_800AD154(0xC) == 2)
     {
-        a = 0x91;
+        music = 0x91;
     }
     else
     {
-        a = mapAreas_800B9220[mapSelect_800AEBF8.a].music_10;
+        music = mapAreas_800B9220[mapSelect_800AEBF8.area].music_10;
     }
-    PlayMusic_800300E0(a, 1);
+    PlayMusic_800300E0(music, 1);
     mapFileStage_800B9434 = 0;
-    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.a].bgFile_0);
-    t->next_8 = WaitAreaPicture_800B6E5C;
+    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.area].bgFile_0);
+    task->next_8 = WaitAreaPicture_800B6E5C;
 }
 
 // Matched
-void RequestMapFile_800B6D90(FileRequestDesc* p, int a1)
+void RequestMapFile_800B6D90(FileRequestDesc* req, int fileId)
 {
     mapFileLoaded_800B9430 = 0;
-    p->flags_0 = 0x2C;
-    p->fileId_4 = a1;
-    p->offset_8 = 0;
-    p->size_C = 0;
-    p->dest_10 = 0;
-    p->params_14 = 0;
-    p->paramsSize_18 = 0;
-    p->callback_1C = OnMapFileLoaded_800B6DE0;
-    QueueFileRequest_8003BC84(p);
+    req->flags_0 = 0x2C;
+    req->fileId_4 = fileId;
+    req->offset_8 = 0;
+    req->size_C = 0;
+    req->dest_10 = 0;
+    req->params_14 = 0;
+    req->paramsSize_18 = 0;
+    req->callback_1C = OnMapFileLoaded_800B6DE0;
+    QueueFileRequest_8003BC84(req);
 }
 
 // Matched
-void OnMapFileLoaded_800B6DE0(MapTask* t, int* a1)
+void OnMapFileLoaded_800B6DE0(MapTask* task, int* data)
 {
-    FreeMapTiys_800B6FAC(t);
+    FreeMapTiys_800B6FAC(task);
     if (mapFileStage_800B9434 == 1)
     {
-        LoadTiy_80028E74(&areaSprts_800B931C, 0, &areaTPages_800B9320, a1, 1);
+        LoadTiy_80028E74(&areaSprts_800B931C, 0, &areaTPages_800B9320, data, 1);
     }
     else
     {
-        LoadTiy_80028E74(&areaBgSprts_800B9314, 0, &areaBgTPages_800B9318, a1, 1);
+        LoadTiy_80028E74(&areaBgSprts_800B9314, 0, &areaBgTPages_800B9318, data, 1);
     }
     mapFileLoaded_800B9430 = 1;
 }
 
 // Matched
-void WaitAreaPicture_800B6E5C(MapTask* t)
+void WaitAreaPicture_800B6E5C(MapTask* task)
 {
     if (mapFileLoaded_800B9430)
     {
-        t->next_8 = LoadAreaSprites_800B6E80;
+        task->next_8 = LoadAreaSprites_800B6E80;
     }
 }
 
 // Matched
-void LoadAreaSprites_800B6E80(MapTask* t)
+void LoadAreaSprites_800B6E80(MapTask* task)
 {
     mapFileStage_800B9434 = 1;
-    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.a].spritesFile_4);
-    t->next_8 = WaitAreaFadeIn_800B6EE8;
+    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.area].spritesFile_4);
+    task->next_8 = WaitAreaFadeIn_800B6EE8;
 }
 
 // Matched
-void WaitAreaFadeIn_800B6EE8(MapTask* t, int a1)
+void WaitAreaFadeIn_800B6EE8(MapTask* task, int work)
 {
     if (mapFileLoaded_800B9430 && IsFadeDone_8001C2FC())
     {
-        t->next_8 = DestinationSelect_800B7044;
+        task->next_8 = DestinationSelect_800B7044;
         ResetPadHoldFrames_8001CD04(0);
-        t->next_8(t, a1);
+        task->next_8(task, work);
         SetFadeMode_8001C19C(3, 0x20);
     }
 }
 
 // Matched
-void MapSelectEnd_800B6F60(MapTask* t, int a1)
+void MapSelectEnd_800B6F60(MapTask* task, int work)
 {
-    FreeMapTiys_800B6FAC(t);
-    t->flags_0 &= ~4;
+    FreeMapTiys_800B6FAC(task);
+    task->flags_0 &= ~4;
     unknownFlags_8008D678 &= 0xFBFFFFFF;
 }
 
 // Matched
-void FreeMapTiys_800B6FAC(MapTask* t)
+void FreeMapTiys_800B6FAC(MapTask* task)
 {
     if (areaBgSprts_800B9314)
     {
@@ -266,39 +266,39 @@ extern void StartDestFadeOut_800B7948();
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
                                 int half);
 extern void SetSemiTrans(void* p, int abe);
-extern void DrawScrollArrows_8002B8DC(MapPos arrow, MapSel* sel, MapPos* pos, int ot);
+extern void DrawScrollArrows_8002B8DC(MapXY arrow, MapSel* sel, MapXY* pos, int ot);
 extern unsigned short padPressed_8009194C;
 #if 0
-// Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when mapSelect_800AEBF8.a >= 2
+// Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when mapSelect_800AEBF8.area >= 2
 // (between the marker's two AddPrimCopy calls), which plain C drops; the tail's pad test / register
 // allocation also differ.
 // the destination list of a map area: the area picture, the blinking marker of the selected destination
 // and the scrolling list of names
-void DestinationSelect_800B7044(MapTask* t, int a)
+void DestinationSelect_800B7044(MapTask* task, int work)
 {
-    MapPos q;
+    MapDest sel;
     DR_MOVE mv;
     RECT r0;
     RECT box;
     short tp[2];
-    MapPos q2;
+    MapDest listDest;
     MapWin w0;
     MapWin w1;
     MapWin w2;
     MapWin* list[4];
-    MapMenu m;
-    MapPos arrow;
-    MapPos pos[2];
+    MapMenu menu;
+    MapXY arrow;
+    MapXY pos[2];
     int i;
-    MapElem* e;
+    MapElem* elem;
     int y;
     int wd;
     int id;
-    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]), mapSelect_800AEBF8.a, &q);
-    e = mapAreas_800B9220[mapSelect_800AEBF8.a].dests_14 + q.b;
+    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area, &sel);
+    elem = mapAreas_800B9220[mapSelect_800AEBF8.area].dests_14 + sel.dest;
     if (openDestCount_800B8CA4 > 0)
     {
-        UpdateMenuCursor_8003D794(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a], 0);
+        UpdateMenuCursor_8003D794(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], 0);
     }
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -314,30 +314,30 @@ void DestinationSelect_800B7044(MapTask* t, int a)
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
-    wd = MeasureTextWidth_8003E4C8(mapAreas_800B9220[mapSelect_800AEBF8.a].name_8);
-    tp[0] = mapAreas_800B9220[mapSelect_800AEBF8.a].x_C - (short)wd / 2;
-    tp[1] = mapAreas_800B9220[mapSelect_800AEBF8.a].y_E;
+    wd = MeasureTextWidth_8003E4C8(mapAreas_800B9220[mapSelect_800AEBF8.area].name_8);
+    tp[0] = mapAreas_800B9220[mapSelect_800AEBF8.area].x_C - (short)wd / 2;
+    tp[1] = mapAreas_800B9220[mapSelect_800AEBF8.area].y_E;
     box.x = tp[0] - 2;
     box.y = tp[1] - 2;
     box.w = wd + 4;
     box.h = 0x12;
     tp[1] += 2;
-    DrawText_8003E91C(2, mapAreas_800B9220[mapSelect_800AEBF8.a].name_8, tp, 0);
+    DrawText_8003E91C(2, mapAreas_800B9220[mapSelect_800AEBF8.area].name_8, tp, 0);
     DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
     if (openDestCount_800B8CA4 > 0)
     {
-        id = e->sprite_0;
-        areaSprts_800B931C[id].x0 = e->x_4;
-        areaSprts_800B931C[id].y0 = e->y_6;
+        id = elem->sprite_0;
+        areaSprts_800B931C[id].x0 = elem->x_4;
+        areaSprts_800B931C[id].y0 = elem->y_6;
         AddPrimCopy_80040298(&pOT_8008D454[10], &areaSprts_800B931C[id], 5);
         AddPrimCopy_80040298(&pOT_8008D454[10], &areaTPages_800B9320[id], 2);
         if (openDestCount_800B8CA4 > 0)
         {
-            id = e->marker_8;
-            areaSprts_800B931C[id].x0 = e->x_C;
-            areaSprts_800B931C[id].y0 = e->y_E;
-            PulseColor_80033394(&areaSprts_800B931C[id].r0, e->c0_10, e->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
-            if ((unsigned short)mapSelect_800AEBF8.a < 2)
+            id = elem->marker_8;
+            areaSprts_800B931C[id].x0 = elem->x_C;
+            areaSprts_800B931C[id].y0 = elem->y_E;
+            PulseColor_80033394(&areaSprts_800B931C[id].r0, elem->c0_10, elem->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
+            if ((unsigned short)mapSelect_800AEBF8.area < 2)
             {
                 SetSemiTrans(&areaSprts_800B931C[id], 0);
             }
@@ -353,127 +353,127 @@ void DestinationSelect_800B7044(MapTask* t, int a)
                 w1 = destListRow1_800B68F0;
                 w2 = destListRow2_800B6928;
                 memset(list, 0, 0x10);
-                m = menuTemplate_800B6960;
+                menu = menuTemplate_800B6960;
                 list[0] = &w0;
                 list[1] = &w1;
                 list[2] = &w2;
-                m.windows_10 = list;
-                for (i = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A;
-                     i < mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A + mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].rows_2; i++)
+                menu.windows_10 = list;
+                for (i = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A;
+                     i < mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A + mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2; i++)
                 {
-                    GetNthOpenDest_800B8128((short)i, mapSelect_800AEBF8.a, &q2);
-                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A]->items[0].text_4 = destNames_800B92FC[q2.a][q2.b];
+                    GetNthOpenDest_800B8128((short)i, mapSelect_800AEBF8.area, &listDest);
+                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A]->items[0].text_4 = destNames_800B92FC[listDest.area][listDest.dest];
                 }
                 if (openDestCount_800B8CA4 < 3)
                 {
                     list[openDestCount_800B8CA4] = 0;
                 }
-                m.time_4 = GetTime30Hz_8002C64C();
-                m.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].index_8;
-                DrawMenuWindows_8002A5A4(&m);
+                menu.time_4 = GetTime30Hz_8002C64C();
+                menu.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].index_8;
+                DrawMenuWindows_8002A5A4(&menu);
             }
         }
     }
     {
-        arrow.a = 2;
-        arrow.b = 1;
-        pos[0].a = 0x4A;
-        pos[0].b = 0x93;
-        pos[1].a = 0x4A;
-        pos[1].b = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].rows_2 * 18 + 0x9D;
-        DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a], pos, 0);
+        arrow.x = 2;
+        arrow.y = 1;
+        pos[0].x = 0x4A;
+        pos[0].y = 0x93;
+        pos[1].x = 0x4A;
+        pos[1].y = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2 * 18 + 0x9D;
+        DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area], pos, 0);
     }
     if (openDestCount_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C & 0x80)))
     {
-        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]), mapSelect_800AEBF8.a,
+        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area]), mapSelect_800AEBF8.area,
                      &mapSelect_800AEBF8);
-        lastDest_800B8C94.a = mapSelect_800AEBF8.a;
-        lastDest_800B8C94.b = mapSelect_800AEBF8.b;
-        if ((unsigned short)mapSelect_800AEBF8.a < 2)
+        lastDest_800B8C94.area = mapSelect_800AEBF8.area;
+        lastDest_800B8C94.dest = mapSelect_800AEBF8.dest;
+        if ((unsigned short)mapSelect_800AEBF8.area < 2)
         {
-            int b = mapSelect_800AEBF8.b;
-            if (b == 0xC)
+            int destIdx = mapSelect_800AEBF8.dest;
+            if (destIdx == 0xC)
             {
-                mapSelect_800AEBF8.a = 5;
-                mapSelect_800AEBF8.b = 5;
+                mapSelect_800AEBF8.area = 5;
+                mapSelect_800AEBF8.dest = 5;
                 if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    mapSelect_800AEBF8.b = 0;
-                    t->next_8 = StartAreaFadeOut_800B6C7C;
-                    t->next_8(t, a);
+                    mapSelect_800AEBF8.dest = 0;
+                    task->next_8 = StartAreaFadeOut_800B6C7C;
+                    task->next_8(task, work);
                     return;
                 }
-                mapSelect_800AEBF8.a = 4;
-                mapSelect_800AEBF8.b = 4;
+                mapSelect_800AEBF8.area = 4;
+                mapSelect_800AEBF8.dest = 4;
                 if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    mapSelect_800AEBF8.b = 0;
-                    t->next_8 = StartAreaFadeOut_800B6C7C;
-                    t->next_8(t, a);
+                    mapSelect_800AEBF8.dest = 0;
+                    task->next_8 = StartAreaFadeOut_800B6C7C;
+                    task->next_8(task, work);
                     return;
                 }
-                mapSelect_800AEBF8.a = 3;
-                mapSelect_800AEBF8.b = 3;
+                mapSelect_800AEBF8.area = 3;
+                mapSelect_800AEBF8.dest = 3;
                 if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    mapSelect_800AEBF8.b = 0;
-                    t->next_8 = StartAreaFadeOut_800B6C7C;
-                    t->next_8(t, a);
+                    mapSelect_800AEBF8.dest = 0;
+                    task->next_8 = StartAreaFadeOut_800B6C7C;
+                    task->next_8(task, work);
                     return;
                 }
-                mapSelect_800AEBF8.a = 2;
-                mapSelect_800AEBF8.b = 2;
+                mapSelect_800AEBF8.area = 2;
+                mapSelect_800AEBF8.dest = 2;
                 if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    mapSelect_800AEBF8.b = 0;
-                    t->next_8 = StartAreaFadeOut_800B6C7C;
-                    t->next_8(t, a);
+                    mapSelect_800AEBF8.dest = 0;
+                    task->next_8 = StartAreaFadeOut_800B6C7C;
+                    task->next_8(task, work);
                     return;
                 }
-                mapSelect_800AEBF8.a = 0;
-                mapSelect_800AEBF8.b = b;
+                mapSelect_800AEBF8.area = 0;
+                mapSelect_800AEBF8.dest = destIdx;
             }
             if (!(padPressed_8009194C & 0x80))
             {
-                t->next_8 = StartDestFadeOut_800B7948;
-                t->next_8(t, a);
+                task->next_8 = StartDestFadeOut_800B7948;
+                task->next_8(task, work);
             }
             else
             {
                 GoToDest_800B8338(&mapSelect_800AEBF8);
-                MapSelectEnd_800B6F60(t, a);
-                t->next_8 = StartMapOverlay_800A75F8;
+                MapSelectEnd_800B6F60(task, work);
+                task->next_8 = StartMapOverlay_800A75F8;
             }
         }
-        else if (mapSelect_800AEBF8.b == 0)
+        else if (mapSelect_800AEBF8.dest == 0)
         {
             if (!saveData_8008B570.mapVariant_2E0)
             {
-                mapSelect_800AEBF8.a = 0;
-                lastDest_800B8C94.a = 0;
+                mapSelect_800AEBF8.area = 0;
+                lastDest_800B8C94.area = 0;
             }
             else
             {
-                mapSelect_800AEBF8.a = 1;
-                lastDest_800B8C94.a = 1;
+                mapSelect_800AEBF8.area = 1;
+                lastDest_800B8C94.area = 1;
             }
-            mapSelect_800AEBF8.b = 0xC;
-            lastDest_800B8C94.b = 0xC;
-            t->next_8 = StartAreaFadeOut_800B6C7C;
-            t->next_8(t, a);
+            mapSelect_800AEBF8.dest = 0xC;
+            lastDest_800B8C94.dest = 0xC;
+            task->next_8 = StartAreaFadeOut_800B6C7C;
+            task->next_8(task, work);
         }
         else
         {
             if (padPressed_8009194C & 0x80)
             {
                 GoToDest_800B8338(&mapSelect_800AEBF8);
-                MapSelectEnd_800B6F60(t, a);
-                t->next_8 = StartMapOverlay_800A75F8;
+                MapSelectEnd_800B6F60(task, work);
+                task->next_8 = StartMapOverlay_800A75F8;
             }
             else
             {
-                t->next_8 = StartDestFadeOut_800B7948;
-                t->next_8(t, a);
+                task->next_8 = StartDestFadeOut_800B7948;
+                task->next_8(task, work);
             }
         }
     }
@@ -482,32 +482,32 @@ void DestinationSelect_800B7044(MapTask* t, int a)
 INCLUDE_OVERLAY_ASM(map, DestinationSelect_800B7044);
 
 // Matched
-void StartDestFadeOut_800B7948(MapTask* t)
+void StartDestFadeOut_800B7948(MapTask* task)
 {
     SetFadeMode_8001C19C(0, 0x20);
-    t->next_8 = LoadDestPicture_800B7980;
+    task->next_8 = LoadDestPicture_800B7980;
 }
 
 // Not matched: register allocation of the table base (v0/v1 swapped)
-void LoadDestPicture_800B7980(MapTask* t)
+void LoadDestPicture_800B7980(MapTask* task)
 {
-    MapPos q;
-    MapElem* e;
-    MapPos* w = &mapSelect_800AEBF8;
-    int r = GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[w->a]);
-    GetNthOpenDest_800B8128((short)r, w->a, &q);
+    MapDest sel;
+    MapElem* elem;
+    MapDest* cur = &mapSelect_800AEBF8;
+    int idx = GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[cur->area]);
+    GetNthOpenDest_800B8128((short)idx, cur->area, &sel);
     mapFileStage_800B9434 = 0;
-    e = mapAreas_800B9220[mapSelect_800AEBF8.a].dests_14 + q.b;
-    RequestMapFile_800B6D90(mapFileRequest_800B9400, e->file_18);
-    t->next_8 = WaitDestPicture_800B7A38;
+    elem = mapAreas_800B9220[mapSelect_800AEBF8.area].dests_14 + sel.dest;
+    RequestMapFile_800B6D90(mapFileRequest_800B9400, elem->file_18);
+    task->next_8 = WaitDestPicture_800B7A38;
 }
 
 // Matched
-void WaitDestPicture_800B7A38(MapTask* t)
+void WaitDestPicture_800B7A38(MapTask* task)
 {
     if (mapFileLoaded_800B9430 && IsFadeDone_8001C2FC())
     {
-        t->next_8 = ConfirmDestination_800B7A90;
+        task->next_8 = ConfirmDestination_800B7A90;
         SetFadeMode_8001C19C(3, 0x20);
         word_800B932C = 0;
     }
@@ -521,11 +521,11 @@ extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void* memset(void* p, int c, unsigned int n);
 extern void UpdateMenuCursor_8003D794(void* p, int a);
-extern void GoToDest_800B8338(MapPos* p);
+extern void GoToDest_800B8338(MapDest* p);
 extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
-void ConfirmDestination_800B7A90(MapTask* t, int a)
+void ConfirmDestination_800B7A90(MapTask* task, int work)
 {
-    MapPos q;
+    MapDest sel;
     DR_MOVE mv;
     RECT r0;
     RECT box;
@@ -535,11 +535,11 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     MapWin w0;
     MapWin w1;
     MapWin* list[3];
-    MapMenu m;
+    MapMenu menu;
     int y;
     int wd;
-    MapPos* w = &mapSelect_800AEBF8;
-    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[w->a]), w->a, &q);
+    MapDest* cur = &mapSelect_800AEBF8;
+    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[cur->area]), cur->area, &sel);
     UpdateMenuCursor_8003D794(&confirmCursor_800B9324, 0);
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -555,14 +555,14 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
-    wd = MeasureTextWidth_8003E4C8(destNames_800B92FC[mapSelect_800AEBF8.a][mapSelect_800AEBF8.b]);
+    wd = MeasureTextWidth_8003E4C8(destNames_800B92FC[mapSelect_800AEBF8.area][mapSelect_800AEBF8.dest]);
     box.x = 0x9E - (short)wd / 2;
     box.y = 0x12;
     box.w = wd + 4;
     box.h = 0x12;
     tp[0] = 0xA0 - (short)wd / 2;
     tp[1] = 0x16;
-    DrawText_8003E91C(2, destNames_800B92FC[mapSelect_800AEBF8.a][mapSelect_800AEBF8.b], tp, 0);
+    DrawText_8003E91C(2, destNames_800B92FC[mapSelect_800AEBF8.area][mapSelect_800AEBF8.dest], tp, 0);
     DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
     box2.x = 0x74;
     box2.y = 0xA6;
@@ -577,57 +577,57 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     w0 = yesRow_800B6994;
     w1 = noRow_800B69D4;
     memset(list, 0, 0xC);
-    m = menuTemplate_800B6960;
+    menu = menuTemplate_800B6960;
     list[0] = &w0;
     list[1] = &w1;
-    m.time_4 = GetTime30Hz_8002C64C();
-    m.windows_10 = list;
-    m.sel_C = confirmCursor_800B9324.index_8;
-    DrawMenuWindows_8002A5A4(&m);
+    menu.time_4 = GetTime30Hz_8002C64C();
+    menu.windows_10 = list;
+    menu.sel_C = confirmCursor_800B9324.index_8;
+    DrawMenuWindows_8002A5A4(&menu);
     if (IsConfirmPressedP1_8003D380(1))
     {
         if ((short)GetMenuCursorIndex_8003DA54(&confirmCursor_800B9324) == 0)
         {
             GoToDest_800B8338(&mapSelect_800AEBF8);
-            MapSelectEnd_800B6F60(t, a);
-            t->next_8 = StartMapOverlay_800A75F8;
+            MapSelectEnd_800B6F60(task, work);
+            task->next_8 = StartMapOverlay_800A75F8;
         }
         else
         {
-            t->next_8 = StartAreaFadeOut_800B6C7C;
+            task->next_8 = StartAreaFadeOut_800B6C7C;
         }
     }
     else if (IsCancelPressedP1_8003D41C(1))
     {
-        t->next_8 = StartAreaFadeOut_800B6C7C;
+        task->next_8 = StartAreaFadeOut_800B6C7C;
     }
 }
 
 // Matched
-int CountOpenDests_800B7E54(short a)
+int CountOpenDests_800B7E54(short area)
 {
     int i;
-    int cnt = 0;
-    MapPos pos;
-    pos.a = a;
-    for (i = 0; i < destCounts_800B8C98[a]; i++)
+    int count = 0;
+    MapDest cur;
+    cur.area = area;
+    for (i = 0; i < destCounts_800B8C98[area]; i++)
     {
-        pos.b = i;
-        if (IsDestOpen_800B8290(&pos))
+        cur.dest = i;
+        if (IsDestOpen_800B8290(&cur))
         {
-            cnt++;
+            count++;
         }
     }
-    return cnt;
+    return count;
 }
 
 // Matched
 void InitDestCursor_800B7EE0()
 {
-    MapPos q;
-    int r;
-    int n;
-    int k;
+    MapDest sel;
+    int idx;
+    int rank;
+    int maxScroll;
     if (openDestCount_800B8CA4 < 4)
     {
         SEL.rows_2 = openDestCount_800B8CA4;
@@ -639,35 +639,35 @@ void InitDestCursor_800B7EE0()
         SEL.flags_6 = 0x40;
     }
     SEL.count_4 = openDestCount_800B8CA4;
-    if (mapSelect_800AEBF8.a != lastDest_800B8C94.a || mapSelect_800AEBF8.b != lastDest_800B8C94.b)
+    if (mapSelect_800AEBF8.area != lastDest_800B8C94.area || mapSelect_800AEBF8.dest != lastDest_800B8C94.dest)
     {
         SEL.index_8 = 0;
         SEL.scroll_A = 0;
     }
     else
     {
-        r = GetMenuCursorIndex_8003DA54(&SEL);
-        GetNthOpenDest_800B8128((short)r, mapSelect_800AEBF8.a, &q);
-        if (!IsDestOpen_800B8290(&q))
+        idx = GetMenuCursorIndex_8003DA54(&SEL);
+        GetNthOpenDest_800B8128((short)idx, mapSelect_800AEBF8.area, &sel);
+        if (!IsDestOpen_800B8290(&sel))
         {
             SEL.index_8 = 0;
             SEL.scroll_A = 0;
         }
         else
         {
-            n = GetOpenDestRank_800B81D0(&mapSelect_800AEBF8);
+            rank = GetOpenDestRank_800B81D0(&mapSelect_800AEBF8);
             if (openDestCount_800B8CA4 < 4)
             {
-                SEL.index_8 = n;
+                SEL.index_8 = rank;
                 SEL.scroll_A = 0;
             }
             else
             {
-                k = (unsigned short)openDestCount_800B8CA4 - 3;
-                if ((short)k < SEL.scroll_A)
+                maxScroll = (unsigned short)openDestCount_800B8CA4 - 3;
+                if ((short)maxScroll < SEL.scroll_A)
                 {
-                    SEL.index_8 = n - k;
-                    SEL.scroll_A = k;
+                    SEL.index_8 = rank - maxScroll;
+                    SEL.scroll_A = maxScroll;
                 }
             }
         }
@@ -675,17 +675,17 @@ void InitDestCursor_800B7EE0()
 }
 
 // Matched
-void GetNthOpenDest_800B8128(short a, short b, MapPos* out)
+void GetNthOpenDest_800B8128(short nth, short area, MapDest* out)
 {
-    int cnt = 0;
+    int count = 0;
     int i;
-    out->a = b;
-    for (i = 0; i < destCounts_800B8C98[b]; i++)
+    out->area = area;
+    for (i = 0; i < destCounts_800B8C98[area]; i++)
     {
-        out->b = i;
+        out->dest = i;
         if (IsDestOpen_800B8290(out))
         {
-            if (cnt++ == a)
+            if (count++ == nth)
             {
                 break;
             }
@@ -693,66 +693,66 @@ void GetNthOpenDest_800B8128(short a, short b, MapPos* out)
     }
 }
 
-int GetOpenDestRank_800B81D0(MapPos* p)
+int GetOpenDestRank_800B81D0(MapDest* want)
 {
     int i;
-    short cnt = 0;
-    MapPos q;
-    q.a = p->a;
-    for (i = 0; i < destCounts_800B8C98[p->a]; i++)
+    short rank = 0;
+    MapDest cur;
+    cur.area = want->area;
+    for (i = 0; i < destCounts_800B8C98[want->area]; i++)
     {
-        q.b = i;
-        if (IsDestOpen_800B8290(&q))
+        cur.dest = i;
+        if (IsDestOpen_800B8290(&cur))
         {
-            cnt++;
-            if (q.b == p->b)
+            rank++;
+            if (cur.dest == want->dest)
             {
                 break;
             }
         }
     }
-    return cnt;
+    return rank;
 }
 
 // Matched
-int IsDestOpen_800B8290(MapPos* p)
+int IsDestOpen_800B8290(MapDest* sel)
 {
-    int idx = p->a;
-    unsigned char c = destMaps_800B9348[idx][p->b];
-    MapQuery q;
-    int r;
-    if (c == 0xFF)
+    int area = sel->area;
+    unsigned char map = destMaps_800B9348[area][sel->dest];
+    MapQuery query;
+    int var;
+    if (map == 0xFF)
     {
         return TestEventFlag_800AD0D4(1) != 0;
     }
-    if (c == 0xFE)
+    if (map == 0xFE)
     {
         return 1;
     }
-    if (c >= 0xF0)
+    if (map >= 0xF0)
     {
-        c += 0x11;
+        map += 0x11;
     }
-    q.group_0 = areaMapGroups_800B9360[idx];
-    q.map_2 = c;
-    q.entry_4 = 0;
-    r = GetMapVar_800ADC1C(&q);
-    return r != -1;
+    query.group_0 = areaMapGroups_800B9360[area];
+    query.map_2 = map;
+    query.entry_4 = 0;
+    var = GetMapVar_800ADC1C(&query);
+    return var != -1;
 }
 
-void GoToDest_800B8338(MapPos* p)
+void GoToDest_800B8338(MapDest* sel)
 {
-    unsigned char c = destMaps_800B9348[p->a][p->b];
-    if (c == 0xFE || c == 0xFF)
+    unsigned char map = destMaps_800B9348[sel->area][sel->dest];
+    if (map == 0xFE || map == 0xFF)
     {
         saveData_8008B570.mapId_2E4[0].field_0 = 4;
         saveData_8008B570.mapId_2E4[1].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
-    else if (c >= 0xF0)
+    else if (map >= 0xF0)
     {
-        SetEventVar_800AD16C(4, c - 0xEF);
+        SetEventVar_800AD16C(4, map - 0xEF);
         saveData_8008B570.mapId_2E4[0].field_0 = 4;
         saveData_8008B570.mapId_2E4[1].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_0 = 0;
@@ -760,8 +760,8 @@ void GoToDest_800B8338(MapPos* p)
     }
     else
     {
-        saveData_8008B570.mapId_2E4[0].field_0 = areaMapGroups_800B9360[p->a];
-        saveData_8008B570.mapId_2E4[1].field_0 = destMaps_800B9348[p->a][p->b];
+        saveData_8008B570.mapId_2E4[0].field_0 = areaMapGroups_800B9360[sel->area];
+        saveData_8008B570.mapId_2E4[1].field_0 = destMaps_800B9348[sel->area][sel->dest];
         saveData_8008B570.mapId_2E4[2].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
@@ -773,106 +773,106 @@ void GoToDest_800B8338(MapPos* p)
 }
 
 // Matched
-void GetCurrentDest_800B8448(MapPos* out)
+void GetCurrentDest_800B8448(MapDest* out)
 {
-    unsigned short t = saveData_8008B570.mapId_2E4[0].field_0;
-    MapQuery q;
+    unsigned short area = saveData_8008B570.mapId_2E4[0].field_0;
+    MapQuery query;
     unsigned char* tbl;
     unsigned char cnt;
-    if ((unsigned short)(t - 4) < 2)
+    if ((unsigned short)(area - 4) < 2)
     {
         if (saveData_8008B570.mapId_2E4[1].field_0 == 0)
         {
-            int f = saveData_8008B570.mapVariant_2E0;
-            out->b = 12;
-            out->a = f == 1;
+            int variant = saveData_8008B570.mapVariant_2E0;
+            out->dest = 12;
+            out->area = variant == 1;
             return;
         }
-        q.group_0 = t;
-        q.entry_4 = 0;
-        q.map_2 = 1;
+        query.group_0 = area;
+        query.entry_4 = 0;
+        query.map_2 = 1;
         do
         {
-            if (GetMapVar_800ADC1C(&q) == -1)
+            if (GetMapVar_800ADC1C(&query) == -1)
             {
                 break;
             }
-            q.map_2++;
-        } while (q.map_2 < 5);
-        if (q.map_2 == 5)
+            query.map_2++;
+        } while (query.map_2 < 5);
+        if (query.map_2 == 5)
         {
-            q.map_2--;
+            query.map_2--;
         }
-        out->a = q.map_2 + 1;
+        out->area = query.map_2 + 1;
     }
-    else if ((unsigned short)(t - 1) >= 3)
+    else if ((unsigned short)(area - 1) >= 3)
     {
-        int f = saveData_8008B570.mapVariant_2E0;
-        out->b = 0;
-        out->a = f == 1;
+        int variant = saveData_8008B570.mapVariant_2E0;
+        out->dest = 0;
+        out->area = variant == 1;
         return;
     }
     else
     {
-        out->a = saveData_8008B570.mapVariant_2E0 == 1;
+        out->area = saveData_8008B570.mapVariant_2E0 == 1;
     }
-    tbl = destMaps_800B9348[out->a];
-    cnt = destMapCounts_800B9368[out->a];
-    for (out->b = 0; out->b < cnt; out->b++)
+    tbl = destMaps_800B9348[out->area];
+    cnt = destMapCounts_800B9368[out->area];
+    for (out->dest = 0; out->dest < cnt; out->dest++)
     {
-        if (saveData_8008B570.mapId_2E4[1].field_0 == tbl[out->b])
+        if (saveData_8008B570.mapId_2E4[1].field_0 == tbl[out->dest])
         {
             return;
         }
     }
-    out->b = 0;
+    out->dest = 0;
 }
 
 // Matched
-void SceneSelectStart_800B85CC(MapTask* t)
+void SceneSelectStart_800B85CC(MapTask* task)
 {
-    MapSelState* p;
-    void (*f)() = SceneSelect_800B860C;
+    MapSelState* st;
+    void (*next)() = SceneSelect_800B860C;
     sceneSelect_800B9420.step_0 = 0;
-    p = &sceneSelect_800B9420;
-    p->area_4 = 0;
-    p->map_8 = 0;
-    p->entry_C = 0;
-    t->next_8 = f;
-    f();
+    st = &sceneSelect_800B9420;
+    st->area_4 = 0;
+    st->map_8 = 0;
+    st->entry_C = 0;
+    task->next_8 = next;
+    next();
 }
 
 void SceneSelect_800B860C()
 {
-    MapSelState* m = &sceneSelect_800B9420;
-    int a = m->area_4;
-    int b = m->map_8;
-    MapEntry* list = mapTable_800B0608[a][b];
+    MapSelState* st = &sceneSelect_800B9420;
+    int area = st->area_4;
+    int map = st->map_8;
+    MapEntry* list = mapTable_800B0608[area][map];
     RECT r1;
     RECT r2;
     RECT r3;
     int y;
     int i;
-    int n;
-    int d;
+    int count;
+    int shift;
     char* str;
     int v;
     int c;
-    switch (m->step_0)
+    switch (st->step_0)
     {
     case 0:
         if (padRepeat_800918CC & 0x1000)
         {
-            m->area_4 = a - 1;
+            st->area_4 = area - 1;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m->area_4 = a + 1;
+            st->area_4 = area + 1;
         }
-        m->area_4 = m->area_4 < 0 ? 0 : m->area_4 < 6 ? m->area_4 : 5;
+        st->area_4 = st->area_4 < 0 ? 0 : st->area_4 < 6 ? st->area_4 : 5;
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            m->step_0++;
+            st->step_0++;
         }
         r1.x = 0x1E;
         r1.y = 0x14;
@@ -880,76 +880,76 @@ void SceneSelect_800B860C()
         for (i = 0; i < 6; i++)
         {
             str = debugGroupNames_800B9370[i];
-            d = i == m->area_4 ? (frameCount_8008D3FC & 0xF) : 0;
-            r2.x = 0x1E + d;
+            shift = i == st->area_4 ? (frameCount_8008D3FC & 0xF) : 0;
+            r2.x = 0x1E + shift;
             r2.y = 0x32 + i * 14;
             DrawText_8003E91C(2, str, &r2, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
             r2.x = 0x1E;
-            r2.y = m->area_4 * 14 + 0x32;
+            r2.y = st->area_4 * 14 + 0x32;
             DrawCursorHand_8003D034(&r2, 0);
         }
         break;
     case 1:
         if (padRepeat_800918CC & 0x1000)
         {
-            m->map_8 = b - 1;
+            st->map_8 = map - 1;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m->map_8 = b + 1;
+            st->map_8 = map + 1;
         }
-        m->map_8 = m->map_8 < 0 ? 0 : (dword_800B0624[m->area_4] - 1 < m->map_8 ? dword_800B0624[m->area_4] - 1 : m->map_8);
+        st->map_8 = st->map_8 < 0 ? 0 : (dword_800B0624[st->area_4] - 1 < st->map_8 ? dword_800B0624[st->area_4] - 1 : st->map_8);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            m->step_0++;
+            st->step_0++;
         }
         else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            m->map_8 = 0;
-            m->step_0--;
+            st->map_8 = 0;
+            st->step_0--;
         }
         r2.x = 0x1E;
         r2.y = 0x14;
         DrawText_8003E91C(2, aSelSceneGroup_800B6BAC, &r2, 0);
-        for (i = 0; i < dword_800B0624[m->area_4]; i++)
+        for (i = 0; i < dword_800B0624[st->area_4]; i++)
         {
-            str = debugSceneNames_800B93E0[m->area_4][i];
-            d = i == m->map_8 ? (frameCount_8008D3FC & 0xF) : 0;
-            r3.x = 0x1E + d;
+            str = debugSceneNames_800B93E0[st->area_4][i];
+            shift = i == st->map_8 ? (frameCount_8008D3FC & 0xF) : 0;
+            r3.x = 0x1E + shift;
             r3.y = 0x32 + i * 14;
             DrawText_8003E91C(2, str, &r3, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
             r3.x = 0x1E;
-            r3.y = m->map_8 * 14 + 0x32;
+            r3.y = st->map_8 * 14 + 0x32;
             DrawCursorHand_8003D034(&r3, 0);
         }
         break;
     case 2:
         if (padRepeat_800918CC & 0x1000)
         {
-            m->entry_C--;
+            st->entry_C--;
         }
         else if (padRepeat_800918CC & 0x4000)
         {
-            m->entry_C++;
+            st->entry_C++;
         }
-        n = 0;
-        while (list[n].id != -1)
+        count = 0;
+        while (list[count].id != -1)
         {
-            n++;
+            count++;
         }
-        m->entry_C = m->entry_C < 0 ? 0 : (n - 1 < m->entry_C ? n - 1 : m->entry_C);
+        st->entry_C = st->entry_C < 0 ? 0 : (count - 1 < st->entry_C ? count - 1 : st->entry_C);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
-            saveData_8008B570.mapVariant_2E0 = debugGroupVariants_800B93F8[m->area_4];
-            saveData_8008B570.mapId_2E4[0].field_0 = m->area_4;
-            saveData_8008B570.mapId_2E4[1].field_0 = m->map_8;
-            saveData_8008B570.mapId_2E4[2].field_0 = m->entry_C;
+            saveData_8008B570.mapVariant_2E0 = debugGroupVariants_800B93F8[st->area_4];
+            saveData_8008B570.mapId_2E4[0].field_0 = st->area_4;
+            saveData_8008B570.mapId_2E4[1].field_0 = st->map_8;
+            saveData_8008B570.mapId_2E4[2].field_0 = st->entry_C;
             saveData_8008B570.field_2E2 = -1;
             saveData_8008B570.mapId_2E4[0].field_2 = -1;
             saveData_8008B570.mapId_2E4[1].field_2 = -1;
@@ -963,8 +963,8 @@ void SceneSelect_800B860C()
         }
         else if (IsCancelPressedP1_8003D41C(1) == 1)
         {
-            m->entry_C = 0;
-            m->step_0--;
+            st->entry_C = 0;
+            st->step_0--;
         }
         r3.x = 0x1E;
         r3.y = 0x14;
@@ -975,22 +975,22 @@ void SceneSelect_800B860C()
 
 
 // Matched
-void ChapterSelectStart_800B8B2C(MapTask* t)
+void ChapterSelectStart_800B8B2C(MapTask* task)
 {
-    void (*f)() = ChapterSelect_800B8B5C;
+    void (*next)() = ChapterSelect_800B8B5C;
     chapterSel_800B9438 = 0;
-    t->next_8 = f;
-    f();
+    task->next_8 = next;
+    next();
 }
 
 void ChapterSelect_800B8B5C()
 {
     int* sel = &chapterSel_800B9438;
     unsigned short pad = padRepeat_800918CC;
-    RECT a;
-    RECT b;
-    RECT c;
-    int r;
+    RECT base;
+    RECT textPos;
+    RECT numPos;
+    int confirmed;
     if (pad & 0x1000)
     {
         chapterSel_800B9438--;
@@ -1000,27 +1000,27 @@ void ChapterSelect_800B8B5C()
         chapterSel_800B9438++;
     }
     *sel = *sel < 0 ? 0 : *sel < 7 ? *sel : 6;
-    r = IsConfirmPressedP1_8003D380(1);
-    if (r == 1)
+    confirmed = IsConfirmPressedP1_8003D380(1);
+    if (confirmed == 1)
     {
-        SaveData* sv = &saveData_8008B570;
-        sv->chapterNext_2DE = -5;
-        sv->chapter_2DC = *sel;
+        SaveData* sd = &saveData_8008B570;
+        sd->chapterNext_2DE = -5;
+        sd->chapter_2DC = *sel;
         RequestGameMode_800A6D30(0);
-        eventDispatchHalt_8008B540 = r;
+        eventDispatchHalt_8008B540 = confirmed;
     }
     IsCancelPressedP1_8003D41C(1);
-    a.x = 0x6E;
-    a.y = 0x78;
-    b.x = a.x + 10;
-    b.y = a.y + 10;
-    DrawText_8003E91C(2, aSelChapter_800B6BE0, &b, 0);
-    c.x = a.x + 0x50;
-    c.y = a.y + 0xA;
-    DrawNumber_8003EF74(&c, *sel + 1, 0);
+    base.x = 0x6E;
+    base.y = 0x78;
+    textPos.x = base.x + 10;
+    textPos.y = base.y + 10;
+    DrawText_8003E91C(2, aSelChapter_800B6BE0, &textPos, 0);
+    numPos.x = base.x + 0x50;
+    numPos.y = base.y + 0xA;
+    DrawNumber_8003EF74(&numPos, *sel + 1, 0);
 }
 
-MapPos lastDest_800B8C94 = { -1, -1 };
+MapDest lastDest_800B8C94 = { -1, -1 };
 short destCounts_800B8C98[6] = { 13, 13, 3, 4, 5, 6 };
 int openDestCount_800B8CA4 = 0;
 MapElem villageDests0_800B8CA8[13] = {
