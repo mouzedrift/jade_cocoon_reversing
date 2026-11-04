@@ -641,24 +641,41 @@ int FreeEventList_80043A5C(EventNode* head)
     return 0;
 }
 
-INCLUDE_DATA(dword_80086FB0);
-INCLUDE_DATA(byte_80086FEC);
-INCLUDE_DATA(byte_80086FED);
-INCLUDE_DATA(byte_80086FEE);
-INCLUDE_DATA(dword_80086FF0);
-INCLUDE_DATA(dword_80087014);
-INCLUDE_DATA(off_80087028);
-INCLUDE_DATA(off_8008703C);
-INCLUDE_DATA(off_80087050);
-INCLUDE_DATA(off_80087064);
-INCLUDE_DATA(dword_80087070);
-INCLUDE_DATA(dword_80087114);
-INCLUDE_DATA(dword_80087118);
-INCLUDE_DATA(dword_8008711C);
-INCLUDE_DATA(dword_80087120);
-INCLUDE_DATA(dword_80087124);
-INCLUDE_DATA(dword_80087134);
-INCLUDE_DATA(dword_80087138);
-INCLUDE_DATA(dword_8008713C);
-INCLUDE_DATA(dword_80087140);
-INCLUDE_DATA(dword_80087144);
+int dword_80086FB0[5][3] = {
+    { 100, 100, 160 },
+    { 130, 100, 130 },
+    { 100, 124, 113 },
+    { 150, 140, 100 },
+    { 100, 100, 100 },
+};
+unsigned char byte_80086FEC = 42;
+unsigned char byte_80086FED = 38;
+unsigned char byte_80086FEE = 110;
+unsigned char byte_80086FEF = 0;
+int dword_80086FF0[9] = {
+    0x5A266E, 0x666E26, 0x254470, 0x293A55, 0xD81FF, 0xFFFF0A, 0xD81FF, 0x73FF0A,
+    0x254470,
+};
+int dword_80087014[5] = { 0xFFFF0A, 0x5161FF, 0xA5FF4B, 0x25E1FF, 0x427595 };
+unsigned char *off_80087028[5] = { &byte_80086FEC, (void *)dword_80086FF0, (void *)&dword_80086FF0[1], (void *)&dword_80086FF0[2], (void *)&dword_80086FF0[3] };
+void *off_8008703C[5] = { (void *)&dword_80086FF0[4], (void *)&dword_80086FF0[5], (void *)&dword_80086FF0[6], (void *)&dword_80086FF0[7], (void *)&dword_80086FF0[8] };
+unsigned char *off_80087050[5] = { (void *)dword_80087014, (void *)&dword_80087014[1], (void *)&dword_80087014[2], (void *)&dword_80087014[3], (void *)&dword_80087014[4] };
+unsigned char **off_80087064[3] = { off_80087028, off_80087028, (void *)off_8008703C };
+int dword_80087070[5][8] = {
+    { 0, 0, 3, 0, 1, 1, 2, 1 },
+    { 0, 0, 1, 1, 0, 3, 1, 2 },
+    { 1, 2, 2, 2, 0, 3, 3, 3 },
+    { 2, 1, 3, 0, 2, 2, 3, 3 },
+    { 1, 1, 2, 1, 1, 2, 2, 2 },
+};
+int dword_80087110 = 0x439;
+MATRIX dword_80087114 = { {
+        { 0x50F, 0, 0xF2E },
+        { 0x446, -0xCD4, 0x88D },
+        { -0x446, 0xCD4, -0x88D },
+    } };
+MATRIX dword_80087134 = { {
+        { 0x800, 0x400, 0x200 },
+        { 0x800, 0x400, 0x200 },
+        { 0x800, 0x400, 0x200 },
+    } };

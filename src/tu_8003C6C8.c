@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "tu_8003C6C8.h"
+#include "cd.h"
 
 const Ints14_8003CD5C dword_8007490C = { {
         7, 8, 9, 10, 11, 12, 13, 14,
@@ -315,12 +316,8 @@ void sub_8003CE18(short x, short y)
 }
 const int dword_80074960 = 0;
 
-INCLUDE_DATA(cdReadState_80086550);
-INCLUDE_DATA(dword_80086554);
-INCLUDE_DATA(dword_80086558);
-INCLUDE_DATA(dword_8008655C);
-INCLUDE_DATA(dword_80086560);
-INCLUDE_DATA(fileBufferInUse_80086564);
-INCLUDE_DATA(dword_80086568);
-INCLUDE_DATA(fileBuffer_8008656C);
-INCLUDE_DATA(data001Path_80086570);
+int cdReadState_80086550[5] = { 1 };
+int fileBufferInUse_80086564 = 0;
+int dword_80086568 = 0;
+int fileBuffer_8008656C = 0;
+char *data001Path_80086570 = aDataData0011;

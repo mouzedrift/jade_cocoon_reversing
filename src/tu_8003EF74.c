@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8003EF74.h"
 
 extern void IntToText_8003F610(unsigned short* buf, int val);
 extern void DrawText_8003E91C(int mode, int* buf, int a, int b);
@@ -906,7 +907,14 @@ void GameLoop_8004047C(void)
     } while ((unknownFlags_8008D678 & 4) == 0);
 }
 
-INCLUDE_DATA(dword_8008686C);
-INCLUDE_DATA(dword_80086878);
-INCLUDE_DATA(dword_80086898);
-INCLUDE_DATA(copyrightData_80086930);
+int dword_8008686C[3] = { 112, 138, 0x800866D4 };
+int dword_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
+int dword_80086898[3][12] = {
+    { 112, 112, 96, 48, 32 },
+    {
+        126, 126, 126, 126, 108, 90, 72, 54,
+        36, 36, 18,
+    },
+};
+int dword_80086928[2] = { 0 };
+int copyrightData_80086930[6] = { 1, 1, 0, 0, 0x80040A10 };

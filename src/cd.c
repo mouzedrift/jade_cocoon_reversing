@@ -17,8 +17,8 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "cd.h"
+#include "tu_8003C6C8.h"
 
-extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
 
@@ -870,7 +870,7 @@ void AssertFileRequestQueueEmpty_8003C684(void)
     }
 }
 
-INCLUDE_DATA(fileRequestQueue_80086540);
-INCLUDE_DATA(dword_80086544);
-INCLUDE_DATA(dword_80086548);
-INCLUDE_DATA(dword_8008654C);
+int fileRequestQueue_80086540 = 0;
+int dword_80086544 = 0;
+FileRequest *dword_80086548 = 0;
+FileRequest *dword_8008654C = 0;

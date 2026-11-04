@@ -19,6 +19,7 @@
 #include "data_decls.h"
 #include "tu_80014954.h"
 #include "effect.h"
+#include "event.h"
 
 // the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
@@ -96,8 +97,6 @@ int sub_80019C84(void)
     return v;
 }
 extern CameraState cameraState_8008D4F0;
-extern MATRIX dword_80087114; // light matrix
-extern MATRIX dword_80087134; // light colour matrix
 extern short dword_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);

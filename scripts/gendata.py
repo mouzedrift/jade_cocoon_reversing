@@ -474,6 +474,13 @@ class Gen:
         if v == 0:
             return "0"
         hit = self.syms.at(v)
+        target = t.to if t is not None and t.kind == "ptr" else None
+        if not in_image(v) and v in self.syms.by_addr and target is not None and target.kind == "func":
+            name = self.syms.by_addr[v][0]      # an overlay's function
+            self.refs.add(name)
+            if name not in self.types.funcnodes:
+                self.protos[name] = t.pnode.type if getattr(t, "pnode", None) is not None else None
+            return name
         if hit is None or not in_image(v):
             raise GenError("pointer %08X outside the image" % v)
         a, names = hit
@@ -748,6 +755,11 @@ def guess(syms, name, addr, size, sec, gen):
     b = syms.rd(addr, size)
     if sec != ".bss" and addr % 4 == 0:
         parts = split_strings(b, rest=True)
+        if parts is not None and sec == ".data" and not all(
+                s is None or s is False or any(c >= 0x80 for c in s) or
+                (len(s) >= 4 and sum(chr(c).isalnum() or c in b" .,:!?%-'" for c in s) * 4 >= len(s) * 3)
+                for _, s in parts):
+            parts = None
         if parts is not None and (len(parts) > 1 or parts[0][1] is not None):
             out = []
             for off, s in parts:
@@ -798,6 +810,12 @@ def guess(syms, name, addr, size, sec, gen):
     n = size // t.size()
     if n == 1:
         return [(name, addr, "%s %s" % (cn, name), t, None)]
+    if addr % 4:
+        # an array would go on 4 bytes: one variable per element
+        es = t.size()
+        return [(name if k == 0 else "%s_%08X" % ("byte" if es == 1 else "word", addr + k * es), addr + k * es,
+                 "%s %s" % (cn, name if k == 0 else "%s_%08X" % ("byte" if es == 1 else "word", addr + k * es)), t, None)
+                for k in range(n)]
     return [(name, addr, "%s %s[%d]" % (cn, name, n), T("array", of=t, n=n), None)]
 
 
@@ -1085,6 +1103,17 @@ def main(argv):
         _SRC_LINES = None
     todo, defs, absorbed, errors, types, syms, gen = generate(exe, tu, args[2:] or None, secs)
     ok = [d for d in defs if d.head not in errors]
+    # an INCLUDE_DATA that stays between C definitions of its section would leave the compiler in the wrong
+    # section (the included assembly switches sections behind its back): nothing behind it is written
+    for sec in (".rdata", ".data"):
+        bad = [syms.addr[n] for n in todo if n in errors and n in syms.addr and chunk_info(n)[0] == sec]
+        if bad:
+            cut = min(bad)
+            heads = {d.head for d in ok if d.sec == sec and d.addr > cut}
+            drop = [d for d in ok if d.head in heads]
+            if drop:
+                print("// %d %s definitions behind %08X are left out" % (len(drop), sec, cut))
+                ok = [d for d in ok if d not in drop]
     for n in todo:
         if n in errors:
             print("// %s: %s" % (n, errors[n]))
@@ -1144,7 +1173,7 @@ def main(argv):
         if find_proto(name):
             continue
         a = syms.addr[name]
-        owner = [n for n, start in tus if start <= a][-1]
+        owner = [n for n, start in tus if start <= a][-1] if a < GAME_TEXT_END else tu
         if owner not in parsed:
             parsed[owner] = Types(parse_preproc(os.path.join(REPO, "build_psyq", owner + ".preproc"))) if owner != tu else types
         node = parsed[owner].funcnodes.get(name, fnode)

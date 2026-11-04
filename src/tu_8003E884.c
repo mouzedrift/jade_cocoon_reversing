@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8003D198.h"
 
 extern int dword_80086898[][12];
 
@@ -168,4 +169,5 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 
-INCLUDE_DATA(charTables_8008685C);
+CharTable_8003E91C charTables_8008685C[1] = { { 0 } };
+void *dword_80086868[1] = { (void *)((char *)&dword_800865B8 + 4) };

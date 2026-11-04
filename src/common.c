@@ -21,9 +21,22 @@
 const struct_u8x12 dword_80071F58 = { { 0, 0, 100, 0, 255, 115, 0, 0, 10, 0, 3, 0 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCommonC[] = "COMMON.C";
-INCLUDE_DATA(dword_80079320);
-INCLUDE_DATA(dword_80079348);
-INCLUDE_DATA(word_80079374);
+int dword_80079320[10] = {
+    1, 0, 1, 0, 5, 7, 11, 13,
+    9, 15,
+};
+unsigned short dword_80079348[0x15] = {
+    0x11D, 0x140, 0x163, 0x186, 0x1A9, 0x1CC, 0x1EF, 0x212,
+    0x235, 0x258, 0x27B, 0x29E, 0x2C1, 0x2E4, 0x307, 0x32A,
+    0x34D, 0x370, 0x393, 0x3B6, 0x3E7,
+};
+unsigned short word_80079374[40] = {
+    190, 19, 180, 18, 170, 17, 160, 16,
+    150, 15, 140, 14, 130, 13, 120, 12,
+    110, 11, 100, 10, 90, 9, 80, 8,
+    70, 7, 60, 6, 50, 5, 40, 4,
+    30, 3, 20, 2, 10, 1,
+};
 unsigned char byte_800793C4[4] = { 2, 3, 5, 10 };
 unsigned char dword_800793C8[118][4] = {
     { 0, 0, 4, 16 },

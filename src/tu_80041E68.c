@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "event.h"
 
 const CVECTOR dword_80074BA0 = { 128, 128, 128 };
 
@@ -36,7 +37,6 @@ int sub_80041E68(int mode, int a, int b, int c)
 }
 extern const CVECTOR dword_80074BA0;
 extern int byte_80086F9C[];
-extern int dword_80087070[][8];
 // Matched
 void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
 {
@@ -114,4 +114,4 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 
-INCLUDE_DATA(byte_80086F9C);
+int byte_80086F9C[5] = { 160, 210, 70, 40, 100 };

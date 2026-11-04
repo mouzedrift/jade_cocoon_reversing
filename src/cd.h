@@ -4,4 +4,6 @@
 extern const char aDataData0011[];
 extern const int dword_800748DC;
 
+extern int dword_80086544;
+
 #endif

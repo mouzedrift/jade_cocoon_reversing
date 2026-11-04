@@ -10,4 +10,7 @@ extern const TextBuf22 dword_80074998;
 
 extern const int dword_800749B0;
 
+extern int dword_800865A4[5];
+extern int dword_800865B8[169];
+
 #endif
