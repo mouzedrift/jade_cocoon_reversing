@@ -96,29 +96,29 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
         for (i = 0; i < 32; i++)
         {
             DVECTOR sxy;
-            VECTOR v;
+            VECTOR rel;
             POLY_FT4 poly;
             SVECTOR sv;
-            long pp;
+            long depth;
             long flag;
             int yaw;
             int sx;
             int size;
             short* cam = &cameraRot_8008D4C8;
-            v.vx = obj->x_38;
-            v.vy = obj->y_3C;
-            v.vz = obj->z_40;
+            rel.vx = obj->x_38;
+            rel.vy = obj->y_3C;
+            rel.vz = obj->z_40;
             yaw = -cam[1];
-            v.vx += sinTable_80084540[yaw & 0xFFF];
-            v.vy = levantPos_8008BD18.pos.y - 0x352;
-            v.vx -= cameraEye_8008D600.vx;
-            v.vy -= cameraEye_8008D600.vy;
-            v.vz += sinTable_80084540[(yaw + 0x400) & 0xFFF];
-            v.vz -= cameraEye_8008D600.vz;
-            sv.vx = v.vx;
-            sv.vy = v.vy;
-            sv.vz = v.vz;
-            RotTransPers(&sv, (long*)&sxy, &pp, &flag);
+            rel.vx += sinTable_80084540[yaw & 0xFFF];
+            rel.vy = levantPos_8008BD18.pos.y - 0x352;
+            rel.vx -= cameraEye_8008D600.vx;
+            rel.vy -= cameraEye_8008D600.vy;
+            rel.vz += sinTable_80084540[(yaw + 0x400) & 0xFFF];
+            rel.vz -= cameraEye_8008D600.vz;
+            sv.vx = rel.vx;
+            sv.vy = rel.vy;
+            sv.vz = rel.vz;
+            RotTransPers(&sv, (long*)&sxy, &depth, &flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
             sx = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
             if ((unsigned int)(sx + 0x60) < 0x1A0)
@@ -249,7 +249,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                 {
                     VECTOR pos;
                     CVECTOR col;
-                    int d;
+                    int dist;
                     int ang;
                     EffectSpriteFrame* frame = &sprite->frames_8[j][k];
                     SaveData* sd = &saveData_8008B570;
@@ -257,10 +257,10 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     pos.vx = obj->x_38;
                     pos.vy = obj->y_3C;
                     pos.vz = obj->z_40;
-                    d = ISqrt_8003B918(frame->pos_10[0] * frame->pos_10[0] + frame->pos_10[2] * frame->pos_10[2]);
+                    dist = ISqrt_8003B918(frame->pos_10[0] * frame->pos_10[0] + frame->pos_10[2] * frame->pos_10[2]);
                     ang = ratan2_8003B548(frame->pos_10[0], frame->pos_10[2]) + m * 512;
-                    pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * d / 4096;
-                    pos.vz += sinTable_80084540[ang & 0xFFF] * d / 4096;
+                    pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * dist / 4096;
+                    pos.vz += sinTable_80084540[ang & 0xFFF] * dist / 4096;
                     pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
                     sprite->poly_C.u0 = frame->u_0;
                     sprite->poly_C.v0 = frame->v_2;

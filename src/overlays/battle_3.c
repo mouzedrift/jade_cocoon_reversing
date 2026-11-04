@@ -488,7 +488,7 @@ void InitTurnGauges_800BF648(short* gauges, int mode)
 
 INCLUDE_OVERLAY_ASM(battle, InitTurnGauges_800BF648);
 
-#if 0 // Not matched: body matches with a goto inner loop (a for loop gets strength-reduced); prologue saves are not interleaved and a/b take s3/s2 in the original (s2/s3 here)
+#if 0 // Not matched: body matches with a goto inner loop (a for loop gets strength-reduced); prologue saves are not interleaved and gauges/summonedUnit take s3/s2 in the original (s2/s3 here)
 int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summonedUnit)
 {
     int next;
@@ -638,7 +638,7 @@ int IsBossSpecies_800BF9B4(int species)
 }
 
 
-#if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
+#if 0 // Not matched: id is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void MarkSpeciesCaptured_800BF9F0(int species)
 {
     unsigned int id = species;
@@ -660,7 +660,7 @@ int AdvancePetrification_800BFA34(int status)
     return (status & ~0x3F8) | (stage << 1);
 }
 
-#if 0 // Not matched: only the last test: andi goes to v1 instead of v0 (and branch sense/layout); tried ternary, if/else, r variable, int params
+#if 0 // Not matched: only the last test: andi goes to v1 instead of v0 (and branch sense/layout); tried ternary, if/else, result variable, int params
 int GetStatusCommand_800BFA4C(unsigned int status, unsigned int prevStatus)
 {
     if (status & 0x200)
@@ -1014,7 +1014,7 @@ void StartHelpWindow_800C0440()
     }
 }
 
-#if 0 // Not matched: u and w swap saved registers (s1/s0); tried w types, decl order, pre-increment
+#if 0 // Not matched: win and width swap saved registers (s1/s0); tried width types, decl order, pre-increment
 extern unsigned char sealOutcomeTable_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
@@ -1696,7 +1696,7 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
     }
 }
 
-#if 0 // Not matched: register permutation only (u/d/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
+#if 0 // Not matched: register permutation only (spark/sprite/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
 void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark* spark)
 {
     EffectSprite* sprite = spark->anim_3C;
@@ -1853,7 +1853,7 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
     }
 }
 
-#if 0 // Not matched: only u and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer, early return, temp for the first lookup
+#if 0 // Not matched: only src and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer, early return, temp for the first lookup
 void ShatterTask_800C23D0(EventEntry* task, BatSpark* src)
 {
     int i;
@@ -2143,7 +2143,7 @@ int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
     return -1;
 }
 
-#if 0 // Not matched: only u and c swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
+#if 0 // Not matched: only anim and clip swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
 void ModelAnimTask_800C33E4(EventEntry* task, BatModelAnim* anim)
 {
     EffectModel* clip = anim->clip_88;
@@ -4556,7 +4556,7 @@ unsigned char GetSelectedCommand_800C78D0()
     return commandByCursor_800C9648[menuForMinion_800C9E49 + (short)GetMenuCursorIndex_8003DA54(commandMenu_800C92D8) * 2];
 }
 
-#if 0 // Not matched: b and r swap registers (v1/a0); tried declaration order, int b, re-reading the global, early returns
+#if 0 // Not matched: flags and targets swap registers (v1/a0); tried declaration order, int flags, re-reading the global, early returns
 int GetSelectedTargets_800C791C()
 {
     unsigned char flags = targetFlags_800C9E68;

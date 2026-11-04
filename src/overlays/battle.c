@@ -667,7 +667,7 @@ void SelectActingUnit_800BB314(BatTaskEntry* task)
     shownUnit_800C9C99 = summonedUnit_800C9C82;
 }
 
-#if 0 // Not matched: only u and flags swap saved registers (s5/s6); reducing flags refs flips them; tried decl order, types, split ifs, tail variable
+#if 0 // Not matched: only work and oldStatus swap saved registers (s5/s6); reducing oldStatus refs flips them; tried decl order, types, split ifs, tail variable
 void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
 {
     UnitStatus* status;
@@ -898,7 +898,7 @@ void CmdAction_800BBA24(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0 // Not matched: u and the hoisted constant 1 swap saved registers (s2/s3); tried decl order, int mask, early return, operand order
+#if 0 // Not matched: work and the hoisted constant 1 swap saved registers (s2/s3); tried decl order, int mask, early return, operand order
 void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
 {
     unsigned int mask;
@@ -960,7 +960,7 @@ void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
 
 #if 0 // Not matched: the lbu of commandUnit_800C9C98 is scheduled above the store to curCommand_800C9C88.targets_C; the
       // original keeps them in order, as if commandUnit_800C9C98 were a field of the same struct (gcc only disambiguates a
-      // fixed scalar from a struct field behind a register). CmdRecall_800BBDB4 gets no arguments (t/u are still in a0/a1)
+      // fixed scalar from a struct field behind a register). CmdRecall_800BBDB4 gets no arguments (task/work are still in a0/a1)
 void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
 {
     curCommand_800C9C88.kind_0 = 3;
@@ -988,7 +988,7 @@ void CmdSwapMinionLoad_800BBC84(BatTaskEntry* task)
     LoadSummonedMinion_800C0AEC(commandUnit_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
 }
 
-#if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->handle_C store / encounterRecord_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
+#if 0 // Not matched: needs the second copy of work (s3, from 'workCopy'); remaining: work->handle_C store / encounterRecord_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
 extern int CreateSummonedMinionActor_800C0BF0();
 extern void UpdateMinionStatusTint_800C0F1C();
 void CmdSummonWait_800BBCC8(BatTaskEntry* task, BatTurnWork* work)
@@ -1343,7 +1343,7 @@ int IsUnitInBattle_800BC784(int unit)
     return 1;
 }
 
-#if 0 // Not matched: original has a dead 'li v0,7' before the last return and uses v0 for x-4; tried switch/case ranges, else-if chains, x==7 tails
+#if 0 // Not matched: original has a dead 'li v0,7' before the last return and uses v0 for unit-4; tried switch/case ranges, else-if chains, unit==7 tails
 int GetUnitSide_800BC7DC(int unit)
 {
     int side;
