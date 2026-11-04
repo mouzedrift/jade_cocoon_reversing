@@ -32,17 +32,21 @@ typedef struct GameAi
     int turnLeft_2C; // turn amount
 } GameAi;
 
-typedef struct GameRec_1
+// the battle chain record (encounterRecord_800ADE78; battle.h BatChain_a)
+typedef struct GameBattleChain
 {
-    int f0, f4, f8, fc, f10;
-} GameRec_1;
+    int active_0; // 1 while a chain of battles runs
+    int f4, f8;
+    int index_C;  // the battle of the chain (-1 before the first)
+    int next_10;  // the next entry (-1: none)
+} GameBattleChain;
 
 typedef struct GameV3_1
 {
     int a, b, c;
 } GameV3_1;
 
-// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by AddEnemySlot_800A17F4)
+// an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameEnemySlot.data_8 by AddEnemySlot_800A17F4)
 typedef struct GameEnemyMember
 {
     int species_0; // GetSpeciesModelDesc_80019C70 / InitMinionData_8001900C
@@ -56,7 +60,7 @@ typedef struct GameEnemy
     int f8;
     int fC;
     int f10;
-    int f14;
+    int groupIndex_14; // GameEncounter.groupIndex_48 (ClearEncounterGroupFlags_800A4940; -1: none)
     int useMinion_18; // 1: the first member is minion_1C
     UnitStats minion_1C;
     Actor* actors_A4[3];
@@ -65,17 +69,17 @@ typedef struct GameEnemy
     int fD4[3];
 } GameEnemy;
 
-typedef struct GameSlot_1
+typedef struct GameEnemySlot
 {
     int used_0;
     GameAi* ai_4;
     GameEnemy data_8;
-} GameSlot_1;
+} GameEnemySlot;
 
 extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
-extern GameSlot_1* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b);
+extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b);
 
 
 
@@ -153,7 +157,7 @@ extern int sub_800B76B8(char* p);
 
 
 
-extern GameSlot_1 enemySlots_800B19F0[];
+extern GameEnemySlot enemySlots_800B19F0[];
 
 extern void ResumeEnemyAi_800A2D48(GameAi* p);
 
@@ -240,10 +244,11 @@ extern int* dword_8008D46C;
 
 extern int* encounterSlot_800B1264;
 
-typedef struct GameS3_1
+// a map location (saveData_8008B570.mapId_2E4[0..2]; FindMapEntrance_800ADCEC)
+typedef struct GameMapLoc
 {
-    unsigned short a, b, c;
-} GameS3_1;
+    unsigned short area, map, entrance; // mapTable_800B0608[area][map][entrance]
+} GameMapLoc;
 
 extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 
@@ -258,21 +263,23 @@ extern int forceMapReload_80091C9C;
 
 extern int dword_80091C8C;
 
-typedef struct GameTask_1
+// a GAME task: the layout of an EventEntry, with the update callback it switches between
+typedef struct GameTask
 {
-    int f0;
+    unsigned int flags_0; // EventEntry.flags (1: run, 0x8000: free)
     int f4;
     void (*next_8)();
-} GameTask_1;
+} GameTask;
 
 
-typedef struct GameSub_1
+// a menu request handed to the sub overlay once it is loaded (shopRequest_800B06B0 / saveRequest_800B06BC)
+typedef struct GameMenuRequest
 {
-    int f0;
-    int f4;
-    int f8;
-    int fc;
-} GameSub_1;
+    int active_0;
+    int kind_4;      // shop: 0 / 1 store, 2 shop control
+    int arg_8;       // shop: the shop id (short), save menu: the save place
+    int endOfGame_C; // save menu: LoadMenuSetEndOfGame_800B78D0
+} GameMenuRequest;
 
 
 extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
@@ -301,9 +308,9 @@ extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
 typedef struct GameEncounter
 {
     int active_0;
-    GameSlot_1* leader_4;     // the enemy slot that started the encounter
+    GameEnemySlot* leader_4;     // the enemy slot that started the encounter
     int otherCount_8;             // number of others_C entries
-    GameSlot_1* others_C[12]; // the other enemy slots
+    GameEnemySlot* others_C[12]; // the other enemy slots
     int swapped_3C; // fixed encounters: which of the two enemies is out (SwapEncounterEnemy_800A2AE8)
     int count_40;
     int remaining_44;
@@ -332,14 +339,13 @@ typedef struct GameJ_1
     short actorWall_2;  // mapState_8008B500.ents_30 index (-1: none)
 } GameJ_1;
 
-typedef struct GameQ_1
+// the work area of the encounter tasks (EncounterWatchTask_800A1314 .. EncounterFadeInWait_800A167C)
+typedef struct GameBattleWork
 {
     int req_0; // file request
-    int f4;
-    int f8;
-    char pad_c[0x30];
-    int f3c;
-} GameQ_1;
+    int fadeWait_4; // frames to wait before fading back in
+    int battleTask_8; // StartBattle_800BA9E4 / sub_800BBB94
+} GameBattleWork;
 
 extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
@@ -386,9 +392,9 @@ extern void SuspendFieldMinions_800A7B00(int a);
 
 extern void ResumeFieldMinions_800A7BF0(int a);
 
-extern void SuspendEnemySlot_800A188C(GameSlot_1* p);
+extern void SuspendEnemySlot_800A188C(GameEnemySlot* p);
 
-extern void ResumeEnemySlot_800A18C8(GameSlot_1* p);
+extern void ResumeEnemySlot_800A18C8(GameEnemySlot* p);
 
 
 
@@ -539,13 +545,14 @@ extern GameRect_1 viewport_8008D420;
 
 extern int useMapStartPos_80091C94;
 
-typedef struct GameMode2_1
+// gameStartMode_800B1DC8 (GetGameStartMode_800A72C8)
+typedef struct GameStartMode
 {
-    int a;
-    int b;
-} GameMode2_1;
+    int useStartPos_0; // useMapStartPos_80091C94
+    int mode_4;        // the first game mode
+} GameStartMode;
 
-extern GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out);
+extern GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out);
 
 
 
@@ -580,11 +587,12 @@ extern int TurnStepForAngle_800A48F4(int a);
 extern void EnemyAiWanderStep_800A46FC(GameAi* p);
 extern void EnemyAiChaseStep_800A45F8(GameAi* p);
 
-typedef struct GameLst_1
+// an entry of a game mode's task list (gameModeTaskLists_800B0D74)
+typedef struct GameTaskListDef
 {
-    EventNode** p0; // a list head variable; 0 ends the table
-    int f4;
-} GameLst_1;
+    EventNode** list_0; // a list head variable; 0 ends the table
+    int modes_4; // bit n: exit the list when switching to mode n (SwitchGameMode_800A6C00); 0x1000: run once when the mode starts
+} GameTaskListDef;
 
 
 
@@ -679,25 +687,28 @@ extern GameXY_1 name_8007DCBC[];
 
 
 
-typedef struct GameStage_1
+// the work area of the GAME main task (GameMainInit_800A68CC); dword_8008D46C[9] points at it
+typedef struct GameMainWork
 {
-    int idx_0;
-    int f4;
-    int f8;
-    int done_c[12];
-} GameStage_1;
+    int mode_0;     // the current game mode (gameModeTaskLists_800B0D74 index)
+    int prevMode_4;
+    int nextMode_8; // RequestGameMode_800A6D30
+    int modeInited_C[12]; // the mode's init tasks (flag 0x1000) were run
+    int eventList_3C; // CreateEventList_800435B4(gameEventListDefs_800B0DA4)
+} GameMainWork;
 
-typedef struct GameD_1
+// the work area of CheckSubOverlayRequests_800A6DAC / WaitSubOverlayLoad_800A70F8
+typedef struct GameSubOverlayWork
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    void (*f1C)(int);
-} GameD_1;
+    int mode_0;   // the game mode to switch to once loaded (-1: none)
+    int req_4;    // the overlay's file request
+    int waitReq_8; // nonzero: wait for req_4
+    int freeze_C; // nonzero: FreezeScreen_8001C224 instead of EndFade_8001C290
+    int halt_10;  // eventDispatchHalt_8008B540 when done
+    int fading_14;
+    int startArg_18; // start_1C's argument
+    void (*start_1C)(int); // StartShopRequest_800A7204 / StartSaveMenuRequest_800A7280
+} GameSubOverlayWork;
 
 extern unsigned short padPressed_8009194C;
 
@@ -1258,7 +1269,7 @@ extern char jtgt_800A81F4[], jtgt_800A8388[], jtgt_800A83A4[], jtgt_800A83D4[], 
 extern void* const dword_800A06F0[17];
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
-extern GameRec_1 encounterRecord_800ADE78;
+extern GameBattleChain encounterRecord_800ADE78;
 extern short formation1_800ADE8C[2];
 extern short formation2_800ADE90[2];
 extern short formation3_800ADE94[4];
@@ -1536,20 +1547,20 @@ extern int chapterOverlayTaskDef_800B099C[6];
 extern int sporeTaskDef_800B09B4[6];
 extern int fieldModeTaskDef_800B09CC[6];
 extern int subOverlayTaskDef_800B09E4[6];
-extern GameLst_1 globalTaskLists_800B09FC[2];
-extern GameLst_1 gameModeChapterTasks_800B0A0C[4];
-extern GameLst_1 gameModeFieldTasks_800B0A2C[26];
-extern GameLst_1 gameModeBattleTasks_800B0AFC[35];
-extern GameLst_1 gameModeBattleEndTasks_800B0C14[4];
-extern GameLst_1 gameModeEquipTasks_800B0C34[3];
-extern GameLst_1 gameModeMenuTasks_800B0C4C[7];
-extern GameLst_1 gameModeShopTasks_800B0C84[12];
-extern GameLst_1 gameModeSaveTasks_800B0CE4[4];
-extern GameLst_1 gameModeReturnTasks_800B0D04[2];
-extern GameLst_1 gameModeMapTasks_800B0D14[6];
-extern GameLst_1 dword_800B0D44[3];
-extern GameLst_1 gameModeLoadingTasks_800B0D5C[3];
-extern GameLst_1 *gameModeTaskLists_800B0D74[12];
+extern GameTaskListDef globalTaskLists_800B09FC[2];
+extern GameTaskListDef gameModeChapterTasks_800B0A0C[4];
+extern GameTaskListDef gameModeFieldTasks_800B0A2C[26];
+extern GameTaskListDef gameModeBattleTasks_800B0AFC[35];
+extern GameTaskListDef gameModeBattleEndTasks_800B0C14[4];
+extern GameTaskListDef gameModeEquipTasks_800B0C34[3];
+extern GameTaskListDef gameModeMenuTasks_800B0C4C[7];
+extern GameTaskListDef gameModeShopTasks_800B0C84[12];
+extern GameTaskListDef gameModeSaveTasks_800B0CE4[4];
+extern GameTaskListDef gameModeReturnTasks_800B0D04[2];
+extern GameTaskListDef gameModeMapTasks_800B0D14[6];
+extern GameTaskListDef dword_800B0D44[3];
+extern GameTaskListDef gameModeLoadingTasks_800B0D5C[3];
+extern GameTaskListDef *gameModeTaskLists_800B0D74[12];
 extern char gameEventListDefs_800B0DA4[232];
 extern int gameMainTaskDef_800B0E8C[6];
 extern char endMovie_800B0EA4[20];

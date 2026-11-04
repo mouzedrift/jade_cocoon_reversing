@@ -350,126 +350,126 @@ void WarpAfterLostBattle_800A5FAC(void)
     if (eventBattleLoseWarp_800AEBE4)
     {
         SaveData* sd = &saveData_8008B570;
-        GameS3_1 v;
+        GameMapLoc loc;
         SetEventVar_800AD16C(4, sd->mapId_2E4[1].field_0 + 4);
-        FindMapEntrance_800ADCEC(&v, GetSetReturnEntrance_800A683C(-1));
+        FindMapEntrance_800ADCEC(&loc, GetSetReturnEntrance_800A683C(-1));
         SetEventFlag_800AD0F8(0);
         useMapStartPos_80091C94 = 1;
         mapStartMode_80091C54 = 0;
         sd->mapId_2E4[3].field_0 = 0;
         forceMapReload_80091C9C = 1;
         dword_80091C8C = 0;
-        sd->mapId_2E4[0].field_0 = v.a;
-        sd->mapId_2E4[1].field_0 = v.b;
-        sd->mapId_2E4[2].field_0 = v.c;
+        sd->mapId_2E4[0].field_0 = loc.area;
+        sd->mapId_2E4[1].field_0 = loc.map;
+        sd->mapId_2E4[2].field_0 = loc.entrance;
         unknownFlags_8008D678 &= ~0x20000;
     }
 }
 
-void RunEventScript_800A6060(GameTask_1* t, GameEvCtx* q)
+void RunEventScript_800A6060(GameTask* task, GameEvCtx* ctx)
 {
     while (1)
     {
         if (fieldMode_800B0EC0 != 1)
             break;
-        if (eventFuncs_800BCDBC[*(int*)q->pc_8](q) == 0)
+        if (eventFuncs_800BCDBC[*(int*)ctx->pc_8](ctx) == 0)
             break;
     }
-    if (q->flags_0 & 0x40)
-        UpdateEventMessage_800BC2B4(q);
-    if (q->flags_0 & 0x10)
+    if (ctx->flags_0 & 0x40)
+        UpdateEventMessage_800BC2B4(ctx);
+    if (ctx->flags_0 & 0x10)
     {
-        q->flags_0 &= ~0x10;
-        q->pc_8 = q->ret_C;
+        ctx->flags_0 &= ~0x10;
+        ctx->pc_8 = ctx->ret_C;
     }
-    if (q->flags_0 & 1)
+    if (ctx->flags_0 & 1)
     {
-        t->f0 &= ~1;
-        t->f0 |= 0x8000;
-        t->f0 &= ~4;
-        t->f0 |= 0x8000;
+        task->flags_0 &= ~1;
+        task->flags_0 |= 0x8000;
+        task->flags_0 &= ~4;
+        task->flags_0 |= 0x8000;
     }
 }
 
 // Matched
-void EndEventScript_800A6168(GameTask_1* t, GameEvCtx* q)
+void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 {
-    if (sceneScriptId_800AEBD8 == q->id_10)
+    if (sceneScriptId_800AEBD8 == ctx->id_10)
     {
-        EvCmdEndScene_800B8A34(q);
+        EvCmdEndScene_800B8A34(ctx);
     }
-    t->f0 = (((t->f0 & ~1) | 0x8000) & ~4) | 0x8000;
+    task->flags_0 = (((task->flags_0 & ~1) | 0x8000) & ~4) | 0x8000;
 }
 
-void GetPortraitSprt_800A61CC(int a, void* b, void* c)
+void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 {
-    GameTim_1 t;
-    GameActorDesc* i;
-    if (a == 0)
+    GameTim_1 tim;
+    GameActorDesc* desc;
+    if (who == 0)
     {
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCA4.x;
-        t.prect.y = name_8007DCA4.y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCA8.x;
-        t.crect.y = name_8007DCA8.y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCA4.x;
+        tim.prect.y = name_8007DCA4.y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCA8.x;
+        tim.crect.y = name_8007DCA8.y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
     else
     {
-        i = GetFieldMinionModelDesc_800A7A1C(a - 1);
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCAC[i->clut_30].x;
-        t.prect.y = name_8007DCAC[i->clut_30].y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[i->clut_30].x;
-        t.crect.y = name_8007DCBC[i->clut_30].y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCAC[desc->clut_30].x;
+        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCBC[desc->clut_30].x;
+        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
-    InitSprtFromTim_800298AC((int)b, (int)c, &t);
+    InitSprtFromTim_800298AC((int)sprt, (int)sprtArg, &tim);
 }
 
-void GetPortraitPoly_800A6308(int a, void* poly)
+void GetPortraitPoly_800A6308(int who, void* poly)
 {
-    GameTim_1 t;
-    GameActorDesc* i;
-    if (a == 0)
+    GameTim_1 tim;
+    GameActorDesc* desc;
+    if (who == 0)
     {
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCA4.x;
-        t.prect.y = name_8007DCA4.y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCA8.x;
-        t.crect.y = name_8007DCA8.y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCA4.x;
+        tim.prect.y = name_8007DCA4.y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCA8.x;
+        tim.crect.y = name_8007DCA8.y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
     else
     {
-        i = GetFieldMinionModelDesc_800A7A1C(a - 1);
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCAC[i->clut_30].x;
-        t.prect.y = name_8007DCAC[i->clut_30].y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[i->clut_30].x;
-        t.crect.y = name_8007DCBC[i->clut_30].y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCAC[desc->clut_30].x;
+        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCBC[desc->clut_30].x;
+        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
-    InitPolyFT4_80029A10(poly, &t);
+    InitPolyFT4_80029A10(poly, &tim);
 }
 
-void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
+void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
 {
     int icon;
     switch (kind)
@@ -477,7 +477,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     case 0:
         break;
     case 1:
-        GetPortraitSprt_800A61CC(id, b, c);
+        GetPortraitSprt_800A61CC(id, sprt, sprtArg);
         break;
     case 2:
         icon = GetItemIcon_8001D2AC(id);
@@ -490,7 +490,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     case 6:
         icon = GetEquipmentIcon_8001D2D4(id, kind - 4);
     draw:
-        GetPublicTiySprt_80032470(icon, b, c);
+        GetPublicTiySprt_80032470(icon, sprt, sprtArg);
         break;
     case 7:
         printf(aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
@@ -504,9 +504,9 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
 void* const dword_800A06B8[14] = { jtgt_800A7E18, jtgt_800A7E48, jtgt_800A7E78, jtgt_800A7EC8, jtgt_800A7EC8, jtgt_800A7EE4, jtgt_800A7EF4, jtgt_800A7F08, jtgt_800A7F1C, jtgt_800A7F30, jtgt_800A7F30, jtgt_800A7FBC, jtgt_800A8078, jtgt_800A8078 };
 
 // Matched
-int IsEventPointValid_800A6504(int a)
+int IsEventPointValid_800A6504(int point)
 {
-    return sub_800B76B8(dword_8008B520 + (a << 3)) >= 0;
+    return sub_800B76B8(dword_8008B520 + (point << 3)) >= 0;
 }
 
 // Matched
@@ -522,33 +522,33 @@ void SetActorWallEnabled_800A654C(int wall, int on)
 }
 
 // Matched
-void SetWallsEnabled_800A6564(GameJ_1* p, int on)
+void SetWallsEnabled_800A6564(GameJ_1* walls, int on)
 {
-    if (p->levantWall_0 >= 0)
+    if (walls->levantWall_0 >= 0)
     {
-        SetLevantWallEnabled_800A6534(p->levantWall_0, on);
+        SetLevantWallEnabled_800A6534(walls->levantWall_0, on);
     }
-    if (p->actorWall_2 >= 0)
+    if (walls->actorWall_2 >= 0)
     {
-        SetActorWallEnabled_800A654C(p->actorWall_2, on);
+        SetActorWallEnabled_800A654C(walls->actorWall_2, on);
     }
 }
 
 // Matched
-int IsAngleWithin36_800A65BC(int a, int b)
+int IsAngleWithin36_800A65BC(int angleA, int angleB)
 {
-    return (unsigned int)(WrapAngle_8003BA18((short)(a - b)) + 0x198) < 0x331;
+    return (unsigned int)(WrapAngle_8003BA18((short)(angleA - angleB)) + 0x198) < 0x331;
 }
 
 // Matched
-int IsPointInViewCone_800A65F0(int* a, int* b, unsigned short* q, int r)
+int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int range)
 {
-    unsigned int u = 0xfff;
-    IsWithinDistance_8003B740(b, a, &u);
-    if (u < (unsigned int)(r * r))
+    unsigned int dist = 0xfff;
+    IsWithinDistance_8003B740(eye, point, &dist);
+    if (dist < (unsigned int)(range * range))
     {
-        int d = GameFn_8003B9E0(b, a);
-        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        int angle = GameFn_8003B9E0(eye, point);
+        if ((unsigned int)(WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -558,12 +558,12 @@ int IsPointInViewCone_800A65F0(int* a, int* b, unsigned short* q, int r)
 
 #if 0
 // Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
-int IsEventPointInView_800A66A4(int* p, int* x, unsigned short* q)
+int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
 {
-    if (p[0] >= 0 && IsEventPointValid_800A6504(p[0]))
+    if (point[0] >= 0 && IsEventPointValid_800A6504(point[0]))
     {
-        int d = GameFn_8003B9E0(x, p + 1);
-        if ((unsigned int)((short)WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        int angle = GameFn_8003B9E0(eye, point + 1);
+        if ((unsigned int)((short)WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -574,32 +574,32 @@ int IsEventPointInView_800A66A4(int* p, int* x, unsigned short* q)
 
 INCLUDE_OVERLAY_ASM(game, IsEventPointInView_800A66A4);
 
-int GetEventString_800A6738(unsigned int a)
+int GetEventString_800A6738(unsigned int id)
 {
     currentMessageId_800AEBE8 = 0x8000;
-    if (a <= 0xfffe)
+    if (id <= 0xfffe)
     {
-        GameTable_1* t;
-        currentMessageId_800AEBE8 = a;
-        t = GetEventDataSlot_800A55B0(1);
-        if (a < t->count)
+        GameTable_1* tbl;
+        currentMessageId_800AEBE8 = id;
+        tbl = GetEventDataSlot_800A55B0(1);
+        if (id < tbl->count)
         {
-            int off = a * 8;
+            int off = id * 8;
             off += 4;
-            return *(int*)((char*)t + off);
+            return *(int*)((char*)tbl + off);
         }
         return 0;
     }
-    return a;
+    return id;
 }
 
 // Matched
-int SkipActorAnims_800A67B4(unsigned int* p)
+int SkipActorAnims_800A67B4(unsigned int* args)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
-        if (p[6] & (1 << i))
+        if (args[6] & (1 << i))
         {
             if (i == 0)
             {
@@ -615,65 +615,65 @@ int SkipActorAnims_800A67B4(unsigned int* p)
 }
 
 // Matched
-void SetVoiceTable_800A6830(int a)
+void SetVoiceTable_800A6830(int tbl)
 {
-    voiceTable_800AEBF0 = a;
+    voiceTable_800AEBF0 = tbl;
 }
 
 // Matched
-int GetSetReturnEntrance_800A683C(int x)
+int GetSetReturnEntrance_800A683C(int entrance)
 {
-    int v = GetEventVar_800AD154(5) << 8;
-    v += GetEventVar_800AD154(6);
-    if (v == 0)
+    int old = GetEventVar_800AD154(5) << 8;
+    old += GetEventVar_800AD154(6);
+    if (old == 0)
     {
-        v = 0x66;
+        old = 0x66;
         SetEventVar_800AD16C(5, 0);
-        SetEventVar_800AD16C(6, v);
+        SetEventVar_800AD16C(6, old);
     }
-    if (x >= 0)
+    if (entrance >= 0)
     {
-        int hi = x >> 8;
+        int hi = entrance >> 8;
         SetEventVar_800AD16C(5, hi);
-        SetEventVar_800AD16C(6, x - (hi << 8));
+        SetEventVar_800AD16C(6, entrance - (hi << 8));
     }
-    return v;
+    return old;
 }
 
-void GameMainInit_800A68CC(GameTask_1* t, int* q)
+void GameMainInit_800A68CC(GameTask* task, GameMainWork* work)
 {
     int i;
-    int* d = gameStartMode_800B1DC8;
-    GetGameStartMode_800A72C8((GameMode2_1*)d);
-    q[0] = d[1];
-    q[1] = q[0];
-    q[2] = q[0];
+    int* startMode = gameStartMode_800B1DC8;
+    GetGameStartMode_800A72C8((GameStartMode*)startMode);
+    work->mode_0 = startMode[1];
+    work->prevMode_4 = work->mode_0;
+    work->nextMode_8 = work->mode_0;
     for (i = 11; i >= 0; i--)
     {
-        q[i + 3] = 0;
+        work->modeInited_C[i] = 0;
     }
-    q[0xf] = CreateEventList_800435B4(gameEventListDefs_800B0DA4);
+    work->eventList_3C = CreateEventList_800435B4(gameEventListDefs_800B0DA4);
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
-    t->next_8 = GameMainStart_800A6968;
+    task->next_8 = GameMainStart_800A6968;
 }
 
-void GameMainStart_800A6968(GameTask_1* t, GameQ_1* q)
+void GameMainStart_800A6968(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = globalTaskLists_800B09FC;
+    GameTaskListDef* lists = globalTaskLists_800B09FC;
     int i;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
         i = 0;
         do
         {
-            RunEventListUpdate_800A7450(*l0[i].p0);
+            RunEventListUpdate_800A7450(*lists[i].list_0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
             }
             i++;
-        } while (l0[i].p0 != 0);
+        } while (lists[i].list_0 != 0);
     }
     if (eventDispatchHalt_8008B540)
     {
@@ -681,139 +681,139 @@ void GameMainStart_800A6968(GameTask_1* t, GameQ_1* q)
     }
     ApplyAudioOutputFormat_80030988();
     ResetFieldState_800A73A8();
-    SwitchGameMode_800A6C00(t, q);
-    InitGameModeTasks_800A6A48(t, q);
-    t->next_8 = GameMainUpdate_800A6B00;
+    SwitchGameMode_800A6C00(task, work);
+    InitGameModeTasks_800A6A48(task, work);
+    task->next_8 = GameMainUpdate_800A6B00;
 end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
 
-void InitGameModeTasks_800A6A48(GameTask_1* t, GameStage_1* q)
+void InitGameModeTasks_800A6A48(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0;
-    GameLst_1* l;
-    if (q->done_c[q->idx_0] == 0)
+    GameTaskListDef* lists;
+    GameTaskListDef* list;
+    if (work->modeInited_C[work->mode_0] == 0)
     {
-        l0 = gameModeTaskLists_800B0D74[q->idx_0];
-        if (l0->p0 != 0)
+        lists = gameModeTaskLists_800B0D74[work->mode_0];
+        if (lists->list_0 != 0)
         {
-            l = l0;
+            list = lists;
             do
             {
-                if (l->f4 & 0x1000)
+                if (list->modes_4 & 0x1000)
                 {
-                    RunEventListUpdate_800A7450(*l->p0);
+                    RunEventListUpdate_800A7450(*list->list_0);
                 }
-                l++;
-            } while (l->p0 != 0);
+                list++;
+            } while (list->list_0 != 0);
         }
-        q->done_c[q->idx_0] = 1;
+        work->modeInited_C[work->mode_0] = 1;
     }
 }
 
-void GameMainUpdate_800A6B00(GameTask_1* t, GameQ_1* q)
+void GameMainUpdate_800A6B00(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = gameModeTaskLists_800B0D74[*(int*)q];
+    GameTaskListDef* lists = gameModeTaskLists_800B0D74[work->mode_0];
     int i;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
         i = 0;
         do
         {
-            RunEventListUpdate_800A7450(*l0[i].p0);
+            RunEventListUpdate_800A7450(*lists[i].list_0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
             }
             i++;
-        } while (l0[i].p0 != 0);
+        } while (lists[i].list_0 != 0);
     }
     if (unknownFlags_8008D678 & 0x8000000)
     {
-        t->next_8 = GameMainExit_800A6CCC;
+        task->next_8 = GameMainExit_800A6CCC;
         goto end;
     }
     if (gameModeChanged_800B0698 != 0)
     {
-        SwitchGameMode_800A6C00(t, q);
-        InitGameModeTasks_800A6A48(t, q);
+        SwitchGameMode_800A6C00(task, work);
+        InitGameModeTasks_800A6A48(task, work);
     }
 end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
 
-void SwitchGameMode_800A6C00(GameTask_1* t, int* q)
+void SwitchGameMode_800A6C00(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = gameModeTaskLists_800B0D74[q[0]];
-    GameLst_1* l;
+    GameTaskListDef* lists = gameModeTaskLists_800B0D74[work->mode_0];
+    GameTaskListDef* list;
     int one = 1;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
-        l = l0;
+        list = lists;
         do
         {
-            if (l->f4 & (one << q[2]))
-                RunEventListExit_800A74F0(*l->p0);
-            l++;
-        } while (l->p0 != 0);
+            if (list->modes_4 & (one << work->nextMode_8))
+                RunEventListExit_800A74F0(*list->list_0);
+            list++;
+        } while (list->list_0 != 0);
     }
-    if (q[0] == 11)
-        q[0] = q[1];
-    q[1] = q[0];
-    q[0] = q[2];
+    if (work->mode_0 == 11)
+        work->mode_0 = work->prevMode_4;
+    work->prevMode_4 = work->mode_0;
+    work->mode_0 = work->nextMode_8;
 }
 
 // Matched
-void GameMainExit_800A6CCC(GameTask_1* t, GameQ_1* q)
+void GameMainExit_800A6CCC(GameTask* task, GameMainWork* work)
 {
-    RunEventListFreeCallbacks_800438F8(q->f3c);
-    FreeEventList_80043A5C(q->f3c);
+    RunEventListFreeCallbacks_800438F8(work->eventList_3C);
+    FreeEventList_80043A5C(work->eventList_3C);
     bStopDrawingMovie_8008D45C = 1;
-    t->f0 = (t->f0 & ~1) | 0x8000;
+    task->flags_0 = (task->flags_0 & ~1) | 0x8000;
 }
 
 // Matched
-void RequestGameMode_800A6D30(int a)
+void RequestGameMode_800A6D30(int mode)
 {
-    int* w = (int*)dword_8008D46C[9];
+    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
     gameModeChanged_800B0698 = 1;
-    w[2] = a;
+    work->nextMode_8 = mode;
 }
 
-int GetGameMode_800A6D50(int a)
+int GetGameMode_800A6D50(int which)
 {
-    int* p = (int*)dword_8008D46C[9];
-    int r = 0;
-    switch ((unsigned)a)
+    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
+    int mode = 0;
+    switch ((unsigned)which)
     {
     case 0:
-        r = p[0];
+        mode = work->mode_0;
         break;
     case 1:
-        r = p[1];
+        mode = work->prevMode_4;
         break;
     case 2:
-        r = p[2];
+        mode = work->nextMode_8;
         break;
     }
-    return r;
+    return mode;
 }
 
-void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
+void CheckSubOverlayRequests_800A6DAC(GameTask* task, GameSubOverlayWork* work)
 {
-    GameD_1* p;
+    GameSubOverlayWork* req;
     int ov;
-    EventEntry* e;
-    q->f0 = -1;
+    EventEntry* entry;
+    work->mode_0 = -1;
     unknownFlags_8008D678 &= ~8;
-    p = q;
-    q->f8 = 0;
-    q->fC = 0;
-    q->f10 = 0;
-    q->f14 = 0;
-    q->f1C = 0;
+    req = work;
+    work->waitReq_8 = 0;
+    work->freeze_C = 0;
+    work->halt_10 = 0;
+    work->fading_14 = 0;
+    work->start_1C = 0;
     if (forceMapReload_80091C9C == 1)
         return;
     if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
@@ -833,19 +833,19 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
     if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == 1 && gCtx_800B1260.active_0 == 0 &&
         !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
     {
-        q->f8 = fieldMode_800B0EC0;
-        q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
-        e = AllocEventEntry_80043AF8(fieldMenuTask_8008D498);
-        e->flags = (e->flags | 1) & ~0x8000;
-        q->f0 = 4;
+        work->waitReq_8 = fieldMode_800B0EC0;
+        work->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
+        entry = AllocEventEntry_80043AF8(fieldMenuTask_8008D498);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        work->mode_0 = 4;
     }
     else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && fieldMode_800B0EC0 != 1)
     {
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
-        e = AllocEventEntry_80043AF8(fieldModeTask_800B1DAC);
-        e->flags = (e->flags | 1) & ~0x8000;
-        p->f0 = 1;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
+        entry = AllocEventEntry_80043AF8(fieldModeTask_800B1DAC);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        req->mode_0 = 1;
     }
     else if (shopRequest_800B06B0[0])
     {
@@ -865,138 +865,138 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         {
             ov = 0xd;
         }
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
-        p->f0 = 5;
-        p->f18 = (int)shopRequest_800B06B0;
-        p->f1C = (void (*)(int))StartShopRequest_800A7204;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
+        req->mode_0 = 5;
+        req->startArg_18 = (int)shopRequest_800B06B0;
+        req->start_1C = (void (*)(int))StartShopRequest_800A7204;
     }
     else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && saveRequest_800B06BC)
     {
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
-        e = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
-        e->flags = (e->flags | 1) & ~0x8000;
-        p->f0 = 6;
-        p->f18 = (int)&saveRequest_800B06BC;
-        p->f1C = (void (*)(int))StartSaveMenuRequest_800A7280;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
+        entry = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        req->mode_0 = 6;
+        req->startArg_18 = (int)&saveRequest_800B06BC;
+        req->start_1C = (void (*)(int))StartSaveMenuRequest_800A7280;
     }
-    if (p->f0 >= 0)
+    if (req->mode_0 >= 0)
     {
-        WaitSubOverlayLoad_800A70F8(t, q);
+        WaitSubOverlayLoad_800A70F8(task, work);
     }
 }
 
-void WaitSubOverlayLoad_800A70F8(GameTask_1* t, GameD_1* q)
+void WaitSubOverlayLoad_800A70F8(GameTask* task, GameSubOverlayWork* work)
 {
-    int c = 0;
-    GameD_1* r = q;
-    if (q->f8)
-        c = (unsigned)GetFileRequestStatus_8003BE30(q->f4) > 0;
-    if (c == 0)
+    int busy = 0;
+    GameSubOverlayWork* req = work;
+    if (work->waitReq_8)
+        busy = (unsigned)GetFileRequestStatus_8003BE30(work->req_4) > 0;
+    if (busy == 0)
     {
-        if (q->f1C)
-            q->f1C(q->f18);
-        RequestGameMode_800A6D30(q->f0);
-        t->next_8 = CheckSubOverlayRequests_800A6DAC;
-        if (q->fC)
+        if (work->start_1C)
+            work->start_1C(work->startArg_18);
+        RequestGameMode_800A6D30(work->mode_0);
+        task->next_8 = CheckSubOverlayRequests_800A6DAC;
+        if (work->freeze_C)
             FreezeScreen_8001C224();
         else
             EndFade_8001C290();
-        eventDispatchHalt_8008B540 = r->f10;
+        eventDispatchHalt_8008B540 = req->halt_10;
     }
     else
     {
-        if (q->f14 == 0)
+        if (work->fading_14 == 0)
         {
             BeginFade_8001C260();
-            q->f14 = 1;
+            work->fading_14 = 1;
             RequestGameMode_800A6D30(0xb);
-            t->next_8 = WaitSubOverlayLoad_800A70F8;
+            task->next_8 = WaitSubOverlayLoad_800A70F8;
         }
         eventDispatchHalt_8008B540 = 1;
     }
 }
 
 // Matched
-void StartShopRequest_800A7204(GameSub_1* p)
+void StartShopRequest_800A7204(GameMenuRequest* req)
 {
-    if (p->f4 == 0)
+    if (req->kind_4 == 0)
     {
-        StartStore_800BAE2C(0, *(short*)&p->f8);
-        p->f0 = 0;
+        StartStore_800BAE2C(0, *(short*)&req->arg_8);
+        req->active_0 = 0;
     }
-    else if (p->f4 == 1)
+    else if (req->kind_4 == 1)
     {
-        StartStore_800BAE2C(1, *(short*)&p->f8);
-        p->f0 = 0;
+        StartStore_800BAE2C(1, *(short*)&req->arg_8);
+        req->active_0 = 0;
     }
     else
     {
-        if (p->f4 == 2)
+        if (req->kind_4 == 2)
         {
-            StartShopCtrl_800B66C4(*(short*)&p->f8);
+            StartShopCtrl_800B66C4(*(short*)&req->arg_8);
         }
-        p->f0 = 0;
+        req->active_0 = 0;
     }
 }
 
 // Matched
-void StartSaveMenuRequest_800A7280(GameSub_1* p)
+void StartSaveMenuRequest_800A7280(GameMenuRequest* req)
 {
-    SetLoadMenuSavePlace_800B78B8(p->f8);
-    if (p->fc)
+    SetLoadMenuSavePlace_800B78B8(req->arg_8);
+    if (req->endOfGame_C)
     {
         LoadMenuSetEndOfGame_800B78D0();
     }
-    p->f0 = 0;
+    req->active_0 = 0;
 }
 
-GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out)
+GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out)
 {
-    GameMode2_1 r;
-    GameS3_1 v;
+    GameStartMode mode;
+    GameMapLoc loc;
     if (unknownFlags_8008D678 & 0x40000000)
     {
-        r.a = 0;
-        r.b = 1;
-        FindMapEntrance_800ADCEC(&v, 0x159);
+        mode.useStartPos_0 = 0;
+        mode.mode_4 = 1;
+        FindMapEntrance_800ADCEC(&loc, 0x159);
         saveData_8008B570.mapId_2E4[0].field_2 = -1;
         saveData_8008B570.mapId_2E4[1].field_2 = -1;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
         useMapStartPos_80091C94 = 1;
-        saveData_8008B570.mapId_2E4[0].field_0 = v.a;
-        saveData_8008B570.mapId_2E4[1].field_0 = v.b;
-        saveData_8008B570.mapId_2E4[2].field_0 = v.c;
+        saveData_8008B570.mapId_2E4[0].field_0 = loc.area;
+        saveData_8008B570.mapId_2E4[1].field_0 = loc.map;
+        saveData_8008B570.mapId_2E4[2].field_0 = loc.entrance;
     }
     else if ((unsigned short)titleMenuState_8008B558[1] == 1)
     {
-        r.a = 0;
-        r.b = 1;
+        mode.useStartPos_0 = 0;
+        mode.mode_4 = 1;
     }
     else if ((unsigned short)titleMenuState_8008B558[1] == 4)
     {
-        r.a = 1;
-        r.b = 1;
+        mode.useStartPos_0 = 1;
+        mode.mode_4 = 1;
     }
     else
     {
-        r.a = 1;
-        r.b = 0;
+        mode.useStartPos_0 = 1;
+        mode.mode_4 = 0;
     }
-    *out = r;
+    *out = mode;
     return out;
 }
 
 void ResetFieldState_800A73A8(void)
 {
-    GameRect_1* r = &viewport_8008D420;
+    GameRect_1* view = &viewport_8008D420;
     sceneBrightness_8008D40C = 0x1000;
     unpausedFrames_8008D404 = 0;
-    r->x = 0;
-    r->w = 0x140;
-    r->y = 0;
-    r->h = 0xf0;
+    view->x = 0;
+    view->w = 0x140;
+    view->y = 0;
+    view->h = 0xf0;
     unknownFlags_8008D678 &= ~0x8000000;
     InitMapState_80026FAC();
     EnableCameraPoints_800A094C();
@@ -1009,38 +1009,38 @@ void ResetFieldState_800A73A8(void)
 }
 
 // Matched
-void RunEventListUpdate_800A7450(EventNode* n)
+void RunEventListUpdate_800A7450(EventNode* node)
 {
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
         if (eventDispatchHalt_8008B540)
         {
             break;
         }
-        if ((n->entry.flags & 0x8001) == 1)
+        if ((node->entry.flags & 0x8001) == 1)
         {
-            EventEntry* o = &n->entry;
-            o->cb_8(o, o->buffer);
+            EventEntry* entry = &node->entry;
+            entry->cb_8(entry, entry->buffer);
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
 // Matched
-void RunEventListExit_800A74F0(EventNode* n)
+void RunEventListExit_800A74F0(EventNode* node)
 {
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        if ((n->entry.flags & 0x8004) == 4)
+        if ((node->entry.flags & 0x8004) == 4)
         {
-            EventEntry* o = &n->entry;
-            o->cb_C(o, o->buffer);
+            EventEntry* entry = &node->entry;
+            entry->cb_C(entry, entry->buffer);
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
@@ -1060,57 +1060,57 @@ int GameShutdown_800A7574(void)
 }
 
 // Matched
-void StartMapOverlay_800A75F8(GameTask_1* t, void** q)
+void StartMapOverlay_800A75F8(GameTask* task, void** work)
 {
-    *q = LoadOverlayIfChanged_80020D1C(1, 0xa);
-    t->next_8 = WaitMapOverlay_800A7654;
+    *work = LoadOverlayIfChanged_80020D1C(1, 0xa);
+    task->next_8 = WaitMapOverlay_800A7654;
     unknownFlags_8008D678 |= 0x4000000;
 }
 
 // Matched
-void WaitMapOverlay_800A7654(GameTask_1* t, int* q)
+void WaitMapOverlay_800A7654(GameTask* task, int* work)
 {
-    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(work[0]) == 0)
     {
-        t->next_8 = MapSelectStart_800B6BFC;
+        task->next_8 = MapSelectStart_800B6BFC;
     }
 }
 
 // Matched
-void StartChapterOverlay_800A7690(GameTask_1* t, void** q)
+void StartChapterOverlay_800A7690(GameTask* task, void** work)
 {
-    *q = LoadOverlayIfChanged_80020D1C(1, 0x14);
-    t->next_8 = WaitChapterOverlay_800A76D8;
+    *work = LoadOverlayIfChanged_80020D1C(1, 0x14);
+    task->next_8 = WaitChapterOverlay_800A76D8;
 }
 
 // Matched
-void WaitChapterOverlay_800A76D8(GameTask_1* t, int* q)
+void WaitChapterOverlay_800A76D8(GameTask* task, int* work)
 {
-    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(work[0]) == 0)
     {
-        t->next_8 = sub_800B66DC;
+        task->next_8 = sub_800B66DC;
     }
 }
 
 // Matched
-void SetFieldMode_800A7714(int a)
+void SetFieldMode_800A7714(int mode)
 {
-    fieldMode_800B0EC0 = a;
+    fieldMode_800B0EC0 = mode;
 }
 
 // Matched
-void FieldModeTask_800A7720(GameTask_1* t)
+void FieldModeTask_800A7720(GameTask* task)
 {
-    int n = fieldMode_800B0EC0;
-    if (n != 1)
+    int mode = fieldMode_800B0EC0;
+    if (mode != 1)
     {
-        void (*f)() = fieldModeHandlers_800B0EB8[n].fn;
-        t->next_8 = f;
-        f(t);
+        void (*handler)() = fieldModeHandlers_800B0EB8[mode].fn;
+        task->next_8 = handler;
+        handler(task);
     }
     else
     {
-        t->f0 = (t->f0 & ~1) | 0x8000;
+        task->flags_0 = (task->flags_0 & ~1) | 0x8000;
     }
 }
 
@@ -4495,7 +4495,7 @@ void FindMapEntrance_800ADCEC(short* out, int key)
 // Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
 void SelectMapEntrance_800ADDAC(void)
 {
-    GameS3_1 v;
+    GameMapLoc v;
     int r;
     int i;
     int key;
@@ -4524,7 +4524,7 @@ void SelectMapEntrance_800ADDAC(void)
 
 INCLUDE_OVERLAY_ASM(game, SelectMapEntrance_800ADDAC);
 
-GameRec_1 encounterRecord_800ADE78 = { 0 };
+GameBattleChain encounterRecord_800ADE78 = { 0 };
 short formation1_800ADE8C[2] = { 0 };
 short formation2_800ADE90[2] = { -0x11C, 0x11C };
 short formation3_800ADE94[4] = { -0x200, 0, 0x200 };
@@ -5219,13 +5219,13 @@ int chapterOverlayTaskDef_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1
 int sporeTaskDef_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
 int fieldModeTaskDef_800B09CC[6] = { 1, 0x8000, 80, (int)&fieldModeTask_800B1DAC, (int)FieldModeTask_800A7720 };
 int subOverlayTaskDef_800B09E4[6] = { 1, 1, 32, (int)subOverlayTask_800B1DB4, (int)CheckSubOverlayRequests_800A6DAC };
-GameLst_1 globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
-GameLst_1 gameModeChapterTasks_800B0A0C[4] = {
+GameTaskListDef globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
+GameTaskListDef gameModeChapterTasks_800B0A0C[4] = {
     { &overlayLoaderTask_8008D4C0 },
     { &soundTask_8008D4A4, 0x1000 },
     { chapterOverlayTask_800B1DB0 },
 };
-GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
+GameTaskListDef gameModeFieldTasks_800B0A2C[26] = {
     { &overlayLoaderTask_8008D4C0 },
     { levantModelTask_800B1DA0 },
     { &modelLoaderTask_8008B54C },
@@ -5252,7 +5252,7 @@ GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
     { (void *)&vibrationTasks_8008D4B8 },
     { &sporeTask_8008D464 },
 };
-GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
+GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &soundTask_8008D4A4 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5288,17 +5288,17 @@ GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
     { &miscTasks_8008D60C },
     { (void *)((char *)&dword_8008D48C + 4) },
 };
-GameLst_1 gameModeBattleEndTasks_800B0C14[4] = {
+GameTaskListDef gameModeBattleEndTasks_800B0C14[4] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&dword_8008D48C + 4) },
     { (void *)&messageWindowTask_8008D640 },
 };
-GameLst_1 gameModeEquipTasks_800B0C34[3] = {
+GameTaskListDef gameModeEquipTasks_800B0C34[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&equipTask_8008D4C4 },
 };
-GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
+GameTaskListDef gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&fieldMenuTask_8008D498 },
@@ -5306,7 +5306,7 @@ GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&configTask_8008B4B8 },
     { (void *)&messageWindowTask_8008D640 },
 };
-GameLst_1 gameModeShopTasks_800B0C84[12] = {
+GameTaskListDef gameModeShopTasks_800B0C84[12] = {
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5319,28 +5319,28 @@ GameLst_1 gameModeShopTasks_800B0C84[12] = {
     { (void *)&shelfMenuTask_8008D4A8 },
     { &fadeTask_8008D628 },
 };
-GameLst_1 gameModeSaveTasks_800B0CE4[4] = {
+GameTaskListDef gameModeSaveTasks_800B0CE4[4] = {
     { (void *)&dword_8008D62C },
     { &overlayLoaderTask_8008D4C0 },
     { &loadMenuTask_8008D480 },
 };
-GameLst_1 gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
-GameLst_1 gameModeMapTasks_800B0D14[6] = {
+GameTaskListDef gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
+GameTaskListDef gameModeMapTasks_800B0D14[6] = {
     { &soundTask_8008D4A4 },
     { levantModelTask_800B1DA0 },
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { &overlayLoaderTask_8008D4C0 },
     { mapOverlayTask_800B1DA4 },
 };
-GameLst_1 dword_800B0D44[3] = {
+GameTaskListDef dword_800B0D44[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&screenOffset_8008D474 + 4) },
 };
-GameLst_1 gameModeLoadingTasks_800B0D5C[3] = {
+GameTaskListDef gameModeLoadingTasks_800B0D5C[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { subOverlayTask_800B1DB4 },
 };
-GameLst_1 *gameModeTaskLists_800B0D74[12] = {
+GameTaskListDef *gameModeTaskLists_800B0D74[12] = {
     gameModeChapterTasks_800B0A0C, gameModeFieldTasks_800B0A2C, gameModeBattleTasks_800B0AFC, gameModeEquipTasks_800B0C34,
     gameModeMenuTasks_800B0C4C, gameModeShopTasks_800B0C84, gameModeSaveTasks_800B0CE4, gameModeReturnTasks_800B0D04,
     gameModeMapTasks_800B0D14, dword_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
