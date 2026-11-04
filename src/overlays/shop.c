@@ -109,37 +109,37 @@ extern int GetMagicElement_8001AD30(int i);
 extern int CountMagicBits_8001AE54(unsigned int* b);
 extern int GetLastInventorySlot_800AD308(int a);
 extern void EndFormView_800BF750();
-typedef struct ShopBigShop
+typedef struct SinQuadrant
 {
     char pad_0[0x5C6];
-    short field_5C6;
+    short sin_5C6;
     char pad_5C8[0x800 - 0x5C8];
-} ShopBigShop;
-extern ShopBigShop name_80084540[];
-typedef struct ShopSetupShop
+} SinQuadrant;
+extern SinQuadrant name_80084540[];
+typedef struct FormActorDesc
 {
-    int w0;
-    int w4;
-    int w8;
-    int wC;
-    int w10;
-    short s14;
-    short s16;
-    short s18;
+    int modelId_0; // the CreateActor_8001D45C ActorDesc without hasMatrices_4C
+    int kind_4;
+    int posX_8;
+    int posY_C;
+    int posZ_10;
+    short rotX_14;
+    short rotY_16;
+    short rotZ_18;
     short pad_1A;
-    int w1C;
-    int w20;
-    int w24;
-    int w28;
-    int w2C;
-    int w30;
-    int w34;
-    int w38;
-    int w3C;
-    int w40;
-    int w44;
-    int w48;
-} ShopSetupShop;
+    int clutRow_1C;
+    int animIdx_20;
+    int frame_24;
+    int frameSpeed_28;
+    int blendDiv_2C;
+    int visible_30;
+    int bones_34;
+    int baseScale_38;
+    int boneScale_3C;
+    int anims_40;
+    int effectTbl_44;
+    int model_48;
+} FormActorDesc;
 extern int fn_80010A44(int a);
 extern int fn_80024E90(int a, int b);
 extern int fn_80024EC8(int a, int b);
@@ -192,7 +192,7 @@ const int dword_800B6D48 = 0;
 
 int CompactStoredMinions_800B97B0()
 {
-    int r = 0;
+    int moved = 0;
     short i;
     short j;
     for (i = 3; i < shopMinionCount_800B6CE4; i++)
@@ -204,11 +204,11 @@ int CompactStoredMinions_800B97B0()
             {
                 break;
             }
-            r = 1;
+            moved = 1;
             SwapMinions_800BAEDC(&shopMinions_800B6CF0[i], &shopMinions_800B6CF0[j]);
         }
     }
-    return r;
+    return moved;
 }
 
 int FindStoredMinion_800B9888(short i)
@@ -278,9 +278,9 @@ void ClearShopMinion_800B9B20(int i)
     shopMinions_800B6CF0[i].id = 4;
 }
 
-void SetMinionEmpty_800B9B44(short* p)
+void SetMinionEmpty_800B9B44(short* state)
 {
-    *p = 4;
+    *state = 4;
 }
 
 Minion* GetNthShopMinion_800B9B50(int state, int n)
@@ -311,9 +311,9 @@ short* GetShopMinionAncestors_800B9C34(int i)
     return &shopMinions_800B6CF0[i].id + 2;
 }
 
-char* GetMinionAncestors_800B9C54(char* p)
+char* GetMinionAncestors_800B9C54(char* minion)
 {
-    return p + 4;
+    return minion + 4;
 }
 
 Minion* GetShopMinion_800B9C5C(int i)
@@ -321,14 +321,14 @@ Minion* GetShopMinion_800B9C5C(int i)
     return &shopMinions_800B6CF0[i];
 }
 
-int CountShopMinionsInState_800B9C78(int v)
+int CountShopMinionsInState_800B9C78(int state)
 {
     int i;
     int n;
     n = 0;
     for (i = 0; i < shopMinionCount_800B6CE4; i++)
     {
-        if (v == shopMinions_800B6CF0[i].id)
+        if (state == shopMinions_800B6CF0[i].id)
         {
             n++;
         }
@@ -336,9 +336,9 @@ int CountShopMinionsInState_800B9C78(int v)
     return n;
 }
 
-int SetMinionInParty_800B9CCC(short* p)
+int SetMinionInParty_800B9CCC(short* state)
 {
-    *p = 3;
+    *state = 3;
     return 1;
 }
 
@@ -355,11 +355,11 @@ int MoveShopMinionToParty_800B9CDC(int i)
     return 0;
 }
 
-int SetMinionStored_800B9D48(short* p)
+int SetMinionStored_800B9D48(short* state)
 {
-    if (*p == 3)
+    if (*state == 3)
     {
-        *p = 2;
+        *state = 2;
         return 1;
     }
     return 0;
@@ -440,44 +440,44 @@ int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short state)
 }
 
 extern int ApplyLevelUps_80011D98(UnitStatus* a, int b);
-extern void MergeSpeciesHistory_800BAB38(Minion* a, Minion* b);
-extern void InheritMergeStats_800BA368(Minion* d, Minion* s);
-extern void MergeBaseStats_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b);
-extern void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b);
-extern void ApplyMergeStatBonus_800BA650(Minion* d);
-extern void MergeExp_800BA6D0(Minion* d, Minion* s, Minion* t);
-extern void MergeSkills_800BA72C(Minion* a, Minion* b);
-extern void MergeMagic_800BAA0C(Minion* a, Minion* b);
-extern int GetSpecialMergeSpecies_800BACD0(Minion* d);
+extern void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner);
+extern void InheritMergeStats_800BA368(Minion* out, Minion* src);
+extern void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned char* partner);
+extern void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner);
+extern void ApplyMergeStatBonus_800BA650(Minion* out);
+extern void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner);
+extern void MergeSkills_800BA72C(Minion* out, Minion* partner);
+extern void MergeMagic_800BAA0C(Minion* out, Minion* partner);
+extern int GetSpecialMergeSpecies_800BACD0(Minion* minion);
 // merges base and partner into out; person: the skin used (GetPersonMergeInfo_8001CD58), 10: none
 int MergeMinions_800B9FC8(Minion* base, Minion* partner, Minion* out, int person)
 {
     ShopElementOrder idx;
     UnitStats tmp;
-    unsigned char* p;
+    unsigned char* info;
     int i;
-    int n;
+    int odd;
     int t;
-    int r;
+    int special;
     MemCopy_800403E8(out, base, sizeof(Minion));
     out->field_3 = partner->field_3;
-    p = GetPersonMergeInfo_8001CD58(person);
-    if (p[0] != 0xFF)
+    info = GetPersonMergeInfo_8001CD58(person);
+    if (info[0] != 0xFF)
     {
-        out->field_3 = p[0];
+        out->field_3 = info[0];
     }
     MergeSpeciesHistory_800BAB38(out, partner);
     for (i = 0; i < 4; i++)
     {
         out->status_84.element_3E[i] = (out->status_84.element_3E[i] + partner->status_84.element_3E[i]) >> 1;
     }
-    n = 0;
+    odd = 0;
     idx = elementOrder_800B6D38;
     for (i = 0; i < 4; i++)
     {
         if (out->status_84.element_3E[i] & 1)
         {
-            n++;
+            odd++;
         }
     }
 restart:
@@ -491,47 +491,47 @@ restart:
             goto restart;
         }
     }
-    if (n == 2)
+    if (odd == 2)
     {
         for (i = 0; i < 4; i++)
         {
-            p = (unsigned char*)out + idx.order[i]; // p[0xC2] == status_84.element_3E[idx.order[i]]; the struct form changes the codegen
-            t = p[0xC2];
+            info = (unsigned char*)out + idx.order[i]; // info[0xC2] == status_84.element_3E[idx.order[i]]; the struct form changes the codegen
+            t = info[0xC2];
             if (t & 1)
             {
-                if (n >= 2)
+                if (odd >= 2)
                 {
-                    p[0xC2] = t
+                    info[0xC2] = t
  + 1;
                 }
                 else
                 {
-                    p[0xC2] = t
+                    info[0xC2] = t
  - 1;
                 }
-                n--;
+                odd--;
             }
         }
     }
-    if (n == 4)
+    if (odd == 4)
     {
         for (i = 0; i < 4; i++)
         {
-            p = (unsigned char*)out + idx.order[i]; // p[0xC2] == status_84.element_3E[idx.order[i]]; the struct form changes the codegen
-            t = p[0xC2];
+            info = (unsigned char*)out + idx.order[i]; // info[0xC2] == status_84.element_3E[idx.order[i]]; the struct form changes the codegen
+            t = info[0xC2];
             if (t & 1)
             {
-                if (n >= 3)
+                if (odd >= 3)
                 {
-                    p[0xC2] = t
+                    info[0xC2] = t
  + 1;
                 }
                 else
                 {
-                    p[0xC2] = t
+                    info[0xC2] = t
  - 1;
                 }
-                n--;
+                odd--;
             }
         }
     }
@@ -564,10 +564,10 @@ restart:
     MergeSkills_800BA72C(out, partner);
     MergeMagic_800BAA0C(out, partner);
     FillHpMp_80011C0C(&out->status_84, &out->status_84);
-    r = GetSpecialMergeSpecies_800BACD0(out);
-    if (r > 0)
+    special = GetSpecialMergeSpecies_800BACD0(out);
+    if (special > 0)
     {
-        idx.order[0] = r;
+        idx.order[0] = special;
         idx.order[1] = (out->status_84.level_44 << 26) + out->status_84.exp_4;
         InitMinionData_8001900C(&tmp, idx.order);
         UnitStatsToMinion_800B9E94(&tmp, out, out->id);
@@ -575,23 +575,23 @@ restart:
     return 1;
 }
 
-void ClearMinion_800BA340(unsigned int* a)
+void ClearMinion_800BA340(unsigned int* minion)
 {
-    MemCopy_800403E8(a, emptyMinion_800C07F0, 0xF8);
+    MemCopy_800403E8(minion, emptyMinion_800C07F0, 0xF8);
 }
 
-void InheritMergeStats_800BA368(Minion* d, Minion* s)
+void InheritMergeStats_800BA368(Minion* out, Minion* src)
 {
     int i;
     for (i = 0; i < 6; i++)
     {
-        d->status_84.stats_2C.cur_0[i] = s->status_84.stats_2C.cur_0[i] - s->status_84.stats_2C.base_6[i] / 20;
+        out->status_84.stats_2C.cur_0[i] = src->status_84.stats_2C.cur_0[i] - src->status_84.stats_2C.base_6[i] / 20;
     }
-    d->status_84.hp_8.max_2 = s->status_84.hp_8.max_2;
-    d->status_84.mp_C.max_2 = s->status_84.mp_C.max_2;
+    out->status_84.hp_8.max_2 = src->status_84.hp_8.max_2;
+    out->status_84.mp_C.max_2 = src->status_84.mp_C.max_2;
 }
 
-void MergeBaseStats_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* b)
+void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned char* partner)
 {
     int i;
     for (i = 5; i >= 0; i--)
@@ -602,22 +602,22 @@ void MergeBaseStats_800BA3C8(unsigned char* d, unsigned char* a, unsigned char* 
     }
     for (i = 0; i < 6; i++)
     {
-        (d + i)[6] = MergeBaseStat_800BA46C((a + i)[6], (b + i)[6]);
+        (out + i)[6] = MergeBaseStat_800BA46C((base + i)[6], (partner + i)[6]);
     }
     for (i = 5; i >= 0; i--)
     {
     }
 }
 
-unsigned char MergeBaseStat_800BA46C(unsigned char a, unsigned char b)
+unsigned char MergeBaseStat_800BA46C(unsigned char base, unsigned char partner)
 {
-    int s = (a + b) >> 1;
-    int c = b - 200;
-    int r = s + (a + c) / 7;
+    int avg = (base + partner) >> 1;
+    int c = partner - 200;
+    int val = avg + (base + c) / 7;
     int out = 0;
-    if (r >= 0)
+    if (val >= 0)
     {
-        out = r;
+        out = val;
         if (out > 200)
         {
             out = 200;
@@ -626,7 +626,7 @@ unsigned char MergeBaseStat_800BA46C(unsigned char a, unsigned char b)
     return out;
 }
 
-void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
+void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner)
 {
     int tmp[4];
     int j;
@@ -639,8 +639,8 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
     int k;
     for (k = 0; k < 12; k++)
     {
-        x = (signed char)a->status_84.field_20[k];
-        y = (signed char)b->status_84.field_20[k];
+        x = (signed char)base->status_84.field_20[k];
+        y = (signed char)partner->status_84.field_20[k];
         if (x < y)
         {
             x = x * 2;
@@ -663,19 +663,19 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
         {
             r = -128;
         }
-        d->status_84.field_20[k] = r;
+        out->status_84.field_20[k] = r;
     }
     memset(tmp, 0, 16);
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 4; j++)
         {
-            tmp[j] += d->status_84.element_3E[i] * name_8007BA74[j + i * 4];
+            tmp[j] += out->status_84.element_3E[i] * name_8007BA74[j + i * 4];
         }
     }
     for (i = 0; i < 4; i++)
     {
-        d->status_84.field_20[i] = tmp[i] / 32;
+        out->status_84.field_20[i] = tmp[i] / 32;
     }
     for (i = 11; i >= 0; i--)
     {
@@ -688,7 +688,7 @@ void MergeResistances_800BA4CC(Minion* d, Minion* a, Minion* b)
     }
 }
 
-void ApplyMergeStatBonus_800BA650(Minion* d)
+void ApplyMergeStatBonus_800BA650(Minion* out)
 {
     int i;
     int v;
@@ -698,7 +698,7 @@ void ApplyMergeStatBonus_800BA650(Minion* d)
     for (i = 0; i < 6; i++)
     {
         // p[0xB0] / p[0xB6] == status_84.stats_2C.cur_0[i] / stats_2C.base_6[i]; indexing the fields lets the compiler strength-reduce the loop
-        p = (unsigned char*)d + i;
+        p = (unsigned char*)out + i;
         v = p[0xB0] + (unsigned char)(p[0xB6] / 20);
         if (v >= 0) { t = v; if (t > 100) t = 100; r = t; } else r = 0; p[0xB0] = r;
     }
@@ -709,20 +709,20 @@ void ApplyMergeStatBonus_800BA650(Minion* d)
     }
 }
 
-void MergeExp_800BA6D0(Minion* d, Minion* s, Minion* t)
+void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner)
 {
-    d->status_84.level_44 = s->status_84.level_44;
-    d->status_84.exp_4 = s->status_84.exp_4;
-    d->status_84.exp_4 += CombinedExpDelta_80012204(s->status_84.level_44, s->status_84.exp_4, t->status_84.level_44, t->status_84.exp_4);
+    out->status_84.level_44 = base->status_84.level_44;
+    out->status_84.exp_4 = base->status_84.exp_4;
+    out->status_84.exp_4 += CombinedExpDelta_80012204(base->status_84.level_44, base->status_84.exp_4, partner->status_84.level_44, partner->status_84.exp_4);
 }
 
 #if 0
-// Not matched (25 words): only the registers of &t.slot[i] (a3 in the original) and m (t0) are swapped.
+// Not matched (25 words): only the registers of &skills.slot[i] (a3 in the original) and m (t0) are swapped.
 // (When writing this in C, delete the C table jpt_800B6D4C behind the function.)
 
-void MergeSkills_800BA72C(Minion* a, Minion* b)
+void MergeSkills_800BA72C(Minion* out, Minion* partner)
 {
-    UnitSkills t;
+    UnitSkills skills;
     UnitSkill* ae;
     UnitSkill* be;
     int i;
@@ -730,46 +730,46 @@ void MergeSkills_800BA72C(Minion* a, Minion* b)
     int r;
     int m;
     int v;
-    t = a->skills_DE;
-    ae = a->skills_DE.slot;
-    be = b->skills_DE.slot;
+    skills = out->skills_DE;
+    ae = out->skills_DE.slot;
+    be = partner->skills_DE.slot;
     for (i = 0; i < 5; i++)
     {
-        t.slot[i].flags_0 |= (ae[i].flags_0 | be[i].flags_0) & 1;
+        skills.slot[i].flags_0 |= (ae[i].flags_0 | be[i].flags_0) & 1;
     }
-    mask = a->status_84.elementMask_42;
+    mask = out->status_84.elementMask_42;
     for (i = 0; i < 5; i++)
     {
-        switch (t.slot[i].id_1)
+        switch (skills.slot[i].id_1)
         {
         case 2:
             if (!(mask & 4))
             {
-                t.slot[i].id_1 = 0;
+                skills.slot[i].id_1 = 0;
             }
             break;
         case 3:
             if (!(mask & 8))
             {
-                t.slot[i].id_1 = 0;
+                skills.slot[i].id_1 = 0;
             }
             break;
         case 4:
             if (!(mask & 1))
             {
-                t.slot[i].id_1 = 0;
+                skills.slot[i].id_1 = 0;
             }
             break;
         case 5:
             if (!(mask & 2))
             {
-                t.slot[i].id_1 = 0;
+                skills.slot[i].id_1 = 0;
             }
             break;
         }
-        if (t.slot[i].flags_0 & 1)
+        if (skills.slot[i].flags_0 & 1)
         {
-            m = a->status_84.elementMask_42;
+            m = out->status_84.elementMask_42;
             r = -1;
             switch (ae[i].id_1)
             {
@@ -807,7 +807,7 @@ void MergeSkills_800BA72C(Minion* a, Minion* b)
             }
             if (r >= 0)
             {
-                t.slot[i].id_1 = r;
+                skills.slot[i].id_1 = r;
             }
             r = -1;
             switch (be[i].id_1)
@@ -840,7 +840,7 @@ void MergeSkills_800BA72C(Minion* a, Minion* b)
                 }
                 break;
             default:
-                if (t.slot[i].id_1 == 0)
+                if (skills.slot[i].id_1 == 0)
                 {
                     r = be[i].id_1;
                 }
@@ -848,38 +848,38 @@ void MergeSkills_800BA72C(Minion* a, Minion* b)
             }
             if (r >= 0)
             {
-                t.slot[i].id_1 = r;
+                skills.slot[i].id_1 = r;
             }
-            if (t.slot[i].id_1 == 1)
+            if (skills.slot[i].id_1 == 1)
             {
-                t.slot[i].id_1 = 0;
+                skills.slot[i].id_1 = 0;
             }
         }
         else
         {
-            t.slot[i].id_1 = 0;
+            skills.slot[i].id_1 = 0;
         }
-        if (t.slot[i].flags_0 & 1)
+        if (skills.slot[i].flags_0 & 1)
         {
             v = be[i].bonus_2;
             if (v == 1)
             {
-                t.slot[i].bonus_2 = 1;
-                t.slot[i].field_3 = 0;
+                skills.slot[i].bonus_2 = 1;
+                skills.slot[i].field_3 = 0;
             }
             else if (v != 0 && v < 5)
             {
-                t.slot[i].bonus_2 = v;
-                t.slot[i].field_3 = 1;
+                skills.slot[i].bonus_2 = v;
+                skills.slot[i].field_3 = 1;
             }
         }
         else
         {
-            t.slot[i].bonus_2 = 0;
-            t.slot[i].field_3 = 0;
+            skills.slot[i].bonus_2 = 0;
+            skills.slot[i].field_3 = 0;
         }
     }
-    MemCopy_800403E8(&a->skills_DE, &t, sizeof(UnitSkills));
+    MemCopy_800403E8(&out->skills_DE, &skills, sizeof(UnitSkills));
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, MergeSkills_800BA72C);
@@ -1077,40 +1077,40 @@ const char aSpecialWaterAtt_800B94F4[] = "\202r\202\220\202\205\202\203\202\211\
 const char aVeryEffectiveAg_800B9520[] = "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201@\202\201\202\207\202\201\202\211\202\216\202\223\202\224\201@\202\227\202\201\202\224\202\205\202\222\201|\202\202\202\201\202\223\202\205\202\204\201@\202\205\202\216\202\205\202\215\202\211\202\205\202\223\201D"; // Very effective against water-based enemies.
 const char aSpecialEarthAtt_800B9578[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Special Earth Attack
 
-void MergeMagic_800BAA0C(Minion* a, Minion* b)
+void MergeMagic_800BAA0C(Minion* out, Minion* partner)
 {
-    unsigned int old = a->magicBits_F4;
-    unsigned int* p = &a->magicBits_F4;
+    unsigned int old = out->magicBits_F4;
+    unsigned int* bits = &out->magicBits_F4;
     int i;
     unsigned int mask;
-    if (CanInheritMagic_800BAB30(b))
+    if (CanInheritMagic_800BAB30(partner))
     {
-        old |= b->magicBits_F4;
+        old |= partner->magicBits_F4;
     }
-    mask = a->status_84.elementMask_42;
-    a->magicBits_F4 = old;
+    mask = out->status_84.elementMask_42;
+    out->magicBits_F4 = old;
     for (i = 0; i < 30; i++)
     {
-        if (TestMagicBit_8001AE2C(p, i) && (mask & (1 << GetMagicElement_8001AD30(i))) == 0)
+        if (TestMagicBit_8001AE2C(bits, i) && (mask & (1 << GetMagicElement_8001AD30(i))) == 0)
         {
-            ClearMagicBit_8001AE00(p, i);
+            ClearMagicBit_8001AE00(bits, i);
         }
     }
-    if ((char)a->status_84.element_3E[0] != 0x20)
+    if ((char)out->status_84.element_3E[0] != 0x20)
     {
-        ClearMagicBit_8001AE00(p, 0x15);
+        ClearMagicBit_8001AE00(bits, 0x15);
     }
-    if ((char)a->status_84.element_3E[2] != 0x20)
+    if ((char)out->status_84.element_3E[2] != 0x20)
     {
-        ClearMagicBit_8001AE00(p, 0x17);
+        ClearMagicBit_8001AE00(bits, 0x17);
     }
-    if ((char)a->status_84.element_3E[1] != 0x20)
+    if ((char)out->status_84.element_3E[1] != 0x20)
     {
-        ClearMagicBit_8001AE00(p, 0x18);
+        ClearMagicBit_8001AE00(bits, 0x18);
     }
-    if ((char)a->status_84.element_3E[3] != 0x20)
+    if ((char)out->status_84.element_3E[3] != 0x20)
     {
-        ClearMagicBit_8001AE00(p, 0x16);
+        ClearMagicBit_8001AE00(bits, 0x16);
     }
 }
 
@@ -1120,11 +1120,11 @@ int CanInheritMagic_800BAB30()
 }
 
 #if 0 // near miss: compiler strength-reduces the first loop to pointer increments (96 of 102 words differ)
-void MergeSpeciesHistory_800BAB38(Minion* a, Minion* b)
+void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
 {
     unsigned char tmp[0x30];
-    unsigned int e[18];
-    unsigned char g[6];
+    unsigned int names[18];
+    unsigned char elements[6];
     int i;
     int j;
     for (i = 0; i < 0x30; i++)
@@ -1133,46 +1133,46 @@ void MergeSpeciesHistory_800BAB38(Minion* a, Minion* b)
         {
             if (i * 2 < 0x30)
             {
-                tmp[i] = a->species_4C[i * 2];
+                tmp[i] = out->species_4C[i * 2];
             }
             else
             {
-                tmp[i] = a->species_4C[i * 6 - 0x8F];
+                tmp[i] = out->species_4C[i * 6 - 0x8F];
             }
         }
         else
         {
-            tmp[i] = b->species_4C[i * 3 - 0x60];
+            tmp[i] = partner->species_4C[i * 3 - 0x60];
         }
     }
-    MemCopy_800403E8(a->species_4C, tmp, 0x30);
-    CopyName_80019AF4(e, (unsigned int*)a->status_84.name_10);
-    CopyName_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
-    CopyName_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
-    CopyName_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
-    CopyName_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
-    CopyName_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
+    MemCopy_800403E8(out->species_4C, tmp, 0x30);
+    CopyName_80019AF4(names, (unsigned int*)out->status_84.name_10);
+    CopyName_80019AF4(names + 3, (unsigned int*)partner->status_84.name_10);
+    CopyName_80019AF4(names + 6, (unsigned int*)out->ancestors_4[0]);
+    CopyName_80019AF4(names + 9, (unsigned int*)out->ancestors_4[1]);
+    CopyName_80019AF4(names + 12, (unsigned int*)partner->ancestors_4[0]);
+    CopyName_80019AF4(names + 15, (unsigned int*)partner->ancestors_4[1]);
     for (j = 0; j < 6; j++)
     {
-        CopyName_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
+        CopyName_80019AF4((unsigned int*)out->ancestors_4[j], names + j * 3);
     }
-    g[0] = a->status_84.elementMask_42;
-    g[1] = b->status_84.elementMask_42;
-    g[2] = a->field_7C[0];
-    g[3] = a->field_7C[1];
-    g[4] = b->field_7C[0];
-    g[5] = b->field_7C[1];
+    elements[0] = out->status_84.elementMask_42;
+    elements[1] = partner->status_84.elementMask_42;
+    elements[2] = out->field_7C[0];
+    elements[3] = out->field_7C[1];
+    elements[4] = partner->field_7C[0];
+    elements[5] = partner->field_7C[1];
     for (j = 0; j < 6; j++)
     {
-        a->field_7C[j] = g[j];
+        out->field_7C[j] = elements[j];
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, MergeSpeciesHistory_800BAB38);
 
-int GetSpecialMergeSpecies_800BACD0(Minion* d)
+int GetSpecialMergeSpecies_800BACD0(Minion* minion)
 {
-    int r = -1;
+    int species = -1;
     int n6 = 0;
     int n5 = n6;
     int n4 = n6;
@@ -1180,133 +1180,133 @@ int GetSpecialMergeSpecies_800BACD0(Minion* d)
     int n2 = n6;
     int n1 = n6;
     int i = n6;
-    unsigned char v;
+    unsigned char ancestor;
     for (; i < 0x30; i++)
     {
-        v = d->species_4C[i];
-        if (v == 0x1E || v == 0xB1 || v == 0xB2 || v == 0xB3 || v == 0xB4)
+        ancestor = minion->species_4C[i];
+        if (ancestor == 0x1E || ancestor == 0xB1 || ancestor == 0xB2 || ancestor == 0xB3 || ancestor == 0xB4)
         {
             n1++;
         }
-        else if (v == 0xE || v == 0x71 || v == 0x72 || v == 0x73 || v == 0x74)
+        else if (ancestor == 0xE || ancestor == 0x71 || ancestor == 0x72 || ancestor == 0x73 || ancestor == 0x74)
         {
             n2++;
         }
-        else if (v == 0xF || v == 0x75 || v == 0x76 || v == 0x77 || v == 0x78)
+        else if (ancestor == 0xF || ancestor == 0x75 || ancestor == 0x76 || ancestor == 0x77 || ancestor == 0x78)
         {
             n3++;
         }
-        else if (v == 3 || v == 0x45 || v == 0x46 || v == 0x47 || v == 0x48)
+        else if (ancestor == 3 || ancestor == 0x45 || ancestor == 0x46 || ancestor == 0x47 || ancestor == 0x48)
         {
             n4++;
         }
-        else if (v == 7 || v == 0x55 || v == 0x56 || v == 0x57 || v == 0x58)
+        else if (ancestor == 7 || ancestor == 0x55 || ancestor == 0x56 || ancestor == 0x57 || ancestor == 0x58)
         {
             n5++;
         }
-        else if (v == 9 || v == 0x5D || v == 0x5E || v == 0x5F || v == 0x60)
+        else if (ancestor == 9 || ancestor == 0x5D || ancestor == 0x5E || ancestor == 0x5F || ancestor == 0x60)
         {
             n6++;
         }
     }
     if (n1 >= 3 && n2 >= 3 && n3 >= 3)
     {
-        r = 0x22;
+        species = 0x22;
     }
     else if (n4 >= 3 && n5 >= 3 && n3 >= 3 && n6 >= 3)
     {
-        r = 0x23;
+        species = 0x23;
     }
-    return r;
+    return species;
 }
 
 // the silk thread item a spun minion yields
-int GetSilkItemForLevel_800BAE80(Minion* p)
+int GetSilkItemForLevel_800BAE80(Minion* minion)
 {
-    unsigned int v = p->status_84.level_44;
-    int r;
-    if (v < 4)
+    unsigned int level = minion->status_84.level_44;
+    int item;
+    if (level < 4)
     {
-        r = 0x21;
+        item = 0x21;
     }
-    else if (v < 7)
+    else if (level < 7)
     {
-        r = 0x22;
+        item = 0x22;
     }
-    else if (v < 12)
+    else if (level < 12)
     {
-        r = 0x23;
+        item = 0x23;
     }
-    else if (v < 18)
+    else if (level < 18)
     {
-        r = 0x24;
+        item = 0x24;
     }
-    else if (v < 25)
+    else if (level < 25)
     {
-        r = 0x25;
+        item = 0x25;
     }
-    else if (v < 31)
+    else if (level < 31)
     {
-        r = 0x26;
+        item = 0x26;
     }
     else
     {
-        r = 0x27;
+        item = 0x27;
     }
-    return r;
+    return item;
 }
 
-void SwapMinions_800BAEDC(unsigned int* a, unsigned int* b)
+void SwapMinions_800BAEDC(unsigned int* first, unsigned int* second)
 {
     unsigned int t1[0x3E];
     unsigned int t2[0x3E];
-    MemCopy_800403E8(t1, a, 0xF8);
-    MemCopy_800403E8(t2, b, 0xF8);
-    MemCopy_800403E8(a, t2, 0xF8);
-    MemCopy_800403E8(b, t1, 0xF8);
+    MemCopy_800403E8(t1, first, 0xF8);
+    MemCopy_800403E8(t2, second, 0xF8);
+    MemCopy_800403E8(first, t2, 0xF8);
+    MemCopy_800403E8(second, t1, 0xF8);
 }
 
 #if 0 // near miss: orig jumps from the b==3 case into the b==4 copy of the *a = 3 store (cross-jump)
-int ExchangeMinions_800BAF54(short* a, short* b, short c, short d)
+int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList)
 {
-    if (*a == 3)
+    if (*first == 3)
     {
-        if (*b == 2)
+        if (*second == 2)
         {
-            *a = 2;
-            *b = 3;
+            *first = 2;
+            *second = 3;
         }
-        else if (*b == 4 && d == 2)
+        else if (*second == 4 && secondList == 2)
         {
-            *a = 2;
+            *first = 2;
         }
     }
-    else if (*a == 2)
+    else if (*first == 2)
     {
-        if (*b == 3)
+        if (*second == 3)
         {
-            *b = 2;
-            *a = 3;
+            *second = 2;
+            *first = 3;
         }
-        else if (*b == 4 && d == 3)
+        else if (*second == 4 && secondList == 3)
         {
-            *a = 3;
+            *first = 3;
         }
     }
-    else if (*a == 4)
+    else if (*first == 4)
     {
-        if (c == 3)
+        if (firstList == 3)
         {
-            if (*b == 2 && d == 2)
+            if (*second == 2 && secondList == 2)
             {
-                *b = 3;
+                *second = 3;
             }
         }
-        else if (c == 2)
+        else if (firstList == 2)
         {
-            if (*b == 3 && d == 3)
+            if (*second == 3 && secondList == 3)
             {
-                *b = 2;
+                *second = 2;
             }
         }
     }
@@ -1314,7 +1314,7 @@ int ExchangeMinions_800BAF54(short* a, short* b, short c, short d)
     {
         goto end;
     }
-    SwapMinions_800BAEDC(a, b);
+    SwapMinions_800BAEDC(first, second);
 end:
     return 1;
 }
@@ -1324,90 +1324,90 @@ INCLUDE_OVERLAY_ASM(shop, ExchangeMinions_800BAF54);
 extern void ShopFadeIn_800BB0F8();
 void StartShop_800BB058(int shopId)
 {
-    EventEntry* t = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
-    ShopMenu* u;
-    if (t)
+    EventEntry* task = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
+    ShopMenu* menu;
+    if (task)
     {
-        u = t->buffer;
-        t->flags = (t->flags | 1) & ~0x8000;
+        menu = task->buffer;
+        task->flags = (task->flags | 1) & ~0x8000;
         SetFontClutOffset_8003F900(2, 0);
         SetFontClutOffset_8003F900(1, 0);
         DrawMenuBackground_8002BE10();
-        u->shopId_96 = shopId;
-        InitShopMenu_800BB148(u);
-        DrawShopMenu_800BC380(u);
-        t->cb_8 = ShopFadeIn_800BB0F8;
+        menu->shopId_96 = shopId;
+        InitShopMenu_800BB148(menu);
+        DrawShopMenu_800BC380(menu);
+        task->cb_8 = ShopFadeIn_800BB0F8;
     }
 }
 
 extern void ShopMenuTask_800BB444();
-void ShopFadeIn_800BB0F8(EventEntry* t, int a)
+void ShopFadeIn_800BB0F8(EventEntry* task, int menu)
 {
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(a);
+    DrawShopMenu_800BC380(menu);
     SetFadeMode_8001C19C(3, 0x20);
-    t->cb_8 = ShopMenuTask_800BB444;
+    task->cb_8 = ShopMenuTask_800BB444;
 }
 
 // Matched
-void InitShopMenu_800BB148(ShopMenu* u)
+void InitShopMenu_800BB148(ShopMenu* menu)
 {
     short i;
     void* r;
     Minion* mn;
-    u->state_0 = 0;
-    u->prevState_2 = -2;
+    menu->state_0 = 0;
+    menu->prevState_2 = -2;
     for (i = 0; i < 10; i++)
     {
-        u->savedIndex_5E[i] = 0;
+        menu->savedIndex_5E[i] = 0;
     }
     for (i = 0; i < 4; i++)
     {
-        u->savedScroll_72[i] = 0;
+        menu->savedScroll_72[i] = 0;
     }
     for (i = 0; i < 2; i++)
     {
-        u->savedList_7A[i] = 0;
+        menu->savedList_7A[i] = 0;
     }
-    u->tabCols_34 = 3;
-    u->tabRows_36 = 1;
-    u->tabCount_38 = 3;
-    u->tabFlags_3A = 1;
-    u->pageCols_40 = 1;
-    u->pageRows_42 = 1;
-    u->pageCount_44 = 1;
-    u->pageFlags_46 = 0x40;
-    u->marks_84 = 0;
-    u->partyMarks_88 = 0;
-    u->storedMarks_8C = 0;
-    u->field_90 = 0;
-    u->markCount_80 = 0;
-    u->fadeAction_94 = 0;
-    u->listScroll_32 = 0;
-    u->listIndex_30 = 0;
-    u->tabScroll_3E = 0;
-    u->tabIndex_3C = 0;
-    u->pageScroll_4A = 0;
-    u->pageIndex_48 = 0;
-    u->base_4C = 0;
-    u->partner_50 = 0;
-    u->shown_54 = 0;
-    u->storedScroll_5C = 0;
-    u->storedIndex_5A = 0;
-    u->partyIndex_58 = 0;
-    u->messageShown_18 = 0;
-    u->errorId_8 = 0;
-    u->cancel_14 = 0;
-    u->confirm_10 = 0;
-    u->openTimer_C = 0;
-    u->messageTimer_98 = 0;
-    u->list_7E = 0;
-    u->flags_24 = 1;
-    u->windows_1C = 0;
-    u->windows_1C = stateWindows_800BF8B4[u->state_0];
-    u->windowsOpen_20 = 0;
-    SetShopHelpText_800BBB54(u, 0);
-    SetupShopCursor_800BD854(u);
+    menu->tabCols_34 = 3;
+    menu->tabRows_36 = 1;
+    menu->tabCount_38 = 3;
+    menu->tabFlags_3A = 1;
+    menu->pageCols_40 = 1;
+    menu->pageRows_42 = 1;
+    menu->pageCount_44 = 1;
+    menu->pageFlags_46 = 0x40;
+    menu->marks_84 = 0;
+    menu->partyMarks_88 = 0;
+    menu->storedMarks_8C = 0;
+    menu->field_90 = 0;
+    menu->markCount_80 = 0;
+    menu->fadeAction_94 = 0;
+    menu->listScroll_32 = 0;
+    menu->listIndex_30 = 0;
+    menu->tabScroll_3E = 0;
+    menu->tabIndex_3C = 0;
+    menu->pageScroll_4A = 0;
+    menu->pageIndex_48 = 0;
+    menu->base_4C = 0;
+    menu->partner_50 = 0;
+    menu->shown_54 = 0;
+    menu->storedScroll_5C = 0;
+    menu->storedIndex_5A = 0;
+    menu->partyIndex_58 = 0;
+    menu->messageShown_18 = 0;
+    menu->errorId_8 = 0;
+    menu->cancel_14 = 0;
+    menu->confirm_10 = 0;
+    menu->openTimer_C = 0;
+    menu->messageTimer_98 = 0;
+    menu->list_7E = 0;
+    menu->flags_24 = 1;
+    menu->windows_1C = 0;
+    menu->windows_1C = stateWindows_800BF8B4[menu->state_0];
+    menu->windowsOpen_20 = 0;
+    SetShopHelpText_800BBB54(menu, 0);
+    SetupShopCursor_800BD854(menu);
     fn_80011CD0(&levantStatus_8008BD38);
     for (i = 0; i < 12; i++)
     {
@@ -1429,12 +1429,12 @@ void InitShopMenu_800BB148(ShopMenu* u)
     AddEmptyCocoons_800AD8F4(GetFreeCocoonSlots_800AD888());
 }
 
-int CanViewForm_800BB38C(ShopMenu* p)
+int CanViewForm_800BB38C(ShopMenu* menu)
 {
-    switch (p->state_0)
+    switch (menu->state_0)
     {
     case 5:
-        if (p->marks_84)
+        if (menu->marks_84)
         {
             break;
         }
@@ -1448,12 +1448,12 @@ int CanViewForm_800BB38C(ShopMenu* p)
     return 0;
 }
 
-int CanRearrange_800BB3E8(ShopMenu* p)
+int CanRearrange_800BB3E8(ShopMenu* menu)
 {
-    switch (p->state_0)
+    switch (menu->state_0)
     {
     case 5:
-        if (p->marks_84 == 0)
+        if (menu->marks_84 == 0)
         {
     case 1:
     case 7:
@@ -1475,123 +1475,123 @@ extern void HandleShopConfirmCancel_800BD0D4();
 extern void StartFormView_800BE2B4();
 extern void ShopCtrlRequestExit_800B6CB8();
 extern unsigned short padPressed_8009194C;
-void ShopMenuTask_800BB444(EventEntry* t, ShopMenu* u)
+void ShopMenuTask_800BB444(EventEntry* task, ShopMenu* menu)
 {
     short old;
     int r;
     DrawMenuBackground_8002BE10();
-    if (u->flags_24 & 1)
+    if (menu->flags_24 & 1)
     {
-        u->storedCount_4 = CountShopMinionsInState_800B9C78(2);
-        u->partyCount_6 = CountShopMinionsInState_800B9C78(3);
-        u->flags_24 &= ~1;
+        menu->storedCount_4 = CountShopMinionsInState_800B9C78(2);
+        menu->partyCount_6 = CountShopMinionsInState_800B9C78(3);
+        menu->flags_24 &= ~1;
     }
-    if (u->state_0 != 15 && !(u->flags_24 & 0x400))
+    if (menu->state_0 != 15 && !(menu->flags_24 & 0x400))
     {
-        u->flags_24 &= ~0x1C0;
+        menu->flags_24 &= ~0x1C0;
     }
-    if ((u->flags_24 & 2) || u->state_0 == 11 || u->state_0 == 12)
+    if ((menu->flags_24 & 2) || menu->state_0 == 11 || menu->state_0 == 12)
     {
         DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
     }
-    if (u->messageShown_18 == 0)
+    if (menu->messageShown_18 == 0)
     {
-        SaveShopCursor_800BB798(u);
-        UpdateSelectedMinions_800BEBC8(u);
-        UpdateShownMinion_800BECC8(u);
+        SaveShopCursor_800BB798(menu);
+        UpdateSelectedMinions_800BEBC8(menu);
+        UpdateShownMinion_800BECC8(menu);
     }
-    DrawShopMenu_800BC380(u);
-    if (u->messageShown_18 == 0)
+    DrawShopMenu_800BC380(menu);
+    if (menu->messageShown_18 == 0)
     {
-        SaveShopCursor_800BB798(u);
-        UpdateMainMenuHelp_800BBAAC(u);
-        if (u->confirm_10 || u->cancel_14)
+        SaveShopCursor_800BB798(menu);
+        UpdateMainMenuHelp_800BBAAC(menu);
+        if (menu->confirm_10 || menu->cancel_14)
         {
-            HandleShopConfirmCancel_800BD0D4(u);
+            HandleShopConfirmCancel_800BD0D4(menu);
         }
-        if (!(u->flags_24 & 4))
+        if (!(menu->flags_24 & 4))
         {
-            if (u->state_0 == 3 && (u->flags_24 & 2))
+            if (menu->state_0 == 3 && (menu->flags_24 & 2))
             {
-                old = u->tabIndex_3C;
-                UpdateMenuCursor_8003D794(&u->tabCols_34, 0);
-                if (u->tabIndex_3C != old)
+                old = menu->tabIndex_3C;
+                UpdateMenuCursor_8003D794(&menu->tabCols_34, 0);
+                if (menu->tabIndex_3C != old)
                 {
-                    u->pageCols_40 = 1;
-                    u->pageRows_42 = 1;
-                    u->pageCount_44 = 1;
-                    u->pageFlags_46 = 0;
-                    u->pageScroll_4A = 0;
-                    u->pageIndex_48 = 0;
-                    if (u->flags_24 & 0x40)
+                    menu->pageCols_40 = 1;
+                    menu->pageRows_42 = 1;
+                    menu->pageCount_44 = 1;
+                    menu->pageFlags_46 = 0;
+                    menu->pageScroll_4A = 0;
+                    menu->pageIndex_48 = 0;
+                    if (menu->flags_24 & 0x40)
                     {
-                        u->pageCount_44 = 5;
-                        u->pageRows_42 = 5;
+                        menu->pageCount_44 = 5;
+                        menu->pageRows_42 = 5;
                     }
-                    else if (u->flags_24 & 0x80)
+                    else if (menu->flags_24 & 0x80)
                     {
-                        UpdateShownMinion_800BECC8(u);
-                        r = CountMagicBits_8001AE54(&u->shown_54->magicBits_F4);
+                        UpdateShownMinion_800BECC8(menu);
+                        r = CountMagicBits_8001AE54(&menu->shown_54->magicBits_F4);
                         if (r < 4)
                         {
                             r = 4;
                         }
-                        u->pageRows_42 = 4;
-                        u->pageCols_40 = 1;
-                        u->pageCount_44 = r;
-                        u->pageFlags_46 = 0x40;
+                        menu->pageRows_42 = 4;
+                        menu->pageCols_40 = 1;
+                        menu->pageCount_44 = r;
+                        menu->pageFlags_46 = 0x40;
                     }
                 }
-                if (u->flags_24 & 0x400)
+                if (menu->flags_24 & 0x400)
                 {
-                    UpdateMenuCursor_8003D794(&u->pageCols_40, 0);
+                    UpdateMenuCursor_8003D794(&menu->pageCols_40, 0);
                 }
             }
-            if (!(u->flags_24 & 2))
+            if (!(menu->flags_24 & 2))
             {
-                ShopMenuInput_800BBE24(u);
-                if (u->state_0 == 8 || CanViewForm_800BB38C(u))
+                ShopMenuInput_800BBE24(menu);
+                if (menu->state_0 == 8 || CanViewForm_800BB38C(menu))
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (u->base_4C->id != 4)
+                        if (menu->base_4C->id != 4)
                         {
-                            u->flags_24 = (u->flags_24 | 0x20) & ~0x400;
-                            u->flags_24 &= ~0x1C0;
-                            StartFormView_800BE2B4(u->shown_54);
+                            menu->flags_24 = (menu->flags_24 | 0x20) & ~0x400;
+                            menu->flags_24 &= ~0x1C0;
+                            StartFormView_800BE2B4(menu->shown_54);
                         }
                     }
                 }
             }
             else
             {
-                DismissShopPrompt_800BC2DC(u);
-                if (u->state_0 == 3)
+                DismissShopPrompt_800BC2DC(menu);
+                if (menu->state_0 == 3)
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (u->base_4C->id != 4)
+                        if (menu->base_4C->id != 4)
                         {
-                            u->flags_24 = (u->flags_24 | 0x20) & ~0x400;
-                            u->flags_24 &= ~0x1C0;
-                            StartFormView_800BE2B4(u->shown_54);
+                            menu->flags_24 = (menu->flags_24 | 0x20) & ~0x400;
+                            menu->flags_24 &= ~0x1C0;
+                            StartFormView_800BE2B4(menu->shown_54);
                         }
                     }
                     else if (padPressed_8009194C & 0x80)
                     {
-                        u->flags_24 |= 0x400;
-                        CycleInfoPage_800BC1A8(u);
+                        menu->flags_24 |= 0x400;
+                        CycleInfoPage_800BC1A8(menu);
                     }
                 }
-                else if (CanViewForm_800BB38C(u))
+                else if (CanViewForm_800BB38C(menu))
                 {
                     if (padPressed_8009194C & 0x20)
                     {
-                        if (u->base_4C->id != 4)
+                        if (menu->base_4C->id != 4)
                         {
-                            u->flags_24 = (u->flags_24 | 0x20) & ~0x400;
-                            u->flags_24 &= ~0x1C0;
-                            StartFormView_800BE2B4(u->shown_54);
+                            menu->flags_24 = (menu->flags_24 | 0x20) & ~0x400;
+                            menu->flags_24 &= ~0x1C0;
+                            StartFormView_800BE2B4(menu->shown_54);
                         }
                     }
                 }
@@ -1599,200 +1599,200 @@ void ShopMenuTask_800BB444(EventEntry* t, ShopMenu* u)
         }
         else
         {
-            t->flags = (t->flags & ~1) | 0x8000;
+            task->flags = (task->flags & ~1) | 0x8000;
             ShopCtrlRequestExit_800B6CB8();
         }
     }
     else
     {
-        ShopWaitMessage_800BBA3C(u);
+        ShopWaitMessage_800BBA3C(menu);
     }
-    if (u->openTimer_C < 8)
+    if (menu->openTimer_C < 8)
     {
-        u->openTimer_C++;
+        menu->openTimer_C++;
     }
 }
 
-void SaveShopCursor_800BB798(ShopMenu* u)
+void SaveShopCursor_800BB798(ShopMenu* menu)
 {
     short a;
     unsigned short b;
     unsigned short c;
-    a = stateIndexSlots_800BFD1C[u->state_0];
-    b = stateScrollSlots_800BFD3C[u->state_0];
-    c = stateListSlots_800BFD5C[u->state_0];
+    a = stateIndexSlots_800BFD1C[menu->state_0];
+    b = stateScrollSlots_800BFD3C[menu->state_0];
+    c = stateListSlots_800BFD5C[menu->state_0];
     if (a >= 0)
     {
-        u->savedIndex_5E[a] = u->listIndex_30;
+        menu->savedIndex_5E[a] = menu->listIndex_30;
     }
     if ((short)b >= 0)
     {
-        u->savedScroll_72[(short)b] = u->listScroll_32;
+        menu->savedScroll_72[(short)b] = menu->listScroll_32;
     }
     if ((short)c >= 0)
     {
-        u->savedList_7A[(short)c] = u->list_7E;
+        menu->savedList_7A[(short)c] = menu->list_7E;
     }
 }
 
-void RestoreShopCursor_800BB828(ShopMenu* u)
+void RestoreShopCursor_800BB828(ShopMenu* menu)
 {
     unsigned short b;
     short a;
     unsigned short c;
-    a = stateIndexSlots_800BFD1C[u->state_0];
-    b = stateScrollSlots_800BFD3C[u->state_0];
-    c = stateListSlots_800BFD5C[u->state_0];
+    a = stateIndexSlots_800BFD1C[menu->state_0];
+    b = stateScrollSlots_800BFD3C[menu->state_0];
+    c = stateListSlots_800BFD5C[menu->state_0];
     if (a >= 0)
     {
-        u->listIndex_30 = u->savedIndex_5E[a];
+        menu->listIndex_30 = menu->savedIndex_5E[a];
     }
     if ((short)b >= 0)
     {
-        u->listScroll_32 = u->savedScroll_72[(short)b];
+        menu->listScroll_32 = menu->savedScroll_72[(short)b];
     }
     if ((short)c >= 0)
     {
-        u->list_7E = u->savedList_7A[(short)c];
+        menu->list_7E = menu->savedList_7A[(short)c];
     }
 }
 
-void ShopMenuBack_800BB8C4(ShopMenu* u)
+void ShopMenuBack_800BB8C4(ShopMenu* menu)
 {
-    short s = u->state_0;
+    short s = menu->state_0;
     short t;
     if (s == 0)
     {
-        if (u->listIndex_30 != 4)
+        if (menu->listIndex_30 != 4)
         {
-            u->listIndex_30 = 4;
+            menu->listIndex_30 = 4;
         }
         else
         {
-            if (u->storedCount_4 >= 13)
+            if (menu->storedCount_4 >= 13)
             {
-                u->state_0 = 12;
+                menu->state_0 = 12;
             }
             else
             {
-                u->state_0 = 11;
+                menu->state_0 = 11;
             }
         }
     }
     else if (s == 3)
     {
-        u->state_0 = 2;
-        u->prevState_2 = 1;
-        u->flags_24 &= ~0x200;
-        u->listIndex_30 = u->savedIndex_5E[2];
-        u->listScroll_32 = u->savedScroll_72[1];
+        menu->state_0 = 2;
+        menu->prevState_2 = 1;
+        menu->flags_24 &= ~0x200;
+        menu->listIndex_30 = menu->savedIndex_5E[2];
+        menu->listScroll_32 = menu->savedScroll_72[1];
     }
     else if (s == 4)
     {
-        u->state_0 = 0;
-        u->listScroll_32 = 0;
-        u->listIndex_30 = 0;
+        menu->state_0 = 0;
+        menu->listScroll_32 = 0;
+        menu->listIndex_30 = 0;
     }
     else if (s == 12)
     {
-        u->state_0 = 0;
+        menu->state_0 = 0;
     }
     else if (s == 11)
     {
-        u->flags_24 |= 4;
+        menu->flags_24 |= 4;
     }
     else if (s == 13)
     {
-        PreviewMerge_800BD720(u);
-        u->state_0 = 3;
-        u->prevState_2 = 2;
+        PreviewMerge_800BD720(menu);
+        menu->state_0 = 3;
+        menu->prevState_2 = 2;
     }
     else if (s == 14)
     {
-        u->state_0 = 13;
-        u->prevState_2 = 2;
+        menu->state_0 = 13;
+        menu->prevState_2 = 2;
     }
     else
     {
         if (s == 2 || s == 10)
         {
-            u->list_7E = u->savedList_7A[0];
+            menu->list_7E = menu->savedList_7A[0];
         }
-        t = u->prevState_2;
-        u->state_0 = t;
-        u->prevState_2 = stateParents_800BF888[t];
-        RestoreShopCursor_800BB828(u);
+        t = menu->prevState_2;
+        menu->state_0 = t;
+        menu->prevState_2 = stateParents_800BF888[t];
+        RestoreShopCursor_800BB828(menu);
     }
 }
 
 extern unsigned short padPressed_8009194C;
-void ShopWaitMessage_800BBA3C(ShopMenu* u)
+void ShopWaitMessage_800BBA3C(ShopMenu* menu)
 {
-    if (u->messageTimer_98 < 0x96)
+    if (menu->messageTimer_98 < 0x96)
     {
-        u->messageTimer_98 += 1;
+        menu->messageTimer_98 += 1;
     }
-    if (padPressed_8009194C != 0 || u->messageTimer_98 >= 0x96)
+    if (padPressed_8009194C != 0 || menu->messageTimer_98 >= 0x96)
     {
-        SetShopHelpText_800BBB54(u, 0);
-        u->messageShown_18 = 0;
-        u->messageTimer_98 = 0;
+        SetShopHelpText_800BBB54(menu, 0);
+        menu->messageShown_18 = 0;
+        menu->messageTimer_98 = 0;
     }
 }
 
-void UpdateMainMenuHelp_800BBAAC(ShopMenu* u)
+void UpdateMainMenuHelp_800BBAAC(ShopMenu* menu)
 {
     short i;
-    if (u->state_0 == 0)
+    if (menu->state_0 == 0)
     {
         for (i = 0; i < 3; i++)
         {
-            if (u->shopId_96 == 4)
+            if (menu->shopId_96 == 4)
             {
-                dialogLines_800BF7C8[i].text_4 = mainHelpTextsA_800BFCF4[u->listIndex_30][i];
+                dialogLines_800BF7C8[i].text_4 = mainHelpTextsA_800BFCF4[menu->listIndex_30][i];
             }
             else
             {
-                dialogLines_800BF7C8[i].text_4 = mainHelpTextsB_800BFD08[u->listIndex_30][i];
+                dialogLines_800BF7C8[i].text_4 = mainHelpTextsB_800BFD08[menu->listIndex_30][i];
             }
         }
     }
 }
 
-void SetShopHelpText_800BBB54(ShopMenu* u, int mode)
+void SetShopHelpText_800BBB54(ShopMenu* menu, int mode)
 {
     switch ((short)mode)
     {
     case 1:
-        if (u->shopId_96 == 4)
+        if (menu->shopId_96 == 4)
         {
-            dialogLines_800BF7C8[0].text_4 = errorTextsA_800BFC04[u->errorId_8][0];
-            dialogLines_800BF7C8[1].text_4 = errorTextsA_800BFC04[u->errorId_8][1];
-            dialogLines_800BF7C8[2].text_4 = errorTextsA_800BFC04[u->errorId_8][2];
+            dialogLines_800BF7C8[0].text_4 = errorTextsA_800BFC04[menu->errorId_8][0];
+            dialogLines_800BF7C8[1].text_4 = errorTextsA_800BFC04[menu->errorId_8][1];
+            dialogLines_800BF7C8[2].text_4 = errorTextsA_800BFC04[menu->errorId_8][2];
         }
         else
         {
-            dialogLines_800BF7C8[0].text_4 = errorTextsB_800BFC68[u->errorId_8][0];
-            dialogLines_800BF7C8[1].text_4 = errorTextsB_800BFC68[u->errorId_8][1];
-            dialogLines_800BF7C8[2].text_4 = errorTextsB_800BFC68[u->errorId_8][2];
+            dialogLines_800BF7C8[0].text_4 = errorTextsB_800BFC68[menu->errorId_8][0];
+            dialogLines_800BF7C8[1].text_4 = errorTextsB_800BFC68[menu->errorId_8][1];
+            dialogLines_800BF7C8[2].text_4 = errorTextsB_800BFC68[menu->errorId_8][2];
         }
         break;
     case 3:
-        if (u->shopId_96 == 4)
+        if (menu->shopId_96 == 4)
         {
-            dialogLines_800BF7C8[0].text_4 = resultTextsA_800BFB34[u->state_0][0];
-            dialogLines_800BF7C8[1].text_4 = resultTextsA_800BFB34[u->state_0][1];
-            dialogLines_800BF7C8[2].text_4 = resultTextsA_800BFB34[u->state_0][2];
+            dialogLines_800BF7C8[0].text_4 = resultTextsA_800BFB34[menu->state_0][0];
+            dialogLines_800BF7C8[1].text_4 = resultTextsA_800BFB34[menu->state_0][1];
+            dialogLines_800BF7C8[2].text_4 = resultTextsA_800BFB34[menu->state_0][2];
         }
         else
         {
-            dialogLines_800BF7C8[0].text_4 = resultTextsB_800BFB74[u->state_0][0];
-            dialogLines_800BF7C8[1].text_4 = resultTextsB_800BFB74[u->state_0][1];
-            dialogLines_800BF7C8[2].text_4 = resultTextsB_800BFB74[u->state_0][2];
+            dialogLines_800BF7C8[0].text_4 = resultTextsB_800BFB74[menu->state_0][0];
+            dialogLines_800BF7C8[1].text_4 = resultTextsB_800BFB74[menu->state_0][1];
+            dialogLines_800BF7C8[2].text_4 = resultTextsB_800BFB74[menu->state_0][2];
         }
         break;
     case 2:
-        if (u->shopId_96 == 4)
+        if (menu->shopId_96 == 4)
         {
             dialogLines_800BF7C8[0].text_4 = textStatsReturnA_800BF9B8[0];
             dialogLines_800BF7C8[1].text_4 = textStatsReturnA_800BF9B8[1];
@@ -1806,34 +1806,34 @@ void SetShopHelpText_800BBB54(ShopMenu* u, int mode)
         }
         break;
     default:
-        if (u->state_0 == 0)
+        if (menu->state_0 == 0)
         {
-            if (u->shopId_96 == 4)
+            if (menu->shopId_96 == 4)
             {
-                dialogLines_800BF7C8[0].text_4 = mainHelpTextsA_800BFCF4[u->listIndex_30][0];
-                dialogLines_800BF7C8[1].text_4 = mainHelpTextsA_800BFCF4[u->listIndex_30][1];
-                dialogLines_800BF7C8[2].text_4 = mainHelpTextsA_800BFCF4[u->listIndex_30][2];
+                dialogLines_800BF7C8[0].text_4 = mainHelpTextsA_800BFCF4[menu->listIndex_30][0];
+                dialogLines_800BF7C8[1].text_4 = mainHelpTextsA_800BFCF4[menu->listIndex_30][1];
+                dialogLines_800BF7C8[2].text_4 = mainHelpTextsA_800BFCF4[menu->listIndex_30][2];
             }
             else
             {
-                dialogLines_800BF7C8[0].text_4 = mainHelpTextsB_800BFD08[u->listIndex_30][0];
-                dialogLines_800BF7C8[1].text_4 = mainHelpTextsB_800BFD08[u->listIndex_30][1];
-                dialogLines_800BF7C8[2].text_4 = mainHelpTextsB_800BFD08[u->listIndex_30][2];
+                dialogLines_800BF7C8[0].text_4 = mainHelpTextsB_800BFD08[menu->listIndex_30][0];
+                dialogLines_800BF7C8[1].text_4 = mainHelpTextsB_800BFD08[menu->listIndex_30][1];
+                dialogLines_800BF7C8[2].text_4 = mainHelpTextsB_800BFD08[menu->listIndex_30][2];
             }
         }
         else
         {
-            if (u->shopId_96 == 4)
+            if (menu->shopId_96 == 4)
             {
-                dialogLines_800BF7C8[0].text_4 = stateTextsA_800BFAB4[u->state_0][0];
-                dialogLines_800BF7C8[1].text_4 = stateTextsA_800BFAB4[u->state_0][1];
-                dialogLines_800BF7C8[2].text_4 = stateTextsA_800BFAB4[u->state_0][2];
+                dialogLines_800BF7C8[0].text_4 = stateTextsA_800BFAB4[menu->state_0][0];
+                dialogLines_800BF7C8[1].text_4 = stateTextsA_800BFAB4[menu->state_0][1];
+                dialogLines_800BF7C8[2].text_4 = stateTextsA_800BFAB4[menu->state_0][2];
             }
             else
             {
-                dialogLines_800BF7C8[0].text_4 = stateTextsB_800BFAF4[u->state_0][0];
-                dialogLines_800BF7C8[1].text_4 = stateTextsB_800BFAF4[u->state_0][1];
-                dialogLines_800BF7C8[2].text_4 = stateTextsB_800BFAF4[u->state_0][2];
+                dialogLines_800BF7C8[0].text_4 = stateTextsB_800BFAF4[menu->state_0][0];
+                dialogLines_800BF7C8[1].text_4 = stateTextsB_800BFAF4[menu->state_0][1];
+                dialogLines_800BF7C8[2].text_4 = stateTextsB_800BFAF4[menu->state_0][2];
             }
         }
         break;
@@ -1845,40 +1845,40 @@ void SetShopHelpText_800BBB54(ShopMenu* u, int mode)
 // UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
 // s28/s7E through a copy; with int snd the copies and the r register still differ.
 extern int IsNoChosen_800BD6C4();
-void ShopMenuInput_800BBE24(ShopMenu* u)
+void ShopMenuInput_800BBE24(ShopMenu* menu)
 {
     short snd;
     int r;
     int k;
     unsigned int bit;
-    if (u->flags_24 & 8)
+    if (menu->flags_24 & 8)
     {
-        UpdateSelectedMinions_800BEBC8(u);
+        UpdateSelectedMinions_800BEBC8(menu);
         snd = 0;
-        r = (short)UpdateMenuCursor_8003D794(&u->listCols_28, snd);
+        r = (short)UpdateMenuCursor_8003D794(&menu->listCols_28, snd);
         if (r == 4)
         {
             snd = 1;
-            u->listCount_2C = 0x18;
-            u->listFlags_2E = 0x50;
-            u->listCols_28 = snd;
-            u->list_7E = snd;
-            u->listRows_2A = r;
-            u->listIndex_30 = 0;
-            u->flags_24 &= ~0x10;
-            SaveShopCursor_800BB798(u);
+            menu->listCount_2C = 0x18;
+            menu->listFlags_2E = 0x50;
+            menu->listCols_28 = snd;
+            menu->list_7E = snd;
+            menu->listRows_2A = r;
+            menu->listIndex_30 = 0;
+            menu->flags_24 &= ~0x10;
+            SaveShopCursor_800BB798(menu);
         }
         else if (r == 3)
         {
             snd = 1;
-            u->listCols_28 = snd;
-            u->listFlags_2E = 0x20;
-            u->listRows_2A = r;
-            u->listCount_2C = r;
-            u->listIndex_30 = 2;
-            u->list_7E = 0;
-            u->flags_24 |= 0x10;
-            SaveShopCursor_800BB798(u);
+            menu->listCols_28 = snd;
+            menu->listFlags_2E = 0x20;
+            menu->listRows_2A = r;
+            menu->listCount_2C = r;
+            menu->listIndex_30 = 2;
+            menu->list_7E = 0;
+            menu->flags_24 |= 0x10;
+            SaveShopCursor_800BB798(menu);
         }
         if (snd)
         {
@@ -1887,71 +1887,71 @@ void ShopMenuInput_800BBE24(ShopMenu* u)
     }
     else
     {
-        UpdateMenuCursor_8003D794(&u->listCols_28, 0);
+        UpdateMenuCursor_8003D794(&menu->listCols_28, 0);
     }
-    if (u->state_0 == 15)
+    if (menu->state_0 == 15)
     {
-        UpdateMenuCursor_8003D794(&u->pageCols_40, 0);
+        UpdateMenuCursor_8003D794(&menu->pageCols_40, 0);
     }
     if (IsConfirmPressedP1_8003D380(0))
     {
-        if (u->state_0 != 5)
+        if (menu->state_0 != 5)
         {
-            if (IsNoChosen_800BD6C4(u))
+            if (IsNoChosen_800BD6C4(menu))
             {
-                u->cancel_14 = 1;
+                menu->cancel_14 = 1;
             }
-            else if (u->state_0 == 2 || u->state_0 == 10)
+            else if (menu->state_0 == 2 || menu->state_0 == 10)
             {
-                if (u->base_4C == u->partner_50)
+                if (menu->base_4C == menu->partner_50)
                 {
-                    u->cancel_14 = 1;
+                    menu->cancel_14 = 1;
                 }
                 else
                 {
-                    u->confirm_10 = 1;
+                    menu->confirm_10 = 1;
                 }
             }
             else
             {
-                u->confirm_10 = 1;
+                menu->confirm_10 = 1;
             }
         }
         else
         {
-            if (u->base_4C->id != 4)
+            if (menu->base_4C->id != 4)
             {
-                if (u->flags_24 & 0x10)
+                if (menu->flags_24 & 0x10)
                 {
-                    bit = 1 << (short)(u->listIndex_30 + u->listScroll_32);
-                    if (!(u->partyMarks_88 & bit))
+                    bit = 1 << (short)(menu->listIndex_30 + menu->listScroll_32);
+                    if (!(menu->partyMarks_88 & bit))
                     {
-                        u->partyMarks_88 |= bit;
-                        u->marks_84 |= bit;
-                        u->markCount_80++;
+                        menu->partyMarks_88 |= bit;
+                        menu->marks_84 |= bit;
+                        menu->markCount_80++;
                     }
                     else
                     {
-                        u->partyMarks_88 &= ~bit;
-                        u->marks_84 &= ~bit;
-                        u->markCount_80--;
+                        menu->partyMarks_88 &= ~bit;
+                        menu->marks_84 &= ~bit;
+                        menu->markCount_80--;
                     }
                 }
                 else
                 {
-                    k = (short)(u->listIndex_30 + u->listScroll_32);
+                    k = (short)(menu->listIndex_30 + menu->listScroll_32);
                     bit = 1 << k;
-                    if (!(u->storedMarks_8C & bit))
+                    if (!(menu->storedMarks_8C & bit))
                     {
-                        u->storedMarks_8C |= bit;
-                        u->marks_84 |= 1 << (k + 3);
-                        u->markCount_80++;
+                        menu->storedMarks_8C |= bit;
+                        menu->marks_84 |= 1 << (k + 3);
+                        menu->markCount_80++;
                     }
                     else
                     {
-                        u->storedMarks_8C &= ~bit;
-                        u->marks_84 &= ~(1 << (k + 3));
-                        u->markCount_80--;
+                        menu->storedMarks_8C &= ~bit;
+                        menu->marks_84 &= ~(1 << (k + 3));
+                        menu->markCount_80--;
                     }
                 }
                 PlaySfx_80031494(0x7E);
@@ -1960,154 +1960,154 @@ void ShopMenuInput_800BBE24(ShopMenu* u)
     }
     else if (IsCancelPressedP1_8003D41C(0))
     {
-        u->cancel_14 = 1;
+        menu->cancel_14 = 1;
     }
     else if (padPressed_8009194C & 0x80)
     {
-        if (u->state_0 == 8)
+        if (menu->state_0 == 8)
         {
-            u->pageCols_40 = 1;
-            u->pageRows_42 = 1;
-            u->pageCount_44 = 1;
-            u->pageFlags_46 = 0;
-            u->pageScroll_4A = 0;
-            u->pageIndex_48 = 0;
-            u->confirm_10 = 1;
-            u->flags_24 |= 0x400;
+            menu->pageCols_40 = 1;
+            menu->pageRows_42 = 1;
+            menu->pageCount_44 = 1;
+            menu->pageFlags_46 = 0;
+            menu->pageScroll_4A = 0;
+            menu->pageIndex_48 = 0;
+            menu->confirm_10 = 1;
+            menu->flags_24 |= 0x400;
         }
-        else if (u->state_0 == 15)
+        else if (menu->state_0 == 15)
         {
-            CycleInfoPage_800BC1A8(u);
+            CycleInfoPage_800BC1A8(menu);
         }
-        else if (CanRearrange_800BB3E8(u) && CompactStoredMinions_800B97B0())
+        else if (CanRearrange_800BB3E8(menu) && CompactStoredMinions_800B97B0())
         {
             PlaySfx_80031494(0x7E);
         }
     }
     else if (padPressed_8009194C & 0x20)
     {
-        if (u->markCount_80 > 0 && u->state_0 == 5)
+        if (menu->markCount_80 > 0 && menu->state_0 == 5)
         {
-            u->confirm_10 = 1;
+            menu->confirm_10 = 1;
         }
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, ShopMenuInput_800BBE24);
 
-void CycleInfoPage_800BC1A8(ShopMenu* u)
+void CycleInfoPage_800BC1A8(ShopMenu* menu)
 {
     int fl;
     int r;
     int t;
-    if (u->shown_54->id != 4)
+    if (menu->shown_54->id != 4)
     {
-        fl = u->flags_24;
-        u->pageCols_40 = 1;
-        u->pageRows_42 = 1;
-        u->pageCount_44 = 1;
-        u->pageFlags_46 = 0;
-        u->pageScroll_4A = 0;
-        u->pageIndex_48 = 0;
+        fl = menu->flags_24;
+        menu->pageCols_40 = 1;
+        menu->pageRows_42 = 1;
+        menu->pageCount_44 = 1;
+        menu->pageFlags_46 = 0;
+        menu->pageScroll_4A = 0;
+        menu->pageIndex_48 = 0;
         if ((fl & 0x1C0) == 0)
         {
-            u->flags_24 = fl | 0x40;
-            u->pageCount_44 = 5;
-            u->pageRows_42 = 5;
+            menu->flags_24 = fl | 0x40;
+            menu->pageCount_44 = 5;
+            menu->pageRows_42 = 5;
         }
         else if (fl & 0x40)
         {
             t = fl & ~0x40;
             t &= ~0x100;
-            u->flags_24 = t | 0x80;
-            r = CountMagicBits_8001AE54(&u->shown_54->magicBits_F4);
+            menu->flags_24 = t | 0x80;
+            r = CountMagicBits_8001AE54(&menu->shown_54->magicBits_F4);
             if (r < 4)
             {
                 r = 4;
             }
-            u->pageCols_40 = 1;
-            u->pageRows_42 = 4;
-            u->pageCount_44 = r;
-            u->pageFlags_46 = 0x40;
+            menu->pageCols_40 = 1;
+            menu->pageRows_42 = 4;
+            menu->pageCount_44 = r;
+            menu->pageFlags_46 = 0x40;
         }
         else if (fl & 0x80)
         {
             int t2 = fl & ~0x40;
             t2 &= ~0x80;
-            u->flags_24 = t2 | 0x100;
+            menu->flags_24 = t2 | 0x100;
         }
         else if (fl & 0x100)
         {
             int fl2 = fl & ~0x100;
-            u->flags_24 = fl2;
-            if (u->state_0 == 3 && (fl & 2))
+            menu->flags_24 = fl2;
+            if (menu->state_0 == 3 && (fl & 2))
             {
-                u->flags_24 = fl2 & ~0x400;
+                menu->flags_24 = fl2 & ~0x400;
             }
         }
         PlaySfx_80031494(0x7F);
     }
 }
 
-void DismissShopPrompt_800BC2DC(ShopMenu* u)
+void DismissShopPrompt_800BC2DC(ShopMenu* menu)
 {
     if (IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))
     {
-        int fl = u->flags_24;
-        if ((fl & 0x400) && u->state_0 == 3 && (fl & 2))
+        int fl = menu->flags_24;
+        if ((fl & 0x400) && menu->state_0 == 3 && (fl & 2))
         {
             PlaySfx_80031494(0x7D);
-            u->flags_24 &= ~0x400;
+            menu->flags_24 &= ~0x400;
         }
         else
         {
             PlaySfx_80031494(0x7E);
-            SetShopHelpText_800BBB54(u, 0);
-            u->flags_24 &= ~2;
+            SetShopHelpText_800BBB54(menu, 0);
+            menu->flags_24 &= ~2;
         }
     }
 }
 
-typedef struct ShopPosShop
+typedef struct ShopPos
 {
     short x;
     short y;
-} ShopPosShop;
+} ShopPos;
 // window style for DrawWindow_80042460
-typedef struct ShopWinShop
+typedef struct ShopWinColor
 {
     short color;
-    unsigned char field_2;
-    unsigned char field_3;
-} ShopWinShop;
+    unsigned char colorSet_2; // window colour set (GetWindowColors_8004226C)
+    unsigned char semiTrans_3;
+} ShopWinColor;
 // DrawUiWindow_8002A384's parameter block
-typedef struct ShopUiWinShop
+typedef struct ShopUiWin
 {
     ShopRect* rect_0;
     int time_4;
     short field_8;
     short ot_A;
-} ShopUiWinShop;
-typedef struct ShopPairShop
+} ShopUiWin;
+typedef struct ShopPair
 {
     short a;
     short b;
-} ShopPairShop;
-extern void DrawScrollArrow_8002B3DC(ShopPairShop p, int b, void* c, int d);
+} ShopPair;
+extern void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d);
 extern int IsCircleHeldP1_8003D480(void);
 extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
 extern void DrawPortraitWindow_8002A4E4(int a);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void DrawAbilityDescription_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
+extern void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* a2, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
-extern void DrawWindow_80042460(void* rect, ShopWinShop* w, void* ot, int t);
-extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
-extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
-extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPosShop* base);
+extern void DrawWindow_80042460(void* rect, ShopWinColor* w, void* ot, int t);
+extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPos* a1);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPos* a1);
+extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
+extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
-extern void DrawUiWindow_8002A384(ShopUiWinShop* p);
+extern void DrawUiWindow_8002A384(ShopUiWin* p);
 extern void DrawShopMainMenu_800BCEDC(ShopMenu* u);
 extern void DrawShopButtonHelp_800BCCD8(ShopMenu* u);
 extern void DrawPartyList_800BE53C(ShopMenu* u);
@@ -2115,49 +2115,49 @@ extern void DrawStoredList_800BE7F0(ShopMenu* u);
 extern void DrawSkinList_800BED48();
 #if 0
 // Not matched: stack layout matches; loop-invariant constant 2 is not hoisted (the original keeps it in a spilled pseudo, rematerialised in $t1), so a few registers differ
-void DrawShopMenu_800BC380(ShopMenu* u)
+void DrawShopMenu_800BC380(ShopMenu* menu)
 {
-    ShopPosShop pos;
-    ShopWinShop win;
+    ShopPos pos;
+    ShopWinColor win;
     short i;
     short j;
-    short n;
-    int c;
-    int t;
-    if (u->flags_24 & 0x40)
+    short openStep;
+    int hasDesc;
+    int time;
+    if (menu->flags_24 & 0x40)
     {
-        c = 0;
-        if (u->shown_54->skills_DE.slot[u->pageIndex_48].flags_0 & 1)
+        hasDesc = 0;
+        if (menu->shown_54->skills_DE.slot[menu->pageIndex_48].flags_0 & 1)
         {
-            c = 0 < u->shown_54->skills_DE.slot[u->pageIndex_48].id_1;
+            hasDesc = 0 < menu->shown_54->skills_DE.slot[menu->pageIndex_48].id_1;
         }
-        if (IsCircleHeldP1_8003D480() && c)
+        if (IsCircleHeldP1_8003D480() && hasDesc)
         {
-            u->flags_24 |= 0x1000;
+            menu->flags_24 |= 0x1000;
         }
         else
         {
-            u->flags_24 &= ~0x1000;
+            menu->flags_24 &= ~0x1000;
         }
     }
-    else if (u->flags_24 & 0x80)
+    else if (menu->flags_24 & 0x80)
     {
-        j = u->pageIndex_48 + u->pageScroll_4A;
-        c = FindNthMagicBit_8001AEC0(&u->shown_54->magicBits_F4, j) < 0x1E;
-        if (IsCircleHeldP1_8003D480() && c)
+        j = menu->pageIndex_48 + menu->pageScroll_4A;
+        hasDesc = FindNthMagicBit_8001AEC0(&menu->shown_54->magicBits_F4, j) < 0x1E;
+        if (IsCircleHeldP1_8003D480() && hasDesc)
         {
-            u->flags_24 |= 0x1000;
+            menu->flags_24 |= 0x1000;
         }
         else
         {
-            u->flags_24 &= ~0x1000;
+            menu->flags_24 &= ~0x1000;
         }
     }
-    if (u->state_0 == 3 && (u->flags_24 & 2))
+    if (menu->state_0 == 3 && (menu->flags_24 & 2))
     {
-        u->flags_24 &= ~0x1000;
+        menu->flags_24 &= ~0x1000;
     }
-    if (!(u->flags_24 & 0x1000))
+    if (!(menu->flags_24 & 0x1000))
     {
         DrawPortraitWindow_8002A4E4(0xE);
         DrawTextList_8002A310(dialogLines_800BF7C8, 0xE);
@@ -2168,23 +2168,23 @@ void DrawShopMenu_800BC380(ShopMenu* u)
     {
         pos.x = 10;
         pos.y = 0x12;
-        if (u->flags_24 & 0x40)
+        if (menu->flags_24 & 0x40)
         {
-            DrawAbilityDescription_8002C670(u->shown_54, &pos, abilityDescLines_800C044C, u->pageIndex_48, 0xE);
+            DrawAbilityDescription_8002C670(menu->shown_54, &pos, abilityDescLines_800C044C, menu->pageIndex_48, 0xE);
         }
-        else if (u->flags_24 & 0x80)
+        else if (menu->flags_24 & 0x80)
         {
-            DrawLargeTextBox_8002AF10((int)magicDescLines_800C026C[FindNthMagicBit_8001AEC0(&u->shown_54->magicBits_F4, u->pageIndex_48 + u->pageScroll_4A)], (int)&pos, 0xE);
+            DrawLargeTextBox_8002AF10((int)magicDescLines_800C026C[FindNthMagicBit_8001AEC0(&menu->shown_54->magicBits_F4, menu->pageIndex_48 + menu->pageScroll_4A)], (int)&pos, 0xE);
         }
     }
-    if (u->windows_1C & 2)
+    if (menu->windows_1C & 2)
     {
         pos.x = partyLabelRect_800BF7A0.x + 5;
         pos.y = partyLabelRect_800BF7A0.y + 3;
         pos.x = partyLabelRect_800BF7A0.x + 3;
         DrawUiTiySprt_8002C06C(&pos, 0xB5, 0xE);
-        win.field_3 = 1;
-        win.field_2 = 0;
+        win.semiTrans_3 = 1;
+        win.colorSet_2 = 0;
         win.color = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(&partyLabelRect_800BF7A0, &win, pOT_8008D454 + 0xE, 0);
         pos.x = storedLabelRect_800BF7A8.x + 5;
@@ -2192,264 +2192,264 @@ void DrawShopMenu_800BC380(ShopMenu* u)
         pos.x = storedLabelRect_800BF7A8.x + 4;
         DrawUiTiySprt_8002C06C(&pos, 0xE, 0xE);
         DrawWindow_80042460(&storedLabelRect_800BF7A8, &win, pOT_8008D454 + 0xE, 0);
-        DrawPartyList_800BE53C(u);
-        DrawStoredList_800BE7F0(u);
+        DrawPartyList_800BE53C(menu);
+        DrawStoredList_800BE7F0(menu);
     }
     for (i = 0; i < 7; i++)
     {
-        if (!((1 << i) & u->windows_1C))
+        if (!((1 << i) & menu->windows_1C))
         {
             continue;
         }
-        n = 8;
-        if (!((1 << i) & u->windowsOpen_20))
+        openStep = 8;
+        if (!((1 << i) & menu->windowsOpen_20))
         {
-            n = u->openTimer_C;
+            openStep = menu->openTimer_C;
         }
         if (i == 2)
         {
-            if (u->shown_54->id != 4 && !(u->flags_24 & 0x20))
+            if (menu->shown_54->id != 4 && !(menu->flags_24 & 0x20))
             {
-                ShopPosShop p28;
-                struct_minion_ref r30;
-                ShopPosShop p40;
-                struct_minion_ref r48;
-                ShopPosShop p58;
-                ShopPosShop p60;
-                ShopRect r68;
-                if (u->flags_24 & 0x1C0)
+                ShopPos abilityPos;
+                struct_minion_ref abilityRef;
+                ShopPos p40;
+                struct_minion_ref magicRef;
+                ShopPos treePos;
+                ShopPos statusPos;
+                ShopRect statusRect;
+                if (menu->flags_24 & 0x1C0)
                 {
-                    if (u->flags_24 & 0x40)
+                    if (menu->flags_24 & 0x40)
                     {
-                        p28.x = 0x5C;
-                        p28.y = 0x5E;
-                        r30.cursor_0 = u->pageIndex_48;
-                        r30.scroll_2 = u->pageScroll_4A;
-                        r30.field_4 = 2;
-                        r30.ot_6 = 0xE;
-                        r30.field_8 = 0;
-                        r30.field_A = 1;
-                        r30.minion_C = u->shown_54;
-                        DrawAbilityList_8002CE28(&r30, &p28);
+                        abilityPos.x = 0x5C;
+                        abilityPos.y = 0x5E;
+                        abilityRef.cursor_0 = menu->pageIndex_48;
+                        abilityRef.scroll_2 = menu->pageScroll_4A;
+                        abilityRef.field_4 = 2;
+                        abilityRef.ot_6 = 0xE;
+                        abilityRef.field_8 = 0;
+                        abilityRef.field_A = 1;
+                        abilityRef.minion_C = menu->shown_54;
+                        DrawAbilityList_8002CE28(&abilityRef, &abilityPos);
                     }
-                    else if (u->flags_24 & 0x80)
+                    else if (menu->flags_24 & 0x80)
                     {
                         p40.x = 0x7E;
                         p40.y = 0x6D;
-                        r48.cursor_0 = u->pageIndex_48;
-                        r48.scroll_2 = u->pageScroll_4A;
-                        r48.field_4 = 2;
-                        r48.ot_6 = 0xE;
-                        r48.field_8 = 0;
-                        r48.field_A = 1;
-                        r48.minion_C = u->shown_54;
-                        DrawMagicList_8002CAC8(&r48, &p40);
+                        magicRef.cursor_0 = menu->pageIndex_48;
+                        magicRef.scroll_2 = menu->pageScroll_4A;
+                        magicRef.field_4 = 2;
+                        magicRef.ot_6 = 0xE;
+                        magicRef.field_8 = 0;
+                        magicRef.field_A = 1;
+                        magicRef.minion_C = menu->shown_54;
+                        DrawMagicList_8002CAC8(&magicRef, &p40);
                     }
-                    else if (u->flags_24 & 0x100)
+                    else if (menu->flags_24 & 0x100)
                     {
-                        p58.x = 0x28;
-                        p58.y = 0x1E;
-                        DrawFamilyTree_8002D7D0(u->shown_54, 0xE, &p58);
+                        treePos.x = 0x28;
+                        treePos.y = 0x1E;
+                        DrawFamilyTree_8002D7D0(menu->shown_54, 0xE, &treePos);
                     }
                 }
-                if (!(u->flags_24 & 0x1C0))
+                if (!(menu->flags_24 & 0x1C0))
                 {
-                    p60.x = 0x5C;
-                    p60.y = 0x5E;
-                    InterpolateWindowRect_8004196C(&r68, &statusWindowRect_800BF790, n, 8, 0);
-                    if (u->state_0 == 3 && u->tabIndex_3C == 2)
+                    statusPos.x = 0x5C;
+                    statusPos.y = 0x5E;
+                    InterpolateWindowRect_8004196C(&statusRect, &statusWindowRect_800BF790, openStep, 8, 0);
+                    if (menu->state_0 == 3 && menu->tabIndex_3C == 2)
                     {
-                        DrawUnitStatusPanel_8002DB48(&mergePreview_800C08E8.status_84, 0xE, &r68, &p60, u->shown_54, &u->base_4C->status_84);
+                        DrawUnitStatusPanel_8002DB48(&mergePreview_800C08E8.status_84, 0xE, &statusRect, &statusPos, menu->shown_54, &menu->base_4C->status_84);
                     }
                     else
                     {
-                        DrawUnitStatusPanel_8002DB48(&u->shown_54->status_84, 0xE, &r68, &p60, u->shown_54, 0);
+                        DrawUnitStatusPanel_8002DB48(&menu->shown_54->status_84, 0xE, &statusRect, &statusPos, menu->shown_54, 0);
                     }
                 }
             }
-            if (!(u->flags_24 & 0x1C0))
+            if (!(menu->flags_24 & 0x1C0))
             {
-                ShopWinShop w28;
-                w28.field_2 = 0;
-                w28.field_3 = 1;
-                w28.color = saveData_8008B570.uiColor_20.h;
-                DrawWindow_80042460(&statusWindowRect_800BF790, &w28, pOT_8008D454 + 0xE, 0);
+                ShopWinColor statusColor;
+                statusColor.colorSet_2 = 0;
+                statusColor.semiTrans_3 = 1;
+                statusColor.color = saveData_8008B570.uiColor_20.h;
+                DrawWindow_80042460(&statusWindowRect_800BF790, &statusColor, pOT_8008D454 + 0xE, 0);
             }
         }
-        if (!(u->flags_24 & 0x800) && i == 3)
+        if (!(menu->flags_24 & 0x800) && i == 3)
         {
-            if (!(u->flags_24 & 2) && u->messageShown_18 == 0)
+            if (!(menu->flags_24 & 2) && menu->messageShown_18 == 0)
             {
-                ShopRect r28;
-                ShopUiWinShop w30;
-                r28.x = 0x56;
-                r28.y = u->listIndex_30 * 16 + 0x25;
-                r28.w = 0x1E;
-                r28.h = 0x10;
-                w30.rect_0 = &r28;
-                w30.ot_A = 0xE;
-                w30.time_4 = frameCount_8008D3FC;
-                w30.field_8 = 1;
-                DrawUiWindow_8002A384(&w30);
+                ShopRect rect;
+                ShopUiWin cursorWin;
+                rect.x = 0x56;
+                rect.y = menu->listIndex_30 * 16 + 0x25;
+                rect.w = 0x1E;
+                rect.h = 0x10;
+                cursorWin.rect_0 = &rect;
+                cursorWin.ot_A = 0xE;
+                cursorWin.time_4 = frameCount_8008D3FC;
+                cursorWin.field_8 = 1;
+                DrawUiWindow_8002A384(&cursorWin);
             }
         }
         if (i == 0)
         {
-            DrawShopMainMenu_800BCEDC(u);
+            DrawShopMainMenu_800BCEDC(menu);
         }
         if (i == 4)
         {
-            ShopRect r28;
-            ShopPosShop p30;
-            p30.x = mergeSlotRects_800BF7B0[0].x + mergeSlotRects_800BF7B0[0].w / 2;
-            p30.y = mergeSlotRects_800BF7B0[0].y + 2;
-            InterpolateWindowRect_8004196C(&r28, &mergeSlotRects_800BF7B0[0], 8, 8, 0);
-            DrawSmallText_8002FAA0(2, (unsigned short*)&p30, u->base_4C->status_84.name_10, 0xE);
-            t = 0;
-            if (u->tabIndex_3C == 0 && u->state_0 == 3 && (u->flags_24 & 2))
+            ShopRect rect;
+            ShopPos baseNamePos;
+            baseNamePos.x = mergeSlotRects_800BF7B0[0].x + mergeSlotRects_800BF7B0[0].w / 2;
+            baseNamePos.y = mergeSlotRects_800BF7B0[0].y + 2;
+            InterpolateWindowRect_8004196C(&rect, &mergeSlotRects_800BF7B0[0], 8, 8, 0);
+            DrawSmallText_8002FAA0(2, (unsigned short*)&baseNamePos, menu->base_4C->status_84.name_10, 0xE);
+            time = 0;
+            if (menu->tabIndex_3C == 0 && menu->state_0 == 3 && (menu->flags_24 & 2))
             {
-                t = frameCount_8008D3FC;
+                time = frameCount_8008D3FC;
             }
             {
-                ShopWinShop w38;
-                w38.field_2 = 1;
-                w38.field_3 = 1;
-                w38.color = saveData_8008B570.uiColor_20.h;
-                DrawWindow_80042460(&r28, &w38, pOT_8008D454 + 0xE, t);
+                ShopWinColor slotColor;
+                slotColor.colorSet_2 = 1;
+                slotColor.semiTrans_3 = 1;
+                slotColor.color = saveData_8008B570.uiColor_20.h;
+                DrawWindow_80042460(&rect, &slotColor, pOT_8008D454 + 0xE, time);
             }
         }
         if (i == 5)
             for (j = 1; j < 3; j++)
             {
-                ShopRect r38;
-                InterpolateWindowRect_8004196C(&r38, &mergeSlotRects_800BF7B0[j], 8, 8, 0);
+                ShopRect slotRect;
+                InterpolateWindowRect_8004196C(&slotRect, &mergeSlotRects_800BF7B0[j], 8, 8, 0);
                 switch (j)
                 {
                 case 1:
                 {
-                    ShopPosShop p40;
+                    ShopPos p40;
                     p40.x = mergeSlotRects_800BF7B0[j].x + mergeSlotRects_800BF7B0[j].w / 2;
                     p40.y = mergeSlotRects_800BF7B0[j].y + 2;
-                    DrawSmallText_8002FAA0(2, (unsigned short*)&p40, u->partner_50->status_84.name_10, 0xE);
+                    DrawSmallText_8002FAA0(2, (unsigned short*)&p40, menu->partner_50->status_84.name_10, 0xE);
                     break;
                 }
                 case 2:
                 {
-                    ShopPosShop p48;
+                    ShopPos p48;
                     p48.x = mergeSlotRects_800BF7B0[j].x + 7;
                     p48.y = mergeSlotRects_800BF7B0[j].y + 1;
                     DrawUiTiySprt_8002C06C(&p48, 0x42, 0xE);
                     break;
                 }
                 }
-                t = 0;
-                if (j == u->tabIndex_3C && u->state_0 == 3 && (u->flags_24 & 2))
+                time = 0;
+                if (j == menu->tabIndex_3C && menu->state_0 == 3 && (menu->flags_24 & 2))
                 {
-                    t = frameCount_8008D3FC;
+                    time = frameCount_8008D3FC;
                 }
                 {
-                    ShopWinShop w40;
-                    w40.field_2 = 1;
-                    w40.field_3 = 1;
-                    w40.color = saveData_8008B570.uiColor_20.h;
-                    DrawWindow_80042460(&r38, &w40, pOT_8008D454 + 0xE, t);
+                    ShopWinColor slotColor2;
+                    slotColor2.colorSet_2 = 1;
+                    slotColor2.semiTrans_3 = 1;
+                    slotColor2.color = saveData_8008B570.uiColor_20.h;
+                    DrawWindow_80042460(&slotRect, &slotColor2, pOT_8008D454 + 0xE, time);
                 }
-                if (u->state_0 == 3 && (u->flags_24 & 2))
+                if (menu->state_0 == 3 && (menu->flags_24 & 2))
                 {
-                    ShopPairShop p48;
-                    ShopPosShop p50;
-                    p50.x = 0xA5;
+                    ShopPair p48;
+                    ShopPos arrowPos;
+                    arrowPos.x = 0xA5;
                     p48.a = 0;
                     p48.b = 0;
-                    p50.y = 0x55;
-                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
-                    p50.x = 0xFA;
-                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    arrowPos.y = 0x55;
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &arrowPos, 0xE);
+                    arrowPos.x = 0xFA;
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &arrowPos, 0xE);
                 }
             }
         if (i == 6)
         {
-            struct_minion_ref r40;
-            r40.cursor_0 = u->savedIndex_5E[8];
-            r40.scroll_2 = u->savedScroll_72[2];
-            r40.field_4 = 2;
-            r40.ot_6 = 0xE;
-            r40.field_8 = 0;
-            r40.field_A = 1;
-            r40.minion_C = 0;
-            DrawSkinList_800BED48(&r40);
+            struct_minion_ref skinRef;
+            skinRef.cursor_0 = menu->savedIndex_5E[8];
+            skinRef.scroll_2 = menu->savedScroll_72[2];
+            skinRef.field_4 = 2;
+            skinRef.ot_6 = 0xE;
+            skinRef.field_8 = 0;
+            skinRef.field_A = 1;
+            skinRef.minion_C = 0;
+            DrawSkinList_800BED48(&skinRef);
         }
-        if (u->openTimer_C == 8)
+        if (menu->openTimer_C == 8)
         {
-            u->windowsOpen_20 |= 1 << i;
+            menu->windowsOpen_20 |= 1 << i;
         }
     }
-    if (u->state_0 != 11)
+    if (menu->state_0 != 11)
     {
-        DrawShopButtonHelp_800BCCD8(u);
+        DrawShopButtonHelp_800BCCD8(menu);
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, DrawShopMenu_800BC380);
 
-void DrawShopButtonHelp_800BCCD8(ShopMenu* u)
+void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
 {
-    switch (u->state_0)
+    switch (menu->state_0)
     {
     case 1:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpSelect_800C0048, 0, 0xE);
         break;
     case 2:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpPartner_800BFF70, 0, 0xE);
         break;
     case 3:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
-        else if (u->flags_24 & 2)
+        else if (menu->flags_24 & 2)
             DrawButtonHelpBar_8002B004(btnHelpMergePreview_800BFFB8, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
         break;
     case 5:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
-        else if (!u->marks_84)
+        else if (!menu->marks_84)
             DrawButtonHelpBar_8002B004(btnHelpSpin_800BFF48, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpSpinMarked_800BFF28, 0, 0xE);
         break;
     case 8:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpView_800BFF90, 0, 0xE);
         break;
     case 15:
-        if (u->flags_24 & 0xC0)
+        if (menu->flags_24 & 0xC0)
             DrawButtonHelpBar_8002B004(btnHelpStatsPage_800C0018, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpStats_800C0000, 0, 0xE);
         break;
     case 7:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpSelect_800C0048, 0, 0xE);
         break;
     case 10:
-        if (u->flags_24 & 0x20)
+        if (menu->flags_24 & 0x20)
             DrawButtonHelpBar_8002B004(btnHelpFormView_800BFFE0, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(btnHelpExchange_800C0070, 0, 0xE);
         break;
     default:
-        if (u->flags_24 & 2)
+        if (menu->flags_24 & 2)
             DrawButtonHelpBar_8002B004(btnHelpPrompt_800C0038, 0, 0xE);
         else
             DrawButtonHelpBar_8002B004(name_80082680, 0, 0xE);
@@ -2459,77 +2459,77 @@ void DrawShopButtonHelp_800BCCD8(ShopMenu* u)
 const ShopMenuWindows mainMenuWindow_800B9608 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800B9620 = 0;
 
-void DrawShopMainMenu_800BCEDC(ShopMenu* u)
+void DrawShopMainMenu_800BCEDC(ShopMenu* menu)
 {
-    ShopMenuWindows q = mainMenuWindow_800B9608;
-    q.time_4 = GetTime30Hz_8002C64C();
-    q.items_10 = (int)mainMenuItems_800C07D4;
-    q.flags_0 = (q.flags_0 & ~7) | 2;
-    q.cursor_C = u->listIndex_30;
-    q.open_8 = 8;
-    DrawMenuWindows_8002A5A4(&q);
+    ShopMenuWindows win = mainMenuWindow_800B9608;
+    win.time_4 = GetTime30Hz_8002C64C();
+    win.items_10 = (int)mainMenuItems_800C07D4;
+    win.flags_0 = (win.flags_0 & ~7) | 2;
+    win.cursor_C = menu->listIndex_30;
+    win.open_8 = 8;
+    DrawMenuWindows_8002A5A4(&win);
 }
 
 #if 0 // near miss: orig shares the field_30 == 0 block with case 4 and cross-jumps the return-2 tails
-int CheckShopSelection_800BCF74(ShopMenu* u)
+int CheckShopSelection_800BCF74(ShopMenu* menu)
 {
     int s;
-    if (u->state_0 == 0)
+    if (menu->state_0 == 0)
     {
-        s = u->listIndex_30;
+        s = menu->listIndex_30;
         if (s == 0)
         {
-            if (u->storedCount_4 + u->partyCount_6 < 2)
+            if (menu->storedCount_4 + menu->partyCount_6 < 2)
             {
                 return 1;
             }
         }
         else if (s >= 0 && s < 4)
         {
-            if (u->storedCount_4 + u->partyCount_6 == 0)
+            if (menu->storedCount_4 + menu->partyCount_6 == 0)
             {
                 return 2;
             }
         }
         return 0;
     }
-    switch (u->state_0)
+    switch (menu->state_0)
     {
     case 5:
-        if (!u->marks_84 && !u->partyMarks_88)
+        if (!menu->marks_84 && !menu->partyMarks_88)
         {
             return 2;
         }
         return 0;
     case 1:
     case 8:
-        if (u->base_4C->id == 4)
+        if (menu->base_4C->id == 4)
         {
             return 2;
         }
         return 0;
     case 2:
-        if (u->partner_50->id == 4)
+        if (menu->partner_50->id == 4)
         {
             return 2;
         }
-        if (u->partner_50 == u->base_4C)
+        if (menu->partner_50 == menu->base_4C)
         {
             return 3;
         }
         return 0;
     case 4:
-        if (u->storedCount_4 + u->partyCount_6 < 2)
+        if (menu->storedCount_4 + menu->partyCount_6 < 2)
         {
             return 1;
         }
         return 0;
     case 14:
-        if (GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4) == 0xFF)
+        if (GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4) == 0xFF)
         {
             return 4;
         }
-        u->flags_24 |= 0x200;
+        menu->flags_24 |= 0x200;
         return 0;
     }
     return 0;
@@ -2547,7 +2547,7 @@ int IsMergePreviewState_800BD650(short* p);
 int IsMinionListState_800BD678(ShopMenu* p);
 void PreviewMerge_800BD720(ShopMenu* u);
 // Matched
-void HandleShopConfirmCancel_800BD0D4(ShopMenu* u)
+void HandleShopConfirmCancel_800BD0D4(ShopMenu* menu)
 {
     short s;
     int changed;
@@ -2555,238 +2555,238 @@ void HandleShopConfirmCancel_800BD0D4(ShopMenu* u)
     short k;
     s = 0;
     changed = 0;
-    if (u->confirm_10)
+    if (menu->confirm_10)
     {
-        s = CheckShopSelection_800BCF74(u);
+        s = CheckShopSelection_800BCF74(menu);
         if (s == 0)
         {
-            f = u->flags_24;
+            f = menu->flags_24;
             if (f & 8)
             {
-                if (u->list_7E == 0)
+                if (menu->list_7E == 0)
                 {
-                    u->flags_24 = f | 0x10;
-                    u->partyIndex_58 = u->listIndex_30;
-                    if (u->state_0 != 5)
+                    menu->flags_24 = f | 0x10;
+                    menu->partyIndex_58 = menu->listIndex_30;
+                    if (menu->state_0 != 5)
                     {
-                        u->marks_84 |= 1 << u->listIndex_30;
-                        u->partyMarks_88 |= 1 << u->listIndex_30;
+                        menu->marks_84 |= 1 << menu->listIndex_30;
+                        menu->partyMarks_88 |= 1 << menu->listIndex_30;
                     }
                 }
                 else
                 {
-                    u->flags_24 = f & ~0x10;
-                    u->storedIndex_5A = u->listIndex_30;
-                    u->storedScroll_5C = u->listScroll_32;
-                    if (u->state_0 != 5)
+                    menu->flags_24 = f & ~0x10;
+                    menu->storedIndex_5A = menu->listIndex_30;
+                    menu->storedScroll_5C = menu->listScroll_32;
+                    if (menu->state_0 != 5)
                     {
-                        u->marks_84 |= 1 << (u->listIndex_30 + u->listScroll_32 + 3);
-                        u->storedMarks_8C |= 1 << (u->listIndex_30 + u->listScroll_32);
+                        menu->marks_84 |= 1 << (menu->listIndex_30 + menu->listScroll_32 + 3);
+                        menu->storedMarks_8C |= 1 << (menu->listIndex_30 + menu->listScroll_32);
                     }
                 }
             }
-            if (stateConfirmNext_800BF868[u->state_0] >= 0)
+            if (stateConfirmNext_800BF868[menu->state_0] >= 0)
             {
-                if (u->state_0 == 1)
+                if (menu->state_0 == 1)
                 {
-                    MemCopy_800403E8(&mergePreview_800C08E8, u->base_4C, sizeof(Minion));
+                    MemCopy_800403E8(&mergePreview_800C08E8, menu->base_4C, sizeof(Minion));
                 }
                 PlaySfx_80031494(0x7E);
-                u->prevState_2 = u->state_0;
-                u->state_0 = stateConfirmNext_800BF868[u->state_0];
+                menu->prevState_2 = menu->state_0;
+                menu->state_0 = stateConfirmNext_800BF868[menu->state_0];
                 changed = 1;
-                u->listScroll_32 = 0;
-                u->listIndex_30 = 0;
-                u->openTimer_C = 0;
+                menu->listScroll_32 = 0;
+                menu->listIndex_30 = 0;
+                menu->openTimer_C = 0;
             }
-            else if (stateConfirmNext_800BF868[u->state_0] == -1)
+            else if (stateConfirmNext_800BF868[menu->state_0] == -1)
             {
-                u->prevState_2 = u->state_0;
-                switch (u->state_0)
+                menu->prevState_2 = menu->state_0;
+                switch (menu->state_0)
                 {
                 case 0:
-                    if (u->listIndex_30 == 4)
+                    if (menu->listIndex_30 == 4)
                     {
                         PlaySfx_80031494(0x7E);
-                        if (u->storedCount_4 < 13)
+                        if (menu->storedCount_4 < 13)
                         {
-                            u->state_0 = 11;
+                            menu->state_0 = 11;
                         }
                         else
                         {
-                            u->state_0 = 12;
+                            menu->state_0 = 12;
                         }
                     }
                     else
                     {
                         PlaySfx_80031494(0x7E);
-                        u->state_0 = mainMenuStates_800BF8A8[u->listIndex_30];
+                        menu->state_0 = mainMenuStates_800BF8A8[menu->listIndex_30];
                     }
                     break;
                 case 4:
-                    if (u->listIndex_30 == 0)
+                    if (menu->listIndex_30 == 0)
                     {
                         PlaySfx_80031494(0x7E);
-                        u->state_0 = 1;
-                        u->prevState_2 = 0;
+                        menu->state_0 = 1;
+                        menu->prevState_2 = 0;
                     }
-                    else if (u->listIndex_30 == 1)
+                    else if (menu->listIndex_30 == 1)
                     {
                         PlaySfx_80031494(0x7D);
-                        u->state_0 = 0;
+                        menu->state_0 = 0;
                     }
                     break;
                 case 2:
                     PlaySfx_80031494(0x7E);
                     if (IsInventory4NonEmpty_800AD398())
                     {
-                        u->state_0 = 13;
+                        menu->state_0 = 13;
                     }
                     else
                     {
-                        PreviewMerge_800BD720(u);
-                        u->state_0 = 3;
+                        PreviewMerge_800BD720(menu);
+                        menu->state_0 = 3;
                     }
-                    u->prevState_2 = 2;
+                    menu->prevState_2 = 2;
                     break;
                 case 13:
-                    if (u->listIndex_30 == 0)
+                    if (menu->listIndex_30 == 0)
                     {
                         PlaySfx_80031494(0x7E);
-                        u->state_0 = 14;
+                        menu->state_0 = 14;
                     }
                     else
                     {
-                        PreviewMerge_800BD720(u);
-                        u->state_0 = 3;
+                        PreviewMerge_800BD720(menu);
+                        menu->state_0 = 3;
                     }
-                    u->prevState_2 = 2;
+                    menu->prevState_2 = 2;
                     break;
                 case 14:
                     PlaySfx_80031494(0x7E);
-                    PreviewMerge_800BD720(u);
-                    u->state_0 = 3;
-                    u->prevState_2 = 1;
+                    PreviewMerge_800BD720(menu);
+                    menu->state_0 = 3;
+                    menu->prevState_2 = 1;
                     break;
                 case 8:
                     PlaySfx_80031494(0x7E);
-                    u->prevState_2 = u->state_0;
-                    if (u->flags_24 & 0x400)
+                    menu->prevState_2 = menu->state_0;
+                    if (menu->flags_24 & 0x400)
                     {
-                        u->state_0 = 15;
-                        u->flags_24 &= ~0x400;
+                        menu->state_0 = 15;
+                        menu->flags_24 &= ~0x400;
                     }
                     else
                     {
-                        u->state_0 = 9;
+                        menu->state_0 = 9;
                     }
                     break;
                 }
                 changed = 1;
-                u->listScroll_32 = 0;
-                u->listIndex_30 = 0;
-                u->openTimer_C = 0;
+                menu->listScroll_32 = 0;
+                menu->listIndex_30 = 0;
+                menu->openTimer_C = 0;
             }
-            else if (stateConfirmNext_800BF868[u->state_0] == -3)
+            else if (stateConfirmNext_800BF868[menu->state_0] == -3)
             {
                 PlaySfx_80031494(0x7E);
-                ShopMenuExecute_800BD9DC(u);
+                ShopMenuExecute_800BD9DC(menu);
             }
         }
         else
         {
             PlaySfx_80031494(0x7C);
-            f = u->flags_24;
+            f = menu->flags_24;
             if (f & 8)
             {
-                if (u->list_7E == 0)
+                if (menu->list_7E == 0)
                 {
-                    u->flags_24 = f | 0x10;
-                    u->partyIndex_58 = u->listIndex_30;
+                    menu->flags_24 = f | 0x10;
+                    menu->partyIndex_58 = menu->listIndex_30;
                 }
                 else
                 {
-                    u->flags_24 = f & ~0x10;
-                    u->storedIndex_5A = u->listIndex_30;
-                    u->storedScroll_5C = u->listScroll_32;
+                    menu->flags_24 = f & ~0x10;
+                    menu->storedIndex_5A = menu->listIndex_30;
+                    menu->storedScroll_5C = menu->listScroll_32;
                 }
             }
-            u->errorId_8 = s;
-            SetShopHelpText_800BBB54(u, 1);
-            u->messageShown_18 = 1;
+            menu->errorId_8 = s;
+            SetShopHelpText_800BBB54(menu, 1);
+            menu->messageShown_18 = 1;
         }
     }
-    else if (u->cancel_14)
+    else if (menu->cancel_14)
     {
-        if (u->state_0 != 0 || u->listIndex_30 != 4)
+        if (menu->state_0 != 0 || menu->listIndex_30 != 4)
         {
             PlaySfx_80031494(0x7D);
-            if (u->state_0 != 13 && u->state_0 != 14)
+            if (menu->state_0 != 13 && menu->state_0 != 14)
             {
-                u->marks_84 = 0;
-                u->partyMarks_88 = 0;
-                u->storedMarks_8C = 0;
+                menu->marks_84 = 0;
+                menu->partyMarks_88 = 0;
+                menu->storedMarks_8C = 0;
             }
-            if (u->state_0 == 3)
+            if (menu->state_0 == 3)
             {
-                if (u->savedList_7A[0] == 0)
+                if (menu->savedList_7A[0] == 0)
                 {
-                    k = u->savedIndex_5E[1];
-                    u->marks_84 |= 1 << k;
-                    u->partyMarks_88 |= 1 << k;
+                    k = menu->savedIndex_5E[1];
+                    menu->marks_84 |= 1 << k;
+                    menu->partyMarks_88 |= 1 << k;
                 }
-                else if (u->savedList_7A[0] == 1)
+                else if (menu->savedList_7A[0] == 1)
                 {
-                    k = u->savedIndex_5E[1] + u->savedScroll_72[0];
-                    u->marks_84 |= 1 << (k + 3);
-                    u->storedMarks_8C |= 1 << k;
+                    k = menu->savedIndex_5E[1] + menu->savedScroll_72[0];
+                    menu->marks_84 |= 1 << (k + 3);
+                    menu->storedMarks_8C |= 1 << k;
                 }
             }
-            ShopMenuBack_800BB8C4(u);
+            ShopMenuBack_800BB8C4(menu);
             changed = 1;
         }
     }
-    u->cancel_14 = 0;
-    u->confirm_10 = 0;
-    if (!(u->flags_24 & 4))
+    menu->cancel_14 = 0;
+    menu->confirm_10 = 0;
+    if (!(menu->flags_24 & 4))
     {
         if (s == 0 && changed)
         {
-            if (IsMergePreviewState_800BD650(&u->state_0))
+            if (IsMergePreviewState_800BD650(&menu->state_0))
             {
-                u->flags_24 |= 2;
-                SetShopHelpText_800BBB54(u, 3);
+                menu->flags_24 |= 2;
+                SetShopHelpText_800BBB54(menu, 3);
             }
             else
             {
-                SetShopHelpText_800BBB54(u, 0);
+                SetShopHelpText_800BBB54(menu, 0);
             }
         }
-        SetShopWindows_800BD7A8(u);
-        if (IsMinionListState_800BD678(u))
+        SetShopWindows_800BD7A8(menu);
+        if (IsMinionListState_800BD678(menu))
         {
-            u->flags_24 |= 8;
+            menu->flags_24 |= 8;
         }
         else
         {
-            u->flags_24 &= ~8;
+            menu->flags_24 &= ~8;
         }
-        SetupShopCursor_800BD854(u);
+        SetupShopCursor_800BD854(menu);
     }
 }
 
-int IsMergePreviewState_800BD650(short* p)
+int IsMergePreviewState_800BD650(short* state)
 {
-    if (*p == 3 || *p == 13)
+    if (*state == 3 || *state == 13)
     {
         return 1;
     }
     return 0;
 }
 
-int IsMinionListState_800BD678(ShopMenu* p)
+int IsMinionListState_800BD678(ShopMenu* menu)
 {
-    switch (p->state_0)
+    switch (menu->state_0)
     {
     case 1:
     case 2:
@@ -2799,16 +2799,16 @@ int IsMinionListState_800BD678(ShopMenu* p)
     return 0;
 }
 
-int IsNoChosen_800BD6C4(ShopMenu* p)
+int IsNoChosen_800BD6C4(ShopMenu* menu)
 {
-    switch (*(short*)p)
+    switch (*(short*)menu)
     {
     case 3:
     case 4:
     case 6:
     case 9:
     case 13:
-        if (p->listIndex_30 == 1)
+        if (menu->listIndex_30 == 1)
         {
             return 1;
         }
@@ -2817,104 +2817,104 @@ int IsNoChosen_800BD6C4(ShopMenu* p)
 }
 const int dword_800B96F0 = 0; // the alignment of jpt_800B96F4 (delete it with that table)
 
-void PreviewMerge_800BD720(ShopMenu* u)
+void PreviewMerge_800BD720(ShopMenu* menu)
 {
     int d;
-    if (u->base_4C && u->partner_50)
+    if (menu->base_4C && menu->partner_50)
     {
-        if (u->flags_24 & 0x200)
+        if (menu->flags_24 & 0x200)
         {
-            d = GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4);
+            d = GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4);
         }
         else
         {
             d = 10;
         }
-        MergeMinions_800B9FC8(u->base_4C, u->partner_50, &mergePreview_800C08E8, d);
+        MergeMinions_800B9FC8(menu->base_4C, menu->partner_50, &mergePreview_800C08E8, d);
     }
 }
 
-void SetShopWindows_800BD7A8(ShopMenu* u)
+void SetShopWindows_800BD7A8(ShopMenu* menu)
 {
     short i;
     unsigned short v;
     int s;
-    v = u->windowsOpen_20;
-    u->windows_1C = 0;
-    s = stateWindows_800BF8B4[u->state_0];
-    u->windowsOpen_20 = 0;
-    u->windows_1C = s;
+    v = menu->windowsOpen_20;
+    menu->windows_1C = 0;
+    s = stateWindows_800BF8B4[menu->state_0];
+    menu->windowsOpen_20 = 0;
+    menu->windows_1C = s;
     for (i = 0; i < 7; i++)
     {
         if ((v >> i) & 1)
         {
-            if ((stateWindows_800BF8B4[u->state_0] >> i) & 1)
+            if ((stateWindows_800BF8B4[menu->state_0] >> i) & 1)
             {
-                u->windowsOpen_20 |= 1 << i;
+                menu->windowsOpen_20 |= 1 << i;
             }
         }
     }
 }
 
-void SetupShopCursor_800BD854(ShopMenu* u)
+void SetupShopCursor_800BD854(ShopMenu* menu)
 {
-    unsigned short* e = stateCursors_800BF7E8[u->state_0];
+    unsigned short* e = stateCursors_800BF7E8[menu->state_0];
     int r;
-    u->listCols_28 = e[0];
-    u->listRows_2A = e[1];
-    u->listCount_2C = e[2];
-    u->listFlags_2E = e[3];
-    if (u->windows_1C & 8)
+    menu->listCols_28 = e[0];
+    menu->listRows_2A = e[1];
+    menu->listCount_2C = e[2];
+    menu->listFlags_2E = e[3];
+    if (menu->windows_1C & 8)
     {
-        if (u->state_0 == 4)
+        if (menu->state_0 == 4)
         {
-            u->listIndex_30 = 0;
+            menu->listIndex_30 = 0;
         }
         else
         {
-            u->listIndex_30 = 1;
+            menu->listIndex_30 = 1;
         }
     }
-    if (u->state_0 == 3)
+    if (menu->state_0 == 3)
     {
-        u->tabIndex_3C = 2;
+        menu->tabIndex_3C = 2;
     }
-    if (u->flags_24 & 8)
+    if (menu->flags_24 & 8)
     {
-        if (u->list_7E == 0)
+        if (menu->list_7E == 0)
         {
-            u->flags_24 |= 0x10;
-            u->listCols_28 = 1;
-            u->listFlags_2E = 0x20;
-            u->listRows_2A = 3;
-            u->listCount_2C = 3;
-            if (u->state_0 == 2 || u->state_0 == 10)
+            menu->flags_24 |= 0x10;
+            menu->listCols_28 = 1;
+            menu->listFlags_2E = 0x20;
+            menu->listRows_2A = 3;
+            menu->listCount_2C = 3;
+            if (menu->state_0 == 2 || menu->state_0 == 10)
             {
-                u->listIndex_30 = u->partyIndex_58;
+                menu->listIndex_30 = menu->partyIndex_58;
             }
         }
         else
         {
-            u->flags_24 &= ~0x10;
-            u->listCols_28 = 1;
-            u->listRows_2A = 4;
-            u->listCount_2C = 0x18;
-            u->listFlags_2E = 0x50;
-            if (u->state_0 == 2 || u->state_0 == 10)
+            menu->flags_24 &= ~0x10;
+            menu->listCols_28 = 1;
+            menu->listRows_2A = 4;
+            menu->listCount_2C = 0x18;
+            menu->listFlags_2E = 0x50;
+            if (menu->state_0 == 2 || menu->state_0 == 10)
             {
-                u->listIndex_30 = u->storedIndex_5A;
-                u->listScroll_32 = u->storedScroll_5C;
+                menu->listIndex_30 = menu->storedIndex_5A;
+                menu->listScroll_32 = menu->storedScroll_5C;
             }
         }
     }
-    if (u->state_0 == 14)
+    if (menu->state_0 == 14)
     {
         r = GetLastInventorySlot_800AD308(4);
         if (r < 3)
         {
             r = 3;
         }
-        u->listCount_2C = r + 1;
+        menu->listCount_2C = r + 1;
     }
 }
 
@@ -2927,46 +2927,46 @@ extern void ShopWaitDarken_800BDE44();
 extern void RequestAreaReload_80027314();
 extern void StartSceneDarken_8001AAA8(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
-extern int ExchangeMinions_800BAF54(short* a, short* b, short c, short d);
-void ShopMenuExecute_800BD9DC(ShopMenu* u)
+extern int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList);
+void ShopMenuExecute_800BD9DC(ShopMenu* menu)
 {
     EventEntry* tk;
     SaveData* sv;
     int* p;
     int any;
     short i;
-    switch (u->state_0)
+    switch (menu->state_0)
     {
     case 3:
-        if (u->listIndex_30 != 0)
+        if (menu->listIndex_30 != 0)
         {
             break;
         }
         sv = &saveData_8008B570;
         if (sv->settings_1C.bits.d_5 == 1)
         {
-            MemCopy_800403E8(u->base_4C, &mergePreview_800C08E8, sizeof(Minion));
-            SetMinionEmpty_800B9B44((short*)u->partner_50);
-            if (u->base_4C->species_4C[0] == 0x23)
+            MemCopy_800403E8(menu->base_4C, &mergePreview_800C08E8, sizeof(Minion));
+            SetMinionEmpty_800B9B44((short*)menu->partner_50);
+            if (menu->base_4C->species_4C[0] == 0x23)
             {
                 p = (int*)sv->allMinionsBitfields_814;
                 p[1] |= 8;
             }
-            else if (u->base_4C->species_4C[0] == 0x22)
+            else if (menu->base_4C->species_4C[0] == 0x22)
             {
                 p = (int*)sv->allMinionsBitfields_814;
                 p[1] |= 4;
             }
-            if (u->flags_24 & 0x200)
+            if (menu->flags_24 & 0x200)
             {
-                RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
+                RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4), 1, 4);
                 CompactInventory_800AD3F0(4);
-                u->flags_24 &= ~0x200;
+                menu->flags_24 &= ~0x200;
             }
-            u->marks_84 = 0;
-            u->partyMarks_88 = 0;
-            u->storedMarks_8C = 0;
-            u->flags_24 |= 1;
+            menu->marks_84 = 0;
+            menu->partyMarks_88 = 0;
+            menu->storedMarks_8C = 0;
+            menu->flags_24 |= 1;
             if (saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
                 tk = &shopMenuTask_8008D670->entry;
@@ -2977,22 +2977,22 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
                 break;
             }
         }
-        u->fadeAction_94 = 1;
-        u->flags_24 |= 0x800;
+        menu->fadeAction_94 = 1;
+        menu->flags_24 |= 0x800;
         tk = &shopMenuTask_8008D670->entry;
         fn_8001ABEC(1);
         tk->cb_8 = ShopWaitDarken_800BDE44;
         StartSceneDarken_8001AAA8(0x20);
         break;
     case 6:
-        if (u->listIndex_30 != 0)
+        if (menu->listIndex_30 != 0)
         {
             break;
         }
         any = 0;
         for (i = any; i < 27; i++)
         {
-            if ((unsigned int)u->marks_84 & (1 << i))
+            if ((unsigned int)menu->marks_84 & (1 << i))
             {
                 AddInventory_800AD184(GetSilkItemForLevel_800BAE80(GetShopMinion_800B9C5C(i)), 1, 0);
                 ClearShopMinion_800B9B20(i);
@@ -3003,10 +3003,10 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         {
             break;
         }
-        u->marks_84 = 0;
-        u->partyMarks_88 = 0;
-        u->storedMarks_8C = 0;
-        u->flags_24 |= 1;
+        menu->marks_84 = 0;
+        menu->partyMarks_88 = 0;
+        menu->storedMarks_8C = 0;
+        menu->flags_24 |= 1;
         if (saveData_8008B570.settings_1C.bits.d_5 == 1)
         {
             tk = &shopMenuTask_8008D670->entry;
@@ -3017,8 +3017,8 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         }
         else
         {
-            u->fadeAction_94 = 2;
-            u->flags_24 |= 0x800;
+            menu->fadeAction_94 = 2;
+            menu->flags_24 |= 0x800;
             tk = &shopMenuTask_8008D670->entry;
             fn_8001ABEC(1);
             tk->cb_8 = ShopWaitDarken_800BDE44;
@@ -3026,31 +3026,31 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         }
         break;
     case 9:
-        ExchangeMinions_800BAF54((short*)u->base_4C, (short*)u->partner_50, u->savedList_7A[0] == 0 ? 3 : 2, u->savedList_7A[1] == 0 ? 3 : 2);
-        u->marks_84 = 0;
-        u->partyMarks_88 = 0;
-        u->storedMarks_8C = 0;
-        u->state_0 = 7;
-        u->prevState_2 = 0;
-        u->flags_24 |= 1;
-        SetShopHelpText_800BBB54(u, 0);
+        ExchangeMinions_800BAF54((short*)menu->base_4C, (short*)menu->partner_50, menu->savedList_7A[0] == 0 ? 3 : 2, menu->savedList_7A[1] == 0 ? 3 : 2);
+        menu->marks_84 = 0;
+        menu->partyMarks_88 = 0;
+        menu->storedMarks_8C = 0;
+        menu->state_0 = 7;
+        menu->prevState_2 = 0;
+        menu->flags_24 |= 1;
+        SetShopHelpText_800BBB54(menu, 0);
         break;
     case 10:
         tk = &shopMenuTask_8008D670->entry;
         tk->cb_8 = ShopResumeAfterNameEntry_800BE128;
         tk->flags = (tk->flags & ~1) | 0x8000;
-        ShopCtrlRequestNameEntry_800B6C6C(u->base_4C->status_84.name_10
+        ShopCtrlRequestNameEntry_800B6C6C(menu->base_4C->status_84.name_10
 , 0);
         SetFadeMode_8001C19C(0, 0x20);
-        u->marks_84 = 0;
-        u->partyMarks_88 = 0;
-        u->storedMarks_8C = 0;
+        menu->marks_84 = 0;
+        menu->partyMarks_88 = 0;
+        menu->storedMarks_8C = 0;
         break;
     case 11:
-        u->flags_24 |= 4;
+        menu->flags_24 |= 4;
         break;
     case 12:
-        u->state_0 = 0;
+        menu->state_0 = 0;
         break;
     }
 }
@@ -3061,28 +3061,28 @@ INCLUDE_OVERLAY_ASM(shop, ShopMenuExecute_800BD9DC);
 void* const jpt_800B96F4[10] = { jtgt_800BDA34, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDB4C, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDCEC, jtgt_800BDC7C, jtgt_800BDD40, jtgt_800BDD54 };
 const ShopMenuWindows minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
 
-void ShopWaitAreaReload_800BDD74(EventEntry* t, void* arg)
+void ShopWaitAreaReload_800BDD74(EventEntry* task, void* arg)
 {
-    ShopMenu* u = (ShopMenu*)arg;
+    ShopMenu* menu = (ShopMenu*)arg;
     extern void ShopResumeAfterNameEntry_800BE128();
     extern void ShopResumeAfterSpin_800BE07C();
     if (fn_800272D0() == 0)
     {
         ResumeFieldMinions_800A7BF0(-1);
-        if (u->state_0 == 3)
+        if (menu->state_0 == 3)
         {
             ExchangeEventResult_800A5F9C(1);
-            t->cb_8 = ShopResumeAfterNameEntry_800BE128;
-            ShopCtrlRequestNameEntry_800B6C6C(u->base_4C->status_84.name_10
+            task->cb_8 = ShopResumeAfterNameEntry_800BE128;
+            ShopCtrlRequestNameEntry_800B6C6C(menu->base_4C->status_84.name_10
 , 1);
         }
-        else if (u->state_0 == 6)
+        else if (menu->state_0 == 6)
         {
             ExchangeEventResult_800A5F9C(2);
-            t->cb_8 = ShopResumeAfterSpin_800BE07C;
+            task->cb_8 = ShopResumeAfterSpin_800BE07C;
             ShopCtrlRequestResume_800B6CC8();
         }
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
         fn_80027478(0x40, 0);
         RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
@@ -3090,178 +3090,178 @@ void ShopWaitAreaReload_800BDD74(EventEntry* t, void* arg)
 }
 
 extern void ShopWaitBrighten_800BDEA8();
-void ShopWaitDarken_800BDE44(EventEntry* t, int a)
+void ShopWaitDarken_800BDE44(EventEntry* task, int menu)
 {
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(a);
+    DrawShopMenu_800BC380(menu);
     if (IsSceneFadeDone_8001AB94())
     {
         StopSceneDarken_8001AAF4();
         StartSceneBrighten_8001AB1C(0x20);
-        t->cb_8 = ShopWaitBrighten_800BDEA8;
+        task->cb_8 = ShopWaitBrighten_800BDEA8;
     }
 }
 
-void ShopWaitBrighten_800BDEA8(int dummy, ShopMenu* u)
+void ShopWaitBrighten_800BDEA8(int dummy, ShopMenu* menu)
 {
     EventEntry* tk;
     SaveData* sv;
     int* p;
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(u);
+    DrawShopMenu_800BC380(menu);
     if (IsSceneFadeDone_8001AB94())
     {
         tk = &shopMenuTask_8008D670->entry;
-        if (u->fadeAction_94 == 1)
+        if (menu->fadeAction_94 == 1)
         {
             tk->cb_8 = ShopResumeAfterNameEntry_800BE128;
         }
-        else if (u->fadeAction_94 == 2)
+        else if (menu->fadeAction_94 == 2)
         {
             tk->cb_8 = ShopResumeAfterSpin_800BE07C;
         }
         tk->flags = (tk->flags & ~1) | 0x8000;
         fn_8002C014();
-        if (u->fadeAction_94 == 1)
+        if (menu->fadeAction_94 == 1)
         {
             sv = &saveData_8008B570;
             if (!((sv->settings_1C.word >> 5) & 1))
             {
-                MemCopy_800403E8(u->base_4C, &mergePreview_800C08E8, sizeof(Minion));
-                SetMinionEmpty_800B9B44((short*)u->partner_50);
-                if (u->base_4C->species_4C[0] == 0x23)
+                MemCopy_800403E8(menu->base_4C, &mergePreview_800C08E8, sizeof(Minion));
+                SetMinionEmpty_800B9B44((short*)menu->partner_50);
+                if (menu->base_4C->species_4C[0] == 0x23)
                 {
                     p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 8;
                 }
-                else if (u->base_4C->species_4C[0] == 0x22)
+                else if (menu->base_4C->species_4C[0] == 0x22)
                 {
                     p = (int*)sv->allMinionsBitfields_814;
                     p[1] |= 4;
                 }
-                if (u->flags_24 & 0x200)
+                if (menu->flags_24 & 0x200)
                 {
-                    RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(u->savedIndex_5E[8] + u->savedScroll_72[2], 4), 1, 4);
+                    RemoveInventory_800AD1E0(GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4), 1, 4);
                     CompactInventory_800AD3F0(4);
-                    u->flags_24 &= ~0x200;
+                    menu->flags_24 &= ~0x200;
                 }
-                u->marks_84 = 0;
-                u->partyMarks_88 = 0;
-                u->storedMarks_8C = 0;
-                u->flags_24 |= 1;
+                menu->marks_84 = 0;
+                menu->partyMarks_88 = 0;
+                menu->storedMarks_8C = 0;
+                menu->flags_24 |= 1;
             }
-            ShopCtrlRequestNameEntry_800B6C6C(u->base_4C->status_84.name_10
+            ShopCtrlRequestNameEntry_800B6C6C(menu->base_4C->status_84.name_10
 , 1);
             SetFadeMode_8001C19C(0, 0x20);
         }
-        else if (u->fadeAction_94 == 2)
+        else if (menu->fadeAction_94 == 2)
         {
             ShopCtrlRequestResume_800B6CC8();
             SetFadeMode_8001C19C(0, 0x20);
         }
-        u->flags_24 &= ~0x800;
+        menu->flags_24 &= ~0x800;
         fn_8001ABEC(0);
-        u->fadeAction_94 = 0;
+        menu->fadeAction_94 = 0;
     }
 }
 
 extern void ShopWaitUiTiy_800BE210();
-void ShopResumeAfterSpin_800BE07C(EventEntry* t, ShopMenu* u)
+void ShopResumeAfterSpin_800BE07C(EventEntry* task, ShopMenu* menu)
 {
-    u->state_0 = 5;
-    u->prevState_2 = 0;
-    SetShopWindows_800BD7A8(u);
-    SetShopHelpText_800BBB54(u, 0);
-    if (IsMinionListState_800BD678(u))
+    menu->state_0 = 5;
+    menu->prevState_2 = 0;
+    SetShopWindows_800BD7A8(menu);
+    SetShopHelpText_800BBB54(menu, 0);
+    if (IsMinionListState_800BD678(menu))
     {
-        u->flags_24 |= 8;
+        menu->flags_24 |= 8;
     }
     else
     {
-        u->flags_24 &= ~8;
+        menu->flags_24 &= ~8;
     }
-    SetupShopCursor_800BD854(u);
-    u->listIndex_30 = u->savedIndex_5E[1];
-    u->listScroll_32 = u->savedScroll_72[0];
+    SetupShopCursor_800BD854(menu);
+    menu->listIndex_30 = menu->savedIndex_5E[1];
+    menu->listScroll_32 = menu->savedScroll_72[0];
     SuspendFieldMinions_800A7B00(-1);
     LoadUiTiy_8002BF74();
-    t->cb_8 = ShopWaitUiTiy_800BE210;
+    task->cb_8 = ShopWaitUiTiy_800BE210;
 }
 
-void ShopResumeAfterNameEntry_800BE128(EventEntry* t, ShopMenu* u)
+void ShopResumeAfterNameEntry_800BE128(EventEntry* task, ShopMenu* menu)
 {
-    if (u->state_0 == 9)
+    if (menu->state_0 == 9)
     {
-        u->state_0 = 8;
+        menu->state_0 = 8;
     }
     else
     {
-        u->state_0 = 4;
+        menu->state_0 = 4;
     }
-    u->prevState_2 = 0;
-    SetShopWindows_800BD7A8(u);
-    SetShopHelpText_800BBB54(u, 0);
-    if (IsMinionListState_800BD678(u))
+    menu->prevState_2 = 0;
+    SetShopWindows_800BD7A8(menu);
+    SetShopHelpText_800BBB54(menu, 0);
+    if (IsMinionListState_800BD678(menu))
     {
-        u->flags_24 |= 8;
+        menu->flags_24 |= 8;
     }
     else
     {
-        u->flags_24 &= ~8;
+        menu->flags_24 &= ~8;
     }
-    SetupShopCursor_800BD854(u);
-    u->listIndex_30 = u->savedIndex_5E[1];
-    u->listScroll_32 = u->savedScroll_72[0];
-    if (u->state_0 == 4)
+    SetupShopCursor_800BD854(menu);
+    menu->listIndex_30 = menu->savedIndex_5E[1];
+    menu->listScroll_32 = menu->savedScroll_72[0];
+    if (menu->state_0 == 4)
     {
-        u->listIndex_30 = 0;
+        menu->listIndex_30 = 0;
     }
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(u);
+    DrawShopMenu_800BC380(menu);
     SetFadeMode_8001C19C(3, 0x20);
     SuspendFieldMinions_800A7B00(-1);
-    t->cb_8 = ShopMenuTask_800BB444;
+    task->cb_8 = ShopMenuTask_800BB444;
 }
 
 extern void ShopFadeInMenu_800BE264();
-void ShopWaitUiTiy_800BE210(EventEntry* t, int a)
+void ShopWaitUiTiy_800BE210(EventEntry* task, int menu)
 {
     if (uiTiyLoaded_8008B4E8)
     {
         DrawMenuBackground_8002BE10();
-        DrawShopMenu_800BC380(a);
-        t->cb_8 = ShopFadeInMenu_800BE264;
+        DrawShopMenu_800BC380(menu);
+        task->cb_8 = ShopFadeInMenu_800BE264;
     }
 }
 
 extern void ShopMenuTask_800BB444();
-void ShopFadeInMenu_800BE264(EventEntry* t, int a)
+void ShopFadeInMenu_800BE264(EventEntry* task, int menu)
 {
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(a);
+    DrawShopMenu_800BC380(menu);
     SetFadeMode_8001C19C(3, 0x20);
-    t->cb_8 = ShopMenuTask_800BB444;
+    task->cb_8 = ShopMenuTask_800BB444;
 }
 
 extern void FormViewLoadTask_800BE4D0();
-void StartFormView_800BE2B4(Minion* m)
+void StartFormView_800BE2B4(Minion* minion)
 {
-    EventEntry* g = &shopMenuTask_8008D670->entry;
+    EventEntry* task = &shopMenuTask_8008D670->entry;
     PlaySfx_80031494(0x7E);
     ResetFormModel_800BF474();
     unknownFlags_8008D678 |= 0x10000;
     unknownFlags_8008D678 |= 0x4000000;
-    LoadFormModel_800BF4B8(m);
-    g->cb_8 = FormViewLoadTask_800BE4D0;
+    LoadFormModel_800BF4B8(minion);
+    task->cb_8 = FormViewLoadTask_800BE4D0;
 }
 
 extern void ShopMenuTask_800BB444();
-void FormViewTask_800BE334(EventEntry* t, ShopMenu* u)
+void FormViewTask_800BE334(EventEntry* task, ShopMenu* menu)
 {
     Actor* c;
     int v;
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(u);
+    DrawShopMenu_800BC380(menu);
     c = GetFormActor_800BF780();
     if (padHeld_800918D0[0] & 0x8000)
     {
@@ -3296,44 +3296,44 @@ void FormViewTask_800BE334(EventEntry* t, ShopMenu* u)
         EndFormView_800BF750();
         unknownFlags_8008D678 &= ~0x10000;
         unknownFlags_8008D678 &= ~0x4000000;
-        if (u->state_0 == 3)
+        if (menu->state_0 == 3)
         {
-            SetShopHelpText_800BBB54(u, 3);
+            SetShopHelpText_800BBB54(menu, 3);
         }
         else
         {
-            SetShopHelpText_800BBB54(u, 0);
+            SetShopHelpText_800BBB54(menu, 0);
         }
-        if (u->state_0 == 5)
+        if (menu->state_0 == 5)
         {
-            u->confirm_10 = 0;
+            menu->confirm_10 = 0;
         }
-        u->flags_24 &= ~0x20;
-        t->cb_8 = ShopMenuTask_800BB444;
+        menu->flags_24 &= ~0x20;
+        task->cb_8 = ShopMenuTask_800BB444;
     }
 }
 
 extern void FormViewTask_800BE334();
-void FormViewLoadTask_800BE4D0(EventEntry* t, ShopMenu* a)
+void FormViewLoadTask_800BE4D0(EventEntry* task, ShopMenu* menu)
 {
     DrawMenuBackground_8002BE10();
-    DrawShopMenu_800BC380(a);
+    DrawShopMenu_800BC380(menu);
     if (RunFormModelTask_800BF520() == 1)
     {
-        SetShopHelpText_800BBB54(a, 2);
-        ShowFormActor_800BF704(a->shopId_96);
-        t->cb_8 = FormViewTask_800BE334;
+        SetShopHelpText_800BBB54(menu, 2);
+        ShowFormActor_800BF704(menu->shopId_96);
+        task->cb_8 = FormViewTask_800BE334;
     }
 }
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
-void DrawPartyList_800BE53C(ShopMenu* u)
+void DrawPartyList_800BE53C(ShopMenu* menu)
 {
     short r[4];
     short out[4];
     unsigned short p[2];
-    ShopMenuWindows q;
+    ShopMenuWindows win;
     short sel;
     short h;
     int clut;
@@ -3341,18 +3341,18 @@ void DrawPartyList_800BE53C(ShopMenu* u)
     char* s;
     Minion* e;
     clut = 0;
-    if (IsMinionListState_800BD678(u))
+    if (IsMinionListState_800BD678(menu))
     {
-        sel = u->listIndex_30;
+        sel = menu->listIndex_30;
     }
     else
     {
         sel = -1;
     }
     h = 8;
-    if (!(u->windowsOpen_20 & 2))
+    if (!(menu->windowsOpen_20 & 2))
     {
-        h = u->openTimer_C;
+        h = menu->openTimer_C;
     }
     r[2] = 0x40;
     r[3] = 0xE;
@@ -3370,7 +3370,7 @@ void DrawPartyList_800BE53C(ShopMenu* u)
         }
         r[0] = 0xD;
         r[1] = i * 15 + 0x5D;
-        if (((unsigned int)u->marks_84 & (1 << i)) && ((unsigned int)u->partyMarks_88 & (1 << i)))
+        if (((unsigned int)menu->marks_84 & (1 << i)) && ((unsigned int)menu->partyMarks_88 & (1 << i)))
         {
             SetFontClutOffset_8003F900(1, 3);
             clut = 1;
@@ -3389,39 +3389,39 @@ void DrawPartyList_800BE53C(ShopMenu* u)
         }
         SetFontClutOffset_8003F900(1, 0);
     }
-    q = minionListWindow_800B971C;
-    q.time_4 = GetTime30Hz_8002C64C();
-    q.open_8 = (short)h;
-    q.items_10 = (int)partyListItems_800BFE24;
-    if (u->flags_24 & 0x10)
+    win = minionListWindow_800B971C;
+    win.time_4 = GetTime30Hz_8002C64C();
+    win.open_8 = (short)h;
+    win.items_10 = (int)partyListItems_800BFE24;
+    if (menu->flags_24 & 0x10)
     {
-        q.cursor_C = (short)sel;
+        win.cursor_C = (short)sel;
     }
     else
     {
-        q.cursor_C = -1;
+        win.cursor_C = -1;
     }
-    if (u->state_0 == 6 || u->state_0 == 9 || u->state_0 == 3 || u->state_0 == 15)
+    if (menu->state_0 == 6 || menu->state_0 == 9 || menu->state_0 == 3 || menu->state_0 == 15)
     {
-        q.flags_0 |= 4;
+        win.flags_0 |= 4;
     }
     else
     {
-        q.flags_0 |= 2;
+        win.flags_0 |= 2;
     }
-    q.open_8 = 8;
-    DrawMenuWindows_8002A5A4(&q);
+    win.open_8 = 8;
+    DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(1, 0);
 }
 
-void DrawStoredList_800BE7F0(ShopMenu* u)
+void DrawStoredList_800BE7F0(ShopMenu* menu)
 {
     short r[4];
     short out[4];
-    ShopPairShop p;
-    ShopMenuWindows q;
-    ShopPairShop pos1;
-    ShopPairShop pos2;
+    ShopPair p;
+    ShopMenuWindows win;
+    ShopPair pos1;
+    ShopPair pos2;
     int base;
     short sel;
     short h;
@@ -3430,20 +3430,20 @@ void DrawStoredList_800BE7F0(ShopMenu* u)
     char* s;
     Minion* e;
     int k;
-    base = GetStoredListScroll_800BEB60(u);
+    base = GetStoredListScroll_800BEB60(menu);
     clut = 0;
-    if (IsMinionListState_800BD678(u))
+    if (IsMinionListState_800BD678(menu))
     {
-        sel = u->listIndex_30;
+        sel = menu->listIndex_30;
     }
     else
     {
         sel = -1;
     }
     h = 8;
-    if (!(u->windowsOpen_20 & 2))
+    if (!(menu->windowsOpen_20 & 2))
     {
-        h = u->openTimer_C;
+        h = menu->openTimer_C;
     }
     r[2] = 0x40;
     r[3] = 0xE;
@@ -3462,7 +3462,7 @@ void DrawStoredList_800BE7F0(ShopMenu* u)
         }
         r[0] = 0xD;
         r[1] = i * 15 + 0x9A;
-        if (((unsigned int)u->marks_84 & (1 << (i + (short)base + 3))) && ((unsigned int)u->storedMarks_8C & (1 << (i + (short)base))))
+        if (((unsigned int)menu->marks_84 & (1 << (i + (short)base + 3))) && ((unsigned int)menu->storedMarks_8C & (1 << (i + (short)base))))
         {
             SetFontClutOffset_8003F900(1, 3);
             clut = 1;
@@ -3480,29 +3480,29 @@ void DrawStoredList_800BE7F0(ShopMenu* u)
             clut = 0;
         }
     }
-    q = minionListWindow_800B971C;
-    q.time_4 = GetTime30Hz_8002C64C();
-    q.items_10 = (int)storedListItems_800BFF14;
-    if (u->flags_24 & 0x10)
+    win = minionListWindow_800B971C;
+    win.time_4 = GetTime30Hz_8002C64C();
+    win.items_10 = (int)storedListItems_800BFF14;
+    if (menu->flags_24 & 0x10)
     {
-        q.cursor_C = -1;
+        win.cursor_C = -1;
     }
     else
     {
-        q.cursor_C = sel;
+        win.cursor_C = sel;
     }
-    if (u->state_0 == 6 || u->state_0 == 9 || u->state_0 == 3 || u->state_0 == 15)
+    if (menu->state_0 == 6 || menu->state_0 == 9 || menu->state_0 == 3 || menu->state_0 == 15)
     {
-        q.flags_0 |= 4;
+        win.flags_0 |= 4;
     }
     else
     {
-        q.flags_0 |= 2;
+        win.flags_0 |= 2;
     }
-    q.open_8 = 8;
-    DrawMenuWindows_8002A5A4(&q);
+    win.open_8 = 8;
+    DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(1, 0);
-    if (!(u->flags_24 & 0x10))
+    if (!(menu->flags_24 & 0x10))
     {
         if ((short)base < 20)
         {
@@ -3523,9 +3523,9 @@ void DrawStoredList_800BE7F0(ShopMenu* u)
     }
 }
 
-int GetStoredListScroll_800BEB60(ShopMenu* u)
+int GetStoredListScroll_800BEB60(ShopMenu* menu)
 {
-    switch (u->state_0)
+    switch (menu->state_0)
     {
     case 1:
     case 2:
@@ -3533,94 +3533,94 @@ int GetStoredListScroll_800BEB60(ShopMenu* u)
     case 7:
     case 8:
     case 10:
-        return u->listScroll_32;
+        return menu->listScroll_32;
     case 3:
     case 4:
     case 13:
     case 14:
-        return u->savedScroll_72[1];
+        return menu->savedScroll_72[1];
     case 6:
     case 9:
     case 15:
-        return u->savedScroll_72[0];
+        return menu->savedScroll_72[0];
     }
     return -1;
 }
 
-void UpdateSelectedMinions_800BEBC8(ShopMenu* u)
+void UpdateSelectedMinions_800BEBC8(ShopMenu* menu)
 {
     int n;
     int v;
-    switch (u->state_0)
+    switch (menu->state_0)
     {
     case 1:
     case 5:
     case 7:
     case 8:
     case 15:
-        if (u->flags_24 & 0x10)
+        if (menu->flags_24 & 0x10)
         {
             n = 0;
-            v = (unsigned short)u->savedIndex_5E[1];
+            v = (unsigned short)menu->savedIndex_5E[1];
         }
         else
         {
             n = 1;
-            v = (unsigned short)u->savedIndex_5E[1] + GetStoredListScroll_800BEB60(u) + 3;
+            v = (unsigned short)menu->savedIndex_5E[1] + GetStoredListScroll_800BEB60(menu) + 3;
         }
-        u->base_4C = GetShopMinion_800B9C5C((short)v);
-        u->savedList_7A[0] = n;
+        menu->base_4C = GetShopMinion_800B9C5C((short)v);
+        menu->savedList_7A[0] = n;
         break;
     case 2:
     case 10:
-        if (u->flags_24 & 0x10)
+        if (menu->flags_24 & 0x10)
         {
             n = 0;
-            v = (unsigned short)u->savedIndex_5E[2];
+            v = (unsigned short)menu->savedIndex_5E[2];
         }
         else
         {
             n = 1;
-            v = (unsigned short)u->savedIndex_5E[2] + GetStoredListScroll_800BEB60(u) + 3;
+            v = (unsigned short)menu->savedIndex_5E[2] + GetStoredListScroll_800BEB60(menu) + 3;
         }
-        u->partner_50 = GetShopMinion_800B9C5C((short)v);
-        u->savedList_7A[1] = n;
+        menu->partner_50 = GetShopMinion_800B9C5C((short)v);
+        menu->savedList_7A[1] = n;
         break;
     }
 }
 
-void UpdateShownMinion_800BECC8(ShopMenu* u)
+void UpdateShownMinion_800BECC8(ShopMenu* menu)
 {
-    if (u->state_0 == 3)
+    if (menu->state_0 == 3)
     {
-        switch (u->tabIndex_3C)
+        switch (menu->tabIndex_3C)
         {
         case 1:
-            u->shown_54 = u->partner_50;
+            menu->shown_54 = menu->partner_50;
             return;
         case 0:
             goto def;
         case 2:
-            u->shown_54 = &mergePreview_800C08E8;
+            menu->shown_54 = &mergePreview_800C08E8;
             return;
         }
         return;
     }
-    if (u->state_0 == 2 || u->state_0 == 10)
+    if (menu->state_0 == 2 || menu->state_0 == 10)
     {
-        u->shown_54 = u->partner_50;
+        menu->shown_54 = menu->partner_50;
         return;
     }
 def:
-    u->shown_54 = u->base_4C;
+    menu->shown_54 = menu->base_4C;
 }
 
 extern void DrawScrollArrow_8002C6DC(void* p, int a, int b);
-void DrawSkinList_800BED48(short* s)
+void DrawSkinList_800BED48(short* ref)
 {
-    ShopMenuWindows q;
+    ShopMenuWindows win;
     short h = 8;
-    short prev = s[0];
+    short prev = ref[0];
     short i;
     int id;
     int icon;
@@ -3630,12 +3630,12 @@ void DrawSkinList_800BED48(short* s)
     int n;
     for (i = 0; i < 4; i++)
     {
-        id = GetInventorySlotId_800AD288(i + s[1], 4);
+        id = GetInventorySlotId_800AD288(i + ref[1], 4);
         if (id < 11)
         {
             icon = GetPersonIcon_8001CD6C(id);
             name = GetPersonName_8001CD3C(id);
-            cnt = GetInventorySlotCount_800AD2C8(i + s[1], 4);
+            cnt = GetInventorySlotCount_800AD2C8(i + ref[1], 4);
         }
         else
         {
@@ -3655,7 +3655,7 @@ void DrawSkinList_800BED48(short* s)
         skinListRows_800C0258[i][1].y_12 = y;
         skinListRows_800C0258[i][2].x_10 = 0xFB;
         skinListRows_800C0258[i][2].y_12 = y;
-        s[0] = i;
+        ref[0] = i;
         if (cnt == 0)
         {
             skinListRows_800C0258[i][0].flags_0 |= 0x40;
@@ -3669,150 +3669,150 @@ void DrawSkinList_800BED48(short* s)
             skinListRows_800C0258[i][2].flags_0 &= ~0x40;
         }
     }
-    q.flags_0 = s[2];
-    q.time_4 = frameCount_8008D3FC;
-    q.open_8 = h;
-    q.cursor_C = prev;
-    q.items_10 = (int)skinListRows_800C0258;
-    q.ot_14 = s[3];
-    DrawMenuWindows_8002A5A4(&q);
+    win.flags_0 = ref[2];
+    win.time_4 = frameCount_8008D3FC;
+    win.open_8 = h;
+    win.cursor_C = prev;
+    win.items_10 = (int)skinListRows_800C0258;
+    win.ot_14 = ref[3];
+    DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(2, 0);
     n = GetLastInventorySlot_800AD308(4) + 1;
     if (n < 4)
     {
         n = 4;
     }
-    if (s[1] != 0)
+    if (ref[1] != 0)
     {
-        DrawScrollArrow_8002C6DC(skinListUpArrowPos_800C0090, 3, s[3]);
+        DrawScrollArrow_8002C6DC(skinListUpArrowPos_800C0090, 3, ref[3]);
     }
-    if (s[1] < n - 4 && n >= 5)
+    if (ref[1] < n - 4 && n >= 5)
     {
-        DrawScrollArrow_8002C6DC(skinListDownArrowPos_800C0094, 1, s[3]);
+        DrawScrollArrow_8002C6DC(skinListDownArrowPos_800C0094, 1, ref[3]);
     }
 }
 
 #if 0
 // Not matched (17 words): the original cross-jumps the all-equal case into the o[1] == o[3] tail
 // (o[4] += o[6]) and reloads o[6] in the o[2] != o[3] case; here the two tails get different registers.
-typedef struct ShopLocalShop
+typedef struct TopSpeciesBuf
 {
     unsigned char b[4];
     int pad_4;
     int w[3];
-} ShopLocalShop;
+} TopSpeciesBuf;
 extern int GetElementHue_800BF2E4(unsigned char* p);
-void BuildFormModelDesc_800BF02C(Minion* a, int* o, int c)
+void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
 {
-    ShopLocalShop l;
-    unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
+    TopSpeciesBuf top;
+    unsigned int h = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
     int t;
-    o[0] = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
-    o[1] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
-    o[2] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
-    o[3] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
-    o[4] = l.w[0];
-    o[5] = l.w[1];
-    o[6] = l.w[2];
-    if (o[1] == o[2])
+    desc[0] = GetTopSpecies_800338DC(minion->species_4C, top.b, top.w);
+    desc[1] = GetSpeciesModelDesc_80019C70(top.b[0])->modelId_0;
+    desc[2] = GetSpeciesModelDesc_80019C70(top.b[1])->modelId_0;
+    desc[3] = GetSpeciesModelDesc_80019C70(top.b[2])->modelId_0;
+    desc[4] = top.w[0];
+    desc[5] = top.w[1];
+    desc[6] = top.w[2];
+    if (desc[1] == desc[2])
     {
-        if (o[2] == o[3])
+        if (desc[2] == desc[3])
         {
-            o[4] = o[4] + o[5] + o[6];
-            o[5] = 0;
-            o[6] = 0;
-            o[0] = 1;
+            desc[4] = desc[4] + desc[5] + desc[6];
+            desc[5] = 0;
+            desc[6] = 0;
+            desc[0] = 1;
         }
         else
         {
-            t = o[6];
-            o[0] = 2;
-            o[4] = o[4] + o[5];
-            o[6] = 0;
-            o[2] = o[3];
-            o[5] = t;
+            t = desc[6];
+            desc[0] = 2;
+            desc[4] = desc[4] + desc[5];
+            desc[6] = 0;
+            desc[2] = desc[3];
+            desc[5] = t;
         }
     }
-    else if (o[1] == o[3])
+    else if (desc[1] == desc[3])
     {
-        o[4] = o[4] + o[6];
-        o[6] = 0;
-        o[0] = 2;
+        desc[4] = desc[4] + desc[6];
+        desc[6] = 0;
+        desc[0] = 2;
     }
-    else if (o[2] == o[3])
+    else if (desc[2] == desc[3])
     {
-        o[5] = o[5] + o[6];
-        o[6] = 0;
-        o[0] = 2;
+        desc[5] = desc[5] + desc[6];
+        desc[6] = 0;
+        desc[0] = 2;
     }
-    o[11] = 0;
-    if (o[1] != h)
+    desc[11] = 0;
+    if (desc[1] != h)
     {
-        if (o[2] == h)
+        if (desc[2] == h)
         {
-            t = o[5];
-            o[2] = o[1];
-            o[1] = h;
-            o[5] = o[4];
-            o[4] = t;
+            t = desc[5];
+            desc[2] = desc[1];
+            desc[1] = h;
+            desc[5] = desc[4];
+            desc[4] = t;
         }
-        else if (o[3] == h)
+        else if (desc[3] == h)
         {
-            t = o[6];
-            o[3] = o[1];
-            o[1] = h;
-            o[6] = o[4];
-            o[4] = t;
+            t = desc[6];
+            desc[3] = desc[1];
+            desc[1] = h;
+            desc[6] = desc[4];
+            desc[4] = t;
         }
-        else if (o[0] < 2)
+        else if (desc[0] < 2)
         {
-            t = o[4];
-            o[2] = o[1];
-            o[1] = h;
-            o[4] = 0;
-            o[0] = 2;
-            o[5] = t;
+            t = desc[4];
+            desc[2] = desc[1];
+            desc[1] = h;
+            desc[4] = 0;
+            desc[0] = 2;
+            desc[5] = t;
         }
         else
         {
-            t = o[4];
-            o[3] = o[1];
-            o[1] = h;
-            o[4] = 0;
-            o[0] = 3;
-            o[6] = t;
+            t = desc[4];
+            desc[3] = desc[1];
+            desc[1] = h;
+            desc[4] = 0;
+            desc[0] = 3;
+            desc[6] = t;
         }
     }
-    o[7] = GetRankForLevel_80019A80(a->status_84.level_44);
-    o[8] = o[0] - 1;
-    o[10] = GetSpeciesModelDesc_80019C70(a->field_3)->modelId_0;
-    o[12] = c;
-    o[9] = GetElementHue_800BF2E4(a->status_84.element_3E);
-    if (o[9] == -1000)
+    desc[7] = GetRankForLevel_80019A80(minion->status_84.level_44);
+    desc[8] = desc[0] - 1;
+    desc[10] = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
+    desc[12] = c;
+    desc[9] = GetElementHue_800BF2E4(minion->status_84.element_3E);
+    if (desc[9] == -1000)
     {
-        o[9] = GetSpeciesModelDesc_80019C70(a->field_3)->field_2 << 1;
+        desc[9] = GetSpeciesModelDesc_80019C70(minion->field_3)->field_2 << 1;
     }
     else
     {
-        o[9] = o[9] - (GetSpeciesModelDesc_80019C70(a->field_3)->field_3 << 1);
+        desc[9] = desc[9] - (GetSpeciesModelDesc_80019C70(minion->field_3)->field_3 << 1);
 
-        if (o[9] < 0)
+        if (desc[9] < 0)
         {
-            o[9] = o[9] + 0x168;
+            desc[9] = desc[9] + 0x168;
         }
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, BuildFormModelDesc_800BF02C);
 
-int GetElementHue_800BF2E4(unsigned char* p)
+int GetElementHue_800BF2E4(unsigned char* elements)
 {
     int n = 0;
     int i;
     int r;
     for (i = 0; i < 4; i++)
     {
-        if (p[i])
+        if (elements[i])
         {
             n++;
         }
@@ -3824,9 +3824,9 @@ int GetElementHue_800BF2E4(unsigned char* p)
     }
     if (n == 2)
     {
-        if (p[3] && p[1])
+        if (elements[3] && elements[1])
         {
-            if (p[1] < p[3])
+            if (elements[1] < elements[3])
             {
                 r = 0xF5;
             }
@@ -3836,9 +3836,9 @@ int GetElementHue_800BF2E4(unsigned char* p)
             }
             goto done;
         }
-        if (p[0] && p[2])
+        if (elements[0] && elements[2])
         {
-            if (p[2] < p[0])
+            if (elements[2] < elements[0])
             {
                 r = 0x14F;
             }
@@ -3849,22 +3849,22 @@ int GetElementHue_800BF2E4(unsigned char* p)
             goto done;
         }
     }
-    r = ElementMixAngle_800BF3B4(p);
+    r = ElementMixAngle_800BF3B4(elements);
 done:
     return r;
 }
 
-int ElementMixAngle_800BF3B4(unsigned char* p)
+int ElementMixAngle_800BF3B4(unsigned char* elements)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;
-    t1 = name_80084540[0].field_5C6 * p[0];
-    t2 = name_80084540[3].field_5C6 * p[0];
-    t3 = name_80084540[3].field_5C6 * p[3];
-    t4 = name_80084540[2].field_5C6 * p[3];
-    t5 = name_80084540[2].field_5C6 * p[2];
-    t6 = name_80084540[1].field_5C6 * p[2];
-    t7 = name_80084540[1].field_5C6 * p[1];
-    t8 = name_80084540[0].field_5C6 * p[1];
+    t1 = name_80084540[0].sin_5C6 * elements[0];
+    t2 = name_80084540[3].sin_5C6 * elements[0];
+    t3 = name_80084540[3].sin_5C6 * elements[3];
+    t4 = name_80084540[2].sin_5C6 * elements[3];
+    t5 = name_80084540[2].sin_5C6 * elements[2];
+    t6 = name_80084540[1].sin_5C6 * elements[2];
+    t7 = name_80084540[1].sin_5C6 * elements[1];
+    t8 = name_80084540[0].sin_5C6 * elements[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 
@@ -3882,13 +3882,13 @@ void FreeFormModel_800BF484()
     }
 }
 
-void LoadFormModel_800BF4B8(Minion* m)
+void LoadFormModel_800BF4B8(Minion* minion)
 {
-    ShopFormModel* c = &formModel_800C09E0;
-    BuildFormModelDesc_800BF02C(m, c->desc_8, name_8007DC74);
-    c->minion_4 = m;
-    c->task_0 = StartModelTask_80010850(c->desc_8);
-    c->actor_3C = 0;
+    ShopFormModel* form = &formModel_800C09E0;
+    BuildFormModelDesc_800BF02C(minion, form->desc_8, name_8007DC74);
+    form->minion_4 = minion;
+    form->task_0 = StartModelTask_80010850(form->desc_8);
+    form->actor_3C = 0;
 }
 
 // the caller reads the step result RunModelTask_80010A10 leaves in v0 (1: model loaded)
@@ -3899,66 +3899,66 @@ int RunFormModelTask_800BF520()
 
 void FreeFormModelTask_800BF548()
 {
-    int v = formModel_800C09E0.task_0;
+    int task = formModel_800C09E0.task_0;
     formModel_800C09E0.task_0 = -1;
-    FreeModelTask_8001098C(v);
+    FreeModelTask_8001098C(task);
 }
 
 #if 0 // near miss: store scheduling / temp registers (17 words)
-void SpawnFormActor_800BF574(int* a, unsigned short* b)
+void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
 {
-    ShopSetupShop q;
-    ShopFormModel* c = &formModel_800C09E0;
-    int r = fn_80010A44(c->task_0);
-    int v;
-    int x;
-    q.w0 = -1;
-    q.w4 = 2;
-    q.w8 = a[0];
-    q.wC = a[1];
-    q.w10 = a[2];
-    q.s14 = b[0];
-    q.s16 = b[1];
-    v = c->desc_8[7];
-    q.s18 = b[2];
-    q.w28 = 0x1000;
-    q.w30 = 1;
-    q.w1C = 0;
-    q.w20 = 4;
-    q.w24 = -1;
-    q.w2C = 4;
-    q.w48 = r;
-    q.w34 = (int)defaultBones_80079140;
-    q.w38 = fn_80024E90(r, v);
-    q.w3C = fn_80024EC8(r, v);
-    q.w40 = fn_80024E38(r);
-    q.w44 = fn_80024E64(r);
-    c->actor_3C = fn_8001D45C(&q);
-    x = fn_80024F00(r, v);
-    r = fn_80024F38(r, v);
-    fn_80019B14(*(int*)((char*)c->actor_3C + 0x134), x, r);
-    fn_8001D68C(c->actor_3C, 0);
+    FormActorDesc desc;
+    ShopFormModel* form = &formModel_800C09E0;
+    int model = fn_80010A44(form->task_0);
+    int stage;
+    int levels;
+    desc.modelId_0 = -1;
+    desc.kind_4 = 2;
+    desc.posX_8 = pos[0];
+    desc.posY_C = pos[1];
+    desc.posZ_10 = pos[2];
+    desc.rotX_14 = rot[0];
+    desc.rotY_16 = rot[1];
+    stage = form->desc_8[7];
+    desc.rotZ_18 = rot[2];
+    desc.frameSpeed_28 = 0x1000;
+    desc.visible_30 = 1;
+    desc.clutRow_1C = 0;
+    desc.animIdx_20 = 4;
+    desc.frame_24 = -1;
+    desc.blendDiv_2C = 4;
+    desc.model_48 = model;
+    desc.bones_34 = (int)defaultBones_80079140;
+    desc.baseScale_38 = fn_80024E90(model, stage);
+    desc.boneScale_3C = fn_80024EC8(model, stage);
+    desc.anims_40 = fn_80024E38(model);
+    desc.effectTbl_44 = fn_80024E64(model);
+    form->actor_3C = fn_8001D45C(&desc);
+    levels = fn_80024F00(model, stage);
+    model = fn_80024F38(model, stage);
+    fn_80019B14(*(int*)((char*)form->actor_3C + 0x134), levels, model);
+    fn_8001D68C(form->actor_3C, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, SpawnFormActor_800BF574);
 
 void DestroyFormActor_800BF6C4()
 {
-    ShopFormModel* c = &formModel_800C09E0;
-    if (c->actor_3C)
+    ShopFormModel* form = &formModel_800C09E0;
+    if (form->actor_3C)
     {
-        DestroyActor_8001D600(c->actor_3C);
-        c->actor_3C = 0;
+        DestroyActor_8001D600(form->actor_3C);
+        form->actor_3C = 0;
     }
 }
 
 void ShowFormActor_800BF704()
 {
-    char a[12];
-    char b[8];
-    memset(a, 0, 12);
-    memset(b, 0, 8);
-    SpawnFormActor_800BF574(a, b);
+    char pos[12];
+    char rot[8];
+    memset(pos, 0, 12);
+    memset(rot, 0, 8);
+    SpawnFormActor_800BF574(pos, rot);
 }
 
 void EndFormView_800BF750()
