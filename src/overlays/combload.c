@@ -14,8 +14,8 @@ typedef struct CombLoadTask
 typedef struct CombLoadBox
 {
     short col_0;
-    char c_2;
-    char c_3;
+    char state_2;
+    char frame_3;
 } CombLoadBox;
 
 extern int IsCardReady_800BAE24(int);
@@ -36,7 +36,7 @@ extern void LoadMenuInit_800B7674(int, int);
 extern int IsLoadMenuActive_800B793C();
 extern int GetLoadMenuLoaded_800B7914();
 extern void DrawMenuBackground_8002BE10();
-extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 
 int dword_800A4088 SDATA = 20;
 const char aCheckingMEMORYC_800A408C[] = "\202b\202\210\202\205\202\203\202\213\202\211\202\216\202\207\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201D\201D\201D"; // Checking MEMORY CARD...
@@ -108,7 +108,7 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
         DrawTitleWindow_800A4364();
         if (!busy)
         {
-            DrawCardSlotMenu_800BB4A8(cardSlotCursor_800A468C[0].f8);
+            DrawCardSlotMenu_800BB4A8(cardSlotCursor_800A468C[0].index_8);
             UpdateMenuCursor_8003D794(&cardSlotCursor_800A468C[0], 0);
             if (IsConfirmPressedP1_8003D380(1))
             {
@@ -119,8 +119,8 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
     case 1:
         DrawTitleWindow2_800A4420();
         DrawDataHeaderWindows_800A44DC();
-        dataMenuWin_800A47D4.f4 = GetTime30Hz_8002C64C();
-        dataMenuWin_800A47D4.fC = dataCursor_800A4698.f8;
+        dataMenuWin_800A47D4.time_4 = GetTime30Hz_8002C64C();
+        dataMenuWin_800A47D4.cursor_C = dataCursor_800A4698.index_8;
         DrawMenuWindows_8002A5A4(&dataMenuWin_800A47D4);
         UpdateMenuCursor_8003D794(&dataCursor_800A4698, 0);
         break;
@@ -132,21 +132,21 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
 #if 0
 void DrawTitleWindow_800A4364()
 {
-    RECT r;
-    CombLoadBox b;
-    SPRT* p = &uiTiySprts_8008D620[15];
-    p->x0 = 0x78;
-    p->y0 = 0x14;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    RECT rect;
+    CombLoadBox box;
+    SPRT* sprt = &uiTiySprts_8008D620[15];
+    sprt->x0 = 0x78;
+    sprt->y0 = 0x14;
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
     AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
-    r.x = 0x78;
-    r.w = 0x7E;
-    r.h = 0x12;
-    b.c_3 = 1;
-    b.col_0 = uiColor_8008B590;
-    r.y = 0x14;
-    b.c_2 = 0;
-    DrawWindow_80042460(&r, &b, pOT_8008D454 + 10, 0);
+    rect.x = 0x78;
+    rect.w = 0x7E;
+    rect.h = 0x12;
+    box.frame_3 = 1;
+    box.col_0 = uiColor_8008B590;
+    rect.y = 0x14;
+    box.state_2 = 0;
+    DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, DrawTitleWindow_800A4364);
@@ -158,51 +158,51 @@ INCLUDE_OVERLAY_ASM(combload, DrawTitleWindow2_800A4420);
 void DrawDataHeaderWindows_800A44DC()
 {
     short rect[4];
-    CombLoadBox b;
-    SPRT* p;
+    CombLoadBox box;
+    SPRT* sprt;
     SPRT* base;
     base = uiTiySprts_8008D620;
-    p = &base[155];
-    p->x0 = 0x66;
-    p->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    sprt = &base[155];
+    sprt->x0 = 0x66;
+    sprt->y0 = 0x2A;
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
     AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     base = uiTiySprts_8008D620;
-    p = &base[155];
-    p->x0 = 0x8E;
-    p->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    sprt = &base[155];
+    sprt->x0 = 0x8E;
+    sprt->y0 = 0x2A;
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
     AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     base = uiTiySprts_8008D620;
-    p = &base[155];
-    p->x0 = 0xD4;
-    p->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, p, 5);
+    sprt = &base[155];
+    sprt->x0 = 0xD4;
+    sprt->y0 = 0x2A;
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
     AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
-    b.c_3 = 1;
+    box.frame_3 = 1;
     rect[0] = 0x64;
-    b.col_0 = uiColor_8008B590;
-    b.c_2 = 0;
+    box.col_0 = uiColor_8008B590;
+    box.state_2 = 0;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
     rect[0] = 0x8C;
     rect[1] = 0x28;
     rect[2] = 0x3C;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
     rect[0] = 0xD2;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &b, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(combload, DrawDataHeaderWindows_800A44DC);
 
-CombLoadObj cardSlotCursor_800A468C[1] = { { 0x10002, 0x10002 } };
-CombLoadObj dataCursor_800A4698 = { 0x50001, 0x40000F };
+CombLoadCursor cardSlotCursor_800A468C[1] = { { 0x10002, 0x10002 } };
+CombLoadCursor dataCursor_800A4698 = { 0x50001, 0x40000F };
 int dataRow0_800A46A4[14] = {
     8, 0, 0, 0, 0x380064, 0x100078, 0x20002, 1,
     0, 0, 0, -1, -1, -1,

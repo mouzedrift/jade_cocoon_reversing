@@ -17,11 +17,12 @@ typedef struct CombRsltText
     int pad_14[2];
 } CombRsltText;
 
-typedef struct CombRsltEnt
+// a menu cursor (UpdateMenuCursor_8003D794, CombSelCursor)
+typedef struct CombRsltCursor
 {
     char pad_0[0xA];
-    short idx_A;
-} CombRsltEnt;
+    short scroll_A;
+} CombRsltCursor;
 
 typedef struct CombRsltPos
 {
@@ -33,7 +34,7 @@ extern int dword_800A4088;
 extern const CombRsltText resultTitleItem_800A408C;
 extern const CombRsltText minionLabelItem_800A40A8;
 extern const CombRsltText minionHpItem_800A40C4;
-extern CombRsltEnt slotCursor_800A47E8[1];
+extern CombRsltCursor slotCursor_800A47E8[1];
 extern int dword_800A47F4;
 extern int playerLabelItemP1_800A47F8[7];
 extern int playerLabelItemP2_800A4814[7];

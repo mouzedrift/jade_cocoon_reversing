@@ -6,28 +6,30 @@
 #include "funcs.h"
 #include "globals.h"
 
+// the head of a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu); the rows follow it
 typedef struct CombLoadDlg
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
+    int flags_0;
+    int time_4;
+    int anim_8;
+    int cursor_C;
 } CombLoadDlg;
 
-typedef struct CombLoadObj
+// a menu cursor (UpdateMenuCursor_8003D794, CombSelCursor)
+typedef struct CombLoadCursor
 {
-    int f0;
-    int f4;
-    short f8;
-    short fA;
-} CombLoadObj;
+    int colsRows_0;   // cols | rows << 16
+    int countFlags_4; // count | flags << 16
+    short index_8;
+    short scroll_A;
+} CombLoadCursor;
 
 extern int dword_800A4088;
 extern const char aCheckingMEMORYC_800A408C[];
 extern const char aSelectMEMORYCAR_800A40BC[];
 extern const char aSelectData_800A40E4[];
-extern CombLoadObj cardSlotCursor_800A468C[1];
-extern CombLoadObj dataCursor_800A4698;
+extern CombLoadCursor cardSlotCursor_800A468C[1];
+extern CombLoadCursor dataCursor_800A4698;
 extern int dataRow0_800A46A4[14];
 extern int dataRow1_800A46DC[14];
 extern int dataRow2_800A4714[14];
