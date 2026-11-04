@@ -367,7 +367,7 @@ void ActionStart_800BDA28(BatTask_a* t)
 
 void ActionWaitIdle_800BDB4C(BatTask_a* t)
 {
-    if (sub_800BDD3C() == 1)
+    if (AreUnitsIdle_800BDD3C() == 1)
     {
         UpdateWindowsHidden_800BF2E8();
         FaceActorAndTargets_800BDEBC();
@@ -380,7 +380,7 @@ void ActionWaitIdle_800BDB4C(BatTask_a* t)
 
 void ActionWaitReady_800BDBB0(BatTask_a* t)
 {
-    if (sub_800BDE04() == 1)
+    if (AreUnitsReady_800BDE04() == 1)
     {
         if (curCommand_800C9C88.kind_0 == 2 && actingUnit_800C9C7C == 0)
         {
@@ -411,7 +411,7 @@ void ActionRun_800BDC3C(BatTask_a* t)
     actionFrame_800C9D94++;
 }
 
-int sub_800BDD3C()
+int AreUnitsIdle_800BDD3C()
 {
     unsigned char i;
     int r;
@@ -426,7 +426,7 @@ int sub_800BDD3C()
     }
     else
     {
-        r = sub_800C0D60();
+        r = IsSummonedMinionIdle_800C0D60();
     }
     if (r == 0)
     {
@@ -446,7 +446,7 @@ int sub_800BDD3C()
     return IsEffectTaskIdle_800148D4() != 0;
 }
 
-int sub_800BDE04()
+int AreUnitsReady_800BDE04()
 {
     unsigned char i;
     int r;
@@ -461,7 +461,7 @@ int sub_800BDE04()
     }
     else
     {
-        r = sub_800C0D88();
+        r = IsSummonedMinionReady_800C0D88();
     }
     if (r == 0)
     {
@@ -545,26 +545,26 @@ void StartReactions_800BDFAC()
     }
 }
 
-BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* p, int c, int a)
+BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReaction, int unit)
 {
     BatPair_a r;
-    if ((saveData_8008B570.field_0 & 0x20) || IsUnitOnField_800BC570(a) == 0)
+    if ((saveData_8008B570.field_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
     {
         r.hit_0 = 0;
         r.end_2 = 0;
     }
     else
     {
-        switch ((unsigned int)GetUnitSide_800BC7DC(a))
+        switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            sub_800A8A30(&r, p, c);
+            sub_800A8A30(&r, cmd, isReaction);
             break;
         case 1:
-            StartMinionAction_800C0DDC(&r, p, c);
+            StartMinionAction_800C0DDC(&r, cmd, isReaction);
             break;
         case 2:
-            sub_800A2684(&r, p, c);
+            sub_800A2684(&r, cmd, isReaction);
             break;
         }
     }
@@ -572,38 +572,38 @@ BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* p, int c, int a)
     return out;
 }
 
-void TriggerUnitAction_800BE14C(BatCmd_a* p, int b, int k)
+void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
 {
-    int r;
+    int side;
     if (saveData_8008B570.field_0 & 0x20)
     {
         return;
     }
-    if (IsUnitOnField_800BC570(k) == 0)
+    if (IsUnitOnField_800BC570(unit) == 0)
     {
         return;
     }
-    r = GetUnitSide_800BC7DC(k);
-    switch ((unsigned int)r)
+    side = GetUnitSide_800BC7DC(unit);
+    switch ((unsigned int)side)
     {
     case 0:
-        sub_800A8C0C(b);
+        sub_800A8C0C(isReaction);
         break;
     case 1:
-        TriggerMinionAction_800C0E84(p, b);
+        TriggerMinionAction_800C0E84(cmd, isReaction);
         break;
     case 2:
-        sub_800A2760(p, b);
-        if (p->kind_0 == 0x13 || p->kind_0 == 0xB || p->kind_0 == 7 || (p->kind_0 == 5 && sub_80013358(p->arg_4) == 1) || (p->kind_0 == 0x1A && sub_80013358(p->arg_4) == 1))
+        sub_800A2760(cmd, isReaction);
+        if (cmd->kind_0 == 0x13 || cmd->kind_0 == 0xB || cmd->kind_0 == 7 || (cmd->kind_0 == 5 && sub_80013358(cmd->arg_4) == 1) || (cmd->kind_0 == 0x1A && sub_80013358(cmd->arg_4) == 1))
         {
-            removedEnemies_800C9DD0[removedEnemyCount_800C9D90] = k - 4;
+            removedEnemies_800C9DD0[removedEnemyCount_800C9D90] = unit - 4;
             removedEnemyCount_800C9D90++;
         }
         break;
     }
-    if (!(saveData_8008B570.field_0 & 2) && b == 0)
+    if (!(saveData_8008B570.field_0 & 2) && isReaction == 0)
     {
-        StartBattleCameraSpline_800377B4(r, (short)p->kind_0, k - 4);
+        StartBattleCameraSpline_800377B4(side, (short)cmd->kind_0, unit - 4);
     }
 }
 
@@ -726,7 +726,7 @@ void UpdateAction_800BE3C0()
             }
             if (reactionHitFrames_800C9DC0[i] == actionFrame_800C9D94)
             {
-                AdjustUnitStatById_800127D0(i, 0x11, 0, dword_800C9D58[i]);
+                AdjustUnitStatById_800127D0(i, 0x11, 0, unitResultFlags_800C9D58[i]);
                 AdjustUnitStatById_800127D0(i, 0x10, 0, unitStatusInflicted_800C9CA0[i]);
                 ShowUnitHitResult_800BE834(i, GetUnitPos_800BC6CC(i));
                 if (IsUnitInBattle_800BC784(i) == 1)

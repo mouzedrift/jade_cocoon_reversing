@@ -502,7 +502,7 @@ extern void LoadModelAnimsMasked_800268E8(struct ModelAnim* a0, int a1, int a2, 
 
 extern void sub_800A5BCC(int a0);
 
-extern void SetPointLight_800C4090(int a0, int a1, int a2, int a3);
+extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);

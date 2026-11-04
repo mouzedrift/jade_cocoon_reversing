@@ -64,10 +64,12 @@ typedef struct BatMenu_a
 
 
 
-// a battle command (curCommand_800C9C88 is the current one, unitReactions_800C9CC8 holds each unit's reaction)
+// a battle command (curCommand_800C9C88 is the current one, unitReactions_800C9CC8 holds each unit's reaction).
+// Units: 0 Levant, 1..3 his minions (one is summoned at a time), 4..6 the enemies.
 typedef struct BatCmd_a
 {
-    int kind_0; // 0x14: none
+    int kind_0; // 0 attack, 1 magic, 2 summon, 3 recall, 4 item, 5 capture, 6 special attack, 7 flee,
+                // 8 change fighter, 0xB killed, 0x12 defend, 0x14 none, 0x15 an enemy calls an ally, 0x1A capture of the last enemy
     int arg_4;
     int mask_8; // acting unit bits
     int targets_C; // target unit bits
@@ -148,7 +150,7 @@ extern unsigned int dword_800B122C;
 
 extern int dword_800ADE88;
 
-extern int sub_800C0D60();
+extern int IsSummonedMinionIdle_800C0D60();
 
 extern int sub_800A89F0();
 
@@ -332,7 +334,7 @@ extern int AdvanceTurnGauges_800BF6BC();
 
 extern int GetUnitsCenter_800BC378();
 
-extern int sub_800BDE04();
+extern int AreUnitsReady_800BDE04();
 
 extern int IsUnitOnField_800BC570();
 
@@ -422,7 +424,7 @@ extern void ActionWaitReady_800BDBB0();
 
 extern void HelpWindowTask_800C04A4();
 
-extern int sub_800BDD3C();
+extern int AreUnitsIdle_800BDD3C();
 
 extern void UpdateWindowsHidden_800BF2E8();
 
@@ -529,7 +531,7 @@ extern void GetActorHitFrame_80018E5C(Actor*, int);
 extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 
-extern int sub_800C0D88();
+extern int IsSummonedMinionReady_800C0D88();
 
 extern int sub_800A8BE4();
 
@@ -626,9 +628,9 @@ extern void sub_80039ED8(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
-extern void StartHitNumber_800BF3DC(int a, int b, int c, int d, int e);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
 
-extern void ShowUnitHitResult_800BE834(int a, int b);
+extern void ShowUnitHitResult_800BE834(int unit, int pos);
 
 extern void UpdateMinionStatusTint_800C0F1C();
 
@@ -638,7 +640,7 @@ typedef struct BatSettingsBits
     unsigned int b21 : 1;
 } BatSettingsBits;
 
-extern void StartHitNumber_800BF3DC(int a, int b, int c, int d, int e);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
 
 extern void FlashScreenWhite_800BF3AC();
 
@@ -666,7 +668,7 @@ typedef struct BatResult_a
 {
     unsigned short kind_0;
     unsigned short arg_2;
-    int f4;
+    int flags_4;
     int status_8;         // status bits inflicted on the target
     int actorHpCost_C;
     int actorMpCost_10;
@@ -884,7 +886,7 @@ extern void SpawnOrb_800C3B50(int* p, int id);
 
 extern void free3_8003FC6C(void* p);
 
-extern void SetPointLight_800C4090(int a0, int a1, int c, int a3);
+extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 
 
 
@@ -950,7 +952,7 @@ extern int AiCastMagic_800C6BD0();
 
 extern int rand();
 
-extern void sub_800C66B4(unsigned char* buf, unsigned int b);
+extern void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int b);
 
 extern void AiSetCommandOnSelf_800C6B24(BatTask* t, int a, int b);
 
@@ -1430,7 +1432,7 @@ extern int dword_800C9184;
 extern Minion *summonedMinion_800C9188;
 extern int summonedMinionSlot_800C918C;
 extern BatSummon_a summonedActor_800C9190;
-extern char dword_800C91A4[56];
+extern char defaultBoneSlots_800C91A4[56];
 extern BatFxFn enemyAiHigh_800C91DC[10];
 extern BatFxFn enemyAi_800C9204[53];
 extern BatMenu_a commandMenu_800C92D8[1];
@@ -1506,7 +1508,7 @@ extern char unitHitKinds_800C9CBC[12];
 extern BatCmd_a unitReactions_800C9CC8[7];
 extern short unitHpDamage_800C9D38[8];
 extern short unitMpDamage_800C9D48[8];
-extern int dword_800C9D58[7];
+extern int unitResultFlags_800C9D58[7];
 extern int helpWindowText_800C9D74;
 extern short hitSfx_800C9D78;
 extern int btlExecLoad_800C9D7C;

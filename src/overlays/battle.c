@@ -834,7 +834,7 @@ void ResetTurnResults_800BB7D4()
         unitHpDamage_800C9D38[i] = 0;
         unitMpDamage_800C9D48[i] = 0;
         unitHitKinds_800C9CBC[i] = 0;
-        dword_800C9D58[i] = 0;
+        unitResultFlags_800C9D58[i] = 0;
         unitStatusInflicted_800C9CA0[i] = 0;
     }
 }
@@ -1185,8 +1185,8 @@ void WaitBtlExecLoaded_800BC324(BatTask_a* t, int a)
 
 int GetUnitsCenter_800BC378(unsigned int mask, BatV12_a* out)
 {
-    BatV12_a arr[7];
-    BatV12_a tmp;
+    BatV12_a pos[7];
+    BatV12_a center;
     unsigned int i;
     int n;
     int m;
@@ -1199,55 +1199,55 @@ int GetUnitsCenter_800BC378(unsigned int mask, BatV12_a* out)
             BatV12_a* p = (BatV12_a*)GetUnitPos_800BC6CC(i);
             if (p)
             {
-                arr[n].x = p->x;
-                arr[n].y = p->y;
-                arr[n].z = p->z;
+                pos[n].x = p->x;
+                pos[n].y = p->y;
+                pos[n].z = p->z;
                 n++;
             }
         }
     }
     if (n != 0)
     {
-        AveragePositions_800BC5EC(&tmp, arr, n);
-        *out = tmp;
+        AveragePositions_800BC5EC(&center, pos, n);
+        *out = center;
         return 1;
     }
     return 0;
 }
 
-void TurnUnitsToward_800BC468(int a, int b)
+void TurnUnitsToward_800BC468(int targetMask, int unitMask)
 {
-    char buf[0x10];
+    char center[0x10];
     unsigned int i;
     int mask;
-    if (GetUnitsCenter_800BC378(a, buf))
+    if (GetUnitsCenter_800BC378(targetMask, center))
     {
         for (i = 0; i < 7; i++)
         {
             mask = 1 << i;
-            if (b & mask)
+            if (unitMask & mask)
             {
-                TurnUnitToward_800BC4D4(i, buf);
+                TurnUnitToward_800BC4D4(i, center);
             }
         }
     }
 }
 
-void TurnUnitToward_800BC4D4(int a, int b)
+void TurnUnitToward_800BC4D4(int unit, int pos)
 {
-    int r = IsUnitOnField_800BC570(a);
+    int r = IsUnitOnField_800BC570(unit);
     if (r == 1)
     {
-        switch ((unsigned int)GetUnitSide_800BC7DC(a))
+        switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            sub_800A8D48(b);
+            sub_800A8D48(pos);
             break;
         case 1:
-            TurnSummonedMinionToward_800C0DB0(b);
+            TurnSummonedMinionToward_800C0DB0(pos);
             break;
         case 2:
-            sub_800A25D8(a - 4, b);
+            sub_800A25D8(unit - 4, pos);
             break;
         default:
             break;
@@ -1255,21 +1255,21 @@ void TurnUnitToward_800BC4D4(int a, int b)
     }
 }
 
-int IsUnitOnField_800BC570(int x)
+int IsUnitOnField_800BC570(int unit)
 {
     int m;
-    if (x == 0 && summonedUnit_800C9C82 == 0)
+    if (unit == 0 && summonedUnit_800C9C82 == 0)
     {
         return 1;
     }
-    if (GetPartyMinionMask_800C0A9C() & (m = 1 << x))
+    if (GetPartyMinionMask_800C0A9C() & (m = 1 << unit))
     {
-        if (x == summonedUnit_800C9C82)
+        if (unit == summonedUnit_800C9C82)
         {
             return 1;
         }
     }
-    return (sub_800A248C() & (m = 1 << x)) != 0;
+    return (sub_800A248C() & (m = 1 << unit)) != 0;
 }
 
 BatV12_a* AveragePositions_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n)
@@ -1299,42 +1299,42 @@ BatV12_a* AveragePositions_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n
     return dst;
 }
 
-int GetUnitPos_800BC6CC(int a)
+int GetUnitPos_800BC6CC(int unit)
 {
-    int r = 0;
+    int pos = 0;
     int m;
-    if (IsUnitInBattle_800BC784(a))
+    if (IsUnitInBattle_800BC784(unit))
     {
-        int k = GetUnitSide_800BC7DC(a);
-        switch ((unsigned int)k)
+        int side = GetUnitSide_800BC7DC(unit);
+        switch ((unsigned int)side)
         {
         case 1:
             m = GetUnitSide_800BC7DC(summonedUnit_800C9C82);
             if (m == 0)
             {
             case 0:
-                r = (int)&levantPos_8008BD18.pos;
+                pos = (int)&levantPos_8008BD18.pos;
                 break;
             }
-            if (m == k)
+            if (m == side)
             {
-                r = (int)GetSummonedMinionPos_800C0F9C();
+                pos = (int)GetSummonedMinionPos_800C0F9C();
             }
             break;
         case 2:
-            r = sub_800A2C28(a - 4);
+            pos = sub_800A2C28(unit - 4);
             break;
         }
     }
-    return r;
+    return pos;
 }
 
-int IsUnitInBattle_800BC784(int x)
+int IsUnitInBattle_800BC784(int unit)
 {
     int m;
-    if (x != 0)
+    if (unit != 0)
     {
-        if ((GetPartyMinionMask_800C0A9C() & (m = 1 << x)) == 0)
+        if ((GetPartyMinionMask_800C0A9C() & (m = 1 << unit)) == 0)
         {
             return (sub_800A248C() & m) != 0;
         }
@@ -1343,18 +1343,18 @@ int IsUnitInBattle_800BC784(int x)
 }
 
 #if 0 // Not matched: original has a dead 'li v0,7' before the last return and uses v0 for x-4; tried switch/case ranges, else-if chains, x==7 tails
-int GetUnitSide_800BC7DC(int x)
+int GetUnitSide_800BC7DC(int unit)
 {
     int r;
-    if (x == 0)
+    if (unit == 0)
     {
         r = 0;
     }
-    else if ((unsigned int)(x - 1) < 3)
+    else if ((unsigned int)(unit - 1) < 3)
     {
         r = 1;
     }
-    else if ((unsigned int)(x - 4) < 3)
+    else if ((unsigned int)(unit - 4) < 3)
     {
         r = 2;
     }
