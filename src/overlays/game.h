@@ -192,9 +192,9 @@ typedef struct GameCb_1
 {
     int f0;
     Actor* actor_4;
-    int* f8;
-    int (*cb_c)();
-    void (*cb_10)();
+    int* anims_8; // animation table (indexed by the script commands)
+    int (*hold_C)();     // HoldFieldMinion_800A7810 (0: busy)
+    void (*release_10)(); // ReleaseFieldMinion_800A785C
 } GameCb_1;
 
 // what Actor.desc_15C of a party member points to
@@ -304,7 +304,7 @@ typedef struct GameEncounter
     GameSlot_1* leader_4;     // the enemy slot that started the encounter
     int otherCount_8;             // number of others_C entries
     GameSlot_1* others_C[12]; // the other enemy slots
-    int f3c;
+    int swapped_3C; // fixed encounters: which of the two enemies is out (SwapEncounterEnemy_800A2AE8)
     int count_40;
     int remaining_44;
     int groupIndex_48;
@@ -328,8 +328,8 @@ typedef struct GameEncounter
 
 typedef struct GameJ_1
 {
-    short h0;
-    short h2;
+    short levantWall_0; // mapState_8008B500.ents_14 index (-1: none)
+    short actorWall_2;  // mapState_8008B500.ents_30 index (-1: none)
 } GameJ_1;
 
 typedef struct GameQ_1
@@ -737,26 +737,29 @@ extern char name_80096090[];
 
 typedef struct G2Inner
 {
-    unsigned int f0;
+    // 1: battle mode (EnterLevantBattleMode_800A895C), 2: action requested, 4: action triggered, 8: main action
+    // (not a reaction: wait for it to finish), 0x10: entering battle, 0x20: held by a script,
+    // 0x40: movement locked, 0x80: stop the scripted walk / turn
+    unsigned int flags_0;
     char pad_4[0xC];
     struct_v3 pos_10; // Levant's position, copied each frame by LevantControlTask_800A818C
     char pad_1C[0x18];
-    int f34;
-    int f38;
+    int targets_34;
+    int arg_38;
     char pad_3C[0x10];
     FirFilter turn_4C;
     int turnBuf_5C[4];
     char pad_6C[0x30];
     int f9C;
     int fA0;
-    int fA4; // fA4..fAC: the point Levant walks to / turns toward
-    int fA8;
-    int fAC;
-    int fB0;
+    int targetX_A4; // targetX_A4..targetZ_AC: the point Levant walks to / turns toward
+    int targetY_A8;
+    int targetZ_AC;
+    int cmdKind_B0;
     char pad_B4[0x12];
-    short fC6; // the state of Levant's input state machine (LevantControlTask_800A818C)
+    short state_C6; // the state of Levant's input state machine (LevantControlTask_800A818C)
     char pad_C8[4];
-    int fCC;
+    int anim_CC;
 } G2Inner;
 
 extern unsigned char pads_800918E8[2][9];
@@ -782,9 +785,9 @@ typedef struct G2Ctx
 
 typedef struct G2Obj
 {
-    unsigned int f0;
+    unsigned int flags_0;
     char pad_4[0x2C];
-    int f30;
+    int fade_30;
 } G2Obj;
 
 typedef struct G2V12
@@ -813,35 +816,41 @@ typedef struct G2Path
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
 {
-    unsigned int f0;
-    int f4; // input bits
-    int f8;
-    int fC;
-    int f10; // animation frame
-    int f14; // blend animation frame
-    unsigned short u18;
-    unsigned short u1a;
-    short s1c;
-    short s1e;
-    short s20;
-    unsigned short u22;
-    short s24;
-    short s26;
-    short s28;
-    short s2A;
-    int f2C;
-    int f30;
-    int f34;
-    int f38;
-    int f3c;
+    // 1: acting, 2: fading out, 4: fading in, 8: animation changed this frame, 0x10: blending from prevAnim_1E,
+    // 0x20: continue (ContinueLevantAnim_800AB1A4), 0x100: in battle (field position saved in basePos_60),
+    // 0x200: the action plays an effect, 0x400: defending, 0x800: loop between the loop frames, 0x1000: victory
+    // pose, 0x2000: action finished, 0x4000: battle stance, 0x8000: the loop wrapped, 0x20000: hidden,
+    // 0x40000: no map collision, 0x80000: root motion from basePos_60, 0x200000: turning on the spot,
+    // 0x400000: walking path_78, 0x800000: skip the script animation, 0x1000000: capture of the last enemy
+    unsigned int flags_0;
+    int moveCmd_4; // input bits
+    int action_8;  // step of the mode_C state machine (0 / 1: idle animations)
+    int mode_C;    // 0 field, 1 battle action, 2 script animation, 3 queued animation
+    int frame_10; // animation frame
+    int blendFrame_14; // blend animation frame
+    unsigned short frameStep_18;
+    unsigned short frameFrac_1A;
+    short anim_1C;
+    short prevAnim_1E;
+    short actionAnim_20;
+    unsigned short queuedAnim_22;
+    short nextAnim_24;
+    short blend_26;
+    short idleTimer_28;
+    short hitRepeat_2A;
+    int effect_2C;
+    int fade_30;
+    int arg_34;
+    int targets_38;
+    int status_3C;
     Model* model_40;
     char pad_44[4];
-    G2V12 v48;
-    G2V12 v54;
-    G2V12 v60;
-    G2V12 v6c; // root motion of the current animation frame (SetLevantRootMotion_800AA140)
+    G2V12 pos_48;
+    G2V12 savedPos_54;
+    G2V12 basePos_60;
+    G2V12 rootMotion_6C; // root motion of the current animation frame (SetLevantRootMotion_800AA140)
     struct G2Path* path_78; // scripted walk (flag 0x400000, SetLevantPath_800ABAA4)
-    int f7c;    // step of path_78
+    int pathStep_7C;    // step of path_78
     int tri_80; // floor triangle under Levant (mapState_8008B500.meshes_C[mesh_84].tris_4)
     int mesh_84;
     char pad_88[8];
@@ -892,15 +901,15 @@ extern int FindMapVar_800ADBA0(short*);
 
 typedef struct G2Rec
 {
-    unsigned char f0;
-    unsigned char f1;
+    unsigned char fileId_0;
+    unsigned char resident_1;
     char pad_2;
-    unsigned char f3;
-    short s4;
-    short s6;
-    short s8;
-    unsigned short sA;
-    short sC;
+    unsigned char flags_3;
+    short start_4;
+    short loopStart_6;
+    short loopEnd_8;
+    unsigned short lastFrame_A;
+    short hitFrames_C;
     char pad_E[0x26];
     int f34;
     char pad_38[8];
@@ -1140,22 +1149,22 @@ typedef struct G2Cmd_1
 
 typedef struct G2Init_1
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
+    int flags_0;
+    int moveCmd_4;
+    int action_8;
+    int mode_C;
+    int frame_10;
     char pad_14[4];
-    short s18;
-    short s1a;
-    short s1c;
-    short s1e;
+    short frameStep_18;
+    short frameFrac_1A;
+    short anim_1C;
+    short prevAnim_1E;
     char pad_20[6];
-    short s26;
+    short blend_26;
     char pad_28[8];
-    int f30;
+    int fade_30;
     char pad_34[8];
-    int f3C;
+    int status_3C;
 } G2Init_1;
 
 extern void sub_800B80C8(void* p);
@@ -1420,7 +1429,26 @@ extern int currentMessageId_800AEBE8;
 extern int currentVoice_800AEBEC;
 extern int voiceTable_800AEBF0;
 extern int eventResult_800AEBF4;
-extern int mapSelect_800AEBF8[19];
+// a menu cursor of the MAP overlay's destination select (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
+typedef struct GameMapCursor
+{
+    short cols_0;
+    short rows_2;
+    short count_4;
+    short flags_6; // 0x40: scrolls
+    short index_8; // on screen
+    short scroll_A;
+} GameMapCursor;
+
+// the MAP overlay's destination select state, kept in GAME across the MAP overlay's loads
+typedef struct GameMapSelect
+{
+    short area_0; // the selected area (-1: none yet)
+    short dest_2;
+    GameMapCursor cursors_4[6]; // one per area
+} GameMapSelect;
+
+extern GameMapSelect mapSelect_800AEBF8;
 extern int mapArea0Map00Entrances_800AEC44[20];
 extern int mapArea0Map01Entrances_800AEC94[20];
 extern int mapArea0Map02Entrances_800AECE4[16];

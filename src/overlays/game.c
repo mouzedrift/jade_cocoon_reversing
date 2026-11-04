@@ -333,7 +333,7 @@ void ResetEncounter_800A170C(void)
     gCtx_800B1260.f77c = 0;
     gCtx_800B1260.f780 = 1;
     gCtx_800B1260.f784 = 1;
-    gCtx_800B1260.f3c = 0;
+    gCtx_800B1260.swapped_3C = 0;
 }
 
 // Matched
@@ -775,12 +775,12 @@ int GetEnemyAliveMask_800A248C(void)
 }
 
 // Matched
-int IsEnemyAlive_800A24F4(int a)
+int IsEnemyAlive_800A24F4(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    if (gCtx_800B1260.actors_7c[a] != 0)
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    if (gCtx_800B1260.actors_7c[idx] != 0)
     {
-        if (gCtx_800B1260.gone_4C[a] == 0)
+        if (gCtx_800B1260.gone_4C[idx] == 0)
         {
             return 1;
         }
@@ -789,30 +789,30 @@ int IsEnemyAlive_800A24F4(int a)
 }
 
 // Matched
-int IsEnemyIdle_800A2550(int a)
+int IsEnemyIdle_800A2550(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1C8(gCtx_800B1260.actors_7c[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return sub_8001E1C8(gCtx_800B1260.actors_7c[idx]);
 }
 
 // Matched
-int IsEnemyReady_800A2594(int a)
+int IsEnemyReady_800A2594(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return sub_8001E1DC(gCtx_800B1260.actors_7c[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return sub_8001E1DC(gCtx_800B1260.actors_7c[idx]);
 }
 
 // Matched
-int TurnEnemyToward_800A25D8(int a)
+int TurnEnemyToward_800A25D8(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int sub_800A25F8(int a)
+int sub_800A25F8(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
@@ -880,48 +880,48 @@ int TriggerEnemyEffects_800A2760(unsigned int* p)
 }
 
 // Matched
-void GetEnemyHitFrame_800A27FC(int a, int b)
+void GetEnemyHitFrame_800A27FC(int idx, int b)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    GetActorHitFrame_80018E5C(gCtx_800B1260.actors_7c[a], b);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    GetActorHitFrame_80018E5C(gCtx_800B1260.actors_7c[idx], b);
 }
 
 // Matched
-void SetEnemyStatusTint_800A284C(int a)
+void SetEnemyStatusTint_800A284C(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStatus* v = GetEnemyStatus_800A2B60(a);
-        SetActorStatusTint_80018EBC(gCtx_800B1260.actors_7c[a], v);
+        UnitStatus* v = GetEnemyStatus_800A2B60(idx);
+        SetActorStatusTint_80018EBC(gCtx_800B1260.actors_7c[idx], v);
     }
 }
 
 // Matched
-int AddEnemyItem_800A2898(int a)
+int AddEnemyItem_800A2898(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return AddItem_80010650(&gCtx_800B1260.ents_ac[a]);
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return AddItem_80010650(&gCtx_800B1260.ents_ac[idx]);
 }
 
 // Matched
-int sub_800A28DC(int a)
+int sub_800A28DC(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int CanFleeFromEnemy_800A28FC(int a)
+int CanFleeFromEnemy_800A28FC(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return dword_800B19E0;
 }
 
 // Matched
-void RemoveEnemy_800A2924(int a)
+void RemoveEnemy_800A2924(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    gCtx_800B1260.gone_4C[a] = 1;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    gCtx_800B1260.gone_4C[idx] = 1;
     if (--gCtx_800B1260.remaining_44 == 0)
     {
         int x = gCtx_800B1260.groupIndex_48;
@@ -934,11 +934,11 @@ void RemoveEnemy_800A2924(int a)
 }
 
 // Matched
-void GetEnemyEffectTarget_800A29CC(int a, EffectTarget* out)
+void GetEnemyEffectTarget_800A29CC(int idx, EffectTarget* out)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        Actor* e = gCtx_800B1260.actors_7c[a];
+        Actor* e = gCtx_800B1260.actors_7c[idx];
         out->tbl_0 = e->effectTbl_14C;
         out->pos_4 = e->pos_38;
         out->bonePos_8 = e->bonePos_1C4;
@@ -949,18 +949,18 @@ void GetEnemyEffectTarget_800A29CC(int a, EffectTarget* out)
 }
 
 // Matched
-int sub_800A2A50(int a)
+int sub_800A2A50(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
 }
 
 // Matched
-int GetEnemyMagicBits_800A2A70(int a)
+int GetEnemyMagicBits_800A2A70(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return (int)&e->magicBits_80;
     }
 }
@@ -971,7 +971,7 @@ int GetActiveSwapEnemy_800A2AB4(void)
     GameEncounter* c = &gCtx_800B1260;
     if (c->fixed_774 != 0)
     {
-        if (c->f3c == 0)
+        if (c->swapped_3C == 0)
         {
             return 1;
         }
@@ -983,78 +983,78 @@ int GetActiveSwapEnemy_800A2AB4(void)
 // Matched
 void SwapEncounterEnemy_800A2AE8(void)
 {
-    if (gCtx_800B1260.f3c == 0)
+    if (gCtx_800B1260.swapped_3C == 0)
     {
         gCtx_800B1260.gone_4C[0] = 1;
         gCtx_800B1260.gone_4C[1] = 0;
-        gCtx_800B1260.f3c = 1;
+        gCtx_800B1260.swapped_3C = 1;
     }
     else
     {
         gCtx_800B1260.gone_4C[0] = 0;
         gCtx_800B1260.gone_4C[1] = 1;
-        gCtx_800B1260.f3c = 0;
+        gCtx_800B1260.swapped_3C = 0;
     }
 }
 
 // Matched
-UnitStats* GetEnemyStats_800A2B20(int a)
+UnitStats* GetEnemyStats_800A2B20(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return &gCtx_800B1260.ents_ac[a];
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return &gCtx_800B1260.ents_ac[idx];
 }
 
 // Matched
-UnitStatus* GetEnemyStatus_800A2B60(int a)
+UnitStatus* GetEnemyStatus_800A2B60(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return &gCtx_800B1260.ents_ac[a].st_0;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return &gCtx_800B1260.ents_ac[idx].st_0;
 }
 
 // Matched
-int GetEnemySkills_800A2BA0(int a)
+int GetEnemySkills_800A2BA0(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return (int)&e->skills_6C;
     }
 }
 
 // Matched
-int GetEnemySpecies_800A2BE4(int a)
+int GetEnemySpecies_800A2BE4(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
+    AssertEnemyIndex_800A2CA8(idx, 0);
     {
-        UnitStats* e = &gCtx_800B1260.ents_ac[a];
+        UnitStats* e = &gCtx_800B1260.ents_ac[idx];
         return e->species_5C;
     }
 }
 
 // Matched
-int* GetEnemyPos_800A2C28(int a)
+int* GetEnemyPos_800A2C28(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return gCtx_800B1260.actors_7c[a]->pos_38;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return gCtx_800B1260.actors_7c[idx]->pos_38;
 }
 
 // Matched
-int* GetEnemyBonePos_800A2C68(int a)
+int* GetEnemyBonePos_800A2C68(int idx)
 {
-    AssertEnemyIndex_800A2CA8(a, 0);
-    return gCtx_800B1260.actors_7c[a]->bonePos_1C4;
+    AssertEnemyIndex_800A2CA8(idx, 0);
+    return gCtx_800B1260.actors_7c[idx]->bonePos_1C4;
 }
 
-int AssertEnemyIndex_800A2CA8(int a, int b)
+int AssertEnemyIndex_800A2CA8(int idx, int noExit)
 {
     int ok = 0;
-    if (a < 0 || a >= gCtx_800B1260.count_40 || gCtx_800B1260.gone_4C[a] != 0)
+    if (idx < 0 || idx >= gCtx_800B1260.count_40 || gCtx_800B1260.gone_4C[idx] != 0)
     {
         ok = 1;
     }
     if (ok)
     {
-        if (!b)
+        if (!noExit)
         {
             printf(aAssertionFaile_800A05A4, aFile_800A05CC, 0x512);
             exit(1);
