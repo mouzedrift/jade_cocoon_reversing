@@ -600,7 +600,8 @@ class Gen:
                     return literal(z)
                 # a string with more bytes behind its terminator (left over in the padding): one literal
                 segs = z.split(b"\0")
-                if self.int_refs and len(segs[0]) >= 2 and is_text(segs[0]) and all(is_text(x) or not x for x in segs):
+                if self.int_refs and len(segs[0]) >= 2 and is_text(segs[0]) and (all(is_text(x) or not x for x in segs) or
+                                                                         len(z) - len(segs[0]) <= 4):
                     return literal(z)
                 while len(b) > 1 and b[-1] == 0:
                     b = b[:-1]
