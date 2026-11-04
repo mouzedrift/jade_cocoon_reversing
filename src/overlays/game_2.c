@@ -1,28 +1,28 @@
 // GAME.BIN, source file 2 of 3 from 0x800A55B0 (.rdata from 0x800A061C)
 #include "game.h"
 
-void* GetEventDataSlot_800A55B0(int a)
+void* GetEventDataSlot_800A55B0(int kind)
 {
-    void* r = 0;
-    switch (a)
+    void* slot = 0;
+    switch (kind)
     {
     case 0:
-        r = eventEffects_800AEB80;
+        slot = eventEffects_800AEB80;
         break;
     case 1:
-        r = eventReloc_800AEBBC;
+        slot = eventReloc_800AEBBC;
         break;
     case 2:
-        r = eventTiy_800AEBC0;
+        slot = eventTiy_800AEBC0;
         break;
     case 3:
-        r = eventDataBuf_800AEBC8;
+        slot = eventDataBuf_800AEBC8;
         break;
     case 4:
-        r = eventRecords_800AEBCC;
+        slot = eventRecords_800AEBCC;
         break;
     }
-    return r;
+    return slot;
 }
 
 
@@ -32,24 +32,24 @@ extern void LoadEventTiy_800BC98C(int a, int b);
 extern void CopyEventData_800BCA18(int a, int b);
 extern void LoadEventRecordTables_800BCA68(int a, int b);
 
-void LoadEventData_800A5628(int kind, int a, int b)
+void LoadEventData_800A5628(int kind, int data, int arg)
 {
     switch (kind)
     {
     case 0:
-        LoadEventEffectFile_800BC7A8(a, b);
+        LoadEventEffectFile_800BC7A8(data, arg);
         break;
     case 1:
-        LoadRelocBlob_800BC854(a, b);
+        LoadRelocBlob_800BC854(data, arg);
         break;
     case 2:
-        LoadEventTiy_800BC98C(a, b);
+        LoadEventTiy_800BC98C(data, arg);
         break;
     case 3:
-        CopyEventData_800BCA18(a, b);
+        CopyEventData_800BCA18(data, arg);
         break;
     case 4:
-        LoadEventRecordTables_800BCA68(a, b);
+        LoadEventRecordTables_800BCA68(data, arg);
         break;
     }
 }

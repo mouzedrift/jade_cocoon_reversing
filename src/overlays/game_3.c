@@ -6,17 +6,17 @@ const char aEventcomC_800A0688[] = "EVENTCOM.C";
 const int dword_800A0694 = 0;
 
 // Matched
-void AllocMdecBuffer_800A5804(int a)
+void AllocMdecBuffer_800A5804(int mode)
 {
-    if (a == 0)
+    if (mode == 0)
     {
         AllocMdecVLCBuffer_80041848();
     }
-    else if (a == 1)
+    else if (mode == 1)
     {
         AllocMdecVLCBufferInFileBuffer_8004188C();
     }
-    mdecBufferMode_800AEB7C = a;
+    mdecBufferMode_800AEB7C = mode;
 }
 
 // Matched
@@ -37,16 +37,16 @@ int FreeMdecBuffer_800A5854(void)
 
 void StopAllEventScripts_800A58B4(void)
 {
-    EventNode* n = eventScripts_8008D410;
+    EventNode* node = eventScripts_8008D410;
     int i;
-    int cnt = n->count;
-    GameRect_1* r;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    GameViewRect* view;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
-            EndEventScript_800A6168(o, o->buffer);
-        n = n->next;
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
+            EndEventScript_800A6168(entry, entry->buffer);
+        node = node->next;
     }
     sceneScriptId_800AEBD8 = -1;
     nextScriptId_800AEBDC = 0;
@@ -55,11 +55,11 @@ void StopAllEventScripts_800A58B4(void)
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
     if (!(name_80091C38 & 0x40))
     {
-        r = &viewport_8008D420;
-        r->x = 0;
-        r->w = 0x140;
-        r->y = 0;
-        r->h = 0xf0;
+        view = &viewport_8008D420;
+        view->x = 0;
+        view->w = 0x140;
+        view->y = 0;
+        view->h = 0xf0;
     }
     ResetSceneFade_8001A9A4();
     voiceTable_800AEBF0 = 0;
@@ -70,214 +70,214 @@ void StopAllEventScripts_800A58B4(void)
 }
 
 // Matched
-EventEntry* StartEventScript_800A59D0(int v)
+EventEntry* StartEventScript_800A59D0(int script)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(eventScripts_8008D410);
-    if (p)
+    EventEntry* entry = AllocEventEntry_80043AF8(eventScripts_8008D410);
+    if (entry)
     {
-        GameEvCtx* q = p->buffer;
+        GameEvCtx* ctx = entry->buffer;
         int i;
-        p->flags = ((((p->flags | 1) & ~0x8000) | 4) & ~0x8000);
-        q->start_4 = v;
-        q->pc_8 = v;
-        q->ret_C = v;
-        q->id_10 = nextScriptId_800AEBDC;
-        q->choiceMask_114 = 0;
+        entry->flags = ((((entry->flags | 1) & ~0x8000) | 4) & ~0x8000);
+        ctx->start_4 = script;
+        ctx->pc_8 = script;
+        ctx->ret_C = script;
+        ctx->id_10 = nextScriptId_800AEBDC;
+        ctx->choiceMask_114 = 0;
         for (i = 7; i >= 0; i--)
         {
-            q->vars_CC[i] = 0;
+            ctx->vars_CC[i] = 0;
         }
-        ResetEventCtx_800A5B54(q);
-        p->cb_8 = RunEventScript_800A6060;
-        p->cb_C = EndEventScript_800A6168;
+        ResetEventCtx_800A5B54(ctx);
+        entry->cb_8 = RunEventScript_800A6060;
+        entry->cb_C = EndEventScript_800A6168;
         nextScriptId_800AEBDC++;
-        return p;
+        return entry;
     }
     return 0;
 }
 
 // Matched
-EventEntry* StartEventScriptForEntity_800A5AA0(int a, int b)
+EventEntry* StartEventScriptForEntity_800A5AA0(int script, int ent)
 {
-    EventEntry* r = StartEventScript_800A59D0(a);
-    GameEvCtx* t = r->buffer;
-    t->ent_120 = b;
-    return r;
+    EventEntry* entry = StartEventScript_800A59D0(script);
+    GameEvCtx* ctx = entry->buffer;
+    ctx->ent_120 = ent;
+    return entry;
 }
 
 // Matched
-int GetEventScriptId_800A5AD0(EventEntry* p)
+int GetEventScriptId_800A5AD0(EventEntry* entry)
 {
-    return ((GameEvCtx*)p->buffer)->id_10;
+    return ((GameEvCtx*)entry->buffer)->id_10;
 }
 
 // Matched
-int FindEventScript_800A5AE4(int a)
+int FindEventScript_800A5AE4(int id)
 {
-    EventNode* n = eventScripts_8008D410;
-    EventEntry* o;
+    EventNode* node = eventScripts_8008D410;
+    EventEntry* entry;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            if (a == ((GameEvCtx*)o->buffer)->id_10)
+            if (id == ((GameEvCtx*)entry->buffer)->id_10)
             {
-                return (int)o;
+                return (int)entry;
             }
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
 
 // Matched
-void ResetEventCtx_800A5B54(GameEvCtx* p)
+void ResetEventCtx_800A5B54(GameEvCtx* ctx)
 {
     int i;
-    p->heldActors_14 = 0;
-    p->busyActors_18 = 0;
-    p->animActors_1C = 0;
-    p->f20 = 0;
-    p->flags_0 = 0;
-    p->msgStep_B4 = 0;
-    p->step_B8 = 0;
-    p->maskStep_BC = 0;
-    p->cmdStep_C0 = 0;
-    p->waitCount_C4 = 0;
-    p->trigger_C8 = -1;
-    p->branch_EC = 0;
-    p->lastMsg_110 = 0;
-    p->msgOpen_118 = 0;
-    p->msgX_100 = -1;
-    p->msgY_102 = -1;
-    p->msgPosMode_104 = -1;
-    p->msgOptions_108 = 0;
-    p->msgWindow_11C = 0;
-    p->ent_120 = 0;
-    p->callArg_F0 = 0;
+    ctx->heldActors_14 = 0;
+    ctx->busyActors_18 = 0;
+    ctx->animActors_1C = 0;
+    ctx->f20 = 0;
+    ctx->flags_0 = 0;
+    ctx->msgStep_B4 = 0;
+    ctx->step_B8 = 0;
+    ctx->maskStep_BC = 0;
+    ctx->cmdStep_C0 = 0;
+    ctx->waitCount_C4 = 0;
+    ctx->trigger_C8 = -1;
+    ctx->branch_EC = 0;
+    ctx->lastMsg_110 = 0;
+    ctx->msgOpen_118 = 0;
+    ctx->msgX_100 = -1;
+    ctx->msgY_102 = -1;
+    ctx->msgPosMode_104 = -1;
+    ctx->msgOptions_108 = 0;
+    ctx->msgWindow_11C = 0;
+    ctx->ent_120 = 0;
+    ctx->callArg_F0 = 0;
     for (i = 4; i >= 0; i--)
     {
-        p->idleAnims_24[i] = 0;
+        ctx->idleAnims_24[i] = 0;
     }
 }
 
 // Matched
-void ClearScriptActorBusy_800A5BCC(int a)
+void ClearScriptActorBusy_800A5BCC(int actor)
 {
-    EventNode* n = eventScripts_8008D410;
+    EventNode* node = eventScripts_8008D410;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->buffer;
-            int m = 1 << a;
-            q->busyActors_18 &= ~m;
-            q->f20 &= ~m;
+            GameEvCtx* ctx = entry->buffer;
+            int mask = 1 << actor;
+            ctx->busyActors_18 &= ~mask;
+            ctx->f20 &= ~mask;
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
-int FireEventTrigger_800A5C40(int a)
+int FireEventTrigger_800A5C40(int trigger)
 {
-    int r = IsSceneHeld_800A5E68();
-    EventNode* n = eventScripts_8008D410;
-    int cnt = n->count;
+    int fired = IsSceneHeld_800A5E68();
+    EventNode* node = eventScripts_8008D410;
+    int count = node->count;
     int i;
-    GameEvCtx* o;
-    GameEvEnt* q;
-    int v;
-    int k;
-    EventEntry* e;
-    for (i = 0; i < cnt; i++)
+    GameEvCtx* ctx;
+    GameEvEnt* ent;
+    int want;
+    int match;
+    EventEntry* entry;
+    for (i = 0; i < count; i++)
     {
-        e = &n->entry;
-        if ((e->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            o = e->buffer;
-            if (r == 0 && (o->flags_0 & 8) && o->trigger_C8 == a)
+            ctx = entry->buffer;
+            if (fired == 0 && (ctx->flags_0 & 8) && ctx->trigger_C8 == trigger)
             {
-                o->flags_0 |= 4;
-                r = 1;
+                ctx->flags_0 |= 4;
+                fired = 1;
                 break;
             }
         }
-        n = n->next;
+        node = node->next;
     }
-    n = eventEntities_8008D400;
-    cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    node = eventEntities_8008D400;
+    count = node->count;
+    for (i = 0; i < count; i++)
     {
-        e = &n->entry;
-        if ((e->flags & 0x8001) == 1)
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            q = e->buffer;
-            if (r)
+            ent = entry->buffer;
+            if (fired)
             {
-                q->f78 = 0;
+                ent->armed_78 = 0;
             }
-            else if (q->f78)
+            else if (ent->armed_78)
             {
-                k = 1;
-                v = q->f84;
-                if (v != -1 && (v & 0x40000000))
+                match = 1;
+                want = ent->trigger_84;
+                if (want != -1 && (want & 0x40000000))
                 {
-                    k = (unsigned)((v & ~0x40000000) ^ a) < k;
+                    match = (unsigned)((want & ~0x40000000) ^ trigger) < match;
                 }
-                if (k)
+                if (match)
                 {
-                    q->f7C = 0;
-                    if (q->f88)
+                    ent->f7C = 0;
+                    if (ent->script_88)
                     {
-                        StartEventScript_800A59D0(q->f88);
+                        StartEventScript_800A59D0(ent->script_88);
                         sceneScriptId_800AEBD8 = nextScriptId_800AEBDC - 1;
-                        r = 1;
+                        fired = 1;
                     }
                 }
             }
         }
-        n = n->next;
+        node = node->next;
     }
-    return r;
+    return fired;
 }
 
 // Matched
-GameEvEnt* FindEventEntity_800A5DDC(int a, int b, GameEvEnt* c)
+GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip)
 {
-    EventNode* n = eventEntities_8008D400;
+    EventNode* node = eventEntities_8008D400;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->buffer;
-            if (c != q)
+            GameEvEnt* ent = entry->buffer;
+            if (skip != ent)
             {
-                if (b == 0)
+                if (byId == 0)
                 {
-                    if (a == q->f4)
+                    if (key == ent->f4)
                     {
-                        return q;
+                        return ent;
                     }
                 }
                 else
                 {
-                    if (a == q->id_10)
+                    if (key == ent->id_10)
                     {
-                        return q;
+                        return ent;
                     }
                 }
             }
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
@@ -288,34 +288,34 @@ int IsSceneHeld_800A5E68(void)
     return sceneScriptId_800AEBD8 >= 0;
 }
 
-int IsTriggerWaited_800A5E80(int a)
+int IsTriggerWaited_800A5E80(int trigger)
 {
-    EventNode* n = eventEntities_8008D400;
+    EventNode* node = eventEntities_8008D400;
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvEnt* q = o->buffer;
-            if (q->f78 != 0 && (q->f84 & 0xBFFFFFFF) == a)
+            GameEvEnt* obj = entry->buffer;
+            if (obj->armed_78 != 0 && (obj->trigger_84 & 0xBFFFFFFF) == trigger)
                 return 1;
         }
-        n = n->next;
+        node = node->next;
     }
-    n = eventScripts_8008D410;
-    cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    node = eventScripts_8008D410;
+    count = node->count;
+    for (i = 0; i < count; i++)
     {
-        EventEntry* o = &n->entry;
-        if ((o->flags & 0x8001) == 1)
+        EventEntry* entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
         {
-            GameEvCtx* q = o->buffer;
-            if (q->trigger_C8 == a)
+            GameEvCtx* obj = entry->buffer;
+            if (obj->trigger_C8 == trigger)
                 return 1;
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
@@ -331,16 +331,16 @@ GameEnemy* GetEventEnemy_800A5F6C(void)
 }
 
 // Matched
-void SetEventHook_800A5F90(int a)
+void SetEventHook_800A5F90(int hook)
 {
-    eventHook_800B1D98 = a;
+    eventHook_800B1D98 = hook;
 }
 
 // Matched
-int ExchangeEventResult_800A5F9C(int a)
+int ExchangeEventResult_800A5F9C(int result)
 {
     int old = eventResult_800AEBF4;
-    eventResult_800AEBF4 = a;
+    eventResult_800AEBF4 = result;
     return old;
 }
 
@@ -350,126 +350,126 @@ void WarpAfterLostBattle_800A5FAC(void)
     if (eventBattleLoseWarp_800AEBE4)
     {
         SaveData* sd = &saveData_8008B570;
-        GameS3_1 v;
+        GameMapLoc loc;
         SetEventVar_800AD16C(4, sd->mapId_2E4[1].field_0 + 4);
-        FindMapEntrance_800ADCEC(&v, GetSetReturnEntrance_800A683C(-1));
+        FindMapEntrance_800ADCEC(&loc, GetSetReturnEntrance_800A683C(-1));
         SetEventFlag_800AD0F8(0);
         useMapStartPos_80091C94 = 1;
         mapStartMode_80091C54 = 0;
         sd->mapId_2E4[3].field_0 = 0;
         forceMapReload_80091C9C = 1;
         dword_80091C8C = 0;
-        sd->mapId_2E4[0].field_0 = v.a;
-        sd->mapId_2E4[1].field_0 = v.b;
-        sd->mapId_2E4[2].field_0 = v.c;
+        sd->mapId_2E4[0].field_0 = loc.area;
+        sd->mapId_2E4[1].field_0 = loc.map;
+        sd->mapId_2E4[2].field_0 = loc.entrance;
         unknownFlags_8008D678 &= ~0x20000;
     }
 }
 
-void RunEventScript_800A6060(GameTask_1* t, GameEvCtx* q)
+void RunEventScript_800A6060(GameTask* task, GameEvCtx* ctx)
 {
     while (1)
     {
         if (fieldMode_800B0EC0 != 1)
             break;
-        if (eventFuncs_800BCDBC[*(int*)q->pc_8](q) == 0)
+        if (eventFuncs_800BCDBC[*(int*)ctx->pc_8](ctx) == 0)
             break;
     }
-    if (q->flags_0 & 0x40)
-        UpdateEventMessage_800BC2B4(q);
-    if (q->flags_0 & 0x10)
+    if (ctx->flags_0 & 0x40)
+        UpdateEventMessage_800BC2B4(ctx);
+    if (ctx->flags_0 & 0x10)
     {
-        q->flags_0 &= ~0x10;
-        q->pc_8 = q->ret_C;
+        ctx->flags_0 &= ~0x10;
+        ctx->pc_8 = ctx->ret_C;
     }
-    if (q->flags_0 & 1)
+    if (ctx->flags_0 & 1)
     {
-        t->f0 &= ~1;
-        t->f0 |= 0x8000;
-        t->f0 &= ~4;
-        t->f0 |= 0x8000;
+        task->flags_0 &= ~1;
+        task->flags_0 |= 0x8000;
+        task->flags_0 &= ~4;
+        task->flags_0 |= 0x8000;
     }
 }
 
 // Matched
-void EndEventScript_800A6168(GameTask_1* t, GameEvCtx* q)
+void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 {
-    if (sceneScriptId_800AEBD8 == q->id_10)
+    if (sceneScriptId_800AEBD8 == ctx->id_10)
     {
-        EvCmdEndScene_800B8A34(q);
+        EvCmdEndScene_800B8A34(ctx);
     }
-    t->f0 = (((t->f0 & ~1) | 0x8000) & ~4) | 0x8000;
+    task->flags_0 = (((task->flags_0 & ~1) | 0x8000) & ~4) | 0x8000;
 }
 
-void GetPortraitSprt_800A61CC(int a, void* b, void* c)
+void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 {
-    GameTim_1 t;
-    GameActorDesc* i;
-    if (a == 0)
+    GameTimImage tim;
+    GameActorDesc* desc;
+    if (who == 0)
     {
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCA4.x;
-        t.prect.y = name_8007DCA4.y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCA8.x;
-        t.crect.y = name_8007DCA8.y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCA4.x;
+        tim.prect.y = name_8007DCA4.y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCA8.x;
+        tim.crect.y = name_8007DCA8.y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
     else
     {
-        i = GetFieldMinionModelDesc_800A7A1C(a - 1);
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCAC[i->clut_30].x;
-        t.prect.y = name_8007DCAC[i->clut_30].y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[i->clut_30].x;
-        t.crect.y = name_8007DCBC[i->clut_30].y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCAC[desc->clut_30].x;
+        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCBC[desc->clut_30].x;
+        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
-    InitSprtFromTim_800298AC((int)b, (int)c, &t);
+    InitSprtFromTim_800298AC((int)sprt, (int)sprtArg, &tim);
 }
 
-void GetPortraitPoly_800A6308(int a, void* poly)
+void GetPortraitPoly_800A6308(int who, void* poly)
 {
-    GameTim_1 t;
-    GameActorDesc* i;
-    if (a == 0)
+    GameTimImage tim;
+    GameActorDesc* desc;
+    if (who == 0)
     {
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCA4.x;
-        t.prect.y = name_8007DCA4.y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCA8.x;
-        t.crect.y = name_8007DCA8.y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCA4.x;
+        tim.prect.y = name_8007DCA4.y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCA8.x;
+        tim.crect.y = name_8007DCA8.y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
     else
     {
-        i = GetFieldMinionModelDesc_800A7A1C(a - 1);
-        t.mode_valid = 1;
-        t.mode = 1;
-        t.prect.x = name_8007DCAC[i->clut_30].x;
-        t.prect.y = name_8007DCAC[i->clut_30].y;
-        t.prect.w = 0x20;
-        t.prect.h = 0x40;
-        t.crect.x = name_8007DCBC[i->clut_30].x;
-        t.crect.y = name_8007DCBC[i->clut_30].y;
-        t.crect.w = 0x100;
-        t.crect.h = 1;
+        desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
+        tim.mode_valid = 1;
+        tim.mode = 1;
+        tim.prect.x = name_8007DCAC[desc->clut_30].x;
+        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.w = 0x20;
+        tim.prect.h = 0x40;
+        tim.crect.x = name_8007DCBC[desc->clut_30].x;
+        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.w = 0x100;
+        tim.crect.h = 1;
     }
-    InitPolyFT4_80029A10(poly, &t);
+    InitPolyFT4_80029A10(poly, &tim);
 }
 
-void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
+void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
 {
     int icon;
     switch (kind)
@@ -477,7 +477,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     case 0:
         break;
     case 1:
-        GetPortraitSprt_800A61CC(id, b, c);
+        GetPortraitSprt_800A61CC(id, sprt, sprtArg);
         break;
     case 2:
         icon = GetItemIcon_8001D2AC(id);
@@ -490,7 +490,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     case 6:
         icon = GetEquipmentIcon_8001D2D4(id, kind - 4);
     draw:
-        GetPublicTiySprt_80032470(icon, b, c);
+        GetPublicTiySprt_80032470(icon, sprt, sprtArg);
         break;
     case 7:
         printf(aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
@@ -504,9 +504,9 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
 void* const dword_800A06B8[14] = { jtgt_800A7E18, jtgt_800A7E48, jtgt_800A7E78, jtgt_800A7EC8, jtgt_800A7EC8, jtgt_800A7EE4, jtgt_800A7EF4, jtgt_800A7F08, jtgt_800A7F1C, jtgt_800A7F30, jtgt_800A7F30, jtgt_800A7FBC, jtgt_800A8078, jtgt_800A8078 };
 
 // Matched
-int IsEventPointValid_800A6504(int a)
+int IsEventPointValid_800A6504(int point)
 {
-    return sub_800B76B8(dword_8008B520 + (a << 3)) >= 0;
+    return sub_800B76B8(dword_8008B520 + (point << 3)) >= 0;
 }
 
 // Matched
@@ -522,33 +522,33 @@ void SetActorWallEnabled_800A654C(int wall, int on)
 }
 
 // Matched
-void SetWallsEnabled_800A6564(GameJ_1* p, int on)
+void SetWallsEnabled_800A6564(GameWallPair* walls, int on)
 {
-    if (p->levantWall_0 >= 0)
+    if (walls->levantWall_0 >= 0)
     {
-        SetLevantWallEnabled_800A6534(p->levantWall_0, on);
+        SetLevantWallEnabled_800A6534(walls->levantWall_0, on);
     }
-    if (p->actorWall_2 >= 0)
+    if (walls->actorWall_2 >= 0)
     {
-        SetActorWallEnabled_800A654C(p->actorWall_2, on);
+        SetActorWallEnabled_800A654C(walls->actorWall_2, on);
     }
 }
 
 // Matched
-int IsAngleWithin36_800A65BC(int a, int b)
+int IsAngleWithin36_800A65BC(int angleA, int angleB)
 {
-    return (unsigned int)(WrapAngle_8003BA18((short)(a - b)) + 0x198) < 0x331;
+    return (unsigned int)(WrapAngle_8003BA18((short)(angleA - angleB)) + 0x198) < 0x331;
 }
 
 // Matched
-int IsPointInViewCone_800A65F0(int* a, int* b, unsigned short* q, int r)
+int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int range)
 {
-    unsigned int u = 0xfff;
-    IsWithinDistance_8003B740(b, a, &u);
-    if (u < (unsigned int)(r * r))
+    unsigned int dist = 0xfff;
+    IsWithinDistance_8003B740(eye, point, &dist);
+    if (dist < (unsigned int)(range * range))
     {
-        int d = GameFn_8003B9E0(b, a);
-        if ((unsigned int)(WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        int angle = GameFn_8003B9E0(eye, point);
+        if ((unsigned int)(WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -558,12 +558,12 @@ int IsPointInViewCone_800A65F0(int* a, int* b, unsigned short* q, int r)
 
 #if 0
 // Not matched: only $s0/$s1 swapped (p and x); tried struct p, locals, early returns, result var
-int IsEventPointInView_800A66A4(int* p, int* x, unsigned short* q)
+int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
 {
-    if (p[0] >= 0 && IsEventPointValid_800A6504(p[0]))
+    if (point[0] >= 0 && IsEventPointValid_800A6504(point[0]))
     {
-        int d = GameFn_8003B9E0(x, p + 1);
-        if ((unsigned int)((short)WrapAngle_8003BA18((short)(q[1] - d)) + 0x198) < 0x331)
+        int angle = GameFn_8003B9E0(eye, point + 1);
+        if ((unsigned int)((short)WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;
         }
@@ -574,32 +574,32 @@ int IsEventPointInView_800A66A4(int* p, int* x, unsigned short* q)
 
 INCLUDE_OVERLAY_ASM(game, IsEventPointInView_800A66A4);
 
-int GetEventString_800A6738(unsigned int a)
+int GetEventString_800A6738(unsigned int id)
 {
     currentMessageId_800AEBE8 = 0x8000;
-    if (a <= 0xfffe)
+    if (id <= 0xfffe)
     {
-        GameTable_1* t;
-        currentMessageId_800AEBE8 = a;
-        t = GetEventDataSlot_800A55B0(1);
-        if (a < t->count)
+        GameMsgTable* tbl;
+        currentMessageId_800AEBE8 = id;
+        tbl = GetEventDataSlot_800A55B0(1);
+        if (id < tbl->count)
         {
-            int off = a * 8;
+            int off = id * 8;
             off += 4;
-            return *(int*)((char*)t + off);
+            return *(int*)((char*)tbl + off);
         }
         return 0;
     }
-    return a;
+    return id;
 }
 
 // Matched
-int SkipActorAnims_800A67B4(unsigned int* p)
+int SkipActorAnims_800A67B4(unsigned int* args)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
-        if (p[6] & (1 << i))
+        if (args[6] & (1 << i))
         {
             if (i == 0)
             {
@@ -615,65 +615,65 @@ int SkipActorAnims_800A67B4(unsigned int* p)
 }
 
 // Matched
-void SetVoiceTable_800A6830(int a)
+void SetVoiceTable_800A6830(int tbl)
 {
-    voiceTable_800AEBF0 = a;
+    voiceTable_800AEBF0 = tbl;
 }
 
 // Matched
-int GetSetReturnEntrance_800A683C(int x)
+int GetSetReturnEntrance_800A683C(int entrance)
 {
-    int v = GetEventVar_800AD154(5) << 8;
-    v += GetEventVar_800AD154(6);
-    if (v == 0)
+    int old = GetEventVar_800AD154(5) << 8;
+    old += GetEventVar_800AD154(6);
+    if (old == 0)
     {
-        v = 0x66;
+        old = 0x66;
         SetEventVar_800AD16C(5, 0);
-        SetEventVar_800AD16C(6, v);
+        SetEventVar_800AD16C(6, old);
     }
-    if (x >= 0)
+    if (entrance >= 0)
     {
-        int hi = x >> 8;
+        int hi = entrance >> 8;
         SetEventVar_800AD16C(5, hi);
-        SetEventVar_800AD16C(6, x - (hi << 8));
+        SetEventVar_800AD16C(6, entrance - (hi << 8));
     }
-    return v;
+    return old;
 }
 
-void GameMainInit_800A68CC(GameTask_1* t, int* q)
+void GameMainInit_800A68CC(GameTask* task, GameMainWork* work)
 {
     int i;
-    int* d = gameStartMode_800B1DC8;
-    GetGameStartMode_800A72C8((GameMode2_1*)d);
-    q[0] = d[1];
-    q[1] = q[0];
-    q[2] = q[0];
+    int* startMode = gameStartMode_800B1DC8;
+    GetGameStartMode_800A72C8((GameStartMode*)startMode);
+    work->mode_0 = startMode[1];
+    work->prevMode_4 = work->mode_0;
+    work->nextMode_8 = work->mode_0;
     for (i = 11; i >= 0; i--)
     {
-        q[i + 3] = 0;
+        work->modeInited_C[i] = 0;
     }
-    q[0xf] = CreateEventList_800435B4(gameEventListDefs_800B0DA4);
+    work->eventList_3C = CreateEventList_800435B4(gameEventListDefs_800B0DA4);
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
-    t->next_8 = GameMainStart_800A6968;
+    task->next_8 = GameMainStart_800A6968;
 }
 
-void GameMainStart_800A6968(GameTask_1* t, GameQ_1* q)
+void GameMainStart_800A6968(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = globalTaskLists_800B09FC;
+    GameTaskListDef* lists = globalTaskLists_800B09FC;
     int i;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
         i = 0;
         do
         {
-            RunEventListUpdate_800A7450(*l0[i].p0);
+            RunEventListUpdate_800A7450(*lists[i].list_0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
             }
             i++;
-        } while (l0[i].p0 != 0);
+        } while (lists[i].list_0 != 0);
     }
     if (eventDispatchHalt_8008B540)
     {
@@ -681,139 +681,139 @@ void GameMainStart_800A6968(GameTask_1* t, GameQ_1* q)
     }
     ApplyAudioOutputFormat_80030988();
     ResetFieldState_800A73A8();
-    SwitchGameMode_800A6C00(t, q);
-    InitGameModeTasks_800A6A48(t, q);
-    t->next_8 = GameMainUpdate_800A6B00;
+    SwitchGameMode_800A6C00(task, work);
+    InitGameModeTasks_800A6A48(task, work);
+    task->next_8 = GameMainUpdate_800A6B00;
 end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
 
-void InitGameModeTasks_800A6A48(GameTask_1* t, GameStage_1* q)
+void InitGameModeTasks_800A6A48(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0;
-    GameLst_1* l;
-    if (q->done_c[q->idx_0] == 0)
+    GameTaskListDef* lists;
+    GameTaskListDef* list;
+    if (work->modeInited_C[work->mode_0] == 0)
     {
-        l0 = gameModeTaskLists_800B0D74[q->idx_0];
-        if (l0->p0 != 0)
+        lists = gameModeTaskLists_800B0D74[work->mode_0];
+        if (lists->list_0 != 0)
         {
-            l = l0;
+            list = lists;
             do
             {
-                if (l->f4 & 0x1000)
+                if (list->modes_4 & 0x1000)
                 {
-                    RunEventListUpdate_800A7450(*l->p0);
+                    RunEventListUpdate_800A7450(*list->list_0);
                 }
-                l++;
-            } while (l->p0 != 0);
+                list++;
+            } while (list->list_0 != 0);
         }
-        q->done_c[q->idx_0] = 1;
+        work->modeInited_C[work->mode_0] = 1;
     }
 }
 
-void GameMainUpdate_800A6B00(GameTask_1* t, GameQ_1* q)
+void GameMainUpdate_800A6B00(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = gameModeTaskLists_800B0D74[*(int*)q];
+    GameTaskListDef* lists = gameModeTaskLists_800B0D74[work->mode_0];
     int i;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
         i = 0;
         do
         {
-            RunEventListUpdate_800A7450(*l0[i].p0);
+            RunEventListUpdate_800A7450(*lists[i].list_0);
             if (eventDispatchHalt_8008B540)
             {
                 break;
             }
             i++;
-        } while (l0[i].p0 != 0);
+        } while (lists[i].list_0 != 0);
     }
     if (unknownFlags_8008D678 & 0x8000000)
     {
-        t->next_8 = GameMainExit_800A6CCC;
+        task->next_8 = GameMainExit_800A6CCC;
         goto end;
     }
     if (gameModeChanged_800B0698 != 0)
     {
-        SwitchGameMode_800A6C00(t, q);
-        InitGameModeTasks_800A6A48(t, q);
+        SwitchGameMode_800A6C00(task, work);
+        InitGameModeTasks_800A6A48(task, work);
     }
 end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
 
-void SwitchGameMode_800A6C00(GameTask_1* t, int* q)
+void SwitchGameMode_800A6C00(GameTask* task, GameMainWork* work)
 {
-    GameLst_1* l0 = gameModeTaskLists_800B0D74[q[0]];
-    GameLst_1* l;
+    GameTaskListDef* lists = gameModeTaskLists_800B0D74[work->mode_0];
+    GameTaskListDef* list;
     int one = 1;
-    if (l0->p0 != 0)
+    if (lists->list_0 != 0)
     {
-        l = l0;
+        list = lists;
         do
         {
-            if (l->f4 & (one << q[2]))
-                RunEventListExit_800A74F0(*l->p0);
-            l++;
-        } while (l->p0 != 0);
+            if (list->modes_4 & (one << work->nextMode_8))
+                RunEventListExit_800A74F0(*list->list_0);
+            list++;
+        } while (list->list_0 != 0);
     }
-    if (q[0] == 11)
-        q[0] = q[1];
-    q[1] = q[0];
-    q[0] = q[2];
+    if (work->mode_0 == 11)
+        work->mode_0 = work->prevMode_4;
+    work->prevMode_4 = work->mode_0;
+    work->mode_0 = work->nextMode_8;
 }
 
 // Matched
-void GameMainExit_800A6CCC(GameTask_1* t, GameQ_1* q)
+void GameMainExit_800A6CCC(GameTask* task, GameMainWork* work)
 {
-    RunEventListFreeCallbacks_800438F8(q->f3c);
-    FreeEventList_80043A5C(q->f3c);
+    RunEventListFreeCallbacks_800438F8(work->eventList_3C);
+    FreeEventList_80043A5C(work->eventList_3C);
     bStopDrawingMovie_8008D45C = 1;
-    t->f0 = (t->f0 & ~1) | 0x8000;
+    task->flags_0 = (task->flags_0 & ~1) | 0x8000;
 }
 
 // Matched
-void RequestGameMode_800A6D30(int a)
+void RequestGameMode_800A6D30(int mode)
 {
-    int* w = (int*)dword_8008D46C[9];
+    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
     gameModeChanged_800B0698 = 1;
-    w[2] = a;
+    work->nextMode_8 = mode;
 }
 
-int GetGameMode_800A6D50(int a)
+int GetGameMode_800A6D50(int which)
 {
-    int* p = (int*)dword_8008D46C[9];
-    int r = 0;
-    switch ((unsigned)a)
+    GameMainWork* work = (GameMainWork*)dword_8008D46C[9];
+    int mode = 0;
+    switch ((unsigned)which)
     {
     case 0:
-        r = p[0];
+        mode = work->mode_0;
         break;
     case 1:
-        r = p[1];
+        mode = work->prevMode_4;
         break;
     case 2:
-        r = p[2];
+        mode = work->nextMode_8;
         break;
     }
-    return r;
+    return mode;
 }
 
-void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
+void CheckSubOverlayRequests_800A6DAC(GameTask* task, GameSubOverlayWork* work)
 {
-    GameD_1* p;
+    GameSubOverlayWork* req;
     int ov;
-    EventEntry* e;
-    q->f0 = -1;
+    EventEntry* entry;
+    work->mode_0 = -1;
     unknownFlags_8008D678 &= ~8;
-    p = q;
-    q->f8 = 0;
-    q->fC = 0;
-    q->f10 = 0;
-    q->f14 = 0;
-    q->f1C = 0;
+    req = work;
+    work->waitReq_8 = 0;
+    work->freeze_C = 0;
+    work->halt_10 = 0;
+    work->fading_14 = 0;
+    work->start_1C = 0;
     if (forceMapReload_80091C9C == 1)
         return;
     if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
@@ -833,19 +833,19 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
     if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == 1 && gCtx_800B1260.active_0 == 0 &&
         !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
     {
-        q->f8 = fieldMode_800B0EC0;
-        q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
-        e = AllocEventEntry_80043AF8(fieldMenuTask_8008D498);
-        e->flags = (e->flags | 1) & ~0x8000;
-        q->f0 = 4;
+        work->waitReq_8 = fieldMode_800B0EC0;
+        work->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
+        entry = AllocEventEntry_80043AF8(fieldMenuTask_8008D498);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        work->mode_0 = 4;
     }
     else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && fieldMode_800B0EC0 != 1)
     {
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
-        e = AllocEventEntry_80043AF8(fieldModeTask_800B1DAC);
-        e->flags = (e->flags | 1) & ~0x8000;
-        p->f0 = 1;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
+        entry = AllocEventEntry_80043AF8(fieldModeTask_800B1DAC);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        req->mode_0 = 1;
     }
     else if (shopRequest_800B06B0[0])
     {
@@ -865,138 +865,138 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         {
             ov = 0xd;
         }
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
-        p->f0 = 5;
-        p->f18 = (int)shopRequest_800B06B0;
-        p->f1C = (void (*)(int))StartShopRequest_800A7204;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
+        req->mode_0 = 5;
+        req->startArg_18 = (int)shopRequest_800B06B0;
+        req->start_1C = (void (*)(int))StartShopRequest_800A7204;
     }
     else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && saveRequest_800B06BC)
     {
-        p->f8 = 1;
-        p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
-        e = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
-        e->flags = (e->flags | 1) & ~0x8000;
-        p->f0 = 6;
-        p->f18 = (int)&saveRequest_800B06BC;
-        p->f1C = (void (*)(int))StartSaveMenuRequest_800A7280;
+        req->waitReq_8 = 1;
+        req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
+        entry = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        req->mode_0 = 6;
+        req->startArg_18 = (int)&saveRequest_800B06BC;
+        req->start_1C = (void (*)(int))StartSaveMenuRequest_800A7280;
     }
-    if (p->f0 >= 0)
+    if (req->mode_0 >= 0)
     {
-        WaitSubOverlayLoad_800A70F8(t, q);
+        WaitSubOverlayLoad_800A70F8(task, work);
     }
 }
 
-void WaitSubOverlayLoad_800A70F8(GameTask_1* t, GameD_1* q)
+void WaitSubOverlayLoad_800A70F8(GameTask* task, GameSubOverlayWork* work)
 {
-    int c = 0;
-    GameD_1* r = q;
-    if (q->f8)
-        c = (unsigned)GetFileRequestStatus_8003BE30(q->f4) > 0;
-    if (c == 0)
+    int busy = 0;
+    GameSubOverlayWork* req = work;
+    if (work->waitReq_8)
+        busy = (unsigned)GetFileRequestStatus_8003BE30(work->req_4) > 0;
+    if (busy == 0)
     {
-        if (q->f1C)
-            q->f1C(q->f18);
-        RequestGameMode_800A6D30(q->f0);
-        t->next_8 = CheckSubOverlayRequests_800A6DAC;
-        if (q->fC)
+        if (work->start_1C)
+            work->start_1C(work->startArg_18);
+        RequestGameMode_800A6D30(work->mode_0);
+        task->next_8 = CheckSubOverlayRequests_800A6DAC;
+        if (work->freeze_C)
             FreezeScreen_8001C224();
         else
             EndFade_8001C290();
-        eventDispatchHalt_8008B540 = r->f10;
+        eventDispatchHalt_8008B540 = req->halt_10;
     }
     else
     {
-        if (q->f14 == 0)
+        if (work->fading_14 == 0)
         {
             BeginFade_8001C260();
-            q->f14 = 1;
+            work->fading_14 = 1;
             RequestGameMode_800A6D30(0xb);
-            t->next_8 = WaitSubOverlayLoad_800A70F8;
+            task->next_8 = WaitSubOverlayLoad_800A70F8;
         }
         eventDispatchHalt_8008B540 = 1;
     }
 }
 
 // Matched
-void StartShopRequest_800A7204(GameSub_1* p)
+void StartShopRequest_800A7204(GameMenuRequest* req)
 {
-    if (p->f4 == 0)
+    if (req->kind_4 == 0)
     {
-        StartStore_800BAE2C(0, *(short*)&p->f8);
-        p->f0 = 0;
+        StartStore_800BAE2C(0, *(short*)&req->arg_8);
+        req->active_0 = 0;
     }
-    else if (p->f4 == 1)
+    else if (req->kind_4 == 1)
     {
-        StartStore_800BAE2C(1, *(short*)&p->f8);
-        p->f0 = 0;
+        StartStore_800BAE2C(1, *(short*)&req->arg_8);
+        req->active_0 = 0;
     }
     else
     {
-        if (p->f4 == 2)
+        if (req->kind_4 == 2)
         {
-            StartShopCtrl_800B66C4(*(short*)&p->f8);
+            StartShopCtrl_800B66C4(*(short*)&req->arg_8);
         }
-        p->f0 = 0;
+        req->active_0 = 0;
     }
 }
 
 // Matched
-void StartSaveMenuRequest_800A7280(GameSub_1* p)
+void StartSaveMenuRequest_800A7280(GameMenuRequest* req)
 {
-    SetLoadMenuSavePlace_800B78B8(p->f8);
-    if (p->fc)
+    SetLoadMenuSavePlace_800B78B8(req->arg_8);
+    if (req->endOfGame_C)
     {
         LoadMenuSetEndOfGame_800B78D0();
     }
-    p->f0 = 0;
+    req->active_0 = 0;
 }
 
-GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out)
+GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out)
 {
-    GameMode2_1 r;
-    GameS3_1 v;
+    GameStartMode mode;
+    GameMapLoc loc;
     if (unknownFlags_8008D678 & 0x40000000)
     {
-        r.a = 0;
-        r.b = 1;
-        FindMapEntrance_800ADCEC(&v, 0x159);
+        mode.useStartPos_0 = 0;
+        mode.mode_4 = 1;
+        FindMapEntrance_800ADCEC(&loc, 0x159);
         saveData_8008B570.mapId_2E4[0].field_2 = -1;
         saveData_8008B570.mapId_2E4[1].field_2 = -1;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
         useMapStartPos_80091C94 = 1;
-        saveData_8008B570.mapId_2E4[0].field_0 = v.a;
-        saveData_8008B570.mapId_2E4[1].field_0 = v.b;
-        saveData_8008B570.mapId_2E4[2].field_0 = v.c;
+        saveData_8008B570.mapId_2E4[0].field_0 = loc.area;
+        saveData_8008B570.mapId_2E4[1].field_0 = loc.map;
+        saveData_8008B570.mapId_2E4[2].field_0 = loc.entrance;
     }
     else if ((unsigned short)titleMenuState_8008B558[1] == 1)
     {
-        r.a = 0;
-        r.b = 1;
+        mode.useStartPos_0 = 0;
+        mode.mode_4 = 1;
     }
     else if ((unsigned short)titleMenuState_8008B558[1] == 4)
     {
-        r.a = 1;
-        r.b = 1;
+        mode.useStartPos_0 = 1;
+        mode.mode_4 = 1;
     }
     else
     {
-        r.a = 1;
-        r.b = 0;
+        mode.useStartPos_0 = 1;
+        mode.mode_4 = 0;
     }
-    *out = r;
+    *out = mode;
     return out;
 }
 
 void ResetFieldState_800A73A8(void)
 {
-    GameRect_1* r = &viewport_8008D420;
+    GameViewRect* view = &viewport_8008D420;
     sceneBrightness_8008D40C = 0x1000;
     unpausedFrames_8008D404 = 0;
-    r->x = 0;
-    r->w = 0x140;
-    r->y = 0;
-    r->h = 0xf0;
+    view->x = 0;
+    view->w = 0x140;
+    view->y = 0;
+    view->h = 0xf0;
     unknownFlags_8008D678 &= ~0x8000000;
     InitMapState_80026FAC();
     EnableCameraPoints_800A094C();
@@ -1009,38 +1009,38 @@ void ResetFieldState_800A73A8(void)
 }
 
 // Matched
-void RunEventListUpdate_800A7450(EventNode* n)
+void RunEventListUpdate_800A7450(EventNode* node)
 {
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
         if (eventDispatchHalt_8008B540)
         {
             break;
         }
-        if ((n->entry.flags & 0x8001) == 1)
+        if ((node->entry.flags & 0x8001) == 1)
         {
-            EventEntry* o = &n->entry;
-            o->cb_8(o, o->buffer);
+            EventEntry* entry = &node->entry;
+            entry->cb_8(entry, entry->buffer);
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
 // Matched
-void RunEventListExit_800A74F0(EventNode* n)
+void RunEventListExit_800A74F0(EventNode* node)
 {
     int i;
-    int cnt = n->count;
-    for (i = 0; i < cnt; i++)
+    int count = node->count;
+    for (i = 0; i < count; i++)
     {
-        if ((n->entry.flags & 0x8004) == 4)
+        if ((node->entry.flags & 0x8004) == 4)
         {
-            EventEntry* o = &n->entry;
-            o->cb_C(o, o->buffer);
+            EventEntry* entry = &node->entry;
+            entry->cb_C(entry, entry->buffer);
         }
-        n = n->next;
+        node = node->next;
     }
 }
 
@@ -1060,57 +1060,57 @@ int GameShutdown_800A7574(void)
 }
 
 // Matched
-void StartMapOverlay_800A75F8(GameTask_1* t, void** q)
+void StartMapOverlay_800A75F8(GameTask* task, void** work)
 {
-    *q = LoadOverlayIfChanged_80020D1C(1, 0xa);
-    t->next_8 = WaitMapOverlay_800A7654;
+    *work = LoadOverlayIfChanged_80020D1C(1, 0xa);
+    task->next_8 = WaitMapOverlay_800A7654;
     unknownFlags_8008D678 |= 0x4000000;
 }
 
 // Matched
-void WaitMapOverlay_800A7654(GameTask_1* t, int* q)
+void WaitMapOverlay_800A7654(GameTask* task, int* work)
 {
-    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(work[0]) == 0)
     {
-        t->next_8 = MapSelectStart_800B6BFC;
+        task->next_8 = MapSelectStart_800B6BFC;
     }
 }
 
 // Matched
-void StartChapterOverlay_800A7690(GameTask_1* t, void** q)
+void StartChapterOverlay_800A7690(GameTask* task, void** work)
 {
-    *q = LoadOverlayIfChanged_80020D1C(1, 0x14);
-    t->next_8 = WaitChapterOverlay_800A76D8;
+    *work = LoadOverlayIfChanged_80020D1C(1, 0x14);
+    task->next_8 = WaitChapterOverlay_800A76D8;
 }
 
 // Matched
-void WaitChapterOverlay_800A76D8(GameTask_1* t, int* q)
+void WaitChapterOverlay_800A76D8(GameTask* task, int* work)
 {
-    if (GetFileRequestStatus_8003BE30(q[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(work[0]) == 0)
     {
-        t->next_8 = sub_800B66DC;
+        task->next_8 = sub_800B66DC;
     }
 }
 
 // Matched
-void SetFieldMode_800A7714(int a)
+void SetFieldMode_800A7714(int mode)
 {
-    fieldMode_800B0EC0 = a;
+    fieldMode_800B0EC0 = mode;
 }
 
 // Matched
-void FieldModeTask_800A7720(GameTask_1* t)
+void FieldModeTask_800A7720(GameTask* task)
 {
-    int n = fieldMode_800B0EC0;
-    if (n != 1)
+    int mode = fieldMode_800B0EC0;
+    if (mode != 1)
     {
-        void (*f)() = fieldModeHandlers_800B0EB8[n].fn;
-        t->next_8 = f;
-        f(t);
+        void (*handler)() = fieldModeHandlers_800B0EB8[mode].fn;
+        task->next_8 = handler;
+        handler(task);
     }
     else
     {
-        t->f0 = (t->f0 & ~1) | 0x8000;
+        task->flags_0 = (task->flags_0 & ~1) | 0x8000;
     }
 }
 
@@ -1126,21 +1126,21 @@ int GetFieldMinionCount_800A7790(void)
     return fieldMinions_800B0EC4.count;
 }
 
-int AddFieldMinion_800A77A0(GameMember* a)
+int AddFieldMinion_800A77A0(GameMember* member)
 {
-    GameList_1* l = &fieldMinions_800B0EC4;
-    int i = l->count;
-    l->a[i] = a;
-    l->b[l->count] = 0;
-    l->c[l->count] = 0;
-    l->count++;
+    GameFieldMinions* list = &fieldMinions_800B0EC4;
+    int i = list->count;
+    list->members[i] = member;
+    list->suspended[list->count] = 0;
+    list->hidden[list->count] = 0;
+    list->count++;
     return i;
 }
 
 // Matched
-GameMember* GetFieldMinion_800A77F4(int a)
+GameMember* GetFieldMinion_800A77F4(int idx)
 {
-    return fieldMinions_800B0EC4.a[a];
+    return fieldMinions_800B0EC4.members[idx];
 }
 
 // Matched
@@ -1148,8 +1148,8 @@ int HoldFieldMinion_800A7810(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        GameCb_1* p = &GetFieldMinion_800A77F4(idx)->cb_14;
-        return p->hold_C(p);
+        GameMemberCb* cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        return cb->hold_C(cb);
     }
     return 0;
 }
@@ -1159,8 +1159,8 @@ void ReleaseFieldMinion_800A785C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        GameCb_1* p = &GetFieldMinion_800A77F4(idx)->cb_14;
-        p->release_10(p);
+        GameMemberCb* cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        cb->release_10(cb);
     }
 }
 
@@ -1250,68 +1250,68 @@ void SkipFieldMinionAnim_800A7AD8(int idx)
     SkipActorAnimToEnd_8001D9B0(GetFieldMinionActor_800A7A60(idx));
 }
 
-void SuspendFieldMinions_800A7B00(int a)
+void SuspendFieldMinions_800A7B00(int idx)
 {
     int i;
     int end;
-    Actor* o;
-    if (a < 0)
+    Actor* actor;
+    if (idx < 0)
     {
         i = 0;
         end = GetFieldMinionCount_800A7790();
     }
     else
     {
-        i = a;
-        end = a + 1;
+        i = idx;
+        end = idx + 1;
     }
     for (; i < end; i++)
     {
-        o = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
-        if (fieldMinions_800B0EC4.b[i] == 0)
+        actor = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
+        if (fieldMinions_800B0EC4.suspended[i] == 0)
         {
-            if (!(o->flags_4 & 0x2000))
+            if (!(actor->flags_4 & 0x2000))
             {
-                SetActorAnimPaused_8001D6EC(o, 1);
-                SetActorVisible_8001D730(o, 0);
-                fieldMinions_800B0EC4.c[i] = 1;
+                SetActorAnimPaused_8001D6EC(actor, 1);
+                SetActorVisible_8001D730(actor, 0);
+                fieldMinions_800B0EC4.hidden[i] = 1;
             }
-            if (!(o->task_0->flags & 0x8000))
+            if (!(actor->task_0->flags & 0x8000))
             {
-                SetActorActive_8001D658(o, 0);
-                fieldMinions_800B0EC4.b[i] = 1;
+                SetActorActive_8001D658(actor, 0);
+                fieldMinions_800B0EC4.suspended[i] = 1;
             }
         }
     }
 }
 
-void ResumeFieldMinions_800A7BF0(int a)
+void ResumeFieldMinions_800A7BF0(int idx)
 {
     int i, end;
-    Actor* o;
-    if (a < 0)
+    Actor* actor;
+    if (idx < 0)
     {
         i = 0;
         end = GetFieldMinionCount_800A7790();
     }
     else
     {
-        i = a;
-        end = a + 1;
+        i = idx;
+        end = idx + 1;
     }
     for (; i < end; i++)
     {
-        o = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
-        if (fieldMinions_800B0EC4.b[i])
+        actor = GetFieldMinion_800A77F4(i)->cb_14.actor_4;
+        if (fieldMinions_800B0EC4.suspended[i])
         {
-            if (fieldMinions_800B0EC4.c[i])
+            if (fieldMinions_800B0EC4.hidden[i])
             {
-                SetActorAnimPaused_8001D6EC(o, 0);
-                SetActorVisible_8001D730(o, 1);
-                fieldMinions_800B0EC4.c[i] = 0;
+                SetActorAnimPaused_8001D6EC(actor, 0);
+                SetActorVisible_8001D730(actor, 1);
+                fieldMinions_800B0EC4.hidden[i] = 0;
             }
-            SetActorActive_8001D658(o, 1);
-            fieldMinions_800B0EC4.b[i] = 0;
+            SetActorActive_8001D658(actor, 1);
+            fieldMinions_800B0EC4.suspended[i] = 0;
         }
     }
 }
@@ -1330,168 +1330,134 @@ int IsFieldMinionReady_800A7CFC(int idx)
     return 0;
 }
 
-typedef struct GameCmdA_1
-{
-    int f0;
-    int kind_4;
-    int f8;
-    int fC;
-    int f10;
-    unsigned int f14;
-    int f18;
-    int f1C;
-    int f20;
-    int f24;
-} GameCmdA_1;
-typedef struct GameAnimReq_1
-{
-    int flags;
-    int f4;
-    int f8;
-    short hC;
-    short hE;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    short h20;
-    short h22;
-    short h24;
-    short h26;
-    short h28;
-    short h2A;
-    int f2C;
-    int f30;
-    char pad_34[0x2c];
-} GameAnimReq_1;
 #if 0
 // Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the C table dword_800A06B8 when enabling
-void FieldMinionCommand_800A7D40(int a, GameCmdA_1* c)
+void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
 {
-    GameAnimReq_1 s;
+    ActorActionDesc desc;
     GameModelHdr** hdr;
-    GameCb_1* ent;
-    Actor* obj;
-    int k;
-    int t;
-    int u;
+    GameMemberCb* cb;
+    Actor* actor;
+    int start;
+    int flags;
+    int flags2;
     int w;
-    if (a < GetFieldMinionCount_800A7790())
+    if (idx < GetFieldMinionCount_800A7790())
     {
-        hdr = GetFieldMinion_800A77F4(a)->hdr_10;
-        ent = &GetFieldMinion_800A77F4(a)->cb_14;
-        obj = ent->actor_4;
-        s.flags = 0;
-        s.f4 = 0;
-        s.f8 = 0;
-        s.hC = 0;
-        s.hE = -1;
-        s.f10 = -1;
-        s.f18 = 0;
-        s.h20 = 0;
-        s.h22 = 0;
-        s.f1C = 1;
-        s.h24 = -1;
-        s.h26 = -1;
-        s.h28 = -1;
-        s.h2A = -1;
-        s.f2C = 0;
-        s.f30 = 0;
-        s.f1C = c->f8;
-        k = 0;
-        switch (c->kind_4)
+        hdr = GetFieldMinion_800A77F4(idx)->hdr_10;
+        cb = &GetFieldMinion_800A77F4(idx)->cb_14;
+        actor = cb->actor_4;
+        desc.flags_0 = 0;
+        desc.script_4 = 0;
+        desc.target_8 = 0;
+        desc.turnStep_C = 0;
+        desc.hitAnim_E = -1;
+        desc.effect_10 = -1;
+        desc.effectKinds_18 = 0;
+        desc.loopCount_20 = 0;
+        desc.scaleTarget_22 = 0;
+        desc.field_1C = 1;
+        desc.nextAnim_24 = -1;
+        desc.nextAnim_26 = -1;
+        desc.field_28 = -1;
+        desc.queuedAnim_2A = -1;
+        desc.field_2C = 0;
+        desc.path_30 = 0;
+        desc.field_1C = cmd->wait_8;
+        start = 0;
+        switch (cmd->kind_4)
         {
         case 0:
-            if (c->f14 != -1)
-                s.h24 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_24 = cmd->opts_14;
             else
-                s.h24 = (*hdr)->f20;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_24 = (*hdr)->walkAnim_20;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 1:
-            if (c->f14 != -1)
-                s.h24 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_24 = cmd->opts_14;
             else
-                s.h24 = (*hdr)->f22;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_24 = (*hdr)->runAnim_22;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 2:
-            if (c->f14 != -1)
-                s.h26 = c->f14;
+            if (cmd->opts_14 != -1)
+                desc.nextAnim_26 = cmd->opts_14;
             else
-                s.h26 = (*hdr)->f24;
-            s.f8 = (int)&c->f18;
-            s.hC = (*hdr)->f26;
-            k = 1;
+                desc.nextAnim_26 = (*hdr)->turnAnim_24;
+            desc.target_8 = &cmd->x_18;
+            desc.turnStep_C = (*hdr)->turnStep_26;
+            start = 1;
             break;
         case 3:
         case 4:
-            s.f4 = ent->anims_8[c->fC];
-            k = 1;
+            desc.script_4 = (ActorScriptCmd*)cb->anims_8[cmd->arg_C];
+            start = 1;
             break;
         case 5:
-            s.f4 = c->f24;
-            k = 1;
+            desc.script_4 = (ActorScriptCmd*)cmd->data_24;
+            start = 1;
             break;
         case 6:
-            SetActorVisible_8001D730(obj, c->fC);
-            k = 0;
+            SetActorVisible_8001D730(actor, cmd->arg_C);
+            start = 0;
             break;
         case 7:
-            SetActorGroundMove_8001D68C(obj, c->fC);
-            k = 0;
+            SetActorGroundMove_8001D68C(actor, cmd->arg_C);
+            start = 0;
             break;
         case 8:
-            SetActorRootMotion_8001D6BC(obj, c->fC);
-            k = 0;
+            SetActorRootMotion_8001D6BC(actor, cmd->arg_C);
+            start = 0;
             break;
         case 9:
         case 10:
-            s.h28 = c->fC;
-            s.h2A = (c->kind_4 == 10) ? c->f10 : -1;
-            s.hC = (c->f14 & 1) ? -1 : -2;
-            s.f2C = (c->f14 >> 3) & 1;
-            k = 1;
-            s.flags = (c->f14 >> 2) & 1;
-            if (c->f14 & 0x10)
+            desc.field_28 = cmd->arg_C;
+            desc.queuedAnim_2A = (cmd->kind_4 == 10) ? cmd->arg2_10 : -1;
+            desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
+            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            start = 1;
+            desc.flags_0 = (cmd->opts_14 >> 2) & 1;
+            if (cmd->opts_14 & 0x10)
             {
-                s.flags |= 2;
+                desc.flags_0 |= 2;
             }
             break;
         case 11:
-            s.h28 = c->fC;
-            if (c->f10 >= 0)
-                s.h2A = c->f10;
+            desc.field_28 = cmd->arg_C;
+            if (cmd->arg2_10 >= 0)
+                desc.queuedAnim_2A = cmd->arg2_10;
             else
-                s.h2A = obj->animIdx_C2;
-            s.hC = (c->f14 & 1) ? -1 : -2;
-            s.f2C = (c->f14 >> 3) & 1;
-            s.flags = (c->f14 >> 2) & 1;
-            t = s.flags;
-            if (c->f14 & 0x10)
-                t |= 2;
-            s.flags = t;
-            u = t;
-            if (c->f14 & 0x20)
-                u |= 4;
-            s.flags = u;
-            s.f30 = c->f24;
-            k = 1;
+                desc.queuedAnim_2A = actor->animIdx_C2;
+            desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
+            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            desc.flags_0 = (cmd->opts_14 >> 2) & 1;
+            flags = desc.flags_0;
+            if (cmd->opts_14 & 0x10)
+                flags |= 2;
+            desc.flags_0 = flags;
+            flags2 = flags;
+            if (cmd->opts_14 & 0x20)
+                flags2 |= 4;
+            desc.flags_0 = flags2;
+            desc.path_30 = (ActorPath*)cmd->data_24;
+            start = 1;
             break;
         case 13:
             break;
         }
-        if (k)
+        if (start)
         {
-            StartActorAction_8001E254(obj, &s);
+            StartActorAction_8001E254(actor, &desc);
         }
-        else if (c->f8)
+        else if (cmd->wait_8)
         {
-            ClearScriptActorBusy_800A5BCC(a + 3);
+            ClearScriptActorBusy_800A5BCC(idx + 3);
         }
     }
 }
@@ -1525,11 +1491,11 @@ void EmptyCallback_800A8138()
 
 void InitLevantControl_800A8140()
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    FirFilterInit_8001450C(p->turnBuf_5C, &p->turn_4C, dword_800795C0, 4);
-    p->flags_0 = 0;
-    p->f9C = 0;
-    p->state_C6 = 0;
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    FirFilterInit_8001450C(ctl->turnBuf_5C, &ctl->turn_4C, dword_800795C0, 4);
+    ctl->flags_0 = 0;
+    ctl->f9C = 0;
+    ctl->state_C6 = 0;
 }
 
 #if 0
@@ -1539,19 +1505,19 @@ void InitLevantControl_800A8140()
 // forms. The |= forms keep jump.c from if-converting the turn arms.
 // Levant's movement command for this frame (SetLevantMoveCmd_800AB37C): 1 / 4 / 2 move, 0x10000000 / 0x20000000 turn
 // (or-ed onto a move), 0x50000000 / 0x60000000 turn on the spot
-void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
+void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
 {
     int cmd;
     short angle;
-    p->pos_10.x = levantPos_8008BD18.pos.x;
-    p->pos_10.y = levantPos_8008BD18.pos.y;
-    p->pos_10.z = levantPos_8008BD18.pos.z;
-    switch (p->state_C6)
+    ctl->pos_10.x = levantPos_8008BD18.pos.x;
+    ctl->pos_10.y = levantPos_8008BD18.pos.y;
+    ctl->pos_10.z = levantPos_8008BD18.pos.z;
+    switch (ctl->state_C6)
     {
     case 0:
-        if (p->flags_0 & 0x20)
+        if (ctl->flags_0 & 0x20)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             break;
         }
         if ((padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[0]) &&
@@ -1617,34 +1583,34 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
         {
             cmd = 0;
         }
-        if (p->flags_0 & 0x40)
+        if (ctl->flags_0 & 0x40)
         {
             cmd = 0;
         }
         SetLevantMoveCmd_800AB37C(cmd);
         break;
     case 1:
-        if (!(p->flags_0 & 1))
+        if (!(ctl->flags_0 & 1))
         {
-            p->state_C6 = 0;
+            ctl->state_C6 = 0;
         }
         break;
     case 2:
-        if (StartLevantActorAction_800AB1EC(p->anim_CC, (p->flags_0 >> 3) & 1, p->targets_34, p->arg_38) == 1)
+        if (StartLevantActorAction_800AB1EC(ctl->anim_CC, (ctl->flags_0 >> 3) & 1, ctl->targets_34, ctl->arg_38) == 1)
         {
-            p->state_C6 = 3;
+            ctl->state_C6 = 3;
         }
         break;
     case 3:
         cmd = 0;
         angle = WrapAngle_8003BA18(
-            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->targetX_A4)));
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &ctl->targetX_A4)));
         if ((unsigned short)(angle + 0x60) <= 0xC0)
         {
-            if (IsLevantActionReady_800AB32C() == 1 && (p->flags_0 & 2))
+            if (IsLevantActionReady_800AB32C() == 1 && (ctl->flags_0 & 2))
             {
-                p->flags_0 &= ~2;
-                p->state_C6 = 4;
+                ctl->flags_0 &= ~2;
+                ctl->state_C6 = 4;
             }
         }
         else if (angle < 0)
@@ -1660,10 +1626,10 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
     case 5:
         cmd = 0;
         angle = WrapAngle_8003BA18(
-            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->targetX_A4)));
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &ctl->targetX_A4)));
         if ((unsigned short)(angle + 0x60) <= 0xC0)
         {
-            p->state_C6 = 4;
+            ctl->state_C6 = 4;
         }
         else if (angle < 0)
         {
@@ -1676,37 +1642,37 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
         SetLevantMoveCmd_800AB37C(cmd);
         break;
     case 4:
-        if (p->flags_0 & 4)
+        if (ctl->flags_0 & 4)
         {
             ContinueLevantAnim_800AB1A4(0);
-            p->state_C6 = 6;
-            p->flags_0 &= ~4;
+            ctl->state_C6 = 6;
+            ctl->flags_0 &= ~4;
         }
         break;
     case 6:
-        if (!(p->flags_0 & 8))
+        if (!(ctl->flags_0 & 8))
         {
-            p->state_C6 = 1;
+            ctl->state_C6 = 1;
         }
         else if (IsLevantActorIdle_800AB304() == 1)
         {
-            p->state_C6 = 1;
-            p->flags_0 &= ~8;
+            ctl->state_C6 = 1;
+            ctl->flags_0 &= ~8;
         }
         break;
     case 7:
-        p->flags_0 &= ~0x10;
-        p->state_C6 = 1;
-        p->flags_0 |= 0x10;
+        ctl->flags_0 &= ~0x10;
+        ctl->state_C6 = 1;
+        ctl->flags_0 |= 0x10;
         EnterLevantActorBattle_800AB3D4();
         SetLevantMoveCmd_800AB37C(0);
     case 8:
         cmd = 0;
         angle = WrapAngle_8003BA18(
-            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->targetX_A4)));
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &ctl->targetX_A4)));
         if ((unsigned short)(angle + 0x40) <= 0x80)
         {
-            p->state_C6 = 1;
+            ctl->state_C6 = 1;
         }
         else if (angle < 0)
         {
@@ -1719,25 +1685,25 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
         SetLevantMoveCmd_800AB37C(cmd);
         break;
     case 9:
-        if (!(p->flags_0 & 0x20) && IsLevantIdleAnim_800AB958() == 1)
+        if (!(ctl->flags_0 & 0x20) && IsLevantIdleAnim_800AB958() == 1)
         {
             SetLevantMapCollision_800ABC34(1);
-            p->state_C6 = 0;
+            ctl->state_C6 = 0;
         }
         SetLevantMoveCmd_800AB37C(0);
         ResetLevantIdleTimer_800AB3BC();
         break;
     case 10:
     {
-        int* target = &p->targetX_A4;
+        int* target = &ctl->targetX_A4;
         int dist = 30000;
         int walk;
         IsWithinDistance_8003B740(&levantPos_8008BD18.pos.x, target, &dist);
-        if (dist < 400 || (p->flags_0 & 0x80))
+        if (dist < 400 || (ctl->flags_0 & 0x80))
         {
             if (IsLevantIdleAnim_800AB958() == 1)
             {
-                p->state_C6 = 9;
+                ctl->state_C6 = 9;
                 ClearScriptActorBusy_800A5BCC(0);
             }
             walk = 0;
@@ -1764,15 +1730,15 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
     }
     case 11:
     {
-        int* target = &p->targetX_A4;
+        int* target = &ctl->targetX_A4;
         int dist = 30000;
         int walk;
         IsWithinDistance_8003B740(&levantPos_8008BD18.pos.x, target, &dist);
-        if (dist < 400 || (p->flags_0 & 0x80))
+        if (dist < 400 || (ctl->flags_0 & 0x80))
         {
             if (IsLevantIdleAnim_800AB958() == 1)
             {
-                p->state_C6 = 9;
+                ctl->state_C6 = 9;
                 ClearScriptActorBusy_800A5BCC(0);
             }
             walk = 0;
@@ -1800,10 +1766,10 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
     case 12:
         cmd = 0;
         angle = WrapAngle_8003BA18(
-            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &p->targetX_A4)));
-        if ((unsigned short)(angle + 0x40) <= 0x80 || (p->flags_0 & 0x80))
+            (short)(levantPos_8008BD18.rot.vy - ratan2Difference_8003B9E0(&levantPos_8008BD18.pos.x, &ctl->targetX_A4)));
+        if ((unsigned short)(angle + 0x40) <= 0x80 || (ctl->flags_0 & 0x80))
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             ClearScriptActorBusy_800A5BCC(0);
         }
         else if (angle < 0)
@@ -1819,14 +1785,14 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
     case 13:
         if (IsLevantAnimLooped_800AB938() == 1)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             ClearScriptActorBusy_800A5BCC(0);
         }
         break;
     case 14:
         if (IsLevantIdleAnim_800AB958() == 1)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             ClearScriptActorBusy_800A5BCC(0);
             SetLevantMoveCmd_800AB37C(0);
         }
@@ -1834,7 +1800,7 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
     case 15:
         if (IsLevantScriptAnimWaiting_800ABB70() == 1)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
         }
         break;
     case 16:
@@ -1845,49 +1811,49 @@ void LevantControlTask_800A818C(EventEntry* e, G2Inner* p)
 INCLUDE_OVERLAY_ASM(game, LevantControlTask_800A818C);
 
 
-void PlaceWindowAwayFromTarget_800A88A0(int a, int b)
+void PlaceWindowAwayFromTarget_800A88A0(int win, int flip)
 {
-    PlaceWindowAwayFromQuadrant_800A88E0(a, b, GetCameraTargetQuadrant_800A8930());
+    PlaceWindowAwayFromQuadrant_800A88E0(win, flip, GetCameraTargetQuadrant_800A8930());
 }
 
-int PlaceWindowAwayFromQuadrant_800A88E0(G2P* p, int a, int b)
+int PlaceWindowAwayFromQuadrant_800A88E0(GameWinRect* win, int flip, int quadrant)
 {
-    int x = b ^ a;
-    if (x & 1)
-        p->s0 = 0x130 - p->u4;
+    int side = quadrant ^ flip;
+    if (side & 1)
+        win->x_0 = 0x130 - win->w_4;
     else
-        p->s0 = 0x10;
-    if (x & 2)
-        p->s2 = 0xE0 - p->u6;
+        win->x_0 = 0x10;
+    if (side & 2)
+        win->y_2 = 0xE0 - win->h_6;
     else
-        p->s2 = 0x10;
-    return x;
+        win->y_2 = 0x10;
+    return side;
 }
 
 int GetCameraTargetQuadrant_800A8930()
 {
-    int r = cameraTargetScreenPos_8008D668[0] > 0xA0;
+    int quadrant = cameraTargetScreenPos_8008D668[0] > 0xA0;
     if (cameraTargetScreenPos_8008D668[1] >= 0x79)
-        r += 2;
-    return r;
+        quadrant += 2;
+    return quadrant;
 }
 
 void EnterLevantBattleMode_800A895C()
 {
-    levantControlTask_8008B4CC->f24->flags_0 |= 0x41;
+    levantControlTask_8008B4CC->buffer_24->flags_0 |= 0x41;
 }
 
 void ExitLevantBattleMode_800A8984(int victoryPose)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->flags_0 &= ~1;
-    p->flags_0 &= ~0x10;
-    ExitLevantActorBattle_800AB444(victoryPose, p);
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->flags_0 &= ~1;
+    ctl->flags_0 &= ~0x10;
+    ExitLevantActorBattle_800AB444(victoryPose, ctl);
 }
 
 void UnlockLevantMovement_800A89C8()
 {
-    levantControlTask_8008B4CC->f24->flags_0 &= ~0x40;
+    levantControlTask_8008B4CC->buffer_24->flags_0 &= ~0x40;
 }
 
 void IsLevantIdle_800A89F0()
@@ -1900,36 +1866,36 @@ void IsLevantDefending_800A8A10()
     IsLevantDefending_800AB354();
 }
 
-G2Pair_1 StartLevantAction_800A8A30(int* cmd, int isReaction)
+GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
 {
-    G2Pair_1 r;
-    unsigned int u;
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    if (levantBattleActions_800B1084[cmd[0]].a == 0x10)
+    GameActionFrames frames;
+    unsigned int flags;
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    if (levantBattleActions_800B1084[cmd[0]].state_0 == 0x10)
     {
-        p->state_C6 = 5;
-        r.a = 0;
-        r.b = 0;
-        return r;
+        ctl->state_C6 = 5;
+        frames.hit = 0;
+        frames.end = 0;
+        return frames;
     }
-    p->state_C6 = levantBattleActions_800B1084[cmd[0]].a;
-    p->anim_CC = levantBattleActions_800B1084[cmd[0]].b;
-    if (p->anim_CC == 8 && (int)((settingsFlags_8008B58C.word >> 21) & 1) == 1)
+    ctl->state_C6 = levantBattleActions_800B1084[cmd[0]].state_0;
+    ctl->anim_CC = levantBattleActions_800B1084[cmd[0]].anim_4;
+    if (ctl->anim_CC == 8 && (int)((settingsFlags_8008B58C.word >> 21) & 1) == 1)
     {
-        p->anim_CC = 7;
+        ctl->anim_CC = 7;
     }
     SetLevantLastCapture_800AC340(cmd[0] == 0x1a);
-    u = (p->flags_0 | 2) & ~4;
-    p->arg_38 = cmd[1];
-    p->targets_34 = cmd[3];
-    p->flags_0 = u;
+    flags = (ctl->flags_0 | 2) & ~4;
+    ctl->arg_38 = cmd[1];
+    ctl->targets_34 = cmd[3];
+    ctl->flags_0 = flags;
     switch (isReaction)
     {
     case 0:
-        p->flags_0 = u | 8;
+        ctl->flags_0 = flags | 8;
         break;
     case 1:
-        p->flags_0 = u & ~8;
+        ctl->flags_0 = flags & ~8;
         break;
     }
     if (cmd[0] == 0x12)
@@ -1948,19 +1914,19 @@ G2Pair_1 StartLevantAction_800A8A30(int* cmd, int isReaction)
     {
         sub_800AB2DC();
     }
-    r.a = GetLevantActionHitFrame_800AB750(p->anim_CC);
-    r.b = GetLevantActionEndFrame_800AB4D8(p->anim_CC);
-    return r;
+    frames.hit = GetLevantActionHitFrame_800AB750(ctl->anim_CC);
+    frames.end = GetLevantActionEndFrame_800AB4D8(ctl->anim_CC);
+    return frames;
 }
 
 int IsLevantReady_800A8BE4()
 {
-    return levantControlTask_8008B4CC->f24->state_C6 == 4;
+    return levantControlTask_8008B4CC->buffer_24->state_C6 == 4;
 }
 
 void TriggerLevantAction_800A8C0C()
 {
-    levantControlTask_8008B4CC->f24->flags_0 |= 4;
+    levantControlTask_8008B4CC->buffer_24->flags_0 |= 4;
 }
 
 UnitStatus* GetLevantStatus_800A8C34()
@@ -1973,58 +1939,58 @@ char* GetLevantPos_800A8C40()
     return (char*)&levantPos_8008BD18;
 }
 
-void DamageLevantHp_800A8C4C(int a)
+void DamageLevantHp_800A8C4C(int dmg)
 {
-    SaveData* s = &saveData_8008B570;
-    s->levantStatus_7C8.hp_8.cur_0 -= a;
-    if ((short)s->levantStatus_7C8.hp_8.cur_0 < 0)
+    SaveData* sd = &saveData_8008B570;
+    sd->levantStatus_7C8.hp_8.cur_0 -= dmg;
+    if ((short)sd->levantStatus_7C8.hp_8.cur_0 < 0)
     {
-        s->levantStatus_7C8.hp_8.cur_0 = 0;
+        sd->levantStatus_7C8.hp_8.cur_0 = 0;
         return;
     }
-    if ((short)s->levantStatus_7C8.hp_8.max_2 < (short)s->levantStatus_7C8.hp_8.cur_0)
-        s->levantStatus_7C8.hp_8.cur_0 = s->levantStatus_7C8.hp_8.max_2;
+    if ((short)sd->levantStatus_7C8.hp_8.max_2 < (short)sd->levantStatus_7C8.hp_8.cur_0)
+        sd->levantStatus_7C8.hp_8.cur_0 = sd->levantStatus_7C8.hp_8.max_2;
 }
 
-void DamageLevantMp_800A8CA0(int a)
+void DamageLevantMp_800A8CA0(int dmg)
 {
-    SaveData* s = &saveData_8008B570;
-    s->levantStatus_7C8.mp_C.cur_0 -= a;
-    if ((short)s->levantStatus_7C8.mp_C.cur_0 < 0)
+    SaveData* sd = &saveData_8008B570;
+    sd->levantStatus_7C8.mp_C.cur_0 -= dmg;
+    if ((short)sd->levantStatus_7C8.mp_C.cur_0 < 0)
     {
-        s->levantStatus_7C8.mp_C.cur_0 = 0;
+        sd->levantStatus_7C8.mp_C.cur_0 = 0;
         return;
     }
-    if ((short)s->levantStatus_7C8.mp_C.max_2 < (short)s->levantStatus_7C8.mp_C.cur_0)
-        s->levantStatus_7C8.mp_C.cur_0 = s->levantStatus_7C8.mp_C.max_2;
+    if ((short)sd->levantStatus_7C8.mp_C.max_2 < (short)sd->levantStatus_7C8.mp_C.cur_0)
+        sd->levantStatus_7C8.mp_C.cur_0 = sd->levantStatus_7C8.mp_C.max_2;
 }
 
 void ResetLevantControlState_800A8CF4()
 {
-    levantControlTask_8008B4CC->f24->state_C6 = 0;
+    levantControlTask_8008B4CC->buffer_24->state_C6 = 0;
 }
 
 void StartLevantBattle_800A8D0C(int* pos)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->state_C6 = 7;
-    p->targetX_A4 = pos[0];
-    p->targetY_A8 = pos[1];
-    p->targetZ_AC = pos[2];
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->state_C6 = 7;
+    ctl->targetX_A4 = pos[0];
+    ctl->targetY_A8 = pos[1];
+    ctl->targetZ_AC = pos[2];
 }
 
 void TurnLevantToward_800A8D48(int* pos)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->state_C6 = 8;
-    p->targetX_A4 = pos[0];
-    p->targetY_A8 = pos[1];
-    p->targetZ_AC = pos[2];
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->state_C6 = 8;
+    ctl->targetX_A4 = pos[0];
+    ctl->targetY_A8 = pos[1];
+    ctl->targetZ_AC = pos[2];
 }
 
 int IsLevantBattleIdle_800A8D84()
 {
-    return levantControlTask_8008B4CC->f24->state_C6 == 1;
+    return levantControlTask_8008B4CC->buffer_24->state_C6 == 1;
 }
 
 void IsLevantActionFinished_800A8DAC()
@@ -2044,22 +2010,22 @@ void ResetLevantActorToIdle_800A8DEC()
 
 void HoldLevantControl_800A8E0C()
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->state_C6 = 9;
-    p->flags_0 |= 0x20;
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->state_C6 = 9;
+    ctl->flags_0 |= 0x20;
 }
 
 void ReleaseLevantControl_800A8E38()
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->flags_0 &= ~0x20;
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->flags_0 &= ~0x20;
     StopLevantScriptMove_800A913C();
     EndLevantPath_800ABAD4();
 }
 
 int IsLevantControlHeld_800A8E7C()
 {
-    return levantControlTask_8008B4CC->f24->state_C6 == 9;
+    return levantControlTask_8008B4CC->buffer_24->state_C6 == 9;
 }
 
 void SkipLevantAnim_800A8EA4()
@@ -2067,22 +2033,22 @@ void SkipLevantAnim_800A8EA4()
     SkipLevantAnim_800AC318();
 }
 
-void LevantCommand_800A8EC4(G2Cmd_1* c)
+void LevantCommand_800A8EC4(GameActorCmd* cmd)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    int b;
-    switch (c->kind_4)
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    int nextAnim;
+    switch (cmd->kind_4)
     {
     case 0:
     case 1:
     case 2:
-        p->targetX_A4 = c->f18;
-        p->targetY_A8 = c->f1C;
-        p->targetZ_AC = c->f20;
+        ctl->targetX_A4 = cmd->x_18;
+        ctl->targetY_A8 = cmd->y_1C;
+        ctl->targetZ_AC = cmd->z_20;
         break;
     case 9:
     case 10:
-        if (c->f14 & 1)
+        if (cmd->opts_14 & 1)
         {
             sub_800ABB98(0);
         }
@@ -2090,28 +2056,28 @@ void LevantCommand_800A8EC4(G2Cmd_1* c)
         {
             sub_800ABB98(1);
         }
-        b = -1;
-        if (c->kind_4 == 10)
+        nextAnim = -1;
+        if (cmd->kind_4 == 10)
         {
-            b = c->f10;
+            nextAnim = cmd->arg2_10;
         }
-        if (c->f14 & 4)
+        if (cmd->opts_14 & 4)
         {
-            PlayLevantScriptAnim_800AB9A8(c->fC, b, 0);
+            PlayLevantScriptAnim_800AB9A8(cmd->arg_C, nextAnim, 0);
         }
         else
         {
-            PlayLevantScriptAnim_800AB9A8(c->fC, b, 1);
+            PlayLevantScriptAnim_800AB9A8(cmd->arg_C, nextAnim, 1);
         }
         goto set;
     case 11:
         SetLevantRootMotionMode_800ABC78(1);
-        SetLevantPath_800ABAA4(c->f24);
+        SetLevantPath_800ABAA4(cmd->data_24);
         sub_800ABB98(1);
-        PlayLevantScriptAnim_800AB9A8(c->fC, -1, 1);
+        PlayLevantScriptAnim_800AB9A8(cmd->arg_C, -1, 1);
     set:
-        p->state_C6 = 9;
-        p->cmdKind_B0 = c->kind_4;
+        ctl->state_C6 = 9;
+        ctl->cmdKind_B0 = cmd->kind_4;
         break;
     case 13:
         break;
@@ -2120,48 +2086,48 @@ void LevantCommand_800A8EC4(G2Cmd_1* c)
 
 int IsLevantCmdDone_800A8FE0()
 {
-    return levantControlTask_8008B4CC->f24->state_C6 == 9;
+    return levantControlTask_8008B4CC->buffer_24->state_C6 == 9;
 }
 
-void FinishLevantCommand_800A9008(G2Cmd_1* c)
+void FinishLevantCommand_800A9008(GameActorCmd* cmd)
 {
-    G2Inner* p = levantControlTask_8008B4CC->f24;
-    p->flags_0 &= ~0x80;
-    switch (c->kind_4)
+    GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
+    ctl->flags_0 &= ~0x80;
+    switch (cmd->kind_4)
     {
     case 0:
-        p->state_C6 = 10;
+        ctl->state_C6 = 10;
         break;
     case 1:
-        p->state_C6 = 11;
+        ctl->state_C6 = 11;
         break;
     case 2:
-        p->state_C6 = 12;
+        ctl->state_C6 = 12;
         break;
     case 4:
-        p->state_C6 = 14;
+        ctl->state_C6 = 14;
         StopLevantAnimLoop_800AB910();
         break;
     case 6:
-        SetLevantVisible_800ABBD8(c->fC);
+        SetLevantVisible_800ABBD8(cmd->arg_C);
         break;
     case 7:
-        SetLevantMapCollision_800ABC34(c->fC);
+        SetLevantMapCollision_800ABC34(cmd->arg_C);
         break;
     case 8:
-        SetLevantRootMotionMode_800ABC78(c->fC);
+        SetLevantRootMotionMode_800ABC78(cmd->arg_C);
         break;
     case 9:
     case 10:
     case 11:
-        if (c->f14 & 8)
+        if (cmd->opts_14 & 8)
         {
-            p->state_C6 = 9;
+            ctl->state_C6 = 9;
             ClearScriptActorBusy_800A5BCC(0);
         }
         else
         {
-            p->state_C6 = 13;
+            ctl->state_C6 = 13;
         }
         ContinueLevantAnim_800AB1A4(1);
         break;
@@ -2177,27 +2143,27 @@ void FireEventTriggerById_800A911C(int id)
 
 void StopLevantScriptMove_800A913C()
 {
-    levantControlTask_8008B4CC->f24->flags_0 |= 0x80;
+    levantControlTask_8008B4CC->buffer_24->flags_0 |= 0x80;
 }
 
 int FindFacingFieldMinion_800A9164(int* out)
 {
-    int best = 0x7FFFFFFF;
+    int dist = 0x7FFFFFFF;
     int n = GetFieldMinionCount_800A7790();
     int i;
-    int* v;
-    short y;
+    int* pos;
+    short angle;
     for (i = 0; i < n; i++)
     {
         if (IsFieldMinionVisible_800A79C8(i))
         {
-            v = GetFieldMinionPos_800A7940(i);
-            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, v, &best);
-            if (best <= 0x9C3F)
+            pos = GetFieldMinionPos_800A7940(i);
+            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
+            if (dist <= 0x9C3F)
             {
-                y = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, v)));
-                *out = y;
-                if ((unsigned)(y + 0x3FF) < 0x7FF)
+                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
+                *out = angle;
+                if ((unsigned)(angle + 0x3FF) < 0x7FF)
                     return 1;
             }
         }
@@ -2207,21 +2173,21 @@ int FindFacingFieldMinion_800A9164(int* out)
 
 int IsFieldMinionBehind_800A926C()
 {
-    int best = 0x7FFFFFFF;
+    int dist = 0x7FFFFFFF;
     int n = GetFieldMinionCount_800A7790();
     int i;
-    int* v;
-    short y;
+    int* pos;
+    short angle;
     for (i = 0; i < n; i++)
     {
         if (IsFieldMinionVisible_800A79C8(i))
         {
-            v = GetFieldMinionPos_800A7940(i);
-            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, v, &best);
-            if (best <= 0x9C3F)
+            pos = GetFieldMinionPos_800A7940(i);
+            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
+            if (dist <= 0x9C3F)
             {
-                y = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, v)));
-                if (!((unsigned)(y + 0x400) < 0x801))
+                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
+                if (!((unsigned)(angle + 0x400) < 0x801))
                     return 1;
             }
         }
@@ -2239,49 +2205,49 @@ void SetLevantVisible_800A9384()
     SetLevantVisible_800ABBD8();
 }
 
-void GetLevantEffectTarget_800A93A4(EffectTarget* a)
+void GetLevantEffectTarget_800A93A4(EffectTarget* out)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    a->tbl_0 = GetModelEffectTable_80024E64(p->model_40);
-    a->pos_4 = &levantPos_8008BD18.pos.x;
-    a->bonePos_8 = p->bonePos_590[0];
-    a->boneMatrices_C = p->mats_90;
-    a->boneScale_2C = levantBoneScale_800B0FB0;
-    a->scale_30 = 0;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    out->tbl_0 = GetModelEffectTable_80024E64(lev->model_40);
+    out->pos_4 = &levantPos_8008BD18.pos.x;
+    out->bonePos_8 = lev->bonePos_590[0];
+    out->boneMatrices_C = lev->mats_90;
+    out->boneScale_2C = levantBoneScale_800B0FB0;
+    out->scale_30 = 0;
 }
 
-void ResetLevantActor_800A9414(void* pv, int action, int anim)
+void ResetLevantActor_800A9414(void* buf, int action, int anim)
 {
-    G2Act* p = (G2Act*)pv;
-    ApplyModelFtgSwaps_80025C38(p->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-    FirFilterInit_8001450C(p->turnBuf_780, &p->turn_770, dword_800795C0, 4);
-    SetLevantAnim_800AB010(p, action, anim, 0);
-    p->mode_C = 0;
-    if (IsLevantAnimLoadedOrFree_800AAFD8(p->prevAnim_1E) != 1)
-        p->flags_0 &= ~0x10;
+    GameLevantActor* lev = (GameLevantActor*)buf;
+    ApplyModelFtgSwaps_80025C38(lev->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+    FirFilterInit_8001450C(lev->turnBuf_780, &lev->turn_770, dword_800795C0, 4);
+    SetLevantAnim_800AB010(lev, action, anim, 0);
+    lev->mode_C = 0;
+    if (IsLevantAnimLoadedOrFree_800AAFD8(lev->prevAnim_1E) != 1)
+        lev->flags_0 &= ~0x10;
     EndLevantPath_800ABAD4();
-    SetLevantRootMotion_800AA140(p);
+    SetLevantRootMotion_800AA140(lev);
 }
 
 void InitLevantActor_800A94CC(void)
 {
-    G2Init_1* p = (G2Init_1*)gameTask_8008B4A4->f24;
-    p->anim_1C = 3;
-    p->prevAnim_1E = 3;
-    p->mode_C = 0;
-    p->action_8 = 0;
-    p->frame_10 = 0;
-    p->blend_26 = 0;
-    p->flags_0 = 0;
-    p->fade_30 = 0;
-    p->frameFrac_1A = 0;
-    p->frameStep_18 = 0x1000;
-    p->moveCmd_4 = 0;
+    GameLevantActorInit* lev = (GameLevantActorInit*)gameTask_8008B4A4->buffer_24;
+    lev->anim_1C = 3;
+    lev->prevAnim_1E = 3;
+    lev->mode_C = 0;
+    lev->action_8 = 0;
+    lev->frame_10 = 0;
+    lev->blend_26 = 0;
+    lev->flags_0 = 0;
+    lev->fade_30 = 0;
+    lev->frameFrac_1A = 0;
+    lev->frameStep_18 = 0x1000;
+    lev->moveCmd_4 = 0;
     UpdateLevantActorModel_800AB8DC();
-    ResetLevantActor_800A9414(p, 0, 3);
-    ClearLevantFade_800AB150((G2Obj*)p);
-    sub_800B80C8(p);
-    p->status_3C = dword_8008BD38;
+    ResetLevantActor_800A9414(lev, 0, 3);
+    ClearLevantFade_800AB150((GameLevantFade*)lev);
+    sub_800B80C8(lev);
+    lev->status_3C = dword_8008BD38;
     SetLevantStatusTint_800ABECC(dword_8008BD38);
 }
 
@@ -2289,63 +2255,63 @@ void LevantActorTaskExit_800A955C()
 {
 }
 
-void LevantActorTask_800A9564(int a, G2Act* p)
+void LevantActorTask_800A9564(int entry, GameLevantActor* lev)
 {
     int i;
-    p->turn_770.input_8 = 0;
-    p->pos_48.a = levantPos_8008BD18.pos.x;
-    p->pos_48.b = levantPos_8008BD18.pos.y;
-    p->pos_48.c = levantPos_8008BD18.pos.z;
-    if (p->blend_26 >= 0x1000)
+    lev->turn_770.input_8 = 0;
+    lev->pos_48.a = levantPos_8008BD18.pos.x;
+    lev->pos_48.b = levantPos_8008BD18.pos.y;
+    lev->pos_48.c = levantPos_8008BD18.pos.z;
+    if (lev->blend_26 >= 0x1000)
     {
-        p->flags_0 &= ~0x10;
+        lev->flags_0 &= ~0x10;
     }
     else
     {
-        p->blend_26 += 0x400;
+        lev->blend_26 += 0x400;
     }
-    p->frameFrac_1A += p->frameStep_18;
-    if (p->frameFrac_1A >= 0x1000)
+    lev->frameFrac_1A += lev->frameStep_18;
+    if (lev->frameFrac_1A >= 0x1000)
     {
-        p->frameFrac_1A -= 0x1000;
-        p->frame_10++;
+        lev->frameFrac_1A -= 0x1000;
+        lev->frame_10++;
     }
-    if (p->flags_0 & 0x800)
+    if (lev->flags_0 & 0x800)
     {
-        if (p->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)))
+        if (lev->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            p->flags_0 |= 0x8000;
-            p->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C));
-            SetLevantRootMotion_800AA140(p);
+            lev->flags_0 |= 0x8000;
+            lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+            SetLevantRootMotion_800AA140(lev);
         }
     }
-    UpdateLevantActionState_800AAF58(p);
-    UpdateLevantMove_800A9A9C(p);
-    UpdateLevantTurn_800A99DC(p);
-    DrawLevantModel_800A9708(p);
-    RunLevantAnimCues_800AA220(p);
+    UpdateLevantActionState_800AAF58(lev);
+    UpdateLevantMove_800A9A9C(lev);
+    UpdateLevantTurn_800A99DC(lev);
+    DrawLevantModel_800A9708(lev);
+    RunLevantAnimCues_800AA220(lev);
     for (i = 0; i < 40; i++)
     {
-        p->mats_90[i] = boneMatrices_80098188[i];
+        lev->mats_90[i] = boneMatrices_80098188[i];
     }
 }
 
-void DrawLevantModel_800A9708(G2Act* p)
+void DrawLevantModel_800A9708(GameLevantActor* lev)
 {
-    G2Skel_1 sk;
-    int v;
+    GameSkelDraw sk;
+    int light;
     ModelAnim* anim;
     int flags;
     int st;
     char* sd; // read as a scalar: through SaveData* gcc reloads the status after the p->status_3C store
-    v = FindNearestCameraPoint_80019CC4(&saveData_8008B570.levant_7A8);
+    light = FindNearestCameraPoint_80019CC4(&saveData_8008B570.levant_7A8);
     sd = (char*)&saveData_8008B570;
-    if (p->status_3C != *(int*)(sd + 0x7c8))
+    if (lev->status_3C != *(int*)(sd + 0x7c8))
     {
-        p->status_3C = *(int*)(sd + 0x7c8);
+        lev->status_3C = *(int*)(sd + 0x7c8);
         SetLevantStatusTint_800ABECC(*(int*)(sd + 0x7c8));
     }
-    anim = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->anim_1C)];
+    anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)];
     if (*(int*)(sd + 0x7c8) & 0x3fd)
     {
         flags = (word_8007DC8A - word_8007DC82) << 8;
@@ -2354,292 +2320,292 @@ void DrawLevantModel_800A9708(G2Act* p)
     {
         flags = 0;
     }
-    if (p->flags_0 & 6)
+    if (lev->flags_0 & 6)
     {
         int t = flags | 0xb0;
-        flags = t | (p->fade_30 << 16);
+        flags = t | (lev->fade_30 << 16);
     }
-    if (p->flags_0 & 2)
+    if (lev->flags_0 & 2)
     {
-        p->fade_30 += 0x80;
-        if (p->fade_30 >= 0x1000)
+        lev->fade_30 += 0x80;
+        if (lev->fade_30 >= 0x1000)
         {
-            p->fade_30 = 0x1000;
+            lev->fade_30 = 0x1000;
         }
     }
-    else if (p->flags_0 & 4)
+    else if (lev->flags_0 & 4)
     {
-        p->fade_30 -= 0x80;
-        if (p->fade_30 < 0)
+        lev->fade_30 -= 0x80;
+        if (lev->fade_30 < 0)
         {
-            p->fade_30 = 0;
-            ClearLevantFade_800AB150(p);
+            lev->fade_30 = 0;
+            ClearLevantFade_800AB150(lev);
         }
     }
-    if (p->fade_30 == 0x1000)
+    if (lev->fade_30 == 0x1000)
     {
         return;
     }
-    if (p->flags_0 & 0x20000)
+    if (lev->flags_0 & 0x20000)
     {
         return;
     }
-    sk.ftg_0 = p->model_40->ftg_50;
-    sk.f4 = &levantPos_8008BD18.pos;
-    sk.f8 = &levantPos_8008BD18.rot;
+    sk.ftg_0 = lev->model_40->ftg_50;
+    sk.pos_4 = &levantPos_8008BD18.pos;
+    sk.rot_8 = &levantPos_8008BD18.rot;
     sk.bones = &levantBones_800B0EF8;
     sk.base = levantBoneScale_800B0FB0;
-    sk.f24 = 0;
+    sk.scale_24 = 0;
     sk.pose = (char*)anim;
-    sk.frame = p->frame_10 % anim->frameCount_0;
+    sk.frame = lev->frame_10 % anim->frameCount_0;
     sk.flags = flags;
-    sk.pos = (char*)p + 0x590;
+    sk.pos = (char*)lev + 0x590;
     sk.ot = pOT_8008D690;
-    if (IsLevantAnimLoaded_800AC518(p->prevAnim_1E) == 0)
+    if (IsLevantAnimLoaded_800AC518(lev->prevAnim_1E) == 0)
     {
-        p->flags_0 &= ~0x10;
+        lev->flags_0 &= ~0x10;
     }
-    if (!(p->flags_0 & 0x10))
+    if (!(lev->flags_0 & 0x10))
     {
-        DrawAnimSkel_80046A58(&sk, &pointLights_8008D534[v], 0);
+        DrawAnimSkel_80046A58(&sk, &pointLights_8008D534[light], 0);
     }
     else
     {
-        anim = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->prevAnim_1E)];
-        DrawAnimSkelBlend_80047E28(&sk, levantBoneScale_800B0FB0, (char*)anim, p->blendFrame_14 % anim->frameCount_0, 0x1000 - p->blend_26, &pointLights_8008D534[v], 0);
+        anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->prevAnim_1E)];
+        DrawAnimSkelBlend_80047E28(&sk, levantBoneScale_800B0FB0, (char*)anim, lev->blendFrame_14 % anim->frameCount_0, 0x1000 - lev->blend_26, &pointLights_8008D534[light], 0);
     }
-    DrawSpriteVtxQuadsGT4_800459E4(&levantBones_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
+    DrawSpriteVtxQuadsGT4_800459E4(&levantBones_800B0EF8, &lev->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
 
-void UpdateLevantTurn_800A99DC(G2Act* p)
+void UpdateLevantTurn_800A99DC(GameLevantActor* lev)
 {
-    if (p->moveCmd_4 & 0x10000000)
-        p->turn_770.input_8 = -0x40;
-    if (p->moveCmd_4 & 0x20000000)
-        p->turn_770.input_8 = 0x40;
-    if (p->moveCmd_4 & 0x40000000)
-        p->turn_770.input_8 /= 2;
-    p->moveCmd_4 &= ~0x30000000;
-    FirFilterStep_80014588(p->turnBuf_780, &p->turn_770, frameCount_8008D3FC);
-    saveData_8008B570.levant_7A8.rot.vy += p->turn_770.output_C.low;
+    if (lev->moveCmd_4 & 0x10000000)
+        lev->turn_770.input_8 = -0x40;
+    if (lev->moveCmd_4 & 0x20000000)
+        lev->turn_770.input_8 = 0x40;
+    if (lev->moveCmd_4 & 0x40000000)
+        lev->turn_770.input_8 /= 2;
+    lev->moveCmd_4 &= ~0x30000000;
+    FirFilterStep_80014588(lev->turnBuf_780, &lev->turn_770, frameCount_8008D3FC);
+    saveData_8008B570.levant_7A8.rot.vy += lev->turn_770.output_C.low;
 }
 
 #if 0
 // Not matched: 24 words: dx/dz get $s2/$s3 swapped (the original keeps the 0x6c delta in $s3), the tri address adds base + index the other way round, and the path_78 reads become register copies (move $v1,$a0) in the original instead of reloads; the rest matches
-void UpdateLevantMove_800A9A9C(G2Act* p)
+void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
 {
     G2V12 prev;
     int dz;
     int dx;
     int div;
-    MapTri* t;
+    MapTri* tri;
     int k;
-    int f;
+    int slope;
     int rot;
     G2Path* path;
     int sn;
     int cs;
     short ang;
-    prev.a = p->rootMotion_6C.a;
-    prev.b = p->rootMotion_6C.b;
-    prev.c = p->rootMotion_6C.c;
-    SetLevantRootMotion_800AA140(p);
+    prev.a = lev->rootMotion_6C.a;
+    prev.b = lev->rootMotion_6C.b;
+    prev.c = lev->rootMotion_6C.c;
+    SetLevantRootMotion_800AA140(lev);
     dz = 0;
-    if (p->flags_0 & 8)
+    if (lev->flags_0 & 8)
     {
-        p->flags_0 &= ~8;
+        lev->flags_0 &= ~8;
         dx = dz;
     }
     else
     {
-        dx = p->rootMotion_6C.a - prev.a;
-        GetLevantAnimFile_800AC4A8(p->anim_1C);
-        p->rootMotion_6C.c -= (dx & 0x1f) * Sign_8003B664(dx);
-        dz = p->rootMotion_6C.c - prev.c;
-        GetLevantAnimFile_800AC4A8(p->anim_1C);
-        p->rootMotion_6C.c -= (dz & 0x1f) * Sign_8003B664(dz);
+        dx = lev->rootMotion_6C.a - prev.a;
+        GetLevantAnimFile_800AC4A8(lev->anim_1C);
+        lev->rootMotion_6C.c -= (dx & 0x1f) * Sign_8003B664(dx);
+        dz = lev->rootMotion_6C.c - prev.c;
+        GetLevantAnimFile_800AC4A8(lev->anim_1C);
+        lev->rootMotion_6C.c -= (dz & 0x1f) * Sign_8003B664(dz);
     }
-    if (p->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)) ||
-        ((p->flags_0 & 0x800) && p->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C))))
+    if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) ||
+        ((lev->flags_0 & 0x800) && lev->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C))))
     {
-        p->flags_0 |= 0x8000;
-        p->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C));
-        SetLevantRootMotion_800AA140(p);
+        lev->flags_0 |= 0x8000;
+        lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+        SetLevantRootMotion_800AA140(lev);
     }
-    if (p->action_8 == 2 && (p->flags_0 & 0x200000))
+    if (lev->action_8 == 2 && (lev->flags_0 & 0x200000))
     {
         dx = 0;
         dz = dx;
     }
-    if (!(p->flags_0 & 0x84000))
+    if (!(lev->flags_0 & 0x84000))
     {
-        div = p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->anim_1C)].divisor_8;
-        sub_800B80C8(p);
-        t = &mapState_8008B500.meshes_C[p->mesh_84].tris_4[p->tri_80];
-        f = t->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
-            t->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
-        f = 0x1000 - f * f / 4096;
-        saveData_8008B570.levant_7A8.pos.x += dx * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
-        saveData_8008B570.levant_7A8.pos.z += -(dx * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096) * f / 4096 / div;
-        saveData_8008B570.levant_7A8.pos.x += dz * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 * f / 4096 / div;
-        saveData_8008B570.levant_7A8.pos.z += dz * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * f / 4096 / div;
-        if (!(p->flags_0 & 0x40000))
+        div = lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)].divisor_8;
+        sub_800B80C8(lev);
+        tri = &mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80];
+        slope = tri->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
+            tri->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
+        slope = 0x1000 - slope * slope / 4096;
+        saveData_8008B570.levant_7A8.pos.x += dx * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * slope / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += -(dx * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096) * slope / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x += dz * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 * slope / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.z += dz * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * slope / 4096 / div;
+        if (!(lev->flags_0 & 0x40000))
         {
-            f = CollideLevantWithMap_800B6DD4(p);
-            if (f < 0)
+            slope = CollideLevantWithMap_800B6DD4(lev);
+            if (slope < 0)
             {
-                p->f778 = -0x40;
+                lev->f778 = -0x40;
             }
-            else if (f > 0)
+            else if (slope > 0)
             {
-                p->f778 = 0x40;
+                lev->f778 = 0x40;
             }
         }
     }
-    else if (p->flags_0 & 0x400000)
+    else if (lev->flags_0 & 0x400000)
     {
-        p->rootMotion_6C.a = p->path_78->steps_8[p->pathStep_7C].x;
-        p->rootMotion_6C.b = p->path_78->steps_8[p->pathStep_7C].y;
-        p->rootMotion_6C.c = p->path_78->steps_8[p->pathStep_7C].z;
-        rot = p->path_78->steps_8[p->pathStep_7C].rotY;
-        div = p->path_78->div_4;
-        p->pathStep_7C++;
-        if (p->pathStep_7C >= p->path_78->count_0)
+        lev->rootMotion_6C.a = lev->path_78->steps_8[lev->pathStep_7C].x;
+        lev->rootMotion_6C.b = lev->path_78->steps_8[lev->pathStep_7C].y;
+        lev->rootMotion_6C.c = lev->path_78->steps_8[lev->pathStep_7C].z;
+        rot = lev->path_78->steps_8[lev->pathStep_7C].rotY;
+        div = lev->path_78->div_4;
+        lev->pathStep_7C++;
+        if (lev->pathStep_7C >= lev->path_78->count_0)
         {
-            p->flags_0 &= ~0x400000;
+            lev->flags_0 &= ~0x400000;
             SetLevantRootMotionMode_800ABC78(0);
-            p->flags_0 = (p->flags_0 & ~0x800) | 8;
-            SetLevantAnim_800AB010(p, 0, 3, 0);
-            p->mode_C = 0;
+            lev->flags_0 = (lev->flags_0 & ~0x800) | 8;
+            SetLevantAnim_800AB010(lev, 0, 3, 0);
+            lev->mode_C = 0;
         }
-        saveData_8008B570.levant_7A8.pos.x = p->basePos_60.a + p->rootMotion_6C.a / div;
-        saveData_8008B570.levant_7A8.pos.y = p->basePos_60.b + p->rootMotion_6C.b / div;
-        saveData_8008B570.levant_7A8.pos.z = p->basePos_60.c + p->rootMotion_6C.c / div;
+        saveData_8008B570.levant_7A8.pos.x = lev->basePos_60.a + lev->rootMotion_6C.a / div;
+        saveData_8008B570.levant_7A8.pos.y = lev->basePos_60.b + lev->rootMotion_6C.b / div;
+        saveData_8008B570.levant_7A8.pos.z = lev->basePos_60.c + lev->rootMotion_6C.c / div;
         saveData_8008B570.levant_7A8.rot.vy = rot;
     }
     else
     {
-        div = p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->anim_1C)].divisor_8;
-        SetLevantRootMotion_800AA140(p);
+        div = lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)].divisor_8;
+        SetLevantRootMotion_800AA140(lev);
         sn = sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff];
         cs = sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff];
-        saveData_8008B570.levant_7A8.pos.z = p->basePos_60.c + (p->rootMotion_6C.c * cs - p->rootMotion_6C.a * sn) / 4096 / div;
-        saveData_8008B570.levant_7A8.pos.x = p->basePos_60.a + (p->rootMotion_6C.c * sn + p->rootMotion_6C.a * cs) / 4096 / div;
-        saveData_8008B570.levant_7A8.pos.y = p->basePos_60.b + p->rootMotion_6C.b / 32;
+        saveData_8008B570.levant_7A8.pos.z = lev->basePos_60.c + (lev->rootMotion_6C.c * cs - lev->rootMotion_6C.a * sn) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.x = lev->basePos_60.a + (lev->rootMotion_6C.c * sn + lev->rootMotion_6C.a * cs) / 4096 / div;
+        saveData_8008B570.levant_7A8.pos.y = lev->basePos_60.b + lev->rootMotion_6C.b / 32;
     }
 }
 #endif
 INCLUDE_OVERLAY_ASM(game, UpdateLevantMove_800A9A9C);
 
-void SetLevantRootMotion_800AA140(G2Act* p)
+void SetLevantRootMotion_800AA140(GameLevantActor* lev)
 {
-    ModelAnim* t = &p->model_40->anims_54[GetLevantAnimFile_800AC4A8(p->anim_1C)];
-    GetAnimRootMotion_8004D288((char*)p + 0x6c, t, (unsigned)p->frame_10 % ((GetLevantAnimLastFrame_800AC8BC(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)) & 0xffff) + 1));
+    ModelAnim* anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)];
+    GetAnimRootMotion_8004D288((char*)lev + 0x6c, anim, (unsigned)lev->frame_10 % ((GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) & 0xffff) + 1));
 }
 
-int GetLevantMoveDir_800AA1C0(G2Act* p)
+int GetLevantMoveDir_800AA1C0(GameLevantActor* lev)
 {
-    return p->moveCmd_4 & 0xFFFFFFF;
+    return lev->moveCmd_4 & 0xFFFFFFF;
 }
 
-int IsLevantInBattle_800AA1D4(unsigned char* p)
+int IsLevantInBattle_800AA1D4(unsigned char* lev)
 {
-    return p[1] & 1;
+    return lev[1] & 1;
 }
 
-void StartLevantQueuedAnim_800AA1E0(G2Act* a)
+void StartLevantQueuedAnim_800AA1E0(GameLevantActor* lev)
 {
-    a->actionAnim_20 = a->queuedAnim_22;
-    SetLevantAnim_800AB010(a, 0x17, 3, 0);
-    a->mode_C = 3;
+    lev->actionAnim_20 = lev->queuedAnim_22;
+    SetLevantAnim_800AB010(lev, 0x17, 3, 0);
+    lev->mode_C = 3;
 }
 
-void RunLevantAnimCues_800AA220(G2Act* a)
+void RunLevantAnimCues_800AA220(GameLevantActor* lev)
 {
-    RunAnimFrameCues_8001C440(a->model_40, GetLevantAnimFile_800AC4A8(a->anim_1C), a->frame_10);
+    RunAnimFrameCues_8001C440(lev->model_40, GetLevantAnimFile_800AC4A8(lev->anim_1C), lev->frame_10);
 }
 
-void UpdateLevantFieldAnim_800AA25C(G2Act* p)
+void UpdateLevantFieldAnim_800AA25C(GameLevantActor* lev)
 {
-    if (IsLevantInBattle_800AA1D4(p) == 1)
+    if (IsLevantInBattle_800AA1D4(lev) == 1)
     {
-        SetLevantAnim_800AB010(p, 7, 3, 0);
-        p->mode_C = 1;
+        SetLevantAnim_800AB010(lev, 7, 3, 0);
+        lev->mode_C = 1;
         return;
     }
-    if (p->flags_0 & 0x4000)
-    {
-        return;
-    }
-    if (p->flags_0 & 0x10)
+    if (lev->flags_0 & 0x4000)
     {
         return;
     }
-    if (GetLevantMoveDir_800AA1C0(p) == 1)
+    if (lev->flags_0 & 0x10)
     {
-        SetLevantAnim_800AB010(p, 5, 2, 0);
         return;
     }
-    if (GetLevantMoveDir_800AA1C0(p) == 2)
+    if (GetLevantMoveDir_800AA1C0(lev) == 1)
     {
-        SetLevantAnim_800AB010(p, 4, 1, 0);
+        SetLevantAnim_800AB010(lev, 5, 2, 0);
         return;
     }
-    if (GetLevantMoveDir_800AA1C0(p) == 4)
+    if (GetLevantMoveDir_800AA1C0(lev) == 2)
     {
-        SetLevantAnim_800AB010(p, 2, 0, 0);
-        p->flags_0 &= ~0x200000;
+        SetLevantAnim_800AB010(lev, 4, 1, 0);
         return;
     }
-    if (p->moveCmd_4 & 0x30000000)
+    if (GetLevantMoveDir_800AA1C0(lev) == 4)
     {
-        SetLevantAnim_800AB010(p, 2, 0, 0);
-        p->flags_0 |= 0x200000;
+        SetLevantAnim_800AB010(lev, 2, 0, 0);
+        lev->flags_0 &= ~0x200000;
         return;
     }
-    if (GetLevantMoveDir_800AA1C0(p) == 3)
+    if (lev->moveCmd_4 & 0x30000000)
     {
-        StartLevantQueuedAnim_800AA1E0(p);
+        SetLevantAnim_800AB010(lev, 2, 0, 0);
+        lev->flags_0 |= 0x200000;
         return;
     }
-    if (++p->idleTimer_28 > 0x5a)
+    if (GetLevantMoveDir_800AA1C0(lev) == 3)
     {
-        SetLevantAnim_800AB010(p, 1, 4, 0);
-        p->idleTimer_28 = 0x5a;
+        StartLevantQueuedAnim_800AA1E0(lev);
+        return;
+    }
+    if (++lev->idleTimer_28 > 0x5a)
+    {
+        SetLevantAnim_800AB010(lev, 1, 4, 0);
+        lev->idleTimer_28 = 0x5a;
     }
     else
     {
-        SetLevantAnim_800AB010(p, 0, 3, 0);
+        SetLevantAnim_800AB010(lev, 0, 3, 0);
     }
 }
 
-void ReturnLevantToIdle_800AA3F0(G2Act* a)
+void ReturnLevantToIdle_800AA3F0(GameLevantActor* lev)
 {
-    SetLevantAnim_800AB010(a, 0, 3, 0);
-    a->mode_C = 0;
-    a->flags_0 |= 0x2000;
+    SetLevantAnim_800AB010(lev, 0, 3, 0);
+    lev->mode_C = 0;
+    lev->flags_0 |= 0x2000;
 }
 
 #if 0
 // Not matched: the original reloads p->effect_2C after the v19 select (lw 0x2c before 'sw 0x18'); here the compare's value is reused, so everything after is 2 words short
-void PlayLevantActionEffect_800AA430(G2Act* p)
+void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 {
-    G2L2 L;
-    int v19;
-    short* r17;
-    int r16;
-    if (p->effect_2C != 0x46)
+    ActorEffectReq req;
+    int repeat;
+    short* hitFrames;
+    int loopStart;
+    if (lev->effect_2C != 0x46)
     {
-        v19 = 4;
-        if (!((unsigned short)(p->anim_1C - 7) < 2))
-            v19 = p->hitRepeat_2A;
-        L.f0 = p->effect_2C;
-        r17 = GetLevantAnimHitFrames_800AC9CC(p->actionAnim_20);
-        r16 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C));
-        L.f4 = RepeatHitTimes_80018200(r17, r16, (unsigned short)GetLevantAnimLoopEnd_800AC878(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)), v19, p->effect_2C);
-        GetLevantEffectTarget_800A93A4(L.rest);
-        CollectEffectTargets_800182B8(&L, p->targets_38);
-        PlayActorEffect_800184DC((int)&L, 0);
+        repeat = 4;
+        if (!((unsigned short)(lev->anim_1C - 7) < 2))
+            repeat = lev->hitRepeat_2A;
+        req.effect_0 = lev->effect_2C;
+        hitFrames = GetLevantAnimHitFrames_800AC9CC(lev->actionAnim_20);
+        loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+        req.hitTimes_4 = (struct_4s*)RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
+        GetLevantEffectTarget_800A93A4((EffectTarget*)&req.tbl_8);
+        CollectEffectTargets_800182B8(&req, lev->targets_38);
+        PlayActorEffect_800184DC(&req, 0);
     }
 }
 #endif
@@ -2654,263 +2620,263 @@ INCLUDE_OVERLAY_ASM(game, PlayLevantActionEffect_800AA430);
 // callers further down (settle them before enabling this); GetLevantAnimFlags_800AC900 returns int (its result is tested as a short).
 // Enabling: drop the C table jpt_800A07A8 below.
 extern short effectOutcomeFlag_8008D780;
-void PlayLevantActionEffect_800AA430(G2Act* p);
+void PlayLevantActionEffect_800AA430(GameLevantActor* p);
 unsigned short GetLevantAnimEventFrameCur_800AB170(int a);
-void RequestLevantActionEffect_800ABCF4(G2Act* p);
-void RunLevantActionCues_800ABDF0(G2Act* a);
+void RequestLevantActionEffect_800ABCF4(GameLevantActor* p);
+void RunLevantActionCues_800ABDF0(GameLevantActor* a);
 int LoadLevantAnimById_800AC604(int a, int b);
 int AreLevantFilesLoaded_800AC768();
 short GetLevantAnimLoopStart_800AC834(int a, int b);
 short GetLevantAnimLoopEnd_800AC878(int a, int b);
 unsigned short GetLevantAnimLastFrame_800AC8BC(int a, int b);
 int GetLevantAnimFlags_800AC900(int a, int b);
-void UpdateLevantBattleAction_800AA51C(G2Act* o)
+void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
 {
-    short r;
-    switch (o->action_8)
+    short animFlags;
+    switch (lev->action_8)
     {
     case 7:
         if (GetCameraMode_800378F8() == 3)
         {
-            SetLevantAnim_800AB010(o, 9, 0xE, 0);
+            SetLevantAnim_800AB010(lev, 9, 0xE, 0);
         }
         break;
     case 9:
-        if (IsLevantInBattle_800AA1D4(o) == 0 && !(o->flags_0 & 0x1000))
+        if (IsLevantInBattle_800AA1D4(lev) == 0 && !(lev->flags_0 & 0x1000))
         {
-            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
-            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
-            ReturnLevantToIdle_800AA3F0(o);
+            SetModelFtg_80025B5C(lev->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(lev->model_40, 7, 0x19);
+            ReturnLevantToIdle_800AA3F0(lev);
             break;
         }
-        if (o->frame_10 == GetLevantAnimEventFrameCur_800AB170(o->anim_1C))
+        if (lev->frame_10 == GetLevantAnimEventFrameCur_800AB170(lev->anim_1C))
         {
-            SetModelFtg_80025B5C(o->model_40, 2, 0x18);
-            SetModelFtg_80025B5C(o->model_40, 7, 0x1A);
+            SetModelFtg_80025B5C(lev->model_40, 2, 0x18);
+            SetModelFtg_80025B5C(lev->model_40, 7, 0x1A);
         }
     case 8:
-        if ((unsigned int)o->frame_10 >= (unsigned short)GetLevantAnimLoopStart_800AC834(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+        if ((unsigned int)lev->frame_10 >= (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            o->action_8 = 10;
+            lev->action_8 = 10;
         }
         break;
     case 10:
-        o->flags_0 = (o->flags_0 | 0x800) & ~0x8000;
-        if (IsLevantInBattle_800AA1D4(o) == 1)
+        lev->flags_0 = (lev->flags_0 | 0x800) & ~0x8000;
+        if (IsLevantInBattle_800AA1D4(lev) == 1)
         {
-            if (o->flags_0 & 1)
+            if (lev->flags_0 & 1)
             {
-                o->action_8 = 11;
+                lev->action_8 = 11;
             }
             break;
         }
-        if (o->flags_0 & 2)
+        if (lev->flags_0 & 2)
         {
-            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
-            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
-            SetModelFtg_80025B5C(o->model_40, 0xC, 0xC);
+            SetModelFtg_80025B5C(lev->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(lev->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(lev->model_40, 0xC, 0xC);
         }
-        if (o->flags_0 & 0x1000)
+        if (lev->flags_0 & 0x1000)
         {
             LoadLevantAnimById_800AC604(10, 0);
-            SetLevantAnim_800AB010(o, 0x11, -1, -1);
+            SetLevantAnim_800AB010(lev, 0x11, -1, -1);
             break;
         }
-        if (o->flags_0 & 2)
+        if (lev->flags_0 & 2)
         {
-            SetLevantAnim_800AB010(o, 0x12, 3, 0);
+            SetLevantAnim_800AB010(lev, 0x12, 3, 0);
         }
         else
         {
-            SetLevantAnim_800AB010(o, 0x12, 0xF, 0);
+            SetLevantAnim_800AB010(lev, 0x12, 0xF, 0);
         }
-        o->flags_0 &= ~0x800;
+        lev->flags_0 &= ~0x800;
         break;
     case 11:
-        if (o->flags_0 & 0x1000000)
+        if (lev->flags_0 & 0x1000000)
         {
             LoadLevantAnimById_800AC604(10, 0);
         }
-        IsLevantAnimLoaded_800AC518(o->actionAnim_20);
-        LoadLevantAnimById_800AC604(o->actionAnim_20, 0);
-        o->action_8 = 12;
-        o->effect_2C = 0x46;
-        if (o->flags_0 & 0x200)
+        IsLevantAnimLoaded_800AC518(lev->actionAnim_20);
+        LoadLevantAnimById_800AC604(lev->actionAnim_20, 0);
+        lev->action_8 = 12;
+        lev->effect_2C = 0x46;
+        if (lev->flags_0 & 0x200)
         {
-            RequestLevantActionEffect_800ABCF4(o);
+            RequestLevantActionEffect_800ABCF4(lev);
         }
         break;
     case 12:
-        if (o->effect_2C == 0x46 || IsEffectReady_80014954() == 1 || o->effect_2C == 0x46)
+        if (lev->effect_2C == 0x46 || IsEffectReady_80014954() == 1 || lev->effect_2C == 0x46)
         {
             if (AreLevantFilesLoaded_800AC768() == 1)
             {
-                o->action_8 = 13;
+                lev->action_8 = 13;
             }
         }
         break;
     case 13:
-        if (o->flags_0 & 0x20)
+        if (lev->flags_0 & 0x20)
         {
-            if (!(GetLevantAnimFlags_800AC900(o->actionAnim_20, GetLevantAnimSet_800AC474(o->actionAnim_20)) & 1))
+            if (!(GetLevantAnimFlags_800AC900(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)) & 1))
             {
-                if (o->actionAnim_20 == o->anim_1C)
+                if (lev->actionAnim_20 == lev->anim_1C)
                 {
-                    SetLevantAnim_800AB010(o, 0x10, -1, -1);
+                    SetLevantAnim_800AB010(lev, 0x10, -1, -1);
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(o, 0x10, o->actionAnim_20, 0);
+                    SetLevantAnim_800AB010(lev, 0x10, lev->actionAnim_20, 0);
                 }
             }
             else
             {
-                SetLevantAnim_800AB010(o, 0xE, 0xF, 0);
-                o->flags_0 &= ~0x800;
+                SetLevantAnim_800AB010(lev, 0xE, 0xF, 0);
+                lev->flags_0 &= ~0x800;
             }
-            o->flags_0 &= ~0x20;
+            lev->flags_0 &= ~0x20;
         }
-        if ((unsigned short)(o->actionAnim_20 - 0x19) < 2 || o->actionAnim_20 == 0x1C)
+        if ((unsigned short)(lev->actionAnim_20 - 0x19) < 2 || lev->actionAnim_20 == 0x1C)
         {
-            o->hitRepeat_2A = 2;
+            lev->hitRepeat_2A = 2;
         }
-        else if ((unsigned short)(o->actionAnim_20 - 7) < 2)
+        else if ((unsigned short)(lev->actionAnim_20 - 7) < 2)
         {
-            o->hitRepeat_2A = 0x1E;
+            lev->hitRepeat_2A = 0x1E;
         }
         else
         {
-            o->hitRepeat_2A = 0;
+            lev->hitRepeat_2A = 0;
         }
         break;
     case 14:
-        if (o->frame_10 == GetLevantAnimEventFrameCur_800AB170(o->anim_1C))
+        if (lev->frame_10 == GetLevantAnimEventFrameCur_800AB170(lev->anim_1C))
         {
-            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
-            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(lev->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(lev->model_40, 7, 0x19);
         }
-        if (o->frame_10 == GetLevantAnimLastFrame_800AC8BC(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+        if (lev->frame_10 == GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            SetLevantAnim_800AB010(o, 0x10, o->actionAnim_20, 0);
+            SetLevantAnim_800AB010(lev, 0x10, lev->actionAnim_20, 0);
         }
         break;
     case 16:
-        RunLevantActionCues_800ABDF0(o);
-        if (o->anim_1C == 0x13 || o->anim_1C == 0x18)
+        RunLevantActionCues_800ABDF0(lev);
+        if (lev->anim_1C == 0x13 || lev->anim_1C == 0x18)
         {
-            o->flags_0 = (o->flags_0 & ~1) | 0x800;
-            SetLevantAnim_800AB010(o, 0x14, o->anim_1C, 0);
+            lev->flags_0 = (lev->flags_0 & ~1) | 0x800;
+            SetLevantAnim_800AB010(lev, 0x14, lev->anim_1C, 0);
         }
         else
         {
-            o->action_8 = 0xF;
+            lev->action_8 = 0xF;
         }
-        PlayLevantActionEffect_800AA430(o);
+        PlayLevantActionEffect_800AA430(lev);
         break;
     case 15:
-        o->flags_0 &= ~0x800;
-        RunLevantActionCues_800ABDF0(o);
-        if (o->anim_1C == 0x19 || o->anim_1C == 7 || o->anim_1C == 0x1A || o->anim_1C == 0x1C || o->anim_1C == 8)
+        lev->flags_0 &= ~0x800;
+        RunLevantActionCues_800ABDF0(lev);
+        if (lev->anim_1C == 0x19 || lev->anim_1C == 7 || lev->anim_1C == 0x1A || lev->anim_1C == 0x1C || lev->anim_1C == 8)
         {
-            if ((unsigned int)o->frame_10 >= (unsigned short)GetLevantAnimLoopEnd_800AC878(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+            if ((unsigned int)lev->frame_10 >= (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
             {
                 if (effectOutcomeFlag_8008D780 == 1)
                 {
-                    o->hitRepeat_2A = -1;
+                    lev->hitRepeat_2A = -1;
                 }
-                else if (--o->hitRepeat_2A >= 0)
+                else if (--lev->hitRepeat_2A >= 0)
                 {
-                    o->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C));
+                    lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
                 }
             }
         }
-        if (o->frame_10 == GetLevantAnimLastFrame_800AC8BC(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+        if (lev->frame_10 == GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            r = GetLevantAnimFlags_800AC900(o->actionAnim_20, GetLevantAnimSet_800AC474(o->actionAnim_20) & 1);
-            if (r == 0)
+            animFlags = GetLevantAnimFlags_800AC900(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20) & 1);
+            if (animFlags == 0)
             {
-                if (o->flags_0 & 0x400)
+                if (lev->flags_0 & 0x400)
                 {
-                    if (o->anim_1C == 0x14)
+                    if (lev->anim_1C == 0x14)
                     {
-                        SetLevantAnim_800AB010(o, 10, -1, -1);
+                        SetLevantAnim_800AB010(lev, 10, -1, -1);
                     }
                     else
                     {
-                        SetLevantAnim_800AB010(o, 8, 0x14, 0);
+                        SetLevantAnim_800AB010(lev, 8, 0x14, 0);
                     }
                 }
-                else if (o->flags_0 & 0x10000)
+                else if (lev->flags_0 & 0x10000)
                 {
-                    if (o->anim_1C == 0x16)
+                    if (lev->anim_1C == 0x16)
                     {
-                        SetLevantAnim_800AB010(o, 10, -1, -1);
+                        SetLevantAnim_800AB010(lev, 10, -1, -1);
                     }
                     else
                     {
-                        SetLevantAnim_800AB010(o, 8, 0x16, 0);
+                        SetLevantAnim_800AB010(lev, 8, 0x16, 0);
                     }
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(o, 10, 0xE, (unsigned short)GetLevantAnimLoopEnd_800AC878(0xE, GetLevantAnimSet_800AC474(0xE)));
+                    SetLevantAnim_800AB010(lev, 10, 0xE, (unsigned short)GetLevantAnimLoopEnd_800AC878(0xE, GetLevantAnimSet_800AC474(0xE)));
                 }
             }
-            else if (o->flags_0 & 0x1000000)
+            else if (lev->flags_0 & 0x1000000)
             {
-                SetLevantAnim_800AB010(o, 0x13, 10, 0);
+                SetLevantAnim_800AB010(lev, 0x13, 10, 0);
             }
             else
             {
-                SetLevantAnim_800AB010(o, 9, 0xE, 0);
+                SetLevantAnim_800AB010(lev, 9, 0xE, 0);
             }
-            o->flags_0 &= ~1;
+            lev->flags_0 &= ~1;
         }
         break;
     case 17:
         if (AreLevantFilesLoaded_800AC768() == 1)
         {
-            if (o->flags_0 & 2)
+            if (lev->flags_0 & 2)
             {
-                SetLevantAnim_800AB010(o, 0x12, 3, 0);
+                SetLevantAnim_800AB010(lev, 0x12, 3, 0);
             }
             else
             {
-                SetLevantAnim_800AB010(o, 0x12, 0xF, 0);
+                SetLevantAnim_800AB010(lev, 0x12, 0xF, 0);
             }
-            o->flags_0 &= ~0x800;
+            lev->flags_0 &= ~0x800;
         }
         break;
     case 18:
-        if (o->frame_10 == GetLevantAnimEventFrameCur_800AB170(o->anim_1C))
+        if (lev->frame_10 == GetLevantAnimEventFrameCur_800AB170(lev->anim_1C))
         {
-            SetModelFtg_80025B5C(o->model_40, 2, 0x17);
-            SetModelFtg_80025B5C(o->model_40, 7, 0x19);
-            SetModelFtg_80025B5C(o->model_40, 0xC, 0xC);
+            SetModelFtg_80025B5C(lev->model_40, 2, 0x17);
+            SetModelFtg_80025B5C(lev->model_40, 7, 0x19);
+            SetModelFtg_80025B5C(lev->model_40, 0xC, 0xC);
         }
-        if ((unsigned int)o->frame_10 >= GetLevantAnimLastFrame_800AC8BC(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+        if ((unsigned int)lev->frame_10 >= GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            o->flags_0 &= ~0x800;
-            if (o->flags_0 & 0x1000)
+            lev->flags_0 &= ~0x800;
+            if (lev->flags_0 & 0x1000)
             {
-                SetLevantAnim_800AB010(o, 0x13, 10, 0);
+                SetLevantAnim_800AB010(lev, 0x13, 10, 0);
             }
             else
             {
-                ReturnLevantToIdle_800AA3F0(o);
+                ReturnLevantToIdle_800AA3F0(lev);
             }
         }
         break;
     case 19:
-        if ((unsigned int)o->frame_10 >= GetLevantAnimLastFrame_800AC8BC(o->anim_1C, GetLevantAnimSet_800AC474(o->anim_1C)))
+        if ((unsigned int)lev->frame_10 >= GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            ReturnLevantToIdle_800AA3F0(o);
+            ReturnLevantToIdle_800AA3F0(lev);
         }
         break;
     case 20:
-        if (!(o->flags_0 & 0x800))
+        if (!(lev->flags_0 & 0x800))
         {
-            ReturnLevantToIdle_800AA3F0(o);
+            ReturnLevantToIdle_800AA3F0(lev);
         }
         break;
     }
@@ -2926,71 +2892,71 @@ const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d
 const char aPLDISPC_800A0808[] = "PLDISP.C";
 
 
-void UpdateLevantScriptAnim_800AACF8(G2Act* p)
+void UpdateLevantScriptAnim_800AACF8(GameLevantActor* lev)
 {
-    switch (p->action_8)
+    switch (lev->action_8)
     {
     case 0x17:
-        if (p->flags_0 & 0x20)
+        if (lev->flags_0 & 0x20)
         {
-            if (p->flags_0 & 0x100000)
+            if (lev->flags_0 & 0x100000)
             {
-                SetLevantAnim_800AB010(p, 0x18, p->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(p->actionAnim_20, GetLevantAnimSet_800AC474(p->actionAnim_20)));
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
             }
             else
             {
-                SetLevantAnim_800AB010(p, 0x18, p->actionAnim_20, 0);
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, 0);
             }
-            p->flags_0 &= ~0x8000;
-            if (p->nextAnim_24 >= 0)
+            lev->flags_0 &= ~0x8000;
+            if (lev->nextAnim_24 >= 0)
             {
-                p->flags_0 &= ~0x800;
+                lev->flags_0 &= ~0x800;
             }
         }
         break;
     case 0x18:
-        if (p->flags_0 & 0x800000)
+        if (lev->flags_0 & 0x800000)
         {
-            if (p->flags_0 & 0x800)
+            if (lev->flags_0 & 0x800)
             {
-                p->flags_0 &= ~0x800000;
-                p->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C));
-                p->flags_0 &= ~0x8000;
+                lev->flags_0 &= ~0x800000;
+                lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+                lev->flags_0 &= ~0x8000;
             }
             else
             {
-                p->flags_0 &= ~0x800000;
-                p->frame_10 = (unsigned short)GetLevantAnimLastFrame_800AC8BC(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C));
+                lev->flags_0 &= ~0x800000;
+                lev->frame_10 = (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
             }
         }
-        if (p->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)))
+        if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            if (p->nextAnim_24 < 0)
+            if (lev->nextAnim_24 < 0)
             {
-                SetLevantAnim_800AB010(p, 0, 3, 0);
-                p->mode_C = 0;
+                SetLevantAnim_800AB010(lev, 0, 3, 0);
+                lev->mode_C = 0;
             }
             else
             {
-                if (p->flags_0 & 0x100000)
+                if (lev->flags_0 & 0x100000)
                 {
-                    SetLevantAnim_800AB010(p, -1, p->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(p->nextAnim_24, GetLevantAnimSet_800AC474(p->nextAnim_24)));
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(p, -1, p->nextAnim_24, 0);
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, 0);
                 }
-                p->nextAnim_24 = -1;
-                p->actionAnim_20 = p->queuedAnim_22;
-                p->flags_0 |= 0x800;
+                lev->nextAnim_24 = -1;
+                lev->actionAnim_20 = lev->queuedAnim_22;
+                lev->flags_0 |= 0x800;
             }
         }
-        if (p->actionAnim_20 != (short)p->queuedAnim_22)
+        if (lev->actionAnim_20 != (short)lev->queuedAnim_22)
         {
-            if (LoadLevantAnimById_800AC604((short)p->queuedAnim_22, 0) == 0)
+            if (LoadLevantAnimById_800AC604((short)lev->queuedAnim_22, 0) == 0)
             {
-                p->action_8 = 0x17;
-                p->actionAnim_20 = p->queuedAnim_22;
+                lev->action_8 = 0x17;
+                lev->actionAnim_20 = lev->queuedAnim_22;
             }
             else
             {
@@ -3002,21 +2968,21 @@ void UpdateLevantScriptAnim_800AACF8(G2Act* p)
     }
 }
 
-void UpdateLevantActionState_800AAF58(G2Act* a)
+void UpdateLevantActionState_800AAF58(GameLevantActor* lev)
 {
-    switch ((unsigned)a->mode_C)
+    switch ((unsigned)lev->mode_C)
     {
     case 0:
-        UpdateLevantFieldAnim_800AA25C(a);
+        UpdateLevantFieldAnim_800AA25C(lev);
         break;
     case 1:
-        UpdateLevantBattleAction_800AA51C(a);
+        UpdateLevantBattleAction_800AA51C(lev);
         break;
     case 2:
-        UpdateLevantScriptAnim_800AACF8(a);
+        UpdateLevantScriptAnim_800AACF8(lev);
         break;
     case 3:
-        UpdateLevantQueuedAnim_800AC02C(a);
+        UpdateLevantQueuedAnim_800AC02C(lev);
         break;
     default:
         break;
@@ -3031,63 +2997,63 @@ int IsLevantAnimLoadedOrFree_800AAFD8(int anim)
     return 0;
 }
 
-void SetLevantAnim_800AB010(G2Act* p, int action, int anim, int frame)
+void SetLevantAnim_800AB010(GameLevantActor* lev, int action, int anim, int frame)
 {
     if (frame == 0)
         frame = (short)GetLevantAnimStartFrame_800AC7F0(anim, GetLevantAnimSet_800AC474(anim));
-    if (p->action_8 == action && p->anim_1C == anim)
+    if (lev->action_8 == action && lev->anim_1C == anim)
         return;
-    p->idleTimer_28 = 0;
+    lev->idleTimer_28 = 0;
     if (anim < 0)
     {
-        p->action_8 = action;
+        lev->action_8 = action;
     }
     else if (action < 0)
     {
-        unsigned short t = p->anim_1C;
-        int t3 = p->frame_10;
-        p->anim_1C = anim;
-        p->frame_10 = frame;
-        p->blend_26 = 0;
-        p->prevAnim_1E = t;
-        p->blendFrame_14 = t3;
+        unsigned short prevAnim = lev->anim_1C;
+        int prevFrame = lev->frame_10;
+        lev->anim_1C = anim;
+        lev->frame_10 = frame;
+        lev->blend_26 = 0;
+        lev->prevAnim_1E = prevAnim;
+        lev->blendFrame_14 = prevFrame;
     }
     else
     {
-        unsigned short t = p->anim_1C;
-        int t3 = p->frame_10;
-        p->action_8 = action;
-        p->anim_1C = anim;
-        p->frame_10 = frame;
-        p->blend_26 = 0;
-        p->prevAnim_1E = t;
-        p->blendFrame_14 = t3;
+        unsigned short prevAnim = lev->anim_1C;
+        int prevFrame = lev->frame_10;
+        lev->action_8 = action;
+        lev->anim_1C = anim;
+        lev->frame_10 = frame;
+        lev->blend_26 = 0;
+        lev->prevAnim_1E = prevAnim;
+        lev->blendFrame_14 = prevFrame;
     }
-    if (p->prevAnim_1E != p->anim_1C)
+    if (lev->prevAnim_1E != lev->anim_1C)
     {
-        p->flags_0 |= 8;
-        if (IsLevantAnimLoadedOrFree_800AAFD8(p->prevAnim_1E) == 1)
-            p->flags_0 |= 0x10;
+        lev->flags_0 |= 8;
+        if (IsLevantAnimLoadedOrFree_800AAFD8(lev->prevAnim_1E) == 1)
+            lev->flags_0 |= 0x10;
     }
 }
 
-void StartLevantFadeIn_800AB114(G2Obj* p)
+void StartLevantFadeIn_800AB114(GameLevantFade* lev)
 {
-    p->fade_30 = 0x1000;
-    p->flags_0 = (p->flags_0 | 4) & ~2;
+    lev->fade_30 = 0x1000;
+    lev->flags_0 = (lev->flags_0 | 4) & ~2;
 }
 
-void StartLevantFadeOut_800AB134(G2Obj* p)
+void StartLevantFadeOut_800AB134(GameLevantFade* lev)
 {
-    p->fade_30 = 0;
-    p->flags_0 = (p->flags_0 | 2) & ~4;
+    lev->fade_30 = 0;
+    lev->flags_0 = (lev->flags_0 | 2) & ~4;
 }
 
-void ClearLevantFade_800AB150(G2Obj* p)
+void ClearLevantFade_800AB150(GameLevantFade* lev)
 {
-    p->fade_30 = 0;
-    p->flags_0 &= ~4;
-    p->flags_0 &= ~2;
+    lev->fade_30 = 0;
+    lev->flags_0 &= ~4;
+    lev->flags_0 &= ~2;
 }
 
 unsigned short GetLevantAnimEventFrameCur_800AB170(int anim)
@@ -3097,30 +3063,30 @@ unsigned short GetLevantAnimEventFrameCur_800AB170(int anim)
 
 void ContinueLevantAnim_800AB1A4(int loop)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    p->flags_0 |= 0x20;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    lev->flags_0 |= 0x20;
     if (loop == 1)
     {
-        p->flags_0 |= 0x800;
-        p->flags_0 &= ~0x8000;
+        lev->flags_0 |= 0x800;
+        lev->flags_0 &= ~0x8000;
     }
 }
 
 int StartLevantActorAction_800AB1EC(int anim, int playEffect, int targets, int arg)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    if (!(p->flags_0 & 1))
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    if (!(lev->flags_0 & 1))
     {
         if (playEffect == 1)
-            p->flags_0 |= 0x200;
+            lev->flags_0 |= 0x200;
         else
-            p->flags_0 &= ~0x200;
-        p->actionAnim_20 = anim;
-        p->targets_38 = targets;
-        p->arg_34 = arg;
-        p->flags_0 &= ~0x2000;
-        p->flags_0 |= 1;
-        p->flags_0 &= ~0x20;
+            lev->flags_0 &= ~0x200;
+        lev->actionAnim_20 = anim;
+        lev->targets_38 = targets;
+        lev->arg_34 = arg;
+        lev->flags_0 &= ~0x2000;
+        lev->flags_0 |= 1;
+        lev->flags_0 &= ~0x20;
         return 1;
     }
     return 0;
@@ -3128,105 +3094,105 @@ int StartLevantActorAction_800AB1EC(int anim, int playEffect, int targets, int a
 
 void SetLevantDefending_800AB264()
 {
-    gameTask_8008B4A4->f24->flags_0 |= 0x400;
+    gameTask_8008B4A4->buffer_24->flags_0 |= 0x400;
 }
 
 void ClearLevantDefending_800AB28C()
 {
-    gameTask_8008B4A4->f24->flags_0 &= ~0x400;
+    gameTask_8008B4A4->buffer_24->flags_0 &= ~0x400;
 }
 
 void sub_800AB2B4()
 {
-    gameTask_8008B4A4->f24->flags_0 |= 0x10000;
+    gameTask_8008B4A4->buffer_24->flags_0 |= 0x10000;
 }
 
 void sub_800AB2DC()
 {
-    gameTask_8008B4A4->f24->flags_0 &= ~0x10000;
+    gameTask_8008B4A4->buffer_24->flags_0 &= ~0x10000;
 }
 
 int IsLevantActorIdle_800AB304()
 {
-    return (gameTask_8008B4A4->f24->flags_0 & 1) ^ 1;
+    return (gameTask_8008B4A4->buffer_24->flags_0 & 1) ^ 1;
 }
 
 int IsLevantActionReady_800AB32C()
 {
-    return gameTask_8008B4A4->f24->action_8 == 0xD;
+    return gameTask_8008B4A4->buffer_24->action_8 == 0xD;
 }
 
 int IsLevantDefending_800AB354()
 {
-    unsigned t = gameTask_8008B4A4->f24->flags_0 & 0x400;
-    return t != 0;
+    unsigned flag = gameTask_8008B4A4->buffer_24->flags_0 & 0x400;
+    return flag != 0;
 }
 
-int SetLevantMoveCmd_800AB37C(int v)
+int SetLevantMoveCmd_800AB37C(int cmd)
 {
-    gameTask_8008B4A4->f24->moveCmd_4 = v;
+    gameTask_8008B4A4->buffer_24->moveCmd_4 = cmd;
     return 1;
 }
 
 int GetLevantMoveCmd_800AB39C()
 {
-    return gameTask_8008B4A4->f24->moveCmd_4;
+    return gameTask_8008B4A4->buffer_24->moveCmd_4;
 }
 
 void ResetLevantIdleTimer_800AB3BC()
 {
-    gameTask_8008B4A4->f24->idleTimer_28 = 0;
+    gameTask_8008B4A4->buffer_24->idleTimer_28 = 0;
 }
 
 void EnterLevantActorBattle_800AB3D4()
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    if (!(p->flags_0 & 0x100))
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    if (!(lev->flags_0 & 0x100))
     {
-        p->flags_0 |= 0x4100;
-        p->basePos_60.a = levantPos_8008BD18.pos.x;
-        p->basePos_60.b = levantPos_8008BD18.pos.y;
-        p->basePos_60.c = levantPos_8008BD18.pos.z;
-        p->savedPos_54.a = p->pos_48.a;
-        p->savedPos_54.b = p->pos_48.b;
-        p->savedPos_54.c = p->pos_48.c;
+        lev->flags_0 |= 0x4100;
+        lev->basePos_60.a = levantPos_8008BD18.pos.x;
+        lev->basePos_60.b = levantPos_8008BD18.pos.y;
+        lev->basePos_60.c = levantPos_8008BD18.pos.z;
+        lev->savedPos_54.a = lev->pos_48.a;
+        lev->savedPos_54.b = lev->pos_48.b;
+        lev->savedPos_54.c = lev->pos_48.c;
     }
 }
 
 void ExitLevantActorBattle_800AB444(int victoryPose)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    if (p->flags_0 & 0x100)
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    if (lev->flags_0 & 0x100)
     {
         if (victoryPose == 1)
-            p->flags_0 |= 0x1000;
+            lev->flags_0 |= 0x1000;
         else
-            p->flags_0 &= ~0x1000;
-        p->flags_0 &= ~0x100;
-        levantPos_8008BD18.pos.x = p->basePos_60.a;
-        levantPos_8008BD18.pos.y = p->basePos_60.b;
-        levantPos_8008BD18.pos.z = p->basePos_60.c;
-        p->pos_48.a = p->basePos_60.a;
-        p->pos_48.b = p->basePos_60.b;
-        p->pos_48.c = p->basePos_60.c;
+            lev->flags_0 &= ~0x1000;
+        lev->flags_0 &= ~0x100;
+        levantPos_8008BD18.pos.x = lev->basePos_60.a;
+        levantPos_8008BD18.pos.y = lev->basePos_60.b;
+        levantPos_8008BD18.pos.z = lev->basePos_60.c;
+        lev->pos_48.a = lev->basePos_60.a;
+        lev->pos_48.b = lev->basePos_60.b;
+        lev->pos_48.c = lev->basePos_60.c;
     }
 }
 
 short GetLevantActionEndFrame_800AB4D8(int anim)
 {
-    int s = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int e = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
-    int t;
+    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    int stanceEnd;
     switch ((unsigned)anim)
     {
     case 25:
     case 26:
     case 28:
-        return GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (e - s) * 2;
+        return GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
     case 7:
     case 8:
-        t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        return t + GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (e - s) * 30;
+        stanceEnd = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        return stanceEnd + GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
     }
     return GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim));
 }
@@ -3238,400 +3204,400 @@ short GetLevantAnimLoopStartCur_800AB5F8(int anim)
 
 short GetLevantActionLoopEndFrame_800AB630(int anim)
 {
-    int s = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int e = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
-    int t;
+    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    int stanceEnd;
     switch ((unsigned)anim)
     {
     case 25:
     case 26:
     case 28:
-        return GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (e - s) * 2;
+        return GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
     case 7:
     case 8:
-        t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        return t + GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (e - s) * 30;
+        stanceEnd = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        return stanceEnd + GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
     }
     return GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
 }
 
 short GetLevantActionHitFrame_800AB750(int anim)
 {
-    int s = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int e = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
-    short t;
+    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    short frame;
     switch ((unsigned)anim)
     {
     case 25:
     case 26:
     case 28:
-        return GetLevantAnimEventFrameCur_800AB170(anim) + (e - s) * 2;
+        return GetLevantAnimEventFrameCur_800AB170(anim) + (loopEnd - loopStart) * 2;
     case 7:
-        t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        t = t + GetLevantAnimEventFrameCur_800AB170(anim) + 0x4c;
-        return t;
+        frame = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        frame = frame + GetLevantAnimEventFrameCur_800AB170(anim) + 0x4c;
+        return frame;
     case 8:
-        t = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        t = t + GetLevantAnimEventFrameCur_800AB170(anim);
-        return t;
+        frame = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        frame = frame + GetLevantAnimEventFrameCur_800AB170(anim);
+        return frame;
     }
     return GetLevantAnimEventFrameCur_800AB170(anim);
 }
 
 int IsLevantActionFinished_800AB85C()
 {
-    unsigned t = gameTask_8008B4A4->f24->flags_0 & 0x2000;
-    return t != 0;
+    unsigned flag = gameTask_8008B4A4->buffer_24->flags_0 & 0x2000;
+    return flag != 0;
 }
 
 void ClearLevantBattleStance_800AB884()
 {
-    gameTask_8008B4A4->f24->flags_0 &= ~0x4000;
+    gameTask_8008B4A4->buffer_24->flags_0 &= ~0x4000;
 }
 
 void ResetLevantActorToIdle_800AB8AC()
 {
-    ResetLevantActor_800A9414(gameTask_8008B4A4->f24, 0, 3);
+    ResetLevantActor_800A9414(gameTask_8008B4A4->buffer_24, 0, 3);
 }
 
 void UpdateLevantActorModel_800AB8DC()
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    p->model_40 = GetLevantModel_800AC38C();
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    lev->model_40 = GetLevantModel_800AC38C();
 }
 
 void StopLevantAnimLoop_800AB910()
 {
-    gameTask_8008B4A4->f24->flags_0 &= ~0x800;
+    gameTask_8008B4A4->buffer_24->flags_0 &= ~0x800;
 }
 
 int IsLevantAnimLooped_800AB938()
 {
-    return ((unsigned char*)gameTask_8008B4A4->f24)[1] >> 7;
+    return ((unsigned char*)gameTask_8008B4A4->buffer_24)[1] >> 7;
 }
 
 int IsLevantIdleAnim_800AB958()
 {
-    return (unsigned)gameTask_8008B4A4->f24->action_8 < 2;
+    return (unsigned)gameTask_8008B4A4->buffer_24->action_8 < 2;
 }
 
 void QueueLevantAnim_800AB978(short anim)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    p->nextAnim_24 = -1;
-    p->queuedAnim_22 = anim;
-    p->flags_0 &= ~0x20;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    lev->nextAnim_24 = -1;
+    lev->queuedAnim_22 = anim;
+    lev->flags_0 &= ~0x20;
 }
 
 void PlayLevantScriptAnim_800AB9A8(int anim, int nextAnim, int blend)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (LoadLevantAnimById_800AC604(anim, 0) == 0 && (nextAnim < 0 || LoadLevantAnimById_800AC604(nextAnim, 0) == 0))
     {
-        SetLevantAnim_800AB010(p, 0x17, anim, 0);
-        p->mode_C = 2;
+        SetLevantAnim_800AB010(lev, 0x17, anim, 0);
+        lev->mode_C = 2;
         if (blend)
-            p->flags_0 |= 0x10;
+            lev->flags_0 |= 0x10;
         else
-            p->flags_0 &= ~0x10;
+            lev->flags_0 &= ~0x10;
     }
     else
     {
         printf(aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x6B9);
         exit(1);
     }
-    p->queuedAnim_22 = anim;
-    p->actionAnim_20 = anim;
-    p->nextAnim_24 = nextAnim;
-    p->flags_0 &= ~0x20;
-    p->flags_0 &= ~1;
+    lev->queuedAnim_22 = anim;
+    lev->actionAnim_20 = anim;
+    lev->nextAnim_24 = nextAnim;
+    lev->flags_0 &= ~0x20;
+    lev->flags_0 &= ~1;
 }
 
 void SetLevantPath_800ABAA4(G2Path* path)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    p->path_78 = path;
-    p->pathStep_7C = 0;
-    p->flags_0 |= 0x400000;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    lev->path_78 = path;
+    lev->pathStep_7C = 0;
+    lev->flags_0 |= 0x400000;
 }
 
 void EndLevantPath_800ABAD4()
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    p->flags_0 &= ~0x400000;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    lev->flags_0 &= ~0x400000;
     SetLevantRootMotionMode_800ABC78(0);
-    p->flags_0 = (p->flags_0 & ~0x800) | 8;
-    SetLevantAnim_800AB010(p, 0, 3, 0);
-    p->mode_C = 0;
+    lev->flags_0 = (lev->flags_0 & ~0x800) | 8;
+    SetLevantAnim_800AB010(lev, 0, 3, 0);
+    lev->mode_C = 0;
 }
 
 int IsLevantPathDone_800ABB44()
 {
-    return ((gameTask_8008B4A4->f24->flags_0 >> 22) ^ 1) & 1;
+    return ((gameTask_8008B4A4->buffer_24->flags_0 >> 22) ^ 1) & 1;
 }
 
 int IsLevantScriptAnimWaiting_800ABB70()
 {
-    return gameTask_8008B4A4->f24->action_8 == 0x17;
+    return gameTask_8008B4A4->buffer_24->action_8 == 0x17;
 }
 
-void sub_800ABB98(int a)
+void sub_800ABB98(int fromLoop)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
-    if (a == 1)
-        p->flags_0 |= 0x100000;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
+    if (fromLoop == 1)
+        lev->flags_0 |= 0x100000;
     else
-        p->flags_0 &= ~0x100000;
+        lev->flags_0 &= ~0x100000;
 }
 
 void SetLevantVisible_800ABBD8(int visible)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (visible)
     {
-        p->flags_0 &= ~0x20000;
-        ClearLevantFade_800AB150((G2Obj*)p);
+        lev->flags_0 &= ~0x20000;
+        ClearLevantFade_800AB150((GameLevantFade*)lev);
     }
     else
     {
-        p->flags_0 |= 0x20000;
+        lev->flags_0 |= 0x20000;
     }
 }
 
 void SetLevantMapCollision_800ABC34(int collide)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (collide)
-        p->flags_0 &= ~0x40000;
+        lev->flags_0 &= ~0x40000;
     else
-        p->flags_0 |= 0x40000;
+        lev->flags_0 |= 0x40000;
 }
 
 void SetLevantRootMotionMode_800ABC78(int on)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (on)
     {
-        p->flags_0 |= 0x80000;
-        p->basePos_60.a = levantPos_8008BD18.pos.x;
-        p->basePos_60.b = levantPos_8008BD18.pos.y;
-        p->basePos_60.c = levantPos_8008BD18.pos.z;
-        p->savedPos_54.a = p->pos_48.a;
-        p->savedPos_54.b = p->pos_48.b;
-        p->savedPos_54.c = p->pos_48.c;
+        lev->flags_0 |= 0x80000;
+        lev->basePos_60.a = levantPos_8008BD18.pos.x;
+        lev->basePos_60.b = levantPos_8008BD18.pos.y;
+        lev->basePos_60.c = levantPos_8008BD18.pos.z;
+        lev->savedPos_54.a = lev->pos_48.a;
+        lev->savedPos_54.b = lev->pos_48.b;
+        lev->savedPos_54.c = lev->pos_48.c;
     }
     else
     {
-        p->flags_0 &= ~0x80000;
+        lev->flags_0 &= ~0x80000;
     }
 }
 
-void RequestLevantActionEffect_800ABCF4(G2Act* p)
+void RequestLevantActionEffect_800ABCF4(GameLevantActor* lev)
 {
-    if (p->actionAnim_20 == 0x19)
+    if (lev->actionAnim_20 == 0x19)
     {
-        p->effect_2C = GetMagicEffect_8001AC8C(p->arg_34);
-        RequestEffect_800148F4(p->effect_2C);
+        lev->effect_2C = GetMagicEffect_8001AC8C(lev->arg_34);
+        RequestEffect_800148F4(lev->effect_2C);
     }
-    else if ((unsigned short)(p->actionAnim_20 - 7) < 2)
+    else if ((unsigned short)(lev->actionAnim_20 - 7) < 2)
     {
-        p->effect_2C = 0x25;
+        lev->effect_2C = 0x25;
         RequestEffect_800148F4(0x25);
-        GetSealResultFlags_80013358(p->arg_34);
-        word_8008D782 = GetSealResultFlags_80013358(p->arg_34);
+        GetSealResultFlags_80013358(lev->arg_34);
+        word_8008D782 = GetSealResultFlags_80013358(lev->arg_34);
     }
-    else if (p->actionAnim_20 == 0x1A)
+    else if (lev->actionAnim_20 == 0x1A)
     {
-        p->effect_2C = 0x39;
-        RequestEffect_800148F4(p->effect_2C);
+        lev->effect_2C = 0x39;
+        RequestEffect_800148F4(lev->effect_2C);
     }
-    else if (p->actionAnim_20 == 0x1C)
+    else if (lev->actionAnim_20 == 0x1C)
     {
-        p->effect_2C = 0x3A;
-        RequestEffect_800148F4(p->effect_2C);
+        lev->effect_2C = 0x3A;
+        RequestEffect_800148F4(lev->effect_2C);
     }
-    else if (p->actionAnim_20 == 0x10)
+    else if (lev->actionAnim_20 == 0x10)
     {
-        p->effect_2C = GetWeaponEffect_800189F8();
-        RequestEffect_800148F4(p->effect_2C);
+        lev->effect_2C = GetWeaponEffect_800189F8();
+        RequestEffect_800148F4(lev->effect_2C);
     }
-    else if (p->actionAnim_20 == 0x1D)
+    else if (lev->actionAnim_20 == 0x1D)
     {
-        p->effect_2C = ((int (*)(int))GetItemEffect_8001CDCC)(p->arg_34);
-        RequestEffect_800148F4(p->effect_2C);
+        lev->effect_2C = ((int (*)(int))GetItemEffect_8001CDCC)(lev->arg_34);
+        RequestEffect_800148F4(lev->effect_2C);
     }
 }
 
-void RunLevantActionCues_800ABDF0(G2Act* a)
+void RunLevantActionCues_800ABDF0(GameLevantActor* lev)
 {
-    if (a->anim_1C == 0x1A)
+    if (lev->anim_1C == 0x1A)
     {
-        if (a->frame_10 == (unsigned short)GetLevantAnimLoopStart_800AC834(a->anim_1C, GetLevantAnimSet_800AC474(0x1A)))
-            StartLevantFadeOut_800AB134((G2Obj*)a);
+        if (lev->frame_10 == (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(0x1A)))
+            StartLevantFadeOut_800AB134((GameLevantFade*)lev);
     }
-    if (a->anim_1C == 0x1D)
+    if (lev->anim_1C == 0x1D)
     {
-        if (a->frame_10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(0x1D))
+        if (lev->frame_10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(0x1D))
             PlaySfx_80031494(0x44);
-        if (a->frame_10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(a->anim_1C) - 10)
+        if (lev->frame_10 == (unsigned short)GetLevantAnimEventFrameCur_800AB170(lev->anim_1C) - 10)
             PlaySeqSlot_80031160(0x1D, 1);
     }
-    if (a->anim_1C == 0x1C && a->frame_10 == 2)
-        StartLevantFadeIn_800AB114((G2Obj*)a);
+    if (lev->anim_1C == 0x1C && lev->frame_10 == 2)
+        StartLevantFadeIn_800AB114((GameLevantFade*)lev);
 }
 
 void SetLevantStatusTint_800ABECC()
 {
-    G2V12* r = &dword_8007A164;
-    unsigned int f = dword_8008BD38;
-    if (f & 0x200)
+    G2V12* tint = &dword_8007A164;
+    unsigned int status = dword_8008BD38;
+    if (status & 0x200)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel7_8007A14C;
+        if (status & 1)
+            tint = &statusTintPoisonLevel7_8007A14C;
         else
-            r = &statusTintLevel7_8007A0EC;
+            tint = &statusTintLevel7_8007A0EC;
     }
-    else if (f & 0x100)
+    else if (status & 0x100)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel6_8007A140;
+        if (status & 1)
+            tint = &statusTintPoisonLevel6_8007A140;
         else
-            r = &statusTintLevel6_8007A0E0;
+            tint = &statusTintLevel6_8007A0E0;
     }
-    else if (f & 0x80)
+    else if (status & 0x80)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel5_8007A134;
+        if (status & 1)
+            tint = &statusTintPoisonLevel5_8007A134;
         else
-            r = &statusTintLevel5_8007A0D4;
+            tint = &statusTintLevel5_8007A0D4;
     }
-    else if (f & 0x40)
+    else if (status & 0x40)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel4_8007A128;
+        if (status & 1)
+            tint = &statusTintPoisonLevel4_8007A128;
         else
-            r = &statusTintLevel4_8007A0C8;
+            tint = &statusTintLevel4_8007A0C8;
     }
-    else if (f & 0x20)
+    else if (status & 0x20)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel3_8007A11C;
+        if (status & 1)
+            tint = &statusTintPoisonLevel3_8007A11C;
         else
-            r = &statusTintLevel3_8007A0BC;
+            tint = &statusTintLevel3_8007A0BC;
     }
-    else if (f & 0x10)
+    else if (status & 0x10)
     {
-        if (f & 1)
-            r = &statusTintPoisonLevel2_8007A110;
+        if (status & 1)
+            tint = &statusTintPoisonLevel2_8007A110;
         else
-            r = &statusTintLevel2_8007A0B0;
+            tint = &statusTintLevel2_8007A0B0;
     }
-    else if (f & 8)
+    else if (status & 8)
     {
-        if (f & 1)
-            r = &dword_8007A104;
+        if (status & 1)
+            tint = &dword_8007A104;
         else
-            r = &statusTintLevel1_8007A0A4;
+            tint = &statusTintLevel1_8007A0A4;
     }
-    else if (f & 1)
+    else if (status & 1)
     {
-        r = &statusTintPoison_8007A0F8;
+        tint = &statusTintPoison_8007A0F8;
     }
-    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
+    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, tint);
 }
 
-void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
+void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
 {
-    switch (p->action_8)
+    switch (lev->action_8)
     {
     case 0x15:
-        if (p->blend_26 >= 0x1000)
+        if (lev->blend_26 >= 0x1000)
         {
-            p->flags_0 &= ~0x10;
-            LoadLevantAnimById_800AC604(p->actionAnim_20, 0);
-            p->action_8 = 0x16;
+            lev->flags_0 &= ~0x10;
+            LoadLevantAnimById_800AC604(lev->actionAnim_20, 0);
+            lev->action_8 = 0x16;
         }
         break;
     case 0x16:
         if (AreLevantFilesLoaded_800AC768() == 1)
         {
-            p->action_8 = 0x17;
+            lev->action_8 = 0x17;
         }
         break;
     case 0x17:
-        if (p->flags_0 & 0x20)
+        if (lev->flags_0 & 0x20)
         {
-            if (p->flags_0 & 0x100000)
+            if (lev->flags_0 & 0x100000)
             {
-                SetLevantAnim_800AB010(p, 0x18, p->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(p->actionAnim_20, GetLevantAnimSet_800AC474(p->actionAnim_20)));
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
             }
             else
             {
-                SetLevantAnim_800AB010(p, 0x18, p->actionAnim_20, 0);
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, 0);
             }
-            p->flags_0 &= ~0x8000;
-            if (p->nextAnim_24 >= 0)
+            lev->flags_0 &= ~0x8000;
+            if (lev->nextAnim_24 >= 0)
             {
-                p->flags_0 &= ~0x800;
+                lev->flags_0 &= ~0x800;
             }
         }
         break;
     case 0x18:
-        if (p->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(p->anim_1C, GetLevantAnimSet_800AC474(p->anim_1C)))
+        if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
-            if (p->nextAnim_24 < 0)
+            if (lev->nextAnim_24 < 0)
             {
-                SetLevantAnim_800AB010(p, 0, 3, 0);
-                p->mode_C = 0;
-                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
+                SetLevantAnim_800AB010(lev, 0, 3, 0);
+                lev->mode_C = 0;
+                if (IsLevantAnimLoadedOrFree_800AAFD8(lev->actionAnim_20) == 1)
                 {
-                    p->flags_0 |= 0x10;
+                    lev->flags_0 |= 0x10;
                 }
             }
             else
             {
-                if (p->flags_0 & 0x100000)
+                if (lev->flags_0 & 0x100000)
                 {
-                    SetLevantAnim_800AB010(p, -1, p->nextAnim_24, 0);
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, 0);
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(p, -1, p->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(p->nextAnim_24, GetLevantAnimSet_800AC474(p->nextAnim_24)));
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
                 }
-                p->actionAnim_20 = p->queuedAnim_22;
-                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
+                lev->actionAnim_20 = lev->queuedAnim_22;
+                if (IsLevantAnimLoadedOrFree_800AAFD8(lev->actionAnim_20) == 1)
                 {
-                    p->flags_0 |= 0x10;
+                    lev->flags_0 |= 0x10;
                 }
-                p->flags_0 |= 0x800;
+                lev->flags_0 |= 0x800;
             }
         }
-        if (p->actionAnim_20 != (short)p->queuedAnim_22)
+        if (lev->actionAnim_20 != (short)lev->queuedAnim_22)
         {
-            if (LoadLevantAnimById_800AC604((short)p->queuedAnim_22, 0) == 0)
+            if (LoadLevantAnimById_800AC604((short)lev->queuedAnim_22, 0) == 0)
             {
-                p->actionAnim_20 = p->queuedAnim_22;
-                p->action_8 = 0x17;
-                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
+                lev->actionAnim_20 = lev->queuedAnim_22;
+                lev->action_8 = 0x17;
+                if (IsLevantAnimLoadedOrFree_800AAFD8(lev->actionAnim_20) == 1)
                 {
-                    p->flags_0 |= 0x10;
+                    lev->flags_0 |= 0x10;
                 }
             }
             else
             {
-                SetLevantAnim_800AB010(p, 0x19, 3, 0);
-                p->flags_0 |= 0x10;
+                SetLevantAnim_800AB010(lev, 0x19, 3, 0);
+                lev->flags_0 |= 0x10;
             }
         }
         break;
     case 0x19:
-        if (p->blend_26 >= 0x1000)
+        if (lev->blend_26 >= 0x1000)
         {
-            p->flags_0 &= ~0x10;
-            IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20);
-            p->actionAnim_20 = p->queuedAnim_22;
-            LoadLevantAnimById_800AC604(p->actionAnim_20, 0);
-            p->action_8 = 0x16;
+            lev->flags_0 &= ~0x10;
+            IsLevantAnimLoadedOrFree_800AAFD8(lev->actionAnim_20);
+            lev->actionAnim_20 = lev->queuedAnim_22;
+            LoadLevantAnimById_800AC604(lev->actionAnim_20, 0);
+            lev->action_8 = 0x16;
         }
         break;
     case 0x1a:
@@ -3641,21 +3607,21 @@ void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
 
 void SkipLevantAnim_800AC318()
 {
-    gameTask_8008B4A4->f24->flags_0 |= 0x800000;
+    gameTask_8008B4A4->buffer_24->flags_0 |= 0x800000;
 }
 
 void SetLevantLastCapture_800AC340(int on)
 {
-    G2Act* p = gameTask_8008B4A4->f24;
+    GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (on)
-        p->flags_0 |= 0x1000000;
+        lev->flags_0 |= 0x1000000;
     else
-        p->flags_0 &= ~0x1000000;
+        lev->flags_0 &= ~0x1000000;
 }
 
-void SetLevantHasArmor_800AC380(int v)
+void SetLevantHasArmor_800AC380(int has)
 {
-    dword_8008BDA0 = v;
+    dword_8008BDA0 = has;
 }
 
 Model* GetLevantModel_800AC38C()
@@ -3663,14 +3629,14 @@ Model* GetLevantModel_800AC38C()
     return dword_8007DC60->items_8;
 }
 
-void SetLevantWeaponKind_800AC3A4(short v)
+void SetLevantWeaponKind_800AC3A4(short kind)
 {
-    word_8008BDA4 = v;
+    word_8008BDA4 = kind;
 }
 
-void SetLevantOutfit_800AC3B0(int a)
+void SetLevantOutfit_800AC3B0(int outfit)
 {
-    word_8008BDA6 = a;
+    word_8008BDA6 = outfit;
     SetLevantHasArmor_800AC380(1);
 }
 
@@ -3686,17 +3652,17 @@ int GetLevantWeaponKind_800AC3E4()
 
 int GetLevantModelId_800AC3F4()
 {
-    SaveData* s = &saveData_8008B570;
-    int r;
-    if (s->field_830)
+    SaveData* sd = &saveData_8008B570;
+    int model;
+    if (sd->field_830)
     {
-        r = ((int (*)(int))GetArmorOutfit_8001D060)(s->levantStatus_7C8.field_1C[1]) + levantOutfitModelOffsets_800B11B8[s->field_834];
+        model = ((int (*)(int))GetArmorOutfit_8001D060)(sd->levantStatus_7C8.field_1C[1]) + levantOutfitModelOffsets_800B11B8[sd->field_834];
     }
     else
     {
-        r = levantBaseModels_800B116C[s->field_834];
+        model = levantBaseModels_800B116C[sd->field_834];
     }
-    return r;
+    return model;
 }
 
 int GetLevantOutfit_800AC464()
@@ -3711,44 +3677,44 @@ int GetLevantAnimSet_800AC474(int anim)
 
 int GetLevantAnimFile_800AC4A8(int anim)
 {
-    G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()])].fileId_0;
+    GameLevantAnim* anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()])].fileId_0;
 }
 
 int IsLevantAnimLoaded_800AC518(int anim)
 {
-    G2Rec* p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    int r = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
-    if (p[r].resident_1)
+    GameLevantAnim* anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    if (anims[idx].resident_1)
         return 1;
     return IsAnimInModelAnimSet_80025924(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
 }
 
-int LoadLevantAnim_800AC5D0(int a, int b)
+int LoadLevantAnim_800AC5D0(int fileId, int resident)
 {
-    return LoadModelAnim_80025440(dword_8007DC60->items_8, a, b) != 0;
+    return LoadModelAnim_80025440(dword_8007DC60->items_8, fileId, resident) != 0;
 }
 
 int LoadLevantAnimById_800AC604(int anim, int resident)
 {
-    int t = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    return LoadModelAnim_80025440(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, t), resident) != 0;
+    int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
+    return LoadModelAnim_80025440(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set), resident) != 0;
 }
 
-void FreeLevantAnim_800AC678(int a)
+void FreeLevantAnim_800AC678(int fileId)
 {
-    FreeModelAnim_8002556C(dword_8007DC60->items_8, a);
+    FreeModelAnim_8002556C(dword_8007DC60->items_8, fileId);
 }
 
 void FreeLevantAnimById_800AC6A8(int anim)
 {
-    int t = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, t));
+    int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
+    FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set));
 }
 
-void LoadLevantAnimSet_800AC708(int a, int b)
+void LoadLevantAnimSet_800AC708(int set, int flag)
 {
-    LoadModelAnimSet_80025780(dword_8007DC60->items_8, a, b);
+    LoadModelAnimSet_80025780(dword_8007DC60->items_8, set, flag);
 }
 
 void FreeLevantAnimSet_800AC73C()
@@ -3775,144 +3741,145 @@ unsigned char* GetLevantAnimSetTable_800AC7B4(int set)
 
 short GetLevantAnimStartFrame_800AC7F0(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].start_4;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].start_4;
 }
 
 short GetLevantAnimLoopStart_800AC834(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].loopStart_6;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].loopStart_6;
 }
 
 short GetLevantAnimLoopEnd_800AC878(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].loopEnd_8;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].loopEnd_8;
 }
 
 unsigned short GetLevantAnimLastFrame_800AC8BC(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].lastFrame_A;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].lastFrame_A;
 }
 
 int GetLevantAnimFlags_800AC900(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].flags_3;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].flags_3;
 }
 
 short GetLevantAnimEventFrame_800AC944(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].hitFrames_C;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].hitFrames_C;
 }
 
 unsigned char GetLevantAnimFileId_800AC988(int anim, int set)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, set);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return p[r].fileId_0;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, set);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return anims[idx].fileId_0;
 }
 
 short* GetLevantAnimHitFrames_800AC9CC(int anim)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return &p[r].hitFrames_C;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return &anims[idx].hitFrames_C;
 }
 
 int* sub_800ACA38(int anim)
 {
-    G2Rec* p;
-    int r = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
-    p = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return &p[r].f34;
+    GameLevantAnim* anims;
+    int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    return &anims[idx].f34;
 }
 
-void LevantModelTaskInit_800ACAA4(int* a, int* b)
+void LevantModelTaskInit_800ACAA4(int* task, int* work)
 {
-    SaveData* s = &saveData_8008B570;
-    b[0] = 0;
-    b[1] = 0;
-    b[2] = -1;
-    b[3] = -1;
-    b[4] = -1;
-    b[5] = -1;
-    b[6] = -1;
-    b[7] = -1;
-    b[8] = -1;
-    b[9] = 0;
-    SetLevantHasArmor_800AC380(s->levantStatus_7C8.field_1C[1] != 0xFF);
-    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
+    SaveData* sd = &saveData_8008B570;
+    work[0] = 0;
+    work[1] = 0;
+    work[2] = -1;
+    work[3] = -1;
+    work[4] = -1;
+    work[5] = -1;
+    work[6] = -1;
+    work[7] = -1;
+    work[8] = -1;
+    work[9] = 0;
+    SetLevantHasArmor_800AC380(sd->levantStatus_7C8.field_1C[1] != 0xFF);
+    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->field_2);
     PoolInit_8003FF1C(&levantPool_800B1DD0, 0x2BF20);
-    LevantModelTask_800ACB64(a, b);
-    a[2] = (int)LevantModelTask_800ACB64;
+    LevantModelTask_800ACB64(task, work);
+    task[2] = (int)LevantModelTask_800ACB64;
 }
 
-typedef struct G2Ld_1
+// the work area of LevantModelTask_800ACB64
+typedef struct GameLevantModelWork
 {
     int state;
-    int flags;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-} G2Ld_1;
+    int flags; // 1: reload the model, 2: reload the outfit, 4: load the weapon's animations, 8 / 0x10: FTG save / swaps
+    int model_8; // saveData_8008B570.field_830 (levantModelIds_800B1164 index)
+    int prevModel_C;
+    int f10; // saveData_8008B570.field_834
+    int weaponKind_14;
+    int f18; // saveData_8008B570.field_836
+    int outfit_1C;
+} GameLevantModelWork;
 extern ModelVramSlot* dword_8007DC6C;
 extern void FreeLevantAnimSetAnims_800ACF3C();
 extern void LoadLevantAnimSetAnims_800ACFB8();
 // Matched
-void LevantModelTask_800ACB64(int* a, void* buf)
+void LevantModelTask_800ACB64(int* task, void* buf)
 {
     int more = 1;
-    G2Ld_1* q = buf;
-    Model* m;
+    GameLevantModelWork* work = buf;
+    Model* model;
     do
     {
-        switch (q->state)
+        switch (work->state)
         {
         case 0:
-            if (q->f8 != saveData_8008B570.field_830)
+            if (work->model_8 != saveData_8008B570.field_830)
             {
-                q->f10 = -1;
-                q->flags |= 0xd;
+                work->f10 = -1;
+                work->flags |= 0xd;
                 SetLevantWeaponKind_800AC3A4(saveData_8008B570.field_834);
             }
-            if (q->f10 != saveData_8008B570.field_834 || q->f18 != saveData_8008B570.field_836)
+            if (work->f10 != saveData_8008B570.field_834 || work->f18 != saveData_8008B570.field_836)
             {
-                q->flags |= 0x16;
-                FreeLevantAnimSetAnims_800ACF3C(q);
+                work->flags |= 0x16;
+                FreeLevantAnimSetAnims_800ACF3C(work);
             }
-            if (q->flags == 0)
+            if (work->flags == 0)
             {
                 more = 0;
             }
             else
             {
                 PoolSetInited_80040148((int*)&levantPool_800B1DD0, 1);
-                q->state = 1;
+                work->state = 1;
             }
             break;
         case 1:
-            if (q->flags & 1)
+            if (work->flags & 1)
             {
                 if (dword_8007DC60)
                 {
@@ -3920,34 +3887,34 @@ void LevantModelTask_800ACB64(int* a, void* buf)
                 }
                 InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&levantPool_800B1DD0);
                 LoadModel_80025200(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830], 0, 2, 1);
-                q->fC = q->f8;
-                q->f8 = saveData_8008B570.field_830;
-                q->flags &= ~1;
+                work->prevModel_C = work->model_8;
+                work->model_8 = saveData_8008B570.field_830;
+                work->flags &= ~1;
             }
-            else if (q->flags & 2)
+            else if (work->flags & 2)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
-                LoadModelAltFtgs_80025974(m, GetLevantModelId_800AC3F4(), 1);
-                q->f14 = GetLevantWeaponKind_800AC3E4();
-                q->f10 = saveData_8008B570.field_834;
-                q->f1C = GetLevantOutfit_800AC464();
-                q->f18 = saveData_8008B570.field_836;
-                q->flags &= ~2;
+                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                LoadModelAltFtgs_80025974(model, GetLevantModelId_800AC3F4(), 1);
+                work->weaponKind_14 = GetLevantWeaponKind_800AC3E4();
+                work->f10 = saveData_8008B570.field_834;
+                work->outfit_1C = GetLevantOutfit_800AC464();
+                work->f18 = saveData_8008B570.field_836;
+                work->flags &= ~2;
             }
-            else if (q->flags & 4)
+            else if (work->flags & 4)
             {
-                LoadLevantAnimSetAnims_800ACFB8(q);
-                q->flags &= ~4;
+                LoadLevantAnimSetAnims_800ACFB8(work);
+                work->flags &= ~4;
             }
             BeginFade_8001C260();
             eventDispatchHalt_8008B540 = 1;
             ClearOTagRAll_8001B260();
-            q->state = 2;
+            work->state = 2;
             break;
         case 2:
             if (AreFileRequestsDone_80024DC4(dword_8007DC60->items_8) == 1)
             {
-                q->state = 3;
+                work->state = 3;
             }
             else
             {
@@ -3956,19 +3923,19 @@ void LevantModelTask_800ACB64(int* a, void* buf)
             }
             break;
         case 3:
-            if ((q->flags & 9) == 8)
+            if ((work->flags & 9) == 8)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
-                SaveModelFtgs_80024FFC(m, levantSavedFtgIds_800B11CC);
-                q->flags &= ~8;
+                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                SaveModelFtgs_80024FFC(model, levantSavedFtgIds_800B11CC);
+                work->flags &= ~8;
             }
-            if ((q->flags & 0x12) == 0x10)
+            if ((work->flags & 0x12) == 0x10)
             {
-                m = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
-                ApplyModelFtgSwaps_80025C38(m, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-                q->flags &= ~0x10;
+                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                ApplyModelFtgSwaps_80025C38(model, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                work->flags &= ~0x10;
             }
-            if (q->flags == 0)
+            if (work->flags == 0)
             {
                 more = 0;
                 UpdateLevantActorModel_800AB8DC();
@@ -3976,7 +3943,7 @@ void LevantModelTask_800ACB64(int* a, void* buf)
                 EndFade_8001C290();
             }
             PoolSetInited_80040148((int*)&levantPool_800B1DD0, 0);
-            q->state = 0;
+            work->state = 0;
             break;
         }
     } while (more);
@@ -3988,115 +3955,115 @@ void LevantModelTaskExit_800ACF0C()
     PoolDestroy_8003FF7C(&levantPool_800B1DD0);
 }
 
-void FreeLevantAnimSetAnims_800ACF3C(G2Ld_1* p)
+void FreeLevantAnimSetAnims_800ACF3C(GameLevantModelWork* work)
 {
-    unsigned char* q;
+    unsigned char* ent;
     int i;
-    if (p->f14 >= 0)
+    if (work->weaponKind_14 >= 0)
     {
-        q = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[p->f14]);
-        for (i = 0; i < 16; i++, q += 0x40)
+        ent = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[work->weaponKind_14]);
+        for (i = 0; i < 16; i++, ent += 0x40)
         {
-            if (q[1])
-                FreeLevantAnim_800AC678(q[0]);
+            if (ent[1])
+                FreeLevantAnim_800AC678(ent[0]);
         }
     }
 }
 
 void LoadLevantAnimSetAnims_800ACFB8()
 {
-    unsigned char* p = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
+    unsigned char* ent = GetLevantAnimSetTable_800AC7B4(levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     int i;
-    for (i = 0; i < 16; i++, p += 0x40)
+    for (i = 0; i < 16; i++, ent += 0x40)
     {
-        if (p[1])
-            LoadLevantAnim_800AC5D0(p[0], 1);
+        if (ent[1])
+            LoadLevantAnim_800AC5D0(ent[0], 1);
     }
 }
 
 int GetMoney_800AD02C()
 {
-    int v = playerYan_8008B594.yan_0;
-    if (v > 9999999)
-        v = 9999999;
-    return v;
+    int yan = playerYan_8008B594.yan_0;
+    if (yan > 9999999)
+        yan = 9999999;
+    return yan;
 }
 
-int AddMoney_800AD058(int a)
+int AddMoney_800AD058(int amount)
 {
-    SaveData* s = &saveData_8008B570;
-    int v;
-    if (s->inv_24.yan_0 <= 9999998)
+    SaveData* sd = &saveData_8008B570;
+    int yan;
+    if (sd->inv_24.yan_0 <= 9999998)
     {
-        v = s->inv_24.yan_0 + a;
-        if (v <= 9999998)
-            s->inv_24.yan_0 = v;
+        yan = sd->inv_24.yan_0 + amount;
+        if (yan <= 9999998)
+            sd->inv_24.yan_0 = yan;
         else
-            s->inv_24.yan_0 = 9999999;
+            sd->inv_24.yan_0 = 9999999;
         return 1;
     }
     return 0;
 }
 
-int SpendMoney_800AD0A4(int a)
+int SpendMoney_800AD0A4(int amount)
 {
-    SaveData* s = &saveData_8008B570;
-    if (s->inv_24.yan_0 >= a)
+    SaveData* sd = &saveData_8008B570;
+    if (sd->inv_24.yan_0 >= amount)
     {
-        s->inv_24.yan_0 -= a;
+        sd->inv_24.yan_0 -= amount;
         return 1;
     }
     return 0;
 }
 
-int TestEventFlag_800AD0D4(unsigned a)
+int TestEventFlag_800AD0D4(unsigned flag)
 {
-    return (playerYan_8008B594.bits_290[a >> 3] >> (a & 7)) & 1;
+    return (playerYan_8008B594.bits_290[flag >> 3] >> (flag & 7)) & 1;
 }
 
-void SetEventFlag_800AD0F8(unsigned a)
+void SetEventFlag_800AD0F8(unsigned flag)
 {
-    playerYan_8008B594.bits_290[a >> 3] |= 1 << (a & 7);
+    playerYan_8008B594.bits_290[flag >> 3] |= 1 << (flag & 7);
 }
 
-void ClearEventFlag_800AD124(unsigned a)
+void ClearEventFlag_800AD124(unsigned flag)
 {
-    playerYan_8008B594.bits_290[a >> 3] &= ~(1 << (a & 7));
+    playerYan_8008B594.bits_290[flag >> 3] &= ~(1 << (flag & 7));
 }
 
-int GetEventVar_800AD154(int a)
+int GetEventVar_800AD154(int var)
 {
-    return playerYan_8008B594.vars_2A3[a];
+    return playerYan_8008B594.vars_2A3[var];
 }
 
-int SetEventVar_800AD16C(int a, int b)
+int SetEventVar_800AD16C(int var, int value)
 {
-    playerYan_8008B594.vars_2A3[a] = b;
-    return b;
+    playerYan_8008B594.vars_2A3[var] = value;
+    return value;
 }
 
-int AddInventory_800AD184(int a, int b, int c)
+int AddInventory_800AD184(int id, int count, int table)
 {
-    InvSlot* r = FindInventorySlotForAdd_800AD4D8(a, b, c);
-    if (r && a != 0xFF)
+    InvSlot* slot = FindInventorySlotForAdd_800AD4D8(id, count, table);
+    if (slot && id != 0xFF)
     {
-        r->id = a;
-        r->count += b;
+        slot->id = id;
+        slot->count += count;
         return 1;
     }
     return 0;
 }
 
-int RemoveInventory_800AD1E0(int a, int b, int c)
+int RemoveInventory_800AD1E0(int id, int count, int table)
 {
-    InvSlot* r = FindInventorySlot_800AD58C(a, c);
-    if (r)
+    InvSlot* slot = FindInventorySlot_800AD58C(id, table);
+    if (slot)
     {
-        if (CanRemoveInventoryCount_800AD67C(r->count, b))
+        if (CanRemoveInventoryCount_800AD67C(slot->count, count))
         {
-            r->count -= b;
-            if (r->count == 0)
-                r->id = 0xFF;
+            slot->count -= count;
+            if (slot->count == 0)
+                slot->id = 0xFF;
             return 1;
         }
     }
@@ -4105,132 +4072,132 @@ int RemoveInventory_800AD1E0(int a, int b, int c)
 
 int GetInventoryCount_800AD254()
 {
-    InvSlot* r = FindInventorySlot_800AD58C();
-    if (r)
-        return r->count;
+    InvSlot* slot = FindInventorySlot_800AD58C();
+    if (slot)
+        return slot->count;
     return 0;
 }
 
-int GetInventorySlotId_800AD288(int a, int b)
+int GetInventorySlotId_800AD288(int slot, int table)
 {
-    InvSlot* p = GetInventoryTable_800AD604(b);
-    if (p)
-        return p[a].id;
+    InvSlot* slots = GetInventoryTable_800AD604(table);
+    if (slots)
+        return slots[slot].id;
     return 0xFF;
 }
 
-int GetInventorySlotCount_800AD2C8(int a, int b)
+int GetInventorySlotCount_800AD2C8(int slot, int table)
 {
-    InvSlot* p = GetInventoryTable_800AD604(b);
-    if (p)
-        return p[a].count;
+    InvSlot* slots = GetInventoryTable_800AD604(table);
+    if (slots)
+        return slots[slot].count;
     return 0;
 }
 
-int GetLastInventorySlot_800AD308(int a)
+int GetLastInventorySlot_800AD308(int table)
 {
-    InvSlot* p = GetInventoryTable_800AD604(a);
-    int n = GetInventorySize_800AD374(a);
+    InvSlot* slots = GetInventoryTable_800AD604(table);
+    int size = GetInventorySize_800AD374(table);
     int i;
-    if (p)
+    if (slots)
     {
-        for (i = n - 1; i > 0; i--)
+        for (i = size - 1; i > 0; i--)
         {
-            if (p[i].id != 0xFF)
+            if (slots[i].id != 0xFF)
                 return i;
         }
     }
     return 0;
 }
 
-int GetInventorySize_800AD374(int a)
+int GetInventorySize_800AD374(int table)
 {
-    int r;
-    unsigned u = a;
-    r = 0;
-    if (u < 4)
+    int size;
+    unsigned idx = table;
+    size = 0;
+    if (idx < 4)
         goto L;
-    if (u == 4)
+    if (idx == 4)
     {
     L:
-        r = 0x40;
+        size = 0x40;
     }
-    return r;
+    return size;
 }
 
 int IsInventory4NonEmpty_800AD398()
 {
-    int x;
+    int count;
     if (GetLastInventorySlot_800AD308(4) > 0)
         return 1;
     if (GetInventorySlotId_800AD288(0, 4) != 0xFF)
     {
-        x = GetInventorySlotCount_800AD2C8(0, 4);
-        if (x)
+        count = GetInventorySlotCount_800AD2C8(0, 4);
+        if (count)
             return 1;
     }
     return 0;
 }
 
-void CompactInventory_800AD3F0(int a)
+void CompactInventory_800AD3F0(int table)
 {
     unsigned char tmp[2];
-    int n = GetInventorySize_800AD374(a);
-    InvSlot* tbl = GetInventoryTable_800AD604(a);
+    int size = GetInventorySize_800AD374(table);
+    InvSlot* tbl = GetInventoryTable_800AD604(table);
     short cnt = 0;
     short i;
-    InvSlot* r;
-    for (i = 0; i < n; i++)
+    InvSlot* slot;
+    for (i = 0; i < size; i++)
     {
-        r = FindInventorySlot_800AD58C(i, a);
-        if (r)
+        slot = FindInventorySlot_800AD58C(i, table);
+        if (slot)
         {
             MemCopy_800403E8(tmp, &tbl[cnt], 2);
-            MemCopy_800403E8(&tbl[cnt], r, 2);
-            MemCopy_800403E8(r, tmp, 2);
+            MemCopy_800403E8(&tbl[cnt], slot, 2);
+            MemCopy_800403E8(slot, tmp, 2);
             cnt++;
         }
     }
 }
 
-InvSlot* FindInventorySlotForAdd_800AD4D8(int a, int b, int c)
+InvSlot* FindInventorySlotForAdd_800AD4D8(int id, int count, int table)
 {
-    InvSlot* r = FindInventorySlot_800AD58C(a, c);
-    if (r)
+    InvSlot* slot = FindInventorySlot_800AD58C(id, table);
+    if (slot)
     {
-        if (CanAddInventoryCount_800AD670(r->count, b))
+        if (CanAddInventoryCount_800AD670(slot->count, count))
         {
-            if ((unsigned)(c - 1) < 3 && a == GetEquippedId_800AD990(c - 1))
+            if ((unsigned)(table - 1) < 3 && id == GetEquippedId_800AD990(table - 1))
             {
-                if (!(r->count + b < 0x14))
+                if (!(slot->count + count < 0x14))
                     return 0;
             }
-            return r;
+            return slot;
         }
         return 0;
     }
-    return FindInventorySlot_800AD58C(0xFF, c);
+    return FindInventorySlot_800AD58C(0xFF, table);
 }
 
-InvSlot* FindInventorySlot_800AD58C(int a, int b)
+InvSlot* FindInventorySlot_800AD58C(int id, int table)
 {
-    int n = GetInventorySize_800AD374(b);
-    InvSlot* p = GetInventoryTable_800AD604(b);
+    int size = GetInventorySize_800AD374(table);
+    InvSlot* slots = GetInventoryTable_800AD604(table);
     int i;
-    if (p != 0)
+    if (slots != 0)
     {
-        for (i = 0; i < n; i++)
+        for (i = 0; i < size; i++)
         {
-            if (a == p[i].id)
-                return &p[i];
+            if (id == slots[i].id)
+                return &slots[i];
         }
     }
     return 0;
 }
 
-InvSlot* GetInventoryTable_800AD604(int n)
+InvSlot* GetInventoryTable_800AD604(int table)
 {
-    switch ((unsigned)n)
+    switch ((unsigned)table)
     {
     case 0:
         return saveData_8008B570.inv_24.inventory_4[0];
@@ -4246,40 +4213,40 @@ InvSlot* GetInventoryTable_800AD604(int n)
     return 0;
 }
 
-int CanAddInventoryCount_800AD670(int a, int b)
+int CanAddInventoryCount_800AD670(int have, int count)
 {
-    return a + b < 0x15;
+    return have + count < 0x15;
 }
 
-int CanRemoveInventoryCount_800AD67C(int a, int b)
+int CanRemoveInventoryCount_800AD67C(int have, int count)
 {
-    return (a - b) >= 0;
+    return (have - count) >= 0;
 }
 
-int SetValuableFlag_800AD68C(int n)
+int SetValuableFlag_800AD68C(int valuable)
 {
-    SaveInventory* f = &playerYan_8008B594;
-    if (n < 0x40)
+    SaveInventory* inv = &playerYan_8008B594;
+    if (valuable < 0x40)
     {
-        f->flags_288[n / 32] |= 1 << (n % 32);
+        inv->flags_288[valuable / 32] |= 1 << (valuable % 32);
         return 1;
     }
     return 0;
 }
 
-void ClearValuableFlag_800AD6E4(int n)
+void ClearValuableFlag_800AD6E4(int valuable)
 {
-    SaveInventory* f = &playerYan_8008B594;
-    if (n < 0x40)
-        f->flags_288[n / 32] &= ~(1 << (n % 32));
+    SaveInventory* inv = &playerYan_8008B594;
+    if (valuable < 0x40)
+        inv->flags_288[valuable / 32] &= ~(1 << (valuable % 32));
 }
 
-int TestValuableFlag_800AD73C(int n)
+int TestValuableFlag_800AD73C(int valuable)
 {
-    SaveInventory* f = &playerYan_8008B594;
-    if (n < 0x40)
+    SaveInventory* inv = &playerYan_8008B594;
+    if (valuable < 0x40)
     {
-        if (f->flags_288[n / 32] & (1 << (n % 32)))
+        if (inv->flags_288[valuable / 32] & (1 << (valuable % 32)))
             return 1;
     }
     return 0;
@@ -4288,24 +4255,24 @@ int TestValuableFlag_800AD73C(int n)
 int CountValuables_800AD79C()
 {
     short i;
-    int c = 0;
+    int count = 0;
     for (i = 0; i < 0x26; i++)
     {
         if (TestValuableFlag_800AD73C(i))
-            c++;
+            count++;
     }
-    return c;
+    return count;
 }
 
-int GetNthValuable_800AD7F8(int a)
+int GetNthValuable_800AD7F8(int nth)
 {
     short i;
-    int c = 0;
+    int count = 0;
     for (i = 0; i < 0x26; i++)
     {
         if (TestValuableFlag_800AD73C(i))
         {
-            if (a == (short)c++)
+            if (nth == (short)count++)
                 return i;
         }
     }
@@ -4314,10 +4281,10 @@ int GetNthValuable_800AD7F8(int a)
 
 int GetFreeCocoonSlots_800AD888()
 {
-    int v = 12 - CountCocoonsAndMinions_800AD8BC();
-    if (v < 0)
-        v = 0;
-    return v;
+    int slots = 12 - CountCocoonsAndMinions_800AD8BC();
+    if (slots < 0)
+        slots = 0;
+    return slots;
 }
 
 int CountCocoonsAndMinions_800AD8BC()
@@ -4330,99 +4297,99 @@ int GetEmptyCocoons_800AD8E4()
     return levantEmptyCocoons_8008B818;
 }
 
-int AddEmptyCocoons_800AD8F4(int a)
+int AddEmptyCocoons_800AD8F4(int count)
 {
     int ret = 1;
-    int v = GetEmptyCocoons_800AD8E4() + a;
-    if (v >= 13)
+    int total = GetEmptyCocoons_800AD8E4() + count;
+    if (total >= 13)
     {
-        v = 12;
+        total = 12;
         ret = 0;
     }
-    levantEmptyCocoons_8008B818 = v;
+    levantEmptyCocoons_8008B818 = total;
     return ret;
 }
 
-int RemoveEmptyCocoons_800AD944(int a)
+int RemoveEmptyCocoons_800AD944(int count)
 {
     int ret = 1;
-    int v = GetEmptyCocoons_800AD8E4() - a;
-    if (v < 0)
+    int total = GetEmptyCocoons_800AD8E4() - count;
+    if (total < 0)
     {
-        v = 0;
-        ret = v;
+        total = 0;
+        ret = total;
     }
-    levantEmptyCocoons_8008B818 = v;
+    levantEmptyCocoons_8008B818 = total;
     return ret;
 }
 
-unsigned int GetEquippedId_800AD990(int a)
+unsigned int GetEquippedId_800AD990(int slot)
 {
-    unsigned int r = 0;
-    switch ((unsigned)a)
+    unsigned int id = 0;
+    switch ((unsigned)slot)
     {
     case 0:
-        r = equippedWeaponId_8008BD54;
+        id = equippedWeaponId_8008BD54;
         break;
     case 1:
-        r = equippedArmor_8008BD55;
+        id = equippedArmor_8008BD55;
         break;
     case 2:
-        r = byte_8008BD56;
+        id = byte_8008BD56;
         break;
     }
-    return r;
+    return id;
 }
 
-int SetEquipment_800AD9EC(int a, int b)
+int SetEquipment_800AD9EC(int id, int slot)
 {
-    unsigned char old = GetEquippedId_800AD990(b);
-    SaveData* s;
-    switch ((unsigned)b)
+    unsigned char old = GetEquippedId_800AD990(slot);
+    SaveData* sd;
+    switch ((unsigned)slot)
     {
     case 0:
         if (old == 0xFF)
         {
-            if (a == 0xFF)
+            if (id == 0xFF)
                 return 1;
         }
-        else if (a == 0xFF)
+        else if (id == 0xFF)
         {
             goto fail;
         }
-        s = &saveData_8008B570;
-        s->levantStatus_7C8.field_1C[0] = a;
-        RemoveInventory_800AD1E0(a, 1, 1);
+        sd = &saveData_8008B570;
+        sd->levantStatus_7C8.field_1C[0] = id;
+        RemoveInventory_800AD1E0(id, 1, 1);
         if (old < 0x17)
             AddInventory_800AD184(old, 1, 1);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(a)->field_2);
-        GetArmorData_8001D034(s->levantStatus_7C8.field_1C[1]);
-        SetLevantOutfit_800AC3B0(dword_8001D060(s->levantStatus_7C8.field_1C[1]));
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(id)->field_2);
+        GetArmorData_8001D034(sd->levantStatus_7C8.field_1C[1]);
+        SetLevantOutfit_800AC3B0(dword_8001D060(sd->levantStatus_7C8.field_1C[1]));
         break;
     case 1:
         if (old == 0xFF)
         {
-            if (a == 0xFF)
+            if (id == 0xFF)
                 return 1;
         }
-        else if (a == 0xFF)
+        else if (id == 0xFF)
         {
             goto fail;
         }
-        s = &saveData_8008B570;
-        s->levantStatus_7C8.field_1C[1] = a;
-        RemoveInventory_800AD1E0(a, 1, 2);
+        sd = &saveData_8008B570;
+        sd->levantStatus_7C8.field_1C[1] = id;
+        RemoveInventory_800AD1E0(id, 1, 2);
         if (old < 0xF)
             AddInventory_800AD184(old, 1, 2);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(s->levantStatus_7C8.field_1C[0])->field_2);
-        GetArmorData_8001D034(a);
-        SetLevantOutfit_800AC3B0(dword_8001D060(a));
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->field_2);
+        GetArmorData_8001D034(id);
+        SetLevantOutfit_800AC3B0(dword_8001D060(id));
         break;
     fail:
         return 0;
     case 2:
-        byte_8008BD56 = a;
-        RemoveInventory_800AD1E0(a, 1, 3);
+        byte_8008BD56 = id;
+        RemoveInventory_800AD1E0(id, 1, 3);
         if (old != 0xFF)
             AddInventory_800AD184(old, 1, 3);
         break;
@@ -4430,38 +4397,38 @@ int SetEquipment_800AD9EC(int a, int b)
     return 1;
 }
 
-int FindMapVar_800ADBA0(short* p)
+int FindMapVar_800ADBA0(short* key)
 {
-    SaveData* base = &saveData_8008B570;
+    SaveData* sd = &saveData_8008B570;
     int i;
-    for (i = 0; i < base->nMapVars_2F4; i++)
+    for (i = 0; i < sd->nMapVars_2F4; i++)
     {
-        if (base->mapVars_2F8[i].area_0 == p[0] && base->mapVars_2F8[i].map_2 == p[1] && base->mapVars_2F8[i].sub_4 == p[2])
+        if (sd->mapVars_2F8[i].area_0 == key[0] && sd->mapVars_2F8[i].map_2 == key[1] && sd->mapVars_2F8[i].sub_4 == key[2])
             return i;
     }
     return -1;
 }
 
-int GetMapVar_800ADC1C(short* p)
+int GetMapVar_800ADC1C(short* key)
 {
-    int r = FindMapVar_800ADBA0(p);
-    if (r != -1)
-        r = saveData_8008B570.mapVars_2F8[r].value_6;
-    return r;
+    int value = FindMapVar_800ADBA0(key);
+    if (value != -1)
+        value = saveData_8008B570.mapVars_2F8[value].value_6;
+    return value;
 }
 
-void SetMapVar_800ADC5C(unsigned short* p, int b)
+void SetMapVar_800ADC5C(unsigned short* key, int value)
 {
     int i;
-    if (b != -2)
+    if (value != -2)
     {
-        i = FindMapVar_800ADBA0((short*)p);
+        i = FindMapVar_800ADBA0((short*)key);
         if (i == -1)
             i = saveData_8008B570.nMapVars_2F4++;
-        saveData_8008B570.mapVars_2F8[i].area_0 = p[0];
-        saveData_8008B570.mapVars_2F8[i].map_2 = p[1];
-        saveData_8008B570.mapVars_2F8[i].sub_4 = p[2];
-        saveData_8008B570.mapVars_2F8[i].value_6 = b;
+        saveData_8008B570.mapVars_2F8[i].area_0 = key[0];
+        saveData_8008B570.mapVars_2F8[i].map_2 = key[1];
+        saveData_8008B570.mapVars_2F8[i].sub_4 = key[2];
+        saveData_8008B570.mapVars_2F8[i].value_6 = value;
     }
 }
 
@@ -4495,36 +4462,36 @@ void FindMapEntrance_800ADCEC(short* out, int key)
 // Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
 void SelectMapEntrance_800ADDAC(void)
 {
-    GameS3_1 v;
-    int r;
+    GameMapLoc loc;
+    int savedEntrance;
     int i;
     int key;
-    GameMapEntrance* e;
-    v.a = saveData_8008B570.mapId_2E4[0].field_0;
-    v.b = saveData_8008B570.mapId_2E4[1].field_0;
-    v.c = saveData_8008B570.mapId_2E4[2].field_0;
-    r = GetMapVar_800ADC1C(&v);
-    e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+    GameMapEntrance* ents;
+    loc.area = saveData_8008B570.mapId_2E4[0].field_0;
+    loc.map = saveData_8008B570.mapId_2E4[1].field_0;
+    loc.entrance = saveData_8008B570.mapId_2E4[2].field_0;
+    savedEntrance = GetMapVar_800ADC1C(&loc);
+    ents = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
     key = saveData_8008B570.mapId_2E4[2].field_0;
     i = 0;
-    if (e->id_0 >= 0)
+    if (ents->id_0 >= 0)
     {
         do
         {
-            if (key == e[i].encIndex_4 && (r == -1 || r == e[i].entrance_6))
+            if (key == ents[i].encIndex_4 && (savedEntrance == -1 || savedEntrance == ents[i].entrance_6))
             {
                 saveData_8008B570.mapId_2E4[2].field_0 = i;
                 return;
             }
             i++;
-        } while (e[i].id_0 >= 0);
+        } while (ents[i].id_0 >= 0);
     }
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(game, SelectMapEntrance_800ADDAC);
 
-GameRec_1 encounterRecord_800ADE78 = { 0 };
+GameBattleChain encounterRecord_800ADE78 = { 0 };
 short formation1_800ADE8C[2] = { 0 };
 short formation2_800ADE90[2] = { -0x11C, 0x11C };
 short formation3_800ADE94[4] = { -0x200, 0, 0x200 };
@@ -5219,13 +5186,13 @@ int chapterOverlayTaskDef_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1
 int sporeTaskDef_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
 int fieldModeTaskDef_800B09CC[6] = { 1, 0x8000, 80, (int)&fieldModeTask_800B1DAC, (int)FieldModeTask_800A7720 };
 int subOverlayTaskDef_800B09E4[6] = { 1, 1, 32, (int)subOverlayTask_800B1DB4, (int)CheckSubOverlayRequests_800A6DAC };
-GameLst_1 globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
-GameLst_1 gameModeChapterTasks_800B0A0C[4] = {
+GameTaskListDef globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
+GameTaskListDef gameModeChapterTasks_800B0A0C[4] = {
     { &overlayLoaderTask_8008D4C0 },
     { &soundTask_8008D4A4, 0x1000 },
     { chapterOverlayTask_800B1DB0 },
 };
-GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
+GameTaskListDef gameModeFieldTasks_800B0A2C[26] = {
     { &overlayLoaderTask_8008D4C0 },
     { levantModelTask_800B1DA0 },
     { &modelLoaderTask_8008B54C },
@@ -5252,7 +5219,7 @@ GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
     { (void *)&vibrationTasks_8008D4B8 },
     { &sporeTask_8008D464 },
 };
-GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
+GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &soundTask_8008D4A4 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5288,17 +5255,17 @@ GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
     { &miscTasks_8008D60C },
     { (void *)((char *)&dword_8008D48C + 4) },
 };
-GameLst_1 gameModeBattleEndTasks_800B0C14[4] = {
+GameTaskListDef gameModeBattleEndTasks_800B0C14[4] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&dword_8008D48C + 4) },
     { (void *)&messageWindowTask_8008D640 },
 };
-GameLst_1 gameModeEquipTasks_800B0C34[3] = {
+GameTaskListDef gameModeEquipTasks_800B0C34[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&equipTask_8008D4C4 },
 };
-GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
+GameTaskListDef gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&fieldMenuTask_8008D498 },
@@ -5306,7 +5273,7 @@ GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&configTask_8008B4B8 },
     { (void *)&messageWindowTask_8008D640 },
 };
-GameLst_1 gameModeShopTasks_800B0C84[12] = {
+GameTaskListDef gameModeShopTasks_800B0C84[12] = {
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
@@ -5319,28 +5286,28 @@ GameLst_1 gameModeShopTasks_800B0C84[12] = {
     { (void *)&shelfMenuTask_8008D4A8 },
     { &fadeTask_8008D628 },
 };
-GameLst_1 gameModeSaveTasks_800B0CE4[4] = {
+GameTaskListDef gameModeSaveTasks_800B0CE4[4] = {
     { (void *)&dword_8008D62C },
     { &overlayLoaderTask_8008D4C0 },
     { &loadMenuTask_8008D480 },
 };
-GameLst_1 gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
-GameLst_1 gameModeMapTasks_800B0D14[6] = {
+GameTaskListDef gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
+GameTaskListDef gameModeMapTasks_800B0D14[6] = {
     { &soundTask_8008D4A4 },
     { levantModelTask_800B1DA0 },
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { &overlayLoaderTask_8008D4C0 },
     { mapOverlayTask_800B1DA4 },
 };
-GameLst_1 dword_800B0D44[3] = {
+GameTaskListDef dword_800B0D44[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&screenOffset_8008D474 + 4) },
 };
-GameLst_1 gameModeLoadingTasks_800B0D5C[3] = {
+GameTaskListDef gameModeLoadingTasks_800B0D5C[3] = {
     { &overlayLoaderTask_8008D4C0 },
     { subOverlayTask_800B1DB4 },
 };
-GameLst_1 *gameModeTaskLists_800B0D74[12] = {
+GameTaskListDef *gameModeTaskLists_800B0D74[12] = {
     gameModeChapterTasks_800B0A0C, gameModeFieldTasks_800B0A2C, gameModeBattleTasks_800B0AFC, gameModeEquipTasks_800B0C34,
     gameModeMenuTasks_800B0C4C, gameModeShopTasks_800B0C84, gameModeSaveTasks_800B0CE4, gameModeReturnTasks_800B0D04,
     gameModeMapTasks_800B0D14, dword_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
@@ -5348,9 +5315,9 @@ GameLst_1 *gameModeTaskLists_800B0D74[12] = {
 char gameEventListDefs_800B0DA4[232] = { 204, 6, 11, 128, 0, 143, 7, 128, 24, 143, 7, 128, 228, 6, 11, 128, 252, 6, 11, 128, 20, 7, 11, 128, 44, 7, 11, 128, 152, 144, 7, 128, 72, 143, 7, 128, 68, 7, 11, 128, 96, 143, 7, 128, 116, 7, 11, 128, 140, 7, 11, 128, 40, 145, 7, 128, 164, 7, 11, 128, 188, 7, 11, 128, 16, 145, 7, 128, 80, 144, 7, 128, 104, 144, 7, 128, 212, 7, 11, 128, 236, 7, 11, 128, 4, 8, 11, 128, 28, 8, 11, 128, 76, 8, 11, 128, 32, 144, 7, 128, 56, 144, 7, 128, 168, 143, 7, 128, 52, 8, 11, 128, 100, 8, 11, 128, 176, 144, 7, 128, 200, 144, 7, 128, 224, 144, 7, 128, 248, 144, 7, 128, 128, 144, 7, 128, 172, 8, 11, 128, 196, 8, 11, 128, 8, 144, 7, 128, 120, 143, 7, 128, 12, 9, 11, 128, 192, 143, 7, 128, 216, 143, 7, 128, 240, 143, 7, 128, 220, 8, 11, 128, 244, 8, 11, 128, 92, 7, 11, 128, 144, 143, 7, 128, 36, 9, 11, 128, 60, 9, 11, 128, 84, 9, 11, 128, 108, 9, 11, 128, 132, 9, 11, 128, 156, 9, 11, 128, 180, 9, 11, 128, 124, 8, 11, 128, 148, 8, 11, 128, 204, 9, 11, 128, 228, 9, 11, 128 };
 int gameMainTaskDef_800B0E8C[6] = { 1, 1, 64, 0x8008D46C, (int)GameMainInit_800A68CC };
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
-GameTab_1 fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
+GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
-GameList_1 fieldMinions_800B0EC4 = { 0 };
+GameFieldMinions fieldMinions_800B0EC4 = { 0 };
 char levantBones_800B0EF8 = 0;
 int dword_800B0EFC[45] = {
     0x460000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003, 0x3040004,
@@ -5386,7 +5353,7 @@ SVECTOR levantBoneScale_800B0FB0[22] = {
 };
 int dword_800B1060[9] = { 0, 0, 0, 0, 0, -0x10000, 0, 0, 0 };
 // control state (0x10: StartLevantAction_800A8A30 starts nothing) and animation of each Levant battle command
-G2Mode_1 levantBattleActions_800B1084[28] = {
+GameLevantBattleAction levantBattleActions_800B1084[28] = {
     { 2, 0x10 },
     { 2, 0x19 },
     { 2, 0x1A },

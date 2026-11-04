@@ -566,7 +566,7 @@ typedef struct EvLoaderEventfnc
     int f8;
     EvLoadEntEventfnc ents_C[4];
 } EvLoaderEventfnc;
-// an enemy slot of the GAME overlay (GameSlot_1): AddEnemySlot_800A17F4 copies the EvEnemyEventfnc into data_8
+// an enemy slot of the GAME overlay (GameEnemySlot): AddEnemySlot_800A17F4 copies the EvEnemyEventfnc into data_8
 typedef struct EvEnemySlotEventfnc
 {
     int f0;

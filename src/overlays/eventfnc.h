@@ -79,7 +79,7 @@ typedef struct EvCtxEventfnc
     EvEntEventfnc* ent_120;
 } EvCtxEventfnc;
 
-// an actor command (GAME's G2Cmd_1): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation,
+// an actor command (GAME's GameActorCmd): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation,
 // 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
 typedef struct EvActorCmdEventfnc
 {

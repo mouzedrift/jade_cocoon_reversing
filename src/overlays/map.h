@@ -32,11 +32,19 @@ typedef struct MapRow
     MapElem* dests_14;
 } MapRow;
 
-typedef struct MapPos
+// a destination: an area and its destination index (mapSelect_800AEBF8, GAME's GameMapSelect area_0 / dest_2)
+typedef struct MapDest
 {
-    short a;
-    short b;
-} MapPos;
+    short area;
+    short dest; // MapRow.dests_14 index
+} MapDest;
+
+// a screen position (DrawScrollArrows_8002B8DC)
+typedef struct MapXY
+{
+    short x;
+    short y;
+} MapXY;
 
 // a menu cursor (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
 typedef struct MapSel
@@ -152,7 +160,7 @@ extern const char aSelKind_800B6B98[];
 extern const char aSelSceneGroup_800B6BAC[];
 extern const char aSelScene_800B6BCC[];
 extern const char aSelChapter_800B6BE0[28];
-extern MapPos lastDest_800B8C94;
+extern MapDest lastDest_800B8C94;
 extern short destCounts_800B8C98[6];
 extern int openDestCount_800B8CA4;
 extern MapElem villageDests0_800B8CA8[13];

@@ -6,20 +6,20 @@
 #include "chapter.h"
 
 // a map var key / map point: (area, map, sub)
-typedef struct ChapterVec
+typedef struct ChapterMapKey
 {
-    short x;
-    short y;
-    short z;
-} ChapterVec;
+    short area;
+    short map;
+    short sub;
+} ChapterMapKey;
 
 extern int dword_800B0624[6];
 extern int mapStartMode_80091C54;
 extern int useMapStartPos_80091C94;
 extern int eventDispatchHalt_8008B540;
 extern void SetEventVar_800AD16C(int, int);
-extern void SetMapVar_800ADC5C(ChapterVec*, int);
-extern void FindMapEntrance_800ADCEC(ChapterVec*, int);
+extern void SetMapVar_800ADC5C(ChapterMapKey*, int);
+extern void FindMapEntrance_800ADCEC(ChapterMapKey*, int);
 extern void RequestGameMode_800A6D30(int);
 extern void SetAreaMapVars_800B69BC(int**);
 extern void SetMapVarList_800B6A94(short*);
@@ -41,16 +41,16 @@ extern void ApplyChapterMapVars_800B6900();
 extern void EnterChapterMap_800B6B18();
 extern void StartChapterOverlay_800A7690();
 extern void SsSepSetDecrescendo(short, short, short, long);
-void ChapterIntroTask_800B66F4(ChapterTask* t, int* st);
+void ChapterIntroTask_800B66F4(ChapterTask* task, int* st);
 
-void ChapterStartTask_800B66DC(ChapterTask* t, int* st)
+void ChapterStartTask_800B66DC(ChapterTask* task, int* st)
 {
     st[0] = 0;
     st[1] = 0;
-    t->next_8 = ChapterIntroTask_800B66F4;
+    task->next_8 = ChapterIntroTask_800B66F4;
 }
 
-void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
+void ChapterIntroTask_800B66F4(ChapterTask* task, int* st)
 {
     switch (st[0])
     {
@@ -93,7 +93,7 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
             ClearChapterYanVars_800B68A8();
             ApplyChapterMapVars_800B6900();
             EnterChapterMap_800B6B18();
-            t->next_8 = StartChapterOverlay_800A7690;
+            task->next_8 = StartChapterOverlay_800A7690;
         }
         break;
     }
@@ -103,11 +103,11 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
 void ClearChapterYanVars_800B68A8()
 {
     int i = 0;
-    int a = chapterClearYanVars_800B70A4[0];
-    while (a != 0x14)
+    int var = chapterClearYanVars_800B70A4[0];
+    while (var != 0x14)
     {
-        SetEventVar_800AD16C(a, 0);
-        a = chapterClearYanVars_800B70A4[++i];
+        SetEventVar_800AD16C(var, 0);
+        var = chapterClearYanVars_800B70A4[++i];
     }
 }
 
@@ -129,7 +129,7 @@ void ApplyChapterMapVars_800B6900()
 
 void SetAreaMapVars_800B69BC(int** areaVars)
 {
-    ChapterVec v;
+    ChapterMapKey key;
     int area;
     int map;
     for (area = 0; area < 6; area++)
@@ -140,10 +140,10 @@ void SetAreaMapVars_800B69BC(int** areaVars)
         {
             while (map < dword_800B0624[area])
             {
-                v.x = area;
-                v.y = map;
-                v.z = 0;
-                SetMapVar_800ADC5C(&v, vars[map]);
+                key.area = area;
+                key.map = map;
+                key.sub = 0;
+                SetMapVar_800ADC5C(&key, vars[map]);
                 map++;
             }
         }
@@ -152,31 +152,31 @@ void SetAreaMapVars_800B69BC(int** areaVars)
 
 void SetMapVarList_800B6A94(short* rec)
 {
-    ChapterVec v;
+    ChapterMapKey key;
     while (rec[3] != -1)
     {
-        v.x = rec[0];
-        v.y = rec[1];
-        v.z = rec[2];
-        SetMapVar_800ADC5C(&v, rec[3]);
+        key.area = rec[0];
+        key.map = rec[1];
+        key.sub = rec[2];
+        SetMapVar_800ADC5C(&key, rec[3]);
         rec += 4;
     }
 }
 
 void EnterChapterMap_800B6B18()
 {
-    SaveData* s = &saveData_8008B570;
-    ChapterEntry* e = &chapterTable_800B6FE0[s->chapter_2DC];
-    ChapterVec v;
-    FindMapEntrance_800ADCEC(&v, e->startPoint_4);
+    SaveData* sd = &saveData_8008B570;
+    ChapterEntry* chapter = &chapterTable_800B6FE0[sd->chapter_2DC];
+    ChapterMapKey key;
+    FindMapEntrance_800ADCEC(&key, chapter->startPoint_4);
     mapStartMode_80091C54 = 0;
-    s->chapterNext_2DE = s->chapter_2DC + 1;
-    s->mapVariant_2E0 = e->mapVariant_0;
+    sd->chapterNext_2DE = sd->chapter_2DC + 1;
+    sd->mapVariant_2E0 = chapter->mapVariant_0;
     useMapStartPos_80091C94 = 1;
-    s->mapId_2E4[0].field_0 = v.x;
-    s->mapId_2E4[1].field_0 = v.y;
-    s->mapId_2E4[2].field_0 = v.z;
-    s->mapId_2E4[3].field_0 = 0;
+    sd->mapId_2E4[0].field_0 = key.area;
+    sd->mapId_2E4[1].field_0 = key.map;
+    sd->mapId_2E4[2].field_0 = key.sub;
+    sd->mapId_2E4[3].field_0 = 0;
     RequestGameMode_800A6D30(1);
     eventDispatchHalt_8008B540 = 1;
 }
