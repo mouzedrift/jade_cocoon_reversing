@@ -2149,11 +2149,11 @@ OverlayEntry overlays_8007D9E8[31] = {
     { 53, (void *)&overlayAddr6_8007320C },
     { 38, (void *)&overlayAdrr1_800731F8 },
 };
-fn_80022458_b ftgPrimLoaders_8007DAE0[10] = { (fn_80022458_b)LoadFtgPolyF3_8002348C, (fn_80022458_b)LoadFtgPolyG3_80023624, (fn_80022458_b)LoadFtgPolyFT3_800238AC, (fn_80022458_b)LoadFtgPolyGT3_80023B48, (fn_80022458_b)LoadFtgPolyF4_80023EA4, (fn_80022458_b)LoadFtgPolyG4_8002407C, (fn_80022458_b)LoadFtgPolyFT4_80024394, (fn_80022458_b)LoadFtgPolyGT4_800246A0 };
-fn_80022458_a ftgPrimRelocators_8007DB08[10] = {
-    0, 0, (fn_80022458_a)RelocFtgPolyFT3_80023B24, (fn_80022458_a)RelocFtgPolyGT3_80023E80,
-    0, 0, (fn_80022458_a)RelocFtgPolyFT4_8002467C, (fn_80022458_a)RelocFtgPolyGT4_80024AB8,
-    0, (fn_80022458_a)RelocFtgTexSprites_80023460,
+FtgPrimLoadFn ftgPrimLoaders_8007DAE0[10] = { (FtgPrimLoadFn)LoadFtgPolyF3_8002348C, (FtgPrimLoadFn)LoadFtgPolyG3_80023624, (FtgPrimLoadFn)LoadFtgPolyFT3_800238AC, (FtgPrimLoadFn)LoadFtgPolyGT3_80023B48, (FtgPrimLoadFn)LoadFtgPolyF4_80023EA4, (FtgPrimLoadFn)LoadFtgPolyG4_8002407C, (FtgPrimLoadFn)LoadFtgPolyFT4_80024394, (FtgPrimLoadFn)LoadFtgPolyGT4_800246A0 };
+FtgPrimRelocFn ftgPrimRelocators_8007DB08[10] = {
+    0, 0, (FtgPrimRelocFn)RelocFtgPolyFT3_80023B24, (FtgPrimRelocFn)RelocFtgPolyGT3_80023E80,
+    0, 0, (FtgPrimRelocFn)RelocFtgPolyFT4_8002467C, (FtgPrimRelocFn)RelocFtgPolyGT4_80024AB8,
+    0, (FtgPrimRelocFn)RelocFtgTexSprites_80023460,
 };
 int dword_8007DB30[8] = { 0, 0, 0, 0, 0xFFFF0000 };
 int dword_8007DB50[13] = {

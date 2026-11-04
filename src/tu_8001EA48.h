@@ -467,11 +467,12 @@ typedef struct ModelAnimRef
 } ModelAnimRef;
 extern ModelAnimRef modelAnimRefs_800919A0[7];
 
+// effect file index: the item of a kind (0 sprite, 1 model) with a given id (FindEffectIndex_80020F00)
 typedef struct
 {
-    int a;
-    int b;
-    int c;
+    int kind;
+    int id;
+    int index;
 } EffectPoint;
 
 // one 28-byte sprite animation frame record (copied as byte groups)
@@ -714,19 +715,19 @@ extern MapList16 mapSpawns_80091C60;
 
 
 // the loaders / relocators of the primitive kinds of an FTG model (LoadFtgObject_80022458)
-typedef void (*fn_80022458_a)(unsigned char* body, int a3);
-typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
-extern fn_80022458_a ftgPrimRelocators_8007DB08[];
-extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
+typedef void (*FtgPrimRelocFn)(unsigned char* body, int a3);
+typedef int (*FtgPrimLoadFn)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
+extern FtgPrimRelocFn ftgPrimRelocators_8007DB08[];
+extern FtgPrimLoadFn ftgPrimLoaders_8007DAE0[];
 
-int LoadFtgPolyF3_8002348C(FtgPrimHeader *a0, FtgPolyF3 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyG3_80023624(FtgPrimHeader *a0, FtgSrcPolyG3 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyFT3_800238AC(FtgPrimHeader *a0, FtgSrcPolyFT3 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyGT3_80023B48(FtgPrimHeader *a0, FtgSrcPolyGT3 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyF4_80023EA4(FtgPrimHeader *a0, FtgPolyF4 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyG4_8002407C(FtgPrimHeader *a0, FtgSrcPolyG4 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyFT4_80024394(FtgPrimHeader *a0, FtgSrcPolyFT4 *a1, FtgObject *a2, int a3);
-int LoadFtgPolyGT4_800246A0(FtgPrimHeader *a0, FtgSrcPolyGT4 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyF3_8002348C(FtgPrimHeader *hdr, FtgPolyF3 *src, FtgObject *obj, int idx);
+int LoadFtgPolyG3_80023624(FtgPrimHeader *hdr, FtgSrcPolyG3 *src, FtgObject *obj, int idx);
+int LoadFtgPolyFT3_800238AC(FtgPrimHeader *hdr, FtgSrcPolyFT3 *src, FtgObject *obj, int idx);
+int LoadFtgPolyGT3_80023B48(FtgPrimHeader *hdr, FtgSrcPolyGT3 *src, FtgObject *obj, int idx);
+int LoadFtgPolyF4_80023EA4(FtgPrimHeader *hdr, FtgPolyF4 *src, FtgObject *obj, int idx);
+int LoadFtgPolyG4_8002407C(FtgPrimHeader *hdr, FtgSrcPolyG4 *src, FtgObject *obj, int idx);
+int LoadFtgPolyFT4_80024394(FtgPrimHeader *hdr, FtgSrcPolyFT4 *src, FtgObject *obj, int idx);
+int LoadFtgPolyGT4_800246A0(FtgPrimHeader *hdr, FtgSrcPolyGT4 *src, FtgObject *obj, int idx);
 
 void InitOverlayLoaderTask_80020CB8();
 
