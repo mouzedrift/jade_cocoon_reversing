@@ -1253,7 +1253,9 @@ extern const char aEnmbatleC_800A05CC[12];
 extern const char aAssertionFaile_800A0660[];
 extern const char aEventcomC_800A0688[];
 extern const int dword_800A0694;
-extern const int dword_800A06F0[18];
+/* the jump table of LevantControlTask_800A818C (asm) and its targets, labels in the generated asm */
+extern char jtgt_800A81F4[], jtgt_800A8388[], jtgt_800A83A4[], jtgt_800A83D4[], jtgt_800A8454[], jtgt_800A84A0[], jtgt_800A84D0[], jtgt_800A8514[], jtgt_800A8540[], jtgt_800A85A0[], jtgt_800A85EC[], jtgt_800A86B4[], jtgt_800A878C[], jtgt_800A8818[], jtgt_800A8840[], jtgt_800A8870[], jtgt_800A8888[];
+extern void* const dword_800A06F0[17];
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
 extern GameRec_1 encounterRecord_800ADE78;
@@ -1582,3 +1584,11 @@ extern char levantPool_800B1DD0;
 extern int dword_800B1DD4[9];
 extern char dword_800B1DF8;
 extern int dword_800B1DFC[304];
+
+/* the jump table of FieldMinionCommand_800A7D40 (asm) and its targets, labels in the generated asm */
+extern char jtgt_800A7E18[], jtgt_800A7E48[], jtgt_800A7E78[], jtgt_800A7EC8[], jtgt_800A7EE4[], jtgt_800A7EF4[], jtgt_800A7F08[], jtgt_800A7F1C[], jtgt_800A7F30[], jtgt_800A7FBC[], jtgt_800A8078[];
+extern void* const dword_800A06B8[14];
+
+/* the jump table of UpdateLevantBattleAction_800AA51C (asm) and its targets, labels in the generated asm */
+extern char jtgt_800AA564[], jtgt_800AA584[], jtgt_800AA604[], jtgt_800AA638[], jtgt_800AA710[], jtgt_800AA770[], jtgt_800AA7C0[], jtgt_800AA8BC[], jtgt_800AA92C[], jtgt_800AA998[], jtgt_800AAB90[], jtgt_800AABEC[], jtgt_800AAC94[], jtgt_800AACC8[];
+extern void* const jpt_800A07A8[14];

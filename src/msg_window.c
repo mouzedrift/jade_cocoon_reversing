@@ -29,7 +29,9 @@ const char aReturned_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222
 const char aReceived_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
 const char aPickedUp_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
 const int dword_80074818 = 0;
-INCLUDE_DATA(jpt_8007481C); // the jump table of UpdateMsgWindowState_80034C18 (asm)
+// the jump table of UpdateMsgWindowState_80034C18 (asm; its targets are labels of the generated asm, gen_asm.jump_label):
+// delete it (and dword_80074818, its alignment) and the externs in msg_window.h when the function is C
+void* const jpt_8007481C[13] = { jtgt_80034F88, jtgt_80034C88, jtgt_80034D84, jtgt_80034E50, jtgt_80034F00, jtgt_80034F74, jtgt_80034F80, jtgt_80034F88, jtgt_80035280, jtgt_80034FB8, jtgt_80035000, jtgt_8003516C, jtgt_800351CC };
 
 // Matched
 int CheckMagicUsable_80034068(short* req)
@@ -530,7 +532,7 @@ extern void DrawMsgWindowPortrait_80035900();
 extern void DrawMsgWindowChoices_800355EC();
 #define PI(off) (*(int*)((char*)p + (off)))
 #if 0
-// Not matched (30 lines, same length): control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed).
+// Not matched (30 lines, same length): control flow and jump tables right (needs the C table jpt_8007481C and dword_80074818 removed).
 // Left: the flags temporaries get $v1 where the original has $a0 (first block) / $v0 (case 4), the DrawMsgWindowText
 // result v is in $a0 instead of $a1, and the reset block reloads field_78 (the original keeps it in $v1, with the fill
 // loop counter in another register; i = field_78 plus a separate counter fixes that but loses an instruction elsewhere).
@@ -836,7 +838,9 @@ INCLUDE_ASM(UpdateMsgWindowState_80034C18);
 const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
 const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
 const int aTimesSign_80074864[2] = { 0x7782 };
-INCLUDE_DATA(jpt_8007486C); // the jump table of UpdateItemMessageWindow_80035BD8 (asm)
+// the jump table of UpdateItemMessageWindow_80035BD8 (asm; its targets are labels of the generated asm): delete it and
+// its externs in msg_window.h when the function is C
+void* const jpt_8007486C[6] = { jtgt_80035F2C, jtgt_80035F54, jtgt_80035F54, jtgt_80035F54, jtgt_80035F6C, jtgt_80035F40 };
 
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
@@ -1127,7 +1131,7 @@ extern void SetValuableFlag_800AD68C(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
 #if 0
 // Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
-// Needs INCLUDE_DATA(jpt_8007486C) (and its config/c_rodata.txt line) removed (tu_800353A0 is merged into this TU for it: the jump table sits at
+// Needs the C table jpt_8007486C removed (tu_800353A0 is merged into this TU for it: the jump table sits at
 // 0x8007486C, which is 8-aligned only relative to this TU's .rdata start 0x8007474C; psylink packs objects on 4 bytes).
 void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {

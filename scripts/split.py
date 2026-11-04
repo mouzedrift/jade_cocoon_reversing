@@ -247,8 +247,13 @@ def main(argv):
     spans = {}
     for (a, n), (b, _) in zip(code, code[1:] + [(GAME_TEXT_END, "")]):
         spans[n] = (a, b - a)
-        text = (gen_asm.emit_data(exe, n, a, b - a) if n.startswith(gen_asm.DATA_PREFIXES)
-                else gen_asm.emit_function(md, exe, n, a, b - a, names))
+    # the targets of the jump tables in .rdata/.data get global labels (jtgt_XXXXXXXX), which the C tables of
+    # functions that are still assembly refer to
+    targets = gen_asm.jump_targets(exe, [(RDATA_START, RDATA_GAME_END), (DATA_START, DATA_GAME_END)],
+                                   [spans[n] for _, n in funcs])
+    for a, n in code:
+        text = (gen_asm.emit_data(exe, n, a, spans[n][1]) if n.startswith(gen_asm.DATA_PREFIXES)
+                else gen_asm.emit_function(md, exe, n, a, spans[n][1], names, targets))
         write(os.path.join(REPO, "asm", "f", n + ".s"), text)
 
     c_sizes = {}

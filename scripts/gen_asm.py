@@ -119,7 +119,30 @@ def decode(md, exe, pc):
 BRANCHES = ("beq", "bne", "beqz", "bnez", "bgez", "bgtz", "blez", "bltz", "b", "bal", "bgezal", "bltzal")
 
 
-def emit_function(md, exe, name, addr, size, names):
+def jump_label(addr):
+    """the global label gen_asm puts at a jump table target inside an asm function, so that a jump table of a
+    function that is still assembly can be defined in C: void* const jpt_X[] = { jtgt_80034F88, ... };"""
+    return "jtgt_%08X" % addr
+
+
+def jump_targets(image, data_ranges, func_spans):
+    """addresses inside (not at the start of) a function [(addr, size)] that a word of the data ranges [(lo, hi)]
+    holds: the targets of jump tables (an odd pointer into the middle of a function only gets an unused label)"""
+    import bisect
+    spans = sorted(func_spans)
+    starts = [a for a, _ in spans]
+    out = set()
+    for lo, hi in data_ranges:
+        for p in range(lo + (-lo % 4), hi - 3, 4):
+            v = struct.unpack("<I", image[p - BASE:p - BASE + 4])[0]
+            k = bisect.bisect_right(starts, v) - 1
+            if v % 4 == 0 and k >= 0 and spans[k][0] < v < spans[k][0] + spans[k][1]:
+                out.add(v)
+    return out
+
+
+def emit_function(md, exe, name, addr, size, names, targets=()):
+    """targets: addresses that get a global jump_label() (jump_targets())"""
     insns = [decode(md, exe, pc) for pc in range(addr, addr + size, 4)]
     labels = {}
     for i in insns:
@@ -128,6 +151,8 @@ def emit_function(md, exe, name, addr, size, names):
             labels[t] = ".L%08x" % t
     out = ["\t.text", "\t.globl\t%s" % name, "%s:" % name, "\t.set\tnoreorder", "\t.set\tnoat"]
     for k, pc in enumerate(range(addr, addr + size, 4)):
+        if pc in targets:
+            out += ["\t.globl\t%s" % jump_label(pc), "%s:" % jump_label(pc)]
         if pc in labels:
             out.append("%s:" % labels[pc])
         ins = format_insn(insns[k], names, labels) if insns[k] is not None else None

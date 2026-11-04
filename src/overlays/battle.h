@@ -1556,3 +1556,7 @@ extern int menuTarget_800C9E54;
 extern BatCmd_a menuCommand_800C9E58;
 extern unsigned char targetFlags_800C9E68;
 extern BatMenuItem_a *menuItems_800C9E6C;
+
+/* the jump table of DrawBattleStage_800BC90C (asm) and its targets, labels in the generated asm */
+extern char jtgt_800BD0F4[], jtgt_800BD4F0[];
+extern void* const dword_800B6710[25];

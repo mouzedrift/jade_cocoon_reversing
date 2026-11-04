@@ -718,7 +718,7 @@ void MergeExp_800BA6D0(Minion* d, Minion* s, Minion* t)
 
 #if 0
 // Not matched (25 words): only the registers of &t.slot[i] (a3 in the original) and m (t0) are swapped.
-// (When writing this in C, delete the jpt_800B6D4C line behind the function.)
+// (When writing this in C, delete the C table jpt_800B6D4C behind the function.)
 
 void MergeSkills_800BA72C(Minion* a, Minion* b)
 {
@@ -883,7 +883,9 @@ void MergeSkills_800BA72C(Minion* a, Minion* b)
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, MergeSkills_800BA72C);
-INCLUDE_OVERLAY_ASM(shop, jpt_800B6D4C);
+// the jump table of MergeSkills_800BA72C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in shop.h when the function is C, the switch emits it then
+void* const jpt_800B6D4C[12] = { jtgt_800BA8C8, jtgt_800BA8C8, jtgt_800BA8A4, jtgt_800BA8AC, jtgt_800BA8B4, jtgt_800BA8BC, jtgt_800BA958, jtgt_800BA958, jtgt_800BA910, jtgt_800BA918, jtgt_800BA920, jtgt_800BA928 };
 const char aEmpty_800B6D7C[4] = { 0 };
 const char aWhatDoYouWantTo_800B6D80[] = "\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201@\202\224\202\217\201@\202\204\202\217\201H"; // What do you want to do?
 const char aForTheNewMinion_800B6DB0[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\205\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for the new minion.
@@ -2534,7 +2536,9 @@ int CheckShopSelection_800BCF74(ShopMenu* u)
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, CheckShopSelection_800BCF74);
-INCLUDE_OVERLAY_ASM(shop, jpt_800B9624);
+// the jump table of CheckShopSelection_800BCF74 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in shop.h when the function is C, the switch emits it then
+void* const jpt_800B9624[14] = { jtgt_800BD01C, jtgt_800BD03C, jtgt_800BD0C0, jtgt_800BD06C, jtgt_800BCFF4, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD01C, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD090 };
 
 extern int IsInventory4NonEmpty_800AD398();
 extern void ShopMenuExecute_800BD9DC(ShopMenu* u);
@@ -2811,7 +2815,7 @@ int IsNoChosen_800BD6C4(ShopMenu* p)
     }
     return 0;
 }
-INCLUDE_OVERLAY_ASM(shop, dword_800B96F0);
+const int dword_800B96F0 = 0; // the alignment of jpt_800B96F4 (delete it with that table)
 
 void PreviewMerge_800BD720(ShopMenu* u)
 {
@@ -2917,7 +2921,7 @@ void SetupShopCursor_800BD854(ShopMenu* u)
 #if 0
 // Not matched (8 words): the two blocks that set tk = shopMenuTask_8008D670 + 0x10 before a call load
 // shopMenuTask_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
-// (When writing this in C, delete the jpt_800B96F4 line behind the function.)
+// (When writing this in C, delete the C table jpt_800B96F4 behind the function.)
 extern void ShopWaitAreaReload_800BDD74();
 extern void ShopWaitDarken_800BDE44();
 extern void RequestAreaReload_80027314();
@@ -3052,7 +3056,9 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
 }
 #endif
 INCLUDE_OVERLAY_ASM(shop, ShopMenuExecute_800BD9DC);
-INCLUDE_OVERLAY_ASM(shop, jpt_800B96F4);
+// the jump table of ShopMenuExecute_800BD9DC (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in shop.h when the function is C, the switch emits it then
+void* const jpt_800B96F4[10] = { jtgt_800BDA34, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDB4C, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDCEC, jtgt_800BDC7C, jtgt_800BDD40, jtgt_800BDD54 };
 const ShopMenuWindows minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
 
 void ShopWaitAreaReload_800BDD74(EventEntry* t, void* arg)

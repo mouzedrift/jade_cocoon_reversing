@@ -261,6 +261,7 @@ extern const char aVeryEffectiveAg_800B9520[];
 extern const char aSpecialEarthAtt_800B9578[];
 extern const ShopMenuWindows mainMenuWindow_800B9608;
 extern const int dword_800B9620;
+extern const int dword_800B96F0;
 extern const ShopMenuWindows minionListWindow_800B971C;
 extern ShopRect statusWindowRect_800BF790;
 extern ShopRect dialogWindowRect_800BF798;
@@ -382,5 +383,17 @@ extern char mainMenuItems_800C07D4[28];
 extern unsigned int emptyMinion_800C07F0[62];
 extern Minion mergePreview_800C08E8;
 extern ShopFormModel formModel_800C09E0;
+
+/* the jump table of MergeSkills_800BA72C (asm) and its targets, labels in the generated asm */
+extern char jtgt_800BA8A4[], jtgt_800BA8AC[], jtgt_800BA8B4[], jtgt_800BA8BC[], jtgt_800BA8C8[], jtgt_800BA910[], jtgt_800BA918[], jtgt_800BA920[], jtgt_800BA928[], jtgt_800BA958[];
+extern void* const jpt_800B6D4C[12];
+
+/* the jump table of CheckShopSelection_800BCF74 (asm) and its targets, labels in the generated asm */
+extern char jtgt_800BCFF4[], jtgt_800BD01C[], jtgt_800BD03C[], jtgt_800BD06C[], jtgt_800BD090[], jtgt_800BD0C0[];
+extern void* const jpt_800B9624[14];
+
+/* the jump table of ShopMenuExecute_800BD9DC (asm) and its targets, labels in the generated asm */
+extern char jtgt_800BDA34[], jtgt_800BDB4C[], jtgt_800BDC7C[], jtgt_800BDCEC[], jtgt_800BDD40[], jtgt_800BDD54[], jtgt_800BDD58[];
+extern void* const jpt_800B96F4[10];
 
 #endif

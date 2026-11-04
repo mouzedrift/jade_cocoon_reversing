@@ -499,7 +499,9 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* b, void* c)
     }
 }
 
-INCLUDE_OVERLAY_ASM(game, dword_800A06B8);
+// the jump table of FieldMinionCommand_800A7D40 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in game.h when the function is C, the switch emits it then
+void* const dword_800A06B8[14] = { jtgt_800A7E18, jtgt_800A7E48, jtgt_800A7E78, jtgt_800A7EC8, jtgt_800A7EC8, jtgt_800A7EE4, jtgt_800A7EF4, jtgt_800A7F08, jtgt_800A7F1C, jtgt_800A7F30, jtgt_800A7F30, jtgt_800A7FBC, jtgt_800A8078, jtgt_800A8078 };
 
 // Matched
 int IsEventPointValid_800A6504(int a)
@@ -1363,7 +1365,7 @@ typedef struct GameAnimReq_1
     char pad_34[0x2c];
 } GameAnimReq_1;
 #if 0
-// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the dword_800A06B8 INCLUDE (the table) when enabling
+// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the C table dword_800A06B8 when enabling
 void FieldMinionCommand_800A7D40(int a, GameCmdA_1* c)
 {
     GameAnimReq_1 s;
@@ -1496,10 +1498,13 @@ void FieldMinionCommand_800A7D40(int a, GameCmdA_1* c)
 #endif
 INCLUDE_OVERLAY_ASM(game, FieldMinionCommand_800A7D40);
 
-const int dword_800A06F0[18] = {
-    0x800A81F4, 0x800A8388, 0x800A83A4, 0x800A83D4, 0x800A84A0, 0x800A8454, 0x800A84D0, 0x800A8514,
-    0x800A8540, 0x800A85A0, 0x800A85EC, 0x800A86B4, 0x800A878C, 0x800A8818, 0x800A8840, 0x800A8870,
-    0x800A8888,
+// the jump table of LevantControlTask_800A818C (asm; its targets are labels of the generated asm, gen_asm.jump_label):
+// delete it and its externs in game.h when the function is C, the switch emits it then
+// (the zero word behind it in the original is the next jump table's .align 3, which the compiler adds)
+void* const dword_800A06F0[17] = {
+    jtgt_800A81F4, jtgt_800A8388, jtgt_800A83A4, jtgt_800A83D4, jtgt_800A84A0, jtgt_800A8454, jtgt_800A84D0, jtgt_800A8514,
+    jtgt_800A8540, jtgt_800A85A0, jtgt_800A85EC, jtgt_800A86B4, jtgt_800A878C, jtgt_800A8818, jtgt_800A8840, jtgt_800A8870,
+    jtgt_800A8888,
 };
 
 void TriggerFieldMinionEffect_800A80C4(int idx)
@@ -2647,7 +2652,7 @@ INCLUDE_OVERLAY_ASM(game, PlayLevantActionEffect_800AA430);
 // SetLevantAnim_800AB010's third argument where this C reloads s1c (so the compare delay slots get filled); tried a
 // switch, a local for s1c, the inverted test and other f0 forms. The prototypes below change the code of matched
 // callers further down (settle them before enabling this); GetLevantAnimFlags_800AC900 returns int (its result is tested as a short).
-// Enabling: drop the jpt_800A07A8 include below.
+// Enabling: drop the C table jpt_800A07A8 below.
 extern short effectOutcomeFlag_8008D780;
 void PlayLevantActionEffect_800AA430(G2Act* p);
 unsigned short GetLevantAnimEventFrameCur_800AB170(int a);
@@ -2912,7 +2917,9 @@ void UpdateLevantBattleAction_800AA51C(G2Act* o)
 }
 #endif
 INCLUDE_OVERLAY_ASM(game, UpdateLevantBattleAction_800AA51C);
-INCLUDE_OVERLAY_ASM(game, jpt_800A07A8);
+// the jump table of UpdateLevantBattleAction_800AA51C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in game.h when the function is C, the switch emits it then
+void* const jpt_800A07A8[14] = { jtgt_800AA564, jtgt_800AA604, jtgt_800AA584, jtgt_800AA638, jtgt_800AA710, jtgt_800AA770, jtgt_800AA7C0, jtgt_800AA8BC, jtgt_800AA998, jtgt_800AA92C, jtgt_800AAB90, jtgt_800AABEC, jtgt_800AAC94, jtgt_800AACC8 };
 
 // PLDISP.C's assertion strings (after the jump table of UpdateLevantBattleAction_800AA51C)
 const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";

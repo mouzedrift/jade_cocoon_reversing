@@ -1766,8 +1766,10 @@ void RestoreMenuCursor_800BE38C(MenuCtx* c)
 const char aLeaveTheForest_800BBA44[] = "\202k\202\205\202\201\202\226\202\205\201@\202\224\202\210\202\205\201@\202\206\202\217\202\222\202\205\202\223\202\224\201H"; // Leave the forest?
 const char aYesNo_800BBA68[] = "\201@\201@\202x\202\205\202\223\201@\201@\202m\202\217"; //   Yes  No
 const int dword_800BBA7C = 0;
-// (When writing DrawFieldMenu_800BE4A0 in C, delete the jpt_800BBA80 line.)
-INCLUDE_OVERLAY_ASM(menu, jpt_800BBA80);
+// the jump table of DrawFieldMenu_800BE4A0 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in menu.h when the function is C, the switch emits it then
+// (the zero word behind it in the original is the next jump table's .align 3, which the compiler adds)
+void* const jpt_800BBA80[17] = { jtgt_800BE564, jtgt_800BE574, jtgt_800BE588, jtgt_800BEA74, jtgt_800BE5CC, jtgt_800BE59C, jtgt_800BE648, jtgt_800BE6BC, jtgt_800BE6CC, jtgt_800BE7BC, jtgt_800BE7E8, jtgt_800BE7F8, jtgt_800BE85C, jtgt_800BE8AC, jtgt_800BEA74, jtgt_800BE91C, jtgt_800BE9F8 };
 
 void DrawLevantWindow_800BECE4(MenuCtx* c, short b);
 void DrawPartyMinionWindows_800BEFAC(MenuCtx* a, short b);
@@ -2099,7 +2101,7 @@ void DrawMenuHelpBar_800BEAE0(MenuCtx* c)
     }
     DrawButtonHelpBar_8002B004(s, 0, 0xE);
 }
-INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
+const int dword_800BBB04 = 0; // the alignment of jpt_800BBB08 (delete it with that table)
 
 extern void DrawUnitStatusPanel_8002DB48();
 void DrawSelectedMinionPanel_800BEBFC(MenuCtx* o, int a)
@@ -2446,7 +2448,9 @@ int CheckMenuAction_800BF540(MenuCtx* c)
 }
 #endif
 INCLUDE_OVERLAY_ASM(menu, CheckMenuAction_800BF540);
-INCLUDE_OVERLAY_ASM(menu, jpt_800BBB08);
+// the jump table of CheckMenuAction_800BF540 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in menu.h when the function is C, the switch emits it then
+void* const jpt_800BBB08[14] = { jtgt_800BF590, jtgt_800BF5E8, jtgt_800BF77C, jtgt_800BF6F0, jtgt_800BF77C, jtgt_800BF6A8, jtgt_800BF6D8, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF77C, jtgt_800BF6F8 };
 
 void DrawMenuMessage_800BF794(MenuCtx* c)
 {
