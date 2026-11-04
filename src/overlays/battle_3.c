@@ -135,8 +135,8 @@ int AreReactionsDone_800BEB68()
 
 void ApplyBattleCommand_800BEBB8()
 {
-    BatCmd_a cmd;
-    BatResult_a res;
+    BatCommand cmd;
+    BatActionResult res;
     UnitStatus* actor;
     UnitStatus* target;
     int escaped;
@@ -384,7 +384,7 @@ void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOf
     EventEntry* entry = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
     if (entry)
     {
-        BatHitNum_a* hit = entry->buffer;
+        BatHitNumber* hit = entry->buffer;
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         hit->kind_0 = kind;
         hit->frame_8 = 0;
@@ -414,7 +414,7 @@ int AnyHitNumberActive_800BF47C()
     return 0;
 }
 
-void HitNumberTask_800BF4D0(EventEntry* task, BatHitNum_a* hit)
+void HitNumberTask_800BF4D0(EventEntry* task, BatHitNumber* hit)
 {
     DVECTOR sxy;
     SVECTOR rel;
@@ -538,12 +538,12 @@ int GetUnitTurnSpeed_800BF784(int unit)
 }
 
 #if 0 // Not matched: body close with a goto loop; prologue saves are not interleaved with the arg copies in the original and b/f/table-base get different saved registers
-typedef struct BatChance_a
+typedef struct BatCureChance
 {
     unsigned int mask;
     unsigned int chance;
-} BatChance_a;
-extern BatChance_a statusCureChances_800C9138[];
+} BatCureChance;
+extern BatCureChance statusCureChances_800C9138[];
 extern int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx);
 extern unsigned int Rand100_80013E30();
 void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpChange)
@@ -551,7 +551,7 @@ void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpC
     unsigned int status = unitStatus->status_0;
     unsigned int oldStatus = status;
     int i;
-    BatChance_a* cure;
+    BatCureChance* cure;
     *hpChange = 0;
     *mpChange = 0;
     status = AdvancePetrification_800BFA34(status);
@@ -798,8 +798,8 @@ void StartEnemyWindows_800BFC40()
                 entry = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
                 if (entry)
                 {
-                    BatXY_a* layout = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + i * 4));
-                    BatUnitWin_a* win;
+                    BatXY* layout = (BatXY*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + i * 4));
+                    BatEnemyWindow* win;
                     entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
                     win = entry->buffer;
                     win->slot_0 = i;
@@ -829,7 +829,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
     int k;
     int one;
     int bit;
-    BatXY_a* layout;
+    BatXY* layout;
     alive = GetEnemyAliveMask_800A248C();
     if (alive != 0 && GetActiveSwapEnemy_800A2AB4() != 0)
     {
@@ -874,7 +874,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
             {
                 if (alive & (bit << (i + 4)))
                 {
-                    layout = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + k * 4));
+                    layout = (BatXY*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + k * 4));
                     enemyWindows_800C9E28[i]->from_8[0] += (layout->x - enemyWindows_800C9E28[i]->from_8[0]) * enemyWindowSlide_800C9E00 >> 2;
                     enemyWindows_800C9E28[i]->from_8[1] += (layout->y - enemyWindows_800C9E28[i]->from_8[1]) * enemyWindowSlide_800C9E00 >> 2;
                     k++;
@@ -895,7 +895,7 @@ void EnemyWindowTask_800C0074(EventEntry* task, void* arg)
     int slot;
     UnitStatus* status;
     int swap;
-    BatUnitWin_a* win;
+    BatEnemyWindow* win;
     if (battleFlags_800B1228 & 0x10000)
     {
         return;
@@ -929,7 +929,7 @@ void StartActorWindow_800C01D8()
     EventEntry* entry = AllocEventEntry_80043AF8(actorWindowTask_8008D4B0);
     if (entry != 0)
     {
-        BatWin_b* win = entry->buffer;
+        BatAnimWindow* win = entry->buffer;
         entry->flags = (entry->flags | 1) & ~0x8000;
         win->frame_0 = 0;
         win->from_4[0] = 0x6E;
@@ -940,23 +940,23 @@ void StartActorWindow_800C01D8()
     }
 }
 
-typedef struct BatBox_b
+typedef struct BatWindowBox
 {
     short col_0;
     char c_2;
     char c_3;
-} BatBox_b;
+} BatWindowBox;
 extern void DrawMpGauge_8002F120(int a0, short* pos, int a2, int a3);
 extern void DrawStatusIcons_8002F480(int a0, void* pos, int ot, int reverse);
-extern void DrawWindow_80042460(void* rect, BatBox_b* box, void* ot, int a3);
+extern void DrawWindow_80042460(void* rect, BatWindowBox* box, void* ot, int a3);
 extern unsigned short uiColor_8008B590;
 
 // Matched
 void ActorWindowTask_800C0254(EventEntry* task, void* arg)
 {
-    BatWin_b* win;
+    BatAnimWindow* win;
     short pos[4];
-    BatBox_b box;
+    BatWindowBox box;
     short rect[4];
     UnitStatus* status;
     if (encounterRecord_800ADE78.active_0 == 1 && actingUnit_800C9C7C == 10)
@@ -1009,7 +1009,7 @@ void StartHelpWindow_800C0440()
     {
         helpWindowText_800C9D74 = 0;
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
-        ((BatWin_b*)entry->buffer)->frame_0 = 0;
+        ((BatAnimWindow*)entry->buffer)->frame_0 = 0;
         entry->cb_8 = (EventEntryFn)HelpWindowTask_800C04A4;
     }
 }
@@ -1019,7 +1019,7 @@ extern unsigned char sealOutcomeTable_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
-void HelpWindowTask_800C04A4(EventEntry* task, BatWin_b* win)
+void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
 {
     int width;
     short pos[2];
@@ -1068,7 +1068,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, BatWin_b* win)
 
 INCLUDE_OVERLAY_ASM(battle, HelpWindowTask_800C04A4);
 
-void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq_a* req, int f30)
+void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, int f30)
 {
     unsigned char ids[8];
     int counts[3];
@@ -1254,7 +1254,7 @@ int GetPartyMinionMask_800C0A9C()
 
 int LoadSummonedMinion_800C0AEC(int slot, int* pos, int rotY)
 {
-    BatModelReq_a req;
+    BatModelReq req;
     Minion* minion;
     if (GetSummonedMinionSlot_800C0D50() != -1)
     {
@@ -1350,9 +1350,9 @@ void TurnSummonedMinionToward_800C0DB0(int pos)
 }
 
 // Matched
-BatCol_a* StartMinionAction_800C0DDC(BatCol_a* out, BatCmd_a* cmd, int isReaction)
+BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BatCommand* cmd, int isReaction)
 {
-    BatCol_a timing;
+    BatRawTiming timing;
     int mask;
     memset(&timing, 0, 4);
     if (cmd->kind_0 == 0x14)
@@ -1368,7 +1368,7 @@ BatCol_a* StartMinionAction_800C0DDC(BatCol_a* out, BatCmd_a* cmd, int isReactio
     return out;
 }
 
-int TriggerMinionAction_800C0E84(BatCmd_a* cmd)
+int TriggerMinionAction_800C0E84(BatCommand* cmd)
 {
     int mask;
     if (cmd->kind_0 == 0x14)
@@ -1449,7 +1449,7 @@ unsigned int* GetPartyMinionMagicBits_800C103C(int slot)
     return 0;
 }
 
-void SeqStopTask_800C106C(unsigned int* flags, BatSeqStop_a* seq)
+void SeqStopTask_800C106C(unsigned int* flags, BatTimedSeq* seq)
 {
     if (--seq->timer_4 < 0)
     {
@@ -1463,7 +1463,7 @@ void PlayTimedSeq_800C10B8(int frames, int slot)
     EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && entry)
     {
-        BatSeqStop_a* seq;
+        BatTimedSeq* seq;
         PlaySeqSlot_80031160(slot, 1);
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         seq = entry->buffer;
@@ -1473,7 +1473,7 @@ void PlayTimedSeq_800C10B8(int frames, int slot)
     }
 }
 
-void SfxStopTask_800C1140(unsigned int* flags, BatSfxStop_a* sfx)
+void SfxStopTask_800C1140(unsigned int* flags, BatTimedSfx* sfx)
 {
     if (--sfx->timer_4 < 0)
     {
@@ -1487,7 +1487,7 @@ void PlayTimedSfx_800C1190(int frames, int sfx)
     EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (frames > 0 && entry)
     {
-        BatSfxStop_a* stop;
+        BatTimedSfx* stop;
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         stop = entry->buffer;
         stop->timer_4 = frames;
@@ -1497,7 +1497,7 @@ void PlayTimedSfx_800C1190(int frames, int sfx)
     }
 }
 
-typedef struct BatDrop_a
+typedef struct BatDrop
 {
     int frame_0;
     int f4;
@@ -1510,10 +1510,10 @@ typedef struct BatDrop_a
     short rot_34[4];
     int pad3C;
     EffectSprite* anim_40;
-} BatDrop_a;
+} BatDrop;
 
 // Matched
-void DropSpriteTask_800C1220(EventEntry* task, BatDrop_a* drop)
+void DropSpriteTask_800C1220(EventEntry* task, BatDrop* drop)
 {
     int pos[3];
     short size[4];
@@ -1549,13 +1549,13 @@ void DropSpriteTask_800C1220(EventEntry* task, BatDrop_a* drop)
 }
 
 // Matched
-void DropTrailTask_800C1450(EventEntry* task, BatDropSrc_a* trail)
+void DropTrailTask_800C1450(EventEntry* task, BatDropTrail* trail)
 {
     int pos[3];
     EffectSpriteFrame* frame;
     int i;
     EventEntry* entry;
-    BatDrop_a* drop;
+    BatDrop* drop;
     EffectSprite* path = trail->path_88;
     if (trail->time_4 / 4096 < path->count_0)
     {
@@ -1615,7 +1615,7 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
         EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (entry)
         {
-            BatSpark_a* spark = entry->buffer;
+            BatSpark* spark = entry->buffer;
             entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
             spark->base_1C[0] = pos[0];
             spark->base_1C[1] = pos[1];
@@ -1642,7 +1642,7 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
     }
 }
 
-void HomingSparkTask_800C17EC(EventEntry* task, BatSpark_a* spark)
+void HomingSparkTask_800C17EC(EventEntry* task, BatSpark* spark)
 {
     int step[3];
     EffectSprite* sprite;
@@ -1680,7 +1680,7 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
     EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (entry)
     {
-        BatSpark_a* spark;
+        BatSpark* spark;
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         spark = entry->buffer;
         spark->pos_10[0] = pos[0];
@@ -1697,7 +1697,7 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
 }
 
 #if 0 // Not matched: register permutation only (u/d/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
-void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark_a* spark)
+void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark* spark)
 {
     EffectSprite* sprite = spark->anim_3C;
     int i;
@@ -1728,7 +1728,7 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
         EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (entry)
         {
-            BatSpark_a* spark = entry->buffer;
+            BatSpark* spark = entry->buffer;
             entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
             spark->pos_10[0] = pos[0];
             spark->pos_10[1] = pos[1];
@@ -1747,7 +1747,7 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
     }
 }
 
-void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark_a* spark)
+void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark* spark)
 {
     int step[3];
     EffectSprite* sprite;
@@ -1793,7 +1793,7 @@ void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int
         EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
         if (entry)
         {
-            BatSpark_a* spark = entry->buffer;
+            BatSpark* spark = entry->buffer;
             entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
             spark->base_1C[0] = pos[0];
             spark->base_1C[1] = pos[1];
@@ -1815,7 +1815,7 @@ void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int
     }
 }
 
-void RisingSparkTask_800C2170(EventEntry* task, BatSpark_a* spark)
+void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
 {
     EffectSprite* sprite;
     int i;
@@ -1854,14 +1854,14 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark_a* spark)
 }
 
 #if 0 // Not matched: only u and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer, early return, temp for the first lookup
-void ShatterTask_800C23D0(EventEntry* task, BatSpark_a* src)
+void ShatterTask_800C23D0(EventEntry* task, BatSpark* src)
 {
     int i;
     int angle;
     int pitch;
     int modelIdx;
     EventEntry* entry;
-    BatShard_a* shard;
+    BatShard* shard;
     if (++src->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
@@ -1911,7 +1911,7 @@ void ShatterTask_800C23D0(EventEntry* task, BatSpark_a* src)
 
 INCLUDE_OVERLAY_ASM(battle, ShatterTask_800C23D0);
 
-void ShardTask_800C273C(EventEntry* task, BatShard_a* shard)
+void ShardTask_800C273C(EventEntry* task, BatShard* shard)
 {
     int pos[4];
     int scale[3];
@@ -1940,10 +1940,10 @@ void ShardTask_800C273C(EventEntry* task, BatShard_a* shard)
     shard->frame_0++;
 }
 
-void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
+void SpawnShatterEffect_800C2914(BatShatterSource* src, int id)
 {
     EventEntry* entry;
-    BatShard_a* shard;
+    BatShard* shard;
     int i;
     int angle;
     int modelIdx;
@@ -1998,7 +1998,7 @@ void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
     }
 }
 
-void ImplodeShardTask_800C2CD8(EventEntry* task, BatShard_a* shard)
+void ImplodeShardTask_800C2CD8(EventEntry* task, BatShard* shard)
 {
     EffectModel* model = shard->obj_3C;
     int pos[4];
@@ -2033,7 +2033,7 @@ void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int
         EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
         if (entry)
         {
-            BatTrail_a* trail;
+            BatSpriteTrail* trail;
             entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
             trail = entry->buffer;
             trail->pos_44[0] = pos[0];
@@ -2064,7 +2064,7 @@ void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int
     }
 }
 
-void SpriteTrailTask_800C2FC8(EventEntry* task, BatTrail_a* trail)
+void SpriteTrailTask_800C2FC8(EventEntry* task, BatSpriteTrail* trail)
 {
     EffectSprite* sprite = trail->anim_88;
     int i;
@@ -2121,7 +2121,7 @@ void SpriteTrailTask_800C2FC8(EventEntry* task, BatTrail_a* trail)
 int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    BatAnim_a* anim;
+    BatModelAnim* anim;
     int idx;
     EffectModel* model;
     if (entry != 0)
@@ -2144,7 +2144,7 @@ int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
 }
 
 #if 0 // Not matched: only u and c swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
-void ModelAnimTask_800C33E4(EventEntry* task, BatAnim_a* anim)
+void ModelAnimTask_800C33E4(EventEntry* task, BatModelAnim* anim)
 {
     EffectModel* clip = anim->clip_88;
     int any;
@@ -2199,7 +2199,7 @@ INCLUDE_OVERLAY_ASM(battle, ModelAnimTask_800C33E4);
 void GlowTask_800C371C(EventEntry* task, void* arg)
 {
     unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
-    BatGlow_a* glow = arg;
+    BatGlow* glow = arg;
     EffectModel* model = glow->model_88;
     if (glow->frame_0 < glow->end_4 && effectOutcomeFlag_8008D780 == 0)
     {
@@ -2261,9 +2261,9 @@ extern void OrbFadeTask_800C3D34();
 void SpawnOrb_800C3B50(int* pos, int id)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    BatOrb_a* orb;
+    BatOrb* orb;
     EffectModel* model;
-    BatHero_a* hero;
+    BatHero* hero;
     int outcome;
     int idx;
     if (entry == 0)
@@ -2315,7 +2315,7 @@ void SpawnOrb_800C3B50(int* pos, int id)
 
 INCLUDE_OVERLAY_ASM(battle, SpawnOrb_800C3B50);
 
-void OrbFadeTask_800C3D34(EventEntry* task, BatOrb_a* orb)
+void OrbFadeTask_800C3D34(EventEntry* task, BatOrb* orb)
 {
     EffectModel* clip = orb->clip_88;
     int alpha = orb->alpha_30 - 0x100;
@@ -2333,11 +2333,11 @@ void OrbFadeTask_800C3D34(EventEntry* task, BatOrb_a* orb)
     DrawFtgObjectAtSlot0_8004D1EC(clip->ftg_4, pOT_8008D690, orb->pos_44, orb->rot_80, pointLights_8008D534, ((0x1000 - orb->alpha_30) << 16) | 0xB0, 0);
 }
 
-void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb_a* orb)
+void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb)
 {
     int target[3];
-    BatHero_a* hero;
-    BatOrb_a* orbCopy;
+    BatHero* hero;
+    BatOrb* orbCopy;
     orbCopy = orb;
     SpawnSpriteAnim_800C1A5C(orb->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orb->fx_E], 0x1000);
     hero = gameTask_8008B4A4->hero_24;
@@ -2385,25 +2385,25 @@ void ClearPointLight_800C410C()
     pointLightRange_8008D3F0 = 0;
 }
 
-extern int EnemyAiBD_800C4A40(BatTask* ai);
-extern void BossAi03_800C5BC0(BatTask* ai);
-extern void BossAi04_800C59A0(BatTask* ai);
-extern void BossAi0A_800C58BC(BatTask* ai);
-extern void BossAi0B_800C5EB8(BatTask* ai);
-extern void BossAi0C_800C6038(BatTask* ai);
-extern void BossAi0D_800C5D04(BatTask* ai);
-extern void BossAi0E_800C61FC(BatTask* ai);
-extern void BossAi0F_800C66F4(BatTask* ai);
-extern void BossAi10_800C6824(BatTask* ai);
-extern void BossAi11_800C6928(BatTask* ai);
-extern void EnemyAiFirstSkill_800C6A40(BatTask* ai);
-void BossAi02_800C5A7C(BatTask* ai);
-void EnemyAiDefend_800C58AC(BatTask* ai);
+extern int EnemyAiBD_800C4A40(EnemyAi* ai);
+extern void BossAi03_800C5BC0(EnemyAi* ai);
+extern void BossAi04_800C59A0(EnemyAi* ai);
+extern void BossAi0A_800C58BC(EnemyAi* ai);
+extern void BossAi0B_800C5EB8(EnemyAi* ai);
+extern void BossAi0C_800C6038(EnemyAi* ai);
+extern void BossAi0D_800C5D04(EnemyAi* ai);
+extern void BossAi0E_800C61FC(EnemyAi* ai);
+extern void BossAi0F_800C66F4(EnemyAi* ai);
+extern void BossAi10_800C6824(EnemyAi* ai);
+extern void BossAi11_800C6928(EnemyAi* ai);
+extern void EnemyAiFirstSkill_800C6A40(EnemyAi* ai);
+void BossAi02_800C5A7C(EnemyAi* ai);
+void EnemyAiDefend_800C58AC(EnemyAi* ai);
 
 // Matched
-void ChooseEnemyCommand_800C4118(BatCmd_a* cmd, UnitStats* self, int slot, unsigned int script)
+void ChooseEnemyCommand_800C4118(BatCommand* cmd, UnitStats* self, int slot, unsigned int script)
 {
-    BatTask ai;
+    EnemyAi ai;
     unsigned int species;
     int minionSlot;
     species = self->species_5C;
@@ -2491,7 +2491,7 @@ void ChooseEnemyCommand_800C4118(BatCmd_a* cmd, UnitStats* self, int slot, unsig
     }
 }
 
-void EnemyAiC9_800C4328(BatTask* ai)
+void EnemyAiC9_800C4328(EnemyAi* ai)
 {
     UnitStatus* status = ai->target_14;
     short hp = GetHp_800334D8(status);
@@ -2510,7 +2510,7 @@ void EnemyAiC9_800C4328(BatTask* ai)
     }
 }
 
-void EnemyAiCA_800C43D8(BatTask* ai)
+void EnemyAiCA_800C43D8(EnemyAi* ai)
 {
     if (rand(ai) & 1)
     {
@@ -2522,7 +2522,7 @@ void EnemyAiCA_800C43D8(BatTask* ai)
     }
 }
 
-void EnemyAiCB_800C4424(BatTask* ai)
+void EnemyAiCB_800C4424(EnemyAi* ai)
 {
     if (rand(ai) & 1)
     {
@@ -2539,7 +2539,7 @@ void EnemyAiCC_800C4470(int ai)
     AiSetCommand_800C6AFC(ai, 1, 0x14);
 }
 
-void EnemyAiCD_800C4494(BatTask* ai)
+void EnemyAiCD_800C4494(EnemyAi* ai)
 {
     int hp = rand();
     if (hp % 3)
@@ -2552,7 +2552,7 @@ void EnemyAiCD_800C4494(BatTask* ai)
     }
 }
 
-void EnemyAiCE_800C44FC(BatTask* ai)
+void EnemyAiCE_800C44FC(EnemyAi* ai)
 {
     if (rand(ai) & 1)
     {
@@ -2564,7 +2564,7 @@ void EnemyAiCE_800C44FC(BatTask* ai)
     }
 }
 
-void EnemyAiCF_800C4548(BatTask* ai)
+void EnemyAiCF_800C4548(EnemyAi* ai)
 {
     if (AiHealWeakAlly_800C6DF8(ai, 0xD) == 0)
     {
@@ -2579,7 +2579,7 @@ void EnemyAiCF_800C4548(BatTask* ai)
     }
 }
 
-void EnemyAiD0_800C45A8(BatTask* ai)
+void EnemyAiD0_800C45A8(EnemyAi* ai)
 {
     if (TargetHasStatus_800C6EC8(ai, 0x3F8) == 0 && rand() % 10 < 7)
     {
@@ -2609,7 +2609,7 @@ void EnemyAiD2_800C471C()
     EnemyAiDefault_800C473C();
 }
 
-int EnemyAiDefault_800C473C(BatTask* ai)
+int EnemyAiDefault_800C473C(EnemyAi* ai)
 {
     UnitStatus* status = &ai->self_10->st_0;
     int chosen;
@@ -2670,7 +2670,7 @@ int EnemyAiDefault_800C473C(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAiBD_800C4A40(BatTask* ai)
+int EnemyAiBD_800C4A40(EnemyAi* ai)
 {
     int chosen;
     if (rand() & 1)
@@ -2721,7 +2721,7 @@ int EnemyAiBD_800C4A40(BatTask* ai)
     return AiFlee_800C6C58(ai);
 }
 
-int EnemyAi0F_800C4B34(BatTask* ai)
+int EnemyAi0F_800C4B34(EnemyAi* ai)
 {
     int chosen;
     UnitStatus* status = &ai->self_10->st_0;
@@ -2746,7 +2746,7 @@ int EnemyAi0F_800C4B34(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi06_800C4BE4(BatTask* ai)
+int EnemyAi06_800C4BE4(EnemyAi* ai)
 {
     int chosen;
     UnitStatus* status = &ai->self_10->st_0;
@@ -2773,7 +2773,7 @@ int EnemyAi06_800C4BE4(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi12_800C4C74(BatTask* ai)
+int EnemyAi12_800C4C74(EnemyAi* ai)
 {
     int chosen;
     if (TargetHasStatus_800C6EC8(ai, 1) == 0)
@@ -2787,7 +2787,7 @@ int EnemyAi12_800C4C74(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi0C_800C4CBC(BatTask* ai)
+int EnemyAi0C_800C4CBC(EnemyAi* ai)
 {
     int chosen;
     int roll = rand() % 100;
@@ -2802,7 +2802,7 @@ int EnemyAi0C_800C4CBC(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi00_800C4D38(BatTask* ai)
+int EnemyAi00_800C4D38(EnemyAi* ai)
 {
     int chosen;
     UnitStatus* status = &ai->self_10->st_0;
@@ -2819,7 +2819,7 @@ int EnemyAi00_800C4D38(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi09_800C4DB8(BatTask* ai)
+int EnemyAi09_800C4DB8(EnemyAi* ai)
 {
     int chosen;
     int roll = rand() % 100;
@@ -2834,7 +2834,7 @@ int EnemyAi09_800C4DB8(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi07_800C4E34(BatTask* ai)
+int EnemyAi07_800C4E34(EnemyAi* ai)
 {
     int chosen;
     if (rand() % 10 < 7)
@@ -2848,7 +2848,7 @@ int EnemyAi07_800C4E34(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi0A_800C4EA8(BatTask* ai)
+int EnemyAi0A_800C4EA8(EnemyAi* ai)
 {
     int chosen;
     int roll = rand() % 100;
@@ -2876,7 +2876,7 @@ int EnemyAi0A_800C4EA8(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi1A_800C4FA8(BatTask* ai)
+int EnemyAi1A_800C4FA8(EnemyAi* ai)
 {
     int chosen = AiCastMagic_800C6BD0(ai, 4);
     if (chosen == 0)
@@ -2886,7 +2886,7 @@ int EnemyAi1A_800C4FA8(BatTask* ai)
     return chosen;
 }
 
-int EnemyAi03_800C4FE0(BatTask* ai)
+int EnemyAi03_800C4FE0(EnemyAi* ai)
 {
     int chosen;
     if (IsTargetWeakToMagic_800C6EE4(ai))
@@ -2905,7 +2905,7 @@ int EnemyAi03_800C4FE0(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi0E_800C5034(BatTask* ai)
+int EnemyAi0E_800C5034(EnemyAi* ai)
 {
     int chosen;
     if (TargetHasStatus_800C6EC8(ai, 0x3F8) == 0)
@@ -2919,7 +2919,7 @@ int EnemyAi0E_800C5034(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi13_800C507C(BatTask* ai)
+int EnemyAi13_800C507C(EnemyAi* ai)
 {
     int chosen = AiUseSkill_800C6A8C(ai);
     if (chosen == 0)
@@ -2929,7 +2929,7 @@ int EnemyAi13_800C507C(BatTask* ai)
     return chosen;
 }
 
-int EnemyAi17_800C50B0(BatTask* ai)
+int EnemyAi17_800C50B0(EnemyAi* ai)
 {
     int chosen;
     UnitStatus* status = &ai->self_10->st_0;
@@ -2964,7 +2964,7 @@ int EnemyAi17_800C50B0(BatTask* ai)
     return AiDefend_800C6C44(ai);
 }
 
-int EnemyAi1B_800C51D8(BatTask* ai)
+int EnemyAi1B_800C51D8(EnemyAi* ai)
 {
     int chosen;
     if (rand(ai) & 1)
@@ -2978,7 +2978,7 @@ int EnemyAi1B_800C51D8(BatTask* ai)
     return chosen;
 }
 
-int EnemyAiUnused_800C5220(BatTask* ai)
+int EnemyAiUnused_800C5220(EnemyAi* ai)
 {
     UnitStatus* status = ai->target_14;
     int chosen = AiHealWeakAlly_800C6DF8(ai, 0xD);
@@ -2997,7 +2997,7 @@ int EnemyAiUnused_800C5220(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi15_800C5290(BatTask* ai)
+int EnemyAi15_800C5290(EnemyAi* ai)
 {
     int chosen;
     if (rand() % 10 < 6)
@@ -3011,7 +3011,7 @@ int EnemyAi15_800C5290(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi10_800C5304(BatTask* ai)
+int EnemyAi10_800C5304(EnemyAi* ai)
 {
     int chosen;
     if (TargetHasStatus_800C6EC8(ai, 1) == 0 && rand() % 10 < 7)
@@ -3033,7 +3033,7 @@ int EnemyAi10_800C5304(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi1C_800C53B0(BatTask* ai)
+int EnemyAi1C_800C53B0(EnemyAi* ai)
 {
     int chosen;
     if (rand() % 10 < 6)
@@ -3047,7 +3047,7 @@ int EnemyAi1C_800C53B0(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi0D_800C5424(BatTask* ai)
+int EnemyAi0D_800C5424(EnemyAi* ai)
 {
     int chosen;
     UnitStatus* status = &ai->self_10->st_0;
@@ -3064,7 +3064,7 @@ int EnemyAi0D_800C5424(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi02_800C54A4(BatTask* ai)
+int EnemyAi02_800C54A4(EnemyAi* ai)
 {
     int chosen;
     if (GetAreaElement_800BC868() == 1 || GetAreaElement_800BC868() == -1)
@@ -3083,7 +3083,7 @@ int EnemyAi02_800C54A4(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi0B_800C5510(BatTask* ai)
+int EnemyAi0B_800C5510(EnemyAi* ai)
 {
     int chosen;
     if (AiCastMagic_800C6BD0(ai, 8) == 0)
@@ -3111,7 +3111,7 @@ int EnemyAi0B_800C5510(BatTask* ai)
     return AiFlee_800C6C58(ai);
 }
 
-int EnemyAi14_800C5594(BatTask* ai)
+int EnemyAi14_800C5594(EnemyAi* ai)
 {
     int chosen;
     if (rand() % 10 < 7)
@@ -3125,7 +3125,7 @@ int EnemyAi14_800C5594(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi16_800C5608(BatTask* ai)
+int EnemyAi16_800C5608(EnemyAi* ai)
 {
     int chosen;
     if (GetAreaElement_800BC868() == 0 || GetAreaElement_800BC868() == -1)
@@ -3144,7 +3144,7 @@ int EnemyAi16_800C5608(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi18_800C5670(BatTask* ai)
+int EnemyAi18_800C5670(EnemyAi* ai)
 {
     int chosen;
     if (TargetHasStatus_800C6EC8(ai, 0x3F8) == 0)
@@ -3158,7 +3158,7 @@ int EnemyAi18_800C5670(BatTask* ai)
     return AiDefend_800C6C44(ai);
 }
 
-int EnemyAi05_800C56B8(BatTask* ai)
+int EnemyAi05_800C56B8(EnemyAi* ai)
 {
     int chosen = AiCastMagic_800C6BD0(ai, 0xB);
     if (chosen)
@@ -3173,7 +3173,7 @@ int EnemyAi05_800C56B8(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi1D_800C5700(BatTask* ai)
+int EnemyAi1D_800C5700(EnemyAi* ai)
 {
     int chosen;
     if (GetAreaElement_800BC868() == 2 || GetAreaElement_800BC868() == -1)
@@ -3192,7 +3192,7 @@ int EnemyAi1D_800C5700(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi19_800C576C(BatTask* ai)
+int EnemyAi19_800C576C(EnemyAi* ai)
 {
     int chosen;
     if (GetAreaElement_800BC868() == 3 || GetAreaElement_800BC868() == -1)
@@ -3211,7 +3211,7 @@ int EnemyAi19_800C576C(BatTask* ai)
     return AiAttack_800C6A68(ai);
 }
 
-int EnemyAi04_800C57D8(BatTask* ai)
+int EnemyAi04_800C57D8(EnemyAi* ai)
 {
     int chosen = AiUseSkill_800C6A8C(ai);
     if (chosen == 0)
@@ -3221,7 +3221,7 @@ int EnemyAi04_800C57D8(BatTask* ai)
     return chosen;
 }
 
-int EnemyAi08_800C580C(BatTask* ai)
+int EnemyAi08_800C580C(EnemyAi* ai)
 {
     int chosen = AiUseSkill_800C6A8C(ai);
     if (chosen == 0)
@@ -3231,7 +3231,7 @@ int EnemyAi08_800C580C(BatTask* ai)
     return chosen;
 }
 
-int EnemyAi1F_800C5840(BatTask* ai)
+int EnemyAi1F_800C5840(EnemyAi* ai)
 {
     int chosen = AiUseSkill_800C6A8C(ai);
     if (chosen == 0)
@@ -3241,7 +3241,7 @@ int EnemyAi1F_800C5840(BatTask* ai)
     return chosen;
 }
 
-int EnemyAi1E_800C5874(BatTask* ai)
+int EnemyAi1E_800C5874(EnemyAi* ai)
 {
     int chosen = AiCastMagic_800C6BD0(ai, 0x14);
     if (chosen == 0)
@@ -3251,12 +3251,12 @@ int EnemyAi1E_800C5874(BatTask* ai)
     return chosen;
 }
 
-void EnemyAiDefend_800C58AC(BatTask* ai)
+void EnemyAiDefend_800C58AC(EnemyAi* ai)
 {
     ai->cmd_8->kind_0 = 0x12;
 }
 
-void BossAi0A_800C58BC(BatTask* ai)
+void BossAi0A_800C58BC(EnemyAi* ai)
 {
     unsigned char phase = aiCounter_800C8B30 % 6;
     switch (phase)
@@ -3506,7 +3506,7 @@ const char aVeryEffectiveAg_800BA0F0[] = "\202u\202\205\202\222\202\231\201@\202
 const char aSpecialEarthAtt_800BA148[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Special Earth Attack
 const int dword_800BA174[2] = { 0 };
 
-void BossAi04_800C59A0(BatTask* ai)
+void BossAi04_800C59A0(EnemyAi* ai)
 {
     unsigned char phase = aiCounter_800C8B30 % 3;
     switch (phase)
@@ -3530,7 +3530,7 @@ void BossAi04_800C59A0(BatTask* ai)
     aiCounter_800C8B30++;
 }
 
-void BossAi02_800C5A7C(BatTask* ai)
+void BossAi02_800C5A7C(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3572,7 +3572,7 @@ void BossAi02_800C5A7C(BatTask* ai)
     }
 }
 
-void BossAi03_800C5BC0(BatTask* ai)
+void BossAi03_800C5BC0(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3614,7 +3614,7 @@ void BossAi03_800C5BC0(BatTask* ai)
     }
 }
 
-void BossAi0D_800C5D04(BatTask* ai)
+void BossAi0D_800C5D04(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3669,7 +3669,7 @@ void BossAi0D_800C5D04(BatTask* ai)
     aiCounter_800C8B30++;
 }
 
-void BossAi0B_800C5EB8(BatTask* ai)
+void BossAi0B_800C5EB8(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3716,7 +3716,7 @@ void BossAi0B_800C5EB8(BatTask* ai)
 }
 
 #if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; aiCounter_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
-void BossAi0C_800C6038(BatTask* ai)
+void BossAi0C_800C6038(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3769,7 +3769,7 @@ void BossAi0C_800C6038(BatTask* ai)
 
 INCLUDE_OVERLAY_ASM(battle, BossAi0C_800C6038);
 
-void BossAi0E_800C61FC(BatTask* ai)
+void BossAi0E_800C61FC(EnemyAi* ai)
 {
     unsigned short element;
     if (ai->slot_C == 0)
@@ -3903,7 +3903,7 @@ void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int element)
     }
 }
 
-void BossAi0F_800C66F4(BatTask* ai)
+void BossAi0F_800C66F4(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3945,7 +3945,7 @@ void BossAi0F_800C66F4(BatTask* ai)
     ai->cmd_8->targets_C = ai->targetMask_18;
 }
 
-void BossAi10_800C6824(BatTask* ai)
+void BossAi10_800C6824(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -3983,7 +3983,7 @@ void BossAi10_800C6824(BatTask* ai)
     ai->cmd_8->targets_C = ai->targetMask_18;
 }
 
-void BossAi11_800C6928(BatTask* ai)
+void BossAi11_800C6928(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
     {
@@ -4024,21 +4024,21 @@ void BossAi11_800C6928(BatTask* ai)
     ai->cmd_8->targets_C = ai->targetMask_18;
 }
 
-void EnemyAiFirstSkill_800C6A40(BatTask* ai)
+void EnemyAiFirstSkill_800C6A40(EnemyAi* ai)
 {
     ai->cmd_8->kind_0 = 6;
     ai->cmd_8->arg_4 = 0;
     ai->cmd_8->targets_C = ai->targetMask_18;
 }
 
-int AiAttack_800C6A68(BatTask* ai)
+int AiAttack_800C6A68(EnemyAi* ai)
 {
     ai->cmd_8->kind_0 = 0;
     ai->cmd_8->targets_C = ai->targetMask_18;
     return 1;
 }
 
-int AiUseSkill_800C6A8C(BatTask* ai)
+int AiUseSkill_800C6A8C(EnemyAi* ai)
 {
     int chosen = FindUsableSkill_800C6D6C(ai->skills_4, ai->self_10);
     if (chosen != 5)
@@ -4051,23 +4051,23 @@ int AiUseSkill_800C6A8C(BatTask* ai)
     return 0;
 }
 
-void AiSetCommand_800C6AFC(BatTask* ai, int kind, int arg)
+void AiSetCommand_800C6AFC(EnemyAi* ai, int kind, int arg)
 {
     ai->cmd_8->kind_0 = kind;
     ai->cmd_8->arg_4 = arg;
     ai->cmd_8->targets_C = ai->targetMask_18;
 }
 
-void AiSetCommandOnSelf_800C6B24(BatTask* ai, int kind, int arg)
+void AiSetCommandOnSelf_800C6B24(EnemyAi* ai, int kind, int arg)
 {
-    BatCmd_a* cmd;
+    BatCommand* cmd;
     ai->cmd_8->kind_0 = kind;
     ai->cmd_8->arg_4 = arg;
     cmd = ai->cmd_8;
     cmd->targets_C = cmd->mask_8;
 }
 
-int AiCastMagicOnAlly_800C6B50(BatTask* ai, int magic, int ally)
+int AiCastMagicOnAlly_800C6B50(EnemyAi* ai, int magic, int ally)
 {
     if (CanCastMagic_800C6CFC(magic, ai->magicBits_0, ai->self_10) != 0)
     {
@@ -4079,7 +4079,7 @@ int AiCastMagicOnAlly_800C6B50(BatTask* ai, int magic, int ally)
     return 0;
 }
 
-int AiCastMagic_800C6BD0(BatTask* ai, int magic)
+int AiCastMagic_800C6BD0(EnemyAi* ai, int magic)
 {
     if (CanCastMagic_800C6CFC(magic, ai->magicBits_0, ai->self_10) != 0)
     {
@@ -4091,13 +4091,13 @@ int AiCastMagic_800C6BD0(BatTask* ai, int magic)
     return 0;
 }
 
-int AiDefend_800C6C44(BatTask* ai)
+int AiDefend_800C6C44(EnemyAi* ai)
 {
     ai->cmd_8->kind_0 = 0x12;
     return 1;
 }
 
-int AiFlee_800C6C58(BatTask* ai)
+int AiFlee_800C6C58(EnemyAi* ai)
 {
     ai->cmd_8->kind_0 = 7;
     ai->cmd_8->targets_C = ai->targetMask_18;
@@ -4151,7 +4151,7 @@ int FindUsableSkill_800C6D6C(UnitSkills* skills, UnitStats* self)
     return i;
 }
 
-int AiHealWeakAlly_800C6DF8(BatTask* ai, int magic)
+int AiHealWeakAlly_800C6DF8(EnemyAi* ai, int magic)
 {
     UnitStatus* allies[3];
     int i;
@@ -4174,12 +4174,12 @@ int AiHealWeakAlly_800C6DF8(BatTask* ai, int magic)
     return 0;
 }
 
-int TargetHasStatus_800C6EC8(BatTask* ai, int mask)
+int TargetHasStatus_800C6EC8(EnemyAi* ai, int mask)
 {
     return (ai->target_14->status_0 & mask) != 0;
 }
 
-int IsTargetWeakToMagic_800C6EE4(BatTask* ai)
+int IsTargetWeakToMagic_800C6EE4(EnemyAi* ai)
 {
     return ai->target_14->stats_2C.cur_0[1] > ai->target_14->stats_2C.cur_0[3];
 }
@@ -4338,7 +4338,7 @@ int CanCapture_800C7334()
     return 1;
 }
 
-BatMenu_a* GetPageCursor_800C73B8(unsigned char page)
+BatMenuCursor* GetPageCursor_800C73B8(unsigned char page)
 {
     if (page == 4)
     {
@@ -4393,7 +4393,7 @@ void HighlightTargetWindows_800C7424(unsigned char page)
 int IsMenuSelectionValid_800C7530()
 {
     struct_minion_ref ref;
-    BatTgtQ_a query;
+    BatTargetQuery query;
     short idx;
     int* error;
     idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
@@ -4493,7 +4493,7 @@ int IsMenuSelectionValid_800C7530()
         }
         else if (GetSelectedCommand_800C78D0() == 6)
         {
-            switch (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&query))
+            switch (((int (*)(BatTargetQuery*))CheckUsableStub_80034124)(&query))
             {
             case 0:
                 return 1;
@@ -4857,9 +4857,9 @@ void BattleMenuDraw_800C7DA8()
 
 void PreviewCommandResult_800C83B0()
 {
-    BatTgtQ_a query;
-    BatCmd_a cmd;
-    BatResult_a res;
+    BatTargetQuery query;
+    BatCommand cmd;
+    BatActionResult res;
     unsigned int i;
     int bit;
     UnitStatus* self;
@@ -4914,7 +4914,7 @@ void PreviewCommandResult_800C83B0()
         }
         else if (GetSelectedCommand_800C78D0() == 6)
         {
-            if (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&query))
+            if (((int (*)(BatTargetQuery*))CheckUsableStub_80034124)(&query))
             {
                 previewHpChange_800C9180 = 0;
             }
@@ -5188,7 +5188,7 @@ unsigned short stage16Models_800C8E94[12] = {
     62, 0, 1, 0, 255, 0, 0, 0,
     255,
 };
-BatStage_a battleStages_800C8EAC[39] = {
+BatStage battleStages_800C8EAC[39] = {
     { stage00Sprites_800C8B70, 0x3A6, 37, 0, 7, -1 },
     { stage01Sprites_800C8B80, 0x3A8, 38, 0, 6, -1 },
     { stage02Sprites_800C8B90, 0x3A9, 39, 0, 7, -1 },
@@ -5234,7 +5234,7 @@ int stageRot_800C9124[2] = { 0 };
 char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
 unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
 int statusCureChances_800C9138[2] = { 2, 77 };
-BatXY_a enemyWindowLayouts_800C9140[9] = {
+BatXY enemyWindowLayouts_800C9140[9] = {
     { 110, 20 },
     { -1, -1 },
     { -1, -1 },
@@ -5253,38 +5253,38 @@ short previewMpChange_800C9182 = 0;
 int dword_800C9184 = 0x24639300;
 Minion *summonedMinion_800C9188 = 0;
 int summonedMinionSlot_800C918C = -1;
-BatSummon_a summonedActor_800C9190 = { 0 };
+BatSummonedActor summonedActor_800C9190 = { 0 };
 char defaultBoneSlots_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
-BatFxFn enemyAiHigh_800C91DC[10] = {
-    EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (BatFxFn)EnemyAiCC_800C4470,
+EnemyAiFn enemyAiHigh_800C91DC[10] = {
+    EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (EnemyAiFn)EnemyAiCC_800C4470,
     EnemyAiCD_800C4494, EnemyAiCE_800C44FC, EnemyAiCF_800C4548, EnemyAiD0_800C45A8,
-    (BatFxFn)EnemyAiD1_800C46FC, (BatFxFn)EnemyAiD2_800C471C,
+    (EnemyAiFn)EnemyAiD1_800C46FC, (EnemyAiFn)EnemyAiD2_800C471C,
 };
-BatFxFn enemyAi_800C9204[53] = {
-    (BatFxFn)EnemyAi00_800C4D38, (BatFxFn)EnemyAi00_800C4D38, (BatFxFn)EnemyAi02_800C54A4, (BatFxFn)EnemyAi03_800C4FE0,
-    (BatFxFn)EnemyAi04_800C57D8, (BatFxFn)EnemyAi05_800C56B8, (BatFxFn)EnemyAi06_800C4BE4, (BatFxFn)EnemyAi07_800C4E34,
-    (BatFxFn)EnemyAi08_800C580C, (BatFxFn)EnemyAi09_800C4DB8, (BatFxFn)EnemyAi0A_800C4EA8, (BatFxFn)EnemyAi0B_800C5510,
-    (BatFxFn)EnemyAi0C_800C4CBC, (BatFxFn)EnemyAi0D_800C5424, (BatFxFn)EnemyAi0E_800C5034, (BatFxFn)EnemyAi0F_800C4B34,
-    (BatFxFn)EnemyAi10_800C5304, (BatFxFn)EnemyAi0F_800C4B34, (BatFxFn)EnemyAi12_800C4C74, (BatFxFn)EnemyAi13_800C507C,
-    (BatFxFn)EnemyAi14_800C5594, (BatFxFn)EnemyAi15_800C5290, (BatFxFn)EnemyAi16_800C5608, (BatFxFn)EnemyAi17_800C50B0,
-    (BatFxFn)EnemyAi18_800C5670, (BatFxFn)EnemyAi19_800C576C, (BatFxFn)EnemyAi1A_800C4FA8, (BatFxFn)EnemyAi1B_800C51D8,
-    (BatFxFn)EnemyAi1C_800C53B0, (BatFxFn)EnemyAi1D_800C5700, (BatFxFn)EnemyAi1E_800C5874, (BatFxFn)EnemyAi1F_800C5840,
-    (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
-    (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
-    (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
-    (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
-    (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
-    (BatFxFn)EnemyAiDefault_800C473C,
+EnemyAiFn enemyAi_800C9204[53] = {
+    (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi00_800C4D38, (EnemyAiFn)EnemyAi02_800C54A4, (EnemyAiFn)EnemyAi03_800C4FE0,
+    (EnemyAiFn)EnemyAi04_800C57D8, (EnemyAiFn)EnemyAi05_800C56B8, (EnemyAiFn)EnemyAi06_800C4BE4, (EnemyAiFn)EnemyAi07_800C4E34,
+    (EnemyAiFn)EnemyAi08_800C580C, (EnemyAiFn)EnemyAi09_800C4DB8, (EnemyAiFn)EnemyAi0A_800C4EA8, (EnemyAiFn)EnemyAi0B_800C5510,
+    (EnemyAiFn)EnemyAi0C_800C4CBC, (EnemyAiFn)EnemyAi0D_800C5424, (EnemyAiFn)EnemyAi0E_800C5034, (EnemyAiFn)EnemyAi0F_800C4B34,
+    (EnemyAiFn)EnemyAi10_800C5304, (EnemyAiFn)EnemyAi0F_800C4B34, (EnemyAiFn)EnemyAi12_800C4C74, (EnemyAiFn)EnemyAi13_800C507C,
+    (EnemyAiFn)EnemyAi14_800C5594, (EnemyAiFn)EnemyAi15_800C5290, (EnemyAiFn)EnemyAi16_800C5608, (EnemyAiFn)EnemyAi17_800C50B0,
+    (EnemyAiFn)EnemyAi18_800C5670, (EnemyAiFn)EnemyAi19_800C576C, (EnemyAiFn)EnemyAi1A_800C4FA8, (EnemyAiFn)EnemyAi1B_800C51D8,
+    (EnemyAiFn)EnemyAi1C_800C53B0, (EnemyAiFn)EnemyAi1D_800C5700, (EnemyAiFn)EnemyAi1E_800C5874, (EnemyAiFn)EnemyAi1F_800C5840,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
+    (EnemyAiFn)EnemyAiDefault_800C473C,
 };
-BatMenu_a commandMenu_800C92D8[1] = { { 2, 3 } };
-BatMenu_a skillMenu_800C92E4[1] = { { 1, 5, 5 } };
-BatMenu_a magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
+BatMenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
+BatMenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
+BatMenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
 int dword_800C92FC[3] = { 0x10001, 1 };
-BatMenu_a itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
-BatMenu_a enemyTargetMenu_800C9314[1] = { { 0, 1 } };
-BatMenu_a targetMenu_800C9320[1] = { { 1 } };
-BatMenu_a allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
-BatMenu_a *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
+BatMenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
+BatMenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
+BatMenuCursor targetMenu_800C9320[1] = { { 1 } };
+BatMenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
+BatMenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
 int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
 int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
 int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
@@ -5306,7 +5306,7 @@ int msgCannotSelect_800C9394[1] = { (int)aCannotSelect_800B6B64 };
 int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
 int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
 int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
-BatMenuItem_a levantMenuItems_800C93A4[6] = {
+BatMenuItem levantMenuItems_800C93A4[6] = {
     { helpAttack_800C9350 },
     { helpDefend_800C9354 },
     { helpSummon_800C9358 },
@@ -5314,53 +5314,53 @@ BatMenuItem_a levantMenuItems_800C93A4[6] = {
     { helpItem_800C9360 },
     { helpFlee_800C9364 },
 };
-BatMenuItem_a minionMenuItems_800C93D4[5] = {
+BatMenuItem minionMenuItems_800C93D4[5] = {
     { helpMinionAttack_800C9368 },
     { helpDefend_800C9354 },
     { helpSpecialAttack_800C936C },
     { helpMagic_800C9370 },
     { helpChangeFighter_800C9374 },
 };
-BatMenuWin_a winAttack_800C93FC[2] = {
+BatMenuWindow winAttack_800C93FC[2] = {
     { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winDefend_800C9434[2] = {
+BatMenuWindow winDefend_800C9434[2] = {
     { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winSummon_800C946C[2] = {
+BatMenuWindow winSummon_800C946C[2] = {
     { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winCapture_800C94A4[2] = {
+BatMenuWindow winCapture_800C94A4[2] = {
     { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winItem_800C94DC[2] = {
+BatMenuWindow winItem_800C94DC[2] = {
     { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winFlee_800C9514[2] = {
+BatMenuWindow winFlee_800C9514[2] = {
     { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winSpecialAttack_800C954C[2] = {
+BatMenuWindow winSpecialAttack_800C954C[2] = {
     { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winMagic_800C9584[2] = {
+BatMenuWindow winMagic_800C9584[2] = {
     { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a winChangeFighter_800C95BC[2] = {
+BatMenuWindow winChangeFighter_800C95BC[2] = {
     { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWin_a *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
-BatMenuWin_a *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
-BatMenuWin_a **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
-BatMenuWins_a menuWindows_800C9630 = { 2 };
+BatMenuWindow *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
+BatMenuWindow *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
+BatMenuWindow **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
+BatMenuWindows menuWindows_800C9630 = { 2 };
 unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
 unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
 unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
@@ -5459,13 +5459,13 @@ short actorHpChange_800C9C7E = 0;
 short actorMpChange_800C9C80 = 0;
 unsigned char summonedUnit_800C9C82 = 0;
 int dword_800C9C84 = 0;
-BatCmd_a curCommand_800C9C88 = { 0 };
+BatCommand curCommand_800C9C88 = { 0 };
 unsigned char commandUnit_800C9C98 = 0;
 unsigned char shownUnit_800C9C99 = 0;
 int dword_800C9C9C = 0;
 int unitStatusInflicted_800C9CA0[7] = { 0 };
 char unitHitKinds_800C9CBC[12] = { 0 };
-BatCmd_a unitReactions_800C9CC8[7] = { { 0 } };
+BatCommand unitReactions_800C9CC8[7] = { { 0 } };
 short unitHpDamage_800C9D38[8] = { 0 };
 short unitMpDamage_800C9D48[8] = { 0 };
 int unitResultFlags_800C9D58[7] = { 0 };
@@ -5481,7 +5481,7 @@ short stageAnimUv_800C9D8C[2] = { 0 };
 int removedEnemyCount_800C9D90 = 0;
 short actionFrame_800C9D94 = 0;
 short actorTiming_800C9D98[4] = { 0 };
-BatPair_a reactionTimings_800C9DA0[7] = { { 0 } };
+BatActionTiming reactionTimings_800C9DA0[7] = { { 0 } };
 short actorHitShift_800C9DBC = 0;
 short reactionHitFrames_800C9DC0[8] = { 0 };
 int removedEnemies_800C9DD0[10] = { 0 };
@@ -5491,13 +5491,13 @@ char actorWindowHighlight_800C9DFD = 0;
 unsigned int enemyWindowSlide_800C9E00 = 0;
 int dword_800C9E04 = 0;
 EventEntry *enemyWindowTasks_800C9E08[4] = { 0 };
-BatXY_a enemyWindowPos_800C9E18[3] = { { 0 } };
+BatXY enemyWindowPos_800C9E18[3] = { { 0 } };
 int enemyWindowMask_800C9E24 = 0;
-BatUnitWin_a *enemyWindows_800C9E28[4] = { 0 };
+BatEnemyWindow *enemyWindows_800C9E28[4] = { 0 };
 int cameraFocus_800C9E38 = 0;
 int newCameraFocus_800C9E3C = 0;
 unsigned char prevMenuPage_800C9E40 = 0;
-BatMenu_a *pageCursor_800C9E44 = 0;
+BatMenuCursor *pageCursor_800C9E44 = 0;
 unsigned char menuState_800C9E48 = 0;
 unsigned char menuForMinion_800C9E49 = 0;
 unsigned char enemyCount_800C9E4A = 0;
@@ -5506,10 +5506,10 @@ int enemyMask_800C9E4C = 0;
 unsigned char menuPage_800C9E50 = 0;
 unsigned char menuErrorTimer_800C9E51 = 0;
 int menuTarget_800C9E54 = 0;
-BatCmd_a menuCommand_800C9E58 = { 0 };
+BatCommand menuCommand_800C9E58 = { 0 };
 unsigned char targetFlags_800C9E68 = 0;
-BatMenuItem_a *menuItems_800C9E6C = 0;
-BatEnemyTargets_a enemyTargets_800C9E70 = { 0 };
+BatMenuItem *menuItems_800C9E6C = 0;
+BatEnemyTargets enemyTargets_800C9E70 = { 0 };
 int partyMinionMask_800C9E78 = 0;
 int menuErrorText_800C9E7C = 0;
 unsigned char enemyUnits_800C9E80[4] = { 0 };

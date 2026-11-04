@@ -9,7 +9,7 @@ void* const dword_800B6710[25] = { jtgt_800BD0F4, jtgt_800BD0F4, jtgt_800BD4F0, 
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
       // Its .rdata (initializer at 0x800B6700, switch table at 0x800B6710) comes out right since this file was split off.
-typedef struct BatLight_a
+typedef struct BatCameraLight
 {
     char pad0[0x30];
     unsigned char r_30;
@@ -19,7 +19,7 @@ typedef struct BatLight_a
     short r_50;
     short g_52;
     short b_54;
-} BatLight_a;
+} BatCameraLight;
 
 extern char stageRot_800C9124[];
 extern char cameraState_8008D4F0[];
@@ -27,15 +27,15 @@ extern short cameraRot_8008D4C8;
 extern short geomScreenBase_8008D51E;
 extern unsigned char stageAnimPhases_800C911C[];
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
-typedef struct BatStageObj_a
+typedef struct BatStageObj
 {
     char pad0[0x38];
     int x_38;
     int y_3C;
     int z_40;
-} BatStageObj_a;
+} BatStageObj;
 
-void DrawBattleStage_800BC90C(BatStageObj_a* obj)
+void DrawBattleStage_800BC90C(BatStageObj* obj)
 {
     int scale[3] = { 0x1000, 0x1000, 0x1000 };
     int idx;
@@ -60,7 +60,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* obj)
                     CVECTOR col;
                     short sz[2];
                     EffectSpriteFrame* frame = &sprite->frames_8[j][k];
-                    BatLight_a* light = (BatLight_a*)cameraState_8008D4F0;
+                    BatCameraLight* light = (BatCameraLight*)cameraState_8008D4F0;
                     pos.vx = obj->x_38;
                     pos.vy = obj->y_3C;
                     pos.vz = obj->z_40;
@@ -193,7 +193,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* obj)
                     int uu;
                     int vv;
                     SaveData* sd;
-                    BatLight_a* light;
+                    BatCameraLight* light;
                     if (stageAnimUv_800C9D8C[1] < 0 && stageAnimUv_800C9D8C[0] < 0)
                     {
                         stageAnimUv_800C9D8C[0] = sprite->poly_C.u0;
@@ -226,7 +226,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* obj)
                     sprite->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + frame->h_6;
                     if (frame->size_C[1] != 0)
                     {
-                        light = (BatLight_a*)cameraState_8008D4F0;
+                        light = (BatCameraLight*)cameraState_8008D4F0;
                         col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
                         col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
                         col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
@@ -253,7 +253,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* obj)
                     int ang;
                     EffectSpriteFrame* frame = &sprite->frames_8[j][k];
                     SaveData* sd = &saveData_8008B570;
-                    BatLight_a* light = (BatLight_a*)cameraState_8008D4F0;
+                    BatCameraLight* light = (BatCameraLight*)cameraState_8008D4F0;
                     pos.vx = obj->x_38;
                     pos.vy = obj->y_3C;
                     pos.vz = obj->z_40;
@@ -531,7 +531,7 @@ void StartActorAction_800BDF74()
 void StartReactions_800BDFAC()
 {
     unsigned char i;
-    BatPair_a timing;
+    BatActionTiming timing;
     for (i = 0; i < 7; i++)
     {
         if (actingUnit_800C9C7C == i)
@@ -547,9 +547,9 @@ void StartReactions_800BDFAC()
     }
 }
 
-BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReaction, int unit)
+BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BatCommand* cmd, int isReaction, int unit)
 {
-    BatPair_a timing;
+    BatActionTiming timing;
     if ((saveData_8008B570.field_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
     {
         timing.hit_0 = 0;
@@ -574,7 +574,7 @@ BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReactio
     return out;
 }
 
-void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
+void TriggerUnitAction_800BE14C(BatCommand* cmd, int isReaction, int unit)
 {
     int side;
     if (saveData_8008B570.field_0 & 0x20)
@@ -719,7 +719,7 @@ void UpdateAction_800BE3C0()
         {
             if (actingUnit_800C9C7C != i)
             {
-                BatCmd_a* reaction = &unitReactions_800C9CC8[i];
+                BatCommand* reaction = &unitReactions_800C9CC8[i];
                 if ((reaction->kind_0 == 5 && GetSealResultFlags_80013358(reaction->arg_4) == 1) || (reaction->kind_0 == 0x1A && GetSealResultFlags_80013358(reaction->arg_4) == 1))
                 {
                     AddEnemyItem_800A2898(i - 4);

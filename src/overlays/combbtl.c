@@ -7,7 +7,7 @@
 
 
 
-// a battle command (same layout as BATTLE.BIN's BatCmd_a)
+// a battle command (same layout as BATTLE.BIN's BatCommand)
 extern EventNode* enemyWindowTasks_8008B564;
 extern int sideSlot_800A4078[2];
 extern unsigned char sideResult_800A3A98[2];
@@ -26,7 +26,7 @@ extern void HitNumberTask_800A7EFC();
 
 extern void SideWindowTask_800A7694();
 extern void CreateSlotActor_800A0BA8(int, void*, void*);
-// a command's result (same layout as BATTLE.BIN's BatResult_a)
+// a command's result (same layout as BATTLE.BIN's BatActionResult)
 extern int actorSideArr_800A85B8[];
 extern int targetSideArr_800A8620[];
 extern unsigned char battleResult_800A38DC;

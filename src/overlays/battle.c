@@ -11,12 +11,12 @@ typedef struct BatEndWork
     int* battleTask_8; // the battle task's EventEntry (its flags)
     int c_C;
 } BatEndWork;
-typedef struct BatSel_a
+typedef struct BatSelection
 {
     char pad_0[0x18];
     int c_18;
-} BatSel_a;
-extern BatSel_a* GetBattleSelection_800A1E3C();
+} BatSelection;
+extern BatSelection* GetBattleSelection_800A1E3C();
 extern void BattleEndDefeat_800BA444();
 extern void BattleEndWaitLevant_800BA52C();
 extern void BattleEndVictory_800BA564();
@@ -31,7 +31,7 @@ extern void SsSepSetDecrescendo(int, int, int, int);
 void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
 {
     short* seq;
-    BatSel_a* sel;
+    BatSelection* sel;
     if ((*work->battleTask_8 & 0x8001) == 1)
     {
         return;
@@ -361,7 +361,7 @@ void InitEnemyRecords_800BABC4()
 {
     int i;
     int alive;
-    BatEnt_a* rec;
+    BatEnemyResult* rec;
     i = 0;
     rec = dword_800B1238;
 loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the original keeps them inside
@@ -531,7 +531,7 @@ void BattleNextTurn_800BAE74(BatTaskEntry* task, BatTurnWork* work)
         }
         if (actingUnit_800C9C7C == 10)
         {
-            BatChain_a* chain = &encounterRecord_800ADE78;
+            BatChainRecord* chain = &encounterRecord_800ADE78;
             chain->next_10 = chainEntry_800C9C78[5];
             workCopy->handle_C = sub_800B4200(chain);
             task->next_8 = WaitChainMessage_800BB100;
@@ -903,7 +903,7 @@ void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
 {
     unsigned int mask;
     int i;
-    BatCmd_a* reactions;
+    BatCommand* reactions;
     if (NeedsStatusReaction_800BC1A8(curCommand_800C9C88.targets_C) == 1)
     {
         mask = curCommand_800C9C88.targets_C;
@@ -1184,10 +1184,10 @@ void WaitBtlExecLoaded_800BC324(BatTaskEntry* task, int buffer)
     }
 }
 
-int GetUnitsCenter_800BC378(unsigned int mask, BatV12_a* out)
+int GetUnitsCenter_800BC378(unsigned int mask, BatVec3* out)
 {
-    BatV12_a pos[7];
-    BatV12_a center;
+    BatVec3 pos[7];
+    BatVec3 center;
     unsigned int i;
     int count;
     int bit;
@@ -1197,7 +1197,7 @@ int GetUnitsCenter_800BC378(unsigned int mask, BatV12_a* out)
         bit = 1 << i;
         if (mask & bit)
         {
-            BatV12_a* unitPos = (BatV12_a*)GetUnitPos_800BC6CC(i);
+            BatVec3* unitPos = (BatVec3*)GetUnitPos_800BC6CC(i);
             if (unitPos)
             {
                 pos[count].x = unitPos->x;
@@ -1273,10 +1273,10 @@ int IsUnitOnField_800BC570(int unit)
     return (GetEnemyAliveMask_800A248C() & (bit = 1 << unit)) != 0;
 }
 
-BatV12_a* AveragePositions_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n)
+BatVec3* AveragePositions_800BC5EC(BatVec3* dst, BatVec3* src, unsigned int n)
 {
     unsigned char i;
-    BatV12_a mid;
+    BatVec3 mid;
     if (n == 1)
     {
         *dst = *src;
@@ -1289,7 +1289,7 @@ BatV12_a* AveragePositions_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n
             i = 0;
             do
             {
-                BatV12_a* cur = &src[i];
+                BatVec3* cur = &src[i];
                 Midpoint3D_8003B95C(&mid, cur, &src[i + 1]);
                 *cur = mid;
                 i++;
