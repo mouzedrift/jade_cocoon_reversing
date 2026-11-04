@@ -9,7 +9,7 @@ const char aColiC_800B6D2C[8] = "COLI.C\000$";
 #if 0
 // Not matched: FindLevantMesh_800B80C8 is inlined here; the original keeps its result in $s3 and sets it to 1 before
 // the mesh loop (0 on exhaustion), this C returns it in $v0, one saved register and one word short
-int sub_800B6DD4(EvEntEventfnc* o)
+int CollideLevantWithMap_800B6DD4(EvEntEventfnc* o)
 {
     EvQuadEventfnc v[4];
     int n[4];
@@ -22,7 +22,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
     int d;
     ret = 0;
     i = 0;
-    sub_800B82C8(&levantPos_8008BD18.pos.x, (int*)&o->pos_48, mapState_8008B500.ents_14,
+    CollideWithMapEnts_800B82C8(&levantPos_8008BD18.pos.x, (int*)&o->pos_48, mapState_8008B500.ents_14,
                  mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10);
     o->f8C_8C = -1;
     o->f88_88 = -1;
@@ -42,7 +42,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        sub_800B8220(&levantPos_8008BD18.pos.x, (int)&o->pos_48, (int)&mapState_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
+        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&o->pos_48, (int)&mapState_8008B500.meshes_C[o->f84_84], &o->f88_88, &o->f8C_8C, n);
         vt = mapState_8008B500.meshes_C[o->f84_84].tris_4[o->f88_88].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[o->f8C_8C % 3].x_0;
@@ -76,7 +76,7 @@ int sub_800B6DD4(EvEntEventfnc* o)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B6DD4);
+INCLUDE_OVERLAY_ASM(eventfnc, CollideLevantWithMap_800B6DD4);
 
 int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
 {
@@ -90,7 +90,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
     MapVtx* vt;
     EvQuadEventfnc* q;
     EvQuadEventfnc* q2;
-    if (!sub_800B82C8((int*)pos, a1, mapState_8008B500.ents_30, mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C))
+    if (!CollideWithMapEnts_800B82C8((int*)pos, a1, mapState_8008B500.ents_30, mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C))
     {
         return 3;
     }
@@ -112,7 +112,7 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
             exit(1);
         }
-        sub_800B8220((int*)pos, (int)a1, (int)mapState_8008B500.mesh_28, &t0, &t1, n);
+        SlideOffEdge_800B8220((int*)pos, (int)a1, (int)mapState_8008B500.mesh_28, &t0, &t1, n);
         vt = mapState_8008B500.mesh_28->tris_4[t0].v_0;
         q = (EvQuadEventfnc*)(i * 16 + (int)v); // &v[i * 2]; that form allocates registers differently
         q->x_0 = vt[t1 % 3].x_0;
@@ -284,7 +284,7 @@ int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* p)
 // Matched
 // finds the first unshared edge (pad_6 == 0) of mesh m crossed by the segment p-q in x/z and returns it in
 // *tri / *edge, unless it is the one already there
-void sub_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
+void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
 {
     VECTOR e;
     VECTOR r;
@@ -473,15 +473,15 @@ int FindMeshAtPos_800B8184(EvVecEventfnc* pos, unsigned int k)
     return -1;
 }
 
-void sub_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
+void SlideOffEdge_800B8220(int* p, int a1, int a2, int* a3, int* a4, int* a5)
 {
-    sub_800B79E0((MapMesh*)a2, p, (int*)a1, a3, a4);
+    FindCrossedEdge_800B79E0((MapMesh*)a2, p, (int*)a1, a3, a4);
     SlideAlongEdge_800B7E40(p, a2, *a3, *a4, a5);
     p[0] += a5[2] >> 10;
     p[2] -= a5[0] >> 10;
 }
 
-int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n)
+int CollideWithMapEnts_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n)
 {
     int i;
     int t0;
@@ -493,7 +493,7 @@ int sub_800B82C8(int* p, int* a1, MapMesh* ents, unsigned char* flags, int n)
         {
             t1 = -1;
             t0 = -1;
-            sub_800B79E0(&ents[i], a1, p, &t0, &t1);
+            FindCrossedEdge_800B79E0(&ents[i], a1, p, &t0, &t1);
             if (t0 != -1 && t1 != -1)
             {
                 SlideAlongEdge_800B7E40(p, (int)&ents[i], t0, t1, v);
@@ -512,7 +512,7 @@ void GetTriHeight_800B83E4(int* v, MapMesh* m, int i)
     v[1] = (t->ny_1A * t->v_0[0].y_2 - t->nx_18 * (v[0] - t->v_0[0].x_0) - t->nz_1C * (v[2] - t->v_0[0].z_4)) / t->ny_1A;
 }
 
-void sub_800B844C(TaskEventfnc* t)
+void EncounterSpawnTask_800B844C(TaskEventfnc* t)
 {
     SaveData* s;
     EvSpawnEventfnc sp;
@@ -527,7 +527,7 @@ void sub_800B844C(TaskEventfnc* t)
         n = sub_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &mapSpawns_80091C60, &sp);
         for (i = 0; i < n; i++)
         {
-            sub_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
+            SpawnEncounterEnemy_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
         }
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
@@ -578,7 +578,7 @@ extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern short defaultBones_80079140[]; // default bone table
 
 // Matched
-void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
+void SpawnEncounterEnemy_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
 {
     ActorDesc s;
     UnitStats mi;
@@ -673,7 +673,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     }
 }
 
-// work area of the encounter task (encounterTask_8008D674, sub_800B844C)
+// work area of the encounter task (encounterTask_8008D674, EncounterSpawnTask_800B844C)
 typedef struct EvEncWorkEventfnc
 {
     int f0;
@@ -683,13 +683,13 @@ typedef struct EvEncWorkEventfnc
     int f10;
     int f14;
 } EvEncWorkEventfnc;
-void sub_800B88A4(int a)
+void StartEncounter_800B88A4(int a)
 {
     EventEntry* p;
     EvEncWorkEventfnc* q;
     if (a)
     {
-        sub_800B8940((int*)a);
+        LoadEncounterModels_800B8940((int*)a);
         eventDispatchHalt_8008B540 = 1;
     }
     p = &encounterTask_8008D674->entry;
@@ -699,7 +699,7 @@ void sub_800B88A4(int a)
     q->fC = 0;
     q->f10 = 0;
     q->f14 = 0;
-    p->cb_8 = (EventEntryFn)sub_800B844C;
+    p->cb_8 = (EventEntryFn)EncounterSpawnTask_800B844C;
     sub_800A170C();
     sub_800A1794();
 }
@@ -713,7 +713,7 @@ void sub_800B8928()
 }
 
 
-void sub_800B8940(int* ids)
+void LoadEncounterModels_800B8940(int* ids)
 {
     int i = 0;
     int* q = ids;
@@ -726,13 +726,13 @@ void sub_800B8940(int* ids)
     StartModelLoader_8002056C();
 }
 
-int sub_800B89A8(EvCtxEventfnc* c)
+int EvCmdNop_800B89A8(EvCtxEventfnc* c)
 {
     c->pc_8++;
     return 1;
 }
 
-int sub_800B89C0(EvCtxEventfnc* c)
+int EvCmdWaitButton_800B89C0(EvCtxEventfnc* c)
 {
     if (padPressed_8009194C & 0x100)
     {
@@ -742,44 +742,44 @@ int sub_800B89C0(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800B89F4(EvCtxEventfnc* c)
+int EvCmdEnd_800B89F4(EvCtxEventfnc* c)
 {
-    if (sub_800B8A34(c))
+    if (EvCmdEndScene_800B8A34(c))
     {
         c->flags_0 |= 1;
     }
     return 0;
 }
 
-int sub_800B8A34(EvCtxEventfnc* c)
+int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     int i;
-    switch (c->fB8_B8)
+    switch (c->step_B8)
     {
     case 0:
-        if (c->f1C_1C & c->f14_14)
+        if (c->animActors_1C & c->heldActors_14)
         {
-            m.m0_0 = c->f1C_1C;
-            m.m4_4 = 4;
-            m.mC_C = c->f24_24[c->pc_8->b_8];
-            if (!sub_800BB990(c, &m, 1, 0))
+            m.actor_0 = c->animActors_1C;
+            m.kind_4 = 4;
+            m.arg_C = c->idleAnims_24[c->pc_8->b_8];
+            if (!SendActorCmdMask_800BB990(c, &m, 1, 0))
             {
                 return 0;
             }
         }
-        c->fB8_B8++;
+        c->step_B8++;
     case 1:
-        if (c->f18_18)
+        if (c->busyActors_18)
         {
             return 0;
         }
-        c->fB8_B8++;
+        c->step_B8++;
     case 2:
         for (i = 0; i < 5; i++)
         {
             int bit = 1 << i;
-            if (c->f14_14 & bit)
+            if (c->heldActors_14 & bit)
             {
                 if (i == 0)
                 {
@@ -789,20 +789,20 @@ int sub_800B8A34(EvCtxEventfnc* c)
                 {
                     sub_800A785C(i - 1);
                 }
-                c->f14_14 &= ~(1 << i);
+                c->heldActors_14 &= ~(1 << i);
             }
         }
-        if (c->f14_14 == 0 && (c->flags_0 & 0x20))
+        if (c->heldActors_14 == 0 && (c->flags_0 & 0x20))
         {
             c->flags_0 &= ~0x20;
             sub_800A1974();
         }
-        if (dword_800AEBD8 == c->f10_10)
+        if (dword_800AEBD8 == c->id_10)
         {
             dword_800AEBD8 = -1;
         }
         sub_800A5B54(c);
-        c->fB8_B8 = 0;
+        c->step_B8 = 0;
         c->pc_8++;
         return 1;
     }
@@ -814,7 +814,7 @@ extern int dword_800B0EC0;
 extern int dword_800B1260;
 extern int sub_800A6D50(int a);
 extern void sub_800A1904(void);
-int sub_800B8BE8(EvCtxEventfnc* c)
+int EvCmdBeginScene_800B8BE8(EvCtxEventfnc* c)
 {
     int r;
     if (dword_800B0EC0 != 1)
@@ -827,7 +827,7 @@ int sub_800B8BE8(EvCtxEventfnc* c)
     }
     if (dword_800AEBD8 >= 0)
     {
-        if (c->f10_10 != dword_800AEBD8)
+        if (c->id_10 != dword_800AEBD8)
         {
             return 0;
         }
@@ -839,15 +839,15 @@ int sub_800B8BE8(EvCtxEventfnc* c)
     }
     c->flags_0 |= 0x20;
     sub_800A1904();
-    dword_800AEBD8 = c->f10_10;
+    dword_800AEBD8 = c->id_10;
     c->pc_8++;
     return 1;
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B8BE8);
+INCLUDE_OVERLAY_ASM(eventfnc, EvCmdBeginScene_800B8BE8);
 
-int sub_800B8CB0(EvCtxEventfnc* c)
+int EvCmdSetLoopPoint_800B8CB0(EvCtxEventfnc* c)
 {
     EvInsEventfnc* p = c->pc_8;
     if (p->b_8 != 0)
@@ -864,7 +864,7 @@ int sub_800B8CB0(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B8D08(EvCtxEventfnc* c)
+int EvCmdTakeActors_800B8D08(EvCtxEventfnc* c)
 {
     int i;
     for (i = 0; i < 5; i++)
@@ -881,22 +881,22 @@ int sub_800B8D08(EvCtxEventfnc* c)
             {
                 return 0;
             }
-            sub_800BBC00(c, i, 1);
-            sub_800BBC80(c, i, 1);
-            c->f14_14 |= 1 << i;
+            GetSavedActorPos_800BBC00(c, i, 1);
+            GetSavedActorFront_800BBC80(c, i, 1);
+            c->heldActors_14 |= 1 << i;
         }
     }
     c->pc_8++;
     return 1;
 }
 
-int sub_800B8DDC(EvCtxEventfnc* c)
+int EvCmdReleaseActors_800B8DDC(EvCtxEventfnc* c)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
         int bit = 1 << i;
-        if ((c->f14_14 & bit) && (c->pc_8->b_8 & bit))
+        if ((c->heldActors_14 & bit) && (c->pc_8->b_8 & bit))
         {
             if (i == 0)
             {
@@ -906,23 +906,23 @@ int sub_800B8DDC(EvCtxEventfnc* c)
             {
                 sub_800A785C(i - 1);
             }
-            c->f14_14 &= ~(1 << i);
+            c->heldActors_14 &= ~(1 << i);
         }
     }
     c->pc_8++;
     return 1;
 }
 
-int sub_800B8E9C(EvCtxEventfnc* c)
+int EvCmdGotoLabel_800B8E9C(EvCtxEventfnc* c)
 {
-    int target = c->pc_8[c->fEC_EC].b_8;
+    int target = c->pc_8[c->branch_EC].b_8;
     EvInsEventfnc* p = c->start_4;
     while (p->op_0 != 3)
     {
         if (p->op_0 == 9 && target == p->b_8)
         {
             c->pc_8 = p;
-            c->fEC_EC = 0;
+            c->branch_EC = 0;
             return 1;
         }
         p++;
@@ -931,31 +931,31 @@ int sub_800B8E9C(EvCtxEventfnc* c)
 }
 
 // Matched
-int sub_800B8F14(EvCtxEventfnc* c)
+int EvCmdJumpScript_800B8F14(EvCtxEventfnc* c)
 {
-    EvInsEventfnc* p = (EvInsEventfnc*)c->pc_8[c->fEC_EC].c_C;
-    c->fEC_EC = 0;
+    EvInsEventfnc* p = (EvInsEventfnc*)c->pc_8[c->branch_EC].c_C;
+    c->branch_EC = 0;
     c->pc_8 = p;
     c->start_4 = p;
     c->ret_C = c->pc_8;
     return 1;
 }
 
-int sub_800B8F44(EvCtxEventfnc* c)
+int EvCmdWait_800B8F44(EvCtxEventfnc* c)
 {
-    c->fC4_C4++;
-    if (c->fC4_C4 >= c->pc_8->b_8 + 1)
+    c->waitCount_C4++;
+    if (c->waitCount_C4 >= c->pc_8->b_8 + 1)
     {
-        c->fC4_C4 = 0;
+        c->waitCount_C4 = 0;
         c->pc_8++;
         return 1;
     }
     return 0;
 }
 
-int sub_800B8F88(EvCtxEventfnc* c)
+int EvCmdWaitActors_800B8F88(EvCtxEventfnc* c)
 {
-    if (c->f18_18 & c->pc_8->b_8)
+    if (c->busyActors_18 & c->pc_8->b_8)
     {
         return 0;
     }
@@ -963,14 +963,14 @@ int sub_800B8F88(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B8FB8(EvCtxEventfnc* c)
+int EvCmdSetVar_800B8FB8(EvCtxEventfnc* c)
 {
     unsigned int v = c->pc_8->b_8;
     int hi = v >> 16;
     int lo = v & 0xFFFF;
     if (c->pc_8->a_4 == 0)
     {
-        c->fCC_CC[hi] = lo;
+        c->vars_CC[hi] = lo;
     }
     else
     {
@@ -980,7 +980,7 @@ int sub_800B8FB8(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B9020(EvCtxEventfnc* c)
+int EvCmdPickBranch_800B9020(EvCtxEventfnc* c)
 {
     unsigned int a = c->pc_8->a_4;
     unsigned int b = c->pc_8->b_8;
@@ -995,24 +995,24 @@ int sub_800B9020(EvCtxEventfnc* c)
         {
             r = rand() % mod;
         } while (r < lo);
-        c->fEC_EC = r;
+        c->branch_EC = r;
         if (idx < 8)
         {
-            c->fCC_CC[idx] = r;
+            c->vars_CC[idx] = r;
         }
     }
     else
     {
-        c->fEC_EC = c->fCC_CC[slot];
-        if (++c->fCC_CC[slot] >= mod)
+        c->branch_EC = c->vars_CC[slot];
+        if (++c->vars_CC[slot] >= mod)
         {
             if (idx)
             {
-                c->fCC_CC[slot] = lo;
+                c->vars_CC[slot] = lo;
             }
             else
             {
-                c->fCC_CC[slot] = mod - 1;
+                c->vars_CC[slot] = mod - 1;
             }
         }
     }
@@ -1020,7 +1020,7 @@ int sub_800B9020(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B9110(EvCtxEventfnc* c)
+int EvCmdCountYanVar_800B9110(EvCtxEventfnc* c)
 {
     unsigned int a = c->pc_8->a_4;
     unsigned int b = c->pc_8->b_8;
@@ -1029,7 +1029,7 @@ int sub_800B9110(EvCtxEventfnc* c)
     int hi2 = b >> 16;
     int lo2 = b & 0xFFFF;
     int v = sub_800AD154(hi);
-    c->fEC_EC = v;
+    c->branch_EC = v;
     sub_800AD16C(hi, v + 1);
     if (sub_800AD154(hi) >= hi2)
     {
@@ -1046,25 +1046,25 @@ int sub_800B9110(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B91CC(EvCtxEventfnc* c)
+int EvCmdCallHook_800B91CC(EvCtxEventfnc* c)
 {
     dword_800B1D98(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9218(EvCtxEventfnc* c)
+int EvCmdStartScript_800B9218(EvCtxEventfnc* c)
 {
     sub_800A59D0(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9260(EvCtxEventfnc* c)
+int EvCmdWarpActor_800B9260(EvCtxEventfnc* c)
 {
     int* q = (int*)c->pc_8->c_C;
-    EvVecEventfnc* pos = sub_800BBBA0(c->pc_8->a_4);
-    SVECTOR* rot = sub_800BBBD0(c->pc_8->a_4);
+    EvVecEventfnc* pos = GetActorPos_800BBBA0(c->pc_8->a_4);
+    SVECTOR* rot = GetActorRot_800BBBD0(c->pc_8->a_4);
     int ang;
     if (q)
     {
@@ -1072,8 +1072,8 @@ int sub_800B9260(EvCtxEventfnc* c)
     }
     else
     {
-        q = (int*)sub_800BBC00(c, c->pc_8->a_4, 0);
-        ang = sub_800BBC80(c, c->pc_8->a_4, 0)->y_4;
+        q = (int*)GetSavedActorPos_800BBC00(c, c->pc_8->a_4, 0);
+        ang = GetSavedActorFront_800BBC80(c, c->pc_8->a_4, 0)->y_4;
     }
     pos->x_0 = q[0];
     pos->y_4 = q[1];
@@ -1085,119 +1085,119 @@ int sub_800B9260(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B93A8(EvCtxEventfnc* c)
+int EvCmdMoveToPoint_800B93A8(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     EvVecEventfnc* v = (EvVecEventfnc*)c->pc_8->c_C;
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = c->pc_8->op_0 != 0x14;
-    m.m18_18 = v->x_0;
-    m.m1C_1C = v->y_4;
-    m.m20_20 = v->z_8;
-    m.m14_14 = c->pc_8->b_8;
-    return sub_800BB840(c, &m, 1, 1);
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = c->pc_8->op_0 != 0x14;
+    m.x_18 = v->x_0;
+    m.y_1C = v->y_4;
+    m.z_20 = v->z_8;
+    m.field_14 = c->pc_8->b_8;
+    return SendActorCmd_800BB840(c, &m, 1, 1);
 }
 
-int sub_800B942C(EvCtxEventfnc* c)
+int EvCmdMoveToActor_800B942C(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     EvVecEventfnc d;
-    EvVecEventfnc* a = sub_800BBBA0(c->pc_8->a_4);
+    EvVecEventfnc* a = GetActorPos_800BBBA0(c->pc_8->a_4);
     EvVecEventfnc* b;
     int ang;
     if (c->pc_8->a_4 == c->pc_8->b_8)
     {
-        b = sub_800BBC00(c, c->pc_8->a_4, 0);
+        b = GetSavedActorPos_800BBC00(c, c->pc_8->a_4, 0);
     }
     else
     {
-        b = sub_800BBBA0(c->pc_8->b_8);
+        b = GetActorPos_800BBBA0(c->pc_8->b_8);
     }
     d.x_0 = a->x_0 - b->x_0;
     d.z_8 = a->z_8 - b->z_8;
     ang = ratan2_8003B548(d.x_0, d.z_8);
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = c->pc_8->op_0 != 0x15;
-    m.m18_18 = b->x_0 + name_80084540[ang & 0xFFF] * 200 / 4096;
-    m.m1C_1C = b->y_4;
-    m.m20_20 = b->z_8 + name_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
-    m.m14_14 = c->pc_8->c_C;
-    return sub_800BB840(c, &m, 1, 1);
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = c->pc_8->op_0 != 0x15;
+    m.x_18 = b->x_0 + name_80084540[ang & 0xFFF] * 200 / 4096;
+    m.y_1C = b->y_4;
+    m.z_20 = b->z_8 + name_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
+    m.field_14 = c->pc_8->c_C;
+    return SendActorCmd_800BB840(c, &m, 1, 1);
 }
 
-int sub_800B95BC(EvCtxEventfnc* c)
+int EvCmdTurnToPoint_800B95BC(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     EvInsEventfnc* i = c->pc_8;
     EvVecEventfnc* v = (EvVecEventfnc*)i->c_C;
     int a = i->a_4;
-    m.m0_0 = a;
-    m.m4_4 = 2;
-    m.m18_18 = v->x_0;
-    m.m1C_1C = v->y_4;
-    m.m20_20 = v->z_8;
-    m.m14_14 = c->pc_8->b_8;
-    return sub_800BB840(c, &m, 1, 1);
+    m.actor_0 = a;
+    m.kind_4 = 2;
+    m.x_18 = v->x_0;
+    m.y_1C = v->y_4;
+    m.z_20 = v->z_8;
+    m.field_14 = c->pc_8->b_8;
+    return SendActorCmd_800BB840(c, &m, 1, 1);
 }
 
-int sub_800B962C(EvCtxEventfnc* c)
+int EvCmdTurnToActor_800B962C(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     EvVecEventfnc* v;
     int a = c->pc_8->a_4;
     int b = c->pc_8->b_8;
-    v = (a == b) ? sub_800BBC80(c, b, 0) : sub_800BBBA0(b);
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = 2;
-    m.m18_18 = v->x_0;
-    m.m1C_1C = v->y_4;
-    m.m20_20 = v->z_8;
-    m.m14_14 = c->pc_8->c_C;
-    return sub_800BB840(c, &m, 1, 1);
+    v = (a == b) ? GetSavedActorFront_800BBC80(c, b, 0) : GetActorPos_800BBBA0(b);
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = 2;
+    m.x_18 = v->x_0;
+    m.y_1C = v->y_4;
+    m.z_20 = v->z_8;
+    m.field_14 = c->pc_8->c_C;
+    return SendActorCmd_800BB840(c, &m, 1, 1);
 }
 
-int sub_800B96D8(EvCtxEventfnc* c)
+int EvCmdSetActorVisible_800B96D8(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = 6;
-    m.mC_C = c->pc_8->b_8;
-    return sub_800BB990(c, &m, 0, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = 6;
+    m.arg_C = c->pc_8->b_8;
+    return SendActorCmdMask_800BB990(c, &m, 0, 1);
 }
 
-int sub_800B9720(EvCtxEventfnc* c)
+int EvCmdSetActorGroundMove_800B9720(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = 7;
-    m.mC_C = c->pc_8->b_8;
-    return sub_800BB990(c, &m, 0, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = 7;
+    m.arg_C = c->pc_8->b_8;
+    return SendActorCmdMask_800BB990(c, &m, 0, 1);
 }
 
-int sub_800B9768(EvCtxEventfnc* c)
+int EvCmdSetActorRootMotion_800B9768(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = c->pc_8->a_4;
-    m.m4_4 = 8;
-    m.mC_C = c->pc_8->b_8;
-    return sub_800BB990(c, &m, 0, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = c->pc_8->a_4;
+    m.kind_4 = 8;
+    m.arg_C = c->pc_8->b_8;
+    return SendActorCmdMask_800BB990(c, &m, 0, 1);
 }
 
-int sub_800B97B0(EvCtxEventfnc* c)
+int EvCmdSaveActorPos_800B97B0(EvCtxEventfnc* c)
 {
-    sub_800BBC00(c, c->pc_8->a_4, 1);
+    GetSavedActorPos_800BBC00(c, c->pc_8->a_4, 1);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B97F8(EvCtxEventfnc* c)
+int EvCmdSaveActorFront_800B97F8(EvCtxEventfnc* c)
 {
-    sub_800BBC80(c, c->pc_8->a_4, 1);
+    GetSavedActorFront_800BBC80(c, c->pc_8->a_4, 1);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9840(EvCtxEventfnc* c)
+int EvCmdTestFlag_800B9840(EvCtxEventfnc* c)
 {
     if (c->pc_8->a_4 == 0)
     {
@@ -1208,77 +1208,77 @@ int sub_800B9840(EvCtxEventfnc* c)
         }
         return 0;
     }
-    c->fEC_EC = sub_800AD0D4(c->pc_8->b_8) == 0;
+    c->branch_EC = sub_800AD0D4(c->pc_8->b_8) == 0;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B98C4(EvCtxEventfnc* c)
+int EvCmdSetFlag_800B98C4(EvCtxEventfnc* c)
 {
     sub_800AD0F8(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B990C(EvCtxEventfnc* c)
+int EvCmdClearFlag_800B990C(EvCtxEventfnc* c)
 {
     sub_800AD124(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9954(EvCtxEventfnc* c)
+int EvCmdTestTempFlags_800B9954(EvCtxEventfnc* c)
 {
     if (c->pc_8->a_4 == 0)
     {
-        if (sub_800BBDD8(c->pc_8->b_8))
+        if (TestTempFlags_800BBDD8(c->pc_8->b_8))
         {
             c->pc_8++;
             return 1;
         }
         return 0;
     }
-    c->fEC_EC = sub_800BBDD8(c->pc_8->b_8) == 0;
+    c->branch_EC = TestTempFlags_800BBDD8(c->pc_8->b_8) == 0;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B99D8(EvCtxEventfnc* c)
+int EvCmdSetTempFlags_800B99D8(EvCtxEventfnc* c)
 {
-    sub_800BBDA0(c->pc_8->b_8, 1);
+    SetTempFlags_800BBDA0(c->pc_8->b_8, 1);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9A20(EvCtxEventfnc* c)
+int EvCmdClearTempFlags_800B9A20(EvCtxEventfnc* c)
 {
-    sub_800BBDA0(c->pc_8->b_8, 0);
+    SetTempFlags_800BBDA0(c->pc_8->b_8, 0);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9A68(EvCtxEventfnc* c)
+int EvCmdAddItem_800B9A68(EvCtxEventfnc* c)
 {
     sub_800AD184(c->pc_8->a_4, c->pc_8->b_8, 0);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9AB4(EvCtxEventfnc* c)
+int EvCmdRemoveItem_800B9AB4(EvCtxEventfnc* c)
 {
     sub_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 0);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9B00(EvCtxEventfnc* c)
+int EvCmdAddItemCat1_800B9B00(EvCtxEventfnc* c)
 {
     sub_800AD184(c->pc_8->a_4, c->pc_8->b_8, 1);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9B4C(EvCtxEventfnc* c)
+int EvCmdRemoveItemCat1_800B9B4C(EvCtxEventfnc* c)
 {
     sub_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 1);
     c->pc_8++;
@@ -1287,22 +1287,23 @@ int sub_800B9B4C(EvCtxEventfnc* c)
 
 #if 0
 // Not matched: the original places a shared 'return 0' block in front of the body and tests the condition differently
-int sub_800B9B98(EvCtxEventfnc* c)
+// a == 0: wait for trigger b (GAME's sub_800A5C40 sets flags 4); else branch_EC = !valuable flag b
+int EvCmdWaitTrigger_800B9B98(EvCtxEventfnc* c)
 {
     unsigned int f;
     if (c->pc_8->a_4 == 0)
     {
-        if (dword_800AEBD8 < 0 || dword_800AEBD8 == c->f10_10)
+        if (dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
         {
             f = c->flags_0 | 8;
             c->flags_0 = f;
-            c->fC8_C8 = c->pc_8->b_8;
+            c->trigger_C8 = c->pc_8->b_8;
             if (!(f & 4))
             {
                 return 0;
             }
             c->flags_0 = f & ~0xC;
-            c->fC8_C8 = -1;
+            c->trigger_C8 = -1;
         }
         else
         {
@@ -1311,16 +1312,16 @@ int sub_800B9B98(EvCtxEventfnc* c)
     }
     else
     {
-        c->fEC_EC = sub_800AD73C(c->pc_8->b_8) == 0;
+        c->branch_EC = sub_800AD73C(c->pc_8->b_8) == 0;
     }
     c->pc_8++;
     return 1;
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800B9B98);
+INCLUDE_OVERLAY_ASM(eventfnc, EvCmdWaitTrigger_800B9B98);
 
-int sub_800B9C5C(EvCtxEventfnc* c)
+int EvCmdSetValuable_800B9C5C(EvCtxEventfnc* c)
 {
     int a = c->pc_8->a_4;
     int b = c->pc_8->b_8;
@@ -1336,21 +1337,21 @@ int sub_800B9C5C(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B9CC0(EvCtxEventfnc* c)
+int EvCmdAddMoney_800B9CC0(EvCtxEventfnc* c)
 {
     sub_800AD058(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9D08(EvCtxEventfnc* c)
+int EvCmdAddEmptyCocoons_800B9D08(EvCtxEventfnc* c)
 {
     sub_800AD8F4(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9D50(EvCtxEventfnc* c)
+int EvCmdHealParty_800B9D50(EvCtxEventfnc* c)
 {
     int i;
     UnitStatus* p;
@@ -1366,7 +1367,7 @@ int sub_800B9D50(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B9DE0(EvCtxEventfnc* c)
+int EvCmdSetEntityState_800B9DE0(EvCtxEventfnc* c)
 {
     EvEntEventfnc* e = sub_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
     if (e == 0)
@@ -1378,7 +1379,7 @@ int sub_800B9DE0(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800B9E48(EvCtxEventfnc* c)
+int EvCmdWaitEntityState_800B9E48(EvCtxEventfnc* c)
 {
     EvEntEventfnc* e = sub_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
     if (e != 0 && e->f80_80 == c->pc_8->b_8)
@@ -1389,14 +1390,14 @@ int sub_800B9E48(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800B9EB0(EvCtxEventfnc* c)
+int EvCmdSetOwnEntityState_800B9EB0(EvCtxEventfnc* c)
 {
     c->ent_120->f7C_7C = c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9EDC(EvCtxEventfnc* c)
+int EvCmdWaitOwnEntityState_800B9EDC(EvCtxEventfnc* c)
 {
     if (c->ent_120->f80_80 == c->pc_8->b_8)
     {
@@ -1406,7 +1407,7 @@ int sub_800B9EDC(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800B9F0C(EvCtxEventfnc* c)
+int EvCmdWaitEntityGone_800B9F0C(EvCtxEventfnc* c)
 {
     if (sub_800A5DDC(c->pc_8->c_C, c->pc_8->b_8, 0) == 0)
     {
@@ -1416,71 +1417,73 @@ int sub_800B9F0C(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800B9F5C(EvCtxEventfnc* c)
+int EvCmdSetMsgOptions_800B9F5C(EvCtxEventfnc* c)
 {
-    c->f108_108 |= c->pc_8->b_8;
+    c->msgOptions_108 |= c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9F84(EvCtxEventfnc* c)
+int EvCmdSetMsgPos_800B9F84(EvCtxEventfnc* c)
 {
-    c->f100_100 = c->pc_8->a_4;
-    c->f102_102 = c->pc_8->b_8;
+    c->msgX_100 = c->pc_8->a_4;
+    c->msgY_102 = c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9FB4(EvCtxEventfnc* c)
+int EvCmdSetMsgPosMode_800B9FB4(EvCtxEventfnc* c)
 {
-    c->f104_104 = c->pc_8->b_8;
+    c->msgPosMode_104 = c->pc_8->b_8;
     c->pc_8++;
     return 1;
 }
 
-int sub_800B9FD8(EvCtxEventfnc* c)
+int EvCmdSetVoiceTable_800B9FD8(EvCtxEventfnc* c)
 {
     sub_800A6830(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
 
-int sub_800BA020(EvCtxEventfnc* c)
+// ops 0x37..0x3F: 0x37/0x38 text, 0x39/0x3A choice (0x38/0x3A keep the window open), 0x3B a string,
+// 0x3C/0x3D/0x3E item messages, 0x3F closes a kept window
+int EvCmdMessage_800BA020(EvCtxEventfnc* c)
 {
     EvInsEventfnc* pc = c->pc_8;
-    switch (c->fB4_B4)
+    switch (c->msgStep_B4)
     {
     case 0:
         if (pc->op_0 == 0x3F)
         {
-            c->fB4_B4 = 3;
+            c->msgStep_B4 = 3;
             c->flags_0 &= ~0x40;
             return 1;
         }
-        c->fB4_B4++;
+        c->msgStep_B4++;
     case 1:
-        sub_800BC7A0(c);
-        if (!sub_800BBE3C(c))
+        EvMessageNop_800BC7A0(c);
+        if (!OpenEventMessage_800BBE3C(c))
         {
             break;
         }
-        c->f110_110 = (int*)c->pc_8;
-        c->fB4_B4++;
+        c->lastMsg_110 = (int*)c->pc_8;
+        c->msgStep_B4++;
     case 2:
         if (pc->op_0 == 0x38 || pc->op_0 == 0x3A)
         {
-            c->fB4_B4 = 0;
+            c->msgStep_B4 = 0;
             c->flags_0 |= 0x40;
             c->pc_8++;
             return 1;
         }
-        c->fB4_B4++;
+        c->msgStep_B4++;
     case 3:
-        if (!sub_800BC2B4(c))
+        if (!UpdateEventMessage_800BC2B4(c))
         {
             break;
         }
-        c->fB4_B4++;
+        c->msgStep_B4++;
     case 4:
         if (c->flags_0 & 0x100)
         {
@@ -1491,18 +1494,18 @@ int sub_800BA020(EvCtxEventfnc* c)
             c->flags_0 &= ~0x100;
         }
     case 5:
-        if (c->f118_118)
+        if (c->msgOpen_118)
         {
-            c->fB4_B4 = 2;
+            c->msgStep_B4 = 2;
             c->pc_8++;
             return 1;
         }
-        if ((*(int*)c->f11C_11C & 0x8001) == 1)
+        if ((*(int*)c->msgWindow_11C & 0x8001) == 1)
         {
             break;
         }
-        c->f11C_11C = 0;
-        c->fB4_B4 = 0;
+        c->msgWindow_11C = 0;
+        c->msgStep_B4 = 0;
         c->pc_8++;
         return 1;
     }
@@ -1511,9 +1514,10 @@ int sub_800BA020(EvCtxEventfnc* c)
 }
 
 
-int sub_800BA1DC(EvCtxEventfnc* c)
+// once shown a times, the last message instruction shows text c instead
+int EvCmdSwapMsgAfterCount_800BA1DC(EvCtxEventfnc* c)
 {
-    int* p = c->f110_110;
+    int* p = c->lastMsg_110;
     if (p != 0)
     {
         EvInsEventfnc* i = c->pc_8;
@@ -1532,9 +1536,9 @@ int sub_800BA1DC(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BA238(EvCtxEventfnc* c)
+int EvCmdWaitMsgMark_800BA238(EvCtxEventfnc* c)
 {
-    if (ConsumeMsgWindowMark_80034ADC(c->f11C_11C, c->pc_8->b_8))
+    if (ConsumeMsgWindowMark_80034ADC(c->msgWindow_11C, c->pc_8->b_8))
     {
         c->pc_8++;
         return 1;
@@ -1542,48 +1546,48 @@ int sub_800BA238(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BA28C(EvCtxEventfnc* c)
+int EvCmdSetChoiceMask_800BA28C(EvCtxEventfnc* c)
 {
     EvInsEventfnc* i = c->pc_8;
     if (i->a_4 == 1)
     {
-        c->f114_114 |= i->b_8;
+        c->choiceMask_114 |= i->b_8;
     }
     else
     {
-        c->f114_114 &= ~i->b_8;
+        c->choiceMask_114 &= ~i->b_8;
     }
     c->pc_8++;
     return 1;
 }
 
-int sub_800BA2E8(EvCtxEventfnc* c)
+int EvCmdPlayAnim_800BA2E8(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = 1 << c->pc_8->a_4;
-    m.m4_4 = 3;
-    m.mC_C = c->pc_8->b_8;
-    return sub_800BB990(c, &m, 1, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = 1 << c->pc_8->a_4;
+    m.kind_4 = 3;
+    m.arg_C = c->pc_8->b_8;
+    return SendActorCmdMask_800BB990(c, &m, 1, 1);
 }
 
-int sub_800BA338(EvCtxEventfnc* c)
+int EvCmdStopAnim_800BA338(EvCtxEventfnc* c)
 {
     EvInsEventfnc* ins = c->pc_8;
-    EvMsgEventfnc m;
-    switch (c->fB8_B8)
+    EvActorCmdEventfnc m;
+    switch (c->step_B8)
     {
     case 0:
-        m.m0_0 = ins->b_8;
-        m.m4_4 = 4;
-        m.mC_C = c->f24_24[c->pc_8->a_4];
-        if (sub_800BB990(c, &m, 1, 0))
+        m.actor_0 = ins->b_8;
+        m.kind_4 = 4;
+        m.arg_C = c->idleAnims_24[c->pc_8->a_4];
+        if (SendActorCmdMask_800BB990(c, &m, 1, 0))
         {
-            c->fB8_B8++;
+            c->step_B8++;
         }
     case 1:
-        if ((c->f18_18 & c->pc_8->b_8) == 0)
+        if ((c->busyActors_18 & c->pc_8->b_8) == 0)
         {
-            c->fB8_B8 = 0;
+            c->step_B8 = 0;
             c->pc_8++;
             return 1;
         }
@@ -1595,16 +1599,16 @@ int sub_800BA338(EvCtxEventfnc* c)
     }
 }
 
-int sub_800BA40C(EvCtxEventfnc* c)
+int EvCmdPlayAnimData_800BA40C(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = 1 << c->pc_8->a_4;
-    m.m4_4 = 5;
-    m.m24_24 = c->pc_8->c_C;
-    return sub_800BB990(c, &m, 1, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = 1 << c->pc_8->a_4;
+    m.kind_4 = 5;
+    m.data_24 = c->pc_8->c_C;
+    return SendActorCmdMask_800BB990(c, &m, 1, 1);
 }
 
-int sub_800BA45C(EvCtxEventfnc* c)
+int EvCmdPauseActorAnim_800BA45C(EvCtxEventfnc* c)
 {
     int ok = 0;
     int a = c->pc_8->a_4;
@@ -1625,70 +1629,70 @@ int sub_800BA45C(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BA4F0(EvCtxEventfnc* c)
+int EvCmdPlayMotion_800BA4F0(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = 1 << c->pc_8->a_4;
-    m.m4_4 = 9;
-    m.mC_C = c->pc_8->b_8;
-    m.m14_14 = c->pc_8->c_C;
-    return sub_800BB990(c, &m, 1, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = 1 << c->pc_8->a_4;
+    m.kind_4 = 9;
+    m.arg_C = c->pc_8->b_8;
+    m.field_14 = c->pc_8->c_C;
+    return SendActorCmdMask_800BB990(c, &m, 1, 1);
 }
 
-int sub_800BA554(EvCtxEventfnc* c)
+int EvCmdPlayMotionRange_800BA554(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
-    m.m0_0 = 1 << c->pc_8->a_4;
-    m.m4_4 = 0xA;
-    m.mC_C = ((unsigned short*)&c->pc_8->b_8)[1];
-    m.m10_10 = ((unsigned short*)&c->pc_8->b_8)[0];
-    m.m14_14 = c->pc_8->c_C;
-    return sub_800BB990(c, &m, 1, 1);
+    EvActorCmdEventfnc m;
+    m.actor_0 = 1 << c->pc_8->a_4;
+    m.kind_4 = 0xA;
+    m.arg_C = ((unsigned short*)&c->pc_8->b_8)[1];
+    m.arg2_10 = ((unsigned short*)&c->pc_8->b_8)[0];
+    m.field_14 = c->pc_8->c_C;
+    return SendActorCmdMask_800BB990(c, &m, 1, 1);
 }
 
-int sub_800BA5CC(EvCtxEventfnc* c)
+int EvCmdPlayMotionData_800BA5CC(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     int n = c->pc_8->c_C;
     int* r = sub_800A55B0(4);
     unsigned int a = c->pc_8->a_4;
-    m.m0_0 = 1 << (a >> 16);
-    m.m4_4 = 0xB;
-    m.mC_C = ((unsigned short*)&c->pc_8->b_8)[1];
-    m.m10_10 = ((unsigned short*)&c->pc_8->b_8)[0];
-    m.m24_24 = r[1] + n * 12;
-    m.m14_14 = a & 0xFFFF;
-    return sub_800BB990(c, &m, 1, 1);
+    m.actor_0 = 1 << (a >> 16);
+    m.kind_4 = 0xB;
+    m.arg_C = ((unsigned short*)&c->pc_8->b_8)[1];
+    m.arg2_10 = ((unsigned short*)&c->pc_8->b_8)[0];
+    m.data_24 = r[1] + n * 12;
+    m.field_14 = a & 0xFFFF;
+    return SendActorCmdMask_800BB990(c, &m, 1, 1);
 }
 
-int sub_800BA678(EvCtxEventfnc* c)
+int EvCmdSetCallArg_800BA678(EvCtxEventfnc* c)
 {
-    c->fF0_F0 = c->pc_8->c_C;
-    if (c->fF0_F0 == 0)
+    c->callArg_F0 = c->pc_8->c_C;
+    if (c->callArg_F0 == 0)
     {
-        c->fF0_F0 = sub_800BBDF4(c);
+        c->callArg_F0 = GetOwnEntityParam_800BBDF4(c);
     }
     c->pc_8++;
     return 1;
 }
 
-int sub_800BA6D0(EvCtxEventfnc* c)
+int EvCmdSetCallArgs_800BA6D0(EvCtxEventfnc* c)
 {
-    c->fF4_F4 = c->pc_8->a_4;
-    c->fF8_F8 = c->pc_8->b_8;
-    c->fFC_FC = c->pc_8->c_C;
-    c->fF0_F0 = (int)&c->fF4_F4;
+    c->callArg0_F4 = c->pc_8->a_4;
+    c->callArg1_F8 = c->pc_8->b_8;
+    c->callArg2_FC = c->pc_8->c_C;
+    c->callArg_F0 = (int)&c->callArg0_F4;
     c->pc_8++;
     return 1;
 }
 
-int sub_800BA714(EvCtxEventfnc* c)
+int EvCmdCallUntilDone_800BA714(EvCtxEventfnc* c)
 {
-    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->f10_10)
+    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
     {
-        if (((int (*)(int))c->pc_8->c_C)(c->fF0_F0) == 1)
+        if (((int (*)(int))c->pc_8->c_C)(c->callArg_F0) == 1)
         {
-            c->fF0_F0 = 0;
+            c->callArg_F0 = 0;
             c->pc_8++;
             return 1;
         }
@@ -1696,12 +1700,12 @@ int sub_800BA714(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BA7A4(EvCtxEventfnc* c)
+int EvCmdCallSelect_800BA7A4(EvCtxEventfnc* c)
 {
-    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->f10_10)
+    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
     {
-        c->fEC_EC = ((int (*)(int))c->pc_8->c_C)(c->fF0_F0);
-        c->fF0_F0 = 0;
+        c->branch_EC = ((int (*)(int))c->pc_8->c_C)(c->callArg_F0);
+        c->callArg_F0 = 0;
         c->pc_8++;
         return 1;
     }
@@ -1710,7 +1714,7 @@ int sub_800BA7A4(EvCtxEventfnc* c)
 
 #if 0
 // Not matched: the tail is scheduled differently (the constant 1 lands in $v0 and the halt store sinks below the pc store; original: $v1, halt store first)
-int sub_800BA82C(EvCtxEventfnc* c)
+int EvCmdSetChapter_800BA82C(EvCtxEventfnc* c)
 {
     SaveData* s = &saveData_8008B570;
     s->chapter_2DC = *(unsigned short*)&c->pc_8->b_8;
@@ -1721,7 +1725,7 @@ int sub_800BA82C(EvCtxEventfnc* c)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BA82C);
+INCLUDE_OVERLAY_ASM(eventfnc, EvCmdSetChapter_800BA82C);
 
 int sub_800BA880(EvCtxEventfnc* c)
 {
@@ -1731,7 +1735,7 @@ int sub_800BA880(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BA8AC(EvCtxEventfnc* c)
+int EvCmdSetMapVar_800BA8AC(EvCtxEventfnc* c)
 {
     unsigned short v[3];
     v[0] = ((unsigned short*)&c->pc_8->a_4)[0];
@@ -1742,7 +1746,7 @@ int sub_800BA8AC(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BA930(EvCtxEventfnc* c)
+int EvCmdChangeMap_800BA930(EvCtxEventfnc* c)
 {
     SaveData* s = &saveData_8008B570;
     int* p;
@@ -1767,7 +1771,7 @@ int sub_800BA930(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BA9E4(EvCtxEventfnc* c)
+int EvCmdChangeMapToPoint_800BA9E4(EvCtxEventfnc* c)
 {
     unsigned short v[3];
     SaveData* s;
@@ -1784,7 +1788,7 @@ int sub_800BA9E4(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BAA6C(EvCtxEventfnc* c)
+int EvCmdPreloadArea_800BAA6C(EvCtxEventfnc* c)
 {
     if (((int (*)(int))RequestAreaPreload_80027330)(c->pc_8->b_8))
     {
@@ -1794,7 +1798,7 @@ int sub_800BAA6C(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BAAC0(EvCtxEventfnc* c)
+int EvCmdUsePreloadedArea_800BAAC0(EvCtxEventfnc* c)
 {
     if (UsePreloadedArea_80027358(c->pc_8->b_8))
     {
@@ -1804,7 +1808,7 @@ int sub_800BAAC0(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BAB14(EvCtxEventfnc* c)
+int EvCmdSetReturnPoint_800BAB14(EvCtxEventfnc* c)
 {
     sub_800A683C(c->pc_8->b_8);
     c->pc_8++;
@@ -1825,21 +1829,22 @@ int sub_800BAB5C(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BAB5C);
 
-int sub_800BABB0(EvCtxEventfnc* c)
+// opens a shop (GAME loads WPNSHOP / SHOPCTRL / SHOP by b's high half) and waits for it to close
+int EvCmdOpenShop_800BABB0(EvCtxEventfnc* c)
 {
-    switch (c->fB8_B8)
+    switch (c->step_B8)
     {
     case 0:
         dword_800B06B0.f0_0 = 1;
         dword_800B06B0.f4_4 = ((unsigned short*)&c->pc_8->b_8)[1];
         dword_800B06B0.f8_8 = ((unsigned short*)&c->pc_8->b_8)[0];
-        c->fB8_B8 = 1;
+        c->step_B8 = 1;
         return 0;
     case 1:
         if (dword_800B06B0.f0_0 == 0)
         {
-            c->fEC_EC = sub_800A5F9C(0);
-            c->fB8_B8 = 0;
+            c->branch_EC = sub_800A5F9C(0);
+            c->step_B8 = 0;
             c->pc_8++;
             return 1;
         }
@@ -1849,7 +1854,7 @@ int sub_800BABB0(EvCtxEventfnc* c)
     }
 }
 
-int sub_800BAC60(EvCtxEventfnc* c)
+int EvCmdCameraLookAtPoint_800BAC60(EvCtxEventfnc* c)
 {
     EvVecEventfnc v;
     EvVecEventfnc* src = (EvVecEventfnc*)c->pc_8->c_C;
@@ -1861,21 +1866,21 @@ int sub_800BAC60(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BACE0(EvCtxEventfnc* c)
+int EvCmdCameraLookAtActor_800BACE0(EvCtxEventfnc* c)
 {
-    SetCameraBlendTarget_800379DC(sub_800BBBA0(c->pc_8->a_4), c->pc_8->b_8);
+    SetCameraBlendTarget_800379DC(GetActorPos_800BBBA0(c->pc_8->a_4), c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800BAD3C(EvCtxEventfnc* c)
+int EvCmdCameraClearLookAt_800BAD3C(EvCtxEventfnc* c)
 {
     ClearCameraBlendTarget_80037A20(c->pc_8->c_C, c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800BAD88(EvCtxEventfnc* c)
+int EvCmdWaitCameraBlend_800BAD88(EvCtxEventfnc* c)
 {
     int v = ((int (*)())GetCameraBlend_80037A4C)();
     int b = c->pc_8->b_8;
@@ -1887,7 +1892,7 @@ int sub_800BAD88(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BADF8(EvCtxEventfnc* c)
+int EvCmdSetViewRect_800BADF8(EvCtxEventfnc* c)
 {
     if (c->pc_8->c_C)
     {
@@ -1915,26 +1920,26 @@ int sub_800BADF8(EvCtxEventfnc* c)
     return 1;
 }
 
-int sub_800BAEBC(EvCtxEventfnc* c)
+int EvCmdSetCameraZoom_800BAEBC(EvCtxEventfnc* c)
 {
     SetCameraZoom_80037A6C(c->pc_8->a_4, c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
-int sub_800BAF08(EvCtxEventfnc* c)
+int EvCmdSetCameraTarget_800BAF08(EvCtxEventfnc* c)
 {
     int v = c->pc_8->c_C;
     if (v == 0)
     {
-        v = (int)sub_800BBBA0(c->pc_8->a_4);
+        v = (int)GetActorPos_800BBBA0(c->pc_8->a_4);
     }
     SetCameraTarget_80037AC8(v);
     c->pc_8++;
     return 1;
 }
 
-int sub_800BAF68(EvCtxEventfnc* c)
+int EvCmdSetMapMesh_800BAF68(EvCtxEventfnc* c)
 {
     SaveData* s = &saveData_8008B570;
     unsigned short v = *(unsigned short*)&c->pc_8->b_8;
@@ -1947,7 +1952,8 @@ int sub_800BAF68(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BAFAC(EvCtxEventfnc* c)
+// waits until Levant faces one of the actors b (near it, or inside region a) and is triggered
+int EvCmdWaitTalk_800BAFAC(EvCtxEventfnc* c)
 {
     EvVecEventfnc* lev;
     SVECTOR* rot;
@@ -1955,7 +1961,7 @@ int sub_800BAFAC(EvCtxEventfnc* c)
     int i;
     int hit;
     unsigned int dist;
-    if (dword_800AEBD8 >= 0 && dword_800AEBD8 != c->f10_10)
+    if (dword_800AEBD8 >= 0 && dword_800AEBD8 != c->id_10)
     {
         return 0;
     }
@@ -1966,14 +1972,14 @@ int sub_800BAFAC(EvCtxEventfnc* c)
         return 1;
     }
     c->flags_0 &= ~0xC;
-    lev = sub_800BBBA0(0);
-    rot = sub_800BBBD0(0);
+    lev = GetActorPos_800BBBA0(0);
+    rot = GetActorRot_800BBBD0(0);
     for (i = 1; i < sub_800A7790() + 1; i++)
     {
         int bit = 1 << i;
         if (c->pc_8->b_8 & bit)
         {
-            p = sub_800BBBA0(i);
+            p = GetActorPos_800BBBA0(i);
             hit = 0;
             if (c->pc_8->a_4 >= 0)
             {
@@ -2003,10 +2009,10 @@ int sub_800BAFAC(EvCtxEventfnc* c)
 
 int sub_800BB180(EvCtxEventfnc* c)
 {
-    EvMsgEventfnc m;
+    EvActorCmdEventfnc m;
     int r;
     int v = c->pc_8->b_8 & 0x80000000;
-    c->f24_24[c->pc_8->a_4] = v;
+    c->idleAnims_24[c->pc_8->a_4] = v;
     if ((c->pc_8->b_8 & 0x80000000) == 0)
     {
         c->pc_8++;
@@ -2014,17 +2020,17 @@ int sub_800BB180(EvCtxEventfnc* c)
     }
     else
     {
-        m.m0_0 = 1 << c->pc_8->a_4;
-        m.m4_4 = 3;
-        m.mC_C = v;
-        r = sub_800BB990(c, &m, 1, 1);
+        m.actor_0 = 1 << c->pc_8->a_4;
+        m.kind_4 = 3;
+        m.arg_C = v;
+        r = SendActorCmdMask_800BB990(c, &m, 1, 1);
     }
     return r;
 }
 
-int sub_800BB214(EvCtxEventfnc* c)
+int EvCmdWaitActorInRegion_800BB214(EvCtxEventfnc* c)
 {
-    EvVecEventfnc* v = sub_800BBBA0(c->pc_8->a_4);
+    EvVecEventfnc* v = GetActorPos_800BBBA0(c->pc_8->a_4);
     if (sub_800A6504(c->pc_8->b_8, v))
     {
         c->pc_8++;
@@ -2069,12 +2075,12 @@ extern int dword_800AEBE0;
 extern int dword_800AEBE4;
 extern int dword_800B1260;
 extern int sub_800A7A9C(int i);
-int sub_800BB27C(EvCtxEventfnc* c)
+int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
 {
     EvPartySrcEventfnc* s;
     int i;
     int k;
-    switch (c->fB8_B8)
+    switch (c->step_B8)
     {
     case 0:
         s = (EvPartySrcEventfnc*)c->pc_8->c_C;
@@ -2106,9 +2112,9 @@ int sub_800BB27C(EvCtxEventfnc* c)
             dword_800B1CB8.fD4_D4[i] = s->e_24[i].c_8;
         }
         dword_800AEBE0 = 1;
-        c->fB8_B8++;
+        c->step_B8++;
     case 1:
-        c->fB8_B8++;
+        c->step_B8++;
         return 0;
     case 2:
         if (dword_800B1260)
@@ -2117,7 +2123,7 @@ int sub_800BB27C(EvCtxEventfnc* c)
         }
         dword_800AEBE4 = 1;
         dword_800AEBE0 = 0;
-        c->fB8_B8 = 0;
+        c->step_B8 = 0;
         c->pc_8++;
         return 1;
     }
@@ -2125,17 +2131,17 @@ int sub_800BB27C(EvCtxEventfnc* c)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB27C);
+INCLUDE_OVERLAY_ASM(eventfnc, EvCmdBattle_800BB27C);
 
 int sub_800BB45C(EvCtxEventfnc* c)
 {
     if (c->pc_8->b_8 == dword_800B1230)
     {
-        c->fEC_EC = 0;
+        c->branch_EC = 0;
     }
     else
     {
-        c->fEC_EC = 1;
+        c->branch_EC = 1;
     }
     c->pc_8++;
     return 1;
@@ -2158,7 +2164,8 @@ extern void SetLoadFadeFlag_80027478(int a, int b);
 extern void SetMotionBlur_8001BCD8(int a);
 
 // Matched
-int sub_800BB4A4(EvCtxEventfnc* c)
+// a selects: 0..9 scene fades / darken, 10/11 GAME hooks, 12 music, 13..15 sfx, 16 XA, 17 load fade, 18 motion blur
+int EvCmdFadeSound_800BB4A4(EvCtxEventfnc* c)
 {
     int r = 1;
     int op;
@@ -2275,7 +2282,7 @@ int sub_800BB4A4(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BB7D8(EvCtxEventfnc* c)
+int EvCmdPadVibration_800BB7D8(EvCtxEventfnc* c)
 {
     EvInsEventfnc* i = c->pc_8;
     if (i->a_4 == 1)
@@ -2292,86 +2299,86 @@ int sub_800BB7D8(EvCtxEventfnc* c)
 
 #if 0
 // Not matched: the original keeps fC0 in $s0 for the whole loop (default case spins on the stale value); register allocation differs
-int sub_800BB840(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
+int SendActorCmd_800BB840(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b)
 {
     while (1)
     {
-        switch (c->fC0_C0)
+        switch (c->cmdStep_C0)
         {
         case 0:
-            m->m8_8 = a;
-            if (c->f18_18 & (1 << m->m0_0))
+            m->field_8 = a;
+            if (c->busyActors_18 & (1 << m->actor_0))
             {
                 return 0;
             }
-            if (!sub_800BBAB0(m->m0_0))
+            if (!IsActorCmdReady_800BBAB0(m->actor_0))
             {
                 return 0;
             }
-            sub_800BBB18((int*)m);
+            StartActorCmd_800BBB18((int*)m);
             if (a)
             {
-                c->f18_18 |= 1 << m->m0_0;
+                c->busyActors_18 |= 1 << m->actor_0;
             }
-            c->fC0_C0 = 1;
+            c->cmdStep_C0 = 1;
             break;
         case 1:
-            if (!sub_800BBAE4(m->m0_0))
+            if (!IsActorCmdDone_800BBAE4(m->actor_0))
             {
                 return 0;
             }
-            sub_800BBB5C((int*)m);
+            FinishActorCmd_800BBB5C((int*)m);
             if (b)
             {
                 c->pc_8++;
             }
-            if (m->m4_4 == 3)
+            if (m->kind_4 == 3)
             {
-                c->f1C_1C |= c->fC0_C0 << m->m0_0;
+                c->animActors_1C |= c->cmdStep_C0 << m->actor_0;
             }
-            else if (m->m4_4 == 4)
+            else if (m->kind_4 == 4)
             {
-                c->f1C_1C &= ~(c->fC0_C0 << m->m0_0);
+                c->animActors_1C &= ~(c->cmdStep_C0 << m->actor_0);
             }
-            c->fC0_C0 = 0;
+            c->cmdStep_C0 = 0;
             return 1;
         }
     }
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BB840);
+INCLUDE_OVERLAY_ASM(eventfnc, SendActorCmd_800BB840);
 
-int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
+int SendActorCmdMask_800BB990(EvCtxEventfnc* c, EvActorCmdEventfnc* m, int a, int b)
 {
     int i;
     int bit;
-    switch (c->fBC_BC)
+    switch (c->maskStep_BC)
     {
     case 0:
-        c->f24_24[5] = m->m0_0;
-        c->fBC_BC++;
+        c->idleAnims_24[5] = m->actor_0;
+        c->maskStep_BC++;
     case 1:
         for (i = 0; i < 5; i++)
         {
             bit = 1 << i;
-            if (c->f24_24[5] & bit)
+            if (c->idleAnims_24[5] & bit)
             {
-                m->m0_0 = i;
-                if (!sub_800BB840(c, m, a, 0))
+                m->actor_0 = i;
+                if (!SendActorCmd_800BB840(c, m, a, 0))
                 {
                     break;
                 }
-                c->f24_24[5] &= ~bit;
+                c->idleAnims_24[5] &= ~bit;
             }
         }
-        if (c->f24_24[5] == 0)
+        if (c->idleAnims_24[5] == 0)
         {
             if (b)
             {
                 c->pc_8++;
             }
-            c->fBC_BC = 0;
+            c->maskStep_BC = 0;
             return 1;
         }
         return 0;
@@ -2380,7 +2387,7 @@ int sub_800BB990(EvCtxEventfnc* c, EvMsgEventfnc* m, int a, int b)
     }
 }
 
-int sub_800BBAB0(int i)
+int IsActorCmdReady_800BBAB0(int i)
 {
     int r;
     if (i == 0)
@@ -2394,7 +2401,7 @@ int sub_800BBAB0(int i)
     return r;
 }
 
-int sub_800BBAE4(int i)
+int IsActorCmdDone_800BBAE4(int i)
 {
     int r;
     if (i == 0)
@@ -2411,7 +2418,7 @@ int sub_800BBAE4(int i)
 // Matched
 extern int sub_800A8EC4(int* p);
 extern int sub_800A7D40(int a, int* p);
-int sub_800BBB18(int* p)
+int StartActorCmd_800BBB18(int* p)
 {
     int r;
     int v = *p;
@@ -2429,7 +2436,7 @@ int sub_800BBB18(int* p)
 // Matched
 extern int sub_800A9008(int* p);
 extern int sub_800A80C4(int a, int* p);
-int sub_800BBB5C(int* p)
+int FinishActorCmd_800BBB5C(int* p)
 {
     int r;
     int v = *p;
@@ -2444,7 +2451,7 @@ int sub_800BBB5C(int* p)
     return r;
 }
 
-EvVecEventfnc* sub_800BBBA0(int i)
+EvVecEventfnc* GetActorPos_800BBBA0(int i)
 {
     EvVecEventfnc* r;
     if (i == 0)
@@ -2458,7 +2465,7 @@ EvVecEventfnc* sub_800BBBA0(int i)
     return r;
 }
 
-SVECTOR* sub_800BBBD0(int i)
+SVECTOR* GetActorRot_800BBBD0(int i)
 {
     SVECTOR* r;
     if (i == 0)
@@ -2472,32 +2479,32 @@ SVECTOR* sub_800BBBD0(int i)
     return r;
 }
 
-EvVecEventfnc* sub_800BBC00(EvCtxEventfnc* c, int idx, int mode)
+EvVecEventfnc* GetSavedActorPos_800BBC00(EvCtxEventfnc* c, int idx, int mode)
 {
     if (mode == 1)
     {
-        EvVecEventfnc* v = sub_800BBBA0(idx);
-        c->vec3C_3C[idx].x_0 = v->x_0;
-        c->vec3C_3C[idx].y_4 = v->y_4;
-        c->vec3C_3C[idx].z_8 = v->z_8;
+        EvVecEventfnc* v = GetActorPos_800BBBA0(idx);
+        c->savedPos_3C[idx].x_0 = v->x_0;
+        c->savedPos_3C[idx].y_4 = v->y_4;
+        c->savedPos_3C[idx].z_8 = v->z_8;
     }
-    return &c->vec3C_3C[idx];
+    return &c->savedPos_3C[idx];
 }
 
-EvVecEventfnc* sub_800BBC80(EvCtxEventfnc* c, int idx, int mode)
+EvVecEventfnc* GetSavedActorFront_800BBC80(EvCtxEventfnc* c, int idx, int mode)
 {
     if (mode == 1)
     {
-        EvVecEventfnc* v = sub_800BBBA0(idx);
-        SVECTOR* r = sub_800BBBD0(idx);
-        c->vec78_78[idx].x_0 = v->x_0 + name_80084540[r->vy & 0xFFF] * 100 / 4096;
-        c->vec78_78[idx].y_4 = r->vy;
-        c->vec78_78[idx].z_8 = v->z_8 + name_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
+        EvVecEventfnc* v = GetActorPos_800BBBA0(idx);
+        SVECTOR* r = GetActorRot_800BBBD0(idx);
+        c->savedFront_78[idx].x_0 = v->x_0 + name_80084540[r->vy & 0xFFF] * 100 / 4096;
+        c->savedFront_78[idx].y_4 = r->vy;
+        c->savedFront_78[idx].z_8 = v->z_8 + name_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
     }
-    return &c->vec78_78[idx];
+    return &c->savedFront_78[idx];
 }
 
-void sub_800BBDA0(int a, int b)
+void SetTempFlags_800BBDA0(int a, int b)
 {
     if (b == 1)
     {
@@ -2509,12 +2516,12 @@ void sub_800BBDA0(int a, int b)
     }
 }
 
-int sub_800BBDD8(int a)
+int TestTempFlags_800BBDD8(int a)
 {
     return (~dword_800AEBD4 & a) == 0;
 }
 
-int sub_800BBDF4(EvCtxEventfnc* c)
+int GetOwnEntityParam_800BBDF4(EvCtxEventfnc* c)
 {
     if (c->ent_120 != 0)
     {
@@ -2582,16 +2589,16 @@ extern int sub_800A78A8(int a);
 extern int sub_800A78F4(int a);
 extern int OpenMessageWindow_8003422C(EvMsgCfgEventfnc* cfg);
 extern int OpenItemMessageWindow_80035AC8(EvItemCfgEventfnc* cfg);
-int* sub_800BC560(int* p);
-int sub_800BC58C(int* p);
-int sub_800BC5C8(int a, int b);
-void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n);
+int* FindMsgChoiceList_800BC560(int* p);
+int GetChoiceMask_800BC58C(int* p);
+int IsActorLeftOf_800BC5C8(int a, int b);
+void SetupItemMsgSlots_800BC6C4(char* base, EvSrcEventfnc* src, int n);
 
 #if 0
 // Not matched (register allocation): list/bc/c0/c4/c8/cc are spilled scalars as in the original, but here list keeps
 // $fp and mask is spilled, so mask/ret/pos/skip sit one callee-saved register off (orig s5/s6/s7/fp) and list's stack
 // slot moves; control flow, the double store of c8 and the call sequence match
-int sub_800BBE3C(EvCtxEventfnc* c)
+int OpenEventMessage_800BBE3C(EvCtxEventfnc* c)
 {
     EvMsgCfgEventfnc m;
     EvItemCfgEventfnc it;
@@ -2639,7 +2646,7 @@ int sub_800BBE3C(EvCtxEventfnc* c)
     {
         if (pc->c_C == -1)
         {
-            str = sub_800BBDF4(c);
+            str = GetOwnEntityParam_800BBDF4(c);
         }
         else
         {
@@ -2652,8 +2659,8 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         mask = 0;
         mode = 0;
         str = sub_800A6738(pc->c_C);
-        list = sub_800BC560((int*)str);
-        mask = sub_800BC58C(list) & ~c->f114_114;
+        list = FindMsgChoiceList_800BC560((int*)str);
+        mask = GetChoiceMask_800BC58C(list) & ~c->choiceMask_114;
     }
     else
     {
@@ -2661,14 +2668,14 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         list = 0;
         str = sub_800A6738(pc->c_C);
     }
-    if (*(short*)&c->f100_100 != -1 && *(short*)&c->f102_102 != -1)
+    if (*(short*)&c->msgX_100 != -1 && *(short*)&c->msgY_102 != -1)
     {
         posMode = 0;
-        pos = &c->f100_100;
+        pos = &c->msgX_100;
     }
     else
     {
-        posMode = c->f104_104;
+        posMode = c->msgPosMode_104;
         if (posMode < 0)
         {
             posMode = !(pc->op_0 == 0x39 || pc->op_0 == 0x3A) << 1;
@@ -2678,7 +2685,7 @@ int sub_800BBE3C(EvCtxEventfnc* c)
     {
         pair.a_0 = 1;
         pair.b_4 = pc->a_4;
-        bc = sub_800BC5C8(pc->a_4, pc->b_8);
+        bc = IsActorLeftOf_800BC5C8(pc->a_4, pc->b_8);
     }
     else if (pc->op_0 == 0x3B)
     {
@@ -2686,7 +2693,7 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         pair.a_0 = 0;
         pair.b_4 = -1;
     }
-    fl = c->f108_108;
+    fl = c->msgOptions_108;
     if (fl & 1)
     {
         skip = 0;
@@ -2750,9 +2757,9 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         x = pc->c_C;
         if (x == 0)
         {
-            x = sub_800BBDF4(c);
+            x = GetOwnEntityParam_800BBDF4(c);
         }
-        sub_800BC6C4((char*)&it, (EvSrcEventfnc*)x, pc->a_4);
+        SetupItemMsgSlots_800BC6C4((char*)&it, (EvSrcEventfnc*)x, pc->a_4);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     else if (mode == 2)
@@ -2770,7 +2777,7 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         src.a_0 = pc->c_C;
         src.b_2 = x;
         src.c_4 = 1;
-        sub_800BC6C4((char*)&it, &src, 1);
+        SetupItemMsgSlots_800BC6C4((char*)&it, &src, 1);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     else if (mode == 3)
@@ -2780,26 +2787,26 @@ int sub_800BBE3C(EvCtxEventfnc* c)
         it.f8 = 0;
         it.f48 = 0xB;
         it.f4C = str;
-        sub_800BC6C4((char*)&it, 0, 0);
+        SetupItemMsgSlots_800BC6C4((char*)&it, 0, 0);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     if (ret == 0)
     {
         return 0;
     }
-    c->f118_118 = 1;
-    c->f100_100 = -1;
-    c->f102_102 = -1;
-    c->f11C_11C = ret;
-    c->f104_104 = -1;
-    c->f108_108 = 0;
+    c->msgOpen_118 = 1;
+    c->msgX_100 = -1;
+    c->msgY_102 = -1;
+    c->msgWindow_11C = ret;
+    c->msgPosMode_104 = -1;
+    c->msgOptions_108 = 0;
     return 1;
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BBE3C);
+INCLUDE_OVERLAY_ASM(eventfnc, OpenEventMessage_800BBE3C);
 
-int sub_800BC2B4(EvCtxEventfnc* c)
+int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c)
 {
     EvMsgInfoEventfnc info;
     unsigned int f;
@@ -2813,7 +2820,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
     }
     if (c->flags_0 & 2)
     {
-        if (!GetMsgWindowResultIfDone_800349B4(c->f11C_11C, &info))
+        if (!GetMsgWindowResultIfDone_800349B4(c->msgWindow_11C, &info))
         {
             return 0;
         }
@@ -2837,12 +2844,12 @@ int sub_800BC2B4(EvCtxEventfnc* c)
         }
         if (info.f8_8)
         {
-            c->fEC_EC = info.s2_2;
+            c->branch_EC = info.s2_2;
         }
-        CloseMsgWindow_80034A84(c->f11C_11C);
+        CloseMsgWindow_80034A84(c->msgWindow_11C);
         dword_800AEBE8 = 0x8000;
         dword_800AEBEC = 0;
-        c->f118_118 = 0;
+        c->msgOpen_118 = 0;
         return 1;
     }
     if (dword_800AEBF0)
@@ -2850,7 +2857,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
         k = 0;
         for (i = 0; dword_800AEBF0[i].xa_2.a_0 >= 0; i++)
         {
-            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && ConsumeMsgWindowMark_80034ADC(c->f11C_11C, dword_800AEBF0[i].sub_1))
+            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && ConsumeMsgWindowMark_80034ADC(c->msgWindow_11C, dword_800AEBF0[i].sub_1))
             {
                 k = &dword_800AEBF0[i].xa_2;
             }
@@ -2862,14 +2869,14 @@ int sub_800BC2B4(EvCtxEventfnc* c)
             c->flags_0 |= 0x100;
         }
     }
-    if (IsMsgWindowWaiting_80034A30(c->f11C_11C))
+    if (IsMsgWindowWaiting_80034A30(c->msgWindow_11C))
     {
         s = &saveData_8008B570;
         if (s->settings_1C.bits.b_3 == 1 || XaIsIdle_80043584())
         {
-            if (s->settings_1C.bits.c_4 == 1 || !c->f18_18)
+            if (s->settings_1C.bits.c_4 == 1 || !c->busyActors_18)
             {
-                EnableMsgWindowAdvance_80034A68(c->f11C_11C);
+                EnableMsgWindowAdvance_80034A68(c->msgWindow_11C);
                 c->flags_0 |= 2;
             }
         }
@@ -2877,7 +2884,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
     return 0;
 }
 
-int* sub_800BC560(int* p)
+int* FindMsgChoiceList_800BC560(int* p)
 {
     int n = 0;
     do
@@ -2892,7 +2899,7 @@ int* sub_800BC560(int* p)
     return p;
 }
 
-int sub_800BC58C(int* p)
+int GetChoiceMask_800BC58C(int* p)
 {
     int m = 0;
     int i;
@@ -2903,13 +2910,13 @@ int sub_800BC58C(int* p)
     return m;
 }
 
-int sub_800BC5C8(int a, int b)
+int IsActorLeftOf_800BC5C8(int a, int b)
 {
     unsigned short v[3];
     short r1[4];
     short r2[4];
     short tmp[4];
-    unsigned short* p = (unsigned short*)sub_800BBBA0(a);
+    unsigned short* p = (unsigned short*)GetActorPos_800BBBA0(a);
     unsigned short* q;
     v[0] = p[0];
     v[1] = p[2];
@@ -2918,7 +2925,7 @@ int sub_800BC5C8(int a, int b)
     v[1] -= word_8008D600[2];
     v[2] -= word_8008D600[4];
     sub_8005BBC8(v, r1, tmp, tmp);
-    q = (unsigned short*)sub_800BBBA0(b);
+    q = (unsigned short*)GetActorPos_800BBBA0(b);
     v[0] = q[0];
     v[1] = q[2];
     v[2] = q[4];
@@ -2931,7 +2938,7 @@ int sub_800BC5C8(int a, int b)
 
 #if 0
 // Not matched: loop induction variables are allocated differently (the original strength-reduces only the slot offset)
-void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
+void SetupItemMsgSlots_800BC6C4(char* base, EvSrcEventfnc* src, int n)
 {
     int local[8];
     int i;
@@ -2965,13 +2972,13 @@ void sub_800BC6C4(char* base, EvSrcEventfnc* src, int n)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BC6C4);
+INCLUDE_OVERLAY_ASM(eventfnc, SetupItemMsgSlots_800BC6C4);
 
-void sub_800BC7A0(EvCtxEventfnc* c)
+void EvMessageNop_800BC7A0(EvCtxEventfnc* c)
 {
 }
 
-void sub_800BC7A8(int a)
+void LoadEventEffectFile_800BC7A8(int a)
 {
     EvGfxArgEventfnc t;
     if (dword_800AEB7C != 2)
@@ -3050,7 +3057,7 @@ void LoadRelocBlob_800BC854(int* src)
 
 INCLUDE_OVERLAY_ASM(eventfnc, LoadRelocBlob_800BC854);
 
-void sub_800BC98C(int* a)
+void LoadEventTiy_800BC98C(int* a)
 {
     if (dword_800AEBC0.sprts_0)
     {
@@ -3068,7 +3075,7 @@ void sub_800BC98C(int* a)
 #if 0
 // Not matched: a/b land in $s1/$s0 in the original, swapped here (param types, temporaries, call-embedded assignment tried)
 extern int dword_800AEBC8;
-void sub_800BCA18(unsigned int* a, unsigned int* b)
+void CopyEventData_800BCA18(unsigned int* a, unsigned int* b)
 {
     unsigned int* r = ListAlloc_8003FDC0(eventHeap_80091C10);
     dword_800AEBC8 = (int)r;
@@ -3076,9 +3083,9 @@ void sub_800BCA18(unsigned int* a, unsigned int* b)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCA18);
+INCLUDE_OVERLAY_ASM(eventfnc, CopyEventData_800BCA18);
 
-void sub_800BCA68(int a)
+void LoadEventRecordTables_800BCA68(int a)
 {
     if (dword_800AEBCC[1] != 0)
     {
@@ -3090,10 +3097,10 @@ void sub_800BCA68(int a)
     LoadRecordTables_80026E74(dword_800AEBCC[1], a, eventHeap_80091C10);
 }
 
-void sub_800BCB00(TaskEventfnc* t, int* x)
+void ReturnWarpStart_800BCB00(TaskEventfnc* t, int* x)
 {
     x[0] = 0;
     x[1] = 0x1D;
-    sub_800BCB3C(t, x);
-    t->next_8 = sub_800BCB3C;
+    ReturnWarpTask_800BCB3C(t, x);
+    t->next_8 = ReturnWarpTask_800BCB3C;
 }

@@ -59,7 +59,7 @@ extern int dword_80092F00;
 extern int dword_800C124C;
 
 // Matched
-void sub_800C6F58(PierceTask* t, int* st)
+void PierceEventTask_800C6F58(PierceTask* t, int* st)
 {
     PierceMsg m;
     PierceMsg m2;
@@ -129,10 +129,10 @@ void sub_800C6F58(PierceTask* t, int* st)
 }
 
 // Matched
-void sub_800C7124(PierceTask* t, int* st)
+void PierceEventStart_800C7124(PierceTask* t, int* st)
 {
     st[0] = 0;
     st[1] = 0x1C;
-    sub_800C6F58(t, st);
-    t->next_8 = sub_800C6F58;
+    PierceEventTask_800C6F58(t, st);
+    t->next_8 = PierceEventTask_800C6F58;
 }
