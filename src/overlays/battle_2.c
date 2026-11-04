@@ -35,7 +35,7 @@ typedef struct BatStageObj_a
     int z_40;
 } BatStageObj_a;
 
-void DrawBattleStage_800BC90C(BatStageObj_a* p)
+void DrawBattleStage_800BC90C(BatStageObj_a* obj)
 {
     int scale[3] = { 0x1000, 0x1000, 0x1000 };
     int idx;
@@ -43,48 +43,48 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
 
     unknownFlags_8008D678 &= ~0x10000;
     idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, battleStages_800C8EAC[battleStageId_80083BD0].model_6);
-    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, stageRot_800C9124, pointLights_8008D534, 1, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &obj->x_38, stageRot_800C9124, pointLights_8008D534, 1, scale);
     {
         unsigned short* list = battleStages_800C8EAC[battleStageId_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, *list)];
+            EffectSprite* sprite = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, *list)];
             int j;
-            for (j = 0; j < g->count_0; j++)
+            for (j = 0; j < sprite->count_0; j++)
             {
                 int k;
-                for (k = 0; k < g->frameCounts_4[j]; k++)
+                for (k = 0; k < sprite->frameCounts_4[j]; k++)
                 {
                     VECTOR pos;
                     CVECTOR col;
                     short sz[2];
-                    EffectSpriteFrame* e = &g->frames_8[j][k];
-                    BatLight_a* l = (BatLight_a*)cameraState_8008D4F0;
-                    pos.vx = p->x_38;
-                    pos.vy = p->y_3C;
-                    pos.vz = p->z_40;
-                    pos.vx += e->pos_10[0];
-                    pos.vz += e->pos_10[2];
-                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
-                    if (e->size_C[1] != 0)
+                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
+                    BatLight_a* light = (BatLight_a*)cameraState_8008D4F0;
+                    pos.vx = obj->x_38;
+                    pos.vy = obj->y_3C;
+                    pos.vz = obj->z_40;
+                    pos.vx += frame->pos_10[0];
+                    pos.vz += frame->pos_10[2];
+                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    if (frame->size_C[1] != 0)
                     {
-                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
-                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
-                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
+                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
+                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
+                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
                         if (battleStageId_80083BD0 == 0x10)
                         {
-                            SetSemiTrans(&g->poly_C, 1);
+                            SetSemiTrans(&sprite->poly_C, 1);
                         }
                         if (battleStageId_80083BD0 == 0x13)
                         {
-                            sz[0] = e->size_C[0] * 5;
-                            sz[1] = e->size_C[1] * 5;
-                            DrawRotSprite_80044010(&g->poly_C, &pos, stageRot_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            sz[0] = frame->size_C[0] * 5;
+                            sz[1] = frame->size_C[1] * 5;
+                            DrawRotSprite_80044010(&sprite->poly_C, &pos, stageRot_800C9124, &frame->u_0, &frame->w_4, &frame->f8, sz, &frame->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {
-                            DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                            DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
                         }
                     }
                 }
@@ -101,34 +101,34 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
             SVECTOR sv;
             long pp;
             long flag;
-            int a;
-            int x;
-            int w;
+            int yaw;
+            int sx;
+            int size;
             short* cam = &cameraRot_8008D4C8;
-            v.vx = p->x_38;
-            v.vy = p->y_3C;
-            v.vz = p->z_40;
-            a = -cam[1];
-            v.vx += sinTable_80084540[a & 0xFFF];
+            v.vx = obj->x_38;
+            v.vy = obj->y_3C;
+            v.vz = obj->z_40;
+            yaw = -cam[1];
+            v.vx += sinTable_80084540[yaw & 0xFFF];
             v.vy = levantPos_8008BD18.pos.y - 0x352;
             v.vx -= cameraEye_8008D600.vx;
             v.vy -= cameraEye_8008D600.vy;
-            v.vz += sinTable_80084540[(a + 0x400) & 0xFFF];
+            v.vz += sinTable_80084540[(yaw + 0x400) & 0xFFF];
             v.vz -= cameraEye_8008D600.vz;
             sv.vx = v.vx;
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
-            x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
-            if ((unsigned int)(x + 0x60) < 0x1A0)
+            sx = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
+            if ((unsigned int)(sx + 0x60) < 0x1A0)
             {
-                w = geomScreenBase_8008D51E * 96 / 240;
+                size = geomScreenBase_8008D51E * 96 / 240;
                 poly.r0 = poly.r0 * sceneBrightness_8008D40C >> 12;
                 poly.g0 = poly.g0 * sceneBrightness_8008D40C >> 12;
                 poly.b0 = poly.b0 * sceneBrightness_8008D40C >> 12;
                 setShadeTex(&poly, 0);
-                setXYWH(&poly, x, sxy.vy - w, w + 1, w + 1);
+                setXYWH(&poly, sx, sxy.vy - size, size + 1, size + 1);
                 *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = poly;
                 addPrim(&pOT_8008B4C8[0x3FF], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
                 primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(POLY_FT4);
@@ -138,21 +138,21 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
     if (battleStages_800C8EAC[battleStageId_80083BD0].anim_A >= 0)
     {
         int cols = 0;
-        unsigned int n = 0;
+        unsigned int period = 0;
         if (battleStageId_80083BD0 == 0xF)
         {
             cols = 3;
-            n = 9;
+            period = 9;
         }
         else if (battleStageId_80083BD0 == 0x13)
         {
             cols = 4;
-            n = 0xE;
+            period = 0xE;
         }
         else if (battleStageId_80083BD0 == 0x15 || battleStageId_80083BD0 == 0x1D || battleStageId_80083BD0 == 6 || battleStageId_80083BD0 == 0x1C || battleStageId_80083BD0 == 5)
         {
             cols = 1;
-            n = 0xC;
+            period = 0xC;
         }
         switch (battleStageId_80083BD0)
         {
@@ -164,74 +164,74 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
+            EffectSprite* sprite = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
             int j;
-            for (j = 0; j < g->count_0; j++)
+            for (j = 0; j < sprite->count_0; j++)
             {
-                int half = n >> 1;
-                int t = (stageAnimPhases_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
+                int half = period >> 1;
+                int phase = (stageAnimPhases_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % period;
                 int k;
-                if (battleStageId_80083BD0 == 0x13 && half < t)
+                if (battleStageId_80083BD0 == 0x13 && half < phase)
                 {
-                    t = n - t;
+                    phase = period - phase;
                 }
                 if (battleStageId_80083BD0 == 0x15 || battleStageId_80083BD0 == 0x1D || battleStageId_80083BD0 == 6 || battleStageId_80083BD0 == 0x1C || battleStageId_80083BD0 == 5)
                 {
-                    if (half < t)
+                    if (half < phase)
                     {
-                        t = n - t;
+                        phase = period - phase;
                     }
-                    t = t / 2;
+                    phase = phase / 2;
                 }
-                for (k = 0; k < g->frameCounts_4[j]; k++)
+                for (k = 0; k < sprite->frameCounts_4[j]; k++)
                 {
                     VECTOR pos;
                     CVECTOR col;
-                    EffectSpriteFrame* e = &g->frames_8[j][k];
+                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
                     int du;
                     int dv;
                     int uu;
                     int vv;
                     SaveData* sd;
-                    BatLight_a* l;
+                    BatLight_a* light;
                     if (stageAnimUv_800C9D8C[1] < 0 && stageAnimUv_800C9D8C[0] < 0)
                     {
-                        stageAnimUv_800C9D8C[0] = g->poly_C.u0;
-                        stageAnimUv_800C9D8C[1] = g->poly_C.v0;
+                        stageAnimUv_800C9D8C[0] = sprite->poly_C.u0;
+                        stageAnimUv_800C9D8C[1] = sprite->poly_C.v0;
                     }
-                    du = t % cols;
-                    dv = t / cols;
+                    du = phase % cols;
+                    dv = phase / cols;
                     sd = &saveData_8008B570;
-                    pos.vx = p->x_38;
-                    pos.vy = p->y_3C;
-                    pos.vz = p->z_40;
-                    pos.vx += e->pos_10[0];
-                    pos.vz += e->pos_10[2];
-                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
-                    du = du * (e->w_4 + 1);
-                    dv = dv * (e->h_6 + 1);
-                    uu = e->u_0 + du;
-                    vv = e->v_2 + dv;
+                    pos.vx = obj->x_38;
+                    pos.vy = obj->y_3C;
+                    pos.vz = obj->z_40;
+                    pos.vx += frame->pos_10[0];
+                    pos.vz += frame->pos_10[2];
+                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    du = du * (frame->w_4 + 1);
+                    dv = dv * (frame->h_6 + 1);
+                    uu = frame->u_0 + du;
+                    vv = frame->v_2 + dv;
                     if (cols == 1)
                     {
-                        uu = e->u_0;
+                        uu = frame->u_0;
                     }
-                    g->poly_C.u0 = stageAnimUv_800C9D8C[0] + uu;
-                    g->poly_C.v0 = stageAnimUv_800C9D8C[1] + vv;
-                    g->poly_C.u1 = stageAnimUv_800C9D8C[0] + uu + e->w_4;
-                    g->poly_C.v1 = stageAnimUv_800C9D8C[1] + vv;
-                    g->poly_C.u2 = stageAnimUv_800C9D8C[0] + uu;
-                    g->poly_C.v2 = stageAnimUv_800C9D8C[1] + vv + e->h_6;
-                    g->poly_C.u3 = stageAnimUv_800C9D8C[0] + uu + e->w_4;
-                    g->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + e->h_6;
-                    if (e->size_C[1] != 0)
+                    sprite->poly_C.u0 = stageAnimUv_800C9D8C[0] + uu;
+                    sprite->poly_C.v0 = stageAnimUv_800C9D8C[1] + vv;
+                    sprite->poly_C.u1 = stageAnimUv_800C9D8C[0] + uu + frame->w_4;
+                    sprite->poly_C.v1 = stageAnimUv_800C9D8C[1] + vv;
+                    sprite->poly_C.u2 = stageAnimUv_800C9D8C[0] + uu;
+                    sprite->poly_C.v2 = stageAnimUv_800C9D8C[1] + vv + frame->h_6;
+                    sprite->poly_C.u3 = stageAnimUv_800C9D8C[0] + uu + frame->w_4;
+                    sprite->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + frame->h_6;
+                    if (frame->size_C[1] != 0)
                     {
-                        l = (BatLight_a*)cameraState_8008D4F0;
-                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
-                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
-                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
-                        SetSemiTrans(&g->poly_C, 1);
-                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        light = (BatLight_a*)cameraState_8008D4F0;
+                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
+                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
+                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
+                        SetSemiTrans(&sprite->poly_C, 1);
+                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
                     }
                 }
             }
@@ -239,10 +239,10 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
-            int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
+            EffectSprite* sprite = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
+            int j = ((unsigned int)frameCount_8008D3FC % (sprite->count_0 * 2)) / 2;
             int k;
-            for (k = 0; k < g->frameCounts_4[j]; k++)
+            for (k = 0; k < sprite->frameCounts_4[j]; k++)
             {
                 int m;
                 for (m = 0; m < 8; m++)
@@ -251,31 +251,31 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                     CVECTOR col;
                     int d;
                     int ang;
-                    EffectSpriteFrame* e = &g->frames_8[j][k];
+                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
                     SaveData* sd = &saveData_8008B570;
-                    BatLight_a* l = (BatLight_a*)cameraState_8008D4F0;
-                    pos.vx = p->x_38;
-                    pos.vy = p->y_3C;
-                    pos.vz = p->z_40;
-                    d = ISqrt_8003B918(e->pos_10[0] * e->pos_10[0] + e->pos_10[2] * e->pos_10[2]);
-                    ang = ratan2_8003B548(e->pos_10[0], e->pos_10[2]) + m * 512;
+                    BatLight_a* light = (BatLight_a*)cameraState_8008D4F0;
+                    pos.vx = obj->x_38;
+                    pos.vy = obj->y_3C;
+                    pos.vz = obj->z_40;
+                    d = ISqrt_8003B918(frame->pos_10[0] * frame->pos_10[0] + frame->pos_10[2] * frame->pos_10[2]);
+                    ang = ratan2_8003B548(frame->pos_10[0], frame->pos_10[2]) + m * 512;
                     pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * d / 4096;
                     pos.vz += sinTable_80084540[ang & 0xFFF] * d / 4096;
-                    pos.vy = sd->levant_7A8.pos.y + e->pos_10[1];
-                    g->poly_C.u0 = e->u_0;
-                    g->poly_C.v0 = e->v_2;
-                    g->poly_C.u1 = e->u_0 + e->w_4;
-                    g->poly_C.v1 = e->v_2;
-                    g->poly_C.u2 = e->u_0;
-                    g->poly_C.v2 = e->v_2 + e->h_6;
-                    g->poly_C.u3 = e->u_0 + e->w_4;
-                    g->poly_C.v3 = e->v_2 + e->h_6;
-                    if (e->size_C[1] != 0)
+                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    sprite->poly_C.u0 = frame->u_0;
+                    sprite->poly_C.v0 = frame->v_2;
+                    sprite->poly_C.u1 = frame->u_0 + frame->w_4;
+                    sprite->poly_C.v1 = frame->v_2;
+                    sprite->poly_C.u2 = frame->u_0;
+                    sprite->poly_C.v2 = frame->v_2 + frame->h_6;
+                    sprite->poly_C.u3 = frame->u_0 + frame->w_4;
+                    sprite->poly_C.v3 = frame->v_2 + frame->h_6;
+                    if (frame->size_C[1] != 0)
                     {
-                        col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
-                        col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
-                        col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
-                        DrawBillboardRgb_80043DE0(&g->poly_C, &pos, e->size_C, &col);
+                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
+                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
+                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
+                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
                     }
                 }
             }
@@ -289,7 +289,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         {
             unsigned short* ent = &battleStages_800C8EAC[battleStageId_80083BD0].models_C[i * 4];
             int id = ent[0];
-            int fl = ent[1];
+            int flags = ent[1];
             unsigned long* ot = pOT_8008B4C8;
             if (id != 0xFF)
             {
@@ -303,9 +303,9 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                 {
                     rot.vy = frameCount_8008D3FC * 100;
                 }
-                pos.vx = p->x_38;
-                pos.vy = p->y_3C;
-                pos.vz = p->z_40;
+                pos.vx = obj->x_38;
+                pos.vy = obj->y_3C;
+                pos.vz = obj->z_40;
                 pos.vy = levantPos_8008BD18.pos.y;
                 if (battleStageId_80083BD0 == 0x13 && i == 0)
                 {
@@ -319,7 +319,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                 }
                 for (k = 0; k < mdl->ftgCount_0; k++)
                 {
-                    DrawFtgObjectAtSlot0_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
+                    DrawFtgObjectAtSlot0_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, flags, sc);
                 }
             }
         }
@@ -329,11 +329,11 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
 
 INCLUDE_OVERLAY_ASM(battle, DrawBattleStage_800BC90C);
 
-void ActionStart_800BDA28(BatTask_a* t)
+void ActionStart_800BDA28(BatTaskEntry* task)
 {
     int i;
-    int f;
-    int m;
+    int uncapturable;
+    int alive;
     if (!(battleFlags_800B1228 & 0x1000))
     {
         ResetUnitReactions_800BB794();
@@ -341,20 +341,20 @@ void ActionStart_800BDA28(BatTask_a* t)
         ApplyBattleCommand_800BEBB8();
         if (!(saveData_8008B570.field_0 & 2))
         {
-            f = 0;
+            uncapturable = 0;
             for (i = 4; i < 7; i++)
             {
-                m = GetEnemyAliveMask_800A248C() & (1 << i);
-                if (m != 0)
+                alive = GetEnemyAliveMask_800A248C() & (1 << i);
+                if (alive != 0)
                 {
                     if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(i - 4)))
                     {
-                        f = 1;
+                        uncapturable = 1;
                         break;
                     }
                 }
             }
-            if (f)
+            if (uncapturable)
             {
                 MoveBattleCameraForAction_80037828(GetUnitSide_800BC7DC(actingUnit_800C9C7C), (short)curCommand_800C9C88.kind_0, 1);
             }
@@ -364,10 +364,10 @@ void ActionStart_800BDA28(BatTask_a* t)
             }
         }
     }
-    t->next_8 = ActionWaitIdle_800BDB4C;
+    task->next_8 = ActionWaitIdle_800BDB4C;
 }
 
-void ActionWaitIdle_800BDB4C(BatTask_a* t)
+void ActionWaitIdle_800BDB4C(BatTaskEntry* task)
 {
     if (AreUnitsIdle_800BDD3C() == 1)
     {
@@ -376,11 +376,11 @@ void ActionWaitIdle_800BDB4C(BatTask_a* t)
         StartActorAction_800BDF74();
         StartReactions_800BDFAC();
         AlignActionTimings_800BE2C8();
-        t->next_8 = ActionWaitReady_800BDBB0;
+        task->next_8 = ActionWaitReady_800BDBB0;
     }
 }
 
-void ActionWaitReady_800BDBB0(BatTask_a* t)
+void ActionWaitReady_800BDBB0(BatTaskEntry* task)
 {
     if (AreUnitsReady_800BDE04() == 1)
     {
@@ -390,20 +390,20 @@ void ActionWaitReady_800BDBB0(BatTask_a* t)
         }
         removedEnemyCount_800C9D90 = 0;
         actionFrame_800C9D94 = 0;
-        t->next_8 = ActionRun_800BDC3C;
+        task->next_8 = ActionRun_800BDC3C;
     }
 }
 
-void ActionRun_800BDC3C(BatTask_a* t)
+void ActionRun_800BDC3C(BatTaskEntry* task)
 {
-    int k;
+    int remaining;
     if ((short)GetLatestHitFrame_800BE364() < actionFrame_800C9D94 && IsActionDone_800BEA94() == 1)
     {
-        while ((k = removedEnemyCount_800C9D90--) != 0)
+        while ((remaining = removedEnemyCount_800C9D90--) != 0)
         {
             RemoveEnemy_800A2924(removedEnemies_800C9DD0[removedEnemyCount_800C9D90]);
         }
-        t->f0 = (t->f0 & ~1) | 0x8000;
+        task->flags_0 = (task->flags_0 & ~1) | 0x8000;
         battleFlags_800B1228 &= ~0x1000;
     }
     else
@@ -416,28 +416,28 @@ void ActionRun_800BDC3C(BatTask_a* t)
 int AreUnitsIdle_800BDD3C()
 {
     unsigned char i;
-    int r;
-    int m;
+    int idle;
+    int alive;
     if (saveData_8008B570.field_0 & 0x20)
     {
         return 1;
     }
     if (summonedUnit_800C9C82 == 0)
     {
-        r = IsLevantIdle_800A89F0();
+        idle = IsLevantIdle_800A89F0();
     }
     else
     {
-        r = IsSummonedMinionIdle_800C0D60();
+        idle = IsSummonedMinionIdle_800C0D60();
     }
-    if (r == 0)
+    if (idle == 0)
     {
         return 0;
     }
     for (i = 4; i < 7; i++)
     {
-        m = GetEnemyAliveMask_800A248C() & (1 << i);
-        if (m != 0)
+        alive = GetEnemyAliveMask_800A248C() & (1 << i);
+        if (alive != 0)
         {
             if (IsEnemyIdle_800A2550(i - 4) == 0)
             {
@@ -451,29 +451,29 @@ int AreUnitsIdle_800BDD3C()
 int AreUnitsReady_800BDE04()
 {
     unsigned char i;
-    int r;
-    int m;
+    int result;
+    int bit;
     if (saveData_8008B570.field_0 & 0x20)
     {
         return 1;
     }
     if (summonedUnit_800C9C82 == 0)
     {
-        r = IsLevantReady_800A8BE4();
+        result = IsLevantReady_800A8BE4();
     }
     else
     {
-        r = IsSummonedMinionReady_800C0D88();
+        result = IsSummonedMinionReady_800C0D88();
     }
-    if (r == 0)
+    if (result == 0)
     {
         return 0;
     }
     for (i = 4; i < 7; i++)
     {
-        r = GetEnemyAliveMask_800A248C();
-        m = 1 << i;
-        if (r & m)
+        result = GetEnemyAliveMask_800A248C();
+        bit = 1 << i;
+        if (result & bit)
         {
             if (IsEnemyReady_800A2594(i - 4) == 0)
             {
@@ -486,38 +486,38 @@ int AreUnitsReady_800BDE04()
 
 void FaceActorAndTargets_800BDEBC()
 {
-    int x;
-    int y;
-    int ny;
+    int actors;
+    int targets;
+    int newTargets;
     if (!(saveData_8008B570.field_0 & 0x20))
     {
-        x = curCommand_800C9C88.mask_8;
-        if (x & 0xF)
+        actors = curCommand_800C9C88.mask_8;
+        if (actors & 0xF)
         {
-            x &= ~0xE;
-            x |= 1;
+            actors &= ~0xE;
+            actors |= 1;
         }
-        y = curCommand_800C9C88.targets_C;
-        if (y & 0xF)
+        targets = curCommand_800C9C88.targets_C;
+        if (targets & 0xF)
         {
-            y &= ~0xE;
-            y |= 1;
+            targets &= ~0xE;
+            targets |= 1;
         }
-        ny = y & ~x;
-        x = x & ~y;
-        y = ny;
-        if (y)
+        newTargets = targets & ~actors;
+        actors = actors & ~targets;
+        targets = newTargets;
+        if (targets)
         {
             if (curCommand_800C9C88.mask_8)
             {
-                TurnUnitsToward_800BC468(y, curCommand_800C9C88.mask_8);
+                TurnUnitsToward_800BC468(targets, curCommand_800C9C88.mask_8);
             }
         }
-        if (x)
+        if (actors)
         {
             if (curCommand_800C9C88.targets_C)
             {
-                TurnUnitsToward_800BC468(x, curCommand_800C9C88.targets_C);
+                TurnUnitsToward_800BC468(actors, curCommand_800C9C88.targets_C);
             }
         }
     }
@@ -531,46 +531,46 @@ void StartActorAction_800BDF74()
 void StartReactions_800BDFAC()
 {
     unsigned char i;
-    BatPair_a t;
+    BatPair_a timing;
     for (i = 0; i < 7; i++)
     {
         if (actingUnit_800C9C7C == i)
         {
-            t.hit_0 = 0;
-            t.end_2 = 0;
+            timing.hit_0 = 0;
+            timing.end_2 = 0;
         }
         else
         {
-            StartUnitAction_800BE058(&t, &unitReactions_800C9CC8[i], 1, i);
+            StartUnitAction_800BE058(&timing, &unitReactions_800C9CC8[i], 1, i);
         }
-        reactionTimings_800C9DA0[i] = t;
+        reactionTimings_800C9DA0[i] = timing;
     }
 }
 
 BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReaction, int unit)
 {
-    BatPair_a r;
+    BatPair_a timing;
     if ((saveData_8008B570.field_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
     {
-        r.hit_0 = 0;
-        r.end_2 = 0;
+        timing.hit_0 = 0;
+        timing.end_2 = 0;
     }
     else
     {
         switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            StartLevantAction_800A8A30(&r, cmd, isReaction);
+            StartLevantAction_800A8A30(&timing, cmd, isReaction);
             break;
         case 1:
-            StartMinionAction_800C0DDC(&r, cmd, isReaction);
+            StartMinionAction_800C0DDC(&timing, cmd, isReaction);
             break;
         case 2:
-            StartEnemyCommandAction_800A2684(&r, cmd, isReaction);
+            StartEnemyCommandAction_800A2684(&timing, cmd, isReaction);
             break;
         }
     }
-    *out = r;
+    *out = timing;
     return out;
 }
 
@@ -611,13 +611,13 @@ void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
 
 void AlignActionTimings_800BE2C8()
 {
-    int m = GetLatestHitFrame_800BE364();
+    int latest = GetLatestHitFrame_800BE364();
     unsigned char i;
-    actorHitShift_800C9DBC = m - actorTiming_800C9D98[0];
+    actorHitShift_800C9DBC = latest - actorTiming_800C9D98[0];
     actorTiming_800C9D98[1] += actorHitShift_800C9DBC;
     for (i = 0; i < 7; i++)
     {
-        reactionHitFrames_800C9DC0[i] = m - reactionTimings_800C9DA0[i].hit_0;
+        reactionHitFrames_800C9DC0[i] = latest - reactionTimings_800C9DA0[i].hit_0;
         reactionTimings_800C9DA0[i].end_2 += reactionHitFrames_800C9DC0[i];
     }
 }
@@ -625,21 +625,21 @@ void AlignActionTimings_800BE2C8()
 int GetLatestHitFrame_800BE364()
 {
     unsigned char i;
-    short m = actorTiming_800C9D98[0];
+    short latest = actorTiming_800C9D98[0];
     for (i = 0; i < 7; i++)
     {
-        if (m < reactionTimings_800C9DA0[i].hit_0)
+        if (latest < reactionTimings_800C9DA0[i].hit_0)
         {
-            m = reactionTimings_800C9DA0[i].hit_0;
+            latest = reactionTimings_800C9DA0[i].hit_0;
         }
     }
-    return m;
+    return latest;
 }
 
 void UpdateAction_800BE3C0()
 {
     unsigned char i;
-    int v;
+    int kind;
     if (actorHitShift_800C9DBC == actionFrame_800C9D94 && actingUnit_800C9C7C < 7)
     {
         TriggerUnitAction_800BE14C(&curCommand_800C9C88, 0, actingUnit_800C9C7C);
@@ -650,16 +650,16 @@ void UpdateAction_800BE3C0()
             PlaySfx_80031494(0x72);
         }
         StartHitNumber_800BF3DC(actingUnit_800C9C7C, 1, actorMpChange_800C9C80, GetUnitPos_800BC6CC(actingUnit_800C9C7C), 0);
-        v = curCommand_800C9C88.kind_0;
-        if (v == 5 || v == 0x1A)
+        kind = curCommand_800C9C88.kind_0;
+        if (kind == 5 || kind == 0x1A)
         {
             RemoveEmptyCocoons_800AD944(1);
         }
-        else if (v == 4)
+        else if (kind == 4)
         {
             RemoveInventory_800AD1E0(curCommand_800C9C88.arg_4, 1, 0);
         }
-        else if (v == 0x13)
+        else if (kind == 0x13)
         {
             KillUnit_800127B8(GetUnitStatus_80014390(actingUnit_800C9C7C));
         }
@@ -669,8 +669,8 @@ void UpdateAction_800BE3C0()
         }
         if (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0 || GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 1)
         {
-            v = curCommand_800C9C88.kind_0;
-            if (v == 5)
+            kind = curCommand_800C9C88.kind_0;
+            if (kind == 5)
             {
                 if (((BatSettingsBits*)&settingsFlags_8008B58C.word)->b21 == 1)
                 {
@@ -681,7 +681,7 @@ void UpdateAction_800BE3C0()
                     StartPadVibration_80036528(0, 4);
                 }
             }
-            else if (v - 2 < 2U)
+            else if (kind - 2 < 2U)
             {
                 StartPadVibration_80036528(0, 9);
             }
@@ -719,8 +719,8 @@ void UpdateAction_800BE3C0()
         {
             if (actingUnit_800C9C7C != i)
             {
-                BatCmd_a* s = &unitReactions_800C9CC8[i];
-                if ((s->kind_0 == 5 && GetSealResultFlags_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && GetSealResultFlags_80013358(s->arg_4) == 1))
+                BatCmd_a* reaction = &unitReactions_800C9CC8[i];
+                if ((reaction->kind_0 == 5 && GetSealResultFlags_80013358(reaction->arg_4) == 1) || (reaction->kind_0 == 0x1A && GetSealResultFlags_80013358(reaction->arg_4) == 1))
                 {
                     AddEnemyItem_800A2898(i - 4);
                 }

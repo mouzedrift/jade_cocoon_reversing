@@ -138,15 +138,15 @@ void ApplyBattleCommand_800BEBB8()
     BatCmd_a cmd;
     BatResult_a res;
     UnitStatus* actor;
-    UnitStatus* m;
-    int flag;
-    int r;
+    UnitStatus* target;
+    int escaped;
+    int side;
     unsigned int i;
     int bit;
-    int a;
+    int defending;
 
     GetUnitSide_800BC7DC(actingUnit_800C9C7C);
-    flag = 1;
+    escaped = 1;
     actor = GetUnitStatus_80014390(actingUnit_800C9C7C);
     cmd = curCommand_800C9C88;
     if (curCommand_800C9C88.kind_0 == 0x12)
@@ -156,7 +156,7 @@ void ApplyBattleCommand_800BEBB8()
     }
     for (i = 0; i < 7; i++)
     {
-        r = GetUnitSide_800BC7DC(i);
+        side = GetUnitSide_800BC7DC(i);
         bit = 1 << i;
         unitReactions_800C9CC8[i].kind_0 = 0x14;
         unitReactions_800C9CC8[i].arg_4 = 0;
@@ -164,14 +164,14 @@ void ApplyBattleCommand_800BEBB8()
         unitReactions_800C9CC8[i].targets_C = 0;
         if (curCommand_800C9C88.targets_C & bit)
         {
-            m = GetUnitStatus_80014390(i & 0xFF);
+            target = GetUnitStatus_80014390(i & 0xFF);
             res.areaElement_24 = shownAreaElement_800C9D82;
             res.fixedElement_26 = (signed char)fixedStageElement_800C9D83;
             cmd.targets_C = bit;
-            ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
-            if (encounterRecord_800ADE78.f0 == 1)
+            ResolveBattleAction_80012BB0(actor, target, &cmd, &res);
+            if (encounterRecord_800ADE78.active_0 == 1)
             {
-                sub_800B4390(actor, m, &curCommand_800C9C88, &res, &encounterRecord_800ADE78);
+                sub_800B4390(actor, target, &curCommand_800C9C88, &res, &encounterRecord_800ADE78);
             }
             areaElement_800C9D84 = res.areaElement_24;
             unitHpDamage_800C9D38[i] = res.hpDamage_1C;
@@ -198,25 +198,25 @@ void ApplyBattleCommand_800BEBB8()
             }
             if (unitHpDamage_800C9D38[i] > 0)
             {
-                if (m->hp_8.cur_0 < unitHpDamage_800C9D38[i])
+                if (target->hp_8.cur_0 < unitHpDamage_800C9D38[i])
                 {
-                    unitHpDamage_800C9D38[i] = m->hp_8.cur_0;
+                    unitHpDamage_800C9D38[i] = target->hp_8.cur_0;
                 }
             }
-            else if (unitHpDamage_800C9D38[i] < m->hp_8.cur_0 - m->hp_8.max_2)
+            else if (unitHpDamage_800C9D38[i] < target->hp_8.cur_0 - target->hp_8.max_2)
             {
-                unitHpDamage_800C9D38[i] = m->hp_8.cur_0 - m->hp_8.max_2;
+                unitHpDamage_800C9D38[i] = target->hp_8.cur_0 - target->hp_8.max_2;
             }
             if (unitMpDamage_800C9D48[i] > 0)
             {
-                if (m->mp_C.cur_0 < unitMpDamage_800C9D48[i])
+                if (target->mp_C.cur_0 < unitMpDamage_800C9D48[i])
                 {
-                    unitMpDamage_800C9D48[i] = m->mp_C.cur_0;
+                    unitMpDamage_800C9D48[i] = target->mp_C.cur_0;
                 }
             }
-            else if (unitMpDamage_800C9D48[i] < m->mp_C.cur_0 - m->mp_C.max_2)
+            else if (unitMpDamage_800C9D48[i] < target->mp_C.cur_0 - target->mp_C.max_2)
             {
-                unitMpDamage_800C9D48[i] = m->mp_C.cur_0 - m->mp_C.max_2;
+                unitMpDamage_800C9D48[i] = target->mp_C.cur_0 - target->mp_C.max_2;
             }
             if (res.actorHpCost_C != 0)
             {
@@ -237,7 +237,7 @@ void ApplyBattleCommand_800BEBB8()
                     unitReactions_800C9CC8[i].arg_4 = res.arg_2;
                     if (res.arg_2 != 0)
                     {
-                        flag = 0;
+                        escaped = 0;
                     }
                     break;
                 case 1:
@@ -254,8 +254,8 @@ void ApplyBattleCommand_800BEBB8()
                     hitSfx_800C9D78 = 0x71;
                     break;
                 case 5:
-                    a = m->status_0 & 0x8000;
-                    unitReactions_800C9CC8[i].kind_0 = a ? 0x14 : 0xC;
+                    defending = target->status_0 & 0x8000;
+                    unitReactions_800C9CC8[i].kind_0 = defending ? 0x14 : 0xC;
                     hitSfx_800C9D78 = 0x70;
                     break;
                 case 7:
@@ -270,22 +270,22 @@ void ApplyBattleCommand_800BEBB8()
                             curCommand_800C9C88.kind_0 = 0x1A;
                         }
                         SetBattleFlag_800BC838(0x40);
-                        if (r == 2)
+                        if (side == 2)
                         {
                             
                             dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
                             dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
-                            dword_800B1238[i - 4].exp_0 = m->exp_4;
-                            dword_800B1238[i - 4].level_8 = m->level_44;
+                            dword_800B1238[i - 4].exp_0 = target->exp_4;
+                            dword_800B1238[i - 4].level_8 = target->level_44;
                         }
                     }
                     break;
                 }
-                if (m->hp_8.cur_0 <= unitHpDamage_800C9D38[i] || (unitStatusInflicted_800C9CA0[i] & 0x600))
+                if (target->hp_8.cur_0 <= unitHpDamage_800C9D38[i] || (unitStatusInflicted_800C9CA0[i] & 0x600))
                 {
-                    unitHpDamage_800C9D38[i] = m->hp_8.cur_0;
+                    unitHpDamage_800C9D38[i] = target->hp_8.cur_0;
                     unitReactions_800C9CC8[i].kind_0 = 0xB;
-                    if (r == 2)
+                    if (side == 2)
                     {
                         SetBattleFlag_800BC838(0x40);
                         if (IsBossSpecies_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
@@ -304,8 +304,8 @@ void ApplyBattleCommand_800BEBB8()
                         dword_800B1238[i - 4].species_4 = GetEnemySpecies_800A2BE4(i - 4);
                         dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
                         dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
-                        dword_800B1238[i - 4].exp_0 = m->exp_4;
-                        dword_800B1238[i - 4].level_8 = m->level_44;
+                        dword_800B1238[i - 4].exp_0 = target->exp_4;
+                        dword_800B1238[i - 4].level_8 = target->level_44;
                         if (TestBattleFlag_800BC820(0x100000) == 1)
                         {
                             deathSfx_800C9D80 = 0x1C;
@@ -315,7 +315,7 @@ void ApplyBattleCommand_800BEBB8()
                             deathSfx_800C9D80 = 0x6F;
                         }
                     }
-                    else if (r == 0)
+                    else if (side == 0)
                     {
                         SetBattleFlag_800BC838(4);
                         deathSfx_800C9D80 = 0x1C;
@@ -335,7 +335,7 @@ void ApplyBattleCommand_800BEBB8()
     }
     if (curCommand_800C9C88.kind_0 == 7)
     {
-        if (flag == 1)
+        if (escaped == 1)
         {
             curCommand_800C9C88.arg_4 = 0;
             if (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0)
@@ -356,9 +356,9 @@ void ApplyBattleCommand_800BEBB8()
 
 void UpdateWindowsHidden_800BF2E8()
 {
-    int v;
-    if ((GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0 && ((v = curCommand_800C9C88.kind_0) == 5 || v == 0x1A || v == 2 || v == 3 || v == 7))
-        || (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 1 && ((v = curCommand_800C9C88.kind_0) - 2 < 2U || v == 8)))
+    int kind;
+    if ((GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0 && ((kind = curCommand_800C9C88.kind_0) == 5 || kind == 0x1A || kind == 2 || kind == 3 || kind == 7))
+        || (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 1 && ((kind = curCommand_800C9C88.kind_0) - 2 < 2U || kind == 8)))
     {
         SetBattleFlag_800BC838(0x8000);
         SetBattleFlag_800BC838(0x10000);
@@ -372,115 +372,115 @@ void UpdateWindowsHidden_800BF2E8()
 
 void FlashScreenWhite_800BF3AC()
 {
-    unsigned char buf[3];
-    buf[0] = 0xFF;
-    buf[1] = 0xFF;
-    buf[2] = 0xFF;
-    StartScreenFlash_8001C02C(buf);
+    unsigned char rgb[3];
+    rgb[0] = 0xFF;
+    rgb[1] = 0xFF;
+    rgb[2] = 0xFF;
+    StartScreenFlash_8001C02C(rgb);
 }
 
-void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14)
+void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset)
 {
-    EventEntry* p = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
-    if (p)
+    EventEntry* entry = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
+    if (entry)
     {
-        BatHitNum_a* q = p->buffer;
-        p->flags = (p->flags | 1) & 0xFFFF7FFF;
-        q->kind_0 = kind;
-        q->frame_8 = 0;
-        q->alpha_C = 0;
-        q->amount_4 = amount;
-        q->pos_10 = (unsigned short*)pos;
-        q->f14 = f14;
-        q->unit_18 = unit;
-        p->cb_8 = (EventEntryFn)HitNumberTask_800BF4D0;
+        BatHitNum_a* hit = entry->buffer;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        hit->kind_0 = kind;
+        hit->frame_8 = 0;
+        hit->alpha_C = 0;
+        hit->amount_4 = amount;
+        hit->pos_10 = (unsigned short*)pos;
+        hit->f14 = lineOffset;
+        hit->unit_18 = unit;
+        entry->cb_8 = (EventEntryFn)HitNumberTask_800BF4D0;
     }
 }
 
 int AnyHitNumberActive_800BF47C()
 {
-    EventNode* h = hitNumberTasks_8008D778;
-    EventNode* n;
+    EventNode* head = hitNumberTasks_8008D778;
+    EventNode* node;
     int i = 0;
-    int cnt = h->count;
-    for (n = h; i < cnt; i++)
+    int cnt = head->count;
+    for (node = head; i < cnt; i++)
     {
-        if ((n->entry.flags & 0x8001) == 1)
+        if ((node->entry.flags & 0x8001) == 1)
         {
             return 1;
         }
-        n = n->next;
+        node = node->next;
     }
     return 0;
 }
 
-void HitNumberTask_800BF4D0(EventEntry* t, BatHitNum_a* u)
+void HitNumberTask_800BF4D0(EventEntry* task, BatHitNum_a* hit)
 {
     DVECTOR sxy;
-    SVECTOR v;
-    long p;
+    SVECTOR rel;
+    long depth;
     long flag;
-    int x;
-    v.vx = u->pos_10[0];
-    v.vy = u->pos_10[2];
-    v.vz = u->pos_10[4];
-    v.vx -= cameraEye_8008D600.vx;
-    v.vy -= cameraEye_8008D600.vy;
-    v.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&v, (long*)&sxy, &p, &flag);
-    u->frame_8++;
-    if (u->frame_8 > 0x10)
+    int step;
+    rel.vx = hit->pos_10[0];
+    rel.vy = hit->pos_10[2];
+    rel.vz = hit->pos_10[4];
+    rel.vx -= cameraEye_8008D600.vx;
+    rel.vy -= cameraEye_8008D600.vy;
+    rel.vz -= cameraEye_8008D600.vz;
+    RotTransPers(&rel, (long*)&sxy, &depth, &flag);
+    hit->frame_8++;
+    if (hit->frame_8 > 0x10)
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
         return;
     }
-    if (u->frame_8 > 8)
+    if (hit->frame_8 > 8)
     {
-        u->alpha_C -= 4;
+        hit->alpha_C -= 4;
     }
     else
     {
-        u->alpha_C += 4;
+        hit->alpha_C += 4;
     }
-    x = u->amount_4 / (0x11 - u->frame_8);
-    x = -x;
-    u->amount_4 += x;
-    if (u->kind_0 == 0)
+    step = hit->amount_4 / (0x11 - hit->frame_8);
+    step = -step;
+    hit->amount_4 += step;
+    if (hit->kind_0 == 0)
     {
-        AdjustUnitStatById_800127D0(u->unit_18, 0, x, 0);
-        if (GetUnitStatus_80014390((unsigned char)u->unit_18)->hp_8.cur_0 <= 0)
+        AdjustUnitStatById_800127D0(hit->unit_18, 0, step, 0);
+        if (GetUnitStatus_80014390((unsigned char)hit->unit_18)->hp_8.cur_0 <= 0)
         {
-            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)u->unit_18));
+            KillUnit_800127B8(GetUnitStatus_80014390((unsigned char)hit->unit_18));
         }
     }
-    if (u->kind_0 == 1)
+    if (hit->kind_0 == 1)
     {
-        AdjustUnitStatById_800127D0(u->unit_18, 2, x, 0);
+        AdjustUnitStatById_800127D0(hit->unit_18, 2, step, 0);
     }
 }
 
 #if 0 // Not matched: cse keeps 500 in a register for case 2 (original reloads it), which reorders the init stores; tried if-chains, struct, returns, default
-void InitTurnGauges_800BF648(short* p, int mode)
+void InitTurnGauges_800BF648(short* gauges, int mode)
 {
-    p[0] = 500;
-    p[1] = 0;
-    p[2] = 0;
-    p[3] = 0;
-    p[4] = 0;
-    p[5] = -0x2BC;
-    p[6] = -0x578;
+    gauges[0] = 500;
+    gauges[1] = 0;
+    gauges[2] = 0;
+    gauges[3] = 0;
+    gauges[4] = 0;
+    gauges[5] = -0x2BC;
+    gauges[6] = -0x578;
     switch (mode)
     {
     case 1:
-        p[0] = 1000;
+        gauges[0] = 1000;
         return;
     case 0:
         return;
     case 2:
-        p[0] = 0;
-        p[4] = 1000;
-        p[5] = 500;
-        p[6] = 0x14D;
+        gauges[0] = 0;
+        gauges[4] = 1000;
+        gauges[5] = 500;
+        gauges[6] = 0x14D;
         return;
     }
 }
@@ -489,7 +489,7 @@ void InitTurnGauges_800BF648(short* p, int mode)
 INCLUDE_OVERLAY_ASM(battle, InitTurnGauges_800BF648);
 
 #if 0 // Not matched: body matches with a goto inner loop (a for loop gets strength-reduced); prologue saves are not interleaved and a/b take s3/s2 in the original (s2/s3 here)
-int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summoned)
+int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summonedUnit)
 {
     int next;
     unsigned int i;
@@ -498,7 +498,7 @@ int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summoned)
     {
         i = 0;
     loop:
-        if (i >= 4 || summoned == i)
+        if (i >= 4 || summonedUnit == i)
         {
             gauges[i] += GetUnitTurnSpeed_800BF784(i);
             if ((short)gauges[i] >= 1000)
@@ -520,20 +520,20 @@ int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summoned)
 
 INCLUDE_OVERLAY_ASM(battle, AdvanceTurnGauges_800BF6BC);
 
-void ResetTurnGauge_800BF770(short* p, int i)
+void ResetTurnGauge_800BF770(short* gauges, int unit)
 {
-    p[i] = 0x320;
+    gauges[unit] = 0x320;
 }
 
 int GetUnitTurnSpeed_800BF784(int unit)
 {
     unsigned char stats[0x18];
-    UnitStatus* p = GetUnitStatus_80014390(unit & 0xFF);
-    if (p == 0)
+    UnitStatus* status = GetUnitStatus_80014390(unit & 0xFF);
+    if (status == 0)
     {
         return 0;
     }
-    CalcEquippedStats_80033624(stats, p);
+    CalcEquippedStats_80033624(stats, status);
     return stats[4] + 10;
 }
 
@@ -546,45 +546,45 @@ typedef struct BatChance_a
 extern BatChance_a statusCureChances_800C9138[];
 extern int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx);
 extern unsigned int Rand100_80013E30();
-void TickUnitStatus_800BF7C4(UnitStatus* p, short* hpChange, short* mpChange)
+void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpChange)
 {
-    unsigned int f = p->status_0;
-    unsigned int f0 = f;
+    unsigned int status = unitStatus->status_0;
+    unsigned int oldStatus = status;
     int i;
-    BatChance_a* e;
+    BatChance_a* cure;
     *hpChange = 0;
     *mpChange = 0;
-    f = AdvancePetrification_800BFA34(f);
-    if ((GetEquipmentId_8003356C(p, 2) & 0xFF) == 0x10)
+    status = AdvancePetrification_800BFA34(status);
+    if ((GetEquipmentId_8003356C(unitStatus, 2) & 0xFF) == 0x10)
     {
-        f |= 0x4000;
+        status |= 0x4000;
     }
-    if (f0 & 1)
+    if (oldStatus & 1)
     {
-        *hpChange = p->hp_8.max_2 / 10;
-        f &= ~2;
+        *hpChange = unitStatus->hp_8.max_2 / 10;
+        status &= ~2;
     }
-    else if (f & 0x4000)
+    else if (status & 0x4000)
     {
-        *hpChange = -(short)(p->hp_8.max_2 / 20);
+        *hpChange = -(short)(unitStatus->hp_8.max_2 / 20);
     }
-    if (f0 & 0x8000)
+    if (oldStatus & 0x8000)
     {
-        *mpChange = -((p->level_44 >> 2) + 3);
-        f &= ~0x8000;
+        *mpChange = -((unitStatus->level_44 >> 2) + 3);
+        status &= ~0x8000;
     }
-    if (f & 0x200)
+    if (status & 0x200)
     {
-        *hpChange = p->hp_8.cur_0;
+        *hpChange = unitStatus->hp_8.cur_0;
     }
     i = 0;
 loop:
-    e = &statusCureChances_800C9138[i];
-    if (f0 & e->mask)
+    cure = &statusCureChances_800C9138[i];
+    if (oldStatus & cure->mask)
     {
-        if (Rand100_80013E30() >= e->chance)
+        if (Rand100_80013E30() >= cure->chance)
         {
-            f &= ~e->mask;
+            status &= ~cure->mask;
         }
     }
     i++;
@@ -592,7 +592,7 @@ loop:
     {
         goto loop;
     }
-    p->status_0 = f;
+    unitStatus->status_0 = status;
 }
 #endif
 
@@ -600,27 +600,27 @@ INCLUDE_OVERLAY_ASM(battle, TickUnitStatus_800BF7C4);
 
 int IsUncapturableSpecies_800BF980(int species)
 {
-    int r = 0;
+    int result = 0;
     if (species >= 0x29)
     {
         if (species < 0x39)
         {
-            r = 1;
+            result = 1;
         }
         else if (species < 0xD3)
         {
             if (species > 0xC8)
             {
-                r = 1;
+                result = 1;
             }
         }
     }
-    return r;
+    return result;
 }
 
 int IsBossSpecies_800BF9B4(int species)
 {
-    int r = 0;
+    int result = 0;
     switch (species)
     {
     case 0x29:
@@ -631,33 +631,33 @@ int IsBossSpecies_800BF9B4(int species)
     case 0x32:
     case 0x33:
     case 0x37:
-        r = 1;
+        result = 1;
         break;
     }
-    return r;
+    return result;
 }
 
 
 #if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void MarkSpeciesCaptured_800BF9F0(int species)
 {
-    unsigned int x = species;
-    unsigned int* p = allMinionsBitfields_8008BD84;
-    if (x < 0xE0)
+    unsigned int id = species;
+    unsigned int* bits = allMinionsBitfields_8008BD84;
+    if (id < 0xE0)
     {
-        unsigned int* q = &p[x >> 5];
-        int m = 1 << (x & 0x1F);
-        *q = m | *q;
+        unsigned int* word = &bits[id >> 5];
+        int bit = 1 << (id & 0x1F);
+        *word = bit | *word;
     }
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(battle, MarkSpeciesCaptured_800BF9F0);
 
-int AdvancePetrification_800BFA34(int x)
+int AdvancePetrification_800BFA34(int status)
 {
-    int y = x & 0x3F8;
-    return (x & ~0x3F8) | (y << 1);
+    int stage = status & 0x3F8;
+    return (status & ~0x3F8) | (stage << 1);
 }
 
 #if 0 // Not matched: only the last test: andi goes to v1 instead of v0 (and branch sense/layout); tried ternary, if/else, r variable, int params
@@ -709,40 +709,40 @@ int GetStatusCommand_800BFA4C(unsigned int status, unsigned int prevStatus)
 
 INCLUDE_OVERLAY_ASM(battle, GetStatusCommand_800BFA4C);
 
-void SetHitVariantForCommand_800BFAF8(int x)
+void SetHitVariantForCommand_800BFAF8(int kind)
 {
-    int a;
-    switch (x)
+    int variant;
+    switch (kind)
     {
     case 9:
-        a = 1;
+        variant = 1;
         break;
     case 7:
-        a = 8;
+        variant = 8;
         break;
     case 11:
-        a = 4;
+        variant = 4;
         break;
     case 14:
-        a = 0;
+        variant = 0;
         break;
     case 18:
-        a = 2;
+        variant = 2;
         break;
     case 2:
-        a = 3;
+        variant = 3;
         break;
     case 13:
-        a = 5;
+        variant = 5;
         break;
     case 21:
-        a = 7;
+        variant = 7;
         break;
     case 22:
     default:
         return;
     }
-    SetHitVariant_80018430(a);
+    SetHitVariant_80018430(variant);
 }
 
 void StartBattleWindows_800BFB80()
@@ -773,47 +773,47 @@ void ResetWindowHighlights_800BFC10()
 
 void StartEnemyWindows_800BFC40()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(enemyWindowsLayoutTask_8008B568);
-    int m;
-    int n;
+    EventEntry* entry = AllocEventEntry_80043AF8(enemyWindowsLayoutTask_8008B568);
+    int alive;
+    int count;
     int i;
-    int b;
-    if (e)
+    int bit;
+    if (entry)
     {
-        m = GetEnemyAliveMask_800A248C();
-        n = GetCapturedMinionsFromBitfield_8003BA58(m);
+        alive = GetEnemyAliveMask_800A248C();
+        count = GetCapturedMinionsFromBitfield_8003BA58(alive);
         if (GetActiveSwapEnemy_800A2AB4())
         {
-            m = 0x10;
+            alive = 0x10;
         }
         enemyWindowFlags_800C9DF8 = 0;
         enemyWindowMask_800C9E24 = 0;
-        e->cb_8 = (EventEntryFn)EnemyWindowsLayoutTask_800BFDEC;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        entry->cb_8 = (EventEntryFn)EnemyWindowsLayoutTask_800BFDEC;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         for (i = 0; i < 3; i++)
         {
-            b = m & (1 << (i + 4));
-            if (b != 0)
+            bit = alive & (1 << (i + 4));
+            if (bit != 0)
             {
-                e = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
-                if (e)
+                entry = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
+                if (entry)
                 {
-                    BatXY_a* pp = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((n - 1) * 12 + i * 4));
-                    BatUnitWin_a* q;
-                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
-                    q = e->buffer;
-                    q->slot_0 = i;
-                    q->frame_4 = 0;
-                    q->from_8[0] = pp->x;
-                    q->from_8[1] = pp->y;
-                    q->from_8[2] = 0x64;
-                    q->from_8[3] = 0x29;
-                    e->cb_8 = (EventEntryFn)EnemyWindowTask_800C0074;
-                    enemyWindows_800C9E28[i] = q;
-                    enemyWindowPos_800C9E18[i].x = pp->x;
-                    enemyWindowPos_800C9E18[i].x = pp->x;
-                    enemyWindowPos_800C9E18[i].y = pp->y;
-                    enemyWindowTasks_800C9E08[i] = e;
+                    BatXY_a* layout = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + i * 4));
+                    BatUnitWin_a* win;
+                    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+                    win = entry->buffer;
+                    win->slot_0 = i;
+                    win->frame_4 = 0;
+                    win->from_8[0] = layout->x;
+                    win->from_8[1] = layout->y;
+                    win->from_8[2] = 0x64;
+                    win->from_8[3] = 0x29;
+                    entry->cb_8 = (EventEntryFn)EnemyWindowTask_800C0074;
+                    enemyWindows_800C9E28[i] = win;
+                    enemyWindowPos_800C9E18[i].x = layout->x;
+                    enemyWindowPos_800C9E18[i].x = layout->x;
+                    enemyWindowPos_800C9E18[i].y = layout->y;
+                    enemyWindowTasks_800C9E08[i] = entry;
                 }
             }
         }
@@ -822,30 +822,30 @@ void StartEnemyWindows_800BFC40()
 
 void EnemyWindowsLayoutTask_800BFDEC()
 {
-    int m;
-    int n;
-    int diff;
+    int alive;
+    int count;
+    int removed;
     int i;
     int k;
     int one;
     int bit;
-    BatXY_a* pp;
-    m = GetEnemyAliveMask_800A248C();
-    if (m != 0 && GetActiveSwapEnemy_800A2AB4() != 0)
+    BatXY_a* layout;
+    alive = GetEnemyAliveMask_800A248C();
+    if (alive != 0 && GetActiveSwapEnemy_800A2AB4() != 0)
     {
-        m = 0x10;
+        alive = 0x10;
     }
-    n = GetCapturedMinionsFromBitfield_8003BA58(m);
-    if (enemyWindowMask_800C9E24 != m)
+    count = GetCapturedMinionsFromBitfield_8003BA58(alive);
+    if (enemyWindowMask_800C9E24 != alive)
     {
-        diff = (enemyWindowMask_800C9E24 | m) ^ m;
-        enemyWindowMask_800C9E24 = m;
+        removed = (enemyWindowMask_800C9E24 | alive) ^ alive;
+        enemyWindowMask_800C9E24 = alive;
         one = 1;
         enemyWindowFlags_800C9DF8 |= one;
         enemyWindowSlide_800C9E00 = 0;
         for (i = 0; i < 3; i++)
         {
-            if (diff & (one << (i + 4)))
+            if (removed & (one << (i + 4)))
             {
                 if (GetActiveSwapEnemy_800A2AB4() != 2)
                 {
@@ -857,7 +857,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
                     SetBattleFlag_800BC838(0x10000);
                 }
             }
-            if (m & (one << (i + 4)))
+            if (alive & (one << (i + 4)))
             {
                 enemyWindowPos_800C9E18[i].x = enemyWindows_800C9E28[i]->from_8[0];
                 enemyWindowPos_800C9E18[i].y = enemyWindows_800C9E28[i]->from_8[1];
@@ -872,11 +872,11 @@ void EnemyWindowsLayoutTask_800BFDEC()
             k = 0;
             for (i = 0, bit = 1; i < 3; i++)
             {
-                if (m & (bit << (i + 4)))
+                if (alive & (bit << (i + 4)))
                 {
-                    pp = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((n - 1) * 12 + k * 4));
-                    enemyWindows_800C9E28[i]->from_8[0] += (pp->x - enemyWindows_800C9E28[i]->from_8[0]) * enemyWindowSlide_800C9E00 >> 2;
-                    enemyWindows_800C9E28[i]->from_8[1] += (pp->y - enemyWindows_800C9E28[i]->from_8[1]) * enemyWindowSlide_800C9E00 >> 2;
+                    layout = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((count - 1) * 12 + k * 4));
+                    enemyWindows_800C9E28[i]->from_8[0] += (layout->x - enemyWindows_800C9E28[i]->from_8[0]) * enemyWindowSlide_800C9E00 >> 2;
+                    enemyWindows_800C9E28[i]->from_8[1] += (layout->y - enemyWindows_800C9E28[i]->from_8[1]) * enemyWindowSlide_800C9E00 >> 2;
                     k++;
                 }
             }
@@ -890,53 +890,53 @@ void EnemyWindowsLayoutTask_800BFDEC()
 
 // Matched
 extern void DrawUnitStatusWindow_8002F1C8();
-void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
+void EnemyWindowTask_800C0074(EventEntry* task, void* arg)
 {
-    int k;
-    UnitStatus* m;
-    int r;
-    BatUnitWin_a* u;
+    int slot;
+    UnitStatus* status;
+    int swap;
+    BatUnitWin_a* win;
     if (battleFlags_800B1228 & 0x10000)
     {
         return;
     }
-    u = arg;
-    r = GetActiveSwapEnemy_800A2AB4();
-    if (r == 1)
-        k = 0;
+    win = arg;
+    swap = GetActiveSwapEnemy_800A2AB4();
+    if (swap == 1)
+        slot = 0;
     else if (GetActiveSwapEnemy_800A2AB4() == 2)
-        k = 1;
+        slot = 1;
     else
-        k = u->slot_0;
-    m = GetUnitStatus_80014390((k + 4) & 0xFF);
+        slot = win->slot_0;
+    status = GetUnitStatus_80014390((slot + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
-    InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
-    if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(k)))
+    InterpolateWindowRect_8004196C(win->rect_10, win->from_8, win->frame_4, 4, 9);
+    if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(slot)))
     {
-        DrawUnitStatusWindow_8002F1C8(m, enemyGaugePreview_800C9164[k], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[k], u->rect_10, 10, 1);
+        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], win->rect_10, 10, 1);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(m, enemyGaugePreview_800C9164[k], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[k], u->rect_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], win->rect_10, 10, 0);
     }
-    u->frame_4++;
-    AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
+    win->frame_4++;
+    AddDrawAreaPrim_8003326C(win->rect_10, pOT_8008D454 + 10);
 }
 
 void StartActorWindow_800C01D8()
 {
-    EventEntry* r = AllocEventEntry_80043AF8(actorWindowTask_8008D4B0);
-    if (r != 0)
+    EventEntry* entry = AllocEventEntry_80043AF8(actorWindowTask_8008D4B0);
+    if (entry != 0)
     {
-        BatWin_b* p = r->buffer;
-        r->flags = (r->flags | 1) & ~0x8000;
-        p->frame_0 = 0;
-        p->from_4[0] = 0x6E;
-        p->from_4[1] = 0xAC;
-        p->from_4[2] = 0x64;
-        p->from_4[3] = 0x29;
-        r->cb_8 = (EventEntryFn)ActorWindowTask_800C0254;
+        BatWin_b* win = entry->buffer;
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        win->frame_0 = 0;
+        win->from_4[0] = 0x6E;
+        win->from_4[1] = 0xAC;
+        win->from_4[2] = 0x64;
+        win->from_4[3] = 0x29;
+        entry->cb_8 = (EventEntryFn)ActorWindowTask_800C0254;
     }
 }
 
@@ -952,14 +952,14 @@ extern void DrawWindow_80042460(void* rect, BatBox_b* box, void* ot, int a3);
 extern unsigned short uiColor_8008B590;
 
 // Matched
-void ActorWindowTask_800C0254(EventEntry* t, void* arg)
+void ActorWindowTask_800C0254(EventEntry* task, void* arg)
 {
-    BatWin_b* u;
+    BatWin_b* win;
     short pos[4];
     BatBox_b box;
     short rect[4];
-    UnitStatus* m;
-    if (encounterRecord_800ADE78.f0 == 1 && actingUnit_800C9C7C == 10)
+    UnitStatus* status;
+    if (encounterRecord_800ADE78.active_0 == 1 && actingUnit_800C9C7C == 10)
     {
         return;
     }
@@ -967,23 +967,23 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
     {
         return;
     }
-    u = arg;
-    m = GetUnitStatus_80014390(shownUnit_800C9C99);
+    win = arg;
+    status = GetUnitStatus_80014390(shownUnit_800C9C99);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
-    InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
+    InterpolateWindowRect_8004196C(win->rect_C, win->from_4, win->frame_0, 4, 9);
     if (shownUnit_800C9C99 == 0)
     {
-        DrawUnitStatusWindow_8002F1C8(m, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, u->rect_C, 10, 2);
+        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, win->rect_C, 10, 2);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(m, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, u->rect_C, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, win->rect_C, 10, 0);
     }
     if (shownUnit_800C9C99 != 0)
     {
         pos[0] = 0xD2;
         pos[1] = 0xC0;
-        DrawMpGauge_8002F120(m, pos, previewMpChange_800C9182, 0xF);
+        DrawMpGauge_8002F120(status, pos, previewMpChange_800C9182, 0xF);
         box.c_3 = 1;
         rect[2] = 0x64;
         rect[3] = 0x15;
@@ -993,24 +993,24 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
         rect[1] = 0xC0;
         DrawWindow_80042460(rect, &box, pOT_8008D454 + 15, 0);
     }
-    u->frame_0++;
-    if (u->frame_0 >= 5)
+    win->frame_0++;
+    if (win->frame_0 >= 5)
     {
-        u->frame_0 = 4;
+        win->frame_0 = 4;
     }
-    DrawStatusIcons_8002F480(m, 0, 0xF, 0);
-    AddDrawAreaPrim_8003326C(u->rect_C, pOT_8008D454 + 10);
+    DrawStatusIcons_8002F480(status, 0, 0xF, 0);
+    AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454 + 10);
 }
 
 void StartHelpWindow_800C0440()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(helpWindowTask_8008D63C);
-    if (e)
+    EventEntry* entry = AllocEventEntry_80043AF8(helpWindowTask_8008D63C);
+    if (entry)
     {
         helpWindowText_800C9D74 = 0;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        ((BatWin_b*)e->buffer)->frame_0 = 0;
-        e->cb_8 = (EventEntryFn)HelpWindowTask_800C04A4;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        ((BatWin_b*)entry->buffer)->frame_0 = 0;
+        entry->cb_8 = (EventEntryFn)HelpWindowTask_800C04A4;
     }
 }
 
@@ -1019,11 +1019,11 @@ extern unsigned char sealOutcomeTable_800793C8[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
-void HelpWindowTask_800C04A4(EventEntry* t, BatWin_b* u)
+void HelpWindowTask_800C04A4(EventEntry* task, BatWin_b* win)
 {
-    int w;
+    int width;
     short pos[2];
-    unsigned char* g;
+    unsigned char* sealTable;
     if (padPressed_8009194C & 0x100)
     {
         saveData_8008B570.field_0 ^= 0x10;
@@ -1037,45 +1037,45 @@ void HelpWindowTask_800C04A4(EventEntry* t, BatWin_b* u)
         return;
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
-    w = MeasureTextWidth_8003E4C8(helpWindowText_800C9D74);
-    g = sealOutcomeTable_800793C8 + 0x14;
-    if (*(int*)(g + 0x24) == helpWindowText_800C9D74)
+    width = MeasureTextWidth_8003E4C8(helpWindowText_800C9D74);
+    sealTable = sealOutcomeTable_800793C8 + 0x14;
+    if (*(int*)(sealTable + 0x24) == helpWindowText_800C9D74)
     {
-        w += 0x10;
+        width += 0x10;
     }
-    u->from_4[2] = w + 4;
-    u->from_4[3] = 0x14;
-    u->from_4[0] = 0xA;
-    u->from_4[1] = 0x88;
-    pos[0] = u->from_4[0] + 2;
-    pos[1] = u->from_4[1] + 3;
+    win->from_4[2] = width + 4;
+    win->from_4[3] = 0x14;
+    win->from_4[0] = 0xA;
+    win->from_4[1] = 0x88;
+    pos[0] = win->from_4[0] + 2;
+    pos[1] = win->from_4[1] + 3;
     DrawText_8003E91C(2, (void*)helpWindowText_800C9D74, pos, 0);
-    if (*(int*)(g + 0x24) == helpWindowText_800C9D74)
+    if (*(int*)(sealTable + 0x24) == helpWindowText_800C9D74)
     {
-        pos[0] += w;
+        pos[0] += width;
         pos[1] += 3;
         DrawNumberRightAlignedFont1_8003F264(pos, GetEmptyCocoons_800AD8E4(), 0);
     }
-    InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 7);
-    DrawUiColorWindow_800424C0(u->rect_C, 0, pOT_8008D454, 0);
-    if (++u->frame_0 >= 5)
+    InterpolateWindowRect_8004196C(win->rect_C, win->from_4, win->frame_0, 4, 7);
+    DrawUiColorWindow_800424C0(win->rect_C, 0, pOT_8008D454, 0);
+    if (++win->frame_0 >= 5)
     {
-        u->frame_0 = 4;
+        win->frame_0 = 4;
     }
-    AddDrawAreaPrim_8003326C(u->rect_C, pOT_8008D454);
+    AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454);
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(battle, HelpWindowTask_800C04A4);
 
-void BuildMinionModelReq_800C064C(Minion* m, BatModelReq_a* req, int f30)
+void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq_a* req, int f30)
 {
     unsigned char ids[8];
     int counts[3];
     int self;
-    int t;
-    self = GetSpeciesModelDesc_80019C70(m->species_2)->modelId_0;
-    req->count_0 = GetTopSpecies_800338DC(m->species_4C, ids, counts);
+    int swap;
+    self = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
+    req->count_0 = GetTopSpecies_800338DC(minion->species_4C, ids, counts);
     req->ids_4[0] = GetSpeciesModelDesc_80019C70(ids[0])->modelId_0;
     req->ids_4[1] = GetSpeciesModelDesc_80019C70(ids[1])->modelId_0;
     req->ids_4[2] = GetSpeciesModelDesc_80019C70(ids[2])->modelId_0;
@@ -1120,17 +1120,17 @@ void BuildMinionModelReq_800C064C(Minion* m, BatModelReq_a* req, int f30)
         {
             req->ids_4[1] = req->ids_4[0];
             req->ids_4[0] = self;
-            t = req->nums_10[1];
+            swap = req->nums_10[1];
             req->nums_10[1] = req->nums_10[0];
-            req->nums_10[0] = t;
+            req->nums_10[0] = swap;
         }
         else if (req->ids_4[2] == self)
         {
             req->ids_4[2] = req->ids_4[0];
             req->ids_4[0] = self;
-            t = req->nums_10[2];
+            swap = req->nums_10[2];
             req->nums_10[2] = req->nums_10[0];
-            req->nums_10[0] = t;
+            req->nums_10[0] = swap;
         }
         else if (req->count_0 < 2)
         {
@@ -1149,18 +1149,18 @@ void BuildMinionModelReq_800C064C(Minion* m, BatModelReq_a* req, int f30)
             req->count_0 = 3;
         }
     }
-    req->f1C = GetRankForLevel_80019A80(m->status_84.level_44);
+    req->f1C = GetRankForLevel_80019A80(minion->status_84.level_44);
     req->f20 = req->count_0 - 1;
-    req->f28 = GetSpeciesModelDesc_80019C70(m->field_3)->modelId_0;
+    req->f28 = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
     req->f30 = f30;
-    req->angle_24 = GetElementModelAngle_800C0904(m->status_84.element_3E);
+    req->angle_24 = GetElementModelAngle_800C0904(minion->status_84.element_3E);
     if (req->angle_24 == -1000)
     {
-        req->angle_24 = GetSpeciesModelDesc_80019C70(m->field_3)->field_2 * 2;
+        req->angle_24 = GetSpeciesModelDesc_80019C70(minion->field_3)->field_2 * 2;
     }
     else
     {
-        req->angle_24 -= GetSpeciesModelDesc_80019C70(m->field_3)->field_3 * 2;
+        req->angle_24 -= GetSpeciesModelDesc_80019C70(minion->field_3)->field_3 * 2;
         if (req->angle_24 < 0)
         {
             req->angle_24 += 360;
@@ -1168,71 +1168,71 @@ void BuildMinionModelReq_800C064C(Minion* m, BatModelReq_a* req, int f30)
     }
 }
 
-int GetElementModelAngle_800C0904(unsigned char* p)
+int GetElementModelAngle_800C0904(unsigned char* elements)
 {
-    int n = 0;
+    int count = 0;
     int i;
-    int r;
+    int angle;
     for (i = 0; i < 4; i++)
     {
-        if (p[i])
+        if (elements[i])
         {
-            n++;
+            count++;
         }
     }
-    if (n == 1)
+    if (count == 1)
     {
-        r = -1000;
+        angle = -1000;
     }
-    else if (n == 2)
+    else if (count == 2)
     {
-        if (p[3] && p[1])
+        if (elements[3] && elements[1])
         {
-            if (p[1] < p[3])
+            if (elements[1] < elements[3])
             {
-                r = 0xF5;
+                angle = 0xF5;
             }
             else
             {
-                r = 0x41;
+                angle = 0x41;
             }
         }
-        else if (p[0] && p[2])
+        else if (elements[0] && elements[2])
         {
-            if (p[2] < p[0])
+            if (elements[2] < elements[0])
             {
-                r = 0x14F;
+                angle = 0x14F;
             }
             else
             {
-                r = 0x9B;
+                angle = 0x9B;
             }
         }
         else
         {
-            r = CalcElementAngle_800C09D4(p);
+            angle = CalcElementAngle_800C09D4(elements);
         }
     }
     else
     {
-        r = CalcElementAngle_800C09D4(p);
+        angle = CalcElementAngle_800C09D4(elements);
     }
-    return r;
+    return angle;
 }
 
 extern short sinTable_80084540[];
 // Matched
-int CalcElementAngle_800C09D4(unsigned char* p)
+int CalcElementAngle_800C09D4(unsigned char* elements)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;
-    t1 = sinTable_80084540[0x2E3] * p[0];
-    t2 = sinTable_80084540[0xEE3] * p[0];
-    t3 = sinTable_80084540[0xEE3] * p[3];
-    t4 = sinTable_80084540[0xAE3] * p[3];
-    t5 = sinTable_80084540[0xAE3] * p[2];
-    t6 = sinTable_80084540[0x6E3] * p[2];
-    t7 = sinTable_80084540[0x6E3] * p[1];
-    t8 = sinTable_80084540[0x2E3] * p[1];
+    t1 = sinTable_80084540[0x2E3] * elements[0];
+    t2 = sinTable_80084540[0xEE3] * elements[0];
+    t3 = sinTable_80084540[0xEE3] * elements[3];
+    t4 = sinTable_80084540[0xAE3] * elements[3];
+    t5 = sinTable_80084540[0xAE3] * elements[2];
+    t6 = sinTable_80084540[0x6E3] * elements[2];
+    t7 = sinTable_80084540[0x6E3] * elements[1];
+    t8 = sinTable_80084540[0x2E3] * elements[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 
@@ -1242,19 +1242,19 @@ void EmptyCallback_800C0A94()
 
 int GetPartyMinionMask_800C0A9C()
 {
-    int n = CountMinions_80010548(3);
-    int r = 0;
+    int count = CountMinions_80010548(3);
+    int mask = 0;
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        r |= 1 << (i + 1);
+        mask |= 1 << (i + 1);
     }
-    return r;
+    return mask;
 }
 
 int LoadSummonedMinion_800C0AEC(int slot, int* pos, int rotY)
 {
-    BatModelReq_a buf;
+    BatModelReq_a req;
     Minion* minion;
     if (GetSummonedMinionSlot_800C0D50() != -1)
     {
@@ -1266,8 +1266,8 @@ int LoadSummonedMinion_800C0AEC(int slot, int* pos, int rotY)
         return 0;
     }
     summonedMinion_800C9188 = minion;
-    BuildMinionModelReq_800C064C(minion, &buf, dword_8007DC74);
-    StartModelTask_80010850(&buf);
+    BuildMinionModelReq_800C064C(minion, &req, dword_8007DC74);
+    StartModelTask_80010850(&req);
     summonedActor_800C9190.x_4 = pos[0];
     summonedActor_800C9190.y_8 = pos[1];
     summonedActor_800C9190.z_C = pos[2];
@@ -1290,40 +1290,40 @@ int FreeSummonedMinion_800C0BA0()
 
 int CreateSummonedMinionActor_800C0BF0()
 {
-    ActorDesc s;
-    Model* m;
-    int k;
-    int x;
+    ActorDesc desc;
+    Model* model;
+    int rank;
+    int levels;
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
-    m = GetModelTaskModel_80010A44(0);
-    k = GetRankForLevel_80019A80(summonedMinion_800C9188->status_84.level_44);
-    s.modelId_0 = -1;
-    s.kind_4 = 2;
-    s.pos_8[0] = summonedActor_800C9190.x_4;
-    s.pos_8[1] = summonedActor_800C9190.y_8;
-    s.pos_8[2] = summonedActor_800C9190.z_C;
-    s.rot_14[0] = 0;
-    s.rot_14[1] = summonedActor_800C9190.rotY_10;
-    s.rot_14[2] = 0;
-    s.clutRow_1C = 3;
-    s.animIdx_20 = 4;
-    s.frame_24 = -1;
-    s.frameSpeed_28 = 0x1000;
-    s.blendDiv_2C = 4;
-    s.visible_30 = 0;
-    s.model_48 = m;
-    s.bones_34 = defaultBones_80079140;
-    s.baseScale_38 = GetModelBaseScale_80024E90(m, k);
-    s.boneScale_3C = GetModelBoneScale_80024EC8(m, k);
-    s.anims_40 = GetModelActorAnims_80024E38(m);
-    s.effectTbl_44 = GetModelEffectTable_80024E64(m);
-    s.hasMatrices_4C = 1;
-    summonedActor_800C9190.actor_0 = CreateActor_8001D45C(&s);
+    model = GetModelTaskModel_80010A44(0);
+    rank = GetRankForLevel_80019A80(summonedMinion_800C9188->status_84.level_44);
+    desc.modelId_0 = -1;
+    desc.kind_4 = 2;
+    desc.pos_8[0] = summonedActor_800C9190.x_4;
+    desc.pos_8[1] = summonedActor_800C9190.y_8;
+    desc.pos_8[2] = summonedActor_800C9190.z_C;
+    desc.rot_14[0] = 0;
+    desc.rot_14[1] = summonedActor_800C9190.rotY_10;
+    desc.rot_14[2] = 0;
+    desc.clutRow_1C = 3;
+    desc.animIdx_20 = 4;
+    desc.frame_24 = -1;
+    desc.frameSpeed_28 = 0x1000;
+    desc.blendDiv_2C = 4;
+    desc.visible_30 = 0;
+    desc.model_48 = model;
+    desc.bones_34 = defaultBones_80079140;
+    desc.baseScale_38 = GetModelBaseScale_80024E90(model, rank);
+    desc.boneScale_3C = GetModelBoneScale_80024EC8(model, rank);
+    desc.anims_40 = GetModelActorAnims_80024E38(model);
+    desc.effectTbl_44 = GetModelEffectTable_80024E64(model);
+    desc.hasMatrices_4C = 1;
+    summonedActor_800C9190.actor_0 = CreateActor_8001D45C(&desc);
     SetActorGroundMove_8001D68C(summonedActor_800C9190.actor_0, 0);
-    x = GetModelBoneGroupLevels_80024F00(m, k);
-    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, x, GetModelBoneGroupFlags_80024F38(m, k));
+    levels = GetModelBoneGroupLevels_80024F00(model, rank);
+    SetBoneGroupFlags_80019B14(summonedActor_800C9190.actor_0->bones_134, levels, GetModelBoneGroupFlags_80024F38(model, rank));
         return 1;
     }
     return 0;
@@ -1352,19 +1352,19 @@ void TurnSummonedMinionToward_800C0DB0(int pos)
 // Matched
 BatCol_a* StartMinionAction_800C0DDC(BatCol_a* out, BatCmd_a* cmd, int isReaction)
 {
-    BatCol_a buf;
+    BatCol_a timing;
     int mask;
-    memset(&buf, 0, 4);
+    memset(&timing, 0, 4);
     if (cmd->kind_0 == 0x14)
     {
-        *out = buf;
+        *out = timing;
         return out;
     }
     if (cmd->mask_8 & (mask = 1 << (summonedMinionSlot_800C918C + 1)))
     {
-        StartCommandAction_80018A4C(&buf, summonedActor_800C9190.actor_0, cmd, 0, isReaction);
+        StartCommandAction_80018A4C(&timing, summonedActor_800C9190.actor_0, cmd, 0, isReaction);
     }
-    *out = buf;
+    *out = timing;
     return out;
 }
 
@@ -1418,15 +1418,15 @@ int* GetSummonedMinionBonePos_800C0FAC()
     return summonedActor_800C9190.actor_0->bonePos_1C4;
 }
 
-void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* p)
+void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* out)
 {
-    Actor* q = summonedActor_800C9190.actor_0;
-    p->tbl_0 = q->effectTbl_14C;
-    p->pos_4 = q->pos_38;
-    p->bonePos_8 = q->bonePos_1C4;
-    p->boneMatrices_C = q->boneMatrices_1C8;
-    p->boneScale_2C = q->boneScale_144;
-    p->scale_30 = q->scale_2C;
+    Actor* actor = summonedActor_800C9190.actor_0;
+    out->tbl_0 = actor->effectTbl_14C;
+    out->pos_4 = actor->pos_38;
+    out->bonePos_8 = actor->bonePos_1C4;
+    out->boneMatrices_C = actor->boneMatrices_1C8;
+    out->boneScale_2C = actor->boneScale_144;
+    out->scale_30 = actor->scale_2C;
 }
 
 UnitSkills* GetPartyMinionSkills_800C100C(int slot)
@@ -1449,51 +1449,51 @@ unsigned int* GetPartyMinionMagicBits_800C103C(int slot)
     return 0;
 }
 
-void SeqStopTask_800C106C(unsigned int* flags, BatSeqStop_a* u)
+void SeqStopTask_800C106C(unsigned int* flags, BatSeqStop_a* seq)
 {
-    if (--u->timer_4 < 0)
+    if (--seq->timer_4 < 0)
     {
         *flags = (*flags & ~1) | 0x8000;
-        StopSeqSlot_80031334(u->slot_0);
+        StopSeqSlot_80031334(seq->slot_0);
     }
 }
 
 void PlayTimedSeq_800C10B8(int frames, int slot)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-    if (frames > 0 && e)
+    EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+    if (frames > 0 && entry)
     {
-        BatSeqStop_a* q;
+        BatSeqStop_a* seq;
         PlaySeqSlot_80031160(slot, 1);
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        q = e->buffer;
-        q->slot_0 = slot;
-        q->timer_4 = frames;
-        e->cb_8 = (EventEntryFn)SeqStopTask_800C106C;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        seq = entry->buffer;
+        seq->slot_0 = slot;
+        seq->timer_4 = frames;
+        entry->cb_8 = (EventEntryFn)SeqStopTask_800C106C;
     }
 }
 
-void SfxStopTask_800C1140(unsigned int* flags, BatSfxStop_a* u)
+void SfxStopTask_800C1140(unsigned int* flags, BatSfxStop_a* sfx)
 {
-    if (--u->timer_4 < 0)
+    if (--sfx->timer_4 < 0)
     {
         *flags = (*flags & ~1) | 0x8000;
-        SfxKeyOff_80031574(u->voice_8, u->sfx_0.id16);
+        SfxKeyOff_80031574(sfx->voice_8, sfx->sfx_0.id16);
     }
 }
 
 void PlayTimedSfx_800C1190(int frames, int sfx)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-    if (frames > 0 && e)
+    EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+    if (frames > 0 && entry)
     {
-        BatSfxStop_a* q;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        q = e->buffer;
-        q->timer_4 = frames;
-        q->voice_8 = SfxKeyOn_800314F4(sfx);
-        q->sfx_0.id = sfx;
-        e->cb_8 = (EventEntryFn)SfxStopTask_800C1140;
+        BatSfxStop_a* stop;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        stop = entry->buffer;
+        stop->timer_4 = frames;
+        stop->voice_8 = SfxKeyOn_800314F4(sfx);
+        stop->sfx_0.id = sfx;
+        entry->cb_8 = (EventEntryFn)SfxStopTask_800C1140;
     }
 }
 
@@ -1513,97 +1513,97 @@ typedef struct BatDrop_a
 } BatDrop_a;
 
 // Matched
-void DropSpriteTask_800C1220(EventEntry* t, BatDrop_a* u)
+void DropSpriteTask_800C1220(EventEntry* task, BatDrop_a* drop)
 {
-    int v[3];
-    short s[4];
-    short w[4];
-    EffectSprite* d;
-    EffectSpriteFrame* e;
-    u->vel_28[0] = u->vel_28[0] * 15 / 16;
-    u->vel_28[1] = u->vel_28[1] * 15 / 16 + u->size_8 / 8;
-    u->vel_28[2] = u->vel_28[2] * 15 / 16;
-    u->pos_10[0] += u->vel_28[0];
-    u->pos_10[1] += u->vel_28[1];
-    u->pos_10[2] += u->vel_28[2];
-    d = u->anim_40;
-    e = d->frames_8[0];
-    v[0] = u->pos_10[0];
-    v[1] = u->pos_10[1];
-    v[2] = u->pos_10[2];
-    v[0] /= 1024;
-    v[1] /= 1024;
-    v[2] /= 1024;
-    if (levantPos_8008BD18.pos.y < v[1] || u->size_8 < 0x800)
+    int pos[3];
+    short size[4];
+    short offset[4];
+    EffectSprite* sprite;
+    EffectSpriteFrame* frame;
+    drop->vel_28[0] = drop->vel_28[0] * 15 / 16;
+    drop->vel_28[1] = drop->vel_28[1] * 15 / 16 + drop->size_8 / 8;
+    drop->vel_28[2] = drop->vel_28[2] * 15 / 16;
+    drop->pos_10[0] += drop->vel_28[0];
+    drop->pos_10[1] += drop->vel_28[1];
+    drop->pos_10[2] += drop->vel_28[2];
+    sprite = drop->anim_40;
+    frame = sprite->frames_8[0];
+    pos[0] = drop->pos_10[0];
+    pos[1] = drop->pos_10[1];
+    pos[2] = drop->pos_10[2];
+    pos[0] /= 1024;
+    pos[1] /= 1024;
+    pos[2] /= 1024;
+    if (levantPos_8008BD18.pos.y < pos[1] || drop->size_8 < 0x800)
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
-    u->size_8 -= 0x40;
-    s[0] = e->size_C[0] * u->size_8 / 4096;
-    s[1] = e->size_C[1] * u->size_8 / 4096;
-    w[0] = 0x14;
-    w[1] = 0;
-    w[2] = 0;
-    u->rot_34[1] += 0x80;
-    DrawRotSprite_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
+    drop->size_8 -= 0x40;
+    size[0] = frame->size_C[0] * drop->size_8 / 4096;
+    size[1] = frame->size_C[1] * drop->size_8 / 4096;
+    offset[0] = 0x14;
+    offset[1] = 0;
+    offset[2] = 0;
+    drop->rot_34[1] += 0x80;
+    DrawRotSprite_80044010(&sprite->poly_C, pos, drop->rot_34, &frame->u_0, &frame->w_4, &frame->f8, size, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
 // Matched
-void DropTrailTask_800C1450(EventEntry* t, BatDropSrc_a* u)
+void DropTrailTask_800C1450(EventEntry* task, BatDropSrc_a* trail)
 {
-    int v[3];
-    EffectSpriteFrame* f;
+    int pos[3];
+    EffectSpriteFrame* frame;
     int i;
-    EventEntry* e;
-    BatDrop_a* q;
-    EffectSprite* s = u->path_88;
-    if (u->time_4 / 4096 < s->count_0)
+    EventEntry* entry;
+    BatDrop_a* drop;
+    EffectSprite* path = trail->path_88;
+    if (trail->time_4 / 4096 < path->count_0)
     {
-        f = s->frames_8[u->time_4 / 4096];
-        v[0] = f->pos_10[0] + u->pos_44[0];
-        v[1] = f->pos_10[1] + u->pos_44[1];
-        v[2] = f->pos_10[2] + u->pos_44[2];
-        if (((u->time_4 / 4096) & 3) == 0)
+        frame = path->frames_8[trail->time_4 / 4096];
+        pos[0] = frame->pos_10[0] + trail->pos_44[0];
+        pos[1] = frame->pos_10[1] + trail->pos_44[1];
+        pos[2] = frame->pos_10[2] + trail->pos_44[2];
+        if (((trail->time_4 / 4096) & 3) == 0)
         {
-            u->count_0++;
+            trail->count_0++;
             for (i = 0; i < 3; i++)
             {
-                e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-                if (e)
+                entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+                if (entry)
                 {
-                    e->flags = (e->flags | 1) & 0xFFFF7FFF;
-                    q = e->buffer;
-                    q->pos_10[0] = v[0];
-                    q->pos_10[1] = v[1];
-                    q->pos_10[2] = v[2];
-                    q->pos_10[0] <<= 10;
-                    q->pos_10[1] <<= 10;
-                    q->pos_10[2] <<= 10;
-                    if (u->count_0 & 1)
+                    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+                    drop = entry->buffer;
+                    drop->pos_10[0] = pos[0];
+                    drop->pos_10[1] = pos[1];
+                    drop->pos_10[2] = pos[2];
+                    drop->pos_10[0] <<= 10;
+                    drop->pos_10[1] <<= 10;
+                    drop->pos_10[2] <<= 10;
+                    if (trail->count_0 & 1)
                     {
-                        q->anim_40 = u->animA_8C;
+                        drop->anim_40 = trail->animA_8C;
                     }
                     else
                     {
-                        q->anim_40 = u->animB_90;
+                        drop->anim_40 = trail->animB_90;
                     }
-                    q->vel_28[0] = 0;
-                    q->vel_28[1] = 0;
-                    q->vel_28[2] = 0;
-                    q->rot_34[0] = 0;
-                    q->rot_34[1] = i * 0x555;
-                    q->rot_34[2] = 0;
-                    q->f0 = 0;
-                    q->size_8 = (rand() & 0xFFF) + 0x800;
-                    e->cb_8 = (EventEntryFn)DropSpriteTask_800C1220;
+                    drop->vel_28[0] = 0;
+                    drop->vel_28[1] = 0;
+                    drop->vel_28[2] = 0;
+                    drop->rot_34[0] = 0;
+                    drop->rot_34[1] = i * 0x555;
+                    drop->rot_34[2] = 0;
+                    drop->f0 = 0;
+                    drop->size_8 = (rand() & 0xFFF) + 0x800;
+                    entry->cb_8 = (EventEntryFn)DropSpriteTask_800C1220;
                 }
             }
         }
-        u->time_4 += u->step_8;
+        trail->time_4 += trail->step_8;
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 
@@ -1612,108 +1612,108 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
     int i;
     for (i = 0; i < 30; i++)
     {
-        EventEntry* ev = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-        if (ev)
+        EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+        if (entry)
         {
-            BatSpark_a* b = ev->buffer;
-            ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
-            b->base_1C[0] = pos[0];
-            b->base_1C[1] = pos[1];
-            b->base_1C[2] = pos[2];
-            b->pos_10[0] = pos[0];
-            b->pos_10[1] = pos[1];
-            b->pos_10[2] = pos[2];
-            b->rot_34[0] = rot[0];
-            b->rot_34[1] = rot[1];
-            b->rot_34[2] = rot[2];
-            b->anim_3C = (EffectSprite*)sprite;
-            b->vel_28[0] = ((rand() & 0x7F) - 0x3F) << 10;
-            b->vel_28[1] = -(rand() & 0x3F) << 10;
-            b->vel_28[2] = ((rand() & 0x7F) - 0x3F) << 10;
-            b->rot_34[0] = 0;
-            b->rot_34[1] = 0;
-            b->rot_34[2] = 0;
-            b->frame_0 = 0;
-            b->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
-            b->target_40 = (int*)target;
-            b->offset_44 = (int*)offset;
-            ev->cb_8 = (EventEntryFn)HomingSparkTask_800C17EC;
+            BatSpark_a* spark = entry->buffer;
+            entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+            spark->base_1C[0] = pos[0];
+            spark->base_1C[1] = pos[1];
+            spark->base_1C[2] = pos[2];
+            spark->pos_10[0] = pos[0];
+            spark->pos_10[1] = pos[1];
+            spark->pos_10[2] = pos[2];
+            spark->rot_34[0] = rot[0];
+            spark->rot_34[1] = rot[1];
+            spark->rot_34[2] = rot[2];
+            spark->anim_3C = (EffectSprite*)sprite;
+            spark->vel_28[0] = ((rand() & 0x7F) - 0x3F) << 10;
+            spark->vel_28[1] = -(rand() & 0x3F) << 10;
+            spark->vel_28[2] = ((rand() & 0x7F) - 0x3F) << 10;
+            spark->rot_34[0] = 0;
+            spark->rot_34[1] = 0;
+            spark->rot_34[2] = 0;
+            spark->frame_0 = 0;
+            spark->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
+            spark->target_40 = (int*)target;
+            spark->offset_44 = (int*)offset;
+            entry->cb_8 = (EventEntryFn)HomingSparkTask_800C17EC;
         }
     }
 }
 
-void HomingSparkTask_800C17EC(EventEntry* t, BatSpark_a* u)
+void HomingSparkTask_800C17EC(EventEntry* task, BatSpark_a* spark)
 {
-    int s[3];
-    EffectSprite* d;
+    int step[3];
+    EffectSprite* sprite;
     int i;
-    EffectSpriteFrame* e;
-    int* a = u->target_40;
-    int* b = u->offset_44;
-    u->vel_28[0] = u->vel_28[0] * 31 / 32 + ((a[0] + b[0] - u->pos_10[0]) << 5);
-    u->vel_28[1] = u->vel_28[1] * 31 / 32 + ((a[1] + b[1] - u->pos_10[1]) << 5);
-    u->vel_28[2] = u->vel_28[2] * 31 / 32 + ((a[2] + b[2] - u->pos_10[2]) << 5);
-    s[0] = u->vel_28[0] / 1024;
-    s[1] = u->vel_28[1] / 1024;
-    s[2] = u->vel_28[2] / 1024;
-    u->pos_10[0] += s[0];
-    u->pos_10[1] += s[1];
-    u->pos_10[2] += s[2];
-    d = u->anim_3C;
-    if (u->frame_0 / 4096 < d->count_0)
+    EffectSpriteFrame* frame;
+    int* target = spark->target_40;
+    int* offset = spark->offset_44;
+    spark->vel_28[0] = spark->vel_28[0] * 31 / 32 + ((target[0] + offset[0] - spark->pos_10[0]) << 5);
+    spark->vel_28[1] = spark->vel_28[1] * 31 / 32 + ((target[1] + offset[1] - spark->pos_10[1]) << 5);
+    spark->vel_28[2] = spark->vel_28[2] * 31 / 32 + ((target[2] + offset[2] - spark->pos_10[2]) << 5);
+    step[0] = spark->vel_28[0] / 1024;
+    step[1] = spark->vel_28[1] / 1024;
+    step[2] = spark->vel_28[2] / 1024;
+    spark->pos_10[0] += step[0];
+    spark->pos_10[1] += step[1];
+    spark->pos_10[2] += step[2];
+    sprite = spark->anim_3C;
+    if (spark->frame_0 / 4096 < sprite->count_0)
     {
-        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
-            e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&zeroSvector_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
+            frame = sprite->frames_8[spark->frame_0 / 4096] + i;
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, (int*)&zeroSvector_800795D4, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
-        u->frame_0 += u->speed_8;
+        spark->frame_0 += spark->speed_8;
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 
 void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-    if (e)
+    EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+    if (entry)
     {
-        BatSpark_a* b;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        b = e->buffer;
-        b->pos_10[0] = pos[0];
-        b->pos_10[1] = pos[1];
-        b->pos_10[2] = pos[2];
-        b->rot_34[0] = rot[0];
-        b->rot_34[1] = rot[1];
-        b->rot_34[2] = rot[2];
-        b->anim_3C = (EffectSprite*)sprite;
-        b->frame_0 = 0;
-        b->speed_8 = speed;
-        e->cb_8 = (EventEntryFn)SpriteAnimTask_800C1B2C;
+        BatSpark_a* spark;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        spark = entry->buffer;
+        spark->pos_10[0] = pos[0];
+        spark->pos_10[1] = pos[1];
+        spark->pos_10[2] = pos[2];
+        spark->rot_34[0] = rot[0];
+        spark->rot_34[1] = rot[1];
+        spark->rot_34[2] = rot[2];
+        spark->anim_3C = (EffectSprite*)sprite;
+        spark->frame_0 = 0;
+        spark->speed_8 = speed;
+        entry->cb_8 = (EventEntryFn)SpriteAnimTask_800C1B2C;
     }
 }
 
 #if 0 // Not matched: register permutation only (u/d/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
-void SpriteAnimTask_800C1B2C(EventEntry* t, BatSpark_a* u)
+void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark_a* spark)
 {
-    EffectSprite* d = u->anim_3C;
+    EffectSprite* sprite = spark->anim_3C;
     int i;
-    EffectSpriteFrame* e;
-    if (u->frame_0 / 4096 < d->count_0)
+    EffectSpriteFrame* frame;
+    if (spark->frame_0 / 4096 < sprite->count_0)
     {
-        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
-            e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            frame = sprite->frames_8[spark->frame_0 / 4096] + i;
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
-        u->frame_0 += u->speed_8;
+        spark->frame_0 += spark->speed_8;
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 #endif
@@ -1725,531 +1725,531 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
     int i;
     for (i = 0; i < 16; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-        if (e)
+        EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+        if (entry)
         {
-            BatSpark_a* b = e->buffer;
-            e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            b->pos_10[0] = pos[0];
-            b->pos_10[1] = pos[1];
-            b->pos_10[2] = pos[2];
-            b->rot_34[0] = rot[0];
-            b->rot_34[1] = rot[1];
-            b->rot_34[2] = rot[2];
-            b->anim_3C = (EffectSprite*)sprite;
-            b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
-            b->vel_28[1] = ((rand() & 0x3F) - 0x1F) << 10;
-            b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
-            b->frame_0 = 0;
-            b->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
-            e->cb_8 = (EventEntryFn)BounceSparkTask_800C1DA4;
+            BatSpark_a* spark = entry->buffer;
+            entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+            spark->pos_10[0] = pos[0];
+            spark->pos_10[1] = pos[1];
+            spark->pos_10[2] = pos[2];
+            spark->rot_34[0] = rot[0];
+            spark->rot_34[1] = rot[1];
+            spark->rot_34[2] = rot[2];
+            spark->anim_3C = (EffectSprite*)sprite;
+            spark->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
+            spark->vel_28[1] = ((rand() & 0x3F) - 0x1F) << 10;
+            spark->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
+            spark->frame_0 = 0;
+            spark->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
+            entry->cb_8 = (EventEntryFn)BounceSparkTask_800C1DA4;
         }
     }
 }
 
-void BounceSparkTask_800C1DA4(EventEntry* t, BatSpark_a* u)
+void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark_a* spark)
 {
-    int s[3];
-    EffectSprite* d;
+    int step[3];
+    EffectSprite* sprite;
     int i;
-    EffectSpriteFrame* e;
+    EffectSpriteFrame* frame;
     SaveData* sd;
-    u->vel_28[0] = u->vel_28[0] * 15 / 16;
-    u->vel_28[1] = u->vel_28[1] * 15 / 16 + 0x200;
-    u->vel_28[2] = u->vel_28[2] * 15 / 16;
-    s[0] = u->vel_28[0] / 1024;
-    s[1] = u->vel_28[1] / 1024;
-    s[2] = u->vel_28[2] / 1024;
-    u->pos_10[0] += s[0];
-    u->pos_10[1] += s[1];
-    u->pos_10[2] += s[2];
+    spark->vel_28[0] = spark->vel_28[0] * 15 / 16;
+    spark->vel_28[1] = spark->vel_28[1] * 15 / 16 + 0x200;
+    spark->vel_28[2] = spark->vel_28[2] * 15 / 16;
+    step[0] = spark->vel_28[0] / 1024;
+    step[1] = spark->vel_28[1] / 1024;
+    step[2] = spark->vel_28[2] / 1024;
+    spark->pos_10[0] += step[0];
+    spark->pos_10[1] += step[1];
+    spark->pos_10[2] += step[2];
     sd = &saveData_8008B570;
-    if (u->pos_10[1] > sd->levant_7A8.pos.y)
+    if (spark->pos_10[1] > sd->levant_7A8.pos.y)
     {
-        u->vel_28[1] = -u->vel_28[1];
-        u->pos_10[1] = sd->levant_7A8.pos.y;
+        spark->vel_28[1] = -spark->vel_28[1];
+        spark->pos_10[1] = sd->levant_7A8.pos.y;
     }
-    d = u->anim_3C;
-    if (u->frame_0 / 4096 < d->count_0)
+    sprite = spark->anim_3C;
+    if (spark->frame_0 / 4096 < sprite->count_0)
     {
-        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
-            e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            frame = sprite->frames_8[spark->frame_0 / 4096] + i;
+            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
-        u->frame_0 += u->speed_8;
+        spark->frame_0 += spark->speed_8;
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 
-void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int n)
+void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int count)
 {
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        EventEntry* e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-        if (e)
+        EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+        if (entry)
         {
-            BatSpark_a* b = e->buffer;
-            e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            b->base_1C[0] = pos[0];
-            b->base_1C[1] = pos[1];
-            b->base_1C[2] = pos[2];
-            b->rot_34[0] = rot[0];
-            b->rot_34[1] = rot[1];
-            b->rot_34[2] = rot[2];
-            b->anim_3C = (EffectSprite*)sprite;
-            b->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
-            b->vel_28[1] = -(rand() & 0x1F) << 10;
-            b->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
-            b->pos_10[0] = 0;
-            b->pos_10[1] = 0;
-            b->pos_10[2] = 0;
-            b->frame_0 = 0;
-            b->speed_8 = speed + ((rand() & 0xFFF) >> 1) + 0x800;
-            e->cb_8 = (EventEntryFn)RisingSparkTask_800C2170;
+            BatSpark_a* spark = entry->buffer;
+            entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+            spark->base_1C[0] = pos[0];
+            spark->base_1C[1] = pos[1];
+            spark->base_1C[2] = pos[2];
+            spark->rot_34[0] = rot[0];
+            spark->rot_34[1] = rot[1];
+            spark->rot_34[2] = rot[2];
+            spark->anim_3C = (EffectSprite*)sprite;
+            spark->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
+            spark->vel_28[1] = -(rand() & 0x1F) << 10;
+            spark->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
+            spark->pos_10[0] = 0;
+            spark->pos_10[1] = 0;
+            spark->pos_10[2] = 0;
+            spark->frame_0 = 0;
+            spark->speed_8 = speed + ((rand() & 0xFFF) >> 1) + 0x800;
+            entry->cb_8 = (EventEntryFn)RisingSparkTask_800C2170;
         }
     }
 }
 
-void RisingSparkTask_800C2170(EventEntry* t, BatSpark_a* u)
+void RisingSparkTask_800C2170(EventEntry* task, BatSpark_a* spark)
 {
-    EffectSprite* d;
+    EffectSprite* sprite;
     int i;
-    EffectSpriteFrame* e;
-    u->rot_34[1] += 0x40;
-    u->vel_28[0] = u->vel_28[0] * 12 / 13;
-    u->vel_28[1] = u->vel_28[1] * 12 / 13 - 0x400;
-    u->vel_28[2] = u->vel_28[2] * 12 / 13;
+    EffectSpriteFrame* frame;
+    spark->rot_34[1] += 0x40;
+    spark->vel_28[0] = spark->vel_28[0] * 12 / 13;
+    spark->vel_28[1] = spark->vel_28[1] * 12 / 13 - 0x400;
+    spark->vel_28[2] = spark->vel_28[2] * 12 / 13;
     {
-        int s[3];
-        s[0] = u->vel_28[0] / 1024;
-        s[1] = u->vel_28[1] / 1024;
-        s[2] = u->vel_28[2] / 1024;
-        u->pos_10[0] += s[0];
-        u->pos_10[1] += s[1];
-        u->pos_10[2] += s[2];
+        int step[3];
+        step[0] = spark->vel_28[0] / 1024;
+        step[1] = spark->vel_28[1] / 1024;
+        step[2] = spark->vel_28[2] / 1024;
+        spark->pos_10[0] += step[0];
+        spark->pos_10[1] += step[1];
+        spark->pos_10[2] += step[2];
     }
-    d = u->anim_3C;
-    if (u->frame_0 / 4096 < d->count_0)
+    sprite = spark->anim_3C;
+    if (spark->frame_0 / 4096 < sprite->count_0)
     {
-        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
+        for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
-            short c[3];
-            e = d->frames_8[u->frame_0 / 4096] + i;
-            c[0] = u->pos_10[0];
-            c[1] = u->pos_10[1];
-            c[2] = u->pos_10[2];
-            DrawRotSprite_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
+            short offset[3];
+            frame = sprite->frames_8[spark->frame_0 / 4096] + i;
+            offset[0] = spark->pos_10[0];
+            offset[1] = spark->pos_10[1];
+            offset[2] = spark->pos_10[2];
+            DrawRotSprite_80044010(&sprite->poly_C, spark->base_1C, spark->rot_34, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
-        u->frame_0 += u->speed_8;
+        spark->frame_0 += spark->speed_8;
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 
 #if 0 // Not matched: only u and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer, early return, temp for the first lookup
-void ShatterTask_800C23D0(EventEntry* t, BatSpark_a* u)
+void ShatterTask_800C23D0(EventEntry* task, BatSpark_a* src)
 {
     int i;
-    int a;
-    int k;
-    int n;
-    EventEntry* e;
-    BatShard_a* b;
-    if (++u->frame_0 >= 30)
+    int angle;
+    int pitch;
+    int modelIdx;
+    EventEntry* entry;
+    BatShard_a* shard;
+    if (++src->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        SpawnSpriteAnim_800C1A5C(u->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        SpawnSpriteAnim_800C1A5C(src->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
-            e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-            if (e)
+            entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+            if (entry)
             {
-                b = e->buffer;
-                b->base_1C[0] = u->pos_10[0];
-                b->base_1C[1] = u->pos_10[1];
-                b->base_1C[2] = u->pos_10[2];
-                b->frame_0 = 0;
-                b->scale_C = (rand() & 0x7FF) + 0x800;
-                b->pos_10[0] = 0;
-                b->pos_10[1] = 0;
-                b->pos_10[2] = 0;
-                a = (i << 12) / 24;
-                b->vel_28[0] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[a & 0xFFF] / 4096;
-                b->vel_28[2] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[(a + 0x400) & 0xFFF] / 4096;
-                k = rand() & 0x1FF;
-                a = k + 0x200;
-                b->vel_28[1] = -((rand() & 0x1F) + 0x28) * sinTable_80084540[a] / 4096;
-                b->vel_28[0] = b->vel_28[0] * sinTable_80084540[k | 0x600] / 4096;
-                b->vel_28[2] = b->vel_28[2] * sinTable_80084540[k | 0x600] / 4096;
-                b->vel_28[0] <<= 10;
-                b->vel_28[1] <<= 10;
-                b->vel_28[2] <<= 10;
-                b->rot_34[0] = rand() & 0x1000;
-                b->rot_34[1] = rand() & 0x1000;
-                b->rot_34[2] = rand() & 0x1000;
-                b->rot_34[3] = (rand() & 0x1FF) + 0x100;
-                n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x19);
-                e->flags = (e->flags | 1) & 0xFFFF7FFF;
+                shard = entry->buffer;
+                shard->base_1C[0] = src->pos_10[0];
+                shard->base_1C[1] = src->pos_10[1];
+                shard->base_1C[2] = src->pos_10[2];
+                shard->frame_0 = 0;
+                shard->scale_C = (rand() & 0x7FF) + 0x800;
+                shard->pos_10[0] = 0;
+                shard->pos_10[1] = 0;
+                shard->pos_10[2] = 0;
+                angle = (i << 12) / 24;
+                shard->vel_28[0] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[angle & 0xFFF] / 4096;
+                shard->vel_28[2] = ((rand() & 0x1F) + 0x28) * sinTable_80084540[(angle + 0x400) & 0xFFF] / 4096;
+                pitch = rand() & 0x1FF;
+                angle = pitch + 0x200;
+                shard->vel_28[1] = -((rand() & 0x1F) + 0x28) * sinTable_80084540[angle] / 4096;
+                shard->vel_28[0] = shard->vel_28[0] * sinTable_80084540[pitch | 0x600] / 4096;
+                shard->vel_28[2] = shard->vel_28[2] * sinTable_80084540[pitch | 0x600] / 4096;
+                shard->vel_28[0] <<= 10;
+                shard->vel_28[1] <<= 10;
+                shard->vel_28[2] <<= 10;
+                shard->rot_34[0] = rand() & 0x1000;
+                shard->rot_34[1] = rand() & 0x1000;
+                shard->rot_34[2] = rand() & 0x1000;
+                shard->rot_34[3] = (rand() & 0x1FF) + 0x100;
+                modelIdx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x19);
+                entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
                 {
-                    EffectModel* ent = &effectFile_80091BD0.models_28[n];
-                    b->obj_3C = ent->ftg_4 + i % 8;
+                    EffectModel* model = &effectFile_80091BD0.models_28[modelIdx];
+                    shard->obj_3C = model->ftg_4 + i % 8;
                 }
-                e->cb_8 = (EventEntryFn)ShardTask_800C273C;
+                entry->cb_8 = (EventEntryFn)ShardTask_800C273C;
             }
         }
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(battle, ShatterTask_800C23D0);
 
-void ShardTask_800C273C(EventEntry* t, BatShard_a* u)
+void ShardTask_800C273C(EventEntry* task, BatShard_a* shard)
 {
-    int v[4];
-    int s[3];
-    u->vel_28[1] += 0x1000;
-    u->vel_28[0] = u->vel_28[0] * 31 / 32;
-    u->vel_28[1] = u->vel_28[1] * 31 / 32;
-    u->vel_28[2] = u->vel_28[2] * 31 / 32;
-    u->pos_10[0] += u->vel_28[0];
-    u->pos_10[1] += u->vel_28[1];
-    u->pos_10[2] += u->vel_28[2];
-    if (u->pos_10[1] > 0)
+    int pos[4];
+    int scale[3];
+    shard->vel_28[1] += 0x1000;
+    shard->vel_28[0] = shard->vel_28[0] * 31 / 32;
+    shard->vel_28[1] = shard->vel_28[1] * 31 / 32;
+    shard->vel_28[2] = shard->vel_28[2] * 31 / 32;
+    shard->pos_10[0] += shard->vel_28[0];
+    shard->pos_10[1] += shard->vel_28[1];
+    shard->pos_10[2] += shard->vel_28[2];
+    if (shard->pos_10[1] > 0)
     {
-        u->vel_28[1] = -u->vel_28[1] * 3 / 4;
-        u->pos_10[1] = 0;
-        if (u->vel_28[1] >= -0xFFF)
+        shard->vel_28[1] = -shard->vel_28[1] * 3 / 4;
+        shard->pos_10[1] = 0;
+        if (shard->vel_28[1] >= -0xFFF)
         {
-            t->flags = (t->flags & ~1) | 0x8000;
+            task->flags = (task->flags & ~1) | 0x8000;
         }
     }
-    u->rot_34[2] += u->rot_34[3];
-    s[0] = s[1] = s[2] = u->scale_C;
-    v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
-    v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
-    v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    DrawFtgObjectAtSlot0_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
-    u->frame_0++;
+    shard->rot_34[2] += shard->rot_34[3];
+    scale[0] = scale[1] = scale[2] = shard->scale_C;
+    pos[0] = shard->base_1C[0] + shard->pos_10[0] / 1024;
+    pos[1] = shard->base_1C[1] + shard->pos_10[1] / 1024;
+    pos[2] = shard->base_1C[2] + shard->pos_10[2] / 1024;
+    DrawFtgObjectAtSlot0_8004D1EC(shard->obj_3C, pOT_8008D690, pos, shard->rot_34, pointLights_8008D534, 0x30, scale);
+    shard->frame_0++;
 }
 
 void SpawnShatterEffect_800C2914(BatSrc_a* src, int id)
 {
-    EventEntry* e;
-    BatShard_a* b;
+    EventEntry* entry;
+    BatShard_a* shard;
     int i;
-    int a;
-    int n;
-    int s[3];
-    e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-    if (e)
+    int angle;
+    int modelIdx;
+    int dir[3];
+    entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+    if (entry)
     {
-        b = e->buffer;
-        b->pos_10[0] = src->pos_1C[0];
-        b->pos_10[1] = src->pos_1C[1];
-        b->pos_10[2] = src->pos_1C[2];
-        b->frame_0 = 0;
-        n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        b->obj_3C = &effectFile_80091BD0.models_28[n];
-        e->cb_8 = (EventEntryFn)ShatterTask_800C23D0;
+        shard = entry->buffer;
+        shard->pos_10[0] = src->pos_1C[0];
+        shard->pos_10[1] = src->pos_1C[1];
+        shard->pos_10[2] = src->pos_1C[2];
+        shard->frame_0 = 0;
+        modelIdx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        shard->obj_3C = &effectFile_80091BD0.models_28[modelIdx];
+        entry->cb_8 = (EventEntryFn)ShatterTask_800C23D0;
     }
     for (i = 0; i < 8; i++)
     {
-        e = AllocEventEntry_80043AF8(miscTasks_8008D60C);
-        if (e)
+        entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
+        if (entry)
         {
-            b = e->buffer;
-            b->base_1C[0] = src->pos_1C[0];
-            b->base_1C[1] = src->pos_1C[1];
-            b->base_1C[2] = src->pos_1C[2];
-            b->frame_0 = 0;
-            b->scale_C = (rand() & 0x7FF) + 0x800;
-            a = i << 9;
-            b->pos_10[0] = sinTable_80084540[a & 0xFFF] * 300 / 4096;
-            b->pos_10[2] = sinTable_80084540[(a + 0x400) & 0xFFF] * 300 / 4096;
-            a = rand() & 0x3FF;
-            b->pos_10[1] = -(sinTable_80084540[a] * 300) / 4096;
-            b->pos_10[0] = b->pos_10[0] * sinTable_80084540[(a + 0x400) & 0xFFF] / 4096;
-            b->pos_10[2] = b->pos_10[2] * sinTable_80084540[(a + 0x400) & 0xFFF] / 4096;
-            b->pos_10[0] <<= 10;
-            b->pos_10[1] <<= 10;
-            b->pos_10[2] <<= 10;
-            b->vel_28[0] = -b->pos_10[0] / 4;
-            b->vel_28[1] = -b->pos_10[1] / 4;
-            b->vel_28[2] = -b->pos_10[2] / 4;
-            s[0] = b->vel_28[0] / 1024;
-            s[1] = b->vel_28[1] / 1024;
-            s[2] = b->vel_28[2] / 1024;
-            VectorToAngles_8003B5D4(s, b->rot_34);
-            b->rot_34[2] = rand() & 0x1000;
-            n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
-            e->flags = (e->flags | 1) & 0xFFFF7FFF;
-            b->obj_3C = &effectFile_80091BD0.models_28[n];
-            e->cb_8 = (EventEntryFn)ImplodeShardTask_800C2CD8;
+            shard = entry->buffer;
+            shard->base_1C[0] = src->pos_1C[0];
+            shard->base_1C[1] = src->pos_1C[1];
+            shard->base_1C[2] = src->pos_1C[2];
+            shard->frame_0 = 0;
+            shard->scale_C = (rand() & 0x7FF) + 0x800;
+            angle = i << 9;
+            shard->pos_10[0] = sinTable_80084540[angle & 0xFFF] * 300 / 4096;
+            shard->pos_10[2] = sinTable_80084540[(angle + 0x400) & 0xFFF] * 300 / 4096;
+            angle = rand() & 0x3FF;
+            shard->pos_10[1] = -(sinTable_80084540[angle] * 300) / 4096;
+            shard->pos_10[0] = shard->pos_10[0] * sinTable_80084540[(angle + 0x400) & 0xFFF] / 4096;
+            shard->pos_10[2] = shard->pos_10[2] * sinTable_80084540[(angle + 0x400) & 0xFFF] / 4096;
+            shard->pos_10[0] <<= 10;
+            shard->pos_10[1] <<= 10;
+            shard->pos_10[2] <<= 10;
+            shard->vel_28[0] = -shard->pos_10[0] / 4;
+            shard->vel_28[1] = -shard->pos_10[1] / 4;
+            shard->vel_28[2] = -shard->pos_10[2] / 4;
+            dir[0] = shard->vel_28[0] / 1024;
+            dir[1] = shard->vel_28[1] / 1024;
+            dir[2] = shard->vel_28[2] / 1024;
+            VectorToAngles_8003B5D4(dir, shard->rot_34);
+            shard->rot_34[2] = rand() & 0x1000;
+            modelIdx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
+            entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+            shard->obj_3C = &effectFile_80091BD0.models_28[modelIdx];
+            entry->cb_8 = (EventEntryFn)ImplodeShardTask_800C2CD8;
         }
     }
 }
 
-void ImplodeShardTask_800C2CD8(EventEntry* t, BatShard_a* u)
+void ImplodeShardTask_800C2CD8(EventEntry* task, BatShard_a* shard)
 {
-    EffectModel* d = u->obj_3C;
-    int v[4];
-    int s[3];
-    if (u->frame_0 >= 0x1A)
+    EffectModel* model = shard->obj_3C;
+    int pos[4];
+    int scale[3];
+    if (shard->frame_0 >= 0x1A)
     {
-        if (u->frame_0 < 0x1E)
+        if (shard->frame_0 < 0x1E)
         {
-            u->pos_10[0] += u->vel_28[0];
-            u->pos_10[1] += u->vel_28[1];
-            u->pos_10[2] += u->vel_28[2];
+            shard->pos_10[0] += shard->vel_28[0];
+            shard->pos_10[1] += shard->vel_28[1];
+            shard->pos_10[2] += shard->vel_28[2];
         }
         else
         {
-            t->flags = (t->flags & ~1) | 0x8000;
+            task->flags = (task->flags & ~1) | 0x8000;
         }
     }
-    u->rot_34[2] += 0xAA;
-    s[0] = s[1] = s[2] = u->scale_C;
-    v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
-    v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
-    v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    DrawFtgObjectAtSlot0_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
-    u->frame_0++;
+    shard->rot_34[2] += 0xAA;
+    scale[0] = scale[1] = scale[2] = shard->scale_C;
+    pos[0] = shard->base_1C[0] + shard->pos_10[0] / 1024;
+    pos[1] = shard->base_1C[1] + shard->pos_10[1] / 1024;
+    pos[2] = shard->base_1C[2] + shard->pos_10[2] / 1024;
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, shard->rot_34, pointLights_8008D534, 0x30, scale);
+    shard->frame_0++;
 }
 
-void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int speed, int n)
+void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int speed, int count)
 {
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        EventEntry* ev = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-        if (ev)
+        EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+        if (entry)
         {
-            BatTrail_a* b;
-            ev->flags = (ev->flags | 1) & 0xFFFF7FFF;
-            b = ev->buffer;
-            b->pos_44[0] = pos[0];
-            b->pos_44[1] = pos[1];
-            b->pos_44[2] = pos[2];
-            b->trail_50[0].x = pos[0];
-            b->trail_50[0].y = pos[1];
-            b->trail_50[0].z = pos[2];
-            b->trail_50[1].x = pos[0];
-            b->trail_50[1].y = pos[1];
-            b->trail_50[1].z = pos[2];
-            b->trail_50[2].x = pos[0];
-            b->trail_50[2].y = pos[1];
-            b->trail_50[2].z = pos[2];
-            b->rot_80[0] = rot[0];
-            b->rot_80[1] = rot[1];
-            b->rot_80[2] = rot[2];
-            b->anim_88 = (EffectSprite*)sprite;
-            b->clip_8C = (EffectModel*)model;
-            b->rot_80[0] = 0;
-            b->rot_80[2] = 0;
-            b->frame_0 = 0;
-            b->count_4 = 0;
-            b->speed_8 = speed;
-            b->rot_80[1] = (i << 12) / n;
-            ev->cb_8 = (EventEntryFn)SpriteTrailTask_800C2FC8;
+            BatTrail_a* trail;
+            entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+            trail = entry->buffer;
+            trail->pos_44[0] = pos[0];
+            trail->pos_44[1] = pos[1];
+            trail->pos_44[2] = pos[2];
+            trail->trail_50[0].x = pos[0];
+            trail->trail_50[0].y = pos[1];
+            trail->trail_50[0].z = pos[2];
+            trail->trail_50[1].x = pos[0];
+            trail->trail_50[1].y = pos[1];
+            trail->trail_50[1].z = pos[2];
+            trail->trail_50[2].x = pos[0];
+            trail->trail_50[2].y = pos[1];
+            trail->trail_50[2].z = pos[2];
+            trail->rot_80[0] = rot[0];
+            trail->rot_80[1] = rot[1];
+            trail->rot_80[2] = rot[2];
+            trail->anim_88 = (EffectSprite*)sprite;
+            trail->clip_8C = (EffectModel*)model;
+            trail->rot_80[0] = 0;
+            trail->rot_80[2] = 0;
+            trail->frame_0 = 0;
+            trail->count_4 = 0;
+            trail->speed_8 = speed;
+            trail->rot_80[1] = (i << 12) / count;
+            entry->cb_8 = (EventEntryFn)SpriteTrailTask_800C2FC8;
         }
     }
 }
 
-void SpriteTrailTask_800C2FC8(EventEntry* t, BatTrail_a* u)
+void SpriteTrailTask_800C2FC8(EventEntry* task, BatTrail_a* trail)
 {
-    EffectSprite* d = u->anim_88;
+    EffectSprite* sprite = trail->anim_88;
     int i;
-    int* r;
-    EffectSpriteFrame* e;
-    if (u->frame_0 / 4096 < d->count_0)
+    int* offset;
+    EffectSpriteFrame* frame;
+    if (trail->frame_0 / 4096 < sprite->count_0)
     {
-        r = 0;
-        for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
+        offset = 0;
+        for (i = 0; i < sprite->frameCounts_4[trail->frame_0 / 4096]; i++)
         {
-            e = d->frames_8[u->frame_0 / 4096] + i;
-            r = DrawRotSprite_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            frame = sprite->frames_8[trail->frame_0 / 4096] + i;
+            offset = DrawRotSprite_80044010(&sprite->poly_C, trail->pos_44, trail->rot_80, &frame->u_0, &frame->w_4, &frame->f8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
-        u->trail_50[0].x = u->pos_44[0] + r[0];
-        u->trail_50[0].y = u->pos_44[1] + r[1];
-        u->trail_50[0].z = u->pos_44[2] + r[2];
-        if (u->count_4 == 0)
+        trail->trail_50[0].x = trail->pos_44[0] + offset[0];
+        trail->trail_50[0].y = trail->pos_44[1] + offset[1];
+        trail->trail_50[0].z = trail->pos_44[2] + offset[2];
+        if (trail->count_4 == 0)
         {
-            u->trail_50[3].x = u->trail_50[0].x;
-            u->trail_50[3].y = u->trail_50[0].y;
-            u->trail_50[3].z = u->trail_50[0].z;
-            u->trail_50[2].x = u->trail_50[0].x;
-            u->trail_50[2].y = u->trail_50[0].y;
-            u->trail_50[2].z = u->trail_50[0].z;
-            u->trail_50[1].x = u->trail_50[0].x;
-            u->trail_50[1].y = u->trail_50[0].y;
-            u->trail_50[1].z = u->trail_50[0].z;
+            trail->trail_50[3].x = trail->trail_50[0].x;
+            trail->trail_50[3].y = trail->trail_50[0].y;
+            trail->trail_50[3].z = trail->trail_50[0].z;
+            trail->trail_50[2].x = trail->trail_50[0].x;
+            trail->trail_50[2].y = trail->trail_50[0].y;
+            trail->trail_50[2].z = trail->trail_50[0].z;
+            trail->trail_50[1].x = trail->trail_50[0].x;
+            trail->trail_50[1].y = trail->trail_50[0].y;
+            trail->trail_50[1].z = trail->trail_50[0].z;
         }
-        u->frame_0 += u->speed_8;
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, pointLights_8008D534, 0x30, 0, 0);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, pointLights_8008D534, 0x30, 0, 1);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, pointLights_8008D534, 0x30, 0, 2);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, pointLights_8008D534, 0x30, 0, 3);
-        DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
+        trail->frame_0 += trail->speed_8;
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4, pOT_8008D690, &trail->trail_50[0], trail->rot_80, pointLights_8008D534, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 1, pOT_8008D690, &trail->trail_50[1], trail->rot_80, pointLights_8008D534, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 2, pOT_8008D690, &trail->trail_50[2], trail->rot_80, pointLights_8008D534, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 3, pOT_8008D690, &trail->trail_50[3], trail->rot_80, pointLights_8008D534, 0x30, 0, 3);
+        DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &trail->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
-    if (++u->count_4 & 1)
+    if (++trail->count_4 & 1)
     {
-        u->trail_50[3].x = u->trail_50[2].x;
-        u->trail_50[3].y = u->trail_50[2].y;
-        u->trail_50[3].z = u->trail_50[2].z;
-        u->trail_50[2].x = u->trail_50[1].x;
-        u->trail_50[2].y = u->trail_50[1].y;
-        u->trail_50[2].z = u->trail_50[1].z;
-        u->trail_50[1].x = u->trail_50[0].x;
-        u->trail_50[1].y = u->trail_50[0].y;
-        u->trail_50[1].z = u->trail_50[0].z;
+        trail->trail_50[3].x = trail->trail_50[2].x;
+        trail->trail_50[3].y = trail->trail_50[2].y;
+        trail->trail_50[3].z = trail->trail_50[2].z;
+        trail->trail_50[2].x = trail->trail_50[1].x;
+        trail->trail_50[2].y = trail->trail_50[1].y;
+        trail->trail_50[2].z = trail->trail_50[1].z;
+        trail->trail_50[1].x = trail->trail_50[0].x;
+        trail->trail_50[1].y = trail->trail_50[0].y;
+        trail->trail_50[1].z = trail->trail_50[0].z;
     }
 }
 
 int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    BatAnim_a* b;
+    EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+    BatAnim_a* anim;
     int idx;
-    EffectModel* t;
-    if (e != 0)
+    EffectModel* model;
+    if (entry != 0)
     {
-    b = e->buffer;
-    b->pos_44[0] = pos[0];
-    b->pos_44[1] = pos[1];
-    b->pos_44[2] = pos[2];
-    b->frame_0 = 0;
-    b->speed_8 = 0;
-    b->rot_82 = rotY;
+    anim = entry->buffer;
+    anim->pos_44[0] = pos[0];
+    anim->pos_44[1] = pos[1];
+    anim->pos_44[2] = pos[2];
+    anim->frame_0 = 0;
+    anim->speed_8 = 0;
+    anim->rot_82 = rotY;
     idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
-    e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    t = &effectFile_80091BD0.models_28[idx];
-    b->clip_88 = t + clip;
-    e->cb_8 = (EventEntryFn)ModelAnimTask_800C33E4;
-    return t->frameCount_14;
+    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+    model = &effectFile_80091BD0.models_28[idx];
+    anim->clip_88 = model + clip;
+    entry->cb_8 = (EventEntryFn)ModelAnimTask_800C33E4;
+    return model->frameCount_14;
     }
     return -1;
 }
 
 #if 0 // Not matched: only u and c swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
-void ModelAnimTask_800C33E4(EventEntry* t, BatAnim_a* u)
+void ModelAnimTask_800C33E4(EventEntry* task, BatAnim_a* anim)
 {
-    EffectModel* c = u->clip_88;
+    EffectModel* clip = anim->clip_88;
     int any;
     int i;
-    EffectKey* k;
-    int v[3];
-    short r[3];
+    EffectKey* key;
+    int pos[3];
+    short rot[3];
     any = 0;
-    if (u->frame_0 < c->frameCount_14)
+    if (anim->frame_0 < clip->frameCount_14)
     {
-        for (i = 0; i < c->keyCount_10; i++)
+        for (i = 0; i < clip->keyCount_10; i++)
         {
-            k = &c->keys_18[i + u->frame_0 * c->keyCount_10];
-            if (k->model_0 >= 0)
+            key = &clip->keys_18[i + anim->frame_0 * clip->keyCount_10];
+            if (key->model_0 >= 0)
             {
-                r[0] = k->rot_10[0];
-                r[1] = k->rot_10[1];
-                r[2] = k->rot_10[2];
-                r[1] += u->rot_82;
-                v[0] = u->pos_44[0] + k->x_4 * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096 + k->z_C * sinTable_80084540[u->rot_82 & 0xFFF] / 4096;
-                v[1] = u->pos_44[1] + k->y_8;
-                v[2] = u->pos_44[2] - k->x_4 * sinTable_80084540[u->rot_82 & 0xFFF] / 4096 + k->z_C * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096;
-                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, pointLights_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
-                if (c->ftg_4[k->model_0].texSpriteCount_48)
+                rot[0] = key->rot_10[0];
+                rot[1] = key->rot_10[1];
+                rot[2] = key->rot_10[2];
+                rot[1] += anim->rot_82;
+                pos[0] = anim->pos_44[0] + key->x_4 * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096 + key->z_C * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096;
+                pos[1] = anim->pos_44[1] + key->y_8;
+                pos[2] = anim->pos_44[2] - key->x_4 * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096 + key->z_C * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096;
+                DrawFtgObjectAt_80044D0C(&clip->ftg_4[key->model_0], pOT_8008D690, pos, rot, pointLights_8008D534, (0x1000 - key->alpha_2) << 16 | 0x80 | key->mode_24, key->f18, i);
+                if (clip->ftg_4[key->model_0].texSpriteCount_48)
                 {
                     any = 1;
                 }
             }
         }
-        u->frame_0++;
+        anim->frame_0++;
         if (any)
         {
-            if (c->mats_8.count_0)
+            if (clip->mats_8.count_0)
             {
-                DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &c->mats_8, pOT_8008D690, 0x30);
+                DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &clip->mats_8, pOT_8008D690, 0x30);
             }
         }
-        else if (c->mats_8.count_0)
+        else if (clip->mats_8.count_0)
         {
-            DrawSpriteVtxQuadsG4_80045E48(&c->mats_8, pOT_8008D690, 0x30);
+            DrawSpriteVtxQuadsG4_80045E48(&clip->mats_8, pOT_8008D690, 0x30);
         }
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(battle, ModelAnimTask_800C33E4);
 
-void GlowTask_800C371C(EventEntry* t, void* arg)
+void GlowTask_800C371C(EventEntry* task, void* arg)
 {
     unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
-    BatGlow_a* u = arg;
-    EffectModel* m = u->model_88;
-    if (u->frame_0 < u->end_4 && effectOutcomeFlag_8008D780 == 0)
+    BatGlow_a* glow = arg;
+    EffectModel* model = glow->model_88;
+    if (glow->frame_0 < glow->end_4 && effectOutcomeFlag_8008D780 == 0)
     {
-        int s[4];
-        int v[4];
-        int a;
-        u->f30 += 0x100;
-        if (u->f30 > 0x1000)
+        int scale[4];
+        int pos[4];
+        int alpha;
+        glow->f30 += 0x100;
+        if (glow->f30 > 0x1000)
         {
-            u->f30 = 0x1000;
+            glow->f30 = 0x1000;
         }
-        s[0] = u->scale_A0[0] * 3 / 2;
-        s[1] = u->scale_A0[1] * 3 / 2;
-        s[2] = u->scale_A0[2] * 3 / 2;
-        a = u->f30;
-        v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
-        v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
-        v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
-        SetPointLight_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
-        u->frame_0++;
+        scale[0] = glow->scale_A0[0] * 3 / 2;
+        scale[1] = glow->scale_A0[1] * 3 / 2;
+        scale[2] = glow->scale_A0[2] * 3 / 2;
+        alpha = glow->f30;
+        pos[0] = glow->path_20[glow->idx_98 * 3 + 0] + glow->base_1C[0];
+        pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
+        pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
+        LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - alpha) << 16) | 0xB0, scale);
+        SetPointLight_800C4090((int)glow->f44, (int)col, 0x5DC, glow->f30);
+        glow->frame_0++;
     }
     else
     {
-        int s[4];
-        int v[4];
-        int a;
-        s[0] = u->scale_A0[0] * 3 / 2;
-        s[1] = u->scale_A0[1] * 3 / 2;
-        s[2] = u->scale_A0[2] * 3 / 2;
-        a = u->f30;
-        v[0] = u->path_20[u->idx_98 * 3 + 0] + u->base_1C[0];
-        v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
-        v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
-        LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, v, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
-        if (u->f30 == 0x1000)
+        int scale[4];
+        int pos[4];
+        int alpha;
+        scale[0] = glow->scale_A0[0] * 3 / 2;
+        scale[1] = glow->scale_A0[1] * 3 / 2;
+        scale[2] = glow->scale_A0[2] * 3 / 2;
+        alpha = glow->f30;
+        pos[0] = glow->path_20[glow->idx_98 * 3 + 0] + glow->base_1C[0];
+        pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
+        pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
+        LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - alpha) << 16) | 0xB0, scale);
+        if (glow->f30 == 0x1000)
         {
-            SpawnOrb_800C3B50(v, 0x25);
+            SpawnOrb_800C3B50(pos, 0x25);
         }
-        SetPointLight_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
-        if (u->f30 <= 0)
+        SetPointLight_800C4090((int)glow->f44, (int)col, 0x5DC, glow->f30);
+        if (glow->f30 <= 0)
         {
             ClearPointLight_800C410C();
-            FreeFtgObjectData_80021804(u->work_94, 1);
-            free3_8003FC6C(u->work_94);
-            t->flags = (t->flags & ~1) | 0x8000;
+            FreeFtgObjectData_80021804(glow->work_94, 1);
+            free3_8003FC6C(glow->work_94);
+            task->flags = (task->flags & ~1) | 0x8000;
         }
-        u->f30 -= 0x100;
+        glow->f30 -= 0x100;
     }
 }
 
@@ -2258,111 +2258,111 @@ void GlowTask_800C371C(EventEntry* t, void* arg)
 extern void PlaySfx_80031494(int id);
 extern void OrbHomingTask_800C3DF8();
 extern void OrbFadeTask_800C3D34();
-void SpawnOrb_800C3B50(int* p, int id)
+void SpawnOrb_800C3B50(int* pos, int id)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    BatOrb_a* b;
-    EffectModel* ent;
-    BatHero_a* q;
-    int f;
+    EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+    BatOrb_a* orb;
+    EffectModel* model;
+    BatHero_a* hero;
+    int outcome;
     int idx;
-    if (e == 0)
+    if (entry == 0)
     {
         return;
     }
-    b = e->buffer;
-    b->pos_44[0] = p[0];
-    b->pos_44[1] = p[1];
-    b->pos_44[2] = p[2];
-    b->frame_0 = 0;
-    b->fx_E = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, id);
-    b->alpha_30 = 0x1000;
-    b->f34 = 0;
-    b->rot_80[2] = 0;
-    b->rot_80[1] = 0;
-    b->rot_80[0] = 0;
-    b->vel_38[0] = 0;
-    b->vel_38[1] = -0xC8;
-    b->vel_38[2] = 0;
-    f = (&effectOutcomeFlag_8008D780)[1];
-    e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    if (f == 0)
+    orb = entry->buffer;
+    orb->pos_44[0] = pos[0];
+    orb->pos_44[1] = pos[1];
+    orb->pos_44[2] = pos[2];
+    orb->frame_0 = 0;
+    orb->fx_E = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, id);
+    orb->alpha_30 = 0x1000;
+    orb->f34 = 0;
+    orb->rot_80[2] = 0;
+    orb->rot_80[1] = 0;
+    orb->rot_80[0] = 0;
+    orb->vel_38[0] = 0;
+    orb->vel_38[1] = -0xC8;
+    orb->vel_38[2] = 0;
+    outcome = (&effectOutcomeFlag_8008D780)[1];
+    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+    if (outcome == 0)
     {
     idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1F);
-    e->flags = (e->flags | 1) & 0xFFFF7FFF;
-    ent = &effectFile_80091BD0.models_28[idx];
-    b->clip_88 = ent;
-    b->model_94 = malloc3_8003FC4C(0x54);
-    CopyFtgObject_800218A8(ent->ftg_4, b->model_94, 1);
-    DiffFtgObjects_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
-    q = gameTask_8008B4A4->hero_24;
-    b->pos_44[0] = q->pos_5E4[0];
-    b->pos_44[1] = q->pos_5E4[1];
-    b->pos_44[2] = q->pos_5E4[2];
-    b->pos_44[0] += levantPos_8008BD18.pos.x;
-    b->pos_44[1] += levantPos_8008BD18.pos.y;
-    b->pos_44[2] += levantPos_8008BD18.pos.z;
-    e->cb_8 = (EventEntryFn)OrbFadeTask_800C3D34;
+    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+    model = &effectFile_80091BD0.models_28[idx];
+    orb->clip_88 = model;
+    orb->model_94 = malloc3_8003FC4C(0x54);
+    CopyFtgObject_800218A8(model->ftg_4, orb->model_94, 1);
+    DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
+    hero = gameTask_8008B4A4->hero_24;
+    orb->pos_44[0] = hero->pos_5E4[0];
+    orb->pos_44[1] = hero->pos_5E4[1];
+    orb->pos_44[2] = hero->pos_5E4[2];
+    orb->pos_44[0] += levantPos_8008BD18.pos.x;
+    orb->pos_44[1] += levantPos_8008BD18.pos.y;
+    orb->pos_44[2] += levantPos_8008BD18.pos.z;
+    entry->cb_8 = (EventEntryFn)OrbFadeTask_800C3D34;
     PlaySfx_80031494(0x3F);
     }
     else
     {
         PlaySfx_80031494(0x47);
-        e->cb_8 = (EventEntryFn)OrbHomingTask_800C3DF8;
+        entry->cb_8 = (EventEntryFn)OrbHomingTask_800C3DF8;
     }
 }
 #endif
 
 INCLUDE_OVERLAY_ASM(battle, SpawnOrb_800C3B50);
 
-void OrbFadeTask_800C3D34(EventEntry* t, BatOrb_a* u)
+void OrbFadeTask_800C3D34(EventEntry* task, BatOrb_a* orb)
 {
-    EffectModel* m = u->clip_88;
-    int v = u->alpha_30 - 0x100;
-    u->alpha_30 = v;
-    if (v > 0)
+    EffectModel* clip = orb->clip_88;
+    int alpha = orb->alpha_30 - 0x100;
+    orb->alpha_30 = alpha;
+    if (alpha > 0)
     {
-        LerpFtgObject_8003A6C4(v, m->ftg_4, m->ftg_4 + 1, u->model_94);
+        LerpFtgObject_8003A6C4(alpha, clip->ftg_4, clip->ftg_4 + 1, orb->model_94);
     }
     else
     {
-        t->flags = (t->flags & ~1) | 0x8000;
-        FreeFtgObjectData_80021804(u->model_94, 1);
-        free3_8003FC6C(u->model_94);
+        task->flags = (task->flags & ~1) | 0x8000;
+        FreeFtgObjectData_80021804(orb->model_94, 1);
+        free3_8003FC6C(orb->model_94);
     }
-    DrawFtgObjectAtSlot0_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, pointLights_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
+    DrawFtgObjectAtSlot0_8004D1EC(clip->ftg_4, pOT_8008D690, orb->pos_44, orb->rot_80, pointLights_8008D534, ((0x1000 - orb->alpha_30) << 16) | 0xB0, 0);
 }
 
-void OrbHomingTask_800C3DF8(EventEntry* t, BatOrb_a* u)
+void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb_a* orb)
 {
-    int v[3];
-    BatHero_a* q;
-    BatOrb_a* w;
-    w = u;
-    SpawnSpriteAnim_800C1A5C(u->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
-    q = gameTask_8008B4A4->hero_24;
-    v[0] = q->pos_5E4[0];
-    v[1] = q->pos_5E4[1];
-    v[2] = q->pos_5E4[2];
-    v[0] += levantPos_8008BD18.pos.x;
-    v[1] += levantPos_8008BD18.pos.y;
-    v[2] += levantPos_8008BD18.pos.z;
-    if (DistanceSquared3D_8003B80C(v, u->pos_44) >= 0x57E5)
+    int target[3];
+    BatHero_a* hero;
+    BatOrb_a* orbCopy;
+    orbCopy = orb;
+    SpawnSpriteAnim_800C1A5C(orb->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orb->fx_E], 0x1000);
+    hero = gameTask_8008B4A4->hero_24;
+    target[0] = hero->pos_5E4[0];
+    target[1] = hero->pos_5E4[1];
+    target[2] = hero->pos_5E4[2];
+    target[0] += levantPos_8008BD18.pos.x;
+    target[1] += levantPos_8008BD18.pos.y;
+    target[2] += levantPos_8008BD18.pos.z;
+    if (DistanceSquared3D_8003B80C(target, orb->pos_44) >= 0x57E5)
     {
-        u->vel_38[0] += ((v[0] - u->pos_44[0]) << 10) / 70;
-        u->vel_38[1] += ((v[1] - u->pos_44[1]) << 10) / 70;
-        u->vel_38[2] += ((v[2] - u->pos_44[2]) << 10) / 70;
-        u->vel_38[0] = u->vel_38[0] * 31 / 32;
-        u->vel_38[1] = u->vel_38[1] * 31 / 32;
-        u->vel_38[2] = u->vel_38[2] * 31 / 32;
-        u->pos_44[0] += u->vel_38[0] / 1024;
-        u->pos_44[1] += u->vel_38[1] / 1024;
-        u->pos_44[2] += u->vel_38[2] / 1024;
+        orb->vel_38[0] += ((target[0] - orb->pos_44[0]) << 10) / 70;
+        orb->vel_38[1] += ((target[1] - orb->pos_44[1]) << 10) / 70;
+        orb->vel_38[2] += ((target[2] - orb->pos_44[2]) << 10) / 70;
+        orb->vel_38[0] = orb->vel_38[0] * 31 / 32;
+        orb->vel_38[1] = orb->vel_38[1] * 31 / 32;
+        orb->vel_38[2] = orb->vel_38[2] * 31 / 32;
+        orb->pos_44[0] += orb->vel_38[0] / 1024;
+        orb->pos_44[1] += orb->vel_38[1] / 1024;
+        orb->pos_44[2] += orb->vel_38[2] / 1024;
     }
     else
     {
-        ((void (*)())SpawnBounceSparks_800C1C5C)(v, &zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[w->fx_E], 0x1000);
-        t->flags = (t->flags & ~1) | 0x8000;
+        ((void (*)())SpawnBounceSparks_800C1C5C)(target, &zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orbCopy->fx_E], 0x1000);
+        task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 

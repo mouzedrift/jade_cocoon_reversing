@@ -179,10 +179,13 @@ extern void ClearBattleFlag_800BC850(unsigned int);
 
 extern char dword_80091D40[];
 
-// GAME's battle chain record (game.h GameRec_1): f0 1 while a chain of battles runs, fc the battle count, f10 the next entry
+// GAME's battle chain record (game.h GameRec_1)
 typedef struct BatChain_a
 {
-    int f0, f4, f8, fc, f10;
+    int active_0; // 1 while a chain of battles runs
+    int f4, f8;
+    int count_C;  // the battle count
+    int next_10;  // the next entry (>= 0: show its message first)
 } BatChain_a;
 extern BatChain_a encounterRecord_800ADE78;
 
@@ -389,13 +392,15 @@ extern void CmdRecallEnd_800BBE7C();
 
 
 
-typedef struct BatObj_a
+// the battle task's buffer: a command handler starts an action task (handle_C, a menu task or a message window
+// while waiting on those) and continues with next_8 once it ends, then returns to resume_4
+typedef struct BatTurnWork
 {
-    int f0;
-    int f4;
+    int pad_0;
+    int resume_4; // state function to return to after the command
     void (*next_8)();
-    int fc;
-} BatObj_a;
+    int handle_C;
+} BatTurnWork;
 
 // when a unit's action hits and when it ends (frames of the action timeline)
 typedef struct BatPair_a
@@ -449,13 +454,15 @@ extern int GetPartyMinionMask_800C0A9C();
 
 extern int GetSummonedMinionSlot_800C0D50();
 
-typedef struct BatTask_a
+// a battle task's EventEntry (flags_0, next_8 = cb_8); CmdSimple_800BC0FC / WaitActionTask_800BC144 also view
+// their buffer through it (resume_4, next_8, handle_C: the action task's flags)
+typedef struct BatTaskEntry
 {
-    int f0;
-    int f4;
+    int flags_0;
+    int resume_4;
     void (*next_8)();
-    int* fc;
-} BatTask_a;
+    int* handle_C;
+} BatTaskEntry;
 
 
 
