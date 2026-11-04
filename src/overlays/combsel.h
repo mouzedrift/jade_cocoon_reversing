@@ -106,7 +106,7 @@ extern void TeamSlotInput_800A5188(void);
 extern void ListInput_800A53B0(void);
 extern void QuitConfirmInput_800A54A0(CombSelTask* t);
 extern void QuitToTitle_800A5538(CombSelTask* t);
-extern int AllSlotsEmpty_800A5560(Minion* p, int n);
+extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 extern int GetMenuCursorIndex_8003DA54(void* cursor);
 extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* p, int v, int ot);
