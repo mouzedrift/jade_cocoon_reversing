@@ -44,8 +44,8 @@ extern int dword_800A38E0;
 extern int combatTaskDesc_800A38E4[6];
 extern int combatModelLoaderDesc_800A38FC[6];
 extern int combatActorTaskDesc_800A3914[6];
-extern int dword_800A392C[6];
-extern int dword_800A3944[6];
+extern int enemyWindowTaskDef_800A392C[6];
+extern int announcerTaskDef_800A3944[6];
 extern int combatCameraTaskDesc_800A395C[6];
 extern int combatFadeTaskDesc_800A3974[6];
 extern void *combatTaskList_800A398C[25];
@@ -53,7 +53,7 @@ extern int stageOverlays_800A39F0[6];
 extern CombatSlot combatSlots_800A3A08[2];
 extern int combatFlags_800A3A88; // bit 0: COMBSTRT goes on to COMBBTL (else back to COMBSEL)
 extern int stage_800A3A8C; // stageOverlays_800A39F0 index: 0 CUI, 1 SEL, 2 LOAD, 3 STRT, 4 BTL, 5 RSLT
-extern int dword_800A3A90[4];
+extern int sideWins_800A3A90[4];
 extern int prevStage_800A4070;
 extern int dword_800A4074[3];
 extern int stageOvlRequest_800A4080;

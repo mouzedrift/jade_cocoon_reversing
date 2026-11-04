@@ -51,7 +51,7 @@ void InitGameDefaults_80040718(void)
         j--;
     }
     ResetButtonConfig_8001C6C8();
-    word_8008B558[1] = 0;
+    titleMenuState_8008B558[1] = 0;
 }
 
 // Matched

@@ -421,10 +421,10 @@ extern unsigned long* decodedImageData_8008B4A0;
 extern int defaultAllocList_80096090[4];
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;
-extern short word_8008B558[2];
+extern short titleMenuState_8008B558[2]; // [0]: title screen entry (0 press start, 1 menu); [1]: title menu selection (GAME GetGameStartMode_800A72C8)
 extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
-extern int dword_8008B55C;
+extern int cdReadFlags_8008B55C; // 0x10: no LoadFileIntoBuffer_8003CB7C in progress
 extern int displayStartFrames_800918BC;
 extern int ODEIsEvenAddressDrawn_800918C0;
 extern DisplayConfig display_8008B4D8;

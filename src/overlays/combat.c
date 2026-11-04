@@ -930,8 +930,8 @@ int dword_800A38E0 = 0xDF0033;
 int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
 int combatModelLoaderDesc_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
 int combatActorTaskDesc_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
-int dword_800A392C[6] = { 2, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
-int dword_800A3944[6] = { 1, 0x8000, 0, (int)&announcerTasks_8008D458 };
+int enemyWindowTaskDef_800A392C[6] = { 2, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
+int announcerTaskDef_800A3944[6] = { 1, 0x8000, 0, (int)&announcerTasks_8008D458 };
 int combatCameraTaskDesc_800A395C[6] = { 1, 0x8000, 0x21C, (int)&cameraTask_8008D4A0 };
 int combatFadeTaskDesc_800A3974[6] = { 1, 0x8000, 8, (int)&fadeTask_8008D628 };
 void *combatTaskList_800A398C[25] = {
@@ -940,13 +940,13 @@ void *combatTaskList_800A398C[25] = {
     (void *)((char *)&eventDescs_80078EB8 + 528), (void *)((char *)&eventDescs_80078EB8 + 552), (void *)((char *)&eventDescs_80078EB8 + 576), (void *)((char *)&eventDescs_80078EB8 + 432),
     (void *)((char *)&eventDescs_80078EB8 + 624), (void *)combatModelLoaderDesc_800A38FC, (void *)((char *)&eventDescs_80078EB8 + 456), (void *)combatTaskDesc_800A38E4,
     (void *)combatActorTaskDesc_800A3914, (void *)((char *)&eventDescs_80078EB8 + 240), (void *)((char *)&eventDescs_80078EB8 + 216), (void *)((char *)&eventDescs_80078EB8 + 600),
-    (void *)dword_800A392C, (void *)dword_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
+    (void *)enemyWindowTaskDef_800A392C, (void *)announcerTaskDef_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
 };
 int stageOverlays_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
 CombatSlot combatSlots_800A3A08[2] = { { 0 } };
 int combatFlags_800A3A88 = 0;
 int stage_800A3A8C = 0;
-int dword_800A3A90[4] = { 0 };
+int sideWins_800A3A90[4] = { 0 };
 Minion teams_800A3AA0[2][3] = { { { 0 } } };
 int prevStage_800A4070 = 0;
 int dword_800A4074[3] = { 0 };

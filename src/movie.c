@@ -131,12 +131,12 @@ int SelectIngameOrTitle_80040D5C(void)
     if (saveData_8008B570.field_0 & 0x80)
     {
         unknownFlags_8008D678 &= ~0x10000000;
-        word_8008B558[1] = 4;
+        titleMenuState_8008B558[1] = 4;
         unknownFlags_8008D678 |= 0x20000000;
         return eMainMenu_6;
     }
     unknownFlags_8008D678 &= ~0x10000000;
-    word_8008B558[1] = 1;
+    titleMenuState_8008B558[1] = 1;
     return eIngame_12;
 }
 // Matched

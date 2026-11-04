@@ -5769,3 +5769,10 @@ sub_800C0F14 MinionReturnZero_800C0F14
 [EVENTFNC]
 sub_800B8928 EmptyLoop_800B8928
 sub_800BA880 EvCmdSetMapVariant_800BA880
+[COMBAT]
+dword_800A3A90 sideWins_800A3A90
+dword_800A392C enemyWindowTaskDef_800A392C
+dword_800A3944 announcerTaskDef_800A3944
+[ALL]
+word_8008B558 titleMenuState_8008B558
+dword_8008B55C cdReadFlags_8008B55C

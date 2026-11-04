@@ -366,7 +366,7 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
     void* buf;
     if (unknownFlags_8008D678 & 0x20000000)
     {
-        word_8008B558[1] = 4;
+        titleMenuState_8008B558[1] = 4;
         SetNewGameStartMap_800A2650();
         saveData_8008B570.field_0 |= 0x80;
         StartNewGameTask_800A1B74(t);
@@ -379,7 +379,7 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
         c->cursor_1C[3] = 2;
         c->field_4 = 0;
         c->field_8 = 0;
-        c->selected_24 = (unsigned short)word_8008B558[1];
+        c->selected_24 = (unsigned short)titleMenuState_8008B558[1];
         titleIdleTimer_800A2814 = 0;
         c->field_26 = 0;
         c->sprts_C = 0;
@@ -397,7 +397,7 @@ extern void TitleMenu_800A1310();
 // Matched
 void TitleEnterScreen_800A1070(TitleTask* t, TitleMenuWork* c)
 {
-    switch ((unsigned short)word_8008B558[0])
+    switch ((unsigned short)titleMenuState_8008B558[0])
     {
     case 0:
         t->next_8 = TitlePressStart_800A1174;
@@ -415,10 +415,10 @@ void TitleEnterScreen_800A1070(TitleTask* t, TitleMenuWork* c)
 void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
 {
     TitleMenuWork* d = c;
-    word_8008B558[1] = c->selected_24;
+    titleMenuState_8008B558[1] = c->selected_24;
     if (unknownFlags_8008D678 & 0x20000000)
     {
-        word_8008B558[1] = 4;
+        titleMenuState_8008B558[1] = 4;
         unknownFlags_8008D678 &= ~0x20000000;
     }
     if (c->sprts_C)

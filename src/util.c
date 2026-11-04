@@ -859,8 +859,8 @@ void GameLoop_8004047C(void)
             case eIntroAnime_5:
                 SetDisplayMode_80040658(1);
                 PlayAnimeMovie_80040CCC();
-                word_8008B558[1] = 1;
-                word_8008B558[0] = 0;
+                titleMenuState_8008B558[1] = 1;
+                titleMenuState_8008B558[0] = 0;
                 currentGameState_8008D4B4 = eMainMenu_6;
             case eMainMenu_6:
                 SetDisplayMode_80040658(1);

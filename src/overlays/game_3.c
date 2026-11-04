@@ -967,12 +967,12 @@ GameMode2_1* GetGameStartMode_800A72C8(GameMode2_1* out)
         saveData_8008B570.mapId_2E4[1].field_0 = v.b;
         saveData_8008B570.mapId_2E4[2].field_0 = v.c;
     }
-    else if ((unsigned short)word_8008B558[1] == 1)
+    else if ((unsigned short)titleMenuState_8008B558[1] == 1)
     {
         r.a = 0;
         r.b = 1;
     }
-    else if ((unsigned short)word_8008B558[1] == 4)
+    else if ((unsigned short)titleMenuState_8008B558[1] == 4)
     {
         r.a = 1;
         r.b = 1;

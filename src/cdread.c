@@ -196,7 +196,7 @@ void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, in
 
     seekSuccess = 1;
     var_s0 = 0;
-    dword_8008B55C &= ~0x10;
+    cdReadFlags_8008B55C &= ~0x10;
     do
     {
         switch (var_s0)
@@ -220,7 +220,7 @@ void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, in
         }
     } while (seekSuccess != 0);
 
-    dword_8008B55C |= 0x10;
+    cdReadFlags_8008B55C |= 0x10;
 }
 // Matched
 int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFileBuffer)
