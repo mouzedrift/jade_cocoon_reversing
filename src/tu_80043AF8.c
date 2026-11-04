@@ -20,6 +20,7 @@
 #include "tu_80043AF8.h"
 #include "tu_80019BF0.h"
 #include "tu_8004B0A8.h"
+#include "spadstack.h"
 
 INCLUDE_DATA(dword_80098690);
 INCLUDE_DATA(dword_800986A0);
@@ -718,8 +719,6 @@ void RotMatrixYXZ_80046874(SVECTOR* r, MATRIX* m)
     m->m[2][2] = (cy * cx) >> 12;
     m->m[2][1] = ((sy * sz) >> 12) + ((b * cz) >> 12);
 }
-INCLUDE_ASM(sub_80046A58);
-INCLUDE_ASM(sub_80047E28);
 extern SVECTOR dword_80098690[];
 
 /* inlined helpers: the original keeps the bone index in a copy of the argument */
@@ -740,6 +739,234 @@ static inline void GetRot(SVECTOR* o, AnimPose* p, int j)
         o->vz = p->rot[k * 3 + 2];
     }
 }
+/* inline copy of RotMatrixZYX_8004D5CC */
+static inline void RotZYX(SVECTOR* r, MATRIX* m)
+{
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int a;
+    int b;
+    m->m[2][0] = -sy;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
+    m->m[0][0] = (cz * cy) >> 12;
+    m->m[1][0] = (sz * cy) >> 12;
+    m->m[0][1] = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    m->m[1][1] = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m->m[2][1] = (cy * sx) >> 12;
+    m->m[0][2] = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    m->m[2][2] = (cy * cx) >> 12;
+    m->m[1][2] = -((cz * sx) >> 12) + ((b * cx) >> 12);
+}
+/* the bone's rotation at frame f (zero for bone 0) */
+static inline void GetFrameRot(SVECTOR* o, AnimPose* p, int f, int j)
+{
+    int k;
+    if (j == 0)
+    {
+        o->vx = 0;
+        o->vy = 0;
+        o->vz = 0;
+    }
+    else
+    {
+        k = j + 2;
+        k = f * (p->n_4 + 2) + k;
+        o->vx = p->rot[k * 3];
+        o->vy = p->rot[k * 3 + 1];
+        o->vz = p->rot[k * 3 + 2];
+    }
+}
+/* RotZYX followed by a rotation about x by rx->vx (applied from the left) */
+static inline void RotZYXThenX(SVECTOR* r, SVECTOR* rx, MATRIX* m)
+{
+    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int c;
+    int s;
+    int a;
+    int b;
+    int m00;
+    int m01;
+    int m02;
+    int m10;
+    int m11;
+    int m12;
+    int m21;
+    int m22;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
+    m21 = (sx * cy) >> 12;
+    m22 = (cx * cy) >> 12;
+    m10 = (cy * sz) >> 12;
+    m11 = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m12 = -((cz * sx) >> 12) + ((b * cx) >> 12);
+    m00 = (cz * cy) >> 12;
+    m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
+    s = SIN_TABLE[rx->vx & 0xFFF];
+    m->m[0][0] = m00;
+    m->m[0][1] = m01;
+    m->m[0][2] = m02;
+    m->m[1][0] = ((m10 * c) >> 12) + ((sy * s) >> 12);
+    m->m[2][0] = ((m10 * s) >> 12) - ((sy * c) >> 12);
+    m->m[1][1] = ((m11 * c) >> 12) - ((m21 * s) >> 12);
+    m->m[1][2] = ((m12 * c) >> 12) - ((m22 * s) >> 12);
+    m->m[2][1] = ((m11 * s) >> 12) + ((m21 * c) >> 12);
+    m->m[2][2] = ((m12 * s) >> 12) + ((m22 * c) >> 12);
+}
+/* adds the translation b to a */
+static inline void AddTrans(long* a, long* b)
+{
+    a[0] += b[0];
+    a[1] += b[1];
+    a[2] += b[2];
+}
+extern MATRIX dword_80096120[]; // per-bone draw matrices
+#if 0
+// Not matched: same shape and length (1274 vs 1268 words); register allocation / scheduling differ in the alt matrix, the 5-word matrix copies and the translation adds
+// draws a skeleton: bone matrices from the pose (alt: bone rotations about x added from another pose), then
+// each drawn bone's FTG object
+void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
+{
+    SVECTOR r;
+    SVECTOR r2;
+    MATRIX* m;
+    MATRIX* root;
+    int n;
+    int i;
+    int flags;
+
+    m = SKEL_MATS;
+    sk->light_2C = light;
+    gte_ReadRotMatrix(m);
+    root = &SKEL_MATS[1];
+    RotZYX(sk->rot_8, root);
+    m->t[0] = sk->pos_4->vx;
+    m->t[1] = sk->pos_4->vy;
+    m->t[2] = sk->pos_4->vz;
+    m->t[0] -= dword_8008D600.vx;
+    m->t[1] -= dword_8008D600.vy;
+    m->t[2] -= dword_8008D600.vz;
+    ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
+    m[1].t[0] = root->t[1] = root->t[2] = 0;
+    GetBoneOffsets_80046248(sk, dword_80098690, alt);
+    for (i = 0; (n = sk->bones[i].parent + 2) >= 2; i++)
+    {
+        GetFrameRot(&r, sk->pose_14, sk->frame_18, sk->bones[i].idx);
+        if (alt)
+        {
+            GetRot(&r2, alt, sk->bones[i].idx);
+            RotZYXThenX(&r, &r2, &m[n]);
+        }
+        else
+        {
+            RotZYX(&r, &m[n]);
+        }
+        gte_MulMatrix0(&m[n - 1], &m[n], &m[n]);
+        gte_ldv0(&dword_80098690[i]);
+        gte_rtv0();
+        gte_stlvnl(m[n].t);
+        AddTrans(m[n].t, m[n - 1].t);
+        n++;
+        ((long*)dword_80098188[i].m)[0] = ((long*)m[n - 1].m)[0];
+        ((long*)dword_80098188[i].m)[1] = ((long*)m[n - 1].m)[1];
+        ((long*)dword_80098188[i].m)[2] = ((long*)m[n - 1].m)[2];
+        ((long*)dword_80098188[i].m)[3] = ((long*)m[n - 1].m)[3];
+        ((long*)dword_80098188[i].m)[4] = ((long*)m[n - 1].m)[4];
+        sk->bonePos_20[i].vx = m[n - 1].t[0];
+        sk->bonePos_20[i].vy = m[n - 1].t[1];
+        sk->bonePos_20[i].vz = m[n - 1].t[2];
+        if (sk->bones[i].flags_6 & 2)
+        {
+            r.vx = m[n - 1].t[0];
+            r.vy = m[n - 1].t[1];
+            r.vz = m[n - 1].t[2];
+            gte_SetRotMatrix(&m[0]);
+            gte_ldv0(&r);
+            gte_rtv0();
+            gte_stlvnl(m[n].t);
+            AddTrans(m[n].t, m[0].t);
+            dword_80096120[i].t[0] = m[n].t[0];
+            dword_80096120[i].t[1] = m[n].t[1];
+            dword_80096120[i].t[2] = m[n].t[2];
+            gte_ldclmv(&m[n - 1]);
+            gte_rtir();
+            gte_stclmv(&m[n]);
+            gte_ldclmv((char*)&m[n - 1] + 2);
+            gte_rtir();
+            gte_stclmv((char*)&m[n] + 2);
+            gte_ldclmv((char*)&m[n - 1] + 4);
+            gte_rtir();
+            gte_stclmv((char*)&m[n] + 4);
+            if (sk->base[sk->bones[i].idx].pad)
+            {
+                m[n].m[0][0] = m[n].m[0][0] * sk->base[sk->bones[i].idx].vx / 4096;
+                m[n].m[0][1] = m[n].m[0][1] * sk->base[sk->bones[i].idx].vy / 4096;
+                m[n].m[0][2] = m[n].m[0][2] * sk->base[sk->bones[i].idx].vz / 4096;
+                m[n].m[1][0] = m[n].m[1][0] * sk->base[sk->bones[i].idx].vx / 4096;
+                m[n].m[1][1] = m[n].m[1][1] * sk->base[sk->bones[i].idx].vy / 4096;
+                m[n].m[1][2] = m[n].m[1][2] * sk->base[sk->bones[i].idx].vz / 4096;
+                m[n].m[2][0] = m[n].m[2][0] * sk->base[sk->bones[i].idx].vx / 4096;
+                m[n].m[2][1] = m[n].m[2][1] * sk->base[sk->bones[i].idx].vy / 4096;
+                m[n].m[2][2] = m[n].m[2][2] * sk->base[sk->bones[i].idx].vz / 4096;
+            }
+            if (sk->scale_24)
+            {
+                gte_MulMatrix0(&m[n], (MATRIX*)getScratchAddr(0), &m[n]);
+            }
+            ((long*)dword_80096120[i].m)[0] = ((long*)m[n].m)[0];
+            ((long*)dword_80096120[i].m)[1] = ((long*)m[n].m)[1];
+            ((long*)dword_80096120[i].m)[2] = ((long*)m[n].m)[2];
+            ((long*)dword_80096120[i].m)[3] = ((long*)m[n].m)[3];
+            ((long*)dword_80096120[i].m)[4] = ((long*)m[n].m)[4];
+        }
+    }
+    for (i = 0; sk->bones[i].parent >= 0; i++)
+    {
+        if (sk->bones[i].flags_6 & 2)
+        {
+            SetSpadStack(SPAD_STACK_ADDR);
+            SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], sk->light_2C, &dword_80098188[i]);
+            ResetSpadStack();
+            gte_SetRotMatrix(&dword_80096120[i]);
+            gte_SetTransMatrix(&dword_80096120[i]);
+            flags = sk->drawMode_1C;
+            if ((flags & 0x10) && !(sk->bones[i].flags_6 & 4))
+            {
+                flags |= (short)(sk->bones[i].flags_6 & ~0x60);
+            }
+            else
+            {
+                flags = (sk->drawMode_1C & ~0x60) | sk->bones[i].flags_6;
+            }
+            if (!(sk->bones[i].flags_6 & 8))
+            {
+                flags &= 0xFFFF00FF;
+            }
+            SetSpadStack(SPAD_STACK_ADDR);
+            DrawFtgObject_8004C7BC(&sk->ftg_0[sk->bones[i].ftg_4], sk->ot_28, flags, sk->bones[i].ftg_4);
+            ResetSpadStack();
+        }
+    }
+    m[0].t[2] = m[0].t[1] = m[0].t[0] = 0;
+    gte_SetLightMatrix(&dword_80087114);
+    gte_SetRotMatrix(SKEL_MATS);
+    gte_SetTransMatrix(SKEL_MATS);
+}
+#endif
+INCLUDE_ASM(sub_80046A58);
+INCLUDE_ASM(sub_80047E28);
+
 
 
 // Matched

@@ -134,22 +134,32 @@ typedef struct
 
 typedef struct
 {
-    short parent; // < 0 ends the list
+    short parent; // depth in the hierarchy (its matrix is SKEL_MATS[parent + 2]); < 0 ends the list
     unsigned char idx;
     unsigned char scale_3; // index into AnimSkel.base (used when parent > 0)
-    char pad[4];
+    short ftg_4;           // the bone's FTG object (AnimSkel.ftg_0) and DrawFtgObject slot
+    short flags_6;         // bit 1: drawn; the rest go to DrawFtgObject's flags
 } AnimBone;
 
+// skeleton draw arguments (Actor.draw_164 / ActorDrawArgs)
 typedef struct
 {
-    char pad[0xC];
+    FtgObject* ftg_0; // one per bone (AnimBone.ftg_4)
+    VECTOR* pos_4;
+    SVECTOR* rot_8;
     AnimBone* bones;
-    SVECTOR* base;
+    SVECTOR* base; // per-bone scale (pad != 0: scale the bone's matrix)
     AnimPose* pose_14;
     int frame_18;
-    int pad_1C[2];
-    VECTOR* scale_24; // optional per-axis scale (rotation matrix diagonal)
+    int drawMode_1C;
+    LVec3* bonePos_20; // out: world position per bone
+    VECTOR* scale_24;  // optional per-axis scale (rotation matrix diagonal)
+    unsigned long* ot_28;
+    PointLight* light_2C;
 } AnimSkel;
+
+// the bone matrices in the scratchpad (0x1F800040): [0] the camera, [1] the model root, [depth + 2] a bone
+#define SKEL_MATS ((MATRIX*)getScratchAddr(0x10))
 
 // draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
 extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);

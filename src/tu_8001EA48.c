@@ -1991,7 +1991,7 @@ void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a
     *a1 = v * 64 + (u >> 4);
 }
 #if 0
-// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers) and keeps q+4/q+8 unfolded; needs its jump table split out of dword_800740B4 (keep 0x68 of its 0x90 bytes)
+// Not matched: the original copies c/q/k into extra registers (looks like inlined helpers; static inline sum / skip helpers tried, the pointer ones put q in memory) and keeps q+4/q+8 unfolded. Its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles
 void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 {
     int n;
