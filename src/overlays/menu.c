@@ -1714,7 +1714,6 @@ void SaveMenuCursor_800BE294(MenuCtx* c)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(menu, dword_800BBA04);
 
 void RestoreMenuCursor_800BE38C(MenuCtx* c)
 {

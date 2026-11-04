@@ -750,7 +750,6 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
     }
     t->next_8(t, x);
 }
-INCLUDE_OVERLAY_ASM(combat, dword_800A05C0);
 
 
 // called by the stage overlays when they are done: picks the next stage and loads its overlay

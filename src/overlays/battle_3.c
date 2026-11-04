@@ -637,7 +637,6 @@ int sub_800BF9B4(int species)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B67F0);
 
 #if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void MarkSpeciesCaptured_800BF9F0(int species)
@@ -4551,7 +4550,6 @@ int IsMenuSelectionValid_800C7530()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800BA238);
 
 unsigned char GetSelectedCommand_800C78D0()
 {

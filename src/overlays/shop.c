@@ -3540,7 +3540,6 @@ int GetStoredListScroll_800BEB60(ShopMenu* u)
     }
     return -1;
 }
-INCLUDE_OVERLAY_ASM(shop, dword_800B9770);
 
 void UpdateSelectedMinions_800BEBC8(ShopMenu* u)
 {
