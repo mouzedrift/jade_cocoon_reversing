@@ -58,9 +58,12 @@ extern UnitSkill* GetEnemySkills_800A2BA0(int a0);
 
 
 #if 0
-// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as GetUnitStatus_80014390 / GetUnitStats_8001449C. Tried: two-arg calls (t, t & 0xFF), int/unsigned t, t used in all three branches; permuter 1500: nothing
-UnitSkill* GetUnitSkills_80031B30(int unit)
+// Not matched (2 lines): a local copy of the parameter (unit = a0) fixes the a0 / r saved registers ($s1/$s2), but the
+// last branch then reads the still-live incoming $a0 for unit - 1 (orig: $s1) and the beqz delay slot differs. Without the
+// copy: $s1/$s2 swapped (13 words). Tried: a0 vs unit in every use, (unit - 1) & 0xFF inline, v - 1, unsigned copy
+UnitSkill* GetUnitSkills_80031B30(int a0)
 {
+    int unit = a0;
     UnitSkill* r = 0;
     unsigned int v = unit & 0xFF;
     unsigned int t;

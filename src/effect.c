@@ -237,9 +237,12 @@ int LowestSetBit_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as GetUnitStats_8001449C / GetUnitSkills_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
-UnitStatus* GetUnitStatus_80014390(int unit)
+// Not matched (1 word): the local copy unit = a0 fixes the a0 / r saved registers ($s1/$s2, 13 words without it), but
+// the last branch computes unit - 1 from the still-live incoming $a0 instead of $s1 (same as GetUnitSkills_80031B30).
+// Tried: a0 in the last branch, the copy after v, minion branch as the final else
+UnitStatus* GetUnitStatus_80014390(int a0)
 {
+    int unit = a0;
     UnitStatus* r = 0;
     unsigned int v = unit & 0xFF;
     unsigned int w;

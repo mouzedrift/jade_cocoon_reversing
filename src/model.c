@@ -4175,8 +4175,7 @@ void LoadTileAnimLayers_800278BC(int* data, int heap)
         e->a = 0;
     }
 }
-#if 0
-// Not matched: $s1/$s2 (record pointer / arr + i) and $a1/$a2 swapped; the original source-triangle pointer is set up as rec + 0x48 and stepped +4 at the loop top, +0x24 at the bottom
+// Matched
 int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
 {
     MapMesh* arr;
@@ -4204,7 +4203,7 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapM
         for (j = 0; j < rec->nTris_0; j++)
         {
             tri = (MapTriRec*)p;
-            p += sizeof(MapTriRec);
+            p += sizeof(int);
             arr[i].tris_4[j].nx_18 = tri->n_8.x_0;
             arr[i].tris_4[j].ny_1A = tri->n_8.y_2;
             arr[i].tris_4[j].nz_1C = tri->n_8.z_4;
@@ -4221,13 +4220,12 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapM
             arr[i].tris_4[j].v_0[2].y_2 = tri->v_10[2].y_2;
             arr[i].tris_4[j].v_0[2].z_4 = tri->v_10[2].z_4;
             arr[i].tris_4[j].v_0[2].pad_6 = 0;
+            p += sizeof(MapTriRec) - sizeof(int);
         }
     }
     *out = arr;
     return (int*)((unsigned char*)hdr + hh->size_0);
 }
-#endif
-INCLUDE_ASM(LoadMapMeshes_80027A88);
 // Matched
 void InitMapLoaderTask_80027CC0(EventEntry* p, int* q)
 {
