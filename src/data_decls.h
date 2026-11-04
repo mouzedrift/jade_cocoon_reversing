@@ -23,7 +23,7 @@ extern const char aAssertionFaile_3[];
 extern const char aEffectC[];
 extern unsigned char rankLevelThresholds_8007C2E4[];
 extern short sinTable_80084540[]; // sine table (0x1000 = 1.0), inside battleCamSpline1Tail_80084350
-extern const struct_u8x4 orangeGlowColor_80072270;
+extern const ColorRGBA orangeGlowColor_80072270;
 extern int statusTintLevel1_8007A0A4[];
 extern int statusTintLevel2_8007A0B0[];
 extern int statusTintLevel3_8007A0BC[];

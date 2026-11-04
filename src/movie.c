@@ -128,7 +128,7 @@ void StartIntroAnime_80040D34(EventEntry* p)
 // Matched
 int SelectIngameOrTitle_80040D5C(void)
 {
-    if (saveData_8008B570.field_0 & 0x80)
+    if (saveData_8008B570.flags_0 & 0x80)
     {
         unknownFlags_8008D678 &= ~0x10000000;
         titleMenuState_8008B558[1] = 4;

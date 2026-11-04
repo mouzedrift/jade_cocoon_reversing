@@ -548,7 +548,7 @@ extern int RollOilBonus_80013DB0(void);
 extern void UnloadMap_80027118(void);
 extern void FreeModelAnimData_800269C4(struct ModelAnim* anims, int a1, int sel, int a3);
 extern void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue);
-extern void LoadRecordTable_80026EF8(struct_12* p, unsigned short* s, int heap);
+extern void LoadRecordTable_80026EF8(RecordTable* p, unsigned short* s, int heap);
 extern void CopyFtgPolyF3_80023514(struct FtgPolyF3List* list, struct FtgPolyF3* s, int code, int idx);
 extern void CopyFtgPolyG3_800236AC(struct FtgPolyG3List* list, struct FtgSrcPolyG3* s, int code, int idx);
 extern void CopyFtgPolyFT3_80023934(struct FtgPolyFT3List* list, struct FtgSrcPolyFT3* s, int code, int idx);

@@ -128,7 +128,7 @@ extern void NewGameLoadNameOvl_800A0A1C();
 void NewGameOpeningMovie_800A09C0(TitleTask* t)
 {
     int r;
-    if (saveData_8008B570.field_0 & 0x80)
+    if (saveData_8008B570.flags_0 & 0x80)
     {
         r = PlayMovie_80040EB4(8);
     }
@@ -166,7 +166,7 @@ void NewGameStartNameEntry_800A0A70(TitleTask* t)
 {
     if (GetFileRequestStatus_8003BE30(nameOvlRequest_800A2808) == 0)
     {
-        if (!(saveData_8008B570.field_0 & 0x80))
+        if (!(saveData_8008B570.flags_0 & 0x80))
         {
             EncodeName_8003F7C8(levantName_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
         }
@@ -238,10 +238,10 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
     int r;
     SoundStruct* ss;
-    if (saveData_8008B570.field_0 & 0x80)
+    if (saveData_8008B570.flags_0 & 0x80)
     {
         r = PlayMovie_80040EB4(9);
-        saveData_8008B570.field_0 &= ~0x80;
+        saveData_8008B570.flags_0 &= ~0x80;
     }
     else
     {
@@ -368,7 +368,7 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
     {
         titleMenuState_8008B558[1] = 4;
         SetNewGameStartMap_800A2650();
-        saveData_8008B570.field_0 |= 0x80;
+        saveData_8008B570.flags_0 |= 0x80;
         StartNewGameTask_800A1B74(t);
     }
     else
@@ -789,11 +789,11 @@ void LoadGameWait_800A1CC0(TitleTaskM* t)
     {
         if (GetLoadMenuLoaded_800B7914() == 1)
         {
-            if (saveData_8008B570.field_0 & 0x80)
+            if (saveData_8008B570.flags_0 & 0x80)
             {
                 word_8008B55A = 4;
                 SetNewGameStartMap_800A2650();
-                saveData_8008B570.field_0 |= 0x80;
+                saveData_8008B570.flags_0 |= 0x80;
                 StartNewGameTask_800A1B74(t);
             }
             else
@@ -958,7 +958,7 @@ void InitSaveData_800A211C(void)
 {
     SDECL;
     s->field_984 = 5;
-    saveData_8008B570.field_0 = 0;
+    saveData_8008B570.flags_0 = 0;
     s->chapterNext_2DE = -1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;

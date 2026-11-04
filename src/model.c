@@ -3725,35 +3725,35 @@ int GetRecordTableCount_80026D6C(int* p)
     return p[0];
 }
 // Matched
-void AllocRecordTables_80026D78(struct_12** out, int count, int heap)
+void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
 {
-    struct_12* p = HeapAlloc_8003FC8C(count * 12, heap);
+    RecordTable* p = HeapAlloc_8003FC8C(count * 12, heap);
     int i;
     for (i = 0; i < count; i++)
     {
-        p[i].field_0 = 0;
+        p[i].count_0 = 0;
         p[i].field_4 = 0;
-        p[i].field_8 = 0;
+        p[i].records_8 = 0;
     }
     *out = p;
 }
 // Matched
-void FreeRecordTables_80026DE8(struct_12** tables, int n, int h)
+void FreeRecordTables_80026DE8(RecordTable** tables, int n, int h)
 {
-    struct_12* p = *tables;
+    RecordTable* p = *tables;
     int i;
     for (i = 0; i < n; i++, p++)
     {
-        if (p->field_8 != 0)
+        if (p->records_8 != 0)
         {
-            HeapFree_8003FD18(p->field_8, h);
+            HeapFree_8003FD18(p->records_8, h);
         }
     }
     HeapFree_8003FD18(*tables, h);
     *tables = 0;
 }
 // Matched
-void LoadRecordTables_80026E74(struct_12* tables, int* file, int heap)
+void LoadRecordTables_80026E74(RecordTable* tables, int* file, int heap)
 {
     int i;
     for (i = 0; i < GetRecordTableCount_80026D6C(file); i++)
@@ -3770,17 +3770,17 @@ typedef struct
     unsigned short d;
 } struct_4h;
 // Matched
-void LoadRecordTable_80026EF8(struct_12* p, unsigned short* s, int heap)
+void LoadRecordTable_80026EF8(RecordTable* p, unsigned short* s, int heap)
 {
     unsigned short* d;
     int i;
-    p->field_0 = *(int*)s;
+    p->count_0 = *(int*)s;
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = HeapAlloc_8003FC8C(p->field_0 * 8, heap);
-    p->field_8 = (int)d;
-    for (i = 0; i < p->field_0; i++)
+    d = HeapAlloc_8003FC8C(p->count_0 * 8, heap);
+    p->records_8 = (int)d;
+    for (i = 0; i < p->count_0; i++)
     {
         d[0] = s[0];
         d[1] = s[1];

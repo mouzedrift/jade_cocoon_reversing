@@ -112,7 +112,7 @@ typedef struct
 
 typedef struct
 {
-    int field_0; // bit 6: config.c
+    int flags_0; // option bits; bit 6: no pad vibration (config.c, StartPadVibration_80036528)
     int playTime_4; // vsyncs, counted by the vsync handler while not paused
     unsigned short buttonConfig_8[10]; // == buttonConfig_8008B578
     Settings settings_1C; // == settingsFlags_8008B58C.word
@@ -231,12 +231,13 @@ typedef struct
 } Font;
 
 
+// a record table (AllocRecordTables_80026D78 / LoadRecordTable_80026EF8, model.c): count_0 records of 8 bytes
 typedef struct
 {
-    int field_0;
+    int count_0;
     int field_4;
-    int field_8;
-} struct_12;
+    int records_8; // unsigned short (*)[4], heap allocated
+} RecordTable;
 
 
 typedef struct
@@ -328,12 +329,13 @@ extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
 extern short seqSlotSepAccessNum_80091D0C;
+// a sequence slot (seqSlots_800833E4, PlaySeqSlot_80031160)
 typedef struct
 {
-    int field_0;
-    int field_4;
-} struct_833E4;
-extern struct_833E4 seqSlots_800833E4[];
+    int sep_0; // 1: the slot sound's second SEP (field_14_sep_access_num), else the first
+    int seq_4; // sequence number in the SEP
+} SeqSlot;
+extern SeqSlot seqSlots_800833E4[];
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];
 extern char genkiMovie_80086968[];
@@ -344,10 +346,11 @@ typedef struct
 {
     int m[3];
 } struct_int3;
+// an RGB colour (+ pad / code byte) passed as 4 bytes
 typedef struct
 {
     unsigned char c[4];
-} struct_u8x4;
+} ColorRGBA;
 // 0x14 bytes copied without alignment
 typedef struct
 {

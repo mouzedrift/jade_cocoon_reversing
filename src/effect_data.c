@@ -3230,7 +3230,7 @@ SoundInfo soundFiles_80082F0C[155] =
   { SOUND_TAISEN_SND, 0, 1u, 0u, -1 },
   { SOUND_SAIRASU_SND, -1, 1u, 0u, 44 }
 };
-struct_833E4 seqSlots_800833E4[32] = {
+SeqSlot seqSlots_800833E4[32] = {
     { 0 },
     { 0, 1 },
     { 0, 2 },

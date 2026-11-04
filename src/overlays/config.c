@@ -197,7 +197,7 @@ void LoadConfigSettings_800C3060(CfgCtxConfig* c)
     {
         c->speech_11 = 1;
     }
-    if (saveData_8008B570.field_0 & 0x40)
+    if (saveData_8008B570.flags_0 & 0x40)
     {
         c->vibration_12 = 0;
     }
@@ -314,11 +314,11 @@ void ApplyConfigSetting_800C31DC(CfgCtxConfig* c)
         {
             if (c->vibration_12 == 0)
             {
-                saveData_8008B570.field_0 |= 0x40;
+                saveData_8008B570.flags_0 |= 0x40;
             }
             else
             {
-                saveData_8008B570.field_0 &= ~0x40;
+                saveData_8008B570.flags_0 &= ~0x40;
             }
         }
         break;

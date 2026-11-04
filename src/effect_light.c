@@ -19,7 +19,7 @@
 #include "effect_obj.h"
 #include "effect_light.h"
 
-const struct_u8x4 orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
+const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
 const int dword_80072274 = 0;
 
 // Matched
@@ -207,7 +207,7 @@ void GlowModelTask_800173A8(int* flags, void* buf)
 {
     EffectObj* obj = buf;
     EffectModel* model = (EffectModel*)obj->res_88;
-    struct_u8x4 color;
+    ColorRGBA color;
     int scale[3];
     if (obj->frame_0 < obj->field_4)
     {

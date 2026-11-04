@@ -40,7 +40,7 @@ void StartPadVibration_80036528(int idx, int pattern)
     PadVibTask* vib;
     EventEntry* entry;
 
-    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[(unsigned char)idx][1] >> 4) != 7)
+    if ((saveData_8008B570.flags_0 & 0x40) || (pads_800918E8[(unsigned char)idx][1] >> 4) != 7)
     {
         StopPadVibration_80036658((unsigned char)idx);
         return;
@@ -87,7 +87,7 @@ void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib)
             entry->cb_8 = (EventEntryFn)StopPadVibrationTask_800367F0;
         }
     }
-    if ((saveData_8008B570.field_0 & 0x40) || (pads_800918E8[vib->port_0][1] >> 4) != 7)
+    if ((saveData_8008B570.flags_0 & 0x40) || (pads_800918E8[vib->port_0][1] >> 4) != 7)
     {
         padVibration_80095460[vib->port_0].motor_2[0] = 0;
         padVibration_80095460[vib->port_0].motor_2[1] = 0;
