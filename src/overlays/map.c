@@ -10,9 +10,17 @@ typedef struct MapTask
     void (*next_8)();
 } MapTask;
 
+// a destination of a map area (MapRow.f14[])
 typedef struct MapElem
 {
-    char pad_0[0x18];
+    int sprite_0; // dword_800B931C / dword_800B9320 index of its picture
+    short x_4;
+    short y_6;
+    int marker_8; // index of its blinking marker sprite
+    short x_C;
+    short y_E;
+    unsigned char c0_10[4]; // the marker's PulseColor_80033394 colors
+    unsigned char c1_14[4];
     int f18;
 } MapElem;
 
@@ -20,8 +28,9 @@ typedef struct MapRow
 {
     int f0;
     int f4;
-    int f8;
-    int fc;
+    char* name_8; // the area name, centred on x_C
+    short x_C;
+    short y_E;
     int f10;
     MapElem* f14;
 } MapRow;
@@ -265,6 +274,257 @@ void sub_800B6FAC(MapTask* t)
     }
 }
 
+typedef struct MapWin
+{
+    int f0;
+    char* text_4;
+    int w[12];
+} MapWin;
+// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
+typedef struct MapMenu
+{
+    int f0;
+    int time_4;
+    int f8;
+    int sel_C;
+    MapWin** windows_10;
+    int f14;
+} MapMenu;
+extern DISPENV dispEnv_8008D750[2];
+extern char** dword_800B92FC[];
+extern char name_800B6978[];
+extern MapWin name_800B6994;
+extern MapWin name_800B69D4;
+extern MapMenu name_800B6960;
+extern MapSel name_800B9324;
+extern void name_800A75F8();
+extern int MeasureTextWidth_8003E4C8(void* p);
+extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void* memset(void* p, int c, unsigned int n);
+extern void UpdateMenuCursor_8003D794(void* p, int a);
+extern void sub_800B8338(MapPos* p);
+extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
+extern void sub_800B7948();
+extern MapWin dword_800B68B8;
+extern MapWin dword_800B68F0;
+extern MapWin dword_800B6928;
+extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
+                                int half);
+extern void SetSemiTrans(void* p, int abe);
+extern void DrawScrollArrows_8002B8DC(MapPos arrow, MapSel* sel, MapPos* pos, int ot);
+extern unsigned short padPressed_8009194C;
+#if 0
+// Not matched: the original reads dword_800B9320[id].code[0] into a dead register when word_800AEBF8.a >= 2
+// (between the marker's two AddPrimCopy calls), which plain C drops; the tail's pad test / register
+// allocation also differ.
+// the destination list of a map area: the area picture, the blinking marker of the selected destination
+// and the scrolling list of names
+void sub_800B7044(MapTask* t, int a)
+{
+    MapPos q;
+    DR_MOVE mv;
+    RECT r0;
+    RECT box;
+    short tp[2];
+    MapPos q2;
+    MapWin w0;
+    MapWin w1;
+    MapWin w2;
+    MapWin* list[4];
+    MapMenu m;
+    MapPos arrow;
+    MapPos pos[2];
+    int i;
+    MapElem* e;
+    int y;
+    int wd;
+    int id;
+    sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[word_800AEBF8.a]), word_800AEBF8.a, &q);
+    e = dword_800B9220[word_800AEBF8.a].f14 + q.b;
+    if (dword_800B8CA4 > 0)
+    {
+        UpdateMenuCursor_8003D794(&dword_800AEBFC[word_800AEBF8.a], 0);
+    }
+    if (display_8008B4D8.vsyncsPerFrame_4 == 1)
+    {
+        y = display_8008B4D8.field_A_y;
+    }
+    else
+    {
+        y = dispEnv_8008D750[bDoubleBuffer_8008D428 ^ 1].disp.y;
+    }
+    r0.x = 0x140;
+    r0.w = 0x140;
+    r0.y = 0;
+    r0.h = 0xF0;
+    SetDrawMove(&mv, &r0, 0, y);
+    AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
+    wd = MeasureTextWidth_8003E4C8(dword_800B9220[word_800AEBF8.a].name_8);
+    tp[0] = dword_800B9220[word_800AEBF8.a].x_C - (short)wd / 2;
+    tp[1] = dword_800B9220[word_800AEBF8.a].y_E;
+    box.x = tp[0] - 2;
+    box.y = tp[1] - 2;
+    box.w = wd + 4;
+    box.h = 0x12;
+    tp[1] += 2;
+    DrawText_8003E91C(2, dword_800B9220[word_800AEBF8.a].name_8, tp, 0);
+    DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
+    if (dword_800B8CA4 > 0)
+    {
+        id = e->sprite_0;
+        dword_800B931C[id].x0 = e->x_4;
+        dword_800B931C[id].y0 = e->y_6;
+        AddPrimCopy_80040298(&pOT_8008D454[10], &dword_800B931C[id], 5);
+        AddPrimCopy_80040298(&pOT_8008D454[10], &dword_800B9320[id], 2);
+        if (dword_800B8CA4 > 0)
+        {
+            id = e->marker_8;
+            dword_800B931C[id].x0 = e->x_C;
+            dword_800B931C[id].y0 = e->y_E;
+            PulseColor_80033394(&dword_800B931C[id].r0, e->c0_10, e->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
+            if ((unsigned short)word_800AEBF8.a < 2)
+            {
+                SetSemiTrans(&dword_800B931C[id], 0);
+            }
+            else
+            {
+                SetSemiTrans(&dword_800B931C[id], 1);
+            }
+            AddPrimCopy_80040298(&pOT_8008D454[9], &dword_800B931C[id], 5);
+            AddPrimCopy_80040298(&pOT_8008D454[9], &dword_800B9320[id], 2);
+            if (dword_800B8CA4 > 0)
+            {
+                w0 = dword_800B68B8;
+                w1 = dword_800B68F0;
+                w2 = dword_800B6928;
+                memset(list, 0, 0x10);
+                m = name_800B6960;
+                list[0] = &w0;
+                list[1] = &w1;
+                list[2] = &w2;
+                m.windows_10 = list;
+                for (i = dword_800AEBFC[word_800AEBF8.a].sA;
+                     i < dword_800AEBFC[word_800AEBF8.a].sA + dword_800AEBFC[word_800AEBF8.a].s2; i++)
+                {
+                    sub_800B8128((short)i, word_800AEBF8.a, &q2);
+                    list[i - dword_800AEBFC[word_800AEBF8.a].sA]->text_4 = dword_800B92FC[q2.a][q2.b];
+                }
+                if (dword_800B8CA4 < 3)
+                {
+                    list[dword_800B8CA4] = 0;
+                }
+                m.time_4 = GetTime30Hz_8002C64C();
+                m.sel_C = dword_800AEBFC[word_800AEBF8.a].s8;
+                DrawMenuWindows_8002A5A4(&m);
+            }
+        }
+    }
+    {
+        arrow.a = 2;
+        arrow.b = 1;
+        pos[0].a = 0x4A;
+        pos[0].b = 0x93;
+        pos[1].a = 0x4A;
+        pos[1].b = dword_800AEBFC[word_800AEBF8.a].s2 * 18 + 0x9D;
+        DrawScrollArrows_8002B8DC(arrow, &dword_800AEBFC[word_800AEBF8.a], pos, 0);
+    }
+    if (dword_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C & 0x80)))
+    {
+        sub_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[word_800AEBF8.a]), word_800AEBF8.a,
+                     &word_800AEBF8);
+        dword_800B8C94.a = word_800AEBF8.a;
+        dword_800B8C94.b = word_800AEBF8.b;
+        if ((unsigned short)word_800AEBF8.a < 2)
+        {
+            int b = word_800AEBF8.b;
+            if (b == 0xC)
+            {
+                word_800AEBF8.a = 5;
+                word_800AEBF8.b = 5;
+                if (sub_800B8290(&word_800AEBF8))
+                {
+                    word_800AEBF8.b = 0;
+                    t->next_8 = sub_800B6C7C;
+                    t->next_8(t, a);
+                    return;
+                }
+                word_800AEBF8.a = 4;
+                word_800AEBF8.b = 4;
+                if (sub_800B8290(&word_800AEBF8))
+                {
+                    word_800AEBF8.b = 0;
+                    t->next_8 = sub_800B6C7C;
+                    t->next_8(t, a);
+                    return;
+                }
+                word_800AEBF8.a = 3;
+                word_800AEBF8.b = 3;
+                if (sub_800B8290(&word_800AEBF8))
+                {
+                    word_800AEBF8.b = 0;
+                    t->next_8 = sub_800B6C7C;
+                    t->next_8(t, a);
+                    return;
+                }
+                word_800AEBF8.a = 2;
+                word_800AEBF8.b = 2;
+                if (sub_800B8290(&word_800AEBF8))
+                {
+                    word_800AEBF8.b = 0;
+                    t->next_8 = sub_800B6C7C;
+                    t->next_8(t, a);
+                    return;
+                }
+                word_800AEBF8.a = 0;
+                word_800AEBF8.b = b;
+            }
+            if (!(padPressed_8009194C & 0x80))
+            {
+                t->next_8 = sub_800B7948;
+                t->next_8(t, a);
+            }
+            else
+            {
+                sub_800B8338(&word_800AEBF8);
+                sub_800B6F60(t, a);
+                t->next_8 = name_800A75F8;
+            }
+        }
+        else if (word_800AEBF8.b == 0)
+        {
+            if (!saveData_8008B570.field_2E0)
+            {
+                word_800AEBF8.a = 0;
+                dword_800B8C94.a = 0;
+            }
+            else
+            {
+                word_800AEBF8.a = 1;
+                dword_800B8C94.a = 1;
+            }
+            word_800AEBF8.b = 0xC;
+            dword_800B8C94.b = 0xC;
+            t->next_8 = sub_800B6C7C;
+            t->next_8(t, a);
+        }
+        else
+        {
+            if (padPressed_8009194C & 0x80)
+            {
+                sub_800B8338(&word_800AEBF8);
+                sub_800B6F60(t, a);
+                t->next_8 = name_800A75F8;
+            }
+            else
+            {
+                t->next_8 = sub_800B7948;
+                t->next_8(t, a);
+            }
+        }
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(map, sub_800B7044);
 
 // Matched
@@ -299,35 +559,6 @@ void sub_800B7A38(MapTask* t)
     }
 }
 
-typedef struct MapWin
-{
-    int w[14];
-} MapWin;
-// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
-typedef struct MapMenu
-{
-    int f0;
-    int time_4;
-    int f8;
-    int sel_C;
-    MapWin** windows_10;
-    int f14;
-} MapMenu;
-extern DISPENV dispEnv_8008D750[2];
-extern char** dword_800B92FC[];
-extern char name_800B6978[];
-extern MapWin name_800B6994;
-extern MapWin name_800B69D4;
-extern MapMenu name_800B6960;
-extern MapSel name_800B9324;
-extern void name_800A75F8();
-extern int MeasureTextWidth_8003E4C8(void* p);
-extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
-extern void DrawMenuWindows_8002A5A4(void* p);
-extern void* memset(void* p, int c, unsigned int n);
-extern void UpdateMenuCursor_8003D794(void* p, int a);
-extern void sub_800B8338(MapPos* p);
-extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 void sub_800B7A90(MapTask* t, int a)
 {
     MapPos q;
