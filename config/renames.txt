@@ -1,7 +1,22 @@
 # Identifier renames, applied by scripts/apply_renames.py as whole-word replacements across src/, include/,
-# symbol_addrs.txt, config/*.txt and overlays/*.sym. One `OldName NewName` per line.
-# Several old spellings of one address (off_/dword_/stru_ aliases) may map to the same new name.
-# Re-run the script after merging other branches: it is idempotent.
+# symbol_addrs.txt, config/*.txt and overlays/*.sym. Re-run the script after merging other branches: it is
+# idempotent, and on main it must be a no-op (every old name is gone).
+#
+# Format:
+#   OldName NewName      one pair per line; `#` starts a comment. Several old spellings of one address
+#                        (off_/dword_/stru_ aliases) may map to the same new name. Chains (A B, then B C) work.
+#   [UNIT UNIT ...]      section header: the pairs below it, up to the next header, only apply to the files
+#                        of these units. A unit is an overlay (its overlays/<name>.sym name: GAME, BATTLE,
+#                        COMBBTL, ...; its files are src/overlays/<name>.c, <name>_<n>.c, <name>.h and
+#                        overlays/<name>.sym) or EXE (every other file: src/*.c/h, symbol_addrs.txt, config/).
+#   [ALL]                the pairs below apply to every file (the default at the top of the file).
+#
+# Overlays loaded at the same address (TITLE, COMBAT, TSTCOMPO, GAME at 0x800A05A0; COMB* at 0x800A4088;
+# BATTLE, MENU, MAP, LOAD, ... at 0x800B66C0) reuse addresses for different things, so a pair whose name
+# has an overlay-area address (0x800A05A0 and up) must be in a [UNIT ...] section (the script refuses it in
+# [ALL]). Name the overlay that defines the symbol plus every unit that refers to it by that name: EXE when
+# the game code or symbol_addrs.txt uses it, overlays loaded above it (BATTLE, EVENTFNC, MENU, MAP call
+# GAME). The same old name may appear in several sections as long as their units do not overlap.
 
 # --- item / equipment / key item tables (names are Shift-JIS fullwidth strings) ---
 off_8007CB78 itemNames_8007CB78
@@ -1244,9 +1259,12 @@ dword_80091CA8 savedLevantRot_80091CA8
 dword_80091CB0 mapAreaCount_80091CB0
 dword_80091CB4 mapCallback_80091CB4
 dword_80095468 battleEffectFile_80095468
+[EVENTFNC GAME MAP EXE]
 dword_800B0608 mapTable_800B0608
+[GAME EXE]
 dword_800B1DB8 areaLoaderTask_800B1DB8
 dword_800B1DC4 mapLoaderTask_800B1DC4
+[ALL]
 dword_80082668 mapJustLoaded_80082668
 dword_8008266C mapHasCode_8008266C
 dword_80082670 areaReload_80082670
@@ -1454,6 +1472,7 @@ tu_80043AF8 skel_draw
 tu_8004B0A8 ftg_draw
 
 # --- overlay TITLE ---
+[TITLE]
 sub_800A08C8 NewGameInit_800A08C8
 sub_800A093C NewGameLoadSprites_800A093C
 sub_800A09C0 NewGameOpeningMovie_800A09C0
@@ -1463,7 +1482,9 @@ sub_800A0AE8 NewGameNameEntry_800A0AE8
 sub_800A0BCC NewGameFadeOut_800A0BCC
 sub_800A0C28 NewGameAfterNameMovie_800A0C28
 sub_800A0D18 DrawNameEntrySprites_800A0D18
+[TITLE EXE]
 sub_800A0EF0 TitleMain_800A0EF0
+[TITLE]
 sub_800A0F6C TitleInit_800A0F6C
 sub_800A1070 TitleEnterScreen_800A1070
 sub_800A10D0 TitleFree_800A10D0
@@ -1526,8 +1547,11 @@ dword_800A2810 pulseMin_800A2810
 dword_800A2814 titleIdleTimer_800A2814
 dword_800A2818 titleResult_800A2818
 
+[ALL]
 # --- overlay SOUNDTST ---
+[SOUNDTST EXE]
 sub_800A51AC SoundTestMain_800A51AC
+[SOUNDTST]
 sub_800A51D8 SoundTestInit_800A51D8
 sub_800A5238 SoundTestUpdate_800A5238
 dword_800A70F0 xaTracks_800A70F0
@@ -1543,8 +1567,11 @@ asc_800A5180 strSeNumber_800A5180
 asc_800A518C strSeFile_800A518C
 asc_800A519C strSoundNumber_800A519C
 
+[ALL]
 # --- overlay TSTCOMPO ---
+[TSTCOMPO EXE]
 sub_800A0918 SetDefaultCompoParams_800A0918
+[TSTCOMPO]
 sub_800A0AB8 TstCompoMenu_800A0AB8
 sub_800A1320 TstCompoStartModel_800A1320
 sub_800A1354 TstCompoWaitModel_800A1354
@@ -1556,7 +1583,9 @@ sub_800A19A4 TstCompoAnimSelect_800A19A4
 sub_800A1AD0 TstCompoFreeModel_800A1AD0
 sub_800A1AFC TstCompoInitBones_800A1AFC
 sub_800A1BE0 TstCompoResetCamera_800A1BE0
+[TSTCOMPO EXE]
 sub_800A200C TstCompoMain_800A200C
+[TSTCOMPO]
 dword_800A20EC compoParts_800A20EC
 dword_800A24AC compoTexts0_800A24AC
 dword_800A24BC compoTexts1_800A24BC
@@ -1569,7 +1598,9 @@ dword_800A2548 tstCompoTaskDesc_800A2548
 name_800A2560 tstCompoTaskList_800A2560
 name_800A2768 compoModelParams_800A2768
 
+[ALL]
 # --- overlay TSTMODEL ---
+[TSTMODEL]
 sub_800A0BC0 TstModelResetCamera_800A0BC0
 sub_800A0C00 TstModelSelectModel_800A0C00
 sub_800A0EC8 TstModelLoadModel_800A0EC8
@@ -1579,7 +1610,9 @@ sub_800A1614 TstModelBoneEdit_800A1614
 sub_800A17B8 TstModelAnimSelect_800A17B8
 sub_800A18F4 TstModelFrameInput_800A18F4
 sub_800A19E4 TstModelFreeModel_800A19E4
+[TSTMODEL EXE]
 sub_800A1B24 TstModelMain_800A1B24
+[TSTMODEL]
 sub_800A1CAC WrapGridCursor_800A1CAC
 sub_800A1D70 UpdateGridCursor_800A1D70
 name_800A1E84 lightDirs_800A1E84
@@ -1617,21 +1650,31 @@ name_800A37E8 levantFtgs_800A37E8
 name_800A37F4 gridWrapMask_800A37F4
 name_800A37FC gridWrapSign_800A37FC
 
+[ALL]
 # --- overlay COMBAT ---
+[COMBAT]
 sub_800A05E0 BuildMinionModelParams_800A05E0
 sub_800A0898 GetElementHueAngle_800A0898
 sub_800A0968 ElementMixAngle_800A0968
 sub_800A0D64 LoadModelTexToVram_800A0D64
+[COMBAT COMBBTL]
 sub_800A0FF0 TriggerSlotEffect_800A0FF0
+[COMBAT]
 sub_800A1034 GetSlotHitFrame_800A1034
 sub_800A10A4 GetSlotAncestors_800A10A4
+[COMBAT EXE]
 sub_800A10C0 GetSlotStatus_800A10C0
+[COMBAT]
 sub_800A10F8 GetSlotBonePos_800A10F8
+[COMBAT EXE]
 sub_800A111C GetSlotEffectTarget_800A111C
+[COMBAT]
 sub_800A11F4 StartCombatCamera_800A11F4
 sub_800A127C StopCombatCamera_800A127C
 sub_800A12B8 ResetCombatCamera_800A12B8
+[COMBAT EXE]
 sub_800A1324 CombatMain_800A1324
+[COMBAT]
 sub_800A13A0 CombatInit_800A13A0
 sub_800A148C CombatFree_800A148C
 sub_800A14AC CombatWaitUiTiy_800A14AC
@@ -1652,13 +1695,17 @@ dword_800A3A08 combatSlots_800A3A08
 dword_800A3A8C stage_800A3A8C
 dword_800A4070 prevStage_800A4070
 dword_800A4080 stageOvlRequest_800A4080
+[ALL]
 # --- overlay COMBCHUI ---
+[COMBCHUI]
 sub_800A450C DrawTextLines_800A450C
 dword_800A45B0 p2PadYesNoMenu_800A45B0
 dword_800A45BC introTextLines_800A45BC
 dword_800A40D0 aBlankLine_800A40D0
 
+[ALL]
 # --- overlay COMBLOAD ---
+[COMBLOAD]
 sub_800A4140 CombLoadWaitOverlay_800A4140
 sub_800A41A8 CombLoadWaitMenu_800A41A8
 sub_800A41FC CardSelectScreen_800A41FC
@@ -1677,7 +1724,9 @@ dword_800A47D4 dataMenuWin_800A47D4
 dword_800A47E4 dataMenuWinItems_800A47E4
 dword_800A47F0 cardSelectState_800A47F0
 
+[ALL]
 # --- overlay COMBRSLT ---
+[COMBRSLT]
 sub_800A41E4 VersusResultFadeOut_800A41E4
 sub_800A4240 DrawPlayerResult_800A4240
 sub_800A444C DrawScorePair_800A444C
@@ -1698,7 +1747,9 @@ dword_800A48B0 scoreWindows_800A48B0
 dword_800A48B8 slotLabelSprites_800A48B8
 dword_800A48C4 minionSlotPos_800A48C4
 
+[ALL]
 # --- overlay COMBSTRT ---
+[COMBSTRT]
 sub_800A4498 SetupShuffleInput_800A4498
 sub_800A4524 SetupStartFightInput_800A4524
 sub_800A45B8 SetupShuffleAnim_800A45B8
@@ -1725,7 +1776,9 @@ word_800A4C92 shufflePhase_800A4C92
 word_800A4C94 shuffleTimer_800A4C94
 word_800A4C96 shuffleDelay_800A4C96
 
+[ALL]
 # --- overlay COMBCOM ---
+[COMBCOM]
 sub_800CB88C SetupCmdMenu_800CB88C
 sub_800CB924 DisableChangeIfAlone_800CB924
 sub_800CB974 GetStateCursor_800CB974
@@ -1817,7 +1870,9 @@ dword_800CD848 padIndex_800CD848
 dword_800CD84C errorMsg_800CD84C
 byte_800CD850 prevState_800CD850
 dword_800CD854 activeCursor_800CD854
+[ALL]
 # --- overlay NAME ---
+[NAME]
 name_800B6E30 nameBufInit_800B6E30
 name_800B6E48 nameUnderlineChar_800B6E48
 sub_800B7A88 HandleCharGridInput_800B7A88
@@ -1847,7 +1902,9 @@ dword_800B83CC cursorWrapMasks2_800B83CC
 name_800B83D0 cursorWrapDirs_800B83D0
 name_800B83D8 cursorExitTbl_800B83D8
 
+[ALL]
 # --- overlay EQUIP ---
+[EQUIP]
 name_800C4784 emptyText_800C4784
 dword_800C4788 aCannotUnequip_800C4788
 sub_800C47A8 StartEquipMenu_800C47A8
@@ -1878,7 +1935,9 @@ tab_800C5B50 armorDescs_800C5B50
 tab_800C5C40 accessoryDescs_800C5C40
 name_800C5D50 cannotUnequipBox_800C5D50
 
+[ALL]
 # --- overlay CONFIG ---
+[CONFIG]
 dword_800C29D0 configOverlayId_800C29D0
 dword_800C2CD0 menuHdrActive_800C2CD0
 dword_800C2CE8 menuHdrIdle_800C2CE8
@@ -1972,7 +2031,9 @@ dword_800C5920 vibrationItems_800C5920
 dword_800C592C helpBar_800C592C
 dword_800C5944 configMenuActive_800C5944
 
+[ALL]
 # --- overlay MENU ---
+[MENU]
 asc_800B66C4 aItemsObtained_800B66C4
 name_800B6838 emptyText_800B6838
 name_800BB9A4 minionListTitle_800BB9A4
@@ -2100,7 +2161,9 @@ name_800C2994 levantSummaryRect_800C2994
 name_800C29A0 battleDrops_800C29A0
 name_800C29B8 menuFromResults_800C29B8
 name_800C29BC leaveForest_800C29BC
+[ALL]
 # --- overlay CHAPTER ---
+[CHAPTER]
 sub_800B68A8 ClearChapterYanVars_800B68A8
 sub_800B69BC SetAreaMapVars_800B69BC
 sub_800B6A94 SetMapVarList_800B6A94
@@ -2129,12 +2192,17 @@ dword_800B6F98 chapter6AreaVars_800B6F98
 dword_800B6FB0 chapter6MapVars_800B6FB0
 dword_800B70A4 chapterClearYanVars_800B70A4
 
+[ALL]
 # --- overlay PIERCE ---
+[PIERCE]
 sub_800C6F58 PierceEventTask_800C6F58
 sub_800C7124 PierceEventStart_800C7124
 
+[ALL]
 # --- overlay LOAD ---
+[LOAD EXE]
 sub_800B7650 LoadMenuStart_800B7650
+[LOAD]
 sub_800B7894 LoadMenuWaitUiTiy_800B7894
 sub_800B7934 LoadMenuNop_800B7934
 sub_800B79F8 LoadMenuScreen_800B79F8
@@ -2266,13 +2334,17 @@ dword_800BDFB0 cardTitles_800BDFB0
 dword_800BE0A0 saveIconSrc_800BE0A0
 dword_800BE0B8 cardHeaderTail_800BE0B8
 
+[ALL]
 # --- overlay EVENTFNC ---
+[EVENTFNC]
 sub_800B79E0 FindCrossedEdge_800B79E0
 sub_800B8220 SlideOffEdge_800B8220
 sub_800B82C8 CollideWithMapEnts_800B82C8
 sub_800B844C EncounterSpawnTask_800B844C
 sub_800B8568 SpawnEncounterEnemy_800B8568
+[EVENTFNC EXE]
 sub_800B88A4 StartEncounter_800B88A4
+[EVENTFNC]
 sub_800B8940 LoadEncounterModels_800B8940
 sub_800B89A8 EvCmdNop_800B89A8
 sub_800B89C0 EvCmdWaitButton_800B89C0
@@ -2378,7 +2450,9 @@ sub_800BC7A0 EvMessageNop_800BC7A0
 sub_800BCB00 ReturnWarpStart_800BCB00
 sub_800BCB3C ReturnWarpTask_800BCB3C
 dword_800B6D98 returnWarpAreaVars_800B6D98
+[ALL]
 # --- overlay BATTLE ---
+[BATTLE]
 sub_800BA444 BattleEndDefeat_800BA444
 sub_800BA4F4 BattleEndWaitFade_800BA4F4
 sub_800BA52C BattleEndWaitLevant_800BA52C
@@ -2433,7 +2507,9 @@ sub_800BC820 TestBattleFlag_800BC820
 sub_800BC838 SetBattleFlag_800BC838
 sub_800BC850 ClearBattleFlag_800BC850
 sub_800BC868 GetAreaElement_800BC868
+[BATTLE EXE]
 sub_800BC90C DrawBattleStage_800BC90C
+[BATTLE]
 sub_800BDA28 ActionStart_800BDA28
 sub_800BDB4C ActionWaitIdle_800BDB4C
 sub_800BDBB0 ActionWaitReady_800BDBB0
@@ -2461,7 +2537,9 @@ sub_800BF7C4 TickUnitStatus_800BF7C4
 sub_800BF980 IsUncapturableSpecies_800BF980
 sub_800BF9F0 MarkSpeciesCaptured_800BF9F0
 sub_800BFA4C GetStatusCommand_800BFA4C
+[BATTLE EXE]
 sub_800BFAF8 SetHitVariantForCommand_800BFAF8
+[BATTLE]
 sub_800BFB80 StartBattleWindows_800BFB80
 sub_800BFBB8 StopBattleWindows_800BFBB8
 sub_800BFC10 ResetWindowHighlights_800BFC10
@@ -2472,14 +2550,18 @@ sub_800C01D8 StartActorWindow_800C01D8
 sub_800C0254 ActorWindowTask_800C0254
 sub_800C0440 StartHelpWindow_800C0440
 sub_800C04A4 HelpWindowTask_800C04A4
+[BATTLE EXE]
 sub_800C064C BuildMinionModelReq_800C064C
+[BATTLE]
 sub_800C0904 GetElementModelAngle_800C0904
 sub_800C09D4 CalcElementAngle_800C09D4
 sub_800C0A9C GetPartyMinionMask_800C0A9C
 sub_800C0AEC LoadSummonedMinion_800C0AEC
 sub_800C0BA0 FreeSummonedMinion_800C0BA0
 sub_800C0BF0 CreateSummonedMinionActor_800C0BF0
+[BATTLE EXE]
 sub_800C0D50 GetSummonedMinionSlot_800C0D50
+[BATTLE]
 sub_800C0DB0 TurnSummonedMinionToward_800C0DB0
 sub_800C0DDC StartMinionAction_800C0DDC
 sub_800C0E84 TriggerMinionAction_800C0E84
@@ -2488,38 +2570,62 @@ sub_800C0F1C UpdateMinionStatusTint_800C0F1C
 sub_800C0F54 GetPartyMinionName_800C0F54
 sub_800C0F78 GetPartyMinionStatus_800C0F78
 sub_800C0F9C GetSummonedMinionPos_800C0F9C
+[BATTLE EXE]
 sub_800C0FAC GetSummonedMinionBonePos_800C0FAC
 sub_800C0FC4 GetSummonedMinionEffectTarget_800C0FC4
+[BATTLE]
 sub_800C100C GetPartyMinionSkills_800C100C
 sub_800C103C GetPartyMinionMagicBits_800C103C
 sub_800C106C SeqStopTask_800C106C
+[BATTLE EXE]
 sub_800C10B8 PlayTimedSeq_800C10B8
+[BATTLE]
 sub_800C1140 SfxStopTask_800C1140
+[BATTLE EXE]
 sub_800C1190 PlayTimedSfx_800C1190
+[BATTLE]
 sub_800C1220 DropSpriteTask_800C1220
+[BATTLE EXE]
 sub_800C1450 DropTrailTask_800C1450
 sub_800C1654 SpawnHomingSparks_800C1654
+[BATTLE]
 sub_800C17EC HomingSparkTask_800C17EC
+[BATTLE EXE]
 sub_800C1A5C SpawnSpriteAnim_800C1A5C
+[BATTLE]
 sub_800C1B2C SpriteAnimTask_800C1B2C
+[BATTLE EXE]
 sub_800C1C5C SpawnBounceSparks_800C1C5C
+[BATTLE]
 sub_800C1DA4 BounceSparkTask_800C1DA4
+[BATTLE EXE]
 sub_800C1FFC SpawnRisingSparks_800C1FFC
+[BATTLE]
 sub_800C2170 RisingSparkTask_800C2170
 sub_800C23D0 ShatterTask_800C23D0
 sub_800C273C ShardTask_800C273C
+[BATTLE EXE]
 sub_800C2914 SpawnShatterEffect_800C2914
+[BATTLE]
 sub_800C2CD8 ImplodeShardTask_800C2CD8
+[BATTLE EXE]
 sub_800C2E28 SpawnSpriteTrails_800C2E28
+[BATTLE]
 sub_800C2FC8 SpriteTrailTask_800C2FC8
+[BATTLE EXE]
 sub_800C32DC SpawnModelAnim_800C32DC
+[BATTLE]
 sub_800C33E4 ModelAnimTask_800C33E4
+[BATTLE EXE]
 sub_800C371C GlowTask_800C371C
+[BATTLE]
 sub_800C3B50 SpawnOrb_800C3B50
 sub_800C3D34 OrbFadeTask_800C3D34
 sub_800C3DF8 OrbHomingTask_800C3DF8
+[BATTLE EXE]
 sub_800C4090 SetPointLight_800C4090
 sub_800C410C ClearPointLight_800C410C
+[BATTLE]
 sub_800C473C EnemyAiDefault_800C473C
 sub_800C58AC EnemyAiDefend_800C58AC
 sub_800C6A40 EnemyAiFirstSkill_800C6A40
@@ -2800,7 +2906,9 @@ sub_800C0D60 IsSummonedMinionIdle_800C0D60
 sub_800C0D88 IsSummonedMinionReady_800C0D88
 dword_800C91A4 defaultBoneSlots_800C91A4
 dword_800C9D58 unitResultFlags_800C9D58
+[ALL]
 # --- overlay SHOPCTRL ---
+[SHOPCTRL]
 sub_800B6720 RestoreMapCamera_800B6720
 sub_800B67C0 ShopCtrlInit_800B67C0
 sub_800B681C ShopCtrlWaitUiTiy_800B681C
@@ -2809,16 +2917,21 @@ sub_800B6898 ShopCtrlWaitOverlay_800B6898
 sub_800B6964 ShopCtrlIdle_800B6964
 sub_800B6A6C ShopCtrlWaitMapReload_800B6A6C
 sub_800B6AE0 ShopCtrlStartMode_800B6AE0
+[SHOP SHOPCTRL]
 sub_800B6C6C ShopCtrlRequestNameEntry_800B6C6C
 sub_800B6CC8 ShopCtrlRequestResume_800B6CC8
+[SHOPCTRL]
 word_800B6CE8 shopCtrlPrevMode_800B6CE8
 word_800B6CEA shopCtrlShopId_800B6CEA
 word_800B6CEC shopCtrlMode_800B6CEC
 dword_800B6CF4 shopCtrlOverlayReq_800B6CF4
 dword_800B6CF8 shopCtrlReloadUi_800B6CF8
+[SHOP SHOPCTRL]
 dword_800B6CF0 shopMinions_800B6CF0
 
+[ALL]
 # --- overlay SHOPENTR ---
+[SHOPENTR]
 sub_800B6F0C IsShelfMenuActive_800B6F0C
 sub_800B6F1C StartShelfMenu_800B6F1C
 sub_800B7000 ShelfMenuTask_800B7000
@@ -2870,7 +2983,9 @@ str_800B6EFC aElement_800B6EFC
 str_800B6F04 aSlash_800B6F04
 str_800B6F08 aColon_800B6F08
 
+[ALL]
 # --- overlay SHOP ---
+[SHOP]
 sub_800B9888 FindStoredMinion_800B9888
 sub_800B9920 BuildShopMinionList_800B9920
 sub_800B9B20 ClearShopMinion_800B9B20
@@ -2884,7 +2999,9 @@ sub_800B9CCC SetMinionInParty_800B9CCC
 sub_800B9CDC MoveShopMinionToParty_800B9CDC
 sub_800B9D48 SetMinionStored_800B9D48
 sub_800B9D6C MoveShopMinionToStorage_800B9D6C
+[SHOP EXE]
 sub_800B9E94 UnitStatsToMinion_800B9E94
+[SHOP]
 sub_800BA340 ClearMinion_800BA340
 sub_800BA368 InheritMergeStats_800BA368
 sub_800BA3C8 MergeBaseStats_800BA3C8
@@ -3095,7 +3212,9 @@ name_800C07F0 emptyMinion_800C07F0
 name_800C08E8 mergePreview_800C08E8
 name_800C09E0 formModel_800C09E0
 
+[ALL]
 # --- overlay WPNSHOP ---
+[WPNSHOP]
 sub_800BB088 GetStoreStockMask_800BB088
 sub_800BB130 StoreWaitUiTiy_800BB130
 sub_800BB194 StoreFadeIn_800BB194
@@ -3239,12 +3358,16 @@ name_800BF244 weaponStock_800BF244
 name_800BF274 armorStock_800BF274
 name_800BF294 accessoryStock_800BF294
 
+[ALL]
 # --- overlay GAME ---
+[GAME]
 GameFn_800A094C EnableCameraPoints_800A094C
 sub_800A0988 FreezeTileAnim_800A0988
 sub_800A09B0 UnfreezeTileAnim_800A09B0
 sub_800A09D8 TileAnimTaskInit_800A09D8
+[GAME EXE]
 sub_800A0A04 TileAnimTask_800A0A04
+[GAME]
 sub_800A0A5C DrawTileAnimLayers_800A0A5C
 dword_800B1DBC tileAnimTask_800B1DBC
 sub_800A1314 EncounterWatchTask_800A1314
@@ -3266,10 +3389,14 @@ sub_800A1E98 SuspendOtherEnemies_800A1E98
 dword_800ADE9C encounterFormations_800ADE9C
 sub_800A24F4 IsEnemyAlive_800A24F4
 sub_800A27FC GetEnemyHitFrame_800A27FC
+[GAME EXE]
 sub_800A29CC GetEnemyEffectTarget_800A29CC
+[GAME]
 sub_800A2A70 GetEnemyMagicBits_800A2A70
+[GAME EXE]
 sub_800A2B20 GetEnemyStats_800A2B20
 sub_800A2BA0 GetEnemySkills_800A2BA0
+[GAME]
 sub_800A2C68 GetEnemyBonePos_800A2C68
 sub_800A2CA8 AssertEnemyIndex_800A2CA8
 sub_800A2D28 FreeEnemyAi_800A2D28
@@ -3308,34 +3435,48 @@ dword_800AE9DC encounterMapLists_800AE9DC
 dword_800AE524 encounterTables_800AE524
 dword_800AEB00 encounterGroups_800AEB00
 dword_800AEB6C encounterSpecies_800AEB6C
+[GAME EXE]
 sub_800A5030 SelectEncounterSpecies_800A5030
+[GAME]
 sub_800A5240 IsOtherEncounterArea_800A5240
+[GAME EXE]
 sub_800A52AC SetBattleStageForMap_800A52AC
+[GAME]
 dword_800AE254 battleStageMaps_800AE254
 dword_800AE3D0 encounterAreaMaps_800AE3D0
 name_800AE4E0 encounterAreaSpecies_800AE4E0
 sub_800A52EC FindInLists_800A52EC
+[GAME EXE]
 sub_800A53CC GetMapEncounterFlags_800A53CC
+[GAME]
 sub_800A5474 ClearEncounterSpecies_800A5474
+[GAME EXE]
 sub_800A5628 LoadEventData_800A5628
+[GAME]
 sub_800A56BC FreeEventData_800A56BC
 name_800AEB80 eventEffects_800AEB80
 name_800AEBBC eventReloc_800AEBBC
 name_800AEBC0 eventTiy_800AEBC0
 name_800AEBC8 eventDataBuf_800AEBC8
 name_800AEBCC eventRecords_800AEBCC
+[GAME EXE]
 sub_800A58B4 StopAllEventScripts_800A58B4
+[GAME]
 dword_800AEBDC nextScriptId_800AEBDC
 dword_800AEBF4 eventResult_800AEBF4
 sub_800A5AA0 StartEventScriptForEntity_800A5AA0
 sub_800A5AD0 GetEventScriptId_800A5AD0
 sub_800A5AE4 FindEventScript_800A5AE4
+[GAME EXE]
 sub_800A5BCC ClearScriptActorBusy_800A5BCC
+[GAME]
 sub_800A5F6C GetEventEnemy_800A5F6C
 sub_800A5F90 SetEventHook_800A5F90
 sub_800A6168 EndEventScript_800A6168
+[GAME EXE]
 sub_800A61CC GetPortraitSprt_800A61CC
 sub_800A6308 GetPortraitPoly_800A6308
+[GAME]
 sub_800A68CC GameMainInit_800A68CC
 sub_800A6968 GameMainStart_800A6968
 sub_800A6A48 InitGameModeTasks_800A6A48
@@ -3356,15 +3497,21 @@ sub_800A72C8 GetGameStartMode_800A72C8
 sub_800A73A8 ResetFieldState_800A73A8
 sub_800A7450 RunEventListUpdate_800A7450
 sub_800A74F0 RunEventListExit_800A74F0
+[GAME EXE]
 sub_800A7574 GameShutdown_800A7574
+[GAME]
 sub_800A7654 WaitMapOverlay_800A7654
 sub_800A76D8 WaitChapterOverlay_800A76D8
 dword_800B0EB8 fieldModeHandlers_800B0EB8
+[GAME EXE]
 sub_800A7784 ClearFieldMinions_800A7784
+[GAME]
 sub_800A77A0 AddFieldMinion_800A77A0
 sub_800A77F4 GetFieldMinion_800A77F4
 dword_800B0EC4 fieldMinions_800B0EC4
+[EVENTFNC GAME]
 name_800A7940 GetFieldMinionPos_800A7940
+[GAME]
 sub_800A79C8 IsFieldMinionVisible_800A79C8
 sub_800A7A1C GetFieldMinionModelDesc_800A7A1C
 sub_800A7AD8 SkipFieldMinionAnim_800A7AD8
@@ -3376,7 +3523,9 @@ sub_800A8C4C DamageLevantHp_800A8C4C
 sub_800A8CA0 DamageLevantMp_800A8CA0
 sub_800A9164 FindFacingFieldMinion_800A9164
 sub_800A926C IsFieldMinionBehind_800A926C
+[GAME EXE]
 sub_800A93A4 GetLevantEffectTarget_800A93A4
+[GAME]
 sub_800A94CC InitLevantActor_800A94CC
 sub_800A9564 LevantActorTask_800A9564
 sub_800A99DC UpdateLevantTurn_800A99DC
@@ -3386,7 +3535,9 @@ sub_800AB010 SetLevantAnim_800AB010
 sub_800AB37C SetLevantMoveCmd_800AB37C
 sub_800AB39C GetLevantMoveCmd_800AB39C
 sub_800AC380 SetLevantHasArmor_800AC380
+[GAME EXE]
 sub_800AC38C GetLevantModel_800AC38C
+[GAME]
 sub_800AC3A4 SetLevantWeaponKind_800AC3A4
 sub_800AC3B0 SetLevantOutfit_800AC3B0
 sub_800AC3E4 GetLevantWeaponKind_800AC3E4
@@ -3395,14 +3546,18 @@ sub_800AC474 GetLevantAnimSet_800AC474
 sub_800AC4A8 GetLevantAnimFile_800AC4A8
 sub_800AC5D0 LoadLevantAnim_800AC5D0
 sub_800AC678 FreeLevantAnim_800AC678
+[GAME EXE]
 sub_800AC73C FreeLevantAnimSet_800AC73C
+[GAME]
 sub_800AC794 GetLevantAnimIndex_800AC794
 sub_800AC834 GetLevantAnimLoopStart_800AC834
 sub_800AC878 GetLevantAnimLoopEnd_800AC878
 sub_800AC8BC GetLevantAnimLastFrame_800AC8BC
 sub_800AC988 GetLevantAnimFileId_800AC988
 sub_800ACAA4 LevantModelTaskInit_800ACAA4
+[GAME EXE]
 sub_800ACB64 LevantModelTask_800ACB64
+[GAME]
 sub_800ACF0C LevantModelTaskExit_800ACF0C
 dword_800B1DA0 levantModelTask_800B1DA0
 dword_800B1DA4 mapOverlayTask_800B1DA4
@@ -3412,13 +3567,17 @@ dword_800B1DB4 subOverlayTask_800B1DB4
 dword_800B1DC0 prevModeTask_800B1DC0
 sub_800AD374 GetInventorySize_800AD374
 sub_800AD58C FindInventorySlot_800AD58C
+[GAME EXE]
 sub_800AD604 GetInventoryTable_800AD604
+[GAME]
 sub_800AD670 CanAddInventoryCount_800AD670
 sub_800AD67C CanRemoveInventoryCount_800AD67C
 sub_800AD888 GetFreeCocoonSlots_800AD888
 sub_800AD8BC CountCocoonsAndMinions_800AD8BC
+[GAME EXE]
 sub_800ADBA0 FindMapVar_800ADBA0
 sub_800ADDAC SelectMapEntrance_800ADDAC
+[GAME]
 dword_800AE060 battleStage00Maps_800AE060
 dword_800AE070 battleStage01Maps_800AE070
 dword_800AE084 battleStage02Maps_800AE084
@@ -3620,7 +3779,9 @@ dword_800B116C levantBaseModels_800B116C
 dword_800B11B8 levantOutfitModelOffsets_800B11B8
 dword_800B11DC levantAnimSets_800B11DC
 dword_800B1DD0 levantPool_800B1DD0
+[GAME EXE]
 dword_800B1DC8 gameStartMode_800B1DC8
+[GAME]
 dword_800B0EF8 levantBones_800B0EF8
 name_800B0EA4 endMovie_800B0EA4
 dword_800ADE8C formation1_800ADE8C
@@ -3669,8 +3830,11 @@ dword_800B05F0 mapArea5Maps_800B05F0
 dword_800B0194 mapArea5Map01Entrances_800B0194
 dword_800B0254 mapArea5Map02Entrances_800B0254
 dword_800B0364 mapArea5Map03Entrances_800B0364
+[ALL]
 # --- naming pass: COMBSEL, COMBBTL, MAP overlays (overlay-local placeholders shared with other overlays are renamed in place, not here) ---
+[COMBAT COMBSEL]
 sub_800A4360 CombSelMain_800A4360
+[COMBSEL]
 sub_800A4C74 PlaceSideWindows_800A4C74
 sub_800A4D64 CompactTeam_800A4D64
 sub_800A4E4C CompactTeams_800A4E4C
@@ -3717,7 +3881,9 @@ dword_800A59E0 nextTextP2_800A59E0
 dword_800A59E4 buttonHelpP1_800A59E4
 dword_800A5A04 buttonHelpP2_800A5A04
 
+[ALL]
 # --- overlay COMBBTL ---
+[COMBBTL]
 sub_800A4C40 CombBtlWaitFile_800A4C40
 sub_800A4CFC ResetSides_800A4CFC
 sub_800A4D48 CombBtlSetup_800A4D48
@@ -3818,7 +3984,9 @@ dword_800A84D4 waitTimer_800A84D4
 dword_800A84D8 commandHistory_800A84D8
 dword_800A85A0 fileRequest_800A85A0
 dword_800A85A8 actorCmd_800A85A8
+[COMBBTL EXE]
 dword_800A85B8 actorSide_800A85B8
+[COMBBTL]
 xarr_800A85B8 actorSideArr_800A85B8
 dword_800A85BC swapSlot_800A85BC
 dword_800A85C0 announcerLines_800A85C0
@@ -3830,7 +3998,9 @@ dword_800A8610 targetCmd_800A8610
 dword_800A8620 targetSide_800A8620
 xarr_800A8620 targetSideArr_800A8620
 
+[ALL]
 # --- overlay MAP ---
+[MAP]
 sub_800B6C7C StartAreaFadeOut_800B6C7C
 sub_800B6CB4 LoadAreaPicture_800B6CB4
 sub_800B6D90 RequestMapFile_800B6D90
@@ -3897,3 +4067,1131 @@ dword_800B8F80 forestDests0_800B8F80
 dword_800B9028 forestDests1_800B9028
 dword_800B90D0 forestDests2_800B90D0
 dword_800B9178 forestDests3_800B9178
+
+[ALL]
+# --- recovered: renames made in place (old names from the history of symbol_addrs.txt / overlays/*.sym) ---
+# EXE
+sub_80010228 ShutdownSystems_80010228
+eventType_0x2_handler_800103AC vsyncEventHandler_800103AC
+sub_80010548 CountMinions_80010548
+sub_80010598 GetMinion_80010598
+sub_80010600 ClearMinionsAndItems_80010600
+sub_80010650 AddItem_80010650
+sub_800106B8 CountItems_800106B8
+sub_800106F8 GetMinionName_800106F8
+sub_800107A0 GetMinionStatus_800107A0
+sub_80011C0C FillHpMp_80011C0C
+sub_80011C30 ClearStatus_80011C30
+sub_80011C44 RecoverQuarterHpMp_80011C44
+sub_80011CD0 Heal_80011CD0
+sub_80011CF4 ReviveOneHp_80011CF4
+sub_800125B8 GetCapturedMinionsCount_800125B8
+sub_80014164 CriticalRateTransform_80014164
+sub_80017A6C SpawnMdecEffect_80017A6C
+sub_80017B10 MdecEffectTask_80017B10
+sub_80019BF0 GetMinionElement_80019BF0
+sub_80019C0C GetMinionEnhancementBody_80019C0C
+sub_80019D84 SetModelLighting_80019D84
+DrawLoop_8001AF64 DrawIntroMovie_8001AF64
+sub_8001B1B0 InitMovie_8001B1B0
+sub_8001B260 ClearOTagRAll_8001B260
+AddPrims_8001B3C8 AddPrimsAll_8001B3C8
+sub_8001B6E8 WaitVSync_8001B6E8
+sub_8001BB28 FadeToBlackStep_8001BB28
+sub_8001BC00 FadeToWhiteStep_8001BC00
+sub_8001BEC8 LoadDecodedImage_8001BEC8
+sub_8001BF50 ProcessPads_8001BF50
+sub_8001BF90 InitPrimBuffers_8001BF90
+sub_8001C02C StartScreenFlash_8001C02C
+sub_8001C0B4 ScreenFlashTask_8001C0B4
+sub_8001C2CC StartFadeToBlack_8001C2CC
+sub_8001C2E4 StartFadeToWhite_8001C2E4
+sub_8001C2FC IsFadeDone_8001C2FC
+sub_8001C6C8 ResetButtonConfig_8001C6C8
+sub_8001C72C TestAnyBits_8001C72C
+sub_8001C73C TestAllBits_8001C73C
+sub_8001C75C FindButtonConfig_8001C75C
+sub_8001C79C SwapButtonConfig_8001C79C
+sub_8001C8E8 ProcessPad_8001C8E8
+sub_8001CAF0 UpdatePadRepeat_8001CAF0
+sub_8001CC04 UpdatePadAnalog_8001CC04
+sub_8001CD04 ResetPadHoldFrames_8001CD04
+sub_80020D1C LoadOverlayIfChanged_80020D1C
+sub_800215E8 LoadMdecImages_800215E8
+sub_80028E68 GetTiyFileCount_80028E68
+sub_80028E74 LoadTiy_80028E74
+sub_80028EEC LoadTiyTims_80028EEC
+sub_800295D8 AllocTiyPrims_800295D8
+sub_80029674 LoadTim_80029674
+sub_800296A0 LoadTimToVram_800296A0
+sub_80029708 ParseTim_80029708
+sub_80029868 InitSprtFromTimData_80029868
+sub_800298AC InitSprtFromTim_800298AC
+sub_800299DC InitPolyFT4FromTimData_800299DC
+sub_80029A10 InitPolyFT4_80029A10
+sub_80029C68 UnpackColor555_80029C68
+sub_8002C64C GetTime30Hz_8002C64C
+sub_8002FBD8 DrawLargeText_8002FBD8
+sub_8002FE54 InitSound_8002FE54
+sub_8002FE7C InitSounds_8002FE7C
+sub_800300E0 PlayMusic_800300E0
+sub_800304D0 LoadSoundSeqFromBuffer_800304D0
+sub_800307B4 LoadSoundFromBuffer_800307B4
+sub_80030988 ApplyAudioOutputFormat_80030988
+sub_800309D8 ApplyBgmVolume_800309D8
+sub_80030A84 LoadSound_80030A84
+sub_80030D00 FreeSound_80030D00
+sub_80030D4C GetSoundFileId_80030D4C
+sub_80030D68 StopSoundSeqs_80030D68
+sub_80030EA4 FreeSoundVab_80030EA4
+sub_80030EEC FreeSoundSeqs_80030EEC
+sub_8003105C PlaySoundSeq_8003105C
+sub_800313C8 FadeOutSeqSlot_800313C8
+sub_80031408 StopSoundSeq_80031408
+sub_80031494 PlaySfx_80031494
+sub_800314F4 SfxKeyOn_800314F4
+sub_80031574 SfxKeyOff_80031574
+sub_8003326C AddDrawAreaPrim_8003326C
+sub_80033308 AddClipDrawAreaPrim_80033308
+sub_80033818 GetMinionStatusOf_80033818
+sub_80033828 GetMinionNameOf_80033828
+sub_80036820 UpdatePadVibration_80036820
+sub_8003B548 ratan2_8003B548
+sub_8003B56C ratan2Degrees_8003B56C
+sub_8003B664 Sign_8003B664
+sub_8003B80C DistanceSquared3D_8003B80C
+sub_8003B860 DistanceSquaredXZ_8003B860
+sub_8003B898 DistanceSquared2D_8003B898
+sub_8003B8BC LengthSquared2D_8003B8BC
+sub_8003B8DC LengthSquared3D_8003B8DC
+sub_8003B918 ISqrt_8003B918
+sub_8003B95C Midpoint3D_8003B95C
+sub_8003BA18 WrapAngle_8003BA18
+sub_8003BA58 GetCapturedMinionsFromBitfield_8003BA58
+sub_8003BA90 DelayLoop_8003BA90
+eventType_0x8000_handler_8003BBAC cdRomEventErrorHandler_8003BBAC
+sub_8003BBE4 InitFileRequestQueue_8003BBE4
+sub_8003BC34 GetFileRequestCount_8003BC34
+sub_8003BC44 FindFreeFileRequest_8003BC44
+sub_8003BC84 QueueFileRequest_8003BC84
+sub_8003BE30 GetFileRequestStatus_8003BE30
+sub_8003BE88 CancelFileRequest_8003BE88
+sub_8003BED4 FindFileRequest_8003BED4
+sub_8003BF18 RemoveFileRequest_8003BF18
+sub_8003BF88 IsFileRequestQueueIdle_8003BF88
+sub_8003BFB8 SetFileBufferInUse_8003BFB8
+sub_8003C128 InitFileRequestTask_8003C128
+sub_8003C184 ProcessFileRequests_8003C184
+sub_8003C684 AssertFileRequestQueueEmpty_8003C684
+sub_8003C8A0 CdSeekStart_8003C8A0
+sub_8003C900 CdSeekIsComplete_8003C900
+sub_8003C944 CdReadStart_8003C944
+sub_8003C9EC CdReadIsIdle_8003C9EC
+sub_8003C9FC CdReadSyncCallback_8003C9FC
+sub_8003CA30 CdReadReadyCallback_8003CA30
+sub_8003CAEC DATA_ReadFileInto_8003CAEC
+sub_8003D288 IsConfirmPressed_8003D288
+sub_8003D380 IsConfirmPressedP1_8003D380
+sub_8003D3A0 IsConfirmPressedP2_8003D3A0
+sub_8003D3C0 IsCancelPressed_8003D3C0
+sub_8003D41C IsCancelPressedP1_8003D41C
+sub_8003D43C IsCancelPressedP2_8003D43C
+sub_8003D45C IsCircleHeld_8003D45C
+sub_8003D480 IsCircleHeldP1_8003D480
+sub_8003D4A0 IsCircleHeldP2_8003D4A0
+sub_8003DA70 InitFonts_8003DA70
+sub_8003E91C DrawText_8003E91C
+sub_8003F544 DrawNumber_8003F544
+sub_8003F58C IntToSjisReversed_8003F58C
+sub_8003F610 IntToText_8003F610
+sub_8003F684 EncodeText_8003F684
+sub_8003F748 DecodeText_8003F748
+sub_8003F860 CopyPlayerName_8003F860
+sub_8003F928 SetFontClutRow_8003F928
+sub_8003F978 SetFontGrey_8003F978
+sub_8003F9A8 SetFontColor_8003F9A8
+sub_8003FA2C SetFontSemiTrans_8003FA2C
+sub_8003FA70 MeasureText_8003FA70
+sub_8003FAF0 StrLen_8003FAF0
+sub_8003FB24 SjisStrLen_8003FB24
+sub_8003FB60 WStrLen_8003FB60
+sub_8003FB8C StrCopy_8003FB8C
+sub_8003FBD4 DecodeNames_8003FBD4
+sub_8003FC8C HeapAlloc_8003FC8C
+sub_8003FD18 HeapFree_8003FD18
+sub_8003FDB0 ListInit_8003FDB0
+sub_8003FDC0 ListAlloc_8003FDC0
+sub_8003FE38 ListFree_8003FE38
+sub_8003FEC8 ListFreeAll_8003FEC8
+sub_8003FF1C PoolInit_8003FF1C
+sub_8003FF7C PoolDestroy_8003FF7C
+sub_8003FFD0 PoolAlloc_8003FFD0
+sub_800400B4 PoolFree_800400B4
+sub_80040150 PoolFindFreeSpace_80040150
+sub_80040274 IsPoolBlock_80040274
+sub_80040298 AddPrimCopy_80040298
+sub_80040360 CopyDoubleWords_80040360
+sub_80040388 ReadBytesInto_80040388
+sub_800403A8 CopyHalfwords_800403A8
+sub_800403C8 CopyBytes_800403C8
+sub_800403E8 MemCopy_800403E8
+sub_80040658 SetDisplayMode_80040658
+sub_80040718 InitGameDefaults_80040718
+sub_80040898 ReloadPublicTiy_80040898
+sub_80040A84 ShowCopyright_80040A84
+sub_80040AC4 PlayGenkiMovie_80040AC4
+sub_80040AEC PlayGenkiMovie_80040AEC
+sub_80040B2C PlayCraveMovie_80040B2C
+sub_80040B54 PlayCraveEntertainmentMovie_80040B54
+sub_80040C8C ShowDemoDisclaimer_80040C8C
+sub_80040CCC PlayAnimeMovie_80040CCC
+sub_80040D0C PlayAnimeMovie_80040D0C
+sub_80040E28 ClearMovieRect_80040E28
+LoadMovie_80040EB4 PlayMovie_80040EB4
+sub_80040EB4 PlayMovie_80040EB4
+sub_80041240 InitMovieCtx_80041240
+sub_80041358 InitMovieStream_80041358
+sub_800413BC SkipMovieButtonPressed_800413BC
+sub_80041424 MovieDctOutCallback_80041424
+sub_800415D8 MovieDecodeNextFrame_800415D8
+sub_80041724 MovieWaitFrameDone_80041724
+sub_800417BC MovieStartCdStream_800417BC
+sub_80041848 AllocMdecVLCBuffer_80041848
+sub_8004188C AllocMdecVLCBufferInFileBuffer_8004188C
+sub_800418CC FreeMdecBuffer_800418CC
+sub_800418FC ReleaseMdecVLCFileBuffer_800418FC
+sub_80041920 DecodeMdec_80041920
+sub_80043054 XaInitTask_80043054
+sub_800430B0 XaStop_800430B0
+sub_800430E8 XaIdleTask_800430E8
+sub_800431C4 XaWaitFilterTask_800431C4
+sub_80043204 XaStartReadTask_80043204
+sub_80043264 XaFadeOutTask_80043264
+sub_800432EC XaMonitorTask_800432EC
+sub_800433FC XaSetup_800433FC
+sub_800434C4 XaStartRead_800434C4
+sub_80043524 XaRequestStop_80043524
+sub_80043564 XaRequestPlay_80043564
+sub_80043584 XaIsIdle_80043584
+sub_800435A4 XaNoRequestPending_800435A4
+sub_800435B4 CreateEventList_800435B4
+sub_800437E8 EventEntryAllocBuffer_800437E8
+sub_80043840 EventEntryFreeBuffer_80043840
+sub_80043898 RunEventList_80043898
+sub_80043958 RunEventListUntilAbort_80043958
+sub_80043A5C FreeEventList_80043A5C
+sub_80043AF8 AllocEventEntry_80043AF8
+sub_80043B40 StopAllEventEntries_80043B40
+sub_8004668C RotMatrixZXY_8004668C
+sub_80046874 RotMatrixYXZ_80046874
+sub_8004DE00 _96_remove
+sub_8004EDB8 MemCardEnd
+sub_80052DD4 DS_CQ_flush
+DrawInit_80053398 DsInit
+sub_800534DC DsReset
+sub_800535E8 DsClose
+sub_80053608 DsCommand
+sub_8005384C DsPacket
+sub_80053B9C DsSync
+sub_80053D8C DsReady
+sub_80053E20 DsFlush
+sub_80053EB0 DsSystemStatus
+sub_80053EFC DsQueueLen
+sub_80053F0C DsStatus
+sub_80053F2C DsShellOpen
+sub_80053F4C DsLastCom
+sub_80054118 DS_init
+sub_800541B0 DS_reset_members
+sub_80054290 DS_close
+sub_800542D0 DS_cw
+sub_8005434C DS_vsync_callback
+sub_80054358 DS_sync_callback
+sub_80054364 DS_ready_callback
+sub_80054370 DS_start_callback
+sub_8005437C DS_system_status
+sub_80054394 DS_lastcom
+sub_800543A4 DS_lastmode
+sub_800543B4 DS_lastpos
+sub_80054414 DS_ready
+sub_80054438 DS_shell_open
+sub_80054448 DS_cw_system
+sub_80055164 DS_stop
+sub_800551DC DS_restart
+sub_800551EC DS_system_active
+sub_800551FC parcpy
+sub_80055244 rescpy
+sub_8005528C tipDsSystem
+sub_80055BC8 DsReadMode
+sub_80058C10 SetDrawOffset
+sub_80058C50 SetDrawEnv
+sub_8005A550 LoadImage2
+sub_8005A63C StoreImage2
+sub_8005A728 MoveImage2
+sub_8005A86C DrawOTag2
+sub_8005A968 _GPU_ResetCallback
+sub_8005A9B8 GPU_cw
+InitDrawEnv_8005A9C8 SetDefDrawEnv
+InitDispEnv_8005AA88 SetDefDispEnv
+sub_8005ACF8 SetDrawStp
+sub_8005B220 InitGeom
+sub_8005CBD8 __fixdfsi
+sub_8005CCD8 __fixsfsi
+sub_8005CD88 __fixunsdfsi
+sub_8005CFA8 __floatsisf
+sub_8005D7B8 __nedf2
+sub_8005DC28 __eqdf2
+sub_8005E940 PadInfoMode
+sub_8005EA38 PadInfoAct
+sub_8005EB0C PadInfoComb
+sub_8005EBB4 PadSetActAlign
+sub_8005EBEC PadSetMainMode
+sub_8005EC34 PadSetAct
+sub_8005EC88 PadEnableCom
+sub_8005EDA0 _padSetVsyncParam
+sub_8005EFC4 _padChkVsync
+sub_8005EFD8 _padStartCom
+sub_8005F0A4 _padStopCom
+sub_8005F0E8 _padInitSioMode
+sub_8005F50C _padSioRW
+sub_8005F71C _padSioRW2
+sub_8005F994 _padClrIntSio0
+sub_8005FA24 _padWaitRXready
+sub_8005FA58 _padSetAct
+sub_8005FA74 _padSendAtLoadInfo
+sub_8005FAF8 _padRecvAtLoadInfo
+sub_8005FD68 _padGetActSize
+sub_8005FDA0 _padLoadActInfo
+sub_80060314 _padSetActAlign
+sub_80060460 _padSetMainMode
+sub_800605AC _padCmdParaMode
+sub_800612E8 _padInitDirSeq
+sub_80061690 _dirFailAuto
+sub_80062978 _SsInit
+sub_80062A58 SsSepOpen
+sub_80066E38 SsUtAllKeyOff
+sub_80067630 SsUtKeyOff
+sub_80067DB8 _SsVmDoAllocate
+sub_80068CA4 _SsVmKeyOff
+sub_80068E04 _SsVmSeKeyOn
+sub_80068EF0 _SsVmSeKeyOff
+sub_80068F84 note2pitch2
+sub_80068FEC SsPitchFromNote
+sub_80069688 vmNoiseOff
+sub_80069788 _SsVmKeyOnNow
+sub_80069C58 _SsVmPBVoice
+sub_80069E44 _SsVmPitchBend
+sub_8006A0A8 _SsVmSetSeqVol
+sub_8006A614 _SsVmGetSeqVol
+sub_8006A708 _SsVmSeqKeyOff
+sub_8006AE28 _SsVmVSetUp
+sub_8006AF08 SsVabClose
+sub_8006EB98 McxStartCom
+sub_8006EC08 McxStopCom
+sub_8006EEF8 _mcxInitSioMode
+sub_8006EFCC _mcxSioRW
+sub_8006F0E0 McxSync
+sub_8006F1F8 _mcxChkRsrv
+sub_8006F248 _mcxStepSio
+sub_8006F8F0 McxGetMem
+sub_8006FBBC McxSetMem
+sub_80070E30 McxAllInfo
+word_800795D4 zeroSvector_800795D4
+dword_8007A4B4 minionBaseStats_8007A4B4
+dword_8007CAD8 padButtonBits_8007CAD8
+dword_8007CAF4 defaultButtonConfig_8007CAF4
+dword_80082F0C soundFiles_80082F0C
+dword_80086540 fileRequestQueue_80086540
+dword_80086550 cdReadState_80086550
+dword_80086564 fileBufferInUse_80086564
+dword_8008656C fileBuffer_8008656C
+dword_8008685C charTables_8008685C
+dword_80086930 copyrightData_80086930
+off_80086948 copyright_80086948
+dword_80086950 genkiMovieData_80086950
+off_80086968 genkiMovie_80086968
+dword_80086970 craveEntertainmentData_80086970
+off_80086988 craveEntertainmentMovie_80086988
+dword_80086990 demoDisclaimerData_80086990
+off_800869A8 demoDisclaimer_800869A8
+dword_800869B0 introAnimeData_800869B0
+off_800869C8 introAnime_800869C8
+dword_80086A4C strMovies_80086A4C
+dword_80086F94 mdecVLCBuffer_80086F94
+word_80086F98 movieWidth_80086F98
+word_80086F9A movieHeight_80086F9A
+dword_80087174 _freep
+dword_8008730C CD_cbsync
+dword_80087310 CD_cbready
+dword_80087314 CD_debug
+dword_80087318 CD_status
+dword_8008731C CD_status1
+dword_80087320 CD_nopen
+byte_80087324 CD_pos
+byte_80087328 CD_mode
+byte_80087329 CD_com
+dword_8008732C DS_active
+off_80087330 CD_comstr
+off_800873B0 CD_intstr
+dword_800876DC debug_cause
+dword_80087954 Hcount
+dword_80088A84 Vcount
+off_80088B20 GPU_printf
+byte_80088B24 GEnv
+dword_80088C4C _qin
+dword_80088C50 _qout
+word_80089134 ratan_tbl
+dword_8008994C math_errno
+dword_80089950 math_err_point
+dword_8008995C _padFuncNextPort
+dword_80089960 _padFuncClrInfo
+dword_80089964 _padFuncGetTxd
+dword_80089968 _padFuncCurrLimit
+dword_8008996C _padFuncPtr2Port
+dword_80089970 _padFuncPort2Info
+dword_80089974 _padFuncSendAuto
+dword_80089978 _padFuncChkEng
+dword_8008997C _padFuncRecvAuto
+dword_80089980 _padFuncClrCmdNo
+dword_80089984 _padFuncIntGun
+dword_80089988 _padFuncSetGunPort
+dword_8008998C _padFuncGetGunPos
+dword_80089990 _padInfoDir
+dword_80089994 _padIntExec
+dword_80089998 _padGunExec
+dword_8008999C _padSioChan
+dword_800899A0 _padSioState
+dword_800899A4 _padTotalCurr
+dword_800899A8 _padModeMtap
+dword_800899AC _padChanStart
+dword_800899B0 _padChanStop
+dword_800899B4 _padFixResult
+off_800899E4 padIntFunc
+dword_8008A9A4 _snd_vmask
+dword_8008A9D4 _snd_seq_tick_env
+dword_8008AB1C _spu_EVdma
+dword_8008AB20 _spu_keystat
+dword_8008AB24 _spu_trans_mode
+dword_8008AB28 _spu_rev_flag
+dword_8008AB2C _spu_rev_reserve_wa
+dword_8008AB30 _spu_rev_offsetaddr
+dword_8008AB48 _spu_RQvoice
+dword_8008AB4C _spu_RQmask
+dword_8008AB50 _spu_voice_centerNote
+dword_8008AB80 _spu_env
+dword_8008AB84 _spu_isCalled
+dword_8008AB94 _spu_RXX
+word_8008ABAC _spu_tsa
+dword_8008ABB0 _spu_transMode
+dword_8008ABB4 _spu_addrMode
+dword_8008ABB8 _spu_mem_mode
+dword_8008ABBC _spu_mem_mode_plus
+dword_8008ABC0 _spu_mem_mode_unit
+dword_8008ABC4 _spu_mem_mode_unitM
+dword_8008ABC8 _spu_inTransfer
+dword_8008ABCC _spu_transferCallback
+dword_8008ABD0 _spu_IRQCallback
+dword_8008ABF4 _spu_AllocBlockNum
+dword_8008ABF8 _spu_AllocLastNum
+dword_8008ABFC _spu_memList
+dword_8008AC04 _spu_zerobuf
+dword_8008B124 _spu_rev_startaddr
+dword_8008B154 _spu_rev_param
+dword_8008B448 _mcxStat
+dword_8008B44C _mcxCmdSeq
+dword_8008B450 _mcxPort
+dword_8008B454 _mcxPass
+dword_8008B45C _mcxTxLen
+dword_8008B460 _mcxRxLen
+eventType_0x8000_8008B490 cdRomEventDescError_8008B490
+eventType_0x2_8008B494 vsyncEventDesc_8008B494
+dword_8008B4A0 decodedImageData_8008B4A0
+dword_8008B4B4 vsyncCounter_8008B4B4
+dword_8008B4BC numFilesInsideTiy_8008B4BC
+dword_8008B4C8 pOT_8008B4C8
+dword_8008B4D8 display_8008B4D8
+stru_8008B4D8 display_8008B4D8
+drawEnvClipH_8008B4E4 word_8008B4E4
+drawEnvClipH_8008B4E6 word_8008B4E6
+dword_8008B540 eventDispatchHalt_8008B540
+dword_8008B570 saveData_8008B570
+stru_8008B570 saveData_8008B570
+dword_8008B578 buttonConfig_8008B578
+dword_8008B58C settingsFlags_8008B58C
+playerYan_8008B590 uiColor_8008B590
+word_8008B854 mapId_8008B854
+dword_8008BD18 levantPos_8008BD18
+levantRotX_8008BD24 levantRot_8008BD24
+byte_8008BD38 levantStatus_8008BD38
+levantCurrentHp_8008BD38 levantStatus_8008BD38
+dword_8008BD48 playerName_8008BD48
+byte_8008BD54 equippedWeaponId_8008BD54
+dword_8008BD84 allMinionsBitfields_8008BD84
+dword_8008D3EC pOT_8008D3EC
+word_8008D420 stru_8008D420
+bUseDrawEnvClipX_8008D428 bDoubleBuffer_8008D428
+dword_8008D42C mdecEffectVlcBuffer_8008D42C
+dword_8008D450 xaTimer_8008D450
+bStopDrawing_8008D45C bStopDrawingMovie_8008D45C
+dword_8008D4A4 soundTask_8008D4A4
+dword_8008D4AC pOT_8008D4AC
+dword_8008D504 cameraEye_8008D504
+dword_8008D534 pointLights_8008D534
+dword_8008D5F4 pOT_8008D5F4
+dword_8008D690 pOT_8008D690
+word_8008D780 effectOutcomeFlag_8008D780
+dword_8008D788 pOT_8008D788
+dword_8008D78C pOT_8008D78C
+dword_8008D798 OT_8008D798
+dword_8008D7D8 OT_8008D7D8
+dword_8008F7D8 OT_8008F7D8
+dword_800917D8 OT_800917D8
+dword_80091858 OT_80091858
+dword_80091888 OT_80091888
+dword_800918A8 OT_800918A8
+dword_800918B0 fadeFlags_800918B0
+dword_800918B4 fadeFrame_800918B4
+dword_800918C8 padPrevHeld_800918C8
+word_800918D0 padHeld_800918D0
+dword_800918D4 padReleased_800918D4
+dword_800918D8 padAnalog_800918D8
+dword_800918E0 padAnalogMax_800918E0
+pad1_800918E8 pads_800918E8
+word_8009194C padPressed_8009194C
+dword_80091950 padHoldFrames_80091950
+dword_80091C00 mdecEffectSchedule_80091C00
+dword_80091C78 savedLevantPos_80091C78
+word_80091CA8 savedLevantRot_80091CA8
+stru_80091CE0 bgmSound_80091CE0
+dword_80091D00 seqSlotSound_80091D00
+dword_80091D20 sfxSound_80091D20
+stru_80091D20 sfxSound_80091D20
+stru_80091D40 systemSound_80091D40
+byte_80095460 padVibration_80095460
+dword_800954C0 fileRequestParams_800954C0
+dword_80095C90 fileRequests_80095C90
+dword_80095FB0 fonts_80095FB0
+dword_80096090 defaultAllocList_80096090
+dword_800960A0 primBufferStart_800960A0
+dword_800960A8 primAllocPtr_800960A8
+dword_800960B0 ringBufferStart_800960B0
+dword_800960C0 movieCtx_800960C0
+dword_800960FC bMovieFinished_800960FC
+dword_80096108 xaStartPos_80096108
+dword_8009610C xaEndPos_8009610C
+dword_80096118 xaRequestPending_80096118
+dword_8009AAE0 _r_bp
+dword_8009AAEC _r_freep
+dword_8009AAF0 _r_p
+dword_8009AE60 Stframe_no
+word_8009AE64 Stsector_offset
+dword_8009AE68 StRgb24
+dword_8009AE6C StCdIntrFlag
+dword_8009AE70 StCHANNEL
+dword_8009AE74 StStartFrame
+dword_8009AE78 CChannel
+dword_8009AE7C StFinalSector
+dword_8009AE80 StEmu_Idx
+dword_8009AE84 StRingIdx1
+dword_8009AE88 StRingIdx2
+dword_8009AE8C StRingIdx3
+dword_8009AE90 StEmu_Addr
+dword_8009AE94 StEndFrame
+dword_8009AE98 StSTART_FLAG
+dword_8009AE9C StRingBase
+dword_8009AEA0 StRingAddr
+dword_8009AEA4 StRingSize
+dword_8009AED8 StMode
+dword_8009AEF0 StFunc1
+dword_8009AEF4 StFunc2
+dword_8009D4B8 GlobalCallback
+dword_8009D618 _que
+dword_8009F0C8 _startTime
+dword_8009F0CC _waitTime
+dword_8009F0D0 SsFCALL
+stru_8009F0D0 SsFCALL
+dword_8009F164 _snd_ev_flag
+dword_8009F168 _snd_openflag
+dword_8009F16C VBLANK_MINUS
+dword_8009F170 _ss_score
+dword_8009F1F0 _SsMarkCallback
+word_8009F9F0 _snd_seq_s_max
+word_8009F9F2 _snd_seq_t_max
+word_8009F9F8 _svm_okon1
+word_8009F9FA _svm_okon2
+word_8009F9FC _svm_orev1
+word_8009F9FE _svm_orev2
+word_8009FA00 _svm_onos1
+word_8009FA02 _svm_onos2
+word_8009FA08 _svm_voice
+byte_8009FF48 _svm_sreg_dirty
+dword_8009FF60 _autopan
+word_8009FF68 _svm_sreg_buf
+dword_800A00E8 _autovol
+dword_800A00EC _svm_envx_ptr
+dword_800A00F0 _svm_envx_hist
+word_800A0130 _svm_okof1
+word_800A0132 _svm_okof2
+dword_800A0138 _svm_rattr
+dword_800A0150 _svm_vab_pg
+dword_800A0190 _svm_vab_vh
+word_800A01D0 _svm_damper
+dword_800A01D8 _svm_vab_tn
+word_800A0218 _svm_stereo_mono
+word_800A021A kMaxPrograms
+dword_800A021C _svm_pg
+dword_800A0224 _svm_vh
+dword_800A0228 _svm_tn
+byte_800A022C _SsVmMaxVoice
+dword_800A0230 _svm_vab_not_send_size
+byte_800A0238 _svm_cur
+byte_800A0258 _svm_vab_used
+byte_800A0268 _svm_auto_kof_mode
+dword_800A0270 _svm_vab_total
+word_800A02B0 _svm_vab_count
+dword_800A02B8 _svm_vab_start
+word_800A0408 _spu_RQ
+byte_800A0468 _mcxRxBuf
+byte_800A0500 _mcxTxBuf
+dword_800A0598 _mcxFuncNo
+[EVENTFNC GAME EXE]
+sub_800A170C ResetEncounter_800A170C
+sub_800A1794 ClearEnemySlots_800A1794
+[GAME EXE]
+sub_800A54A0 FreeAllEventData_800A54A0
+[EVENTFNC GAME EXE]
+sub_800A683C GetSetReturnEntrance_800A683C
+sub_800A6D50 GetGameMode_800A6D50
+sub_800AD124 ClearEventFlag_800AD124
+dword_800B0EC0 fieldMode_800B0EC0
+[BATTLE GAME EXE]
+dword_800B1228 battleFlags_800B1228
+[EXE]
+loadedBinaryFile_801B9250 loadedFileBuffer_801B9250
+# BATTLE
+[BATTLE]
+dword_800B6794 jpt_800B6794
+dword_800B68AC aAttackWithReadi_800B68AC
+[BATTLE GAME]
+sub_800BA254 BattleEnd_800BA254
+sub_800BA9E4 StartBattle_800BA9E4
+[BATTLE]
+sub_800BC1A8 NeedsStatusReaction_800BC1A8
+[BATTLE COMBBTL]
+sub_800BC878 LoadStageEffects_800BC878
+sub_800BC8E8 AreStageEffectsLoaded_800BC8E8
+[BATTLE]
+sub_800BE058 StartUnitAction_800BE058
+sub_800BEBB8 ApplyBattleCommand_800BEBB8
+sub_800BF3AC FlashScreenWhite_800BF3AC
+[BATTLE GAME]
+sub_800C4118 ChooseEnemyCommand_800C4118
+[BATTLE]
+sub_800C4B34 EnemyAi0F_800C4B34
+sub_800C5510 EnemyAi0B_800C5510
+sub_800C6EFC StartBattleMenu_800C6EFC
+sub_800C7DA8 BattleMenuDraw_800C7DA8
+sub_800C8A08 BattleMenuTask_800C8A08
+# CHAPTER
+[CHAPTER]
+dword_800B66DC ChapterStartTask_800B66DC
+sub_800B66F4 ChapterIntroTask_800B66F4
+sub_800B6900 ApplyChapterMapVars_800B6900
+sub_800B6B18 EnterChapterMap_800B6B18
+dword_800B6C0C chapter0MapVars_800B6C0C
+dword_800B6CFC chapter2MapVars_800B6CFC
+# COMBAT
+[COMBAT COMBBTL]
+sub_800A0A28 InitCombatSlots_800A0A28
+sub_800A0A6C FreeCombatSlots_800A0A6C
+sub_800A0ACC StartSlotModel_800A0ACC
+sub_800A0B3C RunSlotModelTask_800A0B3C
+sub_800A0B70 FreeSlotModel_800A0B70
+sub_800A0BA8 CreateSlotActor_800A0BA8
+sub_800A0D1C DestroySlotActor_800A0D1C
+sub_800A0E1C MoveSlotActorTo_800A0E1C
+sub_800A1068 SetSlotStatusTint_800A1068
+sub_800A10DC GetSlotPos_800A10DC
+[COMBAT COMBCOM]
+sub_800A11A0 GetSlotSkills_800A11A0
+sub_800A11BC GetSlotMagicBits_800A11BC
+sub_800A11D8 GetSlotMinion_800A11D8
+[COMBAT COMBBTL COMBCHUI COMBLOAD COMBRSLT COMBSEL COMBSTRT]
+sub_800A16FC CombatNextStage_800A16FC
+[COMBAT COMBRSLT COMBSEL COMBSTRT]
+sub_800A1844 DrawMinionNameLevel_800A1844
+[COMBAT COMBBTL COMBCOM COMBRSLT COMBSEL COMBSTRT]
+sub_800A1934 IsMinionSlotEmpty_800A1934
+[COMBAT COMBSEL]
+sub_800A197C ClearMinionSlot_800A197C
+[COMBAT COMBLOAD]
+sub_800A1988 CopySaveMinionsToRoster_800A1988
+[COMBAT COMBBTL COMBCOM COMBSEL COMBSTRT]
+sub_800A1AAC CountTeamMinions_800A1AAC
+[COMBAT COMBSEL]
+dword_800A1BBC combatCursor_800A1BBC
+word_800A1BC4 combatMenuChoice_800A1BC4
+dword_800A1BC8 rosters_800A1BC8
+byte_800A38D9 curPlayer_800A38D9
+[COMBAT COMBBTL COMBCOM]
+byte_800A38DC battleResult_800A38DC
+[COMBAT COMBBTL COMBCOM COMBSEL COMBSTRT]
+dword_800A3AA0 teams_800A3AA0
+# COMBBTL
+[COMBBTL]
+jpt_800A4A9C dword_800A4A9C
+dword_800A4AB4 jpt_800A4AB4
+[COMBAT COMBBTL]
+sub_800A4B8C CombBtlStart_800A4B8C
+[COMBBTL]
+sub_800A75F8 OpenSideWindow_800A75F8
+sub_800A7C0C PlayHitFeedback_800A7C0C
+[COMBBTL COMBCOM]
+dword_800A82D0 word_800A82D0
+[COMBBTL]
+dword_800A8480 statusCured_800A8480
+[COMBBTL COMBCOM]
+byte_800A84A8 exchangeFlags_800A84A8
+byte_800A85BD actorSlot_800A85BD
+[COMBBTL]
+dword_800A85F0 statusInflicted_800A85F0
+# COMBCHUI
+[COMBCHUI]
+sub_800A4394 VersusIntroTask_800A4394
+# COMBCOM
+[COMBBTL COMBCOM]
+sub_800CB7AC CombComStart_800CB7AC
+# COMBLOAD
+[COMBLOAD]
+dword_800A40BC aSelectMEMORYCAR_800A40BC
+dword_800A40E4 aSelectData_800A40E4
+sub_800A40FC CombLoadStart_800A40FC
+dword_800A47F4 loadOvlRequest_800A47F4
+# COMBRSLT
+[COMBRSLT]
+sub_800A40E0 VersusResultTask_800A40E0
+# COMBSEL
+[COMBSEL]
+sub_800A54A0 QuitConfirmInput_800A54A0
+# COMBSTRT
+[COMBSTRT]
+sub_800A4170 VersusSetupTask_800A4170
+sub_800A473C ShuffleTeam_800A473C
+sub_800A4878 PickNthFreeSlot_800A4878
+# CONFIG
+[CONFIG]
+dword_800C2D40 aOptionNotAvaila_800C2D40
+dword_800C2DA4 aSetSpeechToONTo_800C2DA4
+dword_800C2DF4 aOptionNotAvaila_800C2DF4
+dword_800C2E5C aSetSubtitlesToO_800C2E5C
+[CONFIG TITLE]
+sub_800C2EB4 StartConfigMenu_800C2EB4
+sub_800C45D8 IsConfigMenuActive_800C45D8
+[CONFIG]
+sub_800C4B34 ConfigNoticeTask_800C4B34
+# EQUIP
+[EQUIP]
+overlayId_800C29D0 equipOverlayId_800C29D0
+sub_800C5510 DrawEquipItemList_800C5510
+dword_800C5834 scrollUpArrowPos_800C5834
+# EVENTFNC
+[EVENTFNC GAME]
+sub_800B6DD4 CollideLevantWithMap_800B6DD4
+[EVENTFNC]
+sub_800B716C CollideWithMap_800B716C
+sub_800B73C0 MarkSharedEdges_800B73C0
+sub_800B76B8 FindTriAtXZ_800B76B8
+sub_800B7E40 SlideAlongEdge_800B7E40
+sub_800B8028 FindDuplicatePoint_800B8028
+sub_800B80C8 FindLevantMesh_800B80C8
+sub_800B8184 FindMeshAtPos_800B8184
+sub_800B83E4 GetTriHeight_800B83E4
+[EVENTFNC GAME]
+sub_800B8A34 EvCmdEndScene_800B8A34
+[EVENTFNC]
+sub_800B97B0 EvCmdSaveActorPos_800B97B0
+sub_800B9C5C EvCmdSetValuable_800B9C5C
+sub_800BA6D0 EvCmdSetCallArgs_800BA6D0
+sub_800BA9E4 EvCmdChangeMapToPoint_800BA9E4
+[EVENTFNC GAME]
+sub_800BC2B4 UpdateEventMessage_800BC2B4
+sub_800BC7A8 LoadEventEffectFile_800BC7A8
+sub_800BC854 LoadRelocBlob_800BC854
+sub_800BC98C LoadEventTiy_800BC98C
+sub_800BCA18 CopyEventData_800BCA18
+sub_800BCA68 LoadEventRecordTables_800BCA68
+dword_800BCDBC eventFuncs_800BCDBC
+# GAME
+[GAME]
+dword_800A0660 aAssertionFaile_800A0660
+jpt_800A06F0 dword_800A06F0
+dword_800A07A8 jpt_800A07A8
+dword_800A07E0 aAssertionFailed_800A07E0
+dword_800A0808 aPLDISPC_800A0808
+dword_800A094C EnableCameraPoints_800A094C
+[BATTLE EVENTFNC GAME]
+sub_800A096C DisableCameraPoints_800A096C
+[BATTLE GAME]
+sub_800A14E0 WaitBattleReturnFiles_800A14E0
+sub_800A15FC WaitMapReloadAfterBattle_800A15FC
+[EVENTFNC GAME]
+sub_800A17F4 AddEnemySlot_800A17F4
+sub_800A1904 SuspendAllEnemySlots_800A1904
+sub_800A1974 ResumeAllEnemySlots_800A1974
+[BATTLE GAME]
+sub_800A1B2C AreAllEncounterEnemiesGone_800A1B2C
+sub_800A1B78 DestroyEncounterActors_800A1B78
+sub_800A1E1C EndEncounter_800A1E1C
+sub_800A1E3C GetBattleSelection_800A1E3C
+sub_800A1E48 GetEncounterLeaderPos_800A1E48
+sub_800A1E68 GetEncounterLeaderRot_800A1E68
+sub_800A1F0C ResumeOtherEnemies_800A1F0C
+sub_800A1F80 SpawnEncounterEnemies_800A1F80
+sub_800A248C GetEnemyAliveMask_800A248C
+sub_800A2618 EnemyChooseCommand_800A2618
+sub_800A2684 StartEnemyCommandAction_800A2684
+sub_800A2760 TriggerEnemyEffects_800A2760
+sub_800A284C SetEnemyStatusTint_800A284C
+sub_800A2898 AddEnemyItem_800A2898
+sub_800A2924 RemoveEnemy_800A2924
+sub_800A2B60 GetEnemyStatus_800A2B60
+sub_800A2BE4 GetEnemySpecies_800A2BE4
+sub_800A2C28 GetEnemyPos_800A2C28
+[EVENTFNC GAME]
+sub_800A2D90 CreateEnemyAiEvent_800A2D90
+[GAME]
+sub_800A433C SetEnemyAiState_800A433C
+sub_800A47B8 ReflectPoint_800A47B8
+[EVENTFNC GAME]
+sub_800A49CC RollEncounterGroups_800A49CC
+[BATTLE GAME]
+sub_800A5354 GetSpecialStageIndex_800A5354
+[EVENTFNC GAME]
+sub_800A55B0 GetEventDataSlot_800A55B0
+sub_800A5804 AllocMdecBuffer_800A5804
+sub_800A5854 FreeMdecBuffer_800A5854
+sub_800A59D0 StartEventScript_800A59D0
+sub_800A5B54 ResetEventCtx_800A5B54
+sub_800A5C40 FireEventTrigger_800A5C40
+sub_800A5DDC FindEventEntity_800A5DDC
+[GAME MENU]
+sub_800A5E68 IsSceneHeld_800A5E68
+sub_800A5E80 IsTriggerWaited_800A5E80
+[EVENTFNC GAME]
+sub_800A5F9C ExchangeEventResult_800A5F9C
+[BATTLE GAME]
+sub_800A5FAC WarpAfterLostBattle_800A5FAC
+[EVENTFNC GAME]
+sub_800A6060 RunEventScript_800A6060
+[GAME]
+sub_800A6434 GetIconSprtByKind_800A6434
+[EVENTFNC GAME]
+sub_800A6504 IsEventPointValid_800A6504
+sub_800A6738 GetEventString_800A6738
+sub_800A67B4 SkipActorAnims_800A67B4
+sub_800A6830 SetVoiceTable_800A6830
+[EVENTFNC GAME MAP MENU]
+sub_800A6D30 RequestGameMode_800A6D30
+[GAME]
+sub_800A75F8 StartMapOverlay_800A75F8
+sub_800A7690 StartChapterOverlay_800A7690
+[GAME MENU]
+sub_800A7714 SetFieldMode_800A7714
+[EVENTFNC GAME]
+sub_800A7720 FieldModeTask_800A7720
+sub_800A7790 GetFieldMinionCount_800A7790
+sub_800A78A8 GetFieldMinionModelId_800A78A8
+sub_800A7940 GetFieldMinionPos_800A7940
+sub_800A7984 GetFieldMinionRot_800A7984
+sub_800A7A60 GetFieldMinionActor_800A7A60
+[GAME]
+sub_800A7B00 SuspendFieldMinions_800A7B00
+sub_800A7BF0 ResumeFieldMinions_800A7BF0
+[EVENTFNC GAME]
+sub_800A7D40 FieldMinionCommand_800A7D40
+sub_800A80C4 TriggerFieldMinionEffect_800A80C4
+sub_800A8C34 GetLevantStatus_800A8C34
+sub_800A8E0C HoldLevantControl_800A8E0C
+sub_800A8E38 ReleaseLevantControl_800A8E38
+sub_800A8E7C IsLevantControlHeld_800A8E7C
+sub_800A8EC4 LevantCommand_800A8EC4
+[GAME]
+sub_800A9708 DrawLevantModel_800A9708
+[EVENTFNC GAME]
+sub_800AC604 LoadLevantAnimById_800AC604
+sub_800AC6A8 FreeLevantAnimById_800AC6A8
+[BATTLE GAME]
+sub_800AC708 LoadLevantAnimSet_800AC708
+[BATTLE EVENTFNC GAME]
+sub_800AC768 AreLevantFilesLoaded_800AC768
+[GAME MENU]
+sub_800AD02C GetMoney_800AD02C
+[EVENTFNC GAME]
+sub_800AD058 AddMoney_800AD058
+[GAME]
+sub_800AD0A4 SpendMoney_800AD0A4
+[EVENTFNC GAME MAP]
+sub_800AD0D4 TestEventFlag_800AD0D4
+[EVENTFNC GAME]
+sub_800AD0F8 SetEventFlag_800AD0F8
+[EVENTFNC GAME MAP]
+sub_800AD16C SetEventVar_800AD16C
+[EVENTFNC GAME]
+sub_800AD184 AddInventory_800AD184
+[BATTLE EVENTFNC GAME MENU]
+sub_800AD1E0 RemoveInventory_800AD1E0
+[GAME]
+sub_800AD254 GetInventoryCount_800AD254
+[BATTLE GAME MENU]
+sub_800AD288 GetInventorySlotId_800AD288
+[GAME MENU]
+sub_800AD2C8 GetInventorySlotCount_800AD2C8
+[BATTLE GAME MENU]
+sub_800AD308 GetLastInventorySlot_800AD308
+[GAME MENU]
+sub_800AD3F0 CompactInventory_800AD3F0
+[GAME]
+sub_800AD4D8 FindInventorySlotForAdd_800AD4D8
+[EVENTFNC GAME]
+sub_800AD68C SetValuableFlag_800AD68C
+sub_800AD6E4 ClearValuableFlag_800AD6E4
+[EVENTFNC GAME MENU]
+sub_800AD73C TestValuableFlag_800AD73C
+[GAME MENU]
+sub_800AD79C CountValuables_800AD79C
+sub_800AD7F8 GetNthValuable_800AD7F8
+[BATTLE GAME]
+sub_800AD8E4 GetEmptyCocoons_800AD8E4
+[EVENTFNC GAME]
+sub_800AD8F4 AddEmptyCocoons_800AD8F4
+[BATTLE GAME]
+sub_800AD944 RemoveEmptyCocoons_800AD944
+[GAME MENU]
+sub_800AD990 GetEquippedId_800AD990
+[EQUIP GAME]
+sub_800AD9EC SetEquipment_800AD9EC
+[GAME MAP]
+sub_800ADC1C GetMapVar_800ADC1C
+[EVENTFNC GAME]
+sub_800ADC5C SetMapVar_800ADC5C
+sub_800ADCEC FindMapEntrance_800ADCEC
+[BATTLE GAME]
+dword_800ADE78 encounterRecord_800ADE78
+[EVENTFNC GAME]
+dword_800AEB7C mdecBufferMode_800AEB7C
+dword_800AEBD8 sceneScriptId_800AEBD8
+dword_800AEBE0 eventBattlePending_800AEBE0
+dword_800AEBE4 eventBattleLoseWarp_800AEBE4
+dword_800AEBE8 currentMessageId_800AEBE8
+dword_800AEBF0 voiceTable_800AEBF0
+[EVENTFNC GAME MAP EXE]
+name_800B0608 mapTable_800B0608
+[GAME]
+dword_800B069C levantStartPos_800B069C
+[EVENTFNC GAME]
+dword_800B06B0 shopRequest_800B06B0
+[BATTLE GAME]
+dword_800B122C battleHitEnemies_800B122C
+[EVENTFNC GAME]
+dword_800B1CB8 eventEnemy_800B1CB8
+dword_800B1D98 eventHook_800B1D98
+# LOAD
+[LOAD]
+dword_800B68E0 aLoadGame_800B68E0
+dword_800B6C48 aCorridor_800B6C48
+asc_800B6D04 aCombDataTitle09_800B6D04
+asc_800B6D20 aCombDataTitle08_800B6D20
+asc_800B6D3C aCombDataTitle07_800B6D3C
+[COMBLOAD LOAD TITLE]
+sub_800B7674 LoadMenuInit_800B7674
+[GAME LOAD]
+sub_800B78B8 SetLoadMenuSavePlace_800B78B8
+sub_800B78D0 LoadMenuSetEndOfGame_800B78D0
+[COMBLOAD LOAD TITLE]
+sub_800B7914 GetLoadMenuLoaded_800B7914
+sub_800B793C IsLoadMenuActive_800B793C
+[LOAD]
+sub_800B794C LoadMenuTask_800B794C
+sub_800B9724 ReadSaveSummaries_800B9724
+sub_800BA234 LoadSaveTask_800BA234
+sub_800BA9F0 FormatCardTask_800BA9F0
+sub_800BAAE0 LoadMenuExit_800BAAE0
+sub_800BAC14 PlayTimeHours_800BAC14
+sub_800BAC68 PlayTimeMinutes_800BAC68
+sub_800BACBC DrawMessageBox_800BACBC
+sub_800BADE0 ResetMenuRow_800BADE0
+sub_800BADF4 WaitCardSync_800BADF4
+[LOAD TITLE]
+sub_800BAE2C GetCardFreeBlocks_800BAE2C
+sub_800BAE3C GetCardSaveCount_800BAE3C
+[LOAD]
+sub_800BAE4C GetCardSaveName_800BAE4C
+sub_800BAE68 PollCardAccept_800BAE68
+sub_800BAF0C PollCardExist_800BAF0C
+sub_800BAFB0 ScanCardSaves_800BAFB0
+sub_800BB0E4 ScanCardSavesComb_800BB0E4
+sub_800BB23C FindDirEntry_800BB23C
+sub_800BB2AC BuildCardHeader_800BB2AC
+sub_800BB4A8 DrawCardSlotMenu_800BB4A8
+sub_800BB5DC MemCardStart
+sub_800BB64C MemCardStop
+sub_800BB68C MemCardExist
+sub_800BB9F4 MemCardAccept
+sub_800BBD04 MemCardOpen
+sub_800BBE8C MemCardClose
+sub_800BC0C4 MemCardWriteData
+sub_800BC2B8 MemCardReadFile
+sub_800BC510 MemCardWriteFile
+sub_800BC768 MemCardGetDirentry
+sub_800BC9C8 MemCardCallback
+sub_800BC9DC MemCardSync
+sub_800BCAF8 MemCardCreateFile
+sub_800BCCF4 MemCardDeleteFile
+sub_800BCEA8 MemCardFormat
+sub_800BCF64 MemCardUnformat
+sub_800BD17C UserFuncInit
+sub_800BD18C UserFuncOpen
+sub_800BD208 UserFuncExecute
+sub_800BD274 UserFuncComplete
+sub_800BD2A0 funcEvSpError
+sub_800BD2B4 funcEvSpTimeout
+sub_800BD2C8 funcEvSpNewcard
+sub_800BD2DC funcEvSpIOEx
+sub_800BD2F0 funcEvSpErrorx
+sub_800BD304 funcEvSpTimeoutx
+sub_800BD318 funcEvSpNewcardx
+sub_800BD32C _card_open
+sub_800BD35C _card_start
+sub_800BD538 _card_close
+sub_800BD558 _card_stop
+sub_800BD60C _clr_card_event
+sub_800BD714 _get_card_event
+sub_800BD7EC _get_card_event_x
+sub_800BD8C4 _chk_card_event
+sub_800BD900 _chk_card_event_x
+# MAP
+[MAP]
+dword_800B6B98 aSelKind_800B6B98
+dword_800B6BAC aSelSceneGroup_800B6BAC
+dword_800B6BCC aSelScene_800B6BCC
+dword_800B6BE0 aSelChapter_800B6BE0
+[GAME MAP]
+sub_800B6BFC MapSelectStart_800B6BFC
+# MENU
+[MENU]
+dword_800B66C0 menuOverlayId_800B66C0
+dword_800BBA44 aLeaveTheForest_800BBA44
+dword_800BBB40 jpt_800BBB40
+dword_800BBB7C menuHdrActive_800BBB7C
+sub_800BBB9C CreateBattleResultTask_800BBB9C
+sub_800BD634 SetAllMinionsCaptured_800BD634
+sub_800BD80C MinionListScreen_800BD80C
+sub_800BDB74 GetMinionSpeciesName_800BDB74
+sub_800BDBB8 IsMinionCaptured_800BDBB8
+sub_800BDBFC DrawMinionListPage_800BDBFC
+sub_800BF3AC UseSpore_800BF3AC
+sub_800C01F4 DrawItemGrid_800C01F4
+sub_800C09B0 DrawKeyItemsWindow_800C09B0
+[EQUIP MENU]
+sub_800C0E04 DrawEquipmentWindow_800C0E04
+# NAME
+[NAME]
+dword_800B6D00 nameOverlayId_800B6D00
+overlayId_800B6D00 nameOverlayId_800B6D00
+asc_800B6D04 charRowBlank_800B6D04
+asc_800B6D20 charRowDigits2_800B6D20
+asc_800B6D3C charRowDigits1_800B6D3C
+[NAME SHOPCTRL TITLE]
+sub_800B6E4C StartNameEntry_800B6E4C
+[NAME TITLE]
+sub_800B6FC8 IsNameEntryActive_800B6FC8
+[NAME]
+sub_800B6FD8 NameEntryTask_800B6FD8
+sub_800B70F4 UpdateNameEntry_800B70F4
+sub_800B7414 DrawNameField_800B7414
+sub_800B75EC DrawCharRow_800B75EC
+sub_800B78EC MoveNameCursor_800B78EC
+sub_800B7C68 DeleteNameChar_800B7C68
+sub_800B7CA4 ClampNameLength_800B7CA4
+sub_800B7CD8 SwitchCharPage_800B7CD8
+sub_800B7F08 RestoreSavedName_800B7F08
+sub_800B7F70 SavedNameLength_800B7F70
+sub_800B7FA0 ResetNameToDefault_800B7FA0
+sub_800B7FD8 IsNameBlank_800B7FD8
+sub_800B80E4 MoveCursorWithSfx_800B80E4
+# SHOP
+[SHOP]
+dword_800B6D7C aEmpty_800B6D7C
+dword_800B9608 mainMenuWindow_800B9608
+dword_800B971C minionListWindow_800B971C
+sub_800B97B0 CompactStoredMinions_800B97B0
+[SHOP SHOPENTR]
+sub_800B9C5C GetShopMinion_800B9C5C
+[SHOP]
+sub_800B9C78 CountShopMinionsInState_800B9C78
+[SHOP SHOPCTRL]
+sub_800B9DA8 CommitShopMinionList_800B9DA8
+[SHOP EXE]
+sub_800B9FC8 MergeMinions_800B9FC8
+[SHOP]
+sub_800BA6D0 MergeExp_800BA6D0
+[SHOP SHOPCTRL]
+sub_800BB058 StartShop_800BB058
+[SHOP]
+sub_800BB444 ShopMenuTask_800BB444
+sub_800BBB54 SetShopHelpText_800BBB54
+sub_800BC1A8 CycleInfoPage_800BC1A8
+sub_800BCF74 CheckShopSelection_800BCF74
+sub_800BED48 DrawSkinList_800BED48
+dword_800BF790 statusWindowRect_800BF790
+# SHOPCTRL
+[GAME SHOPCTRL]
+sub_800B66C4 StartShopCtrl_800B66C4
+[SHOPCTRL]
+sub_800B6900 ShopCtrlWaitUiReload_800B6900
+[SHOPCTRL SHOPENTR]
+sub_800B6CA0 ShopCtrlRequestShop_800B6CA0
+[SHOP SHOPCTRL]
+sub_800B6CB8 ShopCtrlRequestExit_800B6CB8
+[SHOPCTRL]
+dword_800B6CD8 shopOverlayIds_800B6CD8
+dword_800B6CFC shopCtrlNameTarget_800B6CFC
+# SHOPENTR
+[SHOPENTR]
+asc_800B6D04 aSaved_800B6D04
+dword_800B6E74 aCardChecking_800B6E74
+dword_800B6F0C IsShelfMenuActive_800B6F0C
+# SOUNDTST
+[SOUNDTST]
+dword_800A519C strSoundNumber_800A519C
+dword_800A57D4 xaNames_800A57D4
+# TITLE
+[TITLE]
+dword_800A05A8 aCaution_800A05A8
+dword_800A0658 aThereAreNoFreeB_800A0658
+dword_800A069C aTheMEMORYCARDIn_800A069C
+dword_800A2718 levantName_800A2718
+# TSTCOMPO
+[TSTCOMPO]
+sub_800A0800 TstCompoInit_800A0800
+sub_800A097C TstCompoTask_800A097C
+sub_800A1C14 TstCompoCameraInput_800A1C14
+sub_800A1E68 SetCameraLookAt_800A1E68
+sub_800A2030 DrawTextListWindow_800A2030
+# TSTMODEL
+[TSTMODEL]
+sub_800A0A8C TstModelTask_800A0A8C
+sub_800A104C TstModelCameraInput_800A104C
+sub_800A1A24 SetCameraLookAt_800A1A24
+sub_800A1B48 MoveGridCursor_800A1B48
+dword_800A1E84 lightDirs_800A1E84
+# WPNSHOP
+[WPNSHOP]
+dword_800BADF0 menuWindow_800BADF0
+[GAME WPNSHOP]
+sub_800BAE2C StartStore_800BAE2C
+[WPNSHOP]
+sub_800BD174 DrawEquipQuantity_800BD174
+sub_800BDE38 GetMaxBuyEquipCount_800BDE38
+sub_800BDF68 GetMaxBuyItemCount_800BDF68
+sub_800BE058 GetStoreListCursor_800BE058
+sub_800BE084 AdjustBuyQuantity_800BE084
