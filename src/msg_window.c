@@ -28,10 +28,6 @@ const char aUsed_800747C0[] = "\201@\202\225\202\223\202\205\202\204\201D"; //  
 const char aReturned_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222\202\216\202\205\202\204\201D"; //  returned.
 const char aReceived_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
 const char aPickedUp_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
-const int dword_80074818 = 0;
-// the jump table of UpdateMsgWindowState_80034C18 (asm; its targets are labels of the generated asm, gen_asm.jump_label):
-// delete it (and dword_80074818, its alignment) and the externs in msg_window.h when the function is C
-void* const jpt_8007481C[13] = { jtgt_80034F88, jtgt_80034C88, jtgt_80034D84, jtgt_80034E50, jtgt_80034F00, jtgt_80034F74, jtgt_80034F80, jtgt_80034F88, jtgt_80035280, jtgt_80034FB8, jtgt_80035000, jtgt_8003516C, jtgt_800351CC };
 
 // Matched
 int CheckMagicUsable_80034068(short* cmd)
@@ -122,24 +118,7 @@ extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
 extern short** FindTextResumePage_80034900(short** list);
 extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
-typedef struct
-{
-    char pad_0[0xB4];
-    int* list_B4[1];
-} MsgWindowLists;
-typedef struct
-{
-    char pad_0[0x1E4];
-    signed char marks_1E4[0x30];
-} MsgWindowMarks;
-#define WL(n) (((MsgWindowLists*)w)->list_B4[n])
-#define WS(off) (*(short*)((char*)w + (off)))
-#define WI(off) (*(int*)((char*)w + (off)))
-#if 0
-// Not matched (2 words): matches when the marks fill walks a byte pointer over w itself, i.e.
-// q = (signed char*)w + i; ... q[0x1E4] = c; (orig: addu q,w,i / sb 0x1e4(q)), a raw offset. With the field the
-// start folds to w + 0x213 and the store is 0(q); plain w->marks_1E4[i] is not strength-reduced at all (loop.c:
-// "giv not worth while, 0 vs 5": byte giv benefit 2 - add cost 2), so the original had two explicit induction vars.
+// Matched
 EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
 {
     EventEntry* e;
@@ -150,7 +129,6 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     int i;
     TextSize sz;
     int c;
-    signed char* q;
 
     e = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
     if (!e)
@@ -266,9 +244,9 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->field_1D8 = 0;
     w->field_1DC = 0;
     w->field_1E0 = 1;
-    for (i = 0x2F, q = &w->marks_1E4[i]; i >= 0; i--, q--)
+    for (i = 0; i < 0x30; i++)
     {
-        *q = c;
+        w->marks_1E4[i] = c;
     }
     w->field_1CC = cfg->field_10;
     w->field_1C4 = (int)w->list_B4[w->page_78];
@@ -375,8 +353,6 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     e->flags = (e->flags | 1) & ~0x8000;
     return e;
 }
-#endif
-INCLUDE_ASM(OpenMessageWindow_8003422C);
 extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** FindTextResumePage_80034900(short** list)
@@ -532,18 +508,12 @@ extern int DrawMsgWindowText_8003580C();
 extern void DrawMsgWindowTitle_800359F8();
 extern void DrawMsgWindowPortrait_80035900();
 extern void DrawMsgWindowChoices_800355EC();
-#if 0
-// Not matched (2 words, the same in both marks fills): matches when the marks fill walks a byte pointer over w itself, i.e.
-// q = (signed char*)w + i; ... q[0x1E4] = c; (orig: addu q,w,i / sb 0x1e4(q)), a raw offset. With the field the
-// start folds to w + 0x213 and the store is 0(q); plain w->marks_1E4[i] is not strength-reduced at all (loop.c:
-// "giv not worth while, 0 vs 5": byte giv benefit 2 - add cost 2), so the original had two explicit induction vars.
+// Matched
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
     short r[4];
     int i;
     int j;
-    signed char* q;
-    signed char* q2;
     int c;
     int v;
 
@@ -584,9 +554,9 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->field_1D8 = 0;
             w->field_1DC = 0;
             w->field_1E0 = 1;
-            for (i = 0x2F, q = &w->marks_1E4[i]; i >= 0; i--, q--)
+            for (i = 0; i < 0x30; i++)
             {
-                *q = c;
+                w->marks_1E4[i] = c;
             }
             w->mode_8 = 0;
             w->field_C = 2;
@@ -713,9 +683,9 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                         w->field_1D8 = 0;
                         w->field_1DC = 0;
                         w->field_1E0 = v;
-                        for (j = 0x2F, q2 = &w->marks_1E4[j]; j >= 0; j--, q2--)
+                        for (j = 0; j < 0x30; j++)
                         {
-                            *q2 = c;
+                            w->marks_1E4[j] = c;
                         }
                         w->field_C = 1;
                         w->field_34 = 0;
@@ -813,8 +783,6 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         break;
     }
 }
-#endif
-INCLUDE_ASM(UpdateMsgWindowState_80034C18);
 
 const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
 const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
