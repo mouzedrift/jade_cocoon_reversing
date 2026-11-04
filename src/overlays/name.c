@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "name.h"
 typedef struct
 {
     unsigned short flags_0;
@@ -35,35 +36,6 @@ typedef struct
     short s8;
     short sA;
 } NameCursor;
-typedef struct
-{
-    short s0;
-    short s2;
-    short s4;
-    short s6;
-    short s8;
-    short sA;
-    short sC;
-    short sE;
-    short s10;
-    short s12;
-} NameGrid;
-typedef struct
-{
-    DVECTOR pos;
-    char* chars_4;
-} NameCharRow;
-extern NameCharRow dword_800B8190[][7];
-typedef struct
-{
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-} NameSprite;
-extern NameSprite name_800B82F4;
-extern NameSprite name_800B8388;
-extern char name_800B83A0[];
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
 extern unsigned short uiColor_8008B590;
@@ -75,10 +47,7 @@ extern void sub_800B7E30(NameEntry* p);
 extern void sub_800B7D60(NameEntry* p);
 extern void SwitchCharPage_800B7CD8(NameEntry* p);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
-extern NameGrid name_800B8200[];
 extern int MoveCursorWithSfx_800B80E4(NameCursor* p);
-extern int nameEntryActive_800B83F8;
-extern char defaultName_800B83B8[0x14];
 extern unsigned short padPressed_8009194C;
 extern short name_800B8204[];
 extern void sub_800B7AB4(NameEntry* p);
@@ -86,7 +55,22 @@ extern void RestoreSavedName_800B7F08(NameEntry* p);
 extern int SavedNameLength_800B7F70(NameEntry* p);
 extern void ClampNameLength_800B7CA4(NameEntry* p);
 
-INCLUDE_OVERLAY_ASM(name, dword_800B6D00);
+int dword_800B6D00 SDATA = 39;
+const char asc_800B6D04[28] = "\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
+const char asc_800B6D20[28] = "\202U\202V\202W\202X\202O\201@\201@\201`\201\227\201[\201@\201@";
+const char asc_800B6D3C[28] = "\202P\202Q\202R\202S\202T\201@\201@\201C\201E\201H\201I\201@";
+const char aYz_800B6D58[28] = "\202\231\202\232\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
+const char aMnopqrstuvwx_800B6D74[28] = "\202\215\202\216\202\217\202\220\202\221\202\222\202\223\202\224\202\225\202\226\202\227\202\230";
+const char aAbcdefghijkl_800B6D90[28] = "\202\201\202\202\202\203\202\204\202\205\202\206\202\207\202\210\202\211\202\212\202\213\202\214";
+const char aYZ_800B6DAC[28] = "\202x\202y\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
+const char aMNOPQRSTUVWX_800B6DC8[28] = "\202l\202m\202n\202o\202p\202q\202r\202s\202t\202u\202v\202w";
+const char aABCDEFGHIJKL_800B6DE4[28] = "\202`\202a\202b\202c\202d\202e\202f\202g\202h\202i\202j\202k";
+const char aABC_800B6E00[] = "\202`\202a\202b"; // ABC
+const char a123_800B6E08[] = "\202P\202Q\202R"; // 123
+const char aCancel_800B6E10[] = "\202b\202\201\202\216\202\203\202\205\202\214"; // Cancel
+const char aSelect_800B6E20[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+const NameBuf name_800B6E30 = { { -1 } };
+const char name_800B6E48[] = "\201["; // ー
 
 extern void DrawMenuBackground_8002BE10();
 extern void EncodeName_8003F7C8(void* name, int a);
@@ -97,11 +81,6 @@ extern void MoveNameCursor_800B78EC(NameEntry* p);
 extern void UpdateNameEntry_800B70F4(NameEntry* p);
 extern void sub_800B8018();
 
-typedef struct NameBuf
-{
-    short s[11];
-} NameBuf;
-extern NameBuf name_800B6E30;
 extern EventNode* name_8008D484;
 void NameEntryTask_800B6FD8();
 void StartNameEntry_800B6E4C(int a, int flags)
@@ -269,7 +248,6 @@ extern void DrawText_8003E91C(int a, void* b, void* c, int d);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 extern void DrawUiTiySprt_8002C06C(void* pos, int a, int b);
 extern int MeasureTextWidth_8003E4C8(void* p);
-extern char name_800B6E48[];
 void DrawNameField_800B7414(NameEntry* p)
 {
     NameTextItem item;
@@ -638,7 +616,6 @@ void sub_800B8018(void)
 }
 
 extern short name_800B83C8[];
-extern short name_800B83D0[];
 void sub_800B8020(NameCursor* p, int k)
 {
     if (p->flags & name_800B83C8[k - 1])
@@ -654,12 +631,6 @@ void sub_800B8020(NameCursor* p, int k)
     }
 }
 
-typedef struct
-{
-    int mask;
-    int result;
-} NameCursorTbl;
-extern NameCursorTbl name_800B83D8[];
 extern int MoveGridCursorP1_8003D630();
 extern void PlaySfx_80031494(int);
 int MoveCursorWithSfx_800B80E4(NameCursor* p)
@@ -682,4 +653,63 @@ int MoveCursorWithSfx_800B80E4(NameCursor* p)
     return 0;
 }
 
-INCLUDE_OVERLAY_ASM(name, dword_800B8190);
+NameCharRow dword_800B8190[2][7] = {
+    {
+        { { 13, 100 }, aABCDEFGHIJKL_800B6DE4 },
+        { { 13, 116 }, aMNOPQRSTUVWX_800B6DC8 },
+        { { 13, 132 }, aYZ_800B6DAC },
+        { { 13, 148 }, aAbcdefghijkl_800B6D90 },
+        { { 13, 164 }, aMnopqrstuvwx_800B6D74 },
+        { { 13, 180 }, aYz_800B6D58 },
+    },
+    {
+        { { 13, 100 }, asc_800B6D3C },
+        { { 13, 116 }, asc_800B6D20 },
+        { { 13, 132 }, asc_800B6D04 },
+        { { 13, 148 }, asc_800B6D04 },
+        { { 13, 164 }, asc_800B6D04 },
+        { { 13, 180 }, asc_800B6D04 },
+    },
+};
+NameGrid name_800B8200[3] = {
+    { 0, 6, 2, 12, 6, 0, 16, 16, 13, 100 },
+    { 1, 14, 1, 1, 2, 0, 54, 10, 209, 99 },
+    { 2, 10, 1, 1, 3, 0, 54, 10, 209, 99 },
+};
+int dword_800B823C[14] = {
+    0x10008, 5, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6100F6, 0x130040, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800B8274[14] = {
+    0x10008, 142, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7500F6, 0x130040, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800B82AC[14] = {
+    0x10008, 47, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8E00F6, 0x130040, 0x40000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *dword_800B82E4[4] = { (void *)dword_800B823C, (void *)dword_800B8274, (void *)dword_800B82AC };
+NameSprite name_800B82F4 = { 2, 0, 8 };
+void *dword_800B8304[2] = { (void *)dword_800B82E4 };
+int dword_800B830C[14] = {
+    0x20008, (int)aABC_800B6E00, 0, 0, 0x6100CE, 0xD0026, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int dword_800B8344[14] = {
+    0x20008, (int)a123_800B6E08, 0, 0, 0x6F00CE, 0xD0026, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *dword_800B837C[3] = { (void *)dword_800B830C, (void *)dword_800B8344 };
+NameSprite name_800B8388 = { 2, 0, 8 };
+void *dword_800B8398[2] = { (void *)dword_800B837C };
+char name_800B83A0[24] = { 16, 0, 0, 0, 32, 110, 11, 128, 167, 0, 0, 0, 16, 110, 11, 128, 255, 255, 255, 255 };
+char defaultName_800B83B8[0x14] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 };
+int dword_800B83CC = 0x20002;
+short name_800B83D0[4] = { -1, 1, 1, -1 };
+NameCursorTbl name_800B83D8[4] = {
+    { 4, 1 },
+    { 8, 2 },
+    { 16, 3 },
+    { 32, 4 },
+};
+int nameEntryActive_800B83F8 = 0;

@@ -145,6 +145,22 @@ def declared_sizes(name):
     return out
 
 
+def inside_string(data, base, lo, r):
+    """r is in the middle of a string (text from the previous terminator, or lo, on through r up to a terminator)"""
+    import gendata
+    o = r - base
+    if not data[o - 1] or not data[o]:
+        return False
+    s = o
+    while s > lo - base and data[s - 1]:
+        s -= 1
+    e = data.find(b"\0", o)
+    if e < 0 or (s - (lo - base)) % 4:
+        return False
+    run = data[s:e]
+    return len(run) >= 4 and gendata.is_text(run)
+
+
 def split_points(name, data, base, syms, lib_ranges):
     code = [a for a, n in syms if not is_data(n)]
     lo, hi = min(code), max(code)
@@ -164,7 +180,8 @@ def split_points(name, data, base, syms, lib_ranges):
             inside.append((a, a + s))
     out = {}
     for a, b, n in bl:
-        pts = sorted(r for r in refs if a < r < b and r % 4 == 0 and not any(x < r < y for x, y in inside))
+        pts = sorted(r for r in refs if a < r < b and r % 4 == 0 and not any(x < r < y for x, y in inside)
+                     and not inside_string(data, base, a, r))
         # the overlay's first word goes to .sdata (overlays.py): a symbol of its own
         if a == base and name.upper() not in ("GAME", "MENU") and b > a + 4 and a + 4 not in pts:
             pts.insert(0, a + 4)

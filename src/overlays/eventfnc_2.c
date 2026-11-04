@@ -1,7 +1,11 @@
 // EVENTFNC.BIN, source file 2 of 2 from 0x800BCB3C (.rdata from 0x800B6D98)
 #include "eventfnc.h"
 
-INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6D98);
+const int dword_800B6D98[10] = {
+    0, 0, 0, 0, 0, 5, 7, 6,
+    8,
+};
+INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6DC0);
 
 #if 0
 // Not matched: with this file's own .rdata the initializer and jump table land where the original's are;
@@ -87,4 +91,32 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
 INCLUDE_OVERLAY_ASM(eventfnc, sub_800BCB3C);
 
 
-INCLUDE_OVERLAY_ASM(eventfnc, dword_800BCDBC);
+int (*eventFuncs_800BCDBC[157])() = {
+    sub_800B89A8, sub_800B89C0, sub_800B89A8, sub_800B89F4,
+    (int (*)())sub_800B8A34, (int (*)())sub_800B8BE8, sub_800B8CB0, sub_800B8D08,
+    sub_800B8DDC, sub_800B89A8, sub_800B8E9C, sub_800B8F14,
+    sub_800B8F44, sub_800B8F88, sub_800B8FB8, sub_800B9020,
+    sub_800B9110, sub_800B91CC, sub_800B9218, sub_800B9260,
+    sub_800B93A8, sub_800B942C, sub_800B93A8, sub_800B942C,
+    sub_800B95BC, sub_800B962C, sub_800B96D8, sub_800B9720,
+    sub_800B9768, sub_800B97B0, sub_800B97F8, sub_800B9840,
+    sub_800B98C4, sub_800B990C, sub_800B9954, sub_800B99D8,
+    sub_800B9A20, sub_800B9A68, sub_800B9AB4, sub_800B9B00,
+    sub_800B9B4C, (int (*)())sub_800B9B98, sub_800B9CC0, sub_800B9D08,
+    sub_800B9D50, sub_800B9C5C, sub_800B9DE0, sub_800B9E48,
+    sub_800B9EB0, sub_800B9EDC, sub_800B9F0C, sub_800B9F5C,
+    sub_800B9F84, sub_800B9FB4, sub_800B9FD8, sub_800BA020,
+    sub_800BA020, sub_800BA020, sub_800BA020, sub_800BA020,
+    sub_800BA020, sub_800BA020, sub_800BA020, sub_800BA020,
+    sub_800B89A8, sub_800BA1DC, sub_800BA238, sub_800BA28C,
+    sub_800BA2E8, sub_800BA338, sub_800BA40C, sub_800BA45C,
+    sub_800BA4F0, sub_800BA554, sub_800BA5CC, sub_800BA678,
+    sub_800BA6D0, sub_800BA714, sub_800BA7A4, (int (*)())sub_800BA82C,
+    sub_800BA880, sub_800BA8AC, sub_800BA930, sub_800BA9E4,
+    sub_800B89A8, sub_800BAA6C, sub_800BAAC0, sub_800BAB14,
+    (int (*)())sub_800BAB5C, sub_800BABB0, sub_800BAC60, sub_800BACE0,
+    sub_800BAD3C, sub_800BAD88, sub_800BADF8, sub_800BAEBC,
+    sub_800BAF08, sub_800BAF68, sub_800BAFAC, sub_800BB180,
+    sub_800BB214, (int (*)())sub_800BB27C, sub_800BB45C, sub_800BB4A4,
+    sub_800BB7D8,
+};

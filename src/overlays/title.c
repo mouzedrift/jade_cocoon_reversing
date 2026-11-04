@@ -3,9 +3,69 @@
 #include "funcs.h"
 #include "globals.h"
 #include "sound.h"
+#include "title.h"
 
 
-INCLUDE_OVERLAY_ASM(title, dword_800A05A0);
+int dword_800A05A0 SDATA = 13;
+const char asc_800A05A4[] = "$$$";
+const char dword_800A05A8[] = "\202b\202\201\202\225\202\224\202\211\202\217\202\216\201I"; // Caution!
+const char str_800A05BC[] = "\202s\202\210\202\205\202\222\202\205\201@\202\211\202\223\201@\202\216\202\217\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\205\201@\202r\202k\202n\202s"; // There is no MEMORY CARD in the SLOT
+const char str_800A0604[] = "\202x\202\217\202\225\201@\202\227\202\211\202\214\202\214\201@\202\216\202\217\202\224\201@\202\202\202\205\201@\202\201\202\202\202\214\202\205\201@\202\224\202\217\201@\202\223\202\201\202\226\202\205"; // You will not be able to save
+const char str_800A0640[] = "\202\207\202\201\202\215\202\205\201@\202\204\202\201\202\224\202\201\201D"; // game data.
+const char dword_800A0658[] = "\202s\202\210\202\205\202\222\202\205\201@\202\201\202\222\202\205\201@\202\216\202\217\201@\202\206\202\222\202\205\202\205\201@\202\202\202\214\202\217\202\203\202\213\202\223\201@\202\214\202\205\202\206\202\224\201@\202\217\202\216"; // There are no free blocks left on
+const char dword_800A069C[] = "\202\224\202\210\202\205\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\211\202\223\201@\202r\202k\202n\202s\201D"; // the MEMORY CARD in this SLOT.
+const TitleBlk38M dword_800A06D8 = {
+    {
+        { 8, 1, 3, 0, 0, 106, 140, { 108, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A0710 = {
+    {
+        { 8, 1, 4, 0, 0, 106, 157, { 108, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A0748 = {
+    {
+        { 8, 1, 0, 0, 0, 106, 174, { 108, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A0780 = {
+    {
+        { 8, 1, 1, 0, 0, 106, 191, { 108, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A07B8 = {
+    {
+        { 8, 0, 0, 0, 0, 214, 140, { 100, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A07F0 = {
+    {
+        { 8, 0, 0, 0, 0, 214, 157, { 100, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A0828 = {
+    {
+        { 8, 0, 0, 0, 0, 214, 174, { 100, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleBlk38M dword_800A0860 = {
+    {
+        { 8, 0, 0, 0, 0, 214, 191, { 100, 0, 16, 0, 0, 0, 2 } },
+        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+    },
+};
+const TitleCfgM dword_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
+const Blk4_ dword_800A08B0 = { "ZZZ" };
+const char byte_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
+const int dword_800A08C0[2] = { 0, 0x8940000 };
 
 typedef struct TitleTask
 {
@@ -26,8 +86,6 @@ typedef struct TitleCtxA
     DR_TPAGE* tpages_74; // one per sprite
 } TitleCtxA;
 
-extern int dword_800A280C;
-extern int dword_800A2810;
 extern void sub_800A093C();
 // Matched
 void sub_800A08C8(TitleTask* t, TitleCtxA* c)
@@ -86,7 +144,6 @@ void sub_800A09C0(TitleTask* t)
 }
 
 
-extern int dword_800A2808;
 extern unsigned short padPressed_8009194C;
 extern void sub_800A0A70();
 // Matched
@@ -101,7 +158,6 @@ void sub_800A0A1C(TitleTask* t)
 }
 
 
-extern int dword_800A2718;
 extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern void EncodeName_8003F7C8(void* a0, void* a1);
 extern void sub_800A0AE8();
@@ -112,7 +168,7 @@ void sub_800A0A70(TitleTask* t)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
-            EncodeName_8003F7C8(&dword_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
+            EncodeName_8003F7C8(levantName_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
         }
         StartNameEntry_800B6E4C(saveData_8008B570.levantStatus_7C8.name_10, 0);
         t->next_8 = sub_800A0AE8;
@@ -223,7 +279,6 @@ typedef struct TitleStr4
 
 extern void PulseColor_80033394(void* a0, void* a1, void* a2, int a3, int a4, int a5);
 extern unsigned long* pOT_8008D3EC;
-extern int dword_800A05A0;
 #if 0
 // Not matched: register allocation / scheduling differs
 void sub_800A0D18(SPRT* p, DR_TPAGE* q, int mode, TitleCtxA* c)
@@ -272,8 +327,6 @@ INCLUDE_OVERLAY_ASM(title, sub_800A0D18);
 
 extern void SetFadeMode_8001C19C(int a0, int a1);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
-extern int dword_800A27C0;
-extern int dword_800A2818;
 // Matched
 int sub_800A0EF0(void)
 {
@@ -303,7 +356,6 @@ typedef struct TitleCtxB
     short field_26;
 } TitleCtxB;
 
-extern unsigned int dword_800A2814;
 extern void sub_800A2650();
 extern void sub_800A1B74();
 extern void sub_800A1070();
@@ -440,7 +492,6 @@ extern void sub_800A14A8();
 extern void UpdateMenuCursor_8003D794(void* a0, int a1);
 extern void CheckMemCards_8003BB1C(void);
 extern void sub_800BB5DC(void);
-extern void (*off_800A27E8[])();
 // Matched
 void sub_800A1310(TitleTask* t, TitleCtxB* c)
 {
@@ -531,9 +582,6 @@ void sub_800A14A8(TitleTask* t)
 
 extern void sub_800BB64C(void);
 extern char str_800A05A8[];
-extern char str_800A05BC[];
-extern char str_800A0604[];
-extern char str_800A0640[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int c);
 // Matched
 void sub_800A158C(TitleTask* t)
@@ -569,24 +617,6 @@ typedef struct
     short x, y, w, h;
 } TitleRectM;
 // a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
-typedef struct TitleMenuItem
-{
-    unsigned short flags_0;
-    short pad_2;
-    int f4;
-    void* f8;
-    void* fC;
-    short x_10;
-    short y_12;
-    char pad_14[8];
-} TitleMenuItem;
-typedef struct
-{
-    TitleMenuItem items[2];
-} TitleBlk38M;
-extern char dword_800A05A8[];
-extern char dword_800A0658[];
-extern char dword_800A069C[];
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
 extern void sub_800A1B74(TitleTaskM* t);
 
@@ -628,15 +658,6 @@ void sub_800A1760(TitleCtxB* p, int x, int y)
 }
 
 // struct_A5A4 in ability_menu.c
-typedef struct
-{
-    int f0, f4, f8, fC;
-    TitleBlk38M** windows_10;
-    int f14;
-} TitleCfgM;
-extern TitleBlk38M dword_800A06D8, dword_800A0710, dword_800A0748, dword_800A0780;
-extern TitleBlk38M dword_800A07B8, dword_800A07F0, dword_800A0828, dword_800A0860;
-extern TitleCfgM dword_800A0898;
 extern void DrawMenuWindows_8002A5A4(TitleCfgM* cfg);
 
 // Matched
@@ -861,9 +882,7 @@ extern void EncodeName_8003F7C8(void* a, void* b);
 
 extern struct_v3 dword_800B069C; // Levant's start position
 extern int useMapStartPos_80091C94;
-extern char byte_800A08B4[];
 extern SVECTOR dword_800B06A8; // Levant's start rotation
-extern UnitStatus dword_800A2730; // Levant's initial status block
 
 extern int dword_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
@@ -885,9 +904,6 @@ void sub_800A1F78(void* a)
 {
     sub_800A1AFC(a, 11);
 }
-
-typedef struct { char c[4]; } Blk4_;
-extern Blk4_ dword_800A08B0;
 
 void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 {
@@ -1122,4 +1138,35 @@ void sub_800A2650(void)
     sub_800A2540();
 }
 
-INCLUDE_OVERLAY_ASM(title, dword_800A2718);
+char levantName_800A2718[] = "\202k\202\205\202\226\202\201\202\216\202\224"; // Levant
+int dword_800A2728 = 0;
+int dword_800A272C = 0;
+UnitStatus dword_800A2730 = {
+    0,
+    0,
+    100,
+    100,
+    0,
+    0,
+    { 0 },
+    { 255, 255, 255, 255 },
+    { 56, 56, 56, 56, 32, 32, 32, 16, 32, 224, 32, 32 },
+    { 20, 23, 20, 23, 20 },
+    { 0 },
+    { 0 },
+    { 8, 8, 8, 8 },
+    0,
+    1,
+    1,
+};
+int dword_800A2778[6] = { 1, 5, 52, 0, (int)sub_800A0F6C, (int)sub_800A10D0 };
+int dword_800A2790[6] = { 1, 0x8000, 120, 0x8008D638, (int)sub_800A08C8 };
+int dword_800A27A8[6] = { 1, 5, 64, (int)&soundTask_8008D4A4, (int)InitSoundTask_8002FF10, (int)FreeSoundTask_8003006C };
+int dword_800A27C0 = (int)&eventDescs_80078EB8;
+void *dword_800A27C4[9] = { (void *)dword_800A2778, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312), (void *)((char *)&eventDescs_80078EB8 + 288), (void *)dword_800A27A8, (void *)dword_800A2790, (void *)((char *)&eventDescs_80078EB8 + 360), (void *)((char *)&eventDescs_80078EB8 + 264) };
+void (*off_800A27E8[8])() = { (void (*)())sub_800A1D6C, (void (*)())sub_800A1C18, (void (*)())sub_800A1F00, (void (*)())sub_800A1D8C, (void (*)())sub_800A1C7C, (void (*)())sub_800A1F38, (void (*)())sub_800A1F58, (void (*)())sub_800A1F78 };
+int dword_800A2808 = 0;
+int dword_800A280C = 0;
+int dword_800A2810 = 0;
+unsigned int dword_800A2814 = 0;
+int dword_800A2818 = 0;

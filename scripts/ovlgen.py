@@ -105,6 +105,7 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
         return sec, b - a
 
     all_defs = []
+    other_types = {}
     srcs = ovldata.sources(name)
     texts = {p: open(p).read() for p in srcs}
     renames = {}        # .sym name -> the name the definition has
@@ -112,6 +113,18 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
     report = []
     for k, src in enumerate(srcs):
         incs = includes(texts[src], oname)
+        # a zero word in front of a jump table is the table's alignment (it goes once the function is C)
+        # a table of places inside functions is a jump table of a function that is still assembly
+        def jump_table(n):
+            sec, size = chunk(n)
+            if size < 8 or size % 4:
+                return False
+            ws = struct.unpack("<%dI" % (size // 4), syms.rd(syms.addr[n], size))
+            fstarts = {a for a, nn in sym_list if not ovldata.is_data(nn)}
+            return all(lo <= w < hi for w in ws) and any(w not in fstarts for w in ws)
+        incs = [x for x in incs if not jump_table(x[0])]
+        incs = [x for x in incs if not (chunk(x[0])[1] == 4 and not any(syms.rd(syms.addr[x[0]], 4)) and any(
+            a == syms.addr[x[0]] + 4 and nn.startswith("jpt_") for a, nn in sym_list))]
         if only:
             incs = [x for x in incs if x[0] in only]
         if not incs:
@@ -127,6 +140,23 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                     syms.by_addr[a].insert(0, dn)
                     syms.addr[dn] = a
         names = [n for n, _ in incs]
+        # the functions the overlay's other files define (without their parameters, which may use those files'
+        # own types): pointers to them in the data are typed by these, and get a prototype in the header
+        types.foreign = set()
+        if len(srcs) > 1:
+            import copy
+            for k2 in range(len(srcs)):
+                if k2 == k:
+                    continue
+                if k2 not in other_types:
+                    other_types[k2] = gendata.Types(gendata.parse_preproc(preproc_path(name, k2)))
+                for fname, fnode in other_types[k2].funcnodes.items():
+                    if fname not in types.funcnodes:
+                        fnode = copy.deepcopy(fnode)
+                        fnode.args = None
+                        types.funcnodes[fname] = fnode
+                        types.funcs.add(fname)
+                        types.foreign.add(fname)
         propagate(types, syms, names, chunk)
         for n in names:
             sec, size = chunk(n)
@@ -163,7 +193,14 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
         for n in names:
             a = syms.addr[n]
             sec, size = info[n]
-            inner = sorted(x for x in declared if a < x < a + size and x not in syms.by_addr)
+            lim = a
+            hd = next((x for x in syms.by_addr.get(a, []) if x in types.decls), None)
+            if hd is not None:
+                try:
+                    lim = a + types.resolve(types.decls[hd].type).size()
+                except GenError:
+                    lim = a + size      # an array of unknown length: what follows is more of it
+            inner = sorted(x for x in declared if max(a, lim - 1) < x < a + size and x not in syms.by_addr)
             cuts = [a] + inner + [a + size]
             allnames.append(n)
             info[n] = (sec, cuts[1] - a)
@@ -192,6 +229,31 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                 d.sec = ".sdata"
                 d.text = re.sub(r"^const ", "", d.text)
                 d.text = d.text.replace(" = ", " SDATA = ", 1)
+        # an object that is smaller than its chunk by less than a word leaves a gap; when the next object's
+        # alignment doesn't produce it (a byte behind a byte array), the bytes become objects of their own
+        bysec = {}
+        for d in ok:
+            bysec.setdefault(d.sec, []).append(d)
+        for sec, ds in bysec.items():
+            ds.sort(key=lambda d: d.addr)
+            for prev, d in zip(ds, ds[1:]):
+                pe = prev.addr + prev.t.size()
+                al = 4 if d.t.kind in ("array", "struct", "union") else d.t.align()
+                if not (0 < d.addr - pe < 4) or (pe + al - 1) // al * al == d.addr:
+                    continue
+                x = pe
+                fill = []
+                while (x + al - 1) // al * al != d.addr:
+                    fn = "byte_%08X" % x
+                    v = syms.rd(x, 1)[0]
+                    f = Def(prev.head, fn, x, sec, gendata.U8, "unsigned char %s" % fn, False)
+                    f.text = ("unsigned char %s BSS = 0;" % fn) if sec == ".bss" else (
+                        "%sunsigned char %s = %d;" % ("const " if sec == ".rdata" else "", fn, v))
+                    f.refs = set()
+                    fill.append(f)
+                    x += 1
+                k = ok.index(prev)
+                ok[k + 1:k + 1] = fill
         text = texts[src]
         heads = {}
         for d in ok:
@@ -220,6 +282,8 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                         bad = n
                         break
                     state, asm_since = sec, False
+                elif absorbed.get(n) in heads and absorbed[n] not in dropped:
+                    continue        # part of a definition (its line goes)
                 else:
                     asm_since = True
             if bad is None:
@@ -257,14 +321,18 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
     for src, d, types, gen in all_defs:
         decl = const_decl(d.decl, d.name) if d.sec == ".rdata" else d.decl
         exts.append("extern %s;" % decl)
-        for r in sorted(gen.protos):
-            if all(r not in p for p in protos):
+        for r in sorted(gen.protos) + sorted(x for x in d.refs if x in types.foreign):
+            if r not in protos:
                 protos.append(r)
     defined = {d.name for _, d, _, _ in all_defs}
     for p in texts:
         t = texts[p]
+        # (the declarations of code in #if 0 blocks stay as they are)
         for n in defined:
-            t = re.sub(r"^extern\b[^;\n]*[\s*(]%s\s*[\[);][^\n]*\n" % re.escape(n), "", t, flags=re.M)
+            live = mask_if0(t)
+            for m in reversed(list(re.finditer(r"^extern\b[^;\n]*[\s*(]%s\s*[\[);][^\n]*\n" % re.escape(n), t, re.M))):
+                if live[m.start():m.start() + 6] == "extern":
+                    t = t[:m.start()] + t[m.end():]
         texts[p] = t
     # symbols of the executable the initialisers use that the overlay doesn't see: the header that declares them
     hdrs = []
@@ -280,7 +348,25 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                     hdrs.append(h)
             elif r not in protos:
                 print("// %s uses %s, which nothing declares" % (d.name, r))
-    write_header(name, texts, exts, protos, hdrs)
+    # prototypes: from the definition when one of the overlay's files has the function in C
+    ptext = []
+    parsed = None
+    for r in protos:
+        node = None
+        for _, d, types, _ in all_defs:
+            node = types.funcnodes.get(r) or node
+        if node is None:
+            if parsed is None:
+                parsed = [gendata.Types(gendata.parse_preproc(preproc_path(name, k))) for k in range(len(srcs))]
+            for ty in parsed:
+                node = ty.funcnodes.get(r) or node
+        if node is not None:
+            import copy
+            node = copy.deepcopy(node)
+            node.args = None    # (the parameter types may be the .c file's own)
+        ptext.append(("extern %s;" % gendata.decl_text(gendata.named(node, r), r)) if node is not None
+                     else "extern void %s();" % r)
+    write_header(name, texts, exts, list(zip(protos, ptext)), hdrs)
     for p, t in texts.items():
         open(p, "w").write(t)
     # the .sym file names every definition (the link script equates the other address names of the source)
@@ -486,6 +572,16 @@ def write_header(name, texts, exts, protos, hdrs=()):
             k = ms[-1].end() if ms else 0
             t = t[:k] + inc + "\n" + t[k:]
         texts[p] = t
+    # declarations the header already has for the names are replaced
+    for e in exts:
+        live = mask_if0(hdr)
+        m = re.search(r"(\w+)\s*(\[[^\]]*\]\s*)*(\)\s*\(\))?;$", e)
+        n = m.group(1) if m else None
+        if n is None:
+            continue
+        for mm in reversed(list(re.finditer(r"^extern\b[^;\n]*[\s*(]%s\s*[\[);][^\n]*\n" % re.escape(n), hdr, re.M))):
+            if live[mm.start():mm.start() + 6] == "extern":
+                hdr = hdr[:mm.start()] + hdr[mm.end():]
     # typedefs the externs use (and the ones those use), in source order
     need_text = "\n".join(exts)
     moved = []
@@ -521,13 +617,13 @@ def write_header(name, texts, exts, protos, hdrs=()):
     if order:
         body += "\n" + "\n".join(x.rstrip("\n") + "\n" for x in order)
     if protos:
-        body += "\n" + "".join("extern void %s();\n" % r for r in protos if not re.search(r"\b%s\s*\(" % r, hdr))
+        body += "\n" + "".join(t + "\n" for r, t in protos if not re.search(r"\b%s\s*\(" % r, hdr))
     body += "\n" + "\n".join(exts) + "\n"
     add = "".join('#include "%s"\n' % h for h in hdrs if '#include "%s"' % h not in hdr)
     if add:
         ms = list(re.finditer(r'^#include .*\n', hdr, re.M))
         k = ms[-1].end() if ms else hdr.index("\n", hdr.index("#define")) + 1
         hdr = hdr[:k] + add + hdr[k:]
-    k = hdr.rindex("#endif")
-    hdr = hdr[:k].rstrip("\n") + "\n" + body + "\n" + hdr[k:]
+    k = hdr.rindex("#endif") if re.search(r"^#endif", hdr, re.M) else len(hdr)
+    hdr = hdr[:k].rstrip("\n") + "\n" + body + ("\n" + hdr[k:] if k < len(hdr) else "")
     open(path, "w").write(hdr)

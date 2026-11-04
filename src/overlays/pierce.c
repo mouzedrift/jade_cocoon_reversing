@@ -3,8 +3,9 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "pierce.h"
 
-INCLUDE_OVERLAY_ASM(pierce, dword_800C6F40);
+int dword_800C6F40 SDATA = 216;
 
 typedef struct PierceTask
 {
