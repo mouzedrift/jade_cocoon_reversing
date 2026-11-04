@@ -730,7 +730,10 @@ extern char name_80096090[];
 typedef struct G2Inner
 {
     unsigned int f0;
-    char pad_4[0x98];
+    char pad_4[0x48];
+    FirFilter turn_4C;
+    int turnBuf_5C[4];
+    char pad_6C[0x30];
     int f9C;
     int fA0;
     int fA4;
@@ -797,9 +800,8 @@ typedef struct G2Act
     char pad_80[0x10];
     MATRIX mats_90[40];
     int bonePos_590[40][3];
-    char pad_770[8];
-    int f778;
-    unsigned short u77C;
+    FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing
+    int turnBuf_780[4];
 } G2Act;
 
 typedef struct G2Ctx2
@@ -867,9 +869,8 @@ extern void sub_800ABAD4();
 
 extern void sub_800AB444();
 
-extern void FirFilterInit_8001450C(int*, void*, int, int);
 
-extern char dword_800795C0;
+extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
 
 typedef struct G2P
 {
@@ -931,7 +932,6 @@ typedef struct G2Ent16
 
 extern G2Ent16** name_800B0608[];
 
-extern void FirFilterStep_80014588(void*, void*, int);
 
 extern char dword_800A07E0[];
 

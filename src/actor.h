@@ -1,6 +1,8 @@
 #ifndef _ACTOR_H_
 #define _ACTOR_H_
 
+#include "effect.h"
+
 // one entry of an actor's animation table (Actor.anims_148, 0x3C bytes each; the int before
 // the first entry is the count)
 typedef struct
@@ -79,16 +81,6 @@ typedef struct
     short arg_A;
 } ActorScriptCmd;
 
-// FirFilterSetup_80014574 / FirFilterStep_80014588 state (the shared headers call it struct_16);
-// the actor reads only the low half of the output
-typedef struct
-{
-    int* coefs_0;
-    unsigned int taps_4;
-    int input_8;
-    short output_C;
-    short outputHi_E;
-} ActorFirFilter;
 
 // actor (CreateActor_8001D45C, actorTasks_8008D43C); names carry the offset, fN fields are still unknown
 typedef struct Actor
@@ -174,7 +166,7 @@ typedef struct Actor
     ActorPath* path_160;        // 0x160
     ActorDrawArgs draw_164;     // 0x164
     int f190;                   // 0x190
-    ActorFirFilter turn_194;    // 0x194: input_8 is the turn speed, output_C the smoothed one
+    FirFilter turn_194;         // 0x194: input_8 is the turn speed, output_C.low the smoothed one
     int turnFilterBuf_1A4[8];   // 0x1A4
     int* bonePos_1C4;           // 0x1C4: int[3] per bone
     MATRIX* boneMatrices_1C8;   // 0x1C8

@@ -1516,7 +1516,7 @@ void sub_800A8138()
 void sub_800A8140()
 {
     G2Inner* p = dword_8008B4CC->f24;
-    FirFilterInit_8001450C((int*)((char*)p + 0x5C), (char*)p + 0x4C, (int)&dword_800795C0, 4);
+    FirFilterInit_8001450C(p->turnBuf_5C, &p->turn_4C, dword_800795C0, 4);
     p->f0 = 0;
     p->f9C = 0;
     p->fC6 = 0;
@@ -1935,7 +1935,7 @@ void sub_800A9414(void* pv, int b, int c)
 {
     G2Act* p = (G2Act*)pv;
     sub_80025C38(p->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-    FirFilterInit_8001450C((int*)((char*)p + 0x780), (char*)p + 0x770, (int)&dword_800795C0, 4);
+    FirFilterInit_8001450C(p->turnBuf_780, &p->turn_770, dword_800795C0, 4);
     sub_800AB010(p, b, c, 0);
     p->fC = 0;
     if (sub_800AAFD8(p->s1e) != 1)
@@ -1973,7 +1973,7 @@ void sub_800A955C()
 void sub_800A9564(int a, G2Act* p)
 {
     int i;
-    p->f778 = 0;
+    p->turn_770.input_8 = 0;
     p->v48.a = levantPos_8008BD18.pos.x;
     p->v48.b = levantPos_8008BD18.pos.y;
     p->v48.c = levantPos_8008BD18.pos.z;
@@ -2095,14 +2095,14 @@ void DrawLevantModel_800A9708(G2Act* p)
 void sub_800A99DC(G2Act* p)
 {
     if (p->f4 & 0x10000000)
-        p->f778 = -0x40;
+        p->turn_770.input_8 = -0x40;
     if (p->f4 & 0x20000000)
-        p->f778 = 0x40;
+        p->turn_770.input_8 = 0x40;
     if (p->f4 & 0x40000000)
-        p->f778 /= 2;
+        p->turn_770.input_8 /= 2;
     p->f4 &= ~0x30000000;
-    FirFilterStep_80014588((char*)p + 0x780, (char*)p + 0x770, frameCount_8008D3FC);
-    saveData_8008B570.levant_7A8.rot.vy += p->u77C;
+    FirFilterStep_80014588(p->turnBuf_780, &p->turn_770, frameCount_8008D3FC);
+    saveData_8008B570.levant_7A8.rot.vy += p->turn_770.output_C.low;
 }
 
 INCLUDE_OVERLAY_ASM(game, sub_800A9A9C);

@@ -234,13 +234,6 @@ typedef struct
     int field_8;
 } struct_12;
 
-typedef struct
-{
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-} struct_16;
 
 typedef struct
 {

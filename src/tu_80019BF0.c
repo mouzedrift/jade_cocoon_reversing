@@ -2406,7 +2406,7 @@ int sub_8001DD44(Actor* o, int mode, int a, int b)
     }
     sub_8001D71C(o);
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     r = a - b;
     return r < 0 ? 0 : (a < r ? a : r);
 }
@@ -2433,7 +2433,7 @@ int TurnActorTowards_8001DDFC(Actor* o, VECTOR* target, int step)
         o->turn_194.input_8 = -step;
     }
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
-    o->rot_5C[1] += o->turn_194.output_C;
+    o->rot_5C[1] += o->turn_194.output_C.low;
     return 0;
 }
 // Matched
@@ -2762,7 +2762,7 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
     o->path_160 = 0;
     sub_8001E7F0(o, d);
-    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, (int)dword_800795A0, 8);
+    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, dword_800795A0, 8);
     sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
