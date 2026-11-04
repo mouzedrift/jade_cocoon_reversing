@@ -33,6 +33,108 @@ typedef struct EquipListRow
     short countY_4A;
 } EquipListRow;
 
+/* the types of equip.c */
+struct EquipCtx;
+
+typedef struct EquipTask
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+    int field_C;
+    int field_10;
+    struct EquipCtx* ctx_14;
+} EquipTask;
+
+typedef struct EquipTaskHolder
+{
+    char pad_0[0x10];
+    EquipTask task_10;
+} EquipTaskHolder;
+
+typedef struct EquipCtx
+{
+    short stepCursor_0[6];
+    short stepScroll_C[6];
+    short category_18; // 0 weapon, 1 armor, 2 accessory
+    short step_1A;
+    short mode_1C;   // equipMenuStepModes_800C59B0[step_1A]: 0 category, 1 item list, 2 equip
+    short activeWindows_1E;
+    int openedWindows_20;
+    int pad_24;
+    int confirmed_28;
+    int cancelled_2C;
+    short pad_30[2];
+    short cols_34;
+    short rows_36;
+    short count_38;
+    short cursorFlags_3A;
+    short cursor_3C; // cols_34..scroll_3E: an exe MenuCursor (UpdateMenuCursor_8003D794)
+    short scroll_3E;
+    short item_40;
+    short openTimer_42;
+    unsigned short flags_44;
+    short msgTimer_46;
+} EquipCtx;
+
+typedef struct
+{
+    short x;
+    short y;
+    short w;
+    short h;
+} EquipRect;
+
+// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
+typedef struct
+{
+    short kind_0;
+    short dir_2;
+} EquipArrow;
+
+// the window colour DrawWindow_80042460 takes (CombSelBox)
+typedef struct
+{
+    short color_0;
+    char state_2;
+    char frame_3;
+} EquipBox;
+
+// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
+typedef struct
+{
+    int flags_0;
+    int time_4;
+    int anim_8;
+    int cursor_C;
+    void* rows_10;
+    int ot_14;
+} EquipMenuWin;
+
+typedef struct
+{
+    short cursor;
+    short scroll;
+    short mode;
+    short ot;
+    short e;
+    int f;
+} EquipListParams;
+
+/* EQUIP functions */
+extern void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c);
+extern void SetEquipCursorArea_800C497C(EquipCtx* c);
+extern void DrawEquipMenu_800C4A94(EquipCtx* c);
+extern void HandleEquipCursorInput_800C4D50(EquipCtx* c);
+extern void ChangeEquipMenuStep_800C4DF4(EquipCtx* c);
+extern void TryEquipItem_800C5064(EquipCtx* c);
+extern void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c);
+extern void UpdateEquipSelection_800C51B0(EquipCtx* c);
+extern void DrawEquipStats_800C5314(EquipCtx* c);
+extern void DrawEquipDescription_800C5440(short itemId, short category, int pos);
+extern void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category);
+
+/* EQUIP data */
 extern int equipOverlayId_800C29D0;
 extern const char aCriticallyWound_800C29D4[];
 extern const char aColdBladeWithAP_800C2A2C[];
@@ -173,5 +275,31 @@ extern char weaponDescs_800C59E0[23][16];
 extern char armorDescs_800C5B50[15][16];
 extern char accessoryDescs_800C5C40[17][16];
 extern char cannotUnequipBox_800C5D50[16];
+
+/* MENU overlay (resident under EQUIP): DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep) */
+extern void DrawEquipmentWindow_800C0E04(void* a0, void* a1, int a2);
+
+/* GAME overlay, to move to game.h */
+extern void CompactInventory_800AD3F0(int table);
+extern int GetLastInventorySlot_800AD308(int table);
+extern int SetEquipment_800AD9EC(int id, int slot);
+
+/* exe-side, to move to <exe header> */
+extern EquipTaskHolder* equipTask_8008D4C4; // main.h declares it int
+extern unsigned short padPressed_8009194C[]; // main.h
+extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument; the callers pass two
+extern void DrawMenuBackground_8002BE10();
+extern short uiColor_8008B590;
+extern void DrawLevantStats_8002F7D0(void* pos, int ot);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
+extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
+extern int GetEquipmentName_8001D128(int id, int category);
+extern void DrawMenuWindows_8002A5A4(void* p);
+extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
+extern char helpBarSelectQuitDesc_800826B0[]; // exe .data: button help Select / Quit / Description
+extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
+extern void AddClipDrawAreaPrim_80033308(void* p);
 
 #endif

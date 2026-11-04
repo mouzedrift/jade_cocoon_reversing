@@ -3,58 +3,6 @@
 #include "funcs.h"
 #include "globals.h"
 #include "name.h"
-typedef struct
-{
-    unsigned short flags_0;
-    char pad_2[2];
-    int moveResult_4; // MoveCursorWithSfx_800B80E4 result
-    short focus_8; // 0 character grid, 1 page selector, 2 commands
-    short page_A;
-    short cursor_C;
-    unsigned short gridCursor_E;
-    unsigned char name_10[20]; // SJIS characters, the first byte of a full-width character is >= 0x81
-    char c_24;
-    char c_25;
-    short pad_26;
-    short savedName_28[10];
-    short pad_3C[2];
-    int nameDest_40;
-    short length_44; // length of name_10 in bytes
-} NameEntry;
-// window style for DrawWindow_80042460
-typedef struct
-{
-    unsigned short color_0;
-    unsigned char colors_2; // GetWindowColors_8004226C
-    unsigned char frame_3;  // DrawWindowFrame_80041ED0
-} NameWinStyle;
-typedef struct
-{
-    int flags;
-    unsigned short unused_4;
-    unsigned short pos_6;
-    short cols_8;
-    short rows_A;
-} NameCursor;
-extern void DrawMenuWindows_8002A5A4(void* p);
-extern void DrawButtonHelpBar_8002B004(void* entries, void* pos, int ot);
-extern unsigned short uiColor_8008B590;
-extern void DrawCharRow_800B75EC(NameCharRow row);
-extern void DrawNameField_800B7414(NameEntry* entry);
-extern void HandleCharGridInput_800B7A88(NameEntry* entry);
-extern void HandlePageSelectInput_800B7DC4(NameEntry* entry);
-extern void HandleNameCommandInput_800B7E30(NameEntry* entry);
-extern // Start jumps to the commands, Select restores the saved name (flags 8)
-void HandleNameShortcutButtons_800B7D60(NameEntry* entry);
-extern void SwitchCharPage_800B7CD8(NameEntry* entry);
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
-extern int MoveCursorWithSfx_800B80E4(NameCursor* cursor);
-extern unsigned short padPressed_8009194C;
-extern short charPageCount_800B8204[];
-extern void InputNameChar_800B7AB4(NameEntry* entry);
-extern void RestoreSavedName_800B7F08(NameEntry* entry);
-extern int SavedNameLength_800B7F70(NameEntry* entry);
-extern void ClampNameLength_800B7CA4(NameEntry* entry);
 
 int nameOverlayId_800B6D00 SDATA = 39;
 const char charRowBlank_800B6D04[28] = "\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
@@ -73,20 +21,71 @@ const char aSelect_800B6E20[] = "\202r\202\205\202\214\202\205\202\203\202\224";
 const NameBuf nameBufInit_800B6E30 = { { -1 } };
 const char nameUnderlineChar_800B6E48[] = "\201["; // ー
 
-extern void DrawMenuBackground_8002BE10();
-extern void EncodeName_8003F7C8(void* name, int dest);
-extern void DecodeText_8003F748(int a, void* name);
-extern void SetFadeMode_8001C19C(int a, int b);
-extern void ShopCtrlRequestShop_800B6CA0();
-extern void MoveNameCursor_800B78EC(NameEntry* entry);
-extern void UpdateNameEntry_800B70F4(NameEntry* entry);
-extern void NameEntryNop_800B8018();
+NameCharRow charPages_800B8190[2][7] = {
+    {
+        { { 13, 100 }, aABCDEFGHIJKL_800B6DE4 },
+        { { 13, 116 }, aMNOPQRSTUVWX_800B6DC8 },
+        { { 13, 132 }, aYZ_800B6DAC },
+        { { 13, 148 }, aAbcdefghijkl_800B6D90 },
+        { { 13, 164 }, aMnopqrstuvwx_800B6D74 },
+        { { 13, 180 }, aYz_800B6D58 },
+    },
+    {
+        { { 13, 100 }, charRowDigits1_800B6D3C },
+        { { 13, 116 }, charRowDigits2_800B6D20 },
+        { { 13, 132 }, charRowBlank_800B6D04 },
+        { { 13, 148 }, charRowBlank_800B6D04 },
+        { { 13, 164 }, charRowBlank_800B6D04 },
+        { { 13, 180 }, charRowBlank_800B6D04 },
+    },
+};
+NameGrid cursorGrids_800B8200[3] = {
+    { 0, 6, 2, 12, 6, 0, 16, 16, 13, 100 },
+    { 1, 14, 1, 1, 2, 0, 54, 10, 209, 99 },
+    { 2, 10, 1, 1, 3, 0, 54, 10, 209, 99 },
+};
+int cmdItemDefault_800B823C[14] = {
+    0x10008, 5, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6100F6, 0x130040, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int cmdItemRestore_800B8274[14] = {
+    0x10008, 142, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7500F6, 0x130040, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int cmdItemOk_800B82AC[14] = {
+    0x10008, 47, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8E00F6, 0x130040, 0x40000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *cmdItemLists_800B82E4[4] = { (void *)cmdItemDefault_800B823C, (void *)cmdItemRestore_800B8274, (void *)cmdItemOk_800B82AC };
+NameMenu cmdMenu_800B82F4 = { 2, 0, 8 };
+void *cmdMenuItems_800B8304[2] = { (void *)cmdItemLists_800B82E4 };
+int pageItemAbc_800B830C[14] = {
+    0x20008, (int)aABC_800B6E00, 0, 0, 0x6100CE, 0xD0026, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int pageItem123_800B8344[14] = {
+    0x20008, (int)a123_800B6E08, 0, 0, 0x6F00CE, 0xD0026, 0, 1,
+    0, 0, 0, -1, -1, -1,
+};
+void *pageItemLists_800B837C[3] = { (void *)pageItemAbc_800B830C, (void *)pageItem123_800B8344 };
+NameMenu pageMenu_800B8388 = { 2, 0, 8 };
+void *pageMenuItems_800B8398[2] = { (void *)pageItemLists_800B837C };
+char helpBar_800B83A0[24] = { 16, 0, 0, 0, 32, 110, 11, 128, 167, 0, 0, 0, 16, 110, 11, 128, 255, 255, 255, 255 };
+char defaultName_800B83B8[0x10] = { 0 }; // ResetNameToDefault_800B7FA0 copies 0x14 bytes from it
+// WrapGridCursor_800B8020: the NameCursor flag that lets the cursor wrap, per direction (1 left .. 4 down)
+short cursorWrapMasks_800B83C8[4] = { 1, 1, 2, 2 };
+short cursorWrapDirs_800B83D0[4] = { -1, 1, 1, -1 };
+NameCursorTbl cursorExitTbl_800B83D8[4] = {
+    { 4, 1 },
+    { 8, 2 },
+    { 16, 3 },
+    { 32, 4 },
+};
+int nameEntryActive_800B83F8 = 0;
 
-extern EventNode* name_8008D484;
-void NameEntryTask_800B6FD8();
 void StartNameEntry_800B6E4C(int nameDest, int flags)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(name_8008D484);
+    EventEntry* e = AllocEventEntry_80043AF8(nameEntryTask_8008D484);
     NameEntry* entry;
     NameBuf buf;
     if (e)
@@ -233,22 +232,6 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
     SwitchCharPage_800B7CD8(entry);
 }
 
-typedef struct
-{
-    unsigned short color;
-    unsigned char colors_2;
-    unsigned char frame_3;
-} NameWinColor;
-typedef struct
-{
-    short x;
-    short y;
-    void* text;
-} NameTextItem;
-extern void DrawText_8003E91C(int a, void* b, void* c, int d);
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
-extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
-extern int MeasureTextWidth_8003E4C8(void* p);
 void DrawNameField_800B7414(NameEntry* entry)
 {
     NameTextItem item;
@@ -292,7 +275,6 @@ void DrawNameField_800B7414(NameEntry* entry)
     }
 }
 
-extern int charWidthThresholds_80086898[][12];
 void DrawCharRow_800B75EC(NameCharRow row)
 {
     Font* font = &fonts_80095FB0[2];
@@ -407,7 +389,6 @@ void HandleCharGridInput_800B7A88(NameEntry* entry)
     ClampNameLength_800B7CA4(entry);
 }
 
-extern void DeleteNameChar_800B7C68(NameEntry* entry);
 // Matched
 void InputNameChar_800B7AB4(NameEntry* entry)
 {
@@ -465,19 +446,19 @@ void ClampNameLength_800B7CA4(NameEntry* entry)
 
 void SwitchCharPage_800B7CD8(NameEntry* entry)
 {
-    if (padPressed_8009194C & 2)
+    if (padPressed_8009194C[0] & 2)
     {
-        if (++entry->page_A > charPageCount_800B8204[0] - 1)
+        if (++entry->page_A > cursorGrids_800B8200[0].count_4 - 1)
         {
             entry->page_A = 0;
         }
     }
-    else if (padPressed_8009194C & 8)
+    else if (padPressed_8009194C[0] & 8)
     {
         entry->page_A--;
         if (entry->page_A < 0)
         {
-            entry->page_A = charPageCount_800B8204[0] - 1;
+            entry->page_A = cursorGrids_800B8200[0].count_4 - 1;
         }
     }
 }
@@ -486,12 +467,12 @@ void SwitchCharPage_800B7CD8(NameEntry* entry)
 // Matched
 void HandleNameShortcutButtons_800B7D60(NameEntry* entry)
 {
-    if (padPressed_8009194C & 0x800)
+    if (padPressed_8009194C[0] & 0x800)
     {
         entry->focus_8 = 2;
         entry->cursor_C = 2;
     }
-    if (padPressed_8009194C & 0x100)
+    if (padPressed_8009194C[0] & 0x100)
     {
         if (entry->flags_0 & 8)
         {
@@ -521,8 +502,6 @@ void HandlePageSelectInput_800B7DC4(NameEntry* entry)
     }
 }
 
-extern void ResetNameToDefault_800B7FA0(NameEntry* entry);
-extern int IsNameBlank_800B7FD8(unsigned char* p);
 void HandleNameCommandInput_800B7E30(NameEntry* entry)
 {
     if (IsConfirmPressedP1_8003D380(0))
@@ -616,11 +595,10 @@ int IsNameBlank_800B7FD8(unsigned char* name)
 }
 
 // Matched
-void NameEntryNop_800B8018(void)
+void NameEntryNop_800B8018(void* name)
 {
 }
 
-extern short cursorWrapMasks_800B83C8[];
 // on a move off an edge (k = direction 1..4) of a wrapping area, jump to the opposite edge
 void WrapGridCursor_800B8020(NameCursor* cursor, int dir)
 {
@@ -637,8 +615,6 @@ void WrapGridCursor_800B8020(NameCursor* cursor, int dir)
     }
 }
 
-extern int MoveGridCursorP1_8003D630();
-extern void PlaySfx_80031494(int);
 int MoveCursorWithSfx_800B80E4(NameCursor* cursor)
 {
     int prevPos = (short)cursor->pos_6;
@@ -658,64 +634,3 @@ int MoveCursorWithSfx_800B80E4(NameCursor* cursor)
     }
     return 0;
 }
-
-NameCharRow charPages_800B8190[2][7] = {
-    {
-        { { 13, 100 }, aABCDEFGHIJKL_800B6DE4 },
-        { { 13, 116 }, aMNOPQRSTUVWX_800B6DC8 },
-        { { 13, 132 }, aYZ_800B6DAC },
-        { { 13, 148 }, aAbcdefghijkl_800B6D90 },
-        { { 13, 164 }, aMnopqrstuvwx_800B6D74 },
-        { { 13, 180 }, aYz_800B6D58 },
-    },
-    {
-        { { 13, 100 }, charRowDigits1_800B6D3C },
-        { { 13, 116 }, charRowDigits2_800B6D20 },
-        { { 13, 132 }, charRowBlank_800B6D04 },
-        { { 13, 148 }, charRowBlank_800B6D04 },
-        { { 13, 164 }, charRowBlank_800B6D04 },
-        { { 13, 180 }, charRowBlank_800B6D04 },
-    },
-};
-NameGrid cursorGrids_800B8200[3] = {
-    { 0, 6, 2, 12, 6, 0, 16, 16, 13, 100 },
-    { 1, 14, 1, 1, 2, 0, 54, 10, 209, 99 },
-    { 2, 10, 1, 1, 3, 0, 54, 10, 209, 99 },
-};
-int cmdItemDefault_800B823C[14] = {
-    0x10008, 5, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6100F6, 0x130040, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int cmdItemRestore_800B8274[14] = {
-    0x10008, 142, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7500F6, 0x130040, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int cmdItemOk_800B82AC[14] = {
-    0x10008, 47, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8E00F6, 0x130040, 0x40000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-void *cmdItemLists_800B82E4[4] = { (void *)cmdItemDefault_800B823C, (void *)cmdItemRestore_800B8274, (void *)cmdItemOk_800B82AC };
-NameMenu cmdMenu_800B82F4 = { 2, 0, 8 };
-void *cmdMenuItems_800B8304[2] = { (void *)cmdItemLists_800B82E4 };
-int pageItemAbc_800B830C[14] = {
-    0x20008, (int)aABC_800B6E00, 0, 0, 0x6100CE, 0xD0026, 0, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int pageItem123_800B8344[14] = {
-    0x20008, (int)a123_800B6E08, 0, 0, 0x6F00CE, 0xD0026, 0, 1,
-    0, 0, 0, -1, -1, -1,
-};
-void *pageItemLists_800B837C[3] = { (void *)pageItemAbc_800B830C, (void *)pageItem123_800B8344 };
-NameMenu pageMenu_800B8388 = { 2, 0, 8 };
-void *pageMenuItems_800B8398[2] = { (void *)pageItemLists_800B837C };
-char helpBar_800B83A0[24] = { 16, 0, 0, 0, 32, 110, 11, 128, 167, 0, 0, 0, 16, 110, 11, 128, 255, 255, 255, 255 };
-char defaultName_800B83B8[0x14] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 };
-int cursorWrapMasks2_800B83CC = 0x20002;
-short cursorWrapDirs_800B83D0[4] = { -1, 1, 1, -1 };
-NameCursorTbl cursorExitTbl_800B83D8[4] = {
-    { 4, 1 },
-    { 8, 2 },
-    { 16, 3 },
-    { 32, 4 },
-};
-int nameEntryActive_800B83F8 = 0;

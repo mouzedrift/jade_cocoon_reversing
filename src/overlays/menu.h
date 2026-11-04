@@ -8,6 +8,9 @@
 #include "tiy.h"
 #include "engine.h"
 #include "minion_menu.h"
+#include "main.h"
+#include "sound.h"
+#include "STDLIB.H"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -98,6 +101,281 @@ typedef struct MenuEquipLine
     short y_4A;
 } MenuEquipLine;
 
+/* the types of menu.c */
+
+typedef struct MenuTask
+{
+    unsigned int flags_0;
+    int field_4;
+    void (*next_8)();
+} MenuTask;
+
+// the field menu (StartFieldMenu_800BD40C)
+typedef struct MenuCtx
+{
+    unsigned short flags_0; // top screen focus: 1 Levant window, 2 party minions, 4 the menu below; 8 closing, 0x20 a sub overlay runs
+    short state_2;          // the screen: index of menuNextState_800C1950, menuStateWindows_800C1998, ...
+    short prevState_4;
+    short message_6;        // CheckMenuAction_800BF540 result: menuMessages_800C18FC index
+    int partyCount_8;       // Levant + minions
+    int storedCount_C;      // CountItems_800106B8
+    unsigned int windows_10;       // bit i: window i of DrawFieldMenu_800BE4A0 is drawn
+    int openedWindows_14;          // bit i: window i finished opening
+    int confirmed_18;
+    int cancelled_1C;
+    int f20;
+    int showMessage_24;            // DrawMenuMessage_800BF794 runs
+    short openTimer_28;            // 0..8 window open animation
+    short cursors_2A[11];          // cursor per screen (cursorSaveSlot_800C1B74)
+    short pad_40[3];
+    short scrolls_46[4];
+    char pad_4E[8];
+    short messageTimer_56;
+    short cols_58; // cols_58..scroll_62: an exe MenuCursor (UpdateMenuCursor_8003D794)
+    short rows_5A;
+    short count_5C;
+    short cursorFlags_5E;
+    short cursor_60;
+    short scroll_62;
+} MenuCtx;
+
+typedef struct MenuWinColor
+{
+    unsigned short col;
+    unsigned char colorSet_2; // window colour set (GetWindowColors_8004226C)
+    unsigned char semiTrans_3;
+} MenuWinColor;
+
+typedef struct MenuPair
+{
+    short a;
+    short b;
+} MenuPair;
+
+// what DrawLevantSummary_8002E334 takes
+typedef struct LevantSummaryArgs
+{
+    short ot_0;
+    short step_2;      // window open step
+    int highlight_4;
+    int time_8;
+} LevantSummaryArgs;
+
+// what DrawEquipmentWindow_800C0E04 / DrawKeyItemsWindow_800C09B0 take
+typedef struct MenuEquipQ
+{
+    short sel_0; // -> MenuWin.cursor_C
+    short scroll_2;
+    short winFlags_4; // -> MenuWin.flags_0
+    short ot_6;  // -> MenuWin.ot_14
+    short f8;
+    short fA;
+    int z;
+} MenuEquipQ;
+
+// what DrawPartySlotWindow_8002F8E4 takes
+typedef struct PartySlotArgs
+{
+    short step_0;   // window open step
+    short count_2;  // party minions
+    short cursor_4; // the highlighted slot (-1: none)
+    short ot_6;
+    int time_8;
+    short slot_C;
+    short pad_1E;
+    int g;
+} PartySlotArgs;
+
+typedef struct MenuEnt
+{
+    char pad_0[4];
+    short dropTable_4; // itemDropTable_800C1080 row (-1: none)
+    unsigned short idx_6;
+    unsigned short u8;
+    unsigned short a;
+} MenuEnt;
+
+// what CheckItemOnTarget_80033DF4 takes
+typedef struct ItemTargetQuery
+{
+    short item_0;
+    short b;
+    unsigned short target_4;
+    short d;
+} ItemTargetQuery;
+
+// stat changes worked out by UseItemOnUnit_80013C28
+typedef struct MenuStatDelta
+{
+    int f0;
+    int f4;
+    int f8;
+    int pad_C[4];
+    int hp_1C; // HP change (negated)
+    int mp_20; // MP change (negated)
+    int f24;
+} MenuStatDelta;
+
+// an item use command (InitItemUse_800C00D4, UseItemOnUnit_80013C28) followed by the stat changes it works out
+typedef struct ItemUseWork
+{
+    int f0;
+    int item_4;
+    int f8;
+    int targets_C; // bit i: unit i
+    MenuStatDelta d_10;
+} ItemUseWork;
+
+typedef struct MenuSprWin
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    short col_8;
+    char colorSet_A;
+    char semiTrans_B;
+} MenuSprWin;
+
+// the battle result screen (CreateBattleResultTask_800BBB9C); index 0 is Levant, 1.. the minions
+typedef struct BattleResult
+{
+    int flags_0; // 2 Levant done, 1 << (i + 1) unit i done, 0x20 rank up / level up panel, 0x40 finished, 0x80 exp counted
+    char pad_4[0x30];
+    unsigned int expAdded_34[4];
+    short count_44;
+    short fade_46;
+    int fadeIn_48;
+    int hasDrop_4C[3];
+    short s58;
+    short pad_5A;
+    int levelUps_5C[4];
+    unsigned int expGain_6C[4];
+    int leveledUp_7C[4];
+    UnitStatus st_8C[4];       // working copy that gets the exp
+    UnitStatus oldStatus_1AC[4];
+    unsigned int expShown_2CC[4];
+    int i2DC;
+} BattleResult;
+
+// what DrawLevantSummary_8002E334 takes (as LevantSummaryArgs)
+typedef struct ResultSummaryArgs
+{
+    short ot_0;
+    short step_2;
+    int highlight_4;
+    int time_8;
+} ResultSummaryArgs;
+
+typedef struct ItemMsgSlot
+{
+    int kind_0;
+    int item_4;
+    int f8;
+    int fC;
+    int f10;
+} ItemMsgSlot;
+
+typedef struct ItemMsgCfg
+{
+    int posMode_0;
+    short* pos_4;
+    int f8;
+    ItemMsgSlot e[3];
+    int f48;
+    int f4C;
+} ItemMsgCfg;
+
+typedef struct UiWinArgs
+{
+    RECT* rect;
+    int f4;
+    short f8;
+    short ot_A;
+} UiWinArgs;
+
+typedef struct MenuUseQ
+{
+    short a;
+    short b;
+    short c;
+    short d;
+    short e;
+    short f;
+    int g;
+} MenuUseQ;
+
+/* MENU functions */
+extern void SaveMenuCursor_800BE294(MenuCtx* menu);
+extern void HandleMenuConfirmCancel_800BDE10(MenuCtx* menu);
+extern void DrawMenuMessage_800BF794(MenuCtx* menu);
+extern void HandleMenuCursorInput_800BFCA8(MenuCtx* menu);
+extern void OpenSubMenuOverlay_800BFE18(MenuCtx* menu);
+extern void CloseMenuReloadArea_800C0084(void);
+extern void SetLevantCmdWindows_800C01AC(MenuCtx* menu);
+extern void SetMinionCmdWindows_800C01D0(MenuCtx* menu);
+extern void MinionListScreen_800BD80C(MenuTask* task, char* a);
+extern int TopMenuCursorDown_800BFB10(MenuCtx* menu);
+extern int TopMenuCursorUp_800BFBE0(MenuCtx* menu);
+extern void ApplyItemUseDelta_800C00F8(ItemUseWork* use, MenuStatDelta* delta);
+extern void InitItemUse_800C00D4(ItemUseWork* use, int item, int target);
+// HandleMenuConfirmCancel_800BDE10 calls it without arguments (a0 still holds its menu)
+extern int CheckMenuAction_800BF540();
+extern void EnterNextMenuState_800BE048(MenuCtx* menu);
+extern void ResumeFieldMenu_800BFF84(MenuCtx* menu);
+extern int GetWindowOpenStep_800C0990(MenuCtx* menu, int mask);
+extern void EnterPrevMenuState_800BE25C(MenuCtx* menu);
+extern void SetMenuCursorLayout_800BF8B4(MenuCtx* menu);
+extern void RestoreMenuCursor_800BE38C(MenuCtx* menu);
+extern void FieldMenuWaitUiTask_800BD590(MenuTask* task, MenuCtx* menu);
+extern void DrawFieldMenu_800BE4A0(MenuCtx* menu);
+extern void FieldMenuFadeInTask_800BD5E4(MenuTask* task, MenuCtx* menu);
+extern void FieldMenuTask_800BD6C8(MenuTask* task, MenuCtx* menu);
+extern void ResultWaitUiTask_800BBE50(MenuTask* task);
+extern void ResultStartTask_800BBE90(MenuTask* task, BattleResult* result);
+extern int RollBattleDrops_800BD230(BattleResult* result);
+extern void ShowDropMessage_800BCFDC(BattleResult* result);
+extern void DrawResultParty_800BC2A8(BattleResult* result);
+extern void DropMessageTask_800BD1B0(MenuTask* task);
+extern void BattleResultTask_800BBF48(MenuTask* task, BattleResult* result);
+extern void UpdateExpCountUp_800BC56C(BattleResult* result);
+extern void HandleLevelUpInput_800BC9E8(BattleResult* result);
+extern void DrawLevantRankUp_800BCB98(BattleResult* result, int b);
+extern void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status, short unit);
+extern void ResultEndTask_800BC24C(MenuTask* task);
+extern void DrawMinionLevelUp_800BC934(int unit, int count);
+extern void OnMinionLevelUp_800BCF74(short index);
+extern void DrawMinionListPage_800BDBFC(char* work, int page);
+extern void DrawMagicInfo_800C06E8(MenuCtx* menu);
+extern void DrawMinionCmdMenu_800C08C0(MenuCtx* menu);
+extern void DrawItemGrid_800C01F4(MenuCtx* menu); // the item grid scroll is cursors_2A[9]
+extern void DrawItemInfo_800C0428(MenuCtx* menu);
+extern void DrawLevantStatsWindow_800C0578(MenuCtx* menu);
+extern void DrawKeyItemInfo_800C05E0(MenuCtx* menu);
+extern void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq);
+extern void PreviewItemRecovery_800C0CA4(MenuCtx* menu, int* out);
+extern void DrawMenuHelpBar_800BEAE0(MenuCtx* menu);
+extern void DrawSelectedMinionPanel_800BEBFC(MenuCtx* menu, RECT* rect);
+extern void DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep);
+extern int IsKeyItemUseAllowed_800C1000(void);
+extern void ConfigMenuWaitTask_800BFF38(MenuTask* task, MenuCtx* menu);
+extern void EquipMenuWaitTask_800BFEC0(MenuTask* task, MenuCtx* menu);
+extern void DrawLevantCmdMenu_800C07F0(MenuCtx* menu);
+extern void StartFieldMenu_800BD40C(MenuTask* task, MenuCtx* menu);
+extern void MenuReloadAreaTask_800BFFFC(MenuTask* task);
+extern void DrawLevantLevelUp_800BC8A8(void);
+extern void DrawCursorWindow_800BEC8C(MenuCtx* unused, RECT* rect, short ot, int unused2);
+extern void DrawLevantWindow_800BECE4(MenuCtx* menu, short ot);
+extern void DrawPartyMinionWindows_800BEFAC(MenuCtx* menu, short ot);
+extern void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short ot);
+extern int RollDrop_800BD358(BattleDrop* out, int idx);
+extern int IsMinionListed_800BDD94(int species);
+// EnterNextMenuState_800BE048 passes the inventory slot as a 2nd argument that it ignores
+extern void UseSpore_800BF3AC();
+extern void ExecuteMenuAction_800BF3E0(MenuCtx* menu);
+extern int IsKeyItemUsable_800C0C3C(int item);
+extern int IsRecoveryItem_800C0DD4(int item);
+
+/* MENU data */
 extern const int menuOverlayId_800B66C0;
 extern const char aItemsObtained_800B66C4[];
 extern const char aStatus_800B66D0[];
@@ -405,7 +683,11 @@ extern const MenuWin menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
 extern int dword_800C1050[4];
 extern char levelUpStatusRect_800C1060[32];
-extern ItemDropRow itemDropTable_800C1080[220];
+extern ItemDropRow itemDropTable_800C1080[211];
+extern short dword_800C1718[10];
+extern int resultHelpBar_800C172C[7];
+extern char dword_800C1748[12];
+extern int equipSlotLabels_800C1754[3];
 extern int equipRowWeapon_800C1760[28];
 extern int equipRowArmor_800C17D0[28];
 extern int equipRowAccessory_800C1840[28];
@@ -465,6 +747,90 @@ extern char levantSummaryRect_800C2994[12];
 extern BattleDrop battleDrops_800C29A0[3];
 extern int menuFromResults_800C29B8;
 extern int leaveForest_800C29BC;
+
+
+/* CONFIG / EQUIP overlays (loaded above MENU) */
+extern void StartConfigMenu_800C2EB4(void);
+extern void StartEquipMenu_800C47A8(); // MENU passes a 0 that it ignores
+extern int IsConfigMenuActive_800C45D8(void);
+
+/* GAME overlay (resident under MENU), to move to game.h */
+extern MenuEnt enemyResults_800B1238[]; // GAME's record of each enemy of the last battle (battle.h dword_800B1238)
+extern int GetNthValuable_800AD7F8(int nth);
+extern int RemoveInventory_800AD1E0(int id, int count, int table);
+extern void RequestGameMode_800A6D30(int mode);
+extern int sub_800B330C(); // called by DrawLevantWindow_800BECE4 (asm), not in GAME.SYM
+extern int GetMoney_800AD02C();
+extern void FireEventTriggerById_800A911C(int id);
+extern int TestValuableFlag_800AD73C(int valuable);
+extern int IsTriggerWaited_800A5E80(int trigger);
+extern int GetLastInventorySlot_800AD308(int table);
+extern int CountValuables_800AD79C();
+extern void CompactInventory_800AD3F0(int table);
+extern void SetFieldMode_800A7714(int mode);
+extern int fieldMode_800B0EC0;
+extern int IsSceneHeld_800A5E68(void);
+
+/* exe-side, to move to <exe header> */
+extern void SetFadeMode_8001C19C(); // K&R definition (one argument), MENU passes two
+// = GetDominantSpecies_800338B0: rename once funcs.h declares it returning int (with its unsigned char return
+// OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
+extern int name_800338B0();
+extern void DrawUnitStatusWindow_8002F1C8();
+extern int IsCurrentMapListed_80034140();
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern char helpBarSelectQuit_80082680[];
+extern char helpBarSelectQuitDesc_800826B0[];
+extern void UseItemOnUnit_80013C28();
+extern void DrawUiTiySprt_8002C06C();
+extern unsigned short uiColor_8008B590;
+extern void SetLoadFadeFlag_80027478();
+extern void DrawMenuWindows_8002A5A4();
+extern void DrawWindow_80042460();
+extern void LoadUiTiy_8002BF74();
+extern void AccumulateExpGain_800122A0();
+extern void DrawMenuBackground_8002BE10();
+extern int GetLevelRank_800121A8();
+extern void FreeActiveOverlay_8002C014();
+extern void DrawLevantSummary_8002E334();
+extern void DrawLevantHeaderWindows_8002FD0C();
+extern void DrawPartySlotWindow_8002F8E4();
+extern void AddClipDrawAreaPrim_80033308();
+extern void PlayMusic_800300E0();
+extern int GetPartyWindowX_8002FA0C();
+extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
+extern void DrawLargeText_8002FBD8();
+extern int GetRankName_8002FCD8();
+extern void* OpenItemMessageWindow_80035AC8();
+extern void CloseMsgWindow_80034A84();
+extern void DrawMenuItemWithWindow_8002ADB4();
+extern void DrawUiWindow_8002A384();
+extern void DrawSmallNumber3_8002C290();
+extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
+extern void DrawText_8003E91C();
+extern void UppercaseSjisName_8003F89C();
+extern int GetItemFlags_8001CE70();
+extern void DrawMagicList_8002CAC8();
+extern void DrawAbilityList_8002CE28();
+extern void DrawItemList_8002C728();
+extern void DrawFamilyTree_8002D7D0();
+extern int DrawTargetSelectMenu_8002D250();
+extern void DrawMpGauge_8002F120();
+extern int DrawAbilityDescription_8002C670();
+extern void DrawUnitStatusPanel_8002DB48();
+extern void InterpolateWindowRect_8004196C();
+extern void AddDrawAreaPrim_8003326C();
+extern void DrawAnimatedWindow_8002BEC8();
+extern void DrawLargeNumber_8002C100();
+extern void DrawLevantStats_8002F7D0();
+extern int CheckItemUsable_80033AFC();
+extern int CheckItemOnTarget_80033DF4();
+extern int CountMagicBits_8001AE54();
+extern int UpdateMenuCursor_8003D794();
+extern void AdjustUnitStatById_800127D0();
+extern int FindNthMagicBit_8001AEC0();
+extern void DrawScrollArrow_8002C6DC();
+extern int GetEquipmentName_8001D128();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 

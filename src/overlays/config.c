@@ -5,94 +5,6 @@
 #include "sound.h"
 #include "config.h"
 
-typedef struct CfgCtxConfig
-{
-    char pad_0[2];
-    short page_2;     // 0 top menu, 1 audio, 2 subtitles, 3 screen color, 4 vibration (5 exits)
-    short nextPage_4; // -1: stay
-    unsigned short topCursor_6;
-    // working copies of the settings (LoadConfigSettings_800C3060)
-    unsigned char displaySpeed_8, animSkip_9, animSkip_A, magicEffects_B, outputFormat_C, bgmVolume_D, sfxVolume_E,
-        uiColor_F, captureEffects_10, speech_11, vibration_12, autoMessage_13, subtitles_14, savedBgmVolume_15,
-        savedSfxVolume_16;
-    char pad_17[0x30 - 0x17];
-    int notice_30; // DrawOptionUnavailable_800C4BDC message: 1 subtitles off, 2 speech off
-    short noticeTimer_34;
-    short pad_36;
-    int editing_38; // EditConfigSettingTask_800C45E8 runs
-    CfgCursorHead cursor_3C; // cursor_3C..scroll_46: an exe MenuCursor (UpdateMenuCursor_8003D794)
-    short cursorPos_44;
-    short scroll_46;
-} CfgCtxConfig;
-
-typedef struct CfgTaskConfig
-{
-    unsigned int flags_0;
-    int pad_4;
-    void (*next_8)();
-    int pad_C;
-    int pad_10;
-    CfgCtxConfig* ctx_14;
-} CfgTaskConfig;
-
-typedef struct CfgHolderConfig
-{
-    char pad_0[0x10];
-    CfgTaskConfig t_10;
-} CfgHolderConfig;
-extern CfgHolderConfig* configTask_8008B4B8;
-extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
-extern int IsConfirmPressedP1_8003D380(int a);
-extern int IsCancelPressedP1_8003D41C(int a);
-extern void PlaySfx_80031494(int a);
-extern void DrawOptionUnavailable_800C4BDC(int notice);
-typedef struct CfgSpinConfig
-{
-    int flags_0;
-    short unused_4, pos_6, cols_8, rows_A;
-} CfgSpinConfig;
-
-typedef struct CfgBoxConfig
-{
-    short x_0;
-    short y_2;
-    int pad_4;
-    short col_8;
-    char colors_A;
-    char frame_B;
-} CfgBoxConfig;
-
-extern char* dword_8008D454;
-extern unsigned short uiColor_8008B590;
-extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
-extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
-extern unsigned int GetTime30Hz_8002C64C(void);
-extern void ApplyBgmVolume_800309D8(void* p);
-typedef struct CfgTailConfig
-{
-    short col_0;
-    char colors_2;
-    char frame_3;
-} CfgTailConfig;
-extern int frameCount_8008D3FC;
-extern void DrawMenuBackground_8002BE10();
-extern void DrawButtonHelpBar_8002B004(void*, int, int);
-extern void UpdateMenuCursor_8003D794(void*, int);
-extern void ConfigMenuTask_800C2F70();
-extern void LoadConfigSettings_800C3060(CfgCtxConfig*);
-extern void DrawConfigPage_800C383C(CfgCtxConfig*);
-extern void DrawConfigHelpText_800C450C(CfgCtxConfig*);
-extern void HandleConfigPageInput_800C3540(CfgCtxConfig*);
-extern void OpenConfigPage_800C378C(CfgCtxConfig*);
-extern void DrawConfigTopMenu_800C38CC(CfgCtxConfig*);
-extern void DrawAudioPage_800C39C4(CfgCtxConfig*);
-extern void DrawSubtitlePage_800C3CA4(CfgCtxConfig*);
-extern void DrawScreenColorPage_800C4180(CfgCtxConfig*);
-extern void DrawVibrationPage_800C4390(CfgCtxConfig*);
-extern void EditConfigSettingTask_800C45E8();
-extern void ConfigNoticeTask_800C4B34(CfgTaskConfig*, CfgCtxConfig*);
-
 int configOverlayId_800C29D0 SDATA = 36;
 const char aVibrationSettin_800C29D4[] = "\202u\202\211\202\202\202\222\202\201\202\224\202\211\202\217\202\216\201@\202\223\202\205\202\224\202\224\202\211\202\216\202\207\202\223\201D"; // Vibration settings.
 const char aSetScreenColor_800C29FC[] = "\202r\202\205\202\224\201@\202\223\202\203\202\222\202\205\202\205\202\216\201@\202\203\202\217\202\214\202\217\202\222\201D"; // Set screen color.
@@ -110,6 +22,255 @@ const char aAllowAnimationS_800C2BFC[] = "\202`\202\214\202\214\202\217\202\227\
 const char aSetDisplaySpeed_800C2C28[] = "\202r\202\205\202\224\201@\202\204\202\211\202\223\202\220\202\214\202\201\202\231\201@\202\223\202\220\202\205\202\205\202\204\201D"; // Set display speed.
 const char aExit_800C2C50[] = "\202d\202\230\202\211\202\224"; // Exit
 const char aSelect_800C2C5C[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+
+int topMenuHelp_800C4C80[4] = { (int)aChangeAudioSett_800C2A54, (int)aChangeSubtitleS_800C2A20, (int)aSetScreenColor_800C29FC, (int)aVibrationSettin_800C29D4 };
+int audioPageHelp_800C4C90[3] = { (int)aSetMusicVolume_800C2AE0, (int)aSetAudioEffects_800C2AAC, (int)aSetOutputFormat_800C2A84 };
+int subtitlePageHelp_800C4C9C[7] = { (int)aSetDisplaySpeed_800C2C28, (int)aAllowAnimationS_800C2BFC, (int)aSelectVoiceAudi_800C2BC4, (int)aAutoMessage_800C2BA8, (int)aMessageWindowDi_800C2B78, (int)aSetMagicSpecial_800C2B40, (int)aSetCaptureSpeci_800C2B04 };
+int screenColorPageHelp_800C4CB8[1] = { (int)aSetScreenColor_800C29FC };
+int vibrationPageHelp_800C4CBC[1] = { (int)aVibrationSettin_800C29D4 };
+int *pageHelpTexts_800C4CC0[5] = { topMenuHelp_800C4C80, audioPageHelp_800C4C90, subtitlePageHelp_800C4C9C, screenColorPageHelp_800C4CB8, vibrationPageHelp_800C4CBC };
+CfgCursorHead pageCursors_800C4CD4[5] = {
+    { { 1, 0, 4, 0, 4 } },
+    { { 1, 0, 3, 0, 3 } },
+    { { 1, 0, 7, 0, 7 } },
+    { { 1, 0, 4, 0, 4 } },
+    { { 1, 0, 1, 0, 1 } },
+};
+int topItemAudio_800C4CFC[14] = {
+    0x10008, 221, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x510072, 0x12005C, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int topItemSubtitle_800C4D34[14] = {
+    0x10008, 232, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x650072, 0x12005C, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int topItemScreenColor_800C4D6C[14] = {
+    0x10008, 42, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x790072, 0x12005C, 0x20000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int topItemVibration_800C4DA4[14] = {
+    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8D0072, 0x12005C, 0x20000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char topMenuItems_800C4DDC[20] = { 252, 76, 12, 128, 52, 77, 12, 128, 108, 77, 12, 128, 164, 77, 12, 128 };
+int audioItemMusic_800C4DF0[14] = {
+    0x10008, 126, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int audioItemSfx_800C4E28[14] = {
+    0x10008, 168, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int audioItemOutput_800C4E60[14] = {
+    0x10008, 146, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0024, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char audioPageItems_800C4E98[16] = { 240, 77, 12, 128, 40, 78, 12, 128, 96, 78, 12, 128 };
+int musicVolume0_800C4EA8[14] = {
+    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530076, 0x120022, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume1_800C4EE0[14] = {
+    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530099, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume2_800C4F18[14] = {
+    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300AC, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume3_800C4F50[14] = {
+    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300BF, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume4_800C4F88[14] = {
+    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300D2, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume5_800C4FC0[14] = {
+    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300E5, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume6_800C4FF8[14] = {
+    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300F8, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int musicVolume7_800C5030[14] = {
+    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x53010B, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume0_800C5068[14] = {
+    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670076, 0x120022, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume1_800C50A0[14] = {
+    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670099, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume2_800C50D8[14] = {
+    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700AC, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume3_800C5110[14] = {
+    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700BF, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume4_800C5148[14] = {
+    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700D2, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume5_800C5180[14] = {
+    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700E5, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume6_800C51B8[14] = {
+    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700F8, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int sfxVolume7_800C51F0[14] = {
+    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x67010B, 0x120012, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int outputItem0_800C5228[14] = {
+    0x10008, 188, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0076, 0x120041, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int outputItem1_800C5260[14] = {
+    0x10008, 124, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B00B9, 0x120041, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char musicVolumeItems_800C5298[36] = { 168, 78, 12, 128, 224, 78, 12, 128, 24, 79, 12, 128, 80, 79, 12, 128, 136, 79, 12, 128, 192, 79, 12, 128, 248, 79, 12, 128, 48, 80, 12, 128 };
+char sfxVolumeItems_800C52BC[36] = { 104, 80, 12, 128, 160, 80, 12, 128, 216, 80, 12, 128, 16, 81, 12, 128, 72, 81, 12, 128, 128, 81, 12, 128, 184, 81, 12, 128, 240, 81, 12, 128 };
+char outputItems_800C52E0[12] = { 40, 82, 12, 128, 96, 82, 12, 128 };
+unsigned short subItemDisplaySpeed_800C52EC[28] = {
+    8, 1, 200, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 41, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemAnimSkip_800C5324[28] = {
+    8, 1, 4, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 72, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemSpeech_800C535C[28] = {
+    8, 1, 201, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 92, 79, 18, 0, 3, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemMagicEffects_800C5394[28] = {
+    8, 1, 50, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 152, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemCaptureEffects_800C53CC[28] = {
+    8, 1, 229, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 172, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemAutoMessage_800C5404[28] = {
+    8, 1, 89, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 112, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short subItemSubtitles_800C543C[28] = {
+    8, 1, 191, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
+    40, 132, 79, 18, 0, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+unsigned short *subtitlePageItems_800C5474[8] = { subItemDisplaySpeed_800C52EC, subItemAnimSkip_800C5324, subItemSpeech_800C535C, subItemAutoMessage_800C5404, subItemSubtitles_800C543C, subItemMagicEffects_800C5394, subItemCaptureEffects_800C53CC };
+int displaySpeed0_800C5494[14] = {
+    0x10008, 179, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29007D, 0x120025, 0x40000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int displaySpeed1_800C54CC[14] = {
+    0x10008, 131, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900A3, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int displaySpeed2_800C5504[14] = {
+    0x10008, 152, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900C9, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int displaySpeed3_800C553C[14] = {
+    0x10008, 195, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900EF, 0x120025, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char displaySpeedItems_800C5574[20] = { 148, 84, 12, 128, 204, 84, 12, 128, 4, 85, 12, 128, 60, 85, 12, 128 };
+int animSkip0_800C5588[14] = {
+    0x10008, 44, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x48007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int animSkip1_800C55C0[14] = {
+    0x10008, 45, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x4800C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char animSkipItems_800C55F8[12] = { 136, 85, 12, 128, 192, 85, 12, 128 };
+int speech0_800C5604[14] = {
+    0x10008, 175, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int speech1_800C563C[14] = {
+    0x10008, 176, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char speechItems_800C5674[12] = { 4, 86, 12, 128, 60, 86, 12, 128 };
+int magicEffects0_800C5680[14] = {
+    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x98007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int magicEffects1_800C56B8[14] = {
+    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9800C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char magicEffectsItems_800C56F0[12] = { 128, 86, 12, 128, 184, 86, 12, 128 };
+int captureEffects0_800C56FC[14] = {
+    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int captureEffects1_800C5734[14] = {
+    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char captureEffectsItems_800C576C[12] = { 252, 86, 12, 128, 52, 87, 12, 128 };
+int autoMessage0_800C5778[14] = {
+    0x10008, 90, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x70007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int autoMessage1_800C57B0[14] = {
+    0x10008, 91, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7000C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char autoMessageItems_800C57E8[12] = { 120, 87, 12, 128, 176, 87, 12, 128 };
+int subtitles0_800C57F4[14] = {
+    0x10008, 192, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x84007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int subtitles1_800C582C[14] = {
+    0x10008, 193, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8400C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char subtitlesItems_800C5864[12] = { 244, 87, 12, 128, 44, 88, 12, 128 };
+int vibrationLabel_800C5870[14] = {
+    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C0028, 0x12004F, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char vibrationLabelItems_800C58A8[8] = { 112, 88, 12, 128 };
+int vibration0_800C58B0[14] = {
+    0x10008, 172, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C007D, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+int vibration1_800C58E8[14] = {
+    0x10008, 173, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C00C9, 0x12004B, 0x30000, 1,
+    0, 0, 0, -1, -1, -1,
+};
+char vibrationItems_800C5920[12] = { 176, 88, 12, 128, 232, 88, 12, 128 };
+char helpBar_800C592C[24] = { 16, 0, 0, 0, 92, 44, 12, 128, 167, 0, 0, 0, 80, 44, 12, 128, 255, 255, 255, 255 };
+int configMenuActive_800C5944 = 0;
 
 // Matched
 void StartConfigMenu_800C2EB4(void)
@@ -490,7 +651,7 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
     box.colors_A = 0;
     box.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&box, 0x4F, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -566,9 +727,8 @@ void DrawAudioPage_800C39C4(CfgCtxConfig* c)
     box.colors_A = 0;
     box.x_0 = 0x8B;
     DrawUiTiySprt_8002C06C(&box, 0xDD, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
-
 
 void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
 {
@@ -701,7 +861,7 @@ done:
     box.colors_A = 0;
     box.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -726,7 +886,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
     box1.y_2 = 0x15;
-    DrawWindow_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box1.col_8, pOT_8008D454 + 14, 0);
     for (i = 0; i < 4; i++)
     {
         unsigned int blink;
@@ -745,7 +905,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         }
         tail.col_0 = i;
         tail.frame_3 = 1;
-        DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, blink);
+        DrawWindow_80042460(rect2, &tail, pOT_8008D454 + 14, blink);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
@@ -758,7 +918,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         DrawUiTiySprt_8002C06C(&box3, 0xCA, 0xE);
         box3.x_0 = rect3[0] + 0xE;
         box3.y_2 = rect3[1] + 6;
-        DrawWindow_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(rect3, &box3.col_8, pOT_8008D454 + 14, 0);
     }
 }
 
@@ -807,7 +967,7 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
     DrawUiTiySprt_8002C06C(&box, 0xAB, 0xE);
     box.x_0 = 0x8C;
     box.y_2 = 0x15;
-    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -850,9 +1010,6 @@ int IsConfigMenuActive_800C45D8(void)
 {
     return configMenuActive_800C5944;
 }
-
-extern void MoveGridCursorP1_8003D630(CfgSpinConfig* p);
-extern void ConfigMenuTask_800C2F70();
 
 void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
 {
@@ -1058,10 +1215,6 @@ void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         c->editing_38 = 0;
     }
 }
-const char aOptionNotAvaila_800C2D40[] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Speech is set to OFF.
-const char aSetSpeechToONTo_800C2DA4[] = "\202r\202\205\202\224\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Speech to ON to enable this option.
-const char aOptionNotAvaila_800C2DF4[] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Subtitles is set to OFF.
-const char aSetSubtitlesToO_800C2E5C[] = "\202r\202\205\202\224\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Subtitles to ON to enable this option.
 
 // Matched
 void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
@@ -1087,16 +1240,16 @@ void DrawOptionUnavailable_800C4BDC(int notice)
 {
     short rect[4];
     short pos[2];
-    char* lines[2];
+    const char* lines[2];
     if ((short)notice == 2)
     {
-        lines[0] = aOptionNotAvaila_800C2D40;
-        lines[1] = aSetSpeechToONTo_800C2DA4;
+        lines[0] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Speech is set to OFF.
+        lines[1] = "\202r\202\205\202\224\201@\202r\202\220\202\205\202\205\202\203\202\210\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Speech to ON to enable this option.
     }
     else
     {
-        lines[0] = aOptionNotAvaila_800C2DF4;
-        lines[1] = aSetSubtitlesToO_800C2E5C;
+        lines[0] = "\202n\202\220\202\224\202\211\202\217\202\216\201@\202\216\202\217\202\224\201@\202\201\202\226\202\201\202\211\202\214\202\201\202\202\202\214\202\205\201@\202\227\202\210\202\211\202\214\202\205\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\211\202\223\201@\202\223\202\205\202\224\201@\202\224\202\217\201@\202n\202e\202e\201D"; // Option not available while Subtitles is set to OFF.
+        lines[1] = "\202r\202\205\202\224\201@\202r\202\225\202\202\202\224\202\211\202\224\202\214\202\205\202\223\201@\202\224\202\217\201@\202n\202m\201@\202\224\202\217\201@\202\205\202\216\202\201\202\202\202\214\202\205\201@\202\224\202\210\202\211\202\223\201@\202\217\202\220\202\224\202\211\202\217\202\216\201D"; // Set Subtitles to ON to enable this option.
     }
     rect[0] = 10;
     rect[1] = 0xC2;
@@ -1106,252 +1259,3 @@ void DrawOptionUnavailable_800C4BDC(int notice)
     pos[1] = 0xC4;
     DrawTextLinesWindow_8002AE38(lines, pos, 0xE, rect, 2);
 }
-
-int topMenuHelp_800C4C80[4] = { (int)aChangeAudioSett_800C2A54, (int)aChangeSubtitleS_800C2A20, (int)aSetScreenColor_800C29FC, (int)aVibrationSettin_800C29D4 };
-int audioPageHelp_800C4C90[3] = { (int)aSetMusicVolume_800C2AE0, (int)aSetAudioEffects_800C2AAC, (int)aSetOutputFormat_800C2A84 };
-int subtitlePageHelp_800C4C9C[7] = { (int)aSetDisplaySpeed_800C2C28, (int)aAllowAnimationS_800C2BFC, (int)aSelectVoiceAudi_800C2BC4, (int)aAutoMessage_800C2BA8, (int)aMessageWindowDi_800C2B78, (int)aSetMagicSpecial_800C2B40, (int)aSetCaptureSpeci_800C2B04 };
-int screenColorPageHelp_800C4CB8[1] = { (int)aSetScreenColor_800C29FC };
-int vibrationPageHelp_800C4CBC[1] = { (int)aVibrationSettin_800C29D4 };
-int *pageHelpTexts_800C4CC0[5] = { topMenuHelp_800C4C80, audioPageHelp_800C4C90, subtitlePageHelp_800C4C9C, screenColorPageHelp_800C4CB8, vibrationPageHelp_800C4CBC };
-CfgCursorHead pageCursors_800C4CD4[5] = {
-    { { 1, 0, 4, 0, 4 } },
-    { { 1, 0, 3, 0, 3 } },
-    { { 1, 0, 7, 0, 7 } },
-    { { 1, 0, 4, 0, 4 } },
-    { { 1, 0, 1, 0, 1 } },
-};
-int topItemAudio_800C4CFC[14] = {
-    0x10008, 221, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x510072, 0x12005C, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int topItemSubtitle_800C4D34[14] = {
-    0x10008, 232, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x650072, 0x12005C, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int topItemScreenColor_800C4D6C[14] = {
-    0x10008, 42, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x790072, 0x12005C, 0x20000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int topItemVibration_800C4DA4[14] = {
-    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8D0072, 0x12005C, 0x20000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char topMenuItems_800C4DDC[20] = { 252, 76, 12, 128, 52, 77, 12, 128, 108, 77, 12, 128, 164, 77, 12, 128 };
-int audioItemMusic_800C4DF0[14] = {
-    0x10008, 126, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530024, 0x12004F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int audioItemSfx_800C4E28[14] = {
-    0x10008, 168, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670024, 0x12004F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int audioItemOutput_800C4E60[14] = {
-    0x10008, 146, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0024, 0x12004F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char audioPageItems_800C4E98[16] = { 240, 77, 12, 128, 40, 78, 12, 128, 96, 78, 12, 128 };
-int musicVolume0_800C4EA8[14] = {
-    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530076, 0x120022, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume1_800C4EE0[14] = {
-    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x530099, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume2_800C4F18[14] = {
-    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300AC, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume3_800C4F50[14] = {
-    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300BF, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume4_800C4F88[14] = {
-    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300D2, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume5_800C4FC0[14] = {
-    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300E5, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume6_800C4FF8[14] = {
-    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5300F8, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int musicVolume7_800C5030[14] = {
-    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x53010B, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume0_800C5068[14] = {
-    0x10008, 125, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670076, 0x120022, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume1_800C50A0[14] = {
-    0x10008, 133, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x670099, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume2_800C50D8[14] = {
-    0x10008, 134, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700AC, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume3_800C5110[14] = {
-    0x10008, 135, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700BF, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume4_800C5148[14] = {
-    0x10008, 136, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700D2, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume5_800C5180[14] = {
-    0x10008, 137, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700E5, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume6_800C51B8[14] = {
-    0x10008, 138, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6700F8, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int sfxVolume7_800C51F0[14] = {
-    0x10008, 139, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x67010B, 0x120012, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int outputItem0_800C5228[14] = {
-    0x10008, 188, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B0076, 0x120041, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int outputItem1_800C5260[14] = {
-    0x10008, 124, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7B00B9, 0x120041, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char musicVolumeItems_800C5298[36] = { 168, 78, 12, 128, 224, 78, 12, 128, 24, 79, 12, 128, 80, 79, 12, 128, 136, 79, 12, 128, 192, 79, 12, 128, 248, 79, 12, 128, 48, 80, 12, 128 };
-char sfxVolumeItems_800C52BC[36] = { 104, 80, 12, 128, 160, 80, 12, 128, 216, 80, 12, 128, 16, 81, 12, 128, 72, 81, 12, 128, 128, 81, 12, 128, 184, 81, 12, 128, 240, 81, 12, 128 };
-char outputItems_800C52E0[12] = { 40, 82, 12, 128, 96, 82, 12, 128 };
-unsigned short subItemDisplaySpeed_800C52EC[28] = {
-    8, 1, 200, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 41, 79, 18, 0, 3, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemAnimSkip_800C5324[28] = {
-    8, 1, 4, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 72, 79, 18, 0, 3, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemSpeech_800C535C[28] = {
-    8, 1, 201, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 92, 79, 18, 0, 3, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemMagicEffects_800C5394[28] = {
-    8, 1, 50, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 152, 79, 18, 0, 2, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemCaptureEffects_800C53CC[28] = {
-    8, 1, 229, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 172, 79, 18, 0, 2, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemAutoMessage_800C5404[28] = {
-    8, 1, 89, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 112, 79, 18, 0, 2, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short subItemSubtitles_800C543C[28] = {
-    8, 1, 191, 0, 0xD620, 0x8008, 0xD3F4, 0x8008,
-    40, 132, 79, 18, 0, 2, 1, 0,
-    0, 0, 0, 0, 0, 0, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-};
-unsigned short *subtitlePageItems_800C5474[8] = { subItemDisplaySpeed_800C52EC, subItemAnimSkip_800C5324, subItemSpeech_800C535C, subItemAutoMessage_800C5404, subItemSubtitles_800C543C, subItemMagicEffects_800C5394, subItemCaptureEffects_800C53CC };
-int displaySpeed0_800C5494[14] = {
-    0x10008, 179, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29007D, 0x120025, 0x40000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int displaySpeed1_800C54CC[14] = {
-    0x10008, 131, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900A3, 0x120025, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int displaySpeed2_800C5504[14] = {
-    0x10008, 152, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900C9, 0x120025, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int displaySpeed3_800C553C[14] = {
-    0x10008, 195, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x2900EF, 0x120025, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char displaySpeedItems_800C5574[20] = { 148, 84, 12, 128, 204, 84, 12, 128, 4, 85, 12, 128, 60, 85, 12, 128 };
-int animSkip0_800C5588[14] = {
-    0x10008, 44, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x48007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int animSkip1_800C55C0[14] = {
-    0x10008, 45, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x4800C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char animSkipItems_800C55F8[12] = { 136, 85, 12, 128, 192, 85, 12, 128 };
-int speech0_800C5604[14] = {
-    0x10008, 175, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int speech1_800C563C[14] = {
-    0x10008, 176, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5C00C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char speechItems_800C5674[12] = { 4, 86, 12, 128, 60, 86, 12, 128 };
-int magicEffects0_800C5680[14] = {
-    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x98007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int magicEffects1_800C56B8[14] = {
-    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9800C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char magicEffectsItems_800C56F0[12] = { 128, 86, 12, 128, 184, 86, 12, 128 };
-int captureEffects0_800C56FC[14] = {
-    0x10008, 143, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int captureEffects1_800C5734[14] = {
-    0x10008, 144, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xAC00C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char captureEffectsItems_800C576C[12] = { 252, 86, 12, 128, 52, 87, 12, 128 };
-int autoMessage0_800C5778[14] = {
-    0x10008, 90, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x70007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int autoMessage1_800C57B0[14] = {
-    0x10008, 91, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7000C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char autoMessageItems_800C57E8[12] = { 120, 87, 12, 128, 176, 87, 12, 128 };
-int subtitles0_800C57F4[14] = {
-    0x10008, 192, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x84007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int subtitles1_800C582C[14] = {
-    0x10008, 193, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8400C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char subtitlesItems_800C5864[12] = { 244, 87, 12, 128, 44, 88, 12, 128 };
-int vibrationLabel_800C5870[14] = {
-    0x10008, 171, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C0028, 0x12004F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char vibrationLabelItems_800C58A8[8] = { 112, 88, 12, 128 };
-int vibration0_800C58B0[14] = {
-    0x10008, 172, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C007D, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-int vibration1_800C58E8[14] = {
-    0x10008, 173, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6C00C9, 0x12004B, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
-};
-char vibrationItems_800C5920[12] = { 176, 88, 12, 128, 232, 88, 12, 128 };
-char helpBar_800C592C[24] = { 16, 0, 0, 0, 92, 44, 12, 128, 167, 0, 0, 0, 80, 44, 12, 128, 255, 255, 255, 255 };
-int configMenuActive_800C5944 = 0;

@@ -15,6 +15,83 @@ typedef struct CfgDlgConfig
     int mode_0, time_4, anim_8, cursor_C, items_10, ot_14; // a DrawMenuWindows_8002A5A4 menu
 } CfgDlgConfig;
 
+/* the types of config.c */
+typedef struct CfgCtxConfig
+{
+    char pad_0[2];
+    short page_2;     // 0 top menu, 1 audio, 2 subtitles, 3 screen color, 4 vibration (5 exits)
+    short nextPage_4; // -1: stay
+    unsigned short topCursor_6;
+    // working copies of the settings (LoadConfigSettings_800C3060)
+    unsigned char displaySpeed_8, animSkip_9, animSkip_A, magicEffects_B, outputFormat_C, bgmVolume_D, sfxVolume_E,
+        uiColor_F, captureEffects_10, speech_11, vibration_12, autoMessage_13, subtitles_14, savedBgmVolume_15,
+        savedSfxVolume_16;
+    char pad_17[0x30 - 0x17];
+    int notice_30; // DrawOptionUnavailable_800C4BDC message: 1 subtitles off, 2 speech off
+    short noticeTimer_34;
+    short pad_36;
+    int editing_38; // EditConfigSettingTask_800C45E8 runs
+    CfgCursorHead cursor_3C; // cursor_3C..scroll_46: an exe MenuCursor (UpdateMenuCursor_8003D794)
+    short cursorPos_44;
+    short scroll_46;
+} CfgCtxConfig;
+
+typedef struct CfgTaskConfig
+{
+    unsigned int flags_0;
+    int pad_4;
+    void (*next_8)();
+    int pad_C;
+    int pad_10;
+    CfgCtxConfig* ctx_14;
+} CfgTaskConfig;
+
+typedef struct CfgHolderConfig
+{
+    char pad_0[0x10];
+    CfgTaskConfig t_10;
+} CfgHolderConfig;
+
+typedef struct CfgSpinConfig
+{
+    int flags_0;
+    short unused_4, pos_6, cols_8, rows_A;
+} CfgSpinConfig;
+
+typedef struct CfgBoxConfig
+{
+    short x_0;
+    short y_2;
+    int pad_4;
+    short col_8;
+    char colors_A;
+    char frame_B;
+} CfgBoxConfig;
+
+typedef struct CfgTailConfig
+{
+    short col_0;
+    char colors_2;
+    char frame_3;
+} CfgTailConfig;
+
+/* CONFIG functions */
+extern void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx);
+extern void LoadConfigSettings_800C3060(CfgCtxConfig* c);
+extern void HandleConfigPageInput_800C3540(CfgCtxConfig* c);
+extern void OpenConfigPage_800C378C(CfgCtxConfig* c);
+extern void DrawConfigPage_800C383C(CfgCtxConfig* c);
+extern void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c);
+extern void DrawAudioPage_800C39C4(CfgCtxConfig* c);
+extern void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c);
+extern void DrawScreenColorPage_800C4180(CfgCtxConfig* c);
+extern void DrawVibrationPage_800C4390(CfgCtxConfig* c);
+extern void DrawConfigHelpText_800C450C(CfgCtxConfig* c);
+extern void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c);
+extern void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c);
+extern void DrawOptionUnavailable_800C4BDC(int notice);
+
+/* CONFIG data */
 extern int configOverlayId_800C29D0;
 extern const char aVibrationSettin_800C29D4[];
 extern const char aSetScreenColor_800C29FC[];
@@ -35,10 +112,6 @@ extern const char aSelect_800C2C5C[];
 extern const CfgDlgConfig menuHdrActive_800C2CD0;
 extern const CfgDlgConfig menuHdrIdle_800C2CE8;
 extern const int dword_800C2D00;
-extern const char aOptionNotAvaila_800C2D40[];
-extern const char aSetSpeechToONTo_800C2DA4[];
-extern const char aOptionNotAvaila_800C2DF4[];
-extern const char aSetSubtitlesToO_800C2E5C[];
 extern int topMenuHelp_800C4C80[4];
 extern int audioPageHelp_800C4C90[3];
 extern int subtitlePageHelp_800C4C9C[7];
@@ -114,5 +187,18 @@ extern int vibration1_800C58E8[14];
 extern char vibrationItems_800C5920[12];
 extern char helpBar_800C592C[24];
 extern int configMenuActive_800C5944;
+
+/* exe-side, to move to <exe header> */
+extern CfgHolderConfig* configTask_8008B4B8; // main.h declares it int
+extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
+extern unsigned short uiColor_8008B590;
+extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
+extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
+extern void ApplyBgmVolume_800309D8(void* p);
+extern void DrawMenuBackground_8002BE10();
+extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
+extern void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument (returns int)
+extern void MoveGridCursorP1_8003D630(CfgSpinConfig* p); // pad_text.c: int MoveGridCursorP1_8003D630(short* grid)
 
 #endif

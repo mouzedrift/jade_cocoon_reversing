@@ -5,129 +5,6 @@
 #include "sound.h"
 #include "equip.h"
 
-struct EquipCtx;
-typedef struct EquipTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-    int field_C;
-    int field_10;
-    struct EquipCtx* ctx_14;
-} EquipTask;
-
-typedef struct EquipTaskHolder
-{
-    char pad_0[0x10];
-    EquipTask task_10;
-} EquipTaskHolder;
-
-typedef struct EquipCtx
-{
-    short stepCursor_0[6];
-    short stepScroll_C[6];
-    short category_18; // 0 weapon, 1 armor, 2 accessory
-    short step_1A;
-    short mode_1C;   // equipMenuStepModes_800C59B0[step_1A]: 0 category, 1 item list, 2 equip
-    short activeWindows_1E;
-    int openedWindows_20;
-    int pad_24;
-    int confirmed_28;
-    int cancelled_2C;
-    short pad_30[2];
-    short cols_34;
-    short rows_36;
-    short count_38;
-    short cursorFlags_3A;
-    short cursor_3C; // cols_34..scroll_3E: an exe MenuCursor (UpdateMenuCursor_8003D794)
-    short scroll_3E;
-    short item_40;
-    short openTimer_42;
-    unsigned short flags_44;
-    short msgTimer_46;
-} EquipCtx;
-
-extern EquipTaskHolder* equipTask_8008D4C4;
-extern unsigned short padPressed_8009194C;
-extern int UpdateMenuCursor_8003D794(void* cursor, int pad);
-extern void DrawMenuBackground_8002BE10();
-extern void CompactInventory_800AD3F0(int category);
-extern int GetLastInventorySlot_800AD308(int category);
-extern int GetInventorySlotId_800AD288(int slot, int category);
-extern int SetEquipment_800AD9EC(int itemId, int category);
-extern void DrawEquipMenu_800C4A94(EquipCtx* c);
-extern void HandleEquipCursorInput_800C4D50(EquipCtx* c);
-extern void ChangeEquipMenuStep_800C4DF4(EquipCtx* c);
-extern void UpdateEquipSelection_800C51B0(EquipCtx* c);
-extern void SetEquipCursorArea_800C497C(EquipCtx* c);
-extern void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c);
-extern void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c);
-extern void TryEquipItem_800C5064(EquipCtx* c);
-typedef struct
-{
-    short x;
-    short y;
-    short w;
-    short h;
-} EquipRect;
-
-// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
-typedef struct
-{
-    short kind_0;
-    short dir_2;
-} EquipArrow;
-
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct
-{
-    short color_0;
-    char state_2;
-    char frame_3;
-} EquipBox;
-
-extern short uiColor_8008B590;
-
-extern void DrawLevantStats_8002F7D0(void* pos, int ot);
-extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
-extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
-extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
-extern void DrawEquipDescription_800C5440(short itemId, short category, int pos);
-// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
-typedef struct
-{
-    int flags_0;
-    int time_4;
-    int anim_8;
-    int cursor_C;
-    void* rows_10;
-    int ot_14;
-} EquipMenuWin;
-
-extern int GetEquipmentName_8001D128(int id, int category);
-extern int GetInventorySlotCount_800AD2C8(int slot, int category);
-extern void DrawMenuWindows_8002A5A4(void* p);
-extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
-
-typedef struct
-{
-    short cursor;
-    short scroll;
-    short mode;
-    short ot;
-    short e;
-    int f;
-} EquipListParams;
-extern void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category);
-
-extern char name_800826B0[];
-extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
-extern void AddClipDrawAreaPrim_80033308(void* p);
-extern void DrawEquipmentWindow_800C0E04(void* a0, void* a1, int a2);
-extern void DrawEquipStats_800C5314(EquipCtx* c);
-
-
 int equipOverlayId_800C29D0 SDATA = 37;
 const char aCriticallyWound_800C29D4[] = "\202b\202\222\202\211\202\224\202\211\202\203\202\201\202\214\202\214\202\231\201@\202\227\202\217\202\225\202\216\202\204\202\223\201@\202\224\202\210\202\205\201@\202\205\202\216\202\205\202\215\202\231\201@\202\227\202\211\202\224\202\210\201@\202\217\202\216\202\205\201@\202\223\202\227\202\211\202\216\202\207\201D"; // Critically wounds the enemy with one swing.
 const char aColdBladeWithAP_800C2A2C[] = "\202b\202\217\202\214\202\204\201@\202\202\202\214\202\201\202\204\202\205\201@\202\227\202\211\202\224\202\210\201@\202\201\201@\202\220\202\222\202\205\202\223\202\205\202\216\202\203\202\205\201@\202\202\202\205\202\231\202\217\202\216\202\204\201@\202\227\202\217\202\222\202\204\202\223\201D"; // Cold blade with a presence beyond words.
@@ -253,6 +130,99 @@ const char aOrnamentalItem_800C4764[] = "\202n\202\222\202\216\202\201\202\215\2
 const char emptyText_800C4784[4] = { 0 };
 const char aCannotUnequip_800C4788[32] = { 130, 98, 130, 129, 130, 142, 130, 142, 130, 143, 130, 148, 129, 64, 130, 149, 130, 142, 130, 133, 130, 145, 130, 149, 130, 137, 130, 144, 0, 0, 0, 148 };
 
+char scrollUpArrowPos_800C5834[4] = { 160, 0, 131 };
+char scrollDownArrowPos_800C5838[4] = { 159, 0, 208 };
+int equipListRow0_800C583C[28] = {
+    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
+    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
+    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
+    0, -1, -1, -1,
+};
+int equipListRow1_800C58AC[28] = {
+    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
+    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
+    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
+    0, -1, -1, -1,
+};
+int equipListRow2_800C591C[28] = {
+    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
+    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
+    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
+    0, -1, -1, -1,
+};
+EquipListRow *equipListRows_800C598C[4] = { (void *)equipListRow0_800C583C, (void *)equipListRow1_800C58AC, (void *)equipListRow2_800C591C };
+char descBoxPos_800C599C[4] = { 10, 0, 61 };
+char statCompareWindowRect_800C59A0[8] = { 25, 1, 49, 0, 29, 0, 77 };
+char statsWindowRect_800C59A8[8] = { 194, 0, 49, 0, 75, 0, 77 };
+short equipMenuStepModes_800C59B0[4] = { 0, 1, 2, -1 };
+short modeCursorAreaMasks_800C59B8[4] = { 2, 1, 8 };
+short cursorAreas_800C59C0[16] = {
+    1, 3, 64, 64, 1, 3, 3, 2,
+    1, 1, 1, 0, 1, 1, 1,
+};
+char weaponDescs_800C59E0[23][16] = {
+    { 56, 54, 12, 128, 232, 53, 12, 128, 204, 53, 12, 128 },
+    { 56, 54, 12, 128, 132, 53, 12, 128, 104, 53, 12, 128 },
+    { 92, 53, 12, 128, 20, 53, 12, 128, 216, 52, 12, 128 },
+    { 192, 52, 12, 128, 144, 52, 12, 128, 120, 52, 12, 128 },
+    { 96, 52, 12, 128, 20, 52, 12, 128, 212, 51, 12, 128 },
+    { 176, 51, 12, 128, 124, 51, 12, 128, 84, 51, 12, 128 },
+    { 76, 51, 12, 128, 4, 51, 12, 128, 184, 50, 12, 128 },
+    { 164, 50, 12, 128, 88, 50, 12, 128, 16, 50, 12, 128 },
+    { 0, 50, 12, 128, 180, 49, 12, 128, 108, 49, 12, 128 },
+    { 96, 52, 12, 128, 40, 49, 12, 128, 228, 48, 12, 128 },
+    { 92, 53, 12, 128, 160, 48, 12, 128, 112, 48, 12, 128 },
+    { 88, 48, 12, 128, 36, 48, 12, 128, 236, 47, 12, 128 },
+    { 176, 51, 12, 128, 160, 47, 12, 128, 96, 47, 12, 128 },
+    { 92, 53, 12, 128, 44, 47, 12, 128, 236, 46, 12, 128 },
+    { 192, 52, 12, 128, 192, 46, 12, 128, 136, 46, 12, 128 },
+    { 108, 46, 12, 128, 24, 46, 12, 128, 208, 45, 12, 128 },
+    { 172, 45, 12, 128, 128, 45, 12, 128, 80, 45, 12, 128 },
+    { 172, 45, 12, 128, 12, 45, 12, 128, 196, 44, 12, 128 },
+    { 76, 51, 12, 128, 112, 44, 12, 128, 28, 44, 12, 128 },
+    { 76, 51, 12, 128, 224, 43, 12, 128, 160, 43, 12, 128 },
+    { 108, 46, 12, 128, 104, 43, 12, 128, 44, 43, 12, 128 },
+    { 108, 46, 12, 128, 216, 42, 12, 128, 128, 42, 12, 128 },
+    { 108, 46, 12, 128, 44, 42, 12, 128, 212, 41, 12, 128 },
+};
+char armorDescs_800C5B50[15][16] = {
+    { 232, 62, 12, 128, 200, 62, 12, 128, 156, 62, 12, 128 },
+    { 232, 62, 12, 128, 108, 62, 12, 128, 52, 62, 12, 128 },
+    { 232, 62, 12, 128, 236, 61, 12, 128, 156, 61, 12, 128 },
+    { 232, 62, 12, 128, 100, 61, 12, 128, 48, 61, 12, 128 },
+    { 232, 62, 12, 128, 4, 61, 12, 128, 180, 60, 12, 128 },
+    { 232, 62, 12, 128, 96, 60, 12, 128, 8, 60, 12, 128 },
+    { 232, 62, 12, 128, 188, 59, 12, 128, 104, 59, 12, 128 },
+    { 232, 62, 12, 128, 40, 59, 12, 128, 232, 58, 12, 128 },
+    { 212, 58, 12, 128, 140, 58, 12, 128, 56, 58, 12, 128 },
+    { 212, 58, 12, 128, 252, 57, 12, 128, 192, 57, 12, 128 },
+    { 212, 58, 12, 128, 112, 57, 12, 128, 20, 57, 12, 128 },
+    { 212, 58, 12, 128, 184, 56, 12, 128, 100, 56, 12, 128 },
+    { 212, 58, 12, 128, 4, 56, 12, 128, 184, 55, 12, 128 },
+    { 212, 58, 12, 128, 96, 55, 12, 128, 4, 55, 12, 128 },
+    { 212, 58, 12, 128, 160, 54, 12, 128, 80, 54, 12, 128 },
+};
+char accessoryDescs_800C5C40[17][16] = {
+    { 100, 71, 12, 128, 44, 71, 12, 128, 216, 70, 12, 128 },
+    { 100, 71, 12, 128, 164, 70, 12, 128, 128, 70, 12, 128 },
+    { 100, 71, 12, 128, 72, 70, 12, 128, 252, 69, 12, 128 },
+    { 100, 71, 12, 128, 164, 69, 12, 128, 84, 69, 12, 128 },
+    { 100, 71, 12, 128, 252, 68, 12, 128, 172, 68, 12, 128 },
+    { 100, 71, 12, 128, 84, 68, 12, 128, 4, 68, 12, 128 },
+    { 100, 71, 12, 128, 172, 67, 12, 128, 92, 67, 12, 128 },
+    { 100, 71, 12, 128, 40, 67, 12, 128, 240, 66, 12, 128 },
+    { 100, 71, 12, 128, 172, 66, 12, 128, 116, 66, 12, 128 },
+    { 100, 71, 12, 128, 48, 66, 12, 128, 12, 66, 12, 128 },
+    { 100, 71, 12, 128, 224, 65, 12, 128, 136, 65, 12, 128 },
+    { 100, 71, 12, 128, 88, 65, 12, 128, 20, 65, 12, 128 },
+    { 100, 71, 12, 128, 236, 64, 12, 128, 172, 64, 12, 128 },
+    { 100, 71, 12, 128, 236, 64, 12, 128, 108, 64, 12, 128 },
+    { 100, 71, 12, 128, 236, 64, 12, 128, 16, 64, 12, 128 },
+    { 100, 71, 12, 128, 236, 64, 12, 128, 184, 63, 12, 128 },
+    { 100, 71, 12, 128, 92, 63, 12, 128, 244, 62, 12, 128 },
+};
+char cannotUnequipBox_800C5D50[16] = { 136, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128 };
+
 // Matched
 void StartEquipMenu_800C47A8(void)
 {
@@ -367,7 +337,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
     EquipListParams equipList;
     if (unknownFlags_8008D678 < 0)
     {
-        DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xe);
+        DrawButtonHelpBar_8002B004(helpBarSelectQuitDesc_800826B0, 0, 0xe);
     }
     for (i = 0; i < 4; i++)
     {
@@ -553,7 +523,7 @@ void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c)
     {
         c->msgTimer_46++;
     }
-    if (padPressed_8009194C || c->msgTimer_46 >= 0x96)
+    if (padPressed_8009194C[0] || c->msgTimer_46 >= 0x96)
     {
         c->cancelled_2C = 1;
         c->msgTimer_46 = 0;
@@ -746,97 +716,3 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
         DrawScrollArrow_8002C6DC((int)scrollDownArrowPos_800C5838, 1, list->ot);
     }
 }
-
-
-char scrollUpArrowPos_800C5834[4] = { 160, 0, 131 };
-char scrollDownArrowPos_800C5838[4] = { 159, 0, 208 };
-int equipListRow0_800C583C[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
-};
-int equipListRow1_800C58AC[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
-};
-int equipListRow2_800C591C[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
-};
-EquipListRow *equipListRows_800C598C[4] = { (void *)equipListRow0_800C583C, (void *)equipListRow1_800C58AC, (void *)equipListRow2_800C591C };
-char descBoxPos_800C599C[4] = { 10, 0, 61 };
-char statCompareWindowRect_800C59A0[8] = { 25, 1, 49, 0, 29, 0, 77 };
-char statsWindowRect_800C59A8[8] = { 194, 0, 49, 0, 75, 0, 77 };
-short equipMenuStepModes_800C59B0[4] = { 0, 1, 2, -1 };
-short modeCursorAreaMasks_800C59B8[4] = { 2, 1, 8 };
-short cursorAreas_800C59C0[16] = {
-    1, 3, 64, 64, 1, 3, 3, 2,
-    1, 1, 1, 0, 1, 1, 1,
-};
-char weaponDescs_800C59E0[23][16] = {
-    { 56, 54, 12, 128, 232, 53, 12, 128, 204, 53, 12, 128 },
-    { 56, 54, 12, 128, 132, 53, 12, 128, 104, 53, 12, 128 },
-    { 92, 53, 12, 128, 20, 53, 12, 128, 216, 52, 12, 128 },
-    { 192, 52, 12, 128, 144, 52, 12, 128, 120, 52, 12, 128 },
-    { 96, 52, 12, 128, 20, 52, 12, 128, 212, 51, 12, 128 },
-    { 176, 51, 12, 128, 124, 51, 12, 128, 84, 51, 12, 128 },
-    { 76, 51, 12, 128, 4, 51, 12, 128, 184, 50, 12, 128 },
-    { 164, 50, 12, 128, 88, 50, 12, 128, 16, 50, 12, 128 },
-    { 0, 50, 12, 128, 180, 49, 12, 128, 108, 49, 12, 128 },
-    { 96, 52, 12, 128, 40, 49, 12, 128, 228, 48, 12, 128 },
-    { 92, 53, 12, 128, 160, 48, 12, 128, 112, 48, 12, 128 },
-    { 88, 48, 12, 128, 36, 48, 12, 128, 236, 47, 12, 128 },
-    { 176, 51, 12, 128, 160, 47, 12, 128, 96, 47, 12, 128 },
-    { 92, 53, 12, 128, 44, 47, 12, 128, 236, 46, 12, 128 },
-    { 192, 52, 12, 128, 192, 46, 12, 128, 136, 46, 12, 128 },
-    { 108, 46, 12, 128, 24, 46, 12, 128, 208, 45, 12, 128 },
-    { 172, 45, 12, 128, 128, 45, 12, 128, 80, 45, 12, 128 },
-    { 172, 45, 12, 128, 12, 45, 12, 128, 196, 44, 12, 128 },
-    { 76, 51, 12, 128, 112, 44, 12, 128, 28, 44, 12, 128 },
-    { 76, 51, 12, 128, 224, 43, 12, 128, 160, 43, 12, 128 },
-    { 108, 46, 12, 128, 104, 43, 12, 128, 44, 43, 12, 128 },
-    { 108, 46, 12, 128, 216, 42, 12, 128, 128, 42, 12, 128 },
-    { 108, 46, 12, 128, 44, 42, 12, 128, 212, 41, 12, 128 },
-};
-char armorDescs_800C5B50[15][16] = {
-    { 232, 62, 12, 128, 200, 62, 12, 128, 156, 62, 12, 128 },
-    { 232, 62, 12, 128, 108, 62, 12, 128, 52, 62, 12, 128 },
-    { 232, 62, 12, 128, 236, 61, 12, 128, 156, 61, 12, 128 },
-    { 232, 62, 12, 128, 100, 61, 12, 128, 48, 61, 12, 128 },
-    { 232, 62, 12, 128, 4, 61, 12, 128, 180, 60, 12, 128 },
-    { 232, 62, 12, 128, 96, 60, 12, 128, 8, 60, 12, 128 },
-    { 232, 62, 12, 128, 188, 59, 12, 128, 104, 59, 12, 128 },
-    { 232, 62, 12, 128, 40, 59, 12, 128, 232, 58, 12, 128 },
-    { 212, 58, 12, 128, 140, 58, 12, 128, 56, 58, 12, 128 },
-    { 212, 58, 12, 128, 252, 57, 12, 128, 192, 57, 12, 128 },
-    { 212, 58, 12, 128, 112, 57, 12, 128, 20, 57, 12, 128 },
-    { 212, 58, 12, 128, 184, 56, 12, 128, 100, 56, 12, 128 },
-    { 212, 58, 12, 128, 4, 56, 12, 128, 184, 55, 12, 128 },
-    { 212, 58, 12, 128, 96, 55, 12, 128, 4, 55, 12, 128 },
-    { 212, 58, 12, 128, 160, 54, 12, 128, 80, 54, 12, 128 },
-};
-char accessoryDescs_800C5C40[17][16] = {
-    { 100, 71, 12, 128, 44, 71, 12, 128, 216, 70, 12, 128 },
-    { 100, 71, 12, 128, 164, 70, 12, 128, 128, 70, 12, 128 },
-    { 100, 71, 12, 128, 72, 70, 12, 128, 252, 69, 12, 128 },
-    { 100, 71, 12, 128, 164, 69, 12, 128, 84, 69, 12, 128 },
-    { 100, 71, 12, 128, 252, 68, 12, 128, 172, 68, 12, 128 },
-    { 100, 71, 12, 128, 84, 68, 12, 128, 4, 68, 12, 128 },
-    { 100, 71, 12, 128, 172, 67, 12, 128, 92, 67, 12, 128 },
-    { 100, 71, 12, 128, 40, 67, 12, 128, 240, 66, 12, 128 },
-    { 100, 71, 12, 128, 172, 66, 12, 128, 116, 66, 12, 128 },
-    { 100, 71, 12, 128, 48, 66, 12, 128, 12, 66, 12, 128 },
-    { 100, 71, 12, 128, 224, 65, 12, 128, 136, 65, 12, 128 },
-    { 100, 71, 12, 128, 88, 65, 12, 128, 20, 65, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 172, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 108, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 16, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 184, 63, 12, 128 },
-    { 100, 71, 12, 128, 92, 63, 12, 128, 244, 62, 12, 128 },
-};
-char cannotUnequipBox_800C5D50[16] = { 136, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128 };
