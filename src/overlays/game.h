@@ -747,7 +747,7 @@ extern char name_80096090[];
 
 /* ---- GAME second half (G2) ---- */
 
-typedef struct G2Inner
+typedef struct GameLevantCtl
 {
     // 1: battle mode (EnterLevantBattleMode_800A895C), 2: action requested, 4: action triggered, 8: main action
     // (not a reaction: wait for it to finish), 0x10: entering battle, 0x20: held by a script,
@@ -772,7 +772,7 @@ typedef struct G2Inner
     short state_C6; // the state of Levant's input state machine (LevantControlTask_800A818C)
     char pad_C8[4];
     int anim_CC;
-} G2Inner;
+} GameLevantCtl;
 
 extern unsigned char pads_800918E8[2][9];
 extern int FindFacingFieldMinion_800A9164(int* out);
@@ -789,18 +789,18 @@ extern int IsLevantIdleAnim_800AB958();
 extern int IsLevantScriptAnimWaiting_800ABB70();
 extern void SetLevantMapCollision_800ABC34(int a);
 
-typedef struct G2Ctx
+typedef struct GameLevantCtlNode
 {
     char pad_0[0x24];
-    G2Inner* f24;
-} G2Ctx;
+    GameLevantCtl* buffer_24; // EventNode.entry.buffer
+} GameLevantCtlNode;
 
-typedef struct G2Obj
+typedef struct GameLevantFade
 {
     unsigned int flags_0;
     char pad_4[0x2C];
     int fade_30;
-} G2Obj;
+} GameLevantFade;
 
 typedef struct G2V12
 {
@@ -824,9 +824,9 @@ typedef struct G2Path
     G2PathStep* steps_8;
 } G2Path;
 
-// Levant's controller object (gameTask_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
+// Levant's controller object (gameTask_8008B4A4->buffer_24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
-typedef struct G2Act
+typedef struct GameLevantActor
 {
     // 1: acting, 2: fading out, 4: fading in, 8: animation changed this frame, 0x10: blending from prevAnim_1E,
     // 0x20: continue (ContinueLevantAnim_800AB1A4), 0x100: in battle (field position saved in basePos_60),
@@ -870,18 +870,18 @@ typedef struct G2Act
     int bonePos_590[40][3];
     FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing
     int turnBuf_780[4];
-} G2Act;
+} GameLevantActor;
 
-typedef struct G2Ctx2
+typedef struct GameLevantActorNode
 {
     char pad_0[0x24];
-    G2Act* f24;
-} G2Ctx2;
+    GameLevantActor* buffer_24; // EventNode.entry.buffer
+} GameLevantActorNode;
 
-extern G2Ctx* levantControlTask_8008B4CC;
+extern GameLevantCtlNode* levantControlTask_8008B4CC;
 extern EventNode* encounterWatchTask_8008B4D0;
 
-extern G2Ctx2* gameTask_8008B4A4;
+extern GameLevantActorNode* gameTask_8008B4A4;
 
 
 
@@ -939,13 +939,14 @@ extern void ExitLevantActorBattle_800AB444();
 
 extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
 
-typedef struct G2P
+// a window's screen rectangle (PlaceWindowAwayFromQuadrant_800A88E0)
+typedef struct GameWinRect
 {
-    short s0;
-    short s2;
-    unsigned short u4;
-    unsigned short u6;
-} G2P;
+    short x_0;
+    short y_2;
+    unsigned short w_4;
+    unsigned short h_6;
+} GameWinRect;
 
 extern unsigned char equippedWeaponId_8008BD54;
 
@@ -1052,12 +1053,6 @@ extern unsigned int dword_8008BD38;
 
 extern void TintVramImage_800292D0();
 
-typedef struct G2L2
-{
-    int f0;
-    int f4;
-    int rest[0x48];
-} G2L2;
 
 extern int dword_8001D060(int);
 
@@ -1130,20 +1125,22 @@ extern void StopLevantAnimLoop_800AB910();
 
 extern void SetLevantVisible_800ABBD8();
 
-typedef struct G2Pair_1
+// the frames StartLevantAction_800A8A30 returns
+typedef struct GameActionFrames
 {
-    short a;
-    short b;
-} G2Pair_1;
+    short hit;
+    short end;
+} GameActionFrames;
 
-typedef struct G2Mode_1
+// a Levant battle command's control state and animation (levantBattleActions_800B1084; camera.c reads it as struct_pair8)
+typedef struct GameLevantBattleAction
 {
-    int a;
-    int b;
-} G2Mode_1;
+    int state_0; // GameLevantCtl.state_C6 (0x10: StartLevantAction_800A8A30 starts nothing)
+    int anim_4;
+} GameLevantBattleAction;
 
 
-extern G2Mode_1 levantBattleActions_800B1084[28];
+extern GameLevantBattleAction levantBattleActions_800B1084[28];
 extern int levantModelIds_800B1164[2];
 
 
@@ -1163,7 +1160,7 @@ typedef struct GameActorCmd
     int data_24;
 } GameActorCmd;
 
-typedef struct G2Init_1
+typedef struct GameLevantActorInit
 {
     int flags_0;
     int moveCmd_4;
@@ -1181,24 +1178,25 @@ typedef struct G2Init_1
     int fade_30;
     char pad_34[8];
     int status_3C;
-} G2Init_1;
+} GameLevantActorInit;
 
 extern void sub_800B80C8(void* p);
 
-typedef struct G2Skel_1
+// skeleton draw arguments (skel_draw.h AnimSkel)
+typedef struct GameSkelDraw
 {
     FtgObject* ftg_0;
-    void* f4;
-    void* f8;
+    void* pos_4;
+    void* rot_8;
     void* bones;
     void* base;
     char* pose;
     unsigned int frame;
     int flags;
-    char* pos;
-    int f24;
+    char* pos; // out: bone positions
+    int scale_24;
     unsigned long* ot;
-} G2Skel_1;
+} GameSkelDraw;
 
 
 extern int FindNearestCameraPoint_80019CC4(void* p);
