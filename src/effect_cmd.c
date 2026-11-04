@@ -211,7 +211,7 @@ int GetWeaponEffect_800189F8(void)
 {
     SaveData* sd = &saveData_8008B570;
     EquipmentData* weapon = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
-    sub_800BFAF8(*((unsigned char*)sd + 0x7E4));
+    SetHitVariantForCommand_800BFAF8(*((unsigned char*)sd + 0x7E4));
     return weaponEffectIds_80079708[weapon->field_2];
 }
 typedef struct

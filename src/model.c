@@ -4276,7 +4276,7 @@ extern int sub_800A5030(int a0, int a1, int a2);
 extern void sub_800A52AC(int a0);
 extern Model* sub_800AC38C(void);
 extern int sub_800AD154(int a0);
-extern void sub_800B88A4(int a0);
+extern void StartEncounter_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void OnMapFileLoaded_80028808(void* a0, int* a1);
 // Matched
@@ -4372,7 +4372,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 }
                 if (dword_80091C90 == 0 && dword_80091C58 != 0)
                 {
-                    sub_800B88A4(t);
+                    StartEncounter_800B88A4(t);
                     k = st[0];
                     eventDispatchHalt_8008B540 = 1;
                     n = k;

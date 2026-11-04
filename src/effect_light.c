@@ -66,7 +66,7 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern void sub_800C1A5C(void* a0, short* a1, int a2, int a3);
+extern void SpawnSpriteAnim_800C1A5C(void* a0, short* a1, int a2, int a3);
 void SpawnMdecEffect_80017A6C(int a0, int a1);
 // Matched
 void RadialBurstTask_80016E20(int* flags, void* buf)
@@ -90,8 +90,8 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
         {
             rot[1] = angle + (i << 12) / 5;
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x176);
-            sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
-            sub_800C32DC(obj->pos_44, 0xB2, 0, rot[1]);
+            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+            SpawnModelAnim_800C32DC(obj->pos_44, 0xB2, 0, rot[1]);
         }
     }
     if (obj->field_4 == 0x5D)
@@ -99,12 +99,12 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
         angle2 = ratan2Difference_8003B9E0(obj->targetPos_1C, obj->srcPos_14);
         StopSoundSeqById_800306FC(6);
         PlaySfx_80031494(0x1A);
-        SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->pos_44, 0xB3, 0, angle2));
+        SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->pos_44, 0xB3, 0, angle2));
         *flags = (*flags & ~1) | 0x8000;
     }
     obj->field_4++;
 }
-extern void sub_800C1190(int a0, int a1);
+extern void PlayTimedSfx_800C1190(int a0, int a1);
 // Matched
 void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
 {
@@ -117,24 +117,24 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     rot[2] = 0;
     if (obj->field_4 == 0)
     {
-        sub_800C1190(0x32, 0x1E);
-        sub_800C1190(0x50, 0x1D);
+        PlayTimedSfx_800C1190(0x32, 0x1E);
+        PlayTimedSfx_800C1190(0x50, 0x1D);
         for (i = 0; i < 4; i++)
         {
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x16);
-            sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             rot[1] += 0x400;
-            sub_800C32DC(obj->targetPos_1C, 0xF, 0, rot[1]);
+            SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xF, 0, rot[1]);
         }
     }
     if (obj->field_4 == 0x30)
     {
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x15);
-        sub_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+        SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
     }
     if (obj->field_4 == 0x33)
     {
-        sub_800C32DC(obj->targetPos_1C, 0xE, 0, rot[1]);
+        SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xE, 0, rot[1]);
         *flags = (*flags & ~1) | 0x8000;
     }
     obj->field_4++;
@@ -165,12 +165,12 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
 {
     if (obj->field_0 < 0x20)
     {
-        sub_800C4090((int)obj->pos_44, (int)obj->rgb_A8, 0x5DC, (0x20 - obj->field_0) << 7);
+        SetPointLight_800C4090((int)obj->pos_44, (int)obj->rgb_A8, 0x5DC, (0x20 - obj->field_0) << 7);
         obj->field_0 = obj->field_0 + 1;
     }
     else
     {
-        sub_800C410C();
+        ClearPointLight_800C410C();
         flags[0] = (flags[0] & ~1) | 0x8000;
     }
 }
@@ -217,12 +217,12 @@ void GlowModelTask_800173A8(int* flags, void* buf)
         scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
         obj->rot_80.vy += obj->rot_80.pad;
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x30, scale);
-        sub_800C4090((int)obj->pos_44, (int)&col, 0x5DC, ((obj->field_4 - obj->field_0) << 12) / obj->field_4);
+        SetPointLight_800C4090((int)obj->pos_44, (int)&col, 0x5DC, ((obj->field_4 - obj->field_0) << 12) / obj->field_4);
         obj->field_0++;
     }
     else
     {
-        sub_800C410C();
+        ClearPointLight_800C410C();
         *flags = (*flags & ~1) | 0x8000;
     }
 }

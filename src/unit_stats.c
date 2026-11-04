@@ -1203,7 +1203,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },
     { 1, 0x8000, 72, (void *)((char *)&loadMenuTask_8008D480 + 4) },
     { 1, 0x8000, 72, (void *)&dword_8008B4B8 },
-    { 1, 0x8000, 124, (void *)&loadMenuTask_8008D480, sub_800B7650 },
+    { 1, 0x8000, 124, (void *)&loadMenuTask_8008D480, LoadMenuStart_800B7650 },
     { 1, 0x8000, 72, (void *)&dword_8008D4C4 },
     { 3, 0x8000, 196, (void *)&dword_8008B4AC },
     { 8, 0x8000, 80, (void *)&hitNumberTasks_8008D778 },
