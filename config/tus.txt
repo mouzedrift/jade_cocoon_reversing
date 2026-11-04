@@ -14,6 +14,7 @@ effect_cmd 80018430
 minion_init 80018E5C
 engine 80019BF0
 model 8001EA48
+model_ftg 80021738
 tim 80028C60
 menu_draw 8002A1BC
 menu_window 8002AAF0
