@@ -2443,10 +2443,11 @@ void SetActorSpeedScale_8001DB58(Actor* p, int scale, int on)
         p->flags_4 &= ~0x20000000;
     }
 }
-#if 0
-void SetActorScript_8001DB98(Actor* o, unsigned char* s)
+// Matched
+void SetActorScript_8001DB98(Actor* o, unsigned char* script)
 {
-    unsigned short old = o->animIdx_C2;
+    unsigned char* s;
+    short old = o->animIdx_C2;
     o->animIdx_C2 = -1;
     o->scriptPos_C4 = 0;
     o->scriptLen_C6 = 1;
@@ -2454,18 +2455,17 @@ void SetActorScript_8001DB98(Actor* o, unsigned char* s)
     o->waitLen_CA = 0;
     o->fCC = -1;
     o->fCE = -1;
-    o->script_D0 = (ActorScriptCmd*)s;
+    o->script_D0 = (ActorScriptCmd*)script;
     o->flags_4 &= ~0x8000;
     o->flags_4 |= 0x4000;
     o->prevAnimIdx_C0 = old;
+    s = script;
     while (s[0] != 0)
     {
         o->scriptLen_C6 += s[1];
         s += s[1] * 4;
     }
 }
-#endif
-INCLUDE_ASM(SetActorScript_8001DB98);
 // Matched
 void StartActorScript_8001DC34(void* actor, void* script)
 {

@@ -1124,8 +1124,6 @@ extern void sub_800AD8F4(int a);
 extern void sub_800AD68C(int a);
 extern void sub_800AD184(int a, int b, int c);
 #if 0
-// MeasureTextLines returns the 2 shorts as Size_8003422C in the code above; this near-miss reads them as x/y
-extern Pos2_35BD8 MeasureTextLines_8003E3B4(int* list);
 // Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
 // Needs INCLUDE_DATA(jpt_8007486C) (and its config/c_rodata.txt line) removed (tu_800353A0 is merged into this TU for it: the jump table sits at
 // 0x8007486C, which is 8-aligned only relative to this TU's .rdata start 0x8007474C; psylink packs objects on 4 bytes).
@@ -1135,7 +1133,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     SPRT spr[3];
     TPage_35BD8 tp[3];
     RECT r;
-    Pos2_35BD8 p70;
+    Size_8003422C p70;
     Pos2_35BD8 p78;
     Pos2_35BD8 p80;
     Pos2_35BD8 p88;
@@ -1185,10 +1183,10 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     if (o->text)
     {
         p70 = MeasureTextLines_8003E3B4(o->text);
-        p70.x += 8;
-        if (r.w < p70.x)
+        p70.w += 8;
+        if (r.w < p70.w)
         {
-            r.w = p70.x;
+            r.w = p70.w;
         }
     }
     line = 0;
@@ -1197,8 +1195,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     {
         if (o->entries[i].type == 7)
         {
-            p70.x = r.x + 6;
-            p70.y = r.y + (line * 16 + y) + 2;
+            p70.w = r.x + 6;
+            p70.h = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
             DrawText_8003E91C(2, aMoney_80074850, &p70, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
@@ -1293,8 +1291,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     {
         int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
         int h = r.y + 9;
-        p70.x = r.x + w;
-        p70.y = h;
+        p70.w = r.x + w;
+        p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
         DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->mode], &p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
@@ -1303,8 +1301,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     {
         int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
         int h = r.y + 9;
-        p70.x = r.x + w;
-        p70.y = h;
+        p70.w = r.x + w;
+        p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
         DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, &p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
@@ -1314,8 +1312,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         text = o->text;
         while (*text)
         {
-            p70.x = r.x + 6;
-            p70.y = r.y + (line * 16 + y) + 2;
+            p70.w = r.x + 6;
+            p70.h = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
             DrawText_8003E91C(2, (void*)*text, &p70, 0);
             text++;
