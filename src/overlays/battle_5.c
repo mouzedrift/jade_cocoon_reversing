@@ -944,9 +944,12 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
     }
 }
 
-#if 0 // Not matched: register permutation only (spark/sprite/offset get s2/s0/s1, original s0/s1/s2); tried decl order and an explicit offset counter
-void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark* spark)
+// SpriteAnimTask_800C1B2C: draws the current frame of a sprite animation at spark->pos_10 and advances it by speed_8; ends the task after the last frame
+// (the buffer arrives as void* and is copied into a typed local: a typed param keeps its doubled REG_EQUIV live length and loses s0)
+// Matched
+void SpriteAnimTask_800C1B2C(EventEntry* task, void* buf)
 {
+    BatSpark* spark = buf;
     EffectSprite* sprite = spark->anim_3C;
     int i;
     EffectSpriteFrame* frame;
@@ -964,9 +967,6 @@ void SpriteAnimTask_800C1B2C(EventEntry* task, BatSpark* spark)
         task->flags = (task->flags & ~1) | 0x8000;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, SpriteAnimTask_800C1B2C);
 
 void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
 {
@@ -1101,8 +1101,10 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
     }
 }
 
-#if 0 // Not matched: only src and the hoisted sinTable base swap saved registers (s5/s6); tried decl order, explicit table pointer, early return, temp for the first lookup
-void ShatterTask_800C23D0(EventEntry* task, BatSpark* src)
+// ShatterTask_800C23D0: after 30 frames plays sfx 0x4F, spawns a burst sprite and 24 ShardTask_800C273C shards flying out from src->pos_10
+// (the buffer arrives as void* and is copied into a typed local: a typed param keeps its doubled REG_EQUIV live length and loses s5)
+// Matched
+void ShatterTask_800C23D0(EventEntry* task, void* buf)
 {
     int i;
     int angle;
@@ -1110,6 +1112,7 @@ void ShatterTask_800C23D0(EventEntry* task, BatSpark* src)
     int modelIdx;
     EventEntry* entry;
     BatShard* shard;
+    BatSpark* src = buf;
     if (++src->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
@@ -1155,9 +1158,6 @@ void ShatterTask_800C23D0(EventEntry* task, BatSpark* src)
         task->flags = (task->flags & ~1) | 0x8000;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, ShatterTask_800C23D0);
 
 void ShardTask_800C273C(EventEntry* task, BatShard* shard)
 {
