@@ -198,7 +198,11 @@ def split(name, data, base, syms, lib_ranges={}, gamebss=None):
     datas |= {n for _, n in syms if n.startswith(gen_asm.DATA_PREFIXES)}
     code = [a for a, n in syms if n not in datas]
     first_code, last_code = min(code), max(code)
-    for (a, n), (b, _) in zip(syms, syms[1:] + [(base + len(data), "")]):
+    pairs = list(zip(syms, syms[1:] + [(base + len(data), "")]))
+    # the targets of the jump tables get global labels (jtgt_XXXXXXXX) for the C tables of asm functions
+    targets = gen_asm.jump_targets(data, [(a, b) for (a, n), (b, _) in pairs if n in datas],
+                                   [(a, b - a) for (a, n), (b, _) in pairs if n not in datas])
+    for (a, n), (b, _) in pairs:
         if any(lo <= a < hi for lo, hi in lib_ranges.values()):
             continue
         if gamebss is not None and a >= gamebss:
@@ -210,7 +214,7 @@ def split(name, data, base, syms, lib_ranges={}, gamebss=None):
         # place), data behind it .data
         sec = ".rdata" if a < first_code else ".data"
         text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code and name.upper() not in ("GAME", "MENU"))) if n in datas
-                else gen_asm.emit_function(md, data, n, a, b - a, names))
+                else gen_asm.emit_function(md, data, n, a, b - a, names, targets))
         open(os.path.join(out, n + ".s"), "w", newline="").write(text.replace("\n", "\r\n"))
 
 
@@ -299,7 +303,7 @@ def main(argv):
         # (main-exe symbols inside the overlay range are not written above, so they count as unknown here)
         known = {n for a, n in main_syms if not (base <= a < base + len(data))} | {n for _, n in syms}
         for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", src_text))):
-            if n not in known:
+            if n not in known and not n.startswith("jtgt_"):  # jump labels come from the asm (gen_asm.jump_label)
                 f.write("%s\tequ\t$%s\n" % (n, addr))
         # library code of the executable is named by its linked objects (SetDrawMove, MulMatrix0, and for the
         # linked library modules open, lseek, _card_load, ...): take those from the executable's link map

@@ -732,5 +732,9 @@ int LoadFtgPolyGT4_800246A0(FtgPrimHeader *hdr, FtgSrcPolyGT4 *src, FtgObject *o
 
 void InitOverlayLoaderTask_80020CB8();
 
+/* the jump table of CountFtgSprites_80022B84 (asm) and its targets, labels in the generated asm */
+extern char jtgt_80022C2C[], jtgt_80022C34[], jtgt_80022C3C[], jtgt_80022C44[], jtgt_80022C4C[], jtgt_80022C54[], jtgt_80022C5C[], jtgt_80022C84[];
+extern void* const dword_8007411C[10];
+
 #endif
 

@@ -243,7 +243,9 @@ void RunActorScript_8001EA48(void* actor)
         cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
-INCLUDE_DATA(dword_8007411C); // the jump table of CountFtgSprites_80022B84 (asm)
+// the jump table of CountFtgSprites_80022B84 (asm; its targets are labels of the generated asm, gen_asm.jump_label):
+// delete it and its externs in model.h when the function is C, the compiler emits it then
+void* const dword_8007411C[10] = { jtgt_80022C34, jtgt_80022C2C, jtgt_80022C34, jtgt_80022C3C, jtgt_80022C4C, jtgt_80022C44, jtgt_80022C4C, jtgt_80022C54, jtgt_80022C5C, jtgt_80022C84 };
 // Matched
 void StopActorScript_8001EFC4(Actor* p)
 {
@@ -1984,7 +1986,7 @@ void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, sho
     *clut = v * 64 + (u >> 4);
 }
 #if 0
-// Not matched (18 lines; its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles). Needs the
+// Not matched (18 lines; its jump table is dword_8007411C: drop that C table when this compiles). Needs the
 // prototype above changed to take unsigned char*: using the parameter itself as the cursor gives the header exactly
 // (c copied to $a3, r a separate copy because q changes before the loads). Left: the type 8/9 cases, where the original
 // keeps a copy P = q (lw 0(P), P + 4 into a fresh register, then q = (P + 4) + k * 20) and a second copy of k for
