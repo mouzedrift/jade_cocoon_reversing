@@ -178,13 +178,13 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
                 SetLargeDigitColor_8002C5D0(0);
             }
             loc3[0] = pos[0] + 0x8C;
-            loc3[1] = pos[1] + a1ftf[i] + 1;
+            loc3[1] = pos[1] + statRowY_80082EE8[i] + 1;
             DrawLargeNumber_8002C100(loc3, stats[i], ot);
             if (delta)
             {
                 SetLargeDigitColor_8002C5D0(0);
                 loc3[0] = pos[0] + 0x8C;
-                loc3[1] = pos[1] + a1ftf[i] + 3;
+                loc3[1] = pos[1] + statRowY_80082EE8[i] + 3;
                 DrawStatDelta_8002E004(loc3, delta, ot);
             }
         }
@@ -194,7 +194,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
         loc4[0] = pos[0] + 0x8C;
         for (j = 0; j < 5; j++)
         {
-            loc4[1] = pos[1] + a1ftf[j] + 1;
+            loc4[1] = pos[1] + statRowY_80082EE8[j] + 1;
             DrawLargeNumber_8002C100(loc4, stats[j], ot);
         }
     }
@@ -230,7 +230,7 @@ void DrawStatDelta_8002E004(unsigned short* p, int delta, int ot)
     DrawSmallNumber3_8002C290(pos, delta, ot);
 }
 extern unsigned char statIcons_80082EBC[];
-extern unsigned char a1ftf[];
+extern unsigned char statRowY_80082EE8[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawStatIcons_8002E0D8(unsigned short* p, short ot)
@@ -240,7 +240,7 @@ void DrawStatIcons_8002E0D8(unsigned short* p, short ot)
     pos[0] = p[0];
     for (i = 0; i < 5; i++)
     {
-        pos[1] = p[1] + a1ftf[i];
+        pos[1] = p[1] + statRowY_80082EE8[i];
         DrawUiTiySprt_8002C06C(pos, statIcons_80082EBC[i], ot);
     }
 }

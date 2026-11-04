@@ -132,10 +132,10 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
     }
     for (k = 0; k < 12; k++)
     {
-        p1.x = aHroto[k].x + base->x;
-        p1.y = aHroto[k].y + base->y;
-        p2.x = aNrutu[k].x + base->x;
-        p2.y = aNrutu[k].y + base->y;
+        p1.x = familyTreeLineFrom_80082DE8[k].x + base->x;
+        p1.y = familyTreeLineFrom_80082DE8[k].y + base->y;
+        p2.x = familyTreeLineTo_80082E18[k].x + base->x;
+        p2.y = familyTreeLineTo_80082E18[k].y + base->y;
         DrawLine_80042870((DVECTOR*)&p1, (DVECTOR*)&p2, (unsigned char*)&color, &pOT_8008D454[ot]);
     }
 }

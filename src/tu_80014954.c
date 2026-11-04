@@ -140,7 +140,7 @@ int statusTintLevel5_8007A0D4[3] = { 0x1F001F, 0xB6D001F, 0xB6D };
 int statusTintLevel6_8007A0E0[3] = { 0x1F001F, 0xDB6001F, 0xDB6 };
 int statusTintLevel7_8007A0EC[3] = { 0x1F001F, 0x1000001F, 0x1000 };
 int statusTintPoison_8007A0F8[3] = { 0x1F0000, 0x8000000, 0x800 };
-int sub_8007A104[3] = { 0x1F000D, 0x249000D, 0x249 };
+int statusTintPoisonLevel1_8007A104[3] = { 0x1F000D, 0x249000D, 0x249 };
 int statusTintPoisonLevel2_8007A110[3] = { 0x1F0010, 0x4920010, 0x492 };
 int statusTintPoisonLevel3_8007A11C[3] = { 0x1F0013, 0x6DB0013, 0x6DB };
 int statusTintPoisonLevel4_8007A128[3] = { 0x1F0016, 0x9240016, 0x924 };
@@ -2927,7 +2927,7 @@ short scrollArrowIcons_8008279C[16] = {
 int elementIcons_800827BC[5] = { 61, 231, 101, 222, 129 };
 int elementIconsUnlit_800827D0[4] = { 80, 95, 204, 121 };
 int dword_800827E0 = 129;
-char aFb[8] = { 10, 0, 9, 0, 70, 0, 66 };
+char portraitWindowRect_800827E4[8] = { 10, 0, 9, 0, 70, 0, 66 };
 unsigned short portraitWindowPos_800827EC[2] = { 13, 9 };
 unsigned char abilityIconsNoType_800827F0[8] = { 81, 62, 41, 199, 63 };
 int dword_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF426A6, 0x47F01FA3 };
@@ -3022,7 +3022,7 @@ MenuItem_1C *abilityListRows_80082D98[6] = { (void *)dword_80082B68, (void *)&dw
 int aKumu[3] = { 0x6B0028, 0x4D0075, 0x8A0075 };
 int dword_80082DBC[4] = { 0x3E00C2, 0x5C00C2, 0x7A00C2, 0x9800C2 };
 Pos16 *familyTreeBoxPos_80082DCC[7] = { (void *)aKumu, (void *)&aKumu[1], (void *)&aKumu[2], (void *)dword_80082DBC, (void *)&dword_80082DBC[1], (void *)&dword_80082DBC[2], (void *)&dword_80082DBC[3] };
-Pos16 aHroto[12] = {
+Pos16 familyTreeLineFrom_80082DE8[12] = {
     { 104, 114 },
     { 111, 84 },
     { 111, 145 },
@@ -3036,7 +3036,7 @@ Pos16 aHroto[12] = {
     { 188, 69 },
     { 188, 129 },
 };
-Pos16 aNrutu[12] = {
+Pos16 familyTreeLineTo_80082E18[12] = {
     { 110, 114 },
     { 117, 84 },
     { 117, 145 },
@@ -3069,7 +3069,7 @@ unsigned char elementChartOrder_80082EB8[4] = { 3, 0, 1, 2 };
 unsigned char statIcons_80082EBC[8] = { 98, 21, 109, 107, 184 };
 char *rankNames_80082EC4[8] = { aApprentice_800743B4, aNovice_800743A4, aAdept_80074398, aImmaculate_80074380, aHero_80074374, aChampion_80074360, aVindicator_80074348, aConqueror_80074334 };
 char *developerRankName_80082EE4 = aDeveloper_80074320;
-unsigned char a1ftf[] = "#1FTf";
+unsigned char statRowY_80082EE8[] = "#1FTf";
 unsigned char elementChartSizes_80082EF0[20] = { 0, 6, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24 };
 unsigned char levantStatRowY_80082F04[8] = { 3, 17, 31, 45, 59 };
 SoundInfo soundFiles_80082F0C[155] =

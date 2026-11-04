@@ -284,7 +284,7 @@ void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
     }
     else if (f & 0x8)
     {
-        tint = (f & 1) ? sub_8007A104 : statusTintLevel1_8007A0A4;
+        tint = (f & 1) ? statusTintPoisonLevel1_8007A104 : statusTintLevel1_8007A0A4;
     }
     else if (f & 1)
     {

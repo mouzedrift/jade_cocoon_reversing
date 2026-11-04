@@ -1405,3 +1405,10 @@ sub_8004D1EC DrawFtgObjectAtSlot0_8004D1EC
 sub_8004D224 GetBonePos_8004D224
 sub_8004D288 GetAnimRootMotion_8004D288
 sub_8004D354 GetAnimBoneRot_8004D354
+
+# --- naming pass: coordinator (cross-TU suggestions) ---
+sub_8007A104 statusTintPoisonLevel1_8007A104
+aFb portraitWindowRect_800827E4
+aHroto familyTreeLineFrom_80082DE8
+aNrutu familyTreeLineTo_80082E18
+a1ftf statRowY_80082EE8

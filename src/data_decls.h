@@ -32,7 +32,7 @@ extern int statusTintLevel5_8007A0D4[];
 extern int statusTintLevel6_8007A0E0[];
 extern int statusTintLevel7_8007A0EC[];
 extern int statusTintPoison_8007A0F8[];
-extern int sub_8007A104[];
+extern int statusTintPoisonLevel1_8007A104[];
 extern int statusTintPoisonLevel2_8007A110[];
 extern int statusTintPoisonLevel3_8007A11C[];
 extern int statusTintPoisonLevel4_8007A128[];
