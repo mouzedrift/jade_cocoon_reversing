@@ -16,7 +16,7 @@ typedef struct CombComTask
 // a menu entry / window (0x38 bytes)
 // DrawMenuWindows_8002A5A4's argument
 extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C
-extern unsigned char byte_800A85BD;
+extern unsigned char actorSlot_800A85BD;
 extern unsigned char dword_800A4078[];
 extern int dword_800A3A88;
 extern int GetSlotMagicBits_800A11BC(int);
@@ -325,15 +325,15 @@ void SetFocusedMinion_800CBAD4(int state)
 {
     if ((state & 0xFF) != 3)
     {
-        byte_800A85BD = dword_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = dword_800A4078[side_800CD839 * 4];
     }
     else if (targetFlags_800CD844 & 5)
     {
-        byte_800A85BD = dword_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = dword_800A4078[side_800CD839 * 4];
     }
     else
     {
-        byte_800A85BD = targetSlotLo_800CD83C;
+        actorSlot_800A85BD = targetSlotLo_800CD83C;
     }
 }
 
@@ -423,7 +423,7 @@ void DrawPauseMenu_800CBCA0()
     DrawMenuWindows_8002A5A4(&m);
 }
 
-extern unsigned char byte_800A84A8;
+extern unsigned char exchangeFlags_800A84A8;
 extern int DrawAbilityDescription_8002C670();
 extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, void* a1);
 extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, void* a1);
@@ -516,11 +516,11 @@ void DrawCmdMenu_800CBEA4()
     }
     if (stateDrawFlags_800CD820[menuState_800CD83A][k] & 1)
     {
-        byte_800A84A8 |= 0xC;
+        exchangeFlags_800A84A8 |= 0xC;
     }
     else
     {
-        byte_800A84A8 &= 0xF3;
+        exchangeFlags_800A84A8 &= 0xF3;
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 4))
     {
@@ -998,7 +998,7 @@ void CmdMenuMessage_800CD0C8()
     }
 }
 
-extern unsigned char byte_800A84A8;
+extern unsigned char exchangeFlags_800A84A8;
 extern int UpdateMenuCursor_8003D794(void* p, int a1);
 extern void DrawCmdMenu_800CBEA4();
 // The menu event: state 4 = command complete, Start opens the pause menu (state 5)
@@ -1017,7 +1017,7 @@ void CmdMenuTask_800CD16C(EventEntry* e, void* buf)
     inputHandlers_800CD818[msgShown_800CD838](e, buf);
     if (menuState_800CD83A == 4)
     {
-        byte_800A84A8 &= 0xF3;
+        exchangeFlags_800A84A8 &= 0xF3;
         FinishCmd_800CC9FC();
         word_800A82D0 = 0;
         word_800A82D2 = 0;
