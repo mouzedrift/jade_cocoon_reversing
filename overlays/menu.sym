@@ -3,6 +3,7 @@ jpt_800BB9C8=0x800bb9c8; // jump table of sub_800BE294
 dword_800BBA04=0x800bba04; // data behind the jump table
 jpt_800BBA08=0x800bba08; // jump table of sub_800BE38C
 dword_800BBA44=0x800bba44; // data behind the jump table
+jpt_800BBA80=0x800bba80; // jump table of sub_800BE4A0
 jpt_800BBAC8=0x800bbac8; // jump table of sub_800BEAE0
 dword_800BBB04=0x800bbb04; // data behind the jump table
 jpt_800BBB08=0x800bbb08; // jump table of sub_800BF540
