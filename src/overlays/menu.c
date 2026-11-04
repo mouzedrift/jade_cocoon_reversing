@@ -1004,17 +1004,18 @@ extern int GetRankName_8002FCD8();
 // Not matched: frame/stack layout matches, but saved-register assignment differs (the 0x80
 // constant, &r, 1 and the pOT/b*4 values are rotated by one s-register) and the brightness uses
 // -0x80 - x instead of 0x80 - x
-#if 0
+// Draws the Levant rank-up panel (portrait, name, old/new rank name with fade)
+// Matched
 void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
 {
     short pos[2];
     RECT r;
     MenuWinColor col;
     MenuWinColor col2;
-    short t[2];
-    short t2[2];
     int ra;
     int rb;
+    UnitStatus* lev;
+    int x;
     pos[0] = 0x80;
     pos[1] = 0x36;
     DrawPortrait_8002A42C(pos, 0, 0, b);
@@ -1030,7 +1031,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
     pos[1] = 0x80;
     DrawUiTiySprt_8002C06C(pos, 0x11, 0xE);
     pos[0] = 0x81;
-    pos[1] = 0x81;
+    pos[1] = x = 0x81;
     DrawLargeText_8002FBD8(0, pos, saveData_8008B570.levantStatus_7C8.name_10, b);
     r.x = 0x5C;
     r.y = 0x7B;
@@ -1040,37 +1041,44 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
     col2.semiTrans_3 = 1;
     col2.col = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
+    lev = &saveData_8008B570.levantStatus_7C8;
     ra = GetLevelRank_800121A8(result->oldStatus_1AC[0].level_44);
-    rb = GetLevelRank_800121A8(levantStatus_8008BD38.level_44);
+    rb = GetLevelRank_800121A8(lev->level_44);
+    {
+    short t[2];
     if (ra < rb)
     {
         if (result->fadeIn_48)
         {
             SetSemiTrans(&fonts_80095FB0[2], 1);
-            t[0] = 0x81;
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - result->fade_46;
+            t[0] = x;
             t[1] = 0x99;
-            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - (unsigned char)result->fade_46;
             DrawText_8003E91C(2, GetRankName_8002FCD8(ra), t, b);
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80;
+            SetSemiTrans(&fonts_80095FB0[2], 0);
         }
         else
         {
+            short t2[2];
             SetSemiTrans(&fonts_80095FB0[2], 1);
-            t2[0] = 0x81;
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - result->fade_46;
+            t2[0] = x;
             t2[1] = 0x99;
-            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80 - (unsigned char)result->fade_46;
             DrawText_8003E91C(2, GetRankName_8002FCD8(rb), t2, b);
+            fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80;
+            SetSemiTrans(&fonts_80095FB0[2], 0);
         }
-        fonts_80095FB0[2].r_4 = fonts_80095FB0[2].g_5 = fonts_80095FB0[2].b_6 = 0x80;
-        SetSemiTrans(&fonts_80095FB0[2], 0);
     }
     else
     {
-        t[0] = 0x81;
+        t[0] = x;
         t[1] = 0x99;
         DrawText_8003E91C(2, GetRankName_8002FCD8(rb), t, b);
     }
+    }
     {
-        MenuWinColor* col3 = (MenuWinColor*)t;
+        MenuWinColor col3;
         pos[0] = 0x61;
         pos[1] = 0x99;
         DrawUiTiySprt_8002C06C(pos, 0xC2, 0xE);
@@ -1078,14 +1086,12 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
         r.y = 0x93;
         r.w = 0x89;
         r.h = 0x15;
-        col3->colorSet_2 = 0;
-        col3->semiTrans_3 = 1;
-        col3->col = uiColor_8008B590;
-        DrawWindow_80042460(&r, col3, &pOT_8008D454[b], 0);
+        col3.colorSet_2 = 0;
+        col3.semiTrans_3 = 1;
+        col3.col = uiColor_8008B590;
+        DrawWindow_80042460(&r, &col3, &pOT_8008D454[b], 0);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(menu, DrawLevantRankUp_800BCB98);
 
 void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status, short unit)
 {

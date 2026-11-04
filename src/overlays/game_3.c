@@ -2606,25 +2606,12 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 }
 
 
-#if 0
-// Not matched (3 words short), one block differs: case 16 passes the matched constant (in $v0) as
-// SetLevantAnim_800AB010's third argument where this C reloads s1c (so the compare delay slots get filled); tried a
-// switch, a local for s1c, the inverted test and other f0 forms. The prototypes below change the code of matched
-// callers further down (settle them before enabling this); GetLevantAnimFlags_800AC900 returns int (its result is tested as a short).
-// Enabling: drop the C table jpt_800A07A8 below.
-extern short effectOutcomeFlag_8008D780;
-void PlayLevantActionEffect_800AA430(GameLevantActor* p);
-unsigned short GetLevantAnimEventFrameCur_800AB170(int a);
-void RequestLevantActionEffect_800ABCF4(GameLevantActor* p);
-void RunLevantActionCues_800ABDF0(GameLevantActor* a);
-int LoadLevantAnimById_800AC604(int a, int b);
-int AreLevantFilesLoaded_800AC768();
-short GetLevantAnimLoopStart_800AC834(int a, int b);
-short GetLevantAnimLoopEnd_800AC878(int a, int b);
-unsigned short GetLevantAnimLastFrame_800AC8BC(int a, int b);
-int GetLevantAnimFlags_800AC900(int a, int b);
+unsigned short GetLevantAnimEventFrameCur_800AB170(int anim);
+// Levant battle action state machine (per action_8 state)
+// Matched
 void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
 {
+    unsigned short GetLevantAnimLastFrame_800AC8BC(int a, int b);
     short animFlags;
     switch (lev->action_8)
     {
@@ -2755,10 +2742,15 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
         break;
     case 16:
         RunLevantActionCues_800ABDF0(lev);
-        if (lev->anim_1C == 0x13 || lev->anim_1C == 0x18)
+        if (lev->anim_1C == 0x13)
         {
             lev->flags_0 = (lev->flags_0 & ~1) | 0x800;
-            SetLevantAnim_800AB010(lev, 0x14, lev->anim_1C, 0);
+            SetLevantAnim_800AB010(lev, 0x14, 0x13, 0);
+        }
+        else if (lev->anim_1C == 0x18)
+        {
+            lev->flags_0 = (lev->flags_0 & ~1) | 0x800;
+            SetLevantAnim_800AB010(lev, 0x14, 0x18, 0);
         }
         else
         {
@@ -2874,11 +2866,6 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, UpdateLevantBattleAction_800AA51C);
-// the jump table of UpdateLevantBattleAction_800AA51C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in game.h when the function is C, the switch emits it then
-void* const jpt_800A07A8[14] = { jtgt_800AA564, jtgt_800AA604, jtgt_800AA584, jtgt_800AA638, jtgt_800AA710, jtgt_800AA770, jtgt_800AA7C0, jtgt_800AA8BC, jtgt_800AA998, jtgt_800AA92C, jtgt_800AAB90, jtgt_800AABEC, jtgt_800AAC94, jtgt_800AACC8 };
 
 // PLDISP.C's assertion strings (after the jump table of UpdateLevantBattleAction_800AA51C)
 const char aAssertionFailed_800A07E0[] = "Assertion failed: file \"%s\", line %d\n";

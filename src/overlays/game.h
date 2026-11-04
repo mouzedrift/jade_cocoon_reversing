@@ -1608,6 +1608,4 @@ extern char jtgt_800A7E18[], jtgt_800A7E48[], jtgt_800A7E78[], jtgt_800A7EC8[], 
 extern void* const dword_800A06B8[14];
 
 /* the jump table of UpdateLevantBattleAction_800AA51C (asm) and its targets, labels in the generated asm */
-extern char jtgt_800AA564[], jtgt_800AA584[], jtgt_800AA604[], jtgt_800AA638[], jtgt_800AA710[], jtgt_800AA770[], jtgt_800AA7C0[], jtgt_800AA8BC[], jtgt_800AA92C[], jtgt_800AA998[], jtgt_800AAB90[], jtgt_800AABEC[], jtgt_800AAC94[], jtgt_800AACC8[];
-extern void* const jpt_800A07A8[14];
 extern GameActionFrames StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c);
