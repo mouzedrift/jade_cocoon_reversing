@@ -6,7 +6,7 @@ typedef struct
     short s[8];
 } Block16;
 
-// the initialiser of sub_8002B1B0's local
-extern const Block16 dword_800741C4;
+// the initialiser of DrawElementIconsRow_8002B1B0's local
+extern const Block16 elementIconRowOffsets_800741C4;
 
 #endif

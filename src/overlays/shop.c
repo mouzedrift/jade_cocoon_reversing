@@ -463,7 +463,7 @@ int sub_800B9E94(UnitStats* src, Minion* dst, short c)
     dst->id = c;
     for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
+        CopyName_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
         dst->field_7C[i] = src->st_0.elementMask_42;
     }
     r = LowestSetBit_80014358(src->st_0.elementMask_42);
@@ -1009,15 +1009,15 @@ void sub_800BAB38(Minion* a, Minion* b)
         }
     }
     MemCopy_800403E8(a->species_4C, tmp, 0x30);
-    sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
-    sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
-    sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
-    sub_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
-    sub_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
-    sub_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
+    CopyName_80019AF4(e, (unsigned int*)a->status_84.name_10);
+    CopyName_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
+    CopyName_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
+    CopyName_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
+    CopyName_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
+    CopyName_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
     for (j = 0; j < 6; j++)
     {
-        sub_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
+        CopyName_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
     }
     g[0] = a->status_84.elementMask_42;
     g[1] = b->status_84.elementMask_42;
@@ -1970,10 +1970,10 @@ typedef struct ShopPairShop
     short a;
     short b;
 } ShopPairShop;
-extern void sub_8002B3DC(ShopPairShop p, int b, void* c, int d);
+extern void DrawScrollArrow_8002B3DC(ShopPairShop p, int b, void* c, int d);
 extern int IsCircleHeldP1_8003D480(void);
 extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
-extern void sub_8002A4E4(int a);
+extern void DrawPortraitWindow_8002A4E4(int a);
 extern void DrawTextList_8002A310(void* p, int a);
 extern void sub_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
@@ -2043,7 +2043,7 @@ void sub_800BC380(ShopUnit3Shop* u)
     }
     if (!(u->field_24 & 0x1000))
     {
-        sub_8002A4E4(0xE);
+        DrawPortraitWindow_8002A4E4(0xE);
         DrawTextList_8002A310(name_800BF7C8, 0xE);
         sub_800429F8((int)&name_800BF798, 0xE);
         sub_80042B38((int)&name_800BF798, 0xE);
@@ -2246,9 +2246,9 @@ void sub_800BC380(ShopUnit3Shop* u)
                     p48.a = 0;
                     p48.b = 0;
                     p50.y = 0x55;
-                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
                     p50.x = 0xFA;
-                    sub_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
+                    DrawScrollArrow_8002B3DC(p48, frameCount_8008D3FC, &p50, 0xE);
                 }
             }
         if (i == 6)
@@ -3394,7 +3394,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
             p.b = 1;
             pos1.a = 0x52;
             pos1.b = 0xCB;
-            sub_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
+            DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, &pos1, 0xE);
         }
         if ((short)base != 0)
         {
@@ -3402,7 +3402,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
             p.b = 3;
             pos2.a = 0x52;
             pos2.b = 0xA2;
-            sub_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
+            DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, &pos2, 0xE);
         }
     }
 }
@@ -3686,7 +3686,7 @@ void sub_800BF02C(Minion* a, int* o, int c)
             o[6] = t;
         }
     }
-    o[7] = sub_80019A80(a->status_84.level_44);
+    o[7] = GetRankForLevel_80019A80(a->status_84.level_44);
     o[8] = o[0] - 1;
     o[10] = sub_80019C70(a->field_3)->modelId_0;
     o[12] = c;

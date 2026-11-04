@@ -280,7 +280,7 @@ extern CombComMenu name_800CB5D0;
 extern short word_800CD2D0;
 extern unsigned short uiColor_8008B590;
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_8002ADB4(void* a, void* b, int c, int d);
+extern void DrawMenuItemWithWindow_8002ADB4(void* a, void* b, int c, int d);
 extern void DrawMenuWindows_8002A5A4(void* p);
 void sub_800CBCA0()
 {
@@ -303,7 +303,7 @@ void sub_800CBCA0()
     col.color = uiColor_8008B590;
     col.a = 0;
     col.b = 1;
-    sub_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
     m.time_4 = GetTime30Hz_8002C64C();
     m.items_10 = list;
     m.sel_C = word_800CD2D0;

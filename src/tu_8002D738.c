@@ -69,7 +69,7 @@ extern const CVECTOR dword_800743CC;
 extern void sub_80033864(Minion* m, unsigned char* out);
 extern short sub_8002F424(unsigned char* p);
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
-extern void sub_8002B1B0(short a, int b, int c);
+extern void DrawElementIconsRow_8002B1B0(short a, int b, int c);
 extern void DrawUiWindow_8002A384(struct_D7D0* p);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 #if 0
@@ -123,7 +123,7 @@ void sub_8002D7D0(Minion* m, int ot, Pos16* base)
             w = sub_80033848(m, i - 1);
 
         }
-        sub_8002B1B0(w, (int)pp, ot);
+        DrawElementIconsRow_8002B1B0(w, (int)pp, ot);
         s.field_8 = 0;
         s.rect = (int)&rect;
         s.ot = ot;

@@ -71,7 +71,7 @@ typedef struct GameSlot_1
     GameEnemy data_8;
 } GameSlot_1;
 
-extern void sub_80019B14(short* p, unsigned short* a1, unsigned short* a2);
+extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short dword_80079140[]; // default bone table
 extern short* dword_800ADE9C[]; // angle offsets around Levant per group size
 extern GameEnemy* sub_800A5F6C(void);
@@ -288,9 +288,9 @@ typedef struct GameSub_1
 } GameSub_1;
 
 
-extern void sub_80018EBC(Actor* a, UnitStatus* b);
+extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
 
-extern void sub_80018E5C(Actor* a, int b);
+extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 extern void sub_8001D760(Actor* a, int b, int c, int d);
 
@@ -997,35 +997,35 @@ extern void sub_8004ED78(int);
 
 extern int sub_8003B9E0(int*, int*);
 
-extern G2V12 dword_8007A0A4;
+extern G2V12 statusTintLevel1_8007A0A4;
 
-extern G2V12 dword_8007A0B0;
+extern G2V12 statusTintLevel2_8007A0B0;
 
-extern G2V12 dword_8007A0BC;
+extern G2V12 statusTintLevel3_8007A0BC;
 
-extern G2V12 dword_8007A0C8;
+extern G2V12 statusTintLevel4_8007A0C8;
 
-extern G2V12 dword_8007A0D4;
+extern G2V12 statusTintLevel5_8007A0D4;
 
-extern G2V12 dword_8007A0E0;
+extern G2V12 statusTintLevel6_8007A0E0;
 
-extern G2V12 dword_8007A0EC;
+extern G2V12 statusTintLevel7_8007A0EC;
 
-extern G2V12 dword_8007A0F8;
+extern G2V12 statusTintPoison_8007A0F8;
 
 extern G2V12 dword_8007A104;
 
-extern G2V12 dword_8007A110;
+extern G2V12 statusTintPoisonLevel2_8007A110;
 
-extern G2V12 dword_8007A11C;
+extern G2V12 statusTintPoisonLevel3_8007A11C;
 
-extern G2V12 dword_8007A128;
+extern G2V12 statusTintPoisonLevel4_8007A128;
 
-extern G2V12 dword_8007A134;
+extern G2V12 statusTintPoisonLevel5_8007A134;
 
-extern G2V12 dword_8007A140;
+extern G2V12 statusTintPoisonLevel6_8007A140;
 
-extern G2V12 dword_8007A14C;
+extern G2V12 statusTintPoisonLevel7_8007A14C;
 
 extern G2V12 dword_8007A164;
 

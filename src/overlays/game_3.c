@@ -3157,55 +3157,55 @@ void sub_800ABECC()
     if (f & 0x200)
     {
         if (f & 1)
-            r = &dword_8007A14C;
+            r = &statusTintPoisonLevel7_8007A14C;
         else
-            r = &dword_8007A0EC;
+            r = &statusTintLevel7_8007A0EC;
     }
     else if (f & 0x100)
     {
         if (f & 1)
-            r = &dword_8007A140;
+            r = &statusTintPoisonLevel6_8007A140;
         else
-            r = &dword_8007A0E0;
+            r = &statusTintLevel6_8007A0E0;
     }
     else if (f & 0x80)
     {
         if (f & 1)
-            r = &dword_8007A134;
+            r = &statusTintPoisonLevel5_8007A134;
         else
-            r = &dword_8007A0D4;
+            r = &statusTintLevel5_8007A0D4;
     }
     else if (f & 0x40)
     {
         if (f & 1)
-            r = &dword_8007A128;
+            r = &statusTintPoisonLevel4_8007A128;
         else
-            r = &dword_8007A0C8;
+            r = &statusTintLevel4_8007A0C8;
     }
     else if (f & 0x20)
     {
         if (f & 1)
-            r = &dword_8007A11C;
+            r = &statusTintPoisonLevel3_8007A11C;
         else
-            r = &dword_8007A0BC;
+            r = &statusTintLevel3_8007A0BC;
     }
     else if (f & 0x10)
     {
         if (f & 1)
-            r = &dword_8007A110;
+            r = &statusTintPoisonLevel2_8007A110;
         else
-            r = &dword_8007A0B0;
+            r = &statusTintLevel2_8007A0B0;
     }
     else if (f & 8)
     {
         if (f & 1)
             r = &dword_8007A104;
         else
-            r = &dword_8007A0A4;
+            r = &statusTintLevel1_8007A0A4;
     }
     else if (f & 1)
     {
-        r = &dword_8007A0F8;
+        r = &statusTintPoison_8007A0F8;
     }
     TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, r);
 }

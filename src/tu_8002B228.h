@@ -3,7 +3,7 @@
 
 #include "tu_8002AAF0.h" // Block16
 
-// the initialiser of sub_8002B228's local
-extern const Block16 dword_800741D4;
+// the initialiser of DrawElementIconsGrid_8002B228's local
+extern const Block16 elementIconGridOffsets_800741D4;
 
 #endif

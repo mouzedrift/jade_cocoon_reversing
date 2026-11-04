@@ -724,7 +724,7 @@ void sub_800BC9E8(MenuMain* p)
     }
 }
 
-extern void sub_8002A42C(short* p, int a, int b, short c);
+extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
 extern void DrawLargeText_8002FBD8();
 extern int GetRankName_8002FCD8();
 // Not matched: frame/stack layout matches, but saved-register assignment differs (the 0x80
@@ -743,7 +743,7 @@ void sub_800BCB98(MenuMain* c, int b)
     int rb;
     pos[0] = 0x80;
     pos[1] = 0x36;
-    sub_8002A42C(pos, 0, 0, b);
+    DrawPortrait_8002A42C(pos, 0, 0, b);
     r.x = 0x7E;
     r.y = 0x34;
     r.w = 0x44;
@@ -1100,11 +1100,11 @@ extern MenuBox7 name_800BB9A4;
 extern int name_800C2980;
 extern char name_800C2958[];
 extern unsigned short padRepeat_800918CC;
-extern void sub_8002ADB4();
+extern void DrawMenuItemWithWindow_8002ADB4();
 extern void DrawMinionListPage_800BDBFC(char* a, int page);
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
-extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 void MinionListScreen_800BD80C(MenuTask* t, char* a)
 {
     MenuCol col;
@@ -1135,7 +1135,7 @@ void MinionListScreen_800BD80C(MenuTask* t, char* a)
     col.col = uiColor_8008B590;
     col.c_2 = 0;
     col.c_3 = 1;
-    sub_8002ADB4(&box, &col, 0xA, 0);
+    DrawMenuItemWithWindow_8002ADB4(&box, &col, 0xA, 0);
     r.x = 0xA;
     r.y = 0x10;
     r.w = 0x58;
@@ -1184,10 +1184,10 @@ void MinionListScreen_800BD80C(MenuTask* t, char* a)
     pr.b = 2;
     p2[0] = 8;
     p2[1] = 0x7A;
-    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
     pr.b = 0;
     p2[0] = 0x138;
-    sub_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
+    DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, p2, 0xE);
     SetFontClutOffset_8003F900(1, 0);
     DrawButtonHelpBar_8002B004(name_800C2958, 0, 0xF);
     DrawMenuBackground_8002BE10();
@@ -2643,7 +2643,7 @@ typedef struct MenuCell
     unsigned short h;
 } MenuCell;
 extern MenuCell name_800C18EC;
-extern void sub_8002B3DC(MenuPair p, int t, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 typedef struct MenuItemGrid
 {
     char pad_0[0xC];
@@ -2697,7 +2697,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
         pr.b = 3;
         pa[0] = 0xA0;
         pa[1] = 0x2D;
-        sub_8002B3DC(pr, frameCount_8008D3FC, pa, 0xE);
+        DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, pa, 0xE);
     }
     if (c->scroll_3C < max)
     {
@@ -2705,7 +2705,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
         pr.b = 1;
         pb[0] = 0xA0;
         pb[1] = 0xC4;
-        sub_8002B3DC(pr, frameCount_8008D3FC, pb, 0xE);
+        DrawScrollArrow_8002B3DC(pr, frameCount_8008D3FC, pb, 0xE);
     }
 }
 

@@ -21,24 +21,24 @@ extern const char name[];
 
 extern const char aAssertionFaile_3[];
 extern const char aEffectC[];
-extern unsigned char dword_8007C2E4[];
+extern unsigned char rankLevelThresholds_8007C2E4[];
 extern short sinTable_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
 extern const struct_u8x4 orangeGlowColor_80072270;
-extern int dword_8007A0A4[];
-extern int dword_8007A0B0[];
-extern int dword_8007A0BC[];
-extern int dword_8007A0C8[];
-extern int dword_8007A0D4[];
-extern int dword_8007A0E0[];
-extern int dword_8007A0EC[];
-extern int dword_8007A0F8[];
+extern int statusTintLevel1_8007A0A4[];
+extern int statusTintLevel2_8007A0B0[];
+extern int statusTintLevel3_8007A0BC[];
+extern int statusTintLevel4_8007A0C8[];
+extern int statusTintLevel5_8007A0D4[];
+extern int statusTintLevel6_8007A0E0[];
+extern int statusTintLevel7_8007A0EC[];
+extern int statusTintPoison_8007A0F8[];
 extern int sub_8007A104[];
-extern int dword_8007A110[];
-extern int dword_8007A11C[];
-extern int dword_8007A128[];
-extern int dword_8007A134[];
-extern int dword_8007A140[];
-extern int dword_8007A14C[];
-extern const struct_int3 dword_8007303C; // three bit masks (0x8007303C..0x80073047)
+extern int statusTintPoisonLevel2_8007A110[];
+extern int statusTintPoisonLevel3_8007A11C[];
+extern int statusTintPoisonLevel4_8007A128[];
+extern int statusTintPoisonLevel5_8007A134[];
+extern int statusTintPoisonLevel6_8007A140[];
+extern int statusTintPoisonLevel7_8007A14C[];
+extern const struct_int3 boneGroupMasks_8007303C; // three bit masks (0x8007303C..0x80073047)
 
 #endif

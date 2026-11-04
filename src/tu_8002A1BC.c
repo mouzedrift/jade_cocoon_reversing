@@ -20,7 +20,7 @@
 #include "tu_80014954.h"
 #include "main.h"
 
-const char dword_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
+const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
 const char aDescription_80074178[] = "\202c\202\205\202\223\202\203\202\222\202\211\202\220\202\224\202\211\202\217\202\216"; // Description
 const char aYes_80074190[] = "\202x\202\205\202\223"; // Yes
@@ -141,32 +141,32 @@ short GetMagicElementIcon_8002A3E0(int a)
 extern void sub_800A61CC(int a, void* b, void* c);
 extern void AddDrawAreaPrim_8003326C(int a, void* b);
 // Matched
-void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
+void DrawPortrait_8002A42C(unsigned short* pos, short id, int drawArea, short ot)
 {
     unsigned short buf1[10];
     char buf2[8];
-    sub_800A61CC(a1, buf1, buf2);
+    sub_800A61CC(id, buf1, buf2);
     buf1[4] = pos[0];
     buf1[5] = pos[1];
-    AddPrimCopy_80040298(pOT_8008D454 + a3, buf1, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + a3, buf2, 2);
-    if (a2)
+    AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + ot, buf2, 2);
+    if (drawArea)
     {
-        AddDrawAreaPrim_8003326C(a2, &pOT_8008D454[a3]);
+        AddDrawAreaPrim_8003326C(drawArea, &pOT_8008D454[ot]);
     }
 }
 // Matched
-void sub_8002A4E4(short a0)
+void DrawPortraitWindow_8002A4E4(short ot)
 {
     unsigned short buf1[10];
     char buf2[8];
-    sub_80042B38((int)aFb, a0);
+    sub_80042B38((int)aFb, ot);
     sub_800A61CC(1, buf1, buf2);
-    buf1[4] = dword_800827EC[0];
-    buf1[5] = dword_800827EC[1];
-    AddPrimCopy_80040298(pOT_8008D454 + a0, buf1, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + a0, buf2, 2);
-    sub_800429F8((int)aFb, a0);
+    buf1[4] = portraitWindowPos_800827EC[0];
+    buf1[5] = portraitWindowPos_800827EC[1];
+    AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + ot, buf2, 2);
+    sub_800429F8((int)aFb, ot);
 }
 
 typedef struct
@@ -187,7 +187,7 @@ typedef struct
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern void AddClipDrawAreaPrim_80033308(void* a);
 extern void DrawMenuWindowContents_8002A710(void* a, int b);
-extern void sub_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
+extern void DrawMenuItemWindow_8002AAF0(struct_A5A4* p, int i, int j, RECT* r);
 // Matched
 void DrawMenuWindows_8002A5A4(struct_A5A4* p)
 {
@@ -202,7 +202,7 @@ void DrawMenuWindows_8002A5A4(struct_A5A4* p)
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + p->field_14);
             DrawMenuWindowContents_8002A710(&p->field_10[i][j], p->field_14);
             AddDrawAreaPrim_8003326C((int)&r, pOT_8008D454 + p->field_14);
-            sub_8002AAF0(p, i, j, &r);
+            DrawMenuItemWindow_8002AAF0(p, i, j, &r);
         }
     }
     SetFontClutOffset_8003F900(2, 0);

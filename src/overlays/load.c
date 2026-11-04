@@ -264,7 +264,7 @@ typedef struct
 } Row16_LOAD;
 extern Row16_LOAD stru_800BDF4C[];
 extern void ResetMenuRow_800BADE0(Row16_LOAD* p);
-extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
+extern void DrawScrollArrows_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
 void sub_800B8BD4(LoadTask_LOAD* t);
 extern void PlaySfx_80031494(int a);
 extern void WaitCardSync_800BADF4(void);
@@ -861,7 +861,7 @@ void sub_800B867C(LoadTask_LOAD* t)
     r0[1] = 0x2C;
     r0[2] = 0x9A;
     r0[3] = 0xB7;
-    sub_8002B8DC(q, r1, r0, 1);
+    DrawScrollArrows_8002B8DC(q, r1, r0, 1);
 }
 
 void sub_800B877C(LoadTask_LOAD* t)

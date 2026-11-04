@@ -17,12 +17,12 @@
 #include "data_decls.h"
 #include "tu_8002B228.h"
 
-const Block16 dword_800741D4 = { { 14, 0, 14, 14, 0, 14 } };
+const Block16 elementIconGridOffsets_800741D4 = { { 14, 0, 14, 14, 0, 14 } };
 
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched
-void sub_8002B228(short a, int b, int c)
+void DrawElementIconsGrid_8002B228(short mask, int pos, int ot)
 {
-    Block16 local = dword_800741D4;
-    DrawElementIcons_8002B2A4(a, b, c, &local, 1);
+    Block16 local = elementIconGridOffsets_800741D4;
+    DrawElementIcons_8002B2A4(mask, pos, ot, &local, 1);
 }

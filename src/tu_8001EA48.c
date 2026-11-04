@@ -3994,7 +3994,7 @@ int sub_80027358(int id)
         }
         sub_8002728C();
         ConsumeFileRequest_8003BFD0(p[1], 0);
-        sub_80028DC0();
+        InitRoomCamera_80028DC0();
         saveData_8008B570.mapId_2E4[3].field_0 = id;
         saveData_8008B570.mapId_2E4[3].field_2 = id;
         dword_80082678 = 0;
@@ -4441,7 +4441,7 @@ void sub_80028388(EventEntry* p, int* q)
 }
 extern int sub_800A6D50(int a0);
 extern int dword_800B1228;
-extern void sub_80028C60();
+extern void OnRoomDataLoaded_80028C60();
 // Matched
 void sub_800283C0(void* a0, int* a)
 {
@@ -4473,7 +4473,7 @@ void sub_800283C0(void* a0, int* a)
             req.dest_10 = 0;
             req.params_14 = 0;
             req.paramsSize_18 = 0;
-            req.callback_1C = sub_80028C60;
+            req.callback_1C = OnRoomDataLoaded_80028C60;
             a1[1] = QueueFileRequest_8003BC84(&req);
             dword_80082678 = 1;
             word_80091C40[1] = word_80091C40[0];
@@ -4505,7 +4505,7 @@ void sub_800283C0(void* a0, int* a)
                 req2.dest_10 = 0;
                 req2.params_14 = 0;
                 req2.paramsSize_18 = 0;
-                req2.callback_1C = sub_80028C60;
+                req2.callback_1C = OnRoomDataLoaded_80028C60;
                 a1[1] = QueueFileRequest_8003BC84(&req2);
             }
             word_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
@@ -4542,7 +4542,7 @@ void sub_800283C0(void* a0, int* a)
         {
             dword_80082670 = 0;
             dword_80082668 = 0;
-            sub_80028DC0();
+            InitRoomCamera_80028DC0();
             sub_80027478(4, 0);
             a1[0] = 0;
         }

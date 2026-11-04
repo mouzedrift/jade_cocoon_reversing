@@ -1,7 +1,7 @@
 #ifndef _TU_8002A1BC_H_
 #define _TU_8002A1BC_H_
 
-extern const char dword_8007415C[];
+extern const char aQuit_8007415C[];
 extern const char aSelect_80074168[];
 extern const char aDescription_80074178[];
 extern const char aYes_80074190[];

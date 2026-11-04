@@ -17,7 +17,7 @@ typedef struct CombRsltBox
     char c_3;
 } CombRsltBox;
 
-// sub_8002ADB4's text window (0x1C bytes)
+// DrawMenuItemWithWindow_8002ADB4's text window (0x1C bytes)
 typedef struct CombRsltText
 {
     unsigned short flags_0;
@@ -32,7 +32,7 @@ typedef struct CombRsltText
 extern CombRsltText dword_800A408C;
 extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
-extern void sub_8002ADB4(void*, void*, int, int);
+extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 extern void DrawButtonHelpBar_8002B004(void*, int, int);
 extern void sub_800A41E4();
 extern void DrawSmallNumber3_8002C290(void*, int, int);
@@ -52,7 +52,7 @@ void sub_800A40E0(CombRsltTask* t)
     box.c_2 = 0;
     box.c_3 = 1;
     box.col_0 = uiColor_8008B590;
-    sub_8002ADB4(&str, &box, 0xF, 0);
+    DrawMenuItemWithWindow_8002ADB4(&str, &box, 0xF, 0);
     for (i = 0; i < 2; i++)
     {
         sub_800A4240(i);
@@ -114,12 +114,12 @@ void sub_800A4240(int i)
     }
     box.col_0 = uiColor_8008B590;
     box.c_3 = 1;
-    sub_8002ADB4(dword_800A4830[i], &box, 0xF, GetTime30Hz_8002C64C());
-    sub_8002ADB4(dword_800A4870[i], &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(dword_800A4830[i], &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(dword_800A4870[i], &box, 0xF, GetTime30Hz_8002C64C());
     pos[0] = dword_800A48B0[i][8];
     pos[1] = dword_800A48B0[i][9];
     sub_800A444C(pos, 0xF, byte_800A3A90[i ^ 1], byte_800A3A90[i]);
-    sub_8002ADB4(dword_800A48B0[i], &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(dword_800A48B0[i], &box, 0xF, GetTime30Hz_8002C64C());
     j = 0;
     u = byte_800A3A98[i];
     if (u < 3 && u != 0)
@@ -224,7 +224,7 @@ void sub_800A4554(int i, int j, void* arg)
         q = dword_800A48C4 + j + i * 3;
         a.x_10 = q->x;
         a.y_12 = q->y;
-        sub_8002ADB4(&a, arg, 0xF, GetTime30Hz_8002C64C());
+        DrawMenuItemWithWindow_8002ADB4(&a, arg, 0xF, GetTime30Hz_8002C64C());
         b = dword_800A40C4;
         b.x_10 = q->x + 0x32;
         b.y_12 = q->y;
@@ -235,7 +235,7 @@ void sub_800A4554(int i, int j, void* arg)
             sub_8002F078(e + 0x84, &r1, 0, 0xF);
             b.s_2 = 0;
         }
-        sub_8002ADB4(&b, arg, 0xF, GetTime30Hz_8002C64C());
+        DrawMenuItemWithWindow_8002ADB4(&b, arg, 0xF, GetTime30Hz_8002C64C());
         r2.x = q->x;
         r2.y = q->y + 0x14;
         sub_800A1844(e, &r2, a.flags_0);
