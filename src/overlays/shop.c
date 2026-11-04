@@ -1084,7 +1084,9 @@ void SwapMinions_800BAEDC(Minion* first, Minion* second)
     MemCopy_800403E8(second, t1, 0xF8);
 }
 
-#if 0 // near miss: orig jumps from the b==3 case into the b==4 copy of the *a = 3 store (cross-jump)
+// Exchange two minions between the party/storage lists, fixing up their list kinds (2/3/4) first; each case calls SwapMinions
+// itself (the separate calls are what lets jump2 cross-jump the *first = 3 stores)
+// Matched
 int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList)
 {
     if (*first == 3)
@@ -1098,6 +1100,7 @@ int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short
         {
             *first = 2;
         }
+        SwapMinions_800BAEDC(first, second);
     }
     else if (*first == 2)
     {
@@ -1110,6 +1113,7 @@ int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short
         {
             *first = 3;
         }
+        SwapMinions_800BAEDC(first, second);
     }
     else if (*first == 4)
     {
@@ -1127,17 +1131,10 @@ int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short
                 *second = 2;
             }
         }
+        SwapMinions_800BAEDC(first, second);
     }
-    else
-    {
-        goto end;
-    }
-    SwapMinions_800BAEDC(first, second);
-end:
     return 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, ExchangeMinions_800BAF54);
 
 void StartShop_800BB058(int shopId)
 {
