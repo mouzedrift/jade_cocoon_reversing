@@ -1151,7 +1151,7 @@ void sub_800C064C(Minion* m, BatModelReq_a* o, int c)
             o->count_0 = 3;
         }
     }
-    o->f1C = sub_80019A80(m->status_84.level_44);
+    o->f1C = GetRankForLevel_80019A80(m->status_84.level_44);
     o->f20 = o->count_0 - 1;
     o->f28 = sub_80019C70(m->field_3)->modelId_0;
     o->f30 = c;
@@ -1300,7 +1300,7 @@ int sub_800C0BF0()
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
     m = sub_80010A44(0);
-    k = sub_80019A80(dword_800C9188->status_84.level_44);
+    k = GetRankForLevel_80019A80(dword_800C9188->status_84.level_44);
     s.modelId_0 = -1;
     s.kind_4 = 2;
     s.pos_8[0] = dword_800C9190.f4;
@@ -1325,7 +1325,7 @@ int sub_800C0BF0()
     dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
     x = sub_80024F00(m, k);
-    sub_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
+    SetBoneGroupFlags_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1387,7 +1387,7 @@ int sub_800C0E84(BatCmd_a* p)
 
 void sub_800C0EE8(int a)
 {
-    sub_80018E5C(dword_800C9190.obj, a);
+    GetActorHitFrame_80018E5C(dword_800C9190.obj, a);
 }
 
 int sub_800C0F14()
@@ -1397,7 +1397,7 @@ int sub_800C0F14()
 
 void sub_800C0F1C()
 {
-    sub_80018EBC(dword_800C9190.obj, sub_800C0F78(dword_800C918C));
+    SetActorStatusTint_80018EBC(dword_800C9190.obj, sub_800C0F78(dword_800C918C));
 }
 
 void sub_800C0F54(int a)

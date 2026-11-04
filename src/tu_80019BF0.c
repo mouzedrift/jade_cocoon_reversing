@@ -23,9 +23,9 @@
 #include "event.h"
 #include "main.h"
 
-// the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
-// for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
-const struct_int3 dword_8007303C = { { 0x1F8, 0xF000, 0x7E0000 } };
+// the bit masks SetBoneGroupFlags_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
+// for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU
+const struct_int3 boneGroupMasks_8007303C = { { 0x1F8, 0xF000, 0x7E0000 } };
 const int dword_80073048 = 0;
 const char dword_8007304C[] = "\202c\202\205\202\226\202\201\201@\202l\202\201\202\214\202\224\202\211"; // Deva Malti
 const char dword_80073064[] = "\202c\202\205\202\226\202\201\201@\202t\202\214\202\226\202\211"; // Deva Ulvi
@@ -91,7 +91,7 @@ MinionModelDesc* sub_80019C70(int idx)
 int sub_80019C84(void)
 {
     int v = 0x24;
-    int c = dword_8008D4DC & 0xFF;
+    int c = minionVariantSeed_8008D4DC & 0xFF;
     if (unknownFlags_8008D678 & 0x1000)
     {
         v = c % 4 + 0x25;

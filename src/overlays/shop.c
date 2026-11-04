@@ -463,7 +463,7 @@ int sub_800B9E94(UnitStats* src, Minion* dst, short c)
     dst->id = c;
     for (i = 0; i < 6; i++)
     {
-        sub_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
+        CopyName_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
         dst->field_7C[i] = src->st_0.elementMask_42;
     }
     r = LowestSetBit_80014358(src->st_0.elementMask_42);
@@ -1009,15 +1009,15 @@ void sub_800BAB38(Minion* a, Minion* b)
         }
     }
     MemCopy_800403E8(a->species_4C, tmp, 0x30);
-    sub_80019AF4(e, (unsigned int*)a->status_84.name_10);
-    sub_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
-    sub_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
-    sub_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
-    sub_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
-    sub_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
+    CopyName_80019AF4(e, (unsigned int*)a->status_84.name_10);
+    CopyName_80019AF4(e + 3, (unsigned int*)b->status_84.name_10);
+    CopyName_80019AF4(e + 6, (unsigned int*)a->ancestors_4[0]);
+    CopyName_80019AF4(e + 9, (unsigned int*)a->ancestors_4[1]);
+    CopyName_80019AF4(e + 12, (unsigned int*)b->ancestors_4[0]);
+    CopyName_80019AF4(e + 15, (unsigned int*)b->ancestors_4[1]);
     for (j = 0; j < 6; j++)
     {
-        sub_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
+        CopyName_80019AF4((unsigned int*)a->ancestors_4[j], e + j * 3);
     }
     g[0] = a->status_84.elementMask_42;
     g[1] = b->status_84.elementMask_42;
@@ -3686,7 +3686,7 @@ void sub_800BF02C(Minion* a, int* o, int c)
             o[6] = t;
         }
     }
-    o[7] = sub_80019A80(a->status_84.level_44);
+    o[7] = GetRankForLevel_80019A80(a->status_84.level_44);
     o[8] = o[0] - 1;
     o[10] = sub_80019C70(a->field_3)->modelId_0;
     o[12] = c;

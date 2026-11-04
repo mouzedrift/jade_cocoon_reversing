@@ -132,75 +132,75 @@ ActorScriptCmd *off_8007A024[32] = {
     (void *)&dword_80079C04[5], (void *)&dword_80079C04[25], (void *)&dword_80079C04[33], (void *)&dword_80079CE0[7],
     (void *)&dword_80079CE0[27], (void *)&dword_80079DE4[5], (void *)&dword_80079DE4[44], (void *)&dword_80079F50[5],
 };
-int dword_8007A0A4[3] = { 0x1F001F, 0x249001F, 0x249 };
-int dword_8007A0B0[3] = { 0x1F001F, 0x492001F, 0x492 };
-int dword_8007A0BC[3] = { 0x1F001F, 0x6DB001F, 0x6DB };
-int dword_8007A0C8[3] = { 0x1F001F, 0x924001F, 0x924 };
-int dword_8007A0D4[3] = { 0x1F001F, 0xB6D001F, 0xB6D };
-int dword_8007A0E0[3] = { 0x1F001F, 0xDB6001F, 0xDB6 };
-int dword_8007A0EC[3] = { 0x1F001F, 0x1000001F, 0x1000 };
-int dword_8007A0F8[3] = { 0x1F0000, 0x8000000, 0x800 };
+int statusTintLevel1_8007A0A4[3] = { 0x1F001F, 0x249001F, 0x249 };
+int statusTintLevel2_8007A0B0[3] = { 0x1F001F, 0x492001F, 0x492 };
+int statusTintLevel3_8007A0BC[3] = { 0x1F001F, 0x6DB001F, 0x6DB };
+int statusTintLevel4_8007A0C8[3] = { 0x1F001F, 0x924001F, 0x924 };
+int statusTintLevel5_8007A0D4[3] = { 0x1F001F, 0xB6D001F, 0xB6D };
+int statusTintLevel6_8007A0E0[3] = { 0x1F001F, 0xDB6001F, 0xDB6 };
+int statusTintLevel7_8007A0EC[3] = { 0x1F001F, 0x1000001F, 0x1000 };
+int statusTintPoison_8007A0F8[3] = { 0x1F0000, 0x8000000, 0x800 };
 int sub_8007A104[3] = { 0x1F000D, 0x249000D, 0x249 };
-int dword_8007A110[3] = { 0x1F0010, 0x4920010, 0x492 };
-int dword_8007A11C[3] = { 0x1F0013, 0x6DB0013, 0x6DB };
-int dword_8007A128[3] = { 0x1F0016, 0x9240016, 0x924 };
-int dword_8007A134[3] = { 0x1F0019, 0xB6D0019, 0xB6D };
-int dword_8007A140[3] = { 0x1F001C, 0xDB6001C, 0xDB6 };
-int dword_8007A14C[9] = { 0x1F001F, 0x1000001F, 0x1000, 16, 0x800001F, 0x800 };
+int statusTintPoisonLevel2_8007A110[3] = { 0x1F0010, 0x4920010, 0x492 };
+int statusTintPoisonLevel3_8007A11C[3] = { 0x1F0013, 0x6DB0013, 0x6DB };
+int statusTintPoisonLevel4_8007A128[3] = { 0x1F0016, 0x9240016, 0x924 };
+int statusTintPoisonLevel5_8007A134[3] = { 0x1F0019, 0xB6D0019, 0xB6D };
+int statusTintPoisonLevel6_8007A140[3] = { 0x1F001C, 0xDB6001C, 0xDB6 };
+int statusTintPoisonLevel7_8007A14C[9] = { 0x1F001F, 0x1000001F, 0x1000, 16, 0x800001F, 0x800 };
 char *minionSpeciesNames_8007A170[209] = {
-    dword_80073028, aRaddreg_80073018, dword_80073008, aRugdogle_80072FF4,
-    dword_80072FE8, dword_80072FD4, dword_80072FC0, dword_80072FAC,
-    aTerhambu_80072F98, dword_80072F88, aMaskhira_80072F74, dword_80072F64,
-    aPataimel_80072F50, dword_80072F40, dword_80072F2C, dword_80072F18,
-    aRaddlchu_80072F04, dword_80072EF4, dword_80072EE4, aRashab_80072ED4,
-    dword_80072EC4, aAsha_80072EB8, dword_80072EA8, aMaryen_80072E98,
-    aMugoo_80072E8C, aNoobwee_80072E7C, aOjiae_80072E70, dword_80072E64,
-    aSrikarta_80072E50, aUglam_80072E44, dword_80072E38, dword_80072E28,
-    aEhsp_80072E1C, aRashaba_80072E0C, aTweengo_80072DFC, dword_80072DEC,
+    aMarrdreg_80073028, aRaddreg_80073018, aPatdreg_80073008, aRugdogle_80072FF4,
+    aDogle_80072FE8, aBerbansa_80072FD4, aMukhambu_80072FC0, aDoghambu_80072FAC,
+    aTerhambu_80072F98, aHiralco_80072F88, aMaskhira_80072F74, aHirasag_80072F64,
+    aPataimel_80072F50, aSkwimel_80072F40, aRadoimel_80072F2C, aPatalchu_80072F18,
+    aRaddlchu_80072F04, aDoglchu_80072EF4, aNushab_80072EE4, aRashab_80072ED4,
+    aMukshab_80072EC4, aAsha_80072EB8, aGeenwee_80072EA8, aMaryen_80072E98,
+    aMugoo_80072E8C, aNoobwee_80072E7C, aOjiae_80072E70, aRiggu_80072E64,
+    aSrikarta_80072E50, aUglam_80072E44, aYoalk_80072E38, aJirahl_80072E28,
+    aEhsp_80072E1C, aRashaba_80072E0C, aTweengo_80072DFC, aSherick_80072DEC,
     aArpatron_80072DD8, aVatolka_80072DC8, aVatolka_80072DC8, aVatolka_80072DC8,
-    aVatolka_80072DC8, dword_80072DB4, dword_80072DA4, dword_80072D90,
-    aEarthBoss_80072D78, aTuturis_80072D68, dword_80072D54, aSeterian_80072D40,
-    aWindBoss_80072D2C, dword_80072D1C, aMaskedBoy_80072D04, dword_80072CF4,
-    dword_80072CE8, dword_80072CD8, dword_80072CC8, dword_80072CB0,
-    dword_80072C9C, aPataraid_80072C88, dword_80072C78, aTerfrayd_80072C64,
-    dword_80072C50, aPatbaran_80072C3C, dword_80072C2C, dword_80072C18,
-    dword_80072C04, dword_80072BF0, aHackaroo_80072BDC, dword_80072BCC,
-    dword_80072BBC, dword_80072BA8, aSkgore_80072B98, aTergore_80072B88,
-    dword_80072B78, dword_80072B68, aSkarunga_80072B54, aTerunga_80072B44,
-    dword_80072B34, dword_80072B20, dword_80072B0C, dword_80072AF8,
-    dword_80072AE4, aPatash_80072AD4, dword_80072AC8, aTerash_80072AB8,
-    dword_80072AA8, aPatagrip_80072A94, aSkagrip_80072A84, aTergrip_80072A74,
-    dword_80072A64, aPatapara_80072A50, aSkapara_80072A40, aTerpara_80072A30,
-    aDogpara_80072A20, dword_80072A10, aSkalco_80072A00, aTeralco_800729F0,
-    aRaddlco_800729E0, aPatbecker_800729CC, dword_800729BC, dword_800729A8,
-    aRadbeker_80072994, aHikisag_80072984, aTagosag_80072974, dword_80072964,
-    dword_80072954, aPatawasp_80072940, aSkawasp_80072930, aTerwasp_80072920,
-    dword_80072910, dword_800728FC, dword_800728E8, dword_800728D4,
-    dword_800728C0, aPatamole_800728AC, aSkumole_8007289C, aTermole_8007288C,
-    dword_8007287C, dword_8007286C, dword_8007285C, dword_8007284C,
-    aRadeeb_8007283C, dword_8007282C, dword_80072818, dword_80072804,
-    dword_800727F0, aPatakuga_800727DC, dword_800727CC, dword_800727B8,
-    aRadkooga_800727A4, dword_80072794, aSkwoot_80072784, dword_80072774,
-    dword_80072764, aPatamoaj_80072750, dword_80072740, aTeramoaj_8007272C,
-    aRadmoaj_8007271C, dword_8007270C, dword_800726F8, aTeramine_800726E4,
-    aRadmine_800726D4, dword_800726C8, dword_800726B8, aShee_800726AC,
-    dword_800726A4, aKarn_80072698, dword_8007268C, aScul_80072680,
+    aVatolka_80072DC8, aDreamMan_80072DB4, aMinion_80072DA4, aDelfanel_80072D90,
+    aEarthBoss_80072D78, aTuturis_80072D68, aFireBoss_80072D54, aSeterian_80072D40,
+    aWindBoss_80072D2C, aKikinak_80072D1C, aMaskedBoy_80072D04, aPoacher_80072CF4,
+    aGoat_80072CE8, aLagoat_80072CD8, aGigoat_80072CC8, aChosenOne_80072CB0,
+    aCushidra_80072C9C, aPataraid_80072C88, aMafrayd_80072C78, aTerfrayd_80072C64,
+    aRagifrayd_80072C50, aPatbaran_80072C3C, aSkbaran_80072C2C, aTerbaran_80072C18,
+    aLadbaran_80072C04, aJitamble_80072BF0, aHackaroo_80072BDC, aClayble_80072BCC,
+    aGeible_80072BBC, aPatagore_80072BA8, aSkgore_80072B98, aTergore_80072B88,
+    aRadgore_80072B78, aDrunga_80072B68, aSkarunga_80072B54, aTerunga_80072B44,
+    aRadunga_80072B34, aPatgaron_80072B20, aSkagaron_80072B0C, aTragaron_80072AF8,
+    aDoggaron_80072AE4, aPatash_80072AD4, aSkash_80072AC8, aTerash_80072AB8,
+    aRadrash_80072AA8, aPatagrip_80072A94, aSkagrip_80072A84, aTergrip_80072A74,
+    aDoggrip_80072A64, aPatapara_80072A50, aSkapara_80072A40, aTerpara_80072A30,
+    aDogpara_80072A20, aPatalco_80072A10, aSkalco_80072A00, aTeralco_800729F0,
+    aRaddlco_800729E0, aPatbecker_800729CC, aSkbeker_800729BC, aTerbeker_800729A8,
+    aRadbeker_80072994, aHikisag_80072984, aTagosag_80072974, aMorisag_80072964,
+    aAmasag_80072954, aPatawasp_80072940, aSkawasp_80072930, aTerwasp_80072920,
+    aRadwasp_80072910, aPatmanty_800728FC, aSkamanty_800728E8, aTermanty_800728D4,
+    aRadmanty_800728C0, aPatamole_800728AC, aSkumole_8007289C, aTermole_8007288C,
+    aRadmole_8007287C, aPateeb_8007286C, aSkaeeb_8007285C, aTereeb_8007284C,
+    aRadeeb_8007283C, aPatodon_8007282C, aSkatodon_80072818, aTertodon_80072804,
+    aRadtodon_800727F0, aPatakuga_800727DC, aSkwooga_800727CC, aTerkooga_800727B8,
+    aRadkooga_800727A4, aPataoot_80072794, aSkwoot_80072784, aTeraoot_80072774,
+    aRadoot_80072764, aPatamoaj_80072750, aSkwmoaj_80072740, aTeramoaj_8007272C,
+    aRadmoaj_8007271C, aCarmine_8007270C, aSkwmaine_800726F8, aTeramine_800726E4,
+    aRadmine_800726D4, aAnash_800726C8, aShulia_800726B8, aShee_800726AC,
+    aFal_800726A4, aKarn_80072698, aTelma_8007268C, aScul_80072680,
     aUld_80072678, aUsk_80072670, aOajin_80072664, aEavun_80072658,
-    aEmbla_8007264C, dword_80072640, aTuloon_80072630, dword_80072620,
+    aEmbla_8007264C, aGabee_80072640, aTuloon_80072630, aPedingo_80072620,
     aZulmoo_80072610, aFrigg_80072604, aShowven_800725F4, aElu_800725EC,
-    dword_800725E0, dword_800725D4, dword_800725C8, dword_800725BC,
-    dword_800725AC, aWardon_8007259C, aAnkoo_80072590, dword_80072584,
-    dword_80072578, dword_8007256C, dword_80072558, dword_80072548,
-    aId_80072540, dword_80072534, aFintan_80072524, dword_80072518,
+    aRobun_800725E0, aFrey_800725D4, aSowl_800725C8, aSgaj_800725BC,
+    aTiootz_800725AC, aWardon_8007259C, aAnkoo_80072590, aGalia_80072584,
+    aOhma_80072578, aSwav_8007256C, aCarlidge_80072558, aFugger_80072548,
+    aId_80072540, aBawni_80072534, aFintan_80072524, aTuren_80072518,
     aRainster_80072504, aYates_800724F8, aNevan_800724EC, aAiona_800724E0,
-    dword_800724D4, dword_800724C4, aArvalzak_800724B0, aFedelco_800724A0,
-    aKamra_80072494, aBauback_80072484, aArmijar_80072474, dword_80072464,
-    dword_80072454, dword_80072440, aSaramoon_8007242C, dword_80072420,
-    dword_80072410, dword_800723FC, aShakures_800723E8, aIbdamia_800723D8,
-    aKetow_800723CC, aLakshel_800723BC, dword_800723AC, aSbarse_8007239C,
-    aTyton_80072390, dword_80072380, aTicker_80072370, aJeechwo_80072360,
-    dword_80072354, aSicanjal_80072340, aTimaios_80072330, dword_80072324,
-    dword_80072310,
+    aOhzay_800724D4, aSpiral_800724C4, aArvalzak_800724B0, aFedelco_800724A0,
+    aKamra_80072494, aBauback_80072484, aArmijar_80072474, aGreydon_80072464,
+    aAgghai_80072454, aNupandra_80072440, aSaramoon_8007242C, aKarro_80072420,
+    aNarade_80072410, aColunius_800723FC, aShakures_800723E8, aIbdamia_800723D8,
+    aKetow_800723CC, aLakshel_800723BC, aSetolka_800723AC, aSbarse_8007239C,
+    aTyton_80072390, aPalooja_80072380, aTicker_80072370, aJeechwo_80072360,
+    aKolna_80072354, aSicanjal_80072340, aTimaios_80072330, aYolga_80072324,
+    aKlarrgas_80072310,
 };
 MinionBaseStats minionBaseStats_8007A4B4[57] = {
     { 150, 40, 140, 50, 120, 100, 1 },
@@ -261,10 +261,10 @@ MinionBaseStats minionBaseStats_8007A4B4[57] = {
     { 130, 130, 100, 70, 130, 190, -1, 1 },
     { 200, 200, 200, 200, 160, 0, -1, 1 },
 };
-int dword_8007A67C[4] = { 2, 0x400, 128, 16 };
-int dword_8007A68C[4] = { 4, 0x800, 0x100, 32 };
-int dword_8007A69C[4] = { 0x100000, 0x40000, 0x20000, 0x2000 };
-int dword_8007A6AC[211] = {
+int elementBonusMagic1_8007A67C[4] = { 2, 0x400, 128, 16 };
+int elementBonusMagic2_8007A68C[4] = { 4, 0x800, 0x100, 32 };
+int elementBonusMagic3_8007A69C[4] = { 0x100000, 0x40000, 0x20000, 0x2000 };
+int speciesMagicBits_8007A6AC[211] = {
     0, 0, 0x200000, 128, 2, 0x800, 0x2000, 0x10000,
     0, 0x600, 0x40000, 0x100, 1, 0x2000, 0, 0,
     0x21000, 0x8000, 0, 0, 0, 4, 0x400000, 0x800040,
@@ -1254,8 +1254,8 @@ UnitSkills dword_8007A9F8[211] = {
     { { { 1, 0, 2, 1 } } },
     { { { 1, 0, 2, 1 } } },
 };
-unsigned char dword_8007BA74[16] = { 32, 16, 32, 64, 64, 32, 16, 32, 32, 64, 32, 16, 16, 32, 64, 32 };
-unsigned char dword_8007BA84[684] = { 64, 24, 28, 32, 32, 48, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 48, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 48, 32, 0, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 48, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 48, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 48, 32, 32, 224, 32, 64, 28, 32, 64, 24, 28, 28, 28, 48, 32, 224, 32, 64, 64, 24, 28, 32, 28, 28, 28, 48, 32, 224, 32, 64, 32, 64, 24, 28, 28, 28, 28, 56, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 32, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 0, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 0, 224, 32, 64, 24, 28, 32, 64, 40, 40, 40, 40, 32, 224, 32, 64, 28, 32, 64, 24, 40, 40, 40, 40, 0, 224, 32, 64, 32, 64, 24, 28, 40, 40, 0, 40, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 0, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 0, 28, 28, 28, 32, 224, 32, 64, 24, 28, 32, 64, 28, 28, 28, 28, 32, 224, 32, 64, 28, 32, 64, 24, 28, 28, 28, 28, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 28, 28, 0, 28, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 24, 24, 24, 24, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 0, 32, 224, 32, 64, 28, 32, 64, 24, 40, 40, 40, 40, 32, 224, 32, 64, 24, 28, 32, 64, 16, 16, 16, 16, 32, 208, 32, 64, 24, 28, 32, 64, 40, 40, 40, 40, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 48, 32, 32, 32, 0, 0, 0, 0, 16, 240, 32, 64, 15, 30, 15, 15, 0, 0, 0, 0, 8, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 15, 15, 15, 30, 0, 0, 0, 0, 16, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 30, 15, 15, 15, 0, 0, 0, 0, 16, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 64, 24, 28, 32, 0, 0, 0, 0, 16, 240, 32, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 32, 32, 32, 32, 0, 0, 0, 0, 16, 240, 32, 64, 32, 16, 32, 64, 0, 0, 0, 0, 16, 240, 24, 64, 64, 32, 16, 32, 0, 0, 0, 0, 16, 240, 24, 64, 32, 64, 32, 16, 0, 0, 0, 0, 16, 240, 24, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 48, 64, 8, 8, 8, 8, 0, 0, 0, 0, 16, 240, 8, 16 };
+unsigned char elementModifiers_8007BA74[16] = { 32, 16, 32, 64, 64, 32, 16, 32, 32, 64, 32, 16, 16, 32, 64, 32 };
+unsigned char speciesModifiers_8007BA84[684] = { 64, 24, 28, 32, 32, 48, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 48, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 48, 32, 0, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 48, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 48, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 48, 32, 32, 224, 32, 64, 28, 32, 64, 24, 28, 28, 28, 48, 32, 224, 32, 64, 64, 24, 28, 32, 28, 28, 28, 48, 32, 224, 32, 64, 32, 64, 24, 28, 28, 28, 28, 56, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 32, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 0, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 0, 224, 32, 64, 24, 28, 32, 64, 40, 40, 40, 40, 32, 224, 32, 64, 28, 32, 64, 24, 40, 40, 40, 40, 0, 224, 32, 64, 32, 64, 24, 28, 40, 40, 0, 40, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 0, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 0, 28, 28, 28, 32, 224, 32, 64, 24, 28, 32, 64, 28, 28, 28, 28, 32, 224, 32, 64, 28, 32, 64, 24, 28, 28, 28, 28, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 28, 28, 0, 28, 32, 224, 32, 64, 32, 64, 24, 28, 32, 32, 32, 32, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 32, 64, 24, 28, 24, 24, 24, 24, 32, 224, 32, 64, 28, 32, 64, 24, 32, 32, 32, 32, 32, 224, 32, 64, 64, 24, 28, 32, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 0, 32, 224, 32, 64, 28, 32, 64, 24, 40, 40, 40, 40, 32, 224, 32, 64, 24, 28, 32, 64, 16, 16, 16, 16, 32, 208, 32, 64, 24, 28, 32, 64, 40, 40, 40, 40, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 32, 32, 32, 32, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 24, 28, 32, 64, 48, 48, 48, 48, 32, 224, 32, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 48, 32, 32, 32, 0, 0, 0, 0, 16, 240, 32, 64, 15, 30, 15, 15, 0, 0, 0, 0, 8, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 15, 15, 15, 30, 0, 0, 0, 0, 16, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 30, 15, 15, 15, 0, 0, 0, 0, 16, 240, 10, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 64, 24, 28, 32, 0, 0, 0, 0, 16, 240, 32, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 32, 64, 32, 32, 32, 32, 0, 0, 0, 0, 16, 240, 32, 64, 32, 16, 32, 64, 0, 0, 0, 0, 16, 240, 24, 64, 64, 32, 16, 32, 0, 0, 0, 0, 16, 240, 24, 64, 32, 64, 32, 16, 0, 0, 0, 0, 16, 240, 24, 64, 48, 48, 48, 48, 0, 0, 0, 0, 16, 240, 48, 64, 8, 8, 8, 8, 0, 0, 0, 0, 16, 240, 8, 16 };
 MinionModelDesc dword_8007BD30[365] = {
     { 12, 12, 10 },
     { 13, 0, 96 },
@@ -1623,7 +1623,7 @@ MinionModelDesc dword_8007BD30[365] = {
     { 91, 0, 40 },
     { 92, 0, 40 },
 };
-unsigned char dword_8007C2E4[40] = { 1, 7, 13, 22, 27, 0, 0, 0, 252, 7, 90, 245, 222, 8 };
+unsigned char rankLevelThresholds_8007C2E4[40] = { 1, 7, 13, 22, 27, 0, 0, 0, 252, 7, 90, 245, 222, 8 };
 int sub_8007C30C[15] = {
     0x1000, 0x10000000, 0, 0x1000, 0, 0, 0, 0,
     0x4D4D4D, 0x8007C2EC, 0x8007C2EC, 0x8007C30C, 0x8007C30C, 0x8007C32C, 0x8007C32C,

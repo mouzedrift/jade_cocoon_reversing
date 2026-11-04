@@ -460,7 +460,7 @@ void sub_800A1AD0(TstCompoWork* a)
 }
 
 extern TstCompoBone dword_80079140[];
-extern void sub_80019B14(void* p, char* a1, char* a2);
+extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
 void sub_800A1AFC(TstCompoWork* a)
 {
     int i;
@@ -471,7 +471,7 @@ void sub_800A1AFC(TstCompoWork* a)
     }
     a->bones_C[i] = dword_80079140[i];
     r = sub_80024F00(a->model_4, name_800A2768.modelId_1C);
-    sub_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
+    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
 }
 
 // Matched

@@ -473,7 +473,7 @@ void OnModelFileLoaded_80025D7C(int* a0, int b);
 
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
-extern int dword_8008D4DC;
+extern int minionVariantSeed_8008D4DC;
 extern int dword_80079708[];
 typedef struct
 {
@@ -488,7 +488,7 @@ typedef struct
     struct_8_id* items;
 } struct_8_list;
 
-extern int dword_8007A6AC[];
+extern int speciesMagicBits_8007A6AC[];
 extern int dword_8008D40C;
 
 typedef struct

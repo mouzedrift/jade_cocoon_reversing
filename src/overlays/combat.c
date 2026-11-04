@@ -46,8 +46,8 @@ typedef struct CombatCameraState
 extern CombatSlotCombat dword_800A3A08[];
 extern Minion dword_800A3AA0[][3];
 extern Minion dword_800A1BC8[][15];
-extern void sub_80018E5C(void* p);
-extern void sub_80018EBC(void* p, UnitStatus* v);
+extern void GetActorHitFrame_80018E5C(void* p);
+extern void SetActorStatusTint_80018EBC(void* p, UnitStatus* v);
 extern void sub_800376A0(void* a, void* b);
 
 extern int sub_800A1A3C(Minion* p, int n);
@@ -390,7 +390,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
     CombatSlotCombat* s = &dword_800A3A08[i];
     ActorDesc r;
     Model* h = sub_80010A44(s->task_0);
-    int v = sub_80019A80(s->minion_4->status_84.level_44);
+    int v = GetRankForLevel_80019A80(s->minion_4->status_84.level_44);
     unsigned short* x;
     unsigned short* y;
     r.modelId_0 = -1;
@@ -417,7 +417,7 @@ void sub_800A0BA8(int i, int* src, short* sh)
     s->actor_3C = CreateActor_8001D45C(&r);
     x = sub_80024F00(h, v);
     y = sub_80024F38(h, v);
-    sub_80019B14(s->actor_3C->bones_134, x, y);
+    SetBoneGroupFlags_80019B14(s->actor_3C->bones_134, x, y);
     sub_8001D68C(s->actor_3C, 0);
 }
 
@@ -528,14 +528,14 @@ void sub_800A0FF0(int i, int* p)
 void sub_800A1034(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018E5C(s->actor_3C);
+    GetActorHitFrame_80018E5C(s->actor_3C);
 }
 
 // Matched
 void sub_800A1068(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    sub_80018EBC(s->actor_3C, sub_800A10C0(i));
+    SetActorStatusTint_80018EBC(s->actor_3C, sub_800A10C0(i));
 }
 
 // Matched

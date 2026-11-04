@@ -563,7 +563,7 @@ void sub_800A1F80(void)
             {
                 p0 = (int*)sub_80024E90(m, k);
                 p1 = (int*)sub_80024E90(m, k + 1);
-                f = sub_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
+                f = GetUnitRank_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
                 f = ((p1[0] - p0[0]) * f) / 4096;
                 v[0] = p0[0] + f;
                 v[1] = p0[1] + f;
@@ -575,7 +575,7 @@ void sub_800A1F80(void)
             s.effectTbl_44 = (short (*)[6])sub_80024E64(m);
             s.hasMatrices_4C = 1;
             a = CreateActor_8001D45C(&s);
-            sub_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
+            SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
         }
         a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c]) & 0xfff] * 1000 / 4096;
         a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
@@ -725,7 +725,7 @@ int sub_800A2760(unsigned int* p)
 void sub_800A27FC(int a, int b)
 {
     sub_800A2CA8(a, 0);
-    sub_80018E5C(gCtx_800B1260.actors_7c[a], b);
+    GetActorHitFrame_80018E5C(gCtx_800B1260.actors_7c[a], b);
 }
 
 // Matched
@@ -734,7 +734,7 @@ void sub_800A284C(int a)
     sub_800A2CA8(a, 0);
     {
         UnitStatus* v = sub_800A2B60(a);
-        sub_80018EBC(gCtx_800B1260.actors_7c[a], v);
+        SetActorStatusTint_80018EBC(gCtx_800B1260.actors_7c[a], v);
     }
 }
 

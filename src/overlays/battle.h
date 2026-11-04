@@ -583,9 +583,9 @@ extern void StartScreenFlash_8001C02C(void*);
 
 extern void sub_8001DB00(Actor*, int, int);
 
-extern void sub_80018E5C(Actor*, int);
+extern void GetActorHitFrame_80018E5C(Actor*, int);
 
-extern void sub_80018EBC(Actor*, UnitStatus*);
+extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 
 extern int sub_800C0D88();

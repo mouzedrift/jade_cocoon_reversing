@@ -15,7 +15,7 @@ typedef struct UnitStatus
     unsigned char name_10[0xC]; // charTables_8008685C encoding, see DecodeNames_8003FBD4
     unsigned char field_1C[4];  // equipped weapon/armor/accessory ids (GetEquipmentId_8003356C)
     unsigned char field_20[0xC]; // ApplyEquipmentModifiers_80033754
-    unsigned char stats_2C[6]; // attack, defense, magic attack, magic defense, speed, critical (sub_8001980C)
+    unsigned char stats_2C[6]; // attack, defense, magic attack, magic defense, speed, critical (InitStatsFromBase_8001980C)
     unsigned char base_32[6];  // the species' base stats; pick the growth kind (sub_80011D98)
     unsigned char frac_38[6];  // fractional growth (0..99)
     unsigned char element_3E[4];
@@ -34,7 +34,7 @@ typedef struct UnitSkill
     unsigned char field_3;
 } UnitSkill;
 
-/* a unit's five ability slots; species defaults come from sub_80019C28 (copied by sub_800199A0) */
+/* a unit's five ability slots; species defaults come from sub_80019C28 (copied by InitSpeciesSkills_800199A0) */
 typedef struct
 {
     UnitSkill slot[5];
