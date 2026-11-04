@@ -1484,11 +1484,7 @@ int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int fl
     }
     return 2;
 }
-#if 0
-// Not matched (5 lines): the pointer-add form below fixes the &b scheduling and the v0/v1 choice, but gcc then folds
-// k*2 into idx*4 + 0x14 instead of keeping (e[9] + k) * 2. The int form ((k + e[9]) * 2 + (int)e) keeps the sum but
-// misplaces &b and the sum register (8 lines). Tried: operand orders, temporaries for e[9]/k, k/idx types, e[k + 1]
-// double reads, statement order, shifts instead of *2; permuter 1500 iters
+// Matched
 int LoadModelAnim_80025440(Model* model, int idx, int flag)
 {
     ModelLoadParams b;
@@ -1498,14 +1494,15 @@ int LoadModelAnim_80025440(Model* model, int idx, int flag)
     int offset;
     int size;
     int k;
+    int entry; // index of the anim's (offset, size) pair in the descriptor
     unsigned char* f = model->animLoaded_44 + idx;
     if (*f == 0)
     {
-        k = idx * 2 + 10;
         e = (unsigned short*)modelDescs_800824CC[model->id_38];
-        sectors = e;
-        sectors += e[9];
-        sectors += k;
+        k = idx * 2 + 10;
+        entry = e[9];
+        entry += k;
+        sectors = (unsigned short*)(entry * 2 + (int)e);
         offset = sectors[0];
         size = sectors[1];
         *f = 1;
@@ -1535,8 +1532,6 @@ int LoadModelAnim_80025440(Model* model, int idx, int flag)
     }
     return AreFileRequestsDone_80024DC4(model) == 0;
 }
-#endif
-INCLUDE_ASM(LoadModelAnim_80025440);
 // Matched
 void FreeModelAnim_8002556C(Model* model, int idx)
 {
