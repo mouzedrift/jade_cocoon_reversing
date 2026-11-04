@@ -40,7 +40,7 @@ void sub_80012794(UnitStatus* p, int a1)
 void sub_800127B8(UnitStatus* p)
 {
     p->exp_4 = 0;
-    p->hp_8 = 0;
+    p->hp_8.cur_0 = 0;
     p->status_0 |= 0x400;
 }
 // Matched

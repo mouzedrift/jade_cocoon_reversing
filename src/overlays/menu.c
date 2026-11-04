@@ -2978,10 +2978,10 @@ void sub_800C0CA4(MenuCtx* c, int* out)
         sub_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);
         out[0] = -tmp.d_10.x_1C;
         out[1] = -tmp.d_10.y_20;
-        v = r16->maxHp_A - r16->hp_8;
+        v = r16->hp_8.max_2 - r16->hp_8.cur_0;
         if (v < out[0])
             out[0] = v;
-        v = r16->maxMp_E - r16->mp_C;
+        v = r16->mp_C.max_2 - r16->mp_C.cur_0;
         if (v < out[1])
             out[1] = v;
     }

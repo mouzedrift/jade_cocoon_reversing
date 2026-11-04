@@ -1654,27 +1654,27 @@ char* sub_800A8C40()
 void sub_800A8C4C(int a)
 {
     SaveData* s = &saveData_8008B570;
-    s->levantStatus_7C8.hp_8 -= a;
-    if ((short)s->levantStatus_7C8.hp_8 < 0)
+    s->levantStatus_7C8.hp_8.cur_0 -= a;
+    if ((short)s->levantStatus_7C8.hp_8.cur_0 < 0)
     {
-        s->levantStatus_7C8.hp_8 = 0;
+        s->levantStatus_7C8.hp_8.cur_0 = 0;
         return;
     }
-    if ((short)s->levantStatus_7C8.maxHp_A < (short)s->levantStatus_7C8.hp_8)
-        s->levantStatus_7C8.hp_8 = s->levantStatus_7C8.maxHp_A;
+    if ((short)s->levantStatus_7C8.hp_8.max_2 < (short)s->levantStatus_7C8.hp_8.cur_0)
+        s->levantStatus_7C8.hp_8.cur_0 = s->levantStatus_7C8.hp_8.max_2;
 }
 
 void sub_800A8CA0(int a)
 {
     SaveData* s = &saveData_8008B570;
-    s->levantStatus_7C8.mp_C -= a;
-    if ((short)s->levantStatus_7C8.mp_C < 0)
+    s->levantStatus_7C8.mp_C.cur_0 -= a;
+    if ((short)s->levantStatus_7C8.mp_C.cur_0 < 0)
     {
-        s->levantStatus_7C8.mp_C = 0;
+        s->levantStatus_7C8.mp_C.cur_0 = 0;
         return;
     }
-    if ((short)s->levantStatus_7C8.maxMp_E < (short)s->levantStatus_7C8.mp_C)
-        s->levantStatus_7C8.mp_C = s->levantStatus_7C8.maxMp_E;
+    if ((short)s->levantStatus_7C8.mp_C.max_2 < (short)s->levantStatus_7C8.mp_C.cur_0)
+        s->levantStatus_7C8.mp_C.cur_0 = s->levantStatus_7C8.mp_C.max_2;
 }
 
 void sub_800A8CF4()

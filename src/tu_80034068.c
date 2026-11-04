@@ -33,7 +33,7 @@ int sub_80034068(short* p)
         switch (magicData_8007C438[p[0]].field_7)
         {
         case 0:
-            if (q->hp_8 == q->maxHp_A)
+            if (q->hp_8.cur_0 == q->hp_8.max_2)
             {
                 return 3;
             }

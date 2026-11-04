@@ -251,7 +251,7 @@ unsigned char* sub_800107CC(int id, int nth)
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_CC;
+        return m->field_CC.cur_0;
     }
     return 0;
 }

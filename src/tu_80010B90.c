@@ -1529,8 +1529,8 @@ void nullsub_2(void)
 // Matched
 void FillHpMp_80011C0C(UnitStatus* a, UnitStatus* b)
 {
-    a->hp_8 = a->maxHp_A = b->maxHp_A;
-    a->mp_C = a->maxMp_E = b->maxMp_E;
+    a->hp_8.cur_0 = a->hp_8.max_2 = b->hp_8.max_2;
+    a->mp_C.cur_0 = a->mp_C.max_2 = b->mp_C.max_2;
 }
 // Matched
 void ClearStatus_80011C30(UnitStatus* p)
@@ -1543,8 +1543,8 @@ void RecoverQuarterHpMp_80011C44(UnitStatus* p)
     p->status_0 = v;
     if (v == 0)
     {
-        p->hp_8 = (p->hp_8 + p->maxHp_A / 4 > p->maxHp_A) ? p->maxHp_A : p->hp_8 + p->maxHp_A / 4;
-        p->mp_C = (p->mp_C + p->maxMp_E / 4 > p->maxMp_E) ? p->maxMp_E : p->mp_C + p->maxMp_E / 4;
+        p->hp_8.cur_0 = (p->hp_8.cur_0 + p->hp_8.max_2 / 4 > p->hp_8.max_2) ? p->hp_8.max_2 : p->hp_8.cur_0 + p->hp_8.max_2 / 4;
+        p->mp_C.cur_0 = (p->mp_C.cur_0 + p->mp_C.max_2 / 4 > p->mp_C.max_2) ? p->mp_C.max_2 : p->mp_C.cur_0 + p->mp_C.max_2 / 4;
     }
 }
 // Matched
@@ -1558,7 +1558,7 @@ void ReviveOneHp_80011CF4(UnitStatus* p)
 {
     p->exp_4 = 0;
     p->status_0 = 0;
-    p->hp_8 = (p->hp_8 + 1 > p->maxHp_A) ? p->maxHp_A : p->hp_8 + 1;
+    p->hp_8.cur_0 = (p->hp_8.cur_0 + 1 > p->hp_8.max_2) ? p->hp_8.max_2 : p->hp_8.cur_0 + 1;
 }
 typedef struct
 {
@@ -1609,12 +1609,12 @@ int sub_80011D98(UnitStatus* m, int arg1)
     n = 0;
     for (i = 0; i < 6; i++)
     {
-        kind[i] = sub_80011D28(m->base_32[i]);
+        kind[i] = sub_80011D28(m->stats_2C.base_6[i]);
     }
     levels = m->exp_4 >> 26;
     for (j = 0; j < 6; j++)
     {
-        acc[j] = m->frac_38[j] * 10;
+        acc[j] = m->stats_2C.frac_C[j] * 10;
     }
     while (m->exp_4 >> 26)
     {
@@ -1639,7 +1639,7 @@ int sub_80011D98(UnitStatus* m, int arg1)
     {
         for (k = 0; k < 6; k++)
         {
-            v = m->stats_2C[k] + acc[k] / 1000;
+            v = m->stats_2C.cur_0[k] + acc[k] / 1000;
             r = (acc[k] % 1000) / 10;
             if (v >= 0)
             {
@@ -1648,11 +1648,11 @@ int sub_80011D98(UnitStatus* m, int arg1)
                 {
                     t = 100;
                 }
-                m->stats_2C[k] = t;
+                m->stats_2C.cur_0[k] = t;
             }
             else
             {
-                m->stats_2C[k] = 0;
+                m->stats_2C.cur_0[k] = 0;
             }
             if (r >= 0)
             {
@@ -1661,19 +1661,19 @@ int sub_80011D98(UnitStatus* m, int arg1)
                 {
                     t = 100;
                 }
-                m->frac_38[k] = t;
+                m->stats_2C.frac_C[k] = t;
             }
             else
             {
-                m->frac_38[k] = 0;
+                m->stats_2C.frac_C[k] = 0;
             }
         }
         a = sub_80012140(m->level_44, m);
         b = sub_80012178(m->level_44, m);
-        oldA = m->maxHp_A;
-        oldE = m->maxMp_E;
-        a = a * (sub_80014308(m->stats_2C) * 40 + 6000) / 10000;
-        b = b * (sub_800142B8(m->stats_2C) * 40 + 6000) / 10000;
+        oldA = m->hp_8.max_2;
+        oldE = m->mp_C.max_2;
+        a = a * (sub_80014308(m->stats_2C.cur_0) * 40 + 6000) / 10000;
+        b = b * (sub_800142B8(m->stats_2C.cur_0) * 40 + 6000) / 10000;
         if (a >= 0)
         {
             t = a;
@@ -1681,11 +1681,11 @@ int sub_80011D98(UnitStatus* m, int arg1)
             {
                 t = 999;
             }
-            m->maxHp_A = t;
+            m->hp_8.max_2 = t;
         }
         else
         {
-            m->maxHp_A = 0;
+            m->hp_8.max_2 = 0;
         }
         if (b >= 0)
         {
@@ -1694,19 +1694,19 @@ int sub_80011D98(UnitStatus* m, int arg1)
             {
                 t = 999;
             }
-            m->maxMp_E = t;
+            m->mp_C.max_2 = t;
         }
         else
         {
-            m->maxMp_E = 0;
+            m->mp_C.max_2 = 0;
         }
         if (sub_80033548(m, 0x400) == 0)
         {
-            m->hp_8 += a - oldA;
-            m->mp_C += b - oldE;
+            m->hp_8.cur_0 += a - oldA;
+            m->mp_C.cur_0 += b - oldE;
         }
-        m->hp_8 = (m->hp_8 < 0) ? 0 : (m->hp_8 > 999) ? 999 : m->hp_8;
-        m->mp_C = (m->mp_C < 0) ? 0 : (m->mp_C > 999) ? 999 : m->mp_C;
+        m->hp_8.cur_0 = (m->hp_8.cur_0 < 0) ? 0 : (m->hp_8.cur_0 > 999) ? 999 : m->hp_8.cur_0;
+        m->mp_C.cur_0 = (m->mp_C.cur_0 < 0) ? 0 : (m->mp_C.cur_0 > 999) ? 999 : m->mp_C.cur_0;
     }
     return levels;
 }
@@ -1858,44 +1858,44 @@ void sub_80012614(UnitStatus* p, int sel, int delta, int mask)
     switch (sel)
     {
     case 0:
-        max = p->maxHp_A;
-        sp = (unsigned short*)&p->hp_8;
+        max = p->hp_8.max_2;
+        sp = (unsigned short*)&p->hp_8.cur_0;
         break;
     case 1:
-        sp = (unsigned short*)&p->maxHp_A;
+        sp = (unsigned short*)&p->hp_8.max_2;
         max = 999;
         break;
     case 2:
-        max = p->maxMp_E;
-        sp = (unsigned short*)&p->mp_C;
+        max = p->mp_C.max_2;
+        sp = (unsigned short*)&p->mp_C.cur_0;
         break;
     case 3:
-        sp = (unsigned short*)&p->maxMp_E;
+        sp = (unsigned short*)&p->mp_C.max_2;
         max = 999;
         break;
     case 4:
     case 5:
-        bp = &p->stats_2C[0];
+        bp = &p->stats_2C.cur_0[0];
         max = 99;
         break;
     case 6:
     case 7:
-        bp = &p->stats_2C[4];
+        bp = &p->stats_2C.cur_0[4];
         max = 99;
         break;
     case 8:
     case 9:
-        bp = &p->stats_2C[1];
+        bp = &p->stats_2C.cur_0[1];
         max = 99;
         break;
     case 10:
     case 11:
-        bp = &p->stats_2C[2];
+        bp = &p->stats_2C.cur_0[2];
         max = 99;
         break;
     case 12:
     case 13:
-        bp = &p->stats_2C[3];
+        bp = &p->stats_2C.cur_0[3];
         max = 99;
         break;
     case 16:

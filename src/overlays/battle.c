@@ -735,10 +735,10 @@ void sub_800BB380(BatTask_a* t, BatObj_a* u)
         u->f4 = (int)(u->next_8 = sub_800BAE74);
         return;
     }
-    if (m->hp_8 - dword_800C9C7E <= 0)
+    if (m->hp_8.cur_0 - dword_800C9C7E <= 0)
     {
         dword_800C9C88.kind_0 = 0xB;
-        dword_800C9C7E = m->hp_8;
+        dword_800C9C7E = m->hp_8.cur_0;
         switch ((unsigned int)kind)
         {
         case 0:
@@ -1138,7 +1138,7 @@ int sub_800BC1A8(unsigned int mask)
         {
             mn = sub_80014390(i & 0xFF);
             c = (unsigned char)dword_800C9CBC[i];
-            if (c != 0 && c != 5 && c != 6 && mn->hp_8 > 0)
+            if (c != 0 && c != 5 && c != 6 && mn->hp_8.cur_0 > 0)
             {
                 if (dword_800C9CA0[i] & 0x18202)
                 {

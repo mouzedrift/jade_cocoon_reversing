@@ -4,20 +4,31 @@
 /* 0x48-byte status block of Levant (levantStatus_8008BD38 == saveData+0x7C8) and of each minion
    (Minion.status_84, GetMinionStatus_800107A0); also the head of UnitStats.
    Heal_80011CD0 refills hp/mp (Meos4's randomizer calls 0x80011CD0 "healFn"). */
+/* current / maximum of a gauge (UnitStatus.hp_8, mp_C); the save packer copies it as one */
+typedef struct UnitGauge
+{
+    short cur_0;
+    short max_2;
+} UnitGauge;
+
+/* the 18-byte stat block of a unit (UnitStatus.stats_2C, Minion.field_CC); copied as one by the save packer */
+typedef struct UnitStatBlock
+{
+    unsigned char cur_0[6];  // attack, defense, magic attack, magic defense, speed, critical (sub_8001980C)
+    unsigned char base_6[6]; // the species' base stats; pick the growth kind (sub_80011D98)
+    unsigned char frac_C[6]; // fractional growth (0..99)
+} UnitStatBlock;
+
 typedef struct UnitStatus
 {
     int status_0;          // status effect bits (0x400 survives ClearStatus_80011C30)
     unsigned int exp_4;           // low 26 bits; level_44 holds the high part
-    short hp_8;
-    short maxHp_A;
-    short mp_C;
-    short maxMp_E;
+    UnitGauge hp_8;
+    UnitGauge mp_C;
     unsigned char name_10[0xC]; // charTables_8008685C encoding, see DecodeNames_8003FBD4
     unsigned char field_1C[4];  // equipped weapon/armor/accessory ids (GetEquipmentId_8003356C)
     unsigned char field_20[0xC]; // ApplyEquipmentModifiers_80033754
-    unsigned char stats_2C[6]; // attack, defense, magic attack, magic defense, speed, critical (sub_8001980C)
-    unsigned char base_32[6];  // the species' base stats; pick the growth kind (sub_80011D98)
-    unsigned char frac_38[6];  // fractional growth (0..99)
+    UnitStatBlock stats_2C;
     unsigned char element_3E[4];
     short elementMask_42;
     unsigned char level_44;
@@ -61,10 +72,9 @@ typedef struct
     unsigned char field_3;
     unsigned char ancestors_4[6][0xC]; // names (sub_80010724, sub_80033830)
     unsigned char species_4C[0x30];    // species history (sub_800338B0)
-    unsigned char field_7C[6];         // element masks of the ancestors (sub_80010768, sub_80033848)
-    char pad_82[2];
+    unsigned char field_7C[8];         // element masks of the ancestors (sub_80010768, sub_80033848); 6 used, 8 saved
     UnitStatus status_84;
-    unsigned char field_CC[0x12];
+    UnitStatBlock field_CC;
     UnitSkills skills_DE;
     char pad_F2[2];
     unsigned int magicBits_F4; // CountMagicBits_8001AE54

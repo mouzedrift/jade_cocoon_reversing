@@ -787,10 +787,10 @@ void sub_800A5C64(CombBtlTask* t)
         dword_800A8490 = dword_800A85B8;
         byte_800A84A8 |= 2;
     }
-    else if (u->hp_8 - word_800A84BC <= 0)
+    else if (u->hp_8.cur_0 - word_800A84BC <= 0)
     {
         dword_800A85A8.kind_0 = 0xB;
-        word_800A84BC = u->hp_8;
+        word_800A84BC = u->hp_8.cur_0;
         t->next_8 = sub_800A68E0;
         word_800A84A6 = 0x6F;
         byte_800A84A8 |= 1;
@@ -1195,7 +1195,7 @@ void sub_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     {
         UnitStatus* r = sub_80014390((unsigned char)(p->side_18 + 8));
         sub_800127D0(p->side_18 + 8, 0, d, 0);
-        if (r->hp_8 <= 0)
+        if (r->hp_8.cur_0 <= 0)
         {
             sub_800127B8(sub_80014390((unsigned char)(p->side_18 + 8)));
         }

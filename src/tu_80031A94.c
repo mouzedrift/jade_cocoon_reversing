@@ -599,22 +599,22 @@ unsigned char sub_800334BC(unsigned char* arr, int idx)
 // Matched
 short sub_800334CC(UnitStatus* p)
 {
-    return p->maxHp_A;
+    return p->hp_8.max_2;
 }
 // Matched
 short sub_800334D8(UnitStatus* p)
 {
-    return p->hp_8;
+    return p->hp_8.cur_0;
 }
 // Matched
 short sub_800334E4(UnitStatus* p)
 {
-    return p->maxMp_E;
+    return p->mp_C.max_2;
 }
 // Matched
 short sub_800334F0(UnitStatus* p)
 {
-    return p->mp_C;
+    return p->mp_C.cur_0;
 }
 // Matched
 int sub_800334FC(int* p)
@@ -634,12 +634,12 @@ short sub_80033514(UnitStatus* p)
 // Matched
 unsigned char* sub_80033520(UnitStatus* p)
 {
-    return p->stats_2C;
+    return p->stats_2C.cur_0;
 }
 // Matched
 unsigned char sub_80033528(UnitStatus* p, int idx)
 {
-    return sub_800334BC(p->stats_2C, idx);
+    return sub_800334BC(p->stats_2C.cur_0, idx);
 }
 // Matched
 int sub_80033548(UnitStatus* p, int mask)
@@ -679,7 +679,7 @@ void sub_800335D0(UnitStatus* pSrc, UnitStatus* m)
 {
     int r;
     MemCopy_800403E8(m, pSrc, sizeof(UnitStatus));
-    r = CalcEquippedStats_80033624(m->stats_2C, m);
+    r = CalcEquippedStats_80033624(m->stats_2C.cur_0, m);
     if (r)
     {
         m->level_44 = r;
@@ -689,7 +689,7 @@ void sub_800335D0(UnitStatus* pSrc, UnitStatus* m)
 // Matched
 int CalcEquippedStats_80033624(unsigned char* arg0, UnitStatus* arg1)
 {
-    unsigned char* stats = arg1->stats_2C;
+    unsigned char* stats = arg1->stats_2C.cur_0;
     unsigned char* ids = arg1->field_1C;
     int* tbl[4];
     int i;
@@ -758,7 +758,7 @@ UnitStatus* GetMinionStatusOf_80033818(Minion* p)
 // Matched
 unsigned char* sub_80033820(Minion* p)
 {
-    return p->field_CC;
+    return p->field_CC.cur_0;
 }
 // Matched
 unsigned char* GetMinionNameOf_80033828(Minion* p)
@@ -964,7 +964,7 @@ int CheckMagicCastable_80033C08(struct_minion_ref* p)
     {
         return 6;
     }
-    if (r->mp_C >= v)
+    if (r->mp_C.cur_0 >= v)
     {
         return 0;
     }
@@ -984,7 +984,7 @@ int sub_80033C98(struct_minion_ref* p)
     {
         return 7;
     }
-    if (p->field_C_minion->status_84.mp_C < a)
+    if (p->field_C_minion->status_84.mp_C.cur_0 < a)
     {
         if (p->field_A == 0)
         {
@@ -1004,7 +1004,7 @@ int sub_80033D20(struct_minion_ref* p)
         switch (magicData_8007C438[r].field_7)
         {
         case 0:
-            if (q->hp_8 == q->maxHp_A)
+            if (q->hp_8.cur_0 == q->hp_8.max_2)
             {
                 return 3;
             }
@@ -1061,43 +1061,43 @@ int sub_80033DF4(ItemUse_DF4* p)
     case 0:
     case 1:
     case 2:
-        if (t->hp_8 == t->maxHp_A)
+        if (t->hp_8.cur_0 == t->hp_8.max_2)
         {
             full = 1;
         }
         break;
     case 3:
-        if (t->maxHp_A == 999)
+        if (t->hp_8.max_2 == 999)
         {
             full = 1;
         }
         break;
     case 4:
-        if (t->stats_2C[0] >= 99)
+        if (t->stats_2C.cur_0[0] >= 99)
         {
             full = 1;
         }
         break;
     case 5:
-        if (t->stats_2C[4] >= 99)
+        if (t->stats_2C.cur_0[4] >= 99)
         {
             full = 1;
         }
         break;
     case 6:
-        if (t->stats_2C[1] >= 99)
+        if (t->stats_2C.cur_0[1] >= 99)
         {
             full = 1;
         }
         break;
     case 7:
-        if (t->stats_2C[2] >= 99)
+        if (t->stats_2C.cur_0[2] >= 99)
         {
             full = 1;
         }
         break;
     case 8:
-        if (t->stats_2C[3] >= 99)
+        if (t->stats_2C.cur_0[3] >= 99)
         {
             full = 1;
         }
@@ -1106,13 +1106,13 @@ int sub_80033DF4(ItemUse_DF4* p)
     case 10:
     case 11:
     case 12:
-        if (t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
+        if (t->hp_8.cur_0 == t->hp_8.max_2 && t->mp_C.cur_0 == t->mp_C.max_2)
         {
             full = 1;
         }
         break;
     case 13:
-        if (!(t->status_0 & 0x7FB) && t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
+        if (!(t->status_0 & 0x7FB) && t->hp_8.cur_0 == t->hp_8.max_2 && t->mp_C.cur_0 == t->mp_C.max_2)
         {
             full = 1;
         }

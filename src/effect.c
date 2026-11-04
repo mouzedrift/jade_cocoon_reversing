@@ -78,13 +78,13 @@ void sub_80013EE8(int* out, UnitStatus* m, unsigned char* x, int mode)
     int b;
     if (mode == 1)
     {
-        out[0] = m->stats_2C[0];
-        out[2] = m->stats_2C[2];
+        out[0] = m->stats_2C.cur_0[0];
+        out[2] = m->stats_2C.cur_0[2];
         out[4] = sub_80014114(10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->stats_2C.base_6[5] / 10));
         out[8] = 0;
-        a = m->stats_2C[1] * (m->stats_2C[1] - 20) / 7;
-        b = m->stats_2C[3] * (m->stats_2C[3] - 20) / 7;
+        a = m->stats_2C.cur_0[1] * (m->stats_2C.cur_0[1] - 20) / 7;
+        b = m->stats_2C.cur_0[3] * (m->stats_2C.cur_0[3] - 20) / 7;
         out[1] = (a < 0) ? 0 : ((a < 0x7FFF) ? a : 0x7FFF);
         out[3] = (b < 0) ? 0 : ((b < 0x7FFF) ? b : 0x7FFF);
         out[5] = sub_8001413C(10);
@@ -93,16 +93,16 @@ void sub_80013EE8(int* out, UnitStatus* m, unsigned char* x, int mode)
     }
     else
     {
-        out[0] = m->stats_2C[0];
-        out[2] = m->stats_2C[2];
-        out[4] = sub_80014114(sub_80014200(m->stats_2C) / 10) + x[5];
-        out[6] = CriticalRateTransform_80014164((unsigned char)(m->base_32[5] / 10));
+        out[0] = m->stats_2C.cur_0[0];
+        out[2] = m->stats_2C.cur_0[2];
+        out[4] = sub_80014114(sub_80014200(m->stats_2C.cur_0) / 10) + x[5];
+        out[6] = CriticalRateTransform_80014164((unsigned char)(m->stats_2C.base_6[5] / 10));
         out[8] = 0;
-        out[1] = m->stats_2C[1];
-        out[3] = m->stats_2C[3];
-        out[5] = sub_8001413C(sub_80014200(m->stats_2C) / 10);
+        out[1] = m->stats_2C.cur_0[1];
+        out[3] = m->stats_2C.cur_0[3];
+        out[5] = sub_8001413C(sub_80014200(m->stats_2C.cur_0) / 10);
         out[7] = 0;
-        out[9] = sub_80014200(m->stats_2C);
+        out[9] = sub_80014200(m->stats_2C.cur_0);
 
     }
 }

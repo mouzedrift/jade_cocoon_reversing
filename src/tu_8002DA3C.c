@@ -116,7 +116,7 @@ void sub_8002DB48(UnitStatus* m, int ot, int unused, unsigned short* pos, Minion
     }
     if (cmp)
     {
-        d = cmp->maxHp_A - m->maxHp_A;
+        d = cmp->hp_8.max_2 - m->hp_8.max_2;
         if (d)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -126,10 +126,10 @@ void sub_8002DB48(UnitStatus* m, int ot, int unused, unsigned short* pos, Minion
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x45;
-    sub_8002EFC4((char*)&m->hp_8, 0, 0, loc, ot, 1);
+    sub_8002EFC4((char*)&m->hp_8.cur_0, 0, 0, loc, ot, 1);
     if (cmp)
     {
-        d = cmp->maxMp_E - m->maxMp_E;
+        d = cmp->mp_C.max_2 - m->mp_C.max_2;
         if (d)
         {
             loc2[0] = pos[0] + 0x2F;
@@ -139,7 +139,7 @@ void sub_8002DB48(UnitStatus* m, int ot, int unused, unsigned short* pos, Minion
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x63;
-    sub_8002EFC4((char*)&m->mp_C, 0, 0, loc, ot, 1);
+    sub_8002EFC4((char*)&m->mp_C.cur_0, 0, 0, loc, ot, 1);
     w[0] = 2;
     w[1] = 0;
     u = m->exp_4;
@@ -158,7 +158,7 @@ void sub_8002DB48(UnitStatus* m, int ot, int unused, unsigned short* pos, Minion
     sub_8002E730(loc, buf, ot);
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 0x3D;
-    sub_8002EACC(m, loc, (int)mn->field_CC, ot);
+    sub_8002EACC(m, loc, (int)mn->field_CC.cur_0, ot);
     CalcEquippedStats_80033624(st, m);
     if (cmp)
     {
@@ -354,12 +354,12 @@ void sub_8002E334(UnitStatus* a0, MenuDrawArgs* a1)
     v[1] = 0;
     loc2[0] = base[0] + 0x22;
     loc2[1] = base[1] + 0x14;
-    v[2] = a0->hp_8;
-    v[3] = a0->maxHp_A;
+    v[2] = a0->hp_8.cur_0;
+    v[3] = a0->hp_8.max_2;
     DrawGauge_8002BA54(v, 0, loc2, a1->ot_0);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
-    sub_8002EE28((short*)&a0->hp_8, loc2, a1->ot_0, 1);
+    sub_8002EE28((short*)&a0->hp_8.cur_0, loc2, a1->ot_0, 1);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 0x24;
     DrawUiTiySprt_8002C06C(loc2, 0x70, a1->ot_0);
@@ -505,7 +505,7 @@ void sub_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot)
     RECT r;
     Color_EACC col = dword_800743D0;
     SPRT* prim;
-    sub_8001419C(a0->stats_2C, loc);
+    sub_8001419C(a0->stats_2C.cur_0, loc);
     loc[0] += pos[0];
     loc[1] += pos[1];
     DrawUiTiySprt_8002C06C(loc, 10, ot);
