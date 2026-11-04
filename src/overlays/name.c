@@ -12,7 +12,7 @@ typedef struct
     short page_A;
     short cursor_C;
     unsigned short gridCursor_E;
-    short name_10[10]; // SJIS characters, the first byte of a full-width character is >= 0x81
+    unsigned char name_10[20]; // SJIS characters, the first byte of a full-width character is >= 0x81
     char c_24;
     char c_25;
     short pad_26;
@@ -407,35 +407,38 @@ void HandleCharGridInput_800B7A88(NameEntry* entry)
     ClampNameLength_800B7CA4(entry);
 }
 
-#if 0
-// Not matched: frame/regalloc: the original keeps 6 saved regs (two copies of the list address, the constant 2 for length_44 - 2) and recomputes the list[i] address for the second EncodeText call
 extern void DeleteNameChar_800B7C68(NameEntry* entry);
+// Matched
 void InputNameChar_800B7AB4(NameEntry* entry)
 {
     unsigned short* list[2];
+    unsigned short** p;
+    unsigned short** q;
     short i = 0;
+    int charLen;
+    p = list;
+    q = list;
     list[0] = 0;
     if (IsConfirmPressedP1_8003D380(0) && entry->length_44 < 0x13)
     {
         PlaySfx_80031494(0x7E);
-        ((char*)entry->name_10)[entry->length_44] = charPages_800B8190[entry->page_A][entry->cursor_C / cursorGrids_800B8200[entry->focus_8].cols_6].chars_4[(entry->cursor_C % cursorGrids_800B8200[entry->focus_8].cols_6) * 2];
+        entry->name_10[entry->length_44] = charPages_800B8190[entry->page_A][entry->cursor_C / cursorGrids_800B8200[entry->focus_8].cols_6].chars_4[(entry->cursor_C % cursorGrids_800B8200[entry->focus_8].cols_6) * 2];
         entry->length_44 += 2;
     }
     if (IsCancelPressedP1_8003D41C(1))
     {
         DeleteNameChar_800B7C68(entry);
     }
-    for (i = 0; list[i]; i++)
+    charLen = 2; // bytes per SJIS character
+    for (; p[i]; i++)
     {
-        if (*EncodeText_8003F684(2, list[i]) == ((unsigned char*)entry->name_10)[entry->length_44 - 2])
+        if (*EncodeText_8003F684(2, p[i]) == entry->name_10[entry->length_44 - charLen])
         {
-            ((unsigned char*)entry->name_10)[entry->length_44 - 2] = *EncodeText_8003F684(2, list[i]);
+            entry->name_10[entry->length_44 - charLen] = *(unsigned char*)EncodeText_8003F684(2, q[i]);
             break;
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(name, InputNameChar_800B7AB4);
 
 void DeleteNameChar_800B7C68(NameEntry* entry)
 {

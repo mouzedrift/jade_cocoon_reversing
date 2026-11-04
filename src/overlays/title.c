@@ -232,8 +232,7 @@ void NewGameFadeOut_800A0BCC(TitleTask* t, NameEntryWork* c)
 
 extern void NewGameFadeOut_800A0BCC();
 extern void SsSepSetDecrescendo(short, short, short, long);
-#if 0
-// Not matched: register allocation / scheduling differs
+// Matched
 void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
     int done;
@@ -249,16 +248,8 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
     }
     if (done)
     {
-        if (c->sprts_70)
-        {
-            free3_8003FC6C(c->sprts_70);
-            c->sprts_70 = 0;
-        }
-        if (c->tpages_74)
-        {
-            free3_8003FC6C(c->tpages_74);
-            c->tpages_74 = 0;
-        }
+        FREE_PTR(c->sprts_70);
+        FREE_PTR(c->tpages_74);
         c->timer_68 = 0x3C;
         t->next_8 = NewGameFadeOut_800A0BCC;
         ss = &bgmSound_80091CE0;
@@ -269,8 +260,6 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, NewGameAfterNameMovie_800A0C28);
 
 
 extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);

@@ -133,48 +133,39 @@ void StartConfigMenu_800C2EB4(void)
     task->next_8 = ConfigMenuTask_800C2F70;
 }
 
-#if 0
-// Not matched: the original keeps a second copy of the context pointer in another register
+// Matched
 void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx)
 {
     short prevPos;
     CfgCtxConfig* c;
+    c = ctx;
     DrawMenuBackground_8002BE10();
     DrawConfigPage_800C383C(ctx);
     DrawConfigHelpText_800C450C(ctx);
     DrawButtonHelpBar_8002B004(helpBar_800C592C, 0, 0xE);
     prevPos = ctx->cursorPos_44;
     UpdateMenuCursor_8003D794(&ctx->cursor_3C, 0);
-    c = ctx;
-    if (prevPos != c->cursorPos_44)
+    if (prevPos != ctx->cursorPos_44)
     {
-        LoadConfigSettings_800C3060(c);
+        LoadConfigSettings_800C3060(ctx);
     }
-    if (c->notice_30 == 0)
+    if (ctx->notice_30 == 0)
     {
-        HandleConfigPageInput_800C3540(c);
+        HandleConfigPageInput_800C3540(ctx);
     }
-    if (c->nextPage_4 != -1)
+    if (ctx->nextPage_4 != -1)
     {
-        if (c->nextPage_4 != 5)
-        {
-            OpenConfigPage_800C378C(c);
-            if (ctx->nextPage_4 != 5)
-            {
-                return;
-            }
-        }
+        if (ctx->nextPage_4 == 5)
+            goto done;
+        OpenConfigPage_800C378C(ctx);
     }
-    else if (ctx->nextPage_4 != 5)
+    if (c->nextPage_4 == 5)
     {
-        return;
+    done:
+        configMenuActive_800C5944 = 0;
+        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
-    configMenuActive_800C5944 = 0;
-    t->flags_0 = (t->flags_0 & ~1) | 0x8000;
 }
-
-#endif
-INCLUDE_OVERLAY_ASM(config, ConfigMenuTask_800C2F70);
 
 // Matched
 void LoadConfigSettings_800C3060(CfgCtxConfig* c)
@@ -713,8 +704,7 @@ done:
     DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
-#if 0
-// Not matched: the original does not keep i*38 in a register across the loop body (uses fewer saved registers)
+// Matched
 void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
 {
     short rect[4];
@@ -729,9 +719,9 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     rect[2] = 0x5C;
     rect[3] = 0x12;
     box1.frame_B = 1;
+    box1.colors_A = 0;
     box1.x_0 = 0x8C;
     box1.col_8 = uiColor_8008B590;
-    box1.colors_A = 0;
     box1.y_2 = 0x14;
     DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
@@ -739,7 +729,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     DrawWindow_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
     for (i = 0; i < 4; i++)
     {
-        unsigned int blink = 0;
+        unsigned int blink;
         rect2[0] = 0x52;
         rect2[1] = i * 38 + 0x2A;
         rect2[2] = 0x12;
@@ -749,6 +739,10 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         {
             blink = (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
         }
+        else
+        {
+            blink = 0;
+        }
         tail.col_0 = i;
         tail.frame_3 = 1;
         DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, blink);
@@ -756,8 +750,8 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
         rect3[3] = 0x24;
-        box3.col_8 = i;
         box3.colors_A = 0;
+        box3.col_8 = i;
         box3.frame_B = 1;
         box3.x_0 = 0x74;
         box3.y_2 = i * 38 + 0x2C;
@@ -767,8 +761,6 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         DrawWindow_80042460(rect3, &box3.col_8, dword_8008D454 + 0x38, 0);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(config, DrawScreenColorPage_800C4180);
 
 // Matched
 void DrawVibrationPage_800C4390(CfgCtxConfig* c)

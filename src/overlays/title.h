@@ -71,4 +71,7 @@ extern int titleResult_800A2818;
 
 extern UnitStatus levantInitStatus_800A2730;
 
+// frees a heap block and clears the pointer to it
+#define FREE_PTR(p) do { if (p) { free3_8003FC6C(p); (p) = 0; } } while (0)
+
 #endif
