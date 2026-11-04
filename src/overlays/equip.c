@@ -590,8 +590,7 @@ void sub_800C5440(short a0, short a1, int a2)
 }
 
 
-#if 0
-// Not matched: the constant 8 in the stack struct is built as addiu/sll/sra in the original
+// Matched
 void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
 {
     short i;
@@ -599,6 +598,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
     int a;
     int flag;
     Params5510_equip prm;
+    short k = 8;
     for (i = 0; i < 3; i++)
     {
         v = sub_800AD288(i + q->b, sel + 1);
@@ -640,7 +640,7 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
     }
     prm.a = q->c;
     prm.b = frameCount_8008D3FC;
-    prm.c = (short)8;
+    prm.c = k;
     prm.d = q->a;
     prm.e = tab_800C598C;
     prm.f = q->d;
@@ -660,8 +660,6 @@ void sub_800C5510(Quad16_equip* q, Rect8_equip* r, short sel)
         sub_8002C6DC((int)name_800C5838, 1, q->d);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(equip, sub_800C5510);
 
 
 INCLUDE_OVERLAY_ASM(equip, dword_800C5834);
