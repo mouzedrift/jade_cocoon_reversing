@@ -17,11 +17,11 @@ typedef struct CombatModelParams
     int parts_4[3];
     int weights_10[3];
     int modelId_1C;
-    int f20;
+    int texPart_20;     // parts_4 index of the model the textures come from
     int angle_24;
-    int f28;
-    int f2C;
-    int f30;
+    int texId_28;       // model id to take the textures from
+    int main_2C;        // parts_4 index of the model whose animations are kept
+    int vram_30;        // ModelVramSlot* (ModelTaskState.vram_34)
 } CombatModelParams;
 
 typedef struct CombatSlot

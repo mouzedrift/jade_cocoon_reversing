@@ -15,20 +15,20 @@
 typedef struct CombatCameraState
 {
     char pad_0[0x14];
-    int f14[3];
-    int f20[3];
+    int eye_14[3];
+    int lookAt_20[3];
     short pad_2C;
-    short f2E;
+    short geomScreen_2E;
     char pad_30[4];
-    SVECTOR rot_34;
-    short f3C[3];
+    SVECTOR lightDir_34;
+    short lightColor_3C[3];
 } CombatCameraState;
 
 extern void GetActorHitFrame_80018E5C(void* p);
 extern void SetActorStatusTint_80018EBC(void* p, UnitStatus* v);
 extern void sub_800376A0(void* a, void* b);
 
-extern int CountMinions_800A1A3C(Minion* p, int n);
+extern int CountMinions_800A1A3C(Minion* minions, int len);
 
 typedef struct CombatTask
 {
@@ -50,18 +50,19 @@ extern char* dword_8007DC78;
 extern int StartModelTask_80010850(void* p);
 extern CombatCameraState cameraState_8008D4F0;
 extern int cameraZoom_8008B4F8;
-extern int IsMinionSlotEmpty_800A1934(Minion* p);
+extern int IsMinionSlotEmpty_800A1934(Minion* minion);
 extern void ResetCameraToLevant_800376A8(void);
 extern void StartBattleCamera_80037748(void);
 extern void InitCameraTask_800368F8(void);
 extern void FreeCameraTask_800376A0(void);
 extern void ResetCombatCamera_800A12B8(void);
-typedef struct CombatLocalCombat
+// GetTopSpecies_800338DC output: the three main ancestor species and their weights
+typedef struct CombatTopSpecies
 {
-    unsigned char b[4];
+    unsigned char species[4];
     int pad_4;
-    int w[3];
-} CombatLocalCombat;
+    int weights[3];
+} CombatTopSpecies;
 extern void Cbt_8002FAA0(int a, void* b, unsigned char* c, int d);
 
 extern void Cbt_8002C290(void* a, int b, int c);
@@ -80,127 +81,127 @@ extern void OnModelFileLoaded_80025D7C();
 extern short defaultBones_80079140[]; // default bone table
 extern int ratan2Degrees_8003B56C(int a, int b);
 extern void InitPolyFT4_80029A10(void* a, void* b);
-extern int ElementMixAngle_800A0968(unsigned char* a);
-typedef struct CombatShortPair_combat
+extern int ElementMixAngle_800A0968(unsigned char* elements);
+typedef struct CombatVramPos
 {
-    unsigned short a;
-    unsigned short b;
-} CombatShortPair_combat;
-extern CombatShortPair_combat dword_8007DCAC[];
-extern CombatShortPair_combat dword_8007DCBC[];
+    unsigned short x;
+    unsigned short y;
+} CombatVramPos;
+extern CombatVramPos dword_8007DCAC[];
+extern CombatVramPos dword_8007DCBC[];
 extern short dword_80084540[];
 extern Minion saveMinions_8008BEF8[];
 extern void PlayMusic_800300E0(int a, int b);
 extern void LoadUiTiy_8002BF74(void);
-extern void ClearMinionSlot_800A197C(Minion* p);
+extern void ClearMinionSlot_800A197C(Minion* minion);
 extern void LoadModelTexToVram_800A0D64(int a, int b);
 extern void CombatWaitUiTiy_800A14AC();
 extern void CombatReq_8001E34C(void* p, void* q);
 
-extern void BuildMinionModelParams_800A05E0(Minion* a, CombatModelParams* o, int c);
-extern int GetElementHueAngle_800A0898(unsigned char* a);
+extern void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram);
+extern int GetElementHueAngle_800A0898(unsigned char* elements);
 
 
 int dword_800A05A0 SDATA = 14;
 
 #if 0
 // Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
-void BuildMinionModelParams_800A05E0(Minion* a, CombatModelParams* o, int c)
+void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram)
 {
-    CombatLocalCombat l;
-    unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
-    int t;
-    o->count_0 = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
-    o->parts_4[0] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
-    o->parts_4[1] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
-    o->parts_4[2] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
-    o->weights_10[0] = l.w[0];
-    o->weights_10[1] = l.w[1];
-    o->weights_10[2] = l.w[2];
-    if (o->parts_4[0] == o->parts_4[1])
+    CombatTopSpecies top;
+    unsigned int mainModel = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
+    int tmpWeight;
+    params->count_0 = GetTopSpecies_800338DC(minion->species_4C, top.species, top.weights);
+    params->parts_4[0] = GetSpeciesModelDesc_80019C70(top.species[0])->modelId_0;
+    params->parts_4[1] = GetSpeciesModelDesc_80019C70(top.species[1])->modelId_0;
+    params->parts_4[2] = GetSpeciesModelDesc_80019C70(top.species[2])->modelId_0;
+    params->weights_10[0] = top.weights[0];
+    params->weights_10[1] = top.weights[1];
+    params->weights_10[2] = top.weights[2];
+    if (params->parts_4[0] == params->parts_4[1])
     {
-        if (o->parts_4[1] == o->parts_4[2])
+        if (params->parts_4[1] == params->parts_4[2])
         {
-            o->weights_10[0] += o->weights_10[1];
-            o->weights_10[1] = 0;
-            o->weights_10[2] = 0;
-            o->count_0 = 1;
+            params->weights_10[0] += params->weights_10[1];
+            params->weights_10[1] = 0;
+            params->weights_10[2] = 0;
+            params->count_0 = 1;
         }
         else
         {
-            t = o->weights_10[2];
-            o->count_0 = 2;
-            o->weights_10[0] = o->weights_10[0] + o->weights_10[1];
-            o->weights_10[2] = 0;
-            o->parts_4[1] = o->parts_4[2];
-            o->weights_10[1] = t;
+            tmpWeight = params->weights_10[2];
+            params->count_0 = 2;
+            params->weights_10[0] = params->weights_10[0] + params->weights_10[1];
+            params->weights_10[2] = 0;
+            params->parts_4[1] = params->parts_4[2];
+            params->weights_10[1] = tmpWeight;
         }
     }
-    else if (o->parts_4[0] == o->parts_4[2])
+    else if (params->parts_4[0] == params->parts_4[2])
     {
-        o->weights_10[0] = o->weights_10[0] + o->weights_10[2];
-        o->weights_10[2] = 0;
-        o->count_0 = 2;
+        params->weights_10[0] = params->weights_10[0] + params->weights_10[2];
+        params->weights_10[2] = 0;
+        params->count_0 = 2;
     }
-    else if (o->parts_4[1] == o->parts_4[2])
+    else if (params->parts_4[1] == params->parts_4[2])
     {
-        o->weights_10[1] = o->weights_10[1] + o->weights_10[2];
-        o->weights_10[2] = 0;
-        o->count_0 = 2;
+        params->weights_10[1] = params->weights_10[1] + params->weights_10[2];
+        params->weights_10[2] = 0;
+        params->count_0 = 2;
     }
-    o->f2C = 0;
-    if (o->parts_4[0] != h)
+    params->main_2C = 0;
+    if (params->parts_4[0] != mainModel)
     {
-        if (o->parts_4[1] == h)
+        if (params->parts_4[1] == mainModel)
         {
-            t = o->weights_10[1];
-            o->parts_4[1] = o->parts_4[0];
-            o->parts_4[0] = h;
-            o->weights_10[1] = o->weights_10[0];
-            o->weights_10[0] = t;
+            tmpWeight = params->weights_10[1];
+            params->parts_4[1] = params->parts_4[0];
+            params->parts_4[0] = mainModel;
+            params->weights_10[1] = params->weights_10[0];
+            params->weights_10[0] = tmpWeight;
         }
-        else if (o->parts_4[2] == h)
+        else if (params->parts_4[2] == mainModel)
         {
-            t = o->weights_10[2];
-            o->parts_4[2] = o->parts_4[0];
-            o->parts_4[0] = h;
-            o->weights_10[2] = o->weights_10[0];
-            o->weights_10[0] = t;
+            tmpWeight = params->weights_10[2];
+            params->parts_4[2] = params->parts_4[0];
+            params->parts_4[0] = mainModel;
+            params->weights_10[2] = params->weights_10[0];
+            params->weights_10[0] = tmpWeight;
         }
-        else if (o->count_0 < 2)
+        else if (params->count_0 < 2)
         {
-            t = o->weights_10[0];
-            o->parts_4[1] = o->parts_4[0];
-            o->parts_4[0] = h;
-            o->weights_10[0] = 0;
-            o->count_0 = 2;
-            o->weights_10[1] = t;
+            tmpWeight = params->weights_10[0];
+            params->parts_4[1] = params->parts_4[0];
+            params->parts_4[0] = mainModel;
+            params->weights_10[0] = 0;
+            params->count_0 = 2;
+            params->weights_10[1] = tmpWeight;
         }
         else
         {
-            t = o->weights_10[0];
-            o->parts_4[2] = o->parts_4[0];
-            o->parts_4[0] = h;
-            o->weights_10[0] = 0;
-            o->count_0 = 3;
-            o->weights_10[2] = t;
+            tmpWeight = params->weights_10[0];
+            params->parts_4[2] = params->parts_4[0];
+            params->parts_4[0] = mainModel;
+            params->weights_10[0] = 0;
+            params->count_0 = 3;
+            params->weights_10[2] = tmpWeight;
         }
     }
-    o->modelId_1C = Cbt_80019A80(a->status_84.level_44);
-    o->f20 = o->count_0 - 1;
-    o->f28 = GetSpeciesModelDesc_80019C70(a->field_3)->modelId_0;
-    o->f30 = c;
-    o->angle_24 = GetElementHueAngle_800A0898(a->status_84.element_3E);
-    if (o->angle_24 == -1000)
+    params->modelId_1C = Cbt_80019A80(minion->status_84.level_44);
+    params->texPart_20 = params->count_0 - 1;
+    params->texId_28 = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
+    params->vram_30 = vram;
+    params->angle_24 = GetElementHueAngle_800A0898(minion->status_84.element_3E);
+    if (params->angle_24 == -1000)
     {
-        o->angle_24 = GetSpeciesModelDesc_80019C70(a->field_3)->field_2 << 1;
+        params->angle_24 = GetSpeciesModelDesc_80019C70(minion->field_3)->field_2 << 1;
     }
     else
     {
-        o->angle_24 = o->angle_24 - (GetSpeciesModelDesc_80019C70(a->field_3)->field_3 << 1);
-        if (o->angle_24 < 0)
+        params->angle_24 = params->angle_24 - (GetSpeciesModelDesc_80019C70(minion->field_3)->field_3 << 1);
+        if (params->angle_24 < 0)
         {
-            o->angle_24 = o->angle_24 + 0x168;
+            params->angle_24 = params->angle_24 + 0x168;
         }
     }
 }
@@ -209,57 +210,57 @@ void BuildMinionModelParams_800A05E0(Minion* a, CombatModelParams* o, int c)
 INCLUDE_OVERLAY_ASM(combat, BuildMinionModelParams_800A05E0);
 
 // Matched
-int GetElementHueAngle_800A0898(unsigned char* a)
+int GetElementHueAngle_800A0898(unsigned char* elements)
 {
-    int n = 0;
-    int r;
+    int count = 0;
+    int angle;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (a[i])
+        if (elements[i])
         {
-            n++;
+            count++;
         }
     }
-    if (n == 1)
+    if (count == 1)
     {
-        r = -1000;
+        angle = -1000;
     }
-    else if (n == 2)
+    else if (count == 2)
     {
-        if (a[3] && a[1])
+        if (elements[3] && elements[1])
         {
-            r = a[1] < a[3] ? 0xF5 : 0x41;
+            angle = elements[1] < elements[3] ? 0xF5 : 0x41;
         }
-        else if (a[0] && a[2])
+        else if (elements[0] && elements[2])
         {
-            r = a[2] < a[0] ? 0x14F : 0x9B;
+            angle = elements[2] < elements[0] ? 0x14F : 0x9B;
         }
         else
         {
-            r = ElementMixAngle_800A0968(a);
+            angle = ElementMixAngle_800A0968(elements);
         }
     }
     else
     {
-        r = ElementMixAngle_800A0968(a);
+        angle = ElementMixAngle_800A0968(elements);
     }
-    return r;
+    return angle;
 }
 
 // Matched
-int ElementMixAngle_800A0968(unsigned char* a)
+int ElementMixAngle_800A0968(unsigned char* elements)
 {
-    short* t = dword_80084540;
+    short* sinTbl = dword_80084540;
     int p1, p0, p3, p2, p4, p5, p6, p7;
-    p0 = t[0x5C6 / 2] * a[0];
-    p1 = t[0x1DC6 / 2] * a[0];
-    p2 = t[0x1DC6 / 2] * a[3];
-    p3 = t[0x15C6 / 2] * a[3];
-    p4 = t[0x15C6 / 2] * a[2];
-    p5 = t[0xDC6 / 2] * a[2];
-    p6 = t[0xDC6 / 2] * a[1];
-    p7 = t[0x5C6 / 2] * a[1];
+    p0 = sinTbl[0x5C6 / 2] * elements[0];
+    p1 = sinTbl[0x1DC6 / 2] * elements[0];
+    p2 = sinTbl[0x1DC6 / 2] * elements[3];
+    p3 = sinTbl[0x15C6 / 2] * elements[3];
+    p4 = sinTbl[0x15C6 / 2] * elements[2];
+    p5 = sinTbl[0xDC6 / 2] * elements[2];
+    p6 = sinTbl[0xDC6 / 2] * elements[1];
+    p7 = sinTbl[0x5C6 / 2] * elements[1];
     return ratan2Degrees_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
 }
 
@@ -267,10 +268,10 @@ int ElementMixAngle_800A0968(unsigned char* a)
 void InitCombatSlots_800A0A28(void)
 {
     int i;
-    int m = -1;
+    int freeTask = -1;
     for (i = 1; i >= 0; i--)
     {
-        combatSlots_800A3A08[i].task_0 = m;
+        combatSlots_800A3A08[i].task_0 = freeTask;
     }
     InitActors_8001D378();
 }
@@ -290,13 +291,13 @@ void FreeCombatSlots_800A0A6C(void)
 }
 
 // Matched
-void StartSlotModel_800A0ACC(int i, Minion* x)
+void StartSlotModel_800A0ACC(int i, Minion* minion)
 {
-    CombatSlot* s = &combatSlots_800A3A08[i];
-    BuildMinionModelParams_800A05E0(x, &s->params_8, (int)(dword_8007DC78 + (i << 6)));
-    s->minion_4 = x;
-    s->task_0 = StartModelTask_80010850(&s->params_8);
-    s->actor_3C = 0;
+    CombatSlot* slot = &combatSlots_800A3A08[i];
+    BuildMinionModelParams_800A05E0(minion, &slot->params_8, (int)(dword_8007DC78 + (i << 6)));
+    slot->minion_4 = minion;
+    slot->task_0 = StartModelTask_80010850(&slot->params_8);
+    slot->actor_3C = 0;
 }
 
 // Matched
@@ -309,47 +310,47 @@ void RunSlotModelTask_800A0B3C(int i)
 // Matched
 void FreeSlotModel_800A0B70(int i)
 {
-    CombatSlot* s = &combatSlots_800A3A08[i];
-    int v = s->task_0;
-    s->task_0 = -1;
-    FreeModelTask_8001098C(v);
+    CombatSlot* slot = &combatSlots_800A3A08[i];
+    int task = slot->task_0;
+    slot->task_0 = -1;
+    FreeModelTask_8001098C(task);
 }
 
 // Matched
-void CreateSlotActor_800A0BA8(int i, int* src, short* sh)
+void CreateSlotActor_800A0BA8(int i, int* pos, short* rot)
 {
-    CombatSlot* s = &combatSlots_800A3A08[i];
-    ActorDesc r;
-    Model* h = GetModelTaskModel_80010A44(s->task_0);
-    int v = GetRankForLevel_80019A80(s->minion_4->status_84.level_44);
-    unsigned short* x;
-    unsigned short* y;
-    r.modelId_0 = -1;
-    r.kind_4 = 2;
-    r.pos_8[0] = src[0];
-    r.pos_8[1] = src[1];
-    r.pos_8[2] = src[2];
-    r.rot_14[0] = sh[0];
-    r.rot_14[1] = sh[1];
-    r.rot_14[2] = sh[2];
-    r.clutRow_1C = i;
-    r.animIdx_20 = 4;
-    r.frame_24 = -1;
-    r.frameSpeed_28 = 0x1000;
-    r.blendDiv_2C = 4;
-    r.visible_30 = 0;
-    r.model_48 = h;
-    r.bones_34 = defaultBones_80079140;
-    r.baseScale_38 = GetModelBaseScale_80024E90(h, v);
-    r.boneScale_3C = GetModelBoneScale_80024EC8(h, v);
-    r.anims_40 = GetModelActorAnims_80024E38(h);
-    r.effectTbl_44 = GetModelEffectTable_80024E64(h);
-    r.hasMatrices_4C = 1;
-    s->actor_3C = CreateActor_8001D45C(&r);
-    x = GetModelBoneGroupLevels_80024F00(h, v);
-    y = GetModelBoneGroupFlags_80024F38(h, v);
-    SetBoneGroupFlags_80019B14(s->actor_3C->bones_134, x, y);
-    SetActorGroundMove_8001D68C(s->actor_3C, 0);
+    CombatSlot* slot = &combatSlots_800A3A08[i];
+    ActorDesc desc;
+    Model* model = GetModelTaskModel_80010A44(slot->task_0);
+    int rank = GetRankForLevel_80019A80(slot->minion_4->status_84.level_44);
+    unsigned short* levels;
+    unsigned short* groupFlags;
+    desc.modelId_0 = -1;
+    desc.kind_4 = 2;
+    desc.pos_8[0] = pos[0];
+    desc.pos_8[1] = pos[1];
+    desc.pos_8[2] = pos[2];
+    desc.rot_14[0] = rot[0];
+    desc.rot_14[1] = rot[1];
+    desc.rot_14[2] = rot[2];
+    desc.clutRow_1C = i;
+    desc.animIdx_20 = 4;
+    desc.frame_24 = -1;
+    desc.frameSpeed_28 = 0x1000;
+    desc.blendDiv_2C = 4;
+    desc.visible_30 = 0;
+    desc.model_48 = model;
+    desc.bones_34 = defaultBones_80079140;
+    desc.baseScale_38 = GetModelBaseScale_80024E90(model, rank);
+    desc.boneScale_3C = GetModelBoneScale_80024EC8(model, rank);
+    desc.anims_40 = GetModelActorAnims_80024E38(model);
+    desc.effectTbl_44 = GetModelEffectTable_80024E64(model);
+    desc.hasMatrices_4C = 1;
+    slot->actor_3C = CreateActor_8001D45C(&desc);
+    levels = GetModelBoneGroupLevels_80024F00(model, rank);
+    groupFlags = GetModelBoneGroupFlags_80024F38(model, rank);
+    SetBoneGroupFlags_80019B14(slot->actor_3C->bones_134, levels, groupFlags);
+    SetActorGroundMove_8001D68C(slot->actor_3C, 0);
 }
 
 // Matched
@@ -364,56 +365,56 @@ void DestroySlotActor_800A0D1C(int i)
 }
 
 // Matched
-void LoadModelTexToVram_800A0D64(int i, int id)
+void LoadModelTexToVram_800A0D64(int vramSlot, int modelId)
 {
-    ModelDesc* q = GetModelDesc_800251E4(id);
-    ModelLoadParams o;
-    FileRequestDesc m;
-    InitModelLoadParams_80025ED0(&o);
-    o.flags_0 = 2;
-    o.model_14 = 0;
-    o.desc_4 = q;
-    o.sel_8 = 0;
-    o.vram_18 = &modelLoaderVram_8007DC70[i];
-    m.flags_0 = 0x69;
-    m.fileId_4 = q->fileId_0;
-    m.offset_8 = q->tex_6.offset << 11;
-    m.size_C = q->tex_6.size << 11;
-    m.dest_10 = 0;
-    m.params_14 = &o;
-    m.paramsSize_18 = 0x3C;
-    m.callback_1C = OnModelFileLoaded_80025D7C;
-    QueueFileRequest_8003BC84(&m);
+    ModelDesc* desc = GetModelDesc_800251E4(modelId);
+    ModelLoadParams params;
+    FileRequestDesc req;
+    InitModelLoadParams_80025ED0(&params);
+    params.flags_0 = 2;
+    params.model_14 = 0;
+    params.desc_4 = desc;
+    params.sel_8 = 0;
+    params.vram_18 = &modelLoaderVram_8007DC70[vramSlot];
+    req.flags_0 = 0x69;
+    req.fileId_4 = desc->fileId_0;
+    req.offset_8 = desc->tex_6.offset << 11;
+    req.size_C = desc->tex_6.size << 11;
+    req.dest_10 = 0;
+    req.params_14 = &params;
+    req.paramsSize_18 = 0x3C;
+    req.callback_1C = OnModelFileLoaded_80025D7C;
+    QueueFileRequest_8003BC84(&req);
 }
 
 // Matched
-void MoveSlotActorTo_800A0E1C(int i, int* src)
+void MoveSlotActorTo_800A0E1C(int i, int* pos)
 {
-    CombatSlot* s = &combatSlots_800A3A08[i];
-    ActorActionDesc r;
-    r.flags_0 = 0;
-    r.script_4 = 0;
-    r.target_8 = 0;
-    r.turnStep_C = 0;
-    r.hitAnim_E = -1;
-    r.effect_10 = -1;
-    r.effectKinds_18 = 0;
-    r.field_1C = 1;
-    r.loopCount_20 = 0;
-    r.scaleTarget_22 = 0;
-    r.nextAnim_24 = -1;
-    r.nextAnim_26 = -1;
-    r.field_28 = -1;
-    r.queuedAnim_2A = -1;
-    r.field_2C = 0;
-    r.path_30 = 0;
-    s->actor_3C->target_70.vx = src[0];
-    s->actor_3C->target_70.vy = src[1];
-    s->actor_3C->target_70.vz = src[2];
-    r.target_8 = (int*)&s->actor_3C->target_70;
-    r.turnStep_C = 0x100;
-    r.nextAnim_26 = 2;
-    CombatReq_8001E34C(s->actor_3C, &r);
+    CombatSlot* slot = &combatSlots_800A3A08[i];
+    ActorActionDesc action;
+    action.flags_0 = 0;
+    action.script_4 = 0;
+    action.target_8 = 0;
+    action.turnStep_C = 0;
+    action.hitAnim_E = -1;
+    action.effect_10 = -1;
+    action.effectKinds_18 = 0;
+    action.field_1C = 1;
+    action.loopCount_20 = 0;
+    action.scaleTarget_22 = 0;
+    action.nextAnim_24 = -1;
+    action.nextAnim_26 = -1;
+    action.field_28 = -1;
+    action.queuedAnim_2A = -1;
+    action.field_2C = 0;
+    action.path_30 = 0;
+    slot->actor_3C->target_70.vx = pos[0];
+    slot->actor_3C->target_70.vy = pos[1];
+    slot->actor_3C->target_70.vz = pos[2];
+    action.target_8 = (int*)&slot->actor_3C->target_70;
+    action.turnStep_C = 0x100;
+    action.nextAnim_26 = 2;
+    CombatReq_8001E34C(slot->actor_3C, &action);
 }
 
 // Matched
@@ -433,16 +434,16 @@ void IsSlotActorReady_800A0F1C(int i)
 // Matched
 CombatColor StartSlotAction_800A0F50(int i, int* p, int x)
 {
-    CombatColor c;
-    CombatSlot* s;
-    memset(&c, 0, 4);
-    s = &combatSlots_800A3A08[i];
+    CombatColor color;
+    CombatSlot* slot;
+    memset(&color, 0, 4);
+    slot = &combatSlots_800A3A08[i];
     if (*p == 0x14)
     {
-        return c;
+        return color;
     }
-    Cbt_80018A4C(&c, s->actor_3C, p, 0, x);
-    return c;
+    Cbt_80018A4C(&color, slot->actor_3C, p, 0, x);
+    return color;
 }
 
 // Matched
@@ -558,29 +559,29 @@ void StopCombatCamera_800A127C(void)
 // Matched
 void ResetCombatCamera_800A12B8(void)
 {
-    CombatCameraState* p = &cameraState_8008D4F0;
-    SaveData* q;
-    p->f2E = 0;
-    p->f20[0] = 0;
-    p->f20[1] = 0;
-    p->f20[2] = 0;
-    p->f14[0] = 0;
-    p->f14[1] = 0;
-    p->f14[2] = 0;
-    p->rot_34.vx = 0;
-    p->rot_34.vy = 0;
-    p->rot_34.vz = 0;
-    p->f3C[0] = 0;
-    p->f3C[1] = 0;
-    p->f3C[2] = 0;
+    CombatCameraState* cam = &cameraState_8008D4F0;
+    SaveData* save;
+    cam->geomScreen_2E = 0;
+    cam->lookAt_20[0] = 0;
+    cam->lookAt_20[1] = 0;
+    cam->lookAt_20[2] = 0;
+    cam->eye_14[0] = 0;
+    cam->eye_14[1] = 0;
+    cam->eye_14[2] = 0;
+    cam->lightDir_34.vx = 0;
+    cam->lightDir_34.vy = 0;
+    cam->lightDir_34.vz = 0;
+    cam->lightColor_3C[0] = 0;
+    cam->lightColor_3C[1] = 0;
+    cam->lightColor_3C[2] = 0;
     cameraZoom_8008B4F8 = 0x1000;
-    q = &saveData_8008B570;
-    q->levant_7A8.pos.x = 0;
-    q->levant_7A8.pos.y = 0;
-    q->levant_7A8.pos.z = 0;
-    q->levant_7A8.rot.vx = 0;
-    q->levant_7A8.rot.vy = 0;
-    q->levant_7A8.rot.vz = 0;
+    save = &saveData_8008B570;
+    save->levant_7A8.pos.x = 0;
+    save->levant_7A8.pos.y = 0;
+    save->levant_7A8.pos.z = 0;
+    save->levant_7A8.rot.vx = 0;
+    save->levant_7A8.rot.vy = 0;
+    save->levant_7A8.rot.vz = 0;
 }
 
 // COMBAT overlay entry (the battle arena): runs combatTaskList_800A398C, back to the title menu after
@@ -667,15 +668,15 @@ extern int CountRosterMinions_800A1AEC(int i);
 
 void CombatEnterStage_800A15B4(CombatTask* t, int x)
 {
-    unsigned int v;
+    unsigned int prev;
     switch (stage_800A3A8C)
     {
     case 0:
         t->next_8 = VersusIntroTask_800A4394;
         break;
     case 1:
-        v = prevStage_800A4070;
-        switch (v)
+        prev = prevStage_800A4070;
+        switch (prev)
         {
         case 0:
         case 3:
@@ -686,7 +687,7 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
         case 2:
             if (CountRosterMinions_800A1AEC(curPlayer_800A38D9))
             {
-                selMode_800A38DB = v;
+                selMode_800A38DB = prev;
                 combatMenuChoice_800A1BC4 = 1;
             }
             else
@@ -719,23 +720,23 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
 // called by the stage overlays when they are done: picks the next stage and loads its overlay
 void CombatNextStage_800A16FC(CombatTask* t)
 {
-    int v = stage_800A3A8C;
-    short s;
-    prevStage_800A4070 = v;
-    switch (v)
+    int stage = stage_800A3A8C;
+    short choice;
+    prevStage_800A4070 = stage;
+    switch (stage)
     {
     case 0:
         stage_800A3A8C = 1;
         break;
     case 1:
-        s = combatMenuChoice_800A1BC4;
-        switch (s)
+        choice = combatMenuChoice_800A1BC4;
+        switch (choice)
         {
         case 0:
             stage_800A3A8C = 2;
             break;
         case 3:
-            stage_800A3A8C = s;
+            stage_800A3A8C = choice;
             break;
         case 4:
             bStopDrawingMovie_8008D45C = 1;
@@ -778,11 +779,11 @@ void CombatNextStage_800A16FC(CombatTask* t)
 }
 
 // Matched
-void DrawMinionNameLevel_800A1844(Minion* a, unsigned short* pt, unsigned int flags)
+void DrawMinionNameLevel_800A1844(Minion* minion, unsigned short* pt, unsigned int flags)
 {
-    UnitStatus* q;
-    unsigned short v[2];
-    if (IsMinionSlotEmpty_800A1934(a) != 1)
+    UnitStatus* status;
+    unsigned short pos[2];
+    if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
         if (flags & 2)
         {
@@ -792,39 +793,39 @@ void DrawMinionNameLevel_800A1844(Minion* a, unsigned short* pt, unsigned int fl
         {
             SetFontClutOffset_8003F900(1, 0);
         }
-        q = &a->status_84;
-        v[0] = pt[0] + 5;
-        v[1] = pt[1] + 6;
-        Cbt_8002FAA0(0, v, a->status_84.name_10, 0);
-        v[0] = pt[0] + 0x50;
-        v[1] = pt[1] + 6;
-        Cbt_8002C290(v, q->level_44, 0);
-        v[0] = pt[0] + 0x54;
-        v[1] = pt[1] + 3;
-        Cbt_8002B1B0(q->elementMask_42, v, 0);
+        status = &minion->status_84;
+        pos[0] = pt[0] + 5;
+        pos[1] = pt[1] + 6;
+        Cbt_8002FAA0(0, pos, minion->status_84.name_10, 0);
+        pos[0] = pt[0] + 0x50;
+        pos[1] = pt[1] + 6;
+        Cbt_8002C290(pos, status->level_44, 0);
+        pos[0] = pt[0] + 0x54;
+        pos[1] = pt[1] + 3;
+        Cbt_8002B1B0(status->elementMask_42, pos, 0);
     }
 }
 
 // Matched
-int IsMinionSlotEmpty_800A1934(Minion* p)
+int IsMinionSlotEmpty_800A1934(Minion* minion)
 {
-    if (p == 0)
+    if (minion == 0)
     {
         return 1;
     }
-    return p->id == 4;
+    return minion->id == 4;
 }
 
 // Matched
-void IsMinionFainted_800A1958(Minion* p)
+void IsMinionFainted_800A1958(Minion* minion)
 {
-    HasStatusFlag_80033548(&p->status_84, 0x400);
+    HasStatusFlag_80033548(&minion->status_84, 0x400);
 }
 
 // Matched
-void ClearMinionSlot_800A197C(Minion* p)
+void ClearMinionSlot_800A197C(Minion* minion)
 {
-    p->id = 4;
+    minion->id = 4;
 }
 
 // Matched
@@ -840,13 +841,13 @@ void CopySaveMinionsToRoster_800A1988(void)
 }
 
 // Matched
-int CountMinions_800A1A3C(Minion* p, int n)
+int CountMinions_800A1A3C(Minion* minions, int len)
 {
     int i;
     int count = 0;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < len; i++)
     {
-        if (!IsMinionSlotEmpty_800A1934(&p[i]))
+        if (!IsMinionSlotEmpty_800A1934(&minions[i]))
         {
             count++;
         }
@@ -855,32 +856,32 @@ int CountMinions_800A1A3C(Minion* p, int n)
 }
 
 // Matched
-void CountTeamMinions_800A1AAC(int i)
+void CountTeamMinions_800A1AAC(int side)
 {
-    CountMinions_800A1A3C(teams_800A3AA0[i], 3);
+    CountMinions_800A1A3C(teams_800A3AA0[side], 3);
 }
 
 // Matched
-int CountRosterMinions_800A1AEC(int i)
+int CountRosterMinions_800A1AEC(int side)
 {
-    return CountMinions_800A1A3C(rosters_800A1BC8[i], 0xF);
+    return CountMinions_800A1A3C(rosters_800A1BC8[side], 0xF);
 }
 
 // Matched
-void GetCombatPortraitPoly_800A1B2C(int i, void* p)
+void GetCombatPortraitPoly_800A1B2C(int i, void* poly)
 {
-    TimInfo r;
-    r.mode_valid = 1;
-    r.mode = 1;
-    r.prect.x = dword_8007DCAC[i].a;
-    r.prect.y = dword_8007DCAC[i].b;
-    r.prect.w = 0x20;
-    r.prect.h = 0x40;
-    r.crect.x = dword_8007DCBC[i].a;
-    r.crect.y = dword_8007DCBC[i].b;
-    r.crect.w = 0x100;
-    r.crect.h = 1;
-    InitPolyFT4_80029A10(p, &r);
+    TimInfo tim;
+    tim.mode_valid = 1;
+    tim.mode = 1;
+    tim.prect.x = dword_8007DCAC[i].x;
+    tim.prect.y = dword_8007DCAC[i].y;
+    tim.prect.w = 0x20;
+    tim.prect.h = 0x40;
+    tim.crect.x = dword_8007DCBC[i].x;
+    tim.crect.y = dword_8007DCBC[i].y;
+    tim.crect.w = 0x100;
+    tim.crect.h = 1;
+    InitPolyFT4_80029A10(poly, &tim);
 }
 
 short combatCursor_800A1BBC[4] = { 1, 5, 5 };
