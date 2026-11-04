@@ -1044,8 +1044,8 @@ void UpdateScreenScroll_800398B4(CameraCtrl* p, void* q_)
         ly = sp[5] * s / 4096 - viewport_8008D420.h;
         screenOffset_8008D474.a = CLAMP_HALF(screenOffset_8008D474.a, lx);
         screenOffset_8008D474.b = CLAMP_HALF(screenOffset_8008D474.b, ly);
-        screenOffset_8008D474.a = screenOffset_8008D474.a - (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
-        screenOffset_8008D474.b = screenOffset_8008D474.b - (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
+        screenOffset_8008D474.a = screenOffset_8008D474.a - (display_8008B4D8.w_C / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+        screenOffset_8008D474.b = screenOffset_8008D474.b - (display_8008B4D8.h_E / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
         r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x + viewport_8008D420.x;
         r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + viewport_8008D420.y;
         r.w = viewport_8008D420.w;

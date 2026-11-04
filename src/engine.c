@@ -286,12 +286,12 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
         poly.b0 = flash;
         poly.x0 = 0;
         poly.y0 = 0;
-        poly.x1 = display_8008B4D8.field_C_w;
+        poly.x1 = display_8008B4D8.w_C;
         poly.y1 = 0;
         poly.x2 = 0;
-        poly.y2 = display_8008B4D8.field_E_h;
-        poly.x3 = display_8008B4D8.field_C_w;
-        poly.y3 = display_8008B4D8.field_E_h;
+        poly.y2 = display_8008B4D8.h_E;
+        poly.x3 = display_8008B4D8.w_C;
+        poly.y3 = display_8008B4D8.h_E;
         SetSemiTrans(&poly, 1);
         AddPrimCopy_80040298(&ot[3], &poly, 6);
         setlen(&tp, 1);
@@ -329,12 +329,12 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
         SetPolyF4(&poly);
         poly.x0 = 0;
         poly.y0 = 0;
-        poly.x1 = display_8008B4D8.field_C_w;
+        poly.x1 = display_8008B4D8.w_C;
         poly.y1 = 0;
         poly.x2 = 0;
-        poly.y2 = display_8008B4D8.field_E_h;
-        poly.x3 = display_8008B4D8.field_C_w;
-        poly.y3 = display_8008B4D8.field_E_h;
+        poly.y2 = display_8008B4D8.h_E;
+        poly.x3 = display_8008B4D8.w_C;
+        poly.y3 = display_8008B4D8.h_E;
         poly.r0 = shade;
         poly.g0 = shade;
         poly.b0 = shade;
@@ -356,12 +356,12 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
         SetPolyF4(&poly);
         poly.x0 = 0;
         poly.y0 = 0;
-        poly.x1 = display_8008B4D8.field_C_w;
+        poly.x1 = display_8008B4D8.w_C;
         poly.y1 = 0;
         poly.x2 = 0;
-        poly.y2 = display_8008B4D8.field_E_h;
-        poly.x3 = display_8008B4D8.field_C_w;
-        poly.y3 = display_8008B4D8.field_E_h;
+        poly.y2 = display_8008B4D8.h_E;
+        poly.x3 = display_8008B4D8.w_C;
+        poly.y3 = display_8008B4D8.h_E;
         poly.r0 = shade;
         poly.g0 = shade;
         poly.b0 = shade;
@@ -858,7 +858,7 @@ void Draw_8001B5EC(void)
     {
         DrawSync(0);
     }
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
+    SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);
     SetGeomScreen(geomScreenDistance_8008B548);
     do
     {
@@ -913,9 +913,9 @@ void InitEnvironments_8001B7B4(void)
 {
     int interlace;
     int off;
-    display_8008B4D8.field_C_w = screenModes_8007C728[display_8008B4D8.field_0][0];
-    display_8008B4D8.field_E_h = screenModes_8007C728[display_8008B4D8.field_0][1];
-    if (display_8008B4D8.field_E_h == 480)
+    display_8008B4D8.w_C = screenModes_8007C728[display_8008B4D8.mode_0][0];
+    display_8008B4D8.h_E = screenModes_8007C728[display_8008B4D8.mode_0][1];
+    if (display_8008B4D8.h_E == 480)
     {
         off = 0;
         interlace = 1;
@@ -927,10 +927,10 @@ void InitEnvironments_8001B7B4(void)
         interlace = 0;
         unknownFlags_8008D678 &= ~0x20;
     }
-    SetDefDrawEnv(&drawEnv_8008D698[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    SetDefDispEnv(&dispEnv_8008D750[0], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    SetDefDrawEnv(&drawEnv_8008D698[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y + off, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
-    SetDefDispEnv(&dispEnv_8008D750[1], display_8008B4D8.field_8_x, display_8008B4D8.field_A_y, display_8008B4D8.field_C_w, display_8008B4D8.field_E_h);
+    SetDefDrawEnv(&drawEnv_8008D698[0], display_8008B4D8.x_8, display_8008B4D8.y_A, display_8008B4D8.w_C, display_8008B4D8.h_E);
+    SetDefDispEnv(&dispEnv_8008D750[0], display_8008B4D8.x_8, display_8008B4D8.y_A + off, display_8008B4D8.w_C, display_8008B4D8.h_E);
+    SetDefDrawEnv(&drawEnv_8008D698[1], display_8008B4D8.x_8, display_8008B4D8.y_A + off, display_8008B4D8.w_C, display_8008B4D8.h_E);
+    SetDefDispEnv(&dispEnv_8008D750[1], display_8008B4D8.x_8, display_8008B4D8.y_A, display_8008B4D8.w_C, display_8008B4D8.h_E);
     drawEnv_8008D698[1].isbg = 1;
     drawEnv_8008D698[0].isbg = 1;
     drawEnv_8008D698[1].dtd = 1;
@@ -939,9 +939,9 @@ void InitEnvironments_8001B7B4(void)
     dispEnv_8008D750[0].isinter = interlace;
     dispEnv_8008D750[1].isrgb24 = 0;
     dispEnv_8008D750[0].isrgb24 = 0;
-    screenOffset_8008D474[0] = display_8008B4D8.field_8_x;
-    screenOffset_8008D474[1] = display_8008B4D8.field_A_y;
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
+    screenOffset_8008D474[0] = display_8008B4D8.x_8;
+    screenOffset_8008D474[1] = display_8008B4D8.y_A;
+    SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);
     SetGeomScreen(geomScreenDistance_8008B548);
     SetFarColor(0, 0, 0);
 }
@@ -967,22 +967,22 @@ void InitSprt_8001B9A0(int buffer)
     SetShadeTex(&sprt, 1);
     if (buffer)
     {
-        top = display_8008B4D8.field_A_y;
+        top = display_8008B4D8.y_A;
     }
     else
     {
         top = 0x100;
     }
-    for (y = 0; y < display_8008B4D8.field_E_h; y += 0x40)
+    for (y = 0; y < display_8008B4D8.h_E; y += 0x40)
     {
-        for (x = 0; x < display_8008B4D8.field_C_w; x += 0x40)
+        for (x = 0; x < display_8008B4D8.w_C; x += 0x40)
         {
             sprt.x0 = x;
             sprt.y0 = y;
-            sprt.u0 = (display_8008B4D8.field_8_x + x) % 64;
+            sprt.u0 = (display_8008B4D8.x_8 + x) % 64;
             sprt.v0 = y + top;
             AddPrimCopy_80040298(pOT_8008D78C, &sprt, 5);
-            tp = GetTPage(2, 0, (display_8008B4D8.field_8_x + x) / 64 * 64, top);
+            tp = GetTPage(2, 0, (display_8008B4D8.x_8 + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
             AddPrimCopy_80040298(pOT_8008D78C, &tpage, 2);
         }
@@ -1089,22 +1089,22 @@ void DrawMotionBlur_8001BCE4(int buffer)
     SetSemiTrans(&sprt, 1);
     if (buffer)
     {
-        top = display_8008B4D8.field_A_y;
+        top = display_8008B4D8.y_A;
     }
     else
     {
         top = 0x100;
     }
-    for (y = 0; y < display_8008B4D8.field_E_h; y += 0x40)
+    for (y = 0; y < display_8008B4D8.h_E; y += 0x40)
     {
-        for (x = 0; x < display_8008B4D8.field_C_w; x += 0x40)
+        for (x = 0; x < display_8008B4D8.w_C; x += 0x40)
         {
             sprt.x0 = x;
             sprt.y0 = y;
-            sprt.u0 = (display_8008B4D8.field_8_x + x) % 64;
+            sprt.u0 = (display_8008B4D8.x_8 + x) % 64;
             sprt.v0 = y + top;
             AddPrimCopy_80040298(pOT_8008D4AC + 1, &sprt, 5);
-            tp = GetTPage(2, 0, (display_8008B4D8.field_8_x + x) / 64 * 64, top);
+            tp = GetTPage(2, 0, (display_8008B4D8.x_8 + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
             AddPrimCopy_80040298(pOT_8008D4AC + 1, &tpage, 2);
         }
@@ -2201,7 +2201,7 @@ Actor* CloneActor_8001D4DC(Actor* src, int kind, int clutRow, int hasMatrices)
 void DestroyActor_8001D600(Actor* actor)
 {
     EventEntry* e = actor->task_0;
-    ReleaseModelAnimRef_80020278(actor->modelRef_16, e->field_4);
+    ReleaseModelAnimRef_80020278(actor->modelRef_16, e->index_4);
     FreeActorBones_8001EA00(actor);
     e->flags = (e->flags & ~1) | 0x8000;
 }
@@ -2317,7 +2317,7 @@ void RequestActorAnim_8001D8B4(Actor* actor, int idx)
 {
     if (actor->anims_148[idx].kind_1 == 0)
     {
-        if (RequestModelAnim_8002032C(actor->modelRef_16, actor->task_0->field_4, actor->anims_148[idx].id_0))
+        if (RequestModelAnim_8002032C(actor->modelRef_16, actor->task_0->index_4, actor->anims_148[idx].id_0))
         {
             actor->animLoading_14 = idx;
             actor->animLoadState_10 = 2;
@@ -2342,7 +2342,7 @@ void ReleaseActorAnim_8001D92C(Actor* actor, int idx)
         }
         e++;
     }
-    ReleaseModelAnim_800203B0(actor->modelRef_16, actor->task_0->field_4, key);
+    ReleaseModelAnim_800203B0(actor->modelRef_16, actor->task_0->index_4, key);
 }
 // Matched
 void SkipActorAnimToEnd_8001D9B0(Actor* p)

@@ -1080,7 +1080,7 @@ int EvCmdWarpActor_800B9260(EvCtxEventfnc* c)
     pos->z_8 = q[2];
     rot->vy = ang;
     UpdateCameraFollow_80037918(cameraTask_8008D4A0->entry.buffer);
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
+    SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);
     c->pc_8++;
     return 1;
 }

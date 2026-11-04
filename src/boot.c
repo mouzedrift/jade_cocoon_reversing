@@ -111,14 +111,14 @@ void DrawCopyrightScreen_800408F4(void)
 }
 extern void DrawCopyrightScreen_800408F4(void);
 // Matched
-void InitCopyrightScreen_80040A10(int* a0)
+void InitCopyrightScreen_80040A10(int* entry)
 {
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     copyrightSprts_8008D47C = 0;
     copyrightTPages_8008B4EC = 0;
     LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, pFile, 1);
     free3_8003FC6C(pFile);
-    a0[2] = (int)DrawCopyrightScreen_800408F4;
+    entry[2] = (int)DrawCopyrightScreen_800408F4;
 }
 // Matched
 void ShowCopyright_80040A84(void)

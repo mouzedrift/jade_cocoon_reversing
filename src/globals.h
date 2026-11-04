@@ -10,12 +10,12 @@
 
 typedef struct
 {
-    int field_0;
+    int mode_0; // index into screenModes_8007C728 (the screen width / height)
     int vsyncsPerFrame_4; // Draw waits until vsyncCounter_8008B4B4 reaches it
-    short field_8_x;
-    short field_A_y;
-    short field_C_w; // word_8008B4E4
-    short field_E_h; // word_8008B4E6
+    short x_8;
+    short y_A;
+    short w_C; // word_8008B4E4
+    short h_E; // word_8008B4E6
 } DisplayConfig;
 
 // Event list nodes (event.c / skel_draw.c). The list head has the same layout as a node.
@@ -24,7 +24,7 @@ typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
 typedef struct EventEntry
 {
     unsigned int flags;
-    int field_4; // nonzero: buffer is not owned
+    int index_4; // index among its EventDesc's entries; only entry 0 owns (frees) the shared buffer
     EventEntryFn cb_8;
     EventEntryFn cb_C;
     int size;
@@ -37,9 +37,9 @@ typedef struct ModelList ModelList;
 
 typedef struct EventNode
 {
-    int field_0;
+    int prev_0; // the previous node
     struct EventNode* next;
-    int field_8;
+    int index_8; // index in the list
     int count;
     EventEntry entry;
 } EventNode;

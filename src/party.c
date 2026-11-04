@@ -290,7 +290,7 @@ int StartModelTask_80010850(void* params)
         e->cb_C = (EventEntryFn)ModelTaskFreeCb_80010AB4;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->flags = (e->flags | 4) & 0xFFFF7FFF;
-        buf->key_0 = e->field_4;
+        buf->key_0 = e->index_4;
         m = malloc3_8003FC4C(0x40);
         buf->state_4 = m;
         MemCopy_800403E8(&m->count_4, params, 0x34);

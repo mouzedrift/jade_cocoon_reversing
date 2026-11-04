@@ -302,7 +302,7 @@ void DestinationSelect_800B7044(MapTask* t, int a)
     }
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
-        y = display_8008B4D8.field_A_y;
+        y = display_8008B4D8.y_A;
     }
     else
     {
@@ -543,7 +543,7 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     UpdateMenuCursor_8003D794(&confirmCursor_800B9324, 0);
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
-        y = display_8008B4D8.field_A_y;
+        y = display_8008B4D8.y_A;
     }
     else
     {

@@ -100,8 +100,8 @@ void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
     c->holding_6C = 0;
     r.x = 0x20;
     r.y = 0x20;
-    r.w = display_8008B4D8.field_C_w - 0x20;
-    r.h = display_8008B4D8.field_E_h - 0x20;
+    r.w = display_8008B4D8.w_C - 0x20;
+    r.h = display_8008B4D8.h_E - 0x20;
     t->next_8 = NewGameLoadSprites_800A093C;
 }
 

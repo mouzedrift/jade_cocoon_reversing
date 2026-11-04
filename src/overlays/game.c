@@ -78,8 +78,8 @@ void DrawTileAnimLayers_800A0A5C(short* q)
     s->zoom_54 = cameraZoom_8008B4F8;
     s->cx_50 = viewport_8008D420.x + viewport_8008D420.w / 2;
     s->cy_52 = viewport_8008D420.y + viewport_8008D420.h / 2;
-    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
-    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
+    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.w_C / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.h_E / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
     b = (sceneBrightness_8008D40C << 7) >> 12;
     s->ft4_4.r0 = b;
     s->ft4_4.g0 = b;

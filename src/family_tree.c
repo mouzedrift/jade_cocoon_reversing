@@ -64,14 +64,14 @@ typedef struct
     int time;
     short field_8;
     short ot;
-} struct_D7D0;
+} UiWindowArgs;
 extern const CVECTOR familyTreeLineColor_800743CC;
 extern void GetElementLevels_80033864(Minion* m, unsigned char* out);
-extern short ElementLevelsToMask_8002F424(unsigned char* p);
-extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
-extern void DrawElementIconsRow_8002B1B0(short a, int b, int c);
-extern void DrawUiWindow_8002A384(struct_D7D0* p);
-extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
+extern short ElementLevelsToMask_8002F424(unsigned char* levels);
+extern void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot);
+extern void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot);
+extern void DrawUiWindow_8002A384(UiWindowArgs* args);
+extern void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot);
 #if 0
 // Not matched (4 words): writing pos.y through pp once gets the m/pp/table saved registers right (19 words with pos.y),
 // but that store then goes through $s4 instead of $sp; the (short)w sll goes to a0 instead of v0 (int / u_short /
@@ -80,18 +80,18 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;
     Pos16 pos;
-    Pos16 p1;
-    Pos16 p2;
+    Pos16 lineFrom;
+    Pos16 lineTo;
     CVECTOR color;
-    unsigned char buf[4];
-    struct_D7D0 s;
+    unsigned char levels[4];
+    UiWindowArgs win;
     unsigned char* name;
-    Pos16* pp;
-    short w;
+    Pos16* pPos;
+    short elemMask;
     int i;
     int k;
     color = familyTreeLineColor_800743CC;
-    pp = &pos;
+    pPos = &pos;
     for (i = 0; i < 7; i++)
     {
         pos.x = familyTreeBoxPos_80082DCC[i]->x + base->x;
@@ -109,34 +109,34 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
             name = GetAncestorName_80033830(m, i - 1);
         }
         pos.x = familyTreeBoxPos_80082DCC[i]->x + base->x + 3;
-        pp->y = familyTreeBoxPos_80082DCC[i]->y + base->y + 4;
-        DrawSmallText_8002FAA0(0, (unsigned short*)pp, name, ot);
+        pPos->y = familyTreeBoxPos_80082DCC[i]->y + base->y + 4;
+        DrawSmallText_8002FAA0(0, (unsigned short*)pPos, name, ot);
         pos.x = (unsigned short)(base->x + 4) + familyTreeBoxPos_80082DCC[i]->x;
         pos.y = (unsigned short)(base->y + 0x10) + familyTreeBoxPos_80082DCC[i]->y;
         if (i == 0)
         {
-            GetElementLevels_80033864(m, buf);
-            w = ElementLevelsToMask_8002F424(buf);
+            GetElementLevels_80033864(m, levels);
+            elemMask = ElementLevelsToMask_8002F424(levels);
         }
         else
         {
-            w = GetAncestorElementMask_80033848(m, i - 1);
+            elemMask = GetAncestorElementMask_80033848(m, i - 1);
 
         }
-        DrawElementIconsRow_8002B1B0(w, (int)pp, ot);
-        s.field_8 = 0;
-        s.rect = (int)&rect;
-        s.ot = ot;
-        s.time = frameCount_8008D3FC;
-        DrawUiWindow_8002A384(&s);
+        DrawElementIconsRow_8002B1B0(elemMask, (int)pPos, ot);
+        win.field_8 = 0;
+        win.rect = (int)&rect;
+        win.ot = ot;
+        win.time = frameCount_8008D3FC;
+        DrawUiWindow_8002A384(&win);
     }
     for (k = 0; k < 12; k++)
     {
-        p1.x = familyTreeLineFrom_80082DE8[k].x + base->x;
-        p1.y = familyTreeLineFrom_80082DE8[k].y + base->y;
-        p2.x = familyTreeLineTo_80082E18[k].x + base->x;
-        p2.y = familyTreeLineTo_80082E18[k].y + base->y;
-        DrawLine_80042870((DVECTOR*)&p1, (DVECTOR*)&p2, (unsigned char*)&color, &pOT_8008D454[ot]);
+        lineFrom.x = familyTreeLineFrom_80082DE8[k].x + base->x;
+        lineFrom.y = familyTreeLineFrom_80082DE8[k].y + base->y;
+        lineTo.x = familyTreeLineTo_80082E18[k].x + base->x;
+        lineTo.y = familyTreeLineTo_80082E18[k].y + base->y;
+        DrawLine_80042870((DVECTOR*)&lineFrom, (DVECTOR*)&lineTo, (unsigned char*)&color, &pOT_8008D454[ot]);
     }
 }
 #endif

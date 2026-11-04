@@ -490,7 +490,7 @@ void UpdateActorAnimLoad_8001F918(void* actor)
     case 0:
         break;
     case 1:
-        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->field_4, p->animRequest_12);
+        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->index_4, p->animRequest_12);
         *(unsigned short*)&p->animLoading_14 = *(unsigned short*)&p->animRequest_12;
         p->animRequest_12 = -1;
         p->animLoadState_10 = 2;

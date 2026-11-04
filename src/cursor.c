@@ -30,44 +30,44 @@ void DrawNextPrompt_8003CF88(short x, short y, int idx)
     AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[60], 5);
     AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[60], 2);
 }
-extern void DrawPublicTiySprt_80033080(void* a, int b, int c);
+extern void DrawPublicTiySprt_80033080(void* pos, int sprtIdx, int ot);
 // Matched
 void DrawCursorHand_8003D034(unsigned short* pPos, int ot)
 {
-    short r[2];
-    r[0] = pPos[0] - 13;
-    r[1] = pPos[1] - 6;
+    short pos[2];
+    pos[0] = pPos[0] - 13;
+    pos[1] = pPos[1] - 6;
     SetSemiTrans(&publicTiySprts_8008D434[5], 1);
-    DrawPublicTiySprt_80033080(r, 5, ot);
+    DrawPublicTiySprt_80033080(pos, 5, ot);
 }
 // Matched
 void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx)
 {
-    int r = 0;
-    int t;
+    int bob = 0;
+    int offsetX;
     switch ((unsigned int)frameCount_8008D3FC % 12)
     {
     case 0:
     case 1:
     case 10:
     case 11:
-        r = 0;
+        bob = 0;
         break;
     case 2:
     case 3:
     case 8:
     case 9:
-        r = 1;
+        bob = 1;
         break;
     case 4:
     case 5:
     case 6:
     case 7:
-        r = 2;
+        bob = 2;
         break;
     }
-    t = r + 0x10;
-    publicTiySprts_8008D434[5].x0 = x - t;
+    offsetX = bob + 0x10;
+    publicTiySprts_8008D434[5].x0 = x - offsetX;
     publicTiySprts_8008D434[5].y0 = y - 10;
     SetSemiTrans(&publicTiySprts_8008D434[5], 1);
     AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[5], 5);
