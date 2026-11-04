@@ -434,7 +434,7 @@ extern void StartStore_800BAE2C(int a, int b);
 
 extern void StartShopCtrl_800B66C4(int a);
 
-extern void* GetEventDataSlot_800A55B0(int a); // one of the loaded event data blocks (what each holds depends on a)
+extern void* GetEventDataSlot_800A55B0(int kind); // one of the loaded event data blocks (what each holds depends on a)
 
 
 
