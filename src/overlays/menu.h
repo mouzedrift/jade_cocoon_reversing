@@ -9,47 +9,54 @@
 #include "engine.h"
 #include "minion_menu.h"
 
-typedef struct MenuRow
+// a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
+typedef struct ItemDropRow
 {
     unsigned short lim_0;
-    unsigned char a_2;
-    unsigned char a_3;
+    unsigned char kind_2;
+    unsigned char item_3;
     unsigned short lim_4;
-    unsigned char a_6;
-    unsigned char a_7;
-} MenuRow;
+    unsigned char kind2_6;
+    unsigned char item2_7;
+} ItemDropRow;
 
 typedef struct MenuQ
 {
     int w[4];
 } MenuQ;
 
-typedef struct MenuDlg
+// what DrawMenuWindows_8002A5A4 takes
+typedef struct MenuWin
 {
-    int f0, f4, f8, fC, f10, f14;
-} MenuDlg;
+    int flags_0;  // 1 plain, 2 blinking cursor, 4 fixed cursor
+    int time_4;   // blink timer
+    int open_8;   // window open step out of 8
+    int cursor_C;
+    int items_10;
+    int ot_14;
+} MenuWin;
 
-typedef struct MenuSlot
+typedef struct BattleDrop
 {
     char pad_0[2];
-    unsigned char f2;
-    unsigned char f3;
+    unsigned char kind_2;
+    unsigned char item_3; // 0xFF: no drop
     char pad_4[4];
-} MenuSlot;
+} BattleDrop;
 
 typedef struct MenuBox7
 {
     int w[7];
 } MenuBox7;
 
-typedef struct MenuLayout
+typedef struct MenuCursorLayout
 {
-    unsigned short a;
-    unsigned short b;
-    unsigned short c;
-    unsigned short d;
+    unsigned short cols_0; // a MenuCursor layout (MenuCtx.cols_58..cursorFlags_5E)
+    unsigned short rows_2;
+    unsigned short count_4;
+    unsigned short flags_6;
     char pad_8[8];
-} MenuLayout;
+} MenuCursorLayout;
 
 typedef struct MenuCell
 {
@@ -74,7 +81,7 @@ typedef struct MenuWinItem
 typedef struct MenuEquipLine
 {
     char pad_0[4];
-    int f4;
+    int label_4;
     SPRT** sprts_8;
     DR_TPAGE** tpages_C;
     short x_10;
@@ -395,11 +402,11 @@ extern const char aLeaveTheForest_800BBA44[];
 extern const char aYesNo_800BBA68[];
 extern const int dword_800BBA7C;
 extern const int dword_800BBB04;
-extern const MenuDlg menuHdrActive_800BBB7C;
+extern const MenuWin menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
 extern int dword_800C1050[4];
 extern char levelUpStatusRect_800C1060[32];
-extern MenuRow itemDropTable_800C1080[220];
+extern ItemDropRow itemDropTable_800C1080[220];
 extern int equipRowWeapon_800C1760[28];
 extern int equipRowArmor_800C17D0[28];
 extern int equipRowAccessory_800C1840[28];
@@ -417,7 +424,7 @@ extern unsigned short minionCmdStates_800C1948[4];
 extern short menuNextState_800C1950[18];
 extern short menuPrevState_800C1974[18];
 extern int menuStateWindows_800C1998[17];
-extern MenuLayout menuStateCursors_800C19DC[17];
+extern MenuCursorLayout menuStateCursors_800C19DC[17];
 extern RECT menuWindowRects_800C1AEC[6];
 extern int dword_800C1B1C[22];
 extern short cursorSaveSlot_800C1B74[18];
@@ -457,7 +464,7 @@ extern int minionListPage_800C2980;
 extern char name_800C2984[8];
 extern char levantHeaderRect_800C298C[8];
 extern char levantSummaryRect_800C2994[12];
-extern MenuSlot battleDrops_800C29A0[3];
+extern BattleDrop battleDrops_800C29A0[3];
 extern int menuFromResults_800C29B8;
 extern int leaveForest_800C29BC;
 
