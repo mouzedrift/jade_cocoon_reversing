@@ -57,7 +57,7 @@ extern const char str_800B6EF4[];
 extern const char str_800B6EFC[];
 extern const char str_800B6F04[];
 extern const char str_800B6F08[];
-extern const int dword_800B6F0C[4];
+extern int sub_800B6F0C(void);
 extern int dword_800B7CC0[2];
 extern unsigned short word_800B7CC8[2];
 extern int dword_800B7CCC;

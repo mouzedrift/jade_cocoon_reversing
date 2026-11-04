@@ -70,6 +70,11 @@ const char asc_800B6E24[] = "\203X\203\215\203b\203g\221I\221\360\201H"; // ス�
 const char asc_800B6E34[] = "\203J\201[\203h\203`\203F\203b\203N\202P"; // カードチェック１
 const int dword_800B6E48 = 0;
 
+int sub_800B6F0C(void)
+{
+    return dword_800B7EAC;
+}
+
 // Matched
 void sub_800B6F1C(void)
 {
@@ -240,7 +245,6 @@ const char str_800B6EF4[] = "\212K\213\211"; // 階級
 const char str_800B6EFC[] = "\221\256\220\253"; // 属性
 const char str_800B6F04[] = "\201^"; // /
 const char str_800B6F08[] = "\201F"; // :
-const int dword_800B6F0C[4] = { 0x3C02800B, 0x8C427EAC, 0x3E00008 };
 
 // Matched
 void sub_800B72D4(CtxShopentr* c)

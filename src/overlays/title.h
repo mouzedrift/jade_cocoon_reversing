@@ -57,7 +57,6 @@ extern const int dword_800A08C0[2];
 extern char levantName_800A2718[];
 extern int dword_800A2728;
 extern int dword_800A272C;
-extern UnitStatus dword_800A2730;
 extern int dword_800A2778[6];
 extern int dword_800A2790[6];
 extern int dword_800A27A8[6];
@@ -69,5 +68,7 @@ extern int dword_800A280C;
 extern int dword_800A2810;
 extern unsigned int dword_800A2814;
 extern int dword_800A2818;
+
+extern UnitStatus dword_800A2730;
 
 #endif

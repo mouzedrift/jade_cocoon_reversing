@@ -636,7 +636,7 @@ class Gen:
             for i in range(len(b)):
                 if b[i] and not covered[i]:
                     raise GenError("non-zero padding at +0x%X in %s %s" % (i, k, t.tag))
-            while len(parts) > 1 and parts[-1] in ("0", "{ 0 }", '""'):
+            while len(parts) > 1 and (parts[-1] == '""' or re.fullmatch(r"[{}\s0,]*0[{}\s0,]*", parts[-1])):
                 parts.pop()
             s = "{ " + ", ".join(parts) + " }"
             if len(s) > 110:

@@ -35,7 +35,6 @@ typedef struct CombatSlotCombat
 extern int dword_800A05A0;
 extern short dword_800A1BBC[4];
 extern short word_800A1BC4;
-extern Minion dword_800A1BC8[2][15];
 extern unsigned char byte_800A38D8;
 extern unsigned char byte_800A38D9;
 extern unsigned char byte_800A38DA;
@@ -55,9 +54,11 @@ extern CombatSlotCombat dword_800A3A08[2];
 extern int dword_800A3A88;
 extern int dword_800A3A8C;
 extern int dword_800A3A90[4];
-extern Minion dword_800A3AA0[2][3];
 extern int dword_800A4070;
 extern int dword_800A4074[3];
 extern int dword_800A4080;
+
+extern Minion dword_800A1BC8[2][15];
+extern Minion dword_800A3AA0[2][3];
 
 #endif

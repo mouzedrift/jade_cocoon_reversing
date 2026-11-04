@@ -4,6 +4,10 @@ The data of an overlay in C: split its data blobs into symbols, then generate C 
 
   python scripts/ovldata.py split NAME ISO.bin SLUS_008.54 [--write]
   python scripts/ovldata.py gen NAME ISO.bin SLUS_008.54 [SYMBOL ...] [--write]
+  python scripts/ovldata.py regen NAME ISO.bin SLUS_008.54 SYMBOL ...
+
+regen: definitions back to INCLUDE_OVERLAY_ASM lines and generated again (after their type changed); run
+overlays.py first when the type changed (gen reads the preprocessed source).
 
 split: the overlay's data in front of / behind its code is one INCLUDE_OVERLAY_ASM blob per gap between the
 symbols of overlays/<name>.sym. The places the code refers to (lui/addiu and lui/load/store pairs, also through an
@@ -259,6 +263,32 @@ def main(argv):
             print("%s %08X-%08X: %d new symbols" % (n, a, b, len(p)))
         if "--write" in argv:
             write_split(name, pts, data, base)
+    elif cmd == "regen":
+        for src in sources(name):
+            text = open(src).read()
+            for n in args[4:]:
+                m = re.search(r"^(?!extern)[A-Za-z_][^\n;=]*\b%s\b[^\n;]*?(=|BSS|SDATA)" % re.escape(n), text, re.M)
+                if not m:
+                    continue
+                d, k = 0, m.start()
+                while True:
+                    c = text[k]
+                    if c == "{":
+                        d += 1
+                    elif c == "}":
+                        d -= 1
+                    elif c == ";" and d == 0:
+                        break
+                    elif c == '"':
+                        k += 1
+                        while text[k] != '"':
+                            k += 2 if text[k] == "\\" else 1
+                    k += 1
+                e = text.find("\n", k)
+                text = text[:m.start()] + "INCLUDE_OVERLAY_ASM(%s, %s);" % (name.lower(), n) + text[e:]
+            open(src, "w").write(text)
+        import ovlgen
+        return ovlgen.main(name, exe, data, base, syms, lib_ranges, args[4:], True)
     elif cmd == "gen":
         import ovlgen
         return ovlgen.main(name, exe, data, base, syms, lib_ranges, args[4:], "--write" in argv)
