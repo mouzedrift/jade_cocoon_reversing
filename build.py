@@ -1,4 +1,5 @@
 from ninja import ninja_syntax
+import glob
 import os
 import subprocess
 import sys
@@ -291,6 +292,53 @@ def build():
 
     return retcode
 
+def read_hashes():
+    path = os.path.join(CURRENT_DIR, "config", "hashes.txt")
+    return {k: h for k, h in (l.split() for l in open(path) if l.strip() and not l.startswith("#"))}
+
+
+def verify_hashes(iso):
+    """SHA-1 of the linked exe image and of every overlay (scripts/overlays.py, built from build_psyq/NAME.orig
+    or from the disc image with --iso) against config/hashes.txt. Returns True if everything matches."""
+    import concurrent.futures
+    import hashlib
+    expected = read_hashes()
+    results = {}
+    exe = open(os.path.join(BUILD_DIR, f"{EXE_NAME}.exe"), "rb").read()[0x800:]
+    results["exe-image"] = hashlib.sha1(exe).hexdigest()
+
+    def one(name):
+        out_bin = os.path.join(BUILD_DIR, name + ".BIN")
+        if os.path.exists(out_bin):
+            os.remove(out_bin)  # a failed build must not leave the previous image behind
+        src = iso if iso else "orig"
+        r = subprocess.run([sys.executable, os.path.join(CURRENT_DIR, "scripts", "overlays.py"), name, src,
+                            os.path.join(BUILD_DIR, f"{EXE_NAME}.exe")], cwd=CURRENT_DIR, capture_output=True, text=True)
+        if not os.path.exists(out_bin):
+            tail = (r.stdout + r.stderr).strip().split("\n")[-1:]
+            return name, "BUILD FAILED: " + " ".join(tail)
+        return name, hashlib.sha1(open(out_bin, "rb").read()).hexdigest()
+
+    names = sorted(os.path.basename(p)[:-4].upper() for p in glob.glob(os.path.join(CURRENT_DIR, "overlays", "*.sym")))
+    with concurrent.futures.ThreadPoolExecutor(8) as pool:
+        for name, h in pool.map(one, names):
+            results["overlay-" + name] = h
+    bad = 0
+    for k, h in results.items():
+        want = expected.get(k)
+        if want != h:
+            bad += 1
+            print(f"HASH MISMATCH {k}: built {h}, expected {want}")
+    missing = [k for k in expected if k not in results]
+    for k in missing:
+        print(f"HASH NOT CHECKED {k}")
+    if bad or missing:
+        print(f"Hash check FAILED ({bad} mismatching, {len(missing)} not checked of {len(expected)})")
+        return False
+    print(f"Hash check OK: exe + {len(results) - 1} overlays identical to the originals")
+    return True
+
+
 def is_build_file(file):
     for suffix in [".preproc", ".o", ".obj", ".cpe", ".sym", ".map", ".exe"]:
         if file.endswith(suffix):
@@ -351,7 +399,10 @@ def main():
     parser.add_argument("-c", "--clean", action="store_true", help="cleans up all the build objects")
     parser.add_argument("-r", "--rebuild", action="store_true", help="rebuild the project")
     parser.add_argument("-e", "--exec", action="store_true", help="executes the built exe with pcsx-redux")
-    parser.add_argument("-i", "--iso", help="the path to the original game iso (for use with --exec)")
+    parser.add_argument("-i", "--iso", help="the path to the original game iso (for --exec, and to build the overlays "
+                        "for the hash check when build_psyq/*.orig do not exist yet)")
+    parser.add_argument("--no-verify", action="store_true",
+                        help="skip the hash check of the exe and all overlays (quick experiments only)")
 
     args = parser.parse_args()
 
@@ -371,7 +422,10 @@ def main():
     build_retcode = build()
     if build_retcode != 0:
         sys.exit(build_retcode)
-        
+
+    if not args.no_verify and not verify_hashes(args.iso):
+        sys.exit(1)
+
     if args.exec:
         exec_pcsx(args.iso)
 

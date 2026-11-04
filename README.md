@@ -32,6 +32,11 @@ python3 build.py
 
 Objects and binaries will be output to the `build_psyq` directory.
 
+Every build ends with a hash check of the executable and all overlays against `config/hashes.txt` and fails if
+anything differs. The overlays are built from `build_psyq/<NAME>.orig`, which `scripts/overlays.py` saves the first
+time it extracts an overlay from the disc; on a fresh checkout pass the disc image once: `python3 build.py --iso
+"Jade Cocoon (USA).bin"`. `--no-verify` skips the check (quick experiments only).
+
 ### Building overlays
 
 ```bash

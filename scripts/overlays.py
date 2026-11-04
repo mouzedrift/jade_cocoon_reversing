@@ -5,6 +5,8 @@ with full_build.py (decompiled C + generated assembly in address order).
 
 usage: overlays.py NAME ISO.bin SLUS_008.54 [--discover]
   e.g. overlays.py NAME "Jade Cocoon (USA).bin" SLUS_008.54
+       overlays.py NAME orig SLUS_008.54   (no disc: use build_psyq/NAME.orig from an earlier run, checked
+                                            against config/hashes.txt)
 
 The overlay file is looked up through the executable's file table (Data001Files), which holds
 positions relative to DATA.001. Load addresses are the ones used by the game
@@ -239,13 +241,29 @@ def init_src(name, syms):
     open(path, "w").write("\n\n".join(out) + "\n")
 
 
+def load_orig(name):
+    """the original overlay saved by an earlier build (build_psyq/NAME.orig), only if its hash is the recorded one"""
+    import hashlib
+    path = os.path.join(REPO, "build_psyq", name + ".orig")
+    if not os.path.exists(path):
+        sys.exit("%s missing: build once from the disc image" % path)
+    data = open(path, "rb").read()
+    want = {l.split()[0]: l.split()[1] for l in open(os.path.join(REPO, "config", "hashes.txt"))
+            if l.strip() and not l.startswith("#")}.get("overlay-" + name)
+    if want != hashlib.sha1(data).hexdigest():
+        sys.exit("%s does not match config/hashes.txt" % path)
+    return data
+
+
 def main(argv):
     import gen_asm
     import full_build as fb
     name = argv[0].upper()
     iso_path, exe_path = argv[1], argv[2]
-    exe = open(exe_path, "rb").read()[0x800:]
-    data = extract(name, iso_path, exe)
+    if iso_path == "orig":
+        data = load_orig(name)
+    else:
+        data = extract(name, iso_path, open(exe_path, "rb").read()[0x800:])
     base = LOAD_ADDRESSES[name]
     data = data + b"\0" * (-len(data) % 4)
     print("%s.BIN: %d bytes, loaded at 0x%08X" % (name, len(data), base))

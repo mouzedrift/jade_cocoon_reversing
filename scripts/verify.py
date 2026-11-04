@@ -3,6 +3,7 @@
 Hash check of everything that is built: the linked image of the executable and every overlay.
 
 usage: verify.py SLUS_008.54 ISO.bin [--update]
+       verify.py SLUS_008.54 orig      (no disc: overlays from build_psyq/*.orig, see overlays.py)
   * runs build.py and scripts/overlays.py for each overlay that has overlays/<name>.sym
   * compares the SHA-1 of each built image with the original (executable image without header and
     without the bss/garbage behind the linked image; overlays as stored on the disc)
