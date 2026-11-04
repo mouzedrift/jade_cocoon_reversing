@@ -37,9 +37,10 @@ typedef struct CombComItem
     int rest[9];
 } CombComItem;
 
+// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
 typedef struct CombComMenu
 {
-    int f0;
+    int flags_0;
     int time_4;
     int anim_8;
     int sel_C;
