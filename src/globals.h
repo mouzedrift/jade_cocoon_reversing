@@ -96,12 +96,12 @@ typedef struct
     int yan_0; // money
     InvSlot inventory_4[5][0x40];
     int emptyCocoons_284; // levantEmptyCocoons_8008B818
-    unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's sub_800AD68C
-    unsigned char bits_290[0x13]; // bit flags (GAME's sub_800AD0D4 / sub_800AD0F8)
-    unsigned char vars_2A3[0x14]; // GAME's sub_800AD154 / sub_800AD16C
+    unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's SetValuableFlag_800AD68C
+    unsigned char bits_290[0x13]; // bit flags (GAME's TestEventFlag_800AD0D4 / SetEventFlag_800AD0F8)
+    unsigned char vars_2A3[0x14]; // GAME's GetEventVar_800AD154 / SetEventVar_800AD16C
 } SaveInventory;
 
-// a value saved per map (SaveData.mapVars_2F8, GAME's FindMapVar_800ADBA0 / sub_800ADC5C), keyed by the map ids
+// a value saved per map (SaveData.mapVars_2F8, GAME's FindMapVar_800ADBA0 / SetMapVar_800ADC5C), keyed by the map ids
 typedef struct
 {
     short area_0;

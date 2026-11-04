@@ -23,7 +23,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
     case 0:
         SuspendAllEnemySlots_800A1904();
         HoldLevantControl_800A8E0C();
-        sub_800A8DEC();
+        ResetLevantActorToIdle_800A8DEC();
         LoadLevantAnimById_800AC604(st[1], 0);
         st[0] = 1;
         break;
@@ -40,7 +40,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
         }
         break;
     case 3:
-        if (sub_800A8FE0())
+        if (IsLevantCmdDone_800A8FE0())
         {
             m.actor_0 = 0;
             m.kind_4 = 9;

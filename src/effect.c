@@ -250,12 +250,12 @@ UnitStatus* GetUnitStatus_80014390(int unit)
     }
     else if (v >= 4)
     {
-        int flags = sub_800A248C();
+        int flags = GetEnemyAliveMask_800A248C();
         int m = 1 << v;
         if (flags & m)
         {
             w = unit - 4;
-            r = sub_800A2B60(w & 0xFF);
+            r = GetEnemyStatus_800A2B60(w & 0xFF);
         }
     }
     else if (v != 0)
@@ -296,7 +296,7 @@ UnitStats* GetUnitStats_8001449C(unsigned char unit)
     int v = unit - 4;
     if ((unsigned char)v < 3)
     {
-        int flags = sub_800A248C();
+        int flags = GetEnemyAliveMask_800A248C();
         int m = 1 << unit;
         if (flags & m)
         {

@@ -71,7 +71,7 @@ UnitSkill* GetUnitSkills_80031B30(int unit)
     }
     else if (v >= 4)
     {
-        int flags = sub_800A248C();
+        int flags = GetEnemyAliveMask_800A248C();
         int bit = 1 << v;
         if (flags & bit)
         {
@@ -918,8 +918,8 @@ extern int GetItemFlags_8001CE70(int a);
 // Matched
 int CheckItemUsable_80033AFC(struct_minion_ref* p)
 {
-    int item = sub_800AD288(p->cursor_0 + p->scroll_2, 0);
-    if (sub_800AD2C8(p->cursor_0 + p->scroll_2, 0) <= 0)
+    int item = GetInventorySlotId_800AD288(p->cursor_0 + p->scroll_2, 0);
+    if (GetInventorySlotCount_800AD2C8(p->cursor_0 + p->scroll_2, 0) <= 0)
     {
         return 1;
     }

@@ -192,9 +192,9 @@ typedef struct GameCb_1
 {
     int f0;
     Actor* actor_4;
-    int* f8;
-    int (*cb_c)();
-    void (*cb_10)();
+    int* anims_8; // animation table (indexed by the script commands)
+    int (*hold_C)();     // HoldFieldMinion_800A7810 (0: busy)
+    void (*release_10)(); // ReleaseFieldMinion_800A785C
 } GameCb_1;
 
 // what Actor.desc_15C of a party member points to
@@ -304,7 +304,7 @@ typedef struct GameEncounter
     GameSlot_1* leader_4;     // the enemy slot that started the encounter
     int otherCount_8;             // number of others_C entries
     GameSlot_1* others_C[12]; // the other enemy slots
-    int f3c;
+    int swapped_3C; // fixed encounters: which of the two enemies is out (SwapEncounterEnemy_800A2AE8)
     int count_40;
     int remaining_44;
     int groupIndex_48;
@@ -328,8 +328,8 @@ typedef struct GameEncounter
 
 typedef struct GameJ_1
 {
-    short h0;
-    short h2;
+    short levantWall_0; // mapState_8008B500.ents_14 index (-1: none)
+    short actorWall_2;  // mapState_8008B500.ents_30 index (-1: none)
 } GameJ_1;
 
 typedef struct GameQ_1
@@ -355,9 +355,9 @@ extern void RunEventListFreeCallbacks_800438F8(int a);
 
 extern void FreeEventList_80043A5C(int a);
 
-extern void sub_800A6534(int a, int b);
+extern void SetLevantWallEnabled_800A6534(int a, int b);
 
-extern void sub_800A654C(int a, int b);
+extern void SetActorWallEnabled_800A654C(int a, int b);
 
 
 
@@ -418,7 +418,7 @@ typedef struct GameTable_1
 
 extern EventNode* eventScripts_8008D410;
 
-extern void sub_800A8EA4();
+extern void SkipLevantAnim_800A8EA4();
 
 extern void StartStore_800BAE2C(int a, int b);
 
@@ -442,7 +442,7 @@ typedef struct GameV6_1
 
 extern char aFile_800A05CC[];
 
-extern void sub_800A895C();
+extern void EnterLevantBattleMode_800A895C();
 
 extern void SetupEncounter_800A1BD0();
 
@@ -737,42 +737,45 @@ extern char name_80096090[];
 
 typedef struct G2Inner
 {
-    unsigned int f0;
+    // 1: battle mode (EnterLevantBattleMode_800A895C), 2: action requested, 4: action triggered, 8: main action
+    // (not a reaction: wait for it to finish), 0x10: entering battle, 0x20: held by a script,
+    // 0x40: movement locked, 0x80: stop the scripted walk / turn
+    unsigned int flags_0;
     char pad_4[0xC];
     struct_v3 pos_10; // Levant's position, copied each frame by LevantControlTask_800A818C
     char pad_1C[0x18];
-    int f34;
-    int f38;
+    int targets_34;
+    int arg_38;
     char pad_3C[0x10];
     FirFilter turn_4C;
     int turnBuf_5C[4];
     char pad_6C[0x30];
     int f9C;
     int fA0;
-    int fA4; // fA4..fAC: the point Levant walks to / turns toward
-    int fA8;
-    int fAC;
-    int fB0;
+    int targetX_A4; // targetX_A4..targetZ_AC: the point Levant walks to / turns toward
+    int targetY_A8;
+    int targetZ_AC;
+    int cmdKind_B0;
     char pad_B4[0x12];
-    short fC6; // the state of Levant's input state machine (LevantControlTask_800A818C)
+    short state_C6; // the state of Levant's input state machine (LevantControlTask_800A818C)
     char pad_C8[4];
-    int fCC;
+    int anim_CC;
 } G2Inner;
 
 extern unsigned char pads_800918E8[2][9];
 extern int FindFacingFieldMinion_800A9164(int* out);
 extern int IsFieldMinionBehind_800A926C();
 extern void ClearScriptActorBusy_800A5BCC(int a);
-extern void sub_800AB1A4(int a);
-extern int sub_800AB1EC(int a, int b, int c, int d);
-extern int sub_800AB32C();
+extern void ContinueLevantAnim_800AB1A4(int a);
+extern int StartLevantActorAction_800AB1EC(int a, int b, int c, int d);
+extern int IsLevantActionReady_800AB32C();
 extern int SetLevantMoveCmd_800AB37C(int v);
-extern void sub_800AB3BC();
-extern void sub_800AB3D4();
-extern int sub_800AB938();
-extern int sub_800AB958();
-extern int sub_800ABB70();
-extern void sub_800ABC34(int a);
+extern void ResetLevantIdleTimer_800AB3BC();
+extern void EnterLevantActorBattle_800AB3D4();
+extern int IsLevantAnimLooped_800AB938();
+extern int IsLevantIdleAnim_800AB958();
+extern int IsLevantScriptAnimWaiting_800ABB70();
+extern void SetLevantMapCollision_800ABC34(int a);
 
 typedef struct G2Ctx
 {
@@ -782,9 +785,9 @@ typedef struct G2Ctx
 
 typedef struct G2Obj
 {
-    unsigned int f0;
+    unsigned int flags_0;
     char pad_4[0x2C];
-    int f30;
+    int fade_30;
 } G2Obj;
 
 typedef struct G2V12
@@ -813,35 +816,41 @@ typedef struct G2Path
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
 {
-    unsigned int f0;
-    int f4; // input bits
-    int f8;
-    int fC;
-    int f10; // animation frame
-    int f14; // blend animation frame
-    unsigned short u18;
-    unsigned short u1a;
-    short s1c;
-    short s1e;
-    short s20;
-    unsigned short u22;
-    short s24;
-    short s26;
-    short s28;
-    short s2A;
-    int f2C;
-    int f30;
-    int f34;
-    int f38;
-    int f3c;
+    // 1: acting, 2: fading out, 4: fading in, 8: animation changed this frame, 0x10: blending from prevAnim_1E,
+    // 0x20: continue (ContinueLevantAnim_800AB1A4), 0x100: in battle (field position saved in basePos_60),
+    // 0x200: the action plays an effect, 0x400: defending, 0x800: loop between the loop frames, 0x1000: victory
+    // pose, 0x2000: action finished, 0x4000: battle stance, 0x8000: the loop wrapped, 0x20000: hidden,
+    // 0x40000: no map collision, 0x80000: root motion from basePos_60, 0x200000: turning on the spot,
+    // 0x400000: walking path_78, 0x800000: skip the script animation, 0x1000000: capture of the last enemy
+    unsigned int flags_0;
+    int moveCmd_4; // input bits
+    int action_8;  // step of the mode_C state machine (0 / 1: idle animations)
+    int mode_C;    // 0 field, 1 battle action, 2 script animation, 3 queued animation
+    int frame_10; // animation frame
+    int blendFrame_14; // blend animation frame
+    unsigned short frameStep_18;
+    unsigned short frameFrac_1A;
+    short anim_1C;
+    short prevAnim_1E;
+    short actionAnim_20;
+    unsigned short queuedAnim_22;
+    short nextAnim_24;
+    short blend_26;
+    short idleTimer_28;
+    short hitRepeat_2A;
+    int effect_2C;
+    int fade_30;
+    int arg_34;
+    int targets_38;
+    int status_3C;
     Model* model_40;
     char pad_44[4];
-    G2V12 v48;
-    G2V12 v54;
-    G2V12 v60;
-    G2V12 v6c; // root motion of the current animation frame (SetLevantRootMotion_800AA140)
+    G2V12 pos_48;
+    G2V12 savedPos_54;
+    G2V12 basePos_60;
+    G2V12 rootMotion_6C; // root motion of the current animation frame (SetLevantRootMotion_800AA140)
     struct G2Path* path_78; // scripted walk (flag 0x400000, SetLevantPath_800ABAA4)
-    int f7c;    // step of path_78
+    int pathStep_7C;    // step of path_78
     int tri_80; // floor triangle under Levant (mapState_8008B500.meshes_C[mesh_84].tris_4)
     int mesh_84;
     char pad_88[8];
@@ -892,15 +901,15 @@ extern int FindMapVar_800ADBA0(short*);
 
 typedef struct G2Rec
 {
-    unsigned char f0;
-    unsigned char f1;
+    unsigned char fileId_0;
+    unsigned char resident_1;
     char pad_2;
-    unsigned char f3;
-    short s4;
-    short s6;
-    short s8;
-    unsigned short sA;
-    short sC;
+    unsigned char flags_3;
+    short start_4;
+    short loopStart_6;
+    short loopEnd_8;
+    unsigned short lastFrame_A;
+    short hitFrames_C;
     char pad_E[0x26];
     int f34;
     char pad_38[8];
@@ -908,11 +917,11 @@ typedef struct G2Rec
 
 extern int GetLevantAnimIndex_800AC794(int, int);
 
-extern void sub_800A913C();
+extern void StopLevantScriptMove_800A913C();
 
-extern void sub_800ABAD4();
+extern void EndLevantPath_800ABAD4();
 
-extern void sub_800AB444();
+extern void ExitLevantActorBattle_800AB444();
 
 
 extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
@@ -943,15 +952,15 @@ extern int GetFieldMinionCount_800A7790();
 
 
 
-extern void sub_800ABC78();
+extern void SetLevantRootMotionMode_800ABC78();
 
-extern void sub_800AA25C();
+extern void UpdateLevantFieldAnim_800AA25C();
 
-extern void sub_800AA51C();
+extern void UpdateLevantBattleAction_800AA51C();
 
-extern void sub_800AACF8();
+extern void UpdateLevantScriptAnim_800AACF8();
 
-extern void sub_800AC02C();
+extern void UpdateLevantQueuedAnim_800AC02C();
 
 extern int CanAddInventoryCount_800AD670(int, int);
 
@@ -1052,7 +1061,7 @@ extern void RequestGameMode_800A6D30(int);
 
 extern int eventDispatchHalt_8008B540;
 
-extern void sub_800A9414(void*, int, int);
+extern void ResetLevantActor_800A9414(void*, int, int);
 
 
 extern void PoolDestroy_8003FF7C(void*);
@@ -1090,23 +1099,23 @@ extern int CountCocoonsAndMinions_800AD8BC();
 
 extern short cameraTargetScreenPos_8008D668[2];
 
-extern int sub_800AB304();
+extern int IsLevantActorIdle_800AB304();
 
-extern int sub_800AB354();
+extern int IsLevantDefending_800AB354();
 
-extern int sub_800AB85C();
+extern int IsLevantActionFinished_800AB85C();
 
-extern void sub_800AB884();
+extern void ClearLevantBattleStance_800AB884();
 
-extern void sub_800AB8AC();
+extern void ResetLevantActorToIdle_800AB8AC();
 
-extern void sub_800AC318();
+extern void SkipLevantAnim_800AC318();
 
 extern int FireEventTrigger_800A5C40();
 
-extern void sub_800AB910();
+extern void StopLevantAnimLoop_800AB910();
 
-extern void sub_800ABBD8();
+extern void SetLevantVisible_800ABBD8();
 
 typedef struct G2Pair_1
 {
@@ -1121,7 +1130,7 @@ typedef struct G2Mode_1
 } G2Mode_1;
 
 
-extern G2Mode_1 name_800B1084[];
+extern G2Mode_1 levantBattleActions_800B1084[];
 
 
 typedef struct G2Cmd_1
@@ -1140,22 +1149,22 @@ typedef struct G2Cmd_1
 
 typedef struct G2Init_1
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
+    int flags_0;
+    int moveCmd_4;
+    int action_8;
+    int mode_C;
+    int frame_10;
     char pad_14[4];
-    short s18;
-    short s1a;
-    short s1c;
-    short s1e;
+    short frameStep_18;
+    short frameFrac_1A;
+    short anim_1C;
+    short prevAnim_1E;
     char pad_20[6];
-    short s26;
+    short blend_26;
     char pad_28[8];
-    int f30;
+    int fade_30;
     char pad_34[8];
-    int f3C;
+    int status_3C;
 } G2Init_1;
 
 extern void sub_800B80C8(void* p);
@@ -1411,16 +1420,35 @@ extern int *eventReloc_800AEBBC;
 extern void *eventTiy_800AEBC0[2];
 extern void *eventDataBuf_800AEBC8;
 extern int eventRecords_800AEBCC[2];
-extern int name_800AEBD4;
+extern int eventTempFlags_800AEBD4;
 extern int sceneScriptId_800AEBD8;
 extern int nextScriptId_800AEBDC;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern int currentMessageId_800AEBE8;
-extern int name_800AEBEC;
+extern int currentVoice_800AEBEC;
 extern int voiceTable_800AEBF0;
 extern int eventResult_800AEBF4;
-extern int dword_800AEBF8[19];
+// a menu cursor of the MAP overlay's destination select (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
+typedef struct GameMapCursor
+{
+    short cols_0;
+    short rows_2;
+    short count_4;
+    short flags_6; // 0x40: scrolls
+    short index_8; // on screen
+    short scroll_A;
+} GameMapCursor;
+
+// the MAP overlay's destination select state, kept in GAME across the MAP overlay's loads
+typedef struct GameMapSelect
+{
+    short area_0; // the selected area (-1: none yet)
+    short dest_2;
+    GameMapCursor cursors_4[6]; // one per area
+} GameMapSelect;
+
+extern GameMapSelect mapSelect_800AEBF8;
 extern int mapArea0Map00Entrances_800AEC44[20];
 extern int mapArea0Map01Entrances_800AEC94[20];
 extern int mapArea0Map02Entrances_800AECE4[16];
@@ -1478,13 +1506,13 @@ extern int actorTasksDef_800B072C[6];
 extern int tileAnimTaskDef_800B0744[6];
 extern int eventScriptsDef_800B075C[6];
 extern int encounterWatchTaskDef_800B0774[6];
-extern int dword_800B078C[6];
+extern int battleTaskDef_800B078C[6];
 extern int battleMenuTaskDef_800B07A4[6];
 extern int dword_800B07BC[6];
-extern int dword_800B07D4[6];
-extern int dword_800B07EC[6];
-extern int dword_800B0804[6];
-extern int dword_800B081C[6];
+extern int enemyWindowsTaskDef_800B07D4[6];
+extern int enemyWindowTaskDef_800B07EC[6];
+extern int actorWindowTaskDef_800B0804[6];
+extern int helpWindowTaskDef_800B081C[6];
 extern int levantControlTaskDef_800B0834[6];
 extern int dword_800B084C[6];
 extern int levantActorTaskDef_800B0864[6];
@@ -1494,11 +1522,11 @@ extern int dword_800B08AC[6];
 extern int eventEntitiesDef_800B08C4[6];
 extern int prevModeTaskDef_800B08DC[6];
 extern int mapOverlayTaskDef_800B08F4[6];
-extern int dword_800B090C[6];
-extern int dword_800B0924[6];
-extern int dword_800B093C[6];
-extern int dword_800B0954[6];
-extern int dword_800B096C[6];
+extern int fieldMenuTaskDef_800B090C[6];
+extern int shopCtrlTaskDef_800B0924[6];
+extern int shopMenuTaskDef_800B093C[6];
+extern int shelfMenuTaskDef_800B0954[6];
+extern int storeTaskDef_800B096C[6];
 extern int dword_800B0984[6];
 extern int chapterOverlayTaskDef_800B099C[6];
 extern int sporeTaskDef_800B09B4[6];
@@ -1509,7 +1537,7 @@ extern GameLst_1 gameModeChapterTasks_800B0A0C[4];
 extern GameLst_1 gameModeFieldTasks_800B0A2C[26];
 extern GameLst_1 gameModeBattleTasks_800B0AFC[35];
 extern GameLst_1 gameModeBattleEndTasks_800B0C14[4];
-extern GameLst_1 dword_800B0C34[3];
+extern GameLst_1 gameModeEquipTasks_800B0C34[3];
 extern GameLst_1 gameModeMenuTasks_800B0C4C[7];
 extern GameLst_1 gameModeShopTasks_800B0C84[12];
 extern GameLst_1 gameModeSaveTasks_800B0CE4[4];
@@ -1530,7 +1558,7 @@ extern SVECTOR levantBoneScale_800B0FB0[55];
 extern int dword_800B1168;
 extern int levantBaseModels_800B116C[19];
 extern unsigned char levantOutfitModelOffsets_800B11B8[20];
-extern int dword_800B11CC[4];
+extern int levantSavedFtgIds_800B11CC[4];
 extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
 extern int battleHitEnemies_800B122C[13];

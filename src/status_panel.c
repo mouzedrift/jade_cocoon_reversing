@@ -287,7 +287,7 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     CalcEquippedStats_80033624(outStats, p);
 }
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
-extern int sub_800AD8E4(void);
+extern int GetEmptyCocoons_800AD8E4(void);
 extern void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
@@ -311,7 +311,7 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     DrawUiTiySprt_8002C06C(loc, 0x82, args->ot_0);
     loc[0] = 0x132;
     loc[1] = 0x32;
-    DrawLargeNumber_8002C100(loc, sub_800AD8E4(), args->ot_0);
+    DrawLargeNumber_8002C100(loc, GetEmptyCocoons_800AD8E4(), args->ot_0);
     r[0] = 0xDB;
     r[1] = 0x2C;
     r[2] = 0x5B;

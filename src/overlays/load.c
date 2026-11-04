@@ -74,8 +74,8 @@ typedef struct DirEntry_LOAD
 } DirEntry_LOAD;
 extern long MemCardGetDirentry(long chan, char* name, DirEntry_LOAD* dir, long* files, long ofs, long max);
 extern void FreeActiveOverlay_8002C014(void);
-extern int sub_800A6D50(int a);
-extern void sub_800A6D30(int a);
+extern int GetGameMode_800A6D50(int a);
+extern void RequestGameMode_800A6D30(int a);
 extern int mapStartMode_80091C54;
 extern int MemCardFormat(long chan);
 extern void ScanCardSaves_800BAFB0(int a);
@@ -1968,12 +1968,12 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadMenuWork* s)
         if (s->flags_54 & 0x20)
         {
             RequestAreaReload_80027314();
-            sub_800A6D30(sub_800A6D50(1));
+            RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
         else if (!(s->flags_54 & 4))
         {
             RequestAreaReload_80027314();
-            sub_800A6D30(sub_800A6D50(1));
+            RequestGameMode_800A6D30(GetGameMode_800A6D50(1));
         }
         if (s->flags_54 & 1)
         {

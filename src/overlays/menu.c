@@ -122,7 +122,7 @@ typedef struct MenuQuad
 extern void DrawLargeTextBox_8002AF10();
 extern void DrawUnitStatusWindow_8002F1C8();
 
-extern int name_800AD288();
+extern int GetInventorySlotId_800AD288();
 extern UnitStatus* name_80014390();
 
 extern int IsCurrentMapListed_80034140();
@@ -1607,7 +1607,7 @@ void EnterNextMenuState_800BE048(MenuCtx* c)
         if (t == 2)
         {
             int s = c->cursors_2A[3] + c->scrolls_46[0];
-            int r = name_800AD288(s, moved);
+            int r = GetInventorySlotId_800AD288(s, moved);
             if (name_8001CE70(r) & 0x20)
             {
                 UseSpore_800BF3AC(r, s);
@@ -1643,7 +1643,7 @@ void EnterNextMenuState_800BE048(MenuCtx* c)
     }
     else if (t == -3)
     {
-        short r = name_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        short r = GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         if (c->state_2 == 0xE && r == 0)
         {
             PlaySfx_80031494(0x7E);
@@ -2309,7 +2309,7 @@ void UseSpore_800BF3AC(int item)
     RemoveInventory_800AD1E0(item, 1, 0);
 }
 
-extern void sub_800A911C();
+extern void FireEventTriggerById_800A911C();
 // Not matched: original tests s == 0 via sltiu + bnez (one word more); also tried
 // (unsigned)s < 1 and short s (both fold to beqz)
 #if 0
@@ -2322,7 +2322,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* c)
     switch (c->state_2)
     {
     case 2:
-        r17 = name_800AD288((short)((unsigned short)c->cursors_2A[3] + (unsigned short)c->scrolls_46[0]), 0);
+        r17 = GetInventorySlotId_800AD288((short)((unsigned short)c->cursors_2A[3] + (unsigned short)c->scrolls_46[0]), 0);
         tmp.f8 = 1;
         InitItemUse_800C00D4(&tmp, r17, c->cursors_2A[5]);
         tmp.f0 = 4;
@@ -2339,7 +2339,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* c)
         if (s == 0)
             leaveForest_800C29BC = 1;
         else
-            sub_800A911C(s);
+            FireEventTriggerById_800A911C(s);
         break;
     case 0x10:
         c->flags_0 |= 8;
@@ -2469,7 +2469,7 @@ void DrawMenuMessage_800BF794(MenuCtx* c)
     }
     else
     {
-        int r = (short)name_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        int r = (short)GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         DrawLargeTextBox_8002AF10(&keyItemDescs_800C1E98[r], 0, 0xE);
         if (!IsConfirmPressedP1_8003D380(0) && !IsCancelPressedP1_8003D41C(0))
             return;
@@ -2929,7 +2929,7 @@ void DrawItemInfo_800C0428(MenuCtx* c)
     int is = c->state_2 == 1;
     if (IsCircleHeldP1_8003D480() && is && c->showMessage_24 == 0)
     {
-        int r = name_800AD288((short)sum, found);
+        int r = GetInventorySlotId_800AD288((short)sum, found);
         if (r < 0x2B)
         {
             DrawLargeTextBox_8002AF10(&itemDescs_800C1BE8[r], found, 0xE);
@@ -3155,7 +3155,7 @@ void PreviewItemRecovery_800C0CA4(MenuCtx* c, int* out)
     int r17;
     UnitStatus* r16;
     unsigned short u = c->cursors_2A[5];
-    r17 = name_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
+    r17 = GetInventorySlotId_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
     r16 = name_80014390(u & 0xFF);
     q.a = r17;
     q.b = 0;
@@ -3241,14 +3241,14 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
     SetFontClutOffset_8003F900(2, 0);
 }
 
-extern int name_800B0EC0;
+extern int fieldMode_800B0EC0;
 extern int IsSceneHeld_800A5E68();
 int sub_800C1000(void)
 {
     int v = menuFromResults_800C29B8;
     if (v != 1)
         return 1;
-    if (IsSceneHeld_800A5E68() == 0 && name_800B0EC0 == v)
+    if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == v)
         return 1;
     return 0;
 }

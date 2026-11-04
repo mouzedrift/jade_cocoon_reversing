@@ -15,7 +15,7 @@
 #include "camera.h"
 
 
-extern int sub_800A2AB4();
+extern int GetActiveSwapEnemy_800A2AB4();
 
 extern void SetHitVariant_80018430(int a);
 
@@ -122,7 +122,7 @@ extern int GetEncounterAdvantage_800BAAD8();
 
 extern void SpawnEncounterEnemies_800A1F80();
 
-extern void sub_800A8D0C();
+extern void StartLevantBattle_800A8D0C();
 
 extern void DisableCameraPoints_800A096C();
 
@@ -152,9 +152,9 @@ extern int dword_800ADE88;
 
 extern int IsSummonedMinionIdle_800C0D60();
 
-extern int sub_800A89F0();
+extern int IsLevantIdle_800A89F0();
 
-extern int sub_800A2550();
+extern int IsEnemyIdle_800A2550();
 
 extern int IsEffectTaskIdle_800148D4();
 
@@ -198,9 +198,9 @@ extern void FreeActiveOverlay_8002C014();
 
 extern void LoadLevantAnimSet_800AC708();
 
-extern void sub_800A9364();
+extern void StopLevantAnimLoop_800A9364();
 
-extern int sub_800A8DAC();
+extern int IsLevantActionFinished_800A8DAC();
 
 extern int AreAllEncounterEnemiesGone_800A1B2C();
 
@@ -314,7 +314,7 @@ extern void memset();
 
 extern void SetFadeMode_8001C19C();
 
-extern void sub_800A2AE8();
+extern void SwapEncounterEnemy_800A2AE8();
 
 extern void PlaySeqSlot_80031160();
 
@@ -324,9 +324,9 @@ extern int LoadOverlay_80020BF8();
 
 extern void StopSceneDarken_8001AAF4();
 
-extern void sub_800A8D48();
+extern void TurnLevantToward_800A8D48();
 
-extern void sub_800A25D8();
+extern void TurnEnemyToward_800A25D8();
 
 extern int GetEnemySpecies_800A2BE4();
 
@@ -488,7 +488,7 @@ typedef struct BatWin_b
 
 extern int IsSceneFadeDone_8001AB94(void*);
 
-extern int sub_800A89F0();
+extern int IsLevantIdle_800A89F0();
 
 extern void BattleEndFadeOut_800BA624();
 
@@ -533,23 +533,23 @@ extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 extern int IsSummonedMinionReady_800C0D88();
 
-extern int sub_800A8BE4();
+extern int IsLevantReady_800A8BE4();
 
-extern int sub_800A2594();
+extern int IsEnemyReady_800A2594();
 
 extern int AreLevantFilesLoaded_800AC768();
 
 extern void ResumeOtherEnemies_800A1F0C();
 
-extern void sub_800A9384(int a);
+extern void SetLevantVisible_800A9384(int a);
 
-extern void sub_800A8DCC();
+extern void ClearLevantBattleStance_800A8DCC();
 
-extern void sub_800A89C8();
+extern void UnlockLevantMovement_800A89C8();
 
 extern void EndEncounter_800A1E1C();
 
-extern void sub_800A094C();
+extern void EnableCameraPoints_800A094C();
 
 extern void WarpAfterLostBattle_800A5FAC();
 
@@ -600,11 +600,11 @@ extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
 extern void ActionWaitIdle_800BDB4C();
 
-extern void sub_800A8A30();
+extern void StartLevantAction_800A8A30();
 
 extern void StartEnemyCommandAction_800A2684();
 
-extern void sub_800A8C0C(int b);
+extern void TriggerLevantAction_800A8C0C(int b);
 
 extern void TriggerEnemyEffects_800A2760(BatCmd_a* p, int b);
 

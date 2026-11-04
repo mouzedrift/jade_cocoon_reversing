@@ -413,8 +413,8 @@ void StartBattleCameraSpline_800377B4(int a0, short a1)
     }
 }
 // Table in the overlay area (outside the linked image), 8 bytes per entry
-extern struct_pair8 dword_800B1084[];
-__asm__(".globl dword_800B1084\n.equ dword_800B1084,0x800b1084");
+extern struct_pair8 levantBattleActions_800B1084[];
+__asm__(".globl levantBattleActions_800B1084\n.equ levantBattleActions_800B1084,0x800b1084");
 // Matched
 void MoveBattleCameraForAction_80037828(int a, short b, int c)
 {
@@ -425,7 +425,7 @@ void MoveBattleCameraForAction_80037828(int a, short b, int c)
     }
     else if (a == 0)
     {
-        if (dword_800B1084[b].a != 0x10 && b != 0x11 && b != 0x12)
+        if (levantBattleActions_800B1084[b].a != 0x10 && b != 0x11 && b != 0x12)
         {
             MoveBattleCamera_800390F4(p, 1);
         }
@@ -512,7 +512,7 @@ void SetCameraTarget_80037AC8(int target)
 {
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
 }
-extern int* sub_800A1E3C(void);
+extern int* GetBattleSelection_800A1E3C(void);
 extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
 extern unsigned char byte_800C9C7C;
 extern void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b);
@@ -540,7 +540,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
     }
     if (*(unsigned short*)&p->mode_8 == 4 || *(unsigned short*)&p->mode_8 == 5)
     {
-        r = sub_800A1E3C();
+        r = GetBattleSelection_800A1E3C();
         if (byte_800C9C7C == 0)
         {
             v = 0;
@@ -954,18 +954,18 @@ void RestoreCameraState_80039698(CameraCtrl* o)
     cameraZoom_8008B4F8 = o->savedZoom_184;
     screenOffset_8008D474 = o->savedShake_14C;
 }
-extern int sub_800AB4D8(int a);
+extern int GetLevantActionEndFrame_800AB4D8(int a);
 // Matched
 void StartCameraSplineLong_8003970C(int idx_, int* a5)
 {
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
-    struct_pair8* t = dword_800B1084;
+    struct_pair8* t = levantBattleActions_800B1084;
     int* q;
     int r;
     p->field_1C = t[(short)idx_].b;
     p->spline_218 = (CamSpline*)a5;
     p->flags_4 |= 8;
-    r = (short)sub_800AB4D8(0xE);
+    r = (short)GetLevantActionEndFrame_800AB4D8(0xE);
     if (((settingsFlags_8008B58C.word & 0x200000) >> 21) == 1)
     {
         q = p->keys_1C8;
@@ -1001,7 +1001,7 @@ void StartCameraSplineLong_8003970C(int idx_, int* a5)
 void StartCameraSplineShort_8003983C(int idx_, int* a5)
 {
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
-    struct_pair8* t = dword_800B1084;
+    struct_pair8* t = levantBattleActions_800B1084;
     int* q;
     p->field_1C = t[(short)idx_].b;
     q = p->keys_1C8;

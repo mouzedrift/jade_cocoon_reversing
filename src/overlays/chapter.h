@@ -11,7 +11,7 @@ typedef struct ChapterEntry
 {
     short field_0;
     short pad_2;
-    int startPoint_4;   // map point key (GAME's sub_800ADCEC) the chapter starts at
+    int startPoint_4;   // map point key (GAME's FindMapEntrance_800ADCEC) the chapter starts at
     int music_8;
     int fadeBgm_C;
     int movie_10;

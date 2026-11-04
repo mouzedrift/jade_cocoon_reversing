@@ -787,7 +787,7 @@ int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
                 }
                 else
                 {
-                    sub_800A785C(i - 1);
+                    ReleaseFieldMinion_800A785C(i - 1);
                 }
                 c->heldActors_14 &= ~(1 << i);
             }
@@ -811,7 +811,7 @@ int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
 
 #if 0
 extern int fieldMode_800B0EC0;
-extern int dword_800B1260;
+extern int gCtx_800B1260;
 extern int GetGameMode_800A6D50(int a);
 extern void SuspendAllEnemySlots_800A1904(void);
 int EvCmdBeginScene_800B8BE8(EvCtxEventfnc* c)
@@ -821,7 +821,7 @@ int EvCmdBeginScene_800B8BE8(EvCtxEventfnc* c)
     {
         return 0;
     }
-    if (dword_800B1260 != 0)
+    if (gCtx_800B1260 != 0)
     {
         return 0;
     }
@@ -875,9 +875,9 @@ int EvCmdTakeActors_800B8D08(EvCtxEventfnc* c)
             if (i == 0)
             {
                 HoldLevantControl_800A8E0C();
-                sub_800A8DEC();
+                ResetLevantActorToIdle_800A8DEC();
             }
-            else if (sub_800A7810(i - 1) == 0)
+            else if (HoldFieldMinion_800A7810(i - 1) == 0)
             {
                 return 0;
             }
@@ -904,7 +904,7 @@ int EvCmdReleaseActors_800B8DDC(EvCtxEventfnc* c)
             }
             else
             {
-                sub_800A785C(i - 1);
+                ReleaseFieldMinion_800A785C(i - 1);
             }
             c->heldActors_14 &= ~(1 << i);
         }
@@ -2073,8 +2073,8 @@ typedef struct EvPartyEventfnc
 extern EvPartyEventfnc eventEnemy_800B1CB8;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
-extern int dword_800B1260;
-extern int sub_800A7A9C(int i);
+extern int gCtx_800B1260;
+extern int GetFieldMinionAnims_800A7A9C(int i);
 int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
 {
     EvPartySrcEventfnc* s;
@@ -2100,7 +2100,7 @@ int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
                 eventEnemy_800B1CB8.fA4_A4[i] = (int)GetFieldMinionActor_800A7A60(k - 1);
                 eventEnemy_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
                 eventEnemy_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
-                eventEnemy_800B1CB8.fC8_C8[i] = sub_800A7A9C(k - 1);
+                eventEnemy_800B1CB8.fC8_C8[i] = GetFieldMinionAnims_800A7A9C(k - 1);
             }
             else
             {
@@ -2117,7 +2117,7 @@ int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
         c->step_B8++;
         return 0;
     case 2:
-        if (dword_800B1260)
+        if (gCtx_800B1260)
         {
             return 0;
         }
@@ -2151,7 +2151,7 @@ extern void StartSceneFadeIn_8001AA04(int a);
 extern void StartSceneFadeOut_8001AA50(int a);
 extern void StopSceneDarken_8001AAF4();
 extern void StartSceneBrighten_8001AB1C(int a);
-extern void sub_800A094C();
+extern void EnableCameraPoints_800A094C();
 extern void DisableCameraPoints_800A096C();
 extern short dword_80091CE0[];
 extern void SsSepSetDecrescendo(int, int, int, int);
@@ -2208,7 +2208,7 @@ int EvCmdFadeSound_800BB4A4(EvCtxEventfnc* c)
         r = IsFadeDone_8001C2FC();
         break;
     case 10:
-        sub_800A094C();
+        EnableCameraPoints_800A094C();
         break;
     case 11:
         DisableCameraPoints_800A096C();
@@ -2396,7 +2396,7 @@ int IsActorCmdReady_800BBAB0(int i)
     }
     else
     {
-        r = sub_800A7CB8(i - 1);
+        r = IsFieldMinionIdle_800A7CB8(i - 1);
     }
     return r;
 }
@@ -2406,11 +2406,11 @@ int IsActorCmdDone_800BBAE4(int i)
     int r;
     if (i == 0)
     {
-        r = sub_800A8FE0();
+        r = IsLevantCmdDone_800A8FE0();
     }
     else
     {
-        r = sub_800A7CFC(i - 1);
+        r = IsFieldMinionReady_800A7CFC(i - 1);
     }
     return r;
 }
@@ -2434,7 +2434,7 @@ int StartActorCmd_800BBB18(int* p)
 }
 
 // Matched
-extern int sub_800A9008(int* p);
+extern int FinishLevantCommand_800A9008(int* p);
 extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
 int FinishActorCmd_800BBB5C(int* p)
 {
@@ -2442,7 +2442,7 @@ int FinishActorCmd_800BBB5C(int* p)
     int v = *p;
     if (v == 0)
     {
-        r = sub_800A9008(p);
+        r = FinishLevantCommand_800A9008(p);
     }
     else
     {
@@ -2508,17 +2508,17 @@ void SetTempFlags_800BBDA0(int a, int b)
 {
     if (b == 1)
     {
-        dword_800AEBD4 |= a;
+        eventTempFlags_800AEBD4 |= a;
     }
     else
     {
-        dword_800AEBD4 &= ~a;
+        eventTempFlags_800AEBD4 &= ~a;
     }
 }
 
 int TestTempFlags_800BBDD8(int a)
 {
-    return (~dword_800AEBD4 & a) == 0;
+    return (~eventTempFlags_800AEBD4 & a) == 0;
 }
 
 int GetOwnEntityParam_800BBDF4(EvCtxEventfnc* c)
@@ -2848,7 +2848,7 @@ int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c)
         }
         CloseMsgWindow_80034A84(c->msgWindow_11C);
         currentMessageId_800AEBE8 = 0x8000;
-        dword_800AEBEC = 0;
+        currentVoice_800AEBEC = 0;
         c->msgOpen_118 = 0;
         return 1;
     }
@@ -2862,9 +2862,9 @@ int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c)
                 k = &voiceTable_800AEBF0[i].xa_2;
             }
         }
-        if (saveData_8008B570.settings_1C.bits.i_22 == 1 && k && dword_800AEBEC != k)
+        if (saveData_8008B570.settings_1C.bits.i_22 == 1 && k && currentVoice_800AEBEC != k)
         {
-            dword_800AEBEC = k;
+            currentVoice_800AEBEC = k;
             XaRequestPlay_80043564(k->a_0, k->b_2, k->c_4);
             c->flags_0 |= 0x100;
         }
@@ -2985,11 +2985,11 @@ void LoadEventEffectFile_800BC7A8(int a)
     {
         FreeMdecBuffer_800A5854();
     }
-    if (dword_800AEB80.f4_4)
+    if (eventEffects_800AEB80.f4_4)
     {
-        ListFreeAll_8003FEC8(&dword_800AEB80.f4_4);
+        ListFreeAll_8003FEC8(&eventEffects_800AEB80.f4_4);
     }
-    t.g_0 = &dword_800AEB80;
+    t.g_0 = &eventEffects_800AEB80;
     t.s_4[5] = 0;
     t.s_4[4] = 0;
     t.s_4[3] = 0;
@@ -2997,9 +2997,9 @@ void LoadEventEffectFile_800BC7A8(int a)
     t.s_4[1] = 0;
     t.s_4[0] = 0;
     t.f10_10 = 0;
-    ListInit_8003FDB0(&dword_800AEB80.f4_4);
+    ListInit_8003FDB0(&eventEffects_800AEB80.f4_4);
     OnEffectFileLoaded_80020F5C(&t, a);
-    if (dword_800AEB80.f2C_2C)
+    if (eventEffects_800AEB80.f2C_2C)
     {
         AllocMdecBuffer_800A5804(0);
     }
@@ -3011,7 +3011,7 @@ typedef struct EvBlobPtrEventfnc
 {
     int* p_0;
 } EvBlobPtrEventfnc;
-extern EvBlobPtrEventfnc dword_800AEBBC;
+extern EvBlobPtrEventfnc eventReloc_800AEBBC;
 void LoadRelocBlob_800BC854(int* src)
 {
     int size;
@@ -3022,22 +3022,22 @@ void LoadRelocBlob_800BC854(int* src)
     int* p;
     int* e;
     size = *src++;
-    if (dword_800AEBBC.p_0)
+    if (eventReloc_800AEBBC.p_0)
     {
-        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBBC.p_0);
-        dword_800AEBBC.p_0 = 0;
+        ListFree_8003FE38(eventHeap_80091C10, eventReloc_800AEBBC.p_0);
+        eventReloc_800AEBBC.p_0 = 0;
     }
-    dword_800AEBBC.p_0 = ListAlloc_8003FDC0(eventHeap_80091C10, size);
-    MemCopy_800403E8(dword_800AEBBC.p_0, src, size);
-    n = dword_800AEBBC.p_0[0];
+    eventReloc_800AEBBC.p_0 = ListAlloc_8003FDC0(eventHeap_80091C10, size);
+    MemCopy_800403E8(eventReloc_800AEBBC.p_0, src, size);
+    n = eventReloc_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {
-        e = (int*)((char*)dword_800AEBBC.p_0 + (i * 8 + 4));
-        *e = (int)dword_800AEBBC.p_0 + *e;
+        e = (int*)((char*)eventReloc_800AEBBC.p_0 + (i * 8 + 4));
+        *e = (int)eventReloc_800AEBBC.p_0 + *e;
     }
     for (i = 0; i < n; i++)
     {
-        e = (int*)((char*)dword_800AEBBC.p_0 + (i * 8 + 4));
+        e = (int*)((char*)eventReloc_800AEBBC.p_0 + (i * 8 + 4));
         m = e[1];
         p = (int*)e[0];
         for (j = 0; j < m; j++, p++)
@@ -3048,7 +3048,7 @@ void LoadRelocBlob_800BC854(int* src)
             }
             else
             {
-                *p = (int)dword_800AEBBC.p_0 + *p;
+                *p = (int)eventReloc_800AEBBC.p_0 + *p;
             }
         }
     }
@@ -3059,26 +3059,26 @@ INCLUDE_OVERLAY_ASM(eventfnc, LoadRelocBlob_800BC854);
 
 void LoadEventTiy_800BC98C(int* a)
 {
-    if (dword_800AEBC0.sprts_0)
+    if (eventTiy_800AEBC0.sprts_0)
     {
-        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBC0.sprts_0);
-        dword_800AEBC0.sprts_0 = 0;
+        ListFree_8003FE38(eventHeap_80091C10, eventTiy_800AEBC0.sprts_0);
+        eventTiy_800AEBC0.sprts_0 = 0;
     }
-    if (dword_800AEBC0.tpages_4)
+    if (eventTiy_800AEBC0.tpages_4)
     {
-        ListFree_8003FE38(eventHeap_80091C10, dword_800AEBC0.tpages_4);
-        dword_800AEBC0.tpages_4 = 0;
+        ListFree_8003FE38(eventHeap_80091C10, eventTiy_800AEBC0.tpages_4);
+        eventTiy_800AEBC0.tpages_4 = 0;
     }
-    LoadTiy_80028E74(&dword_800AEBC0.sprts_0, 0, &dword_800AEBC0.tpages_4, a, (int)eventHeap_80091C10);
+    LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, a, (int)eventHeap_80091C10);
 }
 
 #if 0
 // Not matched: a/b land in $s1/$s0 in the original, swapped here (param types, temporaries, call-embedded assignment tried)
-extern int dword_800AEBC8;
+extern int eventDataBuf_800AEBC8;
 void CopyEventData_800BCA18(unsigned int* a, unsigned int* b)
 {
     unsigned int* r = ListAlloc_8003FDC0(eventHeap_80091C10);
-    dword_800AEBC8 = (int)r;
+    eventDataBuf_800AEBC8 = (int)r;
     MemCopy_800403E8(r, a, (unsigned int)b);
 }
 #endif
@@ -3087,14 +3087,14 @@ INCLUDE_OVERLAY_ASM(eventfnc, CopyEventData_800BCA18);
 
 void LoadEventRecordTables_800BCA68(int a)
 {
-    if (dword_800AEBCC[1] != 0)
+    if (eventRecords_800AEBCC[1] != 0)
     {
-        FreeRecordTables_80026DE8(&dword_800AEBCC[1], dword_800AEBCC[0], eventHeap_80091C10);
-        dword_800AEBCC[0] = 0;
+        FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], eventHeap_80091C10);
+        eventRecords_800AEBCC[0] = 0;
     }
-    dword_800AEBCC[0] = GetRecordTableCount_80026D6C((int*)a);
-    AllocRecordTables_80026D78(&dword_800AEBCC[1], dword_800AEBCC[0], eventHeap_80091C10);
-    LoadRecordTables_80026E74(dword_800AEBCC[1], a, eventHeap_80091C10);
+    eventRecords_800AEBCC[0] = GetRecordTableCount_80026D6C((int*)a);
+    AllocRecordTables_80026D78(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], eventHeap_80091C10);
+    LoadRecordTables_80026E74(eventRecords_800AEBCC[1], a, eventHeap_80091C10);
 }
 
 void ReturnWarpStart_800BCB00(TaskEventfnc* t, int* x)

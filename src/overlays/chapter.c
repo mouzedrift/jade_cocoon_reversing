@@ -17,10 +17,10 @@ extern int dword_800B0624[6];
 extern int mapStartMode_80091C54;
 extern int useMapStartPos_80091C94;
 extern int eventDispatchHalt_8008B540;
-extern void sub_800AD16C(int, int);
-extern void sub_800ADC5C(ChapterVec*, int);
-extern void sub_800ADCEC(ChapterVec*, int);
-extern void sub_800A6D30(int);
+extern void SetEventVar_800AD16C(int, int);
+extern void SetMapVar_800ADC5C(ChapterVec*, int);
+extern void FindMapEntrance_800ADCEC(ChapterVec*, int);
+extern void RequestGameMode_800A6D30(int);
 extern void SetAreaMapVars_800B69BC(int**);
 extern void SetMapVarList_800B6A94(short*);
 
@@ -39,7 +39,7 @@ typedef struct ChapterTask
 extern void ClearChapterYanVars_800B68A8();
 extern void ApplyChapterMapVars_800B6900();
 extern void EnterChapterMap_800B6B18();
-extern void sub_800A7690();
+extern void StartChapterOverlay_800A7690();
 extern void SsSepSetDecrescendo(short, short, short, long);
 void ChapterIntroTask_800B66F4(ChapterTask* t, int* st);
 
@@ -93,7 +93,7 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
             ClearChapterYanVars_800B68A8();
             ApplyChapterMapVars_800B6900();
             EnterChapterMap_800B6B18();
-            t->next_8 = sub_800A7690;
+            t->next_8 = StartChapterOverlay_800A7690;
         }
         break;
     }
@@ -106,7 +106,7 @@ void ClearChapterYanVars_800B68A8()
     int a = chapterClearYanVars_800B70A4[0];
     while (a != 0x14)
     {
-        sub_800AD16C(a, 0);
+        SetEventVar_800AD16C(a, 0);
         a = chapterClearYanVars_800B70A4[++i];
     }
 }
@@ -143,7 +143,7 @@ void SetAreaMapVars_800B69BC(int** areaVars)
                 v.x = area;
                 v.y = map;
                 v.z = 0;
-                sub_800ADC5C(&v, vars[map]);
+                SetMapVar_800ADC5C(&v, vars[map]);
                 map++;
             }
         }
@@ -158,7 +158,7 @@ void SetMapVarList_800B6A94(short* rec)
         v.x = rec[0];
         v.y = rec[1];
         v.z = rec[2];
-        sub_800ADC5C(&v, rec[3]);
+        SetMapVar_800ADC5C(&v, rec[3]);
         rec += 4;
     }
 }
@@ -168,7 +168,7 @@ void EnterChapterMap_800B6B18()
     SaveData* s = &saveData_8008B570;
     ChapterEntry* e = &chapterTable_800B6FE0[s->chapter_2DC];
     ChapterVec v;
-    sub_800ADCEC(&v, e->startPoint_4);
+    FindMapEntrance_800ADCEC(&v, e->startPoint_4);
     mapStartMode_80091C54 = 0;
     s->chapterNext_2DE = s->chapter_2DC + 1;
     s->field_2E0 = e->field_0;
@@ -177,7 +177,7 @@ void EnterChapterMap_800B6B18()
     s->mapId_2E4[1].field_0 = v.y;
     s->mapId_2E4[2].field_0 = v.z;
     s->mapId_2E4[3].field_0 = 0;
-    sub_800A6D30(1);
+    RequestGameMode_800A6D30(1);
     eventDispatchHalt_8008B540 = 1;
 }
 

@@ -5369,3 +5369,210 @@ byte_80082334 modelDesc3A2_80082334
 byte_800823A0 modelDesc3A3_800823A0
 dword_800823E8 modelDesc3A4_800823E8
 byte_80082480 modelDesc3A5_80082480
+
+# --- naming pass 2: GAME ---
+# enemy side of the battle unit interface (BATTLE calls these for units 4..6)
+[BATTLE GAME]
+sub_800A2550 IsEnemyIdle_800A2550
+sub_800A2594 IsEnemyReady_800A2594
+sub_800A25D8 TurnEnemyToward_800A25D8
+sub_800A28FC CanFleeFromEnemy_800A28FC
+sub_800A2AB4 GetActiveSwapEnemy_800A2AB4
+sub_800A2AE8 SwapEncounterEnemy_800A2AE8
+# field minions (EVENTFNC takes / releases them for scripts)
+[EVENTFNC GAME]
+sub_800A7810 HoldFieldMinion_800A7810
+sub_800A785C ReleaseFieldMinion_800A785C
+sub_800A7A9C GetFieldMinionAnims_800A7A9C
+sub_800A7CB8 IsFieldMinionIdle_800A7CB8
+sub_800A7CFC IsFieldMinionReady_800A7CFC
+[GAME]
+sub_800A6534 SetLevantWallEnabled_800A6534
+sub_800A654C SetActorWallEnabled_800A654C
+sub_800A6564 SetWallsEnabled_800A6564
+# Levant's control state (PLDISP.C; dword_8008B4CC->f24)
+sub_800A895C EnterLevantBattleMode_800A895C
+[BATTLE GAME]
+sub_800A8984 ExitLevantBattleMode_800A8984
+sub_800A89C8 UnlockLevantMovement_800A89C8
+sub_800A89F0 IsLevantIdle_800A89F0
+[GAME]
+sub_800A8A10 IsLevantDefending_800A8A10
+[BATTLE GAME]
+sub_800A8A30 StartLevantAction_800A8A30
+sub_800A8BE4 IsLevantReady_800A8BE4
+sub_800A8C0C TriggerLevantAction_800A8C0C
+sub_800A8D0C StartLevantBattle_800A8D0C
+sub_800A8D48 TurnLevantToward_800A8D48
+[GAME]
+sub_800A8D84 IsLevantBattleIdle_800A8D84
+[BATTLE GAME]
+sub_800A8DAC IsLevantActionFinished_800A8DAC
+sub_800A8DCC ClearLevantBattleStance_800A8DCC
+[EVENTFNC GAME MAP]
+sub_800A8DEC ResetLevantActorToIdle_800A8DEC
+[GAME]
+sub_800A8EA4 SkipLevantAnim_800A8EA4
+[EVENTFNC GAME]
+sub_800A8FE0 IsLevantCmdDone_800A8FE0
+sub_800A9008 FinishLevantCommand_800A9008
+[GAME MENU]
+sub_800A911C FireEventTriggerById_800A911C
+[GAME]
+sub_800A913C StopLevantScriptMove_800A913C
+[BATTLE GAME]
+sub_800A9364 StopLevantAnimLoop_800A9364
+sub_800A9384 SetLevantVisible_800A9384
+[GAME]
+sub_800A9414 ResetLevantActor_800A9414
+# Levant's actor (gameTask_8008B4A4->f24)
+sub_800AA1C0 GetLevantMoveDir_800AA1C0
+sub_800AA1D4 IsLevantInBattle_800AA1D4
+sub_800AA1E0 StartLevantQueuedAnim_800AA1E0
+sub_800AA25C UpdateLevantFieldAnim_800AA25C
+sub_800AA3F0 ReturnLevantToIdle_800AA3F0
+sub_800AA430 PlayLevantActionEffect_800AA430
+sub_800AA51C UpdateLevantBattleAction_800AA51C
+sub_800AACF8 UpdateLevantScriptAnim_800AACF8
+sub_800AB114 StartLevantFadeIn_800AB114
+sub_800AB134 StartLevantFadeOut_800AB134
+sub_800AB150 ClearLevantFade_800AB150
+sub_800AB1A4 ContinueLevantAnim_800AB1A4
+sub_800AB1EC StartLevantActorAction_800AB1EC
+sub_800AB264 SetLevantDefending_800AB264
+sub_800AB28C ClearLevantDefending_800AB28C
+sub_800AB304 IsLevantActorIdle_800AB304
+sub_800AB32C IsLevantActionReady_800AB32C
+sub_800AB354 IsLevantDefending_800AB354
+sub_800AB3BC ResetLevantIdleTimer_800AB3BC
+sub_800AB3D4 EnterLevantActorBattle_800AB3D4
+sub_800AB444 ExitLevantActorBattle_800AB444
+[EXE GAME]
+sub_800AB4D8 GetLevantActionEndFrame_800AB4D8
+[GAME]
+sub_800AB5F8 GetLevantAnimLoopStartCur_800AB5F8
+sub_800AB630 GetLevantActionLoopEndFrame_800AB630
+sub_800AB750 GetLevantActionHitFrame_800AB750
+sub_800AB85C IsLevantActionFinished_800AB85C
+sub_800AB884 ClearLevantBattleStance_800AB884
+sub_800AB8AC ResetLevantActorToIdle_800AB8AC
+sub_800AB8DC UpdateLevantActorModel_800AB8DC
+sub_800AB910 StopLevantAnimLoop_800AB910
+sub_800AB938 IsLevantAnimLooped_800AB938
+sub_800AB958 IsLevantIdleAnim_800AB958
+sub_800AB978 QueueLevantAnim_800AB978
+sub_800AB9A8 PlayLevantScriptAnim_800AB9A8
+sub_800ABAD4 EndLevantPath_800ABAD4
+sub_800ABB44 IsLevantPathDone_800ABB44
+sub_800ABB70 IsLevantScriptAnimWaiting_800ABB70
+sub_800ABBD8 SetLevantVisible_800ABBD8
+sub_800ABC34 SetLevantMapCollision_800ABC34
+sub_800ABC78 SetLevantRootMotionMode_800ABC78
+sub_800ABCF4 RequestLevantActionEffect_800ABCF4
+sub_800ABDF0 RunLevantActionCues_800ABDF0
+sub_800AC02C UpdateLevantQueuedAnim_800AC02C
+sub_800AC318 SkipLevantAnim_800AC318
+sub_800AC340 SetLevantLastCapture_800AC340
+sub_800AC7F0 GetLevantAnimStartFrame_800AC7F0
+sub_800AC900 GetLevantAnimFlags_800AC900
+sub_800AC9CC GetLevantAnimHitFrames_800AC9CC
+# data
+name_800B1164 levantModelIds_800B1164
+dword_800B11CC levantSavedFtgIds_800B11CC
+dword_800AEBF8 mapSelect_800AEBF8
+dword_800B0C34 gameModeEquipTasks_800B0C34
+dword_800B078C battleTaskDef_800B078C
+dword_800B07D4 enemyWindowsTaskDef_800B07D4
+dword_800B07EC enemyWindowTaskDef_800B07EC
+dword_800B0804 actorWindowTaskDef_800B0804
+dword_800B081C helpWindowTaskDef_800B081C
+dword_800B090C fieldMenuTaskDef_800B090C
+dword_800B0924 shopCtrlTaskDef_800B0924
+dword_800B093C shopMenuTaskDef_800B093C
+dword_800B0954 shelfMenuTaskDef_800B0954
+dword_800B096C storeTaskDef_800B096C
+[EXE GAME]
+name_800B1084 levantBattleActions_800B1084
+dword_800B1084 levantBattleActions_800B1084
+[EVENTFNC GAME]
+name_800AEBD4 eventTempFlags_800AEBD4
+dword_800AEBD4 eventTempFlags_800AEBD4
+name_800AEBEC currentVoice_800AEBEC
+dword_800AEBEC currentVoice_800AEBEC
+[MAP]
+word_800AEBF8 mapSelect_800AEBF8
+dword_800AEBFC mapSelectCursors_800AEBFC
+# GAME symbols the game code and the overlays loaded above GAME still knew by placeholder names
+[BATTLE EVENTFNC EXE GAME]
+sub_800A094C EnableCameraPoints_800A094C
+[EXE]
+sub_800A1E3C GetBattleSelection_800A1E3C
+sub_800A248C GetEnemyAliveMask_800A248C
+sub_800A2B60 GetEnemyStatus_800A2B60
+sub_800AD0D4 TestEventFlag_800AD0D4
+sub_800AD0F8 SetEventFlag_800AD0F8
+[EXE GAME]
+sub_800AD154 GetEventVar_800AD154
+[EXE]
+sub_800AD68C SetValuableFlag_800AD68C
+sub_800AD8E4 GetEmptyCocoons_800AD8E4
+[CHAPTER EXE]
+sub_800AD16C SetEventVar_800AD16C
+sub_800ADC5C SetMapVar_800ADC5C
+[EXE WPNSHOP]
+sub_800AD058 AddMoney_800AD058
+sub_800AD184 AddInventory_800AD184
+sub_800AD1E0 RemoveInventory_800AD1E0
+[EQUIP EXE WPNSHOP]
+sub_800AD990 GetEquippedId_800AD990
+[EQUIP EXE SHOP WPNSHOP]
+sub_800AD288 GetInventorySlotId_800AD288
+sub_800AD2C8 GetInventorySlotCount_800AD2C8
+sub_800AD308 GetLastInventorySlot_800AD308
+[EXE SHOP]
+sub_800AD8F4 AddEmptyCocoons_800AD8F4
+[GAME SHOP]
+fn_800A5F9C ExchangeEventResult_800A5F9C
+fn_800A6D30 RequestGameMode_800A6D30
+fn_800A7BF0 ResumeFieldMinions_800A7BF0
+fn_800AD184 AddInventory_800AD184
+fn_800AD1E0 RemoveInventory_800AD1E0
+fn_800AD288 GetInventorySlotId_800AD288
+fn_800AD3F0 CompactInventory_800AD3F0
+fn_800AD888 GetFreeCocoonSlots_800AD888
+fn_800AD8F4 AddEmptyCocoons_800AD8F4
+[CHAPTER LOAD SHOPCTRL WPNSHOP]
+sub_800A6D30 RequestGameMode_800A6D30
+[LOAD]
+sub_800A6D50 GetGameMode_800A6D50
+[CHAPTER]
+sub_800A7690 StartChapterOverlay_800A7690
+sub_800ADCEC FindMapEntrance_800ADCEC
+[SHOP SHOPCTRL WPNSHOP]
+sub_800A7B00 SuspendFieldMinions_800A7B00
+[SHOPCTRL WPNSHOP]
+sub_800A7BF0 ResumeFieldMinions_800A7BF0
+[SHOPCTRL]
+sub_800A55B0 GetEventDataSlot_800A55B0
+[WPNSHOP]
+sub_800AD02C GetMoney_800AD02C
+sub_800AD0A4 SpendMoney_800AD0A4
+sub_800AD254 GetInventoryCount_800AD254
+sub_800AD4D8 FindInventorySlotForAdd_800AD4D8
+sub_800AD73C TestValuableFlag_800AD73C
+sub_800AD9EC SetEquipment_800AD9EC
+[EQUIP]
+sub_800AD3F0 CompactInventory_800AD3F0
+[GAME MENU]
+name_800AD288 GetInventorySlotId_800AD288
+name_800AD7F8 GetNthValuable_800AD7F8
+name_800B0EC0 fieldMode_800B0EC0
+[GAME MAP]
+name_800A75F8 StartMapOverlay_800A75F8
+[EVENTFNC GAME]
+dword_800AEB80 eventEffects_800AEB80
+dword_800AEBBC eventReloc_800AEBBC
+dword_800AEBC0 eventTiy_800AEBC0
+dword_800AEBC8 eventDataBuf_800AEBC8
+dword_800AEBCC eventRecords_800AEBCC
+dword_800B1260 gCtx_800B1260
