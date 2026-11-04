@@ -1257,8 +1257,7 @@ extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
 void sub_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char dword_80079140[];
 extern unsigned char dword_80079210[];
-#if 0
-// Not matched (37 lines): only the bone entry / matrix pointers are swapped ($s0/$s1) in the scaling block at the end (decl order, temporaries, sv inline, arg-assign form tried)
+// Matched
 int ModelTaskDraw_80010DB0(ModelTaskState* p)
 {
     ModelList* list;
@@ -1407,8 +1406,10 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.pos = pos;
     sk.ot = pOT_8008D690;
     sub_80046A58(&sk, buf, (char*)o->anims_54);
-    ent = sub_80024E64(o);
-    ent += sub_80018908(0x26, ent);
+    {
+        short (*tbl)[6] = sub_80024E64(o);
+        ent = &tbl[sub_80018908(0x26, tbl)];
+    }
     mat = &dword_80098188[ent[0][1]];
     sv = (SVECTOR*)&ent[0][2];
     PushMatrix();
@@ -1431,8 +1432,6 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     p->state_38 = 3;
     return 1;
 }
-#endif
-INCLUDE_ASM(ModelTaskDraw_80010DB0);
 // Matched
 void sub_80011904(VtxBlend* p, Vtx12* out)
 {
