@@ -161,7 +161,7 @@ typedef struct
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by sub_8001ACE4)
+    int field_0;           // flags (0x40 checked by sub_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4)
     unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char field_6;
@@ -287,7 +287,7 @@ typedef struct
 // per-element/status minimums applied by ApplyEquipmentModifiers_80033754
 extern unsigned char accessoryModifiers_8007D848[17][12];
 extern unsigned char armorModifiers_8007D598[15][12];
-extern unsigned char byte_8007CC24[0x2b];
+extern unsigned char itemEffects_8007CC24[0x2b];
 extern unsigned short itemFlags_8007CC50[];
 extern ActionData itemData_8007CCA8[0x2b];
 extern int itemNames_8007CB78[0x2b];
@@ -310,15 +310,15 @@ extern MinionBaseStats minionBaseStats_8007A4B4[];
 extern ActionData stru_80083594[];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
-extern unsigned char dword_8007CB4C[][4]; // per person (sub_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
+extern unsigned char personMergeInfo_8007CB4C[][4]; // per person (GetPersonMergeInfo_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)
 extern int bStopDrawingMovie_8008D45C;
 extern int eventDispatchHalt_8008B540;
 extern int dword_80091CA0;
-extern int dword_800918B8;
+extern int frozenFrames_800918B8;
 extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
-extern ActionData dword_8007C5A0[];
+extern ActionData magicActions_8007C5A0[];
 extern int dword_80091C20;
 extern int dword_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
@@ -392,13 +392,13 @@ extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;
 extern int frameCount_8008D3FC;
 extern int geomScreenDistance_8008B548;
-extern int dword_8008B4F8;
-extern int dword_800918C4;
+extern int cameraZoom_8008B4F8;
+extern int motionBlurOn_800918C4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
-extern int dword_80091990[4];
+extern int actorHeap_80091990[4];
 extern Font fonts_80095FB0[];
-extern unsigned char dword_8007C708[0x1E];
+extern unsigned char magicIcons_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
 extern char* keyItemNames_8007CF30[0x26];
 extern int magicNames_8007C348[0x1E * 2];
@@ -409,7 +409,7 @@ extern int dword_80091C88;
 extern int dword_80091C44;
 extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
-extern unsigned char byte_8007D588[16];
+extern unsigned char armorOutfits_8007D588[16];
 extern int dword_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
@@ -421,7 +421,7 @@ extern short word_8008B558[2];
 extern DslFILE Data001File_800954A8;
 extern int DsReadSyncResult_8008D630;
 extern int dword_8008B55C;
-extern int dword_800918BC;
+extern int displayStartFrames_800918BC;
 extern int ODEIsEvenAddressDrawn_800918C0;
 extern DisplayConfig display_8008B4D8;
 extern long cdRomEventDescError_8008B490;
@@ -460,7 +460,7 @@ extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
-extern ActionData dword_8007D274[0x17];
+extern ActionData weaponActions_8007D274[0x17];
 extern unsigned short word_80079374[];
 int FindModelIndex_80026630(ModelList* p, unsigned int id);
 void ClearModel_800266CC(Model* p);
@@ -489,7 +489,7 @@ typedef struct
 } struct_8_list;
 
 extern int dword_8007A6AC[];
-extern int dword_8008D40C;
+extern int sceneBrightness_8008D40C;
 
 typedef struct
 {

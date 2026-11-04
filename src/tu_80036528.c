@@ -21,7 +21,7 @@
 #include "main.h"
 
 extern Block104 cameraState_8008D4F0;
-extern ShortPair dword_8008D474;
+extern ShortPair screenOffset_8008D474;
 typedef struct
 {
     unsigned char idx;
@@ -161,7 +161,7 @@ extern void sub_80037C74(CameraCtrl* q);
 extern void sub_8003891C(CameraCtrl* p, struct_v3* v);
 extern void sub_800BC90C(CameraCtrl* q);
 extern void sub_80036AB4(EventEntry* p, CameraCtrl* q);
-extern void sub_8001AA04(int a);
+extern void StartSceneFadeIn_8001AA04(int a);
 
 // Matched
 void sub_800369E0(EventEntry* p, CameraCtrl* q)
@@ -173,7 +173,7 @@ void sub_800369E0(EventEntry* p, CameraCtrl* q)
         {
             q->mode_8 += 1;
             sub_80037C74(q);
-            sub_8001AA04(8);
+            StartSceneFadeIn_8001AA04(8);
         }
         break;
     case 3:
@@ -327,7 +327,7 @@ void sub_800374E0(EventEntry* p, CameraCtrl* q)
         p->cb_8 = (EventEntryFn)sub_800375F8;
     }
 }
-extern int dword_8008B4F8;
+extern int cameraZoom_8008B4F8;
 // Matched
 void sub_800375F8(EventEntry* o, CameraCtrl* p)
 {
@@ -364,7 +364,7 @@ void ResetCameraToLevant_800376A8(void)
 {
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     sub_80039E14();
-    dword_8008B4F8 = 0x1000;
+    cameraZoom_8008B4F8 = 0x1000;
     geomScreenDistance_8008B548 = (word_8008D51E << 12) / 0x1000;
     p->flags_4 = 0;
     p->mode_8 = 0;
@@ -498,12 +498,12 @@ void sub_80037A6C(int a, int b)
     {
         p->zoomTarget_34 = a;
         p->zoomSteps_12 = b;
-        p->zoomStart_A = *(unsigned short*)&dword_8008B4F8;
+        p->zoomStart_A = *(unsigned short*)&cameraZoom_8008B4F8;
         p->flags_4 |= 0x20;
     }
     else
     {
-        dword_8008B4F8 = a;
+        cameraZoom_8008B4F8 = a;
         sub_80037918(p);
     }
 }
@@ -580,8 +580,8 @@ void sub_80037C74(CameraCtrl* q)
 
     q->counter_14 = 0;
     q->t_C = 0;
-    dword_8008D474.a = 0;
-    dword_8008D474.b = 0;
+    screenOffset_8008D474.a = 0;
+    screenOffset_8008D474.b = 0;
     cameraState_8008D4F0.r_30 = cameraState_8008D4F0.g_31 = cameraState_8008D4F0.b_32 = 0x40;
     cameraState_8008D4F0.field_2C = 0;
     if (unknownFlags_8008D678 & 0x2000000)
@@ -604,7 +604,7 @@ void sub_80037C74(CameraCtrl* q)
     cameraState_8008D4F0.ent_44[0].rot.vx = 0x800;
     cameraState_8008D4F0.ent_44[0].rot.vy = 0x800;
     cameraState_8008D4F0.ent_44[0].rot.vz = 0x800;
-    dword_8008B4F8 = q->field_188;
+    cameraZoom_8008B4F8 = q->field_188;
 }
 // Matched
 void sub_80037F44(CameraCtrl* q)
@@ -642,7 +642,7 @@ void sub_80037F44(CameraCtrl* q)
     q->rot_174.vx = 0x1000;
     q->rot_174.vy = 0x1000;
     q->rot_174.vz = 0x1000;
-    q->savedZoom_184 = dword_8008B4F8;
+    q->savedZoom_184 = cameraZoom_8008B4F8;
     q->field_188 = 0x1000;
     sub_80038D64(q, &levantPos_8008BD18.pos.x);
     q->t_C = 0x1000;
@@ -677,48 +677,48 @@ void sub_8003856C(CameraCtrl* p)
     unsigned int u;
     float f;
 
-    dword_8008D4BC = dword_8008B4F8;
+    dword_8008D4BC = cameraZoom_8008B4F8;
     if (GetCameraMode_800378F8() != 0)
     {
         return;
     }
     u = p->zoomTarget_34;
-    if (u < (unsigned int)dword_8008B4F8 && (p->flags_4 & 0x20))
+    if (u < (unsigned int)cameraZoom_8008B4F8 && (p->flags_4 & 0x20))
     {
 
-        f = (float)dword_8008B4F8 * pow((float)u / (float)p->zoomStart_A, 1.0f / (float)p->zoomSteps_12);
-        dword_8008B4F8 = f;
-        if ((unsigned int)p->zoomTarget_34 >= (unsigned int)dword_8008B4F8)
+        f = (float)cameraZoom_8008B4F8 * pow((float)u / (float)p->zoomStart_A, 1.0f / (float)p->zoomSteps_12);
+        cameraZoom_8008B4F8 = f;
+        if ((unsigned int)p->zoomTarget_34 >= (unsigned int)cameraZoom_8008B4F8)
         {
             p->flags_4 &= ~0x20;
         }
     }
-    else if ((unsigned int)dword_8008B4F8 < u && (p->flags_4 & 0x20))
+    else if ((unsigned int)cameraZoom_8008B4F8 < u && (p->flags_4 & 0x20))
     {
 
-        f = (float)dword_8008B4F8 * pow((float)u / (float)p->zoomStart_A, 1.0f / (float)p->zoomSteps_12);
-        dword_8008B4F8 = f;
-        if ((unsigned int)dword_8008B4F8 >= (unsigned int)p->zoomTarget_34)
+        f = (float)cameraZoom_8008B4F8 * pow((float)u / (float)p->zoomStart_A, 1.0f / (float)p->zoomSteps_12);
+        cameraZoom_8008B4F8 = f;
+        if ((unsigned int)cameraZoom_8008B4F8 >= (unsigned int)p->zoomTarget_34)
         {
             p->flags_4 &= ~0x20;
         }
     }
-    if (dword_8008B4F8 < 0x1000)
+    if (cameraZoom_8008B4F8 < 0x1000)
     {
-        dword_8008B4F8 = 0x1000;
+        cameraZoom_8008B4F8 = 0x1000;
         p->flags_4 &= ~0x20;
     }
-    if (dword_8008B4F8 > 0x10000)
+    if (cameraZoom_8008B4F8 > 0x10000)
     {
-        dword_8008B4F8 = 0x10000;
+        cameraZoom_8008B4F8 = 0x10000;
         p->flags_4 &= ~0x20;
     }
-    if (dword_8008D66C * 4 < word_8008D51E * dword_8008B4F8 / 4096)
+    if (dword_8008D66C * 4 < word_8008D51E * cameraZoom_8008B4F8 / 4096)
     {
-        dword_8008B4F8 = (dword_8008D66C << 14) / word_8008D51E;
-        if (dword_8008B4F8 < 0x1000)
+        cameraZoom_8008B4F8 = (dword_8008D66C << 14) / word_8008D51E;
+        if (cameraZoom_8008B4F8 < 0x1000)
         {
-            dword_8008B4F8 = 0x1000;
+            cameraZoom_8008B4F8 = 0x1000;
         }
         p->flags_4 &= ~0x20;
     }
@@ -742,7 +742,7 @@ void sub_8003891C(CameraCtrl* p, struct_v3* v)
     unsigned int b;
     sub_80039E14();
     sub_8003856C(p);
-    a = word_8008D51E * dword_8008B4F8;
+    a = word_8008D51E * cameraZoom_8008B4F8;
     b = word_8008D51E * dword_8008D4BC;
     sv.vx = v->x;
     sv.vy = v->y;
@@ -780,7 +780,7 @@ void sub_80038A5C(CameraCtrl* p, int a, struct_v3* b, int t)
     sub_80039E14();
     sub_8003856C(p);
     g = word_8008D51E * dword_8008D4BC;
-    s = word_8008D51E * dword_8008B4F8;
+    s = word_8008D51E * cameraZoom_8008B4F8;
     geomScreenDistance_8008B548 = g >> 12;
     SetGeomScreen(s / 4096);
     sv.vx = v->x;
@@ -944,15 +944,15 @@ int sub_800395D0(int* pIdx, int value, int* table)
 void SaveCameraState_80039620(CameraCtrl* o)
 {
     o->saved_48 = cameraState_8008D4F0;
-    o->savedZoom_184 = dword_8008B4F8;
-    o->savedShake_14C = dword_8008D474;
+    o->savedZoom_184 = cameraZoom_8008B4F8;
+    o->savedShake_14C = screenOffset_8008D474;
 }
 // Matched
 void RestoreCameraState_80039698(CameraCtrl* o)
 {
     cameraState_8008D4F0 = o->saved_48;
-    dword_8008B4F8 = o->savedZoom_184;
-    dword_8008D474 = o->savedShake_14C;
+    cameraZoom_8008B4F8 = o->savedZoom_184;
+    screenOffset_8008D474 = o->savedShake_14C;
 }
 extern int sub_800AB4D8(int a);
 // Matched
@@ -1036,16 +1036,16 @@ void sub_800398B4(CameraCtrl* p, void* q_)
 
     if (!(p->flags_4 & 4))
     {
-        dword_8008D474.a = dword_8008D474.a - (q->xy.vx - (stru_8008D420.x + stru_8008D420.w / 2));
-        dword_8008D474.b = dword_8008D474.b - (q->xy.vy - (stru_8008D420.y + stru_8008D420.h / 2));
+        screenOffset_8008D474.a = screenOffset_8008D474.a - (q->xy.vx - (stru_8008D420.x + stru_8008D420.w / 2));
+        screenOffset_8008D474.b = screenOffset_8008D474.b - (q->xy.vy - (stru_8008D420.y + stru_8008D420.h / 2));
         sp = dword_8008D654;
-        s = dword_8008B4F8 << 5;
+        s = cameraZoom_8008B4F8 << 5;
         lx = sp[4] * s / 4096 - stru_8008D420.w;
         ly = sp[5] * s / 4096 - stru_8008D420.h;
-        dword_8008D474.a = CLAMP_HALF(dword_8008D474.a, lx);
-        dword_8008D474.b = CLAMP_HALF(dword_8008D474.b, ly);
-        dword_8008D474.a = dword_8008D474.a - (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
-        dword_8008D474.b = dword_8008D474.b - (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
+        screenOffset_8008D474.a = CLAMP_HALF(screenOffset_8008D474.a, lx);
+        screenOffset_8008D474.b = CLAMP_HALF(screenOffset_8008D474.b, ly);
+        screenOffset_8008D474.a = screenOffset_8008D474.a - (display_8008B4D8.field_C_w / 2 - (stru_8008D420.x + stru_8008D420.w / 2));
+        screenOffset_8008D474.b = screenOffset_8008D474.b - (display_8008B4D8.field_E_h / 2 - (stru_8008D420.y + stru_8008D420.h / 2));
         r.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x + stru_8008D420.x;
         r.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y + stru_8008D420.y;
         r.w = stru_8008D420.w;
@@ -1066,11 +1066,11 @@ void sub_800398B4(CameraCtrl* p, void* q_)
         {
             if (p->flags_4 & 0x80)
             {
-                dword_8008D474.b += dword_80083BD4[p->shake_10];
+                screenOffset_8008D474.b += dword_80083BD4[p->shake_10];
             }
             else
             {
-                dword_8008D474.a += dword_80083BD4[p->shake_10];
+                screenOffset_8008D474.a += dword_80083BD4[p->shake_10];
             }
             if ((unsigned short)++p->shake_10 >= 15)
             {
@@ -1082,16 +1082,16 @@ void sub_800398B4(CameraCtrl* p, void* q_)
     {
         if (p->flags_4 & 0x80)
         {
-            dword_8008D474.b = dword_80083BD4[p->shake_10];
+            screenOffset_8008D474.b = dword_80083BD4[p->shake_10];
         }
         else
         {
-            dword_8008D474.a = dword_80083BD4[p->shake_10];
+            screenOffset_8008D474.a = dword_80083BD4[p->shake_10];
         }
         if ((unsigned short)++p->shake_10 >= 15)
         {
-            dword_8008D474.a = 0;
-            dword_8008D474.b = 0;
+            screenOffset_8008D474.a = 0;
+            screenOffset_8008D474.b = 0;
             p->flags_4 &= ~0x40;
         }
     }

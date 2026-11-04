@@ -8,7 +8,7 @@
 typedef struct
 {
     signed char id_0;     // model animation id
-    unsigned char kind_1; // 0: loaded on demand (sub_8001D8B4), 1: resident
+    unsigned char kind_1; // 0: loaded on demand (RequestActorAnim_8001D8B4), 1: resident
     short start_2;
     short loop_4;
     short end_6;
@@ -172,7 +172,7 @@ typedef struct Actor
     MATRIX* boneMatrices_1C8;   // 0x1C8
 } Actor;
 
-// actor creation parameters (CreateActor_8001D45C -> sub_8001E574 / sub_8001E7F0; sub_8001D4DC fills one from an actor)
+// actor creation parameters (CreateActor_8001D45C -> InitActor_8001E574 / AllocActorBones_8001E7F0; CloneActor_8001D4DC fills one from an actor)
 typedef struct ActorDesc
 {
     int modelId_0;          // < 0: use model_48
@@ -182,7 +182,7 @@ typedef struct ActorDesc
     short pad_1A;
     int clutRow_1C;         // read as a short
     int animIdx_20;
-    int frame_24;           // sub_8001D760 mode
+    int frame_24;           // SetActorAnim_8001D760 mode
     int frameSpeed_28;      // read as a short
     int blendDiv_2C;        // read as a short
     int visible_30;         // != 1 sets the hidden flag 0x2000
@@ -195,7 +195,7 @@ typedef struct ActorDesc
     int hasMatrices_4C;     // allocate Actor.boneMatrices_1C8
 } ActorDesc;
 
-// actor action (sub_8001E254 / sub_8001E34C)
+// actor action (StartActorAction_8001E254 / SetActorAction_8001E34C)
 typedef struct
 {
     unsigned int flags_0;

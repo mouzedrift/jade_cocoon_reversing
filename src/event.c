@@ -660,12 +660,12 @@ int dword_80087070[5][8] = {
     { 1, 1, 2, 1, 1, 2, 2, 2 },
 };
 int dword_80087110 = 0x439;
-MATRIX dword_80087114 = { {
+MATRIX lightMatrix_80087114 = { {
         { 0x50F, 0, 0xF2E },
         { 0x446, -0xCD4, 0x88D },
         { -0x446, 0xCD4, -0x88D },
     } };
-MATRIX dword_80087134 = { {
+MATRIX colorMatrix_80087134 = { {
         { 0x800, 0x400, 0x200 },
         { 0x800, 0x400, 0x200 },
         { 0x800, 0x400, 0x200 },

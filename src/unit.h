@@ -34,7 +34,7 @@ typedef struct UnitSkill
     unsigned char field_3;
 } UnitSkill;
 
-/* a unit's five ability slots; species defaults come from sub_80019C28 (copied by sub_800199A0) */
+/* a unit's five ability slots; species defaults come from GetSpeciesSkills_80019C28 (copied by sub_800199A0) */
 typedef struct
 {
     UnitSkill slot[5];
@@ -70,7 +70,7 @@ typedef struct
     unsigned int magicBits_F4; // CountMagicBits_8001AE54
 } Minion;
 
-/* 12-byte parameter block of an action: the basic attack (sub_8001D260), a magic (sub_8001AD64), an item
+/* 12-byte parameter block of an action: the basic attack (GetLevantWeaponAction_8001D260), a magic (GetMagicAction_8001AD64), an item
    (GetItemData_8001CDF4) or an ability (sub_800318C8); sub_80012BB0 / sub_800129B0 work on a copy */
 typedef struct ActionData
 {

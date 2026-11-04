@@ -795,7 +795,7 @@ extern int dword_800CD524[];
 extern char dword_800CD2C8[];
 extern int sub_800A11A0(int);
 extern int sub_80031B0C(int, int);
-extern int sub_8001ACE4(int);
+extern int GetMagicTargetFlags_8001ACE4(int);
 void sub_800CCDD0()
 {
     int v;
@@ -814,7 +814,7 @@ void sub_800CCDD0()
         dword_800CD840->arg_4 = sub_800CBC28();
         break;
     case 2:
-        byte_800CD844 = sub_8001ACE4(sub_800CBC58());
+        byte_800CD844 = GetMagicTargetFlags_8001ACE4(sub_800CBC58());
         if (byte_800CD844 & 2)
         {
             byte_800CD83A = 3;

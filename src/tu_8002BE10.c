@@ -413,7 +413,7 @@ void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
         idx = FindNthMagicBit_8001AEC0(&a0->field_C_minion->magicBits_F4, i + a0->field_2);
         if (idx < 0x1E)
         {
-            v17 = sub_8001AF3C(idx);
+            v17 = GetMagicIcon_8001AF3C(idx);
             v3 = GetMagicName_8001AC2C(idx);
         }
         else

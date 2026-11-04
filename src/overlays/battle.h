@@ -341,7 +341,7 @@ extern int sub_800349B4();
 
 extern void sub_80034A84();
 
-extern void sub_8001E28C();
+extern void TriggerActorEffect_8001E28C();
 
 extern void sub_800A2924();
 
@@ -362,7 +362,7 @@ extern void sub_80018A4C();
 
 extern int LoadOverlay_80020BF8();
 
-extern void sub_8001AAF4();
+extern void StopSceneDarken_8001AAF4();
 
 extern void sub_800A8D48();
 
@@ -543,7 +543,7 @@ extern char dword_800C8B38[];
 
 extern BatCmd_a dword_800C9CC8[7];
 
-extern int sub_8001AB94(void*);
+extern int IsSceneFadeDone_8001AB94(void*);
 
 extern int sub_800A89F0();
 
@@ -581,7 +581,7 @@ extern UnitStatus* sub_800C0F78(int);
 
 extern void StartScreenFlash_8001C02C(void*);
 
-extern void sub_8001DB00(Actor*, int, int);
+extern void SetActorTurnTarget_8001DB00(Actor*, int, int);
 
 extern void sub_80018E5C(Actor*, int);
 
@@ -993,13 +993,13 @@ extern BatScene_a* dword_8008B4A4;
 
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 
-extern int dword_8008D680[3];
+extern int pointLightPos_8008D680[3];
 
 extern short dword_8008D418[3];
 
-extern int dword_8008D3F0;
+extern int pointLightRange_8008D3F0;
 
-extern int dword_8008D3F0;
+extern int pointLightRange_8008D3F0;
 
 extern void sub_800C6AFC();
 
@@ -1131,7 +1131,7 @@ extern int dword_800C96A4[];
 
 extern unsigned int dword_800C9E64;
 
-extern int sub_8001CE8C(int a);
+extern int GetItemTargetFlags_8001CE8C(int a);
 
 extern int sub_80031B30(int a);
 
@@ -1139,7 +1139,7 @@ extern int sub_80031B0C(int a, int b);
 
 extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
-extern int sub_8001ACE4(int a);
+extern int GetMagicTargetFlags_8001ACE4(int a);
 
 struct BatState
 {

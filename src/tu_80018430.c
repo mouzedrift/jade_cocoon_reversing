@@ -264,7 +264,7 @@ ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
     {
         d.field_1C = 1;
     }
-    r.a = sub_8001E254(obj, &d);
+    r.a = StartActorAction_8001E254(obj, &d);
     r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
     if (p[0] != 0x12 && c)
     {
@@ -273,7 +273,7 @@ ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
     return r;
 }
 extern int dword_800B129C[];
-extern int sub_8001AC8C(int idx);
+extern int GetMagicEffect_8001AC8C(int idx);
 extern int sub_80031870(int a0);
 extern int sub_800316EC(int a0, int a1);
 // Matched
@@ -296,7 +296,7 @@ int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** t)
         d->script_4 = t[9];
         d->turnStep_C = p[1];
         d->hitAnim_E = 0xC;
-        d->effect_10 = sub_8001AC8C(p[1]);
+        d->effect_10 = GetMagicEffect_8001AC8C(p[1]);
         d->effectKinds_18 = p[3];
         break;
     case 2:

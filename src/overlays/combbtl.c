@@ -53,8 +53,8 @@ typedef struct CombBtlHist
 extern CombBtlUnit dword_800A3AA0[2][3];
 extern CombBtlHist dword_800A84D8[];
 extern EventNode* dword_8008D778;
-extern void sub_8001A38C();
-extern void sub_8001A41C();
+extern void InitSceneFade_8001A38C();
+extern void SceneFadeTask_8001A41C();
 extern int sub_800A1958(void*);
 extern int* sub_800A10DC(int); // COMBAT: the slot actor pos_38
 extern void sub_800A7EFC();
@@ -153,7 +153,7 @@ extern void StopSeqSlot_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
 extern void FreeSeqSlotSound_80030664();
 extern void SsSepSetDecrescendo(int, int, int, int);
-extern void sub_8001AA50(int);
+extern void StartSceneFadeOut_8001AA50(int);
 extern void PlaySeqSlot_80031160(int, int);
 
 INCLUDE_OVERLAY_ASM(combbtl, dword_800A4088);
@@ -491,12 +491,12 @@ void sub_800A54CC(CombBtlTask* t)
         SsSepSetDecrescendo(word_80091CE0[6], word_80091CE0[2], 0x7F, 0x78);
         word_80091CE0[2] = -1;
     }
-    sub_8001AA50(0x1E);
+    StartSceneFadeOut_8001AA50(0x1E);
     sub_800A7BE4();
     t->next_8 = sub_800A5544;
 }
 
-extern int sub_8001AB94();
+extern int IsSceneFadeDone_8001AB94();
 extern void sub_800A73E4();
 extern void sub_800A7478();
 extern void sub_800A7560();
@@ -507,7 +507,7 @@ extern void sub_800A16FC();
 void sub_800A5544(CombBtlTask* t)
 {
     int i;
-    if (sub_8001AB94() == 1)
+    if (IsSceneFadeDone_8001AB94() == 1)
     {
         sub_800A73E4();
         sub_800A7478();
@@ -937,11 +937,11 @@ CombBtlPair sub_800A71E4(int n, CombBtlPair* p)
 extern void ResetCameraToLevant_800376A8(void);
 extern void InitCameraTask_800368F8(void);
 extern int cameraState_8008D4F0[];
-extern int dword_8008B4F8;
+extern int cameraZoom_8008B4F8;
 extern short dword_8007C2EC[];
 extern short dword_8007C30C[];
-extern short dword_80087114[];
-extern short dword_80087134[];
+extern short lightMatrix_80087114[];
+extern short colorMatrix_80087134[];
 void sub_800A7290()
 {
     int* e = (int*)AllocEventEntry_80043AF8(cameraTask_8008D4A0);
@@ -953,7 +953,7 @@ void sub_800A7290()
         ResetCameraToLevant_800376A8();
         sub_80037748();
         e[2] = (int)InitCameraTask_800368F8;
-        dword_8008B4F8 = 0x1000;
+        cameraZoom_8008B4F8 = 0x1000;
         e[3] = (int)nullsub_5;
         e[0] = (e[0] | 4) & ~0x8000;
         p = (char*)cameraState_8008D4F0;
@@ -983,12 +983,12 @@ void sub_800A7290()
         *(short*)(p + 0x3C) = dword_8007C30C[0];
         *(short*)(p + 0x3E) = dword_8007C30C[3];
         *(short*)(p + 0x40) = dword_8007C30C[6];
-        dword_80087114[0] = dword_8007C2EC[0];
-        dword_80087114[1] = dword_8007C2EC[1];
-        dword_80087114[2] = dword_8007C2EC[2];
-        dword_80087134[0] = dword_8007C30C[0];
-        dword_80087134[3] = dword_8007C30C[3];
-        dword_80087134[6] = dword_8007C30C[6];
+        lightMatrix_80087114[0] = dword_8007C2EC[0];
+        lightMatrix_80087114[1] = dword_8007C2EC[1];
+        lightMatrix_80087114[2] = dword_8007C2EC[2];
+        colorMatrix_80087134[0] = dword_8007C30C[0];
+        colorMatrix_80087134[3] = dword_8007C30C[3];
+        colorMatrix_80087134[6] = dword_8007C30C[6];
     }
 }
 #endif
@@ -1006,8 +1006,8 @@ void sub_800A7420()
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        sub_8001A38C();
-        e->cb_8 = (EventEntryFn)sub_8001A41C;
+        InitSceneFade_8001A38C();
+        e->cb_8 = (EventEntryFn)SceneFadeTask_8001A41C;
     }
 }
 

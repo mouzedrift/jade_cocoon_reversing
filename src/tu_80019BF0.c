@@ -27,32 +27,32 @@
 // for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
 const struct_int3 dword_8007303C = { { 0x1F8, 0xF000, 0x7E0000 } };
 const int dword_80073048 = 0;
-const char dword_8007304C[] = "\202c\202\205\202\226\202\201\201@\202l\202\201\202\214\202\224\202\211"; // Deva Malti
-const char dword_80073064[] = "\202c\202\205\202\226\202\201\201@\202t\202\214\202\226\202\211"; // Deva Ulvi
+const char aDevaMalti_8007304C[] = "\202c\202\205\202\226\202\201\201@\202l\202\201\202\214\202\224\202\211"; // Deva Malti
+const char aDevaUlvi_80073064[] = "\202c\202\205\202\226\202\201\201@\202t\202\214\202\226\202\211"; // Deva Ulvi
 const char aDevaVali_80073078[] = "\202c\202\205\202\226\202\201\201@\202u\202\201\202\214\202\211"; // Deva Vali
 const char aDevaAgni_8007308C[] = "\202c\202\205\202\226\202\201\201@\202`\202\207\202\216\202\211"; // Deva Agni
 const char aAdMumuls_800730A0[] = "\202`\202\204\201@\202l\202\225\202\215\202\225\202\214\202\223"; // Ad Mumuls
 const char aAdRoqua_800730B4[] = "\202`\202\204\201@\202q\202\217\202\221\202\225\202\201"; // Ad Roqua
-const char dword_800730C8[] = "\202`\202\204\201@\202r\202\214\202\201\202\210\202\215"; // Ad Slahm
-const char dword_800730DC[] = "\202`\202\204\201@\202u\202\205\202\216\202\217\202\216"; // Ad Venon
-const char dword_800730F0[] = "\202r\202\205\202\214\201@\202r\202\205\202\214\202\201\202\210\202\215"; // Sel Selahm
-const char dword_80073108[] = "\202r\202\205\202\214\202\201\202\210\202\215"; // Selahm
-const char dword_80073118[] = "\202l\202\205\202\204\202\211\202\216\202\211\202\201"; // Medinia
+const char aAdSlahm_800730C8[] = "\202`\202\204\201@\202r\202\214\202\201\202\210\202\215"; // Ad Slahm
+const char aAdVenon_800730DC[] = "\202`\202\204\201@\202u\202\205\202\216\202\217\202\216"; // Ad Venon
+const char aSelSelahm_800730F0[] = "\202r\202\205\202\214\201@\202r\202\205\202\214\202\201\202\210\202\215"; // Sel Selahm
+const char aSelahm_80073108[] = "\202r\202\205\202\214\202\201\202\210\202\215"; // Selahm
+const char aMedinia_80073118[] = "\202l\202\205\202\204\202\211\202\216\202\211\202\201"; // Medinia
 const char aMedina_80073128[] = "\202l\202\205\202\204\202\211\202\216\202\201"; // Medina
-const char dword_80073138[] = "\202r\202\205\202\214\202\201\202\210\202\215\201@\202u\202\205\202\216\202\217\202\216"; // Selahm Venon
-const char dword_80073154[] = "\202l\202\201\202\214\202\224\202\211\202\201"; // Maltia
-const char dword_80073164[] = "\202l\202\201\202\214\202\224\202\211\202\223"; // Maltis
-const char dword_80073174[] = "\202l\202\201\202\214\202\224\202\211"; // Malti
+const char aSelahmVenon_80073138[] = "\202r\202\205\202\214\202\201\202\210\202\215\201@\202u\202\205\202\216\202\217\202\216"; // Selahm Venon
+const char aMaltia_80073154[] = "\202l\202\201\202\214\202\224\202\211\202\201"; // Maltia
+const char aMaltis_80073164[] = "\202l\202\201\202\214\202\224\202\211\202\223"; // Maltis
+const char aMalti_80073174[] = "\202l\202\201\202\214\202\224\202\211"; // Malti
 const char aUlvia_80073180[] = "\202t\202\214\202\226\202\211\202\201"; // Ulvia
 const char aUlvis_8007318C[] = "\202t\202\214\202\226\202\211\202\223"; // Ulvis
 const char aUlvi_80073198[] = "\202t\202\214\202\226\202\211"; // Ulvi
-const char dword_800731A4[] = "\202u\202\201\202\210\202\214\202\211\202\201"; // Vahlia
-const char dword_800731B4[] = "\202u\202\201\202\210\202\214\202\211\202\223"; // Vahlis
-const char dword_800731C4[] = "\202u\202\201\202\210\202\214\202\211"; // Vahli
+const char aVahlia_800731A4[] = "\202u\202\201\202\210\202\214\202\211\202\201"; // Vahlia
+const char aVahlis_800731B4[] = "\202u\202\201\202\210\202\214\202\211\202\223"; // Vahlis
+const char aVahli_800731C4[] = "\202u\202\201\202\210\202\214\202\211"; // Vahli
 const char aAgnia_800731D0[] = "\202`\202\207\202\216\202\211\202\201"; // Agnia
 const char aAgnis_800731DC[] = "\202`\202\207\202\216\202\211\202\223"; // Agnis
 const int dword_800731E8 = 0;
-const char dword_800731EC[] = "\202`\202\207\202\216\202\211"; // Agni
+const char aAgni_800731EC[] = "\202`\202\207\202\216\202\211"; // Agni
 const int overlayAdrr1_800731F8 = 0x800C9E88;
 const int overlayAddr2_800731FC = 0x800A4088;
 const int overlayAddr3_80073200 = 0x800A05A0;
@@ -73,19 +73,19 @@ unsigned char GetMinionEnhancementBody_80019C0C(int idx)
     return minionBaseStats_8007A4B4[idx].enhancementBody;
 }
 // Matched
-UnitSkills* sub_80019C28(unsigned int idx)
+UnitSkills* GetSpeciesSkills_80019C28(unsigned int idx)
 {
     if (0xC9 > idx)
     {
-        return &dword_8007A9F8[idx];
+        return &speciesSkills_8007A9F8[idx];
     }
     return sub_800B3274(idx - 0x39);
 }
 // Matched
-MinionModelDesc* sub_80019C70(int idx)
+MinionModelDesc* GetSpeciesModelDesc_80019C70(int idx)
 
 {
-    return &dword_8007BD30[idx];
+    return &speciesModelDescs_8007BD30[idx];
 }
 // Matched
 int sub_80019C84(void)
@@ -99,7 +99,7 @@ int sub_80019C84(void)
     return v;
 }
 extern CameraState cameraState_8008D4F0;
-extern short dword_8008D474[2];
+extern short screenOffset_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
@@ -113,7 +113,7 @@ extern unsigned char padAnalogMax_800918E0[][4];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 // index of the camera point nearest to pos (XZ plane)
 // Matched
-int sub_80019CC4(int* pos)
+int FindNearestCameraPoint_80019CC4(int* pos)
 {
     unsigned int i;
     unsigned int best;
@@ -138,8 +138,8 @@ int sub_80019CC4(int* pos)
     }
     return found;
 }
-extern int dword_8008D3F0;      // range of the global point light (0: none)
-// Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
+extern int pointLightRange_8008D3F0;      // range of the global point light (0: none)
+// Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (lightMatrix_80087114 row 0,
 // colour from cameraState), the global point light and the given point light; m is the model's rotation.
 // Matched
 void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m)
@@ -157,43 +157,43 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     d = (int*)0x1F800014;
     g = &cameraState_8008D4F0;
     sm = (MATRIX*)0x1F800000;
-    sm->m[0][0] = dword_80087114.m[0][0];
-    sm->m[0][1] = dword_80087114.m[0][1];
-    sm->m[0][2] = dword_80087114.m[0][2];
-    sm->m[2][0] = -dword_80087114.m[0][0];
-    sm->m[2][1] = -dword_80087114.m[0][1];
-    sm->m[2][2] = -dword_80087114.m[0][2];
-    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
-    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
-    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
-    if (dword_8008D3F0 != 0)
+    sm->m[0][0] = lightMatrix_80087114.m[0][0];
+    sm->m[0][1] = lightMatrix_80087114.m[0][1];
+    sm->m[0][2] = lightMatrix_80087114.m[0][2];
+    sm->m[2][0] = -lightMatrix_80087114.m[0][0];
+    sm->m[2][1] = -lightMatrix_80087114.m[0][1];
+    sm->m[2][2] = -lightMatrix_80087114.m[0][2];
+    colorMatrix_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    colorMatrix_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    colorMatrix_80087134.m[2][2] = g->lightColor_3C[2] / 4;
+    if (pointLightRange_8008D3F0 != 0)
     {
-        d[0] = dword_8008D680[0] - (ofs->vx + pos->vx);
-        d[1] = dword_8008D680[1] - (ofs->vy + pos->vy);
-        d[2] = dword_8008D680[2] - (ofs->vz + pos->vz);
-        if (abs(d[0]) < dword_8008D3F0 && abs(d[1]) < dword_8008D3F0 && abs(d[2]) < dword_8008D3F0)
+        d[0] = pointLightPos_8008D680[0] - (ofs->vx + pos->vx);
+        d[1] = pointLightPos_8008D680[1] - (ofs->vy + pos->vy);
+        d[2] = pointLightPos_8008D680[2] - (ofs->vz + pos->vz);
+        if (abs(d[0]) < pointLightRange_8008D3F0 && abs(d[1]) < pointLightRange_8008D3F0 && abs(d[2]) < pointLightRange_8008D3F0)
         {
             gte_ldlvl(d);
             gte_sqr0();
             gte_stlvnl(sq);
             dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
-            if (dist <= dword_8008D3F0)
+            if (dist <= pointLightRange_8008D3F0)
             {
                 sm->m[2][0] = (d[0] << 12) / dist;
                 sm->m[2][1] = (d[1] << 12) / dist;
                 sm->m[2][2] = (d[2] << 12) / dist;
                 if (unknownFlags_8008D678 & 0x400)
                 {
-                    t = (((dword_8008D3F0 - dist) << 12) / dword_8008D3F0) * dword_8008D40C >> 12;
+                    t = (((pointLightRange_8008D3F0 - dist) << 12) / pointLightRange_8008D3F0) * sceneBrightness_8008D40C >> 12;
                 }
                 else
                 {
-                    t = ((dword_8008D3F0 - dist) << 12) / dword_8008D3F0;
+                    t = ((pointLightRange_8008D3F0 - dist) << 12) / pointLightRange_8008D3F0;
                 }
                 gte_lddp(t);
-                gte_ldsv(&word_8008D418);
+                gte_ldsv(&pointLightColor_8008D418);
                 gte_gpf12();
-                gte_stclmv(&dword_80087134.m[0][2]);
+                gte_stclmv(&colorMatrix_80087134.m[0][2]);
             }
         }
     }
@@ -206,9 +206,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
     if (light->range_14 < dist)
     {
-        dword_80087134.m[0][1] = 0;
-        dword_80087134.m[1][1] = 0;
-        dword_80087134.m[2][1] = 0;
+        colorMatrix_80087134.m[0][1] = 0;
+        colorMatrix_80087134.m[1][1] = 0;
+        colorMatrix_80087134.m[2][1] = 0;
     }
     else
     {
@@ -220,7 +220,7 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
         ((MATRIX*)0x1F800000)->m[1][2] = z;
         if (unknownFlags_8008D678 & 0x400)
         {
-            t = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * dword_8008D40C >> 12;
+            t = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * sceneBrightness_8008D40C >> 12;
         }
         else
         {
@@ -229,7 +229,7 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
         gte_lddp(t);
         gte_ldsv(&light->color_C);
         gte_gpf12();
-        gte_stclmv(&dword_80087134.m[0][1]);
+        gte_stclmv(&colorMatrix_80087134.m[0][1]);
     }
     gte_SetRotMatrix((MATRIX*)0x1F800000);
     gte_ldclmv(&m->m[0][0]);
@@ -242,25 +242,25 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     gte_rtir();
     gte_stclmv(&((MATRIX*)0x1F800000)->m[0][2]);
     gte_SetLightMatrix((MATRIX*)0x1F800000);
-    gte_SetColorMatrix(&dword_80087134);
+    gte_SetColorMatrix(&colorMatrix_80087134);
 }
 // Matched
-void sub_8001A38C(void)
+void InitSceneFade_8001A38C(void)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     CameraState* g;
     p->flags = 0;
     p->count = 0;
     g = &cameraState_8008D4F0;
-    dword_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
-    dword_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
-    dword_80087114.m[2][2] = -(unsigned short)g->lightDir_34.vz;
-    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
-    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
-    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
+    lightMatrix_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
+    lightMatrix_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
+    lightMatrix_80087114.m[2][2] = -(unsigned short)g->lightDir_34.vz;
+    colorMatrix_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    colorMatrix_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    colorMatrix_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
 // Matched
-void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
+void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
 {
     unsigned long* ot;
     POLY_F4 poly;
@@ -304,21 +304,21 @@ void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
     }
     else if (f->flags & 1)
     {
-        dword_8008D40C += 0x1000 / f->duration;
-        if (dword_8008D40C >= 0x1000)
+        sceneBrightness_8008D40C += 0x1000 / f->duration;
+        if (sceneBrightness_8008D40C >= 0x1000)
         {
-            dword_8008D40C = 0x1000;
+            sceneBrightness_8008D40C = 0x1000;
             unknownFlags_8008D678 &= ~0x400;
             f->flags &= ~1;
         }
     }
     else if (f->flags & 2)
     {
-        dword_8008D40C -= 0x1000 / f->duration;
-        if (dword_8008D40C < 0)
+        sceneBrightness_8008D40C -= 0x1000 / f->duration;
+        if (sceneBrightness_8008D40C < 0)
         {
             f->flags &= ~2;
-            dword_8008D40C = 0;
+            sceneBrightness_8008D40C = 0;
         }
     }
     else if (f->flags & 4)
@@ -379,52 +379,52 @@ void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
     sv = &cameraState_8008D4F0.lightDir_34;
     VectorNormalSS(sv, sv);
     c = &cameraState_8008D4F0;
-    dword_80087114.m[0][0] = c->lightDir_34.vx;
-    dword_80087114.m[0][1] = c->lightDir_34.vy;
-    dword_80087114.m[0][2] = c->lightDir_34.vz;
+    lightMatrix_80087114.m[0][0] = c->lightDir_34.vx;
+    lightMatrix_80087114.m[0][1] = c->lightDir_34.vy;
+    lightMatrix_80087114.m[0][2] = c->lightDir_34.vz;
     if (unknownFlags_8008D678 & 0x400)
     {
-        dword_80087134.m[0][0] = c->lightColor_3C[0] * dword_8008D40C >> 12;
-        dword_80087134.m[1][0] = c->lightColor_3C[1] * dword_8008D40C >> 12;
-        dword_80087134.m[2][0] = c->lightColor_3C[2] * dword_8008D40C >> 12;
+        colorMatrix_80087134.m[0][0] = c->lightColor_3C[0] * sceneBrightness_8008D40C >> 12;
+        colorMatrix_80087134.m[1][0] = c->lightColor_3C[1] * sceneBrightness_8008D40C >> 12;
+        colorMatrix_80087134.m[2][0] = c->lightColor_3C[2] * sceneBrightness_8008D40C >> 12;
     }
     else
     {
-        dword_80087134.m[0][0] = c->lightColor_3C[0];
-        dword_80087134.m[1][0] = c->lightColor_3C[1];
-        dword_80087134.m[2][0] = c->lightColor_3C[2];
+        colorMatrix_80087134.m[0][0] = c->lightColor_3C[0];
+        colorMatrix_80087134.m[1][0] = c->lightColor_3C[1];
+        colorMatrix_80087134.m[2][0] = c->lightColor_3C[2];
     }
-    dword_80087114.m[1][0] = 0;
-    dword_80087114.m[1][1] = 0;
-    dword_80087114.m[1][2] = 0;
-    dword_80087114.m[2][0] = -dword_80087114.m[0][0];
-    dword_80087114.m[2][1] = -dword_80087114.m[0][1];
-    dword_80087114.m[2][2] = -dword_80087114.m[0][2];
-    dword_80087134.m[0][1] = 0;
-    dword_80087134.m[1][1] = 0;
-    dword_80087134.m[2][1] = 0;
-    dword_80087134.m[0][2] = dword_80087134.m[0][0] / 4;
-    dword_80087134.m[1][2] = dword_80087134.m[1][0] / 4;
-    dword_80087134.m[2][2] = dword_80087134.m[2][0] / 4;
+    lightMatrix_80087114.m[1][0] = 0;
+    lightMatrix_80087114.m[1][1] = 0;
+    lightMatrix_80087114.m[1][2] = 0;
+    lightMatrix_80087114.m[2][0] = -lightMatrix_80087114.m[0][0];
+    lightMatrix_80087114.m[2][1] = -lightMatrix_80087114.m[0][1];
+    lightMatrix_80087114.m[2][2] = -lightMatrix_80087114.m[0][2];
+    colorMatrix_80087134.m[0][1] = 0;
+    colorMatrix_80087134.m[1][1] = 0;
+    colorMatrix_80087134.m[2][1] = 0;
+    colorMatrix_80087134.m[0][2] = colorMatrix_80087134.m[0][0] / 4;
+    colorMatrix_80087134.m[1][2] = colorMatrix_80087134.m[1][0] / 4;
+    colorMatrix_80087134.m[2][2] = colorMatrix_80087134.m[2][0] / 4;
     if (unknownFlags_8008D678 & 0x400)
     {
-        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0] * dword_8008D40C >> 12;
-        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1] * dword_8008D40C >> 12;
-        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2] * dword_8008D40C >> 12;
+        backColor_8008D460[0] = cameraState_8008D4F0.ambient_30[0] * sceneBrightness_8008D40C >> 12;
+        backColor_8008D460[1] = cameraState_8008D4F0.ambient_30[1] * sceneBrightness_8008D40C >> 12;
+        backColor_8008D460[2] = cameraState_8008D4F0.ambient_30[2] * sceneBrightness_8008D40C >> 12;
     }
     else
     {
-        byte_8008D460[0] = cameraState_8008D4F0.ambient_30[0];
-        byte_8008D460[1] = cameraState_8008D4F0.ambient_30[1];
-        byte_8008D460[2] = cameraState_8008D4F0.ambient_30[2];
+        backColor_8008D460[0] = cameraState_8008D4F0.ambient_30[0];
+        backColor_8008D460[1] = cameraState_8008D4F0.ambient_30[1];
+        backColor_8008D460[2] = cameraState_8008D4F0.ambient_30[2];
     }
 }
 // Matched
-void sub_8001A9A4(void)
+void ResetSceneFade_8001A9A4(void)
 {
     Fade_8001A41C* p;
     unsigned short v;
-    dword_8008D40C = 0x1000;
+    sceneBrightness_8008D40C = 0x1000;
     p = dword_8008D628->entry.buffer;
     v = p->flags;
     unknownFlags_8008D678 &= ~0x400;
@@ -432,13 +432,13 @@ void sub_8001A9A4(void)
     p->flags = v & 0xFFF0;
 }
 // Matched
-void sub_8001A9E4(void)
+void SetSceneDark_8001A9E4(void)
 {
     unknownFlags_8008D678 |= 0x400;
-    dword_8008D40C = 0;
+    sceneBrightness_8008D40C = 0;
 }
 // Matched
-void sub_8001AA04(short a0)
+void StartSceneFadeIn_8001AA04(short a0)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     EventEntry* q;
@@ -446,10 +446,10 @@ void sub_8001AA04(short a0)
     q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 1;
-    sub_8001A41C(q, p);
+    SceneFadeTask_8001A41C(q, p);
 }
 // Matched
-void sub_8001AA50(short a0)
+void StartSceneFadeOut_8001AA50(short a0)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     EventEntry* q;
@@ -458,10 +458,10 @@ void sub_8001AA50(short a0)
     q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 2;
-    sub_8001A41C(q, p);
+    SceneFadeTask_8001A41C(q, p);
 }
 // Matched
-void sub_8001AAA8(short a0)
+void StartSceneDarken_8001AAA8(short a0)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     EventEntry* q;
@@ -469,16 +469,16 @@ void sub_8001AAA8(short a0)
     q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 4;
-    sub_8001A41C(q, p);
+    SceneFadeTask_8001A41C(q, p);
 }
 // Matched
-void sub_8001AAF4(void)
+void StopSceneDarken_8001AAF4(void)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     p->flags &= ~4;
 }
 // Matched
-void sub_8001AB1C(short a0)
+void StartSceneBrighten_8001AB1C(short a0)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     EventEntry* q;
@@ -486,17 +486,17 @@ void sub_8001AB1C(short a0)
     q = &cameraTask_8008D4A0->entry;
     p->count = 0;
     p->flags |= 8;
-    sub_8001A41C(q, p);
+    SceneFadeTask_8001A41C(q, p);
 }
 // Matched
-void sub_8001AB68(void)
+void StartSceneFlash_8001AB68(void)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     p->count = 8;
     p->flags |= 0x10;
 }
 // Matched
-int sub_8001AB94(void)
+int IsSceneFadeDone_8001AB94(void)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     unsigned short v = p->flags;
@@ -511,7 +511,7 @@ int sub_8001AB94(void)
     return 1;
 }
 // Matched
-void sub_8001ABEC(int on)
+void SetSceneFadeFrontOT_8001ABEC(int on)
 {
     Fade_8001A41C* p = dword_8008D628->entry.buffer;
     if (on)
@@ -542,7 +542,7 @@ int GetMagicMpCost_8001AC58(int idx)
     return 0;
 }
 // Matched
-int sub_8001AC8C(int idx)
+int GetMagicEffect_8001AC8C(int idx)
 {
     if (idx < 0x1E)
     {
@@ -556,7 +556,7 @@ int sub_8001ACC0(int idx)
     return magicData_8007C438[idx].field_5;
 }
 // Matched
-int sub_8001ACE4(int idx)
+int GetMagicTargetFlags_8001ACE4(int idx)
 {
     unsigned int v = magicData_8007C438[idx].field_0;
     int r = (v >> 5) & 2;
@@ -580,11 +580,11 @@ int GetMagicElement_8001AD30(int idx)
     return 0xB;
 }
 // Matched
-ActionData* sub_8001AD64(unsigned int idx)
+ActionData* GetMagicAction_8001AD64(unsigned int idx)
 {
     if (idx < 0x1E)
     {
-        return &dword_8007C5A0[idx];
+        return &magicActions_8007C5A0[idx];
     }
     return 0;
 }
@@ -661,11 +661,11 @@ int FindNthMagicBit_8001AEC0(unsigned int* bits, int n)
     return 0x1E;
 }
 // Matched
-int sub_8001AF3C(int idx)
+int GetMagicIcon_8001AF3C(int idx)
 {
     if (idx < 0x1E)
     {
-        return dword_8007C708[idx];
+        return magicIcons_8007C708[idx];
     }
     return 0;
 }
@@ -674,9 +674,9 @@ extern void RunEventList_80043898(void* n);
 extern void RunEventListFreeCallbacks_800438F8(void* n);
 extern int FreeEventList_80043A5C(void* head);
 extern void InitMovie_8001B1B0(void);
-extern void sub_8001B714(void);
-extern void sub_8001B540(void);
-extern void sub_8001BCE4(int buffer);
+extern void StartDisplay_8001B714(void);
+extern void DrawFrozenFrame_8001B540(void);
+extern void DrawMotionBlur_8001BCE4(int buffer);
 extern void Draw_8001B5EC(void);
 extern void LoadDecodedImage_8001BEC8(void);
 extern void InitPrimBuffers_8001BF90(void);
@@ -701,7 +701,7 @@ void DrawIntroMovie_8001AF64(void* a0)
     {
         if (unknownFlags_8008D678 & 0x40)
         {
-            sub_8001B714();
+            StartDisplay_8001B714();
         }
         bDoubleBuffer_8008D428 = bDoubleBuffer_8008D428 == 0;
         ClearOTagRAll_8001B260();
@@ -719,10 +719,10 @@ void DrawIntroMovie_8001AF64(void* a0)
         e1->r0 = r;
         e1->g0 = g;
         e1->b0 = b;
-        sub_8001B540();
-        if (dword_800918C4)
+        DrawFrozenFrame_8001B540();
+        if (motionBlurOn_800918C4)
         {
-            sub_8001BCE4(bDoubleBuffer_8008D428);
+            DrawMotionBlur_8001BCE4(bDoubleBuffer_8008D428);
         }
         Draw_8001B5EC();
         if (unknownFlags_8008D678 & 0x10)
@@ -739,7 +739,7 @@ void DrawIntroMovie_8001AF64(void* a0)
         {
             DrawOTag(pOT_8008D78C);
             DrawOTag(&pOT_8008D454[15]);
-            dword_800918B8++;
+            frozenFrames_800918B8++;
         }
         else
         {
@@ -763,20 +763,20 @@ void InitMovie_8001B1B0(void)
     bStopDrawingMovie_8008D45C = 0;
     frameCount_8008D3FC = 0;
     geomScreenDistance_8008B548 = 0xA0;
-    dword_8008B4F8 = 0x1000;
+    cameraZoom_8008B4F8 = 0x1000;
     drawEnvRed_8008D448[0] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[2] = 0;
     bDoubleBuffer_8008D428 = 0;
-    dword_800918C4 = 0;
+    motionBlurOn_800918C4 = 0;
     unknownFlags_8008D678 &= ~0x200;
-    sub_8001B230();
+    RestartDisplay_8001B230();
 }
 // Matched
-void sub_8001B230(void)
+void RestartDisplay_8001B230(void)
 {
     unknownFlags_8008D678 &= ~0x10;
-    dword_800918BC = 0;
+    displayStartFrames_800918BC = 0;
     unknownFlags_8008D678 |= 0x40;
 }
 // Matched
@@ -833,7 +833,7 @@ void AddPrimsAll_8001B3C8(void)
     }
 }
 // Matched
-void sub_8001B540(void)
+void DrawFrozenFrame_8001B540(void)
 {
     if (unknownFlags_8008D678 & 8)
     {
@@ -862,7 +862,7 @@ void Draw_8001B5EC(void)
     {
         DrawSync(0);
     }
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
     SetGeomScreen(geomScreenDistance_8008B548);
     do
     {
@@ -889,17 +889,17 @@ int WaitVSync_8001B6E8()
     return gnFrame_8008D610;
 }
 // Matched
-void sub_8001B714(void)
+void StartDisplay_8001B714(void)
 {
-    if ((unsigned int)dword_800918BC < 2)
+    if ((unsigned int)displayStartFrames_800918BC < 2)
     {
-        if (dword_800918BC == 0)
+        if (displayStartFrames_800918BC == 0)
         {
             InitEnvironments_8001B7B4();
             WaitVSync_8001B6E8(0);
             ODEIsEvenAddressDrawn_800918C0 = GetODE() == 0;
         }
-        dword_800918BC = dword_800918BC + 1;
+        displayStartFrames_800918BC = displayStartFrames_800918BC + 1;
         unknownFlags_8008D678 &= ~0x10;
     }
     else
@@ -917,8 +917,8 @@ void InitEnvironments_8001B7B4(void)
 {
     int interlace;
     int off;
-    display_8008B4D8.field_C_w = dword_8007C728[display_8008B4D8.field_0][0];
-    display_8008B4D8.field_E_h = dword_8007C728[display_8008B4D8.field_0][1];
+    display_8008B4D8.field_C_w = screenModes_8007C728[display_8008B4D8.field_0][0];
+    display_8008B4D8.field_E_h = screenModes_8007C728[display_8008B4D8.field_0][1];
     if (display_8008B4D8.field_E_h == 480)
     {
         off = 0;
@@ -943,9 +943,9 @@ void InitEnvironments_8001B7B4(void)
     dispEnv_8008D750[0].isinter = interlace;
     dispEnv_8008D750[1].isrgb24 = 0;
     dispEnv_8008D750[0].isrgb24 = 0;
-    dword_8008D474[0] = display_8008B4D8.field_8_x;
-    dword_8008D474[1] = display_8008B4D8.field_A_y;
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    screenOffset_8008D474[0] = display_8008B4D8.field_8_x;
+    screenOffset_8008D474[1] = display_8008B4D8.field_A_y;
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
     SetGeomScreen(geomScreenDistance_8008B548);
     SetFarColor(0, 0, 0);
 }
@@ -1061,12 +1061,12 @@ void FadeToWhiteStep_8001BC00(void)
     }
 }
 // Matched
-void sub_8001BCD8(int a0)
+void SetMotionBlur_8001BCD8(int a0)
 {
-    dword_800918C4 = a0;
+    motionBlurOn_800918C4 = a0;
 }
 // Matched
-void sub_8001BCE4(int buffer)
+void DrawMotionBlur_8001BCE4(int buffer)
 {
     SPRT sprt;
     DR_TPAGE tpage;
@@ -1234,13 +1234,13 @@ unsigned int a0;
     }
 }
 // Matched
-void sub_8001C224(void)
+void FreezeScreen_8001C224(void)
 {
     unknownFlags_8008D678 |= 8;
-    dword_800918B8 = 0;
+    frozenFrames_800918B8 = 0;
 }
 // Matched
-void sub_8001C244(void)
+void CancelFade_8001C244(void)
 {
     unknownFlags_8008D678 &= ~2;
 }
@@ -1277,7 +1277,7 @@ int IsFadeDone_8001C2FC()
     return (fadeFlags_800918B0 & 3) == 0;
 }
 // Matched
-struct_8_id* sub_8001C314(struct_8_list* p, int id)
+struct_8_id* FindItemById_8001C314(struct_8_list* p, int id)
 {
     struct_8_id* r = 0;
     int i;
@@ -1303,7 +1303,7 @@ void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
             unsigned int n = (unsigned short)q->arg_4;
             if (n < 0x6E)
             {
-                SoundCue_8007C750* t = &dword_8007C750[(short)n];
+                SoundCue_8007C750* t = &soundCues_8007C750[(short)n];
                 if (t->kind == 0)
                 {
                     PlaySfx_80031494(t->arg);
@@ -1315,7 +1315,7 @@ void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
 // Matched
-void sub_8001C440(Model* a0, int idx, int key)
+void RunAnimFrameCues_8001C440(Model* a0, int idx, int key)
 {
     ModelAnim* e = (ModelAnim*)(idx * 28 + (int)a0->anims_54); // integer sum: the original adds the base second
     ModelAnimCue* q = e->cues_10;
@@ -1333,38 +1333,38 @@ void sub_8001C440(Model* a0, int idx, int key)
         case 0:
             if ((unsigned short)q->arg_4 < 0x6E)
             {
-                if (dword_8007C750[q->arg_4].kind == 0)
+                if (soundCues_8007C750[q->arg_4].kind == 0)
                 {
-                    PlaySfx_80031494(dword_8007C750[q->arg_4].arg);
+                    PlaySfx_80031494(soundCues_8007C750[q->arg_4].arg);
                 }
-                if (dword_8007C750[q->arg_4].kind == 1)
+                if (soundCues_8007C750[q->arg_4].kind == 1)
                 {
-                    PlayMusic_800300E0(dword_8007C750[q->arg_4].arg, 1);
+                    PlayMusic_800300E0(soundCues_8007C750[q->arg_4].arg, 1);
                 }
-                if (dword_8007C750[q->arg_4].kind == 2)
+                if (soundCues_8007C750[q->arg_4].kind == 2)
                 {
-                    arg = dword_8007C750[q->arg_4].arg;
-                    if (dword_8007C750[q->arg_4].arg == 3)
+                    arg = soundCues_8007C750[q->arg_4].arg;
+                    if (soundCues_8007C750[q->arg_4].arg == 3)
                     {
                         arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
                         {
                             arg = 4;
                         }
-                        arg = dword_8007CACC[arg];
+                        arg = levelSeqsCue3_8007CACC[arg];
                     }
-                    else if (dword_8007C750[q->arg_4].arg == 2)
+                    else if (soundCues_8007C750[q->arg_4].arg == 2)
                     {
                         arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
                         {
                             arg = 4;
                         }
-                        arg = dword_8007CAC0[arg];
+                        arg = levelSeqsCue2_8007CAC0[arg];
                     }
                     PlaySeqSlot_80031160(arg, 1);
                 }
-                if (dword_8007C750[q->arg_4].kind == 3)
+                if (soundCues_8007C750[q->arg_4].kind == 3)
                 {
                     if (systemSound_80091D40.field_4_seq_num >= 0)
                     {
@@ -1381,7 +1381,7 @@ void sub_8001C440(Model* a0, int idx, int key)
     }
 }
 // Matched
-void sub_8001C69C(void)
+void ResetPadAnalogMax_8001C69C(void)
 {
     int i;
     for (i = 0; i < 2; i++)
@@ -1398,7 +1398,7 @@ void ResetButtonConfig_8001C6C8(void)
     unsigned short* q = defaultButtonConfig_8007CAF4;
     for (; i < 10; i++)
     {
-        sub_8001C810((short*)p++, *q++);
+        SetButtonConfigEntry_8001C810((short*)p++, *q++);
     }
 }
 // Matched
@@ -1437,19 +1437,19 @@ void SwapButtonConfig_8001C79C(int a0, int a1)
 {
     unsigned short* base = buttonConfig_8008B578;
     unsigned short* p = &base[a0];
-    unsigned short r1 = sub_8001C818(p);
+    unsigned short r1 = GetButtonConfigEntry_8001C818(p);
     unsigned short* q = &base[a1];
-    unsigned short r2 = sub_8001C818(q);
-    sub_8001C810((short*)p, r2);
-    sub_8001C810((short*)q, r1);
+    unsigned short r2 = GetButtonConfigEntry_8001C818(q);
+    SetButtonConfigEntry_8001C810((short*)p, r2);
+    SetButtonConfigEntry_8001C810((short*)q, r1);
 }
 // Matched
-void sub_8001C810(short* p, unsigned short v)
+void SetButtonConfigEntry_8001C810(short* p, unsigned short v)
 {
     *p = v;
 }
 // Matched
-unsigned short sub_8001C818(unsigned short* p)
+unsigned short GetButtonConfigEntry_8001C818(unsigned short* p)
 {
     return *p;
 }
@@ -1561,61 +1561,61 @@ void ProcessPad_8001C8E8(int port)
 }
 // .rdata that follows the jump table of ProcessPad_8001C8E8 (the compiler's table is emitted between)
 const int dword_80073234 = 0;
-const char dword_80073238[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
-const char dword_8007324C[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
+const char aKlarrgas_80073238[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
+const char aYolga_8007324C[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
 const char aTimaios_80073258[] = "\202s\202\211\202\215\202\201\202\211\202\217\202\223"; // Timaios
 const char aSicanjal_80073268[] = "\202r\202\211\202\203\202\201\202\216\202\212\202\201\202\214"; // Sicanjal
-const char dword_8007327C[] = "\202j\202\217\202\214\202\216\202\201"; // Kolna
+const char aKolna_8007327C[] = "\202j\202\217\202\214\202\216\202\201"; // Kolna
 const char aJeechwo_80073288[] = "\202i\202\205\202\205\202\203\202\210\202\227\202\217"; // Jeechwo
 const char aTicker_80073298[] = "\202s\202\211\202\203\202\213\202\205\202\222"; // Ticker
-const char dword_800732A8[] = "\202o\202\201\202\214\202\217\202\217\202\212\202\201"; // Palooja
+const char aPalooja_800732A8[] = "\202o\202\201\202\214\202\217\202\217\202\212\202\201"; // Palooja
 const char aAttractSpores_800732B8[] = "\202`\202\224\202\224\202\222\202\201\202\203\202\224\201@\202r\202\220\202\217\202\222\202\205\202\223"; // Attract Spores
-const char dword_800732D8[] = "\202r\202\214\202\205\202\205\202\220\201@\202r\202\220\202\217\202\222\202\205\202\223"; // Sleep Spores
-const char dword_800732F4[] = "\202r\202\213\202\205\202\214\202\205\202\224\202\217\202\216\201@\202j\202\205\202\231"; // Skeleton Key
-const char dword_80073310[] = "\202l\202\217\202\217\202\216\202\214\202\211\202\207\202\210\202\224\201@\202r\202\211\202\214\202\213"; // Moonlight Silk
-const char dword_80073330[] = "\202`\202\216\202\207\202\205\202\214\202\227\202\211\202\216\202\207\201@\202r\202\211\202\214\202\213"; // Angelwing Silk
-const char dword_80073350[] = "\202e\202\211\202\222\202\223\202\224\201@\202r\202\216\202\217\202\227\201@\202r\202\211\202\214\202\213"; // First Snow Silk
+const char aSleepSpores_800732D8[] = "\202r\202\214\202\205\202\205\202\220\201@\202r\202\220\202\217\202\222\202\205\202\223"; // Sleep Spores
+const char aSkeletonKey_800732F4[] = "\202r\202\213\202\205\202\214\202\205\202\224\202\217\202\216\201@\202j\202\205\202\231"; // Skeleton Key
+const char aMoonlightSilk_80073310[] = "\202l\202\217\202\217\202\216\202\214\202\211\202\207\202\210\202\224\201@\202r\202\211\202\214\202\213"; // Moonlight Silk
+const char aAngelwingSilk_80073330[] = "\202`\202\216\202\207\202\205\202\214\202\227\202\211\202\216\202\207\201@\202r\202\211\202\214\202\213"; // Angelwing Silk
+const char aFirstSnowSilk_80073350[] = "\202e\202\211\202\222\202\223\202\224\201@\202r\202\216\202\217\202\227\201@\202r\202\211\202\214\202\213"; // First Snow Silk
 const char aPearlSilk_80073370[] = "\202o\202\205\202\201\202\222\202\214\201@\202r\202\211\202\214\202\213"; // Pearl Silk
-const char dword_80073388[] = "\202k\202\211\202\214\202\231\201@\202r\202\211\202\214\202\213"; // Lily Silk
+const char aLilySilk_80073388[] = "\202k\202\211\202\214\202\231\201@\202r\202\211\202\214\202\213"; // Lily Silk
 const char aThunderSilk_8007339C[] = "\202s\202\210\202\225\202\216\202\204\202\205\202\222\201@\202r\202\211\202\214\202\213"; // Thunder Silk
-const char dword_800733B8[] = "\202b\202\214\202\217\202\225\202\204\201@\202r\202\211\202\214\202\213"; // Cloud Silk
-const char dword_800733D0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Malty's Seal 2
-const char dword_800733F0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Malty's Seal 1
-const char dword_80073410[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Agni's Seal 2
+const char aCloudSilk_800733B8[] = "\202b\202\214\202\217\202\225\202\204\201@\202r\202\211\202\214\202\213"; // Cloud Silk
+const char aMaltySSeal2_800733D0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Malty's Seal 2
+const char aMaltySSeal1_800733F0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Malty's Seal 1
+const char aAgniSSeal2_80073410[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Agni's Seal 2
 const char aAgniSSeal1_8007342C[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Agni's Seal 1
 const char aVarySSeal2_80073448[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Vary's Seal 2
 const char aVarySSeal1_80073464[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Vary's Seal 1
 const char aUrvySSeal2_80073480[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Urvy's Seal 2
 const char aUrvySSeal1_8007349C[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Urvy's Seal 1
 const char aMaltySBlessing_800734B8[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Malty's Blessing
-const char dword_800734DC[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Agni's Blessing
+const char aAgniSBlessing_800734DC[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Agni's Blessing
 const char aVarySBlessing_800734FC[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Vary's Blessing
 const char aUrvySBlessing_8007351C[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Urvy's Blessing
 const char aMirrorOfDeva_8007353C[] = "\202l\202\211\202\222\202\222\202\217\202\222\201@\202\217\202\206\201@\202c\202\205\202\226\202\201"; // Mirror of Deva
-const char dword_8007355C[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202c\202\205\202\201\202\224\202\210"; // Ring of Death
+const char aRingOfDeath_8007355C[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202c\202\205\202\201\202\224\202\210"; // Ring of Death
 const char aRingOfStoning_80073578[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202r\202\224\202\217\202\216\202\211\202\216\202\207"; // Ring of Stoning
 const char aRingOfSleep_80073598[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202r\202\214\202\205\202\205\202\220"; // Ring of Sleep
 const char aRingOfVenom_800735B4[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202u\202\205\202\216\202\217\202\215"; // Ring of Venom
 const char aIkariPowder_800735D0[] = "\202h\202\213\202\201\202\222\202\211\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Ikari Powder
-const char dword_800735EC[] = "\202u\202\201\202\214\202\205\202\222\202\211\202\201\202\216\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Valerian Powder
+const char aValerianPowder_800735EC[] = "\202u\202\201\202\214\202\205\202\222\202\211\202\201\202\216\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Valerian Powder
 const char aTendaiUyaku_8007360C[] = "\202s\202\205\202\216\202\204\202\201\202\211\201@\202t\202\231\202\201\202\213\202\225"; // Tendai Uyaku
-const char dword_80073628[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Special Liquor
-const char dword_80073648[] = "\202d\202\230\202\203\202\205\202\214\202\214\202\205\202\216\202\224\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Excellent Liquor
-const char dword_8007366C[] = "\202e\202\211\202\216\202\205\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Fine Liquor
+const char aSpecialLiquor_80073628[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Special Liquor
+const char aExcellentLiquor_80073648[] = "\202d\202\230\202\203\202\205\202\214\202\214\202\205\202\216\202\224\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Excellent Liquor
+const char aFineLiquor_8007366C[] = "\202e\202\211\202\216\202\205\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Fine Liquor
 const char aShabLiquor_80073684[] = "\202r\202\210\202\201\202\202\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Shab Liquor
 const char aIchishiOil_8007369C[] = "\202h\202\203\202\210\202\211\202\223\202\210\202\211\201@\202n\202\211\202\214"; // Ichishi Oil
 const char aBletillaOil_800736B4[] = "\202a\202\214\202\205\202\224\202\211\202\214\202\214\202\201\201@\202n\202\211\202\214"; // Bletilla Oil
-const char dword_800736D0[] = "\202j\202\225\202\213\202\225\202\215\202\211\202\222\202\201\201@\202n\202\211\202\214"; // Kukumira Oil
-const char dword_800736EC[] = "\202r\202\210\202\211\202\223\202\210\202\211\202\225\202\204\202\217\201@\202n\202\211\202\214"; // Shishiudo Oil
+const char aKukumiraOil_800736D0[] = "\202j\202\225\202\213\202\225\202\215\202\211\202\222\202\201\201@\202n\202\211\202\214"; // Kukumira Oil
+const char aShishiudoOil_800736EC[] = "\202r\202\210\202\211\202\223\202\210\202\211\202\225\202\204\202\217\201@\202n\202\211\202\214"; // Shishiudo Oil
 const char aChestnutOil_80073708[] = "\202b\202\210\202\205\202\223\202\224\202\216\202\225\202\224\201@\202n\202\211\202\214"; // Chestnut Oil
-const char dword_80073724[] = "\202f\202\222\202\205\202\201\202\224\201@\202v\202\201\202\214\202\216\202\225\202\224"; // Great Walnut
-const char dword_80073740[] = "\202a\202\211\202\224\202\224\202\205\202\222\201@\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Bitter Mugwort
-const char dword_80073760[] = "\202l\202\205\202\224\202\201\201|\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Meta-Mugwort
-const char dword_8007377C[] = "\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Mugwort
+const char aGreatWalnut_80073724[] = "\202f\202\222\202\205\202\201\202\224\201@\202v\202\201\202\214\202\216\202\225\202\224"; // Great Walnut
+const char aBitterMugwort_80073740[] = "\202a\202\211\202\224\202\224\202\205\202\222\201@\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Bitter Mugwort
+const char aMetaMugwort_80073760[] = "\202l\202\205\202\224\202\201\201|\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Meta-Mugwort
+const char aMugwort_8007377C[] = "\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Mugwort
 const char aSecret3_8007378C[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202R"; // Secret 3
-const char dword_800737A0[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202Q"; // Secret 2
-const char dword_800737B4[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202P"; // Secret 1
-const char dword_800737C8[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202R"; // Merging 3
+const char aSecret2_800737A0[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202Q"; // Secret 2
+const char aSecret1_800737B4[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202P"; // Secret 1
+const char aMerging3_800737C8[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202R"; // Merging 3
 const char aMerging2_800737DC[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202Q"; // Merging 2
 const char aMerging1_800737F0[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202P"; // Merging 1
 const char aMagicUsage2_80073804[] = "\202l\202\201\202\207\202\211\202\203\201@\202t\202\223\202\201\202\207\202\205\201@\202Q"; // Magic Usage 2
@@ -1628,83 +1628,83 @@ const char aKnowledge1_8007389C[] = "\202j\202\216\202\217\202\227\202\214\202\2
 const char aSecretOfKilling_800738B4[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202\217\202\206\201@\202j\202\211\202\214\202\214\202\211\202\216\202\207"; // Secret of Killing
 const char aSpiderWarp_800738D8[] = "\202r\202\220\202\211\202\204\202\205\202\222\201@\202v\202\201\202\222\202\220"; // Spider Warp
 const char aDragonflyWarp_800738F0[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\206\202\214\202\231\201@\202v\202\201\202\222\202\220"; // Dragonfly Warp
-const char dword_80073910[] = "\202a\202\205\202\205\202\224\202\214\202\205\201@\202v\202\201\202\222\202\220"; // Beetle Warp
+const char aBeetleWarp_80073910[] = "\202a\202\205\202\205\202\224\202\214\202\205\201@\202v\202\201\202\222\202\220"; // Beetle Warp
 const char aPupaKey_80073928[] = "\202o\202\225\202\220\202\201\201@\202j\202\205\202\231"; // Pupa Key
-const char dword_8007393C[] = "\202k\202\201\202\222\202\226\202\201\201@\202j\202\205\202\231"; // Larva Key
+const char aLarvaKey_8007393C[] = "\202k\202\201\202\222\202\226\202\201\201@\202j\202\205\202\231"; // Larva Key
 const char aMinionFang_80073950[] = "\202l\202\211\202\216\202\211\202\217\202\216\201@\202e\202\201\202\216\202\207"; // Minion Fang
 const char aKickleberry_80073968[] = "\202j\202\211\202\203\202\213\202\214\202\205\202\202\202\205\202\222\202\222\202\231"; // Kickleberry
 const char aDivineTablet_80073980[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202s\202\201\202\202\202\214\202\205\202\224"; // Divine Tablet
 const char aJewelOfWind_8007399C[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202v\202\211\202\216\202\204"; // Jewel of Wind
 const char aJewelOfFire_800739B8[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202e\202\211\202\222\202\205"; // Jewel of Fire
 const char aJewelOfWater_800739D4[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202v\202\201\202\224\202\205\202\222"; // Jewel of Water
-const char dword_800739F4[] = "\202l\202\201\202\210\202\202\202\225\201f\202\223\201@\202b\202\217\202\203\202\217\202\217\202\216"; // Mahbu's Cocoon
-const char dword_80073A14[] = "\202l\202\217\202\224\202\210\201@\202j\202\205\202\231"; // Moth Key
-const char dword_80073A28[] = "\202b\202\201\202\220\202\224\202\225\202\222\202\205\201@\202`\202\215\202\225\202\214\202\205\202\224"; // Capture Amulet
-const char dword_80073A48[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216\201f\202\223\201@\202a\202\205\202\214\202\224"; // Champion's Belt
+const char aMahbuSCocoon_800739F4[] = "\202l\202\201\202\210\202\202\202\225\201f\202\223\201@\202b\202\217\202\203\202\217\202\217\202\216"; // Mahbu's Cocoon
+const char aMothKey_80073A14[] = "\202l\202\217\202\224\202\210\201@\202j\202\205\202\231"; // Moth Key
+const char aCaptureAmulet_80073A28[] = "\202b\202\201\202\220\202\224\202\225\202\222\202\205\201@\202`\202\215\202\225\202\214\202\205\202\224"; // Capture Amulet
+const char aChampionSBelt_80073A48[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216\201f\202\223\201@\202a\202\205\202\214\202\224"; // Champion's Belt
 const char aCalabasHerb_80073A68[] = "\202b\202\201\202\214\202\201\202\202\202\201\202\223\201@\202g\202\205\202\222\202\202"; // Calabas Herb
-const char dword_80073A84[] = "\202n\202\203\202\201\202\222\202\211\202\216\202\201"; // Ocarina
+const char aOcarina_80073A84[] = "\202n\202\203\202\201\202\222\202\211\202\216\202\201"; // Ocarina
 const char aSpiderKey_80073A94[] = "\202r\202\220\202\211\202\204\202\205\202\222\201@\202j\202\205\202\231"; // Spider Key
-const char dword_80073AAC[] = "\202b\202\201\202\214\202\201\202\202\202\201\202\223\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Calabas Powder
-const char dword_80073ACC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\206\202\214\202\231\201@\202j\202\205\202\231"; // Dragonfly Key
+const char aCalabasPowder_80073AAC[] = "\202b\202\201\202\214\202\201\202\202\202\201\202\223\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Calabas Powder
+const char aDragonflyKey_80073ACC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\206\202\214\202\231\201@\202j\202\205\202\231"; // Dragonfly Key
 const char aBeetleKey_80073AE8[] = "\202a\202\205\202\205\202\224\202\214\202\205\201@\202j\202\205\202\231"; // Beetle Key
-const char dword_80073B00[] = "\202s\202\205\202\201\202\222\202\223\201@\202\217\202\206\201@\202q\202\205\202\205\202\223\202\205"; // Tears of Reese
-const char dword_80073B20[] = "\202e\202\214\202\225\202\224\202\205\201@\202\217\202\206\201@\202b\202\201\202\220\202\224\202\225\202\222\202\205"; // Flute of Capture
-const char dword_80073B44[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202d\202\201\202\222\202\222\202\211\202\216\202\207"; // Hunter's Earring
-const char dword_80073B68[] = "\202h\202\203\202\211\202\203\202\214\202\205"; // Icicle
-const char dword_80073B78[] = "\202`\202\225\202\224\202\225\202\215\202\216\201@\202l\202\217\202\217\202\216"; // Autumn Moon
+const char aTearsOfReese_80073B00[] = "\202s\202\205\202\201\202\222\202\223\201@\202\217\202\206\201@\202q\202\205\202\205\202\223\202\205"; // Tears of Reese
+const char aFluteOfCapture_80073B20[] = "\202e\202\214\202\225\202\224\202\205\201@\202\217\202\206\201@\202b\202\201\202\220\202\224\202\225\202\222\202\205"; // Flute of Capture
+const char aHunterSEarring_80073B44[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202d\202\201\202\222\202\222\202\211\202\216\202\207"; // Hunter's Earring
+const char aIcicle_80073B68[] = "\202h\202\203\202\211\202\203\202\214\202\205"; // Icicle
+const char aAutumnMoon_80073B78[] = "\202`\202\225\202\224\202\225\202\215\202\216\201@\202l\202\217\202\217\202\216"; // Autumn Moon
 const char aDrainer_80073B90[] = "\202c\202\222\202\201\202\211\202\216\202\205\202\222"; // Drainer
 const char aReaper_80073BA0[] = "\202q\202\205\202\201\202\220\202\205\202\222"; // Reaper
-const char dword_80073BB0[] = "\202o\202\201\202\214\202\205\202\215\202\217\202\217\202\216"; // Palemoon
-const char dword_80073BC4[] = "\202b\202\214\202\217\202\225\202\204\202\203\202\217\202\226\202\205\202\222"; // Cloudcover
-const char dword_80073BDC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\203\202\222\202\205\202\223\202\224"; // Dragoncrest
+const char aPalemoon_80073BB0[] = "\202o\202\201\202\214\202\205\202\215\202\217\202\217\202\216"; // Palemoon
+const char aCloudcover_80073BC4[] = "\202b\202\214\202\217\202\225\202\204\202\203\202\217\202\226\202\205\202\222"; // Cloudcover
+const char aDragoncrest_80073BDC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\203\202\222\202\205\202\223\202\224"; // Dragoncrest
 const char aSpringBlossom_80073BF4[] = "\202r\202\220\202\222\202\211\202\216\202\207\201@\202a\202\214\202\217\202\223\202\223\202\217\202\215"; // Spring Blossom
-const char dword_80073C14[] = "\202s\202\223\202\225\202\216\202\201\202\215\202\211"; // Tsunami
+const char aTsunami_80073C14[] = "\202s\202\223\202\225\202\216\202\201\202\215\202\211"; // Tsunami
 const char aThunderbolt_80073C24[] = "\202s\202\210\202\225\202\216\202\204\202\205\202\222\202\202\202\217\202\214\202\224"; // Thunderbolt
 const char aBluePhantom_80073C3C[] = "\202a\202\214\202\225\202\205\201@\202o\202\210\202\201\202\216\202\224\202\217\202\215"; // Blue Phantom
-const char dword_80073C58[] = "\202m\202\211\202\207\202\210\202\224\202\207\202\214\202\217\202\227"; // Nightglow
+const char aNightglow_80073C58[] = "\202m\202\211\202\207\202\210\202\224\202\207\202\214\202\217\202\227"; // Nightglow
 const char aWhistler_80073C6C[] = "\202v\202\210\202\211\202\223\202\224\202\214\202\205\202\222"; // Whistler
-const char dword_80073C80[] = "\202k\202\211\202\224\202\224\202\214\202\205\201@\202a\202\211\202\222\202\204"; // Little Bird
+const char aLittleBird_80073C80[] = "\202k\202\211\202\224\202\224\202\214\202\205\201@\202a\202\211\202\222\202\204"; // Little Bird
 const char aWhiteHorn_80073C98[] = "\202v\202\210\202\211\202\224\202\205\201@\202g\202\217\202\222\202\216"; // White Horn
-const char dword_80073CB0[] = "\202k\202\211\202\206\202\205\201@\202r\202\224\202\205\202\201\202\214\202\205\202\222"; // Life Stealer
-const char dword_80073CCC[] = "\202h\202\222\202\217\202\216\201@\202`\202\230\202\205"; // Iron Axe
-const char dword_80073CE0[] = "\202h\202\222\202\217\202\216\201@\202r\202\227\202\217\202\222\202\204"; // Iron Sword
-const char dword_80073CF8[] = "\202r\202\227\202\217\202\222\202\204\201@\202\217\202\206\201@\202r\202\220\202\205\202\205\202\204"; // Sword of Speed
-const char dword_80073D18[] = "\202a\202\222\202\217\202\216\202\232\202\205\201@\202r\202\227\202\217\202\222\202\204"; // Bronze Sword
-const char dword_80073D34[] = "\202`\202\221\202\225\202\201\202\232\202\217\202\222"; // Aquazor
+const char aLifeStealer_80073CB0[] = "\202k\202\211\202\206\202\205\201@\202r\202\224\202\205\202\201\202\214\202\205\202\222"; // Life Stealer
+const char aIronAxe_80073CCC[] = "\202h\202\222\202\217\202\216\201@\202`\202\230\202\205"; // Iron Axe
+const char aIronSword_80073CE0[] = "\202h\202\222\202\217\202\216\201@\202r\202\227\202\217\202\222\202\204"; // Iron Sword
+const char aSwordOfSpeed_80073CF8[] = "\202r\202\227\202\217\202\222\202\204\201@\202\217\202\206\201@\202r\202\220\202\205\202\205\202\204"; // Sword of Speed
+const char aBronzeSword_80073D18[] = "\202a\202\222\202\217\202\216\202\232\202\205\201@\202r\202\227\202\217\202\222\202\204"; // Bronze Sword
+const char aAquazor_80073D34[] = "\202`\202\221\202\225\202\201\202\232\202\217\202\222"; // Aquazor
 const char aDagger_80073D44[] = "\202c\202\201\202\207\202\207\202\205\202\222"; // Dagger
-const char dword_80073D54[] = "\202j\202\216\202\211\202\206\202\205"; // Knife
+const char aKnife_80073D54[] = "\202j\202\216\202\211\202\206\202\205"; // Knife
 const char aDivineGarb2_80073D60[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202f\202\201\202\222\202\202\201@\202Q"; // Divine Garb 2
 const char aDivineGarb1_80073D7C[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202f\202\201\202\222\202\202\201@\202P"; // Divine Garb 1
 const char aForestGarb_80073D98[] = "\202e\202\217\202\222\202\205\202\223\202\224\201@\202f\202\201\202\222\202\202"; // Forest Garb
 const char aNavyBlueGarb_80073DB0[] = "\202m\202\201\202\226\202\231\201@\202a\202\214\202\225\202\205\201@\202f\202\201\202\222\202\202"; // Navy Blue Garb
-const char dword_80073DD0[] = "\202a\202\214\202\217\202\217\202\204\202\231\201@\202f\202\201\202\222\202\202"; // Bloody Garb
+const char aBloodyGarb_80073DD0[] = "\202a\202\214\202\217\202\217\202\204\202\231\201@\202f\202\201\202\222\202\202"; // Bloody Garb
 const char aNagiGarb_80073DE8[] = "\202m\202\201\202\207\202\211\201@\202f\202\201\202\222\202\202"; // Nagi Garb
 const char aRiketzGarb_80073DFC[] = "\202q\202\211\202\213\202\205\202\224\202\232\201f\201@\202f\202\201\202\222\202\202"; // Riketz' Garb
-const char dword_80073E18[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202u\202\205\202\223\202\224"; // Divine Vest
+const char aDivineVest_80073E18[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202u\202\205\202\223\202\224"; // Divine Vest
 const char aSilverVest_80073E30[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202u\202\205\202\223\202\224"; // Silver Vest
 const char aReflectingVest_80073E48[] = "\202q\202\205\202\206\202\214\202\205\202\203\202\224\202\211\202\216\202\207\201@\202u\202\205\202\223\202\224"; // Reflecting Vest
 const char aPlateMailVest_80073E68[] = "\202o\202\214\202\201\202\224\202\205\201@\202l\202\201\202\211\202\214\201@\202u\202\205\202\223\202\224"; // Plate Mail Vest
 const char aWireVest_80073E88[] = "\202v\202\211\202\222\202\205\201@\202u\202\205\202\223\202\224"; // Wire Vest
 const char aChainMailVest_80073E9C[] = "\202b\202\210\202\201\202\211\202\216\201@\202l\202\201\202\211\202\214\201@\202u\202\205\202\223\202\224"; // Chain Mail Vest
 const char aLeatherVest_80073EBC[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202u\202\205\202\223\202\224"; // Leather Vest
-const char dword_80073ED8[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202u\202\205\202\223\202\224"; // Hunter's Vest
+const char aHunterSVest_80073ED8[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202u\202\205\202\223\202\224"; // Hunter's Vest
 const char aNagiBelt_80073EF4[] = "\202m\202\201\202\207\202\211\201@\202a\202\205\202\214\202\224"; // Nagi Belt
 const char aSuperChoker_80073F08[] = "\202r\202\225\202\220\202\205\202\222\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Super Choker
-const char dword_80073F24[] = "\202r\202\224\202\217\202\216\202\205\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Stone Choker
-const char dword_80073F40[] = "\202r\202\214\202\205\202\205\202\220\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Sleep Choker
-const char dword_80073F5C[] = "\202o\202\217\202\211\202\223\202\217\202\216\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Poison Choker
+const char aStoneChoker_80073F24[] = "\202r\202\224\202\217\202\216\202\205\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Stone Choker
+const char aSleepChoker_80073F40[] = "\202r\202\214\202\205\202\205\202\220\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Sleep Choker
+const char aPoisonChoker_80073F5C[] = "\202o\202\217\202\211\202\223\202\217\202\216\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Poison Choker
 const char aHawkRuff_80073F78[] = "\202g\202\201\202\227\202\213\201@\202q\202\225\202\206\202\206"; // Hawk Ruff
 const char aHollyRuff_80073F8C[] = "\202g\202\217\202\214\202\214\202\231\201@\202q\202\225\202\206\202\206"; // Holly Ruff
-const char dword_80073FA4[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202b\202\222\202\217\202\227\202\216"; // Silver Crown
-const char dword_80073FC0[] = "\202h\202\222\202\217\202\216\201@\202a\202\222\202\201\202\203\202\205\202\214\202\205\202\224"; // Iron Bracelet
+const char aSilverCrown_80073FA4[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202b\202\222\202\217\202\227\202\216"; // Silver Crown
+const char aIronBracelet_80073FC0[] = "\202h\202\222\202\217\202\216\201@\202a\202\222\202\201\202\203\202\205\202\214\202\205\202\224"; // Iron Bracelet
 const char aSparrowRuff_80073FDC[] = "\202r\202\220\202\201\202\222\202\222\202\217\202\227\201@\202q\202\225\202\206\202\206"; // Sparrow Ruff
-const char dword_80073FF8[] = "\202q\202\205\202\204\201@\202a\202\205\202\201\202\204"; // Red Bead
-const char dword_8007400C[] = "\202x\202\205\202\214\202\214\202\217\202\227\201@\202a\202\205\202\201\202\204"; // Yellow Bead
+const char aRedBead_80073FF8[] = "\202q\202\205\202\204\201@\202a\202\205\202\201\202\204"; // Red Bead
+const char aYellowBead_8007400C[] = "\202x\202\205\202\214\202\214\202\217\202\227\201@\202a\202\205\202\201\202\204"; // Yellow Bead
 const char aGreenBead_80074024[] = "\202f\202\222\202\205\202\205\202\216\201@\202a\202\205\202\201\202\204"; // Green Bead
-const char dword_8007403C[] = "\202a\202\214\202\225\202\205\201@\202a\202\205\202\201\202\204"; // Blue Bead
+const char aBlueBead_8007403C[] = "\202a\202\214\202\225\202\205\201@\202a\202\205\202\201\202\204"; // Blue Bead
 const char aSilverHeadband_80074050[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Silver Headband
 const char aIronHeadband_80074070[] = "\202h\202\222\202\217\202\216\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Iron Headband
-const char dword_8007408C[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Leather Headband
+const char aLeatherHeadband_8007408C[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Leather Headband
 // Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
@@ -1810,9 +1810,9 @@ int GetPersonName_8001CD3C(int idx)
     return personNames_8007CB20[idx];
 }
 // Matched
-unsigned char* sub_8001CD58(int idx)
+unsigned char* GetPersonMergeInfo_8001CD58(int idx)
 {
-    return dword_8007CB4C[idx];
+    return personMergeInfo_8007CB4C[idx];
 }
 // Matched
 int GetPersonIcon_8001CD6C(void)
@@ -1838,11 +1838,11 @@ unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
     return armorModifiers_8007D598[idx];
 }
 // Matched
-unsigned char sub_8001CDCC(unsigned int idx)
+unsigned char GetItemEffect_8001CDCC(unsigned int idx)
 {
     if (idx < 0x2B)
     {
-        return byte_8007CC24[idx];
+        return itemEffects_8007CC24[idx];
     }
     return 0x22;
 }
@@ -1880,7 +1880,7 @@ unsigned short GetItemFlags_8001CE70(int idx)
     return itemFlags_8007CC50[idx];
 }
 // Matched
-int sub_8001CE8C(int idx)
+int GetItemTargetFlags_8001CE8C(int idx)
 {
     unsigned short v = itemFlags_8007CC50[idx];
     int r = (v >> 5) & 2;
@@ -1977,9 +1977,9 @@ EquipmentData* GetArmorData_8001D034(unsigned int idx)
     return &armorData_8007D420[idx];
 }
 // Matched
-unsigned char sub_8001D060(int idx)
+unsigned char GetArmorOutfit_8001D060(int idx)
 {
-    return byte_8007D588[idx];
+    return armorOutfits_8007D588[idx];
 }
 // Matched
 int* GetAccessoryStatBonus_8001D078(unsigned int idx)
@@ -2074,12 +2074,12 @@ int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
     return r;
 }
 // Matched
-ActionData* sub_8001D260(void)
+ActionData* GetLevantWeaponAction_8001D260(void)
 {
     unsigned int i = sub_800AD990(0);
     if (i < 0x17)
     {
-        return &dword_8007D274[i];
+        return &weaponActions_8007D274[i];
     }
     return 0;
 }
@@ -2131,7 +2131,7 @@ void InitActors_8001D378(void)
     ResetModelLoader_800204D0();
     StopModelLoader_800205F0();
     ClearModelAnimRefs_800201A4();
-    ListInit_8003FDB0(dword_80091990);
+    ListInit_8003FDB0(actorHeap_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
 }
 // Matched
@@ -2143,14 +2143,14 @@ void FreeActors_8001D3C4(int a0)
         FreeModelLoaderList_8002052C();
         ResetModelLoader_800204D0();
     }
-    ListFreeAll_8003FEC8(dword_80091990);
+    ListFreeAll_8003FEC8(actorHeap_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
     ClearModelAnimRefs_800201A4();
 }
 // Matched
 void UpdateActorCb_8001D41C(EventEntry* e, void* a1)
 {
-    sub_8001EA28(a1);
+    UpdateActorScript_8001EA28(a1);
     sub_8001F354(a1);
     sub_8001F918(a1);
     sub_8001F9AC(a1);
@@ -2166,13 +2166,13 @@ Actor* CreateActor_8001D45C(ActorDesc* a0)
         r->cb_8 = UpdateActorCb_8001D41C;
         r->flags = (r->flags | 1) & ~0x8000;
         p->task_0 = r;
-        sub_8001E574(p, a0);
+        InitActor_8001E574(p, a0);
         return p;
     }
     return 0;
 }
 // Matched
-Actor* sub_8001D4DC(Actor* o, int a1, int a2, int a3)
+Actor* CloneActor_8001D4DC(Actor* o, int a1, int a2, int a3)
 {
     ActorDesc s;
     Actor* r;
@@ -2198,7 +2198,7 @@ Actor* sub_8001D4DC(Actor* o, int a1, int a2, int a3)
     s.effectTbl_44 = o->effectTbl_14C;
     s.hasMatrices_4C = a3;
     r = CreateActor_8001D45C(&s);
-    sub_8001D68C(r, (o->flags_4 >> 18) & 1);
+    SetActorGroundMove_8001D68C(r, (o->flags_4 >> 18) & 1);
     return r;
 }
 // Matched
@@ -2206,7 +2206,7 @@ void DestroyActor_8001D600(Actor* a0)
 {
     EventEntry* q = a0->task_0;
     ReleaseModelAnimRef_80020278(a0->modelRef_16, q->field_4);
-    sub_8001EA00(a0);
+    FreeActorBones_8001EA00(a0);
     q->flags = (q->flags & ~1) | 0x8000;
 }
 // Matched
@@ -2223,7 +2223,7 @@ void SetActorActive_8001D658(Actor* a, int on)
     }
 }
 // Matched
-void sub_8001D68C(Actor* p, int on)
+void SetActorGroundMove_8001D68C(Actor* p, int on)
 {
     if (on)
     {
@@ -2235,7 +2235,7 @@ void sub_8001D68C(Actor* p, int on)
     }
 }
 // Matched
-void sub_8001D6BC(Actor* p, int on)
+void SetActorRootMotion_8001D6BC(Actor* p, int on)
 {
     if (on)
     {
@@ -2247,7 +2247,7 @@ void sub_8001D6BC(Actor* p, int on)
     }
 }
 // Matched
-void sub_8001D6EC(Actor* p, int on)
+void SetActorAnimPaused_8001D6EC(Actor* p, int on)
 {
     if (on)
     {
@@ -2259,12 +2259,12 @@ void sub_8001D6EC(Actor* p, int on)
     }
 }
 // Matched
-void sub_8001D71C(Actor* p)
+void RestartActorMotion_8001D71C(Actor* p)
 {
     p->flags_4 |= 8;
 }
 // Matched
-void sub_8001D730(Actor* p, int on)
+void SetActorVisible_8001D730(Actor* p, int on)
 {
     if (on)
     {
@@ -2276,7 +2276,7 @@ void sub_8001D730(Actor* p, int on)
     }
 }
 // Matched
-void sub_8001D760(Actor* o, int idx, int mode, int a3)
+void SetActorAnim_8001D760(Actor* o, int idx, int mode, int a3)
 {
     int base;
     o->animIdx_C2 = idx;
@@ -2312,12 +2312,12 @@ void sub_8001D760(Actor* o, int idx, int mode, int a3)
     }
 }
 // Matched
-int sub_8001D8A8(Actor* p)
+int IsActorAnimLoadIdle_8001D8A8(Actor* p)
 {
     return p->animLoadState_10 == 0;
 }
 // Matched
-void sub_8001D8B4(Actor* a0, int a1)
+void RequestActorAnim_8001D8B4(Actor* a0, int a1)
 {
     if (a0->anims_148[a1].kind_1 == 0)
     {
@@ -2329,7 +2329,7 @@ void sub_8001D8B4(Actor* a0, int a1)
     }
 }
 // Matched
-void sub_8001D92C(Actor* obj, int idx)
+void ReleaseActorAnim_8001D92C(Actor* obj, int idx)
 {
     ActorAnim* e;
     int i;
@@ -2349,7 +2349,7 @@ void sub_8001D92C(Actor* obj, int idx)
     ReleaseModelAnim_800203B0(obj->modelRef_16, obj->task_0->field_4, key);
 }
 // Matched
-void sub_8001D9B0(Actor* p)
+void SkipActorAnimToEnd_8001D9B0(Actor* p)
 {
     if (!(p->flags_D4 & 2))
     {
@@ -2377,14 +2377,14 @@ void sub_8001DA08(Actor* p, int a1, int a2)
     p->flags_4 &= ~0x20;
 }
 // Matched
-void sub_8001DA2C(Actor* p)
+void StopActorFade_8001DA2C(Actor* p)
 {
     p->fade_20 = 0;
     p->fadeDiv_22 = 0;
     p->flags_4 &= 0xBFFFF81F;
 }
 // Matched
-void sub_8001DA4C(Actor* p, int div, int from, int to)
+void StartActorScale_8001DA4C(Actor* p, int div, int from, int to)
 {
     if (from < 0)
     {
@@ -2419,7 +2419,7 @@ void SetActorTint_8001DAAC(Actor* o, int a1)
     }
 }
 // Matched
-void sub_8001DB00(Actor* o, int* v, int a2)
+void SetActorTurnTarget_8001DB00(Actor* o, int* v, int a2)
 {
     if (v != 0)
     {
@@ -2435,7 +2435,7 @@ void sub_8001DB00(Actor* o, int* v, int a2)
     }
 }
 // Matched
-void sub_8001DB58(Actor* p, int a1, int a2)
+void SetActorSpeedScale_8001DB58(Actor* p, int a1, int a2)
 {
     if (a2)
     {
@@ -2451,7 +2451,7 @@ void sub_8001DB58(Actor* p, int a1, int a2)
 #if 0
 // Not matched (5 words): the original stores 0xC0 after the flags and copies s to $a3 after the mask; with a saved
 // "old" local stored at the end instead, old and the 0xFFFF7FFF mask swap $a1/$a2 (6 words)
-void sub_8001DB98(Actor* o, unsigned char* s)
+void SetActorScript_8001DB98(Actor* o, unsigned char* s)
 {
     o->prevAnimIdx_C0 = o->animIdx_C2;
     o->animIdx_C2 = -1;
@@ -2471,15 +2471,15 @@ void sub_8001DB98(Actor* o, unsigned char* s)
     }
 }
 #endif
-INCLUDE_ASM(sub_8001DB98);
+INCLUDE_ASM(SetActorScript_8001DB98);
 // Matched
-void sub_8001DC34(void* p, void* s)
+void StartActorScript_8001DC34(void* p, void* s)
 {
-    sub_8001DB98(p, s);
+    SetActorScript_8001DB98(p, s);
     sub_8001EA48(p);
 }
 // Matched
-int sub_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
+int ApproachActorTarget_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
 {
     unsigned int dist;
     int x = p->pos_38[2];
@@ -2514,7 +2514,7 @@ int sub_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
     return 0;
 }
 // Matched
-int sub_8001DD44(Actor* o, int mode, int a, int b)
+int TurnActorBy_8001DD44(Actor* o, int mode, int a, int b)
 {
     int m;
     int r;
@@ -2531,7 +2531,7 @@ int sub_8001DD44(Actor* o, int mode, int a, int b)
     {
         o->turn_194.input_8 = -m;
     }
-    sub_8001D71C(o);
+    RestartActorMotion_8001D71C(o);
     FirFilterStep_80014588(o->turnFilterBuf_1A4, &o->turn_194, frameCount_8008D3FC);
     o->rot_5C[1] += o->turn_194.output_C.low;
     r = a - b;
@@ -2690,13 +2690,13 @@ int sub_8001E1DC(Actor* p)
     return 1;
 }
 // Matched
-int sub_8001E254(Actor* p, void* desc)
+int StartActorAction_8001E254(Actor* p, void* desc)
 {
     p->flags_4 = (p->flags_4 & 0xFFFDFFFF) | 0x600000;
-    return sub_8001E34C(p, desc);
+    return SetActorAction_8001E34C(p, desc);
 }
 // Matched
-void sub_8001E28C(Actor* o)
+void TriggerActorEffect_8001E28C(Actor* o)
 {
     ActorEffectReq s;
     if (o->effect_130 >= 0)
@@ -2720,7 +2720,7 @@ void sub_8001E28C(Actor* o)
     }
 }
 // Matched
-int sub_8001E34C(Actor* o, ActorActionDesc* d)
+int SetActorAction_8001E34C(Actor* o, ActorActionDesc* d)
 {
     int r;
     int f;
@@ -2738,7 +2738,7 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     r = 0;
     if (d->script_4)
     {
-        sub_8001DC34(o, d->script_4);
+        StartActorScript_8001DC34(o, d->script_4);
     }
     if (d->hitAnim_E >= 0)
     {
@@ -2762,12 +2762,12 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
         if (d->nextAnim_24 >= 0)
         {
             o->nextAnim_A4 = d->nextAnim_24;
-            sub_8001DC34(o, dword_8007D95C);
+            StartActorScript_8001DC34(o, moveToScript_8007D95C);
         }
         else
         {
             o->nextAnim_A4 = d->nextAnim_26;
-            sub_8001DC34(o, dword_8007D980);
+            StartActorScript_8001DC34(o, moveToScriptAlt_8007D980);
         }
     }
     if (d->path_30)
@@ -2780,13 +2780,13 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     {
         o->nextAnim_A4 = d->field_28;
         o->startMode_A8 = d->turnStep_C;
-        sub_8001DC34(o, dword_8007D9C0);
+        StartActorScript_8001DC34(o, playQueuedAnimScript_8007D9C0);
     }
     else if (d->field_28 >= 0)
     {
         o->nextAnim_A4 = d->field_28;
         o->startMode_A8 = d->turnStep_C;
-        sub_8001DC34(o, dword_8007D9A4);
+        StartActorScript_8001DC34(o, playAnimScript_8007D9A4);
     }
     g = o->flags_4;
     if (d->field_1C)
@@ -2800,7 +2800,7 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
 // Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
 // register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
 // anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
-void sub_8001E574(Actor* o, ActorDesc* d)
+void InitActor_8001E574(Actor* o, ActorDesc* d)
 {
     Model* m;
     int v;
@@ -2876,21 +2876,21 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->animIdx_C2 = o->prevAnimIdx_C0 = *(short*)&o->anim_9C;
     o->effect_130 = -1;
     o->model_15C = m;
-    o->image_150.x = word_8007DC8C[0];
-    o->image_150.y = word_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
-    o->image_150.w = word_8007DC8C[2];
-    o->image_150.h = word_8007DC8C[3];
-    o->clut_158[0] = word_8007DC94[0];
-    o->clut_158[1] = word_8007DC94[1] + *(short*)&d->clutRow_1C;
+    o->image_150.x = actorImageRect_8007DC8C[0];
+    o->image_150.y = actorImageRect_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
+    o->image_150.w = actorImageRect_8007DC8C[2];
+    o->image_150.h = actorImageRect_8007DC8C[3];
+    o->clut_158[0] = actorClutPos_8007DC94[0];
+    o->clut_158[1] = actorClutPos_8007DC94[1] + *(short*)&d->clutRow_1C;
     o->path_160 = 0;
-    sub_8001E7F0(o, d);
+    AllocActorBones_8001E7F0(o, d);
     FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, dword_800795A0, 8);
-    sub_8001D760(o, d->animIdx_20, d->frame_24, 0);
+    SetActorAnim_8001D760(o, d->animIdx_20, d->frame_24, 0);
 }
 #endif
-INCLUDE_ASM(sub_8001E574);
+INCLUDE_ASM(InitActor_8001E574);
 // Matched
-void sub_8001E7F0(Actor* o, ActorDesc* d)
+void AllocActorBones_8001E7F0(Actor* o, ActorDesc* d)
 {
     short* p;
     int n;
@@ -2915,7 +2915,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     {
         size += n * 32;
     }
-    mem = ListAlloc_8003FDC0(dword_80091990, size);
+    mem = ListAlloc_8003FDC0(actorHeap_80091990, size);
     o->bones_134 = (short*)mem;
     MemCopy_800403E8(mem, d->bones_34, sz0);
     o->baseScale_138[0] = d->baseScale_38[0];
@@ -2958,13 +2958,13 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
 }
 // Matched
-void sub_8001EA00(Actor* p)
+void FreeActorBones_8001EA00(Actor* p)
 {
     int v = (int)p->bones_134;
-    ListFree_8003FE38(dword_80091990, (void*)v);
+    ListFree_8003FE38(actorHeap_80091990, (void*)v);
 }
 // Matched
-void sub_8001EA28(void* arg0)
+void UpdateActorScript_8001EA28(void* arg0)
 {
     sub_8001EA48(arg0);
 }

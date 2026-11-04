@@ -28,9 +28,9 @@ extern void sub_800BF02C();
 extern void SetShopHelpText_800BBB54();
 extern void sub_800BF704();
 extern int ret_800BF520();
-extern int sub_8001AB94();
-extern void sub_8001AAF4();
-extern void sub_8001AB1C(int a);
+extern int IsSceneFadeDone_8001AB94();
+extern void StopSceneDarken_8001AAF4();
+extern void StartSceneBrighten_8001AB1C(int a);
 extern void PlaySfx_80031494(int a);
 extern void sub_800BF474();
 extern void sub_800BF4B8();
@@ -515,7 +515,7 @@ int MergeMinions_800B9FC8(Minion* a, Minion* b, Minion* c, int d)
     int r;
     MemCopy_800403E8(c, a, sizeof(Minion));
     c->field_3 = b->field_3;
-    p = sub_8001CD58(d);
+    p = GetPersonMergeInfo_8001CD58(d);
     if (p[0] != 0xFF)
     {
         c->field_3 = p[0];
@@ -2808,7 +2808,7 @@ void sub_800BD854(ShopUnit3Shop* u)
 extern void sub_800BDD74();
 extern void sub_800BDE44();
 extern void sub_80027314();
-extern void sub_8001AAA8(int a);
+extern void StartSceneDarken_8001AAA8(int a);
 extern void fn_800AD184(int a, int b, int c);
 extern int sub_800BAF54(short* a, short* b, short c, short d);
 void sub_800BD9DC(ShopUnit3Shop* u)
@@ -2865,7 +2865,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         tk = (ShopTaskShop*)&name_8008D670->entry;
         fn_8001ABEC(1);
         tk->next_8 = sub_800BDE44;
-        sub_8001AAA8(0x20);
+        StartSceneDarken_8001AAA8(0x20);
         break;
     case 6:
         if (u->field_30 != 0)
@@ -2905,7 +2905,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
             tk = (ShopTaskShop*)&name_8008D670->entry;
             fn_8001ABEC(1);
             tk->next_8 = sub_800BDE44;
-            sub_8001AAA8(0x20);
+            StartSceneDarken_8001AAA8(0x20);
         }
         break;
     case 9:
@@ -2975,10 +2975,10 @@ void sub_800BDE44(ShopTaskShop* t, int a)
 {
     DrawMenuBackground_8002BE10();
     sub_800BC380(a);
-    if (sub_8001AB94())
+    if (IsSceneFadeDone_8001AB94())
     {
-        sub_8001AAF4();
-        sub_8001AB1C(0x20);
+        StopSceneDarken_8001AAF4();
+        StartSceneBrighten_8001AB1C(0x20);
         t->next_8 = sub_800BDEA8;
     }
 }
@@ -2990,7 +2990,7 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
     int* p;
     DrawMenuBackground_8002BE10();
     sub_800BC380(u);
-    if (sub_8001AB94())
+    if (IsSceneFadeDone_8001AB94())
     {
         tk = (ShopTaskShop*)&name_8008D670->entry;
         if (u->field_94 == 1)
@@ -3608,12 +3608,12 @@ extern int sub_800BF2E4(unsigned char* p);
 void sub_800BF02C(Minion* a, int* o, int c)
 {
     ShopLocalShop l;
-    unsigned int h = sub_80019C70(a->species_2)->modelId_0;
+    unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
     int t;
     o[0] = sub_800338DC(a->species_4C, l.b, l.w);
-    o[1] = sub_80019C70(l.b[0])->modelId_0;
-    o[2] = sub_80019C70(l.b[1])->modelId_0;
-    o[3] = sub_80019C70(l.b[2])->modelId_0;
+    o[1] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
+    o[2] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
+    o[3] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
     o[4] = l.w[0];
     o[5] = l.w[1];
     o[6] = l.w[2];
@@ -3688,16 +3688,16 @@ void sub_800BF02C(Minion* a, int* o, int c)
     }
     o[7] = sub_80019A80(a->status_84.level_44);
     o[8] = o[0] - 1;
-    o[10] = sub_80019C70(a->field_3)->modelId_0;
+    o[10] = GetSpeciesModelDesc_80019C70(a->field_3)->modelId_0;
     o[12] = c;
     o[9] = sub_800BF2E4(a->status_84.element_3E);
     if (o[9] == -1000)
     {
-        o[9] = sub_80019C70(a->field_3)->field_2 << 1;
+        o[9] = GetSpeciesModelDesc_80019C70(a->field_3)->field_2 << 1;
     }
     else
     {
-        o[9] = o[9] - (sub_80019C70(a->field_3)->field_3 << 1);
+        o[9] = o[9] - (GetSpeciesModelDesc_80019C70(a->field_3)->field_3 << 1);
 
         if (o[9] < 0)
         {

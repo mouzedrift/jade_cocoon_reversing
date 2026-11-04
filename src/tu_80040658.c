@@ -20,7 +20,7 @@
 // Matched
 void SetDisplayMode_80040658(int arg1)
 {
-    sub_8001B230();
+    RestartDisplay_8001B230();
     switch (arg1)
     {
         case 0:

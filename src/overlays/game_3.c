@@ -59,7 +59,7 @@ void sub_800A58B4(void)
         r->y = 0;
         r->h = 0xf0;
     }
-    sub_8001A9A4();
+    ResetSceneFade_8001A9A4();
     dword_800AEBF0 = 0;
     dword_800AEBE8 = 0x8000;
     name_800AEBEC = 0;
@@ -896,7 +896,7 @@ void sub_800A70F8(GameTask_1* t, GameD_1* q)
         sub_800A6D30(q->f0);
         t->next_8 = sub_800A6DAC;
         if (q->fC)
-            sub_8001C224();
+            FreezeScreen_8001C224();
         else
             EndFade_8001C290();
         eventDispatchHalt_8008B540 = r->f10;
@@ -987,7 +987,7 @@ GameMode2_1* sub_800A72C8(GameMode2_1* out)
 void sub_800A73A8(void)
 {
     GameRect_1* r = &stru_8008D420;
-    dword_8008D40C = 0x1000;
+    sceneBrightness_8008D40C = 0x1000;
     dword_8008D404 = 0;
     r->x = 0;
     r->w = 0x140;
@@ -997,7 +997,7 @@ void sub_800A73A8(void)
     sub_80026FAC();
     GameFn_800A094C();
     ResetSoundTask_8002FEB8();
-    sub_8001A38C();
+    InitSceneFade_8001A38C();
     ResetCameraToLevant_800376A8();
     sub_800A8140();
     sub_800A94CC();
@@ -1243,7 +1243,7 @@ int sub_800A7A9C(int a)
 // Matched
 void sub_800A7AD8(int a)
 {
-    sub_8001D9B0(sub_800A7A60(a));
+    SkipActorAnimToEnd_8001D9B0(sub_800A7A60(a));
 }
 
 void sub_800A7B00(int a)
@@ -1268,8 +1268,8 @@ void sub_800A7B00(int a)
         {
             if (!(o->flags_4 & 0x2000))
             {
-                sub_8001D6EC(o, 1);
-                sub_8001D730(o, 0);
+                SetActorAnimPaused_8001D6EC(o, 1);
+                SetActorVisible_8001D730(o, 0);
                 dword_800B0EC4.c[i] = 1;
             }
             if (!(o->task_0->flags & 0x8000))
@@ -1302,8 +1302,8 @@ void sub_800A7BF0(int a)
         {
             if (dword_800B0EC4.c[i])
             {
-                sub_8001D6EC(o, 0);
-                sub_8001D730(o, 1);
+                SetActorAnimPaused_8001D6EC(o, 0);
+                SetActorVisible_8001D730(o, 1);
                 dword_800B0EC4.c[i] = 0;
             }
             SetActorActive_8001D658(o, 1);
@@ -1434,15 +1434,15 @@ void sub_800A7D40(int a, GameCmdA_1* c)
             k = 1;
             break;
         case 6:
-            sub_8001D730(obj, c->fC);
+            SetActorVisible_8001D730(obj, c->fC);
             k = 0;
             break;
         case 7:
-            sub_8001D68C(obj, c->fC);
+            SetActorGroundMove_8001D68C(obj, c->fC);
             k = 0;
             break;
         case 8:
-            sub_8001D6BC(obj, c->fC);
+            SetActorRootMotion_8001D6BC(obj, c->fC);
             k = 0;
             break;
         case 9:
@@ -1483,7 +1483,7 @@ void sub_800A7D40(int a, GameCmdA_1* c)
         }
         if (k)
         {
-            sub_8001E254(obj, &s);
+            StartActorAction_8001E254(obj, &s);
         }
         else if (c->f8)
         {
@@ -1499,7 +1499,7 @@ INCLUDE_OVERLAY_ASM(game, dword_800A06F0);
 void sub_800A80C4(int a)
 {
     if (a < sub_800A7790())
-        sub_8001E28C(sub_800A77F4(a)->cb_14.actor_4);
+        TriggerActorEffect_8001E28C(sub_800A77F4(a)->cb_14.actor_4);
 }
 
 void sub_800A8108()
@@ -2019,7 +2019,7 @@ void DrawLevantModel_800A9708(G2Act* p)
     int flags;
     int st;
     char* sd; // read as a scalar: through SaveData* gcc reloads the status after the p->f3c store
-    v = sub_80019CC4(&saveData_8008B570.levant_7A8);
+    v = FindNearestCameraPoint_80019CC4(&saveData_8008B570.levant_7A8);
     sd = (char*)&saveData_8008B570;
     if (p->f3c != *(int*)(sd + 0x7c8))
     {
@@ -2237,7 +2237,7 @@ void sub_800AA1E0(G2Act* a)
 
 void sub_800AA220(G2Act* a)
 {
-    sub_8001C440(a->model_40, sub_800AC4A8(a->s1c), a->f10);
+    RunAnimFrameCues_8001C440(a->model_40, sub_800AC4A8(a->s1c), a->f10);
 }
 
 void sub_800AA25C(G2Act* p)
@@ -3100,7 +3100,7 @@ void sub_800ABCF4(G2Act* p)
 {
     if (p->s20 == 0x19)
     {
-        p->f2C = sub_8001AC8C(p->f34);
+        p->f2C = GetMagicEffect_8001AC8C(p->f34);
         RequestEffect_800148F4(p->f2C);
     }
     else if ((unsigned short)(p->s20 - 7) < 2)
@@ -3127,7 +3127,7 @@ void sub_800ABCF4(G2Act* p)
     }
     else if (p->s20 == 0x1D)
     {
-        p->f2C = ((int (*)(int))sub_8001CDCC)(p->f34);
+        p->f2C = ((int (*)(int))GetItemEffect_8001CDCC)(p->f34);
         RequestEffect_800148F4(p->f2C);
     }
 }
@@ -3360,7 +3360,7 @@ int sub_800AC3F4()
     int r;
     if (s->field_830)
     {
-        r = ((int (*)(int))sub_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
+        r = ((int (*)(int))GetArmorOutfit_8001D060)(s->levantStatus_7C8.field_1C[1]) + dword_800B11B8[s->field_834];
     }
     else
     {

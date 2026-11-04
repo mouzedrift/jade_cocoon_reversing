@@ -594,7 +594,7 @@ void sub_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, int d)
     Actor* actor;
     unsigned short* x;
     EvEnemySlotEventfnc* slot;
-    id = &sub_80019C70(a->xy.a)->modelId_0;
+    id = &GetSpeciesModelDesc_80019C70(a->xy.a)->modelId_0;
     found = 0;
     l = ((EvLoaderEventfnc*)modelLoaderTask_8008B54C->entry.buffer)->ents_C;
     for (i = 3; i >= 0; i--)
@@ -717,7 +717,7 @@ void sub_800B8940(int* ids)
     int* q = ids;
     for (; i < 3; i++)
     {
-        MinionModelDesc* e = sub_80019C70(*q++);
+        MinionModelDesc* e = GetSpeciesModelDesc_80019C70(*q++);
         RequestLoaderModel_800206A0(e->modelId_0, e->field_2 << 1, 3, -1);
 
     }
@@ -1078,7 +1078,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->z_8 = q[2];
     rot->vy = ang;
     sub_80037918(cameraTask_8008D4A0->entry.buffer);
-    SetGeomOffset(display_8008B4D8.field_C_w / 2 + dword_8008D474[0], display_8008B4D8.field_E_h / 2 + dword_8008D474[1]);
+    SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
     c->pc_8++;
     return 1;
 }
@@ -1611,7 +1611,7 @@ int sub_800BA45C(EvCtxEventfnc* c)
         EvObjEventfnc* o = sub_800A7A60(a - 1);
         if (o->f90_90 == o->f1A_1A)
         {
-            sub_8001D6EC(o, c->pc_8->b_8);
+            SetActorAnimPaused_8001D6EC(o, c->pc_8->b_8);
             ok = 1;
         }
     }
@@ -2139,10 +2139,10 @@ int sub_800BB45C(EvCtxEventfnc* c)
     return 1;
 }
 
-extern void sub_8001AA04(int a);
-extern void sub_8001AA50(int a);
-extern void sub_8001AAF4();
-extern void sub_8001AB1C(int a);
+extern void StartSceneFadeIn_8001AA04(int a);
+extern void StartSceneFadeOut_8001AA50(int a);
+extern void StopSceneDarken_8001AAF4();
+extern void StartSceneBrighten_8001AB1C(int a);
 extern void sub_800A094C();
 extern void sub_800A096C();
 extern short dword_80091CE0[];
@@ -2153,7 +2153,7 @@ extern void PlayMusic_800300E0(int a, int b);
 extern short SfxKeyOn_800314F4(int a);
 extern void SfxKeyOff_80031574(int a, int b);
 extern void sub_80027478(int a, int b);
-extern void sub_8001BCD8(int a);
+extern void SetMotionBlur_8001BCD8(int a);
 
 // Matched
 int sub_800BB4A4(EvCtxEventfnc* c)
@@ -2167,27 +2167,27 @@ int sub_800BB4A4(EvCtxEventfnc* c)
     switch (c->pc_8->a_4)
     {
     case 0:
-        sub_8001A9A4();
+        ResetSceneFade_8001A9A4();
         break;
     case 1:
-        sub_8001A9E4();
+        SetSceneDark_8001A9E4();
         break;
     case 2:
-        sub_8001A9E4();
-        sub_8001AA04(*(unsigned short*)&c->pc_8->b_8);
+        SetSceneDark_8001A9E4();
+        StartSceneFadeIn_8001AA04(*(unsigned short*)&c->pc_8->b_8);
         break;
     case 3:
-        sub_8001AA50(*(unsigned short*)&c->pc_8->b_8);
+        StartSceneFadeOut_8001AA50(*(unsigned short*)&c->pc_8->b_8);
         break;
     case 4:
-        sub_8001AAF4();
-        sub_8001AB1C(*(unsigned short*)&c->pc_8->b_8);
+        StopSceneDarken_8001AAF4();
+        StartSceneBrighten_8001AB1C(*(unsigned short*)&c->pc_8->b_8);
         break;
     case 5:
-        sub_8001AAA8(*(unsigned short*)&c->pc_8->b_8);
+        StartSceneDarken_8001AAA8(*(unsigned short*)&c->pc_8->b_8);
         break;
     case 6:
-        r = sub_8001AB94();
+        r = IsSceneFadeDone_8001AB94();
         break;
     case 7:
         StartFadeToBlack_8001C2CC();
@@ -2262,7 +2262,7 @@ int sub_800BB4A4(EvCtxEventfnc* c)
         sub_80027478(0x40, c->pc_8->b_8);
         break;
     case 18:
-        sub_8001BCD8(c->pc_8->b_8);
+        SetMotionBlur_8001BCD8(c->pc_8->b_8);
         break;
     }
     if (r != 0)

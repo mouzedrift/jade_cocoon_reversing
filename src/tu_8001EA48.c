@@ -21,7 +21,7 @@
 #include "tu_80019BF0.h"
 #include "main.h"
 
-extern short dword_8008D474[2];
+extern short screenOffset_8008D474[2];
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
@@ -83,7 +83,7 @@ void sub_8001EA48(void* arg0)
             n = cmd->arg_6;
             if (o->animIdx_C2 != n)
             {
-                sub_8001D6EC(o, 0);
+                SetActorAnimPaused_8001D6EC(o, 0);
                 if (n == 0x4003)
                 {
                     n = o->nextAnim_A4;
@@ -101,7 +101,7 @@ void sub_8001EA48(void* arg0)
                     mode = o->startMode_A8;
                     o->startMode_A8 = -1;
                 }
-                sub_8001D760(o, n, mode, flag21);
+                SetActorAnim_8001D760(o, n, mode, flag21);
             }
             done = 1;
             break;
@@ -134,22 +134,22 @@ void sub_8001EA48(void* arg0)
             sub_8001DA08(o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
-            sub_8001DA2C(o);
+            StopActorFade_8001DA2C(o);
             break;
         case 9:
-            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
+            StartActorScale_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
             break;
         case 10:
-            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
+            StartActorScale_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
             break;
         case 11:
-            sub_8001D730(o, cmd->arg_6);
+            SetActorVisible_8001D730(o, cmd->arg_6);
             break;
         case 12:
-            sub_8001D8B4(o, cmd->arg_6);
+            RequestActorAnim_8001D8B4(o, cmd->arg_6);
             break;
         case 13:
-            if (sub_8001D8A8(o))
+            if (IsActorAnimLoadIdle_8001D8A8(o))
             {
                 break;
             }
@@ -159,14 +159,14 @@ void sub_8001EA48(void* arg0)
                 return;
             }
         case 14:
-            sub_8001D92C(o, cmd->arg_6);
+            ReleaseActorAnim_8001D92C(o, cmd->arg_6);
             break;
         case 15:
             if ((o->flags_4 & 0x4080000) && o->kind_C < 3)
             {
                 if (!TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
                 {
-                    sub_8001D71C(o);
+                    RestartActorMotion_8001D71C(o);
                     o->flags_4 |= 0x10000;
                     return;
                 }
@@ -187,11 +187,11 @@ void sub_8001EA48(void* arg0)
             if (o->animIdx_C2 != o->prevAnimIdx_C0)
             {
                 o->animIdx_C2 = o->prevAnimIdx_C0;
-                sub_8001D760(o, o->prevAnimIdx_C0, -2, flag21);
+                SetActorAnim_8001D760(o, o->prevAnimIdx_C0, -2, flag21);
             }
             break;
         case 18:
-            if (!sub_8001DC60(o, &o->target_70, o->target_70.pad, 200))
+            if (!ApproachActorTarget_8001DC60(o, &o->target_70, o->target_70.pad, 200))
             {
                 o->flags_4 |= 0x10000;
                 return;
@@ -207,7 +207,7 @@ void sub_8001EA48(void* arg0)
             }
             else
             {
-                sub_8001D71C(o);
+                RestartActorMotion_8001D71C(o);
                 o->flags_4 |= 0x10000;
                 return;
             }
@@ -220,7 +220,7 @@ void sub_8001EA48(void* arg0)
             }
             break;
         case 22:
-            sub_8001D6EC(o, cmd->arg_6 != 0);
+            SetActorAnimPaused_8001D6EC(o, cmd->arg_6 != 0);
             break;
         case 23:
             if (++o->waitCount_B0 > cmd->arg_6)
@@ -618,8 +618,8 @@ int sub_8001FC90(Actor* a0)
     RotTransPers(&v, &sxy, &p, &flag);
     return flag >= 0;
 }
-extern int sub_80019CC4();
-extern void sub_8001C440();
+extern int FindNearestCameraPoint_80019CC4();
+extern void RunAnimFrameCues_8001C440();
 extern void sub_80047E28();
 extern void sub_80046A58();
 extern void DrawSpriteVtxQuadsGT4_800459E4();
@@ -633,7 +633,7 @@ void sub_8001FD08(void* a0)
     unsigned long* ot2;
     if (!(o->flags_4 & 0x2000) && sub_8001FC90(o))
     {
-        v = sub_80019CC4(o->pos_38);
+        v = FindNearestCameraPoint_80019CC4(o->pos_38);
         o->draw_164.anim_14 = &o->model_15C->anims_54[o->anim_9C];
         o->draw_164.ftg_0 = o->model_15C->ftg_50;
         o->draw_164.pos_4 = o->pos_38;
@@ -680,7 +680,7 @@ void sub_8001FD08(void* a0)
             ot2 = pOT_8008D690;
         }
         DrawSpriteVtxQuadsGT4_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
-        sub_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
+        RunAnimFrameCues_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }
 // Matched

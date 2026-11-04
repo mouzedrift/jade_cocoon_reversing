@@ -503,7 +503,7 @@ void sub_8001980C(unsigned char* p, MinionBaseStats* s)
 // Matched
 void sub_800199A0(UnitStats* p)
 {
-    p->skills_6C = *sub_80019C28(p->species_5C);
+    p->skills_6C = *GetSpeciesSkills_80019C28(p->species_5C);
 }
 // Matched
 void sub_80019A20(UnitStats* a0)

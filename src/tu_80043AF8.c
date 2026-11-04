@@ -68,8 +68,8 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
     gte_stszotz(&s->otz_C);
     if (s->otz_C - 1 < 0xFFFU)
     {
-        s->w_10 = (size[0] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
-        s->h_14 = (size[1] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
         if (s->w_10 > 0x800)
         {
             s->w_10 = 0x800;
@@ -78,7 +78,7 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
         {
             s->h_14 = 0x800;
         }
-        p->r0 = p->g0 = p->b0 = s->shade_18 = ((0x80 - (flags >> 16) / 32) * dword_8008D40C) >> 12;
+        p->r0 = p->g0 = p->b0 = s->shade_18 = ((0x80 - (flags >> 16) / 32) * sceneBrightness_8008D40C) >> 12;
         if (flags & 0x10)
         {
             setSemiTrans(p, 1);
@@ -101,8 +101,8 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned ch
     gte_stszotz(&s->otz_C);
     if (s->otz_C - 101 < 0xF9BU)
     {
-        s->w_10 = (size[0] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
-        s->h_14 = (size[1] << 7) / s->otz_C * dword_8008B4F8 * word_8008D51E / 0xA0000;
+        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
         if (s->w_10 > 0x800)
         {
             s->w_10 = 0x800;
@@ -111,9 +111,9 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned ch
         {
             s->h_14 = 0x800;
         }
-        p->r0 = (rgb[0] * dword_8008D40C) >> 12;
-        p->g0 = (rgb[1] * dword_8008D40C) >> 12;
-        p->b0 = (rgb[2] * dword_8008D40C) >> 12;
+        p->r0 = (rgb[0] * sceneBrightness_8008D40C) >> 12;
+        p->g0 = (rgb[1] * sceneBrightness_8008D40C) >> 12;
+        p->b0 = (rgb[2] * sceneBrightness_8008D40C) >> 12;
         return sub_80031BE4(p, pOT_8008B4C8 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, 0, 0x20);
     }
     return 0;
@@ -180,10 +180,10 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
     }
     if (s->otz_4C - 1 < 0xFFFU)
     {
-        s->prim_0.r0 = (rgb[0] * dword_8008D40C) >> 12;
-        s->prim_0.g0 = (rgb[1] * dword_8008D40C) >> 12;
-        s->prim_0.b0 = (rgb[2] * dword_8008D40C) >> 12;
-        if ((scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4 * dword_8008B4F8 / 4096 >= 9)
+        s->prim_0.r0 = (rgb[0] * sceneBrightness_8008D40C) >> 12;
+        s->prim_0.g0 = (rgb[1] * sceneBrightness_8008D40C) >> 12;
+        s->prim_0.b0 = (rgb[2] * sceneBrightness_8008D40C) >> 12;
+        if ((scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4 * cameraZoom_8008B4F8 / 4096 >= 9)
         {
             return (VECTOR*)&s->wofs_40;
         }
@@ -292,7 +292,7 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
 }
 #endif
 INCLUDE_ASM(DrawRotSprite_80044010);
-extern MATRIX dword_80087114; // light matrix
+extern MATRIX lightMatrix_80087114; // light matrix
 // Matched
 void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot)
 {
@@ -330,7 +330,7 @@ void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SV
     PopMatrix();
     DrawFtgObject_8004C7BC(obj, ot, flags, slot);
     PopMatrix();
-    gte_SetLightMatrix(&dword_80087114);
+    gte_SetLightMatrix(&lightMatrix_80087114);
 }
 // Matched
 void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, PointLight* light, int flags, VECTOR* scale)
@@ -366,7 +366,7 @@ void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos
     SetModelLighting_80019D84(pos, &zero, light, (MATRIX*)getScratchAddr(8));
     PopMatrix();
     DrawFtgObject_8004C7BC(obj, ot, flags, 0);
-    gte_SetLightMatrix(&dword_80087114);
+    gte_SetLightMatrix(&lightMatrix_80087114);
     PopMatrix();
 }
 // Matched
@@ -952,7 +952,7 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         }
     }
     m[0].t[2] = m[0].t[1] = m[0].t[0] = 0;
-    gte_SetLightMatrix(&dword_80087114);
+    gte_SetLightMatrix(&lightMatrix_80087114);
     gte_SetRotMatrix(SKEL_MATS);
     gte_SetTransMatrix(SKEL_MATS);
 }
@@ -1182,7 +1182,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
             DrawFtgObject_8004C7BC(&sk->ftg_0[sk->bones[i].ftg_4], sk->ot_28, flags, sk->bones[i].ftg_4);
         }
     }
-    gte_SetLightMatrix(&dword_80087114);
+    gte_SetLightMatrix(&lightMatrix_80087114);
     gte_SetRotMatrix(m);
     PopMatrix();
 }
