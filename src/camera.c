@@ -125,7 +125,7 @@ extern void SaveCameraState_80039620(CameraCtrl* cam);
 extern void SetupCameraOrbit_80038CA8(CameraCtrl* cam);
 extern void SetupBattleIntroCamera_80037F44(CameraCtrl* cam);
 extern void CameraOrbitTask_800374E0();
-extern int FindMeshAtPos_800B8184(int a, int b);
+extern int FindMeshAtPos_800B8184(int pos, int b);
 extern void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam);
 
 // Matched
@@ -162,7 +162,7 @@ extern void PlaceBattleIntroCamera_80037C74(CameraCtrl* cam);
 extern void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target);
 extern void DrawBattleStage_800BC90C(CameraCtrl* cam);
 extern void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam);
-extern void StartSceneFadeIn_8001AA04(int a);
+extern void StartSceneFadeIn_8001AA04(int duration);
 
 // Matched
 void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam)
@@ -955,7 +955,7 @@ void RestoreCameraState_80039698(CameraCtrl* cam)
     cameraZoom_8008B4F8 = cam->savedZoom_184;
     screenOffset_8008D474 = cam->savedShake_14C;
 }
-extern int GetLevantActionEndFrame_800AB4D8(int a);
+extern int GetLevantActionEndFrame_800AB4D8(int anim);
 // Matched
 void StartCameraSplineLong_8003970C(int action, int* spline)
 {

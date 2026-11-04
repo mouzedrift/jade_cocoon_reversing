@@ -82,19 +82,19 @@ void DrawCopyrightScreen_800408F4(void)
     if ((unsigned int)frameCount_8008D3FC < 0x190)
     {
         int i;
-        SPRT* e = copyrightSprts_8008D47C;
-        e[0].x0 = 0;
-        e[0].y0 = 0;
-        e[1].x0 = 0x100;
-        e[1].y0 = 0;
-        e[2].x0 = 0x200;
-        e[2].y0 = 0;
-        e[3].x0 = 0;
-        e[3].y0 = 0x100;
-        e[4].x0 = 0x100;
-        e[4].y0 = 0x100;
-        e[5].x0 = 0x200;
-        e[5].y0 = 0x100;
+        SPRT* sprts = copyrightSprts_8008D47C;
+        sprts[0].x0 = 0;
+        sprts[0].y0 = 0;
+        sprts[1].x0 = 0x100;
+        sprts[1].y0 = 0;
+        sprts[2].x0 = 0x200;
+        sprts[2].y0 = 0;
+        sprts[3].x0 = 0;
+        sprts[3].y0 = 0x100;
+        sprts[4].x0 = 0x100;
+        sprts[4].y0 = 0x100;
+        sprts[5].x0 = 0x200;
+        sprts[5].y0 = 0x100;
         for (i = 0; i < 6; i++)
         {
             AddPrimCopy_80040298(pOT_8008D3EC, &copyrightSprts_8008D47C[i], 5);
@@ -159,7 +159,7 @@ void PlayCraveEntertainmentMovie_80040B54(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(craveEntertainmentMovie_80086988);
 }
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
+extern void DrawText_8003E91C(int mode, void* str, void* pos, int ot);
 extern const char aWarning_80074A24[];
 extern const char aThisDemoVersion_80074A34[];
 extern const char aInDevelopment_80074A88[];
@@ -171,26 +171,26 @@ void DrawDemoDisclaimer_80040B94(void)
 {
     if ((unsigned int)frameCount_8008D3FC < 0xC8)
     {
-        short p0[2];
-        short p1[2];
-        short p2[2];
-        short p3[2];
-        short p4[2];
-        p0[0] = 0x10;
-        p0[1] = 0xA2;
-        DrawText_8003E91C(2, aWarning_80074A24, p0, 0);
-        p1[0] = 0x10;
-        p1[1] = 0xAE;
-        DrawText_8003E91C(2, aThisDemoVersion_80074A34, p1, 0);
-        p2[0] = 0x10;
-        p2[1] = 0xBA;
-        DrawText_8003E91C(2, aInDevelopment_80074A88, p2, 0);
-        p3[0] = 0x10;
-        p3[1] = 0xC6;
-        DrawText_8003E91C(2, aDueToFutureChanges_80074AA8, p3, 0);
-        p4[0] = 0x10;
-        p4[1] = 0xD2;
-        DrawText_8003E91C(2, aSignificantlyDifferent_80074B10, p4, 0);
+        short linePos0[2];
+        short linePos1[2];
+        short linePos2[2];
+        short linePos3[2];
+        short linePos4[2];
+        linePos0[0] = 0x10;
+        linePos0[1] = 0xA2;
+        DrawText_8003E91C(2, aWarning_80074A24, linePos0, 0);
+        linePos1[0] = 0x10;
+        linePos1[1] = 0xAE;
+        DrawText_8003E91C(2, aThisDemoVersion_80074A34, linePos1, 0);
+        linePos2[0] = 0x10;
+        linePos2[1] = 0xBA;
+        DrawText_8003E91C(2, aInDevelopment_80074A88, linePos2, 0);
+        linePos3[0] = 0x10;
+        linePos3[1] = 0xC6;
+        DrawText_8003E91C(2, aDueToFutureChanges_80074AA8, linePos3, 0);
+        linePos4[0] = 0x10;
+        linePos4[1] = 0xD2;
+        DrawText_8003E91C(2, aSignificantlyDifferent_80074B10, linePos4, 0);
     }
     else
     {

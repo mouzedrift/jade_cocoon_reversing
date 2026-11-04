@@ -471,8 +471,8 @@ void ClearModel_800266CC(Model* p);
 int FindFreeModelIndex_8002667C(ModelList* p);
 void FreeModel_80024C48(Model* p);
 void ApplyModelFtgSwaps_80025C38(Model* p, int flag);
-int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
-void OnModelFileLoaded_80025D7C(int* a0, int b);
+int AddFileRequest_80025D00(Model* model, FileRequestDesc* req);
+void OnModelFileLoaded_80025D7C(int* arg, int data);
 
 
 extern unsigned short padButtonBits_8007CAD8[0xe];

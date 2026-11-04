@@ -93,7 +93,7 @@ void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2)
 {
     CalcEquippedStats_80033624(out, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
 }
-int BaseSpeedRatio_80014200(unsigned char* p);
+int BaseSpeedRatio_80014200(unsigned char* stats);
 // Matched
 void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* action, int mode)
 {
