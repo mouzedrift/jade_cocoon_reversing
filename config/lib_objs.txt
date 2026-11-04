@@ -318,6 +318,7 @@ LIBSPU.LIB S_RMP2
 LIBMCX.LIB MCXINIT
 LIBMCX.LIB MCXMAIN
 LIBMCX.LIB MCXCMD
-asm 80071818 270 .data 8008B464 1c   # LIBMCX MCXDSR, the last 4 bytes of its .data are the head of the bss group (see bsshead)
-bsshead 8008B480 4   # psylink starts the bss group on 8 bytes, the .bss of the game is at 0x8008B484 behind the PSY-Q .data
-asm 80071A88 84 .rdata 80075A9C 4   # strchr (no padding in the game's copy), strrchr; dword_80075A9C is used by the start-up code
+asm 80071818 270 .data 8008B464 20   # LIBMCX MCXDSR
+bsshead 8008B48C 4   # the original's commons made psylink 8-align the .bss (game .bss from 0x8008B490); the build defines them itself
+asm 80071A88 84 .rdata 80075A9C 4   # strchr (no padding in the game's copy), strrchr; _stacksize (0x80075A9C) is used by the start-up code
+bsstail 800A059C 4   # the .bss group ends on 8 bytes (0x800A05A0), where the start-up's bss clear stops

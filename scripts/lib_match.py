@@ -171,7 +171,7 @@ def lib_obj_paths():
     out = []
     for line in open(os.path.join(REPO, "config", "lib_objs.txt")):
         f = line.split("#")[0].split()
-        if not f or f[0] == "bsshead":
+        if not f or f[0] in ("bsshead", "bsstail"):
             continue
         if f[0] == "asm":
             out.append(("asm", int(f[1], 16), int(f[2], 16)))

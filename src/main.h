@@ -4,7 +4,6 @@
 #include "model.h"
 
 extern int gpBase_8008B484;
-extern int startSavedRa_8008B488[2];
 extern int dword_8008B498[2];
 extern EventNode* gameTask_8008B4A4;
 extern int dword_8008B4AC[2];

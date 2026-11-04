@@ -9,16 +9,17 @@ import re
 import platform
 
 def read_tus():
-    """translation units of the game code in link order (config/tus.txt), one src/<name>.c each"""
+    """translation units of the game code in link order (config/tus.txt): src/<name>.c each, or
+    "obj NAME" for a PSY-Q object linked as is from libs/psyq4.4/LIB/NAME (e.g. the SN start-up 2MBYTE.OBJ)"""
     tus = []
     for line in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "tus.txt")):
-        line = line.split("#")[0].strip()
-        if line:
-            tus.append(line.split()[0])
+        f = line.split("#")[0].split()
+        if f:
+            tus.append(("obj " + f[1]) if f[0] == "obj" else f[0])
     return tus
 
 
-c_files = [tu + ".c" for tu in read_tus()]
+c_files = [tu if tu.startswith("obj ") else tu + ".c" for tu in read_tus()]
 
 # the PSY-Q library part of the executable, as raw blobs (see scripts/split.py)
 lib_files = ["text", "lib_pad", "lib_rdata", "lib_data", "lib_sbss", "lib_bss"]
@@ -38,6 +39,9 @@ def read_lib_objs():
             continue
         if f[0] == "bsshead":
             out.append(("bsshead",))
+            continue
+        if f[0] == "bsstail":
+            out.append(("bsstail", int(f[2], 16)))
             continue
         out.append(("asm", int(f[1], 16), int(f[2], 16)) if f[0] == "asm" else ("obj", f[0], f[1]))
         # an asm line may go on with "SECTION ADDR SIZE" for data of that piece (split.py puts it in the .s)
@@ -177,9 +181,13 @@ def generate_ninja():
             ninja.rule(name, f"wine {cmd}" if on_linux else cmd, desc)
 
         linker_deps = list()
+        bss_tail = None
         objs = []
         headers = [os.path.join(project_src, f) for f in sorted(os.listdir(project_src)) if f.endswith(".h")]
         for c_file in c_files:
+            if c_file.startswith("obj "):
+                linker_deps.append(os.path.join(CURRENT_DIR, "libs", "psyq4.4", "LIB", c_file[4:]))
+                continue
             file_name = c_file.split(".")[0]
             out_path = os.path.join(BUILD_DIR, file_name)
 
@@ -213,6 +221,13 @@ def generate_ninja():
                     out_path = os.path.join(BUILD_DIR, "lib_bss_head")
                     ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "bss_head.s"))
                     linker_deps.insert(0, f"{out_path}.obj")
+                elif o[0] == "bsstail":
+                    # padding behind everything: the original's .bss group ends on 8 bytes (its commons made
+                    # psylink 8-align the .bss), and the start-up clears the bss up to that end
+                    src = os.path.join(BUILD_DIR, "lib_bss_tail.s")
+                    write_if_changed(src, "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % o[1])
+                    bss_tail = os.path.join(BUILD_DIR, "lib_bss_tail.obj")
+                    ninja.build(bss_tail, "assemble", src)
                 elif o[0] == "asm":
                     name = "text_%08X" % o[1]
                     out_path = os.path.join(BUILD_DIR, "lib_" + name)
@@ -255,12 +270,14 @@ def generate_ninja():
             ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "lib_pad.s"))
             linker_deps.append(f"{out_path}.obj")
 
+        if bss_tail:
+            linker_deps.append(bss_tail)
         with open(link_path, "w") as f:
             f.write("\torg\t$80010000\n")
             for g, kw in (("text", ""), ("rdata", ""), ("data", ""), ("bss", "\tbss")):
                 f.write("%s\tgroup%s\n" % (g, kw))
             for sec, g in ((".text", "text"), (".rdata", "rdata"), (".data", "data"), (".sdata", "data"),
-                           (".sbss", "bss"), (".bss", "bss")):
+                           (".sbss", "data"), (".bss", "bss")):
                 f.write("\tsection\t%s,%s\n" % (sec, g))
             for o in linker_deps:
                 f.write('\tinclude "%s"\n' % o)
@@ -276,7 +293,7 @@ def generate_ninja():
             # names the code has for a place inside a C object (playerYan_8008B594 == saveData_8008B570.inv_24)
             for name, a in read_aliases():
                 f.write("%s\tequ\t$%08X\n" % (name, a))
-            f.write("\tregs\tpc=start\n")
+            f.write("\tregs\tpc=__SN_ENTRY_POINT\n")
 
         ninja.build(cpe_path, "link", implicit=linker_deps + [link_path])
         ninja.build(exe_path, "convert_cpe_to_exe", cpe_path)

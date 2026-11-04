@@ -24,8 +24,9 @@
 const char name[] = "cdrom:\\SLUS_008.54;1";
 const char aAssertionFaile[] = "Assertion failed: file \"%s\", line %d\n";
 const char aMainC[] = "MAIN.C";
-int gpBase_8008B484 BSS = 0;
-int startSavedRa_8008B488[2] BSS = { 0 };
+// the only .sdata of the game, right behind the PSY-Q .data: the gp base (__SN_GP_BASE) is here; .sbss (linked
+// into the data group) follows with 2MBYTE.OBJ's word for the start-up's saved ra, where its bss clear starts
+int gpBase_8008B484 SDATA = 0;
 long cdRomEventDescError_8008B490 BSS = 0;
 long vsyncEventDesc_8008B494 BSS = 0;
 int dword_8008B498[2] BSS = { 0 };

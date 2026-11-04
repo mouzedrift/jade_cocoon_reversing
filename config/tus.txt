@@ -2,7 +2,9 @@
 # anchors (named from their __FILE__ assert strings): main, common, effect, sound, cd, event (see docs/translation_units.md);
 # the others are inferred from .rdata references and named after their contents (they were tu_<first address> before)
 main 80010000
-party 80010228
+system 80010228
+obj 2MBYTE.OBJ 80010474   # SN start-up: __main, __SN_ENTRY_POINT, _ramsize / _stacksize words
+party 80010538
 unit_stats 80010B90
 common 80012794
 battle_damage 80013358

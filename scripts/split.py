@@ -133,8 +133,9 @@ def load_tus():
     for line in open(os.path.join(REPO, "config", "tus.txt")):
         line = line.split("#")[0].strip()
         if line:
-            n, a = line.split()
-            tus.append((n, int(a, 16)))
+            f = line.split()
+            # "obj NAME ADDR": a PSY-Q object linked as is (no src/ file)
+            tus.append(("@" + f[1], int(f[2], 16)) if f[0] == "obj" else (f[0], int(f[1], 16)))
     return tus
 
 
@@ -205,6 +206,8 @@ def init_src(tus, code, dsyms, owner, tu_of_addr, addr_of):
     for sec, a, size, n in dsyms:
         units[owner[n]][1].append(n)
     for k, (tu, _) in enumerate(tus):
+        if tu.startswith("@"):  # a PSY-Q object, no source file
+            continue
         out = [INCLUDES.rstrip() + '\n#include "data_decls.h"\n']
         for n in units[k][1]:
             out.append(c_data[n] if n in c_data else "INCLUDE_DATA(%s);" % n)

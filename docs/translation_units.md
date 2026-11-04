@@ -53,6 +53,15 @@ Other signals seen so far:
 
 Note: the build does not track header dependencies; use `python build.py -r` after editing a `.h`.
 
+## PSY-Q objects between the game TUs
+
+A line `obj NAME ADDR` in config/tus.txt links libs/psyq4.4/LIB/NAME as is at that point of the link order. The
+SN start-up 2MBYTE.OBJ (`__main`, `__SN_ENTRY_POINT`, the `_ramsize` words; it reads the game's `_stacksize`) sits
+at 0x80010474 between `system` and `party`. Its 4-byte .sbss (the start-up's saved ra) is why .sbss is linked into
+the data group: the game's only .sdata word (gpBase_8008B484 in main.c, the gp base) comes first, then that word,
+where the start-up's bss clear begins; config/lib_objs.txt pads the .bss on both ends (bsshead / bsstail) to the
+8-byte bounds the original's commons gave it.
+
 ## File names of the inferred TUs
 
 Only the six anchors above have their original file names. The other TUs were first named

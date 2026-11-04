@@ -28,6 +28,7 @@ enum foo
    psylink aligns every .bss contribution to 8 bytes as soon as there are commons (the game's .bss is packed, see
    docs/full_build.md). With the initialiser the compiler emits it in place, in definition order. */
 #define BSS __attribute__((section(".bss")))
+#define SDATA __attribute__((section(".sdata")))
 
 /* the first word of an overlay is linked in front of its .rdata (scripts/overlays.py): `int x SDATA = 1;` */
 #define SDATA __attribute__((section(".sdata")))
