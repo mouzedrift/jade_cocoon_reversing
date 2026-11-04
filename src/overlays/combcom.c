@@ -52,8 +52,8 @@ typedef struct CombComMenu
     int f14;
 } CombComMenu;
 
-extern char dword_800CD298[];
-extern char dword_800CD2A4[];
+extern short dword_800CD298[]; // menu cursors (GetMenuCursorIndex_8003DA54)
+extern short dword_800CD2A4[];
 extern unsigned char byte_800CD839;
 extern unsigned char byte_800CD83C;
 extern unsigned char byte_800CD844;
@@ -310,7 +310,168 @@ void sub_800CBCA0()
     DrawMenuWindows_8002A5A4(&m);
 }
 
-INCLUDE_OVERLAY_ASM(combcom, sub_800CBEA4);
+typedef struct CombComMsg
+{
+    int* f0;
+    int* text;
+} CombComMsg;
+extern CombComMsg name_800CD46C[];
+extern char dword_800CD2C8[];
+extern short* dword_800CD854;
+extern char name_800CD718[];
+extern CombComDlg name_800CD538[];
+typedef struct CombComMsgs3
+{
+    int m[3];
+} CombComMsgs3;
+extern CombComMsgs3 name_800CB674;
+typedef struct CombComPos2
+{
+    short xy[2][2];
+} CombComPos2;
+extern CombComPos2 name_800CB680;
+extern CombComPos2 name_800CB688;
+extern unsigned short name_800CD820[][2]; // per byte_800CD83A and window: which windows to hide
+extern unsigned char byte_800A84A8;
+extern unsigned int dword_800CD41C[];
+extern char* name_800CD50C[];
+extern int sub_8002C670();
+extern void sub_8002CE28(struct_minion_ref* a0, void* a1);
+extern void sub_8002CAC8(struct_minion_ref* a0, void* a1);
+extern int sub_80031A04(void* skills, int a);
+extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern void sub_800CC40C();
+// Matched
+void sub_800CBEA4()
+{
+    short w[2];
+    int shown;
+    int k;
+    int f;
+    shown = 0;
+    word_800A82D0 = 0;
+    word_800A82D2 = 0;
+    if (IsCircleHeld_8003D45C(dword_800CD848))
+    {
+        if (byte_800CD83A == 0)
+        {
+            sub_800CBB4C(*name_800CD46C[(short)GetMenuCursorIndex_8003DA54(word_800CD28C)].f0);
+            shown = 1;
+        }
+        else if (byte_800CD83A == 1)
+        {
+            short p[2];
+            Minion* m;
+            shown = 1;
+            m = sub_800A11D8(byte_800CD839);
+            p[0] = 10;
+            p[1] = 0x14;
+            sub_8002C670(m, p, name_800CD718, (short)GetMenuCursorIndex_8003DA54(dword_800CD298), 0xF);
+        }
+        else if (byte_800CD83A == 2)
+        {
+            if (sub_800CBC58() < 0x1E)
+            {
+                short p[2];
+                p[0] = 10;
+                p[1] = 0x14;
+                DrawLargeTextBox_8002AF10((int)&name_800CD538[sub_800CBC58()], (int)p, 0xF);
+                shown = 1;
+            }
+        }
+        else if (byte_800CD83A == 5)
+        {
+            CombComMsgs3 t;
+            t = name_800CB674;
+            sub_800CBB4C(t.m[(short)GetMenuCursorIndex_8003DA54(dword_800CD2C8)]);
+            shown = 1;
+        }
+    }
+    if (shown)
+    {
+        k = 1;
+    }
+    else
+    {
+        k = byte_800CD838;
+    }
+    w[0] = dword_800CD840->arg_4;
+    w[1] = byte_800CD839;
+    if (!(name_800CD820[byte_800CD83A][k] & 0x10))
+    {
+        if (byte_800CD844 & 1)
+        {
+            f = -1;
+        }
+        else
+        {
+            f = (short)GetMenuCursorIndex_8003DA54(dword_800CD854);
+        }
+        if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 3)
+        {
+            if (byte_800CD844 & 2)
+            {
+                dword_800CD83C = sub_800CC674(w, 1, f, 0xF);
+            }
+            sub_800CC40C();
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 6)
+        {
+            sub_800CC40C();
+        }
+        else if ((short)GetMenuCursorIndex_8003DA54(word_800CD28C) == 4)
+        {
+            dword_800CD83C = sub_800CC674(w, 3, f, 0xF);
+        }
+    }
+    if (name_800CD820[byte_800CD83A][k] & 1)
+    {
+        byte_800A84A8 |= 0xC;
+    }
+    else
+    {
+        byte_800A84A8 &= 0xF3;
+    }
+    if (!(name_800CD820[byte_800CD83A][k] & 4))
+    {
+        DrawMenuWindows_8002A5A4(dword_800CD41C);
+    }
+    if (!(name_800CD820[byte_800CD83A][k] & 0x40))
+    {
+        struct_minion_ref r;
+        CombComPos2 p;
+        p = name_800CB680;
+        r.field_4 = 2;
+        r.field_6 = 0xF;
+        r.field_8 = -1;
+        r.field_0 = dword_800CD298[4];
+        r.field_2 = dword_800CD298[5];
+        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.field_A = 0;
+        sub_8002CE28(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -sub_80031A04(&r.field_C_minion->skills_DE, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
+    }
+    if (!(name_800CD820[byte_800CD83A][k] & 0x80))
+    {
+        struct_minion_ref r;
+        CombComPos2 p;
+        p = name_800CB688;
+        r.field_4 = 2;
+        r.field_6 = 0xF;
+        r.field_8 = -1;
+        r.field_0 = dword_800CD2A4[4];
+        r.field_2 = dword_800CD2A4[5];
+        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.field_A = 0;
+        sub_8002CAC8(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
+    }
+    if (byte_800CD83A == 5)
+    {
+        sub_800CBCA0();
+    }
+    DrawButtonHelpBar_8002B004(name_800CD50C[byte_800CD83A], 0, 0xF);
+}
 
 #if 0
 // Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
@@ -502,11 +663,6 @@ void sub_800CC9FC()
     }
 }
 
-typedef struct CombComMsg
-{
-    int f0;
-    int* text;
-} CombComMsg;
 
 extern short* dword_800CD854;
 extern CombComMsg name_800CD46C[];
