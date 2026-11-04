@@ -23,7 +23,7 @@ extern void DrawText_8003E91C(int mode, int* buf, int a, int b);
 typedef struct CharTable
 {
     unsigned short* tbl;
-    int field_4;
+    int glyphCount_4; // codes above it are not drawn
     int count;
 } CharTable;
 extern CharTable charTables_8008685C[];
@@ -56,65 +56,65 @@ typedef struct Pool
     PoolBlock* tail;
 } Pool;
 
-extern PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size);
-extern void* PoolAlloc_8003FFD0(Pool* h, unsigned int size);
-extern void PoolFree_800400B4(Pool* h, void* p);
-extern void* ListAlloc_8003FDC0(List* l, int size);
-extern void ListFree_8003FE38(void* arg0, void* arg1);
+extern PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size);
+extern void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size);
+extern void PoolFree_800400B4(Pool* pool, void* ptr);
+extern void* ListAlloc_8003FDC0(List* list, int size);
+extern void ListFree_8003FE38(void* list, void* ptr);
 
 
 // Matched
-void DrawNumber_8003EF74(int a0, int a1, int a2)
+void DrawNumber_8003EF74(int pos, int val, int ot)
 {
     unsigned short buf[12];
-    IntToText_8003F610(buf, a1);
-    DrawText_8003E91C(2, (int*)buf, a0, a2);
+    IntToText_8003F610(buf, val);
+    DrawText_8003E91C(2, (int*)buf, pos, ot);
 }
 // Matched
 void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
 {
     unsigned short buf[12];
-    Font* p;
+    Font* font;
     short x = pos[0];
     short y = pos[1];
-    unsigned short* s;
-    int c;
-    unsigned short u;
-    int v;
+    unsigned short* text;
+    int ch;
+    unsigned short page;
+    int cell;
     int col;
 
     IntToSjisReversed_8003F58C((unsigned char*)buf, val);
-    s = EncodeText_8003F684(2, buf);
-    p = &fonts_80095FB0[2];
-    c = *s;
-    while (c != 0)
+    text = EncodeText_8003F684(2, buf);
+    font = &fonts_80095FB0[2];
+    ch = *text;
+    while (ch != 0)
     {
-        s++;
-        x -= p->w_10;
-        if (c <= charTables_8008685C[2].field_4)
+        text++;
+        x -= font->w_10;
+        if (ch <= charTables_8008685C[2].glyphCount_4)
         {
-            u = c - 1;
-            v = (short)(u % (unsigned short)p->field_28);
-            u = u / (unsigned short)p->field_28;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
-            p->x0_8 = x;
-            p->y0_A = y;
-            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + u));
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            page = ch - 1;
+            cell = (short)(page % (unsigned short)font->field_28);
+            page = page / (unsigned short)font->field_28;
+            col = cell % (unsigned short)font->field_1C;
+            cell = cell / (unsigned short)font->field_1C;
+            font->x0_8 = x;
+            font->y0_A = y;
+            font->clut_E = getClut(font->clutX_20, font->field_2A + (font->clutY_22 + page));
+            font->u_C = font->field_18 + font->w_10 * col;
+            font->v_D = font->field_1A + font->h_12 * cell;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
             addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
             primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
         }
-        c = *s;
+        ch = *text;
     }
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
@@ -123,62 +123,62 @@ extern int charWidthThresholds_80086898[][12];
 void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
 {
     unsigned short buf[12];
-    Font* p;
+    Font* font;
     short x = pos[0];
     short y = pos[1];
-    unsigned short* s;
-    unsigned short c;
+    unsigned short* text;
+    unsigned short ch;
     short k;
-    int v;
+    int cell;
     int col;
 
     IntToSjisReversed_8003F58C((unsigned char*)buf, val);
-    s = EncodeText_8003F684(1, buf);
-    p = &fonts_80095FB0[1];
-    while (*s != 0)
+    text = EncodeText_8003F684(1, buf);
+    font = &fonts_80095FB0[1];
+    while (*text != 0)
     {
-        c = *s++;
-        x -= p->w_10;
+        ch = *text++;
+        x -= font->w_10;
         for (k = 12; k != 0; k--)
         {
-            if (c - 1 < charWidthThresholds_80086898[0][k - 1])
+            if (ch - 1 < charWidthThresholds_80086898[0][k - 1])
             {
                 x += k;
                 break;
             }
         }
-        if (c <= charTables_8008685C[1].field_4)
+        if (ch <= charTables_8008685C[1].glyphCount_4)
         {
-            c = c - 1;
-            v = (short)(c % (unsigned short)p->field_28);
-            c = c / (unsigned short)p->field_28;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
-            p->x0_8 = x;
-            p->y0_A = y;
-            p->clut_E = getClut(p->clutX_20, p->field_2A + (p->clutY_22 + c));
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            ch = ch - 1;
+            cell = (short)(ch % (unsigned short)font->field_28);
+            ch = ch / (unsigned short)font->field_28;
+            col = cell % (unsigned short)font->field_1C;
+            cell = cell / (unsigned short)font->field_1C;
+            font->x0_8 = x;
+            font->y0_A = y;
+            font->clut_E = getClut(font->clutX_20, font->field_2A + (font->clutY_22 + ch));
+            font->u_C = font->field_18 + font->w_10 * col;
+            font->v_D = font->field_1A + font->h_12 * cell;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
             addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
             primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
         }
     }
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
-void DrawNumber_8003F544(int a0, int a1, int a2)
+void DrawNumber_8003F544(int pos, int val, int ot)
 {
     unsigned short buf[12];
-    IntToText_8003F610(buf, a1);
-    DrawText_8003E91C(1, (int*)buf, a0, a2);
+    IntToText_8003F610(buf, val);
+    DrawText_8003E91C(1, (int*)buf, pos, ot);
 }
 // Matched
 void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
@@ -191,11 +191,11 @@ void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
     }
     do
     {
-        int q;
+        int quot;
         *buf++ = 0x82;
-        q = val / 10;
-        *buf++ = 0x4F + (q * 10 - val);
-        val = q;
+        quot = val / 10;
+        *buf++ = 0x4F + (quot * 10 - val);
+        val = quot;
     } while (val);
     if (neg)
     {
@@ -208,79 +208,79 @@ void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
 // Matched
 void IntToText_8003F610(unsigned short* out, int val)
 {
-    unsigned short tmp[12];
+    unsigned short reversed[12];
     unsigned short* start = out;
-    int n;
-    IntToSjisReversed_8003F58C((unsigned char*)tmp, val);
-    n = WStrLen_8003FB60(tmp);
+    int len;
+    IntToSjisReversed_8003F58C((unsigned char*)reversed, val);
+    len = WStrLen_8003FB60(reversed);
     do
     {
-        n--;
-        *out++ = tmp[n];
-    } while (n);
+        len--;
+        *out++ = reversed[len];
+    } while (len);
     *out = 0;
     EncodeText_8003F684(2, start);
 }
 // Matched
-unsigned short* EncodeText_8003F684(int mode, unsigned short* s)
+unsigned short* EncodeText_8003F684(int mode, unsigned short* text)
 {
-    unsigned short* p = s;
+    unsigned short* cur = text;
     unsigned short j;
-    if (s && *s > 0x2080 && *(unsigned char*)s)
+    if (text && *text > 0x2080 && *(unsigned char*)text)
     {
-        while (*(unsigned char*)p)
+        while (*(unsigned char*)cur)
         {
             unsigned short* tbl = charTables_8008685C[mode].tbl;
-            unsigned short c = *p;
+            unsigned short c = *cur;
             for (j = 0; j < charTables_8008685C[mode].count; j++, tbl++)
             {
                 if (c == *tbl)
                 {
-                    *p = j + 1;
+                    *cur = j + 1;
                     break;
                 }
             }
-            p++;
+            cur++;
         }
     }
-    return s;
+    return text;
 }
 // Matched
-unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
+unsigned short* DecodeText_8003F748(int mode, unsigned short* text)
 {
     unsigned short* tbl = charTables_8008685C[mode].tbl;
-    unsigned short* p = s;
-    if (s && *(unsigned char*)s)
+    unsigned short* cur = text;
+    if (text && *(unsigned char*)text)
     {
-        while (*(unsigned char*)p)
+        while (*(unsigned char*)cur)
         {
-            if (*p <= 0x2080)
+            if (*cur <= 0x2080)
             {
-                *p = tbl[*p - 1];
+                *cur = tbl[*cur - 1];
             }
-            p++;
+            cur++;
         }
     }
-    return s;
+    return text;
 }
 // Matched
 void EncodeName_8003F7C8(void* text, unsigned char* out)
 {
-    unsigned short tmp[11];
-    unsigned short* p;
-    int flag = 0;
+    unsigned short buf[11];
+    unsigned short* encoded;
+    int ended = 0;
     int i;
-    MemCopy_800403E8(tmp, text, 0x16);
-    p = EncodeText_8003F684(1, DecodeText_8003F748(2, tmp));
+    MemCopy_800403E8(buf, text, 0x16);
+    encoded = EncodeText_8003F684(1, DecodeText_8003F748(2, buf));
     for (i = 0; i < 10; i++)
     {
         int c = 0;
-        if (!flag)
+        if (!ended)
         {
-            c = *(unsigned char*)&p[i];
+            c = *(unsigned char*)&encoded[i];
             if (!c)
             {
-                flag = 1;
+                ended = 1;
             }
         }
         out[i] = c;
@@ -304,17 +304,17 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
     return 0;
 }
 // Matched
-void UppercaseSjisName_8003F89C(unsigned short* p)
+void UppercaseSjisName_8003F89C(unsigned short* name)
 {
     int i;
-    unsigned short t;
-    for (i = 0; i < 10; i++, p++)
+    unsigned short ch;
+    for (i = 0; i < 10; i++, name++)
     {
-        t = (*p >> 8) + ((*p & 0xFF) << 8);
-        if ((unsigned short)(t + 0x7D7F) < 0x1A)
+        ch = (*name >> 8) + ((*name & 0xFF) << 8);
+        if ((unsigned short)(ch + 0x7D7F) < 0x1A)
         {
-            t += 0xFFDF;
-            *p = (t >> 8) + ((t % 256) << 8);
+            ch += 0xFFDF;
+            *name = (ch >> 8) + ((ch % 256) << 8);
         }
     }
 }
@@ -322,42 +322,42 @@ void UppercaseSjisName_8003F89C(unsigned short* p)
 // Matched
 void SetFontClutOffset_8003F900(int idx, int val)
 {
-    Font* p = &fonts_80095FB0[idx];
-    p->field_2A = val;
+    Font* font = &fonts_80095FB0[idx];
+    font->field_2A = val;
 }
 // Matched
 void SetFontClutRow_8003F928(int idx, int dy)
 {
-    Font* p = &fonts_80095FB0[idx];
-    p->clut_E = GetClut(p->clutX_20, p->clutY_22 + dy);
+    Font* font = &fonts_80095FB0[idx];
+    font->clut_E = GetClut(font->clutX_20, font->clutY_22 + dy);
 }
 // Matched
 void SetFontGrey_8003F978(int idx, int val)
 {
-    Font* p = &fonts_80095FB0[idx];
-    p->r_4 = val;
-    p->g_5 = val;
-    p->b_6 = val;
+    Font* font = &fonts_80095FB0[idx];
+    font->r_4 = val;
+    font->g_5 = val;
+    font->b_6 = val;
 }
 // Matched
 void SetFontColor_8003F9A8(int idx, unsigned char* rgb)
 {
-    Font* p = &fonts_80095FB0[idx];
-    p->r_4 = rgb[0];
-    p->g_5 = rgb[1];
-    p->b_6 = rgb[2];
+    Font* font = &fonts_80095FB0[idx];
+    font->r_4 = rgb[0];
+    font->g_5 = rgb[1];
+    font->b_6 = rgb[2];
 }
 // Matched
-void SetFontAbr_8003F9E8(int idx, int v)
+void SetFontAbr_8003F9E8(int idx, int abr)
 {
-    Font* p = &fonts_80095FB0[idx];
-    SetDrTPageAbr_80033048(p->tpage_14, v);
+    Font* font = &fonts_80095FB0[idx];
+    SetDrTPageAbr_80033048(font->tpage_14, abr);
 }
 // Matched
 void SetFontSemiTrans_8003FA2C(int idx, int abe)
 {
-    Font* p = &fonts_80095FB0[idx];
-    SetSemiTrans(p->tpage_14, abe);
+    Font* font = &fonts_80095FB0[idx];
+    SetSemiTrans(font->tpage_14, abe);
 }
 // Matched
 int MeasureText_8003FA70(int idx, unsigned char* str)
@@ -365,11 +365,11 @@ int MeasureText_8003FA70(int idx, unsigned char* str)
     int sum = 0;
     int i = 0;
     int c = str[0];
-    Font* p = &fonts_80095FB0[idx];
+    Font* font = &fonts_80095FB0[idx];
     if (c)
     {
-        int base = p->firstChar_1E - 0x20;
-        unsigned char* tbl = p->widths_24;
+        int base = font->firstChar_1E - 0x20;
+        unsigned char* tbl = font->widths_24;
         do
         {
             c += base;
@@ -379,7 +379,7 @@ int MeasureText_8003FA70(int idx, unsigned char* str)
             }
             else
             {
-                sum += p->w_10;
+                sum += font->w_10;
             }
             i++;
             c = str[i];
@@ -388,63 +388,63 @@ int MeasureText_8003FA70(int idx, unsigned char* str)
     return sum;
 }
 // Matched
-int StrLen_8003FAF0(unsigned char* s)
+int StrLen_8003FAF0(unsigned char* str)
 {
-    int n = 0;
-    while (s[n])
+    int len = 0;
+    while (str[len])
     {
-        n++;
+        len++;
     }
-    return n;
+    return len;
 }
 // Matched
-int SjisStrLen_8003FB24(unsigned char* s)
+int SjisStrLen_8003FB24(unsigned char* str)
 {
-    int n = 0;
-    while (s[n])
+    int len = 0;
+    while (str[len])
     {
-        n += 2;
+        len += 2;
     }
-    return n / 2;
+    return len / 2;
 }
 // Matched
-int WStrLen_8003FB60(unsigned short* s)
+int WStrLen_8003FB60(unsigned short* str)
 {
-    int n = 0;
-    while (*s)
+    int len = 0;
+    while (*str)
     {
-        s++;
-        n++;
+        str++;
+        len++;
     }
-    return n;
+    return len;
 }
 // Matched
-void StrCopy_8003FB8C(char* d, char* s)
+void StrCopy_8003FB8C(char* dst, char* src)
 {
     int i = 0;
-    while (s[i])
+    while (src[i])
     {
-        d[i] = s[i];
+        dst[i] = src[i];
         i++;
     }
-    d[i] = s[i];
+    dst[i] = src[i];
 }
 // Matched
 void DecodeNames_8003FBD4(int mode)
 {
-    int n;
+    int count;
     int i;
     DecodeText_8003F748(mode, playerName_8008BD48);
-    n = CountMinions_80010548(3);
-    for (i = 0; i < n; i++)
+    count = CountMinions_80010548(3);
+    for (i = 0; i < count; i++)
     {
         DecodeText_8003F748(mode, GetMinionName_800106F8(3, i));
     }
 }
 // Matched
-void* malloc3_8003FC4C(unsigned int s)
+void* malloc3_8003FC4C(unsigned int size)
 {
-    return malloc3(s);
+    return malloc3(size);
 }
 // Matched
 void free3_8003FC6C(void* block)
@@ -452,31 +452,31 @@ void free3_8003FC6C(void* block)
     free3(block);
 }
 // Matched
-void* HeapAlloc_8003FC8C(int size, Pool* h)
+void* HeapAlloc_8003FC8C(int size, Pool* pool)
 {
-    switch ((int)h)
+    switch ((int)pool)
     {
     case 0:
         return ListAlloc_8003FDC0((List*)defaultAllocList_80096090, size);
     case 1:
         return malloc3_8003FC4C(size);
     default:
-        if (h->magic == (int)0x8FFFFFFF)
+        if (pool->magic == (int)0x8FFFFFFF)
         {
-            if (h->inited != 0)
+            if (pool->inited != 0)
             {
-                return PoolAlloc_8003FFD0(h, size);
+                return PoolAlloc_8003FFD0(pool, size);
             }
             return malloc3_8003FC4C(size);
         }
         break;
     }
-    return ListAlloc_8003FDC0((List*)h, size);
+    return ListAlloc_8003FDC0((List*)pool, size);
 }
 // Matched
-void HeapFree_8003FD18(int ptr, Pool* h)
+void HeapFree_8003FD18(int ptr, Pool* pool)
 {
-    switch ((int)h)
+    switch ((int)pool)
     {
     case 0:
         ListFree_8003FE38(defaultAllocList_80096090, (void*)ptr);
@@ -485,11 +485,11 @@ void HeapFree_8003FD18(int ptr, Pool* h)
         free3_8003FC6C((void*)ptr);
         break;
     default:
-        if (h->magic == (int)0x8FFFFFFF)
+        if (pool->magic == (int)0x8FFFFFFF)
         {
-            if (IsPoolBlock_80040274((int)h, (int*)ptr))
+            if (IsPoolBlock_80040274((int)pool, (int*)ptr))
             {
-                PoolFree_800400B4(h, (void*)ptr);
+                PoolFree_800400B4(pool, (void*)ptr);
             }
             else
             {
@@ -498,173 +498,173 @@ void HeapFree_8003FD18(int ptr, Pool* h)
         }
         else
         {
-            ListFree_8003FE38(h, (void*)ptr);
+            ListFree_8003FE38(pool, (void*)ptr);
         }
         break;
     }
 }
 // Matched
-void ListInit_8003FDB0(int* p)
+void ListInit_8003FDB0(int* list)
 {
-    p[0] = 0;
-    p[1] = 0;
-    p[2] = 0;
+    list[0] = 0;
+    list[1] = 0;
+    list[2] = 0;
 }
 // Matched
-void* ListAlloc_8003FDC0(List* l, int size)
+void* ListAlloc_8003FDC0(List* list, int size)
 {
-    ListNode* n = malloc3_8003FC4C(size + 8);
-    n->prev = 0;
-    n->next = 0;
-    if (l->count == 0)
+    ListNode* node = malloc3_8003FC4C(size + 8);
+    node->prev = 0;
+    node->next = 0;
+    if (list->count == 0)
     {
-        l->head = n;
+        list->head = node;
     }
     else
     {
-        n->prev = l->tail;
-        l->tail->next = n;
+        node->prev = list->tail;
+        list->tail->next = node;
     }
-    l->tail = n;
-    l->count++;
-    return n + 1;
+    list->tail = node;
+    list->count++;
+    return node + 1;
 }
 // Matched
 void ListFree_8003FE38(void* list, void* ptr)
 {
     List* l = (List*)list;
-    ListNode* n = ptr;
-    n--;
+    ListNode* node = ptr;
+    node--;
     if (l->count)
     {
-        if (n->prev == 0)
+        if (node->prev == 0)
         {
-            l->head = n->next;
+            l->head = node->next;
         }
         else
         {
-            n->prev->next = n->next;
+            node->prev->next = node->next;
         }
-        if (n->next == 0)
+        if (node->next == 0)
         {
-            l->tail = n->prev;
+            l->tail = node->prev;
         }
         else
         {
-            n->next->prev = n->prev;
+            node->next->prev = node->prev;
         }
         l->count--;
-        free3_8003FC6C(n);
+        free3_8003FC6C(node);
     }
 }
 // Matched
 void ListFreeAll_8003FEC8(void* list)
 {
     List* l = (List*)list;
-    ListNode* n = l->tail;
-    while (n)
+    ListNode* node = l->tail;
+    while (node)
     {
-        ListNode* cur = n;
-        n = n->prev;
+        ListNode* cur = node;
+        node = node->prev;
         free3_8003FC6C(cur);
     }
     ListInit_8003FDB0((int*)l);
 }
 // Matched
-void PoolInit_8003FF1C(Pool* h, unsigned int size)
+void PoolInit_8003FF1C(Pool* pool, unsigned int size)
 {
     void* buf = malloc3_8003FC4C(size);
-    h->magic = 0x8FFFFFFF;
-    h->inited = 1;
-    h->buffer = buf;
-    h->size = size;
-    h->used = 0;
-    h->count = 0;
-    h->head = 0;
-    h->tail = 0;
+    pool->magic = 0x8FFFFFFF;
+    pool->inited = 1;
+    pool->buffer = buf;
+    pool->size = size;
+    pool->used = 0;
+    pool->count = 0;
+    pool->head = 0;
+    pool->tail = 0;
 }
 // Matched
-void PoolDestroy_8003FF7C(Pool* h)
+void PoolDestroy_8003FF7C(Pool* pool)
 {
-    free3_8003FC6C(h->buffer);
-    h->magic = 0x8FFFFFFF;
-    h->inited = 0;
-    h->buffer = 0;
-    h->size = 0;
-    h->count = 0;
-    h->used = 0;
-    h->head = 0;
-    h->tail = 0;
+    free3_8003FC6C(pool->buffer);
+    pool->magic = 0x8FFFFFFF;
+    pool->inited = 0;
+    pool->buffer = 0;
+    pool->size = 0;
+    pool->count = 0;
+    pool->used = 0;
+    pool->head = 0;
+    pool->tail = 0;
 }
 // Matched
-void* PoolAlloc_8003FFD0(Pool* h, unsigned int size)
+void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size)
 {
-    PoolBlock* b = 0;
+    PoolBlock* block = 0;
     unsigned int align = 4;
     size = (size & 3) ? size + align - (size & 3) : size;
-    if (!(h->size - h->used < size))
+    if (!(pool->size - pool->used < size))
     {
-        b = PoolFindFreeSpace_80040150(h, size + 0x10);
+        block = PoolFindFreeSpace_80040150(pool, size + 0x10);
     }
-    b->magic = 0x8FFFFFFF;
-    b->size = size + 0x10;
-    b->next = 0;
-    b->prev = 0;
-    if (h->count == 0)
+    block->magic = 0x8FFFFFFF;
+    block->size = size + 0x10;
+    block->next = 0;
+    block->prev = 0;
+    if (pool->count == 0)
     {
-        h->head = b;
+        pool->head = block;
     }
     else
     {
-        b->prev = h->tail;
-        h->tail->next = b;
+        block->prev = pool->tail;
+        pool->tail->next = block;
     }
-    h->tail = b;
-    h->used += b->size;
-    h->count++;
-    return b + 1;
+    pool->tail = block;
+    pool->used += block->size;
+    pool->count++;
+    return block + 1;
 }
 // Matched
-void PoolFree_800400B4(Pool* h, void* p)
+void PoolFree_800400B4(Pool* pool, void* ptr)
 {
-    PoolBlock* b;
-    if (h->count)
+    PoolBlock* block;
+    if (pool->count)
     {
-        b = (PoolBlock*)p - 1;
-        if (b->prev == 0)
+        block = (PoolBlock*)ptr - 1;
+        if (block->prev == 0)
         {
-            h->head = b->next;
+            pool->head = block->next;
         }
         else
         {
-            b->prev->next = b->next;
+            block->prev->next = block->next;
         }
-        if (b->next == 0)
+        if (block->next == 0)
         {
-            h->tail = b->prev;
+            pool->tail = block->prev;
         }
         else
         {
-            b->next->prev = b->prev;
+            block->next->prev = block->prev;
         }
-        b->magic = 0x08070F01;
-        h->used -= b->size;
-        h->count--;
+        block->magic = 0x08070F01;
+        pool->used -= block->size;
+        pool->count--;
     }
 }
 // Matched
-void PoolSetInited_80040148(int* p, int v)
+void PoolSetInited_80040148(int* pool, int inited)
 {
-    p[1] = v;
+    pool[1] = inited;
 }
 // Matched
-PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
+PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size)
 {
     char* best = 0;
-    char* pos = (char*)h->buffer;
+    char* pos = (char*)pool->buffer;
     unsigned int bestsz;
-    unsigned int total = h->size;
-    PoolBlock* blk = h->head;
+    unsigned int total = pool->size;
+    PoolBlock* blk = pool->head;
     char* end;
     PoolBlock* b;
     unsigned int i;
@@ -672,7 +672,7 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
     unsigned int gap;
     end = pos + total;
     bestsz = total;
-    if (h->count == 0)
+    if (pool->count == 0)
     {
         if (end >= pos + size)
         {
@@ -681,22 +681,22 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
     }
     else
     {
-        for (i = 0; i <= h->count; i++)
+        for (i = 0; i <= pool->count; i++)
         {
             if (end >= pos + size)
             {
                 j = 0;
-                for (b = h->head; b; b = b->next, j++)
+                for (b = pool->head; b; b = b->next, j++)
                 {
                     if (pos < (char*)b + b->size && (char*)b < pos + size)
                     {
                         break;
                     }
                 }
-                if (j == h->count)
+                if (j == pool->count)
                 {
-                    gap = h->size;
-                    for (b = h->head; b; b = b->next)
+                    gap = pool->size;
+                    for (b = pool->head; b; b = b->next)
                     {
                         if (pos < (char*)b && (unsigned int)((char*)b - pos) < gap)
                         {
@@ -742,17 +742,17 @@ void* AddPrimCopy_80040298(void* ot, void* prim, int words)
 // Matched
 void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
 {
-  int result; // $v0
-  int v4; // $v1
+  int first; // $v0
+  int second; // $v1
 
   do
   {
-    result = *pDataToWrite;
-    v4 = pDataToWrite[1];
+    first = *pDataToWrite;
+    second = pDataToWrite[1];
     pDataToWrite += 2;
     --fileSize;
-    *pOut = result;
-    pOut[1] = v4;
+    *pOut = first;
+    pOut[1] = second;
     pOut += 2;
   }
   while ( fileSize );
@@ -779,11 +779,11 @@ void CopyHalfwords_800403A8(unsigned short* pOut, unsigned short* pSource, int c
     } while (count);
 }
 // Matched
-void CopyBytes_800403C8(char *a1, unsigned char *fileBuffer, int fileSize)
+void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize)
 {
   do
   {
-    *a1++ = *fileBuffer++;
+    *pOut++ = *fileBuffer++;
     --fileSize;
   }
   while ( fileSize );
