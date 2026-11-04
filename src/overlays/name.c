@@ -37,24 +37,24 @@ typedef struct
     short rows_A;
 } NameCursor;
 extern void DrawMenuWindows_8002A5A4(void* p);
-extern void DrawButtonHelpBar_8002B004(void* a, void* b, int c);
+extern void DrawButtonHelpBar_8002B004(void* entries, void* pos, int ot);
 extern unsigned short uiColor_8008B590;
 extern void DrawCharRow_800B75EC(NameCharRow row);
-extern void DrawNameField_800B7414(NameEntry* p);
-extern void HandleCharGridInput_800B7A88(NameEntry* p);
-extern void HandlePageSelectInput_800B7DC4(NameEntry* p);
-extern void HandleNameCommandInput_800B7E30(NameEntry* p);
+extern void DrawNameField_800B7414(NameEntry* entry);
+extern void HandleCharGridInput_800B7A88(NameEntry* entry);
+extern void HandlePageSelectInput_800B7DC4(NameEntry* entry);
+extern void HandleNameCommandInput_800B7E30(NameEntry* entry);
 extern // Start jumps to the commands, Select restores the saved name (flags 8)
-void HandleNameShortcutButtons_800B7D60(NameEntry* p);
-extern void SwitchCharPage_800B7CD8(NameEntry* p);
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
-extern int MoveCursorWithSfx_800B80E4(NameCursor* p);
+void HandleNameShortcutButtons_800B7D60(NameEntry* entry);
+extern void SwitchCharPage_800B7CD8(NameEntry* entry);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
+extern int MoveCursorWithSfx_800B80E4(NameCursor* cursor);
 extern unsigned short padPressed_8009194C;
 extern short charPageCount_800B8204[];
-extern void InputNameChar_800B7AB4(NameEntry* p);
-extern void RestoreSavedName_800B7F08(NameEntry* p);
-extern int SavedNameLength_800B7F70(NameEntry* p);
-extern void ClampNameLength_800B7CA4(NameEntry* p);
+extern void InputNameChar_800B7AB4(NameEntry* entry);
+extern void RestoreSavedName_800B7F08(NameEntry* entry);
+extern int SavedNameLength_800B7F70(NameEntry* entry);
+extern void ClampNameLength_800B7CA4(NameEntry* entry);
 
 int nameOverlayId_800B6D00 SDATA = 39;
 const char charRowBlank_800B6D04[28] = "\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
@@ -74,12 +74,12 @@ const NameBuf nameBufInit_800B6E30 = { { -1 } };
 const char nameUnderlineChar_800B6E48[] = "\201["; // ー
 
 extern void DrawMenuBackground_8002BE10();
-extern void EncodeName_8003F7C8(void* name, int a);
+extern void EncodeName_8003F7C8(void* name, int dest);
 extern void DecodeText_8003F748(int a, void* name);
 extern void SetFadeMode_8001C19C(int a, int b);
 extern void ShopCtrlRequestShop_800B6CA0();
-extern void MoveNameCursor_800B78EC(NameEntry* p);
-extern void UpdateNameEntry_800B70F4(NameEntry* p);
+extern void MoveNameCursor_800B78EC(NameEntry* entry);
+extern void UpdateNameEntry_800B70F4(NameEntry* entry);
 extern void NameEntryNop_800B8018();
 
 extern EventNode* name_8008D484;
@@ -87,34 +87,34 @@ void NameEntryTask_800B6FD8();
 void StartNameEntry_800B6E4C(int nameDest, int flags)
 {
     EventEntry* e = AllocEventEntry_80043AF8(name_8008D484);
-    NameEntry* p;
+    NameEntry* entry;
     NameBuf buf;
     if (e)
     {
         e->flags = (e->flags | 1) & ~0x8000;
-        p = (NameEntry*)e->buffer;
-        p->flags_0 = flags;
-        p->moveResult_4 = 0;
-        p->focus_8 = 0;
-        p->page_A = 0;
-        p->cursor_C = 0;
-        p->gridCursor_E = 0;
-        p->length_44 = 0;
-        p->nameDest_40 = nameDest;
+        entry = (NameEntry*)e->buffer;
+        entry->flags_0 = flags;
+        entry->moveResult_4 = 0;
+        entry->focus_8 = 0;
+        entry->page_A = 0;
+        entry->cursor_C = 0;
+        entry->gridCursor_E = 0;
+        entry->length_44 = 0;
+        entry->nameDest_40 = nameDest;
         buf = nameBufInit_800B6E30;
         CopyPlayerName_8003F860((unsigned char*)nameDest, (unsigned short*)&buf);
         DecodeText_8003F748(1, &buf);
         NameEntryNop_800B8018(&buf);
-        MemCopy_800403E8(p->savedName_28, &buf, 0x14);
-        MemCopy_800403E8(p->name_10, &buf, 0x14);
-        p->c_24 = 0;
-        p->c_25 = 0;
-        p->length_44 = SavedNameLength_800B7F70(p);
-        if (p->flags_0 & 0x10)
+        MemCopy_800403E8(entry->savedName_28, &buf, 0x14);
+        MemCopy_800403E8(entry->name_10, &buf, 0x14);
+        entry->c_24 = 0;
+        entry->c_25 = 0;
+        entry->length_44 = SavedNameLength_800B7F70(entry);
+        if (entry->flags_0 & 0x10)
         {
             DrawMenuBackground_8002BE10();
         }
-        UpdateNameEntry_800B70F4(p);
+        UpdateNameEntry_800B70F4(entry);
         nameEntryActive_800B83F8 = 1;
         e->cb_8 = (EventEntryFn)NameEntryTask_800B6FD8;
     }
@@ -126,23 +126,23 @@ int IsNameEntryActive_800B6FC8(void)
     return nameEntryActive_800B83F8;
 }
 
-void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* p)
+void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* entry)
 {
-    NameEntry* q = p;
-    if (p->flags_0 & 0x10)
+    NameEntry* q = entry;
+    if (entry->flags_0 & 0x10)
     {
         DrawMenuBackground_8002BE10();
     }
-    MoveNameCursor_800B78EC(p);
-    UpdateNameEntry_800B70F4(p);
-    if (p->flags_0 & 1)
+    MoveNameCursor_800B78EC(entry);
+    UpdateNameEntry_800B70F4(entry);
+    if (entry->flags_0 & 1)
     {
-        NameEntryNop_800B8018(p->name_10);
-        EncodeName_8003F7C8(p->name_10, p->nameDest_40);
+        NameEntryNop_800B8018(entry->name_10);
+        EncodeName_8003F7C8(entry->name_10, entry->nameDest_40);
         nameEntryActive_800B83F8 = 0;
-        DecodeText_8003F748(2, p->name_10);
+        DecodeText_8003F748(2, entry->name_10);
         e->flags = (e->flags & ~1) | 0x8000;
-        if (p->flags_0 & 0x10)
+        if (entry->flags_0 & 0x10)
         {
             SetFadeMode_8001C19C(0, 0x20);
             ShopCtrlRequestShop_800B6CA0();
@@ -157,87 +157,87 @@ void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* p)
     }
 }
 
-void UpdateNameEntry_800B70F4(NameEntry* p)
+void UpdateNameEntry_800B70F4(NameEntry* entry)
 {
     short pos[2];
-    RECT r;
-    NameWinStyle c;
+    RECT rect;
+    NameWinStyle charStyle;
     union
     {
         unsigned short pos[2];
         NameWinStyle style;
     } t; // the help bar position, then the style of the character window
     int k;
-    switch (p->focus_8)
+    switch (entry->focus_8)
     {
     case 0:
-        pos[0] = cursorGrids_800B8200[0].x_10 + (p->cursor_C % cursorGrids_800B8200[0].cols_6) * cursorGrids_800B8200[0].cellW_C;
-        pos[1] = cursorGrids_800B8200[0].y_12 + (p->cursor_C / cursorGrids_800B8200[0].cols_6) * cursorGrids_800B8200[0].cellH_E;
-        r.x = pos[0] - 1;
-        r.y = pos[1] - 1;
-        r.w = 0xD;
-        r.h = 0xD;
-        c.colors_2 = 1;
-        c.frame_3 = 1;
-        c.color_0 = uiColor_8008B590;
-        DrawWindow_80042460(&r, &c, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
+        pos[0] = cursorGrids_800B8200[0].x_10 + (entry->cursor_C % cursorGrids_800B8200[0].cols_6) * cursorGrids_800B8200[0].cellW_C;
+        pos[1] = cursorGrids_800B8200[0].y_12 + (entry->cursor_C / cursorGrids_800B8200[0].cols_6) * cursorGrids_800B8200[0].cellH_E;
+        rect.x = pos[0] - 1;
+        rect.y = pos[1] - 1;
+        rect.w = 0xD;
+        rect.h = 0xD;
+        charStyle.colors_2 = 1;
+        charStyle.frame_3 = 1;
+        charStyle.color_0 = uiColor_8008B590;
+        DrawWindow_80042460(&rect, &charStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
         pageMenu_800B8388.time_4 = 0;
         cmdMenu_800B82F4.time_4 = 0;
         pageMenu_800B8388.mode_0 = 4;
         break;
     case 1:
-        p->page_A = p->cursor_C;
+        entry->page_A = entry->cursor_C;
         pageMenu_800B8388.time_4 = GetTime30Hz_8002C64C();
         cmdMenu_800B82F4.time_4 = 0;
         pageMenu_800B8388.mode_0 = 2;
         break;
     case 2:
-        cmdMenu_800B82F4.cursor_C = p->cursor_C;
+        cmdMenu_800B82F4.cursor_C = entry->cursor_C;
         cmdMenu_800B82F4.time_4 = GetTime30Hz_8002C64C();
         pageMenu_800B8388.time_4 = 0;
         pageMenu_800B8388.mode_0 = 4;
         break;
     }
-    pageMenu_800B8388.cursor_C = p->page_A;
-    DrawNameField_800B7414(p);
+    pageMenu_800B8388.cursor_C = entry->page_A;
+    DrawNameField_800B7414(entry);
     DrawMenuWindows_8002A5A4(&pageMenu_800B8388);
     DrawMenuWindows_8002A5A4(&cmdMenu_800B82F4);
     t.pos[0] = 0xA;
     t.pos[1] = 0xD6;
     DrawButtonHelpBar_8002B004(helpBar_800B83A0, t.pos, 1);
-    r.x = 0xA;
-    r.y = 0x61;
-    r.w = 0xC2;
-    r.h = 0x65;
+    rect.x = 0xA;
+    rect.y = 0x61;
+    rect.w = 0xC2;
+    rect.h = 0x65;
     t.style.colors_2 = 1;
     t.style.frame_3 = 1;
     t.style.color_0 = uiColor_8008B590;
-    DrawWindow_80042460(&r, &t.style, pOT_8008D454 + 14, 0);
-    for (k = 0; charPages_800B8190[p->page_A][k].chars_4; k++)
+    DrawWindow_80042460(&rect, &t.style, pOT_8008D454 + 14, 0);
+    for (k = 0; charPages_800B8190[entry->page_A][k].chars_4; k++)
     {
-        DrawCharRow_800B75EC(charPages_800B8190[p->page_A][k]);
+        DrawCharRow_800B75EC(charPages_800B8190[entry->page_A][k]);
     }
-    switch (p->focus_8)
+    switch (entry->focus_8)
     {
     case 0:
-        HandleCharGridInput_800B7A88(p);
+        HandleCharGridInput_800B7A88(entry);
         break;
     case 1:
-        HandlePageSelectInput_800B7DC4(p);
+        HandlePageSelectInput_800B7DC4(entry);
         break;
     case 2:
-        HandleNameCommandInput_800B7E30(p);
+        HandleNameCommandInput_800B7E30(entry);
         break;
     }
-    HandleNameShortcutButtons_800B7D60(p);
-    SwitchCharPage_800B7CD8(p);
+    HandleNameShortcutButtons_800B7D60(entry);
+    SwitchCharPage_800B7CD8(entry);
 }
 
 typedef struct
 {
     unsigned short color;
-    unsigned char a;
-    unsigned char b;
+    unsigned char colors_2;
+    unsigned char frame_3;
 } NameWinColor;
 typedef struct
 {
@@ -246,47 +246,47 @@ typedef struct
     void* text;
 } NameTextItem;
 extern void DrawText_8003E91C(int a, void* b, void* c, int d);
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
-extern void DrawUiTiySprt_8002C06C(void* pos, int a, int b);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
+extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern int MeasureTextWidth_8003E4C8(void* p);
-void DrawNameField_800B7414(NameEntry* p)
+void DrawNameField_800B7414(NameEntry* entry)
 {
     NameTextItem item;
     short pos[2];
     short pos2[2];
-    RECT r;
-    NameWinColor c1;
-    NameWinColor c2;
+    RECT rect;
+    NameWinColor fieldStyle;
+    NameWinColor cursorStyle;
     short pos3[2];
     int i;
     item.x = 0x74;
     item.y = 0x28;
-    item.text = p->name_10;
+    item.text = entry->name_10;
     pos[0] = 0x74;
     pos[1] = 0x28;
-    DrawText_8003E91C(2, p->name_10, pos, 1);
+    DrawText_8003E91C(2, entry->name_10, pos, 1);
     pos2[0] = 0x49;
     pos2[1] = 0x28;
     DrawUiTiySprt_8002C06C(pos2, 0x11, 1);
-    r.x = 0x45;
-    r.y = 0x24;
-    r.w = 0xB8;
-    r.h = 0x14;
-    c1.color = saveData_8008B570.uiColor_20.i;
-    c1.a = 0;
-    c1.b = 1;
-    DrawWindow_80042460(&r, &c1, pOT_8008D454 + 14, 0);
-    r.x = MeasureTextWidth_8003E4C8(p->name_10) + 0x74;
-    r.y = 0x27;
-    r.w = 8;
-    r.h = 0xC;
-    c2.color = saveData_8008B570.uiColor_20.i;
-    c2.a = 1;
-    c2.b = 1;
-    DrawWindow_80042460(&r, &c2, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
-    for (i = 0; i <= 9 - p->length_44 / 2; i++)
+    rect.x = 0x45;
+    rect.y = 0x24;
+    rect.w = 0xB8;
+    rect.h = 0x14;
+    fieldStyle.color = saveData_8008B570.uiColor_20.i;
+    fieldStyle.colors_2 = 0;
+    fieldStyle.frame_3 = 1;
+    DrawWindow_80042460(&rect, &fieldStyle, pOT_8008D454 + 14, 0);
+    rect.x = MeasureTextWidth_8003E4C8(entry->name_10) + 0x74;
+    rect.y = 0x27;
+    rect.w = 8;
+    rect.h = 0xC;
+    cursorStyle.color = saveData_8008B570.uiColor_20.i;
+    cursorStyle.colors_2 = 1;
+    cursorStyle.frame_3 = 1;
+    DrawWindow_80042460(&rect, &cursorStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
+    for (i = 0; i <= 9 - entry->length_44 / 2; i++)
     {
-        pos3[0] = MeasureTextWidth_8003E4C8(p->name_10) + 0x74 + i * 8;
+        pos3[0] = MeasureTextWidth_8003E4C8(entry->name_10) + 0x74 + i * 8;
         pos3[1] = 0x30;
         DrawText_8003E91C(2, nameUnderlineChar_800B6E48, pos3, 1);
     }
@@ -295,24 +295,24 @@ void DrawNameField_800B7414(NameEntry* p)
 extern int charWidthThresholds_80086898[][12];
 void DrawCharRow_800B75EC(NameCharRow row)
 {
-    Font* p = &fonts_80095FB0[2];
-    unsigned short* s = EncodeText_8003F684(2, (unsigned short*)row.chars_4);
+    Font* font = &fonts_80095FB0[2];
+    unsigned short* text = EncodeText_8003F684(2, (unsigned short*)row.chars_4);
     int col;
-    unsigned short c;
+    unsigned short ch;
     short k;
     int off;
     int v;
-    int q;
-    c = *s;
-    while (c != 0)
+    int clutRow;
+    ch = *text;
+    while (ch != 0)
     {
-        s++;
-        if (c < 0x7F)
+        text++;
+        if (ch < 0x7F)
         {
             off = 2;
             for (k = 12; k != 0; k--)
             {
-                if (c - 1 < charWidthThresholds_80086898[1][k - 1])
+                if (ch - 1 < charWidthThresholds_80086898[1][k - 1])
                 {
                     off -= k;
                     break;
@@ -320,116 +320,116 @@ void DrawCharRow_800B75EC(NameCharRow row)
             }
             off = -off;
             off /= 2;
-            v = c - 1;
-            q = v / 126;
-            p->clut_E = GetClut(p->clutX_20, p->clutY_22 + q);
+            v = ch - 1;
+            clutRow = v / 126;
+            font->clut_E = GetClut(font->clutX_20, font->clutY_22 + clutRow);
             v = v % 126;
-            col = v % (unsigned short)p->field_1C;
-            v = v / (unsigned short)p->field_1C;
-            p->u_C = p->field_18 + p->w_10 * col;
-            p->v_D = p->field_1A + p->h_12 * v;
-            p->x0_8 = row.pos.vx + off;
-            p->y0_A = row.pos.vy;
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p)[0];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p)[1];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)p)[2];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)p)[3];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)p)[4];
+            col = v % (unsigned short)font->field_1C;
+            v = v / (unsigned short)font->field_1C;
+            font->u_C = font->field_18 + font->w_10 * col;
+            font->v_D = font->field_1A + font->h_12 * v;
+            font->x0_8 = row.pos.vx + off;
+            font->y0_A = row.pos.vy;
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
+            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
             addPrim(&pOT_8008D454[0], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
             primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
         }
         row.pos.vx += 0x10;
-        c = *s;
+        ch = *text;
     }
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)p->tpage_14)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)p->tpage_14)[1];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
     addPrim(&pOT_8008D454[0], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 
-void MoveNameCursor_800B78EC(NameEntry* p)
+void MoveNameCursor_800B78EC(NameEntry* entry)
 {
     NameCursor cur;
-    if (p->focus_8 == 0)
+    if (entry->focus_8 == 0)
     {
-        p->gridCursor_E = p->cursor_C;
+        entry->gridCursor_E = entry->cursor_C;
     }
-    cur.flags = cursorGrids_800B8200[p->focus_8].cursorFlags_2;
+    cur.flags = cursorGrids_800B8200[entry->focus_8].cursorFlags_2;
     cur.unused_4 = 0;
-    cur.cols_8 = cursorGrids_800B8200[p->focus_8].cols_6;
-    cur.rows_A = cursorGrids_800B8200[p->focus_8].rows_8;
-    cur.pos_6 = p->cursor_C;
-    p->moveResult_4 = MoveCursorWithSfx_800B80E4(&cur);
-    p->cursor_C = cur.pos_6;
-    if (p->focus_8 == 0)
+    cur.cols_8 = cursorGrids_800B8200[entry->focus_8].cols_6;
+    cur.rows_A = cursorGrids_800B8200[entry->focus_8].rows_8;
+    cur.pos_6 = entry->cursor_C;
+    entry->moveResult_4 = MoveCursorWithSfx_800B80E4(&cur);
+    entry->cursor_C = cur.pos_6;
+    if (entry->focus_8 == 0)
     {
-        if (p->moveResult_4 == 1)
+        if (entry->moveResult_4 == 1)
         {
-            p->focus_8 = 1;
-            p->cursor_C = p->page_A;
+            entry->focus_8 = 1;
+            entry->cursor_C = entry->page_A;
         }
     }
-    else if (p->focus_8 == 1)
+    else if (entry->focus_8 == 1)
     {
-        if (p->moveResult_4 == 1)
+        if (entry->moveResult_4 == 1)
         {
-            p->cursor_C = 0;
-            p->focus_8 = 2;
+            entry->cursor_C = 0;
+            entry->focus_8 = 2;
         }
-        else if (p->moveResult_4 == 2)
+        else if (entry->moveResult_4 == 2)
         {
-            if ((short)p->gridCursor_E % 12 != 0)
+            if ((short)entry->gridCursor_E % 12 != 0)
             {
-                p->cursor_C = p->gridCursor_E;
+                entry->cursor_C = entry->gridCursor_E;
             }
             else
             {
-                p->cursor_C = p->gridCursor_E + 11;
+                entry->cursor_C = entry->gridCursor_E + 11;
             }
-            p->focus_8 = 0;
+            entry->focus_8 = 0;
         }
     }
-    else if (p->focus_8 == 2)
+    else if (entry->focus_8 == 2)
     {
-        if (p->moveResult_4 == 2)
+        if (entry->moveResult_4 == 2)
         {
-            p->focus_8 = 1;
-            p->cursor_C = p->page_A;
+            entry->focus_8 = 1;
+            entry->cursor_C = entry->page_A;
         }
     }
-    p->moveResult_4 = 0;
+    entry->moveResult_4 = 0;
 }
 
 // Matched
-void HandleCharGridInput_800B7A88(NameEntry* p)
+void HandleCharGridInput_800B7A88(NameEntry* entry)
 {
-    InputNameChar_800B7AB4(p);
-    ClampNameLength_800B7CA4(p);
+    InputNameChar_800B7AB4(entry);
+    ClampNameLength_800B7CA4(entry);
 }
 
 #if 0
 // Not matched: frame/regalloc: the original keeps 6 saved regs (two copies of the list address, the constant 2 for length_44 - 2) and recomputes the list[i] address for the second EncodeText call
-extern void DeleteNameChar_800B7C68(NameEntry* p);
-void InputNameChar_800B7AB4(NameEntry* p)
+extern void DeleteNameChar_800B7C68(NameEntry* entry);
+void InputNameChar_800B7AB4(NameEntry* entry)
 {
     unsigned short* list[2];
     short i = 0;
     list[0] = 0;
-    if (IsConfirmPressedP1_8003D380(0) && p->length_44 < 0x13)
+    if (IsConfirmPressedP1_8003D380(0) && entry->length_44 < 0x13)
     {
         PlaySfx_80031494(0x7E);
-        ((char*)p->name_10)[p->length_44] = charPages_800B8190[p->page_A][p->cursor_C / cursorGrids_800B8200[p->focus_8].cols_6].chars_4[(p->cursor_C % cursorGrids_800B8200[p->focus_8].cols_6) * 2];
-        p->length_44 += 2;
+        ((char*)entry->name_10)[entry->length_44] = charPages_800B8190[entry->page_A][entry->cursor_C / cursorGrids_800B8200[entry->focus_8].cols_6].chars_4[(entry->cursor_C % cursorGrids_800B8200[entry->focus_8].cols_6) * 2];
+        entry->length_44 += 2;
     }
     if (IsCancelPressedP1_8003D41C(1))
     {
-        DeleteNameChar_800B7C68(p);
+        DeleteNameChar_800B7C68(entry);
     }
     for (i = 0; list[i]; i++)
     {
-        if (*EncodeText_8003F684(2, list[i]) == ((unsigned char*)p->name_10)[p->length_44 - 2])
+        if (*EncodeText_8003F684(2, list[i]) == ((unsigned char*)entry->name_10)[entry->length_44 - 2])
         {
-            ((unsigned char*)p->name_10)[p->length_44 - 2] = *EncodeText_8003F684(2, list[i]);
+            ((unsigned char*)entry->name_10)[entry->length_44 - 2] = *EncodeText_8003F684(2, list[i]);
             break;
         }
     }
@@ -437,108 +437,108 @@ void InputNameChar_800B7AB4(NameEntry* p)
 #endif
 INCLUDE_OVERLAY_ASM(name, InputNameChar_800B7AB4);
 
-void DeleteNameChar_800B7C68(NameEntry* p)
+void DeleteNameChar_800B7C68(NameEntry* entry)
 {
-    if (p->length_44)
+    if (entry->length_44)
     {
-        *(short*)((char*)p->name_10 + p->length_44) = 0;
-        p->length_44 -= 2;
-        *(short*)((char*)p->name_10 + p->length_44) = 0;
+        *(short*)((char*)entry->name_10 + entry->length_44) = 0;
+        entry->length_44 -= 2;
+        *(short*)((char*)entry->name_10 + entry->length_44) = 0;
     }
 }
 
 // Matched
-void ClampNameLength_800B7CA4(NameEntry* p)
+void ClampNameLength_800B7CA4(NameEntry* entry)
 {
-    if (p->length_44 >= 0x15)
+    if (entry->length_44 >= 0x15)
     {
-        p->length_44 = 0x14;
+        entry->length_44 = 0x14;
     }
-    if (p->length_44 < 0)
+    if (entry->length_44 < 0)
     {
-        p->length_44 = 0;
+        entry->length_44 = 0;
     }
 }
 
-void SwitchCharPage_800B7CD8(NameEntry* p)
+void SwitchCharPage_800B7CD8(NameEntry* entry)
 {
     if (padPressed_8009194C & 2)
     {
-        if (++p->page_A > charPageCount_800B8204[0] - 1)
+        if (++entry->page_A > charPageCount_800B8204[0] - 1)
         {
-            p->page_A = 0;
+            entry->page_A = 0;
         }
     }
     else if (padPressed_8009194C & 8)
     {
-        p->page_A--;
-        if (p->page_A < 0)
+        entry->page_A--;
+        if (entry->page_A < 0)
         {
-            p->page_A = charPageCount_800B8204[0] - 1;
+            entry->page_A = charPageCount_800B8204[0] - 1;
         }
     }
 }
 
 // Start jumps to the commands, Select restores the saved name (flags 8)
 // Matched
-void HandleNameShortcutButtons_800B7D60(NameEntry* p)
+void HandleNameShortcutButtons_800B7D60(NameEntry* entry)
 {
     if (padPressed_8009194C & 0x800)
     {
-        p->focus_8 = 2;
-        p->cursor_C = 2;
+        entry->focus_8 = 2;
+        entry->cursor_C = 2;
     }
     if (padPressed_8009194C & 0x100)
     {
-        if (p->flags_0 & 8)
+        if (entry->flags_0 & 8)
         {
-            RestoreSavedName_800B7F08(p);
+            RestoreSavedName_800B7F08(entry);
         }
     }
 }
 
-void HandlePageSelectInput_800B7DC4(NameEntry* p)
+void HandlePageSelectInput_800B7DC4(NameEntry* entry)
 {
     if (IsConfirmPressedP1_8003D380(0))
     {
-        if (p->cursor_C >= 2)
+        if (entry->cursor_C >= 2)
         {
             return;
         }
-        if (p->cursor_C < 0)
+        if (entry->cursor_C < 0)
         {
             return;
         }
-        p->page_A = p->cursor_C;
+        entry->page_A = entry->cursor_C;
     }
     if (IsCancelPressedP1_8003D41C(0))
     {
-        p->focus_8 = 0;
-        p->cursor_C = p->gridCursor_E;
+        entry->focus_8 = 0;
+        entry->cursor_C = entry->gridCursor_E;
     }
 }
 
-extern void ResetNameToDefault_800B7FA0(NameEntry* p);
+extern void ResetNameToDefault_800B7FA0(NameEntry* entry);
 extern int IsNameBlank_800B7FD8(unsigned char* p);
-void HandleNameCommandInput_800B7E30(NameEntry* p)
+void HandleNameCommandInput_800B7E30(NameEntry* entry)
 {
     if (IsConfirmPressedP1_8003D380(0))
     {
-        switch (p->cursor_C)
+        switch (entry->cursor_C)
         {
         case 0:
-            ResetNameToDefault_800B7FA0(p);
+            ResetNameToDefault_800B7FA0(entry);
             PlaySfx_80031494(0x7E);
             break;
         case 1:
-            RestoreSavedName_800B7F08(p);
+            RestoreSavedName_800B7F08(entry);
             PlaySfx_80031494(0x7E);
             break;
         case 2:
-            if (!IsNameBlank_800B7FD8((unsigned char*)p->name_10))
+            if (!IsNameBlank_800B7FD8((unsigned char*)entry->name_10))
             {
                 PlaySfx_80031494(0x7E);
-                p->flags_0 |= 1;
+                entry->flags_0 |= 1;
             }
             break;
         default:
@@ -547,38 +547,38 @@ void HandleNameCommandInput_800B7E30(NameEntry* p)
     }
     if (IsCancelPressedP1_8003D41C(0))
     {
-        p->focus_8 = 0;
-        p->cursor_C = p->gridCursor_E;
+        entry->focus_8 = 0;
+        entry->cursor_C = entry->gridCursor_E;
     }
 }
 
 // Matched
-void RestoreSavedName_800B7F08(NameEntry* p)
+void RestoreSavedName_800B7F08(NameEntry* entry)
 {
     int i;
-    short* s;
+    short* ch;
 
-    MemCopy_800403E8(p->name_10, p->savedName_28, 0x14);
-    s = p->savedName_28;
+    MemCopy_800403E8(entry->name_10, entry->savedName_28, 0x14);
+    ch = entry->savedName_28;
     i = 0;
-    for (i = 0; i < 10; s++)
+    for (i = 0; i < 10; ch++)
     {
         i++;
-        if (*s == 0)
+        if (*ch == 0)
         {
             break;
         }
     }
-    p->length_44 = SavedNameLength_800B7F70(p);
+    entry->length_44 = SavedNameLength_800B7F70(entry);
 }
 
-int SavedNameLength_800B7F70(NameEntry* p)
+int SavedNameLength_800B7F70(NameEntry* entry)
 {
     int n;
-    short* q;
-    for (n = 0, q = p->savedName_28; n < 10; n++, q++)
+    short* ch;
+    for (n = 0, ch = entry->savedName_28; n < 10; n++, ch++)
     {
-        if (*q == 0)
+        if (*ch == 0)
         {
             break;
         }
@@ -587,27 +587,27 @@ int SavedNameLength_800B7F70(NameEntry* p)
 }
 
 // Matched
-void ResetNameToDefault_800B7FA0(NameEntry* p)
+void ResetNameToDefault_800B7FA0(NameEntry* entry)
 {
-    MemCopy_800403E8(p->name_10, defaultName_800B83B8, 0x14);
-    p->length_44 = 0;
+    MemCopy_800403E8(entry->name_10, defaultName_800B83B8, 0x14);
+    entry->length_44 = 0;
 }
 
 // Matched
-int IsNameBlank_800B7FD8(unsigned char* p)
+int IsNameBlank_800B7FD8(unsigned char* name)
 {
     int n = 0;
     do
     {
-        if (*p != 0x91)
+        if (*name != 0x91)
         {
-            if (*p != 0)
+            if (*name != 0)
             {
                 return 0;
             }
         }
         n++;
-        p += 2;
+        name += 2;
     } while (n < 10);
     return 1;
 }
@@ -619,37 +619,37 @@ void NameEntryNop_800B8018(void)
 
 extern short cursorWrapMasks_800B83C8[];
 // on a move off an edge (k = direction 1..4) of a wrapping area, jump to the opposite edge
-void WrapGridCursor_800B8020(NameCursor* p, int k)
+void WrapGridCursor_800B8020(NameCursor* cursor, int dir)
 {
-    if (p->flags & cursorWrapMasks_800B83C8[k - 1])
+    if (cursor->flags & cursorWrapMasks_800B83C8[dir - 1])
     {
-        if ((p->flags & 1) && (unsigned)(k - 1) < 2)
+        if ((cursor->flags & 1) && (unsigned)(dir - 1) < 2)
         {
-            p->pos_6 += cursorWrapDirs_800B83D0[k - 1] * (p->cols_8 - 1);
+            cursor->pos_6 += cursorWrapDirs_800B83D0[dir - 1] * (cursor->cols_8 - 1);
         }
-        else if ((p->flags & 2) && (unsigned)(k - 3) < 2)
+        else if ((cursor->flags & 2) && (unsigned)(dir - 3) < 2)
         {
-            p->pos_6 += cursorWrapDirs_800B83D0[k - 1] * p->cols_8 * (p->rows_A - 1);
+            cursor->pos_6 += cursorWrapDirs_800B83D0[dir - 1] * cursor->cols_8 * (cursor->rows_A - 1);
         }
     }
 }
 
 extern int MoveGridCursorP1_8003D630();
 extern void PlaySfx_80031494(int);
-int MoveCursorWithSfx_800B80E4(NameCursor* p)
+int MoveCursorWithSfx_800B80E4(NameCursor* cursor)
 {
-    int old = (short)p->pos_6;
-    int k = MoveGridCursorP1_8003D630();
-    if (k)
+    int prevPos = (short)cursor->pos_6;
+    int dir = MoveGridCursorP1_8003D630();
+    if (dir)
     {
-        WrapGridCursor_800B8020(p, k);
-        if (p->flags & cursorExitTbl_800B83D8[k - 1].mask)
+        WrapGridCursor_800B8020(cursor, dir);
+        if (cursor->flags & cursorExitTbl_800B83D8[dir - 1].mask)
         {
             PlaySfx_80031494(0x7F);
-            return cursorExitTbl_800B83D8[k - 1].result;
+            return cursorExitTbl_800B83D8[dir - 1].result;
         }
     }
-    if (old != (short)p->pos_6)
+    if (prevPos != (short)cursor->pos_6)
     {
         PlaySfx_80031494(0x7F);
     }
