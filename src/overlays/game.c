@@ -57,7 +57,7 @@ void sub_800A13B8(GameTask_1* t, void** q)
     sub_800A1E98();
     sub_800AC73C();
     FreeLoaderModelAnimSets_80020814();
-    sub_80037720();
+    SetCameraBattleMode_80037720();
     *q = LoadOverlayIfChanged_80020D1C(1, 6);
     t->next_8 = sub_800A1474;
     StopSoundSeqs_80030D68(dword_80091CE0);
@@ -69,7 +69,7 @@ void sub_800A1444(void)
 {
     FreeActiveOverlay_8002C014();
     FreeSeqSlotSound_80030664();
-    sub_80039FC0();
+    FreeStageEffects_80039FC0();
 }
 
 // Matched
@@ -1916,7 +1916,7 @@ void sub_800A52AC(int a)
     {
         r = 0;
     }
-    sub_80039FA4(r);
+    SetBattleStageId_80039FA4(r);
 }
 
 // Matched
@@ -1945,7 +1945,7 @@ done:
 int sub_800A5354(void)
 {
     int v = -1;
-    switch (sub_80039FB0())
+    switch (GetBattleStageId_80039FB0())
     {
     case 0xf:
         v = 0;

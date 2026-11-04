@@ -21,7 +21,7 @@
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
 // Matched
-void sub_8004B0A8(VECTOR* v, MATRIX* m)
+void BasisFromAxis_8004B0A8(VECTOR* v, MATRIX* m)
 {
     VECTOR t;
     VECTOR u;
@@ -31,7 +31,7 @@ void sub_8004B0A8(VECTOR* v, MATRIX* m)
     int ax;
     int ay;
     int az;
-    sub_8003B684((int*)v);
+    ScaleVectorToFit_8003B684((int*)v);
     VectorNormal(v, &n0);
     m->m[0][0] = n0.vx;
     m->m[1][0] = n0.vy;
@@ -114,13 +114,13 @@ void sub_8004B0A8(VECTOR* v, MATRIX* m)
             }
         }
     }
-    sub_8003B684((int*)&t);
+    ScaleVectorToFit_8003B684((int*)&t);
     VectorNormal(&t, &n1);
     m->m[0][1] = n1.vx;
     m->m[1][1] = n1.vy;
     m->m[2][1] = n1.vz;
     OuterProduct12(&n0, &n1, &u);
-    sub_8003B684((int*)&u);
+    ScaleVectorToFit_8003B684((int*)&u);
     VectorNormal(&u, &n2);
     m->m[0][2] = n2.vx;
     m->m[1][2] = n2.vy;
@@ -520,7 +520,7 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx
     {
         return;
     }
-    o = dword_80098180;
+    o = ftgSpriteVtxNext_80098180;
     o->rgbc_C = 0x3C808080;
     gte_ldrgb(&o->rgbc_C);
     s = obj->texSprites_50;
@@ -528,7 +528,7 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx
     {
         gte_ldv3(&s[0].p1, &s[1].p1, &s[2].p1);
         gte_rtpt();
-        dword_8009AAD8.word = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
+        ftgSpriteTPageClut_8009AAD8.word = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
         gte_stsxy3(&o[0].sxy_0, &o[1].sxy_0, &o[2].sxy_0);
         gte_stsz3(&o[0].sz_4, &o[1].sz_4, &o[2].sz_4);
         if (ctx->flags_20 & 1)
@@ -551,17 +551,17 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx
             o[2].uv_8 = s[2].p1.uv;
             gte_strgb3(&o[0].rgbc_C, &o[1].rgbc_C, &o[2].rgbc_C);
         }
-        dword_800987D8[slot][i * 3] = &o[0];
-        dword_800987D8[slot][i * 3 + 1] = &o[1];
-        dword_800987D8[slot][i * 3 + 2] = &o[2];
+        ftgSpriteVtxSlots_800987D8[slot][i * 3] = &o[0];
+        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 1] = &o[1];
+        ftgSpriteVtxSlots_800987D8[slot][i * 3 + 2] = &o[2];
         o += 3;
     }
-    dword_80098180 = o;
+    ftgSpriteVtxNext_80098180 = o;
 }
 static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
-    FtgSpriteVtx* o = dword_80098180;
+    FtgSpriteVtx* o = ftgSpriteVtxNext_80098180;
     FtgSprite* sp = obj->sprites_44;
     int i;
     for (i = 0; i < obj->spriteCount_40; i++, sp++)
@@ -585,10 +585,10 @@ static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
             gte_dpcs();
             gte_strgb(&o->rgbc_C);
         }
-        dword_800987D8[slot][i] = o;
+        ftgSpriteVtxSlots_800987D8[slot][i] = o;
         o++;
     }
-    dword_80098180 = o;
+    ftgSpriteVtxNext_80098180 = o;
 }
 // Matched
 void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
@@ -784,7 +784,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
 extern unsigned char backColor_8008D460[3]; // back colour
 extern MATRIX lightMatrix_80087114;            // light matrix
 extern MATRIX colorMatrix_80087134;            // light colour matrix
-extern SVECTOR word_8008D4C8;
+extern SVECTOR cameraRot_8008D4C8;
 // Matched
 void SetGteLightAndCamera_8004D0E8(void)
 {
@@ -792,7 +792,7 @@ void SetGteLightAndCamera_8004D0E8(void)
     gte_SetBackColor(backColor_8008D460[0], backColor_8008D460[1], backColor_8008D460[2]);
     gte_SetColorMatrix(&colorMatrix_80087134);
     gte_SetLightMatrix(&lightMatrix_80087114);
-    RotMatrixZXY_8004668C(&word_8008D4C8, (MATRIX*)getScratchAddr(0));
+    RotMatrixZXY_8004668C(&cameraRot_8008D4C8, (MATRIX*)getScratchAddr(0));
     m = (MATRIX*)getScratchAddr(0);
     m->t[2] = 0;
     m->t[1] = 0;
@@ -802,9 +802,9 @@ void SetGteLightAndCamera_8004D0E8(void)
 }
 
 // Matched
-void sub_8004D1EC(struct FtgObject* a0, unsigned long* a1, void* a2, void* a3, void* a4, int a5, void* a6)
+void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale)
 {
-    DrawFtgObjectAt_80044D0C(a0, a1, a2, a3, a4, a5, a6, 0);
+    DrawFtgObjectAt_80044D0C(obj, ot, pos, rot, light, flags, scale, 0);
 }
 typedef struct
 {
@@ -813,7 +813,7 @@ typedef struct
 } struct_tbl14;
 
 // Matched
-void sub_8004D224(unsigned short* out, struct_tbl14* s, int idx)
+void GetBonePos_8004D224(unsigned short* out, struct_tbl14* s, int idx)
 {
     if (idx == 0)
     {
@@ -834,7 +834,7 @@ typedef struct
     short* field_18;
 } struct_tbl18;
 // Matched
-void sub_8004D288(int* out, struct_tbl18* s, int k)
+void GetAnimRootMotion_8004D288(int* out, struct_tbl18* s, int k)
 {
     int i = k * (s->n + 2);
     out[0] = s->field_18[i * 3];
@@ -850,7 +850,7 @@ void sub_8004D2EC(short* out, struct_tbl18* s, int k)
     out[2] = s->field_18[i * 3 + 2];
 }
 // Matched
-void sub_8004D354(short* out, struct_tbl18* s, int j, int k)
+void GetAnimBoneRot_8004D354(short* out, struct_tbl18* s, int j, int k)
 {
     int i;
     int t;
@@ -947,13 +947,13 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
     out->vz = (a->vz + d * t / 4096) & 0xFFF;
 }
 
-FtgSpriteVtx *dword_80098180 BSS = 0;
+FtgSpriteVtx *ftgSpriteVtxNext_80098180 BSS = 0;
 int dword_80098184 BSS = 0;
 MATRIX boneMatrices_80098188[40] BSS = { 0 };
 int dword_80098688 BSS = 0;
 int dword_8009868C BSS = 0;
-SVECTOR dword_80098690[2] BSS = { 0 };
+SVECTOR boneOffsets_80098690[2] BSS = { 0 };
 int dword_800986A0[78] BSS = { 0 };
-FtgSpriteVtx *dword_800987D8[40][56] BSS = { 0 };
-FtgTPageClut dword_8009AAD8 BSS = { 0 };
+FtgSpriteVtx *ftgSpriteVtxSlots_800987D8[40][56] BSS = { 0 };
+FtgTPageClut ftgSpriteTPageClut_8009AAD8 BSS = { 0 };
 int dword_8009AADC BSS = 0;

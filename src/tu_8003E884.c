@@ -17,7 +17,7 @@
 #include "data_decls.h"
 #include "tu_8003D198.h"
 
-extern int dword_80086898[][12];
+extern int charWidthThresholds_80086898[][12];
 
 
 // Matched
@@ -29,7 +29,7 @@ int GetCharWidth_8003E884(int idx, short n)
     int v = n - 1;
     for (; k != 0; k--)
     {
-        if (v < dword_80086898[idx - 1][k - 1])
+        if (v < charWidthThresholds_80086898[idx - 1][k - 1])
         {
             r -= k;
             break;
@@ -65,7 +65,7 @@ void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot)
         {
             for (k = 12; k > 0; k--)
             {
-                if (c - 1 < dword_80086898[idx - 1][k - 1])
+                if (c - 1 < charWidthThresholds_80086898[idx - 1][k - 1])
                 {
                     break;
                 }
@@ -98,7 +98,7 @@ void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
-void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
+void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
 {
     Font* p = &fonts_80095FB0[2];
     short x = pos[0];
@@ -118,7 +118,7 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
         {
             for (k = 12; k > 0; k--)
             {
-                if (c - 1 < dword_80086898[1][k - 1])
+                if (c - 1 < charWidthThresholds_80086898[1][k - 1])
                 {
                     break;
                 }
@@ -170,4 +170,4 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
 }
 
 CharTable_8003E91C charTables_8008685C[1] = { { 0 } };
-void *dword_80086868[1] = { (void *)((char *)&dword_800865B8 + 4) };
+void *dword_80086868[1] = { (void *)((char *)&font2CharCodes_800865B8 + 4) };

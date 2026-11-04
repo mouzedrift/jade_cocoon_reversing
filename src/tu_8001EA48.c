@@ -374,7 +374,7 @@ short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script
     }
     return out[0].field_0;
 }
-extern void sub_8004D288(int* out, ModelAnim* s, int k);
+extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
 extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
 void UpdateActorMotion_8001F354(void* actor)
@@ -397,7 +397,7 @@ void UpdateActorMotion_8001F354(void* actor)
     prevDelta[0] = o->animDelta_64[0];
     prevDelta[1] = o->animDelta_64[1];
     prevDelta[2] = o->animDelta_64[2];
-    sub_8004D288(o->animDelta_64, e, o->frame_90 % e->frameCount_0);
+    GetAnimRootMotion_8004D288(o->animDelta_64, e, o->frame_90 % e->frameCount_0);
     if (o->frame_90 % e->frameCount_0 == 0 || (o->flags_4 & 8))
     {
         o->flags_4 &= ~8;
@@ -620,8 +620,8 @@ int IsActorOnScreen_8001FC90(Actor* actor)
 }
 extern int FindNearestCameraPoint_80019CC4();
 extern void RunAnimFrameCues_8001C440();
-extern void sub_80047E28();
-extern void sub_80046A58();
+extern void DrawAnimSkelBlend_80047E28();
+extern void DrawAnimSkel_80046A58();
 extern void DrawSpriteVtxQuadsGT4_800459E4();
 // Matched
 void DrawActor_8001FD08(void* actor)
@@ -663,13 +663,13 @@ void DrawActor_8001FD08(void* actor)
         }
         if (o->flags_4 & 0x10)
         {
-            sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
+            DrawAnimSkelBlend_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
                          o->prevFrame_94 % o->model_15C->anims_54[o->prevAnim_A0].frameCount_0,
                          0x1000 - o->blend_AC, &pointLights_8008D534[v], t);
         }
         else
         {
-            sub_80046A58(&o->draw_164, &pointLights_8008D534[v], t);
+            DrawAnimSkel_80046A58(&o->draw_164, &pointLights_8008D534[v], t);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {

@@ -42,7 +42,7 @@ void sub_800BA254(BatTask_a* t, BatStart_a* u)
     r = sub_800A1E3C();
     u->c_C = r->c_18;
     dword_800ADE78.f0 = 0;
-    sub_80037828(2, 0, 0);
+    MoveBattleCameraForAction_80037828(2, 0, 0);
     switch (dword_800B1230)
     {
     case 0:
@@ -238,7 +238,7 @@ void sub_800BA788(BatTask_a* t)
     sub_800C0BA0();
     sub_800A1B78();
     FreeActiveOverlay_8002C014();
-    sub_80039FC0();
+    FreeStageEffects_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
     StopSeqSlot_80031334(0);
     FreeSeqSlotSound_80030664();
@@ -259,7 +259,7 @@ void sub_800BA848(BatTask_a* t, BatObj_a* u)
     if (AreLoaderModelsLoaded_80020924() && sub_800AC768())
     {
         sub_800A1F0C();
-        sub_80037770();
+        EndBattleCamera_80037770();
         sub_800A9384(1);
         sub_800A8DCC();
         sub_800A89C8();
@@ -446,7 +446,7 @@ void sub_800BAC4C(BatTask_a* t)
             break;
         }
         SetFadeMode_8001C19C(3, 0x20);
-        sub_80037748();
+        StartBattleCamera_80037748();
         dword_800C9C58 = 5;
     case 5:
         if (((int (*)())IsSceneFadeDone_8001AB94)() == 0) // called without its argument here
@@ -580,16 +580,16 @@ void sub_800BAE74(BatTask_a* t, BatObj_a* u)
 void sub_800BB100(BatTask_a* t, BatObj_a* u)
 {
     int buf[4];
-    if (sub_800349B4(u->fc, buf) && buf[3])
+    if (GetMsgWindowResultIfDone_800349B4(u->fc, buf) && buf[3])
     {
-        sub_80034A84(u->fc);
+        CloseMsgWindow_80034A84(u->fc);
         t->next_8 = sub_800BB168;
     }
 }
 
 void sub_800BB168(BatTask_a* t, BatObj_a* u)
 {
-    if (sub_80034AB8(u->fc) == 0)
+    if (IsMsgWindowAlive_80034AB8(u->fc) == 0)
     {
         dword_800ADE88 = -1;
         t->next_8 = sub_800BAE74;
@@ -1392,7 +1392,7 @@ void sub_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(dword_800C8EAC[dword_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(dword_800C8EAC[battleStageId_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
     dword_800C9D8C[1] = -1;
     dword_800C9D8C[0] = -1;
 }

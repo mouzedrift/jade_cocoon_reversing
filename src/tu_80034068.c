@@ -19,34 +19,34 @@
 #include "tu_80034068.h"
 #include "tu_80014954.h"
 
-const char dword_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
+const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
-const char dword_80074780[] = "\201@\202\216\202\205\202\205\202\204\202\205\202\204\201D"; //  needed.
-const char dword_80074794[] = "\201@\202\207\202\211\202\226\202\205\202\216\201D"; //  given.
+const char aNeeded_80074780[] = "\201@\202\216\202\205\202\205\202\204\202\205\202\204\201D"; //  needed.
+const char aGiven_80074794[] = "\201@\202\207\202\211\202\226\202\205\202\216\201D"; //  given.
 const char aHandedOver_800747A4[] = "\201@\202\210\202\201\202\216\202\204\202\205\202\204\201@\202\217\202\226\202\205\202\222\201D"; //  handed over.
 const char aUsed_800747C0[] = "\201@\202\225\202\223\202\205\202\204\201D"; //  used.
-const char dword_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222\202\216\202\205\202\204\201D"; //  returned.
-const char dword_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
-const char dword_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
+const char aReturned_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222\202\216\202\205\202\204\201D"; //  returned.
+const char aReceived_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
+const char aPickedUp_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
 const int dword_80074818 = 0;
-INCLUDE_DATA(jpt_8007481C); // the jump table of sub_80034C18 (asm)
+INCLUDE_DATA(jpt_8007481C); // the jump table of UpdateMsgWindowState_80034C18 (asm)
 
 // Matched
-int sub_80034068(short* p)
+int CheckMagicUsable_80034068(short* req)
 {
-    UnitStatus* q = GetUnitStatus_80014390(((unsigned char*)p)[2]);
-    if (magicData_8007C438[p[0]].field_0 & 0x40)
+    UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)req)[2]);
+    if (magicData_8007C438[req[0]].field_0 & 0x40)
     {
-        switch (magicData_8007C438[p[0]].field_7)
+        switch (magicData_8007C438[req[0]].field_7)
         {
         case 0:
-            if (q->hp_8 == q->maxHp_A)
+            if (target->hp_8 == target->maxHp_A)
             {
                 return 3;
             }
             break;
         case 1:
-            if (p[0] != 0x10 && !(q->status_0 & 0x7FB))
+            if (req[0] != 0x10 && !(target->status_0 & 0x7FB))
             {
                 return 3;
             }
@@ -56,23 +56,23 @@ int sub_80034068(short* p)
     return 0;
 }
 // Matched
-int sub_80034124(void)
+int CheckUsableStub_80034124(void)
 {
     return 0;
 }
 // Matched
-int sub_8003412C(UnitStatus* p)
+int GetUnitElementMask_8003412C(UnitStatus* unit)
 {
-    if (p)
+    if (unit)
     {
-        return p->elementMask_42;
+        return unit->elementMask_42;
     }
     return 0;
 }
 // Matched
-int sub_80034140(void)
+int IsCurrentMapListed_80034140(void)
 {
-    unsigned char*** t = off_80083800;
+    unsigned char*** t = mapListTable_80083800;
     SaveData* sd = &saveData_8008B570;
     unsigned char** tbl = t[sd->mapId_2E4[0].field_0];
     unsigned char* list;
@@ -118,7 +118,7 @@ extern Size_8003422C MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mas
 extern int MeasureTextWidth_8003E4C8(int str);
 extern void sub_800A6308(int a, void* b);
 extern void sub_800A1B2C(int a, void* b);
-extern short** sub_80034900(short** list);
+extern short** FindTextResumePage_80034900(short** list);
 extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 typedef struct
 {
@@ -215,7 +215,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     list = (int**)cfg[0x8 / 4];
     if (list)
     {
-        list = (int**)sub_80034900((short**)list);
+        list = (int**)FindTextResumePage_80034900((short**)list);
         while (*list)
         {
             WS(0x1C)++;
@@ -238,7 +238,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     p = (int*)cfg[0x1C / 4];
     if (p)
     {
-        if (sub_8003E484(*p) == 1)
+        if (IsTextMarkerLine_8003E484(*p) == 1)
         {
             WI(0x1B4) = (int)(p + 1);
         }
@@ -375,7 +375,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
 INCLUDE_ASM(OpenMessageWindow_8003422C);
 extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
-short** sub_80034900(short** list)
+short** FindTextResumePage_80034900(short** list)
 {
     short** p = list;
     short* t;
@@ -400,9 +400,9 @@ short** sub_80034900(short** list)
     return list;
 }
 // Matched
-int sub_800349B4(MsgWindowEntry* a0, MsgResult* out)
+int GetMsgWindowResultIfDone_800349B4(MsgWindowEntry* win, MsgResult* out)
 {
-    MsgWindow* u = a0->win_14;
+    MsgWindow* u = win->win_14;
     if (u->flags_4 & 0x200)
     {
         *out = u->res_18;
@@ -411,14 +411,14 @@ int sub_800349B4(MsgWindowEntry* a0, MsgResult* out)
     return 0;
 }
 // Matched
-void sub_80034A00(MsgWindowEntry* a0, MsgResult* out)
+void GetMsgWindowResult_80034A00(MsgWindowEntry* win, MsgResult* out)
 {
-    *out = a0->win_14->res_18;
+    *out = win->win_14->res_18;
 }
 // Matched
-int sub_80034A30(MsgWindowEntry* a0)
+int IsMsgWindowWaiting_80034A30(MsgWindowEntry* win)
 {
-    MsgWindow* u = a0->win_14;
+    MsgWindow* u = win->win_14;
     if (u->field_C == 3 || u->field_10 == 2)
     {
         return 1;
@@ -426,34 +426,34 @@ int sub_80034A30(MsgWindowEntry* a0)
     return 0;
 }
 // Matched
-void sub_80034A68(MsgWindowEntry* a0)
+void EnableMsgWindowAdvance_80034A68(MsgWindowEntry* win)
 {
-    a0->win_14->flags_4 |= 0x800;
+    win->win_14->flags_4 |= 0x800;
 }
 // Matched
-void sub_80034A84(MsgWindowEntry* a0)
+void CloseMsgWindow_80034A84(MsgWindowEntry* win)
 {
-    a0->win_14->flags_4 |= 0x4000;
+    win->win_14->flags_4 |= 0x4000;
 }
 // Matched
-void sub_80034AA0(MsgWindowEntry* a0)
+void KillMsgWindow_80034AA0(MsgWindowEntry* win)
 {
-    a0->flags_0 = (a0->flags_0 & ~1) | 0x8000;
+    win->flags_0 = (win->flags_0 & ~1) | 0x8000;
 }
 // Matched
-int sub_80034AB8(MsgWindowEntry* a0)
+int IsMsgWindowAlive_80034AB8(MsgWindowEntry* win)
 {
-    return (a0->flags_0 & 0x8001) == 1;
+    return (win->flags_0 & 0x8001) == 1;
 }
 // Matched
-void sub_80034AD0(MsgWindowEntry* a0, int v)
+void SetMsgWindowChoiceMask_80034AD0(MsgWindowEntry* win, int v)
 {
-    a0->win_14->mask_14 = v;
+    win->win_14->mask_14 = v;
 }
 // Matched
-int sub_80034ADC(MsgWindowEntry* a0, int idx)
+int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* win, int idx)
 {
-    MsgWindow* u = a0->win_14;
+    MsgWindow* u = win->win_14;
     if (u->marks_1E4[idx] == -2 || u->marks_1E4[idx] >= 0)
     {
         u->marks_1E4[idx] = -2;
@@ -508,30 +508,30 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-extern void sub_80034C18(MsgWindow* a);
-extern void sub_800353A0(MsgWindow* o);
+extern void UpdateMsgWindowState_80034C18(MsgWindow* a);
+extern void HandleMsgWindowInput_800353A0(MsgWindow* o);
 // Matched
-void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1)
+void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
 {
-    sub_80034C18(a1);
-    sub_800353A0(a1);
-    if (a1->mode_8 == 7)
+    UpdateMsgWindowState_80034C18(win);
+    HandleMsgWindowInput_800353A0(win);
+    if (win->mode_8 == 7)
     {
-        a0[0] = (a0[0] & ~1) | 0x8000;
+        entry[0] = (entry[0] & ~1) | 0x8000;
     }
 }
 extern void PlaySfx_80031494(int id);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern int sub_800429A8(void* r);
+extern int IsWindowFrameFit_800429A8(void* r);
 /* defined below (their parameter types are declared there) */
-extern int sub_8003580C();
-extern void sub_800359F8();
-extern void sub_80035900();
-extern void sub_800355EC();
+extern int DrawMsgWindowText_8003580C();
+extern void DrawMsgWindowTitle_800359F8();
+extern void DrawMsgWindowPortrait_80035900();
+extern void DrawMsgWindowChoices_800355EC();
 #define PI(off) (*(int*)((char*)p + (off)))
 #if 0
 // Not matched: control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed), register allocation of the flag temporaries and the reset block differ
-void sub_80034C18(int* p)
+void UpdateMsgWindowState_80034C18(int* p)
 {
     short r[4];
     int c;
@@ -566,7 +566,7 @@ void sub_80034C18(int* p)
             }
             if (!(p[1] & 0x40000))
             {
-                sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
             }
         }
         if (p[1] & 0x200)
@@ -604,7 +604,7 @@ void sub_80034C18(int* p)
             }
             if (!(p[1] & 0x40000))
             {
-                sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
             }
         }
         if (p[1] & 0x200)
@@ -674,7 +674,7 @@ void sub_80034C18(int* p)
         }
         if (!(p[1] & 0x40000))
         {
-            sub_8003E268((unsigned short*)(p + 0x1B8 / 4));
+            DrawMsgWindowNextPrompt_8003E268((unsigned short*)(p + 0x1B8 / 4));
         }
         break;
     case 5:
@@ -698,16 +698,16 @@ void sub_80034C18(int* p)
             p[3] = 2;
         }
         InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898(p, (int)r, 2);
-        sub_800358CC(p, (int)r, 0);
+        DrawMsgWindowBackground_80035898(p, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898(p, (int)r, 2);
-        sub_800358CC(p, (int)r, 0);
+        DrawMsgWindowBackground_80035898(p, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         break;
     case 2:
-        sub_800359F8(p);
-        sub_80035900(p);
-        v = sub_8003580C(p, p + 0x38 / 4);
+        DrawMsgWindowTitle_800359F8(p);
+        DrawMsgWindowPortrait_80035900(p);
+        v = DrawMsgWindowText_8003580C(p, p + 0x38 / 4);
         if (v == 1)
         {
             p[3] = 3;
@@ -749,19 +749,19 @@ void sub_80034C18(int* p)
                 p[9] = v;
             }
         }
-        sub_80035898(p, (int)(p + 0x38 / 4), 2);
-        sub_800358CC(p, (int)(p + 0x38 / 4), 0);
-        sub_80035898(p, (int)(p + 0x40 / 4), 2);
-        sub_800358CC(p, (int)(p + 0x40 / 4), 0);
+        DrawMsgWindowBackground_80035898(p, (int)(p + 0x38 / 4), 2);
+        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x38 / 4), 0);
+        DrawMsgWindowBackground_80035898(p, (int)(p + 0x40 / 4), 2);
+        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x40 / 4), 0);
         break;
     case 3:
-        sub_800359F8(p);
-        sub_80035900(p);
-        sub_8003580C(p, p + 0x38 / 4);
-        sub_80035898(p, (int)(p + 0x38 / 4), 2);
-        sub_800358CC(p, (int)(p + 0x38 / 4), 0);
-        sub_80035898(p, (int)(p + 0x40 / 4), 2);
-        sub_800358CC(p, (int)(p + 0x40 / 4), 0);
+        DrawMsgWindowTitle_800359F8(p);
+        DrawMsgWindowPortrait_80035900(p);
+        DrawMsgWindowText_8003580C(p, p + 0x38 / 4);
+        DrawMsgWindowBackground_80035898(p, (int)(p + 0x38 / 4), 2);
+        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x38 / 4), 0);
+        DrawMsgWindowBackground_80035898(p, (int)(p + 0x40 / 4), 2);
+        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x40 / 4), 0);
         break;
     case 4:
         p[0x34 / 4]--;
@@ -772,15 +772,15 @@ void sub_80034C18(int* p)
             p[2] = 7;
         }
         InterpolateWindowRect_8004196C(r, p + 0x38 / 4, p[0x34 / 4], 8, 0);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            sub_8003580C(p, (int*)r);
-            sub_80035898(p, (int)r, 2);
-            sub_800358CC(p, (int)r, 0);
+            DrawMsgWindowText_8003580C(p, (int*)r);
+            DrawMsgWindowBackground_80035898(p, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         }
         InterpolateWindowRect_8004196C(r, p + 0x40 / 4, p[0x34 / 4], 8, 0);
-        sub_80035898(p, (int)r, 2);
-        sub_800358CC(p, (int)r, 0);
+        DrawMsgWindowBackground_80035898(p, (int)r, 2);
+        DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         break;
     }
     switch (p[4])
@@ -797,17 +797,17 @@ void sub_80034C18(int* p)
             p[9] = 1;
         }
         InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            sub_800355EC(p, (int*)r);
-            sub_80035898(p, (int)r, 2);
-            sub_800358CC(p, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(p, (int*)r);
+            DrawMsgWindowBackground_80035898(p, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         }
         break;
     case 2:
-        sub_800355EC(p, p + 0x4C / 4);
-        sub_80035898(p, (int)(p + 0x4C / 4), 2);
-        sub_800358CC(p, (int)(p + 0x4C / 4), 0);
+        DrawMsgWindowChoices_800355EC(p, p + 0x4C / 4);
+        DrawMsgWindowBackground_80035898(p, (int)(p + 0x4C / 4), 2);
+        DrawMsgWindowBorder_800358CC(p, (int)(p + 0x4C / 4), 0);
         break;
     case 3:
         p[0x48 / 4]--;
@@ -818,26 +818,26 @@ void sub_80034C18(int* p)
             p[2] = 6;
         }
         InterpolateWindowRect_8004196C(r, p + 0x4C / 4, p[0x48 / 4], 8, 5);
-        if (sub_800429A8(r) == 1)
+        if (IsWindowFrameFit_800429A8(r) == 1)
         {
-            sub_800355EC(p, (int*)r);
-            sub_80035898(p, (int)r, 2);
-            sub_800358CC(p, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(p, (int*)r);
+            DrawMsgWindowBackground_80035898(p, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         }
         break;
     }
 }
 #endif
-INCLUDE_ASM(sub_80034C18);
+INCLUDE_ASM(UpdateMsgWindowState_80034C18);
 
-const int dword_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
-const int dword_8007485C[2] = { 0x9A96F38B };
-const int dword_80074864[2] = { 0x7782 };
+const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
+const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
+const int aTimesSign_80074864[2] = { 0x7782 };
 INCLUDE_DATA(jpt_8007486C); // the jump table of UpdateItemMessageWindow_80035BD8 (asm)
 
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
-void sub_800353A0(MsgWindow* o)
+void HandleMsgWindowInput_800353A0(MsgWindow* o)
 {
     switch (o->mode_8)
     {
@@ -894,11 +894,11 @@ void sub_800353A0(MsgWindow* o)
 }
 extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
-extern void sub_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
+extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
-void sub_800355EC(MsgWindow* o, unsigned short* r)
+void DrawMsgWindowChoices_800355EC(MsgWindow* o, unsigned short* r)
 {
     RECT clip;
     union
@@ -932,7 +932,7 @@ void sub_800355EC(MsgWindow* o, unsigned short* r)
                 y += 12;
                 u.loc[0] = x;
                 AddClipDrawAreaPrim_80033308(&pOT_8008D454[o->ot_54]);
-                sub_8003EC2C(*p, u.loc, o->ot_54);
+                DrawColorText_8003EC2C(*p, u.loc, o->ot_54);
                 AddDrawAreaPrim_8003326C(&clip, &pOT_8008D454[o->ot_54]);
             }
             p++;
@@ -964,9 +964,9 @@ void sub_800355EC(MsgWindow* o, unsigned short* r)
     DrawPulsingWindow_8002F6F8(&r2, u.st, 0);
     o->res_18.sel_1A = NthMaskedIndex_80034B88(o->field_B2, o->mask_14);
 }
-extern int sub_8003DB74(struct_rect_1B8* p, int a);
+extern int UpdateTextWindow_8003DB74(struct_rect_1B8* p, int a);
 // Matched
-int sub_8003580C(MsgWindow* o, unsigned short* r)
+int DrawMsgWindowText_8003580C(MsgWindow* o, unsigned short* r)
 {
     o->clip_1B8.x = r[0] + 6;
     o->clip_1B8.y = r[1] + 4;
@@ -974,28 +974,28 @@ int sub_8003580C(MsgWindow* o, unsigned short* r)
     o->clip_1B8.h = r[3] - 7;
     if ((short)o->clip_1B8.h > 0 && (short)o->clip_1B8.w > 0)
     {
-        return sub_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
+        return UpdateTextWindow_8003DB74(&o->clip_1B8, ((o->flags_4 >> 18) ^ 1) & 1);
     }
     return 1;
 }
 // Matched
-void sub_80035898(MsgWindow* p, int a1, int a2)
+void DrawMsgWindowBackground_80035898(MsgWindow* p, int rect, int ot)
 {
     if (!(p->flags_4 & 0x40000))
     {
-        sub_800429F8(a1, 2);
+        DrawWindowBackground_800429F8(rect, 2);
     }
 }
 // Matched
-void sub_800358CC(MsgWindow* p, int a1, int a2)
+void DrawMsgWindowBorder_800358CC(MsgWindow* p, int rect, int ot)
 {
     if (!(p->flags_4 & 0x40000))
     {
-        sub_80042B38(a1, 2);
+        DrawWindowBorder_80042B38(rect, 2);
     }
 }
 // Matched
-void sub_80035900(MsgWindow* o)
+void DrawMsgWindowPortrait_80035900(MsgWindow* o)
 {
     if (!(o->flags_4 & 0x40000) && o->field_84 == 1)
     {
@@ -1020,7 +1020,7 @@ void sub_80035900(MsgWindow* o)
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 
 // Matched
-void sub_800359F8(MsgWindow* p)
+void DrawMsgWindowTitle_800359F8(MsgWindow* p)
 {
     short pos[2];
     short r[4];
@@ -1035,8 +1035,8 @@ void sub_800359F8(MsgWindow* p)
             r[1] = p->titleY_70;
             r[2] = MeasureTextWidth_8003E4C8((int)p->title_74) + 0x11;
             r[3] = 0x12;
-            sub_80035898(p, (int)r, 2);
-            sub_800358CC(p, (int)r, 0);
+            DrawMsgWindowBackground_80035898(p, (int)r, 2);
+            DrawMsgWindowBorder_800358CC(p, (int)r, 0);
         }
     }
 }
@@ -1111,10 +1111,10 @@ typedef struct
     int a;
     int b;
 } TPage_35BD8;
-extern const int dword_80074850[];
-extern const int dword_8007485C[];
-extern const int dword_80074864[];
-extern void sub_8003F264(void* pos, int val, int ot);
+extern const int aMoney_80074850[];
+extern const int aEmptyCocoon_8007485C[];
+extern const int aTimesSign_80074864[];
+extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
 extern void sub_800AD1E0(int a, int b, int c);
@@ -1199,12 +1199,12 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p70.x = r.x + 6;
             p70.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, dword_80074850, &p70, 0);
+            DrawText_8003E91C(2, aMoney_80074850, &p70, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             p78.x = r.x + r.w - 4;
             p78.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            sub_8003F264(&p78, o->entries[i].count, 0);
+            DrawNumberRightAlignedFont1_8003F264(&p78, o->entries[i].count, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;
             continue;
@@ -1214,14 +1214,14 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p80.x = r.x + 6;
             p80.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, dword_8007485C, &p80, 0);
+            DrawText_8003E91C(2, aEmptyCocoon_8007485C, &p80, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             if (flag)
             {
                 p88.x = r.x + 0x84;
                 p88.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawText_8003E91C(1, dword_80074864, &p88, 0);
+                DrawText_8003E91C(1, aTimesSign_80074864, &p88, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
                 p90.x = r.x + 0x8D;
                 p90.y = r.y + (line * 16 + y) + 2;
@@ -1273,7 +1273,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 p98.x = r.x + 0x84;
                 p98.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawText_8003E91C(1, dword_80074864, &p98, 0);
+                DrawText_8003E91C(1, aTimesSign_80074864, &p98, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
                 pA0.x = r.x + 0x8D;
                 pA0.y = r.y + (line * 16 + y) + 2;
@@ -1305,7 +1305,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         p70.x = r.x + w;
         p70.y = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
-        DrawText_8003E91C(2, off_80083820, &p70, 0);
+        DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, &p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
     if (o->text)
@@ -1322,8 +1322,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             line++;
         }
     }
-    sub_800429F8((int)&r, 0);
-    sub_80042B38((int)&r, 0);
+    DrawWindowBackground_800429F8((int)&r, 0);
+    DrawWindowBorder_80042B38((int)&r, 0);
     o->field_C = 3;
     if (IsConfirmPressedP1_8003D380(0))
     {

@@ -20,8 +20,8 @@ typedef struct BatLight_a
 
 extern char dword_800C9124[];
 extern char cameraState_8008D4F0[];
-extern short word_8008D4C8;
-extern short word_8008D51E;
+extern short cameraRot_8008D4C8;
+extern short geomScreenBase_8008D51E;
 extern unsigned char dword_800C911C[];
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj_a
@@ -39,10 +39,10 @@ void sub_800BC90C(BatStageObj_a* p)
     int i;
 
     unknownFlags_8008D678 &= ~0x10000;
-    idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
-    sub_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, pointLights_8008D534, 1, scale);
+    idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, dword_800C8EAC[battleStageId_80083BD0].model_6);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, pointLights_8008D534, 1, scale);
     {
-        unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
+        unsigned short* list = dword_800C8EAC[battleStageId_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
@@ -69,11 +69,11 @@ void sub_800BC90C(BatStageObj_a* p)
                         col.r = l->r_30 + e->rgb_18[0] * l->r_50 / 4096;
                         col.g = l->g_31 + e->rgb_18[1] * l->g_52 / 4096;
                         col.b = l->b_32 + e->rgb_18[2] * l->b_54 / 4096;
-                        if (dword_80083BD0 == 0x10)
+                        if (battleStageId_80083BD0 == 0x10)
                         {
                             SetSemiTrans(&g->poly_C, 1);
                         }
-                        if (dword_80083BD0 == 0x13)
+                        if (battleStageId_80083BD0 == 0x13)
                         {
                             sz[0] = e->size_C[0] * 5;
                             sz[1] = e->size_C[1] * 5;
@@ -88,7 +88,7 @@ void sub_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (dword_800C8EAC[dword_80083BD0].floor_8 >= 0)
+    if (dword_800C8EAC[battleStageId_80083BD0].floor_8 >= 0)
     {
         for (i = 0; i < 32; i++)
         {
@@ -101,7 +101,7 @@ void sub_800BC90C(BatStageObj_a* p)
             int a;
             int x;
             int w;
-            short* cam = &word_8008D4C8;
+            short* cam = &cameraRot_8008D4C8;
             v.vx = p->x_38;
             v.vy = p->y_3C;
             v.vz = p->z_40;
@@ -116,11 +116,11 @@ void sub_800BC90C(BatStageObj_a* p)
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
-            poly = battleEffectFile_80095468.sprites_20[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
-            x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * word_8008D51E / 240;
+            poly = battleEffectFile_80095468.sprites_20[dword_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
+            x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
-                w = word_8008D51E * 96 / 240;
+                w = geomScreenBase_8008D51E * 96 / 240;
                 poly.r0 = poly.r0 * sceneBrightness_8008D40C >> 12;
                 poly.g0 = poly.g0 * sceneBrightness_8008D40C >> 12;
                 poly.b0 = poly.b0 * sceneBrightness_8008D40C >> 12;
@@ -132,26 +132,26 @@ void sub_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (dword_800C8EAC[dword_80083BD0].anim_A >= 0)
+    if (dword_800C8EAC[battleStageId_80083BD0].anim_A >= 0)
     {
         int cols = 0;
         unsigned int n = 0;
-        if (dword_80083BD0 == 0xF)
+        if (battleStageId_80083BD0 == 0xF)
         {
             cols = 3;
             n = 9;
         }
-        else if (dword_80083BD0 == 0x13)
+        else if (battleStageId_80083BD0 == 0x13)
         {
             cols = 4;
             n = 0xE;
         }
-        else if (dword_80083BD0 == 0x15 || dword_80083BD0 == 0x1D || dword_80083BD0 == 6 || dword_80083BD0 == 0x1C || dword_80083BD0 == 5)
+        else if (battleStageId_80083BD0 == 0x15 || battleStageId_80083BD0 == 0x1D || battleStageId_80083BD0 == 6 || battleStageId_80083BD0 == 0x1C || battleStageId_80083BD0 == 5)
         {
             cols = 1;
             n = 0xC;
         }
-        switch (dword_80083BD0)
+        switch (battleStageId_80083BD0)
         {
         case 5:
         case 6:
@@ -161,18 +161,18 @@ void sub_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[battleStageId_80083BD0].anim_A)];
             int j;
             for (j = 0; j < g->count_0; j++)
             {
                 int half = n >> 1;
                 int t = (dword_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
                 int k;
-                if (dword_80083BD0 == 0x13 && half < t)
+                if (battleStageId_80083BD0 == 0x13 && half < t)
                 {
                     t = n - t;
                 }
-                if (dword_80083BD0 == 0x15 || dword_80083BD0 == 0x1D || dword_80083BD0 == 6 || dword_80083BD0 == 0x1C || dword_80083BD0 == 5)
+                if (battleStageId_80083BD0 == 0x15 || battleStageId_80083BD0 == 0x1D || battleStageId_80083BD0 == 6 || battleStageId_80083BD0 == 0x1C || battleStageId_80083BD0 == 5)
                 {
                     if (half < t)
                     {
@@ -236,7 +236,7 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[battleStageId_80083BD0].anim_A)];
             int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->frameCounts_4[j]; k++)
@@ -280,11 +280,11 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         }
     }
-    if (dword_800C8EAC[dword_80083BD0].models_C != 0)
+    if (dword_800C8EAC[battleStageId_80083BD0].models_C != 0)
     {
         for (i = 0; i < 3; i++)
         {
-            unsigned short* ent = &dword_800C8EAC[dword_80083BD0].models_C[i * 4];
+            unsigned short* ent = &dword_800C8EAC[battleStageId_80083BD0].models_C[i * 4];
             int id = ent[0];
             int fl = ent[1];
             unsigned long* ot = pOT_8008B4C8;
@@ -296,7 +296,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 EffectModel* mdl = &battleEffectFile_80095468.models_28[FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, id)];
                 int k;
                 memset(&rot, 0, 8);
-                if (dword_80083BD0 == 0x10)
+                if (battleStageId_80083BD0 == 0x10)
                 {
                     rot.vy = frameCount_8008D3FC * 100;
                 }
@@ -304,19 +304,19 @@ void sub_800BC90C(BatStageObj_a* p)
                 pos.vy = p->y_3C;
                 pos.vz = p->z_40;
                 pos.vy = levantPos_8008BD18.pos.y;
-                if (dword_80083BD0 == 0x13 && i == 0)
+                if (battleStageId_80083BD0 == 0x13 && i == 0)
                 {
                     sc[0] *= 3;
                     sc[1] *= 3;
                     sc[2] *= 3;
                 }
-                if (dword_80083BD0 == 0x14)
+                if (battleStageId_80083BD0 == 0x14)
                 {
                     pos.vy -= 0x2F8;
                 }
                 for (k = 0; k < mdl->ftgCount_0; k++)
                 {
-                    sub_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
+                    DrawFtgObjectAtSlot0_8004D1EC(&mdl->ftg_4[k], ot, &pos, &rot, 0, fl, sc);
                 }
             }
         }
@@ -353,11 +353,11 @@ void sub_800BDA28(BatTask_a* t)
             }
             if (f)
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
+                MoveBattleCameraForAction_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
             }
             else
             {
-                sub_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
+                MoveBattleCameraForAction_80037828(sub_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
             }
         }
     }
@@ -602,7 +602,7 @@ void sub_800BE14C(BatCmd_a* p, int b, int k)
     }
     if (!(saveData_8008B570.field_0 & 2) && b == 0)
     {
-        sub_800377B4(r, (short)p->kind_0, k - 4);
+        StartBattleCameraSpline_800377B4(r, (short)p->kind_0, k - 4);
     }
 }
 
@@ -643,7 +643,7 @@ void sub_800BE3C0()
         sub_800BF3DC(dword_800C9C7C, 0, dword_800C9C7E, sub_800BC6CC(dword_800C9C7C), 0);
         if (dword_800C9C7E > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             PlaySfx_80031494(0x72);
         }
         sub_800BF3DC(dword_800C9C7C, 1, dword_800C9C80, sub_800BC6CC(dword_800C9C7C), 0);

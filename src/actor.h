@@ -53,7 +53,7 @@ typedef struct
     short (*steps_8)[4];
 } ActorPath;
 
-// draw arguments handed to sub_80046A58 / sub_80047E28 (Actor.draw_164)
+// draw arguments handed to DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28 (Actor.draw_164)
 typedef struct
 {
     struct FtgObject* ftg_0; // 0x164: Model.ftg_50

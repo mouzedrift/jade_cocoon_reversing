@@ -319,9 +319,9 @@ extern int dword_800ADE88;
 
 extern int eventDispatchHalt_8008B540;
 
-extern int dword_80083BD0;
+extern int battleStageId_80083BD0;
 
-// per battle stage (indexed by dword_80083BD0)
+// per battle stage (indexed by battleStageId_80083BD0)
 typedef struct BatStage_a
 {
     unsigned short* list_0;
@@ -335,11 +335,11 @@ typedef struct BatStage_a
 
 extern BatStage_a dword_800C8EAC[];
 
-extern int sub_80034AB8();
+extern int IsMsgWindowAlive_80034AB8();
 
-extern int sub_800349B4();
+extern int GetMsgWindowResultIfDone_800349B4();
 
-extern void sub_80034A84();
+extern void CloseMsgWindow_80034A84();
 
 extern void TriggerActorEffect_8001E28C();
 
@@ -626,7 +626,7 @@ extern int LoadSeqSlotSound_800303E8();
 
 extern int IsSoundTaskReady_80030688();
 
-extern void sub_80037748();
+extern void StartBattleCamera_80037748();
 
 extern void LoadUiTiy_8002BF74();
 
@@ -654,7 +654,7 @@ extern BatV12_a* sub_800BC5EC();
 
 extern void ApplyBattleCommand_800BEBB8();
 
-extern void sub_80037828(int a, int b, int c);
+extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
 extern void sub_800BDB4C();
 
@@ -666,9 +666,9 @@ extern void sub_800A8C0C(int b);
 
 extern void sub_800A2760(BatCmd_a* p, int b);
 
-extern void sub_800377B4(int a, int b, int c);
+extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
-extern void sub_80037BFC(int a);
+extern void StartCameraShake_80037BFC(int a);
 
 extern void PlaySfx_80031494(int id);
 
@@ -714,7 +714,7 @@ typedef struct BatHitNum_a
     int unit_18;
 } BatHitNum_a;
 
-extern void sub_80037BFC(int a);
+extern void StartCameraShake_80037BFC(int a);
 
 extern void StartPadVibration_80036528(int a, int b);
 
@@ -1113,7 +1113,7 @@ extern int CheckSkillUsable_80033C98(struct_minion_ref* q);
 
 extern int CheckItemOnTarget_80033DF4(BatTgtQ_a* q);
 
-extern int sub_80034068(BatTgtQ_a* q);
+extern int CheckMagicUsable_80034068(BatTgtQ_a* q);
 
 extern unsigned char sub_800C78D0();
 

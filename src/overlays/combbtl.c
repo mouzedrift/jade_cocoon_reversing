@@ -125,7 +125,7 @@ extern void sub_800A4D48();
 extern void sub_800A68E0();
 extern void sub_800A616C();
 extern void sub_800A5000();
-extern void sub_80039FA4(int);
+extern void SetBattleStageId_80039FA4(int);
 extern void sub_800A0A28();
 extern int PlayMusic_800300E0(int, int);
 extern void sub_800A5EF8();
@@ -178,7 +178,7 @@ void sub_800A4C40(CombBtlTask* t, int a)
         byte_800A38DC = 2;
         dword_800A85B8 = -1;
         dword_800A8620 = -1;
-        sub_80039FA4(dword_800A84C0);
+        SetBattleStageId_80039FA4(dword_800A84C0);
         sub_800A0A28();
         dword_800A84B8 = 0;
         dword_800A85F8 = -1;
@@ -203,8 +203,8 @@ extern int LoadSeqSlotSound_800303E8();
 extern int IsSoundTaskReady_80030688();
 extern int sub_800BC8E8();
 extern void sub_800BC878();
-extern void sub_80037720();
-extern void sub_80037748();
+extern void SetCameraBattleMode_80037720();
+extern void StartBattleCamera_80037748();
 extern void SetFadeMode_8001C19C();
 extern void LoadUiTiy_8002BF74();
 extern int uiTiyLoaded_8008B4E8;
@@ -248,8 +248,8 @@ void sub_800A4D48(CombBtlTask* t, int a)
     case 5:
         sub_800A7290();
         sub_800A7420();
-        sub_80037720();
-        sub_80037748();
+        SetCameraBattleMode_80037720();
+        StartBattleCamera_80037748();
         dword_800A84B8 = 9;
         break;
     case 6:
@@ -525,7 +525,7 @@ void sub_800A5544(CombBtlTask* t)
         FreeSeqSlotSound_80030664();
         SsUtAllKeyOff(0);
         PlayMusic_800300E0(0x8E, 1);
-        sub_80039FC0();
+        FreeStageEffects_80039FC0();
         t->next_8 = sub_800A16FC;
     }
 }
@@ -633,7 +633,7 @@ void sub_800A58E8(int i)
 #if 0
 // Not matched: the original has a jump to the loop increment right after the i == 1 block (one word longer) plus a t0/a3 swap; tried continue/while/switch forms
 extern int sub_800A5B70(int a);
-extern void sub_800378CC();
+extern void MoveBattleCameraDefault_800378CC();
 extern int dword_8008D610;
 extern int dword_800A82E8;
 extern unsigned char byte_800A85BD;
@@ -672,7 +672,7 @@ void sub_800A599C(CombBtlTask* t, int a)
     if (dword_800A85B8 >= 0)
     {
         void (*f)();
-        sub_800378CC();
+        MoveBattleCameraDefault_800378CC();
         dword_800A82E8++;
         byte_800A85BD = dword_800A4078[dword_800A85B8];
         f = sub_800A5C64;
@@ -951,7 +951,7 @@ void sub_800A7290()
     {
         e[0] = (e[0] | 1) & ~0x8000;
         ResetCameraToLevant_800376A8();
-        sub_80037748();
+        StartBattleCamera_80037748();
         e[2] = (int)InitCameraTask_800368F8;
         cameraZoom_8008B4F8 = 0x1000;
         e[3] = (int)nullsub_5;
@@ -1071,7 +1071,7 @@ void sub_800A7BE4()
 }
 
 extern unsigned char byte_800A38D8;
-extern void sub_80037BFC(int a);
+extern void StartCameraShake_80037BFC(int a);
 extern void StartPadVibration_80036528(int pad, int kind);
 extern void sub_800A7E34(int a, int b, int c);
 typedef struct CombBtlHitNum
@@ -1107,7 +1107,7 @@ void PlayHitFeedback_800A7C0C(int side)
         sub_800A7E34(side, dword_800A85C8.kind_0, word_800A8470[side]);
         if (word_800A8470[side] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             StartPadVibration_80036528(me, 0);
             StartPadVibration_80036528(other, 2);
         }
@@ -1116,7 +1116,7 @@ void PlayHitFeedback_800A7C0C(int side)
         sub_800A7E34(side, dword_800A85C8.kind_0, word_800A8474[side]);
         if (word_800A8474[side] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
         }
         break;
@@ -1125,13 +1125,13 @@ void PlayHitFeedback_800A7C0C(int side)
         sub_800A7E34(side, 2, word_800A8474[side]);
         if (word_800A8470[side] > 0 || word_800A8474[side] > 0)
         {
-            sub_80037BFC(0x1E);
+            StartCameraShake_80037BFC(0x1E);
             StartPadVibration_80036528(side ? byte_800A38D8 : 0, 0);
         }
         break;
     case 4:
         sub_800A7E34(side, 1, word_800A8470[side]);
-        sub_80037BFC(0x1E);
+        StartCameraShake_80037BFC(0x1E);
         StartPadVibration_80036528(side ? byte_800A38D8 : 0, 1);
         sub_800A7ECC();
         break;
@@ -1236,9 +1236,9 @@ int sub_800A8098(int a, int b, int c)
     return (int)e;
 }
 
-extern int sub_800349B4();
+extern int GetMsgWindowResultIfDone_800349B4();
 extern int XaRequestStop_80043524();
-extern void sub_80034A84();
+extern void CloseMsgWindow_80034A84();
 
 void sub_800A816C(EventEntry* e)
 {
@@ -1246,7 +1246,7 @@ void sub_800A816C(EventEntry* e)
     int v;
     if (!(dword_800A3A88 & 4))
     {
-        if (sub_800349B4(dword_800A8478, buf) && buf[3])
+        if (GetMsgWindowResultIfDone_800349B4(dword_800A8478, buf) && buf[3])
         {
             dword_800A3A88 |= 4;
         }
@@ -1275,7 +1275,7 @@ void sub_800A816C(EventEntry* e)
         dword_800A3A88 &= ~4;
         dword_800A3A88 &= ~8;
         dword_800A3A88 &= ~0x10;
-        sub_80034A84(dword_800A8478);
+        CloseMsgWindow_80034A84(dword_800A8478);
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }

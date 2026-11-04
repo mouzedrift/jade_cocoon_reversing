@@ -913,7 +913,7 @@ UnitStats* GetSaveItem_80033AE4(SaveData* s, int idx)
 {
     return &s->items[idx];
 }
-extern int sub_80034140(void);
+extern int IsCurrentMapListed_80034140(void);
 extern int GetItemFlags_8001CE70(int a);
 // Matched
 int CheckItemUsable_80033AFC(struct_minion_ref* p)
@@ -925,7 +925,7 @@ int CheckItemUsable_80033AFC(struct_minion_ref* p)
     }
     if (item == 0x29 && p->field_A == 1)
     {
-        if (sub_80034140())
+        if (IsCurrentMapListed_80034140())
         {
             return 0;
         }

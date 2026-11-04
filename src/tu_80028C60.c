@@ -70,7 +70,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
 #endif
 INCLUDE_ASM(OnRoomDataLoaded_80028C60);
 extern short screenOffset_8008D474[2];
-extern void sub_80037918(CameraCtrl* p);
+extern void UpdateCameraFollow_80037918(CameraCtrl* p);
 // Matched
 void InitRoomCamera_80028DC0(void)
 {
@@ -82,7 +82,7 @@ void InitRoomCamera_80028DC0(void)
         {
             SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
         }
-        sub_80037918(cam);
+        UpdateCameraFollow_80037918(cam);
         SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
     }
 }

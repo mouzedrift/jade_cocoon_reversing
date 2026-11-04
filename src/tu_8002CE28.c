@@ -162,7 +162,7 @@ typedef struct
     short my;
 } MenuItem_D250;
 extern int CheckItemOnTarget_80033DF4(short* p);
-extern int sub_80034068(short* p);
+extern int CheckMagicUsable_80034068(short* p);
 // Matched
 int DrawTargetSelectMenu_8002D250(short* p, int mode, int cursor, int ot)
 {
@@ -253,7 +253,7 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int cursor, int ot)
             }
             else if (mode == 1)
             {
-                state = sub_80034068(p);
+                state = CheckMagicUsable_80034068(p);
             }
             else if ((unsigned int)(mode - 2) < 2)
             {

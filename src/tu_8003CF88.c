@@ -20,7 +20,7 @@
 
 
 // Matched
-void sub_8003CF88(short x, short y, int idx)
+void DrawNextPrompt_8003CF88(short x, short y, int idx)
 {
     publicTiySprts_8008D434[60].x0 = x;
     publicTiySprts_8008D434[60].y0 = y;
@@ -32,16 +32,16 @@ void sub_8003CF88(short x, short y, int idx)
 }
 extern void DrawPublicTiySprt_80033080(void* a, int b, int c);
 // Matched
-void sub_8003D034(unsigned short* pPos, int a1)
+void DrawCursorHand_8003D034(unsigned short* pPos, int ot)
 {
     short r[2];
     r[0] = pPos[0] - 13;
     r[1] = pPos[1] - 6;
     SetSemiTrans(&publicTiySprts_8008D434[5], 1);
-    DrawPublicTiySprt_80033080(r, 5, a1);
+    DrawPublicTiySprt_80033080(r, 5, ot);
 }
 // Matched
-void sub_8003D090(short x, short y, int a2, int a3, int idx)
+void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx)
 {
     int r = 0;
     int t;

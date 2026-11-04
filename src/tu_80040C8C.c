@@ -126,7 +126,7 @@ void StartIntroAnime_80040D34(EventEntry* p)
     }
 }
 // Matched
-int sub_80040D5C(void)
+int SelectIngameOrTitle_80040D5C(void)
 {
     if (saveData_8008B570.field_0 & 0x80)
     {
@@ -293,11 +293,11 @@ int SkipMovieButtonPressed_800413BC(MovieParams* c)
     return 0;
 }
 extern MovieCtx movieCtx_800960C0;
-extern int dword_80096100;
+extern int movieSliceFirst_80096100;
 extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
 #if 0
-// Not matched: field_14/dword_80096100 loads are hoisted above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
+// Not matched: field_14/movieSliceFirst_80096100 loads are hoisted above the slice copy, field_14 straight into s0 (orig: after the copy, lw v0 + move s0); 1 instruction short
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect r;
@@ -312,9 +312,9 @@ void MovieDctOutCallback_80041424(void)
     r = movieCtx_800960C0.slice;
     id = movieCtx_800960C0.field_14;
     movieCtx_800960C0.field_14 = (movieCtx_800960C0.field_14 + 1) & 1;
-    if (dword_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
+    if (movieSliceFirst_80096100 == 1 && (rem = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].w % movieCtx_800960C0.slice.w) != 0)
     {
-        dword_80096100 = 0;
+        movieSliceFirst_80096100 = 0;
         movieCtx_800960C0.slice.x += rem;
     }
     else
@@ -330,7 +330,7 @@ void MovieDctOutCallback_80041424(void)
         movieCtx_800960C0.field_34 = 1;
         movieCtx_800960C0.field_28 = movieCtx_800960C0.field_28 ? 0 : 1;
         movieCtx_800960C0.slice.x = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].x;
-        dword_80096100 = 1;
+        movieSliceFirst_80096100 = 1;
         movieCtx_800960C0.slice.y = movieCtx_800960C0.rect[movieCtx_800960C0.field_28].y;
     }
     LoadImage((RECT*)&r, movieCtx_800960C0.imgbuf[id]);
@@ -949,5 +949,5 @@ unsigned long *ringBufferStart_800960B0 BSS = 0;
 int dword_800960B4[3] BSS = { 0 };
 MovieCtx movieCtx_800960C0 BSS = { 0 };
 int bMovieFinished_800960FC BSS = 0;
-int dword_80096100 BSS = 0;
+int movieSliceFirst_80096100 BSS = 0;
 int dword_80096104 BSS = 0;

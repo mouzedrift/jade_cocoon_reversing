@@ -52,7 +52,7 @@ void StopAllEventEntries_80043B40(EventNode* p)
         p = p->next;
     }
 }
-extern short word_8008D51E; // projection distance
+extern short geomScreenBase_8008D51E; // projection distance
 extern int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
 // Matched
 int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, short fl)
@@ -68,8 +68,8 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
     gte_stszotz(&s->otz_C);
     if (s->otz_C - 1 < 0xFFFU)
     {
-        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
-        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
+        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
         if (s->w_10 > 0x800)
         {
             s->w_10 = 0x800;
@@ -101,8 +101,8 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned ch
     gte_stszotz(&s->otz_C);
     if (s->otz_C - 101 < 0xF9BU)
     {
-        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
-        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * word_8008D51E / 0xA0000;
+        s->w_10 = (size[0] << 7) / s->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
+        s->h_14 = (size[1] << 7) / s->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
         if (s->w_10 > 0x800)
         {
             s->w_10 = 0x800;
@@ -443,8 +443,8 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
     s->next_14 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     t = (FtgPrimGT4*)FTG_PRIM_SCRATCH;
     s->ref_28 = list->items;
-    t->tpage = dword_8009AAD8.tc.tpage;
-    t->clut = dword_8009AAD8.tc.clut;
+    t->tpage = ftgSpriteTPageClut_8009AAD8.tc.tpage;
+    t->clut = ftgSpriteTPageClut_8009AAD8.tc.clut;
     for (i = 0; i < list->count; i++)
     {
         s->slot_10 = s->ref_28->v[0].slot;
@@ -459,10 +459,10 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
             {
                 s->attr_0 = (flags & ~0x60) | s->attr_0;
             }
-            s->v_18[0] = dword_800987D8[s->slot_10][s->ref_28->v[0].idx];
-            s->v_18[1] = dword_800987D8[s->ref_28->v[1].slot][s->ref_28->v[1].idx];
-            s->v_18[2] = dword_800987D8[s->ref_28->v[2].slot][s->ref_28->v[2].idx];
-            s->v_18[3] = dword_800987D8[s->ref_28->v[3].slot][s->ref_28->v[3].idx];
+            s->v_18[0] = ftgSpriteVtxSlots_800987D8[s->slot_10][s->ref_28->v[0].idx];
+            s->v_18[1] = ftgSpriteVtxSlots_800987D8[s->ref_28->v[1].slot][s->ref_28->v[1].idx];
+            s->v_18[2] = ftgSpriteVtxSlots_800987D8[s->ref_28->v[2].slot][s->ref_28->v[2].idx];
+            s->v_18[3] = ftgSpriteVtxSlots_800987D8[s->ref_28->v[3].slot][s->ref_28->v[3].idx];
             *(long*)&t->x0 = s->v_18[0]->sxy_0;
             *(long*)&t->x1 = s->v_18[1]->sxy_0;
             *(long*)&t->x2 = s->v_18[2]->sxy_0;
@@ -530,10 +530,10 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int 
     }
     for (i = 0; i < list->count; i++)
     {
-        s->v_34[0] = dword_800987D8[s->ref_44->v[0].slot][s->ref_44->v[0].idx];
-        s->v_34[1] = dword_800987D8[s->ref_44->v[1].slot][s->ref_44->v[1].idx];
-        s->v_34[2] = dword_800987D8[s->ref_44->v[2].slot][s->ref_44->v[2].idx];
-        s->v_34[3] = dword_800987D8[s->ref_44->v[3].slot][s->ref_44->v[3].idx];
+        s->v_34[0] = ftgSpriteVtxSlots_800987D8[s->ref_44->v[0].slot][s->ref_44->v[0].idx];
+        s->v_34[1] = ftgSpriteVtxSlots_800987D8[s->ref_44->v[1].slot][s->ref_44->v[1].idx];
+        s->v_34[2] = ftgSpriteVtxSlots_800987D8[s->ref_44->v[2].slot][s->ref_44->v[2].idx];
+        s->v_34[3] = ftgSpriteVtxSlots_800987D8[s->ref_44->v[3].slot][s->ref_44->v[3].idx];
         otz = (s->v_34[0]->sz_4 + s->v_34[1]->sz_4 + s->v_34[2]->sz_4 + s->v_34[3]->sz_4) / 4;
         if (otz - 1 < 0xFFFU)
         {
@@ -570,7 +570,7 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int 
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)s->next_30;
     sub_8004D924();
 }
-/* inline copy of sub_8004D224 */
+/* inline copy of GetBonePos_8004D224 */
 static inline void GetBonePos(SVECTOR* o, AnimPose* p, int j)
 {
     if (j == 0)
@@ -829,7 +829,7 @@ static inline void AddTrans(long* a, long* b)
 // Not matched: same shape and length (1274 vs 1268 words); register allocation / scheduling differ in the alt matrix, the 5-word matrix copies and the translation adds
 // draws a skeleton: bone matrices from the pose (alt: bone rotations about x added from another pose), then
 // each drawn bone's FTG object
-void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
+void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 {
     SVECTOR r;
     SVECTOR r2;
@@ -852,7 +852,7 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     m->t[2] -= cameraEye_8008D600.vz;
     ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
     m[1].t[0] = root->t[1] = root->t[2] = 0;
-    GetBoneOffsets_80046248(sk, dword_80098690, alt);
+    GetBoneOffsets_80046248(sk, boneOffsets_80098690, alt);
     for (i = 0; (n = sk->bones[i].parent + 2) >= 2; i++)
     {
         GetFrameRot(&r, sk->pose_14, sk->frame_18, sk->bones[i].idx);
@@ -866,7 +866,7 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             RotZYX(&r, &m[n]);
         }
         gte_MulMatrix0(&m[n - 1], &m[n], &m[n]);
-        gte_ldv0(&dword_80098690[i]);
+        gte_ldv0(&boneOffsets_80098690[i]);
         gte_rtv0();
         gte_stlvnl(m[n].t);
         AddTrans(m[n].t, m[n - 1].t);
@@ -889,9 +889,9 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             gte_rtv0();
             gte_stlvnl(m[n].t);
             AddTrans(m[n].t, m[0].t);
-            dword_80096120[i].t[0] = m[n].t[0];
-            dword_80096120[i].t[1] = m[n].t[1];
-            dword_80096120[i].t[2] = m[n].t[2];
+            boneMatrices_80096120[i].t[0] = m[n].t[0];
+            boneMatrices_80096120[i].t[1] = m[n].t[1];
+            boneMatrices_80096120[i].t[2] = m[n].t[2];
             gte_ldclmv(&m[n - 1]);
             gte_rtir();
             gte_stclmv(&m[n]);
@@ -917,11 +917,11 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             {
                 gte_MulMatrix0(&m[n], (MATRIX*)getScratchAddr(0), &m[n]);
             }
-            ((long*)dword_80096120[i].m)[0] = ((long*)m[n].m)[0];
-            ((long*)dword_80096120[i].m)[1] = ((long*)m[n].m)[1];
-            ((long*)dword_80096120[i].m)[2] = ((long*)m[n].m)[2];
-            ((long*)dword_80096120[i].m)[3] = ((long*)m[n].m)[3];
-            ((long*)dword_80096120[i].m)[4] = ((long*)m[n].m)[4];
+            ((long*)boneMatrices_80096120[i].m)[0] = ((long*)m[n].m)[0];
+            ((long*)boneMatrices_80096120[i].m)[1] = ((long*)m[n].m)[1];
+            ((long*)boneMatrices_80096120[i].m)[2] = ((long*)m[n].m)[2];
+            ((long*)boneMatrices_80096120[i].m)[3] = ((long*)m[n].m)[3];
+            ((long*)boneMatrices_80096120[i].m)[4] = ((long*)m[n].m)[4];
         }
     }
     for (i = 0; sk->bones[i].parent >= 0; i++)
@@ -931,8 +931,8 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             SetSpadStack(SPAD_STACK_ADDR);
             SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], sk->light_2C, &boneMatrices_80098188[i]);
             ResetSpadStack();
-            gte_SetRotMatrix(&dword_80096120[i]);
-            gte_SetTransMatrix(&dword_80096120[i]);
+            gte_SetRotMatrix(&boneMatrices_80096120[i]);
+            gte_SetTransMatrix(&boneMatrices_80096120[i]);
             flags = sk->drawMode_1C;
             if ((flags & 0x10) && !(sk->bones[i].flags_6 & 4))
             {
@@ -957,12 +957,12 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     gte_SetTransMatrix(SKEL_MATS);
 }
 #endif
-INCLUDE_ASM(sub_80046A58);
+INCLUDE_ASM(DrawAnimSkel_80046A58);
 #if 0
 // Not matched: full C, about half the words differ (register allocation from the first loop on; the stack layout and block order follow the original)
-// sub_80046A58 blending two poses: the bone rotations are interpolated by t through the axis / angle of the
-// relative rotation (sub_8004AD44 / sub_8004B0A8), the bone offsets and per-bone scales linearly
-void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, int t, PointLight* light, AnimPose* alt)
+// DrawAnimSkel_80046A58 blending two poses: the bone rotations are interpolated by t through the axis / angle of the
+// relative rotation (GetRotationAxis_8004AD44 / BasisFromAxis_8004B0A8), the bone offsets and per-bone scales linearly
+void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, int t, PointLight* light, AnimPose* alt)
 {
     VECTOR root;
     MATRIX axis[40];
@@ -1032,8 +1032,8 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
         }
         else
         {
-            sub_8004AD44(&d, &acc.l);
-            sub_8004B0A8(&acc.l, &axis[i]);
+            GetRotationAxis_8004AD44(&d, &acc.l);
+            BasisFromAxis_8004B0A8(&acc.l, &axis[i]);
             TransposeMatrix(&axis[i], &axisT[i]);
             gte_MulMatrix0(&axisT[i], &d, &tmp.m);
             gte_MulMatrix0(&tmp.m, &axis[i], &rel[i]);
@@ -1055,7 +1055,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
             }
         }
         gte_MulMatrix0(&m[n - 1], &m[n], &m[n]);
-        o = &dword_80098690[n];
+        o = &boneOffsets_80098690[n];
         if (alt)
         {
             if (i == 1)
@@ -1114,7 +1114,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
             for (k = 0; k < n - 2; k++)
             {
                 gte_SetRotMatrix(&m[k + 1]);
-                gte_ldv0(&dword_80098690[k + 2]);
+                gte_ldv0(&boneOffsets_80098690[k + 2]);
                 gte_rtv0();
                 gte_stlvnl(&tmp.l);
                 acc.l.vx += tmp.l.vx;
@@ -1156,7 +1156,7 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
             m[n].t[0] = acc.l.vx;
             m[n].t[1] = acc.l.vy;
             m[n].t[2] = acc.l.vz;
-            dword_80096120[i] = m[n];
+            boneMatrices_80096120[i] = m[n];
         }
     }
     for (i = 0; sk->bones[i].parent >= 0; i++)
@@ -1164,8 +1164,8 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
         if (sk->bones[i].flags_6 & 2)
         {
             SetModelLighting_80019D84(sk->pos_4, (VECTOR*)&sk->bonePos_20[i], light, &boneMatrices_80098188[i]);
-            gte_SetRotMatrix(&dword_80096120[i]);
-            gte_SetTransMatrix(&dword_80096120[i]);
+            gte_SetRotMatrix(&boneMatrices_80096120[i]);
+            gte_SetTransMatrix(&boneMatrices_80096120[i]);
             flags = sk->drawMode_1C;
             if ((flags & 0x10) && !(sk->bones[i].flags_6 & 4))
             {
@@ -1187,10 +1187,10 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
     PopMatrix();
 }
 #endif
-INCLUDE_ASM(sub_80047E28);
+INCLUDE_ASM(DrawAnimSkelBlend_80047E28);
 
 // Matched
-void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, AnimPose* a2, int t2,
+void BlendSkelPoses_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, AnimPose* a2, int t2,
                   AnimPose* r0, AnimPose* p0, AnimPose* out, SVECTOR* vout)
 {
     SVECTOR s;
@@ -1261,7 +1261,7 @@ void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, 
         GetBonePos(&q0, p0, sk->bones[i].idx);
         GetBonePos(&q1, a1, sk->bones[i].idx);
         GetBonePos(&q2, a2, sk->bones[i].idx);
-        d = &dword_80098690[n];
+        d = &boneOffsets_80098690[n];
         d->vx = q0.vx + (q1.vx - q0.vx) * t1 / 4096 + (q2.vx - q0.vx) * t2 / 4096;
         d->vy = q0.vy + (q1.vy - q0.vy) * t1 / 4096 + (q2.vy - q0.vy) * t2 / 4096;
         d->vz = q0.vz + (q1.vz - q0.vz) * t1 / 4096 + (q2.vz - q0.vz) * t2 / 4096;
@@ -1276,7 +1276,7 @@ void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, 
     }
 }
 // Matched
-void sub_8004AD44(MATRIX* in, VECTOR* out)
+void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out)
 {
     MATRIX m;
     int c[9];
@@ -1365,6 +1365,6 @@ void sub_8004AD44(MATRIX* in, VECTOR* out)
     VectorNormal(&r, out);
 }
 
-MATRIX dword_80096120[40] BSS = { 0 };
+MATRIX boneMatrices_80096120[40] BSS = { 0 };
 int dword_80096620[2] BSS = { 0 };
 int dword_80096628[1750] BSS = { 0 };

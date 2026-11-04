@@ -1077,7 +1077,7 @@ int sub_800B9260(EvCtxEventfnc* c)
     pos->y_4 = q[1];
     pos->z_8 = q[2];
     rot->vy = ang;
-    sub_80037918(cameraTask_8008D4A0->entry.buffer);
+    UpdateCameraFollow_80037918(cameraTask_8008D4A0->entry.buffer);
     SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
     c->pc_8++;
     return 1;
@@ -1532,7 +1532,7 @@ int sub_800BA1DC(EvCtxEventfnc* c)
 
 int sub_800BA238(EvCtxEventfnc* c)
 {
-    if (sub_80034ADC(c->f11C_11C, c->pc_8->b_8))
+    if (ConsumeMsgWindowMark_80034ADC(c->f11C_11C, c->pc_8->b_8))
     {
         c->pc_8++;
         return 1;
@@ -1854,28 +1854,28 @@ int sub_800BAC60(EvCtxEventfnc* c)
     v.x_0 = src->x_0;
     v.y_4 = src->y_4 + 0x15E;
     v.z_8 = src->z_8;
-    sub_800379DC(&v, c->pc_8->b_8);
+    SetCameraBlendTarget_800379DC(&v, c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
 int sub_800BACE0(EvCtxEventfnc* c)
 {
-    sub_800379DC(sub_800BBBA0(c->pc_8->a_4), c->pc_8->b_8);
+    SetCameraBlendTarget_800379DC(sub_800BBBA0(c->pc_8->a_4), c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
 int sub_800BAD3C(EvCtxEventfnc* c)
 {
-    sub_80037A20(c->pc_8->c_C, c->pc_8->b_8);
+    ClearCameraBlendTarget_80037A20(c->pc_8->c_C, c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
 int sub_800BAD88(EvCtxEventfnc* c)
 {
-    int v = ((int (*)())sub_80037A4C)();
+    int v = ((int (*)())GetCameraBlend_80037A4C)();
     int b = c->pc_8->b_8;
     if ((b == 1 && (short)v == 0x1000) || (b == 0 && (short)v == 0))
     {
@@ -1915,7 +1915,7 @@ int sub_800BADF8(EvCtxEventfnc* c)
 
 int sub_800BAEBC(EvCtxEventfnc* c)
 {
-    sub_80037A6C(c->pc_8->a_4, c->pc_8->b_8);
+    SetCameraZoom_80037A6C(c->pc_8->a_4, c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
@@ -2811,7 +2811,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
     }
     if (c->flags_0 & 2)
     {
-        if (!sub_800349B4(c->f11C_11C, &info))
+        if (!GetMsgWindowResultIfDone_800349B4(c->f11C_11C, &info))
         {
             return 0;
         }
@@ -2837,7 +2837,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
         {
             c->fEC_EC = info.s2_2;
         }
-        sub_80034A84(c->f11C_11C);
+        CloseMsgWindow_80034A84(c->f11C_11C);
         dword_800AEBE8 = 0x8000;
         dword_800AEBEC = 0;
         c->f118_118 = 0;
@@ -2848,7 +2848,7 @@ int sub_800BC2B4(EvCtxEventfnc* c)
         k = 0;
         for (i = 0; dword_800AEBF0[i].xa_2.a_0 >= 0; i++)
         {
-            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && sub_80034ADC(c->f11C_11C, dword_800AEBF0[i].sub_1))
+            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && ConsumeMsgWindowMark_80034ADC(c->f11C_11C, dword_800AEBF0[i].sub_1))
             {
                 k = &dword_800AEBF0[i].xa_2;
             }
@@ -2860,14 +2860,14 @@ int sub_800BC2B4(EvCtxEventfnc* c)
             c->flags_0 |= 0x100;
         }
     }
-    if (sub_80034A30(c->f11C_11C))
+    if (IsMsgWindowWaiting_80034A30(c->f11C_11C))
     {
         s = &saveData_8008B570;
         if (s->settings_1C.bits.b_3 == 1 || XaIsIdle_80043584())
         {
             if (s->settings_1C.bits.c_4 == 1 || !c->f18_18)
             {
-                sub_80034A68(c->f11C_11C);
+                EnableMsgWindowAdvance_80034A68(c->f11C_11C);
                 c->flags_0 |= 2;
             }
         }

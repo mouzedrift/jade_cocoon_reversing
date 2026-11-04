@@ -22,8 +22,8 @@ typedef struct
 {
     int v[14];
 } Ints14_8003CD5C;
-extern const Ints14_8003CD5C dword_8007490C;
+extern const Ints14_8003CD5C loadingIconFrames_8007490C;
 
-extern int dword_80086568;
+extern int cdXaLock_80086568;
 
 #endif

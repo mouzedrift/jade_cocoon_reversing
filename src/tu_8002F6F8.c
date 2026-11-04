@@ -144,7 +144,7 @@ short GetLevantLevel_8002FA70(void)
 extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short MeasureTextWidth_8003E4C8(NameBuf* b);
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
-extern void sub_8003F89C(NameBuf* b);
+extern void UppercaseSjisName_8003F89C(NameBuf* b);
 extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot)
@@ -154,7 +154,7 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     int w;
     CopyPlayerName_8003F860(text, buf.s);
     DecodeText_8003F748(1, &buf);
-    sub_8003F89C(&buf);
+    UppercaseSjisName_8003F89C(&buf);
     if (align == 1)
     {
         w = MeasureTextWidthFont1_8003E6B0(&buf);

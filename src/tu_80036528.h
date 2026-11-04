@@ -14,9 +14,9 @@ typedef struct
 typedef struct
 {
     int pad_0[5];
-    struct_v3 field_14; // eye (copied to cameraEye_8008D600)
-    struct_v3 field_20; // look-at
-    short field_2C;     // roll
+    struct_v3 eye_14; // eye (copied to cameraEye_8008D600)
+    struct_v3 lookAt_20; // look-at
+    short roll_2C;     // roll
     short field_2E;
     unsigned char r_30;
     unsigned char g_31;
@@ -29,7 +29,7 @@ typedef struct
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
 extern CamEntry pointLights_8008D534[8];
-extern VECTOR cameraEye_8008D600; // camera eye (cameraState_8008D4F0.field_14)
+extern VECTOR cameraEye_8008D600; // camera eye (cameraState_8008D4F0.eye_14)
 
 typedef struct
 {

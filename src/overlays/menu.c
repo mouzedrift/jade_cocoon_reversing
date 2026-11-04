@@ -139,7 +139,7 @@ extern void DrawUnitStatusWindow_8002F1C8();
 extern int name_800AD288();
 extern UnitStatus* name_80014390();
 
-extern int sub_80034140();
+extern int IsCurrentMapListed_80034140();
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern char name_80082680[];
 extern char name_800826B0[];
@@ -915,7 +915,7 @@ void sub_800BCFDC(MenuMain* c)
     OpenItemMessageWindow_80035AC8(&m);
 }
 
-extern void sub_80034A84();
+extern void CloseMsgWindow_80034A84();
 extern EventNode* name_8008D640;
 void sub_800BD1B0(MenuTask* t)
 {
@@ -926,7 +926,7 @@ void sub_800BD1B0(MenuTask* t)
     if (f != 1)
         t->next_8 = sub_800BBF48;
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
-        sub_80034A84(p);
+        CloseMsgWindow_80034A84(p);
 }
 
 
@@ -1081,7 +1081,7 @@ void sub_800BD6C8(MenuTask* t, MenuCtx* c)
     }
     if (c->f28 < 8)
         c->f28++;
-    if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && sub_80034140())
+    if ((padPressed_8009194C & 0x80) && c->sel_2 == 0 && IsCurrentMapListed_80034140())
         t->next_8 = MinionListScreen_800BD80C;
 }
 
@@ -1209,7 +1209,7 @@ int IsMinionCaptured_800BDBB8(int a)
 
 extern char name_800BB9C0[];
 extern void DrawText_8003E91C();
-extern void sub_8003F89C();
+extern void UppercaseSjisName_8003F89C();
 void DrawMinionListPage_800BDBFC(char* a, int page)
 {
     short pos[2];
@@ -1235,7 +1235,7 @@ void DrawMinionListPage_800BDBFC(char* a, int page)
             pos[0] += 8;
             if (buf)
             {
-                sub_8003F89C(buf);
+                UppercaseSjisName_8003F89C(buf);
                 DrawText_8003E91C(1, buf, pos, 0xE);
             }
         }
@@ -1813,14 +1813,14 @@ void sub_800BEAE0(MenuCtx* c)
     case 0:
         if ((c->flags_0 & 1) || (c->flags_0 & 2))
         {
-            if (sub_80034140())
+            if (IsCurrentMapListed_80034140())
                 s = name_800C28F0;
             else
                 s = name_800C28D8;
         }
         else
         {
-            if (sub_80034140())
+            if (IsCurrentMapListed_80034140())
                 s = name_800C2910;
             else
                 s = name_80082680;
@@ -2204,7 +2204,7 @@ int sub_800BF540(MenuCtx* c)
         if (s)
             v = sub_800A5E80(s);
         else
-            v = sub_80034140();
+            v = IsCurrentMapListed_80034140();
         if (v != 0 && sub_800C1000() != 0)
             return 0;
         return 2;
@@ -2939,7 +2939,7 @@ int sub_800C0C3C(void* a)
     }
     else
     {
-        r = sub_80034140();
+        r = IsCurrentMapListed_80034140();
     }
     if (r == 0)
         return 0;

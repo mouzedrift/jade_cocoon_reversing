@@ -1312,9 +1312,9 @@ typedef struct
     int f24;
     unsigned long* ot;
 } FuseSkel;
-extern void sub_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
+extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* v1, char* a1, int t1, char* v2, char* a2, int t2, char* r0, char* p0,
                          char* out, void* vout);
-extern void sub_80046A58(FuseSkel* sk, void* buf, char* pose);
+extern void DrawAnimSkel_80046A58(FuseSkel* sk, void* buf, char* pose);
 void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char defaultBones_80079140[];
 extern unsigned char dword_80079210[];
@@ -1384,12 +1384,12 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
         w2 = (w2 << 12) / (w0 + w1 + w2);
         if (p->count_4 >= 2 && w1 != 0)
         {
-            sub_80039FE4(&a6[i], &t[i], &a6[i]);
+            DiffFtgObjects_80039FE4(&a6[i], &t[i], &a6[i]);
             LerpFtgObject_8003A6C4(w1, &t[i], &t[i], &a6[i]);
         }
         if (p->count_4 >= 3 && w2 != 0)
         {
-            sub_80039FE4(&a4[i], &t[i], &a4[i]);
+            DiffFtgObjects_80039FE4(&a4[i], &t[i], &a4[i]);
             LerpFtgObject_8003A6C4(w2, &t[i], &t[i], &a4[i]);
         }
     }
@@ -1433,7 +1433,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.f24 = 0;
     sk.ot = pOT_8008D690;
     b1 = GetModelBoneScale_80024EC8(m[1], p->record_20);
-    sub_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], GetModelBoneScale_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
+    BlendSkelPoses_8004A4FC(&sk, b1, (char*)m[1]->anims_54, p->weights_14[1], GetModelBoneScale_80024EC8(m[2], p->record_20), (char*)m[2]->anims_54,
                  p->weights_14[2], (char*)m[0]->anims_54, (char*)m[0]->anims_54, (char*)o->anims_54, 0);
     for (i = 1; i < 3; i++)
     {
@@ -1466,7 +1466,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sk.f18 = 0;
     sk.pos = pos;
     sk.ot = pOT_8008D690;
-    sub_80046A58(&sk, buf, (char*)o->anims_54);
+    DrawAnimSkel_80046A58(&sk, buf, (char*)o->anims_54);
     {
         short (*tbl)[6] = GetModelEffectTable_80024E64(o);
         ent = &tbl[FindEffectTblRow_80018908(0x26, tbl)];

@@ -71,7 +71,7 @@ void DrawNumber_8003EF74(int a0, int a1, int a2)
     DrawText_8003E91C(2, (int*)buf, a0, a2);
 }
 // Matched
-void sub_8003EFBC(short* pos, int val, int ot)
+void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     Font* p;
@@ -118,9 +118,9 @@ void sub_8003EFBC(short* pos, int val, int ot)
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
-extern int dword_80086898[][12];
+extern int charWidthThresholds_80086898[][12];
 // Matched
-void sub_8003F264(short* pos, int val, int ot)
+void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     Font* p;
@@ -141,7 +141,7 @@ void sub_8003F264(short* pos, int val, int ot)
         x -= p->w_10;
         for (k = 12; k != 0; k--)
         {
-            if (c - 1 < dword_80086898[0][k - 1])
+            if (c - 1 < charWidthThresholds_80086898[0][k - 1])
             {
                 x += k;
                 break;
@@ -304,7 +304,7 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
     return 0;
 }
 // Matched
-void sub_8003F89C(unsigned short* p)
+void UppercaseSjisName_8003F89C(unsigned short* p)
 {
     int i;
     unsigned short t;
@@ -653,7 +653,7 @@ void PoolFree_800400B4(Pool* h, void* p)
     }
 }
 // Matched
-void sub_80040148(int* p, int v)
+void PoolSetInited_80040148(int* p, int v)
 {
     p[1] = v;
 }
@@ -868,7 +868,7 @@ void GameLoop_8004047C(void)
                 break;
             case eUnknown_7:
                 SetDisplayMode_80040658(2);
-                currentGameState_8008D4B4 = sub_80040D5C();
+                currentGameState_8008D4B4 = SelectIngameOrTitle_80040D5C();
                 break;
             case eBattleArenaMenu_8:
                 SetDisplayMode_80040658(2);
@@ -907,7 +907,7 @@ void GameLoop_8004047C(void)
 
 int dword_8008686C[3] = { 112, 138, 0x800866D4 };
 int dword_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
-int dword_80086898[3][12] = {
+int charWidthThresholds_80086898[3][12] = {
     { 112, 112, 96, 48, 32 },
     {
         126, 126, 126, 126, 108, 90, 72, 54,

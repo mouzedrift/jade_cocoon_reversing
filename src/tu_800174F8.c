@@ -47,7 +47,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         obj->field_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
-        sub_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
+        DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         e->cb_8 = (EventEntryFn)PulseModelTask_8001761C;
     }
 }
@@ -63,7 +63,7 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
     obj->rot_80.vy += 0x80;
     fade = (obj->field_0 < 45) ? 0 : (((obj->field_0 - 44) << 24) | 0x80);
     LerpFtgObject_8003A6C4(sinTable_80084540[(obj->field_0 * 512) & 0xE00] / 2 + 0x800, model->ftg_4, model->ftg_4 + 1, obj->work_94);
-    sub_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, fade | 0x31, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, fade | 0x31, scale);
     if (obj->field_0++ > 60)
     {
         *flags = (*flags & ~1) | 0x8000;
@@ -97,7 +97,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         obj->field_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
-        sub_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
+        DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         e->cb_8 = (EventEntryFn)MorphModelTask_800178C0;
     }
 }
@@ -118,7 +118,7 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
             obj->field_0 = 0;
             if (obj->field_8 < 3)
             {
-                sub_80039FE4(&model->ftg_4[obj->field_8], &model->ftg_4[obj->field_8 + 1], obj->work_94);
+                DiffFtgObjects_80039FE4(&model->ftg_4[obj->field_8], &model->ftg_4[obj->field_8 + 1], obj->work_94);
             }
         }
     }
@@ -132,7 +132,7 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
             free3_8003FC6C(obj->work_94);
         }
     }
-    sub_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x10, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x10, scale);
 }
 extern EventNode* effectObjects_8008B4A8;
 extern void MdecEffectTask_80017B10(unsigned int* a0, EffectObj* a1);
@@ -220,7 +220,7 @@ void WaveModelTask_80017CE4(EventEntry* e, void* buf)
             scale[0] = scale[2] = 0x1000 + i * 0x80;
             y = sinTable_80084540[(obj->field_0 * 16) & 0xFF0] * (sinTable_80084540[((i - obj->field_0) * 256) & 0xF00] + 0x1000) / 4096;
             scale[1] = y;
-            sub_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, scale);
+            DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, scale);
         }
         obj->field_0++;
     }
@@ -259,7 +259,7 @@ void MorphInModelTask_80017E30(EventEntry* e, void* buf)
     pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
     pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
     pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-    sub_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_30 << 16) | 0xB0, scalePtr);
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_30 << 16) | 0xB0, scalePtr);
 }
 // Matched
 void FadeOutModelTask_80017FF8(EventEntry* e, void* buf)
@@ -286,7 +286,7 @@ void FadeOutModelTask_80017FF8(EventEntry* e, void* buf)
         pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
         pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
         pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-        sub_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_30 << 16) | 0xB0, scalePtr);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_30 << 16) | 0xB0, scalePtr);
     }
     else
     {

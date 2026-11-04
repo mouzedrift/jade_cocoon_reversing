@@ -79,7 +79,7 @@ extern int cameraZoom_8008B4F8;
 extern char dword_800A398C[];
 extern int sub_800A1934(Minion* p);
 extern void ResetCameraToLevant_800376A8(void);
-extern void sub_80037748(void);
+extern void StartBattleCamera_80037748(void);
 extern void InitCameraTask_800368F8(void);
 extern void nullsub_5(void);
 extern void sub_800A12B8(void);
@@ -608,7 +608,7 @@ void sub_800A11F4(void)
     {
         e->flags = (e->flags | 1) & ~0x8000;
         ResetCameraToLevant_800376A8();
-        sub_80037748();
+        StartBattleCamera_80037748();
         e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
         e->cb_C = (EventEntryFn)nullsub_5;
         e->flags = (e->flags | 4) & ~0x8000;

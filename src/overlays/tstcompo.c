@@ -17,7 +17,7 @@ typedef struct TstCompoBone
     short s4;
     short s6;
 } TstCompoBone;
-// parameter block of sub_80046A58 / sub_80047E28
+// parameter block of DrawAnimSkel_80046A58 / DrawAnimSkelBlend_80047E28
 typedef struct TstCompoDraw
 {
     FtgObject* ftg_0;
@@ -264,7 +264,7 @@ void sub_800A13B8(TstCompoWork* a)
 }
 
 extern void* memset(void* p, int c, unsigned int n);
-extern void sub_80046A58(void* a, void* b, void* c);
+extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A2588[];
 extern char name_800A2570[];
@@ -294,11 +294,11 @@ void sub_800A1468(TstCompoWork* c)
     c->draw_1A8.f20 = name_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
-    sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+    DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
 }
 
-extern void sub_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
+extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
 void sub_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
@@ -330,13 +330,13 @@ void sub_800A15F4(TstCompoWork* c)
     c->frame_180++;
     if ((unsigned)c->f1FC >= 0x1000)
     {
-        sub_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
+        DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
         anim = &c->model_4->anims_54[c->f204];
-        sub_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
+        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
                      name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
