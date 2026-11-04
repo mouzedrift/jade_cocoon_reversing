@@ -1,6 +1,9 @@
 dword_800A4088=0x800a4088; // overlay header / data
 jpt_800A4A2C=0x800a4a2c; // jump table of sub_800A4D48
 dword_800A4A54=0x800a4a54; // data behind the jump table
+jpt_800A4A9C=0x800a4a9c; // jump table of sub_800A616C
+jpt_800A4AB4=0x800a4ab4; // jump table of sub_800A68E0
+dword_800A4AD4=0x800a4ad4; // data behind the jump tables
 jpt_800A4B74=0x800a4b74; // jump table of PlayHitFeedback_800A7C0C
 sub_800A4B8C=0x800a4b8c;
 sub_800A4C40=0x800a4c40;

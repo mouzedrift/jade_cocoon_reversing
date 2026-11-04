@@ -888,9 +888,220 @@ void sub_800A60F0()
     }
 }
 
+INCLUDE_OVERLAY_ASM(combbtl, jpt_800A4A9C);
+
 INCLUDE_OVERLAY_ASM(combbtl, sub_800A616C);
 
-INCLUDE_OVERLAY_ASM(combbtl, sub_800A68E0);
+extern unsigned char byte_800A38D8;
+extern void StartCameraShake_80037BFC(int a);
+extern void StartPadVibration_80036528(int pad, int kind);
+extern void sub_800A7E34(int a, int b, int c);
+extern void PlayHitFeedback_800A7C0C(int side);
+extern int sub_800A0EE8(int i);
+extern int sub_800A0F1C(int i);
+extern CombBtlPair sub_800A0F50(int i, CombBtlCmd* cmd, int x);
+extern void sub_800A0FF0(int i, CombBtlCmd* cmd, int x);
+extern void sub_80039ED8(int mode);
+extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
+extern int rand();
+extern void PlaySfx_80031494(int id);
+extern CombBtlPair word_800A84C8[2]; // per side: the hit frame window of its command animation (sub_800A0F50)
+extern CombBtlPair word_800A8494;    // the merged window; lo counts the frames up to hi
+extern CombBtlPair sub_800A71E4(int n, CombBtlPair* p);
+extern unsigned char byte_800A85BC; // the minion slot a swap command (kind 3) brings in
+extern char* dword_800A85C0;
+// Matched
+// The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
+// handles a KO / swap / counter. Steps fall through in one call while the step keeps changing.
+void sub_800A68E0(CombBtlTask* t)
+{
+    int prev = -1;
+    UnitStatus* u;
+    int fl;
+    while (prev != word_800A8488)
+    {
+        prev = word_800A8488;
+        switch (prev)
+        {
+        case 0:
+            if (IsEffectTaskIdle_800148D4() == 1 && sub_800A0EE8(dword_800A85B8) == 1 &&
+                sub_800A0EE8(dword_800A8620) == 1)
+            {
+                word_800A8488 = 1;
+            }
+            break;
+        case 1:
+            word_800A84C8[dword_800A85B8] = sub_800A0F50(dword_800A85B8, &dword_800A85A8, 0);
+            word_800A84C8[dword_800A8620] = sub_800A0F50(dword_800A8620, &dword_800A8610, 1);
+            word_800A8494 = sub_800A71E4(2, word_800A84C8);
+            word_800A8488 = 2;
+            break;
+        case 2:
+            if (sub_800A0F1C(dword_800A85B8) && sub_800A0F1C(dword_800A8620))
+            {
+                word_800A8488 = 3;
+                dword_800A82DC = 0;
+            }
+            break;
+        case 3:
+            if (word_800A84C8[dword_800A85B8].lo == word_800A8494.lo)
+            {
+                sub_800A0FF0(dword_800A85B8, &dword_800A85A8, 0);
+                sub_800A7E34(dword_800A85B8, 1, word_800A84BC);
+                if (word_800A84BC > 0)
+                {
+                    StartCameraShake_80037BFC(0x1E);
+                    PlaySfx_80031494(0x72);
+                }
+                sub_800A7E34(dword_800A85B8, 2, word_800A84C4);
+                if ((unsigned int)(dword_800A85A8.kind_0 - 2) < 2)
+                {
+                    StartPadVibration_80036528(dword_800A85B8 ? byte_800A38D8 : 0, 9);
+                }
+            }
+            if (word_800A84C8[dword_800A8620].lo == word_800A8494.lo)
+            {
+                sub_800A0FF0(dword_800A8620, &dword_800A8610, 1);
+                if (word_800A84A4 >= 0)
+                {
+                    PlaySfx_80031494(word_800A84A4);
+                }
+                if (word_800A84A6 >= 0)
+                {
+                    PlaySfx_80031494(word_800A84A6);
+                }
+                if (dword_800A84A0 != dword_800A8498)
+                {
+                    sub_80039ED8((short)dword_800A84A0);
+                    dword_800A8498 = dword_800A84A0;
+                }
+            }
+            word_800A8494.lo++;
+            if (word_800A8494.hi < word_800A8494.lo)
+            {
+                word_800A8488 = 4;
+            }
+            else if (word_800A8494.lo == 0)
+            {
+                AdjustUnitStatById_800127D0(dword_800A85B8 + 8, 0x11, 0, dword_800A8480[dword_800A85B8]);
+                AdjustUnitStatById_800127D0(dword_800A8620 + 8, 0x11, 0, dword_800A8480[dword_800A8620]);
+                AdjustUnitStatById_800127D0(dword_800A85B8 + 8, 0x10, 0, dword_800A85F0[dword_800A85B8]);
+                AdjustUnitStatById_800127D0(dword_800A8620 + 8, 0x10, 0, dword_800A85F0[dword_800A8620]);
+                PlayHitFeedback_800A7C0C(dword_800A85B8);
+                PlayHitFeedback_800A7C0C(dword_800A8620);
+                sub_800A1068(dword_800A85B8);
+                sub_800A1068(dword_800A8620);
+                if (word_800A82E0[0] == 1 && !(byte_800A84A8 & 0x10))
+                {
+                    word_800A82E0[0] = 0;
+                    dword_800A82DC = (CombBtlNode*)sub_800A8098(1, dword_800A85C0, dword_800A85B8 == 1);
+                }
+            }
+            break;
+        case 4:
+            if (dword_800A82DC == 0 || (dword_800A82DC->flags & 0x8001) != 1)
+            {
+                dword_800A82DC = 0;
+                prev = word_800A8488 = 5;
+            }
+            break;
+        case 5:
+            if (byte_800A84A8 & 1)
+            {
+                KillUnit_800127B8(GetMinionStatusOf_80033818(&dword_800A3AA0[dword_800A8490][dword_800A4078[dword_800A8490]]));
+                sub_800A0D1C(dword_800A8490);
+                sub_800A0B70(dword_800A8490);
+                word_800A8488 = prev;
+                t->next_8 = sub_800A4EC8;
+                byte_800A84A8 &= ~1;
+            }
+            else if (dword_800A85A8.kind_0 == 3)
+            {
+                sub_800A7560(dword_800A85B8);
+                dword_800A4078[dword_800A85B8] = byte_800A85BC;
+                sub_800A0ACC(dword_800A85B8, &dword_800A3AA0[dword_800A85B8][byte_800A85BC]);
+                word_800A8488 = 6;
+                dword_800A84B0[dword_800A85B8] = 1;
+                word_800A84D0[dword_800A85B8] = 1000 - rand() % 200;
+            }
+            else if (byte_800A84A8 & 2)
+            {
+                byte_800A84A8 &= ~2;
+                word_800A8488 = prev;
+                t->next_8 = sub_800A5EB8;
+            }
+            else if (byte_800A84A8 & 0x10)
+            {
+                byte_800A84A8 &= ~0x10;
+                word_800A8488 = prev;
+                t->next_8 = sub_800A4EC8;
+            }
+            else if (dword_800A85A8.targets_C)
+            {
+                word_800A8488 = 7;
+            }
+            else
+            {
+                word_800A8488 = prev;
+                t->next_8 = sub_800A4EC8;
+            }
+            break;
+        case 6:
+            if (sub_800A758C() == 1)
+            {
+                sub_800A74A0(dword_800A85B8);
+                sub_800A0E1C(dword_800A85B8, (int)sub_800A10DC(dword_800A85B8 ^ 1));
+                word_800A8488 = 0;
+                dword_800A85A8.kind_0 = 2;
+                dword_800A85A8.targets_C = 0;
+                dword_800A85A8.arg_4 = dword_800A8600.arg_4;
+                dword_800A85A8.mask_8 = 1 << (dword_800A85B8 + 8);
+            }
+            break;
+        case 7:
+            u = GetUnitStatus_80014390((unsigned char)((unsigned char)dword_800A8620 + 8));
+            if (u->hp_8.cur_0 > 0 && ((dword_800A85C8.f8 & 0x18202) || (u->status_0 & 0x8000)))
+            {
+                sub_800A5BB4();
+                dword_800A85C8.kind_0 = 0;
+                dword_800A85B8 ^= 1;
+                dword_800A8620 ^= 1;
+                byte_800A84A8 |= 0x10;
+                fl = u->status_0;
+                if (fl & 0x200)
+                {
+                    dword_800A85A8.kind_0 = 0x13;
+                }
+                else if (fl & 0x10000)
+                {
+                    dword_800A85A8.kind_0 = 0xE;
+                }
+                else if (fl & 2)
+                {
+                    dword_800A85A8.kind_0 = 0x10;
+                }
+                else if (fl & 0x8000)
+                {
+                    dword_800A85A8.kind_0 = 0x12;
+                }
+                dword_800A85A8.arg_4 = 0;
+                dword_800A85A8.targets_C = 0;
+                word_800A8488 = 0;
+                dword_800A85A8.mask_8 = 1 << (dword_800A85B8 + 8);
+                sub_800A616C();
+                byte_800A85BD = dword_800A4078[dword_800A85B8];
+            }
+            else
+            {
+                word_800A8488 = prev;
+                t->next_8 = sub_800A4EC8;
+            }
+            break;
+        }
+    }
+}
+
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4AD4);
 
 int sub_800A7164(int i)
 {
