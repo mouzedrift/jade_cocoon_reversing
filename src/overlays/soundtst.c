@@ -1649,165 +1649,165 @@ typedef union SndTest
 } SndTest;
 
 extern void SoundTestUpdate_800A5238();
-void SoundTestInit_800A51D8(int* a, SndTest* b)
+void SoundTestInit_800A51D8(int* task, SndTest* st)
 {
-    b->f.se_6 = 0x7F;
-    b->f.reverb_8 = 0x32;
-    b->f.row_0 = 0;
-    b->f.seq_2 = 0;
-    b->f.seFile_4 = 0;
-    b->f.xa_A = 0;
-    a[2] = (int)SoundTestUpdate_800A5238;
+    st->f.se_6 = 0x7F;
+    st->f.reverb_8 = 0x32;
+    st->f.row_0 = 0;
+    st->f.seq_2 = 0;
+    st->f.seFile_4 = 0;
+    st->f.xa_A = 0;
+    task[2] = (int)SoundTestUpdate_800A5238;
     FreeSound_80030D00((int)&systemSound_80091D40);
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
 
 extern unsigned short padPressed_8009194C;
 extern unsigned short word_800918CC; // pad, with key repeat
-extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
+extern void PlayMusicSeq_80031260(void* sound, int idx, int loops);
 extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 // Matched
-void SoundTestUpdate_800A5238(int* a, SndTest* b)
+void SoundTestUpdate_800A5238(int* task, SndTest* st)
 {
     SVECTOR pos[12];
-    SoundStruct* ss;
+    SoundStruct* bgm;
     int id;
     if (padPressed_8009194C & 0x40)
     {
-        ss = &bgmSound_80091CE0;
-        if (ss->field_4_seq_num >= 0)
+        bgm = &bgmSound_80091CE0;
+        if (bgm->field_4_seq_num >= 0)
         {
-            SsSepStop(ss->field_C_sep_access_num, ss->field_4_seq_num);
-            ss->field_4_seq_num = -1;
+            SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
+            bgm->field_4_seq_num = -1;
         }
-        FreeSound_80030D00(ss);
+        FreeSound_80030D00(bgm);
         BeginFade_8001C260();
         bStopDrawingMovie_8008D45C = 1;
     }
     else if (padPressed_8009194C & 0x20)
     {
-        if (b->f.row_0 == 0)
+        if (st->f.row_0 == 0)
         {
-            id = b->f.seq_2;
+            id = st->f.seq_2;
             if (id != 10)
             {
-                ss = &bgmSound_80091CE0;
-                if (ss->field_4_seq_num >= 0)
+                bgm = &bgmSound_80091CE0;
+                if (bgm->field_4_seq_num >= 0)
                 {
-                    SsSepStop(ss->field_C_sep_access_num, ss->field_4_seq_num);
-                    ss->field_4_seq_num = -1;
+                    SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
+                    bgm->field_4_seq_num = -1;
                 }
-                FreeSound_80030D00(ss);
-                LoadSound_80030A84(id, ss);
-                PlayMusicSeq_80031260(ss, id, 1);
+                FreeSound_80030D00(bgm);
+                LoadSound_80030A84(id, bgm);
+                PlayMusicSeq_80031260(bgm, id, 1);
             }
         }
-        else if (b->f.row_0 == 1)
+        else if (st->f.row_0 == 1)
         {
         }
-        else if (b->f.row_0 == 2)
+        else if (st->f.row_0 == 2)
         {
-            if (b->f.voice_C >= 0)
+            if (st->f.voice_C >= 0)
             {
-                SsUtKeyOff(b->f.voice_C, bgmSound_80091CE0.field_0_vab_id, b->f.prog_E, 0x3f, 0);
+                SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0x3f, 0);
             }
-            b->f.prog_E = b->f.se_6;
-            b->f.voice_C = SsUtKeyOn(bgmSound_80091CE0.field_0_vab_id, b->f.prog_E, 0, 0x3f, 0,
+            st->f.prog_E = st->f.se_6;
+            st->f.voice_C = SsUtKeyOn(bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0, 0x3f, 0,
                                    saveData_8008B570.settings_1C.bits.sfxVol_14, saveData_8008B570.settings_1C.bits.sfxVol_14);
         }
         else
         {
-            XaRequestPlay_80043564(xaTracks_800A70F0[b->f.xa_A][1], xaTracks_800A70F0[b->f.xa_A][2], xaTracks_800A70F0[b->f.xa_A][3]);
+            XaRequestPlay_80043564(xaTracks_800A70F0[st->f.xa_A][1], xaTracks_800A70F0[st->f.xa_A][2], xaTracks_800A70F0[st->f.xa_A][3]);
         }
     }
     else if (padPressed_8009194C & 0x10)
     {
-        ss = &bgmSound_80091CE0;
-        if (ss->field_4_seq_num >= 0)
+        bgm = &bgmSound_80091CE0;
+        if (bgm->field_4_seq_num >= 0)
         {
-            SsSepSetDecrescendo(ss->field_C_sep_access_num, ss->field_4_seq_num, 0x7f, 0x78);
-            ss->field_4_seq_num = -1;
+            SsSepSetDecrescendo(bgm->field_C_sep_access_num, bgm->field_4_seq_num, 0x7f, 0x78);
+            bgm->field_4_seq_num = -1;
         }
-        if (b->f.voice_C >= 0)
+        if (st->f.voice_C >= 0)
         {
-            SsUtKeyOff(b->f.voice_C, bgmSound_80091CE0.field_0_vab_id, b->f.prog_E, 0x3f, 0);
+            SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0x3f, 0);
         }
-        b->f.voice_C = -1;
+        st->f.voice_C = -1;
     }
     else if (word_800918CC & 0x1000)
     {
-        b->f.row_0--;
+        st->f.row_0--;
     }
     else if (word_800918CC & 0x4000)
     {
-        b->f.row_0++;
+        st->f.row_0++;
     }
     else if (word_800918CC & 0x8000)
     {
-        b->v[b->f.row_0 + 1]--;
+        st->v[st->f.row_0 + 1]--;
     }
     else if (word_800918CC & 0x2000)
     {
-        b->v[b->f.row_0 + 1]++;
+        st->v[st->f.row_0 + 1]++;
     }
     else if (word_800918CC & 4)
     {
-        b->v[b->f.row_0 + 1] -= 10;
+        st->v[st->f.row_0 + 1] -= 10;
     }
     else if (word_800918CC & 8)
     {
-        b->v[b->f.row_0 + 1] += 10;
+        st->v[st->f.row_0 + 1] += 10;
     }
-    if (b->f.row_0 >= 5)
+    if (st->f.row_0 >= 5)
     {
-        b->f.row_0 = 4;
+        st->f.row_0 = 4;
     }
-    if (b->f.row_0 < 0)
+    if (st->f.row_0 < 0)
     {
-        b->f.row_0 = 0;
+        st->f.row_0 = 0;
     }
-    if (b->f.seq_2 >= 0x9b)
+    if (st->f.seq_2 >= 0x9b)
     {
-        b->f.seq_2 = 0;
+        st->f.seq_2 = 0;
     }
-    if (b->f.seq_2 < 0)
+    if (st->f.seq_2 < 0)
     {
-        b->f.seq_2 = 0x9a;
+        st->f.seq_2 = 0x9a;
     }
-    if (b->f.se_6 >= 0x80)
+    if (st->f.se_6 >= 0x80)
     {
-        b->f.se_6 = 0;
+        st->f.se_6 = 0;
     }
-    if (b->f.se_6 < 0)
+    if (st->f.se_6 < 0)
     {
-        b->f.se_6 = 0x7f;
+        st->f.se_6 = 0x7f;
     }
-    if (b->f.reverb_8 >= 0x80)
+    if (st->f.reverb_8 >= 0x80)
     {
-        b->f.reverb_8 = 0x7f;
+        st->f.reverb_8 = 0x7f;
     }
-    if (b->f.reverb_8 < 0)
+    if (st->f.reverb_8 < 0)
     {
-        b->f.reverb_8 = 0;
+        st->f.reverb_8 = 0;
     }
-    if (b->f.xa_A >= 0x648)
+    if (st->f.xa_A >= 0x648)
     {
-        b->f.xa_A = 0;
+        st->f.xa_A = 0;
     }
-    if (b->f.xa_A < 0)
+    if (st->f.xa_A < 0)
     {
-        b->f.xa_A = 0x647;
+        st->f.xa_A = 0x647;
     }
-    SsUtSetReverbDepth(b->f.reverb_8, b->f.reverb_8);
-    DrawBobbingCursorHand_8003D090(0x12, b->f.row_0 * 16 + 0x46, 0, 0, 0);
+    SsUtSetReverbDepth(st->f.reverb_8, st->f.reverb_8);
+    DrawBobbingCursorHand_8003D090(0x12, st->f.row_0 * 16 + 0x46, 0, 0, 0);
     pos[0].vx = 0x14;
     pos[0].vy = 0x3c;
     DrawText_8003E91C(2, soundTestLabels_800AA350[0], &pos[0], 0);
     pos[1].vx = 0x78;
     pos[1].vy = 0x3c;
-    DrawNumber_8003EF74(&pos[1], b->f.seq_2, 0);
+    DrawNumber_8003EF74(&pos[1], st->f.seq_2, 0);
     pos[2].vx = 0x14;
     pos[2].vy = 0x4c;
     DrawText_8003E91C(2, soundTestLabels_800AA350[1], &pos[2], 0);
@@ -1816,19 +1816,19 @@ void SoundTestUpdate_800A5238(int* a, SndTest* b)
     DrawText_8003E91C(2, soundTestLabels_800AA350[2], &pos[3], 0);
     pos[4].vx = 0x78;
     pos[4].vy = 0x5c;
-    DrawNumber_8003EF74(&pos[4], b->f.se_6, 0);
+    DrawNumber_8003EF74(&pos[4], st->f.se_6, 0);
     pos[5].vx = 0x14;
     pos[5].vy = 0x6c;
     DrawText_8003E91C(2, soundTestLabels_800AA350[3], &pos[5], 0);
     pos[6].vx = 0x78;
     pos[6].vy = 0x6c;
-    DrawNumber_8003EF74(&pos[6], b->f.reverb_8, 0);
+    DrawNumber_8003EF74(&pos[6], st->f.reverb_8, 0);
     pos[7].vx = 0x14;
     pos[7].vy = 0x7c;
     DrawText_8003E91C(2, soundTestLabels_800AA350[4], &pos[7], 0);
     pos[8].vx = 0x78;
     pos[8].vy = 0x7c;
-    DrawNumber_8003EF74(&pos[8], b->f.xa_A, 0);
+    DrawNumber_8003EF74(&pos[8], st->f.xa_A, 0);
     pos[9].vx = 0x14;
     pos[9].vy = 0xac;
     DrawText_8003E91C(2, soundTestLabels_800AA350[5], &pos[9], 0);
