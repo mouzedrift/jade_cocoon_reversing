@@ -1197,7 +1197,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 1, 16, &overlayLoaderTask_8008D4C0, (EventEntryFn)InitOverlayLoaderTask_80020CB8 },
     { 1, 5, 12, &xaTask_8008B560, (EventEntryFn)XaInitTask_80043054, (EventEntryFn)XaStop_800430B0 },
     { 1, 1, 8, &fadeTask_8008D628, (EventEntryFn)SceneFadeTask_8001A41C },
-    { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, (EventEntryFn)FreeCameraTask_800376A0 },
+    { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, FreeCameraTask_800376A0 },
     { 1, 0x8000, 124, (void *)&dword_8008D62C },
     { 1, 0x8000, 0x2A8, (void *)&messageWindowTask_8008D640 },
     { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },

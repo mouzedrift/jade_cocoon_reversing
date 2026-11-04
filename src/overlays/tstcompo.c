@@ -345,7 +345,7 @@ void TstCompoStartModel_800A1320(TstCompoWork* work)
 
 void TstCompoWaitModel_800A1354(TstCompoWork* work)
 {
-    if (name_80010A10(0))
+    if (RunModelTask_80010A10(0))
     {
         work->model_4 = GetModelTaskModel_80010A44(0);
         TstCompoInitBones_800A1AFC(work);

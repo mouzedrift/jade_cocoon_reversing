@@ -276,11 +276,11 @@ void StartSlotModel_800A0ACC(int i, Minion* minion)
 }
 
 // Matched
-// returns RunModelTask_80010A10's result: funcs.h still declares that one void (TODO: int, then `return` it here)
+// returns RunModelTask_80010A10's result
 int RunSlotModelTask_800A0B3C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    RunModelTask_80010A10(s->task_0);
+    return RunModelTask_80010A10(s->task_0);
 }
 
 // Matched
@@ -517,7 +517,7 @@ void StartCombatCamera_800A11F4(void)
         ResetCameraToLevant_800376A8();
         StartBattleCamera_80037748();
         e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
-        e->cb_C = (EventEntryFn)FreeCameraTask_800376A0;
+        e->cb_C = FreeCameraTask_800376A0;
         e->flags = (e->flags | 4) & ~0x8000;
         ResetCombatCamera_800A12B8();
     }
@@ -527,7 +527,7 @@ void StartCombatCamera_800A11F4(void)
 void StopCombatCamera_800A127C(void)
 {
     EventNode* p = cameraTask_8008D4A0;
-    sub_800376A0(&p->entry, p->entry.buffer);
+    FreeCameraTask_800376A0(&p->entry, p->entry.buffer);
     StopAllEventEntries_80043B40(cameraTask_8008D4A0);
 }
 

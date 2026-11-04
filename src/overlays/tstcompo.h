@@ -250,8 +250,6 @@ extern short cameraRot_8008D4C8[];
 extern unsigned char backColor_8008D460[];
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern int cameraEye_8008D600[];
-/* exe-side: funcs.h declares it void RunModelTask_80010A10(int) */
-extern int name_80010A10(int); // RunModelTask_80010A10 (declared void), its v0 is tested
 /* exe-side, to move to main.h / globals.h */
 extern short screenOffset_8008D474[];
 extern TstCompoMat dword_8007C2EC;

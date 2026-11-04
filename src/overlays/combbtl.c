@@ -1247,7 +1247,7 @@ void StartArenaCamera_800A7290()
         ResetCameraToLevant_800376A8();
         StartBattleCamera_80037748();
         e->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
-        e->cb_C = (EventEntryFn)FreeCameraTask_800376A0;
+        e->cb_C = FreeCameraTask_800376A0;
         e->flags = (e->flags | 4) & ~0x8000;
         cam = &cameraState_8008D4F0;
         cam->geomScreen_2E = 0;
@@ -1288,7 +1288,7 @@ void StartArenaCamera_800A7290()
 
 void StopArenaCamera_800A73E4()
 {
-    sub_800376A0(&cameraTask_8008D4A0->entry, cameraTask_8008D4A0->entry.buffer);
+    FreeCameraTask_800376A0(&cameraTask_8008D4A0->entry, cameraTask_8008D4A0->entry.buffer);
     StopAllEventEntries_80043B40(cameraTask_8008D4A0);
 }
 

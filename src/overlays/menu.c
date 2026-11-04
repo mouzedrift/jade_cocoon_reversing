@@ -1370,7 +1370,7 @@ void OnMinionLevelUp_800BCF74(short index)
     int idx = index - 1;
     int magicBits = (int)GetMinionMagicBits_80010824(3, idx);
     Minion* minion = GetMinion_80010598(3, idx);
-    MinionLevelUpHook_8001AEB8(name_800338B0(minion), &minion->status_84, magicBits);
+    MinionLevelUpHook_8001AEB8(GetDominantSpecies_800338B0(minion), &minion->status_84, magicBits);
 }
 
 void ShowDropMessage_800BCFDC(BattleResult* result)

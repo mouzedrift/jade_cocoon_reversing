@@ -792,7 +792,7 @@ void GetElementLevels_80033864(Minion* m, unsigned char* out)
     }
 }
 // Matched
-unsigned char GetDominantSpecies_800338B0(Minion* m)
+int GetDominantSpecies_800338B0(Minion* m)
 {
     unsigned char ids[8];
     unsigned char ratios[16];

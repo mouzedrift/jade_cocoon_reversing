@@ -524,7 +524,7 @@ int CreateSummonedMinionActor_800C0BF0()
     int rank;
     int levels;
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
-    if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
+    if (RunModelTask_80010A10(0) != 0)
     {
     model = GetModelTaskModel_80010A44(0);
     rank = GetRankForLevel_80019A80(summonedMinion_800C9188->status_84.level_44);

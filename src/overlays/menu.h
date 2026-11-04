@@ -776,7 +776,6 @@ extern int IsSceneHeld_800A5E68(void);
 extern void SetFadeMode_8001C19C(); // K&R definition (one argument), MENU passes two
 // = GetDominantSpecies_800338B0: rename once funcs.h declares it returning int (with its unsigned char return
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
-extern int name_800338B0();
 extern void DrawUnitStatusWindow_8002F1C8();
 extern int IsCurrentMapListed_80034140();
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);

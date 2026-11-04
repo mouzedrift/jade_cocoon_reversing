@@ -355,7 +355,7 @@ void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam)
     }
 }
 // Matched
-void FreeCameraTask_800376A0(void)
+void FreeCameraTask_800376A0(EventEntry* entry, void* buffer)
 {
 }
 extern void UpdateCameraRotation_80039E14(void);
@@ -556,7 +556,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
     }
 }
 // Matched
-void StartCameraShake_80037BFC(void)
+void StartCameraShake_80037BFC(int strength) // strength is unused
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->shake_10 = 0;

@@ -277,10 +277,10 @@ int FreeModelTask_8001098C(int key)
     return 0;
 }
 // Matched
-void RunModelTask_80010A10(int key)
+int RunModelTask_80010A10(int key)
 {
     EventEntry* entry = FindModelTask_8001091C();
-    StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
+    return StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
 }
 // Matched
 Model* GetModelTaskModel_80010A44(int key)

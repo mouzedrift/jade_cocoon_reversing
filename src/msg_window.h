@@ -13,4 +13,16 @@ extern const char aPickedUp_80074800[];
 
 void InitPadVibration_800364E4();
 
+// a target check of an item / magic command (CheckMagicUsable_80034068)
+typedef struct TargetQuery
+{
+    short id_0;     // item / magic id (the command's arg_4)
+    short actor_2;
+    short target_4; // target unit
+    short f6;
+} TargetQuery;
+
+int CheckMagicUsable_80034068(TargetQuery* q);
+int CheckUsableStub_80034124(TargetQuery* q);
+
 #endif

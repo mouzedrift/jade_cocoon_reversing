@@ -3567,7 +3567,7 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 {
     ActorEffectReq req;
     int repeat;
-    short* hitFrames;
+    HitTimes* hitFrames;
     int loopStart;
     if (lev->effect_2C != 0x46)
     {
@@ -3578,7 +3578,7 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
         req.effect_0 = lev->effect_2C;
         hitFrames = GetLevantAnimHitFrames_800AC9CC(lev->actionAnim_20);
         loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
-        req.hitTimes_4 = (HitTimes*)RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
+        req.hitTimes_4 = RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
         GetLevantEffectTarget_800A93A4((EffectTarget*)&req.tbl_8);
         CollectEffectTargets_800182B8(&req, lev->targets_38);
         PlayActorEffect_800184DC(&req, 0);
@@ -4616,7 +4616,7 @@ int GetLevantModelId_800AC3F4()
     int model;
     if (sd->field_830)
     {
-        model = ((int (*)(int))dword_8001D060)(sd->levantStatus_7C8.equipment_1C[1]) + levantOutfitModelOffsets_800B11B8[sd->field_834];
+        model = GetArmorOutfit_8001D060(sd->levantStatus_7C8.equipment_1C[1]) + levantOutfitModelOffsets_800B11B8[sd->field_834];
     }
     else
     {
@@ -4744,7 +4744,7 @@ short GetLevantAnimEventFrame_800AC944(int anim, int set)
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
     anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return anims[idx].hitFrames_C;
+    return anims[idx].hitTimes_C[0].start_0;
 }
 
 unsigned char GetLevantAnimFileId_800AC988(int anim, int set)
@@ -4755,12 +4755,12 @@ unsigned char GetLevantAnimFileId_800AC988(int anim, int set)
     return anims[idx].fileId_0;
 }
 
-short* GetLevantAnimHitFrames_800AC9CC(int anim)
+HitTimes* GetLevantAnimHitFrames_800AC9CC(int anim)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
-    return &anims[idx].hitFrames_C;
+    return anims[idx].hitTimes_C;
 }
 
 int* sub_800ACA38(int anim)
@@ -5309,7 +5309,7 @@ int SetEquipment_800AD9EC(int id, int slot)
             AddInventory_800AD184(old, 1, 1);
         SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(id)->kind_2);
         GetArmorData_8001D034(sd->levantStatus_7C8.equipment_1C[1]);
-        SetLevantOutfit_800AC3B0(dword_8001D060(sd->levantStatus_7C8.equipment_1C[1]));
+        SetLevantOutfit_800AC3B0(GetArmorOutfit_8001D060(sd->levantStatus_7C8.equipment_1C[1]));
         break;
     case 1:
         if (old == 0xFF)
@@ -5328,7 +5328,7 @@ int SetEquipment_800AD9EC(int id, int slot)
             AddInventory_800AD184(old, 1, 2);
         SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.equipment_1C[0])->kind_2);
         GetArmorData_8001D034(id);
-        SetLevantOutfit_800AC3B0(dword_8001D060(id));
+        SetLevantOutfit_800AC3B0(GetArmorOutfit_8001D060(id));
         break;
     fail:
         return 0;

@@ -274,7 +274,6 @@ extern void CloseMsgWindow_80034A84();             // -> msg_window.h
 extern void StartPadVibration_80036528(int pad, int kind); // -> camera.h
 extern void SetCameraBattleMode_80037720(void);    // -> camera.h
 extern void StartBattleCamera_80037748(void);      // -> camera.h
-extern void StartCameraShake_80037BFC();           // -> camera.h (camera.c defines it (void); COMBBTL passes the strength in a0)
 extern void SetAreaElementLight_80039ED8(int mode); // -> camera.h
 extern int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode); // -> movie.h
 extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time); // -> event.h

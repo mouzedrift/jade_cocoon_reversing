@@ -8,6 +8,7 @@
 #include "minion_menu.h"
 #include "effect_data.h"
 #include "common_tu.h"
+#include "msg_window.h"
 #include "combat.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
@@ -202,6 +203,5 @@ extern int GetSkillMpCost_80031A04(void* skills, int slot);  // -> skills.h
 extern int GetSkillTargetFlags_80031B0C(int skills, int idx); // -> unit_query.h
 extern int CheckSkillUsable_80033C98(ListMenuState* menu);   // -> unit_query.h
 extern int CheckMagicCastable_80033C08(ListMenuState* menu); // -> unit_query.h
-extern int CheckMagicUsable_80034068(short* cmd);            // -> msg_window.h
 
 #endif

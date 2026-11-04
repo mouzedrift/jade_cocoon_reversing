@@ -2,6 +2,7 @@
 // BATTLE.BIN
 #include "common.h"
 #include "common_tu.h"
+#include "msg_window.h"
 
 #include "funcs.h"
 
@@ -607,7 +608,6 @@ extern void TriggerEnemyEffects_800A2760(BattleCmd* p, int b);
 
 extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
-extern void StartCameraShake_80037BFC(int a);
 
 
 
@@ -959,13 +959,6 @@ typedef struct BatMenuItem
 
 
 
-typedef struct BatTargetQuery
-{
-    short id_0;     // item / magic id (the command's arg_4)
-    short actor_2;
-    short target_4; // target unit
-    short f6;
-} BatTargetQuery;
 
 
 
@@ -983,9 +976,8 @@ extern int CheckMagicCastable_80033C08(ListMenuState* q);
 
 extern int CheckSkillUsable_80033C98(ListMenuState* q);
 
-extern int CheckItemOnTarget_80033DF4(BatTargetQuery* q);
+extern int CheckItemOnTarget_80033DF4(TargetQuery* q);
 
-extern int CheckMagicUsable_80034068(BatTargetQuery* q);
 
 extern unsigned char GetSelectedCommand_800C78D0();
 

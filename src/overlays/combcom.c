@@ -624,7 +624,7 @@ void DrawCmdMenu_800CBEA4()
 // Matched
 void PreviewCmdEffect_800CC40C()
 {
-    short check[4];
+    TargetQuery check;
     ActionResult out;
     unsigned int i;
     UnitStatus* src;
@@ -667,18 +667,18 @@ void PreviewCmdEffect_800CC40C()
                 }
             }
         }
-        check[3] = 0;
-        check[0] = cmd_800CD840->arg_4;
-        check[1] = side_800CD839 + 8;
-        check[2] = targetSlot_800CD83C;
+        check.f6 = 0;
+        check.id_0 = cmd_800CD840->arg_4;
+        check.actor_2 = side_800CD839 + 8;
+        check.target_4 = targetSlot_800CD83C;
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 6)
         {
-            if (((int (*)(short*))CheckUsableStub_80034124)(check))
+            if (CheckUsableStub_80034124(&check))
             {
                 previewHp_800A82D0 = 0;
             }
         }
-        else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(check))
+        else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(&check))
         {
             previewHp_800A82D0 = 0;
         }
@@ -694,7 +694,7 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     CombComItem* list[4];
     CombComItem* items[3];
     CombComMenu menu;
-    short check[2];
+    TargetQuery check;
     int res;
     int i;
     int k;
@@ -723,7 +723,7 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.sel_C = sel;
     menu.items_10 = pk;
-    check[0] = target[0];
+    check.id_0 = target[0];
     res = 0;
     if (mode == 1)
     {
@@ -732,8 +732,8 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
             list[0] = p0;
             p0->text_4 = status->name_10;
         }
-        check[1] = target[1] + 8;
-        if (CheckMagicUsable_80034068(check) == 0)
+        check.actor_2 = target[1] + 8;
+        if (CheckMagicUsable_80034068(&check) == 0)
         {
             list[0]->flags &= ~2;
         }
@@ -809,17 +809,17 @@ void FinishCmd_800CC9FC()
 int CheckCmdSelectable_800CCA94()
 {
     ListMenuState ref;
-    short check[4];
+    TargetQuery check;
     int idx = GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
     const char** error;
     ref.cursor_0 = activeCursor_800CD854[4];
     errorMsg_800CD84C = 0;
     ref.scroll_2 = activeCursor_800CD854[5];
     ref.fieldMenu_A = 0;
-    check[3] = 0;
-    check[0] = cmd_800CD840->arg_4;
-    check[1] = side_800CD839 + 8;
-    check[2] = targetSlot_800CD83C;
+    check.f6 = 0;
+    check.id_0 = cmd_800CD840->arg_4;
+    check.actor_2 = side_800CD839 + 8;
+    check.target_4 = targetSlot_800CD83C;
     switch (menuState_800CD83A)
     {
     case 0:
@@ -869,7 +869,7 @@ int CheckCmdSelectable_800CCA94()
     case 3:
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 2)
         {
-            switch ((unsigned int)((int (*)(short*))CheckUsableStub_80034124)(check))
+            switch ((unsigned int)CheckUsableStub_80034124(&check))
             {
             case 0:
                 return 1;
@@ -884,7 +884,7 @@ int CheckCmdSelectable_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 3)
         {
-            switch ((unsigned int)CheckMagicUsable_80034068(check))
+            switch ((unsigned int)CheckMagicUsable_80034068(&check))
             {
             case 0:
                 return 1;

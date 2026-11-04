@@ -8,7 +8,6 @@
 
 
 /* funcs.h declares unsigned short; the callers here use the full register */
-#define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
 
 
 int dword_800B66C0 SDATA = 26;
@@ -1089,12 +1088,12 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
             case 4:
                 name = GetItemName_8001CE20(r);
                 icon = GetItemIcon_8001D2AC(r);
-                price = GETINT_8001CE54(r);
+                price = GetItemPrice_8001CE54(r);
                 break;
             case 5:
                 name = GetItemName_8001CE20(r);
                 icon = GetItemIcon_8001D2AC(r);
-                price = GETINT_8001CE54(r) * 3 / 4;
+                price = GetItemPrice_8001CE54(r) * 3 / 4;
                 break;
             case 10:
                 name = GetEquipmentName_8001D128(r, store->equipKind_10);
@@ -1404,11 +1403,11 @@ void DrawTotalPrice_800BCFCC(StoreMenu* store)
         {
         case 17:
         case 19:
-            v = GETINT_8001CE54(store->itemId_14);
+            v = GetItemPrice_8001CE54(store->itemId_14);
             break;
         case 16:
         case 18:
-            v = GETINT_8001CE54(store->itemId_14) * 3 / 4;
+            v = GetItemPrice_8001CE54(store->itemId_14) * 3 / 4;
             break;
         case 13:
         case 15:
@@ -1824,7 +1823,7 @@ int BuyItem_800BDB80(int id, int count)
 {
     if (AddInventory_800AD184(id, count, 0))
     {
-        return SpendMoney_800AD0A4(GETINT_8001CE54(id) * count) != 1;
+        return SpendMoney_800AD0A4(GetItemPrice_8001CE54(id) * count) != 1;
     }
     return 2;
 }
@@ -1834,7 +1833,7 @@ void SellItem_800BDBDC(int id, int count)
 {
     int price;
     RemoveInventory_800AD1E0(id, count, 0);
-    price = GETINT_8001CE54(id);
+    price = GetItemPrice_8001CE54(id);
     AddMoney_800AD058((price * 3 / 4) * count);
 }
 
@@ -1962,7 +1961,7 @@ int GetMaxBuyItemCount_800BDF68(short id)
     if (FindInventorySlotForAdd_800AD4D8(id, 1, 0) != 0)
     {
         have = GetInventoryCount_800AD254(id, 0);
-        n = GetMoney_800AD02C() / GETINT_8001CE54(id);
+        n = GetMoney_800AD02C() / GetItemPrice_8001CE54(id);
         if (n > 20)
         {
             n = 20;

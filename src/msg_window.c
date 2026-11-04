@@ -30,12 +30,12 @@ const char aReceived_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211
 const char aPickedUp_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
 
 // Matched
-int CheckMagicUsable_80034068(short* cmd)
+int CheckMagicUsable_80034068(TargetQuery* q)
 {
-    UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)cmd)[2]);
-    if (magicData_8007C438[cmd[0]].flags_0 & 0x40)
+    UnitStatus* target = GetUnitStatus_80014390((unsigned char)q->actor_2);
+    if (magicData_8007C438[q->id_0].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[cmd[0]].kind_7)
+        switch (magicData_8007C438[q->id_0].kind_7)
         {
         case 0:
             if (target->hp_8.cur_0 == target->hp_8.max_2)
@@ -44,7 +44,7 @@ int CheckMagicUsable_80034068(short* cmd)
             }
             break;
         case 1:
-            if (cmd[0] != 0x10 && !(target->status_0 & 0x7FB))
+            if (q->id_0 != 0x10 && !(target->status_0 & 0x7FB))
             {
                 return 3;
             }
@@ -54,7 +54,7 @@ int CheckMagicUsable_80034068(short* cmd)
     return 0;
 }
 // Matched
-int CheckUsableStub_80034124(void)
+int CheckUsableStub_80034124(TargetQuery* q)
 {
     return 0;
 }

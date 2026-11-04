@@ -1866,7 +1866,7 @@ int ReturnZero_8001CE4C(void)
     return 0;
 }
 // Matched
-unsigned short GetItemPrice_8001CE54(int idx)
+int GetItemPrice_8001CE54(int idx)
 {
     return itemPrices_8007CED8[idx];
 }
@@ -1973,7 +1973,7 @@ EquipmentData* GetArmorData_8001D034(unsigned int idx)
     return &armorData_8007D420[idx];
 }
 // Matched
-unsigned char GetArmorOutfit_8001D060(int idx)
+int GetArmorOutfit_8001D060(int idx)
 {
     return armorOutfits_8007D588[idx];
 }
@@ -2032,9 +2032,7 @@ int GetEquipmentName_8001D128(int idx, unsigned int kind)
     return name;
 }
 // Matched
-EquipmentData* GetEquipmentData_8001D190(idx, kind)
-unsigned int idx;
-unsigned int kind;
+EquipmentData* GetEquipmentData_8001D190(unsigned int idx, unsigned int kind)
 {
     EquipmentData* data = 0;
     switch (kind)
@@ -2089,9 +2087,9 @@ int GetItemIcon_8001D2AC(int idx)
     return 0xFF;
 }
 // Matched
-int GetEquipmentIcon_8001D2D4(void)
+int GetEquipmentIcon_8001D2D4(int idx, int kind)
 {
-    EquipmentData* data = GetEquipmentData_8001D190();
+    EquipmentData* data = GetEquipmentData_8001D190(idx, kind);
     if (data != 0)
     {
         return equipmentIcons_8007D938[data->icon_0];

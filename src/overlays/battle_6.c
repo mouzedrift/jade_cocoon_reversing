@@ -2418,7 +2418,7 @@ void HighlightTargetWindows_800C7424(unsigned char page)
 int IsMenuSelectionValid_800C7530()
 {
     ListMenuState ref;
-    BatTargetQuery query;
+    TargetQuery query;
     short idx;
     int* error;
     idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
@@ -2518,7 +2518,7 @@ int IsMenuSelectionValid_800C7530()
         }
         else if (GetSelectedCommand_800C78D0() == 6)
         {
-            switch (((int (*)(BatTargetQuery*))CheckUsableStub_80034124)(&query))
+            switch (CheckUsableStub_80034124(&query))
             {
             case 0:
                 return 1;
@@ -2881,7 +2881,7 @@ void BattleMenuDraw_800C7DA8()
 
 void PreviewCommandResult_800C83B0()
 {
-    BatTargetQuery query;
+    TargetQuery query;
     BattleCmd cmd;
     ActionResult res;
     unsigned int i;
@@ -2938,7 +2938,7 @@ void PreviewCommandResult_800C83B0()
         }
         else if (GetSelectedCommand_800C78D0() == 6)
         {
-            if (((int (*)(BatTargetQuery*))CheckUsableStub_80034124)(&query))
+            if (CheckUsableStub_80034124(&query))
             {
                 previewHpChange_800C9180 = 0;
             }

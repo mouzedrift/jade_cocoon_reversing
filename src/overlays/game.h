@@ -11,6 +11,7 @@
 
 #include "model.h"
 #include "effect_obj.h"
+#include "effect_model.h"
 #include "camera.h"
 #include "engine.h"
 #include "event.h" // EventDesc
@@ -927,8 +928,7 @@ typedef struct GameLevantAnim
     short loopStart_6;
     short loopEnd_8;
     unsigned short lastFrame_A;
-    short hitFrames_C;
-    char pad_E[0x26];
+    HitTimes hitTimes_C[10]; // hit windows (RepeatHitTimes_80018200)
     int f34;
     char pad_38[8];
 } GameLevantAnim;
@@ -1055,7 +1055,6 @@ extern char dword_8007DC80;
 extern char dword_8007DC88;
 
 extern unsigned int dword_8008BD38;
-extern int dword_8001D060(int); // GetArmorOutfit_8001D060: funcs.h declares it u_char, but SetEquipment_800AD9EC uses the result unmasked
 
 extern void TintVramImage_800292D0();
 
@@ -1687,7 +1686,7 @@ int EnemyAiTurnStep_800A4470(GameAi* ai);
 int FreeMdecBuffer_800A5854(void);
 int GetCameraTargetQuadrant_800A8930();
 int GetLevantAnimFlags_800AC900(int anim, int set);
-short* GetLevantAnimHitFrames_800AC9CC(int anim);
+HitTimes* GetLevantAnimHitFrames_800AC9CC(int anim);
 int GetSetReturnEntrance_800A683C(int entrance);
 int IsInFrontHalf_800A4884(Vec3i* from, short* rot, Vec3i* to);
 int IsLevantAnimLoadedOrFree_800AAFD8(int anim);
