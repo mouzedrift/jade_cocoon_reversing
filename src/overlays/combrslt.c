@@ -18,7 +18,7 @@ typedef struct CombRsltBox
     char c_3;
 } CombRsltBox;
 
-// sub_8002ADB4's text window (0x1C bytes)
+// DrawMenuItemWithWindow_8002ADB4's text window (0x1C bytes)
 extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
 extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
