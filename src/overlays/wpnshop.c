@@ -70,10 +70,10 @@ extern void DrawStoreButtonHelp_800BCF80();
 extern void DrawStore_800BB950();
 extern void DrawQuantityWindow_800BC0AC();
 extern int uiTiyLoaded_8008B4E8;
-extern int sub_800AD184(int a, int b, int c);
-extern void sub_800AD1E0(int a, int b, int c);
-extern void sub_800AD058(int a);
-extern int sub_800AD0A4(int a);
+extern int AddInventory_800AD184(int a, int b, int c);
+extern void RemoveInventory_800AD1E0(int a, int b, int c);
+extern void AddMoney_800AD058(int a);
+extern int SpendMoney_800AD0A4(int a);
 extern void DrawNextPrompt_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
 extern void UpdateMenuCursor_8003D794(void* p, int a1);
@@ -110,7 +110,7 @@ extern void SetStoreDialogText_800BCED4();
 extern void DrawTotalPrice_800BCFCC();
 extern void DrawStoreDialog_800BB8CC();
 extern int** dword_8008D3E0;
-extern void sub_800A7B00(int a);
+extern void SuspendFieldMinions_800A7B00(int a);
 extern void StoreWaitUiTiy_800BB130();
 extern short CountStock_800BDDF8();
 extern int GetStoreStockMask_800BB088();
@@ -127,7 +127,7 @@ typedef struct WpnBox2_wpnshop
     short y;
 } WpnBox2_wpnshop;
 extern void DrawUiWindow_8002A384(void* p);
-extern int sub_800AD02C(void);
+extern int GetMoney_800AD02C(void);
 extern int GetMaxBuyItemCount_800BDF68(short id);
 extern int GetMaxBuyEquipCount_800BDE38(short id, short kind);
 typedef struct WpnPos_wpnshop
@@ -139,10 +139,10 @@ extern void DrawHeldCountWindow_800BBFD4();
 extern short GetStoreListPos_800BE00C(StoreMenu* o, short i);
 extern int GetStockItem_800BDDB0();
 extern int GetStockEquipment_800BDD2C();
-extern int sub_800AD2C8(int a, int b);
-extern int sub_800AD254(int a, int b);
-extern int sub_800AD288(int a, int b);
-extern int sub_800AD73C(int a);
+extern int GetInventorySlotCount_800AD2C8(int a, int b);
+extern int GetInventoryCount_800AD254(int a, int b);
+extern int GetInventorySlotId_800AD288(int a, int b);
+extern int TestValuableFlag_800AD73C(int a);
 extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
 extern void DrawSmallNumber9_8002C414(void* p, int a, short b);
 typedef struct WpnBox_wpnshop
@@ -155,7 +155,7 @@ typedef struct WpnBox_wpnshop
     char c_B;
 } WpnBox_wpnshop;
 extern void FreeActiveOverlay_8002C014(void);
-extern void sub_800AD9EC(int a, int b);
+extern void SetEquipment_800AD9EC(int a, int b);
 extern void UpdateStoreCursor_800BBDD0();
 extern void StoreInput_800BB664();
 extern void StoreEnterState_800BB30C();
@@ -173,19 +173,19 @@ extern void StoreConfirmInput_800BD444();
 extern void ReadyEquipInput_800BD61C();
 extern void StoreWaitPrompt_800BD6A4();
 
-extern int sub_800AD308(int a);
+extern int GetLastInventorySlot_800AD308(int a);
 extern void StoreWaitMapReload_800BB298();
 extern void SetLoadFadeFlag_80027478(int a, int b);
-extern void sub_800A7BF0(int a);
-extern void sub_800A6D30(int a);
+extern void ResumeFieldMinions_800A7BF0(int a);
+extern void RequestGameMode_800A6D30(int a);
 extern int IsMapLoading_800272D0(void);
 extern int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d);
 extern unsigned short padRepeat_800918CC;
 extern int eventDispatchHalt_8008B540;
 extern void StoreFadeIn_800BB194();
 extern void StoreTask_800BB1F4();
-extern unsigned int sub_800AD990(int a);
-extern int sub_800AD4D8(int a, int b, int c);
+extern unsigned int GetEquippedId_800AD990(int a);
+extern int FindInventorySlotForAdd_800AD4D8(int a, int b, int c);
 
 int dword_800B66C0 SDATA = 26;
 const int aEmpty_800B66C4 = 0;
@@ -526,7 +526,7 @@ void StartStore_800BAE2C(int kind, short keeper)
         o->errorId_4E = 0;
         o->messageTimer_50 = 0;
         SetFadeMode_8001C19C(0, 0x20);
-        sub_800A7B00(-1);
+        SuspendFieldMinions_800A7B00(-1);
         LoadUiTiy_8002BF74();
         t->cb_8 = (EventEntryFn)StoreWaitUiTiy_800BB130;
     }
@@ -539,11 +539,11 @@ INCLUDE_OVERLAY_ASM(wpnshop, StartStore_800BAE2C);
 int GetStoreStockMask_800BB088(StoreMenu* o)
 {
     int r = 1;
-    if (sub_800AD73C(4))
+    if (TestValuableFlag_800AD73C(4))
     {
         r = 2;
     }
-    if (sub_800AD73C(6))
+    if (TestValuableFlag_800AD73C(6))
     {
         r = 4;
     }
@@ -607,11 +607,11 @@ void StoreWaitMapReload_800BB298(EventEntry* t)
 {
     if (IsMapLoading_800272D0() == 0)
     {
-        sub_800A7BF0(-1);
+        ResumeFieldMinions_800A7BF0(-1);
         t->cb_8 = StoreTask_800BB1F4;
         t->flags = (t->flags & ~1) | 0x8000;
         SetLoadFadeFlag_80027478(0x40, 0);
-        sub_800A6D30(1);
+        RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
 }
@@ -634,13 +634,13 @@ void StoreEnterState_800BB30C(StoreMenu* o)
         switch (o->nextState_2)
         {
         case 3:
-            r = sub_800AD308(0);
+            r = GetLastInventorySlot_800AD308(0);
             if (r < 3)
                 r = 3;
             o->cursor_28[2] = r + 1;
             break;
         case 5:
-            r = sub_800AD308(o->equipKind_10 + 1);
+            r = GetLastInventorySlot_800AD308(o->equipKind_10 + 1);
             if (r < 3)
                 r = 3;
             o->cursor_28[2] = r + 1;
@@ -949,7 +949,7 @@ void DrawStore_800BB950(StoreMenu* o)
                 }
                 break;
             case 5:
-                r = sub_800AD288((short)s, 0);
+                r = GetInventorySlotId_800AD288((short)s, 0);
                 if (r != 0xFF)
                 {
                     p = itemDescLines_800BEBCC + r * 16;
@@ -977,7 +977,7 @@ void DrawStore_800BB950(StoreMenu* o)
                 }
                 break;
             case 11:
-                r = sub_800AD288((short)s, o->equipKind_10 + 1);
+                r = GetInventorySlotId_800AD288((short)s, o->equipKind_10 + 1);
                 if (r != 0xFF)
                 {
                     switch (o->equipKind_10)
@@ -1081,7 +1081,7 @@ void DrawMoneyWindow_800BBED0(void* unused, WpnPos_wpnshop* p)
     DrawUiTiySprt_8002C06C(&b, 0x7A, 0xE);
     b.x_0 = p->x + 0x60;
     b.y_2 = p->y + 6;
-    DrawSmallNumber9_8002C414(&b, sub_800AD02C(), 0xE);
+    DrawSmallNumber9_8002C414(&b, GetMoney_800AD02C(), 0xE);
     b.x_0 = p->x + 0x61;
     b.y_2 = p->y + 4;
     DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
@@ -1184,11 +1184,11 @@ void DrawItemHeldCount_800BC2E4(StoreMenu* o)
     int r = 0;
     if (o->sell_12 == 1)
     {
-        r = sub_800AD2C8(GetStoreListPos_800BE00C(o, 5), 0);
+        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(o, 5), 0);
     }
     else if (o->sell_12 == 0)
     {
-        r = sub_800AD254(GetStockItem_800BDDB0(GetStoreListPos_800BE00C(o, 4), o->stockMask_1E), 0);
+        r = GetInventoryCount_800AD254(GetStockItem_800BDDB0(GetStoreListPos_800BE00C(o, 4), o->stockMask_1E), 0);
     }
     DrawHeldCountWindow_800BBFD4(r);
 }
@@ -1250,7 +1250,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             }
             break;
         case 5:
-            r = sub_800AD288(s, 0);
+            r = GetInventorySlotId_800AD288(s, 0);
             break;
         case 10:
             if (s < o->stockCounts_20[o->equipKind_10])
@@ -1263,7 +1263,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             }
             break;
         case 11:
-            r = sub_800AD288(s, o->equipKind_10 + 1);
+            r = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
             break;
         default:
             r = 0xFF;
@@ -1303,7 +1303,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             storeListRows_800BEA40[i][0].value_4 = icon;
             storeListRows_800BEA40[i][1].value_4 = name;
             storeListRows_800BEA40[i][2].value_4 = price;
-            if (sub_800AD02C() < price && (k == 4 || k == 10))
+            if (GetMoney_800AD02C() < price && (k == 4 || k == 10))
             {
                 storeListRows_800BEA40[i][0].flags_0 |= 2;
                 storeListRows_800BEA40[i][1].flags_0 |= 2;
@@ -1417,7 +1417,7 @@ void DrawEquippedMark_800BCABC(StoreMenu* o, short k)
     WpnRect_wpnshop rect;
     WpnA384_wpnshop d;
     WpnBox2_wpnshop box;
-    int cur = sub_800AD990(o->equipKind_10);
+    int cur = GetEquippedId_800AD990(o->equipKind_10);
     int s;
     int r = 0xFF;
     if (k == o->panel_34)
@@ -1441,7 +1441,7 @@ void DrawEquippedMark_800BCABC(StoreMenu* o, short k)
     }
     else if (k == 0xB)
     {
-        r = sub_800AD288(s, o->equipKind_10 + 1);
+        r = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
     }
     if (r != 0xFF && r == cur)
     {
@@ -1472,11 +1472,11 @@ void DrawEquipHeldCount_800BCC4C(StoreMenu* o)
     int r = 0;
     if (o->sell_12 == 1)
     {
-        r = sub_800AD2C8(GetStoreListPos_800BE00C(o, 0xB), o->equipKind_10 + 1);
+        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(o, 0xB), o->equipKind_10 + 1);
     }
     else if (o->sell_12 == 0)
     {
-        r = sub_800AD254(GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(o, 0xA), o->equipKind_10, o->stockMask_1E), o->equipKind_10 + 1);
+        r = GetInventoryCount_800AD254(GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(o, 0xA), o->equipKind_10, o->stockMask_1E), o->equipKind_10 + 1);
     }
     DrawHeldCountWindow_800BBFD4(r);
 }
@@ -1715,13 +1715,13 @@ void ItemSellListInput_800BD378(StoreMenu* o)
 {
     int s = o->cursorIndex_30 + o->cursorScroll_32;
     int r;
-    sub_800AD288(s, 0);
-    r = sub_800AD2C8(s, 0);
+    GetInventorySlotId_800AD288(s, 0);
+    r = GetInventorySlotCount_800AD2C8(s, 0);
     if (o->confirm_40)
     {
         if (r)
         {
-            o->itemId_14 = sub_800AD288(s, 0);
+            o->itemId_14 = GetInventorySlotId_800AD288(s, 0);
             if (o->sell_12 == 0)
             {
                 o->nextState_2 = 0xA;
@@ -1814,7 +1814,7 @@ void ReadyEquipInput_800BD61C(StoreMenu* o)
         if (o->cursorIndex_30 == 0)
         {
             PlaySfx_80031494(0x7E);
-            sub_800AD9EC(o->itemId_14, o->equipKind_10);
+            SetEquipment_800AD9EC(o->itemId_14, o->equipKind_10);
             o->nextState_2 = 0x11;
             return;
         }
@@ -1845,7 +1845,7 @@ void StoreWaitPrompt_800BD6A4(StoreMenu* o)
 // Matched
 int IsEquipped_800BD71C(int id, int kind)
 {
-    int r = sub_800AD990(kind);
+    int r = GetEquippedId_800AD990(kind);
     if (id != 0xFF && id == r)
     {
         return 1;
@@ -1864,13 +1864,13 @@ void StoreQuantityInput_800BD760(StoreMenu* o)
         v = GetMaxBuyEquipCount_800BDE38((short)o->itemId_14, o->equipKind_10);
         break;
     case 9:
-        v = sub_800AD2C8(o->savedIndex_36 + o->savedScroll_38, o->equipKind_10 + 1);
+        v = GetInventorySlotCount_800AD2C8(o->savedIndex_36 + o->savedScroll_38, o->equipKind_10 + 1);
         break;
     case 10:
         v = GetMaxBuyItemCount_800BDF68((short)o->itemId_14);
         break;
     case 11:
-        v = sub_800AD2C8(o->savedIndex_36 + o->savedScroll_38, 0);
+        v = GetInventorySlotCount_800AD2C8(o->savedIndex_36 + o->savedScroll_38, 0);
         break;
     }
     o->quantity_18 = AdjustBuyQuantity_800BE084(o->quantity_18, v);
@@ -1981,10 +1981,10 @@ void EquipSellListInput_800BDAB4(StoreMenu* o)
     int s = o->cursorIndex_30 + o->cursorScroll_32;
     if (o->confirm_40)
     {
-        if (sub_800AD2C8(s, o->equipKind_10 + 1))
+        if (GetInventorySlotCount_800AD2C8(s, o->equipKind_10 + 1))
         {
             PlaySfx_80031494(0x7E);
-            o->itemId_14 = sub_800AD288(s, o->equipKind_10 + 1);
+            o->itemId_14 = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
             if (o->sell_12 == 0)
             {
                 o->nextState_2 = 8;
@@ -2010,9 +2010,9 @@ void EquipSellListInput_800BDAB4(StoreMenu* o)
 // 0: bought, 1: not enough money, 2: no room
 int BuyItem_800BDB80(int id, int count)
 {
-    if (sub_800AD184(id, count, 0))
+    if (AddInventory_800AD184(id, count, 0))
     {
-        return sub_800AD0A4(GETINT_8001CE54(id) * count) != 1;
+        return SpendMoney_800AD0A4(GETINT_8001CE54(id) * count) != 1;
     }
     return 2;
 }
@@ -2021,17 +2021,17 @@ int BuyItem_800BDB80(int id, int count)
 void SellItem_800BDBDC(int id, int count)
 {
     int price;
-    sub_800AD1E0(id, count, 0);
+    RemoveInventory_800AD1E0(id, count, 0);
     price = GETINT_8001CE54(id);
-    sub_800AD058((price * 3 / 4) * count);
+    AddMoney_800AD058((price * 3 / 4) * count);
 }
 
 // Matched
 int BuyEquipment_800BDC40(int id, int kind, int count)
 {
-    if (sub_800AD184(id, count, kind + 1) == 1)
+    if (AddInventory_800AD184(id, count, kind + 1) == 1)
     {
-        return sub_800AD0A4(GetEquipmentPrice_8001D1F8(id, kind) * count) != 1;
+        return SpendMoney_800AD0A4(GetEquipmentPrice_8001D1F8(id, kind) * count) != 1;
     }
     return 2;
 }
@@ -2040,9 +2040,9 @@ int BuyEquipment_800BDC40(int id, int kind, int count)
 void SellEquipment_800BDCB4(int id, int kind, int count)
 {
     int price;
-    sub_800AD1E0(id, count, kind + 1);
+    RemoveInventory_800AD1E0(id, count, kind + 1);
     price = GetEquipmentPrice_8001D1F8(id, kind);
-    sub_800AD058((price * 3 / 4) * count);
+    AddMoney_800AD058((price * 3 / 4) * count);
 }
 
 // the n-th equipment of a kind this store stocks (stock bits & mask), 0xFF: none
@@ -2119,10 +2119,10 @@ int GetMaxBuyEquipCount_800BDE38(short id, short kind)
 {
     int have;
     int n;
-    if (sub_800AD4D8(id, 1, kind + 1) != 0)
+    if (FindInventorySlotForAdd_800AD4D8(id, 1, kind + 1) != 0)
     {
-        have = sub_800AD254(id, kind + 1);
-        n = sub_800AD02C() / GetEquipmentPrice_8001D1F8(id, kind);
+        have = GetInventoryCount_800AD254(id, kind + 1);
+        n = GetMoney_800AD02C() / GetEquipmentPrice_8001D1F8(id, kind);
         if (n > 20)
         {
             n = 20;
@@ -2136,7 +2136,7 @@ int GetMaxBuyEquipCount_800BDE38(short id, short kind)
     {
         return -1;
     }
-    if (id == sub_800AD990(kind) && n >= 2 && n == 20 - sub_800AD254(id, kind + 1))
+    if (id == GetEquippedId_800AD990(kind) && n >= 2 && n == 20 - GetInventoryCount_800AD254(id, kind + 1))
     {
         n--;
     }
@@ -2147,10 +2147,10 @@ int GetMaxBuyItemCount_800BDF68(short id)
 {
     int have;
     int n;
-    if (sub_800AD4D8(id, 1, 0) != 0)
+    if (FindInventorySlotForAdd_800AD4D8(id, 1, 0) != 0)
     {
-        have = sub_800AD254(id, 0);
-        n = sub_800AD02C() / GETINT_8001CE54(id);
+        have = GetInventoryCount_800AD254(id, 0);
+        n = GetMoney_800AD02C() / GETINT_8001CE54(id);
         if (n > 20)
         {
             n = 20;

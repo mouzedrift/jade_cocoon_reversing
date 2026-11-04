@@ -210,7 +210,7 @@ void EncounterWatchTask_800A1314(GameTask_1* t)
 // Matched
 void StartEncounterBattle_800A13B8(GameTask_1* t, void** q)
 {
-    sub_800A895C();
+    EnterLevantBattleMode_800A895C();
     SetupEncounter_800A1BD0();
     SuspendOtherEnemies_800A1E98();
     FreeLevantAnimSet_800AC73C();
@@ -789,21 +789,21 @@ int IsEnemyAlive_800A24F4(int a)
 }
 
 // Matched
-int sub_800A2550(int a)
+int IsEnemyIdle_800A2550(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
     return sub_8001E1C8(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
-int sub_800A2594(int a)
+int IsEnemyReady_800A2594(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
     return sub_8001E1DC(gCtx_800B1260.actors_7c[a]);
 }
 
 // Matched
-int sub_800A25D8(int a)
+int TurnEnemyToward_800A25D8(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
     return 0;
@@ -911,7 +911,7 @@ int sub_800A28DC(int a)
 }
 
 // Matched
-int sub_800A28FC(int a)
+int CanFleeFromEnemy_800A28FC(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
     return dword_800B19E0;
@@ -966,7 +966,7 @@ int GetEnemyMagicBits_800A2A70(int a)
 }
 
 // Matched
-int sub_800A2AB4(void)
+int GetActiveSwapEnemy_800A2AB4(void)
 {
     GameEncounter* c = &gCtx_800B1260;
     if (c->fixed_774 != 0)
@@ -981,7 +981,7 @@ int sub_800A2AB4(void)
 }
 
 // Matched
-void sub_800A2AE8(void)
+void SwapEncounterEnemy_800A2AE8(void)
 {
     if (gCtx_800B1260.f3c == 0)
     {

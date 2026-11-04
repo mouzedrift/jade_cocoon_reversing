@@ -464,7 +464,7 @@ extern int CountMaskedUntilZero_80034B40(int* p, unsigned int mask);
 
 extern void InitFonts_8003DA70(void);
 extern void SceneFadeTask_8001A41C(EventEntry* e, struct Fade_8001A41C* q);
-extern unsigned int sub_800AD990(int a0);
+extern unsigned int GetEquippedId_800AD990(int a0);
 extern void ResetModelLoader_800204D0(void);
 extern void StopModelLoader_800205F0(void);
 extern void StopAllEventEntries_80043B40(EventNode* p);
@@ -480,8 +480,8 @@ extern int IsEffectTaskIdle_800148D4(void);
 extern int sub_80019C84(void);
 
 extern Minion* sub_800A11D8(int a0);
-extern int sub_800AD288(int a0, int a1);
-extern int sub_800AD2C8(int a0, int a1);
+extern int GetInventorySlotId_800AD288(int a0, int a1);
+extern int GetInventorySlotCount_800AD2C8(int a0, int a1);
 extern void GetPortraitSprt_800A61CC(int a0, void* a1, void* a2);
 
 extern int GetActorScriptTime_8001F03C(int a0, int a1, int a2, int a3);
@@ -494,7 +494,7 @@ extern void ScreenFlashTask_8001C0B4(EventEntry* p, int* q);
 extern void FadeToBlackStep_8001BB28(void);
 extern void FadeToWhiteStep_8001BC00(void);
 
-extern int sub_800A248C(void);
+extern int GetEnemyAliveMask_800A248C(void);
 extern UnitStats* GetEnemyStats_800A2B20(int a0);
 
 extern int RequestModelAnim_8002032C(int a0, int a1, int a2);
@@ -520,7 +520,7 @@ extern int AreRequestedModelsLoaded_80020B70(struct ModelLoader* p);
 extern void InitActor_8001E574();
 
 extern void KillUnit_800127B8(UnitStatus* p);
-extern UnitStatus* sub_800A2B60(int a0);
+extern UnitStatus* GetEnemyStatus_800A2B60(int a0);
 extern UnitStatus* GetSlotStatus_800A10C0(int a0);
 extern Minion* GetUnitMinion_80014444(int a0);
 extern UnitStats* GetUnitStats_8001449C(int a0);

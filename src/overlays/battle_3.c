@@ -296,7 +296,7 @@ void ApplyBattleCommand_800BEBB8()
                         {
                             ClearBattleFlag_800BC850(0x100000);
                         }
-                        if (sub_800A2AB4() == 2)
+                        if (GetActiveSwapEnemy_800A2AB4() == 2)
                         {
                             SetBattleFlag_800BC838(2);
                         }
@@ -783,7 +783,7 @@ void StartEnemyWindows_800BFC40()
     {
         m = GetEnemyAliveMask_800A248C();
         n = GetCapturedMinionsFromBitfield_8003BA58(m);
-        if (sub_800A2AB4())
+        if (GetActiveSwapEnemy_800A2AB4())
         {
             m = 0x10;
         }
@@ -832,7 +832,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
     int bit;
     BatXY_a* pp;
     m = GetEnemyAliveMask_800A248C();
-    if (m != 0 && sub_800A2AB4() != 0)
+    if (m != 0 && GetActiveSwapEnemy_800A2AB4() != 0)
     {
         m = 0x10;
     }
@@ -848,7 +848,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
         {
             if (diff & (one << (i + 4)))
             {
-                if (sub_800A2AB4() != 2)
+                if (GetActiveSwapEnemy_800A2AB4() != 2)
                 {
                     enemyWindowTasks_800C9E08[i]->flags &= ~1;
                     enemyWindowTasks_800C9E08[i]->flags |= 0x8000;
@@ -902,10 +902,10 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
         return;
     }
     u = arg;
-    r = sub_800A2AB4();
+    r = GetActiveSwapEnemy_800A2AB4();
     if (r == 1)
         k = 0;
-    else if (sub_800A2AB4() == 2)
+    else if (GetActiveSwapEnemy_800A2AB4() == 2)
         k = 1;
     else
         k = u->slot_0;
@@ -4312,7 +4312,7 @@ int CanFlee_800C72B8()
         m = enemyMask_800C9E4C & (1 << (i + 4));
         if (m != 0)
         {
-            if (sub_800A28FC(i) == 0)
+            if (CanFleeFromEnemy_800A28FC(i) == 0)
             {
                 return 0;
             }

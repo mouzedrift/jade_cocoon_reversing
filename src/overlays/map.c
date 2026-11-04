@@ -14,13 +14,13 @@ extern MapEntry** mapTable_800B0608[];
 extern int dword_800B0624[];
 extern int dword_80091C54;
 extern void DrawCursorHand_8003D034(void*, int);
-#define SEL dword_800AEBFC[word_800AEBF8.a]
+#define SEL mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]
 extern int GetMenuCursorIndex_8003DA54(void*);
-extern void sub_800A8DEC();
+extern void ResetLevantActorToIdle_800A8DEC();
 extern void RequestGameMode_800A6D30(int);
 extern void SetEventVar_800AD16C(int, int);
 extern int useMapStartPos_80091C94;
-extern MapSel dword_800AEBFC[];
+extern MapSel mapSelectCursors_800AEBFC[];
 extern unsigned short padRepeat_800918CC;
 extern void DrawText_8003E91C(int, void*, void*, int);
 extern void DrawNumber_8003EF74(void*, int, int);
@@ -29,7 +29,7 @@ extern void PlayMusic_800300E0(int, int);
 extern void WaitAreaPicture_800B6E5C();
 extern int GetOpenDestRank_800B81D0(MapPos*);
 // state of the map select (SceneSelect_800B860C)
-extern MapPos word_800AEBF8;  // the selected destination (GAME data)
+extern MapPos mapSelect_800AEBF8;  // the selected destination (GAME data)
 extern void GetCurrentDest_800B8448();
 extern short word_800B932C;
 extern void SetFadeMode_8001C19C(int, int);
@@ -130,9 +130,9 @@ const char aSelChapter_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\21
 void MapSelectStart_800B6BFC(MapTask* t, int a1)
 {
     void (*f)();
-    lastDest_800B8C94.a = word_800AEBF8.a;
-    lastDest_800B8C94.b = word_800AEBF8.b;
-    GetCurrentDest_800B8448(&word_800AEBF8);
+    lastDest_800B8C94.a = mapSelect_800AEBF8.a;
+    lastDest_800B8C94.b = mapSelect_800AEBF8.b;
+    GetCurrentDest_800B8448(&mapSelect_800AEBF8);
     f = StartAreaFadeOut_800B6C7C;
     t->next_8 = f;
     f(t, a1);
@@ -150,7 +150,7 @@ void StartAreaFadeOut_800B6C7C(MapTask* t)
 void LoadAreaPicture_800B6CB4(MapTask* t)
 {
     int a;
-    openDestCount_800B8CA4 = CountOpenDests_800B7E54(word_800AEBF8.a);
+    openDestCount_800B8CA4 = CountOpenDests_800B7E54(mapSelect_800AEBF8.a);
     InitDestCursor_800B7EE0();
     if (GetEventVar_800AD154(0xC) == 1)
     {
@@ -162,11 +162,11 @@ void LoadAreaPicture_800B6CB4(MapTask* t)
     }
     else
     {
-        a = mapAreas_800B9220[word_800AEBF8.a].music_10;
+        a = mapAreas_800B9220[mapSelect_800AEBF8.a].music_10;
     }
     PlayMusic_800300E0(a, 1);
     mapFileStage_800B9434 = 0;
-    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[word_800AEBF8.a].bgFile_0);
+    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.a].bgFile_0);
     t->next_8 = WaitAreaPicture_800B6E5C;
 }
 
@@ -213,7 +213,7 @@ void WaitAreaPicture_800B6E5C(MapTask* t)
 void LoadAreaSprites_800B6E80(MapTask* t)
 {
     mapFileStage_800B9434 = 1;
-    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[word_800AEBF8.a].spritesFile_4);
+    RequestMapFile_800B6D90(mapFileRequest_800B9400, mapAreas_800B9220[mapSelect_800AEBF8.a].spritesFile_4);
     t->next_8 = WaitAreaFadeIn_800B6EE8;
 }
 
@@ -269,7 +269,7 @@ extern void SetSemiTrans(void* p, int abe);
 extern void DrawScrollArrows_8002B8DC(MapPos arrow, MapSel* sel, MapPos* pos, int ot);
 extern unsigned short padPressed_8009194C;
 #if 0
-// Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when word_800AEBF8.a >= 2
+// Not matched: the original reads areaTPages_800B9320[id].code[0] into a dead register when mapSelect_800AEBF8.a >= 2
 // (between the marker's two AddPrimCopy calls), which plain C drops; the tail's pad test / register
 // allocation also differ.
 // the destination list of a map area: the area picture, the blinking marker of the selected destination
@@ -294,11 +294,11 @@ void DestinationSelect_800B7044(MapTask* t, int a)
     int y;
     int wd;
     int id;
-    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[word_800AEBF8.a]), word_800AEBF8.a, &q);
-    e = mapAreas_800B9220[word_800AEBF8.a].dests_14 + q.b;
+    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]), mapSelect_800AEBF8.a, &q);
+    e = mapAreas_800B9220[mapSelect_800AEBF8.a].dests_14 + q.b;
     if (openDestCount_800B8CA4 > 0)
     {
-        UpdateMenuCursor_8003D794(&dword_800AEBFC[word_800AEBF8.a], 0);
+        UpdateMenuCursor_8003D794(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a], 0);
     }
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -314,15 +314,15 @@ void DestinationSelect_800B7044(MapTask* t, int a)
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
-    wd = MeasureTextWidth_8003E4C8(mapAreas_800B9220[word_800AEBF8.a].name_8);
-    tp[0] = mapAreas_800B9220[word_800AEBF8.a].x_C - (short)wd / 2;
-    tp[1] = mapAreas_800B9220[word_800AEBF8.a].y_E;
+    wd = MeasureTextWidth_8003E4C8(mapAreas_800B9220[mapSelect_800AEBF8.a].name_8);
+    tp[0] = mapAreas_800B9220[mapSelect_800AEBF8.a].x_C - (short)wd / 2;
+    tp[1] = mapAreas_800B9220[mapSelect_800AEBF8.a].y_E;
     box.x = tp[0] - 2;
     box.y = tp[1] - 2;
     box.w = wd + 4;
     box.h = 0x12;
     tp[1] += 2;
-    DrawText_8003E91C(2, mapAreas_800B9220[word_800AEBF8.a].name_8, tp, 0);
+    DrawText_8003E91C(2, mapAreas_800B9220[mapSelect_800AEBF8.a].name_8, tp, 0);
     DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
     if (openDestCount_800B8CA4 > 0)
     {
@@ -337,7 +337,7 @@ void DestinationSelect_800B7044(MapTask* t, int a)
             areaSprts_800B931C[id].x0 = e->x_C;
             areaSprts_800B931C[id].y0 = e->y_E;
             PulseColor_80033394(&areaSprts_800B931C[id].r0, e->c0_10, e->c1_14, GetTime30Hz_8002C64C(), 0x28, 0xA);
-            if ((unsigned short)word_800AEBF8.a < 2)
+            if ((unsigned short)mapSelect_800AEBF8.a < 2)
             {
                 SetSemiTrans(&areaSprts_800B931C[id], 0);
             }
@@ -358,18 +358,18 @@ void DestinationSelect_800B7044(MapTask* t, int a)
                 list[1] = &w1;
                 list[2] = &w2;
                 m.windows_10 = list;
-                for (i = dword_800AEBFC[word_800AEBF8.a].scroll_A;
-                     i < dword_800AEBFC[word_800AEBF8.a].scroll_A + dword_800AEBFC[word_800AEBF8.a].rows_2; i++)
+                for (i = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A;
+                     i < mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A + mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].rows_2; i++)
                 {
-                    GetNthOpenDest_800B8128((short)i, word_800AEBF8.a, &q2);
-                    list[i - dword_800AEBFC[word_800AEBF8.a].scroll_A]->items[0].text_4 = destNames_800B92FC[q2.a][q2.b];
+                    GetNthOpenDest_800B8128((short)i, mapSelect_800AEBF8.a, &q2);
+                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].scroll_A]->items[0].text_4 = destNames_800B92FC[q2.a][q2.b];
                 }
                 if (openDestCount_800B8CA4 < 3)
                 {
                     list[openDestCount_800B8CA4] = 0;
                 }
                 m.time_4 = GetTime30Hz_8002C64C();
-                m.sel_C = dword_800AEBFC[word_800AEBF8.a].index_8;
+                m.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].index_8;
                 DrawMenuWindows_8002A5A4(&m);
             }
         }
@@ -380,58 +380,58 @@ void DestinationSelect_800B7044(MapTask* t, int a)
         pos[0].a = 0x4A;
         pos[0].b = 0x93;
         pos[1].a = 0x4A;
-        pos[1].b = dword_800AEBFC[word_800AEBF8.a].rows_2 * 18 + 0x9D;
-        DrawScrollArrows_8002B8DC(arrow, &dword_800AEBFC[word_800AEBF8.a], pos, 0);
+        pos[1].b = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a].rows_2 * 18 + 0x9D;
+        DrawScrollArrows_8002B8DC(arrow, &mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a], pos, 0);
     }
     if (openDestCount_800B8CA4 > 0 && (IsConfirmPressedP1_8003D380(1) || (padPressed_8009194C & 0x80)))
     {
-        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[word_800AEBF8.a]), word_800AEBF8.a,
-                     &word_800AEBF8);
-        lastDest_800B8C94.a = word_800AEBF8.a;
-        lastDest_800B8C94.b = word_800AEBF8.b;
-        if ((unsigned short)word_800AEBF8.a < 2)
+        GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[mapSelect_800AEBF8.a]), mapSelect_800AEBF8.a,
+                     &mapSelect_800AEBF8);
+        lastDest_800B8C94.a = mapSelect_800AEBF8.a;
+        lastDest_800B8C94.b = mapSelect_800AEBF8.b;
+        if ((unsigned short)mapSelect_800AEBF8.a < 2)
         {
-            int b = word_800AEBF8.b;
+            int b = mapSelect_800AEBF8.b;
             if (b == 0xC)
             {
-                word_800AEBF8.a = 5;
-                word_800AEBF8.b = 5;
-                if (IsDestOpen_800B8290(&word_800AEBF8))
+                mapSelect_800AEBF8.a = 5;
+                mapSelect_800AEBF8.b = 5;
+                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    word_800AEBF8.b = 0;
+                    mapSelect_800AEBF8.b = 0;
                     t->next_8 = StartAreaFadeOut_800B6C7C;
                     t->next_8(t, a);
                     return;
                 }
-                word_800AEBF8.a = 4;
-                word_800AEBF8.b = 4;
-                if (IsDestOpen_800B8290(&word_800AEBF8))
+                mapSelect_800AEBF8.a = 4;
+                mapSelect_800AEBF8.b = 4;
+                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    word_800AEBF8.b = 0;
+                    mapSelect_800AEBF8.b = 0;
                     t->next_8 = StartAreaFadeOut_800B6C7C;
                     t->next_8(t, a);
                     return;
                 }
-                word_800AEBF8.a = 3;
-                word_800AEBF8.b = 3;
-                if (IsDestOpen_800B8290(&word_800AEBF8))
+                mapSelect_800AEBF8.a = 3;
+                mapSelect_800AEBF8.b = 3;
+                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    word_800AEBF8.b = 0;
+                    mapSelect_800AEBF8.b = 0;
                     t->next_8 = StartAreaFadeOut_800B6C7C;
                     t->next_8(t, a);
                     return;
                 }
-                word_800AEBF8.a = 2;
-                word_800AEBF8.b = 2;
-                if (IsDestOpen_800B8290(&word_800AEBF8))
+                mapSelect_800AEBF8.a = 2;
+                mapSelect_800AEBF8.b = 2;
+                if (IsDestOpen_800B8290(&mapSelect_800AEBF8))
                 {
-                    word_800AEBF8.b = 0;
+                    mapSelect_800AEBF8.b = 0;
                     t->next_8 = StartAreaFadeOut_800B6C7C;
                     t->next_8(t, a);
                     return;
                 }
-                word_800AEBF8.a = 0;
-                word_800AEBF8.b = b;
+                mapSelect_800AEBF8.a = 0;
+                mapSelect_800AEBF8.b = b;
             }
             if (!(padPressed_8009194C & 0x80))
             {
@@ -440,24 +440,24 @@ void DestinationSelect_800B7044(MapTask* t, int a)
             }
             else
             {
-                GoToDest_800B8338(&word_800AEBF8);
+                GoToDest_800B8338(&mapSelect_800AEBF8);
                 MapSelectEnd_800B6F60(t, a);
-                t->next_8 = name_800A75F8;
+                t->next_8 = StartMapOverlay_800A75F8;
             }
         }
-        else if (word_800AEBF8.b == 0)
+        else if (mapSelect_800AEBF8.b == 0)
         {
             if (!saveData_8008B570.field_2E0)
             {
-                word_800AEBF8.a = 0;
+                mapSelect_800AEBF8.a = 0;
                 lastDest_800B8C94.a = 0;
             }
             else
             {
-                word_800AEBF8.a = 1;
+                mapSelect_800AEBF8.a = 1;
                 lastDest_800B8C94.a = 1;
             }
-            word_800AEBF8.b = 0xC;
+            mapSelect_800AEBF8.b = 0xC;
             lastDest_800B8C94.b = 0xC;
             t->next_8 = StartAreaFadeOut_800B6C7C;
             t->next_8(t, a);
@@ -466,9 +466,9 @@ void DestinationSelect_800B7044(MapTask* t, int a)
         {
             if (padPressed_8009194C & 0x80)
             {
-                GoToDest_800B8338(&word_800AEBF8);
+                GoToDest_800B8338(&mapSelect_800AEBF8);
                 MapSelectEnd_800B6F60(t, a);
-                t->next_8 = name_800A75F8;
+                t->next_8 = StartMapOverlay_800A75F8;
             }
             else
             {
@@ -493,11 +493,11 @@ void LoadDestPicture_800B7980(MapTask* t)
 {
     MapPos q;
     MapElem* e;
-    MapPos* w = &word_800AEBF8;
-    int r = GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w->a]);
+    MapPos* w = &mapSelect_800AEBF8;
+    int r = GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[w->a]);
     GetNthOpenDest_800B8128((short)r, w->a, &q);
     mapFileStage_800B9434 = 0;
-    e = mapAreas_800B9220[word_800AEBF8.a].dests_14 + q.b;
+    e = mapAreas_800B9220[mapSelect_800AEBF8.a].dests_14 + q.b;
     RequestMapFile_800B6D90(mapFileRequest_800B9400, e->file_18);
     t->next_8 = WaitDestPicture_800B7A38;
 }
@@ -515,7 +515,7 @@ void WaitDestPicture_800B7A38(MapTask* t)
 
 // what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
 extern DISPENV dispEnv_8008D750[2];
-extern void name_800A75F8();
+extern void StartMapOverlay_800A75F8();
 extern int MeasureTextWidth_8003E4C8(void* p);
 extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -538,8 +538,8 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     MapMenu m;
     int y;
     int wd;
-    MapPos* w = &word_800AEBF8;
-    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&dword_800AEBFC[w->a]), w->a, &q);
+    MapPos* w = &mapSelect_800AEBF8;
+    GetNthOpenDest_800B8128((short)GetMenuCursorIndex_8003DA54(&mapSelectCursors_800AEBFC[w->a]), w->a, &q);
     UpdateMenuCursor_8003D794(&confirmCursor_800B9324, 0);
     if (display_8008B4D8.vsyncsPerFrame_4 == 1)
     {
@@ -555,14 +555,14 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
     AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
-    wd = MeasureTextWidth_8003E4C8(destNames_800B92FC[word_800AEBF8.a][word_800AEBF8.b]);
+    wd = MeasureTextWidth_8003E4C8(destNames_800B92FC[mapSelect_800AEBF8.a][mapSelect_800AEBF8.b]);
     box.x = 0x9E - (short)wd / 2;
     box.y = 0x12;
     box.w = wd + 4;
     box.h = 0x12;
     tp[0] = 0xA0 - (short)wd / 2;
     tp[1] = 0x16;
-    DrawText_8003E91C(2, destNames_800B92FC[word_800AEBF8.a][word_800AEBF8.b], tp, 0);
+    DrawText_8003E91C(2, destNames_800B92FC[mapSelect_800AEBF8.a][mapSelect_800AEBF8.b], tp, 0);
     DrawUiColorWindow_800424C0(&box, 0, pOT_8008D454, 0);
     box2.x = 0x74;
     box2.y = 0xA6;
@@ -588,9 +588,9 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
     {
         if ((short)GetMenuCursorIndex_8003DA54(&confirmCursor_800B9324) == 0)
         {
-            GoToDest_800B8338(&word_800AEBF8);
+            GoToDest_800B8338(&mapSelect_800AEBF8);
             MapSelectEnd_800B6F60(t, a);
-            t->next_8 = name_800A75F8;
+            t->next_8 = StartMapOverlay_800A75F8;
         }
         else
         {
@@ -639,7 +639,7 @@ void InitDestCursor_800B7EE0()
         SEL.flags_6 = 0x40;
     }
     SEL.count_4 = openDestCount_800B8CA4;
-    if (word_800AEBF8.a != lastDest_800B8C94.a || word_800AEBF8.b != lastDest_800B8C94.b)
+    if (mapSelect_800AEBF8.a != lastDest_800B8C94.a || mapSelect_800AEBF8.b != lastDest_800B8C94.b)
     {
         SEL.index_8 = 0;
         SEL.scroll_A = 0;
@@ -647,7 +647,7 @@ void InitDestCursor_800B7EE0()
     else
     {
         r = GetMenuCursorIndex_8003DA54(&SEL);
-        GetNthOpenDest_800B8128((short)r, word_800AEBF8.a, &q);
+        GetNthOpenDest_800B8128((short)r, mapSelect_800AEBF8.a, &q);
         if (!IsDestOpen_800B8290(&q))
         {
             SEL.index_8 = 0;
@@ -655,7 +655,7 @@ void InitDestCursor_800B7EE0()
         }
         else
         {
-            n = GetOpenDestRank_800B81D0(&word_800AEBF8);
+            n = GetOpenDestRank_800B81D0(&mapSelect_800AEBF8);
             if (openDestCount_800B8CA4 < 4)
             {
                 SEL.index_8 = n;
@@ -765,7 +765,7 @@ void GoToDest_800B8338(MapPos* p)
         saveData_8008B570.mapId_2E4[2].field_0 = 0;
         saveData_8008B570.mapId_2E4[2].field_2 = -1;
     }
-    sub_800A8DEC();
+    ResetLevantActorToIdle_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
     RequestGameMode_800A6D30(1);
     useMapStartPos_80091C94 = 1;
@@ -956,7 +956,7 @@ void SceneSelect_800B860C()
             saveData_8008B570.mapId_2E4[2].field_2 = -1;
             useMapStartPos_80091C94 = 1;
             dword_80091C54 = 0;
-            sub_800A8DEC();
+            ResetLevantActorToIdle_800A8DEC();
             RequestGameMode_800A6D30(1);
             SetFadeMode_8001C19C(0, 0x20);
             eventDispatchHalt_8008B540 = 1;

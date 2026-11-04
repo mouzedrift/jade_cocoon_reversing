@@ -2076,7 +2076,7 @@ int GetEquipmentPrice_8001D1F8(int idx, unsigned int kind)
 // Matched
 ActionData* GetLevantWeaponAction_8001D260(void)
 {
-    unsigned int i = sub_800AD990(0);
+    unsigned int i = GetEquippedId_800AD990(0);
     if (i < 0x17)
     {
         return &weaponActions_8007D274[i];

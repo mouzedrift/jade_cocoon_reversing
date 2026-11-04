@@ -244,15 +244,15 @@ extern void ResumeAllEnemySlots_800A1974(void);
 
 extern void ResetEventCtx_800A5B54(EvCtxEventfnc* c);
 
-extern int sub_800A7810(int a);
+extern int HoldFieldMinion_800A7810(int a);
 
 extern void HoldLevantControl_800A8E0C(void);
 
-extern void sub_800A8DEC(void);
+extern void ResetLevantActorToIdle_800A8DEC(void);
 
 extern void ReleaseLevantControl_800A8E38(void);
 
-extern void sub_800A785C(int a);
+extern void ReleaseFieldMinion_800A785C(int a);
 
 extern int SetEventVar_800AD16C(int a, int b);
 
@@ -383,18 +383,18 @@ extern int FinishActorCmd_800BBB5C(int* p);
 
 extern int IsLevantControlHeld_800A8E7C();
 
-extern int sub_800A7CB8(int a);
+extern int IsFieldMinionIdle_800A7CB8(int a);
 
-extern int sub_800A8FE0();
+extern int IsLevantCmdDone_800A8FE0();
 
-extern int sub_800A7CFC(int a);
+extern int IsFieldMinionReady_800A7CFC(int a);
 
 extern EvVecEventfnc* GetFieldMinionPos_800A7940(int a);
 
 
 extern SVECTOR* GetFieldMinionRot_800A7984(int a);
 
-extern int dword_800AEBD4;
+extern int eventTempFlags_800AEBD4;
 
 typedef struct EvMsgInfoEventfnc
 {
@@ -431,7 +431,7 @@ extern void EnableMsgWindowAdvance_80034A68(int a);
 
 extern int currentMessageId_800AEBE8;
 
-extern EvXaEventfnc* dword_800AEBEC;
+extern EvXaEventfnc* currentVoice_800AEBEC;
 
 extern EvVoiceEventfnc* voiceTable_800AEBF0;
 
@@ -473,7 +473,7 @@ typedef struct EvGfxArgEventfnc
 
 extern int mdecBufferMode_800AEB7C;
 
-extern EvGfxEventfnc dword_800AEB80;
+extern EvGfxEventfnc eventEffects_800AEB80;
 
 extern void FreeMdecBuffer_800A5854(void);
 
@@ -487,9 +487,9 @@ typedef struct
     SPRT* sprts_0;
     DR_TPAGE* tpages_4;
 } EvTiyEventfnc;
-extern EvTiyEventfnc dword_800AEBC0;
+extern EvTiyEventfnc eventTiy_800AEBC0;
 
-extern int dword_800AEBCC[2];
+extern int eventRecords_800AEBCC[2];
 
 extern void FreeRecordTables_80026DE8(int* a, int b, void* c);
 

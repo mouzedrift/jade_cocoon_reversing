@@ -23,10 +23,10 @@ extern void ShopCtrlWaitUiTiy_800B681C(EventEntry* t, void* buffer);
 extern void StartNameEntry_800B6E4C(int, int);
 extern void CommitShopMinionList_800B9DA8();
 extern void StartShop_800BB058(int);
-extern void sub_800A7B00(int);
-extern void sub_800A7BF0(int);
-extern void sub_800A6D30(int);
-extern void* sub_800A55B0(int);
+extern void SuspendFieldMinions_800A7B00(int);
+extern void ResumeFieldMinions_800A7BF0(int);
+extern void RequestGameMode_800A6D30(int);
+extern void* GetEventDataSlot_800A55B0(int);
 extern void SetFadeMode_8001C19C(int, int);
 extern void LoadUiTiy_8002BF74();
 extern void DrawMenuBackground_8002BE10();
@@ -52,7 +52,7 @@ void StartShopCtrl_800B66C4(int shopId)
 void RestoreMapCamera_800B6720()
 {
     unsigned short* s;
-    unsigned int* buf = sub_800A55B0(3);
+    unsigned int* buf = GetEventDataSlot_800A55B0(3);
     MemCopy_800403E8(&cameraState_8008D4F0, buf, 0x104);
     UpdateCameraFollow_80037918(cameraTask_8008D4A0->entry.buffer);
     s = (unsigned short*)&display_8008B4D8;
@@ -62,7 +62,7 @@ void RestoreMapCamera_800B6720()
 void ShopCtrlInit_800B67C0(EventEntry* t, void* buffer)
 {
     SetFadeMode_8001C19C(0, 0x20);
-    sub_800A7B00(-1);
+    SuspendFieldMinions_800A7B00(-1);
     shopCtrlPrevMode_800B6CE8 = 0;
     shopCtrlMode_800B6CEC = 0;
     shopCtrlReloadUi_800B6CF8 = 0;
@@ -124,7 +124,7 @@ void ShopCtrlIdle_800B6964(EventEntry* t, void* buffer)
     {
         if (shopCtrlMode_800B6CEC != 3)
         {
-            sub_800A7B00(-1);
+            SuspendFieldMinions_800A7B00(-1);
             if (shopCtrlMode_800B6CEC == 2 && settingsFlags_8008B58C.bits.d_5 == 1)
             {
                 SetFadeMode_8001C19C(0, 0x20);
@@ -154,11 +154,11 @@ void ShopCtrlWaitMapReload_800B6A6C(EventEntry* t, void* buffer)
 {
     if (IsMapLoading_800272D0() == 0)
     {
-        sub_800A7BF0(-1);
+        ResumeFieldMinions_800A7BF0(-1);
         t->cb_8 = ShopCtrlInit_800B67C0;
         t->flags = (t->flags & ~1) | 0x8000;
         SetLoadFadeFlag_80027478(0x40, 0);
-        sub_800A6D30(1);
+        RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
 }

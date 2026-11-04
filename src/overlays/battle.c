@@ -20,7 +20,7 @@ extern void BattleEndDefeat_800BA444();
 extern void BattleEndWaitLevant_800BA52C();
 extern void BattleEndVictory_800BA564();
 extern int TestBattleFlag_800BC820(unsigned int m);
-extern void sub_800A8984(int a);
+extern void ExitLevantBattleMode_800A8984(int a);
 extern void StartSceneDarken_8001AAA8(int a);
 extern void StopSoundSeqs_80030D68(void* a);
 extern void StopSeqSlot_80031334(int a);
@@ -57,22 +57,22 @@ void BattleEnd_800BA254(BatTask_a* t, BatStart_a* u)
         PlaySeqSlot_80031160(1, 1);
         if (summonedUnit_800C9C82 != 0)
         {
-            sub_800A8984(0);
+            ExitLevantBattleMode_800A8984(0);
         }
         else
         {
-            sub_800A8984(1);
+            ExitLevantBattleMode_800A8984(1);
         }
         u->timer_4 = 0x3C;
         t->next_8 = BattleEndVictory_800BA564;
         break;
     case 1:
-        sub_800A8984(0);
+        ExitLevantBattleMode_800A8984(0);
         u->timer_4 = 0;
         t->next_8 = BattleEndVictory_800BA564;
         break;
     case 2:
-        sub_800A8984(0);
+        ExitLevantBattleMode_800A8984(0);
         if (TestBattleFlag_800BC820(0x20000) == 0)
         {
             FadeOutSeqSlot_800313C8(0);
@@ -89,13 +89,13 @@ void BattleEnd_800BA254(BatTask_a* t, BatStart_a* u)
         t->next_8 = BattleEndWaitLevant_800BA52C;
         break;
     case 3:
-        sub_800A8984(0);
+        ExitLevantBattleMode_800A8984(0);
         StartSceneDarken_8001AAA8(0x3C);
         t->next_8 = BattleEndDefeat_800BA444;
         break;
     case 4:
     case 5:
-        sub_800A8984(0);
+        ExitLevantBattleMode_800A8984(0);
         u->timer_4 = 0x12;
         if (TestBattleFlag_800BC820(0x20000) == 0)
         {
@@ -121,8 +121,8 @@ void BattleEndDefeat_800BA444(BatTask_a* t)
     int r = IsSceneFadeDone_8001AB94(t);
     if (r == 1)
     {
-        sub_800A9364();
-        if (sub_800A8DAC() == r)
+        StopLevantAnimLoop_800A9364();
+        if (IsLevantActionFinished_800A8DAC() == r)
         {
             ReviveOneHp_80011CF4(&levantStatus_8008BD38);
             t->next_8 = BattleEndWaitFade_800BA4F4;
@@ -153,7 +153,7 @@ void BattleEndWaitFade_800BA4F4(BatTask_a* t)
 
 void BattleEndWaitLevant_800BA52C(BatTask_a* t)
 {
-    if (sub_800A89F0(t) == 1)
+    if (IsLevantIdle_800A89F0(t) == 1)
     {
         t->next_8 = BattleEndFadeOut_800BA624;
     }
@@ -161,7 +161,7 @@ void BattleEndWaitLevant_800BA52C(BatTask_a* t)
 
 void BattleEndVictory_800BA564(BatTask_a* t, BatObj_a* u)
 {
-    int r = sub_800A8DAC();
+    int r = IsLevantActionFinished_800A8DAC();
     if (r == 1)
     {
         if (AreAllEncounterEnemiesGone_800A1B2C() == r)
@@ -260,12 +260,12 @@ void BattleEndReturnToField_800BA848(BatTask_a* t, BatObj_a* u)
     {
         ResumeOtherEnemies_800A1F0C();
         EndBattleCamera_80037770();
-        sub_800A9384(1);
-        sub_800A8DCC();
-        sub_800A89C8();
+        SetLevantVisible_800A9384(1);
+        ClearLevantBattleStance_800A8DCC();
+        UnlockLevantMovement_800A89C8();
         EndEncounter_800A1E1C();
         RecoverPartyAfterBattle_800BA97C();
-        sub_800A094C();
+        EnableCameraPoints_800A094C();
         if ((dword_800B1230 == 0 || dword_800B1230 == 2) && u->fc == 1)
         {
             u->f0 = LoadOverlayIfChanged_80020D1C(1, 7);
@@ -273,7 +273,7 @@ void BattleEndReturnToField_800BA848(BatTask_a* t, BatObj_a* u)
         }
         else if (dword_800B1230 == 3)
         {
-            sub_800A9364();
+            StopLevantAnimLoop_800A9364();
             WarpAfterLostBattle_800A5FAC();
             if (forceMapReload_80091C9C == 0)
             {
@@ -325,7 +325,7 @@ EventEntry* StartBattle_800BA9E4()
         battleHitEnemies_800B122C = 0;
         SpawnEncounterEnemies_800A1F80();
         GetUnitsCenter_800BC378(GetEnemyAliveMask_800A248C(), buf);
-        sub_800A8D0C(buf);
+        StartLevantBattle_800A8D0C(buf);
         InitEnemyRecords_800BABC4();
         battleLoadState_800C9C58 = 0;
         DisableCameraPoints_800A096C();
@@ -724,7 +724,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
                 ClearBattleFlag_800BC850(0x100000);
                 deathSfx_800C9D80 = 0x6F;
             }
-            if (sub_800A2AB4() == 2)
+            if (GetActiveSwapEnemy_800A2AB4() == 2)
             {
                 SetBattleFlag_800BC838(2);
             }
@@ -761,7 +761,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
                 ClearBattleFlag_800BC850(0x100000);
                 deathSfx_800C9D80 = 0x6F;
             }
-            if (sub_800A2AB4() == 2)
+            if (GetActiveSwapEnemy_800A2AB4() == 2)
             {
                 SetBattleFlag_800BC838(2);
             }
@@ -1070,7 +1070,7 @@ void CmdEnemyCallJoin_800BBF64(BatTask_a* t, BatObj_a* u)
     curCommand_800C9C88.kind_0 = 0x15;
     actingUnit_800C9C7C = commandUnit_800C9C98;
     curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
-    sub_800A2AE8(&curCommand_800C9C88);
+    SwapEncounterEnemy_800A2AE8(&curCommand_800C9C88);
     u->fc = StartActionTask_800BC28C();
     u->next_8 = (void (*)())u->f4;
     t->next_8 = WaitActionTask_800BC144;
@@ -1094,7 +1094,7 @@ void sub_800BC05C(BatTask_a* t, BatObj_a* u)
     curCommand_800C9C88.kind_0 = 0x16;
     actingUnit_800C9C7C = commandUnit_800C9C98;
     curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
-    sub_800A2AE8(&curCommand_800C9C88);
+    SwapEncounterEnemy_800A2AE8(&curCommand_800C9C88);
     SetBattleFlag_800BC838(0x10000);
     u->fc = StartActionTask_800BC28C();
     u->next_8 = (void (*)())u->f4;
@@ -1241,13 +1241,13 @@ void TurnUnitToward_800BC4D4(int unit, int pos)
         switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            sub_800A8D48(pos);
+            TurnLevantToward_800A8D48(pos);
             break;
         case 1:
             TurnSummonedMinionToward_800C0DB0(pos);
             break;
         case 2:
-            sub_800A25D8(unit - 4, pos);
+            TurnEnemyToward_800A25D8(unit - 4, pos);
             break;
         default:
             break;

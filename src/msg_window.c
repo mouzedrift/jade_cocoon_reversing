@@ -1117,11 +1117,11 @@ extern const int aTimesSign_80074864[];
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
-extern void sub_800AD1E0(int a, int b, int c);
-extern void sub_800AD058(int a);
-extern void sub_800AD8F4(int a);
-extern void sub_800AD68C(int a);
-extern void sub_800AD184(int a, int b, int c);
+extern void RemoveInventory_800AD1E0(int a, int b, int c);
+extern void AddMoney_800AD058(int a);
+extern void AddEmptyCocoons_800AD8F4(int a);
+extern void SetValuableFlag_800AD68C(int a);
+extern void AddInventory_800AD184(int a, int b, int c);
 #if 0
 // MeasureTextLines returns the 2 shorts as Size_8003422C in the code above; this near-miss reads them as x/y
 extern Pos2_35BD8 MeasureTextLines_8003E3B4(int* list);
@@ -1362,7 +1362,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                     continue;
                 }
                 PlaySfx_80031494(sfx);
-                sub_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
+                RemoveInventory_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
             }
         }
         if (o->mode >= -1 && o->mode < 4)
@@ -1371,21 +1371,21 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             {
                 if (o->entries[i].type == 7)
                 {
-                    sub_800AD058(o->entries[i].count);
+                    AddMoney_800AD058(o->entries[i].count);
                 }
                 else if (o->entries[i].type == 6)
                 {
-                    sub_800AD8F4(o->entries[i].count);
+                    AddEmptyCocoons_800AD8F4(o->entries[i].count);
                 }
                 else if ((unsigned int)o->entries[i].type < 6)
                 {
                     if (o->entries[i].type == 5)
                     {
-                        sub_800AD68C(o->entries[i].id);
+                        SetValuableFlag_800AD68C(o->entries[i].id);
                     }
                     else
                     {
-                        sub_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
+                        AddInventory_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
                     }
                 }
             }

@@ -422,7 +422,7 @@ int AreUnitsIdle_800BDD3C()
     }
     if (summonedUnit_800C9C82 == 0)
     {
-        r = sub_800A89F0();
+        r = IsLevantIdle_800A89F0();
     }
     else
     {
@@ -437,7 +437,7 @@ int AreUnitsIdle_800BDD3C()
         m = GetEnemyAliveMask_800A248C() & (1 << i);
         if (m != 0)
         {
-            if (sub_800A2550(i - 4) == 0)
+            if (IsEnemyIdle_800A2550(i - 4) == 0)
             {
                 return 0;
             }
@@ -457,7 +457,7 @@ int AreUnitsReady_800BDE04()
     }
     if (summonedUnit_800C9C82 == 0)
     {
-        r = sub_800A8BE4();
+        r = IsLevantReady_800A8BE4();
     }
     else
     {
@@ -473,7 +473,7 @@ int AreUnitsReady_800BDE04()
         m = 1 << i;
         if (r & m)
         {
-            if (sub_800A2594(i - 4) == 0)
+            if (IsEnemyReady_800A2594(i - 4) == 0)
             {
                 return 0;
             }
@@ -558,7 +558,7 @@ BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReactio
         switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            sub_800A8A30(&r, cmd, isReaction);
+            StartLevantAction_800A8A30(&r, cmd, isReaction);
             break;
         case 1:
             StartMinionAction_800C0DDC(&r, cmd, isReaction);
@@ -587,7 +587,7 @@ void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
     switch ((unsigned int)side)
     {
     case 0:
-        sub_800A8C0C(isReaction);
+        TriggerLevantAction_800A8C0C(isReaction);
         break;
     case 1:
         TriggerMinionAction_800C0E84(cmd, isReaction);

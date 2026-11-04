@@ -355,9 +355,9 @@ extern void RunEventListFreeCallbacks_800438F8(int a);
 
 extern void FreeEventList_80043A5C(int a);
 
-extern void sub_800A6534(int a, int b);
+extern void SetLevantWallEnabled_800A6534(int a, int b);
 
-extern void sub_800A654C(int a, int b);
+extern void SetActorWallEnabled_800A654C(int a, int b);
 
 
 
@@ -418,7 +418,7 @@ typedef struct GameTable_1
 
 extern EventNode* eventScripts_8008D410;
 
-extern void sub_800A8EA4();
+extern void SkipLevantAnim_800A8EA4();
 
 extern void StartStore_800BAE2C(int a, int b);
 
@@ -442,7 +442,7 @@ typedef struct GameV6_1
 
 extern char aFile_800A05CC[];
 
-extern void sub_800A895C();
+extern void EnterLevantBattleMode_800A895C();
 
 extern void SetupEncounter_800A1BD0();
 
@@ -763,16 +763,16 @@ extern unsigned char pads_800918E8[2][9];
 extern int FindFacingFieldMinion_800A9164(int* out);
 extern int IsFieldMinionBehind_800A926C();
 extern void ClearScriptActorBusy_800A5BCC(int a);
-extern void sub_800AB1A4(int a);
-extern int sub_800AB1EC(int a, int b, int c, int d);
-extern int sub_800AB32C();
+extern void ContinueLevantAnim_800AB1A4(int a);
+extern int StartLevantActorAction_800AB1EC(int a, int b, int c, int d);
+extern int IsLevantActionReady_800AB32C();
 extern int SetLevantMoveCmd_800AB37C(int v);
-extern void sub_800AB3BC();
-extern void sub_800AB3D4();
-extern int sub_800AB938();
-extern int sub_800AB958();
-extern int sub_800ABB70();
-extern void sub_800ABC34(int a);
+extern void ResetLevantIdleTimer_800AB3BC();
+extern void EnterLevantActorBattle_800AB3D4();
+extern int IsLevantAnimLooped_800AB938();
+extern int IsLevantIdleAnim_800AB958();
+extern int IsLevantScriptAnimWaiting_800ABB70();
+extern void SetLevantMapCollision_800ABC34(int a);
 
 typedef struct G2Ctx
 {
@@ -908,11 +908,11 @@ typedef struct G2Rec
 
 extern int GetLevantAnimIndex_800AC794(int, int);
 
-extern void sub_800A913C();
+extern void StopLevantScriptMove_800A913C();
 
-extern void sub_800ABAD4();
+extern void EndLevantPath_800ABAD4();
 
-extern void sub_800AB444();
+extern void ExitLevantActorBattle_800AB444();
 
 
 extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
@@ -943,15 +943,15 @@ extern int GetFieldMinionCount_800A7790();
 
 
 
-extern void sub_800ABC78();
+extern void SetLevantRootMotionMode_800ABC78();
 
-extern void sub_800AA25C();
+extern void UpdateLevantFieldAnim_800AA25C();
 
-extern void sub_800AA51C();
+extern void UpdateLevantBattleAction_800AA51C();
 
-extern void sub_800AACF8();
+extern void UpdateLevantScriptAnim_800AACF8();
 
-extern void sub_800AC02C();
+extern void UpdateLevantQueuedAnim_800AC02C();
 
 extern int CanAddInventoryCount_800AD670(int, int);
 
@@ -1052,7 +1052,7 @@ extern void RequestGameMode_800A6D30(int);
 
 extern int eventDispatchHalt_8008B540;
 
-extern void sub_800A9414(void*, int, int);
+extern void ResetLevantActor_800A9414(void*, int, int);
 
 
 extern void PoolDestroy_8003FF7C(void*);
@@ -1090,23 +1090,23 @@ extern int CountCocoonsAndMinions_800AD8BC();
 
 extern short cameraTargetScreenPos_8008D668[2];
 
-extern int sub_800AB304();
+extern int IsLevantActorIdle_800AB304();
 
-extern int sub_800AB354();
+extern int IsLevantDefending_800AB354();
 
-extern int sub_800AB85C();
+extern int IsLevantActionFinished_800AB85C();
 
-extern void sub_800AB884();
+extern void ClearLevantBattleStance_800AB884();
 
-extern void sub_800AB8AC();
+extern void ResetLevantActorToIdle_800AB8AC();
 
-extern void sub_800AC318();
+extern void SkipLevantAnim_800AC318();
 
 extern int FireEventTrigger_800A5C40();
 
-extern void sub_800AB910();
+extern void StopLevantAnimLoop_800AB910();
 
-extern void sub_800ABBD8();
+extern void SetLevantVisible_800ABBD8();
 
 typedef struct G2Pair_1
 {
@@ -1121,7 +1121,7 @@ typedef struct G2Mode_1
 } G2Mode_1;
 
 
-extern G2Mode_1 name_800B1084[];
+extern G2Mode_1 levantBattleActions_800B1084[];
 
 
 typedef struct G2Cmd_1
@@ -1411,16 +1411,16 @@ extern int *eventReloc_800AEBBC;
 extern void *eventTiy_800AEBC0[2];
 extern void *eventDataBuf_800AEBC8;
 extern int eventRecords_800AEBCC[2];
-extern int name_800AEBD4;
+extern int eventTempFlags_800AEBD4;
 extern int sceneScriptId_800AEBD8;
 extern int nextScriptId_800AEBDC;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern int currentMessageId_800AEBE8;
-extern int name_800AEBEC;
+extern int currentVoice_800AEBEC;
 extern int voiceTable_800AEBF0;
 extern int eventResult_800AEBF4;
-extern int dword_800AEBF8[19];
+extern int mapSelect_800AEBF8[19];
 extern int mapArea0Map00Entrances_800AEC44[20];
 extern int mapArea0Map01Entrances_800AEC94[20];
 extern int mapArea0Map02Entrances_800AECE4[16];
@@ -1478,13 +1478,13 @@ extern int actorTasksDef_800B072C[6];
 extern int tileAnimTaskDef_800B0744[6];
 extern int eventScriptsDef_800B075C[6];
 extern int encounterWatchTaskDef_800B0774[6];
-extern int dword_800B078C[6];
+extern int battleTaskDef_800B078C[6];
 extern int battleMenuTaskDef_800B07A4[6];
 extern int dword_800B07BC[6];
-extern int dword_800B07D4[6];
-extern int dword_800B07EC[6];
-extern int dword_800B0804[6];
-extern int dword_800B081C[6];
+extern int enemyWindowsTaskDef_800B07D4[6];
+extern int enemyWindowTaskDef_800B07EC[6];
+extern int actorWindowTaskDef_800B0804[6];
+extern int helpWindowTaskDef_800B081C[6];
 extern int levantControlTaskDef_800B0834[6];
 extern int dword_800B084C[6];
 extern int levantActorTaskDef_800B0864[6];
@@ -1494,11 +1494,11 @@ extern int dword_800B08AC[6];
 extern int eventEntitiesDef_800B08C4[6];
 extern int prevModeTaskDef_800B08DC[6];
 extern int mapOverlayTaskDef_800B08F4[6];
-extern int dword_800B090C[6];
-extern int dword_800B0924[6];
-extern int dword_800B093C[6];
-extern int dword_800B0954[6];
-extern int dword_800B096C[6];
+extern int fieldMenuTaskDef_800B090C[6];
+extern int shopCtrlTaskDef_800B0924[6];
+extern int shopMenuTaskDef_800B093C[6];
+extern int shelfMenuTaskDef_800B0954[6];
+extern int storeTaskDef_800B096C[6];
 extern int dword_800B0984[6];
 extern int chapterOverlayTaskDef_800B099C[6];
 extern int sporeTaskDef_800B09B4[6];
@@ -1509,7 +1509,7 @@ extern GameLst_1 gameModeChapterTasks_800B0A0C[4];
 extern GameLst_1 gameModeFieldTasks_800B0A2C[26];
 extern GameLst_1 gameModeBattleTasks_800B0AFC[35];
 extern GameLst_1 gameModeBattleEndTasks_800B0C14[4];
-extern GameLst_1 dword_800B0C34[3];
+extern GameLst_1 gameModeEquipTasks_800B0C34[3];
 extern GameLst_1 gameModeMenuTasks_800B0C4C[7];
 extern GameLst_1 gameModeShopTasks_800B0C84[12];
 extern GameLst_1 gameModeSaveTasks_800B0CE4[4];
@@ -1530,7 +1530,7 @@ extern SVECTOR levantBoneScale_800B0FB0[55];
 extern int dword_800B1168;
 extern int levantBaseModels_800B116C[19];
 extern unsigned char levantOutfitModelOffsets_800B11B8[20];
-extern int dword_800B11CC[4];
+extern int levantSavedFtgIds_800B11CC[4];
 extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
 extern int battleHitEnemies_800B122C[13];
