@@ -1,5 +1,6 @@
 // GAME.BIN, source file 1 of 3
 #include "game.h"
+#include "spadstack.h"
 
 const int dword_800A05A0 = 12;
 const char aAssertionFaile_800A05A4[] = "Assertion failed: file \"%s\", line %d\n";
@@ -36,7 +37,20 @@ void TileAnimTaskInit_800A09D8(GameTask_1* t, short* q)
     TileAnimTask_800A0A04(t, q);
 }
 
-// Not C: calls DrawTileAnimLayers_800A0A5C with $sp moved to the scratchpad (0x1F8003FC), an inline-asm stack switch
+#if 0
+// Matches byte for byte when enabled, but the stack switch is inline asm (src/spadstack.h), an undecided exception:
+// kept disabled, the assembly stays included.
+// Draws the animated tile layers on the scratchpad stack, unless the camera points are disabled.
+void TileAnimTask_800A0A04(GameTask_1* t, short* q)
+{
+    if (!(unknownFlags_8008D678 & 0x8000))
+    {
+        SetSpadStack(SPAD_STACK_ADDR);
+        DrawTileAnimLayers_800A0A5C(q);
+        ResetSpadStack();
+    }
+}
+#endif
 INCLUDE_OVERLAY_ASM(game, TileAnimTask_800A0A04);
 
 #if 0
