@@ -31,7 +31,7 @@ typedef struct
     short y0;
     short z0;
     short pad_6;
-    int field_8;
+    int geomScreen_8; // projection distance
     short x1;
     short y1;
     short z1;
@@ -41,9 +41,9 @@ typedef struct
 // a step of a pad vibration pattern (vibrationPatterns_80083B30, camera)
 typedef struct
 {
-    unsigned short field_0;
-    unsigned char field_2;
-    unsigned char field_3;
+    unsigned short frames_0; // how long the step lasts (negative: the pattern ends)
+    unsigned char motor0_2;  // actuator values (PadVibration.motor_2)
+    unsigned char motor1_3;
 } PadVibEntry;
 
 typedef struct

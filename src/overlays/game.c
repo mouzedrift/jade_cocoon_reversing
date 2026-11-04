@@ -1425,12 +1425,12 @@ void EnemyAiChaseBehind_800A3BEC(int unused, GameAi* p)
             SetEnemyAiState_800A433C(p, 1, 1, (rand() % 16) * 8 + 0x32, c, 1, 2);
             break;
         case 1:
-            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (struct_v3*)p->actor_8->pos_38))
+            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (Vec3i*)p->actor_8->pos_38))
                 SetEnemyAiState_800A433C(p, 0xf, 2, 0, -1, c, 2);
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(p);
-            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (struct_v3*)p->actor_8->pos_38) == 0)
+            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (Vec3i*)p->actor_8->pos_38) == 0)
                 q->state_c = -1;
             break;
         }
@@ -1618,7 +1618,7 @@ void EnemyAiFleeTurnStep_800A44C0(GameAi* p)
     idx = (ang - p->actor_8->rot_5C[1]) & 0xfff;
     w.x = p->actor_8->pos_38[0] + (p->actor_8->pos_38[0] - saveData_8008B570.levant_7A8.pos.x);
     w.z = p->actor_8->pos_38[2] + (p->actor_8->pos_38[2] - saveData_8008B570.levant_7A8.pos.z);
-    if (TurnActorTowards_8001DDFC(p->actor_8, (struct_v3*)&w, TurnStepForAngle_800A48F4(idx * 3)) == 0)
+    if (TurnActorTowards_8001DDFC(p->actor_8, (Vec3i*)&w, TurnStepForAngle_800A48F4(idx * 3)) == 0)
     {
         RestartActorMotion_8001D71C(p->actor_8);
     }
@@ -1627,8 +1627,8 @@ void EnemyAiFleeTurnStep_800A44C0(GameAi* p)
 // Matched
 void EnemyAiFleeStep_800A459C(GameAi* p)
 {
-    struct_v3 v;
-    ReflectPoint_800A47B8(&levantPos_8008BD18.pos, (struct_v3*)p->actor_8->pos_38, &v);
+    Vec3i v;
+    ReflectPoint_800A47B8(&levantPos_8008BD18.pos, (Vec3i*)p->actor_8->pos_38, &v);
     if (TurnActorTowards_8001DDFC(p->actor_8, &v, 0x155) == 0)
     {
         RestartActorMotion_8001D71C(p->actor_8);
@@ -1668,7 +1668,7 @@ check:
         return;
     }
     step = 0x40;
-    if (IsInFrontHalf_800A4884((struct_v3*)p->actor_8->pos_38, p->actor_8->rot_5C, &levantPos_8008BD18.pos))
+    if (IsInFrontHalf_800A4884((Vec3i*)p->actor_8->pos_38, p->actor_8->rot_5C, &levantPos_8008BD18.pos))
     {
         step = 0x80;
     }
@@ -1712,7 +1712,7 @@ void EnemyAiWanderStep_800A46FC(GameAi* p)
     }
 }
 
-void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out)
+void ReflectPoint_800A47B8(Vec3i* a, Vec3i* b, Vec3i* out)
 {
     int t;
     t = b->x - a->x;
@@ -1754,7 +1754,7 @@ int EnemyAiCheckBlocked_800A4804(GameAi* p)
 }
 
 // Matched
-int IsInFrontHalf_800A4884(struct_v3* a, short* q, struct_v3* b)
+int IsInFrontHalf_800A4884(Vec3i* a, short* q, Vec3i* b)
 {
     int ang = ratan2_8003B548(a->x - b->x, a->z - b->z);
     return sinTable_80084540[(ang - q[1] + 0x400) & 0xfff] >= 0;

@@ -4551,7 +4551,7 @@ typedef struct
 } MapEntry16b;
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
 extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
-extern int FindTriAtXZ_800B76B8(MapMesh* a0, struct_v3* a1);
+extern int FindTriAtXZ_800B76B8(MapMesh* a0, Vec3i* a1);
 extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task

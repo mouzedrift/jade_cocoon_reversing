@@ -40,7 +40,7 @@ typedef struct
     short pad;
 } SoundCue_8007C750;
 
-// the block at 0x8008D4F0 (camera.c copies its first 0x68 bytes as Block104)
+// the block at 0x8008D4F0 (camera.c copies its first 0x68 bytes as CameraView)
 typedef struct
 {
     char pad_0[0x30];
@@ -61,7 +61,7 @@ typedef struct
 // (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)
 typedef struct
 {
-    struct_v3 pos_0;
+    Vec3i pos_0;
     SVECTOR color_C;   // only vx/vy/vz used
     int range_14;
 } PointLight;

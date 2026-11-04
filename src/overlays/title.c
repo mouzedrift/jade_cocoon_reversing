@@ -884,7 +884,7 @@ extern void InitFlagTables_800A2540(void);
 extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
 extern void EncodeName_8003F7C8(void* a, void* b);
 
-extern struct_v3 dword_800B069C; // Levant's start position
+extern Vec3i dword_800B069C; // Levant's start position
 extern int useMapStartPos_80091C94;
 extern SVECTOR dword_800B06A8; // Levant's start rotation
 

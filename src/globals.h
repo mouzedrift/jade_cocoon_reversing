@@ -74,12 +74,12 @@ typedef struct
     int x;
     int y;
     int z;
-} struct_v3;
+} Vec3i;
 
 // Levant's position + rotation (SaveData.levant_7A8 == levantPos_8008BD18; rot == levantRot_8008BD24)
 typedef struct LevantPos
 {
-    struct_v3 pos;
+    Vec3i pos;
     SVECTOR rot; // rot.vy: facing angle
 } LevantPos;
 
@@ -527,12 +527,6 @@ extern EventNode* fadeTask_8008D628;
 extern EventNode* actorTasks_8008D43C;
 extern EventNode* screenFlashTasks_8008D61C;
 
-typedef struct
-{
-    int x;
-    int y;
-    int z;
-} Vec3i;
 
 extern int memCardInfo_8008D4D8;
 extern short effectOutcomeFlag_8008D780;
