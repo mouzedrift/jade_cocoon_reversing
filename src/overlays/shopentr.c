@@ -40,15 +40,7 @@ extern void DrawShelfContentsPage_800B7858(ShelfMenu* c);
 extern void DrawPageCount_800B7A90(ShelfRect* p, short a1, short a2);
 extern void DrawNumberPair_800B7B64(ShelfRect* p, short a1, short a2);
 extern void DrawZeroTime_800B7C08(ShelfRect* p);
-typedef struct
-{
-    short kind_0;
-    char pad_2[0x92];
-    char data_94[0x32];
-    unsigned short field_C6;
-    unsigned char field_C8;
-} EntShopentr;
-extern EntShopentr* sub_800B9C5C(int a0);
+extern Minion* GetShopMinion_800B9C5C(int a0); // SHOP's (not loaded with this overlay)
 extern void DrawSmallText_8002FAA0(int a0, void* a1, void* a2, short a3);
 extern void DrawElementIconsRow_8002B1B0(short a0, void* a1, short a2);
 
@@ -426,7 +418,7 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* c)
     unsigned short l30[2];
     unsigned short l38[2];
     unsigned short l40[2];
-    EntShopentr* e;
+    Minion* e;
     char* d;
     int s16;
     unsigned short s18;
@@ -437,12 +429,12 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* c)
     a.h = 0x12;
     for (i = 0; i < 5; i++)
     {
-        e = sub_800B9C5C(i + c->scroll_A);
-        if (e && e->kind_0 != 4)
+        e = GetShopMinion_800B9C5C(i + c->scroll_A);
+        if (e && e->id != 4)
         {
-            d = e->data_94;
-            s16 = e->field_C8;
-            s18 = e->field_C6;
+            d = e->status_84.name_10;
+            s16 = e->status_84.level_44;
+            s18 = e->status_84.elementMask_42;
         }
         else
         {

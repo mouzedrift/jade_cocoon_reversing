@@ -21,8 +21,8 @@ extern void ShopCtrlWaitMapReload_800B6A6C(EventEntry* t, void* buffer);
 extern void ShopCtrlInit_800B67C0(EventEntry* t, void* buffer);
 extern void ShopCtrlWaitUiTiy_800B681C(EventEntry* t, void* buffer);
 extern void StartNameEntry_800B6E4C(int, int);
-extern void sub_800B9DA8();
-extern void sub_800BB058(int);
+extern void CommitShopMinionList_800B9DA8();
+extern void StartShop_800BB058(int);
 extern void sub_800A7B00(int);
 extern void sub_800A7BF0(int);
 extern void sub_800A6D30(int);
@@ -141,7 +141,7 @@ void ShopCtrlIdle_800B6964(EventEntry* t, void* buffer)
         }
         else
         {
-            sub_800B9DA8();
+            CommitShopMinionList_800B9DA8();
             SetLoadFadeFlag_80027478(0x40, 1);
             FreeActiveOverlay_8002C014();
             RequestAreaReload_80027314();
@@ -171,7 +171,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* t, void* buffer)
     case 0:
         if (shopCtrlPrevMode_800B6CE8 == 0)
         {
-            sub_800BB058(shopCtrlShopId_800B6CEA);
+            StartShop_800BB058(shopCtrlShopId_800B6CEA);
         }
         else
         {
@@ -238,11 +238,13 @@ void ShopCtrlRequestResume_800B6CC8()
     shopCtrlMode_800B6CEC = 2;
 }
 
-int shopOverlayIds_800B6CD8[4] = { 13, 17, 13 };
+int shopOverlayIds_800B6CD8[3] = { eShop_13, eName_17, eShop_13 }; // per shopCtrlMode_800B6CEC
+int shopMinionCount_800B6CE4 = 0; // SHOP's minion list, kept here across a name entry
+
 short shopCtrlPrevMode_800B6CE8 = 0;
 short shopCtrlShopId_800B6CEA = 0;
 short shopCtrlMode_800B6CEC = 0;
-int dword_800B6CF0 = 0;
+Minion* shopMinions_800B6CF0 = 0;
 int shopCtrlOverlayReq_800B6CF4 = 0;
 int shopCtrlReloadUi_800B6CF8 = 0;
 int shopCtrlNameTarget_800B6CFC = 0;
