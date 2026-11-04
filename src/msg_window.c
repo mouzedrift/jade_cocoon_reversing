@@ -971,7 +971,7 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, unsigned short* rect)
     DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
     win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
-extern int UpdateTextWindow_8003DB74(struct_rect_1B8* p, int a);
+extern int UpdateTextWindow_8003DB74(MsgTextClip* p, int a);
 // Matched
 int DrawMsgWindowText_8003580C(MsgWindow* win, unsigned short* rect)
 {

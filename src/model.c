@@ -2787,7 +2787,7 @@ void GetSavedModelFtg_8002512C(unsigned int* out, Model* model, int id)
     }
 }
 // Matched
-void GetModelFtg_800251A0(void* dst, Model* src, int a2, int idx)
+void GetModelFtg_800251A0(void* dst, Model* src, int unused, int idx)
 {
     MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
@@ -3768,7 +3768,7 @@ typedef struct
     unsigned short b;
     unsigned short c;
     unsigned short d;
-} struct_4h;
+} RecordEntry; // one 8-byte entry of a record table (LoadRecordTable_80026EF8)
 // Matched
 void LoadRecordTable_80026EF8(struct_12* table, unsigned short* src, int heap)
 {
@@ -3794,8 +3794,8 @@ typedef struct
 {
     int pos[3];
     int mapIdx;
-} struct_80091C78;
-extern struct_80091C78 savedLevantPos_80091C78;
+} SavedLevantPos;
+extern SavedLevantPos savedLevantPos_80091C78;
 extern int gameStartMode_800B1DC8;
 extern int mapHeap_80091C68;
 // Matched

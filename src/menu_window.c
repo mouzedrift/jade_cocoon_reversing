@@ -238,41 +238,41 @@ void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int 
 // Matched
 void DrawLargeTextBox_8002AF10(int text, int pos, int ot)
 {
-    RECT r;
-    r.x = 10;
-    r.y = 0x99;
-    r.w = 0x12C;
-    r.h = 0x3C;
-    DrawTextBox_8002AFA0(text, pos, ot, &r, 4);
+    RECT rect;
+    rect.x = 10;
+    rect.y = 0x99;
+    rect.w = 0x12C;
+    rect.h = 0x3C;
+    DrawTextBox_8002AFA0(text, pos, ot, &rect, 4);
 }
 // Matched
 void DrawSmallTextBox_8002AF58(int text, int pos, int ot)
 {
-    RECT r;
-    r.x = 10;
-    r.y = 0xC3;
-    r.w = 0x12C;
-    r.h = 0x12;
-    DrawTextBox_8002AFA0(text, pos, ot, &r, 1);
+    RECT rect;
+    rect.x = 10;
+    rect.y = 0xC3;
+    rect.w = 0x12C;
+    rect.h = 0x12;
+    DrawTextBox_8002AFA0(text, pos, ot, &rect, 1);
 }
 #if 0
-void DrawTextBox_8002AFA0(int a0, int a1, int a2, RECT* a3, int a4)
+void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
 {
 }
 #endif
 // Matched
 void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
 {
-    Pos16 p;
+    Pos16 cur;
     Pos16* src = (Pos16*)pos;
     if (src)
     {
         ((Pos16*)rect)->x = src->x;
         ((Pos16*)rect)->y = src->y;
     }
-    p.x = ((Pos16*)rect)->x + 4;
-    p.y = ((Pos16*)rect)->y + 5;
-    DrawTextLinesWindow_8002AE38(text, &p, ot, rect, count);
+    cur.x = ((Pos16*)rect)->x + 4;
+    cur.y = ((Pos16*)rect)->y + 5;
+    DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
 typedef struct
 {
@@ -286,7 +286,7 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
 {
     Pos16 cur;
     Pos16 base;
-    RECT r;
+    RECT rect;
     WindowStyle style;
     int i;
     i = 0;
@@ -310,14 +310,14 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
         DrawText_8003E91C(2, entries[i].text, &cur, ot);
         cur.x = MeasureTextWidth_8003E4C8(entries[i].text) + (unsigned short)(cur.x + 4);
     }
-    r.x = base.x;
-    r.y = base.y;
-    r.w = 0x12C;
-    r.h = 0xE;
+    rect.x = base.x;
+    rect.y = base.y;
+    rect.w = 0x12C;
+    rect.h = 0xE;
     style.semiTrans_3 = 1;
     style.colorSet_2 = 0;
     style.color = uiColor_8008B590;
-    DrawWindow_80042460(&r, (int)&style, &pOT_8008D454[ot], 0);
+    DrawWindow_80042460(&rect, (int)&style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched

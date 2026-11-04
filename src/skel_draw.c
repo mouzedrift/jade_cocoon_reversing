@@ -669,14 +669,14 @@ void GetBoneOffsets_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
     }
 }
 // Matched
-void RotMatrixZXY_8004668C(SVECTOR* r, MATRIX* m)
+void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m)
 {
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
     int a;
     int b;
     m->m[2][1] = sx;
@@ -692,14 +692,14 @@ void RotMatrixZXY_8004668C(SVECTOR* r, MATRIX* m)
     m->m[1][2] = ((sz * sy) >> 12) - ((b * cy) >> 12);
 }
 // Matched
-void RotMatrixYXZ_80046874(SVECTOR* r, MATRIX* m)
+void RotMatrixYXZ_80046874(SVECTOR* rot, MATRIX* m)
 {
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
     int a;
     int b;
     m->m[1][2] = -sx;
@@ -734,14 +734,14 @@ static inline void GetRot(SVECTOR* out, AnimPose* pose, int bone)
     }
 }
 /* inline copy of RotMatrixZYX_8004D5CC */
-static inline void RotZYX(SVECTOR* r, MATRIX* m)
+static inline void RotZYX(SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[2][0] = -sy;
@@ -776,14 +776,14 @@ static inline void GetFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bone
     }
 }
 /* RotZYX followed by a rotation about x by rx->vx (applied from the left) */
-static inline void RotZYXThenX(SVECTOR* r, SVECTOR* rx, MATRIX* m)
+static inline void RotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 {
-    int cz = SIN_TABLE[(r->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(r->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[r->vy & 0xFFF];
-    int sz = SIN_TABLE[r->vz & 0xFFF];
-    int cx = SIN_TABLE[(r->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[r->vx & 0xFFF];
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
     int c;
     int s;
     int a;

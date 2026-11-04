@@ -2718,7 +2718,7 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* d)
     actor->effectKinds_EC = d->effectKinds_18;
     actor->loopCount_F4 = d->loopCount_20;
     actor->scaleTarget_F6 = d->scaleTarget_22;
-    actor->fFC = d->field_28;
+    actor->fFC = d->anim_28;
     actor->queuedAnim_FE = d->queuedAnim_2A;
     actor->turnStep_E0 = d->turnStep_C;
     actor->f100 = d->field_2C;
@@ -2765,13 +2765,13 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* d)
     }
     if (d->queuedAnim_2A >= 0)
     {
-        actor->nextAnim_A4 = d->field_28;
+        actor->nextAnim_A4 = d->anim_28;
         actor->startMode_A8 = d->turnStep_C;
         StartActorScript_8001DC34(actor, playQueuedAnimScript_8007D9C0);
     }
-    else if (d->field_28 >= 0)
+    else if (d->anim_28 >= 0)
     {
-        actor->nextAnim_A4 = d->field_28;
+        actor->nextAnim_A4 = d->anim_28;
         actor->startMode_A8 = d->turnStep_C;
         StartActorScript_8001DC34(actor, playAnimScript_8007D9A4);
     }

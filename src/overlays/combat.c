@@ -403,7 +403,7 @@ void MoveSlotActorTo_800A0E1C(int i, int* src)
     r.scaleTarget_22 = 0;
     r.nextAnim_24 = -1;
     r.nextAnim_26 = -1;
-    r.field_28 = -1;
+    r.anim_28 = -1;
     r.queuedAnim_2A = -1;
     r.field_2C = 0;
     r.path_30 = 0;

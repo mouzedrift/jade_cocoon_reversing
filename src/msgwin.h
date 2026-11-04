@@ -10,7 +10,7 @@ typedef struct
     unsigned short y;
     unsigned short w;
     unsigned short h;
-} struct_rect_1B8;
+} MsgTextClip;
 
 /* 0x18..0x27, copied out by GetMsgWindowResultIfDone_800349B4 / GetMsgWindowResult_80034A00 */
 typedef struct
@@ -86,7 +86,7 @@ typedef struct MsgWindow
     short choice_B2;
     int* list_B4[0x40];
     unsigned short** lines_1B4;
-    struct_rect_1B8 clip_1B8;
+    MsgTextClip clip_1B8;
     int field_1C4;
     int field_1C8;
     int field_1CC;

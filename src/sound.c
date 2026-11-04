@@ -174,7 +174,7 @@ extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
-int PlayMusic_800300E0(int idx, int a1)
+int PlayMusic_800300E0(int idx, int unused)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
     SoundStruct* bgm;

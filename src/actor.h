@@ -211,7 +211,7 @@ typedef struct
     short scaleTarget_22;
     short nextAnim_24;
     short nextAnim_26;
-    short field_28;
+    short anim_28;          // >= 0: played next (playAnimScript_8007D9A4)
     short queuedAnim_2A;
     int field_2C;
     ActorPath* path_30;
