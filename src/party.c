@@ -23,8 +23,18 @@ extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
 extern unsigned long SpuWrite0(unsigned long size);
 extern void McxStopCom(void);
 extern void MemCardEnd(void);
-// hand-written assembly: leaves its jr delay slot empty, which the compiler never does
-INCLUDE_ASM(GetHeapStart_80010538);
+// hand-written assembly (no PSY-Q module has it, and the compiler always fills the jr delay slot):
+// char* GetHeapStart_80010538(void) returns heapStart_800CD858
+__asm__(
+    "\t.text\n"
+    "\t.globl\tGetHeapStart_80010538\n"
+    "GetHeapStart_80010538:\n"
+    "\t.set\tnoreorder\n"
+    "\tlui\t$2, %hi(heapStart_800CD858)\n"
+    "\taddiu\t$2, $2, %lo(heapStart_800CD858)\n"
+    "\tjr\t$31\n"
+    "\tnop\n"
+    "\t.set\treorder\n");
 // Matched
 int CountMinions_80010548(int id)
 {
