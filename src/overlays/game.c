@@ -512,8 +512,8 @@ void DestroyEncounterActors_800A1B78(void)
     }
 }
 
-extern int dword_800B1CA8[];
 extern int name_8007A024[];
+extern int dword_800B1CA8[];
 // Matched
 void SetupEncounter_800A1BD0(void)
 {
@@ -1778,34 +1778,21 @@ void ClearEncounterGroupFlags_800A4940(int group, int encIndex)
     }
 }
 
-typedef struct GameSpawnEntry
-{
-    unsigned int chance : 8;
-    unsigned int species0 : 3; // encounterSpecies_800AEB6C index
-    unsigned int v0 : 5;
-    unsigned int species1 : 3; // encounterSpecies_800AEB6C index
-    unsigned int v1 : 5;
-    unsigned int species2 : 3; // encounterSpecies_800AEB6C index
-    unsigned int v2 : 5;
-} GameSpawnEntry;
-typedef struct GameSpawnMember
-{
-    int species_0;
-    int f4;
-    int f8;
-} GameSpawnMember;
-extern GameSpawnMember name_800AEB00[][3];
 extern int sub_800B330C(void);
 extern GameSpawnEntry* sub_800B2B40();
-extern short* name_800AE9DC[];
-extern GameSpawnEntry name_800AE524[][3];
-void RollEncounterGroup_800A4DD0(int a, int b, MapList16* c, GameSpawnEntry* p, int* e, unsigned short* f);
+// the rolled encounter groups (EvSpawnTable on the EVENTFNC side)
+typedef struct GameSpawnOut
+{
+    GameSpawnMember* members_0[3];
+    int (*places_C[3])[4]; // MapList16.items_4 entries
+} GameSpawnOut;
+void RollEncounterGroup_800A4DD0(int a, int b, MapList16* c, GameSpawnEntry* p, GameSpawnOut* e, unsigned short* f);
 
 #if 0
 // Not matched (3 words long, registers differ): the original clears e[] with a scratch counter, keeps c in $s7 and
 // encounterSpecies_800AEB6C in $fp, and leaves the 0x8000 loop unrotated (bottom "i < c->count_0" exit, then a jump back to the
 // "i < 3" test); the original also reloads *f for the == 0 test
-int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, int* out)
+int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, GameSpawnOut* out)
 {
     int count;
     unsigned short* flags;
@@ -1818,7 +1805,6 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     int k;
     GameSpawnMember* members;
     GameSpawnEntry* ent;
-    int* outp;
     count = 0;
     flags = 0;
     if (unknownFlags_8008D678 & 0x20000)
@@ -1839,8 +1825,8 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     }
     for (i = 0; i < 3; i++)
     {
-        out[i] = 0;
-        out[i + 3] = 0;
+        out->members_0[i] = 0;
+        out->places_C[i] = 0;
     }
     tbl = 0;
     if (unknownFlags_8008D678 & 0x20000)
@@ -1849,10 +1835,10 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     }
     else
     {
-        idx = FindInLists_800A52EC(name_800AE9DC, 0x49, entrance);
+        idx = FindInLists_800A52EC(encounterMapLists_800AE9DC, 0x49, entrance);
         if (idx >= 0)
         {
-            tbl = name_800AE524[idx];
+            tbl = encounterTables_800AE524[idx];
         }
     }
     if (tbl == 0)
@@ -1895,8 +1881,7 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     else
     {
         bits = *flags;
-        members = name_800AEB00[0];
-        outp = out + count;
+        members = encounterGroups_800AEB00[0];
         for (j = 0; j < 3; j++, members += 3, bits >>= 5)
         {
             if (bits & 0x10)
@@ -1919,10 +1904,9 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
                     members[1].f4 = (ent->v1 + k) << 26;
                     members[2].f4 = (ent->v2 + k) << 26;
                 }
+                out->members_0[count] = members;
+                out->places_C[count] = &groups->items_4[j];
                 count++;
-                outp[0] = (int)members;
-                outp[3] = (int)&groups->items_4[j];
-                outp++;
             }
         }
     }
@@ -1932,31 +1916,30 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
 
 INCLUDE_OVERLAY_ASM(game, RollEncounterGroups_800A49CC);
 
-#if 0
-// Not matched: logic and bitfield layout right; callee-saved registers differ and b*5 / the table address get hoisted out of the loop, the original computes b*5 in the found path
-void RollEncounterGroup_800A4DD0(int outIdx, int group, MapList16* groups, GameSpawnEntry* tbl, int* out, unsigned short* flags)
+// rolls one encounter group: picks a GameSpawnEntry by chance, fills encounterGroups_800AEB00[group] and records it in out and *flags
+// Matched
+void RollEncounterGroup_800A4DD0(int outIdx, int group, MapList16* groups, GameSpawnEntry* tbl, GameSpawnOut* out, unsigned short* flags)
 {
     int roll = rand() % 16;
     int i;
     int unkFlags;
     int k;
+    GameSpawnMember (*grp)[3];
     GameSpawnMember* members;
-    GameSpawnEntry* ent;
-    int* outp;
+    grp = encounterGroups_800AEB00;
     unkFlags = unknownFlags_8008D678;
-    members = name_800AEB00[group];
-    outp = out + outIdx;
-    ent = tbl;
-    for (i = 0; i < 3; i++, ent++)
+    i = 0;
+    members = grp[group];
+    for (; i < 3; i++)
     {
-        if (roll < ent->chance)
+        if (roll < tbl[i].chance)
         {
-            members[0].species_0 = encounterSpecies_800AEB6C[ent->species0];
-            members[1].species_0 = encounterSpecies_800AEB6C[ent->species1];
-            members[2].species_0 = encounterSpecies_800AEB6C[ent->species2];
-            members[0].f4 = ent->v0 << 26;
-            members[1].f4 = ent->v1 << 26;
-            members[2].f4 = ent->v2 << 26;
+            members[0].species_0 = encounterSpecies_800AEB6C[tbl[i].species0];
+            members[1].species_0 = encounterSpecies_800AEB6C[tbl[i].species1];
+            members[2].species_0 = encounterSpecies_800AEB6C[tbl[i].species2];
+            members[0].f4 = tbl[i].v0 << 26;
+            members[1].f4 = tbl[i].v1 << 26;
+            members[2].f4 = tbl[i].v2 << 26;
             if (unknownFlags_8008D678 & 0x20000)
             {
                 k = (sub_800B330C() - 1) / 4 + 1;
@@ -1964,21 +1947,21 @@ void RollEncounterGroup_800A4DD0(int outIdx, int group, MapList16* groups, GameS
                 {
                     k = 7;
                 }
-                members[0].f4 = (ent->v0 + k) << 26;
-                members[1].f4 = (ent->v1 + k) << 26;
-                members[2].f4 = (ent->v2 + k) << 26;
+                members[0].f4 = (tbl[i].v0 + k) << 26;
+                members[1].f4 = (tbl[i].v1 + k) << 26;
+                members[2].f4 = (tbl[i].v2 + k) << 26;
             }
-            outp[0] = (int)members;
-            outp[3] = (int)&groups->items_4[group];
-            *flags |= (unsigned short)(i | 0x10) << (group * 5);
+            {
+                unsigned short bits = i | 0x10;
+                out->members_0[outIdx] = members;
+                out->places_C[outIdx] = &groups->items_4[group];
+                *flags |= bits << (group * 5);
+            }
             return;
         }
-        roll -= ent->chance;
+        roll -= tbl[i].chance;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, RollEncounterGroup_800A4DD0);
 
 int* SelectEncounterSpecies_800A5030(int entrance, int prevEntrance, int force)
 {

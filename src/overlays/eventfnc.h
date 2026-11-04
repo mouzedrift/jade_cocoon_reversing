@@ -67,8 +67,8 @@ typedef struct EvScriptCtx
     int callArg0_F4;
     int callArg1_F8;
     int callArg2_FC;
-    unsigned short msgX_100;
-    unsigned short msgY_102;
+    short msgX_100;
+    short msgY_102;
     int msgPosMode_104;
     int msgOptions_108;
     char pad_10C[4];

@@ -4657,138 +4657,181 @@ int *encounterAreaSpecies_800AE4E0[17] = {
     encounterArea12Species_800AE4A4, encounterArea13Species_800AE4B0, encounterArea14Species_800AE4BC, encounterArea15Species_800AE4C8,
     encounterArea16Species_800AE4D4,
 };
-int encounterTables_800AE524[219] = {
-    0x3030110, 0x3030300, 0x3030300, 0x3030010, 0x3030300, 0x3030300, 0x3030210, 0x3030300,
-    0x3030300, 0x3030108, 0x3030008, 0x3030300, 0x3030210, 0x3030300, 0x3030300, 0x3000010,
-    0x3030300, 0x3030300, 0x3020008, 0x3020108, 0x3030300, 0x3031110, 0x3030300, 0x3030300,
-    0x3031010, 0x3030300, 0x3030300, 0x3031008, 0x3031908, 0x3030300, 0x3031008, 0x3031908,
-    0x3030300, 0x3031008, 0x3191008, 0x3030300, 0x3191908, 0x31B1008, 0x3030300, 0x3181808,
-    0x3031808, 0x3030300, 0x3101008, 0x3191908, 0x3030300, 0x3212110, 0x3030300, 0x3030300,
-    0x3222210, 0x3030300, 0x3030300, 0x3181810, 0x3030300, 0x3030300, 0x10101008, 0x19191908,
-    0x3030300, 0x3033010, 0x3030300, 0x3030300, 0x303310A, 0x3033006, 0x3030300, 0x303320E,
-    0x3303202, 0x3030300, 0x3033010, 0x3030300, 0x3030300, 0x303300E, 0x3313002, 0x3030300,
-    0x3033010, 0x3030300, 0x3030300, 0x3303108, 0x3033108, 0x3030300, 0x303300E, 0x3313002,
-    0x3030300, 0x3313108, 0x3313208, 0x3030300, 0x30313208, 0x3313208, 0x3030300, 0x3033810,
-    0x3030300, 0x3030300, 0x33A3808, 0x3033808, 0x3030300, 0x33A3808, 0x3033808, 0x3030300,
-    0x3393910, 0x3030300, 0x3030300, 0x3404008, 0x3034008, 0x3030300, 0x3034A10, 0x3030300,
-    0x3030300, 0x3034910, 0x3030300, 0x3030300, 0x3034810, 0x3030300, 0x3030300, 0x3034810,
-    0x3030300, 0x3030300, 0x3034A0A, 0x3034906, 0x3030300, 0x34A4808, 0x3484A08, 0x3030300,
-    0x3034807, 0x3034907, 0x3484902, 0x3034A07, 0x3034907, 0x48494A02, 0x3034808, 0x3034A08,
-    0x3030300, 0x3035210, 0x3030300, 0x3030300, 0x3035910, 0x3030300, 0x3030300, 0x3035810,
-    0x3030300, 0x3030300, 0x3035208, 0x3595908, 0x3030300, 0x3035810, 0x3030300, 0x3030300,
-    0x3035208, 0x3525208, 0x3030300, 0x3035808, 0x3585908, 0x3030300, 0x3005806, 0x3035205,
-    0x3525905, 0x3036010, 0x3030300, 0x3030300, 0x3036008, 0x3036908, 0x3030300, 0x3036008,
-    0x3036908, 0x3030300, 0x3036908, 0x3696908, 0x3030300, 0x3037208, 0x3036908, 0x3030300,
-    0x3707008, 0x3037008, 0x3030300, 0x3696008, 0x3697208, 0x3030300, 0x3707010, 0x3030300,
-    0x3030300, 0x3727110, 0x3030300, 0x3030300, 0x3707010, 0x3030300, 0x3030300, 0x3696010,
-    0x3030300, 0x3030300, 0x3037810, 0x3030300, 0x3030300, 0x3038110, 0x3030300, 0x3030300,
-    0x3038A10, 0x3030300, 0x3030300, 0x3038810, 0x3030300, 0x3030300, 0x3888810, 0x3030300,
-    0x3030300, 0x3038110, 0x3030300, 0x3030300, 0x3788110, 0x3030300, 0x3030300, 0x3038A10,
-    0x3030300, 0x3030300, 0x3898A10, 0x38A8900, 0x3030300, 0x3888810, 0x3030300, 0x3030300,
-    0x88798A01, 0x38A7907, 0x3798808,
+GameSpawnEntry encounterTables_800AE524[73][3] = {
+    { { 16, 1, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 1, 0, 3, 0, 3, 0 }, { 8, 0, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 0, 0, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 0, 2, 0, 3, 0 }, { 8, 1, 0, 2, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 2, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 2, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 2, 3, 0, 3, 0 }, { 8, 1, 3, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 2, 3, 0, 3, 0 }, { 8, 1, 3, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 2, 3, 0, 3, 0 }, { 8, 0, 2, 1, 3, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 1, 3, 1, 3, 3, 0 }, { 8, 0, 2, 3, 3, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 3, 0, 3, 3, 0 }, { 8, 0, 3, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 2, 0, 2, 3, 0 }, { 8, 1, 3, 1, 3, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 4, 1, 4, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 4, 2, 4, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 3, 0, 3, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 2, 0, 2, 0, 2 }, { 8, 1, 3, 1, 3, 1, 3 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 6, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 10, 1, 6, 3, 0, 3, 0 }, { 6, 0, 6, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 14, 2, 6, 3, 0, 3, 0 }, { 2, 2, 6, 0, 6, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 6, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 14, 0, 6, 3, 0, 3, 0 }, { 2, 0, 6, 1, 6, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 6, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 1, 6, 0, 6, 3, 0 }, { 8, 1, 6, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 14, 0, 6, 3, 0, 3, 0 }, { 2, 0, 6, 1, 6, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 1, 6, 1, 6, 3, 0 }, { 8, 2, 6, 1, 6, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 2, 6, 1, 6, 0, 6 }, { 8, 2, 6, 1, 6, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 7, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 7, 2, 7, 3, 0 }, { 8, 0, 7, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 7, 2, 7, 3, 0 }, { 8, 0, 7, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 7, 1, 7, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 8, 0, 8, 3, 0 }, { 8, 0, 8, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 10, 2, 9, 3, 0, 3, 0 }, { 6, 1, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 9, 2, 9, 3, 0 }, { 8, 2, 9, 0, 9, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 7, 0, 9, 3, 0, 3, 0 }, { 7, 1, 9, 3, 0, 3, 0 }, { 2, 1, 9, 0, 9, 3, 0 } },
+    { { 7, 2, 9, 3, 0, 3, 0 }, { 7, 1, 9, 3, 0, 3, 0 }, { 2, 2, 9, 1, 9, 0, 9 } },
+    { { 8, 0, 9, 3, 0, 3, 0 }, { 8, 2, 9, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 10, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 11, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 11, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 2, 10, 3, 0, 3, 0 }, { 8, 1, 11, 1, 11, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 11, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 2, 10, 3, 0, 3, 0 }, { 8, 2, 10, 2, 10, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 11, 3, 0, 3, 0 }, { 8, 1, 11, 0, 11, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 6, 0, 11, 0, 0, 3, 0 }, { 5, 2, 10, 3, 0, 3, 0 }, { 5, 1, 11, 2, 10, 3, 0 } },
+    { { 16, 0, 12, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 12, 3, 0, 3, 0 }, { 8, 1, 13, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 12, 3, 0, 3, 0 }, { 8, 1, 13, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 1, 13, 3, 0, 3, 0 }, { 8, 1, 13, 1, 13, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 2, 14, 3, 0, 3, 0 }, { 8, 1, 13, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 14, 0, 14, 3, 0 }, { 8, 0, 14, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 8, 0, 12, 1, 13, 3, 0 }, { 8, 2, 14, 1, 13, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 14, 0, 14, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 14, 2, 14, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 14, 0, 14, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 12, 1, 13, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 15, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 16, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 17, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 17, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 17, 0, 17, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 16, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 1, 16, 0, 15, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 17, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 2, 17, 1, 17, 3, 0 }, { 0, 1, 17, 2, 17, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 16, 0, 17, 0, 17, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 }, { 0, 3, 0, 3, 0, 3, 0 } },
+    { { 1, 2, 17, 1, 15, 0, 17 }, { 7, 1, 15, 2, 17, 3, 0 }, { 8, 0, 17, 1, 15, 3, 0 } },
 };
-int encounterTable00Maps_800AE890 = 0xFFFF006A;
-int encounterTable01Maps_800AE894 = 0xFFFF006B;
-int encounterTable02Maps_800AE898 = 0xFFFF006C;
-int encounterTable03Maps_800AE89C = 0xFFFF006D;
-int encounterTable04Maps_800AE8A0 = 0xFFFF006E;
-int encounterTable05Maps_800AE8A4 = 0xFFFF006F;
-int encounterTable06Maps_800AE8A8 = 0xFFFF0070;
-int encounterTable07Maps_800AE8AC = 0xFFFF0072;
-int encounterTable08Maps_800AE8B0 = 0xFFFF0076;
-int encounterTable09Maps_800AE8B4 = 0xFFFF0077;
-int encounterTable10Maps_800AE8B8 = 0xFFFF0078;
-int encounterTable11Maps_800AE8BC = 0xFFFF0079;
-int encounterTable12Maps_800AE8C0 = 0xFFFF007A;
-int encounterTable13Maps_800AE8C4 = 0xFFFF007B;
-int encounterTable14Maps_800AE8C8 = 0xFFFF007C;
-int encounterTable15Maps_800AE8CC = 0xFFFF0080;
-int encounterTable16Maps_800AE8D0 = 0xFFFF0081;
-int encounterTable17Maps_800AE8D4 = 0xFFFF0083;
-int encounterTable18Maps_800AE8D8 = 0xFFFF0084;
-int encounterTable19Maps_800AE8DC = 0xFFFF0089;
-int encounterTable20Maps_800AE8E0 = 0xFFFF008A;
-int encounterTable21Maps_800AE8E4 = 0xFFFF008B;
-int encounterTable22Maps_800AE8E8 = 0xFFFF008C;
-int encounterTable23Maps_800AE8EC = 0xFFFF008E;
-int encounterTable24Maps_800AE8F0 = 0xFFFF008F;
-int encounterTable25Maps_800AE8F4 = 0xFFFF0090;
-int encounterTable26Maps_800AE8F8 = 0xFFFF0091;
-int encounterTable27Maps_800AE8FC = 0xFFFF0092;
-int encounterTable28Maps_800AE900 = 0xFFFF0093;
-int encounterTable29Maps_800AE904 = 0xFFFF009E;
-int encounterTable30Maps_800AE908 = 0xFFFF009F;
-int encounterTable31Maps_800AE90C = 0xFFFF00A0;
-int encounterTable32Maps_800AE910 = 0xFFFF00A1;
-int encounterTable33Maps_800AE914[8] = { 0xA400A3, 0xA600A5, 0xA800A7, 0xAA00A9, 0xAC00AB, 0xB400B3, 0xB600B5, 0xFFFF };
-int encounterTable34Maps_800AE934 = 0xFFFF00BB;
-int encounterTable35Maps_800AE938[2] = { 0xBA00BC, 0xFFFF };
-int encounterTable36Maps_800AE940 = 0xFFFF00BD;
-int encounterTable37Maps_800AE944 = 0xFFFF;
-int encounterTable38Maps_800AE948 = 0xFFFF00BF;
-int encounterTable39Maps_800AE94C = 0xFFFF00C0;
-int encounterTable40Maps_800AE950 = 0xFFFF00C1;
-int encounterTable41Maps_800AE954 = 0xFFFF00C2;
-int encounterTable42Maps_800AE958 = 0xFFFF00C3;
-int encounterTable43Maps_800AE95C = 0xFFFF00D2;
-int encounterTable44Maps_800AE960 = 0xFFFF00D3;
-int encounterTable45Maps_800AE964 = 0xFFFF00D4;
-int encounterTable46Maps_800AE968 = 0xFFFF00D5;
-int encounterTable47Maps_800AE96C = 0xFFFF00D6;
-int encounterTable48Maps_800AE970 = 0xFFFF00D7;
-int encounterTable49Maps_800AE974 = 0xFFFF00D8;
-int encounterTable50Maps_800AE978 = 0xFFFF00D9;
-int encounterTable51Maps_800AE97C = 0xFFFF00DD;
-int encounterTable52Maps_800AE980 = 0xFFFF00DE;
-int encounterTable53Maps_800AE984 = 0xFFFF00DF;
-int encounterTable54Maps_800AE988 = 0xFFFF00E0;
-int encounterTable55Maps_800AE98C = 0xFFFF00E1;
-int encounterTable56Maps_800AE990 = 0xFFFF00E2;
-int encounterTable57Maps_800AE994 = 0xFFFF00E3;
-int encounterTable58Maps_800AE998 = 0xFFFF00E4;
-int encounterTable59Maps_800AE99C = 0xFFFF00E7;
-int encounterTable60Maps_800AE9A0 = 0xFFFF00E9;
-int encounterTable61Maps_800AE9A4 = 0xFFFF00EA;
-int encounterTable62Maps_800AE9A8 = 0xFFFF00ED;
-int encounterTable63Maps_800AE9AC = 0xFFFF00EE;
-int encounterTable64Maps_800AE9B0 = 0xFFFF00EF;
-int encounterTable65Maps_800AE9B4 = 0xFFFF00F0;
-int encounterTable66Maps_800AE9B8 = 0xFFFF00F1;
-int encounterTable67Maps_800AE9BC = 0xFFFF00F2;
-int encounterTable68Maps_800AE9C0 = 0xFFFF00F3;
-int encounterTable69Maps_800AE9C4 = 0xFFFF00F4;
-int encounterTable70Maps_800AE9C8 = 0xFFFF00F5;
-int encounterTable71Maps_800AE9CC = 0xFFFF00F6;
-int encounterTable72Maps_800AE9D0[3] = { 0x1010100, 0x1030102, 0xFFFF };
-void *encounterMapLists_800AE9DC[73] = {
-    (void *)&encounterTable00Maps_800AE890, (void *)&encounterTable01Maps_800AE894, (void *)&encounterTable02Maps_800AE898, (void *)&encounterTable03Maps_800AE89C,
-    (void *)&encounterTable04Maps_800AE8A0, (void *)&encounterTable05Maps_800AE8A4, (void *)&encounterTable06Maps_800AE8A8, (void *)&encounterTable07Maps_800AE8AC,
-    (void *)&encounterTable08Maps_800AE8B0, (void *)&encounterTable09Maps_800AE8B4, (void *)&encounterTable10Maps_800AE8B8, (void *)&encounterTable11Maps_800AE8BC,
-    (void *)&encounterTable12Maps_800AE8C0, (void *)&encounterTable13Maps_800AE8C4, (void *)&encounterTable14Maps_800AE8C8, (void *)&encounterTable15Maps_800AE8CC,
-    (void *)&encounterTable16Maps_800AE8D0, (void *)&encounterTable17Maps_800AE8D4, (void *)&encounterTable18Maps_800AE8D8, (void *)&encounterTable19Maps_800AE8DC,
-    (void *)&encounterTable20Maps_800AE8E0, (void *)&encounterTable21Maps_800AE8E4, (void *)&encounterTable22Maps_800AE8E8, (void *)&encounterTable23Maps_800AE8EC,
-    (void *)&encounterTable24Maps_800AE8F0, (void *)&encounterTable25Maps_800AE8F4, (void *)&encounterTable26Maps_800AE8F8, (void *)&encounterTable27Maps_800AE8FC,
-    (void *)&encounterTable28Maps_800AE900, (void *)&encounterTable29Maps_800AE904, (void *)&encounterTable30Maps_800AE908, (void *)&encounterTable31Maps_800AE90C,
-    (void *)&encounterTable32Maps_800AE910, (void *)encounterTable33Maps_800AE914, (void *)&encounterTable34Maps_800AE934, (void *)encounterTable35Maps_800AE938,
-    (void *)&encounterTable36Maps_800AE940, (void *)&encounterTable37Maps_800AE944, (void *)&encounterTable38Maps_800AE948, (void *)&encounterTable39Maps_800AE94C,
-    (void *)&encounterTable40Maps_800AE950, (void *)&encounterTable41Maps_800AE954, (void *)&encounterTable42Maps_800AE958, (void *)&encounterTable43Maps_800AE95C,
-    (void *)&encounterTable44Maps_800AE960, (void *)&encounterTable45Maps_800AE964, (void *)&encounterTable46Maps_800AE968, (void *)&encounterTable47Maps_800AE96C,
-    (void *)&encounterTable48Maps_800AE970, (void *)&encounterTable49Maps_800AE974, (void *)&encounterTable50Maps_800AE978, (void *)&encounterTable51Maps_800AE97C,
-    (void *)&encounterTable52Maps_800AE980, (void *)&encounterTable53Maps_800AE984, (void *)&encounterTable54Maps_800AE988, (void *)&encounterTable55Maps_800AE98C,
-    (void *)&encounterTable56Maps_800AE990, (void *)&encounterTable57Maps_800AE994, (void *)&encounterTable58Maps_800AE998, (void *)&encounterTable59Maps_800AE99C,
-    (void *)&encounterTable60Maps_800AE9A0, (void *)&encounterTable61Maps_800AE9A4, (void *)&encounterTable62Maps_800AE9A8, (void *)&encounterTable63Maps_800AE9AC,
-    (void *)&encounterTable64Maps_800AE9B0, (void *)&encounterTable65Maps_800AE9B4, (void *)&encounterTable66Maps_800AE9B8, (void *)&encounterTable67Maps_800AE9BC,
-    (void *)&encounterTable68Maps_800AE9C0, (void *)&encounterTable69Maps_800AE9C4, (void *)&encounterTable70Maps_800AE9C8, (void *)&encounterTable71Maps_800AE9CC,
-    (void *)encounterTable72Maps_800AE9D0,
+short encounterTable00Maps_800AE890[2] = { 106, -1 };
+short encounterTable01Maps_800AE894[2] = { 107, -1 };
+short encounterTable02Maps_800AE898[2] = { 108, -1 };
+short encounterTable03Maps_800AE89C[2] = { 109, -1 };
+short encounterTable04Maps_800AE8A0[2] = { 110, -1 };
+short encounterTable05Maps_800AE8A4[2] = { 111, -1 };
+short encounterTable06Maps_800AE8A8[2] = { 112, -1 };
+short encounterTable07Maps_800AE8AC[2] = { 114, -1 };
+short encounterTable08Maps_800AE8B0[2] = { 118, -1 };
+short encounterTable09Maps_800AE8B4[2] = { 119, -1 };
+short encounterTable10Maps_800AE8B8[2] = { 120, -1 };
+short encounterTable11Maps_800AE8BC[2] = { 121, -1 };
+short encounterTable12Maps_800AE8C0[2] = { 122, -1 };
+short encounterTable13Maps_800AE8C4[2] = { 123, -1 };
+short encounterTable14Maps_800AE8C8[2] = { 124, -1 };
+short encounterTable15Maps_800AE8CC[2] = { 128, -1 };
+short encounterTable16Maps_800AE8D0[2] = { 129, -1 };
+short encounterTable17Maps_800AE8D4[2] = { 131, -1 };
+short encounterTable18Maps_800AE8D8[2] = { 132, -1 };
+short encounterTable19Maps_800AE8DC[2] = { 137, -1 };
+short encounterTable20Maps_800AE8E0[2] = { 138, -1 };
+short encounterTable21Maps_800AE8E4[2] = { 139, -1 };
+short encounterTable22Maps_800AE8E8[2] = { 140, -1 };
+short encounterTable23Maps_800AE8EC[2] = { 142, -1 };
+short encounterTable24Maps_800AE8F0[2] = { 143, -1 };
+short encounterTable25Maps_800AE8F4[2] = { 144, -1 };
+short encounterTable26Maps_800AE8F8[2] = { 145, -1 };
+short encounterTable27Maps_800AE8FC[2] = { 146, -1 };
+short encounterTable28Maps_800AE900[2] = { 147, -1 };
+short encounterTable29Maps_800AE904[2] = { 158, -1 };
+short encounterTable30Maps_800AE908[2] = { 159, -1 };
+short encounterTable31Maps_800AE90C[2] = { 160, -1 };
+short encounterTable32Maps_800AE910[2] = { 161, -1 };
+short encounterTable33Maps_800AE914[16] = { 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 179, 180, 181, 182, -1, 0 };
+short encounterTable34Maps_800AE934[2] = { 187, -1 };
+short encounterTable35Maps_800AE938[4] = { 188, 186, -1, 0 };
+short encounterTable36Maps_800AE940[2] = { 189, -1 };
+short encounterTable37Maps_800AE944[2] = { -1, 0 };
+short encounterTable38Maps_800AE948[2] = { 191, -1 };
+short encounterTable39Maps_800AE94C[2] = { 192, -1 };
+short encounterTable40Maps_800AE950[2] = { 193, -1 };
+short encounterTable41Maps_800AE954[2] = { 194, -1 };
+short encounterTable42Maps_800AE958[2] = { 195, -1 };
+short encounterTable43Maps_800AE95C[2] = { 210, -1 };
+short encounterTable44Maps_800AE960[2] = { 211, -1 };
+short encounterTable45Maps_800AE964[2] = { 212, -1 };
+short encounterTable46Maps_800AE968[2] = { 213, -1 };
+short encounterTable47Maps_800AE96C[2] = { 214, -1 };
+short encounterTable48Maps_800AE970[2] = { 215, -1 };
+short encounterTable49Maps_800AE974[2] = { 216, -1 };
+short encounterTable50Maps_800AE978[2] = { 217, -1 };
+short encounterTable51Maps_800AE97C[2] = { 221, -1 };
+short encounterTable52Maps_800AE980[2] = { 222, -1 };
+short encounterTable53Maps_800AE984[2] = { 223, -1 };
+short encounterTable54Maps_800AE988[2] = { 224, -1 };
+short encounterTable55Maps_800AE98C[2] = { 225, -1 };
+short encounterTable56Maps_800AE990[2] = { 226, -1 };
+short encounterTable57Maps_800AE994[2] = { 227, -1 };
+short encounterTable58Maps_800AE998[2] = { 228, -1 };
+short encounterTable59Maps_800AE99C[2] = { 231, -1 };
+short encounterTable60Maps_800AE9A0[2] = { 233, -1 };
+short encounterTable61Maps_800AE9A4[2] = { 234, -1 };
+short encounterTable62Maps_800AE9A8[2] = { 237, -1 };
+short encounterTable63Maps_800AE9AC[2] = { 238, -1 };
+short encounterTable64Maps_800AE9B0[2] = { 239, -1 };
+short encounterTable65Maps_800AE9B4[2] = { 240, -1 };
+short encounterTable66Maps_800AE9B8[2] = { 241, -1 };
+short encounterTable67Maps_800AE9BC[2] = { 242, -1 };
+short encounterTable68Maps_800AE9C0[2] = { 243, -1 };
+short encounterTable69Maps_800AE9C4[2] = { 244, -1 };
+short encounterTable70Maps_800AE9C8[2] = { 245, -1 };
+short encounterTable71Maps_800AE9CC[2] = { 246, -1 };
+short encounterTable72Maps_800AE9D0[5] = { 256, 257, 258, 259, -1 };
+short *encounterMapLists_800AE9DC[73] = {
+    encounterTable00Maps_800AE890, encounterTable01Maps_800AE894, encounterTable02Maps_800AE898, encounterTable03Maps_800AE89C,
+    encounterTable04Maps_800AE8A0, encounterTable05Maps_800AE8A4, encounterTable06Maps_800AE8A8, encounterTable07Maps_800AE8AC,
+    encounterTable08Maps_800AE8B0, encounterTable09Maps_800AE8B4, encounterTable10Maps_800AE8B8, encounterTable11Maps_800AE8BC,
+    encounterTable12Maps_800AE8C0, encounterTable13Maps_800AE8C4, encounterTable14Maps_800AE8C8, encounterTable15Maps_800AE8CC,
+    encounterTable16Maps_800AE8D0, encounterTable17Maps_800AE8D4, encounterTable18Maps_800AE8D8, encounterTable19Maps_800AE8DC,
+    encounterTable20Maps_800AE8E0, encounterTable21Maps_800AE8E4, encounterTable22Maps_800AE8E8, encounterTable23Maps_800AE8EC,
+    encounterTable24Maps_800AE8F0, encounterTable25Maps_800AE8F4, encounterTable26Maps_800AE8F8, encounterTable27Maps_800AE8FC,
+    encounterTable28Maps_800AE900, encounterTable29Maps_800AE904, encounterTable30Maps_800AE908, encounterTable31Maps_800AE90C,
+    encounterTable32Maps_800AE910, encounterTable33Maps_800AE914, encounterTable34Maps_800AE934, encounterTable35Maps_800AE938,
+    encounterTable36Maps_800AE940, encounterTable37Maps_800AE944, encounterTable38Maps_800AE948, encounterTable39Maps_800AE94C,
+    encounterTable40Maps_800AE950, encounterTable41Maps_800AE954, encounterTable42Maps_800AE958, encounterTable43Maps_800AE95C,
+    encounterTable44Maps_800AE960, encounterTable45Maps_800AE964, encounterTable46Maps_800AE968, encounterTable47Maps_800AE96C,
+    encounterTable48Maps_800AE970, encounterTable49Maps_800AE974, encounterTable50Maps_800AE978, encounterTable51Maps_800AE97C,
+    encounterTable52Maps_800AE980, encounterTable53Maps_800AE984, encounterTable54Maps_800AE988, encounterTable55Maps_800AE98C,
+    encounterTable56Maps_800AE990, encounterTable57Maps_800AE994, encounterTable58Maps_800AE998, encounterTable59Maps_800AE99C,
+    encounterTable60Maps_800AE9A0, encounterTable61Maps_800AE9A4, encounterTable62Maps_800AE9A8, encounterTable63Maps_800AE9AC,
+    encounterTable64Maps_800AE9B0, encounterTable65Maps_800AE9B4, encounterTable66Maps_800AE9B8, encounterTable67Maps_800AE9BC,
+    encounterTable68Maps_800AE9C0, encounterTable69Maps_800AE9C4, encounterTable70Maps_800AE9C8, encounterTable71Maps_800AE9CC,
+    encounterTable72Maps_800AE9D0,
 };
-int encounterGroups_800AEB00[27] = {
-    0, 0, 0, 3, 0, 0, 3, 0,
-    0, 0, 0, 0, 3, 0, 0, 3,
-    0, 0, 0, 0, 0, 3, 0, 0,
-    3,
+GameSpawnMember encounterGroups_800AEB00[3][3] = {
+    { { 0, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 } },
+    { { 0, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 } },
+    { { 0, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 } },
 };
-int encounterSpecies_800AEB6C[3] = { 211, 211, 211 };
-int dword_800AEB78 = 211;
+int encounterSpecies_800AEB6C[4] = { 211, 211, 211, 211 };
 int mdecBufferMode_800AEB7C = 2;
 int eventEffects_800AEB80[15] = { 0 };
 int *eventReloc_800AEBBC = 0;
@@ -5125,40 +5168,40 @@ int levantStartPos_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };
 int shopRequest_800B06B0[3] = { 0 };
 int saveRequest_800B06BC = 0;
 int dword_800B06C0[3] = { 0 };
-int mapLoaderTaskDef_800B06CC[6] = { 1, 5, 8, (int)&mapLoaderTask_800B1DC4, (int)InitMapLoaderTask_80027CC0, (int)ResetMapLoaderTask_8002830C };
-int areaLoaderTaskDef_800B06E4[6] = { 1, 1, 8, (int)&areaLoaderTask_800B1DB8, (int)InitAreaLoaderTask_80028388 };
-int levantModelTaskDef_800B06FC[6] = { 1, 5, 40, (int)levantModelTask_800B1DA0, (int)LevantModelTaskInit_800ACAA4, (int)LevantModelTaskExit_800ACF0C };
-int modelLoaderTaskDef_800B0714[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
-int actorTasksDef_800B072C[6] = { 7, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
-int tileAnimTaskDef_800B0744[6] = { 1, 1, 4, (int)&tileAnimTask_800B1DBC, (int)TileAnimTaskInit_800A09D8 };
-int eventScriptsDef_800B075C[6] = { 10, 0x8000, 0x124, (int)&eventScripts_8008D410 };
-int encounterWatchTaskDef_800B0774[6] = { 1, 5, 16, (int)&encounterWatchTask_8008B4D0, (int)EncounterWatchTask_800A1314, (int)FreeBattleResources_800A1444 };
-int battleTaskDef_800B078C[6] = { 1, 0x8000, 16, (int)&battleTask_8008D624 };
-int battleMenuTaskDef_800B07A4[6] = { 1, 0x8000, 12, (int)&battleMenuTask_8008D468 };
-int dword_800B07BC[6] = { 1, 0x8000, 0, (int)&dword_8008D444 };
-int enemyWindowsTaskDef_800B07D4[6] = { 1, 0x8000, 48, (int)&enemyWindowsLayoutTask_8008B568 };
-int enemyWindowTaskDef_800B07EC[6] = { 3, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
-int actorWindowTaskDef_800B0804[6] = { 1, 0x8000, 20, (int)&actorWindowTask_8008D4B0 };
-int helpWindowTaskDef_800B081C[6] = { 1, 0x8000, 20, (int)&helpWindowTask_8008D63C };
-int levantControlTaskDef_800B0834[6] = { 1, 1, 0x9D0, (int)&levantControlTask_8008B4CC, (int)LevantControlTask_800A818C };
-int dword_800B084C[6] = { 1, 0x8000, 0x2E0, 0x8008D490 };
-int levantActorTaskDef_800B0864[6] = { 1, 5, 0x7C0, (int)&gameTask_8008B4A4, (int)LevantActorTask_800A9564, (int)LevantActorTaskExit_800A955C };
-int encounterTaskDef_800B087C[6] = { 1, 0x8000, 24, (int)&encounterTask_8008D674 };
-int enemyAiTasksDef_800B0894[6] = { 3, 0x8000, 48, (int)&enemyAiTasks_8008D49C };
-int dword_800B08AC[6] = { 1, 0x8000, 12, (int)dword_800B1DA8 };
-int eventEntitiesDef_800B08C4[6] = { 25, 0x8000, 148, (int)&eventEntities_8008D400 };
-int prevModeTaskDef_800B08DC[6] = { 1, 1, 4, (int)prevModeTask_800B1DC0, (int)ReturnToPrevGameMode_800A8108 };
-int mapOverlayTaskDef_800B08F4[6] = { 1, 1, 0x100, (int)mapOverlayTask_800B1DA4, (int)StartMapOverlay_800A75F8, 0x800B6F60 };
-int fieldMenuTaskDef_800B090C[6] = { 1, 0x8000, 124, (int)&fieldMenuTask_8008D498, 0x800BD40C };
-int shopCtrlTaskDef_800B0924[6] = { 1, 0x8000, 0, (int)&shopCtrlTask_8008D438, 0x800B67C0 };
-int shopMenuTaskDef_800B093C[6] = { 1, 0x8000, 156, (int)&shopMenuTask_8008D670, 0x800BB444 };
-int shelfMenuTaskDef_800B0954[6] = { 1, 0x8000, 24, (int)&shelfMenuTask_8008D4A8, 0x800B7000 };
-int storeTaskDef_800B096C[6] = { 1, 0x8000, 84, (int)&storeTask_8008D3E0, 0x800BB1F4 };
-int dword_800B0984[6] = { 1, 0x8000, 0, 0x8008D478 };
-int chapterOverlayTaskDef_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1DB0, (int)StartChapterOverlay_800A7690 };
-int sporeTaskDef_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
-int fieldModeTaskDef_800B09CC[6] = { 1, 0x8000, 80, (int)&fieldModeTask_800B1DAC, (int)FieldModeTask_800A7720 };
-int subOverlayTaskDef_800B09E4[6] = { 1, 1, 32, (int)subOverlayTask_800B1DB4, (int)CheckSubOverlayRequests_800A6DAC };
+EventDesc mapLoaderTaskDef_800B06CC = { 1, 5, 8, (void *)&mapLoaderTask_800B1DC4, (EventEntryFn)InitMapLoaderTask_80027CC0, (EventEntryFn)ResetMapLoaderTask_8002830C };
+EventDesc areaLoaderTaskDef_800B06E4 = { 1, 1, 8, (void *)&areaLoaderTask_800B1DB8, (EventEntryFn)InitAreaLoaderTask_80028388 };
+EventDesc levantModelTaskDef_800B06FC = { 1, 5, 40, (void *)levantModelTask_800B1DA0, (EventEntryFn)LevantModelTaskInit_800ACAA4, (EventEntryFn)LevantModelTaskExit_800ACF0C };
+EventDesc modelLoaderTaskDef_800B0714 = { 1, 0x8000, 92, (void *)&modelLoaderTask_8008B54C, (EventEntryFn)ModelLoaderTask_800209AC };
+EventDesc actorTasksDef_800B072C = { 7, 0x8000, 0x1CC, (void *)&actorTasks_8008D43C };
+EventDesc tileAnimTaskDef_800B0744 = { 1, 1, 4, (void *)&tileAnimTask_800B1DBC, (EventEntryFn)TileAnimTaskInit_800A09D8 };
+EventDesc eventScriptsDef_800B075C = { 10, 0x8000, 0x124, (void *)&eventScripts_8008D410 };
+EventDesc encounterWatchTaskDef_800B0774 = { 1, 5, 16, (void *)&encounterWatchTask_8008B4D0, (EventEntryFn)EncounterWatchTask_800A1314, (EventEntryFn)FreeBattleResources_800A1444 };
+EventDesc battleTaskDef_800B078C = { 1, 0x8000, 16, (void *)&battleTask_8008D624 };
+EventDesc battleMenuTaskDef_800B07A4 = { 1, 0x8000, 12, (void *)&battleMenuTask_8008D468 };
+EventDesc dword_800B07BC = { 1, 0x8000, 0, (void *)&dword_8008D444 };
+EventDesc enemyWindowsTaskDef_800B07D4 = { 1, 0x8000, 48, (void *)&enemyWindowsLayoutTask_8008B568 };
+EventDesc enemyWindowTaskDef_800B07EC = { 3, 0x8000, 24, (void *)&enemyWindowTasks_8008B564 };
+EventDesc actorWindowTaskDef_800B0804 = { 1, 0x8000, 20, (void *)&actorWindowTask_8008D4B0 };
+EventDesc helpWindowTaskDef_800B081C = { 1, 0x8000, 20, (void *)&helpWindowTask_8008D63C };
+EventDesc levantControlTaskDef_800B0834 = { 1, 1, 0x9D0, (void *)&levantControlTask_8008B4CC, (EventEntryFn)LevantControlTask_800A818C };
+EventDesc dword_800B084C = { 1, 0x8000, 0x2E0, (void *)0x8008D490 };
+EventDesc levantActorTaskDef_800B0864 = { 1, 5, 0x7C0, (void *)&gameTask_8008B4A4, (EventEntryFn)LevantActorTask_800A9564, (EventEntryFn)LevantActorTaskExit_800A955C };
+EventDesc encounterTaskDef_800B087C = { 1, 0x8000, 24, (void *)&encounterTask_8008D674 };
+EventDesc enemyAiTasksDef_800B0894 = { 3, 0x8000, 48, (void *)&enemyAiTasks_8008D49C };
+EventDesc dword_800B08AC = { 1, 0x8000, 12, (void *)dword_800B1DA8 };
+EventDesc eventEntitiesDef_800B08C4 = { 25, 0x8000, 148, (void *)&eventEntities_8008D400 };
+EventDesc prevModeTaskDef_800B08DC = { 1, 1, 4, (void *)prevModeTask_800B1DC0, (EventEntryFn)ReturnToPrevGameMode_800A8108 };
+EventDesc mapOverlayTaskDef_800B08F4 = { 1, 1, 0x100, (void *)mapOverlayTask_800B1DA4, (EventEntryFn)StartMapOverlay_800A75F8, (EventEntryFn)0x800B6F60 };
+EventDesc fieldMenuTaskDef_800B090C = { 1, 0x8000, 124, (void *)&fieldMenuTask_8008D498, (EventEntryFn)0x800BD40C };
+EventDesc shopCtrlTaskDef_800B0924 = { 1, 0x8000, 0, (void *)&shopCtrlTask_8008D438, (EventEntryFn)0x800B67C0 };
+EventDesc shopMenuTaskDef_800B093C = { 1, 0x8000, 156, (void *)&shopMenuTask_8008D670, (EventEntryFn)0x800BB444 };
+EventDesc shelfMenuTaskDef_800B0954 = { 1, 0x8000, 24, (void *)&shelfMenuTask_8008D4A8, (EventEntryFn)0x800B7000 };
+EventDesc storeTaskDef_800B096C = { 1, 0x8000, 84, (void *)&storeTask_8008D3E0, (EventEntryFn)0x800BB1F4 };
+EventDesc dword_800B0984 = { 1, 0x8000, 0, (void *)0x8008D478 };
+EventDesc chapterOverlayTaskDef_800B099C = { 1, 1, 8, (void *)chapterOverlayTask_800B1DB0, (EventEntryFn)StartChapterOverlay_800A7690 };
+EventDesc sporeTaskDef_800B09B4 = { 1, 1, 8, (void *)&sporeTask_8008D464, (EventEntryFn)InitSporeTask_80011ADC };
+EventDesc fieldModeTaskDef_800B09CC = { 1, 0x8000, 80, (void *)&fieldModeTask_800B1DAC, (EventEntryFn)FieldModeTask_800A7720 };
+EventDesc subOverlayTaskDef_800B09E4 = { 1, 1, 32, (void *)subOverlayTask_800B1DB4, (EventEntryFn)CheckSubOverlayRequests_800A6DAC };
 GameTaskListDef globalTaskLists_800B09FC[2] = { { levantModelTask_800B1DA0 } };
 GameTaskListDef gameModeChapterTasks_800B0A0C[4] = {
     { &overlayLoaderTask_8008D4C0 },
@@ -5285,8 +5328,24 @@ GameTaskListDef *gameModeTaskLists_800B0D74[12] = {
     gameModeMenuTasks_800B0C4C, gameModeShopTasks_800B0C84, gameModeSaveTasks_800B0CE4, gameModeReturnTasks_800B0D04,
     gameModeMapTasks_800B0D14, dword_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
 };
-char gameEventListDefs_800B0DA4[232] = { 204, 6, 11, 128, 0, 143, 7, 128, 24, 143, 7, 128, 228, 6, 11, 128, 252, 6, 11, 128, 20, 7, 11, 128, 44, 7, 11, 128, 152, 144, 7, 128, 72, 143, 7, 128, 68, 7, 11, 128, 96, 143, 7, 128, 116, 7, 11, 128, 140, 7, 11, 128, 40, 145, 7, 128, 164, 7, 11, 128, 188, 7, 11, 128, 16, 145, 7, 128, 80, 144, 7, 128, 104, 144, 7, 128, 212, 7, 11, 128, 236, 7, 11, 128, 4, 8, 11, 128, 28, 8, 11, 128, 76, 8, 11, 128, 32, 144, 7, 128, 56, 144, 7, 128, 168, 143, 7, 128, 52, 8, 11, 128, 100, 8, 11, 128, 176, 144, 7, 128, 200, 144, 7, 128, 224, 144, 7, 128, 248, 144, 7, 128, 128, 144, 7, 128, 172, 8, 11, 128, 196, 8, 11, 128, 8, 144, 7, 128, 120, 143, 7, 128, 12, 9, 11, 128, 192, 143, 7, 128, 216, 143, 7, 128, 240, 143, 7, 128, 220, 8, 11, 128, 244, 8, 11, 128, 92, 7, 11, 128, 144, 143, 7, 128, 36, 9, 11, 128, 60, 9, 11, 128, 84, 9, 11, 128, 108, 9, 11, 128, 132, 9, 11, 128, 156, 9, 11, 128, 180, 9, 11, 128, 124, 8, 11, 128, 148, 8, 11, 128, 204, 9, 11, 128, 228, 9, 11, 128 };
-int gameMainTaskDef_800B0E8C[6] = { 1, 1, 64, 0x8008D46C, (int)GameMainInit_800A68CC };
+EventDesc* gameEventListDefs_800B0DA4[58] = {
+    &mapLoaderTaskDef_800B06CC, &eventDescs_80078EB8[3], &eventDescs_80078EB8[4], &areaLoaderTaskDef_800B06E4,
+    &levantModelTaskDef_800B06FC, &modelLoaderTaskDef_800B0714, &actorTasksDef_800B072C, &eventDescs_80078EB8[20],
+    &eventDescs_80078EB8[6], &tileAnimTaskDef_800B0744, &eventDescs_80078EB8[7], &encounterWatchTaskDef_800B0774,
+    &battleTaskDef_800B078C, &eventDescs_80078EB8[26], &battleMenuTaskDef_800B07A4, &dword_800B07BC,
+    &eventDescs_80078EB8[25], &eventDescs_80078EB8[17], &eventDescs_80078EB8[18], &enemyWindowsTaskDef_800B07D4,
+    &enemyWindowTaskDef_800B07EC, &actorWindowTaskDef_800B0804, &helpWindowTaskDef_800B081C, &dword_800B084C,
+    &eventDescs_80078EB8[15], &eventDescs_80078EB8[16], &eventDescs_80078EB8[10], &levantControlTaskDef_800B0834,
+    &levantActorTaskDef_800B0864, &eventDescs_80078EB8[21], &eventDescs_80078EB8[22], &eventDescs_80078EB8[23],
+    &eventDescs_80078EB8[24], &eventDescs_80078EB8[19], &dword_800B08AC, &eventEntitiesDef_800B08C4,
+    &eventDescs_80078EB8[14], &eventDescs_80078EB8[8], &fieldMenuTaskDef_800B090C, &eventDescs_80078EB8[11],
+    &eventDescs_80078EB8[12], &eventDescs_80078EB8[13], &prevModeTaskDef_800B08DC, &mapOverlayTaskDef_800B08F4,
+    &eventScriptsDef_800B075C, &eventDescs_80078EB8[9], &shopCtrlTaskDef_800B0924, &shopMenuTaskDef_800B093C,
+    &shelfMenuTaskDef_800B0954, &storeTaskDef_800B096C, &dword_800B0984, &chapterOverlayTaskDef_800B099C,
+    &sporeTaskDef_800B09B4, &encounterTaskDef_800B087C, &enemyAiTasksDef_800B0894, &fieldModeTaskDef_800B09CC,
+    &subOverlayTaskDef_800B09E4,
+};
+EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)0x8008D46C, (EventEntryFn)GameMainInit_800A68CC };
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
 GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;

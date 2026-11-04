@@ -2520,7 +2520,7 @@ typedef struct EvSpeaker
 typedef struct EvMsgWindowCfg
 {
     int posMode_0;
-    unsigned short* pos_4;
+    short* pos_4;
     int str_8;
     int fC;
     int f10;
@@ -2540,7 +2540,7 @@ typedef struct EvMsgWindowCfg
 typedef struct EvItemMsgCfg
 {
     int posMode_0;
-    unsigned short* pos_4;
+    short* pos_4;
     int f8;
     EvItemMsgSlot slots_C[3];
     int f48;
