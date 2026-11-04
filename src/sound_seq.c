@@ -17,6 +17,7 @@
 #include "soundtask.h"
 #include "data_decls.h"
 #include "sound_seq.h"
+#include "skill_anim.h"
 
 const char aRendWings_8007447C[] = "\202q\202\205\202\216\202\204\201@\202v\202\211\202\216\202\207\202\223"; // Rend Wings
 const char aBreakLegs_80074494[] = "\202a\202\222\202\205\202\201\202\213\201@\202k\202\205\202\207\202\223"; // Break Legs
@@ -328,7 +329,6 @@ int ReturnZero_800316E4(void)
 {
     return 0;
 }
-extern int SkillSlotToAnimIndex_80031870(int a0);
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
 extern void SetHitVariant_80018430(short v);
 // Matched
