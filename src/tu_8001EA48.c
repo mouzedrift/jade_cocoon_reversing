@@ -4223,75 +4223,56 @@ void sub_800278BC(int* a, int h)
         e->a = 0;
     }
 }
-typedef struct
-{
-    short x;
-    short y;
-    short z;
-    short pad;
-} struct_a88_sv;
-typedef struct
-{
-    int field_0;
-    struct_a88_sv v[4];
-} struct_a88_24;
-typedef struct
-{
-    struct_a88_sv v[4];
-} struct_20v;
-typedef struct
-{
-    unsigned short n;
-    struct_20v* items;
-} struct_8_20v;
 #if 0
-// Not matched: s1/s2 swapped (p vs arr+i) and the source-item address is strength-reduced differently
-int* sub_80027A88(struct_8_20v** out, int* count, int heap, int* hdr)
+// Not matched: $s1/$s2 (record pointer / arr + i) and $a1/$a2 swapped; the original source-triangle pointer is set up as rec + 0x48 and stepped +4 at the loop top, +0x24 at the bottom
+int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
 {
-    struct_8_20v* arr;
+    MapMesh* arr;
     unsigned int i;
     unsigned int j;
     unsigned char* p;
-    unsigned char* rec;
-    int* hh;
-    p = (unsigned char*)hdr + 0x10;
+    MapMeshRec* rec;
+    MapTriRec* tri;
+    MapMeshFile* hh;
+    p = (unsigned char*)(hdr + 1);
     hh = hdr;
-    arr = ListAlloc_8003FDC0(heap, hdr[1] * 8);
-    *count = hdr[1];
-    if (hdr[1] == 0)
+    arr = ListAlloc_8003FDC0(heap, hdr->count_4 * sizeof(MapMesh));
+    *count = hdr->count_4;
+    if (hdr->count_4 == 0)
     {
         *out = 0;
-        return (int*)((unsigned char*)hdr + hdr[0]);
+        return (int*)((unsigned char*)hdr + hdr->size_0);
     }
-    for (i = 0; i < hh[1]; i++)
+    for (i = 0; i < hh->count_4; i++)
     {
-        rec = p;
-        arr[i].n = *(unsigned short*)rec;
-        p = rec + 0x28;
-        arr[i].items = ListAlloc_8003FDC0(heap, *(int*)rec * 32);
-        for (j = 0; j < *(unsigned int*)rec; j++)
+        rec = (MapMeshRec*)p;
+        arr[i].nTris_0 = rec->nTris_0;
+        p = (unsigned char*)(rec + 1);
+        arr[i].tris_4 = ListAlloc_8003FDC0(heap, rec->nTris_0 * sizeof(MapTri));
+        for (j = 0; j < rec->nTris_0; j++)
         {
-            arr[i].items[j].v[3].x = ((struct_a88_24*)(rec + 0x2C))[j].v[0].x;
-            arr[i].items[j].v[3].y = ((struct_a88_24*)(rec + 0x2C))[j].v[0].y;
-            arr[i].items[j].v[3].z = ((struct_a88_24*)(rec + 0x2C))[j].v[0].z;
-            arr[i].items[j].v[3].pad = 0;
-            arr[i].items[j].v[0].x = ((struct_a88_24*)(rec + 0x2C))[j].v[1].x;
-            arr[i].items[j].v[0].y = ((struct_a88_24*)(rec + 0x2C))[j].v[1].y;
-            arr[i].items[j].v[0].z = ((struct_a88_24*)(rec + 0x2C))[j].v[1].z;
-            arr[i].items[j].v[0].pad = 0;
-            arr[i].items[j].v[1].x = ((struct_a88_24*)(rec + 0x2C))[j].v[2].x;
-            arr[i].items[j].v[1].y = ((struct_a88_24*)(rec + 0x2C))[j].v[2].y;
-            arr[i].items[j].v[1].z = ((struct_a88_24*)(rec + 0x2C))[j].v[2].z;
-            arr[i].items[j].v[1].pad = 0;
-            arr[i].items[j].v[2].x = ((struct_a88_24*)(rec + 0x2C))[j].v[3].x;
-            arr[i].items[j].v[2].y = ((struct_a88_24*)(rec + 0x2C))[j].v[3].y;
-            arr[i].items[j].v[2].z = ((struct_a88_24*)(rec + 0x2C))[j].v[3].z;
-            arr[i].items[j].v[2].pad = 0;
-            p += 0x28;
+            tri = (MapTriRec*)p;
+            p += sizeof(MapTriRec);
+            arr[i].tris_4[j].nx_18 = tri->n_8.x_0;
+            arr[i].tris_4[j].ny_1A = tri->n_8.y_2;
+            arr[i].tris_4[j].nz_1C = tri->n_8.z_4;
+            arr[i].tris_4[j].pad_1E = 0;
+            arr[i].tris_4[j].v_0[0].x_0 = tri->v_10[0].x_0;
+            arr[i].tris_4[j].v_0[0].y_2 = tri->v_10[0].y_2;
+            arr[i].tris_4[j].v_0[0].z_4 = tri->v_10[0].z_4;
+            arr[i].tris_4[j].v_0[0].pad_6 = 0;
+            arr[i].tris_4[j].v_0[1].x_0 = tri->v_10[1].x_0;
+            arr[i].tris_4[j].v_0[1].y_2 = tri->v_10[1].y_2;
+            arr[i].tris_4[j].v_0[1].z_4 = tri->v_10[1].z_4;
+            arr[i].tris_4[j].v_0[1].pad_6 = 0;
+            arr[i].tris_4[j].v_0[2].x_0 = tri->v_10[2].x_0;
+            arr[i].tris_4[j].v_0[2].y_2 = tri->v_10[2].y_2;
+            arr[i].tris_4[j].v_0[2].z_4 = tri->v_10[2].z_4;
+            arr[i].tris_4[j].v_0[2].pad_6 = 0;
         }
     }
     *out = arr;
-    return (int*)((unsigned char*)hdr + hh[0]);
+    return (int*)((unsigned char*)hdr + hh->size_0);
 }
 #endif
 INCLUDE_ASM(sub_80027A88);
@@ -4621,7 +4602,6 @@ typedef struct
 extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
-extern int* sub_80027A88();
 extern unsigned int* dword_80073210;
 extern short dword_80091CA8[];
 extern EventNode* dword_8008B4A4; // the GAME overlay task

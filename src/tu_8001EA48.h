@@ -649,7 +649,7 @@ typedef struct MapTri
     short nx_18;
     short ny_1A;
     short nz_1C;
-    char pad_1E[2];
+    short pad_1E;
 } MapTri;
 
 typedef struct MapMesh
@@ -658,6 +658,30 @@ typedef struct MapMesh
     short pad_2;
     MapTri* tris_4;
 } MapMesh;
+
+// a mesh block of a map file (sub_80027A88): header, then per mesh a MapMeshRec and its MapTriRecs
+typedef struct MapMeshFile
+{
+    int size_0; // of the whole block
+    unsigned int count_4;
+    int pad_8[2];
+} MapMeshFile;
+
+typedef struct MapMeshRec
+{
+    unsigned int nTris_0;
+    char pad_4[0x24];
+} MapMeshRec;
+
+typedef struct MapTriRec
+{
+    int f0_0;
+    int f4_4;
+    MapVtx n_8;
+    MapVtx v_10[3];
+} MapTriRec;
+
+int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr);
 
 typedef struct MapState
 {
