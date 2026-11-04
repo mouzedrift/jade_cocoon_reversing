@@ -1615,19 +1615,19 @@ extern const char aKA16010XA_800A50D8[];
 extern const char aKA16009XA_800A50E4[];
 extern const char aKA16006XA_800A50F0[];
 extern const char aKA16005XA_800A50FC[];
-extern const char asc_800A5108[];
-extern const char asc_800A511C[];
-extern const char asc_800A5138[];
-extern const char asc_800A5164[];
-extern const char asc_800A5170[];
-extern const char asc_800A5180[];
-extern const char asc_800A518C[];
+extern const char strCrossToQuit_800A5108[];
+extern const char strTriangleToStop_800A511C[];
+extern const char strLeftRightCircle_800A5138[];
+extern const char strXaNumber_800A5164[];
+extern const char strReverbDepth_800A5170[];
+extern const char strSeNumber_800A5180[];
+extern const char strSeFile_800A518C[];
 extern const char *xaNames_800A57D4[1607];
-extern short dword_800A70F0[1607][4];
-extern int dword_800AA328[6];
-extern char name_800AA340[16];
-extern char *name_800AA350[8];
+extern short xaTracks_800A70F0[1607][4];
+extern int soundTestTaskDesc_800AA328[6];
+extern char soundTestTaskList_800AA340[16];
+extern char *soundTestLabels_800AA350[8];
 
-extern const char asc_800A519C[16];
+extern const char strSoundNumber_800A519C[16];
 
 #endif

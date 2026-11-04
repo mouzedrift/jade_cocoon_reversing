@@ -7,7 +7,7 @@ enum GameStates TitleMain_800A0EF0(void);
 enum GameStates sub_800A1324(void);
 enum GameStates sub_800A1B24(void);
 enum GameStates sub_800A200C(void);
-enum GameStates sub_800A51AC(void);
+enum GameStates SoundTestMain_800A51AC(void);
 enum GameStates sub_800A7574(void);
 
 extern int dword_800960B4[3];

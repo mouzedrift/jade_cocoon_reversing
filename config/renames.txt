@@ -1525,3 +1525,20 @@ dword_800A280C pulseMax_800A280C
 dword_800A2810 pulseMin_800A2810
 dword_800A2814 titleIdleTimer_800A2814
 dword_800A2818 titleResult_800A2818
+
+# --- overlay SOUNDTST ---
+sub_800A51AC SoundTestMain_800A51AC
+sub_800A51D8 SoundTestInit_800A51D8
+sub_800A5238 SoundTestUpdate_800A5238
+dword_800A70F0 xaTracks_800A70F0
+dword_800AA328 soundTestTaskDesc_800AA328
+name_800AA340 soundTestTaskList_800AA340
+name_800AA350 soundTestLabels_800AA350
+asc_800A5108 strCrossToQuit_800A5108
+asc_800A511C strTriangleToStop_800A511C
+asc_800A5138 strLeftRightCircle_800A5138
+asc_800A5164 strXaNumber_800A5164
+asc_800A5170 strReverbDepth_800A5170
+asc_800A5180 strSeNumber_800A5180
+asc_800A518C strSeFile_800A518C
+asc_800A519C strSoundNumber_800A519C
