@@ -2536,7 +2536,7 @@ int CheckShopSelection_800BCF74(ShopMenu* u)
 INCLUDE_OVERLAY_ASM(shop, CheckShopSelection_800BCF74);
 INCLUDE_OVERLAY_ASM(shop, jpt_800B9624);
 
-extern int sub_800AD398();
+extern int IsInventory4NonEmpty_800AD398();
 extern void ShopMenuExecute_800BD9DC(ShopMenu* u);
 int CheckShopSelection_800BCF74(ShopMenu* u);
 int IsMergePreviewState_800BD650(short* p);
@@ -2634,7 +2634,7 @@ void HandleShopConfirmCancel_800BD0D4(ShopMenu* u)
                     break;
                 case 2:
                     PlaySfx_80031494(0x7E);
-                    if (sub_800AD398())
+                    if (IsInventory4NonEmpty_800AD398())
                     {
                         u->state_0 = 13;
                     }

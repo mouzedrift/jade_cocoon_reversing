@@ -633,7 +633,7 @@ void EncounterNop_800A1E88(void)
 }
 
 // Matched
-int sub_800A1E90(void)
+int ReturnOne_800A1E90(void)
 {
     return 1;
 }
@@ -824,7 +824,7 @@ int TurnEnemyToward_800A25D8(int idx)
 }
 
 // Matched
-int sub_800A25F8(int idx)
+int EnemyReturnZero_800A25F8(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
@@ -918,7 +918,7 @@ int AddEnemyItem_800A2898(int idx)
 }
 
 // Matched
-int sub_800A28DC(int idx)
+int EnemyReturnZero_800A28DC(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
@@ -963,7 +963,7 @@ void GetEnemyEffectTarget_800A29CC(int idx, EffectTarget* out)
 }
 
 // Matched
-int sub_800A2A50(int idx)
+int EnemyReturnZero_800A2A50(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;

@@ -1131,7 +1131,8 @@ typedef struct G2Mode_1
 } G2Mode_1;
 
 
-extern G2Mode_1 levantBattleActions_800B1084[];
+extern G2Mode_1 levantBattleActions_800B1084[28];
+extern int levantModelIds_800B1164[2];
 
 
 typedef struct G2Cmd_1
@@ -1555,7 +1556,7 @@ extern int fieldMode_800B0EC0;
 extern GameList_1 fieldMinions_800B0EC4;
 extern char levantBones_800B0EF8;
 extern int dword_800B0EFC[45];
-extern SVECTOR levantBoneScale_800B0FB0[55];
+extern SVECTOR levantBoneScale_800B0FB0[22];
 extern int dword_800B1168;
 extern int levantBaseModels_800B116C[19];
 extern unsigned char levantOutfitModelOffsets_800B11B8[20];

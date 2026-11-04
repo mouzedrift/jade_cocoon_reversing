@@ -1514,7 +1514,7 @@ void ReturnToPrevGameMode_800A8108()
     eventDispatchHalt_8008B540 = 1;
 }
 
-void sub_800A8138()
+void EmptyCallback_800A8138()
 {
 }
 
@@ -2252,7 +2252,7 @@ void ResetLevantActor_800A9414(void* pv, int action, int anim)
     FirFilterInit_8001450C(p->turnBuf_780, &p->turn_770, dword_800795C0, 4);
     SetLevantAnim_800AB010(p, action, anim, 0);
     p->mode_C = 0;
-    if (sub_800AAFD8(p->prevAnim_1E) != 1)
+    if (IsLevantAnimLoadedOrFree_800AAFD8(p->prevAnim_1E) != 1)
         p->flags_0 &= ~0x10;
     EndLevantPath_800ABAD4();
     SetLevantRootMotion_800AA140(p);
@@ -3016,7 +3016,7 @@ void UpdateLevantActionState_800AAF58(G2Act* a)
     }
 }
 
-int sub_800AAFD8(int anim)
+int IsLevantAnimLoadedOrFree_800AAFD8(int anim)
 {
     if (IsLevantAnimLoaded_800AC518(anim))
         return 1;
@@ -3059,7 +3059,7 @@ void SetLevantAnim_800AB010(G2Act* p, int action, int anim, int frame)
     if (p->prevAnim_1E != p->anim_1C)
     {
         p->flags_0 |= 8;
-        if (sub_800AAFD8(p->prevAnim_1E) == 1)
+        if (IsLevantAnimLoadedOrFree_800AAFD8(p->prevAnim_1E) == 1)
             p->flags_0 |= 0x10;
     }
 }
@@ -3576,7 +3576,7 @@ void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
             {
                 SetLevantAnim_800AB010(p, 0, 3, 0);
                 p->mode_C = 0;
-                if (sub_800AAFD8(p->actionAnim_20) == 1)
+                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
                 {
                     p->flags_0 |= 0x10;
                 }
@@ -3592,7 +3592,7 @@ void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
                     SetLevantAnim_800AB010(p, -1, p->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(p->nextAnim_24, GetLevantAnimSet_800AC474(p->nextAnim_24)));
                 }
                 p->actionAnim_20 = p->queuedAnim_22;
-                if (sub_800AAFD8(p->actionAnim_20) == 1)
+                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
                 {
                     p->flags_0 |= 0x10;
                 }
@@ -3605,7 +3605,7 @@ void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
             {
                 p->actionAnim_20 = p->queuedAnim_22;
                 p->action_8 = 0x17;
-                if (sub_800AAFD8(p->actionAnim_20) == 1)
+                if (IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20) == 1)
                 {
                     p->flags_0 |= 0x10;
                 }
@@ -3621,7 +3621,7 @@ void UpdateLevantQueuedAnim_800AC02C(G2Act* p)
         if (p->blend_26 >= 0x1000)
         {
             p->flags_0 &= ~0x10;
-            sub_800AAFD8(p->actionAnim_20);
+            IsLevantAnimLoadedOrFree_800AAFD8(p->actionAnim_20);
             p->actionAnim_20 = p->queuedAnim_22;
             LoadLevantAnimById_800AC604(p->actionAnim_20, 0);
             p->action_8 = 0x16;
@@ -3870,7 +3870,6 @@ typedef struct G2Ld_1
     int f1C;
 } G2Ld_1;
 extern ModelVramSlot* dword_8007DC6C;
-extern int levantModelIds_800B1164[];
 extern void FreeLevantAnimSetAnims_800ACF3C();
 extern void LoadLevantAnimSetAnims_800ACFB8();
 // Matched
@@ -4152,7 +4151,7 @@ int GetInventorySize_800AD374(int a)
     return r;
 }
 
-int sub_800AD398()
+int IsInventory4NonEmpty_800AD398()
 {
     int x;
     if (GetLastInventorySlot_800AD308(4) > 0)
@@ -5354,7 +5353,7 @@ int dword_800B0EFC[45] = {
     0xB0010, 0x10110004, 0xB0011, 0x11120005, 0xB0012, 0xF130003, 0xB0013, 0x13140004,
     0xB0014, 0x14150005, 0xB0015, -1, -1,
 };
-SVECTOR levantBoneScale_800B0FB0[55] = {
+SVECTOR levantBoneScale_800B0FB0[22] = {
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
@@ -5377,41 +5376,41 @@ SVECTOR levantBoneScale_800B0FB0[55] = {
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
-    { 0 },
-    { 0 },
-    { 0, 0, 0, -1 },
-    { 0 },
-    { 0, 0, 2 },
-    { 16, 0, 2 },
-    { 25, 0, 2 },
-    { 26, 0, 2 },
-    { 28, 0, 2 },
-    { 29, 0, 2 },
-    { 8, 0, 2 },
-    { 16, 0, 2 },
-    { 13, 0, 2 },
-    { 19, 0, 2 },
-    { 17, 0, 2 },
-    { 18, 0, 2 },
-    { 19, 0, 2 },
-    { 20, 0, 2 },
-    { 21, 0, 2 },
-    { 20, 0, 2 },
-    { 23, 0, 2 },
-    { 22, 0, 2 },
-    { 21, 0, 2 },
-    { 20, 0, 2 },
-    { 24, 0, 16 },
-    { 16, 0, 2 },
-    { 6, 0, 2 },
-    { 12, 0, 2 },
-    { 17, 0, 2 },
-    { 4, 0, 16 },
-    { 16, 0, 2 },
-    { 8, 0, 0, 26 },
-    { 0, 0, 40 },
 };
-int dword_800B1168 = 39;
+int dword_800B1060[9] = { 0, 0, 0, 0, 0, -0x10000, 0, 0, 0 };
+// control state (0x10: StartLevantAction_800A8A30 starts nothing) and animation of each Levant battle command
+G2Mode_1 levantBattleActions_800B1084[28] = {
+    { 2, 0x10 },
+    { 2, 0x19 },
+    { 2, 0x1A },
+    { 2, 0x1C },
+    { 2, 0x1D },
+    { 2, 8 },
+    { 2, 0x10 },
+    { 2, 0xD },
+    { 2, 0x13 },
+    { 2, 0x11 },
+    { 2, 0x12 },
+    { 2, 0x13 },
+    { 2, 0x14 },
+    { 2, 0x15 },
+    { 2, 0x14 },
+    { 2, 0x17 },
+    { 2, 0x16 },
+    { 2, 0x15 },
+    { 2, 0x14 },
+    { 2, 0x18 },
+    { 0x10, 0x10 },
+    { 2, 6 },
+    { 2, 0xC },
+    { 2, 0x11 },
+    { 2, 4 },
+    { 0x10, 0x10 },
+    { 2, 8 },
+    { 0x1A0000, 0 },
+};
+// model id of Levant per saveData_8008B570.field_830 (LevantModelTask_800ACB64)
+int levantModelIds_800B1164[2] = { 0x28, 0x27 };
 int levantBaseModels_800B116C[19] = {
     5, 6, 4, 1, 3, 2, 0, 12,
     10, 13, 11, 9, 7, 8, 18, 17,

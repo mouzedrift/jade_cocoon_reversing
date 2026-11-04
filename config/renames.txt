@@ -5754,3 +5754,12 @@ name_8008D670 shopMenuTask_8008D670
 word_80091CB8 areaLoadIds_80091CB8
 [MENU]
 sub_8001AEB8 MinionLevelUpHook_8001AEB8
+[GAME]
+sub_800A1E90 ReturnOne_800A1E90
+sub_800A25F8 EnemyReturnZero_800A25F8
+sub_800A28DC EnemyReturnZero_800A28DC
+sub_800A2A50 EnemyReturnZero_800A2A50
+sub_800A8138 EmptyCallback_800A8138
+sub_800AAFD8 IsLevantAnimLoadedOrFree_800AAFD8
+[GAME SHOP]
+sub_800AD398 IsInventory4NonEmpty_800AD398
