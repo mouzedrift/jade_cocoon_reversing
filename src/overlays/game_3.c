@@ -40,7 +40,7 @@ void StopAllEventScripts_800A58B4(void)
     EventNode* node = eventScripts_8008D410;
     int i;
     int count = node->count;
-    GameRect_1* view;
+    GameViewRect* view;
     for (i = 0; i < count; i++)
     {
         EventEntry* entry = &node->entry;
@@ -403,7 +403,7 @@ void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 
 void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 {
-    GameTim_1 tim;
+    GameTimImage tim;
     GameActorDesc* desc;
     if (who == 0)
     {
@@ -437,7 +437,7 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 
 void GetPortraitPoly_800A6308(int who, void* poly)
 {
-    GameTim_1 tim;
+    GameTimImage tim;
     GameActorDesc* desc;
     if (who == 0)
     {
@@ -522,7 +522,7 @@ void SetActorWallEnabled_800A654C(int wall, int on)
 }
 
 // Matched
-void SetWallsEnabled_800A6564(GameJ_1* walls, int on)
+void SetWallsEnabled_800A6564(GameWallPair* walls, int on)
 {
     if (walls->levantWall_0 >= 0)
     {
@@ -579,7 +579,7 @@ int GetEventString_800A6738(unsigned int id)
     currentMessageId_800AEBE8 = 0x8000;
     if (id <= 0xfffe)
     {
-        GameTable_1* tbl;
+        GameMsgTable* tbl;
         currentMessageId_800AEBE8 = id;
         tbl = GetEventDataSlot_800A55B0(1);
         if (id < tbl->count)
@@ -990,7 +990,7 @@ GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out)
 
 void ResetFieldState_800A73A8(void)
 {
-    GameRect_1* view = &viewport_8008D420;
+    GameViewRect* view = &viewport_8008D420;
     sceneBrightness_8008D40C = 0x1000;
     unpausedFrames_8008D404 = 0;
     view->x = 0;
@@ -4462,29 +4462,29 @@ void FindMapEntrance_800ADCEC(short* out, int key)
 // Not matched: loop registers rotated (key/-1/saveData copy get $a2/$a3/$t0 instead of $a3/$t0/$a2)
 void SelectMapEntrance_800ADDAC(void)
 {
-    GameMapLoc v;
-    int r;
+    GameMapLoc loc;
+    int savedEntrance;
     int i;
     int key;
-    GameMapEntrance* e;
-    v.a = saveData_8008B570.mapId_2E4[0].field_0;
-    v.b = saveData_8008B570.mapId_2E4[1].field_0;
-    v.c = saveData_8008B570.mapId_2E4[2].field_0;
-    r = GetMapVar_800ADC1C(&v);
-    e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+    GameMapEntrance* ents;
+    loc.area = saveData_8008B570.mapId_2E4[0].field_0;
+    loc.map = saveData_8008B570.mapId_2E4[1].field_0;
+    loc.entrance = saveData_8008B570.mapId_2E4[2].field_0;
+    savedEntrance = GetMapVar_800ADC1C(&loc);
+    ents = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
     key = saveData_8008B570.mapId_2E4[2].field_0;
     i = 0;
-    if (e->id_0 >= 0)
+    if (ents->id_0 >= 0)
     {
         do
         {
-            if (key == e[i].encIndex_4 && (r == -1 || r == e[i].entrance_6))
+            if (key == ents[i].encIndex_4 && (savedEntrance == -1 || savedEntrance == ents[i].entrance_6))
             {
                 saveData_8008B570.mapId_2E4[2].field_0 = i;
                 return;
             }
             i++;
-        } while (e[i].id_0 >= 0);
+        } while (ents[i].id_0 >= 0);
     }
 }
 #endif
@@ -5315,7 +5315,7 @@ GameTaskListDef *gameModeTaskLists_800B0D74[12] = {
 char gameEventListDefs_800B0DA4[232] = { 204, 6, 11, 128, 0, 143, 7, 128, 24, 143, 7, 128, 228, 6, 11, 128, 252, 6, 11, 128, 20, 7, 11, 128, 44, 7, 11, 128, 152, 144, 7, 128, 72, 143, 7, 128, 68, 7, 11, 128, 96, 143, 7, 128, 116, 7, 11, 128, 140, 7, 11, 128, 40, 145, 7, 128, 164, 7, 11, 128, 188, 7, 11, 128, 16, 145, 7, 128, 80, 144, 7, 128, 104, 144, 7, 128, 212, 7, 11, 128, 236, 7, 11, 128, 4, 8, 11, 128, 28, 8, 11, 128, 76, 8, 11, 128, 32, 144, 7, 128, 56, 144, 7, 128, 168, 143, 7, 128, 52, 8, 11, 128, 100, 8, 11, 128, 176, 144, 7, 128, 200, 144, 7, 128, 224, 144, 7, 128, 248, 144, 7, 128, 128, 144, 7, 128, 172, 8, 11, 128, 196, 8, 11, 128, 8, 144, 7, 128, 120, 143, 7, 128, 12, 9, 11, 128, 192, 143, 7, 128, 216, 143, 7, 128, 240, 143, 7, 128, 220, 8, 11, 128, 244, 8, 11, 128, 92, 7, 11, 128, 144, 143, 7, 128, 36, 9, 11, 128, 60, 9, 11, 128, 84, 9, 11, 128, 108, 9, 11, 128, 132, 9, 11, 128, 156, 9, 11, 128, 180, 9, 11, 128, 124, 8, 11, 128, 148, 8, 11, 128, 204, 9, 11, 128, 228, 9, 11, 128 };
 int gameMainTaskDef_800B0E8C[6] = { 1, 1, 64, 0x8008D46C, (int)GameMainInit_800A68CC };
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
-GameTab_1 fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
+GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
 GameFieldMinions fieldMinions_800B0EC4 = { 0 };
 char levantBones_800B0EF8 = 0;

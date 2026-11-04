@@ -334,11 +334,12 @@ typedef struct GameEncounter
 } GameEncounter;
 
 
-typedef struct GameJ_1
+// the walls an event toggles (SetWallsEnabled_800A6564)
+typedef struct GameWallPair
 {
     short levantWall_0; // mapState_8008B500.ents_14 index (-1: none)
     short actorWall_2;  // mapState_8008B500.ents_30 index (-1: none)
-} GameJ_1;
+} GameWallPair;
 
 // the work area of the encounter tasks (EncounterWatchTask_800A1314 .. EncounterFadeInWait_800A167C)
 typedef struct GameBattleWork
@@ -368,11 +369,12 @@ extern void SetActorWallEnabled_800A654C(int a, int b);
 
 
 
-typedef struct GameTab_1
+// fieldModeHandlers_800B0EB8 (FieldModeTask_800A7720)
+typedef struct GameFieldModeHandler
 {
     int f0;
     void (*fn)();
-} GameTab_1;
+} GameFieldModeHandler;
 
 extern void FreeMdecBuffer_800418CC(void);
 
@@ -411,17 +413,18 @@ typedef struct GameObjList_1
     char pad_10[4];
 } GameObjList_1;
 
-typedef struct GameTabEnt_1
+typedef struct GameMsgEntry
 {
     int v;
     int w;
-} GameTabEnt_1;
+} GameMsgEntry;
 
-typedef struct GameTable_1
+// the event message table (GetEventDataSlot_800A55B0(1), GetEventString_800A6738)
+typedef struct GameMsgTable
 {
     unsigned int count;
-    GameTabEnt_1 e[1];
-} GameTable_1;
+    GameMsgEntry e[1];
+} GameMsgTable;
 
 extern EventNode* eventScripts_8008D410;
 
@@ -479,10 +482,11 @@ extern int GetEventVar_800AD154(int a);
 
 extern int SetEventVar_800AD16C(int a, int b);
 
-typedef struct GameRect_1
+// the field view rectangle (viewport_8008D420)
+typedef struct GameViewRect
 {
     short x, y, w, h;
-} GameRect_1;
+} GameViewRect;
 
 // the animated map tile layers' work area (DrawTileAnimLayers_800A0A5C), in the scratchpad at 0x1F800214
 typedef struct TileAnimScratch
@@ -542,7 +546,7 @@ extern void InitLevantActor_800A94CC(void);
 
 extern EventNode* eventEntities_8008D400;
 
-extern GameRect_1 viewport_8008D420;
+extern GameViewRect viewport_8008D420;
 
 extern int useMapStartPos_80091C94;
 
@@ -660,7 +664,8 @@ extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
 extern void UpdateEventMessage_800BC2B4(GameEvCtx* q);
 
-typedef struct GameTim_1
+// TIM image info handed to InitSprtFromTim_800298AC / InitPolyFT4_80029A10 (the TIM_IMAGE layout)
+typedef struct GameTimImage
 {
     int mode_valid;
     int mode;
@@ -670,21 +675,22 @@ typedef struct GameTim_1
     int pix_len;
     RECT prect;
     u_long* paddr;
-} GameTim_1;
+} GameTimImage;
 
-typedef struct GameXY_1
+// a VRAM position (the portrait images: name_8007DCA4..name_8007DCBC)
+typedef struct GameVramXY
 {
     unsigned short x;
     unsigned short y;
-} GameXY_1;
+} GameVramXY;
 
-extern GameXY_1 name_8007DCA4;
+extern GameVramXY name_8007DCA4;
 
-extern GameXY_1 name_8007DCA8;
+extern GameVramXY name_8007DCA8;
 
-extern GameXY_1 name_8007DCAC[];
+extern GameVramXY name_8007DCAC[];
 
-extern GameXY_1 name_8007DCBC[];
+extern GameVramXY name_8007DCBC[];
 
 
 
@@ -1565,7 +1571,7 @@ extern GameTaskListDef *gameModeTaskLists_800B0D74[12];
 extern char gameEventListDefs_800B0DA4[232];
 extern int gameMainTaskDef_800B0E8C[6];
 extern char endMovie_800B0EA4[20];
-extern GameTab_1 fieldModeHandlers_800B0EB8[1];
+extern GameFieldModeHandler fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
 extern GameFieldMinions fieldMinions_800B0EC4;
 extern char levantBones_800B0EF8;
