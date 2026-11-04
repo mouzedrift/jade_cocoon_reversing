@@ -118,7 +118,7 @@ extern char name_800BF0DC[];
 extern void sub_800BC194();
 extern void sub_800BC2E4();
 extern void sub_800BBED0();
-extern void sub_800BC374();
+extern void sub_800BC374(WpnObj_wpnshop* o, short k);
 extern void sub_800BCC4C();
 extern void sub_800BCCE8();
 extern void sub_800BD174();
@@ -948,7 +948,232 @@ void sub_800BC2E4(WpnObj_wpnshop* o)
     sub_800BBFD4(r);
 }
 
-INCLUDE_OVERLAY_ASM(wpnshop, sub_800BC374);
+// a cell of the shop list rows (DrawMenuWindows_8002A5A4)
+typedef struct WpnCell_wpnshop
+{
+    unsigned short flags_0; // 2: price too high, 0x40: empty row
+    short pad_2;
+    int value_4; // icon, name text, price
+    char pad_8[0x14];
+} WpnCell_wpnshop;
+extern WpnCell_wpnshop* name_800BEA40[]; // the 4 list rows: icon, name and price cells
+extern int name_800BE874[];              // the equipment kind's header sprite
+extern int GetEquipmentName_8001D128(int idx, unsigned int kind);
+extern short sub_800BE058(WpnObj_wpnshop* o, short i);
+extern void sub_800BCABC(WpnObj_wpnshop* o, short k);
+
+// Matched
+void sub_800BC374(WpnObj_wpnshop* o, short k)
+{
+    WpnDlg_wpnshop cfg;
+    WpnRect_wpnshop r28;
+    union
+    {
+        WpnBox_wpnshop b;
+        WpnRect_wpnshop r;
+        WpnPair_wpnshop p;
+    } u30;
+    union
+    {
+        WpnRect_wpnshop r;
+        WpnPair_wpnshop p;
+    } u40;
+    WpnBox_wpnshop b48;
+    int name = 0;
+    int icon;
+    int price;
+    int sprt;
+    int s;
+    int r;
+    short top;
+    short i;
+
+    top = sub_800BE058(o, k);
+    icon = 0;
+    price = 0;
+    for (i = 0; i < 4; i++)
+    {
+        if (k == o->f_34)
+        {
+            s = o->f_32 + i;
+        }
+        else
+        {
+            s = o->f_38 + i;
+        }
+        switch (k)
+        {
+        case 4:
+            if (s < o->f_26)
+            {
+                r = sub_800BDDB0(s, o->f_1E);
+            }
+            else
+            {
+                r = 0xFF;
+            }
+            break;
+        case 5:
+            r = sub_800AD288(s, 0);
+            break;
+        case 10:
+            if (s < o->f_20[o->f_10])
+            {
+                r = sub_800BDD2C(s, o->f_10, o->f_1E);
+            }
+            else
+            {
+                r = 0xFF;
+            }
+            break;
+        case 11:
+            r = sub_800AD288(s, o->f_10 + 1);
+            break;
+        default:
+            r = 0xFF;
+            break;
+        }
+        if (r != 0xFF)
+        {
+            switch (k)
+            {
+            case 4:
+                name = GetItemName_8001CE20(r);
+                icon = GetItemIcon_8001D2AC(r);
+                price = GETINT_8001CE54(r);
+                break;
+            case 5:
+                name = GetItemName_8001CE20(r);
+                icon = GetItemIcon_8001D2AC(r);
+                price = GETINT_8001CE54(r) * 3 / 4;
+                break;
+            case 10:
+                name = GetEquipmentName_8001D128(r, o->f_10);
+                icon = GetEquipmentIcon_8001D2D4(r, o->f_10);
+                price = GetEquipmentPrice_8001D1F8(r, o->f_10);
+                break;
+            case 11:
+                name = GetEquipmentName_8001D128(r, o->f_10);
+                icon = GetEquipmentIcon_8001D2D4(r, o->f_10);
+                price = GetEquipmentPrice_8001D1F8(r, o->f_10) * 3 / 4;
+                break;
+            }
+        }
+        if (r != 0xFF)
+        {
+            name_800BEA40[i][0].flags_0 &= ~0x40;
+            name_800BEA40[i][1].flags_0 &= ~0x40;
+            name_800BEA40[i][2].flags_0 &= ~0x40;
+            name_800BEA40[i][0].value_4 = icon;
+            name_800BEA40[i][1].value_4 = name;
+            name_800BEA40[i][2].value_4 = price;
+            if (sub_800AD02C() < price && (k == 4 || k == 10))
+            {
+                name_800BEA40[i][0].flags_0 |= 2;
+                name_800BEA40[i][1].flags_0 |= 2;
+                name_800BEA40[i][2].flags_0 |= 2;
+            }
+            else
+            {
+                name_800BEA40[i][0].flags_0 &= ~2;
+                name_800BEA40[i][1].flags_0 &= ~2;
+                name_800BEA40[i][2].flags_0 &= ~2;
+            }
+        }
+        else
+        {
+            name_800BEA40[i][0].flags_0 |= 0x40;
+            name_800BEA40[i][1].flags_0 |= 0x40;
+            name_800BEA40[i][2].flags_0 |= 0x40;
+        }
+    }
+    cfg = name_800BADF0;
+    cfg.f4 = GetTime30Hz_8002C64C();
+    cfg.fC = top;
+    cfg.f10 = (int)name_800BEA40;
+    if (k == o->f_34)
+    {
+        cfg.f0 = (cfg.f0 & ~7) | 2;
+    }
+    else
+    {
+        cfg.f0 = (cfg.f0 & ~7) | 4;
+    }
+    DrawMenuWindows_8002A5A4(&cfg);
+    SetFontClutOffset_8003F900(2, 0);
+    SetFontClutOffset_8003F900(1, 0);
+    r28.x = 0x8A;
+    r28.y = 0xC5;
+    r28.w = 0x37;
+    r28.h = 0x10;
+    u30.b.c_B = 1;
+    u30.b.x_0 = 0x9B;
+    u30.b.col_8 = uiColor_8008B590;
+    u30.b.c_A = 0;
+    u30.b.y_2 = 0xC8;
+    DrawUiTiySprt_8002C06C(&u30.b, 0x80, 0xE);
+    DrawWindow_80042460(&r28, &u30.b.col_8, dword_8008D454 + 0x38, 0);
+    if (k == o->f_34)
+    {
+        if (o->f_32 != 0)
+        {
+            u30.p.a = 2;
+            u30.p.b = 3;
+            r28.x = 0x4F;
+            r28.y = 0x68;
+            sub_8002B3DC(u30.p, frameCount_8008D3FC, &r28, 0xE);
+        }
+        if (o->f_32 != (unsigned short)o->f_28[2] - 4 && (unsigned short)o->f_28[2] >= 4)
+        {
+            u40.p.a = 2;
+            u40.p.b = 1;
+            u30.r.x = 0x4F;
+            u30.r.y = 0xC9;
+            sub_8002B3DC(u40.p, frameCount_8008D3FC, &u30.r, 0xE);
+        }
+    }
+    sprt = 0;
+    switch (k)
+    {
+    case 4:
+    case 5:
+        sprt = 0x58;
+        r28.x = 6;
+        r28.y = 2;
+        break;
+    case 10:
+    case 11:
+        sprt = name_800BE874[o->f_10];
+        switch (o->f_10)
+        {
+        case 0:
+        case 1:
+            r28.x = 1;
+            r28.y = 1;
+            break;
+        case 2:
+            r28.x = 1;
+            r28.y = 1;
+            break;
+        }
+        break;
+    }
+    if (o->f_1C == 0 && (unsigned short)(o->f_0 - 0x10) >= 3)
+    {
+        sub_800BCABC(o, k);
+    }
+    u30.r.x = 0xA;
+    u30.r.y = 0x4D;
+    u30.r.w = 0x2F;
+    u30.r.h = 0x12;
+    b48.col_8 = uiColor_8008B590;
+    b48.c_B = 1;
+    b48.c_A = 0;
+    b48.x_0 = r28.x + 0xD;
+    b48.y_2 = r28.y + 0x4F;
+    DrawUiTiySprt_8002C06C(&b48, sprt, 0xE);
+    DrawWindow_80042460(&u30.r, &b48.col_8, dword_8008D454 + 0x38, 0);
+}
 
 // Matched
 void sub_800BCABC(WpnObj_wpnshop* o, short k)
