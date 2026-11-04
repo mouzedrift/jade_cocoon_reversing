@@ -14,57 +14,57 @@ const char str_800A0604[] = "\202x\202\217\202\225\201@\202\227\202\211\202\214\
 const char str_800A0640[] = "\202\207\202\201\202\215\202\205\201@\202\204\202\201\202\224\202\201\201D"; // game data.
 const char aThereAreNoFreeB_800A0658[] = "\202s\202\210\202\205\202\222\202\205\201@\202\201\202\222\202\205\201@\202\216\202\217\201@\202\206\202\222\202\205\202\205\201@\202\202\202\214\202\217\202\203\202\213\202\223\201@\202\214\202\205\202\206\202\224\201@\202\217\202\216"; // There are no free blocks left on
 const char aTheMEMORYCARDIn_800A069C[] = "\202\224\202\210\202\205\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\211\202\223\201@\202r\202k\202n\202s\201D"; // the MEMORY CARD in this SLOT.
-const TitleBlk38M dword_800A06D8 = {
+const TitleMenuWindow titleMenuWin0_800A06D8 = {
     {
         { 8, 1, 3, 0, 0, 106, 140, { 108, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A0710 = {
+const TitleMenuWindow titleMenuWin1_800A0710 = {
     {
         { 8, 1, 4, 0, 0, 106, 157, { 108, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A0748 = {
+const TitleMenuWindow titleMenuWin2_800A0748 = {
     {
         { 8, 1, 0, 0, 0, 106, 174, { 108, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A0780 = {
+const TitleMenuWindow titleMenuWin3_800A0780 = {
     {
         { 8, 1, 1, 0, 0, 106, 191, { 108, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A07B8 = {
+const TitleMenuWindow titleMenuWin4_800A07B8 = {
     {
         { 8, 0, 0, 0, 0, 214, 140, { 100, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A07F0 = {
+const TitleMenuWindow titleMenuWin5_800A07F0 = {
     {
         { 8, 0, 0, 0, 0, 214, 157, { 100, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A0828 = {
+const TitleMenuWindow titleMenuWin6_800A0828 = {
     {
         { 8, 0, 0, 0, 0, 214, 174, { 100, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleBlk38M dword_800A0860 = {
+const TitleMenuWindow titleMenuWin7_800A0860 = {
     {
         { 8, 0, 0, 0, 0, 214, 191, { 100, 0, 16, 0, 0, 0, 2 } },
         { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
     },
 };
-const TitleCfgM dword_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
-const Blk4_ dword_800A08B0 = { "ZZZ" };
-const char byte_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
+const TitleMenuCfg titleMenuCfg_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
+const Blk4_ logoPulseColor_800A08B0 = { "ZZZ" };
+const char debugLevantName_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
 const int dword_800A08C0[2] = { 0, 0x8940000 };
 
 typedef struct TitleTask
@@ -74,41 +74,41 @@ typedef struct TitleTask
     void (*next_8)();
 } TitleTask;
 
-typedef struct TitleCtxA
+typedef struct NameEntryWork
 {
     char pad_0[0x5C];
-    int field_5C;
-    int field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
+    int pulseTime_5C;
+    int pulsePeak_60;
+    int pulseStep_64;
+    int timer_68;
+    int holding_6C;
     SPRT* sprts_70;      // from LoadTiy_80028E74
     DR_TPAGE* tpages_74; // one per sprite
-} TitleCtxA;
+} NameEntryWork;
 
-extern void sub_800A093C();
+extern void NewGameLoadSprites_800A093C();
 // Matched
-void sub_800A08C8(TitleTask* t, TitleCtxA* c)
+void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
 {
     RECT r;
-    dword_800A280C = 0x36;
-    dword_800A2810 = 0x18;
-    c->field_64 = 0x1E;
-    c->field_5C = 0;
-    c->field_68 = 0;
-    c->field_60 = 0x18;
-    c->field_6C = 0;
+    pulseMax_800A280C = 0x36;
+    pulseMin_800A2810 = 0x18;
+    c->pulseStep_64 = 0x1E;
+    c->pulseTime_5C = 0;
+    c->timer_68 = 0;
+    c->pulsePeak_60 = 0x18;
+    c->holding_6C = 0;
     r.x = 0x20;
     r.y = 0x20;
     r.w = display_8008B4D8.field_C_w - 0x20;
     r.h = display_8008B4D8.field_E_h - 0x20;
-    t->next_8 = sub_800A093C;
+    t->next_8 = NewGameLoadSprites_800A093C;
 }
 
 
-extern void sub_800A09C0();
+extern void NewGameOpeningMovie_800A09C0();
 // Matched
-void sub_800A093C(TitleTask* t, TitleCtxA* c)
+void NewGameLoadSprites_800A093C(TitleTask* t, NameEntryWork* c)
 {
     void* buf;
     if (GetFileRequestCount_8003BC34() == 0)
@@ -118,14 +118,14 @@ void sub_800A093C(TitleTask* t, TitleCtxA* c)
         buf = DATA_GetFileBuffer_8003CAA0(0x39);
         LoadTiy_80028E74(&c->sprts_70, 0, &c->tpages_74, buf, 1);
         free3_8003FC6C(buf);
-        t->next_8 = sub_800A09C0;
+        t->next_8 = NewGameOpeningMovie_800A09C0;
     }
 }
 
 
-extern void sub_800A0A1C();
+extern void NewGameLoadNameOvl_800A0A1C();
 // Matched
-void sub_800A09C0(TitleTask* t)
+void NewGameOpeningMovie_800A09C0(TitleTask* t)
 {
     int r;
     if (saveData_8008B570.field_0 & 0x80)
@@ -139,102 +139,102 @@ void sub_800A09C0(TitleTask* t)
     if (r)
     {
         LoadUiTiy_8002BF74();
-        t->next_8 = sub_800A0A1C;
+        t->next_8 = NewGameLoadNameOvl_800A0A1C;
     }
 }
 
 
 extern unsigned short padPressed_8009194C;
-extern void sub_800A0A70();
+extern void NewGameStartNameEntry_800A0A70();
 // Matched
-void sub_800A0A1C(TitleTask* t)
+void NewGameLoadNameOvl_800A0A1C(TitleTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
         padPressed_8009194C = 0;
-        dword_800A2808 = LoadOverlay_80020BF8(1, 0x11);
-        t->next_8 = sub_800A0A70;
+        nameOvlRequest_800A2808 = LoadOverlay_80020BF8(1, 0x11);
+        t->next_8 = NewGameStartNameEntry_800A0A70;
     }
 }
 
 
 extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern void EncodeName_8003F7C8(void* a0, void* a1);
-extern void sub_800A0AE8();
+extern void NewGameNameEntry_800A0AE8();
 // Matched
-void sub_800A0A70(TitleTask* t)
+void NewGameStartNameEntry_800A0A70(TitleTask* t)
 {
-    if (GetFileRequestStatus_8003BE30(dword_800A2808) == 0)
+    if (GetFileRequestStatus_8003BE30(nameOvlRequest_800A2808) == 0)
     {
         if (!(saveData_8008B570.field_0 & 0x80))
         {
             EncodeName_8003F7C8(levantName_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
         }
         StartNameEntry_800B6E4C(saveData_8008B570.levantStatus_7C8.name_10, 0);
-        t->next_8 = sub_800A0AE8;
+        t->next_8 = NewGameNameEntry_800A0AE8;
     }
 }
 
 
-extern void sub_800A0D18();
+extern void DrawNameEntrySprites_800A0D18();
 extern int IsNameEntryActive_800B6FC8(void);
-extern void sub_800A0C28();
+extern void NewGameAfterNameMovie_800A0C28();
 // Matched
-void sub_800A0AE8(TitleTask* t, TitleCtxA* c)
+void NewGameNameEntry_800A0AE8(TitleTask* t, NameEntryWork* c)
 {
-    if (c->field_6C == 0)
+    if (c->holding_6C == 0)
     {
-        c->field_5C++;
-        if (c->field_60 == c->field_5C)
+        c->pulseTime_5C++;
+        if (c->pulsePeak_60 == c->pulseTime_5C)
         {
-            c->field_6C = 1;
+            c->holding_6C = 1;
         }
     }
-    else if (c->field_68 < 0x18)
+    else if (c->timer_68 < 0x18)
     {
-        c->field_68++;
+        c->timer_68++;
     }
     else
     {
-        c->field_68 = 0;
-        c->field_6C = 0;
-        c->field_60 += c->field_64;
-        if (c->field_64 == dword_800A280C - dword_800A2810)
+        c->timer_68 = 0;
+        c->holding_6C = 0;
+        c->pulsePeak_60 += c->pulseStep_64;
+        if (c->pulseStep_64 == pulseMax_800A280C - pulseMin_800A2810)
         {
-            c->field_64 = dword_800A2810;
+            c->pulseStep_64 = pulseMin_800A2810;
         }
         else
         {
-            c->field_64 = dword_800A280C - dword_800A2810;
+            c->pulseStep_64 = pulseMax_800A280C - pulseMin_800A2810;
         }
     }
-    sub_800A0D18(c->sprts_70, c->tpages_74, 0, c);
+    DrawNameEntrySprites_800A0D18(c->sprts_70, c->tpages_74, 0, c);
     if (IsNameEntryActive_800B6FC8() == 0)
     {
         FreeActiveOverlay_8002C014();
-        t->next_8 = sub_800A0C28;
+        t->next_8 = NewGameAfterNameMovie_800A0C28;
     }
 }
 
 
-extern void sub_800A1AFC();
+extern void TitleExit_800A1AFC();
 // Matched
-void sub_800A0BCC(TitleTask* t, TitleCtxA* c)
+void NewGameFadeOut_800A0BCC(TitleTask* t, NameEntryWork* c)
 {
-    if (--c->field_68 <= 0)
+    if (--c->timer_68 <= 0)
     {
         FreeSound_80030D00((int)&bgmSound_80091CE0);
-        sub_800A1AFC(t, 0xC);
+        TitleExit_800A1AFC(t, 0xC);
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
 }
 
 
-extern void sub_800A0BCC();
+extern void NewGameFadeOut_800A0BCC();
 extern void SsSepSetDecrescendo(short, short, short, long);
 #if 0
 // Not matched: register allocation / scheduling differs
-void sub_800A0C28(TitleTask* t, TitleCtxA* c)
+void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
     int r;
     SoundStruct* ss;
@@ -259,8 +259,8 @@ void sub_800A0C28(TitleTask* t, TitleCtxA* c)
             free3_8003FC6C(c->tpages_74);
             c->tpages_74 = 0;
         }
-        c->field_68 = 0x3C;
-        t->next_8 = sub_800A0BCC;
+        c->timer_68 = 0x3C;
+        t->next_8 = NewGameFadeOut_800A0BCC;
         ss = &bgmSound_80091CE0;
         if (ss->field_4_seq_num >= 0)
         {
@@ -270,7 +270,7 @@ void sub_800A0C28(TitleTask* t, TitleCtxA* c)
     }
 }
 #endif
-INCLUDE_OVERLAY_ASM(title, sub_800A0C28);
+INCLUDE_OVERLAY_ASM(title, NewGameAfterNameMovie_800A0C28);
 
 typedef struct TitleStr4
 {
@@ -281,7 +281,7 @@ extern void PulseColor_80033394(void* a0, void* a1, void* a2, int a3, int a4, in
 extern unsigned long* pOT_8008D3EC;
 #if 0
 // Not matched: register allocation / scheduling differs
-void sub_800A0D18(SPRT* p, DR_TPAGE* q, int mode, TitleCtxA* c)
+void DrawNameEntrySprites_800A0D18(SPRT* p, DR_TPAGE* q, int mode, NameEntryWork* c)
 {
     int y = 0;
     short i = 0;
@@ -316,19 +316,20 @@ void sub_800A0D18(SPRT* p, DR_TPAGE* q, int mode, TitleCtxA* c)
         s4 = *(TitleStr4*)((char*)&dword_800A05A0 + 4);
         p[i].x0 = 0x6F;
         p[i].y0 = y;
-        PulseColor_80033394(&p[i].r0, zero, &s4, c->field_5C, dword_800A280C, dword_800A2810);
+        PulseColor_80033394(&p[i].r0, zero, &s4, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
         SetSemiTrans(&p[i], 1);
         AddPrimCopy_80040298(pOT_8008D3EC, &p[i], 5);
         AddPrimCopy_80040298(pOT_8008D3EC, &q[i], 2);
     }
 }
 #endif
-INCLUDE_OVERLAY_ASM(title, sub_800A0D18);
+INCLUDE_OVERLAY_ASM(title, DrawNameEntrySprites_800A0D18);
 
 extern void SetFadeMode_8001C19C(int a0, int a1);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 // Matched
-int sub_800A0EF0(void)
+// TITLE overlay entry: runs the title tasks, returns the next GameStates value (titleResult_800A2818)
+int TitleMain_800A0EF0(void)
 {
     SetFadeMode_8001C19C(3, 0x20);
     drawEnvRed_8008D448[0] = 0;
@@ -336,74 +337,74 @@ int sub_800A0EF0(void)
     drawEnvRed_8008D448[2] = 0;
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
     PlayMusicSeq_80031260(&bgmSound_80091CE0, 0x1B, 1);
-    DrawIntroMovie_8001AF64(&dword_800A27C0);
+    DrawIntroMovie_8001AF64(&titleTaskList_800A27C0);
     FreeSound_80030D00((int)&bgmSound_80091CE0);
-    return dword_800A2818;
+    return titleResult_800A2818;
 }
 
 
-typedef struct TitleCtxB
+typedef struct TitleMenuWork
 {
-    int field_0;
+    int frames_0; // menu frame counter, reused as the idle fade-out counter
     int field_4;
     int field_8;
     SPRT* sprts_C;       // from LoadTiy_80028E74
     int field_10;
     DR_TPAGE* tpages_14; // one per sprite
     char pad_18[4];
-    short field_1C[4];
-    short field_24;
+    short cursor_1C[4]; // UpdateMenuCursor_8003D794 state
+    short selected_24;
     short field_26;
-} TitleCtxB;
+} TitleMenuWork;
 
-extern void sub_800A2650();
-extern void sub_800A1B74();
-extern void sub_800A1070();
+extern void SetNewGameStartMap_800A2650();
+extern void StartNewGameTask_800A1B74();
+extern void TitleEnterScreen_800A1070();
 // Matched
-void sub_800A0F6C(TitleTask* t, TitleCtxB* c)
+void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
 {
     void* buf;
     if (unknownFlags_8008D678 & 0x20000000)
     {
         word_8008B558[1] = 4;
-        sub_800A2650();
+        SetNewGameStartMap_800A2650();
         saveData_8008B570.field_0 |= 0x80;
-        sub_800A1B74(t);
+        StartNewGameTask_800A1B74(t);
     }
     else
     {
-        c->field_1C[0] = 1;
-        c->field_1C[1] = 4;
-        c->field_1C[2] = 4;
-        c->field_1C[3] = 2;
+        c->cursor_1C[0] = 1;
+        c->cursor_1C[1] = 4;
+        c->cursor_1C[2] = 4;
+        c->cursor_1C[3] = 2;
         c->field_4 = 0;
         c->field_8 = 0;
-        c->field_24 = (unsigned short)word_8008B558[1];
-        dword_800A2814 = 0;
+        c->selected_24 = (unsigned short)word_8008B558[1];
+        titleIdleTimer_800A2814 = 0;
         c->field_26 = 0;
         c->sprts_C = 0;
         c->tpages_14 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x36);
         LoadTiy_80028E74(&c->sprts_C, 0, &c->tpages_14, buf, 1);
         free3_8003FC6C(buf);
-        (t->next_8 = sub_800A1070)(t, c);
+        (t->next_8 = TitleEnterScreen_800A1070)(t, c);
     }
 }
 
 
-extern void sub_800A1174();
-extern void sub_800A1310();
+extern void TitlePressStart_800A1174();
+extern void TitleMenu_800A1310();
 // Matched
-void sub_800A1070(TitleTask* t, TitleCtxB* c)
+void TitleEnterScreen_800A1070(TitleTask* t, TitleMenuWork* c)
 {
     switch ((unsigned short)word_8008B558[0])
     {
     case 0:
-        t->next_8 = sub_800A1174;
+        t->next_8 = TitlePressStart_800A1174;
         break;
     case 1:
-        c->field_0 = 0;
-        t->next_8 = sub_800A1310;
+        c->frames_0 = 0;
+        t->next_8 = TitleMenu_800A1310;
         break;
     }
     t->next_8(t, c);
@@ -411,10 +412,10 @@ void sub_800A1070(TitleTask* t, TitleCtxB* c)
 
 
 // Matched
-void sub_800A10D0(TitleTask* t, TitleCtxB* c)
+void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
 {
-    TitleCtxB* d = c;
-    word_8008B558[1] = c->field_24;
+    TitleMenuWork* d = c;
+    word_8008B558[1] = c->selected_24;
     if (unknownFlags_8008D678 & 0x20000000)
     {
         word_8008B558[1] = 4;
@@ -441,13 +442,13 @@ typedef struct TitleSmall
 } TitleSmall;
 
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
-extern void sub_800A1F98();
-extern void sub_800A1AC0();
+extern void DrawTitleBackground_800A1F98();
+extern void TitleIdleFadeOut_800A1AC0();
 extern void sub_8004E2C8(int a0);
 #define TITLE_TIMEOUT(t, c) \
-    if (++dword_800A2814 >= 0x1771) \
+    if (++titleIdleTimer_800A2814 >= 0x1771) \
     { \
-        (c)->field_0 = 0; \
+        (c)->frames_0 = 0; \
         if (bgmSound_80091CE0.field_4_seq_num >= 0) \
         { \
             SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78); \
@@ -455,13 +456,13 @@ extern void sub_8004E2C8(int a0);
         } \
         SetFadeMode_8001C19C(0, 0x20); \
         SetFadeMode_8001C19C(1, 0x20); \
-        (t)->next_8 = sub_800A1AC0; \
+        (t)->next_8 = TitleIdleFadeOut_800A1AC0; \
     }
-void sub_800A1174(TitleTask* t, TitleCtxB* c)
+void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
 {
     TitleSmall s;
     RECT r;
-    TitleCtxB* d = c;
+    TitleMenuWork* d = c;
     r.x = 0x4D;
     r.y = 0xA3;
     r.w = 0xA6;
@@ -474,77 +475,77 @@ void sub_800A1174(TitleTask* t, TitleCtxB* c)
     AddPrimCopy_80040298(pOT_8008D454 + 14, &c->sprts_C[2], 5);
     AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], 2);
     DrawWindow_80042460(&r, &s, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
-    sub_800A1F98(c->sprts_C, c->tpages_14, c);
+    DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
     if (padPressed_8009194C & 0x800)
     {
         PlaySfx_80031494(0x7E);
         srand(gnFrame_8008D610);
-        c->field_0 = 0;
-        t->next_8 = sub_800A1310;
-        dword_800A2814 = 0;
+        c->frames_0 = 0;
+        t->next_8 = TitleMenu_800A1310;
+        titleIdleTimer_800A2814 = 0;
     }
     TITLE_TIMEOUT(t, d)
 }
 
-extern void sub_800A1760();
+extern void DrawTitleMenu_800A1760();
 extern unsigned short padRepeat_800918CC;
-extern void sub_800A14A8();
+extern void NewGameCheckMemCards_800A14A8();
 extern void UpdateMenuCursor_8003D794(void* a0, int a1);
 extern void CheckMemCards_8003BB1C(void);
 extern void sub_800BB5DC(void);
 // Matched
-void sub_800A1310(TitleTask* t, TitleCtxB* c)
+void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
 {
-    sub_800A1F98(c->sprts_C, c->tpages_14, c);
-    UpdateMenuCursor_8003D794(c->field_1C, 0);
+    DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
+    UpdateMenuCursor_8003D794(c->cursor_1C, 0);
     if (padRepeat_800918CC & 0x5000)
     {
-        c->field_0 = 0;
-        dword_800A2814 = 0;
+        c->frames_0 = 0;
+        titleIdleTimer_800A2814 = 0;
     }
-    sub_800A1760(c, c->field_24, c->field_0);
-    c->field_0 = c->field_0 + 1;
+    DrawTitleMenu_800A1760(c, c->selected_24, c->frames_0);
+    c->frames_0 = c->frames_0 + 1;
     if (IsConfirmPressedP1_8003D380(1))
     {
-        dword_800A2814 = 0;
-        off_800A27E8[c->field_24](t, c);
-        if ((unsigned short)c->field_24 < 2)
+        titleIdleTimer_800A2814 = 0;
+        titleMenuHandlers_800A27E8[c->selected_24](t, c);
+        if ((unsigned short)c->selected_24 < 2)
         {
             CheckMemCards_8003BB1C();
-            if (c->field_24 == 0)
+            if (c->selected_24 == 0)
             {
                 LoadOverlay_80020BF8(2, 0x10);
                 sub_800BB5DC();
-                t->next_8 = sub_800A14A8;
+                t->next_8 = NewGameCheckMemCards_800A14A8;
             }
         }
     }
     else if (IsCancelPressedP1_8003D41C(1))
     {
-        dword_800A2814 = 0;
-        t->next_8 = sub_800A1070;
+        titleIdleTimer_800A2814 = 0;
+        t->next_8 = TitleEnterScreen_800A1070;
     }
     TITLE_TIMEOUT(t, c)
 }
 
 
-extern void sub_800A158C();
-extern void sub_800A166C();
-extern void sub_800A1728();
+extern void NoMemCardWarning_800A158C();
+extern void NoFreeBlocksWarning_800A166C();
+extern void NewGameMemCardOk_800A1728();
 extern void sub_800BB9F4(int a0);
 extern void sub_800BC9DC(int a0, int* a1, int* a2);
 extern void sub_800BAFB0(int a0);
 extern int sub_800BAE2C(void);
 extern int sub_800BAE3C(void);
 // Matched
-void sub_800A14A8(TitleTask* t)
+void NewGameCheckMemCards_800A14A8(TitleTask* t)
 {
     int i;
     int a;
     int b;
     b = 0;
     a = 0;
-    t->next_8 = sub_800A158C;
+    t->next_8 = NoMemCardWarning_800A158C;
     for (i = 0; i < 2; i++)
     {
         sub_800BB9F4(i << 4);
@@ -568,12 +569,12 @@ void sub_800A14A8(TitleTask* t)
             sub_800BAFB0(i);
             if (sub_800BAE2C() || sub_800BAE3C())
             {
-                t->next_8 = sub_800A1728;
+                t->next_8 = NewGameMemCardOk_800A1728;
                 return;
             }
             else
             {
-                t->next_8 = sub_800A166C;
+                t->next_8 = NoFreeBlocksWarning_800A166C;
             }
         }
     }
@@ -581,10 +582,10 @@ void sub_800A14A8(TitleTask* t)
 
 
 extern void sub_800BB64C(void);
-extern char str_800A05A8[];
+
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int c);
 // Matched
-void sub_800A158C(TitleTask* t)
+void NoMemCardWarning_800A158C(TitleTask* t)
 {
     RECT r0;
     RECT r1;
@@ -593,7 +594,7 @@ void sub_800A158C(TitleTask* t)
     sub_800BB64C();
     r0.x = 0x10;
     r0.y = 0x5A;
-    DrawText_8003E91C(2, str_800A05A8, &r0, 0);
+    DrawText_8003E91C(2, aCaution_800A05A8, &r0, 0);
     r1.x = 0x10;
     r1.y = 0x6A;
     DrawText_8003E91C(2, str_800A05BC, &r1, 0);
@@ -605,8 +606,8 @@ void sub_800A158C(TitleTask* t)
     DrawText_8003E91C(2, str_800A0640, &r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
-        t->next_8 = sub_800A1310;
-        sub_800A1B74(t);
+        t->next_8 = TitleMenu_800A1310;
+        StartNewGameTask_800A1B74(t);
     }
 }
 
@@ -618,10 +619,10 @@ typedef struct
 } TitleRectM;
 // a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
-extern void sub_800A1B74(TitleTaskM* t);
+extern void StartNewGameTask_800A1B74(TitleTaskM* t);
 
 // Matched
-void sub_800A166C(TitleTaskM* t)
+void NoFreeBlocksWarning_800A166C(TitleTaskM* t)
 {
     TitleRectM r1, r2, r3;
     sub_800BB64C();
@@ -636,46 +637,46 @@ void sub_800A166C(TitleTaskM* t)
     DrawText_8003E91C(2, aTheMEMORYCARDIn_800A069C, &r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
-        t->next_8 = sub_800A1310;
-        sub_800A1B74(t);
+        t->next_8 = TitleMenu_800A1310;
+        StartNewGameTask_800A1B74(t);
     }
 }
 
 // Matched
-void sub_800A1728(TitleTaskM* t)
+void NewGameMemCardOk_800A1728(TitleTaskM* t)
 {
     sub_800BB64C();
-    t->next_8 = sub_800A1310;
-    sub_800A1B74(t);
+    t->next_8 = TitleMenu_800A1310;
+    StartNewGameTask_800A1B74(t);
 }
 
-extern void sub_800A1780(TitleCtxB* c, int x);
+extern void DrawTitleMenuWindows_800A1780(TitleMenuWork* c, int x);
 
 // Matched
-void sub_800A1760(TitleCtxB* p, int x, int y)
+void DrawTitleMenu_800A1760(TitleMenuWork* p, int x, int y)
 {
-    sub_800A1780(p, x);
+    DrawTitleMenuWindows_800A1780(p, x);
 }
 
 // struct_A5A4 in ability_menu.c
-extern void DrawMenuWindows_8002A5A4(TitleCfgM* cfg);
+extern void DrawMenuWindows_8002A5A4(TitleMenuCfg* cfg);
 
 // Matched
-void sub_800A1780(TitleCtxB* t, int x)
+void DrawTitleMenuWindows_800A1780(TitleMenuWork* t, int x)
 {
-    TitleBlk38M b0, b1, b2, b3, b4, b5, b6, b7;
-    TitleBlk38M* ptrs[5];
-    TitleCfgM cfg;
-    b0 = dword_800A06D8;
-    b1 = dword_800A0710;
-    b2 = dword_800A0748;
-    b3 = dword_800A0780;
-    b4 = dword_800A07B8;
-    b5 = dword_800A07F0;
-    b6 = dword_800A0828;
-    b7 = dword_800A0860;
+    TitleMenuWindow b0, b1, b2, b3, b4, b5, b6, b7;
+    TitleMenuWindow* ptrs[5];
+    TitleMenuCfg cfg;
+    b0 = titleMenuWin0_800A06D8;
+    b1 = titleMenuWin1_800A0710;
+    b2 = titleMenuWin2_800A0748;
+    b3 = titleMenuWin3_800A0780;
+    b4 = titleMenuWin4_800A07B8;
+    b5 = titleMenuWin5_800A07F0;
+    b6 = titleMenuWin6_800A0828;
+    b7 = titleMenuWin7_800A0860;
     memset(ptrs, 0, sizeof(ptrs));
-    cfg = dword_800A0898;
+    cfg = titleMenuCfg_800A0898;
     b0.items[0].f8 = &t->sprts_C;
     b0.items[0].fC = &t->tpages_14;
     b1.items[0].f8 = &t->sprts_C;
@@ -696,19 +697,19 @@ void sub_800A1780(TitleCtxB* t, int x)
 
 
 // Matched
-void sub_800A1AC0(TitleTaskM* t, int* cnt)
+void TitleIdleFadeOut_800A1AC0(TitleTaskM* t, int* cnt)
 {
     if (++*cnt >= 0x5B)
     {
-        sub_800A1AFC(t, 5);
+        TitleExit_800A1AFC(t, 5);
     }
 }
 
 // Matched
-void sub_800A1AFC(TitleTaskM* t, int a)
+void TitleExit_800A1AFC(TitleTaskM* t, int a)
 {
     SoundStruct* s = &bgmSound_80091CE0;
-    dword_800A2818 = a;
+    titleResult_800A2818 = a;
     if (s->field_4_seq_num >= 0)
     {
         SsSepSetDecrescendo((short)s->field_C_sep_access_num, s->field_4_seq_num, 0x7F, 0x78);
@@ -721,7 +722,8 @@ void sub_800A1AFC(TitleTaskM* t, int a)
 extern EventNode* dword_8008D638;
 
 // Matched
-void sub_800A1B74(TitleTaskM* t)
+// stops the title menu task and enables newGameTaskDesc_800A2790 (name entry + opening movies)
+void StartNewGameTask_800A1B74(TitleTaskM* t)
 {
     EventEntry* e;
     t->flags_0 &= ~1;
@@ -732,55 +734,56 @@ void sub_800A1B74(TitleTaskM* t)
     }
 }
 
-extern void sub_800A211C(void);
-extern void sub_800A2214(void);
-extern void sub_800A2450(void);
-extern void sub_800A242C(void);
+extern void InitSaveData_800A211C(void);
+extern void ClearCapturedMinions_800A2214(void);
+extern void ClearMinionSlots_800A2450(void);
+extern void ResetMapIds_800A242C(void);
 extern unsigned short word_8008B55A;
 
 // Matched
-void sub_800A1BCC(void)
+void InitNewGameData_800A1BCC(void)
 {
-    sub_800A211C();
-    sub_800A2214();
-    sub_800A2450();
+    InitSaveData_800A211C();
+    ClearCapturedMinions_800A2214();
+    ClearMinionSlots_800A2450();
     if (word_8008B55A == 1)
     {
-        sub_800A242C();
+        ResetMapIds_800A242C();
     }
 }
 
 extern int dword_8008BD80;
 extern void sub_800B7674(int a, int b);
-extern void sub_800A1CC0(TitleTaskM* t);
+extern void LoadGameWait_800A1CC0(TitleTaskM* t);
 
 // Matched
-void sub_800A1C18(TitleTaskM* t)
+void MenuLoadGame_800A1C18(TitleTaskM* t)
 {
     word_8008B55A = 1;
     LoadOverlay_80020BF8(2, 0x10);
     SetDisplayMode_80040658(1);
     dword_8008BD80 = -2;
     sub_800B7674(1, 0);
-    t->next_8 = sub_800A1CC0;
+    t->next_8 = LoadGameWait_800A1CC0;
 }
 
-extern void sub_800A2650(void);
+extern void SetNewGameStartMap_800A2650(void);
 
 // Matched
-void sub_800A1C7C(TitleTaskM* t)
+// menu entry 4: fresh save data, straight into the game (no name entry)
+void MenuQuickStart_800A1C7C(TitleTaskM* t)
 {
     word_8008B55A = 4;
-    sub_800A1BCC();
-    sub_800A2650();
-    sub_800A1AFC(t, 0xC);
+    InitNewGameData_800A1BCC();
+    SetNewGameStartMap_800A2650();
+    TitleExit_800A1AFC(t, 0xC);
 }
 
 extern int sub_800B793C(void);
 extern int sub_800B7914(void);
 
 // Matched
-void sub_800A1CC0(TitleTaskM* t)
+void LoadGameWait_800A1CC0(TitleTaskM* t)
 {
     if (!sub_800B793C())
     {
@@ -789,94 +792,95 @@ void sub_800A1CC0(TitleTaskM* t)
             if (saveData_8008B570.field_0 & 0x80)
             {
                 word_8008B55A = 4;
-                sub_800A2650();
+                SetNewGameStartMap_800A2650();
                 saveData_8008B570.field_0 |= 0x80;
-                sub_800A1B74(t);
+                StartNewGameTask_800A1B74(t);
             }
             else
             {
-                sub_800A1AFC(t, 7);
+                TitleExit_800A1AFC(t, 7);
             }
         }
         else
         {
-            t->next_8 = sub_800A1310;
+            t->next_8 = TitleMenu_800A1310;
             SetDisplayMode_80040658(1);
         }
     }
 }
 
 // Matched
-void sub_800A1D6C(void)
+void MenuNewGame_800A1D6C(void)
 {
-    sub_800A1BCC();
+    InitNewGameData_800A1BCC();
 }
 
 extern void SetFadeMode_8001C19C(int a, int b);
-extern void sub_800A1DD8(TitleTaskM* t);
+extern void ConfigWaitUiTiy_800A1DD8(TitleTaskM* t);
 
 // Matched
-void sub_800A1D8C(TitleTaskM* t)
+void MenuConfig_800A1D8C(TitleTaskM* t)
 {
     LoadOverlay_80020BF8(2, 0xF);
     SetFadeMode_8001C19C(0, 0x20);
     LoadUiTiy_8002BF74();
-    t->next_8 = sub_800A1DD8;
+    t->next_8 = ConfigWaitUiTiy_800A1DD8;
 }
 
 extern void sub_800C2EB4(void);
-extern void sub_800A1E24();
+extern void ConfigWait_800A1E24();
 
 // Matched
-void sub_800A1DD8(TitleTaskM* t)
+void ConfigWaitUiTiy_800A1DD8(TitleTaskM* t)
 {
     if (uiTiyLoaded_8008B4E8)
     {
         SetFadeMode_8001C19C(3, 0x20);
         sub_800C2EB4();
-        t->next_8 = sub_800A1E24;
+        t->next_8 = ConfigWait_800A1E24;
     }
 }
 
 extern int sub_800C45D8(void);
-extern void sub_800A1E9C();
+extern void ConfigReturn_800A1E9C();
 
 // Matched
-void sub_800A1E24(TitleTaskM* t, TitleCtxB* u)
+void ConfigWait_800A1E24(TitleTaskM* t, TitleMenuWork* u)
 {
     if (!sub_800C45D8())
     {
-        u->field_0 = 0;
+        u->frames_0 = 0;
         FreeActiveOverlay_8002C014();
-        sub_800A1F98(u->sprts_C, u->tpages_14, u);
-        sub_800A1760(u, u->field_24, u->field_0);
+        DrawTitleBackground_800A1F98(u->sprts_C, u->tpages_14, u);
+        DrawTitleMenu_800A1760(u, u->selected_24, u->frames_0);
         SetFadeMode_8001C19C(0, 0x20);
-        t->next_8 = sub_800A1E9C;
+        t->next_8 = ConfigReturn_800A1E9C;
     }
 }
 
 // Matched
-void sub_800A1E9C(TitleTaskM* t, TitleCtxB* u)
+void ConfigReturn_800A1E9C(TitleTaskM* t, TitleMenuWork* u)
 {
     SetFadeMode_8001C19C(3, 0x20);
-    sub_800A1F98(u->sprts_C, u->tpages_14, u);
-    sub_800A1760(u, u->field_24, u->field_0);
-    t->next_8 = sub_800A1310;
+    DrawTitleBackground_800A1F98(u->sprts_C, u->tpages_14, u);
+    DrawTitleMenu_800A1760(u, u->selected_24, u->frames_0);
+    t->next_8 = TitleMenu_800A1310;
 }
 
 // Matched
-void sub_800A1F00(TitleTaskM* t)
+// menu entry 2: GAME starts on the arena map and returns eBattleArenaMenu_8 (flag 0x40000000)
+void MenuBattleArena_800A1F00(TitleTaskM* t)
 {
     unknownFlags_8008D678 |= 0x40000000;
-    sub_800A1AFC(t, 0xC);
+    TitleExit_800A1AFC(t, 0xC);
 }
 
-extern void sub_800A2358(void);
-extern void sub_800A22FC(void);
-extern void sub_800A2424(void);
-extern void sub_800A20F4(void);
-extern void sub_800A2110(void);
-extern void sub_800A2540(void);
+extern void ClearInventory_800A2358(void);
+extern void GiveDebugStartItems_800A22FC(void);
+extern void InitStub_800A2424(void);
+extern void InitLevantEquipment_800A20F4(void);
+extern void ClearMapVars_800A2110(void);
+extern void InitFlagTables_800A2540(void);
 extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
 extern void EncodeName_8003F7C8(void* a, void* b);
 
@@ -888,24 +892,24 @@ extern int dword_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
 
 // Matched
-void sub_800A1F38(void* a)
+void MenuSoundTest_800A1F38(void* a)
 {
-    sub_800A1AFC(a, 9);
+    TitleExit_800A1AFC(a, 9);
 }
 
 // Matched
-void sub_800A1F58(void* a)
+void MenuTstModel_800A1F58(void* a)
 {
-    sub_800A1AFC(a, 10);
+    TitleExit_800A1AFC(a, 10);
 }
 
 // Matched
-void sub_800A1F78(void* a)
+void MenuTstCompo_800A1F78(void* a)
 {
-    sub_800A1AFC(a, 11);
+    TitleExit_800A1AFC(a, 11);
 }
 
-void sub_800A1F98(SPRT* p, DR_TPAGE* q)
+void DrawTitleBackground_800A1F98(SPRT* p, DR_TPAGE* q)
 {
     char tmp[4];
     Blk4_ loc;
@@ -917,7 +921,7 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
     memset(tmp, 0, 4);
     y = 0x4A;
     e5 = &p[5];
-    loc = dword_800A08B0;
+    loc = logoPulseColor_800A08B0;
     e5->y0 = y;
     e5->x0 = 0x55;
     PulseColor_80033394(&p[5].r0, tmp, &loc, frameCount_8008D3FC, 0xB4, 0x5A);
@@ -936,7 +940,7 @@ void sub_800A1F98(SPRT* p, DR_TPAGE* q)
 }
 
 // Matched
-void sub_800A20F4(void)
+void InitLevantEquipment_800A20F4(void)
 {
     SDECL;
     s->levantStatus_7C8.field_1C[0] = 0;
@@ -945,12 +949,12 @@ void sub_800A20F4(void)
 }
 
 // Matched
-void sub_800A2110(void)
+void ClearMapVars_800A2110(void)
 {
     saveData_8008B570.nMapVars_2F4 = 0;
 }
 
-void sub_800A211C(void)
+void InitSaveData_800A211C(void)
 {
     SDECL;
     s->field_984 = 5;
@@ -960,15 +964,15 @@ void sub_800A211C(void)
     s->chapter_2DC = 0;
     s->levant_7A8.pos = dword_800B069C;
     s->levant_7A8.rot = dword_800B06A8;
-    s->levantStatus_7C8 = dword_800A2730;
+    s->levantStatus_7C8 = levantInitStatus_800A2730;
     saveData_8008B570.field_810 = -2;
-    sub_800A2358();
-    sub_800A20F4();
-    sub_800A2110();
-    sub_800A2540();
+    ClearInventory_800A2358();
+    InitLevantEquipment_800A20F4();
+    ClearMapVars_800A2110();
+    InitFlagTables_800A2540();
 }
 
-void sub_800A2214(void)
+void ClearCapturedMinions_800A2214(void)
 {
     int i;
     SDECL;
@@ -978,11 +982,12 @@ void sub_800A2214(void)
     }
 }
 
-void sub_800A223C(void)
+// unreferenced
+void InitDebugSaveData_800A223C(void)
 {
     {
         SDECL;
-        s->levantStatus_7C8 = dword_800A2730;
+        s->levantStatus_7C8 = levantInitStatus_800A2730;
     }
     {
         int i;
@@ -992,15 +997,15 @@ void sub_800A223C(void)
             s->allMinionsBitfields_814[i] = 0;
         }
     }
-    EncodeName_8003F7C8(byte_800A08B4, saveData_8008B570.levantStatus_7C8.name_10);
-    sub_800A2358();
-    sub_800A22FC();
-    sub_800A2450();
-    sub_800A2424();
+    EncodeName_8003F7C8(debugLevantName_800A08B4, saveData_8008B570.levantStatus_7C8.name_10);
+    ClearInventory_800A2358();
+    GiveDebugStartItems_800A22FC();
+    ClearMinionSlots_800A2450();
+    InitStub_800A2424();
 }
 
 // Matched
-void sub_800A22FC(void)
+void GiveDebugStartItems_800A22FC(void)
 {
     SaveInventory* b = &saveData_8008B570.inv_24;
     b->yan_0 = 0x64;
@@ -1018,7 +1023,7 @@ void sub_800A22FC(void)
 }
 
 
-void sub_800A2358(void)
+void ClearInventory_800A2358(void)
 {
     SaveInventory* b;
     unsigned char* p;
@@ -1061,11 +1066,11 @@ void sub_800A2358(void)
 }
 
 // Matched
-void sub_800A2424(void)
+void InitStub_800A2424(void)
 {
 }
 
-void sub_800A242C(void)
+void ResetMapIds_800A242C(void)
 {
     SDECL;
     s->field_2E2 = -1;
@@ -1075,7 +1080,7 @@ void sub_800A242C(void)
     s->mapId_2E4[3].field_2 = -1;
 }
 
-void sub_800A2450(void)
+void ClearMinionSlots_800A2450(void)
 {
     short i;
     for (i = 0; i < 15; i++)
@@ -1102,7 +1107,7 @@ void sub_800A24E0(void)
 
 #define FILL(arr, n) { int i; unsigned short v = 0x8000; SDECL; for (i = (n) - 1; i >= 0; i--) s->arr[i] = v; }
 
-void sub_800A2540(void)
+void InitFlagTables_800A2540(void)
 {
     dword_8008B554 = 1;
     FILL(tbl_838, 12)
@@ -1114,7 +1119,7 @@ void sub_800A2540(void)
     FILL(tbl_92C, 42)
 }
 
-void sub_800A2650(void)
+void SetNewGameStartMap_800A2650(void)
 {
     SDECL;
     s->chapterNext_2DE = -1;
@@ -1134,14 +1139,14 @@ void sub_800A2650(void)
     s->mapId_2E4[3].field_0 = 0;
     s->levant_7A8.pos = dword_800B069C;
     s->levant_7A8.rot = dword_800B06A8;
-    sub_800A2110();
-    sub_800A2540();
+    ClearMapVars_800A2110();
+    InitFlagTables_800A2540();
 }
 
 char levantName_800A2718[] = "\202k\202\205\202\226\202\201\202\216\202\224"; // Levant
 int dword_800A2728 = 0;
 int dword_800A272C = 0;
-UnitStatus dword_800A2730 = {
+UnitStatus levantInitStatus_800A2730 = {
     0,
     0,
     { 100, 100 },
@@ -1155,14 +1160,14 @@ UnitStatus dword_800A2730 = {
     1,
     1,
 };
-int dword_800A2778[6] = { 1, 5, 52, 0, (int)sub_800A0F6C, (int)sub_800A10D0 };
-int dword_800A2790[6] = { 1, 0x8000, 120, 0x8008D638, (int)sub_800A08C8 };
-int dword_800A27A8[6] = { 1, 5, 64, (int)&soundTask_8008D4A4, (int)InitSoundTask_8002FF10, (int)FreeSoundTask_8003006C };
-int dword_800A27C0 = (int)&eventDescs_80078EB8;
-void *dword_800A27C4[9] = { (void *)dword_800A2778, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312), (void *)((char *)&eventDescs_80078EB8 + 288), (void *)dword_800A27A8, (void *)dword_800A2790, (void *)((char *)&eventDescs_80078EB8 + 360), (void *)((char *)&eventDescs_80078EB8 + 264) };
-void (*off_800A27E8[8])() = { (void (*)())sub_800A1D6C, (void (*)())sub_800A1C18, (void (*)())sub_800A1F00, (void (*)())sub_800A1D8C, (void (*)())sub_800A1C7C, (void (*)())sub_800A1F38, (void (*)())sub_800A1F58, (void (*)())sub_800A1F78 };
-int dword_800A2808 = 0;
-int dword_800A280C = 0;
-int dword_800A2810 = 0;
-unsigned int dword_800A2814 = 0;
-int dword_800A2818 = 0;
+int titleMenuTaskDesc_800A2778[6] = { 1, 5, 52, 0, (int)TitleInit_800A0F6C, (int)TitleFree_800A10D0 };
+int newGameTaskDesc_800A2790[6] = { 1, 0x8000, 120, 0x8008D638, (int)NewGameInit_800A08C8 };
+int titleSoundTaskDesc_800A27A8[6] = { 1, 5, 64, (int)&soundTask_8008D4A4, (int)InitSoundTask_8002FF10, (int)FreeSoundTask_8003006C };
+int titleTaskList_800A27C0 = (int)&eventDescs_80078EB8;
+void *dword_800A27C4[9] = { (void *)titleMenuTaskDesc_800A2778, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312), (void *)((char *)&eventDescs_80078EB8 + 288), (void *)titleSoundTaskDesc_800A27A8, (void *)newGameTaskDesc_800A2790, (void *)((char *)&eventDescs_80078EB8 + 360), (void *)((char *)&eventDescs_80078EB8 + 264) };
+void (*titleMenuHandlers_800A27E8[8])() = { (void (*)())MenuNewGame_800A1D6C, (void (*)())MenuLoadGame_800A1C18, (void (*)())MenuBattleArena_800A1F00, (void (*)())MenuConfig_800A1D8C, (void (*)())MenuQuickStart_800A1C7C, (void (*)())MenuSoundTest_800A1F38, (void (*)())MenuTstModel_800A1F58, (void (*)())MenuTstCompo_800A1F78 };
+int nameOvlRequest_800A2808 = 0;
+int pulseMax_800A280C = 0;
+int pulseMin_800A2810 = 0;
+unsigned int titleIdleTimer_800A2814 = 0;
+int titleResult_800A2818 = 0;

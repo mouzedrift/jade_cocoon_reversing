@@ -79,7 +79,7 @@ typedef struct
 } EffectArgs;
 
 /* what an effect needs to know about an actor (ActorEffectReq.targets_44; filled by sub_800C0FC4 (BATTLE),
-   sub_800A93A4 / sub_800A29CC (GAME) and sub_800A111C (COMBAT)) */
+   sub_800A93A4 / sub_800A29CC (GAME) and GetSlotEffectTarget_800A111C (COMBAT)) */
 typedef struct EffectTarget
 {
     short (*tbl_0)[6];       // Actor.effectTbl_14C

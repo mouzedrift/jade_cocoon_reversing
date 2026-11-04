@@ -1614,50 +1614,50 @@ const char aKA16010XA_800A50D8[] = "kA160_10_XA";
 const char aKA16009XA_800A50E4[] = "kA160_09_XA";
 const char aKA16006XA_800A50F0[] = "kA160_06_XA";
 const char aKA16005XA_800A50FC[] = "kA160_05_XA";
-const char asc_800A5108[] = "\202\316\202\302\203{\203^\203\223\202\305\217I\227\271"; // ばつボタンで終了
-const char asc_800A511C[] = "\202\263\202\361\202\251\202\255\203{\203^\203\223\202\305\203X\203g\203b\203v"; // さんかくボタンでストップ
-const char asc_800A5138[] = "\215\266\211E\202\305\221I\202\361\202\305\201A\202\334\202\351\203{\203^\203\223\202\305\202\246\202\361\202\273\202\244\202\265\202\334\202\267"; // 左右で選んで、まるボタンでえんそうします
-const char asc_800A5164[] = "\202w\202`\224\324\215\206"; // ＸＡ番号
-const char asc_800A5170[] = "\203\212\203o\201[\203u\220[\202\263"; // リバーブ深さ
-const char asc_800A5180[] = "\202r\202d\224\324\215\206"; // ＳＥ番号
-const char asc_800A518C[] = "\202r\202d\203t\203@\203C\203\213"; // ＳＥファイル
-const char asc_800A519C[16] = "\203T\203E\203\223\203h\224\324\215\206\000\000\000\314";
+const char strCrossToQuit_800A5108[] = "\202\316\202\302\203{\203^\203\223\202\305\217I\227\271"; // ばつボタンで終了
+const char strTriangleToStop_800A511C[] = "\202\263\202\361\202\251\202\255\203{\203^\203\223\202\305\203X\203g\203b\203v"; // さんかくボタンでストップ
+const char strLeftRightCircle_800A5138[] = "\215\266\211E\202\305\221I\202\361\202\305\201A\202\334\202\351\203{\203^\203\223\202\305\202\246\202\361\202\273\202\244\202\265\202\334\202\267"; // 左右で選んで、まるボタンでえんそうします
+const char strXaNumber_800A5164[] = "\202w\202`\224\324\215\206"; // ＸＡ番号
+const char strReverbDepth_800A5170[] = "\203\212\203o\201[\203u\220[\202\263"; // リバーブ深さ
+const char strSeNumber_800A5180[] = "\202r\202d\224\324\215\206"; // ＳＥ番号
+const char strSeFile_800A518C[] = "\202r\202d\203t\203@\203C\203\213"; // ＳＥファイル
+const char strSoundNumber_800A519C[16] = "\203T\203E\203\223\203h\224\324\215\206\000\000\000\314";
 
 // Matched
-int sub_800A51AC()
+int SoundTestMain_800A51AC()
 {
     EndFade_8001C290();
-    DrawIntroMovie_8001AF64(name_800AA340);
+    DrawIntroMovie_8001AF64(soundTestTaskList_800AA340);
     return 6;
 }
 
-// the sound test's state (sub_800A51D8 sets it up); v[row_0 + 1] is the value the cursor row edits
+// the sound test's state (SoundTestInit_800A51D8 sets it up); v[row_0 + 1] is the value the cursor row edits
 typedef union SndTest
 {
     struct
     {
         short row_0;    // cursor row (0..4)
         short seq_2;    // sound file to play (0..0x9A, 10 = none)
-        short f4;
-        short note_6;   // 0..0x7F
+        short seFile_4; // row 1, does nothing
+        short se_6;     // SE (VAB program) number, 0..0x7F
         short reverb_8; // 0..0x7F
-        short xa_A;     // XA track (0..0x647)
+        short xa_A;     // XA track (0..0x647), xaTracks_800A70F0 index
         short voice_C;  // SsUtKeyOn voice, -1 = none
-        short prog_E;   // note of voice_C
+        short prog_E;   // program voice_C was keyed on
     } f;
     short v[8];
 } SndTest;
 
-extern void sub_800A5238();
-void sub_800A51D8(int* a, SndTest* b)
+extern void SoundTestUpdate_800A5238();
+void SoundTestInit_800A51D8(int* a, SndTest* b)
 {
-    b->f.note_6 = 0x7F;
+    b->f.se_6 = 0x7F;
     b->f.reverb_8 = 0x32;
     b->f.row_0 = 0;
     b->f.seq_2 = 0;
-    b->f.f4 = 0;
+    b->f.seFile_4 = 0;
     b->f.xa_A = 0;
-    a[2] = (int)sub_800A5238;
+    a[2] = (int)SoundTestUpdate_800A5238;
     FreeSound_80030D00((int)&systemSound_80091D40);
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
@@ -1669,7 +1669,7 @@ extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 // Matched
-void sub_800A5238(int* a, SndTest* b)
+void SoundTestUpdate_800A5238(int* a, SndTest* b)
 {
     SVECTOR pos[12];
     SoundStruct* ss;
@@ -1713,13 +1713,13 @@ void sub_800A5238(int* a, SndTest* b)
             {
                 SsUtKeyOff(b->f.voice_C, bgmSound_80091CE0.field_0_vab_id, b->f.prog_E, 0x3f, 0);
             }
-            b->f.prog_E = b->f.note_6;
+            b->f.prog_E = b->f.se_6;
             b->f.voice_C = SsUtKeyOn(bgmSound_80091CE0.field_0_vab_id, b->f.prog_E, 0, 0x3f, 0,
                                    saveData_8008B570.settings_1C.bits.sfxVol_14, saveData_8008B570.settings_1C.bits.sfxVol_14);
         }
         else
         {
-            XaRequestPlay_80043564(dword_800A70F0[b->f.xa_A][1], dword_800A70F0[b->f.xa_A][2], dword_800A70F0[b->f.xa_A][3]);
+            XaRequestPlay_80043564(xaTracks_800A70F0[b->f.xa_A][1], xaTracks_800A70F0[b->f.xa_A][2], xaTracks_800A70F0[b->f.xa_A][3]);
         }
     }
     else if (padPressed_8009194C & 0x10)
@@ -1776,13 +1776,13 @@ void sub_800A5238(int* a, SndTest* b)
     {
         b->f.seq_2 = 0x9a;
     }
-    if (b->f.note_6 >= 0x80)
+    if (b->f.se_6 >= 0x80)
     {
-        b->f.note_6 = 0;
+        b->f.se_6 = 0;
     }
-    if (b->f.note_6 < 0)
+    if (b->f.se_6 < 0)
     {
-        b->f.note_6 = 0x7f;
+        b->f.se_6 = 0x7f;
     }
     if (b->f.reverb_8 >= 0x80)
     {
@@ -1804,40 +1804,40 @@ void sub_800A5238(int* a, SndTest* b)
     DrawBobbingCursorHand_8003D090(0x12, b->f.row_0 * 16 + 0x46, 0, 0, 0);
     pos[0].vx = 0x14;
     pos[0].vy = 0x3c;
-    DrawText_8003E91C(2, name_800AA350[0], &pos[0], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[0], &pos[0], 0);
     pos[1].vx = 0x78;
     pos[1].vy = 0x3c;
     DrawNumber_8003EF74(&pos[1], b->f.seq_2, 0);
     pos[2].vx = 0x14;
     pos[2].vy = 0x4c;
-    DrawText_8003E91C(2, name_800AA350[1], &pos[2], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[1], &pos[2], 0);
     pos[3].vx = 0x14;
     pos[3].vy = 0x5c;
-    DrawText_8003E91C(2, name_800AA350[2], &pos[3], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[2], &pos[3], 0);
     pos[4].vx = 0x78;
     pos[4].vy = 0x5c;
-    DrawNumber_8003EF74(&pos[4], b->f.note_6, 0);
+    DrawNumber_8003EF74(&pos[4], b->f.se_6, 0);
     pos[5].vx = 0x14;
     pos[5].vy = 0x6c;
-    DrawText_8003E91C(2, name_800AA350[3], &pos[5], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[3], &pos[5], 0);
     pos[6].vx = 0x78;
     pos[6].vy = 0x6c;
     DrawNumber_8003EF74(&pos[6], b->f.reverb_8, 0);
     pos[7].vx = 0x14;
     pos[7].vy = 0x7c;
-    DrawText_8003E91C(2, name_800AA350[4], &pos[7], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[4], &pos[7], 0);
     pos[8].vx = 0x78;
     pos[8].vy = 0x7c;
     DrawNumber_8003EF74(&pos[8], b->f.xa_A, 0);
     pos[9].vx = 0x14;
     pos[9].vy = 0xac;
-    DrawText_8003E91C(2, name_800AA350[5], &pos[9], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[5], &pos[9], 0);
     pos[10].vx = 0x14;
     pos[10].vy = 0xbc;
-    DrawText_8003E91C(2, name_800AA350[6], &pos[10], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[6], &pos[10], 0);
     pos[11].vx = 0x14;
     pos[11].vy = 0xcc;
-    DrawText_8003E91C(2, name_800AA350[7], &pos[11], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[7], &pos[11], 0);
 }
 
 const char *xaNames_800A57D4[1607] = {
@@ -2244,7 +2244,7 @@ const char *xaNames_800A57D4[1607] = {
     aKY53A18XA_800A05EC, aKY6A201XA_800A05E0, aKY6A202XA_800A05D4, aKY6A204XA_800A05C8,
     aKY6A208XA_800A05BC, aKY6A211XA_800A05B0, aKY6A212XA_800A05A4,
 };
-short dword_800A70F0[1607][4] = {
+short xaTracks_800A70F0[1607][4] = {
     { 0, 0, 0, 45 },
     { 0, 1, 0, 26 },
     { 0, 2, 0, 45 },
@@ -3853,6 +3853,6 @@ short dword_800A70F0[1607][4] = {
     { 0, 26, 0x523, 14 },
     { 0, 18, 0x525, 22 },
 };
-int dword_800AA328[6] = { 1, 1, 28, 0, (int)sub_800A51D8 };
-char name_800AA340[16] = { 184, 142, 7, 128, 48, 143, 7, 128, 40, 163, 10, 128 };
-char *name_800AA350[8] = { asc_800A519C, asc_800A518C, asc_800A5180, asc_800A5170, asc_800A5164, asc_800A5138, asc_800A511C, asc_800A5108 };
+int soundTestTaskDesc_800AA328[6] = { 1, 1, 28, 0, (int)SoundTestInit_800A51D8 };
+char soundTestTaskList_800AA340[16] = { 184, 142, 7, 128, 48, 143, 7, 128, 40, 163, 10, 128 };
+char *soundTestLabels_800AA350[8] = { strSoundNumber_800A519C, strSeFile_800A518C, strSeNumber_800A5180, strReverbDepth_800A5170, strXaNumber_800A5164, strLeftRightCircle_800A5138, strTriangleToStop_800A511C, strCrossToQuit_800A5108 };

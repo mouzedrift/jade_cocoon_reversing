@@ -521,7 +521,7 @@ extern void InitActor_8001E574();
 
 extern void KillUnit_800127B8(UnitStatus* p);
 extern UnitStatus* sub_800A2B60(int a0);
-extern UnitStatus* sub_800A10C0(int a0);
+extern UnitStatus* GetSlotStatus_800A10C0(int a0);
 extern Minion* GetUnitMinion_80014444(int a0);
 extern UnitStats* GetUnitStats_8001449C(int a0);
 extern int CombinedExpDelta_80012204(int a, int b, int c, int d);

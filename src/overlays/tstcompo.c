@@ -62,8 +62,8 @@ const char aTEXHANGL_800A07B8[] = "\202s\202d\202w\201@\201@\201@\201@\201@\201@
 const char aENEMY_800A07D8[] = "\202d\202m\202d\202l\202x"; // ENEMY
 
 // a menu layout of the TSTCOMPO pages: the cursor head (copied into the work cursor), then the grid geometry
-// a TSTCOMPO page (name_800A250C[3])
-// a selectable part / colour of the compound test (dword_800A20EC[])
+// a TSTCOMPO page (compoPages_800A250C[3])
+// a selectable part / colour of the compound test (compoParts_800A20EC[])
 typedef struct TstCompoBone
 {
     short s0;
@@ -107,55 +107,55 @@ typedef struct TstCompoWork
     int frame_180;
     int anim_184;
     int animCount_188;
-    int f18C;
-    int f190;
-    int f194;
-    int f198;
-    int f19C;
+    int nextAnim_18C;
+    int animLoaded_190;
+    int paused_194;
+    int scaleStep_198;
+    int scaleId_19C;
     int* scale_1A0;
     char* f1A4;
     TstCompoDraw draw_1A8;
     int pad_1D4;
-    TstCompoBlk8 f1D8;
-    short f1E0;
-    short f1E2;
-    int f1E4;
-    int f1E8;
-    int f1EC;
+    TstCompoBlk8 cursor_1D8;
+    short sel_1E0;
+    short scroll_1E2;
+    int nextPage_1E4;
+    int page_1E8;
+    int returnPage_1EC;
     int f1F0;
-    unsigned int f1F4;
-    int* f1F8;
-    int f1FC;
-    int f200;
-    int f204;
-    int f208;
-    int f20C;
+    unsigned int savedSel_1F4;
+    int* pickTarget_1F8;
+    int blend_1FC;
+    int blendFrame_200;
+    int blendAnim_204;
+    int listScroll_208;
+    int listSel_20C;
     int part_210[3];
     int ratio_21C[3];
     int f228;
-    int f22C;
+    int enemy_22C;
 } TstCompoWork;
 extern void TstCompoTask_800A097C();
 void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 {
     c->anim_184 = 3;
     c->state_0 = 0;
-    c->f194 = 0;
-    c->f190 = 0;
+    c->paused_194 = 0;
+    c->animLoaded_190 = 0;
     c->frame_180 = 0;
-    c->f198 = 0;
+    c->scaleStep_198 = 0;
     drawEnvRed_8008D448[0] = 0x40;
     drawEnvRed_8008D448[1] = 0x40;
     drawEnvRed_8008D448[2] = 0x80;
-    sub_800A1BE0(c);
-    sub_800A0918();
-    c->f1E8 = 0;
-    c->f1E4 = -1;
-    c->f1EC = -1;
-    c->f1E0 = 0;
-    c->f1E2 = 0;
-    c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
-    c->f1F4 = 0;
+    TstCompoResetCamera_800A1BE0(c);
+    SetDefaultCompoParams_800A0918();
+    c->page_1E8 = 0;
+    c->nextPage_1E4 = -1;
+    c->returnPage_1EC = -1;
+    c->sel_1E0 = 0;
+    c->scroll_1E2 = 0;
+    c->cursor_1D8 = compoPages_800A250C[c->page_1E8].menu_0->head_0.blk;
+    c->savedSel_1F4 = 0;
     c->f1F0 = 0;
     c->part_210[0] = 0;
     c->part_210[1] = 0;
@@ -164,21 +164,21 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
     c->ratio_21C[1] = 0;
     c->ratio_21C[2] = 0;
     c->f228 = 0;
-    c->f22C = 0;
-    c->f208 = 0;
-    c->f20C = 0;
-    c->f1FC = 0;
-    c->f200 = 0;
-    c->f204 = 0;
+    c->enemy_22C = 0;
+    c->listScroll_208 = 0;
+    c->listSel_20C = 0;
+    c->blend_1FC = 0;
+    c->blendFrame_200 = 0;
+    c->blendAnim_204 = 0;
     task->cb_8 = (EventEntryFn)TstCompoTask_800A097C;
 }
 
 // parameters of StartModelTask_80010850 (0x34 bytes)
 extern int dword_8007DC74;
-void sub_800A0918()
+void SetDefaultCompoParams_800A0918()
 {
-    TstCompoModelParams* p = &name_800A2768;
-    p->f0 = 3;
+    TstCompoModelParams* p = &compoModelParams_800A2768;
+    p->partCount_0 = 3;
     p->part_4[0] = 1;
     p->part_4[1] = 0xC;
     p->part_4[2] = 0x29;
@@ -187,59 +187,59 @@ void sub_800A0918()
     p->ratio_10[2] = 0x555;
     p->modelId_1C = 4;
     p->f20 = 0;
-    p->f24 = 0;
-    p->f28 = 0x4C;
+    p->angle_24 = 0;
+    p->enemyPart_28 = 0x4C;
     p->f2C = 0;
     p->f30 = dword_8007DC74;
 }
 
 extern unsigned short padHeld_800918D0[];
-extern void sub_800A0AB8();
-extern void sub_800A1320();
-extern void sub_800A1354();
-extern void sub_800A13B8();
-extern void sub_800A1468();
-extern void sub_800A15F4();
-extern void sub_800A1804();
-extern void sub_800A194C();
-extern void sub_800A19A4();
-extern void sub_800A1AD0();
+extern void TstCompoMenu_800A0AB8();
+extern void TstCompoStartModel_800A1320();
+extern void TstCompoWaitModel_800A1354();
+extern void TstCompoWaitFiles_800A13B8();
+extern void TstCompoDrawModel_800A1468();
+extern void TstCompoDrawBlend_800A15F4();
+extern void TstCompoFrameInput_800A1804();
+extern void TstCompoViewInput_800A194C();
+extern void TstCompoAnimSelect_800A19A4();
+extern void TstCompoFreeModel_800A1AD0();
 extern void TstCompoCameraInput_800A1C14();
 void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
 {
     if (c->state_0 != 1 && c->state_0 != 3 && c->state_0 != 6 && (padHeld_800918D0[0] & 4) && (padHeld_800918D0[0] & 1) &&
         (padHeld_800918D0[0] & 0x90A) == 0x90A)
     {
-        sub_800A1AD0(c);
+        TstCompoFreeModel_800A1AD0(c);
         bStopDrawingMovie_8008D45C = 1;
         return;
     }
     switch (c->state_0)
     {
     case 0:
-        sub_800A0AB8(c);
+        TstCompoMenu_800A0AB8(c);
         break;
     case 1:
-        sub_800A1320(c);
+        TstCompoStartModel_800A1320(c);
         break;
     case 2:
-        sub_800A1354(c);
+        TstCompoWaitModel_800A1354(c);
         break;
     case 3:
-        sub_800A13B8(c);
+        TstCompoWaitFiles_800A13B8(c);
         break;
     case 4:
-        sub_800A194C(c);
+        TstCompoViewInput_800A194C(c);
         TstCompoCameraInput_800A1C14(c);
-        sub_800A1468(c);
-        sub_800A1804(c);
+        TstCompoDrawModel_800A1468(c);
+        TstCompoFrameInput_800A1804(c);
         break;
     case 5:
-        sub_800A15F4(c);
-        sub_800A19A4(c);
+        TstCompoDrawBlend_800A15F4(c);
+        TstCompoAnimSelect_800A19A4(c);
         break;
     case 6:
-        sub_800A1AD0(c);
+        TstCompoFreeModel_800A1AD0(c);
         break;
     }
 }
@@ -252,7 +252,7 @@ extern void DrawText_8003E91C(int a, int b, void* c, int d);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* e, int idx);
 // Matched
-void sub_800A0AB8(TstCompoWork* c)
+void TstCompoMenu_800A0AB8(TstCompoWork* c)
 {
     short p0[4];
     short p1[4];
@@ -268,97 +268,97 @@ void sub_800A0AB8(TstCompoWork* c)
     int d;
     unsigned int total;
 
-    if (c->f1E4 != -1)
+    if (c->nextPage_1E4 != -1)
     {
-        c->f1E8 = c->f1E4;
-        c->f1E4 = -1;
-        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
-        c->f1E0 = 0;
-        c->f1E2 = 0;
-        switch (c->f1E8)
+        c->page_1E8 = c->nextPage_1E4;
+        c->nextPage_1E4 = -1;
+        c->cursor_1D8 = compoPages_800A250C[c->page_1E8].menu_0->head_0.blk;
+        c->sel_1E0 = 0;
+        c->scroll_1E2 = 0;
+        switch (c->page_1E8)
         {
         case 0:
-            c->f1E0 = c->f1F4;
+            c->sel_1E0 = c->savedSel_1F4;
             break;
         case 1:
             break;
         case 2:
-            c->f1E0 = c->f20C;
-            c->f1E2 = c->f208;
+            c->sel_1E0 = c->listSel_20C;
+            c->scroll_1E2 = c->listScroll_208;
             break;
         }
     }
-    switch (c->f1E8)
+    switch (c->page_1E8)
     {
     case 0:
         if (IsConfirmPressedP1_8003D380(1))
         {
-            c->f1E4 = 2;
-            c->f1EC = 0;
-            c->f1F8 = &c->part_210[c->f1E0];
-            c->f1F4 = c->f1E0;
+            c->nextPage_1E4 = 2;
+            c->returnPage_1EC = 0;
+            c->pickTarget_1F8 = &c->part_210[c->sel_1E0];
+            c->savedSel_1F4 = c->sel_1E0;
         }
-        c->ratio_21C[c->f1E0] = AdjustByLeftRight_8003D210(10, c->ratio_21C[c->f1E0], 1, 0);
+        c->ratio_21C[c->sel_1E0] = AdjustByLeftRight_8003D210(10, c->ratio_21C[c->sel_1E0], 1, 0);
         break;
     case 1:
         if (IsConfirmPressedP1_8003D380(1))
         {
-            c->f1F8 = &c->f22C;
-            c->f1E4 = 2;
-            c->f1EC = 1;
-            c->f1F4 = c->f1E0;
+            c->pickTarget_1F8 = &c->enemy_22C;
+            c->nextPage_1E4 = 2;
+            c->returnPage_1EC = 1;
+            c->savedSel_1F4 = c->sel_1E0;
         }
-        name_800A2768.f24 = AdjustByLeftRight_8003D210(0x167, name_800A2768.f24, 1, 0);
-        name_800A2768.f24 = AdjustByShoulderButtons_8003D198(0x168, name_800A2768.f24, 10, 0);
+        compoModelParams_800A2768.angle_24 = AdjustByLeftRight_8003D210(0x167, compoModelParams_800A2768.angle_24, 1, 0);
+        compoModelParams_800A2768.angle_24 = AdjustByShoulderButtons_8003D198(0x168, compoModelParams_800A2768.angle_24, 10, 0);
         break;
     case 2:
         if (IsConfirmPressedP1_8003D380(1))
         {
-            *c->f1F8 = c->f1E0 + c->f1E2;
-            c->f1E4 = c->f1EC;
+            *c->pickTarget_1F8 = c->sel_1E0 + c->scroll_1E2;
+            c->nextPage_1E4 = c->returnPage_1EC;
         }
         else if (IsCancelPressedP1_8003D41C(1))
         {
-            c->f1E4 = c->f1EC;
+            c->nextPage_1E4 = c->returnPage_1EC;
         }
-        m = name_800A250C[c->f1EC].menu_0;
-        DrawBobbingCursorHand_8003D090(m->x_C + (c->f1F4 % m->head_0.f.cols_0) * m->dx_8,
-                     m->y_E + (c->f1F4 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
-        c->f20C = c->f1E0;
-        c->f208 = c->f1E2;
+        m = compoPages_800A250C[c->returnPage_1EC].menu_0;
+        DrawBobbingCursorHand_8003D090(m->x_C + (c->savedSel_1F4 % m->head_0.f.cols_0) * m->dx_8,
+                     m->y_E + (c->savedSel_1F4 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+        c->listSel_20C = c->sel_1E0;
+        c->listScroll_208 = c->scroll_1E2;
         break;
     }
-    switch (UpdateMenuCursor_8003D794(&c->f1D8, 0))
+    switch (UpdateMenuCursor_8003D794(&c->cursor_1D8, 0))
     {
     case 4:
-        c->f1E8++;
-        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
-        c->f1E0 = 0;
-        c->f1E2 = 0;
+        c->page_1E8++;
+        c->cursor_1D8 = compoPages_800A250C[c->page_1E8].menu_0->head_0.blk;
+        c->sel_1E0 = 0;
+        c->scroll_1E2 = 0;
         break;
     case 3:
-        c->f1E8--;
-        c->f1D8 = name_800A250C[c->f1E8].menu_0->head_0.blk;
-        c->f1E0 = name_800A250C[c->f1E8].menu_0->head_0.f.count_2 - 1;
-        c->f1E2 = 0;
+        c->page_1E8--;
+        c->cursor_1D8 = compoPages_800A250C[c->page_1E8].menu_0->head_0.blk;
+        c->sel_1E0 = compoPages_800A250C[c->page_1E8].menu_0->head_0.f.count_2 - 1;
+        c->scroll_1E2 = 0;
         break;
     }
-    m = name_800A250C[c->f1E8].menu_0;
-    DrawBobbingCursorHand_8003D090(m->x_C + (c->f1E0 % m->head_0.f.cols_0) * m->dx_8,
-                 m->y_E + (c->f1E0 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
-    if (c->f1E8 < 3)
+    m = compoPages_800A250C[c->page_1E8].menu_0;
+    DrawBobbingCursorHand_8003D090(m->x_C + (c->sel_1E0 % m->head_0.f.cols_0) * m->dx_8,
+                 m->y_E + (c->sel_1E0 / m->head_0.f.cols_0) * m->dy_A + 6, 0, 0, 0);
+    if (c->page_1E8 < 3)
     {
-        if (c->f1E8 >= 0)
+        if (c->page_1E8 >= 0)
         {
             p0[0] = 0x22;
             p0[1] = 0x1C;
-            DrawText_8003E91C(1, dword_800A20EC[c->part_210[0]].text_0, p0, 0);
+            DrawText_8003E91C(1, compoParts_800A20EC[c->part_210[0]].text_0, p0, 0);
             p1[0] = 0x22;
             p1[1] = 0x26;
-            DrawText_8003E91C(1, dword_800A20EC[c->part_210[1]].text_0, p1, 0);
+            DrawText_8003E91C(1, compoParts_800A20EC[c->part_210[1]].text_0, p1, 0);
             p2[0] = 0x22;
             p2[1] = 0x30;
-            DrawText_8003E91C(1, dword_800A20EC[c->part_210[2]].text_0, p2, 0);
+            DrawText_8003E91C(1, compoParts_800A20EC[c->part_210[2]].text_0, p2, 0);
             p3[0] = 0x92;
             p3[1] = 0x1C;
             DrawNumberRightAlignedFont1_8003F264(p3, c->ratio_21C[0], 0);
@@ -370,32 +370,32 @@ void sub_800A0AB8(TstCompoWork* c)
             DrawNumberRightAlignedFont1_8003F264(p5, c->ratio_21C[2], 0);
             p0[0] = 0x22;
             p0[1] = 0x46;
-            DrawText_8003E91C(1, dword_800A20EC[c->f22C].text_0, p0, 0);
+            DrawText_8003E91C(1, compoParts_800A20EC[c->enemy_22C].text_0, p0, 0);
             p1[0] = 0x92;
             p1[1] = 0x46;
-            DrawNumberRightAlignedFont1_8003F264(p1, name_800A2768.f24, 0);
+            DrawNumberRightAlignedFont1_8003F264(p1, compoModelParams_800A2768.angle_24, 0);
             for (i = 0; i < 20; i++)
             {
                 p0[0] = 0xCA;
                 p0[1] = (i + 1) * 10 + 0x12;
-                DrawText_8003E91C(1, dword_800A20EC[c->f208 + i].text_0, p0, 0);
+                DrawText_8003E91C(1, compoParts_800A20EC[c->listScroll_208 + i].text_0, p0, 0);
             }
             for (j = 0; j < 3; j++)
             {
-                DrawTextListWindow_800A2030(name_800A250C[j].rect_8, name_800A250C[j].texts_4, 0);
+                DrawTextListWindow_800A2030(compoPages_800A250C[j].rect_8, compoPages_800A250C[j].texts_4, 0);
             }
         }
     }
     if (padPressed_8009194C & 0x800)
     {
-        name_800A2768.f0 = 3;
-        name_800A2768.modelId_1C = 4;
-        name_800A2768.f20 = 0;
-        name_800A2768.f28 = dword_800A20EC[c->f22C].id_4;
-        name_800A2768.f2C = 0;
-        name_800A2768.part_4[0] = a = dword_800A20EC[c->part_210[0]].id_4;
-        name_800A2768.part_4[1] = b = dword_800A20EC[c->part_210[1]].id_4;
-        name_800A2768.part_4[2] = d = dword_800A20EC[c->part_210[2]].id_4;
+        compoModelParams_800A2768.partCount_0 = 3;
+        compoModelParams_800A2768.modelId_1C = 4;
+        compoModelParams_800A2768.f20 = 0;
+        compoModelParams_800A2768.enemyPart_28 = compoParts_800A20EC[c->enemy_22C].id_4;
+        compoModelParams_800A2768.f2C = 0;
+        compoModelParams_800A2768.part_4[0] = a = compoParts_800A20EC[c->part_210[0]].id_4;
+        compoModelParams_800A2768.part_4[1] = b = compoParts_800A20EC[c->part_210[1]].id_4;
+        compoModelParams_800A2768.part_4[2] = d = compoParts_800A20EC[c->part_210[2]].id_4;
         if (a == b)
         {
             if (b == d)
@@ -422,45 +422,43 @@ void sub_800A0AB8(TstCompoWork* c)
             c->ratio_21C[2] = 0;
         }
         total = c->ratio_21C[0] + c->ratio_21C[1] + c->ratio_21C[2];
-        name_800A2768.ratio_10[0] = (c->ratio_21C[0] << 12) / total;
-        name_800A2768.ratio_10[1] = (c->ratio_21C[1] << 12) / total;
-        name_800A2768.ratio_10[2] = (c->ratio_21C[2] << 12) / total;
-        name_800A2768.f24 += dword_800A20EC[c->f22C].angle_8;
-        if (name_800A2768.f24 >= 0x168)
+        compoModelParams_800A2768.ratio_10[0] = (c->ratio_21C[0] << 12) / total;
+        compoModelParams_800A2768.ratio_10[1] = (c->ratio_21C[1] << 12) / total;
+        compoModelParams_800A2768.ratio_10[2] = (c->ratio_21C[2] << 12) / total;
+        compoModelParams_800A2768.angle_24 += compoParts_800A20EC[c->enemy_22C].angle_8;
+        if (compoModelParams_800A2768.angle_24 >= 0x168)
         {
-            name_800A2768.f24 -= 0x168;
+            compoModelParams_800A2768.angle_24 -= 0x168;
         }
         c->state_0 = 1;
     }
 }
 
-extern void name_80010850();
-void sub_800A1320(TstCompoWork* a)
+extern void StartModelTask_80010850();
+void TstCompoStartModel_800A1320(TstCompoWork* a)
 {
-    name_80010850(&name_800A2768);
+    StartModelTask_80010850(&compoModelParams_800A2768);
     a->state_0 = 2;
 }
 
-extern int name_80010A10(int);
-extern Model* name_80010A44(int);
-extern void sub_800A1AFC();
-void sub_800A1354(TstCompoWork* a)
+extern int name_80010A10(int); // RunModelTask_80010A10 (declared void), its v0 is tested
+extern void TstCompoInitBones_800A1AFC();
+void TstCompoWaitModel_800A1354(TstCompoWork* a)
 {
     if (name_80010A10(0))
     {
-        a->model_4 = name_80010A44(0);
-        sub_800A1AFC(a);
+        a->model_4 = GetModelTaskModel_80010A44(0);
+        TstCompoInitBones_800A1AFC(a);
         a->animCount_188 = -1;
-        a->f198 = 0;
-        a->f19C = name_800A2768.modelId_1C;
+        a->scaleStep_198 = 0;
+        a->scaleId_19C = compoModelParams_800A2768.modelId_1C;
         a->state_0 = 3;
     }
 }
 
-extern int name_80024DC4(Model*);
-void sub_800A13B8(TstCompoWork* a)
+void TstCompoWaitFiles_800A13B8(TstCompoWork* a)
 {
-    if (name_80024DC4(a->model_4))
+    if (AreFileRequestsDone_80024DC4(a->model_4))
     {
         if (a->animCount_188 <= 0)
         {
@@ -477,7 +475,7 @@ void sub_800A13B8(TstCompoWork* a)
         }
         else
         {
-            a->anim_184 = a->f18C;
+            a->anim_184 = a->nextAnim_18C;
         }
         a->state_0 = 4;
     }
@@ -486,7 +484,7 @@ void sub_800A13B8(TstCompoWork* a)
 extern void* memset(void* p, int c, unsigned int n);
 extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
-void sub_800A1468(TstCompoWork* c)
+void TstCompoDrawModel_800A1468(TstCompoWork* c)
 {
     VECTOR pos;
     char z[8];
@@ -496,11 +494,11 @@ void sub_800A1468(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
-    scale.vx = c->scale_1A0[0] + (c->f198 << 12);
-    scale.vy = c->scale_1A0[1] + (c->f198 << 12);
-    scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->scaleId_19C);
+    scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
+    scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
+    scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
@@ -517,7 +515,7 @@ void sub_800A1468(TstCompoWork* c)
 }
 
 extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, void* f, void* g);
-void sub_800A15F4(TstCompoWork* c)
+void TstCompoDrawBlend_800A15F4(TstCompoWork* c)
 {
     VECTOR pos;
     char z[8];
@@ -528,11 +526,11 @@ void sub_800A15F4(TstCompoWork* c)
     pos.vy = c->pos_16C[1];
     pos.vz = c->pos_16C[2];
     pos.vy += 0xFA;
-    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->f19C);
-    scale.vx = c->scale_1A0[0] + (c->f198 << 12);
-    scale.vy = c->scale_1A0[1] + (c->f198 << 12);
-    scale.vz = c->scale_1A0[2] + (c->f198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->f19C);
+    c->scale_1A0 = GetModelBaseScale_80024E90(c->model_4, c->scaleId_19C);
+    scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
+    scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
+    scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
+    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
@@ -544,25 +542,25 @@ void sub_800A15F4(TstCompoWork* c)
     c->draw_1A8.f20 = name_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
-    c->f1FC += 0x88;
+    c->blend_1FC += 0x88;
     c->frame_180++;
-    if ((unsigned)c->f1FC >= 0x1000)
+    if ((unsigned)c->blend_1FC >= 0x1000)
     {
         DrawAnimSkel_80046A58(&c->draw_1A8, name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
     else
     {
-        anim = &c->model_4->anims_54[c->f204];
-        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->f200 % anim->frameCount_0, 0x1000 - c->f1FC,
+        anim = &c->model_4->anims_54[c->blendAnim_204];
+        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->blendFrame_200 % anim->frameCount_0, 0x1000 - c->blend_1FC,
                      name_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }
 }
 
-void sub_800A1804(TstCompoWork* c)
+void TstCompoFrameInput_800A1804(TstCompoWork* c)
 {
-    if (c->f194)
+    if (c->paused_194)
     {
         if (padRepeat_800918CC & 0x80)
         {
@@ -584,22 +582,22 @@ void sub_800A1804(TstCompoWork* c)
     if (padPressed_8009194C & 0x40)
     {
         c->s14E = 0;
-        c->f194 = !c->f194;
+        c->paused_194 = !c->paused_194;
     }
-    if (c->f194 == 0)
+    if (c->paused_194 == 0)
     {
         if (padPressed_8009194C & 0x100)
         {
-            c->f198 = (c->f198 + 1) & 3;
+            c->scaleStep_198 = (c->scaleStep_198 + 1) & 3;
         }
         if (padPressed_8009194C & 0x10)
         {
-            c->f19C = (c->f19C + 1) % 5;
+            c->scaleId_19C = (c->scaleId_19C + 1) % 5;
         }
     }
 }
 
-void sub_800A194C(TstCompoWork* c)
+void TstCompoViewInput_800A194C(TstCompoWork* c)
 {
     if (padPressed_8009194C & 0x800)
     {
@@ -608,58 +606,56 @@ void sub_800A194C(TstCompoWork* c)
     else if (padPressed_8009194C & 0x20)
     {
         c->state_0 = 5;
-        c->f1FC = 0;
-        c->f18C = c->anim_184;
-        c->f200 = c->frame_180;
-        c->f204 = c->anim_184;
+        c->blend_1FC = 0;
+        c->nextAnim_18C = c->anim_184;
+        c->blendFrame_200 = c->frame_180;
+        c->blendAnim_204 = c->anim_184;
     }
 }
 
-extern void name_8002556C(Model* a, int b);
-extern void name_80025440(Model* a, int b, int c);
-void sub_800A19A4(TstCompoWork* c)
+void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
 {
     unsigned short pad = padRepeat_800918CC;
     if (pad & 0x1000)
     {
-        int v = c->f18C + 1;
+        int v = c->nextAnim_18C + 1;
         int t = c->animCount_188 - 1;
-        c->f18C = v;
+        c->nextAnim_18C = v;
         if (t < v)
         {
-            c->f18C = t;
+            c->nextAnim_18C = t;
         }
     }
     else if (pad & 0x4000)
     {
-        int v = c->f18C - 1;
-        c->f18C = v;
+        int v = c->nextAnim_18C - 1;
+        c->nextAnim_18C = v;
         if (v <= 0)
         {
-            c->f18C = 1;
+            c->nextAnim_18C = 1;
         }
     }
     pad = padPressed_8009194C;
     if (pad & 0x20)
     {
-        if (c->f190)
+        if (c->animLoaded_190)
         {
-            name_8002556C(c->model_4, c->anim_184);
-            c->f190 = 0;
+            FreeModelAnim_8002556C(c->model_4, c->anim_184);
+            c->animLoaded_190 = 0;
         }
-        if (c->model_4->animLoaded_44[c->f18C] == 0)
+        if (c->model_4->animLoaded_44[c->nextAnim_18C] == 0)
         {
-            c->f190 = 1;
+            c->animLoaded_190 = 1;
         }
         else
         {
-            c->f190 = 0;
+            c->animLoaded_190 = 0;
         }
-        if (c->f190)
+        if (c->animLoaded_190)
         {
-            name_80025440(c->model_4, c->f18C, 0);
+            LoadModelAnim_80025440(c->model_4, c->nextAnim_18C, 0);
         }
-        c->f194 = 0;
+        c->paused_194 = 0;
         c->frame_180 = 0;
         c->state_0 = 3;
     }
@@ -671,7 +667,7 @@ void sub_800A19A4(TstCompoWork* c)
 }
 
 // Matched
-void sub_800A1AD0(TstCompoWork* a)
+void TstCompoFreeModel_800A1AD0(TstCompoWork* a)
 {
     FreeModelTask_8001098C(0);
     a->state_0 = 0;
@@ -679,7 +675,7 @@ void sub_800A1AD0(TstCompoWork* a)
 
 extern TstCompoBone defaultBones_80079140[];
 extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
-void sub_800A1AFC(TstCompoWork* a)
+void TstCompoInitBones_800A1AFC(TstCompoWork* a)
 {
     int i;
     char* r;
@@ -688,12 +684,12 @@ void sub_800A1AFC(TstCompoWork* a)
         a->bones_C[i] = defaultBones_80079140[i];
     }
     a->bones_C[i] = defaultBones_80079140[i];
-    r = sub_80024F00(a->model_4, name_800A2768.modelId_1C);
-    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, name_800A2768.modelId_1C));
+    r = sub_80024F00(a->model_4, compoModelParams_800A2768.modelId_1C);
+    SetBoneGroupFlags_80019B14(a->bones_C, r, sub_80024F38(a->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
 // Matched
-void sub_800A1BE0(TstCompoWork* a)
+void TstCompoResetCamera_800A1BE0(TstCompoWork* a)
 {
     a->dist_150 = 0x4B0;
     a->yaw_14C = 0;
@@ -731,7 +727,7 @@ void TstCompoCameraInput_800A1C14(TstCompoWork* a)
     a->eye_154[1] = a->eye_154[1] < -1000 ? -1000 : a->eye_154[1] < 1001 ? a->eye_154[1] : 1000;
     if ((padHeld_800918D0[0] & 0xC) == 0xC)
     {
-        sub_800A1BE0(a);
+        TstCompoResetCamera_800A1BE0(a);
     }
     else if (padHeld_800918D0[0] & 4)
     {
@@ -748,7 +744,7 @@ void TstCompoCameraInput_800A1C14(TstCompoWork* a)
     {
         if (padHeld_800918D0[0] & 2)
         {
-            sub_800A1BE0(a);
+            TstCompoResetCamera_800A1BE0(a);
         }
         else
         {
@@ -769,13 +765,12 @@ typedef struct TstCompoMat
 {
     int w[8];
 } TstCompoMat;
-extern int name_8008D600[];
-extern short name_8008D4C8[];
-extern unsigned char name_8008D460[];
-extern short name_8008D474[];
+extern int cameraEye_8008D600[];
+extern short cameraRot_8008D4C8[];
+extern unsigned char backColor_8008D460[];
+extern short screenOffset_8008D474[];
 extern int geomScreenDistance_8008B548;
-extern int name_8003B548();
-extern void name_8004D0E8();
+extern void SetGteLightAndCamera_8004D0E8();
 extern TstCompoMat dword_8007C2EC;
 extern TstCompoMat dword_8007C30C;
 extern TstCompoMat lightMatrix_80087114;
@@ -784,31 +779,31 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int v[3];
     int yaw;
-    name_8008D600[0] = c->eye_154[0];
-    name_8008D600[1] = c->eye_154[1];
-    name_8008D600[2] = c->eye_154[2];
+    cameraEye_8008D600[0] = c->eye_154[0];
+    cameraEye_8008D600[1] = c->eye_154[1];
+    cameraEye_8008D600[2] = c->eye_154[2];
     v[0] = c->at_160[0] - c->eye_154[0];
     v[1] = c->at_160[1] - c->eye_154[1];
     v[2] = c->at_160[2] - c->eye_154[2];
     yaw = ratan2_8003B548(v[0], v[2]);
-    name_8008D4C8[1] = -yaw;
-    name_8008D4C8[0] = name_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
-    name_8008D4C8[2] = 0;
-    name_8008D460[0] = 0x40;
-    name_8008D460[1] = 0x40;
-    name_8008D460[2] = 0x40;
-    name_8008D474[0] = 0;
-    name_8008D474[1] = 0;
+    cameraRot_8008D4C8[1] = -yaw;
+    cameraRot_8008D4C8[0] = ratan2_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    cameraRot_8008D4C8[2] = 0;
+    backColor_8008D460[0] = 0x40;
+    backColor_8008D460[1] = 0x40;
+    backColor_8008D460[2] = 0x40;
+    screenOffset_8008D474[0] = 0;
+    screenOffset_8008D474[1] = 0;
     geomScreenDistance_8008B548 = 0xA0;
     lightMatrix_80087114 = dword_8007C2EC;
     colorMatrix_80087134 = dword_8007C30C;
-    name_8004D0E8();
+    SetGteLightAndCamera_8004D0E8();
 }
 
 // Matched
-int sub_800A200C()
+int TstCompoMain_800A200C()
 {
-    DrawIntroMovie_8001AF64(name_800A2560);
+    DrawIntroMovie_8001AF64(tstCompoTaskList_800A2560);
     return 6;
 }
 
@@ -831,11 +826,11 @@ void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
     if (e)
     {
         int i = 0;
-        while (e[i].p)
+        while (e[i].text_4)
         {
-            t.pos[0] = e[i].a;
-            t.pos[1] = e[i].b;
-            DrawText_8003E91C(1, e[i].p, t.pos, idx);
+            t.pos[0] = e[i].x_0;
+            t.pos[1] = e[i].y_2;
+            DrawText_8003E91C(1, e[i].text_4, t.pos, idx);
             i++;
         }
     }
@@ -848,7 +843,7 @@ void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
     }
 }
 
-TstCompoPart dword_800A20EC[48] = {
+TstCompoPart compoParts_800A20EC[48] = {
     { (int)asc_800A0788, 12, 0, 29 },
     { (int)asc_800A077C, 13, 0, 192, 1 },
     { (int)asc_800A076C, 14, 0, 0x162, 2 },
@@ -898,19 +893,19 @@ TstCompoPart dword_800A20EC[48] = {
     { (int)a8_800A05A8, 91, 0, 0, 209 },
     { (int)a9_800A05A4, 92, 0, 0, 210 },
 };
-int dword_800A24AC[4] = { 0x120022, (int)aNAMERATE_800A0798 };
-int dword_800A24BC[4] = { 0x3C0022, (int)aTEXHANGL_800A07B8 };
-int dword_800A24CC[4] = { 0x1200CA, (int)aENEMY_800A07D8 };
-int dword_800A24DC[4] = { 0x30001, 0x200003, 0xA0000, 0x1A0022 };
-int dword_800A24EC[4] = { 0x10001, 0x100001, 0xA0000, 0x440022 };
-int dword_800A24FC[4] = { 0x140001, 0x400030, 0xA0000, 0x1A00CA };
-TstCompoPage name_800A250C[3] = {
-    { (void *)dword_800A24DC, (void *)dword_800A24AC, { 32, 16, 114, 42 } },
-    { (void *)dword_800A24EC, (void *)dword_800A24BC, { 32, 58, 114, 22 } },
-    { (void *)dword_800A24FC, (void *)dword_800A24CC, { 200, 16, 64, 212 } },
+int compoTexts0_800A24AC[4] = { 0x120022, (int)aNAMERATE_800A0798 };
+int compoTexts1_800A24BC[4] = { 0x3C0022, (int)aTEXHANGL_800A07B8 };
+int compoTexts2_800A24CC[4] = { 0x1200CA, (int)aENEMY_800A07D8 };
+int compoMenu0_800A24DC[4] = { 0x30001, 0x200003, 0xA0000, 0x1A0022 };
+int compoMenu1_800A24EC[4] = { 0x10001, 0x100001, 0xA0000, 0x440022 };
+int compoMenu2_800A24FC[4] = { 0x140001, 0x400030, 0xA0000, 0x1A00CA };
+TstCompoPage compoPages_800A250C[3] = {
+    { (void *)compoMenu0_800A24DC, (void *)compoTexts0_800A24AC, { 32, 16, 114, 42 } },
+    { (void *)compoMenu1_800A24EC, (void *)compoTexts1_800A24BC, { 32, 58, 114, 22 } },
+    { (void *)compoMenu2_800A24FC, (void *)compoTexts2_800A24CC, { 200, 16, 64, 212 } },
 };
-int dword_800A2548[6] = { 1, 1, 0x230, 0, (int)TstCompoInit_800A0800 };
-char name_800A2560[16] = { 184, 142, 7, 128, 128, 144, 7, 128, 72, 37, 10, 128 };
+int tstCompoTaskDesc_800A2548[6] = { 1, 1, 0x230, 0, (int)TstCompoInit_800A0800 };
+char tstCompoTaskList_800A2560[16] = { 184, 142, 7, 128, 128, 144, 7, 128, 72, 37, 10, 128 };
 char name_800A2570[24] = { 0 };
 char name_800A2588[480] = { 0 };
-TstCompoModelParams name_800A2768 = { 0 };
+TstCompoModelParams compoModelParams_800A2768 = { 0 };
