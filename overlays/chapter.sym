@@ -32,5 +32,5 @@ dword_800B6E98=0x800b6e98;
 dword_800B6EB0=0x800b6eb0;
 dword_800B6F98=0x800b6f98;
 dword_800B6FB0=0x800b6fb0;
-chapterTable_800B6FE0=0x800b6fe0;
+chapterTable_800B6FE0=0x800b6fe0; // data
 dword_800B70A4=0x800b70a4;

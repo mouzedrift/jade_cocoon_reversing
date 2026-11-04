@@ -194,7 +194,9 @@ def split(name, data, base, syms, lib_ranges={}, gamebss=None):
     names = {a: n for a, n in syms}
     out = os.path.join(REPO, "asm", "overlays", name.lower())
     os.makedirs(out, exist_ok=True)
-    code = [a for a, n in syms if not n.startswith(gen_asm.DATA_PREFIXES)]
+    datas = gen_asm.overlay_data_names(REPO, os.path.join("overlays", name.lower() + ".sym"))
+    datas |= {n for _, n in syms if n.startswith(gen_asm.DATA_PREFIXES)}
+    code = [a for a, n in syms if n not in datas]
     first_code, last_code = min(code), max(code)
     for (a, n), (b, _) in zip(syms, syms[1:] + [(base + len(data), "")]):
         if any(lo <= a < hi for lo, hi in lib_ranges.values()):
@@ -207,7 +209,7 @@ def split(name, data, base, syms, lib_ranges={}, gamebss=None):
         # data in front of the code is .rdata (jump tables and strings come out of the compiler in the same
         # place), data behind it .data
         sec = ".rdata" if a < first_code else ".data"
-        text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code and name.upper() not in ("GAME", "MENU"))) if n.startswith(gen_asm.DATA_PREFIXES)
+        text = (gen_asm.emit_data(data, n, a, b - a, sec, header=(a == base and a < first_code and name.upper() not in ("GAME", "MENU"))) if n in datas
                 else gen_asm.emit_function(md, data, n, a, b - a, names))
         open(os.path.join(out, n + ".s"), "w", newline="").write(text.replace("\n", "\r\n"))
 

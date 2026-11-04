@@ -51,8 +51,18 @@ def sources(name):
     return srcs
 
 
-def is_data(n):
-    return n.startswith(gen_asm.DATA_PREFIXES)
+_DATA = {}
+
+
+def is_data(n, name=None):
+    """a data symbol of the overlay (prefix or '// data' in the .sym file)"""
+    if n.startswith(gen_asm.DATA_PREFIXES):
+        return True
+    return any(n in d for d in _DATA.values()) if name is None else n in _DATA.get(name, ())
+
+
+def load_data_names(name):
+    _DATA[name] = gen_asm.overlay_data_names(REPO, os.path.join("overlays", name.lower() + ".sym"))
 
 
 def code_refs(data, base, lo, hi):
@@ -108,7 +118,7 @@ def blobs(name, syms, lib_ranges, size_end):
     inc = set(re.findall(r"^INCLUDE_OVERLAY_ASM\(\w+, (\w+)\);", text, re.M))
     out = []
     for (a, n), (b, _) in zip(syms, syms[1:] + [(size_end, "")]):
-        if is_data(n) and n in inc and not any(lo <= a < hi for lo, hi in lib_ranges.values()):
+        if is_data(n) and not n.startswith("jpt_") and n in inc and not any(lo <= a < hi for lo, hi in lib_ranges.values()):
             out.append((a, b, n))
     return out
 
@@ -162,13 +172,31 @@ def split_points(name, data, base, syms, lib_ranges):
     return out
 
 
-def write_split(name, points):
+def sym_name(data, base, a, b):
+    """aName_XXXXXXXX for a place that starts with a string (as gendata.py names them), else dword_XXXXXXXX"""
+    import gendata
+    parts = gendata.split_strings(data[a - base:b - base], rest=True)
+    if parts and parts[0][0] == 0 and parts[0][1]:
+        s = parts[0][1]
+        an = gendata.ascii_name(s.decode("latin1")) if all(c < 0x80 for c in s) else None
+        if an is None:
+            a2 = gendata.sjis_ascii(s)
+            an = gendata.ascii_name(a2) if a2 else None
+        return "%s_%08X" % (an or "asc", a)
+    return "dword_%08X" % a
+
+
+def sym_line(n, a):
+    return "%s=0x%08x;%s" % (n, a, "" if n.startswith(gen_asm.DATA_PREFIXES) else " // data")
+
+
+def write_split(name, points, data, base):
     path = sym_path(name)
     lines = open(path).read().split("\n")
     new = {}
     for n, (a, b, pts) in points.items():
-        for p in pts:
-            new[p] = "dword_%08X" % p
+        for p, q in zip(pts, pts[1:] + [b]):
+            new[p] = sym_name(data, base, p, q)
     have = set()
     for l in lines:
         m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", l)
@@ -181,12 +209,12 @@ def write_split(name, points):
         if m:
             a = int(m.group(2), 16)
             while add and add[0] < a:
-                out.append("%s=0x%08x;" % (new[add[0]], add[0]))
+                out.append(sym_line(new[add[0]], add[0]))
                 add.pop(0)
         out.append(l)
     while out and out[-1] == "":
         out.pop()
-    out += ["%s=0x%08x;" % (new[p], p) for p in add] + [""]
+    out += [sym_line(new[p], p) for p in add] + [""]
     open(path, "w").write("\n".join(out))
     for src in sources(name):
         text = open(src).read()
@@ -203,6 +231,7 @@ def main(argv):
     cmd, name, iso, exe_path = args[:4]
     exe, data, base = load(name, iso, exe_path)
     syms = gen_asm.load_symbols(REPO, os.path.join("overlays", name.lower() + ".sym"))
+    load_data_names(name)
     _, lib_ranges, gamebss = overlays.lib_objs(name.upper())
     have = {a for a, _ in syms}
     edges = {x for r in lib_ranges.values() for x in r} | ({gamebss} if gamebss else set())
@@ -212,7 +241,7 @@ def main(argv):
         for n, (a, b, p) in pts.items():
             print("%s %08X-%08X: %d new symbols" % (n, a, b, len(p)))
         if "--write" in argv:
-            write_split(name, pts)
+            write_split(name, pts, data, base)
     elif cmd == "gen":
         import ovlgen
         return ovlgen.main(name, exe, data, base, syms, lib_ranges, args[4:], "--write" in argv)

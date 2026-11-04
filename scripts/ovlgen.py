@@ -43,10 +43,16 @@ class OvlSyms(gendata.Syms):
 
 
 def section_ranges(name, data, base, osyms):
-    code = [a for a, n in osyms if not n.startswith(gendata_prefixes())]
+    import ovldata
+    code = [a for a, n in osyms if not ovldata.is_data(n)]
     lo = min(code)
     hi = next((a for a, n in osyms if a > max(code)), base + len(data))
     return lo, hi
+
+
+def ovldata_is_data(n):
+    import ovldata
+    return ovldata.is_data(n)
 
 
 def gendata_prefixes():
@@ -59,7 +65,7 @@ def includes(text, oname):
     out = []
     for m in re.finditer(r"^INCLUDE_OVERLAY_ASM\(%s, (\w+)\);[^\n]*\n?" % oname, text, re.M):
         n = m.group(1)
-        if n.startswith(gendata_prefixes()) and not n.startswith("jpt_"):
+        if ovldata_is_data(n) and not n.startswith("jpt_"):
             out.append((n, m))
     return out
 
@@ -74,6 +80,7 @@ def header_path(name):
 
 def main(name, exe, data, base, osyms, lib_ranges, only, write):
     import ovldata
+    ovldata.load_data_names(name)   # (this runs as ovldata's __main__, which is another module object)
     oname = name.lower()
     end = base + len(data)
     lo, hi = section_ranges(name, data, base, osyms)
@@ -121,7 +128,20 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                     syms.addr[dn] = a
         names = [n for n, _ in incs]
         propagate(types, syms, names, chunk)
+        for n in names:
+            sec, size = chunk(n)
+            if n in types.decls or sec in (".bss", ".sdata") or syms.addr[n] % 4:
+                continue
+            b = syms.rd(syms.addr[n], size)
+            s0 = b.split(b"\0")[0]
+            if len(s0) >= 2 and gendata.is_text(s0) and len(s0) < len(b) and gendata.split_strings(b, rest=True) is None:
+                # a string with bytes behind its terminator: one char array
+                from pycparser import c_ast
+                td = c_ast.TypeDecl(n, [], None, c_ast.IdentifierType(["char"]))
+                arr = c_ast.ArrayDecl(td, c_ast.Constant("int", str(size)), [])
+                types.decls[n] = c_ast.Decl(n, [], [], [], [], arr, None, None)
         gen = gendata.Gen(syms, types)
+        gen.int_refs = True
 
         def chunk_of(n, _gen=gen):
             return chunk(n) if n in syms.addr and base <= syms.addr[n] < end and any(
@@ -131,7 +151,36 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
         for n in names:
             sec, size = chunk(n)
             info[n] = (".rdata" if sec == ".sdata" else sec, size)
+        # places inside a chunk the source declares (not split by ovldata.py split: not on 4 bytes, or the
+        # generated assembly has no symbol there yet) are chunks of their own, defined in place of the chunk's line
+        parent = {}
+        declared = {}
+        for dn in types.decls:
+            m = re.search(r"_([0-9A-F]{8})$", dn)
+            if m:
+                declared.setdefault(int(m.group(1), 16), dn)
+        allnames = []
+        for n in names:
+            a = syms.addr[n]
+            sec, size = info[n]
+            inner = sorted(x for x in declared if a < x < a + size and x not in syms.by_addr)
+            cuts = [a] + inner + [a + size]
+            allnames.append(n)
+            info[n] = (sec, cuts[1] - a)
+            for x, y in zip(inner, cuts[2:]):
+                vn = declared[x]
+                syms.add(vn, x)
+                parent[vn] = n
+                info[vn] = (sec, y - x)
+                allnames.append(vn)
+        names = allnames
         todo, defs, absorbed, errors, types, syms, gen = gendata.generate_chunks(syms, types, gen, names, info)
+        for vn, n in parent.items():
+            if vn in errors and n not in errors:
+                errors[n] = "%s: %s" % (vn, errors[vn])
+        for d in defs:
+            d.head = parent.get(d.head, d.head)
+        todo = [n for n in todo if n not in parent]
         ok = [d for d in defs if d.head not in errors]
         # an INCLUDE_OVERLAY_ASM can't stay between two C definitions of its section: nothing behind a failed
         # chunk is written (up to the next function, where the compiler switches sections itself)
@@ -189,7 +238,6 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
                                   flags=re.M)
             for d in ds:
                 all_defs.append((src, d, types, gen))
-                at = [x for _, x in sym_list if syms.addr.get(x) == d.addr and x != d.name] if False else None
                 # the .sym name of the place
                 sname = next((x for a, x in sym_list if a == d.addr), None)
                 if sname is None:
@@ -216,16 +264,32 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
     for p in texts:
         t = texts[p]
         for n in defined:
-            t = re.sub(r"^extern\b[^;\n]*[\s*(]%s\s*[\[);][^;\n]*;[^\n]*\n" % re.escape(n), "", t, flags=re.M)
+            t = re.sub(r"^extern\b[^;\n]*[\s*(]%s\s*[\[);][^\n]*\n" % re.escape(n), "", t, flags=re.M)
         texts[p] = t
-    write_header(name, texts, exts, protos)
+    # symbols of the executable the initialisers use that the overlay doesn't see: the header that declares them
+    hdrs = []
+    for src, d, types, gen in all_defs:
+        for r in sorted(d.refs):
+            if r in defined or r in types.decls or r in types.funcs:
+                continue
+            hs = [p for p, _ in gendata.find_extern(r) if p.endswith(".h")] or [p for p, _ in gendata.find_proto(r)]
+            hs = [h for h in hs if os.sep + "overlays" + os.sep not in h]
+            if hs:
+                h = os.path.relpath(hs[0], os.path.join(REPO, "src"))
+                if h not in hdrs:
+                    hdrs.append(h)
+            elif r not in protos:
+                print("// %s uses %s, which nothing declares" % (d.name, r))
+    write_header(name, texts, exts, protos, hdrs)
     for p, t in texts.items():
         open(p, "w").write(t)
     # the .sym file names every definition (the link script equates the other address names of the source)
     path = ovldata.sym_path(name)
     st = open(path).read()
     for old, new in renames.items():
-        st = re.sub(r"^%s=" % re.escape(old), new + "=", st, flags=re.M)
+        st = re.sub(r"^%s=(0x[0-9a-fA-F]+;)(.*)$" % re.escape(old), lambda m: new + "=" + m.group(1) + (
+            m.group(2) if ovldata.is_data(new) or "data" in m.group(2) else (m.group(2) + " // data" if m.group(2) else " // data")),
+            st, flags=re.M)
     lines = st.rstrip("\n").split("\n")
     for n, a in sorted(new_syms.items(), key=lambda x: x[1]):
         k = 0
@@ -234,7 +298,7 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
             if m and int(m.group(1), 16) > a:
                 break
             k += 1
-        lines.insert(k, "%s=0x%08x;" % (n, a))
+        lines.insert(k, ovldata.sym_line(n, a))
     open(path, "w").write("\n".join(lines) + "\n")
     print("wrote %d definitions" % len(all_defs))
     return 0
@@ -397,7 +461,7 @@ def defined_types(block):
     return names
 
 
-def write_header(name, texts, exts, protos):
+def write_header(name, texts, exts, protos, hdrs=()):
     """externs (and the prototypes of the functions their initialisers use) into the overlay's header; the
     typedefs of the .c files they need move there too"""
     path = header_path(name)
@@ -459,6 +523,11 @@ def write_header(name, texts, exts, protos):
     if protos:
         body += "\n" + "".join("extern void %s();\n" % r for r in protos if not re.search(r"\b%s\s*\(" % r, hdr))
     body += "\n" + "\n".join(exts) + "\n"
+    add = "".join('#include "%s"\n' % h for h in hdrs if '#include "%s"' % h not in hdr)
+    if add:
+        ms = list(re.finditer(r'^#include .*\n', hdr, re.M))
+        k = ms[-1].end() if ms else hdr.index("\n", hdr.index("#define")) + 1
+        hdr = hdr[:k] + add + hdr[k:]
     k = hdr.rindex("#endif")
     hdr = hdr[:k].rstrip("\n") + "\n" + body + "\n" + hdr[k:]
     open(path, "w").write(hdr)

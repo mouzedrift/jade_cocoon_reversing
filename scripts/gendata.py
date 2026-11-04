@@ -464,6 +464,7 @@ class Gen:
         self.protos = {}             # functions the initialisers use that nobody declares: FuncDecl or None
         self.arrays = set(defined)   # names that are arrays (no & needed)
         self.local = {}              # name -> T of the objects being defined here
+        self.int_refs = False        # ints that hold the address of a symbol become references (overlays)
 
     @staticmethod
     def chunk_of(name):
@@ -571,6 +572,15 @@ class Gen:
         k = t.kind
         if k == "int":
             v = int.from_bytes(self.syms.rd(addr, t.nbytes), "little", signed=t.signed)
+            if self.int_refs and t.nbytes == 4:
+                u = v & 0xffffffff
+                hit = self.syms.at(u) if in_image(u) else None
+                if hit is not None and hit[0] == u:
+                    # an address in an int: a reference cast to int
+                    e = self.ref(u, None)
+                    if e.startswith("(void *)"):
+                        e = e[len("(void *)"):]
+                    return "(%s)%s" % ("int" if t.signed else "unsigned int", e)
             return intstr(v, t)
         if k == "ptr":
             return self.ref(struct.unpack("<I", self.syms.rd(addr, 4))[0], t)
@@ -582,6 +592,10 @@ class Gen:
                     return literal(z)
                 if b"\0" not in z and is_text(z) and (any(c >= 0x80 for c in z) or
                                                        sum(chr(c).isalnum() for c in z) * 2 >= len(z) >= 2):
+                    return literal(z)
+                # a string with more bytes behind its terminator (left over in the padding): one literal
+                segs = z.split(b"\0")
+                if self.int_refs and len(segs[0]) >= 2 and is_text(segs[0]) and all(is_text(x) or not x for x in segs):
                     return literal(z)
                 while len(b) > 1 and b[-1] == 0:
                     b = b[:-1]
@@ -1103,7 +1117,22 @@ def src_lines():
 def find_extern(name):
     """(path, line text) of the extern declarations of name in src/ (headers first)"""
     r = re.compile(r"\s*extern\b[^;]*?[\s*(]%s\s*[\[);]" % re.escape(name))
-    return [(p, l) for p, l in src_lines() if name in l and r.match(l)]
+    return [(p, l) for p, l in _word_index().get(name, ()) if r.match(l)]
+
+
+_WORDS = None
+
+
+def _word_index():
+    """identifier -> the (path, line)s of src/ it occurs in (in src_lines order)"""
+    global _WORDS
+    if _WORDS is None or _WORDS[0] is not _SRC_LINES:
+        idx = {}
+        for pl in src_lines():
+            for w in set(re.findall(r"[A-Za-z_]\w*", pl[1])):
+                idx.setdefault(w, []).append(pl)
+        _WORDS = (_SRC_LINES, idx)
+    return _WORDS[1]
 
 
 def absorbed_head(x, absorbed, syms):
@@ -1142,7 +1171,7 @@ def member_path(t, off):
 
 def find_proto(name):
     r = re.compile(r"\b%s\s*\(" % re.escape(name))
-    return [(p, l) for p, l in src_lines() if p.endswith(".h") and name in l and r.search(l) and l.rstrip().endswith(";")]
+    return [(p, l) for p, l in _word_index().get(name, ()) if p.endswith(".h") and r.search(l) and l.rstrip().endswith(";")]
 
 
 def header_for(tu):

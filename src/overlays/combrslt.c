@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "combrslt.h"
 
 typedef struct CombRsltTask
 {
@@ -18,18 +19,6 @@ typedef struct CombRsltBox
 } CombRsltBox;
 
 // sub_8002ADB4's text window (0x1C bytes)
-typedef struct CombRsltText
-{
-    unsigned short flags_0;
-    short s_2;
-    int ptr_4;
-    int pad_8[2];
-    short x_10;
-    short y_12;
-    int pad_14[2];
-} CombRsltText;
-
-extern CombRsltText dword_800A408C;
 extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
 extern void sub_8002ADB4(void*, void*, int, int);
@@ -42,7 +31,10 @@ extern void SetFadeMode_8001C19C(int, int);
 extern void sub_800A4240(int);
 extern void DrawMenuBackground_8002BE10();
 
-INCLUDE_OVERLAY_ASM(combrslt, dword_800A4088);
+int dword_800A4088 SDATA = 23;
+const CombRsltText dword_800A408C = { 8, 1, 159, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 122, 20, { 0x14004C, 0x40002 } };
+const CombRsltText dword_800A40A8 = { 8, 1, 0, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x140032, 0x40002 } };
+const CombRsltText dword_800A40C4 = { 10, 1, 64, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x14005E, 0x40002 } };
 
 void sub_800A40E0(CombRsltTask* t)
 {
@@ -78,15 +70,6 @@ void sub_800A41E4(CombRsltTask* t, int a)
 
 extern unsigned char byte_800A3A98[];
 extern unsigned char byte_800A3A90[];
-extern int* dword_800A4830[];
-extern int* dword_800A4870[];
-extern unsigned short* dword_800A48B0[];
-typedef struct CombRsltEnt
-{
-    char pad_0[0xA];
-    short idx_A;
-} CombRsltEnt;
-extern CombRsltEnt dword_800A47E8[];
 extern void sub_800A444C();
 extern void sub_800A4554();
 
@@ -177,16 +160,6 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
     }
 }
 
-typedef struct CombRsltPos
-{
-    unsigned short x;
-    unsigned short y;
-} CombRsltPos;
-
-extern CombRsltText dword_800A40A8;
-extern CombRsltText dword_800A40C4;
-extern int* dword_800A48B8[];
-extern CombRsltPos dword_800A48C4[];
 extern char byte_800A3AA0[];
 
 extern int sub_800A1958();
@@ -220,7 +193,7 @@ void sub_800A4554(int i, int j, void* arg)
     e = byte_800A3AA0 + i * 744 + j * 248;
     if (sub_800A1934(e) != 1)
     {
-        a.ptr_4 = (int)dword_800A48B8[j];
+        a.ptr_4 = dword_800A48B8[j];
         q = dword_800A48C4 + j + i * 3;
         a.x_10 = q->x;
         a.y_12 = q->y;
@@ -249,4 +222,29 @@ void sub_800A4554(int i, int j, void* arg)
 #endif
 INCLUDE_OVERLAY_ASM(combrslt, sub_800A4554);
 
-INCLUDE_OVERLAY_ASM(combrslt, dword_800A47E8);
+CombRsltEnt dword_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
+int dword_800A47F4 = 0;
+int dword_800A47F8[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
+int dword_800A4814[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };
+int *dword_800A4830[2] = { dword_800A47F8, dword_800A4814 };
+int dword_800A4838[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29000A, 0x140032, 0x40002 };
+int dword_800A4854[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x290104, 0x140032, 0x40002 };
+int *dword_800A4870[2] = { dword_800A4838, dword_800A4854 };
+unsigned short dword_800A4878[14] = {
+    8, 0, 0, 0, 0, 0, 0, 0,
+    28, 193, 99, 21, 2, 4,
+};
+unsigned short dword_800A4894[14] = {
+    8, 0, 0, 0, 0, 0, 0, 0,
+    184, 193, 99, 21, 2, 4,
+};
+unsigned short *dword_800A48B0[2] = { dword_800A4878, dword_800A4894 };
+int dword_800A48B8[3] = { 219, 115, 102 };
+CombRsltPos dword_800A48C4[6] = {
+    { 10, 64 },
+    { 10, 109 },
+    { 10, 154 },
+    { 166, 64 },
+    { 166, 109 },
+    { 166, 154 },
+};

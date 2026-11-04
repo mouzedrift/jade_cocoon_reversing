@@ -2,6 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "shopctrl.h"
 
 typedef struct ShopCtrlTask
 {
@@ -10,13 +11,6 @@ typedef struct ShopCtrlTask
     void (*next_8)();
 } ShopCtrlTask;
 
-extern short word_800B6CE8;
-extern short word_800B6CEA;
-extern short word_800B6CEC;
-extern int dword_800B6CD8[];
-extern int dword_800B6CF4;
-extern int dword_800B6CF8;
-extern int dword_800B6CFC;
 extern int dword_8008D438;
 extern int dword_8008D670;
 typedef struct { unsigned int pad:5; unsigned int f5:1; } ShopCtrlFlags;
@@ -47,7 +41,7 @@ extern void sub_80027478(int, int);
 extern void sub_80037918(void* p);
 extern void FreeActiveOverlay_8002C014();
 
-INCLUDE_OVERLAY_ASM(shopctrl, dword_800B66C0);
+int dword_800B66C0 SDATA = 30;
 
 void sub_800B66C4(int a)
 {
@@ -91,7 +85,7 @@ void sub_800B681C(ShopCtrlTask* t)
 
 void sub_800B6840(ShopCtrlTask* t)
 {
-    dword_800B6CF4 = LoadOverlay_80020BF8(1, dword_800B6CD8[word_800B6CEC]);
+    dword_800B6CF4 = LoadOverlay_80020BF8(1, shopOverlayIds_800B6CD8[word_800B6CEC]);
     t->next_8 = sub_800B6898;
 }
 
@@ -248,4 +242,11 @@ void sub_800B6CC8()
     word_800B6CEC = 2;
 }
 
-INCLUDE_OVERLAY_ASM(shopctrl, dword_800B6CD8);
+int shopOverlayIds_800B6CD8[4] = { 13, 17, 13 };
+short word_800B6CE8 = 0;
+short word_800B6CEA = 0;
+short word_800B6CEC = 0;
+int dword_800B6CF0 = 0;
+int dword_800B6CF4 = 0;
+int dword_800B6CF8 = 0;
+int dword_800B6CFC = 0;
