@@ -225,11 +225,6 @@ void CombBtlSetup_800A4D48(CombBtlTask* t, int a)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(combbtl, winnerBanner_800A4A54);
-INCLUDE_OVERLAY_ASM(combbtl, resultBanner_800A4A70);
-INCLUDE_OVERLAY_ASM(combbtl, aRa_800A4A8C);
-INCLUDE_OVERLAY_ASM(combbtl, aMu_800A4A94);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A9C);
 extern void SendInMinions_800A5638();
 
 void CheckBattleOver_800A4EC8(CombBtlTask* t, int a)
@@ -355,8 +350,8 @@ void AnnounceWinner_800A51EC(CombBtlTask* t)
 }
 
 
-extern CombBtlItem winnerBanner_800A4A54;
-extern CombBtlItem resultBanner_800A4A70;
+const CombBtlItem winnerBanner_800A4A54 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x56, 0x32, 0x14, 2, 4 };
+const CombBtlItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
 extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
@@ -384,6 +379,11 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
+// the announcer names "Ra", "Mu" (full width); in front of the jump table of ResolveCommand_800A616C, which must stay
+// word aligned while that function is assembly
+INCLUDE_OVERLAY_ASM(combbtl, aRa_800A4A8C);
+INCLUDE_OVERLAY_ASM(combbtl, aMu_800A4A94);
+INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A9C);
 extern int dword_800A4A8C[];
 extern int dword_800A4A94[];
 // Matched
