@@ -32,7 +32,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     CombSelMenu* win = modeWindows_800A5994[byte_800A38DB];
     int i;
     int j;
-    if (AllSlotsEmpty_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
+    if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)
     {
         deleteRow_800A5888[0].flags_0 |= 2;
         nextRow_800A58C0[0].flags_0 |= 2;
@@ -42,7 +42,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         deleteRow_800A5888[0].flags_0 &= ~2;
         nextRow_800A58C0[0].flags_0 &= ~2;
     }
-    if (AllSlotsEmpty_800A5560(dword_800A1BC8[byte_800A38D9], 6) == 1)
+    if (AllSlotsEmpty_800A5560(rosters_800A1BC8[curPlayer_800A38D9], 6) == 1)
     {
         enterRow_800A5850[0].flags_0 |= 2;
     }
@@ -50,7 +50,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     {
         enterRow_800A5850[0].flags_0 &= ~2;
     }
-    if (byte_800A38D9 == 0)
+    if (curPlayer_800A38D9 == 0)
     {
         dword_800A3A94 = 0;
     }
@@ -58,7 +58,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     {
         dword_800A3A94 = byte_800A38D8;
     }
-    nextRow_800A58C0[0].icon_4 = nextIcons_800A59AC[byte_800A38D9];
+    nextRow_800A58C0[0].icon_4 = nextIcons_800A59AC[curPlayer_800A38D9];
     listCursor_800A596C.rows_2 = 6;
     listCursor_800A596C.count_4 = 15;
     PlaceSideWindows_800A4C74();
@@ -72,7 +72,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     case 1:
         mainWindow_800A5948.flags_0 = 4;
         teamWindow_800A567C.flags_0 = 2;
-        switch (word_800A1BC4)
+        switch (combatMenuChoice_800A1BC4)
         {
         case 1:
             listWindow_800A5800.flags_0 = 4;
@@ -93,14 +93,14 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         unsigned short pt[2];
         pt[0] = teamRows_800A566C[i]->x_10;
         pt[1] = teamRows_800A566C[i]->y_12;
-        sub_800A1844(&dword_800A3AA0[byte_800A38D9][i + teamCursor_800A5960.scroll_A], pt, 0);
+        DrawMinionNameLevel_800A1844(&teams_800A3AA0[curPlayer_800A38D9][i + teamCursor_800A5960.scroll_A], pt, 0);
     }
     for (j = 0; j < 6; j++)
     {
         unsigned short pt[2];
         pt[0] = listRows_800A57E4[j]->x_10;
         pt[1] = listRows_800A57E4[j]->y_12;
-        sub_800A1844(&dword_800A1BC8[byte_800A38D9][j + listCursor_800A596C.scroll_A], pt, 0);
+        DrawMinionNameLevel_800A1844(&rosters_800A1BC8[curPlayer_800A38D9][j + listCursor_800A596C.scroll_A], pt, 0);
     }
     {
         CombSelBox col;
@@ -112,7 +112,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         col.state_2 = 0;
         col.frame_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
-        r.x = xs[byte_800A38D9];
+        r.x = xs[curPlayer_800A38D9];
         r.y = 0x3B;
         r.w = 0x2F;
         r.h = 0xE;
@@ -139,8 +139,8 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         CombSelItem item = playerItems_800A4254[0];
         short xs[2] = { 0xA, 0xE9 };
         CombSelItem unused; // never used (it keeps the original frame layout)
-        item.x_10 = xs[byte_800A38D9];
-        item.icon_4 = playerIcons_800A59A4[byte_800A38D9];
+        item.x_10 = xs[curPlayer_800A38D9];
+        item.icon_4 = playerIcons_800A59A4[curPlayer_800A38D9];
         col.state_2 = 0;
         col.frame_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
@@ -154,9 +154,9 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             xs[1] = 0xF;
             arrow.kind_0 = 1;
             arrow.dir_2 = 1;
-            pos[0] = xs[byte_800A38D9];
+            pos[0] = xs[curPlayer_800A38D9];
             pos[1] = 0x52;
-            pos[2] = xs[byte_800A38D9];
+            pos[2] = xs[curPlayer_800A38D9];
             pos[3] = 0xB8;
             DrawScrollArrows_8002B8DC(arrow, &listCursor_800A596C, pos, 10);
         }
@@ -164,7 +164,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             CombSelItem item = listHeaderItem_800A428C;
             CombSelBox col;
             short xs[2] = { 0x9B, 0x73 };
-            item.x_10 = xs[byte_800A38D9];
+            item.x_10 = xs[curPlayer_800A38D9];
             col.state_2 = 0;
             col.frame_3 = 1;
             col.color_0 = saveData_8008B570.uiColor_20.h;
@@ -173,7 +173,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         switch (byte_800A38DB)
         {
         case 0:
-            if (byte_800A38D9 == 0)
+            if (curPlayer_800A38D9 == 0)
             {
                 mainMenuHelp_800A59C4[3] = nextTextP1_800A59DC[0];
             }
@@ -181,12 +181,12 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             {
                 mainMenuHelp_800A59C4[3] = nextTextP2_800A59E0[0];
             }
-            DrawSmallTextBox_8002AF58((int)&mainMenuHelp_800A59C4[word_800A1BC4], 0, 15);
+            DrawSmallTextBox_8002AF58((int)&mainMenuHelp_800A59C4[combatMenuChoice_800A1BC4], 0, 15);
             break;
         case 1:
         {
             const char* s = 0;
-            switch (word_800A1BC4)
+            switch (combatMenuChoice_800A1BC4)
             {
             case 1:
                 s = aSelectSpaceToEn_800A42A8;
@@ -209,13 +209,13 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             break;
         }
         win->time_4 = GetTime30Hz_8002C64C();
-        mainWindow_800A5948.cursor_C = dword_800A1BBC.index_8;
+        mainWindow_800A5948.cursor_C = combatCursor_800A1BBC.index_8;
         listWindow_800A5800.cursor_C = listCursor_800A596C.index_8;
         teamWindow_800A567C.cursor_C = teamCursor_800A5960.index_8;
         DrawMenuWindows_8002A5A4(&mainWindow_800A5948);
         DrawMenuWindows_8002A5A4(&teamWindow_800A567C);
         DrawMenuWindows_8002A5A4(&listWindow_800A5800);
-        if (byte_800A38D9 == 0)
+        if (curPlayer_800A38D9 == 0)
         {
             DrawButtonHelpBar_8002B004(buttonHelpP1_800A59E4, 0, 15);
         }
@@ -259,19 +259,19 @@ void PlaceSideWindows_800A4C74()
     {
         v[0] = 0xA;
         v[1] = 0xA6;
-        teamRows_800A566C[i]->x_10 = v[*(volatile unsigned char*)&byte_800A38D9];
+        teamRows_800A566C[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
     for (i = 0; i < 6; i++)
     {
         v[0] = 0x9B;
         v[1] = 0x15;
-        listRows_800A57E4[i]->x_10 = v[*(volatile unsigned char*)&byte_800A38D9];
+        listRows_800A57E4[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
     for (i = 0; i < 5; i++)
     {
         v[0] = 0xA;
         v[1] = 0xCA;
-        mainRows_800A5930[i]->x_10 = v[*(volatile unsigned char*)&byte_800A38D9];
+        mainRows_800A5930[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
 }
 
@@ -281,14 +281,14 @@ void CompactTeam_800A4D64(Minion* base)
     int j;
     for (i = 0; i < 2; i++)
     {
-        if (sub_800A1934(&base[i]) == 1)
+        if (IsMinionSlotEmpty_800A1934(&base[i]) == 1)
         {
             for (j = i + 1; j < 3; j++)
             {
-                if (sub_800A1934(&base[j]) == 0)
+                if (IsMinionSlotEmpty_800A1934(&base[j]) == 0)
                 {
                     MemCopy_800403E8(&base[i], &base[j], 0xF8);
-                    sub_800A197C(&base[j]);
+                    ClearMinionSlot_800A197C(&base[j]);
                     break;
                 }
             }
@@ -305,7 +305,7 @@ void CompactTeams_800A4E4C()
     int i;
     for (i = 0; i < 2; i++)
     {
-        CompactTeam_800A4D64(dword_800A3AA0[i]);
+        CompactTeam_800A4D64(teams_800A3AA0[i]);
     }
 }
 
@@ -314,15 +314,15 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
 {
     if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
-        switch (word_800A1BC4)
+        switch (combatMenuChoice_800A1BC4)
         {
         case 0:
             PlaySfx_80031494(0x7E);
-            t->next_8 = sub_800A16FC;
+            t->next_8 = CombatNextStage_800A16FC;
             t->next_8(t, a);
             break;
         case 1:
-            if (AllSlotsEmpty_800A5560(dword_800A1BC8[byte_800A38D9], 6) == 1)
+            if (AllSlotsEmpty_800A5560(rosters_800A1BC8[curPlayer_800A38D9], 6) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
@@ -333,7 +333,7 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
             }
             break;
         case 2:
-            if (AllSlotsEmpty_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
+            if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
@@ -355,15 +355,15 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
     }
     else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
-        switch (byte_800A38D9)
+        switch (curPlayer_800A38D9)
         {
         case 0:
-            word_800A1BC4 = 4;
+            combatMenuChoice_800A1BC4 = 4;
             break;
         case 1:
-            word_800A1BC4 = 1;
+            combatMenuChoice_800A1BC4 = 1;
             teamCursor_800A5960.index_8 = 0;
-            byte_800A38D9 = 0;
+            curPlayer_800A38D9 = 0;
             listCursor_800A596C.index_8 = 0;
             break;
         }
@@ -374,26 +374,26 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
 #if 0
 void NextOrFight_800A5080(CombSelTask* t, int a)
 {
-    if (AllSlotsEmpty_800A5560(dword_800A3AA0[byte_800A38D9], 3) == 1)
+    if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)
     {
         PlaySfx_80031494(0x7C);
     }
     else
     {
         byte_800A38DB = 0;
-        dword_800A1BBC.index_8 = 3;
+        combatCursor_800A1BBC.index_8 = 3;
         PlaySfx_80031494(0x7E);
-        switch (byte_800A38D9)
+        switch (curPlayer_800A38D9)
         {
         case 0:
-            dword_800A1BBC.index_8 = 0;
+            combatCursor_800A1BBC.index_8 = 0;
             teamCursor_800A5960.index_8 = 0;
-            byte_800A38D9 = 1;
+            curPlayer_800A38D9 = 1;
             listCursor_800A596C.index_8 = 0;
             break;
         case 1:
             CompactTeams_800A4E4C();
-            t->next_8 = sub_800A16FC;
+            t->next_8 = CombatNextStage_800A16FC;
             t->next_8(t, a);
             break;
         }
@@ -407,26 +407,26 @@ void TeamSlotInput_800A5188()
 {
     if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
-        switch (word_800A1BC4)
+        switch (combatMenuChoice_800A1BC4)
         {
         case 1:
         {
-            Minion* a = &dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)];
-            Minion* b = &dword_800A1BC8[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C)];
+            Minion* a = &teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)];
+            Minion* b = &rosters_800A1BC8[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C)];
             MemCopy_800403E8(a, b, 0xF8);
             byte_800A38DB = 2;
             PlaySfx_80031494(0x7E);
             break;
         }
         case 2:
-            if (sub_800A1934(&dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)]) == 1)
+            if (IsMinionSlotEmpty_800A1934(&teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)]) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
             else
             {
                 PlaySfx_80031494(0x7E);
-                sub_800A197C(&dword_800A3AA0[byte_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)]);
+                ClearMinionSlot_800A197C(&teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)]);
                 byte_800A38DB = 0;
             }
             break;
@@ -434,7 +434,7 @@ void TeamSlotInput_800A5188()
     }
     else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
-        switch (word_800A1BC4)
+        switch (combatMenuChoice_800A1BC4)
         {
         case 1:
             byte_800A38DB = 2;
@@ -451,11 +451,11 @@ void ListInput_800A53B0()
     short s;
     if (IsConfirmPressed_8003D288(0, dword_800A3A94))
     {
-        s = word_800A1BC4;
+        s = combatMenuChoice_800A1BC4;
         if (s == 1)
         {
             short r = GetMenuCursorIndex_8003DA54(&listCursor_800A596C);
-            if (sub_800A1934(&dword_800A1BC8[byte_800A38D9][r]) == 1)
+            if (IsMinionSlotEmpty_800A1934(&rosters_800A1BC8[curPlayer_800A38D9][r]) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
@@ -469,9 +469,9 @@ void ListInput_800A53B0()
     else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
     {
         byte_800A38DB = 0;
-        if (sub_800A1AAC(byte_800A38D9))
+        if (CountTeamMinions_800A1AAC(curPlayer_800A38D9))
         {
-            word_800A1BC4 = 3;
+            combatMenuChoice_800A1BC4 = 3;
         }
     }
 }
@@ -499,7 +499,7 @@ void QuitConfirmInput_800A54A0(CombSelTask* t)
 
 void QuitToTitle_800A5538(CombSelTask* t)
 {
-    t->next_8 = sub_800A16FC;
+    t->next_8 = CombatNextStage_800A16FC;
     t->next_8(t);
 }
 
@@ -508,7 +508,7 @@ int AllSlotsEmpty_800A5560(Minion* p, int n)
     int i;
     for (i = 0; i < n; i++)
     {
-        if (sub_800A1934(p + i) == 0)
+        if (IsMinionSlotEmpty_800A1934(p + i) == 0)
         {
             return 0;
         }
@@ -581,7 +581,7 @@ CombSelMenu mainWindow_800A5948 = { 2, 0, 8, 0, mainRows_800A5930, 0 };
 CombSelCursor teamCursor_800A5960 = { 1, 3, 3, 0x40, 0, 0 };
 CombSelCursor listCursor_800A596C = { 1, 6, 15, 0x40, 0, 0 };
 CombSelCursor quitCursor_800A5978 = { 2, 1, 2, 0, 1, 0 };
-CombSelCursor *modeCursors_800A5984[4] = { &dword_800A1BBC, &teamCursor_800A5960, &listCursor_800A596C, &quitCursor_800A5978 };
+CombSelCursor *modeCursors_800A5984[4] = { &combatCursor_800A1BBC, &teamCursor_800A5960, &listCursor_800A596C, &quitCursor_800A5978 };
 CombSelMenu *modeWindows_800A5994[4] = { &mainWindow_800A5948, &teamWindow_800A567C, &listWindow_800A5800, &dword_80082784 };
 int playerIcons_800A59A4[2] = { 55, 56 };
 int nextIcons_800A59AC[2] = { 56, 36 };

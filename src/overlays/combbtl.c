@@ -17,18 +17,18 @@ typedef struct CombBtlTask
 extern EventNode* dword_8008B564;
 extern int dword_800A4078[2];
 extern unsigned char byte_800A3A98[2];
-extern void sub_800A0D1C(int);
-extern void sub_800A0B70(int);
+extern void DestroySlotActor_800A0D1C(int);
+extern void FreeSlotModel_800A0B70(int);
 extern void StartScreenFlash_8001C02C(void*);
 extern void sub_800376A0(void* a, void* b);
 typedef Minion CombBtlUnit;
 
-extern CombBtlUnit dword_800A3AA0[2][3];
+extern CombBtlUnit teams_800A3AA0[2][3];
 extern EventNode* hitNumberTasks_8008D778;
 extern void InitSceneFade_8001A38C();
 extern void SceneFadeTask_8001A41C();
 extern int sub_800A1958(void*);
-extern int* sub_800A10DC(int); // COMBAT: the slot actor pos_38
+extern int* GetSlotPos_800A10DC(int); // COMBAT: the slot actor pos_38
 extern void sub_800A7EFC();
 // a side's unit window task (sub_800A75F8, sub_800A7694)
 typedef struct CombBtlObj
@@ -40,18 +40,18 @@ typedef struct CombBtlObj
 } CombBtlObj;
 
 extern void sub_800A7694();
-extern void sub_800A0BA8(int, void*, void*);
+extern void CreateSlotActor_800A0BA8(int, void*, void*);
 // a command's result (same layout as BATTLE.BIN's BatResult_a)
 extern int xarr_800A85B8[];
 extern int xarr_800A8620[];
-extern unsigned char byte_800A38DC;
+extern unsigned char battleResult_800A38DC;
 extern void sub_800A4C40();
 extern void sub_800A4D48();
 extern void sub_800A68E0();
 extern void sub_800A616C();
 extern void sub_800A5000();
 extern void SetBattleStageId_80039FA4(int);
-extern void sub_800A0A28();
+extern void InitCombatSlots_800A0A28();
 extern int PlayMusic_800300E0(int, int);
 extern void sub_800A5EF8();
 extern void sub_800A5F60();
@@ -61,8 +61,8 @@ extern void sub_800A5BB4();
 extern void sub_800A5080();
 extern short word_80091CE0[];
 extern char dword_80091D40[];
-extern EventEntry* sub_800CB7AC(void*, int);
-extern int sub_800A0B3C(int);
+extern EventEntry* CombComStart_800CB7AC(void*, int);
+extern int RunSlotModelTask_800A0B3C(int);
 extern void StopSeqSlot_80031334(int);
 extern void StopSoundSeqs_80030D68(int);
 extern void FreeSeqSlotSound_80030664();
@@ -142,11 +142,11 @@ void sub_800A4C40(CombBtlTask* t, int a)
         dword_800A84A0 = -1;
         dword_800A8498 = -1;
         dword_800A849C = -1;
-        byte_800A38DC = 2;
+        battleResult_800A38DC = 2;
         dword_800A85B8 = -1;
         dword_800A8620 = -1;
         SetBattleStageId_80039FA4(dword_800A84C0);
-        sub_800A0A28();
+        InitCombatSlots_800A0A28();
         dword_800A84B8 = 0;
         dword_800A85F8 = -1;
         sub_800A4CFC();
@@ -168,8 +168,8 @@ void sub_800A4CFC()
 
 extern int LoadSeqSlotSound_800303E8();
 extern int IsSoundTaskReady_80030688();
-extern int sub_800BC8E8();
-extern void sub_800BC878();
+extern int AreStageEffectsLoaded_800BC8E8();
+extern void LoadStageEffects_800BC878();
 extern void SetCameraBattleMode_80037720();
 extern void StartBattleCamera_80037748();
 extern void SetFadeMode_8001C19C();
@@ -204,10 +204,10 @@ void sub_800A4D48(CombBtlTask* t, int a)
         }
         dword_800A84B8 = 3;
     case 3:
-        sub_800BC878();
+        LoadStageEffects_800BC878();
         dword_800A84B8 = 4;
     case 4:
-        if (!sub_800BC8E8())
+        if (!AreStageEffectsLoaded_800BC8E8())
         {
             break;
         }
@@ -257,7 +257,7 @@ void sub_800A4EC8(CombBtlTask* t, int a)
         ok[i] = 1;
         for (j = 0; j < 3; j++)
         {
-            if (sub_800A1934(&dword_800A3AA0[i][j]) == 0 && sub_800A1958(&dword_800A3AA0[i][j]) == 0)
+            if (IsMinionSlotEmpty_800A1934(&teams_800A3AA0[i][j]) == 0 && sub_800A1958(&teams_800A3AA0[i][j]) == 0)
             {
                 ok[i] = 0;
                 break;
@@ -316,7 +316,7 @@ void sub_800A50E4(CombBtlTask* t)
     {
         if (dword_800A85F8 < 0)
         {
-            if (byte_800A38DC == r)
+            if (battleResult_800A38DC == r)
             {
                 dword_800A85F8 = dword_800A85B8;
                 byte_800A3A90[dword_800A85B8]++;
@@ -333,7 +333,7 @@ void sub_800A50E4(CombBtlTask* t)
         }
         else
         {
-            byte_800A38DC = 0;
+            battleResult_800A38DC = 0;
             byte_800A3A98[dword_800A85F8] = r;
             byte_800A3A90[dword_800A85F8]++;
             if (byte_800A3A90[dword_800A85F8] >= 100)
@@ -458,9 +458,9 @@ extern int IsSceneFadeDone_8001AB94();
 extern void sub_800A73E4();
 extern void sub_800A7478();
 extern void sub_800A7560();
-extern void sub_800A0A6C();
+extern void FreeCombatSlots_800A0A6C();
 extern void SsUtAllKeyOff();
-extern void sub_800A16FC();
+extern void CombatNextStage_800A16FC();
 
 void sub_800A5544(CombBtlTask* t)
 {
@@ -473,28 +473,28 @@ void sub_800A5544(CombBtlTask* t)
         {
             if (dword_800A4078[i] >= 0)
             {
-                if (sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]) == 0)
+                if (sub_800A1958(&teams_800A3AA0[i][dword_800A4078[i]]) == 0)
                 {
                     sub_800A7560(i);
                 }
             }
         }
-        sub_800A0A6C();
+        FreeCombatSlots_800A0A6C();
         FreeSeqSlotSound_80030664();
         SsUtAllKeyOff(0);
         PlayMusic_800300E0(0x8E, 1);
         FreeStageEffects_80039FC0();
-        t->next_8 = sub_800A16FC;
+        t->next_8 = CombatNextStage_800A16FC;
     }
 }
 
 extern void sub_800A58E8(int i);
-extern void sub_800A0ACC(int i, void* u);
+extern void StartSlotModel_800A0ACC(int i, void* u);
 extern int sub_800A758C();
 extern void sub_800A74A0(int i);
 extern void sub_800A75F8(int i);
-extern void sub_800A0E1C(int i, int v);
-extern void sub_800A1068(int i);
+extern void MoveSlotActorTo_800A0E1C(int i, int v);
+extern void SetSlotStatusTint_800A1068(int i);
 extern void sub_800A599C();
 extern void sub_800A60F0();
 void sub_800A5638(CombBtlTask* t, int a)
@@ -508,10 +508,10 @@ void sub_800A5638(CombBtlTask* t, int a)
         for (i = 0; i < 2; i++)
         {
             dword_800A84B0[i] = 0;
-            if (dword_800A4078[i] < 0 || sub_800A1958(&dword_800A3AA0[i][dword_800A4078[i]]))
+            if (dword_800A4078[i] < 0 || sub_800A1958(&teams_800A3AA0[i][dword_800A4078[i]]))
             {
                 sub_800A58E8(i);
-                sub_800A0ACC(i, &dword_800A3AA0[i][dword_800A4078[i]]);
+                StartSlotModel_800A0ACC(i, &teams_800A3AA0[i][dword_800A4078[i]]);
                 any = dword_800A84B0[i] = 1;
             }
         }
@@ -539,8 +539,8 @@ void sub_800A5638(CombBtlTask* t, int a)
             }
             for (i = 0; i < 2; i++)
             {
-                sub_800A0E1C(i, sub_800A10DC(i ^ 1));
-                sub_800A1068(i);
+                MoveSlotActorTo_800A0E1C(i, GetSlotPos_800A10DC(i ^ 1));
+                SetSlotStatusTint_800A1068(i);
             }
             dword_800A84B8 = 12;
         }
@@ -583,8 +583,8 @@ void sub_800A58E8(int i)
         {
             dword_800A4078[i] = 0;
         }
-        u = &dword_800A3AA0[i][dword_800A4078[i]];
-    } while (sub_800A1934(u) || sub_800A1958(u));
+        u = &teams_800A3AA0[i][dword_800A4078[i]];
+    } while (IsMinionSlotEmpty_800A1934(u) || sub_800A1958(u));
 }
 
 #if 0
@@ -776,7 +776,7 @@ void sub_800A5EF8(CombBtlTask* t)
     if (GetFileRequestStatus_8003BE30(dword_800A85A0) == 0)
     {
         sub_800A5BB4();
-        dword_800A848C = sub_800CB7AC(&dword_800A8600, dword_800A85B8);
+        dword_800A848C = CombComStart_800CB7AC(&dword_800A8600, dword_800A85B8);
         t->next_8 = sub_800A5F60;
     }
 }
@@ -786,7 +786,7 @@ void sub_800A5F60(CombBtlTask* t, int a)
     if ((dword_800A848C->flags & 0x8001) != 1)
     {
         sub_800A601C();
-        if (byte_800A38DC)
+        if (battleResult_800A38DC)
         {
             byte_800A3A98[dword_800A85B8] = 2;
             t->next_8 = sub_800A5000;
@@ -845,7 +845,7 @@ void sub_800A60F0()
 
 
 extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombBtlCmd* cmd, CombBtlResult* out);
-extern int sub_800A1AAC(int i);
+extern int CountTeamMinions_800A1AAC(int i);
 extern unsigned int sub_800A7164(int i);
 extern int dword_800A82E8;
 extern unsigned int dword_800A3A88;
@@ -983,13 +983,13 @@ void sub_800A616C()
         }
         if (u->hp_8.cur_0 <= word_800A8470[i] || (dword_800A85F0[i] & 0x400))
         {
-            if (sub_800A1AAC(dword_800A85B8) == 3 && sub_800A1AAC(dword_800A8620) == 3 &&
+            if (CountTeamMinions_800A1AAC(dword_800A85B8) == 3 && CountTeamMinions_800A1AAC(dword_800A8620) == 3 &&
                 sub_800A7164(dword_800A85B8) == 1 && sub_800A7164(dword_800A8620) == 1)
             {
                 sub_800A8078(0x17, 0x4E4, 0x23);
                 dword_800A85C0 = (const char**)dword_800A8454;
             }
-            else if (!(dword_800A3A88 & 2) && sub_800A1AAC(dword_800A85B8) == 3 && sub_800A7164(dword_800A85B8) >= 2 &&
+            else if (!(dword_800A3A88 & 2) && CountTeamMinions_800A1AAC(dword_800A85B8) == 3 && sub_800A7164(dword_800A85B8) >= 2 &&
                      sub_800A7164(dword_800A8620) == 1)
             {
                 sub_800A8078(9, 0x4E4, 0x34);
@@ -1047,7 +1047,7 @@ extern void PlayHitFeedback_800A7C0C(int side);
 extern int sub_800A0EE8(int i);
 extern int sub_800A0F1C(int i);
 extern CombBtlPair sub_800A0F50(int i, CombBtlCmd* cmd, int x);
-extern void sub_800A0FF0(int i, CombBtlCmd* cmd, int x);
+extern void TriggerSlotEffect_800A0FF0(int i, CombBtlCmd* cmd, int x);
 extern void sub_80039ED8(int mode);
 extern void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 extern int rand();
@@ -1092,7 +1092,7 @@ void sub_800A68E0(CombBtlTask* t)
         case 3:
             if (word_800A84C8[dword_800A85B8].lo == word_800A8494.lo)
             {
-                sub_800A0FF0(dword_800A85B8, &dword_800A85A8, 0);
+                TriggerSlotEffect_800A0FF0(dword_800A85B8, &dword_800A85A8, 0);
                 sub_800A7E34(dword_800A85B8, 1, word_800A84BC);
                 if (word_800A84BC > 0)
                 {
@@ -1107,7 +1107,7 @@ void sub_800A68E0(CombBtlTask* t)
             }
             if (word_800A84C8[dword_800A8620].lo == word_800A8494.lo)
             {
-                sub_800A0FF0(dword_800A8620, &dword_800A8610, 1);
+                TriggerSlotEffect_800A0FF0(dword_800A8620, &dword_800A8610, 1);
                 if (word_800A84A4 >= 0)
                 {
                     PlaySfx_80031494(word_800A84A4);
@@ -1135,8 +1135,8 @@ void sub_800A68E0(CombBtlTask* t)
                 AdjustUnitStatById_800127D0(dword_800A8620 + 8, 0x10, 0, dword_800A85F0[dword_800A8620]);
                 PlayHitFeedback_800A7C0C(dword_800A85B8);
                 PlayHitFeedback_800A7C0C(dword_800A8620);
-                sub_800A1068(dword_800A85B8);
-                sub_800A1068(dword_800A8620);
+                SetSlotStatusTint_800A1068(dword_800A85B8);
+                SetSlotStatusTint_800A1068(dword_800A8620);
                 if (word_800A82E0[0] == 1 && !(byte_800A84A8 & 0x10))
                 {
                     word_800A82E0[0] = 0;
@@ -1154,9 +1154,9 @@ void sub_800A68E0(CombBtlTask* t)
         case 5:
             if (byte_800A84A8 & 1)
             {
-                KillUnit_800127B8(GetMinionStatusOf_80033818(&dword_800A3AA0[dword_800A8490][dword_800A4078[dword_800A8490]]));
-                sub_800A0D1C(dword_800A8490);
-                sub_800A0B70(dword_800A8490);
+                KillUnit_800127B8(GetMinionStatusOf_80033818(&teams_800A3AA0[dword_800A8490][dword_800A4078[dword_800A8490]]));
+                DestroySlotActor_800A0D1C(dword_800A8490);
+                FreeSlotModel_800A0B70(dword_800A8490);
                 word_800A8488 = prev;
                 t->next_8 = sub_800A4EC8;
                 byte_800A84A8 &= ~1;
@@ -1165,7 +1165,7 @@ void sub_800A68E0(CombBtlTask* t)
             {
                 sub_800A7560(dword_800A85B8);
                 dword_800A4078[dword_800A85B8] = dword_800A85BC;
-                sub_800A0ACC(dword_800A85B8, &dword_800A3AA0[dword_800A85B8][dword_800A85BC]);
+                StartSlotModel_800A0ACC(dword_800A85B8, &teams_800A3AA0[dword_800A85B8][dword_800A85BC]);
                 word_800A8488 = 6;
                 dword_800A84B0[dword_800A85B8] = 1;
                 word_800A84D0[dword_800A85B8] = 1000 - rand() % 200;
@@ -1196,7 +1196,7 @@ void sub_800A68E0(CombBtlTask* t)
             if (sub_800A758C() == 1)
             {
                 sub_800A74A0(dword_800A85B8);
-                sub_800A0E1C(dword_800A85B8, (int)sub_800A10DC(dword_800A85B8 ^ 1));
+                MoveSlotActorTo_800A0E1C(dword_800A85B8, (int)GetSlotPos_800A10DC(dword_800A85B8 ^ 1));
                 word_800A8488 = 0;
                 dword_800A85A8.kind_0 = 2;
                 dword_800A85A8.targets_C = 0;
@@ -1279,7 +1279,7 @@ unsigned int sub_800A7164(int i)
     int j;
     for (j = 0; j < 3; j++)
     {
-        if (sub_800A1958(&dword_800A3AA0[i][j]) == 0)
+        if (sub_800A1958(&teams_800A3AA0[i][j]) == 0)
         {
             cnt++;
         }
@@ -1400,13 +1400,13 @@ void sub_800A74A0(int i)
 {
     CombBtlA24 a = dword_800A4AD4;
     CombBtlB16 b = dword_800A4AEC;
-    sub_800A0BA8(i, a.pos_0[i], b.f0[i]);
+    CreateSlotActor_800A0BA8(i, a.pos_0[i], b.f0[i]);
 }
 
 void sub_800A7560(int a)
 {
-    sub_800A0D1C(a);
-    sub_800A0B70(a);
+    DestroySlotActor_800A0D1C(a);
+    FreeSlotModel_800A0B70(a);
 }
 
 int sub_800A758C()
@@ -1416,7 +1416,7 @@ int sub_800A758C()
     {
         if (dword_800A84B0[i])
         {
-            if (sub_800A0B3C(i) == 0)
+            if (RunSlotModelTask_800A0B3C(i) == 0)
             {
                 return 0;
             }
@@ -1485,11 +1485,11 @@ void sub_800A7694(EventEntry* e, void* buf)
     o = buf;
     if (o->a == dword_800A85B8)
     {
-        st = GetMinionStatusOf_80033818(&dword_800A3AA0[o->a][byte_800A85BD]);
+        st = GetMinionStatusOf_80033818(&teams_800A3AA0[o->a][byte_800A85BD]);
     }
     else
     {
-        st = GetMinionStatusOf_80033818(&dword_800A3AA0[o->a][dword_800A4078[o->a]]);
+        st = GetMinionStatusOf_80033818(&teams_800A3AA0[o->a][dword_800A4078[o->a]]);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
     SetFontClutOffset_8003F900(1, 0);
@@ -1661,7 +1661,7 @@ void sub_800A7E34(int a, int b, int c)
         p->frame_8 = 0;
         p->amount_4 = c;
         p->side_18 = a;
-        p->pos_10 = sub_800A10DC(a);
+        p->pos_10 = GetSlotPos_800A10DC(a);
         e->cb_8 = (EventEntryFn)sub_800A7EFC;
     }
 }

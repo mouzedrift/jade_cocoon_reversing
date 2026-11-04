@@ -13,63 +13,63 @@ typedef struct
     unsigned short y;
     unsigned short w;
     unsigned short h;
-} RectShopentr;
+} ShelfRect;
 
 typedef struct
 {
-    short next_0;
-    short next_2;
-    short rect_4;
+    short confirmNext_0; // state after confirm (-1: chosen in ShelfMenuConfirm_800B7144)
+    short cancelNext_2;  // state after cancel (-2: none)
+    short cursorRect_4;  // shelfCursorRects_800B7CE8 index
     short pad_6;
     int pad_8;
     int pad_C;
-    int field_10;
-} EntryShopentr;
+    int timed_10; // advances by itself after a progress gauge
+} ShelfMenuState;
 
 extern int dword_800B6D00;
-extern const char asc_800B6D04[];
-extern const char asc_800B6D14[];
-extern const char asc_800B6D24[];
-extern const char asc_800B6D30[];
-extern const char asc_800B6D48[];
-extern const char asc_800B6D5C[];
-extern const char asc_800B6D6C[];
-extern const char asc_800B6D84[];
-extern const char asc_800B6DA0[];
-extern const char asc_800B6DB4[];
-extern const char asc_800B6DCC[];
-extern const char asc_800B6DEC[];
-extern const char asc_800B6E10[];
-extern const char asc_800B6E24[];
-extern const char asc_800B6E34[];
+extern const char aSaved_800B6D04[];
+extern const char aSaving_800B6D14[];
+extern const char aNoSpace_800B6D24[];
+extern const char aSaveNew_800B6D30[];
+extern const char aOverwrite_800B6D48[];
+extern const char aOverwriting_800B6D5C[];
+extern const char aFormatting_800B6D6C[];
+extern const char aFormatOrNot_800B6D84[];
+extern const char aUnformatted_800B6DA0[];
+extern const char aNoDataSpace_800B6DB4[];
+extern const char aDataSpaceMinion_800B6DCC[];
+extern const char aDataSpaceBlock_800B6DEC[];
+extern const char aCardCheck2_800B6E10[];
+extern const char aSlotSelect_800B6E24[];
+extern const char aCardCheck1_800B6E34[];
 extern const int dword_800B6E48;
-extern const char str_800B6E74[];
-extern const char str_800B6E90[];
-extern const char str_800B6EA4[];
-extern const char str_800B6EB0[];
-extern const char str_800B6EBC[];
-extern const char str_800B6EC8[];
-extern const char str_800B6ED0[];
-extern const char str_800B6EDC[];
-extern const char str_800B6EE4[];
-extern const char str_800B6EEC[];
-extern const char str_800B6EF4[];
-extern const char str_800B6EFC[];
-extern const char str_800B6F04[];
-extern const char str_800B6F08[];
-extern int sub_800B6F0C(void);
+extern const char aCardChecking_800B6E74[];
+extern const char aCardSelect_800B6E90[];
+extern const char aSlot1_800B6EA4[];
+extern const char aSlot2_800B6EB0[];
+extern const char aShelfSelect_800B6EBC[];
+extern const char aShelf_800B6EC8[];
+extern const char aMinionCount_800B6ED0[];
+extern const char aTime_800B6EDC[];
+extern const char aRegistered_800B6EE4[];
+extern const char aName_800B6EEC[];
+extern const char aRank_800B6EF4[];
+extern const char aElement_800B6EFC[];
+extern const char aSlash_800B6F04[];
+extern const char aColon_800B6F08[];
+extern int IsShelfMenuActive_800B6F0C(void);
 extern int dword_800B7CC0[2];
-extern unsigned short word_800B7CC8[2];
+extern unsigned short cardCheckTextPos_800B7CC8[2];
 extern int dword_800B7CCC;
-extern unsigned short word_800B7CD0[2];
+extern unsigned short cardSelectTitlePos_800B7CD0[2];
 extern int dword_800B7CD4;
-extern unsigned short word_800B7CD8[2];
+extern unsigned short slot1TextPos_800B7CD8[2];
 extern int dword_800B7CDC;
-extern unsigned short word_800B7CE0[2];
+extern unsigned short slot2TextPos_800B7CE0[2];
 extern int dword_800B7CE4;
-extern RectShopentr rects_800B7CE8[4];
-extern EntryShopentr entries_800B7D08[15];
-extern unsigned int masks_800B7E34[30];
-extern int dword_800B7EAC;
+extern ShelfRect shelfCursorRects_800B7CE8[4];
+extern ShelfMenuState shelfMenuStates_800B7D08[15];
+extern unsigned int shelfStatePages_800B7E34[30];
+extern int shelfMenuActive_800B7EAC;
 
 #endif

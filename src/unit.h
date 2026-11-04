@@ -52,7 +52,7 @@ typedef struct
 } UnitSkills;
 
 /* the 0x88-byte record of a new minion / an encounter's minion (InitMinionData_8001900C, GameCtx_1.ents_ac);
-   sub_800B9E94 packs it into a Minion */
+   UnitStatsToMinion_800B9E94 packs it into a Minion */
 typedef struct
 {
     UnitStatus st_0;
@@ -64,7 +64,7 @@ typedef struct
     int field_84;
 } UnitStats;
 
-/* a minion as kept in SaveData.minions (0xF8 bytes, filled by sub_800B9E94 from a UnitStats) */
+/* a minion as kept in SaveData.minions (0xF8 bytes, filled by UnitStatsToMinion_800B9E94 from a UnitStats) */
 typedef struct
 {
     short id; // 2/3 = owned, 4 = empty slot

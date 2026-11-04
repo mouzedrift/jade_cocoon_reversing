@@ -82,19 +82,19 @@ extern CombSelItem dword_80082740[2];
 extern CombSelMenu dword_80082784;
 
 // COMBAT (the overlay below this one)
-extern CombSelCursor dword_800A1BBC; // the main menu cursor
-extern short word_800A1BC4;          // == dword_800A1BBC.index_8
-extern Minion dword_800A1BC8[2][15];
+extern CombSelCursor combatCursor_800A1BBC; // the main menu cursor
+extern short combatMenuChoice_800A1BC4;          // == combatCursor_800A1BBC.index_8
+extern Minion rosters_800A1BC8[2][15];
 extern unsigned char byte_800A38D8;
-extern unsigned char byte_800A38D9;
+extern unsigned char curPlayer_800A38D9;
 extern unsigned char byte_800A38DB;
 extern int dword_800A3A94;
-extern Minion dword_800A3AA0[2][3];
-extern void sub_800A16FC();
-extern void sub_800A1844(Minion* m, unsigned short* pt, unsigned int flags);
-extern int sub_800A1934(Minion* m);
-extern void sub_800A197C(Minion* m);
-extern int sub_800A1AAC(int side);
+extern Minion teams_800A3AA0[2][3];
+extern void CombatNextStage_800A16FC();
+extern void DrawMinionNameLevel_800A1844(Minion* m, unsigned short* pt, unsigned int flags);
+extern int IsMinionSlotEmpty_800A1934(Minion* m);
+extern void ClearMinionSlot_800A197C(Minion* m);
+extern int CountTeamMinions_800A1AAC(int side);
 
 extern void CombSelMain_800A4360(CombSelTask* t, int a);
 extern void PlaceSideWindows_800A4C74(void);
