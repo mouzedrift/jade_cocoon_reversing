@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "tu_80019BF0.h"
+#include "gte.h"
 #include "tu_8001EA48.h"
 #include "STDLIB.H"
 #include "STDIO.H"
@@ -154,9 +155,9 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-#if 0
-// Not matched: loop counter i is set with move s1,zero in the original, the compiler copies found (s4) instead
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
+// index of the camera point nearest to pos (XZ plane)
+// Matched
 int sub_80019CC4(int* pos)
 {
     unsigned int i;
@@ -164,26 +165,132 @@ int sub_80019CC4(int* pos)
     int found;
     best = -1;
     found = 0;
-    if (!(unknownFlags_8008D678 & 0x8000))
+    if (unknownFlags_8008D678 & 0x8000)
     {
-        for (i = 0; i < 8; i++)
+        return found;
+    }
+    for (i = 0; i < 8; i++)
+    {
+        if (cameraState_8008D4F0.points_44[i].active == 0)
         {
-            if (cameraState_8008D4F0.points_44[i].active == 0)
-            {
-                break;
-            }
-            if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
-            {
-                best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
-                found = i;
-            }
+            break;
+        }
+        if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
+        {
+            best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
+            found = i;
         }
     }
     return found;
 }
-#endif
-INCLUDE_ASM(sub_80019CC4);
-INCLUDE_ASM(sub_80019D84);
+extern int dword_8008D3F0;      // range of the global point light (0: none)
+extern int dword_8008D680[3];   // position of the global point light
+extern SVECTOR word_8008D418;   // colour of the global point light
+// Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
+// colour from cameraState), the global point light and the given point light; m is the model's rotation.
+// Matched
+void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m)
+{
+    MATRIX* sm;
+    int* d;
+    CameraState* g;
+    int sq[3];
+    int dist;
+    int t;
+    int x;
+    int y;
+    int z;
+
+    d = (int*)0x1F800014;
+    g = &cameraState_8008D4F0;
+    sm = (MATRIX*)0x1F800000;
+    sm->m[0][0] = dword_80087114.m[0][0];
+    sm->m[0][1] = dword_80087114.m[0][1];
+    sm->m[0][2] = dword_80087114.m[0][2];
+    sm->m[2][0] = -dword_80087114.m[0][0];
+    sm->m[2][1] = -dword_80087114.m[0][1];
+    sm->m[2][2] = -dword_80087114.m[0][2];
+    dword_80087134.m[0][2] = g->lightColor_3C[0] / 4;
+    dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
+    dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
+    if (dword_8008D3F0 != 0)
+    {
+        d[0] = dword_8008D680[0] - (ofs[0] + pos[0]);
+        d[1] = dword_8008D680[1] - (ofs[1] + pos[1]);
+        d[2] = dword_8008D680[2] - (ofs[2] + pos[2]);
+        if (abs(d[0]) < dword_8008D3F0 && abs(d[1]) < dword_8008D3F0 && abs(d[2]) < dword_8008D3F0)
+        {
+            gte_ldlvl(d);
+            gte_sqr0();
+            gte_stlvnl(sq);
+            dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+            if (dist <= dword_8008D3F0)
+            {
+                sm->m[2][0] = (d[0] << 12) / dist;
+                sm->m[2][1] = (d[1] << 12) / dist;
+                sm->m[2][2] = (d[2] << 12) / dist;
+                if (unknownFlags_8008D678 & 0x400)
+                {
+                    t = (((dword_8008D3F0 - dist) << 12) / dword_8008D3F0) * dword_8008D40C >> 12;
+                }
+                else
+                {
+                    t = ((dword_8008D3F0 - dist) << 12) / dword_8008D3F0;
+                }
+                gte_lddp(t);
+                gte_ldsv(&word_8008D418);
+                gte_gpf12();
+                gte_stclmv(&dword_80087134.m[0][2]);
+            }
+        }
+    }
+    d[0] = light->pos_0[0] - (ofs[0] + pos[0]);
+    d[1] = light->pos_0[1] - (ofs[1] + pos[1]);
+    d[2] = light->pos_0[2] - (ofs[2] + pos[2]);
+    gte_ldlvl(d);
+    gte_sqr0();
+    gte_stlvnl(sq);
+    dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
+    if (light->range_14 < dist)
+    {
+        dword_80087134.m[0][1] = 0;
+        dword_80087134.m[1][1] = 0;
+        dword_80087134.m[2][1] = 0;
+    }
+    else
+    {
+        x = (d[0] << 12) / dist;
+        y = (d[1] << 12) / dist;
+        z = (d[2] << 12) / dist;
+        ((MATRIX*)0x1F800000)->m[1][0] = x;
+        ((MATRIX*)0x1F800000)->m[1][1] = y;
+        ((MATRIX*)0x1F800000)->m[1][2] = z;
+        if (unknownFlags_8008D678 & 0x400)
+        {
+            t = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * dword_8008D40C >> 12;
+        }
+        else
+        {
+            t = ((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14;
+        }
+        gte_lddp(t);
+        gte_ldsv(&light->color_C);
+        gte_gpf12();
+        gte_stclmv(&dword_80087134.m[0][1]);
+    }
+    gte_SetRotMatrix((MATRIX*)0x1F800000);
+    gte_ldclmv(&m->m[0][0]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][0]);
+    gte_ldclmv(&m->m[0][1]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][1]);
+    gte_ldclmv(&m->m[0][2]);
+    gte_rtir();
+    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][2]);
+    gte_SetLightMatrix((MATRIX*)0x1F800000);
+    gte_SetColorMatrix(&dword_80087134);
+}
 // Matched
 void sub_8001A38C(void)
 {
@@ -2320,12 +2427,11 @@ void sub_8001DB58(Actor* p, int a1, int a2)
     }
 }
 #if 0
-// Not matched: a1/a2 swapped between the saved 0xC2 value and the 0xFFFF7FFF mask
-void sub_8001DB98(void* arg0, void* arg1)
+// Not matched (5 words): the original stores 0xC0 after the flags and copies s to $a3 after the mask; with a saved
+// "old" local stored at the end instead, old and the 0xFFFF7FFF mask swap $a1/$a2 (6 words)
+void sub_8001DB98(Actor* o, unsigned char* s)
 {
-    Actor* o = arg0;
-    unsigned char* s = arg1;
-    short old = o->animIdx_C2;
+    o->prevAnimIdx_C0 = o->animIdx_C2;
     o->animIdx_C2 = -1;
     o->scriptPos_C4 = 0;
     o->scriptLen_C6 = 1;
@@ -2336,7 +2442,6 @@ void sub_8001DB98(void* arg0, void* arg1)
     o->script_D0 = (ActorScriptCmd*)s;
     o->flags_4 &= ~0x8000;
     o->flags_4 |= 0x4000;
-    o->prevAnimIdx_C0 = old;
     while (s[0] != 0)
     {
         o->scriptLen_C6 += s[1];
@@ -2677,7 +2782,9 @@ extern unsigned short word_8007DC8C[];
 extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
-// Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load
+// Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
+// register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
+// anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
 void sub_8001E574(Actor* o, ActorDesc* d)
 {
     Model* m;
@@ -2697,8 +2804,8 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     if (d->visible_30 != 1)
     {
         f |= 0x2000;
-        o->flags_4 = f;
     }
+    o->flags_4 = f;
     if (d->kind_4 == 2)
     {
         f |= 0x1000;
@@ -2755,7 +2862,7 @@ void sub_8001E574(Actor* o, ActorDesc* d)
     o->effect_130 = -1;
     o->model_15C = m;
     o->image_150.x = word_8007DC8C[0];
-    o->image_150.y = word_8007DC8C[1] + *(short*)(*(char**)(m->field_0 + 0xC) + m->field_30 * 16 + 0xE);
+    o->image_150.y = word_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
     o->image_150.w = word_8007DC8C[2];
     o->image_150.h = word_8007DC8C[3];
     o->clut_158[0] = word_8007DC94[0];

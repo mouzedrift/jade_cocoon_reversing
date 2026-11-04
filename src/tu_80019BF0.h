@@ -55,6 +55,15 @@ typedef struct
     } points_44[8];
 } CameraState;
 
+// a point light passed to SetModelLighting_80019D84
+typedef struct
+{
+    int pos_0[3];
+    SVECTOR color_C;   // only vx/vy/vz used
+    int range_14;
+} PointLight;
+extern void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m);
+
 // screen fade task state (the dword_8008D628 task buffer, run by sub_8001A41C)
 typedef struct Fade_8001A41C
 {
