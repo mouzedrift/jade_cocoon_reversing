@@ -1,4 +1,4 @@
-// BATTLE.BIN, source file 2 of 3 from 0x800BC90C (.rdata from 0x800B6700)
+// BATTLE.BIN, source file 2 of 6 from 0x800BC90C (.rdata from 0x800B6700)
 #include "battle.h"
 
 const int dword_800B6700[4] = { 0x1000, 0x1000, 0x1000 };

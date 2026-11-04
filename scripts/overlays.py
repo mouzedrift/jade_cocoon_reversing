@@ -255,6 +255,17 @@ def load_orig(name):
     return data
 
 
+def overlay_opt(src_name):
+    """optimisation level of an overlay source file (config/overlay_cc.txt: "battle_4 -O1"; default -O2)"""
+    path = os.path.join(REPO, "config", "overlay_cc.txt")
+    if os.path.exists(path):
+        for line in open(path):
+            f = line.split("#")[0].split()
+            if len(f) == 2 and f[0] == src_name:
+                return f[1]
+    return "-O2"
+
+
 def main(argv):
     import gen_asm
     import full_build as fb
@@ -298,7 +309,8 @@ def main(argv):
         fb.run([os.path.join(fb.BIN, "CPPPSX.EXE"), "-undef", "-D__GNUC__=2", "-v", "-D__OPTIMIZE__"] + inc + [
             "-lang-c", "-Dmips", "-D__mips__", "-D__mips", "-Dpsx", "-D__psx__", "-D__psx", "-D_PSYQ",
             "-D__EXTENSIONS__", "-D_MIPSEL", "-D__CHAR_UNSIGNED__", "-D_LANGUAGE_C", "-DLANGUAGE_C", src, pre])
-        fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", "-O2", pre, "-o", cc])
+        opt = overlay_opt(os.path.basename(src)[:-2])
+        fb.run([os.path.join(fb.BIN, "CC1PSX.EXE"), "-quiet", "-G0", opt, pre, "-o", cc])
         fb.run([os.path.join(fb.BIN, "ASPSX.EXE"), "-G0", "-q", "-0", cc, "-o", obj])
         objs.append(obj)
     link = os.path.join(b, tag + "_link.txt")

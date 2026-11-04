@@ -1,4 +1,4 @@
-// BATTLE.BIN, source file 1 of 3
+// BATTLE.BIN, source file 1 of 6
 #include "battle.h"
 
 int dword_800B66C0 SDATA = 31;
