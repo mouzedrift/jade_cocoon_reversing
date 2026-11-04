@@ -144,8 +144,6 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
         }
     }
 }
-#if 0
-// Not matched: size and code right; per group the scheduler orders the three item-pointer setups differently (vo/va/vd: a1,a3,a2 vs a1,a2,a3) and swaps the j / vo-giv registers
 /* o = a + d * t / 4096 */
 #define LERP_SV(o, a, d, t)  \
     {                        \
@@ -161,13 +159,12 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
 #define LERP_GROUP(k, size, off, nn, nv)                                          \
     if (pa->g[k].count_0 * (nn + nv))                                                   \
     {                                                                             \
-        int i;                                                                    \
         int j;                                                                    \
         for (i = 0; i < pa->g[k].count_0; i++)                                          \
         {                                                                         \
-            SVECTOR* vo = (SVECTOR*)(po->g[k].prims_4 + i * size + off);                \
-            SVECTOR* va = (SVECTOR*)(pa->g[k].prims_4 + i * size + off);                \
-            SVECTOR* vd = (SVECTOR*)(pd->g[k].prims_4 + i * size + off);                \
+            vo = (SVECTOR*)(po->g[k].prims_4 + i * size + off);                \
+            va = (SVECTOR*)(pa->g[k].prims_4 + i * size + off);                \
+            vd = (SVECTOR*)(pd->g[k].prims_4 + i * size + off);                \
             for (j = 0; j < nn; j++)                                              \
             {                                                                     \
                 LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
@@ -179,11 +176,16 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
         }                                                                         \
     }
 
+// Matched
 void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
 {
     PolyGroups* po = (PolyGroups*)out;
     PolyGroups* pa = (PolyGroups*)a;
     PolyGroups* pd = (PolyGroups*)d;
+    int i;
+    SVECTOR* vo;
+    SVECTOR* va;
+    SVECTOR* vd;
 
     LERP_GROUP(0, 0x24, 4, 1, 3);
     LERP_GROUP(1, 0x3C, 0xC, 3, 3);
@@ -198,7 +200,6 @@ void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, s
         EdgeDelta* eo = (EdgeDelta*)po->sprites_44;
         EdgeDelta* ea = (EdgeDelta*)pa->sprites_44;
         EdgeDelta* ed = (EdgeDelta*)pd->sprites_44;
-        int i;
         for (i = 0; i < po->spriteCount_40; i++, eo++, ea++, ed++)
         {
             LERP_SV(&eo->a, &ea->a, &ed->a, t);
@@ -210,7 +211,6 @@ void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, s
         EdgeDelta* eo = (EdgeDelta*)po->texSprites_50;
         EdgeDelta* ea = (EdgeDelta*)pa->texSprites_50;
         EdgeDelta* ed = (EdgeDelta*)pd->texSprites_50;
-        int i;
         for (i = 0; i < po->texSpriteCount_48; i++, eo++, ea++, ed++)
         {
             LERP_SV(&eo->a, &ea->a, &ed->a, t);
@@ -218,8 +218,6 @@ void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, s
         }
     }
 }
-#endif
-INCLUDE_ASM(LerpFtgObject_8003A6C4);
 // Matched
 short ratan2_8003B548(long y, long x)
 {
