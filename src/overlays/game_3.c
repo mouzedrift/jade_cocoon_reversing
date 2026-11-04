@@ -3366,19 +3366,17 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev)
     saveData_8008B570.levant_7A8.rot.vy += lev->turn_770.output_C.low;
 }
 
-#if 0
-// Not matched: 24 words: dx/dz get $s2/$s3 swapped (the original keeps the 0x6c delta in $s3), the tri address adds base + index the other way round, and the path_78 reads become register copies (move $v1,$a0) in the original instead of reloads; the rest matches
+// Moves Levant by the animation's root motion: rotated by the facing and scaled by the floor slope, or along a scripted path (0x400000), or offset from basePos_60
+// Matched
 void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
 {
     G2V12 prev;
     int dz;
     int dx;
     int div;
-    MapTri* tri;
     int k;
     int slope;
     int rot;
-    G2Path* path;
     int sn;
     int cs;
     short ang;
@@ -3397,7 +3395,8 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
         dx = lev->rootMotion_6C.a - prev.a;
         GetLevantAnimFile_800AC4A8(lev->anim_1C);
         lev->rootMotion_6C.c -= (dx & 0x1f) * Sign_8003B664(dx);
-        dz = lev->rootMotion_6C.c - prev.c;
+        dz = lev->rootMotion_6C.c;
+        dz -= prev.c;
         GetLevantAnimFile_800AC4A8(lev->anim_1C);
         lev->rootMotion_6C.c -= (dz & 0x1f) * Sign_8003B664(dz);
     }
@@ -3417,9 +3416,8 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
     {
         div = lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)].divisor_8;
         sub_800B80C8(lev);
-        tri = &mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80];
-        slope = tri->nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
-            tri->nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
+        slope = mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80].nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
+            mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80].nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
         slope = 0x1000 - slope * slope / 4096;
         saveData_8008B570.levant_7A8.pos.x += dx * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096 * slope / 4096 / div;
         saveData_8008B570.levant_7A8.pos.z += -(dx * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096) * slope / 4096 / div;
@@ -3430,21 +3428,21 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
             slope = CollideLevantWithMap_800B6DD4(lev);
             if (slope < 0)
             {
-                lev->f778 = -0x40;
+                lev->turn_770.input_8 = -0x40;
             }
             else if (slope > 0)
             {
-                lev->f778 = 0x40;
+                lev->turn_770.input_8 = 0x40;
             }
         }
     }
     else if (lev->flags_0 & 0x400000)
     {
+        int d = lev->path_78->div_4;
         lev->rootMotion_6C.a = lev->path_78->steps_8[lev->pathStep_7C].x;
         lev->rootMotion_6C.b = lev->path_78->steps_8[lev->pathStep_7C].y;
         lev->rootMotion_6C.c = lev->path_78->steps_8[lev->pathStep_7C].z;
         rot = lev->path_78->steps_8[lev->pathStep_7C].rotY;
-        div = lev->path_78->div_4;
         lev->pathStep_7C++;
         if (lev->pathStep_7C >= lev->path_78->count_0)
         {
@@ -3454,9 +3452,9 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
             SetLevantAnim_800AB010(lev, 0, 3, 0);
             lev->mode_C = 0;
         }
-        saveData_8008B570.levant_7A8.pos.x = lev->basePos_60.a + lev->rootMotion_6C.a / div;
-        saveData_8008B570.levant_7A8.pos.y = lev->basePos_60.b + lev->rootMotion_6C.b / div;
-        saveData_8008B570.levant_7A8.pos.z = lev->basePos_60.c + lev->rootMotion_6C.c / div;
+        saveData_8008B570.levant_7A8.pos.x = lev->basePos_60.a + lev->rootMotion_6C.a / d;
+        saveData_8008B570.levant_7A8.pos.y = lev->basePos_60.b + lev->rootMotion_6C.b / d;
+        saveData_8008B570.levant_7A8.pos.z = lev->basePos_60.c + lev->rootMotion_6C.c / d;
         saveData_8008B570.levant_7A8.rot.vy = rot;
     }
     else
@@ -3470,8 +3468,6 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
         saveData_8008B570.levant_7A8.pos.y = lev->basePos_60.b + lev->rootMotion_6C.b / 32;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, UpdateLevantMove_800A9A9C);
 
 void SetLevantRootMotion_800AA140(GameLevantActor* lev)
 {
