@@ -379,19 +379,18 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
-// the announcer names "Ra", "Mu" (full width); in front of the jump table of ResolveCommand_800A616C, which must stay
-// word aligned while that function is assembly
-INCLUDE_OVERLAY_ASM(combbtl, aRa_800A4A8C);
-INCLUDE_OVERLAY_ASM(combbtl, aMu_800A4A94);
-INCLUDE_OVERLAY_ASM(combbtl, dword_800A4A9C);
-extern int aRa_800A4A8C[];
-extern int aMu_800A4A94[];
+// the announcer names "Ra", "Mu" (full width)
+const char aRa_800A4A8C[] = "\202q\202\201"; // Ra
+const char aMu_800A4A94[] = "\202l\202\225"; // Mu
+// the jump table of ResolveCommand_800A616C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in combbtl.h when the function is C, the switch emits it then
+void* const dword_800A4A9C[6] = { jtgt_800A6624, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A65BC, jtgt_800A65F0 };
 // Matched
 int OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 {
     int cfg[18];
     int kinds[2] = {2, 3};
-    int* tbl[2] = {aRa_800A4A8C, aMu_800A4A94};
+    const char* tbl[2] = {aRa_800A4A8C, aMu_800A4A94};
     cfg[0] = 2;
     cfg[1] = 0;
     cfg[2] = lines;

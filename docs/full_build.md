@@ -69,7 +69,18 @@ addresses the objects don't export (statics, data inside a module) become `equ`s
 ## Data in C
 
 The executable's data is C: each TU file defines its `.rdata` (`const`), `.data` and `.bss` in address order, with
-the externs in the TU's header. Only the jump tables of functions that are still asm stay `INCLUDE_DATA`.
+the externs in the TU's header (no `INCLUDE_DATA` is left).
+
+* Jump tables of functions that are still assembly are C too: `gen_asm.jump_targets()` finds the words of the data
+  that point into the middle of a function and `emit_function()` puts a global label `jtgt_XXXXXXXX`
+  (`gen_asm.jump_label`) at each of those instructions of the generated asm (split.py, overlays.py). The table is
+  then an array of those labels, `void* const jpt_8007486C[6] = { jtgt_80035F2C, ... };`, with
+  `extern char jtgt_80035F2C[];` and the table's extern in the TU's header. A zero word in front of such a table
+  (the original table's `.align 3`) is `const int dword_80074818 = 0;`; a zero word behind it that is the next
+  (compiled) table's alignment is left out, the compiler pads.
+* When the function is written in C, its switch emits the table: delete the C table, its `jtgt_` externs and the
+  zero word in front of it (the compiler's `.align 3` puts it back). A `jtgt_` name that is left over no longer
+  links (the label is gone with the asm).
 
 * `python scripts/gendata.py SLUS_008.54 TU [--sec=.rdata|.data|.bss] [--write]` turns a TU's `INCLUDE_DATA` lines
   into definitions with initialisers from the executable. The type is the one the code declares (the TU's
@@ -122,8 +133,8 @@ that points at it, or from its bytes; ints that hold a symbol's address and numb
 as casts. Symbols of an overlay's .sym file that are data but have no data prefix are marked `// data`
 (`gen_asm.overlay_data_names`). The first word (in front of `.rdata`) is `int x SDATA = n;` (`common.h`).
 
-What stays assembly: jump tables of functions that are still assembly (also the unnamed ones, and the zero word in
-front of a table, which is the table's alignment), and a definition that would sit behind assembly that follows a
+Jump tables of functions that are still assembly are arrays of `jtgt_` labels as in the executable (see Data in C;
+the link of an overlay gives no `equ` to `jtgt_` names, they come from the asm). What stays assembly: a definition that would sit behind assembly that follows a
 C definition of the same section with no function in between (the compiler would not switch back from the section
 the assembly ends in; ovlgen keeps the smaller side as assembly). Struct initialisers follow the struct: after a
 layout change, `regen` them.
@@ -138,8 +149,9 @@ cut out of the data blob and the compiler's copy has to land in the same place:
     python scripts/carve.py NAME sub_XXXXXXXX     # after an overlays.py run
 
 adds `jpt_<table>` and `dword_<rest>` symbols to `overlays/<name>.sym` and puts their `INCLUDE_OVERLAY_ASM`
-lines behind the function (build stays identical). Write the function in C and delete the `jpt_` line: the
-table comes from the compiler, `dword_<rest>` (kept behind the function) holds the data that followed it.
+lines behind the function (build stays identical); while the function stays assembly, turn the `jpt_` line into
+the C label table (Data in C). Write the function in C and delete the table (and its `jtgt_` externs): the table comes from
+the compiler, `dword_<rest>` (kept behind the function) holds the data that followed it.
 Case labels may sit inside nested blocks (`case 0:` inside the `if` that cases 1, 2 and 4 share) - the table
 entries show which instruction each case enters.
 

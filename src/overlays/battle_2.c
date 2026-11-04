@@ -2,7 +2,9 @@
 #include "battle.h"
 
 const int dword_800B6700[4] = { 0x1000, 0x1000, 0x1000 };
-INCLUDE_OVERLAY_ASM(battle, dword_800B6710);
+// the jump table of DrawBattleStage_800BC90C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
+// its externs in battle.h when the function is C, the switch emits it then
+void* const dword_800B6710[25] = { jtgt_800BD0F4, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD0F4 };
 
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.

@@ -622,3 +622,7 @@ extern const char aAssertionFaile_800B6D04[];
 extern const char aColiC_800B6D2C[8];
 extern const int returnWarpAreaVars_800B6D98[10];
 extern int (*eventFuncs_800BCDBC[157])();
+
+/* the jump table of ReturnWarpTask_800BCB3C (asm) and its targets, labels in the generated asm */
+extern char jtgt_800BCB84[], jtgt_800BCBB4[], jtgt_800BCBCC[], jtgt_800BCBE4[], jtgt_800BCC30[];
+extern void* const dword_800B6DC0[5];
