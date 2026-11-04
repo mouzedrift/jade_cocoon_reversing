@@ -912,7 +912,7 @@ extern int GetLevantAnimFile_800AC4A8();
 
 extern int FindMapVar_800ADBA0(short*);
 
-typedef struct G2Rec
+typedef struct GameLevantAnim
 {
     unsigned char fileId_0;
     unsigned char resident_1;
@@ -926,7 +926,7 @@ typedef struct G2Rec
     char pad_E[0x26];
     int f34;
     char pad_38[8];
-} G2Rec;
+} GameLevantAnim;
 
 extern int GetLevantAnimIndex_800AC794(int, int);
 
