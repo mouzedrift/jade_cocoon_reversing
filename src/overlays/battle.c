@@ -597,10 +597,12 @@ void WaitChainMessageClosed_800BB168(BatTaskEntry* task, BatTurnWork* work)
     }
 }
 
-#if 0 // Not matched: prologue scheduling only: 'li a0,4' lands after 'move s2,a1' (original: before); tried param types, store order
 extern void StopBattleWindows_800BFBB8();
+// Matched
 void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
 {
+    BatTurnWork* w = work;
+    BatTaskEntry* t = task;
     if (TestBattleFlag_800BC820(4) == 1)
     {
         ClearBattleFlag_800BC850(4);
@@ -620,9 +622,9 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
             curCommand_800C9C88.arg_4 = 0;
             curCommand_800C9C88.targets_C = 0;
             curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
-            task->next_8 = (void (*)())GetCommandHandler_800BC174();
-            work->resume_4 = (int)BattleFinish_800BB1B0;
-            work->next_8 = BattleFinish_800BB1B0;
+            t->next_8 = (void (*)())GetCommandHandler_800BC174();
+            w->resume_4 = (int)BattleFinish_800BB1B0;
+            w->next_8 = BattleFinish_800BB1B0;
             return;
         }
         if (TestBattleFlag_800BC820(0x2000) == 1)
@@ -651,11 +653,8 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
         }
     }
     StopBattleWindows_800BFBB8();
-    task->flags_0 = (task->flags_0 & ~1) | 0x8000;
+    t->flags_0 = (t->flags_0 & ~1) | 0x8000;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, BattleFinish_800BB1B0);
 
 void SelectActingUnit_800BB314(BatTaskEntry* task)
 {
@@ -667,9 +666,10 @@ void SelectActingUnit_800BB314(BatTaskEntry* task)
     shownUnit_800C9C99 = summonedUnit_800C9C82;
 }
 
-#if 0 // Not matched: only work and oldStatus swap saved registers (s5/s6); reducing oldStatus refs flips them; tried decl order, types, split ifs, tail variable
+// Matched
 void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
 {
+    BatTurnWork* w = work;
     UnitStatus* status;
     int oldStatus;
     int side;
@@ -733,7 +733,7 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
         }
         SetBattleFlag_800BC838(0x1000);
         task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        work->resume_4 = (int)(work->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
         return;
     }
     if (status->hp_8.cur_0 - actorHpChange_800C9C7E <= 0)
@@ -770,7 +770,7 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
         }
         SetBattleFlag_800BC838(0x1000);
         task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        work->resume_4 = (int)(work->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
         return;
     }
     if (((newStatus & 0x10000) && (oldStatus & 0x10000)) || ((newStatus & 2) && (oldStatus & 2)))
@@ -787,20 +787,17 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = (void (*)())GetCommandHandler_800BC174();
     if (newStatus & 0x200)
     {
-        work->resume_4 = (int)(work->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
     }
     else if (newStatus & 0x10002)
     {
-        work->resume_4 = (int)(work->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
     }
     else
     {
-        work->resume_4 = (int)(work->next_8 = PrepareCommandInput_800BB860);
+        w->resume_4 = (int)(w->next_8 = PrepareCommandInput_800BB860);
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, BeginUnitTurn_800BB380);
 
 void ResetCurrentCommand_800BB74C()
 {
@@ -898,9 +895,10 @@ void CmdAction_800BBA24(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0 // Not matched: work and the hoisted constant 1 swap saved registers (s2/s3); tried decl order, int mask, early return, operand order
+// Matched
 void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
 {
+    BatTurnWork* w = work;
     unsigned int mask;
     int i;
     BatCommand* reactions;
@@ -938,18 +936,15 @@ void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
             }
         }
         actingUnit_800C9C7C = 7;
-        work->handle_C = StartActionTask_800BC28C();
-        work->next_8 = (void (*)())work->resume_4;
+        w->handle_C = StartActionTask_800BC28C();
+        w->next_8 = (void (*)())w->resume_4;
         task->next_8 = WaitActionTask_800BC144;
     }
     else
     {
-        task->next_8 = (void (*)())work->resume_4;
+        task->next_8 = (void (*)())w->resume_4;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, CmdActionReactions_800BBA70);
 
 void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
 {
@@ -958,11 +953,11 @@ void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0 // Not matched: the lbu of commandUnit_800C9C98 is scheduled above the store to curCommand_800C9C88.targets_C; the
-      // original keeps them in order, as if commandUnit_800C9C98 were a field of the same struct (gcc only disambiguates a
-      // fixed scalar from a struct field behind a register). CmdRecall_800BBDB4 gets no arguments (task/work are still in a0/a1)
+// CmdRecall_800BBDB4 gets no arguments (task/work are still in a0/a1)
+// Matched
 void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
 {
+    BatTurnWork* w = work;
     curCommand_800C9C88.kind_0 = 3;
     curCommand_800C9C88.targets_C = 0;
     if (!commandUnit_800C9C98)
@@ -972,14 +967,11 @@ void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
     else
     {
         PlaySeqSlot_80031160(0x11, 1);
-        work->handle_C = StartActionTask_800BC28C();
-        work->next_8 = CmdSwapMinionLoad_800BBC84;
+        w->handle_C = StartActionTask_800BC28C();
+        w->next_8 = CmdSwapMinionLoad_800BBC84;
         task->next_8 = WaitActionTask_800BC144;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, CmdSwapMinion_800BBBF4);
 
 void CmdSwapMinionLoad_800BBC84(BatTaskEntry* task)
 {

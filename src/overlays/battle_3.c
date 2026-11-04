@@ -79,7 +79,7 @@ void ShowUnitHitResult_800BE834(int unit, int pos)
     }
 }
 
-#if 0 // Not matched: the shared 'return 1' block sits after the AreReactionsDone_800BEB68 test in the original (here it lands at the end and the last test flips); tried goto/early-return layouts
+// Matched
 int IsActionDone_800BEA94()
 {
     if (!(saveData_8008B570.flags_0 & 0x20))
@@ -88,31 +88,29 @@ int IsActionDone_800BEA94()
         {
             return 0;
         }
-        if (TestBattleFlag_800BC820(4) == 1)
+        if (TestBattleFlag_800BC820(4) != 1)
         {
-            if (IsActorActionDone_800BEB50() == 0)
-            {
-                return 0;
-            }
-            if (AreReactionsDone_800BEB68() == 0)
-            {
-                return 0;
-            }
+            goto handler;
         }
-        else
+        if (IsActorActionDone_800BEB50() == 0)
         {
-            if (handlerWaitsReactions_800C912C[(unsigned char)commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]] == 0)
-            {
-                return IsActorActionDone_800BEB50();
-            }
-            return AreReactionsDone_800BEB68();
+            return 0;
+        }
+        if (AreReactionsDone_800BEB68() == 0)
+        {
+            goto zero;
         }
     }
     return 1;
+handler:
+    if (handlerWaitsReactions_800C912C[(unsigned char)commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]] == 0)
+    {
+        return IsActorActionDone_800BEB50();
+    }
+    return AreReactionsDone_800BEB68();
+zero:
+    return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, IsActionDone_800BEA94);
 
 int IsActorActionDone_800BEB50()
 {
