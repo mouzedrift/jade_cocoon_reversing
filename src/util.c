@@ -16,17 +16,10 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "util.h"
+#include "font.h"
 
 extern void IntToText_8003F610(unsigned short* buf, int val);
-extern void DrawText_8003E91C(int mode, int* buf, int a, int b);
 
-typedef struct CharTable
-{
-    unsigned short* tbl;
-    int glyphCount_4; // codes above it are not drawn
-    int count;
-} CharTable;
-extern CharTable charTables_8008685C[];
 extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
 extern void IntToSjisReversed_8003F58C(unsigned char* buf, int val);
 extern int WStrLen_8003FB60(unsigned short* s);
@@ -91,7 +84,7 @@ void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
     {
         text++;
         x -= font->w_10;
-        if (ch <= charTables_8008685C[2].glyphCount_4)
+        if (ch <= charTables_8008685C[2].lastChar_4)
         {
             page = ch - 1;
             cell = (short)(page % (unsigned short)font->charsPerClut_28);
@@ -147,7 +140,7 @@ void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
                 break;
             }
         }
-        if (ch <= charTables_8008685C[1].glyphCount_4)
+        if (ch <= charTables_8008685C[1].lastChar_4)
         {
             ch = ch - 1;
             cell = (short)(ch % (unsigned short)font->charsPerClut_28);

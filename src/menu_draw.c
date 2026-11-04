@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "main.h"
 #include "pad_text.h"
+#include "font.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -82,7 +83,6 @@ typedef struct
     unsigned short y;
     int text_4;
 } TextListEntry;
-extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
 void DrawTextList_8002A310(TextListEntry* entries, int ot)
 {

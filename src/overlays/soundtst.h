@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "main.h"
 #include "sound.h"
+#include "font.h"
 
 extern int dword_800A05A0;
 extern const char aKY6A212XA_800A05A4[];
@@ -1653,7 +1654,6 @@ extern void SoundTestUpdate_800A5238(int* task, SndTest* st);
 /* exe-side, to move to an exe header */
 extern void PlayMusicSeq_80031260(void* sound, int idx, int loops);
 extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 
 #endif

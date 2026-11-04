@@ -12,4 +12,5 @@ extern CharTable charTables_8008685C[];
 
 extern void *dword_80086868[1];
 
+void DrawText_8003E91C(int font, const char* str, short* pos, int ot);
 #endif

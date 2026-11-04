@@ -39,7 +39,7 @@ int GetCharWidth_8003E884(int idx, short c)
     return width;
 }
 // Matched
-void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot)
+void DrawText_8003E91C(int idx, const char* str, short* pos, int ot)
 {
     Font* font = &fonts_80095FB0[idx];
     short x = pos[0];
@@ -50,7 +50,7 @@ void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot)
     int row;
     int col;
 
-    codes = EncodeText_8003F684(idx, str);
+    codes = EncodeText_8003F684(idx, (unsigned short*)str);
     c = *codes;
     while (c != 0)
     {

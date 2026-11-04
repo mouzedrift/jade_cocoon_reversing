@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "pad_text.h"
 #include "main.h"
+#include "font.h"
 
 
 
@@ -1551,7 +1552,6 @@ extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int r
 extern void DrawWindow_80042460(short* rect, BatWindowBox* style, void* ot, int time);
 extern void DrawUiColorWindow_800424C0(void* rect, short colorSet, void* ot, int time);
 /* exe-side, to move to font.h */
-extern void DrawText_8003E91C(int idx, unsigned short* str, short* pos, int ot);
 /* exe-side, to move to util.h */
 extern void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot);
 /* exe-side, to move to menu_window.h */

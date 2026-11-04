@@ -8,6 +8,7 @@
 #include "sound.h"
 #include "pad_text.h"
 #include "main.h"
+#include "font.h"
 
 typedef struct
 {
@@ -511,7 +512,6 @@ extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 extern void FreeActiveOverlay_8002C014(void);
-extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawMenuWindows_8002A5A4(void* p);
 extern unsigned short uiColor_8008B590;

@@ -19,6 +19,7 @@
 #include "model.h"
 #include "boot.h"
 #include "main.h"
+#include "font.h"
 
 const char aWarning_80074A24[] = "\202v\202\201\202\222\202\216\202\211\202\216\202\207"; // Warning
 const char aThisDemoVersion_80074A34[] = "\202s\202\210\202\211\202\223\201@\202\204\202\205\202\215\202\217\201@\202\226\202\205\202\222\202\223\202\211\202\217\202\216\201@\202\217\202\206\201@\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201@\202\211\202\223\201@\202\223\202\224\202\211\202\214\202\214"; // This demo version of Jade Cocoon is still
@@ -159,7 +160,6 @@ void PlayCraveEntertainmentMovie_80040B54(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(craveEntertainmentMovie_80086988);
 }
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int ot);
 extern const char aWarning_80074A24[];
 extern const char aThisDemoVersion_80074A34[];
 extern const char aInDevelopment_80074A88[];

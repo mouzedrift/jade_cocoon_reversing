@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "model.h"
 #include "main.h"
+#include "font.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -263,7 +264,6 @@ extern int UpdateMenuCursor_8003D794(void* p, int idx); // the exe def takes one
 /* exe-side, to move to cursor.h */
 extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 /* exe-side, to move to font.h */
-extern void DrawText_8003E91C(int a, int b, void* c, int d);
 /* exe-side, to move to util.h */
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 /* exe-side, to move to party.h */

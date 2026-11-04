@@ -19,6 +19,7 @@
 #include "msg_window.h"
 #include "effect_data.h"
 #include "pad_text.h"
+#include "font.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -970,7 +971,6 @@ void DrawMsgWindowPortrait_80035900(MsgWindow* win)
         AddPrimCopy_80040298(pOT_8008D454 + 1, &win->prim_88, 10);
     }
 }
-extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 
 // Matched
 void DrawMsgWindowTitle_800359F8(MsgWindow* win)

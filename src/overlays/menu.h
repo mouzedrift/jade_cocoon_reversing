@@ -12,6 +12,7 @@
 #include "main.h"
 #include "sound.h"
 #include "STDLIB.H"
+#include "font.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -807,7 +808,6 @@ extern void DrawMenuItemWithWindow_8002ADB4();
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
-extern void DrawText_8003E91C();
 extern void UppercaseSjisName_8003F89C();
 extern int GetItemFlags_8001CE70();
 extern void DrawMagicList_8002CAC8();

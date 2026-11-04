@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "party_window.h"
 #include "effect_data.h"
+#include "font.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
@@ -143,7 +144,6 @@ short GetLevantLevel_8002FA70(void)
 }
 extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short MeasureTextWidth_8003E4C8(NameBuf* b); // this TU was built against a short-returning prototype (pad_text.h: int)
-extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
 extern void UppercaseSjisName_8003F89C(NameBuf* b);
 extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched

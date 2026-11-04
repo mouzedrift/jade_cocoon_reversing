@@ -18,6 +18,7 @@
 #include "menu_window.h"
 #include "effect_data.h"
 #include "pad_text.h"
+#include "font.h"
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
@@ -210,7 +211,6 @@ void DrawMenuItemWithWindow_8002ADB4(char* item, int window, int ot, int time)
     DrawWindow_80042460(item + 0x10, window, &pOT_8008D454[ot], time);
 }
 extern short uiColor_8008B590;
-extern void DrawText_8003E91C(int mode, int a, void* b, int c);
 // Matched
 void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int count)
 {
