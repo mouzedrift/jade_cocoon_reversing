@@ -67,9 +67,9 @@ int IsShelfMenuActive_800B6F0C(void)
     return shelfMenuActive_800B7EAC;
 }
 
-// Matched
 // starts the cocoon shelf menu (memory card check, slot and shelf selection, registered minion list); when it
 // reaches state 15 it hands back to the shop (ShopCtrlRequestShop_800B6CA0)
+// Matched
 void StartShelfMenu_800B6F1C(void)
 {
     EventEntry* t;
@@ -263,7 +263,6 @@ void ShelfMenuCancel_800B72D4(ShelfMenu* c)
     }
 }
 
-// Matched
 // what DrawGauge_8002BA54 takes (struct_BA54 in ui_gauge.c)
 typedef struct GaugeShopentr
 {
@@ -272,6 +271,7 @@ typedef struct GaugeShopentr
     int value_8;
     int max_C;
 } GaugeShopentr;
+// Matched
 int ShelfMenuProgress_800B73A8(ShelfMenu* c)
 {
     short r[2];

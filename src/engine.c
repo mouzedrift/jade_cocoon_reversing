@@ -638,8 +638,8 @@ int CountMagicBits_8001AE54(unsigned int* bits)
     }
     return n;
 }
-// Matched
 // called by MENU's OnMinionLevelUp_800BCF74 with the minion's dominant species, status and magic bits
+// Matched
 void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, int magicBits)
 {
 }

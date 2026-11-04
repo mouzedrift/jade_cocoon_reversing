@@ -479,8 +479,8 @@ void SwitchCharPage_800B7CD8(NameEntry* p)
     }
 }
 
-// Matched
 // Start jumps to the commands, Select restores the saved name (flags 8)
+// Matched
 void HandleNameShortcutButtons_800B7D60(NameEntry* p)
 {
     if (padPressed_8009194C & 0x800)

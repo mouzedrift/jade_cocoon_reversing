@@ -145,10 +145,10 @@ int CollideWithMap_800B716C(EvVecEventfnc* pos, int* a1, SVECTOR* rot)
     return 2;
 }
 
-// Matched
 // clears the pad_6 edge flag of every vertex, then sets it to -1 where the edge (v, v+1) of a triangle is shared
 // (same x/z, either direction) with another triangle of the same mesh. The vertices are re-indexed in every test
 // (a named pointer to t's vertex gets its loads hoisted out of the b loop)
+// Matched
 void MarkSharedEdges_800B73C0(MapMesh* m, int n)
 {
     int i;
@@ -281,9 +281,9 @@ int FindTriAtXZ_800B76B8(MapMesh* m, EvVecEventfnc* p)
     return -1;
 }
 
-// Matched
 // finds the first unshared edge (pad_6 == 0) of mesh m crossed by the segment p-q in x/z and returns it in
 // *tri / *edge, unless it is the one already there
+// Matched
 void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
 {
     VECTOR e;
@@ -2163,8 +2163,8 @@ extern void SfxKeyOff_80031574(int a, int b);
 extern void SetLoadFadeFlag_80027478(int a, int b);
 extern void SetMotionBlur_8001BCD8(int a);
 
-// Matched
 // a selects: 0..9 scene fades / darken, 10/11 GAME hooks, 12 music, 13..15 sfx, 16 XA, 17 load fade, 18 motion blur
+// Matched
 int EvCmdFadeSound_800BB4A4(EvCtxEventfnc* c)
 {
     int r = 1;

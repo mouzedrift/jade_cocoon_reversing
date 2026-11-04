@@ -1220,8 +1220,8 @@ int GetElementModelAngle_800C0904(unsigned char* p)
     return r;
 }
 
-// Matched
 extern short sinTable_80084540[];
+// Matched
 int CalcElementAngle_800C09D4(unsigned char* p)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;

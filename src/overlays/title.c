@@ -327,8 +327,8 @@ INCLUDE_OVERLAY_ASM(title, DrawNameEntrySprites_800A0D18);
 
 extern void SetFadeMode_8001C19C(int a0, int a1);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
-// Matched
 // TITLE overlay entry: runs the title tasks, returns the next GameStates value (titleResult_800A2818)
+// Matched
 int TitleMain_800A0EF0(void)
 {
     SetFadeMode_8001C19C(3, 0x20);
@@ -721,8 +721,8 @@ void TitleExit_800A1AFC(TitleTaskM* t, int a)
 
 extern EventNode* newGameTask_8008D638;
 
-// Matched
 // stops the title menu task and enables newGameTaskDesc_800A2790 (name entry + opening movies)
+// Matched
 void StartNewGameTask_800A1B74(TitleTaskM* t)
 {
     EventEntry* e;
@@ -769,8 +769,8 @@ void MenuLoadGame_800A1C18(TitleTaskM* t)
 
 extern void SetNewGameStartMap_800A2650(void);
 
-// Matched
 // menu entry 4: fresh save data, straight into the game (no name entry)
+// Matched
 void MenuQuickStart_800A1C7C(TitleTaskM* t)
 {
     word_8008B55A = 4;
@@ -867,8 +867,8 @@ void ConfigReturn_800A1E9C(TitleTaskM* t, TitleMenuWork* u)
     t->next_8 = TitleMenu_800A1310;
 }
 
-// Matched
 // menu entry 2: GAME starts on the arena map and returns eBattleArenaMenu_8 (flag 0x40000000)
+// Matched
 void MenuBattleArena_800A1F00(TitleTaskM* t)
 {
     unknownFlags_8008D678 |= 0x40000000;

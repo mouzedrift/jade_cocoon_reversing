@@ -301,7 +301,6 @@ int GetMdecEffectLength_800181E8(void)
     return *mdecEffectSchedule_80091C00;
 }
 // Matched
-// Matched
 struct_4s* RepeatHitTimes_80018200(struct_4s* src, unsigned short loopStart, unsigned short loopEnd, short loops)
 {
     struct_4s* dst = ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->hitTimes_0;

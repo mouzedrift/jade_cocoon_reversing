@@ -430,8 +430,8 @@ extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, void* a1);
 extern int GetSkillMpCost_80031A04(void* skills, int a);
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void PreviewCmdEffect_800CC40C();
-// Matched
 // Draws the menus of the current state, the circle-held descriptions and the HP/MP preview
+// Matched
 void DrawCmdMenu_800CBEA4()
 {
     short w[2];

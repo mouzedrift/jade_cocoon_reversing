@@ -3959,7 +3959,6 @@ int RequestAreaPreload_80027330(short a0)
     return 0;
 }
 // Matched
-// Matched
 int UsePreloadedArea_80027358(int id)
 {
     int* task;
@@ -4398,7 +4397,6 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
         break;
     }
 }
-// Matched
 // Matched
 void ResetMapLoaderTask_8002830C(EventEntry* p)
 {

@@ -1025,9 +1025,9 @@ extern void PlaySfx_80031494(int id);
 // hitWindow_800A8494: the merged window; lo counts the frames up to hi
 extern CombBtlPair MergeHitWindows_800A71E4(int n, CombBtlPair* p);
 extern unsigned char swapSlot_800A85BC; // the minion slot side swap command (kind 3) brings in
-// Matched
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles side KO / swap / counter. Steps fall through in one call while the step keeps changing.
+// Matched
 void RunExchange_800A68E0(CombBtlTask* t)
 {
     int prev = -1;

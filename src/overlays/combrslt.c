@@ -113,8 +113,8 @@ void DrawPlayerResult_800A4240(int player)
 }
 
 // Near miss: scheduling of the repeated x/y stores
-// Matched
 // Draws the two numbers of a player's score box, each followed by a UI sprite (0xAE, 0x4D)
+// Matched
 void DrawScorePair_800A444C(unsigned short* p, int ot, int b, int c)
 {
     short v[2];

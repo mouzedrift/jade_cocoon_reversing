@@ -583,8 +583,8 @@ void ResetCombatCamera_800A12B8(void)
     q->levant_7A8.rot.vz = 0;
 }
 
-// Matched
 // COMBAT overlay entry (the battle arena): runs combatTaskList_800A398C, back to the title menu after
+// Matched
 int CombatMain_800A1324(void)
 {
     unknownFlags_8008D678 |= 0x2000000;

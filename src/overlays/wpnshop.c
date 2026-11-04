@@ -2005,8 +2005,8 @@ void EquipSellListInput_800BDAB4(StoreMenu* o)
     }
 }
 
-// Matched
 // 0: bought, 1: not enough money, 2: no room
+// Matched
 int BuyItem_800BDB80(int id, int count)
 {
     if (AddInventory_800AD184(id, count, 0))
