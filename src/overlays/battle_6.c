@@ -2687,8 +2687,8 @@ void BattleMenuTask_800C8A08(EventEntry* task, int buffer)
 int dword_800C8B2C = 0xFFFF;
 unsigned char aiCounter_800C8B30[4] = { 0 };
 int aiAllyCalled_800C8B34 = 0;
-char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
-int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)CmdEnemySwap_800BBFFC };
+unsigned char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
+void (*commandHandlers_800C8B54[7])() = { CmdAction_800BBA24, CmdSummon_800BBBA8, CmdRecall_800BBDB4, CmdSimple_800BC0FC, CmdSwapMinion_800BBBF4, CmdEnemyCall_800BBEFC, CmdEnemySwap_800BBFFC };
 unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
 unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
 unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
@@ -2826,8 +2826,8 @@ BatStage battleStages_800C8EAC[39] = {
     { stage25Sprites_800C8DB4, 0x437, 190, 0, 6, -1 },
     { stage26Sprites_800C8DC4, 0x438, 186, 0, 6, -1 },
 };
-int stageAnimPhases_800C911C[2] = { 0x2090501, 0x4070306 };
-int stageRot_800C9124[2] = { 0 };
+unsigned char stageAnimPhases_800C911C[8] = { 1, 5, 9, 2, 6, 3, 7, 4 };
+SVECTOR stageRot_800C9124 = { 0 };
 char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
 unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
 BatCureChance statusCureChances_800C9138[1] = { { 2, 77 } };

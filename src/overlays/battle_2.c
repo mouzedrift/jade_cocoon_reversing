@@ -21,11 +21,9 @@ typedef struct BatCameraLight
     short b_54;
 } BatCameraLight;
 
-extern char stageRot_800C9124[];
 extern char cameraState_8008D4F0[];
 extern short cameraRot_8008D4C8;
 extern short geomScreenBase_8008D51E;
-extern unsigned char stageAnimPhases_800C911C[];
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj
 {
@@ -43,7 +41,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
 
     unknownFlags_8008D678 &= ~0x10000;
     idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, battleStages_800C8EAC[battleStageId_80083BD0].model_6);
-    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &obj->x_38, stageRot_800C9124, pointLights_8008D534, 1, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &obj->x_38, &stageRot_800C9124, pointLights_8008D534, 1, scale);
     {
         unsigned short* list = battleStages_800C8EAC[battleStageId_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;
@@ -80,7 +78,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                         {
                             sz[0] = frame->size_C[0] * 5;
                             sz[1] = frame->size_C[1] * 5;
-                            DrawRotSprite_80044010(&sprite->poly_C, &pos, stageRot_800C9124, &frame->u_0, &frame->w_4, &frame->pivotX_8, sz, &frame->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&sprite->poly_C, &pos, &stageRot_800C9124, &frame->u_0, &frame->w_4, &frame->pivotX_8, sz, &frame->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {

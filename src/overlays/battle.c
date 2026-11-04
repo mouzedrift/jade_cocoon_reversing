@@ -556,7 +556,7 @@ void BattleNextTurn_800BAE74(BatTaskEntry* task, BatTurnWork* work)
             curCommand_800C9C88.targets_C = 0;
             SetBattleFlag_800BC838(0x8000);
             task->next_8 = CmdRecallDone_800BBE00;
-            work->next_8 = (void (*)())(work->resume_4 = (int)BattleNextTurn_800BAE74);
+            work->next_8 = work->resume_4 = BattleNextTurn_800BAE74;
             return;
         }
         if (TestBattleFlag_800BC820(2) == 1)
@@ -570,7 +570,7 @@ void BattleNextTurn_800BAE74(BatTaskEntry* task, BatTurnWork* work)
             curCommand_800C9C88.targets_C = 0;
             SetBattleFlag_800BC838(0x10000);
             task->next_8 = CmdEnemySwapJoin_800BC05C;
-            workCopy->next_8 = (void (*)())(workCopy->resume_4 = (int)BattleNextTurn_800BAE74);
+            workCopy->next_8 = workCopy->resume_4 = BattleNextTurn_800BAE74;
             return;
         }
         actingUnit_800C9C7C = 7;
@@ -622,8 +622,8 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
             curCommand_800C9C88.arg_4 = 0;
             curCommand_800C9C88.targets_C = 0;
             curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
-            t->next_8 = (void (*)())GetCommandHandler_800BC174();
-            w->resume_4 = (int)BattleFinish_800BB1B0;
+            t->next_8 = GetCommandHandler_800BC174();
+            w->resume_4 = BattleFinish_800BB1B0;
             w->next_8 = BattleFinish_800BB1B0;
             return;
         }
@@ -732,8 +732,8 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
             break;
         }
         SetBattleFlag_800BC838(0x1000);
-        task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
+        task->next_8 = GetCommandHandler_800BC174();
+        w->resume_4 = w->next_8 = BattleNextTurn_800BAE74;
         return;
     }
     if (status->hp_8.cur_0 - actorHpChange_800C9C7E <= 0)
@@ -769,8 +769,8 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
             break;
         }
         SetBattleFlag_800BC838(0x1000);
-        task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
+        task->next_8 = GetCommandHandler_800BC174();
+        w->resume_4 = w->next_8 = BattleNextTurn_800BAE74;
         return;
     }
     if (((newStatus & 0x10000) && (oldStatus & 0x10000)) || ((newStatus & 2) && (oldStatus & 2)))
@@ -784,18 +784,18 @@ void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
         return;
     }
     SetBattleFlag_800BC838(0x1000);
-    task->next_8 = (void (*)())GetCommandHandler_800BC174();
+    task->next_8 = GetCommandHandler_800BC174();
     if (newStatus & 0x200)
     {
-        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = w->next_8 = BattleNextTurn_800BAE74;
     }
     else if (newStatus & 0x10002)
     {
-        w->resume_4 = (int)(w->next_8 = BattleNextTurn_800BAE74);
+        w->resume_4 = w->next_8 = BattleNextTurn_800BAE74;
     }
     else
     {
-        w->resume_4 = (int)(w->next_8 = PrepareCommandInput_800BB860);
+        w->resume_4 = w->next_8 = PrepareCommandInput_800BB860;
     }
 }
 
@@ -855,8 +855,8 @@ void InputCommand_800BB894(BatTaskEntry* task, BatTurnWork* work)
         {
             EnemyChooseCommand_800A2618(&curCommand_800C9C88, actingUnit_800C9C7C - 4);
         }
-        task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        work->next_8 = (void (*)())(work->resume_4 = (int)BattleNextTurn_800BAE74);
+        task->next_8 = GetCommandHandler_800BC174();
+        work->next_8 = work->resume_4 = BattleNextTurn_800BAE74;
     }
     else
     {
@@ -879,8 +879,8 @@ void WaitBattleMenu_800BB940(BatTaskEntry* task, BatTurnWork* work)
                 return;
             }
         }
-        task->next_8 = (void (*)())GetCommandHandler_800BC174();
-        work->resume_4 = (int)BattleNextTurn_800BAE74;
+        task->next_8 = GetCommandHandler_800BC174();
+        work->resume_4 = BattleNextTurn_800BAE74;
         if (curCommand_800C9C88.kind_0 == 2)
         {
             battleHitEnemies_800B122C |= curCommand_800C9C88.targets_C;
@@ -937,12 +937,12 @@ void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
         }
         actingUnit_800C9C7C = 7;
         w->handle_C = StartActionTask_800BC28C();
-        w->next_8 = (void (*)())w->resume_4;
+        w->next_8 = w->resume_4;
         task->next_8 = WaitActionTask_800BC144;
     }
     else
     {
-        task->next_8 = (void (*)())w->resume_4;
+        task->next_8 = w->resume_4;
     }
 }
 
@@ -980,18 +980,17 @@ void CmdSwapMinionLoad_800BBC84(BatTaskEntry* task)
     LoadSummonedMinion_800C0AEC(commandUnit_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
 }
 
-#if 0 // Not matched: needs the second copy of work (s3, from 'workCopy'); remaining: work->handle_C store / encounterRecord_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
-extern int CreateSummonedMinionActor_800C0BF0();
-extern void UpdateMinionStatusTint_800C0F1C();
+// waits until the summoned minion's actor is created, then starts its summon action (CreateSummonedMinionActor_800C0BF0 takes no arguments; the s3 copy of work comes from 'workCopy')
+// Matched
 void CmdSummonWait_800BBCC8(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* workCopy = work;
-    if (CreateSummonedMinionActor_800C0BF0(task) == 1)
+    if (CreateSummonedMinionActor_800C0BF0() == 1)
     {
         curCommand_800C9C88.kind_0 = 2;
         curCommand_800C9C88.targets_C = 0;
-        shownUnit_800C9C99 = commandUnit_800C9C98;
         actingUnit_800C9C7C = commandUnit_800C9C98;
+        shownUnit_800C9C99 = commandUnit_800C9C98;
         summonedUnit_800C9C82 = commandUnit_800C9C98;
         curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
         work->handle_C = StartActionTask_800BC28C();
@@ -1001,16 +1000,13 @@ void CmdSummonWait_800BBCC8(BatTaskEntry* task, BatTurnWork* work)
         }
         else
         {
-            ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
             workCopy->next_8 = BattleNextTurn_800BAE74;
+            ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
         }
         UpdateMinionStatusTint_800C0F1C();
         task->next_8 = WaitActionTask_800BC144;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, CmdSummonWait_800BBCC8);
 
 void CmdRecall_800BBDB4(BatTaskEntry* task, BatTurnWork* work)
 {
@@ -1057,21 +1053,19 @@ void CmdEnemyCall_800BBEFC(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0 // Not matched: instruction scheduling only (s0/s1 save order, C68 address placement); tried assignment-expression, pointer local, byte temp
+// an enemy's call for help: the called enemy joins (SwapEncounterEnemy_800A2AE8 takes no arguments; a typed '(void)' prototype keeps &curCommand_800C9C88 from becoming its argument)
+// Matched
 void CmdEnemyCallJoin_800BBF64(BatTaskEntry* task, BatTurnWork* work)
 {
     curCommand_800C9C88.kind_0 = 0x15;
     actingUnit_800C9C7C = commandUnit_800C9C98;
-    curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
-    SwapEncounterEnemy_800A2AE8(&curCommand_800C9C88);
+    curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
+    SwapEncounterEnemy_800A2AE8();
     work->handle_C = StartActionTask_800BC28C();
-    work->next_8 = (void (*)())work->resume_4;
+    work->next_8 = work->resume_4;
     task->next_8 = WaitActionTask_800BC144;
     ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, CmdEnemyCallJoin_800BBF64);
 
 void CmdEnemySwap_800BBFFC(BatTaskEntry* task, BatTurnWork* work)
 {
@@ -1081,27 +1075,25 @@ void CmdEnemySwap_800BBFFC(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0
+// an enemy swaps with its partner in a fixed encounter (SwapEncounterEnemy_800A2AE8 takes no arguments)
+// Matched
 void CmdEnemySwapJoin_800BC05C(BatTaskEntry* task, BatTurnWork* work)
 {
     curCommand_800C9C88.kind_0 = 0x16;
     actingUnit_800C9C7C = commandUnit_800C9C98;
     curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
-    SwapEncounterEnemy_800A2AE8(&curCommand_800C9C88);
+    SwapEncounterEnemy_800A2AE8();
     SetBattleFlag_800BC838(0x10000);
     work->handle_C = StartActionTask_800BC28C();
-    work->next_8 = (void (*)())work->resume_4;
+    work->next_8 = work->resume_4;
     task->next_8 = WaitActionTask_800BC144;
     ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, CmdEnemySwapJoin_800BC05C);
 
 void CmdSimple_800BC0FC(BatTaskEntry* task, BatTaskEntry* work)
 {
     work->handle_C = (int*)StartActionTask_800BC28C(task);
-    work->next_8 = (void (*)())work->resume_4;
+    work->next_8 = work->resume_4;
     task->next_8 = WaitActionTask_800BC144;
 }
 
@@ -1113,9 +1105,9 @@ void WaitActionTask_800BC144(BatTaskEntry* task, BatTaskEntry* work)
     }
 }
 
-int GetCommandHandler_800BC174()
+void (*GetCommandHandler_800BC174())()
 {
-    return commandHandlers_800C8B54[(unsigned char)commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]];
+    return commandHandlers_800C8B54[commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]];
 }
 
 int NeedsStatusReaction_800BC1A8(unsigned int mask)

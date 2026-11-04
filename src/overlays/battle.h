@@ -324,7 +324,7 @@ extern void memset();
 
 extern void SetFadeMode_8001C19C();
 
-extern void SwapEncounterEnemy_800A2AE8();
+extern void SwapEncounterEnemy_800A2AE8(void);
 
 extern void PlaySeqSlot_80031160();
 
@@ -354,7 +354,7 @@ extern void TurnUnitToward_800BC4D4();
 
 extern void ResetTurnGauge_800BF770();
 
-extern void SetBattleFlag_800BC838();
+extern void SetBattleFlag_800BC838(unsigned int mask);
 
 extern void BattleEndFadeOut_800BA624();
 
@@ -367,6 +367,9 @@ extern void RemoveAliveEnemies_800BA720();
 extern void BattleNextTurn_800BAE74();
 
 extern void BattleFinish_800BB1B0();
+
+// the handler of curCommand_800C9C88's kind (commandHandlers_800C8B54[commandHandlerIdx_800C8B38[kind]])
+extern void (*GetCommandHandler_800BC174())();
 
 extern void WaitChainMessageClosed_800BB168();
 
@@ -395,7 +398,7 @@ extern void CmdRecallEnd_800BBE7C();
 typedef struct BatTurnWork
 {
     int pad_0;
-    int resume_4; // state function to return to after the command
+    void (*resume_4)(); // state function to return to after the command
     void (*next_8)();
     int handle_C;
 } BatTurnWork;
@@ -457,7 +460,7 @@ extern int GetSummonedMinionSlot_800C0D50();
 typedef struct BatTaskEntry
 {
     int flags_0;
-    int resume_4;
+    void (*resume_4)();
     void (*next_8)();
     int* handle_C;
 } BatTaskEntry;
@@ -646,7 +649,9 @@ extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int
 
 extern void ShowUnitHitResult_800BE834(int unit, int pos);
 
-extern void UpdateMinionStatusTint_800C0F1C();
+extern int CreateSummonedMinionActor_800C0BF0(void);
+
+extern void UpdateMinionStatusTint_800C0F1C(void);
 
 typedef struct BatSettingsBits
 {
@@ -1371,8 +1376,8 @@ extern const int dword_800BA174[2];
 extern int dword_800C8B2C;
 extern unsigned char aiCounter_800C8B30[4];
 extern int aiAllyCalled_800C8B34;
-extern char commandHandlerIdx_800C8B38[28];
-extern int commandHandlers_800C8B54[7];
+extern unsigned char commandHandlerIdx_800C8B38[28];
+extern void (*commandHandlers_800C8B54[7])();
 extern unsigned short stage00Sprites_800C8B70[8];
 extern unsigned short stage01Sprites_800C8B80[8];
 extern unsigned short stage02Sprites_800C8B90[8];
@@ -1422,8 +1427,8 @@ extern unsigned short stage14Models_800C8E64[12];
 extern unsigned short stage15Models_800C8E7C[12];
 extern unsigned short stage16Models_800C8E94[12];
 extern BatStage battleStages_800C8EAC[39];
-extern int stageAnimPhases_800C911C[2];
-extern int stageRot_800C9124[2];
+extern unsigned char stageAnimPhases_800C911C[8];
+extern SVECTOR stageRot_800C9124;
 extern char handlerWaitsReactions_800C912C[8];
 extern unsigned char captureVibrations_800C9134[4];
 typedef struct BatCureChance

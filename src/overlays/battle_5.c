@@ -262,16 +262,17 @@ void StartHelpWindow_800C0440()
     }
 }
 
-#if 0 // Not matched: win and width swap saved registers (s1/s0); tried width types, decl order, pre-increment
-extern unsigned char sealOutcomeTable_800793C8[];
+extern int battleHelpTexts_800793DC[];
 extern void DrawText_8003E91C(int mode, void* str, void* pos, int z);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern void DrawUiColorWindow_800424C0();
-void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
+// Draws the battle help window text (with the empty-cocoon count for help text 9); the void* task buffer is copied into a typed local
+// Matched
+void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
 {
+    BatAnimWindow* win = buf;
     int width;
     short pos[2];
-    unsigned char* sealTable;
     if (padPressed_8009194C & 0x100)
     {
         saveData_8008B570.flags_0 ^= 0x10;
@@ -286,8 +287,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
     width = MeasureTextWidth_8003E4C8(helpWindowText_800C9D74);
-    sealTable = sealOutcomeTable_800793C8 + 0x14;
-    if (*(int*)(sealTable + 0x24) == helpWindowText_800C9D74)
+    if (battleHelpTexts_800793DC[9] == helpWindowText_800C9D74)
     {
         width += 0x10;
     }
@@ -298,7 +298,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
     pos[0] = win->from_4[0] + 2;
     pos[1] = win->from_4[1] + 3;
     DrawText_8003E91C(2, (void*)helpWindowText_800C9D74, pos, 0);
-    if (*(int*)(sealTable + 0x24) == helpWindowText_800C9D74)
+    if (battleHelpTexts_800793DC[9] == helpWindowText_800C9D74)
     {
         pos[0] += width;
         pos[1] += 3;
@@ -312,9 +312,6 @@ void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
     }
     AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454);
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, HelpWindowTask_800C04A4);
 
 void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, int f30)
 {
@@ -1391,9 +1388,11 @@ int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
     return -1;
 }
 
-#if 0 // Not matched: only anim and clip swap saved registers (s1/s2); tried decl/init order, early return, tail shapes, pointer arithmetic
-void ModelAnimTask_800C33E4(EventEntry* task, BatModelAnim* anim)
+// Plays one frame of an effect clip's keyed model animation; the void* task buffer is copied into a typed local
+// Matched
+void ModelAnimTask_800C33E4(EventEntry* task, void* buf)
 {
+    BatModelAnim* anim = buf;
     EffectModel* clip = anim->clip_88;
     int any;
     int i;
@@ -1440,9 +1439,6 @@ void ModelAnimTask_800C33E4(EventEntry* task, BatModelAnim* anim)
         task->flags = (task->flags & ~1) | 0x8000;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, ModelAnimTask_800C33E4);
 
 void GlowTask_800C371C(EventEntry* task, void* arg)
 {
